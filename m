@@ -2,82 +2,99 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 71851C00144
-	for <linux-perf-users@archiver.kernel.org>; Mon,  1 Aug 2022 17:48:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9E353C00144
+	for <linux-perf-users@archiver.kernel.org>; Mon,  1 Aug 2022 17:58:07 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233319AbiHARs0 (ORCPT
+        id S234107AbiHAR6E (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Mon, 1 Aug 2022 13:48:26 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55610 "EHLO
+        Mon, 1 Aug 2022 13:58:04 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35718 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232650AbiHARsZ (ORCPT
+        with ESMTP id S234139AbiHAR5c (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Mon, 1 Aug 2022 13:48:25 -0400
+        Mon, 1 Aug 2022 13:57:32 -0400
 Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5A57C2DAAB;
-        Mon,  1 Aug 2022 10:48:24 -0700 (PDT)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 55738B1DC;
+        Mon,  1 Aug 2022 10:56:27 -0700 (PDT)
 Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id E7C2B6109E;
-        Mon,  1 Aug 2022 17:48:23 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 29DF4C433C1;
-        Mon,  1 Aug 2022 17:48:23 +0000 (UTC)
+        by dfw.source.kernel.org (Postfix) with ESMTPS id BFF1561160;
+        Mon,  1 Aug 2022 17:56:23 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id F2A0BC433C1;
+        Mon,  1 Aug 2022 17:56:22 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1659376103;
-        bh=VH+9IJa8N2N/pZ14waAEZzza9dSZ+N1KF+5/+D85BNk=;
+        s=k20201202; t=1659376583;
+        bh=sgF7Ila5Go50G/Z0YwLeetdlAZaIQSPpQ4eGRIrjUfQ=;
         h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=jeWuSZTv033aU1Z1zCAYdh5j8RfiSLieo9TtUZQMKC/acnpSq+TLAFiI6kFP7n+bl
-         djMTowEDde/tsuAH/4o1Kk9hVYe0mTFU4h7bJ55+7Ru4xhVt1QH/j9AzYxXq2yIEGE
-         a94h8SYgxWaBMw6/nUL7fY4yuhmBSUpeo23pHU8PjQTVKWP14gIExQ1xclH62Ouahy
-         fH/yfX2UU0TwmIxUgOHIrrkbxFm70hOGSUbjd+dL9RwHfIt6MA3UKIXH5KJ/0TIEHn
-         rGgNC7XZ4v7sEuYcAMey0pp3sgUju3NGImq7/kHxAhfrUBu0g8dLbPvcK26qFy2aUZ
-         k4sN+XLJ0HQSw==
+        b=eQTYpYq2X9p4/bUFs31elGwHf3bxE9a0XO/ulP0WVFoHMvP3pBDsTMQejLTPyc2N3
+         U0fHcZyyUzs/hhoGl63QeTyCgHAAWQZe5PVcW3pUX6PHoCVWvrN7qmCR175zqC2h5i
+         6yEdsEwEqFKRGuM4hKs3bzMgYHLh3cS7AmlMpItHucbTG+v8TztGV6kKSsW1wrdAoz
+         jDJBZwDTV9oi3kQt+hKPYgo9brBELv4brGpE+pT9HyEmJI2p/7/4DShfeKyk/IagAY
+         VirBQTb9SHpfzfBi8+biYsCRl6uS+abxZJMAkSqhtHs9YjBiHqk5FiyIi0wd7aKtOp
+         VqQoQ40Kai+IA==
 Received: by quaco.ghostprotocols.net (Postfix, from userid 1000)
-        id 07D3540736; Mon,  1 Aug 2022 14:48:20 -0300 (-03)
-Date:   Mon, 1 Aug 2022 14:48:20 -0300
+        id 5DE0940736; Mon,  1 Aug 2022 14:56:20 -0300 (-03)
+Date:   Mon, 1 Aug 2022 14:56:20 -0300
 From:   Arnaldo Carvalho de Melo <acme@kernel.org>
 To:     Leo Yan <leo.yan@linaro.org>
-Cc:     Namhyung Kim <namhyung@kernel.org>, Jiri Olsa <jolsa@kernel.org>,
-        Ingo Molnar <mingo@kernel.org>,
+Cc:     Ian Rogers <irogers@google.com>,
         Peter Zijlstra <peterz@infradead.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Jiri Olsa <jolsa@kernel.org>,
+        Namhyung Kim <namhyung@kernel.org>,
+        linux-perf-users <linux-perf-users@vger.kernel.org>,
         LKML <linux-kernel@vger.kernel.org>,
-        Ian Rogers <irogers@google.com>,
-        linux-perf-users@vger.kernel.org,
-        John Garry <john.garry@huawei.com>,
-        Will Deacon <will@kernel.org>,
-        James Clark <james.clark@arm.com>,
-        Mike Leach <mike.leach@linaro.org>,
-        German Gomez <german.gomez@arm.com>
-Subject: Re: [PATCH v3] perf test: Add ARM SPE system wide test
-Message-ID: <YugR5LbHqTcweo2c@kernel.org>
-References: <20220701230932.1000495-1-namhyung@kernel.org>
- <20220707031352.GB631004@leoy-ThinkPad-X240s>
+        Stephane Eranian <eranian@google.com>
+Subject: Re: [PATCH] perf symbol: Fail to read phdr workaround
+Message-ID: <YugTxE/O0SmTb9FI@kernel.org>
+References: <20220731164923.691193-1-irogers@google.com>
+ <20220801015259.GA101027@leoy-ThinkPad-X240s>
+ <CAP-5=fVSjCQ4jeAeyP5THnQVyXDpKd6Ob33C7PDwFB_6+YSXuw@mail.gmail.com>
+ <YufJP5YqeEBM51HL@kernel.org>
+ <20220801132511.GC73228@leoy-ThinkPad-X240s>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20220707031352.GB631004@leoy-ThinkPad-X240s>
+In-Reply-To: <20220801132511.GC73228@leoy-ThinkPad-X240s>
 X-Url:  http://acmel.wordpress.com
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-Em Thu, Jul 07, 2022 at 11:13:52AM +0800, Leo Yan escreveu:
-> On Fri, Jul 01, 2022 at 04:09:32PM -0700, Namhyung Kim wrote:
-> > In the past it had a problem not setting the pid/tid on the sample
-> > correctly when system-wide mode is used.  Although it's fixed now it'd
-> > be nice if we have a test case for it.
+Em Mon, Aug 01, 2022 at 09:25:11PM +0800, Leo Yan escreveu:
+> On Mon, Aug 01, 2022 at 09:38:23AM -0300, Arnaldo Carvalho de Melo wrote:
+> > Em Sun, Jul 31, 2022 at 11:19:15PM -0700, Ian Rogers escreveu:
+> > > On Sun, Jul 31, 2022, 6:53 PM Leo Yan <leo.yan@linaro.org> wrote:
+> > > 
+> > > > On Sun, Jul 31, 2022 at 09:49:23AM -0700, Ian Rogers wrote:
+> > > > > The perf jvmti agent doesn't create program headers, in this case
+> > > > > fallback on section headers as happened previously.
+> > > > >
+> > > > > Fixes: 882528d2e776 ("perf symbol: Skip symbols if SHF_ALLOC flag is not
+> > > > set")
+> > > >
+> > > > It's good to change fix tag as:
+> > > > Fixes: 2d86612aacb7 ("perf symbol: Correct address for bss symbols")
+> > > >
+> > > 
+> > > Doh! I was rushing this morning. Thanks for catching and reviewing!
 > > 
-> > Cc: German Gomez <german.gomez@arm.com>
-> > Cc: Leo Yan <leo.yan@linaro.org>
-> > Signed-off-by: Namhyung Kim <namhyung@kernel.org>
+> > I made the adjustments and added a note with the repro, to help in the
+> > future when trying to test this area.
 > 
-> Tested for both root user and non-privileged user, both works as
-> expected:
+> Thanks, Arnaldo.
 > 
-> Tested-by: Leo Yan <leo.yan@linaro.org>
+> > I also think we could have something like a 'perf test' mode where, when
+> > asked to, it would enable tests that involve downloading such files to
+> > perform tests, such as this dacapo benchmark, and then would test if the
+> > output matches expectations.
+> 
+> I will add a testing based on the steps, alongside with the discussed
+> testing for data symbols.  Will share out after get ready.
 
-Thanks, applied.
+Great! Thanks in advance,
 
 - Arnaldo
-
