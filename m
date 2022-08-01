@@ -2,116 +2,82 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EF7FCC3F6B0
-	for <linux-perf-users@archiver.kernel.org>; Mon,  1 Aug 2022 17:44:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 71851C00144
+	for <linux-perf-users@archiver.kernel.org>; Mon,  1 Aug 2022 17:48:29 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232182AbiHARoy (ORCPT
+        id S233319AbiHARs0 (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Mon, 1 Aug 2022 13:44:54 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53260 "EHLO
+        Mon, 1 Aug 2022 13:48:26 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55610 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232441AbiHARox (ORCPT
+        with ESMTP id S232650AbiHARsZ (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Mon, 1 Aug 2022 13:44:53 -0400
-Received: from ams.source.kernel.org (ams.source.kernel.org [IPv6:2604:1380:4601:e00::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D7DA81D310;
-        Mon,  1 Aug 2022 10:44:52 -0700 (PDT)
+        Mon, 1 Aug 2022 13:48:25 -0400
+Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5A57C2DAAB;
+        Mon,  1 Aug 2022 10:48:24 -0700 (PDT)
 Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by ams.source.kernel.org (Postfix) with ESMTPS id 92AFBB80FE4;
-        Mon,  1 Aug 2022 17:44:51 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 168A8C433C1;
-        Mon,  1 Aug 2022 17:44:50 +0000 (UTC)
+        by dfw.source.kernel.org (Postfix) with ESMTPS id E7C2B6109E;
+        Mon,  1 Aug 2022 17:48:23 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 29DF4C433C1;
+        Mon,  1 Aug 2022 17:48:23 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1659375890;
-        bh=QhdcxiP5hdvFcT0P+oIqjmgTAl2ERTJ0dwKan59w/Uk=;
+        s=k20201202; t=1659376103;
+        bh=VH+9IJa8N2N/pZ14waAEZzza9dSZ+N1KF+5/+D85BNk=;
         h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=gFXqWJi7SSrIKziZD8EfWQIpIaS4i5ooXDPtWEHp+Ej3aRu9x4Q9w0+YniUs2qcFl
-         KtH8KZJ9iamwCFgIKFOo73UFO054zxN81qXKyF6R1PHWEPUdED2eSy1m9V1r1UzmU8
-         /NMpNFFRzBGybWRxEojYpjm5GULfABOCJd1SdupgcDpi37z5rE62bdo5wNKPYFKhlq
-         k8CKwC5vmWKLik0FwYzTuWy2Iy9WdpejX9opgamNpKIK8yTOWZUUvi9jd15vendvod
-         0HgcWCaNKz8Csn+J4JW2YQw3lQ7EtJIndQ7DUPWYDh5jeJVTkF93NEHvkybXAEmoSi
-         /NYnpXOLk8Z2Q==
+        b=jeWuSZTv033aU1Z1zCAYdh5j8RfiSLieo9TtUZQMKC/acnpSq+TLAFiI6kFP7n+bl
+         djMTowEDde/tsuAH/4o1Kk9hVYe0mTFU4h7bJ55+7Ru4xhVt1QH/j9AzYxXq2yIEGE
+         a94h8SYgxWaBMw6/nUL7fY4yuhmBSUpeo23pHU8PjQTVKWP14gIExQ1xclH62Ouahy
+         fH/yfX2UU0TwmIxUgOHIrrkbxFm70hOGSUbjd+dL9RwHfIt6MA3UKIXH5KJ/0TIEHn
+         rGgNC7XZ4v7sEuYcAMey0pp3sgUju3NGImq7/kHxAhfrUBu0g8dLbPvcK26qFy2aUZ
+         k4sN+XLJ0HQSw==
 Received: by quaco.ghostprotocols.net (Postfix, from userid 1000)
-        id 8F1C840736; Mon,  1 Aug 2022 14:44:47 -0300 (-03)
-Date:   Mon, 1 Aug 2022 14:44:47 -0300
+        id 07D3540736; Mon,  1 Aug 2022 14:48:20 -0300 (-03)
+Date:   Mon, 1 Aug 2022 14:48:20 -0300
 From:   Arnaldo Carvalho de Melo <acme@kernel.org>
-To:     Daniel Borkmann <daniel@iogearbox.net>
-Cc:     Jiri Olsa <jolsa@kernel.org>, Alexei Starovoitov <ast@kernel.org>,
-        Andrii Nakryiko <andrii@kernel.org>,
-        linux-perf-users@vger.kernel.org, netdev@vger.kernel.org,
-        bpf@vger.kernel.org, Ingo Molnar <mingo@kernel.org>,
-        Namhyung Kim <namhyung@kernel.org>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Peter Zijlstra <a.p.zijlstra@chello.nl>,
-        Martin KaFai Lau <kafai@fb.com>,
-        Song Liu <songliubraving@fb.com>, Yonghong Song <yhs@fb.com>,
-        John Fastabend <john.fastabend@gmail.com>,
-        Ian Rogers <irogers@google.com>
-Subject: Re: [PATCHv5 bpf-next 1/1] perf tools: Rework prologue generation
- code
-Message-ID: <YugRD0jmlT3p4GNK@kernel.org>
-References: <20220616202214.70359-1-jolsa@kernel.org>
- <20220616202214.70359-2-jolsa@kernel.org>
- <72122b4e-1056-7392-f9eb-6ea4c0a79529@iogearbox.net>
+To:     Leo Yan <leo.yan@linaro.org>
+Cc:     Namhyung Kim <namhyung@kernel.org>, Jiri Olsa <jolsa@kernel.org>,
+        Ingo Molnar <mingo@kernel.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Ian Rogers <irogers@google.com>,
+        linux-perf-users@vger.kernel.org,
+        John Garry <john.garry@huawei.com>,
+        Will Deacon <will@kernel.org>,
+        James Clark <james.clark@arm.com>,
+        Mike Leach <mike.leach@linaro.org>,
+        German Gomez <german.gomez@arm.com>
+Subject: Re: [PATCH v3] perf test: Add ARM SPE system wide test
+Message-ID: <YugR5LbHqTcweo2c@kernel.org>
+References: <20220701230932.1000495-1-namhyung@kernel.org>
+ <20220707031352.GB631004@leoy-ThinkPad-X240s>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <72122b4e-1056-7392-f9eb-6ea4c0a79529@iogearbox.net>
+In-Reply-To: <20220707031352.GB631004@leoy-ThinkPad-X240s>
 X-Url:  http://acmel.wordpress.com
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-Em Mon, Jun 20, 2022 at 02:43:22PM +0200, Daniel Borkmann escreveu:
-> On 6/16/22 10:22 PM, Jiri Olsa wrote:
-> > Some functions we use for bpf prologue generation are going to be
-> > deprecated. This change reworks current code not to use them.
+Em Thu, Jul 07, 2022 at 11:13:52AM +0800, Leo Yan escreveu:
+> On Fri, Jul 01, 2022 at 04:09:32PM -0700, Namhyung Kim wrote:
+> > In the past it had a problem not setting the pid/tid on the sample
+> > correctly when system-wide mode is used.  Although it's fixed now it'd
+> > be nice if we have a test case for it.
 > > 
-> > We need to replace following functions/struct:
-> >     bpf_program__set_prep
-> >     bpf_program__nth_fd
-> >     struct bpf_prog_prep_result
-> > 
-> > Currently we use bpf_program__set_prep to hook perf callback before
-> > program is loaded and provide new instructions with the prologue.
-> > 
-> > We replace this function/ality by taking instructions for specific
-> > program, attaching prologue to them and load such new ebpf programs
-> > with prologue using separate bpf_prog_load calls (outside libbpf
-> > load machinery).
-> > 
-> > Before we can take and use program instructions, we need libbpf to
-> > actually load it. This way we get the final shape of its instructions
-> > with all relocations and verifier adjustments).
-> > 
-> > There's one glitch though.. perf kprobe program already assumes
-> > generated prologue code with proper values in argument registers,
-> > so loading such program directly will fail in the verifier.
-> > 
-> > That's where the fallback pre-load handler fits in and prepends
-> > the initialization code to the program. Once such program is loaded
-> > we take its instructions, cut off the initialization code and prepend
-> > the prologue.
-> > 
-> > I know.. sorry ;-)
-> > 
-> > To have access to the program when loading this patch adds support to
-> > register 'fallback' section handler to take care of perf kprobe programs.
-> > The fallback means that it handles any section definition besides the
-> > ones that libbpf handles.
-> > 
-> > The handler serves two purposes:
-> >    - allows perf programs to have special arguments in section name
-> >    - allows perf to use pre-load callback where we can attach init
-> >      code (zeroing all argument registers) to each perf program
-> > 
-> > Suggested-by: Andrii Nakryiko <andrii@kernel.org>
-> > Signed-off-by: Jiri Olsa <jolsa@kernel.org>
+> > Cc: German Gomez <german.gomez@arm.com>
+> > Cc: Leo Yan <leo.yan@linaro.org>
+> > Signed-off-by: Namhyung Kim <namhyung@kernel.org>
 > 
-> Hey Arnaldo, if you get a chance, please take a look.
+> Tested for both root user and non-privileged user, both works as
+> expected:
+> 
+> Tested-by: Leo Yan <leo.yan@linaro.org>
 
-Sry, applied.
+Thanks, applied.
 
 - Arnaldo
+
