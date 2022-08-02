@@ -2,121 +2,75 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6B29CC00140
-	for <linux-perf-users@archiver.kernel.org>; Tue,  2 Aug 2022 09:08:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B52C2C25B07
+	for <linux-perf-users@archiver.kernel.org>; Tue,  2 Aug 2022 12:26:59 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232677AbiHBJIx (ORCPT
+        id S236580AbiHBM05 (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Tue, 2 Aug 2022 05:08:53 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36890 "EHLO
+        Tue, 2 Aug 2022 08:26:57 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47552 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S233918AbiHBJIw (ORCPT
+        with ESMTP id S231732AbiHBM04 (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Tue, 2 Aug 2022 05:08:52 -0400
-Received: from frasgout.his.huawei.com (frasgout.his.huawei.com [185.176.79.56])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 246901E3F3;
-        Tue,  2 Aug 2022 02:08:51 -0700 (PDT)
-Received: from fraeml740-chm.china.huawei.com (unknown [172.18.147.206])
-        by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4LxpyB6WQYz682wj;
-        Tue,  2 Aug 2022 17:06:26 +0800 (CST)
-Received: from lhrpeml500003.china.huawei.com (7.191.162.67) by
- fraeml740-chm.china.huawei.com (10.206.15.221) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2375.24; Tue, 2 Aug 2022 11:08:48 +0200
-Received: from [10.195.33.92] (10.195.33.92) by lhrpeml500003.china.huawei.com
- (7.191.162.67) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2375.24; Tue, 2 Aug
- 2022 10:08:47 +0100
-Message-ID: <3d0c1ec0-42ec-8c51-743b-5d93cabb53fb@huawei.com>
-Date:   Tue, 2 Aug 2022 10:08:47 +0100
+        Tue, 2 Aug 2022 08:26:56 -0400
+Received: from casper.infradead.org (casper.infradead.org [IPv6:2001:8b0:10b:1236::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 78B83D85;
+        Tue,  2 Aug 2022 05:26:55 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=casper.20170209; h=In-Reply-To:Content-Type:MIME-Version:
+        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description;
+        bh=i+Zl91q4t+AZoHrEuNohjOyc7HDaxjH2xIeIWp7puuQ=; b=wBqS2CGpTw57Y88TURyJ4aTzj8
+        8rA9zlyUQVdeZi0SP6WeltO8x64WM2LPUJbZVVC9vyEvcTQAvLSqpCU4SHM0zaQY9o9OrcdaBHZUh
+        chmVGrmleKNL5N3TDrjg+ibrLYbwS53UAzvK3KElODt+f7h/w5gi+6ldrpx7Tm/yeEUiofU0dBDeX
+        FbHeAzOiq9gf3BwXU38L2H1pGh5PUVyhGn6vnq+zYqs/YA3Pvf7oi7Z7cPZG0u/xpO9Hz/Tp1HGwz
+        oL5k2sD1WrQc2lLN3YLU266NK2sWUfhJXbwwljK9tqmKmI8tRrOhN3HJGG+3q4+Epob0XnjfJ2x5S
+        xfW/iZZw==;
+Received: from willy by casper.infradead.org with local (Exim 4.94.2 #2 (Red Hat Linux))
+        id 1oIqz1-008LTX-CP; Tue, 02 Aug 2022 12:26:47 +0000
+Date:   Tue, 2 Aug 2022 13:26:47 +0100
+From:   Matthew Wilcox <willy@infradead.org>
+To:     Miguel Ojeda <ojeda@kernel.org>
+Cc:     Linus Torvalds <torvalds@linux-foundation.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        rust-for-linux@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Jarkko Sakkinen <jarkko@kernel.org>,
+        linux-arm-kernel@lists.infradead.org, linux-doc@vger.kernel.org,
+        linux-gpio@vger.kernel.org, linux-kbuild@vger.kernel.org,
+        linux-perf-users@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
+        linux-riscv@lists.infradead.org, linux-um@lists.infradead.org,
+        live-patching@vger.kernel.org, linux-fsdevel@vger.kernel.org
+Subject: Re: [PATCH v8 00/31] Rust support
+Message-ID: <YukYByl76DKqa+iD@casper.infradead.org>
+References: <20220802015052.10452-1-ojeda@kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:91.0) Gecko/20100101
- Thunderbird/91.6.1
-Subject: Re: [PATCH v3 00/17] Compress the pmu_event tables
-To:     Ian Rogers <irogers@google.com>
-CC:     Will Deacon <will@kernel.org>, James Clark <james.clark@arm.com>,
-        "Mike Leach" <mike.leach@linaro.org>, Leo Yan <leo.yan@linaro.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        "Arnaldo Carvalho de Melo" <acme@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        "Alexander Shishkin" <alexander.shishkin@linux.intel.com>,
-        Jiri Olsa <jolsa@kernel.org>,
-        Namhyung Kim <namhyung@kernel.org>,
-        Andi Kleen <ak@linux.intel.com>,
-        "Zhengjun Xing" <zhengjun.xing@linux.intel.com>,
-        Ravi Bangoria <ravi.bangoria@amd.com>,
-        Kan Liang <kan.liang@linux.intel.com>,
-        Adrian Hunter <adrian.hunter@intel.com>,
-        <linux-kernel@vger.kernel.org>,
-        <linux-arm-kernel@lists.infradead.org>,
-        <linux-perf-users@vger.kernel.org>,
-        Stephane Eranian <eranian@google.com>
-References: <20220729074351.138260-1-irogers@google.com>
- <d8356ddc-56e7-7324-5330-ff2bd54bcba4@huawei.com>
- <CAP-5=fV0CMpBGkNOBMRjbdZfdw1mQjrDhLVG38jLtpsdWXtQ_Q@mail.gmail.com>
-From:   John Garry <john.garry@huawei.com>
-In-Reply-To: <CAP-5=fV0CMpBGkNOBMRjbdZfdw1mQjrDhLVG38jLtpsdWXtQ_Q@mail.gmail.com>
-Content-Type: text/plain; charset="UTF-8"; format=flowed
-Content-Transfer-Encoding: 7bit
-X-Originating-IP: [10.195.33.92]
-X-ClientProxiedBy: lhreml717-chm.china.huawei.com (10.201.108.68) To
- lhrpeml500003.china.huawei.com (7.191.162.67)
-X-CFilter-Loop: Reflected
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20220802015052.10452-1-ojeda@kernel.org>
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-On 29/07/2022 18:27, Ian Rogers wrote:
->> This implementation would require core pmu.c to be changed, but there is
->> ways that this could be done without needing to change core pmu.c
->>
->> Thanks,
->> John
-> Thanks John!
+On Tue, Aug 02, 2022 at 03:49:47AM +0200, Miguel Ojeda wrote:
+> Some of the improvements to the abstractions and example drivers are:
 > 
-> You are right about broadwell, it is an extreme case of sharing. IIRC
-> BDX is the server core/uncore events, BDW is the consumer core/uncore
-> and BDW-DE is consumer core with server uncore - so the sharing is
-> inherent in this. Metrics become interesting as they may mix core and
-> uncore, but I'll ignore that here.
+>   - Filesystem support (`fs` module), including:
 > 
-> In the old code every event needs 15 char*s, with 64-bit that is 15*8
-> bytes per entry with 741 core and 23 uncore entries for BDW, and 372
-> core and 1284 uncore for BDX. I expect the strings themselves will be
-> shared by the C compiler, and so I just focus on the pointer sizes.
-> With the new code every event is just 1 32-bit int. So for BDW we go
-> from 15*8*(741+23)=91,680 to 4*(741+23)=3056, BDX is
-> 15*8*(372+1284)=198720 to 4*(372+1284)=6624. This means we've gone
-> from 290,400bytes to 9,680bytes for BDW and BDX. BDW-DE goes from
-> 243,000bytes to 8,100bytes -
+>       + `INode` type (which wraps `struct inode`).
+>       + `DEntry` type (which wraps `struct dentry`).
+>       + `Filename` type (which wraps `struct filename`).
+>       + `Registration` type.
+>       + `Type` and `Context` traits.
+>       + `SuperBlock` type (which wraps `struct super_block` and takes
+>         advantage of typestates for its initialization).
+>       + File system parameters support (with a `Value` enum; `Spec*`
+>         and `Constant*` types, `define_fs_params!` macro...).
+>       + File system flags.
+>       + `module_fs!` macro to simplify registering kernel modules that
+>         only implement a single file system.
+>       + A file system sample.
 
-
-> we can ignore the costs of the strings as
-> they should be fully shared, especially for BDW-DE.
-
-Are you sure about this? I did not think that the compiler would have 
-the intelligence to try to share strings. That is the basis of the size 
-optimisation which I was proposing (that the compiler would not share 
-strings).
-
-> 
-> If we added some kind of table sharing, so BDW-DE was core from BDW
-> and uncore from BDX and the tables shared, then in the old code you
-> could save nearly 0.25MB but with the new code the saving is only
-> around 8KB. I think we can go after that 8KB but it is less urgent
-> after this change which gets 96% of the benefit. We have 72
-> architectures for jevents at the moment and so I'd ball park (assuming
-> they all saved as much as BDW-DE) the max saving as about 0.5MB, which
-> is 12% of what is saved here.
-> 
-> Longer term I'd like to make the pmu-events.c logic look closer to the
-> sysfs API. Perhaps we can unify the uncore events for BDX and BDW-DE
-> with some notion of a common PMU, or PMUs with common events and
-> tables, and automate deduction of this. It also isn't clear to me the
-> advantage of storing the metrics inside the events, separate tables
-> feel cleaner. Anyway, there's lots of follow up.
-
-Thanks,
-John
-
+None of this (afaict) has been discussed on linux-fsdevel.  And I may
+have missed somethiing, but I don't see the fs module in this series
+of patches.  Could linux-fsdevel be cc'd on the development of Rust
+support for filesystems in the future?
