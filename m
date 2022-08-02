@@ -2,277 +2,245 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7D51CC00140
-	for <linux-perf-users@archiver.kernel.org>; Tue,  2 Aug 2022 07:34:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DA80AC00140
+	for <linux-perf-users@archiver.kernel.org>; Tue,  2 Aug 2022 07:35:30 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232646AbiHBHeC (ORCPT
+        id S234725AbiHBHf2 (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Tue, 2 Aug 2022 03:34:02 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39060 "EHLO
+        Tue, 2 Aug 2022 03:35:28 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40544 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231442AbiHBHeB (ORCPT
+        with ESMTP id S235962AbiHBHfV (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Tue, 2 Aug 2022 03:34:01 -0400
-Received: from szxga02-in.huawei.com (szxga02-in.huawei.com [45.249.212.188])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7287C6579;
-        Tue,  2 Aug 2022 00:33:59 -0700 (PDT)
-Received: from dggemv703-chm.china.huawei.com (unknown [172.30.72.57])
-        by szxga02-in.huawei.com (SkyGuard) with ESMTP id 4Lxmps5xfgzWfNV;
-        Tue,  2 Aug 2022 15:29:57 +0800 (CST)
-Received: from kwepemm600006.china.huawei.com (7.193.23.105) by
- dggemv703-chm.china.huawei.com (10.3.19.46) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2375.24; Tue, 2 Aug 2022 15:33:51 +0800
-Received: from huawei.com (10.175.127.234) by kwepemm600006.china.huawei.com
- (7.193.23.105) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2375.24; Tue, 2 Aug
- 2022 15:33:50 +0800
-From:   Wenyu Liu <liuwenyu7@huawei.com>
-To:     <linux-kernel@vger.kernel.org>, <bpf@vger.kernel.org>,
-        <rickyman7@gmail.com>, <namhyung@gmail.com>, <nicolas@fjasle.eu>,
-        <acme@redhat.com>, <alexey.v.bayduraev@linux.intel.com>,
-        <masahiroy@kernel.org>, <linux-perf-users@vger.kernel.org>
-CC:     <hewenliang4@huawei.com>, <yeyunfeng@huawei.com>,
-        <linfeilong@huawei.com>, <liuwenyu7@huawei.com>
-Subject: [PATCH] tools api fs: fix the concurrency problem for xxx__mountpoint()
-Date:   Tue, 2 Aug 2022 03:37:16 -0400
-Message-ID: <20220802073716.1875289-1-liuwenyu7@huawei.com>
-X-Mailer: git-send-email 2.27.0
+        Tue, 2 Aug 2022 03:35:21 -0400
+Received: from mail-pg1-x52f.google.com (mail-pg1-x52f.google.com [IPv6:2607:f8b0:4864:20::52f])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 121A9307;
+        Tue,  2 Aug 2022 00:35:14 -0700 (PDT)
+Received: by mail-pg1-x52f.google.com with SMTP id bh13so11676293pgb.4;
+        Tue, 02 Aug 2022 00:35:14 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20210112;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:sender:from:to:cc;
+        bh=1Fhi/pC4xw3OPTvEKSAzkqvvM4dFeLSgYHZxK40S0/Q=;
+        b=lAoYzTGSkC8SEsXta60yxrUe2IMIzfGd7Us5ZtbZYnGk7+b2Cxf4JfEDUhcMHF1GPl
+         xktZiuHju3cS5EgAwbEo1ZmcYAXXqqDttlHHlX4jSFS8QmMGqF1UvF/s9/fb5TxURteW
+         9YZkhlWISR8cjDpVfupIqAP+w2X5q6on1+QtOplW6TUDqdR0wwtMGf1muj8MTu5LJf8S
+         rYHAtggwzTg0MIMSRO5/lIaaDjiw+lZlJGtJ+bAMMKc6tC/8HN8J32/CKFwfYlQdUCZ+
+         185GW2LB6rqzu4MOBBtnQNaxc0U1Cf3a+Z59Bnk3oRNfvL3xTbpF1OD2OozNzjDjQ89+
+         3NXA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:sender:x-gm-message-state:from:to:cc;
+        bh=1Fhi/pC4xw3OPTvEKSAzkqvvM4dFeLSgYHZxK40S0/Q=;
+        b=jeHPk0oR85kQXUg0bIjbsT8e6WfvmOB4Fdf7Ek/b8hhLkokEWSrz8F5Q/0fEjt2SqG
+         pnu1lWym3Hg4Q4USpMOtndmx5rFZ5HeJ96rCiv6v4hiJSh13fQ130x809Z+uXdFBhnhO
+         zFIR2P1AJlx1n39nvL65XOBrODxDhIBI+xBx2aL7u3REB7z5QQVBjW/267mEZsZp6tk9
+         5ruGy3vzL241o4ayJ02nZoJ6KkmPFx8s2kKMqCOwEXX0EULA0AAsW/0WFH2zTNxyr/hY
+         B9W4ZS4in9xQ3ew6i3PQPm7RorECgb1E9/DBPVQi6vguSh2jyXrZrv4tzrOCUihBPvb7
+         tlhg==
+X-Gm-Message-State: AJIora978+/46rp/dHMzvWyOhw4IoqPAD07fWTokVGTLEppGJrOySAUi
+        9kZAUGyA3jZfO2KEiWs7aXw=
+X-Google-Smtp-Source: AGRyM1snNTp6Oq00DrZzYYHLxQo+Ii74tmFr50PQS42tdricKjBI7IzM9gygLfu4el88Rh1yznMXlA==
+X-Received: by 2002:a63:fd14:0:b0:41a:20e8:c1e2 with SMTP id d20-20020a63fd14000000b0041a20e8c1e2mr16086488pgh.286.1659425714175;
+        Tue, 02 Aug 2022 00:35:14 -0700 (PDT)
+Received: from balhae.roam.corp.google.com (rrcs-173-196-215-70.west.biz.rr.com. [173.196.215.70])
+        by smtp.gmail.com with ESMTPSA id d12-20020a170902e14c00b0016be368fb30sm10802896pla.212.2022.08.02.00.35.12
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 02 Aug 2022 00:35:13 -0700 (PDT)
+Sender: Namhyung Kim <namhyung@gmail.com>
+From:   Namhyung Kim <namhyung@kernel.org>
+To:     Arnaldo Carvalho de Melo <acme@kernel.org>,
+        Jiri Olsa <jolsa@kernel.org>
+Cc:     Ingo Molnar <mingo@kernel.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Ian Rogers <irogers@google.com>,
+        linux-perf-users@vger.kernel.org, Will Deacon <will@kernel.org>,
+        Waiman Long <longman@redhat.com>,
+        Boqun Feng <boqun.feng@gmail.com>,
+        Davidlohr Bueso <dave@stgolabs.net>,
+        Song Liu <songliubraving@fb.com>,
+        Blake Jones <blakejones@google.com>
+Subject: [PATCH 1/3] perf lock: Introduce struct lock_contention
+Date:   Tue,  2 Aug 2022 00:35:09 -0700
+Message-Id: <20220802073511.299459-1-namhyung@kernel.org>
+X-Mailer: git-send-email 2.37.1.455.g008518b4e5-goog
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7BIT
-Content-Type:   text/plain; charset=US-ASCII
-X-Originating-IP: [10.175.127.234]
-X-ClientProxiedBy: dggems702-chm.china.huawei.com (10.3.19.179) To
- kwepemm600006.china.huawei.com (7.193.23.105)
-X-CFilter-Loop: Reflected
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-The hugeltbfs__mountpoint() interface seems have a problem
-in perf top,sometimes it will get a wrong path in
-perf_event__synthesize_mmap_events().
+The lock_contention struct is to carry related fields together and to
+minimize the change when we add new config options.
 
-There is a very small probability when using perf top
-and I got entries like this:
-	3.26% 	perf-1.map		[.]0x0000ffffb2993d00
-	3.22%	perf-1.map		[.]0x0000ffffb28a2984
-	3.26%	perf-1.map		[.]0x0000ffffb2993d00
-	...	...			...
-I have already installed the perf-debuginfo package.
-
-I find out it's in perf_event__synthesize_mmap_events():
-when these following code execute:
-
-    const char *hugetlbfs_mnt = hugetlbfs__mountpoint();
-    int hugetlbfs_mnt_len = hugetlbfs_mnt ? strlen(hugetlbfs_mnt) : 0;
-    ...	...
-    if (hugetlbfs_mnt_len &&
-        !strncmp(event->mmap2.filename, hugetlbfs_mnt,
-                 hugetlbfs_mnt_len)) {
-    		strcpy(event->mmap2.filename, anonstr);
-            event->mmap2.flags |= MAP_HUGETLB;
-     }
-
-when came to the if condition:
-*event->mmap2.filename = "/usr/lib64/libgpg-error.so.0.29.0"
-*hugetlbfs_mnt = "/dev/hugepages"
-hugetlbfs_mnt_len = 1
-
-So it's the strlen(hugetlbfs_mnt) get a wrong result,
-make it only compared the first character and resulting
-the mistake.
-And that make the filename in map__new() came
-to "/tmp/perf-<pid>.map".
-
-It seems xxx_mountpoint() have a concurrency problem when
-it scan /proc/mounts and fill path into fs->path in
-fs__read_mounts().
-
-The hugeltbfs__mountpoint() is called for each process found
-in perf_event__synthesize_mmap_events().
-And the working threads is synthesize_threads_worker(),which
-is created by perf_event__synthesize_threads(),threads number
-equals to the cpus number.
-These threads share the fs__entries and fill path into
-fs->path concurrently in perf_event__synthesize_mmap_events()
-but without any synchronizing measures,cause the problem.
-
-This patch add a mutex in struct fs,and a interface
-fs_fill_path() for copying the path into fs->path.
-When the target fs name be found in fs__read_mounts(),
-using fs_fill_path() to copy the path into fs->path,
-the mutex is needed during the coping procedure.
-
-And add memory barrier to ensure the path is completely
-filled before the fs->found is set.
-
-Signed-off-by: Wenyu Liu <liuwenyu7@huawei.com>
+Signed-off-by: Namhyung Kim <namhyung@kernel.org>
 ---
- tools/lib/api/Makefile |  1 +
- tools/lib/api/fs/fs.c  | 50 ++++++++++++++++++++++++++++++++++--------
- 2 files changed, 42 insertions(+), 9 deletions(-)
+ tools/perf/builtin-lock.c             | 23 ++++++++++++++---------
+ tools/perf/util/bpf_lock_contention.c |  9 ++++++---
+ tools/perf/util/lock-contention.h     | 17 +++++++++++------
+ 3 files changed, 31 insertions(+), 18 deletions(-)
 
-diff --git a/tools/lib/api/Makefile b/tools/lib/api/Makefile
-index e21e1b40b525..9f2332c07294 100644
---- a/tools/lib/api/Makefile
-+++ b/tools/lib/api/Makefile
-@@ -19,6 +19,7 @@ LIBFILE = $(OUTPUT)libapi.a
+diff --git a/tools/perf/builtin-lock.c b/tools/perf/builtin-lock.c
+index 7897a33fec1b..eef778b7d33d 100644
+--- a/tools/perf/builtin-lock.c
++++ b/tools/perf/builtin-lock.c
+@@ -1594,7 +1594,10 @@ static int __cmd_contention(int argc, const char **argv)
+ 		.mode  = PERF_DATA_MODE_READ,
+ 		.force = force,
+ 	};
+-	struct evlist *evlist = NULL;
++	struct lock_contention con = {
++		.target = &target,
++		.result = &lockhash_table[0],
++	};
  
- CFLAGS := $(EXTRA_WARNINGS) $(EXTRA_CFLAGS)
- CFLAGS += -ggdb3 -Wall -Wextra -std=gnu99 -U_FORTIFY_SOURCE -fPIC
-+CFLAGS += -lpthread
+ 	session = perf_session__new(use_bpf ? NULL : &data, &eops);
+ 	if (IS_ERR(session)) {
+@@ -1620,24 +1623,26 @@ static int __cmd_contention(int argc, const char **argv)
+ 		signal(SIGCHLD, sighandler);
+ 		signal(SIGTERM, sighandler);
  
- ifeq ($(DEBUG),0)
- ifeq ($(CC_NO_CLANG), 0)
-diff --git a/tools/lib/api/fs/fs.c b/tools/lib/api/fs/fs.c
-index 82f53d81a7a7..5de7ba1fdbc9 100644
---- a/tools/lib/api/fs/fs.c
-+++ b/tools/lib/api/fs/fs.c
-@@ -12,6 +12,9 @@
- #include <fcntl.h>
- #include <unistd.h>
- #include <sys/mount.h>
-+#include <pthread.h>
-+#include <asm/barrier.h>
-+#include <linux/compiler.h>
+-		evlist = evlist__new();
+-		if (evlist == NULL) {
++		con.machine = &session->machines.host;
++
++		con.evlist = evlist__new();
++		if (con.evlist == NULL) {
+ 			err = -ENOMEM;
+ 			goto out_delete;
+ 		}
  
- #include "fs.h"
- #include "debug-internal.h"
-@@ -92,6 +95,7 @@ struct fs {
- 	bool			 found;
- 	bool			 checked;
- 	long			 magic;
-+	pthread_mutex_t		 lock;
+-		err = evlist__create_maps(evlist, &target);
++		err = evlist__create_maps(con.evlist, &target);
+ 		if (err < 0)
+ 			goto out_delete;
+ 
+ 		if (argc) {
+-			err = evlist__prepare_workload(evlist, &target,
++			err = evlist__prepare_workload(con.evlist, &target,
+ 						       argv, false, NULL);
+ 			if (err < 0)
+ 				goto out_delete;
+ 		}
+ 
+-		if (lock_contention_prepare(evlist, &target) < 0) {
++		if (lock_contention_prepare(&con) < 0) {
+ 			pr_err("lock contention BPF setup failed\n");
+ 			goto out_delete;
+ 		}
+@@ -1672,13 +1677,13 @@ static int __cmd_contention(int argc, const char **argv)
+ 	if (use_bpf) {
+ 		lock_contention_start();
+ 		if (argc)
+-			evlist__start_workload(evlist);
++			evlist__start_workload(con.evlist);
+ 
+ 		/* wait for signal */
+ 		pause();
+ 
+ 		lock_contention_stop();
+-		lock_contention_read(&session->machines.host, &lockhash_table[0]);
++		lock_contention_read(&con);
+ 	} else {
+ 		err = perf_session__process_events(session);
+ 		if (err)
+@@ -1691,7 +1696,7 @@ static int __cmd_contention(int argc, const char **argv)
+ 	print_contention_result();
+ 
+ out_delete:
+-	evlist__delete(evlist);
++	evlist__delete(con.evlist);
+ 	lock_contention_finish();
+ 	perf_session__delete(session);
+ 	return err;
+diff --git a/tools/perf/util/bpf_lock_contention.c b/tools/perf/util/bpf_lock_contention.c
+index 16b7451b4b09..f5e2b4f19a72 100644
+--- a/tools/perf/util/bpf_lock_contention.c
++++ b/tools/perf/util/bpf_lock_contention.c
+@@ -27,10 +27,12 @@ struct lock_contention_data {
+ 	u32 flags;
  };
  
- enum {
-@@ -113,43 +117,69 @@ static struct fs fs__entries[] = {
- 		.mounts	= sysfs__fs_known_mountpoints,
- 		.magic	= SYSFS_MAGIC,
- 		.checked = false,
-+		.lock = PTHREAD_MUTEX_INITIALIZER,
- 	},
- 	[FS__PROCFS] = {
- 		.name	= "proc",
- 		.mounts	= procfs__known_mountpoints,
- 		.magic	= PROC_SUPER_MAGIC,
- 		.checked = false,
-+		.lock = PTHREAD_MUTEX_INITIALIZER,
- 	},
- 	[FS__DEBUGFS] = {
- 		.name	= "debugfs",
- 		.mounts	= debugfs__known_mountpoints,
- 		.magic	= DEBUGFS_MAGIC,
- 		.checked = false,
-+		.lock = PTHREAD_MUTEX_INITIALIZER,
- 	},
- 	[FS__TRACEFS] = {
- 		.name	= "tracefs",
- 		.mounts	= tracefs__known_mountpoints,
- 		.magic	= TRACEFS_MAGIC,
- 		.checked = false,
-+		.lock = PTHREAD_MUTEX_INITIALIZER,
- 	},
- 	[FS__HUGETLBFS] = {
- 		.name	= "hugetlbfs",
- 		.mounts = hugetlbfs__known_mountpoints,
- 		.magic	= HUGETLBFS_MAGIC,
- 		.checked = false,
-+		.lock = PTHREAD_MUTEX_INITIALIZER,
- 	},
- 	[FS__BPF_FS] = {
- 		.name	= "bpf",
- 		.mounts = bpf_fs__known_mountpoints,
- 		.magic	= BPF_FS_MAGIC,
- 		.checked = false,
-+		.lock = PTHREAD_MUTEX_INITIALIZER,
- 	},
- };
- 
-+static void fs_fill_path(struct fs *fs, const char *path, size_t len)
-+{
-+	if (len >= sizeof(fs->path))
-+		len = sizeof(fs->path) - 1;
-+
-+	pthread_mutex_lock(&fs->lock);
-+	if (fs->found) {
-+		pthread_mutex_unlock(&fs->lock);
-+		return;
-+	}
-+	strncpy(fs->path, path, len);
-+	fs->path[len] = '\0';
-+	/* Make sure the path is filled before fs->found is set */
-+	smp_wmb();
-+	fs->found = true;
-+	pthread_mutex_unlock(&fs->lock);
-+}
-+
-+
- static bool fs__read_mounts(struct fs *fs)
+-int lock_contention_prepare(struct evlist *evlist, struct target *target)
++int lock_contention_prepare(struct lock_contention *con)
  {
- 	bool found = false;
- 	char type[100];
-+	char path[PATH_MAX];
- 	FILE *fp;
+ 	int i, fd;
+ 	int ncpus = 1, ntasks = 1;
++	struct evlist *evlist = con->evlist;
++	struct target *target = con->target;
  
- 	fp = fopen("/proc/mounts", "r");
-@@ -158,15 +188,17 @@ static bool fs__read_mounts(struct fs *fs)
+ 	skel = lock_contention_bpf__open();
+ 	if (!skel) {
+@@ -102,12 +104,13 @@ int lock_contention_stop(void)
+ 	return 0;
+ }
  
- 	while (!found &&
- 	       fscanf(fp, "%*s %" STR(PATH_MAX) "s %99s %*s %*d %*d\n",
--		      fs->path, type) == 2) {
-+		      path, type) == 2) {
+-int lock_contention_read(struct machine *machine, struct hlist_head *head)
++int lock_contention_read(struct lock_contention *con)
+ {
+ 	int fd, stack;
+ 	u32 prev_key, key;
+ 	struct lock_contention_data data;
+ 	struct lock_stat *st;
++	struct machine *machine = con->machine;
+ 	u64 stack_trace[CONTENTION_STACK_DEPTH];
  
--		if (strcmp(type, fs->name) == 0)
-+		if (strcmp(type, fs->name) == 0) {
-+			fs_fill_path(fs, path, sizeof(path) - 1);
- 			found = true;
-+		}
+ 	fd = bpf_map__fd(skel->maps.lock_stat);
+@@ -163,7 +166,7 @@ int lock_contention_read(struct machine *machine, struct hlist_head *head)
+ 			return -1;
+ 		}
+ 
+-		hlist_add_head(&st->hash_entry, head);
++		hlist_add_head(&st->hash_entry, con->result);
+ 		prev_key = key;
  	}
  
- 	fclose(fp);
- 	fs->checked = true;
--	return fs->found = found;
-+	return found;
- }
+diff --git a/tools/perf/util/lock-contention.h b/tools/perf/util/lock-contention.h
+index 092c84441f9f..a0df5308cca4 100644
+--- a/tools/perf/util/lock-contention.h
++++ b/tools/perf/util/lock-contention.h
+@@ -107,18 +107,24 @@ struct evlist;
+ struct machine;
+ struct target;
  
- static int fs__valid_mount(const char *fs, long magic)
-@@ -188,8 +220,7 @@ static bool fs__check_mounts(struct fs *fs)
- 	ptr = fs->mounts;
- 	while (*ptr) {
- 		if (fs__valid_mount(*ptr, fs->magic) == 0) {
--			fs->found = true;
--			strcpy(fs->path, *ptr);
-+			fs_fill_path(fs, *ptr, strlen(*ptr));
- 			return true;
- 		}
- 		ptr++;
-@@ -227,10 +258,8 @@ static bool fs__env_override(struct fs *fs)
- 	if (!override_path)
- 		return false;
++struct lock_contention {
++	struct evlist *evlist;
++	struct target *target;
++	struct machine *machine;
++	struct hlist_head *result;
++};
++
+ #ifdef HAVE_BPF_SKEL
  
--	fs->found = true;
-+	fs_fill_path(fs, override_path, sizeof(fs->path) - 1);
- 	fs->checked = true;
--	strncpy(fs->path, override_path, sizeof(fs->path) - 1);
--	fs->path[sizeof(fs->path) - 1] = '\0';
- 	return true;
- }
+-int lock_contention_prepare(struct evlist *evlist, struct target *target);
++int lock_contention_prepare(struct lock_contention *con);
+ int lock_contention_start(void);
+ int lock_contention_stop(void);
+-int lock_contention_read(struct machine *machine, struct hlist_head *head);
++int lock_contention_read(struct lock_contention *con);
+ int lock_contention_finish(void);
  
-@@ -252,8 +281,11 @@ static const char *fs__mountpoint(int idx)
+ #else  /* !HAVE_BPF_SKEL */
+ 
+-static inline int lock_contention_prepare(struct evlist *evlist __maybe_unused,
+-					  struct target *target __maybe_unused)
++static inline int lock_contention_prepare(struct lock_contention *con __maybe_unused)
  {
- 	struct fs *fs = &fs__entries[idx];
+ 	return 0;
+ }
+@@ -127,8 +133,7 @@ static inline int lock_contention_start(void) { return 0; }
+ static inline int lock_contention_stop(void) { return 0; }
+ static inline int lock_contention_finish(void) { return 0; }
  
--	if (fs->found)
-+	if (READ_ONCE(fs->found)) {
-+		/* Make sure the path is filled completely */
-+		smp_rmb();
- 		return (const char *)fs->path;
-+	}
- 
- 	/* the mount point was already checked for the mount point
- 	 * but and did not exist, so return NULL to avoid scanning again.
+-static inline int lock_contention_read(struct machine *machine __maybe_unused,
+-				       struct hlist_head *head __maybe_unused)
++static inline int lock_contention_read(struct lock_contention *con __maybe_unused)
+ {
+ 	return 0;
+ }
 -- 
-2.36.1
+2.37.1.455.g008518b4e5-goog
 
