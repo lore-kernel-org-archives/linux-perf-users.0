@@ -2,93 +2,90 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1AC68C00140
-	for <linux-perf-users@archiver.kernel.org>; Tue,  2 Aug 2022 18:17:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7ECE6C19F28
+	for <linux-perf-users@archiver.kernel.org>; Tue,  2 Aug 2022 18:25:09 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230359AbiHBSRL (ORCPT
+        id S232371AbiHBSZI (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Tue, 2 Aug 2022 14:17:11 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35106 "EHLO
+        Tue, 2 Aug 2022 14:25:08 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39068 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229748AbiHBSRK (ORCPT
+        with ESMTP id S229748AbiHBSZH (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Tue, 2 Aug 2022 14:17:10 -0400
-Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4B81332EE1;
-        Tue,  2 Aug 2022 11:17:09 -0700 (PDT)
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id DB92561333;
-        Tue,  2 Aug 2022 18:17:08 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 1D6D5C433D6;
-        Tue,  2 Aug 2022 18:17:08 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1659464228;
-        bh=MAPAKOMDnapoFWQI4pbiRIHdLfwu4SmgOSEVB+CmYFE=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=uqCiNcvOxvcQF54d52JcBnBqklZPQOkv3iae9KzBU5KxMbhEAXyCWxwVT8+BjGV4E
-         F4VvDFJM2YMMc+tcVGfhijodaIQdQqHqOAkhtOhCdM1FBav7kBvvVwLbnpzKUFa0dw
-         +s/J42aE585ahlwTzU/GYJDkCI5S3iQO6fTAlp0khV+zpcZhYjoytvFIoWGU1EYc6R
-         sYHcnkE3QWfZHkZehoZEwH8DM+R45lDrfhhdPWxUMz9Raq57mootGS7D1GR4nxO3Uc
-         RVQqpeyAlXvk+YAhpPs7sZ9vRTEEQPwIgWSuSbMsn47dR6VpoUcoOAdTYe61YZndO/
-         Icl18/KHyZkrw==
-Received: by quaco.ghostprotocols.net (Postfix, from userid 1000)
-        id F186B40736; Tue,  2 Aug 2022 15:17:05 -0300 (-03)
-Date:   Tue, 2 Aug 2022 15:17:05 -0300
-From:   Arnaldo Carvalho de Melo <acme@kernel.org>
-To:     Namhyung Kim <namhyung@kernel.org>
-Cc:     Jiri Olsa <jolsa@kernel.org>, Ingo Molnar <mingo@kernel.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Ian Rogers <irogers@google.com>,
-        linux-perf-users <linux-perf-users@vger.kernel.org>,
-        Will Deacon <will@kernel.org>,
-        Waiman Long <longman@redhat.com>,
-        Boqun Feng <boqun.feng@gmail.com>,
-        Davidlohr Bueso <dave@stgolabs.net>,
-        Song Liu <songliubraving@fb.com>,
-        Blake Jones <blakejones@google.com>
-Subject: Re: [PATCH 2/3] perf lock: Add -m/--map-length option
-Message-ID: <YulqIWpDMisldmHH@kernel.org>
-References: <20220802073511.299459-1-namhyung@kernel.org>
- <20220802073511.299459-2-namhyung@kernel.org>
- <YuliN2UDbls5uW3u@kernel.org>
- <CAM9d7chZT-mociK=+iF_6SO=1JuD2xaL1HpE4eeo=myngq9vTw@mail.gmail.com>
+        Tue, 2 Aug 2022 14:25:07 -0400
+Received: from linux.microsoft.com (linux.microsoft.com [13.77.154.182])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTP id DA50014017;
+        Tue,  2 Aug 2022 11:25:06 -0700 (PDT)
+Received: from BRIANROB-L1.corp.microsoft.com (unknown [167.220.2.188])
+        by linux.microsoft.com (Postfix) with ESMTPSA id 751EA20FF4ED;
+        Tue,  2 Aug 2022 11:25:06 -0700 (PDT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com 751EA20FF4ED
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.microsoft.com;
+        s=default; t=1659464706;
+        bh=jCknuAZXcS7EQG+s0KtGkSDPS0LlyQP0yJ1frqbdv5s=;
+        h=From:To:Cc:Subject:Date:From;
+        b=i+fYMFLaNvJPNfflfVXOv8D1JbPvYuB4MXj9KKAemXPXyZxcM5olO83G0u+PBxg6o
+         VXnsxBnVufDNFmvOrG/S87NmsaO4csmmSIcrlNaML46g9R29ARojZHmbgGRDl5MSrc
+         IsmwenUDwAXkuhvGdbNPrZAXt/D9N1Yup3AurHyw=
+From:   Brian Robbins <brianrob@linux.microsoft.com>
+To:     Peter Zijlstra <peterz@infradead.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        Arnaldo Carvalho de Melo <acme@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Jiri Olsa <jolsa@kernel.org>,
+        Namhyung Kim <namhyung@kernel.org>
+Cc:     linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org,
+        brianrob@linux.microsoft.com
+Subject: [PATCH] perf inject jit: Ignore memfd mmap events if jitdump present
+Date:   Tue,  2 Aug 2022 11:25:02 -0700
+Message-Id: <20220802182502.85562-1-brianrob@linux.microsoft.com>
+X-Mailer: git-send-email 2.25.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CAM9d7chZT-mociK=+iF_6SO=1JuD2xaL1HpE4eeo=myngq9vTw@mail.gmail.com>
-X-Url:  http://acmel.wordpress.com
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-Em Tue, Aug 02, 2022 at 11:05:09AM -0700, Namhyung Kim escreveu:
-> On Tue, Aug 2, 2022 at 10:43 AM Arnaldo Carvalho de Melo <acme@kernel.org> wrote:
-> > Em Tue, Aug 02, 2022 at 12:35:10AM -0700, Namhyung Kim escreveu:
-> > > +-m::
-> > > +--map-length::
-> > > +     Maximum number of BPF map entries (default: 10240).
-> >
-> > --map-nr-entries?
-> >
-> > I think we use this jargon "nr-entries" for arrays, lists, etc, better
-> > try to stick to it.
+Some processes store jitted code in memfd mappings to avoid having rwx
+mappings.  These processes map the code with a writeable mapping and a
+read-execute mapping.  They write the code using the writeable mapping
+and then unmap the writeable mapping.  All subsequent execution is
+through the read-execute mapping.
+
+perf inject --jit ignores //anon* mappings for each process where a
+jitdump is present because it expects to inject mmap events for each
+jitted code range, and said jitted code ranges will overlap with the
+//anon* mappings.
+
+Ignore /memfd: mappings so that jitted code contained in /memfd:
+mappings is treated the same way as jitted code contained in //anon*
+mappings.
+
+Signed-off-by: Brian Robbins <brianrob@linux.microsoft.com>
+---
+ tools/perf/util/jitdump.c | 8 ++++++--
+ 1 file changed, 6 insertions(+), 2 deletions(-)
+
+diff --git a/tools/perf/util/jitdump.c b/tools/perf/util/jitdump.c
+index a23255773c60..335a3c61940b 100644
+--- a/tools/perf/util/jitdump.c
++++ b/tools/perf/util/jitdump.c
+@@ -845,8 +845,12 @@ jit_process(struct perf_session *session,
+ 	if (jit_detect(filename, pid, nsi)) {
+ 		nsinfo__put(nsi);
  
-> Makes sense, will change.
-
-Great.
+-		// Strip //anon* mmaps if we processed a jitdump for this pid
+-		if (jit_has_pid(machine, pid) && (strncmp(filename, "//anon", 6) == 0))
++		/*
++		 * Strip //anon* and /memfd:* mmaps if we processed a jitdump for this pid
++		 */
++		if (jit_has_pid(machine, pid) &&
++			((strncmp(filename, "//anon", 6) == 0) ||
++			 (strncmp(filename, "/memfd:", 7) == 0))
+ 			return 1;
  
-> > Also what do you think about not using single letter options for things
-> > that are not that used?
-> >
-> > The map size has a default, one that seems generous, so changing it
-> > should be something uncommon, and then, if it becomes common that more
-> > entries are needed by default, we can change the default in the tool.
-> 
-> Fair enough, I'll remove the single letter option.
+ 		return 0;
+-- 
+2.25.1
 
-Thanks!
-
-- Arnaldo
