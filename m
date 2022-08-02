@@ -2,40 +2,40 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B6550C00140
-	for <linux-perf-users@archiver.kernel.org>; Tue,  2 Aug 2022 17:43:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AC259C00140
+	for <linux-perf-users@archiver.kernel.org>; Tue,  2 Aug 2022 17:45:17 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S234626AbiHBRnd (ORCPT
+        id S234585AbiHBRpQ (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Tue, 2 Aug 2022 13:43:33 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37098 "EHLO
+        Tue, 2 Aug 2022 13:45:16 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38764 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S234352AbiHBRn1 (ORCPT
+        with ESMTP id S233779AbiHBRpP (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Tue, 2 Aug 2022 13:43:27 -0400
-Received: from ams.source.kernel.org (ams.source.kernel.org [145.40.68.75])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E954E4F1A4;
-        Tue,  2 Aug 2022 10:43:25 -0700 (PDT)
+        Tue, 2 Aug 2022 13:45:15 -0400
+Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 63963FEB;
+        Tue,  2 Aug 2022 10:45:13 -0700 (PDT)
 Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by ams.source.kernel.org (Postfix) with ESMTPS id 6E2C6B81FE2;
-        Tue,  2 Aug 2022 17:43:24 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id E505DC433C1;
-        Tue,  2 Aug 2022 17:43:22 +0000 (UTC)
+        by dfw.source.kernel.org (Postfix) with ESMTPS id F344661238;
+        Tue,  2 Aug 2022 17:45:12 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 29BD8C433D6;
+        Tue,  2 Aug 2022 17:45:12 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1659462203;
-        bh=JpSLV2pSf0Tq+89uqu5+RJglNUvUhxd5MJsBuzfmQmM=;
+        s=k20201202; t=1659462312;
+        bh=fNLNp3SXi0T9cQ+M9a3/VF682i2Ilo5KyQltsQOukTg=;
         h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=R0rJ8uXNqgSd2JVdaXo0Ehej7xwbGibYnuJSEYMNwzLNfuyS7H3f4EeF+yqOa+G8P
-         o5LftWGFc20P29l/vOseKrOaDkN6ynZGxi2WyU5LjhC4w7coY6aRnvb8qwrxy94PQu
-         vnBD/g7iXedbbjD66TmKN/wUFtHDlzGy7u2BFP76WV0ZbqnJMKdvD0LaAbLR8I6S4N
-         aWs4ZFF7DP8kVlA0V3cyAr7EFOw9rTBxV7bgrJDN3+fRH/yDD3QH8yRkKmf5DBVIGl
-         T6EuN16y+vyv3/wqNQfzOzF1pNwkZ/k2xBZHUpkY8LkgJ9nVILHjdM/5366lC72oTs
-         eJpOyO76T/oUg==
+        b=OHonArg+Xrw5t/EDI1D4iP7MQ2H25Z/WUmcW7SS4igI0Hw14wYQm0TKYqXWxgJ3wp
+         8jnp4e35pQor1X2YgxCu13z9BKrFXTHCwcPwqOubC/iTIHz5wxYdMcCb6c3Hc4SCpd
+         77MCWCm7n4U3G0PJfebJ79iN6EbbJYLXW/ZjOHw5jlrf2C7yy9JxBRnwKaWf/5SMAb
+         i/Yx661rrCuhwWXpd53MJSKDhoIvJAld5y7TFz9c9xpt/DFam97kJE2JlNkBjfrFFs
+         UVzPMrMkuAnS/7yc//aklVCjMMafmOJqTNUUVfIIx2rs9OYUoKE/EbCuvzN/hg+0nj
+         EBAB9RcXlV3wQ==
 Received: by quaco.ghostprotocols.net (Postfix, from userid 1000)
-        id BF46440736; Tue,  2 Aug 2022 14:43:19 -0300 (-03)
-Date:   Tue, 2 Aug 2022 14:43:19 -0300
+        id 8A8B140736; Tue,  2 Aug 2022 14:45:09 -0300 (-03)
+Date:   Tue, 2 Aug 2022 14:45:09 -0300
 From:   Arnaldo Carvalho de Melo <acme@kernel.org>
 To:     Namhyung Kim <namhyung@kernel.org>
 Cc:     Jiri Olsa <jolsa@kernel.org>, Ingo Molnar <mingo@kernel.org>,
@@ -48,141 +48,154 @@ Cc:     Jiri Olsa <jolsa@kernel.org>, Ingo Molnar <mingo@kernel.org>,
         Davidlohr Bueso <dave@stgolabs.net>,
         Song Liu <songliubraving@fb.com>,
         Blake Jones <blakejones@google.com>
-Subject: Re: [PATCH 2/3] perf lock: Add -m/--map-length option
-Message-ID: <YuliN2UDbls5uW3u@kernel.org>
+Subject: Re: [PATCH 3/3] perf lock: Print lost entries at the end
+Message-ID: <YulipRqJZ7oYVWD/@kernel.org>
 References: <20220802073511.299459-1-namhyung@kernel.org>
- <20220802073511.299459-2-namhyung@kernel.org>
+ <20220802073511.299459-3-namhyung@kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20220802073511.299459-2-namhyung@kernel.org>
+In-Reply-To: <20220802073511.299459-3-namhyung@kernel.org>
 X-Url:  http://acmel.wordpress.com
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-Em Tue, Aug 02, 2022 at 12:35:10AM -0700, Namhyung Kim escreveu:
-> The -m/--map-length option is to control number of max entries in the
-> perf lock contention BPF maps.
+Em Tue, Aug 02, 2022 at 12:35:11AM -0700, Namhyung Kim escreveu:
+> Like the normal perf lock report output, it'd print bad stats at the end
+> if exists or -v option is passed.  Currently it uses BROKEN_CONTENDED
+ stat for the lost count (due to full stack maps).
+
+"Print the number of lost entries in verbose mode"?
+ 
+>   $ sudo perf lock con -a -b -m 128 sleep 5
+>   ...
+>   === output for debug===
+> 
+>   bad: 43, total: 14903
+>   bad rate: 0.29 %
+>   histogram of events caused bad sequence
+>       acquire: 0
+>      acquired: 0
+>     contended: 43
+>       release: 0
 > 
 > Signed-off-by: Namhyung Kim <namhyung@kernel.org>
 > ---
->  tools/perf/Documentation/perf-lock.txt |  4 ++++
->  tools/perf/builtin-lock.c              | 23 ++++++++++++++++++++++-
->  tools/perf/util/bpf_lock_contention.c  |  3 +++
->  tools/perf/util/lock-contention.h      |  1 +
->  4 files changed, 30 insertions(+), 1 deletion(-)
+>  tools/perf/builtin-lock.c                      | 8 +++++++-
+>  tools/perf/util/bpf_lock_contention.c          | 6 ++++--
+>  tools/perf/util/bpf_skel/lock_contention.bpf.c | 9 +++++++--
+>  tools/perf/util/lock-contention.h              | 1 +
+>  4 files changed, 19 insertions(+), 5 deletions(-)
 > 
-> diff --git a/tools/perf/Documentation/perf-lock.txt b/tools/perf/Documentation/perf-lock.txt
-> index 7949d2e6891b..2101644785e0 100644
-> --- a/tools/perf/Documentation/perf-lock.txt
-> +++ b/tools/perf/Documentation/perf-lock.txt
-> @@ -145,6 +145,10 @@ CONTENTION OPTIONS
->  --tid=::
->          Record events on existing thread ID (comma separated list).
->  
-> +-m::
-> +--map-length::
-> +	Maximum number of BPF map entries (default: 10240).
-
---map-nr-entries?
-
-I think we use this jargon "nr-entries" for arrays, lists, etc, better
-try to stick to it.
-
-Also what do you think about not using single letter options for things
-that are not that used?
-
-The map size has a default, one that seems generous, so changing it
-should be something uncommon, and then, if it becomes common that more
-entries are needed by default, we can change the default in the tool.
-
-- Arnaldo
-
-> +
->  
->  SEE ALSO
->  --------
 > diff --git a/tools/perf/builtin-lock.c b/tools/perf/builtin-lock.c
-> index eef778b7d33d..e32fdcd497e0 100644
+> index e32fdcd497e0..8065f0268e55 100644
 > --- a/tools/perf/builtin-lock.c
 > +++ b/tools/perf/builtin-lock.c
-> @@ -55,6 +55,7 @@ static struct rb_root		thread_stats;
->  static bool combine_locks;
->  static bool show_thread_stats;
->  static bool use_bpf;
-> +static unsigned long bpf_map_len = 10240;
+> @@ -1471,8 +1471,11 @@ static void print_contention_result(void)
+>  		pr_info("  %10s   %s\n\n", "type", "caller");
 >  
->  static enum {
->  	LOCK_AGGR_ADDR,
-> @@ -1597,6 +1598,7 @@ static int __cmd_contention(int argc, const char **argv)
->  	struct lock_contention con = {
->  		.target = &target,
->  		.result = &lockhash_table[0],
-> +		.map_len = bpf_map_len,
->  	};
->  
->  	session = perf_session__new(use_bpf ? NULL : &data, &eops);
-> @@ -1786,6 +1788,24 @@ static int __cmd_record(int argc, const char **argv)
->  	return ret;
->  }
->  
-> +static int parse_map_length(const struct option *opt, const char *str,
-> +			    int unset __maybe_unused)
-> +{
-> +	unsigned long *len = (unsigned long *)opt->value;
-> +	unsigned long val;
-> +	char *endptr;
+>  	bad = total = 0;
+> +	if (use_bpf)
+> +		bad = bad_hist[BROKEN_CONTENDED];
 > +
-> +	errno = 0;
-> +	val = strtoul(str, &endptr, 0);
-> +	if (*endptr != '\0' || errno != 0) {
-> +		pr_err("invalid BPF map length: %s\n", str);
-> +		return -1;
-> +	}
-> +
-> +	*len = val;
-> +	return 0;
-> +}
-> +
->  int cmd_lock(int argc, const char **argv)
->  {
->  	const struct option lock_options[] = {
-> @@ -1835,9 +1855,10 @@ int cmd_lock(int argc, const char **argv)
->  		    "List of cpus to monitor"),
->  	OPT_STRING('p', "pid", &target.pid, "pid",
->  		   "Trace on existing process id"),
-> -	/* TODO: Add short option -t after -t/--tracer can be removed. */
->  	OPT_STRING(0, "tid", &target.tid, "tid",
->  		   "Trace on existing thread id (exclusive to --pid)"),
-> +	OPT_CALLBACK('m', "map-length", &bpf_map_len, "len",
-> +		     "Max number of BPF map entries", parse_map_length),
->  	OPT_PARENT(lock_options)
->  	};
+>  	while ((st = pop_from_result())) {
+> -		total++;
+> +		total += use_bpf ? st->nr_contended : 1;
+>  		if (st->broken)
+>  			bad++;
 >  
+> @@ -1686,6 +1689,9 @@ static int __cmd_contention(int argc, const char **argv)
+>  
+>  		lock_contention_stop();
+>  		lock_contention_read(&con);
+> +
+> +		/* abuse bad hist stats for lost entries */
+> +		bad_hist[BROKEN_CONTENDED] = con.lost;
+>  	} else {
+>  		err = perf_session__process_events(session);
+>  		if (err)
 > diff --git a/tools/perf/util/bpf_lock_contention.c b/tools/perf/util/bpf_lock_contention.c
-> index f5e2b4f19a72..26128e5bb659 100644
+> index 26128e5bb659..65f51cc25236 100644
 > --- a/tools/perf/util/bpf_lock_contention.c
 > +++ b/tools/perf/util/bpf_lock_contention.c
-> @@ -40,6 +40,9 @@ int lock_contention_prepare(struct lock_contention *con)
->  		return -1;
->  	}
+> @@ -16,7 +16,7 @@ static struct lock_contention_bpf *skel;
 >  
-> +	bpf_map__set_max_entries(skel->maps.stacks, con->map_len);
-> +	bpf_map__set_max_entries(skel->maps.lock_stat, con->map_len);
+>  /* should be same as bpf_skel/lock_contention.bpf.c */
+>  struct lock_contention_key {
+> -	u32 stack_id;
+> +	s32 stack_id;
+>  };
+>  
+>  struct lock_contention_data {
+> @@ -110,7 +110,7 @@ int lock_contention_stop(void)
+>  int lock_contention_read(struct lock_contention *con)
+>  {
+>  	int fd, stack;
+> -	u32 prev_key, key;
+> +	s32 prev_key, key;
+>  	struct lock_contention_data data;
+>  	struct lock_stat *st;
+>  	struct machine *machine = con->machine;
+> @@ -119,6 +119,8 @@ int lock_contention_read(struct lock_contention *con)
+>  	fd = bpf_map__fd(skel->maps.lock_stat);
+>  	stack = bpf_map__fd(skel->maps.stacks);
+>  
+> +	con->lost = skel->bss->lost;
 > +
->  	if (target__has_cpu(target))
->  		ncpus = perf_cpu_map__nr(evlist->core.user_requested_cpus);
->  	if (target__has_task(target))
+>  	prev_key = 0;
+>  	while (!bpf_map_get_next_key(fd, &prev_key, &key)) {
+>  		struct map *kmap;
+> diff --git a/tools/perf/util/bpf_skel/lock_contention.bpf.c b/tools/perf/util/bpf_skel/lock_contention.bpf.c
+> index 67d46533e518..9e8b94eb6320 100644
+> --- a/tools/perf/util/bpf_skel/lock_contention.bpf.c
+> +++ b/tools/perf/util/bpf_skel/lock_contention.bpf.c
+> @@ -12,7 +12,7 @@
+>  #define MAX_ENTRIES  10240
+>  
+>  struct contention_key {
+> -	__u32 stack_id;
+> +	__s32 stack_id;
+>  };
+>  
+>  struct contention_data {
+> @@ -27,7 +27,7 @@ struct tstamp_data {
+>  	__u64 timestamp;
+>  	__u64 lock;
+>  	__u32 flags;
+> -	__u32 stack_id;
+> +	__s32 stack_id;
+>  };
+>  
+>  /* callstack storage  */
+> @@ -73,6 +73,9 @@ int enabled;
+>  int has_cpu;
+>  int has_task;
+>  
+> +/* error stat */
+> +unsigned long lost;
+> +
+>  static inline int can_record(void)
+>  {
+>  	if (has_cpu) {
+> @@ -116,6 +119,8 @@ int contention_begin(u64 *ctx)
+>  	pelem->flags = (__u32)ctx[1];
+>  	pelem->stack_id = bpf_get_stackid(ctx, &stacks, BPF_F_FAST_STACK_CMP);
+>  
+> +	if (pelem->stack_id < 0)
+> +		lost++;
+>  	return 0;
+>  }
+>  
 > diff --git a/tools/perf/util/lock-contention.h b/tools/perf/util/lock-contention.h
-> index a0df5308cca4..b09fd6eb978a 100644
+> index b09fd6eb978a..d9fc5f076567 100644
 > --- a/tools/perf/util/lock-contention.h
 > +++ b/tools/perf/util/lock-contention.h
-> @@ -112,6 +112,7 @@ struct lock_contention {
->  	struct target *target;
+> @@ -113,6 +113,7 @@ struct lock_contention {
 >  	struct machine *machine;
 >  	struct hlist_head *result;
-> +	unsigned long map_len;
+>  	unsigned long map_len;
+> +	unsigned long lost;
 >  };
 >  
 >  #ifdef HAVE_BPF_SKEL
