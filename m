@@ -2,108 +2,193 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5ED88C25B07
-	for <linux-perf-users@archiver.kernel.org>; Tue,  2 Aug 2022 15:09:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B6550C00140
+	for <linux-perf-users@archiver.kernel.org>; Tue,  2 Aug 2022 17:43:35 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S236826AbiHBPJU (ORCPT
+        id S234626AbiHBRnd (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Tue, 2 Aug 2022 11:09:20 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50296 "EHLO
+        Tue, 2 Aug 2022 13:43:33 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37098 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S236468AbiHBPJT (ORCPT
+        with ESMTP id S234352AbiHBRn1 (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Tue, 2 Aug 2022 11:09:19 -0400
-Received: from mail-il1-x12a.google.com (mail-il1-x12a.google.com [IPv6:2607:f8b0:4864:20::12a])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7DF4A27FEE;
-        Tue,  2 Aug 2022 08:09:18 -0700 (PDT)
-Received: by mail-il1-x12a.google.com with SMTP id j20so5678186ila.6;
-        Tue, 02 Aug 2022 08:09:18 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20210112;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=TnTubc6T2moNEJDYoN4cgfDzPxoHQtes0c+6H3Y5Dww=;
-        b=pkkYVaCXoDjN3BxJA9fdnVundUXhEs1ZNjfqqqRGarF5AV++es8DHqocJO+FlDtBo2
-         K9VLQBHIKirR+kBAZXEW9X3tax+LPb3OLjnPtBLoJhQvOpYVhyum0CDwjRQmi8N3QLG9
-         qVZKGbs47r3RtFLMkEjxsxA5QRB0Pkop+q4m7mjlwSgMKR5zZqDQjBomHGV1Us1vun9a
-         vz+DnLQ27XHfdmEC6MvRGoByNQNFIbb1wMouC5XlTA9YXSvZ12GajCS96japFxJgfg9b
-         tHVgeXFpFd/wEAlJhB2ZChsOmOVxsmNul/LP5dMDpuISoJLCiJvTU58sqjiz4XsvWNCB
-         Ou/w==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=TnTubc6T2moNEJDYoN4cgfDzPxoHQtes0c+6H3Y5Dww=;
-        b=ezLDAmC6BHmFs42TUEiMJrWk68fzsM8u6A+ZX1eNNXAZNZaksw1+J4auCXRX6ue0aZ
-         Gk0xJHAb081hhcUxIiD2QgfqY2XxDCY6NWevAtWSXh+IzUruc1+hJ7hW7xFV/TaiAK2k
-         Z7ktxvRTP+6edKyT/49XTEq3hz+8YN8PJ4IYUr3SUQ72wuAT2+3RX8yiS3RsZZFnS7DD
-         CyTfGBv1u5tbwmrHbncBMpQnReoysvoI32CSithMhAHYS4dh3wnhOYyOPQPilNDYYMqK
-         P/9P1QqNSIqeZcti+AeggwmvXK/nUnI7UlUJXW1s6fRdzn5vhpuYn19qQHeNa7WGHUYI
-         PkSQ==
-X-Gm-Message-State: AJIora/6NvwLb4B9ZdIwlPvsEYEk4XVuYwzs9uS636pBZmPxEuZpHwX8
-        NntW69t02RHSEUEX0rXe4KtG6IcV86IW8j5et0A=
-X-Google-Smtp-Source: AGRyM1s/X7XdR0/a8lkQRbVcBP+dwZOZipEH93h8R/VlEWYf/KISRMdds5FIhduFNaDE0FsZQymaRLP6g1Da/s6WJVw=
-X-Received: by 2002:a05:6e02:17c6:b0:2dd:d9dc:6387 with SMTP id
- z6-20020a056e0217c600b002ddd9dc6387mr8296085ilu.321.1659452957891; Tue, 02
- Aug 2022 08:09:17 -0700 (PDT)
+        Tue, 2 Aug 2022 13:43:27 -0400
+Received: from ams.source.kernel.org (ams.source.kernel.org [145.40.68.75])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E954E4F1A4;
+        Tue,  2 Aug 2022 10:43:25 -0700 (PDT)
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by ams.source.kernel.org (Postfix) with ESMTPS id 6E2C6B81FE2;
+        Tue,  2 Aug 2022 17:43:24 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id E505DC433C1;
+        Tue,  2 Aug 2022 17:43:22 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1659462203;
+        bh=JpSLV2pSf0Tq+89uqu5+RJglNUvUhxd5MJsBuzfmQmM=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=R0rJ8uXNqgSd2JVdaXo0Ehej7xwbGibYnuJSEYMNwzLNfuyS7H3f4EeF+yqOa+G8P
+         o5LftWGFc20P29l/vOseKrOaDkN6ynZGxi2WyU5LjhC4w7coY6aRnvb8qwrxy94PQu
+         vnBD/g7iXedbbjD66TmKN/wUFtHDlzGy7u2BFP76WV0ZbqnJMKdvD0LaAbLR8I6S4N
+         aWs4ZFF7DP8kVlA0V3cyAr7EFOw9rTBxV7bgrJDN3+fRH/yDD3QH8yRkKmf5DBVIGl
+         T6EuN16y+vyv3/wqNQfzOzF1pNwkZ/k2xBZHUpkY8LkgJ9nVILHjdM/5366lC72oTs
+         eJpOyO76T/oUg==
+Received: by quaco.ghostprotocols.net (Postfix, from userid 1000)
+        id BF46440736; Tue,  2 Aug 2022 14:43:19 -0300 (-03)
+Date:   Tue, 2 Aug 2022 14:43:19 -0300
+From:   Arnaldo Carvalho de Melo <acme@kernel.org>
+To:     Namhyung Kim <namhyung@kernel.org>
+Cc:     Jiri Olsa <jolsa@kernel.org>, Ingo Molnar <mingo@kernel.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Ian Rogers <irogers@google.com>,
+        linux-perf-users@vger.kernel.org, Will Deacon <will@kernel.org>,
+        Waiman Long <longman@redhat.com>,
+        Boqun Feng <boqun.feng@gmail.com>,
+        Davidlohr Bueso <dave@stgolabs.net>,
+        Song Liu <songliubraving@fb.com>,
+        Blake Jones <blakejones@google.com>
+Subject: Re: [PATCH 2/3] perf lock: Add -m/--map-length option
+Message-ID: <YuliN2UDbls5uW3u@kernel.org>
+References: <20220802073511.299459-1-namhyung@kernel.org>
+ <20220802073511.299459-2-namhyung@kernel.org>
 MIME-Version: 1.0
-References: <20220802015052.10452-1-ojeda@kernel.org> <YukYByl76DKqa+iD@casper.infradead.org>
- <CANiq72k7JKqq5-8Nqf3Q2r2t_sAffC8g86A+v8yBc=W-1--_Tg@mail.gmail.com> <YukuUtuXm/xPUuoP@casper.infradead.org>
-In-Reply-To: <YukuUtuXm/xPUuoP@casper.infradead.org>
-From:   Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>
-Date:   Tue, 2 Aug 2022 17:09:05 +0200
-Message-ID: <CANiq72kgwssTSE7F+4xkRrXBGVgHeWxCyjeZ-NHLUXWnFjMyTg@mail.gmail.com>
-Subject: Re: [PATCH v8 00/31] Rust support
-To:     Matthew Wilcox <willy@infradead.org>
-Cc:     Linus Torvalds <torvalds@linux-foundation.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Miguel Ojeda <ojeda@kernel.org>,
-        rust-for-linux@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Jarkko Sakkinen <jarkko@kernel.org>,
-        linux-arm-kernel@lists.infradead.org, linux-doc@vger.kernel.org,
-        linux-gpio@vger.kernel.org, linux-kbuild@vger.kernel.org,
-        linux-perf-users@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
-        linux-riscv@lists.infradead.org, linux-um@lists.infradead.org,
-        live-patching@vger.kernel.org, linux-fsdevel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20220802073511.299459-2-namhyung@kernel.org>
+X-Url:  http://acmel.wordpress.com
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-On Tue, Aug 2, 2022 at 4:01 PM Matthew Wilcox <willy@infradead.org> wrote:
->
-> No objections to any of this.  I love the idea of being able to write
-> filesystems in Rust.  I just think it would go more smoothly if
-> linux-fsdevel were involved more closely so people at least have the
-> option of being able to follow design decisions, and hopefully influence
-> them.  That goes both ways, of course; I hardly think our current
-> operations structures are the optimum way to implement a filesystem,
-> and having fresh eyes say things like "But that shouldn't be part of the
-> address_space_operations" can impel better abstractions.
+Em Tue, Aug 02, 2022 at 12:35:10AM -0700, Namhyung Kim escreveu:
+> The -m/--map-length option is to control number of max entries in the
+> perf lock contention BPF maps.
+> 
+> Signed-off-by: Namhyung Kim <namhyung@kernel.org>
+> ---
+>  tools/perf/Documentation/perf-lock.txt |  4 ++++
+>  tools/perf/builtin-lock.c              | 23 ++++++++++++++++++++++-
+>  tools/perf/util/bpf_lock_contention.c  |  3 +++
+>  tools/perf/util/lock-contention.h      |  1 +
+>  4 files changed, 30 insertions(+), 1 deletion(-)
+> 
+> diff --git a/tools/perf/Documentation/perf-lock.txt b/tools/perf/Documentation/perf-lock.txt
+> index 7949d2e6891b..2101644785e0 100644
+> --- a/tools/perf/Documentation/perf-lock.txt
+> +++ b/tools/perf/Documentation/perf-lock.txt
+> @@ -145,6 +145,10 @@ CONTENTION OPTIONS
+>  --tid=::
+>          Record events on existing thread ID (comma separated list).
+>  
+> +-m::
+> +--map-length::
+> +	Maximum number of BPF map entries (default: 10240).
 
-I will send the patches to fsdevel then!
+--map-nr-entries?
 
-As for following development closely and design decisions, we have
-been doing it in GitHub so far pre-merge, so the easiest until the
-merge (for us) would be to ping you there. We can also send you copies
-of the `fs` related patches too if you would like that. I would highly
-recommend joining the monthly informal calls too.
+I think we use this jargon "nr-entries" for arrays, lists, etc, better
+try to stick to it.
 
-(I appreciate the kind answer, by the way!)
+Also what do you think about not using single letter options for things
+that are not that used?
 
-> The obvious answer is to split out the 'fs module' into its own patch
-> ;-)  I presume it was part of the kernel crate which would have been
-> either patch 17 or 11 in that series?
+The map size has a default, one that seems generous, so changing it
+should be something uncommon, and then, if it becomes common that more
+entries are needed by default, we can change the default in the tool.
 
-Yeah, patch 17, exactly (patch 11 is the `alloc` import). I have asked
-Konstantin privately about them.
+- Arnaldo
 
-In any case, I will split the patches further for v9 which should help.
+> +
+>  
+>  SEE ALSO
+>  --------
+> diff --git a/tools/perf/builtin-lock.c b/tools/perf/builtin-lock.c
+> index eef778b7d33d..e32fdcd497e0 100644
+> --- a/tools/perf/builtin-lock.c
+> +++ b/tools/perf/builtin-lock.c
+> @@ -55,6 +55,7 @@ static struct rb_root		thread_stats;
+>  static bool combine_locks;
+>  static bool show_thread_stats;
+>  static bool use_bpf;
+> +static unsigned long bpf_map_len = 10240;
+>  
+>  static enum {
+>  	LOCK_AGGR_ADDR,
+> @@ -1597,6 +1598,7 @@ static int __cmd_contention(int argc, const char **argv)
+>  	struct lock_contention con = {
+>  		.target = &target,
+>  		.result = &lockhash_table[0],
+> +		.map_len = bpf_map_len,
+>  	};
+>  
+>  	session = perf_session__new(use_bpf ? NULL : &data, &eops);
+> @@ -1786,6 +1788,24 @@ static int __cmd_record(int argc, const char **argv)
+>  	return ret;
+>  }
+>  
+> +static int parse_map_length(const struct option *opt, const char *str,
+> +			    int unset __maybe_unused)
+> +{
+> +	unsigned long *len = (unsigned long *)opt->value;
+> +	unsigned long val;
+> +	char *endptr;
+> +
+> +	errno = 0;
+> +	val = strtoul(str, &endptr, 0);
+> +	if (*endptr != '\0' || errno != 0) {
+> +		pr_err("invalid BPF map length: %s\n", str);
+> +		return -1;
+> +	}
+> +
+> +	*len = val;
+> +	return 0;
+> +}
+> +
+>  int cmd_lock(int argc, const char **argv)
+>  {
+>  	const struct option lock_options[] = {
+> @@ -1835,9 +1855,10 @@ int cmd_lock(int argc, const char **argv)
+>  		    "List of cpus to monitor"),
+>  	OPT_STRING('p', "pid", &target.pid, "pid",
+>  		   "Trace on existing process id"),
+> -	/* TODO: Add short option -t after -t/--tracer can be removed. */
+>  	OPT_STRING(0, "tid", &target.tid, "tid",
+>  		   "Trace on existing thread id (exclusive to --pid)"),
+> +	OPT_CALLBACK('m', "map-length", &bpf_map_len, "len",
+> +		     "Max number of BPF map entries", parse_map_length),
+>  	OPT_PARENT(lock_options)
+>  	};
+>  
+> diff --git a/tools/perf/util/bpf_lock_contention.c b/tools/perf/util/bpf_lock_contention.c
+> index f5e2b4f19a72..26128e5bb659 100644
+> --- a/tools/perf/util/bpf_lock_contention.c
+> +++ b/tools/perf/util/bpf_lock_contention.c
+> @@ -40,6 +40,9 @@ int lock_contention_prepare(struct lock_contention *con)
+>  		return -1;
+>  	}
+>  
+> +	bpf_map__set_max_entries(skel->maps.stacks, con->map_len);
+> +	bpf_map__set_max_entries(skel->maps.lock_stat, con->map_len);
+> +
+>  	if (target__has_cpu(target))
+>  		ncpus = perf_cpu_map__nr(evlist->core.user_requested_cpus);
+>  	if (target__has_task(target))
+> diff --git a/tools/perf/util/lock-contention.h b/tools/perf/util/lock-contention.h
+> index a0df5308cca4..b09fd6eb978a 100644
+> --- a/tools/perf/util/lock-contention.h
+> +++ b/tools/perf/util/lock-contention.h
+> @@ -112,6 +112,7 @@ struct lock_contention {
+>  	struct target *target;
+>  	struct machine *machine;
+>  	struct hlist_head *result;
+> +	unsigned long map_len;
+>  };
+>  
+>  #ifdef HAVE_BPF_SKEL
+> -- 
+> 2.37.1.455.g008518b4e5-goog
 
-Meanwhile, you can also see the `fs` module here, if you are curious:
+-- 
 
-    https://github.com/Rust-for-Linux/linux/blob/rust-next/rust/kernel/fs.rs
-    https://github.com/Rust-for-Linux/linux/blob/rust-next/rust/kernel/fs/param.rs
-
-Cheers,
-Miguel
+- Arnaldo
