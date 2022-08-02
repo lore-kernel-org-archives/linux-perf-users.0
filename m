@@ -2,242 +2,77 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 19172C00140
-	for <linux-perf-users@archiver.kernel.org>; Tue,  2 Aug 2022 21:04:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A9406C00140
+	for <linux-perf-users@archiver.kernel.org>; Tue,  2 Aug 2022 23:47:16 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231808AbiHBVEf (ORCPT
+        id S234716AbiHBXrP (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Tue, 2 Aug 2022 17:04:35 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54108 "EHLO
+        Tue, 2 Aug 2022 19:47:15 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48026 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229482AbiHBVEe (ORCPT
+        with ESMTP id S232721AbiHBXrO (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Tue, 2 Aug 2022 17:04:34 -0400
-Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BD76045077;
-        Tue,  2 Aug 2022 14:04:33 -0700 (PDT)
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id 58136614B8;
-        Tue,  2 Aug 2022 21:04:33 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 5C619C433C1;
-        Tue,  2 Aug 2022 21:04:32 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1659474272;
-        bh=wJtT9GHNrpPgl7ieiEvee76VOHI23x/7v0i9zeXxLtI=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=IdTyLCPwcuuIT9VextDI7wfdar3USX+1v0+sjcqzEG5J4zax5uTx+eslkEUGmiWxX
-         RbUOTvSfncEBORL0AOmm0yn6csLfji3/pbxrgnv65acVW5+pk0o/frkUiJpt72zzcP
-         7YcXPWYdoABiPSkOAtKVh+gkyGRPYpVAOnm5c1QVX/eSW7rRbx8A8bGJAHaJ9mBtHT
-         PSmEYjQWhYZpNn6GmZFnS8BuOxnfiz3Mltly7XwANPmVLMwUPQGf/0mTEI1CmyLb8q
-         m4jzFDEj7YohW9zaJcjw6ovX3gWxI0aNOT+SDkcMVkbtmK9j9qXlY19XnY2gd4Y4Gq
-         RmPq+cSCidBTw==
-Received: by quaco.ghostprotocols.net (Postfix, from userid 1000)
-        id 548FC40736; Tue,  2 Aug 2022 18:04:29 -0300 (-03)
-Date:   Tue, 2 Aug 2022 18:04:29 -0300
-From:   Arnaldo Carvalho de Melo <acme@kernel.org>
-To:     Namhyung Kim <namhyung@kernel.org>
+        Tue, 2 Aug 2022 19:47:14 -0400
+Received: from mail-oi1-f179.google.com (mail-oi1-f179.google.com [209.85.167.179])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 07E8C54673;
+        Tue,  2 Aug 2022 16:47:14 -0700 (PDT)
+Received: by mail-oi1-f179.google.com with SMTP id u9so18237550oiv.12;
+        Tue, 02 Aug 2022 16:47:14 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:x-gm-message-state:from:to:cc;
+        bh=1r7BMu+e52KMvTlTlsEeBScPSgTDXdrzxQKCaN3tXo4=;
+        b=XVCcSxO3BZdIRw4f2nvR2JflUa7kglCJoL2GSedsRetwLgzVEDh5EzKXXRNEeV0XT1
+         m4bgsDJX8j/FcIjsuMQEC5Yjp3sJgJpsFfkpP8WoYpWIMAh8Y4ZB/upSMKLuUrkvdads
+         Wkzm8w0F+nbBcKlbl0rsUMrEgPj7L8YTioNCtF2cOlJiwVn+dHgnWdRf/82vATVw9QOg
+         Dt2MtyXjPDUBmcFaDKqWsCpLEoByoyDDm+aN98LEV6V3deKyvUT5g7TqMiFUtrqJMp/l
+         B77O9+AbfJma94wV6x4XbnnWghvLJQWUB1TmKYHjg+v10WKJ2RpUXfHmqCH+aPpgXC+X
+         n/vg==
+X-Gm-Message-State: ACgBeo1ySmKGfKBeQODHSJzEOSrrM5sz950vwYUUfpA2wbZLKJwPAb99
+        1zxWexi5lUH82Xzsw5Y8agPWNGmzyf8rZ75qOws=
+X-Google-Smtp-Source: AA6agR5x52u8VYhoCIElD40vDyBxJ/TgfmRg47KshUBAkgN+Tu5P0Fy1+73Yiz32f52GD4qI1QyVBFQibNauTtPwZks=
+X-Received: by 2002:a05:6808:1492:b0:33a:7448:8b98 with SMTP id
+ e18-20020a056808149200b0033a74488b98mr736688oiw.92.1659484033343; Tue, 02 Aug
+ 2022 16:47:13 -0700 (PDT)
+MIME-Version: 1.0
+References: <20220802191004.347740-1-namhyung@kernel.org> <YumRXcxc5XIUwlBO@kernel.org>
+In-Reply-To: <YumRXcxc5XIUwlBO@kernel.org>
+From:   Namhyung Kim <namhyung@kernel.org>
+Date:   Tue, 2 Aug 2022 16:47:02 -0700
+Message-ID: <CAM9d7choD8v8Bxu3w4V1Q3M1i7SwP2W+pY5ZWLqUqr89O2PLOQ@mail.gmail.com>
+Subject: Re: [PATCH v2 1/3] perf lock: Introduce struct lock_contention
+To:     Arnaldo Carvalho de Melo <acme@kernel.org>
 Cc:     Jiri Olsa <jolsa@kernel.org>, Ingo Molnar <mingo@kernel.org>,
         Peter Zijlstra <peterz@infradead.org>,
         LKML <linux-kernel@vger.kernel.org>,
         Ian Rogers <irogers@google.com>,
-        linux-perf-users@vger.kernel.org, Will Deacon <will@kernel.org>,
+        linux-perf-users <linux-perf-users@vger.kernel.org>,
+        Will Deacon <will@kernel.org>,
         Waiman Long <longman@redhat.com>,
         Boqun Feng <boqun.feng@gmail.com>,
         Davidlohr Bueso <dave@stgolabs.net>,
         Song Liu <songliubraving@fb.com>,
         Blake Jones <blakejones@google.com>
-Subject: Re: [PATCH v2 1/3] perf lock: Introduce struct lock_contention
-Message-ID: <YumRXcxc5XIUwlBO@kernel.org>
-References: <20220802191004.347740-1-namhyung@kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20220802191004.347740-1-namhyung@kernel.org>
-X-Url:  http://acmel.wordpress.com
+Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-Em Tue, Aug 02, 2022 at 12:10:02PM -0700, Namhyung Kim escreveu:
-> The lock_contention struct is to carry related fields together and to
-> minimize the change when we add new config options.
+On Tue, Aug 2, 2022 at 2:04 PM Arnaldo Carvalho de Melo <acme@kernel.org> wrote:
+>
+> Em Tue, Aug 02, 2022 at 12:10:02PM -0700, Namhyung Kim escreveu:
+> > The lock_contention struct is to carry related fields together and to
+> > minimize the change when we add new config options.
+>
+>
+> Thanks, applied. Forgot the cover letter? :-)
 
+Thank you!
 
-Thanks, applied. Forgot the cover letter? :-)
+I thought it's a small change that doesn't require a cover letter.
+But if you prefer seeing it for small changes too, I'd write a
+short letter next time.
 
-- Arnaldo
-
- 
-> Signed-off-by: Namhyung Kim <namhyung@kernel.org>
-> ---
->  tools/perf/builtin-lock.c             | 23 ++++++++++++++---------
->  tools/perf/util/bpf_lock_contention.c |  9 ++++++---
->  tools/perf/util/lock-contention.h     | 17 +++++++++++------
->  3 files changed, 31 insertions(+), 18 deletions(-)
-> 
-> diff --git a/tools/perf/builtin-lock.c b/tools/perf/builtin-lock.c
-> index 7897a33fec1b..eef778b7d33d 100644
-> --- a/tools/perf/builtin-lock.c
-> +++ b/tools/perf/builtin-lock.c
-> @@ -1594,7 +1594,10 @@ static int __cmd_contention(int argc, const char **argv)
->  		.mode  = PERF_DATA_MODE_READ,
->  		.force = force,
->  	};
-> -	struct evlist *evlist = NULL;
-> +	struct lock_contention con = {
-> +		.target = &target,
-> +		.result = &lockhash_table[0],
-> +	};
->  
->  	session = perf_session__new(use_bpf ? NULL : &data, &eops);
->  	if (IS_ERR(session)) {
-> @@ -1620,24 +1623,26 @@ static int __cmd_contention(int argc, const char **argv)
->  		signal(SIGCHLD, sighandler);
->  		signal(SIGTERM, sighandler);
->  
-> -		evlist = evlist__new();
-> -		if (evlist == NULL) {
-> +		con.machine = &session->machines.host;
-> +
-> +		con.evlist = evlist__new();
-> +		if (con.evlist == NULL) {
->  			err = -ENOMEM;
->  			goto out_delete;
->  		}
->  
-> -		err = evlist__create_maps(evlist, &target);
-> +		err = evlist__create_maps(con.evlist, &target);
->  		if (err < 0)
->  			goto out_delete;
->  
->  		if (argc) {
-> -			err = evlist__prepare_workload(evlist, &target,
-> +			err = evlist__prepare_workload(con.evlist, &target,
->  						       argv, false, NULL);
->  			if (err < 0)
->  				goto out_delete;
->  		}
->  
-> -		if (lock_contention_prepare(evlist, &target) < 0) {
-> +		if (lock_contention_prepare(&con) < 0) {
->  			pr_err("lock contention BPF setup failed\n");
->  			goto out_delete;
->  		}
-> @@ -1672,13 +1677,13 @@ static int __cmd_contention(int argc, const char **argv)
->  	if (use_bpf) {
->  		lock_contention_start();
->  		if (argc)
-> -			evlist__start_workload(evlist);
-> +			evlist__start_workload(con.evlist);
->  
->  		/* wait for signal */
->  		pause();
->  
->  		lock_contention_stop();
-> -		lock_contention_read(&session->machines.host, &lockhash_table[0]);
-> +		lock_contention_read(&con);
->  	} else {
->  		err = perf_session__process_events(session);
->  		if (err)
-> @@ -1691,7 +1696,7 @@ static int __cmd_contention(int argc, const char **argv)
->  	print_contention_result();
->  
->  out_delete:
-> -	evlist__delete(evlist);
-> +	evlist__delete(con.evlist);
->  	lock_contention_finish();
->  	perf_session__delete(session);
->  	return err;
-> diff --git a/tools/perf/util/bpf_lock_contention.c b/tools/perf/util/bpf_lock_contention.c
-> index 16b7451b4b09..f5e2b4f19a72 100644
-> --- a/tools/perf/util/bpf_lock_contention.c
-> +++ b/tools/perf/util/bpf_lock_contention.c
-> @@ -27,10 +27,12 @@ struct lock_contention_data {
->  	u32 flags;
->  };
->  
-> -int lock_contention_prepare(struct evlist *evlist, struct target *target)
-> +int lock_contention_prepare(struct lock_contention *con)
->  {
->  	int i, fd;
->  	int ncpus = 1, ntasks = 1;
-> +	struct evlist *evlist = con->evlist;
-> +	struct target *target = con->target;
->  
->  	skel = lock_contention_bpf__open();
->  	if (!skel) {
-> @@ -102,12 +104,13 @@ int lock_contention_stop(void)
->  	return 0;
->  }
->  
-> -int lock_contention_read(struct machine *machine, struct hlist_head *head)
-> +int lock_contention_read(struct lock_contention *con)
->  {
->  	int fd, stack;
->  	u32 prev_key, key;
->  	struct lock_contention_data data;
->  	struct lock_stat *st;
-> +	struct machine *machine = con->machine;
->  	u64 stack_trace[CONTENTION_STACK_DEPTH];
->  
->  	fd = bpf_map__fd(skel->maps.lock_stat);
-> @@ -163,7 +166,7 @@ int lock_contention_read(struct machine *machine, struct hlist_head *head)
->  			return -1;
->  		}
->  
-> -		hlist_add_head(&st->hash_entry, head);
-> +		hlist_add_head(&st->hash_entry, con->result);
->  		prev_key = key;
->  	}
->  
-> diff --git a/tools/perf/util/lock-contention.h b/tools/perf/util/lock-contention.h
-> index 092c84441f9f..a0df5308cca4 100644
-> --- a/tools/perf/util/lock-contention.h
-> +++ b/tools/perf/util/lock-contention.h
-> @@ -107,18 +107,24 @@ struct evlist;
->  struct machine;
->  struct target;
->  
-> +struct lock_contention {
-> +	struct evlist *evlist;
-> +	struct target *target;
-> +	struct machine *machine;
-> +	struct hlist_head *result;
-> +};
-> +
->  #ifdef HAVE_BPF_SKEL
->  
-> -int lock_contention_prepare(struct evlist *evlist, struct target *target);
-> +int lock_contention_prepare(struct lock_contention *con);
->  int lock_contention_start(void);
->  int lock_contention_stop(void);
-> -int lock_contention_read(struct machine *machine, struct hlist_head *head);
-> +int lock_contention_read(struct lock_contention *con);
->  int lock_contention_finish(void);
->  
->  #else  /* !HAVE_BPF_SKEL */
->  
-> -static inline int lock_contention_prepare(struct evlist *evlist __maybe_unused,
-> -					  struct target *target __maybe_unused)
-> +static inline int lock_contention_prepare(struct lock_contention *con __maybe_unused)
->  {
->  	return 0;
->  }
-> @@ -127,8 +133,7 @@ static inline int lock_contention_start(void) { return 0; }
->  static inline int lock_contention_stop(void) { return 0; }
->  static inline int lock_contention_finish(void) { return 0; }
->  
-> -static inline int lock_contention_read(struct machine *machine __maybe_unused,
-> -				       struct hlist_head *head __maybe_unused)
-> +static inline int lock_contention_read(struct lock_contention *con __maybe_unused)
->  {
->  	return 0;
->  }
-> -- 
-> 2.37.1.455.g008518b4e5-goog
-
--- 
-
-- Arnaldo
+Thanks,
+Namhyung
