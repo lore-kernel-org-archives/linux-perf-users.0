@@ -2,84 +2,107 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 73A2FC25B06
-	for <linux-perf-users@archiver.kernel.org>; Tue,  2 Aug 2022 17:46:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 39F37C00140
+	for <linux-perf-users@archiver.kernel.org>; Tue,  2 Aug 2022 18:05:26 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S235071AbiHBRqa (ORCPT
+        id S230216AbiHBSFY (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Tue, 2 Aug 2022 13:46:30 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40010 "EHLO
+        Tue, 2 Aug 2022 14:05:24 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54812 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232716AbiHBRq3 (ORCPT
+        with ESMTP id S230188AbiHBSFW (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Tue, 2 Aug 2022 13:46:29 -0400
-Received: from mail-io1-xd30.google.com (mail-io1-xd30.google.com [IPv6:2607:f8b0:4864:20::d30])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C33EABF44;
-        Tue,  2 Aug 2022 10:46:28 -0700 (PDT)
-Received: by mail-io1-xd30.google.com with SMTP id z132so11229406iof.0;
-        Tue, 02 Aug 2022 10:46:28 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20210112;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=KjAZA+RBJyFCRVs3/+3jiKse67/26F8E/TlaG4k7TyI=;
-        b=G1ZC9vkFJ4/eIUWgdyFRStYtBBwbb1Zif38+6Kd6XjFeJpq0EDYF5HEYZANxccxOAb
-         HmDVHGEm41eETriohYDDkKfsfhiS1kgVPFbEY4rtweJ1QJ1w8sFeRIN71ItWO6BPmvwR
-         8ySNPXjJA7WIgGsGRmXgKwdyXVub6MJulx221Nk9d5iPBQyqj6nT41qN3sjBcMtODkzh
-         YVggKsNuk881EIvL8fVF0dABkRzDdp+uzsz7L1RfHwhrgeGxg09GhCRL77vLtcefM4Z1
-         g8BDmDPc0IdBGSMtP/pcTI7F8/Li326UqJekszusX2sd2U1KdEOWLdx+003Nps6DRXrj
-         M3lw==
+        Tue, 2 Aug 2022 14:05:22 -0400
+Received: from mail-oa1-f42.google.com (mail-oa1-f42.google.com [209.85.160.42])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CE910113A;
+        Tue,  2 Aug 2022 11:05:20 -0700 (PDT)
+Received: by mail-oa1-f42.google.com with SMTP id 586e51a60fabf-1013ecaf7e0so18037019fac.13;
+        Tue, 02 Aug 2022 11:05:20 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=KjAZA+RBJyFCRVs3/+3jiKse67/26F8E/TlaG4k7TyI=;
-        b=60seINrQDXCdijBLG5HC52XF1E2xB/G9/Z6SBaEfaRC1Q4NsklXq+yxUtyOXXA9GC6
-         Fyod7MiNhgLD5TZiupDhglBhmi48p0+6spTHDVYvnqVSpNrms/wa0MaMdI9B2EBKNU6M
-         N8GmT79dk9084i2Xss+bDNzfzN+12PYq0vHBjUQ5tZ6DPTl5kuxAMrJohjE8uOMsc67q
-         W+JG8vyH1XQWhjd7zfGaXsLejMC/U3bV0RTAl+fhT8DW8G6KcwCwtJLwxq3QBveF8Xs3
-         lB/IYiO8Rh3CMfHBBQnI5COUeTAoSsZ7h6x2IqLe+zG5aqCTWa3iJ1gcBc8LOP/XN8CL
-         tO8Q==
-X-Gm-Message-State: AJIora8nPtNAL0sNkUSWJ/DNhbKBPUg2JcHuaVJLQ1JhFtm19vvrHcYB
-        sj+mHmWNcOWigORMDxd7UgMe4xNdmDfaJDaonko=
-X-Google-Smtp-Source: AGRyM1sTchBu9DJxxSaHL1GJ3B7rxsIGwFJokjusWYxkrpam9ZondCiC/NMBhmRLcxl3wlnfbZ37BaFnTFAFjGKVsvA=
-X-Received: by 2002:a05:6638:25cb:b0:341:6546:1534 with SMTP id
- u11-20020a05663825cb00b0034165461534mr8585003jat.308.1659462388257; Tue, 02
- Aug 2022 10:46:28 -0700 (PDT)
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:x-gm-message-state:from:to:cc;
+        bh=UHeuO4m1+0J5UAlSgd6a8rj3eBaXa+1Xip7NqoHiSmg=;
+        b=NGrthaA8IXRcLwThaq0CE0GNaIEMB/4kzBAKzYrdS9YZBG89CeF7+5COgWR8oyg9de
+         wrOFJBXEWjPLxNGdPr5WAdNIVrzkwEvxaDRmkVy9rooxfiXx+z0sAQWuzZqdMs1PXeCM
+         0QEO/hcrtcObr+qIwPM8Pe0riQBQntLamG0aIDBGEnKED9JoPDIc4ES3u7Ok1d8NYz7J
+         Fcdi/t/+kdLsMenrM9xxq5iODYfdL4Pm1vDSfhg0pO6QdmJpuVqAELxPmgjOfZt3z3Zd
+         fvOO2NsVy2g33O4t6cI6oNPVZ9u+iWScxI3+lmizht8SwgWcFmeIdbcpb+iVral6HTU2
+         I6kQ==
+X-Gm-Message-State: ACgBeo23cnuwqozp9lHnqQ8dH6RbDcc+0OeYo06CeRHqwC9KT2v4suWR
+        82hxGr+ABpsokxru6S1ThJKWvAROy46IlQ9UuAeozWGd
+X-Google-Smtp-Source: AA6agR4jnsOeta38tYWDtd4Yqm1aG3kaThX1Nbcmx08uVJCpjEDUj5U8hpXpb0zZWYrLeCa+xwTKJPdrp1x5jy7WsQ0=
+X-Received: by 2002:a05:6870:a182:b0:10b:efbe:e65d with SMTP id
+ a2-20020a056870a18200b0010befbee65dmr310078oaf.5.1659463520100; Tue, 02 Aug
+ 2022 11:05:20 -0700 (PDT)
 MIME-Version: 1.0
-References: <20220802015052.10452-1-ojeda@kernel.org> <YukYByl76DKqa+iD@casper.infradead.org>
- <CANiq72k7JKqq5-8Nqf3Q2r2t_sAffC8g86A+v8yBc=W-1--_Tg@mail.gmail.com>
- <YukuUtuXm/xPUuoP@casper.infradead.org> <CANiq72kgwssTSE7F+4xkRrXBGVgHeWxCyjeZ-NHLUXWnFjMyTg@mail.gmail.com>
-In-Reply-To: <CANiq72kgwssTSE7F+4xkRrXBGVgHeWxCyjeZ-NHLUXWnFjMyTg@mail.gmail.com>
-From:   Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>
-Date:   Tue, 2 Aug 2022 19:46:17 +0200
-Message-ID: <CANiq72=551t+CeiuCZz-SSx+uDaz238xjDFMRmkTwRuSFNcqmw@mail.gmail.com>
-Subject: Re: [PATCH v8 00/31] Rust support
-To:     Matthew Wilcox <willy@infradead.org>
-Cc:     Linus Torvalds <torvalds@linux-foundation.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Miguel Ojeda <ojeda@kernel.org>,
-        rust-for-linux@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Jarkko Sakkinen <jarkko@kernel.org>,
-        linux-arm-kernel@lists.infradead.org, linux-doc@vger.kernel.org,
-        linux-gpio@vger.kernel.org, linux-kbuild@vger.kernel.org,
-        linux-perf-users@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
-        linux-riscv@lists.infradead.org, linux-um@lists.infradead.org,
-        live-patching@vger.kernel.org, linux-fsdevel@vger.kernel.org
+References: <20220802073511.299459-1-namhyung@kernel.org> <20220802073511.299459-2-namhyung@kernel.org>
+ <YuliN2UDbls5uW3u@kernel.org>
+In-Reply-To: <YuliN2UDbls5uW3u@kernel.org>
+From:   Namhyung Kim <namhyung@kernel.org>
+Date:   Tue, 2 Aug 2022 11:05:09 -0700
+Message-ID: <CAM9d7chZT-mociK=+iF_6SO=1JuD2xaL1HpE4eeo=myngq9vTw@mail.gmail.com>
+Subject: Re: [PATCH 2/3] perf lock: Add -m/--map-length option
+To:     Arnaldo Carvalho de Melo <acme@kernel.org>
+Cc:     Jiri Olsa <jolsa@kernel.org>, Ingo Molnar <mingo@kernel.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Ian Rogers <irogers@google.com>,
+        linux-perf-users <linux-perf-users@vger.kernel.org>,
+        Will Deacon <will@kernel.org>,
+        Waiman Long <longman@redhat.com>,
+        Boqun Feng <boqun.feng@gmail.com>,
+        Davidlohr Bueso <dave@stgolabs.net>,
+        Song Liu <songliubraving@fb.com>,
+        Blake Jones <blakejones@google.com>
 Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-On Tue, Aug 2, 2022 at 5:09 PM Miguel Ojeda
-<miguel.ojeda.sandonis@gmail.com> wrote:
+On Tue, Aug 2, 2022 at 10:43 AM Arnaldo Carvalho de Melo
+<acme@kernel.org> wrote:
 >
-> Yeah, patch 17, exactly (patch 11 is the `alloc` import). I have asked
-> Konstantin privately about them.
+> Em Tue, Aug 02, 2022 at 12:35:10AM -0700, Namhyung Kim escreveu:
+> > The -m/--map-length option is to control number of max entries in the
+> > perf lock contention BPF maps.
+> >
+> > Signed-off-by: Namhyung Kim <namhyung@kernel.org>
+> > ---
+> >  tools/perf/Documentation/perf-lock.txt |  4 ++++
+> >  tools/perf/builtin-lock.c              | 23 ++++++++++++++++++++++-
+> >  tools/perf/util/bpf_lock_contention.c  |  3 +++
+> >  tools/perf/util/lock-contention.h      |  1 +
+> >  4 files changed, 30 insertions(+), 1 deletion(-)
+> >
+> > diff --git a/tools/perf/Documentation/perf-lock.txt b/tools/perf/Documentation/perf-lock.txt
+> > index 7949d2e6891b..2101644785e0 100644
+> > --- a/tools/perf/Documentation/perf-lock.txt
+> > +++ b/tools/perf/Documentation/perf-lock.txt
+> > @@ -145,6 +145,10 @@ CONTENTION OPTIONS
+> >  --tid=::
+> >          Record events on existing thread ID (comma separated list).
+> >
+> > +-m::
+> > +--map-length::
+> > +     Maximum number of BPF map entries (default: 10240).
+>
+> --map-nr-entries?
+>
+> I think we use this jargon "nr-entries" for arrays, lists, etc, better
+> try to stick to it.
 
-The patches are showing up now in lore -- not sure if it was just a
-delay (which would be consistent with the lack of bounce) or somebody
-did something (thank you if so!).
+Makes sense, will change.
 
-Cheers,
-Miguel
+>
+> Also what do you think about not using single letter options for things
+> that are not that used?
+>
+> The map size has a default, one that seems generous, so changing it
+> should be something uncommon, and then, if it becomes common that more
+> entries are needed by default, we can change the default in the tool.
+
+Fair enough, I'll remove the single letter option.
+
+Thanks,
+Namhyung
