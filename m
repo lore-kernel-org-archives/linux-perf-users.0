@@ -2,191 +2,84 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B7786C19F28
-	for <linux-perf-users@archiver.kernel.org>; Wed,  3 Aug 2022 15:07:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A8BF7C19F29
+	for <linux-perf-users@archiver.kernel.org>; Wed,  3 Aug 2022 15:12:36 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S236981AbiHCPHy (ORCPT
+        id S229912AbiHCPMf (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Wed, 3 Aug 2022 11:07:54 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44774 "EHLO
+        Wed, 3 Aug 2022 11:12:35 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47474 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S236361AbiHCPHx (ORCPT
+        with ESMTP id S235868AbiHCPMe (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Wed, 3 Aug 2022 11:07:53 -0400
-Received: from mail-pl1-x62e.google.com (mail-pl1-x62e.google.com [IPv6:2607:f8b0:4864:20::62e])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9FD462E9CC
-        for <linux-perf-users@vger.kernel.org>; Wed,  3 Aug 2022 08:07:52 -0700 (PDT)
-Received: by mail-pl1-x62e.google.com with SMTP id o3so16657331ple.5
-        for <linux-perf-users@vger.kernel.org>; Wed, 03 Aug 2022 08:07:52 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=OZdPufNv7yDerMaHu8UNrCkIxv3ZM8aDx+A/G4DitU4=;
-        b=tp2cehirVs+zbOm4bECh3bmIak37aqyRWHWgLwJFExkKI2U0zKMJmrAbjAQv4m47Uj
-         GNgAHydYek1KfP8swkal+yD4MQ+82UftMf2ZcNQI9xvggLW8wRlaGVHDXQHOkNBOWm1y
-         msef2A0yL1Ca75GxQKifzuFS7kxDhVGAMczjzHdBUJ5tQN3IhkIpV+iqVdTc0ofcXO/I
-         G1F0AOFTsy+EhP4DbhR4eV+NdeTsg1PsDpH1oQ7tqMVt0J0RYC5CJLwIG0U49I4Uo++N
-         CFgM2QZMKjCLJnQBYFLMWQbL434ZgFOKloH3K5jip8lceI7ECuedYsXXMmGkTSGULXB0
-         gFSQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=OZdPufNv7yDerMaHu8UNrCkIxv3ZM8aDx+A/G4DitU4=;
-        b=YaYwL8QtaiHiRj5SH+FdGiKZhulj2/yYgWnwjue4OzenwwfAgvv2q9kfcckFvu9QZo
-         V8vIgkPCHQzTgzZGICs+voeMeowbAgNIRkbYIc1Dw7QIdPB+XqTeka6hVuMHJjMkEL8K
-         aypojvvtPXrw/QemvAdTHmx7St1Z7DBh+Kr5UqODXlOkenlF/zbfOY3zRjh1HN6o61o6
-         RNNlYgw3JQaucIVT4uA8iQl+cKTcg3KqWuWHeIeDXuuE7Vt6lEU/yMGXfYnG0ZAFrzQa
-         Abnk2RgsuI36MHCkYGyLc0V8njDz8xL8ApDFw1UHaAD6pxbbgjDoqBQnSWQ5uuTiyQeS
-         P4rg==
-X-Gm-Message-State: ACgBeo2OOqRtE6+CYBe6uKCe/ygEszNPBNxZdICWqfVxV8Jbf8ASQJN1
-        x5JqM8cAIiZHfh8W8exdbN0IOg==
-X-Google-Smtp-Source: AA6agR7Gw7PLtGUqnDN56Gwqyo3f9eGti/0N0xixgqRO0/uYfAlrhLdMJk7dH4o8RNHv3sB19rrB4Q==
-X-Received: by 2002:a17:90a:e295:b0:1f3:2ddb:9c53 with SMTP id d21-20020a17090ae29500b001f32ddb9c53mr5319858pjz.129.1659539271878;
-        Wed, 03 Aug 2022 08:07:51 -0700 (PDT)
-Received: from localhost (ec2-13-57-253-244.us-west-1.compute.amazonaws.com. [13.57.253.244])
-        by smtp.gmail.com with ESMTPSA id q1-20020a17090a064100b001f218ddd5e2sm1694029pje.32.2022.08.03.08.07.50
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 03 Aug 2022 08:07:51 -0700 (PDT)
-From:   Leo Yan <leo.yan@linaro.org>
-To:     Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Ian Rogers <irogers@google.com>,
+        Wed, 3 Aug 2022 11:12:34 -0400
+Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7FD1B2AC64;
+        Wed,  3 Aug 2022 08:12:33 -0700 (PDT)
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by dfw.source.kernel.org (Postfix) with ESMTPS id 0D5D5616DA;
+        Wed,  3 Aug 2022 15:12:33 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 35CA9C433D6;
+        Wed,  3 Aug 2022 15:12:32 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1659539552;
+        bh=p8QyDDDw5i78K85n6ri69fueQGZCAVLQxha9fjbynak=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=vEIYcNU92D1Fx6/jc/qFgiTqebXCPFev99O6evkXGK75fW2wj75NOjv4ZqGNmifGP
+         HyF0Ppg0U9ufEryHgO70XWGnocyjjkUNh0Awa/LaGMl6LwA3bTwVZSh6Ax3HZ4Mi7k
+         Xm3PPJT+3vAqH99ZBAGu4yKGiJLZexOe3raWclBxEOr1ZEPfoVhPoVEGE6f8b9qJam
+         D1VP8o3rh051irPkOqC7e8J4A5B2HlExNCE67zGTvAVjyH/7vVh4NU2aOIALLItbgt
+         Saj7tF8HtlcBJbH9IGB1GutE0FtV7yoJAw/ol2E/MPn23Dfsq8oZX6Fujuj3ycez/C
+         IaRHNHjE1qZYw==
+Received: by quaco.ghostprotocols.net (Postfix, from userid 1000)
+        id 7341840736; Wed,  3 Aug 2022 12:12:29 -0300 (-03)
+Date:   Wed, 3 Aug 2022 12:12:29 -0300
+From:   Arnaldo Carvalho de Melo <acme@kernel.org>
+To:     Namhyung Kim <namhyung@kernel.org>
+Cc:     Jiri Olsa <jolsa@kernel.org>, Ingo Molnar <mingo@kernel.org>,
         Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Jiri Olsa <jolsa@kernel.org>,
-        Namhyung Kim <namhyung@kernel.org>,
-        linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org
-Cc:     Leo Yan <leo.yan@linaro.org>
-Subject: [PATCH v1] perf test: Introduce script for data symbol parsing
-Date:   Wed,  3 Aug 2022 23:07:44 +0800
-Message-Id: <20220803150744.133128-1-leo.yan@linaro.org>
-X-Mailer: git-send-email 2.25.1
+        LKML <linux-kernel@vger.kernel.org>,
+        Ian Rogers <irogers@google.com>,
+        linux-perf-users <linux-perf-users@vger.kernel.org>,
+        Will Deacon <will@kernel.org>,
+        Waiman Long <longman@redhat.com>,
+        Boqun Feng <boqun.feng@gmail.com>,
+        Davidlohr Bueso <dave@stgolabs.net>,
+        Song Liu <songliubraving@fb.com>,
+        Blake Jones <blakejones@google.com>
+Subject: Re: [PATCH v2 1/3] perf lock: Introduce struct lock_contention
+Message-ID: <YuqQXbCTCLPjTnH6@kernel.org>
+References: <20220802191004.347740-1-namhyung@kernel.org>
+ <YumRXcxc5XIUwlBO@kernel.org>
+ <CAM9d7choD8v8Bxu3w4V1Q3M1i7SwP2W+pY5ZWLqUqr89O2PLOQ@mail.gmail.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CAM9d7choD8v8Bxu3w4V1Q3M1i7SwP2W+pY5ZWLqUqr89O2PLOQ@mail.gmail.com>
+X-Url:  http://acmel.wordpress.com
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-This commit introduces a shell script for data symbol parsing.
+Em Tue, Aug 02, 2022 at 04:47:02PM -0700, Namhyung Kim escreveu:
+> On Tue, Aug 2, 2022 at 2:04 PM Arnaldo Carvalho de Melo <acme@kernel.org> wrote:
+> >
+> > Em Tue, Aug 02, 2022 at 12:10:02PM -0700, Namhyung Kim escreveu:
+> > > The lock_contention struct is to carry related fields together and to
+> > > minimize the change when we add new config options.
+> >
+> >
+> > Thanks, applied. Forgot the cover letter? :-)
+> 
+> Thank you!
+> 
+> I thought it's a small change that doesn't require a cover letter.
+> But if you prefer seeing it for small changes too, I'd write a
+> short letter next time.
 
-The testing is designed a data structure with 64-byte alignment, and it
-has two fields "data1" and "data2", and other fields are reserved.
+Yeah, just felt unusual, but then, b4 with any of the message-ids works
+just fine, so up to you, I'm adjusting.
 
-Using "perf mem" command, it records and reports memory samples for a
-workload with 1 second duration.  If have no any memory sample for the
-data structure "buf1", it reports failure;  and any memory accessing for
-the data structure is not for "data1" and "data2" filed, it also means
-the wrong data symbol parsing and returns failure.
-
-Signed-off-by: Leo Yan <leo.yan@linaro.org>
----
- tools/perf/tests/shell/test_data_symbol.sh | 94 ++++++++++++++++++++++
- 1 file changed, 94 insertions(+)
- create mode 100755 tools/perf/tests/shell/test_data_symbol.sh
-
-diff --git a/tools/perf/tests/shell/test_data_symbol.sh b/tools/perf/tests/shell/test_data_symbol.sh
-new file mode 100755
-index 000000000000..7039dae4e087
---- /dev/null
-+++ b/tools/perf/tests/shell/test_data_symbol.sh
-@@ -0,0 +1,94 @@
-+#!/bin/bash
-+# Check perf data symbol parsing
-+
-+# SPDX-License-Identifier: GPL-2.0
-+# Leo Yan <leo.yan@linaro.org>, 2022
-+
-+skip_if_no_mem_event() {
-+	perf mem record -e list 2>&1 | egrep -q 'available' && return 0
-+	return 2
-+}
-+
-+skip_if_no_mem_event || exit 2
-+
-+# skip if there's no compiler
-+if ! [ -x "$(command -v cc)" ]; then
-+	echo "skip: no compiler, install gcc"
-+	exit 2
-+fi
-+
-+TEST_PROGRAM_SOURCE=$(mktemp /tmp/__perf_test.program.XXXXX.c)
-+TEST_PROGRAM=$(mktemp /tmp/__perf_test.program.XXXXX)
-+PERF_DATA=$(mktemp /tmp/__perf_test.perf.data.XXXXX)
-+
-+check_result() {
-+	# The memory report format is as below:
-+	#    99.92%  ...  [.] buf1+0x38  ...
-+	result=$(perf mem report -i ${PERF_DATA} --stdio 2>&1 | egrep "buf1" | \
-+		awk '{ for (i = 1; i <= NF; i++) { if ($i ~ /^buf1/) { print $i; break; } } }')
-+
-+	# Testing is failed if has no any sample for "buf1"
-+	[ -z "$result" ] && return 1
-+
-+	while IFS= read -r line; do
-+		# The "data1" and "data2" fields in structure "buf1" have
-+		# offset "0x0" and "0x38", returns failure if detect any
-+		# other offset value.
-+		if [ "$line" != "buf1+0x0" ] && [ "$line" != "buf1+0x38" ]; then
-+			return 1
-+		fi
-+	done <<< "$result"
-+
-+	return 0
-+}
-+
-+cleanup_files()
-+{
-+	echo "Cleaning up files..."
-+	rm -f ${PERF_DATA}
-+	rm -f ${TEST_PROGRAM_SOURCE}
-+	rm -f ${TEST_PROGRAM}
-+}
-+
-+trap cleanup_files exit term int
-+
-+# compile test program
-+cat << EOF > $TEST_PROGRAM_SOURCE
-+#include <stdio.h>
-+#include <stdlib.h>
-+#include <unistd.h>
-+
-+typedef struct _buf {
-+	long data1;
-+	long reserved[6];
-+	long data2;
-+} buf __attribute__((aligned (64)));
-+
-+static buf buf1;
-+
-+int main() {
-+	int i;
-+	for (;;) {
-+		buf1.data1++;
-+		buf1.data2 += buf1.data1;
-+	}
-+	return 0;
-+}
-+EOF
-+
-+echo "Compiling test program..."
-+cc $TEST_PROGRAM_SOURCE -o $TEST_PROGRAM || exit 1
-+
-+echo "Recording workload..."
-+perf mem record --all-user -o ${PERF_DATA} -- $TEST_PROGRAM &
-+PERFPID=$!
-+
-+sleep 1
-+
-+kill $PERFPID
-+wait $PERFPID
-+# test program may leave an orphan process running the workload
-+killall $(basename $TEST_PROGRAM)
-+
-+check_result "$variable_name"
-+exit $?
--- 
-2.25.1
-
+- Arnaldo
