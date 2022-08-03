@@ -2,84 +2,106 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A8BF7C19F29
-	for <linux-perf-users@archiver.kernel.org>; Wed,  3 Aug 2022 15:12:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 22842C19F28
+	for <linux-perf-users@archiver.kernel.org>; Wed,  3 Aug 2022 15:25:43 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229912AbiHCPMf (ORCPT
+        id S233814AbiHCPZm (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Wed, 3 Aug 2022 11:12:35 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47474 "EHLO
+        Wed, 3 Aug 2022 11:25:42 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57526 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S235868AbiHCPMe (ORCPT
+        with ESMTP id S238084AbiHCPZf (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Wed, 3 Aug 2022 11:12:34 -0400
-Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7FD1B2AC64;
-        Wed,  3 Aug 2022 08:12:33 -0700 (PDT)
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id 0D5D5616DA;
-        Wed,  3 Aug 2022 15:12:33 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 35CA9C433D6;
-        Wed,  3 Aug 2022 15:12:32 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1659539552;
-        bh=p8QyDDDw5i78K85n6ri69fueQGZCAVLQxha9fjbynak=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=vEIYcNU92D1Fx6/jc/qFgiTqebXCPFev99O6evkXGK75fW2wj75NOjv4ZqGNmifGP
-         HyF0Ppg0U9ufEryHgO70XWGnocyjjkUNh0Awa/LaGMl6LwA3bTwVZSh6Ax3HZ4Mi7k
-         Xm3PPJT+3vAqH99ZBAGu4yKGiJLZexOe3raWclBxEOr1ZEPfoVhPoVEGE6f8b9qJam
-         D1VP8o3rh051irPkOqC7e8J4A5B2HlExNCE67zGTvAVjyH/7vVh4NU2aOIALLItbgt
-         Saj7tF8HtlcBJbH9IGB1GutE0FtV7yoJAw/ol2E/MPn23Dfsq8oZX6Fujuj3ycez/C
-         IaRHNHjE1qZYw==
-Received: by quaco.ghostprotocols.net (Postfix, from userid 1000)
-        id 7341840736; Wed,  3 Aug 2022 12:12:29 -0300 (-03)
-Date:   Wed, 3 Aug 2022 12:12:29 -0300
-From:   Arnaldo Carvalho de Melo <acme@kernel.org>
-To:     Namhyung Kim <namhyung@kernel.org>
-Cc:     Jiri Olsa <jolsa@kernel.org>, Ingo Molnar <mingo@kernel.org>,
+        Wed, 3 Aug 2022 11:25:35 -0400
+Received: from mail-pf1-x434.google.com (mail-pf1-x434.google.com [IPv6:2607:f8b0:4864:20::434])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7534E65C1
+        for <linux-perf-users@vger.kernel.org>; Wed,  3 Aug 2022 08:25:33 -0700 (PDT)
+Received: by mail-pf1-x434.google.com with SMTP id y141so16754740pfb.7
+        for <linux-perf-users@vger.kernel.org>; Wed, 03 Aug 2022 08:25:33 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=vY5Gs44ObcZqhnAkDw1pnGHq29Y4iUKBpPeypGL8C04=;
+        b=lJgAtu/cwXyf8s1wIwQZ0CNNCCdmo3JMXJHH0lscHNOrNNBxXncxE/VrJgKSC2OmjC
+         NOerG+8+aBL44+OZSHHph5NPJruytt71lzo8W8GEOnfS5lwOAUxXXIw2UcxyknUXR/1L
+         lrVum/jmFqx0a1SppZUxYzDhGpaUJrzClIxxqSDWVBqc1ZjPa2kFfiJJMtWL/QhR5YOu
+         /SaveEvW+ChdAin3Rtr7GwieqNMZCrxQJSNTs8AQckr40CoFwDoWcA9et803Nq9RtZ7J
+         lrZ+le+z4NnubOJuVZXbTqF06axzexzf8tC/L2kW1P/kN1hk1pcSDjSyrqdoaXFeehIc
+         6pxw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=vY5Gs44ObcZqhnAkDw1pnGHq29Y4iUKBpPeypGL8C04=;
+        b=iD3kZ/jTvFDcAf4Dqozecg9VZBi7op/R4Uvv63tLLEh7YOdSd6qAlN/amapQTjeu6t
+         Ux+XvVzcw+bt6iEOLHpqeQ5ty4id50v5DHVi041ynCQfjtHHFaNfLDAjk+EkOGOic6Af
+         9S8vSmgiMwiSn19lfcJgr+wwaVG5P3s/+FNujnBhUYJkkclSPOLWWDzhE+IAKGky/U4U
+         Q57y8/gTxO+FDEMhByn6Y9t8AOmqNAlQygc+vjuY/p/aL4AQfgEZ6IQnQQW7XLaH2aSK
+         AL98PvvSr0KAE/6X+LUYaxNaUPDuLurKb6witkp6OWF7ixwRWQpKPEI+PO6Zn1fxhjJN
+         rXNg==
+X-Gm-Message-State: AJIora+gqsRjgzdgF5W+U8/Aw88EB8Pk3XPISlDA/T6ftPIC+2/etAX+
+        BcSyTQdjmrXTJsFBDn9tEn40zA==
+X-Google-Smtp-Source: AGRyM1vmGDb1Z3T7ofJ95dzDpNMA/3hyYgDtd8/HkcsQWLW3sJTFg2aNQGuKVlVz5njqGZrL2NFrHg==
+X-Received: by 2002:a05:6a00:1a0c:b0:528:6baa:a2e3 with SMTP id g12-20020a056a001a0c00b005286baaa2e3mr26609309pfv.27.1659540332794;
+        Wed, 03 Aug 2022 08:25:32 -0700 (PDT)
+Received: from leoy-ThinkPad-X240s (173.242.120.83.16clouds.com. [173.242.120.83])
+        by smtp.gmail.com with ESMTPSA id h23-20020a17090a055700b001f3162e4e55sm1756596pjf.35.2022.08.03.08.25.30
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 03 Aug 2022 08:25:32 -0700 (PDT)
+Date:   Wed, 3 Aug 2022 23:25:27 +0800
+From:   Leo Yan <leo.yan@linaro.org>
+To:     Arnaldo Carvalho de Melo <acme@kernel.org>
+Cc:     Ian Rogers <irogers@google.com>,
         Peter Zijlstra <peterz@infradead.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Ian Rogers <irogers@google.com>,
+        Ingo Molnar <mingo@redhat.com>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Jiri Olsa <jolsa@kernel.org>,
+        Namhyung Kim <namhyung@kernel.org>,
         linux-perf-users <linux-perf-users@vger.kernel.org>,
-        Will Deacon <will@kernel.org>,
-        Waiman Long <longman@redhat.com>,
-        Boqun Feng <boqun.feng@gmail.com>,
-        Davidlohr Bueso <dave@stgolabs.net>,
-        Song Liu <songliubraving@fb.com>,
-        Blake Jones <blakejones@google.com>
-Subject: Re: [PATCH v2 1/3] perf lock: Introduce struct lock_contention
-Message-ID: <YuqQXbCTCLPjTnH6@kernel.org>
-References: <20220802191004.347740-1-namhyung@kernel.org>
- <YumRXcxc5XIUwlBO@kernel.org>
- <CAM9d7choD8v8Bxu3w4V1Q3M1i7SwP2W+pY5ZWLqUqr89O2PLOQ@mail.gmail.com>
+        LKML <linux-kernel@vger.kernel.org>,
+        Stephane Eranian <eranian@google.com>
+Subject: Re: [PATCH] perf symbol: Fail to read phdr workaround
+Message-ID: <20220803152527.GA133193@leoy-ThinkPad-X240s>
+References: <20220731164923.691193-1-irogers@google.com>
+ <20220801015259.GA101027@leoy-ThinkPad-X240s>
+ <CAP-5=fVSjCQ4jeAeyP5THnQVyXDpKd6Ob33C7PDwFB_6+YSXuw@mail.gmail.com>
+ <YufJP5YqeEBM51HL@kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <CAM9d7choD8v8Bxu3w4V1Q3M1i7SwP2W+pY5ZWLqUqr89O2PLOQ@mail.gmail.com>
-X-Url:  http://acmel.wordpress.com
+In-Reply-To: <YufJP5YqeEBM51HL@kernel.org>
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-Em Tue, Aug 02, 2022 at 04:47:02PM -0700, Namhyung Kim escreveu:
-> On Tue, Aug 2, 2022 at 2:04 PM Arnaldo Carvalho de Melo <acme@kernel.org> wrote:
-> >
-> > Em Tue, Aug 02, 2022 at 12:10:02PM -0700, Namhyung Kim escreveu:
-> > > The lock_contention struct is to carry related fields together and to
-> > > minimize the change when we add new config options.
-> >
-> >
-> > Thanks, applied. Forgot the cover letter? :-)
-> 
-> Thank you!
-> 
-> I thought it's a small change that doesn't require a cover letter.
-> But if you prefer seeing it for small changes too, I'd write a
-> short letter next time.
+Hi Arnaldo, Ian,
 
-Yeah, just felt unusual, but then, b4 with any of the message-ids works
-just fine, so up to you, I'm adjusting.
+On Mon, Aug 01, 2022 at 09:38:23AM -0300, Arnaldo Carvalho de Melo wrote:
 
-- Arnaldo
+[...]
+
+> I also think we could have something like a 'perf test' mode where, when
+> asked to, it would enable tests that involve downloading such files to
+> perform tests, such as this dacapo benchmark, and then would test if the
+> output matches expectations.
+
+I am working on testing script for java symbols, one of the steps shared by
+Ian is:
+
+  # /tmp/perf/perf record -k 1 java -agentpath:/tmp/perf/libperf-jvmti.so \
+    -jar dacapo-9.12-MR1-bach.jar -n 10 fop
+
+The question is how we can specify the path for the lib
+libperf-jvmti.so in the testing script?
+
+If we can run the test case from the root folder of Linux kernel
+source code, the lib libperf-jvmti.so can be found in the folder
+$linux/tools/perf, but for the integration testing the lib should be
+placed in an installed folder.  Any suggestion if we have exited
+way to specify the path for libperf-jvmti.so, or need to introduce a
+new shell envorinment variable for the lib path?
+
+Thanks,
+Leo
