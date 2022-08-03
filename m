@@ -2,60 +2,60 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8858CC19F28
-	for <linux-perf-users@archiver.kernel.org>; Wed,  3 Aug 2022 19:27:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 82952C19F2D
+	for <linux-perf-users@archiver.kernel.org>; Wed,  3 Aug 2022 19:27:43 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S238629AbiHCT1h (ORCPT
+        id S238692AbiHCT1k (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Wed, 3 Aug 2022 15:27:37 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60580 "EHLO
+        Wed, 3 Aug 2022 15:27:40 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60514 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S238544AbiHCT1S (ORCPT
+        with ESMTP id S237931AbiHCT10 (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Wed, 3 Aug 2022 15:27:18 -0400
-Received: from mail-pl1-x64a.google.com (mail-pl1-x64a.google.com [IPv6:2607:f8b0:4864:20::64a])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 51E9F5B790
-        for <linux-perf-users@vger.kernel.org>; Wed,  3 Aug 2022 12:27:13 -0700 (PDT)
-Received: by mail-pl1-x64a.google.com with SMTP id h8-20020a170902f54800b0016d9db4a55dso10971131plf.9
-        for <linux-perf-users@vger.kernel.org>; Wed, 03 Aug 2022 12:27:13 -0700 (PDT)
+        Wed, 3 Aug 2022 15:27:26 -0400
+Received: from mail-pl1-x649.google.com (mail-pl1-x649.google.com [IPv6:2607:f8b0:4864:20::649])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8FD6F5B7A8
+        for <linux-perf-users@vger.kernel.org>; Wed,  3 Aug 2022 12:27:15 -0700 (PDT)
+Received: by mail-pl1-x649.google.com with SMTP id n8-20020a170902d2c800b0016edca79984so6481754plc.8
+        for <linux-perf-users@vger.kernel.org>; Wed, 03 Aug 2022 12:27:15 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=google.com; s=20210112;
         h=cc:to:from:subject:references:mime-version:message-id:in-reply-to
          :date:reply-to:from:to:cc;
-        bh=GeP9RItuT5cX0x8bod8txy1j8Bx4gMfigExcAQKorEA=;
-        b=TH39iZbQfjrOovP6PSkDuCuS1K49VQy+rHdokoRe8Vd6fIqvucm5OmGFpX08KC9cko
-         qtR88vT2RLqC05Cjmf6Qzexgo6uCk80zekZzYc6Gbs2AHwjSuiMZWV6RxkWIqgYCP9YV
-         EpjmxTFjxvjk3OhnIB55DRUzd2ILIDgUtghPGZ1aErMB5J/1QFgVyJRyjCqikMW9qkmj
-         glgZaRijKDZxBX1i9q5SGvO4pQzh5QxwCQppSNvjsedGAq1C2fgTBZ7SyEfTM6dcfk9/
-         9cugZPgy2EL0e253nEbHKTfXTshu9tCvTxTdR73CbL3M21WKLLHajXj1R15ryMZU9Scg
-         UIFg==
+        bh=miAlPwrbCQgN0E56eM5ssFJVYzMR4KpxRDlfQ+ZlXIY=;
+        b=D0UbA+P6z2AObS7Jny22QIU9JpwXlxc7eVpeSbs4iLwVBu/ML/aZ6JaS3Wagmy9rNQ
+         243ST+j1zEGSYdXQK4HrC7rGsRSmx4OX6MIU11kiQSYK0dB52FW9aB+uz+1fLWMSbgqE
+         PmZkbB8H6w6xE6GIqOnzw6d5sBC7h8E3Q3ZR+Rlk8wA/I0fN1IhOJpUMbRocequv6p35
+         OKppsjNxoCJgNzY5Zn7LxjKZLKcP2YdgIz4sDxr2FPqwiwXJAKQpdDpZ4ir0Zl2vzz+d
+         Qsml54AQ25D78PJKwfbH2VBwg+G7LzBVIFK8K3SXh3VJu8Njpk0iPw5Mzv1Frl4jnib0
+         aibg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
         h=cc:to:from:subject:references:mime-version:message-id:in-reply-to
          :date:reply-to:x-gm-message-state:from:to:cc;
-        bh=GeP9RItuT5cX0x8bod8txy1j8Bx4gMfigExcAQKorEA=;
-        b=AhRe2zRadpRLo2W7JTgwE/3E6lMXEO00KGWh9xhTTp2nQl3Ls3y3/87CoB7GwewPH0
-         yeMRwOAGh/4OvTz6yck19AQxD8en4jtEgOYSDWQHpscYSQdpXIhwl5xtBLyfGtSKu/n5
-         2iEgVMowwLyH3ZXGoSg4wcKUbffZoRZLhGA+ZBFjXejdXQ7xHFTue7HSWxy2G4NZl2yk
-         sG6RX7DamlQrlOnjq4jys9KK1KP2TKB66qClWOG9x26/Z4P9OfAc3sYlSjCwjnTzJKW0
-         l0RmavAQx4Ytw6+QVz6+IaaWcW6z4oVbXh4MVjeNsHjOoZYqZ0lnHuWOvhtDT9BzBPTc
-         GowQ==
-X-Gm-Message-State: ACgBeo2+ka8ZlZAp7252U3HDQTJkbXkgYan9iOpLX2yF/+7MiFaJvKzj
-        Lc3oGI7l5evL0CZLAVR6as9tLQ28XNI=
-X-Google-Smtp-Source: AA6agR70W4WfP/jyajIwpsWZD3Yz/LI6VDrsaqbQLRj42kpQfzh6LodaF+ZwCJ1s72gveDyQK98NJvXN98c=
+        bh=miAlPwrbCQgN0E56eM5ssFJVYzMR4KpxRDlfQ+ZlXIY=;
+        b=IJoqMO6oFOEI/dYyZh/4ELlf2cVZNQXWsSx12p4dsPR01kj4Tu0lX19hSfv8ZgycqC
+         GYNPm4Pc/yjvebIYOR6wI+WjJhcLuYOu9wXgcpmF+a2QBrahiS9PzHWaiuLh+kiaHodH
+         fR/e8bM+7RQ+gNMUJznOBM+TqE/cb999y3NhG97d+u/tGipT3VhqvRzqSSDSaWPUyx0u
+         ZXTqc3HTq0EZDzNXa6vzH+0XHKGRo2knmKpFtP+rGcK7g7fqeZ/MuJTHw+AJzHYqiT+k
+         cDQ87MtdQ3AJvRRC9bNtqmWu5SuKC6ykus2vXI1Bs/B8/LDPauCF8OTrLscGmubCx4y6
+         FeLQ==
+X-Gm-Message-State: ACgBeo15D6tYO6Sw+ghprMHJJDxsx6hoURziipgAXaOa2gSJX1YIEloe
+        pwxssv9BATjXZUiAs6GcJ06NNVdoQ5M=
+X-Google-Smtp-Source: AA6agR6lAdTPvlttjsLtXWWxIk5IZzJW8lJsYP3jKoyPIMRir4soD844K2FCZGswawiXrim1VMllZqU/H90=
 X-Received: from zagreus.c.googlers.com ([fda3:e722:ac3:cc00:7f:e700:c0a8:5c37])
- (user=seanjc job=sendgmr) by 2002:a17:903:110e:b0:16c:defc:a092 with SMTP id
- n14-20020a170903110e00b0016cdefca092mr27719373plh.143.1659554832817; Wed, 03
- Aug 2022 12:27:12 -0700 (PDT)
+ (user=seanjc job=sendgmr) by 2002:a05:6a00:1786:b0:52e:625d:a08d with SMTP id
+ s6-20020a056a00178600b0052e625da08dmr730293pfg.76.1659554834636; Wed, 03 Aug
+ 2022 12:27:14 -0700 (PDT)
 Reply-To: Sean Christopherson <seanjc@google.com>
-Date:   Wed,  3 Aug 2022 19:26:57 +0000
+Date:   Wed,  3 Aug 2022 19:26:58 +0000
 In-Reply-To: <20220803192658.860033-1-seanjc@google.com>
-Message-Id: <20220803192658.860033-7-seanjc@google.com>
+Message-Id: <20220803192658.860033-8-seanjc@google.com>
 Mime-Version: 1.0
 References: <20220803192658.860033-1-seanjc@google.com>
 X-Mailer: git-send-email 2.37.1.559.g78731f0fdb-goog
-Subject: [PATCH v2 6/7] KVM: VMX: Adjust number of LBR records for
- PERF_CAPABILITIES at refresh
+Subject: [PATCH v2 7/7] KVM: VMX: Simplify capability check when handling
+ PERF_CAPABILITIES write
 From:   Sean Christopherson <seanjc@google.com>
 To:     Peter Zijlstra <peterz@infradead.org>,
         Ingo Molnar <mingo@redhat.com>,
@@ -73,84 +73,41 @@ Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-Now that the PMU is refreshed when MSR_IA32_PERF_CAPABILITIES is written
-by host userspace, zero out the number of LBR records for a vCPU during
-PMU refresh if PMU_CAP_LBR_FMT is not set in PERF_CAPABILITIES instead of
-handling the check at run-time.
+Explicitly check for the absence of host support for LBRs or PEBS when
+userspace attempts to enable said features by writing PERF_CAPABILITIES.
+Comparing host support against the incoming value is unnecessary and
+weird since the checks are buried inside an if-statement that verifies
+userspace wants to enable the feature.
 
-guest_cpuid_has() is expensive due to the linear search of guest CPUID
-entries, intel_pmu_lbr_is_enabled() is checked on every VM-Enter, _and_
-simply enumerating the same "Model" as the host causes KVM to set the
-number of LBR records to a non-zero value.
+No functional change intended.
 
 Signed-off-by: Sean Christopherson <seanjc@google.com>
 ---
- arch/x86/kvm/vmx/pmu_intel.c | 12 +++---------
- arch/x86/kvm/vmx/vmx.h       |  7 +++++--
- 2 files changed, 8 insertions(+), 11 deletions(-)
+ arch/x86/kvm/vmx/vmx.c | 6 ++----
+ 1 file changed, 2 insertions(+), 4 deletions(-)
 
-diff --git a/arch/x86/kvm/vmx/pmu_intel.c b/arch/x86/kvm/vmx/pmu_intel.c
-index 862c1a4d971b..c399637a3a79 100644
---- a/arch/x86/kvm/vmx/pmu_intel.c
-+++ b/arch/x86/kvm/vmx/pmu_intel.c
-@@ -171,13 +171,6 @@ static inline struct kvm_pmc *get_fw_gp_pmc(struct kvm_pmu *pmu, u32 msr)
- 	return get_gp_pmc(pmu, msr, MSR_IA32_PMC0);
- }
- 
--bool intel_pmu_lbr_is_enabled(struct kvm_vcpu *vcpu)
--{
--	struct x86_pmu_lbr *lbr = vcpu_to_lbr_records(vcpu);
--
--	return lbr->nr && (vcpu_get_perf_capabilities(vcpu) & PMU_CAP_LBR_FMT);
--}
--
- static bool intel_pmu_is_valid_lbr_msr(struct kvm_vcpu *vcpu, u32 index)
- {
- 	struct x86_pmu_lbr *records = vcpu_to_lbr_records(vcpu);
-@@ -592,7 +585,9 @@ static void intel_pmu_refresh(struct kvm_vcpu *vcpu)
- 	bitmap_set(pmu->all_valid_pmc_idx,
- 		INTEL_PMC_MAX_GENERIC, pmu->nr_arch_fixed_counters);
- 
--	if (cpuid_model_is_consistent(vcpu))
-+	perf_capabilities = vcpu_get_perf_capabilities(vcpu);
-+	if (cpuid_model_is_consistent(vcpu) &&
-+	    (perf_capabilities & PMU_CAP_LBR_FMT))
- 		x86_perf_get_lbr(&lbr_desc->records);
- 	else
- 		lbr_desc->records.nr = 0;
-@@ -600,7 +595,6 @@ static void intel_pmu_refresh(struct kvm_vcpu *vcpu)
- 	if (lbr_desc->records.nr)
- 		bitmap_set(pmu->all_valid_pmc_idx, INTEL_PMC_IDX_FIXED_VLBR, 1);
- 
--	perf_capabilities = vcpu_get_perf_capabilities(vcpu);
- 	if (perf_capabilities & PERF_CAP_PEBS_FORMAT) {
- 		if (perf_capabilities & PERF_CAP_PEBS_BASELINE) {
- 			pmu->pebs_enable_mask = counter_mask;
-diff --git a/arch/x86/kvm/vmx/vmx.h b/arch/x86/kvm/vmx/vmx.h
-index 35b39dab175d..413702dc1315 100644
---- a/arch/x86/kvm/vmx/vmx.h
-+++ b/arch/x86/kvm/vmx/vmx.h
-@@ -532,6 +532,11 @@ static inline struct x86_pmu_lbr *vcpu_to_lbr_records(struct kvm_vcpu *vcpu)
- 	return &vcpu_to_lbr_desc(vcpu)->records;
- }
- 
-+static inline bool intel_pmu_lbr_is_enabled(struct kvm_vcpu *vcpu)
-+{
-+	return !!vcpu_to_lbr_records(vcpu)->nr;
-+}
-+
- static inline bool intel_pmu_has_perf_global_ctrl(struct kvm_pmu *pmu)
- {
- 	/*
-@@ -545,8 +550,6 @@ static inline bool intel_pmu_has_perf_global_ctrl(struct kvm_pmu *pmu)
- }
- 
- void intel_pmu_cross_mapped_check(struct kvm_pmu *pmu);
--bool intel_pmu_lbr_is_enabled(struct kvm_vcpu *vcpu);
--
- int intel_pmu_create_guest_lbr_event(struct kvm_vcpu *vcpu);
- void vmx_passthrough_lbr_msrs(struct kvm_vcpu *vcpu);
- 
+diff --git a/arch/x86/kvm/vmx/vmx.c b/arch/x86/kvm/vmx/vmx.c
+index d7f8331d6f7e..0ada0ee234b7 100644
+--- a/arch/x86/kvm/vmx/vmx.c
++++ b/arch/x86/kvm/vmx/vmx.c
+@@ -2323,15 +2323,13 @@ static int vmx_set_msr(struct kvm_vcpu *vcpu, struct msr_data *msr_info)
+ 		if (data && !vcpu_to_pmu(vcpu)->version)
+ 			return 1;
+ 		if (data & PMU_CAP_LBR_FMT) {
+-			if ((data & PMU_CAP_LBR_FMT) !=
+-			    (vmx_get_perf_capabilities() & PMU_CAP_LBR_FMT))
++			if (!(vmx_get_perf_capabilities() & PMU_CAP_LBR_FMT))
+ 				return 1;
+ 			if (!cpuid_model_is_consistent(vcpu))
+ 				return 1;
+ 		}
+ 		if (data & PERF_CAP_PEBS_FORMAT) {
+-			if ((data & PERF_CAP_PEBS_MASK) !=
+-			    (vmx_get_perf_capabilities() & PERF_CAP_PEBS_MASK))
++			if (!(vmx_get_perf_capabilities() & PERF_CAP_PEBS_MASK))
+ 				return 1;
+ 			if (!guest_cpuid_has(vcpu, X86_FEATURE_DS))
+ 				return 1;
 -- 
 2.37.1.559.g78731f0fdb-goog
 
