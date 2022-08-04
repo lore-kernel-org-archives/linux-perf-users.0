@@ -2,59 +2,57 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 70833C19F21
-	for <linux-perf-users@archiver.kernel.org>; Thu,  4 Aug 2022 19:31:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 67708C19F21
+	for <linux-perf-users@archiver.kernel.org>; Thu,  4 Aug 2022 20:23:15 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S235054AbiHDTbK (ORCPT
+        id S237361AbiHDUXN (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Thu, 4 Aug 2022 15:31:10 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40882 "EHLO
+        Thu, 4 Aug 2022 16:23:13 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41408 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S233421AbiHDTbJ (ORCPT
+        with ESMTP id S232290AbiHDUXM (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Thu, 4 Aug 2022 15:31:09 -0400
-Received: from mail-wr1-x42f.google.com (mail-wr1-x42f.google.com [IPv6:2a00:1450:4864:20::42f])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B1B4B21E34
-        for <linux-perf-users@vger.kernel.org>; Thu,  4 Aug 2022 12:31:07 -0700 (PDT)
-Received: by mail-wr1-x42f.google.com with SMTP id z12so874922wrs.9
-        for <linux-perf-users@vger.kernel.org>; Thu, 04 Aug 2022 12:31:07 -0700 (PDT)
+        Thu, 4 Aug 2022 16:23:12 -0400
+Received: from mail-ej1-x62d.google.com (mail-ej1-x62d.google.com [IPv6:2a00:1450:4864:20::62d])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 395E26D556;
+        Thu,  4 Aug 2022 13:23:11 -0700 (PDT)
+Received: by mail-ej1-x62d.google.com with SMTP id m4so1338790ejr.3;
+        Thu, 04 Aug 2022 13:23:11 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20210112;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:from:to:cc;
-        bh=aGjkhmIvnwcqLQbSOFBCkR1cfjJE7Hbwa+5fNevRKuc=;
-        b=QaVYvQCz30zqEprRDkqypJhLvUiWaB4HFXQtkkrHtZSTC55M9bFdWYP9Fhi3TJhUkp
-         grFlEeAySbHkix58AxR9WzAvLQG8UkV5srm0Srzp5r7xmg452kovuHWCEbNcm7/IYsw8
-         HK8BO2Ty/iW3zrj7ftgMnxvuwm8Uem0BFKfYefgl703v0mupkMJJOUGwOAclEd/9RnJg
-         mxGg+f5w9xUiFrZ6KO1SKTWkRV52RzGgrmG+h7mld1ktX1qa9TUp1U5vCyFzKXhSleeG
-         LW+lNqrn9KoBWR0xxzPasviGm2ZKSRMGX1zxsv9eSrNTlHiv0rGAyDd/y94Um6MDywSh
-         qwsA==
+        d=gmail.com; s=20210112;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:date:from:from:to:cc;
+        bh=jXfSwIVHH5n0bd8ihUeImZw7y0OX8igYXCyoA7ZaxS0=;
+        b=LwAXYbKVkp+zbNDblZPDf5TS4z/8LXvzWeOvJhDHqCaj+dRAy2vmB/oSk7HnWNsC2c
+         JxKzLvRfwevhn4fzSUG//t5CW8rvx1UmRD5wsfAUAtO3rCUpgBGuwjWINVmWvicQixNS
+         l9H9BP8Dtk3F1oORE/lpWh84boBRpJ8PeUCehbfivHUJ8dE002kGiiRq5Wfn6qVDEP58
+         ZA2IsJL7kshfxUGMLPNIN3H947Mfkc5eD2iliO8I3DscF0DEuMmNRqiSsPsG8CIrBlc+
+         od9TjS8/l90kO4XsvsNsligDjxHb86lzqVoLHw1TL+ZyrInSTD9hdp7hS9G44unqf2NO
+         xHqg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc;
-        bh=aGjkhmIvnwcqLQbSOFBCkR1cfjJE7Hbwa+5fNevRKuc=;
-        b=neX2fSroGn/EpxoETDGG2DiHOgx+2NmWAXskRRywrm9KVLxFuqs/EgjEaAkcy64drY
-         204n41rHqpqaaqiEF/fUYF2T2hFopdcWdAzLrbnaTV7zwyvqFgeDnpjTyLBYbRVk+C9B
-         m12XJGhG4L9J9u++JuIYPuxmHpBdextWx5T3VKs2Uj5X9NQwrzSoOR8C9AJXN3PkO6G9
-         JbRPbpDJSYZpC7Losikr1gSFfjyU78kUkY5oxtSQs/wTtRFLV4lCagLA9RsVyVNSY9Wo
-         +PP5TUOTRD2B7v69t1vYHrcBOr4IOJGg4nmrl38sLbl8S3EyRktAhKvahjiwr8uFFXtT
-         wlKQ==
-X-Gm-Message-State: ACgBeo0m2OXIDpG+3elCXP0Fzof8oDTC9cvZOsA2AXcwf5STFthIGHZo
-        hGEeEhuF9T7HHrtciSSd3oUtXChefKP3CG6KPJcieA==
-X-Google-Smtp-Source: AA6agR7hwbiLDEMDY3c9luxh08xLMPlqCqTgN45hujP0/9+cQ6JmTeyry+yvDwOpIiFeCXDDIGDzrYSdS14twZuN2ZE=
-X-Received: by 2002:adf:e28d:0:b0:21e:4c3b:b446 with SMTP id
- v13-20020adfe28d000000b0021e4c3bb446mr2278375wri.300.1659641466133; Thu, 04
- Aug 2022 12:31:06 -0700 (PDT)
-MIME-Version: 1.0
-References: <20220614143353.1559597-1-irogers@google.com> <20220614143353.1559597-7-irogers@google.com>
- <YuZ4CEnken8U4HO5@krava>
-In-Reply-To: <YuZ4CEnken8U4HO5@krava>
-From:   Ian Rogers <irogers@google.com>
-Date:   Thu, 4 Aug 2022 12:30:53 -0700
-Message-ID: <CAP-5=fVczMiasS15UovH8kzOaNw=TC_adeqjC+xBzv8jVJ3DTQ@mail.gmail.com>
-Subject: Re: [PATCH v2 6/6] perf cpumap: Add range data encoding
-To:     Jiri Olsa <olsajiri@gmail.com>
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:date:from:x-gm-message-state:from:to:cc;
+        bh=jXfSwIVHH5n0bd8ihUeImZw7y0OX8igYXCyoA7ZaxS0=;
+        b=vPOJCwM6NPUSr6XEL0SycxqildAGkN+ierIxgA7NLpenZsYd4EimtjacpgLKdIb8E6
+         OWAiew1n4mOBx/PHialWI0Y+AMv3spXyiocXmu7NmkNgRUH8D89821MbADY9ra3kizNl
+         ajNpYby4geRBtItdAu1lxYZDyKi7KMiEMpN1vnnQ83yxaMK9kDpyqe0+BK82CBmjLbAE
+         07Xb8QtPnMYEV66vSIQlsBdlutNY9rxdH/Uvj+69Yz3n53a/vzBcvAwxa5DAI1hyJiSZ
+         s9A+X+W5zpMuNU7OPXpDbFNJqpCdeu7U4DvSsSVoSQaWiGjYd8D4NRjsXhEWq8lSqqYv
+         cfjA==
+X-Gm-Message-State: ACgBeo3YpHd5FJVopfh5/hoCKQjI30AprnzNdEM3gXp0NseoNIoMvEA0
+        K1U0EIUdLIDesL2Nl4Hlzjs=
+X-Google-Smtp-Source: AA6agR4oyK0YED/1FR9FdT7TBlIRZ/M2U896QReMZ+uLFHSeBWKZpEarxRCoOOb6t4tG6jpBFAzqOw==
+X-Received: by 2002:a17:906:ef8b:b0:730:d348:61b9 with SMTP id ze11-20020a170906ef8b00b00730d34861b9mr2654647ejb.350.1659644589481;
+        Thu, 04 Aug 2022 13:23:09 -0700 (PDT)
+Received: from krava ([83.240.62.222])
+        by smtp.gmail.com with ESMTPSA id kx16-20020a170907775000b00724261b592esm661620ejc.186.2022.08.04.13.23.08
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 04 Aug 2022 13:23:09 -0700 (PDT)
+From:   Jiri Olsa <olsajiri@gmail.com>
+X-Google-Original-From: Jiri Olsa <jolsa@kernel.org>
+Date:   Thu, 4 Aug 2022 22:23:07 +0200
+To:     Ian Rogers <irogers@google.com>
 Cc:     Peter Zijlstra <peterz@infradead.org>,
         Ingo Molnar <mingo@redhat.com>,
         Arnaldo Carvalho de Melo <acme@kernel.org>,
@@ -74,82 +72,100 @@ Cc:     Peter Zijlstra <peterz@infradead.org>,
         Alexey Bayduraev <alexey.v.bayduraev@linux.intel.com>,
         Leo Yan <leo.yan@linaro.org>, linux-perf-users@vger.kernel.org,
         linux-kernel@vger.kernel.org, Stephane Eranian <eranian@google.com>
-Content-Type: text/plain; charset="UTF-8"
+Subject: Re: [PATCH v2 0/6] Corrections to cpu map event encoding
+Message-ID: <Yuwqq1g5EgCzUohJ@krava>
+References: <20220614143353.1559597-1-irogers@google.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20220614143353.1559597-1-irogers@google.com>
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-On Sun, Jul 31, 2022 at 5:39 AM Jiri Olsa <olsajiri@gmail.com> wrote:
->
-> On Tue, Jun 14, 2022 at 07:33:53AM -0700, Ian Rogers wrote:
->
-> SNIP
->
-> > +     event = cpu_map_data__alloc(&syn_data, sizeof(struct perf_event_header));
-> >       if (!event)
-> >               return NULL;
-> >
-> > +     syn_data.data = &event->data;
-> >       event->header.type = PERF_RECORD_CPU_MAP;
-> > -     event->header.size = size;
-> > -     event->data.type   = type;
-> > -
-> > -     cpu_map_data__synthesize(&event->data, map, type, max);
-> > +     event->header.size = syn_data.size;
-> > +     cpu_map_data__synthesize(&syn_data);
-> >       return event;
-> >  }
-> >
-> > +
-> >  int perf_event__synthesize_cpu_map(struct perf_tool *tool,
-> >                                  const struct perf_cpu_map *map,
-> >                                  perf_event__handler_t process,
-> > @@ -1891,24 +1894,20 @@ int perf_event__synthesize_event_update_name(struct perf_tool *tool, struct evse
-> >  int perf_event__synthesize_event_update_cpus(struct perf_tool *tool, struct evsel *evsel,
-> >                                            perf_event__handler_t process)
-> >  {
-> > -     size_t size = sizeof(struct perf_event_header) + sizeof(u64) + sizeof(u64);
-> > +     struct synthesize_cpu_map_data syn_data = { .map = evsel->core.own_cpus };
-> >       struct perf_record_event_update *ev;
-> > -     int max, err;
-> > -     u16 type;
-> > -
-> > -     if (!evsel->core.own_cpus)
-> > -             return 0;
->
-> all seems fine, just looks like we no longer do this check,
-> might not be needed anymore, as that changed in past
+On Tue, Jun 14, 2022 at 07:33:47AM -0700, Ian Rogers wrote:
+> A mask encoding of a cpu map is laid out as:
+>   u16 nr
+>   u16 long_size
+>   unsigned long mask[];
+> However, the mask may be 8-byte aligned meaning there is a 4-byte pad
+> after long_size. This means 32-bit and 64-bit builds see the mask as
+> being at different offsets. On top of this the structure is in the byte
+> data[] encoded as:
+>   u16 type
+>   char data[]
+> This means the mask's struct isn't the required 4 or 8 byte aligned, but
+> is offset by 2. Consequently the long reads and writes are causing
+> undefined behavior as the alignment is broken.
+> 
+> These changes do minor clean up with const, visibility of functions
+> and using the constant time max function. It then adds 32 and 64-bit
+> mask encoding variants, packed to match current alignment. Taking the
+> address of a packed struct leads to unaligned data, so function
+> arguments are altered to be passed the packed struct. To compact the
+> mask encoding further and drop the padding, the 4-byte variant is
+> preferred. Finally a new range encoding is added, that reduces the
+> size of the common case of a range of CPUs to a single u64.
+> 
+> On a 72 CPU (hyperthread) machine the original encoding of all CPUs is:
+> 0x9a98 [0x28]: event: 74
+> .
+> . ... raw event: size 40 bytes
+> .  0000:  4a 00 00 00 00 00 28 00 01 00 02 00 08 00 00 00  J.....(.........
+> .  0010:  00 00 ff ff ff ff ff ff ff ff ff 00 00 00 00 00  ................
+> .  0020:  00 00 00 00 00 00 00 00                          ........        
+> 
+> 0 0 0x9a98 [0x28]: PERF_RECORD_CPU_MAP
+> 
+> Using the 4-byte encoding it is:
+> 0x9a98@pipe [0x20]: event: 74
+> .
+> . ... raw event: size 32 bytes
+> .  0000:  4a 00 00 00 00 00 20 00 01 00 03 00 04 00 ff ff  J..... .........
+> .  0010:  ff ff ff ff ff ff ff 00 00 00 00 00 00 00 00 00  ................
+> 
+> 0 0 0x9a98 [0x20]: PERF_RECORD_CPU_MAP
+> 
+> Finally, with the range encoding it is:
+> 0x9ab8@pipe [0x10]: event: 74
+> .
+> . ... raw event: size 16 bytes
+> .  0000:  4a 00 00 00 00 00 10 00 02 00 00 00 00 00 47 00  J.............G.
+> 
+> 0 0 0x9ab8 [0x10]: PERF_RECORD_CPU_MAP
+> 
+> v2. Fixes a bug in the size computation of the update header
+>     introduced by the last patch (Add range data encoding) and caught
+>     by address sanitizer.
+> 
+> Ian Rogers (6):
+>   perf cpumap: Const map for max
+>   perf cpumap: Synthetic events and const/static
+>   perf cpumap: Compute mask size in constant time
+>   perf cpumap: Fix alignment for masks in event encoding
+>   perf events: Prefer union over variable length array
+>   perf cpumap: Add range data encoding
 
-This function is called in a test and in this file. The caller already
-does this test and so the check is redundant plus a little confusing:
-https://git.kernel.org/pub/scm/linux/kernel/git/acme/linux.git/tree/tools/perf/util/synthetic-events.c?h=perf/core#n2062
-As you say, it wasn't needed any more and so I removed it.
+Acked-by: Jiri Olsa <jolsa@kernel.org>
 
-Thanks,
-Ian
+thanks,
+jirka
 
-> thanks,
-> jirka
->
-> > +     int err;
-> >
-> > -     ev = cpu_map_data__alloc(evsel->core.own_cpus, &size, &type, &max);
-> > +     ev = cpu_map_data__alloc(&syn_data, sizeof(struct perf_event_header) + 2 * sizeof(u64));
-> >       if (!ev)
-> >               return -ENOMEM;
-> >
-> > +     syn_data.data = &ev->cpus.cpus;
-> >       ev->header.type = PERF_RECORD_EVENT_UPDATE;
-> > -     ev->header.size = (u16)size;
-> > +     ev->header.size = (u16)syn_data.size;
-> >       ev->type        = PERF_EVENT_UPDATE__CPUS;
-> >       ev->id          = evsel->core.id[0];
-> > -
-> > -     cpu_map_data__synthesize(&ev->cpus.cpus, evsel->core.own_cpus, type, max);
-> > +     cpu_map_data__synthesize(&syn_data);
-> >
-> >       err = process(tool, (union perf_event *)ev, NULL, NULL);
-> >       free(ev);
-> > --
-> > 2.36.1.476.g0c4daa206d-goog
-> >
+> 
+>  tools/lib/perf/cpumap.c              |   2 +-
+>  tools/lib/perf/include/perf/cpumap.h |   2 +-
+>  tools/lib/perf/include/perf/event.h  |  61 ++++++++-
+>  tools/perf/tests/cpumap.c            |  71 ++++++++---
+>  tools/perf/tests/event_update.c      |  14 +--
+>  tools/perf/util/cpumap.c             | 111 +++++++++++++---
+>  tools/perf/util/cpumap.h             |   4 +-
+>  tools/perf/util/event.h              |   4 -
+>  tools/perf/util/header.c             |  24 ++--
+>  tools/perf/util/session.c            |  35 +++---
+>  tools/perf/util/synthetic-events.c   | 182 +++++++++++++--------------
+>  tools/perf/util/synthetic-events.h   |   2 +-
+>  12 files changed, 327 insertions(+), 185 deletions(-)
+> 
+> -- 
+> 2.36.1.476.g0c4daa206d-goog
+> 
