@@ -2,194 +2,159 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E9141C19F2B
-	for <linux-perf-users@archiver.kernel.org>; Thu,  4 Aug 2022 11:02:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BCDC2C19F2A
+	for <linux-perf-users@archiver.kernel.org>; Thu,  4 Aug 2022 12:46:39 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S239523AbiHDLCk (ORCPT
+        id S232339AbiHDMqi (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Thu, 4 Aug 2022 07:02:40 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50444 "EHLO
+        Thu, 4 Aug 2022 08:46:38 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34230 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S239551AbiHDLCO (ORCPT
+        with ESMTP id S230484AbiHDMqi (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Thu, 4 Aug 2022 07:02:14 -0400
-Received: from szxga02-in.huawei.com (szxga02-in.huawei.com [45.249.212.188])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6283B6069A;
-        Thu,  4 Aug 2022 04:02:12 -0700 (PDT)
-Received: from dggemv711-chm.china.huawei.com (unknown [172.30.72.55])
-        by szxga02-in.huawei.com (SkyGuard) with ESMTP id 4Lz5L94dv2zWfD6;
-        Thu,  4 Aug 2022 18:58:09 +0800 (CST)
-Received: from kwepemm600003.china.huawei.com (7.193.23.202) by
- dggemv711-chm.china.huawei.com (10.1.198.66) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2375.24; Thu, 4 Aug 2022 19:02:10 +0800
-Received: from ubuntu1804.huawei.com (10.67.174.61) by
- kwepemm600003.china.huawei.com (7.193.23.202) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2375.24; Thu, 4 Aug 2022 19:02:09 +0800
-From:   Yang Jihong <yangjihong1@huawei.com>
-To:     <rostedt@goodmis.org>, <peterz@infradead.org>, <mingo@redhat.com>,
-        <acme@kernel.org>, <mark.rutland@arm.com>,
-        <alexander.shishkin@linux.intel.com>, <jolsa@kernel.org>,
-        <namhyung@kernel.org>, <linux-kernel@vger.kernel.org>,
-        <linux-perf-users@vger.kernel.org>
-CC:     <yangjihong1@huawei.com>
-Subject: [PATCH] perf/core: Fix syzkaller reported issue "Internal error in read_pmevcntrn"
-Date:   Thu, 4 Aug 2022 18:59:18 +0800
-Message-ID: <20220804105918.113833-1-yangjihong1@huawei.com>
-X-Mailer: git-send-email 2.30.GIT
+        Thu, 4 Aug 2022 08:46:38 -0400
+Received: from mail-wr1-x431.google.com (mail-wr1-x431.google.com [IPv6:2a00:1450:4864:20::431])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 06FDA64D4
+        for <linux-perf-users@vger.kernel.org>; Thu,  4 Aug 2022 05:46:37 -0700 (PDT)
+Received: by mail-wr1-x431.google.com with SMTP id h13so5892250wrf.6
+        for <linux-perf-users@vger.kernel.org>; Thu, 04 Aug 2022 05:46:36 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=giKnKISVMAsiPJX3VXxs0ynsiTBqVt8j9JEnvT2UxBg=;
+        b=NbKDBV0VtJxC9+FNETy4s7gG8mMWd5uQAdfb3VE1dBX6yaShZ9A9l2fxAmWOcWmndb
+         /ftQOBlSBY5eEiltNl2u4MAgE63PcB63fiABeYpWMDClFcdV5Q9POCg4I24TkeSLotqx
+         PA3RSAtnfCnUyDQ0Eim+vMJtbQG4eWtQIRRctb13apb/w87DgZ1bBzsBG39bzI+SKBPA
+         w7WNSemTshELz7+uesOPT08oQrmAlFl0LJ1OCo9vs9bzsbrAAwaxpblwnu8KBQzsiQkd
+         ynWKsCcS1jWMHuxm/rhGpgRUEg0arLpENoQK/tcV2SdTLRaJ0c/1TyLWbQh6YUpL7tnu
+         gYpA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=giKnKISVMAsiPJX3VXxs0ynsiTBqVt8j9JEnvT2UxBg=;
+        b=qMveFqA3sncAQAtnXFA/9545nDHk44252sFZZHlJ1Ujn7tS1gQt+MR6mgbDlem3Rwu
+         NLLlm0cgDJVh3CoEW/ZviHzuMHsL3GLPmXNA5uh30XfjAlj7cWMvdcrfl7eJaoFHcmM/
+         X4116HXPSWWfCdrRvCbcPKK+5PP3P48w9e8l94sxZAai/lMjZgkwQkTKmzi8Nb9mkvTz
+         tPjW63hWnL72MGriRqVi0f83+azMkoZeyoCDGzNiDTxucdSJ5IuPIeUOjzxF++G6/5Ar
+         09lsdEWJqO6/X2+iyUNlIQMhWfTBpiE/sQcWSbmmi/SfNz7GwwijkibEmVgAnRmIB8Pf
+         274g==
+X-Gm-Message-State: ACgBeo2GL0IZteMOyc8PCqJA3dOnuuRdxS4zl+Z56lfrzrdLOcjtaG06
+        N15kUV47euFKITBn6t9zjqx21bXhmxs3X1N9J6s=
+X-Google-Smtp-Source: AA6agR6vS/KrcB1Xy05KjWQYf2qwHWqw500M9jCO18rJYncM0MXptB9QBm3Xg0NbQnIapY+h9sTj3g==
+X-Received: by 2002:a5d:560d:0:b0:21f:1619:ba0 with SMTP id l13-20020a5d560d000000b0021f16190ba0mr1344504wrv.318.1659617195318;
+        Thu, 04 Aug 2022 05:46:35 -0700 (PDT)
+Received: from leoy-ThinkPad-X240s ([167.71.129.183])
+        by smtp.gmail.com with ESMTPSA id m8-20020a7bce08000000b003a4f29d6f69sm6741668wmc.36.2022.08.04.05.46.32
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 04 Aug 2022 05:46:34 -0700 (PDT)
+Date:   Thu, 4 Aug 2022 20:46:29 +0800
+From:   Leo Yan <leo.yan@linaro.org>
+To:     Carsten Haitzler <carsten.haitzler@foss.arm.com>
+Cc:     coresight@lists.linaro.org, mathieu.poirier@linaro.org,
+        mike.leach@linaro.org, linux-perf-users@vger.kernel.org
+Subject: Re: [PATCH 01/14] perf test: Refactor shell tests allowing subdirs
+Message-ID: <20220804124629.GB1219098@leoy-ThinkPad-X240s>
+References: <20220712135750.2212005-1-carsten.haitzler@foss.arm.com>
+ <20220712135750.2212005-2-carsten.haitzler@foss.arm.com>
+ <20220713065328.GB1354743@leoy-ThinkPad-X240s>
+ <b6798d9f-2d81-2a39-1406-9b9770b016ae@foss.arm.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7BIT
-Content-Type:   text/plain; charset=US-ASCII
-X-Originating-IP: [10.67.174.61]
-X-ClientProxiedBy: dggems703-chm.china.huawei.com (10.3.19.180) To
- kwepemm600003.china.huawei.com (7.193.23.202)
-X-CFilter-Loop: Reflected
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <b6798d9f-2d81-2a39-1406-9b9770b016ae@foss.arm.com>
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-syzkaller report a issue:
-Internal error: Oops - undefined instruction: 0 [#1] SMP
-Modules linked in:
-CPU: 1 PID: 15523 Comm: syz-executor.3 Not tainted 5.10.0 #6
-Hardware name: linux,dummy-virt (DT)
-pstate: 80400005 (Nzcv daif +PAN -UAO -TCO BTYPE=--)
-pc : read_pmevcntrn+0x1e4/0x1ec arch/arm64/kernel/perf_event.c:423
-lr : read_pmevcntrn+0x1e4/0x1ec arch/arm64/kernel/perf_event.c:423
-sp : ffffa000174d6ee0
-x29: ffffa000174d6ee0 x28: ffffedbca6b17a40
-x27: ffffa000174d7310 x26: ffff4b3ec102e398
-x25: 00000000ffffffff x24: 00000000ffffffff
-x23: ffff4b3ed8afb000 x22: ffff4b3ed8afb160
-x21: ffff4b3ed8afb184 x20: ffffedbca46aa3e0
-x19: ffffedbca2a524bc x18: 0000000000000000
-x17: 0000000000000000 x16: 0000000000000000
-x15: 0000000020000100 x14: 0000000000000000
-x13: 0000000000000000 x12: ffff8967db15f63d
-x11: 1fffe967db15f63c x10: ffff8967db15f63c
-x9 : ffffedbca2a5273c x8 : ffff4b3ed8afb1e7
-x7 : 0000000000000001 x6 : ffff8967db15f63c
-x5 : ffff4b3f08b89400 x4 : 0000000000000000
-x3 : ffffedbca2a00000 x2 : ffffedbca4690000
-x1 : ffff4b3f08b89400 x0 : 0000000000000000
-Call trace:
- read_pmevcntrn+0x1e4/0x1ec arch/arm64/kernel/perf_event.c:423
- armv8pmu_read_evcntr arch/arm64/kernel/perf_event.c:467 [inline]
- armv8pmu_read_hw_counter arch/arm64/kernel/perf_event.c:475 [inline]
- armv8pmu_read_counter+0x10c/0x1f0 arch/arm64/kernel/perf_event.c:528
- armpmu_event_update+0x9c/0x1bc drivers/perf/arm_pmu.c:247
- armpmu_read+0x24/0x30 drivers/perf/arm_pmu.c:264
- perf_output_read_group+0x4cc/0x71c kernel/events/core.c:6806
- perf_output_read+0x78/0x1c4 kernel/events/core.c:6845
- perf_output_sample+0xafc/0x1000 kernel/events/core.c:6892
- __perf_event_output kernel/events/core.c:7273 [inline]
- perf_event_output_forward+0xd8/0x130 kernel/events/core.c:7287
- __perf_event_overflow+0xbc/0x20c kernel/events/core.c:8943
- perf_swevent_overflow kernel/events/core.c:9019 [inline]
- perf_swevent_event+0x274/0x2c0 kernel/events/core.c:9047
- do_perf_sw_event kernel/events/core.c:9160 [inline]
- ___perf_sw_event+0x150/0x1b4 kernel/events/core.c:9191
- __perf_sw_event+0x58/0x7c kernel/events/core.c:9203
- perf_sw_event include/linux/perf_event.h:1177 [inline]
- mm_account_fault mm/memory.c:4707 [inline]
- handle_mm_fault+0x364/0x3f0 mm/memory.c:4758
- __do_page_fault arch/arm64/mm/fault.c:438 [inline]
- do_page_fault+0x334/0x8f0 arch/arm64/mm/fault.c:537
- do_translation_fault+0x188/0x1e0 arch/arm64/mm/fault.c:619
- do_mem_abort+0x68/0x120 arch/arm64/mm/fault.c:743
- el1_abort+0xc0/0x150 arch/arm64/kernel/entry-common.c:119
- el1_sync_handler+0x118/0x150 arch/arm64/kernel/entry-common.c:202
- el1_sync+0x74/0x100 arch/arm64/kernel/entry.S:665
- __arch_clear_user+0x20/0xa0 arch/arm64/lib/clear_user.S:25
- read_iter_zero+0x90/0x16c drivers/char/mem.c:718
- call_read_iter include/linux/fs.h:1954 [inline]
- do_iter_readv_writev+0x394/0x414 fs/read_write.c:735
- do_iter_read+0x1b0/0x280 fs/read_write.c:798
- vfs_readv+0xf0/0x150 fs/read_write.c:918
- do_readv+0x108/0x270 fs/read_write.c:955
- __do_sys_readv fs/read_write.c:1046 [inline]
- __se_sys_readv fs/read_write.c:1043 [inline]
- __arm64_sys_readv+0x54/0x64 fs/read_write.c:1043
- __invoke_syscall arch/arm64/kernel/syscall.c:36 [inline]
- invoke_syscall arch/arm64/kernel/syscall.c:48 [inline]
- el0_svc_common.constprop.0+0xf4/0x414 arch/arm64/kernel/syscall.c:155
- do_el0_svc+0x50/0x11c arch/arm64/kernel/syscall.c:217
- el0_svc+0x20/0x30 arch/arm64/kernel/entry-common.c:353
- el0_sync_handler+0xe4/0x1e0 arch/arm64/kernel/entry-common.c:369
- el0_sync+0x148/0x180 arch/arm64/kernel/entry.S:683
-Code: 940c387b d53be813 17ffff9c 940c3878 (d53bebd3)
----[ end trace 6aab9f4b33ebf0aa ]---
-----------------
-Code disassembly (best guess):
-   0:	940c387b 	bl	0x30e1ec
-   4:	d53be813 	mrs	x19, pmevcntr0_el0
-   8:	17ffff9c 	b	0xfffffffffffffe78
-   c:	940c3878 	bl	0x30e1ec
-* 10:	d53bebd3 	mrs	x19, pmevcntr30_el0 <-- trapping instruction
+On Thu, Jul 28, 2022 at 03:17:08PM +0100, Carsten Haitzler wrote:
 
-Interrupts is not disabled when perf_output_read_group reads PMU counter.
-In this case, IPI request may be received from other cores.
-As a result, PMU configuration is modified and an error occurs when
-reading PMU counter:
+[...]
 
-                   CPU0                                         CPU1
-                                                    __se_sys_perf_event_open
-                                                      perf_install_in_context
-perf_output_read_group                                  smp_call_function_single
-  for_each_sibling_event(sub, leader) {                   generic_exec_single
-    if ((sub != event) &&                                   remote_function
-        (sub->state == PERF_EVENT_STATE_ACTIVE))                    |
-<enter IPI handler: __perf_install_in_context>   <----RAISE IPI-----+
-__perf_install_in_context
-  ctx_resched
-    event_sched_out
-      armpmu_del
-        ...
-        hwc->idx = -1; // event->hwc.idx is set to -1
-...
-<exit IPI>
-            sub->pmu->read(sub);
-              armpmu_read
-                armv8pmu_read_counter
-                  armv8pmu_read_hw_counter
-                    int idx = event->hw.idx; // idx = -1
-                    u64 val = armv8pmu_read_evcntr(idx);
-                      u32 counter = ARMV8_IDX_TO_COUNTER(idx); // invalid counter = 30
-                      read_pmevcntrn(counter) // undefined instruction
+> > > +	}
+> > > +	/* Realloc is good enough, though we could realloc by chunks, not that
+> > > +	 * anyone will ever measure performance here */
+> > > +	files_tmp = realloc(files,
+> > > +			    (files_num_tmp + 1) * sizeof(struct script_file));
+> > 
+> >          files = realloc(files,
+> >                          (files_num_tmp + 1) * sizeof(struct script_file));
+> > 
+> > BTW, I don't see any where to free the memory for "files".
+> 
+> The very first comment at the top of the code (after headers) that you
+> wanted the format of changed explains this right above the static vars.
+> There is no point. This is code for a utility that runs tests and runs them
+> once ever and then exits. There is no need for a cleanup/free as it's all
+> freed on process exit. It's a singleton design pattern so it scans for these
+> test files once ever for the whole run of the tests (unlike before it'd scan
+> multiple times with all the I/O overhead and syscall costs).
 
-Signed-off-by: Yang Jihong <yangjihong1@huawei.com>
----
- kernel/events/core.c | 9 +++++++++
- 1 file changed, 9 insertions(+)
+Okay, I understand your meaning.  But I still think that it's not a
+good practice if program doesn't explictly release memory.
 
-diff --git a/kernel/events/core.c b/kernel/events/core.c
-index c9d32d4d2e20..9a143ea25667 100644
---- a/kernel/events/core.c
-+++ b/kernel/events/core.c
-@@ -6869,6 +6869,13 @@ static void perf_output_read_one(struct perf_output_handle *handle,
- 	u64 read_format = event->attr.read_format;
- 	u64 values[5];
- 	int n = 0;
-+	unsigned long flags;
-+
-+	/*
-+	 * Disabling interrupts avoids all counter scheduling
-+	 * (context switches, timer based rotation and IPIs).
-+	 */
-+	local_irq_save(flags);
- 
- 	values[n++] = perf_event_count(event);
- 	if (read_format & PERF_FORMAT_TOTAL_TIME_ENABLED) {
-@@ -6931,6 +6938,8 @@ static void perf_output_read_group(struct perf_output_handle *handle,
- 
- 		__output_copy(handle, values, n * sizeof(u64));
- 	}
-+
-+	local_irq_restore(flags);
- }
- 
- #define PERF_FORMAT_TOTAL_TIMES (PERF_FORMAT_TOTAL_TIME_ENABLED|\
--- 
-2.30.GIT
+I will review new patch and check if we can release the buffer in
+somewhere in the code.
 
+> > > +	if (files_tmp == NULL) {
+> > > +		pr_err("Out of memory while building test list\n");
+> > > +		abort();
+> > > +	}
+> > > +	/* Add file to end and NULL terminate the struct array */
+> > > +	files = files_tmp;
+> > > +	files_num = files_num_tmp;
+> > > +	files[files_num - 1].dir = strdup_check(dir);
+> > > +	files[files_num - 1].file = strdup_check(file);
+> > > +	files[files_num - 1].desc = strdup_check(desc);
+> > > +	files[files_num].dir = NULL;
+> > > +	files[files_num].file = NULL;
+> > > +	files[files_num].desc = NULL;
+> > 
+> > I personally think here it's over complex for using the last item in the
+> > array as a redundant item and set NULL to its fields.  We have the
+> > global variable "files_num", which can be used for checking boundary
+> > for the array.
+> 
+> See how the code is called. It makes the calling simpler as you don't need
+> to get both the array and the num/count. You just get the array and iterate
+> until a NULL item. So the calling convention is simplified. That's why I did
+> it. It's a very common design pattern that saves some complexity at the
+> caller end with the cost of a "null item" overhead. Just do ptr++ as you
+> iterate over the files until a null item - much simpler calling code.
+
+Okay, this would be fine for me.
+
+[...]
+
+> > I strongly suggest you to consider how to organize the patches with
+> > better format.  This patch actually finishes below things:
+> > 
+> > - Support sub folder searching for shell script (so the key change is
+> >    using the recursion in append_scripts_in_dir());
+> > - Refactoring to a common code for iterating testing scripts;
+> > - Many minor refactoring, like dropping macro for_each_shell_test()
+> >    and introduces new function is_shell_script().
+> > 
+> > Seems every part above is deserved to use a separate patch, which would
+> > be much easier for review.
+> 
+> It was not written in stages at all but wholesale written as a new file to
+> replace the functionality in the previous file that was duplicated multiple
+> times (scandir). The new code could also recurse too. I'd have to bend over
+> backwards to create an artificial new set of code that uses all the old code
+> then iterate it multiple times to do this. It's not how it happened.
+> 
+> It should be drastically easier to review this way as you can easily just
+> see the old code vanish and how it now calls the new code (and how simple it
+> is) and then the whole new code beng called - review it as new code. :)
+
+Just remind, at the end you need to convince maintainers for the
+patches, this is why I suggest you to use small pieces of patches
+rather than a single big patch. :-)
+
+My personal experience is small chunk patch is much easier for review.
+Anyway, I will review the new patch set.
+
+Thanks,
+Leo
