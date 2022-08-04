@@ -2,54 +2,54 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B6F70C19F2A
-	for <linux-perf-users@archiver.kernel.org>; Thu,  4 Aug 2022 15:00:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BC61CC3F6B0
+	for <linux-perf-users@archiver.kernel.org>; Thu,  4 Aug 2022 15:07:55 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S240131AbiHDPA4 (ORCPT
+        id S232643AbiHDPHw (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Thu, 4 Aug 2022 11:00:56 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41190 "EHLO
+        Thu, 4 Aug 2022 11:07:52 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46266 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S240153AbiHDPAv (ORCPT
+        with ESMTP id S234233AbiHDPHu (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Thu, 4 Aug 2022 11:00:51 -0400
-Received: from mail-pf1-x42c.google.com (mail-pf1-x42c.google.com [IPv6:2607:f8b0:4864:20::42c])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 676F013F66
-        for <linux-perf-users@vger.kernel.org>; Thu,  4 Aug 2022 08:00:50 -0700 (PDT)
-Received: by mail-pf1-x42c.google.com with SMTP id w185so19591765pfb.4
-        for <linux-perf-users@vger.kernel.org>; Thu, 04 Aug 2022 08:00:50 -0700 (PDT)
+        Thu, 4 Aug 2022 11:07:50 -0400
+Received: from mail-pj1-x102d.google.com (mail-pj1-x102d.google.com [IPv6:2607:f8b0:4864:20::102d])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id EF1941CB35
+        for <linux-perf-users@vger.kernel.org>; Thu,  4 Aug 2022 08:07:48 -0700 (PDT)
+Received: by mail-pj1-x102d.google.com with SMTP id x2-20020a17090ab00200b001f4da5cdc9cso5617031pjq.0
+        for <linux-perf-users@vger.kernel.org>; Thu, 04 Aug 2022 08:07:48 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=google.com; s=20210112;
         h=in-reply-to:content-disposition:mime-version:references:message-id
          :subject:cc:to:from:date:from:to:cc;
-        bh=IaifTpn3u0w2qUkig48qynKFfInn0OoAePTEgfMQ/6g=;
-        b=SM4HtroITzHOZUFHTx7wGP7tvdu9IAxGSxtCMAsBe810xu9aIob9MCZbOolfYzn2+e
-         j79pj5EZWJJzVBm+DlQ9qL0YGGyMyf/egYOSXlw8RgRiClXjQpthTrp7Iqh3PIPjnPAn
-         8+TJD8GinwO57p/omdUnuI5NwqNeM/WSRUkLJT77l1kK5Z4bFz3EuPcZDKrCtkP+ptrr
-         0n/tLCQMaprvpWJ4hh+JWoWexfkLJE+kbl41zeroCm6WyfmY97oCLde4x/mAI5hEbBin
-         fSB7HHpNIuAsqyLbyIMYwB3mCYCMkcOCi78C1cbpMRas/0ldqGJvXkvK2lzByC0iONsi
-         oEMA==
+        bh=neB+q0Kh/QsWUNLfDZS1PKd7092ZvbprenIhcvXZr4s=;
+        b=DEtCTuZuYtlNCKENrIWS/qrP6UQrptimFrP7vr/8hGEfVxGNVAqaGxVs1Mqahh3fJf
+         Bk8KfmBIyI2ctXtvBZ8yDNsVrvvumQU+Y395lVQju+2V1hs0PKE68RlkcSPVWHTOTL/2
+         KBO5J9nzOj09abxmKMh61PutppsEYFH+qAyutY6ntxdijTFkg3Z9Vl3W8ItxXlYwoc62
+         qYRqdStaJn4e9fw7YPAtUq0kDQ9F+l1royE+v4mZgpIA9xi6VuvhXezVDhLWxacvVRVN
+         XTiuz3CEDMVaaP23QuuUGKS8aObobALB2lOYSdnHgRuQopka5bRyrcoIrQ+HGDYOdtzO
+         yysA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
         h=in-reply-to:content-disposition:mime-version:references:message-id
          :subject:cc:to:from:date:x-gm-message-state:from:to:cc;
-        bh=IaifTpn3u0w2qUkig48qynKFfInn0OoAePTEgfMQ/6g=;
-        b=mlu8AnFvFVA9Gwv6E4SNzV9WXSyAJMjwjT5FXFhQXxifRT+5t2M0Qh+6t7mcUprhVX
-         05NIGalhQo7P2pihjkaHWtGK6CFd11oPSIgLWJkSEa6fUOqZbqKtie+tnfc+56zT8n5g
-         Kj6T6xEBAxEuhoB/v9E1sQ+JQmKqdv+ehnvlzK7MFLN4KycyBKW35zpcPENS5lwclpf7
-         CRg6F6zaj9+KBxPh5O3t8DwaEm4cJU5KxtD7Y3G4P6m/xWgT6QHw/CTnWdfC3J4Jw7yE
-         GEipKmmN9JaEMmCrcUXvdCGE3JTkn4COZI/cAwEZ8Rp3Vs+OPD7iL8DM7JyZ4Mo83BRI
-         hfGw==
-X-Gm-Message-State: ACgBeo08wlc79qEUKo5M65KaiTTiq8oRp+AshtfLvDOqpwY5dXoUfsrD
-        5Nq9TZX5qoThzuiGZHyDLadN/w==
-X-Google-Smtp-Source: AA6agR6vOOf5eInTDw94W1UE+cE40wpAwMxYjG3kliNFyyKOGQTat2W+Q3wfOpjiZ2CFqYuVxfrSRg==
-X-Received: by 2002:aa7:919a:0:b0:52a:eeef:3e65 with SMTP id x26-20020aa7919a000000b0052aeeef3e65mr2112688pfa.15.1659625249718;
-        Thu, 04 Aug 2022 08:00:49 -0700 (PDT)
+        bh=neB+q0Kh/QsWUNLfDZS1PKd7092ZvbprenIhcvXZr4s=;
+        b=RptQhKdDqrbXAO1y8tITnoykR+MZEHkh+awyvEV8Q68dtJ2NRXmBIqJoFmQnYYb15s
+         vPyxwusoym7YbLa6PI4dhdZD0PrbAQj/5pd9UwVLAFUTiMQJ1h87ucptPwMHh9fB17/8
+         YbfKI0cPgX7HhVinPUk3CJJnMsc2Sps0WSslOyJo0LVqJCbQpKwMaud5FuI9NaLwOSz/
+         OiDwI+2X09QK03g+ymjzvBhCNBDLAKp7gaTGRh1qcOUJowZ2xTrECQL4VnBc0Z2SgS58
+         ITdQzPd76KZw+PW5hHoR0K4wCUzH0Qo6aq90ZMm7Iyz2va8HBzyNENP0dcgWHV326pOr
+         Cq2Q==
+X-Gm-Message-State: ACgBeo3l4cLzilZTvggUsLMqd44QLBf1DBNCuEaFhhYLp79pclsi6gsE
+        PZTivqsU6qrxGokWaZ5bItAcLQ==
+X-Google-Smtp-Source: AA6agR70GYTX3ilAS5d1f2gctcAwETJuwcR3TW4OSclNNeLqgXdvT9Jce7p5cZBSSsf9/7R9avPxpQ==
+X-Received: by 2002:a17:902:788f:b0:16e:f6b8:16c6 with SMTP id q15-20020a170902788f00b0016ef6b816c6mr2331324pll.3.1659625668331;
+        Thu, 04 Aug 2022 08:07:48 -0700 (PDT)
 Received: from google.com (7.104.168.34.bc.googleusercontent.com. [34.168.104.7])
-        by smtp.gmail.com with ESMTPSA id e6-20020a170902784600b0016357fd0fd1sm1119297pln.69.2022.08.04.08.00.49
+        by smtp.gmail.com with ESMTPSA id x16-20020a170902ec9000b0016c9e5f291bsm1103441plg.111.2022.08.04.08.07.47
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 04 Aug 2022 08:00:49 -0700 (PDT)
-Date:   Thu, 4 Aug 2022 15:00:45 +0000
+        Thu, 04 Aug 2022 08:07:47 -0700 (PDT)
+Date:   Thu, 4 Aug 2022 15:07:43 +0000
 From:   Sean Christopherson <seanjc@google.com>
 To:     Like Xu <like.xu.linux@gmail.com>
 Cc:     Mark Rutland <mark.rutland@arm.com>,
@@ -58,45 +58,59 @@ Cc:     Mark Rutland <mark.rutland@arm.com>,
         Namhyung Kim <namhyung@kernel.org>,
         linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org,
         kvm@vger.kernel.org, Paolo Bonzini <pbonzini@redhat.com>,
+        Ingo Molnar <mingo@redhat.com>,
         Peter Zijlstra <peterz@infradead.org>,
-        Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Ingo Molnar <mingo@redhat.com>
-Subject: Re: [PATCH v2 7/7] KVM: VMX: Simplify capability check when handling
- PERF_CAPABILITIES write
-Message-ID: <YuvfHZLGbU08S4ee@google.com>
+        Arnaldo Carvalho de Melo <acme@kernel.org>
+Subject: Re: [PATCH v2 2/7] perf/x86/core: Remove unnecessary stubs provided
+ for KVM-only helpers
+Message-ID: <Yuvgv4QC3oKPlKs2@google.com>
 References: <20220803192658.860033-1-seanjc@google.com>
- <20220803192658.860033-8-seanjc@google.com>
- <41e0b2a0-c53d-870f-d619-4008eb222d42@gmail.com>
+ <20220803192658.860033-3-seanjc@google.com>
+ <fcb0e878-29ff-e408-ccf3-3b594160c0df@gmail.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <41e0b2a0-c53d-870f-d619-4008eb222d42@gmail.com>
+In-Reply-To: <fcb0e878-29ff-e408-ccf3-3b594160c0df@gmail.com>
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
 On Thu, Aug 04, 2022, Like Xu wrote:
 > On 4/8/2022 3:26 am, Sean Christopherson wrote:
-> > Explicitly check for the absence of host support for LBRs or PEBS when
-> > userspace attempts to enable said features by writing PERF_CAPABILITIES.
-> > Comparing host support against the incoming value is unnecessary and
-> > weird since the checks are buried inside an if-statement that verifies
-> > userspace wants to enable the feature.
+> > -#if defined(CONFIG_PERF_EVENTS) && defined(CONFIG_CPU_SUP_AMD)
+> > - extern void amd_pmu_enable_virt(void);
+> > - extern void amd_pmu_disable_virt(void);
+> > -
+> > -#if defined(CONFIG_PERF_EVENTS_AMD_BRS)
+> > +#ifdef CONFIG_PERF_EVENTS_AMD_BRS
+> >   #define PERF_NEEDS_LOPWR_CB 1
+> > @@ -566,12 +538,13 @@ static inline void perf_lopwr_cb(bool lopwr_in)
+> >   	static_call_mod(perf_lopwr_cb)(lopwr_in);
+> >   }
+> > -#endif /* PERF_NEEDS_LOPWR_CB */
 > 
-> If you mean this part in the KVM:
-> 
-> 	case MSR_IA32_PERF_CAPABILITIES: {
-> 		...
-> 		if (data & ~msr_ent.data)
-> 			return 1;
-> 		...
-> 
-> then this patch brings a flaw, for example:
-> 
-> a user space can successfully set 0x1 on a host that reports a value of 0x5,
-> which should not happen since the semantics of 0x1 and 0x5 for LBR_FMT
-> may be completely different from the guest LBR driver's perspective.
+> Oops, now the definition of PERF_NEEDS_LOPWR_CB will not be unset.
+> This is not mentioned in the commit message and may cause trouble.
 
-/facepalm
+PERF_NEEDS_LOPWR_CB isn't being "unset" in the existing code, the comment is simply
+wrong.  The #endif pairs with CONFIG_PERF_EVENTS_AMD_BRS.
 
-I keep forgetting the caps need to match the host exactly.  Thanks!
+  #if defined(CONFIG_PERF_EVENTS_AMD_BRS)
+
+  #define PERF_NEEDS_LOPWR_CB 1
+
+  /*
+   * architectural low power callback impacts
+   * drivers/acpi/processor_idle.c
+   * drivers/acpi/acpi_pad.c
+   */
+  extern void perf_amd_brs_lopwr_cb(bool lopwr_in);
+
+  DECLARE_STATIC_CALL(perf_lopwr_cb, perf_amd_brs_lopwr_cb);
+
+  static inline void perf_lopwr_cb(bool lopwr_in)
+  {
+  	static_call_mod(perf_lopwr_cb)(lopwr_in);
+  }
+
+  #endif /* PERF_NEEDS_LOPWR_CB */ <=== should be /* CONFIG_PERF_EVENTS_AMD_BRS */
