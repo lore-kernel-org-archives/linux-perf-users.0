@@ -2,115 +2,167 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BCA6DC19F2A
-	for <linux-perf-users@archiver.kernel.org>; Thu,  4 Aug 2022 17:51:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6D928C19F21
+	for <linux-perf-users@archiver.kernel.org>; Thu,  4 Aug 2022 18:55:38 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232290AbiHDRvo (ORCPT
+        id S234628AbiHDSzg (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Thu, 4 Aug 2022 13:51:44 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33958 "EHLO
+        Thu, 4 Aug 2022 14:55:36 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47798 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231712AbiHDRvn (ORCPT
+        with ESMTP id S232130AbiHDSzg (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Thu, 4 Aug 2022 13:51:43 -0400
-Received: from linux.microsoft.com (linux.microsoft.com [13.77.154.182])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTP id 60EFA252BB;
-        Thu,  4 Aug 2022 10:51:42 -0700 (PDT)
-Received: by linux.microsoft.com (Postfix, from userid 1145)
-        id EFE8A20FFD77; Thu,  4 Aug 2022 10:51:41 -0700 (PDT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com EFE8A20FFD77
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.microsoft.com;
-        s=default; t=1659635501;
-        bh=DA2WdpGD1N3fcW6Dsv5m5wiKHrGeoNd5c50fiNvhp5A=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=MvQcFnxQRNl4/WLq33i0JzbCPxbjU1svjIha/mscRx0GZkgQmORxIUcDlxxTo2QSB
-         nuTjSIysihYk8eF/BP88ceadz4TvxzgcdKbYbqo5tELhAXBqo6LlS09j76fMl3L3dV
-         KMP3uZHylt/dSFhVWkXrDEp2ulA7peQggkpK2HKY=
-Date:   Thu, 4 Aug 2022 10:51:41 -0700
-From:   Brian Robbins <brianrob@linux.microsoft.com>
-To:     Ian Rogers <irogers@google.com>
-Cc:     Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Jiri Olsa <jolsa@kernel.org>,
-        Namhyung Kim <namhyung@kernel.org>,
-        linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] perf inject jit: Ignore memfd mmap events if jitdump
- present
-Message-ID: <20220804175141.GA3858@linuxonhyperv3.guj3yctzbm1etfxqx2vob5hsef.xx.internal.cloudapp.net>
-References: <20220802182502.85562-1-brianrob@linux.microsoft.com>
- <CAP-5=fXY8paDRMcyMokRMXOrrB2CHfY2=HkPsHZrWL_vd_-bWw@mail.gmail.com>
+        Thu, 4 Aug 2022 14:55:36 -0400
+Received: from mga04.intel.com (mga04.intel.com [192.55.52.120])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 05C3C65A2;
+        Thu,  4 Aug 2022 11:55:35 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1659639335; x=1691175335;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=vTjXRsL4lAnfzqth+z2XycE86BJ3XSQ3FJU78c46BNU=;
+  b=Mb6Uom0PeUWSmRlY9CGzmj+0X2WD7MZhsWsdiOexQeKvk20aFjfoDsvI
+   /zZqGi4MuD8Wt+AggIUZn9GRi1pZTr11UVWrhHHx0/0czibQNglDPRflx
+   sGB4+2HO+1QP62LSvID/Gm57sY7h51Wi8GBARpvCyPnFBMaR7WmWAEVxG
+   OINGlE6IGbtudnp4LV/ap+PtQUS/jWGibDyzg81invPpanUGII5/RPr5T
+   9c6JEwIP+otOTttRlS/bGpj+/CYli9Cj6cJqhcGCbEjzUN9IodzJMNmOE
+   jrUDJHbhWqq3YTmJHHTs0PCVEuWt22T2MQIZAkBJTH7Gl65P3vstdTnhu
+   Q==;
+X-IronPort-AV: E=McAfee;i="6400,9594,10429"; a="288779234"
+X-IronPort-AV: E=Sophos;i="5.93,216,1654585200"; 
+   d="scan'208";a="288779234"
+Received: from fmsmga004.fm.intel.com ([10.253.24.48])
+  by fmsmga104.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 04 Aug 2022 11:55:34 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.93,216,1654585200"; 
+   d="scan'208";a="671382107"
+Received: from lkp-server01.sh.intel.com (HELO e0eace57cfef) ([10.239.97.150])
+  by fmsmga004.fm.intel.com with ESMTP; 04 Aug 2022 11:55:31 -0700
+Received: from kbuild by e0eace57cfef with local (Exim 4.96)
+        (envelope-from <lkp@intel.com>)
+        id 1oJg0J-000Ijv-0J;
+        Thu, 04 Aug 2022 18:55:31 +0000
+Date:   Fri, 5 Aug 2022 02:55:14 +0800
+From:   kernel test robot <lkp@intel.com>
+To:     Yang Jihong <yangjihong1@huawei.com>, rostedt@goodmis.org,
+        peterz@infradead.org, mingo@redhat.com, acme@kernel.org,
+        mark.rutland@arm.com, alexander.shishkin@linux.intel.com,
+        jolsa@kernel.org, namhyung@kernel.org,
+        linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org
+Cc:     kbuild-all@lists.01.org, yangjihong1@huawei.com
+Subject: Re: [PATCH] perf/core: Fix syzkaller reported issue "Internal error
+ in read_pmevcntrn"
+Message-ID: <202208050241.9fLxoaz4-lkp@intel.com>
+References: <20220804105918.113833-1-yangjihong1@huawei.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <CAP-5=fXY8paDRMcyMokRMXOrrB2CHfY2=HkPsHZrWL_vd_-bWw@mail.gmail.com>
-User-Agent: Mutt/1.5.21 (2010-09-15)
+In-Reply-To: <20220804105918.113833-1-yangjihong1@huawei.com>
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-On Thu, Aug 04, 2022 at 08:22:14AM -0700, Ian Rogers wrote:
-> On Tue, Aug 2, 2022 at 11:25 AM Brian Robbins
-> <brianrob@linux.microsoft.com> wrote:
-> >
-> > Some processes store jitted code in memfd mappings to avoid having rwx
-> > mappings.  These processes map the code with a writeable mapping and a
-> > read-execute mapping.  They write the code using the writeable mapping
-> > and then unmap the writeable mapping.  All subsequent execution is
-> > through the read-execute mapping.
-> >
-> > perf inject --jit ignores //anon* mappings for each process where a
-> > jitdump is present because it expects to inject mmap events for each
-> > jitted code range, and said jitted code ranges will overlap with the
-> > //anon* mappings.
-> >
-> > Ignore /memfd: mappings so that jitted code contained in /memfd:
-> > mappings is treated the same way as jitted code contained in //anon*
-> > mappings.
-> >
-> > Signed-off-by: Brian Robbins <brianrob@linux.microsoft.com>
-> 
-> Acked-by: Ian Rogers <irogers@google.com>
-> 
-> > ---
-> >  tools/perf/util/jitdump.c | 8 ++++++--
-> >  1 file changed, 6 insertions(+), 2 deletions(-)
-> >
-> > diff --git a/tools/perf/util/jitdump.c b/tools/perf/util/jitdump.c
-> > index a23255773c60..335a3c61940b 100644
-> > --- a/tools/perf/util/jitdump.c
-> > +++ b/tools/perf/util/jitdump.c
-> > @@ -845,8 +845,12 @@ jit_process(struct perf_session *session,
-> >         if (jit_detect(filename, pid, nsi)) {
-> >                 nsinfo__put(nsi);
-> >
-> > -               // Strip //anon* mmaps if we processed a jitdump for this pid
-> > -               if (jit_has_pid(machine, pid) && (strncmp(filename, "//anon", 6) == 0))
-> > +               /*
-> > +                * Strip //anon* and /memfd:* mmaps if we processed a jitdump for this pid
-> > +                */
-> > +               if (jit_has_pid(machine, pid) &&
-> > +                       ((strncmp(filename, "//anon", 6) == 0) ||
-> > +                        (strncmp(filename, "/memfd:", 7) == 0))
-> 
-> Related to this there is the prctl PR_SET_VMA_ANON_NAME which will
-> name mapping to start with "[anon:"
-> https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree/Documentation/filesystems/proc.rst#n434
-> I wonder also we should be checking the pages are executable.
-> 
-> Thanks,
-> Ian
-> 
-> >                         return 1;
-> >
-> >                 return 0;
-> > --
-> > 2.25.1
-> >
+Hi Yang,
 
-I have not run into this case yet, but I suspect you are right that this should be handled as well.  I can create a follow-up patch for this.
+Thank you for the patch! Perhaps something to improve:
 
-Thanks.
---Brian
+[auto build test WARNING on tip/perf/core]
+[also build test WARNING on linus/master v5.19 next-20220803]
+[cannot apply to acme/perf/core]
+[If your patch is applied to the wrong git tree, kindly drop us a note.
+And when submitting patch, we suggest to use '--base' as documented in
+https://git-scm.com/docs/git-format-patch#_base_tree_information]
+
+url:    https://github.com/intel-lab-lkp/linux/commits/Yang-Jihong/perf-core-Fix-syzkaller-reported-issue-Internal-error-in-read_pmevcntrn/20220804-190347
+base:   https://git.kernel.org/pub/scm/linux/kernel/git/tip/tip.git 326ecc15c61c349cd49d1700ff9e3e31c6fd1cd5
+config: x86_64-randconfig-a015 (https://download.01.org/0day-ci/archive/20220805/202208050241.9fLxoaz4-lkp@intel.com/config)
+compiler: gcc-11 (Debian 11.3.0-3) 11.3.0
+reproduce (this is a W=1 build):
+        # https://github.com/intel-lab-lkp/linux/commit/9c758a8d3d13d1ac89f651850b79d91b23b41b02
+        git remote add linux-review https://github.com/intel-lab-lkp/linux
+        git fetch --no-tags linux-review Yang-Jihong/perf-core-Fix-syzkaller-reported-issue-Internal-error-in-read_pmevcntrn/20220804-190347
+        git checkout 9c758a8d3d13d1ac89f651850b79d91b23b41b02
+        # save the config file
+        mkdir build_dir && cp config build_dir/.config
+        make W=1 O=build_dir ARCH=x86_64 SHELL=/bin/bash kernel/events/
+
+If you fix the issue, kindly add following tag where applicable
+Reported-by: kernel test robot <lkp@intel.com>
+
+All warnings (new ones prefixed by >>):
+
+   In file included from include/linux/spinlock.h:54,
+                    from include/linux/wait.h:9,
+                    from include/linux/wait_bit.h:8,
+                    from include/linux/fs.h:6,
+                    from kernel/events/core.c:11:
+   kernel/events/core.c: In function 'perf_output_read_group':
+   kernel/events/core.c:6942:27: error: 'flags' undeclared (first use in this function)
+    6942 |         local_irq_restore(flags);
+         |                           ^~~~~
+   include/linux/typecheck.h:11:16: note: in definition of macro 'typecheck'
+      11 |         typeof(x) __dummy2; \
+         |                ^
+   include/linux/irqflags.h:228:22: note: in expansion of macro 'raw_irqs_disabled_flags'
+     228 |                 if (!raw_irqs_disabled_flags(flags))    \
+         |                      ^~~~~~~~~~~~~~~~~~~~~~~
+   kernel/events/core.c:6942:9: note: in expansion of macro 'local_irq_restore'
+    6942 |         local_irq_restore(flags);
+         |         ^~~~~~~~~~~~~~~~~
+   kernel/events/core.c:6942:27: note: each undeclared identifier is reported only once for each function it appears in
+    6942 |         local_irq_restore(flags);
+         |                           ^~~~~
+   include/linux/typecheck.h:11:16: note: in definition of macro 'typecheck'
+      11 |         typeof(x) __dummy2; \
+         |                ^
+   include/linux/irqflags.h:228:22: note: in expansion of macro 'raw_irqs_disabled_flags'
+     228 |                 if (!raw_irqs_disabled_flags(flags))    \
+         |                      ^~~~~~~~~~~~~~~~~~~~~~~
+   kernel/events/core.c:6942:9: note: in expansion of macro 'local_irq_restore'
+    6942 |         local_irq_restore(flags);
+         |         ^~~~~~~~~~~~~~~~~
+>> include/linux/typecheck.h:12:25: warning: comparison of distinct pointer types lacks a cast
+      12 |         (void)(&__dummy == &__dummy2); \
+         |                         ^~
+   include/linux/irqflags.h:193:17: note: in expansion of macro 'typecheck'
+     193 |                 typecheck(unsigned long, flags);        \
+         |                 ^~~~~~~~~
+   include/linux/irqflags.h:228:22: note: in expansion of macro 'raw_irqs_disabled_flags'
+     228 |                 if (!raw_irqs_disabled_flags(flags))    \
+         |                      ^~~~~~~~~~~~~~~~~~~~~~~
+   kernel/events/core.c:6942:9: note: in expansion of macro 'local_irq_restore'
+    6942 |         local_irq_restore(flags);
+         |         ^~~~~~~~~~~~~~~~~
+>> include/linux/typecheck.h:12:25: warning: comparison of distinct pointer types lacks a cast
+      12 |         (void)(&__dummy == &__dummy2); \
+         |                         ^~
+   include/linux/irqflags.h:182:17: note: in expansion of macro 'typecheck'
+     182 |                 typecheck(unsigned long, flags);        \
+         |                 ^~~~~~~~~
+   include/linux/irqflags.h:230:17: note: in expansion of macro 'raw_local_irq_restore'
+     230 |                 raw_local_irq_restore(flags);           \
+         |                 ^~~~~~~~~~~~~~~~~~~~~
+   kernel/events/core.c:6942:9: note: in expansion of macro 'local_irq_restore'
+    6942 |         local_irq_restore(flags);
+         |         ^~~~~~~~~~~~~~~~~
+
+
+vim +12 include/linux/typecheck.h
+
+e0deaff470900a4c Andrew Morton 2008-07-25   4  
+e0deaff470900a4c Andrew Morton 2008-07-25   5  /*
+e0deaff470900a4c Andrew Morton 2008-07-25   6   * Check at compile time that something is of a particular type.
+e0deaff470900a4c Andrew Morton 2008-07-25   7   * Always evaluates to 1 so you may use it easily in comparisons.
+e0deaff470900a4c Andrew Morton 2008-07-25   8   */
+e0deaff470900a4c Andrew Morton 2008-07-25   9  #define typecheck(type,x) \
+e0deaff470900a4c Andrew Morton 2008-07-25  10  ({	type __dummy; \
+e0deaff470900a4c Andrew Morton 2008-07-25  11  	typeof(x) __dummy2; \
+e0deaff470900a4c Andrew Morton 2008-07-25 @12  	(void)(&__dummy == &__dummy2); \
+e0deaff470900a4c Andrew Morton 2008-07-25  13  	1; \
+e0deaff470900a4c Andrew Morton 2008-07-25  14  })
+e0deaff470900a4c Andrew Morton 2008-07-25  15  
+
+-- 
+0-DAY CI Kernel Test Service
+https://01.org/lkp
