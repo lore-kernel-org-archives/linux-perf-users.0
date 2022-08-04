@@ -2,58 +2,58 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 54ABDC25B08
-	for <linux-perf-users@archiver.kernel.org>; Thu,  4 Aug 2022 22:19:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 88456C25B07
+	for <linux-perf-users@archiver.kernel.org>; Thu,  4 Aug 2022 22:19:58 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S240185AbiHDWT4 (ORCPT
+        id S240129AbiHDWT4 (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
         Thu, 4 Aug 2022 18:19:56 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48008 "EHLO
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47328 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S240048AbiHDWTM (ORCPT
+        with ESMTP id S239982AbiHDWTP (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Thu, 4 Aug 2022 18:19:12 -0400
-Received: from mail-yb1-xb49.google.com (mail-yb1-xb49.google.com [IPv6:2607:f8b0:4864:20::b49])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4ED846FA0A
-        for <linux-perf-users@vger.kernel.org>; Thu,  4 Aug 2022 15:18:53 -0700 (PDT)
-Received: by mail-yb1-xb49.google.com with SMTP id 207-20020a2505d8000000b0067709d8d3eeso581653ybf.18
-        for <linux-perf-users@vger.kernel.org>; Thu, 04 Aug 2022 15:18:53 -0700 (PDT)
+        Thu, 4 Aug 2022 18:19:15 -0400
+Received: from mail-yb1-xb4a.google.com (mail-yb1-xb4a.google.com [IPv6:2607:f8b0:4864:20::b4a])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5EED86FA2E
+        for <linux-perf-users@vger.kernel.org>; Thu,  4 Aug 2022 15:18:55 -0700 (PDT)
+Received: by mail-yb1-xb4a.google.com with SMTP id 137-20020a250b8f000000b0067a5a14d730so600694ybl.12
+        for <linux-perf-users@vger.kernel.org>; Thu, 04 Aug 2022 15:18:55 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=google.com; s=20210112;
         h=cc:to:from:subject:references:mime-version:message-id:in-reply-to
          :date:from:to:cc;
-        bh=sxQ3NgaGvyZvqLsnvSuWrAEklghpO9eHvVo0+qiRlwk=;
-        b=eCGMuF7hnql9EdwBvth8dRunrydqTYfauGRZ1iDr/M8VHI27TYViSnq9fyeo4H5JgV
-         V6LGbOvcSxRFYepaPl664EYB+jKU10CtEkx4YjZA+KhvUwHnoAX/hW6DQ6LsOGnqb11K
-         9ySjaKJKCxLQYKrGyQ4t8WkWuFsGq8vuSaFOaKqAuCKs/vXPwvB/2Wz/I33z7Ztc8rxZ
-         efi6mtUND4tQxj3CWZpCBo9aDXGsvY1PK5dVcuk+boRRBTBJ0knpiQo1PYnYiOUK7LYb
-         jN7yOMhPZq4xlx85kK4BgobztVs842/pilcTOl3A8zjipZIyobnXz/9RC3rfV3R4lLwH
-         EEjA==
+        bh=WRzJvWRxYrANs6b5P5hXctmIEfbb7zbPwjhClYCaTdw=;
+        b=EedUdYbJv7zdFBtr45yqAht3y7rqZ4fCvSTXftOYXm1k4fW4nMHX9jxJZNWHqdncMJ
+         kFgVDuAWYz4JPJA2Nrf0rPgUWysazQfAs6AMt8QzsDUINNimrOux4W+OdaiagBiIcPnh
+         9aTH5EN8BuQ6FA4tpTEQz4H44mv5oaYd5L/+O7UN7wwHM9h9AuH4zDEhVyEIl8icEXxe
+         6vC0AKtxtv9EMduvxlCgh2YoLMtDzdtbDsGQyP3eRQ9lvAlKqk6LN8Esovr51foUZs9W
+         mzalF+92zRWrQVfUtM2rpCzVjOACEWiEb4wcEVFdAVSEXLD6BpdlFxpCxBdxnKsHwC3m
+         tp9Q==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
         h=cc:to:from:subject:references:mime-version:message-id:in-reply-to
          :date:x-gm-message-state:from:to:cc;
-        bh=sxQ3NgaGvyZvqLsnvSuWrAEklghpO9eHvVo0+qiRlwk=;
-        b=2vikCgV7ri7XO/QzqvyR1bYoN9BeCp9L34bE+DMFXOUhRsbSvV8j/t5ElyaO4/GdVt
-         Co7UHC7vdnCaXTeMPyGnzDJUyi56kmlIBa7kXe/H1fbCr+h5WoNcXzIJvSMTY4oYa6Hg
-         PIq72T8dH1t2jDqE8XN5nMgMt/yAhExmrWgWEqwVQptAKjqOhmwYtwR/V9HQEZcP4BE2
-         +vvoiAy7C2vumV78Avn2U3NoOSkvWEvB+7qSpaQolMpD4ouIZhlP1zPmWfg4+O511vWE
-         lpZmHAPdySyQ4e0+TZk1Tm6ju8Ki0ErWZex9UoDyzTjGVlFQ4hrkROMbzf9kXru4A8xY
-         fTag==
-X-Gm-Message-State: ACgBeo0MiGlqnubZBDsyRSsUFghzZ+TFF5v1qaJSrh7MaQ2+mIi5Vtj+
-        tgjUqP0ONTlBl9tCoRIiZHbrm4Jr1JMf
-X-Google-Smtp-Source: AA6agR4l94lTAOWEwMCCSzuT/joWaQgFNgh/0L1pyiyzsEHL3p12erTz3j18xD0M0Oc7DlkXogsjaMBh2g8X
+        bh=WRzJvWRxYrANs6b5P5hXctmIEfbb7zbPwjhClYCaTdw=;
+        b=FAaBfWUvSQCrFe/42m2vn1+X/kcJHKpxeNgj/b5wfzTia4QLBNhGhICag3cj/d8JMd
+         uR9A/ZCdmK3d14ivDTT0EZRKPJCzI8L2Z/+JlX1HgeXCFhD9DXrk5vSxY0gIxPsg6Spk
+         no+2n6yQbx0MZIUmmNyF7GIoTgFiMp+C+8dKfVdNXeme32F/VQHDwzEp+ojPkKPGE6Px
+         vYD0vk3RAk88CChrY79NF46j6+0WAgHUmqiTp9Ccg7EPsratsnYpgFugBmuKLP6KBfg+
+         H9GZGzC+UChI5mVG1QnShwxrhg4R5cLYRgObOd9DbkniPvR3e2E4I47qrB2FJXxtWVsP
+         hdDA==
+X-Gm-Message-State: ACgBeo1EMLZ/+cI7AyIPObkvojGJ4uFCMX2G9Ef9mGLLQ3d4JAgknXcx
+        w6hhy3XP5bqOxBLZviDASeOQpHhCII9f
+X-Google-Smtp-Source: AA6agR419IpSwckkR1hznAXQnajCcoc7OIST6/ndSKpKBf7IlBNo3OprHgypzwIj2mlOKudiPHOBZfvYY+8K
 X-Received: from irogers.svl.corp.google.com ([2620:15c:2d4:203:f5e1:5bc5:7dab:2b7c])
- (user=irogers job=sendgmr) by 2002:a25:b9ce:0:b0:67a:6b58:2444 with SMTP id
- y14-20020a25b9ce000000b0067a6b582444mr3169101ybj.238.1659651532563; Thu, 04
- Aug 2022 15:18:52 -0700 (PDT)
-Date:   Thu,  4 Aug 2022 15:18:10 -0700
+ (user=irogers job=sendgmr) by 2002:a81:8607:0:b0:324:92a5:b809 with SMTP id
+ w7-20020a818607000000b0032492a5b809mr3668375ywf.87.1659651535084; Thu, 04 Aug
+ 2022 15:18:55 -0700 (PDT)
+Date:   Thu,  4 Aug 2022 15:18:11 -0700
 In-Reply-To: <20220804221816.1802790-1-irogers@google.com>
-Message-Id: <20220804221816.1802790-12-irogers@google.com>
+Message-Id: <20220804221816.1802790-13-irogers@google.com>
 Mime-Version: 1.0
 References: <20220804221816.1802790-1-irogers@google.com>
 X-Mailer: git-send-email 2.37.1.559.g78731f0fdb-goog
-Subject: [PATCH v4 11/17] perf test: Use full metric resolution
+Subject: [PATCH v4 12/17] perf pmu-events: Move test events/metrics to json
 From:   Ian Rogers <irogers@google.com>
 To:     John Garry <john.garry@huawei.com>, Will Deacon <will@kernel.org>,
         James Clark <james.clark@arm.com>,
@@ -80,297 +80,289 @@ Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-The simple metric resolution doesn't handle recursion properly, switch
-to use the full resolution as with the parse-metric tests which also
-increases coverage. Don't set the values for the metric backward as
-failures to generate a result are ignored.
+Move arrays of pmu_events into the json code so that it may be
+regenerated and modified by the jevents.py script.
 
 Signed-off-by: Ian Rogers <irogers@google.com>
 ---
- tools/perf/tests/pmu-events.c | 222 ++++++++++++----------------------
- 1 file changed, 77 insertions(+), 145 deletions(-)
+ .../arch/test/test_soc/cpu/metrics.json       | 64 +++++++++++++++++
+ tools/perf/pmu-events/empty-pmu-events.c      | 64 +++++++++++++++++
+ tools/perf/tests/expand-cgroup.c              | 17 +----
+ tools/perf/tests/parse-metric.c               | 68 +------------------
+ 4 files changed, 132 insertions(+), 81 deletions(-)
+ create mode 100644 tools/perf/pmu-events/arch/test/test_soc/cpu/metrics.json
 
-diff --git a/tools/perf/tests/pmu-events.c b/tools/perf/tests/pmu-events.c
-index ea8b41b5c4e3..e8df6bc26ebd 100644
---- a/tools/perf/tests/pmu-events.c
-+++ b/tools/perf/tests/pmu-events.c
-@@ -9,10 +9,12 @@
- #include <linux/zalloc.h>
- #include "debug.h"
- #include "../pmu-events/pmu-events.h"
-+#include <perf/evlist.h>
- #include "util/evlist.h"
- #include "util/expr.h"
- #include "util/parse-events.h"
- #include "metricgroup.h"
-+#include "stat.h"
+diff --git a/tools/perf/pmu-events/arch/test/test_soc/cpu/metrics.json b/tools/perf/pmu-events/arch/test/test_soc/cpu/metrics.json
+new file mode 100644
+index 000000000000..42d9b5242fd7
+--- /dev/null
++++ b/tools/perf/pmu-events/arch/test/test_soc/cpu/metrics.json
+@@ -0,0 +1,64 @@
++[
++  {
++    "MetricExpr": "1 / IPC",
++    "MetricName": "CPI"
++  },
++  {
++    "MetricExpr": "inst_retired.any / cpu_clk_unhalted.thread",
++    "MetricName": "IPC",
++    "MetricGroup": "group1"
++  },
++  {
++    "MetricExpr": "idq_uops_not_delivered.core / (4 * (( ( cpu_clk_unhalted.thread / 2 ) * ( 1 + cpu_clk_unhalted.one_thread_active / cpu_clk_unhalted.ref_xclk ) )))",
++    "MetricName": "Frontend_Bound_SMT"
++  },
++  {
++    "MetricExpr": "l1d\\-loads\\-misses / inst_retired.any",
++    "MetricName": "dcache_miss_cpi"
++  },
++  {
++    "MetricExpr": "l1i\\-loads\\-misses / inst_retired.any",
++    "MetricName": "icache_miss_cycles"
++  },
++  {
++    "MetricExpr": "(dcache_miss_cpi + icache_miss_cycles)",
++    "MetricName": "cache_miss_cycles",
++    "MetricGroup": "group1"
++  },
++  {
++    "MetricExpr": "l2_rqsts.demand_data_rd_hit + l2_rqsts.pf_hit + l2_rqsts.rfo_hit",
++    "MetricName": "DCache_L2_All_Hits"
++  },
++  {
++    "MetricExpr": "max(l2_rqsts.all_demand_data_rd - l2_rqsts.demand_data_rd_hit, 0) + l2_rqsts.pf_miss + l2_rqsts.rfo_miss",
++    "MetricName": "DCache_L2_All_Miss"
++  },
++  {
++    "MetricExpr": "dcache_l2_all_hits + dcache_l2_all_miss",
++    "MetricName": "DCache_L2_All"
++  },
++  {
++    "MetricExpr": "d_ratio(dcache_l2_all_hits, dcache_l2_all)",
++    "MetricName": "DCache_L2_Hits"
++  },
++  {
++    "MetricExpr": "d_ratio(dcache_l2_all_miss, dcache_l2_all)",
++    "MetricName": "DCache_L2_Misses"
++  },
++  {
++    "MetricExpr": "ipc + M2",
++    "MetricName": "M1"
++  },
++  {
++    "MetricExpr": "ipc + M1",
++    "MetricName": "M2"
++  },
++  {
++    "MetricExpr": "1/M3",
++    "MetricName": "M3"
++  },
++  {
++    "MetricExpr": "64 * l1d.replacement / 1000000000 / duration_time",
++    "MetricName": "L1D_Cache_Fill_BW"
++  }
++]
+diff --git a/tools/perf/pmu-events/empty-pmu-events.c b/tools/perf/pmu-events/empty-pmu-events.c
+index 8ef75aff996c..028f44efe48d 100644
+--- a/tools/perf/pmu-events/empty-pmu-events.c
++++ b/tools/perf/pmu-events/empty-pmu-events.c
+@@ -105,6 +105,70 @@ static const struct pmu_event pme_test_soc_cpu[] = {
+ 		.desc = "L2 BTB Correction",
+ 		.topic = "branch",
+ 	},
++	{
++		.metric_expr	= "1 / IPC",
++		.metric_name	= "CPI",
++	},
++	{
++		.metric_expr	= "inst_retired.any / cpu_clk_unhalted.thread",
++		.metric_name	= "IPC",
++		.metric_group	= "group1",
++	},
++	{
++		.metric_expr	= "idq_uops_not_delivered.core / (4 * (( ( cpu_clk_unhalted.thread / 2 ) * "
++		"( 1 + cpu_clk_unhalted.one_thread_active / cpu_clk_unhalted.ref_xclk ) )))",
++		.metric_name	= "Frontend_Bound_SMT",
++	},
++	{
++		.metric_expr	= "l1d\\-loads\\-misses / inst_retired.any",
++		.metric_name	= "dcache_miss_cpi",
++	},
++	{
++		.metric_expr	= "l1i\\-loads\\-misses / inst_retired.any",
++		.metric_name	= "icache_miss_cycles",
++	},
++	{
++		.metric_expr	= "(dcache_miss_cpi + icache_miss_cycles)",
++		.metric_name	= "cache_miss_cycles",
++		.metric_group	= "group1",
++	},
++	{
++		.metric_expr	= "l2_rqsts.demand_data_rd_hit + l2_rqsts.pf_hit + l2_rqsts.rfo_hit",
++		.metric_name	= "DCache_L2_All_Hits",
++	},
++	{
++		.metric_expr	= "max(l2_rqsts.all_demand_data_rd - l2_rqsts.demand_data_rd_hit, 0) + "
++		"l2_rqsts.pf_miss + l2_rqsts.rfo_miss",
++		.metric_name	= "DCache_L2_All_Miss",
++	},
++	{
++		.metric_expr	= "dcache_l2_all_hits + dcache_l2_all_miss",
++		.metric_name	= "DCache_L2_All",
++	},
++	{
++		.metric_expr	= "d_ratio(dcache_l2_all_hits, dcache_l2_all)",
++		.metric_name	= "DCache_L2_Hits",
++	},
++	{
++		.metric_expr	= "d_ratio(dcache_l2_all_miss, dcache_l2_all)",
++		.metric_name	= "DCache_L2_Misses",
++	},
++	{
++		.metric_expr	= "ipc + M2",
++		.metric_name	= "M1",
++	},
++	{
++		.metric_expr	= "ipc + M1",
++		.metric_name	= "M2",
++	},
++	{
++		.metric_expr	= "1/M3",
++		.metric_name	= "M3",
++	},
++	{
++		.metric_expr	= "64 * l1d.replacement / 1000000000 / duration_time",
++		.metric_name	= "L1D_Cache_Fill_BW",
++	},
+ 	{
+ 		.name = 0,
+ 		.event = 0,
+diff --git a/tools/perf/tests/expand-cgroup.c b/tools/perf/tests/expand-cgroup.c
+index 411fc578e5a4..e79ee8621a90 100644
+--- a/tools/perf/tests/expand-cgroup.c
++++ b/tools/perf/tests/expand-cgroup.c
+@@ -180,26 +180,13 @@ static int expand_metric_events(void)
+ 	struct evlist *evlist;
+ 	struct rblist metric_events;
+ 	const char metric_str[] = "CPI";
+-
+-	struct pmu_event pme_test[] = {
+-		{
+-			.metric_expr	= "instructions / cycles",
+-			.metric_name	= "IPC",
+-		},
+-		{
+-			.metric_expr	= "1 / IPC",
+-			.metric_name	= "CPI",
+-		},
+-		{
+-			.metric_expr	= NULL,
+-			.metric_name	= NULL,
+-		},
+-	};
++	const struct pmu_event *pme_test;
  
- struct perf_pmu_test_event {
- 	/* used for matching against events from generated pmu-events.c */
-@@ -801,27 +803,6 @@ static int check_parse_id(const char *id, struct parse_events_error *error,
- 	return ret;
- }
+ 	evlist = evlist__new();
+ 	TEST_ASSERT_VAL("failed to get evlist", evlist);
  
--static int check_parse_cpu(const char *id, bool same_cpu, const struct pmu_event *pe)
--{
--	struct parse_events_error error;
--	int ret;
--
--	parse_events_error__init(&error);
--	ret = check_parse_id(id, &error, NULL);
--	if (ret && same_cpu) {
--		pr_warning("Parse event failed metric '%s' id '%s' expr '%s'\n",
--			pe->metric_name, id, pe->metric_expr);
--		pr_warning("Error string '%s' help '%s'\n", error.str,
--			error.help);
--	} else if (ret) {
--		pr_debug3("Parse event failed, but for an event that may not be supported by this CPU.\nid '%s' metric '%s' expr '%s'\n",
--			  id, pe->metric_name, pe->metric_expr);
--		ret = 0;
--	}
--	parse_events_error__exit(&error);
--	return ret;
--}
--
- static int check_parse_fake(const char *id)
- {
- 	struct parse_events_error error;
-@@ -838,160 +819,111 @@ struct metric {
- 	struct metric_ref metric_ref;
- };
+ 	rblist__init(&metric_events);
++	pme_test = find_core_events_table("testarch", "testcpu");
+ 	ret = metricgroup__parse_groups_test(evlist, pme_test, metric_str,
+ 					     false, false, &metric_events);
+ 	if (ret < 0) {
+diff --git a/tools/perf/tests/parse-metric.c b/tools/perf/tests/parse-metric.c
+index 7aebde7c37ec..30c7091857b8 100644
+--- a/tools/perf/tests/parse-metric.c
++++ b/tools/perf/tests/parse-metric.c
+@@ -13,72 +13,6 @@
+ #include "stat.h"
+ #include "pmu.h"
  
--static int resolve_metric_simple(struct expr_parse_ctx *pctx,
--				 struct list_head *compound_list,
--				 const struct pmu_event *map,
--				 const char *metric_name)
+-static struct pmu_event pme_test[] = {
 -{
--	struct hashmap_entry *cur, *cur_tmp;
--	struct metric *metric, *tmp;
--	size_t bkt;
--	bool all;
--	int rc;
--
--	do {
--		all = true;
--		hashmap__for_each_entry_safe(pctx->ids, cur, cur_tmp, bkt) {
--			struct metric_ref *ref;
--			const struct pmu_event *pe;
--
--			pe = metricgroup__find_metric(cur->key, map);
--			if (!pe)
--				continue;
--
--			if (!strcmp(metric_name, (char *)cur->key)) {
--				pr_warning("Recursion detected for metric %s\n", metric_name);
--				rc = -1;
--				goto out_err;
--			}
--
--			all = false;
--
--			/* The metric key itself needs to go out.. */
--			expr__del_id(pctx, cur->key);
--
--			metric = malloc(sizeof(*metric));
--			if (!metric) {
--				rc = -ENOMEM;
--				goto out_err;
--			}
--
--			ref = &metric->metric_ref;
--			ref->metric_name = pe->metric_name;
--			ref->metric_expr = pe->metric_expr;
--			list_add_tail(&metric->list, compound_list);
--
--			rc = expr__find_ids(pe->metric_expr, NULL, pctx);
--			if (rc)
--				goto out_err;
--			break; /* The hashmap has been modified, so restart */
--		}
--	} while (!all);
--
--	return 0;
--
--out_err:
--	list_for_each_entry_safe(metric, tmp, compound_list, list)
--		free(metric);
--
--	return rc;
--
--}
--
--static void expr_failure(const char *msg, const struct pmu_event *pe)
+-	.metric_expr	= "inst_retired.any / cpu_clk_unhalted.thread",
+-	.metric_name	= "IPC",
+-	.metric_group	= "group1",
+-},
 -{
--	pr_debug("%s\nOn metric %s\nOn expression %s\n", msg, pe->metric_name, pe->metric_expr);
+-	.metric_expr	= "idq_uops_not_delivered.core / (4 * (( ( cpu_clk_unhalted.thread / 2 ) * "
+-			  "( 1 + cpu_clk_unhalted.one_thread_active / cpu_clk_unhalted.ref_xclk ) )))",
+-	.metric_name	= "Frontend_Bound_SMT",
+-},
+-{
+-	.metric_expr	= "l1d\\-loads\\-misses / inst_retired.any",
+-	.metric_name	= "dcache_miss_cpi",
+-},
+-{
+-	.metric_expr	= "l1i\\-loads\\-misses / inst_retired.any",
+-	.metric_name	= "icache_miss_cycles",
+-},
+-{
+-	.metric_expr	= "(dcache_miss_cpi + icache_miss_cycles)",
+-	.metric_name	= "cache_miss_cycles",
+-	.metric_group	= "group1",
+-},
+-{
+-	.metric_expr	= "l2_rqsts.demand_data_rd_hit + l2_rqsts.pf_hit + l2_rqsts.rfo_hit",
+-	.metric_name	= "DCache_L2_All_Hits",
+-},
+-{
+-	.metric_expr	= "max(l2_rqsts.all_demand_data_rd - l2_rqsts.demand_data_rd_hit, 0) + "
+-			  "l2_rqsts.pf_miss + l2_rqsts.rfo_miss",
+-	.metric_name	= "DCache_L2_All_Miss",
+-},
+-{
+-	.metric_expr	= "dcache_l2_all_hits + dcache_l2_all_miss",
+-	.metric_name	= "DCache_L2_All",
+-},
+-{
+-	.metric_expr	= "d_ratio(dcache_l2_all_hits, dcache_l2_all)",
+-	.metric_name	= "DCache_L2_Hits",
+-},
+-{
+-	.metric_expr	= "d_ratio(dcache_l2_all_miss, dcache_l2_all)",
+-	.metric_name	= "DCache_L2_Misses",
+-},
+-{
+-	.metric_expr	= "ipc + m2",
+-	.metric_name	= "M1",
+-},
+-{
+-	.metric_expr	= "ipc + m1",
+-	.metric_name	= "M2",
+-},
+-{
+-	.metric_expr	= "1/m3",
+-	.metric_name	= "M3",
+-},
+-{
+-	.metric_expr	= "64 * l1d.replacement / 1000000000 / duration_time",
+-	.metric_name	= "L1D_Cache_Fill_BW",
+-},
+-{
+-	.name	= NULL,
 -}
--
--
--struct test__parsing_data {
--	const struct pmu_event *cpus_table;
--	struct expr_parse_ctx *ctx;
--	int failures;
 -};
 -
- static int test__parsing_callback(const struct pmu_event *pe, const struct pmu_event *table,
--				  void *vdata)
-+				  void *data)
- {
--	struct test__parsing_data *data = vdata;
--	struct metric *metric, *tmp;
--	struct hashmap_entry *cur;
--	LIST_HEAD(compound_list);
--	size_t bkt;
-+	int *failures = data;
- 	int k;
--	double result;
-+	struct evlist *evlist;
-+	struct perf_cpu_map *cpus;
-+	struct runtime_stat st;
-+	struct evsel *evsel;
-+	struct rblist metric_events = {
-+		.nr_entries = 0,
-+	};
-+	int err = 0;
+ struct value {
+ 	const char	*event;
+ 	u64		 val;
+@@ -138,6 +72,7 @@ static int __compute_metric(const char *name, struct value *vals,
+ 	struct rblist metric_events = {
+ 		.nr_entries = 0,
+ 	};
++	const struct pmu_event *pme_test;
+ 	struct perf_cpu_map *cpus;
+ 	struct runtime_stat st;
+ 	struct evlist *evlist;
+@@ -161,6 +96,7 @@ static int __compute_metric(const char *name, struct value *vals,
+ 	runtime_stat__init(&st);
  
- 	if (!pe->metric_expr)
- 		return 0;
- 
- 	pr_debug("Found metric '%s'\n", pe->metric_name);
-+	(*failures)++;
- 
--	expr__ctx_clear(data->ctx);
--	if (expr__find_ids(pe->metric_expr, NULL, data->ctx) < 0) {
--		expr_failure("Parse find ids failed", pe);
--		data->failures++;
--		return 0;
-+	/*
-+	 * We need to prepare evlist for stat mode running on CPU 0
-+	 * because that's where all the stats are going to be created.
-+	 */
-+	evlist = evlist__new();
-+	if (!evlist)
-+		return -ENOMEM;
-+
-+	cpus = perf_cpu_map__new("0");
-+	if (!cpus) {
-+		evlist__delete(evlist);
-+		return -ENOMEM;
- 	}
- 
--	if (resolve_metric_simple(data->ctx, &compound_list, table,
--				  pe->metric_name)) {
--		expr_failure("Could not resolve metrics", pe);
--		data->failures++;
--		return TEST_FAIL; /* Don't tolerate errors due to severity */
-+	perf_evlist__set_maps(&evlist->core, cpus, NULL);
-+	runtime_stat__init(&st);
-+
-+	err = metricgroup__parse_groups_test(evlist, table, pe->metric_name,
-+					     false, false,
-+					     &metric_events);
-+	if (err) {
-+		if (!strcmp(pe->metric_name, "M1") || !strcmp(pe->metric_name, "M2") ||
-+		    !strcmp(pe->metric_name, "M3")) {
-+			(*failures)--;
-+			pr_debug("Expected broken metric %s skipping\n", pe->metric_name);
-+			err = 0;
-+		}
-+		goto out_err;
- 	}
- 
-+	err = evlist__alloc_stats(evlist, false);
-+	if (err)
-+		goto out_err;
- 	/*
- 	 * Add all ids with a made up value. The value may trigger divide by
- 	 * zero when subtracted and so try to make them unique.
- 	 */
- 	k = 1;
--	hashmap__for_each_entry(data->ctx->ids, cur, bkt)
--		expr__add_id_val(data->ctx, strdup(cur->key), k++);
--
--	hashmap__for_each_entry(data->ctx->ids, cur, bkt) {
--		if (check_parse_cpu(cur->key, table == data->cpus_table, pe))
--			data->failures++;
-+	perf_stat__reset_shadow_stats();
-+	evlist__for_each_entry(evlist, evsel) {
-+		perf_stat__update_shadow_stats(evsel, k, 0, &st);
-+		if (!strcmp(evsel->name, "duration_time"))
-+			update_stats(&walltime_nsecs_stats, k);
-+		k++;
- 	}
-+	evlist__for_each_entry(evlist, evsel) {
-+		struct metric_event *me = metricgroup__lookup(&metric_events, evsel, false);
- 
--	list_for_each_entry_safe(metric, tmp, &compound_list, list) {
--		expr__add_ref(data->ctx, &metric->metric_ref);
--		free(metric);
--	}
-+		if (me != NULL) {
-+			struct metric_expr *mexp;
- 
--	if (expr__parse(&result, data->ctx, pe->metric_expr)) {
--		/*
--		 * Parsing failed, make numbers go from large to small which can
--		 * resolve divide by zero issues.
--		 */
--		k = 1024;
--		hashmap__for_each_entry(data->ctx->ids, cur, bkt)
--			expr__add_id_val(data->ctx, strdup(cur->key), k--);
--		if (expr__parse(&result, data->ctx, pe->metric_expr)) {
--			expr_failure("Parse failed", pe);
--			data->failures++;
-+			list_for_each_entry (mexp, &me->head, nd) {
-+				if (strcmp(mexp->metric_name, pe->metric_name))
-+					continue;
-+				pr_debug("Result %f\n", test_generic_metric(mexp, 0, &st));
-+				err = 0;
-+				(*failures)--;
-+				goto out_err;
-+			}
- 		}
- 	}
--	return 0;
-+	pr_debug("Didn't find parsed metric %s", pe->metric_name);
-+	err = 1;
-+out_err:
-+	if (err)
-+		pr_debug("Broken metric %s\n", pe->metric_name);
-+
-+	/* ... cleanup. */
-+	metricgroup__rblist_exit(&metric_events);
-+	runtime_stat__exit(&st);
-+	evlist__free_stats(evlist);
-+	perf_cpu_map__put(cpus);
-+	evlist__delete(evlist);
-+	return err;
- }
- 
- static int test__parsing(struct test_suite *test __maybe_unused,
- 			 int subtest __maybe_unused)
- {
--	struct test__parsing_data data = {
--		.cpus_table = pmu_events_map__find(),
--		.ctx = expr__ctx_new(),
--		.failures = 0,
--	};
-+	int failures = 0;
- 
--	if (!data.ctx) {
--		pr_debug("expr__ctx_new failed");
--		return TEST_FAIL;
--	}
--	pmu_for_each_core_event(test__parsing_callback, &data);
--	pmu_for_each_sys_event(test__parsing_callback, &data);
-+	pmu_for_each_core_event(test__parsing_callback, &failures);
-+	pmu_for_each_sys_event(test__parsing_callback, &failures);
- 
--	expr__ctx_free(data.ctx);
--	return data.failures == 0 ? TEST_OK : TEST_FAIL;
-+	return failures == 0 ? TEST_OK : TEST_FAIL;
- }
- 
- struct test_metric {
+ 	/* Parse the metric into metric_events list. */
++	pme_test = find_core_events_table("testarch", "testcpu");
+ 	err = metricgroup__parse_groups_test(evlist, pme_test, name,
+ 					     false, false,
+ 					     &metric_events);
 -- 
 2.37.1.559.g78731f0fdb-goog
 
