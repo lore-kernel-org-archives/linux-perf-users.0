@@ -2,178 +2,194 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C4885C19F2B
-	for <linux-perf-users@archiver.kernel.org>; Thu,  4 Aug 2022 08:49:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E9141C19F2B
+	for <linux-perf-users@archiver.kernel.org>; Thu,  4 Aug 2022 11:02:41 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S234069AbiHDItY (ORCPT
+        id S239523AbiHDLCk (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Thu, 4 Aug 2022 04:49:24 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52958 "EHLO
+        Thu, 4 Aug 2022 07:02:40 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50444 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232080AbiHDItV (ORCPT
+        with ESMTP id S239551AbiHDLCO (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Thu, 4 Aug 2022 04:49:21 -0400
-Received: from mail-pf1-x429.google.com (mail-pf1-x429.google.com [IPv6:2607:f8b0:4864:20::429])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id AB58EC3F;
-        Thu,  4 Aug 2022 01:49:17 -0700 (PDT)
-Received: by mail-pf1-x429.google.com with SMTP id 17so18824906pfy.0;
-        Thu, 04 Aug 2022 01:49:17 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20210112;
-        h=message-id:date:mime-version:user-agent:subject:content-language:to
-         :cc:references:from:in-reply-to:content-transfer-encoding;
-        bh=YuZgAf9eJDiIQ1pfzGSgYaDFUDPS+whO4VhSlSI0bQI=;
-        b=Nmc3YZfbiVDljfe1S3Nnwdzg+Heu9NiAzb8XYTDkWy//pJAFpCxwgfFeLQf2ohvT/e
-         mFW7ObPEdj0F3bnRJeesXm2sulwWEH/fC4xRE1xeyPCZApTHvR1I+OV17k7a/gAJ/1m8
-         6mZ+FkdlsDjiA7CatUJuQmtJaC0KKnO/koGR5mJOLAS942loviG+34p3x7vSykD4xFlJ
-         fTqe49yQlWYEfucrNvf1To1zhNLim+Q2z8++lkfY0C+d+++st5vFrouiFj39nqKn0hGs
-         zrErSeX9TCxrqnrEcxd7WK7KfJd9y6v7+2Jh/DrFSyMglhHV/7Qh7XCcxMd6YMHqS+t5
-         eGXA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=x-gm-message-state:message-id:date:mime-version:user-agent:subject
-         :content-language:to:cc:references:from:in-reply-to
-         :content-transfer-encoding;
-        bh=YuZgAf9eJDiIQ1pfzGSgYaDFUDPS+whO4VhSlSI0bQI=;
-        b=b3Axv2Eng02YYx8gZi54WVuEjncGMpz3Qbk3mPAoua9OGPw/dCrblNNZ+Hyi69RiW8
-         GMQL6egs8rPCtZ4wn4wFqAyfwNq35klYVVilXqmLlYcq8zQRa/IgREQ8F7cVb1aZduVE
-         OO5LAzLc0JQ5LPHXgkjhL82650pB0zaZi5NIEVtBpNVnOiW7bh3Q93DYjhszaOVVyxwA
-         xWj9VQLyNgTGoSAf3ZiPScbddFv1EwDHKeDiONCM1cyFoYkJNeixFNWj/rG0KBROI8Sc
-         lb6PwWt7hU7Q+ppsuAAzBU1zI3RoSFdYvMq61P7bK6XPrrmwq6B/7UOxjE5r0xUWFpvv
-         ketA==
-X-Gm-Message-State: ACgBeo01Ds+uPTLUn2RMx5TvrAfS1AZniJKI6Xd2EspeZWUYyxv83Fdj
-        H2uIMWqrs+3M+AWkGQbY/J4=
-X-Google-Smtp-Source: AA6agR6f3u0cPfCCQAl+H1d7gVecNdB5HL/YM90VhrCkP10fYBmef0cMO23jtPBYj2yRVDo6s4uuhg==
-X-Received: by 2002:a63:fd0b:0:b0:415:f76b:a2cd with SMTP id d11-20020a63fd0b000000b00415f76ba2cdmr816661pgh.440.1659602957225;
-        Thu, 04 Aug 2022 01:49:17 -0700 (PDT)
-Received: from [192.168.255.10] ([103.7.29.32])
-        by smtp.gmail.com with ESMTPSA id z4-20020a170902ccc400b0016be9d498d0sm283814ple.211.2022.08.04.01.49.14
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 04 Aug 2022 01:49:16 -0700 (PDT)
-Message-ID: <fcb0e878-29ff-e408-ccf3-3b594160c0df@gmail.com>
-Date:   Thu, 4 Aug 2022 16:49:08 +0800
+        Thu, 4 Aug 2022 07:02:14 -0400
+Received: from szxga02-in.huawei.com (szxga02-in.huawei.com [45.249.212.188])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6283B6069A;
+        Thu,  4 Aug 2022 04:02:12 -0700 (PDT)
+Received: from dggemv711-chm.china.huawei.com (unknown [172.30.72.55])
+        by szxga02-in.huawei.com (SkyGuard) with ESMTP id 4Lz5L94dv2zWfD6;
+        Thu,  4 Aug 2022 18:58:09 +0800 (CST)
+Received: from kwepemm600003.china.huawei.com (7.193.23.202) by
+ dggemv711-chm.china.huawei.com (10.1.198.66) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2375.24; Thu, 4 Aug 2022 19:02:10 +0800
+Received: from ubuntu1804.huawei.com (10.67.174.61) by
+ kwepemm600003.china.huawei.com (7.193.23.202) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2375.24; Thu, 4 Aug 2022 19:02:09 +0800
+From:   Yang Jihong <yangjihong1@huawei.com>
+To:     <rostedt@goodmis.org>, <peterz@infradead.org>, <mingo@redhat.com>,
+        <acme@kernel.org>, <mark.rutland@arm.com>,
+        <alexander.shishkin@linux.intel.com>, <jolsa@kernel.org>,
+        <namhyung@kernel.org>, <linux-kernel@vger.kernel.org>,
+        <linux-perf-users@vger.kernel.org>
+CC:     <yangjihong1@huawei.com>
+Subject: [PATCH] perf/core: Fix syzkaller reported issue "Internal error in read_pmevcntrn"
+Date:   Thu, 4 Aug 2022 18:59:18 +0800
+Message-ID: <20220804105918.113833-1-yangjihong1@huawei.com>
+X-Mailer: git-send-email 2.30.GIT
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.15; rv:91.0)
- Gecko/20100101 Thunderbird/91.11.0
-Subject: Re: [PATCH v2 2/7] perf/x86/core: Remove unnecessary stubs provided
- for KVM-only helpers
-Content-Language: en-US
-To:     Sean Christopherson <seanjc@google.com>
-Cc:     Mark Rutland <mark.rutland@arm.com>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Jiri Olsa <jolsa@kernel.org>,
-        Namhyung Kim <namhyung@kernel.org>,
-        linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org,
-        kvm@vger.kernel.org, Paolo Bonzini <pbonzini@redhat.com>,
-        Ingo Molnar <mingo@redhat.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Arnaldo Carvalho de Melo <acme@kernel.org>
-References: <20220803192658.860033-1-seanjc@google.com>
- <20220803192658.860033-3-seanjc@google.com>
-From:   Like Xu <like.xu.linux@gmail.com>
-In-Reply-To: <20220803192658.860033-3-seanjc@google.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 7BIT
+Content-Type:   text/plain; charset=US-ASCII
+X-Originating-IP: [10.67.174.61]
+X-ClientProxiedBy: dggems703-chm.china.huawei.com (10.3.19.180) To
+ kwepemm600003.china.huawei.com (7.193.23.202)
+X-CFilter-Loop: Reflected
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-On 4/8/2022 3:26 am, Sean Christopherson wrote:
-> Remove CONFIG_PERF_EVENT=n stubs for functions that are effectively
-> KVM-only.  KVM selects PERF_EVENT and will never consume the stubs.
-> Dropping the unnecessary stubs will allow simplifying x86_perf_get_lbr()
+syzkaller report a issue:
+Internal error: Oops - undefined instruction: 0 [#1] SMP
+Modules linked in:
+CPU: 1 PID: 15523 Comm: syz-executor.3 Not tainted 5.10.0 #6
+Hardware name: linux,dummy-virt (DT)
+pstate: 80400005 (Nzcv daif +PAN -UAO -TCO BTYPE=--)
+pc : read_pmevcntrn+0x1e4/0x1ec arch/arm64/kernel/perf_event.c:423
+lr : read_pmevcntrn+0x1e4/0x1ec arch/arm64/kernel/perf_event.c:423
+sp : ffffa000174d6ee0
+x29: ffffa000174d6ee0 x28: ffffedbca6b17a40
+x27: ffffa000174d7310 x26: ffff4b3ec102e398
+x25: 00000000ffffffff x24: 00000000ffffffff
+x23: ffff4b3ed8afb000 x22: ffff4b3ed8afb160
+x21: ffff4b3ed8afb184 x20: ffffedbca46aa3e0
+x19: ffffedbca2a524bc x18: 0000000000000000
+x17: 0000000000000000 x16: 0000000000000000
+x15: 0000000020000100 x14: 0000000000000000
+x13: 0000000000000000 x12: ffff8967db15f63d
+x11: 1fffe967db15f63c x10: ffff8967db15f63c
+x9 : ffffedbca2a5273c x8 : ffff4b3ed8afb1e7
+x7 : 0000000000000001 x6 : ffff8967db15f63c
+x5 : ffff4b3f08b89400 x4 : 0000000000000000
+x3 : ffffedbca2a00000 x2 : ffffedbca4690000
+x1 : ffff4b3f08b89400 x0 : 0000000000000000
+Call trace:
+ read_pmevcntrn+0x1e4/0x1ec arch/arm64/kernel/perf_event.c:423
+ armv8pmu_read_evcntr arch/arm64/kernel/perf_event.c:467 [inline]
+ armv8pmu_read_hw_counter arch/arm64/kernel/perf_event.c:475 [inline]
+ armv8pmu_read_counter+0x10c/0x1f0 arch/arm64/kernel/perf_event.c:528
+ armpmu_event_update+0x9c/0x1bc drivers/perf/arm_pmu.c:247
+ armpmu_read+0x24/0x30 drivers/perf/arm_pmu.c:264
+ perf_output_read_group+0x4cc/0x71c kernel/events/core.c:6806
+ perf_output_read+0x78/0x1c4 kernel/events/core.c:6845
+ perf_output_sample+0xafc/0x1000 kernel/events/core.c:6892
+ __perf_event_output kernel/events/core.c:7273 [inline]
+ perf_event_output_forward+0xd8/0x130 kernel/events/core.c:7287
+ __perf_event_overflow+0xbc/0x20c kernel/events/core.c:8943
+ perf_swevent_overflow kernel/events/core.c:9019 [inline]
+ perf_swevent_event+0x274/0x2c0 kernel/events/core.c:9047
+ do_perf_sw_event kernel/events/core.c:9160 [inline]
+ ___perf_sw_event+0x150/0x1b4 kernel/events/core.c:9191
+ __perf_sw_event+0x58/0x7c kernel/events/core.c:9203
+ perf_sw_event include/linux/perf_event.h:1177 [inline]
+ mm_account_fault mm/memory.c:4707 [inline]
+ handle_mm_fault+0x364/0x3f0 mm/memory.c:4758
+ __do_page_fault arch/arm64/mm/fault.c:438 [inline]
+ do_page_fault+0x334/0x8f0 arch/arm64/mm/fault.c:537
+ do_translation_fault+0x188/0x1e0 arch/arm64/mm/fault.c:619
+ do_mem_abort+0x68/0x120 arch/arm64/mm/fault.c:743
+ el1_abort+0xc0/0x150 arch/arm64/kernel/entry-common.c:119
+ el1_sync_handler+0x118/0x150 arch/arm64/kernel/entry-common.c:202
+ el1_sync+0x74/0x100 arch/arm64/kernel/entry.S:665
+ __arch_clear_user+0x20/0xa0 arch/arm64/lib/clear_user.S:25
+ read_iter_zero+0x90/0x16c drivers/char/mem.c:718
+ call_read_iter include/linux/fs.h:1954 [inline]
+ do_iter_readv_writev+0x394/0x414 fs/read_write.c:735
+ do_iter_read+0x1b0/0x280 fs/read_write.c:798
+ vfs_readv+0xf0/0x150 fs/read_write.c:918
+ do_readv+0x108/0x270 fs/read_write.c:955
+ __do_sys_readv fs/read_write.c:1046 [inline]
+ __se_sys_readv fs/read_write.c:1043 [inline]
+ __arm64_sys_readv+0x54/0x64 fs/read_write.c:1043
+ __invoke_syscall arch/arm64/kernel/syscall.c:36 [inline]
+ invoke_syscall arch/arm64/kernel/syscall.c:48 [inline]
+ el0_svc_common.constprop.0+0xf4/0x414 arch/arm64/kernel/syscall.c:155
+ do_el0_svc+0x50/0x11c arch/arm64/kernel/syscall.c:217
+ el0_svc+0x20/0x30 arch/arm64/kernel/entry-common.c:353
+ el0_sync_handler+0xe4/0x1e0 arch/arm64/kernel/entry-common.c:369
+ el0_sync+0x148/0x180 arch/arm64/kernel/entry.S:683
+Code: 940c387b d53be813 17ffff9c 940c3878 (d53bebd3)
+---[ end trace 6aab9f4b33ebf0aa ]---
+----------------
+Code disassembly (best guess):
+   0:	940c387b 	bl	0x30e1ec
+   4:	d53be813 	mrs	x19, pmevcntr0_el0
+   8:	17ffff9c 	b	0xfffffffffffffe78
+   c:	940c3878 	bl	0x30e1ec
+* 10:	d53bebd3 	mrs	x19, pmevcntr30_el0 <-- trapping instruction
 
-Giggling, I used to have a similar cleanup patch sitting in a corner somewhere.
+Interrupts is not disabled when perf_output_read_group reads PMU counter.
+In this case, IPI request may be received from other cores.
+As a result, PMU configuration is modified and an error occurs when
+reading PMU counter:
 
-> by getting rid of the impossible-to-hit error path (which KVM doesn't
-> even check).
-> 
-> Opportunstically reorganize the declarations to collapse multiple
-> CONFIG_PERF_EVENTS #ifdefs.
-> 
-> Signed-off-by: Sean Christopherson <seanjc@google.com>
-> ---
->   arch/x86/include/asm/perf_event.h | 53 ++++++++-----------------------
->   1 file changed, 13 insertions(+), 40 deletions(-)
-> 
-> diff --git a/arch/x86/include/asm/perf_event.h b/arch/x86/include/asm/perf_event.h
-> index cc47044401ff..aba196172500 100644
-> --- a/arch/x86/include/asm/perf_event.h
-> +++ b/arch/x86/include/asm/perf_event.h
-> @@ -509,46 +509,18 @@ extern u64 perf_get_hw_event_config(int hw_event);
->   extern void perf_check_microcode(void);
->   extern void perf_clear_dirty_counters(void);
->   extern int x86_perf_rdpmc_index(struct perf_event *event);
-> -#else
-> -static inline void perf_get_x86_pmu_capability(struct x86_pmu_capability *cap)
-> -{
-> -	memset(cap, 0, sizeof(*cap));
-> -}
->   
-> -static inline u64 perf_get_hw_event_config(int hw_event)
-> -{
-> -	return 0;
-> -}
-> -
-> -static inline void perf_events_lapic_init(void)	{ }
-> -static inline void perf_check_microcode(void) { }
-> -#endif
-> -
-> -#if defined(CONFIG_PERF_EVENTS) && defined(CONFIG_CPU_SUP_INTEL)
-> +#ifdef CONFIG_CPU_SUP_INTEL
->   extern struct perf_guest_switch_msr *perf_guest_get_msrs(int *nr, void *data);
->   extern int x86_perf_get_lbr(struct x86_pmu_lbr *lbr);
-> -#else
-> -struct perf_guest_switch_msr *perf_guest_get_msrs(int *nr, void *data);
-> -static inline int x86_perf_get_lbr(struct x86_pmu_lbr *lbr)
-> -{
-> -	return -1;
-> -}
-> -#endif
-> +extern void intel_pt_handle_vmx(int on);
-> +#endif /* CONFIG_CPU_SUP_INTEL */
->   
-> -#ifdef CONFIG_CPU_SUP_INTEL
-> - extern void intel_pt_handle_vmx(int on);
-> -#else
-> -static inline void intel_pt_handle_vmx(int on)
-> -{
-> +#ifdef CONFIG_CPU_SUP_AMD
-> +extern void amd_pmu_enable_virt(void);
-> +extern void amd_pmu_disable_virt(void);
->   
-> -}
-> -#endif
-> -
-> -#if defined(CONFIG_PERF_EVENTS) && defined(CONFIG_CPU_SUP_AMD)
-> - extern void amd_pmu_enable_virt(void);
-> - extern void amd_pmu_disable_virt(void);
-> -
-> -#if defined(CONFIG_PERF_EVENTS_AMD_BRS)
-> +#ifdef CONFIG_PERF_EVENTS_AMD_BRS
->   
->   #define PERF_NEEDS_LOPWR_CB 1
->   
-> @@ -566,12 +538,13 @@ static inline void perf_lopwr_cb(bool lopwr_in)
->   	static_call_mod(perf_lopwr_cb)(lopwr_in);
->   }
->   
-> -#endif /* PERF_NEEDS_LOPWR_CB */
+                   CPU0                                         CPU1
+                                                    __se_sys_perf_event_open
+                                                      perf_install_in_context
+perf_output_read_group                                  smp_call_function_single
+  for_each_sibling_event(sub, leader) {                   generic_exec_single
+    if ((sub != event) &&                                   remote_function
+        (sub->state == PERF_EVENT_STATE_ACTIVE))                    |
+<enter IPI handler: __perf_install_in_context>   <----RAISE IPI-----+
+__perf_install_in_context
+  ctx_resched
+    event_sched_out
+      armpmu_del
+        ...
+        hwc->idx = -1; // event->hwc.idx is set to -1
+...
+<exit IPI>
+            sub->pmu->read(sub);
+              armpmu_read
+                armv8pmu_read_counter
+                  armv8pmu_read_hw_counter
+                    int idx = event->hw.idx; // idx = -1
+                    u64 val = armv8pmu_read_evcntr(idx);
+                      u32 counter = ARMV8_IDX_TO_COUNTER(idx); // invalid counter = 30
+                      read_pmevcntrn(counter) // undefined instruction
 
-Oops, now the definition of PERF_NEEDS_LOPWR_CB will not be unset.
-This is not mentioned in the commit message and may cause trouble.
+Signed-off-by: Yang Jihong <yangjihong1@huawei.com>
+---
+ kernel/events/core.c | 9 +++++++++
+ 1 file changed, 9 insertions(+)
 
-> +#endif /* CONFIG_PERF_EVENTS_AMD_BRS */
-> +#endif /* CONFIG_CPU_SUP_AMD */
->   
-> -#else
-> - static inline void amd_pmu_enable_virt(void) { }
-> - static inline void amd_pmu_disable_virt(void) { }
-> -#endif
-> +#else  /* !CONFIG_PERF_EVENTS */
-> +static inline void perf_events_lapic_init(void)	{ }
-> +static inline void perf_check_microcode(void) { }
-> +#endif /* CONFIG_PERF_EVENTS */
->   
->   #define arch_perf_out_copy_user copy_from_user_nmi
->   
+diff --git a/kernel/events/core.c b/kernel/events/core.c
+index c9d32d4d2e20..9a143ea25667 100644
+--- a/kernel/events/core.c
++++ b/kernel/events/core.c
+@@ -6869,6 +6869,13 @@ static void perf_output_read_one(struct perf_output_handle *handle,
+ 	u64 read_format = event->attr.read_format;
+ 	u64 values[5];
+ 	int n = 0;
++	unsigned long flags;
++
++	/*
++	 * Disabling interrupts avoids all counter scheduling
++	 * (context switches, timer based rotation and IPIs).
++	 */
++	local_irq_save(flags);
+ 
+ 	values[n++] = perf_event_count(event);
+ 	if (read_format & PERF_FORMAT_TOTAL_TIME_ENABLED) {
+@@ -6931,6 +6938,8 @@ static void perf_output_read_group(struct perf_output_handle *handle,
+ 
+ 		__output_copy(handle, values, n * sizeof(u64));
+ 	}
++
++	local_irq_restore(flags);
+ }
+ 
+ #define PERF_FORMAT_TOTAL_TIMES (PERF_FORMAT_TOTAL_TIME_ENABLED|\
+-- 
+2.30.GIT
+
