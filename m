@@ -2,170 +2,158 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 67708C19F21
-	for <linux-perf-users@archiver.kernel.org>; Thu,  4 Aug 2022 20:23:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5093CC25B06
+	for <linux-perf-users@archiver.kernel.org>; Thu,  4 Aug 2022 21:02:18 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S237361AbiHDUXN (ORCPT
+        id S234271AbiHDVCR (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Thu, 4 Aug 2022 16:23:13 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41408 "EHLO
+        Thu, 4 Aug 2022 17:02:17 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35410 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232290AbiHDUXM (ORCPT
+        with ESMTP id S233569AbiHDVCQ (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Thu, 4 Aug 2022 16:23:12 -0400
-Received: from mail-ej1-x62d.google.com (mail-ej1-x62d.google.com [IPv6:2a00:1450:4864:20::62d])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 395E26D556;
-        Thu,  4 Aug 2022 13:23:11 -0700 (PDT)
-Received: by mail-ej1-x62d.google.com with SMTP id m4so1338790ejr.3;
-        Thu, 04 Aug 2022 13:23:11 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20210112;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:date:from:from:to:cc;
-        bh=jXfSwIVHH5n0bd8ihUeImZw7y0OX8igYXCyoA7ZaxS0=;
-        b=LwAXYbKVkp+zbNDblZPDf5TS4z/8LXvzWeOvJhDHqCaj+dRAy2vmB/oSk7HnWNsC2c
-         JxKzLvRfwevhn4fzSUG//t5CW8rvx1UmRD5wsfAUAtO3rCUpgBGuwjWINVmWvicQixNS
-         l9H9BP8Dtk3F1oORE/lpWh84boBRpJ8PeUCehbfivHUJ8dE002kGiiRq5Wfn6qVDEP58
-         ZA2IsJL7kshfxUGMLPNIN3H947Mfkc5eD2iliO8I3DscF0DEuMmNRqiSsPsG8CIrBlc+
-         od9TjS8/l90kO4XsvsNsligDjxHb86lzqVoLHw1TL+ZyrInSTD9hdp7hS9G44unqf2NO
-         xHqg==
+        Thu, 4 Aug 2022 17:02:16 -0400
+Received: from mail-oa1-f42.google.com (mail-oa1-f42.google.com [209.85.160.42])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 637436FA06;
+        Thu,  4 Aug 2022 14:02:14 -0700 (PDT)
+Received: by mail-oa1-f42.google.com with SMTP id 586e51a60fabf-10cf9f5b500so930115fac.2;
+        Thu, 04 Aug 2022 14:02:14 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:date:from:x-gm-message-state:from:to:cc;
-        bh=jXfSwIVHH5n0bd8ihUeImZw7y0OX8igYXCyoA7ZaxS0=;
-        b=vPOJCwM6NPUSr6XEL0SycxqildAGkN+ierIxgA7NLpenZsYd4EimtjacpgLKdIb8E6
-         OWAiew1n4mOBx/PHialWI0Y+AMv3spXyiocXmu7NmkNgRUH8D89821MbADY9ra3kizNl
-         ajNpYby4geRBtItdAu1lxYZDyKi7KMiEMpN1vnnQ83yxaMK9kDpyqe0+BK82CBmjLbAE
-         07Xb8QtPnMYEV66vSIQlsBdlutNY9rxdH/Uvj+69Yz3n53a/vzBcvAwxa5DAI1hyJiSZ
-         s9A+X+W5zpMuNU7OPXpDbFNJqpCdeu7U4DvSsSVoSQaWiGjYd8D4NRjsXhEWq8lSqqYv
-         cfjA==
-X-Gm-Message-State: ACgBeo3YpHd5FJVopfh5/hoCKQjI30AprnzNdEM3gXp0NseoNIoMvEA0
-        K1U0EIUdLIDesL2Nl4Hlzjs=
-X-Google-Smtp-Source: AA6agR4oyK0YED/1FR9FdT7TBlIRZ/M2U896QReMZ+uLFHSeBWKZpEarxRCoOOb6t4tG6jpBFAzqOw==
-X-Received: by 2002:a17:906:ef8b:b0:730:d348:61b9 with SMTP id ze11-20020a170906ef8b00b00730d34861b9mr2654647ejb.350.1659644589481;
-        Thu, 04 Aug 2022 13:23:09 -0700 (PDT)
-Received: from krava ([83.240.62.222])
-        by smtp.gmail.com with ESMTPSA id kx16-20020a170907775000b00724261b592esm661620ejc.186.2022.08.04.13.23.08
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 04 Aug 2022 13:23:09 -0700 (PDT)
-From:   Jiri Olsa <olsajiri@gmail.com>
-X-Google-Original-From: Jiri Olsa <jolsa@kernel.org>
-Date:   Thu, 4 Aug 2022 22:23:07 +0200
-To:     Ian Rogers <irogers@google.com>
-Cc:     Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Namhyung Kim <namhyung@kernel.org>,
-        James Clark <james.clark@arm.com>,
-        Kees Cook <keescook@chromium.org>,
-        "Gustavo A. R. Silva" <gustavoars@kernel.org>,
-        Adrian Hunter <adrian.hunter@intel.com>,
-        Riccardo Mancini <rickyman7@gmail.com>,
-        German Gomez <german.gomez@arm.com>,
-        Colin Ian King <colin.king@intel.com>,
-        Song Liu <songliubraving@fb.com>,
-        Dave Marchevsky <davemarchevsky@fb.com>,
-        Athira Rajeev <atrajeev@linux.vnet.ibm.com>,
-        Alexey Bayduraev <alexey.v.bayduraev@linux.intel.com>,
-        Leo Yan <leo.yan@linaro.org>, linux-perf-users@vger.kernel.org,
-        linux-kernel@vger.kernel.org, Stephane Eranian <eranian@google.com>
-Subject: Re: [PATCH v2 0/6] Corrections to cpu map event encoding
-Message-ID: <Yuwqq1g5EgCzUohJ@krava>
-References: <20220614143353.1559597-1-irogers@google.com>
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:x-gm-message-state:from:to:cc;
+        bh=E5qgGrwnGKDu9LGh41bwLSLTPVsg0aXK1A6+RnujZQY=;
+        b=LEj2HDSQRwySncU8E1bXZMU2wF6etsM0VLkMaFS6v1Ue/mXGS56XfByYux0LCclcgF
+         vI8e6ze6BRe5ImqbzomMPchDnm+ke8j2/kGZMXrr1HZBEzUhWQUwk0tKCMb0/GGK4hok
+         CtCVPWm1k+D3D3FY21iZNgGoHIxozyqE/UcPDB+VcBTzvS2Vl3GbJeswvAgnvVVwYTw+
+         vYFh6B1bEVA4ly25hhzPuGIGLux2DktsodWCxgMyXHcz9qcKTWHdk/fvhlVmEE7fiy80
+         7zi/bgI5oeVzFl+QOYLI2RQK2HOXGkiOug7MJCfRVOqNtdr2ofQZrC6br1LgPhYN8PgC
+         C9lQ==
+X-Gm-Message-State: ACgBeo1GXL2sIXyUrziMLqZsgsqrLoBXKi8nuW12FwY4t7XoCE5AQwLJ
+        9cJTaHbepY4R3xjJsZoCOfOqzAI0uPMlXoZNk80=
+X-Google-Smtp-Source: AA6agR7ylQHyJHpJ1q3LXoXcI8U1HifJQY3LZR7pIO5heZGskn2VJ8US78QikGbZKZh+gD4If/ZGAg14C7FNwROuayU=
+X-Received: by 2002:a05:6870:5b84:b0:10c:d1fa:2f52 with SMTP id
+ em4-20020a0568705b8400b0010cd1fa2f52mr1782730oab.92.1659646933569; Thu, 04
+ Aug 2022 14:02:13 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20220614143353.1559597-1-irogers@google.com>
+References: <20220721043644.153718-1-namhyung@kernel.org> <YupFEkzCDxpFUyeD@gmail.com>
+ <CAM9d7cjhVwRhVTiJM6hX8Y75SGJhpwYgMtSc_9PB0tzysJjVgQ@mail.gmail.com> <YuuFWr2435kd0CYl@gmail.com>
+In-Reply-To: <YuuFWr2435kd0CYl@gmail.com>
+From:   Namhyung Kim <namhyung@kernel.org>
+Date:   Thu, 4 Aug 2022 14:02:02 -0700
+Message-ID: <CAM9d7cjuo0Xeq8cLGZK+McTVzSOrK=ZWaBBpgHGosK0e5t0wcQ@mail.gmail.com>
+Subject: Re: [PATCHSET 0/6] perf lock: Add contention subcommand (v1)
+To:     Ingo Molnar <mingo@kernel.org>
+Cc:     Arnaldo Carvalho de Melo <acme@kernel.org>,
+        Jiri Olsa <jolsa@kernel.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Ian Rogers <irogers@google.com>,
+        linux-perf-users <linux-perf-users@vger.kernel.org>,
+        Will Deacon <will@kernel.org>,
+        Waiman Long <longman@redhat.com>,
+        Boqun Feng <boqun.feng@gmail.com>,
+        Davidlohr Bueso <dave@stgolabs.net>
+Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-On Tue, Jun 14, 2022 at 07:33:47AM -0700, Ian Rogers wrote:
-> A mask encoding of a cpu map is laid out as:
->   u16 nr
->   u16 long_size
->   unsigned long mask[];
-> However, the mask may be 8-byte aligned meaning there is a 4-byte pad
-> after long_size. This means 32-bit and 64-bit builds see the mask as
-> being at different offsets. On top of this the structure is in the byte
-> data[] encoded as:
->   u16 type
->   char data[]
-> This means the mask's struct isn't the required 4 or 8 byte aligned, but
-> is offset by 2. Consequently the long reads and writes are causing
-> undefined behavior as the alignment is broken.
-> 
-> These changes do minor clean up with const, visibility of functions
-> and using the constant time max function. It then adds 32 and 64-bit
-> mask encoding variants, packed to match current alignment. Taking the
-> address of a packed struct leads to unaligned data, so function
-> arguments are altered to be passed the packed struct. To compact the
-> mask encoding further and drop the padding, the 4-byte variant is
-> preferred. Finally a new range encoding is added, that reduces the
-> size of the common case of a range of CPUs to a single u64.
-> 
-> On a 72 CPU (hyperthread) machine the original encoding of all CPUs is:
-> 0x9a98 [0x28]: event: 74
-> .
-> . ... raw event: size 40 bytes
-> .  0000:  4a 00 00 00 00 00 28 00 01 00 02 00 08 00 00 00  J.....(.........
-> .  0010:  00 00 ff ff ff ff ff ff ff ff ff 00 00 00 00 00  ................
-> .  0020:  00 00 00 00 00 00 00 00                          ........        
-> 
-> 0 0 0x9a98 [0x28]: PERF_RECORD_CPU_MAP
-> 
-> Using the 4-byte encoding it is:
-> 0x9a98@pipe [0x20]: event: 74
-> .
-> . ... raw event: size 32 bytes
-> .  0000:  4a 00 00 00 00 00 20 00 01 00 03 00 04 00 ff ff  J..... .........
-> .  0010:  ff ff ff ff ff ff ff 00 00 00 00 00 00 00 00 00  ................
-> 
-> 0 0 0x9a98 [0x20]: PERF_RECORD_CPU_MAP
-> 
-> Finally, with the range encoding it is:
-> 0x9ab8@pipe [0x10]: event: 74
-> .
-> . ... raw event: size 16 bytes
-> .  0000:  4a 00 00 00 00 00 10 00 02 00 00 00 00 00 47 00  J.............G.
-> 
-> 0 0 0x9ab8 [0x10]: PERF_RECORD_CPU_MAP
-> 
-> v2. Fixes a bug in the size computation of the update header
->     introduced by the last patch (Add range data encoding) and caught
->     by address sanitizer.
-> 
-> Ian Rogers (6):
->   perf cpumap: Const map for max
->   perf cpumap: Synthetic events and const/static
->   perf cpumap: Compute mask size in constant time
->   perf cpumap: Fix alignment for masks in event encoding
->   perf events: Prefer union over variable length array
->   perf cpumap: Add range data encoding
+On Thu, Aug 4, 2022 at 1:37 AM Ingo Molnar <mingo@kernel.org> wrote:
+>
+>
+> * Namhyung Kim <namhyung@kernel.org> wrote:
+>
+> > Hi Ingo,
+> >
+> > On Wed, Aug 3, 2022 at 2:51 AM Ingo Molnar <mingo@kernel.org> wrote:
+> > >
+> > >
+> > > * Namhyung Kim <namhyung@kernel.org> wrote:
+> > >
+> > > > Hello,
+> > > >
+> > > > It's to add a new subcommand 'contention' (shortly 'con') to perf lock.
+> > > >
+> > > > The new subcommand is to handle the new lock:contention_{begin,end}
+> > > > tracepoints and shows lock type and caller address like below:
+> > > >
+> > > >   $ perf lock contention
+> > > >    contended   total wait     max wait     avg wait         type   caller
+> > > >
+> > > >          238      1.41 ms     29.20 us      5.94 us     spinlock   update_blocked_averages+0x4c
+> > > >            1    902.08 us    902.08 us    902.08 us      rwsem:R   do_user_addr_fault+0x1dd
+> > > >           81    330.30 us     17.24 us      4.08 us     spinlock   _nohz_idle_balance+0x172
+> > > >            2     89.54 us     61.26 us     44.77 us     spinlock   do_anonymous_page+0x16d
+> > > >           24     78.36 us     12.27 us      3.27 us        mutex   pipe_read+0x56
+> > > >            2     71.58 us     59.56 us     35.79 us     spinlock   __handle_mm_fault+0x6aa
+> > > >            6     25.68 us      6.89 us      4.28 us     spinlock   do_idle+0x28d
+> > > >            1     18.46 us     18.46 us     18.46 us      rtmutex   exec_fw_cmd+0x21b
+> > > >            3     15.25 us      6.26 us      5.08 us     spinlock   tick_do_update_jiffies64+0x2c
+> > > >    ...
+> > >
+> > > Wouldn't it also be useful to display a lock contention percentage value,
+> > > the ratio of fastpath vs. contended/wait events?
+> > >
+> > > That's usually the first-approximation metric to see how contended
+> > > different locks are, and the average wait time quantifies it.
+> >
+> > Yeah, that'd be nice to have.  But it requires some action in the fast
+> > path which I don't want because I'd like to use this in production.  So
+> > these new tracepoints were added only in the slow path.
+>
+> Yeah. Might make sense to re-measure the impact of possibly doing that
+> though: most of the locking fast-patch is out of line already and could be
+> instrumented, with only a handful of inlined primitives -
+> CONFIG_UNINLINE_SPIN_UNLOCK in particular.
 
-Acked-by: Jiri Olsa <jolsa@kernel.org>
+I'll take a look and measure overhead with tracepoints in the fast path.
 
-thanks,
-jirka
+>
+> How many additional inlined NOP sequences does this add in a defconfig
+> kernel? How much is the bloat, and would it be acceptable for production
+> kernels?
 
-> 
->  tools/lib/perf/cpumap.c              |   2 +-
->  tools/lib/perf/include/perf/cpumap.h |   2 +-
->  tools/lib/perf/include/perf/event.h  |  61 ++++++++-
->  tools/perf/tests/cpumap.c            |  71 ++++++++---
->  tools/perf/tests/event_update.c      |  14 +--
->  tools/perf/util/cpumap.c             | 111 +++++++++++++---
->  tools/perf/util/cpumap.h             |   4 +-
->  tools/perf/util/event.h              |   4 -
->  tools/perf/util/header.c             |  24 ++--
->  tools/perf/util/session.c            |  35 +++---
->  tools/perf/util/synthetic-events.c   | 182 +++++++++++++--------------
->  tools/perf/util/synthetic-events.h   |   2 +-
->  12 files changed, 327 insertions(+), 185 deletions(-)
-> 
-> -- 
-> 2.36.1.476.g0c4daa206d-goog
-> 
+Last time I measured that it added around 1.3KB of code with the
+tracepoints but they are all in the slow path.  So it'd be ok for production.
+
+>
+> The other question is to keep tracing overhead low in production systems.
+>
+> For that we'd have to implement some concept of 'sampling tracepoints',
+> which generate only one event for every 128 fast path invocations or so,
+> but stay out of the way & don't slow down the system otherwise.
+
+Yeah, it looks like we can do it with perf tools using a custom period like
+`-c 128` option.  But I'm not sure how it can deal with the slow path in
+sync.  IOW the fast path and the slow path will fire separately.
+
+>
+> OTOH frequently used locking fastpaths are measured via regular PMU
+> sampling based profiling already.
+
+Sure.  Also note that the recent off-cpu profiling (perf record --off-cpu)
+would be helpful to see impact of the sleeping locks.
+
+>
+> > Instead, I think we can display the ratio of (total) contended time vs.
+> > wall clock time.  What do you think?
+>
+> That looks useful too - but also the time spent waiting/spinning in a
+> thread vs. the time spent actually running and executing real stuff.
+>
+> That ratio could easily get over 100%, for wait-dominated workloads - so
+> ordering by that ratio would highlight the tasks that make the least amount
+> of real progress. Measuring the ratio based only on wall clock time would
+> hide this aspect.
+
+Do you talk about per-thread stats?  It has the -t/--threads option but it
+doesn't work with this BPF program yet.  Will work on it.
+
+By default it shows per-lock (well.. actually per-callstack) contention stat.
+We use caller symbols because there're no symbols for locks in general.
+It'd be nice if we could merge the stats for the same lock (class) from
+different call stacks.
+
+Thanks,
+Namhyung
