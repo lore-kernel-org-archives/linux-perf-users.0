@@ -2,55 +2,58 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5017BC25B06
-	for <linux-perf-users@archiver.kernel.org>; Thu,  4 Aug 2022 22:18:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 70D08C25B08
+	for <linux-perf-users@archiver.kernel.org>; Thu,  4 Aug 2022 22:18:29 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S235490AbiHDWSZ (ORCPT
+        id S235474AbiHDWS1 (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Thu, 4 Aug 2022 18:18:25 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46422 "EHLO
+        Thu, 4 Aug 2022 18:18:27 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46442 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230266AbiHDWSY (ORCPT
+        with ESMTP id S237575AbiHDWS0 (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Thu, 4 Aug 2022 18:18:24 -0400
-Received: from mail-yb1-xb49.google.com (mail-yb1-xb49.google.com [IPv6:2607:f8b0:4864:20::b49])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 37DC061D68
-        for <linux-perf-users@vger.kernel.org>; Thu,  4 Aug 2022 15:18:23 -0700 (PDT)
-Received: by mail-yb1-xb49.google.com with SMTP id i194-20020a253bcb000000b00676d86fc5d7so599971yba.9
-        for <linux-perf-users@vger.kernel.org>; Thu, 04 Aug 2022 15:18:23 -0700 (PDT)
+        Thu, 4 Aug 2022 18:18:26 -0400
+Received: from mail-pg1-x54a.google.com (mail-pg1-x54a.google.com [IPv6:2607:f8b0:4864:20::54a])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D49A061D68
+        for <linux-perf-users@vger.kernel.org>; Thu,  4 Aug 2022 15:18:25 -0700 (PDT)
+Received: by mail-pg1-x54a.google.com with SMTP id h185-20020a636cc2000000b00419b8e7df69so429316pgc.18
+        for <linux-perf-users@vger.kernel.org>; Thu, 04 Aug 2022 15:18:25 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=google.com; s=20210112;
-        h=cc:to:from:subject:mime-version:message-id:date:from:to:cc;
-        bh=afC7m49cjNfKDxx8SRPAftfupGqIsHHSQyDvra4Q74g=;
-        b=CqW4EiBCmYXpfUtrQRvcQaz5Q4DGGhdN8MMUkCCndOkLlx8ei6pVCaZSYTdlIjdqs4
-         pOcgU3gQ3sPQQ1fLCsSFzE3hz7bAabNShOANl77wHOJlKRCzRBQtf77Z8/r0t4elcdh8
-         I76XePBMLGTX6JOW2gZRcxNxrccF7UuxBqc8+GlBRhSE0tWOC///k90zNhLJyhsiDBSo
-         0uMP7Cp1fe4JNXOdaewLAJCdoEGRe6h/jGN+MTbLEwALYHT3W2oZGTK6qt28bHpOpcMQ
-         gKF2f2qZCWg8HAnm4Z1TTmx/wKKZ+/+UvSYcpmbMqH6slpvlE2EfXUb8vp3ZoiGDwPS5
-         IXhQ==
+        h=cc:to:from:subject:references:mime-version:message-id:in-reply-to
+         :date:from:to:cc;
+        bh=FuugmUCF0TvRTU+HzlBpRf2vN7sysi6PxjIgBXMJd4Y=;
+        b=l5SBZQVnabn522EriGOrgVBqUMbRT8xQi8ySOJ9glx8sVCcnbvcUcqndcZpeLQ+zbf
+         +xJfe7I5AHvmHn7n1eweTfR+QO6XOQbAz0nqcR5vk/7TuCW8EYPsC+TDifyQn2HxgRop
+         WyP8zDUUK5tXAO2qulPSAB2ylG7qAN0tInXyggGgsS4/ijsZIZyn+woZDGt9iqckR6Yf
+         bQmvCbVJNMG/Fwz1P15luRDcf7Nbxi0z5Xqpkl5/TLo2jebpgVngq017qCVIJ+2mAxN/
+         NZ2N0Lp8DwmKCeH5mXl8nEnTpcrrVcE8bV+ks+Qre8Sh8blqqTF9ZwMzkwrBDHNcSrHt
+         JU3A==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=cc:to:from:subject:mime-version:message-id:date:x-gm-message-state
-         :from:to:cc;
-        bh=afC7m49cjNfKDxx8SRPAftfupGqIsHHSQyDvra4Q74g=;
-        b=Kib/DeAhSAipLTta5b8ccXGeeQ+N9on8nEQCxSMgqhEf3MWKM32zIkw7c0IbFZp4eS
-         M9K9Mm1DqYtXhJAIyl3U8zatthnk2j8+n6dU7PYimHtvJ0FRDSCev4ksGCNAjzCujLrW
-         YhRVmC9nILqwb+76ED72hYi9lHuvlRq2MXxYNAinZRri5mrZn3o0oCNvZWGsGENTm8RC
-         JnfJwcbANURLDV8/JMgk8TXIuHwV/3EAj0KmBuMvnWCBK+re/i37h0fb7utEklkeNRNw
-         ypfwGq77VpH1FRt/UbLwzn2IB11Bq3aWtEOtoRlLAM72sEHzLGp3VoYONXeocj+sHKH4
-         Myeg==
-X-Gm-Message-State: ACgBeo2VtUUKhhKc7OaN8griUdD2yEl/aK+HZjXkZk5q38rgonuFbpbu
-        lPodEfxPLYi/FyF1batAJyEzBMRb797m
-X-Google-Smtp-Source: AA6agR6UoJ/B+2t1DjsHDMitDONdMTz4cKVsLmeoKn5GZnjn7ld+Z8DVU59sOS/S/vjvdrH8gamESJxt0Cpy
+        h=cc:to:from:subject:references:mime-version:message-id:in-reply-to
+         :date:x-gm-message-state:from:to:cc;
+        bh=FuugmUCF0TvRTU+HzlBpRf2vN7sysi6PxjIgBXMJd4Y=;
+        b=Ox44b5kQHw6uZ2bfpoUoUamxIKn2HzZP1oUoZucO3v+Ameby9xIW8/8qLkIiWQGfUw
+         CPNOJ1nk2RQEZXfaZR7hq6D8CDdPtSKPDY0ck6f5p3ibpvvM+Y2cLuybL4hz+s4VGjrN
+         w7qciH/AJ0TfSry1D0c83XiqzFMYPGCI00VX65IYQm/NQ7gibXOnuE0MqyN8ZQzYCnhD
+         5DjUJd2vxKLCPNwU+hXmg7RXKfrULVdzvCtGosb+XNJJWdHULKPCBW4d0NrM4gBqHPLn
+         de8I/24k4ZhH7Iw+djzxfc/3CryoBXsiAig4Krgu8Z5iYX+s3oc8yIV7mmXysfrHsegb
+         sdpQ==
+X-Gm-Message-State: ACgBeo0XIC4YF9Y10BUX+S+ccfQHDA0t0h9v558Cgc/jeoxVwEJQ9vGU
+        Ub1J7skSlwzf1D/brjs218AKGDrX7iDS
+X-Google-Smtp-Source: AA6agR4FGBjujwgqDlSb71XtFqqVCyQxC3yG7Bm2g9hTbvY0gPg8s3VEUGL9nf+YZH1gR5gaEj346sgYjzrN
 X-Received: from irogers.svl.corp.google.com ([2620:15c:2d4:203:f5e1:5bc5:7dab:2b7c])
- (user=irogers job=sendgmr) by 2002:a25:e90d:0:b0:676:b468:9902 with SMTP id
- n13-20020a25e90d000000b00676b4689902mr3178382ybd.379.1659651502489; Thu, 04
- Aug 2022 15:18:22 -0700 (PDT)
-Date:   Thu,  4 Aug 2022 15:17:59 -0700
-Message-Id: <20220804221816.1802790-1-irogers@google.com>
+ (user=irogers job=sendgmr) by 2002:a05:6a00:1395:b0:52e:128a:23de with SMTP
+ id t21-20020a056a00139500b0052e128a23demr3962734pfg.5.1659651505336; Thu, 04
+ Aug 2022 15:18:25 -0700 (PDT)
+Date:   Thu,  4 Aug 2022 15:18:00 -0700
+In-Reply-To: <20220804221816.1802790-1-irogers@google.com>
+Message-Id: <20220804221816.1802790-2-irogers@google.com>
 Mime-Version: 1.0
+References: <20220804221816.1802790-1-irogers@google.com>
 X-Mailer: git-send-email 2.37.1.559.g78731f0fdb-goog
-Subject: [PATCH v4 00/17]  Compress the pmu_event tables
+Subject: [PATCH v4 01/17] perf jevents: Clean up pytype warnings
 From:   Ian Rogers <irogers@google.com>
 To:     John Garry <john.garry@huawei.com>, Will Deacon <will@kernel.org>,
         James Clark <james.clark@arm.com>,
@@ -77,74 +80,72 @@ Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-jevents.py creates a number of large arrays from the json events. The
-arrays contain pointers to strings that need relocating. The
-relocations have file size, run time and memory costs. These changes
-refactor the pmu_events API so that the storage of the pmu_event
-struct isn't exposed. The format is then changed to an offset within a
-combined big string, with adjacent pmu_event struct variables being
-next to each other in the string separated by \0 - meaning only the
-first variable of the struct needs its offset recording.
+Improve type hints to clean up pytype warnings.
 
-Some related fixes are contained with the patches. The architecture
-jevents.py creates tables for can now be set by the JEVENTS_ARCH make
-variable, with a new 'all' that generates the events and metrics for
-all architectures.
+Signed-off-by: Ian Rogers <irogers@google.com>
+---
+ tools/perf/pmu-events/jevents.py | 13 ++++++-------
+ 1 file changed, 6 insertions(+), 7 deletions(-)
 
-An example of the improvement to the file size on x86 is:
-no jevents - the same 19,788,464bytes
-x86 jevents - ~16.7% file size saving 23,744,288bytes vs 28,502,632bytes
-all jevents - ~19.5% file size saving 24,469,056bytes vs 30,379,920bytes
-default build options plus NO_LIBBFD=1.
-
-I originally suggested fixing this problem in:
-https://lore.kernel.org/linux-perf-users/CAP-5=fVB8G4bdb9T=FncRTh9oBVKCS=+=eowAO+YSgAhab+Dtg@mail.gmail.com/
-
-v4. Fixed an issue with the empty-pmu-events.c spotted by John Garry
-    <john.garry@huawei.com>.
-v3. Fix an ARM build issue with a missed weak symbol. Perform some
-    pytype clean up.
-v2. Split the substring folding optimization to its own patch and
-    comment tweaks as suggested by Namhyung Kim
-    <namhyung@kernel.org>. Recompute the file size savings with the
-    latest json events and metrics.
-
-Ian Rogers (17):
-  perf jevents: Clean up pytype warnings
-  perf jevents: Simplify generation of C-string
-  perf jevents: Add JEVENTS_ARCH make option
-  perf jevent: Add an 'all' architecture argument
-  perf jevents: Remove the type/version variables
-  perf jevents: Provide path to json file on error
-  perf jevents: Sort json files entries
-  perf pmu-events: Hide pmu_sys_event_tables
-  perf pmu-events: Avoid passing pmu_events_map
-  perf pmu-events: Hide pmu_events_map
-  perf test: Use full metric resolution
-  perf pmu-events: Move test events/metrics to json
-  perf pmu-events: Don't assume pmu_event is an array
-  perf pmu-events: Hide the pmu_events
-  perf metrics: Copy entire pmu_event in find metric
-  perf jevents: Compress the pmu_events_table
-  perf jevents: Fold strings optimization
-
- tools/perf/arch/arm64/util/pmu.c              |   4 +-
- tools/perf/pmu-events/Build                   |   6 +-
- .../arch/test/test_soc/cpu/metrics.json       |  64 +++
- tools/perf/pmu-events/empty-pmu-events.c      | 204 +++++++-
- tools/perf/pmu-events/jevents.py              | 495 ++++++++++++++----
- tools/perf/pmu-events/pmu-events.h            |  40 +-
- tools/perf/tests/expand-cgroup.c              |  25 +-
- tools/perf/tests/parse-metric.c               |  77 +--
- tools/perf/tests/pmu-events.c                 | 466 +++++++----------
- tools/perf/util/metricgroup.c                 | 275 ++++++----
- tools/perf/util/metricgroup.h                 |   5 +-
- tools/perf/util/pmu.c                         | 139 ++---
- tools/perf/util/pmu.h                         |   8 +-
- tools/perf/util/s390-sample-raw.c             |  50 +-
- 14 files changed, 1140 insertions(+), 718 deletions(-)
- create mode 100644 tools/perf/pmu-events/arch/test/test_soc/cpu/metrics.json
-
+diff --git a/tools/perf/pmu-events/jevents.py b/tools/perf/pmu-events/jevents.py
+index 83e0dcbeac9a..5b72048d50da 100755
+--- a/tools/perf/pmu-events/jevents.py
++++ b/tools/perf/pmu-events/jevents.py
+@@ -6,8 +6,7 @@ import csv
+ import json
+ import os
+ import sys
+-from typing import Callable
+-from typing import Sequence
++from typing import (Callable, Optional, Sequence)
+ 
+ # Global command line arguments.
+ _args = None
+@@ -57,7 +56,7 @@ class JsonEvent:
+                                        '. '), '.').replace('\n', '\\n').replace(
+                                            '\"', '\\"').replace('\r', '\\r')
+ 
+-    def convert_aggr_mode(aggr_mode: str) -> str:
++    def convert_aggr_mode(aggr_mode: str) -> Optional[str]:
+       """Returns the aggr_mode_class enum value associated with the JSON string."""
+       if not aggr_mode:
+         return None
+@@ -67,7 +66,7 @@ class JsonEvent:
+       }
+       return aggr_mode_to_enum[aggr_mode]
+ 
+-    def lookup_msr(num: str) -> str:
++    def lookup_msr(num: str) -> Optional[str]:
+       """Converts the msr number, or first in a list to the appropriate event field."""
+       if not num:
+         return None
+@@ -79,7 +78,7 @@ class JsonEvent:
+       }
+       return msrmap[int(num.split(',', 1)[0], 0)]
+ 
+-    def real_event(name: str, event: str) -> str:
++    def real_event(name: str, event: str) -> Optional[str]:
+       """Convert well known event names to an event string otherwise use the event argument."""
+       fixed = {
+           'inst_retired.any': 'event=0xc0,period=2000003',
+@@ -95,7 +94,7 @@ class JsonEvent:
+         return fixed[name.lower()]
+       return event
+ 
+-    def unit_to_pmu(unit: str) -> str:
++    def unit_to_pmu(unit: str) -> Optional[str]:
+       """Convert a JSON Unit to Linux PMU name."""
+       if not unit:
+         return None
+@@ -154,7 +153,7 @@ class JsonEvent:
+     if self.metric_expr:
+       self.metric_expr = self.metric_expr.replace('\\', '\\\\')
+     arch_std = jd.get('ArchStdEvent')
+-    if precise and self.desc and not '(Precise Event)' in self.desc:
++    if precise and self.desc and '(Precise Event)' not in self.desc:
+       extra_desc += ' (Must be precise)' if precise == '2' else (' (Precise '
+                                                                  'event)')
+     event = f'config={llx(configcode)}' if configcode is not None else f'event={llx(eventcode)}'
 -- 
 2.37.1.559.g78731f0fdb-goog
 
