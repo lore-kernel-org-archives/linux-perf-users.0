@@ -2,115 +2,102 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 94683C19F29
-	for <linux-perf-users@archiver.kernel.org>; Thu,  4 Aug 2022 01:22:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 86B1AC00144
+	for <linux-perf-users@archiver.kernel.org>; Thu,  4 Aug 2022 04:55:41 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S237128AbiHDBWI (ORCPT
+        id S238824AbiHDEzd (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Wed, 3 Aug 2022 21:22:08 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45224 "EHLO
+        Thu, 4 Aug 2022 00:55:33 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49494 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231136AbiHDBWH (ORCPT
+        with ESMTP id S238790AbiHDEz3 (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Wed, 3 Aug 2022 21:22:07 -0400
-Received: from mail-pj1-x1030.google.com (mail-pj1-x1030.google.com [IPv6:2607:f8b0:4864:20::1030])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2830E41D12
-        for <linux-perf-users@vger.kernel.org>; Wed,  3 Aug 2022 18:22:04 -0700 (PDT)
-Received: by mail-pj1-x1030.google.com with SMTP id a8so4650063pjg.5
-        for <linux-perf-users@vger.kernel.org>; Wed, 03 Aug 2022 18:22:04 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=qmHsy1Q+Qy+99H5+YhBfxvmg0PPmS0+X89adjUkkWlw=;
-        b=egbM4EiiUdEHQLRS/2yKD3DZ4MP6J9Mk1CGfB35ObRvvaaY6IXA66MG5k8Qo55AoFs
-         ctp2C1vQhACDvBI2UdPJIsPWnHsfa6snU+TpTRTXpUawVLctXjdsvlVZtyyKeMNMTomD
-         2QqWB7Z4P0NKlmmKTl9t/ucTIMsYOnM7pxLC0w9ze8hlBAO4kBRZCLYHw2xMHU9v8WqL
-         /XmPuuOXl2hDMKw+VCoysvzcCJw8/gP2/pIYmZLAaqVPxwz4TJzQzzWIaGqKc/OURk1n
-         sh9NGRs8rWpVYk8I7sYI4QCFHbDJcfBnkHDH5JS9y43lSKvdtC9zq5/lu5YX3XDrupNv
-         jHEQ==
+        Thu, 4 Aug 2022 00:55:29 -0400
+Received: from mail-oa1-f54.google.com (mail-oa1-f54.google.com [209.85.160.54])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9742A186C4;
+        Wed,  3 Aug 2022 21:55:28 -0700 (PDT)
+Received: by mail-oa1-f54.google.com with SMTP id 586e51a60fabf-10ee900cce0so11151143fac.5;
+        Wed, 03 Aug 2022 21:55:28 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=qmHsy1Q+Qy+99H5+YhBfxvmg0PPmS0+X89adjUkkWlw=;
-        b=4Lx6BHQXSoLVdUSS0FYAeuaD9mkcfKj45mtxJQIY70pSrpkTAgtdx9Mft8MEknScel
-         0zvvD4CXVRDPkSTfFTJ4gmnlpltFz3Ps3FD1occjW6uWuCW+coBgwYg0RA2n/MkjXDdN
-         hIPdvy+0Sm4Cm9r2fXWH4UAXG72c1elTTERwP+tSwFCt9teULzI0oFIs+29wKVdjDJS6
-         QbITZoI32ILFAXiwWWCT+c127ZgHKiory2rPElbQ2x+Bwatn6mIo1dnHiypNCQBRBRh9
-         BnJFbN6UEnO/a0ARKhUBxYDdGPf9TjtJ/rxCEu6r7MpJl6nSsOCI8GWmOeOBAaA/TlT1
-         F2JQ==
-X-Gm-Message-State: ACgBeo1Fh/S0PHiIWtG4nQf399TLLlTmTrnvJG4duEEcleew4rP6fkFZ
-        LvTFDG4bzEty4FesiXB1pFwOCw==
-X-Google-Smtp-Source: AA6agR7fBYO45a1xSzVN0avfLorSv9B0IgodrJtibOF42oGgzMcuWlzUebdLrPQfVHJgIGSKVrkbvg==
-X-Received: by 2002:a17:903:185:b0:16c:3af7:dbc8 with SMTP id z5-20020a170903018500b0016c3af7dbc8mr28798986plg.147.1659576123297;
-        Wed, 03 Aug 2022 18:22:03 -0700 (PDT)
-Received: from leoy-ThinkPad-X240s (173.242.113.38.16clouds.com. [173.242.113.38])
-        by smtp.gmail.com with ESMTPSA id n6-20020a170903110600b0016f09d217c1sm2685227plh.281.2022.08.03.18.22.00
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 03 Aug 2022 18:22:02 -0700 (PDT)
-Date:   Thu, 4 Aug 2022 09:21:58 +0800
-From:   Leo Yan <leo.yan@linaro.org>
-To:     Ian Rogers <irogers@google.com>
-Cc:     Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Jiri Olsa <jolsa@kernel.org>,
-        Namhyung Kim <namhyung@kernel.org>,
-        linux-perf-users <linux-perf-users@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Stephane Eranian <eranian@google.com>
-Subject: Re: [PATCH] perf symbol: Fail to read phdr workaround
-Message-ID: <20220804012158.GC133193@leoy-ThinkPad-X240s>
-References: <20220731164923.691193-1-irogers@google.com>
- <20220801015259.GA101027@leoy-ThinkPad-X240s>
- <CAP-5=fVSjCQ4jeAeyP5THnQVyXDpKd6Ob33C7PDwFB_6+YSXuw@mail.gmail.com>
- <YufJP5YqeEBM51HL@kernel.org>
- <20220803152527.GA133193@leoy-ThinkPad-X240s>
- <CAP-5=fX1B9qv1kPLfRx59kgeEwNOzFVnaNm34YiLFpc3JMTQpA@mail.gmail.com>
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:x-gm-message-state:from:to:cc;
+        bh=5Znvp4bZBNpUhIR7zlvHoT8ljG2idXAwtie2scktUnw=;
+        b=WR5w5EdOr9m9XdqAeJcFPrOogj8Q6wZCOe+H+6hX1QVdN3rDvB1BjRCgE6DViCXlBu
+         xaNPv13xmwEQ137vXPTfAScwCdG2BXjavi6I8WiLLDhV0U3gYVumTsZJ4F0e98ly4eYn
+         3Lp38RAUDtH8GvMp33LKcz0273i/e0iM5zdTz9Q0MpkcwXLFBSaEUxU7NmSnj5yD91ls
+         CX4H+2XdSWtWWijYyfUpncTs046NRgZYLaBU0tOOGhgMHp03KHrc5kVlQBHs/LpEVmJU
+         YSWv2giAc+olWmIt3Q2E+naZnqXauUoaEHrv0OOztQN5v/TVudVIdSrMgZMkdxJmJnNn
+         1eqQ==
+X-Gm-Message-State: ACgBeo25bV74qhmtWx0f5EX/t8+iAdF4SiIcVWY55tgadkkAIkiB1/Dm
+        JuiSkMrlKMb4R/ilYOl3n1ynB8qONSOI/D8wKdI=
+X-Google-Smtp-Source: AA6agR56bf6DsAPcQfTKWDVtk4OMqRDfhheUN4GoM7PSLn4Hftqb8Cj+UMkon2KfXE0ZsNFg4fmrW26XSL6KZe/m7+0=
+X-Received: by 2002:a05:6870:a182:b0:10b:efbe:e65d with SMTP id
+ a2-20020a056870a18200b0010befbee65dmr3496926oaf.5.1659588927936; Wed, 03 Aug
+ 2022 21:55:27 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CAP-5=fX1B9qv1kPLfRx59kgeEwNOzFVnaNm34YiLFpc3JMTQpA@mail.gmail.com>
+References: <20220721043644.153718-1-namhyung@kernel.org> <YupFEkzCDxpFUyeD@gmail.com>
+In-Reply-To: <YupFEkzCDxpFUyeD@gmail.com>
+From:   Namhyung Kim <namhyung@kernel.org>
+Date:   Wed, 3 Aug 2022 21:55:17 -0700
+Message-ID: <CAM9d7cjhVwRhVTiJM6hX8Y75SGJhpwYgMtSc_9PB0tzysJjVgQ@mail.gmail.com>
+Subject: Re: [PATCHSET 0/6] perf lock: Add contention subcommand (v1)
+To:     Ingo Molnar <mingo@kernel.org>
+Cc:     Arnaldo Carvalho de Melo <acme@kernel.org>,
+        Jiri Olsa <jolsa@kernel.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Ian Rogers <irogers@google.com>,
+        linux-perf-users <linux-perf-users@vger.kernel.org>,
+        Will Deacon <will@kernel.org>,
+        Waiman Long <longman@redhat.com>,
+        Boqun Feng <boqun.feng@gmail.com>,
+        Davidlohr Bueso <dave@stgolabs.net>
+Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-On Wed, Aug 03, 2022 at 05:26:39PM -0700, Ian Rogers wrote:
+Hi Ingo,
 
-[...]
-
-> > The question is how we can specify the path for the lib
-> > libperf-jvmti.so in the testing script?
+On Wed, Aug 3, 2022 at 2:51 AM Ingo Molnar <mingo@kernel.org> wrote:
+>
+>
+> * Namhyung Kim <namhyung@kernel.org> wrote:
+>
+> > Hello,
 > >
-> > If we can run the test case from the root folder of Linux kernel
-> > source code, the lib libperf-jvmti.so can be found in the folder
-> > $linux/tools/perf, but for the integration testing the lib should be
-> > placed in an installed folder.  Any suggestion if we have exited
-> > way to specify the path for libperf-jvmti.so, or need to introduce a
-> > new shell envorinment variable for the lib path?
-> 
-> There is a hack in 'perf test' where we assume a few paths to tests:
-> https://git.kernel.org/pub/scm/linux/kernel/git/acme/linux.git/tree/tools/perf/tests/builtin-test.c?h=perf/core#n308
-> so in this case we could look in the same directory. There is also a
-> #define for PERF_EXEC_PATH.
+> > It's to add a new subcommand 'contention' (shortly 'con') to perf lock.
+> >
+> > The new subcommand is to handle the new lock:contention_{begin,end}
+> > tracepoints and shows lock type and caller address like below:
+> >
+> >   $ perf lock contention
+> >    contended   total wait     max wait     avg wait         type   caller
+> >
+> >          238      1.41 ms     29.20 us      5.94 us     spinlock   update_blocked_averages+0x4c
+> >            1    902.08 us    902.08 us    902.08 us      rwsem:R   do_user_addr_fault+0x1dd
+> >           81    330.30 us     17.24 us      4.08 us     spinlock   _nohz_idle_balance+0x172
+> >            2     89.54 us     61.26 us     44.77 us     spinlock   do_anonymous_page+0x16d
+> >           24     78.36 us     12.27 us      3.27 us        mutex   pipe_read+0x56
+> >            2     71.58 us     59.56 us     35.79 us     spinlock   __handle_mm_fault+0x6aa
+> >            6     25.68 us      6.89 us      4.28 us     spinlock   do_idle+0x28d
+> >            1     18.46 us     18.46 us     18.46 us      rtmutex   exec_fw_cmd+0x21b
+> >            3     15.25 us      6.26 us      5.08 us     spinlock   tick_do_update_jiffies64+0x2c
+> >    ...
+>
+> Wouldn't it also be useful to display a lock contention percentage value,
+> the ratio of fastpath vs. contended/wait events?
+>
+> That's usually the first-approximation metric to see how contended
+> different locks are, and the average wait time quantifies it.
 
-Thanks for the info.  I will try to search paths like the buildin-test.c
-file, and the lib libperf-jvmti.so is installed in the folder
-"$HOME/lib64/", I will check if can reuse PERF_EXEC_PATH for this
-case.
+Yeah, that'd be nice to have.  But it requires some action in the fast path
+which I don't want because I'd like to use this in production.  So these
+new tracepoints were added only in the slow path.
 
-> I'd prefer it if the test could be self contained for example:
-> 
-> echo "int fib(int x) { return x > 1 ? fib(x - 2) + fib(x - 1) : 1; }
-> int q = 0; for(int i=0; i < 10; i++) q += fib(i);
-> System.out.println(q);" | /tmp/perf/perf record -k 1 jshell
-> -J-agentpath:/tmp/perf/libperf-jvmti.so
-> 
-> where jshell runs on the JVM and so we should get some jitted execution time.
+Instead, I think we can display the ratio of (total) contended time vs.
+wall clock time.  What do you think?
 
-Will do.  Appreciate for sharing this!
-
-Leo
+Thanks,
+Namhyung
