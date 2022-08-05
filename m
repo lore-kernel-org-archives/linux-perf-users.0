@@ -2,37 +2,37 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 34A4BC00140
-	for <linux-perf-users@archiver.kernel.org>; Fri,  5 Aug 2022 09:55:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A305EC00140
+	for <linux-perf-users@archiver.kernel.org>; Fri,  5 Aug 2022 10:34:23 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S240595AbiHEJz4 (ORCPT
+        id S236199AbiHEKeW (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Fri, 5 Aug 2022 05:55:56 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52628 "EHLO
+        Fri, 5 Aug 2022 06:34:22 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48388 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S240580AbiHEJzw (ORCPT
+        with ESMTP id S232901AbiHEKeW (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Fri, 5 Aug 2022 05:55:52 -0400
+        Fri, 5 Aug 2022 06:34:22 -0400
 Received: from frasgout.his.huawei.com (frasgout.his.huawei.com [185.176.79.56])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6222877555;
-        Fri,  5 Aug 2022 02:55:51 -0700 (PDT)
-Received: from fraeml740-chm.china.huawei.com (unknown [172.18.147.200])
-        by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4Lzgp52Bmkz67ykV;
-        Fri,  5 Aug 2022 17:50:53 +0800 (CST)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 831441F62E;
+        Fri,  5 Aug 2022 03:34:19 -0700 (PDT)
+Received: from fraeml740-chm.china.huawei.com (unknown [172.18.147.226])
+        by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4LzhfT4Z2xz67ZDL;
+        Fri,  5 Aug 2022 18:29:21 +0800 (CST)
 Received: from lhrpeml500003.china.huawei.com (7.191.162.67) by
  fraeml740-chm.china.huawei.com (10.206.15.221) with Microsoft SMTP Server
  (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2375.24; Fri, 5 Aug 2022 11:55:48 +0200
+ 15.1.2375.24; Fri, 5 Aug 2022 12:34:17 +0200
 Received: from [10.126.170.142] (10.126.170.142) by
  lhrpeml500003.china.huawei.com (7.191.162.67) with Microsoft SMTP Server
  (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256) id
- 15.1.2375.24; Fri, 5 Aug 2022 10:55:47 +0100
-Message-ID: <b1cc7151-e57c-6ec5-f3f1-361434e0b2ee@huawei.com>
-Date:   Fri, 5 Aug 2022 10:55:50 +0100
+ 15.1.2375.24; Fri, 5 Aug 2022 11:34:15 +0100
+Message-ID: <74e839ed-0733-d2db-7744-75921705ac5d@huawei.com>
+Date:   Fri, 5 Aug 2022 11:34:18 +0100
 MIME-Version: 1.0
 User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:91.0) Gecko/20100101
  Thunderbird/91.6.1
-Subject: Re: [PATCH v4 03/17] perf jevents: Add JEVENTS_ARCH make option
+Subject: Re: [PATCH v4 04/17] perf jevent: Add an 'all' architecture argument
 To:     Ian Rogers <irogers@google.com>, Will Deacon <will@kernel.org>,
         "James Clark" <james.clark@arm.com>,
         Mike Leach <mike.leach@linaro.org>,
@@ -54,9 +54,9 @@ To:     Ian Rogers <irogers@google.com>, Will Deacon <will@kernel.org>,
         <linux-perf-users@vger.kernel.org>
 CC:     Stephane Eranian <eranian@google.com>
 References: <20220804221816.1802790-1-irogers@google.com>
- <20220804221816.1802790-4-irogers@google.com>
+ <20220804221816.1802790-5-irogers@google.com>
 From:   John Garry <john.garry@huawei.com>
-In-Reply-To: <20220804221816.1802790-4-irogers@google.com>
+In-Reply-To: <20220804221816.1802790-5-irogers@google.com>
 Content-Type: text/plain; charset="UTF-8"; format=flowed
 Content-Transfer-Encoding: 7bit
 X-Originating-IP: [10.126.170.142]
@@ -68,42 +68,171 @@ List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
 On 04/08/2022 23:18, Ian Rogers wrote:
-> Allow the architecture built into pmu-events.c to be set on the make
-> command line with JEVENTS_ARCH.
+> When 'all' is passed as the architecture generate a mapping table for
+> all architectures. This simplifies testing. To identify the table for an
+> architecture add an arch variable to the pmu_events_map.
+
+so could this 'all' arg ever passed for perf test? I thought maybe we 
+could use to verify tables for all architectures - I didn't think that 
+we did it today.
+
+Thanks,
+John
+
 > 
 > Signed-off-by: Ian Rogers <irogers@google.com>
-
-Seems reasonable, so:
-
-Reviewed-by: John Garry <john.garry@huawei.com>
-
-I assume that if we run on the wrong arch (than we build for) then it 
-has same effect as if pmu-events is not supported.
-
 > ---
->   tools/perf/pmu-events/Build | 6 +++++-
->   1 file changed, 5 insertions(+), 1 deletion(-)
+>   tools/perf/pmu-events/empty-pmu-events.c |  2 +
+>   tools/perf/pmu-events/jevents.py         | 70 +++++++++++++++---------
+>   tools/perf/pmu-events/pmu-events.h       |  1 +
+>   tools/perf/tests/pmu-events.c            |  3 +-
+>   4 files changed, 47 insertions(+), 29 deletions(-)
 > 
-> diff --git a/tools/perf/pmu-events/Build b/tools/perf/pmu-events/Build
-> index 28a9d01b08af..04ef95174660 100644
-> --- a/tools/perf/pmu-events/Build
-> +++ b/tools/perf/pmu-events/Build
-> @@ -7,6 +7,10 @@ JSON_TEST	=  $(shell [ -d $(JDIR_TEST) ] &&			\
->   			find $(JDIR_TEST) -name '*.json')
->   JEVENTS_PY	=  pmu-events/jevents.py
+> diff --git a/tools/perf/pmu-events/empty-pmu-events.c b/tools/perf/pmu-events/empty-pmu-events.c
+> index 77e655c6f116..d8cf9283e486 100644
+> --- a/tools/perf/pmu-events/empty-pmu-events.c
+> +++ b/tools/perf/pmu-events/empty-pmu-events.c
+> @@ -110,12 +110,14 @@ static const struct pmu_event pme_test_soc_cpu[] = {
 >   
-> +ifeq ($(JEVENTS_ARCH),)
-> +JEVENTS_ARCH=$(SRCARCH)
-> +endif
+>   const struct pmu_events_map pmu_events_map[] = {
+>   	{
+> +		.arch = "testarch",
+>   		.cpuid = "testcpu",
+>   		.version = "v1",
+>   		.type = "core",
+>   		.table = pme_test_soc_cpu,
+>   	},
+>   	{
+> +		.arch = 0,
+>   		.cpuid = 0,
+>   		.version = 0,
+>   		.type = 0,
+> diff --git a/tools/perf/pmu-events/jevents.py b/tools/perf/pmu-events/jevents.py
+> index cdfa4e0e7557..e6e6c42c3f8a 100755
+> --- a/tools/perf/pmu-events/jevents.py
+> +++ b/tools/perf/pmu-events/jevents.py
+> @@ -304,38 +304,45 @@ def process_one_file(parents: Sequence[str], item: os.DirEntry) -> None:
+>     print_events_table_entries(item, get_topic(item.name))
+>   
+>   
+> -def print_mapping_table() -> None:
+> +def print_mapping_table(archs: Sequence[str]) -> None:
+>     """Read the mapfile and generate the struct from cpuid string to event table."""
+> -  with open(f'{_args.starting_dir}/{_args.arch}/mapfile.csv') as csvfile:
+> -    table = csv.reader(csvfile)
+> -    _args.output_file.write(
+> -        'const struct pmu_events_map pmu_events_map[] = {\n')
+> -    first = True
+> -    for row in table:
+> -      # Skip the first row or any row beginning with #.
+> -      if not first and len(row) > 0 and not row[0].startswith('#'):
+> -        tblname = file_name_to_table_name([], row[2].replace('/', '_'))
+> -        _args.output_file.write("""{
+> -\t.cpuid = \"%s\",
+> -\t.version = \"%s\",
+> -\t.type = \"%s\",
+> -\t.table = %s
+> -},
+> -""" % (row[0].replace('\\', '\\\\'), row[1], row[3], tblname))
+> -      first = False
+> -
+> -  _args.output_file.write("""{
+> +  _args.output_file.write('const struct pmu_events_map pmu_events_map[] = {\n')
+> +  for arch in archs:
+> +    if arch == 'test':
+> +      _args.output_file.write("""{
+> +\t.arch = "testarch",
+>   \t.cpuid = "testcpu",
+>   \t.version = "v1",
+>   \t.type = "core",
+>   \t.table = pme_test_soc_cpu,
+>   },
+> -{
+> +""")
+> +    else:
+> +      with open(f'{_args.starting_dir}/{arch}/mapfile.csv') as csvfile:
+> +        table = csv.reader(csvfile)
+> +        first = True
+> +        for row in table:
+> +          # Skip the first row or any row beginning with #.
+> +          if not first and len(row) > 0 and not row[0].startswith('#'):
+> +            tblname = file_name_to_table_name([], row[2].replace('/', '_'))
+> +            cpuid = row[0].replace('\\', '\\\\')
+> +            _args.output_file.write(f"""{{
+> +\t.arch = "{arch}",
+> +\t.cpuid = "{cpuid}",
+> +\t.version = "{row[1]}",
+> +\t.type = "{row[3]}",
+> +\t.table = {tblname}
+> +}},
+> +""")
+> +          first = False
 > +
->   #
->   # Locate/process JSON files in pmu-events/arch/
->   # directory and create tables in pmu-events.c.
-> @@ -19,5 +23,5 @@ $(OUTPUT)pmu-events/pmu-events.c: pmu-events/empty-pmu-events.c
->   else
->   $(OUTPUT)pmu-events/pmu-events.c: $(JSON) $(JSON_TEST) $(JEVENTS_PY)
->   	$(call rule_mkdir)
-> -	$(Q)$(call echo-cmd,gen)$(PYTHON) $(JEVENTS_PY) $(SRCARCH) pmu-events/arch $@
-> +	$(Q)$(call echo-cmd,gen)$(PYTHON) $(JEVENTS_PY) $(JEVENTS_ARCH) pmu-events/arch $@
->   endif
+> +  _args.output_file.write("""{
+> +\t.arch = 0,
+>   \t.cpuid = 0,
+>   \t.version = 0,
+>   \t.type = 0,
+>   \t.table = 0,
+> -},
+> +}
+>   };
+>   """)
+>   
+> @@ -386,15 +393,24 @@ def main() -> None:
+>     _args = ap.parse_args()
+>   
+>     _args.output_file.write("#include \"pmu-events/pmu-events.h\"\n")
+> -  for path in [_args.arch, 'test']:
+> -    arch_path = f'{_args.starting_dir}/{path}'
+> -    if not os.path.isdir(arch_path):
+> -      raise IOError(f'Missing architecture directory in \'{arch_path}\'')
+> +  archs = []
+> +  for item in os.scandir(_args.starting_dir):
+> +    if not item.is_dir():
+> +      continue
+> +    if item.name == _args.arch or _args.arch == 'all' or item.name == 'test':
+> +      archs.append(item.name)
+> +
+> +  if len(archs) < 2:
+> +    raise IOError(f'Missing architecture directory \'{_args.arch}\'')
+> +
+> +  archs.sort()
+> +  for arch in archs:
+> +    arch_path = f'{_args.starting_dir}/{arch}'
+>       preprocess_arch_std_files(arch_path)
+>       ftw(arch_path, [], process_one_file)
+>       print_events_table_suffix()
+>   
+> -  print_mapping_table()
+> +  print_mapping_table(archs)
+>     print_system_mapping_table()
+>   
+>   
+> diff --git a/tools/perf/pmu-events/pmu-events.h b/tools/perf/pmu-events/pmu-events.h
+> index 6efe73976440..7a360792635f 100644
+> --- a/tools/perf/pmu-events/pmu-events.h
+> +++ b/tools/perf/pmu-events/pmu-events.h
+> @@ -38,6 +38,7 @@ struct pmu_event {
+>    * The  cpuid can contain any character other than the comma.
+>    */
+>   struct pmu_events_map {
+> +	const char *arch;
+>   	const char *cpuid;
+>   	const char *version;
+>   	const char *type;		/* core, uncore etc */
+> diff --git a/tools/perf/tests/pmu-events.c b/tools/perf/tests/pmu-events.c
+> index 263cbb67c861..82192f1a7bf7 100644
+> --- a/tools/perf/tests/pmu-events.c
+> +++ b/tools/perf/tests/pmu-events.c
+> @@ -864,8 +864,7 @@ static void expr_failure(const char *msg,
+>   			 const struct pmu_events_map *map,
+>   			 const struct pmu_event *pe)
+>   {
+> -	pr_debug("%s for map %s %s %s\n",
+> -		msg, map->cpuid, map->version, map->type);
+> +	pr_debug("%s for map %s %s\n", msg, map->arch, map->cpuid);
+>   	pr_debug("On metric %s\n", pe->metric_name);
+>   	pr_debug("On expression %s\n", pe->metric_expr);
+>   }
 
