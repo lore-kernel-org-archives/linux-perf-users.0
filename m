@@ -2,197 +2,160 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 303DAC25B06
-	for <linux-perf-users@archiver.kernel.org>; Thu,  4 Aug 2022 22:20:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A668EC25B06
+	for <linux-perf-users@archiver.kernel.org>; Fri,  5 Aug 2022 00:41:58 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S239634AbiHDWUk (ORCPT
+        id S234862AbiHEAl5 (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Thu, 4 Aug 2022 18:20:40 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47976 "EHLO
+        Thu, 4 Aug 2022 20:41:57 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49800 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S240104AbiHDWTw (ORCPT
+        with ESMTP id S234455AbiHEAl4 (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Thu, 4 Aug 2022 18:19:52 -0400
-Received: from mail-yb1-xb49.google.com (mail-yb1-xb49.google.com [IPv6:2607:f8b0:4864:20::b49])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D1F4272EF6
-        for <linux-perf-users@vger.kernel.org>; Thu,  4 Aug 2022 15:19:08 -0700 (PDT)
-Received: by mail-yb1-xb49.google.com with SMTP id i194-20020a253bcb000000b00676d86fc5d7so601149yba.9
-        for <linux-perf-users@vger.kernel.org>; Thu, 04 Aug 2022 15:19:08 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20210112;
-        h=content-transfer-encoding:cc:to:from:subject:references
-         :mime-version:message-id:in-reply-to:date:from:to:cc;
-        bh=4sKjIkmYkxcPgdqfn3mzo5ECG/fhrbPKoovcaQBneno=;
-        b=RPm1sCjET5JP8rNcetK1qF6U3qw+w4oLLcGhOWWOu6L1nGDRTQOuOliumqxWh/gKIX
-         /9yKGK/DBjlSzOJoAEnI8awONqJrPt8jJdDpabeEJsIpGx6Azhbs+NJ3l/6DHoaLnJAK
-         iNfK+TCPk3sbqCiJXNNHG/RA1dtiLHE0H/Fd49d8eU7Sri+xugWbE1EhCKXlJdnmCTqB
-         rbYIxHKfLk4UTPxs3M8dea/EN0OfJggsJJ/zVHHmz3o+JOprkTttk13fyYZ928dUigUh
-         kDM7BJaruWI9v6ppGVYpxP7wIR9PEzOHNqqUA2nfkq0TcCOlbYuvMWFoY6ORd6dZg3zR
-         P3cA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=content-transfer-encoding:cc:to:from:subject:references
-         :mime-version:message-id:in-reply-to:date:x-gm-message-state:from:to
-         :cc;
-        bh=4sKjIkmYkxcPgdqfn3mzo5ECG/fhrbPKoovcaQBneno=;
-        b=b1PA1u6J8xwenVm2PFjL19o4yhmyISxLip1vUL0zYABiwdz88GwEfqZIPeqmPElf2v
-         jCZ5jmj+42dLFF4ogakWOdMDOamGjALnx5XNeASYjwghSXlkp6I8ZMqRITdU3Vdf9+ny
-         QqhIbm4knTbkG+atwiK1jJBefPxWF1x2+L3l2FIHWtcG06Ekkdixf8Pq4gXtrdR5zyKZ
-         3ehKcxI0llG8Gtn5cNjNOZFqYasRnfaa5KmutCcOJlgw5Fij//VSXHIFVIt6XWDaENDl
-         6YZYu9lhydlEFE4AkvCpQ6oPuHJcF/60A4hptcnATEuKpUE71qpDCSXVJPw/v3WV763+
-         kznw==
-X-Gm-Message-State: ACgBeo3USD5dpHxKDKow0N+PPUcNUgjCB5QdVYpn+mny1h+RKIkChsu0
-        5K+N9wdAWyHCxHfvUu98K23dq0LsnE5H
-X-Google-Smtp-Source: AA6agR4FmNYXeclC++bbyZH3TZg+ZhvtAunrgtkYw8Z7YOjZT3L+beFF6zd42weYs5tFP9F2zwFabCWCQG6g
-X-Received: from irogers.svl.corp.google.com ([2620:15c:2d4:203:f5e1:5bc5:7dab:2b7c])
- (user=irogers job=sendgmr) by 2002:a0d:c007:0:b0:324:8274:24cf with SMTP id
- b7-20020a0dc007000000b00324827424cfmr3627946ywd.213.1659651548135; Thu, 04
- Aug 2022 15:19:08 -0700 (PDT)
-Date:   Thu,  4 Aug 2022 15:18:16 -0700
-In-Reply-To: <20220804221816.1802790-1-irogers@google.com>
-Message-Id: <20220804221816.1802790-18-irogers@google.com>
-Mime-Version: 1.0
-References: <20220804221816.1802790-1-irogers@google.com>
-X-Mailer: git-send-email 2.37.1.559.g78731f0fdb-goog
-Subject: [PATCH v4 17/17] perf jevents: Fold strings optimization
-From:   Ian Rogers <irogers@google.com>
-To:     John Garry <john.garry@huawei.com>, Will Deacon <will@kernel.org>,
-        James Clark <james.clark@arm.com>,
-        Mike Leach <mike.leach@linaro.org>,
-        Leo Yan <leo.yan@linaro.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Jiri Olsa <jolsa@kernel.org>,
-        Namhyung Kim <namhyung@kernel.org>,
-        Andi Kleen <ak@linux.intel.com>,
-        Zhengjun Xing <zhengjun.xing@linux.intel.com>,
-        Ravi Bangoria <ravi.bangoria@amd.com>,
-        Kan Liang <kan.liang@linux.intel.com>,
-        Adrian Hunter <adrian.hunter@intel.com>,
-        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-perf-users@vger.kernel.org
-Cc:     Stephane Eranian <eranian@google.com>,
-        Ian Rogers <irogers@google.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+        Thu, 4 Aug 2022 20:41:56 -0400
+Received: from mga11.intel.com (mga11.intel.com [192.55.52.93])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 636196FA20;
+        Thu,  4 Aug 2022 17:41:55 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1659660115; x=1691196115;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=/VEyLkxeq77TQnF1fntRymq2bZdRxvN59tAQlnS5Qdg=;
+  b=fh+3hx0sPvwJMqK4qBnA1SssG8GqmdFFanDeJXXRt3D/fm4gNQTdQAAA
+   g46iXw89gz5RDqsoVKzHln8pJb4f5rrzQ+mh3k0vMGnDb1m0oU5bKW6Hs
+   3rOF7drNcUVm5hBqzMHg8ldYFPOVnFG6jKQ99RyiIGSWA5DQn1NjckU3j
+   AmEjq2A5M87TZM3dsNIgjJbS4e3yLqBES6w7pxEak0H8jtctSO6+AivAF
+   Mc+z0WgdKJAcov6CZhRTaKfk/crRm2otqbDTWSWpORLRiiWHdp5D9BOK8
+   AOVD3pOOdu4bIZ27qR9Z4RECa1Heq05e/a9tU4rmpWzlI91g3bLdFrg3q
+   Q==;
+X-IronPort-AV: E=McAfee;i="6400,9594,10429"; a="287650913"
+X-IronPort-AV: E=Sophos;i="5.93,216,1654585200"; 
+   d="scan'208";a="287650913"
+Received: from orsmga001.jf.intel.com ([10.7.209.18])
+  by fmsmga102.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 04 Aug 2022 17:41:55 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.93,216,1654585200"; 
+   d="scan'208";a="636308499"
+Received: from lkp-server01.sh.intel.com (HELO e0eace57cfef) ([10.239.97.150])
+  by orsmga001.jf.intel.com with ESMTP; 04 Aug 2022 17:41:51 -0700
+Received: from kbuild by e0eace57cfef with local (Exim 4.96)
+        (envelope-from <lkp@intel.com>)
+        id 1oJlPT-000IzX-0I;
+        Fri, 05 Aug 2022 00:41:51 +0000
+Date:   Fri, 5 Aug 2022 08:41:33 +0800
+From:   kernel test robot <lkp@intel.com>
+To:     Yang Jihong <yangjihong1@huawei.com>, rostedt@goodmis.org,
+        peterz@infradead.org, mingo@redhat.com, acme@kernel.org,
+        mark.rutland@arm.com, alexander.shishkin@linux.intel.com,
+        jolsa@kernel.org, namhyung@kernel.org,
+        linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org
+Cc:     llvm@lists.linux.dev, kbuild-all@lists.01.org,
+        yangjihong1@huawei.com
+Subject: Re: [PATCH] perf/core: Fix syzkaller reported issue "Internal error
+ in read_pmevcntrn"
+Message-ID: <202208050845.V2B12mSf-lkp@intel.com>
+References: <20220804105918.113833-1-yangjihong1@huawei.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20220804105918.113833-1-yangjihong1@huawei.com>
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-If a shorter string ends a longer string then the shorter string may
-reuse the longer string at an offset. For example, on x86 the event
-arith.cycles_div_busy and cycles_div_busy can be folded, even though
-they have difference names the strings are identical after 6
-characters. cycles_div_busy can reuse the arith.cycles_div_busy string
-at an offset of 6.
+Hi Yang,
 
-In pmu-events.c this looks like the following where the 'also:' lists
-folded strings:
-/* offset=3D177541 */ "arith.cycles_div_busy\000\000pipeline\000Cycles the =
-divider is busy\000\000\000event=3D0x14,period=3D2000000,umask=3D0x1\000\00=
-0\000\000\000\000\000\000\000" /* also: cycles_div_busy\000\000pipeline\000=
-Cycles the divider is busy\000\000\000event=3D0x14,period=3D2000000,umask=
-=3D0x1\000\000\000\000\000\000\000\000\000 */
+Thank you for the patch! Yet something to improve:
 
-As jevents.py combines multiple strings for an event into a larger
-string, the amount of folding is minimal as all parts of the event must
-align. Other organizations can benefit more from folding, but lose space
-by say recording more offsets.
+[auto build test ERROR on tip/perf/core]
+[also build test ERROR on linus/master v5.19 next-20220804]
+[cannot apply to acme/perf/core]
+[If your patch is applied to the wrong git tree, kindly drop us a note.
+And when submitting patch, we suggest to use '--base' as documented in
+https://git-scm.com/docs/git-format-patch#_base_tree_information]
 
-Signed-off-by: Ian Rogers <irogers@google.com>
----
- tools/perf/pmu-events/jevents.py | 55 ++++++++++++++++++++++++++++----
- 1 file changed, 48 insertions(+), 7 deletions(-)
+url:    https://github.com/intel-lab-lkp/linux/commits/Yang-Jihong/perf-core-Fix-syzkaller-reported-issue-Internal-error-in-read_pmevcntrn/20220804-190347
+base:   https://git.kernel.org/pub/scm/linux/kernel/git/tip/tip.git 326ecc15c61c349cd49d1700ff9e3e31c6fd1cd5
+config: arm-randconfig-r004-20220804 (https://download.01.org/0day-ci/archive/20220805/202208050845.V2B12mSf-lkp@intel.com/config)
+compiler: clang version 16.0.0 (https://github.com/llvm/llvm-project 26dd42705c2af0b8f6e5d6cdb32c9bd5ed9524eb)
+reproduce (this is a W=1 build):
+        wget https://raw.githubusercontent.com/intel/lkp-tests/master/sbin/make.cross -O ~/bin/make.cross
+        chmod +x ~/bin/make.cross
+        # install arm cross compiling tool for clang build
+        # apt-get install binutils-arm-linux-gnueabi
+        # https://github.com/intel-lab-lkp/linux/commit/9c758a8d3d13d1ac89f651850b79d91b23b41b02
+        git remote add linux-review https://github.com/intel-lab-lkp/linux
+        git fetch --no-tags linux-review Yang-Jihong/perf-core-Fix-syzkaller-reported-issue-Internal-error-in-read_pmevcntrn/20220804-190347
+        git checkout 9c758a8d3d13d1ac89f651850b79d91b23b41b02
+        # save the config file
+        mkdir build_dir && cp config build_dir/.config
+        COMPILER_INSTALL_PATH=$HOME/0day COMPILER=clang make.cross W=1 O=build_dir ARCH=arm SHELL=/bin/bash
 
-diff --git a/tools/perf/pmu-events/jevents.py b/tools/perf/pmu-events/jeven=
-ts.py
-index a5e162558994..e5545758c92d 100755
---- a/tools/perf/pmu-events/jevents.py
-+++ b/tools/perf/pmu-events/jevents.py
-@@ -80,7 +80,9 @@ class BigCString:
-   are all the other C strings (to avoid memory issues the string
-   itself is held as a list of strings). The offsets within the big
-   string are recorded and when stored to disk these don't need
--  relocation.
-+  relocation. To reduce the size of the string further, identical
-+  strings are merged. If a longer string ends-with the same value as a
-+  shorter string, these entries are also merged.
-   """
-   strings: Set[str]
-   big_string: Sequence[str]
-@@ -96,6 +98,33 @@ class BigCString:
-   def compute(self) -> None:
-     """Called once all strings are added to compute the string and offsets=
-."""
-=20
-+    folded_strings =3D {}
-+    # Determine if two strings can be folded, ie. let 1 string use the
-+    # end of another. First reverse all strings and sort them.
-+    sorted_reversed_strings =3D sorted([x[::-1] for x in self.strings])
-+
-+    # Strings 'xyz' and 'yz' will now be [ 'zy', 'zyx' ]. Scan forward
-+    # for each string to see if there is a better candidate to fold it
-+    # into, in the example rather than using 'yz' we can use'xyz' at
-+    # an offset of 1. We record which string can be folded into which
-+    # in folded_strings, we don't need to record the offset as it is
-+    # trivially computed from the string lengths.
-+    for pos,s in enumerate(sorted_reversed_strings):
-+      best_pos =3D pos
-+      for check_pos in range(pos + 1, len(sorted_reversed_strings)):
-+        if sorted_reversed_strings[check_pos].startswith(s):
-+          best_pos =3D check_pos
-+        else:
-+          break
-+      if pos !=3D best_pos:
-+        folded_strings[s[::-1]] =3D sorted_reversed_strings[best_pos][::-1=
-]
-+
-+    # Compute reverse mappings for debugging.
-+    fold_into_strings =3D collections.defaultdict(set)
-+    for key, val in folded_strings.items():
-+      if key !=3D val:
-+        fold_into_strings[val].add(key)
-+
-     # big_string_offset is the current location within the C string
-     # being appended to - comments, etc. don't count. big_string is
-     # the string contents represented as a list. Strings are immutable
-@@ -104,13 +133,25 @@ class BigCString:
-     big_string_offset =3D 0
-     self.big_string =3D []
-     self.offsets =3D {}
--    # Emit all strings in a sorted manner.
-+
-+    # Emit all strings that aren't folded in a sorted manner.
-     for s in sorted(self.strings):
--      self.offsets[s] =3D big_string_offset
--      self.big_string.append(f'/* offset=3D{big_string_offset} */ "')
--      self.big_string.append(s)
--      self.big_string.append('"\n')
--      big_string_offset +=3D c_len(s)
-+      if s not in folded_strings:
-+        self.offsets[s] =3D big_string_offset
-+        self.big_string.append(f'/* offset=3D{big_string_offset} */ "')
-+        self.big_string.append(s)
-+        self.big_string.append('"')
-+        if s in fold_into_strings:
-+          self.big_string.append(' /* also: ' + ', '.join(fold_into_string=
-s[s]) + ' */')
-+        self.big_string.append('\n')
-+        big_string_offset +=3D c_len(s)
-+        continue
-+
-+    # Compute the offsets of the folded strings.
-+    for s in folded_strings.keys():
-+      assert s not in self.offsets
-+      folded_s =3D folded_strings[s]
-+      self.offsets[s] =3D self.offsets[folded_s] + c_len(folded_s) - c_len=
-(s)
-=20
- _bcs =3D BigCString()
-=20
---=20
-2.37.1.559.g78731f0fdb-goog
+If you fix the issue, kindly add following tag where applicable
+Reported-by: kernel test robot <lkp@intel.com>
 
+All errors (new ones prefixed by >>):
+
+>> kernel/events/core.c:6942:20: error: use of undeclared identifier 'flags'
+           local_irq_restore(flags);
+                             ^
+>> kernel/events/core.c:6942:20: error: use of undeclared identifier 'flags'
+   2 errors generated.
+
+
+vim +/flags +6942 kernel/events/core.c
+
+  6896	
+  6897	static void perf_output_read_group(struct perf_output_handle *handle,
+  6898				    struct perf_event *event,
+  6899				    u64 enabled, u64 running)
+  6900	{
+  6901		struct perf_event *leader = event->group_leader, *sub;
+  6902		u64 read_format = event->attr.read_format;
+  6903		u64 values[6];
+  6904		int n = 0;
+  6905	
+  6906		values[n++] = 1 + leader->nr_siblings;
+  6907	
+  6908		if (read_format & PERF_FORMAT_TOTAL_TIME_ENABLED)
+  6909			values[n++] = enabled;
+  6910	
+  6911		if (read_format & PERF_FORMAT_TOTAL_TIME_RUNNING)
+  6912			values[n++] = running;
+  6913	
+  6914		if ((leader != event) &&
+  6915		    (leader->state == PERF_EVENT_STATE_ACTIVE))
+  6916			leader->pmu->read(leader);
+  6917	
+  6918		values[n++] = perf_event_count(leader);
+  6919		if (read_format & PERF_FORMAT_ID)
+  6920			values[n++] = primary_event_id(leader);
+  6921		if (read_format & PERF_FORMAT_LOST)
+  6922			values[n++] = atomic64_read(&leader->lost_samples);
+  6923	
+  6924		__output_copy(handle, values, n * sizeof(u64));
+  6925	
+  6926		for_each_sibling_event(sub, leader) {
+  6927			n = 0;
+  6928	
+  6929			if ((sub != event) &&
+  6930			    (sub->state == PERF_EVENT_STATE_ACTIVE))
+  6931				sub->pmu->read(sub);
+  6932	
+  6933			values[n++] = perf_event_count(sub);
+  6934			if (read_format & PERF_FORMAT_ID)
+  6935				values[n++] = primary_event_id(sub);
+  6936			if (read_format & PERF_FORMAT_LOST)
+  6937				values[n++] = atomic64_read(&sub->lost_samples);
+  6938	
+  6939			__output_copy(handle, values, n * sizeof(u64));
+  6940		}
+  6941	
+> 6942		local_irq_restore(flags);
+  6943	}
+  6944	
+
+-- 
+0-DAY CI Kernel Test Service
+https://01.org/lkp
