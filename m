@@ -2,568 +2,84 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B06C4C25B06
-	for <linux-perf-users@archiver.kernel.org>; Fri,  5 Aug 2022 01:39:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0CD73C00140
+	for <linux-perf-users@archiver.kernel.org>; Fri,  5 Aug 2022 08:11:26 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S240047AbiHEBjV (ORCPT
+        id S237188AbiHEILZ (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Thu, 4 Aug 2022 21:39:21 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49946 "EHLO
+        Fri, 5 Aug 2022 04:11:25 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37478 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S240175AbiHEBjS (ORCPT
+        with ESMTP id S235691AbiHEILY (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Thu, 4 Aug 2022 21:39:18 -0400
-Received: from mail-yb1-xb4a.google.com (mail-yb1-xb4a.google.com [IPv6:2607:f8b0:4864:20::b4a])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 89B0672EC0
-        for <linux-perf-users@vger.kernel.org>; Thu,  4 Aug 2022 18:39:14 -0700 (PDT)
-Received: by mail-yb1-xb4a.google.com with SMTP id 130-20020a250188000000b006777ce7728cso941572ybb.4
-        for <linux-perf-users@vger.kernel.org>; Thu, 04 Aug 2022 18:39:14 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20210112;
-        h=content-transfer-encoding:cc:to:from:subject:references
-         :mime-version:message-id:in-reply-to:date:from:to:cc;
-        bh=dGOcqc2WIfaiBXb536VI0Rx7fwEtR3PoXTHtRaHn/Bs=;
-        b=E7AKVS97zUvLb0JHIxmVJ0EJjG5a3eo/vkC+Q2/swrHqsVDcQNNTuL3s/WlCyTcdIQ
-         qgPtgZYJws5VbqYGpxUJRHeEr3uMgzgCfp2ZBR3TTc0HUluWF9s2iRuI8D4C7swS+548
-         z+3ZtCRNLyhlEuh5owsANJ2xCxza3xuWdQehuk8Y9mMce2z+qR4emL5x8i5cZuCISMPW
-         yjGYfoSJxhn7MNKTFSflJHylBLM0m7rNUiyaIUDZYyLE82Y5LEtGo813DLYkdNncbG7n
-         qFskrDdgX05XvWC1Um3B4lqqw314N9PhovIsMLDR6L2y3crkRlu5Ax8I66ci/o0Od13k
-         Yu/g==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=content-transfer-encoding:cc:to:from:subject:references
-         :mime-version:message-id:in-reply-to:date:x-gm-message-state:from:to
-         :cc;
-        bh=dGOcqc2WIfaiBXb536VI0Rx7fwEtR3PoXTHtRaHn/Bs=;
-        b=h96AIhFi0Y9gXLOuTHoliTeLvR7a10jM+ylZW+Hl2Kqkzt7QwqVOOqjLRKX22C4DyP
-         j1ijCtUHFFBFohGkdwC7cAKzTlSZJG3tZ9GCUJhg8KmpPzjEpYOXvwOcbUClngXb0fmN
-         i26VPrrE2WQjW1vFJRP8BJZO3qu70PFmq/BnuzXJHLtf3l8QrIU0CREg4QVqEdmmRDMT
-         1KX9juz5DExRg9Yk9FKHVr8CDolilhGR4MnFt5nkDlUWpSmUYV3xjTzxtX5ZOqRllxQY
-         AhRJXczg15eh2F6y800BppvS8a9LzN/zQN+HZN43HxEqetYvSVYW8ahWqTMWzmGEDt6I
-         HBjQ==
-X-Gm-Message-State: ACgBeo2le67eQroNKcFOn0enthc7c9Zae7I+X8XMoL/eD8BNgxdRv9uw
-        rgOFBQ62L90YdgFGCs8qX04w63nHdzLR
-X-Google-Smtp-Source: AA6agR6QOtcubIMn/NjbLIZCx9vP4S2tofMovdgucOvV/0lyL5m9FVBGeIHd78sZe6mDsbh/FEBZk5NLd715
-X-Received: from irogers.svl.corp.google.com ([2620:15c:2d4:203:f5e1:5bc5:7dab:2b7c])
- (user=irogers job=sendgmr) by 2002:a81:578b:0:b0:324:82ff:12c1 with SMTP id
- l133-20020a81578b000000b0032482ff12c1mr3878783ywb.174.1659663553842; Thu, 04
- Aug 2022 18:39:13 -0700 (PDT)
-Date:   Thu,  4 Aug 2022 18:38:56 -0700
-In-Reply-To: <20220805013856.1842878-1-irogers@google.com>
-Message-Id: <20220805013856.1842878-4-irogers@google.com>
-Mime-Version: 1.0
-References: <20220805013856.1842878-1-irogers@google.com>
-X-Mailer: git-send-email 2.37.1.559.g78731f0fdb-goog
-Subject: [PATCH v3 3/3] perf vendor events: Remove bad jaketown uncore events
-From:   Ian Rogers <irogers@google.com>
-To:     Zhengjun Xing <zhengjun.xing@linux.intel.com>,
-        Kan Liang <kan.liang@linux.intel.com>,
-        Andi Kleen <ak@linux.intel.com>, perry.taylor@intel.com,
-        caleb.biggers@intel.com, kshipra.bopardikar@intel.com,
+        Fri, 5 Aug 2022 04:11:24 -0400
+Received: from frasgout.his.huawei.com (frasgout.his.huawei.com [185.176.79.56])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 535D92AE0;
+        Fri,  5 Aug 2022 01:11:21 -0700 (PDT)
+Received: from fraeml705-chm.china.huawei.com (unknown [172.18.147.226])
+        by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4LzdXK2SPmz67Cr0;
+        Fri,  5 Aug 2022 16:08:49 +0800 (CST)
+Received: from lhrpeml500003.china.huawei.com (7.191.162.67) by
+ fraeml705-chm.china.huawei.com (10.206.15.54) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id
+ 15.1.2375.24; Fri, 5 Aug 2022 10:11:19 +0200
+Received: from [10.126.170.142] (10.126.170.142) by
+ lhrpeml500003.china.huawei.com (7.191.162.67) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256) id
+ 15.1.2375.24; Fri, 5 Aug 2022 09:11:18 +0100
+Message-ID: <ea108115-f2dd-5767-1f86-34cdfdedc2a5@huawei.com>
+Date:   Fri, 5 Aug 2022 09:11:21 +0100
+MIME-Version: 1.0
+User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:91.0) Gecko/20100101
+ Thunderbird/91.6.1
+Subject: Re: [PATCH v3 00/17] Compress the pmu_event tables
+From:   John Garry <john.garry@huawei.com>
+To:     Ian Rogers <irogers@google.com>
+CC:     Will Deacon <will@kernel.org>, James Clark <james.clark@arm.com>,
+        "Mike Leach" <mike.leach@linaro.org>, Leo Yan <leo.yan@linaro.org>,
         Peter Zijlstra <peterz@infradead.org>,
         Ingo Molnar <mingo@redhat.com>,
-        Arnaldo Carvalho de Melo <acme@kernel.org>,
+        "Arnaldo Carvalho de Melo" <acme@kernel.org>,
         Mark Rutland <mark.rutland@arm.com>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        "Alexander Shishkin" <alexander.shishkin@linux.intel.com>,
         Jiri Olsa <jolsa@kernel.org>,
         Namhyung Kim <namhyung@kernel.org>,
-        linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
-Cc:     Stephane Eranian <eranian@google.com>,
-        Ian Rogers <irogers@google.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+        Andi Kleen <ak@linux.intel.com>,
+        "Zhengjun Xing" <zhengjun.xing@linux.intel.com>,
+        Ravi Bangoria <ravi.bangoria@amd.com>,
+        Kan Liang <kan.liang@linux.intel.com>,
+        Adrian Hunter <adrian.hunter@intel.com>,
+        <linux-kernel@vger.kernel.org>,
+        <linux-arm-kernel@lists.infradead.org>,
+        <linux-perf-users@vger.kernel.org>,
+        Stephane Eranian <eranian@google.com>
+References: <20220729074351.138260-1-irogers@google.com>
+ <d8356ddc-56e7-7324-5330-ff2bd54bcba4@huawei.com>
+ <CAP-5=fV0CMpBGkNOBMRjbdZfdw1mQjrDhLVG38jLtpsdWXtQ_Q@mail.gmail.com>
+ <3d0c1ec0-42ec-8c51-743b-5d93cabb53fb@huawei.com>
+In-Reply-To: <3d0c1ec0-42ec-8c51-743b-5d93cabb53fb@huawei.com>
+Content-Type: text/plain; charset="UTF-8"; format=flowed
+Content-Transfer-Encoding: 7bit
+X-Originating-IP: [10.126.170.142]
+X-ClientProxiedBy: lhreml704-chm.china.huawei.com (10.201.108.53) To
+ lhrpeml500003.china.huawei.com (7.191.162.67)
+X-CFilter-Loop: Reflected
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-The event converter scripts at:
-https://github.com/intel/event-converter-for-linux-perf
-passes Filter values from data on 01.org that is bogus in a perf command
-line and can cause perf to infinitely recurse in parse events. Remove
-such events or filters using the updated patch:
-https://github.com/intel/event-converter-for-linux-perf/pull/15/commits/afd=
-779df99ee41aac646eae1ae5ae651cda3394d
+On 02/08/2022 10:08, John Garry wrote:
+> 
+> 
+>> we can ignore the costs of the strings as
+>> they should be fully shared, especially for BDW-DE.
+> 
+> Are you sure about this? I did not think that the compiler would have 
+> the intelligence to try to share strings. That is the basis of the size 
+> optimisation which I was proposing (that the compiler would not share 
+> strings).
 
-Fixes: 376d8b581b76 ("perf vendor events: Update Intel jaketown")
-Signed-off-by: Ian Rogers <irogers@google.com>
----
- .../arch/x86/jaketown/uncore-cache.json       | 30 -------------------
- .../arch/x86/jaketown/uncore-other.json       | 13 --------
- .../arch/x86/jaketown/uncore-power.json       | 11 -------
- 3 files changed, 54 deletions(-)
+JFYI, I am finding that all identical strings are shared, which is good.
 
-diff --git a/tools/perf/pmu-events/arch/x86/jaketown/uncore-cache.json b/to=
-ols/perf/pmu-events/arch/x86/jaketown/uncore-cache.json
-index cf28ffa778ba..351f8b040ed1 100644
---- a/tools/perf/pmu-events/arch/x86/jaketown/uncore-cache.json
-+++ b/tools/perf/pmu-events/arch/x86/jaketown/uncore-cache.json
-@@ -20,7 +20,6 @@
-         "Counter": "0,1",
-         "EventCode": "0x34",
-         "EventName": "UNC_C_LLC_LOOKUP.DATA_READ",
--        "Filter": "CBoFilter[22:18]",
-         "PerPkg": "1",
-         "PublicDescription": "Counts the number of times the LLC was acces=
-sed - this includes code, data, prefetches and hints coming from L2.  This =
-has numerous filters available.  Note the non-standard filtering equation. =
- This event will count requests that lookup the cache multiple times with m=
-ultiple increments.  One must ALWAYS set filter mask bit 0 and select a sta=
-te or states to match.  Otherwise, the event will count nothing.   CBoGlCtr=
-l[22:18] bits correspond to [FMESI] state.",
-         "UMask": "0x3",
-@@ -31,7 +30,6 @@
-         "Counter": "0,1",
-         "EventCode": "0x34",
-         "EventName": "UNC_C_LLC_LOOKUP.NID",
--        "Filter": "CBoFilter[22:18], CBoFilter[17:10]",
-         "PerPkg": "1",
-         "PublicDescription": "Counts the number of times the LLC was acces=
-sed - this includes code, data, prefetches and hints coming from L2.  This =
-has numerous filters available.  Note the non-standard filtering equation. =
- This event will count requests that lookup the cache multiple times with m=
-ultiple increments.  One must ALWAYS set filter mask bit 0 and select a sta=
-te or states to match.  Otherwise, the event will count nothing.   CBoGlCtr=
-l[22:18] bits correspond to [FMESI] state.",
-         "UMask": "0x41",
-@@ -42,7 +40,6 @@
-         "Counter": "0,1",
-         "EventCode": "0x34",
-         "EventName": "UNC_C_LLC_LOOKUP.REMOTE_SNOOP",
--        "Filter": "CBoFilter[22:18]",
-         "PerPkg": "1",
-         "PublicDescription": "Counts the number of times the LLC was acces=
-sed - this includes code, data, prefetches and hints coming from L2.  This =
-has numerous filters available.  Note the non-standard filtering equation. =
- This event will count requests that lookup the cache multiple times with m=
-ultiple increments.  One must ALWAYS set filter mask bit 0 and select a sta=
-te or states to match.  Otherwise, the event will count nothing.   CBoGlCtr=
-l[22:18] bits correspond to [FMESI] state.",
-         "UMask": "0x9",
-@@ -53,7 +50,6 @@
-         "Counter": "0,1",
-         "EventCode": "0x34",
-         "EventName": "UNC_C_LLC_LOOKUP.WRITE",
--        "Filter": "CBoFilter[22:18]",
-         "PerPkg": "1",
-         "PublicDescription": "Counts the number of times the LLC was acces=
-sed - this includes code, data, prefetches and hints coming from L2.  This =
-has numerous filters available.  Note the non-standard filtering equation. =
- This event will count requests that lookup the cache multiple times with m=
-ultiple increments.  One must ALWAYS set filter mask bit 0 and select a sta=
-te or states to match.  Otherwise, the event will count nothing.   CBoGlCtr=
-l[22:18] bits correspond to [FMESI] state.",
-         "UMask": "0x5",
-@@ -94,7 +90,6 @@
-         "Counter": "0,1",
-         "EventCode": "0x37",
-         "EventName": "UNC_C_LLC_VICTIMS.NID",
--        "Filter": "CBoFilter[17:10]",
-         "PerPkg": "1",
-         "PublicDescription": "Counts the number of lines that were victimi=
-zed on a fill.  This can be filtered by the state that the line was in.",
-         "UMask": "0x40",
-@@ -613,7 +608,6 @@
-         "Counter": "0,1",
-         "EventCode": "0x35",
-         "EventName": "UNC_C_TOR_INSERTS.MISS_OPCODE",
--        "Filter": "CBoFilter[31:23]",
-         "PerPkg": "1",
-         "PublicDescription": "Counts the number of entries successfuly ins=
-erted into the TOR that match  qualifications specified by the subevent.  T=
-here are a number of subevent 'filters' but only a subset of the subevent c=
-ombinations are valid.  Subevents that require an opcode or NID match requi=
-re the Cn_MSR_PMON_BOX_FILTER.{opc, nid} field to be set.  If, for example,=
- one wanted to count DRD Local Misses, one should select 'MISS_OPC_MATCH' a=
-nd set Cn_MSR_PMON_BOX_FILTER.opc  to DRD (0x182).",
-         "UMask": "0x3",
-@@ -624,7 +618,6 @@
-         "Counter": "0,1",
-         "EventCode": "0x35",
-         "EventName": "UNC_C_TOR_INSERTS.NID_ALL",
--        "Filter": "CBoFilter[17:10]",
-         "PerPkg": "1",
-         "PublicDescription": "Counts the number of entries successfuly ins=
-erted into the TOR that match  qualifications specified by the subevent.  T=
-here are a number of subevent 'filters' but only a subset of the subevent c=
-ombinations are valid.  Subevents that require an opcode or NID match requi=
-re the Cn_MSR_PMON_BOX_FILTER.{opc, nid} field to be set.  If, for example,=
- one wanted to count DRD Local Misses, one should select 'MISS_OPC_MATCH' a=
-nd set Cn_MSR_PMON_BOX_FILTER.opc  to DRD (0x182).",
-         "UMask": "0x48",
-@@ -635,7 +628,6 @@
-         "Counter": "0,1",
-         "EventCode": "0x35",
-         "EventName": "UNC_C_TOR_INSERTS.NID_EVICTION",
--        "Filter": "CBoFilter[17:10]",
-         "PerPkg": "1",
-         "PublicDescription": "Counts the number of entries successfuly ins=
-erted into the TOR that match  qualifications specified by the subevent.  T=
-here are a number of subevent 'filters' but only a subset of the subevent c=
-ombinations are valid.  Subevents that require an opcode or NID match requi=
-re the Cn_MSR_PMON_BOX_FILTER.{opc, nid} field to be set.  If, for example,=
- one wanted to count DRD Local Misses, one should select 'MISS_OPC_MATCH' a=
-nd set Cn_MSR_PMON_BOX_FILTER.opc  to DRD (0x182).",
-         "UMask": "0x44",
-@@ -646,7 +638,6 @@
-         "Counter": "0,1",
-         "EventCode": "0x35",
-         "EventName": "UNC_C_TOR_INSERTS.NID_MISS_ALL",
--        "Filter": "CBoFilter[17:10]",
-         "PerPkg": "1",
-         "PublicDescription": "Counts the number of entries successfuly ins=
-erted into the TOR that match  qualifications specified by the subevent.  T=
-here are a number of subevent 'filters' but only a subset of the subevent c=
-ombinations are valid.  Subevents that require an opcode or NID match requi=
-re the Cn_MSR_PMON_BOX_FILTER.{opc, nid} field to be set.  If, for example,=
- one wanted to count DRD Local Misses, one should select 'MISS_OPC_MATCH' a=
-nd set Cn_MSR_PMON_BOX_FILTER.opc  to DRD (0x182).",
-         "UMask": "0x4a",
-@@ -657,7 +648,6 @@
-         "Counter": "0,1",
-         "EventCode": "0x35",
-         "EventName": "UNC_C_TOR_INSERTS.NID_MISS_OPCODE",
--        "Filter": "CBoFilter[31:23], CBoFilter[17:10]",
-         "PerPkg": "1",
-         "PublicDescription": "Counts the number of entries successfuly ins=
-erted into the TOR that match  qualifications specified by the subevent.  T=
-here are a number of subevent 'filters' but only a subset of the subevent c=
-ombinations are valid.  Subevents that require an opcode or NID match requi=
-re the Cn_MSR_PMON_BOX_FILTER.{opc, nid} field to be set.  If, for example,=
- one wanted to count DRD Local Misses, one should select 'MISS_OPC_MATCH' a=
-nd set Cn_MSR_PMON_BOX_FILTER.opc  to DRD (0x182).",
-         "UMask": "0x43",
-@@ -668,7 +658,6 @@
-         "Counter": "0,1",
-         "EventCode": "0x35",
-         "EventName": "UNC_C_TOR_INSERTS.NID_OPCODE",
--        "Filter": "CBoFilter[31:23], CBoFilter[17:10]",
-         "PerPkg": "1",
-         "PublicDescription": "Counts the number of entries successfuly ins=
-erted into the TOR that match  qualifications specified by the subevent.  T=
-here are a number of subevent 'filters' but only a subset of the subevent c=
-ombinations are valid.  Subevents that require an opcode or NID match requi=
-re the Cn_MSR_PMON_BOX_FILTER.{opc, nid} field to be set.  If, for example,=
- one wanted to count DRD Local Misses, one should select 'MISS_OPC_MATCH' a=
-nd set Cn_MSR_PMON_BOX_FILTER.opc  to DRD (0x182).",
-         "UMask": "0x41",
-@@ -679,7 +668,6 @@
-         "Counter": "0,1",
-         "EventCode": "0x35",
-         "EventName": "UNC_C_TOR_INSERTS.NID_WB",
--        "Filter": "CBoFilter[17:10]",
-         "PerPkg": "1",
-         "PublicDescription": "Counts the number of entries successfuly ins=
-erted into the TOR that match  qualifications specified by the subevent.  T=
-here are a number of subevent 'filters' but only a subset of the subevent c=
-ombinations are valid.  Subevents that require an opcode or NID match requi=
-re the Cn_MSR_PMON_BOX_FILTER.{opc, nid} field to be set.  If, for example,=
- one wanted to count DRD Local Misses, one should select 'MISS_OPC_MATCH' a=
-nd set Cn_MSR_PMON_BOX_FILTER.opc  to DRD (0x182).",
-         "UMask": "0x50",
-@@ -690,7 +678,6 @@
-         "Counter": "0,1",
-         "EventCode": "0x35",
-         "EventName": "UNC_C_TOR_INSERTS.OPCODE",
--        "Filter": "CBoFilter[31:23]",
-         "PerPkg": "1",
-         "PublicDescription": "Counts the number of entries successfuly ins=
-erted into the TOR that match  qualifications specified by the subevent.  T=
-here are a number of subevent 'filters' but only a subset of the subevent c=
-ombinations are valid.  Subevents that require an opcode or NID match requi=
-re the Cn_MSR_PMON_BOX_FILTER.{opc, nid} field to be set.  If, for example,=
- one wanted to count DRD Local Misses, one should select 'MISS_OPC_MATCH' a=
-nd set Cn_MSR_PMON_BOX_FILTER.opc  to DRD (0x182).",
-         "UMask": "0x1",
-@@ -737,7 +724,6 @@
-         "BriefDescription": "TOR Occupancy; Miss Opcode Match",
-         "EventCode": "0x36",
-         "EventName": "UNC_C_TOR_OCCUPANCY.MISS_OPCODE",
--        "Filter": "CBoFilter[31:23]",
-         "PerPkg": "1",
-         "PublicDescription": "For each cycle, this event accumulates the n=
-umber of valid entries in the TOR that match qualifications specified by th=
-e subevent.   There are a number of subevent 'filters' but only a subset of=
- the subevent combinations are valid.  Subevents that require an opcode or =
-NID match require the Cn_MSR_PMON_BOX_FILTER.{opc, nid} field to be set.  I=
-f, for example, one wanted to count DRD Local Misses, one should select 'MI=
-SS_OPC_MATCH' and set Cn_MSR_PMON_BOX_FILTER.opc to DRD (0x182)",
-         "UMask": "0x3",
-@@ -747,7 +733,6 @@
-         "BriefDescription": "TOR Occupancy; NID Matched",
-         "EventCode": "0x36",
-         "EventName": "UNC_C_TOR_OCCUPANCY.NID_ALL",
--        "Filter": "CBoFilter[17:10]",
-         "PerPkg": "1",
-         "PublicDescription": "For each cycle, this event accumulates the n=
-umber of valid entries in the TOR that match qualifications specified by th=
-e subevent.   There are a number of subevent 'filters' but only a subset of=
- the subevent combinations are valid.  Subevents that require an opcode or =
-NID match require the Cn_MSR_PMON_BOX_FILTER.{opc, nid} field to be set.  I=
-f, for example, one wanted to count DRD Local Misses, one should select 'MI=
-SS_OPC_MATCH' and set Cn_MSR_PMON_BOX_FILTER.opc to DRD (0x182)",
-         "UMask": "0x48",
-@@ -757,7 +742,6 @@
-         "BriefDescription": "TOR Occupancy; NID Matched Evictions",
-         "EventCode": "0x36",
-         "EventName": "UNC_C_TOR_OCCUPANCY.NID_EVICTION",
--        "Filter": "CBoFilter[17:10]",
-         "PerPkg": "1",
-         "PublicDescription": "For each cycle, this event accumulates the n=
-umber of valid entries in the TOR that match qualifications specified by th=
-e subevent.   There are a number of subevent 'filters' but only a subset of=
- the subevent combinations are valid.  Subevents that require an opcode or =
-NID match require the Cn_MSR_PMON_BOX_FILTER.{opc, nid} field to be set.  I=
-f, for example, one wanted to count DRD Local Misses, one should select 'MI=
-SS_OPC_MATCH' and set Cn_MSR_PMON_BOX_FILTER.opc to DRD (0x182)",
-         "UMask": "0x44",
-@@ -767,7 +751,6 @@
-         "BriefDescription": "TOR Occupancy; NID Matched",
-         "EventCode": "0x36",
-         "EventName": "UNC_C_TOR_OCCUPANCY.NID_MISS_ALL",
--        "Filter": "CBoFilter[17:10]",
-         "PerPkg": "1",
-         "PublicDescription": "For each cycle, this event accumulates the n=
-umber of valid entries in the TOR that match qualifications specified by th=
-e subevent.   There are a number of subevent 'filters' but only a subset of=
- the subevent combinations are valid.  Subevents that require an opcode or =
-NID match require the Cn_MSR_PMON_BOX_FILTER.{opc, nid} field to be set.  I=
-f, for example, one wanted to count DRD Local Misses, one should select 'MI=
-SS_OPC_MATCH' and set Cn_MSR_PMON_BOX_FILTER.opc to DRD (0x182)",
-         "UMask": "0x4a",
-@@ -777,7 +760,6 @@
-         "BriefDescription": "TOR Occupancy; NID and Opcode Matched Miss",
-         "EventCode": "0x36",
-         "EventName": "UNC_C_TOR_OCCUPANCY.NID_MISS_OPCODE",
--        "Filter": "CBoFilter[31:23], CBoFilter[17:10]",
-         "PerPkg": "1",
-         "PublicDescription": "For each cycle, this event accumulates the n=
-umber of valid entries in the TOR that match qualifications specified by th=
-e subevent.   There are a number of subevent 'filters' but only a subset of=
- the subevent combinations are valid.  Subevents that require an opcode or =
-NID match require the Cn_MSR_PMON_BOX_FILTER.{opc, nid} field to be set.  I=
-f, for example, one wanted to count DRD Local Misses, one should select 'MI=
-SS_OPC_MATCH' and set Cn_MSR_PMON_BOX_FILTER.opc to DRD (0x182)",
-         "UMask": "0x43",
-@@ -787,7 +769,6 @@
-         "BriefDescription": "TOR Occupancy; NID and Opcode Matched",
-         "EventCode": "0x36",
-         "EventName": "UNC_C_TOR_OCCUPANCY.NID_OPCODE",
--        "Filter": "CBoFilter[31:23], CBoFilter[17:10]",
-         "PerPkg": "1",
-         "PublicDescription": "For each cycle, this event accumulates the n=
-umber of valid entries in the TOR that match qualifications specified by th=
-e subevent.   There are a number of subevent 'filters' but only a subset of=
- the subevent combinations are valid.  Subevents that require an opcode or =
-NID match require the Cn_MSR_PMON_BOX_FILTER.{opc, nid} field to be set.  I=
-f, for example, one wanted to count DRD Local Misses, one should select 'MI=
-SS_OPC_MATCH' and set Cn_MSR_PMON_BOX_FILTER.opc to DRD (0x182)",
-         "UMask": "0x41",
-@@ -797,7 +778,6 @@
-         "BriefDescription": "TOR Occupancy; Opcode Match",
-         "EventCode": "0x36",
-         "EventName": "UNC_C_TOR_OCCUPANCY.OPCODE",
--        "Filter": "CBoFilter[31:23]",
-         "PerPkg": "1",
-         "PublicDescription": "For each cycle, this event accumulates the n=
-umber of valid entries in the TOR that match qualifications specified by th=
-e subevent.   There are a number of subevent 'filters' but only a subset of=
- the subevent combinations are valid.  Subevents that require an opcode or =
-NID match require the Cn_MSR_PMON_BOX_FILTER.{opc, nid} field to be set.  I=
-f, for example, one wanted to count DRD Local Misses, one should select 'MI=
-SS_OPC_MATCH' and set Cn_MSR_PMON_BOX_FILTER.opc to DRD (0x182)",
-         "UMask": "0x1",
-@@ -893,16 +873,6 @@
-         "UMask": "0x4",
-         "Unit": "CBO"
-     },
--    {
--        "BriefDescription": "QPI Address/Opcode Match; Address & Opcode Ma=
-tch",
--        "Counter": "0,1,2,3",
--        "EventCode": "0x20",
--        "EventName": "UNC_H_ADDR_OPC_MATCH.FILT",
--        "Filter": "HA_AddrMatch0[31:6], HA_AddrMatch1[13:0], HA_OpcodeMatc=
-h[5:0]",
--        "PerPkg": "1",
--        "UMask": "0x3",
--        "Unit": "HA"
--    },
-     {
-         "BriefDescription": "HA to iMC Bypass; Not Taken",
-         "Counter": "0,1,2,3",
-diff --git a/tools/perf/pmu-events/arch/x86/jaketown/uncore-other.json b/to=
-ols/perf/pmu-events/arch/x86/jaketown/uncore-other.json
-index 99fc673c59e9..588549a668bd 100644
---- a/tools/perf/pmu-events/arch/x86/jaketown/uncore-other.json
-+++ b/tools/perf/pmu-events/arch/x86/jaketown/uncore-other.json
-@@ -247,17 +247,6 @@
-         "UMask": "0x2",
-         "Unit": "IRP"
-     },
--    {
--        "BriefDescription": "Inbound Transaction Count; Select Source",
--        "Counter": "0,1",
--        "EventCode": "0x15",
--        "EventName": "UNC_I_TRANSACTIONS.ORDERINGQ",
--        "Filter": "IRPFilter[4:0]",
--        "PerPkg": "1",
--        "PublicDescription": "Counts the number of 'Inbound' transactions =
-from the IRP to the Uncore.  This can be filtered based on request type in =
-addition to the source queue.  Note the special filtering equation.  We do =
-OR-reduction on the request type.  If the SOURCE bit is set, then we also d=
-o AND qualification based on the source portID.",
--        "UMask": "0x8",
--        "Unit": "IRP"
--    },
-     {
-         "BriefDescription": "Inbound Transaction Count; Read Prefetches",
-         "Counter": "0,1",
-@@ -1378,7 +1367,6 @@
-         "Counter": "0,1",
-         "EventCode": "0x41",
-         "EventName": "UNC_U_FILTER_MATCH.ENABLE",
--        "Filter": "UBoxFilter[3:0]",
-         "PerPkg": "1",
-         "PublicDescription": "Filter match per thread (w/ or w/o Filter En=
-able).  Specify the thread to filter on using NCUPMONCTRLGLCTR.ThreadID.",
-         "UMask": "0x1",
-@@ -1399,7 +1387,6 @@
-         "Counter": "0,1",
-         "EventCode": "0x41",
-         "EventName": "UNC_U_FILTER_MATCH.U2C_ENABLE",
--        "Filter": "UBoxFilter[3:0]",
-         "PerPkg": "1",
-         "PublicDescription": "Filter match per thread (w/ or w/o Filter En=
-able).  Specify the thread to filter on using NCUPMONCTRLGLCTR.ThreadID.",
-         "UMask": "0x4",
-diff --git a/tools/perf/pmu-events/arch/x86/jaketown/uncore-power.json b/to=
-ols/perf/pmu-events/arch/x86/jaketown/uncore-power.json
-index 04228344cb9c..817ea6d7f785 100644
---- a/tools/perf/pmu-events/arch/x86/jaketown/uncore-power.json
-+++ b/tools/perf/pmu-events/arch/x86/jaketown/uncore-power.json
-@@ -92,7 +92,6 @@
-         "Counter": "0,1,2,3",
-         "EventCode": "0x1e",
-         "EventName": "UNC_P_DEMOTIONS_CORE0",
--        "Filter": "PCUFilter[7:0]",
-         "PerPkg": "1",
-         "PublicDescription": "Counts the number of times when a configurab=
-le cores had a C-state demotion",
-         "Unit": "PCU"
-@@ -102,7 +101,6 @@
-         "Counter": "0,1,2,3",
-         "EventCode": "0x1f",
-         "EventName": "UNC_P_DEMOTIONS_CORE1",
--        "Filter": "PCUFilter[7:0]",
-         "PerPkg": "1",
-         "PublicDescription": "Counts the number of times when a configurab=
-le cores had a C-state demotion",
-         "Unit": "PCU"
-@@ -121,7 +119,6 @@
-         "Counter": "0,1,2,3",
-         "EventCode": "0x21",
-         "EventName": "UNC_P_DEMOTIONS_CORE3",
--        "Filter": "PCUFilter[7:0]",
-         "PerPkg": "1",
-         "PublicDescription": "Counts the number of times when a configurab=
-le cores had a C-state demotion",
-         "Unit": "PCU"
-@@ -131,7 +128,6 @@
-         "Counter": "0,1,2,3",
-         "EventCode": "0x22",
-         "EventName": "UNC_P_DEMOTIONS_CORE4",
--        "Filter": "PCUFilter[7:0]",
-         "PerPkg": "1",
-         "PublicDescription": "Counts the number of times when a configurab=
-le cores had a C-state demotion",
-         "Unit": "PCU"
-@@ -141,7 +137,6 @@
-         "Counter": "0,1,2,3",
-         "EventCode": "0x23",
-         "EventName": "UNC_P_DEMOTIONS_CORE5",
--        "Filter": "PCUFilter[7:0]",
-         "PerPkg": "1",
-         "PublicDescription": "Counts the number of times when a configurab=
-le cores had a C-state demotion",
-         "Unit": "PCU"
-@@ -151,7 +146,6 @@
-         "Counter": "0,1,2,3",
-         "EventCode": "0x24",
-         "EventName": "UNC_P_DEMOTIONS_CORE6",
--        "Filter": "PCUFilter[7:0]",
-         "PerPkg": "1",
-         "PublicDescription": "Counts the number of times when a configurab=
-le cores had a C-state demotion",
-         "Unit": "PCU"
-@@ -161,7 +155,6 @@
-         "Counter": "0,1,2,3",
-         "EventCode": "0x25",
-         "EventName": "UNC_P_DEMOTIONS_CORE7",
--        "Filter": "PCUFilter[7:0]",
-         "PerPkg": "1",
-         "PublicDescription": "Counts the number of times when a configurab=
-le cores had a C-state demotion",
-         "Unit": "PCU"
-@@ -171,7 +164,6 @@
-         "Counter": "0,1,2,3",
-         "EventCode": "0xb",
-         "EventName": "UNC_P_FREQ_BAND0_CYCLES",
--        "Filter": "PCUFilter[7:0]",
-         "PerPkg": "1",
-         "PublicDescription": "Counts the number of cycles that the uncore =
-was running at a frequency greater than or equal to the frequency that is c=
-onfigured in the filter.  One can use all four counters with this event, so=
- it is possible to track up to 4 configurable bands.  One can use edge dete=
-ct in conjunction with this event to track the number of times that we tran=
-sitioned into a frequency greater than or equal to the configurable frequen=
-cy. One can also use inversion to track cycles when we were less than the c=
-onfigured frequency.",
-         "Unit": "PCU"
-@@ -181,7 +173,6 @@
-         "Counter": "0,1,2,3",
-         "EventCode": "0xc",
-         "EventName": "UNC_P_FREQ_BAND1_CYCLES",
--        "Filter": "PCUFilter[15:8]",
-         "PerPkg": "1",
-         "PublicDescription": "Counts the number of cycles that the uncore =
-was running at a frequency greater than or equal to the frequency that is c=
-onfigured in the filter.  One can use all four counters with this event, so=
- it is possible to track up to 4 configurable bands.  One can use edge dete=
-ct in conjunction with this event to track the number of times that we tran=
-sitioned into a frequency greater than or equal to the configurable frequen=
-cy. One can also use inversion to track cycles when we were less than the c=
-onfigured frequency.",
-         "Unit": "PCU"
-@@ -191,7 +182,6 @@
-         "Counter": "0,1,2,3",
-         "EventCode": "0xd",
-         "EventName": "UNC_P_FREQ_BAND2_CYCLES",
--        "Filter": "PCUFilter[23:16]",
-         "PerPkg": "1",
-         "PublicDescription": "Counts the number of cycles that the uncore =
-was running at a frequency greater than or equal to the frequency that is c=
-onfigured in the filter.  One can use all four counters with this event, so=
- it is possible to track up to 4 configurable bands.  One can use edge dete=
-ct in conjunction with this event to track the number of times that we tran=
-sitioned into a frequency greater than or equal to the configurable frequen=
-cy. One can also use inversion to track cycles when we were less than the c=
-onfigured frequency.",
-         "Unit": "PCU"
-@@ -201,7 +191,6 @@
-         "Counter": "0,1,2,3",
-         "EventCode": "0xe",
-         "EventName": "UNC_P_FREQ_BAND3_CYCLES",
--        "Filter": "PCUFilter[31:24]",
-         "PerPkg": "1",
-         "PublicDescription": "Counts the number of cycles that the uncore =
-was running at a frequency greater than or equal to the frequency that is c=
-onfigured in the filter.  One can use all four counters with this event, so=
- it is possible to track up to 4 configurable bands.  One can use edge dete=
-ct in conjunction with this event to track the number of times that we tran=
-sitioned into a frequency greater than or equal to the configurable frequen=
-cy. One can also use inversion to track cycles when we were less than the c=
-onfigured frequency.",
-         "Unit": "PCU"
---=20
-2.37.1.559.g78731f0fdb-goog
-
+Thanks,
+John
