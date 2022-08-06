@@ -2,91 +2,108 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 00695C25B0C
-	for <linux-perf-users@archiver.kernel.org>; Sat,  6 Aug 2022 18:19:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C1C23C19F2D
+	for <linux-perf-users@archiver.kernel.org>; Sat,  6 Aug 2022 19:10:43 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S234242AbiHFSTp (ORCPT
+        id S229456AbiHFTKm (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Sat, 6 Aug 2022 14:19:45 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46750 "EHLO
+        Sat, 6 Aug 2022 15:10:42 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45384 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232944AbiHFSTc (ORCPT
+        with ESMTP id S231835AbiHFTKl (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Sat, 6 Aug 2022 14:19:32 -0400
-Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id EAB2A12096;
-        Sat,  6 Aug 2022 11:19:31 -0700 (PDT)
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id 85A016115D;
-        Sat,  6 Aug 2022 18:19:31 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPS id D0C55C433D6;
-        Sat,  6 Aug 2022 18:19:30 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1659809970;
-        bh=GzeMyM3wJ1P84CG/BoU2WyvfIEHgqNHa/SH83KefuE8=;
-        h=Subject:From:In-Reply-To:References:Date:To:Cc:From;
-        b=L+RiD/4fhLmqXVWDO3f84KDsr7aKpfPu9vlh6BNf7juf+wzzo/yADNtznPqg5fu7W
-         kBqjrJTTHTycFEoVH+j5NWpNofSTBDcV2UwakMZx/GM3qARA/ctHrY8Il47TW7aDhj
-         mmX4Q7Bxaya+WtobZYA/Ryw/CQco18bGAzchxXsrDkvcEpa4gVVUosKntsw4SIXhgo
-         i5L7CWaGAly9r/K06DxGRGMSR/iRlAqzbyW7JoYRdgwJkfIMIMYDpXpL+AgXCgxwzm
-         7lM3gpCRAuHbHK74usrBr+OtWnxNNMo8ZPKwtD+QLB9tVR6ORgG45v09BxZVFNBF5R
-         3aKss+D3SxICQ==
-Received: from aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (localhost.localdomain [127.0.0.1])
-        by aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (Postfix) with ESMTP id BFD00C43140;
-        Sat,  6 Aug 2022 18:19:30 +0000 (UTC)
-Subject: Re: [GIT PULL] perf tools changes for v6.0: 1st batch
-From:   pr-tracker-bot@kernel.org
-In-Reply-To: <20220804213457.500335-1-acme@kernel.org>
-References: <20220804213457.500335-1-acme@kernel.org>
-X-PR-Tracked-List-Id: <linux-perf-users.vger.kernel.org>
-X-PR-Tracked-Message-Id: <20220804213457.500335-1-acme@kernel.org>
-X-PR-Tracked-Remote: git://git.kernel.org/pub/scm/linux/kernel/git/acme/linux.git tags/perf-tools-for-v6.0-2022-08-04
-X-PR-Tracked-Commit-Id: bb8bc52e75785af94b9ba079277547d50d018a52
-X-PR-Merge-Tree: torvalds/linux.git
-X-PR-Merge-Refname: refs/heads/master
-X-PR-Merge-Commit-Id: 48a577dc1b09c1d35f2b8b37e7fa9a7169d50f5d
-Message-Id: <165980997077.27284.581164792704578757.pr-tracker-bot@kernel.org>
-Date:   Sat, 06 Aug 2022 18:19:30 +0000
-To:     Arnaldo Carvalho de Melo <acme@kernel.org>
-Cc:     Linus Torvalds <torvalds@linux-foundation.org>,
-        Ingo Molnar <mingo@kernel.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Jiri Olsa <jolsa@kernel.org>,
-        Namhyung Kim <namhyung@kernel.org>,
-        Clark Williams <williams@redhat.com>,
-        Kate Carcia <kcarcia@redhat.com>, linux-kernel@vger.kernel.org,
-        linux-perf-users@vger.kernel.org,
+        Sat, 6 Aug 2022 15:10:41 -0400
+Received: from mail-ej1-x630.google.com (mail-ej1-x630.google.com [IPv6:2a00:1450:4864:20::630])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D565FCE29;
+        Sat,  6 Aug 2022 12:10:40 -0700 (PDT)
+Received: by mail-ej1-x630.google.com with SMTP id dc19so10097832ejb.12;
+        Sat, 06 Aug 2022 12:10:40 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20210112;
+        h=sender:date:from:to:cc:subject:message-id:mime-version
+         :content-disposition;
+        bh=X+RUlnK1eQo3sW/X+9F8SKrpxqJLZraFpOTVGpOtH+U=;
+        b=FAmbe5GFHQ/8g3C2PwAYnfd+fZUkQanSKQPwmWCFbVDbrWSZIwZ85gt+zXL2a4EqbW
+         0IRimdM+FCCUjM9e7SS/l7ez33dkyWFkTO/YHc/ESkrncywrp++XyBh0dRSwyYaxUsm5
+         jGhpDVKPWv7luXfgF94xoKdlsEEr3o0p2kFulPuoQohio5uOPf/GGvxHlVTgTOrWaiDz
+         U/lUwbauHQ6uw3ULh0rtSOpf3+tw0JrW1CR1gxN+SWKt/V/sRSKbLdcYDchVLIZy5CNd
+         GVVaItERJVUXL6aae2TyYnd4c9zzCBpTZFEkqhu61AAC3W+0DthZHPZ/vxRs/kd3o41W
+         8cXg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
+         :mime-version:content-disposition;
+        bh=X+RUlnK1eQo3sW/X+9F8SKrpxqJLZraFpOTVGpOtH+U=;
+        b=Drti2Dp8L6IZWZ4UPlCaV14ltkLmzLVBVxomqZz76DkbR4u3xuMuIb59j7l9ehYr0z
+         saGobw4o6ILpGng+XCEujGKIwBzFTtGG8LHESsj1FEOR9Ny9nHbP3fIjd7r5FUpjqeOA
+         /xOzq2cBPfI8AF2Op5CZliNB5Wcj+6yoZgehw1ZY3PGTu0S6Xy83/p5g53gpMmmTUkP7
+         bV5X9k/G8eKl83FHTa6kyv853JbPX1lktaWd6JNe+M5K70PVB7XdCGwi0KYouU6X+m8C
+         rgIUpkrHK/gQOlWDV41+6ZZFxFZdet7BYJMu/vBSs96Flf2z4j6H+7AWEE2QnCwxRpzM
+         0efA==
+X-Gm-Message-State: ACgBeo2D88DzHDAUYCfAdu8D4RxJbwFA2ifQ3zzsnGyv8jtJBHQ0+e3d
+        4j6d7M8ys8PmlJfKem+TxFU=
+X-Google-Smtp-Source: AA6agR5iQsegzTpNhE0SKB0loxYaXoyQsFhN21vQ+89p7jJ8OJb8LZzV6xB3Gdzh5FuS5cSr2PdxyA==
+X-Received: by 2002:a17:907:948e:b0:72d:3fd2:5da0 with SMTP id dm14-20020a170907948e00b0072d3fd25da0mr8656300ejc.225.1659813039480;
+        Sat, 06 Aug 2022 12:10:39 -0700 (PDT)
+Received: from gmail.com (195-38-112-141.pool.digikabel.hu. [195.38.112.141])
+        by smtp.gmail.com with ESMTPSA id 17-20020a170906211100b0072af92fa086sm2986604ejt.32.2022.08.06.12.10.38
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sat, 06 Aug 2022 12:10:38 -0700 (PDT)
+Sender: Ingo Molnar <mingo.kernel.org@gmail.com>
+Date:   Sat, 6 Aug 2022 21:10:36 +0200
+From:   Ingo Molnar <mingo@kernel.org>
+To:     Linus Torvalds <torvalds@linux-foundation.org>
+Cc:     linux-kernel@vger.kernel.org,
+        Peter Zijlstra <peterz@infradead.org>,
         Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Adrian Hunter <adrian.hunter@intel.com>,
-        Anshuman Khandual <anshuman.khandual@arm.com>,
-        Blake Jones <blakejones@google.com>,
-        Colin Ian King <colin.i.king@gmail.com>,
-        German Gomez <german.gomez@arm.com>,
-        Ian Rogers <irogers@google.com>,
-        Jason Wang <wangborong@cdjrlc.com>,
-        John Garry <john.garry@huawei.com>,
-        Kan Liang <kan.liang@linux.intel.com>,
-        Ravi Bangoria <ravi.bangoria@amd.com>,
-        "Shawn M . Chapla" <schapla@codeweavers.com>,
-        Thomas Richter <tmricht@linux.ibm.com>,
-        Xing Zhengjun <zhengjun.xing@linux.intel.com>,
-        Yang Jihong <yangjihong1@huawei.com>,
-        Arnaldo Carvalho de Melo <acme@redhat.com>
+        Mark Rutland <mark.rutland@arm.com>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Jiri Olsa <jolsa@redhat.com>,
+        Namhyung Kim <namhyung@kernel.org>,
+        linux-perf-users@vger.kernel.org,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Borislav Petkov <bp@alien8.de>,
+        Andrew Morton <akpm@linux-foundation.org>
+Subject: [GIT PULL] perf fixes
+Message-ID: <Yu68rPjbQXEJlrdj@gmail.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-The pull request you sent on Thu,  4 Aug 2022 18:34:57 -0300:
+Linus,
 
-> git://git.kernel.org/pub/scm/linux/kernel/git/acme/linux.git tags/perf-tools-for-v6.0-2022-08-04
+Please pull the latest perf/urgent git tree from:
 
-has been merged into torvalds/linux.git:
-https://git.kernel.org/torvalds/c/48a577dc1b09c1d35f2b8b37e7fa9a7169d50f5d
+   git://git.kernel.org/pub/scm/linux/kernel/git/tip/tip.git perf-urgent-2022-08-06
 
-Thank you!
+   # HEAD: 99643bab36b642be10bf09cd3285c37c9e5b597f perf/core: Fix ';;' typo
 
--- 
-Deet-doot-dot, I am a bot.
-https://korg.docs.kernel.org/prtracker.html
+Misc fixes to kprobes and the faddr2line script, plus a cleanup.
+
+ Thanks,
+
+	Ingo
+
+------------------>
+Chen Zhongjin (1):
+      kprobes: Forbid probing on trampoline and BPF code areas
+
+Josh Poimboeuf (2):
+      scripts/faddr2line: Fix vmlinux detection on arm64
+      scripts/faddr2line: Add CONFIG_DEBUG_INFO check
+
+Masami Hiramatsu (Google) (1):
+      x86/kprobes: Update kcb status flag after singlestepping
+
+Slark Xiao (1):
+      perf/core: Fix ';;' typo
+
+
+ arch/x86/kernel/kprobes/core.c | 18 +++++++++++-------
+ kernel/events/core.c           |  2 +-
+ kernel/kprobes.c               |  3 ++-
+ scripts/faddr2line             |  7 ++++++-
+ 4 files changed, 20 insertions(+), 10 deletions(-)
