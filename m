@@ -2,90 +2,249 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 47108C19F2D
-	for <linux-perf-users@archiver.kernel.org>; Sat,  6 Aug 2022 09:37:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 49D40C19F2D
+	for <linux-perf-users@archiver.kernel.org>; Sat,  6 Aug 2022 09:41:07 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S239628AbiHFJhV (ORCPT
+        id S241763AbiHFJlG (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Sat, 6 Aug 2022 05:37:21 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45136 "EHLO
+        Sat, 6 Aug 2022 05:41:06 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47308 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229798AbiHFJhU (ORCPT
+        with ESMTP id S229970AbiHFJlF (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Sat, 6 Aug 2022 05:37:20 -0400
-Received: from szxga02-in.huawei.com (szxga02-in.huawei.com [45.249.212.188])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 22D2F15808;
-        Sat,  6 Aug 2022 02:37:19 -0700 (PDT)
-Received: from dggemv704-chm.china.huawei.com (unknown [172.30.72.56])
-        by szxga02-in.huawei.com (SkyGuard) with ESMTP id 4M0HNg0gYhzlVsH;
-        Sat,  6 Aug 2022 17:34:27 +0800 (CST)
-Received: from kwepemm600003.china.huawei.com (7.193.23.202) by
- dggemv704-chm.china.huawei.com (10.3.19.47) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2375.24; Sat, 6 Aug 2022 17:37:14 +0800
-Received: from [10.67.111.205] (10.67.111.205) by
- kwepemm600003.china.huawei.com (7.193.23.202) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2375.24; Sat, 6 Aug 2022 17:37:13 +0800
-Subject: Re: [PATCH v2 0/7] perf kwork: A couple of fixes according to review
- comments
-To:     <peterz@infradead.org>, <mingo@redhat.com>, <acme@kernel.org>,
-        <mark.rutland@arm.com>, <alexander.shishkin@linux.intel.com>,
-        <jolsa@kernel.org>, <namhyung@kernel.org>,
-        <colin.i.king@gmail.com>, <linux-kernel@vger.kernel.org>,
-        <linux-perf-users@vger.kernel.org>
-CC:     <pc@us.ibm.com>, <yhs@fb.com>, <andrii.nakryiko@gmail.com>,
-        <songliubraving@fb.com>
-References: <20220730030335.78203-1-yangjihong1@huawei.com>
-From:   Yang Jihong <yangjihong1@huawei.com>
-Message-ID: <417639ef-5c98-35a6-0ec7-501c1a33475a@huawei.com>
-Date:   Sat, 6 Aug 2022 17:37:13 +0800
-User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:78.0) Gecko/20100101
- Thunderbird/78.6.1
+        Sat, 6 Aug 2022 05:41:05 -0400
+Received: from mail-pj1-x1029.google.com (mail-pj1-x1029.google.com [IPv6:2607:f8b0:4864:20::1029])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B62B9659F
+        for <linux-perf-users@vger.kernel.org>; Sat,  6 Aug 2022 02:41:01 -0700 (PDT)
+Received: by mail-pj1-x1029.google.com with SMTP id t2-20020a17090a4e4200b001f21572f3a4so5038397pjl.0
+        for <linux-perf-users@vger.kernel.org>; Sat, 06 Aug 2022 02:41:01 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=EEBuFx6DM+1Pu6CeLy6E4LdQQ3xoNoJlUQHPSG/y8jc=;
+        b=ppDRa5X6p90CTf1cafDx1Zk0Kc7xcybYOz8P+NWbNDX2ao+uhmjL8RHRFJCeippXtl
+         2lmW3fra9l71aVfr6YyrJrJROek2PZx9RgwjL37fOYUJkvuuzpVxWpiZQaFJHl4S+mbo
+         JP75/4JePU5fPw33guYkpDp98wX4F4b/g2GIJUdhaDXX6vzkOyMh2L9Crj2WgHGjgACZ
+         aFfuivI2c49MH3iHeaq+IcOkT7h5pINs4AxmIoFdzvvWReJVahan5zXWhLfeanKQ9CJp
+         VH2foqxXBN94dLeswyCARTwnltPFkTLnP5ugv6dqgAshQT4cjde9F2a10iGX32NLXjsE
+         6thw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=EEBuFx6DM+1Pu6CeLy6E4LdQQ3xoNoJlUQHPSG/y8jc=;
+        b=mH52aS3AqAxGqw4xw+NzIASq1dtnX410buKdrmpwPFFy+/avGbUoJ7i7p8dYnq3DQl
+         EYpr0rppLEYWzOpjHmacjRUtEoUw56X5MUcjyd4ZZRNE8/w+EzU5Yu3h4LyktDNuE+Az
+         DD0x4UQH9V88s0crxem9PGovRnYCeyMY1k+jOz/sVfrLdzegbuoLXAVtcM+t+Y47FnTi
+         sZs3dAJChJ4TOrwpCHgKN+qiV1ouZxOI6XF/d8wjvyNADxmwu2m6bvouy0BSqKVllhGl
+         5A6fZxfLZ1why6esWLAyuJo5uyG24t0KV2Bu6H0+JtCs7msElGk4Oa4y6tAfN8sNRvXU
+         b1ew==
+X-Gm-Message-State: ACgBeo2K7KjPhnlyyFDTC2Y9iJz9GPNoC3VCf+2snfNJ/UBFdJi+AwQw
+        FESx29hWaML6xt9S4NAngp5spQ==
+X-Google-Smtp-Source: AA6agR4S2pHS26I/pTJ2W21h40jn+mEA9XTUKWbHuLKprOyZ/r8KySqt1kQO6k3skaJ9VcTIPlR1jg==
+X-Received: by 2002:a17:902:ccc4:b0:156:5d37:b42f with SMTP id z4-20020a170902ccc400b001565d37b42fmr10511226ple.157.1659778860839;
+        Sat, 06 Aug 2022 02:41:00 -0700 (PDT)
+Received: from leoy-ThinkPad-X240s (173.242.120.104.16clouds.com. [173.242.120.104])
+        by smtp.gmail.com with ESMTPSA id c1-20020a056a00008100b0052d1341a2c6sm4652507pfj.177.2022.08.06.02.40.57
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sat, 06 Aug 2022 02:40:59 -0700 (PDT)
+Date:   Sat, 6 Aug 2022 17:40:55 +0800
+From:   Leo Yan <leo.yan@linaro.org>
+To:     carsten.haitzler@foss.arm.com
+Cc:     linux-kernel@vger.kernel.org, coresight@lists.linaro.org,
+        suzuki.poulose@arm.com, mathieu.poirier@linaro.org,
+        mike.leach@linaro.org, linux-perf-users@vger.kernel.org,
+        acme@kernel.org
+Subject: Re: [PATCH v5 02/14] perf test: Add CoreSight shell lib shared code
+ for future tests
+Message-ID: <20220806094055.GB124146@leoy-ThinkPad-X240s>
+References: <20220728145256.2985298-1-carsten.haitzler@foss.arm.com>
+ <20220728145256.2985298-3-carsten.haitzler@foss.arm.com>
 MIME-Version: 1.0
-In-Reply-To: <20220730030335.78203-1-yangjihong1@huawei.com>
-Content-Type: text/plain; charset="utf-8"; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-Originating-IP: [10.67.111.205]
-X-ClientProxiedBy: dggems704-chm.china.huawei.com (10.3.19.181) To
- kwepemm600003.china.huawei.com (7.193.23.202)
-X-CFilter-Loop: Reflected
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20220728145256.2985298-3-carsten.haitzler@foss.arm.com>
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-Hello,
-
-PING.
-
-Regards,
-Jihong
-.
-
-On 2022/7/30 11:03, Yang Jihong wrote:
-> Some issues are fixed based on the comments of several reviewers:
-> 1. Add '--synth task' option for record (note from Namhyung)
-> 2. Replace hard-coded initialization of nr_tracepoints with ARRAY_SIZE macro (note from Namhyung)
-> 3. Fix spelling mistake: "PRINT_TIME_UNIT_MESC_WIDTH" -> "PRINT_TIME_UNIT_MSEC_WIDTH" (note from Namhyung)
-> 4. Fix spelling mistake: "Captuer" -> "Capture" (note from Colin)
-> 5. Add some {} for multiline for/if blocks (note from Arnaldo)
+On Thu, Jul 28, 2022 at 03:52:44PM +0100, carsten.haitzler@foss.arm.com wrote:
+> From: "Carsten Haitzler (Rasterman)" <raster@rasterman.com>
 > 
-> Modifying based on the latest commit (9a0b36266f7a) at acme/perf/core:
-> git://git.kernel.org/pub/scm/linux/kernel/git/acme/linux.git perf/core
+> This adds a library of shell "code" to be shared and used by future
+> tests that target quality testing for Arm CoreSight support in perf
+> and the Linux kernel.
 > 
-> Yang Jihong (7):
->    perf kwork: Add '--synth task' option for record
->    perf kwork: Replace hard-coded initialization of nr_tracepoints with
->      ARRAY_SIZE macro
->    perf kwork: Fix spelling mistake: "Captuer" -> "Capture"
->    perf kwork: Fix spelling mistake: "PRINT_TIME_UNIT_MESC_WIDTH" ->
->      "PRINT_TIME_UNIT_MSEC_WIDTH"
->    perf kwork: Strdup function name in workqueue_work_init
->    perf kwork: Expand capacity of bpf entries
->    perf kwork: Add some {} for multiline for/if blocks
+> Signed-off-by: Carsten Haitzler <carsten.haitzler@arm.com>
+> ---
+>  tools/perf/tests/shell/lib/coresight.sh | 132 ++++++++++++++++++++++++
+>  1 file changed, 132 insertions(+)
+>  create mode 100644 tools/perf/tests/shell/lib/coresight.sh
 > 
->   tools/perf/builtin-kwork.c                 | 67 +++++++++++++---------
->   tools/perf/util/bpf_skel/kwork_trace.bpf.c |  2 +-
->   2 files changed, 40 insertions(+), 29 deletions(-)
+> diff --git a/tools/perf/tests/shell/lib/coresight.sh b/tools/perf/tests/shell/lib/coresight.sh
+> new file mode 100644
+
+Now one thing is tricky.  Since we scan sub directories, all scripts
+under the folder "tools/perf/tests/shell/lib/" are not added into the
+test list, this is because the scripts under this folder have no the
+executable (X) permission:
+
+-rw-rw-r-- 1 leoy leoy 4675 Aug  6 17:03 coresight.sh
+-rw-rw-r-- 1 leoy leoy  329 Jul 27 09:37 probe.sh
+-rw-rw-r-- 1 leoy leoy  812 Jul 27 09:37 probe_vfs_getname.sh
+
+I verified with command "perf list" and it works as expected.
+
+> index 000000000000..45a1477256b6
+> --- /dev/null
+> +++ b/tools/perf/tests/shell/lib/coresight.sh
+> @@ -0,0 +1,132 @@
+> +# SPDX-License-Identifier: GPL-2.0
+> +# Carsten Haitzler <carsten.haitzler@arm.com>, 2021
+> +
+> +# This is sourced from a driver script so no need for #!/bin... etc. at the
+> +# top - the assumption below is that it runs as part of sourcing after the
+> +# test sets up some basic env vars to say what it is.
+> +
+> +# This currently works with ETMv4 / ETF not any other packet types at thi
+> +# point. This will need changes if that changes.
+> +
+> +# perf record options for the perf tests to use
+> +PERFRECMEM="-m ,16M"
+> +PERFRECOPT="$PERFRECMEM -e cs_etm//u"
+> +
+> +TOOLS=$(dirname $0)
+> +DIR="$TOOLS/$TEST"
+> +BIN="$DIR/$TEST"
+> +# If the test tool/binary does not exist and is executable then skip the test
+> +if ! test -x "$BIN"; then exit 2; fi
+> +DATD="."
+> +# If the data dir env is set then make the data dir use that instead of ./
+> +if test -n "$PERF_TEST_CORESIGHT_DATADIR"; then
+> +	DATD="$PERF_TEST_CORESIGHT_DATADIR";
+> +fi
+> +# If the stat dir env is set then make the data dir use that instead of ./
+> +STATD="."
+> +if test -n "$PERF_TEST_CORESIGHT_STATDIR"; then
+> +	STATD="$PERF_TEST_CORESIGHT_STATDIR";
+> +fi
+> +
+> +# Called if the test fails - error code 1
+> +err() {
+> +	echo "$1"
+> +	exit 1
+> +}
+> +
+> +# Check that some statistics from our perf
+> +check_val_min() {
+> +	STATF="$4"
+> +	if test "$2" -lt "$3"; then
+> +		echo ", FAILED" >> "$STATF"
+> +		err "Sanity check number of $1 is too low ($2 < $3)"
+> +	fi
+> +}
+> +
+> +perf_dump_aux_verify() {
+> +	# Some basic checking that the AUX chunk contains some sensible data
+> +	# to see that we are recording something and at least a minimum
+> +	# amount of it. We should almost always see Fn packets in just about
+> +	# anything but certainly we will see some trace info and async
+> +	# packets
+> +	DUMP="$DATD/perf-tmp-aux-dump.txt"
+> +	perf report --stdio --dump -i "$1" | \
+> +		grep -o -e I_ATOM_F -e I_ASYNC -e I_TRACE_INFO > "$DUMP"
+> +	# Simply count how many of these packets we find to see that we are
+> +	# producing a reasonable amount of data - exact checks are not sane
+> +	# as this is a lossy process where we may lose some blocks and the
+> +	# compiler may produce different code depending on the compiler and
+> +	# optimization options, so this is rough just to see if we're
+> +	# either missing almost all the data or all of it
+> +	ATOM_FX_NUM=`grep I_ATOM_F "$DUMP" | wc -l`
+> +	ASYNC_NUM=`grep I_ASYNC "$DUMP" | wc -l`
+> +	TRACE_INFO_NUM=`grep I_TRACE_INFO "$DUMP" | wc -l`
+> +	rm -f "$DUMP"
+> +
+> +	# Arguments provide minimums for a pass
+> +	CHECK_FX_MIN="$2"
+> +	CHECK_ASYNC_MIN="$3"
+> +	CHECK_TRACE_INFO_MIN="$4"
+> +
+> +	# Write out statistics, so over time you can track results to see if
+> +	# there is a pattern - for example we have less "noisy" results that
+> +	# produce more consistent amounts of data each run, to see if over
+> +	# time any techinques to  minimize data loss are having an effect or
+> +	# not
+> +	STATF="$STATD/stats-$TEST-$DATV.csv"
+> +	if ! test -f "$STATF"; then
+> +		echo "ATOM Fx Count, Minimum, ASYNC Count, Minimum, TRACE INFO Count, Minimum" > "$STATF"
+> +	fi
+> +	echo -n "$ATOM_FX_NUM, $CHECK_FX_MIN, $ASYNC_NUM, $CHECK_ASYNC_MIN, $TRACE_INFO_NUM, $CHECK_TRACE_INFO_MIN" >> "$STATF"
+> +
+> +	# Actually check to see if we passed or failed.
+> +	check_val_min "ATOM_FX" "$ATOM_FX_NUM" "$CHECK_FX_MIN" "$STATF"
+> +	check_val_min "ASYNC" "$ASYNC_NUM" "$CHECK_ASYNC_MIN" "$STATF"
+> +	check_val_min "TRACE_INFO" "$TRACE_INFO_NUM" "$CHECK_TRACE_INFO_MIN" "$STATF"
+> +	echo ", Ok" >> "$STATF"
+> +}
+> +
+> +perf_dump_aux_tid_verify() {
+> +	# Specifically crafted test will produce a list of Tread ID's to
+> +	# stdout that need to be checked to  see that they have had trace
+> +	# info collected in AUX blocks in the perf data. This will go
+> +	# through all the TID's that are listed as CID=0xabcdef and see
+> +	# that all the Thread IDs the test tool reports are  in the perf
+> +	# data AUX chunks
+> +
+> +	# The TID test tools will print a TID per stdout line that are being
+> +	# tested
+> +	TIDS=`cat "$2"`
+> +	# Scan the perf report to find the TIDs that are actually CID in hex
+> +	# and build a list of the ones found
+> +	FOUND_TIDS=`perf report --stdio --dump -i "$1" | \
+> +			grep -o "CID=0x[0-9a-z]\+" | sed 's/CID=//g' | \
+> +			uniq | sort | uniq`
+> +	# No CID=xxx found - maybe your kernel is reporting these as
+> +	# VMID=xxx so look there
+> +	if test -z "$FOUND_TIDS"; then
+> +		FOUND_TIDS=`perf report --stdio --dump -i "$1" | \
+> +				grep -o "VMID=0x[0-9a-z]\+" | sed 's/VMID=//g' | \
+> +				uniq | sort | uniq`
+> +	fi
+
+Just note, in theory we can check perf meta data and decide if use
+VMID or CID as thread ID in the trace data.  But perf meta data doesn't
+give direct info and need to parse the "TRCIDR2" field, this would
+introduce complexity.
+
+Current approach is simple, so let's keep it.
+
+> +
+> +	# Iterate over the list of TIDs that the test says it has and find
+> +	# them in the TIDs found in the perf report
+> +	MISSING=""
+> +	for TID2 in $TIDS; do
+> +		FOUND=""
+> +		for TIDHEX in $FOUND_TIDS; do
+> +			TID=`printf "%i" $TIDHEX`
+> +			if test "$TID" -eq "$TID2"; then
+> +				FOUND="y"
+> +				break
+> +			fi
+> +		done
+> +		if test -z "$FOUND"; then
+> +			MISSING="$MISSING $TID"
+> +		fi
+> +	done
+> +	if test -n "$MISSING"; then
+> +		err "Thread IDs $MISSING not found in perf AUX data"
+> +	fi
+> +}
+
+The patch LGTM:
+
+Reviewed-by: Leo Yan <leo.yan@linaro.org>
+
+> -- 
+> 2.32.0
 > 
