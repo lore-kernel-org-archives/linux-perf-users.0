@@ -2,121 +2,195 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2EC8CC00140
-	for <linux-perf-users@archiver.kernel.org>; Fri,  5 Aug 2022 22:39:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7191FC19F29
+	for <linux-perf-users@archiver.kernel.org>; Sat,  6 Aug 2022 03:32:50 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S241367AbiHEWjf (ORCPT
+        id S238132AbiHFDco (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Fri, 5 Aug 2022 18:39:35 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45884 "EHLO
+        Fri, 5 Aug 2022 23:32:44 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46158 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S237373AbiHEWje (ORCPT
+        with ESMTP id S237545AbiHFDcm (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Fri, 5 Aug 2022 18:39:34 -0400
-Received: from mail-wm1-x335.google.com (mail-wm1-x335.google.com [IPv6:2a00:1450:4864:20::335])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C76871AF1D
-        for <linux-perf-users@vger.kernel.org>; Fri,  5 Aug 2022 15:39:33 -0700 (PDT)
-Received: by mail-wm1-x335.google.com with SMTP id 186-20020a1c02c3000000b003a34ac64bdfso2295673wmc.1
-        for <linux-perf-users@vger.kernel.org>; Fri, 05 Aug 2022 15:39:33 -0700 (PDT)
+        Fri, 5 Aug 2022 23:32:42 -0400
+Received: from mail-pj1-x1036.google.com (mail-pj1-x1036.google.com [IPv6:2607:f8b0:4864:20::1036])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3CD3219C16
+        for <linux-perf-users@vger.kernel.org>; Fri,  5 Aug 2022 20:32:40 -0700 (PDT)
+Received: by mail-pj1-x1036.google.com with SMTP id a8so4307117pjg.5
+        for <linux-perf-users@vger.kernel.org>; Fri, 05 Aug 2022 20:32:40 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20210112;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:from:to:cc;
-        bh=a4+alUb2V+A+FrnxdAfx95t0xsifhWlq+vFrSrgmIiw=;
-        b=GLKZ3acW7kyjSzl8FTgV7hTdmon7BqyPQJ9gE7JaEMFcR609IsISTVm1E2MPaaMOB2
-         bDT5IiITAqvcb/od/wDtbLYaiCF/q/CPhQqI0eAhe7tVfC73sI/hqY8ewv2ZZH4iDNy/
-         +q2EycnykKC1/E91JFv9KG312V+rrS9wpRWbr0H+Aai1ctTHKe6hViIDegmpPOL0fDOg
-         fC0hM154DKNYySj7EEkhzp1no6yVpdNJ1t4EKTw0sY0+WwOVnpx/9SvppwkVxg9pIC7Q
-         Q/U66K4J+HOeN3qfrYlHQbVGyhRsbW4PmPRoiEz4/b61aG2N4Cuzpab/ab9XCTfIeI7Y
-         CfYw==
+        d=linaro.org; s=google;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=tg4NqtSjU5XuVyDQiVNzVWf9P9SeByvm1yWNtEyxPVc=;
+        b=fxgTY/Vjxw5wi7/JasXkvEFil2jV0OHHXJTvu2o7ec0Ho6BHNtW+E2EUsOKbf0bttA
+         hmVmRa5NUSZJMpdRKaGH2Rk5vj36TkQs6xoJEiD++Nj2s6hW/eQPIVkJZEVyz6c+Ze+M
+         pVz8+6bBZTB0xFcOiaCGFwyCk9CBMoMlFo+1CFkPBSplf8B49bKcjwH+yRjVqiiqfZ3N
+         l8yU/zQPdi0+2k44KYpvDxE66e27tn5oB25bEyks/5lGKfwxVcirgK7Alz6KXt6p/qvd
+         uOVFc4nkhY5wXmkrqyiT4IGmxeqyBgcJBQfOkYpB3Z+vbRYKTOUWmu+rZsTXRGeCMaTn
+         OFKA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc;
-        bh=a4+alUb2V+A+FrnxdAfx95t0xsifhWlq+vFrSrgmIiw=;
-        b=fUruy6dI1z4Jt2rXcptNpqdSCdnozwwqqvZtjmZT40043Mwtymhy2MrJ+mfa2mOt7O
-         ARmqWJLksggaTpx0uyl6pP9E0db6ytZUSO2qJirvf52K992/13P9iWHETmQJEF51umiS
-         YZEhmAEnhObE5fXE5sJNDiYREih2enkFd4rx1D1vVxFCtgqOL3Bpqs3VC0ZmKwiEpsB7
-         zDDGe/iFu6kY4KUM7OX5zmvbXJgX6L33JcLMnJb1QlRIkRDmvvAr1j8D6nziEzP3x7IC
-         a7mJgzD4cqJTXPMPZHvF3DGsp/rkU2Wxu8k0e7OMqNM/A0t81S35PJmZd0ckaohRbtso
-         CyvA==
-X-Gm-Message-State: ACgBeo0sG+Q4c1eiQ/y74EVP1bqGta0q1lwloV51wD7Jx/jo3BQHsNyP
-        BPhqLGHow1CZroJasaY5hik6r/JAKTzCaZxHiJprdA==
-X-Google-Smtp-Source: AA6agR7AHekHXLe5no7RXaVKXf0rP2CNhnvxhSm2gC5BYXCEhjXzSalxmhI9FqE9JMTUwofhlW4WId6korNGY+Dg5C4=
-X-Received: by 2002:a05:600c:4e86:b0:3a3:417a:2fcd with SMTP id
- f6-20020a05600c4e8600b003a3417a2fcdmr6046018wmq.149.1659739172136; Fri, 05
- Aug 2022 15:39:32 -0700 (PDT)
-MIME-Version: 1.0
-References: <20220805220645.95855-1-brianrob@linux.microsoft.com>
-In-Reply-To: <20220805220645.95855-1-brianrob@linux.microsoft.com>
-From:   Ian Rogers <irogers@google.com>
-Date:   Fri, 5 Aug 2022 15:39:20 -0700
-Message-ID: <CAP-5=fVhwVcNqr+z+KfUrH1Rq=3sbrkwX3U1nZBbW6_ASVp13w@mail.gmail.com>
-Subject: Re: [PATCH v2] perf inject jit: Ignore memfd and anonymous mmap
- events if jitdump present
-To:     Brian Robbins <brianrob@linux.microsoft.com>
-Cc:     Peter Zijlstra <peterz@infradead.org>,
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=tg4NqtSjU5XuVyDQiVNzVWf9P9SeByvm1yWNtEyxPVc=;
+        b=OM0F3sa6G8iMCS8XIojkAkbSrtoHknZ+VnRv9n/aMsaq/k/5SrByWDbNimOMdI22gl
+         notze8Wd/aDkfH+389azoh5PGrFyt7sG46B2Mv6RhRtbcmOJHyVic1+0o18UQv92lJm5
+         EYVvh8fQwrMm4Tv/gnSio8qPSXcbzL3fejOwkxNVt2/DlyZy6eRJ64EKtX7hOwOEZMr5
+         nS7MYyu7/Nuq9uyTw+KyKXu9vMkMW0G5DmfqoZQKNyku8uF9qEDMnm8lGJgp7nnUmCgn
+         auID/wY1CuohvVkji0Dm3mhbUy77kZ2Di43IK0rc571lZ+16Vit+D+F3h4EkQwlSJmZV
+         xfLw==
+X-Gm-Message-State: ACgBeo0SSN+8JaYtgSbAVhKAt/KXecQrtyF0xscW5ljoR8W9zJLCdf6V
+        JeFUMwqsLM6kiz7YgLhP8uD+Vg==
+X-Google-Smtp-Source: AA6agR4M3DVrnATT7rSwbZDjb+owoi+595hWPep9TEfDL344GrMNcwwVGwVkUrASwgeEH9UqbNQ0Wg==
+X-Received: by 2002:a17:902:d2c3:b0:16e:ea56:7840 with SMTP id n3-20020a170902d2c300b0016eea567840mr9535113plc.142.1659756759202;
+        Fri, 05 Aug 2022 20:32:39 -0700 (PDT)
+Received: from localhost (ec2-18-144-7-244.us-west-1.compute.amazonaws.com. [18.144.7.244])
+        by smtp.gmail.com with ESMTPSA id y2-20020aa793c2000000b0052d27ccea39sm3986012pff.19.2022.08.05.20.32.38
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 05 Aug 2022 20:32:38 -0700 (PDT)
+From:   Leo Yan <leo.yan@linaro.org>
+To:     Arnaldo Carvalho de Melo <acme@kernel.org>,
+        Ian Rogers <irogers@google.com>,
+        Peter Zijlstra <peterz@infradead.org>,
         Ingo Molnar <mingo@redhat.com>,
-        Arnaldo Carvalho de Melo <acme@kernel.org>,
         Mark Rutland <mark.rutland@arm.com>,
         Alexander Shishkin <alexander.shishkin@linux.intel.com>,
         Jiri Olsa <jolsa@kernel.org>,
         Namhyung Kim <namhyung@kernel.org>,
-        linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+        linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org
+Cc:     Leo Yan <leo.yan@linaro.org>
+Subject: [PATCH v2] perf test: Introduce script for data symbol testing
+Date:   Sat,  6 Aug 2022 11:32:34 +0800
+Message-Id: <20220806033234.121781-1-leo.yan@linaro.org>
+X-Mailer: git-send-email 2.25.1
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-On Fri, Aug 5, 2022 at 3:06 PM Brian Robbins
-<brianrob@linux.microsoft.com> wrote:
->
-> Some processes store jitted code in memfd mappings to avoid having rwx
-> mappings.  These processes map the code with a writeable mapping and a
-> read-execute mapping.  They write the code using the writeable mapping
-> and then unmap the writeable mapping.  All subsequent execution is
-> through the read-execute mapping.
->
-> perf inject --jit ignores //anon* mappings for each process where a
-> jitdump is present because it expects to inject mmap events for each
-> jitted code range, and said jitted code ranges will overlap with the
-> //anon* mappings.
->
-> Ignore /memfd: and [anon:* mappings so that jitted code contained in
-> /memfd: and [anon:* mappings is treated the same way as jitted code
-> contained in //anon* mappings.
->
-> Signed-off-by: Brian Robbins <brianrob@linux.microsoft.com>
+This commit introduces a shell script for data symbol testing.
 
-Acked-by: Ian Rogers <irogers@google.com>
+The testing is designed a data structure with 64-byte alignment, it has
+two fields "data1" and "data2", and other fields are reserved.
 
-Thanks,
-Ian
+Using "perf mem" command, we can record and report memory samples for a
+self-contained workload with 1 second duration.  If have no any memory
+sample for the data structure "buf1", it reports failure;  and by
+checking the offset in structure "buf1", if any memory accessing is not
+for "data1" and "data2" fields, it means wrong data symbol parsing and
+returns failure.
 
-> ---
->  tools/perf/util/jitdump.c | 9 +++++++--
->  1 file changed, 7 insertions(+), 2 deletions(-)
->
-> diff --git a/tools/perf/util/jitdump.c b/tools/perf/util/jitdump.c
-> index a23255773c60..4e6632203704 100644
-> --- a/tools/perf/util/jitdump.c
-> +++ b/tools/perf/util/jitdump.c
-> @@ -845,8 +845,13 @@ jit_process(struct perf_session *session,
->         if (jit_detect(filename, pid, nsi)) {
->                 nsinfo__put(nsi);
->
-> -               // Strip //anon* mmaps if we processed a jitdump for this pid
-> -               if (jit_has_pid(machine, pid) && (strncmp(filename, "//anon", 6) == 0))
-> +               /*
-> +                * Strip //anon*, [anon:* and /memfd:* mmaps if we processed a jitdump for this pid
-> +                */
-> +               if (jit_has_pid(machine, pid) &&
-> +                       ((strncmp(filename, "//anon", 6) == 0) ||
-> +                        (strncmp(filename, "[anon:", 6) == 0) ||
-> +                        (strncmp(filename, "/memfd:", 7) == 0)))
->                         return 1;
->
->                 return 0;
-> --
-> 2.25.1
->
+Signed-off-by: Leo Yan <leo.yan@linaro.org>
+---
+
+Changes from v1:
+- Removed "killall" since the test has no child process (Ian);
+- Used "char" instead of "long" in the buf structure.
+
+ tools/perf/tests/shell/test_data_symbol.sh | 92 ++++++++++++++++++++++
+ 1 file changed, 92 insertions(+)
+ create mode 100755 tools/perf/tests/shell/test_data_symbol.sh
+
+diff --git a/tools/perf/tests/shell/test_data_symbol.sh b/tools/perf/tests/shell/test_data_symbol.sh
+new file mode 100755
+index 000000000000..d007513ecfbe
+--- /dev/null
++++ b/tools/perf/tests/shell/test_data_symbol.sh
+@@ -0,0 +1,92 @@
++#!/bin/bash
++# Test data symbol
++
++# SPDX-License-Identifier: GPL-2.0
++# Leo Yan <leo.yan@linaro.org>, 2022
++
++skip_if_no_mem_event() {
++	perf mem record -e list 2>&1 | egrep -q 'available' && return 0
++	return 2
++}
++
++skip_if_no_mem_event || exit 2
++
++# skip if there's no compiler
++if ! [ -x "$(command -v cc)" ]; then
++	echo "skip: no compiler, install gcc"
++	exit 2
++fi
++
++TEST_PROGRAM_SOURCE=$(mktemp /tmp/__perf_test.program.XXXXX.c)
++TEST_PROGRAM=$(mktemp /tmp/__perf_test.program.XXXXX)
++PERF_DATA=$(mktemp /tmp/__perf_test.perf.data.XXXXX)
++
++check_result() {
++	# The memory report format is as below:
++	#    99.92%  ...  [.] buf1+0x38  ...
++	result=$(perf mem report -i ${PERF_DATA} --stdio 2>&1 | egrep "buf1" | \
++		awk '{ for (i = 1; i <= NF; i++) { if ($i ~ /^buf1/) { print $i; break; } } }')
++
++	# Testing is failed if has no any sample for "buf1"
++	[ -z "$result" ] && return 1
++
++	while IFS= read -r line; do
++		# The "data1" and "data2" fields in structure "buf1" have
++		# offset "0x0" and "0x38", returns failure if detect any
++		# other offset value.
++		if [ "$line" != "buf1+0x0" ] && [ "$line" != "buf1+0x38" ]; then
++			return 1
++		fi
++	done <<< "$result"
++
++	return 0
++}
++
++cleanup_files()
++{
++	echo "Cleaning up files..."
++	rm -f ${PERF_DATA}
++	rm -f ${TEST_PROGRAM_SOURCE}
++	rm -f ${TEST_PROGRAM}
++}
++
++trap cleanup_files exit term int
++
++# compile test program
++cat << EOF > $TEST_PROGRAM_SOURCE
++#include <stdio.h>
++#include <stdlib.h>
++#include <unistd.h>
++
++typedef struct _buf {
++	char data1;
++	char reserved[55];
++	char data2;
++} buf __attribute__((aligned(64)));
++
++static buf buf1;
++
++int main() {
++	int i;
++	for (;;) {
++		buf1.data1++;
++		buf1.data2 += buf1.data1;
++	}
++	return 0;
++}
++EOF
++
++echo "Compiling test program..."
++cc $TEST_PROGRAM_SOURCE -o $TEST_PROGRAM || exit 1
++
++echo "Recording workload..."
++perf mem record --all-user -o ${PERF_DATA} -- $TEST_PROGRAM &
++PERFPID=$!
++
++sleep 1
++
++kill $PERFPID
++wait $PERFPID
++
++check_result
++exit $?
+-- 
+2.25.1
+
