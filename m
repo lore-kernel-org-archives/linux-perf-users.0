@@ -2,39 +2,40 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6568FC19F2A
-	for <linux-perf-users@archiver.kernel.org>; Sun,  7 Aug 2022 15:56:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 71E4AC25B06
+	for <linux-perf-users@archiver.kernel.org>; Sun,  7 Aug 2022 16:03:07 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233475AbiHGP4O (ORCPT
+        id S234414AbiHGQDG (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Sun, 7 Aug 2022 11:56:14 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52756 "EHLO
+        Sun, 7 Aug 2022 12:03:06 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56254 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229616AbiHGP4M (ORCPT
+        with ESMTP id S234222AbiHGQDF (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Sun, 7 Aug 2022 11:56:12 -0400
-Received: from bg5.exmail.qq.com (bg4.exmail.qq.com [43.154.54.12])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A274A64F7;
-        Sun,  7 Aug 2022 08:56:09 -0700 (PDT)
-X-QQ-mid: bizesmtp86t1659887760t21is6qe
+        Sun, 7 Aug 2022 12:03:05 -0400
+Received: from bg5.exmail.qq.com (unknown [43.155.67.158])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2B4D464EA;
+        Sun,  7 Aug 2022 09:03:03 -0700 (PDT)
+X-QQ-mid: bizesmtp83t1659888167tbvqfw97
 Received: from localhost.localdomain ( [182.148.15.41])
         by bizesmtp.qq.com (ESMTP) with 
-        id ; Sun, 07 Aug 2022 23:55:50 +0800 (CST)
-X-QQ-SSF: 0100000000200040B000B00A0000000
-X-QQ-FEAT: 8eavv92r+Yk86VBS8z+mamh7NMEuMvA6ldeTh4eDuX8TkXKUdq+Xsv0/DRfgz
-        jeL1o0TI1Hp7NmkgYxOK9xcKkskwF0KGZypLwvB9bTBuHrbv9VwiH40EzqkYhQgolm1lSmj
-        4DiiSU7/1L4U06nweWfhdkx+u662T3AUI3KUqmRYr3bkHj9fju6/Uc0CEDFSwhSTRsiOUUJ
-        9K2EDRFWBflULmEh3JlYvbCbK9d1+rdWzTTikS+0tTDP9CZ2p7191pBsXPmgEWlE16oXvmV
-        TgT0zPwB7hXX0I3l1xOEZrFPzI7dCt1t9uWHIkDn/bi2VBCLnDPF+SfHFbXU60aQ1FzwBDv
-        GR2pLIRB85/Uett3wK8Fu/ys/vjwyt/2eDcvaY+Bo7ExokuRhMKd1mjXzLbOA==
+        id ; Mon, 08 Aug 2022 00:02:43 +0800 (CST)
+X-QQ-SSF: 0100000000000040B000000A0000000
+X-QQ-FEAT: AmBEVSWWrMca1Gv19HfFCsafPdV2RRaBAFQrEm5BmZmWHz0Cjx1IMB3HjWkSP
+        2p5HUAJcBG5VRbOM2AI1vf3WiTaxFWZ2yDncZcF/hhV87IgGIAVXTaPFOvSlCiEBASlg3nO
+        Xwue8NDPacJW4sMlqI+an7lNTK4gAZ9lHmrVjgrwG5PykXTPtjkj8bGj2NgIMxpou1pMNDT
+        Izt/6ibwmUevmzfZjZ/Ztu4a2dEkYGjb9vGHIW4CPnwNzFlgSkZDRRlwiPbPYrx3+MywlDN
+        lSh91wti9XdIb3eR6uc+nY6q3JOYNQ0umBo0iOIvlu/GqsBWc52PmJD1vmD+TKHnb+5CCPU
+        O3UOW+Jzt2KxCb/G6F4ant/C0LIsg==
 X-QQ-GoodBg: 0
 From:   shaomin Deng <dengshaomin@cdjrlc.com>
 To:     peterz@infradead.org, mingo@redhat.com, acme@kernel.org,
         linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
-Cc:     mark.rutland@arm.com, shaomin Deng <dengshaomin@cdjrlc.com>
-Subject: [PATCH] perf tools: Fix typo in comments
-Date:   Sun,  7 Aug 2022 11:55:49 -0400
-Message-Id: <20220807155549.30953-1-dengshaomin@cdjrlc.com>
+Cc:     mark.rutland@arm.com, alexander.shishkin@linux.intel.com,
+        shaomin Deng <dengshaomin@cdjrlc.com>
+Subject: [PATCH] perf scripting python: Delete repeated word in comments
+Date:   Sun,  7 Aug 2022 12:02:39 -0400
+Message-Id: <20220807160239.474-1-dengshaomin@cdjrlc.com>
 X-Mailer: git-send-email 2.35.1
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
@@ -44,26 +45,27 @@ Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-Delete the repeated word "to" in comments.
+Delete the repeated word "into" in comments.
 
 Signed-off-by: shaomin Deng <dengshaomin@cdjrlc.com>
 ---
- tools/perf/util/events_stats.h | 2 +-
+ tools/perf/util/scripting-engines/trace-event-python.c | 2 +-
  1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/tools/perf/util/events_stats.h b/tools/perf/util/events_stats.h
-index 1b0006092265..040ab9d0a803 100644
---- a/tools/perf/util/events_stats.h
-+++ b/tools/perf/util/events_stats.h
-@@ -22,7 +22,7 @@
-  *
-  * The total_period is needed because by default auto-freq is used, so
-  * multiplying nr_events[PERF_EVENT_SAMPLE] by a frequency isn't possible to get
-- * the total number of low level events, it is necessary to to sum all struct
-+ * the total number of low level events, it is necessary to sum all struct
-  * perf_record_sample.period and stash the result in total_period.
+diff --git a/tools/perf/util/scripting-engines/trace-event-python.c b/tools/perf/util/scripting-engines/trace-event-python.c
+index adba01b7d9dd..107aeccbae30 100644
+--- a/tools/perf/util/scripting-engines/trace-event-python.c
++++ b/tools/perf/util/scripting-engines/trace-event-python.c
+@@ -131,7 +131,7 @@ static void handler_call_die(const char *handler_name)
+ }
+ 
+ /*
+- * Insert val into into the dictionary and decrement the reference counter.
++ * Insert val into the dictionary and decrement the reference counter.
+  * This is necessary for dictionaries since PyDict_SetItemString() does not
+  * steal a reference, as opposed to PyTuple_SetItem().
   */
- struct events_stats {
 -- 
 2.35.1
+
 
