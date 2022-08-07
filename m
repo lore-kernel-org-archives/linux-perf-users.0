@@ -2,137 +2,107 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 73224C19F2A
-	for <linux-perf-users@archiver.kernel.org>; Sun,  7 Aug 2022 05:44:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B0394C19F2A
+	for <linux-perf-users@archiver.kernel.org>; Sun,  7 Aug 2022 05:49:01 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231593AbiHGFoN (ORCPT
+        id S231888AbiHGFtA (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Sun, 7 Aug 2022 01:44:13 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53242 "EHLO
+        Sun, 7 Aug 2022 01:49:00 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55596 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231389AbiHGFoM (ORCPT
+        with ESMTP id S229557AbiHGFs7 (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Sun, 7 Aug 2022 01:44:12 -0400
-Received: from mail-pj1-x102a.google.com (mail-pj1-x102a.google.com [IPv6:2607:f8b0:4864:20::102a])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5978A1054D
-        for <linux-perf-users@vger.kernel.org>; Sat,  6 Aug 2022 22:44:11 -0700 (PDT)
-Received: by mail-pj1-x102a.google.com with SMTP id a8so6134797pjg.5
-        for <linux-perf-users@vger.kernel.org>; Sat, 06 Aug 2022 22:44:11 -0700 (PDT)
+        Sun, 7 Aug 2022 01:48:59 -0400
+Received: from mail-pl1-x630.google.com (mail-pl1-x630.google.com [IPv6:2607:f8b0:4864:20::630])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0CA0BB1FF
+        for <linux-perf-users@vger.kernel.org>; Sat,  6 Aug 2022 22:48:59 -0700 (PDT)
+Received: by mail-pl1-x630.google.com with SMTP id o3so5976169ple.5
+        for <linux-perf-users@vger.kernel.org>; Sat, 06 Aug 2022 22:48:59 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
         h=date:from:to:cc:subject:message-id:references:mime-version
          :content-disposition:in-reply-to;
-        bh=qEhg68YRniOXq5BKbBv0ex6VPSZORGkaXrhNztya/B4=;
-        b=Sc/8ey8sZqSGNmWo+eLf/3NzmUldsolv4qWckQyNaayzHsb6V1U0BfsibytFHJcmap
-         o1jMrIcLe6YwSHIL2Wl6iFXtsCHRLgYJ4wpNHIa828eloffF8bxv3SP4CWIbWYwSmFZE
-         noR5YSbnGq3p+qjh5Pn3xU95ezQkXeq82bBxxat4jeQE+LTBXQ4Z9TLF3CyGbUAGmtBN
-         TWynf9Tx9IEs3Q7pSpcucjqL5YWyJ778edLMEjTAt7kzqre6pp/+92pPYoa5p6Zd7YCi
-         dqIwuhfsGRDFApLJb70gSNilRL8i2UODj60nTr51ygmx+HcXnoIhzIKohPdSRi/XeQ97
-         TpyA==
+        bh=KZGw1PnHsXxrYwCyXKBLZGs4Yl0JJ1Too94jRTJKoa0=;
+        b=k9ieTByRp257nB1pQB06VrPzSLeXQtwbFMtklYPxezobo1Fzoio1z4Zey8sfGgRNh+
+         RADp322TENPrOh3/Q4k2X6EXQb4L6dLLQaNPN8Lc03Ong+0bWKvB02zW5TNiM3WJ8SpW
+         eapJLPKPc2ab6wgblIY04RPHORohLCj3qS7pHUpija1zz6uXSOF35j2gVtaqDQXeLffj
+         49maLAboTYsCRRCtj/9RpVHtWcT1F+hcYZmHYng5SZsQhZSP8dwhDo/oeNhd3saQmIVN
+         2V1sKz89Qv9aFr0VSj26+AI/b6rPR3w5Asa/gWDk4XgaiDdWZkYdlTvXCngpzNjUvhQ5
+         BZ5A==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
          :mime-version:content-disposition:in-reply-to;
-        bh=qEhg68YRniOXq5BKbBv0ex6VPSZORGkaXrhNztya/B4=;
-        b=o84t9Yzj9FzF4iL39t4OqSXdQFjO1P4X4al6FSwKJyA8bb6phGigwMAtKc29rDEvmc
-         wNOHBWezHP68lzIlr0CJUSKxNYkIQnU2ht6Oi7FUOgSgmPQUwxxhKpQtkZYtj2hrmF/r
-         fxZLjbEW7zNQkPbIitGpAjFxv+Dzfr1nHON9YuxtznNGECGuY/kIwTC/jPa+4OeQVBvL
-         HnfkZ0K/Ndv8f3q6p75Z/XTzho7u713bEdf5CEoCG7bzyPBYwnlLWWPgT1VE/XaiPlXJ
-         BTm0pc3tiz//uVElJrugjXBM0L4wOZqqwMFXUSS3Fp0iUZRmuM5OENI29sEDrnMuguUa
-         ZEag==
-X-Gm-Message-State: ACgBeo1jpRxvBpfondp5iPozGecVWg8njCiG5imf+nYfFaOF6iadh+zA
-        jL1Ep/f2vLAi4nfq0bgY20xagQ==
-X-Google-Smtp-Source: AA6agR7hx420YhP8MRZ2DGDvVzPLjRztAOnOEBMxZgU3XCasqf7UjkBrUstin0r2QxYJ8IVTMYClOw==
-X-Received: by 2002:a17:90a:c58e:b0:1f3:1ab5:22ae with SMTP id l14-20020a17090ac58e00b001f31ab522aemr23684577pjt.45.1659851050706;
-        Sat, 06 Aug 2022 22:44:10 -0700 (PDT)
+        bh=KZGw1PnHsXxrYwCyXKBLZGs4Yl0JJ1Too94jRTJKoa0=;
+        b=1X+fRuDYDPmnYTYSroR2FjGNqiWFGlEYCRbrS5EHUibUsSlto2OLK3cxTdN7rlbYtm
+         yJUSgqQAinnY7hPjIFVYtV3aU+RFcEuEi8tWK6dAs0txe91m398qZJEgOaHj/LBMAtPM
+         zLDWxl22DR6VqSKO7eUvznBXXGVGgkOY4XjqQ5wlCIhhAqoMNT24fVuqXWyJpR7eouka
+         Nb8RtS3g6abPMrBQ6fS2gR7NkZ2ZOyZqQTUvMR4wUuPP3Jwb7TCTCUXriPbZ3Q5Zm6iV
+         sCtmf0P/GgsM6qmmLBlQAU/hII7EIjk3/8KRBZJnHPdfBJPocXmV93em8xO+P/mg1qbh
+         opAg==
+X-Gm-Message-State: ACgBeo0KYSwWfP1MO5Gcv8I0dEpX8uTqJ2Eq8WGgjhh/Yxjwr1oJ37ym
+        IwPs4mGak01aSzOIoZgSyOKaSA==
+X-Google-Smtp-Source: AA6agR65OvLjWIiqwaCVUlT0OrSK6YQzHH7bKQz1av2dopEKBoPbdOgfedcQT/OlrFhLK8W6lw80Mw==
+X-Received: by 2002:a17:90b:681:b0:1f2:147a:5e55 with SMTP id m1-20020a17090b068100b001f2147a5e55mr15175599pjz.159.1659851338432;
+        Sat, 06 Aug 2022 22:48:58 -0700 (PDT)
 Received: from leoy-ThinkPad-X240s (173.242.120.104.16clouds.com. [173.242.120.104])
-        by smtp.gmail.com with ESMTPSA id o16-20020a170902d4d000b0015e8d4eb2easm5977893plg.308.2022.08.06.22.44.08
+        by smtp.gmail.com with ESMTPSA id ie9-20020a17090b400900b001f327021900sm5604846pjb.1.2022.08.06.22.48.56
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sat, 06 Aug 2022 22:44:10 -0700 (PDT)
-Date:   Sun, 7 Aug 2022 13:44:06 +0800
+        Sat, 06 Aug 2022 22:48:58 -0700 (PDT)
+Date:   Sun, 7 Aug 2022 13:48:54 +0800
 From:   Leo Yan <leo.yan@linaro.org>
 To:     carsten.haitzler@foss.arm.com
 Cc:     linux-kernel@vger.kernel.org, coresight@lists.linaro.org,
         suzuki.poulose@arm.com, mathieu.poirier@linaro.org,
         mike.leach@linaro.org, linux-perf-users@vger.kernel.org,
         acme@kernel.org
-Subject: Re: [PATCH v5 12/14] perf test: Add unroll thread test shell script
-Message-ID: <20220807054406.GJ34254@leoy-ThinkPad-X240s>
+Subject: Re: [PATCH v5 13/14] perf test: Add git ignore for tmp and output
+ files of CoreSight tests
+Message-ID: <20220807054854.GK34254@leoy-ThinkPad-X240s>
 References: <20220728145256.2985298-1-carsten.haitzler@foss.arm.com>
- <20220728145256.2985298-13-carsten.haitzler@foss.arm.com>
+ <20220728145256.2985298-14-carsten.haitzler@foss.arm.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20220728145256.2985298-13-carsten.haitzler@foss.arm.com>
+In-Reply-To: <20220728145256.2985298-14-carsten.haitzler@foss.arm.com>
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-On Thu, Jul 28, 2022 at 03:52:54PM +0100, carsten.haitzler@foss.arm.com wrote:
+On Thu, Jul 28, 2022 at 03:52:55PM +0100, carsten.haitzler@foss.arm.com wrote:
 > From: "Carsten Haitzler (Rasterman)" <raster@rasterman.com>
 > 
-> This adds scripts to drive the unroll thread tests to compare perf
-> output against a minimum bar of content/quality.
+> Ignore other output files of the new CoreSight tests so they don't
+> fill git status with noise we don't need or want.
 > 
 > Signed-off-by: Carsten Haitzler <carsten.haitzler@arm.com>
-> ---
->  .../shell/coresight/unroll_loop_thread_10.sh   | 18 ++++++++++++++++++
->  1 file changed, 18 insertions(+)
->  create mode 100755 tools/perf/tests/shell/coresight/unroll_loop_thread_10.sh
-> 
-> diff --git a/tools/perf/tests/shell/coresight/unroll_loop_thread_10.sh b/tools/perf/tests/shell/coresight/unroll_loop_thread_10.sh
-> new file mode 100755
-> index 000000000000..f48c85230b15
-> --- /dev/null
-> +++ b/tools/perf/tests/shell/coresight/unroll_loop_thread_10.sh
-> @@ -0,0 +1,18 @@
-> +#!/bin/sh -e
-> +# CoreSight / Unroll Loop Thread 10
-> +
-> +# SPDX-License-Identifier: GPL-2.0
-> +# Carsten Haitzler <carsten.haitzler@arm.com>, 2021
-> +
-> +TEST="unroll_loop_thread"
-> +. $(dirname $0)/../lib/coresight.sh
-> +ARGS="10"
-> +DATV="10"
-> +DATA="$DATD/perf-$TEST-$DATV.data"
-> +
-> +perf record $PERFRECOPT -o "$DATA" "$BIN" $ARGS
-> +
-> +perf_dump_aux_verify "$DATA" 10 10 10
-
-Just minor comments for checking the trace data quality:
-
-The unroll program loops for 10000 times per thread, and this test
-creates 10 threads; so if we pass the parameter "10 10 10" for
-perf_dump_aux_verify, seems to me this is very conservative?
-
-I would like hear Mike's opinion for these quality metrics; the
-patch itself is fine for me, you could add my review tag:
 
 Reviewed-by: Leo Yan <leo.yan@linaro.org>
 
-
-P.s. it's off-topic, just want to remind to use the "b4" tool when you
-spin for next version's patch set, e.g. you could use below commands:
-
-  $ b4 am 20220728145256.2985298-1-carsten.haitzler@foss.arm.com
-            ^
-            ` I get the message ID from the page:
-              https://lore.kernel.org/lkml/20220728145256.2985298-1-carsten.haitzler@foss.arm.com/
-  $ git am ./v5_20220728_carsten_haitzler_a_patch_series_improving_data_quality_of_perf_test_for_coresight.mbx
-
-We can benefit from this due "b4" can automatically append tags in
-patches; this can help us to track which patches have been reviewed
-and tested in previous versions.
-
-Thanks,
-Leo
-
-> +
-> +err=$?
-> +exit $err
+> ---
+>  tools/perf/.gitignore | 2 ++
+>  1 file changed, 2 insertions(+)
+> 
+> diff --git a/tools/perf/.gitignore b/tools/perf/.gitignore
+> index faa23b5d32f5..a653311d9693 100644
+> --- a/tools/perf/.gitignore
+> +++ b/tools/perf/.gitignore
+> @@ -22,6 +22,7 @@ perf-archive
+>  perf-iostat
+>  tags
+>  TAGS
+> +stats-*.csv
+>  cscope*
+>  config.mak
+>  config.mak.autogen
+> @@ -29,6 +30,7 @@ config.mak.autogen
+>  *-flex.*
+>  *.pyc
+>  *.pyo
+> +*.stdout
+>  .config-detected
+>  util/intel-pt-decoder/inat-tables.c
+>  arch/*/include/generated/
 > -- 
 > 2.32.0
 > 
