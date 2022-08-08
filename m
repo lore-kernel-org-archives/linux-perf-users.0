@@ -2,80 +2,127 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 05CADC00140
-	for <linux-perf-users@archiver.kernel.org>; Mon,  8 Aug 2022 21:22:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CA1E7C00140
+	for <linux-perf-users@archiver.kernel.org>; Mon,  8 Aug 2022 21:55:53 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S236234AbiHHVWg (ORCPT
+        id S244331AbiHHVzw (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Mon, 8 Aug 2022 17:22:36 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50356 "EHLO
+        Mon, 8 Aug 2022 17:55:52 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41696 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S234943AbiHHVWf (ORCPT
+        with ESMTP id S238737AbiHHVzv (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Mon, 8 Aug 2022 17:22:35 -0400
-Received: from mail-ot1-f42.google.com (mail-ot1-f42.google.com [209.85.210.42])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 011321834C;
-        Mon,  8 Aug 2022 14:22:33 -0700 (PDT)
-Received: by mail-ot1-f42.google.com with SMTP id p22-20020a9d6956000000b00636a088b2aeso7302256oto.9;
-        Mon, 08 Aug 2022 14:22:33 -0700 (PDT)
+        Mon, 8 Aug 2022 17:55:51 -0400
+Received: from mail-oa1-f48.google.com (mail-oa1-f48.google.com [209.85.160.48])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 986AF264E;
+        Mon,  8 Aug 2022 14:55:50 -0700 (PDT)
+Received: by mail-oa1-f48.google.com with SMTP id 586e51a60fabf-10ec41637b3so12043832fac.4;
+        Mon, 08 Aug 2022 14:55:50 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
         h=cc:to:subject:message-id:date:from:in-reply-to:references
          :mime-version:x-gm-message-state:from:to:cc;
-        bh=2dB/oWE41ZJoWC2gckJ+2Ap55kUOeESrqQysvusxcqE=;
-        b=QcpD0L830z/1w8+FStFnP87paauOFNJwJznBqJyei6aDn1F1C7XMNmnqWdKrWx6nSL
-         IFM0lYymV03qvHq0Ly1DlK3V0a2Xm1EhYY49ucQnLaHSRZYFli+hfBPMVnTzhbw60WaV
-         hFnUzqHTh3Trtk3oId6Iw8CDpceUTQltTyVtreDXPxv5XC7MHoAzQE59MPgXcQExSnMJ
-         IE1He/ghPKvJfXih/4EI5kCvDLs2TRsI4403xlIkBxe1q13YirnXHhVQWfpAAaXR1m9h
-         HKj9w4V2bfsUtLVmk8cuqmOlGwlW/zzWGd3BUUpgXsb1KrhXn2jvr8DHXz7vOYvZ027+
-         vxaA==
-X-Gm-Message-State: ACgBeo3OZs5fNwl9h10W9HvVZZ3DNXG1/YDfrI52xMfuuDlE3cqFwKEe
-        fA4z2j3E2V0Mw4SaPSSgGt8APUSLf0ghX6UKhCg=
-X-Google-Smtp-Source: AA6agR51c7YU1mfiHlZXfXJvCCfMUOK65nmX34uBneWzZxoN8c11sqBGleUTGaoSUZxlTxPspoyA9sFGpVP5mMSDmYA=
-X-Received: by 2002:a05:6830:6388:b0:61c:80a9:d5b6 with SMTP id
- ch8-20020a056830638800b0061c80a9d5b6mr7658767otb.124.1659993753257; Mon, 08
- Aug 2022 14:22:33 -0700 (PDT)
+        bh=YMM16MbCFLtKN+/DJnf0CX9M13gA/YQhzSl0zvJPDe4=;
+        b=qLSn7nKuSF+OMpDBFof6q/rYWu88ZtHpDSeKPgW7VdGUc4uTUWzNy57OHLbKBtVp8U
+         lvPCnMM1zEgpjwNgdJgFPwLQD/JHExC0OeIu/zu9jgcVxiRmOquDvqBc5oYmcTJKRwTs
+         FgFJ0bs4oc06GI9+VXEGG2H3ccGKukpXK0Ulm9ENybljuBTShyePUd4OM7u4QMlE5rtK
+         +jpXjEKVNJoSlsnUvNcSpAVbDIOlQBQlzdmP0UyqZ1vIlAy/SccUwi9WXC+XO51YKNXy
+         tJErX5uQ8BtmJho3UHk0NPPrwcrlb+lQiYMTlWnQTW0Lbo1P7ky40Go0EixVLZpCyMeE
+         7Zkg==
+X-Gm-Message-State: ACgBeo0fUxrjjUOLpgknTpT+qI2QT7NsFhWNw7YXRy96y3npCN39t/pI
+        4WA3DhN/BZsrAmMf0+6Fo1JsWi35fa/Ct4qGRVQ=
+X-Google-Smtp-Source: AA6agR7axXUFueNjegLyLSeyiAPEMqpegVipvTDZ1g/rWbmH0x8Ux7rC5CeehG+IvbK+WQ+f3D+39eT7/8lvRIEX76g=
+X-Received: by 2002:a05:6870:5b84:b0:10c:d1fa:2f52 with SMTP id
+ em4-20020a0568705b8400b0010cd1fa2f52mr9573010oab.92.1659995749780; Mon, 08
+ Aug 2022 14:55:49 -0700 (PDT)
 MIME-Version: 1.0
-References: <20220808092408.107399-1-yangjihong1@huawei.com>
-In-Reply-To: <20220808092408.107399-1-yangjihong1@huawei.com>
+References: <20220805200105.2020995-1-irogers@google.com>
+In-Reply-To: <20220805200105.2020995-1-irogers@google.com>
 From:   Namhyung Kim <namhyung@kernel.org>
-Date:   Mon, 8 Aug 2022 14:22:22 -0700
-Message-ID: <CAM9d7cj3HcijAz_C1Y-u87H4XXeR4zW2TFQOxhmSjMuTqHQAzA@mail.gmail.com>
-Subject: Re: [PATCH 0/2] perf kvm/sched: Use strstarts instead of strncmp to
- match subcommands
-To:     Yang Jihong <yangjihong1@huawei.com>
+Date:   Mon, 8 Aug 2022 14:55:38 -0700
+Message-ID: <CAM9d7chPmvnjUicvjVpaHjpiNXvQLPjfx+ZasENxbg1+s54j+Q@mail.gmail.com>
+Subject: Re: [PATCH v7 0/2] JSON output for perf stat
+To:     Ian Rogers <irogers@google.com>
 Cc:     Peter Zijlstra <peterz@infradead.org>,
         Ingo Molnar <mingo@redhat.com>,
         Arnaldo Carvalho de Melo <acme@kernel.org>,
         Mark Rutland <mark.rutland@arm.com>,
         Alexander Shishkin <alexander.shishkin@linux.intel.com>,
         Jiri Olsa <jolsa@kernel.org>,
+        Kan Liang <kan.liang@linux.intel.com>,
+        Zhengjun Xing <zhengjun.xing@linux.intel.com>,
+        Sandipan Das <sandipan.das@amd.com>,
+        Claire Jensen <cjense@google.com>, Alyssa Ross <hi@alyssa.is>,
+        Like Xu <likexu@tencent.com>,
+        James Clark <james.clark@arm.com>,
+        Florian Fischer <florian.fischer@muhq.space>,
+        linux-kernel <linux-kernel@vger.kernel.org>,
         linux-perf-users <linux-perf-users@vger.kernel.org>,
-        linux-kernel <linux-kernel@vger.kernel.org>
+        Claire Jensen <clairej735@gmail.com>,
+        Stephane Eranian <eranian@google.com>
 Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-Hello,
+Hi Ian,
 
-On Mon, Aug 8, 2022 at 2:27 AM Yang Jihong <yangjihong1@huawei.com> wrote:
+On Fri, Aug 5, 2022 at 1:01 PM Ian Rogers <irogers@google.com> wrote:
 >
-> Yang Jihong (2):
->   perf kvm: Fix subcommand matching error
->   perf sched latency: Fix subcommand matching error
+> Parsing the CSV or text output of perf stat can be problematic when
+> new output is added (columns in CSV format). JSON names values and
+> simplifies the job of parsing. Add a JSON output option to perf-stat
+> then add unit test that parses and validates the output.
+>
+> This is a resend of two v2 patches:
+> https://lore.kernel.org/lkml/20210813220754.2104922-1-cjense@google.com/
+> https://lore.kernel.org/lkml/20210813220936.2105426-1-cjense@google.com/
+> with a few formatting changes and improvements to the linter.
+>
+> v7. Weakens a test and adds a Makefile.perf change Suggested-by:
+>     Arnaldo Carvalho de Melo <acme@kernel.org>.
+>
+> v6. Is a rebase.
+>
+> v5. Drops the merged CSV check, fixes a json test issue found by
+>     Arnaldo and a typo.
+>
+> v4. Does some minor fixes to the json linter.
+>
+> v3. There is some tidy up of CSV code including a potential memory
+>     over run in the os.nfields set up caught by sanitizers. To
+>     facilitate this an AGGR_MAX value is added. v3 also adds the CSV
+>     testing.
+>
+> v2. Fixes the system wide no aggregation test to not run if the
+>     paranoia is wrong. It also makes the counter-value check handle
+>     the "<not counted>" and "<not supported>" cases.
+>
+> Claire Jensen (2):
+>   perf stat: Add JSON output option
+>   perf test: Json format checking
+
+I'd really like to clean up the perf stat output code as it's already hard
+to deal with..  Let me do that after adding this.  So,
 
 Acked-by: Namhyung Kim <namhyung@kernel.org>
 
 Thanks,
 Namhyung
 
-
 >
->  tools/perf/builtin-kvm.c   | 8 ++++----
->  tools/perf/builtin-sched.c | 2 +-
->  2 files changed, 5 insertions(+), 5 deletions(-)
+>  tools/perf/Documentation/perf-stat.txt        |  21 +
+>  tools/perf/Makefile.perf                      |   3 +-
+>  tools/perf/builtin-stat.c                     |   6 +
+>  .../tests/shell/lib/perf_json_output_lint.py  |  96 +++++
+>  tools/perf/tests/shell/stat+json_output.sh    | 147 +++++++
+>  tools/perf/util/stat-display.c                | 383 +++++++++++++-----
+>  tools/perf/util/stat.c                        |   1 +
+>  tools/perf/util/stat.h                        |   2 +
+>  8 files changed, 552 insertions(+), 107 deletions(-)
+>  create mode 100644 tools/perf/tests/shell/lib/perf_json_output_lint.py
+>  create mode 100755 tools/perf/tests/shell/stat+json_output.sh
 >
 > --
-> 2.30.GIT
+> 2.37.1.559.g78731f0fdb-goog
 >
