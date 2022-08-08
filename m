@@ -2,127 +2,109 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CA1E7C00140
-	for <linux-perf-users@archiver.kernel.org>; Mon,  8 Aug 2022 21:55:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 65736C00140
+	for <linux-perf-users@archiver.kernel.org>; Mon,  8 Aug 2022 22:36:57 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S244331AbiHHVzw (ORCPT
+        id S244647AbiHHWgy (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Mon, 8 Aug 2022 17:55:52 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41696 "EHLO
+        Mon, 8 Aug 2022 18:36:54 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59872 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S238737AbiHHVzv (ORCPT
+        with ESMTP id S244727AbiHHWgp (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Mon, 8 Aug 2022 17:55:51 -0400
-Received: from mail-oa1-f48.google.com (mail-oa1-f48.google.com [209.85.160.48])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 986AF264E;
-        Mon,  8 Aug 2022 14:55:50 -0700 (PDT)
-Received: by mail-oa1-f48.google.com with SMTP id 586e51a60fabf-10ec41637b3so12043832fac.4;
-        Mon, 08 Aug 2022 14:55:50 -0700 (PDT)
+        Mon, 8 Aug 2022 18:36:45 -0400
+Received: from mail-wr1-x434.google.com (mail-wr1-x434.google.com [IPv6:2a00:1450:4864:20::434])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3F557192AA
+        for <linux-perf-users@vger.kernel.org>; Mon,  8 Aug 2022 15:36:44 -0700 (PDT)
+Received: by mail-wr1-x434.google.com with SMTP id z17so12418618wrq.4
+        for <linux-perf-users@vger.kernel.org>; Mon, 08 Aug 2022 15:36:44 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20210112;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :mime-version:from:to:cc;
+        bh=/fYTKzN+KmvOSZAeaqzQF8kkx1WjOkaE4GNtbDr+tPk=;
+        b=Vr5qowAorj5TI6twxK5U4r9o5FwteExAaQhfkv+S+M0dHD0Io29z8SVBIjpMcIJfjE
+         /TF851kO0Apf5Dq53MgrZ9SQdY+zQR1p9X+SiI1cJAR1RR269aIcPg2cLNI2HF3CeWX2
+         CvDICXsV76mcG7g5WCOiCVLI1FcjwKSNcFNRb8WP/IajpQII3+8htbkFAAxzmNN2/173
+         FonX7HiozmAha7Xe4rkjUZu7lP3IXaHG0aC4QbTS8pFGl3g/g/FBjMzTpyCGsf1bSOoA
+         kQoj3hGvA3E8L5jBOq5LgjlQI0m1Ygf2SDHpHyUKVawH9OuJ10N1geuGrIlJV6lVCEDy
+         JknA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :mime-version:x-gm-message-state:from:to:cc;
-        bh=YMM16MbCFLtKN+/DJnf0CX9M13gA/YQhzSl0zvJPDe4=;
-        b=qLSn7nKuSF+OMpDBFof6q/rYWu88ZtHpDSeKPgW7VdGUc4uTUWzNy57OHLbKBtVp8U
-         lvPCnMM1zEgpjwNgdJgFPwLQD/JHExC0OeIu/zu9jgcVxiRmOquDvqBc5oYmcTJKRwTs
-         FgFJ0bs4oc06GI9+VXEGG2H3ccGKukpXK0Ulm9ENybljuBTShyePUd4OM7u4QMlE5rtK
-         +jpXjEKVNJoSlsnUvNcSpAVbDIOlQBQlzdmP0UyqZ1vIlAy/SccUwi9WXC+XO51YKNXy
-         tJErX5uQ8BtmJho3UHk0NPPrwcrlb+lQiYMTlWnQTW0Lbo1P7ky40Go0EixVLZpCyMeE
-         7Zkg==
-X-Gm-Message-State: ACgBeo0fUxrjjUOLpgknTpT+qI2QT7NsFhWNw7YXRy96y3npCN39t/pI
-        4WA3DhN/BZsrAmMf0+6Fo1JsWi35fa/Ct4qGRVQ=
-X-Google-Smtp-Source: AA6agR7axXUFueNjegLyLSeyiAPEMqpegVipvTDZ1g/rWbmH0x8Ux7rC5CeehG+IvbK+WQ+f3D+39eT7/8lvRIEX76g=
-X-Received: by 2002:a05:6870:5b84:b0:10c:d1fa:2f52 with SMTP id
- em4-20020a0568705b8400b0010cd1fa2f52mr9573010oab.92.1659995749780; Mon, 08
- Aug 2022 14:55:49 -0700 (PDT)
+        bh=/fYTKzN+KmvOSZAeaqzQF8kkx1WjOkaE4GNtbDr+tPk=;
+        b=LNcOSzrUWbQv2smR7Zb4+TR0IohMMVp/B2ts9uY9+y91eGAJ+TrsNHKudW29PauGSg
+         I7BErpl/Ld76h99UPDNrLqtCbIsnc9ibpbSMdA4UiswFKbYhc75hUyvVAxGe79w6BIMx
+         LZz3s9y6J7u54H5jOS83UcJykE5cFZAVjXo41wSB4UbimXjM0l27jeGXg6+bPWt5nPep
+         EtpyMlm+Fk4mnTyWMDaOJugb3JtvHTcZwcDDIFMWOjvC8XXpLxRm8h6wClbEwQvDMyp6
+         CU3M9Yg38TvUSYA2spCh+8TxAOash5QoasixosBiktnCrg+pqHvK5t5kRMcnE8CXS8gl
+         FmgQ==
+X-Gm-Message-State: ACgBeo1yXGNxuVlfrI9Ey+/6BbrCq6OD455355YfVfvwHwlZ1JsWCt5f
+        7CStx2a/eH1A/C5cjbSTGg71ESCNm+T6bkq69l+M527GU7taWg==
+X-Google-Smtp-Source: AA6agR4/2pvuOUpsw2LGeedPWkg+RSJkZwr1Yd5CFYEmYLomrKmw/cYLlbF3yDhUUiR1kPCZ2VPFzP7+9qDH2mLRURc=
+X-Received: by 2002:a5d:6d4e:0:b0:21e:660e:55bf with SMTP id
+ k14-20020a5d6d4e000000b0021e660e55bfmr11962855wri.343.1659998201771; Mon, 08
+ Aug 2022 15:36:41 -0700 (PDT)
 MIME-Version: 1.0
-References: <20220805200105.2020995-1-irogers@google.com>
-In-Reply-To: <20220805200105.2020995-1-irogers@google.com>
-From:   Namhyung Kim <namhyung@kernel.org>
-Date:   Mon, 8 Aug 2022 14:55:38 -0700
-Message-ID: <CAM9d7chPmvnjUicvjVpaHjpiNXvQLPjfx+ZasENxbg1+s54j+Q@mail.gmail.com>
-Subject: Re: [PATCH v7 0/2] JSON output for perf stat
-To:     Ian Rogers <irogers@google.com>
+From:   Ian Rogers <irogers@google.com>
+Date:   Mon, 8 Aug 2022 15:36:29 -0700
+Message-ID: <CAP-5=fWiQHvYZp5R=uw4xUwBiN1fBLBU8witPkYM+2r8tnYCOg@mail.gmail.com>
+Subject: August 11th - office hours
+To:     linux-perf-users <linux-perf-users@vger.kernel.org>,
+        Arnaldo Carvalho de Melo <acme@kernel.org>,
+        Namhyung Kim <namhyung@kernel.org>,
+        Jiri Olsa <jolsa@kernel.org>
 Cc:     Peter Zijlstra <peterz@infradead.org>,
         Ingo Molnar <mingo@redhat.com>,
-        Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Jiri Olsa <jolsa@kernel.org>,
-        Kan Liang <kan.liang@linux.intel.com>,
-        Zhengjun Xing <zhengjun.xing@linux.intel.com>,
-        Sandipan Das <sandipan.das@amd.com>,
-        Claire Jensen <cjense@google.com>, Alyssa Ross <hi@alyssa.is>,
-        Like Xu <likexu@tencent.com>,
-        James Clark <james.clark@arm.com>,
-        Florian Fischer <florian.fischer@muhq.space>,
-        linux-kernel <linux-kernel@vger.kernel.org>,
-        linux-perf-users <linux-perf-users@vger.kernel.org>,
-        Claire Jensen <clairej735@gmail.com>,
-        Stephane Eranian <eranian@google.com>
+        Mark Rutland <mark.rutland@arm.com>
 Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-Hi Ian,
+Hi,
 
-On Fri, Aug 5, 2022 at 1:01 PM Ian Rogers <irogers@google.com> wrote:
->
-> Parsing the CSV or text output of perf stat can be problematic when
-> new output is added (columns in CSV format). JSON names values and
-> simplifies the job of parsing. Add a JSON output option to perf-stat
-> then add unit test that parses and validates the output.
->
-> This is a resend of two v2 patches:
-> https://lore.kernel.org/lkml/20210813220754.2104922-1-cjense@google.com/
-> https://lore.kernel.org/lkml/20210813220936.2105426-1-cjense@google.com/
-> with a few formatting changes and improvements to the linter.
->
-> v7. Weakens a test and adds a Makefile.perf change Suggested-by:
->     Arnaldo Carvalho de Melo <acme@kernel.org>.
->
-> v6. Is a rebase.
->
-> v5. Drops the merged CSV check, fixes a json test issue found by
->     Arnaldo and a typo.
->
-> v4. Does some minor fixes to the json linter.
->
-> v3. There is some tidy up of CSV code including a potential memory
->     over run in the os.nfields set up caught by sanitizers. To
->     facilitate this an AGGR_MAX value is added. v3 also adds the CSV
->     testing.
->
-> v2. Fixes the system wide no aggregation test to not run if the
->     paranoia is wrong. It also makes the counter-value check handle
->     the "<not counted>" and "<not supported>" cases.
->
-> Claire Jensen (2):
->   perf stat: Add JSON output option
->   perf test: Json format checking
+There will be another office hours on Thursday August 11th at 2pm
+GMT*. Currently on the agenda is the idea of having a reviewer
+rotation similar to BPF:
+https://lore.kernel.org/bpf/50da58e3-e056-2d24-765b-818fed09e216@iogearbox.=
+net/T/
+Please suggest other agenda items as replies to the mailing list to this em=
+ail.
 
-I'd really like to clean up the perf stat output code as it's already hard
-to deal with..  Let me do that after adding this.  So,
+If you experience problems accessing the meeting then my email can be
+used for Google hangout messages, and I'll try to be on IRC (#perf on
+irc.oftc.net).
 
-Acked-by: Namhyung Kim <namhyung@kernel.org>
+The code of conduct is below**:
+https://www.kernel.org/doc/html/latest/process/code-of-conduct.html
+
+The Google meet details are here:
+Linux Perf Tool - Office Hours
+Thursday, August 11 =C2=B7 7:00 =E2=80=93 8:00am
+Google Meet joining info
+Video call link: https://meet.google.com/goj-quks-ydn
+Or dial: =E2=80=AA(US) +1 301-969-4101=E2=80=AC PIN: =E2=80=AA374 496 227=
+=E2=80=AC#
+More phone numbers: https://tel.meet/goj-quks-ydn?pin=3D8067739163431
+Notes (ask to be added to see):
+https://docs.google.com/document/d/1tQZvJ12czMedpmLLZWS0XILAte97zdR6H_tgC3I=
+vafs/edit?usp=3Dsharing&resourcekey=3D0-iV9_8Oc0cSOPl0-NvEYDAA
 
 Thanks,
-Namhyung
+Ian
 
->
->  tools/perf/Documentation/perf-stat.txt        |  21 +
->  tools/perf/Makefile.perf                      |   3 +-
->  tools/perf/builtin-stat.c                     |   6 +
->  .../tests/shell/lib/perf_json_output_lint.py  |  96 +++++
->  tools/perf/tests/shell/stat+json_output.sh    | 147 +++++++
->  tools/perf/util/stat-display.c                | 383 +++++++++++++-----
->  tools/perf/util/stat.c                        |   1 +
->  tools/perf/util/stat.h                        |   2 +
->  8 files changed, 552 insertions(+), 107 deletions(-)
->  create mode 100644 tools/perf/tests/shell/lib/perf_json_output_lint.py
->  create mode 100755 tools/perf/tests/shell/stat+json_output.sh
->
-> --
-> 2.37.1.559.g78731f0fdb-goog
->
+*The around the world times I believe are:
+China: 10pm
+India: 7:30pm
+Europe: 4pm
+UK: 3pm
+US east coast: 10am
+Brazil: 11am
+US west coast: 7am
+
+**More details from the first office hours are here:
+https://lore.kernel.org/linux-perf-users/CAP-5=3DfWkxtm5-Ebwkh4pzA83prvuAJ5=
+yy6CKQYatdkKWu3Tgeg@mail.gmail.com/
