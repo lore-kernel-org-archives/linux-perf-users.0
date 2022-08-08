@@ -2,114 +2,80 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8AB4FC00140
-	for <linux-perf-users@archiver.kernel.org>; Mon,  8 Aug 2022 18:33:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 05CADC00140
+	for <linux-perf-users@archiver.kernel.org>; Mon,  8 Aug 2022 21:22:37 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S243854AbiHHSdl (ORCPT
+        id S236234AbiHHVWg (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Mon, 8 Aug 2022 14:33:41 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59880 "EHLO
+        Mon, 8 Aug 2022 17:22:36 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50356 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S235278AbiHHSdj (ORCPT
+        with ESMTP id S234943AbiHHVWf (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Mon, 8 Aug 2022 14:33:39 -0400
-Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5B7D4DE82;
-        Mon,  8 Aug 2022 11:33:39 -0700 (PDT)
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id 0062F61245;
-        Mon,  8 Aug 2022 18:33:39 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 2F40CC433D7;
-        Mon,  8 Aug 2022 18:33:38 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1659983618;
-        bh=D2XW8J2IVrVhTm9qso0bSI1eB34b3POF3YjI53CNJj4=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=m9TCF1LblgMJD9S1VkUE1pBE+IEXHKG5gTnWhHoVjYzgmUxhwaysmPAQvRofn/80w
-         RyDEbWSMcg77uqD8/ygAOFo6i+JcrqbhmrB+sIHzc4iFNGLTsy7Bhuq08Txqm92O8j
-         +jsZ13tpScJr+DjRmevGyqJQMs4jUiSYh4RhL/Kk7NuokDsjucHxnXHojQxOAoRn2l
-         mk25fUHPE5q6IvRDFkA4u2JFjEXXo/7/5ZP0unvdPkEvRR3trTvmrwMPIIZM2fG7vb
-         oDgJ1YM4frZ6AU3rMsdAhwx02Ea7pU8U1mIoDduRDaISAM8rHn90yNplMy+c/vRZJK
-         T+FQ+5abhb/fg==
-Received: by quaco.ghostprotocols.net (Postfix, from userid 1000)
-        id F27384035A; Mon,  8 Aug 2022 15:33:34 -0300 (-03)
-Date:   Mon, 8 Aug 2022 15:33:34 -0300
-From:   Arnaldo Carvalho de Melo <acme@kernel.org>
-To:     Daniel Borkmann <daniel@iogearbox.net>
-Cc:     Roberto Sassu <roberto.sassu@huawei.com>, quentin@isovalent.com,
-        ast@kernel.org, andrii@kernel.org, martin.lau@linux.dev,
-        song@kernel.org, john.fastabend@gmail.com, kpsingh@kernel.org,
-        sdf@google.com, peterz@infradead.org, mingo@redhat.com,
-        terrelln@fb.com, nathan@kernel.org, ndesaulniers@google.com,
-        bpf@vger.kernel.org, linux-perf-users@vger.kernel.org,
-        llvm@lists.linux.dev, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 4/4] build: Switch to new openssl API for test-libcrypto
-Message-ID: <YvFW/kBL6YA3Tlnc@kernel.org>
-References: <20220719170555.2576993-1-roberto.sassu@huawei.com>
- <20220719170555.2576993-4-roberto.sassu@huawei.com>
- <5f867295-10d2-0085-d1dc-051f56e7136a@iogearbox.net>
+        Mon, 8 Aug 2022 17:22:35 -0400
+Received: from mail-ot1-f42.google.com (mail-ot1-f42.google.com [209.85.210.42])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 011321834C;
+        Mon,  8 Aug 2022 14:22:33 -0700 (PDT)
+Received: by mail-ot1-f42.google.com with SMTP id p22-20020a9d6956000000b00636a088b2aeso7302256oto.9;
+        Mon, 08 Aug 2022 14:22:33 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:x-gm-message-state:from:to:cc;
+        bh=2dB/oWE41ZJoWC2gckJ+2Ap55kUOeESrqQysvusxcqE=;
+        b=QcpD0L830z/1w8+FStFnP87paauOFNJwJznBqJyei6aDn1F1C7XMNmnqWdKrWx6nSL
+         IFM0lYymV03qvHq0Ly1DlK3V0a2Xm1EhYY49ucQnLaHSRZYFli+hfBPMVnTzhbw60WaV
+         hFnUzqHTh3Trtk3oId6Iw8CDpceUTQltTyVtreDXPxv5XC7MHoAzQE59MPgXcQExSnMJ
+         IE1He/ghPKvJfXih/4EI5kCvDLs2TRsI4403xlIkBxe1q13YirnXHhVQWfpAAaXR1m9h
+         HKj9w4V2bfsUtLVmk8cuqmOlGwlW/zzWGd3BUUpgXsb1KrhXn2jvr8DHXz7vOYvZ027+
+         vxaA==
+X-Gm-Message-State: ACgBeo3OZs5fNwl9h10W9HvVZZ3DNXG1/YDfrI52xMfuuDlE3cqFwKEe
+        fA4z2j3E2V0Mw4SaPSSgGt8APUSLf0ghX6UKhCg=
+X-Google-Smtp-Source: AA6agR51c7YU1mfiHlZXfXJvCCfMUOK65nmX34uBneWzZxoN8c11sqBGleUTGaoSUZxlTxPspoyA9sFGpVP5mMSDmYA=
+X-Received: by 2002:a05:6830:6388:b0:61c:80a9:d5b6 with SMTP id
+ ch8-20020a056830638800b0061c80a9d5b6mr7658767otb.124.1659993753257; Mon, 08
+ Aug 2022 14:22:33 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <5f867295-10d2-0085-d1dc-051f56e7136a@iogearbox.net>
-X-Url:  http://acmel.wordpress.com
+References: <20220808092408.107399-1-yangjihong1@huawei.com>
+In-Reply-To: <20220808092408.107399-1-yangjihong1@huawei.com>
+From:   Namhyung Kim <namhyung@kernel.org>
+Date:   Mon, 8 Aug 2022 14:22:22 -0700
+Message-ID: <CAM9d7cj3HcijAz_C1Y-u87H4XXeR4zW2TFQOxhmSjMuTqHQAzA@mail.gmail.com>
+Subject: Re: [PATCH 0/2] perf kvm/sched: Use strstarts instead of strncmp to
+ match subcommands
+To:     Yang Jihong <yangjihong1@huawei.com>
+Cc:     Peter Zijlstra <peterz@infradead.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        Arnaldo Carvalho de Melo <acme@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Jiri Olsa <jolsa@kernel.org>,
+        linux-perf-users <linux-perf-users@vger.kernel.org>,
+        linux-kernel <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-Em Mon, Aug 08, 2022 at 06:14:48PM +0200, Daniel Borkmann escreveu:
-> Hi Arnaldo,
-> 
-> On 7/19/22 7:05 PM, Roberto Sassu wrote:
-> > Switch to new EVP API for detecting libcrypto, as Fedora 36 returns an
-> > error when it encounters the deprecated function MD5_Init() and the others.
-> > The error would be interpreted as missing libcrypto, while in reality it is
-> > not.
-> > 
-> > Signed-off-by: Roberto Sassu <roberto.sassu@huawei.com>
-> 
-> Given rest of the tooling fixes from Andres Freund went via perf tree and the
-> below is perf related as well, I presume you'll pick this up, too?
+Hello,
 
-Sure.
- 
->   [0] https://git.kernel.org/pub/scm/linux/kernel/git/acme/linux.git/log/?h=perf/core
-> 
-> >   tools/build/feature/test-libcrypto.c | 15 +++++++++++----
-> >   1 file changed, 11 insertions(+), 4 deletions(-)
-> > 
-> > diff --git a/tools/build/feature/test-libcrypto.c b/tools/build/feature/test-libcrypto.c
-> > index a98174e0569c..bc34a5bbb504 100644
-> > --- a/tools/build/feature/test-libcrypto.c
-> > +++ b/tools/build/feature/test-libcrypto.c
-> > @@ -1,16 +1,23 @@
-> >   // SPDX-License-Identifier: GPL-2.0
-> > +#include <openssl/evp.h>
-> >   #include <openssl/sha.h>
-> >   #include <openssl/md5.h>
-> >   int main(void)
-> >   {
-> > -	MD5_CTX context;
-> > +	EVP_MD_CTX *mdctx;
-> >   	unsigned char md[MD5_DIGEST_LENGTH + SHA_DIGEST_LENGTH];
-> >   	unsigned char dat[] = "12345";
-> > +	unsigned int digest_len;
-> > -	MD5_Init(&context);
-> > -	MD5_Update(&context, &dat[0], sizeof(dat));
-> > -	MD5_Final(&md[0], &context);
-> > +	mdctx = EVP_MD_CTX_new();
-> > +	if (!mdctx)
-> > +		return 0;
-> > +
-> > +	EVP_DigestInit_ex(mdctx, EVP_md5(), NULL);
-> > +	EVP_DigestUpdate(mdctx, &dat[0], sizeof(dat));
-> > +	EVP_DigestFinal_ex(mdctx, &md[0], &digest_len);
-> > +	EVP_MD_CTX_free(mdctx);
-> >   	SHA1(&dat[0], sizeof(dat), &md[0]);
-> > 
+On Mon, Aug 8, 2022 at 2:27 AM Yang Jihong <yangjihong1@huawei.com> wrote:
+>
+> Yang Jihong (2):
+>   perf kvm: Fix subcommand matching error
+>   perf sched latency: Fix subcommand matching error
 
--- 
+Acked-by: Namhyung Kim <namhyung@kernel.org>
 
-- Arnaldo
+Thanks,
+Namhyung
+
+
+>
+>  tools/perf/builtin-kvm.c   | 8 ++++----
+>  tools/perf/builtin-sched.c | 2 +-
+>  2 files changed, 5 insertions(+), 5 deletions(-)
+>
+> --
+> 2.30.GIT
+>
