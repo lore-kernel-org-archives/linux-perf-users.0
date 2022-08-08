@@ -2,106 +2,114 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1A6A6C00140
-	for <linux-perf-users@archiver.kernel.org>; Mon,  8 Aug 2022 16:15:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8AB4FC00140
+	for <linux-perf-users@archiver.kernel.org>; Mon,  8 Aug 2022 18:33:42 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S243906AbiHHQPP (ORCPT
+        id S243854AbiHHSdl (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Mon, 8 Aug 2022 12:15:15 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46858 "EHLO
+        Mon, 8 Aug 2022 14:33:41 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59880 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230398AbiHHQPO (ORCPT
+        with ESMTP id S235278AbiHHSdj (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Mon, 8 Aug 2022 12:15:14 -0400
-Received: from www62.your-server.de (www62.your-server.de [213.133.104.62])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 622FE126;
-        Mon,  8 Aug 2022 09:15:12 -0700 (PDT)
-Received: from sslproxy01.your-server.de ([78.46.139.224])
-        by www62.your-server.de with esmtpsa (TLSv1.3:TLS_AES_256_GCM_SHA384:256)
-        (Exim 4.92.3)
-        (envelope-from <daniel@iogearbox.net>)
-        id 1oL5Oz-0002Rw-Hu; Mon, 08 Aug 2022 18:14:49 +0200
-Received: from [85.1.206.226] (helo=linux.home)
-        by sslproxy01.your-server.de with esmtpsa (TLSv1.3:TLS_AES_256_GCM_SHA384:256)
-        (Exim 4.92)
-        (envelope-from <daniel@iogearbox.net>)
-        id 1oL5Oz-000OuE-0M; Mon, 08 Aug 2022 18:14:49 +0200
-Subject: Re: [PATCH 4/4] build: Switch to new openssl API for test-libcrypto
-To:     Roberto Sassu <roberto.sassu@huawei.com>, quentin@isovalent.com,
+        Mon, 8 Aug 2022 14:33:39 -0400
+Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5B7D4DE82;
+        Mon,  8 Aug 2022 11:33:39 -0700 (PDT)
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by dfw.source.kernel.org (Postfix) with ESMTPS id 0062F61245;
+        Mon,  8 Aug 2022 18:33:39 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 2F40CC433D7;
+        Mon,  8 Aug 2022 18:33:38 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1659983618;
+        bh=D2XW8J2IVrVhTm9qso0bSI1eB34b3POF3YjI53CNJj4=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=m9TCF1LblgMJD9S1VkUE1pBE+IEXHKG5gTnWhHoVjYzgmUxhwaysmPAQvRofn/80w
+         RyDEbWSMcg77uqD8/ygAOFo6i+JcrqbhmrB+sIHzc4iFNGLTsy7Bhuq08Txqm92O8j
+         +jsZ13tpScJr+DjRmevGyqJQMs4jUiSYh4RhL/Kk7NuokDsjucHxnXHojQxOAoRn2l
+         mk25fUHPE5q6IvRDFkA4u2JFjEXXo/7/5ZP0unvdPkEvRR3trTvmrwMPIIZM2fG7vb
+         oDgJ1YM4frZ6AU3rMsdAhwx02Ea7pU8U1mIoDduRDaISAM8rHn90yNplMy+c/vRZJK
+         T+FQ+5abhb/fg==
+Received: by quaco.ghostprotocols.net (Postfix, from userid 1000)
+        id F27384035A; Mon,  8 Aug 2022 15:33:34 -0300 (-03)
+Date:   Mon, 8 Aug 2022 15:33:34 -0300
+From:   Arnaldo Carvalho de Melo <acme@kernel.org>
+To:     Daniel Borkmann <daniel@iogearbox.net>
+Cc:     Roberto Sassu <roberto.sassu@huawei.com>, quentin@isovalent.com,
         ast@kernel.org, andrii@kernel.org, martin.lau@linux.dev,
         song@kernel.org, john.fastabend@gmail.com, kpsingh@kernel.org,
         sdf@google.com, peterz@infradead.org, mingo@redhat.com,
-        acme@kernel.org, terrelln@fb.com, nathan@kernel.org,
-        ndesaulniers@google.com
-Cc:     bpf@vger.kernel.org, linux-perf-users@vger.kernel.org,
+        terrelln@fb.com, nathan@kernel.org, ndesaulniers@google.com,
+        bpf@vger.kernel.org, linux-perf-users@vger.kernel.org,
         llvm@lists.linux.dev, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 4/4] build: Switch to new openssl API for test-libcrypto
+Message-ID: <YvFW/kBL6YA3Tlnc@kernel.org>
 References: <20220719170555.2576993-1-roberto.sassu@huawei.com>
  <20220719170555.2576993-4-roberto.sassu@huawei.com>
-From:   Daniel Borkmann <daniel@iogearbox.net>
-Message-ID: <5f867295-10d2-0085-d1dc-051f56e7136a@iogearbox.net>
-Date:   Mon, 8 Aug 2022 18:14:48 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.7.2
+ <5f867295-10d2-0085-d1dc-051f56e7136a@iogearbox.net>
 MIME-Version: 1.0
-In-Reply-To: <20220719170555.2576993-4-roberto.sassu@huawei.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-Authenticated-Sender: daniel@iogearbox.net
-X-Virus-Scanned: Clear (ClamAV 0.103.6/26621/Mon Aug  8 09:52:38 2022)
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <5f867295-10d2-0085-d1dc-051f56e7136a@iogearbox.net>
+X-Url:  http://acmel.wordpress.com
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-Hi Arnaldo,
-
-On 7/19/22 7:05 PM, Roberto Sassu wrote:
-> Switch to new EVP API for detecting libcrypto, as Fedora 36 returns an
-> error when it encounters the deprecated function MD5_Init() and the others.
-> The error would be interpreted as missing libcrypto, while in reality it is
-> not.
+Em Mon, Aug 08, 2022 at 06:14:48PM +0200, Daniel Borkmann escreveu:
+> Hi Arnaldo,
 > 
-> Signed-off-by: Roberto Sassu <roberto.sassu@huawei.com>
-
-Given rest of the tooling fixes from Andres Freund went via perf tree and the
-below is perf related as well, I presume you'll pick this up, too?
-
-   [0] https://git.kernel.org/pub/scm/linux/kernel/git/acme/linux.git/log/?h=perf/core
-
->   tools/build/feature/test-libcrypto.c | 15 +++++++++++----
->   1 file changed, 11 insertions(+), 4 deletions(-)
+> On 7/19/22 7:05 PM, Roberto Sassu wrote:
+> > Switch to new EVP API for detecting libcrypto, as Fedora 36 returns an
+> > error when it encounters the deprecated function MD5_Init() and the others.
+> > The error would be interpreted as missing libcrypto, while in reality it is
+> > not.
+> > 
+> > Signed-off-by: Roberto Sassu <roberto.sassu@huawei.com>
 > 
-> diff --git a/tools/build/feature/test-libcrypto.c b/tools/build/feature/test-libcrypto.c
-> index a98174e0569c..bc34a5bbb504 100644
-> --- a/tools/build/feature/test-libcrypto.c
-> +++ b/tools/build/feature/test-libcrypto.c
-> @@ -1,16 +1,23 @@
->   // SPDX-License-Identifier: GPL-2.0
-> +#include <openssl/evp.h>
->   #include <openssl/sha.h>
->   #include <openssl/md5.h>
->   
->   int main(void)
->   {
-> -	MD5_CTX context;
-> +	EVP_MD_CTX *mdctx;
->   	unsigned char md[MD5_DIGEST_LENGTH + SHA_DIGEST_LENGTH];
->   	unsigned char dat[] = "12345";
-> +	unsigned int digest_len;
->   
-> -	MD5_Init(&context);
-> -	MD5_Update(&context, &dat[0], sizeof(dat));
-> -	MD5_Final(&md[0], &context);
-> +	mdctx = EVP_MD_CTX_new();
-> +	if (!mdctx)
-> +		return 0;
-> +
-> +	EVP_DigestInit_ex(mdctx, EVP_md5(), NULL);
-> +	EVP_DigestUpdate(mdctx, &dat[0], sizeof(dat));
-> +	EVP_DigestFinal_ex(mdctx, &md[0], &digest_len);
-> +	EVP_MD_CTX_free(mdctx);
->   
->   	SHA1(&dat[0], sizeof(dat), &md[0]);
->   
-> 
+> Given rest of the tooling fixes from Andres Freund went via perf tree and the
+> below is perf related as well, I presume you'll pick this up, too?
 
+Sure.
+ 
+>   [0] https://git.kernel.org/pub/scm/linux/kernel/git/acme/linux.git/log/?h=perf/core
+> 
+> >   tools/build/feature/test-libcrypto.c | 15 +++++++++++----
+> >   1 file changed, 11 insertions(+), 4 deletions(-)
+> > 
+> > diff --git a/tools/build/feature/test-libcrypto.c b/tools/build/feature/test-libcrypto.c
+> > index a98174e0569c..bc34a5bbb504 100644
+> > --- a/tools/build/feature/test-libcrypto.c
+> > +++ b/tools/build/feature/test-libcrypto.c
+> > @@ -1,16 +1,23 @@
+> >   // SPDX-License-Identifier: GPL-2.0
+> > +#include <openssl/evp.h>
+> >   #include <openssl/sha.h>
+> >   #include <openssl/md5.h>
+> >   int main(void)
+> >   {
+> > -	MD5_CTX context;
+> > +	EVP_MD_CTX *mdctx;
+> >   	unsigned char md[MD5_DIGEST_LENGTH + SHA_DIGEST_LENGTH];
+> >   	unsigned char dat[] = "12345";
+> > +	unsigned int digest_len;
+> > -	MD5_Init(&context);
+> > -	MD5_Update(&context, &dat[0], sizeof(dat));
+> > -	MD5_Final(&md[0], &context);
+> > +	mdctx = EVP_MD_CTX_new();
+> > +	if (!mdctx)
+> > +		return 0;
+> > +
+> > +	EVP_DigestInit_ex(mdctx, EVP_md5(), NULL);
+> > +	EVP_DigestUpdate(mdctx, &dat[0], sizeof(dat));
+> > +	EVP_DigestFinal_ex(mdctx, &md[0], &digest_len);
+> > +	EVP_MD_CTX_free(mdctx);
+> >   	SHA1(&dat[0], sizeof(dat), &md[0]);
+> > 
+
+-- 
+
+- Arnaldo
