@@ -2,98 +2,106 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EFD7FC00140
-	for <linux-perf-users@archiver.kernel.org>; Mon,  8 Aug 2022 15:07:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1A6A6C00140
+	for <linux-perf-users@archiver.kernel.org>; Mon,  8 Aug 2022 16:15:16 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S236158AbiHHPHA (ORCPT
+        id S243906AbiHHQPP (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Mon, 8 Aug 2022 11:07:00 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54190 "EHLO
+        Mon, 8 Aug 2022 12:15:15 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46858 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S235852AbiHHPG7 (ORCPT
+        with ESMTP id S230398AbiHHQPO (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Mon, 8 Aug 2022 11:06:59 -0400
-Received: from mail-wm1-x336.google.com (mail-wm1-x336.google.com [IPv6:2a00:1450:4864:20::336])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6748B63B5
-        for <linux-perf-users@vger.kernel.org>; Mon,  8 Aug 2022 08:06:58 -0700 (PDT)
-Received: by mail-wm1-x336.google.com with SMTP id b21-20020a05600c4e1500b003a32bc8612fso4630017wmq.3
-        for <linux-perf-users@vger.kernel.org>; Mon, 08 Aug 2022 08:06:58 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20210112;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:from:to:cc;
-        bh=OYUBSmT3VH7eZdDQ7fMZ91lcnew+sGEhSV7yBFdrkzA=;
-        b=LiARel5+W4e3yVhRKSxREvFZ4zSIBvDEzwOMdqrN6PdMxuLdKhIb8w1PBO48c5fb2g
-         5DVkyytqRiwCVHpgXtQxNbqaQro0pzAMSMdCVBMfCTSnbVmaATKjz69tVTvs1vHR93qE
-         ni9zblnFGuQMIeKXfi2YeB9mvwv/1XNCagZjDdcpvkykL1RO3Nr85OMQSI2HoZyGTPr9
-         Oqzfb+a8comq8SJ73LCP0Bm8vnDvsSIBcv7hshyKpDzn1TJNXNyXmcXIjYOdGisYVw4L
-         eYLP4IiwHwOQbrdy26sZ2Vwie6sQLpH0QORsD8IkNu58bii/q1HF5pEYA0sxgrIrxxHg
-         A5Xg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc;
-        bh=OYUBSmT3VH7eZdDQ7fMZ91lcnew+sGEhSV7yBFdrkzA=;
-        b=D/4tDtuOH1ahV0hOxnegJ7cwMheLTbtAVxiVcNUW1UkRgB8nSOaPydH6tI0Vvyl4zT
-         4hjwMp2QENF/7mQFqq7cksLou7iCKv8yL+BCxUWuBP7L6gxEnWWjTd7Wd4xfi0Wu17xR
-         feZXiLM0RA6WSW50SpRblpJQ+to3M5/+kokq9T+HbuBTT5D2Q4inoAPK1qeHQQ0sG1Xn
-         4dHfM5JvNmhCkpBw1vP8IaHsg/ipHCIl9zO5RD4Mqb1cyBcwbY+921V6RInNRkfQxtd1
-         Lf1Bmg9luNujA6oTJ9wKSESWpBfll8eT5XQ7DKDPnH6STmmR3+/JPr3kmXt57VxZb3Rj
-         rpiA==
-X-Gm-Message-State: ACgBeo38LMgC59KfRp6s+4J8Sk2YeHkf7UThYa41MJr245Y9uqTL50BA
-        WAEXqiQRa4zfX+5ny0G4t/p4HEIowL07W6mvyXXgbg==
-X-Google-Smtp-Source: AA6agR7U48+bT4iSfCh3vGfxQT6GTKPO2tOE9J0f7KAZqT3b6b7t64Emfk7gm2m538KOwSdral81YJHlTu+ZpJA116E=
-X-Received: by 2002:a7b:cb44:0:b0:3a4:e8c7:59a2 with SMTP id
- v4-20020a7bcb44000000b003a4e8c759a2mr12996744wmj.67.1659971216755; Mon, 08
- Aug 2022 08:06:56 -0700 (PDT)
+        Mon, 8 Aug 2022 12:15:14 -0400
+Received: from www62.your-server.de (www62.your-server.de [213.133.104.62])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 622FE126;
+        Mon,  8 Aug 2022 09:15:12 -0700 (PDT)
+Received: from sslproxy01.your-server.de ([78.46.139.224])
+        by www62.your-server.de with esmtpsa (TLSv1.3:TLS_AES_256_GCM_SHA384:256)
+        (Exim 4.92.3)
+        (envelope-from <daniel@iogearbox.net>)
+        id 1oL5Oz-0002Rw-Hu; Mon, 08 Aug 2022 18:14:49 +0200
+Received: from [85.1.206.226] (helo=linux.home)
+        by sslproxy01.your-server.de with esmtpsa (TLSv1.3:TLS_AES_256_GCM_SHA384:256)
+        (Exim 4.92)
+        (envelope-from <daniel@iogearbox.net>)
+        id 1oL5Oz-000OuE-0M; Mon, 08 Aug 2022 18:14:49 +0200
+Subject: Re: [PATCH 4/4] build: Switch to new openssl API for test-libcrypto
+To:     Roberto Sassu <roberto.sassu@huawei.com>, quentin@isovalent.com,
+        ast@kernel.org, andrii@kernel.org, martin.lau@linux.dev,
+        song@kernel.org, john.fastabend@gmail.com, kpsingh@kernel.org,
+        sdf@google.com, peterz@infradead.org, mingo@redhat.com,
+        acme@kernel.org, terrelln@fb.com, nathan@kernel.org,
+        ndesaulniers@google.com
+Cc:     bpf@vger.kernel.org, linux-perf-users@vger.kernel.org,
+        llvm@lists.linux.dev, linux-kernel@vger.kernel.org
+References: <20220719170555.2576993-1-roberto.sassu@huawei.com>
+ <20220719170555.2576993-4-roberto.sassu@huawei.com>
+From:   Daniel Borkmann <daniel@iogearbox.net>
+Message-ID: <5f867295-10d2-0085-d1dc-051f56e7136a@iogearbox.net>
+Date:   Mon, 8 Aug 2022 18:14:48 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.7.2
 MIME-Version: 1.0
-References: <defae7d2-5f3e-5de1-bcd0-f7ee7871a9f9@linux.ibm.com>
- <20220808083618.GA35313@leoy-ThinkPad-X240s> <b8ce5423-f6ee-42bc-75eb-ce182cc325b8@linux.ibm.com>
- <20220808105556.GC35313@leoy-ThinkPad-X240s> <F4B3D957-548A-4AD6-B00A-1C5BDD18E6EB@gmail.com>
-In-Reply-To: <F4B3D957-548A-4AD6-B00A-1C5BDD18E6EB@gmail.com>
-From:   Ian Rogers <irogers@google.com>
-Date:   Mon, 8 Aug 2022 08:06:44 -0700
-Message-ID: <CAP-5=fXfPgtiQnvZDoLTveGWgC9O5uGFFfxAst8jhLgyTT+5Vg@mail.gmail.com>
-Subject: Re: perf recording with java runtime broken with commit 2d86612aacb7
-To:     Arnaldo Carvalho de Melo <arnaldo.melo@gmail.com>
-Cc:     Leo Yan <leo.yan@linaro.org>,
-        Thomas Richter <tmricht@linux.ibm.com>,
-        "linux-perf-use." <linux-perf-users@vger.kernel.org>,
-        Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Namhyung Kim <namhyung@kernel.org>,
-        Vasily Gorbik <gor@linux.ibm.com>
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <20220719170555.2576993-4-roberto.sassu@huawei.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-Authenticated-Sender: daniel@iogearbox.net
+X-Virus-Scanned: Clear (ClamAV 0.103.6/26621/Mon Aug  8 09:52:38 2022)
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-On Mon, Aug 8, 2022 at 4:30 AM Arnaldo Carvalho de Melo
-<arnaldo.melo@gmail.com> wrote:
->
->
->
-> On August 8, 2022 7:55:56 AM GMT-03:00, Leo Yan <leo.yan@linaro.org> wrote:
-> >On Mon, Aug 08, 2022 at 11:25:29AM +0200, Thomas Richter wrote:
-> >
-> >[...]
-> >
-> >> > Ian has committed a patch "perf symbol: Fail to read phdr workaround" to
-> >> > address java JIT symbol issue:
-> >> > https://git.kernel.org/pub/scm/linux/kernel/git/acme/linux.git/commit/?h=tmp.perf/core&id=6d518ac7be6223811ab947897273b1bbef846180
-> >> >
-> >> > Could you confirm if have included this patch in your code base?
-> >> >
-> >>
-> >> Thanks Leo, this patch fixes my issue.
-> >
-> >Great!  Thanks for confirmation.
->
-> It's upstream already:
-> https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/commit/?id=6d518ac7be6223811ab947897273b1bbef846180
+Hi Arnaldo,
 
-Thanks! Plus the fixes tag is there and so the backporting should
-happen. Nice to know this wasn't broken for long.
+On 7/19/22 7:05 PM, Roberto Sassu wrote:
+> Switch to new EVP API for detecting libcrypto, as Fedora 36 returns an
+> error when it encounters the deprecated function MD5_Init() and the others.
+> The error would be interpreted as missing libcrypto, while in reality it is
+> not.
+> 
+> Signed-off-by: Roberto Sassu <roberto.sassu@huawei.com>
 
-Ian
+Given rest of the tooling fixes from Andres Freund went via perf tree and the
+below is perf related as well, I presume you'll pick this up, too?
 
-> - Arnaldo
+   [0] https://git.kernel.org/pub/scm/linux/kernel/git/acme/linux.git/log/?h=perf/core
+
+>   tools/build/feature/test-libcrypto.c | 15 +++++++++++----
+>   1 file changed, 11 insertions(+), 4 deletions(-)
+> 
+> diff --git a/tools/build/feature/test-libcrypto.c b/tools/build/feature/test-libcrypto.c
+> index a98174e0569c..bc34a5bbb504 100644
+> --- a/tools/build/feature/test-libcrypto.c
+> +++ b/tools/build/feature/test-libcrypto.c
+> @@ -1,16 +1,23 @@
+>   // SPDX-License-Identifier: GPL-2.0
+> +#include <openssl/evp.h>
+>   #include <openssl/sha.h>
+>   #include <openssl/md5.h>
+>   
+>   int main(void)
+>   {
+> -	MD5_CTX context;
+> +	EVP_MD_CTX *mdctx;
+>   	unsigned char md[MD5_DIGEST_LENGTH + SHA_DIGEST_LENGTH];
+>   	unsigned char dat[] = "12345";
+> +	unsigned int digest_len;
+>   
+> -	MD5_Init(&context);
+> -	MD5_Update(&context, &dat[0], sizeof(dat));
+> -	MD5_Final(&md[0], &context);
+> +	mdctx = EVP_MD_CTX_new();
+> +	if (!mdctx)
+> +		return 0;
+> +
+> +	EVP_DigestInit_ex(mdctx, EVP_md5(), NULL);
+> +	EVP_DigestUpdate(mdctx, &dat[0], sizeof(dat));
+> +	EVP_DigestFinal_ex(mdctx, &md[0], &digest_len);
+> +	EVP_MD_CTX_free(mdctx);
+>   
+>   	SHA1(&dat[0], sizeof(dat), &md[0]);
+>   
+> 
+
