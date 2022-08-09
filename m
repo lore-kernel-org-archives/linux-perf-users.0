@@ -2,203 +2,497 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 93FACC19F2D
-	for <linux-perf-users@archiver.kernel.org>; Tue,  9 Aug 2022 16:01:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1CA55C19F2D
+	for <linux-perf-users@archiver.kernel.org>; Tue,  9 Aug 2022 16:11:57 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S244818AbiHIQBh convert rfc822-to-8bit (ORCPT
+        id S244474AbiHIQL4 (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Tue, 9 Aug 2022 12:01:37 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56558 "EHLO
+        Tue, 9 Aug 2022 12:11:56 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34388 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S239710AbiHIQBg (ORCPT
+        with ESMTP id S234359AbiHIQLy (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Tue, 9 Aug 2022 12:01:36 -0400
-Received: from frasgout.his.huawei.com (frasgout.his.huawei.com [185.176.79.56])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1FEDC101C0;
-        Tue,  9 Aug 2022 09:01:35 -0700 (PDT)
-Received: from fraeml707-chm.china.huawei.com (unknown [172.18.147.207])
-        by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4M2Hqt3L9xz67gtM;
-        Wed, 10 Aug 2022 00:01:30 +0800 (CST)
-Received: from fraeml714-chm.china.huawei.com (10.206.15.33) by
- fraeml707-chm.china.huawei.com (10.206.15.35) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2375.24; Tue, 9 Aug 2022 18:01:32 +0200
-Received: from fraeml714-chm.china.huawei.com ([10.206.15.33]) by
- fraeml714-chm.china.huawei.com ([10.206.15.33]) with mapi id 15.01.2375.024;
- Tue, 9 Aug 2022 18:01:32 +0200
-From:   Roberto Sassu <roberto.sassu@huawei.com>
-To:     Arnaldo Carvalho de Melo <acme@kernel.org>
-CC:     "quentin@isovalent.com" <quentin@isovalent.com>,
-        "ast@kernel.org" <ast@kernel.org>,
-        "andrii@kernel.org" <andrii@kernel.org>,
-        "martin.lau@linux.dev" <martin.lau@linux.dev>,
-        "song@kernel.org" <song@kernel.org>,
-        "john.fastabend@gmail.com" <john.fastabend@gmail.com>,
-        "kpsingh@kernel.org" <kpsingh@kernel.org>,
-        "sdf@google.com" <sdf@google.com>,
-        "peterz@infradead.org" <peterz@infradead.org>,
-        "mingo@redhat.com" <mingo@redhat.com>,
-        "terrelln@fb.com" <terrelln@fb.com>,
-        "nathan@kernel.org" <nathan@kernel.org>,
-        "ndesaulniers@google.com" <ndesaulniers@google.com>,
-        "bpf@vger.kernel.org" <bpf@vger.kernel.org>,
-        "linux-perf-users@vger.kernel.org" <linux-perf-users@vger.kernel.org>,
-        "llvm@lists.linux.dev" <llvm@lists.linux.dev>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Jiri Olsa <jolsa@kernel.org>,
-        Andres Freund <andres@anarazel.de>,
-        Daniel Borkmann <daniel@iogearbox.net>
-Subject: RE: [PATCH 4/4] build: Switch to new openssl API for test-libcrypto
-Thread-Topic: [PATCH 4/4] build: Switch to new openssl API for test-libcrypto
-Thread-Index: AQHYm5HfT/KQ8BwklE+dy083QuWM9q2lK0sAgAAmxQCAAVr4gIAAAaGAgAAjZQCAAAjuAA==
-Date:   Tue, 9 Aug 2022 16:01:32 +0000
-Message-ID: <bf906906df714ebb82259539496ec6be@huawei.com>
-References: <20220719170555.2576993-1-roberto.sassu@huawei.com>
- <20220719170555.2576993-4-roberto.sassu@huawei.com>
- <5f867295-10d2-0085-d1dc-051f56e7136a@iogearbox.net>
- <YvFW/kBL6YA3Tlnc@kernel.org> <YvJ6DbzBNsAgNZS4@kernel.org>
- <YvJ7awkCVBYaZ2dd@kernel.org> <23f8c56f584b4da8acf15d050c0443b6@huawei.com>
-In-Reply-To: <23f8c56f584b4da8acf15d050c0443b6@huawei.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-originating-ip: [10.81.201.209]
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 8BIT
+        Tue, 9 Aug 2022 12:11:54 -0400
+Received: from mail-lf1-x130.google.com (mail-lf1-x130.google.com [IPv6:2a00:1450:4864:20::130])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E56101ADA9
+        for <linux-perf-users@vger.kernel.org>; Tue,  9 Aug 2022 09:11:52 -0700 (PDT)
+Received: by mail-lf1-x130.google.com with SMTP id o2so10330409lfb.1
+        for <linux-perf-users@vger.kernel.org>; Tue, 09 Aug 2022 09:11:52 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=ENI5b+/p0O/rYhtzOF+Lh3Dia5iT+fZ6g9G+vQPnlRs=;
+        b=ZdUY1IwDhnYs12+XgKAe8WLH0xbjiVpXxvJiedN8pgqTGaei9cbN4iWl5tzgGFc11P
+         tMPSPMAOgnXqvwFBZs2egoU9jlBGAOWYlB+wSXrOIXma6rF5prnyPcpjjMwH/ffoYg8/
+         +rLeUibDbtyzla05T57Rtcu5Y2xVZjWF4f3Wi092UBOiJ7pq3LmuTXm5hQyMXf9/oAlF
+         wg00r5fLuvvq/cig+tnP56qih1hPwSQO8UvfM0ZzyRWqbr4dqH9mjwWdFPKLmUcoUpLq
+         u0GQe+4Lw4WY6c/gV6k441YQCzB8aLJNmdnJcEqd1AmaSkex8hJMJfNxBPXtrG+vOQFy
+         AmbA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=ENI5b+/p0O/rYhtzOF+Lh3Dia5iT+fZ6g9G+vQPnlRs=;
+        b=Z36CFRH24uGew6eh0x6ec+C+k6H5brejsCXnsFXQkDzn6KmvM54CgZiooyjK8LNg0G
+         MQ1ZoWD77ZUOG2xk2naSJ/H7jAPnZAdVkn5AVPU48nLgAlGN25iqRwE4X+PP7puzYbBt
+         qRYJTcYO+CaLgIWwfwzX5h68CAr8DLfnd3pHXzDXZ9hECtkM0HPu5HqOBppxW6bhhykG
+         dFdinPNFn3C7kaGqHbgQlIwEpqGhisdXvn9lVAWzYRCvrNOnqOiBZrLXvJtLf0VIpauN
+         pMkCvjWXHbmH84wgQcu0YU9nLShZvV1xvYDcUNK8lBk54La2ThfBaleSbJ9dahOEbYz5
+         EjgQ==
+X-Gm-Message-State: ACgBeo0Tv8St/vM4PPAPjnsuEByNIRcujJwaoItaCJHPkR+Sf4UE/tSo
+        PVZm5r1DIAmLlgJ/a9bww9VpYBU1wRoxqz/6iumBczws97/pmw==
+X-Google-Smtp-Source: AA6agR6NsQlR8kbRhbdw3pvkpiviTFBQGCiMA5TR2Hw59y9fwjeIJu8kiR943gYLtU4EWAWtdiNdZK8Mu2pX0KueZH4=
+X-Received: by 2002:a05:6512:2314:b0:48c:f43c:3a39 with SMTP id
+ o20-20020a056512231400b0048cf43c3a39mr2915370lfu.419.1660061511154; Tue, 09
+ Aug 2022 09:11:51 -0700 (PDT)
 MIME-Version: 1.0
-X-CFilter-Loop: Reflected
+References: <20220704081149.16797-1-mike.leach@linaro.org> <20220704081149.16797-2-mike.leach@linaro.org>
+ <ae61e907-cf88-873a-1925-878ad9293bc1@arm.com>
+In-Reply-To: <ae61e907-cf88-873a-1925-878ad9293bc1@arm.com>
+From:   Mike Leach <mike.leach@linaro.org>
+Date:   Tue, 9 Aug 2022 17:11:40 +0100
+Message-ID: <CAJ9a7VhoK33w0_pR0dptDWC4L1mcz172=T=N4PMpv3hj75zM_A@mail.gmail.com>
+Subject: Re: [PATCH v2 01/13] coresight: trace-id: Add API to dynamically
+ assign Trace ID values
+To:     Suzuki K Poulose <suzuki.poulose@arm.com>
+Cc:     coresight@lists.linaro.org, linux-arm-kernel@lists.infradead.org,
+        linux-kernel@vger.kernel.org, mathieu.poirier@linaro.org,
+        peterz@infradead.org, mingo@redhat.com, acme@kernel.org,
+        linux-perf-users@vger.kernel.org, leo.yan@linaro.org,
+        quic_jinlmao@quicinc.com
+Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-> From: Roberto Sassu [mailto:roberto.sassu@huawei.com]
-> Sent: Tuesday, August 9, 2022 5:29 PM
-> > From: Arnaldo Carvalho de Melo [mailto:acme@kernel.org]
-> > Sent: Tuesday, August 9, 2022 5:21 PM
-> > Em Tue, Aug 09, 2022 at 12:15:25PM -0300, Arnaldo Carvalho de Melo
-> escreveu:
-> > > Em Mon, Aug 08, 2022 at 03:33:34PM -0300, Arnaldo Carvalho de Melo
-> > escreveu:
-> > > > Em Mon, Aug 08, 2022 at 06:14:48PM +0200, Daniel Borkmann escreveu:
-> > > > > Hi Arnaldo,
-> > > > >
-> > > > > On 7/19/22 7:05 PM, Roberto Sassu wrote:
-> > > > > > Switch to new EVP API for detecting libcrypto, as Fedora 36 returns an
-> > > > > > error when it encounters the deprecated function MD5_Init() and the
-> > others.
-> > > > > > The error would be interpreted as missing libcrypto, while in reality it is
-> > > > > > not.
-> > > > > >
-> > > > > > Signed-off-by: Roberto Sassu <roberto.sassu@huawei.com>
-> > > > >
-> > > > > Given rest of the tooling fixes from Andres Freund went via perf tree and
-> > the
-> > > > > below is perf related as well, I presume you'll pick this up, too?
-> > > >
-> > > > Sure.
-> > > >
-> > > > >   [0]
-> >
-> https://git.kernel.org/pub/scm/linux/kernel/git/acme/linux.git/log/?h=perf/cor
-> > e
-> > >
-> > > So I fixed up the first one, minor fuzzes, the second I had to fix
-> > > conflicts with the patchset from Andres, ended up as below, will test
-> > > build it then in my container kit.
+Hi Suzuki
 
-Did you push to a remote branch, so that I start from those?
+On Tue, 19 Jul 2022 at 18:30, Suzuki K Poulose <suzuki.poulose@arm.com> wrote:
+>
+>
+> Hi Mike,
+>
+> Thanks for the patch, please find my comments inline.
+>
+>
+> On 04/07/2022 09:11, Mike Leach wrote:
+> > The existing mechanism to assign Trace ID values to sources is limited
+> > and does not scale for larger multicore / multi trace source systems.
+> >
+> > The API introduces functions that reserve IDs based on availabilty
+> > represented by a coresight_trace_id_map structure. This records the
+> > used and free IDs in a bitmap.
+> >
+> > CPU bound sources such as ETMs use the coresight_trace_id_get_cpu_id /
+> > coresight_trace_id_put_cpu_id pair of functions. The API will record
+> > the ID associated with the CPU. This ensures that the same ID will be
+> > re-used while perf events are active on the CPU. The put_cpu_id function
+> > will pend release of the ID until all perf cs_etm sessions are complete.
+> >
+> > Non-cpu sources, such as the STM can use coresight_trace_id_get_system_id /
+> > coresight_trace_id_put_system_id.
+> >
+> > Signed-off-by: Mike Leach <mike.leach@linaro.org>
+> > ---
+> >   drivers/hwtracing/coresight/Makefile          |   2 +-
+> >   .../hwtracing/coresight/coresight-trace-id.c  | 230 ++++++++++++++++++
+> >   .../hwtracing/coresight/coresight-trace-id.h  |  65 +++++
+> >   3 files changed, 296 insertions(+), 1 deletion(-)
+> >   create mode 100644 drivers/hwtracing/coresight/coresight-trace-id.c
+> >   create mode 100644 drivers/hwtracing/coresight/coresight-trace-id.h
+> >
+> > diff --git a/drivers/hwtracing/coresight/Makefile b/drivers/hwtracing/coresight/Makefile
+> > index b6c4a48140ec..329a0c704b87 100644
+> > --- a/drivers/hwtracing/coresight/Makefile
+> > +++ b/drivers/hwtracing/coresight/Makefile
+> > @@ -6,7 +6,7 @@ obj-$(CONFIG_CORESIGHT) += coresight.o
+> >   coresight-y := coresight-core.o  coresight-etm-perf.o coresight-platform.o \
+> >               coresight-sysfs.o coresight-syscfg.o coresight-config.o \
+> >               coresight-cfg-preload.o coresight-cfg-afdo.o \
+> > -             coresight-syscfg-configfs.o
+> > +             coresight-syscfg-configfs.o coresight-trace-id.o
+> >   obj-$(CONFIG_CORESIGHT_LINK_AND_SINK_TMC) += coresight-tmc.o
+> >   coresight-tmc-y := coresight-tmc-core.o coresight-tmc-etf.o \
+> >                     coresight-tmc-etr.o
+> > diff --git a/drivers/hwtracing/coresight/coresight-trace-id.c b/drivers/hwtracing/coresight/coresight-trace-id.c
+> > new file mode 100644
+> > index 000000000000..dac9c89ae00d
+> > --- /dev/null
+> > +++ b/drivers/hwtracing/coresight/coresight-trace-id.c
+> > @@ -0,0 +1,230 @@
+> > +// SPDX-License-Identifier: GPL-2.0
+> > +/*
+> > + * Copyright (c) 2022, Linaro Limited, All rights reserved.
+> > + * Author: Mike Leach <mike.leach@linaro.org>
+> > + */
+> > +#include <linux/kernel.h>
+> > +#include <linux/types.h>
+> > +#include <linux/spinlock.h>
+> > +
+> > +#include "coresight-trace-id.h"
+> > +
+> > +/* need to keep data on ids & association with cpus. */
+> > +struct cpu_id_info {
+> > +     int id;
+> > +     bool pend_rel;
+> > +};
+> > +
+> > +/* default trace ID map. Used for systems that do not require per sink mappings */
+> > +static struct coresight_trace_id_map id_map_default;
+> > +
+> > +/* maintain a record of the current mapping of cpu IDs */
+> > +static DEFINE_PER_CPU(struct cpu_id_info, cpu_ids);
+> > +
+> > +/* perf session active flag */
+> > +static int perf_cs_etm_session_active;
+> > +
+> > +/* lock to protect id_map and cpu data  */
+> > +static DEFINE_SPINLOCK(id_map_lock);
+> > +
+> > +/* ID 0 is reserved */
+> > +#define CORESIGHT_TRACE_ID_RES_0 0
+> > +
+> > +/* ID 0x70 onwards are reserved */
+> > +#define CORESIGHT_TRACE_ID_RES_RANGE_LO 0x70
+> > +#define CORESIGHT_TRACE_ID_RES_RANGE_HI 0x7F
+>
+> Since this range is at the end of top, we could clip the
+> MAX_IDS to 0x70 and skip all these unnecessary checks and reservations.
+> Also, by modifying the find_bit and for_each_bit slightly we could
+> get away with this reservation scheme and the IS_VALID(id) checks.
+>
+> > +#define IS_VALID_ID(id)      \
+> > +     ((id > CORESIGHT_TRACE_ID_RES_0) && (id < CORESIGHT_TRACE_ID_RES_RANGE_LO))
+> > +
+> > +static void coresight_trace_id_set_inuse(int id, struct coresight_trace_id_map *id_map)
+> > +{
+> > +     if (IS_VALID_ID(id))
+> > +             set_bit(id, id_map->avail_ids);
+> > +}
+>
+> Please see my comment around the definition of avail_ids.
+>
+> > +
+> > +static void coresight_trace_id_clear_inuse(int id, struct coresight_trace_id_map *id_map)
+> > +{
+> > +     if (IS_VALID_ID(id))
+> > +             clear_bit(id, id_map->avail_ids);
+> > +}
+>
+> This could be :
+>
+> coresight_trace_id_free_id()
+>
+> > +
+> > +static void coresight_trace_id_set_pend_rel(int id, struct coresight_trace_id_map *id_map)
+> > +{
+> > +     if (IS_VALID_ID(id))
+> > +             set_bit(id, id_map->pend_rel_ids);
+> > +}
+> > +
+> > +static void coresight_trace_id_clear_pend_rel(int id, struct coresight_trace_id_map *id_map)
+> > +{
+> > +     if (IS_VALID_ID(id))
+> > +             clear_bit(id, id_map->pend_rel_ids);
+> > +}
+> > +
+>
+>
+> > +static int coresight_trace_id_find_new_id(struct coresight_trace_id_map *id_map)
+>
+> minor nit: Could we call this :
+>
+> coresight_trace_id_alloc_new_id(id_map) and
+>
+> > +{
+> > +     int id;
+> > +
+> > +     id = find_first_zero_bit(id_map->avail_ids, CORESIGHT_TRACE_IDS_MAX);
+>
+> minor nit: You could also do, to explicitly skip 0.
+>
+>      id = find_next_zero_bit(id_map->avail_ids, 1, CORESIGHT_TRACE_IDS_MAX);
+>
+>
+> > +     if (id >= CORESIGHT_TRACE_IDS_MAX)
+> > +             id = -EINVAL;
+>
+> Could we also mark the id as in use here itself ? All callers of this
+> function have to do that explicitly, anyways.
+>
+> > +     return id;
+> > +}
+> > +
+> > +/* release all pending IDs for all current maps & clear CPU associations */
+> > +static void coresight_trace_id_release_all_pending(void)
+> > +{
+> > +     struct coresight_trace_id_map *id_map = &id_map_default;
+> > +     int cpu, bit;
+> > +
+>         int cpu, bit = 1;
+>
+> > +     for_each_set_bit(bit, id_map->pend_rel_ids, CORESIGHT_TRACE_IDS_MAX) {
+>
+> for_each_set_bit_from(bit, id_map...)
+>
+> > +             clear_bit(bit, id_map->avail_ids);
+> > +             clear_bit(bit, id_map->pend_rel_ids);
+> > +     }
+> > +
+> > +     for_each_possible_cpu(cpu) {
+> > +             if (per_cpu(cpu_ids, cpu).pend_rel) {
+> > +                     per_cpu(cpu_ids, cpu).pend_rel = false;
+> > +                     per_cpu(cpu_ids, cpu).id = 0;
+> > +             }
+> > +     }
+> > +}
+> > +
+> > +static void coresight_trace_id_init_id_map(struct coresight_trace_id_map *id_map)
+> > +{
+> > +     int bit;
+> > +
+> > +     /* set all reserved bits as in-use */
+> > +     set_bit(CORESIGHT_TRACE_ID_RES_0, id_map->avail_ids);
+>
+> > +     for (bit = CORESIGHT_TRACE_ID_RES_RANGE_LO;
+> > +          bit <= CORESIGHT_TRACE_ID_RES_RANGE_HI; bit++)
+> > +             set_bit(bit, id_map->avail_ids);
+>
+>
+> > +}
+> > +
+> > +static int coresight_trace_id_map_get_cpu_id(int cpu, struct coresight_trace_id_map *id_map)
+> > +{
+> > +     unsigned long flags;
+> > +     int id;
+> > +
+> > +     spin_lock_irqsave(&id_map_lock, flags);
+> > +
+> > +     /* check for existing allocation for this CPU */
+> > +     id = per_cpu(cpu_ids, cpu).id;
+> > +     if (id)
+> > +             goto get_cpu_id_out;
+> > +
+> > +     /* find a new ID */
+> > +     id = coresight_trace_id_find_new_id(id_map);
+> > +     if (id < 0)
+> > +             goto get_cpu_id_out;
+> > +
+> > +     /* got a valid new ID - save details */
+> > +     per_cpu(cpu_ids, cpu).id = id;
+> > +     per_cpu(cpu_ids, cpu).pend_rel = false;
+> > +     coresight_trace_id_set_inuse(id, id_map);
+> > +     coresight_trace_id_clear_pend_rel(id, id_map);
+> > +
+> > +get_cpu_id_out:
+> > +     spin_unlock_irqrestore(&id_map_lock, flags);
+> > +     return id;
+> > +}
+> > +
+> > +static void coresight_trace_id_map_put_cpu_id(int cpu, struct coresight_trace_id_map *id_map)
+> > +{
+> > +     unsigned long flags;
+> > +     int id;
+> > +
+> > +     spin_lock_irqsave(&id_map_lock, flags);
+> > +     id = per_cpu(cpu_ids, cpu).id;
+> > +     if (!id)
+> > +             goto put_cpu_id_out;
+> > +
+> > +     if (perf_cs_etm_session_active) {
+> > +             /* set release at pending if perf still active */
+> > +             coresight_trace_id_set_pend_rel(id, id_map);
+> > +             per_cpu(cpu_ids, cpu).pend_rel = true;
+> > +     } else {
+> > +             /* otherwise clear id */
+> > +             coresight_trace_id_clear_inuse(id, id_map);
+> > +             per_cpu(cpu_ids, cpu).id = 0;
+> > +     }
+> > +
+> > + put_cpu_id_out:
+> > +     spin_unlock_irqrestore(&id_map_lock, flags);
+> > +}
+> > +
+> > +static int coresight_trace_id_map_get_system_id(struct coresight_trace_id_map *id_map)
+> > +{
+> > +     unsigned long flags;
+> > +     int id;
+> > +
+> > +     spin_lock_irqsave(&id_map_lock, flags);
+> > +     id = coresight_trace_id_find_new_id(id_map);
+> > +     if (id > 0)
+> > +             coresight_trace_id_set_inuse(id, id_map);
+>
+> Please see my suggestion above on moving this to the place where we find
+> the bit.
+>
+> > +     spin_unlock_irqrestore(&id_map_lock, flags);
+> > +
+> > +     return id;
+> > +}
+> > +
+> > +static void coresight_trace_id_map_put_system_id(struct coresight_trace_id_map *id_map, int id)
+> > +{
+> > +     unsigned long flags;
+> > +
+> > +     spin_lock_irqsave(&id_map_lock, flags);
+> > +     coresight_trace_id_clear_inuse(id, id_map);
+> > +     spin_unlock_irqrestore(&id_map_lock, flags);
+> > +}
+> > +
+> > +/* API functions */
+> > +int coresight_trace_id_get_cpu_id(int cpu)
+> > +{
+> > +     return coresight_trace_id_map_get_cpu_id(cpu, &id_map_default);
+> > +}
+> > +EXPORT_SYMBOL_GPL(coresight_trace_id_get_cpu_id);
+> > +
+> > +void coresight_trace_id_put_cpu_id(int cpu)
+> > +{
+> > +     coresight_trace_id_map_put_cpu_id(cpu, &id_map_default);
+> > +}
+> > +EXPORT_SYMBOL_GPL(coresight_trace_id_put_cpu_id);
+> > +
+> > +int coresight_trace_id_get_system_id(void)
+> > +{
+> > +     return coresight_trace_id_map_get_system_id(&id_map_default);
+> > +}
+> > +EXPORT_SYMBOL_GPL(coresight_trace_id_get_system_id);
+> > +
+> > +void coresight_trace_id_put_system_id(int id)
+> > +{
+> > +     coresight_trace_id_map_put_system_id(&id_map_default, id);
+> > +}
+> > +EXPORT_SYMBOL_GPL(coresight_trace_id_put_system_id);
+> > +
+> > +void coresight_trace_id_perf_start(void)
+> > +{
+> > +     unsigned long flags;
+> > +
+> > +     spin_lock_irqsave(&id_map_lock, flags);
+> > +     perf_cs_etm_session_active++;
+> > +     spin_unlock_irqrestore(&id_map_lock, flags);
+> > +}
+> > +EXPORT_SYMBOL_GPL(coresight_trace_id_perf_start);
+> > +
+> > +void coresight_trace_id_perf_stop(void)
+> > +{
+> > +     unsigned long flags;
+> > +
+> > +     spin_lock_irqsave(&id_map_lock, flags);
+> > +     perf_cs_etm_session_active--;
+> > +     if (!perf_cs_etm_session_active)
+> > +             coresight_trace_id_release_all_pending();
+> > +     spin_unlock_irqrestore(&id_map_lock, flags);
+> > +}
+> > +EXPORT_SYMBOL_GPL(coresight_trace_id_perf_stop);
+> > +
+> > +void coresight_trace_id_init_default_map(void)
+> > +{
+> > +     coresight_trace_id_init_id_map(&id_map_default);
+> > +}
+> > +EXPORT_SYMBOL_GPL(coresight_trace_id_init_default_map);
+>
+> We may be able to get rid of this init. Otherwise we may convert this to
+> a module_initcall() in the worst case. No need to export this.
+>
+> > diff --git a/drivers/hwtracing/coresight/coresight-trace-id.h b/drivers/hwtracing/coresight/coresight-trace-id.h
+> > new file mode 100644
+> > index 000000000000..63950087edf6
+> > --- /dev/null
+> > +++ b/drivers/hwtracing/coresight/coresight-trace-id.h
+> > @@ -0,0 +1,65 @@
+> > +/* SPDX-License-Identifier: GPL-2.0 */
+> > +/*
+> > + * Copyright(C) 2022 Linaro Limited. All rights reserved.
+> > + * Author: Mike Leach <mike.leach@linaro.org>
+> > + */
+> > +
+> > +#ifndef _CORESIGHT_TRACE_ID_H
+> > +#define _CORESIGHT_TRACE_ID_H
+> > +
+> > +/*
+> > + * Coresight trace ID allocation API
+> > + *
+> > + * With multi cpu systems, and more additional trace sources a scalable
+> > + * trace ID reservation system is required.
+> > + *
+> > + * The system will allocate Ids on a demand basis, and allow them to be
+> > + * released when done.
+> > + *
+> > + * In order to ensure that a consistent cpu / ID matching is maintained
+> > + * throughout a perf cs_etm event session - a session in progress flag will
+> > + * be maintained, and released IDs not cleared until the perf session is
+> > + * complete. This allows the same CPU to be re-allocated its prior ID.
+> > + *
+> > + *
+> > + * Trace ID maps will be created and initialised to prevent architecturally
+> > + * reserved IDs from being allocated.
+> > + *
+> > + * API permits multiple maps to be maintained - for large systems where
+> > + * different sets of cpus trace into different independent sinks.
+> > + */
+>
+> Thanks for the detailed comment above.
+>
+> > +
+> > +#include <linux/bitops.h>
+> > +#include <linux/types.h>
+> > +
+> > +
+> > +/* architecturally we have 128 IDs some of which are reserved */
+> > +#define CORESIGHT_TRACE_IDS_MAX 128
+>
+> Could we restrict the CORESIGHT_TRACE_IDS_MAX to 0x70, clipping the
+> upper range of reserved ids ? That way, we could skip bothering about
+> checking it everywhere.
+>
+> > +
+> > +/**
+> > + * Trace ID map.
+> > + *
+> > + * @avail_ids:       Bitmap to register available (bit = 0) and in use (bit = 1) IDs.
+> > + *           Initialised so that the reserved IDs are permanently marked as in use.
+>
+> To be honest this inverses the intution. Could we instead name this
+> used_ids ?
+>
+> i.e BIT(i) = 1 => implies trace id is in use.
+>
+>
+> > + * @pend_rel_ids: CPU IDs that have been released by the trace source but not yet marked
+> > + *                as available, to allow re-allocation to the same CPU during a perf session.
+> > + */
+> > +struct coresight_trace_id_map {
+> > +     DECLARE_BITMAP(avail_ids, CORESIGHT_TRACE_IDS_MAX);
+> > +     DECLARE_BITMAP(pend_rel_ids, CORESIGHT_TRACE_IDS_MAX);
+> > +};
+>
+> Also, the definitions are split between the .c and .h. Could we keep all
+> of them at one place, .h preferrably ? Or if this is not at all needed
+> for the consumers of the API, we should keep all of this in the .c file.
+>
+> I guess in the future, with the sink specific scheme, we may need to
+> expose the helpers which accept an id_map. So may be even move it here.
+>
 
-Thanks
+I have updated the set pretty much along the lines you suggested.
+However there have been some changes to cope with issues thrown up by
+lockdep as ever, so the new set has a slightly different approach
+depending on perf or sysfs
 
-Roberto
+Thanks for the review. New set to follow shortly.
 
-> > So I backtracked, the way it works needs further consideration with
-> > regard to the patchkit from Andres, that is already upstream, so it
-> > would be good for Roberto to take a look at what is in torvalds/master
-> > now and see if we have to removed that styled thing from Andres.
-> 
-> Will do. Thanks Arnaldo for adapting the patch.
-> 
-> Roberto
-> 
-> > Andres, if you could take a look at Roberto's patchkit as well that
-> > would be great.
-> >
-> > - Arnaldo
-> >
-> > > commit bea955a0256e20cc18e87087e42f2a903b9a8b84
-> > > Author: Roberto Sassu <roberto.sassu@huawei.com>
-> > > Date:   Tue Jul 19 19:05:53 2022 +0200
-> > >
-> > >     bpftool: Complete libbfd feature detection
-> > >
-> > >     Commit 6e8ccb4f624a7 ("tools/bpf: properly account for libbfd
-> variations")
-> > >     sets the linking flags depending on which flavor of the libbfd feature was
-> > >     detected.
-> > >
-> > >     However, the flavors except libbfd cannot be detected, as they are not in
-> > >     the feature list.
-> > >
-> > >     Complete the list of features to detect by adding libbfd-liberty and
-> > >     libbfd-liberty-z.
-> > >
-> > >     Committer notes:
-> > >
-> > >     Adjust conflict with with:
-> > >
-> > >       1e1613f64cc8a09d ("tools bpftool: Don't display disassembler-four-args
-> > feature test")
-> > >       600b7b26c07a070d ("tools bpftool: Fix compilation error with new
-> > binutils")
-> > >
-> > >     Fixes: 6e8ccb4f624a73c5 ("tools/bpf: properly account for libbfd
-> variations")
-> > >     Signed-off-by: Roberto Sassu <roberto.sassu@huawei.com>
-> > >     Cc: Alexei Starovoitov <ast@kernel.org>
-> > >     Cc: Andres Freund <andres@anarazel.de>
-> > >     Cc: Andrii Nakryiko <andrii@kernel.org>
-> > >     Cc: bpf@vger.kernel.org
-> > >     Cc: Daniel Borkmann <daniel@iogearbox.net>
-> > >     Cc: Ingo Molnar <mingo@redhat.com>
-> > >     Cc: John Fastabend <john.fastabend@gmail.com>
-> > >     Cc: KP Singh <kpsingh@kernel.org>
-> > >     Cc: llvm@lists.linux.dev
-> > >     Cc: Martin KaFai Lau <martin.lau@linux.dev>
-> > >     Cc: Nathan Chancellor <nathan@kernel.org>
-> > >     Cc: Nick Desaulniers <ndesaulniers@google.com>
-> > >     Cc: Nick Terrell <terrelln@fb.com>
-> > >     Cc: Peter Zijlstra <peterz@infradead.org>
-> > >     Cc: Quentin Monnet <quentin@isovalent.com>
-> > >     Cc: Song Liu <song@kernel.org>
-> > >     Cc: Stanislav Fomichev <sdf@google.com>
-> > >     Link: https://lore.kernel.org/r/20220719170555.2576993-2-
-> > roberto.sassu@huawei.com
-> > >     Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
-> > >
-> > > diff --git a/tools/bpf/bpftool/Makefile b/tools/bpf/bpftool/Makefile
-> > > index 04d733e98bffbc08..9cc132277150c534 100644
-> > > --- a/tools/bpf/bpftool/Makefile
-> > > +++ b/tools/bpf/bpftool/Makefile
-> > > @@ -93,9 +93,11 @@ INSTALL ?= install
-> > >  RM ?= rm -f
-> > >
-> > >  FEATURE_USER = .bpftool
-> > > -FEATURE_TESTS = libbfd disassembler-four-args disassembler-init-styled
-> > libcap \
-> > > +FEATURE_TESTS = libbfd libbfd-liberty libbfd-liberty-z
-> > > +	disassembler-four-args disassembler-init-styled libcap \
-> > >  	clang-bpf-co-re
-> > > -FEATURE_DISPLAY = libbfd libcap clang-bpf-co-re
-> > > +FEATURE_DISPLAY = libbfd libbfd-liberty libbfd-liberty-z
-> > > +	libcap clang-bpf-co-re
-> > >
-> > >  check_feat := 1
-> > >  NON_CHECK_FEAT_TARGETS := clean uninstall doc doc-clean doc-install
-> doc-
-> > uninstall
-> >
-> > --
-> >
-> > - Arnaldo
+Mike
+
+>
+> Thanks
+> Suzuki
+
+
+
+-- 
+Mike Leach
+Principal Engineer, ARM Ltd.
+Manchester Design Centre. UK
