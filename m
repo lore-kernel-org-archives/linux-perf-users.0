@@ -2,101 +2,110 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E21A3C19F2D
-	for <linux-perf-users@archiver.kernel.org>; Tue,  9 Aug 2022 15:21:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 43CBAC3F6B0
+	for <linux-perf-users@archiver.kernel.org>; Tue,  9 Aug 2022 15:22:02 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S244851AbiHIPVj (ORCPT
+        id S243999AbiHIPWA (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Tue, 9 Aug 2022 11:21:39 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58050 "EHLO
+        Tue, 9 Aug 2022 11:22:00 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57938 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S244866AbiHIPVW (ORCPT
+        with ESMTP id S244891AbiHIPVe (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Tue, 9 Aug 2022 11:21:22 -0400
-Received: from ams.source.kernel.org (ams.source.kernel.org [IPv6:2604:1380:4601:e00::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 22145DF8;
-        Tue,  9 Aug 2022 08:21:21 -0700 (PDT)
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by ams.source.kernel.org (Postfix) with ESMTPS id CB54EB812A1;
-        Tue,  9 Aug 2022 15:21:19 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 47BEBC433D6;
-        Tue,  9 Aug 2022 15:21:18 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1660058478;
-        bh=QdIXELd2CkFV47UtpgDg60Cn8MPrEGSNTDM5L4nMVaM=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=bib2QomNTOnSYhOqg3FOlmGw1OXqMNx1c5eY1Gvi550ot2tfMkDVSIRdRWg98sgf0
-         aHq+y2TsJWEcUG5bdPXeOQmPV300/tV9V30a7ZOQhM69TBjWJYijy0YgxalDcvOeH0
-         VidjCldHTnS29NrNPnWe1nMAAyxu6Z1y5p9UpUO+IyFyIW2p0wGf2XhZqITcgct9gn
-         DTj4HFH6E3wlaWOeWdcry3zuQTJ46iApGKbdTmMSX55iMFOGPb0/PCCD0bWu/MC/6+
-         6ON/faUBPr5VMLBSrqZrO1Em/dIW9+gAHSKZhmN/A3Yw8v/4cR7UtaI1InA0ww2Zic
-         rIH+c6+o7FJ8w==
-Received: by quaco.ghostprotocols.net (Postfix, from userid 1000)
-        id A5D8E4035A; Tue,  9 Aug 2022 12:21:15 -0300 (-03)
-Date:   Tue, 9 Aug 2022 12:21:15 -0300
-From:   Arnaldo Carvalho de Melo <acme@kernel.org>
-To:     Roberto Sassu <roberto.sassu@huawei.com>,
-        Andres Freund <andres@anarazel.de>,
-        Daniel Borkmann <daniel@iogearbox.net>
-Cc:     quentin@isovalent.com, ast@kernel.org, andrii@kernel.org,
-        martin.lau@linux.dev, song@kernel.org, john.fastabend@gmail.com,
-        kpsingh@kernel.org, sdf@google.com, peterz@infradead.org,
-        mingo@redhat.com, terrelln@fb.com, nathan@kernel.org,
-        ndesaulniers@google.com, bpf@vger.kernel.org,
-        linux-perf-users@vger.kernel.org, llvm@lists.linux.dev,
-        linux-kernel@vger.kernel.org, Jiri Olsa <jolsa@kernel.org>
+        Tue, 9 Aug 2022 11:21:34 -0400
+Received: from mail-wm1-x331.google.com (mail-wm1-x331.google.com [IPv6:2a00:1450:4864:20::331])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C126ABC26
+        for <linux-perf-users@vger.kernel.org>; Tue,  9 Aug 2022 08:21:32 -0700 (PDT)
+Received: by mail-wm1-x331.google.com with SMTP id ay36-20020a05600c1e2400b003a4e30d7995so9101532wmb.5
+        for <linux-perf-users@vger.kernel.org>; Tue, 09 Aug 2022 08:21:32 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=isovalent-com.20210112.gappssmtp.com; s=20210112;
+        h=content-transfer-encoding:in-reply-to:from:references:cc:to
+         :content-language:subject:user-agent:mime-version:date:message-id
+         :from:to:cc;
+        bh=vD+tcaqZeKcn4ZVpEK9uVGgFnO6G13lBCWtO9h+EQ/g=;
+        b=CwxDLnH4X215ms/nKAODiOifmdxrI4drSDDiQkd/NN3b1zbHgl6+S7nfvWRDASDwIu
+         CTvv39YA+0cl0ZQYyk3r+e/MnXQa+gh7ZaOm140v6+hxVMjeLEBo31z0w98m4N6G9X5q
+         2d17suTrO+nWCKSxwH4caI0d1v/KaPIlk5UUonbmzO5SqrS7vt8DeSw3xcZB4upKaCjZ
+         FyeIcNgMrT6dW2kf6RPMMJqwE5BZIS4kS261oeIheZkjqtLNOGO4yHK1+fh2fXbDZWbQ
+         mnFgbD53tmMls6sVyGDMK0RTr5oxWCx0ejsz2av51mvb8x11G4stXpU/69EvkRHxi2sa
+         HJuw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=content-transfer-encoding:in-reply-to:from:references:cc:to
+         :content-language:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc;
+        bh=vD+tcaqZeKcn4ZVpEK9uVGgFnO6G13lBCWtO9h+EQ/g=;
+        b=rGgsjLBmMZlGsWEuZhqb974PW4PgTSxB7jNEZ0vktuViHlfUOCIU6GvHj2Fszh34y/
+         e0522jkC/Ib34SK5bl+8fYkDCn8CIF7P0Qy+AVqKp4gG6r5E/OKcvZqzPvaPu19+ME7v
+         amAuT2ob8MBQMtc2VMS6vhYoU0GdHC7+udr0BhXN0MxvNrOblFFq28VGWVELtHP6XIXZ
+         tLuD38JFasEcBHPWG2VFdCWL3whKVUfb2q4LdxRQo6Js0Gs/YdRKuqdObIjFgr21ob22
+         baGr0MfHmzPQUedFkbWyFkgacRc9RJ4eevGf3CcLZpOSB/dCxMF5zb5zsMaKAcl2gqmC
+         hvcA==
+X-Gm-Message-State: ACgBeo3n+IGgUmP16GQFG7KTDiJquxFR+1duczZ6mXl11mk04tEIn6nU
+        Z1JeEsOaPtL5lNsZuKtub+ebEA==
+X-Google-Smtp-Source: AA6agR7j4Y+NYWojvBo9JAbZpEfFdgONFgHaBON1QHZInE56IWly4nKhnF9/PcB1utTyjgCAOhUA0g==
+X-Received: by 2002:a05:600c:350:b0:3a5:3473:1c23 with SMTP id u16-20020a05600c035000b003a534731c23mr9907997wmd.9.1660058491245;
+        Tue, 09 Aug 2022 08:21:31 -0700 (PDT)
+Received: from [192.168.178.32] ([51.155.200.13])
+        by smtp.gmail.com with ESMTPSA id v8-20020a5d5908000000b0021f131de6aesm13649334wrd.34.2022.08.09.08.21.30
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 09 Aug 2022 08:21:30 -0700 (PDT)
+Message-ID: <692f0648-6f47-f4b7-f806-e57af59b1447@isovalent.com>
+Date:   Tue, 9 Aug 2022 16:21:29 +0100
+MIME-Version: 1.0
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
+ Thunderbird/102.1.0
 Subject: Re: [PATCH 4/4] build: Switch to new openssl API for test-libcrypto
-Message-ID: <YvJ7awkCVBYaZ2dd@kernel.org>
+Content-Language: en-GB
+To:     Arnaldo Carvalho de Melo <acme@kernel.org>,
+        Daniel Borkmann <daniel@iogearbox.net>
+Cc:     Roberto Sassu <roberto.sassu@huawei.com>, ast@kernel.org,
+        andrii@kernel.org, martin.lau@linux.dev, song@kernel.org,
+        john.fastabend@gmail.com, kpsingh@kernel.org, sdf@google.com,
+        peterz@infradead.org, mingo@redhat.com, terrelln@fb.com,
+        nathan@kernel.org, ndesaulniers@google.com, bpf@vger.kernel.org,
+        linux-perf-users@vger.kernel.org, llvm@lists.linux.dev,
+        linux-kernel@vger.kernel.org, Andres Freund <andres@anarazel.de>,
+        Jiri Olsa <jolsa@kernel.org>
 References: <20220719170555.2576993-1-roberto.sassu@huawei.com>
  <20220719170555.2576993-4-roberto.sassu@huawei.com>
  <5f867295-10d2-0085-d1dc-051f56e7136a@iogearbox.net>
- <YvFW/kBL6YA3Tlnc@kernel.org>
- <YvJ6DbzBNsAgNZS4@kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+ <YvFW/kBL6YA3Tlnc@kernel.org> <YvJ6DbzBNsAgNZS4@kernel.org>
+From:   Quentin Monnet <quentin@isovalent.com>
 In-Reply-To: <YvJ6DbzBNsAgNZS4@kernel.org>
-X-Url:  http://acmel.wordpress.com
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-Em Tue, Aug 09, 2022 at 12:15:25PM -0300, Arnaldo Carvalho de Melo escreveu:
+On 09/08/2022 16:15, Arnaldo Carvalho de Melo wrote:
 > Em Mon, Aug 08, 2022 at 03:33:34PM -0300, Arnaldo Carvalho de Melo escreveu:
-> > Em Mon, Aug 08, 2022 at 06:14:48PM +0200, Daniel Borkmann escreveu:
-> > > Hi Arnaldo,
-> > > 
-> > > On 7/19/22 7:05 PM, Roberto Sassu wrote:
-> > > > Switch to new EVP API for detecting libcrypto, as Fedora 36 returns an
-> > > > error when it encounters the deprecated function MD5_Init() and the others.
-> > > > The error would be interpreted as missing libcrypto, while in reality it is
-> > > > not.
-> > > > 
-> > > > Signed-off-by: Roberto Sassu <roberto.sassu@huawei.com>
-> > > 
-> > > Given rest of the tooling fixes from Andres Freund went via perf tree and the
-> > > below is perf related as well, I presume you'll pick this up, too?
-> > 
-> > Sure.
-> >  
-> > >   [0] https://git.kernel.org/pub/scm/linux/kernel/git/acme/linux.git/log/?h=perf/core
+>> Em Mon, Aug 08, 2022 at 06:14:48PM +0200, Daniel Borkmann escreveu:
+>>> Hi Arnaldo,
+>>>
+>>> On 7/19/22 7:05 PM, Roberto Sassu wrote:
+>>>> Switch to new EVP API for detecting libcrypto, as Fedora 36 returns an
+>>>> error when it encounters the deprecated function MD5_Init() and the others.
+>>>> The error would be interpreted as missing libcrypto, while in reality it is
+>>>> not.
+>>>>
+>>>> Signed-off-by: Roberto Sassu <roberto.sassu@huawei.com>
+>>>
+>>> Given rest of the tooling fixes from Andres Freund went via perf tree and the
+>>> below is perf related as well, I presume you'll pick this up, too?
+>>
+>> Sure.
+>>  
+>>>   [0] https://git.kernel.org/pub/scm/linux/kernel/git/acme/linux.git/log/?h=perf/core
 > 
 > So I fixed up the first one, minor fuzzes, the second I had to fix
 > conflicts with the patchset from Andres, ended up as below, will test
 > build it then in my container kit.
-
-So I backtracked, the way it works needs further consideration with
-regard to the patchkit from Andres, that is already upstream, so it
-would be good for Roberto to take a look at what is in torvalds/master
-now and see if we have to removed that styled thing from Andres.
-
-Andres, if you could take a look at Roberto's patchkit as well that
-would be great.
-
-- Arnaldo
- 
+> 
+> - Arnaldo
+> 
 > commit bea955a0256e20cc18e87087e42f2a903b9a8b84
 > Author: Roberto Sassu <roberto.sassu@huawei.com>
 > Date:   Tue Jul 19 19:05:53 2022 +0200
@@ -161,6 +170,4 @@ would be great.
 >  check_feat := 1
 >  NON_CHECK_FEAT_TARGETS := clean uninstall doc doc-clean doc-install doc-uninstall
 
--- 
-
-- Arnaldo
+The adjustment looks good, thanks Arnaldo!
