@@ -2,110 +2,109 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AF729C00140
-	for <linux-perf-users@archiver.kernel.org>; Wed, 10 Aug 2022 13:06:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EA7D4C25B08
+	for <linux-perf-users@archiver.kernel.org>; Wed, 10 Aug 2022 13:10:33 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229487AbiHJNGA (ORCPT
+        id S232471AbiHJNKc (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Wed, 10 Aug 2022 09:06:00 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37564 "EHLO
+        Wed, 10 Aug 2022 09:10:32 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42634 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232580AbiHJNF5 (ORCPT
+        with ESMTP id S231687AbiHJNKc (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Wed, 10 Aug 2022 09:05:57 -0400
-Received: from ams.source.kernel.org (ams.source.kernel.org [IPv6:2604:1380:4601:e00::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 87EEE54662;
-        Wed, 10 Aug 2022 06:05:56 -0700 (PDT)
+        Wed, 10 Aug 2022 09:10:32 -0400
+Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id EBBC4BEC;
+        Wed, 10 Aug 2022 06:10:30 -0700 (PDT)
 Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by ams.source.kernel.org (Postfix) with ESMTPS id 4C1E1B81C11;
-        Wed, 10 Aug 2022 13:05:55 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id D5988C433D6;
-        Wed, 10 Aug 2022 13:05:51 +0000 (UTC)
+        by dfw.source.kernel.org (Postfix) with ESMTPS id 262176144B;
+        Wed, 10 Aug 2022 13:10:30 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 67138C433D6;
+        Wed, 10 Aug 2022 13:10:29 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1660136754;
-        bh=iL1pcQ1UCvjHw2tHMD8Xe73O/Xs5rV9iq6M/B8XsBGo=;
+        s=k20201202; t=1660137029;
+        bh=sXSgjj5+4JsQMk/9Qox6+ZAQuvnEJ/J3+NWYzjJbhPE=;
         h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=ol8YaxFX6N6Y1SQVrFWYtePyxKmUu8izcCF2xYRxj7xtVUqfUSYwWfCKMe9g+844p
-         H7NQST4gtA4v4XqjExGcNYf0QXUbinJisvlFz6DaLWUjoeOHWScfOt2BvkcKBoi97p
-         McHQWBzkPq+sh4Ou65zBzCNr6GLJH1tnqLngQE14H2r1SD1BPHprIS++yJ9KtYrW39
-         8q/NH8fRdV99oiDFqXqu2JCHHIt88wTYZWPV7fG9T11tSe+w190yNa890scgI/OS0Z
-         On7ByggJoODWxVVPqcrpXjRGRGvx/tKVb2+WavXd5UdXB8kiZuz2tCZ76yo4yAzYTu
-         jenjPDt85sHQg==
+        b=ndzHzvgqRms/h4alSGbXbFmh+oce7SiBJ1vt6g2QWH1+sdnF7XALSFmJJE42VKRvx
+         N/+HoxuaZosX9/dOFAD9C9bTOx5GePb8PDejMMGkOfWrGFu4o7yOAmOoe5SR0uGw4z
+         MlnxKCbI1TCW32A5o0yb6QqlBkfyKHFG4Z5ey1olHRV53MslQojlf0mGJg183rjakm
+         XAIetpwJvH2eLw1fJOtRjsa89n6jIXwrfxoV1M82Cbm+Zfx16SoSHWI2kVROBRwKwF
+         tWqR4tdYaQenHKk1oKgCovH67wX3n1kSH7cGAsiqJwtBH3tF0UHpbJL2qARITQkDOH
+         jKTxxEqleyWEw==
 Received: by quaco.ghostprotocols.net (Postfix, from userid 1000)
-        id 57E2D4035A; Wed, 10 Aug 2022 10:05:49 -0300 (-03)
-Date:   Wed, 10 Aug 2022 10:05:49 -0300
+        id 0877F4035A; Wed, 10 Aug 2022 10:10:27 -0300 (-03)
+Date:   Wed, 10 Aug 2022 10:10:26 -0300
 From:   Arnaldo Carvalho de Melo <acme@kernel.org>
-To:     Brian Robbins <brianrob@linux.microsoft.com>
+To:     Christophe JAILLET <christophe.jaillet@wanadoo.fr>
 Cc:     Peter Zijlstra <peterz@infradead.org>,
         Ingo Molnar <mingo@redhat.com>,
         Mark Rutland <mark.rutland@arm.com>,
         Alexander Shishkin <alexander.shishkin@linux.intel.com>,
         Jiri Olsa <jolsa@kernel.org>,
         Namhyung Kim <namhyung@kernel.org>,
-        Ian Rogers <irogers@google.com>,
-        linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v2] perf inject jit: Ignore memfd and anonymous mmap
- events if jitdump present
-Message-ID: <YvOtLXXJ1O60N8Hg@kernel.org>
-References: <20220805220645.95855-1-brianrob@linux.microsoft.com>
+        Masami Hiramatsu <mhiramat@kernel.org>,
+        linux-kernel@vger.kernel.org, kernel-janitors@vger.kernel.org,
+        Arnaldo Carvalho de Melo <acme@redhat.com>,
+        linux-perf-users@vger.kernel.org
+Subject: Re: [PATCH v2] perf probe: Fix an error handling path in
+ 'parse_perf_probe_command()'
+Message-ID: <YvOuQnSdT31wSPZ8@kernel.org>
+References: <b71bcb01fa0c7b9778647235c3ab490f699ba278.1659797452.git.christophe.jaillet@wanadoo.fr>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20220805220645.95855-1-brianrob@linux.microsoft.com>
+In-Reply-To: <b71bcb01fa0c7b9778647235c3ab490f699ba278.1659797452.git.christophe.jaillet@wanadoo.fr>
 X-Url:  http://acmel.wordpress.com
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-Em Fri, Aug 05, 2022 at 03:06:45PM -0700, Brian Robbins escreveu:
-> Some processes store jitted code in memfd mappings to avoid having rwx
-> mappings.  These processes map the code with a writeable mapping and a
-> read-execute mapping.  They write the code using the writeable mapping
-> and then unmap the writeable mapping.  All subsequent execution is
-> through the read-execute mapping.
+Em Sat, Aug 06, 2022 at 04:51:26PM +0200, Christophe JAILLET escreveu:
+> If a memory allocation fail, we should branch to the error handling path in
+> order to free some resources allocated a few lines above.
 > 
-> perf inject --jit ignores //anon* mappings for each process where a
-> jitdump is present because it expects to inject mmap events for each
-> jitted code range, and said jitted code ranges will overlap with the
-> //anon* mappings.
-> 
-> Ignore /memfd: and [anon:* mappings so that jitted code contained in
-> /memfd: and [anon:* mappings is treated the same way as jitted code
-> contained in //anon* mappings.
+> Fixes: 15354d546986 ("perf probe: Generate event name with line number")
+> Signed-off-by: Christophe JAILLET <christophe.jaillet@wanadoo.fr>
+> Acked-by: Masami Hiramatsu <mhiramat@kernel.org>
 
-Removed v1, applied this one.
+
+Thanks, applied.
 
 - Arnaldo
- 
-> Signed-off-by: Brian Robbins <brianrob@linux.microsoft.com>
+
+
 > ---
->  tools/perf/util/jitdump.c | 9 +++++++--
->  1 file changed, 7 insertions(+), 2 deletions(-)
+> Change in v2:
+>  - Synch with latest -next
+>  - Add A-by tag (see link below, it was old!)
 > 
-> diff --git a/tools/perf/util/jitdump.c b/tools/perf/util/jitdump.c
-> index a23255773c60..4e6632203704 100644
-> --- a/tools/perf/util/jitdump.c
-> +++ b/tools/perf/util/jitdump.c
-> @@ -845,8 +845,13 @@ jit_process(struct perf_session *session,
->  	if (jit_detect(filename, pid, nsi)) {
->  		nsinfo__put(nsi);
+> v1:
+>  https://lore.kernel.org/all/20200315201259.29190-1-christophe.jaillet@wanadoo.fr/
+> ---
+>  tools/perf/util/probe-event.c | 6 ++++--
+>  1 file changed, 4 insertions(+), 2 deletions(-)
+> 
+> diff --git a/tools/perf/util/probe-event.c b/tools/perf/util/probe-event.c
+> index 67c12d5303e7..785246ff4179 100644
+> --- a/tools/perf/util/probe-event.c
+> +++ b/tools/perf/util/probe-event.c
+> @@ -1775,8 +1775,10 @@ int parse_perf_probe_command(const char *cmd, struct perf_probe_event *pev)
+>  	if (!pev->event && pev->point.function && pev->point.line
+>  			&& !pev->point.lazy_line && !pev->point.offset) {
+>  		if (asprintf(&pev->event, "%s_L%d", pev->point.function,
+> -			pev->point.line) < 0)
+> -			return -ENOMEM;
+> +			pev->point.line) < 0) {
+> +			ret = -ENOMEM;
+> +			goto out;
+> +		}
+>  	}
 >  
-> -		// Strip //anon* mmaps if we processed a jitdump for this pid
-> -		if (jit_has_pid(machine, pid) && (strncmp(filename, "//anon", 6) == 0))
-> +		/*
-> +		 * Strip //anon*, [anon:* and /memfd:* mmaps if we processed a jitdump for this pid
-> +		 */
-> +		if (jit_has_pid(machine, pid) &&
-> +			((strncmp(filename, "//anon", 6) == 0) ||
-> +			 (strncmp(filename, "[anon:", 6) == 0) ||
-> +			 (strncmp(filename, "/memfd:", 7) == 0)))
->  			return 1;
->  
->  		return 0;
+>  	/* Copy arguments and ensure return probe has no C argument */
 > -- 
-> 2.25.1
+> 2.34.1
 
 -- 
 
