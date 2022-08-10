@@ -2,58 +2,58 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B44C2C00140
-	for <linux-perf-users@archiver.kernel.org>; Wed, 10 Aug 2022 14:29:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4BF29C00140
+	for <linux-perf-users@archiver.kernel.org>; Wed, 10 Aug 2022 14:35:46 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232447AbiHJO3f (ORCPT
+        id S229680AbiHJOfn (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Wed, 10 Aug 2022 10:29:35 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39526 "EHLO
+        Wed, 10 Aug 2022 10:35:43 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46224 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232366AbiHJO3f (ORCPT
+        with ESMTP id S232001AbiHJOfa (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Wed, 10 Aug 2022 10:29:35 -0400
-Received: from mail-wr1-x42a.google.com (mail-wr1-x42a.google.com [IPv6:2a00:1450:4864:20::42a])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E5D4321E3C
-        for <linux-perf-users@vger.kernel.org>; Wed, 10 Aug 2022 07:29:33 -0700 (PDT)
-Received: by mail-wr1-x42a.google.com with SMTP id n4so16194144wrp.10
-        for <linux-perf-users@vger.kernel.org>; Wed, 10 Aug 2022 07:29:33 -0700 (PDT)
+        Wed, 10 Aug 2022 10:35:30 -0400
+Received: from mail-wm1-x32f.google.com (mail-wm1-x32f.google.com [IPv6:2a00:1450:4864:20::32f])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 777502314C
+        for <linux-perf-users@vger.kernel.org>; Wed, 10 Aug 2022 07:35:28 -0700 (PDT)
+Received: by mail-wm1-x32f.google.com with SMTP id 186-20020a1c02c3000000b003a34ac64bdfso1111590wmc.1
+        for <linux-perf-users@vger.kernel.org>; Wed, 10 Aug 2022 07:35:28 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=google.com; s=20210112;
         h=cc:to:subject:message-id:date:from:in-reply-to:references
          :mime-version:from:to:cc;
-        bh=6NCrAqjcYlhGZUqWXYrABrAD13m9MCdw4daKveaKHD4=;
-        b=bgwZ8VUxCN+fAD3U4mXgM1Ml0h0PkJfeoHPuPQDJtwXBrgXmoJdNesEQjwiXBMZ6N1
-         3xVptBaVTSMipRn13RxDhzRoSb6IwuPdBawnOJ8BS0bUDyfRG8MUxPe8vN67XsPjc7lt
-         ET5rbfrSWcA1JtHU87x43MJ6bAvXTU3UHMD0YRllFuWZJ07wPFiaju88qvItasDLohfT
-         m3ikSf3kntduelZIjuipb2KCB5SzDqcXvktCKay3rFXwv7mNp9XRpMEFZkNmpVnqCNxI
-         EjxAk26SWiqwhoaFcK4V2a/IJftgeaXeOuC/8oZ7RFT+bYyR/mhORuDtjSy2/ygQXIrI
-         QVRg==
+        bh=Ed56vkDi/zv5qaB9aD5u6z7vh8CobJ4CIVyP7SjogOA=;
+        b=cl4O4zNlI8o2hN1iAjgolY/+xKu4KhMrG31mHyDpq5ocsyRt2KiYaH4lTnh6AhYErb
+         ybTsYxm8tQgG+8e9Sk7tqMdCpizS2/S1xErsJaaMrrvlXa2ccYb3Ot8RaPjyuGIg9m/0
+         4ROf7V5bGAjlfNU1b3BG8BLo+3hn8KfCx8BjU89vMrnt3Lujvel+knb++MAA6T5s2a5L
+         kOXOThV1kHRRUmedyQ/kxKw61+C+E4hIxmc79pfAD1XoHsjcz+5HFEy7y0vLQseOsCDA
+         C3Ey1/XEcAmsQ8Gfje+ia9jojQPqVqxBGK9ykf+Y9zntqc66ifPn4mV7LB16X3uJDdm8
+         Ywmg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
         h=cc:to:subject:message-id:date:from:in-reply-to:references
          :mime-version:x-gm-message-state:from:to:cc;
-        bh=6NCrAqjcYlhGZUqWXYrABrAD13m9MCdw4daKveaKHD4=;
-        b=z2yxG6kgixhDt+vDY20/yUwp/KbHtp4NutxMcckMDokkBMorRZzzrNqBiw14Sd/MP9
-         qgkVn4kU35dqcllvWt5tAmT5OiBDQN/hlzd3WKn6kyB2BQCpQltGXOzcjRd5jtYv87hQ
-         /MeZb3SwqZwhQCVzzNxTm7crFOIFChgZKyRohGuC8c1PPFCOg16YOd0F0OzoJBHLQsqg
-         EM5MGRHkUHAPXFIpZQnw0lDjf6TKgB7+cYebLnJS5PFheZibl01Zb/MIVL35sMZ73tLm
-         5q86vnVpKIsq2rLxDhysIkr7TOsaCchEz6BZVaX8S4tvUry1ZDOuoV0nKgy27rdUB0OP
-         z+dg==
-X-Gm-Message-State: ACgBeo30LagdGRMhle36eqpL5hbxkMHDmCMMUhi4nJHGJoZq61cjR9qE
-        qPtJ67Qn9mT4KTTqSPkfxUoys5OesPLulKV0/7YfJw==
-X-Google-Smtp-Source: AA6agR4Qh+xvSo11mAtUPGheEe6kESQkvRLJTpuP6tvgsKczQyDx563jSC/DfY44lbHco54DLKwW0zO9691Dxsuk5qc=
-X-Received: by 2002:a05:6000:1ac9:b0:220:7f40:49e3 with SMTP id
- i9-20020a0560001ac900b002207f4049e3mr17099423wry.40.1660141772234; Wed, 10
- Aug 2022 07:29:32 -0700 (PDT)
+        bh=Ed56vkDi/zv5qaB9aD5u6z7vh8CobJ4CIVyP7SjogOA=;
+        b=wbyQVeHzz+kelc6z8E2hlWoZYq4bGc+XjNFXsD4LCykT7o/2Yy4cBuaYFa6tihDmRt
+         1uAevqDIrdVVrv1HeEDLCbPhG/WFKAZT+O3y5VXkZh0B/QvGXGlZ9vlGhOj9e0Ybuq8I
+         XFuZlqw6W16msXOXCW4re7tTFpKbIzBMaM/NMSIy7JI+QvO6Zt4+qVkCSe6KzQhNFpdf
+         gBpcOXXIqALr/sjtUxxaj9+x9/MehUcsKK/eiLDtbe7zy18etM9LF2+aYCnvli7BRjNd
+         aQwdSPGqG/UO/EE0THxBhgqauOstPhD1TFxGL5SLzYDbBA7TN/X23TtA4L5MV6m264gy
+         WKow==
+X-Gm-Message-State: ACgBeo3YgChlF9Bvd3pLfX/UeZsr+t+i73Nx8PtbAuD40S0TVU9PvhCs
+        5h+YdLB1UGjE/VRLLg2PGqA1qJenXVzpnIMO+nErGA==
+X-Google-Smtp-Source: AA6agR4gcFHtIy3illRgki17dURdpQ5Zh+DycYrPqBY9v1nnVRKtn5Ex8UVpVnp+AbX+1jdVzLD2XCkNdgK0xL5q7o4=
+X-Received: by 2002:a05:600c:25ce:b0:3a5:a3b7:bbfe with SMTP id
+ 14-20020a05600c25ce00b003a5a3b7bbfemr2807827wml.115.1660142126602; Wed, 10
+ Aug 2022 07:35:26 -0700 (PDT)
 MIME-Version: 1.0
-References: <20220804221816.1802790-1-irogers@google.com> <20220804221816.1802790-11-irogers@google.com>
- <463cffea-51d9-98ad-86ac-d064faac05b9@huawei.com>
-In-Reply-To: <463cffea-51d9-98ad-86ac-d064faac05b9@huawei.com>
+References: <20220804221816.1802790-1-irogers@google.com> <20220804221816.1802790-17-irogers@google.com>
+ <955d5788-5eff-ccec-d089-d4331b025a81@huawei.com>
+In-Reply-To: <955d5788-5eff-ccec-d089-d4331b025a81@huawei.com>
 From:   Ian Rogers <irogers@google.com>
-Date:   Wed, 10 Aug 2022 07:29:19 -0700
-Message-ID: <CAP-5=fXuG9Jt5x-e3um=-hYNSb18j8dL5np5Edozw+H5PoZ2eA@mail.gmail.com>
-Subject: Re: [PATCH v4 10/17] perf pmu-events: Hide pmu_events_map
+Date:   Wed, 10 Aug 2022 07:35:13 -0700
+Message-ID: <CAP-5=fXtOLX2TMz2+pWgSCTKPoWJum1vbQztRC9NAUjeOrxyCQ@mail.gmail.com>
+Subject: Re: [PATCH v4 16/17] perf jevents: Compress the pmu_events_table
 To:     John Garry <john.garry@huawei.com>
 Cc:     Will Deacon <will@kernel.org>, James Clark <james.clark@arm.com>,
         Mike Leach <mike.leach@linaro.org>,
@@ -78,211 +78,476 @@ Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-On Fri, Aug 5, 2022 at 5:31 AM John Garry <john.garry@huawei.com> wrote:
+On Fri, Aug 5, 2022 at 7:02 AM John Garry <john.garry@huawei.com> wrote:
 >
 > On 04/08/2022 23:18, Ian Rogers wrote:
-> > Move usage of the table to pmu-events.c so it may be hidden. By
-> > abstracting the table the implementation can later be changed.
+> > The pmu_events array requires 15 pointers per entry which in position
+> > independent code need relocating. Change the array to be an array of
+> > offsets within a big C string. Only the offset of the first variable is
+> > required, subsequent variables are stored in order after the \0
+> > terminator (requiring a byte per variable rather than 4 bytes per
+> > offset).
+> >
+> > The file size savings are:
+> > no jevents - the same 19,788,464bytes
+> > x86 jevents - ~16.7% file size saving 23,744,288bytes vs 28,502,632bytes
+> > all jevents - ~19.5% file size saving 24,469,056bytes vs 30,379,920bytes
+> > default build options plus NO_LIBBFD=1.
+> >
+> > For example, the x86 build savings come from .rela.dyn and
+> > .data.rel.ro becoming smaller by 3,157,032bytes and 3,042,016bytes
+> > respectively. .rodata increases by 1,432,448bytes, giving an overall
+> > 4,766,600bytes saving.
+> >
+> > To make metric strings more shareable, the topic is changed from say
+> > 'skx metrics' to just 'metrics'.
+> >
+> > To try to help with the memory layout the pmu_events are ordered as used
+> > by perf qsort comparator functions.
 > >
 > > Signed-off-by: Ian Rogers <irogers@google.com>
 > > ---
-> >   tools/perf/pmu-events/empty-pmu-events.c |  81 ++++++++-
-> >   tools/perf/pmu-events/jevents.py         |  81 ++++++++-
-> >   tools/perf/pmu-events/pmu-events.h       |  29 +--
-> >   tools/perf/tests/pmu-events.c            | 218 +++++++++++------------
-> >   tools/perf/util/metricgroup.c            |  15 +-
-> >   tools/perf/util/pmu.c                    |  34 +---
-> >   tools/perf/util/pmu.h                    |   2 +-
-> >   7 files changed, 280 insertions(+), 180 deletions(-)
+> >   tools/perf/pmu-events/jevents.py | 207 ++++++++++++++++++++++++-------
+> >   1 file changed, 162 insertions(+), 45 deletions(-)
 > >
-> > diff --git a/tools/perf/pmu-events/empty-pmu-events.c b/tools/perf/pmu-events/empty-pmu-events.c
-> > index 216ea0482c37..8ef75aff996c 100644
-> > --- a/tools/perf/pmu-events/empty-pmu-events.c
-> > +++ b/tools/perf/pmu-events/empty-pmu-events.c
-> > @@ -6,6 +6,8 @@
-> >    * The test cpu/soc is provided for testing.
-> >    */
-> >   #include "pmu-events/pmu-events.h"
-> > +#include "util/header.h"
-> > +#include "util/pmu.h"
-> >   #include <string.h>
-> >   #include <stddef.h>
-> >
-> > @@ -110,7 +112,26 @@ static const struct pmu_event pme_test_soc_cpu[] = {
-> >       },
-> >   };
-> >
-> > -const struct pmu_events_map pmu_events_map[] = {
-> > +
-> > +/*
-> > + * Map a CPU to its table of PMU events. The CPU is identified by the
-> > + * cpuid field, which is an arch-specific identifier for the CPU.
-> > + * The identifier specified in tools/perf/pmu-events/arch/xxx/mapfile
-> > + * must match the get_cpuid_str() in tools/perf/arch/xxx/util/header.c)
-> > + *
-> > + * The  cpuid can contain any character other than the comma.
-> > + */
-> > +struct pmu_events_map {
-> > +     const char *arch;
-> > +     const char *cpuid;
-> > +     const struct pmu_event *table;
-> > +};
-> > +
-> > +/*
-> > + * Global table mapping each known CPU for the architecture to its
-> > + * table of PMU events.
-> > + */
-> > +static const struct pmu_events_map pmu_events_map[] = {
-> >       {
-> >               .arch = "testarch",
-> >               .cpuid = "testcpu",
-> > @@ -162,6 +183,62 @@ static const struct pmu_sys_events pmu_sys_event_tables[] = {
-> >       },
-> >   };
-> >
-> > +const struct pmu_event *perf_pmu__find_table(struct perf_pmu *pmu)
-> > +{
-> > +     const struct pmu_event *table = NULL;
-> > +     char *cpuid = perf_pmu__getcpuid(pmu);
-> > +     int i;
-> > +
-> > +     /* on some platforms which uses cpus map, cpuid can be NULL for
-> > +      * PMUs other than CORE PMUs.
-> > +      */
-> > +     if (!cpuid)
-> > +             return NULL;
-> > +
-> > +     i = 0;
-> > +     for (;;) {
-> > +             const struct pmu_events_map *map = &pmu_events_map[i++];
-> > +
-> > +             if (!map->table)
-> > +                     break;
-> > +
-> > +             if (!strcmp_cpuid_str(map->cpuid, cpuid)) {
-> > +                     table = map->table;
-> > +                     break;
-> > +             }
-> > +     }
-> > +     free(cpuid);
-> > +     return table;
-> > +}
-> > +
-> > +const struct pmu_event *find_core_events_table(const char *arch, const char *cpuid)
-> > +{
-> > +     for (const struct pmu_events_map *tables = &pmu_events_map[0];
-> > +          tables->table;
-> > +          tables++) {
-> > +             if (!strcmp(tables->arch, arch) && !strcmp_cpuid_str(tables->cpuid, cpuid))
-> > +                     return tables->table;
-> > +     }
-> > +     return NULL;
-> > +}
-> > +
-> > +int pmu_for_each_core_event(pmu_event_iter_fn fn, void *data)
-> > +{
-> > +     for (const struct pmu_events_map *tables = &pmu_events_map[0];
-> > +          tables->table;
-> > +          tables++) {
-> > +             for (const struct pmu_event *pe = &tables->table[0];
-> > +                  pe->name || pe->metric_group || pe->metric_name;
-> > +                  pe++) {
-> > +                     int ret = fn(pe, &tables->table[0], data);
-> > +
-> > +                     if (ret)
-> > +                             return ret;
-> > +             }
-> > +     }
-> > +     return 0;
-> > +}
-> > +
-> >   const struct pmu_event *find_sys_events_table(const char *name)
-> >   {
-> >       for (const struct pmu_sys_events *tables = &pmu_sys_event_tables[0];
-> > @@ -181,7 +258,7 @@ int pmu_for_each_sys_event(pmu_event_iter_fn fn, void *data)
-> >               for (const struct pmu_event *pe = &tables->table[0];
-> >                    pe->name || pe->metric_group || pe->metric_name;
-> >                    pe++) {
-> > -                     int ret = fn(pe, data);
-> > +                     int ret = fn(pe, &tables->table[0], data);
-> >
-> >                       if (ret)
-> >                               return ret;
 > > diff --git a/tools/perf/pmu-events/jevents.py b/tools/perf/pmu-events/jevents.py
-> > index dd21bc9eeeed..e976c5e8e80b 100755
+> > index aa8df649025a..a5e162558994 100755
 > > --- a/tools/perf/pmu-events/jevents.py
 > > +++ b/tools/perf/pmu-events/jevents.py
-> > @@ -333,7 +333,27 @@ def process_one_file(parents: Sequence[str], item: os.DirEntry) -> None:
+> > @@ -6,7 +6,8 @@ import csv
+> >   import json
+> >   import os
+> >   import sys
+> > -from typing import (Callable, Optional, Sequence)
+> > +from typing import (Callable, Dict, Optional, Sequence, Set, Tuple)
+> > +import collections
 > >
-> >   def print_mapping_table(archs: Sequence[str]) -> None:
-> >     """Read the mapfile and generate the struct from cpuid string to event table."""
-> > -  _args.output_file.write('const struct pmu_events_map pmu_events_map[] = {\n')
-> > +  _args.output_file.write("""
-> > +/*
-> > + * Map a CPU to its table of PMU events. The CPU is identified by the
-> > + * cpuid field, which is an arch-specific identifier for the CPU.
-> > + * The identifier specified in tools/perf/pmu-events/arch/xxx/mapfile
-> > + * must match the get_cpuid_str() in tools/perf/arch/xxx/util/header.c)
-> > + *
-> > + * The  cpuid can contain any character other than the comma.
-> > + */
-> > +struct pmu_events_map {
-> > +        const char *arch;
-> > +        const char *cpuid;
-> > +        const struct pmu_event *table;
-> > +};
+> >   # Global command line arguments.
+> >   _args = None
+> > @@ -20,6 +21,19 @@ _arch_std_events = {}
+> >   _close_table = False
+> >   # Events to write out when the table is closed
+> >   _pending_events = []
+> > +# Global BigCString shared by all structures.
+> > +_bcs = None
+> > +# Order specific JsonEvent attributes will be visited.
+> > +_json_event_attributes = [
+> > +    # cmp_sevent related attributes.
+> > +    'name', 'pmu', 'topic', 'desc', 'metric_name', 'metric_group',
+> > +    # Seems useful, put it early.
+> > +    'event',
+> > +    # Short things in alphabetical order.
+> > +    'aggr_mode', 'compat', 'deprecated', 'perpkg', 'unit',
+> > +    # Longer things (the last won't be iterated over during decompress).
+> > +    'metric_constraint', 'metric_expr', 'long_desc'
+> > +]
+> >
+> >
+> >   def removesuffix(s: str, suffix: str) -> str:
+> > @@ -39,6 +53,66 @@ def file_name_to_table_name(parents: Sequence[str], dirname: str) -> str:
+> >     tblname += '_' + dirname
+> >     return tblname.replace('-', '_')
+> >
+> > +def c_len(s: str) -> int:
+> > +  """Return the length of s a C string
 > > +
-> > +/*
-> > + * Global table mapping each known CPU for the architecture to its
-> > + * table of PMU events.
-> > + */
-> > +const struct pmu_events_map pmu_events_map[] = {
-> > +""")
-> >     for arch in archs:
-> >       if arch == 'test':
+> > +  This doesn't handle all escape characters properly. It first assumes
+> > +  all \ are for escaping, it then adjusts as it will have over counted
+> > +  \\. The code uses \000 rather than \0 as a terminator as an adjacent
+> > +  number would be folded into a string of \0 (ie. "\0" + "5" doesn't
+> > +  equal a terminator followed by the number 5 but the escape of
+> > +  \05). The code adjusts for \000 but not properly for all octal, hex
+> > +  or unicode values.
+> > +  """
+> > +  try:
+> > +    utf = s.encode(encoding='utf-8',errors='strict')
+> > +  except:
+> > +    print(f'broken string {s}')
+> > +    raise
+> > +  return len(utf) - utf.count(b'\\') + utf.count(b'\\\\') - (utf.count(b'\\000') * 2)
+> > +
+> > +class BigCString:
+> > +  """A class to hold many strings concatenated together.
+> > +
+> > +  Generating a large number of stand-alone C strings creates a large
+> > +  number of relocations in position independent code. The BigCString
+> > +  is a helper for this case. It builds a single string which within it
+> > +  are all the other C strings (to avoid memory issues the string
+> > +  itself is held as a list of strings). The offsets within the big
+> > +  string are recorded and when stored to disk these don't need
+> > +  relocation.
+> > +  """
+> > +  strings: Set[str]
+> > +  big_string: Sequence[str]
+> > +  offsets: Dict[str, int]
+> > +
+> > +  def __init__(self):
+> > +    self.strings = set()
+> > +
+> > +  def add(self, s: str) -> None:
+> > +    """Called to add to the big string."""
+> > +    self.strings.add(s)
+> > +
+> > +  def compute(self) -> None:
+> > +    """Called once all strings are added to compute the string and offsets."""
+> > +
+> > +    # big_string_offset is the current location within the C string
+> > +    # being appended to - comments, etc. don't count. big_string is
+> > +    # the string contents represented as a list. Strings are immutable
+> > +    # in Python and so appending to one causes memory issues, while
+> > +    # lists are mutable.
+> > +    big_string_offset = 0
+> > +    self.big_string = []
+> > +    self.offsets = {}
+> > +    # Emit all strings in a sorted manner.
+> > +    for s in sorted(self.strings):
+> > +      self.offsets[s] = big_string_offset
+> > +      self.big_string.append(f'/* offset={big_string_offset} */ "')
+> > +      self.big_string.append(s)
+> > +      self.big_string.append('"\n')
+> > +      big_string_offset += c_len(s)
+> > +
+> > +_bcs = BigCString()
+> >
+> >   class JsonEvent:
+> >     """Representation of an event loaded from a json file dictionary."""
+> > @@ -202,26 +276,18 @@ class JsonEvent:
+> >           s += f'\t{attr} = {value},\n'
+> >       return s + '}'
+> >
+> > +  def build_c_string(self) -> str:
+> > +    s = ''
+> > +    for attr in _json_event_attributes:
+> > +      x = getattr(self, attr)
+> > +      s += f'{x}\\000' if x else '\\000'
+> > +    return s
+> > +
+> >     def to_c_string(self) -> str:
+> >       """Representation of the event as a C struct initializer."""
+> >
+> > -    def attr_string(attr: str, value: str) -> str:
+> > -      return f'\t.{attr} = \"{value}\",\n'
+> > -
+> > -    def str_if_present(self, attr: str) -> str:
+> > -      if not getattr(self, attr):
+> > -        return ''
+> > -      return attr_string(attr, getattr(self, attr))
+> > -
+> > -    s = '{\n'
+> > -    for attr in [
+> > -        'aggr_mode', 'compat', 'deprecated', 'desc', 'event', 'long_desc',
+> > -        'metric_constraint', 'metric_expr', 'metric_group', 'metric_name',
+> > -        'name', 'perpkg', 'pmu', 'topic', 'unit'
+> > -    ]:
+> > -      s += str_if_present(self, attr)
+> > -    s += '},\n'
+> > -    return s
+> > +    s = self.build_c_string()
+> > +    return f'{{ { _bcs.offsets[s] } }}, /* {s} */\n'
+> >
+> >
+> >   def read_json_events(path: str, topic: str) -> Sequence[JsonEvent]:
+> > @@ -236,7 +302,6 @@ def read_json_events(path: str, topic: str) -> Sequence[JsonEvent]:
+> >       event.topic = topic
+> >     return result
+> >
+> > -
+> >   def preprocess_arch_std_files(archpath: str) -> None:
+> >     """Read in all architecture standard events."""
+> >     global _arch_std_events
+> > @@ -252,7 +317,7 @@ def print_events_table_prefix(tblname: str) -> None:
+> >     global _close_table
+> >     if _close_table:
+> >       raise IOError('Printing table prefix but last table has no suffix')
+> > -  _args.output_file.write(f'static const struct pmu_event {tblname}[] = {{\n')
+> > +  _args.output_file.write(f'static const struct compact_pmu_event {tblname}[] = {{\n')
+> >     _close_table = True
+> >
+> >
+> > @@ -267,13 +332,13 @@ def add_events_table_entries(item: os.DirEntry, topic: str) -> None:
+> >   def print_events_table_suffix() -> None:
+> >     """Optionally close events table."""
+> >
+> > -  def event_cmp_key(j: JsonEvent):
+> > -    def fix_none(s: str):
+> > +  def event_cmp_key(j: JsonEvent) -> Tuple[bool, str, str, str, str]:
+> > +    def fix_none(s: Optional[str]) -> str:
+> >         if s is None:
+> >           return ''
+> >         return s
+> >
+> > -    return (not j.desc is None, fix_none(j.topic), fix_none(j.name), fix_none(j.pmu),
+> > +    return (j.desc is not None, fix_none(j.topic), fix_none(j.name), fix_none(j.pmu),
+> >               fix_none(j.metric_name))
+> >
+> >     global _close_table
+> > @@ -285,23 +350,37 @@ def print_events_table_suffix() -> None:
+> >       _args.output_file.write(event.to_c_string())
+> >       _pending_events = []
+> >
+> > -  _args.output_file.write("""{
+> > -\t.name = 0,
+> > -\t.event = 0,
+> > -\t.desc = 0,
+> > -},
+> > -};
+> > -""")
+> > +  _args.output_file.write('};\n\n')
+> >     _close_table = False
+> >
+> > +def get_topic(topic: str) -> str:
+> > +  if topic.endswith('metrics.json'):
+> > +    return 'metrics'
+> > +  return removesuffix(topic, '.json').replace('-', ' ')
+> > +
+> > +def preprocess_one_file(parents: Sequence[str], item: os.DirEntry) -> None:
+> > +
+> > +  if item.is_dir():
+> > +    return
+> > +
+> > +  # base dir or too deep
+> > +  level = len(parents)
+> > +  if level == 0 or level > 4:
+> > +    return
+> > +
+> > +  # Ignore other directories. If the file name does not have a .json
+> > +  # extension, ignore it. It could be a readme.txt for instance.
+> > +  if not item.is_file() or not item.name.endswith('.json'):
+> > +    return
+> > +
+> > +  topic = get_topic(item.name)
+> > +  for event in read_json_events(item.path, topic):
+> > +    _bcs.add(event.build_c_string())
+> >
+> >   def process_one_file(parents: Sequence[str], item: os.DirEntry) -> None:
+> >     """Process a JSON file during the main walk."""
+> >     global _sys_event_tables
+> >
+> > -  def get_topic(topic: str) -> str:
+> > -    return removesuffix(topic, '.json').replace('-', ' ')
+> > -
+> >     def is_leaf_dir(path: str) -> bool:
+> >       for item in os.scandir(path):
+> >         if item.is_dir():
+> > @@ -336,7 +415,8 @@ def print_mapping_table(archs: Sequence[str]) -> None:
+> >     _args.output_file.write("""
+> >   /* Struct used to make the PMU event table implementation opaque to callers. */
+> >   struct pmu_events_table {
+> > -        const struct pmu_event *entries;
+> > +        const struct compact_pmu_event *entries;
+> > +        size_t length;
+> >   };
+> >
+> >   /*
+> > @@ -364,7 +444,10 @@ const struct pmu_events_map pmu_events_map[] = {
 > >         _args.output_file.write("""{
-> > @@ -389,6 +409,61 @@ static const struct pmu_sys_events pmu_sys_event_tables[] = {
+> >   \t.arch = "testarch",
+> >   \t.cpuid = "testcpu",
+> > -\t.table = { pme_test_soc_cpu },
+> > +\t.table = {
+> > +\t.entries = pme_test_soc_cpu,
+> > +\t.length = ARRAY_SIZE(pme_test_soc_cpu),
+> > +\t}
+> >   },
+> >   """)
+> >       else:
+> > @@ -379,7 +462,10 @@ const struct pmu_events_map pmu_events_map[] = {
+> >               _args.output_file.write(f"""{{
+> >   \t.arch = "{arch}",
+> >   \t.cpuid = "{cpuid}",
+> > -\t.table = {{ {tblname} }}
+> > +\t.table = {{
+> > +\t\t.entries = {tblname},
+> > +\t\t.length = ARRAY_SIZE({tblname})
+> > +\t}}
+> >   }},
+> >   """)
+> >             first = False
+> > @@ -387,7 +473,7 @@ const struct pmu_events_map pmu_events_map[] = {
+> >     _args.output_file.write("""{
+> >   \t.arch = 0,
+> >   \t.cpuid = 0,
+> > -\t.table = { 0 },
+> > +\t.table = { 0, 0 },
+> >   }
+> >   };
+> >   """)
+> > @@ -405,23 +491,41 @@ static const struct pmu_sys_events pmu_sys_event_tables[] = {
+> >   """)
+> >     for tblname in _sys_event_tables:
+> >       _args.output_file.write(f"""\t{{
+> > -\t\t.table = {{ {tblname} }},
+> > +\t\t.table = {{
+> > +\t\t\t.entries = {tblname},
+> > +\t\t\t.length = ARRAY_SIZE({tblname})
+> > +\t\t}},
+> >   \t\t.name = \"{tblname}\",
+> >   \t}},
+> >   """)
+> >     _args.output_file.write("""\t{
+> > -\t\t.table = { 0 }
+> > +\t\t.table = { 0, 0 }
 > >   \t},
 > >   };
 > >
-> > +const struct pmu_event *perf_pmu__find_table(struct perf_pmu *pmu)
+> > -int pmu_events_table_for_each_event(const struct pmu_events_table *table, pmu_event_iter_fn fn,
+> > +static void decompress(int offset, struct pmu_event *pe)
 > > +{
-> > +        const struct pmu_event *table = NULL;
-> > +        char *cpuid = perf_pmu__getcpuid(pmu);
+> > +\tconst char *p = &big_c_string[offset];
+> > +""")
+> > +  for attr in _json_event_attributes:
+> > +    _args.output_file.write(f"""
+> > +\tpe->{attr} = (*p == '\\0' ? NULL : p);
+> > +""")
+> > +    if attr == _json_event_attributes[-1]:
+> > +      continue
+> > +    _args.output_file.write('\twhile (*p++);')
+> > +  _args.output_file.write("""}
 >
-> This seems an identical implementation to that in empty-pmu-events.c -
-> can we reduce this duplication? Maybe a seperate common c file which can
-> be linked in
 >
-> The indentation seems different also - this version seems to use whitespaces
+> I get this in generated pmu-events.c:
+>
+> static void decompress(int offset, struct pmu_event *pe)
+> {
+> const char *p = &big_c_string[offset];
+>
+> pe->name = (*p == '\0' ? NULL : p);
+> while (*p++);
+> pe->pmu = (*p == '\0' ? NULL : p);
+> while (*p++);
+> pe->topic = (*p == '\0' ? NULL : p);
+> while (*p++);
+> pe->desc = (*p == '\0' ? NULL : p);
+> while (*p++);
+> pe->metric_name = (*p == '\0' ? NULL : p);
+> while (*p++);
+> pe->metric_group = (*p == '\0' ? NULL : p);
+> while (*p++);
+> pe->event = (*p == '\0' ? NULL : p);
+> while (*p++);
+> pe->aggr_mode = (*p == '\0' ? NULL : p);
+> while (*p++);
+> pe->compat = (*p == '\0' ? NULL : p);
+> while (*p++);
+> pe->deprecated = (*p == '\0' ? NULL : p);
+> while (*p++);
+> pe->perpkg = (*p == '\0' ? NULL : p);
+> while (*p++);
+> pe->unit = (*p == '\0' ? NULL : p);
+> while (*p++);
+> pe->metric_constraint = (*p == '\0' ? NULL : p);
+> while (*p++);
+> pe->metric_expr = (*p == '\0' ? NULL : p);
+> while (*p++);
+> pe->long_desc = (*p == '\0' ? NULL : p);
+> }
+>
+> int pmu_events_table_for_each_event(const struct pmu_events_table *table,
+>                                      pmu_event_iter_fn fn,
+>                                      void *data)
+> {
+>          for (size_t i = 0; i < table->length; i++) {
+>                  struct pmu_event pe;
+>                  int ret;
+>
+>                  decompress(table->entries[i].offset, &pe);
+>                  ret = fn(&pe, table, data);
+>                  if (ret)
+>                          return ret;
+>          }
+>          return 0;
+> }
+>
+> --->8---
+>
+> This seems a bit inefficient in terms of performance - if that really is
+> a requirement, but I figure that it isn't really.
 
-Agreed. Later on this will change, the empty version isn't compressed
-and the jevents.py one is. Having a common C file would defeat the
-goal of hiding the API, but ultimately we'd need to get rid of it in
-later changes when the empty/compressed implementations diverge.
+I think the main inefficiency is coming from the struct pmu_event
+containing so many variables. I think we can modify that later, say by
+separating metrics from events, I did look at performance and the
+decompress function is hot but overall the performance was similar to
+before the change for some hand crafted examples.
+
+> Another observation is that although we compress and reduce size in this
+> method, we are now losing out on some sharing of strings. For example,
+> this is an extract from big_string:
+>
+> /* offset=3342573 */
+> "unc_p_core0_transition_cycles\000uncore_pcu\000uncore power\000Core 0 C
+> State Transition Cycles. Unit: uncore_pcu
+> \000\000\000event=0x70\000\000\000\0001\000\000\000\000Number of cycles
+> spent performing core C state transitions.  There is one event per core\000"
+> /* offset=3342789 */
+> "unc_p_core0_transition_cycles\000uncore_pcu\000uncore power\000Core C
+> State Transition Cycles. Unit: uncore_pcu
+> \000\000\000event=0x103\000\000\000\0001\000\000\000\000Number of cycles
+> spent performing core C state transitions.  There is one event per core\000"
+>
+> These super-strings are not identical, but many sub-strings are, like
+> "Number of cycles spent performing core C state transitions.  There is
+> one event per core", so we are losing out there on sharing strings there.
+
+Agreed. I found that the savings by having a single offset were in
+O(100kbs) and so had to give up string sharing for this.
 
 Thanks,
 Ian
 
-> > +        int i;
+> Thanks,
+> John
 > > +
-> > +        /* on some platforms which uses cpus map, cpuid can be NULL for
-> > +         * PMUs other than CORE PMUs.
-> > +         */
-> > +        if (!cpuid)
-> > +                return NULL;
+> > +int pmu_events_table_for_each_event(const struct pmu_events_table *table,
+> > +                                    pmu_event_iter_fn fn,
+> >                                       void *data)
+> >   {
+> > -        for (const struct pmu_event *pe = &table->entries[0];
+> > -             pe->name || pe->metric_group || pe->metric_name;
+> > -             pe++) {
+> > -                int ret = fn(pe, table, data);
+> > +        for (size_t i = 0; i < table->length; i++) {
+> > +                struct pmu_event pe;
+> > +                int ret;
+> >
+> > +                decompress(table->entries[i].offset, &pe);
+> > +                ret = fn(&pe, table, data);
+> >                   if (ret)
+> >                           return ret;
+> >           }
+> > @@ -530,7 +634,7 @@ def main() -> None:
+> >         help='Root of tree containing architecture directories containing json files'
+> >     )
+> >     ap.add_argument(
+> > -      'output_file', type=argparse.FileType('w'), nargs='?', default=sys.stdout)
+> > +      'output_file', type=argparse.FileType('w', encoding='utf-8'), nargs='?', default=sys.stdout)
+> >     _args = ap.parse_args()
+> >
+> >     _args.output_file.write("""
+> > @@ -540,6 +644,10 @@ def main() -> None:
+> >   #include <string.h>
+> >   #include <stddef.h>
+> >
+> > +struct compact_pmu_event {
+> > +  int offset;
+> > +};
 > > +
-> > +        i = 0;
-> > +        for (;;) {
-> > +                const struct pmu_events_map *map = &pmu_events_map[i++];
-> > +                if (!map->table)
-> > +                        break;
+> >   """)
+> >     archs = []
+> >     for item in os.scandir(_args.starting_dir):
+> > @@ -555,6 +663,15 @@ def main() -> None:
+> >     for arch in archs:
+> >       arch_path = f'{_args.starting_dir}/{arch}'
+> >       preprocess_arch_std_files(arch_path)
+> > +    ftw(arch_path, [], preprocess_one_file)
 > > +
-> > +                if (!strcmp_cpuid_str(map->cpuid, cpuid)) {
-> > +                        table = map->table;
-> > +                        break;
-> > +                }
-> > +        }
-> > +        free(cpuid);
-> > +        return table;
-> > +}
+> > +  _bcs.compute()
+> > +  _args.output_file.write('static const char *const big_c_string =\n')
+> > +  for s in _bcs.big_string:
+> > +    _args.output_file.write(s)
+> > +  _args.output_file.write(';\n\n')
+> > +  for arch in archs:
+> > +    arch_path = f'{_args.starting_dir}/{arch}'
+> >       ftw(arch_path, [], process_one_file)
+> >       print_events_table_suffix()
+> >
+>
