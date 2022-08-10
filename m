@@ -2,234 +2,260 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BD8B2C00140
-	for <linux-perf-users@archiver.kernel.org>; Wed, 10 Aug 2022 17:37:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 493C0C00140
+	for <linux-perf-users@archiver.kernel.org>; Wed, 10 Aug 2022 17:42:50 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232202AbiHJRhL (ORCPT
+        id S232647AbiHJRmt (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Wed, 10 Aug 2022 13:37:11 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43138 "EHLO
+        Wed, 10 Aug 2022 13:42:49 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47840 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231928AbiHJRhK (ORCPT
+        with ESMTP id S232392AbiHJRms (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Wed, 10 Aug 2022 13:37:10 -0400
-Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTP id 3C981832FA;
-        Wed, 10 Aug 2022 10:37:08 -0700 (PDT)
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 73DEB11FB;
-        Wed, 10 Aug 2022 10:37:09 -0700 (PDT)
-Received: from [192.168.99.12] (unknown [172.31.20.19])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 9BBE43F67D;
-        Wed, 10 Aug 2022 10:37:07 -0700 (PDT)
-Message-ID: <3e2ffc6b-a9d8-3ebd-92d0-799bea2203ca@foss.arm.com>
-Date:   Wed, 10 Aug 2022 18:37:02 +0100
+        Wed, 10 Aug 2022 13:42:48 -0400
+Received: from mail-oi1-f173.google.com (mail-oi1-f173.google.com [209.85.167.173])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6507C85F94;
+        Wed, 10 Aug 2022 10:42:47 -0700 (PDT)
+Received: by mail-oi1-f173.google.com with SMTP id j5so12823576oih.6;
+        Wed, 10 Aug 2022 10:42:47 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:x-gm-message-state:from:to:cc;
+        bh=ReTi6csPYQ4CXa/vuLDipJBo/AuIWqJL15Ka4MBCcRM=;
+        b=vJ+0UbztOk9p4KHYxxQpmwQsnx4aBRDTaBZrkYkTUCs38jdJDD8349ceQkB4oRSQZE
+         ZHlP7JJ9BBLZDv9BiXhe7XtfBngo/+2j5y7Z2tV5TW50nrCBJuR8NGq+2AzJQ+xtOYEC
+         DJULCwf9XkHpeiniupG4UMC4HyXbM+pR124opG5d2gY0EvMMyeFG9Qj8E+y7fadJjwTK
+         +adaOfLk1fXAs36+6Vf7zhPyNP0RHljxkAPi1fvPdjjfix2wAOyLxCjyha5h+Hdpj05j
+         0tnp9KbVHCwh+22YIoCRZiYHmZm5bVTcV37z+52l0xIytHVayoTsrpkCx/F2/Hgh2OIb
+         LHrg==
+X-Gm-Message-State: ACgBeo3Rf4N+mOATf2dErHMjbyZfXB+akR6TiETt8uTp15Kfs/VdOpjA
+        bL0qp4Jz7J8h0UMsmnJkayIdSSZTyGlSoBmSsfjN5B+yivU=
+X-Google-Smtp-Source: AA6agR6k9KspJf2BBoGAcVkGpqsP4ySKaqhImZYnVSb2VSaqazLGOO4Ju6PERh2iW+zHj0da9rjWisoxKaGJMxAjMQk=
+X-Received: by 2002:aca:ba86:0:b0:33a:c6f7:3001 with SMTP id
+ k128-20020acaba86000000b0033ac6f73001mr1885586oif.5.1660153365444; Wed, 10
+ Aug 2022 10:42:45 -0700 (PDT)
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
- Thunderbird/91.11.0
-Subject: Re: [PATCH v5 03/14] perf test: Add build infra for perf test tools
- for CoreSight tests
-Content-Language: en-US
-To:     Leo Yan <leo.yan@linaro.org>
-Cc:     linux-kernel@vger.kernel.org, coresight@lists.linaro.org,
-        suzuki.poulose@arm.com, mathieu.poirier@linaro.org,
-        mike.leach@linaro.org, linux-perf-users@vger.kernel.org,
-        acme@kernel.org
-References: <20220728145256.2985298-1-carsten.haitzler@foss.arm.com>
- <20220728145256.2985298-4-carsten.haitzler@foss.arm.com>
- <20220807035928.GA34254@leoy-ThinkPad-X240s>
-From:   Carsten Haitzler <carsten.haitzler@foss.arm.com>
-Organization: Arm Ltd.
-In-Reply-To: <20220807035928.GA34254@leoy-ThinkPad-X240s>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+References: <20220709002046.2804157-1-rsilvera@google.com>
+In-Reply-To: <20220709002046.2804157-1-rsilvera@google.com>
+From:   Namhyung Kim <namhyung@kernel.org>
+Date:   Wed, 10 Aug 2022 10:42:34 -0700
+Message-ID: <CAM9d7cicdANoZCrqctdW+m+zx6_3nm4F_A_=5jEcBT7auOScJQ@mail.gmail.com>
+Subject: Re: [PATCH v3] perf inject: Add a command line option to specify
+ build ids.
+To:     Raul Silvera <rsilvera@google.com>
+Cc:     Peter Zijlstra <peterz@infradead.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        Arnaldo Carvalho de Melo <acme@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Jiri Olsa <jolsa@kernel.org>,
+        linux-perf-users <linux-perf-users@vger.kernel.org>,
+        linux-kernel <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
+Hello,
+
+On Fri, Jul 8, 2022 at 5:20 PM Raul Silvera <rsilvera@google.com> wrote:
+>
+> This commit adds the option --known-build-ids to perf inject.
+> It allows the user to explicitly specify the build id for a given
+> path, instead of retrieving it from the current system. This is
+> useful in cases where a perf.data file is processed on a different
+> system from where it was collected, or if some of the binaries are
+> no longer available.
+>
+> The build ids and paths are specified in pairs in the command line.
+> Using the file:// specifier, build ids can be loaded from a file
+> directly generated by perf buildid-list. This is convenient to copy
+> build ids from one perf.data file to another.
+>
+> ** Example: In this example we use perf record to create two
+> perf.data files, one with build ids and another without, and use
+> perf buildid-list and perf inject to copy the build ids from the
+> first file to the second.
+>
+>  $ perf record ls /tmp
+>  $ perf record --no-buildid -o perf.data.no-buildid ls /tmp
+>  $ perf buildid-list > /tmp/build-ids.txt
+>  $ perf inject -b --known-build-ids='file:///tmp/build-ids.txt' \
+>         -i perf.data.no-buildid -o perf.data.buildid
+>
+> Signed-off-by: Raul Silvera <rsilvera@google.com>
+> ---
+>
+>   V2 -> V3  Added documentation and removed unnecessary temps
+>   V1 -> V2: Cleaned up patch description, deleted the strlist during
+>             cleanup, and updated validation of the build id strings
+>
+>  tools/perf/Documentation/perf-inject.txt |  7 ++-
+>  tools/perf/builtin-inject.c              | 57 ++++++++++++++++++++++++
+>  2 files changed, 63 insertions(+), 1 deletion(-)
+>
+> diff --git a/tools/perf/Documentation/perf-inject.txt b/tools/perf/Documentation/perf-inject.txt
+> index 0570a1ccd344..78474d941fd8 100644
+> --- a/tools/perf/Documentation/perf-inject.txt
+> +++ b/tools/perf/Documentation/perf-inject.txt
+> @@ -27,9 +27,14 @@ OPTIONS
+>  --build-ids::
+>          Inject build-ids into the output stream
+>
+> ---buildid-all:
+> +--buildid-all::
+>         Inject build-ids of all DSOs into the output stream
+>
+> +--known-build-ids=::
+> +       Override build-ids to inject using these comma-separated pairs of
+> +       build-id and path. Understands file://filename to read these pairs
+> +       from a file, which can be generated with perf buildid-list.
+> +
+>  -v::
+>  --verbose::
+>         Be more verbose.
+> diff --git a/tools/perf/builtin-inject.c b/tools/perf/builtin-inject.c
+> index a75bf11585b5..bf10c6478493 100644
+> --- a/tools/perf/builtin-inject.c
+> +++ b/tools/perf/builtin-inject.c
+> @@ -21,6 +21,7 @@
+>  #include "util/data.h"
+>  #include "util/auxtrace.h"
+>  #include "util/jit.h"
+> +#include "util/string2.h"
+>  #include "util/symbol.h"
+>  #include "util/synthetic-events.h"
+>  #include "util/thread.h"
+> @@ -35,6 +36,7 @@
+>
+>  #include <linux/list.h>
+>  #include <linux/string.h>
+> +#include <ctype.h>
+>  #include <errno.h>
+>  #include <signal.h>
+>
+> @@ -59,6 +61,7 @@ struct perf_inject {
+>         struct itrace_synth_opts itrace_synth_opts;
+>         char                    event_copy[PERF_SAMPLE_MAX_SIZE];
+>         struct perf_file_section secs[HEADER_FEAT_BITS];
+> +       struct strlist          *known_build_ids;
+>  };
+>
+>  struct event_entry {
+> @@ -570,9 +573,45 @@ static int dso__read_build_id(struct dso *dso)
+>         return dso->has_build_id ? 0 : -1;
+>  }
+>
+> +static bool perf_inject__lookup_known_build_id(struct perf_inject *inject,
+> +                                              struct dso *dso)
+> +{
+> +       struct str_node *pos;
+> +       int bid_len;
+> +
+> +       strlist__for_each_entry(pos, inject->known_build_ids) {
+> +               const char *build_id, *dso_name;
+> +
+> +               build_id = skip_spaces(pos->s);
+> +               dso_name = strchr(build_id, ' ');
+> +               if (dso_name == NULL)
+> +                       continue;
+
+I think this is a broken entry and it should check them when it
+creates the strlist
+rather than whenever it looks up the entries.
+
+You may use strlist__for_each_entry_safe() and strlist__remove().
 
 
-On 8/7/22 04:59, Leo Yan wrote:
-> On Thu, Jul 28, 2022 at 03:52:45PM +0100, carsten.haitzler@foss.arm.com wrote:
->> From: "Carsten Haitzler (Rasterman)" <raster@rasterman.com>
->>
->> This adds the initial build infrastructure (makefiles maintainers
->> information) for adding follow-on tests for CoreSight.
->>
->> Signed-off-by: Carsten Haitzler <carsten.haitzler@arm.com>
->> ---
->>   MAINTAINERS                                   |  1 +
->>   tools/perf/Makefile.perf                      | 18 ++++++++++---
->>   tools/perf/tests/shell/coresight/Makefile     | 26 +++++++++++++++++++
->>   .../tests/shell/coresight/Makefile.miniconfig | 24 +++++++++++++++++
->>   4 files changed, 66 insertions(+), 3 deletions(-)
->>   create mode 100644 tools/perf/tests/shell/coresight/Makefile
->>   create mode 100644 tools/perf/tests/shell/coresight/Makefile.miniconfig
->>
->> diff --git a/MAINTAINERS b/MAINTAINERS
->> index 171563d8dc14..87e4ac463429 100644
->> --- a/MAINTAINERS
->> +++ b/MAINTAINERS
->> @@ -1989,6 +1989,7 @@ F:	drivers/hwtracing/coresight/*
->>   F:	include/dt-bindings/arm/coresight-cti-dt.h
->>   F:	include/linux/coresight*
->>   F:	samples/coresight/*
->> +F:	tools/perf/tests/shell/coresight/*
->>   F:	tools/perf/arch/arm/util/auxtrace.c
->>   F:	tools/perf/arch/arm/util/cs-etm.c
->>   F:	tools/perf/arch/arm/util/cs-etm.h
->> diff --git a/tools/perf/Makefile.perf b/tools/perf/Makefile.perf
->> index 8f738e11356d..edb621ace2e2 100644
->> --- a/tools/perf/Makefile.perf
->> +++ b/tools/perf/Makefile.perf
->> @@ -629,7 +629,15 @@ sync_file_range_tbls := $(srctree)/tools/perf/trace/beauty/sync_file_range.sh
->>   $(sync_file_range_arrays): $(linux_uapi_dir)/fs.h $(sync_file_range_tbls)
->>   	$(Q)$(SHELL) '$(sync_file_range_tbls)' $(linux_uapi_dir) > $@
->>   
->> -all: shell_compatibility_test $(ALL_PROGRAMS) $(LANG_BINDINGS) $(OTHER_PROGRAMS)
->> +TESTS_CORESIGHT_DIR := $(srctree)/tools/perf/tests/shell/coresight
->> +
->> +tests-coresight-targets: FORCE
->> +	$(Q)$(MAKE) -C $(TESTS_CORESIGHT_DIR)
->> +
->> +tests-coresight-targets-clean:
->> +	$(Q)$(MAKE) -C $(TESTS_CORESIGHT_DIR) clean
->> +
->> +all: shell_compatibility_test $(ALL_PROGRAMS) $(LANG_BINDINGS) $(OTHER_PROGRAMS) tests-coresight-targets
->>   
->>   # Create python binding output directory if not already present
->>   _dummy := $(shell [ -d '$(OUTPUT)python' ] || mkdir -p '$(OUTPUT)python')
->> @@ -1015,7 +1023,10 @@ install-tests: all install-gtk
->>   		$(INSTALL) -d -m 755 '$(DESTDIR_SQ)$(perfexec_instdir_SQ)/tests/shell'; \
->>   		$(INSTALL) tests/shell/*.sh '$(DESTDIR_SQ)$(perfexec_instdir_SQ)/tests/shell'; \
->>   		$(INSTALL) -d -m 755 '$(DESTDIR_SQ)$(perfexec_instdir_SQ)/tests/shell/lib'; \
->> -		$(INSTALL) tests/shell/lib/*.sh '$(DESTDIR_SQ)$(perfexec_instdir_SQ)/tests/shell/lib'
->> +		$(INSTALL) tests/shell/lib/*.sh '$(DESTDIR_SQ)$(perfexec_instdir_SQ)/tests/shell/lib'; \
->> +		$(INSTALL) -d -m 755 '$(DESTDIR_SQ)$(perfexec_instdir_SQ)/tests/shell/coresight'; \
->> +		$(INSTALL) tests/shell/coresight/*.sh '$(DESTDIR_SQ)$(perfexec_instdir_SQ)/tests/shell/coresight'
->> +	$(Q)$(MAKE) -C tests/shell/coresight install-tests
->>   
->>   install-bin: install-tools install-tests install-traceevent-plugins
->>   
->> @@ -1085,7 +1096,7 @@ endif # BUILD_BPF_SKEL
->>   bpf-skel-clean:
->>   	$(call QUIET_CLEAN, bpf-skel) $(RM) -r $(SKEL_TMP_OUT) $(SKELETONS)
->>   
->> -clean:: $(LIBTRACEEVENT)-clean $(LIBAPI)-clean $(LIBBPF)-clean $(LIBSUBCMD)-clean $(LIBPERF)-clean fixdep-clean python-clean bpf-skel-clean
->> +clean:: $(LIBTRACEEVENT)-clean $(LIBAPI)-clean $(LIBBPF)-clean $(LIBSUBCMD)-clean $(LIBPERF)-clean fixdep-clean python-clean bpf-skel-clean tests-coresight-targets-clean
->>   	$(call QUIET_CLEAN, core-objs)  $(RM) $(LIBPERF_A) $(OUTPUT)perf-archive $(OUTPUT)perf-iostat $(LANG_BINDINGS)
->>   	$(Q)find $(or $(OUTPUT),.) -name '*.o' -delete -o -name '\.*.cmd' -delete -o -name '\.*.d' -delete
->>   	$(Q)$(RM) $(OUTPUT).config-detected
->> @@ -1143,5 +1154,6 @@ FORCE:
->>   .PHONY: shell_compatibility_test please_set_SHELL_PATH_to_a_more_modern_shell
->>   .PHONY: .FORCE-PERF-VERSION-FILE TAGS tags cscope FORCE prepare
->>   .PHONY: libtraceevent_plugins archheaders
->> +.PHONY: $(TESTS_CORESIGHT_TARGETS)
-> 
-> TESTS_CORESIGHT_TARGETS is not used anywhere else, should remove it?
+> +               bid_len = dso_name - pos->s;
+> +               dso_name = skip_spaces(dso_name);
+> +               if (strcmp(dso->long_name, dso_name))
+> +                       continue;
+> +               if (bid_len % 2 != 0 || bid_len >= SBUILD_ID_SIZE)
+> +                       return false;
+> +               for (int ix = 0; 2 * ix + 1 < bid_len; ++ix) {
+> +                       if (!isxdigit(build_id[2 * ix]) ||
+> +                           !isxdigit(build_id[2 * ix + 1]))
+> +                               return false;
 
-I think this was left over from a previous iteration of this work and I 
-removed it later on and forgot about this.
+Ditto.
 
->>   endif # force_fixdep
->> diff --git a/tools/perf/tests/shell/coresight/Makefile b/tools/perf/tests/shell/coresight/Makefile
->> new file mode 100644
->> index 000000000000..3b816bb4ced3
->> --- /dev/null
->> +++ b/tools/perf/tests/shell/coresight/Makefile
->> @@ -0,0 +1,26 @@
->> +# SPDX-License-Identifier: GPL-2.0-only
->> +# Carsten Haitzler <carsten.haitzler@arm.com>, 2021
->> +include ../../../../../tools/scripts/Makefile.include
->> +include ../../../../../tools/scripts/Makefile.arch
->> +include ../../../../../tools/scripts/utilities.mak
->> +
->> +SUBDIRS =
->> +
->> +all: $(SUBDIRS)
->> +$(SUBDIRS):
->> +	$(Q)$(MAKE) -C $@
->> +
->> +INSTALLDIRS = $(SUBDIRS:%=install-%)
->> +
->> +install-tests: $(INSTALLDIRS)
->> +$(INSTALLDIRS):
->> +	$(Q)$(MAKE) -C $(@:install-%=%) install-tests
-> 
-> I can see here you add a prefix "install-" for every sub directory
-> string, and then removed this prefix when invoke "make -C" command.
+Thanks,
+Namhyung
 
-install-tests is a target to install the tests on the host in a known 
-location. it was already there. i added handling of this. there are 
-other install- taregts like install-doc, install-bin and so on. i passed 
-that through so *IF* there is a doc: or similar rule to generate docs 
-then it runs the doc rule first to ensure docs are built before doing 
-the install. this isn't actually used but it's passing along rules. i.e. 
-make install-doc -> make doc etc.
 
-> I know you have reason for doing this way, could you explain why not
-> directly use $(SUBDIRS) for INSTALLDIRS?
-> 
->> +
->> +CLEANDIRS = $(SUBDIRS:%=clean-%)
->> +
->> +clean: $(CLEANDIRS)
->> +$(CLEANDIRS):
->> +	$(Q)$(MAKE) -C $(@:clean-%=%) clean >/dev/null
-> 
-> Same question of using prefix "clean-" for variable CLEANDIRS.
-
-Same answer as above.
-
->> +
->> +.PHONY: all clean $(SUBDIRS) $(CLEANDIRS) $(INSTALLDIRS)
->> +
->> diff --git a/tools/perf/tests/shell/coresight/Makefile.miniconfig b/tools/perf/tests/shell/coresight/Makefile.miniconfig
->> new file mode 100644
->> index 000000000000..a65482d769ab
->> --- /dev/null
->> +++ b/tools/perf/tests/shell/coresight/Makefile.miniconfig
->> @@ -0,0 +1,24 @@
->> +# SPDX-License-Identifier: GPL-2.0-only
->> +# Carsten Haitzler <carsten.haitzler@arm.com>, 2021
->> +
->> +ifndef DESTDIR
->> +prefix ?= $(HOME)
->> +endif
->> +
->> +DESTDIR_SQ = $(subst ','\'',$(DESTDIR))
->> +perfexecdir = libexec/perf-core
->> +perfexec_instdir = $(perfexecdir)
->> +
->> +ifneq ($(filter /%,$(firstword $(perfexecdir))),)
->> +perfexec_instdir = $(perfexecdir)
->> +else
->> +perfexec_instdir = $(prefix)/$(perfexecdir)
->> +endif
->> +
->> +perfexec_instdir_SQ = $(subst ','\'',$(perfexec_instdir))
-> 
-> I know these variables are copied from Makefile.config, just wandering
-> if we can directly export these variables from high level makefile, so
-> the sub-make can inherit the variables.
-> 
-> E.g. we can add below line in Makefile.config:
-> 
->    export perfexec_instdir_SQ
-> 
-> Please let me know if you observe any issue for this.
-
-I can indeed simplify that a bit and remove a few lines.
-
-> Thanks,
-> Leo
-> 
->> +INSTALL = install
->> +INSTDIR_SUB = tests/shell/coresight
->> +
->> +include ../../../../../scripts/Makefile.include
->> +include ../../../../../scripts/Makefile.arch
->> +include ../../../../../scripts/utilities.mak
->> -- 
->> 2.32.0
->>
+> +
+> +                       dso->bid.data[ix] = (hex(build_id[2 * ix]) << 4 |
+> +                                            hex(build_id[2 * ix + 1]));
+> +               }
+> +               dso->bid.size = bid_len / 2;
+> +               dso->has_build_id = 1;
+> +               return true;
+> +       }
+> +       return false;
+> +}
+> +
+>  static int dso__inject_build_id(struct dso *dso, struct perf_tool *tool,
+>                                 struct machine *machine, u8 cpumode, u32 flags)
+>  {
+> +       struct perf_inject *inject = container_of(tool, struct perf_inject,
+> +                                                 tool);
+>         int err;
+>
+>         if (is_anon_memory(dso->long_name) || flags & MAP_HUGETLB)
+> @@ -580,6 +619,10 @@ static int dso__inject_build_id(struct dso *dso, struct perf_tool *tool,
+>         if (is_no_dso_memory(dso->long_name))
+>                 return 0;
+>
+> +       if (inject->known_build_ids != NULL &&
+> +           perf_inject__lookup_known_build_id(inject, dso))
+> +               return 1;
+> +
+>         if (dso__read_build_id(dso) < 0) {
+>                 pr_debug("no build_id found for %s\n", dso->long_name);
+>                 return -1;
+> @@ -1076,12 +1119,16 @@ int cmd_inject(int argc, const char **argv)
+>         };
+>         int ret;
+>         bool repipe = true;
+> +       const char *known_build_ids = NULL;
+>
+>         struct option options[] = {
+>                 OPT_BOOLEAN('b', "build-ids", &inject.build_ids,
+>                             "Inject build-ids into the output stream"),
+>                 OPT_BOOLEAN(0, "buildid-all", &inject.build_id_all,
+>                             "Inject build-ids of all DSOs into the output stream"),
+> +               OPT_STRING(0, "known-build-ids", &known_build_ids,
+> +                          "buildid path [,buildid path...]",
+> +                          "build-ids to use for given paths"),
+>                 OPT_STRING('i', "input", &inject.input_name, "file",
+>                            "input file name"),
+>                 OPT_STRING('o', "output", &inject.output.path, "file",
+> @@ -1215,6 +1262,15 @@ int cmd_inject(int argc, const char **argv)
+>                  */
+>                 inject.tool.ordered_events = true;
+>                 inject.tool.ordering_requires_timestamps = true;
+> +               if (known_build_ids != NULL) {
+> +                       inject.known_build_ids = strlist__new(
+> +                           known_build_ids, NULL);
+> +
+> +                       if (inject.known_build_ids == NULL) {
+> +                               pr_err("Couldn't parse known build ids.\n");
+> +                               goto out_delete;
+> +                       }
+> +               }
+>         }
+>
+>         if (inject.sched_stat) {
+> @@ -1241,6 +1297,7 @@ int cmd_inject(int argc, const char **argv)
+>         ret = __cmd_inject(&inject);
+>
+>  out_delete:
+> +       strlist__delete(inject.known_build_ids);
+>         zstd_fini(&(inject.session->zstd_data));
+>         perf_session__delete(inject.session);
+>  out_close_output:
+> --
+> 2.37.0.rc0.161.g10f37bed90-goog
+>
