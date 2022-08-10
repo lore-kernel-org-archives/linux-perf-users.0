@@ -2,32 +2,33 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0C78AC00140
-	for <linux-perf-users@archiver.kernel.org>; Wed, 10 Aug 2022 08:38:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DC407C25B06
+	for <linux-perf-users@archiver.kernel.org>; Wed, 10 Aug 2022 08:41:01 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231724AbiHJIi5 (ORCPT
+        id S231759AbiHJIlA (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Wed, 10 Aug 2022 04:38:57 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35036 "EHLO
+        Wed, 10 Aug 2022 04:41:00 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37128 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231718AbiHJIi4 (ORCPT
+        with ESMTP id S231782AbiHJIk6 (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Wed, 10 Aug 2022 04:38:56 -0400
+        Wed, 10 Aug 2022 04:40:58 -0400
 Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTP id D92411835E;
-        Wed, 10 Aug 2022 01:38:55 -0700 (PDT)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTP id EAD142BB0C;
+        Wed, 10 Aug 2022 01:40:55 -0700 (PDT)
 Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 6670C1FB;
-        Wed, 10 Aug 2022 01:38:56 -0700 (PDT)
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 7A6C51FB;
+        Wed, 10 Aug 2022 01:40:56 -0700 (PDT)
 Received: from [192.168.99.12] (unknown [172.31.20.19])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id A4FE73F70D;
-        Wed, 10 Aug 2022 01:38:54 -0700 (PDT)
-Message-ID: <7b3bdad2-906b-98ea-239f-e76703a0f7a4@foss.arm.com>
-Date:   Wed, 10 Aug 2022 09:38:45 +0100
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id B96AA3F70D;
+        Wed, 10 Aug 2022 01:40:54 -0700 (PDT)
+Message-ID: <efadadfb-4aa7-9786-c297-8f073b4e97be@foss.arm.com>
+Date:   Wed, 10 Aug 2022 09:40:43 +0100
 MIME-Version: 1.0
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
  Thunderbird/91.11.0
-Subject: Re: [PATCH v5 01/14] perf test: Refactor shell tests allowing subdirs
+Subject: Re: [PATCH v5 02/14] perf test: Add CoreSight shell lib shared code
+ for future tests
 Content-Language: en-US
 To:     Leo Yan <leo.yan@linaro.org>
 Cc:     linux-kernel@vger.kernel.org, coresight@lists.linaro.org,
@@ -35,11 +36,11 @@ Cc:     linux-kernel@vger.kernel.org, coresight@lists.linaro.org,
         mike.leach@linaro.org, linux-perf-users@vger.kernel.org,
         acme@kernel.org
 References: <20220728145256.2985298-1-carsten.haitzler@foss.arm.com>
- <20220728145256.2985298-2-carsten.haitzler@foss.arm.com>
- <20220806083712.GA124146@leoy-ThinkPad-X240s>
+ <20220728145256.2985298-3-carsten.haitzler@foss.arm.com>
+ <20220806094055.GB124146@leoy-ThinkPad-X240s>
 From:   Carsten Haitzler <carsten.haitzler@foss.arm.com>
 Organization: Arm Ltd.
-In-Reply-To: <20220806083712.GA124146@leoy-ThinkPad-X240s>
+In-Reply-To: <20220806094055.GB124146@leoy-ThinkPad-X240s>
 Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 7bit
 Precedence: bulk
@@ -48,165 +49,189 @@ X-Mailing-List: linux-perf-users@vger.kernel.org
 
 
 
-On 8/6/22 09:37, Leo Yan wrote:
-> On Thu, Jul 28, 2022 at 03:52:43PM +0100, carsten.haitzler@foss.arm.com wrote:
+On 8/6/22 10:40, Leo Yan wrote:
+> On Thu, Jul 28, 2022 at 03:52:44PM +0100, carsten.haitzler@foss.arm.com wrote:
+>> From: "Carsten Haitzler (Rasterman)" <raster@rasterman.com>
+>>
+>> This adds a library of shell "code" to be shared and used by future
+>> tests that target quality testing for Arm CoreSight support in perf
+>> and the Linux kernel.
+>>
+>> Signed-off-by: Carsten Haitzler <carsten.haitzler@arm.com>
+>> ---
+>>   tools/perf/tests/shell/lib/coresight.sh | 132 ++++++++++++++++++++++++
+>>   1 file changed, 132 insertions(+)
+>>   create mode 100644 tools/perf/tests/shell/lib/coresight.sh
+>>
+>> diff --git a/tools/perf/tests/shell/lib/coresight.sh b/tools/perf/tests/shell/lib/coresight.sh
+>> new file mode 100644
 > 
-> [...]
+> Now one thing is tricky.  Since we scan sub directories, all scripts
+> under the folder "tools/perf/tests/shell/lib/" are not added into the
+> test list, this is because the scripts under this folder have no the
+> executable (X) permission:
 > 
->> +int list_script_max_width(void)
->> +{
->> +	list_script_files(); /* Ensure we have scanned all scriptd */
+> -rw-rw-r-- 1 leoy leoy 4675 Aug  6 17:03 coresight.sh
+> -rw-rw-r-- 1 leoy leoy  329 Jul 27 09:37 probe.sh
+> -rw-rw-r-- 1 leoy leoy  812 Jul 27 09:37 probe_vfs_getname.sh
 > 
-> s/scriptd/scripts/
+> I verified with command "perf list" and it works as expected.
 
-oops. fixed. v6 will come with that.
+Correct. the code takes advantage of this and skips things that are not 
++x as these will be assumed to be "library files".
 
->> +	return files_max_width;
+>> index 000000000000..45a1477256b6
+>> --- /dev/null
+>> +++ b/tools/perf/tests/shell/lib/coresight.sh
+>> @@ -0,0 +1,132 @@
+>> +# SPDX-License-Identifier: GPL-2.0
+>> +# Carsten Haitzler <carsten.haitzler@arm.com>, 2021
+>> +
+>> +# This is sourced from a driver script so no need for #!/bin... etc. at the
+>> +# top - the assumption below is that it runs as part of sourcing after the
+>> +# test sets up some basic env vars to say what it is.
+>> +
+>> +# This currently works with ETMv4 / ETF not any other packet types at thi
+>> +# point. This will need changes if that changes.
+>> +
+>> +# perf record options for the perf tests to use
+>> +PERFRECMEM="-m ,16M"
+>> +PERFRECOPT="$PERFRECMEM -e cs_etm//u"
+>> +
+>> +TOOLS=$(dirname $0)
+>> +DIR="$TOOLS/$TEST"
+>> +BIN="$DIR/$TEST"
+>> +# If the test tool/binary does not exist and is executable then skip the test
+>> +if ! test -x "$BIN"; then exit 2; fi
+>> +DATD="."
+>> +# If the data dir env is set then make the data dir use that instead of ./
+>> +if test -n "$PERF_TEST_CORESIGHT_DATADIR"; then
+>> +	DATD="$PERF_TEST_CORESIGHT_DATADIR";
+>> +fi
+>> +# If the stat dir env is set then make the data dir use that instead of ./
+>> +STATD="."
+>> +if test -n "$PERF_TEST_CORESIGHT_STATDIR"; then
+>> +	STATD="$PERF_TEST_CORESIGHT_STATDIR";
+>> +fi
+>> +
+>> +# Called if the test fails - error code 1
+>> +err() {
+>> +	echo "$1"
+>> +	exit 1
+>> +}
+>> +
+>> +# Check that some statistics from our perf
+>> +check_val_min() {
+>> +	STATF="$4"
+>> +	if test "$2" -lt "$3"; then
+>> +		echo ", FAILED" >> "$STATF"
+>> +		err "Sanity check number of $1 is too low ($2 < $3)"
+>> +	fi
+>> +}
+>> +
+>> +perf_dump_aux_verify() {
+>> +	# Some basic checking that the AUX chunk contains some sensible data
+>> +	# to see that we are recording something and at least a minimum
+>> +	# amount of it. We should almost always see Fn packets in just about
+>> +	# anything but certainly we will see some trace info and async
+>> +	# packets
+>> +	DUMP="$DATD/perf-tmp-aux-dump.txt"
+>> +	perf report --stdio --dump -i "$1" | \
+>> +		grep -o -e I_ATOM_F -e I_ASYNC -e I_TRACE_INFO > "$DUMP"
+>> +	# Simply count how many of these packets we find to see that we are
+>> +	# producing a reasonable amount of data - exact checks are not sane
+>> +	# as this is a lossy process where we may lose some blocks and the
+>> +	# compiler may produce different code depending on the compiler and
+>> +	# optimization options, so this is rough just to see if we're
+>> +	# either missing almost all the data or all of it
+>> +	ATOM_FX_NUM=`grep I_ATOM_F "$DUMP" | wc -l`
+>> +	ASYNC_NUM=`grep I_ASYNC "$DUMP" | wc -l`
+>> +	TRACE_INFO_NUM=`grep I_TRACE_INFO "$DUMP" | wc -l`
+>> +	rm -f "$DUMP"
+>> +
+>> +	# Arguments provide minimums for a pass
+>> +	CHECK_FX_MIN="$2"
+>> +	CHECK_ASYNC_MIN="$3"
+>> +	CHECK_TRACE_INFO_MIN="$4"
+>> +
+>> +	# Write out statistics, so over time you can track results to see if
+>> +	# there is a pattern - for example we have less "noisy" results that
+>> +	# produce more consistent amounts of data each run, to see if over
+>> +	# time any techinques to  minimize data loss are having an effect or
+>> +	# not
+>> +	STATF="$STATD/stats-$TEST-$DATV.csv"
+>> +	if ! test -f "$STATF"; then
+>> +		echo "ATOM Fx Count, Minimum, ASYNC Count, Minimum, TRACE INFO Count, Minimum" > "$STATF"
+>> +	fi
+>> +	echo -n "$ATOM_FX_NUM, $CHECK_FX_MIN, $ASYNC_NUM, $CHECK_ASYNC_MIN, $TRACE_INFO_NUM, $CHECK_TRACE_INFO_MIN" >> "$STATF"
+>> +
+>> +	# Actually check to see if we passed or failed.
+>> +	check_val_min "ATOM_FX" "$ATOM_FX_NUM" "$CHECK_FX_MIN" "$STATF"
+>> +	check_val_min "ASYNC" "$ASYNC_NUM" "$CHECK_ASYNC_MIN" "$STATF"
+>> +	check_val_min "TRACE_INFO" "$TRACE_INFO_NUM" "$CHECK_TRACE_INFO_MIN" "$STATF"
+>> +	echo ", Ok" >> "$STATF"
+>> +}
+>> +
+>> +perf_dump_aux_tid_verify() {
+>> +	# Specifically crafted test will produce a list of Tread ID's to
+>> +	# stdout that need to be checked to  see that they have had trace
+>> +	# info collected in AUX blocks in the perf data. This will go
+>> +	# through all the TID's that are listed as CID=0xabcdef and see
+>> +	# that all the Thread IDs the test tool reports are  in the perf
+>> +	# data AUX chunks
+>> +
+>> +	# The TID test tools will print a TID per stdout line that are being
+>> +	# tested
+>> +	TIDS=`cat "$2"`
+>> +	# Scan the perf report to find the TIDs that are actually CID in hex
+>> +	# and build a list of the ones found
+>> +	FOUND_TIDS=`perf report --stdio --dump -i "$1" | \
+>> +			grep -o "CID=0x[0-9a-z]\+" | sed 's/CID=//g' | \
+>> +			uniq | sort | uniq`
+>> +	# No CID=xxx found - maybe your kernel is reporting these as
+>> +	# VMID=xxx so look there
+>> +	if test -z "$FOUND_TIDS"; then
+>> +		FOUND_TIDS=`perf report --stdio --dump -i "$1" | \
+>> +				grep -o "VMID=0x[0-9a-z]\+" | sed 's/VMID=//g' | \
+>> +				uniq | sort | uniq`
+>> +	fi
+> 
+> Just note, in theory we can check perf meta data and decide if use
+> VMID or CID as thread ID in the trace data.  But perf meta data doesn't
+> give direct info and need to parse the "TRCIDR2" field, this would
+> introduce complexity.
+> 
+> Current approach is simple, so let's keep it.
+
+A simple approach at least is easier to maintain here. so we're in 
+agreement. :)
+
+>> +
+>> +	# Iterate over the list of TIDs that the test says it has and find
+>> +	# them in the TIDs found in the perf report
+>> +	MISSING=""
+>> +	for TID2 in $TIDS; do
+>> +		FOUND=""
+>> +		for TIDHEX in $FOUND_TIDS; do
+>> +			TID=`printf "%i" $TIDHEX`
+>> +			if test "$TID" -eq "$TID2"; then
+>> +				FOUND="y"
+>> +				break
+>> +			fi
+>> +		done
+>> +		if test -z "$FOUND"; then
+>> +			MISSING="$MISSING $TID"
+>> +		fi
+>> +	done
+>> +	if test -n "$MISSING"; then
+>> +		err "Thread IDs $MISSING not found in perf AUX data"
+>> +	fi
 >> +}
 > 
-> [...]
-> 
->>   struct shell_test {
->>   	const char *dir;
->>   	const char *file;
->> @@ -385,33 +302,17 @@ static int shell_test__run(struct test_suite *test, int subdir __maybe_unused)
->>   static int run_shell_tests(int argc, const char *argv[], int i, int width,
->>   				struct intlist *skiplist)
->>   {
->> -	struct dirent **entlist;
->> -	struct dirent *ent;
->> -	int n_dirs, e;
->> -	char path_dir[PATH_MAX];
->> -	struct shell_test st = {
->> -		.dir = shell_tests__dir(path_dir, sizeof(path_dir)),
->> -	};
->> -
->> -	if (st.dir == NULL)
->> -		return -1;
->> +	struct shell_test st;
->> +	const struct script_file *files, *file;
->>   
->> -	n_dirs = scandir(st.dir, &entlist, NULL, alphasort);
->> -	if (n_dirs == -1) {
->> -		pr_err("failed to open shell test directory: %s\n",
->> -			st.dir);
->> -		return -1;
->> -	}
->> -
->> -	for_each_shell_test(entlist, n_dirs, st.dir, ent) {
->> +	files = list_script_files();
->> +	if (!files)
->> +		return 0;
->> +	for (file = files; file->dir; file++) {
->>   		int curr = i++;
->> -		char desc[256];
->>   		struct test_case test_cases[] = {
->>   			{
->> -				.desc = shell_test__description(desc,
->> -								sizeof(desc),
->> -								st.dir,
->> -								ent->d_name),
->> +				.desc = file->desc,
->>   				.run_case = shell_test__run,
->>   			},
->>   			{ .name = NULL, }
->> @@ -421,12 +322,13 @@ static int run_shell_tests(int argc, const char *argv[], int i, int width,
->>   			.test_cases = test_cases,
->>   			.priv = &st,
->>   		};
->> +		st.dir = file->dir;
->>   
->>   		if (test_suite.desc == NULL ||
->>   		    !perf_test__matches(test_suite.desc, curr, argc, argv))
->>   			continue;
->>   
->> -		st.file = ent->d_name;
->> +		st.file = file->file;
-> 
-> I am just wandering if we can remove "st" in this function, finally I
-> found you are right, the "st" (struct shell_test) will be used in the
-> function shell_test__run(), so let's keep as it is.
-> 
->>   		pr_info("%3d: %-*s:", i, width, test_suite.desc);
->>   
->>   		if (intlist__find(skiplist, i)) {
->> @@ -436,10 +338,6 @@ static int run_shell_tests(int argc, const char *argv[], int i, int width,
->>   
->>   		test_and_print(&test_suite, 0);
->>   	}
->> -
->> -	for (e = 0; e < n_dirs; e++)
->> -		zfree(&entlist[e]);
->> -	free(entlist);
->>   	return 0;
->>   }
->>   
->> @@ -448,7 +346,7 @@ static int __cmd_test(int argc, const char *argv[], struct intlist *skiplist)
->>   	struct test_suite *t;
->>   	unsigned int j, k;
->>   	int i = 0;
->> -	int width = shell_tests__max_desc_width();
->> +	int width = list_script_max_width();
->>   
->>   	for_each_test(j, k, t) {
->>   		int len = strlen(test_description(t, -1));
->> @@ -529,36 +427,22 @@ static int __cmd_test(int argc, const char *argv[], struct intlist *skiplist)
->>   
->>   static int perf_test__list_shell(int argc, const char **argv, int i)
->>   {
->> -	struct dirent **entlist;
->> -	struct dirent *ent;
->> -	int n_dirs, e;
->> -	char path_dir[PATH_MAX];
->> -	const char *path = shell_tests__dir(path_dir, sizeof(path_dir));
->> -
->> -	if (path == NULL)
->> -		return -1;
->> +	const struct script_file *files, *file;
->>   
->> -	n_dirs = scandir(path, &entlist, NULL, alphasort);
->> -	if (n_dirs == -1)
->> -		return -1;
->> -
->> -	for_each_shell_test(entlist, n_dirs, path, ent) {
->> +	files = list_script_files();
->> +	if (!files)
->> +		return 0;
->> +	for (file = files; file->dir; file++) {
->>   		int curr = i++;
->> -		char bf[256];
->>   		struct test_suite t = {
->> -			.desc = shell_test__description(bf, sizeof(bf), path, ent->d_name),
->> +			.desc = file->desc
->>   		};
->>   
->>   		if (!perf_test__matches(t.desc, curr, argc, argv))
->>   			continue;
->>   
->>   		pr_info("%3d: %s\n", i, t.desc);
->> -
->>   	}
->> -
->> -	for (e = 0; e < n_dirs; e++)
->> -		zfree(&entlist[e]);
->> -	free(entlist);
->>   	return 0;
->>   }
-> 
-> Except a minor typo, the patch looks good to me, it's a good
-> refactoring and enhancement for shell script testing.
-> 
-> I reviewed the change one by one line, at least I cannot find any logic
-> error.
-> 
-> With typo fixing:
+> The patch LGTM:
 > 
 > Reviewed-by: Leo Yan <leo.yan@linaro.org>
 > 
-> I'd leave this patch for maintainers to review it.  Just a caveat, given
-> it's a big patch, as Carsten replied it's good that take the patch as a
-> total new code for searching shell scripts, this would be easier for
-> understanding the change.
-> 
-> Thanks,
-> Leo
+>> -- 
+>> 2.32.0
+>>
