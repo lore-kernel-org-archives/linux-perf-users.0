@@ -2,236 +2,175 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DC407C25B06
-	for <linux-perf-users@archiver.kernel.org>; Wed, 10 Aug 2022 08:41:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 039A0C25B0E
+	for <linux-perf-users@archiver.kernel.org>; Wed, 10 Aug 2022 08:45:22 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231759AbiHJIlA (ORCPT
+        id S231778AbiHJIpU (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Wed, 10 Aug 2022 04:41:00 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37128 "EHLO
+        Wed, 10 Aug 2022 04:45:20 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40888 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231782AbiHJIk6 (ORCPT
+        with ESMTP id S230104AbiHJIpT (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Wed, 10 Aug 2022 04:40:58 -0400
-Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTP id EAD142BB0C;
-        Wed, 10 Aug 2022 01:40:55 -0700 (PDT)
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 7A6C51FB;
-        Wed, 10 Aug 2022 01:40:56 -0700 (PDT)
-Received: from [192.168.99.12] (unknown [172.31.20.19])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id B96AA3F70D;
-        Wed, 10 Aug 2022 01:40:54 -0700 (PDT)
-Message-ID: <efadadfb-4aa7-9786-c297-8f073b4e97be@foss.arm.com>
-Date:   Wed, 10 Aug 2022 09:40:43 +0100
+        Wed, 10 Aug 2022 04:45:19 -0400
+Received: from madras.collabora.co.uk (madras.collabora.co.uk [IPv6:2a00:1098:0:82:1000:25:2eeb:e5ab])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E44221ADA5;
+        Wed, 10 Aug 2022 01:45:16 -0700 (PDT)
+Received: from [192.168.10.7] (unknown [39.45.206.166])
+        (using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
+         key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+        (No client certificate requested)
+        (Authenticated sender: usama.anjum)
+        by madras.collabora.co.uk (Postfix) with ESMTPSA id 7B0486601BE2;
+        Wed, 10 Aug 2022 09:45:06 +0100 (BST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=collabora.com;
+        s=mail; t=1660121114;
+        bh=1473869Iv8iu6o+SiEUIxAN5ZWzArP8lHuuYZHC8TEQ=;
+        h=Date:Cc:Subject:To:References:From:In-Reply-To:From;
+        b=VOT3kbYiY90iOsNmwjPKDRcrnhA+Nq+dHr2wUdQ3dp9YXfPoB45lsModbPKyApHkC
+         FqBlOolHNZDE+WjJGbgYXMW9exPj0qxxJb+ixSAn890nshpejAJA9F3VE931As8+sK
+         x6005gi8H2dMEftgItMtJpNFHI5E0rwISEYaEmkXVeTFZsMdGLpUv/fZqScFXLHSxt
+         PrF69uDmhxQOiOzlllAlwWiKiu/Fnpy2Sm4c8YBdhu2x/lEV3arOPAJ+3fOIT9prrM
+         lCuNUMzEy2M93qUld/dgvNQf3T9IPenUsGD5zceoYOZ52JX0DIPo7GXaVwqTNv8Pbd
+         48dFgrtPO/2BQ==
+Message-ID: <a5122af2-90e2-39c5-2d6a-57a4ab8d8f24@collabora.com>
+Date:   Wed, 10 Aug 2022 13:45:00 +0500
 MIME-Version: 1.0
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
  Thunderbird/91.11.0
-Subject: Re: [PATCH v5 02/14] perf test: Add CoreSight shell lib shared code
- for future tests
+Cc:     usama.anjum@collabora.com, kernel@collabora.com
+Subject: Re: [PATCH 0/5] Add process_memwatch syscall
 Content-Language: en-US
-To:     Leo Yan <leo.yan@linaro.org>
-Cc:     linux-kernel@vger.kernel.org, coresight@lists.linaro.org,
-        suzuki.poulose@arm.com, mathieu.poirier@linaro.org,
-        mike.leach@linaro.org, linux-perf-users@vger.kernel.org,
-        acme@kernel.org
-References: <20220728145256.2985298-1-carsten.haitzler@foss.arm.com>
- <20220728145256.2985298-3-carsten.haitzler@foss.arm.com>
- <20220806094055.GB124146@leoy-ThinkPad-X240s>
-From:   Carsten Haitzler <carsten.haitzler@foss.arm.com>
-Organization: Arm Ltd.
-In-Reply-To: <20220806094055.GB124146@leoy-ThinkPad-X240s>
-Content-Type: text/plain; charset=UTF-8; format=flowed
+To:     Jonathan Corbet <corbet@lwn.net>,
+        Andy Lutomirski <luto@kernel.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+        Dave Hansen <dave.hansen@linux.intel.com>,
+        "maintainer:X86 ARCHITECTURE (32-BIT AND 64-BIT)" <x86@kernel.org>,
+        "H. Peter Anvin" <hpa@zytor.com>, Arnd Bergmann <arnd@arndb.de>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Arnaldo Carvalho de Melo <acme@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Jiri Olsa <jolsa@kernel.org>,
+        Namhyung Kim <namhyung@kernel.org>,
+        Shuah Khan <shuah@kernel.org>,
+        "open list:DOCUMENTATION" <linux-doc@vger.kernel.org>,
+        open list <linux-kernel@vger.kernel.org>,
+        "open list:PROC FILESYSTEM" <linux-fsdevel@vger.kernel.org>,
+        "open list:ABI/API" <linux-api@vger.kernel.org>,
+        "open list:GENERIC INCLUDE/ASM HEADER FILES" 
+        <linux-arch@vger.kernel.org>,
+        "open list:MEMORY MANAGEMENT" <linux-mm@kvack.org>,
+        "open list:PERFORMANCE EVENTS SUBSYSTEM" 
+        <linux-perf-users@vger.kernel.org>,
+        "open list:KERNEL SELFTEST FRAMEWORK" 
+        <linux-kselftest@vger.kernel.org>, krisman@collabora.com
+References: <20220726161854.276359-1-usama.anjum@collabora.com>
+From:   Muhammad Usama Anjum <usama.anjum@collabora.com>
+In-Reply-To: <20220726161854.276359-1-usama.anjum@collabora.com>
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
+On 7/26/22 9:18 PM, Muhammad Usama Anjum wrote:
+> Hello,
+> 
+> This patch series implements a new syscall, process_memwatch. Currently,
+> only the support to watch soft-dirty PTE bit is added. This syscall is
+> generic to watch the memory of the process. There is enough room to add
+> more operations like this to watch memory in the future.
+> 
+> Soft-dirty PTE bit of the memory pages can be viewed by using pagemap
+> procfs file. The soft-dirty PTE bit for the memory in a process can be
+> cleared by writing to the clear_refs file. This series adds features that
+> weren't possible through the Proc FS interface.
+> - There is no atomic get soft-dirty PTE bit status and clear operation
+>   possible.
+> - The soft-dirty PTE bit of only a part of memory cannot be cleared.
+> 
+> Historically, soft-dirty PTE bit tracking has been used in the CRIU
+> project. The Proc FS interface is enough for that as I think the process
+> is frozen. We have the use case where we need to track the soft-dirty
+> PTE bit for running processes. We need this tracking and clear mechanism
+> of a region of memory while the process is running to emulate the
+> getWriteWatch() syscall of Windows. This syscall is used by games to keep
+> track of dirty pages and keep processing only the dirty pages. This
+> syscall can be used by the CRIU project and other applications which
+> require soft-dirty PTE bit information.
+> 
+> As in the current kernel there is no way to clear a part of memory (instead
+> of clearing the Soft-Dirty bits for the entire processi) and get+clear
+> operation cannot be performed atomically, there are other methods to mimic
+> this information entirely in userspace with poor performance:
+> - The mprotect syscall and SIGSEGV handler for bookkeeping
+> - The userfaultfd syscall with the handler for bookkeeping
+> 
+>         long process_memwatch(int pidfd, unsigned long start, int len,
+>                               unsigned int flags, void *vec, int vec_len);
+Any thoughts?
 
+> 
+> This syscall can be used by the CRIU project and other applications which
+> require soft-dirty PTE bit information. The following operations are
+> supported in this syscall:
+> - Get the pages that are soft-dirty.
+> - Clear the pages which are soft-dirty.
+> - The optional flag to ignore the VM_SOFTDIRTY and only track per page
+> soft-dirty PTE bit
+> 
+> There are two decisions which have been taken about how to get the output
+> from the syscall.
+> - Return offsets of the pages from the start in the vec
+> - Stop execution when vec is filled with dirty pages
+> These two arguments doesn't follow the mincore() philosophy where the
+> output array corresponds to the address range in one to one fashion, hence
+> the output buffer length isn't passed and only a flag is set if the page
+> is present. This makes mincore() easy to use with less control. We are
+> passing the size of the output array and putting return data consecutively
+> which is offset of dirty pages from the start. The user can convert these
+> offsets back into the dirty page addresses easily. Suppose, the user want
+> to get first 10 dirty pages from a total memory of 100 pages. He'll
+> allocate output buffer of size 10 and process_memwatch() syscall will
+> abort after finding the 10 pages. This behaviour is needed to support
+> Windows' getWriteWatch(). The behaviour like mincore() can be achieved by
+> passing output buffer of 100 size. This interface can be used for any
+> desired behaviour.
+> 
+> Regards,
+> Muhammad Usama Anjum
+> 
+> Muhammad Usama Anjum (5):
+>   fs/proc/task_mmu: make functions global to be used in other files
+>   mm: Implement process_memwatch syscall
+>   mm: wire up process_memwatch syscall for x86
+>   selftests: vm: add process_memwatch syscall tests
+>   mm: add process_memwatch syscall documentation
+> 
+>  Documentation/admin-guide/mm/soft-dirty.rst   |  48 +-
+>  arch/x86/entry/syscalls/syscall_32.tbl        |   1 +
+>  arch/x86/entry/syscalls/syscall_64.tbl        |   1 +
+>  fs/proc/task_mmu.c                            |  84 +--
+>  include/linux/mm_inline.h                     |  99 +++
+>  include/linux/syscalls.h                      |   3 +-
+>  include/uapi/asm-generic/unistd.h             |   5 +-
+>  include/uapi/linux/memwatch.h                 |  12 +
+>  kernel/sys_ni.c                               |   1 +
+>  mm/Makefile                                   |   2 +-
+>  mm/memwatch.c                                 | 285 ++++++++
+>  tools/include/uapi/asm-generic/unistd.h       |   5 +-
+>  .../arch/x86/entry/syscalls/syscall_64.tbl    |   1 +
+>  tools/testing/selftests/vm/.gitignore         |   1 +
+>  tools/testing/selftests/vm/Makefile           |   2 +
+>  tools/testing/selftests/vm/memwatch_test.c    | 635 ++++++++++++++++++
+>  16 files changed, 1098 insertions(+), 87 deletions(-)
+>  create mode 100644 include/uapi/linux/memwatch.h
+>  create mode 100644 mm/memwatch.c
+>  create mode 100644 tools/testing/selftests/vm/memwatch_test.c
+> 
 
-On 8/6/22 10:40, Leo Yan wrote:
-> On Thu, Jul 28, 2022 at 03:52:44PM +0100, carsten.haitzler@foss.arm.com wrote:
->> From: "Carsten Haitzler (Rasterman)" <raster@rasterman.com>
->>
->> This adds a library of shell "code" to be shared and used by future
->> tests that target quality testing for Arm CoreSight support in perf
->> and the Linux kernel.
->>
->> Signed-off-by: Carsten Haitzler <carsten.haitzler@arm.com>
->> ---
->>   tools/perf/tests/shell/lib/coresight.sh | 132 ++++++++++++++++++++++++
->>   1 file changed, 132 insertions(+)
->>   create mode 100644 tools/perf/tests/shell/lib/coresight.sh
->>
->> diff --git a/tools/perf/tests/shell/lib/coresight.sh b/tools/perf/tests/shell/lib/coresight.sh
->> new file mode 100644
-> 
-> Now one thing is tricky.  Since we scan sub directories, all scripts
-> under the folder "tools/perf/tests/shell/lib/" are not added into the
-> test list, this is because the scripts under this folder have no the
-> executable (X) permission:
-> 
-> -rw-rw-r-- 1 leoy leoy 4675 Aug  6 17:03 coresight.sh
-> -rw-rw-r-- 1 leoy leoy  329 Jul 27 09:37 probe.sh
-> -rw-rw-r-- 1 leoy leoy  812 Jul 27 09:37 probe_vfs_getname.sh
-> 
-> I verified with command "perf list" and it works as expected.
-
-Correct. the code takes advantage of this and skips things that are not 
-+x as these will be assumed to be "library files".
-
->> index 000000000000..45a1477256b6
->> --- /dev/null
->> +++ b/tools/perf/tests/shell/lib/coresight.sh
->> @@ -0,0 +1,132 @@
->> +# SPDX-License-Identifier: GPL-2.0
->> +# Carsten Haitzler <carsten.haitzler@arm.com>, 2021
->> +
->> +# This is sourced from a driver script so no need for #!/bin... etc. at the
->> +# top - the assumption below is that it runs as part of sourcing after the
->> +# test sets up some basic env vars to say what it is.
->> +
->> +# This currently works with ETMv4 / ETF not any other packet types at thi
->> +# point. This will need changes if that changes.
->> +
->> +# perf record options for the perf tests to use
->> +PERFRECMEM="-m ,16M"
->> +PERFRECOPT="$PERFRECMEM -e cs_etm//u"
->> +
->> +TOOLS=$(dirname $0)
->> +DIR="$TOOLS/$TEST"
->> +BIN="$DIR/$TEST"
->> +# If the test tool/binary does not exist and is executable then skip the test
->> +if ! test -x "$BIN"; then exit 2; fi
->> +DATD="."
->> +# If the data dir env is set then make the data dir use that instead of ./
->> +if test -n "$PERF_TEST_CORESIGHT_DATADIR"; then
->> +	DATD="$PERF_TEST_CORESIGHT_DATADIR";
->> +fi
->> +# If the stat dir env is set then make the data dir use that instead of ./
->> +STATD="."
->> +if test -n "$PERF_TEST_CORESIGHT_STATDIR"; then
->> +	STATD="$PERF_TEST_CORESIGHT_STATDIR";
->> +fi
->> +
->> +# Called if the test fails - error code 1
->> +err() {
->> +	echo "$1"
->> +	exit 1
->> +}
->> +
->> +# Check that some statistics from our perf
->> +check_val_min() {
->> +	STATF="$4"
->> +	if test "$2" -lt "$3"; then
->> +		echo ", FAILED" >> "$STATF"
->> +		err "Sanity check number of $1 is too low ($2 < $3)"
->> +	fi
->> +}
->> +
->> +perf_dump_aux_verify() {
->> +	# Some basic checking that the AUX chunk contains some sensible data
->> +	# to see that we are recording something and at least a minimum
->> +	# amount of it. We should almost always see Fn packets in just about
->> +	# anything but certainly we will see some trace info and async
->> +	# packets
->> +	DUMP="$DATD/perf-tmp-aux-dump.txt"
->> +	perf report --stdio --dump -i "$1" | \
->> +		grep -o -e I_ATOM_F -e I_ASYNC -e I_TRACE_INFO > "$DUMP"
->> +	# Simply count how many of these packets we find to see that we are
->> +	# producing a reasonable amount of data - exact checks are not sane
->> +	# as this is a lossy process where we may lose some blocks and the
->> +	# compiler may produce different code depending on the compiler and
->> +	# optimization options, so this is rough just to see if we're
->> +	# either missing almost all the data or all of it
->> +	ATOM_FX_NUM=`grep I_ATOM_F "$DUMP" | wc -l`
->> +	ASYNC_NUM=`grep I_ASYNC "$DUMP" | wc -l`
->> +	TRACE_INFO_NUM=`grep I_TRACE_INFO "$DUMP" | wc -l`
->> +	rm -f "$DUMP"
->> +
->> +	# Arguments provide minimums for a pass
->> +	CHECK_FX_MIN="$2"
->> +	CHECK_ASYNC_MIN="$3"
->> +	CHECK_TRACE_INFO_MIN="$4"
->> +
->> +	# Write out statistics, so over time you can track results to see if
->> +	# there is a pattern - for example we have less "noisy" results that
->> +	# produce more consistent amounts of data each run, to see if over
->> +	# time any techinques to  minimize data loss are having an effect or
->> +	# not
->> +	STATF="$STATD/stats-$TEST-$DATV.csv"
->> +	if ! test -f "$STATF"; then
->> +		echo "ATOM Fx Count, Minimum, ASYNC Count, Minimum, TRACE INFO Count, Minimum" > "$STATF"
->> +	fi
->> +	echo -n "$ATOM_FX_NUM, $CHECK_FX_MIN, $ASYNC_NUM, $CHECK_ASYNC_MIN, $TRACE_INFO_NUM, $CHECK_TRACE_INFO_MIN" >> "$STATF"
->> +
->> +	# Actually check to see if we passed or failed.
->> +	check_val_min "ATOM_FX" "$ATOM_FX_NUM" "$CHECK_FX_MIN" "$STATF"
->> +	check_val_min "ASYNC" "$ASYNC_NUM" "$CHECK_ASYNC_MIN" "$STATF"
->> +	check_val_min "TRACE_INFO" "$TRACE_INFO_NUM" "$CHECK_TRACE_INFO_MIN" "$STATF"
->> +	echo ", Ok" >> "$STATF"
->> +}
->> +
->> +perf_dump_aux_tid_verify() {
->> +	# Specifically crafted test will produce a list of Tread ID's to
->> +	# stdout that need to be checked to  see that they have had trace
->> +	# info collected in AUX blocks in the perf data. This will go
->> +	# through all the TID's that are listed as CID=0xabcdef and see
->> +	# that all the Thread IDs the test tool reports are  in the perf
->> +	# data AUX chunks
->> +
->> +	# The TID test tools will print a TID per stdout line that are being
->> +	# tested
->> +	TIDS=`cat "$2"`
->> +	# Scan the perf report to find the TIDs that are actually CID in hex
->> +	# and build a list of the ones found
->> +	FOUND_TIDS=`perf report --stdio --dump -i "$1" | \
->> +			grep -o "CID=0x[0-9a-z]\+" | sed 's/CID=//g' | \
->> +			uniq | sort | uniq`
->> +	# No CID=xxx found - maybe your kernel is reporting these as
->> +	# VMID=xxx so look there
->> +	if test -z "$FOUND_TIDS"; then
->> +		FOUND_TIDS=`perf report --stdio --dump -i "$1" | \
->> +				grep -o "VMID=0x[0-9a-z]\+" | sed 's/VMID=//g' | \
->> +				uniq | sort | uniq`
->> +	fi
-> 
-> Just note, in theory we can check perf meta data and decide if use
-> VMID or CID as thread ID in the trace data.  But perf meta data doesn't
-> give direct info and need to parse the "TRCIDR2" field, this would
-> introduce complexity.
-> 
-> Current approach is simple, so let's keep it.
-
-A simple approach at least is easier to maintain here. so we're in 
-agreement. :)
-
->> +
->> +	# Iterate over the list of TIDs that the test says it has and find
->> +	# them in the TIDs found in the perf report
->> +	MISSING=""
->> +	for TID2 in $TIDS; do
->> +		FOUND=""
->> +		for TIDHEX in $FOUND_TIDS; do
->> +			TID=`printf "%i" $TIDHEX`
->> +			if test "$TID" -eq "$TID2"; then
->> +				FOUND="y"
->> +				break
->> +			fi
->> +		done
->> +		if test -z "$FOUND"; then
->> +			MISSING="$MISSING $TID"
->> +		fi
->> +	done
->> +	if test -n "$MISSING"; then
->> +		err "Thread IDs $MISSING not found in perf AUX data"
->> +	fi
->> +}
-> 
-> The patch LGTM:
-> 
-> Reviewed-by: Leo Yan <leo.yan@linaro.org>
-> 
->> -- 
->> 2.32.0
->>
+-- 
+Muhammad Usama Anjum
