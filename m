@@ -2,173 +2,211 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6CE65C28B2B
-	for <linux-perf-users@archiver.kernel.org>; Tue,  9 Aug 2022 22:35:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0C78AC00140
+	for <linux-perf-users@archiver.kernel.org>; Wed, 10 Aug 2022 08:38:58 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230227AbiHIWez (ORCPT
+        id S231724AbiHJIi5 (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Tue, 9 Aug 2022 18:34:55 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54286 "EHLO
+        Wed, 10 Aug 2022 04:38:57 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35036 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230247AbiHIWe2 (ORCPT
+        with ESMTP id S231718AbiHJIi4 (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Tue, 9 Aug 2022 18:34:28 -0400
-Received: from mail-wr1-x433.google.com (mail-wr1-x433.google.com [IPv6:2a00:1450:4864:20::433])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 18DFE65806
-        for <linux-perf-users@vger.kernel.org>; Tue,  9 Aug 2022 15:34:19 -0700 (PDT)
-Received: by mail-wr1-x433.google.com with SMTP id l4so15782276wrm.13
-        for <linux-perf-users@vger.kernel.org>; Tue, 09 Aug 2022 15:34:19 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references;
-        bh=Ht2C5hmUen8Zs+3SYPbHRSeYgcLBnHmLYbKN5MCrEgA=;
-        b=ReoNsdK6Qf7stNbwqpvMm9Ps3u5XWBgokoaC2yhwkEv62aRu1zmFBrOA1cnNu8SB7I
-         QjLddDNP2g4u9p6ZtPodt5virk5oHHyLDcmgzy14jfEvX3+F/6xCZ8ekLlzGgCRMo2ld
-         XFAztJQYM006MYg5zp/2FsunjL7yoeHmv7+nTX3URAxE8MCR8HTCaSRn/xhXYhOgbZFo
-         GRRKQgNTp7TFCR/ei2DxZOtlzQrXhCSworaV9VMnCceTGk5r84mkHs+kZWr7x0vFp+FG
-         bC3Pa30f+tsH7R3remZY5HczWX0R+oqCsoW0vI2w+Fqo0bSR1CTLMFFAabzrFbdSlsuz
-         kWjQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references;
-        bh=Ht2C5hmUen8Zs+3SYPbHRSeYgcLBnHmLYbKN5MCrEgA=;
-        b=fELfDA4D/lfln493SnT66yvvP7SpQNWlPzVYN4RqJYAknR/sytIImaEMeVBT2k0F2C
-         6+xcVtbR1NIvwmFLy9fEImi78MR698mCkq48zer+prWKNlCxEzSVVz9dZsTzwtaR3DWD
-         aO1EwPbxWOhdqeYpz3B/QZP0XlL6Pcx/f4fwUvFSugpRTmMHf1J4nAEOHzS+sRKRbaiY
-         huWT/mp3aXTUwWvfKT/xjANYG91cLFExYOOGFegQ9IBA+2mhvkGmIXz3E5p9yIcrJy2z
-         ScKArdTi8EHZuyDgYecMEY7gRO6QmvKObvVqwjEHbeNKIdgXtyTIhv6zqfv1U82/ivch
-         dHyA==
-X-Gm-Message-State: ACgBeo3nclwl/nE3agBFHujJIKCWQA4IJuSKzLvR+aeAoA10RT6+ZxjG
-        lJgJxZw9cbaTyN44XI7FfnyArw==
-X-Google-Smtp-Source: AA6agR7iJg2CnEWqKZ9yqi+h9y7+qiLbREP+KF0Qz0+eZXbO1MQ8ibEAp64ra1HPkU1Wop7FsiymEQ==
-X-Received: by 2002:a05:6000:81c:b0:222:ed7f:4445 with SMTP id bt28-20020a056000081c00b00222ed7f4445mr5671154wrb.111.1660084459352;
-        Tue, 09 Aug 2022 15:34:19 -0700 (PDT)
-Received: from linaro.org ([2a00:23c5:6809:2201:a6:74a6:5a0e:f3e2])
-        by smtp.gmail.com with ESMTPSA id e20-20020a05600c4b9400b003a2cf1ba9e2sm311650wmp.6.2022.08.09.15.34.18
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 09 Aug 2022 15:34:18 -0700 (PDT)
-From:   Mike Leach <mike.leach@linaro.org>
-To:     coresight@lists.linaro.org, linux-arm-kernel@lists.infradead.org,
-        linux-kernel@vger.kernel.org
-Cc:     mathieu.poirier@linaro.org, suzuki.poulose@arm.com,
-        peterz@infradead.org, mingo@redhat.com, acme@kernel.org,
-        linux-perf-users@vger.kernel.org, leo.yan@linaro.org,
-        quic_jinlmao@quicinc.com, Mike Leach <mike.leach@linaro.org>
-Subject: [PATCH v3 13/13] coresight: trace-id: Add debug & test macros to Trace ID allocation
-Date:   Tue,  9 Aug 2022 23:34:01 +0100
-Message-Id: <20220809223401.24599-14-mike.leach@linaro.org>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20220809223401.24599-1-mike.leach@linaro.org>
-References: <20220809223401.24599-1-mike.leach@linaro.org>
+        Wed, 10 Aug 2022 04:38:56 -0400
+Received: from foss.arm.com (foss.arm.com [217.140.110.172])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTP id D92411835E;
+        Wed, 10 Aug 2022 01:38:55 -0700 (PDT)
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 6670C1FB;
+        Wed, 10 Aug 2022 01:38:56 -0700 (PDT)
+Received: from [192.168.99.12] (unknown [172.31.20.19])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id A4FE73F70D;
+        Wed, 10 Aug 2022 01:38:54 -0700 (PDT)
+Message-ID: <7b3bdad2-906b-98ea-239f-e76703a0f7a4@foss.arm.com>
+Date:   Wed, 10 Aug 2022 09:38:45 +0100
+MIME-Version: 1.0
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
+ Thunderbird/91.11.0
+Subject: Re: [PATCH v5 01/14] perf test: Refactor shell tests allowing subdirs
+Content-Language: en-US
+To:     Leo Yan <leo.yan@linaro.org>
+Cc:     linux-kernel@vger.kernel.org, coresight@lists.linaro.org,
+        suzuki.poulose@arm.com, mathieu.poirier@linaro.org,
+        mike.leach@linaro.org, linux-perf-users@vger.kernel.org,
+        acme@kernel.org
+References: <20220728145256.2985298-1-carsten.haitzler@foss.arm.com>
+ <20220728145256.2985298-2-carsten.haitzler@foss.arm.com>
+ <20220806083712.GA124146@leoy-ThinkPad-X240s>
+From:   Carsten Haitzler <carsten.haitzler@foss.arm.com>
+Organization: Arm Ltd.
+In-Reply-To: <20220806083712.GA124146@leoy-ThinkPad-X240s>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-Adds in a number of pr_debug macros to allow the debugging and test of
-the trace ID allocation system.
 
-Signed-off-by: Mike Leach <mike.leach@linaro.org>
----
- .../hwtracing/coresight/coresight-trace-id.c  | 36 +++++++++++++++++++
- 1 file changed, 36 insertions(+)
 
-diff --git a/drivers/hwtracing/coresight/coresight-trace-id.c b/drivers/hwtracing/coresight/coresight-trace-id.c
-index ac9092896dec..24c19ff493a9 100644
---- a/drivers/hwtracing/coresight/coresight-trace-id.c
-+++ b/drivers/hwtracing/coresight/coresight-trace-id.c
-@@ -69,6 +69,30 @@ static void coresight_trace_id_set_pend_rel(int id, struct coresight_trace_id_ma
- 	set_bit(id, id_map->pend_rel_ids);
- }
- 
-+/* #define TRACE_ID_DEBUG 1 */
-+#ifdef TRACE_ID_DEBUG
-+static char page_buf[PAGE_SIZE];
-+
-+static void coresight_trace_id_dump_table(struct coresight_trace_id_map *id_map,
-+					  const char *func_name)
-+{
-+	pr_debug("%s id_map::\n", func_name);
-+	bitmap_print_to_pagebuf(0, page_buf, id_map->used_ids, CORESIGHT_TRACE_IDS_MAX);
-+	pr_debug("Avial= %s\n", page_buf);
-+	bitmap_print_to_pagebuf(0, page_buf, id_map->pend_rel_ids, CORESIGHT_TRACE_IDS_MAX);
-+	pr_debug("Pend = %s\n", page_buf);
-+}
-+#define DUMP_ID_MAP(map)   coresight_trace_id_dump_table(map, __func__)
-+#define DUMP_ID_CPU(cpu, id) pr_debug("%s called;  cpu=%d, id=%d\n", __func__, cpu, id)
-+#define DUMP_ID(id)   pr_debug("%s called; id=%d\n", __func__, id)
-+#define PERF_SESSION(n) pr_debug("%s perf count %d\n", __func__, n)
-+#else
-+#define DUMP_ID_MAP(map)
-+#define DUMP_ID(id)
-+#define DUMP_ID_CPU(cpu, id)
-+#define PERF_SESSION(n)
-+#endif
-+
- /* release all pending IDs for all current maps & clear CPU associations */
- static void coresight_trace_id_release_all_pending(void)
- {
-@@ -88,6 +112,7 @@ static void coresight_trace_id_release_all_pending(void)
- 		}
- 	}
- 	spin_unlock_irqrestore(&id_map_lock, flags);
-+	DUMP_ID_MAP(id_map);
- }
- 
- static int coresight_trace_id_map_get_cpu_id(int cpu, struct coresight_trace_id_map *id_map)
-@@ -123,6 +148,8 @@ static int coresight_trace_id_map_get_cpu_id(int cpu, struct coresight_trace_id_
- get_cpu_id_out:
- 	spin_unlock_irqrestore(&id_map_lock, flags);
- 
-+	DUMP_ID_CPU(cpu, id);
-+	DUMP_ID_MAP(id_map);
- 	return id;
- }
- 
-@@ -150,6 +177,8 @@ static void coresight_trace_id_map_put_cpu_id(int cpu, struct coresight_trace_id
- 
- 	spin_unlock_irqrestore(&id_map_lock, flags);
- put_cpu_id_out:
-+	DUMP_ID_CPU(cpu, id);
-+	DUMP_ID_MAP(id_map);
- }
- 
- static int coresight_trace_id_map_get_system_id(struct coresight_trace_id_map *id_map)
-@@ -161,6 +190,8 @@ static int coresight_trace_id_map_get_system_id(struct coresight_trace_id_map *i
- 	id = coresight_trace_id_alloc_new_id(id_map, 0);
- 	spin_unlock_irqrestore(&id_map_lock, flags);
- 
-+	DUMP_ID(id);
-+	DUMP_ID_MAP(id_map);
- 	return id;
- }
- 
-@@ -171,6 +202,9 @@ static void coresight_trace_id_map_put_system_id(struct coresight_trace_id_map *
- 	spin_lock_irqsave(&id_map_lock, flags);
- 	coresight_trace_id_free(id, id_map);
- 	spin_unlock_irqrestore(&id_map_lock, flags);
-+
-+	DUMP_ID(id);
-+	DUMP_ID_MAP(id_map);
- }
- 
- /* API functions */
-@@ -207,6 +241,7 @@ EXPORT_SYMBOL_GPL(coresight_trace_id_put_system_id);
- void coresight_trace_id_perf_start(void)
- {
- 	atomic_inc(&perf_cs_etm_session_active);
-+	PERF_SESSION(atomic_read(&perf_cs_etm_session_active));
- }
- EXPORT_SYMBOL_GPL(coresight_trace_id_perf_start);
- 
-@@ -214,6 +249,7 @@ void coresight_trace_id_perf_stop(void)
- {
- 	if (!atomic_dec_return(&perf_cs_etm_session_active))
- 		coresight_trace_id_release_all_pending();
-+	PERF_SESSION(atomic_read(&perf_cs_etm_session_active));
- }
- EXPORT_SYMBOL_GPL(coresight_trace_id_perf_stop);
- 
--- 
-2.17.1
+On 8/6/22 09:37, Leo Yan wrote:
+> On Thu, Jul 28, 2022 at 03:52:43PM +0100, carsten.haitzler@foss.arm.com wrote:
+> 
+> [...]
+> 
+>> +int list_script_max_width(void)
+>> +{
+>> +	list_script_files(); /* Ensure we have scanned all scriptd */
+> 
+> s/scriptd/scripts/
 
+oops. fixed. v6 will come with that.
+
+>> +	return files_max_width;
+>> +}
+> 
+> [...]
+> 
+>>   struct shell_test {
+>>   	const char *dir;
+>>   	const char *file;
+>> @@ -385,33 +302,17 @@ static int shell_test__run(struct test_suite *test, int subdir __maybe_unused)
+>>   static int run_shell_tests(int argc, const char *argv[], int i, int width,
+>>   				struct intlist *skiplist)
+>>   {
+>> -	struct dirent **entlist;
+>> -	struct dirent *ent;
+>> -	int n_dirs, e;
+>> -	char path_dir[PATH_MAX];
+>> -	struct shell_test st = {
+>> -		.dir = shell_tests__dir(path_dir, sizeof(path_dir)),
+>> -	};
+>> -
+>> -	if (st.dir == NULL)
+>> -		return -1;
+>> +	struct shell_test st;
+>> +	const struct script_file *files, *file;
+>>   
+>> -	n_dirs = scandir(st.dir, &entlist, NULL, alphasort);
+>> -	if (n_dirs == -1) {
+>> -		pr_err("failed to open shell test directory: %s\n",
+>> -			st.dir);
+>> -		return -1;
+>> -	}
+>> -
+>> -	for_each_shell_test(entlist, n_dirs, st.dir, ent) {
+>> +	files = list_script_files();
+>> +	if (!files)
+>> +		return 0;
+>> +	for (file = files; file->dir; file++) {
+>>   		int curr = i++;
+>> -		char desc[256];
+>>   		struct test_case test_cases[] = {
+>>   			{
+>> -				.desc = shell_test__description(desc,
+>> -								sizeof(desc),
+>> -								st.dir,
+>> -								ent->d_name),
+>> +				.desc = file->desc,
+>>   				.run_case = shell_test__run,
+>>   			},
+>>   			{ .name = NULL, }
+>> @@ -421,12 +322,13 @@ static int run_shell_tests(int argc, const char *argv[], int i, int width,
+>>   			.test_cases = test_cases,
+>>   			.priv = &st,
+>>   		};
+>> +		st.dir = file->dir;
+>>   
+>>   		if (test_suite.desc == NULL ||
+>>   		    !perf_test__matches(test_suite.desc, curr, argc, argv))
+>>   			continue;
+>>   
+>> -		st.file = ent->d_name;
+>> +		st.file = file->file;
+> 
+> I am just wandering if we can remove "st" in this function, finally I
+> found you are right, the "st" (struct shell_test) will be used in the
+> function shell_test__run(), so let's keep as it is.
+> 
+>>   		pr_info("%3d: %-*s:", i, width, test_suite.desc);
+>>   
+>>   		if (intlist__find(skiplist, i)) {
+>> @@ -436,10 +338,6 @@ static int run_shell_tests(int argc, const char *argv[], int i, int width,
+>>   
+>>   		test_and_print(&test_suite, 0);
+>>   	}
+>> -
+>> -	for (e = 0; e < n_dirs; e++)
+>> -		zfree(&entlist[e]);
+>> -	free(entlist);
+>>   	return 0;
+>>   }
+>>   
+>> @@ -448,7 +346,7 @@ static int __cmd_test(int argc, const char *argv[], struct intlist *skiplist)
+>>   	struct test_suite *t;
+>>   	unsigned int j, k;
+>>   	int i = 0;
+>> -	int width = shell_tests__max_desc_width();
+>> +	int width = list_script_max_width();
+>>   
+>>   	for_each_test(j, k, t) {
+>>   		int len = strlen(test_description(t, -1));
+>> @@ -529,36 +427,22 @@ static int __cmd_test(int argc, const char *argv[], struct intlist *skiplist)
+>>   
+>>   static int perf_test__list_shell(int argc, const char **argv, int i)
+>>   {
+>> -	struct dirent **entlist;
+>> -	struct dirent *ent;
+>> -	int n_dirs, e;
+>> -	char path_dir[PATH_MAX];
+>> -	const char *path = shell_tests__dir(path_dir, sizeof(path_dir));
+>> -
+>> -	if (path == NULL)
+>> -		return -1;
+>> +	const struct script_file *files, *file;
+>>   
+>> -	n_dirs = scandir(path, &entlist, NULL, alphasort);
+>> -	if (n_dirs == -1)
+>> -		return -1;
+>> -
+>> -	for_each_shell_test(entlist, n_dirs, path, ent) {
+>> +	files = list_script_files();
+>> +	if (!files)
+>> +		return 0;
+>> +	for (file = files; file->dir; file++) {
+>>   		int curr = i++;
+>> -		char bf[256];
+>>   		struct test_suite t = {
+>> -			.desc = shell_test__description(bf, sizeof(bf), path, ent->d_name),
+>> +			.desc = file->desc
+>>   		};
+>>   
+>>   		if (!perf_test__matches(t.desc, curr, argc, argv))
+>>   			continue;
+>>   
+>>   		pr_info("%3d: %s\n", i, t.desc);
+>> -
+>>   	}
+>> -
+>> -	for (e = 0; e < n_dirs; e++)
+>> -		zfree(&entlist[e]);
+>> -	free(entlist);
+>>   	return 0;
+>>   }
+> 
+> Except a minor typo, the patch looks good to me, it's a good
+> refactoring and enhancement for shell script testing.
+> 
+> I reviewed the change one by one line, at least I cannot find any logic
+> error.
+> 
+> With typo fixing:
+> 
+> Reviewed-by: Leo Yan <leo.yan@linaro.org>
+> 
+> I'd leave this patch for maintainers to review it.  Just a caveat, given
+> it's a big patch, as Carsten replied it's good that take the patch as a
+> total new code for searching shell scripts, this would be easier for
+> understanding the change.
+> 
+> Thanks,
+> Leo
