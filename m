@@ -2,183 +2,234 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0504FC25B0E
-	for <linux-perf-users@archiver.kernel.org>; Wed, 10 Aug 2022 17:05:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BD8B2C00140
+	for <linux-perf-users@archiver.kernel.org>; Wed, 10 Aug 2022 17:37:11 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233144AbiHJRFY (ORCPT
+        id S232202AbiHJRhL (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Wed, 10 Aug 2022 13:05:24 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38736 "EHLO
+        Wed, 10 Aug 2022 13:37:11 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43138 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229522AbiHJRFW (ORCPT
+        with ESMTP id S231928AbiHJRhK (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Wed, 10 Aug 2022 13:05:22 -0400
-Received: from madras.collabora.co.uk (madras.collabora.co.uk [46.235.227.172])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4B46E20F5A;
-        Wed, 10 Aug 2022 10:05:21 -0700 (PDT)
-Received: from localhost (modemcable141.102-20-96.mc.videotron.ca [96.20.102.141])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-        (No client certificate requested)
-        (Authenticated sender: krisman)
-        by madras.collabora.co.uk (Postfix) with ESMTPSA id 227CD66019C1;
-        Wed, 10 Aug 2022 18:05:19 +0100 (BST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=collabora.com;
-        s=mail; t=1660151120;
-        bh=4xdK5anslBOIhnkqGW81pncrZ4JdPy+zW5SIE/JLnRY=;
-        h=From:To:Cc:Subject:References:Date:In-Reply-To:From;
-        b=h3/E9F9xuu0PQBdbIIIowMiztInzpGA0Sr0/+ERtIQ9Vaj8xol3qxBdNobdQ5OFOQ
-         lAbYHUygoM5LQQ5pucfxCdpxQTPn06tCWpoSfjKHlvwjjlSxcMj8Ew2NicpOm1AvJ3
-         roEcd73rt3wd9yGwbKMRSMKfTRLj6KFgYIfZ2F4vNor+cpy8eB6hytQGEFPfzNo5Md
-         msk+2xH6Fdmd57XrQPJRtVBSL67QF0eySoRR2reLPDjb1MJQU/w+xrfqcTVAbkf3vT
-         XqEyOLcJ5t7UXVh9WHIGLYw/NAFIeHfZKTVCtl5iayQ/V09KExOQ4SdIqXZDjGHMtJ
-         +LprGiO7NYsdA==
-From:   Gabriel Krisman Bertazi <krisman@collabora.com>
-To:     David Hildenbrand <david@redhat.com>
-Cc:     Muhammad Usama Anjum <usama.anjum@collabora.com>,
-        Jonathan Corbet <corbet@lwn.net>,
-        Andy Lutomirski <luto@kernel.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-        Dave Hansen <dave.hansen@linux.intel.com>,
-        "maintainer:X86 ARCHITECTURE (32-BIT AND 64-BIT)" <x86@kernel.org>,
-        "H. Peter Anvin" <hpa@zytor.com>, Arnd Bergmann <arnd@arndb.de>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Jiri Olsa <jolsa@kernel.org>,
-        Namhyung Kim <namhyung@kernel.org>,
-        Shuah Khan <shuah@kernel.org>,
-        "open list:DOCUMENTATION" <linux-doc@vger.kernel.org>,
-        open list <linux-kernel@vger.kernel.org>,
-        "open list:PROC FILESYSTEM" <linux-fsdevel@vger.kernel.org>,
-        "open list:ABI/API" <linux-api@vger.kernel.org>,
-        "open list:GENERIC INCLUDE/ASM HEADER FILES" 
-        <linux-arch@vger.kernel.org>,
-        "open list:MEMORY MANAGEMENT" <linux-mm@kvack.org>,
-        "open list:PERFORMANCE EVENTS SUBSYSTEM" 
-        <linux-perf-users@vger.kernel.org>,
-        "open list:KERNEL SELFTEST FRAMEWORK" 
-        <linux-kselftest@vger.kernel.org>, kernel@collabora.com
-Subject: Re: [PATCH 0/5] Add process_memwatch syscall
-References: <20220726161854.276359-1-usama.anjum@collabora.com>
-        <95ed1a81-ff8e-2c48-8838-4b3995af51b7@redhat.com>
-Date:   Wed, 10 Aug 2022 13:05:13 -0400
-In-Reply-To: <95ed1a81-ff8e-2c48-8838-4b3995af51b7@redhat.com> (David
-        Hildenbrand's message of "Wed, 10 Aug 2022 11:03:11 +0200")
-Message-ID: <87pmh8ghbq.fsf@collabora.com>
-User-Agent: Gnus/5.13 (Gnus v5.13) Emacs/28.1 (gnu/linux)
+        Wed, 10 Aug 2022 13:37:10 -0400
+Received: from foss.arm.com (foss.arm.com [217.140.110.172])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTP id 3C981832FA;
+        Wed, 10 Aug 2022 10:37:08 -0700 (PDT)
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 73DEB11FB;
+        Wed, 10 Aug 2022 10:37:09 -0700 (PDT)
+Received: from [192.168.99.12] (unknown [172.31.20.19])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 9BBE43F67D;
+        Wed, 10 Aug 2022 10:37:07 -0700 (PDT)
+Message-ID: <3e2ffc6b-a9d8-3ebd-92d0-799bea2203ca@foss.arm.com>
+Date:   Wed, 10 Aug 2022 18:37:02 +0100
 MIME-Version: 1.0
-Content-Type: text/plain
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
+ Thunderbird/91.11.0
+Subject: Re: [PATCH v5 03/14] perf test: Add build infra for perf test tools
+ for CoreSight tests
+Content-Language: en-US
+To:     Leo Yan <leo.yan@linaro.org>
+Cc:     linux-kernel@vger.kernel.org, coresight@lists.linaro.org,
+        suzuki.poulose@arm.com, mathieu.poirier@linaro.org,
+        mike.leach@linaro.org, linux-perf-users@vger.kernel.org,
+        acme@kernel.org
+References: <20220728145256.2985298-1-carsten.haitzler@foss.arm.com>
+ <20220728145256.2985298-4-carsten.haitzler@foss.arm.com>
+ <20220807035928.GA34254@leoy-ThinkPad-X240s>
+From:   Carsten Haitzler <carsten.haitzler@foss.arm.com>
+Organization: Arm Ltd.
+In-Reply-To: <20220807035928.GA34254@leoy-ThinkPad-X240s>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-David Hildenbrand <david@redhat.com> writes:
 
-> On 26.07.22 18:18, Muhammad Usama Anjum wrote:
->> Hello,
->
-> Hi,
->
->> 
->> This patch series implements a new syscall, process_memwatch. Currently,
->> only the support to watch soft-dirty PTE bit is added. This syscall is
->> generic to watch the memory of the process. There is enough room to add
->> more operations like this to watch memory in the future.
->> 
->> Soft-dirty PTE bit of the memory pages can be viewed by using pagemap
->> procfs file. The soft-dirty PTE bit for the memory in a process can be
->> cleared by writing to the clear_refs file. This series adds features that
->> weren't possible through the Proc FS interface.
->> - There is no atomic get soft-dirty PTE bit status and clear operation
->>   possible.
->
-> Such an interface might be easy to add, no?
->
->> - The soft-dirty PTE bit of only a part of memory cannot be cleared.
->
-> Same.
->
-> So I'm curious why we need a new syscall for that.
 
-Hi David,
+On 8/7/22 04:59, Leo Yan wrote:
+> On Thu, Jul 28, 2022 at 03:52:45PM +0100, carsten.haitzler@foss.arm.com wrote:
+>> From: "Carsten Haitzler (Rasterman)" <raster@rasterman.com>
+>>
+>> This adds the initial build infrastructure (makefiles maintainers
+>> information) for adding follow-on tests for CoreSight.
+>>
+>> Signed-off-by: Carsten Haitzler <carsten.haitzler@arm.com>
+>> ---
+>>   MAINTAINERS                                   |  1 +
+>>   tools/perf/Makefile.perf                      | 18 ++++++++++---
+>>   tools/perf/tests/shell/coresight/Makefile     | 26 +++++++++++++++++++
+>>   .../tests/shell/coresight/Makefile.miniconfig | 24 +++++++++++++++++
+>>   4 files changed, 66 insertions(+), 3 deletions(-)
+>>   create mode 100644 tools/perf/tests/shell/coresight/Makefile
+>>   create mode 100644 tools/perf/tests/shell/coresight/Makefile.miniconfig
+>>
+>> diff --git a/MAINTAINERS b/MAINTAINERS
+>> index 171563d8dc14..87e4ac463429 100644
+>> --- a/MAINTAINERS
+>> +++ b/MAINTAINERS
+>> @@ -1989,6 +1989,7 @@ F:	drivers/hwtracing/coresight/*
+>>   F:	include/dt-bindings/arm/coresight-cti-dt.h
+>>   F:	include/linux/coresight*
+>>   F:	samples/coresight/*
+>> +F:	tools/perf/tests/shell/coresight/*
+>>   F:	tools/perf/arch/arm/util/auxtrace.c
+>>   F:	tools/perf/arch/arm/util/cs-etm.c
+>>   F:	tools/perf/arch/arm/util/cs-etm.h
+>> diff --git a/tools/perf/Makefile.perf b/tools/perf/Makefile.perf
+>> index 8f738e11356d..edb621ace2e2 100644
+>> --- a/tools/perf/Makefile.perf
+>> +++ b/tools/perf/Makefile.perf
+>> @@ -629,7 +629,15 @@ sync_file_range_tbls := $(srctree)/tools/perf/trace/beauty/sync_file_range.sh
+>>   $(sync_file_range_arrays): $(linux_uapi_dir)/fs.h $(sync_file_range_tbls)
+>>   	$(Q)$(SHELL) '$(sync_file_range_tbls)' $(linux_uapi_dir) > $@
+>>   
+>> -all: shell_compatibility_test $(ALL_PROGRAMS) $(LANG_BINDINGS) $(OTHER_PROGRAMS)
+>> +TESTS_CORESIGHT_DIR := $(srctree)/tools/perf/tests/shell/coresight
+>> +
+>> +tests-coresight-targets: FORCE
+>> +	$(Q)$(MAKE) -C $(TESTS_CORESIGHT_DIR)
+>> +
+>> +tests-coresight-targets-clean:
+>> +	$(Q)$(MAKE) -C $(TESTS_CORESIGHT_DIR) clean
+>> +
+>> +all: shell_compatibility_test $(ALL_PROGRAMS) $(LANG_BINDINGS) $(OTHER_PROGRAMS) tests-coresight-targets
+>>   
+>>   # Create python binding output directory if not already present
+>>   _dummy := $(shell [ -d '$(OUTPUT)python' ] || mkdir -p '$(OUTPUT)python')
+>> @@ -1015,7 +1023,10 @@ install-tests: all install-gtk
+>>   		$(INSTALL) -d -m 755 '$(DESTDIR_SQ)$(perfexec_instdir_SQ)/tests/shell'; \
+>>   		$(INSTALL) tests/shell/*.sh '$(DESTDIR_SQ)$(perfexec_instdir_SQ)/tests/shell'; \
+>>   		$(INSTALL) -d -m 755 '$(DESTDIR_SQ)$(perfexec_instdir_SQ)/tests/shell/lib'; \
+>> -		$(INSTALL) tests/shell/lib/*.sh '$(DESTDIR_SQ)$(perfexec_instdir_SQ)/tests/shell/lib'
+>> +		$(INSTALL) tests/shell/lib/*.sh '$(DESTDIR_SQ)$(perfexec_instdir_SQ)/tests/shell/lib'; \
+>> +		$(INSTALL) -d -m 755 '$(DESTDIR_SQ)$(perfexec_instdir_SQ)/tests/shell/coresight'; \
+>> +		$(INSTALL) tests/shell/coresight/*.sh '$(DESTDIR_SQ)$(perfexec_instdir_SQ)/tests/shell/coresight'
+>> +	$(Q)$(MAKE) -C tests/shell/coresight install-tests
+>>   
+>>   install-bin: install-tools install-tests install-traceevent-plugins
+>>   
+>> @@ -1085,7 +1096,7 @@ endif # BUILD_BPF_SKEL
+>>   bpf-skel-clean:
+>>   	$(call QUIET_CLEAN, bpf-skel) $(RM) -r $(SKEL_TMP_OUT) $(SKELETONS)
+>>   
+>> -clean:: $(LIBTRACEEVENT)-clean $(LIBAPI)-clean $(LIBBPF)-clean $(LIBSUBCMD)-clean $(LIBPERF)-clean fixdep-clean python-clean bpf-skel-clean
+>> +clean:: $(LIBTRACEEVENT)-clean $(LIBAPI)-clean $(LIBBPF)-clean $(LIBSUBCMD)-clean $(LIBPERF)-clean fixdep-clean python-clean bpf-skel-clean tests-coresight-targets-clean
+>>   	$(call QUIET_CLEAN, core-objs)  $(RM) $(LIBPERF_A) $(OUTPUT)perf-archive $(OUTPUT)perf-iostat $(LANG_BINDINGS)
+>>   	$(Q)find $(or $(OUTPUT),.) -name '*.o' -delete -o -name '\.*.cmd' -delete -o -name '\.*.d' -delete
+>>   	$(Q)$(RM) $(OUTPUT).config-detected
+>> @@ -1143,5 +1154,6 @@ FORCE:
+>>   .PHONY: shell_compatibility_test please_set_SHELL_PATH_to_a_more_modern_shell
+>>   .PHONY: .FORCE-PERF-VERSION-FILE TAGS tags cscope FORCE prepare
+>>   .PHONY: libtraceevent_plugins archheaders
+>> +.PHONY: $(TESTS_CORESIGHT_TARGETS)
+> 
+> TESTS_CORESIGHT_TARGETS is not used anywhere else, should remove it?
 
-Yes, sure. Though it has to be through an ioctl since we need both input
-and output semantics at the same call to keep the atomic semantics.
+I think this was left over from a previous iteration of this work and I 
+removed it later on and forgot about this.
 
-I answered Peter Enderborg about our concerns when turning this into an
-ioctl.  But they are possible to overcome.
+>>   endif # force_fixdep
+>> diff --git a/tools/perf/tests/shell/coresight/Makefile b/tools/perf/tests/shell/coresight/Makefile
+>> new file mode 100644
+>> index 000000000000..3b816bb4ced3
+>> --- /dev/null
+>> +++ b/tools/perf/tests/shell/coresight/Makefile
+>> @@ -0,0 +1,26 @@
+>> +# SPDX-License-Identifier: GPL-2.0-only
+>> +# Carsten Haitzler <carsten.haitzler@arm.com>, 2021
+>> +include ../../../../../tools/scripts/Makefile.include
+>> +include ../../../../../tools/scripts/Makefile.arch
+>> +include ../../../../../tools/scripts/utilities.mak
+>> +
+>> +SUBDIRS =
+>> +
+>> +all: $(SUBDIRS)
+>> +$(SUBDIRS):
+>> +	$(Q)$(MAKE) -C $@
+>> +
+>> +INSTALLDIRS = $(SUBDIRS:%=install-%)
+>> +
+>> +install-tests: $(INSTALLDIRS)
+>> +$(INSTALLDIRS):
+>> +	$(Q)$(MAKE) -C $(@:install-%=%) install-tests
+> 
+> I can see here you add a prefix "install-" for every sub directory
+> string, and then removed this prefix when invoke "make -C" command.
 
->> project. The Proc FS interface is enough for that as I think the process
->> is frozen. We have the use case where we need to track the soft-dirty
->> PTE bit for running processes. We need this tracking and clear mechanism
->> of a region of memory while the process is running to emulate the
->> getWriteWatch() syscall of Windows. This syscall is used by games to keep
->> track of dirty pages and keep processing only the dirty pages. This
->> syscall can be used by the CRIU project and other applications which
->> require soft-dirty PTE bit information.
->> 
->> As in the current kernel there is no way to clear a part of memory (instead
->> of clearing the Soft-Dirty bits for the entire processi) and get+clear
->> operation cannot be performed atomically, there are other methods to mimic
->> this information entirely in userspace with poor performance:
->> - The mprotect syscall and SIGSEGV handler for bookkeeping
->> - The userfaultfd syscall with the handler for bookkeeping
->
-> You write "poor performance". Did you actually implement a prototype
-> using userfaultfd-wp? Can you share numbers for comparison?
+install-tests is a target to install the tests on the host in a known 
+location. it was already there. i added handling of this. there are 
+other install- taregts like install-doc, install-bin and so on. i passed 
+that through so *IF* there is a doc: or similar rule to generate docs 
+then it runs the doc rule first to ensure docs are built before doing 
+the install. this isn't actually used but it's passing along rules. i.e. 
+make install-doc -> make doc etc.
 
-Yes, we did.  I think Usama can share some numbers.
+> I know you have reason for doing this way, could you explain why not
+> directly use $(SUBDIRS) for INSTALLDIRS?
+> 
+>> +
+>> +CLEANDIRS = $(SUBDIRS:%=clean-%)
+>> +
+>> +clean: $(CLEANDIRS)
+>> +$(CLEANDIRS):
+>> +	$(Q)$(MAKE) -C $(@:clean-%=%) clean >/dev/null
+> 
+> Same question of using prefix "clean-" for variable CLEANDIRS.
 
-The problem with userfaultfd, as far as I understand, is that it will
-require a second userspace process to be called in order to handle the
-annotation that a page was touched, before remapping the page to make it
-accessible to the originating process, every time a page is touched.
-This context switch is prohibitively expensive to our use case, where
-Windows applications might invoke it quite often.  Soft-dirty bit
-instead, allows the page tracking to be done entirely in kernelspace.
+Same answer as above.
 
-If I understand correctly, userfaultfd is usefull for VM/container
-migration, where the cost of the context switch is not a real concern,
-since there are much bigger costs from the migration itself.
+>> +
+>> +.PHONY: all clean $(SUBDIRS) $(CLEANDIRS) $(INSTALLDIRS)
+>> +
+>> diff --git a/tools/perf/tests/shell/coresight/Makefile.miniconfig b/tools/perf/tests/shell/coresight/Makefile.miniconfig
+>> new file mode 100644
+>> index 000000000000..a65482d769ab
+>> --- /dev/null
+>> +++ b/tools/perf/tests/shell/coresight/Makefile.miniconfig
+>> @@ -0,0 +1,24 @@
+>> +# SPDX-License-Identifier: GPL-2.0-only
+>> +# Carsten Haitzler <carsten.haitzler@arm.com>, 2021
+>> +
+>> +ifndef DESTDIR
+>> +prefix ?= $(HOME)
+>> +endif
+>> +
+>> +DESTDIR_SQ = $(subst ','\'',$(DESTDIR))
+>> +perfexecdir = libexec/perf-core
+>> +perfexec_instdir = $(perfexecdir)
+>> +
+>> +ifneq ($(filter /%,$(firstword $(perfexecdir))),)
+>> +perfexec_instdir = $(perfexecdir)
+>> +else
+>> +perfexec_instdir = $(prefix)/$(perfexecdir)
+>> +endif
+>> +
+>> +perfexec_instdir_SQ = $(subst ','\'',$(perfexec_instdir))
+> 
+> I know these variables are copied from Makefile.config, just wandering
+> if we can directly export these variables from high level makefile, so
+> the sub-make can inherit the variables.
+> 
+> E.g. we can add below line in Makefile.config:
+> 
+>    export perfexec_instdir_SQ
+> 
+> Please let me know if you observe any issue for this.
 
-Maybe we're missing some feature about userfaultfd that would allow us
-to avoid the cost, but from our observations we didn't find a way to
-overcome it.
+I can indeed simplify that a bit and remove a few lines.
 
->>         long process_memwatch(int pidfd, unsigned long start, int len,
->>                               unsigned int flags, void *vec, int vec_len);
->> 
->> This syscall can be used by the CRIU project and other applications which
->> require soft-dirty PTE bit information. The following operations are
->> supported in this syscall:
->> - Get the pages that are soft-dirty.
->> - Clear the pages which are soft-dirty.
->> - The optional flag to ignore the VM_SOFTDIRTY and only track per page
->> soft-dirty PTE bit
->
-> Huh, why? VM_SOFTDIRTY is an internal implementation detail and should
-> remain such.
-> VM_SOFTDIRTY translates to "all pages in this VMA are soft-dirty".
-
-That is something very specific about our use case, and we should
-explain it a bit better.  The problem is that VM_SOFTDIRTY modifications
-introduce the overhead of the mm write lock acquisition, which is very
-visible in our benchmarks of Windows games running over Wine.
-
-Since the main reason for VM_SOFTDIRTY to exist, as far as we understand
-it, is to track vma remapping, and this is a use case we don't need to
-worry about when implementing windows semantics, we'd like to be able to
-avoid this extra overhead, optionally, iff userspace knows it can be
-done safely.
-
-VM_SOFTDIRTY is indeed an internal interface.  Which is why we are
-proposing to expose the feature in terms of tracking VMA reuse.
-
-Thanks,
-
--- 
-Gabriel Krisman Bertazi
+> Thanks,
+> Leo
+> 
+>> +INSTALL = install
+>> +INSTDIR_SUB = tests/shell/coresight
+>> +
+>> +include ../../../../../scripts/Makefile.include
+>> +include ../../../../../scripts/Makefile.arch
+>> +include ../../../../../scripts/utilities.mak
+>> -- 
+>> 2.32.0
+>>
