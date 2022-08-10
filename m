@@ -2,110 +2,111 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A9B9BC00140
-	for <linux-perf-users@archiver.kernel.org>; Wed, 10 Aug 2022 13:03:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AF729C00140
+	for <linux-perf-users@archiver.kernel.org>; Wed, 10 Aug 2022 13:06:01 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231374AbiHJNDW (ORCPT
+        id S229487AbiHJNGA (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Wed, 10 Aug 2022 09:03:22 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34576 "EHLO
+        Wed, 10 Aug 2022 09:06:00 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37564 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231727AbiHJNDW (ORCPT
+        with ESMTP id S232580AbiHJNF5 (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Wed, 10 Aug 2022 09:03:22 -0400
-Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 429A06CD26;
-        Wed, 10 Aug 2022 06:03:21 -0700 (PDT)
+        Wed, 10 Aug 2022 09:05:57 -0400
+Received: from ams.source.kernel.org (ams.source.kernel.org [IPv6:2604:1380:4601:e00::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 87EEE54662;
+        Wed, 10 Aug 2022 06:05:56 -0700 (PDT)
 Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id D623E6143F;
-        Wed, 10 Aug 2022 13:03:20 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 1BAEAC433C1;
-        Wed, 10 Aug 2022 13:03:20 +0000 (UTC)
+        by ams.source.kernel.org (Postfix) with ESMTPS id 4C1E1B81C11;
+        Wed, 10 Aug 2022 13:05:55 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id D5988C433D6;
+        Wed, 10 Aug 2022 13:05:51 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1660136600;
-        bh=h4aEJWedInCPM5c5hyMsi++l2BhJ1unrkZNoDXxgsBQ=;
+        s=k20201202; t=1660136754;
+        bh=iL1pcQ1UCvjHw2tHMD8Xe73O/Xs5rV9iq6M/B8XsBGo=;
         h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=WwuoyFeOhfWn8bwx8qHXTWjg2NacpwaYMPlI1wz6TX47IIBOoxvbSAVfGYQIcGeRR
-         TVxFn5D/gMxwYkZtS0UePxsBsslje6amNC7g2WjhxsHynPMvvQsWwipWWKieKcVaY+
-         4LEFGt5xp5eKCe4G0x5l27czLTHLfBEFFbiG7U/1ik9Rt8Zy/pg2q/WteqY5ap9/XQ
-         vy0r4k5g5aKGviVLk6nL3Jw4euIAktA/cbBccn4wR6HcdBNCguXBj/0DT1O9rO70Je
-         5/D811gi9xdP3I99InODBHcIX0pH5EtpfV4+LTXQPJo9e3P5GC2cWln+D8ZmwFVo+L
-         v7R1RPIsfcGnA==
+        b=ol8YaxFX6N6Y1SQVrFWYtePyxKmUu8izcCF2xYRxj7xtVUqfUSYwWfCKMe9g+844p
+         H7NQST4gtA4v4XqjExGcNYf0QXUbinJisvlFz6DaLWUjoeOHWScfOt2BvkcKBoi97p
+         McHQWBzkPq+sh4Ou65zBzCNr6GLJH1tnqLngQE14H2r1SD1BPHprIS++yJ9KtYrW39
+         8q/NH8fRdV99oiDFqXqu2JCHHIt88wTYZWPV7fG9T11tSe+w190yNa890scgI/OS0Z
+         On7ByggJoODWxVVPqcrpXjRGRGvx/tKVb2+WavXd5UdXB8kiZuz2tCZ76yo4yAzYTu
+         jenjPDt85sHQg==
 Received: by quaco.ghostprotocols.net (Postfix, from userid 1000)
-        id A9C1C4035A; Wed, 10 Aug 2022 10:03:17 -0300 (-03)
-Date:   Wed, 10 Aug 2022 10:03:17 -0300
+        id 57E2D4035A; Wed, 10 Aug 2022 10:05:49 -0300 (-03)
+Date:   Wed, 10 Aug 2022 10:05:49 -0300
 From:   Arnaldo Carvalho de Melo <acme@kernel.org>
-To:     Brian Robbins <brianrob@linux.microsoft.com>,
-        Ian Rogers <irogers@google.com>
+To:     Brian Robbins <brianrob@linux.microsoft.com>
 Cc:     Peter Zijlstra <peterz@infradead.org>,
         Ingo Molnar <mingo@redhat.com>,
         Mark Rutland <mark.rutland@arm.com>,
         Alexander Shishkin <alexander.shishkin@linux.intel.com>,
         Jiri Olsa <jolsa@kernel.org>,
         Namhyung Kim <namhyung@kernel.org>,
+        Ian Rogers <irogers@google.com>,
         linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] perf inject jit: Ignore memfd mmap events if jitdump
- present
-Message-ID: <YvOslWVtSyHRJAOw@kernel.org>
-References: <20220802182502.85562-1-brianrob@linux.microsoft.com>
- <CAP-5=fXY8paDRMcyMokRMXOrrB2CHfY2=HkPsHZrWL_vd_-bWw@mail.gmail.com>
- <YvOr3t9JNlEI4p+6@kernel.org>
+Subject: Re: [PATCH v2] perf inject jit: Ignore memfd and anonymous mmap
+ events if jitdump present
+Message-ID: <YvOtLXXJ1O60N8Hg@kernel.org>
+References: <20220805220645.95855-1-brianrob@linux.microsoft.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <YvOr3t9JNlEI4p+6@kernel.org>
+In-Reply-To: <20220805220645.95855-1-brianrob@linux.microsoft.com>
 X-Url:  http://acmel.wordpress.com
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-Em Wed, Aug 10, 2022 at 10:00:14AM -0300, Arnaldo Carvalho de Melo escreveu:
-> Em Thu, Aug 04, 2022 at 08:22:14AM -0700, Ian Rogers escreveu:
-> > On Tue, Aug 2, 2022 at 11:25 AM Brian Robbins <brianrob@linux.microsoft.com> wrote:
-> > > Signed-off-by: Brian Robbins <brianrob@linux.microsoft.com>
-> > 
-> > Acked-by: Ian Rogers <irogers@google.com>
+Em Fri, Aug 05, 2022 at 03:06:45PM -0700, Brian Robbins escreveu:
+> Some processes store jitted code in memfd mappings to avoid having rwx
+> mappings.  These processes map the code with a writeable mapping and a
+> read-execute mapping.  They write the code using the writeable mapping
+> and then unmap the writeable mapping.  All subsequent execution is
+> through the read-execute mapping.
 > 
->   CC      /tmp/build/perf/util/jitdump.o
->   CC      /tmp/build/perf/pmu-events/pmu-events.o
->   LD      /tmp/build/perf/pmu-events/pmu-events-in.o
-> util/jitdump.c: In function ‘jit_process’:
-> util/jitdump.c:853:65: error: expected ‘)’ before ‘return’
->   853 |                          (strncmp(filename, "/memfd:", 7) == 0))
->       |                                                                 ^
->       |                                                                 )
->   854 |                         return 1;
->       |                         ~~~~~~
-> util/jitdump.c:851:20: note: to match this ‘(’
->   851 |                 if (jit_has_pid(machine, pid) &&
->       |                    ^
-> util/jitdump.c:857:9: error: expected expression before ‘}’ token
->   857 |         }
->       |         ^
-> make[4]: *** [/var/home/acme/git/perf/tools/build/Makefile.build:96: /tmp/build/perf/util/jitdump.o] Error 1
-> make[4]: *** Waiting for unfinished jobs....
-> make[3]: *** [/var/home/acme/git/perf/tools/build/Makefile.build:139: util] Error 2
+> perf inject --jit ignores //anon* mappings for each process where a
+> jitdump is present because it expects to inject mmap events for each
+> jitted code range, and said jitted code ranges will overlap with the
+> //anon* mappings.
 > 
-> 
-> Trying to fix now.
+> Ignore /memfd: and [anon:* mappings so that jitted code contained in
+> /memfd: and [anon:* mappings is treated the same way as jitted code
+> contained in //anon* mappings.
 
-Trivial, please compile test it...
+Removed v1, applied this one.
 
 - Arnaldo
-
-diff --git a/tools/perf/util/jitdump.c b/tools/perf/util/jitdump.c
-index 335a3c61940b7b39..9983d21a5c42d70e 100644
---- a/tools/perf/util/jitdump.c
-+++ b/tools/perf/util/jitdump.c
-@@ -850,7 +850,7 @@ jit_process(struct perf_session *session,
- 		 */
- 		if (jit_has_pid(machine, pid) &&
- 			((strncmp(filename, "//anon", 6) == 0) ||
--			 (strncmp(filename, "/memfd:", 7) == 0))
-+			 (strncmp(filename, "/memfd:", 7) == 0)))
- 			return 1;
  
- 		return 0;
+> Signed-off-by: Brian Robbins <brianrob@linux.microsoft.com>
+> ---
+>  tools/perf/util/jitdump.c | 9 +++++++--
+>  1 file changed, 7 insertions(+), 2 deletions(-)
+> 
+> diff --git a/tools/perf/util/jitdump.c b/tools/perf/util/jitdump.c
+> index a23255773c60..4e6632203704 100644
+> --- a/tools/perf/util/jitdump.c
+> +++ b/tools/perf/util/jitdump.c
+> @@ -845,8 +845,13 @@ jit_process(struct perf_session *session,
+>  	if (jit_detect(filename, pid, nsi)) {
+>  		nsinfo__put(nsi);
+>  
+> -		// Strip //anon* mmaps if we processed a jitdump for this pid
+> -		if (jit_has_pid(machine, pid) && (strncmp(filename, "//anon", 6) == 0))
+> +		/*
+> +		 * Strip //anon*, [anon:* and /memfd:* mmaps if we processed a jitdump for this pid
+> +		 */
+> +		if (jit_has_pid(machine, pid) &&
+> +			((strncmp(filename, "//anon", 6) == 0) ||
+> +			 (strncmp(filename, "[anon:", 6) == 0) ||
+> +			 (strncmp(filename, "/memfd:", 7) == 0)))
+>  			return 1;
+>  
+>  		return 0;
+> -- 
+> 2.25.1
+
+-- 
+
+- Arnaldo
