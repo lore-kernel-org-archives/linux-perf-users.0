@@ -2,260 +2,133 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 493C0C00140
-	for <linux-perf-users@archiver.kernel.org>; Wed, 10 Aug 2022 17:42:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 27C09C00140
+	for <linux-perf-users@archiver.kernel.org>; Wed, 10 Aug 2022 17:55:51 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232647AbiHJRmt (ORCPT
+        id S231533AbiHJRzu (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Wed, 10 Aug 2022 13:42:49 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47840 "EHLO
+        Wed, 10 Aug 2022 13:55:50 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36220 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232392AbiHJRms (ORCPT
+        with ESMTP id S233340AbiHJRzt (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Wed, 10 Aug 2022 13:42:48 -0400
-Received: from mail-oi1-f173.google.com (mail-oi1-f173.google.com [209.85.167.173])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6507C85F94;
-        Wed, 10 Aug 2022 10:42:47 -0700 (PDT)
-Received: by mail-oi1-f173.google.com with SMTP id j5so12823576oih.6;
-        Wed, 10 Aug 2022 10:42:47 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc;
-        bh=ReTi6csPYQ4CXa/vuLDipJBo/AuIWqJL15Ka4MBCcRM=;
-        b=vJ+0UbztOk9p4KHYxxQpmwQsnx4aBRDTaBZrkYkTUCs38jdJDD8349ceQkB4oRSQZE
-         ZHlP7JJ9BBLZDv9BiXhe7XtfBngo/+2j5y7Z2tV5TW50nrCBJuR8NGq+2AzJQ+xtOYEC
-         DJULCwf9XkHpeiniupG4UMC4HyXbM+pR124opG5d2gY0EvMMyeFG9Qj8E+y7fadJjwTK
-         +adaOfLk1fXAs36+6Vf7zhPyNP0RHljxkAPi1fvPdjjfix2wAOyLxCjyha5h+Hdpj05j
-         0tnp9KbVHCwh+22YIoCRZiYHmZm5bVTcV37z+52l0xIytHVayoTsrpkCx/F2/Hgh2OIb
-         LHrg==
-X-Gm-Message-State: ACgBeo3Rf4N+mOATf2dErHMjbyZfXB+akR6TiETt8uTp15Kfs/VdOpjA
-        bL0qp4Jz7J8h0UMsmnJkayIdSSZTyGlSoBmSsfjN5B+yivU=
-X-Google-Smtp-Source: AA6agR6k9KspJf2BBoGAcVkGpqsP4ySKaqhImZYnVSb2VSaqazLGOO4Ju6PERh2iW+zHj0da9rjWisoxKaGJMxAjMQk=
-X-Received: by 2002:aca:ba86:0:b0:33a:c6f7:3001 with SMTP id
- k128-20020acaba86000000b0033ac6f73001mr1885586oif.5.1660153365444; Wed, 10
- Aug 2022 10:42:45 -0700 (PDT)
+        Wed, 10 Aug 2022 13:55:49 -0400
+Received: from foss.arm.com (foss.arm.com [217.140.110.172])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTP id 3DA66186EF;
+        Wed, 10 Aug 2022 10:55:48 -0700 (PDT)
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id B492611FB;
+        Wed, 10 Aug 2022 10:55:48 -0700 (PDT)
+Received: from [192.168.99.12] (unknown [172.31.20.19])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id E554C3F5A1;
+        Wed, 10 Aug 2022 10:55:46 -0700 (PDT)
+Message-ID: <67f38a67-d664-4537-6df0-5fdef7596e52@foss.arm.com>
+Date:   Wed, 10 Aug 2022 18:55:37 +0100
 MIME-Version: 1.0
-References: <20220709002046.2804157-1-rsilvera@google.com>
-In-Reply-To: <20220709002046.2804157-1-rsilvera@google.com>
-From:   Namhyung Kim <namhyung@kernel.org>
-Date:   Wed, 10 Aug 2022 10:42:34 -0700
-Message-ID: <CAM9d7cicdANoZCrqctdW+m+zx6_3nm4F_A_=5jEcBT7auOScJQ@mail.gmail.com>
-Subject: Re: [PATCH v3] perf inject: Add a command line option to specify
- build ids.
-To:     Raul Silvera <rsilvera@google.com>
-Cc:     Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Jiri Olsa <jolsa@kernel.org>,
-        linux-perf-users <linux-perf-users@vger.kernel.org>,
-        linux-kernel <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
+ Thunderbird/91.11.0
+Subject: Re: [PATCH v5 12/14] perf test: Add unroll thread test shell script
+Content-Language: en-US
+To:     Leo Yan <leo.yan@linaro.org>
+Cc:     linux-kernel@vger.kernel.org, coresight@lists.linaro.org,
+        suzuki.poulose@arm.com, mathieu.poirier@linaro.org,
+        mike.leach@linaro.org, linux-perf-users@vger.kernel.org,
+        acme@kernel.org
+References: <20220728145256.2985298-1-carsten.haitzler@foss.arm.com>
+ <20220728145256.2985298-13-carsten.haitzler@foss.arm.com>
+ <20220807054406.GJ34254@leoy-ThinkPad-X240s>
+From:   Carsten Haitzler <carsten.haitzler@foss.arm.com>
+Organization: Arm Ltd.
+In-Reply-To: <20220807054406.GJ34254@leoy-ThinkPad-X240s>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-Hello,
-
-On Fri, Jul 8, 2022 at 5:20 PM Raul Silvera <rsilvera@google.com> wrote:
->
-> This commit adds the option --known-build-ids to perf inject.
-> It allows the user to explicitly specify the build id for a given
-> path, instead of retrieving it from the current system. This is
-> useful in cases where a perf.data file is processed on a different
-> system from where it was collected, or if some of the binaries are
-> no longer available.
->
-> The build ids and paths are specified in pairs in the command line.
-> Using the file:// specifier, build ids can be loaded from a file
-> directly generated by perf buildid-list. This is convenient to copy
-> build ids from one perf.data file to another.
->
-> ** Example: In this example we use perf record to create two
-> perf.data files, one with build ids and another without, and use
-> perf buildid-list and perf inject to copy the build ids from the
-> first file to the second.
->
->  $ perf record ls /tmp
->  $ perf record --no-buildid -o perf.data.no-buildid ls /tmp
->  $ perf buildid-list > /tmp/build-ids.txt
->  $ perf inject -b --known-build-ids='file:///tmp/build-ids.txt' \
->         -i perf.data.no-buildid -o perf.data.buildid
->
-> Signed-off-by: Raul Silvera <rsilvera@google.com>
-> ---
->
->   V2 -> V3  Added documentation and removed unnecessary temps
->   V1 -> V2: Cleaned up patch description, deleted the strlist during
->             cleanup, and updated validation of the build id strings
->
->  tools/perf/Documentation/perf-inject.txt |  7 ++-
->  tools/perf/builtin-inject.c              | 57 ++++++++++++++++++++++++
->  2 files changed, 63 insertions(+), 1 deletion(-)
->
-> diff --git a/tools/perf/Documentation/perf-inject.txt b/tools/perf/Documentation/perf-inject.txt
-> index 0570a1ccd344..78474d941fd8 100644
-> --- a/tools/perf/Documentation/perf-inject.txt
-> +++ b/tools/perf/Documentation/perf-inject.txt
-> @@ -27,9 +27,14 @@ OPTIONS
->  --build-ids::
->          Inject build-ids into the output stream
->
-> ---buildid-all:
-> +--buildid-all::
->         Inject build-ids of all DSOs into the output stream
->
-> +--known-build-ids=::
-> +       Override build-ids to inject using these comma-separated pairs of
-> +       build-id and path. Understands file://filename to read these pairs
-> +       from a file, which can be generated with perf buildid-list.
-> +
->  -v::
->  --verbose::
->         Be more verbose.
-> diff --git a/tools/perf/builtin-inject.c b/tools/perf/builtin-inject.c
-> index a75bf11585b5..bf10c6478493 100644
-> --- a/tools/perf/builtin-inject.c
-> +++ b/tools/perf/builtin-inject.c
-> @@ -21,6 +21,7 @@
->  #include "util/data.h"
->  #include "util/auxtrace.h"
->  #include "util/jit.h"
-> +#include "util/string2.h"
->  #include "util/symbol.h"
->  #include "util/synthetic-events.h"
->  #include "util/thread.h"
-> @@ -35,6 +36,7 @@
->
->  #include <linux/list.h>
->  #include <linux/string.h>
-> +#include <ctype.h>
->  #include <errno.h>
->  #include <signal.h>
->
-> @@ -59,6 +61,7 @@ struct perf_inject {
->         struct itrace_synth_opts itrace_synth_opts;
->         char                    event_copy[PERF_SAMPLE_MAX_SIZE];
->         struct perf_file_section secs[HEADER_FEAT_BITS];
-> +       struct strlist          *known_build_ids;
->  };
->
->  struct event_entry {
-> @@ -570,9 +573,45 @@ static int dso__read_build_id(struct dso *dso)
->         return dso->has_build_id ? 0 : -1;
->  }
->
-> +static bool perf_inject__lookup_known_build_id(struct perf_inject *inject,
-> +                                              struct dso *dso)
-> +{
-> +       struct str_node *pos;
-> +       int bid_len;
-> +
-> +       strlist__for_each_entry(pos, inject->known_build_ids) {
-> +               const char *build_id, *dso_name;
-> +
-> +               build_id = skip_spaces(pos->s);
-> +               dso_name = strchr(build_id, ' ');
-> +               if (dso_name == NULL)
-> +                       continue;
-
-I think this is a broken entry and it should check them when it
-creates the strlist
-rather than whenever it looks up the entries.
-
-You may use strlist__for_each_entry_safe() and strlist__remove().
 
 
-> +               bid_len = dso_name - pos->s;
-> +               dso_name = skip_spaces(dso_name);
-> +               if (strcmp(dso->long_name, dso_name))
-> +                       continue;
-> +               if (bid_len % 2 != 0 || bid_len >= SBUILD_ID_SIZE)
-> +                       return false;
-> +               for (int ix = 0; 2 * ix + 1 < bid_len; ++ix) {
-> +                       if (!isxdigit(build_id[2 * ix]) ||
-> +                           !isxdigit(build_id[2 * ix + 1]))
-> +                               return false;
+On 8/7/22 06:44, Leo Yan wrote:
+> On Thu, Jul 28, 2022 at 03:52:54PM +0100, carsten.haitzler@foss.arm.com wrote:
+>> From: "Carsten Haitzler (Rasterman)" <raster@rasterman.com>
+>>
+>> This adds scripts to drive the unroll thread tests to compare perf
+>> output against a minimum bar of content/quality.
+>>
+>> Signed-off-by: Carsten Haitzler <carsten.haitzler@arm.com>
+>> ---
+>>   .../shell/coresight/unroll_loop_thread_10.sh   | 18 ++++++++++++++++++
+>>   1 file changed, 18 insertions(+)
+>>   create mode 100755 tools/perf/tests/shell/coresight/unroll_loop_thread_10.sh
+>>
+>> diff --git a/tools/perf/tests/shell/coresight/unroll_loop_thread_10.sh b/tools/perf/tests/shell/coresight/unroll_loop_thread_10.sh
+>> new file mode 100755
+>> index 000000000000..f48c85230b15
+>> --- /dev/null
+>> +++ b/tools/perf/tests/shell/coresight/unroll_loop_thread_10.sh
+>> @@ -0,0 +1,18 @@
+>> +#!/bin/sh -e
+>> +# CoreSight / Unroll Loop Thread 10
+>> +
+>> +# SPDX-License-Identifier: GPL-2.0
+>> +# Carsten Haitzler <carsten.haitzler@arm.com>, 2021
+>> +
+>> +TEST="unroll_loop_thread"
+>> +. $(dirname $0)/../lib/coresight.sh
+>> +ARGS="10"
+>> +DATV="10"
+>> +DATA="$DATD/perf-$TEST-$DATV.data"
+>> +
+>> +perf record $PERFRECOPT -o "$DATA" "$BIN" $ARGS
+>> +
+>> +perf_dump_aux_verify "$DATA" 10 10 10
+> 
+> Just minor comments for checking the trace data quality:
+> 
+> The unroll program loops for 10000 times per thread, and this test
+> creates 10 threads; so if we pass the parameter "10 10 10" for
+> perf_dump_aux_verify, seems to me this is very conservative?
 
-Ditto.
+Correct. It's very conservative. It's essentially saying "i need just 
+SOME data... something minimal to say it caught something executing". It 
+SHOULD catch it, but the more I raise these numbers, the more likely it 
+is sometimes you get failures. At the start My numbers were chosen at 
+about 20% of the minimum run of the code empirically. It's not 100%^ 
+pure ASM so some is compiler generated code thus some may vary per 
+binary produced by different compilers and options, so there has to be 
+some leeway.
 
-Thanks,
-Namhyung
+So I did lower the bar to "some data - just some" as opposed to "a 
+reasonable amount of data" which would be larger numbers. The csv files 
+still store this side-bad data anyway.
 
+> I would like hear Mike's opinion for these quality metrics; the
+> patch itself is fine for me, you could add my review tag:
+> 
+> Reviewed-by: Leo Yan <leo.yan@linaro.org>
+> 
+> 
+> P.s. it's off-topic, just want to remind to use the "b4" tool when you
+> spin for next version's patch set, e.g. you could use below commands:
+> 
+>    $ b4 am 20220728145256.2985298-1-carsten.haitzler@foss.arm.com
+>              ^
+>              ` I get the message ID from the page:
+>                https://lore.kernel.org/lkml/20220728145256.2985298-1-carsten.haitzler@foss.arm.com/
+>    $ git am ./v5_20220728_carsten_haitzler_a_patch_series_improving_data_quality_of_perf_test_for_coresight.mbx
+> 
+> We can benefit from this due "b4" can automatically append tags in
+> patches; this can help us to track which patches have been reviewed
+> and tested in previous versions.
 
-> +
-> +                       dso->bid.data[ix] = (hex(build_id[2 * ix]) << 4 |
-> +                                            hex(build_id[2 * ix + 1]));
-> +               }
-> +               dso->bid.size = bid_len / 2;
-> +               dso->has_build_id = 1;
-> +               return true;
-> +       }
-> +       return false;
-> +}
-> +
->  static int dso__inject_build_id(struct dso *dso, struct perf_tool *tool,
->                                 struct machine *machine, u8 cpumode, u32 flags)
->  {
-> +       struct perf_inject *inject = container_of(tool, struct perf_inject,
-> +                                                 tool);
->         int err;
->
->         if (is_anon_memory(dso->long_name) || flags & MAP_HUGETLB)
-> @@ -580,6 +619,10 @@ static int dso__inject_build_id(struct dso *dso, struct perf_tool *tool,
->         if (is_no_dso_memory(dso->long_name))
->                 return 0;
->
-> +       if (inject->known_build_ids != NULL &&
-> +           perf_inject__lookup_known_build_id(inject, dso))
-> +               return 1;
-> +
->         if (dso__read_build_id(dso) < 0) {
->                 pr_debug("no build_id found for %s\n", dso->long_name);
->                 return -1;
-> @@ -1076,12 +1119,16 @@ int cmd_inject(int argc, const char **argv)
->         };
->         int ret;
->         bool repipe = true;
-> +       const char *known_build_ids = NULL;
->
->         struct option options[] = {
->                 OPT_BOOLEAN('b', "build-ids", &inject.build_ids,
->                             "Inject build-ids into the output stream"),
->                 OPT_BOOLEAN(0, "buildid-all", &inject.build_id_all,
->                             "Inject build-ids of all DSOs into the output stream"),
-> +               OPT_STRING(0, "known-build-ids", &known_build_ids,
-> +                          "buildid path [,buildid path...]",
-> +                          "build-ids to use for given paths"),
->                 OPT_STRING('i', "input", &inject.input_name, "file",
->                            "input file name"),
->                 OPT_STRING('o', "output", &inject.output.path, "file",
-> @@ -1215,6 +1262,15 @@ int cmd_inject(int argc, const char **argv)
->                  */
->                 inject.tool.ordered_events = true;
->                 inject.tool.ordering_requires_timestamps = true;
-> +               if (known_build_ids != NULL) {
-> +                       inject.known_build_ids = strlist__new(
-> +                           known_build_ids, NULL);
-> +
-> +                       if (inject.known_build_ids == NULL) {
-> +                               pr_err("Couldn't parse known build ids.\n");
-> +                               goto out_delete;
-> +                       }
-> +               }
->         }
->
->         if (inject.sched_stat) {
-> @@ -1241,6 +1297,7 @@ int cmd_inject(int argc, const char **argv)
->         ret = __cmd_inject(&inject);
->
->  out_delete:
-> +       strlist__delete(inject.known_build_ids);
->         zstd_fini(&(inject.session->zstd_data));
->         perf_session__delete(inject.session);
->  out_close_output:
-> --
-> 2.37.0.rc0.161.g10f37bed90-goog
->
+OK - that's news to me. I'll look into it.
+
+> Thanks,
+> Leo
+> 
+>> +
+>> +err=$?
+>> +exit $err
+>> -- 
+>> 2.32.0
+>>
