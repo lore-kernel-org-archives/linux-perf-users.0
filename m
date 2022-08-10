@@ -2,126 +2,84 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7D4FCC00140
-	for <linux-perf-users@archiver.kernel.org>; Wed, 10 Aug 2022 13:26:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1FC00C25B07
+	for <linux-perf-users@archiver.kernel.org>; Wed, 10 Aug 2022 13:29:46 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232530AbiHJN06 (ORCPT
+        id S232689AbiHJN3P (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Wed, 10 Aug 2022 09:26:58 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33832 "EHLO
+        Wed, 10 Aug 2022 09:29:15 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35788 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232688AbiHJN0t (ORCPT
+        with ESMTP id S232752AbiHJN24 (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Wed, 10 Aug 2022 09:26:49 -0400
-Received: from ams.source.kernel.org (ams.source.kernel.org [IPv6:2604:1380:4601:e00::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 295562F005;
-        Wed, 10 Aug 2022 06:26:48 -0700 (PDT)
+        Wed, 10 Aug 2022 09:28:56 -0400
+Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DE81632BA2;
+        Wed, 10 Aug 2022 06:28:55 -0700 (PDT)
 Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by ams.source.kernel.org (Postfix) with ESMTPS id DBDE3B81C83;
-        Wed, 10 Aug 2022 13:26:46 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 61641C433D7;
-        Wed, 10 Aug 2022 13:26:45 +0000 (UTC)
+        by dfw.source.kernel.org (Postfix) with ESMTPS id 7B89561472;
+        Wed, 10 Aug 2022 13:28:55 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id B779DC433D6;
+        Wed, 10 Aug 2022 13:28:54 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1660138005;
-        bh=iCSYzze/A6AJ5yd6akWKrnvCXX2lZs4kWIkzBHKActI=;
+        s=k20201202; t=1660138134;
+        bh=rTPuHCGz6a2bI7IJ+milWeVAdLUW+haFtoK526dBSDk=;
         h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=hAYlHda1fDZ2XlRszconMlRg/CjsuLcJqruiZVVYoWaP352LYvLpUhAeWKmdiXT6t
-         zFYFVnIRuDjYXhxpJheBbxPrkBPMNbqgV0T339OHfn6VtZFjTZyfjE7eMtQB3R3qsC
-         VdbRUR0EG4g6shLOTvqf2aLrdQHIho8DwKfHc6fcwVmbRXPRDbIuWG8caIpkQVIN0a
-         0ERDLKJAaixE28V92g1JCKxqanUlEyrzu3TT+HGC4cv7QRXFlJ+1iJvJRlmJCdWDFO
-         mdlKxeyMWodE3wmeR9cWAdw0S8N8w4PCwTyK/JpOLy4y5unkSZ7wclIagBlpkw6vOS
-         +RKAtLOuxL0rQ==
+        b=PY4WCm7ur+n8Y+kgz1izD5lSiKc6FV8qbzw+Xf6IirOS8EFavLSbLYzswBKs0PrKG
+         LEGN4GCQ2hN0OG5N3frYQHbYF9/9Q8/I2GWVCd5GZomH8oc8q4sC9dokBeebZnVZug
+         Xd8vheVL7qSQKoa3ShKpzcMy6Zf4S9E+1PYiJuKZR/xkA+bYTXMgW00RM+kJK8BGvo
+         57oXrKWiWLOM9/JtmlEQ4HsN7uNK4JJk2VMG9R8Aq14yA+7+hhtZ/2jqtcFYIBhP+W
+         +iaenPDbMN7bz2X8FjUGfi5UTRxQvK2UMFFqeEIPtfwT6vEzUuKk+VwBcjlqS/fN6X
+         0e3+OEYuBz1rA==
 Received: by quaco.ghostprotocols.net (Postfix, from userid 1000)
-        id 43D3E4035A; Wed, 10 Aug 2022 10:26:43 -0300 (-03)
-Date:   Wed, 10 Aug 2022 10:26:43 -0300
+        id BF9934035A; Wed, 10 Aug 2022 10:28:52 -0300 (-03)
+Date:   Wed, 10 Aug 2022 10:28:52 -0300
 From:   Arnaldo Carvalho de Melo <acme@kernel.org>
-To:     Ravi Bangoria <ravi.bangoria@amd.com>
-Cc:     Peter Zijlstra <peterz@infradead.org>,
-        Arnaldo Carvalho de Melo <arnaldo.melo@gmail.com>,
-        Jiri Olsa <olsajiri@gmail.com>,
-        Namhyung Kim <namhyung@kernel.org>,
-        Stephane Eranian <eranian@google.com>,
-        Ian Rogers <irogers@google.com>, Joe Mario <jmario@redhat.com>,
-        Leo Yan <leo.yan@linaro.org>, Ali Saidi <alisaidi@amazon.com>,
-        Andi Kleen <ak@linux.intel.com>,
+To:     Namhyung Kim <namhyung@kernel.org>
+Cc:     Michael Pratt <mpratt@google.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Ingo Molnar <mingo@redhat.com>, Tejun Heo <tj@kernel.org>,
         Kan Liang <kan.liang@linux.intel.com>,
-        Dave Hansen <dave.hansen@linux.intel.com>,
-        "H. Peter Anvin" <hpa@zytor.com>, Ingo Molnar <mingo@redhat.com>,
+        Stephane Eranian <eranian@google.com>,
         Mark Rutland <mark.rutland@arm.com>,
         Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Borislav Petkov <bp@alien8.de>, X86 ML <x86@kernel.org>,
+        Jiri Olsa <jolsa@kernel.org>,
         linux-perf-users <linux-perf-users@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Sandipan Das <sandipan.das@amd.com>, ananth.narayan@amd.com,
-        Kim Phillips <kim.phillips@amd.com>, santosh.shukla@amd.com
-Subject: Re: [PATCH v2 00/14] perf mem/c2c: Add support for AMD
-Message-ID: <YvOyE6840exUm9BV@kernel.org>
-References: <20220616113638.900-1-ravi.bangoria@amd.com>
- <Ys1cfZgL4TyWazRm@krava>
- <YtV9kwfulEVWuaXR@kernel.org>
- <CA+JHD91X9_dMV-sXho_L9k326-Eneor4ZeOtw_WgWNtHbKzWxg@mail.gmail.com>
- <ef9034a6-c4b2-ff82-a56c-bd7df2d10884@amd.com>
+        linux-kernel <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH] perf: uapi: fix PERF_RECORD_SAMPLE format documentation
+Message-ID: <YvOylAvzGsk5f7Tg@kernel.org>
+References: <20220706210613.1987767-1-mpratt@google.com>
+ <CAM9d7cjTUQtLLfj-eZiKgjByDzduBnkWM87srmH6EJKiRa3mdA@mail.gmail.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <ef9034a6-c4b2-ff82-a56c-bd7df2d10884@amd.com>
+In-Reply-To: <CAM9d7cjTUQtLLfj-eZiKgjByDzduBnkWM87srmH6EJKiRa3mdA@mail.gmail.com>
 X-Url:  http://acmel.wordpress.com
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-Em Fri, Jul 22, 2022 at 07:51:27AM +0530, Ravi Bangoria escreveu:
-> On 21-Jul-22 10:54 PM, Arnaldo Carvalho de Melo wrote:
-> > On Mon, Jul 18, 2022, 12:34 PM Arnaldo Carvalho de Melo <arnaldo.melo@gmail.com> wrote:
-> >> Em Tue, Jul 12, 2022 at 01:35:25PM +0200, Jiri Olsa escreveu:
-> >>> On Thu, Jun 16, 2022 at 05:06:23PM +0530, Ravi Bangoria wrote:
-> >>>> Perf mem and c2c tools are wrappers around perf record with mem load/
-> >>>> store events. IBS tagged load/store sample provides most of the
-> >>>> information needed for these tools. Enable support for these tools on
-> >>>> AMD Zen processors based on IBS Op pmu.
+Em Fri, Jul 08, 2022 at 01:38:08PM -0700, Namhyung Kim escreveu:
+> Hello,
+> 
+> On Wed, Jul 6, 2022 at 2:06 PM Michael Pratt <mpratt@google.com> wrote:
+> >
+> > The documented format of PERF_RECORD_SAMPLE does not match the actual
+> > format emitted by perf_output_sample:
+> >
+> > * The cgroup field is missing entirely.
+> > * The data_page_size and code_page_size fields are output before the aux
+> >   data, but are documented before.
+> >
+> > Fixes: 6546b19f95ac ("perf/core: Add PERF_SAMPLE_CGROUP feature")
+> > Fixes: 8d97e71811aa ("perf/core: Add PERF_SAMPLE_DATA_PAGE_SIZE")
+> > Fixes: 995f088efebe ("perf/core: Add support for PERF_SAMPLE_CODE_PAGE_SIZE")
+> > Signed-off-by: Michael Pratt <mpratt@google.com>
+> 
+> Acked-by: Namhyung Kim <namhyung@kernel.org>
 
-> >>>> Ravi Bangoria (14):
-> >>>>   perf/mem: Introduce PERF_MEM_LVLNUM_{EXTN_MEM|IO}
-> >>>>   perf/x86/amd: Add IBS OP_DATA2 DataSrc bit definitions
-> >>>>   perf/x86/amd: Support PERF_SAMPLE_DATA_SRC
-> >>>>   perf/x86/amd: Support PERF_SAMPLE_{WEIGHT|WEIGHT_STRUCT}
-> >>>>   perf/x86/amd: Support PERF_SAMPLE_ADDR
-> >>>>   perf/x86/amd: Support PERF_SAMPLE_PHY_ADDR
-> >>>>   perf tool: Sync include/uapi/linux/perf_event.h header
-> >>>>   perf tool: Sync arch/x86/include/asm/amd-ibs.h header
-> >>>>   perf mem: Add support for printing PERF_MEM_LVLNUM_{EXTN_MEM|IO}
-> >>>>   perf mem/c2c: Set PERF_SAMPLE_WEIGHT for LOAD_STORE events
-> >>>>   perf mem/c2c: Add load store event mappings for AMD
-> >>>>   perf mem/c2c: Avoid printing empty lines for unsupported events
-> >>>>   perf mem: Use more generic term for LFB
-> >>>>   perf script: Add missing fields in usage hint
-
-> >>> tools part looks good to me
-
-> >>> Acked-by: Jiri Olsa <jolsa@kernel.org>
-
-> >> What about the kernel bits? PeterZ? Is this in some tip branch?
-
-> Peter, Would you able to pick this up for next merge window? Please
-> note that, one dependency patch needs to be applied first from "IBS
-> Zen4 enhancement" series:
- 
-> [PATCH v6 6/8] perf/x86/ibs: Add new IBS register bits into header
-> https://lore.kernel.org/lkml/20220604044519.594-7-ravi.bangoria@amd.com
-
-It is there already:
-
-⬢[acme@toolbox perf]$ git log --oneline torvalds/master | grep -m1 "Add new IBS register bits into header"
-326ecc15c61c349c perf/x86/ibs: Add new IBS register bits into header
-⬢[acme@toolbox perf]$
-
-but not the other patches in this series:
-
-⬢[acme@toolbox perf]$ git log --oneline torvalds/master | grep -m1 "amd: Support PERF_SAMPLE_PHY_ADDR"
-⬢[acme@toolbox perf]$
+This hasn't been merged yet.
 
 - Arnaldo
