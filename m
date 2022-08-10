@@ -2,119 +2,91 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E4AB6C00140
-	for <linux-perf-users@archiver.kernel.org>; Wed, 10 Aug 2022 15:49:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4AB69C25B07
+	for <linux-perf-users@archiver.kernel.org>; Wed, 10 Aug 2022 15:56:15 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231804AbiHJPtU (ORCPT
+        id S231608AbiHJP4N (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Wed, 10 Aug 2022 11:49:20 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39498 "EHLO
+        Wed, 10 Aug 2022 11:56:13 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44426 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229446AbiHJPtS (ORCPT
+        with ESMTP id S233052AbiHJPz4 (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Wed, 10 Aug 2022 11:49:18 -0400
-Received: from mail-vk1-xa2f.google.com (mail-vk1-xa2f.google.com [IPv6:2607:f8b0:4864:20::a2f])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A1A8221E24
-        for <linux-perf-users@vger.kernel.org>; Wed, 10 Aug 2022 08:49:17 -0700 (PDT)
-Received: by mail-vk1-xa2f.google.com with SMTP id bi51so3482287vkb.5
-        for <linux-perf-users@vger.kernel.org>; Wed, 10 Aug 2022 08:49:17 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20210112;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc;
-        bh=z4rm8qHQd6KDv0Z23+IZwQE1Sw/HS2T9ErGB9+4K64Q=;
-        b=l7Pj5auHrFzhQ5xcoEnc7Y6ZAxm4dUjgCAcjmQkvr/LlDBZxTcSm03cOiqSlH2gKQE
-         opoYC+rUehvJbcnKIWtGUs5kYzi01jhx6xh2wAOpz5iEtXstzZCufPzp1HIn+3O1B3wl
-         vlNWIuaKgE/5QiMl0FioBlAcRMjhZRpZmYmvk6dot3EvByoUTDbknMPmS8njkPs9VOC0
-         MsNoHDW+RQbFQ5gEDbQIywOhj1e3nc8hvgXbKMVpk9MbMaBkvZH4qnnGGg9wMH5PTCRT
-         av613sHyEGdpalYMVoL1rngzemzxIjjzVQRhV8SEVt6Ap7wma1DUWtJ9MnKDMwhYrP3E
-         VCAA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc;
-        bh=z4rm8qHQd6KDv0Z23+IZwQE1Sw/HS2T9ErGB9+4K64Q=;
-        b=VJMIva/y2SfqOGEH4VDJVkcu45RacGH5P51/hvwSaAxjQG7ODsES4nUEMMR0snIz9c
-         mk6PxofvZQfEZmGRG5hNztdjk2kM5rC46dP7HAdyNkwbfqT4cvFWRNg9oxNjLdI/fNQw
-         NeImPcPYto2an46ZWXKrEKL5doe0KNAtp226gTZ5f/tDHw6e6rVvolNVu9EVFQJy1f2D
-         q9hlpuI7y/MzKAh20kku0Zd15857FBNIOyFg4UbrKuCrROay4gQoQtsl17elPdWiAj9h
-         V83yQTKrfdRmJrO8Wq652jmBxOXGhpPB/8km72T7X+vZ0MY9ZIzpvOlkAjClj751jpac
-         OjvQ==
-X-Gm-Message-State: ACgBeo3NGXdlN72ap7215bjCYyGDKsjdYoLdFy8NO58+wQCG73e8j79q
-        iuViVFOsSBTAGlQ4xtxZBOF5eFRZVZb+wsw+Z6+saLPI71I=
-X-Google-Smtp-Source: AA6agR4WWa6V7KdTH8Aa45Kuvcq9309pyU5Y9Q+FB2vUhFqbyofXP6ZckYa7tnrPLjqi4JnhpT5PyRkYTJzwfqs4eK0=
-X-Received: by 2002:a05:6122:e2a:b0:37c:eefd:4df6 with SMTP id
- bk42-20020a0561220e2a00b0037ceefd4df6mr1064245vkb.37.1660146556245; Wed, 10
- Aug 2022 08:49:16 -0700 (PDT)
+        Wed, 10 Aug 2022 11:55:56 -0400
+Received: from frasgout.his.huawei.com (frasgout.his.huawei.com [185.176.79.56])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id AFD408FD5E;
+        Wed, 10 Aug 2022 08:54:03 -0700 (PDT)
+Received: from fraeml708-chm.china.huawei.com (unknown [172.18.147.207])
+        by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4M2vYK0Cj6z67bMc;
+        Wed, 10 Aug 2022 23:51:01 +0800 (CST)
+Received: from lhrpeml500003.china.huawei.com (7.191.162.67) by
+ fraeml708-chm.china.huawei.com (10.206.15.36) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2375.24; Wed, 10 Aug 2022 17:53:46 +0200
+Received: from [10.48.150.13] (10.48.150.13) by lhrpeml500003.china.huawei.com
+ (7.191.162.67) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2375.24; Wed, 10 Aug
+ 2022 16:53:43 +0100
+Message-ID: <3f0579b3-2d58-c8c6-3e3f-ff966ad09bad@huawei.com>
+Date:   Wed, 10 Aug 2022 16:53:41 +0100
 MIME-Version: 1.0
-References: <CAP-5=fWiQHvYZp5R=uw4xUwBiN1fBLBU8witPkYM+2r8tnYCOg@mail.gmail.com>
-In-Reply-To: <CAP-5=fWiQHvYZp5R=uw4xUwBiN1fBLBU8witPkYM+2r8tnYCOg@mail.gmail.com>
-From:   Ian Rogers <irogers@google.com>
-Date:   Wed, 10 Aug 2022 08:49:04 -0700
-Message-ID: <CAP-5=fViwt1+PwcPZgw7Vy0VtP+UzSRNCYSLjbbAiTd44R5VZg@mail.gmail.com>
-Subject: Re: August 11th - office hours
-To:     linux-perf-users <linux-perf-users@vger.kernel.org>,
-        Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Namhyung Kim <namhyung@kernel.org>,
-        Jiri Olsa <jolsa@kernel.org>
-Cc:     Peter Zijlstra <peterz@infradead.org>,
+User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:91.0) Gecko/20100101
+ Thunderbird/91.6.1
+Subject: Re: [PATCH v4 07/17] perf jevents: Sort json files entries
+To:     Ian Rogers <irogers@google.com>
+CC:     Will Deacon <will@kernel.org>, James Clark <james.clark@arm.com>,
+        "Mike Leach" <mike.leach@linaro.org>, Leo Yan <leo.yan@linaro.org>,
+        Peter Zijlstra <peterz@infradead.org>,
         Ingo Molnar <mingo@redhat.com>,
-        Mark Rutland <mark.rutland@arm.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+        "Arnaldo Carvalho de Melo" <acme@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        "Alexander Shishkin" <alexander.shishkin@linux.intel.com>,
+        Jiri Olsa <jolsa@kernel.org>,
+        Namhyung Kim <namhyung@kernel.org>,
+        Andi Kleen <ak@linux.intel.com>,
+        "Zhengjun Xing" <zhengjun.xing@linux.intel.com>,
+        Ravi Bangoria <ravi.bangoria@amd.com>,
+        Kan Liang <kan.liang@linux.intel.com>,
+        Adrian Hunter <adrian.hunter@intel.com>,
+        <linux-kernel@vger.kernel.org>,
+        <linux-arm-kernel@lists.infradead.org>,
+        <linux-perf-users@vger.kernel.org>,
+        Stephane Eranian <eranian@google.com>
+References: <20220804221816.1802790-1-irogers@google.com>
+ <20220804221816.1802790-8-irogers@google.com>
+ <ad2ad328-89f9-7dea-a6fd-b473da2f1ad0@huawei.com>
+ <CAP-5=fVWx9ROmHiOYJdBRvQNCdoUxf83dY8nBOsxMe5Xb-ofKQ@mail.gmail.com>
+From:   John Garry <john.garry@huawei.com>
+In-Reply-To: <CAP-5=fVWx9ROmHiOYJdBRvQNCdoUxf83dY8nBOsxMe5Xb-ofKQ@mail.gmail.com>
+Content-Type: text/plain; charset="UTF-8"; format=flowed
+Content-Transfer-Encoding: 7bit
+X-Originating-IP: [10.48.150.13]
+X-ClientProxiedBy: lhrpeml100001.china.huawei.com (7.191.160.183) To
+ lhrpeml500003.china.huawei.com (7.191.162.67)
+X-CFilter-Loop: Reflected
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-A reminder that this is tomorrow. Discussion of reviewers and reviewer
-rotation is on the agenda. Please suggest more items.
+On 10/08/2022 15:23, Ian Rogers wrote:
+>> We sort the attributes of the events alphabetically by attribute name,
+>> right? Is there any advantage in this? Do we need it for later?
+> 
+> The sort order is given by the tuple:
+> (not j.desc is None, fix_none(j.topic), fix_none(j.name),
+> fix_none(j.pmu), fix_none(j.metric_name))
+> which is putting events with descriptions and topics before those
+> without, then sorting by name, then pmu and finally metric_name. The
+> advantage is that when we qsort alias events:
+> https://git.kernel.org/pub/scm/linux/kernel/git/acme/linux.git/tree/tools/perf/util/pmu.c?h=perf/core#n1759
+> the events are already in the sorted format, which should make the
+> code faster -
 
-Thanks,
-Ian
+ok, so can you mention that in the commit message? Just writing that you 
+want to replicate cmp_sevent from pmu.c does not tell us this clearly.
 
-On Mon, Aug 8, 2022 at 3:36 PM Ian Rogers <irogers@google.com> wrote:
->
-> Hi,
->
-> There will be another office hours on Thursday August 11th at 2pm
-> GMT*. Currently on the agenda is the idea of having a reviewer
-> rotation similar to BPF:
-> https://lore.kernel.org/bpf/50da58e3-e056-2d24-765b-818fed09e216@iogearbo=
-x.net/T/
-> Please suggest other agenda items as replies to the mailing list to this =
-email.
->
-> If you experience problems accessing the meeting then my email can be
-> used for Google hangout messages, and I'll try to be on IRC (#perf on
-> irc.oftc.net).
->
-> The code of conduct is below**:
-> https://www.kernel.org/doc/html/latest/process/code-of-conduct.html
->
-> The Google meet details are here:
-> Linux Perf Tool - Office Hours
-> Thursday, August 11 =C2=B7 7:00 =E2=80=93 8:00am
-> Google Meet joining info
-> Video call link: https://meet.google.com/goj-quks-ydn
-> Or dial: =E2=80=AA(US) +1 301-969-4101=E2=80=AC PIN: =E2=80=AA374 496 227=
-=E2=80=AC#
-> More phone numbers: https://tel.meet/goj-quks-ydn?pin=3D8067739163431
-> Notes (ask to be added to see):
-> https://docs.google.com/document/d/1tQZvJ12czMedpmLLZWS0XILAte97zdR6H_tgC=
-3Ivafs/edit?usp=3Dsharing&resourcekey=3D0-iV9_8Oc0cSOPl0-NvEYDAA
->
-> Thanks,
-> Ian
->
-> *The around the world times I believe are:
-> China: 10pm
-> India: 7:30pm
-> Europe: 4pm
-> UK: 3pm
-> US east coast: 10am
-> Brazil: 11am
-> US west coast: 7am
->
-> **More details from the first office hours are here:
-> https://lore.kernel.org/linux-perf-users/CAP-5=3DfWkxtm5-Ebwkh4pzA83prvuA=
-J5yy6CKQYatdkKWu3Tgeg@mail.gmail.com/
+ > it still has to qsort the sysfs events.
+
+thanks,
+John
+
