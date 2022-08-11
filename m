@@ -2,182 +2,138 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4391DC19F2D
-	for <linux-perf-users@archiver.kernel.org>; Thu, 11 Aug 2022 06:27:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C6745C25B07
+	for <linux-perf-users@archiver.kernel.org>; Thu, 11 Aug 2022 06:41:33 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S234190AbiHKG1S (ORCPT
+        id S234080AbiHKGlc (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Thu, 11 Aug 2022 02:27:18 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60402 "EHLO
+        Thu, 11 Aug 2022 02:41:32 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50570 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S234130AbiHKG0m (ORCPT
+        with ESMTP id S233535AbiHKGlb (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Thu, 11 Aug 2022 02:26:42 -0400
-Received: from mail-pl1-x62f.google.com (mail-pl1-x62f.google.com [IPv6:2607:f8b0:4864:20::62f])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6C6096C11F
-        for <linux-perf-users@vger.kernel.org>; Wed, 10 Aug 2022 23:26:27 -0700 (PDT)
-Received: by mail-pl1-x62f.google.com with SMTP id o3so16179761ple.5
-        for <linux-perf-users@vger.kernel.org>; Wed, 10 Aug 2022 23:26:27 -0700 (PDT)
+        Thu, 11 Aug 2022 02:41:31 -0400
+Received: from mail-pf1-x433.google.com (mail-pf1-x433.google.com [IPv6:2607:f8b0:4864:20::433])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1C1C16261
+        for <linux-perf-users@vger.kernel.org>; Wed, 10 Aug 2022 23:41:29 -0700 (PDT)
+Received: by mail-pf1-x433.google.com with SMTP id 130so15691734pfv.13
+        for <linux-perf-users@vger.kernel.org>; Wed, 10 Aug 2022 23:41:29 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc;
-        bh=aXFjFccGANdUwvtZryztlC25DdtbTU6bNIi+xzPEs8M=;
-        b=cmTa5UTGnSb14CI383akQ88vLH4A5udvCixMf7QsdBG6KLLeHMiTByAczpfmDrjVlU
-         NAJ2wfa+nb2rcg+3YbqsR0J8FjBSkV/70C2ESUhQ5aNwCgRIpLkSO/6Q3jdVZIvIXjRS
-         46nJzDGdEHgQuKgNVJRo0foXbYGRKcO4d8Ou+XL1RB5WZcoSNB4smQPdq+nV9zLuejk2
-         +TlxcTdHeKQXxYfePEDl8VqoXBN4efNHORQ6eXOYO4Xffi5kBSKGzrjm1ufobE1Dd61Y
-         PZkQPyBPhosY2QjcTu9dAa8u/4WXmbUwZWK8FIUpqkU8InnHeIyy6k/jgLSFjRiOmT23
-         ZdIg==
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date:from:to
+         :cc;
+        bh=8Ls4pFvfLJMWwcmLhID1I6I1DLBX05K+UJVFFV9Za6M=;
+        b=vMy0JbabQGaviBO27so/kcHKd/6i1tm8ma6oUqJlmeqnvqIleBB4FN3SZyCTA9oApz
+         JNVMSIbKSiyvqVgKfgwtyb7g072G8H4fScIPRFqpkddCUr04cYfniC5FZ1r/9h4gNa2L
+         jzK2fZVX+eu34dd7p4EjUOlm5GbRQcgAAQ8f5LBgVzVpJ4Bh9OeBEURXBlffgwIDTfC/
+         0sbZdEnh3BbofV/dOE/NiLP+0HCBB2k64zNG2AC8CoNKbNMDue3Cjiv6TLFTXVa9duFf
+         VNksgovC8IjiE8CV/i16v4GLtLX4rDL0Cag7P0M/ZTCyRzizPlGJeTmgPEFZHw2Vhnwi
+         4cOg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc;
-        bh=aXFjFccGANdUwvtZryztlC25DdtbTU6bNIi+xzPEs8M=;
-        b=oaFZ3V1riQ/tbK745Ur/jchrhkahM97MyYUCslTFkv4j9kz844fvpnyKz5dDh4eEPx
-         SJzrlGg/P/fieELmLs2qYqj8QKcpQPU8whnfMcKh4kjxgXokSzCQAAmzvMKTmerm8zq1
-         HFd/HptLOo63cuePlw67BMFlUxqMervzvqCyPSVIBGOkfRDCyDCV7INLhq+BkS9tU3Vl
-         Mddl2xWAuRhw+NlPiFWyOgriF+ZC8CNp1UWjrCltUvb3MxephWh87AFXsFFv38N9euy2
-         022Omsm+xYWLNMHbdW2DTQ17XVekcG5JNFwcAqcvqWLHC21KNFmNfmK++Gl8yk2ZT/bU
-         Y86g==
-X-Gm-Message-State: ACgBeo3o3/oVxhJqacZnBSzZOmfdIUb8v1CorAKCr+1aF0zQhJoPqfkp
-        ikWNALRiV4owuHdkZFi/RYK2Qw==
-X-Google-Smtp-Source: AA6agR4n8ZaYpx9klZ/kRtJ73Tu6pOdF0YML1o9FxjpCu9NyxtSyyJol8ieOc0kQOL4T7cm2afHQwg==
-X-Received: by 2002:a17:90a:c4f:b0:1df:a178:897f with SMTP id u15-20020a17090a0c4f00b001dfa178897fmr7300240pje.19.1660199186832;
-        Wed, 10 Aug 2022 23:26:26 -0700 (PDT)
-Received: from leoy-yangtze.lan (n058152077182.netvigator.com. [58.152.77.182])
-        by smtp.gmail.com with ESMTPSA id o12-20020a17090a55cc00b001f506009036sm2766926pjm.49.2022.08.10.23.26.21
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date
+         :x-gm-message-state:from:to:cc;
+        bh=8Ls4pFvfLJMWwcmLhID1I6I1DLBX05K+UJVFFV9Za6M=;
+        b=VG5yA4XnsA0boUam6UVgA50ltnNAvcsU80allQYow1n4BnGRQn/R/t+kiXU8ecZKNK
+         gDGjUZFpafeKDbU4SUU9FFf1nvmaeyrWOQ2w5y9ZOz7QZwlg4kiQ8ev/htKm32LF3+qB
+         CyrJWFCybCmURe36IH/coVs6TaqiF3YqMujT52/ASIkQyECqyeC7zUuzp2yuvCWyszx3
+         YNHHvjcVjkrz1t9TwbjP7oOxIbFyI5kCMvdoqqCeZIO8CuthNghu315Y6tY13gWtqj7X
+         oQKsDuNznAVn/nmqR3/xkPe4cA8YGK/jEgdyb0BQ2NsJdyalFqxIGHctRiLPZzatiP2q
+         fCWg==
+X-Gm-Message-State: ACgBeo2yjAx0crXyp50JKwUn4CEQ6Tdvaixh/0ieA8Wq65vrQa37jUiZ
+        aYHfKWIo+VY9ilhP6SWFKGek6A==
+X-Google-Smtp-Source: AA6agR7nKY/UN1mSywz2fbtTnLwsfY0AOBEbt40itndC5bJz8PmSiqPAd8PaShPIGIhT3T81iZYDEw==
+X-Received: by 2002:a63:4566:0:b0:41d:353:46b4 with SMTP id u38-20020a634566000000b0041d035346b4mr23099189pgk.316.1660200088455;
+        Wed, 10 Aug 2022 23:41:28 -0700 (PDT)
+Received: from leoy-huanghe.lan (n058152077182.netvigator.com. [58.152.77.182])
+        by smtp.gmail.com with ESMTPSA id q1-20020a17090a2dc100b001f21f5c81a5sm2795643pjm.19.2022.08.10.23.41.24
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 10 Aug 2022 23:26:26 -0700 (PDT)
+        Wed, 10 Aug 2022 23:41:28 -0700 (PDT)
+Date:   Thu, 11 Aug 2022 14:41:22 +0800
 From:   Leo Yan <leo.yan@linaro.org>
-To:     Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Peter Zijlstra <peterz@infradead.org>,
+To:     Arnaldo Carvalho de Melo <acme@kernel.org>
+Cc:     Peter Zijlstra <peterz@infradead.org>,
         Ingo Molnar <mingo@redhat.com>,
         Mark Rutland <mark.rutland@arm.com>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
         Jiri Olsa <jolsa@kernel.org>,
         Namhyung Kim <namhyung@kernel.org>,
+        Ian Rogers <irogers@google.com>,
         John Garry <john.garry@huawei.com>,
         Will Deacon <will@kernel.org>,
         James Clark <james.clark@arm.com>,
-        Mike Leach <mike.leach@linaro.org>,
-        Kajol Jain <kjain@linux.ibm.com>,
-        Ali Saidi <alisaidi@amazon.com>,
-        Adrian Hunter <adrian.hunter@intel.com>,
-        "Gustavo A. R. Silva" <gustavoars@kernel.org>,
-        Anshuman Khandual <anshuman.khandual@arm.com>,
-        Ian Rogers <irogers@google.com>, Like Xu <likexu@tencent.com>,
         German Gomez <german.gomez@arm.com>,
-        Timothy Hayes <timothy.hayes@arm.com>,
-        linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org,
+        Ali Saidi <alisaidi@amazon.com>, Joe Mario <jmario@redhat.com>,
+        Adam Li <adam.li@amperecomputing.com>,
+        linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org,
         linux-arm-kernel@lists.infradead.org
-Cc:     Leo Yan <leo.yan@linaro.org>
-Subject: [PATCH v6 15/15] perf c2c: Update documentation for new display option 'peer'
-Date:   Thu, 11 Aug 2022 14:24:51 +0800
-Message-Id: <20220811062451.435810-16-leo.yan@linaro.org>
-X-Mailer: git-send-email 2.34.1
-In-Reply-To: <20220811062451.435810-1-leo.yan@linaro.org>
-References: <20220811062451.435810-1-leo.yan@linaro.org>
+Subject: Re: [PATCH v5 00/17] perf c2c: Support data source and display for
+ Arm64
+Message-ID: <20220811064122.GA860078@leoy-huanghe.lan>
+References: <20220604042820.2270916-1-leo.yan@linaro.org>
+ <YvO0nAZ1znppjKjZ@kernel.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
+In-Reply-To: <YvO0nAZ1znppjKjZ@kernel.org>
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-Since the new display option 'peer' is introduced, this patch is to
-update the documentation to reflect it.
+Hi Arnaldo,
 
-Signed-off-by: Leo Yan <leo.yan@linaro.org>
-Acked-by: Ian Rogers <irogers@google.com>
-Reviewed-by: Ali Saidi <alisaidi@amazon.com>
----
- tools/perf/Documentation/perf-c2c.txt | 31 +++++++++++++++++++++------
- 1 file changed, 24 insertions(+), 7 deletions(-)
+On Wed, Aug 10, 2022 at 10:37:32AM -0300, Arnaldo Carvalho de Melo wrote:
+> Em Sat, Jun 04, 2022 at 12:28:03PM +0800, Leo Yan escreveu:
+> > Arm64 Neoverse CPUs supports data source in Arm SPE trace, this allows
+> > us to detect cache line contention and transfers.
+> > 
+> > This patch set includes Ali's patch set v9 "perf: arm-spe: Decode SPE
+> > source and use for perf c2c" [1] and rebased on the latest perf core
+> > banch with latest commit 1bcca2b1bd67 ("perf vendor events intel:
+> > Update metrics for Alderlake").
+> > 
+> > Patches 01-05 comes from Ali's patch set to support data source for Arm
+> > SPE for neoverse cores.
+> 
+> Leo, please remove touching the kernel perf_event.h on the first patch,
+> I see it doesn't affect the kernel right now as it is done just from
+> synthesizing perf records from hw trace data, and we haven't received
+> any review comment from Peter Zijlstra (I think he is in vacations).
 
-diff --git a/tools/perf/Documentation/perf-c2c.txt b/tools/perf/Documentation/perf-c2c.txt
-index 6f69173731aa..f1f7ae6b08d1 100644
---- a/tools/perf/Documentation/perf-c2c.txt
-+++ b/tools/perf/Documentation/perf-c2c.txt
-@@ -109,7 +109,9 @@ REPORT OPTIONS
- 
- -d::
- --display::
--	Switch to HITM type (rmt, lcl) to display and sort on. Total HITMs as default.
-+	Switch to HITM type (rmt, lcl) or peer snooping type (peer) to display
-+	and sort on. Total HITMs (tot) as default, except Arm64 uses peer mode
-+	as default.
- 
- --stitch-lbr::
- 	Show callgraph with stitched LBRs, which may have more complete
-@@ -174,12 +176,18 @@ For each cacheline in the 1) list we display following data:
-   Cacheline
-   - cacheline address (hex number)
- 
--  Rmt/Lcl Hitm
-+  Rmt/Lcl Hitm (Display with HITM types)
-   - cacheline percentage of all Remote/Local HITM accesses
- 
--  LLC Load Hitm - Total, LclHitm, RmtHitm
-+  Peer Snoop (Display with peer type)
-+  - cacheline percentage of all peer accesses
-+
-+  LLC Load Hitm - Total, LclHitm, RmtHitm (For display with HITM types)
-   - count of Total/Local/Remote load HITMs
- 
-+  Load Peer - Total, Local, Remote (For display with peer type)
-+  - count of Total/Local/Remote load from peer cache or DRAM
-+
-   Total records
-   - sum of all cachelines accesses
- 
-@@ -201,16 +209,21 @@ For each cacheline in the 1) list we display following data:
-   - count of LLC load accesses, includes LLC hits and LLC HITMs
- 
-   RMT Load Hit - RmtHit, RmtHitm
--  - count of remote load accesses, includes remote hits and remote HITMs
-+  - count of remote load accesses, includes remote hits and remote HITMs;
-+    on Arm neoverse cores, RmtHit is used to account remote accesses,
-+    includes remote DRAM or any upward cache level in remote node
- 
-   Load Dram - Lcl, Rmt
-   - count of local and remote DRAM accesses
- 
- For each offset in the 2) list we display following data:
- 
--  HITM - Rmt, Lcl
-+  HITM - Rmt, Lcl (Display with HITM types)
-   - % of Remote/Local HITM accesses for given offset within cacheline
- 
-+  Peer Snoop - Rmt, Lcl (Display with peer type)
-+  - % of Remote/Local peer accesses for given offset within cacheline
-+
-   Store Refs - L1 Hit, L1 Miss, N/A
-   - % of store accesses that hit L1, missed L1 and N/A (no available) memory
-     level for given offset within cacheline
-@@ -227,9 +240,12 @@ For each offset in the 2) list we display following data:
-   Code address
-   - code address responsible for the accesses
- 
--  cycles - rmt hitm, lcl hitm, load
-+  cycles - rmt hitm, lcl hitm, load (Display with HITM types)
-     - sum of cycles for given accesses - Remote/Local HITM and generic load
- 
-+  cycles - rmt peer, lcl peer, load (Display with peer type)
-+    - sum of cycles for given accesses - Remote/Local peer load and generic load
-+
-   cpu cnt
-     - number of cpus that participated on the access
- 
-@@ -251,7 +267,8 @@ The 'Node' field displays nodes that accesses given cacheline
- offset. Its output comes in 3 flavors:
-   - node IDs separated by ','
-   - node IDs with stats for each ID, in following format:
--      Node{cpus %hitms %stores}
-+      Node{cpus %hitms %stores} (Display with HITM types)
-+      Node{cpus %peers %stores} (Display with peer type)
-   - node IDs with list of affected CPUs in following format:
-       Node{cpu list}
- 
--- 
-2.34.1
+Done!  The new patch set іs in below link, which dropped the patch for
+kernel perf_event.h:
+https://lore.kernel.org/lkml/20220811062451.435810-1-leo.yan@linaro.org/
 
+One question: should I later continue to upstream the first patch for
+syncing the kernel header perf_event.h after Peter.Z comes back?
+
+
+> Also please refresh it:
+> 
+> ⬢[acme@toolbox perf]$        git am ./v5_20220604_leo_yan_perf_c2c_support_data_source_and_display_for_arm64.mbx
+> Applying: perf: Add SNOOP_PEER flag to perf mem data struct
+> Applying: perf tools: sync addition of PERF_MEM_SNOOPX_PEER
+> Applying: perf mem: Print snoop peer flag
+> Applying: perf arm-spe: Don't set data source if it's not a memory operation
+> error: patch failed: tools/perf/util/arm-spe.c:387
+> error: tools/perf/util/arm-spe.c: patch does not apply
+> Patch failed at 0004 perf arm-spe: Don't set data source if it's not a memory operation
+> hint: Use 'git am --show-current-patch=diff' to see the failed patch
+> When you have resolved this problem, run "git am --continue".
+> If you prefer to skip this patch, run "git am --skip" instead.
+> To restore the original branch and stop patching, run "git am --abort".
+> ⬢[acme@toolbox perf]$
+
+To fix the merging conflict in the new patch set, I also dropped the
+patch "perf arm-spe: Don't set data source if it's not a memory
+operation", since this patch has been merged into the mainline kernel.
+
+Note, when verified the patch set, I found a compilation error, so I
+sent a separate patch to fix it:
+https://lore.kernel.org/lkml/20220811044341.426796-1-leo.yan@linaro.org/
+
+Thanks a lot for continuous tracking this series.
+
+Leo
