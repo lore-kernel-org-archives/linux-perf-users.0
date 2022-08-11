@@ -2,53 +2,53 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 13344C19F2D
-	for <linux-perf-users@archiver.kernel.org>; Thu, 11 Aug 2022 06:26:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EC95FC19F2D
+	for <linux-perf-users@archiver.kernel.org>; Thu, 11 Aug 2022 06:26:54 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S234161AbiHKG0m (ORCPT
+        id S233601AbiHKG0y (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Thu, 11 Aug 2022 02:26:42 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59864 "EHLO
+        Thu, 11 Aug 2022 02:26:54 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59916 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S234079AbiHKG0L (ORCPT
+        with ESMTP id S234142AbiHKG0X (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Thu, 11 Aug 2022 02:26:11 -0400
-Received: from mail-pl1-x633.google.com (mail-pl1-x633.google.com [IPv6:2607:f8b0:4864:20::633])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1B96D7C1B9
-        for <linux-perf-users@vger.kernel.org>; Wed, 10 Aug 2022 23:26:06 -0700 (PDT)
-Received: by mail-pl1-x633.google.com with SMTP id 17so6817681pli.0
-        for <linux-perf-users@vger.kernel.org>; Wed, 10 Aug 2022 23:26:06 -0700 (PDT)
+        Thu, 11 Aug 2022 02:26:23 -0400
+Received: from mail-pg1-x531.google.com (mail-pg1-x531.google.com [IPv6:2607:f8b0:4864:20::531])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8B15F6068F
+        for <linux-perf-users@vger.kernel.org>; Wed, 10 Aug 2022 23:26:11 -0700 (PDT)
+Received: by mail-pg1-x531.google.com with SMTP id l64so16391692pge.0
+        for <linux-perf-users@vger.kernel.org>; Wed, 10 Aug 2022 23:26:11 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:from:to:cc;
-        bh=yX+GwOcQgu1/f98JNOfLTYqRyUQAYNUlTATo/eQwKAI=;
-        b=HZ0HBemuTdMQwFcxMQMiy1ewF6Q+l84dc6q8lA9gr85l7CPXqHPbDCjFXcxa2HtZ2D
-         u2sLuam2rpoUDZZ5AN87wqX+11GC0cumbKIVuJs/ajkyXdFNLLh1SIzujemf8QGyiBzz
-         jffsQ8Vh0ZGDI0qVqoYGDfpYX9UfhzfZPOeWn5gZ6gHT5oOi2CdAe1FKX4X/eXzjiklJ
-         FZLW52hkBHeAiz1l4bjEl6P2nnuiqsGbPnYh4O2c590Ua39Y9TFlg66R+8TSWfHkMkfh
-         4hRQfEUfZmAZ0djjbzVcqQXav0RcTzDIHud3XjY3O7SLKtof9lu9lWtkEs2ebPeCERE+
-         kyKQ==
+        bh=2BjSb17Xo+YW8LG40iOqmFrwUMRlbFx/Kcx9RnLyLS4=;
+        b=hcICa0z1OMm5qm9hJR0Y9mqXD+y7Ore41LW0ePfj1QxfQ2Kl1GnDsa7IVBC4hVHZSD
+         SbQPVjbAUI+V097ZrQ3Hn+q5741GszYzDEBo+NS6sh50ISdCE7uBLm22ba6/xztQUKY1
+         X3LTbey8f9wOPtfxh5aee4pWt6EW9va46uiJDEvUoIBgJX2HSGTBB9mt1pixXRfw3fmA
+         +ohbYjcXVg/Oi/l3H3Nwv2eqa5FeSg3aeKiX5qun0BCfhZQXaIlyFJeHQSjqsV3fba8z
+         ymYAuU6m3o1DdenuaeU3wTFxQ1goyLuXnZyQBLs24Skupd1LGTiyzCc9Ni6nuHnzzT+s
+         iAxw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc;
-        bh=yX+GwOcQgu1/f98JNOfLTYqRyUQAYNUlTATo/eQwKAI=;
-        b=CiznpFgX60k9/ejNCIcMIjAKrIyZCR9H9CwJFK/79heKeC7v64FYvUyhb14Q8AwfdD
-         Tt6aqqTvnqkdfa+H4i2p7pm3Yzix9M9iAvS3RpmxaSJKA1nQsdjHagzg3ruA2VKXU7BF
-         b6ItyCH/HlNl22WmUeih/s2z9Ew6E/un3odKNfA2kONOCKBXs4fednyfJ2fHza9SGsqm
-         1z0TtypEZTLJOyYcUq2BdtAut10DIBNsKsGH0P0g1KpwxOKIbUkTw/FGjE+r2XGQ/3M9
-         tucBuWSTDjuE/FrsRns9h9ccazVgGCpk1Aln8LejPjh8dh29HXiJvLXNg79Ia96ML0TJ
-         e30A==
-X-Gm-Message-State: ACgBeo0NtrnJ1+Be8QOzZlr4v8Q9Wi/TB8Rv0ZnbsEr1ZW4tuHagR0qv
-        MMau9n6YpVQeI6h9+v+nPWEx1g==
-X-Google-Smtp-Source: AA6agR4p+EoOtegbOAceuvLzmnP44Ejnh+ZZxWz7HMVe3IW3df7He3O9mk1nH2Li37fCh27Z/ez7wg==
-X-Received: by 2002:a17:90b:198a:b0:1f5:2f97:12a0 with SMTP id mv10-20020a17090b198a00b001f52f9712a0mr7004901pjb.97.1660199165402;
-        Wed, 10 Aug 2022 23:26:05 -0700 (PDT)
+        bh=2BjSb17Xo+YW8LG40iOqmFrwUMRlbFx/Kcx9RnLyLS4=;
+        b=SajXklMl3mj5AV8FY56f9B4b2LFzTcxD2KZEsBXDUb/LTkhmkEaLk+f4uBsFeRYGb8
+         zQvXV8XRlwQxWng56rrqp/PB8azs2L6ISrCuQwB58VonYaaadRQSHepQfj6L/PW+HNlg
+         nOB8Px4kWXNpHM9FLyPjpGTYCBoJE4WOCjQ1ADRnBlZ4ImXkt9hoXytNZkQrOxQ0oosM
+         uMVSaY5ISfwFKsMRhldmVxb9dyubbhLZRlh1oBmbMrMuy0pZFMtN+0d8LLqMtgfM39LW
+         H5Z8L/N6AriULbEcSoizG9VUAA16mUug4KGKwmkHV77vD3ITLuOT5/6mE7hgZCJp//3B
+         X2cA==
+X-Gm-Message-State: ACgBeo1wj7vYmAprQULvzbPJJ/wN2ydAegvhusN/IrPxsZOomI21m0x+
+        Sv/fuCWsb6Ti1iAbYPhGq9nkwA==
+X-Google-Smtp-Source: AA6agR761+qNleysosWB22AkEG5qMY4yybGJ1hxKKOzgEQpLJwZjmsbIHyfXgP9lVeuJE8lfJFG6Kw==
+X-Received: by 2002:a05:6a00:1908:b0:525:5dad:cb1c with SMTP id y8-20020a056a00190800b005255dadcb1cmr30415553pfi.47.1660199170702;
+        Wed, 10 Aug 2022 23:26:10 -0700 (PDT)
 Received: from leoy-yangtze.lan (n058152077182.netvigator.com. [58.152.77.182])
-        by smtp.gmail.com with ESMTPSA id o12-20020a17090a55cc00b001f506009036sm2766926pjm.49.2022.08.10.23.26.00
+        by smtp.gmail.com with ESMTPSA id o12-20020a17090a55cc00b001f506009036sm2766926pjm.49.2022.08.10.23.26.05
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 10 Aug 2022 23:26:04 -0700 (PDT)
+        Wed, 10 Aug 2022 23:26:10 -0700 (PDT)
 From:   Leo Yan <leo.yan@linaro.org>
 To:     Arnaldo Carvalho de Melo <acme@kernel.org>,
         Peter Zijlstra <peterz@infradead.org>,
@@ -72,9 +72,9 @@ To:     Arnaldo Carvalho de Melo <acme@kernel.org>,
         linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org,
         linux-arm-kernel@lists.infradead.org
 Cc:     Leo Yan <leo.yan@linaro.org>
-Subject: [PATCH v6 11/15] perf c2c: Refactor node header
-Date:   Thu, 11 Aug 2022 14:24:47 +0800
-Message-Id: <20220811062451.435810-12-leo.yan@linaro.org>
+Subject: [PATCH v6 12/15] perf c2c: Refactor display string
+Date:   Thu, 11 Aug 2022 14:24:48 +0800
+Message-Id: <20220811062451.435810-13-leo.yan@linaro.org>
 X-Mailer: git-send-email 2.34.1
 In-Reply-To: <20220811062451.435810-1-leo.yan@linaro.org>
 References: <20220811062451.435810-1-leo.yan@linaro.org>
@@ -84,70 +84,57 @@ Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-The node header array contains 3 items, each item is used for one of
-the 3 flavors for node accessing info.  To extend sorting on other
-snooping type and not always stick to HITMs, the second header string
-"Node{cpus %hitms %stores}" should be adjusted (e.g. it's changed as
-"Node{cpus %peer %stores}").
+The display type is shown by combination the display string array and a
+suffix string "HITMs", which is not friendly to extend display for other
+sorting type (e.g. extension for peer operations).
 
-For this reason, this patch changes the node header array to three
-flat variables and uses switch-case in function setup_nodes_header(),
-thus it is easier for altering the header string.
+This patch moves the suffix string "HITMs" into display string array for
+HITM types, so it can allow us to not necessarily to output string
+"HITMs" for new incoming display type.
 
 Signed-off-by: Leo Yan <leo.yan@linaro.org>
 Acked-by: Ian Rogers <irogers@google.com>
 Tested-by: Ali Saidi <alisaidi@amazon.com>
 Reviewed-by: Ali Saidi <alisaidi@amazon.com>
 ---
- tools/perf/builtin-c2c.c | 26 +++++++++++++++++++-------
- 1 file changed, 19 insertions(+), 7 deletions(-)
+ tools/perf/builtin-c2c.c | 10 +++++-----
+ 1 file changed, 5 insertions(+), 5 deletions(-)
 
 diff --git a/tools/perf/builtin-c2c.c b/tools/perf/builtin-c2c.c
-index 66ff834516a2..49a9b8480b41 100644
+index 49a9b8480b41..8b7c1fd35380 100644
 --- a/tools/perf/builtin-c2c.c
 +++ b/tools/perf/builtin-c2c.c
-@@ -1723,12 +1723,6 @@ static struct c2c_dimension dim_dso = {
- 	.se		= &sort_dso,
+@@ -122,9 +122,9 @@ enum {
  };
  
--static struct c2c_header header_node[3] = {
--	HEADER_LOW("Node"),
--	HEADER_LOW("Node{cpus %hitms %stores}"),
--	HEADER_LOW("Node{cpu list}"),
--};
--
- static struct c2c_dimension dim_node = {
- 	.name		= "node",
- 	.cmp		= empty_cmp,
-@@ -2229,9 +2223,27 @@ static int resort_cl_cb(struct hist_entry *he, void *arg __maybe_unused)
- 	return 0;
- }
+ static const char *display_str[DISPLAY_MAX] = {
+-	[DISPLAY_LCL_HITM] = "Local",
+-	[DISPLAY_RMT_HITM] = "Remote",
+-	[DISPLAY_TOT_HITM] = "Total",
++	[DISPLAY_LCL_HITM] = "Local HITMs",
++	[DISPLAY_RMT_HITM] = "Remote HITMs",
++	[DISPLAY_TOT_HITM] = "Total HITMs",
+ };
  
-+static struct c2c_header header_node_0 = HEADER_LOW("Node");
-+static struct c2c_header header_node_1 = HEADER_LOW("Node{cpus %hitms %stores}");
-+static struct c2c_header header_node_2 = HEADER_LOW("Node{cpu list}");
-+
- static void setup_nodes_header(void)
+ static const struct option c2c_options[] = {
+@@ -2489,7 +2489,7 @@ static void print_c2c_info(FILE *out, struct perf_session *session)
+ 		fprintf(out, "%-36s: %s\n", first ? "  Events" : "", evsel__name(evsel));
+ 		first = false;
+ 	}
+-	fprintf(out, "  Cachelines sort on                : %s HITMs\n",
++	fprintf(out, "  Cachelines sort on                : %s\n",
+ 		display_str[c2c.display]);
+ 	fprintf(out, "  Cacheline data grouping           : %s\n", c2c.cl_sort);
+ }
+@@ -2646,7 +2646,7 @@ static int perf_c2c_browser__title(struct hist_browser *browser,
  {
--	dim_node.header = header_node[c2c.node_info];
-+	switch (c2c.node_info) {
-+	case 0:
-+		dim_node.header = header_node_0;
-+		break;
-+	case 1:
-+		dim_node.header = header_node_1;
-+		break;
-+	case 2:
-+		dim_node.header = header_node_2;
-+		break;
-+	default:
-+		break;
-+	}
-+
-+	return;
- }
- 
- static int setup_nodes(struct perf_session *session)
+ 	scnprintf(bf, size,
+ 		  "Shared Data Cache Line Table     "
+-		  "(%lu entries, sorted on %s HITMs)",
++		  "(%lu entries, sorted on %s)",
+ 		  browser->nr_non_filtered_entries,
+ 		  display_str[c2c.display]);
+ 	return 0;
 -- 
 2.34.1
 
