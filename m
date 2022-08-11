@@ -2,138 +2,305 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C6745C25B07
-	for <linux-perf-users@archiver.kernel.org>; Thu, 11 Aug 2022 06:41:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 43E2BC19F2D
+	for <linux-perf-users@archiver.kernel.org>; Thu, 11 Aug 2022 08:32:06 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S234080AbiHKGlc (ORCPT
+        id S234526AbiHKIcF (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Thu, 11 Aug 2022 02:41:32 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50570 "EHLO
+        Thu, 11 Aug 2022 04:32:05 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38306 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S233535AbiHKGlb (ORCPT
+        with ESMTP id S234154AbiHKIcC (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Thu, 11 Aug 2022 02:41:31 -0400
-Received: from mail-pf1-x433.google.com (mail-pf1-x433.google.com [IPv6:2607:f8b0:4864:20::433])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1C1C16261
-        for <linux-perf-users@vger.kernel.org>; Wed, 10 Aug 2022 23:41:29 -0700 (PDT)
-Received: by mail-pf1-x433.google.com with SMTP id 130so15691734pfv.13
-        for <linux-perf-users@vger.kernel.org>; Wed, 10 Aug 2022 23:41:29 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date:from:to
-         :cc;
-        bh=8Ls4pFvfLJMWwcmLhID1I6I1DLBX05K+UJVFFV9Za6M=;
-        b=vMy0JbabQGaviBO27so/kcHKd/6i1tm8ma6oUqJlmeqnvqIleBB4FN3SZyCTA9oApz
-         JNVMSIbKSiyvqVgKfgwtyb7g072G8H4fScIPRFqpkddCUr04cYfniC5FZ1r/9h4gNa2L
-         jzK2fZVX+eu34dd7p4EjUOlm5GbRQcgAAQ8f5LBgVzVpJ4Bh9OeBEURXBlffgwIDTfC/
-         0sbZdEnh3BbofV/dOE/NiLP+0HCBB2k64zNG2AC8CoNKbNMDue3Cjiv6TLFTXVa9duFf
-         VNksgovC8IjiE8CV/i16v4GLtLX4rDL0Cag7P0M/ZTCyRzizPlGJeTmgPEFZHw2Vhnwi
-         4cOg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date
-         :x-gm-message-state:from:to:cc;
-        bh=8Ls4pFvfLJMWwcmLhID1I6I1DLBX05K+UJVFFV9Za6M=;
-        b=VG5yA4XnsA0boUam6UVgA50ltnNAvcsU80allQYow1n4BnGRQn/R/t+kiXU8ecZKNK
-         gDGjUZFpafeKDbU4SUU9FFf1nvmaeyrWOQ2w5y9ZOz7QZwlg4kiQ8ev/htKm32LF3+qB
-         CyrJWFCybCmURe36IH/coVs6TaqiF3YqMujT52/ASIkQyECqyeC7zUuzp2yuvCWyszx3
-         YNHHvjcVjkrz1t9TwbjP7oOxIbFyI5kCMvdoqqCeZIO8CuthNghu315Y6tY13gWtqj7X
-         oQKsDuNznAVn/nmqR3/xkPe4cA8YGK/jEgdyb0BQ2NsJdyalFqxIGHctRiLPZzatiP2q
-         fCWg==
-X-Gm-Message-State: ACgBeo2yjAx0crXyp50JKwUn4CEQ6Tdvaixh/0ieA8Wq65vrQa37jUiZ
-        aYHfKWIo+VY9ilhP6SWFKGek6A==
-X-Google-Smtp-Source: AA6agR7nKY/UN1mSywz2fbtTnLwsfY0AOBEbt40itndC5bJz8PmSiqPAd8PaShPIGIhT3T81iZYDEw==
-X-Received: by 2002:a63:4566:0:b0:41d:353:46b4 with SMTP id u38-20020a634566000000b0041d035346b4mr23099189pgk.316.1660200088455;
-        Wed, 10 Aug 2022 23:41:28 -0700 (PDT)
-Received: from leoy-huanghe.lan (n058152077182.netvigator.com. [58.152.77.182])
-        by smtp.gmail.com with ESMTPSA id q1-20020a17090a2dc100b001f21f5c81a5sm2795643pjm.19.2022.08.10.23.41.24
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 10 Aug 2022 23:41:28 -0700 (PDT)
-Date:   Thu, 11 Aug 2022 14:41:22 +0800
-From:   Leo Yan <leo.yan@linaro.org>
-To:     Arnaldo Carvalho de Melo <acme@kernel.org>
-Cc:     Peter Zijlstra <peterz@infradead.org>,
+        Thu, 11 Aug 2022 04:32:02 -0400
+X-Greylist: delayed 521 seconds by postgrey-1.37 at lindbergh.monkeyblade.net; Thu, 11 Aug 2022 01:32:01 PDT
+Received: from forward105j.mail.yandex.net (forward105j.mail.yandex.net [5.45.198.248])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0B2908A7E5
+        for <linux-perf-users@vger.kernel.org>; Thu, 11 Aug 2022 01:32:00 -0700 (PDT)
+Received: from forward502j.mail.yandex.net (forward502j.mail.yandex.net [IPv6:2a02:6b8:0:801:2::112])
+        by forward105j.mail.yandex.net (Yandex) with ESMTP id 3CBEA4EC8E7E;
+        Thu, 11 Aug 2022 11:23:17 +0300 (MSK)
+Received: from myt5-ca5ec8faf378.qloud-c.yandex.net (myt5-ca5ec8faf378.qloud-c.yandex.net [IPv6:2a02:6b8:c12:2514:0:640:ca5e:c8fa])
+        by forward502j.mail.yandex.net (Yandex) with ESMTP id 58CA91121660;
+        Thu, 11 Aug 2022 11:23:11 +0300 (MSK)
+Received: by myt5-ca5ec8faf378.qloud-c.yandex.net (smtp/Yandex) with ESMTPSA id IswyNOuXR0-N5iW18LY;
+        Thu, 11 Aug 2022 11:23:09 +0300
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits))
+        (Client certificate not present)
+X-Yandex-Fwd: 1
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=maquefel.me; s=mail; t=1660206190;
+        bh=rZvkAnRgFuIGmVLfU2EdMsDzDf3zUw3Dpp3B3RWQkLs=;
+        h=Cc:Message-ID:Subject:Date:References:To:From:In-Reply-To;
+        b=AwaIkaEaQ71adi5y5BQN9OMuCdVOjMG9Cen7fgwsTpmrHbLWzmNrDfVCstj3YFeSC
+         MHwkImLJGpXQlu7snsqzAfiMSrCb2fxSsQsIegLrfMhdedrXdmou7Kvxw/ypCmNKPg
+         Fapj2UPvckyaxZ4gxyfzraG0lBchocNsQO2oDdjk=
+Authentication-Results: myt5-ca5ec8faf378.qloud-c.yandex.net; dkim=pass header.i=@maquefel.me
+Date:   Thu, 11 Aug 2022 11:23:03 +0300
+From:   Nikita Shubin <nikita.shubin@maquefel.me>
+To:     Mayuresh Chitale <mchitale@ventanamicro.com>
+Cc:     linux@yadro.com, Genevieve Chan <genevieve.chan@starfivetech.com>,
+        =?UTF-8?B?Sm/Do28gTcOhcmlv?= Domingos 
+        <joao.mario@tecnico.ulisboa.pt>,
+        Nikita Shubin <n.shubin@yadro.com>,
+        Peter Zijlstra <peterz@infradead.org>,
         Ingo Molnar <mingo@redhat.com>,
+        Arnaldo Carvalho de Melo <acme@kernel.org>,
         Mark Rutland <mark.rutland@arm.com>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
         Jiri Olsa <jolsa@kernel.org>,
         Namhyung Kim <namhyung@kernel.org>,
-        Ian Rogers <irogers@google.com>,
-        John Garry <john.garry@huawei.com>,
-        Will Deacon <will@kernel.org>,
-        James Clark <james.clark@arm.com>,
-        German Gomez <german.gomez@arm.com>,
-        Ali Saidi <alisaidi@amazon.com>, Joe Mario <jmario@redhat.com>,
-        Adam Li <adam.li@amperecomputing.com>,
-        linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org
-Subject: Re: [PATCH v5 00/17] perf c2c: Support data source and display for
- Arm64
-Message-ID: <20220811064122.GA860078@leoy-huanghe.lan>
-References: <20220604042820.2270916-1-leo.yan@linaro.org>
- <YvO0nAZ1znppjKjZ@kernel.org>
+        Paul Walmsley <paul.walmsley@sifive.com>,
+        Palmer Dabbelt <palmer@dabbelt.com>,
+        Albert Ou <aou@eecs.berkeley.edu>,
+        linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org,
+        linux-riscv@lists.infradead.org,
+        Kautuk Consul <kconsul@ventanamicro.com>
+Subject: Re: [PATCH v5] perf arch events: riscv sbi firmware std event files
+Message-ID: <20220811112303.4e5f0566@redslave.neermore.group>
+In-Reply-To: <18c8e9c74955c08fdbd631a35c51b30f3cff3cd3.camel@ventanamicro.com>
+References: <20220628114625.166665-1-nikita.shubin@maquefel.me>
+        <20220628114625.166665-4-nikita.shubin@maquefel.me>
+        <18c8e9c74955c08fdbd631a35c51b30f3cff3cd3.camel@ventanamicro.com>
+X-Mailer: Claws Mail 3.17.7 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <YvO0nAZ1znppjKjZ@kernel.org>
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-Hi Arnaldo,
+Hello Mayuresh!
 
-On Wed, Aug 10, 2022 at 10:37:32AM -0300, Arnaldo Carvalho de Melo wrote:
-> Em Sat, Jun 04, 2022 at 12:28:03PM +0800, Leo Yan escreveu:
-> > Arm64 Neoverse CPUs supports data source in Arm SPE trace, this allows
-> > us to detect cache line contention and transfers.
+On Wed, 10 Aug 2022 20:26:18 +0530
+Mayuresh Chitale <mchitale@ventanamicro.com> wrote:
+
+> On Tue, 2022-06-28 at 14:45 +0300, Nikita Shubin wrote:
+> > From: Nikita Shubin <n.shubin@yadro.com>
 > > 
-> > This patch set includes Ali's patch set v9 "perf: arm-spe: Decode SPE
-> > source and use for perf c2c" [1] and rebased on the latest perf core
-> > banch with latest commit 1bcca2b1bd67 ("perf vendor events intel:
-> > Update metrics for Alderlake").
+> > Firmware events are defined by "RISC-V Supervisor Binary Interface
+> > Specification", which means they should be always available as long
+> > as
+> > firmware supports >= 0.3.0 SBI.
 > > 
-> > Patches 01-05 comes from Ali's patch set to support data source for Arm
-> > SPE for neoverse cores.
+> > Expose them to arch std events, so they can be reused by particular
+> > PMU bindings.
+> > 
+> > Signed-off-by: Nikita Shubin <n.shubin@yadro.com>
+> > ---
+> > v4->v5:
+> > - changed EventCode to ConfigCode, as 63 bit exceeds event code
+> > format
+> > ---
+> >  .../arch/riscv/riscv-sbi-firmware.json        | 134
+> > ++++++++++++++++++
+> >  1 file changed, 134 insertions(+)
+> >  create mode 100644 tools/perf/pmu-events/arch/riscv/riscv-sbi-
+> > firmware.json
+> > 
+> > diff --git
+> > a/tools/perf/pmu-events/arch/riscv/riscv-sbi-firmware.json
+> > b/tools/perf/pmu-events/arch/riscv/riscv-sbi-firmware.json new file
+> > mode 100644 index 000000000000..b9d305f1ada8
+> > --- /dev/null
+> > +++ b/tools/perf/pmu-events/arch/riscv/riscv-sbi-firmware.json
+> > @@ -0,0 +1,134 @@
+> > +[
+> > +  {
+> > +    "PublicDescription": "Misaligned load trap",
+> > +    "ConfigCode": "0x8000000000000000",
+> > +    "EventName": "FW_MISALIGNED_LOAD",
+> > +    "BriefDescription": "Misaligned load trap event"
+> > +  },
+> > +  {
+> > +    "PublicDescription": "Misaligned store trap",
+> > +    "ConfigCode": "0x8000000000000001",
+> > +    "EventName": "FW_MISALIGNED_STORE",
+> > +    "BriefDescription": "Misaligned store trap event"
+> > +  },
+> > +  {
+> > +    "PublicDescription": "Load access trap",
+> > +    "ConfigCode": "0x8000000000000002",
+> > +    "EventName": "FW_ACCESS_LOAD",
+> > +    "BriefDescription": "Load access trap event"
+> > +  },
+> > +  {
+> > +    "PublicDescription": "Store access trap",
+> > +    "ConfigCode": "0x8000000000000003",
+> > +    "EventName": "FW_ACCESS_STORE",
+> > +    "BriefDescription": "Store access trap event"
+> > +  },
+> > +  {
+> > +    "PublicDescription": "Illegal instruction trap",
+> > +    "ConfigCode": "0x8000000000000004",
+> > +    "EventName": "FW_ILLEGAL_INSN",
+> > +    "BriefDescription": "Illegal instruction trap event"
+> > +  },
+> > +  {
+> > +    "PublicDescription": "Set timer event",
+> > +    "ConfigCode": "0x8000000000000005",
+> > +    "EventName": "FW_SET_TIMER",
+> > +    "BriefDescription": "Set timer event"
+> > +  },
+> > +  {
+> > +    "PublicDescription": "Sent IPI to other HART event",
+> > +    "ConfigCode": "0x8000000000000006",
+> > +    "EventName": "FW_IPI_SENT",
+> > +    "BriefDescription": "Sent IPI to other HART event"
+> > +  },
+> > +  {
+> > +    "PublicDescription": "Received IPI from other HART event",
+> > +    "ConfigCode": "0x8000000000000007",
+> > +    "EventName": "FW_IPI_RECEIVED",
+> > +    "BriefDescription": "Received IPI from other HART event"
+> > +  },
+> > +  {
+> > +    "PublicDescription": "Sent FENCE.I request to other HART
+> > event",
+> > +    "ConfigCode": "0x8000000000000008",
+> > +    "EventName": "FW_FENCE_I_SENT",
+> > +    "BriefDescription": "Sent FENCE.I request to other HART event"
+> > +  },
+> > +  {
+> > +    "PublicDescription": "Received FENCE.I request from other HART
+> > event",
+> > +    "ConfigCode": "0x8000000000000009",
+> > +    "EventName": "FW_FENCE_I_RECEIVED",
+> > +    "BriefDescription": "Received FENCE.I request from other HART
+> > event"
+> > +  },
+> > +  {
+> > +    "PublicDescription": "Sent SFENCE.VMA request to other HART
+> > event",
+> > +    "ConfigCode": "0x80000000000000a",
+> > +    "EventName": "FW_SFENCE_VMA_SENT",
+> > +    "BriefDescription": "Sent SFENCE.VMA request to other HART
+> > event"
+> > +  },
+> > +  {
+> > +    "PublicDescription": "Received SFENCE.VMA request from other
+> > HART event",
+> > +    "ConfigCode": "0x800000000000000b",
+> > +    "EventName": "FW_SFENCE_VMA_RECEIVED",
+> > +    "BriefDescription": "Received SFENCE.VMA request from other
+> > HART event"
+> > +  },
+> > +  {
+> > +    "PublicDescription": "Sent SFENCE.VMA with ASID request to
+> > other HART event",
+> > +    "ConfigCode": "0x800000000000000c",
+> > +    "EventName": "FW_SFENCE_VMA_RECEIVED",
+> > +    "BriefDescription": "Sent SFENCE.VMA with ASID request to other
+> > HART event"
+> > +  },
+> > +  {
+> > +    "PublicDescription": "Received SFENCE.VMA with ASID request
+> > from other HART event",
+> > +    "ConfigCode": "0x800000000000000d",
+> > +    "EventName": "FW_SFENCE_VMA_ASID_RECEIVED",
+> > +    "BriefDescription": "Received SFENCE.VMA with ASID request from
+> > other HART event"
+> > +  },
+> > +  {
+> > +    "PublicDescription": "Sent HFENCE.GVMA request to other HART
+> > event",
+> > +    "ConfigCode": "0x800000000000000e",
+> > +    "EventName": "FW_HFENCE_GVMA_SENT",
+> > +    "BriefDescription": "Sent HFENCE.GVMA request to other HART
+> > event"
+> > +  },
+> > +  {
+> > +    "PublicDescription": "Received HFENCE.GVMA request from other
+> > HART event",
+> > +    "ConfigCode": "0x800000000000000f",
+> > +    "EventName": "FW_HFENCE_GVMA_RECEIVED",
+> > +    "BriefDescription": "Received HFENCE.GVMA request from other
+> > HART event"
+> > +  },
+> > +  {
+> > +    "PublicDescription": "Sent HFENCE.GVMA with VMID request to
+> > other HART event",
+> > +    "ConfigCode": "0x8000000000000010",
+> > +    "EventName": "FW_HFENCE_GVMA_VMID_SENT",
+> > +    "BriefDescription": "Sent HFENCE.GVMA with VMID request to
+> > other HART event"
+> > +  },
+> > +  {
+> > +    "PublicDescription": "Received HFENCE.GVMA with VMID request
+> > from other HART event",
+> > +    "ConfigCode": "0x8000000000000011",
+> > +    "EventName": "FW_HFENCE_GVMA_VMID_RECEIVED",
+> > +    "BriefDescription": "Received HFENCE.GVMA with VMID request
+> > from other HART event"
+> > +  },
+> > +  {
+> > +    "PublicDescription": "Sent HFENCE.VVMA request to other HART
+> > event",
+> > +    "ConfigCode": "0x8000000000000012",
+> > +    "EventName": "FW_HFENCE_VVMA_SENT",
+> > +    "BriefDescription": "Sent HFENCE.VVMA request to other HART
+> > event"
+> > +  },
+> > +  {
+> > +    "PublicDescription": "Received HFENCE.VVMA request from other
+> > HART event",
+> > +    "ConfigCode": "0x8000000000000013",
+> > +    "EventName": "FW_HFENCE_VVMA_RECEIVED",
+> > +    "BriefDescription": "Received HFENCE.VVMA request from other
+> > HART event"
+> > +  },
+> > +  {
+> > +    "PublicDescription": "Sent HFENCE.VVMA with ASID request to
+> > other HART event",
+> > +    "ConfigCode": "0x8000000000000014",
+> > +    "EventName": "FW_HFENCE_VVMA_ASID_SENT",
+> > +    "BriefDescription": "Sent HFENCE.VVMA with ASID request to
+> > other HART event"
+> > +  },
+> > +  {
+> > +    "PublicDescription": "Received HFENCE.VVMA with ASID request
+> > from other HART event",
+> > +    "ConfigCode": "0x8000000000000015",
+> > +    "EventName": "FW_HFENCE_VVMA_ASID_RECEIVED",
+> > +    "BriefDescription": "Received HFENCE.VVMA with ASID request
+> > from other HART event"
+> > +  }
+> > +]  
 > 
-> Leo, please remove touching the kernel perf_event.h on the first patch,
-> I see it doesn't affect the kernel right now as it is done just from
-> synthesizing perf records from hw trace data, and we haven't received
-> any review comment from Peter Zijlstra (I think he is in vacations).
-
-Done!  The new patch set іs in below link, which dropped the patch for
-kernel perf_event.h:
-https://lore.kernel.org/lkml/20220811062451.435810-1-leo.yan@linaro.org/
-
-One question: should I later continue to upstream the first patch for
-syncing the kernel header perf_event.h after Peter.Z comes back?
-
-
-> Also please refresh it:
+> When testing with perf using firmware events we saw this error: 
+> WARNING: event 'N/A' not valid (bits 59 of config '80000000000000a'
+> not supported by kernel)!
 > 
-> ⬢[acme@toolbox perf]$        git am ./v5_20220604_leo_yan_perf_c2c_support_data_source_and_display_for_arm64.mbx
-> Applying: perf: Add SNOOP_PEER flag to perf mem data struct
-> Applying: perf tools: sync addition of PERF_MEM_SNOOPX_PEER
-> Applying: perf mem: Print snoop peer flag
-> Applying: perf arm-spe: Don't set data source if it's not a memory operation
-> error: patch failed: tools/perf/util/arm-spe.c:387
-> error: tools/perf/util/arm-spe.c: patch does not apply
-> Patch failed at 0004 perf arm-spe: Don't set data source if it's not a memory operation
-> hint: Use 'git am --show-current-patch=diff' to see the failed patch
-> When you have resolved this problem, run "git am --continue".
-> If you prefer to skip this patch, run "git am --skip" instead.
-> To restore the original branch and stop patching, run "git am --abort".
-> ⬢[acme@toolbox perf]$
+> It looks it is due to a typo and applying the below patch resolved the
+> issue for us.
 
-To fix the merging conflict in the new patch set, I also dropped the
-patch "perf arm-spe: Don't set data source if it's not a memory
-operation", since this patch has been merged into the mainline kernel.
+Thanks for catching this - indeed this is a correct fix.
 
-Note, when verified the patch set, I found a compilation error, so I
-sent a separate patch to fix it:
-https://lore.kernel.org/lkml/20220811044341.426796-1-leo.yan@linaro.org/
+> 
+> Tested-by: Kautuk Consul <kconsul@ventanamicro.com>
 
-Thanks a lot for continuous tracking this series.
+Thank you for testing!
 
-Leo
+
+Yours,
+Nikita Shubin.
+
+> 
+> diff --git a/tools/perf/pmu-events/arch/riscv/riscv-sbi-firmware.json
+> b/tools/perf/pmu-events/arch/riscv/riscv-sbi-firmware.json
+> index b9d305f1ada8..a9939823b14b 100644
+> --- a/tools/perf/pmu-events/arch/riscv/riscv-sbi-firmware.json
+> +++ b/tools/perf/pmu-events/arch/riscv/riscv-sbi-firmware.json
+> @@ -61,7 +61,7 @@
+>    },
+>    {
+>      "PublicDescription": "Sent SFENCE.VMA request to other HART
+> event",
+> -    "ConfigCode": "0x80000000000000a",
+> +    "ConfigCode": "0x800000000000000a",
+>      "EventName": "FW_SFENCE_VMA_SENT",
+>      "BriefDescription": "Sent SFENCE.VMA request to other HART event"
+>    },
+> 
+> 
+> 
+
