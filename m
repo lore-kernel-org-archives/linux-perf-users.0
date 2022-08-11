@@ -2,305 +2,201 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 43E2BC19F2D
-	for <linux-perf-users@archiver.kernel.org>; Thu, 11 Aug 2022 08:32:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D337BC19F2A
+	for <linux-perf-users@archiver.kernel.org>; Thu, 11 Aug 2022 12:30:53 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S234526AbiHKIcF (ORCPT
+        id S234164AbiHKMaw (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Thu, 11 Aug 2022 04:32:05 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38306 "EHLO
+        Thu, 11 Aug 2022 08:30:52 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39212 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S234154AbiHKIcC (ORCPT
+        with ESMTP id S234491AbiHKMav (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Thu, 11 Aug 2022 04:32:02 -0400
-X-Greylist: delayed 521 seconds by postgrey-1.37 at lindbergh.monkeyblade.net; Thu, 11 Aug 2022 01:32:01 PDT
-Received: from forward105j.mail.yandex.net (forward105j.mail.yandex.net [5.45.198.248])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0B2908A7E5
-        for <linux-perf-users@vger.kernel.org>; Thu, 11 Aug 2022 01:32:00 -0700 (PDT)
-Received: from forward502j.mail.yandex.net (forward502j.mail.yandex.net [IPv6:2a02:6b8:0:801:2::112])
-        by forward105j.mail.yandex.net (Yandex) with ESMTP id 3CBEA4EC8E7E;
-        Thu, 11 Aug 2022 11:23:17 +0300 (MSK)
-Received: from myt5-ca5ec8faf378.qloud-c.yandex.net (myt5-ca5ec8faf378.qloud-c.yandex.net [IPv6:2a02:6b8:c12:2514:0:640:ca5e:c8fa])
-        by forward502j.mail.yandex.net (Yandex) with ESMTP id 58CA91121660;
-        Thu, 11 Aug 2022 11:23:11 +0300 (MSK)
-Received: by myt5-ca5ec8faf378.qloud-c.yandex.net (smtp/Yandex) with ESMTPSA id IswyNOuXR0-N5iW18LY;
-        Thu, 11 Aug 2022 11:23:09 +0300
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits))
-        (Client certificate not present)
-X-Yandex-Fwd: 1
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=maquefel.me; s=mail; t=1660206190;
-        bh=rZvkAnRgFuIGmVLfU2EdMsDzDf3zUw3Dpp3B3RWQkLs=;
-        h=Cc:Message-ID:Subject:Date:References:To:From:In-Reply-To;
-        b=AwaIkaEaQ71adi5y5BQN9OMuCdVOjMG9Cen7fgwsTpmrHbLWzmNrDfVCstj3YFeSC
-         MHwkImLJGpXQlu7snsqzAfiMSrCb2fxSsQsIegLrfMhdedrXdmou7Kvxw/ypCmNKPg
-         Fapj2UPvckyaxZ4gxyfzraG0lBchocNsQO2oDdjk=
-Authentication-Results: myt5-ca5ec8faf378.qloud-c.yandex.net; dkim=pass header.i=@maquefel.me
-Date:   Thu, 11 Aug 2022 11:23:03 +0300
-From:   Nikita Shubin <nikita.shubin@maquefel.me>
-To:     Mayuresh Chitale <mchitale@ventanamicro.com>
-Cc:     linux@yadro.com, Genevieve Chan <genevieve.chan@starfivetech.com>,
-        =?UTF-8?B?Sm/Do28gTcOhcmlv?= Domingos 
-        <joao.mario@tecnico.ulisboa.pt>,
-        Nikita Shubin <n.shubin@yadro.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Jiri Olsa <jolsa@kernel.org>,
-        Namhyung Kim <namhyung@kernel.org>,
-        Paul Walmsley <paul.walmsley@sifive.com>,
-        Palmer Dabbelt <palmer@dabbelt.com>,
-        Albert Ou <aou@eecs.berkeley.edu>,
-        linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org,
-        linux-riscv@lists.infradead.org,
-        Kautuk Consul <kconsul@ventanamicro.com>
-Subject: Re: [PATCH v5] perf arch events: riscv sbi firmware std event files
-Message-ID: <20220811112303.4e5f0566@redslave.neermore.group>
-In-Reply-To: <18c8e9c74955c08fdbd631a35c51b30f3cff3cd3.camel@ventanamicro.com>
-References: <20220628114625.166665-1-nikita.shubin@maquefel.me>
-        <20220628114625.166665-4-nikita.shubin@maquefel.me>
-        <18c8e9c74955c08fdbd631a35c51b30f3cff3cd3.camel@ventanamicro.com>
-X-Mailer: Claws Mail 3.17.7 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
+        Thu, 11 Aug 2022 08:30:51 -0400
+Received: from NAM11-CO1-obe.outbound.protection.outlook.com (mail-co1nam11on2068.outbound.protection.outlook.com [40.107.220.68])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C069ADC9;
+        Thu, 11 Aug 2022 05:30:49 -0700 (PDT)
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=IUBYRA2wReZ21CDqfzxNlIV/Blt1mhdm0aksz7oSc+euiMCZFDuWG4ezzcyIRZ0PQj/1/75G39p9aPPHhwGZGph/qkvW50VY4cSjXqzOTy8iDR21AvY7VV68Wo/9nNdGZgW1oNdWM2ESwZc2htp6LYCZf2aZdoAQMRB7WDgWJ1S40lJ79R2kMVo/TRLL/Jys+I01LUhZwmmH9monUL4n1rAPo/gx8WQq1pgwj4XU3RbSVR9YScUgkXbqNutTLbK/ditVeOiOoFGj8T7b/sZcJbNx+rVmMXi8aS1cgUi2BBhJrugGrFggOuiE0F0+h6Lgfv3faPKmJ/1rT6X8WtxeVg==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=hhxz62pPebNwiXmKkY48CDHnplEASDNrssq4l40Jfcc=;
+ b=LSdy8ReXrLwaKa5Bv9uqZKZ+XOHeKcs41Tzlv9zsqtwotQLiQLDGHJCRqRgYMEA33RcPlHEvlzFqV0qA9NbCWzjiJ3ZUED9gqhKeTpalEkNe/oEs0eMLn9IXnso+vewt+duQDWRHa2e9+hwIXaBvNvsqFmyrPrl9nHMSFiAjsysXXSw3x9hn4BwaoA7sQI41EF1SFgFXrkVzVUR02U8/281tqmnOfAg6cxSkf/zjdoCezz9uv6NuVBulpPaxSfwfw3BZPabkkmj69g3zlLiw8GgbhEZUC3o1pYw/A9Yra0NpoizhMWAcsFIf+72cFcU6FpIq1YNffsNQ7WK3WIjXtQ==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
+ 165.204.84.17) smtp.rcpttodomain=vger.kernel.org smtp.mailfrom=amd.com;
+ dmarc=pass (p=quarantine sp=quarantine pct=100) action=none
+ header.from=amd.com; dkim=none (message not signed); arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=hhxz62pPebNwiXmKkY48CDHnplEASDNrssq4l40Jfcc=;
+ b=5DRyrmNDwdtQE7ZMs8lirOz36mmG+Nqf9STHVu7YblfvWDh4ybs6VOBBvH3CKXq6OhLGhBXfE2HuNwulqA8iLvODd/yAE6s3NWKmkrPWlJFBj0cjX4hLc8/yMCJ4f8mfIyXjzQ5iKDdVNIHXXZAQULOcoY3SRlncvS1C0c/2tnQ=
+Received: from MW4PR04CA0367.namprd04.prod.outlook.com (2603:10b6:303:81::12)
+ by CH0PR12MB5169.namprd12.prod.outlook.com (2603:10b6:610:b8::8) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.5504.14; Thu, 11 Aug
+ 2022 12:30:48 +0000
+Received: from CO1NAM11FT003.eop-nam11.prod.protection.outlook.com
+ (2603:10b6:303:81:cafe::6c) by MW4PR04CA0367.outlook.office365.com
+ (2603:10b6:303:81::12) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.5482.15 via Frontend
+ Transport; Thu, 11 Aug 2022 12:30:47 +0000
+X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 165.204.84.17)
+ smtp.mailfrom=amd.com; dkim=none (message not signed)
+ header.d=none;dmarc=pass action=none header.from=amd.com;
+Received-SPF: Pass (protection.outlook.com: domain of amd.com designates
+ 165.204.84.17 as permitted sender) receiver=protection.outlook.com;
+ client-ip=165.204.84.17; helo=SATLEXMB04.amd.com; pr=C
+Received: from SATLEXMB04.amd.com (165.204.84.17) by
+ CO1NAM11FT003.mail.protection.outlook.com (10.13.175.93) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.20.5525.11 via Frontend Transport; Thu, 11 Aug 2022 12:30:32 +0000
+Received: from sindhu.amd.com (10.180.168.240) by SATLEXMB04.amd.com
+ (10.181.40.145) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2375.28; Thu, 11 Aug
+ 2022 07:30:24 -0500
+From:   Sandipan Das <sandipan.das@amd.com>
+To:     <linux-kernel@vger.kernel.org>, <linux-perf-users@vger.kernel.org>,
+        <x86@kernel.org>
+CC:     <peterz@infradead.org>, <bp@alien8.de>, <acme@kernel.org>,
+        <namhyung@kernel.org>, <jolsa@kernel.org>, <tglx@linutronix.de>,
+        <mingo@redhat.com>, <mark.rutland@arm.com>,
+        <alexander.shishkin@linux.intel.com>,
+        <dave.hansen@linux.intel.com>, <like.xu.linux@gmail.com>,
+        <eranian@google.com>, <ananth.narayan@amd.com>,
+        <ravi.bangoria@amd.com>, <santosh.shukla@amd.com>,
+        <sandipan.das@amd.com>
+Subject: [PATCH 00/13] perf/x86/amd: Add AMD LbrExtV2 support
+Date:   Thu, 11 Aug 2022 17:59:48 +0530
+Message-ID: <cover.1660211399.git.sandipan.das@amd.com>
+X-Mailer: git-send-email 2.34.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-Originating-IP: [10.180.168.240]
+X-ClientProxiedBy: SATLEXMB03.amd.com (10.181.40.144) To SATLEXMB04.amd.com
+ (10.181.40.145)
+X-EOPAttributedMessage: 0
+X-MS-PublicTrafficType: Email
+X-MS-Office365-Filtering-Correlation-Id: a6e6672c-566b-494e-d79c-08da7b9551c7
+X-MS-TrafficTypeDiagnostic: CH0PR12MB5169:EE_
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info: 0nrn248+pesIgYVE4v32B8PHcji+G2S5bWFdNHmjPx1qTTVCncR4EODpWrg9WkhHSyEeamGp30S8xW4RcCvX4swt1xMK62Ay7lDT/S5qOfLMQXsshQ3/7OJZO1qBXhcLki9+S85xHZzODJ8EdY5dnsqT3bpaKqFau7JyXoRJ5zrVel+yY9+KptyjPqGbFn15dgmUVF9gEK0Facd0cx91fEi4JbjORNT3DJf2XCwMtf2e+s3yZMHNVSAdnyqRdRshkKxR6aL4xsQ6/4JQVDWGTlEAZCZSpMPgdqMEN4tOEdAfMWkhuDteMBRFs5Wk3VDONVt79MSLD3bpzzDTIP+QMVHnnGiqX0SIRa+e5cxKg61OjyImapGdhAXwWdGHfuXKi/FrCqaA/iGoHjDbml+aH4CMn16S5kZBdEgNWAPMg6KoKqGMYuRUKrKgtX1DRtfULY5pUK+Nkudk++qYOhnpnYxYu/S89cIEdTApkaVdlOsBJao+M/6oQcEJ2u+aZEss6QruuQ06NTtsHGIGNIBcCIMepyEq9iLUBKSlAFWbxGUw+5E+jIwkYxm1UjS0FzUS6+zaaM3wxzEdwdZJCe7i9NXXwof0W4cZhWkcfX6XOUX6y5rlM4EkOKek0ygwXfIVWoYdMF3WG95mhk6M5pu6o/CVm+icSvoIOebIbhEHGCxqnRr6KkE+ubnyAXRenUyAsXplMHdjJb9Fy4hNMf7uzSBmesLRuKmut94YEXMX/pkcncfWDV+xvtgzTYUymC82JndOxRJ2VO1MOIYDt8AF3W2qzgpHtUWDoGuEwdqEdfZCMAKIU68g8IPxWnXsZBtVRlFT/h4kF3F+ZWdJ9JOVgdkTSuvMGq3wiKTO6sRpYsOaK1uECavKMFuH/x53LiGo
+X-Forefront-Antispam-Report: CIP:165.204.84.17;CTRY:US;LANG:en;SCL:1;SRV:;IPV:CAL;SFV:NSPM;H:SATLEXMB04.amd.com;PTR:InfoDomainNonexistent;CAT:NONE;SFS:(13230016)(4636009)(136003)(376002)(346002)(396003)(39860400002)(36840700001)(40470700004)(46966006)(70206006)(7416002)(41300700001)(70586007)(7696005)(186003)(6666004)(4326008)(316002)(2616005)(40480700001)(16526019)(83380400001)(8676002)(82740400003)(26005)(426003)(336012)(54906003)(47076005)(110136005)(86362001)(36756003)(2906002)(966005)(40460700003)(356005)(81166007)(8936002)(478600001)(44832011)(36860700001)(5660300002)(82310400005)(36900700001);DIR:OUT;SFP:1101;
+X-OriginatorOrg: amd.com
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 11 Aug 2022 12:30:32.1253
+ (UTC)
+X-MS-Exchange-CrossTenant-Network-Message-Id: a6e6672c-566b-494e-d79c-08da7b9551c7
+X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
+X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=3dd8961f-e488-4e60-8e11-a82d994e183d;Ip=[165.204.84.17];Helo=[SATLEXMB04.amd.com]
+X-MS-Exchange-CrossTenant-AuthSource: CO1NAM11FT003.eop-nam11.prod.protection.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Anonymous
+X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: CH0PR12MB5169
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-Hello Mayuresh!
+Last Branch Record (LBR) is a feature available on modern processors for
+recording branch information. It helps determine the flow of control by
+logging branch information to registers in realtime and helps with the
+detection of hot code paths.
 
-On Wed, 10 Aug 2022 20:26:18 +0530
-Mayuresh Chitale <mchitale@ventanamicro.com> wrote:
+Add support for using AMD Last Branch Record Extension Version 2 (LbrExtV2)
+features on Zen 4 processors. New CPU features are introduced for LbrExtV2
+detection. New MSR definitions are added for configuring hardware branch
+filtering and for enabling the LBR Freeze on PMI feature.
 
-> On Tue, 2022-06-28 at 14:45 +0300, Nikita Shubin wrote:
-> > From: Nikita Shubin <n.shubin@yadro.com>
-> > 
-> > Firmware events are defined by "RISC-V Supervisor Binary Interface
-> > Specification", which means they should be always available as long
-> > as
-> > firmware supports >= 0.3.0 SBI.
-> > 
-> > Expose them to arch std events, so they can be reused by particular
-> > PMU bindings.
-> > 
-> > Signed-off-by: Nikita Shubin <n.shubin@yadro.com>
-> > ---
-> > v4->v5:
-> > - changed EventCode to ConfigCode, as 63 bit exceeds event code
-> > format
-> > ---
-> >  .../arch/riscv/riscv-sbi-firmware.json        | 134
-> > ++++++++++++++++++
-> >  1 file changed, 134 insertions(+)
-> >  create mode 100644 tools/perf/pmu-events/arch/riscv/riscv-sbi-
-> > firmware.json
-> > 
-> > diff --git
-> > a/tools/perf/pmu-events/arch/riscv/riscv-sbi-firmware.json
-> > b/tools/perf/pmu-events/arch/riscv/riscv-sbi-firmware.json new file
-> > mode 100644 index 000000000000..b9d305f1ada8
-> > --- /dev/null
-> > +++ b/tools/perf/pmu-events/arch/riscv/riscv-sbi-firmware.json
-> > @@ -0,0 +1,134 @@
-> > +[
-> > +  {
-> > +    "PublicDescription": "Misaligned load trap",
-> > +    "ConfigCode": "0x8000000000000000",
-> > +    "EventName": "FW_MISALIGNED_LOAD",
-> > +    "BriefDescription": "Misaligned load trap event"
-> > +  },
-> > +  {
-> > +    "PublicDescription": "Misaligned store trap",
-> > +    "ConfigCode": "0x8000000000000001",
-> > +    "EventName": "FW_MISALIGNED_STORE",
-> > +    "BriefDescription": "Misaligned store trap event"
-> > +  },
-> > +  {
-> > +    "PublicDescription": "Load access trap",
-> > +    "ConfigCode": "0x8000000000000002",
-> > +    "EventName": "FW_ACCESS_LOAD",
-> > +    "BriefDescription": "Load access trap event"
-> > +  },
-> > +  {
-> > +    "PublicDescription": "Store access trap",
-> > +    "ConfigCode": "0x8000000000000003",
-> > +    "EventName": "FW_ACCESS_STORE",
-> > +    "BriefDescription": "Store access trap event"
-> > +  },
-> > +  {
-> > +    "PublicDescription": "Illegal instruction trap",
-> > +    "ConfigCode": "0x8000000000000004",
-> > +    "EventName": "FW_ILLEGAL_INSN",
-> > +    "BriefDescription": "Illegal instruction trap event"
-> > +  },
-> > +  {
-> > +    "PublicDescription": "Set timer event",
-> > +    "ConfigCode": "0x8000000000000005",
-> > +    "EventName": "FW_SET_TIMER",
-> > +    "BriefDescription": "Set timer event"
-> > +  },
-> > +  {
-> > +    "PublicDescription": "Sent IPI to other HART event",
-> > +    "ConfigCode": "0x8000000000000006",
-> > +    "EventName": "FW_IPI_SENT",
-> > +    "BriefDescription": "Sent IPI to other HART event"
-> > +  },
-> > +  {
-> > +    "PublicDescription": "Received IPI from other HART event",
-> > +    "ConfigCode": "0x8000000000000007",
-> > +    "EventName": "FW_IPI_RECEIVED",
-> > +    "BriefDescription": "Received IPI from other HART event"
-> > +  },
-> > +  {
-> > +    "PublicDescription": "Sent FENCE.I request to other HART
-> > event",
-> > +    "ConfigCode": "0x8000000000000008",
-> > +    "EventName": "FW_FENCE_I_SENT",
-> > +    "BriefDescription": "Sent FENCE.I request to other HART event"
-> > +  },
-> > +  {
-> > +    "PublicDescription": "Received FENCE.I request from other HART
-> > event",
-> > +    "ConfigCode": "0x8000000000000009",
-> > +    "EventName": "FW_FENCE_I_RECEIVED",
-> > +    "BriefDescription": "Received FENCE.I request from other HART
-> > event"
-> > +  },
-> > +  {
-> > +    "PublicDescription": "Sent SFENCE.VMA request to other HART
-> > event",
-> > +    "ConfigCode": "0x80000000000000a",
-> > +    "EventName": "FW_SFENCE_VMA_SENT",
-> > +    "BriefDescription": "Sent SFENCE.VMA request to other HART
-> > event"
-> > +  },
-> > +  {
-> > +    "PublicDescription": "Received SFENCE.VMA request from other
-> > HART event",
-> > +    "ConfigCode": "0x800000000000000b",
-> > +    "EventName": "FW_SFENCE_VMA_RECEIVED",
-> > +    "BriefDescription": "Received SFENCE.VMA request from other
-> > HART event"
-> > +  },
-> > +  {
-> > +    "PublicDescription": "Sent SFENCE.VMA with ASID request to
-> > other HART event",
-> > +    "ConfigCode": "0x800000000000000c",
-> > +    "EventName": "FW_SFENCE_VMA_RECEIVED",
-> > +    "BriefDescription": "Sent SFENCE.VMA with ASID request to other
-> > HART event"
-> > +  },
-> > +  {
-> > +    "PublicDescription": "Received SFENCE.VMA with ASID request
-> > from other HART event",
-> > +    "ConfigCode": "0x800000000000000d",
-> > +    "EventName": "FW_SFENCE_VMA_ASID_RECEIVED",
-> > +    "BriefDescription": "Received SFENCE.VMA with ASID request from
-> > other HART event"
-> > +  },
-> > +  {
-> > +    "PublicDescription": "Sent HFENCE.GVMA request to other HART
-> > event",
-> > +    "ConfigCode": "0x800000000000000e",
-> > +    "EventName": "FW_HFENCE_GVMA_SENT",
-> > +    "BriefDescription": "Sent HFENCE.GVMA request to other HART
-> > event"
-> > +  },
-> > +  {
-> > +    "PublicDescription": "Received HFENCE.GVMA request from other
-> > HART event",
-> > +    "ConfigCode": "0x800000000000000f",
-> > +    "EventName": "FW_HFENCE_GVMA_RECEIVED",
-> > +    "BriefDescription": "Received HFENCE.GVMA request from other
-> > HART event"
-> > +  },
-> > +  {
-> > +    "PublicDescription": "Sent HFENCE.GVMA with VMID request to
-> > other HART event",
-> > +    "ConfigCode": "0x8000000000000010",
-> > +    "EventName": "FW_HFENCE_GVMA_VMID_SENT",
-> > +    "BriefDescription": "Sent HFENCE.GVMA with VMID request to
-> > other HART event"
-> > +  },
-> > +  {
-> > +    "PublicDescription": "Received HFENCE.GVMA with VMID request
-> > from other HART event",
-> > +    "ConfigCode": "0x8000000000000011",
-> > +    "EventName": "FW_HFENCE_GVMA_VMID_RECEIVED",
-> > +    "BriefDescription": "Received HFENCE.GVMA with VMID request
-> > from other HART event"
-> > +  },
-> > +  {
-> > +    "PublicDescription": "Sent HFENCE.VVMA request to other HART
-> > event",
-> > +    "ConfigCode": "0x8000000000000012",
-> > +    "EventName": "FW_HFENCE_VVMA_SENT",
-> > +    "BriefDescription": "Sent HFENCE.VVMA request to other HART
-> > event"
-> > +  },
-> > +  {
-> > +    "PublicDescription": "Received HFENCE.VVMA request from other
-> > HART event",
-> > +    "ConfigCode": "0x8000000000000013",
-> > +    "EventName": "FW_HFENCE_VVMA_RECEIVED",
-> > +    "BriefDescription": "Received HFENCE.VVMA request from other
-> > HART event"
-> > +  },
-> > +  {
-> > +    "PublicDescription": "Sent HFENCE.VVMA with ASID request to
-> > other HART event",
-> > +    "ConfigCode": "0x8000000000000014",
-> > +    "EventName": "FW_HFENCE_VVMA_ASID_SENT",
-> > +    "BriefDescription": "Sent HFENCE.VVMA with ASID request to
-> > other HART event"
-> > +  },
-> > +  {
-> > +    "PublicDescription": "Received HFENCE.VVMA with ASID request
-> > from other HART event",
-> > +    "ConfigCode": "0x8000000000000015",
-> > +    "EventName": "FW_HFENCE_VVMA_ASID_RECEIVED",
-> > +    "BriefDescription": "Received HFENCE.VVMA with ASID request
-> > from other HART event"
-> > +  }
-> > +]  
-> 
-> When testing with perf using firmware events we saw this error: 
-> WARNING: event 'N/A' not valid (bits 59 of config '80000000000000a'
-> not supported by kernel)!
-> 
-> It looks it is due to a typo and applying the below patch resolved the
-> issue for us.
+The LBR Freeze on PMI feature is essential for ensuring that branch records
+remain consistent with the point of PMU overflow in order to provide a
+precise correlation between the two.
 
-Thanks for catching this - indeed this is a correct fix.
+Hardware branch filtering allows users to record only specific types of
+branches and can be mapped to most of the existing filters supported by the
+perf tool. Additional software filtering ensures that some special branches
+(syscall entry and exit) for which direct hardware filters do not exist are
+also recorded. This expands the scope of filters like "any_call".
 
-> 
-> Tested-by: Kautuk Consul <kconsul@ventanamicro.com>
+Additionally, the perf UAPI is now extended to provide branch speculation
+information, if available. LbrExtV2 provides this information through the
+"valid" and "spec" bits in the Branch To registers. The tools-side changes
+for this will be submitted as a separate series.
 
-Thank you for testing!
+Users of perf tool can now record branches as shown below. The 'div'
+workload used here is from https://lwn.net/Articles/680985/.
 
+E.g.
 
-Yours,
-Nikita Shubin.
+  $ perf record -b -e cycles:u ./div
 
-> 
-> diff --git a/tools/perf/pmu-events/arch/riscv/riscv-sbi-firmware.json
-> b/tools/perf/pmu-events/arch/riscv/riscv-sbi-firmware.json
-> index b9d305f1ada8..a9939823b14b 100644
-> --- a/tools/perf/pmu-events/arch/riscv/riscv-sbi-firmware.json
-> +++ b/tools/perf/pmu-events/arch/riscv/riscv-sbi-firmware.json
-> @@ -61,7 +61,7 @@
->    },
->    {
->      "PublicDescription": "Sent SFENCE.VMA request to other HART
-> event",
-> -    "ConfigCode": "0x80000000000000a",
-> +    "ConfigCode": "0x800000000000000a",
->      "EventName": "FW_SFENCE_VMA_SENT",
->      "BriefDescription": "Sent SFENCE.VMA request to other HART event"
->    },
-> 
-> 
-> 
+Before:
+
+  Error:
+  cycles:u: PMU Hardware doesn't support sampling/overflow-interrupts. Try 'perf stat'
+
+After:
+
+  [ perf record: Woken up 49 times to write data ]
+  [ perf record: Captured and wrote 12.197 MB perf.data (29601 samples) ]
+
+  $ perf report --stdio
+
+  # To display the perf.data header info, please use --header/--header-only options.
+  #
+  #
+  # Total Lost Samples: 0
+  #
+  # Samples: 473K of event 'cycles:u'
+  # Event count (approx.): 473521
+  #
+  # Overhead  Command  Source Shared Object  Source Symbol           Target Symbol           Basic Block Cycles
+  # ........  .......  ....................  ......................  ......................  ..................
+  #
+      29.69%  div      div                   [.] main                [.] main                -
+      23.84%  div      div                   [.] compute_flag        [.] main                -
+      23.41%  div      div                   [.] compute_flag        [.] compute_flag        -
+      23.04%  div      div                   [.] main                [.] compute_flag        -
+  [...]
+
+No additional failures are seen upon running the following:
+  * perf built-in test suite
+  * perf_event_tests suite
+
+Sandipan Das (13):
+  perf/x86/amd/brs: Move feature-specific functions
+  perf/x86/amd/core: Refactor branch attributes
+  perf/x86/amd/core: Add generic branch record interfaces
+  x86/cpufeatures: Add LbrExtV2 feature bit
+  perf/x86/amd/lbr: Detect LbrExtV2 support
+  perf/x86/amd/lbr: Add LbrExtV2 branch record support
+  perf/x86/amd/lbr: Add LbrExtV2 hardware branch filter support
+  perf/x86: Move branch classifier
+  perf/x86/amd/lbr: Add LbrExtV2 software branch filter support
+  perf/x86: Make branch classifier fusion-aware
+  perf/x86/amd/lbr: Use fusion-aware branch classifier
+  perf/core: Add speculation info to branch entries
+  perf/x86/amd/lbr: Add LbrExtV2 branch speculation info support
+
+ arch/x86/events/Makefile           |   2 +-
+ arch/x86/events/amd/Makefile       |   2 +-
+ arch/x86/events/amd/brs.c          |  69 ++++-
+ arch/x86/events/amd/core.c         | 200 +++++++------
+ arch/x86/events/amd/lbr.c          | 435 +++++++++++++++++++++++++++++
+ arch/x86/events/intel/lbr.c        | 273 ------------------
+ arch/x86/events/perf_event.h       |  81 +++++-
+ arch/x86/events/utils.c            | 247 ++++++++++++++++
+ arch/x86/include/asm/cpufeatures.h |   2 +-
+ arch/x86/include/asm/msr-index.h   |   5 +
+ arch/x86/include/asm/perf_event.h  |   3 +-
+ arch/x86/kernel/cpu/scattered.c    |   1 +
+ include/linux/perf_event.h         |   1 +
+ include/uapi/linux/perf_event.h    |  15 +-
+ 14 files changed, 952 insertions(+), 384 deletions(-)
+ create mode 100644 arch/x86/events/amd/lbr.c
+ create mode 100644 arch/x86/events/utils.c
+
+-- 
+2.34.1
 
