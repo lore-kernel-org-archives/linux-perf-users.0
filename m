@@ -2,110 +2,187 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 03C20C00140
-	for <linux-perf-users@archiver.kernel.org>; Fri, 12 Aug 2022 13:28:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 28283C00140
+	for <linux-perf-users@archiver.kernel.org>; Fri, 12 Aug 2022 13:33:35 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S238278AbiHLN16 (ORCPT
+        id S238896AbiHLNdd (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Fri, 12 Aug 2022 09:27:58 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45984 "EHLO
+        Fri, 12 Aug 2022 09:33:33 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51788 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232434AbiHLN14 (ORCPT
+        with ESMTP id S236938AbiHLNdc (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Fri, 12 Aug 2022 09:27:56 -0400
-Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4A9EF9676F;
-        Fri, 12 Aug 2022 06:27:54 -0700 (PDT)
+        Fri, 12 Aug 2022 09:33:32 -0400
+Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0A3129C511;
+        Fri, 12 Aug 2022 06:33:32 -0700 (PDT)
 Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id E646261796;
-        Fri, 12 Aug 2022 13:27:53 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 27BBEC433C1;
-        Fri, 12 Aug 2022 13:27:53 +0000 (UTC)
+        by dfw.source.kernel.org (Postfix) with ESMTPS id 9AD79617DE;
+        Fri, 12 Aug 2022 13:33:31 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id AA303C433C1;
+        Fri, 12 Aug 2022 13:33:30 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1660310873;
-        bh=cmb2NY59G28HxU+zeB3Bvu59tXMPnTojd4k1tey0wIw=;
+        s=k20201202; t=1660311211;
+        bh=1TUNb6pLvX4Ox7av4dvhHf3hf1X4XZbP46KvovBUTMQ=;
         h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=OfsTPUB+qTeTidebw5eZ5Hl2PBnTTaxB0iU0jiw+BDPRS0AIJAf2zrynh4wJjXRaw
-         5ViGjqJB3W030x6YwJG/9qUje2SoZOzHguin1ID2Xpx9KERyoaWzqUxEwDLgGy0aMn
-         erg4txxKflOyB4nnw1HkC2F1azUBjC86WXcgcSfF3DDF2ZCqnb28I0VpX6eISwWIMi
-         tniLfIxMRFXYFgUisC/EMVFNAy7hTueF49Ce7KNhNUS/viRGc3Ysu9M8ezVagLPWl5
-         sKzs2Ey0fkgKL731vKfhPnvI5dF1exFfXvXw7GzdreqLTN4ahG6BdWHopYLMef2BrY
-         Oq1PVNI6z7rDA==
+        b=PGdIcLBa6/0bQfxW3EV5SAw845qCnwCh1tjY0MsPHESoWDmFv5A53ro8uVwbqKs1A
+         GxbATL5x59vTFinZgbUVt5UG5+pwnYP3pupthUmQE9E/YoyOuAHQ0Ve9uPrdCFUlnY
+         omqdFWAoHdw/415g4pXJtQMHYvOXBFo4BTli6Ik+bgwp48tN4ozEVXkdU/D8r5j5LS
+         EzinzM1BWio0Qrfrg8HiY61rgxBr+wuyH5z5xUvnAbdTkr8VzexOxC+AZLbZAI0JEs
+         tnVfm+++JW70TpauWYs1oq/J/IOUL2KkgIBAfrouo6jEfc6F64agmlGpvqQk+Wi86z
+         GQP27t9+gz6Dg==
 Received: by quaco.ghostprotocols.net (Postfix, from userid 1000)
-        id DE72B4035A; Fri, 12 Aug 2022 10:27:50 -0300 (-03)
-Date:   Fri, 12 Aug 2022 10:27:50 -0300
+        id 453724035A; Fri, 12 Aug 2022 10:33:28 -0300 (-03)
+Date:   Fri, 12 Aug 2022 10:33:28 -0300
 From:   Arnaldo Carvalho de Melo <acme@kernel.org>
-To:     Martin =?utf-8?B?TGnFoWth?= <mliska@suse.cz>
-Cc:     linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org
-Subject: Re: [PATCH] perf record: improve error message of -p not_existing_pid
-Message-ID: <YvZVVjrfKLCfJ/ig@kernel.org>
-References: <8e00eda1-4de0-2c44-ce67-d4df48ac1f7c@suse.cz>
+To:     Sandipan Das <sandipan.das@amd.com>
+Cc:     Jiri Olsa <olsajiri@gmail.com>, linux-kernel@vger.kernel.org,
+        linux-perf-users@vger.kernel.org, x86@kernel.org,
+        peterz@infradead.org, bp@alien8.de, namhyung@kernel.org,
+        tglx@linutronix.de, mingo@redhat.com, mark.rutland@arm.com,
+        alexander.shishkin@linux.intel.com, dave.hansen@linux.intel.com,
+        like.xu.linux@gmail.com, eranian@google.com,
+        ananth.narayan@amd.com, ravi.bangoria@amd.com,
+        santosh.shukla@amd.com
+Subject: Re: [PATCH 2/4] tools headers x86: Sync msr-index.h with kernel
+ sources
+Message-ID: <YvZWqAPc3lg0CvsN@kernel.org>
+References: <cover.1660217326.git.sandipan.das@amd.com>
+ <ffb9a9f0aa46a4339bb61282e26810112700ae97.1660217326.git.sandipan.das@amd.com>
+ <YvYQQr5VenglbpWM@krava>
+ <94f483f5-c541-2a1e-87f6-a4105c30a045@amd.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <8e00eda1-4de0-2c44-ce67-d4df48ac1f7c@suse.cz>
+In-Reply-To: <94f483f5-c541-2a1e-87f6-a4105c30a045@amd.com>
 X-Url:  http://acmel.wordpress.com
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-Em Fri, Aug 12, 2022 at 01:40:49PM +0200, Martin Liška escreveu:
-> When one uses -p $not_existing_pid, the output of --help is printed:
+Em Fri, Aug 12, 2022 at 02:33:46PM +0530, Sandipan Das escreveu:
+> Hi Jiri,
 > 
-> $ perf record -p 123456789 2>&1 | head -n3
+> On 8/12/2022 2:03 PM, Jiri Olsa wrote:
+> > On Thu, Aug 11, 2022 at 06:16:47PM +0530, Sandipan Das wrote:
+> >> Sync msr-index.h with the kernel sources by adding the new AMD Last Branch
+> >> Record Extension Version 2 (LbrExtV2) MSRs.
+> >>
+> >> Signed-off-by: Sandipan Das <sandipan.das@amd.com>
+> >> ---
+> >>  tools/arch/x86/include/asm/msr-index.h | 5 +++++
+> >>  1 file changed, 5 insertions(+)
+> >>
+> >> diff --git a/tools/arch/x86/include/asm/msr-index.h b/tools/arch/x86/include/asm/msr-index.h
+> >> index cc615be27a54..7f9eaf497947 100644
+> >> --- a/tools/arch/x86/include/asm/msr-index.h
+> >> +++ b/tools/arch/x86/include/asm/msr-index.h
+> >> @@ -574,6 +574,9 @@
+> >>  #define MSR_AMD64_PERF_CNTR_GLOBAL_CTL		0xc0000301
+> >>  #define MSR_AMD64_PERF_CNTR_GLOBAL_STATUS_CLR	0xc0000302
+> >>  
+> >> +/* AMD Last Branch Record MSRs */
+> >> +#define MSR_AMD64_LBR_SELECT			0xc000010e
+> > 
+> > curious do we actualy use this in tools somewhere?
+> > 
+> > jirka
+> > 
 > 
->  Usage: perf record [<options>] [<command>]
->     or: perf record [<options>] -- <command> [<options>]
-> 
-> Let's change it something similar what perf top -p $not_existing_pid
-> prints:
-> 
-> $ ./perf top -p 123456789 --stdio
-> Error:
-> Couldn't create thread/CPU maps: No such process
-> 
-> Newly suggested error message:
-> 
-> $ ./perf record -p 123456789
-> Couldn't create thread/CPU maps: No such process
+> Commit 9dde6cadb92b ("tools arch x86: Sync the msr-index.h copy with the kernel sources")
+> from Arnaldo says that adding these new MSR definitions in the tools headers allows the
+> beautification scripts to pick up new entries which can be used for filtering MSR access
+> traces.
 
-Thanks, tested and applied.
+Right, in this specific case that header should be moved to
+tools/perf/trace/beauty/include/, as it is only used to harvest new MSRs
+by:
+
+⬢[acme@toolbox perf]$ tools/perf/trace/beauty/tracepoints/x86_msr.sh  | wc -l
+328
+⬢[acme@toolbox perf]$ tools/perf/trace/beauty/tracepoints/x86_msr.sh  | head
+static const char *x86_MSRs[] = {
+	[0x00000000] = "IA32_P5_MC_ADDR",
+	[0x00000001] = "IA32_P5_MC_TYPE",
+	[0x00000010] = "IA32_TSC",
+	[0x00000017] = "IA32_PLATFORM_ID",
+	[0x0000001b] = "IA32_APICBASE",
+	[0x00000020] = "KNC_PERFCTR0",
+	[0x00000021] = "KNC_PERFCTR1",
+	[0x00000028] = "KNC_EVNTSEL0",
+	[0x00000029] = "KNC_EVNTSEL1",
+⬢[acme@toolbox perf]$
+
+Other headers we have copies from the kernel may be used both for
+harvesting non-enum enumerations like those to pretty print and use in
+tracepoint filter expressions in 'perf trace', and in building perf on
+older systems.
+
+The preferred way is for kernel developers not to update the copies when
+they add new stuff to the original file, so that perf developers have
+the opportunity of checking if the new original file in the kernel don't
+break the scripts in tools/perf/, or if the new additions are note
+matched by regexps in the perf/tools/trace/beauty/ extraction scripts.
+
+But kernel developers are welcome to update it iif they do these checks
+themselves, at the very least do a 'make -C tools/perf' to check if it
+builds before/after the update.
 
 - Arnaldo
-
  
-> Signed-off-by: Martin Liska <mliska@suse.cz>
-> ---
->  tools/perf/builtin-record.c | 11 +++++++++--
->  1 file changed, 9 insertions(+), 2 deletions(-)
+> E.g. one can trace the hardware LBR branch filter bits getting written to the LBR_SELECT
+> MSR while recording branches.
 > 
-> diff --git a/tools/perf/builtin-record.c b/tools/perf/builtin-record.c
-> index cf5c5379ceaa..4713f0f3a6cf 100644
-> --- a/tools/perf/builtin-record.c
-> +++ b/tools/perf/builtin-record.c
-> @@ -3996,8 +3996,15 @@ int cmd_record(int argc, const char **argv)
->  		arch__add_leaf_frame_record_opts(&rec->opts);
->  
->  	err = -ENOMEM;
-> -	if (evlist__create_maps(rec->evlist, &rec->opts.target) < 0)
-> -		usage_with_options(record_usage, record_options);
-> +	if (evlist__create_maps(rec->evlist, &rec->opts.target) < 0) {
-> +		if (rec->opts.target.pid != NULL) {
-> +			pr_err("Couldn't create thread/CPU maps: %s\n",
-> +				errno == ENOENT ? "No such process" : str_error_r(errno, errbuf, sizeof(errbuf)));
-> +			goto out;
-> +		}
-> +		else
-> +			usage_with_options(record_usage, record_options);
-> +	}
->  
->  	err = auxtrace_record__options(rec->itr, rec->evlist, &rec->opts);
->  	if (err)
-> -- 
-> 2.37.1
+> $ perf record -j any,u true
+> $ perf record -j any_call,u true
+> 
+> $ sudo perf trace -e msr:write_msr/max-stack=32/ --filter="msr == AMD64_LBR_SELECT"
+> 
+> [...]
+> 224568.130 perf/9093 msr:write_msr(msr: AMD64_LBR_SELECT, val: 1)
+>                                        do_trace_write_msr ([kernel.kallsyms])
+>                                        do_trace_write_msr ([kernel.kallsyms])
+>                                        native_write_msr ([kernel.kallsyms])
+>                                        amd_pmu_lbr_enable_all ([kernel.kallsyms])
+>                                        amd_pmu_v2_enable_all ([kernel.kallsyms])
+>                                        x86_pmu_enable ([kernel.kallsyms])
+>                                        ctx_resched ([kernel.kallsyms])
+>                                        perf_event_exec ([kernel.kallsyms])
+>                                        begin_new_exec ([kernel.kallsyms])
+>                                        load_elf_binary ([kernel.kallsyms])
+>                                        bprm_execve ([kernel.kallsyms])
+>                                        do_execveat_common.isra.0 ([kernel.kallsyms])
+>                                        __x64_sys_execve ([kernel.kallsyms])
+>                                        do_syscall_64 ([kernel.kallsyms])
+>                                        entry_SYSCALL_64 ([kernel.kallsyms])
+>                                        execve (/usr/lib/x86_64-linux-gnu/libc.so.6)
+> [...]
+> 302748.439 perf/9126 msr:write_msr(msr: AMD64_LBR_SELECT, val: 229)
+>                                        do_trace_write_msr ([kernel.kallsyms])
+>                                        do_trace_write_msr ([kernel.kallsyms])
+>                                        native_write_msr ([kernel.kallsyms])
+>                                        amd_pmu_lbr_enable_all ([kernel.kallsyms])
+>                                        amd_pmu_v2_enable_all ([kernel.kallsyms])
+>                                        x86_pmu_enable ([kernel.kallsyms])
+>                                        ctx_resched ([kernel.kallsyms])
+>                                        perf_event_exec ([kernel.kallsyms])
+>                                        begin_new_exec ([kernel.kallsyms])
+>                                        load_elf_binary ([kernel.kallsyms])
+>                                        bprm_execve ([kernel.kallsyms])
+>                                        do_execveat_common.isra.0 ([kernel.kallsyms])
+>                                        __x64_sys_execve ([kernel.kallsyms])
+>                                        do_syscall_64 ([kernel.kallsyms])
+>                                        entry_SYSCALL_64 ([kernel.kallsyms])
+>                                        execve (/usr/lib/x86_64-linux-gnu/libc.so.6)
+> [...]
+> 
+> I can add this example to the commit message in the next revision.
+> 
+> 
+> - Sandipan
 
 -- 
 
