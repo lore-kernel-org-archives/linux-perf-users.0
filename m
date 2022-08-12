@@ -2,35 +2,35 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 805EEC25B08
-	for <linux-perf-users@archiver.kernel.org>; Fri, 12 Aug 2022 11:42:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5D6ABC282E7
+	for <linux-perf-users@archiver.kernel.org>; Fri, 12 Aug 2022 11:42:59 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S237995AbiHLLm5 (ORCPT
+        id S238002AbiHLLm5 (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
         Fri, 12 Aug 2022 07:42:57 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49348 "EHLO
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49244 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232082AbiHLLmx (ORCPT
+        with ESMTP id S237874AbiHLLmx (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
         Fri, 12 Aug 2022 07:42:53 -0400
 Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTP id 4502DAF0CB;
-        Fri, 12 Aug 2022 04:42:48 -0700 (PDT)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTP id 28902AF0D2;
+        Fri, 12 Aug 2022 04:42:51 -0700 (PDT)
 Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id D26FF113E;
-        Fri, 12 Aug 2022 04:42:48 -0700 (PDT)
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id B5C45113E;
+        Fri, 12 Aug 2022 04:42:51 -0700 (PDT)
 Received: from e126387.arm.com (unknown [10.57.42.152])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id D71783F70D;
-        Fri, 12 Aug 2022 04:42:46 -0700 (PDT)
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id B8B6C3F70D;
+        Fri, 12 Aug 2022 04:42:49 -0700 (PDT)
 From:   carsten.haitzler@foss.arm.com
 To:     linux-kernel@vger.kernel.org
 Cc:     coresight@lists.linaro.org, suzuki.poulose@arm.com,
         mathieu.poirier@linaro.org, mike.leach@linaro.org,
         leo.yan@linaro.org, linux-perf-users@vger.kernel.org,
         acme@kernel.org
-Subject: [PATCH v6 09/14] perf test: Add thread loop test tool
-Date:   Fri, 12 Aug 2022 12:42:13 +0100
-Message-Id: <20220812114218.323052-10-carsten.haitzler@foss.arm.com>
+Subject: [PATCH v6 11/14] perf test: Add unroll thread test tool
+Date:   Fri, 12 Aug 2022 12:42:15 +0100
+Message-Id: <20220812114218.323052-12-carsten.haitzler@foss.arm.com>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20220812114218.323052-1-carsten.haitzler@foss.arm.com>
 References: <20220812114218.323052-1-carsten.haitzler@foss.arm.com>
@@ -43,53 +43,53 @@ X-Mailing-List: linux-perf-users@vger.kernel.org
 From: "Carsten Haitzler (Rasterman)" <raster@rasterman.com>
 
 Add test tool to be driven by further test scripts. This is a simple C
-based loop with threads test to drive from scripts that can output TIDs
-for tracking/checking.
+based test that is for arm64 with some inline ASM to manually unroll a
+lot of code to have a very long sequence of commands.
 
 Signed-off-by: Carsten Haitzler <carsten.haitzler@arm.com>
 ---
  tools/perf/tests/shell/coresight/Makefile     |  3 +-
- .../shell/coresight/thread_loop/.gitignore    |  1 +
- .../shell/coresight/thread_loop/Makefile      | 33 +++++++
- .../shell/coresight/thread_loop/thread_loop.c | 86 +++++++++++++++++++
- 4 files changed, 122 insertions(+), 1 deletion(-)
- create mode 100644 tools/perf/tests/shell/coresight/thread_loop/.gitignore
- create mode 100644 tools/perf/tests/shell/coresight/thread_loop/Makefile
- create mode 100644 tools/perf/tests/shell/coresight/thread_loop/thread_loop.c
+ .../coresight/unroll_loop_thread/.gitignore   |  1 +
+ .../coresight/unroll_loop_thread/Makefile     | 33 +++++++++
+ .../unroll_loop_thread/unroll_loop_thread.c   | 74 +++++++++++++++++++
+ 4 files changed, 110 insertions(+), 1 deletion(-)
+ create mode 100644 tools/perf/tests/shell/coresight/unroll_loop_thread/.gitignore
+ create mode 100644 tools/perf/tests/shell/coresight/unroll_loop_thread/Makefile
+ create mode 100644 tools/perf/tests/shell/coresight/unroll_loop_thread/unroll_loop_thread.c
 
 diff --git a/tools/perf/tests/shell/coresight/Makefile b/tools/perf/tests/shell/coresight/Makefile
-index 561c807022ec..004974a71fb8 100644
+index 004974a71fb8..3b2b876cd9e2 100644
 --- a/tools/perf/tests/shell/coresight/Makefile
 +++ b/tools/perf/tests/shell/coresight/Makefile
-@@ -6,7 +6,8 @@ include ../../../../../tools/scripts/utilities.mak
- 
+@@ -7,7 +7,8 @@ include ../../../../../tools/scripts/utilities.mak
  SUBDIRS = \
  	asm_pure_loop \
--	memcpy_thread
-+	memcpy_thread \
-+	thread_loop
+ 	memcpy_thread \
+-	thread_loop
++	thread_loop \
++	unroll_loop_thread
  
  all: $(SUBDIRS)
  $(SUBDIRS):
-diff --git a/tools/perf/tests/shell/coresight/thread_loop/.gitignore b/tools/perf/tests/shell/coresight/thread_loop/.gitignore
+diff --git a/tools/perf/tests/shell/coresight/unroll_loop_thread/.gitignore b/tools/perf/tests/shell/coresight/unroll_loop_thread/.gitignore
 new file mode 100644
-index 000000000000..6d4c33eaa9e8
+index 000000000000..2cb4e996dbf3
 --- /dev/null
-+++ b/tools/perf/tests/shell/coresight/thread_loop/.gitignore
++++ b/tools/perf/tests/shell/coresight/unroll_loop_thread/.gitignore
 @@ -0,0 +1 @@
-+thread_loop
-diff --git a/tools/perf/tests/shell/coresight/thread_loop/Makefile b/tools/perf/tests/shell/coresight/thread_loop/Makefile
++unroll_loop_thread
+diff --git a/tools/perf/tests/shell/coresight/unroll_loop_thread/Makefile b/tools/perf/tests/shell/coresight/unroll_loop_thread/Makefile
 new file mode 100644
-index 000000000000..ea846c038e7a
+index 000000000000..6264c4e3abd1
 --- /dev/null
-+++ b/tools/perf/tests/shell/coresight/thread_loop/Makefile
++++ b/tools/perf/tests/shell/coresight/unroll_loop_thread/Makefile
 @@ -0,0 +1,33 @@
 +# SPDX-License-Identifier: GPL-2.0
 +# Carsten Haitzler <carsten.haitzler@arm.com>, 2021
 +include ../Makefile.miniconfig
 +
 +# Binary to produce
-+BIN=thread_loop
++BIN=unroll_loop_thread
 +# Any linking/libraries needed for the binary - empty if none needed
 +LIB=-pthread
 +
@@ -117,56 +117,50 @@ index 000000000000..ea846c038e7a
 +	$(Q)$(RM) -f $(BIN)
 +
 +.PHONY: all clean install-tests
-diff --git a/tools/perf/tests/shell/coresight/thread_loop/thread_loop.c b/tools/perf/tests/shell/coresight/thread_loop/thread_loop.c
+diff --git a/tools/perf/tests/shell/coresight/unroll_loop_thread/unroll_loop_thread.c b/tools/perf/tests/shell/coresight/unroll_loop_thread/unroll_loop_thread.c
 new file mode 100644
-index 000000000000..c0158fac7d0b
+index 000000000000..8f6d384208ed
 --- /dev/null
-+++ b/tools/perf/tests/shell/coresight/thread_loop/thread_loop.c
-@@ -0,0 +1,86 @@
++++ b/tools/perf/tests/shell/coresight/unroll_loop_thread/unroll_loop_thread.c
+@@ -0,0 +1,74 @@
 +// SPDX-License-Identifier: GPL-2.0
 +// Carsten Haitzler <carsten.haitzler@arm.com>, 2021
-+
-+// define this for gettid()
-+#define _GNU_SOURCE
-+
 +#include <stdio.h>
 +#include <stdlib.h>
 +#include <unistd.h>
 +#include <string.h>
 +#include <pthread.h>
-+#include <sys/syscall.h>
-+#ifndef SYS_gettid
-+// gettid is 178 on arm64
-+# define SYS_gettid 178
-+#endif
-+#define gettid() syscall(SYS_gettid)
 +
 +struct args {
-+	unsigned int loops;
 +	pthread_t th;
++	unsigned int in;
 +	void *ret;
 +};
 +
 +static void *thrfn(void *arg)
 +{
 +	struct args *a = arg;
-+	int i = 0, len = a->loops;
++	unsigned int i, in = a->in;
 +
-+	if (getenv("SHOW_TID")) {
-+		unsigned long long tid = gettid();
-+
-+		printf("%llu\n", tid);
++	for (i = 0; i < 10000; i++) {
++		asm volatile (
++// force an unroll of thia add instruction so we can test long runs of code
++#define SNIP1 "add %[in], %[in], #1\n"
++// 10
++#define SNIP2 SNIP1 SNIP1 SNIP1 SNIP1 SNIP1 SNIP1 SNIP1 SNIP1 SNIP1 SNIP1
++// 100
++#define SNIP3 SNIP2 SNIP2 SNIP2 SNIP2 SNIP2 SNIP2 SNIP2 SNIP2 SNIP2 SNIP2
++// 1000
++#define SNIP4 SNIP3 SNIP3 SNIP3 SNIP3 SNIP3 SNIP3 SNIP3 SNIP3 SNIP3 SNIP3
++// 10000
++#define SNIP5 SNIP4 SNIP4 SNIP4 SNIP4 SNIP4 SNIP4 SNIP4 SNIP4 SNIP4 SNIP4
++// 100000
++			SNIP5 SNIP5 SNIP5 SNIP5 SNIP5 SNIP5 SNIP5 SNIP5 SNIP5 SNIP5
++			: /* out */
++			: /* in */ [in] "r" (in)
++			: /* clobber */
++		);
 +	}
-+	asm volatile(
-+		"loop:\n"
-+		"add %[i], %[i], #1\n"
-+		"cmp %[i], %[len]\n"
-+		"blt loop\n"
-+		: /* out */
-+		: /* in */ [i] "r" (i), [len] "r" (len)
-+		: /* clobber */
-+	);
-+	return (void *)(long)i;
 +}
 +
 +static pthread_t new_thr(void *(*fn) (void *arg), void *arg)
@@ -181,28 +175,22 @@ index 000000000000..c0158fac7d0b
 +
 +int main(int argc, char **argv)
 +{
-+	unsigned int i, len, thr;
++	unsigned int i, thr;
 +	pthread_t threads[256];
 +	struct args args[256];
 +
-+	if (argc < 3) {
-+		printf("ERR: %s [numthreads] [numloops (millions)]\n", argv[0]);
++	if (argc < 2) {
++		printf("ERR: %s [numthreads]\n", argv[0]);
 +		exit(1);
 +	}
 +
 +	thr = atoi(argv[1]);
-+	if ((thr < 1) || (thr > 256)) {
++	if ((thr > 256) || (thr < 1)) {
 +		printf("ERR: threads 1-256\n");
 +		exit(1);
 +	}
-+	len = atoi(argv[2]);
-+	if ((len < 1) || (len > 4000)) {
-+		printf("ERR: max loops 4000 (millions)\n");
-+		exit(1);
-+	}
-+	len *= 1000000;
 +	for (i = 0; i < thr; i++) {
-+		args[i].loops = len;
++		args[i].in = rand();
 +		args[i].th = new_thr(thrfn, &(args[i]));
 +	}
 +	for (i = 0; i < thr; i++)
