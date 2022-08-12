@@ -2,42 +2,57 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EF7AAC19F2A
-	for <linux-perf-users@archiver.kernel.org>; Thu, 11 Aug 2022 22:25:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9DF90C25B06
+	for <linux-perf-users@archiver.kernel.org>; Fri, 12 Aug 2022 01:27:03 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S234269AbiHKWZl (ORCPT
+        id S231822AbiHLB1C (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Thu, 11 Aug 2022 18:25:41 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34450 "EHLO
+        Thu, 11 Aug 2022 21:27:02 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40818 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S234106AbiHKWZk (ORCPT
+        with ESMTP id S229814AbiHLB1A (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Thu, 11 Aug 2022 18:25:40 -0400
-Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C63FD90C79;
-        Thu, 11 Aug 2022 15:25:39 -0700 (PDT)
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id 235516153E;
-        Thu, 11 Aug 2022 22:25:39 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 3928EC433D6;
-        Thu, 11 Aug 2022 22:25:38 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1660256738;
-        bh=Ju5fw6M4oF7Kaa6Ojd7ycLcKYwPg9N5EWmJlDUgLLYo=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=j+yLRJDgrq2OPVuDKo41fFXEwx/yrwkjyCPnh1GM16+Aq8llcjOYjexEbC1IBw+RI
-         rKYZQ+Rh49gpCWt/BYC8WqfbNmLQjZRwHqUNAPR5T0Wcru8rNsPQkdjGMs4IIH/wYZ
-         Cn4x35fAswbCXuz+YwJ6UyppE9stwdnHVftuso3B4/ZkNEkNIMT8PZaWanML0175b7
-         X6wXYtOpUQRZCNiW3ZIl7q7SfWhmzwwpVTPZg7YaNqA4GpPTa/G3Lnuw2oiFJpPuMw
-         MwLrcfRlAtBfME9YlCejK7St3I3YTV0pm+cZrdKiNCqfg0KOWJ12WVdsBR/rATi7qf
-         nxMlBJd37w11Q==
-Received: by quaco.ghostprotocols.net (Postfix, from userid 1000)
-        id D1FE94035A; Thu, 11 Aug 2022 19:25:35 -0300 (-03)
-Date:   Thu, 11 Aug 2022 19:25:35 -0300
-From:   Arnaldo Carvalho de Melo <acme@kernel.org>
-To:     Leo Yan <leo.yan@linaro.org>
+        Thu, 11 Aug 2022 21:27:00 -0400
+Received: from mail-pl1-x62e.google.com (mail-pl1-x62e.google.com [IPv6:2607:f8b0:4864:20::62e])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1BF5FE01D
+        for <linux-perf-users@vger.kernel.org>; Thu, 11 Aug 2022 18:26:59 -0700 (PDT)
+Received: by mail-pl1-x62e.google.com with SMTP id z19so18409552plb.1
+        for <linux-perf-users@vger.kernel.org>; Thu, 11 Aug 2022 18:26:59 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc;
+        bh=IC2lOX4v95VrufPS47o61RIKEMbFjLQqPK43AtSv6po=;
+        b=UE9z9/3M/BAUiXTOQrCRmLbiL2MAC3pvT3WlcBscTEAWfL722Wj6OXfNmvrinxoYaJ
+         FvWholCLiJDnuaeJ5zzWb60iBctYTKpCdbSRbk5A5cNrLL7kWPBDoiLYr6pe/BP9Iu+b
+         FTDNNsKlkkTxaeyHSnKwH4m+RJ44e2m2bIGRvQY7SO7Nrk/LeJ72oaToLUxsHlo7KBcx
+         tYpOMlFTLHXf6cFevj1kZjUpTyzuQXR4mhnvbbFb+vnHsLn+Tdj7QpThMF8Z1Vvf+OGI
+         aBWzD1NcT9GS+QlZvSEeVegmFHLmA/+D4CKMfeAnZSspbRjsqxgvwTy2RNF6MRbdOlX6
+         K4Xg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc;
+        bh=IC2lOX4v95VrufPS47o61RIKEMbFjLQqPK43AtSv6po=;
+        b=tTmW9Hz55CNnVw6NOuFmRFlzaUoutMqgLKwA5+f/ONm1RWAP1ch//bbgq+GrQ1A40O
+         5u9qcmcITjWUCqOc1rGYTt+tzHRc0P5aswSUAyACJH0x5cy+yvAN73hMsi+U87deN0nA
+         Vy7pOgbYgTsy1L0vWRGWNMBuO6zuL9dXpsfUFL7wftvjPUckP/vUsenfzb+9meP7HOT8
+         u03qOy3kRbBrOjy285lBnDPLGL2MxbF0kXURDDKRFcspcvl3M1zbfcAH1hmNkOLmmmAB
+         gzpzQp+ImGtvPtQOKhfrw3Q6zodG0ET4ztwIRmPvjpJaLk3eeDnVcMNBoZK45LZ5nn22
+         t1gA==
+X-Gm-Message-State: ACgBeo2t+97nY7PhC4kdN/haM3OVDzuiBTmxlasIyYGk9yLiVSlNUStw
+        GzRG4h7+6g8J76G7mW9CiTwz2w==
+X-Google-Smtp-Source: AA6agR4a+3vDJ+tdb5s4TP+TqyslMWMcYsO4THIG/TPxnJ10mwssUEupQP1W6Ft56ScaJ0Re6cv3ow==
+X-Received: by 2002:a17:90b:1bc6:b0:1f5:313a:de4b with SMTP id oa6-20020a17090b1bc600b001f5313ade4bmr11414402pjb.4.1660267618478;
+        Thu, 11 Aug 2022 18:26:58 -0700 (PDT)
+Received: from leoy-huanghe.lan (n058152077182.netvigator.com. [58.152.77.182])
+        by smtp.gmail.com with ESMTPSA id e15-20020a17090301cf00b0016a111c83cdsm324932plh.119.2022.08.11.18.26.53
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 11 Aug 2022 18:26:58 -0700 (PDT)
+Date:   Fri, 12 Aug 2022 09:26:51 +0800
+From:   Leo Yan <leo.yan@linaro.org>
+To:     Arnaldo Carvalho de Melo <acme@kernel.org>,
+        Suzuki Kuruppassery Poulose <suzuki.poulose@arm.com>
 Cc:     Peter Zijlstra <peterz@infradead.org>,
         Ingo Molnar <mingo@redhat.com>,
         Mark Rutland <mark.rutland@arm.com>,
@@ -60,98 +75,67 @@ Cc:     Peter Zijlstra <peterz@infradead.org>,
         linux-arm-kernel@lists.infradead.org
 Subject: Re: [PATCH v6 00/15] perf c2c: Support data source and display for
  Arm64
-Message-ID: <YvWB32rTsOHirOb4@kernel.org>
+Message-ID: <20220812012651.GA1643436@leoy-huanghe.lan>
 References: <20220811062451.435810-1-leo.yan@linaro.org>
+ <YvWB32rTsOHirOb4@kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20220811062451.435810-1-leo.yan@linaro.org>
-X-Url:  http://acmel.wordpress.com
+In-Reply-To: <YvWB32rTsOHirOb4@kernel.org>
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-Em Thu, Aug 11, 2022 at 02:24:36PM +0800, Leo Yan escreveu:
-> Arm64 Neoverse CPUs supports data source in Arm SPE trace, this allows
-> us to detect cache line contention and transfers.
-> 
-> This patch set has been rebased on the acme/perf/core branch with the latest
-> commit b39c9e1b101d ("perf machine: Fix missing free of
-> machine->kallsyms_filename").
-> 
-> To make building success, a compilation fixing commit [1] has been sent
-> to LKML, this patch set is dependent on it.  This patch set has been verified
-> for both x86 perf memory events and Arm SPE events.
-> 
-> [1] https://lore.kernel.org/lkml/20220811044341.426796-1-leo.yan@linaro.org/
+Hi Arnaldo,
 
-So, I tentatively applied this set after applying the patch for
-<asm/sysreg.h>, and its all now out in tmp.perf/core in my git tree,
-please check.
+On Thu, Aug 11, 2022 at 07:25:35PM -0300, Arnaldo Carvalho de Melo wrote:
+> Em Thu, Aug 11, 2022 at 02:24:36PM +0800, Leo Yan escreveu:
+> > Arm64 Neoverse CPUs supports data source in Arm SPE trace, this allows
+> > us to detect cache line contention and transfers.
+> > 
+> > This patch set has been rebased on the acme/perf/core branch with the latest
+> > commit b39c9e1b101d ("perf machine: Fix missing free of
+> > machine->kallsyms_filename").
+> > 
+> > To make building success, a compilation fixing commit [1] has been sent
+> > to LKML, this patch set is dependent on it.  This patch set has been verified
+> > for both x86 perf memory events and Arm SPE events.
+> > 
+> > [1] https://lore.kernel.org/lkml/20220811044341.426796-1-leo.yan@linaro.org/
+> 
+> So, I tentatively applied this set after applying the patch for
+> <asm/sysreg.h>, and its all now out in tmp.perf/core in my git tree,
+> please check.
 
-I'm doing the usual set of container build tests, but any additional
-checking, including on the committer note I added to the first patch in
-this series, claryfing it is not really a "sync" with the kernel
-headers, is more than welcome.
+With discussing with Suzuki, he pointed it is not perfect for adding asm
+include path in that way.  With the patch on tmp.perf/core branch, two
+include paths are added into CFLAGS for arm-spe.c:
 
-- Arnaldo
- 
-> Changes from v5:
-> * Removed the patch "perf: Add SNOOP_PEER flag to perf mem data struct"
->   (Arnaldo);
-> * Removed the patch "perf arm-spe: Don't set data source if it's not a
->   memory operation" which has been merged in the mainline kernel, so can
->   dismiss merging conflict.
-> * Rebased on the latest acme perf/core branch, no any code change
->   compared to previous version.
-> 
-> Changes from v4:
-> * Included Ali's patch set for adding data source in Arm SPE samples;
-> * Added Ian's ACK and Ali's review and test tags;
-> * Update document for the default peer dispaly for Arm64 (Ali).
-> 
-> Changes from v3:
-> * Changed to display remote and local peer accesses (Joe);
-> * Fixed the usage info for display types (Joe);
-> * Do not display HITM dimensions when use 'peer' display, and HITM
->   display doesn't show any 'peer' dimensions (James);
-> * Split to smaller patches for adding dimensions of peer operations;
-> * Updated documentation to reflect the latest GUI and stdio.
-> 
-> 
-> Ali Saidi (2):
->   perf tools: sync addition of PERF_MEM_SNOOPX_PEER
->   perf arm-spe: Use SPE data source for neoverse cores
-> 
-> Leo Yan (13):
->   perf mem: Print snoop peer flag
->   perf mem: Add statistics for peer snooping
->   perf c2c: Output statistics for peer snooping
->   perf c2c: Add dimensions for peer load operations
->   perf c2c: Add dimensions of peer metrics for cache line view
->   perf c2c: Add mean dimensions for peer operations
->   perf c2c: Use explicit names for display macros
->   perf c2c: Rename dimension from 'percent_hitm' to
->     'percent_costly_snoop'
->   perf c2c: Refactor node header
->   perf c2c: Refactor display string
->   perf c2c: Sort on peer snooping for load operations
->   perf c2c: Use 'peer' as default display for Arm64
->   perf c2c: Update documentation for new display option 'peer'
-> 
->  tools/include/uapi/linux/perf_event.h         |   2 +-
->  tools/perf/Documentation/perf-c2c.txt         |  31 +-
->  tools/perf/builtin-c2c.c                      | 454 ++++++++++++++----
->  .../util/arm-spe-decoder/arm-spe-decoder.c    |   1 +
->  .../util/arm-spe-decoder/arm-spe-decoder.h    |  12 +
->  tools/perf/util/arm-spe.c                     | 130 ++++-
->  tools/perf/util/mem-events.c                  |  46 +-
->  tools/perf/util/mem-events.h                  |   3 +
->  8 files changed, 547 insertions(+), 132 deletions(-)
-> 
-> -- 
-> 2.34.1
+  -I$(srctree)/tools/arch/$(SRCARCH)/include/
+  -I$(srctree)/tools/arch/arm64/include/
 
--- 
+When we build perf on x86_64, then $(srctree)/tools/arch/x86/include/
+takes more precedence than $(srctree)/tools/arch/arm64/include/; if we
+want to include header file without relative path in c code, like
+"#include <asm/cputype.h>", then it has chance to find the same name
+file from x86's asm folder rather than arm64's asm folder.
 
-- Arnaldo
+At yesterday, I spent couple hours to find other methods (like
+filter-out, CFLAGS_REMOVE, etc) in makefile but it's no lucky to make
+success to give precedence for $(srctree)/tools/arch/arm64/include/.
+
+So current patches on the branch tmp.perf/core can build successfully,
+but if have any better method to resolve the header path precedence
+issue, then I prefer to improve for this, which can allow us later
+don't worry about it.  Any suggestion for this?
+
+> I'm doing the usual set of container build tests, but any additional
+> checking, including on the committer note I added to the first patch in
+> this series, claryfing it is not really a "sync" with the kernel
+> headers, is more than welcome.
+
+It's fine for me for adding my Signed-off for the signature chain.
+Appreicate for the amending.
+
+Thanks,
+Leo
