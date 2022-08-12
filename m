@@ -2,115 +2,113 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 45945C25B0E
-	for <linux-perf-users@archiver.kernel.org>; Fri, 12 Aug 2022 08:33:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EB921C00140
+	for <linux-perf-users@archiver.kernel.org>; Fri, 12 Aug 2022 08:51:38 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229719AbiHLIdN (ORCPT
+        id S237724AbiHLIvh (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Fri, 12 Aug 2022 04:33:13 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44678 "EHLO
+        Fri, 12 Aug 2022 04:51:37 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37866 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229552AbiHLIdM (ORCPT
+        with ESMTP id S230385AbiHLIvg (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Fri, 12 Aug 2022 04:33:12 -0400
-Received: from mail-ej1-x630.google.com (mail-ej1-x630.google.com [IPv6:2a00:1450:4864:20::630])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 743629DB55;
-        Fri, 12 Aug 2022 01:33:11 -0700 (PDT)
-Received: by mail-ej1-x630.google.com with SMTP id fy5so838932ejc.3;
-        Fri, 12 Aug 2022 01:33:11 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20210112;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:date:from:from:to:cc;
-        bh=0mFuBwdVPqFlV7N56fSA5adSdmVH4jP4hL7xdmNu1TE=;
-        b=pS5SodMoU4hQS4XknHVjinNRjg577EauBYA6bS5qrDsjfMvBJvYU21NvSHcjUOBVPS
-         612iHeuvowrJW9LiJ5jXaZPZC5MJ4jchKgXxq6vJte8QSlI/Xi2dLNoQd3WqefxWLCJN
-         BxdF6/o0jab2c2P2IVGxMcXlpYeCm4gRjhZTkr9HRhgGz8Ez2IW1lBOgDUTdl6FU+kBD
-         Ox6vBglTUlQvT5PxIlvHBbqRWzmXYuStvL7U6Br1F9wcRz7+y22Yxs7PwRk7X/1lPVm2
-         P3BtctD056FcgzakKCLlvZOmKHkOvH1fD61L4SL+ECnH1qq/8MAaXE+wtYdzrKSPVhjt
-         5Z4Q==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:date:from:x-gm-message-state:from:to:cc;
-        bh=0mFuBwdVPqFlV7N56fSA5adSdmVH4jP4hL7xdmNu1TE=;
-        b=TIdeTdx333GWTm6kFut3AG8CpXu5+vkVSIlsdB6TrR/uNCdWcQe5KwxUuK/wCkQFxl
-         aiijykmatuALeSkdA5CllmoV/L4IThUGs+y37xh9odIhSads97BnD+DE0aNViKX0QN74
-         KH+9PUhRWEScLtliTy9taLtRjmauymgTn0ayJBm/yIxV0HPLvWLkoP8kZnsG+U+d0qKa
-         9D1bWcENTvsJ8HLdaXBuOQjMugYWG8M1AaYUKUyzvv1ABrp7APQaUp5h4Sa35uRDKfmI
-         vs41MmG4HB0H6x4saHbNjmmJ0yRKlfqZMzRHUG55cJ6iwKDDDeqf+wQDDLCFTMdRSjBV
-         zgRw==
-X-Gm-Message-State: ACgBeo1zWBC1xadl1tJLc4u3EzZZZ9H9MiYN5idJH86eKwVNmJahxz6X
-        aRpQQi3/ARPYfmfCbCxbV4M=
-X-Google-Smtp-Source: AA6agR5S4uhyQ3nI0Nn/eQye9nDWyDILAYvxeXbLOBdagee4RU0xBAuPKCS25E29hPDFJj6Jesoy4w==
-X-Received: by 2002:a17:907:6e08:b0:731:83a3:58b6 with SMTP id sd8-20020a1709076e0800b0073183a358b6mr2027569ejc.12.1660293189500;
-        Fri, 12 Aug 2022 01:33:09 -0700 (PDT)
-Received: from krava ([193.85.244.190])
-        by smtp.gmail.com with ESMTPSA id m17-20020a1709066d1100b007305b8aa36bsm538022ejr.157.2022.08.12.01.33.07
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 12 Aug 2022 01:33:08 -0700 (PDT)
-From:   Jiri Olsa <olsajiri@gmail.com>
-X-Google-Original-From: Jiri Olsa <jolsa@kernel.org>
-Date:   Fri, 12 Aug 2022 10:33:06 +0200
-To:     Sandipan Das <sandipan.das@amd.com>
+        Fri, 12 Aug 2022 04:51:36 -0400
+Received: from mga06.intel.com (mga06b.intel.com [134.134.136.31])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A715DA8CC9;
+        Fri, 12 Aug 2022 01:51:35 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1660294295; x=1691830295;
+  h=from:to:cc:subject:date:message-id:mime-version:
+   content-transfer-encoding;
+  bh=A19Y/Vv7Njp++9ZFDHaF/Zkego9M6KhA3Ql91r6OQzc=;
+  b=QVqofymZZMdExXURciux63zga++lnmflhghjAdQtV0MqIdgnB/cyWsp7
+   VViudGL0yp9rwi4DMPuCWqSgyts2qDavimQ0ZZ7ugpnPrZ6oFum89qakJ
+   QMy7myJ2aks/TxVbsuXMuxETDIapmd5dEPAGczKreyvt1e79gad1sal5V
+   qIZdWY5xvilm/XL5+VSVyw/fFJdq2mM5jf8vJp2qWYjTA0LhK/VsjZBXz
+   tOUG4w+n/EV72woUAYxcobRvEhTghLcUjEYmAuT+bNtU5I93SE3HiPijG
+   Mq0LjiBvIdpZMh98ulCWND3UA+InS8YYVXZTG4Ftr/LmlFe0fzAig1jH0
+   w==;
+X-IronPort-AV: E=McAfee;i="6400,9594,10436"; a="353297754"
+X-IronPort-AV: E=Sophos;i="5.93,231,1654585200"; 
+   d="scan'208";a="353297754"
+Received: from orsmga007.jf.intel.com ([10.7.209.58])
+  by orsmga104.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 12 Aug 2022 01:51:35 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.93,231,1654585200"; 
+   d="scan'208";a="602451369"
+Received: from zxingrtx.sh.intel.com ([10.239.159.110])
+  by orsmga007.jf.intel.com with ESMTP; 12 Aug 2022 01:51:27 -0700
+From:   zhengjun.xing@linux.intel.com
+To:     acme@kernel.org, peterz@infradead.org, mingo@redhat.com,
+        alexander.shishkin@intel.com, jolsa@kernel.org, namhyung@kernel.org
 Cc:     linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org,
-        x86@kernel.org, peterz@infradead.org, bp@alien8.de,
-        acme@kernel.org, namhyung@kernel.org, tglx@linutronix.de,
-        mingo@redhat.com, mark.rutland@arm.com,
-        alexander.shishkin@linux.intel.com, dave.hansen@linux.intel.com,
-        like.xu.linux@gmail.com, eranian@google.com,
-        ananth.narayan@amd.com, ravi.bangoria@amd.com,
-        santosh.shukla@amd.com
-Subject: Re: [PATCH 2/4] tools headers x86: Sync msr-index.h with kernel
- sources
-Message-ID: <YvYQQr5VenglbpWM@krava>
-References: <cover.1660217326.git.sandipan.das@amd.com>
- <ffb9a9f0aa46a4339bb61282e26810112700ae97.1660217326.git.sandipan.das@amd.com>
+        irogers@google.com, ak@linux.intel.com, kan.liang@linux.intel.com,
+        zhengjun.xing@linux.intel.com
+Subject: [PATCH 00/11] Add generated latest Intel events and metrics
+Date:   Fri, 12 Aug 2022 16:52:28 +0800
+Message-Id: <20220812085239.3089231-1-zhengjun.xing@linux.intel.com>
+X-Mailer: git-send-email 2.25.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <ffb9a9f0aa46a4339bb61282e26810112700ae97.1660217326.git.sandipan.das@amd.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-On Thu, Aug 11, 2022 at 06:16:47PM +0530, Sandipan Das wrote:
-> Sync msr-index.h with the kernel sources by adding the new AMD Last Branch
-> Record Extension Version 2 (LbrExtV2) MSRs.
-> 
-> Signed-off-by: Sandipan Das <sandipan.das@amd.com>
-> ---
->  tools/arch/x86/include/asm/msr-index.h | 5 +++++
->  1 file changed, 5 insertions(+)
-> 
-> diff --git a/tools/arch/x86/include/asm/msr-index.h b/tools/arch/x86/include/asm/msr-index.h
-> index cc615be27a54..7f9eaf497947 100644
-> --- a/tools/arch/x86/include/asm/msr-index.h
-> +++ b/tools/arch/x86/include/asm/msr-index.h
-> @@ -574,6 +574,9 @@
->  #define MSR_AMD64_PERF_CNTR_GLOBAL_CTL		0xc0000301
->  #define MSR_AMD64_PERF_CNTR_GLOBAL_STATUS_CLR	0xc0000302
->  
-> +/* AMD Last Branch Record MSRs */
-> +#define MSR_AMD64_LBR_SELECT			0xc000010e
+From: Zhengjun Xing <zhengjun.xing@linux.intel.com>
 
-curious do we actualy use this in tools somewhere?
+The goal of this patch series is to align the json events for Intel
+platforms with those generated by:
+https://github.com/intel/event-converter-for-linux-perf/blob/master/download_and_gen.py
+This script takes the latest event json and TMA metrics from:
+https://download.01.org/perfmon/ and adds to these metrics, in
+particular uncore ones, from: https://github.com/intel/perfmon-metrics
 
-jirka
+Compared to the previous json, the major changes are:
+ - Add new metrics “UNCORE_FREQ” for Linux perf,this new metric can be added to all platforms that have Sockets_CLKS.
+ - Remove duplicated uncore events.
+ - the inclusion of previously ungenerated and experimental uncore events.
 
-> +
->  /* Fam 17h MSRs */
->  #define MSR_F17H_IRPERF			0xc00000e9
->  
-> @@ -745,6 +748,8 @@
->  #define MSR_AMD_DBG_EXTN_CFG		0xc000010f
->  #define MSR_AMD_SAMP_BR_FROM		0xc0010300
->  
-> +#define DBG_EXTN_CFG_LBRV2EN		BIT_ULL(6)
-> +
->  #define MSR_IA32_MPERF			0x000000e7
->  #define MSR_IA32_APERF			0x000000e8
->  
-> -- 
-> 2.34.1
-> 
+Zhengjun Xing (11):
+  perf vendor events: Update metrics for broadwellde
+  perf vendor events: Update events and metrics for broadwellx
+  perf vendor events: Update events and metrics for cascadelakex
+  perf vendor events: Update events and metrics for haswellx
+  perf vendor events: Update events and metrics for icelakex
+  perf vendor events: Update metrics for ivytown
+  perf vendor events: Update metrics for jaketown
+  perf vendor events: Update events for knightslanding
+  perf vendor events: Update metrics for sapphirerapids
+  perf vendor events: Update events and metrics for skylakex
+  perf vendor events: Update events for snowridgex
+
+ .../arch/x86/broadwellde/bdwde-metrics.json   |     6 +
+ .../arch/x86/broadwellx/bdx-metrics.json      |     6 +
+ .../arch/x86/broadwellx/uncore-cache.json     |   163 +-
+ .../arch/x86/cascadelakex/clx-metrics.json    |     6 +
+ .../arch/x86/cascadelakex/uncore-memory.json  |  4424 +-
+ .../arch/x86/cascadelakex/uncore-other.json   | 23162 +++++++++-
+ .../arch/x86/cascadelakex/uncore-power.json   |   201 +
+ .../arch/x86/haswellx/hsx-metrics.json        |   411 +-
+ .../arch/x86/haswellx/uncore-cache.json       |   173 +-
+ .../arch/x86/icelakex/icx-metrics.json        |     6 +
+ .../arch/x86/icelakex/uncore-memory.json      |  1523 +
+ .../arch/x86/icelakex/uncore-other.json       | 38506 +++++++++++++++-
+ .../arch/x86/icelakex/uncore-power.json       |   225 +
+ .../arch/x86/ivytown/ivt-metrics.json         |     6 +
+ .../arch/x86/jaketown/jkt-metrics.json        |     6 +
+ .../arch/x86/knightslanding/uncore-other.json |   213 +
+ .../arch/x86/sapphirerapids/spr-metrics.json  |     6 +
+ .../arch/x86/skylakex/skx-metrics.json        |     6 +
+ .../arch/x86/skylakex/uncore-memory.json      |  3566 +-
+ .../arch/x86/skylakex/uncore-other.json       | 23442 +++++++++-
+ .../arch/x86/skylakex/uncore-power.json       |   201 +
+ .../arch/x86/snowridgex/uncore-other.json     |   111 +-
+ 22 files changed, 91393 insertions(+), 4976 deletions(-)
+ create mode 100644 tools/perf/pmu-events/arch/x86/cascadelakex/uncore-power.json
+ create mode 100644 tools/perf/pmu-events/arch/x86/skylakex/uncore-power.json
+
+-- 
+2.25.1
+
