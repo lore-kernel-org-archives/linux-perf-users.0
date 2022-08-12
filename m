@@ -2,87 +2,108 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6AB1AC00140
-	for <linux-perf-users@archiver.kernel.org>; Fri, 12 Aug 2022 13:24:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 03C20C00140
+	for <linux-perf-users@archiver.kernel.org>; Fri, 12 Aug 2022 13:28:03 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S235317AbiHLNYz (ORCPT
+        id S238278AbiHLN16 (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Fri, 12 Aug 2022 09:24:55 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41696 "EHLO
+        Fri, 12 Aug 2022 09:27:58 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45984 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232434AbiHLNYz (ORCPT
+        with ESMTP id S232434AbiHLN14 (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Fri, 12 Aug 2022 09:24:55 -0400
-Received: from ams.source.kernel.org (ams.source.kernel.org [IPv6:2604:1380:4601:e00::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DC54491083;
-        Fri, 12 Aug 2022 06:24:52 -0700 (PDT)
+        Fri, 12 Aug 2022 09:27:56 -0400
+Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4A9EF9676F;
+        Fri, 12 Aug 2022 06:27:54 -0700 (PDT)
 Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by ams.source.kernel.org (Postfix) with ESMTPS id 9E3F1B82438;
-        Fri, 12 Aug 2022 13:24:51 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 35BFBC433C1;
-        Fri, 12 Aug 2022 13:24:50 +0000 (UTC)
+        by dfw.source.kernel.org (Postfix) with ESMTPS id E646261796;
+        Fri, 12 Aug 2022 13:27:53 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 27BBEC433C1;
+        Fri, 12 Aug 2022 13:27:53 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1660310690;
-        bh=YUlrJqV7OXDl0VwFu2JPlNjExMew8te/RhYglmsalYw=;
+        s=k20201202; t=1660310873;
+        bh=cmb2NY59G28HxU+zeB3Bvu59tXMPnTojd4k1tey0wIw=;
         h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=PHfRVx8n4zP2uuRfW8ZvQd6cxz4DngbJJzM+oFUaKToIZDr9SzgHbKy3mArN+4UiF
-         KEv0RzI8VNULwIhIW0lYELftoWwPdHws4bljRMlot/26sQuUauaOt3x4x/K+QJNMzo
-         WIRdS67JKCVdVX6pri5kHN+5x2jw1qL7Bne2ix45kVvkRXPCPu4QHBc2IM41sWBlq5
-         4PifvPMCrjXYpDbsRYcFjADIlUXLXPdeYzmMszmvvwKTSBO7FTUOZXto6VHxsQkRCi
-         m7pP62WA9L26qO8BBTKavohU6aFxSiM2KQhPi171sZUe5smsYQoP6OthCiyIl03vBd
-         CygdbU9DYgu8A==
+        b=OfsTPUB+qTeTidebw5eZ5Hl2PBnTTaxB0iU0jiw+BDPRS0AIJAf2zrynh4wJjXRaw
+         5ViGjqJB3W030x6YwJG/9qUje2SoZOzHguin1ID2Xpx9KERyoaWzqUxEwDLgGy0aMn
+         erg4txxKflOyB4nnw1HkC2F1azUBjC86WXcgcSfF3DDF2ZCqnb28I0VpX6eISwWIMi
+         tniLfIxMRFXYFgUisC/EMVFNAy7hTueF49Ce7KNhNUS/viRGc3Ysu9M8ezVagLPWl5
+         sKzs2Ey0fkgKL731vKfhPnvI5dF1exFfXvXw7GzdreqLTN4ahG6BdWHopYLMef2BrY
+         Oq1PVNI6z7rDA==
 Received: by quaco.ghostprotocols.net (Postfix, from userid 1000)
-        id 03C7E4035A; Fri, 12 Aug 2022 10:24:47 -0300 (-03)
-Date:   Fri, 12 Aug 2022 10:24:47 -0300
+        id DE72B4035A; Fri, 12 Aug 2022 10:27:50 -0300 (-03)
+Date:   Fri, 12 Aug 2022 10:27:50 -0300
 From:   Arnaldo Carvalho de Melo <acme@kernel.org>
 To:     Martin =?utf-8?B?TGnFoWth?= <mliska@suse.cz>
 Cc:     linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org
-Subject: Re: [PATCH] perf: Print debuginfod queries if -v option is used
-Message-ID: <YvZUnxjDo0JxeRdE@kernel.org>
-References: <2983e2e0-6850-ad59-79d8-efe83b22cffe@suse.cz>
- <325871cf-b71f-6237-8793-82182272ece8@suse.cz>
+Subject: Re: [PATCH] perf record: improve error message of -p not_existing_pid
+Message-ID: <YvZVVjrfKLCfJ/ig@kernel.org>
+References: <8e00eda1-4de0-2c44-ce67-d4df48ac1f7c@suse.cz>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <325871cf-b71f-6237-8793-82182272ece8@suse.cz>
+In-Reply-To: <8e00eda1-4de0-2c44-ce67-d4df48ac1f7c@suse.cz>
 X-Url:  http://acmel.wordpress.com
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-Em Fri, Aug 12, 2022 at 01:43:53PM +0200, Martin Liška escreveu:
-> When ending a perf record session, the querying of a debuginfod
-> server can take quite some time. Inform a user about it when
-> -v options is used.
+Em Fri, Aug 12, 2022 at 01:40:49PM +0200, Martin Liška escreveu:
+> When one uses -p $not_existing_pid, the output of --help is printed:
+> 
+> $ perf record -p 123456789 2>&1 | head -n3
+> 
+>  Usage: perf record [<options>] [<command>]
+>     or: perf record [<options>] -- <command> [<options>]
+> 
+> Let's change it something similar what perf top -p $not_existing_pid
+> prints:
+> 
+> $ ./perf top -p 123456789 --stdio
+> Error:
+> Couldn't create thread/CPU maps: No such process
+> 
+> Newly suggested error message:
+> 
+> $ ./perf record -p 123456789
+> Couldn't create thread/CPU maps: No such process
 
-Thanks, applied.
+Thanks, tested and applied.
 
 - Arnaldo
 
  
 > Signed-off-by: Martin Liska <mliska@suse.cz>
 > ---
->  tools/perf/util/build-id.c | 4 +++-
->  1 file changed, 3 insertions(+), 1 deletion(-)
+>  tools/perf/builtin-record.c | 11 +++++++++--
+>  1 file changed, 9 insertions(+), 2 deletions(-)
 > 
-> diff --git a/tools/perf/util/build-id.c b/tools/perf/util/build-id.c
-> index 0cc68cdd84c8..d1cfce0613ee 100644
-> --- a/tools/perf/util/build-id.c
-> +++ b/tools/perf/util/build-id.c
-> @@ -653,7 +653,9 @@ static char *build_id_cache__find_debug(const char *sbuild_id,
+> diff --git a/tools/perf/builtin-record.c b/tools/perf/builtin-record.c
+> index cf5c5379ceaa..4713f0f3a6cf 100644
+> --- a/tools/perf/builtin-record.c
+> +++ b/tools/perf/builtin-record.c
+> @@ -3996,8 +3996,15 @@ int cmd_record(int argc, const char **argv)
+>  		arch__add_leaf_frame_record_opts(&rec->opts);
 >  
->  #ifdef HAVE_DEBUGINFOD_SUPPORT
->  	if (realname == NULL) {
-> -		debuginfod_client* c = debuginfod_begin();
-> +		debuginfod_client* c;
-> +		pr_debug("Downloading debug info with build id %s\n", sbuild_id);
-> +		c = debuginfod_begin();
->  		if (c != NULL) {
->  			int fd = debuginfod_find_debuginfo(c,
->  					(const unsigned char*)sbuild_id, 0,
+>  	err = -ENOMEM;
+> -	if (evlist__create_maps(rec->evlist, &rec->opts.target) < 0)
+> -		usage_with_options(record_usage, record_options);
+> +	if (evlist__create_maps(rec->evlist, &rec->opts.target) < 0) {
+> +		if (rec->opts.target.pid != NULL) {
+> +			pr_err("Couldn't create thread/CPU maps: %s\n",
+> +				errno == ENOENT ? "No such process" : str_error_r(errno, errbuf, sizeof(errbuf)));
+> +			goto out;
+> +		}
+> +		else
+> +			usage_with_options(record_usage, record_options);
+> +	}
+>  
+>  	err = auxtrace_record__options(rec->itr, rec->evlist, &rec->opts);
+>  	if (err)
 > -- 
 > 2.37.1
 
