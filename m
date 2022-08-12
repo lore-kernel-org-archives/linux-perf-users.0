@@ -2,158 +2,186 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A2DA7C00140
-	for <linux-perf-users@archiver.kernel.org>; Fri, 12 Aug 2022 19:47:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D1E1AC00140
+	for <linux-perf-users@archiver.kernel.org>; Fri, 12 Aug 2022 19:50:32 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S238093AbiHLTrs (ORCPT
+        id S233786AbiHLTub (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Fri, 12 Aug 2022 15:47:48 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46182 "EHLO
+        Fri, 12 Aug 2022 15:50:31 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48208 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230433AbiHLTrr (ORCPT
+        with ESMTP id S238136AbiHLTub (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Fri, 12 Aug 2022 15:47:47 -0400
+        Fri, 12 Aug 2022 15:50:31 -0400
 Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0049BB3B0A;
-        Fri, 12 Aug 2022 12:47:46 -0700 (PDT)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0F3473055E;
+        Fri, 12 Aug 2022 12:50:30 -0700 (PDT)
 Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id 7BD12617D0;
-        Fri, 12 Aug 2022 19:47:46 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id B66EAC433D6;
-        Fri, 12 Aug 2022 19:47:45 +0000 (UTC)
+        by dfw.source.kernel.org (Postfix) with ESMTPS id A0A2B60FDE;
+        Fri, 12 Aug 2022 19:50:29 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id A7944C433D6;
+        Fri, 12 Aug 2022 19:50:28 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1660333665;
-        bh=sLwV+GfE5JlpxI6fGKXia79sYL3aNd8bTMsFSGrZUMk=;
+        s=k20201202; t=1660333829;
+        bh=Aadwi9ysXgU0mQsdevszz50JIvn2K0rNkzfoHX1HNp8=;
         h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=h8rwd8NdYRL7FXj7T2VnfGlYsburhFeYY59+RumlqhM+U5jny6jvfNmoIEumJyl+a
-         qhfk8HzlOYttknjvbDoY9NS+f+So3V8mxdVytNdD3Dlw0yPDHhEWSblN6VEEC/pM4v
-         J3hS87H3VD+p+WAcFoHN6fREEOYh+0uQraoSmeKbme/9HgKX1JN19Gcx0pj5hxa9au
-         O6N/NpfztNDNBioSDvFrRy0XQvTx7SrfseIR5TiYUTHr/EHRfG7r5Cb82XefrdDbFZ
-         p6RDYyRvz6SqcwXIdsTRY5d2X81N3ZHcv5UurNOAEGd8rnNyk0o0tJFi4bJrV1skDp
-         F/20I7PiewWcA==
+        b=nvysOGncr2kSJbxrbvptLoIU7Z3W6Rb7kVH7Rq9cOm+BPOa8map5vJE8nJQIWlO3v
+         oCPlTRux0KgZ9kAQ+F0wVA9PYFGo5dWvVQS2h6RHZmnkBWSYcC6CpBnnxIirvAXXH/
+         vH2yG5EDWgddqYNxGmKKtFvwAJFxmXiaHUzDodZwo1UtSb6UcWdA6ukWtE5FWUXe47
+         J+OqC1V3rva47viuAs5KUvqnN8NvYxqjjGwcQWMycIGiAdU/UBSvSByTuPT+L9c1C7
+         i0spJv1wG0eNkEcFfQrWSnE3K1tQl5n6ykBC9AkaIeCy6/3XgXEDH0JLvUcDj0Vv0/
+         C/CeeNPWXx2pg==
 Received: by quaco.ghostprotocols.net (Postfix, from userid 1000)
-        id E07E34035A; Fri, 12 Aug 2022 16:47:43 -0300 (-03)
-Date:   Fri, 12 Aug 2022 16:47:43 -0300
+        id E6E114035A; Fri, 12 Aug 2022 16:50:26 -0300 (-03)
+Date:   Fri, 12 Aug 2022 16:50:26 -0300
 From:   Arnaldo Carvalho de Melo <acme@kernel.org>
-To:     Leo Yan <leo.yan@linaro.org>
-Cc:     Ian Rogers <irogers@google.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Jiri Olsa <jolsa@kernel.org>,
-        Namhyung Kim <namhyung@kernel.org>,
-        linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org
-Subject: Re: [PATCH 2/2] perf test: Introduce script for java symbol testing
-Message-ID: <YvauX7u69u9AeID/@kernel.org>
-References: <20220806033434.121908-1-leo.yan@linaro.org>
- <20220806033434.121908-3-leo.yan@linaro.org>
+To:     Mike Leach <mike.leach@linaro.org>
+Cc:     coresight@lists.linaro.org, linux-arm-kernel@lists.infradead.org,
+        linux-kernel@vger.kernel.org, mathieu.poirier@linaro.org,
+        suzuki.poulose@arm.com, peterz@infradead.org, mingo@redhat.com,
+        linux-perf-users@vger.kernel.org, leo.yan@linaro.org,
+        quic_jinlmao@quicinc.com
+Subject: Re: [PATCH v3 00/13] coresight: Add new API to allocate trace source
+ ID values
+Message-ID: <YvavAqZfO2nFg3LF@kernel.org>
+References: <20220809223401.24599-1-mike.leach@linaro.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20220806033434.121908-3-leo.yan@linaro.org>
+In-Reply-To: <20220809223401.24599-1-mike.leach@linaro.org>
 X-Url:  http://acmel.wordpress.com
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-Em Sat, Aug 06, 2022 at 11:34:34AM +0800, Leo Yan escreveu:
-> This commit introduces a script for testing java symbols.
+Em Tue, Aug 09, 2022 at 11:33:48PM +0100, Mike Leach escreveu:
+> The current method for allocating trace source ID values to sources is
+> to use a fixed algorithm for CPU based sources of (cpu_num * 2 + 0x10).
+> The STM is allocated ID 0x1.
+
+So I'll wait for the kernel bits to get into the ARM architecture tree
+to then process the userspace bits.
+
+Would be great to have Tested-by/Reviewed-by from pehole actually
+testing these patches on the hardware where these features are
+available.
+
+- Arnaldo
+ 
+> This fixed algorithm is used in both the CoreSight driver code, and by
+> perf when writing the trace metadata in the AUXTRACE_INFO record.
 > 
-> The test records for java program, inject samples with JIT samples, then
-> check specific words "Interpreter" and "jdk.internal" in the report, the
-> test will pass if these two symbols are detected.
+> The method needs replacing as currently:-
+> 1. It is inefficient in using available IDs.
+> 2. Does not scale to larger systems with many cores and the algorithm
+> has no limits so will generate invalid trace IDs for cpu number > 44.
 > 
-> Signed-off-by: Leo Yan <leo.yan@linaro.org>
-> ---
->  tools/perf/tests/shell/test_java_symbol.sh | 66 ++++++++++++++++++++++
->  1 file changed, 66 insertions(+)
->  create mode 100755 tools/perf/tests/shell/test_java_symbol.sh
+> Additionally requirements to allocate additional system IDs on some
+> systems have been seen.
 > 
-> diff --git a/tools/perf/tests/shell/test_java_symbol.sh b/tools/perf/tests/shell/test_java_symbol.sh
-> new file mode 100755
-> index 000000000000..45d42a9fdca5
-> --- /dev/null
-> +++ b/tools/perf/tests/shell/test_java_symbol.sh
-> @@ -0,0 +1,66 @@
-> +#!/bin/bash
-> +# Test java symbol
-> +
-> +# SPDX-License-Identifier: GPL-2.0
-> +# Leo Yan <leo.yan@linaro.org>, 2022
-> +
-> +PERF_DATA=$(mktemp /tmp/__perf_test.perf.data.XXXXX)
-> +PERF_INJ_DATA=$(mktemp /tmp/__perf_test.perf.data.inj.XXXXX)
-> +
-> +cleanup_files()
-> +{
-> +	echo "Cleaning up files..."
-> +	rm -f ${PERF_DATA}
-> +	rm -f ${PERF_INJ_DATA}
-> +}
-> +
-> +trap cleanup_files exit term int
-> +
-> +if [ -e "$PWD/tools/perf/libperf-jvmti.so" ]; then
-> +	LIBJVMTI=$PWD/tools/perf/libperf-jvmti.so
-
-
-Will this only work if we do a:
-
-make -C tools/perf
-
-?
-
-> +elif [ -e "$PWD/libperf-jvmti.so" ]; then
-> +	LIBJVMTI=$PWD/libperf-jvmti.so
-> +elif [ -e "$PREFIX/lib64/libperf-jvmti.so" ]; then
-> +	LIBJVMTI=$PREFIX/lib64/libperf-jvmti.so
-> +elif [ -e "$PREFIX/lib/libperf-jvmti.so" ]; then
-> +	LIBJVMTI=$PREFIX/lib/libperf-jvmti.so
-> +else
-> +	echo "Fail to find libperf-jvmti.so"
-> +	exit 1
-> +fi
-> +
-> +cat <<EOF | perf record -k 1 -o $PERF_DATA jshell -s -J-agentpath:$LIBJVMTI
-> +int fib(int x) {
-> +	return x > 1 ? fib(x - 2) + fib(x - 1) : 1;
-> +}
-> +
-> +int q = 0;
-> +
-> +for (int i = 0; i < 10; i++)
-> +	q += fib(i);
-> +
-> +System.out.println(q);
-> +EOF
-> +
-> +if [ $? -ne 0 ]; then
-> +	echo "Fail to record for java program"
-> +	exit 1
-> +fi
-> +
-> +if ! perf inject -i $PERF_DATA -o $PERF_INJ_DATA -j; then
-> +	echo "Fail to inject samples"
-> +	exit 1
-> +fi
-> +
-> +# Below is an example of the instruction samples reporting:
-> +#   8.18%  jshell           jitted-50116-29.so    [.] Interpreter
-> +#   0.75%  Thread-1         jitted-83602-1670.so  [.] jdk.internal.jimage.BasicImageReader.getString(int)
-> +perf report --stdio -i ${PERF_INJ_DATA} 2>&1 | \
-> +	egrep " +[0-9]+\.[0-9]+% .* (Interpreter|jdk\.internal).*" > /dev/null 2>&1
-> +
-> +if [ $? -ne 0 ]; then
-> +	echo "Fail to find java symbols"
-> +	exit 1
-> +fi
-> +
-> +exit 0
+> This patch set  introduces an API that allows the allocation of trace IDs
+> in a dynamic manner.
+> 
+> Architecturally reserved IDs are never allocated, and the system is
+> limited to allocating only valid IDs.
+> 
+> Each of the current trace sources ETM3.x, ETM4.x and STM is updated to use
+> the new API.
+> 
+> For the ETMx.x devices IDs are allocated on certain events
+> a) When using sysfs, an ID will be allocated on hardware enable, or a read of
+> sysfs TRCTRACEID register and freed when the sysfs reset is written.
+> 
+> b) When using perf, ID is allocated on during setup AUX event, and freed on
+> event free. IDs are communicated using the AUX_OUTPUT_HW_ID packet.
+> The ID allocator is notified when perf sessions start and stop
+> so CPU based IDs are kept constant throughout any perf session.
+> 
+> 
+> Note: This patchset breaks some backward compatibility for perf record and
+> perf report.
+> 
+> The version of the AUXTRACE_INFO has been updated to reflect the fact that
+> the trace source IDs are generated differently. This will
+> mean older versions of perf report cannot decode the newer file.
+> 
+> Applies to coresight/next [4d45bc82df66]
+> Tested on DB410c
+> 
+> Changes since v2:
+> 1) Improved backward compatibility: (requested by James)
+> 
+> Using the new version of perf on an old kernel will generate a usable file
+> legacy metadata values are set by the new perf and will be used if mew
+> ID packets are not present in the file.
+> 
+> Using an older version of perf / simpleperf on an updated kernel may still
+> work. The trace ID allocator has been updated to use the legacy ID values
+> where possible, so generated file and used trace IDs will match up to the
+> point where the legacy algorithm is broken anyway.
+> 
+> 2) Various changes to the ID allocator and ID packet format.
+> (suggested by Suzuki)
+> 
+> 3) per CPU ID info in allocator now stored as atomic type to allow a passive read
+> without taking the allocator spinlock. perf flow now allocates and releases ID
+> values in setup_aux / free_event. Device enable and event enable use the passive
+> read to set the allocated values. This simplifies the locking mechanisms on the
+> perf run and fixes issues that arose with locking dependencies.
+> 
+> Changes since v1:
+> (after feedback & discussion with Mathieu & Suzuki).
+> 
+> 1) API has changed. The global trace ID map is managed internally, so it
+> is no longer passed in to the API functions.
+> 
+> 2) perf record does not use sysfs to find the trace IDs. These are now
+> output as AUX_OUTPUT_HW_ID events. The drivers, perf record, and perf report
+> have been updated accordingly to generate and handle these events.
+> 
+> Mike Leach (13):
+>   coresight: trace-id: Add API to dynamically assign Trace ID values
+>   coresight: Remove obsolete Trace ID unniqueness checks
+>   coresight: stm: Update STM driver to use Trace ID API
+>   coresight: etm4x: Update ETM4 driver to use Trace ID API
+>   coresight: etm3x: Update ETM3 driver to use Trace ID API
+>   coresight: etmX.X: stm: Remove trace_id() callback
+>   coresight: perf: traceid: Add perf notifiers for Trace ID
+>   perf: cs-etm: Move mapping of Trace ID and cpu into helper function
+>   perf: cs-etm: Update record event to use new Trace ID protocol
+>   kernel: events: Export perf_report_aux_output_id()
+>   perf: cs-etm: Handle PERF_RECORD_AUX_OUTPUT_HW_ID packet
+>   coresight: events: PERF_RECORD_AUX_OUTPUT_HW_ID used for Trace ID
+>   coresight: trace-id: Add debug & test macros to Trace ID allocation
+> 
+>  drivers/hwtracing/coresight/Makefile          |   2 +-
+>  drivers/hwtracing/coresight/coresight-core.c  |  49 +--
+>  .../hwtracing/coresight/coresight-etm-perf.c  |  23 ++
+>  drivers/hwtracing/coresight/coresight-etm.h   |   3 +-
+>  .../coresight/coresight-etm3x-core.c          |  92 +++--
+>  .../coresight/coresight-etm3x-sysfs.c         |  27 +-
+>  .../coresight/coresight-etm4x-core.c          |  79 ++++-
+>  .../coresight/coresight-etm4x-sysfs.c         |  27 +-
+>  drivers/hwtracing/coresight/coresight-etm4x.h |   3 +
+>  drivers/hwtracing/coresight/coresight-stm.c   |  49 +--
+>  .../hwtracing/coresight/coresight-trace-id.c  | 266 ++++++++++++++
+>  .../hwtracing/coresight/coresight-trace-id.h  |  78 +++++
+>  include/linux/coresight-pmu.h                 |  35 +-
+>  include/linux/coresight.h                     |   3 -
+>  kernel/events/core.c                          |   1 +
+>  tools/include/linux/coresight-pmu.h           |  48 ++-
+>  tools/perf/arch/arm/util/cs-etm.c             |  21 +-
+>  .../perf/util/cs-etm-decoder/cs-etm-decoder.c |   7 +
+>  tools/perf/util/cs-etm.c                      | 331 +++++++++++++++---
+>  tools/perf/util/cs-etm.h                      |  14 +-
+>  20 files changed, 933 insertions(+), 225 deletions(-)
+>  create mode 100644 drivers/hwtracing/coresight/coresight-trace-id.c
+>  create mode 100644 drivers/hwtracing/coresight/coresight-trace-id.h
+> 
 > -- 
-> 2.25.1
+> 2.17.1
 
 -- 
 
