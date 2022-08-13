@@ -2,125 +2,173 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E93A7C00140
-	for <linux-perf-users@archiver.kernel.org>; Sat, 13 Aug 2022 03:08:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5DE84C19F2D
+	for <linux-perf-users@archiver.kernel.org>; Sat, 13 Aug 2022 09:53:21 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233149AbiHMDIb (ORCPT
+        id S229719AbiHMJxU (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Fri, 12 Aug 2022 23:08:31 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60608 "EHLO
+        Sat, 13 Aug 2022 05:53:20 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44798 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229719AbiHMDIb (ORCPT
+        with ESMTP id S229507AbiHMJxT (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Fri, 12 Aug 2022 23:08:31 -0400
-Received: from mail-ej1-x62d.google.com (mail-ej1-x62d.google.com [IPv6:2a00:1450:4864:20::62d])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 87595F1E
-        for <linux-perf-users@vger.kernel.org>; Fri, 12 Aug 2022 20:08:29 -0700 (PDT)
-Received: by mail-ej1-x62d.google.com with SMTP id dc19so4816479ejb.12
-        for <linux-perf-users@vger.kernel.org>; Fri, 12 Aug 2022 20:08:29 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc;
-        bh=FOjkNd1xVbJqVfY8UU3UGqnX4Y9P4jNlc+hF+lbTxj8=;
-        b=CGqOaiP0INUys49T9Soj1g/hXp8XrX3vKSK9EDxc+qSSPlrTDokeZpmJjOfOg/VEhy
-         Ddosef03tn79JDqtphwXUwNzxzNm2Gn17PW3452sIqf65rPIwufbxHwZI46blovZjrRY
-         8ZxB1XBp0k3dQMKFoEUxlkZwbG9Wyw5AaZqdD6Z4rHLEHLnlCHTaipss5tbuSxTf+bEc
-         EXhzyNUkWXnahKPZoiKKl5Wvkc9UCkrUfsTRgCGPlIuu9bKp9Swrn+6Jg3R7accoFrgC
-         SP280fkjw3lfEBy8tgzPZSitwgg/1o/UYI1OyoV7ulsWpGTcs9Pc3iGq+viHiV5ksaFI
-         Bzng==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc;
-        bh=FOjkNd1xVbJqVfY8UU3UGqnX4Y9P4jNlc+hF+lbTxj8=;
-        b=gIkgMEL6lQvcsTW3NJOhtcWikC2UcbDtLVXG9RWteFJivmydpJffL0uSMH1yBfDdtf
-         7ocGmZ87rW9hFSC6Ec2cvVSGrUENQ38M3xvT8h2a5p4pCNJkcQzcgpPlaEZckErhyyfB
-         0vBHbUQy6eZkw21B2hM8Uj+OufSiNVmv7GF6e2h7vnGCeRAaRlmQwt0xlO7V5/WwYY+B
-         uas+fwb4WRoEwBuO2P5F2JyxZi+BV+BSN/C2T1SRToCvIlPzzZu2SxU4jTxdPiWU6VO8
-         y8uxiffbG/YzbXfl4HqdlPnBtXKUCGmllst/gTbstavUe6uQQJGgqHX/XZMi9rVU0pNi
-         tSsw==
-X-Gm-Message-State: ACgBeo1Q/cgCXwEcD+itATavBrUUi6Ck2PutTm/8DB+hMoiLD/oytArt
-        S1q3dKC+hnK6UaoHid7+IgYW5g==
-X-Google-Smtp-Source: AA6agR4rpMYubzwMwCgXF+kZTc7AFFRuwGRLRj5ZQm649WyeBGV8FRlpJUJ/JwwIu/iX98SWDjExDQ==
-X-Received: by 2002:a17:907:60c7:b0:731:2be4:f72d with SMTP id hv7-20020a17090760c700b007312be4f72dmr4329113ejc.639.1660360107980;
-        Fri, 12 Aug 2022 20:08:27 -0700 (PDT)
-Received: from leoy-huanghe ([104.245.96.132])
-        by smtp.gmail.com with ESMTPSA id z7-20020a170906d00700b00726c0e63b94sm1415941ejy.27.2022.08.12.20.08.24
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 12 Aug 2022 20:08:27 -0700 (PDT)
-Date:   Sat, 13 Aug 2022 11:08:22 +0800
-From:   Leo Yan <leo.yan@linaro.org>
-To:     Ian Rogers <irogers@google.com>
-Cc:     Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Jiri Olsa <jolsa@kernel.org>,
-        Namhyung Kim <namhyung@kernel.org>,
-        linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org
-Subject: Re: [PATCH 2/2] perf test: Introduce script for java symbol testing
-Message-ID: <20220813030822.GE74978@leoy-huanghe>
-References: <20220806033434.121908-1-leo.yan@linaro.org>
- <20220806033434.121908-3-leo.yan@linaro.org>
- <YvauX7u69u9AeID/@kernel.org>
- <CAP-5=fUJxMz0C61Y1qwptc+M6rT=J3ztvguB+9bJBaQrYEQZ3w@mail.gmail.com>
+        Sat, 13 Aug 2022 05:53:19 -0400
+Received: from mga09.intel.com (mga09.intel.com [134.134.136.24])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3C3187646F;
+        Sat, 13 Aug 2022 02:53:18 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1660384398; x=1691920398;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=OamMQmkw1kw/qgC1ToQfGGYK5wCJuB1mv86EUB851PE=;
+  b=QH1WsiawuHZZ3SX4ZexhqUUZs5TMHQq4vPmWqLLWv3NXS0EGh8yf73S6
+   VxEFxq6jtKUnvtmdNbUrwC0h6fM7Ylug5Z/hXamO9jC1K4bQkj8G3Q7ZL
+   Ndv9ngrHvb0uxcTIU5i0LQdV3ejIxEtDG7CLc0SnKhqZz9xiUJxv7koBb
+   t+fh0TZ/4BRBhiula5WqTFiUNfvj3KGKZBIwBLsbwlcY07dHFo5UICWBn
+   ea0cu/VyjqCA++jRerz4nWJm6Ftz+XV5oLKK/lHHSnAx22tYfCnPvxAt0
+   yNInB6IqmnEdB5xHRt2/s58Bqi2Wmiklpy0o6o3Yp45Wq+ov+yy03YmNM
+   g==;
+X-IronPort-AV: E=McAfee;i="6400,9594,10437"; a="292537612"
+X-IronPort-AV: E=Sophos;i="5.93,233,1654585200"; 
+   d="scan'208";a="292537612"
+Received: from orsmga006.jf.intel.com ([10.7.209.51])
+  by orsmga102.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 13 Aug 2022 02:53:17 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.93,233,1654585200"; 
+   d="scan'208";a="582354751"
+Received: from lkp-server02.sh.intel.com (HELO 8745164cafc7) ([10.239.97.151])
+  by orsmga006.jf.intel.com with ESMTP; 13 Aug 2022 02:53:14 -0700
+Received: from kbuild by 8745164cafc7 with local (Exim 4.96)
+        (envelope-from <lkp@intel.com>)
+        id 1oMnpR-0001Xd-36;
+        Sat, 13 Aug 2022 09:53:13 +0000
+Date:   Sat, 13 Aug 2022 17:53:01 +0800
+From:   kernel test robot <lkp@intel.com>
+To:     Mike Leach <mike.leach@linaro.org>, coresight@lists.linaro.org,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+Cc:     kbuild-all@lists.01.org, mathieu.poirier@linaro.org,
+        suzuki.poulose@arm.com, peterz@infradead.org, mingo@redhat.com,
+        acme@kernel.org, linux-perf-users@vger.kernel.org,
+        leo.yan@linaro.org, quic_jinlmao@quicinc.com,
+        Mike Leach <mike.leach@linaro.org>
+Subject: Re: [PATCH v3 05/13] coresight: etm3x: Update ETM3 driver to use
+ Trace ID API
+Message-ID: <202208131723.4WupJz5f-lkp@intel.com>
+References: <20220809223401.24599-6-mike.leach@linaro.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <CAP-5=fUJxMz0C61Y1qwptc+M6rT=J3ztvguB+9bJBaQrYEQZ3w@mail.gmail.com>
+In-Reply-To: <20220809223401.24599-6-mike.leach@linaro.org>
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-On Fri, Aug 12, 2022 at 02:08:43PM -0700, Ian Rogers wrote:
+Hi Mike,
 
-[...]
+I love your patch! Perhaps something to improve:
 
-> > > +if [ -e "$PWD/tools/perf/libperf-jvmti.so" ]; then
-> > > +     LIBJVMTI=$PWD/tools/perf/libperf-jvmti.so
-> >
-> >
-> > Will this only work if we do a:
-> >
-> > make -C tools/perf
+[auto build test WARNING on acme/perf/core]
+[also build test WARNING on tip/perf/core atorgue-stm32/stm32-next linus/master v5.19 next-20220812]
+[If your patch is applied to the wrong git tree, kindly drop us a note.
+And when submitting patch, we suggest to use '--base' as documented in
+https://git-scm.com/docs/git-format-patch#_base_tree_information]
 
-Yes, I think so.
+url:    https://github.com/intel-lab-lkp/linux/commits/Mike-Leach/coresight-Add-new-API-to-allocate-trace-source-ID-values/20220810-063940
+base:   https://git.kernel.org/pub/scm/linux/kernel/git/acme/linux.git perf/core
+config: arm-allyesconfig (https://download.01.org/0day-ci/archive/20220813/202208131723.4WupJz5f-lkp@intel.com/config)
+compiler: arm-linux-gnueabi-gcc (GCC) 12.1.0
+reproduce (this is a W=1 build):
+        wget https://raw.githubusercontent.com/intel/lkp-tests/master/sbin/make.cross -O ~/bin/make.cross
+        chmod +x ~/bin/make.cross
+        # https://github.com/intel-lab-lkp/linux/commit/48c9bb1ba00758132c4523dba423071440723ccd
+        git remote add linux-review https://github.com/intel-lab-lkp/linux
+        git fetch --no-tags linux-review Mike-Leach/coresight-Add-new-API-to-allocate-trace-source-ID-values/20220810-063940
+        git checkout 48c9bb1ba00758132c4523dba423071440723ccd
+        # save the config file
+        mkdir build_dir && cp config build_dir/.config
+        COMPILER_INSTALL_PATH=$HOME/0day COMPILER=gcc-12.1.0 make.cross W=1 O=build_dir ARCH=arm SHELL=/bin/bash drivers/hwtracing/coresight/
 
-> >
-> > ?
-> 
-> Perhaps, I'm not sure on the correct way to detect the install location.
-> The only similar example I know of is:
-> https://git.kernel.org/pub/scm/linux/kernel/git/acme/linux.git/tree/tools/perf/tests/builtin-test.c?h=perf/core#n308
+If you fix the issue, kindly add following tag where applicable
+Reported-by: kernel test robot <lkp@intel.com>
 
-Yes, I refered the code in this link.
+All warnings (new ones prefixed by >>):
 
-If user works under Linux source folder, the test will search lib in
-the folder $LINUX or $LINUX/tools/perf; and it searchs the installed
-libperf-jvmti.so in the folder "$PREFIX/lib64" or "$PREFIX/lib".
+>> drivers/hwtracing/coresight/coresight-etm3x-core.c:509:44: warning: 'struct etmv4_drvdata' declared inside parameter list will not be visible outside of this definition or declaration
+     509 | static int etm_set_current_trace_id(struct etmv4_drvdata *drvdata)
+         |                                            ^~~~~~~~~~~~~
+   drivers/hwtracing/coresight/coresight-etm3x-core.c: In function 'etm_set_current_trace_id':
+   drivers/hwtracing/coresight/coresight-etm3x-core.c:517:58: error: invalid use of undefined type 'struct etmv4_drvdata'
+     517 |         trace_id = coresight_trace_id_read_cpu_id(drvdata->cpu);
+         |                                                          ^~
+   drivers/hwtracing/coresight/coresight-etm3x-core.c:519:24: error: invalid use of undefined type 'struct etmv4_drvdata'
+     519 |                 drvdata->traceid = (u8)trace_id;
+         |                        ^~
+   In file included from include/linux/device.h:15,
+                    from drivers/hwtracing/coresight/coresight-etm3x-core.c:12:
+   drivers/hwtracing/coresight/coresight-etm3x-core.c:523:25: error: invalid use of undefined type 'struct etmv4_drvdata'
+     523 |         dev_err(&drvdata->csdev->dev, "Failed to set trace ID for %s on CPU%d\n",
+         |                         ^~
+   include/linux/dev_printk.h:110:25: note: in definition of macro 'dev_printk_index_wrap'
+     110 |                 _p_func(dev, fmt, ##__VA_ARGS__);                       \
+         |                         ^~~
+   drivers/hwtracing/coresight/coresight-etm3x-core.c:523:9: note: in expansion of macro 'dev_err'
+     523 |         dev_err(&drvdata->csdev->dev, "Failed to set trace ID for %s on CPU%d\n",
+         |         ^~~~~~~
+   drivers/hwtracing/coresight/coresight-etm3x-core.c:524:34: error: invalid use of undefined type 'struct etmv4_drvdata'
+     524 |                 dev_name(&drvdata->csdev->dev), drvdata->cpu);
+         |                                  ^~
+   include/linux/dev_printk.h:110:37: note: in definition of macro 'dev_printk_index_wrap'
+     110 |                 _p_func(dev, fmt, ##__VA_ARGS__);                       \
+         |                                     ^~~~~~~~~~~
+   drivers/hwtracing/coresight/coresight-etm3x-core.c:523:9: note: in expansion of macro 'dev_err'
+     523 |         dev_err(&drvdata->csdev->dev, "Failed to set trace ID for %s on CPU%d\n",
+         |         ^~~~~~~
+   drivers/hwtracing/coresight/coresight-etm3x-core.c:524:56: error: invalid use of undefined type 'struct etmv4_drvdata'
+     524 |                 dev_name(&drvdata->csdev->dev), drvdata->cpu);
+         |                                                        ^~
+   include/linux/dev_printk.h:110:37: note: in definition of macro 'dev_printk_index_wrap'
+     110 |                 _p_func(dev, fmt, ##__VA_ARGS__);                       \
+         |                                     ^~~~~~~~~~~
+   drivers/hwtracing/coresight/coresight-etm3x-core.c:523:9: note: in expansion of macro 'dev_err'
+     523 |         dev_err(&drvdata->csdev->dev, "Failed to set trace ID for %s on CPU%d\n",
+         |         ^~~~~~~
+   drivers/hwtracing/coresight/coresight-etm3x-core.c: In function 'etm_enable_perf':
+   drivers/hwtracing/coresight/coresight-etm3x-core.c:547:40: error: passing argument 1 of 'etm_set_current_trace_id' from incompatible pointer type [-Werror=incompatible-pointer-types]
+     547 |         ret = etm_set_current_trace_id(drvdata);
+         |                                        ^~~~~~~
+         |                                        |
+         |                                        struct etm_drvdata *
+   drivers/hwtracing/coresight/coresight-etm3x-core.c:509:59: note: expected 'struct etmv4_drvdata *' but argument is of type 'struct etm_drvdata *'
+     509 | static int etm_set_current_trace_id(struct etmv4_drvdata *drvdata)
+         |                                     ~~~~~~~~~~~~~~~~~~~~~~^~~~~~~
+   cc1: some warnings being treated as errors
 
-I think I can add a more path for searching system lib (e.g. the
-libperf-jvmti.so is under /usr/lib/linux-tools-xxx/):
 
-  elif [ -e "/usr/lib/linux-tools-$(uname -a | awk '{ print $3 }' | sed -r 's/-generic//')/libperf-jvmti.so" ]; then
-       LIBJVMTI= /usr/lib/linux-tools-$(uname -a | awk '{ print $3 }' | sed -r 's/-generic//')/libperf-jvmti.so
+vim +509 drivers/hwtracing/coresight/coresight-etm3x-core.c
 
-> > +elif [ -e "$PWD/libperf-jvmti.so" ]; then
-> > > +     LIBJVMTI=$PWD/libperf-jvmti.so
-> > > +elif [ -e "$PREFIX/lib64/libperf-jvmti.so" ]; then
-> > > +     LIBJVMTI=$PREFIX/lib64/libperf-jvmti.so
-> > > +elif [ -e "$PREFIX/lib/libperf-jvmti.so" ]; then
-> > > +     LIBJVMTI=$PREFIX/lib/libperf-jvmti.so
-> > > +else
-> > > +     echo "Fail to find libperf-jvmti.so"
-> > > +     exit 1
-> >
-> 
-> JVMTI is a build option so this should probably be "exit 2" for skip.
+   508	
+ > 509	static int etm_set_current_trace_id(struct etmv4_drvdata *drvdata)
+   510	{
+   511		int trace_id;
+   512	
+   513		/*
+   514		 * Set the currently allocated trace ID - perf allocates IDs
+   515		 * as part of setup_aux for all CPUs it may use.
+   516		 */
+   517		trace_id = coresight_trace_id_read_cpu_id(drvdata->cpu);
+   518		if (IS_VALID_ID(trace_id)) {
+   519			drvdata->traceid = (u8)trace_id;
+   520			return 0;
+   521		}
+   522	
+   523		dev_err(&drvdata->csdev->dev, "Failed to set trace ID for %s on CPU%d\n",
+   524			dev_name(&drvdata->csdev->dev), drvdata->cpu);
+   525	
+   526		return -EINVAL;
+   527	}
+   528	
 
-Sure, will fix.
-
-Thanks,
-Leo
+-- 
+0-DAY CI Kernel Test Service
+https://01.org/lkp
