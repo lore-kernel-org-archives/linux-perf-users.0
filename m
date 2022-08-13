@@ -2,48 +2,48 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5DE84C19F2D
-	for <linux-perf-users@archiver.kernel.org>; Sat, 13 Aug 2022 09:53:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8EFA8C19F2D
+	for <linux-perf-users@archiver.kernel.org>; Sat, 13 Aug 2022 13:49:28 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229719AbiHMJxU (ORCPT
+        id S239590AbiHMNt1 (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Sat, 13 Aug 2022 05:53:20 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44798 "EHLO
+        Sat, 13 Aug 2022 09:49:27 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52680 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229507AbiHMJxT (ORCPT
+        with ESMTP id S239537AbiHMNt0 (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Sat, 13 Aug 2022 05:53:19 -0400
-Received: from mga09.intel.com (mga09.intel.com [134.134.136.24])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3C3187646F;
-        Sat, 13 Aug 2022 02:53:18 -0700 (PDT)
+        Sat, 13 Aug 2022 09:49:26 -0400
+Received: from mga06.intel.com (mga06b.intel.com [134.134.136.31])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2EB9BE00C;
+        Sat, 13 Aug 2022 06:49:23 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1660384398; x=1691920398;
+  t=1660398563; x=1691934563;
   h=date:from:to:cc:subject:message-id:references:
    mime-version:in-reply-to;
-  bh=OamMQmkw1kw/qgC1ToQfGGYK5wCJuB1mv86EUB851PE=;
-  b=QH1WsiawuHZZ3SX4ZexhqUUZs5TMHQq4vPmWqLLWv3NXS0EGh8yf73S6
-   VxEFxq6jtKUnvtmdNbUrwC0h6fM7Ylug5Z/hXamO9jC1K4bQkj8G3Q7ZL
-   Ndv9ngrHvb0uxcTIU5i0LQdV3ejIxEtDG7CLc0SnKhqZz9xiUJxv7koBb
-   t+fh0TZ/4BRBhiula5WqTFiUNfvj3KGKZBIwBLsbwlcY07dHFo5UICWBn
-   ea0cu/VyjqCA++jRerz4nWJm6Ftz+XV5oLKK/lHHSnAx22tYfCnPvxAt0
-   yNInB6IqmnEdB5xHRt2/s58Bqi2Wmiklpy0o6o3Yp45Wq+ov+yy03YmNM
-   g==;
-X-IronPort-AV: E=McAfee;i="6400,9594,10437"; a="292537612"
-X-IronPort-AV: E=Sophos;i="5.93,233,1654585200"; 
-   d="scan'208";a="292537612"
-Received: from orsmga006.jf.intel.com ([10.7.209.51])
-  by orsmga102.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 13 Aug 2022 02:53:17 -0700
+  bh=JaEvKL+AdxwiSWRlV+uCBYdtPcSSE/UBNzAyRFE7VoI=;
+  b=apWI1AljpOI1clF/g8FNMI5VWYENGqhLWYzX2wIMZR2x/hXA3n34w6m/
+   b/4p/EKmvWV+2+59PMofQMoWkFO4Yqtr4N4r2JzCTcrIF40LWDmCPHzGP
+   m3BQFUX2FgutKk91N3/EmJPMmet3bmyZCeyU8YnX8167lD4u8mr+QimQt
+   bUzqzvFcKCpBObYqHzTnsD7NFqPBgBEQdrM/0WzYYAyS/BUzPJ7F/ywaF
+   s40ZQgq7cwoRkKmTDCK1rP7SXoR6TbHY/bjjwa0oHFIgOr6GxqbBjvbrC
+   kcIJS7EK18K5SSPZRpHFeW+nvDiAn6CWLG2V46ux5dvTEL1h5Fuv1AL2s
+   A==;
+X-IronPort-AV: E=McAfee;i="6400,9594,10437"; a="353496792"
+X-IronPort-AV: E=Sophos;i="5.93,235,1654585200"; 
+   d="scan'208";a="353496792"
+Received: from fmsmga003.fm.intel.com ([10.253.24.29])
+  by orsmga104.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 13 Aug 2022 06:49:22 -0700
 X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.93,233,1654585200"; 
-   d="scan'208";a="582354751"
+X-IronPort-AV: E=Sophos;i="5.93,235,1654585200"; 
+   d="scan'208";a="695536376"
 Received: from lkp-server02.sh.intel.com (HELO 8745164cafc7) ([10.239.97.151])
-  by orsmga006.jf.intel.com with ESMTP; 13 Aug 2022 02:53:14 -0700
+  by FMSMGA003.fm.intel.com with ESMTP; 13 Aug 2022 06:49:19 -0700
 Received: from kbuild by 8745164cafc7 with local (Exim 4.96)
         (envelope-from <lkp@intel.com>)
-        id 1oMnpR-0001Xd-36;
-        Sat, 13 Aug 2022 09:53:13 +0000
-Date:   Sat, 13 Aug 2022 17:53:01 +0800
+        id 1oMrVv-0001jI-0L;
+        Sat, 13 Aug 2022 13:49:19 +0000
+Date:   Sat, 13 Aug 2022 21:48:19 +0800
 From:   kernel test robot <lkp@intel.com>
 To:     Mike Leach <mike.leach@linaro.org>, coresight@lists.linaro.org,
         linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
@@ -54,7 +54,7 @@ Cc:     kbuild-all@lists.01.org, mathieu.poirier@linaro.org,
         Mike Leach <mike.leach@linaro.org>
 Subject: Re: [PATCH v3 05/13] coresight: etm3x: Update ETM3 driver to use
  Trace ID API
-Message-ID: <202208131723.4WupJz5f-lkp@intel.com>
+Message-ID: <202208132126.X6alpomk-lkp@intel.com>
 References: <20220809223401.24599-6-mike.leach@linaro.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
@@ -66,17 +66,17 @@ X-Mailing-List: linux-perf-users@vger.kernel.org
 
 Hi Mike,
 
-I love your patch! Perhaps something to improve:
+I love your patch! Yet something to improve:
 
-[auto build test WARNING on acme/perf/core]
-[also build test WARNING on tip/perf/core atorgue-stm32/stm32-next linus/master v5.19 next-20220812]
+[auto build test ERROR on acme/perf/core]
+[also build test ERROR on tip/perf/core atorgue-stm32/stm32-next linus/master v5.19 next-20220812]
 [If your patch is applied to the wrong git tree, kindly drop us a note.
 And when submitting patch, we suggest to use '--base' as documented in
 https://git-scm.com/docs/git-format-patch#_base_tree_information]
 
 url:    https://github.com/intel-lab-lkp/linux/commits/Mike-Leach/coresight-Add-new-API-to-allocate-trace-source-ID-values/20220810-063940
 base:   https://git.kernel.org/pub/scm/linux/kernel/git/acme/linux.git perf/core
-config: arm-allyesconfig (https://download.01.org/0day-ci/archive/20220813/202208131723.4WupJz5f-lkp@intel.com/config)
+config: arm-allyesconfig (https://download.01.org/0day-ci/archive/20220813/202208132126.X6alpomk-lkp@intel.com/config)
 compiler: arm-linux-gnueabi-gcc (GCC) 12.1.0
 reproduce (this is a W=1 build):
         wget https://raw.githubusercontent.com/intel/lkp-tests/master/sbin/make.cross -O ~/bin/make.cross
@@ -87,18 +87,18 @@ reproduce (this is a W=1 build):
         git checkout 48c9bb1ba00758132c4523dba423071440723ccd
         # save the config file
         mkdir build_dir && cp config build_dir/.config
-        COMPILER_INSTALL_PATH=$HOME/0day COMPILER=gcc-12.1.0 make.cross W=1 O=build_dir ARCH=arm SHELL=/bin/bash drivers/hwtracing/coresight/
+        COMPILER_INSTALL_PATH=$HOME/0day COMPILER=gcc-12.1.0 make.cross W=1 O=build_dir ARCH=arm SHELL=/bin/bash drivers/
 
 If you fix the issue, kindly add following tag where applicable
 Reported-by: kernel test robot <lkp@intel.com>
 
-All warnings (new ones prefixed by >>):
+All errors (new ones prefixed by >>):
 
->> drivers/hwtracing/coresight/coresight-etm3x-core.c:509:44: warning: 'struct etmv4_drvdata' declared inside parameter list will not be visible outside of this definition or declaration
+   drivers/hwtracing/coresight/coresight-etm3x-core.c:509:44: warning: 'struct etmv4_drvdata' declared inside parameter list will not be visible outside of this definition or declaration
      509 | static int etm_set_current_trace_id(struct etmv4_drvdata *drvdata)
          |                                            ^~~~~~~~~~~~~
    drivers/hwtracing/coresight/coresight-etm3x-core.c: In function 'etm_set_current_trace_id':
-   drivers/hwtracing/coresight/coresight-etm3x-core.c:517:58: error: invalid use of undefined type 'struct etmv4_drvdata'
+>> drivers/hwtracing/coresight/coresight-etm3x-core.c:517:58: error: invalid use of undefined type 'struct etmv4_drvdata'
      517 |         trace_id = coresight_trace_id_read_cpu_id(drvdata->cpu);
          |                                                          ^~
    drivers/hwtracing/coresight/coresight-etm3x-core.c:519:24: error: invalid use of undefined type 'struct etmv4_drvdata'
@@ -134,7 +134,7 @@ All warnings (new ones prefixed by >>):
      523 |         dev_err(&drvdata->csdev->dev, "Failed to set trace ID for %s on CPU%d\n",
          |         ^~~~~~~
    drivers/hwtracing/coresight/coresight-etm3x-core.c: In function 'etm_enable_perf':
-   drivers/hwtracing/coresight/coresight-etm3x-core.c:547:40: error: passing argument 1 of 'etm_set_current_trace_id' from incompatible pointer type [-Werror=incompatible-pointer-types]
+>> drivers/hwtracing/coresight/coresight-etm3x-core.c:547:40: error: passing argument 1 of 'etm_set_current_trace_id' from incompatible pointer type [-Werror=incompatible-pointer-types]
      547 |         ret = etm_set_current_trace_id(drvdata);
          |                                        ^~~~~~~
          |                                        |
@@ -145,10 +145,10 @@ All warnings (new ones prefixed by >>):
    cc1: some warnings being treated as errors
 
 
-vim +509 drivers/hwtracing/coresight/coresight-etm3x-core.c
+vim +517 drivers/hwtracing/coresight/coresight-etm3x-core.c
 
    508	
- > 509	static int etm_set_current_trace_id(struct etmv4_drvdata *drvdata)
+   509	static int etm_set_current_trace_id(struct etmv4_drvdata *drvdata)
    510	{
    511		int trace_id;
    512	
@@ -156,7 +156,7 @@ vim +509 drivers/hwtracing/coresight/coresight-etm3x-core.c
    514		 * Set the currently allocated trace ID - perf allocates IDs
    515		 * as part of setup_aux for all CPUs it may use.
    516		 */
-   517		trace_id = coresight_trace_id_read_cpu_id(drvdata->cpu);
+ > 517		trace_id = coresight_trace_id_read_cpu_id(drvdata->cpu);
    518		if (IS_VALID_ID(trace_id)) {
    519			drvdata->traceid = (u8)trace_id;
    520			return 0;
@@ -168,6 +168,34 @@ vim +509 drivers/hwtracing/coresight/coresight-etm3x-core.c
    526		return -EINVAL;
    527	}
    528	
+   529	void etm_release_trace_id(struct etm_drvdata *drvdata)
+   530	{
+   531		coresight_trace_id_put_cpu_id(drvdata->cpu);
+   532	}
+   533	
+   534	static int etm_enable_perf(struct coresight_device *csdev,
+   535				   struct perf_event *event)
+   536	{
+   537		struct etm_drvdata *drvdata = dev_get_drvdata(csdev->dev.parent);
+   538		int ret;
+   539	
+   540		if (WARN_ON_ONCE(drvdata->cpu != smp_processor_id()))
+   541			return -EINVAL;
+   542	
+   543		/* Configure the tracer based on the session's specifics */
+   544		etm_parse_event_config(drvdata, event);
+   545	
+   546		/* perf allocates cpu IDs in setup aux - set the current on device */
+ > 547		ret = etm_set_current_trace_id(drvdata);
+   548		if (ret < 0)
+   549			return ret;
+   550	
+   551		/* And enable it */
+   552		ret = etm_enable_hw(drvdata);
+   553	
+   554		return ret;
+   555	}
+   556	
 
 -- 
 0-DAY CI Kernel Test Service
