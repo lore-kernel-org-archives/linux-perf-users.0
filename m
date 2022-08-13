@@ -2,144 +2,147 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9DA09C3F6B0
-	for <linux-perf-users@archiver.kernel.org>; Sat, 13 Aug 2022 16:53:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 73C41C19F2D
+	for <linux-perf-users@archiver.kernel.org>; Sat, 13 Aug 2022 18:04:04 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S239701AbiHMQwM (ORCPT
+        id S233814AbiHMSEC (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Sat, 13 Aug 2022 12:52:12 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53244 "EHLO
+        Sat, 13 Aug 2022 14:04:02 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46452 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S234900AbiHMQwL (ORCPT
+        with ESMTP id S230103AbiHMSEB (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Sat, 13 Aug 2022 12:52:11 -0400
-Received: from mga14.intel.com (mga14.intel.com [192.55.52.115])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9F52E27CED;
-        Sat, 13 Aug 2022 09:52:09 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1660409529; x=1691945529;
-  h=message-id:date:mime-version:subject:to:cc:references:
-   from:in-reply-to:content-transfer-encoding;
-  bh=jUaf61eY9bVSVQrGX5E86tNJtvOl6+OURS+GiXpuTGY=;
-  b=hPMW4fLcThjPurqFCUl82dOL9x7k4Japl7k+oYTh7pJcmIqDg+K39ami
-   fWpMWmrU63SddCjzFSOIzPWphMUgd/nQgr0e/PZ2GpRkQRgqiQfZPf8Xx
-   x83Q2IC6DMC3f7MecV4ChKAvqcsfLmEt+WhV4jvfguYLbAiFDoR7vCwJA
-   8HVte5aF1DOjclSQHYKDnmILvNpt0j+bm5DB4tTgnHNm7SYf9lVVccopV
-   Qp8QRrYdG3SENH/LslazXVpjtd3rAyMYTAxgkoYzDa1/pocq38mZJlniM
-   MaiL2PlUIZ6mxyheK1Qn24KrEuhmPsvQ0EdLH75dpHmg0cFDfbEFU9hb8
-   Q==;
-X-IronPort-AV: E=McAfee;i="6400,9594,10437"; a="291764023"
-X-IronPort-AV: E=Sophos;i="5.93,235,1654585200"; 
-   d="scan'208";a="291764023"
-Received: from fmsmga004.fm.intel.com ([10.253.24.48])
-  by fmsmga103.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 13 Aug 2022 09:52:09 -0700
-X-IronPort-AV: E=Sophos;i="5.93,235,1654585200"; 
-   d="scan'208";a="674401463"
-Received: from xingzhen-mobl.ccr.corp.intel.com (HELO [10.249.170.184]) ([10.249.170.184])
-  by fmsmga004-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 13 Aug 2022 09:52:06 -0700
-Message-ID: <b118ec12-6b51-3b86-22b2-c7689e0f91d8@linux.intel.com>
-Date:   Sun, 14 Aug 2022 00:52:04 +0800
-MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:91.0) Gecko/20100101
- Thunderbird/91.12.0
-Subject: Re: [PATCH 00/11] Add generated latest Intel events and metrics
-Content-Language: en-US
+        Sat, 13 Aug 2022 14:04:01 -0400
+Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E4C5024BC7;
+        Sat, 13 Aug 2022 11:03:59 -0700 (PDT)
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by dfw.source.kernel.org (Postfix) with ESMTPS id 6E63E60F21;
+        Sat, 13 Aug 2022 18:03:59 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 96221C433D6;
+        Sat, 13 Aug 2022 18:03:58 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1660413838;
+        bh=LW0WsvI44YjlO0JrIFH51DdrccN4k9zbLcQRC93MHhY=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=Qn4yvixeKZFr5T5fEX1GJwmHbENG8132bO+Ok6f0tlgUsGPFHA1forgYS1MRWIsKh
+         my2aP/qrS7w3cB0CqIz9lHe314Hv6YCKr5KCHgzUeOt3A+sf+fGoagHhYkhsYZ7gKR
+         0OIZMuhViZVTH0tc+MjTy8X5S/pzVTEbVvwny5IxQL/c5s3m+2+nocgPuOvvuRbPKH
+         kPFyvywB4oB9DGrqh47spKgPKYvTScufkc1aNQiVw1/vAxof8wntKp/hpV/RLQ07zL
+         d4E0tSmBuNL9y2qx857BO2TZScthnMfat8KUn0UXan7kmxM8eiB+wFhDSuxctB7hok
+         bNyng5BYXAUQw==
+Received: by quaco.ghostprotocols.net (Postfix, from userid 1000)
+        id A3F7E4035A; Sat, 13 Aug 2022 15:03:55 -0300 (-03)
+Date:   Sat, 13 Aug 2022 15:03:55 -0300
+From:   Arnaldo Carvalho de Melo <acme@kernel.org>
 To:     Ian Rogers <irogers@google.com>
-Cc:     acme@kernel.org, peterz@infradead.org, mingo@redhat.com,
-        alexander.shishkin@intel.com, jolsa@kernel.org,
-        namhyung@kernel.org, linux-kernel@vger.kernel.org,
-        linux-perf-users@vger.kernel.org, ak@linux.intel.com,
-        kan.liang@linux.intel.com
-References: <20220812085239.3089231-1-zhengjun.xing@linux.intel.com>
- <CAP-5=fVTOvY0_3PxrzP28iFn0FtDgQE34qJ4_6+fD-TQohCFQQ@mail.gmail.com>
-From:   Xing Zhengjun <zhengjun.xing@linux.intel.com>
-In-Reply-To: <CAP-5=fVTOvY0_3PxrzP28iFn0FtDgQE34qJ4_6+fD-TQohCFQQ@mail.gmail.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
+Cc:     John Garry <john.garry@huawei.com>, Will Deacon <will@kernel.org>,
+        James Clark <james.clark@arm.com>,
+        Mike Leach <mike.leach@linaro.org>,
+        Leo Yan <leo.yan@linaro.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Jiri Olsa <jolsa@kernel.org>,
+        Namhyung Kim <namhyung@kernel.org>,
+        Andi Kleen <ak@linux.intel.com>,
+        Zhengjun Xing <zhengjun.xing@linux.intel.com>,
+        Ravi Bangoria <ravi.bangoria@amd.com>,
+        Kan Liang <kan.liang@linux.intel.com>,
+        Adrian Hunter <adrian.hunter@intel.com>,
+        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-perf-users@vger.kernel.org,
+        Stephane Eranian <eranian@google.com>
+Subject: Re: [PATCH v5 00/14] Compress the pmu_event tables
+Message-ID: <Yvfni9lsQ9HljF49@kernel.org>
+References: <20220812230949.683239-1-irogers@google.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20220812230949.683239-1-irogers@google.com>
+X-Url:  http://acmel.wordpress.com
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-Hi Ian,
+Em Fri, Aug 12, 2022 at 04:09:35PM -0700, Ian Rogers escreveu:
+> jevents.py creates a number of large arrays from the json events. The
+> arrays contain pointers to strings that need relocating. The
+> relocations have file size, run time and memory costs. These changes
+> refactor the pmu_events API so that the storage of the pmu_event
+> struct isn't exposed. The format is then changed to an offset within a
+> combined big string, with adjacent pmu_event struct variables being
+> next to each other in the string separated by \0 - meaning only the
+> first variable of the struct needs its offset recording.
+> 
+> Some related fixes are contained with the patches. The architecture
+> jevents.py creates tables for can now be set by the JEVENTS_ARCH make
+> variable, with a new 'all' that generates the events and metrics for
+> all architectures.
+> 
+> An example of the improvement to the file size on x86 is:
+> no jevents - the same 19,788,464bytes
+> x86 jevents - ~16.7% file size saving 23,744,288bytes vs 28,502,632bytes
+> all jevents - ~19.5% file size saving 24,469,056bytes vs 30,379,920bytes
+> default build options plus NO_LIBBFD=1.
 
-On 8/13/2022 4:53 AM, Ian Rogers wrote:
-> On Fri, Aug 12, 2022 at 1:51 AM <zhengjun.xing@linux.intel.com 
-> <mailto:zhengjun.xing@linux.intel.com>> wrote:
-> 
->     From: Zhengjun Xing <zhengjun.xing@linux.intel.com
->     <mailto:zhengjun.xing@linux.intel.com>>
-> 
->     The goal of this patch series is to align the json events for Intel
->     platforms with those generated by:
->     https://github.com/intel/event-converter-for-linux-perf/blob/master/download_and_gen.py
->     <https://github.com/intel/event-converter-for-linux-perf/blob/master/download_and_gen.py>
->     This script takes the latest event json and TMA metrics from:
->     https://download.01.org/perfmon/ <https://download.01.org/perfmon/>
->     and adds to these metrics, in
->     particular uncore ones, from:
->     https://github.com/intel/perfmon-metrics
->     <https://github.com/intel/perfmon-metrics>
-> 
->     Compared to the previous json, the major changes are:
->       - Add new metrics “UNCORE_FREQ” for Linux perf,this new metric can
->     be added to all platforms that have Sockets_CLKS.
->       - Remove duplicated uncore events.
->       - the inclusion of previously ungenerated and experimental uncore
->     events.
-> 
->     Zhengjun Xing (11):
->        perf vendor events: Update metrics for broadwellde
->        perf vendor events: Update events and metrics for broadwellx
->        perf vendor events: Update events and metrics for cascadelakex
->        perf vendor events: Update events and metrics for haswellx
->        perf vendor events: Update events and metrics for icelakex
->        perf vendor events: Update metrics for ivytown
->        perf vendor events: Update metrics for jaketown
->        perf vendor events: Update events for knightslanding
->        perf vendor events: Update metrics for sapphirerapids
->        perf vendor events: Update events and metrics for skylakex
->        perf vendor events: Update events for snowridgex
-> 
-> 
-> Tested-by: Ian Rogers <irogers@google.com <mailto:irogers@google.com>>
-> 
-Thanks.
+Applied locally, going thru further tests.
 
-> Thanks,
-> Ian
+- Arnaldo
+ 
+> I originally suggested fixing this problem in:
+> https://lore.kernel.org/linux-perf-users/CAP-5=fVB8G4bdb9T=FncRTh9oBVKCS=+=eowAO+YSgAhab+Dtg@mail.gmail.com/
 > 
->       .../arch/x86/broadwellde/bdwde-metrics.json   |     6 +
->       .../arch/x86/broadwellx/bdx-metrics.json      |     6 +
->       .../arch/x86/broadwellx/uncore-cache.json     |   163 +-
->       .../arch/x86/cascadelakex/clx-metrics.json    |     6 +
->       .../arch/x86/cascadelakex/uncore-memory.json  |  4424 +-
->       .../arch/x86/cascadelakex/uncore-other.json   | 23162 +++++++++-
->       .../arch/x86/cascadelakex/uncore-power.json   |   201 +
->       .../arch/x86/haswellx/hsx-metrics.json        |   411 +-
->       .../arch/x86/haswellx/uncore-cache.json       |   173 +-
->       .../arch/x86/icelakex/icx-metrics.json        |     6 +
->       .../arch/x86/icelakex/uncore-memory.json      |  1523 +
->       .../arch/x86/icelakex/uncore-other.json       | 38506 +++++++++++++++-
->       .../arch/x86/icelakex/uncore-power.json       |   225 +
->       .../arch/x86/ivytown/ivt-metrics.json         |     6 +
->       .../arch/x86/jaketown/jkt-metrics.json        |     6 +
->       .../arch/x86/knightslanding/uncore-other.json |   213 +
->       .../arch/x86/sapphirerapids/spr-metrics.json  |     6 +
->       .../arch/x86/skylakex/skx-metrics.json        |     6 +
->       .../arch/x86/skylakex/uncore-memory.json      |  3566 +-
->       .../arch/x86/skylakex/uncore-other.json       | 23442 +++++++++-
->       .../arch/x86/skylakex/uncore-power.json       |   201 +
->       .../arch/x86/snowridgex/uncore-other.json     |   111 +-
->       22 files changed, 91393 insertions(+), 4976 deletions(-)
->       create mode 100644
->     tools/perf/pmu-events/arch/x86/cascadelakex/uncore-power.json
->       create mode 100644
->     tools/perf/pmu-events/arch/x86/skylakex/uncore-power.json
+> v5. Renamed two functions to be more inline with the code and added
+>     extra commit message detail on the event sorting order as
+>     suggested by John Garry <john.garry@huawei.com>.
+> v4. Fixed an issue with the empty-pmu-events.c spotted by John Garry
+>     <john.garry@huawei.com>.
+> v3. Fix an ARM build issue with a missed weak symbol. Perform some
+>     pytype clean up.
+> v2. Split the substring folding optimization to its own patch and
+>     comment tweaks as suggested by Namhyung Kim
+>     <namhyung@kernel.org>. Recompute the file size savings with the
+>     latest json events and metrics.
 > 
->     -- 
->     2.25.1
+> Ian Rogers (14):
+>   perf jevent: Add an 'all' architecture argument
+>   perf jevents: Remove the type/version variables
+>   perf jevents: Provide path to json file on error
+>   perf jevents: Sort json files entries
+>   perf pmu-events: Hide pmu_sys_event_tables
+>   perf pmu-events: Avoid passing pmu_events_map
+>   perf pmu-events: Hide pmu_events_map
+>   perf test: Use full metric resolution
+>   perf pmu-events: Move test events/metrics to json
+>   perf pmu-events: Don't assume pmu_event is an array
+>   perf pmu-events: Hide the pmu_events
+>   perf metrics: Copy entire pmu_event in find metric
+>   perf jevents: Compress the pmu_events_table
+>   perf jevents: Fold strings optimization
 > 
+>  tools/perf/arch/arm64/util/pmu.c              |   4 +-
+>  .../arch/test/test_soc/cpu/metrics.json       |  64 +++
+>  tools/perf/pmu-events/empty-pmu-events.c      | 204 +++++++-
+>  tools/perf/pmu-events/jevents.py              | 478 +++++++++++++++---
+>  tools/perf/pmu-events/pmu-events.h            |  40 +-
+>  tools/perf/tests/expand-cgroup.c              |  25 +-
+>  tools/perf/tests/parse-metric.c               |  77 +--
+>  tools/perf/tests/pmu-events.c                 | 466 +++++++----------
+>  tools/perf/util/metricgroup.c                 | 275 ++++++----
+>  tools/perf/util/metricgroup.h                 |   5 +-
+>  tools/perf/util/pmu.c                         | 139 ++---
+>  tools/perf/util/pmu.h                         |  10 +-
+>  tools/perf/util/s390-sample-raw.c             |  50 +-
+>  13 files changed, 1131 insertions(+), 706 deletions(-)
+>  create mode 100644 tools/perf/pmu-events/arch/test/test_soc/cpu/metrics.json
+> 
+> -- 
+> 2.37.1.595.g718a3a8f04-goog
 
 -- 
-Zhengjun Xing
+
+- Arnaldo
