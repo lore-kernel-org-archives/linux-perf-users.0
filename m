@@ -2,197 +2,125 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D4DE4C00140
-	for <linux-perf-users@archiver.kernel.org>; Fri, 12 Aug 2022 23:11:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E93A7C00140
+	for <linux-perf-users@archiver.kernel.org>; Sat, 13 Aug 2022 03:08:32 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S237876AbiHLXLd (ORCPT
+        id S233149AbiHMDIb (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Fri, 12 Aug 2022 19:11:33 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46526 "EHLO
+        Fri, 12 Aug 2022 23:08:31 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60608 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S238737AbiHLXK5 (ORCPT
+        with ESMTP id S229719AbiHMDIb (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Fri, 12 Aug 2022 19:10:57 -0400
-Received: from mail-yb1-xb49.google.com (mail-yb1-xb49.google.com [IPv6:2607:f8b0:4864:20::b49])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4225AA2614
-        for <linux-perf-users@vger.kernel.org>; Fri, 12 Aug 2022 16:10:33 -0700 (PDT)
-Received: by mail-yb1-xb49.google.com with SMTP id j130-20020a252388000000b0067c1f731317so1801358ybj.5
-        for <linux-perf-users@vger.kernel.org>; Fri, 12 Aug 2022 16:10:32 -0700 (PDT)
+        Fri, 12 Aug 2022 23:08:31 -0400
+Received: from mail-ej1-x62d.google.com (mail-ej1-x62d.google.com [IPv6:2a00:1450:4864:20::62d])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 87595F1E
+        for <linux-perf-users@vger.kernel.org>; Fri, 12 Aug 2022 20:08:29 -0700 (PDT)
+Received: by mail-ej1-x62d.google.com with SMTP id dc19so4816479ejb.12
+        for <linux-perf-users@vger.kernel.org>; Fri, 12 Aug 2022 20:08:29 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20210112;
-        h=content-transfer-encoding:cc:to:from:subject:references
-         :mime-version:message-id:in-reply-to:date:from:to:cc;
-        bh=jZOzQ8/cjxO+jmOM/T4yZoES9QnypFGOepiGDeweX0Y=;
-        b=RJO4FqpdnDqxJsx06M6lmWaX7oizy+rw9/HhJWXJx5ZdNTbitqkx4QHn2QF4uYNITM
-         0vnHOvZp43OQ6Kd3g82E2bGI5LZIAa7jfUE2+bDPZ0eBXY6DN16zVgPGv8Wtmng9lY+x
-         n07Y+g5R0+Suy19iAfu+Ds/JzLIYGD0bQSD8J00yuYf8Mq2uLt3AgPIlMbfAWYyseRhV
-         hz/jvdadPxf27jS1jJneXUCY3F7dTcMdq8qwqw+rKsnU07YSKRJLdlDzGKs46kUATkpl
-         fN8dEOctLjQssCfjHGU/MBCck+36zlzWE9pLI6qA7mggUnW2qv2N4K3JK1Fh7FFEqEIG
-         OdBw==
+        d=linaro.org; s=google;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc;
+        bh=FOjkNd1xVbJqVfY8UU3UGqnX4Y9P4jNlc+hF+lbTxj8=;
+        b=CGqOaiP0INUys49T9Soj1g/hXp8XrX3vKSK9EDxc+qSSPlrTDokeZpmJjOfOg/VEhy
+         Ddosef03tn79JDqtphwXUwNzxzNm2Gn17PW3452sIqf65rPIwufbxHwZI46blovZjrRY
+         8ZxB1XBp0k3dQMKFoEUxlkZwbG9Wyw5AaZqdD6Z4rHLEHLnlCHTaipss5tbuSxTf+bEc
+         EXhzyNUkWXnahKPZoiKKl5Wvkc9UCkrUfsTRgCGPlIuu9bKp9Swrn+6Jg3R7accoFrgC
+         SP280fkjw3lfEBy8tgzPZSitwgg/1o/UYI1OyoV7ulsWpGTcs9Pc3iGq+viHiV5ksaFI
+         Bzng==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=content-transfer-encoding:cc:to:from:subject:references
-         :mime-version:message-id:in-reply-to:date:x-gm-message-state:from:to
-         :cc;
-        bh=jZOzQ8/cjxO+jmOM/T4yZoES9QnypFGOepiGDeweX0Y=;
-        b=XpmMeNRhKvId7WgQcDrUMY1MP5knKc6cemCjjmvFHPS8Gq2aHZRR6wyUtymLSsHebB
-         Efd34pqVgKI3w/SL3P2Hv5hBBchPkiziMDZkaM+4Mfomso/4Ii4TOc10Zzh6UvVi3GMM
-         CZJ0X21lEW0mRAT8qHSjueWFBfPPDU+iaOLFxwcpdn3vu6ASRBeCuQGw5ciqxXQZQieW
-         6NOQJya8GzML8Q1+2H0szxuAJz/b196MwVnwXOQVqEg9itKuhHbTktSh4mmC+UIm7B73
-         SqnYUjDYk2LwsJumfVDq7V2jz9yh5qBmmMawDq55DgPI2+QMbaSPjVcxgrN4dpS7nd0+
-         BcXw==
-X-Gm-Message-State: ACgBeo0bwBTUL2+xUbDzEAlrpDs9XQaYir5njo8tF6XGLDmSzwOz+QSp
-        Q9dYO9MqayxdcRW4G0dAKVRsafum/TR8
-X-Google-Smtp-Source: AA6agR4JX/0Hi07MegusXtIqA4W9pZ0BOeAGXxQUl7a1pjGzkLhiVnawBPSTGCCN8lWQmKjYSuesLdrODo63
-X-Received: from irogers.svl.corp.google.com ([2620:15c:2d4:203:d668:2937:8218:c5ec])
- (user=irogers job=sendgmr) by 2002:a05:6902:150c:b0:676:c807:6cb2 with SMTP
- id q12-20020a056902150c00b00676c8076cb2mr5285892ybu.488.1660345832252; Fri,
- 12 Aug 2022 16:10:32 -0700 (PDT)
-Date:   Fri, 12 Aug 2022 16:09:49 -0700
-In-Reply-To: <20220812230949.683239-1-irogers@google.com>
-Message-Id: <20220812230949.683239-15-irogers@google.com>
-Mime-Version: 1.0
-References: <20220812230949.683239-1-irogers@google.com>
-X-Mailer: git-send-email 2.37.1.595.g718a3a8f04-goog
-Subject: [PATCH v5 14/14] perf jevents: Fold strings optimization
-From:   Ian Rogers <irogers@google.com>
-To:     John Garry <john.garry@huawei.com>, Will Deacon <will@kernel.org>,
-        James Clark <james.clark@arm.com>,
-        Mike Leach <mike.leach@linaro.org>,
-        Leo Yan <leo.yan@linaro.org>,
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc;
+        bh=FOjkNd1xVbJqVfY8UU3UGqnX4Y9P4jNlc+hF+lbTxj8=;
+        b=gIkgMEL6lQvcsTW3NJOhtcWikC2UcbDtLVXG9RWteFJivmydpJffL0uSMH1yBfDdtf
+         7ocGmZ87rW9hFSC6Ec2cvVSGrUENQ38M3xvT8h2a5p4pCNJkcQzcgpPlaEZckErhyyfB
+         0vBHbUQy6eZkw21B2hM8Uj+OufSiNVmv7GF6e2h7vnGCeRAaRlmQwt0xlO7V5/WwYY+B
+         uas+fwb4WRoEwBuO2P5F2JyxZi+BV+BSN/C2T1SRToCvIlPzzZu2SxU4jTxdPiWU6VO8
+         y8uxiffbG/YzbXfl4HqdlPnBtXKUCGmllst/gTbstavUe6uQQJGgqHX/XZMi9rVU0pNi
+         tSsw==
+X-Gm-Message-State: ACgBeo1Q/cgCXwEcD+itATavBrUUi6Ck2PutTm/8DB+hMoiLD/oytArt
+        S1q3dKC+hnK6UaoHid7+IgYW5g==
+X-Google-Smtp-Source: AA6agR4rpMYubzwMwCgXF+kZTc7AFFRuwGRLRj5ZQm649WyeBGV8FRlpJUJ/JwwIu/iX98SWDjExDQ==
+X-Received: by 2002:a17:907:60c7:b0:731:2be4:f72d with SMTP id hv7-20020a17090760c700b007312be4f72dmr4329113ejc.639.1660360107980;
+        Fri, 12 Aug 2022 20:08:27 -0700 (PDT)
+Received: from leoy-huanghe ([104.245.96.132])
+        by smtp.gmail.com with ESMTPSA id z7-20020a170906d00700b00726c0e63b94sm1415941ejy.27.2022.08.12.20.08.24
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 12 Aug 2022 20:08:27 -0700 (PDT)
+Date:   Sat, 13 Aug 2022 11:08:22 +0800
+From:   Leo Yan <leo.yan@linaro.org>
+To:     Ian Rogers <irogers@google.com>
+Cc:     Arnaldo Carvalho de Melo <acme@kernel.org>,
         Peter Zijlstra <peterz@infradead.org>,
         Ingo Molnar <mingo@redhat.com>,
-        Arnaldo Carvalho de Melo <acme@kernel.org>,
         Mark Rutland <mark.rutland@arm.com>,
         Alexander Shishkin <alexander.shishkin@linux.intel.com>,
         Jiri Olsa <jolsa@kernel.org>,
         Namhyung Kim <namhyung@kernel.org>,
-        Andi Kleen <ak@linux.intel.com>,
-        Zhengjun Xing <zhengjun.xing@linux.intel.com>,
-        Ravi Bangoria <ravi.bangoria@amd.com>,
-        Kan Liang <kan.liang@linux.intel.com>,
-        Adrian Hunter <adrian.hunter@intel.com>,
-        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-perf-users@vger.kernel.org
-Cc:     Stephane Eranian <eranian@google.com>,
-        Ian Rogers <irogers@google.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+        linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org
+Subject: Re: [PATCH 2/2] perf test: Introduce script for java symbol testing
+Message-ID: <20220813030822.GE74978@leoy-huanghe>
+References: <20220806033434.121908-1-leo.yan@linaro.org>
+ <20220806033434.121908-3-leo.yan@linaro.org>
+ <YvauX7u69u9AeID/@kernel.org>
+ <CAP-5=fUJxMz0C61Y1qwptc+M6rT=J3ztvguB+9bJBaQrYEQZ3w@mail.gmail.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CAP-5=fUJxMz0C61Y1qwptc+M6rT=J3ztvguB+9bJBaQrYEQZ3w@mail.gmail.com>
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-If a shorter string ends a longer string then the shorter string may
-reuse the longer string at an offset. For example, on x86 the event
-arith.cycles_div_busy and cycles_div_busy can be folded, even though
-they have difference names the strings are identical after 6
-characters. cycles_div_busy can reuse the arith.cycles_div_busy string
-at an offset of 6.
+On Fri, Aug 12, 2022 at 02:08:43PM -0700, Ian Rogers wrote:
 
-In pmu-events.c this looks like the following where the 'also:' lists
-folded strings:
-/* offset=3D177541 */ "arith.cycles_div_busy\000\000pipeline\000Cycles the =
-divider is busy\000\000\000event=3D0x14,period=3D2000000,umask=3D0x1\000\00=
-0\000\000\000\000\000\000\000" /* also: cycles_div_busy\000\000pipeline\000=
-Cycles the divider is busy\000\000\000event=3D0x14,period=3D2000000,umask=
-=3D0x1\000\000\000\000\000\000\000\000\000 */
+[...]
 
-As jevents.py combines multiple strings for an event into a larger
-string, the amount of folding is minimal as all parts of the event must
-align. Other organizations can benefit more from folding, but lose space
-by say recording more offsets.
+> > > +if [ -e "$PWD/tools/perf/libperf-jvmti.so" ]; then
+> > > +     LIBJVMTI=$PWD/tools/perf/libperf-jvmti.so
+> >
+> >
+> > Will this only work if we do a:
+> >
+> > make -C tools/perf
 
-Signed-off-by: Ian Rogers <irogers@google.com>
----
- tools/perf/pmu-events/jevents.py | 55 ++++++++++++++++++++++++++++----
- 1 file changed, 48 insertions(+), 7 deletions(-)
+Yes, I think so.
 
-diff --git a/tools/perf/pmu-events/jevents.py b/tools/perf/pmu-events/jeven=
-ts.py
-index d722fcba2d9f..0daa3e007528 100755
---- a/tools/perf/pmu-events/jevents.py
-+++ b/tools/perf/pmu-events/jevents.py
-@@ -80,7 +80,9 @@ class BigCString:
-   are all the other C strings (to avoid memory issues the string
-   itself is held as a list of strings). The offsets within the big
-   string are recorded and when stored to disk these don't need
--  relocation.
-+  relocation. To reduce the size of the string further, identical
-+  strings are merged. If a longer string ends-with the same value as a
-+  shorter string, these entries are also merged.
-   """
-   strings: Set[str]
-   big_string: Sequence[str]
-@@ -96,6 +98,33 @@ class BigCString:
-   def compute(self) -> None:
-     """Called once all strings are added to compute the string and offsets=
-."""
-=20
-+    folded_strings =3D {}
-+    # Determine if two strings can be folded, ie. let 1 string use the
-+    # end of another. First reverse all strings and sort them.
-+    sorted_reversed_strings =3D sorted([x[::-1] for x in self.strings])
-+
-+    # Strings 'xyz' and 'yz' will now be [ 'zy', 'zyx' ]. Scan forward
-+    # for each string to see if there is a better candidate to fold it
-+    # into, in the example rather than using 'yz' we can use'xyz' at
-+    # an offset of 1. We record which string can be folded into which
-+    # in folded_strings, we don't need to record the offset as it is
-+    # trivially computed from the string lengths.
-+    for pos,s in enumerate(sorted_reversed_strings):
-+      best_pos =3D pos
-+      for check_pos in range(pos + 1, len(sorted_reversed_strings)):
-+        if sorted_reversed_strings[check_pos].startswith(s):
-+          best_pos =3D check_pos
-+        else:
-+          break
-+      if pos !=3D best_pos:
-+        folded_strings[s[::-1]] =3D sorted_reversed_strings[best_pos][::-1=
-]
-+
-+    # Compute reverse mappings for debugging.
-+    fold_into_strings =3D collections.defaultdict(set)
-+    for key, val in folded_strings.items():
-+      if key !=3D val:
-+        fold_into_strings[val].add(key)
-+
-     # big_string_offset is the current location within the C string
-     # being appended to - comments, etc. don't count. big_string is
-     # the string contents represented as a list. Strings are immutable
-@@ -104,13 +133,25 @@ class BigCString:
-     big_string_offset =3D 0
-     self.big_string =3D []
-     self.offsets =3D {}
--    # Emit all strings in a sorted manner.
-+
-+    # Emit all strings that aren't folded in a sorted manner.
-     for s in sorted(self.strings):
--      self.offsets[s] =3D big_string_offset
--      self.big_string.append(f'/* offset=3D{big_string_offset} */ "')
--      self.big_string.append(s)
--      self.big_string.append('"\n')
--      big_string_offset +=3D c_len(s)
-+      if s not in folded_strings:
-+        self.offsets[s] =3D big_string_offset
-+        self.big_string.append(f'/* offset=3D{big_string_offset} */ "')
-+        self.big_string.append(s)
-+        self.big_string.append('"')
-+        if s in fold_into_strings:
-+          self.big_string.append(' /* also: ' + ', '.join(fold_into_string=
-s[s]) + ' */')
-+        self.big_string.append('\n')
-+        big_string_offset +=3D c_len(s)
-+        continue
-+
-+    # Compute the offsets of the folded strings.
-+    for s in folded_strings.keys():
-+      assert s not in self.offsets
-+      folded_s =3D folded_strings[s]
-+      self.offsets[s] =3D self.offsets[folded_s] + c_len(folded_s) - c_len=
-(s)
-=20
- _bcs =3D BigCString()
-=20
---=20
-2.37.1.595.g718a3a8f04-goog
+> >
+> > ?
+> 
+> Perhaps, I'm not sure on the correct way to detect the install location.
+> The only similar example I know of is:
+> https://git.kernel.org/pub/scm/linux/kernel/git/acme/linux.git/tree/tools/perf/tests/builtin-test.c?h=perf/core#n308
 
+Yes, I refered the code in this link.
+
+If user works under Linux source folder, the test will search lib in
+the folder $LINUX or $LINUX/tools/perf; and it searchs the installed
+libperf-jvmti.so in the folder "$PREFIX/lib64" or "$PREFIX/lib".
+
+I think I can add a more path for searching system lib (e.g. the
+libperf-jvmti.so is under /usr/lib/linux-tools-xxx/):
+
+  elif [ -e "/usr/lib/linux-tools-$(uname -a | awk '{ print $3 }' | sed -r 's/-generic//')/libperf-jvmti.so" ]; then
+       LIBJVMTI= /usr/lib/linux-tools-$(uname -a | awk '{ print $3 }' | sed -r 's/-generic//')/libperf-jvmti.so
+
+> > +elif [ -e "$PWD/libperf-jvmti.so" ]; then
+> > > +     LIBJVMTI=$PWD/libperf-jvmti.so
+> > > +elif [ -e "$PREFIX/lib64/libperf-jvmti.so" ]; then
+> > > +     LIBJVMTI=$PREFIX/lib64/libperf-jvmti.so
+> > > +elif [ -e "$PREFIX/lib/libperf-jvmti.so" ]; then
+> > > +     LIBJVMTI=$PREFIX/lib/libperf-jvmti.so
+> > > +else
+> > > +     echo "Fail to find libperf-jvmti.so"
+> > > +     exit 1
+> >
+> 
+> JVMTI is a build option so this should probably be "exit 2" for skip.
+
+Sure, will fix.
+
+Thanks,
+Leo
