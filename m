@@ -2,140 +2,144 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E07B0C19F2D
-	for <linux-perf-users@archiver.kernel.org>; Sat, 13 Aug 2022 14:17:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9DA09C3F6B0
+	for <linux-perf-users@archiver.kernel.org>; Sat, 13 Aug 2022 16:53:18 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S239472AbiHMORr (ORCPT
+        id S239701AbiHMQwM (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Sat, 13 Aug 2022 10:17:47 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43310 "EHLO
+        Sat, 13 Aug 2022 12:52:12 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53244 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S237284AbiHMORq (ORCPT
+        with ESMTP id S234900AbiHMQwL (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Sat, 13 Aug 2022 10:17:46 -0400
-Received: from mail-pg1-x533.google.com (mail-pg1-x533.google.com [IPv6:2607:f8b0:4864:20::533])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 116841C902
-        for <linux-perf-users@vger.kernel.org>; Sat, 13 Aug 2022 07:17:45 -0700 (PDT)
-Received: by mail-pg1-x533.google.com with SMTP id r69so3045019pgr.2
-        for <linux-perf-users@vger.kernel.org>; Sat, 13 Aug 2022 07:17:45 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc;
-        bh=+E0k8hootfoswIfOh4pYh7kOzDD2ZwZBXauTpEBfTNY=;
-        b=PckzpwNDmR1DPo9Tpu8HXT3zfLGDm/6xPpFz292MntKjHxmXhueXCyOCsfLR1/UCTp
-         7PFJC1waq+WOLonucIStJGiwR9/MjuvG5PXxN6gJGZTe667GwG31fovL4+zOab40bmnt
-         0EyJPyXbwOfGlLW1SNy/OkfrFYszG4MqPf/vjvF8xELi2knDZxJuzbbo4Un/ZYAHePQE
-         14jEioSIZMQSk7WLOeYXIUQlwKFhUGPz3iDaDywHYIo2Lgl14zmE5mkumy/agVh4LsfE
-         Q8c8jYl6p2pMhRwiuUmOpf/b4yV03vzDaH81aQu9j0ItEuEZQQOW1d5Spr0RUe48aZ9h
-         H9Kw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc;
-        bh=+E0k8hootfoswIfOh4pYh7kOzDD2ZwZBXauTpEBfTNY=;
-        b=fksdggVxDWrb+RxwsskmarXVNUsDUHxtNVNSsgdjcjApwKvI+qIXdCyYMo28SQeT5K
-         G8FqZzPmzD9HXB+1cBQx28UuPv4Q0nZ2QRrEpB3mjsyG29wQtGuf4kBQbjBpIxbPs6Rj
-         uUXQ9jUn7vNYuXV1GxxSrTp/3U+x5yzdOA3daxb1Y3Nq4+v68U4XgL3op4khAm/3EQXf
-         GsAKOkUGsCFusicaCVwLd/a6GXy64km154NI01y92+97y2hYgkQ0ySaApNCMIz+JfLJy
-         d7qK/0qGCB31UYC0Gf8c2SmuSngyupGJcd8bfbqwpRWzFxZcEW7W/GzCGYgQMyUYwo3F
-         cWXA==
-X-Gm-Message-State: ACgBeo1Qyj2GCQAiyHS9V0+GcvgFkYc5jp1lQUHMJoC37S0ZNznmdIKv
-        MwiebI2TIELG4IrZN4w7+uZSdw==
-X-Google-Smtp-Source: AA6agR6YNktXnQb8y//5O6cLR57gk7hHZamYnXgwIbZ7rcEmRfRZk3gLbXljY1sGNWjqR5W1QNxqYA==
-X-Received: by 2002:a63:c1f:0:b0:41a:9b73:a89e with SMTP id b31-20020a630c1f000000b0041a9b73a89emr6897036pgl.342.1660400264394;
-        Sat, 13 Aug 2022 07:17:44 -0700 (PDT)
-Received: from leoy-huanghe.lan (n058152048222.netvigator.com. [58.152.48.222])
-        by smtp.gmail.com with ESMTPSA id z6-20020a170903018600b0016d2db82962sm3808367plg.16.2022.08.13.07.17.41
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sat, 13 Aug 2022 07:17:43 -0700 (PDT)
-Date:   Sat, 13 Aug 2022 22:17:39 +0800
-From:   Leo Yan <leo.yan@linaro.org>
-To:     Arnaldo Carvalho de Melo <acme@kernel.org>
-Cc:     carsten.haitzler@foss.arm.com, linux-kernel@vger.kernel.org,
-        coresight@lists.linaro.org, suzuki.poulose@arm.com,
-        mathieu.poirier@linaro.org, mike.leach@linaro.org,
-        linux-perf-users@vger.kernel.org
-Subject: Re: [PATCH v7 00/14] perf: test: Add trace data quality tests for
- CoreSight
-Message-ID: <20220813141739.GB687527@leoy-huanghe.lan>
-References: <20220812121641.336465-1-carsten.haitzler@foss.arm.com>
- <Yvaj2ukXV+SLIBR0@kernel.org>
+        Sat, 13 Aug 2022 12:52:11 -0400
+Received: from mga14.intel.com (mga14.intel.com [192.55.52.115])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9F52E27CED;
+        Sat, 13 Aug 2022 09:52:09 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1660409529; x=1691945529;
+  h=message-id:date:mime-version:subject:to:cc:references:
+   from:in-reply-to:content-transfer-encoding;
+  bh=jUaf61eY9bVSVQrGX5E86tNJtvOl6+OURS+GiXpuTGY=;
+  b=hPMW4fLcThjPurqFCUl82dOL9x7k4Japl7k+oYTh7pJcmIqDg+K39ami
+   fWpMWmrU63SddCjzFSOIzPWphMUgd/nQgr0e/PZ2GpRkQRgqiQfZPf8Xx
+   x83Q2IC6DMC3f7MecV4ChKAvqcsfLmEt+WhV4jvfguYLbAiFDoR7vCwJA
+   8HVte5aF1DOjclSQHYKDnmILvNpt0j+bm5DB4tTgnHNm7SYf9lVVccopV
+   Qp8QRrYdG3SENH/LslazXVpjtd3rAyMYTAxgkoYzDa1/pocq38mZJlniM
+   MaiL2PlUIZ6mxyheK1Qn24KrEuhmPsvQ0EdLH75dpHmg0cFDfbEFU9hb8
+   Q==;
+X-IronPort-AV: E=McAfee;i="6400,9594,10437"; a="291764023"
+X-IronPort-AV: E=Sophos;i="5.93,235,1654585200"; 
+   d="scan'208";a="291764023"
+Received: from fmsmga004.fm.intel.com ([10.253.24.48])
+  by fmsmga103.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 13 Aug 2022 09:52:09 -0700
+X-IronPort-AV: E=Sophos;i="5.93,235,1654585200"; 
+   d="scan'208";a="674401463"
+Received: from xingzhen-mobl.ccr.corp.intel.com (HELO [10.249.170.184]) ([10.249.170.184])
+  by fmsmga004-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 13 Aug 2022 09:52:06 -0700
+Message-ID: <b118ec12-6b51-3b86-22b2-c7689e0f91d8@linux.intel.com>
+Date:   Sun, 14 Aug 2022 00:52:04 +0800
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <Yvaj2ukXV+SLIBR0@kernel.org>
+User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:91.0) Gecko/20100101
+ Thunderbird/91.12.0
+Subject: Re: [PATCH 00/11] Add generated latest Intel events and metrics
+Content-Language: en-US
+To:     Ian Rogers <irogers@google.com>
+Cc:     acme@kernel.org, peterz@infradead.org, mingo@redhat.com,
+        alexander.shishkin@intel.com, jolsa@kernel.org,
+        namhyung@kernel.org, linux-kernel@vger.kernel.org,
+        linux-perf-users@vger.kernel.org, ak@linux.intel.com,
+        kan.liang@linux.intel.com
+References: <20220812085239.3089231-1-zhengjun.xing@linux.intel.com>
+ <CAP-5=fVTOvY0_3PxrzP28iFn0FtDgQE34qJ4_6+fD-TQohCFQQ@mail.gmail.com>
+From:   Xing Zhengjun <zhengjun.xing@linux.intel.com>
+In-Reply-To: <CAP-5=fVTOvY0_3PxrzP28iFn0FtDgQE34qJ4_6+fD-TQohCFQQ@mail.gmail.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-On Fri, Aug 12, 2022 at 04:02:50PM -0300, Arnaldo Carvalho de Melo wrote:
-> Em Fri, Aug 12, 2022 at 01:16:27PM +0100, carsten.haitzler@foss.arm.com escreveu:
-> > From: Carsten Haitzler <carsten.haitzler@arm.com>
-> > 
-> > This is a prelude to adding more tests to shell tests and in order to
-> > support putting those tests into subdirectories, I need to change the
-> > test code that scans/finds and runs them.
-> > 
-> > To support subdirs I have to recurse so it's time to refactor the code to
-> > allow this and centralize the shell script finding into one location and
-> > only one single scan that builds a list of all the found tests in memory
-> > instead of it being duplicated in 3 places.
-> > 
-> > This code also optimizes things like knowing the max width of desciption
-> > strings (as we can do that while we scan instead of a whole new pass
-> > of opening files). It also more cleanly filters scripts to see only
-> > *.sh files thus skipping random other files in directories like *~
-> > backup files, other random junk/data files that may appear and the
-> > scripts must be executable to make the cut (this ensures the script
-> > lib dir is not seen as scripts to run). This avoids perf test running
-> > previous older versions of test scripts that are editor backup files
-> > as well as skipping perf.data files that may appear and so on.
-> > 
-> > Signed-off-by: Carsten Haitzler <carsten.haitzler@arm.com>
+Hi Ian,
+
+On 8/13/2022 4:53 AM, Ian Rogers wrote:
+> On Fri, Aug 12, 2022 at 1:51 AM <zhengjun.xing@linux.intel.com 
+> <mailto:zhengjun.xing@linux.intel.com>> wrote:
 > 
-> Leo, can you please check if your previous Reviewed-by tags stand for
-> this new version?
+>     From: Zhengjun Xing <zhengjun.xing@linux.intel.com
+>     <mailto:zhengjun.xing@linux.intel.com>>
+> 
+>     The goal of this patch series is to align the json events for Intel
+>     platforms with those generated by:
+>     https://github.com/intel/event-converter-for-linux-perf/blob/master/download_and_gen.py
+>     <https://github.com/intel/event-converter-for-linux-perf/blob/master/download_and_gen.py>
+>     This script takes the latest event json and TMA metrics from:
+>     https://download.01.org/perfmon/ <https://download.01.org/perfmon/>
+>     and adds to these metrics, in
+>     particular uncore ones, from:
+>     https://github.com/intel/perfmon-metrics
+>     <https://github.com/intel/perfmon-metrics>
+> 
+>     Compared to the previous json, the major changes are:
+>       - Add new metrics “UNCORE_FREQ” for Linux perf,this new metric can
+>     be added to all platforms that have Sockets_CLKS.
+>       - Remove duplicated uncore events.
+>       - the inclusion of previously ungenerated and experimental uncore
+>     events.
+> 
+>     Zhengjun Xing (11):
+>        perf vendor events: Update metrics for broadwellde
+>        perf vendor events: Update events and metrics for broadwellx
+>        perf vendor events: Update events and metrics for cascadelakex
+>        perf vendor events: Update events and metrics for haswellx
+>        perf vendor events: Update events and metrics for icelakex
+>        perf vendor events: Update metrics for ivytown
+>        perf vendor events: Update metrics for jaketown
+>        perf vendor events: Update events for knightslanding
+>        perf vendor events: Update metrics for sapphirerapids
+>        perf vendor events: Update events and metrics for skylakex
+>        perf vendor events: Update events for snowridgex
+> 
+> 
+> Tested-by: Ian Rogers <irogers@google.com <mailto:irogers@google.com>>
+> 
+Thanks.
 
-Yeah, after applied this patch series on the repo:
-https://git.kernel.org/pub/scm/linux/kernel/git/acme/linux.git, branch perf/core;
-it has merging conflict for the patch 03 "perf test: Add build infra for perf
-test tools for CoreSight tests".  It's good to rebase this patch set on the
-latest perf/core branch.
+> Thanks,
+> Ian
+> 
+>       .../arch/x86/broadwellde/bdwde-metrics.json   |     6 +
+>       .../arch/x86/broadwellx/bdx-metrics.json      |     6 +
+>       .../arch/x86/broadwellx/uncore-cache.json     |   163 +-
+>       .../arch/x86/cascadelakex/clx-metrics.json    |     6 +
+>       .../arch/x86/cascadelakex/uncore-memory.json  |  4424 +-
+>       .../arch/x86/cascadelakex/uncore-other.json   | 23162 +++++++++-
+>       .../arch/x86/cascadelakex/uncore-power.json   |   201 +
+>       .../arch/x86/haswellx/hsx-metrics.json        |   411 +-
+>       .../arch/x86/haswellx/uncore-cache.json       |   173 +-
+>       .../arch/x86/icelakex/icx-metrics.json        |     6 +
+>       .../arch/x86/icelakex/uncore-memory.json      |  1523 +
+>       .../arch/x86/icelakex/uncore-other.json       | 38506 +++++++++++++++-
+>       .../arch/x86/icelakex/uncore-power.json       |   225 +
+>       .../arch/x86/ivytown/ivt-metrics.json         |     6 +
+>       .../arch/x86/jaketown/jkt-metrics.json        |     6 +
+>       .../arch/x86/knightslanding/uncore-other.json |   213 +
+>       .../arch/x86/sapphirerapids/spr-metrics.json  |     6 +
+>       .../arch/x86/skylakex/skx-metrics.json        |     6 +
+>       .../arch/x86/skylakex/uncore-memory.json      |  3566 +-
+>       .../arch/x86/skylakex/uncore-other.json       | 23442 +++++++++-
+>       .../arch/x86/skylakex/uncore-power.json       |   201 +
+>       .../arch/x86/snowridgex/uncore-other.json     |   111 +-
+>       22 files changed, 91393 insertions(+), 4976 deletions(-)
+>       create mode 100644
+>     tools/perf/pmu-events/arch/x86/cascadelakex/uncore-power.json
+>       create mode 100644
+>     tools/perf/pmu-events/arch/x86/skylakex/uncore-power.json
+> 
+>     -- 
+>     2.25.1
+> 
 
-I compared patch set v5 and v7, confirmed the my comments have been addressed
-in v7.  Carsten also has updated patches' author address, it is same with the
-address used in SoB, this is the right thing to do (Sorry I missed that).
-
-I tested this patch set on my Juno board and observed a regression related with
-CTI driver, the regression is not relevant with this patch set, I have
-reported it on CoreSight mailing list.  This will be investigated separatly.
-
-When played these test cases, I observed a failure for below case; but when I
-re-run the case again and it passed.
-
-  # ./perf test -v 78
-   78: CoreSight / Thread Loop 10 Threads - Check TID                  :
-  --- start ---
-  test child forked, pid 6233
-  [ perf record: Woken up 1 times to write data ]
-  [ perf record: Captured and wrote 0.380 MB ./perf-thread_loop-check-tid-10th.data ]
-  Thread IDs  6242 6242 6242 6242 6242 6242 6242 6242 not found in perf AUX data
-  test child finished with -1
-  ---- end ----
-  CoreSight / Thread Loop 10 Threads - Check TID: FAILED!
-
-You could see the perf data file is abnormally small (0.380 MiB), it should be
-an issue for perf cs-etm record.  I don't think this is an issue for the test
-case itself, we need to look at this issue later.
-
-So with fixing the merging conflict:
-
-Tested-by: Leo Yan <leo.yan@linaro.org>
-Reviewed-by: Leo Yan <leo.yan@linaro.org>
-
-These test cases are for trace data quality, I'd like wait a bit for Mike's
-green light since he has much better understanding.
-
-Thanks,
-Leo
+-- 
+Zhengjun Xing
