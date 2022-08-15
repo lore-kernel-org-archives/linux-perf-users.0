@@ -2,117 +2,121 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 72216C00140
-	for <linux-perf-users@archiver.kernel.org>; Mon, 15 Aug 2022 07:15:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6D2FAC25B0D
+	for <linux-perf-users@archiver.kernel.org>; Mon, 15 Aug 2022 08:00:57 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S241460AbiHOHPE (ORCPT
+        id S231287AbiHOIAm (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Mon, 15 Aug 2022 03:15:04 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46232 "EHLO
+        Mon, 15 Aug 2022 04:00:42 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58568 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231168AbiHOHOn (ORCPT
+        with ESMTP id S240812AbiHOIAi (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Mon, 15 Aug 2022 03:14:43 -0400
-Received: from mail-ej1-x632.google.com (mail-ej1-x632.google.com [IPv6:2a00:1450:4864:20::632])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2FEC81CB00
-        for <linux-perf-users@vger.kernel.org>; Mon, 15 Aug 2022 00:14:24 -0700 (PDT)
-Received: by mail-ej1-x632.google.com with SMTP id gb36so12085607ejc.10
-        for <linux-perf-users@vger.kernel.org>; Mon, 15 Aug 2022 00:14:24 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20210112;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:date:from:from:to
-         :cc;
-        bh=fP3+e4Xpzy8lqTrEpmhkpBj83B7QmOa6cMB7d+YHYIY=;
-        b=V6P6zicK9gPSx4ylIKaaWQvg6dT7w8NeqfeBiGk2AqYftWjI/aCRYI9UkZp0fYrop3
-         KXcRWnny/hBwFnGC0eeaN+fgcOnexTe5y0SYIa0e4Ci3Ed9fNZscEjhk5MSyJDObEeob
-         eik/Aw6lJBthUe8gyHVvnDZuUlOx8rHuUQV+N9GMDWiNxrrja3Q+dHqRujYVvMy78Doo
-         Vqo14Q7LI9TTAMHpVymEZPyF4Vp7h/oaDigXhDTDO3DVVBECCG+g0n0KDG+dRm/C8jbz
-         YmloTmY/Iqf4LRuLGq62Gvw+SLLAbOFV5RGnnZ474qfuS3U6Xh7HG28rH6aJHB5lsCeQ
-         tQLg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:date:from
-         :x-gm-message-state:from:to:cc;
-        bh=fP3+e4Xpzy8lqTrEpmhkpBj83B7QmOa6cMB7d+YHYIY=;
-        b=GJIdXVneTjUPEipybJThS8hT2swILgxg6X1Hkk5JldTa41TGzrY15vzY5t/Px5abCv
-         hQZlwnEPqPvJsg050/m7Gh1WQXDwIuT5IbQUy2/hhtN/YAsqKNKDZaEwxLvBuk5KGQc4
-         WSlJYlFoN/cctZ2I8SGmDt04Et4NIQTAcp98GY/n3mQXfGOrXt49zN5kn9G+kr+t5MSs
-         myL9whZYAFgtWd+SCFJ4L2wAzAKZg3G2fQR4wCoLPDpGolXOuMxCVkd9y5s4yAREGI9y
-         Vw+qBEeY5jCKH9J1sGBhwB15hRpU0UkV1KMiZ9oWwgSUibClKflLsIWm8h27EMY99U4c
-         AAdQ==
-X-Gm-Message-State: ACgBeo243Vk7L5otJsatJFmfrmJCMMEbqCThpqwzwbzKDOTakKYT0vqo
-        vr6mUe54lkafgeF5yYjGMVGm2Mya4X/zmA==
-X-Google-Smtp-Source: AA6agR7xr76RZIaTQlCBcB7yo0gUmdipyCOZ7e7lowLvahYSfnGYBefw+5pn4TGomCYxQNFWZBr0bA==
-X-Received: by 2002:a17:907:60c7:b0:731:17e4:7fcc with SMTP id hv7-20020a17090760c700b0073117e47fccmr9625801ejc.73.1660547662679;
-        Mon, 15 Aug 2022 00:14:22 -0700 (PDT)
-Received: from krava ([193.85.244.190])
-        by smtp.gmail.com with ESMTPSA id el13-20020a056402360d00b00443d657d8a4sm774573edb.61.2022.08.15.00.14.21
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 15 Aug 2022 00:14:22 -0700 (PDT)
-From:   Jiri Olsa <olsajiri@gmail.com>
-X-Google-Original-From: Jiri Olsa <jolsa@kernel.org>
-Date:   Mon, 15 Aug 2022 09:14:21 +0200
-To:     Hongtao Yu <hoy@fb.com>
-Cc:     "linux-perf-users@vger.kernel.org" <linux-perf-users@vger.kernel.org>
-Subject: Re: Cannot print 'uregs' field with perf script -F uregs
-Message-ID: <YvnyTc5q91d2RpQi@krava>
-References: <MW3PR15MB3868A1461BB93AC91C242B0CCF689@MW3PR15MB3868.namprd15.prod.outlook.com>
+        Mon, 15 Aug 2022 04:00:38 -0400
+Received: from foss.arm.com (foss.arm.com [217.140.110.172])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTP id 4818AB7E7;
+        Mon, 15 Aug 2022 01:00:37 -0700 (PDT)
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 6C9F3113E;
+        Mon, 15 Aug 2022 01:00:37 -0700 (PDT)
+Received: from [192.168.99.12] (unknown [172.31.20.19])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 9BC9F3F67D;
+        Mon, 15 Aug 2022 01:00:35 -0700 (PDT)
+Message-ID: <b679a0a9-938b-5039-8bce-b2cb1b45cb78@foss.arm.com>
+Date:   Mon, 15 Aug 2022 09:00:20 +0100
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
+ Thunderbird/91.11.0
+Subject: Re: [PATCH v7 00/14] perf: test: Add trace data quality tests for
+ CoreSight
+Content-Language: en-US
+To:     Arnaldo Carvalho de Melo <acme@kernel.org>
+Cc:     linux-kernel@vger.kernel.org, coresight@lists.linaro.org,
+        suzuki.poulose@arm.com, mathieu.poirier@linaro.org,
+        mike.leach@linaro.org, leo.yan@linaro.org,
+        linux-perf-users@vger.kernel.org
+References: <20220812121641.336465-1-carsten.haitzler@foss.arm.com>
+ <YvahJcUNAZ0WC8fj@kernel.org> <YvahnOSyts95F8xm@kernel.org>
+ <YvaiE4w/Fb0XAmmM@kernel.org> <YvajWfaMUDjmrFoY@kernel.org>
+From:   Carsten Haitzler <carsten.haitzler@foss.arm.com>
+Organization: Arm Ltd.
+In-Reply-To: <YvajWfaMUDjmrFoY@kernel.org>
+Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <MW3PR15MB3868A1461BB93AC91C242B0CCF689@MW3PR15MB3868.namprd15.prod.outlook.com>
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-On Mon, Aug 15, 2022 at 04:22:57AM +0000, Hongtao Yu wrote:
-> Hi,
->  
-> I was seeing an issue with “perf script -F uregs”: 
->  
-> Samples for 'dummy:HG' event do not have UREGS attribute set. Cannot print 'uregs' field.
->  
-> This seems to only happen to a perf.data resulted from a system-wide monitoring, e.g “perf record -a”. Per-process monitoring works fine. By search up online I see a thread that could be relevant:   https://lore.kernel.org/all/YVNq9av%2F3Lwmom4T@krava/
->  
-> Can someone please shed a light whether this is an issue with perf, or something wrong with my perf.data?
->  
->  
-> Thanks,
-> Hongtao
->  
->  
 
 
-hum, I thought we already fixed this.. would fix below work for you?
+On 8/12/22 20:00, Arnaldo Carvalho de Melo wrote:
+> Em Fri, Aug 12, 2022 at 03:55:15PM -0300, Arnaldo Carvalho de Melo escreveu:
+>> Em Fri, Aug 12, 2022 at 03:53:16PM -0300, Arnaldo Carvalho de Melo escreveu:
+>>> Em Fri, Aug 12, 2022 at 03:51:17PM -0300, Arnaldo Carvalho de Melo escreveu:
+>>>> Em Fri, Aug 12, 2022 at 01:16:27PM +0100, carsten.haitzler@foss.arm.com escreveu:
+>>>>> previous older versions of test scripts that are editor backup files
+>>>>> as well as skipping perf.data files that may appear and so on.
+> 
+>>>>> Signed-off-by: Carsten Haitzler <carsten.haitzler@arm.com>
+> 
+>>>> On the next series, please add to the cover letter a summary of what
+>>>> changed on each repost.
+> 
+>>> I also saw that several of your patches got reviewed and given
+>>> "Reviewed-by" tags, so if some of the patches in the previous versions
+>>> didn't change and received Reviewed-by tags, please collect them on the
+>>> current version.
+> 
+>> I tried getting v5 to see if b4 would find v6 and v7 and go on figuring
+>> this out for us, but somehow it can't match v5 to v6 and v7:
+> 
+> It seems you changed the subject on the cover letter, and AFAIK that is
+> what makes b4 find a previous version :-\
 
-thanks,
-jirka
+I was asked to change the subject... so I did. :)
 
-
----
-diff --git a/tools/perf/builtin-script.c b/tools/perf/builtin-script.c
-index 13580a9c50b8..30c9cbdee98d 100644
---- a/tools/perf/builtin-script.c
-+++ b/tools/perf/builtin-script.c
-@@ -451,6 +451,9 @@ static int evsel__check_attr(struct evsel *evsel, struct perf_session *session)
- 	allow_user_set = perf_header__has_feat(&session->header,
- 					       HEADER_AUXTRACE);
- 
-+	if (evsel__is_dummy_event(evsel))
-+		allow_user_set = true;
-+
- 	if (PRINT_FIELD(TRACE) &&
- 	    !perf_session__has_traces(session, "record -R"))
- 		return -EINVAL;
-@@ -517,7 +520,7 @@ static int evsel__check_attr(struct evsel *evsel, struct perf_session *session)
- 		return -EINVAL;
- 
- 	if (PRINT_FIELD(UREGS) &&
--	    evsel__check_stype(evsel, PERF_SAMPLE_REGS_USER, "UREGS", PERF_OUTPUT_UREGS))
-+	    evsel__do_check_stype(evsel, PERF_SAMPLE_REGS_USER, "UREGS", PERF_OUTPUT_UREGS, allow_user_set))
- 		return -EINVAL;
- 
- 	if (PRINT_FIELD(PHYS_ADDR) &&
+> - Arnaldo
+>   
+>> ⬢[acme@toolbox perf]$ b4 am -ctsl --cc-trailers 20220728145256.2985298-1-carsten.haitzler@foss.arm.com
+>> Grabbing thread from lore.kernel.org/all/20220728145256.2985298-1-carsten.haitzler%40foss.arm.com/t.mbox.gz
+>> Checking for newer revisions on https://lore.kernel.org/all/
+>> Analyzing 36 messages in the thread
+>> ('Reviewed-by', 'Leo Yan <leo.yan@linaro.org>', None)
+>> Checking attestation on all messages, may take a moment...
+>> ---
+>>    [PATCH v5 1/14] perf test: Refactor shell tests allowing subdirs
+>>      + Reviewed-by: Leo Yan <leo.yan@linaro.org> (✓ DKIM/linaro.org)
+>>    [PATCH v5 2/14] perf test: Add CoreSight shell lib shared code for future tests
+>>      + Reviewed-by: Leo Yan <leo.yan@linaro.org> (✓ DKIM/linaro.org)
+>>    [PATCH v5 3/14] perf test: Add build infra for perf test tools for CoreSight tests
+>>    [PATCH v5 4/14] perf test: Add asm pureloop test tool
+>>      + Reviewed-by: Leo Yan <leo.yan@linaro.org> (✓ DKIM/linaro.org)
+>>    [PATCH v5 5/14] perf test: Add asm pureloop test shell script
+>>      + Reviewed-by: Leo Yan <leo.yan@linaro.org> (✓ DKIM/linaro.org)
+>>    [PATCH v5 6/14] perf test: Add git ignore for perf data generated by the CoreSight tests
+>>      + Reviewed-by: Leo Yan <leo.yan@linaro.org> (✓ DKIM/linaro.org)
+>>    [PATCH v5 7/14] perf test: Add memcpy thread test tool
+>>      + Reviewed-by: Leo Yan <leo.yan@linaro.org> (✓ DKIM/linaro.org)
+>>    [PATCH v5 8/14] perf test: Add memcpy thread test shell script
+>>      + Reviewed-by: Leo Yan <leo.yan@linaro.org> (✓ DKIM/linaro.org)
+>>    [PATCH v5 9/14] perf test: Add thread loop test tool
+>>      + Reviewed-by: Leo Yan <leo.yan@linaro.org> (✓ DKIM/linaro.org)
+>>    [PATCH v5 10/14] perf test: Add thread loop test shell scripts
+>>      + Reviewed-by: Leo Yan <leo.yan@linaro.org> (✓ DKIM/linaro.org)
+>>    [PATCH v5 11/14] perf test: Add unroll thread test tool
+>>      + Reviewed-by: Leo Yan <leo.yan@linaro.org> (✓ DKIM/linaro.org)
+>>    [PATCH v5 12/14] perf test: Add unroll thread test shell script
+>>      + Reviewed-by: Leo Yan <leo.yan@linaro.org> (✓ DKIM/linaro.org)
+>>    [PATCH v5 13/14] perf test: Add git ignore for tmp and output files of CoreSight tests
+>>      + Reviewed-by: Leo Yan <leo.yan@linaro.org> (✓ DKIM/linaro.org)
+>>    [PATCH v5 14/14] perf test: Add relevant documentation about CoreSight testing
+>>      + Reviewed-by: Mike Leach <mike.leach@linaro.org> (✓ DKIM/linaro.org)
+>>      + Reviewed-by: Leo Yan <leo.yan@linaro.org> (✓ DKIM/linaro.org)
+>> ---
+>> Total patches: 14
+>> ---
+>> Cover: ./v5_20220728_carsten_haitzler_a_patch_series_improving_data_quality_of_perf_test_for_coresight.cover
+>>   Link: https://lore.kernel.org/r/20220728145256.2985298-1-carsten.haitzler@foss.arm.com
+>>   Base: not specified
+>>         git am ./v5_20220728_carsten_haitzler_a_patch_series_improving_data_quality_of_perf_test_for_coresight.mbx
+>> ⬢[acme@toolbox perf]$
