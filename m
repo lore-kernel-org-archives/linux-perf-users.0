@@ -2,218 +2,132 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 10194C00140
-	for <linux-perf-users@archiver.kernel.org>; Mon, 15 Aug 2022 20:32:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F07A4C2BB41
+	for <linux-perf-users@archiver.kernel.org>; Mon, 15 Aug 2022 22:19:22 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S243365AbiHOUcu (ORCPT
+        id S1346925AbiHOWTT (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Mon, 15 Aug 2022 16:32:50 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33694 "EHLO
+        Mon, 15 Aug 2022 18:19:19 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59608 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1347239AbiHOUbD (ORCPT
+        with ESMTP id S1350829AbiHOWSj (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Mon, 15 Aug 2022 16:31:03 -0400
-Received: from mail-lj1-x22f.google.com (mail-lj1-x22f.google.com [IPv6:2a00:1450:4864:20::22f])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id F023CA3D60
-        for <linux-perf-users@vger.kernel.org>; Mon, 15 Aug 2022 12:04:36 -0700 (PDT)
-Received: by mail-lj1-x22f.google.com with SMTP id x9so8487351ljj.13
-        for <linux-perf-users@vger.kernel.org>; Mon, 15 Aug 2022 12:04:36 -0700 (PDT)
+        Mon, 15 Aug 2022 18:18:39 -0400
+Received: from mail-vk1-xa2c.google.com (mail-vk1-xa2c.google.com [IPv6:2607:f8b0:4864:20::a2c])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6526441D20
+        for <linux-perf-users@vger.kernel.org>; Mon, 15 Aug 2022 12:42:38 -0700 (PDT)
+Received: by mail-vk1-xa2c.google.com with SMTP id q14so4164578vke.9
+        for <linux-perf-users@vger.kernel.org>; Mon, 15 Aug 2022 12:42:38 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
+        d=google.com; s=20210112;
         h=cc:to:subject:message-id:date:from:in-reply-to:references
          :mime-version:from:to:cc;
-        bh=ul8IHw4RrluaYwczzAKxTYGxJ51uPLM0qDTfe069M8Y=;
-        b=jC407XRH9JG9f3FPdW1khnxw1sRd6sA0ltG/8LqR7aYsypz0GGDc2TQ6wPFUBULScI
-         wXaHQBHoKdDs4fsr7oc/H0pg/+7MGv4d1AtaTDNWf7NJrD7GLMj5GagL5jO8GfOyRiqK
-         NbBXK9uVxjWazbaM9CVau0oG5Hm9Snz87eWClNKnZh5QBwDqkvQ6Px4Tl5VqCRt4N0g+
-         ku8y2p0Hwg7O5T/tmejGQA38Q/Dvxg8MOzSbVjmjI2Um8IwfakpoYvXagc01zJQ0fVLw
-         Y0pMotsVtR09VXwPWHQflEhYe3C4u7UVuLGEqpiRX/LtbLoMExRvXQP0LG1Man6uycGr
-         9Ljg==
+        bh=RGBjkPaE8J9hO2HXiD58roaLLtlMCd9GApWRbn/4InE=;
+        b=FPnuTloO45sF2T+4wEAf823pe7ogF3QnjRaKt7CEVoHfJADFo52qIDJ1ZW2Z4LsAcu
+         H1W2iVmPI4c522AHFCUyx7ONp/gv20XWuh3LLqi1W1gNTA7Go2R4zwn18WsNaore+syl
+         0eYy6eJq/oyYLaYS+z59QmSMvokUC+mywr5AIISm+KTlLsOJU4LPOKV0XxpFu3UwdcS0
+         dYc0WrRklRJfH4uzQCrjttrHj/om6vTyzT/5gmlSslEJoj/j2XoWwJu62hNTThOfBCfK
+         uwOFZ9py99FCDB/TEkuZ2PIS8vruJ36GwJ47bJEEbddUQ86rJ18LozZWAOKcFsQXzuXX
+         elKw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
         h=cc:to:subject:message-id:date:from:in-reply-to:references
          :mime-version:x-gm-message-state:from:to:cc;
-        bh=ul8IHw4RrluaYwczzAKxTYGxJ51uPLM0qDTfe069M8Y=;
-        b=xJHaoueiEiYMwLOxpKLsF0ioZkLo9RgVvLvgbW1ntPjWoguaZ0v4cVmxvy+NoLEnij
-         CDKwcyCxnZ3KOVXhh2Dt+7QrZAopYL0EHUJiukSS88x5UjxxPTCyvD6UWtj7ZpqcNk92
-         IaI7dBN/eSLYEKI+wsedFxFs05uZyEB0H3UMUAK8yBrPp0T7VIdHNG/GtOu/4E9QiZK1
-         qAvx6SPQWbOufmLrc9X5ZCWhsgMzeZqMRhIOLDLpjhN1suxo3r8rGFMOJPiZqk8gbLRL
-         kURh8sHwyUjkSgfwC9DWe10do366u69Qj9TjC4L2tAIWANM3XiNsadRH6pjT5/cN9TXr
-         sJlA==
-X-Gm-Message-State: ACgBeo3sTxXwJfuBpe5DlQbABdarste+3L7QsHiVMZ+BOosOEi2FPxE7
-        RMrc95l0Zw/zWfH16YcHaK71DKg2k5VolEfWxUceMA==
-X-Google-Smtp-Source: AA6agR4jPuoXOrAbdtUck3G5EGFGiezlZT4chWtrkQI+p+otQEHTReDzEae+kLibqiW73pDCK6p8NesdrqCzRD4ZMK4=
-X-Received: by 2002:a05:651c:903:b0:25d:e732:6409 with SMTP id
- e3-20020a05651c090300b0025de7326409mr5349254ljq.314.1660590273952; Mon, 15
- Aug 2022 12:04:33 -0700 (PDT)
+        bh=RGBjkPaE8J9hO2HXiD58roaLLtlMCd9GApWRbn/4InE=;
+        b=yCzDCwEMl+iO19mQ0cPdeLDhFLaz1zy8FEAhj9dWgCZ/pIQt2gELrOa9h8AJej1mCO
+         grgXW5zt/OcIUNyHEA2cWTtXf/z+fX9Vl4Q8bZjL+e4sRGQtBfg/X9sM5oEGR0+A5+nI
+         sdaRBpRg8TCRiT1hRs7kYMjnEoDB1SgN5hJpvZpFPcISEi9ZBNkpIyxFWkRE5HPQI1jd
+         iwxtqwsuUTdx5v/Zc0NStnUpxM56bhYm/+l0fNyUNacLV5MREH0fUtDLQS31KAtCTqsh
+         napU3n0IEtULnptvCiooCaiDgsaIvZVlOqPxvzL4gDocR9iH0dCHgNavV2soLLlTnFdj
+         4Rmg==
+X-Gm-Message-State: ACgBeo10Lk8MOnWHKyrhKlj4cp6AtCntz05Iqq4YhwrGygZbppwS+vKd
+        nu6C6mX7a+Ku1DN0yz2su2NpMelRhyF98Ube3G3Bkw==
+X-Google-Smtp-Source: AA6agR7pGITv9xB++a81UrxiizddUCff4tMML/JKgOT3cUKsfaaQ9Khq0zhzod+3R31qgsSrSVaAxFx5/6Bs+6Zfd0E=
+X-Received: by 2002:a1f:2b47:0:b0:380:59c5:8b8f with SMTP id
+ r68-20020a1f2b47000000b0038059c58b8fmr1092986vkr.20.1660592557245; Mon, 15
+ Aug 2022 12:42:37 -0700 (PDT)
 MIME-Version: 1.0
-References: <20220809223401.24599-1-mike.leach@linaro.org> <YvavAqZfO2nFg3LF@kernel.org>
-In-Reply-To: <YvavAqZfO2nFg3LF@kernel.org>
-From:   Mike Leach <mike.leach@linaro.org>
-Date:   Mon, 15 Aug 2022 20:04:22 +0100
-Message-ID: <CAJ9a7VhmdEN14NfTfw8ioU=eZrGedhOdenFN85rbMur_OGAEZg@mail.gmail.com>
-Subject: Re: [PATCH v3 00/13] coresight: Add new API to allocate trace source
- ID values
-To:     Arnaldo Carvalho de Melo <acme@kernel.org>
-Cc:     coresight@lists.linaro.org, linux-arm-kernel@lists.infradead.org,
-        linux-kernel@vger.kernel.org, mathieu.poirier@linaro.org,
-        suzuki.poulose@arm.com, peterz@infradead.org, mingo@redhat.com,
-        linux-perf-users@vger.kernel.org, leo.yan@linaro.org,
-        quic_jinlmao@quicinc.com
+References: <cover.1660211399.git.sandipan.das@amd.com> <172d2b0df39306ed77221c45ee1aa62e8ae0548d.1660211399.git.sandipan.das@amd.com>
+ <YvotoHMaLE1XawiO@worktop.programming.kicks-ass.net>
+In-Reply-To: <YvotoHMaLE1XawiO@worktop.programming.kicks-ass.net>
+From:   Stephane Eranian <eranian@google.com>
+Date:   Mon, 15 Aug 2022 12:42:23 -0700
+Message-ID: <CABPqkBQ1YLAu+sJC_U4QsQuo3PuzUwRDrNm9KcrUAEUxeBaYbg@mail.gmail.com>
+Subject: Re: [PATCH 04/13] x86/cpufeatures: Add LbrExtV2 feature bit
+To:     Peter Zijlstra <peterz@infradead.org>
+Cc:     Sandipan Das <sandipan.das@amd.com>, linux-kernel@vger.kernel.org,
+        linux-perf-users@vger.kernel.org, x86@kernel.org, bp@alien8.de,
+        acme@kernel.org, namhyung@kernel.org, jolsa@kernel.org,
+        tglx@linutronix.de, mingo@redhat.com, mark.rutland@arm.com,
+        alexander.shishkin@linux.intel.com, dave.hansen@linux.intel.com,
+        like.xu.linux@gmail.com, ananth.narayan@amd.com,
+        ravi.bangoria@amd.com, santosh.shukla@amd.com
 Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-Hi Arnaldo,
+Hi,
 
-On Fri, 12 Aug 2022 at 20:50, Arnaldo Carvalho de Melo <acme@kernel.org> wrote:
+On Mon, Aug 15, 2022 at 4:27 AM Peter Zijlstra <peterz@infradead.org> wrote:
 >
-> Em Tue, Aug 09, 2022 at 11:33:48PM +0100, Mike Leach escreveu:
-> > The current method for allocating trace source ID values to sources is
-> > to use a fixed algorithm for CPU based sources of (cpu_num * 2 + 0x10).
-> > The STM is allocated ID 0x1.
+> On Thu, Aug 11, 2022 at 05:59:52PM +0530, Sandipan Das wrote:
+> > CPUID leaf 0x80000022 i.e. ExtPerfMonAndDbg advertises some new performance
+> > monitoring features for AMD processors.
+> >
+> > Bit 1 of EAX indicates support for Last Branch Record Extension Version 2
+> > (LbrExtV2) features. If found to be set during PMU initialization, the EBX
+> > bits of the same leaf can be used to determine the number of available LBR
+> > entries.
+> >
+> > For better utilization of feature words, LbrExtV2 is added as a scattered
+> > feature bit.
+> >
+> > Signed-off-by: Sandipan Das <sandipan.das@amd.com>
+> > ---
+> >  arch/x86/include/asm/cpufeatures.h | 2 +-
+> >  arch/x86/kernel/cpu/scattered.c    | 1 +
+> >  2 files changed, 2 insertions(+), 1 deletion(-)
+> >
+> > diff --git a/arch/x86/include/asm/cpufeatures.h b/arch/x86/include/asm/cpufeatures.h
+> > index 393f2bbb5e3a..e3fa476a24b0 100644
+> > --- a/arch/x86/include/asm/cpufeatures.h
+> > +++ b/arch/x86/include/asm/cpufeatures.h
+> > @@ -96,7 +96,7 @@
+> >  #define X86_FEATURE_SYSCALL32                ( 3*32+14) /* "" syscall in IA32 userspace */
+> >  #define X86_FEATURE_SYSENTER32               ( 3*32+15) /* "" sysenter in IA32 userspace */
+> >  #define X86_FEATURE_REP_GOOD         ( 3*32+16) /* REP microcode works well */
+> > -/* FREE!                                ( 3*32+17) */
+> > +#define X86_FEATURE_LBREXT_V2                ( 3*32+17) /* AMD Last Branch Record Extension Version 2 */
+> >  #define X86_FEATURE_LFENCE_RDTSC     ( 3*32+18) /* "" LFENCE synchronizes RDTSC */
+> >  #define X86_FEATURE_ACC_POWER                ( 3*32+19) /* AMD Accumulated Power Mechanism */
+> >  #define X86_FEATURE_NOPL             ( 3*32+20) /* The NOPL (0F 1F) instructions */
+> > diff --git a/arch/x86/kernel/cpu/scattered.c b/arch/x86/kernel/cpu/scattered.c
+> > index dbaa8326d6f2..6be46dffddbf 100644
+> > --- a/arch/x86/kernel/cpu/scattered.c
+> > +++ b/arch/x86/kernel/cpu/scattered.c
+> > @@ -44,6 +44,7 @@ static const struct cpuid_bit cpuid_bits[] = {
+> >       { X86_FEATURE_PROC_FEEDBACK,    CPUID_EDX, 11, 0x80000007, 0 },
+> >       { X86_FEATURE_MBA,              CPUID_EBX,  6, 0x80000008, 0 },
+> >       { X86_FEATURE_PERFMON_V2,       CPUID_EAX,  0, 0x80000022, 0 },
+> > +     { X86_FEATURE_LBREXT_V2,        CPUID_EAX,  1, 0x80000022, 0 },
+> >       { 0, 0, 0, 0, 0 }
+> >  };
 >
-> So I'll wait for the kernel bits to get into the ARM architecture tree
-> to then process the userspace bits.
+> Would LBR_V2 work at all? It being a new version already seems to imply
+> extention, no? Then again, I suppose there's an argument to be had for
+> avoiding confusion vs the Intel LBR thing.. Couldn't you have called
+> this BRS_V2 :-)
 >
-> Would be great to have Tested-by/Reviewed-by from pehole actually
-> testing these patches on the hardware where these features are
-> available.
->
-Agreed, although the issue is not hardware - this is a fix of a
-software issue that just happens to manifest on more modern hardware,
-though can be tested on anything.
+I believe it is called v2 because there was already a LBR in previous
+generations, however it
+was 1-deep and it was not connected to the PMU like this one. The
+public PPR mentions it
+(MSR 0x1DB/0x1DC, Last Branch From IP, Last Branch To IP). See for
+instance the PPR
+for Fam17h model 71h:
+https://www.amd.com/system/files/TechDocs/56176_ppr_Family_17h_Model_71h_B0_pub_Rev_3.06.zip
 
-That said, you should wait for v4 as the kernel test bot has picked
-something up that requires attention.
+BRS is a model specific feature for Zen3.
 
-Thanks
-
-Mike
-
-> - Arnaldo
->
-> > This fixed algorithm is used in both the CoreSight driver code, and by
-> > perf when writing the trace metadata in the AUXTRACE_INFO record.
-> >
-> > The method needs replacing as currently:-
-> > 1. It is inefficient in using available IDs.
-> > 2. Does not scale to larger systems with many cores and the algorithm
-> > has no limits so will generate invalid trace IDs for cpu number > 44.
-> >
-> > Additionally requirements to allocate additional system IDs on some
-> > systems have been seen.
-> >
-> > This patch set  introduces an API that allows the allocation of trace IDs
-> > in a dynamic manner.
-> >
-> > Architecturally reserved IDs are never allocated, and the system is
-> > limited to allocating only valid IDs.
-> >
-> > Each of the current trace sources ETM3.x, ETM4.x and STM is updated to use
-> > the new API.
-> >
-> > For the ETMx.x devices IDs are allocated on certain events
-> > a) When using sysfs, an ID will be allocated on hardware enable, or a read of
-> > sysfs TRCTRACEID register and freed when the sysfs reset is written.
-> >
-> > b) When using perf, ID is allocated on during setup AUX event, and freed on
-> > event free. IDs are communicated using the AUX_OUTPUT_HW_ID packet.
-> > The ID allocator is notified when perf sessions start and stop
-> > so CPU based IDs are kept constant throughout any perf session.
-> >
-> >
-> > Note: This patchset breaks some backward compatibility for perf record and
-> > perf report.
-> >
-> > The version of the AUXTRACE_INFO has been updated to reflect the fact that
-> > the trace source IDs are generated differently. This will
-> > mean older versions of perf report cannot decode the newer file.
-> >
-> > Applies to coresight/next [4d45bc82df66]
-> > Tested on DB410c
-> >
-> > Changes since v2:
-> > 1) Improved backward compatibility: (requested by James)
-> >
-> > Using the new version of perf on an old kernel will generate a usable file
-> > legacy metadata values are set by the new perf and will be used if mew
-> > ID packets are not present in the file.
-> >
-> > Using an older version of perf / simpleperf on an updated kernel may still
-> > work. The trace ID allocator has been updated to use the legacy ID values
-> > where possible, so generated file and used trace IDs will match up to the
-> > point where the legacy algorithm is broken anyway.
-> >
-> > 2) Various changes to the ID allocator and ID packet format.
-> > (suggested by Suzuki)
-> >
-> > 3) per CPU ID info in allocator now stored as atomic type to allow a passive read
-> > without taking the allocator spinlock. perf flow now allocates and releases ID
-> > values in setup_aux / free_event. Device enable and event enable use the passive
-> > read to set the allocated values. This simplifies the locking mechanisms on the
-> > perf run and fixes issues that arose with locking dependencies.
-> >
-> > Changes since v1:
-> > (after feedback & discussion with Mathieu & Suzuki).
-> >
-> > 1) API has changed. The global trace ID map is managed internally, so it
-> > is no longer passed in to the API functions.
-> >
-> > 2) perf record does not use sysfs to find the trace IDs. These are now
-> > output as AUX_OUTPUT_HW_ID events. The drivers, perf record, and perf report
-> > have been updated accordingly to generate and handle these events.
-> >
-> > Mike Leach (13):
-> >   coresight: trace-id: Add API to dynamically assign Trace ID values
-> >   coresight: Remove obsolete Trace ID unniqueness checks
-> >   coresight: stm: Update STM driver to use Trace ID API
-> >   coresight: etm4x: Update ETM4 driver to use Trace ID API
-> >   coresight: etm3x: Update ETM3 driver to use Trace ID API
-> >   coresight: etmX.X: stm: Remove trace_id() callback
-> >   coresight: perf: traceid: Add perf notifiers for Trace ID
-> >   perf: cs-etm: Move mapping of Trace ID and cpu into helper function
-> >   perf: cs-etm: Update record event to use new Trace ID protocol
-> >   kernel: events: Export perf_report_aux_output_id()
-> >   perf: cs-etm: Handle PERF_RECORD_AUX_OUTPUT_HW_ID packet
-> >   coresight: events: PERF_RECORD_AUX_OUTPUT_HW_ID used for Trace ID
-> >   coresight: trace-id: Add debug & test macros to Trace ID allocation
-> >
-> >  drivers/hwtracing/coresight/Makefile          |   2 +-
-> >  drivers/hwtracing/coresight/coresight-core.c  |  49 +--
-> >  .../hwtracing/coresight/coresight-etm-perf.c  |  23 ++
-> >  drivers/hwtracing/coresight/coresight-etm.h   |   3 +-
-> >  .../coresight/coresight-etm3x-core.c          |  92 +++--
-> >  .../coresight/coresight-etm3x-sysfs.c         |  27 +-
-> >  .../coresight/coresight-etm4x-core.c          |  79 ++++-
-> >  .../coresight/coresight-etm4x-sysfs.c         |  27 +-
-> >  drivers/hwtracing/coresight/coresight-etm4x.h |   3 +
-> >  drivers/hwtracing/coresight/coresight-stm.c   |  49 +--
-> >  .../hwtracing/coresight/coresight-trace-id.c  | 266 ++++++++++++++
-> >  .../hwtracing/coresight/coresight-trace-id.h  |  78 +++++
-> >  include/linux/coresight-pmu.h                 |  35 +-
-> >  include/linux/coresight.h                     |   3 -
-> >  kernel/events/core.c                          |   1 +
-> >  tools/include/linux/coresight-pmu.h           |  48 ++-
-> >  tools/perf/arch/arm/util/cs-etm.c             |  21 +-
-> >  .../perf/util/cs-etm-decoder/cs-etm-decoder.c |   7 +
-> >  tools/perf/util/cs-etm.c                      | 331 +++++++++++++++---
-> >  tools/perf/util/cs-etm.h                      |  14 +-
-> >  20 files changed, 933 insertions(+), 225 deletions(-)
-> >  create mode 100644 drivers/hwtracing/coresight/coresight-trace-id.c
-> >  create mode 100644 drivers/hwtracing/coresight/coresight-trace-id.h
-> >
-> > --
-> > 2.17.1
->
-> --
->
-> - Arnaldo
-
-
-
--- 
-Mike Leach
-Principal Engineer, ARM Ltd.
-Manchester Design Centre. UK
+LBRv2 is a great improvement including over Zen3 BRS.
