@@ -2,206 +2,99 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2C00CC3F6B0
-	for <linux-perf-users@archiver.kernel.org>; Mon, 15 Aug 2022 13:35:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 55F3DC25B06
+	for <linux-perf-users@archiver.kernel.org>; Mon, 15 Aug 2022 14:56:59 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S242234AbiHONfK (ORCPT
+        id S229909AbiHOO45 (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Mon, 15 Aug 2022 09:35:10 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47144 "EHLO
+        Mon, 15 Aug 2022 10:56:57 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36258 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S242071AbiHONfJ (ORCPT
+        with ESMTP id S241110AbiHOO4w (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Mon, 15 Aug 2022 09:35:09 -0400
-X-Greylist: delayed 347 seconds by postgrey-1.37 at lindbergh.monkeyblade.net; Mon, 15 Aug 2022 06:35:07 PDT
-Received: from forward100o.mail.yandex.net (forward100o.mail.yandex.net [37.140.190.180])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BAB8320F68;
-        Mon, 15 Aug 2022 06:35:07 -0700 (PDT)
-Received: from forward503p.mail.yandex.net (forward503p.mail.yandex.net [IPv6:2a02:6b8:0:1472:2741:0:8b7:122])
-        by forward100o.mail.yandex.net (Yandex) with ESMTP id 61BB052ABA4F;
-        Mon, 15 Aug 2022 16:24:02 +0300 (MSK)
-Received: from iva1-dcde80888020.qloud-c.yandex.net (iva1-dcde80888020.qloud-c.yandex.net [IPv6:2a02:6b8:c0c:7695:0:640:dcde:8088])
-        by forward503p.mail.yandex.net (Yandex) with ESMTP id 49E5511018E6;
-        Mon, 15 Aug 2022 16:22:59 +0300 (MSK)
-Received: by iva1-dcde80888020.qloud-c.yandex.net (smtp/Yandex) with ESMTPSA id BL0XdiM9S6-Mvi4Dxrs;
-        Mon, 15 Aug 2022 16:22:57 +0300
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits))
-        (Client certificate not present)
-X-Yandex-Fwd: 1
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=maquefel.me; s=mail; t=1660569778;
-        bh=Pn3L6cXxvX9m7wl4hmev8LZGUCinVPWeTkQjWKkyw4Y=;
-        h=Message-Id:Date:In-Reply-To:Cc:Subject:References:To:From;
-        b=Ic1PN/9REPOl1gnzimegeayVri/yEbacitqkG72vxi/iYEZbgZh/GKBJ8KVikBmVu
-         rNSIAhRerd+A+IZogTabK1I2VTuV5slOnQY3jdESYH19lPfT66eVvgeqk9upyoadN/
-         DKvVG/cM3V+9jPWQkpFx0fPPWYx3jNO7Vb6CYsQ4=
-Authentication-Results: iva1-dcde80888020.qloud-c.yandex.net; dkim=pass header.i=@maquefel.me
-From:   Nikita Shubin <nikita.shubin@maquefel.me>
-Cc:     linux@yadro.com, Anup Patel <anup@brainfault.org>,
-        Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Nikita Shubin <n.shubin@yadro.com>,
-        Kautuk Consul <kconsul@ventanamicro.com>,
+        Mon, 15 Aug 2022 10:56:52 -0400
+Received: from mail-wr1-x434.google.com (mail-wr1-x434.google.com [IPv6:2a00:1450:4864:20::434])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4254120F6E
+        for <linux-perf-users@vger.kernel.org>; Mon, 15 Aug 2022 07:56:48 -0700 (PDT)
+Received: by mail-wr1-x434.google.com with SMTP id n4so9328430wrp.10
+        for <linux-perf-users@vger.kernel.org>; Mon, 15 Aug 2022 07:56:48 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20210112;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:from:to:cc;
+        bh=SNEwN3qf4cTPak4P3uJkYoBDFHuw13WWi+vOH5Zd4Ac=;
+        b=c2TeqN6ajJt/R05lUrbaU/cW8aitjSNIIkCewNDl9j/5olXm2dAggQ54HiQFhIB8xS
+         1ysjI8wb6P7OKswHBtc5qRHgXGxD5U1N3Lq2ahjJYLVjKcVtLLiadcyNH/srISGGBO8+
+         3BCm9zqYR3CXLNeOGkg6aeBVRQ3Srveh6jLH0jNLmUbfxcsR5AizhVzcoCQdKYKcBCt5
+         Ir9452ZyBgHg8qj0k4zMJ1Bk2GZsxUT8+XHyYwZWz7Ia5CwCyQ1bjkDYzOOZ0bm4LtaS
+         aPBFWV3AKAmFuEJxPj4JSKanWag4vyc3FqbGTpPICfePrxdbII1Xv/KNA+6DN5wMT7Px
+         sSUQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:x-gm-message-state:from:to:cc;
+        bh=SNEwN3qf4cTPak4P3uJkYoBDFHuw13WWi+vOH5Zd4Ac=;
+        b=SJJ4tES/KQAuNvYqKC8woaeyazXW2iT0YU8ComrSHtEwNlQbHsEc+BogfXpQhsQ4Mj
+         bBAcL7QGhvoQhuPdfE6tv5ZWaGg9ZJbMxTdC6qX4IoA71O3GN9Cb/MORx5PAFOsNyJaq
+         mFn6DhBaWg2hxW/HiI0UANqR7ep4Pazwwbv7/e4JNq0mxjv6t1QReA4enVU8k+OisgKC
+         zjB8nyUiLZLu5relIKvtTCCIIf+kjcFzdwLwB4diA7BMFNJlV/Vj7FGOPnHMINl6tLTW
+         PNzgs3x6mQ9SkKR0tGbyFUwr6HxitBpHGdYHmpgRLsP4JuS7MTGCsqm0GBSXY3gSTqEZ
+         rsSw==
+X-Gm-Message-State: ACgBeo1EUAYz4dA8UYqEe7mxzrtqX85zd1k/dmC8tsNLyvZSqda0zsF/
+        Gq7qrxS2jPwtCt25pwCRPcgVb0GX5Mh1mUL2fWfPpw==
+X-Google-Smtp-Source: AA6agR4wiUckDTDALcDEn5Dgm86gur7YVyasP8WtZkwG8dhPc2lAvm+1sKa+ebt8tKnqTv0xrMMcQVySwm4DVH24oNU=
+X-Received: by 2002:adf:e28d:0:b0:21e:4c3b:b446 with SMTP id
+ v13-20020adfe28d000000b0021e4c3bb446mr8679323wri.300.1660575406510; Mon, 15
+ Aug 2022 07:56:46 -0700 (PDT)
+MIME-Version: 1.0
+References: <cecae74c-6bb2-d7da-bce3-35772b6e3f8c@intel.com>
+In-Reply-To: <cecae74c-6bb2-d7da-bce3-35772b6e3f8c@intel.com>
+From:   Ian Rogers <irogers@google.com>
+Date:   Mon, 15 Aug 2022 07:56:34 -0700
+Message-ID: <CAP-5=fXJtRVKuPA_xpa=jBzq66y5JMv+jmr1GFNzh-zQ-7j5QA@mail.gmail.com>
+Subject: Re: perf tools man pages on the web
+To:     Adrian Hunter <adrian.hunter@intel.com>
+Cc:     Arnaldo Carvalho de Melo <acme@kernel.org>,
+        Jiri Olsa <jolsa@kernel.org>,
+        Namhyung Kim <namhyung@kernel.org>,
+        Jonathan Corbet <corbet@lwn.net>,
         Peter Zijlstra <peterz@infradead.org>,
         Ingo Molnar <mingo@redhat.com>,
         Mark Rutland <mark.rutland@arm.com>,
         Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Jiri Olsa <jolsa@kernel.org>,
-        Namhyung Kim <namhyung@kernel.org>,
-        Paul Walmsley <paul.walmsley@sifive.com>,
-        Palmer Dabbelt <palmer@dabbelt.com>,
-        Albert Ou <aou@eecs.berkeley.edu>,
-        linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org,
-        linux-riscv@lists.infradead.org
-Subject: [PATCH v6 1/3] perf tools riscv: Add support for get_cpuid_str function
-Date:   Mon, 15 Aug 2022 16:22:38 +0300
-Message-Id: <20220815132251.25702-2-nikita.shubin@maquefel.me>
-X-Mailer: git-send-email 2.35.1
-In-Reply-To: <20220815132251.25702-1-nikita.shubin@maquefel.me>
-References: <20220815132251.25702-1-nikita.shubin@maquefel.me>
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-To:     unlisted-recipients:; (no To-header on input)
+        "linux-perf-users@vger.kernel.org" <linux-perf-users@vger.kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-From: Nikita Shubin <n.shubin@yadro.com>
+On Mon, Aug 15, 2022 at 5:05 AM Adrian Hunter <adrian.hunter@intel.com> wrote:
+>
+> Hi
+>
+> I notice man pages on man7.org e.g.
+>
+>         https://www.man7.org/linux/man-pages/man1/perf.1.html
+>
+> do not get updated every release, and I wondered if the perf tools
+> man pages should also be under:
+>
+>         https://docs.kernel.org/tools/index.html
+>
+> Thoughts?
 
-The get_cpuid_str function returns the string that
-contains values of MVENDORID, MARCHID and MIMPID in
-hex format separated by coma.
+Sounds good to me. I'm assuming it would be some kind of build step
+that would take the man pages and add them to what linux-doc needs?
 
-The values themselves are taken from first cpu entry
-in "/proc/cpuid" that contains "mvendorid", "marchid"
-and "mimpid".
+Fwiw, there has been some effort to try to improve the wiki:
+https://perf.wiki.kernel.org/index.php/Main_Page
+For example, the useful links are now broken apart and have more
+links, there is a work-in-progress glossary. Perhaps there can be some
+guidance on what to capture and where.
 
-Signed-off-by: Nikita Shubin <n.shubin@yadro.com>
-Tested-by: Kautuk Consul <kconsul@ventanamicro.com>
----
- tools/perf/arch/riscv/util/Build    |   1 +
- tools/perf/arch/riscv/util/header.c | 104 ++++++++++++++++++++++++++++
- 2 files changed, 105 insertions(+)
- create mode 100644 tools/perf/arch/riscv/util/header.c
+Thanks,
+Ian
 
-diff --git a/tools/perf/arch/riscv/util/Build b/tools/perf/arch/riscv/util/Build
-index 7d3050134ae0..603dbb5ae4dc 100644
---- a/tools/perf/arch/riscv/util/Build
-+++ b/tools/perf/arch/riscv/util/Build
-@@ -1,4 +1,5 @@
- perf-y += perf_regs.o
-+perf-y += header.o
- 
- perf-$(CONFIG_DWARF) += dwarf-regs.o
- perf-$(CONFIG_LIBDW_DWARF_UNWIND) += unwind-libdw.o
-diff --git a/tools/perf/arch/riscv/util/header.c b/tools/perf/arch/riscv/util/header.c
-new file mode 100644
-index 000000000000..4a41856938a8
---- /dev/null
-+++ b/tools/perf/arch/riscv/util/header.c
-@@ -0,0 +1,104 @@
-+// SPDX-License-Identifier: GPL-2.0-only
-+/*
-+ * Implementation of get_cpuid().
-+ *
-+ * Author: Nikita Shubin <n.shubin@yadro.com>
-+ */
-+
-+#include <stdio.h>
-+#include <stdlib.h>
-+#include <api/fs/fs.h>
-+#include <errno.h>
-+#include "../../util/debug.h"
-+#include "../../util/header.h"
-+
-+#define CPUINFO_MVEN	"mvendorid"
-+#define CPUINFO_MARCH	"marchid"
-+#define CPUINFO_MIMP	"mimpid"
-+#define CPUINFO		"/proc/cpuinfo"
-+
-+static char *_get_field(const char *line)
-+{
-+	char *line2, *nl;
-+
-+	line2 = strrchr(line, ' ');
-+	if (!line2)
-+		return NULL;
-+
-+	line2++;
-+	nl = strrchr(line, '\n');
-+	if (!nl)
-+		return NULL;
-+
-+	return strndup(line2, nl - line2);
-+}
-+
-+static char *_get_cpuid(void)
-+{
-+	char *line = NULL;
-+	char *mvendorid = NULL;
-+	char *marchid = NULL;
-+	char *mimpid = NULL;
-+	char *cpuid = NULL;
-+	int read;
-+	unsigned long line_sz;
-+	FILE *cpuinfo;
-+
-+	cpuinfo = fopen(CPUINFO, "r");
-+	if (cpuinfo == NULL)
-+		return cpuid;
-+
-+	while ((read = getline(&line, &line_sz, cpuinfo)) != -1) {
-+		if (!strncmp(line, CPUINFO_MVEN, strlen(CPUINFO_MVEN))) {
-+			mvendorid = _get_field(line);
-+			if (!mvendorid)
-+				goto free;
-+		} else if (!strncmp(line, CPUINFO_MARCH, strlen(CPUINFO_MARCH))) {
-+			marchid = _get_field(line);
-+			if (!marchid)
-+				goto free;
-+		} else if (!strncmp(line, CPUINFO_MIMP, strlen(CPUINFO_MIMP))) {
-+			mimpid = _get_field(line);
-+			if (!mimpid)
-+				goto free;
-+
-+			break;
-+		}
-+	}
-+
-+	if (!mvendorid || !marchid || !mimpid)
-+		goto free;
-+
-+	if (asprintf(&cpuid, "%s-%s-%s", mvendorid, marchid, mimpid) < 0)
-+		cpuid = NULL;
-+
-+free:
-+	fclose(cpuinfo);
-+	free(mvendorid);
-+	free(marchid);
-+	free(mimpid);
-+
-+	return cpuid;
-+}
-+
-+int get_cpuid(char *buffer, size_t sz)
-+{
-+	char *cpuid = _get_cpuid();
-+	int ret = 0;
-+
-+	if (sz < strlen(cpuid)) {
-+		ret = -EINVAL;
-+		goto free;
-+	}
-+
-+	scnprintf(buffer, sz, "%s", cpuid);
-+free:
-+	free(cpuid);
-+	return ret;
-+}
-+
-+char *
-+get_cpuid_str(struct perf_pmu *pmu __maybe_unused)
-+{
-+	return _get_cpuid();
-+}
--- 
-2.35.1
-
+> Regards
+> Adrian
