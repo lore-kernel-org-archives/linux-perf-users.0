@@ -2,67 +2,103 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 867F0C00140
-	for <linux-perf-users@archiver.kernel.org>; Mon, 15 Aug 2022 08:02:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F2FC8C00140
+	for <linux-perf-users@archiver.kernel.org>; Mon, 15 Aug 2022 11:27:46 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229816AbiHOICf (ORCPT
+        id S231404AbiHOL1q (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Mon, 15 Aug 2022 04:02:35 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60170 "EHLO
+        Mon, 15 Aug 2022 07:27:46 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45204 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S241548AbiHOIC0 (ORCPT
+        with ESMTP id S231339AbiHOL1p (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Mon, 15 Aug 2022 04:02:26 -0400
-Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTP id 4E0AB1B791;
-        Mon, 15 Aug 2022 01:02:25 -0700 (PDT)
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id E0BC7113E;
-        Mon, 15 Aug 2022 01:02:25 -0700 (PDT)
-Received: from [192.168.99.12] (unknown [172.31.20.19])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 17FD53F67D;
-        Mon, 15 Aug 2022 01:02:23 -0700 (PDT)
-Message-ID: <a15dd3b3-dd7c-4c7f-0eb9-ac1d6f2d608c@foss.arm.com>
-Date:   Mon, 15 Aug 2022 09:02:15 +0100
+        Mon, 15 Aug 2022 07:27:45 -0400
+Received: from casper.infradead.org (casper.infradead.org [IPv6:2001:8b0:10b:1236::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8B04923BFF;
+        Mon, 15 Aug 2022 04:27:44 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=casper.20170209; h=In-Reply-To:Content-Type:MIME-Version:
+        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description;
+        bh=Ik6nEchRqVhcMLPDCsHn3EUuUuiA8xxLA2tdEPzeaQo=; b=FV933jaAKQ1XYfA7Ddg3K8hiwM
+        JNtZD+/dC3/e5Eb+3Gw4xscIQrutxMtPKtKoVwXLPQGNLeKLJZN0xmg8c5YSa3ShDY0Lw6T6lYGte
+        f1KvLFXqBPreNiOjTgNof6axNtfclrbxnypYuJ6QscLvAJjobF9HOJfjistKEHq9gYOYAQSexjmga
+        IDz9IPwSgMdhK+Y/OXOqpk8o9p3OW8V4ZMYZg1G49/FGEEgdEJwYtAGE+Y4uAzB07IsZ/VQo05Swi
+        yNmR01xo/gWjdGGzL62OC4DbjJ7yXQ6gVNT2uwtxlisC9SbM3GXWr44/RSvjHirETOJRjwCikeZpa
+        OfBTCUfg==;
+Received: from j130084.upc-j.chello.nl ([24.132.130.84] helo=worktop.programming.kicks-ass.net)
+        by casper.infradead.org with esmtpsa (Exim 4.94.2 #2 (Red Hat Linux))
+        id 1oNYFl-005fX8-M7; Mon, 15 Aug 2022 11:27:29 +0000
+Received: by worktop.programming.kicks-ass.net (Postfix, from userid 1000)
+        id DAB57980153; Mon, 15 Aug 2022 13:27:28 +0200 (CEST)
+Date:   Mon, 15 Aug 2022 13:27:28 +0200
+From:   Peter Zijlstra <peterz@infradead.org>
+To:     Sandipan Das <sandipan.das@amd.com>
+Cc:     linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org,
+        x86@kernel.org, bp@alien8.de, acme@kernel.org, namhyung@kernel.org,
+        jolsa@kernel.org, tglx@linutronix.de, mingo@redhat.com,
+        mark.rutland@arm.com, alexander.shishkin@linux.intel.com,
+        dave.hansen@linux.intel.com, like.xu.linux@gmail.com,
+        eranian@google.com, ananth.narayan@amd.com, ravi.bangoria@amd.com,
+        santosh.shukla@amd.com
+Subject: Re: [PATCH 04/13] x86/cpufeatures: Add LbrExtV2 feature bit
+Message-ID: <YvotoHMaLE1XawiO@worktop.programming.kicks-ass.net>
+References: <cover.1660211399.git.sandipan.das@amd.com>
+ <172d2b0df39306ed77221c45ee1aa62e8ae0548d.1660211399.git.sandipan.das@amd.com>
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
- Thunderbird/91.11.0
-Subject: Re: [PATCH v7 00/14] perf: test: Add trace data quality tests for
- CoreSight
-Content-Language: en-US
-To:     Arnaldo Carvalho de Melo <acme@kernel.org>
-Cc:     linux-kernel@vger.kernel.org, coresight@lists.linaro.org,
-        suzuki.poulose@arm.com, mathieu.poirier@linaro.org,
-        mike.leach@linaro.org, leo.yan@linaro.org,
-        linux-perf-users@vger.kernel.org
-References: <20220812121641.336465-1-carsten.haitzler@foss.arm.com>
- <YvahJcUNAZ0WC8fj@kernel.org> <YvahnOSyts95F8xm@kernel.org>
-From:   Carsten Haitzler <carsten.haitzler@foss.arm.com>
-Organization: Arm Ltd.
-In-Reply-To: <YvahnOSyts95F8xm@kernel.org>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <172d2b0df39306ed77221c45ee1aa62e8ae0548d.1660211399.git.sandipan.das@amd.com>
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-
-
-On 8/12/22 19:53, Arnaldo Carvalho de Melo wrote:
-> Em Fri, Aug 12, 2022 at 03:51:17PM -0300, Arnaldo Carvalho de Melo escreveu:
->> Em Fri, Aug 12, 2022 at 01:16:27PM +0100, carsten.haitzler@foss.arm.com escreveu:
->>> previous older versions of test scripts that are editor backup files
->>> as well as skipping perf.data files that may appear and so on.
+On Thu, Aug 11, 2022 at 05:59:52PM +0530, Sandipan Das wrote:
+> CPUID leaf 0x80000022 i.e. ExtPerfMonAndDbg advertises some new performance
+> monitoring features for AMD processors.
 > 
->>> Signed-off-by: Carsten Haitzler <carsten.haitzler@arm.com>
+> Bit 1 of EAX indicates support for Last Branch Record Extension Version 2
+> (LbrExtV2) features. If found to be set during PMU initialization, the EBX
+> bits of the same leaf can be used to determine the number of available LBR
+> entries.
 > 
->> On the next series, please add to the cover letter a summary of what
->> changed on each repost.
+> For better utilization of feature words, LbrExtV2 is added as a scattered
+> feature bit.
 > 
-> I also saw that several of your patches got reviewed and given
-> "Reviewed-by" tags, so if some of the patches in the previous versions
-> didn't change and received Reviewed-by tags, please collect them on the
-> current version.
+> Signed-off-by: Sandipan Das <sandipan.das@amd.com>
+> ---
+>  arch/x86/include/asm/cpufeatures.h | 2 +-
+>  arch/x86/kernel/cpu/scattered.c    | 1 +
+>  2 files changed, 2 insertions(+), 1 deletion(-)
+> 
+> diff --git a/arch/x86/include/asm/cpufeatures.h b/arch/x86/include/asm/cpufeatures.h
+> index 393f2bbb5e3a..e3fa476a24b0 100644
+> --- a/arch/x86/include/asm/cpufeatures.h
+> +++ b/arch/x86/include/asm/cpufeatures.h
+> @@ -96,7 +96,7 @@
+>  #define X86_FEATURE_SYSCALL32		( 3*32+14) /* "" syscall in IA32 userspace */
+>  #define X86_FEATURE_SYSENTER32		( 3*32+15) /* "" sysenter in IA32 userspace */
+>  #define X86_FEATURE_REP_GOOD		( 3*32+16) /* REP microcode works well */
+> -/* FREE!                                ( 3*32+17) */
+> +#define X86_FEATURE_LBREXT_V2		( 3*32+17) /* AMD Last Branch Record Extension Version 2 */
+>  #define X86_FEATURE_LFENCE_RDTSC	( 3*32+18) /* "" LFENCE synchronizes RDTSC */
+>  #define X86_FEATURE_ACC_POWER		( 3*32+19) /* AMD Accumulated Power Mechanism */
+>  #define X86_FEATURE_NOPL		( 3*32+20) /* The NOPL (0F 1F) instructions */
+> diff --git a/arch/x86/kernel/cpu/scattered.c b/arch/x86/kernel/cpu/scattered.c
+> index dbaa8326d6f2..6be46dffddbf 100644
+> --- a/arch/x86/kernel/cpu/scattered.c
+> +++ b/arch/x86/kernel/cpu/scattered.c
+> @@ -44,6 +44,7 @@ static const struct cpuid_bit cpuid_bits[] = {
+>  	{ X86_FEATURE_PROC_FEEDBACK,    CPUID_EDX, 11, 0x80000007, 0 },
+>  	{ X86_FEATURE_MBA,		CPUID_EBX,  6, 0x80000008, 0 },
+>  	{ X86_FEATURE_PERFMON_V2,	CPUID_EAX,  0, 0x80000022, 0 },
+> +	{ X86_FEATURE_LBREXT_V2,	CPUID_EAX,  1, 0x80000022, 0 },
+>  	{ 0, 0, 0, 0, 0 }
+>  };
 
-I changed the Author. wrong email address (I missed it). So all of them 
-changed.
+Would LBR_V2 work at all? It being a new version already seems to imply
+extention, no? Then again, I suppose there's an argument to be had for
+avoiding confusion vs the Intel LBR thing.. Couldn't you have called
+this BRS_V2 :-)
+
+Oh well...
