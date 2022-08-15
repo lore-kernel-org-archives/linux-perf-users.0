@@ -2,132 +2,281 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F07A4C2BB41
-	for <linux-perf-users@archiver.kernel.org>; Mon, 15 Aug 2022 22:19:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1C26AC19F2C
+	for <linux-perf-users@archiver.kernel.org>; Tue, 16 Aug 2022 05:53:39 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1346925AbiHOWTT (ORCPT
+        id S229484AbiHPFxh (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Mon, 15 Aug 2022 18:19:19 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59608 "EHLO
+        Tue, 16 Aug 2022 01:53:37 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51728 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1350829AbiHOWSj (ORCPT
+        with ESMTP id S230141AbiHPFxW (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Mon, 15 Aug 2022 18:18:39 -0400
-Received: from mail-vk1-xa2c.google.com (mail-vk1-xa2c.google.com [IPv6:2607:f8b0:4864:20::a2c])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6526441D20
-        for <linux-perf-users@vger.kernel.org>; Mon, 15 Aug 2022 12:42:38 -0700 (PDT)
-Received: by mail-vk1-xa2c.google.com with SMTP id q14so4164578vke.9
-        for <linux-perf-users@vger.kernel.org>; Mon, 15 Aug 2022 12:42:38 -0700 (PDT)
+        Tue, 16 Aug 2022 01:53:22 -0400
+Received: from mail-io1-xd49.google.com (mail-io1-xd49.google.com [IPv6:2607:f8b0:4864:20::d49])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0FE227F250
+        for <linux-perf-users@vger.kernel.org>; Mon, 15 Aug 2022 15:59:41 -0700 (PDT)
+Received: by mail-io1-xd49.google.com with SMTP id q20-20020a6bd214000000b00680799e0fbaso4999419iob.16
+        for <linux-perf-users@vger.kernel.org>; Mon, 15 Aug 2022 15:59:40 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=google.com; s=20210112;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:from:to:cc;
-        bh=RGBjkPaE8J9hO2HXiD58roaLLtlMCd9GApWRbn/4InE=;
-        b=FPnuTloO45sF2T+4wEAf823pe7ogF3QnjRaKt7CEVoHfJADFo52qIDJ1ZW2Z4LsAcu
-         H1W2iVmPI4c522AHFCUyx7ONp/gv20XWuh3LLqi1W1gNTA7Go2R4zwn18WsNaore+syl
-         0eYy6eJq/oyYLaYS+z59QmSMvokUC+mywr5AIISm+KTlLsOJU4LPOKV0XxpFu3UwdcS0
-         dYc0WrRklRJfH4uzQCrjttrHj/om6vTyzT/5gmlSslEJoj/j2XoWwJu62hNTThOfBCfK
-         uwOFZ9py99FCDB/TEkuZ2PIS8vruJ36GwJ47bJEEbddUQ86rJ18LozZWAOKcFsQXzuXX
-         elKw==
+        h=cc:to:from:subject:mime-version:message-id:date:from:to:cc;
+        bh=qjxTwNs46mBErQ+98eCyfxk5QZmIEb2cOA8EBrFu9oc=;
+        b=tWMtvPeknQYFBSL7spt7SaiV96nFguiXlCt/bQ7nMaSfG0Ja6ya07XtqMamEMvhd1W
+         4bSb8u8+o/lu8KhKDgL81BN8gcBFGQCbuW4AKcGObZznNTP8Myhij12FwXjx63XmzpVv
+         UO5s0LWwv0gezIKQ4fMMdr1H7nGxLd1Idz+jwZbwXlLlIeGGN40yAffJjtUZLXvyJuDq
+         UouPrm2CJArWx3SxGMKo64k/QuDSC1DRp9YXUNc5B+gMH2fusgPg9+iuMHz4SUW+cOLi
+         tE8xZsxM4ZXJM2hEROEE9SQuFD9JQa+eflvKrMNcZSI05x8Rkmo77Tqlsdn+Z2Em9b1N
+         ZRRQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc;
-        bh=RGBjkPaE8J9hO2HXiD58roaLLtlMCd9GApWRbn/4InE=;
-        b=yCzDCwEMl+iO19mQ0cPdeLDhFLaz1zy8FEAhj9dWgCZ/pIQt2gELrOa9h8AJej1mCO
-         grgXW5zt/OcIUNyHEA2cWTtXf/z+fX9Vl4Q8bZjL+e4sRGQtBfg/X9sM5oEGR0+A5+nI
-         sdaRBpRg8TCRiT1hRs7kYMjnEoDB1SgN5hJpvZpFPcISEi9ZBNkpIyxFWkRE5HPQI1jd
-         iwxtqwsuUTdx5v/Zc0NStnUpxM56bhYm/+l0fNyUNacLV5MREH0fUtDLQS31KAtCTqsh
-         napU3n0IEtULnptvCiooCaiDgsaIvZVlOqPxvzL4gDocR9iH0dCHgNavV2soLLlTnFdj
-         4Rmg==
-X-Gm-Message-State: ACgBeo10Lk8MOnWHKyrhKlj4cp6AtCntz05Iqq4YhwrGygZbppwS+vKd
-        nu6C6mX7a+Ku1DN0yz2su2NpMelRhyF98Ube3G3Bkw==
-X-Google-Smtp-Source: AA6agR7pGITv9xB++a81UrxiizddUCff4tMML/JKgOT3cUKsfaaQ9Khq0zhzod+3R31qgsSrSVaAxFx5/6Bs+6Zfd0E=
-X-Received: by 2002:a1f:2b47:0:b0:380:59c5:8b8f with SMTP id
- r68-20020a1f2b47000000b0038059c58b8fmr1092986vkr.20.1660592557245; Mon, 15
- Aug 2022 12:42:37 -0700 (PDT)
-MIME-Version: 1.0
-References: <cover.1660211399.git.sandipan.das@amd.com> <172d2b0df39306ed77221c45ee1aa62e8ae0548d.1660211399.git.sandipan.das@amd.com>
- <YvotoHMaLE1XawiO@worktop.programming.kicks-ass.net>
-In-Reply-To: <YvotoHMaLE1XawiO@worktop.programming.kicks-ass.net>
-From:   Stephane Eranian <eranian@google.com>
-Date:   Mon, 15 Aug 2022 12:42:23 -0700
-Message-ID: <CABPqkBQ1YLAu+sJC_U4QsQuo3PuzUwRDrNm9KcrUAEUxeBaYbg@mail.gmail.com>
-Subject: Re: [PATCH 04/13] x86/cpufeatures: Add LbrExtV2 feature bit
-To:     Peter Zijlstra <peterz@infradead.org>
-Cc:     Sandipan Das <sandipan.das@amd.com>, linux-kernel@vger.kernel.org,
-        linux-perf-users@vger.kernel.org, x86@kernel.org, bp@alien8.de,
-        acme@kernel.org, namhyung@kernel.org, jolsa@kernel.org,
-        tglx@linutronix.de, mingo@redhat.com, mark.rutland@arm.com,
-        alexander.shishkin@linux.intel.com, dave.hansen@linux.intel.com,
-        like.xu.linux@gmail.com, ananth.narayan@amd.com,
-        ravi.bangoria@amd.com, santosh.shukla@amd.com
+        h=cc:to:from:subject:mime-version:message-id:date:x-gm-message-state
+         :from:to:cc;
+        bh=qjxTwNs46mBErQ+98eCyfxk5QZmIEb2cOA8EBrFu9oc=;
+        b=B3ZcdDohqiJZmkqFyp8OPvCr0VtgRqobcmAXk470bUiWkHhmL9ivF5wjVObQlMbcq4
+         sGE8dm3I6eRYdRdbkaNP9jgWBzyceaam2vRSlFIBjlRafM4B2LyljbMosoJpkfMnXESM
+         7Zi3vH3qY6AF8Hz1P+/fn/KI8HmCNzk4pAMFM7dFr/ZQffECXpv1EpbanOMBhlhp2X4R
+         MSo4KEYZZCJ49bQH07QMOl6tpISQHLDXJzhZQXiNYMRE3mTcdT95Q0lMlkbgcAYw7jQi
+         zQUTDS+CIIlq7FLqB0QvlzthNQOzRj8pUpcTqJIP4J3MohstrFP/Qrv8CqVpf869yM2f
+         2Hlw==
+X-Gm-Message-State: ACgBeo1ViIPGTVHixol8QHfdnXT1S8VIstORPIs/paRtw0QP5ylj/Tf+
+        BeDVIt3nXlJVCD6VfcUrIArvjUp808gpNw==
+X-Google-Smtp-Source: AA6agR43YtkaciFxA5o18koQqVw4sEaVs9oQNrp2PsIfD5FgZeY7kwnbEQ2XUNzLjISkxrXBhtslS3mC6VvyoQ==
+X-Received: from riochico.c.googlers.com ([fda3:e722:ac3:cc00:2b:ff92:c0a8:b3e])
+ (user=rsilvera job=sendgmr) by 2002:a92:9506:0:b0:2e0:ed70:ea7d with SMTP id
+ y6-20020a929506000000b002e0ed70ea7dmr8114959ilh.207.1660604380104; Mon, 15
+ Aug 2022 15:59:40 -0700 (PDT)
+Date:   Mon, 15 Aug 2022 22:59:22 +0000
+Message-Id: <20220815225922.2118745-1-rsilvera@google.com>
+Mime-Version: 1.0
+X-Mailer: git-send-email 2.37.1.595.g718a3a8f04-goog
+Subject: [PATCH v4] perf inject: Add a command line option to specify build ids.
+From:   Raul Silvera <rsilvera@google.com>
+To:     Namhyung Kim <namhyung@kernel.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        Arnaldo Carvalho de Melo <acme@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Jiri Olsa <jolsa@kernel.org>
+Cc:     Adrian Hunter <adrian.hunter@intel.com>,
+        James Clark <james.clark@arm.com>,
+        Raul Silvera <rsilvera@google.com>,
+        linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
 Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-Hi,
+This commit adds the option --known-build-ids to perf inject.
+It allows the user to explicitly specify the build id for a given
+path, instead of retrieving it from the current system. This is
+useful in cases where a perf.data file is processed on a different
+system from where it was collected, or if some of the binaries are
+no longer available.
 
-On Mon, Aug 15, 2022 at 4:27 AM Peter Zijlstra <peterz@infradead.org> wrote:
->
-> On Thu, Aug 11, 2022 at 05:59:52PM +0530, Sandipan Das wrote:
-> > CPUID leaf 0x80000022 i.e. ExtPerfMonAndDbg advertises some new performance
-> > monitoring features for AMD processors.
-> >
-> > Bit 1 of EAX indicates support for Last Branch Record Extension Version 2
-> > (LbrExtV2) features. If found to be set during PMU initialization, the EBX
-> > bits of the same leaf can be used to determine the number of available LBR
-> > entries.
-> >
-> > For better utilization of feature words, LbrExtV2 is added as a scattered
-> > feature bit.
-> >
-> > Signed-off-by: Sandipan Das <sandipan.das@amd.com>
-> > ---
-> >  arch/x86/include/asm/cpufeatures.h | 2 +-
-> >  arch/x86/kernel/cpu/scattered.c    | 1 +
-> >  2 files changed, 2 insertions(+), 1 deletion(-)
-> >
-> > diff --git a/arch/x86/include/asm/cpufeatures.h b/arch/x86/include/asm/cpufeatures.h
-> > index 393f2bbb5e3a..e3fa476a24b0 100644
-> > --- a/arch/x86/include/asm/cpufeatures.h
-> > +++ b/arch/x86/include/asm/cpufeatures.h
-> > @@ -96,7 +96,7 @@
-> >  #define X86_FEATURE_SYSCALL32                ( 3*32+14) /* "" syscall in IA32 userspace */
-> >  #define X86_FEATURE_SYSENTER32               ( 3*32+15) /* "" sysenter in IA32 userspace */
-> >  #define X86_FEATURE_REP_GOOD         ( 3*32+16) /* REP microcode works well */
-> > -/* FREE!                                ( 3*32+17) */
-> > +#define X86_FEATURE_LBREXT_V2                ( 3*32+17) /* AMD Last Branch Record Extension Version 2 */
-> >  #define X86_FEATURE_LFENCE_RDTSC     ( 3*32+18) /* "" LFENCE synchronizes RDTSC */
-> >  #define X86_FEATURE_ACC_POWER                ( 3*32+19) /* AMD Accumulated Power Mechanism */
-> >  #define X86_FEATURE_NOPL             ( 3*32+20) /* The NOPL (0F 1F) instructions */
-> > diff --git a/arch/x86/kernel/cpu/scattered.c b/arch/x86/kernel/cpu/scattered.c
-> > index dbaa8326d6f2..6be46dffddbf 100644
-> > --- a/arch/x86/kernel/cpu/scattered.c
-> > +++ b/arch/x86/kernel/cpu/scattered.c
-> > @@ -44,6 +44,7 @@ static const struct cpuid_bit cpuid_bits[] = {
-> >       { X86_FEATURE_PROC_FEEDBACK,    CPUID_EDX, 11, 0x80000007, 0 },
-> >       { X86_FEATURE_MBA,              CPUID_EBX,  6, 0x80000008, 0 },
-> >       { X86_FEATURE_PERFMON_V2,       CPUID_EAX,  0, 0x80000022, 0 },
-> > +     { X86_FEATURE_LBREXT_V2,        CPUID_EAX,  1, 0x80000022, 0 },
-> >       { 0, 0, 0, 0, 0 }
-> >  };
->
-> Would LBR_V2 work at all? It being a new version already seems to imply
-> extention, no? Then again, I suppose there's an argument to be had for
-> avoiding confusion vs the Intel LBR thing.. Couldn't you have called
-> this BRS_V2 :-)
->
-I believe it is called v2 because there was already a LBR in previous
-generations, however it
-was 1-deep and it was not connected to the PMU like this one. The
-public PPR mentions it
-(MSR 0x1DB/0x1DC, Last Branch From IP, Last Branch To IP). See for
-instance the PPR
-for Fam17h model 71h:
-https://www.amd.com/system/files/TechDocs/56176_ppr_Family_17h_Model_71h_B0_pub_Rev_3.06.zip
+The build ids and paths are specified in pairs in the command line.
+Using the file:// specifier, build ids can be loaded from a file
+directly generated by perf buildid-list. This is convenient to copy
+build ids from one perf.data file to another.
 
-BRS is a model specific feature for Zen3.
+** Example: In this example we use perf record to create two
+perf.data files, one with build ids and another without, and use
+perf buildid-list and perf inject to copy the build ids from the
+first file to the second.
 
-LBRv2 is a great improvement including over Zen3 BRS.
+ $ perf record ls /tmp
+ $ perf record --no-buildid -o perf.data.no-buildid ls /tmp
+ $ perf buildid-list > build-ids.txt
+ $ perf inject -b --known-build-ids='file://build-ids.txt' \
+        -i perf.data.no-buildid -o perf.data.buildid
+
+Signed-off-by: Raul Silvera <rsilvera@google.com>
+---
+
+  V3 -> V4: Perform upfront validation of build ids
+  V2 -> V3: Added documentation and removed unnecessary temps
+  V1 -> V2: Cleaned up patch description, deleted the strlist during
+            cleanup, and updated validation of the build id strings
+	    
+ tools/perf/Documentation/perf-inject.txt |  7 +-
+ tools/perf/builtin-inject.c              | 85 ++++++++++++++++++++++++
+ 2 files changed, 91 insertions(+), 1 deletion(-)
+
+diff --git a/tools/perf/Documentation/perf-inject.txt b/tools/perf/Documentation/perf-inject.txt
+index ffc293fdf61d..70e2ac3cc91a 100644
+--- a/tools/perf/Documentation/perf-inject.txt
++++ b/tools/perf/Documentation/perf-inject.txt
+@@ -27,9 +27,14 @@ OPTIONS
+ --build-ids::
+         Inject build-ids into the output stream
+ 
+---buildid-all:
++--buildid-all::
+ 	Inject build-ids of all DSOs into the output stream
+ 
++--known-build-ids=::
++	Override build-ids to inject using these comma-separated pairs of
++	build-id and path. Understands file://filename to read these pairs
++	from a file, which can be generated with perf buildid-list.
++
+ -v::
+ --verbose::
+ 	Be more verbose.
+diff --git a/tools/perf/builtin-inject.c b/tools/perf/builtin-inject.c
+index 2a0f992ca0be..8ec955402488 100644
+--- a/tools/perf/builtin-inject.c
++++ b/tools/perf/builtin-inject.c
+@@ -21,6 +21,7 @@
+ #include "util/data.h"
+ #include "util/auxtrace.h"
+ #include "util/jit.h"
++#include "util/string2.h"
+ #include "util/symbol.h"
+ #include "util/synthetic-events.h"
+ #include "util/thread.h"
+@@ -38,6 +39,7 @@
+ #include <linux/string.h>
+ #include <linux/zalloc.h>
+ #include <linux/hash.h>
++#include <ctype.h>
+ #include <errno.h>
+ #include <signal.h>
+ #include <inttypes.h>
+@@ -123,6 +125,7 @@ struct perf_inject {
+ 	char			event_copy[PERF_SAMPLE_MAX_SIZE];
+ 	struct perf_file_section secs[HEADER_FEAT_BITS];
+ 	struct guest_session	guest_session;
++	struct strlist		*known_build_ids;
+ };
+ 
+ struct event_entry {
+@@ -634,9 +637,73 @@ static int dso__read_build_id(struct dso *dso)
+ 	return dso->has_build_id ? 0 : -1;
+ }
+ 
++static struct strlist *perf_inject__parse_known_build_ids(
++	const char *known_build_ids_string)
++{
++	struct str_node *pos, *tmp;
++	struct strlist *known_build_ids;
++	int bid_len;
++
++	known_build_ids = strlist__new(known_build_ids_string, NULL);
++	if (known_build_ids == NULL)
++		return NULL;
++	strlist__for_each_entry_safe(pos, tmp, known_build_ids) {
++		const char *build_id, *dso_name;
++
++		build_id = skip_spaces(pos->s);
++		dso_name = strchr(build_id, ' ');
++		if (dso_name == NULL) {
++			strlist__remove(known_build_ids, pos);
++			continue;
++		}
++		bid_len = dso_name - pos->s;
++		dso_name = skip_spaces(dso_name);
++		if (bid_len % 2 != 0 || bid_len >= SBUILD_ID_SIZE) {
++			strlist__remove(known_build_ids, pos);
++			continue;
++		}
++		for (int ix = 0; 2 * ix + 1 < bid_len; ++ix) {
++			if (!isxdigit(build_id[2 * ix]) ||
++			    !isxdigit(build_id[2 * ix + 1])) {
++				strlist__remove(known_build_ids, pos);
++				break;
++			}
++		}
++	}
++	return known_build_ids;
++}
++
++static bool perf_inject__lookup_known_build_id(struct perf_inject *inject,
++					       struct dso *dso)
++{
++	struct str_node *pos;
++	int bid_len;
++
++	strlist__for_each_entry(pos, inject->known_build_ids) {
++		const char *build_id, *dso_name;
++
++		build_id = skip_spaces(pos->s);
++		dso_name = strchr(build_id, ' ');
++		bid_len = dso_name - pos->s;
++		dso_name = skip_spaces(dso_name);
++		if (strcmp(dso->long_name, dso_name))
++			continue;
++		for (int ix = 0; 2 * ix + 1 < bid_len; ++ix) {
++			dso->bid.data[ix] = (hex(build_id[2 * ix]) << 4 |
++					     hex(build_id[2 * ix + 1]));
++		}
++		dso->bid.size = bid_len / 2;
++		dso->has_build_id = 1;
++		return true;
++	}
++	return false;
++}
++
+ static int dso__inject_build_id(struct dso *dso, struct perf_tool *tool,
+ 				struct machine *machine, u8 cpumode, u32 flags)
+ {
++	struct perf_inject *inject = container_of(tool, struct perf_inject,
++						  tool);
+ 	int err;
+ 
+ 	if (is_anon_memory(dso->long_name) || flags & MAP_HUGETLB)
+@@ -644,6 +711,10 @@ static int dso__inject_build_id(struct dso *dso, struct perf_tool *tool,
+ 	if (is_no_dso_memory(dso->long_name))
+ 		return 0;
+ 
++	if (inject->known_build_ids != NULL &&
++	    perf_inject__lookup_known_build_id(inject, dso))
++		return 1;
++
+ 	if (dso__read_build_id(dso) < 0) {
+ 		pr_debug("no build_id found for %s\n", dso->long_name);
+ 		return -1;
+@@ -2112,12 +2183,16 @@ int cmd_inject(int argc, const char **argv)
+ 	};
+ 	int ret;
+ 	bool repipe = true;
++	const char *known_build_ids = NULL;
+ 
+ 	struct option options[] = {
+ 		OPT_BOOLEAN('b', "build-ids", &inject.build_ids,
+ 			    "Inject build-ids into the output stream"),
+ 		OPT_BOOLEAN(0, "buildid-all", &inject.build_id_all,
+ 			    "Inject build-ids of all DSOs into the output stream"),
++		OPT_STRING(0, "known-build-ids", &known_build_ids,
++			   "buildid path [,buildid path...]",
++			   "build-ids to use for given paths"),
+ 		OPT_STRING('i', "input", &inject.input_name, "file",
+ 			   "input file name"),
+ 		OPT_STRING('o', "output", &inject.output.path, "file",
+@@ -2257,6 +2332,15 @@ int cmd_inject(int argc, const char **argv)
+ 		 */
+ 		inject.tool.ordered_events = true;
+ 		inject.tool.ordering_requires_timestamps = true;
++		if (known_build_ids != NULL) {
++			inject.known_build_ids =
++				perf_inject__parse_known_build_ids(known_build_ids);
++
++			if (inject.known_build_ids == NULL) {
++				pr_err("Couldn't parse known build ids.\n");
++				goto out_delete;
++			}
++		}
+ 	}
+ 
+ 	if (inject.sched_stat) {
+@@ -2285,6 +2369,7 @@ int cmd_inject(int argc, const char **argv)
+ 	guest_session__exit(&inject.guest_session);
+ 
+ out_delete:
++	strlist__delete(inject.known_build_ids);
+ 	zstd_fini(&(inject.session->zstd_data));
+ 	perf_session__delete(inject.session);
+ out_close_output:
+-- 
+2.37.1.595.g718a3a8f04-goog
+
