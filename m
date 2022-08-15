@@ -2,103 +2,80 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F2FC8C00140
-	for <linux-perf-users@archiver.kernel.org>; Mon, 15 Aug 2022 11:27:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 32EE8C25B0E
+	for <linux-perf-users@archiver.kernel.org>; Mon, 15 Aug 2022 12:05:11 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231404AbiHOL1q (ORCPT
+        id S231402AbiHOMFJ (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Mon, 15 Aug 2022 07:27:46 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45204 "EHLO
+        Mon, 15 Aug 2022 08:05:09 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46974 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231339AbiHOL1p (ORCPT
+        with ESMTP id S229987AbiHOMFC (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Mon, 15 Aug 2022 07:27:45 -0400
-Received: from casper.infradead.org (casper.infradead.org [IPv6:2001:8b0:10b:1236::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8B04923BFF;
-        Mon, 15 Aug 2022 04:27:44 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=casper.20170209; h=In-Reply-To:Content-Type:MIME-Version:
-        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description;
-        bh=Ik6nEchRqVhcMLPDCsHn3EUuUuiA8xxLA2tdEPzeaQo=; b=FV933jaAKQ1XYfA7Ddg3K8hiwM
-        JNtZD+/dC3/e5Eb+3Gw4xscIQrutxMtPKtKoVwXLPQGNLeKLJZN0xmg8c5YSa3ShDY0Lw6T6lYGte
-        f1KvLFXqBPreNiOjTgNof6axNtfclrbxnypYuJ6QscLvAJjobF9HOJfjistKEHq9gYOYAQSexjmga
-        IDz9IPwSgMdhK+Y/OXOqpk8o9p3OW8V4ZMYZg1G49/FGEEgdEJwYtAGE+Y4uAzB07IsZ/VQo05Swi
-        yNmR01xo/gWjdGGzL62OC4DbjJ7yXQ6gVNT2uwtxlisC9SbM3GXWr44/RSvjHirETOJRjwCikeZpa
-        OfBTCUfg==;
-Received: from j130084.upc-j.chello.nl ([24.132.130.84] helo=worktop.programming.kicks-ass.net)
-        by casper.infradead.org with esmtpsa (Exim 4.94.2 #2 (Red Hat Linux))
-        id 1oNYFl-005fX8-M7; Mon, 15 Aug 2022 11:27:29 +0000
-Received: by worktop.programming.kicks-ass.net (Postfix, from userid 1000)
-        id DAB57980153; Mon, 15 Aug 2022 13:27:28 +0200 (CEST)
-Date:   Mon, 15 Aug 2022 13:27:28 +0200
-From:   Peter Zijlstra <peterz@infradead.org>
-To:     Sandipan Das <sandipan.das@amd.com>
-Cc:     linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org,
-        x86@kernel.org, bp@alien8.de, acme@kernel.org, namhyung@kernel.org,
-        jolsa@kernel.org, tglx@linutronix.de, mingo@redhat.com,
-        mark.rutland@arm.com, alexander.shishkin@linux.intel.com,
-        dave.hansen@linux.intel.com, like.xu.linux@gmail.com,
-        eranian@google.com, ananth.narayan@amd.com, ravi.bangoria@amd.com,
-        santosh.shukla@amd.com
-Subject: Re: [PATCH 04/13] x86/cpufeatures: Add LbrExtV2 feature bit
-Message-ID: <YvotoHMaLE1XawiO@worktop.programming.kicks-ass.net>
-References: <cover.1660211399.git.sandipan.das@amd.com>
- <172d2b0df39306ed77221c45ee1aa62e8ae0548d.1660211399.git.sandipan.das@amd.com>
+        Mon, 15 Aug 2022 08:05:02 -0400
+Received: from mga11.intel.com (mga11.intel.com [192.55.52.93])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1C1D8255AB;
+        Mon, 15 Aug 2022 05:05:02 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1660565102; x=1692101102;
+  h=message-id:date:mime-version:to:from:subject:cc:
+   content-transfer-encoding;
+  bh=VBX263V+zvk7b3GYwEzp8zXhpQeIy96QkAOJXVDEb0w=;
+  b=CVftYBoFO83SRIcEvMU4hDrRZorLtAc9SyZxOesv3LVmGUWNahZtsBLz
+   71DQOg4zzRcqh+nkL8UbLWUrCQUXYjTK5huw+LggbD+hV21H+JPVDn5ox
+   HRRB4fzAwE3BKzLynFiano84InondMRe4dzTusp7N04jR64ep4uHlAEDQ
+   /iZtj67T1gXeZLCtGH2ANUT0qFw9PBoHFkSwSobuXyYhJiAYlau3/b9Y7
+   PABkHq34JzVd4war2U1vkoSq+Ch9sSFfH/ptkP1/uer1UswvN9zdTPQYY
+   kYCRz+LPUkdGsl0lX9AQqRxeq/kJOKa29IzjGa7sFIgu41mKFX4Qmz+GP
+   A==;
+X-IronPort-AV: E=McAfee;i="6400,9594,10439"; a="289512745"
+X-IronPort-AV: E=Sophos;i="5.93,238,1654585200"; 
+   d="scan'208";a="289512745"
+Received: from orsmga008.jf.intel.com ([10.7.209.65])
+  by fmsmga102.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 15 Aug 2022 05:05:01 -0700
+X-IronPort-AV: E=Sophos;i="5.93,238,1654585200"; 
+   d="scan'208";a="635454008"
+Received: from ahunter6-mobl1.ger.corp.intel.com (HELO [10.0.2.15]) ([10.252.50.166])
+  by orsmga008-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 15 Aug 2022 05:04:57 -0700
+Message-ID: <cecae74c-6bb2-d7da-bce3-35772b6e3f8c@intel.com>
+Date:   Mon, 15 Aug 2022 15:04:53 +0300
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <172d2b0df39306ed77221c45ee1aa62e8ae0548d.1660211399.git.sandipan.das@amd.com>
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
+ Firefox/91.0 Thunderbird/91.11.0
+Content-Language: en-US
+To:     Arnaldo Carvalho de Melo <acme@kernel.org>
+From:   Adrian Hunter <adrian.hunter@intel.com>
+Subject: perf tools man pages on the web
+Organization: Intel Finland Oy, Registered Address: PL 281, 00181 Helsinki,
+ Business Identity Code: 0357606 - 4, Domiciled in Helsinki
+Cc:     Jiri Olsa <jolsa@kernel.org>, Namhyung Kim <namhyung@kernel.org>,
+        Ian Rogers <irogers@google.com>,
+        Jonathan Corbet <corbet@lwn.net>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        "linux-perf-users@vger.kernel.org" <linux-perf-users@vger.kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-On Thu, Aug 11, 2022 at 05:59:52PM +0530, Sandipan Das wrote:
-> CPUID leaf 0x80000022 i.e. ExtPerfMonAndDbg advertises some new performance
-> monitoring features for AMD processors.
-> 
-> Bit 1 of EAX indicates support for Last Branch Record Extension Version 2
-> (LbrExtV2) features. If found to be set during PMU initialization, the EBX
-> bits of the same leaf can be used to determine the number of available LBR
-> entries.
-> 
-> For better utilization of feature words, LbrExtV2 is added as a scattered
-> feature bit.
-> 
-> Signed-off-by: Sandipan Das <sandipan.das@amd.com>
-> ---
->  arch/x86/include/asm/cpufeatures.h | 2 +-
->  arch/x86/kernel/cpu/scattered.c    | 1 +
->  2 files changed, 2 insertions(+), 1 deletion(-)
-> 
-> diff --git a/arch/x86/include/asm/cpufeatures.h b/arch/x86/include/asm/cpufeatures.h
-> index 393f2bbb5e3a..e3fa476a24b0 100644
-> --- a/arch/x86/include/asm/cpufeatures.h
-> +++ b/arch/x86/include/asm/cpufeatures.h
-> @@ -96,7 +96,7 @@
->  #define X86_FEATURE_SYSCALL32		( 3*32+14) /* "" syscall in IA32 userspace */
->  #define X86_FEATURE_SYSENTER32		( 3*32+15) /* "" sysenter in IA32 userspace */
->  #define X86_FEATURE_REP_GOOD		( 3*32+16) /* REP microcode works well */
-> -/* FREE!                                ( 3*32+17) */
-> +#define X86_FEATURE_LBREXT_V2		( 3*32+17) /* AMD Last Branch Record Extension Version 2 */
->  #define X86_FEATURE_LFENCE_RDTSC	( 3*32+18) /* "" LFENCE synchronizes RDTSC */
->  #define X86_FEATURE_ACC_POWER		( 3*32+19) /* AMD Accumulated Power Mechanism */
->  #define X86_FEATURE_NOPL		( 3*32+20) /* The NOPL (0F 1F) instructions */
-> diff --git a/arch/x86/kernel/cpu/scattered.c b/arch/x86/kernel/cpu/scattered.c
-> index dbaa8326d6f2..6be46dffddbf 100644
-> --- a/arch/x86/kernel/cpu/scattered.c
-> +++ b/arch/x86/kernel/cpu/scattered.c
-> @@ -44,6 +44,7 @@ static const struct cpuid_bit cpuid_bits[] = {
->  	{ X86_FEATURE_PROC_FEEDBACK,    CPUID_EDX, 11, 0x80000007, 0 },
->  	{ X86_FEATURE_MBA,		CPUID_EBX,  6, 0x80000008, 0 },
->  	{ X86_FEATURE_PERFMON_V2,	CPUID_EAX,  0, 0x80000022, 0 },
-> +	{ X86_FEATURE_LBREXT_V2,	CPUID_EAX,  1, 0x80000022, 0 },
->  	{ 0, 0, 0, 0, 0 }
->  };
+Hi
 
-Would LBR_V2 work at all? It being a new version already seems to imply
-extention, no? Then again, I suppose there's an argument to be had for
-avoiding confusion vs the Intel LBR thing.. Couldn't you have called
-this BRS_V2 :-)
+I notice man pages on man7.org e.g.
 
-Oh well...
+	https://www.man7.org/linux/man-pages/man1/perf.1.html
+
+do not get updated every release, and I wondered if the perf tools
+man pages should also be under:
+
+	https://docs.kernel.org/tools/index.html
+
+Thoughts?
+
+Regards
+Adrian
