@@ -2,452 +2,218 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 694A8C00140
-	for <linux-perf-users@archiver.kernel.org>; Mon, 15 Aug 2022 20:24:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 10194C00140
+	for <linux-perf-users@archiver.kernel.org>; Mon, 15 Aug 2022 20:32:57 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1347152AbiHOUYd (ORCPT
+        id S243365AbiHOUcu (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Mon, 15 Aug 2022 16:24:33 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49434 "EHLO
+        Mon, 15 Aug 2022 16:32:50 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33694 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1347109AbiHOUX3 (ORCPT
+        with ESMTP id S1347239AbiHOUbD (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Mon, 15 Aug 2022 16:23:29 -0400
-Received: from mail-pl1-x631.google.com (mail-pl1-x631.google.com [IPv6:2607:f8b0:4864:20::631])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0CBE14BD01;
-        Mon, 15 Aug 2022 12:02:48 -0700 (PDT)
-Received: by mail-pl1-x631.google.com with SMTP id z19so7153916plb.1;
-        Mon, 15 Aug 2022 12:02:48 -0700 (PDT)
+        Mon, 15 Aug 2022 16:31:03 -0400
+Received: from mail-lj1-x22f.google.com (mail-lj1-x22f.google.com [IPv6:2a00:1450:4864:20::22f])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id F023CA3D60
+        for <linux-perf-users@vger.kernel.org>; Mon, 15 Aug 2022 12:04:36 -0700 (PDT)
+Received: by mail-lj1-x22f.google.com with SMTP id x9so8487351ljj.13
+        for <linux-perf-users@vger.kernel.org>; Mon, 15 Aug 2022 12:04:36 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20210112;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:sender:from:to:cc;
-        bh=eGwWLAV+VmdnzL2DzlRl4cqZkvkUk0pyXNIXElL51oM=;
-        b=J/lvfr3edKFmTE604ZrQ7c46BPEPDrQKT6POvbxYhQTGKf2baJhUBrNqQfEkBLsqdc
-         TgJ7BiBQTb3owvJ6CiWD6ROAXyvRIurtJIQwkM2cuZWotTw2iDFP0FAiVLw7Tzr8NIG8
-         pvnuQfBhV1H9PEy+8he0i7Zh/WPiwPTPdwrO69CT6ANnLKxY7SGWhXkk8wpv4jrI1xC/
-         35Lr9JrCPzOYxOJtg6t5AILyWhQZYM4YN3F6QcTRKceC3R1saINrFc6xsvk0k3y5+klO
-         scUx+HQquIZAhb91/vt6XvoU7WNvZ/xStfKf7SNPZe4Bn9yCBSDZAKoTTEEAcKSff9OU
-         H9qA==
+        d=linaro.org; s=google;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:from:to:cc;
+        bh=ul8IHw4RrluaYwczzAKxTYGxJ51uPLM0qDTfe069M8Y=;
+        b=jC407XRH9JG9f3FPdW1khnxw1sRd6sA0ltG/8LqR7aYsypz0GGDc2TQ6wPFUBULScI
+         wXaHQBHoKdDs4fsr7oc/H0pg/+7MGv4d1AtaTDNWf7NJrD7GLMj5GagL5jO8GfOyRiqK
+         NbBXK9uVxjWazbaM9CVau0oG5Hm9Snz87eWClNKnZh5QBwDqkvQ6Px4Tl5VqCRt4N0g+
+         ku8y2p0Hwg7O5T/tmejGQA38Q/Dvxg8MOzSbVjmjI2Um8IwfakpoYvXagc01zJQ0fVLw
+         Y0pMotsVtR09VXwPWHQflEhYe3C4u7UVuLGEqpiRX/LtbLoMExRvXQP0LG1Man6uycGr
+         9Ljg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:sender:x-gm-message-state:from
-         :to:cc;
-        bh=eGwWLAV+VmdnzL2DzlRl4cqZkvkUk0pyXNIXElL51oM=;
-        b=fOYCsm5W42ChTZGkB9MYqMFI1FuYSFOpnfg64FOexc4Mbba37arQrT2aIozsGRnqdz
-         7Vqr3vi1VOsr+9fAUUcAp887nDminOkOsj/4VbFWl385qBya4m9JKKAJrZ3rMcBWjVNT
-         WSH0w6EiahhMyS3BRH0ppbQXnlSRyJIDibOfwUhrsopGQBUT/GF1ZQtid/6rBCOHN20x
-         QQ8581086/VcexbrVzVL7vgbmGR7RI+RKG117ZuPTcVPDkk8nAdLZy9z7MyvspEA+45T
-         Hfm91mA2wPjSzAvzUSqteZDAxSGd4sp0TW0ty0r5oubtbkvbkAka7RF5bvnp8WYcDvgR
-         Fvtg==
-X-Gm-Message-State: ACgBeo1iVMQt7QsbPSCWUvNXBiJYyywwNmZiNc/kUYuj8/HfYVBY29QQ
-        4IIxDNhiPyCidGZ6QtFKCeo=
-X-Google-Smtp-Source: AA6agR6FsoK6jpHF+J6IYoYqVk42xSZCvYEAqxFRv568MP0hdMRmGFRKiEerc48b+ygoz4rlYkImEw==
-X-Received: by 2002:a17:902:b903:b0:170:9964:b47b with SMTP id bf3-20020a170902b90300b001709964b47bmr18023909plb.83.1660590167848;
-        Mon, 15 Aug 2022 12:02:47 -0700 (PDT)
-Received: from youngsil.svl.corp.google.com ([2620:15c:2d4:203:df3e:22e0:b905:822b])
-        by smtp.gmail.com with ESMTPSA id q13-20020a170902a3cd00b0016a4db13429sm7266926plb.192.2022.08.15.12.02.45
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 15 Aug 2022 12:02:46 -0700 (PDT)
-Sender: Namhyung Kim <namhyung@gmail.com>
-From:   Namhyung Kim <namhyung@kernel.org>
-To:     Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Jiri Olsa <jolsa@kernel.org>
-Cc:     LKML <linux-kernel@vger.kernel.org>,
-        Ian Rogers <irogers@google.com>,
-        linux-perf-users@vger.kernel.org
-Subject: [PATCH 4/4] perf tools: Support reading PERF_FORMAT_LOST
-Date:   Mon, 15 Aug 2022 12:01:06 -0700
-Message-Id: <20220815190106.1293082-5-namhyung@kernel.org>
-X-Mailer: git-send-email 2.37.1.595.g718a3a8f04-goog
-In-Reply-To: <20220815190106.1293082-1-namhyung@kernel.org>
-References: <20220815190106.1293082-1-namhyung@kernel.org>
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:x-gm-message-state:from:to:cc;
+        bh=ul8IHw4RrluaYwczzAKxTYGxJ51uPLM0qDTfe069M8Y=;
+        b=xJHaoueiEiYMwLOxpKLsF0ioZkLo9RgVvLvgbW1ntPjWoguaZ0v4cVmxvy+NoLEnij
+         CDKwcyCxnZ3KOVXhh2Dt+7QrZAopYL0EHUJiukSS88x5UjxxPTCyvD6UWtj7ZpqcNk92
+         IaI7dBN/eSLYEKI+wsedFxFs05uZyEB0H3UMUAK8yBrPp0T7VIdHNG/GtOu/4E9QiZK1
+         qAvx6SPQWbOufmLrc9X5ZCWhsgMzeZqMRhIOLDLpjhN1suxo3r8rGFMOJPiZqk8gbLRL
+         kURh8sHwyUjkSgfwC9DWe10do366u69Qj9TjC4L2tAIWANM3XiNsadRH6pjT5/cN9TXr
+         sJlA==
+X-Gm-Message-State: ACgBeo3sTxXwJfuBpe5DlQbABdarste+3L7QsHiVMZ+BOosOEi2FPxE7
+        RMrc95l0Zw/zWfH16YcHaK71DKg2k5VolEfWxUceMA==
+X-Google-Smtp-Source: AA6agR4jPuoXOrAbdtUck3G5EGFGiezlZT4chWtrkQI+p+otQEHTReDzEae+kLibqiW73pDCK6p8NesdrqCzRD4ZMK4=
+X-Received: by 2002:a05:651c:903:b0:25d:e732:6409 with SMTP id
+ e3-20020a05651c090300b0025de7326409mr5349254ljq.314.1660590273952; Mon, 15
+ Aug 2022 12:04:33 -0700 (PDT)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+References: <20220809223401.24599-1-mike.leach@linaro.org> <YvavAqZfO2nFg3LF@kernel.org>
+In-Reply-To: <YvavAqZfO2nFg3LF@kernel.org>
+From:   Mike Leach <mike.leach@linaro.org>
+Date:   Mon, 15 Aug 2022 20:04:22 +0100
+Message-ID: <CAJ9a7VhmdEN14NfTfw8ioU=eZrGedhOdenFN85rbMur_OGAEZg@mail.gmail.com>
+Subject: Re: [PATCH v3 00/13] coresight: Add new API to allocate trace source
+ ID values
+To:     Arnaldo Carvalho de Melo <acme@kernel.org>
+Cc:     coresight@lists.linaro.org, linux-arm-kernel@lists.infradead.org,
+        linux-kernel@vger.kernel.org, mathieu.poirier@linaro.org,
+        suzuki.poulose@arm.com, peterz@infradead.org, mingo@redhat.com,
+        linux-perf-users@vger.kernel.org, leo.yan@linaro.org,
+        quic_jinlmao@quicinc.com
+Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-The recent kernel added lost count can be read from either read(2) or
-ring buffer data with PERF_SAMPLE_READ.  As it's a variable length data
-we need to access it according to the format info.
+Hi Arnaldo,
 
-But for perf tools use cases, PERF_FORMAT_ID is always set.  So we can
-only check PERF_FORMAT_LOST bit to determine the data format.
+On Fri, 12 Aug 2022 at 20:50, Arnaldo Carvalho de Melo <acme@kernel.org> wrote:
+>
+> Em Tue, Aug 09, 2022 at 11:33:48PM +0100, Mike Leach escreveu:
+> > The current method for allocating trace source ID values to sources is
+> > to use a fixed algorithm for CPU based sources of (cpu_num * 2 + 0x10).
+> > The STM is allocated ID 0x1.
+>
+> So I'll wait for the kernel bits to get into the ARM architecture tree
+> to then process the userspace bits.
+>
+> Would be great to have Tested-by/Reviewed-by from pehole actually
+> testing these patches on the hardware where these features are
+> available.
+>
+Agreed, although the issue is not hardware - this is a fix of a
+software issue that just happens to manifest on more modern hardware,
+though can be tested on anything.
 
-Add sample_read_value_size() and next_sample_read_value() helpers to
-make it a bit easier to access.  Use them in all places where it reads
-the struct sample_read_value.
+That said, you should wait for v4 as the kernel test bot has picked
+something up that requires attention.
 
-Signed-off-by: Namhyung Kim <namhyung@kernel.org>
----
- tools/perf/tests/sample-parsing.c             | 14 +++++---
- tools/perf/util/event.h                       | 18 +++++++++-
- tools/perf/util/evsel.c                       | 33 +++++++++++++-----
- .../scripting-engines/trace-event-python.c    | 16 ++++++---
- tools/perf/util/session.c                     | 32 +++++++++++------
- tools/perf/util/synthetic-events.c            | 34 +++++++++++++++----
- 6 files changed, 112 insertions(+), 35 deletions(-)
+Thanks
 
-diff --git a/tools/perf/tests/sample-parsing.c b/tools/perf/tests/sample-parsing.c
-index 07f2411b0ad4..20930dd48ee0 100644
---- a/tools/perf/tests/sample-parsing.c
-+++ b/tools/perf/tests/sample-parsing.c
-@@ -86,10 +86,15 @@ static bool samples_same(const struct perf_sample *s1,
- 			COMP(read.time_running);
- 		/* PERF_FORMAT_ID is forced for PERF_SAMPLE_READ */
- 		if (read_format & PERF_FORMAT_GROUP) {
--			for (i = 0; i < s1->read.group.nr; i++)
--				MCOMP(read.group.values[i]);
-+			for (i = 0; i < s1->read.group.nr; i++) {
-+				/* FIXME: check values without LOST */
-+				if (read_format & PERF_FORMAT_LOST)
-+					MCOMP(read.group.values[i]);
-+			}
- 		} else {
- 			COMP(read.one.id);
-+			if (read_format & PERF_FORMAT_LOST)
-+				COMP(read.one.lost);
- 		}
- 	}
- 
-@@ -263,7 +268,7 @@ static int do_test(u64 sample_type, u64 sample_regs, u64 read_format)
- 			.data	= (void *)aux_data,
- 		},
- 	};
--	struct sample_read_value values[] = {{1, 5}, {9, 3}, {2, 7}, {6, 4},};
-+	struct sample_read_value values[] = {{1, 5, 0}, {9, 3, 0}, {2, 7, 0}, {6, 4, 1},};
- 	struct perf_sample sample_out, sample_out_endian;
- 	size_t i, sz, bufsz;
- 	int err, ret = -1;
-@@ -286,6 +291,7 @@ static int do_test(u64 sample_type, u64 sample_regs, u64 read_format)
- 	} else {
- 		sample.read.one.value = 0x08789faeb786aa87ULL;
- 		sample.read.one.id    = 99;
-+		sample.read.one.lost  = 1;
- 	}
- 
- 	sz = perf_event__sample_event_size(&sample, sample_type, read_format);
-@@ -370,7 +376,7 @@ static int do_test(u64 sample_type, u64 sample_regs, u64 read_format)
-  */
- static int test__sample_parsing(struct test_suite *test __maybe_unused, int subtest __maybe_unused)
- {
--	const u64 rf[] = {4, 5, 6, 7, 12, 13, 14, 15};
-+	const u64 rf[] = {4, 5, 6, 7, 12, 13, 14, 15, 20, 21, 22, 28, 29, 30, 31};
- 	u64 sample_type;
- 	u64 sample_regs;
- 	size_t i;
-diff --git a/tools/perf/util/event.h b/tools/perf/util/event.h
-index a7b0931d5137..7753368d70d6 100644
---- a/tools/perf/util/event.h
-+++ b/tools/perf/util/event.h
-@@ -65,7 +65,8 @@ struct stack_dump {
- 
- struct sample_read_value {
- 	u64 value;
--	u64 id;
-+	u64 id;   /* only if PERF_FORMAT_ID */
-+	u64 lost; /* only if PERF_FORMAT_LOST */
- };
- 
- struct sample_read {
-@@ -80,6 +81,21 @@ struct sample_read {
- 	};
- };
- 
-+static inline size_t sample_read_value_size(u64 read_format)
-+{
-+	/* PERF_FORMAT_ID is forced for PERF_SAMPLE_READ */
-+	if (read_format & PERF_FORMAT_LOST)
-+		return sizeof(struct sample_read_value);
-+	else
-+		return offsetof(struct sample_read_value, lost);
-+}
-+
-+static inline struct sample_read_value *
-+next_sample_read_value(struct sample_read_value *v, u64 read_format)
-+{
-+	return (void *)v + sample_read_value_size(read_format);
-+}
-+
- struct ip_callchain {
- 	u64 nr;
- 	u64 ips[];
-diff --git a/tools/perf/util/evsel.c b/tools/perf/util/evsel.c
-index 4852089e1d79..781367ccdb84 100644
---- a/tools/perf/util/evsel.c
-+++ b/tools/perf/util/evsel.c
-@@ -1541,7 +1541,7 @@ static int evsel__read_one(struct evsel *evsel, int cpu_map_idx, int thread)
- }
- 
- static void evsel__set_count(struct evsel *counter, int cpu_map_idx, int thread,
--			     u64 val, u64 ena, u64 run)
-+			     u64 val, u64 ena, u64 run, u64 lost)
- {
- 	struct perf_counts_values *count;
- 
-@@ -1550,6 +1550,7 @@ static void evsel__set_count(struct evsel *counter, int cpu_map_idx, int thread,
- 	count->val    = val;
- 	count->ena    = ena;
- 	count->run    = run;
-+	count->lost   = lost;
- 
- 	perf_counts__set_loaded(counter->counts, cpu_map_idx, thread, true);
- }
-@@ -1558,7 +1559,7 @@ static int evsel__process_group_data(struct evsel *leader, int cpu_map_idx, int
- {
- 	u64 read_format = leader->core.attr.read_format;
- 	struct sample_read_value *v;
--	u64 nr, ena = 0, run = 0, i;
-+	u64 nr, ena = 0, run = 0, lost = 0, i;
- 
- 	nr = *data++;
- 
-@@ -1573,16 +1574,25 @@ static int evsel__process_group_data(struct evsel *leader, int cpu_map_idx, int
- 
- 	v = (struct sample_read_value *) data;
- 
--	evsel__set_count(leader, cpu_map_idx, thread, v[0].value, ena, run);
-+	if (read_format & PERF_FORMAT_LOST)
-+		lost = v->lost;
-+
-+	evsel__set_count(leader, cpu_map_idx, thread, v[0].value, ena, run, lost);
-+
-+	v = next_sample_read_value(v, read_format);
- 
- 	for (i = 1; i < nr; i++) {
- 		struct evsel *counter;
- 
--		counter = evlist__id2evsel(leader->evlist, v[i].id);
-+		counter = evlist__id2evsel(leader->evlist, v->id);
- 		if (!counter)
- 			return -EINVAL;
- 
--		evsel__set_count(counter, cpu_map_idx, thread, v[i].value, ena, run);
-+		if (read_format & PERF_FORMAT_LOST)
-+			lost = v->lost;
-+
-+		evsel__set_count(counter, cpu_map_idx, thread, v->value, ena, run, lost);
-+		v = next_sample_read_value(v, read_format);
- 	}
- 
- 	return 0;
-@@ -2475,16 +2485,21 @@ int evsel__parse_sample(struct evsel *evsel, union perf_event *event,
- 
- 			if (data->read.group.nr > max_group_nr)
- 				return -EFAULT;
--			sz = data->read.group.nr *
--			     sizeof(struct sample_read_value);
-+
-+			sz = data->read.group.nr * sample_read_value_size(read_format);
- 			OVERFLOW_CHECK(array, sz, max_size);
--			data->read.group.values =
--					(struct sample_read_value *)array;
-+			data->read.group.values = (void *)array;
- 			array = (void *)array + sz;
- 		} else {
- 			OVERFLOW_CHECK_u64(array);
- 			data->read.one.id = *array;
- 			array++;
-+
-+			if (read_format & PERF_FORMAT_LOST) {
-+				OVERFLOW_CHECK_u64(array);
-+				data->read.one.lost = *array;
-+				array++;
-+			}
- 		}
- 	}
- 
-diff --git a/tools/perf/util/scripting-engines/trace-event-python.c b/tools/perf/util/scripting-engines/trace-event-python.c
-index 9ef2406e0ede..7e15e64f311b 100644
---- a/tools/perf/util/scripting-engines/trace-event-python.c
-+++ b/tools/perf/util/scripting-engines/trace-event-python.c
-@@ -642,15 +642,19 @@ static PyObject *python_process_brstacksym(struct perf_sample *sample,
- 	return pylist;
- }
- 
--static PyObject *get_sample_value_as_tuple(struct sample_read_value *value)
-+static PyObject *get_sample_value_as_tuple(struct sample_read_value *value,
-+					   u64 read_format)
- {
- 	PyObject *t;
- 
--	t = PyTuple_New(2);
-+	t = PyTuple_New(3);
- 	if (!t)
- 		Py_FatalError("couldn't create Python tuple");
- 	PyTuple_SetItem(t, 0, PyLong_FromUnsignedLongLong(value->id));
- 	PyTuple_SetItem(t, 1, PyLong_FromUnsignedLongLong(value->value));
-+	if (read_format & PERF_FORMAT_LOST)
-+		PyTuple_SetItem(t, 2, PyLong_FromUnsignedLongLong(value->lost));
-+
- 	return t;
- }
- 
-@@ -681,12 +685,16 @@ static void set_sample_read_in_dict(PyObject *dict_sample,
- 		Py_FatalError("couldn't create Python list");
- 
- 	if (read_format & PERF_FORMAT_GROUP) {
-+		struct sample_read_value *v = sample->read.group.values;
-+
- 		for (i = 0; i < sample->read.group.nr; i++) {
--			PyObject *t = get_sample_value_as_tuple(&sample->read.group.values[i]);
-+			PyObject *t = get_sample_value_as_tuple(v, read_format);
- 			PyList_SET_ITEM(values, i, t);
-+			v = next_sample_read_value(v, read_format);
- 		}
- 	} else {
--		PyObject *t = get_sample_value_as_tuple(&sample->read.one);
-+		PyObject *t = get_sample_value_as_tuple(&sample->read.one,
-+							read_format);
- 		PyList_SET_ITEM(values, 0, t);
- 	}
- 	pydict_set_item_string_decref(dict_sample, "values", values);
-diff --git a/tools/perf/util/session.c b/tools/perf/util/session.c
-index 98e16659a149..dd818764bd4d 100644
---- a/tools/perf/util/session.c
-+++ b/tools/perf/util/session.c
-@@ -1284,20 +1284,26 @@ static void sample_read__printf(struct perf_sample *sample, u64 read_format)
- 
- 	if (read_format & PERF_FORMAT_GROUP) {
- 		u64 i;
-+		struct sample_read_value *value = sample->read.group.values;
- 
- 		printf(".... group nr %" PRIu64 "\n", sample->read.group.nr);
- 
- 		for (i = 0; i < sample->read.group.nr; i++) {
--			struct sample_read_value *value;
--
--			value = &sample->read.group.values[i];
- 			printf("..... id %016" PRIx64
--			       ", value %016" PRIx64 "\n",
-+			       ", value %016" PRIx64,
- 			       value->id, value->value);
-+			if (read_format & PERF_FORMAT_LOST)
-+				printf(", lost %" PRIu64, value->lost);
-+			printf("\n");
-+			value = next_sample_read_value(value, read_format);
- 		}
--	} else
--		printf("..... id %016" PRIx64 ", value %016" PRIx64 "\n",
-+	} else {
-+		printf("..... id %016" PRIx64 ", value %016" PRIx64,
- 			sample->read.one.id, sample->read.one.value);
-+		if (read_format & PERF_FORMAT_LOST)
-+			printf(", lost %" PRIu64, sample->read.one.lost);
-+		printf("\n");
-+	}
- }
- 
- static void dump_event(struct evlist *evlist, union perf_event *event,
-@@ -1411,6 +1417,9 @@ static void dump_read(struct evsel *evsel, union perf_event *event)
- 
- 	if (read_format & PERF_FORMAT_ID)
- 		printf("... id           : %" PRI_lu64 "\n", read_event->id);
-+
-+	if (read_format & PERF_FORMAT_LOST)
-+		printf("... lost         : %" PRI_lu64 "\n", read_event->lost);
- }
- 
- static struct machine *machines__find_for_cpumode(struct machines *machines,
-@@ -1479,17 +1488,20 @@ static int deliver_sample_group(struct evlist *evlist,
- 				struct perf_tool *tool,
- 				union  perf_event *event,
- 				struct perf_sample *sample,
--				struct machine *machine)
-+				struct machine *machine,
-+				u64 read_format)
- {
- 	int ret = -EINVAL;
- 	u64 i;
-+	struct sample_read_value *v = sample->read.group.values;
- 
- 	for (i = 0; i < sample->read.group.nr; i++) {
--		ret = deliver_sample_value(evlist, tool, event, sample,
--					   &sample->read.group.values[i],
-+		ret = deliver_sample_value(evlist, tool, event, sample, v,
- 					   machine);
- 		if (ret)
- 			break;
-+
-+		v = next_sample_read_value(v, read_format);
- 	}
- 
- 	return ret;
-@@ -1510,7 +1522,7 @@ static int evlist__deliver_sample(struct evlist *evlist, struct perf_tool *tool,
- 	/* For PERF_SAMPLE_READ we have either single or group mode. */
- 	if (read_format & PERF_FORMAT_GROUP)
- 		return deliver_sample_group(evlist, tool, event, sample,
--					    machine);
-+					    machine, read_format);
- 	else
- 		return deliver_sample_value(evlist, tool, event, sample,
- 					    &sample->read.one, machine);
-diff --git a/tools/perf/util/synthetic-events.c b/tools/perf/util/synthetic-events.c
-index 2ae59c03ae77..9b8dc7633a02 100644
---- a/tools/perf/util/synthetic-events.c
-+++ b/tools/perf/util/synthetic-events.c
-@@ -1432,11 +1432,12 @@ size_t perf_event__sample_event_size(const struct perf_sample *sample, u64 type,
- 			result += sizeof(u64);
- 		/* PERF_FORMAT_ID is forced for PERF_SAMPLE_READ */
- 		if (read_format & PERF_FORMAT_GROUP) {
--			sz = sample->read.group.nr *
--			     sizeof(struct sample_read_value);
--			result += sz;
-+			sz = sample_read_value_size(read_format);
-+			result += sz * sample->read.group.nr;
- 		} else {
- 			result += sizeof(u64);
-+			if (read_format & PERF_FORMAT_LOST)
-+				result += sizeof(u64);
- 		}
- 	}
- 
-@@ -1521,6 +1522,22 @@ void __weak arch_perf_synthesize_sample_weight(const struct perf_sample *data,
- 	*array = data->weight;
- }
- 
-+static __u64 *copy_read_group_values(__u64 *array, __u64 read_format,
-+				     const struct perf_sample *sample)
-+{
-+	size_t i, sz;
-+	void *data = sample->read.group.values;
-+
-+	sz = sample_read_value_size(read_format);
-+	for (i = 0; i < sample->read.group.nr; i++) {
-+		memcpy(array, data, sz);
-+
-+		data += sz;
-+		array = (void *)array + sz;
-+	}
-+	return array;
-+}
-+
- int perf_event__synthesize_sample(union perf_event *event, u64 type, u64 read_format,
- 				  const struct perf_sample *sample)
- {
-@@ -1602,13 +1619,16 @@ int perf_event__synthesize_sample(union perf_event *event, u64 type, u64 read_fo
- 
- 		/* PERF_FORMAT_ID is forced for PERF_SAMPLE_READ */
- 		if (read_format & PERF_FORMAT_GROUP) {
--			sz = sample->read.group.nr *
--			     sizeof(struct sample_read_value);
--			memcpy(array, sample->read.group.values, sz);
--			array = (void *)array + sz;
-+			array = copy_read_group_values(array, read_format,
-+						       sample);
- 		} else {
- 			*array = sample->read.one.id;
- 			array++;
-+
-+			if (read_format & PERF_FORMAT_LOST) {
-+				*array = sample->read.one.lost;
-+				array++;
-+			}
- 		}
- 	}
- 
+Mike
+
+> - Arnaldo
+>
+> > This fixed algorithm is used in both the CoreSight driver code, and by
+> > perf when writing the trace metadata in the AUXTRACE_INFO record.
+> >
+> > The method needs replacing as currently:-
+> > 1. It is inefficient in using available IDs.
+> > 2. Does not scale to larger systems with many cores and the algorithm
+> > has no limits so will generate invalid trace IDs for cpu number > 44.
+> >
+> > Additionally requirements to allocate additional system IDs on some
+> > systems have been seen.
+> >
+> > This patch set  introduces an API that allows the allocation of trace IDs
+> > in a dynamic manner.
+> >
+> > Architecturally reserved IDs are never allocated, and the system is
+> > limited to allocating only valid IDs.
+> >
+> > Each of the current trace sources ETM3.x, ETM4.x and STM is updated to use
+> > the new API.
+> >
+> > For the ETMx.x devices IDs are allocated on certain events
+> > a) When using sysfs, an ID will be allocated on hardware enable, or a read of
+> > sysfs TRCTRACEID register and freed when the sysfs reset is written.
+> >
+> > b) When using perf, ID is allocated on during setup AUX event, and freed on
+> > event free. IDs are communicated using the AUX_OUTPUT_HW_ID packet.
+> > The ID allocator is notified when perf sessions start and stop
+> > so CPU based IDs are kept constant throughout any perf session.
+> >
+> >
+> > Note: This patchset breaks some backward compatibility for perf record and
+> > perf report.
+> >
+> > The version of the AUXTRACE_INFO has been updated to reflect the fact that
+> > the trace source IDs are generated differently. This will
+> > mean older versions of perf report cannot decode the newer file.
+> >
+> > Applies to coresight/next [4d45bc82df66]
+> > Tested on DB410c
+> >
+> > Changes since v2:
+> > 1) Improved backward compatibility: (requested by James)
+> >
+> > Using the new version of perf on an old kernel will generate a usable file
+> > legacy metadata values are set by the new perf and will be used if mew
+> > ID packets are not present in the file.
+> >
+> > Using an older version of perf / simpleperf on an updated kernel may still
+> > work. The trace ID allocator has been updated to use the legacy ID values
+> > where possible, so generated file and used trace IDs will match up to the
+> > point where the legacy algorithm is broken anyway.
+> >
+> > 2) Various changes to the ID allocator and ID packet format.
+> > (suggested by Suzuki)
+> >
+> > 3) per CPU ID info in allocator now stored as atomic type to allow a passive read
+> > without taking the allocator spinlock. perf flow now allocates and releases ID
+> > values in setup_aux / free_event. Device enable and event enable use the passive
+> > read to set the allocated values. This simplifies the locking mechanisms on the
+> > perf run and fixes issues that arose with locking dependencies.
+> >
+> > Changes since v1:
+> > (after feedback & discussion with Mathieu & Suzuki).
+> >
+> > 1) API has changed. The global trace ID map is managed internally, so it
+> > is no longer passed in to the API functions.
+> >
+> > 2) perf record does not use sysfs to find the trace IDs. These are now
+> > output as AUX_OUTPUT_HW_ID events. The drivers, perf record, and perf report
+> > have been updated accordingly to generate and handle these events.
+> >
+> > Mike Leach (13):
+> >   coresight: trace-id: Add API to dynamically assign Trace ID values
+> >   coresight: Remove obsolete Trace ID unniqueness checks
+> >   coresight: stm: Update STM driver to use Trace ID API
+> >   coresight: etm4x: Update ETM4 driver to use Trace ID API
+> >   coresight: etm3x: Update ETM3 driver to use Trace ID API
+> >   coresight: etmX.X: stm: Remove trace_id() callback
+> >   coresight: perf: traceid: Add perf notifiers for Trace ID
+> >   perf: cs-etm: Move mapping of Trace ID and cpu into helper function
+> >   perf: cs-etm: Update record event to use new Trace ID protocol
+> >   kernel: events: Export perf_report_aux_output_id()
+> >   perf: cs-etm: Handle PERF_RECORD_AUX_OUTPUT_HW_ID packet
+> >   coresight: events: PERF_RECORD_AUX_OUTPUT_HW_ID used for Trace ID
+> >   coresight: trace-id: Add debug & test macros to Trace ID allocation
+> >
+> >  drivers/hwtracing/coresight/Makefile          |   2 +-
+> >  drivers/hwtracing/coresight/coresight-core.c  |  49 +--
+> >  .../hwtracing/coresight/coresight-etm-perf.c  |  23 ++
+> >  drivers/hwtracing/coresight/coresight-etm.h   |   3 +-
+> >  .../coresight/coresight-etm3x-core.c          |  92 +++--
+> >  .../coresight/coresight-etm3x-sysfs.c         |  27 +-
+> >  .../coresight/coresight-etm4x-core.c          |  79 ++++-
+> >  .../coresight/coresight-etm4x-sysfs.c         |  27 +-
+> >  drivers/hwtracing/coresight/coresight-etm4x.h |   3 +
+> >  drivers/hwtracing/coresight/coresight-stm.c   |  49 +--
+> >  .../hwtracing/coresight/coresight-trace-id.c  | 266 ++++++++++++++
+> >  .../hwtracing/coresight/coresight-trace-id.h  |  78 +++++
+> >  include/linux/coresight-pmu.h                 |  35 +-
+> >  include/linux/coresight.h                     |   3 -
+> >  kernel/events/core.c                          |   1 +
+> >  tools/include/linux/coresight-pmu.h           |  48 ++-
+> >  tools/perf/arch/arm/util/cs-etm.c             |  21 +-
+> >  .../perf/util/cs-etm-decoder/cs-etm-decoder.c |   7 +
+> >  tools/perf/util/cs-etm.c                      | 331 +++++++++++++++---
+> >  tools/perf/util/cs-etm.h                      |  14 +-
+> >  20 files changed, 933 insertions(+), 225 deletions(-)
+> >  create mode 100644 drivers/hwtracing/coresight/coresight-trace-id.c
+> >  create mode 100644 drivers/hwtracing/coresight/coresight-trace-id.h
+> >
+> > --
+> > 2.17.1
+>
+> --
+>
+> - Arnaldo
+
+
+
 -- 
-2.37.1.595.g718a3a8f04-goog
-
+Mike Leach
+Principal Engineer, ARM Ltd.
+Manchester Design Centre. UK
