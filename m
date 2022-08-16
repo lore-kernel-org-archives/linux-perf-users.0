@@ -2,117 +2,168 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BCD55C3F6B0
-	for <linux-perf-users@archiver.kernel.org>; Tue, 16 Aug 2022 14:12:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 13CB2C3F6B0
+	for <linux-perf-users@archiver.kernel.org>; Tue, 16 Aug 2022 14:14:02 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S235830AbiHPOMu (ORCPT
+        id S235778AbiHPOOB (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Tue, 16 Aug 2022 10:12:50 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60384 "EHLO
+        Tue, 16 Aug 2022 10:14:01 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34658 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S234215AbiHPOMt (ORCPT
+        with ESMTP id S229477AbiHPOOA (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Tue, 16 Aug 2022 10:12:49 -0400
-Received: from mail-yw1-x1134.google.com (mail-yw1-x1134.google.com [IPv6:2607:f8b0:4864:20::1134])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B670B75394
-        for <linux-perf-users@vger.kernel.org>; Tue, 16 Aug 2022 07:12:47 -0700 (PDT)
-Received: by mail-yw1-x1134.google.com with SMTP id 00721157ae682-32868f43dd6so154293567b3.8
-        for <linux-perf-users@vger.kernel.org>; Tue, 16 Aug 2022 07:12:47 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20210112;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:from:to:cc;
-        bh=Vyh7nX6aNSNUE119qdiIIT/EoXittiyqJ3KmpoRb3JU=;
-        b=fDj6FoppCemEAwso3o7LaD74WUC1I9oEzmYzOiTRD1OOS+4Bh/MPtP7m5uo8mLYe8C
-         zjiVBUaPQ3d7zM+BHkTObTgsVSBd9aM9wKIW8UUHuYI2CXJkxy+j0lvwAbiMhmbKWwl4
-         a16VohoYwhqmH4juBAj0nl6EkhgDKPGuuylgPjsCBy90RROWdi4K+AERKW55Swmsat7e
-         gnR7lOcShMaxofH2EhqaBVQcfGs2vhqk4kVv+35th/mz8bcupB5rEqa7i56L72oV8VbK
-         VzJx+/RwAFTqDU3LqTCDymIJPC5R6KkqcOySUiJTzF/kKwXNS+QpJMPFKemJ/d79x23F
-         eiQQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc;
-        bh=Vyh7nX6aNSNUE119qdiIIT/EoXittiyqJ3KmpoRb3JU=;
-        b=YNKT++mRKqo3a6J86HaL+UHGABfd0/htUR9ifgy/hwkZ1j7oO0Af0yJ0Dt5Mq178Hu
-         M8n4HYx55EaVUmi/rp1joTvw/yxaecCUwwkcvm4ZUbDC3Vr2+ZEby8a0v9/AMr3zgzxr
-         auIKvuVySX7D0IlMCWTPSx+vXlAnFvc/44YP9x24Rar1zD1y36TwYjpX83rHyhEIxYSR
-         MYQc7qp0AIknwdSCT2mHzMIv7MUPiL+0jCYBcXgaqBgdrMr/KY8m9yyR2a8sLP1c8VXM
-         X6XvXEvE6/NZnzCUjGOYInhpxlqnPr4lkCNiaX5q231MddOwtkNC4FX3CgPcV66+fAnB
-         1D1Q==
-X-Gm-Message-State: ACgBeo2VjAA4tKUaDPQ7bkx+aqTtfLc9d5fx+kAzm+z9nLjGiW1m0k9J
-        lO+nLStHbdLP6+O2vd0J8tc/d1X4a3iYTKiawlwIyg==
-X-Google-Smtp-Source: AA6agR6Cj7c7hUVt8CtUfA7vQh2q4zez305SpvmX/WRPpgHJLs/Mntp/ap6raCDGqlCGO9HtoAnpVoiUF1QjmGuI+uU=
-X-Received: by 2002:a25:490:0:b0:67c:22be:65db with SMTP id
- 138-20020a250490000000b0067c22be65dbmr15094214ybe.16.1660659166737; Tue, 16
- Aug 2022 07:12:46 -0700 (PDT)
+        Tue, 16 Aug 2022 10:14:00 -0400
+Received: from desiato.infradead.org (desiato.infradead.org [IPv6:2001:8b0:10b:1:d65d:64ff:fe57:4e05])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 26B997AC1D;
+        Tue, 16 Aug 2022 07:13:58 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=desiato.20200630; h=In-Reply-To:Content-Type:MIME-Version:
+        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description;
+        bh=B7iCF7z/dSs3zH5fQRon2FEpe1wqapi26nHgYMm0Kq8=; b=oFJ/DrCFcck1y3NjM2VilKCRya
+        4rivGyeWBfnAkTx0ni6buZwRH3Ey7dtalxx4EUdvGgG6uXSQa+I1o/ycafUAmdHQn4SMTtJ6rszow
+        X8VBu61zBkWVQJKClfqvdJjRCECPSKK+qCYcCwT5OruYFmyi0xULRaX/HKWgIgDgcw3zbPAfEn5L+
+        GFRLN5/E6vANaxOAlDmTWAMbcycfxmQBs7oorNdI1AMW3YoHqGbEdogNTWXPF0x10KSTXX/VXOaaX
+        5XUpmYapACHkmjoLeQc6r3PcU7nmEQVgdLn4R3wZKTndjjog7s9DehQFESlJ6doIoU8MikFWoHx3V
+        EieLOFbA==;
+Received: from j130084.upc-j.chello.nl ([24.132.130.84] helo=worktop.programming.kicks-ass.net)
+        by desiato.infradead.org with esmtpsa (Exim 4.94.2 #2 (Red Hat Linux))
+        id 1oNxK1-002yjb-8s; Tue, 16 Aug 2022 14:13:35 +0000
+Received: by worktop.programming.kicks-ass.net (Postfix, from userid 1000)
+        id 3A0C8980120; Tue, 16 Aug 2022 16:13:32 +0200 (CEST)
+Date:   Tue, 16 Aug 2022 16:13:32 +0200
+From:   Peter Zijlstra <peterz@infradead.org>
+To:     Yang Jihong <yangjihong1@huawei.com>
+Cc:     rostedt@goodmis.org, mingo@redhat.com, acme@kernel.org,
+        mark.rutland@arm.com, alexander.shishkin@linux.intel.com,
+        jolsa@kernel.org, namhyung@kernel.org,
+        linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org
+Subject: Re: [PATCH v3] perf/core: Fix reentry problem in
+ perf_output_read_group
+Message-ID: <YvumDL1qz1NjpfEC@worktop.programming.kicks-ass.net>
+References: <20220816091103.257702-1-yangjihong1@huawei.com>
 MIME-Version: 1.0
-References: <20220704150514.48816-1-elver@google.com> <CANpmjNP0hPuhXmZmkX1ytCDh56LOAmxJjf7RyfxOvoaem=2d8Q@mail.gmail.com>
- <CAP-5=fXgYWuHKkfAxxTeAzTuq7PLwMd6UvBu+J+6tnqHwraSCA@mail.gmail.com>
-In-Reply-To: <CAP-5=fXgYWuHKkfAxxTeAzTuq7PLwMd6UvBu+J+6tnqHwraSCA@mail.gmail.com>
-From:   Marco Elver <elver@google.com>
-Date:   Tue, 16 Aug 2022 16:12:10 +0200
-Message-ID: <CANpmjNOnRNKUTeSB9+LBTjG=2+BC=ox20ain1F8T1krS+ah9HA@mail.gmail.com>
-Subject: Re: [PATCH v3 00/14] perf/hw_breakpoint: Optimize for thousands of tasks
-To:     Peter Zijlstra <peterz@infradead.org>
-Cc:     Ian Rogers <irogers@google.com>,
-        Frederic Weisbecker <frederic@kernel.org>,
-        Ingo Molnar <mingo@kernel.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Jiri Olsa <jolsa@redhat.com>,
-        Namhyung Kim <namhyung@kernel.org>,
-        Dmitry Vyukov <dvyukov@google.com>,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        linuxppc-dev@lists.ozlabs.org, linux-perf-users@vger.kernel.org,
-        x86@kernel.org, linux-sh@vger.kernel.org,
-        kasan-dev@googlegroups.com, linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20220816091103.257702-1-yangjihong1@huawei.com>
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-On Wed, 20 Jul 2022 at 17:47, Ian Rogers <irogers@google.com> wrote:
-> On Tue, Jul 12, 2022 at 6:41 AM Marco Elver <elver@google.com> wrote:
-> > On Mon, 4 Jul 2022 at 17:05, Marco Elver <elver@google.com> wrote:
-> > > The hw_breakpoint subsystem's code has seen little change in over 10
-> > > years. In that time, systems with >100s of CPUs have become common,
-> > > along with improvements to the perf subsystem: using breakpoints on
-> > > thousands of concurrent tasks should be a supported usecase.
-> > [...]
-> > > Marco Elver (14):
-> > >   perf/hw_breakpoint: Add KUnit test for constraints accounting
-> > >   perf/hw_breakpoint: Provide hw_breakpoint_is_used() and use in test
-> > >   perf/hw_breakpoint: Clean up headers
-> > >   perf/hw_breakpoint: Optimize list of per-task breakpoints
-> > >   perf/hw_breakpoint: Mark data __ro_after_init
-> > >   perf/hw_breakpoint: Optimize constant number of breakpoint slots
-> > >   perf/hw_breakpoint: Make hw_breakpoint_weight() inlinable
-> > >   perf/hw_breakpoint: Remove useless code related to flexible
-> > >     breakpoints
-> > >   powerpc/hw_breakpoint: Avoid relying on caller synchronization
-> > >   locking/percpu-rwsem: Add percpu_is_write_locked() and
-> > >     percpu_is_read_locked()
-> > >   perf/hw_breakpoint: Reduce contention with large number of tasks
-> > >   perf/hw_breakpoint: Introduce bp_slots_histogram
-> > >   perf/hw_breakpoint: Optimize max_bp_pinned_slots() for CPU-independent
-> > >     task targets
-> > >   perf/hw_breakpoint: Optimize toggle_bp_slot() for CPU-independent task
-> > >     targets
-> > [...]
-> >
-> > This is ready from our side, and given the silence, assume it's ready
-> > to pick up and/or have a maintainer take a look. Since this is mostly
-> > kernel/events, would -tip/perf/core be appropriate?
->
-> These are awesome improvements, I've added my acked-by to every
-> change. I hope we can pull these changes, as you say, into tip.git
-> perf/core and get them into 5.20.
+On Tue, Aug 16, 2022 at 05:11:03PM +0800, Yang Jihong wrote:
+> perf_output_read_group may respond to IPI request of other cores and invoke
+> __perf_install_in_context function. As a result, hwc configuration is modified.
+> As a result, the hwc configuration is modified, causing inconsistency and
+> unexpected consequences.
 
-These still apply cleanly to 6.0-rc1 and the test passes, but let me
-know if I shall send a rebased version.
+>  read_pmevcntrn+0x1e4/0x1ec arch/arm64/kernel/perf_event.c:423
+>  armv8pmu_read_evcntr arch/arm64/kernel/perf_event.c:467 [inline]
+>  armv8pmu_read_hw_counter arch/arm64/kernel/perf_event.c:475 [inline]
+>  armv8pmu_read_counter+0x10c/0x1f0 arch/arm64/kernel/perf_event.c:528
+>  armpmu_event_update+0x9c/0x1bc drivers/perf/arm_pmu.c:247
+>  armpmu_read+0x24/0x30 drivers/perf/arm_pmu.c:264
+>  perf_output_read_group+0x4cc/0x71c kernel/events/core.c:6806
+>  perf_output_read+0x78/0x1c4 kernel/events/core.c:6845
+>  perf_output_sample+0xafc/0x1000 kernel/events/core.c:6892
+>  __perf_event_output kernel/events/core.c:7273 [inline]
+>  perf_event_output_forward+0xd8/0x130 kernel/events/core.c:7287
+>  __perf_event_overflow+0xbc/0x20c kernel/events/core.c:8943
+>  perf_swevent_overflow kernel/events/core.c:9019 [inline]
+>  perf_swevent_event+0x274/0x2c0 kernel/events/core.c:9047
+>  do_perf_sw_event kernel/events/core.c:9160 [inline]
+>  ___perf_sw_event+0x150/0x1b4 kernel/events/core.c:9191
+>  __perf_sw_event+0x58/0x7c kernel/events/core.c:9203
+>  perf_sw_event include/linux/perf_event.h:1177 [inline]
 
-Thanks
--- Marco
+> Interrupts is not disabled when perf_output_read_group reads PMU counter.
+
+s/is/are/ due to 'interrupts' being plural
+
+Anyway, yes, I suppose this is indeed so. That code expects to run with
+IRQs disabled but in the case of software events that isn't so.
+
+> In this case, IPI request may be received from other cores.
+> As a result, PMU configuration is modified and an error occurs when
+> reading PMU counter:
+> 
+>                    CPU0                                         CPU1
+>                                                     __se_sys_perf_event_open
+>                                                       perf_install_in_context
+> perf_output_read_group                                  smp_call_function_single
+>   for_each_sibling_event(sub, leader) {                   generic_exec_single
+>     if ((sub != event) &&                                   remote_function
+>         (sub->state == PERF_EVENT_STATE_ACTIVE))                    |
+> <enter IPI handler: __perf_install_in_context>   <----RAISE IPI-----+
+> __perf_install_in_context
+>   ctx_resched
+>     event_sched_out
+>       armpmu_del
+>         ...
+>         hwc->idx = -1; // event->hwc.idx is set to -1
+> ...
+> <exit IPI>
+>             sub->pmu->read(sub);
+>               armpmu_read
+>                 armv8pmu_read_counter
+>                   armv8pmu_read_hw_counter
+>                     int idx = event->hw.idx; // idx = -1
+>                     u64 val = armv8pmu_read_evcntr(idx);
+>                       u32 counter = ARMV8_IDX_TO_COUNTER(idx); // invalid counter = 30
+>                       read_pmevcntrn(counter) // undefined instruction
+> 
+> Signed-off-by: Yang Jihong <yangjihong1@huawei.com>
+> ---
+>  kernel/events/core.c | 9 +++++++++
+>  1 file changed, 9 insertions(+)
+> 
+> diff --git a/kernel/events/core.c b/kernel/events/core.c
+> index 4e718b93442b..776fe24adcbd 100644
+> --- a/kernel/events/core.c
+> +++ b/kernel/events/core.c
+> @@ -6895,6 +6895,13 @@ static void perf_output_read_group(struct perf_output_handle *handle,
+>  	u64 read_format = event->attr.read_format;
+>  	u64 values[6];
+>  	int n = 0;
+> +	unsigned long flags;
+> +
+> +	/*
+> +	 * Disabling interrupts avoids all counter scheduling
+> +	 * (context switches, timer based rotation and IPIs).
+> +	 */
+> +	local_irq_save(flags);
+>  
+>  	values[n++] = 1 + leader->nr_siblings;
+>  
+> @@ -6931,6 +6938,8 @@ static void perf_output_read_group(struct perf_output_handle *handle,
+>  
+>  		__output_copy(handle, values, n * sizeof(u64));
+>  	}
+> +
+> +	local_irq_restore(flags);
+>  }
+
+Specifically I think it is for_each_sibling_event() itself that requires
+the context to be stable. Perhaps we should add an assertion there as
+well.
+
+Something like so on top, I suppose.. Does that yield more problem
+sites?
+
+diff --git a/include/linux/perf_event.h b/include/linux/perf_event.h
+index ee8b9ecdc03b..d4d53b9ba71e 100644
+--- a/include/linux/perf_event.h
++++ b/include/linux/perf_event.h
+@@ -631,7 +631,12 @@ struct pmu_event_list {
+ 	struct list_head	list;
+ };
+ 
++/*
++ * Iterating the sibling list requires this list to be stable; by ensuring IRQs
++ * are disabled IPIs from perf_{install_in,remove_from}_context() are held off.
++ */
+ #define for_each_sibling_event(sibling, event)			\
++	lockdep_assert_irqs_disabled();				\
+ 	if ((event)->group_leader == (event))			\
+ 		list_for_each_entry((sibling), &(event)->sibling_list, sibling_list)
+ 
+
