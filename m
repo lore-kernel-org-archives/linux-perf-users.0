@@ -2,69 +2,87 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3BFA9C25B0E
-	for <linux-perf-users@archiver.kernel.org>; Tue, 16 Aug 2022 17:42:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 68C6DC25B0E
+	for <linux-perf-users@archiver.kernel.org>; Tue, 16 Aug 2022 19:25:44 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S236298AbiHPRmB (ORCPT
+        id S237092AbiHPTZn (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Tue, 16 Aug 2022 13:42:01 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38218 "EHLO
+        Tue, 16 Aug 2022 15:25:43 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46950 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S233537AbiHPRl7 (ORCPT
+        with ESMTP id S237156AbiHPTZm (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Tue, 16 Aug 2022 13:41:59 -0400
-Received: from bg5.exmail.qq.com (bg4.exmail.qq.com [43.154.54.12])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BFE7121801;
-        Tue, 16 Aug 2022 10:41:56 -0700 (PDT)
-X-QQ-mid: bizesmtp88t1660671681t74hx3op
-Received: from harry-jrlc.. ( [182.148.12.144])
-        by bizesmtp.qq.com (ESMTP) with 
-        id ; Wed, 17 Aug 2022 01:41:10 +0800 (CST)
-X-QQ-SSF: 0100000000200060D000B00A0000020
-X-QQ-FEAT: xqT8U4SkSphTDDkaSJLIDDA0iAQssCISAKJJgZfRA+41rXHjtp7pGpTT5XDCA
-        Oy4Ru9qCP6Zxy3KLFLLS9UC9X34WUPH3XKUX5tiQRKmZq+ebGodM453X6Lseqy90l4iRQO6
-        yqq4m/u9Z5kRe0VIeztMVCOGnGrUN9sSTn27a8HaO5PSVsgaPog3oDEd9YAYSSvUDQ2dI9R
-        2inrCrImq8zdgkkVcLb1d2+N8ZubCtcXqkPukmCx0BrXNxPZ47Aa2ZddjiJJLVbdjsY5EMw
-        drU6V524n/edUtubIgEBJduZ7grHyxyH104O2Fw1JRK8LhQ1ij1apjvTeuhRvKFOKdG8JZ0
-        gIrXY3mBYqZ1vHyezdl5oQOlWAUUDwJx6Tka/J6DAIdtT4iFzAFf9HXcRDzeg==
-X-QQ-GoodBg: 0
-From:   Xin Gao <gaoxin@cdjrlc.com>
-To:     peterz@infradead.org, mingo@redhat.com, acme@kernel.org
-Cc:     namhyung@kernel.org, irogers@google.com, ak@linux.intel.com,
-        linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Xin Gao <gaoxin@cdjrlc.com>
-Subject: [PATCH] perf parse-events: Variable type completion
-Date:   Wed, 17 Aug 2022 01:41:09 +0800
-Message-Id: <20220816174109.7718-1-gaoxin@cdjrlc.com>
-X-Mailer: git-send-email 2.30.2
+        Tue, 16 Aug 2022 15:25:42 -0400
+Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7A7787549C;
+        Tue, 16 Aug 2022 12:25:38 -0700 (PDT)
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by dfw.source.kernel.org (Postfix) with ESMTPS id F24BD61449;
+        Tue, 16 Aug 2022 19:25:37 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 312AAC433C1;
+        Tue, 16 Aug 2022 19:25:37 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1660677937;
+        bh=XjTfd+V+GT/DlFSYxIKxS+oQDaAKsyKqTh3uSDGCIeg=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=F/YRjeydG3WfemscVqTTVwYaq0sNyT6+i8ZAPAPCfT1mnEZGash0UOWzLzUVMi8Qq
+         9McluBUVZDVBYyEetWmolZyhuDXsf0TlDTYPBQSZqr5BbefjH1LGXrcHOMcjG+auWO
+         4RHhWVfVj3txDwkD3PBGrFZsNRACBzaVJoa3DB8OILEaehkBxQX18VIC9yFXIsn8Sx
+         Q+Eiior8CZ0wLhABJflnpIy16eDJUbFigcgmi1mcpw9z0RROAUGcKkU+Vmya5gDS/m
+         HE+0mpWnMN2WMxjYFDztgkNeEyddbDOu5BmQacKNDoj7333P7ohcNWDSZiwbC0mZZg
+         JUBlvH76SH+pg==
+Received: by quaco.ghostprotocols.net (Postfix, from userid 1000)
+        id CD7F64035A; Tue, 16 Aug 2022 16:25:33 -0300 (-03)
+Date:   Tue, 16 Aug 2022 16:25:33 -0300
+From:   Arnaldo Carvalho de Melo <acme@kernel.org>
+To:     Nikita Shubin <nikita.shubin@maquefel.me>
+Cc:     Mayuresh Chitale <mchitale@ventanamicro.com>, linux@yadro.com,
+        Genevieve Chan <genevieve.chan@starfivetech.com>,
+        =?iso-8859-1?Q?Jo=E3o_M=E1rio?= Domingos 
+        <joao.mario@tecnico.ulisboa.pt>,
+        Nikita Shubin <n.shubin@yadro.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Jiri Olsa <jolsa@kernel.org>,
+        Namhyung Kim <namhyung@kernel.org>,
+        Paul Walmsley <paul.walmsley@sifive.com>,
+        Palmer Dabbelt <palmer@dabbelt.com>,
+        Albert Ou <aou@eecs.berkeley.edu>,
+        linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org,
+        linux-riscv@lists.infradead.org,
+        Kautuk Consul <kconsul@ventanamicro.com>
+Subject: Re: [PATCH v5] perf arch events: riscv sbi firmware std event files
+Message-ID: <YvvvLUnVaO+Fvw3U@kernel.org>
+References: <20220628114625.166665-1-nikita.shubin@maquefel.me>
+ <20220628114625.166665-4-nikita.shubin@maquefel.me>
+ <18c8e9c74955c08fdbd631a35c51b30f3cff3cd3.camel@ventanamicro.com>
+ <20220811112303.4e5f0566@redslave.neermore.group>
+ <Yvas60duFUkSzuz+@kernel.org>
+ <20220815162755.7ed970c6@redslave.neermore.group>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-QQ-SENDSIZE: 520
-Feedback-ID: bizesmtp:cdjrlc.com:qybglogicsvr:qybglogicsvr6
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20220815162755.7ed970c6@redslave.neermore.group>
+X-Url:  http://acmel.wordpress.com
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-'unsigned int' is better than 'unsigned'.
-
-Signed-off-by: Xin Gao <gaoxin@cdjrlc.com>
----
- tools/perf/util/pmu.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
-
-diff --git a/tools/perf/util/pmu.c b/tools/perf/util/pmu.c
-index f516d3821d28..bc1230f68341 100644
---- a/tools/perf/util/pmu.c
-+++ b/tools/perf/util/pmu.c
-@@ -1225,7 +1225,7 @@ static char *pmu_formats_string(struct list_head *formats)
- 	struct perf_pmu_format *format;
- 	char *str = NULL;
- 	struct strbuf buf = STRBUF_INIT;
--	unsigned i = 0;
-+	unsigned int i = 0;
+Em Mon, Aug 15, 2022 at 04:27:55PM +0300, Nikita Shubin escreveu:
+> > If I get this today it may even get into v6.0. :-)
  
- 	if (!formats)
- 		return NULL;
--- 
-2.30.2
+> Well... i missed it :), on the other hand this series depends on 
+> https://lkml.org/lkml/2022/7/27/23 
+> which hasn't been merged yet.
+ 
+> Just have sent a v6 series.
+ 
+> Thank you for review!
 
+Ok! Hopefully it'll make 6.1 then. :-)
+
+- Arnaldo
