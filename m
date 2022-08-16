@@ -2,98 +2,103 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 13AC9C2BB41
-	for <linux-perf-users@archiver.kernel.org>; Tue, 16 Aug 2022 19:55:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 996A6C25B0E
+	for <linux-perf-users@archiver.kernel.org>; Tue, 16 Aug 2022 20:01:38 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S237289AbiHPTzB (ORCPT
+        id S237325AbiHPUBh (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Tue, 16 Aug 2022 15:55:01 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55056 "EHLO
+        Tue, 16 Aug 2022 16:01:37 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37616 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231804AbiHPTzA (ORCPT
+        with ESMTP id S233708AbiHPUBb (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Tue, 16 Aug 2022 15:55:00 -0400
-Received: from ams.source.kernel.org (ams.source.kernel.org [145.40.68.75])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C101079605;
-        Tue, 16 Aug 2022 12:54:58 -0700 (PDT)
+        Tue, 16 Aug 2022 16:01:31 -0400
+Received: from ams.source.kernel.org (ams.source.kernel.org [IPv6:2604:1380:4601:e00::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 085C87E83A;
+        Tue, 16 Aug 2022 13:01:27 -0700 (PDT)
 Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by ams.source.kernel.org (Postfix) with ESMTPS id 6F401B81AA7;
-        Tue, 16 Aug 2022 19:54:57 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 062A5C433C1;
-        Tue, 16 Aug 2022 19:54:56 +0000 (UTC)
+        by ams.source.kernel.org (Postfix) with ESMTPS id E5EFAB816A4;
+        Tue, 16 Aug 2022 20:01:25 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 629AEC433D6;
+        Tue, 16 Aug 2022 20:01:24 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1660679696;
-        bh=Dv9W8QLz1LA4YHxnAf2g5KmnoAlkZPcjgdcUZXnkJ7I=;
+        s=k20201202; t=1660680084;
+        bh=exaNKYkS3RGsXGptBvcU0ygllszaHLvdDMEuOEXqDh8=;
         h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=Zxa3et2Ds6fZ4gNaGeT5SnNiZhDx/03Dp18FAiPcxu4jBGmUXjCpCL/VdIEu1buoJ
-         xkOQwdJyLE/IfU3XopgKNWO7pDwx98YVRR3jZ2vE1b80hA5aLLo9KhlXa4Ivb/zE2C
-         l9oDjVZARL+Ytf9X5closp4eioEzS1UYA/vwr9NbxK9637BUAIjtbTrXVSzqR+3063
-         pyHuYfBg9QOsOdRnN+V35k7mYLgm5b2SqaFThxoZd0Ns5IVuqqeIECBE5l1IOKJzUH
-         +X6f/O3R0t0pmh5bRTVysqk7+KvNfIfsFdbdKR3oChuYnZzbTa3CRvc1JocpsYJsfL
-         Q31Hg/2b7E1xQ==
+        b=Ye5uz8wJF+KkzYAi6mwLSo+EQndL4RfeowxCt0/ubtbmZtHSqy0+5RZyHt3p+4buT
+         jcykLx6DVR4FUv7XfLSLkrCMKE54KrYwsxUvUngW5gwsfAKc/MfM2Vh82sl7kHsqXI
+         fz+BI+aw8VIy19PQQ8WleqiU+dqVkFCARE3LGairCU7+mU8pPjZC/0WmBwpKHJqtvo
+         T7wJSN9/d4tWsy3BvA21DrpuBQkF7SYTH6Q1cYW2cp/8x5FYVq0b/kA2nuRlR9jSf2
+         BJ1NUzWtTQ0KHf6zHeJh7VNetJH/DEEZ1H+JEsAmnBSTXQAJ9mG2k3AmFVyj27usaI
+         mP9jAOoaiZUTw==
 Received: by quaco.ghostprotocols.net (Postfix, from userid 1000)
-        id 583544035A; Tue, 16 Aug 2022 16:54:53 -0300 (-03)
-Date:   Tue, 16 Aug 2022 16:54:53 -0300
+        id C88944035A; Tue, 16 Aug 2022 17:01:21 -0300 (-03)
+Date:   Tue, 16 Aug 2022 17:01:21 -0300
 From:   Arnaldo Carvalho de Melo <acme@kernel.org>
 To:     Namhyung Kim <namhyung@kernel.org>
-Cc:     Raul Silvera <rsilvera@google.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Jiri Olsa <jolsa@kernel.org>,
-        Adrian Hunter <adrian.hunter@intel.com>,
-        James Clark <james.clark@arm.com>,
-        linux-perf-users <linux-perf-users@vger.kernel.org>,
-        linux-kernel <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH v4] perf inject: Add a command line option to specify
- build ids.
-Message-ID: <Yvv2DdPfCcFYsEwL@kernel.org>
-References: <20220815225922.2118745-1-rsilvera@google.com>
- <CAM9d7chU_qSHoN7X=bbDFx=cuXRj08AFLLPH2-DsEHNnxO7qMg@mail.gmail.com>
+Cc:     Jiri Olsa <jolsa@kernel.org>, LKML <linux-kernel@vger.kernel.org>,
+        Ian Rogers <irogers@google.com>,
+        linux-perf-users@vger.kernel.org
+Subject: Re: [PATCH 0/4] perf tools: Support reading PERF_FORMAT_LOST
+Message-ID: <Yvv3kS9YqHMFSXDV@kernel.org>
+References: <20220815190106.1293082-1-namhyung@kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <CAM9d7chU_qSHoN7X=bbDFx=cuXRj08AFLLPH2-DsEHNnxO7qMg@mail.gmail.com>
+In-Reply-To: <20220815190106.1293082-1-namhyung@kernel.org>
 X-Url:  http://acmel.wordpress.com
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-Em Mon, Aug 15, 2022 at 10:11:41PM -0700, Namhyung Kim escreveu:
+Em Mon, Aug 15, 2022 at 12:01:02PM -0700, Namhyung Kim escreveu:
 > Hello,
 > 
-> On Mon, Aug 15, 2022 at 3:59 PM Raul Silvera <rsilvera@google.com> wrote:
-> >
-> > This commit adds the option --known-build-ids to perf inject.
-> > It allows the user to explicitly specify the build id for a given
-> > path, instead of retrieving it from the current system. This is
-> > useful in cases where a perf.data file is processed on a different
-> > system from where it was collected, or if some of the binaries are
-> > no longer available.
-> >
-> > The build ids and paths are specified in pairs in the command line.
-> > Using the file:// specifier, build ids can be loaded from a file
-> > directly generated by perf buildid-list. This is convenient to copy
-> > build ids from one perf.data file to another.
-> >
-> > ** Example: In this example we use perf record to create two
-> > perf.data files, one with build ids and another without, and use
-> > perf buildid-list and perf inject to copy the build ids from the
-> > first file to the second.
-> >
-> >  $ perf record ls /tmp
-> >  $ perf record --no-buildid -o perf.data.no-buildid ls /tmp
-> >  $ perf buildid-list > build-ids.txt
-> >  $ perf inject -b --known-build-ids='file://build-ids.txt' \
-> >         -i perf.data.no-buildid -o perf.data.buildid
-> >
-> > Signed-off-by: Raul Silvera <rsilvera@google.com>
-> 
-> Acked-by: Namhyung Kim <namhyung@kernel.org>
+> The kernel v6.0 added PERF_FORMAT_LOST which can read a number of lost
 
-Thanks, applied to perf/core.
+I've tentantively added this to perf/urgent, as this matches a feature
+introduced in this merge window, we'll see how it goes, hopefully Linus
+accepts this at this point.
+
+- Arnaldo
+
+> samples for the given event.  As it can change the output format of
+> read(2) and perf sample data, it needs to access them carefully.
+> 
+> You can get the code from 'perf/read-lost-v1' brach on
+> 
+>   git://git.kernel.org/pub/scm/linux/kernel/git/namhyung/linux-perf.git
+> 
+> Thanks,
+> Namhyung
+> 
+> 
+> Namhyung Kim (4):
+>   tools headers UAPI: Sync linux/perf_event.h with the kernel sources
+>   tools lib perf: Handle read format in perf_evsel__read()
+>   tools lib perf: Add a test case for read formats
+>   perf tools: Support reading PERF_FORMAT_LOST
+> 
+>  tools/include/uapi/linux/perf_event.h         |   5 +-
+>  tools/lib/perf/evsel.c                        |  72 ++++++++
+>  tools/lib/perf/include/perf/event.h           |   3 +-
+>  tools/lib/perf/include/perf/evsel.h           |   4 +-
+>  tools/lib/perf/tests/test-evsel.c             | 161 ++++++++++++++++++
+>  tools/perf/tests/sample-parsing.c             |  14 +-
+>  tools/perf/util/event.h                       |  18 +-
+>  tools/perf/util/evsel.c                       |  33 +++-
+>  .../scripting-engines/trace-event-python.c    |  16 +-
+>  tools/perf/util/session.c                     |  32 ++--
+>  tools/perf/util/synthetic-events.c            |  34 +++-
+>  11 files changed, 354 insertions(+), 38 deletions(-)
+> 
+> 
+> base-commit: 568035b01cfb107af8d2e4bd2fb9aea22cf5b868
+> -- 
+> 2.37.1.595.g718a3a8f04-goog
+
+-- 
 
 - Arnaldo
