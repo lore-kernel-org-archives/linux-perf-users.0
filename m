@@ -2,40 +2,40 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C7569C25B0E
-	for <linux-perf-users@archiver.kernel.org>; Tue, 16 Aug 2022 17:38:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3BFA9C25B0E
+	for <linux-perf-users@archiver.kernel.org>; Tue, 16 Aug 2022 17:42:02 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S236760AbiHPRil (ORCPT
+        id S236298AbiHPRmB (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Tue, 16 Aug 2022 13:38:41 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59822 "EHLO
+        Tue, 16 Aug 2022 13:42:01 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38218 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S236759AbiHPRih (ORCPT
+        with ESMTP id S233537AbiHPRl7 (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Tue, 16 Aug 2022 13:38:37 -0400
+        Tue, 16 Aug 2022 13:41:59 -0400
 Received: from bg5.exmail.qq.com (bg4.exmail.qq.com [43.154.54.12])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C791C3718C;
-        Tue, 16 Aug 2022 10:38:33 -0700 (PDT)
-X-QQ-mid: bizesmtp86t1660671497tp0hmleu
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BFE7121801;
+        Tue, 16 Aug 2022 10:41:56 -0700 (PDT)
+X-QQ-mid: bizesmtp88t1660671681t74hx3op
 Received: from harry-jrlc.. ( [182.148.12.144])
         by bizesmtp.qq.com (ESMTP) with 
-        id ; Wed, 17 Aug 2022 01:38:05 +0800 (CST)
+        id ; Wed, 17 Aug 2022 01:41:10 +0800 (CST)
 X-QQ-SSF: 0100000000200060D000B00A0000020
-X-QQ-FEAT: r/cTxDoDoiHFKS4LFalCA3jzslwrLAnPDYJotktburOuxpIbzU2Nz4ejWIojG
-        YfYQG6qV5Nr5Mln0E1HFO3Mbhv2SRzh54hosARBoMD29aUBa8fMZ/5SNk3JF/HWY5/36hMG
-        bIxSI/yvWVWkc9w//De82CmXkDoKOfnVx+6UOLdhvV1GJF8KsBXNLAMQF+r9CmrgT7PfoMw
-        BavNCMEwba7wUTZjkY3hjm67SuR4eK0jUcFUw3no+Q73XnMwDRSymEEXEsuro2IFJpdS9/V
-        LsgMz9gjns9mJ++JTvjX8iEh7C3n9FsJW1CHkLoiM+dgdexcr9uomgpsL0z75pkkARIQxMq
-        rR8glep3N/qYRcLn4UoxCefKmbhJGi4pmvYyZVKAtZ++jR4j8A=
+X-QQ-FEAT: xqT8U4SkSphTDDkaSJLIDDA0iAQssCISAKJJgZfRA+41rXHjtp7pGpTT5XDCA
+        Oy4Ru9qCP6Zxy3KLFLLS9UC9X34WUPH3XKUX5tiQRKmZq+ebGodM453X6Lseqy90l4iRQO6
+        yqq4m/u9Z5kRe0VIeztMVCOGnGrUN9sSTn27a8HaO5PSVsgaPog3oDEd9YAYSSvUDQ2dI9R
+        2inrCrImq8zdgkkVcLb1d2+N8ZubCtcXqkPukmCx0BrXNxPZ47Aa2ZddjiJJLVbdjsY5EMw
+        drU6V524n/edUtubIgEBJduZ7grHyxyH104O2Fw1JRK8LhQ1ij1apjvTeuhRvKFOKdG8JZ0
+        gIrXY3mBYqZ1vHyezdl5oQOlWAUUDwJx6Tka/J6DAIdtT4iFzAFf9HXcRDzeg==
 X-QQ-GoodBg: 0
 From:   Xin Gao <gaoxin@cdjrlc.com>
 To:     peterz@infradead.org, mingo@redhat.com, acme@kernel.org
-Cc:     namhyung@kernel.org, irogers@google.com, john.garry@huawei.com,
+Cc:     namhyung@kernel.org, irogers@google.com, ak@linux.intel.com,
         linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org,
         Xin Gao <gaoxin@cdjrlc.com>
-Subject: [PATCH] perf metrics: Variable type completion
-Date:   Wed, 17 Aug 2022 01:38:04 +0800
-Message-Id: <20220816173804.7539-1-gaoxin@cdjrlc.com>
+Subject: [PATCH] perf parse-events: Variable type completion
+Date:   Wed, 17 Aug 2022 01:41:09 +0800
+Message-Id: <20220816174109.7718-1-gaoxin@cdjrlc.com>
 X-Mailer: git-send-email 2.30.2
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
@@ -49,22 +49,22 @@ X-Mailing-List: linux-perf-users@vger.kernel.org
 
 Signed-off-by: Xin Gao <gaoxin@cdjrlc.com>
 ---
- tools/perf/util/metricgroup.c | 2 +-
+ tools/perf/util/pmu.c | 2 +-
  1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/tools/perf/util/metricgroup.c b/tools/perf/util/metricgroup.c
-index ee8fcfa115e5..8926de9617ef 100644
---- a/tools/perf/util/metricgroup.c
-+++ b/tools/perf/util/metricgroup.c
-@@ -1620,7 +1620,7 @@ int metricgroup__copy_metric_events(struct evlist *evlist, struct cgroup *cgrp,
- 				    struct rblist *new_metric_events,
- 				    struct rblist *old_metric_events)
- {
--	unsigned i;
-+	unsigned int i;
+diff --git a/tools/perf/util/pmu.c b/tools/perf/util/pmu.c
+index f516d3821d28..bc1230f68341 100644
+--- a/tools/perf/util/pmu.c
++++ b/tools/perf/util/pmu.c
+@@ -1225,7 +1225,7 @@ static char *pmu_formats_string(struct list_head *formats)
+ 	struct perf_pmu_format *format;
+ 	char *str = NULL;
+ 	struct strbuf buf = STRBUF_INIT;
+-	unsigned i = 0;
++	unsigned int i = 0;
  
- 	for (i = 0; i < rblist__nr_entries(old_metric_events); i++) {
- 		struct rb_node *nd;
+ 	if (!formats)
+ 		return NULL;
 -- 
 2.30.2
 
