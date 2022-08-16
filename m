@@ -2,283 +2,100 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1FB44C2BB41
-	for <linux-perf-users@archiver.kernel.org>; Tue, 16 Aug 2022 07:56:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 31285C2BB41
+	for <linux-perf-users@archiver.kernel.org>; Tue, 16 Aug 2022 08:10:06 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231405AbiHPH4s (ORCPT
+        id S232250AbiHPIKE (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Tue, 16 Aug 2022 03:56:48 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42780 "EHLO
+        Tue, 16 Aug 2022 04:10:04 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36576 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231773AbiHPH40 (ORCPT
+        with ESMTP id S232087AbiHPIJp (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Tue, 16 Aug 2022 03:56:26 -0400
-Received: from mail-oa1-f53.google.com (mail-oa1-f53.google.com [209.85.160.53])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 79ADD2BB;
-        Mon, 15 Aug 2022 22:11:53 -0700 (PDT)
-Received: by mail-oa1-f53.google.com with SMTP id 586e51a60fabf-f2a4c51c45so10518392fac.9;
-        Mon, 15 Aug 2022 22:11:53 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc;
-        bh=7nbksoY+g/t2iig7dGBQy09jZQxK8xDZcYLIfKcAXxA=;
-        b=APWEfZcx/SHC1r7G7NqcIfGZRD/HyPU6+QpLWRhsoVrkyXZw/KpcyW6qM7XYl/1ioV
-         12emDYEbV++iRLSj2yvVioI2QACkcBFZxzcbfAowU33Ord4VD5NJLLrgNgN4Vi3L3IWD
-         /YSjqTinpfF+jj+6MG0SLBDRFIWMgigxAvnUQk9TjEO13kQzWB7gtN890GQkHYoFK+hH
-         H3qFMppw1zDl07a7K7GXfN5/u6U5XS54sfA9O3wR+Y4DDemteAPdgLQiW54GDNyExESE
-         0j0jH5X5pSJ/Q5U7MV2mwSjw/BCjdxVQ4CJujB/yZDsBd3cQCJiT0VZVQepoyLMZB6sf
-         eFGA==
-X-Gm-Message-State: ACgBeo0sWCKBj1QDcxmmKlSuvdXUgL65hb1N32lPDNBvfYzJomuPnkkv
-        y/qB7gl2s6R2CknxITQFQQJN8bDcveAasaRDk4E=
-X-Google-Smtp-Source: AA6agR5aiP9iRyeuxJ/qQZcOMqVEXy6GhDC9Vj55Xo70khRhkN6gouLxjQ0S47Dr+ECvzT3up6kuAj0sYV0//F1hPdc=
-X-Received: by 2002:a05:6870:5b84:b0:10c:d1fa:2f52 with SMTP id
- em4-20020a0568705b8400b0010cd1fa2f52mr8312109oab.92.1660626712698; Mon, 15
- Aug 2022 22:11:52 -0700 (PDT)
+        Tue, 16 Aug 2022 04:09:45 -0400
+Received: from NAM04-BN8-obe.outbound.protection.outlook.com (mail-bn8nam04olkn2063.outbound.protection.outlook.com [40.92.47.63])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id AE92D1AF18
+        for <linux-perf-users@vger.kernel.org>; Mon, 15 Aug 2022 22:34:48 -0700 (PDT)
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=k8zYu6AA7ZhCpOMUyoDP7g6nYCT5ppkuRr1vTY7QhqVoXoCLNL4rEnWqGmgRAtaYmgFRWf+QSHIXYCe5v5EXpRR7cFjhtai5jboEIbhKNbY9AAWQf/d29M7ZjbHNg7bKBoxe+M4pSLhvK+8qNTVgonmnX8Qq4Ye4v8TMjbsyxlKQznvYCmmm+cJz4diQa69807siUuC5SOrFhvFyu4SfDSPZ8YBNztbgAqna8w8lLFxvPn8aRnESa6a5UGjBmsc7v5ajCaIL9zg7cxWXk24rX0Z7m75wO+Fu7atjiA8vib3s86S1GjewUmuoI9hEhmpVYxm37cVS5mWK1Iv80We1Sw==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=Iy6I4UHbqbGF8IrOstbM3WTRsIITIFOgf4ypGK2YleA=;
+ b=YJHOKDdeyygKyTXUevsuPGKD7Pn+yX6xBSPF3LI6VB3Hcj6oU9biqcFlFyVDU8IS3dtTgo8iK6pUeMMDfND/XL5/OHOwypaO6OCRuEsyM0YMyHHHVrL1re/WEnxBKychukSI3tqFN7VeWsOOZkwy+uz8vkxoH14VuNLD5U4wfOhv2IYgak29S7lUpfXofiqMUbRQ6Da25s6WF9e/VtFx+92CVQw2fFY06IgHbHZrtTfrj5BA+q2DYKhlvDeeJLDJl2f5pGshPnsw38dOiQTaA9eEvjCWW2HvOW9RvhvzHUkzqkwSPXi5dL344nUtS1tTkasTKD9UXtZc6t875XfZ5A==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=none; dmarc=none;
+ dkim=none; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=outlook.com;
+ s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=Iy6I4UHbqbGF8IrOstbM3WTRsIITIFOgf4ypGK2YleA=;
+ b=hHBitmWz6LvEc99ZjKzuygYN3wIDcn4DJko8rlkay48pt6WP9VgSd6LkZG8b4m6TrB7DZ1RaEb1n75ZCRWkojrcsNU8M2Y75uwARiDnxLKMDUQ3cpDVPjeIwdkfCJwMIzMGYL4OHSX2YUWG+rZil5iDH2+VG/qgpwd3QImGoa8n78aQR4QxFABhjvnG4hk0iHnZ5KPXOXyXsHRcFxEsa1JeHFKmcsXph5pXNJyMLFXp0zf4Pjv7Q03oUmnVLVEtL+gnaMjYR8hUhzLgUA7FqqaoDiDG+I4ReBVJOFDS7SZ2gJkRGB+2GbrwXqohnamw+JvQQIyritWhWMV48eTYRdA==
+Received: from DM4PR18MB5026.namprd18.prod.outlook.com (2603:10b6:8:51::10) by
+ PH0PR18MB3800.namprd18.prod.outlook.com (2603:10b6:510:29::18) with Microsoft
+ SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.5525.11; Tue, 16 Aug 2022 05:34:47 +0000
+Received: from DM4PR18MB5026.namprd18.prod.outlook.com
+ ([fe80::fd8d:f920:c9a5:83d5]) by DM4PR18MB5026.namprd18.prod.outlook.com
+ ([fe80::fd8d:f920:c9a5:83d5%3]) with mapi id 15.20.5525.011; Tue, 16 Aug 2022
+ 05:34:47 +0000
+From:   Hongtao Yu <Hongtao.Yu@outlook.com>
+Content-Type: text/plain;
+        charset=us-ascii
+Content-Transfer-Encoding: 7bit
+Subject: Re: Cannot print 'uregs' field with perf script -F uregs
+Message-ID: <DM4PR18MB5026C7008C77EF24557409138A6B9@DM4PR18MB5026.namprd18.prod.outlook.com>
+Date:   Mon, 15 Aug 2022 22:34:44 -0700
+Cc:     linux-perf-users@vger.kernel.org
+To:     olsajiri@gmail.com
+X-Mailer: Apple Mail (2.3696.80.82.1.1)
+X-TMN:  [KfZmp/h1Z06FriQDqwzmXzwa53KjlSMpMxAhyW8BPu7yhlrxfUbXEw==]
+X-ClientProxiedBy: BYAPR21CA0003.namprd21.prod.outlook.com
+ (2603:10b6:a03:114::13) To DM4PR18MB5026.namprd18.prod.outlook.com
+ (2603:10b6:8:51::10)
+X-Microsoft-Original-Message-ID: <A5EEA504-8484-4B59-95B3-3A460633E296@outlook.com>
 MIME-Version: 1.0
-References: <20220815225922.2118745-1-rsilvera@google.com>
-In-Reply-To: <20220815225922.2118745-1-rsilvera@google.com>
-From:   Namhyung Kim <namhyung@kernel.org>
-Date:   Mon, 15 Aug 2022 22:11:41 -0700
-Message-ID: <CAM9d7chU_qSHoN7X=bbDFx=cuXRj08AFLLPH2-DsEHNnxO7qMg@mail.gmail.com>
-Subject: Re: [PATCH v4] perf inject: Add a command line option to specify
- build ids.
-To:     Raul Silvera <rsilvera@google.com>
-Cc:     Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Jiri Olsa <jolsa@kernel.org>,
-        Adrian Hunter <adrian.hunter@intel.com>,
-        James Clark <james.clark@arm.com>,
-        linux-perf-users <linux-perf-users@vger.kernel.org>,
-        linux-kernel <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+X-MS-Exchange-MessageSentRepresentingType: 1
+X-MS-PublicTrafficType: Email
+X-MS-Office365-Filtering-Correlation-Id: 98bac041-6c1d-4390-83c3-08da7f4907eb
+X-MS-TrafficTypeDiagnostic: PH0PR18MB3800:EE_
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info: 7FAUkNbYuXIMGKftEaXAUF8p49cGRx0UMahFJuFKwGFPNGMaR6OaZUNKTVmcX9JMxxJLSG6w2I0JcIXy8113kI6I8ZBpbeGIj8td4hR8oILleR+lXaLKxPNqYoiO12QAmV2IcAsHeUT1Kr8whLorjsWIcBRRSxf5fTsdTsil/s+Xr3lyjvbHOQtWLNGMGSMjODy5Sh8V2bKzCxCCwowrnfO8rcjHFe0nQPdNztnnF3iYiV/Hvz15iRFk3Rywl+Kp2P7ZdlfAs6w4sgsQ6Yoh38cOY6Cand3HIskiyqrR7T9V2j60W1zL1ZeqYb+oz6fmabSH2PBJgZkdI/v/pBj1lAjZIUUWxSU1Zhor8JvSFDebZK3RlrHTunsKiGHY2QHJsEQEkXp1sbvwNLQXlJchuNAnoobDaMO110WK7xIQTfEzVCUrxX5yDf7+fFabiAkowP8+btmwc4UcOaCCs7owIMFf9iw8MEo2XH0qVuZbXRZ93Gn+maQ6AXYQ4Wm0ovx9RCfuf0X4TfSpHgHNI/hWCKeK3m63/9qrr41P7zCIANfx5KEADAVnJt7pxg5soU6d7981qaQ/U2Mh/2KSEc4dqBU/WAPUvrthwtulzNyJmq0Da+vXqd3KvLvjTWoWfHjlO5+pND70KOHpGazMdXNmthyXVwny3xK3tBZzDIP3hcWQB4sLooDqbiwGBdeJFJPx
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0: =?us-ascii?Q?HD3oR2dPbhRS1iRGD1cvJhCwmng/X+fxi5wcok1n/fQiq1lwH8V2q5qtT0gb?=
+ =?us-ascii?Q?R4fcI43vN7jwD+EjXaBCKlKhk27mAVMwQ8JVUWbWRDjeG9NFPoHdqoMgT5sP?=
+ =?us-ascii?Q?p0tV/bqd448SoDCZkFMrP3AgD5i9s/MQB7RPH7Pf+gGSXhgZcMbssTrkqdQB?=
+ =?us-ascii?Q?Zl1OLtOyp7huwk2jpv0i5gco6opoW448qZa2KfzkP1J/Rf4v+TTKDVfoavYf?=
+ =?us-ascii?Q?50FG5g5QNDktvExd1ru4ymOwL6tVq3oHCrDTPZfL3pA/PSVDW3lEHKha5nln?=
+ =?us-ascii?Q?8QFw6eTx7SYcXKlGDdaAqIAZ9s+aED2BhcIbbMKMzkoGhjUiZOoJRRKDFZqf?=
+ =?us-ascii?Q?EbPpOoRYG30iFM4sKevguJJdJx25lH8ms+N9XIjcMuVtGe5CIUmDPmdUMPrB?=
+ =?us-ascii?Q?hu6h/v98OkOnuhYyJbVfDdgHosaWknQavD0ybsSN4p36k+S7u49L0zSGFd9K?=
+ =?us-ascii?Q?PgPKGmUSb7p+Bm0V6osCY7NLRDFd2qhDexKwgxvXYS0WGPeJqG//JH6qUGBI?=
+ =?us-ascii?Q?pzd2X/gZ5kfL0VQAGomG2Z6vXCSZ6vgx+7S0Zdju5gA00IDUOUm7uyFsRrNp?=
+ =?us-ascii?Q?vex4wNndfwUruKWpBvJRberHMEAPixXNUALa9KXyUp0S7PXvOvILWl7YVRtl?=
+ =?us-ascii?Q?NNbPICZWc1ExC686BjLtXn9CnKBx8GSa3iWQLWYguNjgQkYpFiO95JuJ/WCQ?=
+ =?us-ascii?Q?bwmoyUua0nWPLuc21+L+3rYmpigs0k6BzxW/ExPZAKXJb3aOVlAekusbLBD7?=
+ =?us-ascii?Q?4IcQOnX24qP3F0jS2D23XKrNXZQW9MhOpDmq/qGlxaSnbq0FErCZ3vaFFeDx?=
+ =?us-ascii?Q?LTDwscJFxma6JopSzaa98oeM+FiqVPmJgdyhMbrS7+twn7IAiFTF369nk/Rt?=
+ =?us-ascii?Q?gRMJJMwk0DtGgVx3nacFwcI+STWCA25AHriTotd8isBJupvzGYDgExp6j8T5?=
+ =?us-ascii?Q?Dc03ME794QB2EdmfZanZeGL8u1WSB8Ut8U8aD8ghSXF1YWzBjYdZ1aDzyHf8?=
+ =?us-ascii?Q?O9vnZbZEob5tfe64TgDR9til0bqmEDhlN1XPi9IsZ07XgHKlavyCmT32IF90?=
+ =?us-ascii?Q?iyWXGcbBHJmSlFp0GTiDXiY2h0vTVJDbxnTBCI5SW/IoV4CDZYh2YdtAlWMK?=
+ =?us-ascii?Q?K9QBNvB8xTSSoctrkoCWhSNku4FsWehNwbG9GuSNohU8aPSjq5xVw4EGv9AX?=
+ =?us-ascii?Q?UvKLUEP90WpIDF9qdiLQRQrq/W/IIpbHgMjezEi+txflO8xFX2QCuR3uvKeU?=
+ =?us-ascii?Q?P8GJHQk/GWh9QTJENMAoiA10Em34esO0zI3XLTB1ATq4vZ3xYzB/ZCw7NFex?=
+ =?us-ascii?Q?eJgrJvHijzzmUsaZ7nitAggR?=
+X-OriginatorOrg: outlook.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 98bac041-6c1d-4390-83c3-08da7f4907eb
+X-MS-Exchange-CrossTenant-AuthSource: DM4PR18MB5026.namprd18.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 16 Aug 2022 05:34:47.1961
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 84df9e7f-e9f6-40af-b435-aaaaaaaaaaaa
+X-MS-Exchange-CrossTenant-RMS-PersistedConsumerOrg: 00000000-0000-0000-0000-000000000000
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: PH0PR18MB3800
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-Hello,
-
-On Mon, Aug 15, 2022 at 3:59 PM Raul Silvera <rsilvera@google.com> wrote:
->
-> This commit adds the option --known-build-ids to perf inject.
-> It allows the user to explicitly specify the build id for a given
-> path, instead of retrieving it from the current system. This is
-> useful in cases where a perf.data file is processed on a different
-> system from where it was collected, or if some of the binaries are
-> no longer available.
->
-> The build ids and paths are specified in pairs in the command line.
-> Using the file:// specifier, build ids can be loaded from a file
-> directly generated by perf buildid-list. This is convenient to copy
-> build ids from one perf.data file to another.
->
-> ** Example: In this example we use perf record to create two
-> perf.data files, one with build ids and another without, and use
-> perf buildid-list and perf inject to copy the build ids from the
-> first file to the second.
->
->  $ perf record ls /tmp
->  $ perf record --no-buildid -o perf.data.no-buildid ls /tmp
->  $ perf buildid-list > build-ids.txt
->  $ perf inject -b --known-build-ids='file://build-ids.txt' \
->         -i perf.data.no-buildid -o perf.data.buildid
->
-> Signed-off-by: Raul Silvera <rsilvera@google.com>
-
-Acked-by: Namhyung Kim <namhyung@kernel.org>
-
-Thanks,
-Namhyung
-
-
-> ---
->
->   V3 -> V4: Perform upfront validation of build ids
->   V2 -> V3: Added documentation and removed unnecessary temps
->   V1 -> V2: Cleaned up patch description, deleted the strlist during
->             cleanup, and updated validation of the build id strings
->
->  tools/perf/Documentation/perf-inject.txt |  7 +-
->  tools/perf/builtin-inject.c              | 85 ++++++++++++++++++++++++
->  2 files changed, 91 insertions(+), 1 deletion(-)
->
-> diff --git a/tools/perf/Documentation/perf-inject.txt b/tools/perf/Documentation/perf-inject.txt
-> index ffc293fdf61d..70e2ac3cc91a 100644
-> --- a/tools/perf/Documentation/perf-inject.txt
-> +++ b/tools/perf/Documentation/perf-inject.txt
-> @@ -27,9 +27,14 @@ OPTIONS
->  --build-ids::
->          Inject build-ids into the output stream
->
-> ---buildid-all:
-> +--buildid-all::
->         Inject build-ids of all DSOs into the output stream
->
-> +--known-build-ids=::
-> +       Override build-ids to inject using these comma-separated pairs of
-> +       build-id and path. Understands file://filename to read these pairs
-> +       from a file, which can be generated with perf buildid-list.
-> +
->  -v::
->  --verbose::
->         Be more verbose.
-> diff --git a/tools/perf/builtin-inject.c b/tools/perf/builtin-inject.c
-> index 2a0f992ca0be..8ec955402488 100644
-> --- a/tools/perf/builtin-inject.c
-> +++ b/tools/perf/builtin-inject.c
-> @@ -21,6 +21,7 @@
->  #include "util/data.h"
->  #include "util/auxtrace.h"
->  #include "util/jit.h"
-> +#include "util/string2.h"
->  #include "util/symbol.h"
->  #include "util/synthetic-events.h"
->  #include "util/thread.h"
-> @@ -38,6 +39,7 @@
->  #include <linux/string.h>
->  #include <linux/zalloc.h>
->  #include <linux/hash.h>
-> +#include <ctype.h>
->  #include <errno.h>
->  #include <signal.h>
->  #include <inttypes.h>
-> @@ -123,6 +125,7 @@ struct perf_inject {
->         char                    event_copy[PERF_SAMPLE_MAX_SIZE];
->         struct perf_file_section secs[HEADER_FEAT_BITS];
->         struct guest_session    guest_session;
-> +       struct strlist          *known_build_ids;
->  };
->
->  struct event_entry {
-> @@ -634,9 +637,73 @@ static int dso__read_build_id(struct dso *dso)
->         return dso->has_build_id ? 0 : -1;
->  }
->
-> +static struct strlist *perf_inject__parse_known_build_ids(
-> +       const char *known_build_ids_string)
-> +{
-> +       struct str_node *pos, *tmp;
-> +       struct strlist *known_build_ids;
-> +       int bid_len;
-> +
-> +       known_build_ids = strlist__new(known_build_ids_string, NULL);
-> +       if (known_build_ids == NULL)
-> +               return NULL;
-> +       strlist__for_each_entry_safe(pos, tmp, known_build_ids) {
-> +               const char *build_id, *dso_name;
-> +
-> +               build_id = skip_spaces(pos->s);
-> +               dso_name = strchr(build_id, ' ');
-> +               if (dso_name == NULL) {
-> +                       strlist__remove(known_build_ids, pos);
-> +                       continue;
-> +               }
-> +               bid_len = dso_name - pos->s;
-> +               dso_name = skip_spaces(dso_name);
-> +               if (bid_len % 2 != 0 || bid_len >= SBUILD_ID_SIZE) {
-> +                       strlist__remove(known_build_ids, pos);
-> +                       continue;
-> +               }
-> +               for (int ix = 0; 2 * ix + 1 < bid_len; ++ix) {
-> +                       if (!isxdigit(build_id[2 * ix]) ||
-> +                           !isxdigit(build_id[2 * ix + 1])) {
-> +                               strlist__remove(known_build_ids, pos);
-> +                               break;
-> +                       }
-> +               }
-> +       }
-> +       return known_build_ids;
-> +}
-> +
-> +static bool perf_inject__lookup_known_build_id(struct perf_inject *inject,
-> +                                              struct dso *dso)
-> +{
-> +       struct str_node *pos;
-> +       int bid_len;
-> +
-> +       strlist__for_each_entry(pos, inject->known_build_ids) {
-> +               const char *build_id, *dso_name;
-> +
-> +               build_id = skip_spaces(pos->s);
-> +               dso_name = strchr(build_id, ' ');
-> +               bid_len = dso_name - pos->s;
-> +               dso_name = skip_spaces(dso_name);
-> +               if (strcmp(dso->long_name, dso_name))
-> +                       continue;
-> +               for (int ix = 0; 2 * ix + 1 < bid_len; ++ix) {
-> +                       dso->bid.data[ix] = (hex(build_id[2 * ix]) << 4 |
-> +                                            hex(build_id[2 * ix + 1]));
-> +               }
-> +               dso->bid.size = bid_len / 2;
-> +               dso->has_build_id = 1;
-> +               return true;
-> +       }
-> +       return false;
-> +}
-> +
->  static int dso__inject_build_id(struct dso *dso, struct perf_tool *tool,
->                                 struct machine *machine, u8 cpumode, u32 flags)
->  {
-> +       struct perf_inject *inject = container_of(tool, struct perf_inject,
-> +                                                 tool);
->         int err;
->
->         if (is_anon_memory(dso->long_name) || flags & MAP_HUGETLB)
-> @@ -644,6 +711,10 @@ static int dso__inject_build_id(struct dso *dso, struct perf_tool *tool,
->         if (is_no_dso_memory(dso->long_name))
->                 return 0;
->
-> +       if (inject->known_build_ids != NULL &&
-> +           perf_inject__lookup_known_build_id(inject, dso))
-> +               return 1;
-> +
->         if (dso__read_build_id(dso) < 0) {
->                 pr_debug("no build_id found for %s\n", dso->long_name);
->                 return -1;
-> @@ -2112,12 +2183,16 @@ int cmd_inject(int argc, const char **argv)
->         };
->         int ret;
->         bool repipe = true;
-> +       const char *known_build_ids = NULL;
->
->         struct option options[] = {
->                 OPT_BOOLEAN('b', "build-ids", &inject.build_ids,
->                             "Inject build-ids into the output stream"),
->                 OPT_BOOLEAN(0, "buildid-all", &inject.build_id_all,
->                             "Inject build-ids of all DSOs into the output stream"),
-> +               OPT_STRING(0, "known-build-ids", &known_build_ids,
-> +                          "buildid path [,buildid path...]",
-> +                          "build-ids to use for given paths"),
->                 OPT_STRING('i', "input", &inject.input_name, "file",
->                            "input file name"),
->                 OPT_STRING('o', "output", &inject.output.path, "file",
-> @@ -2257,6 +2332,15 @@ int cmd_inject(int argc, const char **argv)
->                  */
->                 inject.tool.ordered_events = true;
->                 inject.tool.ordering_requires_timestamps = true;
-> +               if (known_build_ids != NULL) {
-> +                       inject.known_build_ids =
-> +                               perf_inject__parse_known_build_ids(known_build_ids);
-> +
-> +                       if (inject.known_build_ids == NULL) {
-> +                               pr_err("Couldn't parse known build ids.\n");
-> +                               goto out_delete;
-> +                       }
-> +               }
->         }
->
->         if (inject.sched_stat) {
-> @@ -2285,6 +2369,7 @@ int cmd_inject(int argc, const char **argv)
->         guest_session__exit(&inject.guest_session);
->
->  out_delete:
-> +       strlist__delete(inject.known_build_ids);
->         zstd_fini(&(inject.session->zstd_data));
->         perf_session__delete(inject.session);
->  out_close_output:
-> --
-> 2.37.1.595.g718a3a8f04-goog
->
+You fix works, thanks! Are you going to commit it?
