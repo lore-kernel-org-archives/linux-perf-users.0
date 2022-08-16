@@ -2,98 +2,200 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6BBABC38142
-	for <linux-perf-users@archiver.kernel.org>; Tue, 16 Aug 2022 13:01:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1F132C2BB41
+	for <linux-perf-users@archiver.kernel.org>; Tue, 16 Aug 2022 13:20:11 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232682AbiHPNBF (ORCPT
+        id S234148AbiHPNUI (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Tue, 16 Aug 2022 09:01:05 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37046 "EHLO
+        Tue, 16 Aug 2022 09:20:08 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48014 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S234305AbiHPNAS (ORCPT
+        with ESMTP id S235463AbiHPNTx (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Tue, 16 Aug 2022 09:00:18 -0400
-Received: from szxga01-in.huawei.com (szxga01-in.huawei.com [45.249.212.187])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 630D6B2DB0;
-        Tue, 16 Aug 2022 05:59:57 -0700 (PDT)
-Received: from canpemm500009.china.huawei.com (unknown [172.30.72.57])
-        by szxga01-in.huawei.com (SkyGuard) with ESMTP id 4M6WQb0xGbzmVm6;
-        Tue, 16 Aug 2022 20:57:43 +0800 (CST)
-Received: from localhost.localdomain (10.67.164.66) by
- canpemm500009.china.huawei.com (7.192.105.203) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2375.24; Tue, 16 Aug 2022 20:59:53 +0800
-From:   Yicong Yang <yangyicong@huawei.com>
-To:     <acme@kernel.org>, <peterz@infradead.org>,
-        <alexander.shishkin@linux.intel.com>, <leo.yan@linaro.org>,
-        <james.clark@arm.com>, <will@kernel.org>,
-        <mathieu.poirier@linaro.org>, <mark.rutland@arm.com>,
-        <suzuki.poulose@arm.com>, <jonathan.cameron@huawei.com>,
-        <john.garry@huawei.com>, <mike.leach@linaro.org>
-CC:     <gregkh@linuxfoundation.org>, <helgaas@kernel.org>,
-        <lorenzo.pieralisi@arm.com>,
-        <shameerali.kolothum.thodi@huawei.com>, <mingo@redhat.com>,
-        <linux-kernel@vger.kernel.org>,
-        <linux-arm-kernel@lists.infradead.org>,
-        <linux-pci@vger.kernel.org>, <linux-perf-users@vger.kernel.org>,
-        <prime.zeng@huawei.com>, <zhangshaokun@hisilicon.com>,
-        <linuxarm@huawei.com>, <yangyicong@hisilicon.com>
-Subject: [PATCH v12 0/3] Add perf support for HiSilicon PCIe Tune and Trace device
-Date:   Tue, 16 Aug 2022 20:57:54 +0800
-Message-ID: <20220816125757.60302-1-yangyicong@huawei.com>
-X-Mailer: git-send-email 2.31.0
+        Tue, 16 Aug 2022 09:19:53 -0400
+Received: from mail-ed1-x52f.google.com (mail-ed1-x52f.google.com [IPv6:2a00:1450:4864:20::52f])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id EB85DF0;
+        Tue, 16 Aug 2022 06:19:23 -0700 (PDT)
+Received: by mail-ed1-x52f.google.com with SMTP id s11so13417125edd.13;
+        Tue, 16 Aug 2022 06:19:23 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20210112;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:date:from:from:to:cc;
+        bh=qmHSiAZVfahNJyGDQHqY9RH0z385W5MNqPmTHwP/rM0=;
+        b=RxFatrzfZbS95Eg3KXfsn18/tlkBlSKOXix79F8ldtLP7WNS4nnyylSkfkbNfZAyXa
+         XNexvzCa0kZ2tW6DXUqWbXxlujxiLZ36wZ8LF6eYjxjWUmXADth7ljPGSsOili4BQ7to
+         FEPC1bv/9wkt0GBW2Ug4ncOm3bn2wflANsD7PU4yZ6Q7mXqTozTZEZisoTtNhIwKGstH
+         Hgv9PLnDxiyUsAcCa6ndeYF7DR1i9A+ntaEQ2QyNGHtlukeVvA87ntPIaz3rx+p9dsgv
+         9fNcxM4FdP9HC6xNeVmCxcE0YgeSlEhuy5j9lNesX9XZ5sy5SyBwMH+LCRqmC81rwjPY
+         DNdg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:date:from:x-gm-message-state:from:to:cc;
+        bh=qmHSiAZVfahNJyGDQHqY9RH0z385W5MNqPmTHwP/rM0=;
+        b=vH8kC9TI18gzNknpRMTfjN/nn5aqE2qseXBN91x4Q0qZvP9lMzSlkYuHp9m7P9TjR1
+         YuTulef/petl4oZqFwyScxc18ao0ywC4QLViqctacfRgnhPUfpdxJ5N/32lLiWDc0KnO
+         b9aSPrBXi3xMyd41Mc79Ay3diJYiwWoS2WWYPvWRySHLuz4lZFMXkmwC6PkqE6EMqeh9
+         bo+2iH1Sr2W3hijQE+jEAXJHjl3PMXjVj6BWqhwmAd+p7ctLFn5O33LwOsTyi2MvoJ6t
+         98QU7+y6Pp3QsszlM5J21ewwq9blpPPCExTtVMl5SWq/J58usgB/1hOFXPRGKZ19qLYN
+         vWoQ==
+X-Gm-Message-State: ACgBeo3pTaE1OQHLKhDA9pJq3X/mVLxCbkj/ThSiHtYdHTChAJGo16k9
+        MWl/9zusfoln2lUbC8CWkWpcGU4h3zebyQ==
+X-Google-Smtp-Source: AA6agR5eqJMOuTyl7XBOWuq4mnBTsgrS/8h6hKrqf/TqzZKKZ0DHsNBaBwulO3l1ROSFKn9qUoxcYg==
+X-Received: by 2002:a05:6402:3492:b0:43e:9666:ece2 with SMTP id v18-20020a056402349200b0043e9666ece2mr19078057edc.65.1660655962362;
+        Tue, 16 Aug 2022 06:19:22 -0700 (PDT)
+Received: from krava ([193.85.244.190])
+        by smtp.gmail.com with ESMTPSA id l13-20020a1709066b8d00b007262b9f7120sm5281259ejr.167.2022.08.16.06.19.21
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 16 Aug 2022 06:19:22 -0700 (PDT)
+From:   Jiri Olsa <olsajiri@gmail.com>
+X-Google-Original-From: Jiri Olsa <jolsa@kernel.org>
+Date:   Tue, 16 Aug 2022 15:19:20 +0200
+To:     Namhyung Kim <namhyung@kernel.org>
+Cc:     Arnaldo Carvalho de Melo <acme@kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Ian Rogers <irogers@google.com>,
+        linux-perf-users@vger.kernel.org
+Subject: Re: [PATCH 2/4] tools lib perf: Handle read format in
+ perf_evsel__read()
+Message-ID: <YvuZWAzsBVo/l9sf@krava>
+References: <20220815190106.1293082-1-namhyung@kernel.org>
+ <20220815190106.1293082-3-namhyung@kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7BIT
-Content-Type:   text/plain; charset=US-ASCII
-X-Originating-IP: [10.67.164.66]
-X-ClientProxiedBy: dggems702-chm.china.huawei.com (10.3.19.179) To
- canpemm500009.china.huawei.com (7.192.105.203)
-X-CFilter-Loop: Reflected
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20220815190106.1293082-3-namhyung@kernel.org>
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-From: Yicong Yang <yangyicong@hisilicon.com>
+On Mon, Aug 15, 2022 at 12:01:04PM -0700, Namhyung Kim wrote:
+> The perf_counts_values should be increased to read the new lost data.
+> Also adjust values after read according the read format.
+> 
+> This supports PERF_FORMAT_GROUP which has a different data format but
+> it's only available for leader events.  Currently it doesn't have an API
+> to read sibling (member) events in the group.  But users may read the
+> sibling event directly.
+> 
+> Also reading from mmap would be disabled when the read format has ID or
+> LOST bit as it's not exposed via mmap.
+> 
+> Signed-off-by: Namhyung Kim <namhyung@kernel.org>
+> ---
+>  tools/lib/perf/evsel.c              | 72 +++++++++++++++++++++++++++++
+>  tools/lib/perf/include/perf/event.h |  3 +-
+>  tools/lib/perf/include/perf/evsel.h |  4 +-
+>  3 files changed, 77 insertions(+), 2 deletions(-)
+> 
+> diff --git a/tools/lib/perf/evsel.c b/tools/lib/perf/evsel.c
+> index 952f3520d5c2..fc23670231cb 100644
+> --- a/tools/lib/perf/evsel.c
+> +++ b/tools/lib/perf/evsel.c
+> @@ -305,6 +305,9 @@ int perf_evsel__read_size(struct perf_evsel *evsel)
+>  	if (read_format & PERF_FORMAT_ID)
+>  		entry += sizeof(u64);
+>  
+> +	if (read_format & PERF_FORMAT_LOST)
+> +		entry += sizeof(u64);
+> +
+>  	if (read_format & PERF_FORMAT_GROUP) {
+>  		nr = evsel->nr_members;
+>  		size += sizeof(u64);
+> @@ -314,24 +317,93 @@ int perf_evsel__read_size(struct perf_evsel *evsel)
+>  	return size;
+>  }
+>  
+> +/* This only reads values for the leader */
+> +static int perf_evsel__read_group(struct perf_evsel *evsel, int cpu_map_idx,
+> +				  int thread, struct perf_counts_values *count)
+> +{
+> +	size_t size = perf_evsel__read_size(evsel);
+> +	int *fd = FD(evsel, cpu_map_idx, thread);
+> +	u64 read_format = evsel->attr.read_format;
+> +	u64 *data;
+> +	int idx = 1;
+> +
+> +	if (fd == NULL || *fd < 0)
+> +		return -EINVAL;
+> +
+> +	data = calloc(1, size);
+> +	if (data == NULL)
+> +		return -ENOMEM;
+> +
+> +	if (readn(*fd, data, size) <= 0) {
+> +		free(data);
+> +		return -errno;
+> +	}
 
-This patchset adds the perf tool support for HiSilicon PCIe Tune and Trace
-device [1]. The device driver makes use of perf AUX trace for tracing
-TLP(Transaction Layer Packet) headers of PCIe. The trace can be used by
-`perf record` and the traced data can be decoded by `perf report` with
-this patchset. The detailed usage is documented in [1].
+could you please put in here some comment that this is intentionaly
+reading only the leader or better yet rename the function? I was lost
+before I got to read the changelog ;-)
 
-This is split from the v11 series as suggested to send driver part and
-perf tool part separately. The perf tool part has no change since v11.
-The whole changelog can be found at [2].
+> +
+> +	if (read_format & PERF_FORMAT_TOTAL_TIME_ENABLED)
+> +		count->ena = data[idx++];
+> +	if (read_format & PERF_FORMAT_TOTAL_TIME_RUNNING)
+> +		count->run = data[idx++];
+> +
+> +	/* value is always available */
+> +	count->val = data[idx++];
+> +	if (read_format & PERF_FORMAT_ID)
+> +		count->id = data[idx++];
+> +	if (read_format & PERF_FORMAT_LOST)
+> +		count->lost = data[idx++];
+> +
+> +	free(data);
+> +	return 0;
+> +}
+> +
+> +/*
+> + * The perf read format is very flexible.  It needs to set the proper
+> + * values according to the read format.
+> + */
+> +static void perf_evsel__adjust_values(struct perf_evsel *evsel,
+> +				      struct perf_counts_values *count)
+> +{
+> +	u64 read_format = evsel->attr.read_format;
+> +
+> +	if (!(read_format & PERF_FORMAT_TOTAL_TIME_ENABLED)) {
+> +		memmove(&count->values[2], &count->values[1], 24);
+> +		count->ena = 0;
+> +	}
+> +
+> +	if (!(read_format & PERF_FORMAT_TOTAL_TIME_RUNNING)) {
+> +		memmove(&count->values[3], &count->values[2], 16);
+> +		count->run = 0;
+> +	}
+> +
+> +	if (!(read_format & PERF_FORMAT_ID)) {
+> +		memmove(&count->values[4], &count->values[3], 8);
+> +		count->id = 0;
+> +	}
+> +}
 
-[1] https://lore.kernel.org/lkml/20220816114414.4092-5-yangyicong@huawei.com/
-[2] https://lore.kernel.org/lkml/20220816114414.4092-1-yangyicong@huawei.com/
 
-Qi Liu (3):
-  perf tool: arm: Refactor event list iteration in
-    auxtrace_record__init()
-  perf tool: Add support for HiSilicon PCIe Tune and Trace device driver
-  perf tool: Add support for parsing HiSilicon PCIe Trace packet
+could we do this the same way we read group counters.. like make read
+into local buffer and initialize perf_counts_values values based on
+format, something like:
 
- tools/perf/arch/arm/util/auxtrace.c           | 116 +++++++++--
- tools/perf/arch/arm/util/pmu.c                |   3 +
- tools/perf/arch/arm64/util/Build              |   2 +-
- tools/perf/arch/arm64/util/hisi-ptt.c         | 188 +++++++++++++++++
- tools/perf/util/Build                         |   2 +
- tools/perf/util/auxtrace.c                    |   4 +
- tools/perf/util/auxtrace.h                    |   1 +
- tools/perf/util/hisi-ptt-decoder/Build        |   1 +
- .../hisi-ptt-decoder/hisi-ptt-pkt-decoder.c   | 164 +++++++++++++++
- .../hisi-ptt-decoder/hisi-ptt-pkt-decoder.h   |  31 +++
- tools/perf/util/hisi-ptt.c                    | 192 ++++++++++++++++++
- tools/perf/util/hisi-ptt.h                    |  19 ++
- 12 files changed, 703 insertions(+), 20 deletions(-)
- create mode 100644 tools/perf/arch/arm64/util/hisi-ptt.c
- create mode 100644 tools/perf/util/hisi-ptt-decoder/Build
- create mode 100644 tools/perf/util/hisi-ptt-decoder/hisi-ptt-pkt-decoder.c
- create mode 100644 tools/perf/util/hisi-ptt-decoder/hisi-ptt-pkt-decoder.h
- create mode 100644 tools/perf/util/hisi-ptt.c
- create mode 100644 tools/perf/util/hisi-ptt.h
+        readn(fd, data ...
 
--- 
-2.24.0
+        if (read_format & PERF_FORMAT_TOTAL_TIME_ENABLED)
+                count->ena = data[idx++];
+        if (read_format & PERF_FORMAT_TOTAL_TIME_RUNNING)
+                count->run = data[idx++];
 
+        /* value is always available */
+        count->val = data[idx++];
+        if (read_format & PERF_FORMAT_ID)
+                count->id = data[idx++];
+        if (read_format & PERF_FORMAT_LOST)
+                count->lost = data[idx++];
+
+
+and perhaps we should cancel that perf_counts_values's union and keep
+only 'val/ena/run...' fields?
+
+jirka
