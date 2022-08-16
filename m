@@ -2,38 +2,29 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9D020C25B0E
-	for <linux-perf-users@archiver.kernel.org>; Tue, 16 Aug 2022 15:31:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1191AC25B0E
+	for <linux-perf-users@archiver.kernel.org>; Tue, 16 Aug 2022 16:40:08 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232500AbiHPPbz (ORCPT
+        id S236567AbiHPQkH (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Tue, 16 Aug 2022 11:31:55 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48578 "EHLO
+        Tue, 16 Aug 2022 12:40:07 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43654 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231589AbiHPPby (ORCPT
+        with ESMTP id S235798AbiHPQkB (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Tue, 16 Aug 2022 11:31:54 -0400
-Received: from casper.infradead.org (casper.infradead.org [IPv6:2001:8b0:10b:1236::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 45E23DE5;
-        Tue, 16 Aug 2022 08:31:52 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=casper.20170209; h=In-Reply-To:Content-Type:MIME-Version:
-        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description;
-        bh=piB87MH4BnL8/sCpyrwH73dQ4LrdevKm9iNdDHRtn8Y=; b=bw0i6sQhn+gqtiCOs5StixYStC
-        CpXdFygGFVg81kotcMz0zpZfp1orva5SUyaaSpE/9SgPn/iMiE2RIqQDnb3218YiID1zFa1Asbcjd
-        N99U2xyH3JkgeGDKK3jndKfTxtqQt6NFQcfZZldLdXYxSMTPp+6MdVLXi85kXUxV1xIQCAlIHPoa9
-        Uf8XGn8ayjr3g7bE9+tMRVvRzbmJ0/NygNTGj6DPo+SodWqXVALg5vct8el1pMe345NMCBYcogyFA
-        gYS2f0mH/lsidFU/IlkEwqi0o8JBiv0PaC/dBipLFFM/NZLTveRIySXHqPQewh0ruP3OYm8/mXH3j
-        KyqlAjnw==;
-Received: from j130084.upc-j.chello.nl ([24.132.130.84] helo=worktop.programming.kicks-ass.net)
-        by casper.infradead.org with esmtpsa (Exim 4.94.2 #2 (Red Hat Linux))
-        id 1oNyXR-00756X-AE; Tue, 16 Aug 2022 15:31:29 +0000
-Received: by worktop.programming.kicks-ass.net (Postfix, from userid 1000)
-        id 2E882980120; Tue, 16 Aug 2022 17:31:27 +0200 (CEST)
-Date:   Tue, 16 Aug 2022 17:31:27 +0200
-From:   Peter Zijlstra <peterz@infradead.org>
-To:     Mark Rutland <mark.rutland@arm.com>
+        Tue, 16 Aug 2022 12:40:01 -0400
+Received: from foss.arm.com (foss.arm.com [217.140.110.172])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTP id EE6137F10E;
+        Tue, 16 Aug 2022 09:39:59 -0700 (PDT)
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 4D446106F;
+        Tue, 16 Aug 2022 09:40:00 -0700 (PDT)
+Received: from FVFF77S0Q05N (unknown [10.57.44.6])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id C99633F67D;
+        Tue, 16 Aug 2022 09:39:57 -0700 (PDT)
+Date:   Tue, 16 Aug 2022 17:39:54 +0100
+From:   Mark Rutland <mark.rutland@arm.com>
+To:     Peter Zijlstra <peterz@infradead.org>
 Cc:     Yang Jihong <yangjihong1@huawei.com>, rostedt@goodmis.org,
         mingo@redhat.com, acme@kernel.org,
         alexander.shishkin@linux.intel.com, jolsa@kernel.org,
@@ -41,69 +32,79 @@ Cc:     Yang Jihong <yangjihong1@huawei.com>, rostedt@goodmis.org,
         linux-perf-users@vger.kernel.org
 Subject: Re: [PATCH v3] perf/core: Fix reentry problem in
  perf_output_read_group
-Message-ID: <Yvu4TyFmeOd/rJ8t@worktop.programming.kicks-ass.net>
+Message-ID: <YvvIWmDBWdIUCMZj@FVFF77S0Q05N>
 References: <20220816091103.257702-1-yangjihong1@huawei.com>
  <YvumDL1qz1NjpfEC@worktop.programming.kicks-ass.net>
  <Yvuvm7Onw3pmB9Z6@FVFF77S0Q05N>
+ <Yvu4TyFmeOd/rJ8t@worktop.programming.kicks-ass.net>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <Yvuvm7Onw3pmB9Z6@FVFF77S0Q05N>
+In-Reply-To: <Yvu4TyFmeOd/rJ8t@worktop.programming.kicks-ass.net>
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-On Tue, Aug 16, 2022 at 03:54:19PM +0100, Mark Rutland wrote:
-> > diff --git a/include/linux/perf_event.h b/include/linux/perf_event.h
-> > index ee8b9ecdc03b..d4d53b9ba71e 100644
-> > --- a/include/linux/perf_event.h
-> > +++ b/include/linux/perf_event.h
-> > @@ -631,7 +631,12 @@ struct pmu_event_list {
-> >  	struct list_head	list;
-> >  };
-> >  
-> > +/*
-> > + * Iterating the sibling list requires this list to be stable; by ensuring IRQs
-> > + * are disabled IPIs from perf_{install_in,remove_from}_context() are held off.
-> > + */
-> >  #define for_each_sibling_event(sibling, event)			\
-> > +	lockdep_assert_irqs_disabled();				\
-> >  	if ((event)->group_leader == (event))			\
-> >  		list_for_each_entry((sibling), &(event)->sibling_list, sibling_list)
-> >  
+On Tue, Aug 16, 2022 at 05:31:27PM +0200, Peter Zijlstra wrote:
+> On Tue, Aug 16, 2022 at 03:54:19PM +0100, Mark Rutland wrote:
+> > > diff --git a/include/linux/perf_event.h b/include/linux/perf_event.h
+> > > index ee8b9ecdc03b..d4d53b9ba71e 100644
+> > > --- a/include/linux/perf_event.h
+> > > +++ b/include/linux/perf_event.h
+> > > @@ -631,7 +631,12 @@ struct pmu_event_list {
+> > >  	struct list_head	list;
+> > >  };
+> > >  
+> > > +/*
+> > > + * Iterating the sibling list requires this list to be stable; by ensuring IRQs
+> > > + * are disabled IPIs from perf_{install_in,remove_from}_context() are held off.
+> > > + */
+> > >  #define for_each_sibling_event(sibling, event)			\
+> > > +	lockdep_assert_irqs_disabled();				\
+> > >  	if ((event)->group_leader == (event))			\
+> > >  		list_for_each_entry((sibling), &(event)->sibling_list, sibling_list)
+> > >  
+> > 
+> > I had a go with v6.0-rc1 and Vince's perf fuzzer immediately triggered a bunch
+> > of cases (dump below).
+> > 
+> > I had thought holding the context mutex protected some of these cases, even
+> > with IRQs unmasked?
 > 
-> I had a go with v6.0-rc1 and Vince's perf fuzzer immediately triggered a bunch
-> of cases (dump below).
+> Ah yes.. duh. How's this then?
 > 
-> I had thought holding the context mutex protected some of these cases, even
-> with IRQs unmasked?
+> 
+> diff --git a/include/linux/perf_event.h b/include/linux/perf_event.h
+> index ee8b9ecdc03b..4d9cf508c510 100644
+> --- a/include/linux/perf_event.h
+> +++ b/include/linux/perf_event.h
+> @@ -631,7 +631,21 @@ struct pmu_event_list {
+>  	struct list_head	list;
+>  };
+>  
+> +#ifdef CONFIG_LOCKDEP
+> +#define LOCKDEP_ASSERT_EVENT_CTX(event)				\
+> +	WARN_ON_ONCE(__lockdep_enabled &&			\
+> +		     (this_cpu_read(hardirqs_enabled) ||	\
+> +		      lockdep_is_held(&(event)->ctx->mutex) != LOCK_STATE_HELD))
 
-Ah yes.. duh. How's this then?
+Uh, should that `||` be `&&`, or am I missing the plot?
 
+This'll warn if IRQs are enabled regardless of whether the mutex is held.
 
-diff --git a/include/linux/perf_event.h b/include/linux/perf_event.h
-index ee8b9ecdc03b..4d9cf508c510 100644
---- a/include/linux/perf_event.h
-+++ b/include/linux/perf_event.h
-@@ -631,7 +631,21 @@ struct pmu_event_list {
- 	struct list_head	list;
- };
- 
-+#ifdef CONFIG_LOCKDEP
-+#define LOCKDEP_ASSERT_EVENT_CTX(event)				\
-+	WARN_ON_ONCE(__lockdep_enabled &&			\
-+		     (this_cpu_read(hardirqs_enabled) ||	\
-+		      lockdep_is_held(&(event)->ctx->mutex) != LOCK_STATE_HELD))
-+#else
-+#define LOCKDEP_ASSERT_EVENT_CTX(event)
-+#endif
-+
-+/*
-+ * Iterating the sibling list requires this list to be stable; by ensuring IRQs
-+ * are disabled IPIs from perf_{install_in,remove_from}_context() are held off.
-+ */
- #define for_each_sibling_event(sibling, event)			\
-+	LOCKDEP_ASSERT_EVENT_CTX(event);			\
- 	if ((event)->group_leader == (event))			\
- 		list_for_each_entry((sibling), &(event)->sibling_list, sibling_list)
- 
+Thanks,
+Mark.
+
+> +#else
+> +#define LOCKDEP_ASSERT_EVENT_CTX(event)
+> +#endif
+> +
+> +/*
+> + * Iterating the sibling list requires this list to be stable; by ensuring IRQs
+> + * are disabled IPIs from perf_{install_in,remove_from}_context() are held off.
+> + */
+>  #define for_each_sibling_event(sibling, event)			\
+> +	LOCKDEP_ASSERT_EVENT_CTX(event);			\
+>  	if ((event)->group_leader == (event))			\
+>  		list_for_each_entry((sibling), &(event)->sibling_list, sibling_list)
+>  
