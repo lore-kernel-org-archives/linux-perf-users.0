@@ -2,141 +2,180 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7EF9CC25B08
-	for <linux-perf-users@archiver.kernel.org>; Wed, 17 Aug 2022 05:24:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A6D30C25B08
+	for <linux-perf-users@archiver.kernel.org>; Wed, 17 Aug 2022 05:39:38 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229807AbiHQFYU (ORCPT
+        id S238388AbiHQFjh (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Wed, 17 Aug 2022 01:24:20 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46696 "EHLO
+        Wed, 17 Aug 2022 01:39:37 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58364 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229758AbiHQFYU (ORCPT
+        with ESMTP id S230034AbiHQFjg (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Wed, 17 Aug 2022 01:24:20 -0400
-Received: from mga01.intel.com (mga01.intel.com [192.55.52.88])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C6C3E5FAC;
-        Tue, 16 Aug 2022 22:24:18 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1660713858; x=1692249858;
-  h=message-id:date:mime-version:subject:to:cc:references:
-   from:in-reply-to:content-transfer-encoding;
-  bh=RuOw0a+zfDrSKH3bQpTCct6nUD3o/er6utR/T/sgNW4=;
-  b=i44bWr4SYMqooJj+0tczklLNYGRvSyLPkORK4eLX6Sxk/1WAw9ykYDAB
-   zZyjeaTgn9kftaDVQSPyba4i8NuSUX7ic+vfoOFdhfdV0d2BtA4l12h1Z
-   CMKj6pG6X9zXhlKo0BIj9y49nzQTbS2YzyMqHFkc2mx6cROdTdqlwUSOV
-   GAE06eN2O9grMke0mjodTqN6SPocxPFogIXKra7QKY8Tha2r0Di37icoy
-   dndiZqN6yHZQpyzLVZtyVL1VkmoNZTDzbHdoNG/unQRLg5Xn9rMGUwMuN
-   GlTjt47ppSmV3UUYVsp4+skqH3Wz+GM5A5yopTmKbq9+ZiY7NmHsSYz79
-   w==;
-X-IronPort-AV: E=McAfee;i="6400,9594,10441"; a="318408352"
-X-IronPort-AV: E=Sophos;i="5.93,242,1654585200"; 
-   d="scan'208";a="318408352"
-Received: from fmsmga008.fm.intel.com ([10.253.24.58])
-  by fmsmga101.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 16 Aug 2022 22:24:18 -0700
-X-IronPort-AV: E=Sophos;i="5.93,242,1654585200"; 
-   d="scan'208";a="667445041"
-Received: from ahunter6-mobl1.ger.corp.intel.com (HELO [10.0.2.15]) ([10.252.49.3])
-  by fmsmga008-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 16 Aug 2022 22:24:14 -0700
-Message-ID: <53428314-9dfc-288d-d109-79240fba82ac@intel.com>
-Date:   Wed, 17 Aug 2022 08:24:08 +0300
-MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
- Firefox/91.0 Thunderbird/91.11.0
-Subject: Re: perf tools man pages on the web
-Content-Language: en-US
-To:     Ian Rogers <irogers@google.com>,
-        Mauro Carvalho Chehab <mchehab@kernel.org>
-Cc:     Namhyung Kim <namhyung@kernel.org>,
-        Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Jiri Olsa <jolsa@kernel.org>, Jonathan Corbet <corbet@lwn.net>,
-        Peter Zijlstra <peterz@infradead.org>,
+        Wed, 17 Aug 2022 01:39:36 -0400
+Received: from mail-yw1-x1149.google.com (mail-yw1-x1149.google.com [IPv6:2607:f8b0:4864:20::1149])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6776B4F191
+        for <linux-perf-users@vger.kernel.org>; Tue, 16 Aug 2022 22:39:35 -0700 (PDT)
+Received: by mail-yw1-x1149.google.com with SMTP id 00721157ae682-31f5960500bso137964337b3.14
+        for <linux-perf-users@vger.kernel.org>; Tue, 16 Aug 2022 22:39:35 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20210112;
+        h=cc:to:from:subject:mime-version:message-id:date:from:to:cc;
+        bh=ay7C3qxUv6wm2M5yxAB5RjaZvJl34dFW/a2TS0G4SVk=;
+        b=btnq2puhvjoxHQHAy1baE77P6/KtF8feSe92/mRaRlqRRfJyTt4wzScjpvRrg71Cr8
+         ytASsBkMV4g5uik8SYrXsVCpTOfmwaZ/fbOYRZQDp/SsdYajvCcSGYNk3d+Z94wRlXYl
+         W4dYlfgiC8mM/W7RiqR7D9Yiu5swke91StU5P/ESOiDc60cVLzkjaB2VdJ98EbqoeVWR
+         D4T8xqWx2PxP9dVZ36HlzCFiYeaWSpEf1ba+jKPVfPpB/5symWSETmagL7w5P0GBxub9
+         uBBJgVAvsjPLhbjC9DPhYff5uKhx5UxVs7lrPYJP6IVXNHLRpNt1jUde2E7oxo0TaST5
+         nAQQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=cc:to:from:subject:mime-version:message-id:date:x-gm-message-state
+         :from:to:cc;
+        bh=ay7C3qxUv6wm2M5yxAB5RjaZvJl34dFW/a2TS0G4SVk=;
+        b=3ztFQnhyCmKdF+VHfNSqFa0xAuIA8qgVH+yLzTV7S1P6Nz+JGie0/U5yd2QtlvH43m
+         UOjPL5Uj1QI69RauzFLFwpIujO6RWq4AK6N95ZeVCumH741lwH5iC6gwbC94tUW6tuhz
+         LyFrW8pRU1e+U3DUHT4VIuUtmXKFikUJdKVw4GsOK2q1d+LmMmCAkK+tTBBfH6FA8gTy
+         WcuQqN1tVAZmNb1lZtewSHqsMHiHJ3UPrUy0qu+cR9ZIq+lyOaGPNn4Wa0NXF+nwnMNE
+         kOHetZH74mPUTrIbau0TLsTNG4qTtSKcll+OImMe5D0bBwJ4YD+NqCm6zmYUZgtgD0Ot
+         9g2A==
+X-Gm-Message-State: ACgBeo3wUVWj+VQFFlqZGMMmblTE5a9KgUZgVAhkom9l0e8r/q9ImsvG
+        d57oYLAtkQZOgfxzRwL98cEdWneFleVn
+X-Google-Smtp-Source: AA6agR5/TuzIKPRvq9d6k2zC4Z/3B5xJV9wBXC8x3j+A2e24n1pFKzFGPTqkgN21/Upp/uI3FRsF9s4PNbsC
+X-Received: from irogers.svl.corp.google.com ([2620:15c:2d4:203:3bec:858f:9a6d:63de])
+ (user=irogers job=sendgmr) by 2002:a25:ac10:0:b0:690:a94a:97eb with SMTP id
+ w16-20020a25ac10000000b00690a94a97ebmr745776ybi.592.1660714774662; Tue, 16
+ Aug 2022 22:39:34 -0700 (PDT)
+Date:   Tue, 16 Aug 2022 22:39:24 -0700
+Message-Id: <20220817053930.769840-1-irogers@google.com>
+Mime-Version: 1.0
+X-Mailer: git-send-email 2.37.1.595.g718a3a8f04-goog
+Subject: [PATCH v1 0/6] Mutex wrapper, locking and memory leak fixes
+From:   Ian Rogers <irogers@google.com>
+To:     Peter Zijlstra <peterz@infradead.org>,
         Ingo Molnar <mingo@redhat.com>,
+        Arnaldo Carvalho de Melo <acme@kernel.org>,
         Mark Rutland <mark.rutland@arm.com>,
         Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        "linux-perf-users@vger.kernel.org" <linux-perf-users@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>
-References: <cecae74c-6bb2-d7da-bce3-35772b6e3f8c@intel.com>
- <CAP-5=fXJtRVKuPA_xpa=jBzq66y5JMv+jmr1GFNzh-zQ-7j5QA@mail.gmail.com>
- <CAM9d7cgWXP2s25XUM90=b5Eaojutxi=LobkqrUkRoF5gek4DPQ@mail.gmail.com>
- <edd637d1-e85c-bc18-a8a2-8aa63d02146f@intel.com>
- <CAP-5=fWRNO+dmrnq_3a-L6Vdfd2i3oEB8y2+7F2ik7Lc35s5Pg@mail.gmail.com>
-From:   Adrian Hunter <adrian.hunter@intel.com>
-Organization: Intel Finland Oy, Registered Address: PL 281, 00181 Helsinki,
- Business Identity Code: 0357606 - 4, Domiciled in Helsinki
-In-Reply-To: <CAP-5=fWRNO+dmrnq_3a-L6Vdfd2i3oEB8y2+7F2ik7Lc35s5Pg@mail.gmail.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+        Jiri Olsa <jolsa@kernel.org>,
+        Namhyung Kim <namhyung@kernel.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Darren Hart <dvhart@infradead.org>,
+        Davidlohr Bueso <dave@stgolabs.net>,
+        "=?UTF-8?q?Andr=C3=A9=20Almeida?=" <andrealmeid@igalia.com>,
+        Nathan Chancellor <nathan@kernel.org>,
+        Nick Desaulniers <ndesaulniers@google.com>,
+        Tom Rix <trix@redhat.com>,
+        Athira Rajeev <atrajeev@linux.vnet.ibm.com>,
+        Weiguo Li <liwg06@foxmail.com>,
+        Pavithra Gurushankar <gpavithrasha@gmail.com>,
+        Thomas Richter <tmricht@linux.ibm.com>,
+        Ravi Bangoria <ravi.bangoria@amd.com>,
+        Dario Petrillo <dario.pk1@gmail.com>,
+        Wenyu Liu <liuwenyu7@huawei.com>,
+        Hewenliang <hewenliang4@huawei.com>,
+        yaowenbin <yaowenbin1@huawei.com>,
+        Dave Marchevsky <davemarchevsky@fb.com>,
+        Andrii Nakryiko <andrii@kernel.org>,
+        Alexandre Truong <alexandre.truong@arm.com>,
+        Kim Phillips <kim.phillips@amd.com>,
+        Leo Yan <leo.yan@linaro.org>,
+        Quentin Monnet <quentin@isovalent.com>,
+        William Cohen <wcohen@redhat.com>,
+        Andres Freund <andres@anarazel.de>,
+        Song Liu <songliubraving@fb.com>,
+        Adrian Hunter <adrian.hunter@intel.com>,
+        "=?UTF-8?q?Martin=20Li=C5=A1ka?=" <mliska@suse.cz>,
+        Colin Ian King <colin.king@intel.com>,
+        James Clark <james.clark@arm.com>,
+        Fangrui Song <maskray@google.com>,
+        Stephane Eranian <eranian@google.com>,
+        Kajol Jain <kjain@linux.ibm.com>,
+        Andi Kleen <ak@linux.intel.com>,
+        Alexey Bayduraev <alexey.v.bayduraev@linux.intel.com>,
+        Riccardo Mancini <rickyman7@gmail.com>,
+        Masami Hiramatsu <mhiramat@kernel.org>,
+        Christophe JAILLET <christophe.jaillet@wanadoo.fr>,
+        Zechuan Chen <chenzechuan1@huawei.com>,
+        Jason Wang <wangborong@cdjrlc.com>,
+        Lexi Shao <shaolexi@huawei.com>,
+        Remi Bernon <rbernon@codeweavers.com>,
+        linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org,
+        llvm@lists.linux.dev
+Cc:     Ian Rogers <irogers@google.com>
+Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-On 16/08/22 16:25, Ian Rogers wrote:
-> On Mon, Aug 15, 2022 at 11:05 PM Adrian Hunter <adrian.hunter@intel.com> wrote:
->>
->> On 16/08/22 08:07, Namhyung Kim wrote:
->>> Hi Ian and Adrian,
->>>
->>> On Mon, Aug 15, 2022 at 7:56 AM Ian Rogers <irogers@google.com> wrote:
->>>>
->>>> On Mon, Aug 15, 2022 at 5:05 AM Adrian Hunter <adrian.hunter@intel.com> wrote:
->>>>>
->>>>> Hi
->>>>>
->>>>> I notice man pages on man7.org e.g.
->>>>>
->>>>>         https://www.man7.org/linux/man-pages/man1/perf.1.html
->>>>>
->>>>> do not get updated every release, and I wondered if the perf tools
->>>>> man pages should also be under:
->>>>>
->>>>>         https://docs.kernel.org/tools/index.html
->>>>>
->>>>> Thoughts?
->>>>
->>>> Sounds good to me. I'm assuming it would be some kind of build step
->>>> that would take the man pages and add them to what linux-doc needs?
->>>
->>> I guess it's the RST format.  I'm not sure if there's a converter
->>> from asciidoc to RST.
->>
->> Could use the html files that are already generated by:
->>
->>         make -C perf/tools html
-> 
-> A lot of the man page makefile code comes from git and wasn't in great
-> shape the last I looked [1]. I believe that would be true for the HTML
-> output. As there are existing dependencies on rst2man for BPF [2], I
-> think it'd be cleaner to migrate all the man pages to rst format with
-> new man page build rules using rst2man. Wdyt?
+When fixing a locking race and memory leak in:
+https://lore.kernel.org/linux-perf-users/20211118193714.2293728-1-irogers@google.com/
 
-That seems like a larger job.  For now, I am just suggesting copying the
-html files onto kernel.org.
+It was requested that debug mutex code be separated out into its own
+files. This was done by Pavithra Gurushankar in:
+https://lore.kernel.org/lkml/20220727111954.105118-1-gpavithrasha@gmail.com/
 
-+ Mauro
+These patches fix issues with the previous patches, add in the
+original dso->nsinfo fix and then build on our mutex wrapper with
+clang's -Wthread-safety analysis. The analysis found missing unlocks
+in builtin-sched.c which are fixed and -Wthread-safety is enabled by
+default when building with clang.
 
-Mauro, do you know if that is feasible?
+Ian Rogers (4):
+  perf dso: Hold lock when accessing nsinfo
+  perf mutex: Add thread safety annotations
+  perf mutex: Fix thread safety analysis
+  perf build: Enable -Wthread-safety with clang
 
-> 
-> Thanks,
-> Ian
-> 
-> [1] https://lore.kernel.org/all/20210715013343.2286699-1-irogers@google.com/
-> [2] https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree/tools/include/uapi/linux/bpf.h#n1538
-> 
->>>                        Anyway having the perf man pages in the
->>> tools section looks good.
->>>
->>>>
->>>> Fwiw, there has been some effort to try to improve the wiki:
->>>> https://perf.wiki.kernel.org/index.php/Main_Page
->>>> For example, the useful links are now broken apart and have more
->>>> links, there is a work-in-progress glossary. Perhaps there can be some
->>>> guidance on what to capture and where.
->>>
->>> Thanks for working on this.  I really need to take a look...
->>>
->>> Thanks,
->>> Namhyung
->>
+Pavithra Gurushankar (2):
+  perf mutex: Wrapped usage of mutex and cond
+  perf mutex: Update use of pthread mutex/cond
+
+ tools/perf/Makefile.config                 |   5 +
+ tools/perf/bench/epoll-ctl.c               |  33 +++----
+ tools/perf/bench/epoll-wait.c              |  33 +++----
+ tools/perf/bench/futex-hash.c              |  33 +++----
+ tools/perf/bench/futex-lock-pi.c           |  33 +++----
+ tools/perf/bench/futex-requeue.c           |  33 +++----
+ tools/perf/bench/futex-wake-parallel.c     |  33 +++----
+ tools/perf/bench/futex-wake.c              |  33 +++----
+ tools/perf/bench/numa.c                    |  93 +++++++-----------
+ tools/perf/builtin-inject.c                |   4 +
+ tools/perf/builtin-lock.c                  |   1 -
+ tools/perf/builtin-record.c                |  13 ++-
+ tools/perf/builtin-sched.c                 |  75 ++++++++-------
+ tools/perf/builtin-top.c                   |  45 ++++-----
+ tools/perf/tests/mmap-basic.c              |   2 -
+ tools/perf/tests/openat-syscall-all-cpus.c |   2 +-
+ tools/perf/tests/perf-record.c             |   2 -
+ tools/perf/ui/browser.c                    |  20 ++--
+ tools/perf/ui/browsers/annotate.c          |  12 +--
+ tools/perf/ui/setup.c                      |   5 +-
+ tools/perf/ui/tui/helpline.c               |   5 +-
+ tools/perf/ui/tui/progress.c               |   8 +-
+ tools/perf/ui/tui/setup.c                  |   8 +-
+ tools/perf/ui/tui/util.c                   |  18 ++--
+ tools/perf/ui/ui.h                         |   4 +-
+ tools/perf/util/Build                      |   1 +
+ tools/perf/util/annotate.c                 |  15 +--
+ tools/perf/util/annotate.h                 |   4 +-
+ tools/perf/util/bpf-event.h                |   1 -
+ tools/perf/util/build-id.c                 |  12 ++-
+ tools/perf/util/dso.c                      |  19 ++--
+ tools/perf/util/dso.h                      |   4 +-
+ tools/perf/util/hist.c                     |   6 +-
+ tools/perf/util/hist.h                     |   4 +-
+ tools/perf/util/map.c                      |   3 +
+ tools/perf/util/mmap.h                     |   1 -
+ tools/perf/util/mutex.c                    |  99 +++++++++++++++++++
+ tools/perf/util/mutex.h                    | 105 +++++++++++++++++++++
+ tools/perf/util/probe-event.c              |   3 +
+ tools/perf/util/symbol.c                   |   4 +-
+ tools/perf/util/top.h                      |   5 +-
+ 41 files changed, 529 insertions(+), 310 deletions(-)
+ create mode 100644 tools/perf/util/mutex.c
+ create mode 100644 tools/perf/util/mutex.h
+
+-- 
+2.37.1.595.g718a3a8f04-goog
 
