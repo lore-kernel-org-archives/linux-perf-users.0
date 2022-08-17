@@ -2,58 +2,58 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6BE23C32773
-	for <linux-perf-users@archiver.kernel.org>; Wed, 17 Aug 2022 05:39:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 36C11C25B08
+	for <linux-perf-users@archiver.kernel.org>; Wed, 17 Aug 2022 05:40:00 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S238509AbiHQFj6 (ORCPT
+        id S232202AbiHQFj7 (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Wed, 17 Aug 2022 01:39:58 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58554 "EHLO
+        Wed, 17 Aug 2022 01:39:59 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58614 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S238485AbiHQFjr (ORCPT
+        with ESMTP id S238499AbiHQFj4 (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Wed, 17 Aug 2022 01:39:47 -0400
-Received: from mail-yw1-x114a.google.com (mail-yw1-x114a.google.com [IPv6:2607:f8b0:4864:20::114a])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4CDB157E26
-        for <linux-perf-users@vger.kernel.org>; Tue, 16 Aug 2022 22:39:46 -0700 (PDT)
-Received: by mail-yw1-x114a.google.com with SMTP id 00721157ae682-334ab1f0247so28083897b3.7
-        for <linux-perf-users@vger.kernel.org>; Tue, 16 Aug 2022 22:39:46 -0700 (PDT)
+        Wed, 17 Aug 2022 01:39:56 -0400
+Received: from mail-yw1-x1149.google.com (mail-yw1-x1149.google.com [IPv6:2607:f8b0:4864:20::1149])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B98D252DF0
+        for <linux-perf-users@vger.kernel.org>; Tue, 16 Aug 2022 22:39:48 -0700 (PDT)
+Received: by mail-yw1-x1149.google.com with SMTP id 00721157ae682-334228502a8so46277777b3.20
+        for <linux-perf-users@vger.kernel.org>; Tue, 16 Aug 2022 22:39:48 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=google.com; s=20210112;
         h=cc:to:from:subject:references:mime-version:message-id:in-reply-to
          :date:from:to:cc;
-        bh=dvXHlanNSMpb8+NK6h6mlaZdJjvFNZm2U3e/25BiLG8=;
-        b=mYp9/Sr/BzctNpEaunppnamILdm+vQXkxgyXNAS6a0QaWmaKLlm25oxAnyn2IJgmtz
-         hagzDnnPKhwIAXUv2ZJRYc6IVqAhuRHaPODwh3Q563t+oe1lRL+ErStXbEi+tYxHBYVm
-         nOYkDy4xuwbYmK786oVtKub1xhTwScQLqC/olf/AcIja9xAmoFNAO1qun/tLqpY88wfx
-         jGc+cEZ5xN7ZWQenIRMnd3rNV0LkdxZXhZuN1mi8DVDhGzh6BkGnKSIbVeO/KfclhoWe
-         T2vm6MQAyKt5N0pAEKl2X9GH+ZjBDy2ZaFbCvk15+KpKHTWUJBzLv0Mc4IJ2lKsVojKz
-         h4eQ==
+        bh=iLN5+FLnhYIWqoDWLTWymRmT3HSuCKQDMghp6cr49+4=;
+        b=RmO9zVA/7Wz8b9GtpWsugHokUFgVDsG4vXhQNbDdnCDmm9BYfj+EyK6z57xrOuwSr5
+         xEHy7nRGZdtn7j0pVRnsb79os9hz8xZ8L3I3H/+5RGvGbmAaY1KTeppz5YckCGTdlKFi
+         WMmnxqPfR29q93koEqVqKV0oQyX6zZAGkY0X+m7nC1ZDpearMsBP/fqcS/s4uAbh7N4k
+         VL5kJWQpBFQf16lVQU3Hz3d7rLu9p44+5RFbWVEZKnl4dC6PjnAHJBEy0jRaUu8zH2r1
+         brJNcJN3Lg6IsHi6eP1cNqo9Kcsv7W71EYHmTabd6r3Bc8KeGw+RTkqsFBciOOgkRjzC
+         qIBw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
         h=cc:to:from:subject:references:mime-version:message-id:in-reply-to
          :date:x-gm-message-state:from:to:cc;
-        bh=dvXHlanNSMpb8+NK6h6mlaZdJjvFNZm2U3e/25BiLG8=;
-        b=l685AuKnc5MXHYKQDVMP3wx2JIcZgRMTFNT1IV9pddqyeAuKg3BhRq/U2rjyeoZXCl
-         KenH3ScWrXTPyWRQYRFN+Sk6I6wpiV+8emBG2KM98GshyQoi7b22nZmKimrAhUmINa6E
-         UFKvE18vBq7clY/StYxGpYtMlZIv1KwHI1nuN1lyngOg8JlRw6AGn3i6S9Lh9TC6iHET
-         rLDR5hNvMXtbAMOkeDv6RgoHyhHNEGF/TxwW1X9lRryJ8bS7PNLrjMWCPsvR7BJZCtzk
-         GG+k1C5waC15v3g/vlU//VfgdsEcVKWNnfvWtAJWXrtGED1MsbGFyI4uuoCltYLLwEIC
-         +6ZQ==
-X-Gm-Message-State: ACgBeo1EBPJBSN/wbu6LojqULc67gVyRheoVksE6zhS58r5TkFyPFNWv
-        z/7tyIsgaW4LSRnEtRt9aBJUuSmDyJ3w
-X-Google-Smtp-Source: AA6agR6zSnCmpG7kuPNJMbVm7HIrXY4YLPDkRXnjRDSwn6ZhR4GqOHvFVK+oQ64A8/6nWhOOENcY693gBv1U
+        bh=iLN5+FLnhYIWqoDWLTWymRmT3HSuCKQDMghp6cr49+4=;
+        b=Vn8yYSDq0lsKdlut1XJmQ4tqWREbneUkfspl4Gu3KH12Yr0YodRhhKVlrl+nZHjRsX
+         8LJB0EGzmm6ftIJQsLji+q8u89KcRTm0G9A50nyu02ZWhV0YihxAaQenAZS2lawU9Q5C
+         UBxOYD9GqMYB3lN2H47JUE83hpbcPpXlvs4jxTHpFMHPpNTnSAFmH6vBfKIwZK13uy6m
+         AP2okg8Hng9gwzzPtZbz7/ZpN0sms6eId0DQkJTeTfKnvYGp9PXHI+shNadXWmDQvarI
+         RKmR3XcyaLoqzU/+sfaH7WYX2plTDWMtNM3Kr4y04rpv3ek8XS1oEgTao9xn8AIAlTZg
+         uAhQ==
+X-Gm-Message-State: ACgBeo3PCPn7yMypjguajsqXxO++xLISUsaH5cxwMxtj8shS88ye9yCA
+        ySHHRzuy5KwD3+Yj1wzwCqzErMYO/4B5
+X-Google-Smtp-Source: AA6agR5Ztfm8DnME40MFJ+L3pOkrk/LLHs6fSAOR1/U1JeP8TP+phIUcP0v3cVdGvdWh8ubaYa9KQriPDx3N
 X-Received: from irogers.svl.corp.google.com ([2620:15c:2d4:203:3bec:858f:9a6d:63de])
- (user=irogers job=sendgmr) by 2002:a5b:83:0:b0:689:7b36:5307 with SMTP id
- b3-20020a5b0083000000b006897b365307mr10169676ybp.328.1660714785978; Tue, 16
- Aug 2022 22:39:45 -0700 (PDT)
-Date:   Tue, 16 Aug 2022 22:39:28 -0700
+ (user=irogers job=sendgmr) by 2002:a05:6902:920:b0:68f:a286:2a2b with SMTP id
+ bu32-20020a056902092000b0068fa2862a2bmr3041696ybb.612.1660714788460; Tue, 16
+ Aug 2022 22:39:48 -0700 (PDT)
+Date:   Tue, 16 Aug 2022 22:39:29 -0700
 In-Reply-To: <20220817053930.769840-1-irogers@google.com>
-Message-Id: <20220817053930.769840-5-irogers@google.com>
+Message-Id: <20220817053930.769840-6-irogers@google.com>
 Mime-Version: 1.0
 References: <20220817053930.769840-1-irogers@google.com>
 X-Mailer: git-send-email 2.37.1.595.g718a3a8f04-goog
-Subject: [PATCH v1 4/6] perf mutex: Add thread safety annotations
+Subject: [PATCH v1 5/6] perf mutex: Fix thread safety analysis
 From:   Ian Rogers <irogers@google.com>
 To:     Peter Zijlstra <peterz@infradead.org>,
         Ingo Molnar <mingo@redhat.com>,
@@ -111,136 +111,84 @@ Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-Add thread safety annotations to struct mutex so that when compiled with
-clang's -Wthread-safety warnings are generated for erroneous lock
-patterns. NO_THREAD_SAFETY_ANALYSIS is needed for
-mutex_lock/mutex_unlock as the analysis doesn't under pthread calls.
+Add annotations to describe lock behavior. Add missing unlocks to
+perf_sched__replay. Alter hist_iter__top_callback as the thread-safety
+analysis cannot follow pointers through local variables.
 
 Signed-off-by: Ian Rogers <irogers@google.com>
 ---
- tools/perf/util/mutex.c |  2 ++
- tools/perf/util/mutex.h | 72 ++++++++++++++++++++++++++++++++++++++---
- 2 files changed, 69 insertions(+), 5 deletions(-)
+ tools/perf/builtin-sched.c | 8 ++++++++
+ tools/perf/builtin-top.c   | 5 +++--
+ 2 files changed, 11 insertions(+), 2 deletions(-)
 
-diff --git a/tools/perf/util/mutex.c b/tools/perf/util/mutex.c
-index d12cf0714268..c936557d8bbb 100644
---- a/tools/perf/util/mutex.c
-+++ b/tools/perf/util/mutex.c
-@@ -40,11 +40,13 @@ void mutex_destroy(struct mutex *mtx)
+diff --git a/tools/perf/builtin-sched.c b/tools/perf/builtin-sched.c
+index 0f52f73be896..a8a765ed28ce 100644
+--- a/tools/perf/builtin-sched.c
++++ b/tools/perf/builtin-sched.c
+@@ -658,6 +658,8 @@ static void *thread_func(void *ctx)
  }
  
- void mutex_lock(struct mutex *mtx)
-+	NO_THREAD_SAFETY_ANALYSIS
+ static void create_tasks(struct perf_sched *sched)
++	EXCLUSIVE_LOCK_FUNCTION(sched->start_work_mutex)
++	EXCLUSIVE_LOCK_FUNCTION(sched->work_done_wait_mutex)
  {
- 	CHECK_ERR(pthread_mutex_lock(&mtx->lock));
+ 	struct task_desc *task;
+ 	pthread_attr_t attr;
+@@ -687,6 +689,8 @@ static void create_tasks(struct perf_sched *sched)
  }
  
- void mutex_unlock(struct mutex *mtx)
-+	NO_THREAD_SAFETY_ANALYSIS
+ static void wait_for_tasks(struct perf_sched *sched)
++	EXCLUSIVE_LOCKS_REQUIRED(sched->work_done_wait_mutex)
++	EXCLUSIVE_LOCKS_REQUIRED(sched->start_work_mutex)
  {
- 	CHECK_ERR(pthread_mutex_unlock(&mtx->lock));
+ 	u64 cpu_usage_0, cpu_usage_1;
+ 	struct task_desc *task;
+@@ -738,6 +742,8 @@ static void wait_for_tasks(struct perf_sched *sched)
  }
-diff --git a/tools/perf/util/mutex.h b/tools/perf/util/mutex.h
-index 952276ad83bd..6c2062d41a4e 100644
---- a/tools/perf/util/mutex.h
-+++ b/tools/perf/util/mutex.h
-@@ -5,11 +5,73 @@
- #include <pthread.h>
- #include <stdbool.h>
  
-+/*
-+ * A function-like feature checking macro that is a wrapper around
-+ * `__has_attribute`, which is defined by GCC 5+ and Clang and evaluates to a
-+ * nonzero constant integer if the attribute is supported or 0 if not.
-+ */
-+#ifdef __has_attribute
-+#define HAVE_ATTRIBUTE(x) __has_attribute(x)
-+#else
-+#define HAVE_ATTRIBUTE(x) 0
-+#endif
-+
-+
-+#if HAVE_ATTRIBUTE(guarded_by) && HAVE_ATTRIBUTE(pt_guarded_by) && \
-+	HAVE_ATTRIBUTE(lockable) && HAVE_ATTRIBUTE(exclusive_lock_function) && \
-+	HAVE_ATTRIBUTE(exclusive_trylock_function) && HAVE_ATTRIBUTE(exclusive_locks_required) && \
-+	HAVE_ATTRIBUTE(no_thread_safety_analysis)
-+
-+/* Documents if a shared field or global variable needs to be protected by a mutex. */
-+#define GUARDED_BY(x) __attribute__((guarded_by(x)))
-+
-+/*
-+ * Documents if the memory location pointed to by a pointer should be guarded by
-+ * a mutex when dereferencing the pointer.
-+ */
-+#define PT_GUARDED_BY(x) __attribute__((pt_guarded_by(x)))
-+
-+/* Documents if a type is a lockable type. */
-+#define LOCKABLE __attribute__((capability("lockable")))
-+
-+/* Documents functions that acquire a lock in the body of a function, and do not release it. */
-+#define EXCLUSIVE_LOCK_FUNCTION(...)  __attribute__((exclusive_lock_function(__VA_ARGS__)))
-+
-+/*
-+ * Documents functions that expect a lock to be held on entry to the function,
-+ * and release it in the body of the function.
-+ */
-+#define UNLOCK_FUNCTION(...) __attribute__((unlock_function(__VA_ARGS__)))
-+
-+/* Documents functions that try to acquire a lock, and return success or failure. */
-+#define EXCLUSIVE_TRYLOCK_FUNCTION(...) \
-+	__attribute__((exclusive_trylock_function(__VA_ARGS__)))
-+
-+
-+/* Documents a function that expects a mutex to be held prior to entry. */
-+#define EXCLUSIVE_LOCKS_REQUIRED(...) __attribute__((exclusive_locks_required(__VA_ARGS__)))
-+
-+/* Turns off thread safety checking within the body of a particular function. */
-+#define NO_THREAD_SAFETY_ANALYSIS __attribute__((no_thread_safety_analysis))
-+
-+#else
-+
-+#define GUARDED_BY(x)
-+#define PT_GUARDED_BY(x)
-+#define LOCKABLE
-+#define EXCLUSIVE_LOCK_FUNCTION(...)
-+#define UNLOCK_FUNCTION(...)
-+#define EXCLUSIVE_TRYLOCK_FUNCTION(...)
-+#define EXCLUSIVE_LOCKS_REQUIRED(...)
-+#define NO_THREAD_SAFETY_ANALYSIS
-+
-+#endif
-+
- /*
-  * A wrapper around the mutex implementation that allows perf to error check
-  * usage, etc.
-  */
--struct mutex {
-+struct LOCKABLE mutex {
- 	pthread_mutex_t lock;
- };
+ static void run_one_test(struct perf_sched *sched)
++	EXCLUSIVE_LOCKS_REQUIRED(sched->work_done_wait_mutex)
++	EXCLUSIVE_LOCKS_REQUIRED(sched->start_work_mutex)
+ {
+ 	u64 T0, T1, delta, avg_delta, fluct;
  
-@@ -25,9 +87,9 @@ struct cond {
- void mutex_init(struct mutex *mtx, bool pshared);
- void mutex_destroy(struct mutex *mtx);
+@@ -3314,6 +3320,8 @@ static int perf_sched__replay(struct perf_sched *sched)
+ 	for (i = 0; i < sched->replay_repeat; i++)
+ 		run_one_test(sched);
  
--void mutex_lock(struct mutex *mtx);
--void mutex_unlock(struct mutex *mtx);
--bool mutex_trylock(struct mutex *mtx);
-+void mutex_lock(struct mutex *mtx) EXCLUSIVE_LOCK_FUNCTION(*mtx);
-+void mutex_unlock(struct mutex *mtx) UNLOCK_FUNCTION(*mtx);
-+bool mutex_trylock(struct mutex *mtx) EXCLUSIVE_TRYLOCK_FUNCTION(true, *mtx);
++	mutex_unlock(&sched->start_work_mutex);
++	mutex_unlock(&sched->work_done_wait_mutex);
+ 	return 0;
+ }
  
- /*
-  * Initialize the cond struct, if pshared is set then specify the process-shared
-@@ -36,7 +98,7 @@ bool mutex_trylock(struct mutex *mtx);
- void cond_init(struct cond *cnd, bool pshared);
- void cond_destroy(struct cond *cnd);
+diff --git a/tools/perf/builtin-top.c b/tools/perf/builtin-top.c
+index 3757292bfe86..e832f04e3076 100644
+--- a/tools/perf/builtin-top.c
++++ b/tools/perf/builtin-top.c
+@@ -196,6 +196,7 @@ static void perf_top__record_precise_ip(struct perf_top *top,
+ 					struct hist_entry *he,
+ 					struct perf_sample *sample,
+ 					struct evsel *evsel, u64 ip)
++	EXCLUSIVE_LOCKS_REQUIRED(he->hists->lock)
+ {
+ 	struct annotation *notes;
+ 	struct symbol *sym = he->ms.sym;
+@@ -724,13 +725,13 @@ static void *display_thread(void *arg)
+ static int hist_iter__top_callback(struct hist_entry_iter *iter,
+ 				   struct addr_location *al, bool single,
+ 				   void *arg)
++	EXCLUSIVE_LOCKS_REQUIRED(iter->he->hists->lock)
+ {
+ 	struct perf_top *top = arg;
+-	struct hist_entry *he = iter->he;
+ 	struct evsel *evsel = iter->evsel;
  
--void cond_wait(struct cond *cnd, struct mutex *mtx);
-+void cond_wait(struct cond *cnd, struct mutex *mtx) EXCLUSIVE_LOCKS_REQUIRED(mtx);
- void cond_signal(struct cond *cnd);
- void cond_broadcast(struct cond *cnd);
+ 	if (perf_hpp_list.sym && single)
+-		perf_top__record_precise_ip(top, he, iter->sample, evsel, al->addr);
++		perf_top__record_precise_ip(top, iter->he, iter->sample, evsel, al->addr);
  
+ 	hist__account_cycles(iter->sample->branch_stack, al, iter->sample,
+ 		     !(top->record_opts.branch_stack & PERF_SAMPLE_BRANCH_ANY),
 -- 
 2.37.1.595.g718a3a8f04-goog
 
