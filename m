@@ -2,106 +2,107 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 939A9C25B08
-	for <linux-perf-users@archiver.kernel.org>; Wed, 17 Aug 2022 13:02:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6C797C28B2B
+	for <linux-perf-users@archiver.kernel.org>; Wed, 17 Aug 2022 13:04:03 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S238823AbiHQNCj (ORCPT
+        id S239042AbiHQNEB (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Wed, 17 Aug 2022 09:02:39 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37538 "EHLO
+        Wed, 17 Aug 2022 09:04:01 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41418 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S236051AbiHQNCj (ORCPT
+        with ESMTP id S239532AbiHQND7 (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Wed, 17 Aug 2022 09:02:39 -0400
-Received: from mail-vs1-xe31.google.com (mail-vs1-xe31.google.com [IPv6:2607:f8b0:4864:20::e31])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 236D85007E
-        for <linux-perf-users@vger.kernel.org>; Wed, 17 Aug 2022 06:02:38 -0700 (PDT)
-Received: by mail-vs1-xe31.google.com with SMTP id z185so3516666vsb.4
-        for <linux-perf-users@vger.kernel.org>; Wed, 17 Aug 2022 06:02:38 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20210112;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:from:to:cc;
-        bh=JEpY0RlSeNKZEJVlprf831gSjjfs90GuJUkUulGJpXE=;
-        b=HhwjHoELRn0n2dtUiR/VcsdJqCy/a2xBD+R5nenQKQWxOlIESLF9n0qlR5EOjKBR3v
-         b+TbLF79FlfjMmtuS09ym0DOoszsDhtR5AJQcy0rT0UdaSru5MqiSn2wcvCBzWrh4wTr
-         dTDdABjI278o6rNHK4MvpfgEAKNJW8qfUzlPn5PY7MkJKImp9xbxpRs6ziWQYKK0j6/M
-         JDW+ebvCOExqVRUDf7d3riYGFI2ulJOk+J/LN/ooYQdHGgFWZWLSLb2UyBRiMTjOVKsX
-         MipcEUK8kn7R/tyKniGxuOk2MGg83iFMqXy+7mP/t30zVUu6pcJmhib6FWk+qAqYW/Gz
-         ompw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc;
-        bh=JEpY0RlSeNKZEJVlprf831gSjjfs90GuJUkUulGJpXE=;
-        b=r7+9qTFiBgSYYwiaVKWEVjgUxlr/X7FZ4YZba2355rLWgRPYBquFyDu4tt1ggv7O7/
-         AMJYGWAzOXp+eBaJeqguevGZWf7Ku9hyjRILYlsbz/KeqSNfLTVp8xHN3gHzlFTYg1q8
-         ls2kc9Oa19VZ8BheqCifYoMQjKKQfgyAF9ue6Y9B31Phi+aro2soO3L/AK32fhWEJPuF
-         Wdyh3vIb5dNLS4JRTc1/kYF44ODseUih2zQznlKQ9zsPrBlaF6QbLImPD2Ebz0FIjfsO
-         pepAj45WT1iArstHgtUIQyZjl6QncJnjvhYI/Ro+WZ0Zp41K3Fbyua61HAncl8A36qdd
-         fumg==
-X-Gm-Message-State: ACgBeo1nFPC0XaxQb+na2nLtVVpXYC1u84oUhChEQT2z6pIOmTYqeSwZ
-        tYImbwjEa2bUlQnIu/MbCfCkza+KmLb8GF/yTKXDEA==
-X-Google-Smtp-Source: AA6agR5xZEq+JYJ8NeDjjkQ6b/O3OdnvHus5amnMCRh5iTGg+w3myZ+kESjCxE+ExhG3WsA3fIVF4kR6TVhJZ1Mn138=
-X-Received: by 2002:a05:6102:ec7:b0:388:d2a2:41c5 with SMTP id
- m7-20020a0561020ec700b00388d2a241c5mr10069927vst.41.1660741357054; Wed, 17
- Aug 2022 06:02:37 -0700 (PDT)
-MIME-Version: 1.0
-References: <cecae74c-6bb2-d7da-bce3-35772b6e3f8c@intel.com>
- <CAP-5=fXJtRVKuPA_xpa=jBzq66y5JMv+jmr1GFNzh-zQ-7j5QA@mail.gmail.com> <b42344bc-86f6-9047-b015-88ef3b58a619@intel.com>
-In-Reply-To: <b42344bc-86f6-9047-b015-88ef3b58a619@intel.com>
-From:   Ian Rogers <irogers@google.com>
-Date:   Wed, 17 Aug 2022 06:02:25 -0700
-Message-ID: <CAP-5=fUq4N+X+3VMsT=he3Q9_4qHKkqxdPDcMdDE=_3qdV9aCg@mail.gmail.com>
-Subject: Re: perf tools man pages on the web
-To:     Adrian Hunter <adrian.hunter@intel.com>
-Cc:     Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Jiri Olsa <jolsa@kernel.org>,
-        Namhyung Kim <namhyung@kernel.org>,
-        Jonathan Corbet <corbet@lwn.net>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@redhat.com>,
+        Wed, 17 Aug 2022 09:03:59 -0400
+Received: from desiato.infradead.org (desiato.infradead.org [IPv6:2001:8b0:10b:1:d65d:64ff:fe57:4e05])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4050C32049;
+        Wed, 17 Aug 2022 06:03:54 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=desiato.20200630; h=In-Reply-To:Content-Type:MIME-Version:
+        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description;
+        bh=8tSVbs/LntHCfdjrxtk7ceXw6TPtMo4nIYUkIIRtVa4=; b=TUYGDjo5Eb2C+vokB8lSzbnHTV
+        FxOXCuCCTso8IKA26Dds1MHiVap25aWsBqDfMrSAfdetz5F38Njwrq7LSinw80hTP1RQ8VwP8qy0v
+        7nRsJ9iJd9DpyBqYujIGvKYSJahc/HW6bsUkkcTOydv1t4XrhRac50TnUR6TepqFHAZfx1WHAPaz2
+        9T/QLjxx2nykjKy9HbBQ8OibboBOKmwBLlH4IsSqotH1UU7wt5BZ0CstHJkqDCeYkuT+Ac1jQq+vt
+        MlxLdvXedqGnarZIbn+D2o5PGLGOEVupFFTe7erGNcfxZ4C6okDm8ETszLbb9v3vt4+VyxJftLprh
+        59bIzbvQ==;
+Received: from j130084.upc-j.chello.nl ([24.132.130.84] helo=worktop.programming.kicks-ass.net)
+        by desiato.infradead.org with esmtpsa (Exim 4.94.2 #2 (Red Hat Linux))
+        id 1oOIht-003I0R-UD; Wed, 17 Aug 2022 13:03:41 +0000
+Received: by worktop.programming.kicks-ass.net (Postfix, from userid 1000)
+        id 84568980256; Wed, 17 Aug 2022 15:03:37 +0200 (CEST)
+Date:   Wed, 17 Aug 2022 15:03:37 +0200
+From:   Peter Zijlstra <peterz@infradead.org>
+To:     Marco Elver <elver@google.com>
+Cc:     Frederic Weisbecker <frederic@kernel.org>,
+        Ingo Molnar <mingo@kernel.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Arnaldo Carvalho de Melo <acme@kernel.org>,
         Mark Rutland <mark.rutland@arm.com>,
         Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        "linux-perf-users@vger.kernel.org" <linux-perf-users@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+        Jiri Olsa <jolsa@redhat.com>,
+        Namhyung Kim <namhyung@kernel.org>,
+        Dmitry Vyukov <dvyukov@google.com>,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        linuxppc-dev@lists.ozlabs.org, linux-perf-users@vger.kernel.org,
+        x86@kernel.org, linux-sh@vger.kernel.org,
+        kasan-dev@googlegroups.com, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v3 11/14] perf/hw_breakpoint: Reduce contention with
+ large number of tasks
+Message-ID: <YvznKYgRKjDRSMkT@worktop.programming.kicks-ass.net>
+References: <20220704150514.48816-1-elver@google.com>
+ <20220704150514.48816-12-elver@google.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20220704150514.48816-12-elver@google.com>
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-On Wed, Aug 17, 2022 at 1:55 AM Adrian Hunter <adrian.hunter@intel.com> wrote:
->
-> On 15/08/22 17:56, Ian Rogers wrote:
-> > On Mon, Aug 15, 2022 at 5:05 AM Adrian Hunter <adrian.hunter@intel.com> wrote:
-> >>
-> >> Hi
-> >>
-> >> I notice man pages on man7.org e.g.
-> >>
-> >>         https://www.man7.org/linux/man-pages/man1/perf.1.html
-> >>
-> >> do not get updated every release, and I wondered if the perf tools
-> >> man pages should also be under:
-> >>
-> >>         https://docs.kernel.org/tools/index.html
-> >>
-> >> Thoughts?
-> >
-> > Sounds good to me. I'm assuming it would be some kind of build step
-> > that would take the man pages and add them to what linux-doc needs?
-> >
-> > Fwiw, there has been some effort to try to improve the wiki:
-> > https://perf.wiki.kernel.org/index.php/Main_Page
-> > For example, the useful links are now broken apart and have more
-> > links, there is a work-in-progress glossary. Perhaps there can be some
-> > guidance on what to capture and where.
->
-> Speaking of the wiki, anyone know how to change the
-> "Set $wgLogo to the URL path to your own logo image." image?
+On Mon, Jul 04, 2022 at 05:05:11PM +0200, Marco Elver wrote:
+> +static bool bp_constraints_is_locked(struct perf_event *bp)
+> +{
+> +	struct mutex *tsk_mtx = get_task_bps_mutex(bp);
+> +
+> +	return percpu_is_write_locked(&bp_cpuinfo_sem) ||
+> +	       (tsk_mtx ? mutex_is_locked(tsk_mtx) :
+> +			  percpu_is_read_locked(&bp_cpuinfo_sem));
+> +}
 
-+1000
+> @@ -426,18 +521,28 @@ static int modify_bp_slot(struct perf_event *bp, u64 old_type, u64 new_type)
+>   */
+>  int dbg_reserve_bp_slot(struct perf_event *bp)
+>  {
+> -	if (mutex_is_locked(&nr_bp_mutex))
+> +	int ret;
+> +
+> +	if (bp_constraints_is_locked(bp))
+>  		return -1;
+>  
+> -	return __reserve_bp_slot(bp, bp->attr.bp_type);
+> +	/* Locks aren't held; disable lockdep assert checking. */
+> +	lockdep_off();
+> +	ret = __reserve_bp_slot(bp, bp->attr.bp_type);
+> +	lockdep_on();
+> +
+> +	return ret;
+>  }
+>  
+>  int dbg_release_bp_slot(struct perf_event *bp)
+>  {
+> -	if (mutex_is_locked(&nr_bp_mutex))
+> +	if (bp_constraints_is_locked(bp))
+>  		return -1;
+>  
+> +	/* Locks aren't held; disable lockdep assert checking. */
+> +	lockdep_off();
+>  	__release_bp_slot(bp, bp->attr.bp_type);
+> +	lockdep_on();
+>  
+>  	return 0;
+>  }
 
-Someone at RedHat knows :-)
+Urggghhhh... this is horrible crap. That is, the current code is that
+and this makes it worse :/
 
-Ian
