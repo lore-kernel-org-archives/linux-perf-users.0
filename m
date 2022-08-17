@@ -2,95 +2,107 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 677D1C2BB41
-	for <linux-perf-users@archiver.kernel.org>; Wed, 17 Aug 2022 08:55:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 54C46C25B08
+	for <linux-perf-users@archiver.kernel.org>; Wed, 17 Aug 2022 11:40:44 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231464AbiHQIzG (ORCPT
+        id S238371AbiHQLkn (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Wed, 17 Aug 2022 04:55:06 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57596 "EHLO
+        Wed, 17 Aug 2022 07:40:43 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53848 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229704AbiHQIzF (ORCPT
+        with ESMTP id S239226AbiHQLke (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Wed, 17 Aug 2022 04:55:05 -0400
-Received: from mga05.intel.com (mga05.intel.com [192.55.52.43])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6314C78BCD;
-        Wed, 17 Aug 2022 01:55:04 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1660726504; x=1692262504;
-  h=message-id:date:mime-version:subject:to:cc:references:
-   from:in-reply-to:content-transfer-encoding;
-  bh=CTKtDOyB60/QGOd7TsvIyNY16TNwoiQhsBzxyF3hBas=;
-  b=OpLfnuGcvvDzpbmnETUMJ3+U2+hJCpZQSLy5taYbfZxBO/fGMrIl3iKR
-   fplH8F6evRqnnE2pL67jFLTC4oA6xEdqdKHvCu24Ib8E5qjbRtxmLkJkA
-   SvGYjT03AgSczj0fEX975zwDJ5XiZZKJvPewSzkGZguAMZOvC0/Jn2zgG
-   Dks3JgvEkmGFECr+/23+V7MApWGW3Me/x0x6/o+X2FY1m/aN5w4/eeg6T
-   XrxxqYWZJwvU0GSIlwNDqqlMM6aKCx3gNLOdC5oD5+RVhB9ERDCyNQ7py
-   5P7szJw0JzY4FavbFE/n2xZ6t2CKs4f3mlzg5ZOYYw9ToD2eaw6rzEuiN
-   Q==;
-X-IronPort-AV: E=McAfee;i="6400,9594,10441"; a="378734610"
-X-IronPort-AV: E=Sophos;i="5.93,242,1654585200"; 
-   d="scan'208";a="378734610"
-Received: from fmsmga008.fm.intel.com ([10.253.24.58])
-  by fmsmga105.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 17 Aug 2022 01:55:01 -0700
-X-IronPort-AV: E=Sophos;i="5.93,242,1654585200"; 
-   d="scan'208";a="667519870"
-Received: from ahunter6-mobl1.ger.corp.intel.com (HELO [10.0.2.15]) ([10.252.49.3])
-  by fmsmga008-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 17 Aug 2022 01:54:58 -0700
-Message-ID: <b42344bc-86f6-9047-b015-88ef3b58a619@intel.com>
-Date:   Tue, 16 Aug 2022 23:48:22 +0300
-MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
- Firefox/91.0 Thunderbird/91.11.0
-Subject: Re: perf tools man pages on the web
-Content-Language: en-US
-To:     Arnaldo Carvalho de Melo <acme@kernel.org>
-Cc:     Jiri Olsa <jolsa@kernel.org>, Namhyung Kim <namhyung@kernel.org>,
-        Jonathan Corbet <corbet@lwn.net>,
+        Wed, 17 Aug 2022 07:40:34 -0400
+Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 722A482FAB;
+        Wed, 17 Aug 2022 04:40:33 -0700 (PDT)
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by dfw.source.kernel.org (Postfix) with ESMTPS id EE885614CD;
+        Wed, 17 Aug 2022 11:40:32 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 27C83C433D6;
+        Wed, 17 Aug 2022 11:40:32 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1660736432;
+        bh=ONtkeJPXeNURpLNKLHDePnWlDmpB+dnu6iDI/6X8T3A=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=b3kl48/4jnJFhWCWnqyUt4SP1JZP8p0VWe3Uo6unxx7XUu9/e6DP5G9hiWh/9zKAy
+         39Tpu7qkmWoK7wLKt5PdBhVo/nbtx1JYLRnHmr08U5QJ58W8awg42LXbdzcw4gtwaF
+         h/M8lVG0DiXDfE0HdX66HMjLxWTYSHWpejtGGCesfBxCdWa4H7UJq9w7IKdiIJVz4z
+         PuJQz86a5PoamQJ9068JnYdPI0C7Agr4rU3hnF1B6PSdEwZT6hmL6SOnETYaw37qJS
+         yFEEtR8WRF7f4VkplZ8hWp7apNuKU7+/j2V6snGnQ8kI/LIObUdnBClZ0A08dsV5Um
+         BYmZ366Qn1rTw==
+Received: by quaco.ghostprotocols.net (Postfix, from userid 1000)
+        id 1CCEA4035A; Wed, 17 Aug 2022 08:40:29 -0300 (-03)
+Date:   Wed, 17 Aug 2022 08:40:29 -0300
+From:   Arnaldo Carvalho de Melo <acme@kernel.org>
+To:     Namhyung Kim <namhyung@kernel.org>
+Cc:     Jiri Olsa <jolsa@kernel.org>, Ingo Molnar <mingo@kernel.org>,
         Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        "linux-perf-users@vger.kernel.org" <linux-perf-users@vger.kernel.org>,
         LKML <linux-kernel@vger.kernel.org>,
-        Ian Rogers <irogers@google.com>
-References: <cecae74c-6bb2-d7da-bce3-35772b6e3f8c@intel.com>
- <CAP-5=fXJtRVKuPA_xpa=jBzq66y5JMv+jmr1GFNzh-zQ-7j5QA@mail.gmail.com>
-From:   Adrian Hunter <adrian.hunter@intel.com>
-Organization: Intel Finland Oy, Registered Address: PL 281, 00181 Helsinki,
- Business Identity Code: 0357606 - 4, Domiciled in Helsinki
-In-Reply-To: <CAP-5=fXJtRVKuPA_xpa=jBzq66y5JMv+jmr1GFNzh-zQ-7j5QA@mail.gmail.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+        Ian Rogers <irogers@google.com>,
+        linux-perf-users@vger.kernel.org
+Subject: Re: [PATCH 0/4] perf tools: Support reading PERF_FORMAT_LOST (v2)
+Message-ID: <YvzTrSUF5XTsslH7@kernel.org>
+References: <20220816221747.275828-1-namhyung@kernel.org>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20220816221747.275828-1-namhyung@kernel.org>
+X-Url:  http://acmel.wordpress.com
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-On 15/08/22 17:56, Ian Rogers wrote:
-> On Mon, Aug 15, 2022 at 5:05 AM Adrian Hunter <adrian.hunter@intel.com> wrote:
->>
->> Hi
->>
->> I notice man pages on man7.org e.g.
->>
->>         https://www.man7.org/linux/man-pages/man1/perf.1.html
->>
->> do not get updated every release, and I wondered if the perf tools
->> man pages should also be under:
->>
->>         https://docs.kernel.org/tools/index.html
->>
->> Thoughts?
+Em Tue, Aug 16, 2022 at 03:17:43PM -0700, Namhyung Kim escreveu:
+> Hello,
 > 
-> Sounds good to me. I'm assuming it would be some kind of build step
-> that would take the man pages and add them to what linux-doc needs?
+> The kernel v6.0 added PERF_FORMAT_LOST which can read a number of lost
+> samples for the given event.  As it can change the output format of
+> read(2) and perf sample data, it needs to access them carefully.
 > 
-> Fwiw, there has been some effort to try to improve the wiki:
-> https://perf.wiki.kernel.org/index.php/Main_Page
-> For example, the useful links are now broken apart and have more
-> links, there is a work-in-progress glossary. Perhaps there can be some
-> guidance on what to capture and where.
+> Changes in v2)
+>  * add a comment in perf_evsel__read_group()  (Jiri)
+>  * simplify perf_evsel__adjust_values()  (Jiri)
 
-Speaking of the wiki, anyone know how to change the
-"Set $wgLogo to the URL path to your own logo image." image?
+Replaced v1 with this one in my local tree.
+
+- Arnaldo
+ 
+> 
+> You can get the code from 'perf/read-lost-v2' brach on
+> 
+>   git://git.kernel.org/pub/scm/linux/kernel/git/namhyung/linux-perf.git
+> 
+> Thanks,
+> Namhyung
+> 
+> 
+> Namhyung Kim (4):
+>   tools headers UAPI: Sync linux/perf_event.h with the kernel sources
+>   tools lib perf: Handle read format in perf_evsel__read()
+>   tools lib perf: Add a test case for read formats
+>   perf tools: Support reading PERF_FORMAT_LOST
+> 
+>  tools/include/uapi/linux/perf_event.h         |   5 +-
+>  tools/lib/perf/evsel.c                        |  79 ++++++++-
+>  tools/lib/perf/include/perf/event.h           |   3 +-
+>  tools/lib/perf/include/perf/evsel.h           |   4 +-
+>  tools/lib/perf/tests/test-evsel.c             | 161 ++++++++++++++++++
+>  tools/perf/tests/sample-parsing.c             |  14 +-
+>  tools/perf/util/event.h                       |  18 +-
+>  tools/perf/util/evsel.c                       |  33 +++-
+>  .../scripting-engines/trace-event-python.c    |  16 +-
+>  tools/perf/util/session.c                     |  32 ++--
+>  tools/perf/util/synthetic-events.c            |  34 +++-
+>  11 files changed, 360 insertions(+), 39 deletions(-)
+> 
+> 
+> base-commit: 568035b01cfb107af8d2e4bd2fb9aea22cf5b868
+> -- 
+> 2.37.1.595.g718a3a8f04-goog
+
+-- 
+
+- Arnaldo
