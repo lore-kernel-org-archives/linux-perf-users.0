@@ -2,138 +2,169 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D3D2FC32792
-	for <linux-perf-users@archiver.kernel.org>; Wed, 17 Aug 2022 05:40:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E7128C25B08
+	for <linux-perf-users@archiver.kernel.org>; Wed, 17 Aug 2022 06:01:41 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S238504AbiHQFj7 (ORCPT
+        id S229840AbiHQGBk (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Wed, 17 Aug 2022 01:39:59 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58626 "EHLO
+        Wed, 17 Aug 2022 02:01:40 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59880 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S238512AbiHQFj4 (ORCPT
+        with ESMTP id S232883AbiHQGBi (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Wed, 17 Aug 2022 01:39:56 -0400
-Received: from mail-yw1-x1149.google.com (mail-yw1-x1149.google.com [IPv6:2607:f8b0:4864:20::1149])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7018558518
-        for <linux-perf-users@vger.kernel.org>; Tue, 16 Aug 2022 22:39:51 -0700 (PDT)
-Received: by mail-yw1-x1149.google.com with SMTP id 00721157ae682-31f3959ba41so138320487b3.2
-        for <linux-perf-users@vger.kernel.org>; Tue, 16 Aug 2022 22:39:51 -0700 (PDT)
+        Wed, 17 Aug 2022 02:01:38 -0400
+Received: from mail-wr1-x42b.google.com (mail-wr1-x42b.google.com [IPv6:2a00:1450:4864:20::42b])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D999C72ED4
+        for <linux-perf-users@vger.kernel.org>; Tue, 16 Aug 2022 23:01:36 -0700 (PDT)
+Received: by mail-wr1-x42b.google.com with SMTP id j7so15005362wrh.3
+        for <linux-perf-users@vger.kernel.org>; Tue, 16 Aug 2022 23:01:36 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=google.com; s=20210112;
-        h=cc:to:from:subject:references:mime-version:message-id:in-reply-to
-         :date:from:to:cc;
-        bh=qHxxMbzf5P1kENTIcu/skD1A7VW/ZSQMIDyzork9iPw=;
-        b=gqVyKJEKg7FHYfUlvFZRQ4gywaDxqgOla/wYNSrRrpQPIOeQgd8otSDUR81rYz06Pz
-         86FwoEQRXDngYehTse62DCp3ULAG3zl2VVSHPUTcSch9dCd1GVJmHLNIuS9Ice2KYHSE
-         /Ph6X2GyUQLtHLZp3hUMsFENjq6wAqo+qn5EpWgzZcCvi33yqo5FpUFubMhztDoufgY/
-         s/YaI0T2hL8w14sHHW7W+c6Mmk2yfQ/ibvJzRLrLjAkzecGwLWICJuoLQBTNOna3XZbI
-         VnFy770xGVxdjDk9dXHvkb/ZqSHfM1yhNZARL1EQll7tFtso8gJjlI04p5hAKF0gFFP7
-         BTDQ==
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:from:to:cc;
+        bh=pEfAVAxWJXoJIXxB3VHZJ8vG43/WOXk9aDnpoOjZ6lw=;
+        b=qYQJj0a6LSPI8R8WeCajCBaR8m4rSdefImsfMUzcX98F2vNNFlc6g+QfHWWKWfhbxk
+         n22CowZron62myVfRI5h2tqwAkoGv1byPpArT+r60qu7xbVJA1e84DLEe6J2lAJ9d3in
+         ZWaMk7OLEmrnsO6riof8EH0bX+Frjsu8VnAdD5hb3aB/ArGNQYMIOOiFQypJNFHpYp05
+         z4y6ucZ8SKcoCmKs15tA+El7ymlwheKgrXXGCew/xohw2oaHpwFxbuvPZeT3ionEPl7h
+         vQwAMcIoGPBT/Tqa8s4QHnpcw1JIywT88yxbxFmwiYW/TB9HzC+izh0VAx6MBD8Ashwc
+         wtDQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=cc:to:from:subject:references:mime-version:message-id:in-reply-to
-         :date:x-gm-message-state:from:to:cc;
-        bh=qHxxMbzf5P1kENTIcu/skD1A7VW/ZSQMIDyzork9iPw=;
-        b=3/oCxZ9lPQsP8znsXIAssXnn9RYjnDijl6dk1rZ637yMQxOqvIW5dYcNdObwpRiStx
-         7jHbFSFoG42LQPXfBKdKWgQtR7dAo5safhh0faT+CW8CZff5ovB0nj++Mc1TJGZ2BCed
-         UvrpdgWOkFCBI5OWGwinKReY3R3Yxi/Q0Q2eM0YrI0QwBBPH6qFgUIOEXnQFRXIxQUKW
-         /wmhbz1KJV4XKf54j8OhwWbvuCVOi8lnb/WFG4G3VEm6Tzlktr+DeLso5pTFQn5ZjTkm
-         NCUcK8r6kx4IlOZHMakTMf0KMG8he4xiae9Z3DTrdWDk2ky3b8hQFP2OrWbTF5TNXKGw
-         pnxQ==
-X-Gm-Message-State: ACgBeo2BnorcjDUtL9Kg6qgnbKOTC/6BLvLiPgyTAZv7kwrHrDsWRbJb
-        EZ+xU/DngxRqZYjkD55e08goQkRGQJv+
-X-Google-Smtp-Source: AA6agR6oqIM30UMn/90m2gApF2R7Le2AepInoK1oGfNY9eAWaYg7N++h7MaUpqoBJDhq2iKEZ3Oi69J7zqh3
-X-Received: from irogers.svl.corp.google.com ([2620:15c:2d4:203:3bec:858f:9a6d:63de])
- (user=irogers job=sendgmr) by 2002:a25:ce92:0:b0:680:c480:4a8 with SMTP id
- x140-20020a25ce92000000b00680c48004a8mr19112893ybe.299.1660714791094; Tue, 16
- Aug 2022 22:39:51 -0700 (PDT)
-Date:   Tue, 16 Aug 2022 22:39:30 -0700
-In-Reply-To: <20220817053930.769840-1-irogers@google.com>
-Message-Id: <20220817053930.769840-7-irogers@google.com>
-Mime-Version: 1.0
-References: <20220817053930.769840-1-irogers@google.com>
-X-Mailer: git-send-email 2.37.1.595.g718a3a8f04-goog
-Subject: [PATCH v1 6/6] perf build: Enable -Wthread-safety with clang
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:x-gm-message-state:from:to:cc;
+        bh=pEfAVAxWJXoJIXxB3VHZJ8vG43/WOXk9aDnpoOjZ6lw=;
+        b=RVux/Y+PD0jHPuI8KfGolyzL+nCyrS4RQW5CFrFjx6+MfBrEMq9Re3E/G2jghUO7Sz
+         E/WamSNMN8y4FI0EtscixB3bQ9zevIDOTXD3dpJtY7wmLqdjBiCTxe0Y2PWfl6h9OJ4F
+         nhBZnBca2SfITvuoAlnozSs5tc2eKMCiTVz964aYSLZ0PDVAUMvi9OGokn/PwrqarNqn
+         n1RbksMvDZuYeHNkXqXXcjnlLzx+pEMeGMvup2BvG5qydmX4gwlEyUKjPNOq1UWmy1SO
+         79M7WFqxr7B8UY65usbZCmp2zVbxg4/vK32m63Qj4EjcahnqFh8bP+SHd89ZXPzTnDpP
+         iVQQ==
+X-Gm-Message-State: ACgBeo14PZon9lIOKaZ74DE1XZN76isxL5IGkYt6lqOItqINg9vwPtJW
+        cXPEIziL2kmXgsocWhk3HLmjt8oVycxgxR8os++emg==
+X-Google-Smtp-Source: AA6agR7R9xBXecwSit10SZQcOcWDoqrGP/tX7H+/4sAvHqw+sxH/OVFj7urKO4y0Jgre/AC4aPgUljiZneAjvzw6gd0=
+X-Received: by 2002:a05:6000:1ac9:b0:220:7f40:49e3 with SMTP id
+ i9-20020a0560001ac900b002207f4049e3mr13085130wry.40.1660716095206; Tue, 16
+ Aug 2022 23:01:35 -0700 (PDT)
+MIME-Version: 1.0
+References: <cecae74c-6bb2-d7da-bce3-35772b6e3f8c@intel.com>
+ <CAP-5=fXJtRVKuPA_xpa=jBzq66y5JMv+jmr1GFNzh-zQ-7j5QA@mail.gmail.com>
+ <CAM9d7cgWXP2s25XUM90=b5Eaojutxi=LobkqrUkRoF5gek4DPQ@mail.gmail.com>
+ <edd637d1-e85c-bc18-a8a2-8aa63d02146f@intel.com> <CAP-5=fWRNO+dmrnq_3a-L6Vdfd2i3oEB8y2+7F2ik7Lc35s5Pg@mail.gmail.com>
+ <53428314-9dfc-288d-d109-79240fba82ac@intel.com>
+In-Reply-To: <53428314-9dfc-288d-d109-79240fba82ac@intel.com>
 From:   Ian Rogers <irogers@google.com>
-To:     Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@redhat.com>,
+Date:   Tue, 16 Aug 2022 23:01:22 -0700
+Message-ID: <CAP-5=fXEE9pvz_maO3BGAAWyaHjBpxcW0uPmvACZBovAqXC6ug@mail.gmail.com>
+Subject: Re: perf tools man pages on the web
+To:     Adrian Hunter <adrian.hunter@intel.com>
+Cc:     Mauro Carvalho Chehab <mchehab@kernel.org>,
+        Namhyung Kim <namhyung@kernel.org>,
         Arnaldo Carvalho de Melo <acme@kernel.org>,
+        Jiri Olsa <jolsa@kernel.org>, Jonathan Corbet <corbet@lwn.net>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Ingo Molnar <mingo@redhat.com>,
         Mark Rutland <mark.rutland@arm.com>,
         Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Jiri Olsa <jolsa@kernel.org>,
-        Namhyung Kim <namhyung@kernel.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Darren Hart <dvhart@infradead.org>,
-        Davidlohr Bueso <dave@stgolabs.net>,
-        "=?UTF-8?q?Andr=C3=A9=20Almeida?=" <andrealmeid@igalia.com>,
-        Nathan Chancellor <nathan@kernel.org>,
-        Nick Desaulniers <ndesaulniers@google.com>,
-        Tom Rix <trix@redhat.com>,
-        Athira Rajeev <atrajeev@linux.vnet.ibm.com>,
-        Weiguo Li <liwg06@foxmail.com>,
-        Pavithra Gurushankar <gpavithrasha@gmail.com>,
-        Thomas Richter <tmricht@linux.ibm.com>,
-        Ravi Bangoria <ravi.bangoria@amd.com>,
-        Dario Petrillo <dario.pk1@gmail.com>,
-        Wenyu Liu <liuwenyu7@huawei.com>,
-        Hewenliang <hewenliang4@huawei.com>,
-        yaowenbin <yaowenbin1@huawei.com>,
-        Dave Marchevsky <davemarchevsky@fb.com>,
-        Andrii Nakryiko <andrii@kernel.org>,
-        Alexandre Truong <alexandre.truong@arm.com>,
-        Kim Phillips <kim.phillips@amd.com>,
-        Leo Yan <leo.yan@linaro.org>,
-        Quentin Monnet <quentin@isovalent.com>,
-        William Cohen <wcohen@redhat.com>,
-        Andres Freund <andres@anarazel.de>,
-        Song Liu <songliubraving@fb.com>,
-        Adrian Hunter <adrian.hunter@intel.com>,
-        "=?UTF-8?q?Martin=20Li=C5=A1ka?=" <mliska@suse.cz>,
-        Colin Ian King <colin.king@intel.com>,
-        James Clark <james.clark@arm.com>,
-        Fangrui Song <maskray@google.com>,
-        Stephane Eranian <eranian@google.com>,
-        Kajol Jain <kjain@linux.ibm.com>,
-        Andi Kleen <ak@linux.intel.com>,
-        Alexey Bayduraev <alexey.v.bayduraev@linux.intel.com>,
-        Riccardo Mancini <rickyman7@gmail.com>,
-        Masami Hiramatsu <mhiramat@kernel.org>,
-        Christophe JAILLET <christophe.jaillet@wanadoo.fr>,
-        Zechuan Chen <chenzechuan1@huawei.com>,
-        Jason Wang <wangborong@cdjrlc.com>,
-        Lexi Shao <shaolexi@huawei.com>,
-        Remi Bernon <rbernon@codeweavers.com>,
-        linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org,
-        llvm@lists.linux.dev
-Cc:     Ian Rogers <irogers@google.com>
+        "linux-perf-users@vger.kernel.org" <linux-perf-users@vger.kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>
 Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-If building with clang then enable -Wthread-safety warnings.
+On Tue, Aug 16, 2022 at 10:24 PM Adrian Hunter <adrian.hunter@intel.com> wrote:
+>
+> On 16/08/22 16:25, Ian Rogers wrote:
+> > On Mon, Aug 15, 2022 at 11:05 PM Adrian Hunter <adrian.hunter@intel.com> wrote:
+> >>
+> >> On 16/08/22 08:07, Namhyung Kim wrote:
+> >>> Hi Ian and Adrian,
+> >>>
+> >>> On Mon, Aug 15, 2022 at 7:56 AM Ian Rogers <irogers@google.com> wrote:
+> >>>>
+> >>>> On Mon, Aug 15, 2022 at 5:05 AM Adrian Hunter <adrian.hunter@intel.com> wrote:
+> >>>>>
+> >>>>> Hi
+> >>>>>
+> >>>>> I notice man pages on man7.org e.g.
+> >>>>>
+> >>>>>         https://www.man7.org/linux/man-pages/man1/perf.1.html
+> >>>>>
+> >>>>> do not get updated every release, and I wondered if the perf tools
+> >>>>> man pages should also be under:
+> >>>>>
+> >>>>>         https://docs.kernel.org/tools/index.html
+> >>>>>
+> >>>>> Thoughts?
+> >>>>
+> >>>> Sounds good to me. I'm assuming it would be some kind of build step
+> >>>> that would take the man pages and add them to what linux-doc needs?
+> >>>
+> >>> I guess it's the RST format.  I'm not sure if there's a converter
+> >>> from asciidoc to RST.
+> >>
+> >> Could use the html files that are already generated by:
+> >>
+> >>         make -C perf/tools html
+> >
+> > A lot of the man page makefile code comes from git and wasn't in great
+> > shape the last I looked [1]. I believe that would be true for the HTML
+> > output. As there are existing dependencies on rst2man for BPF [2], I
+> > think it'd be cleaner to migrate all the man pages to rst format with
+> > new man page build rules using rst2man. Wdyt?
+>
+> That seems like a larger job.  For now, I am just suggesting copying the
+> html files onto kernel.org.
 
-Signed-off-by: Ian Rogers <irogers@google.com>
----
- tools/perf/Makefile.config | 5 +++++
- 1 file changed, 5 insertions(+)
+So I'm not sure the HTML is in any kind of shape. The build rules and
+configuration files are remnants of what git had many many years ago.
+I did a quick experiment going via docbook (which we do currently in
+the man page generation) and using pandoc to write out rst:
 
-diff --git a/tools/perf/Makefile.config b/tools/perf/Makefile.config
-index 0661a1cf9855..0ef6f572485d 100644
---- a/tools/perf/Makefile.config
-+++ b/tools/perf/Makefile.config
-@@ -19,6 +19,11 @@ detected_var = $(shell echo "$(1)=$($(1))" >> $(OUTPUT).config-detected)
- CFLAGS := $(EXTRA_CFLAGS) $(filter-out -Wnested-externs,$(EXTRA_WARNINGS))
- HOSTCFLAGS := $(filter-out -Wnested-externs,$(EXTRA_WARNINGS))
- 
-+# Enabled Wthread-safety analysis for clang builds.
-+ifeq ($(CC_NO_CLANG), 0)
-+  CFLAGS += -Wthread-safety
-+endif
-+
- include $(srctree)/tools/scripts/Makefile.arch
- 
- $(call detected_var,SRCARCH)
--- 
-2.37.1.595.g718a3a8f04-goog
+$ cd tools/perf/Documentation
+$ asciidoc -o - -b docbook -d manpage -f asciidoc.conf perf.txt|pandoc
+-f docbook -t rst > perf.rst
+$ man2rst perf.rst perf.man
+$ man ./perf.man
 
+and got something functional but with these warnings:
+
+perf.rst:7: (ERROR/3) Unexpected indentation.
+perf.rst:11: (WARNING/2) malformed hyperlink target.
+perf.rst:66: (WARNING/2) malformed hyperlink target.
+perf.rst:76: (WARNING/2) malformed hyperlink target.
+
+So we might be able to convert somewhat automatically but have to fix
+up hyperlinks.
+
+Thanks,
+Ian
+
+> + Mauro
+>
+> Mauro, do you know if that is feasible?
+>
+> >
+> > Thanks,
+> > Ian
+> >
+> > [1] https://lore.kernel.org/all/20210715013343.2286699-1-irogers@google.com/
+> > [2] https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree/tools/include/uapi/linux/bpf.h#n1538
+> >
+> >>>                        Anyway having the perf man pages in the
+> >>> tools section looks good.
+> >>>
+> >>>>
+> >>>> Fwiw, there has been some effort to try to improve the wiki:
+> >>>> https://perf.wiki.kernel.org/index.php/Main_Page
+> >>>> For example, the useful links are now broken apart and have more
+> >>>> links, there is a work-in-progress glossary. Perhaps there can be some
+> >>>> guidance on what to capture and where.
+> >>>
+> >>> Thanks for working on this.  I really need to take a look...
+> >>>
+> >>> Thanks,
+> >>> Namhyung
+> >>
+>
