@@ -2,227 +2,179 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8938FC25B08
-	for <linux-perf-users@archiver.kernel.org>; Wed, 17 Aug 2022 17:49:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9A5F0C25B08
+	for <linux-perf-users@archiver.kernel.org>; Wed, 17 Aug 2022 18:13:42 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S237637AbiHQRtU (ORCPT
+        id S232235AbiHQSNl (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Wed, 17 Aug 2022 13:49:20 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56340 "EHLO
+        Wed, 17 Aug 2022 14:13:41 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45838 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S237202AbiHQRtR (ORCPT
+        with ESMTP id S230055AbiHQSNk (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Wed, 17 Aug 2022 13:49:17 -0400
-Received: from mail-yw1-x114a.google.com (mail-yw1-x114a.google.com [IPv6:2607:f8b0:4864:20::114a])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 897326566D
-        for <linux-perf-users@vger.kernel.org>; Wed, 17 Aug 2022 10:49:16 -0700 (PDT)
-Received: by mail-yw1-x114a.google.com with SMTP id 00721157ae682-32a115757b6so165762537b3.13
-        for <linux-perf-users@vger.kernel.org>; Wed, 17 Aug 2022 10:49:16 -0700 (PDT)
+        Wed, 17 Aug 2022 14:13:40 -0400
+Received: from mail-wm1-x32d.google.com (mail-wm1-x32d.google.com [IPv6:2a00:1450:4864:20::32d])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6D0E43121B
+        for <linux-perf-users@vger.kernel.org>; Wed, 17 Aug 2022 11:13:37 -0700 (PDT)
+Received: by mail-wm1-x32d.google.com with SMTP id d5so4745883wms.5
+        for <linux-perf-users@vger.kernel.org>; Wed, 17 Aug 2022 11:13:37 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=google.com; s=20210112;
-        h=cc:to:from:subject:mime-version:message-id:date:from:to:cc;
-        bh=M5S6AbdkVVbSnSfN9/DAhnwSxKsAuBYodWwik9s6ZfI=;
-        b=b7wOw1EkyAq3QKpxWwsvGGOitsz3gO6HkDKqrLtqYR8egq2Cng/I2Q+5J/yXk0gKkc
-         pPOp/sLtqOZ8rleYh0yUs4yxGk8ic7w57MroP+WIcBS6WE2lHHsEGhu3JvHjsPjkaRRV
-         Tvn3Y7JGBWCGjRisO2SOvqhovF7oJYB0Cz05PyBPDS8pe3yD1y7rVJrPfSuuhX1dhnF9
-         +gm1Es3hFwDtk+Lnr1PQRMcNtyee6766z42/gWXiLhqbdfa9jaWSkmPTWd9z86MEgmDJ
-         Vnh92bLCkCjrkTsuf07AAnU1QiYsZCiL/kXv8ZzcTZBiHfFvUJE4YobOzgf09KZisdLB
-         wNsg==
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:from:to:cc;
+        bh=AoLCAbLDO5OKQ45Upb5zhSD4FC4CobRiXEeHndZfFHs=;
+        b=ox6h+dfiVDke1t4uuzgyltlICgBnQ1/58MJNplaIGdEIyNts7Uk1lgald0iUw2nMfC
+         yP86/49AcLMoqg8tkR2T6acPQkCZqStjiM2+ckIhZO1NRDnRhw4cGlzS1ExCl54Wwdlt
+         o46oE8XvStO596NsNAi5MQcK78HTIXfOLy1NbqeXh4MVdEf61SpOlyyltPgLV95LXFxR
+         Krn3dUNXhi+ojdC4FiGokAAVVXKawpyzEUWYoJDOSsu+RyH/4Bzwa4aCBW+cQpjgqM4k
+         sAiMiRBb5tVg+etFVxFLBr+IIkkSHYPsgiA/0D95iEsuBkGC3dpVXyQh7QMJWS/huZ/1
+         0sTA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=cc:to:from:subject:mime-version:message-id:date:x-gm-message-state
-         :from:to:cc;
-        bh=M5S6AbdkVVbSnSfN9/DAhnwSxKsAuBYodWwik9s6ZfI=;
-        b=lryPhSs+sQ6o1+Jo8owGs8W/L/t9r9x8k5apuzXAmx15/OoTXcOQ6WS0p7y5sqWhHJ
-         vWVFTj1CM6eqa6FBmRLVmHlA76LEEC95mwFt/nZjSiMN26UuMB167tzBtidBsZRBf8pw
-         qNCBnavSDTOHL4e4+4BzUjUuTRs/bdCBcD0KtrWlZ7vjpx3n9zt4FX0hiJWVa8PFGH1a
-         IUU+UWzDnaMai1/1p0LuNxSV3aHjYsd4heq/MLLUi4vn0coD83+wjCeduQfpR516CxoE
-         jy2RYEhfQ0iQ4PD5mVzHwGo6ycTv2159I/hM80xWv6A7IqRfSm/NAjCFi1Zb0Hc8jnkn
-         fPdw==
-X-Gm-Message-State: ACgBeo3TL6iOQpqaXPq6euq9HKY3br39Vcolz6FUUhjfMTNKuwS6tlky
-        Klg92Mb15xoQ5xcjnA7PFWOZO29b8D/C
-X-Google-Smtp-Source: AA6agR4VxwATvDhl8n87bMtS9U47mhZWWdFKxULZ6Sl7Ek669qjcQ5RdrwxIyMw70WScIz43kLNeoI/kn5FT
-X-Received: from irogers.svl.corp.google.com ([2620:15c:2d4:203:9c12:6eda:f67d:4ffb])
- (user=irogers job=sendgmr) by 2002:a5b:591:0:b0:66d:edde:4ca with SMTP id
- l17-20020a5b0591000000b0066dedde04camr20968031ybp.641.1660758555884; Wed, 17
- Aug 2022 10:49:15 -0700 (PDT)
-Date:   Wed, 17 Aug 2022 10:49:09 -0700
-Message-Id: <20220817174909.877139-1-irogers@google.com>
-Mime-Version: 1.0
-X-Mailer: git-send-email 2.37.1.595.g718a3a8f04-goog
-Subject: [PATCH v4] perf: Align user space counter reading with code
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:x-gm-message-state:from:to:cc;
+        bh=AoLCAbLDO5OKQ45Upb5zhSD4FC4CobRiXEeHndZfFHs=;
+        b=XaPLEIfXd+1SFu1mAuhwW7/ap7nhf4quSOTCuUd/QcMZ7A5Ar14jpluM26wcWoDeXv
+         tBHxYDBXpaKqdJXzOqJuwEEjri7U1ILdgv0xMbBMXEXqCdm6qA1y9+wsvP07WiUiYogN
+         VP36EZ5qHzVslAtwypmkvOhHDkzGBHW0NGlbpSrH49Wi5YJNUnf3mQS16ClV+PI7QeAN
+         l674gBbEhjguG6rsLnq3XCm/tGfacS3wi8Hv9r1rdLIA0TfVQRR9QWuZWQUGRcQK82La
+         2Xy31ugWEv0Dcs5bRJ3OX2mNdo0XAQ+JfCM3uBzKaN7+ysqPyXu5oLFo0cIekdtj+7e0
+         5uew==
+X-Gm-Message-State: ACgBeo2jxYpgIwpB62/Y0O8o3yY+TVnWoW1PpujRaDyAfkWO2/qxW9Pz
+        GwtIohcrb1gVqLEEowfvHWWQBd64Z1dKeCjkDCUOaA==
+X-Google-Smtp-Source: AA6agR4RQoJMtBDJGpJeKlnU6pxN+BsYEcPmRSHJ/eyjmjIXSq9zHCKdu25c0jH2OgNF9mr3rEmMZNkydhBo/OdebjI=
+X-Received: by 2002:a7b:cb44:0:b0:3a4:e8c7:59a2 with SMTP id
+ v4-20020a7bcb44000000b003a4e8c759a2mr2892114wmj.67.1660760015775; Wed, 17 Aug
+ 2022 11:13:35 -0700 (PDT)
+MIME-Version: 1.0
+References: <20220817134324.702278-1-tcwzxx@gmail.com>
+In-Reply-To: <20220817134324.702278-1-tcwzxx@gmail.com>
 From:   Ian Rogers <irogers@google.com>
-To:     Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Jiri Olsa <jolsa@kernel.org>,
-        Namhyung Kim <namhyung@kernel.org>,
-        Kajol Jain <kjain@linux.ibm.com>,
-        Andi Kleen <ak@linux.intel.com>,
-        Adrian Hunter <adrian.hunter@intel.com>,
-        Anshuman Khandual <anshuman.khandual@arm.com>,
-        linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org,
-        Rob Herring <robh@kernel.org>
-Cc:     Stephane Eranian <eranian@google.com>,
-        Ian Rogers <irogers@google.com>
+Date:   Wed, 17 Aug 2022 11:13:23 -0700
+Message-ID: <CAP-5=fVrpsid2_Ku=5hHeFSQ5Q1zE--5qszWw38ZVciq9Rxd5A@mail.gmail.com>
+Subject: Re: [PATCH] perf tool: add skip_not_exec_file_map_events option
+To:     tcwzxx <tcwzxx@gmail.com>
+Cc:     peterz@infradead.org, mingo@redhat.com, acme@kernel.org,
+        alexander.shishkin@linux.intel.com, jolsa@kernel.org,
+        linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
 Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-Align the user space counter reading documentation with the code in
-perf_mmap__read_self. Previously the documentation was based on the perf
-rdpmc test, but now general purpose code is provided by libperf.
+On Wed, Aug 17, 2022 at 6:43 AM tcwzxx <tcwzxx@gmail.com> wrote:
+>
+> When generate the flame graph, the perf-script subcommand will
+> process all mmap event and add them to the rbtree. The 240,000
+> mmap region takes about 5 minutes, which is not useful for flame
+> graph. So add the skip-not-exec-file-map-events option to skip
+> not PROT_EXEC flag memory regions.
+>
+> Signed-off-by: tcwzxx <tcwzxx@gmail.com>
 
-Signed-off-by: Ian Rogers <irogers@google.com>
-Reviewed-by: Rob Herring <robh@kernel.org>
+Could you provide more context? A reproduction?
 
-v4. Is a rebase.
----
- include/uapi/linux/perf_event.h       | 35 +++++++++++++++++----------
- tools/include/uapi/linux/perf_event.h | 35 +++++++++++++++++----------
- 2 files changed, 44 insertions(+), 26 deletions(-)
+When we synthesize mmap events we drop non-executable pages:
+https://github.com/torvalds/linux/blob/master/tools/perf/util/synthetic-events.c#L466
 
-diff --git a/include/uapi/linux/perf_event.h b/include/uapi/linux/perf_event.h
-index 03b370062741..f35c10aa71b9 100644
---- a/include/uapi/linux/perf_event.h
-+++ b/include/uapi/linux/perf_event.h
-@@ -541,9 +541,13 @@ struct perf_event_mmap_page {
- 	 *
- 	 *     if (pc->cap_usr_time && enabled != running) {
- 	 *       cyc = rdtsc();
--	 *       time_offset = pc->time_offset;
- 	 *       time_mult   = pc->time_mult;
- 	 *       time_shift  = pc->time_shift;
-+	 *       time_offset = pc->time_offset;
-+	 *       if (pc->cap_user_time_short) {
-+	 *         time_cycles = pc->time_cycles;
-+	 *         time_mask = pc->time_mask;
-+	 *       }
- 	 *     }
- 	 *
- 	 *     index = pc->index;
-@@ -551,6 +555,9 @@ struct perf_event_mmap_page {
- 	 *     if (pc->cap_user_rdpmc && index) {
- 	 *       width = pc->pmc_width;
- 	 *       pmc = rdpmc(index - 1);
-+	 *       pmc <<= 64 - width;
-+	 *       pmc >>= 64 - width;
-+	 *       count += pmc;
- 	 *     }
- 	 *
- 	 *     barrier();
-@@ -593,25 +600,27 @@ struct perf_event_mmap_page {
- 	 * If cap_usr_time the below fields can be used to compute the time
- 	 * delta since time_enabled (in ns) using rdtsc or similar.
- 	 *
--	 *   u64 quot, rem;
--	 *   u64 delta;
--	 *
--	 *   quot = (cyc >> time_shift);
--	 *   rem = cyc & (((u64)1 << time_shift) - 1);
--	 *   delta = time_offset + quot * time_mult +
--	 *              ((rem * time_mult) >> time_shift);
-+	 *   cyc = time_cycles + ((cyc - time_cycles) & time_mask);
-+	 *   delta = time_offset + mul_u64_u32_shr(cyc, time_mult, time_shift);
- 	 *
- 	 * Where time_offset,time_mult,time_shift and cyc are read in the
--	 * seqcount loop described above. This delta can then be added to
--	 * enabled and possible running (if index), improving the scaling:
-+	 * seqcount loop described above. mul_u64_u32_shr will compute:
-+	 *
-+	 *   (u64)(((unsigned __int128)cyc * time_mult) >> time_shift)
-+	 *
-+	 * This delta can then be added to enabled and possible running (if
-+	 * index) to improve the scaling. Due to event multiplexing, running
-+	 * may be zero and so care is needed to avoid division by zero.
- 	 *
- 	 *   enabled += delta;
- 	 *   if (index)
- 	 *     running += delta;
- 	 *
--	 *   quot = count / running;
--	 *   rem  = count % running;
--	 *   count = quot * enabled + (rem * enabled) / running;
-+	 *   if (running != 0) {
-+	 *     quot = count / running;
-+	 *     rem  = count % running;
-+	 *     count = quot * enabled + (rem * enabled) / running;
-+	 *   }
- 	 */
- 	__u16	time_shift;
- 	__u32	time_mult;
-diff --git a/tools/include/uapi/linux/perf_event.h b/tools/include/uapi/linux/perf_event.h
-index 581ed4bdc062..9c93e521a6b0 100644
---- a/tools/include/uapi/linux/perf_event.h
-+++ b/tools/include/uapi/linux/perf_event.h
-@@ -541,9 +541,13 @@ struct perf_event_mmap_page {
- 	 *
- 	 *     if (pc->cap_usr_time && enabled != running) {
- 	 *       cyc = rdtsc();
--	 *       time_offset = pc->time_offset;
- 	 *       time_mult   = pc->time_mult;
- 	 *       time_shift  = pc->time_shift;
-+	 *       time_offset = pc->time_offset;
-+	 *       if (pc->cap_user_time_short) {
-+	 *         time_cycles = pc->time_cycles;
-+	 *         time_mask = pc->time_mask;
-+	 *       }
- 	 *     }
- 	 *
- 	 *     index = pc->index;
-@@ -551,6 +555,9 @@ struct perf_event_mmap_page {
- 	 *     if (pc->cap_user_rdpmc && index) {
- 	 *       width = pc->pmc_width;
- 	 *       pmc = rdpmc(index - 1);
-+	 *       pmc <<= 64 - width;
-+	 *       pmc >>= 64 - width;
-+	 *       count += pmc;
- 	 *     }
- 	 *
- 	 *     barrier();
-@@ -593,25 +600,27 @@ struct perf_event_mmap_page {
- 	 * If cap_usr_time the below fields can be used to compute the time
- 	 * delta since time_enabled (in ns) using rdtsc or similar.
- 	 *
--	 *   u64 quot, rem;
--	 *   u64 delta;
--	 *
--	 *   quot = (cyc >> time_shift);
--	 *   rem = cyc & (((u64)1 << time_shift) - 1);
--	 *   delta = time_offset + quot * time_mult +
--	 *              ((rem * time_mult) >> time_shift);
-+	 *   cyc = time_cycles + ((cyc - time_cycles) & time_mask);
-+	 *   delta = time_offset + mul_u64_u32_shr(cyc, time_mult, time_shift);
- 	 *
- 	 * Where time_offset,time_mult,time_shift and cyc are read in the
--	 * seqcount loop described above. This delta can then be added to
--	 * enabled and possible running (if index), improving the scaling:
-+	 * seqcount loop described above. mul_u64_u32_shr will compute:
-+	 *
-+	 *   (u64)(((unsigned __int128)cyc * time_mult) >> time_shift)
-+	 *
-+	 * This delta can then be added to enabled and possible running (if
-+	 * index) to improve the scaling. Due to event multiplexing, running
-+	 * may be zero and so care is needed to avoid division by zero.
- 	 *
- 	 *   enabled += delta;
- 	 *   if (index)
- 	 *     running += delta;
- 	 *
--	 *   quot = count / running;
--	 *   rem  = count % running;
--	 *   count = quot * enabled + (rem * enabled) / running;
-+	 *   if (running != 0) {
-+	 *     quot = count / running;
-+	 *     rem  = count % running;
-+	 *     count = quot * enabled + (rem * enabled) / running;
-+	 *   }
- 	 */
- 	__u16	time_shift;
- 	__u32	time_mult;
--- 
-2.37.1.595.g718a3a8f04-goog
+Similarly in the kernel for the "dummy" event:
+https://github.com/torvalds/linux/blob/master/kernel/events/core.c#L8258
 
+Thanks,
+Ian
+
+> ---
+>  tools/perf/builtin-report.c | 2 ++
+>  tools/perf/builtin-script.c | 3 +++
+>  tools/perf/util/machine.c   | 3 +++
+>  tools/perf/util/map.c       | 5 +++++
+>  tools/perf/util/map.h       | 2 ++
+>  5 files changed, 15 insertions(+)
+>
+> diff --git a/tools/perf/builtin-report.c b/tools/perf/builtin-report.c
+> index 91ed41cc7d88..c28eb9450a66 100644
+> --- a/tools/perf/builtin-report.c
+> +++ b/tools/perf/builtin-report.c
+> @@ -1364,6 +1364,8 @@ int cmd_report(int argc, const char **argv)
+>                     "Disable raw trace ordering"),
+>         OPT_BOOLEAN(0, "skip-empty", &report.skip_empty,
+>                     "Do not display empty (or dummy) events in the output"),
+> +       OPT_BOOLEAN(0, "skip-not-exec-file-map_events", &skip_not_exec_file_map_events,
+> +                   "skip not exec map events"),
+>         OPT_END()
+>         };
+>         struct perf_data data = {
+> diff --git a/tools/perf/builtin-script.c b/tools/perf/builtin-script.c
+> index 13580a9c50b8..e3f4e5e654c9 100644
+> --- a/tools/perf/builtin-script.c
+> +++ b/tools/perf/builtin-script.c
+> @@ -32,6 +32,7 @@
+>  #include "util/time-utils.h"
+>  #include "util/path.h"
+>  #include "util/event.h"
+> +#include "util/map.h"
+>  #include "ui/ui.h"
+>  #include "print_binary.h"
+>  #include "archinsn.h"
+> @@ -3936,6 +3937,8 @@ int cmd_script(int argc, const char **argv)
+>                     "Guest code can be found in hypervisor process"),
+>         OPT_BOOLEAN('\0', "stitch-lbr", &script.stitch_lbr,
+>                     "Enable LBR callgraph stitching approach"),
+> +       OPT_BOOLEAN(0, "skip-not-exec-map_events", &skip_not_exec_file_map_events,
+> +                   "skip not exec map events"),
+>         OPTS_EVSWITCH(&script.evswitch),
+>         OPT_END()
+>         };
+> diff --git a/tools/perf/util/machine.c b/tools/perf/util/machine.c
+> index 2a16cae28407..21dde9f9935c 100644
+> --- a/tools/perf/util/machine.c
+> +++ b/tools/perf/util/machine.c
+> @@ -1904,6 +1904,9 @@ int machine__process_mmap2_event(struct machine *machine,
+>         if (thread == NULL)
+>                 goto out_problem;
+>
+> +       if (skip_not_exec_file_map_events && !(event->mmap2.prot & PROT_EXEC))
+> +               goto out_problem;
+> +
+>         map = map__new(machine, event->mmap2.start,
+>                         event->mmap2.len, event->mmap2.pgoff,
+>                         &dso_id, event->mmap2.prot,
+> diff --git a/tools/perf/util/map.c b/tools/perf/util/map.c
+> index e0aa4a254583..2b51ca012c91 100644
+> --- a/tools/perf/util/map.c
+> +++ b/tools/perf/util/map.c
+> @@ -16,6 +16,8 @@
+>  #include "thread.h"
+>  #include "vdso.h"
+>
+> +bool skip_not_exec_file_map_events;
+> +
+>  static inline int is_android_lib(const char *filename)
+>  {
+>         return strstarts(filename, "/data/app-lib/") ||
+> @@ -168,6 +170,9 @@ struct map *map__new(struct machine *machine, u64 start, u64 len,
+>                 if (dso == NULL)
+>                         goto out_delete;
+>
+> +               if (skip_not_exec_file_map_events && dso__type(dso, machine) == DSO__TYPE_UNKNOWN)
+> +                       goto out_delete;
+> +
+>                 map__init(map, start, start + len, pgoff, dso);
+>
+>                 if (anon || no_dso) {
+> diff --git a/tools/perf/util/map.h b/tools/perf/util/map.h
+> index 3dcfe06db6b3..67b0e0f9f0ae 100644
+> --- a/tools/perf/util/map.h
+> +++ b/tools/perf/util/map.h
+> @@ -11,6 +11,8 @@
+>  #include <stdbool.h>
+>  #include <linux/types.h>
+>
+> +extern bool skip_not_exec_file_map_events;
+> +
+>  struct dso;
+>  struct maps;
+>  struct machine;
+> --
+> 2.34.1
+>
