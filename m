@@ -2,113 +2,167 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AD0DAC25B08
-	for <linux-perf-users@archiver.kernel.org>; Wed, 17 Aug 2022 13:22:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 00F3DC25B08
+	for <linux-perf-users@archiver.kernel.org>; Wed, 17 Aug 2022 13:43:40 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S239789AbiHQNWA (ORCPT
+        id S236106AbiHQNnk (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Wed, 17 Aug 2022 09:22:00 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60588 "EHLO
+        Wed, 17 Aug 2022 09:43:40 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34618 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S239903AbiHQNVp (ORCPT
+        with ESMTP id S233443AbiHQNnj (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Wed, 17 Aug 2022 09:21:45 -0400
-Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C400580EBE;
-        Wed, 17 Aug 2022 06:21:41 -0700 (PDT)
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id E97BC6130F;
-        Wed, 17 Aug 2022 13:21:39 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 29D4FC433C1;
-        Wed, 17 Aug 2022 13:21:39 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1660742499;
-        bh=h4GXGKaQaNJOaFx5e5DFot02bgz0zhhO3WPRqCaKCzU=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=rUVUg/JR5mlDYRP4D/zT4mFFkjO3HGHnNdmUpDLUFpAK/LpYUcUD2YMWFeMdZ3sg4
-         5ZW7OGjYCZ0zq5RWB/WQoO88q1wm1et1tErGGKZ38a/Et5uYiuzWlaUZ5+do6uBBs9
-         Xx9g6yXjNZA48/Gg1lvyih/ZAaS4zcc/kdqr4vz9jF/LNRNCkU+3BC5IuAmq+/yb/V
-         sEZ9rcUG9idpjmLqHXSCzhGN29JV3Df0WhFBRWnwio2VF0VggkODbd3wPpru5JuUvq
-         AiyRW3iAW2eGyW6klN3g82+pRNLC+dE7OALI5ct/fCTW+D8+EGGwUjxzB11dvkigXC
-         wl5X/gVvF1paw==
-Received: by quaco.ghostprotocols.net (Postfix, from userid 1000)
-        id C78434035A; Wed, 17 Aug 2022 10:21:36 -0300 (-03)
-Date:   Wed, 17 Aug 2022 10:21:36 -0300
-From:   Arnaldo Carvalho de Melo <acme@kernel.org>
-To:     Ian Rogers <irogers@google.com>, John Kacur <jkacur@redhat.com>
-Cc:     Adrian Hunter <adrian.hunter@intel.com>,
-        Jiri Olsa <jolsa@kernel.org>,
-        Namhyung Kim <namhyung@kernel.org>,
-        Jonathan Corbet <corbet@lwn.net>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        "linux-perf-users@vger.kernel.org" <linux-perf-users@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>
-Subject: Re: perf tools man pages on the web
-Message-ID: <YvzrYLx3RDHAmqbf@kernel.org>
-References: <cecae74c-6bb2-d7da-bce3-35772b6e3f8c@intel.com>
- <CAP-5=fXJtRVKuPA_xpa=jBzq66y5JMv+jmr1GFNzh-zQ-7j5QA@mail.gmail.com>
- <b42344bc-86f6-9047-b015-88ef3b58a619@intel.com>
- <CAP-5=fUq4N+X+3VMsT=he3Q9_4qHKkqxdPDcMdDE=_3qdV9aCg@mail.gmail.com>
+        Wed, 17 Aug 2022 09:43:39 -0400
+Received: from mail-pj1-x102d.google.com (mail-pj1-x102d.google.com [IPv6:2607:f8b0:4864:20::102d])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 584F23CBED;
+        Wed, 17 Aug 2022 06:43:38 -0700 (PDT)
+Received: by mail-pj1-x102d.google.com with SMTP id m10-20020a17090a730a00b001fa986fd8eeso1894967pjk.0;
+        Wed, 17 Aug 2022 06:43:38 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20210112;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc;
+        bh=ltEvwlF7Mc7Jfl+CVYXmu3T8hQuVRPkB5nZQ2bzNo40=;
+        b=dEU0EguborkBx81g9hWug55t3YIcKqs5J0/FrnUJGlrgBQUGhlcAMRJlx3aknSQDTV
+         0YgD2F1LyeajruuaTOflPNvR8gvmUK23gfA0tPhWESXkDqdWlzjk8+J9pocDc6w+xYGh
+         XCqOHmYse/viFAaGggf8mLxG9UytxejRWc+iDuzT0alTWeSsFMBgxTqKb21tsj5ynI6R
+         8NlJL2W6+cE3Z+QXgD82G24uYbJXufyei78rG2IQlsBXPilLF7MauCDvy+OSDmz58ypf
+         PejwCi+zUMaM2JblPAMX+iP3KJR+Vpt5Ei8w4o/iL2y7Ki+z6RcFzP6eoprkUTupcIIV
+         rAHw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc;
+        bh=ltEvwlF7Mc7Jfl+CVYXmu3T8hQuVRPkB5nZQ2bzNo40=;
+        b=nXEqs1I1vmEm1MVfQ+Dk2VSgI28MkGsK2Q4fV+v4RGuSGcD2iytMW3E8S5+9pMPEAa
+         V5r3+tm6sXy7L33xe+ScXLKgBIQqhH6hqbo6dpFYk+hZQu2oOK2mGg8F/8uvtkNdYkzV
+         ERChr61tj+AKuUvwe0X7sezT5klfd4DKPBm9SfDxKC5TSVdfcnWD2KyQ6Q4u4PvSUUiE
+         PXPOXrdq1Y3zLFinxi2P4+RZBZ3Kaej8XklemoN7mCUXwRv1GsUMOcEij41fhWuchKxO
+         yAakM4q2byhEvtSyY5msYyWupFfV9QjYkgGNNyqGn3vgvS0QMFNY5nops7MXRW02Rc5k
+         UXdg==
+X-Gm-Message-State: ACgBeo3M48shWwm2ThDwmfuJmqSbA3EmC5wczyi/+juDQTeBW9o6tCpW
+        bAc2l10vLwiwTuczAg8fw1M=
+X-Google-Smtp-Source: AA6agR7IzL4j/fNNZG2fIpkkOy57Eo5eqFLkF5ehsNbgWZvLivG8647a4lQWujNb/umEnPl7LacACg==
+X-Received: by 2002:a17:902:7883:b0:172:935c:7712 with SMTP id q3-20020a170902788300b00172935c7712mr4999396pll.7.1660743817579;
+        Wed, 17 Aug 2022 06:43:37 -0700 (PDT)
+Received: from instance-20220713-1412.vcn09202155.oraclevcn.com ([168.138.217.33])
+        by smtp.gmail.com with ESMTPSA id w1-20020a631601000000b004129741dd9dsm9480651pgl.51.2022.08.17.06.43.35
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 17 Aug 2022 06:43:36 -0700 (PDT)
+From:   tcwzxx <tcwzxx@gmail.com>
+To:     peterz@infradead.org, mingo@redhat.com, acme@kernel.org,
+        alexander.shishkin@linux.intel.com, jolsa@kernel.org
+Cc:     linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org,
+        tcwzxx <tcwzxx@gmail.com>
+Subject: [PATCH] perf tool: add skip_not_exec_file_map_events option
+Date:   Wed, 17 Aug 2022 13:43:24 +0000
+Message-Id: <20220817134324.702278-1-tcwzxx@gmail.com>
+X-Mailer: git-send-email 2.34.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CAP-5=fUq4N+X+3VMsT=he3Q9_4qHKkqxdPDcMdDE=_3qdV9aCg@mail.gmail.com>
-X-Url:  http://acmel.wordpress.com
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-Em Wed, Aug 17, 2022 at 06:02:25AM -0700, Ian Rogers escreveu:
-> On Wed, Aug 17, 2022 at 1:55 AM Adrian Hunter <adrian.hunter@intel.com> wrote:
-> > Speaking of the wiki, anyone know how to change the
-> > "Set $wgLogo to the URL path to your own logo image." image?
+When generate the flame graph, the perf-script subcommand will
+process all mmap event and add them to the rbtree. The 240,000
+mmap region takes about 5 minutes, which is not useful for flame
+graph. So add the skip-not-exec-file-map-events option to skip
+not PROT_EXEC flag memory regions.
+
+Signed-off-by: tcwzxx <tcwzxx@gmail.com>
+---
+ tools/perf/builtin-report.c | 2 ++
+ tools/perf/builtin-script.c | 3 +++
+ tools/perf/util/machine.c   | 3 +++
+ tools/perf/util/map.c       | 5 +++++
+ tools/perf/util/map.h       | 2 ++
+ 5 files changed, 15 insertions(+)
+
+diff --git a/tools/perf/builtin-report.c b/tools/perf/builtin-report.c
+index 91ed41cc7d88..c28eb9450a66 100644
+--- a/tools/perf/builtin-report.c
++++ b/tools/perf/builtin-report.c
+@@ -1364,6 +1364,8 @@ int cmd_report(int argc, const char **argv)
+ 		    "Disable raw trace ordering"),
+ 	OPT_BOOLEAN(0, "skip-empty", &report.skip_empty,
+ 		    "Do not display empty (or dummy) events in the output"),
++	OPT_BOOLEAN(0, "skip-not-exec-file-map_events", &skip_not_exec_file_map_events,
++		    "skip not exec map events"),
+ 	OPT_END()
+ 	};
+ 	struct perf_data data = {
+diff --git a/tools/perf/builtin-script.c b/tools/perf/builtin-script.c
+index 13580a9c50b8..e3f4e5e654c9 100644
+--- a/tools/perf/builtin-script.c
++++ b/tools/perf/builtin-script.c
+@@ -32,6 +32,7 @@
+ #include "util/time-utils.h"
+ #include "util/path.h"
+ #include "util/event.h"
++#include "util/map.h"
+ #include "ui/ui.h"
+ #include "print_binary.h"
+ #include "archinsn.h"
+@@ -3936,6 +3937,8 @@ int cmd_script(int argc, const char **argv)
+ 		    "Guest code can be found in hypervisor process"),
+ 	OPT_BOOLEAN('\0', "stitch-lbr", &script.stitch_lbr,
+ 		    "Enable LBR callgraph stitching approach"),
++	OPT_BOOLEAN(0, "skip-not-exec-map_events", &skip_not_exec_file_map_events,
++		    "skip not exec map events"),
+ 	OPTS_EVSWITCH(&script.evswitch),
+ 	OPT_END()
+ 	};
+diff --git a/tools/perf/util/machine.c b/tools/perf/util/machine.c
+index 2a16cae28407..21dde9f9935c 100644
+--- a/tools/perf/util/machine.c
++++ b/tools/perf/util/machine.c
+@@ -1904,6 +1904,9 @@ int machine__process_mmap2_event(struct machine *machine,
+ 	if (thread == NULL)
+ 		goto out_problem;
  
-> +1000
++	if (skip_not_exec_file_map_events && !(event->mmap2.prot & PROT_EXEC))
++		goto out_problem;
++
+ 	map = map__new(machine, event->mmap2.start,
+ 			event->mmap2.len, event->mmap2.pgoff,
+ 			&dso_id, event->mmap2.prot,
+diff --git a/tools/perf/util/map.c b/tools/perf/util/map.c
+index e0aa4a254583..2b51ca012c91 100644
+--- a/tools/perf/util/map.c
++++ b/tools/perf/util/map.c
+@@ -16,6 +16,8 @@
+ #include "thread.h"
+ #include "vdso.h"
  
-> Someone at RedHat knows :-)
++bool skip_not_exec_file_map_events;
++
+ static inline int is_android_lib(const char *filename)
+ {
+ 	return strstarts(filename, "/data/app-lib/") ||
+@@ -168,6 +170,9 @@ struct map *map__new(struct machine *machine, u64 start, u64 len,
+ 		if (dso == NULL)
+ 			goto out_delete;
+ 
++		if (skip_not_exec_file_map_events && dso__type(dso, machine) == DSO__TYPE_UNKNOWN)
++			goto out_delete;
++
+ 		map__init(map, start, start + len, pgoff, dso);
+ 
+ 		if (anon || no_dso) {
+diff --git a/tools/perf/util/map.h b/tools/perf/util/map.h
+index 3dcfe06db6b3..67b0e0f9f0ae 100644
+--- a/tools/perf/util/map.h
++++ b/tools/perf/util/map.h
+@@ -11,6 +11,8 @@
+ #include <stdbool.h>
+ #include <linux/types.h>
+ 
++extern bool skip_not_exec_file_map_events;
++
+ struct dso;
+ struct maps;
+ struct machine;
+-- 
+2.34.1
 
-Documentation is at the Media Wiki site, admin up to a point was John Kacur,
-John?
-
-https://www.mediawiki.org/wiki/Manual:FAQ#Changing_the_interface>
-
---------------------- 8< ----------------------------------
-
-How do I change the logo?
-
-The logo that appears in the top left of each page is determined by the $wgLogo configuration line in the LocalSettings.php file.
-
-There are two ways to change the logo:
-
-    Upload a picture to your wiki using the normal file uploading interface. This allows the logo to be replaced easily, so you may want to protect the page if you use this method.
-
-        Then add the $wgLogo line to LocalSettings.php, for example:
-
-        $wgLogo = "{$wgUploadPath}/6/62/mylogo.png";
-
-    Upload an image to your server by other means (such as FTP).
-
-        Add the $wgLogo line to LocalSettings.php, for example:
-
-        $wgLogo = "{$wgScriptPath}/mylogo.jpg";
-
-        (In this example, the image is in the same folder as the LocalSettings.php file.)
-
-If you want to change the logo in only specific pages, override #p-logo
-css's background-image property or use third party extension like
-Extension:LogoFunctions.  Caution! Caution: 	Do not simply overwrite
-the default logo installed with MediaWiki (/resources/assets/wiki.png);
-this file will be overwritten when you upgrade.  A good size for a
-square logo is 135x135px or 150x150px, but the logo need not be square,
-especially if it contains text below an image. The maximum logo size in
-Vector is ~160x160px, while MonoBook's is ~155x155px. A logo that is too
-large will be cut off.
-
---------------------- 8< ----------------------------------
-
-- Arnaldo
