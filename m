@@ -2,102 +2,141 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4151AC25B0E
-	for <linux-perf-users@archiver.kernel.org>; Wed, 17 Aug 2022 03:18:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7EF9CC25B08
+	for <linux-perf-users@archiver.kernel.org>; Wed, 17 Aug 2022 05:24:21 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229569AbiHQDSj (ORCPT
+        id S229807AbiHQFYU (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Tue, 16 Aug 2022 23:18:39 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52802 "EHLO
+        Wed, 17 Aug 2022 01:24:20 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46696 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229448AbiHQDSg (ORCPT
+        with ESMTP id S229758AbiHQFYU (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Tue, 16 Aug 2022 23:18:36 -0400
-Received: from szxga01-in.huawei.com (szxga01-in.huawei.com [45.249.212.187])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CEBAF606AD;
-        Tue, 16 Aug 2022 20:18:30 -0700 (PDT)
-Received: from dggemv704-chm.china.huawei.com (unknown [172.30.72.57])
-        by szxga01-in.huawei.com (SkyGuard) with ESMTP id 4M6tTF34sHzmVhr;
-        Wed, 17 Aug 2022 11:16:17 +0800 (CST)
-Received: from kwepemm600003.china.huawei.com (7.193.23.202) by
- dggemv704-chm.china.huawei.com (10.3.19.47) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2375.24; Wed, 17 Aug 2022 11:18:28 +0800
-Received: from [10.67.111.205] (10.67.111.205) by
- kwepemm600003.china.huawei.com (7.193.23.202) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2375.24; Wed, 17 Aug 2022 11:18:28 +0800
-Subject: Re: [PATCH v3] perf/core: Fix reentry problem in
- perf_output_read_group
-To:     Peter Zijlstra <peterz@infradead.org>
-CC:     <rostedt@goodmis.org>, <mingo@redhat.com>, <acme@kernel.org>,
-        <mark.rutland@arm.com>, <alexander.shishkin@linux.intel.com>,
-        <jolsa@kernel.org>, <namhyung@kernel.org>,
-        <linux-kernel@vger.kernel.org>, <linux-perf-users@vger.kernel.org>
-References: <20220816091103.257702-1-yangjihong1@huawei.com>
- <YvumDL1qz1NjpfEC@worktop.programming.kicks-ass.net>
-From:   Yang Jihong <yangjihong1@huawei.com>
-Message-ID: <eef9a64a-6f3a-01cb-ec06-1b6da0102217@huawei.com>
-Date:   Wed, 17 Aug 2022 11:18:26 +0800
-User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:78.0) Gecko/20100101
- Thunderbird/78.6.1
+        Wed, 17 Aug 2022 01:24:20 -0400
+Received: from mga01.intel.com (mga01.intel.com [192.55.52.88])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C6C3E5FAC;
+        Tue, 16 Aug 2022 22:24:18 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1660713858; x=1692249858;
+  h=message-id:date:mime-version:subject:to:cc:references:
+   from:in-reply-to:content-transfer-encoding;
+  bh=RuOw0a+zfDrSKH3bQpTCct6nUD3o/er6utR/T/sgNW4=;
+  b=i44bWr4SYMqooJj+0tczklLNYGRvSyLPkORK4eLX6Sxk/1WAw9ykYDAB
+   zZyjeaTgn9kftaDVQSPyba4i8NuSUX7ic+vfoOFdhfdV0d2BtA4l12h1Z
+   CMKj6pG6X9zXhlKo0BIj9y49nzQTbS2YzyMqHFkc2mx6cROdTdqlwUSOV
+   GAE06eN2O9grMke0mjodTqN6SPocxPFogIXKra7QKY8Tha2r0Di37icoy
+   dndiZqN6yHZQpyzLVZtyVL1VkmoNZTDzbHdoNG/unQRLg5Xn9rMGUwMuN
+   GlTjt47ppSmV3UUYVsp4+skqH3Wz+GM5A5yopTmKbq9+ZiY7NmHsSYz79
+   w==;
+X-IronPort-AV: E=McAfee;i="6400,9594,10441"; a="318408352"
+X-IronPort-AV: E=Sophos;i="5.93,242,1654585200"; 
+   d="scan'208";a="318408352"
+Received: from fmsmga008.fm.intel.com ([10.253.24.58])
+  by fmsmga101.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 16 Aug 2022 22:24:18 -0700
+X-IronPort-AV: E=Sophos;i="5.93,242,1654585200"; 
+   d="scan'208";a="667445041"
+Received: from ahunter6-mobl1.ger.corp.intel.com (HELO [10.0.2.15]) ([10.252.49.3])
+  by fmsmga008-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 16 Aug 2022 22:24:14 -0700
+Message-ID: <53428314-9dfc-288d-d109-79240fba82ac@intel.com>
+Date:   Wed, 17 Aug 2022 08:24:08 +0300
 MIME-Version: 1.0
-In-Reply-To: <YvumDL1qz1NjpfEC@worktop.programming.kicks-ass.net>
-Content-Type: text/plain; charset="utf-8"; format=flowed
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
+ Firefox/91.0 Thunderbird/91.11.0
+Subject: Re: perf tools man pages on the web
 Content-Language: en-US
+To:     Ian Rogers <irogers@google.com>,
+        Mauro Carvalho Chehab <mchehab@kernel.org>
+Cc:     Namhyung Kim <namhyung@kernel.org>,
+        Arnaldo Carvalho de Melo <acme@kernel.org>,
+        Jiri Olsa <jolsa@kernel.org>, Jonathan Corbet <corbet@lwn.net>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        "linux-perf-users@vger.kernel.org" <linux-perf-users@vger.kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>
+References: <cecae74c-6bb2-d7da-bce3-35772b6e3f8c@intel.com>
+ <CAP-5=fXJtRVKuPA_xpa=jBzq66y5JMv+jmr1GFNzh-zQ-7j5QA@mail.gmail.com>
+ <CAM9d7cgWXP2s25XUM90=b5Eaojutxi=LobkqrUkRoF5gek4DPQ@mail.gmail.com>
+ <edd637d1-e85c-bc18-a8a2-8aa63d02146f@intel.com>
+ <CAP-5=fWRNO+dmrnq_3a-L6Vdfd2i3oEB8y2+7F2ik7Lc35s5Pg@mail.gmail.com>
+From:   Adrian Hunter <adrian.hunter@intel.com>
+Organization: Intel Finland Oy, Registered Address: PL 281, 00181 Helsinki,
+ Business Identity Code: 0357606 - 4, Domiciled in Helsinki
+In-Reply-To: <CAP-5=fWRNO+dmrnq_3a-L6Vdfd2i3oEB8y2+7F2ik7Lc35s5Pg@mail.gmail.com>
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
-X-Originating-IP: [10.67.111.205]
-X-ClientProxiedBy: dggems701-chm.china.huawei.com (10.3.19.178) To
- kwepemm600003.china.huawei.com (7.193.23.202)
-X-CFilter-Loop: Reflected
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-Hello,
+On 16/08/22 16:25, Ian Rogers wrote:
+> On Mon, Aug 15, 2022 at 11:05 PM Adrian Hunter <adrian.hunter@intel.com> wrote:
+>>
+>> On 16/08/22 08:07, Namhyung Kim wrote:
+>>> Hi Ian and Adrian,
+>>>
+>>> On Mon, Aug 15, 2022 at 7:56 AM Ian Rogers <irogers@google.com> wrote:
+>>>>
+>>>> On Mon, Aug 15, 2022 at 5:05 AM Adrian Hunter <adrian.hunter@intel.com> wrote:
+>>>>>
+>>>>> Hi
+>>>>>
+>>>>> I notice man pages on man7.org e.g.
+>>>>>
+>>>>>         https://www.man7.org/linux/man-pages/man1/perf.1.html
+>>>>>
+>>>>> do not get updated every release, and I wondered if the perf tools
+>>>>> man pages should also be under:
+>>>>>
+>>>>>         https://docs.kernel.org/tools/index.html
+>>>>>
+>>>>> Thoughts?
+>>>>
+>>>> Sounds good to me. I'm assuming it would be some kind of build step
+>>>> that would take the man pages and add them to what linux-doc needs?
+>>>
+>>> I guess it's the RST format.  I'm not sure if there's a converter
+>>> from asciidoc to RST.
+>>
+>> Could use the html files that are already generated by:
+>>
+>>         make -C perf/tools html
+> 
+> A lot of the man page makefile code comes from git and wasn't in great
+> shape the last I looked [1]. I believe that would be true for the HTML
+> output. As there are existing dependencies on rst2man for BPF [2], I
+> think it'd be cleaner to migrate all the man pages to rst format with
+> new man page build rules using rst2man. Wdyt?
 
-On 2022/8/16 22:13, Peter Zijlstra wrote:
-> On Tue, Aug 16, 2022 at 05:11:03PM +0800, Yang Jihong wrote:
->> perf_output_read_group may respond to IPI request of other cores and invoke
->> __perf_install_in_context function. As a result, hwc configuration is modified.
->> As a result, the hwc configuration is modified, causing inconsistency and
->> unexpected consequences.
-> 
->>   read_pmevcntrn+0x1e4/0x1ec arch/arm64/kernel/perf_event.c:423
->>   armv8pmu_read_evcntr arch/arm64/kernel/perf_event.c:467 [inline]
->>   armv8pmu_read_hw_counter arch/arm64/kernel/perf_event.c:475 [inline]
->>   armv8pmu_read_counter+0x10c/0x1f0 arch/arm64/kernel/perf_event.c:528
->>   armpmu_event_update+0x9c/0x1bc drivers/perf/arm_pmu.c:247
->>   armpmu_read+0x24/0x30 drivers/perf/arm_pmu.c:264
->>   perf_output_read_group+0x4cc/0x71c kernel/events/core.c:6806
->>   perf_output_read+0x78/0x1c4 kernel/events/core.c:6845
->>   perf_output_sample+0xafc/0x1000 kernel/events/core.c:6892
->>   __perf_event_output kernel/events/core.c:7273 [inline]
->>   perf_event_output_forward+0xd8/0x130 kernel/events/core.c:7287
->>   __perf_event_overflow+0xbc/0x20c kernel/events/core.c:8943
->>   perf_swevent_overflow kernel/events/core.c:9019 [inline]
->>   perf_swevent_event+0x274/0x2c0 kernel/events/core.c:9047
->>   do_perf_sw_event kernel/events/core.c:9160 [inline]
->>   ___perf_sw_event+0x150/0x1b4 kernel/events/core.c:9191
->>   __perf_sw_event+0x58/0x7c kernel/events/core.c:9203
->>   perf_sw_event include/linux/perf_event.h:1177 [inline]
-> 
->> Interrupts is not disabled when perf_output_read_group reads PMU counter.
-> 
-> s/is/are/ due to 'interrupts' being plural
-Ok, will fix in next version.
-> 
-> Anyway, yes, I suppose this is indeed so. That code expects to run with
-> IRQs disabled but in the case of software events that isn't so.
-> 
-Do we need to determine whether it is a software event?
-It feels like it's simply disable IRQs interrupts, with little impact.
->> In this case, IPI request may be received from other cores.
->> As a result, PMU configuration is modified and an error occurs when
->> reading PMU counter:
+That seems like a larger job.  For now, I am just suggesting copying the
+html files onto kernel.org.
 
-<SNIP>
++ Mauro
 
+Mauro, do you know if that is feasible?
 
-Thanks,
-Yang
+> 
+> Thanks,
+> Ian
+> 
+> [1] https://lore.kernel.org/all/20210715013343.2286699-1-irogers@google.com/
+> [2] https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree/tools/include/uapi/linux/bpf.h#n1538
+> 
+>>>                        Anyway having the perf man pages in the
+>>> tools section looks good.
+>>>
+>>>>
+>>>> Fwiw, there has been some effort to try to improve the wiki:
+>>>> https://perf.wiki.kernel.org/index.php/Main_Page
+>>>> For example, the useful links are now broken apart and have more
+>>>> links, there is a work-in-progress glossary. Perhaps there can be some
+>>>> guidance on what to capture and where.
+>>>
+>>> Thanks for working on this.  I really need to take a look...
+>>>
+>>> Thanks,
+>>> Namhyung
+>>
+
