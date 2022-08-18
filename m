@@ -2,194 +2,142 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3F3DCC00140
-	for <linux-perf-users@archiver.kernel.org>; Thu, 18 Aug 2022 16:59:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3B328C00140
+	for <linux-perf-users@archiver.kernel.org>; Thu, 18 Aug 2022 18:14:11 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1345178AbiHRQ74 (ORCPT
+        id S244187AbiHRSOK (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Thu, 18 Aug 2022 12:59:56 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60814 "EHLO
+        Thu, 18 Aug 2022 14:14:10 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48968 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1345192AbiHRQ7r (ORCPT
+        with ESMTP id S238585AbiHRSOI (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Thu, 18 Aug 2022 12:59:47 -0400
-Received: from mail-oi1-f169.google.com (mail-oi1-f169.google.com [209.85.167.169])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C883CBBA4E;
-        Thu, 18 Aug 2022 09:59:39 -0700 (PDT)
-Received: by mail-oi1-f169.google.com with SMTP id u14so2166760oie.2;
-        Thu, 18 Aug 2022 09:59:39 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc;
-        bh=q7/Fq4wajEpRWsjYlv5hp9maHaZJ2PyakIzJtclDzD4=;
-        b=TOf54i4QzknwmUsFPEzAad9zsCPT/sg+4uDsVqVcUIAk4WW/+VgnbAx4xhVd28QJQk
-         WHaeK4fQxIE7R9GJwnKkBo/GnTO2zmijW1D3dF0OOa+kl3pmpNwY/jods/zMmWrah5H7
-         2bJG0wulpu6KKCi2+s7MQwn0tFFrFxq+FBAlEN5yoF7EjPaYK/0fRC+Wna/jV2gh/GPq
-         Fpseeeb44cICQAt/aN1IditH6tPaxBQ4G8O+SCerb+ISGKW6C3yrWwMlVlSeyv+bVqFr
-         lGUIxdWcoDSOpumJI07lFzPdAb2hvasCDU2zkz7MdtcnnCr4mRT6JFO5WZ0D8Z8XtZjF
-         TJIA==
-X-Gm-Message-State: ACgBeo0kBPB29oJj1WFEav7U/3tVuqXwtUBM80ciV3uQjxNwmaUWwQXs
-        hXxBAsgcj+25pCrOXQazJvwSdvEyA9fB57dwZ4E=
-X-Google-Smtp-Source: AA6agR4iwsH/3Ly/RDW4D9ckyby0ca5r4L3Qy/tzmwa28TR5cN/koZwdMIxbIjeyB0wBmLJT0E/dwyKa+pYmuJsD5wA=
-X-Received: by 2002:aca:6088:0:b0:343:75a6:d6a3 with SMTP id
- u130-20020aca6088000000b0034375a6d6a3mr1678269oib.92.1660841977477; Thu, 18
- Aug 2022 09:59:37 -0700 (PDT)
+        Thu, 18 Aug 2022 14:14:08 -0400
+Received: from ams.source.kernel.org (ams.source.kernel.org [145.40.68.75])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9504F47B94;
+        Thu, 18 Aug 2022 11:14:06 -0700 (PDT)
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by ams.source.kernel.org (Postfix) with ESMTPS id 39A0DB823A9;
+        Thu, 18 Aug 2022 18:14:05 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id A0A3DC433D6;
+        Thu, 18 Aug 2022 18:14:03 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1660846443;
+        bh=0gg07s0kGzT4ViYZPq8WstaAK0/6SvOT3SF9kcQbD+k=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=vAvdRdYBhmyNF9gdV0ZDssdTuErtRHEkX4c5eaK1AdNYS/Vx97v+O9Gzpi9Cf82c+
+         lS7oSlebGIclK8IHn+tufEn3Pqql+zXSwK/MgIBZ3lqOrFzsZS6U7ZIfoKGN7PyxCO
+         9b3J7HZT1qay7d0PPp2hAJ3TZqjnGaC9KVcX/klxQenzh4D8peQPkgaZZ18IDTXNco
+         I03TsZswsGDEDWJQqqvNbnSLg57S/ajKIXwExLKQOVc/8tMjy6l2kXjlbpM546mu8G
+         sPXE/nUMTP6VcXVJHX6BgMgkPCgAVmJC35XF43Z5R21g8UMLZFXutbl/gD2LAi9uAb
+         sIReUHqJ1oVaA==
+Received: by quaco.ghostprotocols.net (Postfix, from userid 1000)
+        id BC7944035A; Thu, 18 Aug 2022 15:14:00 -0300 (-03)
+Date:   Thu, 18 Aug 2022 15:14:00 -0300
+From:   Arnaldo Carvalho de Melo <acme@kernel.org>
+To:     Quentin Monnet <quentin@isovalent.com>
+Cc:     Roberto Sassu <roberto.sassu@huaweicloud.com>,
+        peterz@infradead.org, mingo@redhat.com, mark.rutland@arm.com,
+        alexander.shishkin@linux.intel.com, jolsa@kernel.org,
+        namhyung@kernel.org, linux-perf-users@vger.kernel.org,
+        bpf@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Roberto Sassu <roberto.sassu@huawei.com>
+Subject: Re: [PATCH 3/3] tools/build: Display logical OR of a feature flavors
+Message-ID: <Yv6BaHgC4E4J0TTT@kernel.org>
+References: <20220818120957.319995-1-roberto.sassu@huaweicloud.com>
+ <20220818120957.319995-3-roberto.sassu@huaweicloud.com>
+ <Yv46EW6KbUe9zjur@kernel.org>
+ <71544d2970e246e1f0d5f5ec065ea2437df58cd9.camel@huaweicloud.com>
+ <23da162e-1018-9bfa-bc5c-ec09eba9428b@isovalent.com>
 MIME-Version: 1.0
-References: <20220816221747.275828-1-namhyung@kernel.org> <20220816221747.275828-5-namhyung@kernel.org>
- <Yv4qu8xMpfzUQ/8L@krava>
-In-Reply-To: <Yv4qu8xMpfzUQ/8L@krava>
-From:   Namhyung Kim <namhyung@kernel.org>
-Date:   Thu, 18 Aug 2022 09:59:26 -0700
-Message-ID: <CAM9d7ciQ=Vcp-wFdqB7G-t8k75uhrQiEiOHvVFX8WV4Od4LPQw@mail.gmail.com>
-Subject: Re: [PATCH 4/4] perf tools: Support reading PERF_FORMAT_LOST
-To:     Jiri Olsa <olsajiri@gmail.com>
-Cc:     Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Ingo Molnar <mingo@kernel.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Ian Rogers <irogers@google.com>,
-        linux-perf-users <linux-perf-users@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <23da162e-1018-9bfa-bc5c-ec09eba9428b@isovalent.com>
+X-Url:  http://acmel.wordpress.com
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-Hi Jiri,
+Em Thu, Aug 18, 2022 at 05:40:04PM +0100, Quentin Monnet escreveu:
+> On 18/08/2022 14:25, Roberto Sassu wrote:
+> > On Thu, 2022-08-18 at 10:09 -0300, Arnaldo Carvalho de Melo wrote:
+> >> Em Thu, Aug 18, 2022 at 02:09:57PM +0200, 
+> >> roberto.sassu@huaweicloud.com escreveu:
+> >>> From: Roberto Sassu <roberto.sassu@huawei.com>
+> >>>
+> >>> Sometimes, features are simply different flavors of another
+> >>> feature, to
+> >>> properly detect the exact dependencies needed by different Linux
+> >>> distributions.
+> >>>
+> >>> For example, libbfd has three flavors: libbfd if the distro does
+> >>> not
+> >>> require any additional dependency; libbfd-liberty if it requires
+> >>> libiberty;
+> >>> libbfd-liberty-z if it requires libiberty and libz.
+> >>>
+> >>> It might not be clear to the user whether a feature has been
+> >>> successfully
+> >>> detected or not, given that some of its flavors will be set to OFF,
+> >>> others
+> >>> to ON.
+> >>>
+> >>> Instead, display only the feature main flavor if not in verbose
+> >>> mode
+> >>> (VF != 1), and set it to ON if at least one of its flavors has been
+> >>> successfully detected (logical OR), OFF otherwise. Omit the other
+> >>> flavors.
+> >>>
+> >>> Accomplish that by declaring a FEATURE_GROUP_MEMBERS-<feature main
+> >>> flavor>
+> >>> variable, with the list of the other flavors as variable value. For
+> >>> now, do
+> >>> it just for libbfd.
+> >>>
+> >>> In verbose mode, of if no group is defined for a feature, show the
+> >>> feature
+> >>> detection result as before.
+> >>
+> >> Looks cool, tested and added this to the commit log message here in
+> >> my
+> >> local branch, that will go public after further tests for the other
+> >> csets in it:
+> >>
+> >> Committer testing:
+> >>
+> >> Collecting the output from:
+> >>
+> >>   $ make -C tools/bpf/bpftool/ clean
+> >>   $ make -C tools/bpf/bpftool/ |& grep "Auto-detecting system
+> >> features" -A10
+> >>
+> >>   $ diff -u before after
+> >>   --- before    2022-08-18 10:06:40.422086966 -0300
+> >>   +++ after     2022-08-18 10:07:59.202138282 -0300
+> >>   @@ -1,6 +1,4 @@
+> >>    Auto-detecting system features:
+> >>    ...                                  libbfd: [ on  ]
+> >>   -...                          libbfd-liberty: [ on  ]
+> >>   -...                        libbfd-liberty-z: [ on  ]
+> >>    ...                                  libcap: [ on  ]
+> >>    ...                         clang-bpf-co-re: [ on  ]
+> >>   $
+> >>
+> >> Tested-by: Arnaldo Carvalho de Melo <acme@redhat.com>
+> >>
+> >> Thanks for working on this!
+> > 
+> > Thanks for testing and for adapting/pushing the other patches!
+> > 
+> > Roberto
+> > 
+> 
+> Tested locally for bpftool and I also observe "libbfd: [ on  ]" only.
+> This looks much better, thank you Roberto for following up on this!
 
-On Thu, Aug 18, 2022 at 5:04 AM Jiri Olsa <olsajiri@gmail.com> wrote:
->
-> On Tue, Aug 16, 2022 at 03:17:47PM -0700, Namhyung Kim wrote:
->
-> SNIP
->
-> > diff --git a/tools/perf/util/event.h b/tools/perf/util/event.h
-> > index a7b0931d5137..7753368d70d6 100644
-> > --- a/tools/perf/util/event.h
-> > +++ b/tools/perf/util/event.h
-> > @@ -65,7 +65,8 @@ struct stack_dump {
-> >
-> >  struct sample_read_value {
-> >       u64 value;
-> > -     u64 id;
-> > +     u64 id;   /* only if PERF_FORMAT_ID */
-> > +     u64 lost; /* only if PERF_FORMAT_LOST */
-> >  };
->
-> I was wondering why not to split this patch into smaller piece,
-> but once you change this struct you break all the places
+So I'll add your Tested-by: to this one as well, maybe to all the
+patches in this series?
 
-Right.. I'd like to do so but couldn't.. :)
-
->
-> SNIP
->
-> > --- a/tools/perf/util/evsel.c
-> > +++ b/tools/perf/util/evsel.c
-> > @@ -1541,7 +1541,7 @@ static int evsel__read_one(struct evsel *evsel, int cpu_map_idx, int thread)
-> >  }
-> >
-> >  static void evsel__set_count(struct evsel *counter, int cpu_map_idx, int thread,
-> > -                          u64 val, u64 ena, u64 run)
-> > +                          u64 val, u64 ena, u64 run, u64 lost)
-> >  {
-> >       struct perf_counts_values *count;
-> >
-> > @@ -1550,6 +1550,7 @@ static void evsel__set_count(struct evsel *counter, int cpu_map_idx, int thread,
-> >       count->val    = val;
-> >       count->ena    = ena;
-> >       count->run    = run;
-> > +     count->lost   = lost;
-> >
-> >       perf_counts__set_loaded(counter->counts, cpu_map_idx, thread, true);
-> >  }
-> > @@ -1558,7 +1559,7 @@ static int evsel__process_group_data(struct evsel *leader, int cpu_map_idx, int
-> >  {
-> >       u64 read_format = leader->core.attr.read_format;
-> >       struct sample_read_value *v;
-> > -     u64 nr, ena = 0, run = 0, i;
-> > +     u64 nr, ena = 0, run = 0, lost = 0, i;
-> >
-> >       nr = *data++;
-> >
-> > @@ -1573,16 +1574,25 @@ static int evsel__process_group_data(struct evsel *leader, int cpu_map_idx, int
-> >
-> >       v = (struct sample_read_value *) data;
-> >
-> > -     evsel__set_count(leader, cpu_map_idx, thread, v[0].value, ena, run);
-> > +     if (read_format & PERF_FORMAT_LOST)
-> > +             lost = v->lost;
-> > +
-> > +     evsel__set_count(leader, cpu_map_idx, thread, v[0].value, ena, run, lost);
-> > +
-> > +     v = next_sample_read_value(v, read_format);
->
-> oneway of making this simpler here and share with other places
-> could be adding something like:
->
->   for_each_group_data(v, i, nr, read_format) {
->   }
->
-> but not sure how would that turn out, thoughts?
-
-Looks good.  Let me try. :)
-
-
->
-> >
-> >       for (i = 1; i < nr; i++) {
-> >               struct evsel *counter;
-> >
-> > -             counter = evlist__id2evsel(leader->evlist, v[i].id);
-> > +             counter = evlist__id2evsel(leader->evlist, v->id);
-> >               if (!counter)
-> >                       return -EINVAL;
-> >
-> > -             evsel__set_count(counter, cpu_map_idx, thread, v[i].value, ena, run);
-> > +             if (read_format & PERF_FORMAT_LOST)
-> > +                     lost = v->lost;
-> > +
-> > +             evsel__set_count(counter, cpu_map_idx, thread, v->value, ena, run, lost);
-> > +             v = next_sample_read_value(v, read_format);
-> >       }
-> >
-> >       return 0;
-> > @@ -2475,16 +2485,21 @@ int evsel__parse_sample(struct evsel *evsel, union perf_event *event,
-> >
-> >                       if (data->read.group.nr > max_group_nr)
-> >                               return -EFAULT;
-> > -                     sz = data->read.group.nr *
-> > -                          sizeof(struct sample_read_value);
-> > +
-> > +                     sz = data->read.group.nr * sample_read_value_size(read_format);
-> >                       OVERFLOW_CHECK(array, sz, max_size);
-> > -                     data->read.group.values =
-> > -                                     (struct sample_read_value *)array;
-> > +                     data->read.group.values = (void *)array;
->
-> nit, is this void casting needed?
-
-Well.. the array is a pointer to u64 so the casting is needed.
-But it's an unrelated change, can be dropped.
-
-Thanks,
-Namhyung
-
-
->
-> >                       array = (void *)array + sz;
-> >               } else {
-> >                       OVERFLOW_CHECK_u64(array);
-> >                       data->read.one.id = *array;
-> >                       array++;
-> > +
-> > +                     if (read_format & PERF_FORMAT_LOST) {
-> > +                             OVERFLOW_CHECK_u64(array);
-> > +                             data->read.one.lost = *array;
-> > +                             array++;
-> > +                     }
-> >               }
-> >       }
-> >
->
-> SNIP
+- Arnaldo
