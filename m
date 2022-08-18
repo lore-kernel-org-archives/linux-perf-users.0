@@ -2,198 +2,137 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 407F6C25B08
-	for <linux-perf-users@archiver.kernel.org>; Thu, 18 Aug 2022 03:24:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CBDC0C00140
+	for <linux-perf-users@archiver.kernel.org>; Thu, 18 Aug 2022 06:11:19 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S240714AbiHRDYI (ORCPT
+        id S243540AbiHRGLT (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Wed, 17 Aug 2022 23:24:08 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43636 "EHLO
+        Thu, 18 Aug 2022 02:11:19 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57958 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S238882AbiHRDYI (ORCPT
+        with ESMTP id S243561AbiHRGLS (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Wed, 17 Aug 2022 23:24:08 -0400
-Received: from mail-ej1-x62b.google.com (mail-ej1-x62b.google.com [IPv6:2a00:1450:4864:20::62b])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 962BC459B4;
-        Wed, 17 Aug 2022 20:24:04 -0700 (PDT)
-Received: by mail-ej1-x62b.google.com with SMTP id j8so884896ejx.9;
-        Wed, 17 Aug 2022 20:24:04 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20210112;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:from:to:cc;
-        bh=i/5FTk4ehPe1FyyuKCLJg6XVHxq2SQ4ha+cI9T3mg3w=;
-        b=jVG/JT9/Bfyk2QC9r5gleNQHdiyhi6j2Uauh5fO6b9jw+f5ZqtDm409tS9fEBivFPJ
-         Q/Dv0QHfIR8eVYym2anf107mTjSGI3hH+oNJsUrvgXTHJX6MAzKL+LPpt0gz8mewr/d2
-         FzFIytXdXdVe6SduANzt2SxgX2yly8dfZoHzp7vtVcRGNQqxGn5i7TyQ9DZilvoLYOVk
-         BfYV7eOoL2F6+4IhRjpx38G+xLAQOkuuob8xFI2+d3fmBw03yG2+JqoyQ76WHxu8XOxZ
-         lUb+xzhUfMtFEitHhr6lgJU9VjfoG5S/qp/7gJjxDmYiwWEboKSFB4/vVmOreOUgytos
-         OVEw==
+        Thu, 18 Aug 2022 02:11:18 -0400
+Received: from mail-oi1-f173.google.com (mail-oi1-f173.google.com [209.85.167.173])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6D2E58FD5D;
+        Wed, 17 Aug 2022 23:11:17 -0700 (PDT)
+Received: by mail-oi1-f173.google.com with SMTP id j5so603951oih.6;
+        Wed, 17 Aug 2022 23:11:17 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
         h=cc:to:subject:message-id:date:from:in-reply-to:references
          :mime-version:x-gm-message-state:from:to:cc;
-        bh=i/5FTk4ehPe1FyyuKCLJg6XVHxq2SQ4ha+cI9T3mg3w=;
-        b=TQ0SvaJs5v6/OtbhgHjBT30Hpc0WXlbVl8IO9PdcOVpMaeNRHXoMbZx4UdaZ2vVAv+
-         GmZtP2T7JKbkdsI58S8mPeOCIwEnbTYpk9XlFAY57Zd5zht89v1DD4i6RNWK0byKluqX
-         A6Ouzcydo2GtLWFIVPPVP+LkivksX7QTUCWkaFPj9ORyXpbdWOe4WEIwZ9IX+AQAlYp+
-         FDaZQLMLuRLODIIot801iqVlaaIa8GacK0V25WwmLYSOVrlLDqVT6dTriTC9U7hjeUvy
-         t3DQ+3grljI9K1f0W4/v0PeamgTJYXZ8juzN144nWFjoevL8E+4oLE0g5uYacrbJo6tS
-         +usA==
-X-Gm-Message-State: ACgBeo3SswwSwzweRkRqaKIRdQrmwEzf8hUk0B1DrrsCazg2nD6pipZz
-        5GiyI8GIlhmO+dxdJCM50aWeuEu+NJe3ngK2JgK99zK7mOKQqO4PljY=
-X-Google-Smtp-Source: AA6agR68ydPdGsAqXnYedHMznYevETK9SfkWZm7T/ZT1QyiE/ByPwlplDYMxsyn7W/r9ug1xRmGXd15ItRs6cckeceM=
-X-Received: by 2002:a17:907:1b1c:b0:72f:9aac:ee41 with SMTP id
- mp28-20020a1709071b1c00b0072f9aacee41mr613895ejc.56.1660793043202; Wed, 17
- Aug 2022 20:24:03 -0700 (PDT)
+        bh=7wi5Dq09PF7tBJQH6bXSrTc2e9ldESvsPGRPC2plYto=;
+        b=08eoDGAZ4ma5mLjnmUhg1kTXYwdKly5CbDncWVWiwiiCkJPiKC+7GFhNeKoGyIb01P
+         F8hUezEpAA8jzFQKdtW1E0nvU+UmcaXOTFUZBm7gEEY2SyKBSDkYKgVuDKwSyakyNOKo
+         68GQ9DTCtvrqToGK7AJqQn82sISiXeVRwVYhxMcGF91K0ocR9vercT1AklU+CLrwzqYG
+         b4ByGecZe88QuqQXsDdPIqJIMw1YahK7GO3S2MuEbJ9Rp7c+0Gg8R6oVhzIE7/UysMRT
+         FcXgfLKDEImnXkxCGAOwij5XAFHbHn1qo8BBV9gYHO9UCub7xcl+ErcjhlEEplVMXgHO
+         d6qw==
+X-Gm-Message-State: ACgBeo1yqGW3NAz/CCj90LMzfSaD/NRvIRYKy9qmmohT1K1A5TabKAh6
+        uxutmA2nAsEZKiSfIyglx2lqt5d9Po17hHiUpFo=
+X-Google-Smtp-Source: AA6agR4/sPvTIzjHQaJmNk55ffpb1MSMI0f8hww9p7bOSxJWVEuIYeW5MYOhK0zcxE+zpqSo2p6nc7U+NyhPVjAcmJM=
+X-Received: by 2002:aca:6088:0:b0:343:75a6:d6a3 with SMTP id
+ u130-20020aca6088000000b0034375a6d6a3mr694163oib.92.1660803076558; Wed, 17
+ Aug 2022 23:11:16 -0700 (PDT)
 MIME-Version: 1.0
-References: <20220817134324.702278-1-tcwzxx@gmail.com> <CAP-5=fVrpsid2_Ku=5hHeFSQ5Q1zE--5qszWw38ZVciq9Rxd5A@mail.gmail.com>
-In-Reply-To: <CAP-5=fVrpsid2_Ku=5hHeFSQ5Q1zE--5qszWw38ZVciq9Rxd5A@mail.gmail.com>
-From:   lika you <tcwzxx@gmail.com>
-Date:   Thu, 18 Aug 2022 11:26:00 +0800
-Message-ID: <CAHkAAVrhD4Z4=NtwD-sA-vwpQTj=sHB5V7Kr0KNFNSVsu+-DnQ@mail.gmail.com>
-Subject: Re: [PATCH] perf tool: add skip_not_exec_file_map_events option
+References: <20220817053930.769840-1-irogers@google.com> <20220817053930.769840-7-irogers@google.com>
+In-Reply-To: <20220817053930.769840-7-irogers@google.com>
+From:   Namhyung Kim <namhyung@kernel.org>
+Date:   Wed, 17 Aug 2022 23:11:04 -0700
+Message-ID: <CAM9d7cgd-KsqJNxh_MbX9h4tr8rOtAqKe-t7Qfck0m9pTxWK7w@mail.gmail.com>
+Subject: Re: [PATCH v1 6/6] perf build: Enable -Wthread-safety with clang
 To:     Ian Rogers <irogers@google.com>
-Cc:     peterz@infradead.org, mingo@redhat.com, acme@kernel.org,
-        alexander.shishkin@linux.intel.com, jolsa@kernel.org,
-        linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
+Cc:     Peter Zijlstra <peterz@infradead.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        Arnaldo Carvalho de Melo <acme@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Jiri Olsa <jolsa@kernel.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Darren Hart <dvhart@infradead.org>,
+        Davidlohr Bueso <dave@stgolabs.net>,
+        =?UTF-8?Q?Andr=C3=A9_Almeida?= <andrealmeid@igalia.com>,
+        Nathan Chancellor <nathan@kernel.org>,
+        Nick Desaulniers <ndesaulniers@google.com>,
+        Tom Rix <trix@redhat.com>,
+        Athira Rajeev <atrajeev@linux.vnet.ibm.com>,
+        Weiguo Li <liwg06@foxmail.com>,
+        Pavithra Gurushankar <gpavithrasha@gmail.com>,
+        Thomas Richter <tmricht@linux.ibm.com>,
+        Ravi Bangoria <ravi.bangoria@amd.com>,
+        Dario Petrillo <dario.pk1@gmail.com>,
+        Wenyu Liu <liuwenyu7@huawei.com>,
+        Hewenliang <hewenliang4@huawei.com>,
+        yaowenbin <yaowenbin1@huawei.com>,
+        Dave Marchevsky <davemarchevsky@fb.com>,
+        Andrii Nakryiko <andrii@kernel.org>,
+        Alexandre Truong <alexandre.truong@arm.com>,
+        Kim Phillips <kim.phillips@amd.com>,
+        Leo Yan <leo.yan@linaro.org>,
+        Quentin Monnet <quentin@isovalent.com>,
+        William Cohen <wcohen@redhat.com>,
+        Andres Freund <andres@anarazel.de>,
+        Song Liu <songliubraving@fb.com>,
+        Adrian Hunter <adrian.hunter@intel.com>,
+        =?UTF-8?Q?Martin_Li=C5=A1ka?= <mliska@suse.cz>,
+        Colin Ian King <colin.king@intel.com>,
+        James Clark <james.clark@arm.com>,
+        Fangrui Song <maskray@google.com>,
+        Stephane Eranian <eranian@google.com>,
+        Kajol Jain <kjain@linux.ibm.com>,
+        Andi Kleen <ak@linux.intel.com>,
+        Alexey Bayduraev <alexey.v.bayduraev@linux.intel.com>,
+        Riccardo Mancini <rickyman7@gmail.com>,
+        Masami Hiramatsu <mhiramat@kernel.org>,
+        Christophe JAILLET <christophe.jaillet@wanadoo.fr>,
+        Zechuan Chen <chenzechuan1@huawei.com>,
+        Jason Wang <wangborong@cdjrlc.com>,
+        Lexi Shao <shaolexi@huawei.com>,
+        Remi Bernon <rbernon@codeweavers.com>,
+        linux-kernel <linux-kernel@vger.kernel.org>,
+        linux-perf-users <linux-perf-users@vger.kernel.org>,
+        llvm@lists.linux.dev
 Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-I'm so sorry for forgetting to reply to all. Here is the reply again.
+Hi Ian,
 
-Thanks for the reply.
+On Tue, Aug 16, 2022 at 10:39 PM Ian Rogers <irogers@google.com> wrote:
+>
+> If building with clang then enable -Wthread-safety warnings.
 
-The background is we have two types of tasks running on the same host.The high
-priority one which is CPU overhead and the low priority which is IO overhead.
-The high priority task has mmap many files as shared memory. The low priority
-task may load multi TB data from SSD at once time which will cause the high
-priority task file page cache to be swapped out. So we mmap all files with the
-PROT_EXEC flag to prevent hot page cache to be swapped out. That cause
-too many executable memory regions without symbols on it.
+Do you know the minimal supported version for the option?
+I'm not sure we have a check for that kind of thing.
 
-The trick is implementate here.
-https://github.com/torvalds/linux/blob/master/mm/vmscan.c#L2572
+Thanks,
+Namhyung
 
-Thanks again
 
-On Thu, 18 Aug 2022 at 02:13, Ian Rogers <irogers@google.com> wrote:
 >
-> On Wed, Aug 17, 2022 at 6:43 AM tcwzxx <tcwzxx@gmail.com> wrote:
-> >
-> > When generate the flame graph, the perf-script subcommand will
-> > process all mmap event and add them to the rbtree. The 240,000
-> > mmap region takes about 5 minutes, which is not useful for flame
-> > graph. So add the skip-not-exec-file-map-events option to skip
-> > not PROT_EXEC flag memory regions.
-> >
-> > Signed-off-by: tcwzxx <tcwzxx@gmail.com>
+> Signed-off-by: Ian Rogers <irogers@google.com>
+> ---
+>  tools/perf/Makefile.config | 5 +++++
+>  1 file changed, 5 insertions(+)
 >
-> Could you provide more context? A reproduction?
+> diff --git a/tools/perf/Makefile.config b/tools/perf/Makefile.config
+> index 0661a1cf9855..0ef6f572485d 100644
+> --- a/tools/perf/Makefile.config
+> +++ b/tools/perf/Makefile.config
+> @@ -19,6 +19,11 @@ detected_var = $(shell echo "$(1)=$($(1))" >> $(OUTPUT).config-detected)
+>  CFLAGS := $(EXTRA_CFLAGS) $(filter-out -Wnested-externs,$(EXTRA_WARNINGS))
+>  HOSTCFLAGS := $(filter-out -Wnested-externs,$(EXTRA_WARNINGS))
 >
-> When we synthesize mmap events we drop non-executable pages:
-> https://github.com/torvalds/linux/blob/master/tools/perf/util/synthetic-events.c#L466
+> +# Enabled Wthread-safety analysis for clang builds.
+> +ifeq ($(CC_NO_CLANG), 0)
+> +  CFLAGS += -Wthread-safety
+> +endif
+> +
+>  include $(srctree)/tools/scripts/Makefile.arch
 >
-> Similarly in the kernel for the "dummy" event:
-> https://github.com/torvalds/linux/blob/master/kernel/events/core.c#L8258
+>  $(call detected_var,SRCARCH)
+> --
+> 2.37.1.595.g718a3a8f04-goog
 >
-> Thanks,
-> Ian
->
-> > ---
-> >  tools/perf/builtin-report.c | 2 ++
-> >  tools/perf/builtin-script.c | 3 +++
-> >  tools/perf/util/machine.c   | 3 +++
-> >  tools/perf/util/map.c       | 5 +++++
-> >  tools/perf/util/map.h       | 2 ++
-> >  5 files changed, 15 insertions(+)
-> >
-> > diff --git a/tools/perf/builtin-report.c b/tools/perf/builtin-report.c
-> > index 91ed41cc7d88..c28eb9450a66 100644
-> > --- a/tools/perf/builtin-report.c
-> > +++ b/tools/perf/builtin-report.c
-> > @@ -1364,6 +1364,8 @@ int cmd_report(int argc, const char **argv)
-> >                     "Disable raw trace ordering"),
-> >         OPT_BOOLEAN(0, "skip-empty", &report.skip_empty,
-> >                     "Do not display empty (or dummy) events in the output"),
-> > +       OPT_BOOLEAN(0, "skip-not-exec-file-map_events", &skip_not_exec_file_map_events,
-> > +                   "skip not exec map events"),
-> >         OPT_END()
-> >         };
-> >         struct perf_data data = {
-> > diff --git a/tools/perf/builtin-script.c b/tools/perf/builtin-script.c
-> > index 13580a9c50b8..e3f4e5e654c9 100644
-> > --- a/tools/perf/builtin-script.c
-> > +++ b/tools/perf/builtin-script.c
-> > @@ -32,6 +32,7 @@
-> >  #include "util/time-utils.h"
-> >  #include "util/path.h"
-> >  #include "util/event.h"
-> > +#include "util/map.h"
-> >  #include "ui/ui.h"
-> >  #include "print_binary.h"
-> >  #include "archinsn.h"
-> > @@ -3936,6 +3937,8 @@ int cmd_script(int argc, const char **argv)
-> >                     "Guest code can be found in hypervisor process"),
-> >         OPT_BOOLEAN('\0', "stitch-lbr", &script.stitch_lbr,
-> >                     "Enable LBR callgraph stitching approach"),
-> > +       OPT_BOOLEAN(0, "skip-not-exec-map_events", &skip_not_exec_file_map_events,
-> > +                   "skip not exec map events"),
-> >         OPTS_EVSWITCH(&script.evswitch),
-> >         OPT_END()
-> >         };
-> > diff --git a/tools/perf/util/machine.c b/tools/perf/util/machine.c
-> > index 2a16cae28407..21dde9f9935c 100644
-> > --- a/tools/perf/util/machine.c
-> > +++ b/tools/perf/util/machine.c
-> > @@ -1904,6 +1904,9 @@ int machine__process_mmap2_event(struct machine *machine,
-> >         if (thread == NULL)
-> >                 goto out_problem;
-> >
-> > +       if (skip_not_exec_file_map_events && !(event->mmap2.prot & PROT_EXEC))
-> > +               goto out_problem;
-> > +
-> >         map = map__new(machine, event->mmap2.start,
-> >                         event->mmap2.len, event->mmap2.pgoff,
-> >                         &dso_id, event->mmap2.prot,
-> > diff --git a/tools/perf/util/map.c b/tools/perf/util/map.c
-> > index e0aa4a254583..2b51ca012c91 100644
-> > --- a/tools/perf/util/map.c
-> > +++ b/tools/perf/util/map.c
-> > @@ -16,6 +16,8 @@
-> >  #include "thread.h"
-> >  #include "vdso.h"
-> >
-> > +bool skip_not_exec_file_map_events;
-> > +
-> >  static inline int is_android_lib(const char *filename)
-> >  {
-> >         return strstarts(filename, "/data/app-lib/") ||
-> > @@ -168,6 +170,9 @@ struct map *map__new(struct machine *machine, u64 start, u64 len,
-> >                 if (dso == NULL)
-> >                         goto out_delete;
-> >
-> > +               if (skip_not_exec_file_map_events && dso__type(dso, machine) == DSO__TYPE_UNKNOWN)
-> > +                       goto out_delete;
-> > +
-> >                 map__init(map, start, start + len, pgoff, dso);
-> >
-> >                 if (anon || no_dso) {
-> > diff --git a/tools/perf/util/map.h b/tools/perf/util/map.h
-> > index 3dcfe06db6b3..67b0e0f9f0ae 100644
-> > --- a/tools/perf/util/map.h
-> > +++ b/tools/perf/util/map.h
-> > @@ -11,6 +11,8 @@
-> >  #include <stdbool.h>
-> >  #include <linux/types.h>
-> >
-> > +extern bool skip_not_exec_file_map_events;
-> > +
-> >  struct dso;
-> >  struct maps;
-> >  struct machine;
-> > --
-> > 2.34.1
-> >
