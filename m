@@ -2,182 +2,162 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 142CDC3F6B0
-	for <linux-perf-users@archiver.kernel.org>; Thu, 18 Aug 2022 13:09:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AC1C6C28B2B
+	for <linux-perf-users@archiver.kernel.org>; Thu, 18 Aug 2022 13:17:56 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S244372AbiHRNJo (ORCPT
+        id S242785AbiHRNRz (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Thu, 18 Aug 2022 09:09:44 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35960 "EHLO
+        Thu, 18 Aug 2022 09:17:55 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44020 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S244117AbiHRNJn (ORCPT
+        with ESMTP id S244784AbiHRNRy (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Thu, 18 Aug 2022 09:09:43 -0400
-Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id F1092A721B;
-        Thu, 18 Aug 2022 06:09:41 -0700 (PDT)
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id 8AAA56160E;
-        Thu, 18 Aug 2022 13:09:41 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id BD017C433D6;
-        Thu, 18 Aug 2022 13:09:40 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1660828180;
-        bh=9x4BUNySY3ragNluRSR1VyPAkopHYd2HMy0eUJpv0rQ=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=pKxJRXrbe/9gXJGrG8NAv0TqHP0ITm0G53/79YOA4oQmd3vgRnkJY6kTIzIS2Xg1J
-         H/ElEQDn7Jr58iBwGSLP88/xx2UZFrATcwJx9TP3qY001R+/jIYfEN34NNwXWeKeRl
-         FSyz4Yj1Y8NGWMzUW71wboQM5ef8f59shrdHewzs7uP7lbkzbA1ChWcBxzH4XUFuV3
-         tHfojUQEHY2CBu2dkTExUeH70NdVCIzVKWezLqvtgj95mMIsstLIvqOwwHoidyr2yx
-         HFvuilctAiy33MAeZf7XYxGdcZUjSIQSm3ubwnd8y/VGjqzNL9K00jcKBIGDiK2/Ko
-         Uy3SjHRvDvdgQ==
-Received: by quaco.ghostprotocols.net (Postfix, from userid 1000)
-        id 2EAB84035A; Thu, 18 Aug 2022 10:09:37 -0300 (-03)
-Date:   Thu, 18 Aug 2022 10:09:37 -0300
-From:   Arnaldo Carvalho de Melo <acme@kernel.org>
-To:     roberto.sassu@huaweicloud.com
-Cc:     peterz@infradead.org, mingo@redhat.com, mark.rutland@arm.com,
-        alexander.shishkin@linux.intel.com, jolsa@kernel.org,
-        namhyung@kernel.org, quentin@isovalent.com,
-        linux-perf-users@vger.kernel.org, bpf@vger.kernel.org,
-        linux-kernel@vger.kernel.org,
-        Roberto Sassu <roberto.sassu@huawei.com>
-Subject: Re: [PATCH 3/3] tools/build: Display logical OR of a feature flavors
-Message-ID: <Yv46EW6KbUe9zjur@kernel.org>
-References: <20220818120957.319995-1-roberto.sassu@huaweicloud.com>
- <20220818120957.319995-3-roberto.sassu@huaweicloud.com>
+        Thu, 18 Aug 2022 09:17:54 -0400
+Received: from mail-wm1-x32e.google.com (mail-wm1-x32e.google.com [IPv6:2a00:1450:4864:20::32e])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CA7A351A09
+        for <linux-perf-users@vger.kernel.org>; Thu, 18 Aug 2022 06:17:52 -0700 (PDT)
+Received: by mail-wm1-x32e.google.com with SMTP id k6-20020a05600c1c8600b003a54ecc62f6so905864wms.5
+        for <linux-perf-users@vger.kernel.org>; Thu, 18 Aug 2022 06:17:52 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20210112;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:from:to:cc;
+        bh=0hMBZdmypFeE7nn9xpMgEu0GnAmxZ1jeqSSwSJUPNNw=;
+        b=rx/8KX1mx8pJRM89xEGW6NK8OKmkJd2/woep5gOqGBrN/7wCef8CijbpKqeuvkrDYH
+         w5swqrKMHXoMv7i14LzcSTZJ2MLuu9/I14kjsrvs9GjUEUeA0/P08z4yLkPgOJ9VDGtN
+         pt64OkRaZh8MkRfyO0I5R2Mta5tE2GNS2hZvV22yguSN3xkZjzQb1xusC3wVGapEw+x3
+         ffCmamFDmN3upQjRi3SO99qIXUUa3sJ4fcBhAeQOZwShAscwfy+2fMOCGt5l1tQqaFta
+         nzS1rjpyYyFrOG86aRO6hxDT7mQblkdXd14wXqSKrochgVcu1kGs5Vseao4cayI9iuEQ
+         esMw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:x-gm-message-state:from:to:cc;
+        bh=0hMBZdmypFeE7nn9xpMgEu0GnAmxZ1jeqSSwSJUPNNw=;
+        b=Qmlk0WzH9X6JZqrOBTnDgGMKUL3bk2VdPeWe6kna9HFtcOhSfQL4w4dpowdP9yg8XC
+         HILbKLEeHpe2y0/Mf39+WF8zlwt0yuJk1qRzLG4Ry8kZQ1yrtPDO6FrwzijM3qc/GHzx
+         LIK9q/syfz91XPeos4jFzwc1axFcbRMgWvTAqWgJMXCQjfRKtu0yXScNI6VR3latDM5R
+         nb48YTEvw2g5Wvv4aZy3EDioBcTqIMi6Zhrz++UjgXWJGgdJQvSe1P78X2ksuvS2UxE8
+         nCaVoHwxvTxZNlrTqg+Pm5gfa/k16lVXbk3zD7nPZ7uZoJwSLcIbIoe/xJCHh4iSqdFU
+         4vow==
+X-Gm-Message-State: ACgBeo2ysLfQTRXUDx8C23IA/QJfqdVVyvbmGi6MdUOQmjIiE7G8aBEX
+        A3BAe1bm4qDPxnYQHiT1MMZUcQP0xpdWdBurlkZmeQ==
+X-Google-Smtp-Source: AA6agR4P2W83lFoyy+21Wbj3xoywCVddVDI5GzAZccFnalAxynNAHBGH73Kr8DU9jGhKcsmqEpavY1+anpVqWP3s4UA=
+X-Received: by 2002:a05:600c:19c8:b0:3a5:ec6a:8d16 with SMTP id
+ u8-20020a05600c19c800b003a5ec6a8d16mr5021369wmq.182.1660828670994; Thu, 18
+ Aug 2022 06:17:50 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20220818120957.319995-3-roberto.sassu@huaweicloud.com>
-X-Url:  http://acmel.wordpress.com
+References: <20220817053930.769840-1-irogers@google.com> <20220817053930.769840-7-irogers@google.com>
+ <CAM9d7cgd-KsqJNxh_MbX9h4tr8rOtAqKe-t7Qfck0m9pTxWK7w@mail.gmail.com>
+In-Reply-To: <CAM9d7cgd-KsqJNxh_MbX9h4tr8rOtAqKe-t7Qfck0m9pTxWK7w@mail.gmail.com>
+From:   Ian Rogers <irogers@google.com>
+Date:   Thu, 18 Aug 2022 06:17:38 -0700
+Message-ID: <CAP-5=fVVV8UPppzet7jwvrf9ig8RpWE1x4mxAJBAnuqbdSbP-Q@mail.gmail.com>
+Subject: Re: [PATCH v1 6/6] perf build: Enable -Wthread-safety with clang
+To:     Namhyung Kim <namhyung@kernel.org>
+Cc:     Peter Zijlstra <peterz@infradead.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        Arnaldo Carvalho de Melo <acme@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Jiri Olsa <jolsa@kernel.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Darren Hart <dvhart@infradead.org>,
+        Davidlohr Bueso <dave@stgolabs.net>,
+        =?UTF-8?Q?Andr=C3=A9_Almeida?= <andrealmeid@igalia.com>,
+        Nathan Chancellor <nathan@kernel.org>,
+        Nick Desaulniers <ndesaulniers@google.com>,
+        Tom Rix <trix@redhat.com>,
+        Athira Rajeev <atrajeev@linux.vnet.ibm.com>,
+        Weiguo Li <liwg06@foxmail.com>,
+        Pavithra Gurushankar <gpavithrasha@gmail.com>,
+        Thomas Richter <tmricht@linux.ibm.com>,
+        Ravi Bangoria <ravi.bangoria@amd.com>,
+        Dario Petrillo <dario.pk1@gmail.com>,
+        Wenyu Liu <liuwenyu7@huawei.com>,
+        Hewenliang <hewenliang4@huawei.com>,
+        yaowenbin <yaowenbin1@huawei.com>,
+        Dave Marchevsky <davemarchevsky@fb.com>,
+        Andrii Nakryiko <andrii@kernel.org>,
+        Alexandre Truong <alexandre.truong@arm.com>,
+        Kim Phillips <kim.phillips@amd.com>,
+        Leo Yan <leo.yan@linaro.org>,
+        Quentin Monnet <quentin@isovalent.com>,
+        William Cohen <wcohen@redhat.com>,
+        Andres Freund <andres@anarazel.de>,
+        Song Liu <songliubraving@fb.com>,
+        Adrian Hunter <adrian.hunter@intel.com>,
+        =?UTF-8?Q?Martin_Li=C5=A1ka?= <mliska@suse.cz>,
+        Colin Ian King <colin.king@intel.com>,
+        James Clark <james.clark@arm.com>,
+        Fangrui Song <maskray@google.com>,
+        Stephane Eranian <eranian@google.com>,
+        Kajol Jain <kjain@linux.ibm.com>,
+        Andi Kleen <ak@linux.intel.com>,
+        Alexey Bayduraev <alexey.v.bayduraev@linux.intel.com>,
+        Riccardo Mancini <rickyman7@gmail.com>,
+        Masami Hiramatsu <mhiramat@kernel.org>,
+        Christophe JAILLET <christophe.jaillet@wanadoo.fr>,
+        Zechuan Chen <chenzechuan1@huawei.com>,
+        Jason Wang <wangborong@cdjrlc.com>,
+        Lexi Shao <shaolexi@huawei.com>,
+        Remi Bernon <rbernon@codeweavers.com>,
+        linux-kernel <linux-kernel@vger.kernel.org>,
+        linux-perf-users <linux-perf-users@vger.kernel.org>,
+        llvm@lists.linux.dev
+Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-Em Thu, Aug 18, 2022 at 02:09:57PM +0200, roberto.sassu@huaweicloud.com escreveu:
-> From: Roberto Sassu <roberto.sassu@huawei.com>
-> 
-> Sometimes, features are simply different flavors of another feature, to
-> properly detect the exact dependencies needed by different Linux
-> distributions.
-> 
-> For example, libbfd has three flavors: libbfd if the distro does not
-> require any additional dependency; libbfd-liberty if it requires libiberty;
-> libbfd-liberty-z if it requires libiberty and libz.
-> 
-> It might not be clear to the user whether a feature has been successfully
-> detected or not, given that some of its flavors will be set to OFF, others
-> to ON.
-> 
-> Instead, display only the feature main flavor if not in verbose mode
-> (VF != 1), and set it to ON if at least one of its flavors has been
-> successfully detected (logical OR), OFF otherwise. Omit the other flavors.
-> 
-> Accomplish that by declaring a FEATURE_GROUP_MEMBERS-<feature main flavor>
-> variable, with the list of the other flavors as variable value. For now, do
-> it just for libbfd.
-> 
-> In verbose mode, of if no group is defined for a feature, show the feature
-> detection result as before.
+On Wed, Aug 17, 2022, 11:11 PM Namhyung Kim <namhyung@kernel.org> wrote:
+>
+> Hi Ian,
+>
+> On Tue, Aug 16, 2022 at 10:39 PM Ian Rogers <irogers@google.com> wrote:
+> >
+> > If building with clang then enable -Wthread-safety warnings.
+>
+> Do you know the minimal supported version for the option?
+> I'm not sure we have a check for that kind of thing.
 
-Looks cool, tested and added this to the commit log message here in my
-local branch, that will go public after further tests for the other
-csets in it:
 
-Committer testing:
+It has been supported for a long time, close to 10 years. Looking
+around it looks like clang 3.5 had the support. For context, BPF was
+supported after clang 3.7. Given this long support, and we don't
+version check for BPF, I think it is okay to assume the flag is
+supported.
 
-Collecting the output from:
+Thanks,
+Ian
 
-  $ make -C tools/bpf/bpftool/ clean
-  $ make -C tools/bpf/bpftool/ |& grep "Auto-detecting system features" -A10
-
-  $ diff -u before after
-  --- before    2022-08-18 10:06:40.422086966 -0300
-  +++ after     2022-08-18 10:07:59.202138282 -0300
-  @@ -1,6 +1,4 @@
-   Auto-detecting system features:
-   ...                                  libbfd: [ on  ]
-  -...                          libbfd-liberty: [ on  ]
-  -...                        libbfd-liberty-z: [ on  ]
-   ...                                  libcap: [ on  ]
-   ...                         clang-bpf-co-re: [ on  ]
-  $
-
-Tested-by: Arnaldo Carvalho de Melo <acme@redhat.com>
-
-Thanks for working on this!
-
-- Arnaldo
- 
-> Signed-off-by: Roberto Sassu <roberto.sassu@huawei.com>
-> ---
->  tools/build/Makefile.feature | 27 +++++++++++++++++++++++++--
->  1 file changed, 25 insertions(+), 2 deletions(-)
-> 
-> diff --git a/tools/build/Makefile.feature b/tools/build/Makefile.feature
-> index 6c809941ff01..57619f240b56 100644
-> --- a/tools/build/Makefile.feature
-> +++ b/tools/build/Makefile.feature
-> @@ -137,6 +137,12 @@ FEATURE_DISPLAY ?=              \
->           libaio			\
->           libzstd
->  
-> +#
-> +# Declare group members of a feature to display the logical OR of the detection
-> +# result instead of each member result.
-> +#
-> +FEATURE_GROUP_MEMBERS-libbfd = libbfd-liberty libbfd-liberty-z
-> +
->  # Set FEATURE_CHECK_(C|LD)FLAGS-all for all FEATURE_TESTS features.
->  # If in the future we need per-feature checks/flags for features not
->  # mentioned in this list we need to refactor this ;-).
-> @@ -179,8 +185,17 @@ endif
->  #
->  feature_print_status = $(eval $(feature_print_status_code))
->  
-> +feature_group = $(eval $(feature_gen_group)) $(GROUP)
-> +
-> +define feature_gen_group
-> +  GROUP := $(1)
-> +  ifneq ($(feature_verbose),1)
-> +    GROUP += $(FEATURE_GROUP_MEMBERS-$(1))
-> +  endif
-> +endef
-> +
->  define feature_print_status_code
-> -  ifeq ($(feature-$(1)), 1)
-> +  ifneq (,$(filter 1,$(foreach feat,$(call feature_group,$(feat)),$(feature-$(feat)))))
->      MSG = $(shell printf '...%40s: [ \033[32mon\033[m  ]' $(1))
->    else
->      MSG = $(shell printf '...%40s: [ \033[31mOFF\033[m ]' $(1))
-> @@ -244,12 +259,20 @@ ifeq ($(VF),1)
->    feature_verbose := 1
->  endif
->  
-> +ifneq ($(feature_verbose),1)
-> +  #
-> +  # Determine the features to omit from the displayed message, as only the
-> +  # logical OR of the detection result will be shown.
-> +  #
-> +  FEATURE_OMIT := $(foreach feat,$(FEATURE_DISPLAY),$(FEATURE_GROUP_MEMBERS-$(feat)))
-> +endif
-> +
->  feature_display_entries = $(eval $(feature_display_entries_code))
->  define feature_display_entries_code
->    ifeq ($(feature_display),1)
->      $$(info )
->      $$(info Auto-detecting system features:)
-> -    $(foreach feat,$(FEATURE_DISPLAY),$(call feature_print_status,$(feat),) $$(info $(MSG)))
-> +    $(foreach feat,$(filter-out $(FEATURE_OMIT),$(FEATURE_DISPLAY)),$(call feature_print_status,$(feat),) $$(info $(MSG)))
->    endif
->  
->    ifeq ($(feature_verbose),1)
-> -- 
-> 2.25.1
-
--- 
-
-- Arnaldo
+>
+> Thanks,
+> Namhyung
+>
+>
+> >
+> > Signed-off-by: Ian Rogers <irogers@google.com>
+> > ---
+> >  tools/perf/Makefile.config | 5 +++++
+> >  1 file changed, 5 insertions(+)
+> >
+> > diff --git a/tools/perf/Makefile.config b/tools/perf/Makefile.config
+> > index 0661a1cf9855..0ef6f572485d 100644
+> > --- a/tools/perf/Makefile.config
+> > +++ b/tools/perf/Makefile.config
+> > @@ -19,6 +19,11 @@ detected_var = $(shell echo "$(1)=$($(1))" >> $(OUTPUT).config-detected)
+> >  CFLAGS := $(EXTRA_CFLAGS) $(filter-out -Wnested-externs,$(EXTRA_WARNINGS))
+> >  HOSTCFLAGS := $(filter-out -Wnested-externs,$(EXTRA_WARNINGS))
+> >
+> > +# Enabled Wthread-safety analysis for clang builds.
+> > +ifeq ($(CC_NO_CLANG), 0)
+> > +  CFLAGS += -Wthread-safety
+> > +endif
+> > +
+> >  include $(srctree)/tools/scripts/Makefile.arch
+> >
+> >  $(call detected_var,SRCARCH)
+> > --
+> > 2.37.1.595.g718a3a8f04-goog
+> >
