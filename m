@@ -2,142 +2,236 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3B328C00140
-	for <linux-perf-users@archiver.kernel.org>; Thu, 18 Aug 2022 18:14:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 959A0C00140
+	for <linux-perf-users@archiver.kernel.org>; Thu, 18 Aug 2022 18:17:30 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S244187AbiHRSOK (ORCPT
+        id S241395AbiHRSR3 (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Thu, 18 Aug 2022 14:14:10 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48968 "EHLO
+        Thu, 18 Aug 2022 14:17:29 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52676 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S238585AbiHRSOI (ORCPT
+        with ESMTP id S235521AbiHRSR2 (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Thu, 18 Aug 2022 14:14:08 -0400
-Received: from ams.source.kernel.org (ams.source.kernel.org [145.40.68.75])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9504F47B94;
-        Thu, 18 Aug 2022 11:14:06 -0700 (PDT)
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by ams.source.kernel.org (Postfix) with ESMTPS id 39A0DB823A9;
-        Thu, 18 Aug 2022 18:14:05 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id A0A3DC433D6;
-        Thu, 18 Aug 2022 18:14:03 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1660846443;
-        bh=0gg07s0kGzT4ViYZPq8WstaAK0/6SvOT3SF9kcQbD+k=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=vAvdRdYBhmyNF9gdV0ZDssdTuErtRHEkX4c5eaK1AdNYS/Vx97v+O9Gzpi9Cf82c+
-         lS7oSlebGIclK8IHn+tufEn3Pqql+zXSwK/MgIBZ3lqOrFzsZS6U7ZIfoKGN7PyxCO
-         9b3J7HZT1qay7d0PPp2hAJ3TZqjnGaC9KVcX/klxQenzh4D8peQPkgaZZ18IDTXNco
-         I03TsZswsGDEDWJQqqvNbnSLg57S/ajKIXwExLKQOVc/8tMjy6l2kXjlbpM546mu8G
-         sPXE/nUMTP6VcXVJHX6BgMgkPCgAVmJC35XF43Z5R21g8UMLZFXutbl/gD2LAi9uAb
-         sIReUHqJ1oVaA==
-Received: by quaco.ghostprotocols.net (Postfix, from userid 1000)
-        id BC7944035A; Thu, 18 Aug 2022 15:14:00 -0300 (-03)
-Date:   Thu, 18 Aug 2022 15:14:00 -0300
-From:   Arnaldo Carvalho de Melo <acme@kernel.org>
-To:     Quentin Monnet <quentin@isovalent.com>
-Cc:     Roberto Sassu <roberto.sassu@huaweicloud.com>,
-        peterz@infradead.org, mingo@redhat.com, mark.rutland@arm.com,
-        alexander.shishkin@linux.intel.com, jolsa@kernel.org,
-        namhyung@kernel.org, linux-perf-users@vger.kernel.org,
-        bpf@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Roberto Sassu <roberto.sassu@huawei.com>
-Subject: Re: [PATCH 3/3] tools/build: Display logical OR of a feature flavors
-Message-ID: <Yv6BaHgC4E4J0TTT@kernel.org>
-References: <20220818120957.319995-1-roberto.sassu@huaweicloud.com>
- <20220818120957.319995-3-roberto.sassu@huaweicloud.com>
- <Yv46EW6KbUe9zjur@kernel.org>
- <71544d2970e246e1f0d5f5ec065ea2437df58cd9.camel@huaweicloud.com>
- <23da162e-1018-9bfa-bc5c-ec09eba9428b@isovalent.com>
+        Thu, 18 Aug 2022 14:17:28 -0400
+Received: from mail-vs1-xe2b.google.com (mail-vs1-xe2b.google.com [IPv6:2607:f8b0:4864:20::e2b])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B5FABCCE30
+        for <linux-perf-users@vger.kernel.org>; Thu, 18 Aug 2022 11:17:26 -0700 (PDT)
+Received: by mail-vs1-xe2b.google.com with SMTP id o123so2304076vsc.3
+        for <linux-perf-users@vger.kernel.org>; Thu, 18 Aug 2022 11:17:26 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20210112;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:from:to:cc;
+        bh=rT2H7zlcI3RbMs94rTqf1TBmQjKXhRQAfwkbwmUxhx8=;
+        b=ZAe8Fo690UR35gXYrC8n1f6/45PnTs0JqPtd/wzOqd21vWG8HzQqnUef38dnjI+jIo
+         F/AF3v6Go4ZhQy72p3BLVZ9xq1OM/OjXCeqaFXW+JjQeDXrr0C+vAA2luAnzsiZ05IZG
+         uuofD+JCbEEFQvKGcSU6Zm59tINvNljz/buqfNO4Jvk8342/bQ3dFu7G9B+R8nT9Z6Ei
+         HlCJXTJC3OWgwntsTuf+AR1j0Wq2z+FZfgwCWnAWuXyZOvfKMx1jKHzomLG4L74Qd90Y
+         I2qZ1eQ9SPy8Hh+oiQmkmn1fZsEU7atoma6CQbCywU2aoxKcsVpKJ6AcQiRaWSAzI5VD
+         EvXQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:x-gm-message-state:from:to:cc;
+        bh=rT2H7zlcI3RbMs94rTqf1TBmQjKXhRQAfwkbwmUxhx8=;
+        b=ccdbE/2C4FbJ/Ty1ana7RrtLXjMlSXN35kpXHU6Qj4nkxKPRRb+DEe1+w4Rd1lDLC9
+         4P3TG2gYwqr1Cx11b0aNJywqAt3jrLCI05HSWxX5gu1mAUq7+1EkyMrsNaxeT/Y9NvxZ
+         O6FkZBGerhCNWiGXyf/T5ZiT0RT4OfaxT4YdtVwDhxZ0JzK7wf3VCbZbYYI5S3IMLuhO
+         HnmFE/ipRYMJ+WECftY2Ldlr7uWQsc4Ax3d9EVn/9Hcb3Oq2UINgRG0BxR7hK52D41w0
+         0rL+jFAL1/6Zw2D2NxtmEfpH+JFHa2OVEhPgV8IOd5e3rVU3bm61lOmyumcUx9yNLm05
+         O3rw==
+X-Gm-Message-State: ACgBeo3T21tYWLBU8/oCfMMEy6nxZeRG0xE+OF4u2T1APSz1K5FHVG7e
+        CnYV0c8kiM3cReco0c6h0Hes2Nug4/WUHK0xip2uhg==
+X-Google-Smtp-Source: AA6agR5+uj3uGbdRY155vc58puxQAjmKpFPCCn8f/lDMgE/7pqVk3fGVMYvkjQkSYIi/zK78CfDGYqSChiTxMLjRj1Q=
+X-Received: by 2002:a67:d105:0:b0:38d:c73d:fe21 with SMTP id
+ u5-20020a67d105000000b0038dc73dfe21mr1675728vsi.36.1660846645628; Thu, 18 Aug
+ 2022 11:17:25 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <23da162e-1018-9bfa-bc5c-ec09eba9428b@isovalent.com>
-X-Url:  http://acmel.wordpress.com
+References: <20220817053930.769840-1-irogers@google.com> <20220817053930.769840-6-irogers@google.com>
+ <CAM9d7ciBh2DhH7wEVFfXucxtvaog_BBVkuYcNC4vX_XQDx-QCw@mail.gmail.com>
+In-Reply-To: <CAM9d7ciBh2DhH7wEVFfXucxtvaog_BBVkuYcNC4vX_XQDx-QCw@mail.gmail.com>
+From:   Ian Rogers <irogers@google.com>
+Date:   Thu, 18 Aug 2022 11:17:14 -0700
+Message-ID: <CAP-5=fWPgfSa5ck9DLUZaMd4g6y=3hY1Q-=vjgZxNS0Et6Qjuw@mail.gmail.com>
+Subject: Re: [PATCH v1 5/6] perf mutex: Fix thread safety analysis
+To:     Namhyung Kim <namhyung@kernel.org>
+Cc:     Peter Zijlstra <peterz@infradead.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        Arnaldo Carvalho de Melo <acme@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Jiri Olsa <jolsa@kernel.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Darren Hart <dvhart@infradead.org>,
+        Davidlohr Bueso <dave@stgolabs.net>,
+        =?UTF-8?Q?Andr=C3=A9_Almeida?= <andrealmeid@igalia.com>,
+        Nathan Chancellor <nathan@kernel.org>,
+        Nick Desaulniers <ndesaulniers@google.com>,
+        Tom Rix <trix@redhat.com>,
+        Athira Rajeev <atrajeev@linux.vnet.ibm.com>,
+        Weiguo Li <liwg06@foxmail.com>,
+        Pavithra Gurushankar <gpavithrasha@gmail.com>,
+        Thomas Richter <tmricht@linux.ibm.com>,
+        Ravi Bangoria <ravi.bangoria@amd.com>,
+        Dario Petrillo <dario.pk1@gmail.com>,
+        Wenyu Liu <liuwenyu7@huawei.com>,
+        Hewenliang <hewenliang4@huawei.com>,
+        yaowenbin <yaowenbin1@huawei.com>,
+        Dave Marchevsky <davemarchevsky@fb.com>,
+        Andrii Nakryiko <andrii@kernel.org>,
+        Alexandre Truong <alexandre.truong@arm.com>,
+        Kim Phillips <kim.phillips@amd.com>,
+        Leo Yan <leo.yan@linaro.org>,
+        Quentin Monnet <quentin@isovalent.com>,
+        William Cohen <wcohen@redhat.com>,
+        Andres Freund <andres@anarazel.de>,
+        Song Liu <songliubraving@fb.com>,
+        Adrian Hunter <adrian.hunter@intel.com>,
+        =?UTF-8?Q?Martin_Li=C5=A1ka?= <mliska@suse.cz>,
+        Colin Ian King <colin.king@intel.com>,
+        James Clark <james.clark@arm.com>,
+        Fangrui Song <maskray@google.com>,
+        Stephane Eranian <eranian@google.com>,
+        Kajol Jain <kjain@linux.ibm.com>,
+        Andi Kleen <ak@linux.intel.com>,
+        Alexey Bayduraev <alexey.v.bayduraev@linux.intel.com>,
+        Riccardo Mancini <rickyman7@gmail.com>,
+        Masami Hiramatsu <mhiramat@kernel.org>,
+        Christophe JAILLET <christophe.jaillet@wanadoo.fr>,
+        Zechuan Chen <chenzechuan1@huawei.com>,
+        Jason Wang <wangborong@cdjrlc.com>,
+        Lexi Shao <shaolexi@huawei.com>,
+        Remi Bernon <rbernon@codeweavers.com>,
+        linux-kernel <linux-kernel@vger.kernel.org>,
+        linux-perf-users <linux-perf-users@vger.kernel.org>,
+        llvm@lists.linux.dev
+Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-Em Thu, Aug 18, 2022 at 05:40:04PM +0100, Quentin Monnet escreveu:
-> On 18/08/2022 14:25, Roberto Sassu wrote:
-> > On Thu, 2022-08-18 at 10:09 -0300, Arnaldo Carvalho de Melo wrote:
-> >> Em Thu, Aug 18, 2022 at 02:09:57PM +0200, 
-> >> roberto.sassu@huaweicloud.com escreveu:
-> >>> From: Roberto Sassu <roberto.sassu@huawei.com>
-> >>>
-> >>> Sometimes, features are simply different flavors of another
-> >>> feature, to
-> >>> properly detect the exact dependencies needed by different Linux
-> >>> distributions.
-> >>>
-> >>> For example, libbfd has three flavors: libbfd if the distro does
-> >>> not
-> >>> require any additional dependency; libbfd-liberty if it requires
-> >>> libiberty;
-> >>> libbfd-liberty-z if it requires libiberty and libz.
-> >>>
-> >>> It might not be clear to the user whether a feature has been
-> >>> successfully
-> >>> detected or not, given that some of its flavors will be set to OFF,
-> >>> others
-> >>> to ON.
-> >>>
-> >>> Instead, display only the feature main flavor if not in verbose
-> >>> mode
-> >>> (VF != 1), and set it to ON if at least one of its flavors has been
-> >>> successfully detected (logical OR), OFF otherwise. Omit the other
-> >>> flavors.
-> >>>
-> >>> Accomplish that by declaring a FEATURE_GROUP_MEMBERS-<feature main
-> >>> flavor>
-> >>> variable, with the list of the other flavors as variable value. For
-> >>> now, do
-> >>> it just for libbfd.
-> >>>
-> >>> In verbose mode, of if no group is defined for a feature, show the
-> >>> feature
-> >>> detection result as before.
-> >>
-> >> Looks cool, tested and added this to the commit log message here in
-> >> my
-> >> local branch, that will go public after further tests for the other
-> >> csets in it:
-> >>
-> >> Committer testing:
-> >>
-> >> Collecting the output from:
-> >>
-> >>   $ make -C tools/bpf/bpftool/ clean
-> >>   $ make -C tools/bpf/bpftool/ |& grep "Auto-detecting system
-> >> features" -A10
-> >>
-> >>   $ diff -u before after
-> >>   --- before    2022-08-18 10:06:40.422086966 -0300
-> >>   +++ after     2022-08-18 10:07:59.202138282 -0300
-> >>   @@ -1,6 +1,4 @@
-> >>    Auto-detecting system features:
-> >>    ...                                  libbfd: [ on  ]
-> >>   -...                          libbfd-liberty: [ on  ]
-> >>   -...                        libbfd-liberty-z: [ on  ]
-> >>    ...                                  libcap: [ on  ]
-> >>    ...                         clang-bpf-co-re: [ on  ]
-> >>   $
-> >>
-> >> Tested-by: Arnaldo Carvalho de Melo <acme@redhat.com>
-> >>
-> >> Thanks for working on this!
-> > 
-> > Thanks for testing and for adapting/pushing the other patches!
-> > 
-> > Roberto
-> > 
-> 
-> Tested locally for bpftool and I also observe "libbfd: [ on  ]" only.
-> This looks much better, thank you Roberto for following up on this!
+On Thu, Aug 18, 2022 at 9:41 AM Namhyung Kim <namhyung@kernel.org> wrote:
+>
+> On Tue, Aug 16, 2022 at 10:39 PM Ian Rogers <irogers@google.com> wrote:
+> >
+> > Add annotations to describe lock behavior. Add missing unlocks to
+> > perf_sched__replay. Alter hist_iter__top_callback as the thread-safety
+> > analysis cannot follow pointers through local variables.
+> >
+> > Signed-off-by: Ian Rogers <irogers@google.com>
+> > ---
+> >  tools/perf/builtin-sched.c | 8 ++++++++
+> >  tools/perf/builtin-top.c   | 5 +++--
+> >  2 files changed, 11 insertions(+), 2 deletions(-)
+> >
+> > diff --git a/tools/perf/builtin-sched.c b/tools/perf/builtin-sched.c
+> > index 0f52f73be896..a8a765ed28ce 100644
+> > --- a/tools/perf/builtin-sched.c
+> > +++ b/tools/perf/builtin-sched.c
+> > @@ -658,6 +658,8 @@ static void *thread_func(void *ctx)
+> >  }
+> >
+> >  static void create_tasks(struct perf_sched *sched)
+> > +       EXCLUSIVE_LOCK_FUNCTION(sched->start_work_mutex)
+> > +       EXCLUSIVE_LOCK_FUNCTION(sched->work_done_wait_mutex)
+> >  {
+> >         struct task_desc *task;
+> >         pthread_attr_t attr;
+> > @@ -687,6 +689,8 @@ static void create_tasks(struct perf_sched *sched)
+> >  }
+> >
+> >  static void wait_for_tasks(struct perf_sched *sched)
+> > +       EXCLUSIVE_LOCKS_REQUIRED(sched->work_done_wait_mutex)
+> > +       EXCLUSIVE_LOCKS_REQUIRED(sched->start_work_mutex)
+> >  {
+> >         u64 cpu_usage_0, cpu_usage_1;
+> >         struct task_desc *task;
+> > @@ -738,6 +742,8 @@ static void wait_for_tasks(struct perf_sched *sched)
+> >  }
+> >
+> >  static void run_one_test(struct perf_sched *sched)
+> > +       EXCLUSIVE_LOCKS_REQUIRED(sched->work_done_wait_mutex)
+> > +       EXCLUSIVE_LOCKS_REQUIRED(sched->start_work_mutex)
+> >  {
+> >         u64 T0, T1, delta, avg_delta, fluct;
+> >
+> > @@ -3314,6 +3320,8 @@ static int perf_sched__replay(struct perf_sched *sched)
+> >         for (i = 0; i < sched->replay_repeat; i++)
+> >                 run_one_test(sched);
+> >
+> > +       mutex_unlock(&sched->start_work_mutex);
+> > +       mutex_unlock(&sched->work_done_wait_mutex);
+>
+> But this would wake up the replay tasks and let them burn cpus unnecessarily.
+> Maybe we can make them exit at the moment.
 
-So I'll add your Tested-by: to this one as well, maybe to all the
-patches in this series?
+I think I've stumbled on a can of worms. Why would you spin and not
+use a condition variable? Anyway, I can remove this by just saying
+this function leaves these locked.
 
-- Arnaldo
+>
+> >         return 0;
+> >  }
+> >
+> > diff --git a/tools/perf/builtin-top.c b/tools/perf/builtin-top.c
+> > index 3757292bfe86..e832f04e3076 100644
+> > --- a/tools/perf/builtin-top.c
+> > +++ b/tools/perf/builtin-top.c
+> > @@ -196,6 +196,7 @@ static void perf_top__record_precise_ip(struct perf_top *top,
+> >                                         struct hist_entry *he,
+> >                                         struct perf_sample *sample,
+> >                                         struct evsel *evsel, u64 ip)
+> > +       EXCLUSIVE_LOCKS_REQUIRED(he->hists->lock)
+> >  {
+> >         struct annotation *notes;
+> >         struct symbol *sym = he->ms.sym;
+> > @@ -724,13 +725,13 @@ static void *display_thread(void *arg)
+> >  static int hist_iter__top_callback(struct hist_entry_iter *iter,
+> >                                    struct addr_location *al, bool single,
+> >                                    void *arg)
+> > +       EXCLUSIVE_LOCKS_REQUIRED(iter->he->hists->lock)
+> >  {
+> >         struct perf_top *top = arg;
+> > -       struct hist_entry *he = iter->he;
+> >         struct evsel *evsel = iter->evsel;
+> >
+> >         if (perf_hpp_list.sym && single)
+> > -               perf_top__record_precise_ip(top, he, iter->sample, evsel, al->addr);
+> > +               perf_top__record_precise_ip(top, iter->he, iter->sample, evsel, al->addr);
+> >
+> >         hist__account_cycles(iter->sample->branch_stack, al, iter->sample,
+> >                      !(top->record_opts.branch_stack & PERF_SAMPLE_BRANCH_ANY),
+>
+> Looks like a separate change.
+
+This is subtle and relates to how the thread safety pass in clang is
+implemented. I'll waffle but the TL;DR is that without this change we
+can't enable Wthread-safety so I'd say it is part of the same change.
+The waffley bit:
+
+Thread safety checking puts the annotation on to the variable and not
+the type. We know that:
+const char *x = "hi";
+char *y = x;
+will give a compile time error on the assignment to y as const-ness
+was lost. With the thread safety checks you could have:
+char *x PT_GUARDED_BY(lock) = ...;
+char *y = x;
+And if you used x without holding "lock" you'd get an error but you
+wouldn't get the same error from y, even though behind the scenes it
+is the same memory. It is the same case here, on entry we know that
+"iter->he->hists->lock" is held but the assignment to "he" means clang
+doesn't know that "he->hists->lock" is held. This then fails the check
+on perf_top__record_precise_ip that the lock be held as we pass "he"
+rather than "iter->he".
+
+Thanks,
+Ian
+
+> Thanks,
+> Namhyung
+>
+>
+> > --
+> > 2.37.1.595.g718a3a8f04-goog
+> >
