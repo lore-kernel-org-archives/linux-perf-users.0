@@ -2,135 +2,187 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D689DC3F6B0
-	for <linux-perf-users@archiver.kernel.org>; Thu, 18 Aug 2022 13:26:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BB8C0C00140
+	for <linux-perf-users@archiver.kernel.org>; Thu, 18 Aug 2022 14:52:42 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S245070AbiHRN0W (ORCPT
+        id S1343747AbiHROwl (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Thu, 18 Aug 2022 09:26:22 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53630 "EHLO
+        Thu, 18 Aug 2022 10:52:41 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:32822 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S245076AbiHRN0Q (ORCPT
+        with ESMTP id S1343708AbiHROwj (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Thu, 18 Aug 2022 09:26:16 -0400
-Received: from frasgout13.his.huawei.com (frasgout13.his.huawei.com [14.137.139.46])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5C6CAB3B37;
-        Thu, 18 Aug 2022 06:26:13 -0700 (PDT)
-Received: from mail02.huawei.com (unknown [172.18.147.227])
-        by frasgout13.his.huawei.com (SkyGuard) with ESMTP id 4M7lrW4NjZz9xHdY;
-        Thu, 18 Aug 2022 21:20:59 +0800 (CST)
-Received: from roberto-ThinkStation-P620 (unknown [10.204.63.22])
-        by APP1 (Coremail) with SMTP id LxC2BwB3RhLaPf5iVW0wAA--.23197S2;
-        Thu, 18 Aug 2022 14:25:54 +0100 (CET)
-Message-ID: <71544d2970e246e1f0d5f5ec065ea2437df58cd9.camel@huaweicloud.com>
-Subject: Re: [PATCH 3/3] tools/build: Display logical OR of a feature flavors
-From:   Roberto Sassu <roberto.sassu@huaweicloud.com>
-To:     Arnaldo Carvalho de Melo <acme@kernel.org>
-Cc:     peterz@infradead.org, mingo@redhat.com, mark.rutland@arm.com,
-        alexander.shishkin@linux.intel.com, jolsa@kernel.org,
-        namhyung@kernel.org, quentin@isovalent.com,
-        linux-perf-users@vger.kernel.org, bpf@vger.kernel.org,
-        linux-kernel@vger.kernel.org,
-        Roberto Sassu <roberto.sassu@huawei.com>
-Date:   Thu, 18 Aug 2022 15:25:36 +0200
-In-Reply-To: <Yv46EW6KbUe9zjur@kernel.org>
-References: <20220818120957.319995-1-roberto.sassu@huaweicloud.com>
-         <20220818120957.319995-3-roberto.sassu@huaweicloud.com>
-         <Yv46EW6KbUe9zjur@kernel.org>
-Content-Type: text/plain; charset="UTF-8"
-User-Agent: Evolution 3.36.5-0ubuntu1 
+        Thu, 18 Aug 2022 10:52:39 -0400
+Received: from mail-wr1-x430.google.com (mail-wr1-x430.google.com [IPv6:2a00:1450:4864:20::430])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5C30ABCC10
+        for <linux-perf-users@vger.kernel.org>; Thu, 18 Aug 2022 07:52:37 -0700 (PDT)
+Received: by mail-wr1-x430.google.com with SMTP id ba1so2019954wrb.5
+        for <linux-perf-users@vger.kernel.org>; Thu, 18 Aug 2022 07:52:37 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20210112;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:from:to:cc;
+        bh=9FRCT+qtp+vyx/FEeM2zjhMWbwEfzpU/Nc1Eb30iBdg=;
+        b=j8b682twpvR4egkJTXFvbVZGBaDXgcOSQrK0FuvJfDjRfQ8ImPc4zYW30AFn6RGYap
+         vffFONQijgvpYH6NVbPERgOalQn3S+KmgYgLm9M9oUOn/N64xF8qgTGur3f2kyqqlq9M
+         cmDm2fw+Wto9auNbEhuMqbEdHoqHcmxrzJZCxQDRE4aFaY3T3Vw1sNx8KZYhhxWomf68
+         6PrBvcBc6XDSyeVkCAtgakQgMZGNHp4IqrHfbgE3ThVVGVkG3ICmjq9RqunkiApiZdEM
+         ehRV2KZdWjj+hTMaHL8Rcrl+v1NYkp9vVohnqDnao/zrF53zCnKO73yFQ5X6QgJm+I+N
+         d/jA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:x-gm-message-state:from:to:cc;
+        bh=9FRCT+qtp+vyx/FEeM2zjhMWbwEfzpU/Nc1Eb30iBdg=;
+        b=WqSeqA/DBvnj3cyU9jOF6kTohl2pnySZP7WWozz2XpOke5zF+OxZkuVrkUZHGQZ493
+         u2WG9EYfIhCMrNGLTpUyDA0JnXz8FuiVuSU9lmVO9nIT5F5MpJnKAaDWYKZgU6JPEPcb
+         Nksm5g0kTLJcG753Zwsn3XGaixRRhgVcxfIjovASKm7AOtmQ9Yg8NbShRXDDUlupvrGP
+         h7QuCPL/8ztlcrt78CEhgzXEz5fUi8SfoHzYiVu56fM+ElcprIgo7QSWX9lrmwFLU8fG
+         CbREL97hdNpQGa1wnp8cVo/U48eg/sYsNP6WlIVcRGI75lVzBkB7/m3ePsChTenmP0es
+         Rdhg==
+X-Gm-Message-State: ACgBeo1rmOaAtkJ8tXii45IHyFXikHs6e+DvM/+KNuOmqFVFfI1BmAxi
+        X1Ged1AkImYkGvJAHlluPiaTc11Z46PFdjkgMZ4NUQ==
+X-Google-Smtp-Source: AA6agR7dn9uicZ9VwiA+UeZEVvBtEWj9Oo4SsEA7kXrGueDcKSkWvVXxjnH+HH3y52vPjLXpFqe8SjIMBlhhT/XXe8g=
+X-Received: by 2002:a5d:6789:0:b0:225:2787:d44f with SMTP id
+ v9-20020a5d6789000000b002252787d44fmr1756425wru.343.1660834355561; Thu, 18
+ Aug 2022 07:52:35 -0700 (PDT)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
-X-CM-TRANSID: LxC2BwB3RhLaPf5iVW0wAA--.23197S2
-X-Coremail-Antispam: 1UD129KBjvJXoW7urW8ZF48ZF15WrWkXw47urg_yoW8urW8pa
-        4rG3WUKrsrKr1Ikw42kr18ta1F9w4Iy3yUXFy0yw17AF4UWF17KF1a9FWrWFyDurn3u3Wa
-        vrWSq34ru3WDZaDanT9S1TB71UUUUUUqnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
-        9KBjDU0xBIdaVrnRJUUUkFb4IE77IF4wAFF20E14v26r4j6ryUM7CY07I20VC2zVCF04k2
-        6cxKx2IYs7xG6r1j6r18M7CIcVAFz4kK6r1j6r18M28lY4IEw2IIxxk0rwA2F7IY1VAKz4
-        vEj48ve4kI8wA2z4x0Y4vE2Ix0cI8IcVAFwI0_Jr0_JF4l84ACjcxK6xIIjxv20xvEc7Cj
-        xVAFwI0_Gr0_Cr1l84ACjcxK6I8E87Iv67AKxVW8JVWxJwA2z4x0Y4vEx4A2jsIEc7CjxV
-        AFwI0_Gr1j6F4UJwAS0I0E0xvYzxvE52x082IY62kv0487Mc02F40EFcxC0VAKzVAqx4xG
-        6I80ewAv7VC0I7IYx2IY67AKxVWUJVWUGwAv7VC2z280aVAFwI0_Gr0_Cr1lOx8S6xCaFV
-        Cjc4AY6r1j6r4UM4x0Y48IcVAKI48JM4IIrI8v6xkF7I0E8cxan2IY04v7MxAIw28IcxkI
-        7VAKI48JMxC20s026xCaFVCjc4AY6r1j6r4UMI8I3I0E5I8CrVAFwI0_Jr0_Jr4lx2IqxV
-        Cjr7xvwVAFwI0_JrI_JrWlx4CE17CEb7AF67AKxVWUtVW8ZwCIc40Y0x0EwIxGrwCI42IY
-        6xIIjxv20xvE14v26r1j6r1xMIIF0xvE2Ix0cI8IcVCY1x0267AKxVW8JVWxJwCI42IY6x
-        AIw20EY4v20xvaj40_Wr1j6rW3Jr1lIxAIcVC2z280aVAFwI0_Gr0_Cr1lIxAIcVC2z280
-        aVCY1x0267AKxVW8Jr0_Cr1UYxBIdaVFxhVjvjDU0xZFpf9x07UR7KsUUUUU=
-X-CM-SenderInfo: purev21wro2thvvxqx5xdzvxpfor3voofrz/1tbiAgAIBF1jj34VsAAAsk
-X-CFilter-Loop: Reflected
+References: <20220725104220.1106663-1-leo.yan@linaro.org> <Yt68AZA2VV9d02xZ@kernel.org>
+ <CA+_WhHyZZC=3gtzetEAQQrjtGujHmY5azwtQNZEc90gyOAwUDg@mail.gmail.com>
+ <CAP-5=fWiNdnEawdj_3ExCrcwRSnRxeV8=8RhA6pwbw_bJdPJFg@mail.gmail.com>
+ <YuBDw/+7McESS05X@kernel.org> <CAP-5=fV4+KeGcyyODTNjS01dw1iTXpFyaLXwZ8nBkek+NHL37w@mail.gmail.com>
+ <11781d7e-d9de-f889-ff57-9d26d92ada44@netscape.net> <16cb5f73-ac85-5094-3cd1-ec91cb47fb99@netscape.net>
+ <CAP-5=fXjBBbU3EHD5iY6VMKMo3wj+dJteeqBf5B9m464HtdF3Q@mail.gmail.com>
+ <806d152f-358b-572a-64f2-798fe7783f93@netscape.net> <20220818030335.GB30503@leoy-huanghe>
+In-Reply-To: <20220818030335.GB30503@leoy-huanghe>
+From:   Ian Rogers <irogers@google.com>
+Date:   Thu, 18 Aug 2022 07:52:22 -0700
+Message-ID: <CAP-5=fX8OVBFGXAgshstMBMFo4ULvMBdZnE_2h-RsamJ6q1qow@mail.gmail.com>
+Subject: Re: [PATCH] perf scripts python: Let script to be python2 compliant
+To:     Leo Yan <leo.yan@linaro.org>
+Cc:     Chuck Zmudzinski <brchuckz@netscape.net>,
+        Arnaldo Carvalho de Melo <acme@kernel.org>,
+        Alan Bartlett <ajb@elrepo.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        linux-perf-users@vger.kernel.org, ElRepo <contact@elrepo.org>,
+        Akemi Yagi <toracat@elrepo.org>, Jiri Olsa <jolsa@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Namhyung Kim <namhyung@kernel.org>,
+        linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-On Thu, 2022-08-18 at 10:09 -0300, Arnaldo Carvalho de Melo wrote:
-> Em Thu, Aug 18, 2022 at 02:09:57PM +0200, 
-> roberto.sassu@huaweicloud.com escreveu:
-> > From: Roberto Sassu <roberto.sassu@huawei.com>
-> > 
-> > Sometimes, features are simply different flavors of another
-> > feature, to
-> > properly detect the exact dependencies needed by different Linux
-> > distributions.
-> > 
-> > For example, libbfd has three flavors: libbfd if the distro does
-> > not
-> > require any additional dependency; libbfd-liberty if it requires
-> > libiberty;
-> > libbfd-liberty-z if it requires libiberty and libz.
-> > 
-> > It might not be clear to the user whether a feature has been
-> > successfully
-> > detected or not, given that some of its flavors will be set to OFF,
-> > others
-> > to ON.
-> > 
-> > Instead, display only the feature main flavor if not in verbose
-> > mode
-> > (VF != 1), and set it to ON if at least one of its flavors has been
-> > successfully detected (logical OR), OFF otherwise. Omit the other
-> > flavors.
-> > 
-> > Accomplish that by declaring a FEATURE_GROUP_MEMBERS-<feature main
-> > flavor>
-> > variable, with the list of the other flavors as variable value. For
-> > now, do
-> > it just for libbfd.
-> > 
-> > In verbose mode, of if no group is defined for a feature, show the
-> > feature
-> > detection result as before.
-> 
-> Looks cool, tested and added this to the commit log message here in
-> my
-> local branch, that will go public after further tests for the other
-> csets in it:
-> 
-> Committer testing:
-> 
-> Collecting the output from:
-> 
->   $ make -C tools/bpf/bpftool/ clean
->   $ make -C tools/bpf/bpftool/ |& grep "Auto-detecting system
-> features" -A10
-> 
->   $ diff -u before after
->   --- before    2022-08-18 10:06:40.422086966 -0300
->   +++ after     2022-08-18 10:07:59.202138282 -0300
->   @@ -1,6 +1,4 @@
->    Auto-detecting system features:
->    ...                                  libbfd: [ on  ]
->   -...                          libbfd-liberty: [ on  ]
->   -...                        libbfd-liberty-z: [ on  ]
->    ...                                  libcap: [ on  ]
->    ...                         clang-bpf-co-re: [ on  ]
->   $
-> 
-> Tested-by: Arnaldo Carvalho de Melo <acme@redhat.com>
-> 
-> Thanks for working on this!
+On Wed, Aug 17, 2022 at 8:03 PM Leo Yan <leo.yan@linaro.org> wrote:
+>
+> On Wed, Aug 17, 2022 at 09:12:24PM -0400, Chuck Zmudzinski wrote:
+>
+> [...]
+>
+> > > > > > > Someone reported a problem in a system they used, the author of the code
+> > > > > > > in question posted a patch allowing perf to be used in such old systems,
+> > > > > > > doesn't get in the way of newer systems, small patch, merged, life goes
+> > > > > > > on.
+> > > > >
+> > > > > Considering the proposed patch, can you be sure that replacing the
+> > > > > f-string format with the legacy format won't cause a regression for
+> > > > > some python3 user somewhere when this hits the real world? Even
+> > > > > if it does not cause a regression today, as new versions and features
+> > > > > are added to python3, can you be sure none of those new features
+> > > > > will depend on the upgrade from the legacy format to the f-string
+> > > > > format here to work properly? So many regressions happen because
+> > > > > the people who write patches cannot possibly foresee how their
+> > > > > patch is going to affect the millions of Linux users out there, but still
+> > > > > they are certain it will not cause a regression somewhere. So how
+> > > > > can the chances that this patch will cause a regression be minimized?
+> > > > >
+> > > > > It seems to me for this to be suitable for the Linux kernel, the
+> > > > > default should be to use the modern python3 format and only
+> > > > > enable python2 compatibility via a sysctl setting and/or kernel boot
+> > > > > option for those who are still using python2. There should be no
+> > > > > change to the behavior of the kernel for users who have upgraded
+> > > > > to python3. But I don't see any such consideration for python3
+> > > > > users in this patch.
+> > > >
+> > > > Sorry, I didn't see this is a script, LOL! So obviously a sysctl or boot option
+> > > > does not apply. But can't the script implement this simple logic:
+> > > >
+> > > > If python version = 3 use f-string format
+> > > > if python version = 2 use traditional string format
+> > >
+> > > Doing this in the script would be noisy, having two scripts less than
+> > > ideal. I'd suggest we wait two weeks, declare the official death of
+> > > RHEL7 without "rpm -i python3" and then revert the python3 to python2
+> > > patch. There are plenty of things to worry about and python2 shouldn't
+> > > be one of them (it died over 2 years ago).
+> >
+> > I see this has already been committed. I agree it should not
+> > stay in the kernel tree for long. At some point in the future
+> > it will most likely cause problems if it is not reverted.
+>
+> It is a bit confused me that here actually we are worrying about the
+> python distro issue, e.g. python2 is obsolete, so it's risky to keep
+> using python2 in the system, especially if python2 has potential
+> security issue.  So the system (e.g. RHEL7) needs to upgrade its python
+> distro from python2 to python3.
+>
+> But this doesn't mean the python script cannot be compatible for both
+> python2 and python3.  I verified this patch, it should can work for
+> both python2 and python3 on my PC.
+>
+> Another concern is there have some python scripts in perf, I think most
+> of them are python2 compatible, should we update all of them to be only
+> python3 compatible?
 
-Thanks for testing and for adapting/pushing the other patches!
+I think there are a lot of things that need to be done for python in
+the perf build. For example, perf script is using deprecated python C
+APIs. . As you say string formatting isn't the biggest issue. What I
+think we need to do is set a minimum bar for what is supported, for
+jevents.py that is python 3.6.
 
-Roberto
+The problem with python2 compatibility can be seen with this:
+https://lore.kernel.org/all/20220615014206.26651-1-irogers@google.com/
+python3 is deprecating APIs which are the only API choices on python2.
+So we can:
+1) have 2 scripts, one for python2 and one for python3, possibly
+varying by release of python3 depending on when a deprecated API is
+removed
+2) always be stuck on python 2 as our lowest bar for compatibility
+3) forget about python 2, set compatibility at some reasonably but not
+totally new version of python like 3.6 and move this forward inline
+with supported versions by the python community
 
+I favor (3) not least as testing (1) is a challenge/chore and if
+something is wrong with python2, well it is on us. I think we
+shouldn't aim to support more python than what the python community
+itself aims to support. They are clear that python 2 is dead.
+
+Going back to f-strings, they are considered the more pythonic way to
+write things and make it easier to read code, eye-ball mistakes, etc.
+We want to have the best code possible in the perf codebase and so
+changes to use f-strings to the python scripts in perf should be
+welcomed - RHEL7 customers will just have to get with the program imo,
+well they should upgrade off of RHEL7. Python 3.6 is hardly new and
+this causes issues in jevents.py, for example, as I can't rely on the
+string removesuffix function being available (added in python 3.9).
+
+There is a bunch of clean up necessary to get rid of python 2 from the
+build, and we took a step in this direction by defaulting to python 3
+(not without pain) in:
+https://lore.kernel.org/all/20220616044806.47770-2-irogers@google.com/
+
+Should we make all the scripts python 3 only? It comes down to people
+writing patches. If someone updates a script and uses an f-string, I
+don't think we should code review and reject the patch. Should we
+proactively go and clean up python code in perf to make it more
+pythonic? Sounds good to me, and I might suggest a list of other clean
+ups we need to do given you have the time :-)
+
+Thanks,
+Ian
+
+> Thanks,
+> Leo
