@@ -2,106 +2,157 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7C03EC00140
-	for <linux-perf-users@archiver.kernel.org>; Thu, 18 Aug 2022 09:15:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B4AF3C00140
+	for <linux-perf-users@archiver.kernel.org>; Thu, 18 Aug 2022 10:01:43 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230452AbiHRJPn (ORCPT
+        id S233335AbiHRKBm (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Thu, 18 Aug 2022 05:15:43 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42666 "EHLO
+        Thu, 18 Aug 2022 06:01:42 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36362 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229986AbiHRJPm (ORCPT
+        with ESMTP id S243919AbiHRKBk (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Thu, 18 Aug 2022 05:15:42 -0400
-Received: from szxga02-in.huawei.com (szxga02-in.huawei.com [45.249.212.188])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6B05766A64;
-        Thu, 18 Aug 2022 02:15:40 -0700 (PDT)
-Received: from dggemv704-chm.china.huawei.com (unknown [172.30.72.54])
-        by szxga02-in.huawei.com (SkyGuard) with ESMTP id 4M7fJY3TlTzXdf3;
-        Thu, 18 Aug 2022 17:11:25 +0800 (CST)
-Received: from kwepemm600010.china.huawei.com (7.193.23.86) by
- dggemv704-chm.china.huawei.com (10.3.19.47) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2375.24; Thu, 18 Aug 2022 17:15:38 +0800
-Received: from [10.67.110.237] (10.67.110.237) by
- kwepemm600010.china.huawei.com (7.193.23.86) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2375.24; Thu, 18 Aug 2022 17:15:37 +0800
-Subject: Re: [PATCH v3 0/4] ARM: Convert to ARCH_STACKWALK
-To:     <linux@armlinux.org.uk>
-CC:     <mark.rutland@arm.com>, <peterz@infradead.org>, <mingo@redhat.com>,
-        <acme@kernel.org>, <alexander.shishkin@linux.intel.com>,
-        <jolsa@kernel.org>, <namhyung@kernel.org>, <arnd@arndb.de>,
-        <rostedt@goodmis.org>, <nick.hawkins@hpe.com>, <john@phrozen.org>,
-        <mhiramat@kernel.org>, <ast@kernel.org>, <linyujun809@huawei.com>,
-        <ndesaulniers@google.com>, <linux-arm-kernel@lists.infradead.org>,
-        <linux-kernel@vger.kernel.org>, <linux-perf-users@vger.kernel.org>,
-        <rmk+kernel@armlinux.org.uk>, <ardb@kernel.org>, <will@kernel.org>,
-        <broonie@kernel.org>, <linus.walleij@linaro.org>
-References: <20220727040022.139387-1-lihuafei1@huawei.com>
-From:   Li Huafei <lihuafei1@huawei.com>
-Message-ID: <13e8c9ba-c5ec-a231-5493-3255e1ef9db8@huawei.com>
-Date:   Thu, 18 Aug 2022 17:15:36 +0800
-User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:78.0) Gecko/20100101
- Thunderbird/78.9.0
+        Thu, 18 Aug 2022 06:01:40 -0400
+Received: from mga06.intel.com (mga06b.intel.com [134.134.136.31])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 846BA979FD
+        for <linux-perf-users@vger.kernel.org>; Thu, 18 Aug 2022 03:01:39 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1660816899; x=1692352899;
+  h=from:to:cc:subject:date:message-id:mime-version:
+   content-transfer-encoding;
+  bh=7LeBf56IOf53Pscm0kXsYB8ERlNBj3KIW3jRU3mlLxE=;
+  b=Ekr5KtE7iuTJAcQjrDHOHLwtvmlwpu/Ku2Odu5WJbKMZcpat5YooWK7p
+   k+LJ9dmWc4rml150BMJIItzmPiSZSpXAfp/iPhJROcNPur+lXaZHnPC7X
+   FygTZ6qjsbr31GNA6ewCFuAwElT7ulBjSSzHJ75vBiI5usQbXnrmipeda
+   0c0dvg47mGODddoC7Y8WU8C1l00aqfFS27SIrAoWYso3VcibJt6lBUo23
+   nlp3JUX4vfiig/IwnxFp8R+sxGEsxWSIxpmnDrooWc/PKCAV06QSsyveJ
+   HnSC8xAgtdtkkLH6uJVPioUTGPYdwnFrWe6IYoj2Jg0UTOiwnNe+BDHAx
+   w==;
+X-IronPort-AV: E=McAfee;i="6500,9779,10442"; a="354458901"
+X-IronPort-AV: E=Sophos;i="5.93,246,1654585200"; 
+   d="scan'208";a="354458901"
+Received: from orsmga003.jf.intel.com ([10.7.209.27])
+  by orsmga104.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 18 Aug 2022 03:01:39 -0700
+X-IronPort-AV: E=Sophos;i="5.93,246,1654585200"; 
+   d="scan'208";a="558470097"
+Received: from tassilo.jf.intel.com ([10.54.74.11])
+  by orsmga003-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 18 Aug 2022 03:01:39 -0700
+From:   Andi Kleen <ak@linux.intel.com>
+To:     acme@kernel.org
+Cc:     linux-perf-users@vger.kernel.org, zhengjun.xing@intel.com,
+        Andi Kleen <ak@linux.intel.com>
+Subject: [PATCH] perf tools: Improve hybrid description in perf record manpage
+Date:   Thu, 18 Aug 2022 03:01:27 -0700
+Message-Id: <20220818100127.249401-1-ak@linux.intel.com>
+X-Mailer: git-send-email 2.35.3
 MIME-Version: 1.0
-In-Reply-To: <20220727040022.139387-1-lihuafei1@huawei.com>
-Content-Type: text/plain; charset="utf-8"
-Content-Language: en-US
 Content-Transfer-Encoding: 8bit
-X-Originating-IP: [10.67.110.237]
-X-ClientProxiedBy: dggems703-chm.china.huawei.com (10.3.19.180) To
- kwepemm600010.china.huawei.com (7.193.23.86)
-X-CFilter-Loop: Reflected
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
+The Intel hybrid description is written in a different style than
+the rest of the perf record man page. There were some new command line
+options added after it which resulted in very strange section ordering.
+Move the hybrid include last.
 
+Also the sub sections in the hybrid document don't fit the record
+manpage well (especially since it talks about all kinds of unrelated
+commands). I left this for now, but would be better to separate this
+properly in the different man pages.
 
-On 2022/7/27 12:00, Li Huafei wrote:
-> This series mainly updates the ARM stack trace code to use the newer and
-> simpler arch_stack_walk() interface (see patches 3 and 4). Two issues
-> were fixed before that (see patches 1 and 2).
-> 
-> v3:
->  - According to the discussion with Linus and Russell in v1:
->    - Add a comment about "regs[1]" in patch 2, and remove the
->      unnecessary ternary operator in the initialization of
->      "frame->ex_frame".
->    - Remove the patch "ARM: stacktrace: Allow stack trace saving for
->      non-current tasks", and keep the check for not being able to
->      unwind non-current tasks (including tasks running on other CPUs)
->      when CONFIG_SMP=y in patch 4.
->  - Rebase to linux-5.19-rc8.
-> 
-> v2: https://lore.kernel.org/lkml/20220713110020.85511-1-lihuafei1@huawei.com/
->  - As suggested by Mark, the commit logs for patch 4 and 5 were
->    refined for easy review.
-> 
-> v1: https://lore.kernel.org/lkml/20220712021527.109921-1-lihuafei1@huawei.com/
-> 
-> Li Huafei (4):
->   ARM: stacktrace: Skip frame pointer boundary check for
->     call_with_stack()
->   ARM: stacktrace: Avoid duplicate saving of exception PC value
->   ARM: stacktrace: Make stack walk callback consistent with generic code
->   ARM: stacktrace: Convert stacktrace to generic ARCH_STACKWALK
-> 
->  arch/arm/Kconfig                  |   1 +
->  arch/arm/include/asm/stacktrace.h |   8 +-
->  arch/arm/kernel/perf_callchain.c  |   9 +-
->  arch/arm/kernel/return_address.c  |   9 +-
->  arch/arm/kernel/stacktrace.c      | 191 ++++++++++++++----------------
->  arch/arm/lib/call_with_stack.S    |   2 +
->  6 files changed, 110 insertions(+), 110 deletions(-)
-> 
+It would be better to use sub sections for the other sections, but these
+don't seem to be supported in AsciiDoc?
 
+Some of the examples are still misrendered in the manpage with an indented
+troff command, but I don't know how to fix that.
 
-Hi Russell，
+In any case it's now better than before.
 
-Do you have any more comments on this patch set? Can you add this patch
-set to your patch tracker? Thanks!
+Signed-off-by: Andi Kleen <ak@linux.intel.com>
+---
+ tools/perf/Documentation/intel-hybrid.txt | 10 ----------
+ tools/perf/Documentation/perf-record.txt  |  4 ++--
+ 2 files changed, 2 insertions(+), 12 deletions(-)
 
-Thanks,
-Huafei
+diff --git a/tools/perf/Documentation/intel-hybrid.txt b/tools/perf/Documentation/intel-hybrid.txt
+index c9302096dc46..e7a776ad25d7 100644
+--- a/tools/perf/Documentation/intel-hybrid.txt
++++ b/tools/perf/Documentation/intel-hybrid.txt
+@@ -21,11 +21,6 @@ cat /sys/devices/cpu_atom/cpus
+ 
+ It indicates cpu0-cpu15 are core cpus and cpu16-cpu23 are atom cpus.
+ 
+-Quickstart
+-
+-List hybrid event
+------------------
+-
+ As before, use perf-list to list the symbolic event.
+ 
+ perf list
+@@ -40,7 +35,6 @@ the event is belong to. Same event name but with different pmu can
+ be supported.
+ 
+ Enable hybrid event with a specific pmu
+----------------------------------------
+ 
+ To enable a core only event or atom only event, following syntax is supported:
+ 
+@@ -53,7 +47,6 @@ For example, count the 'cycles' event on core cpus.
+ 	perf stat -e cpu_core/cycles/
+ 
+ Create two events for one hardware event automatically
+-------------------------------------------------------
+ 
+ When creating one event and the event is available on both atom and core,
+ two events are created automatically. One is for atom, the other is for
+@@ -132,7 +125,6 @@ For perf-stat result, it displays two events:
+ The first 'cycles' is core event, the second 'cycles' is atom event.
+ 
+ Thread mode example:
+---------------------
+ 
+ perf-stat reports the scaled counts for hybrid event and with a percentage
+ displayed. The percentage is the event's running time/enabling time.
+@@ -176,14 +168,12 @@ perf_event_attr:
+        604,097,080      cpu_atom/cycles/                                              (99.57%)
+ 
+ perf-record:
+-------------
+ 
+ If there is no '-e' specified in perf record, on hybrid platform,
+ it creates two default 'cycles' and adds them to event list. One
+ is for core, the other is for atom.
+ 
+ perf-stat:
+-----------
+ 
+ If there is no '-e' specified in perf stat, on hybrid platform,
+ besides of software events, following events are created and
+diff --git a/tools/perf/Documentation/perf-record.txt b/tools/perf/Documentation/perf-record.txt
+index cf8ad50f3de1..0aaaaa7aee68 100644
+--- a/tools/perf/Documentation/perf-record.txt
++++ b/tools/perf/Documentation/perf-record.txt
+@@ -747,8 +747,6 @@ events in data directory files. Option specified with no or empty value
+ defaults to CPU layout. Masks defined or provided by the option value are
+ filtered through the mask provided by -C option.
+ 
+-include::intel-hybrid.txt[]
+-
+ --debuginfod[=URLs]::
+ 	Specify debuginfod URL to be used when cacheing perf.data binaries,
+ 	it follows the same syntax as the DEBUGINFOD_URLS variable, like:
+@@ -768,6 +766,8 @@ include::intel-hybrid.txt[]
+ 	only, as of now.  So the applications built without the frame
+ 	pointer might see bogus addresses.
+ 
++include::intel-hybrid.txt[]
++
+ SEE ALSO
+ --------
+ linkperf:perf-stat[1], linkperf:perf-list[1], linkperf:perf-intel-pt[1]
+-- 
+2.35.3
+
