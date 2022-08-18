@@ -2,187 +2,217 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BB8C0C00140
-	for <linux-perf-users@archiver.kernel.org>; Thu, 18 Aug 2022 14:52:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B1DE5C00140
+	for <linux-perf-users@archiver.kernel.org>; Thu, 18 Aug 2022 15:00:50 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1343747AbiHROwl (ORCPT
+        id S1343886AbiHRPAt (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Thu, 18 Aug 2022 10:52:41 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:32822 "EHLO
+        Thu, 18 Aug 2022 11:00:49 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44110 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1343708AbiHROwj (ORCPT
+        with ESMTP id S1343968AbiHRPAT (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Thu, 18 Aug 2022 10:52:39 -0400
-Received: from mail-wr1-x430.google.com (mail-wr1-x430.google.com [IPv6:2a00:1450:4864:20::430])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5C30ABCC10
-        for <linux-perf-users@vger.kernel.org>; Thu, 18 Aug 2022 07:52:37 -0700 (PDT)
-Received: by mail-wr1-x430.google.com with SMTP id ba1so2019954wrb.5
-        for <linux-perf-users@vger.kernel.org>; Thu, 18 Aug 2022 07:52:37 -0700 (PDT)
+        Thu, 18 Aug 2022 11:00:19 -0400
+Received: from mail-wr1-x42b.google.com (mail-wr1-x42b.google.com [IPv6:2a00:1450:4864:20::42b])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9B37A5754F
+        for <linux-perf-users@vger.kernel.org>; Thu, 18 Aug 2022 08:00:17 -0700 (PDT)
+Received: by mail-wr1-x42b.google.com with SMTP id j7so2053808wrh.3
+        for <linux-perf-users@vger.kernel.org>; Thu, 18 Aug 2022 08:00:17 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=google.com; s=20210112;
         h=cc:to:subject:message-id:date:from:in-reply-to:references
          :mime-version:from:to:cc;
-        bh=9FRCT+qtp+vyx/FEeM2zjhMWbwEfzpU/Nc1Eb30iBdg=;
-        b=j8b682twpvR4egkJTXFvbVZGBaDXgcOSQrK0FuvJfDjRfQ8ImPc4zYW30AFn6RGYap
-         vffFONQijgvpYH6NVbPERgOalQn3S+KmgYgLm9M9oUOn/N64xF8qgTGur3f2kyqqlq9M
-         cmDm2fw+Wto9auNbEhuMqbEdHoqHcmxrzJZCxQDRE4aFaY3T3Vw1sNx8KZYhhxWomf68
-         6PrBvcBc6XDSyeVkCAtgakQgMZGNHp4IqrHfbgE3ThVVGVkG3ICmjq9RqunkiApiZdEM
-         ehRV2KZdWjj+hTMaHL8Rcrl+v1NYkp9vVohnqDnao/zrF53zCnKO73yFQ5X6QgJm+I+N
-         d/jA==
+        bh=UYjHY1acINgL9m9sUZH1KoEEKDAQudNgC+8E9iR494E=;
+        b=VPZ5VId64ZyCGoL16RvVHPOvKXcIeR2L1XXakxXJNuZ7IxWTe5wKRfHrsed2GNe7YJ
+         x9BhzMTcFs/HgjFymb5+42uEk2aNp0H7+3IJTohAu5UK78w6JzKq54KXt49wUcqu8nT3
+         6+BPczQQRlmM1pLg7GeQsb48VegIqKVAvM90/HpmdwHek5LllTeXtnp2Zg50z4UxZrul
+         ojPZCG3c2ThOXMjKXX6Jyxs20sAkt/qc+iRhLpBmK2sBYDL5b/PnLb2k+s8oz0AYJrv9
+         lMM1xg+aBmy3OBgQBGxXedl+PrGuUN+2nlPrYaSPPsdZJEzo8busnqIicnr/DkMaiFbN
+         6KbQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
         h=cc:to:subject:message-id:date:from:in-reply-to:references
          :mime-version:x-gm-message-state:from:to:cc;
-        bh=9FRCT+qtp+vyx/FEeM2zjhMWbwEfzpU/Nc1Eb30iBdg=;
-        b=WqSeqA/DBvnj3cyU9jOF6kTohl2pnySZP7WWozz2XpOke5zF+OxZkuVrkUZHGQZ493
-         u2WG9EYfIhCMrNGLTpUyDA0JnXz8FuiVuSU9lmVO9nIT5F5MpJnKAaDWYKZgU6JPEPcb
-         Nksm5g0kTLJcG753Zwsn3XGaixRRhgVcxfIjovASKm7AOtmQ9Yg8NbShRXDDUlupvrGP
-         h7QuCPL/8ztlcrt78CEhgzXEz5fUi8SfoHzYiVu56fM+ElcprIgo7QSWX9lrmwFLU8fG
-         CbREL97hdNpQGa1wnp8cVo/U48eg/sYsNP6WlIVcRGI75lVzBkB7/m3ePsChTenmP0es
-         Rdhg==
-X-Gm-Message-State: ACgBeo1rmOaAtkJ8tXii45IHyFXikHs6e+DvM/+KNuOmqFVFfI1BmAxi
-        X1Ged1AkImYkGvJAHlluPiaTc11Z46PFdjkgMZ4NUQ==
-X-Google-Smtp-Source: AA6agR7dn9uicZ9VwiA+UeZEVvBtEWj9Oo4SsEA7kXrGueDcKSkWvVXxjnH+HH3y52vPjLXpFqe8SjIMBlhhT/XXe8g=
+        bh=UYjHY1acINgL9m9sUZH1KoEEKDAQudNgC+8E9iR494E=;
+        b=2TkAP1SUAWRKKhyFphXSeC17cuM+A3TcQ6LEjdWmhhCPzMop9zSzvybIedx7eDntiD
+         zWSSo5Kp9ZEjUdCMwvuo8NfYoOcjiKpWZxcEY0PJIjtKTKuiWiQ8dDiOv3KVFhpkTQod
+         S5S4lm3Cz2zFyZWLfZ8+lV23zvNVsdunxgzfpz7QohGaBTthXD27GuSVd2uMcyFuYS6h
+         lovUikt8WycV1KEQ36Vtd2YHnXMWYpDd5vsVNjimSbnqVQiacUsZAsRxv+0V3DfUqCwU
+         u5PjilCPNf9tsKwUhjrJlQU6/k6gFoab12Mb2m9W+vILtk8y8rhW86iXqzAFV93rc9es
+         sHww==
+X-Gm-Message-State: ACgBeo23si4ORKJ9QFHhb+AMSrrbRWtPF0ynJJVnXuKdljK1amLAZ8X9
+        Z518551E8l8KS4M2+mOXSz1jpQUJc96IgMImG4rAJw==
+X-Google-Smtp-Source: AA6agR6+bvZZrHOIwJzUSQEqkUk4syxjsSUxRRkrDUIpaUWwNf0LMbTP4UKbRfPhv8GAF+8s9OwIEjWUSAJxmbspxqY=
 X-Received: by 2002:a5d:6789:0:b0:225:2787:d44f with SMTP id
- v9-20020a5d6789000000b002252787d44fmr1756425wru.343.1660834355561; Thu, 18
- Aug 2022 07:52:35 -0700 (PDT)
+ v9-20020a5d6789000000b002252787d44fmr1771228wru.343.1660834815588; Thu, 18
+ Aug 2022 08:00:15 -0700 (PDT)
 MIME-Version: 1.0
-References: <20220725104220.1106663-1-leo.yan@linaro.org> <Yt68AZA2VV9d02xZ@kernel.org>
- <CA+_WhHyZZC=3gtzetEAQQrjtGujHmY5azwtQNZEc90gyOAwUDg@mail.gmail.com>
- <CAP-5=fWiNdnEawdj_3ExCrcwRSnRxeV8=8RhA6pwbw_bJdPJFg@mail.gmail.com>
- <YuBDw/+7McESS05X@kernel.org> <CAP-5=fV4+KeGcyyODTNjS01dw1iTXpFyaLXwZ8nBkek+NHL37w@mail.gmail.com>
- <11781d7e-d9de-f889-ff57-9d26d92ada44@netscape.net> <16cb5f73-ac85-5094-3cd1-ec91cb47fb99@netscape.net>
- <CAP-5=fXjBBbU3EHD5iY6VMKMo3wj+dJteeqBf5B9m464HtdF3Q@mail.gmail.com>
- <806d152f-358b-572a-64f2-798fe7783f93@netscape.net> <20220818030335.GB30503@leoy-huanghe>
-In-Reply-To: <20220818030335.GB30503@leoy-huanghe>
+References: <20220817134324.702278-1-tcwzxx@gmail.com> <CAP-5=fVrpsid2_Ku=5hHeFSQ5Q1zE--5qszWw38ZVciq9Rxd5A@mail.gmail.com>
+ <CAHkAAVrhD4Z4=NtwD-sA-vwpQTj=sHB5V7Kr0KNFNSVsu+-DnQ@mail.gmail.com>
+In-Reply-To: <CAHkAAVrhD4Z4=NtwD-sA-vwpQTj=sHB5V7Kr0KNFNSVsu+-DnQ@mail.gmail.com>
 From:   Ian Rogers <irogers@google.com>
-Date:   Thu, 18 Aug 2022 07:52:22 -0700
-Message-ID: <CAP-5=fX8OVBFGXAgshstMBMFo4ULvMBdZnE_2h-RsamJ6q1qow@mail.gmail.com>
-Subject: Re: [PATCH] perf scripts python: Let script to be python2 compliant
-To:     Leo Yan <leo.yan@linaro.org>
-Cc:     Chuck Zmudzinski <brchuckz@netscape.net>,
-        Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Alan Bartlett <ajb@elrepo.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        linux-perf-users@vger.kernel.org, ElRepo <contact@elrepo.org>,
-        Akemi Yagi <toracat@elrepo.org>, Jiri Olsa <jolsa@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Namhyung Kim <namhyung@kernel.org>,
-        linux-kernel@vger.kernel.org
+Date:   Thu, 18 Aug 2022 08:00:03 -0700
+Message-ID: <CAP-5=fUfpmLPfAP1NZ+O5UTWYrAvzhsepvCkYpj3UE9Q5e6=mg@mail.gmail.com>
+Subject: Re: [PATCH] perf tool: add skip_not_exec_file_map_events option
+To:     lika you <tcwzxx@gmail.com>
+Cc:     peterz@infradead.org, mingo@redhat.com, acme@kernel.org,
+        alexander.shishkin@linux.intel.com, jolsa@kernel.org,
+        linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
 Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-On Wed, Aug 17, 2022 at 8:03 PM Leo Yan <leo.yan@linaro.org> wrote:
+On Wed, Aug 17, 2022 at 8:24 PM lika you <tcwzxx@gmail.com> wrote:
 >
-> On Wed, Aug 17, 2022 at 09:12:24PM -0400, Chuck Zmudzinski wrote:
+> I'm so sorry for forgetting to reply to all. Here is the reply again.
 >
-> [...]
+> Thanks for the reply.
 >
-> > > > > > > Someone reported a problem in a system they used, the author of the code
-> > > > > > > in question posted a patch allowing perf to be used in such old systems,
-> > > > > > > doesn't get in the way of newer systems, small patch, merged, life goes
-> > > > > > > on.
-> > > > >
-> > > > > Considering the proposed patch, can you be sure that replacing the
-> > > > > f-string format with the legacy format won't cause a regression for
-> > > > > some python3 user somewhere when this hits the real world? Even
-> > > > > if it does not cause a regression today, as new versions and features
-> > > > > are added to python3, can you be sure none of those new features
-> > > > > will depend on the upgrade from the legacy format to the f-string
-> > > > > format here to work properly? So many regressions happen because
-> > > > > the people who write patches cannot possibly foresee how their
-> > > > > patch is going to affect the millions of Linux users out there, but still
-> > > > > they are certain it will not cause a regression somewhere. So how
-> > > > > can the chances that this patch will cause a regression be minimized?
-> > > > >
-> > > > > It seems to me for this to be suitable for the Linux kernel, the
-> > > > > default should be to use the modern python3 format and only
-> > > > > enable python2 compatibility via a sysctl setting and/or kernel boot
-> > > > > option for those who are still using python2. There should be no
-> > > > > change to the behavior of the kernel for users who have upgraded
-> > > > > to python3. But I don't see any such consideration for python3
-> > > > > users in this patch.
-> > > >
-> > > > Sorry, I didn't see this is a script, LOL! So obviously a sysctl or boot option
-> > > > does not apply. But can't the script implement this simple logic:
-> > > >
-> > > > If python version = 3 use f-string format
-> > > > if python version = 2 use traditional string format
-> > >
-> > > Doing this in the script would be noisy, having two scripts less than
-> > > ideal. I'd suggest we wait two weeks, declare the official death of
-> > > RHEL7 without "rpm -i python3" and then revert the python3 to python2
-> > > patch. There are plenty of things to worry about and python2 shouldn't
-> > > be one of them (it died over 2 years ago).
+> The background is we have two types of tasks running on the same host.The high
+> priority one which is CPU overhead and the low priority which is IO overhead.
+> The high priority task has mmap many files as shared memory. The low priority
+> task may load multi TB data from SSD at once time which will cause the high
+> priority task file page cache to be swapped out. So we mmap all files with the
+> PROT_EXEC flag to prevent hot page cache to be swapped out. That cause
+> too many executable memory regions without symbols on it.
+>
+> The trick is implementate here.
+> https://github.com/torvalds/linux/blob/master/mm/vmscan.c#L2572
+>
+> Thanks again
+
+Thanks. So you are making data pages executable for the sake of
+getting "better chances to stay in memory under moderate memory
+pressure." Having lots of executable pages in your program isn't
+great, I'm reminded of efforts to stop stacks from being executable.
+This also feels like a case where madvise should be being used, for
+example, the MADV_WILLNEED option. Given this, I'm not sure supporting
+this case in the perf tool makes sense.
+
+> On Thu, 18 Aug 2022 at 02:13, Ian Rogers <irogers@google.com> wrote:
 > >
-> > I see this has already been committed. I agree it should not
-> > stay in the kernel tree for long. At some point in the future
-> > it will most likely cause problems if it is not reverted.
->
-> It is a bit confused me that here actually we are worrying about the
-> python distro issue, e.g. python2 is obsolete, so it's risky to keep
-> using python2 in the system, especially if python2 has potential
-> security issue.  So the system (e.g. RHEL7) needs to upgrade its python
-> distro from python2 to python3.
->
-> But this doesn't mean the python script cannot be compatible for both
-> python2 and python3.  I verified this patch, it should can work for
-> both python2 and python3 on my PC.
->
-> Another concern is there have some python scripts in perf, I think most
-> of them are python2 compatible, should we update all of them to be only
-> python3 compatible?
+> > On Wed, Aug 17, 2022 at 6:43 AM tcwzxx <tcwzxx@gmail.com> wrote:
+> > >
+> > > When generate the flame graph, the perf-script subcommand will
+> > > process all mmap event and add them to the rbtree. The 240,000
+> > > mmap region takes about 5 minutes, which is not useful for flame
+> > > graph. So add the skip-not-exec-file-map-events option to skip
+> > > not PROT_EXEC flag memory regions.
+> > >
+> > > Signed-off-by: tcwzxx <tcwzxx@gmail.com>
+> >
+> > Could you provide more context? A reproduction?
+> >
+> > When we synthesize mmap events we drop non-executable pages:
+> > https://github.com/torvalds/linux/blob/master/tools/perf/util/synthetic-events.c#L466
+> >
+> > Similarly in the kernel for the "dummy" event:
+> > https://github.com/torvalds/linux/blob/master/kernel/events/core.c#L8258
+> >
+> > Thanks,
+> > Ian
+> >
+> > > ---
+> > >  tools/perf/builtin-report.c | 2 ++
+> > >  tools/perf/builtin-script.c | 3 +++
+> > >  tools/perf/util/machine.c   | 3 +++
+> > >  tools/perf/util/map.c       | 5 +++++
+> > >  tools/perf/util/map.h       | 2 ++
+> > >  5 files changed, 15 insertions(+)
+> > >
+> > > diff --git a/tools/perf/builtin-report.c b/tools/perf/builtin-report.c
+> > > index 91ed41cc7d88..c28eb9450a66 100644
+> > > --- a/tools/perf/builtin-report.c
+> > > +++ b/tools/perf/builtin-report.c
+> > > @@ -1364,6 +1364,8 @@ int cmd_report(int argc, const char **argv)
+> > >                     "Disable raw trace ordering"),
+> > >         OPT_BOOLEAN(0, "skip-empty", &report.skip_empty,
+> > >                     "Do not display empty (or dummy) events in the output"),
+> > > +       OPT_BOOLEAN(0, "skip-not-exec-file-map_events", &skip_not_exec_file_map_events,
+> > > +                   "skip not exec map events"),
+> > >         OPT_END()
+> > >         };
+> > >         struct perf_data data = {
+> > > diff --git a/tools/perf/builtin-script.c b/tools/perf/builtin-script.c
+> > > index 13580a9c50b8..e3f4e5e654c9 100644
+> > > --- a/tools/perf/builtin-script.c
+> > > +++ b/tools/perf/builtin-script.c
+> > > @@ -32,6 +32,7 @@
+> > >  #include "util/time-utils.h"
+> > >  #include "util/path.h"
+> > >  #include "util/event.h"
+> > > +#include "util/map.h"
+> > >  #include "ui/ui.h"
+> > >  #include "print_binary.h"
+> > >  #include "archinsn.h"
+> > > @@ -3936,6 +3937,8 @@ int cmd_script(int argc, const char **argv)
+> > >                     "Guest code can be found in hypervisor process"),
+> > >         OPT_BOOLEAN('\0', "stitch-lbr", &script.stitch_lbr,
+> > >                     "Enable LBR callgraph stitching approach"),
+> > > +       OPT_BOOLEAN(0, "skip-not-exec-map_events", &skip_not_exec_file_map_events,
+> > > +                   "skip not exec map events"),
+> > >         OPTS_EVSWITCH(&script.evswitch),
+> > >         OPT_END()
+> > >         };
+> > > diff --git a/tools/perf/util/machine.c b/tools/perf/util/machine.c
+> > > index 2a16cae28407..21dde9f9935c 100644
+> > > --- a/tools/perf/util/machine.c
+> > > +++ b/tools/perf/util/machine.c
+> > > @@ -1904,6 +1904,9 @@ int machine__process_mmap2_event(struct machine *machine,
+> > >         if (thread == NULL)
+> > >                 goto out_problem;
+> > >
+> > > +       if (skip_not_exec_file_map_events && !(event->mmap2.prot & PROT_EXEC))
+> > > +               goto out_problem;
 
-I think there are a lot of things that need to be done for python in
-the perf build. For example, perf script is using deprecated python C
-APIs. . As you say string formatting isn't the biggest issue. What I
-think we need to do is set a minimum bar for what is supported, for
-jevents.py that is python 3.6.
-
-The problem with python2 compatibility can be seen with this:
-https://lore.kernel.org/all/20220615014206.26651-1-irogers@google.com/
-python3 is deprecating APIs which are the only API choices on python2.
-So we can:
-1) have 2 scripts, one for python2 and one for python3, possibly
-varying by release of python3 depending on when a deprecated API is
-removed
-2) always be stuck on python 2 as our lowest bar for compatibility
-3) forget about python 2, set compatibility at some reasonably but not
-totally new version of python like 3.6 and move this forward inline
-with supported versions by the python community
-
-I favor (3) not least as testing (1) is a challenge/chore and if
-something is wrong with python2, well it is on us. I think we
-shouldn't aim to support more python than what the python community
-itself aims to support. They are clear that python 2 is dead.
-
-Going back to f-strings, they are considered the more pythonic way to
-write things and make it easier to read code, eye-ball mistakes, etc.
-We want to have the best code possible in the perf codebase and so
-changes to use f-strings to the python scripts in perf should be
-welcomed - RHEL7 customers will just have to get with the program imo,
-well they should upgrade off of RHEL7. Python 3.6 is hardly new and
-this causes issues in jevents.py, for example, as I can't rely on the
-string removesuffix function being available (added in python 3.9).
-
-There is a bunch of clean up necessary to get rid of python 2 from the
-build, and we took a step in this direction by defaulting to python 3
-(not without pain) in:
-https://lore.kernel.org/all/20220616044806.47770-2-irogers@google.com/
-
-Should we make all the scripts python 3 only? It comes down to people
-writing patches. If someone updates a script and uses an f-string, I
-don't think we should code review and reject the patch. Should we
-proactively go and clean up python code in perf to make it more
-pythonic? Sounds good to me, and I might suggest a list of other clean
-ups we need to do given you have the time :-)
+Do you mean to drop all executable pages with the flag here or just
+those with the DSO__TYPE_UNKNOWN (as below)? It reads that all
+executable pages will be dropped.
 
 Thanks,
 Ian
 
-> Thanks,
-> Leo
+> > > +
+> > >         map = map__new(machine, event->mmap2.start,
+> > >                         event->mmap2.len, event->mmap2.pgoff,
+> > >                         &dso_id, event->mmap2.prot,
+> > > diff --git a/tools/perf/util/map.c b/tools/perf/util/map.c
+> > > index e0aa4a254583..2b51ca012c91 100644
+> > > --- a/tools/perf/util/map.c
+> > > +++ b/tools/perf/util/map.c
+> > > @@ -16,6 +16,8 @@
+> > >  #include "thread.h"
+> > >  #include "vdso.h"
+> > >
+> > > +bool skip_not_exec_file_map_events;
+> > > +
+> > >  static inline int is_android_lib(const char *filename)
+> > >  {
+> > >         return strstarts(filename, "/data/app-lib/") ||
+> > > @@ -168,6 +170,9 @@ struct map *map__new(struct machine *machine, u64 start, u64 len,
+> > >                 if (dso == NULL)
+> > >                         goto out_delete;
+> > >
+> > > +               if (skip_not_exec_file_map_events && dso__type(dso, machine) == DSO__TYPE_UNKNOWN)
+> > > +                       goto out_delete;
+> > > +
+> > >                 map__init(map, start, start + len, pgoff, dso);
+> > >
+> > >                 if (anon || no_dso) {
+> > > diff --git a/tools/perf/util/map.h b/tools/perf/util/map.h
+> > > index 3dcfe06db6b3..67b0e0f9f0ae 100644
+> > > --- a/tools/perf/util/map.h
+> > > +++ b/tools/perf/util/map.h
+> > > @@ -11,6 +11,8 @@
+> > >  #include <stdbool.h>
+> > >  #include <linux/types.h>
+> > >
+> > > +extern bool skip_not_exec_file_map_events;
+> > > +
+> > >  struct dso;
+> > >  struct maps;
+> > >  struct machine;
+> > > --
+> > > 2.34.1
+> > >
