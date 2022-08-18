@@ -2,27 +2,26 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4AEF1C32772
-	for <linux-perf-users@archiver.kernel.org>; Thu, 18 Aug 2022 12:30:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 90928C00140
+	for <linux-perf-users@archiver.kernel.org>; Thu, 18 Aug 2022 12:49:03 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S244684AbiHRMad (ORCPT
+        id S244775AbiHRMtB (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Thu, 18 Aug 2022 08:30:33 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58070 "EHLO
+        Thu, 18 Aug 2022 08:49:01 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60520 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S243967AbiHRMac (ORCPT
+        with ESMTP id S244777AbiHRMs7 (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Thu, 18 Aug 2022 08:30:32 -0400
-X-Greylist: delayed 93 seconds by postgrey-1.37 at lindbergh.monkeyblade.net; Thu, 18 Aug 2022 05:30:31 PDT
-Received: from frasgout12.his.huawei.com (frasgout12.his.huawei.com [14.137.139.154])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2A8BAA1D7C;
-        Thu, 18 Aug 2022 05:30:31 -0700 (PDT)
+        Thu, 18 Aug 2022 08:48:59 -0400
+Received: from frasgout11.his.huawei.com (frasgout11.his.huawei.com [14.137.139.23])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8B3575F138;
+        Thu, 18 Aug 2022 05:48:55 -0700 (PDT)
 Received: from mail02.huawei.com (unknown [172.18.147.228])
-        by frasgout12.his.huawei.com (SkyGuard) with ESMTP id 4M7kDd51zfz9v7Gc;
-        Thu, 18 Aug 2022 20:08:17 +0800 (CST)
+        by frasgout11.his.huawei.com (SkyGuard) with ESMTP id 4M7kBx3Fwmz9v7gh;
+        Thu, 18 Aug 2022 20:06:49 +0800 (CST)
 Received: from huaweicloud.com (unknown [10.204.63.22])
-        by APP2 (Coremail) with SMTP id GxC2BwA38hluLP5ipRkyAA--.42926S2;
-        Thu, 18 Aug 2022 13:11:34 +0100 (CET)
+        by APP2 (Coremail) with SMTP id GxC2BwA38hluLP5ipRkyAA--.42926S4;
+        Thu, 18 Aug 2022 13:11:46 +0100 (CET)
 From:   roberto.sassu@huaweicloud.com
 To:     peterz@infradead.org, mingo@redhat.com, acme@kernel.org,
         mark.rutland@arm.com, alexander.shishkin@linux.intel.com,
@@ -30,29 +29,32 @@ To:     peterz@infradead.org, mingo@redhat.com, acme@kernel.org,
 Cc:     linux-perf-users@vger.kernel.org, bpf@vger.kernel.org,
         linux-kernel@vger.kernel.org,
         Roberto Sassu <roberto.sassu@huawei.com>
-Subject: [PATCH 1/3] tools/build: Fix feature detection output due to eval expansion
-Date:   Thu, 18 Aug 2022 14:09:55 +0200
-Message-Id: <20220818120957.319995-1-roberto.sassu@huaweicloud.com>
+Subject: [PATCH 3/3] tools/build: Display logical OR of a feature flavors
+Date:   Thu, 18 Aug 2022 14:09:57 +0200
+Message-Id: <20220818120957.319995-3-roberto.sassu@huaweicloud.com>
 X-Mailer: git-send-email 2.25.1
+In-Reply-To: <20220818120957.319995-1-roberto.sassu@huaweicloud.com>
+References: <20220818120957.319995-1-roberto.sassu@huaweicloud.com>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-X-CM-TRANSID: GxC2BwA38hluLP5ipRkyAA--.42926S2
-X-Coremail-Antispam: 1UD129KBjvJXoWxuFy7KryDCFWxKFW7Xr15twb_yoW7XF1kpa
-        yrCF1UAr4DGF4Fya18Ar4UuF45Gr4fJay3J3sIk34UA3WUGrnI9r4ayFWvvFZ3u3y3XF13
-        KF13KFWUAw1UCwUanT9S1TB71UUUUU7qnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
-        9KBjDU0xBIdaVrnRJUUU9ab4IE77IF4wAFF20E14v26r4j6ryUM7CY07I20VC2zVCF04k2
-        6cxKx2IYs7xG6r1j6r18M7CIcVAFz4kK6r1j6r18M28lY4IEw2IIxxk0rwA2F7IY1VAKz4
-        vEj48ve4kI8wA2z4x0Y4vE2Ix0cI8IcVAFwI0_JFI_Gr1l84ACjcxK6xIIjxv20xvEc7Cj
-        xVAFwI0_Cr0_Gr1UM28EF7xvwVC2z280aVAFwI0_Gr0_Cr1l84ACjcxK6I8E87Iv6xkF7I
-        0E14v26r4UJVWxJr1le2I262IYc4CY6c8Ij28IcVAaY2xG8wAqx4xG64xvF2IEw4CE5I8C
-        rVC2j2WlYx0E2Ix0cI8IcVAFwI0_JrI_JrylYx0Ex4A2jsIE14v26r4j6F4UMcvjeVCFs4
-        IE7xkEbVWUJVW8JwACjcxG0xvY0x0EwIxGrwACI402YVCY1x02628vn2kIc2xKxwAKzVCY
-        07xG64k0F24lc7CjxVAaw2AFwI0_GFv_Wryl42xK82IYc2Ij64vIr41l4I8I3I0E4IkC6x
-        0Yz7v_Jr0_Gr1lx2IqxVAqx4xG67AKxVWUJVWUGwC20s026x8GjcxK67AKxVWUGVWUWwC2
-        zVAF1VAY17CE14v26r1q6r43MIIYrxkI7VAKI48JMIIF0xvE2Ix0cI8IcVAFwI0_Jr0_JF
-        4lIxAIcVC0I7IYx2IY6xkF7I0E14v26F4j6r4UJwCI42IY6xAIw20EY4v20xvaj40_Wr1j
-        6rW3Jr1lIxAIcVC2z280aVAFwI0_Gr0_Cr1lIxAIcVC2z280aVCY1x0267AKxVW8JVW8Jr
-        UvcSsGvfC2KfnxnUUI43ZEXa7IU0fb1UUUUUU==
+X-CM-TRANSID: GxC2BwA38hluLP5ipRkyAA--.42926S4
+X-Coremail-Antispam: 1UD129KBjvJXoWxCw47Wr18JF15JFyxGw4xCrg_yoW5uF1rp3
+        yrC3W3Ar1DKr4Ika1ayr48WF4Fkr4xJay7tas2kw17JF18Grnruw1YyFW8WFZ2g3yfZ3W3
+        KF1aqr4UA3WDCaUanT9S1TB71UUUUU7qnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
+        9KBjDU0xBIdaVrnRJUUUmFb4IE77IF4wAFF20E14v26rWj6s0DM7CY07I20VC2zVCF04k2
+        6cxKx2IYs7xG6r1j6r18M7CIcVAFz4kK6r1j6r18M28IrcIa0xkI8VA2jI8067AKxVWUXw
+        A2048vs2IY020Ec7CjxVAFwI0_Xr0E3s1l8cAvFVAK0II2c7xJM28CjxkF64kEwVA0rcxS
+        w2x7M28EF7xvwVC0I7IYx2IY67AKxVWUCVW8JwA2z4x0Y4vE2Ix0cI8IcVCY1x0267AKxV
+        WxJVW8Jr1l84ACjcxK6I8E87Iv67AKxVW8JVWxJwA2z4x0Y4vEx4A2jsIEc7CjxVAFwI0_
+        Gr1j6F4UJwAS0I0E0xvYzxvE52x082IY62kv0487Mc02F40EFcxC0VAKzVAqx4xG6I80ew
+        Av7VC0I7IYx2IY67AKxVWUGVWUXwAv7VC2z280aVAFwI0_Gr0_Cr1lOx8S6xCaFVCjc4AY
+        6r1j6r4UM4x0Y48IcxkI7VAKI48JM4IIrI8v6xkF7I0E8cxan2IY04v7M4kE6xkIj40Ew7
+        xC0wCY1x0262kKe7AKxVW8ZVWrXwCF04k20xvY0x0EwIxGrwCFx2IqxVCFs4IE7xkEbVWU
+        JVW8JwC20s026c02F40E14v26r1j6r18MI8I3I0E7480Y4vE14v26r106r1rMI8E67AF67
+        kF1VAFwI0_Jw0_GFylIxkGc2Ij64vIr41lIxAIcVC0I7IYx2IY67AKxVWUCVW8JwCI42IY
+        6xIIjxv20xvEc7CjxVAFwI0_Cr0_Gr1UMIIF0xvE42xK8VAvwI8IcIk0rVWUJVWUCwCI42
+        IY6I8E87Iv67AKxVW8JVWxJwCI42IY6I8E87Iv6xkF7I0E14v26r4UJVWxJrUvcSsGvfC2
+        KfnxnUUI43ZEXa7IU06c_3UUUUU==
 X-CM-SenderInfo: purev21wro2thvvxqx5xdzvxpfor3voofrz/
 X-CFilter-Loop: Reflected
 Precedence: bulk
@@ -61,137 +63,92 @@ X-Mailing-List: linux-perf-users@vger.kernel.org
 
 From: Roberto Sassu <roberto.sassu@huawei.com>
 
-As the first eval expansion is used only to generate Makefile statements,
-messages should not be displayed at this stage, as for example conditional
-expressions are not evaluated.
+Sometimes, features are simply different flavors of another feature, to
+properly detect the exact dependencies needed by different Linux
+distributions.
 
-It can be seen for example in the output of feature detection for bpftool,
-where the number of detected features does not change, despite turning on
-the verbose mode (VF = 1) and there are additional features to display.
+For example, libbfd has three flavors: libbfd if the distro does not
+require any additional dependency; libbfd-liberty if it requires libiberty;
+libbfd-liberty-z if it requires libiberty and libz.
 
-Fix this issue by escaping the $ before $(info) statements, to ensure that
-messages are printed only when the function containing them is actually
-executed, and not when it is expanded.
+It might not be clear to the user whether a feature has been successfully
+detected or not, given that some of its flavors will be set to OFF, others
+to ON.
 
-In addition, move the $(info) statement out of feature_print_status, due to
-the fact that is called both inside and outside an eval context, and place
-it to the caller so that the $ can be escaped when necessary. For symmetry,
-move the $(info) statement also out of feature_print_text, and place it to
-the caller.
+Instead, display only the feature main flavor if not in verbose mode
+(VF != 1), and set it to ON if at least one of its flavors has been
+successfully detected (logical OR), OFF otherwise. Omit the other flavors.
 
-Force the TMP variable evaluation in verbose mode, to display the features
-in FEATURE_TESTS that are not in FEATURE_DISPLAY.
+Accomplish that by declaring a FEATURE_GROUP_MEMBERS-<feature main flavor>
+variable, with the list of the other flavors as variable value. For now, do
+it just for libbfd.
 
-Reorder perf feature detection messages (first non-verbose, then verbose
-ones) by moving the call to feature_display_entries earlier, before the VF
-environment variable check.
+In verbose mode, of if no group is defined for a feature, show the feature
+detection result as before.
 
-Also, remove the newline from that function, as perf might display
-additional messages. Move the newline to perf Makefile, and display another
-one if displaying the detection result is not deferred as in the case of
-bpftool.
-
-Fixes: 0afc5cad387db ("perf build: Separate feature make support into config/Makefile.feature")
 Signed-off-by: Roberto Sassu <roberto.sassu@huawei.com>
 ---
- tools/build/Makefile.feature | 19 ++++++++-----------
- tools/perf/Makefile.config   | 15 ++++++++-------
- 2 files changed, 16 insertions(+), 18 deletions(-)
+ tools/build/Makefile.feature | 27 +++++++++++++++++++++++++--
+ 1 file changed, 25 insertions(+), 2 deletions(-)
 
 diff --git a/tools/build/Makefile.feature b/tools/build/Makefile.feature
-index fc6ce0b2535a..9d3afbc37e15 100644
+index 6c809941ff01..57619f240b56 100644
 --- a/tools/build/Makefile.feature
 +++ b/tools/build/Makefile.feature
-@@ -177,7 +177,7 @@ endif
- #
- # Print the result of the feature test:
- #
--feature_print_status = $(eval $(feature_print_status_code)) $(info $(MSG))
-+feature_print_status = $(eval $(feature_print_status_code))
+@@ -137,6 +137,12 @@ FEATURE_DISPLAY ?=              \
+          libaio			\
+          libzstd
  
++#
++# Declare group members of a feature to display the logical OR of the detection
++# result instead of each member result.
++#
++FEATURE_GROUP_MEMBERS-libbfd = libbfd-liberty libbfd-liberty-z
++
+ # Set FEATURE_CHECK_(C|LD)FLAGS-all for all FEATURE_TESTS features.
+ # If in the future we need per-feature checks/flags for features not
+ # mentioned in this list we need to refactor this ;-).
+@@ -179,8 +185,17 @@ endif
+ #
+ feature_print_status = $(eval $(feature_print_status_code))
+ 
++feature_group = $(eval $(feature_gen_group)) $(GROUP)
++
++define feature_gen_group
++  GROUP := $(1)
++  ifneq ($(feature_verbose),1)
++    GROUP += $(FEATURE_GROUP_MEMBERS-$(1))
++  endif
++endef
++
  define feature_print_status_code
-   ifeq ($(feature-$(1)), 1)
-@@ -187,7 +187,7 @@ define feature_print_status_code
-   endif
- endef
+-  ifeq ($(feature-$(1)), 1)
++  ifneq (,$(filter 1,$(foreach feat,$(call feature_group,$(feat)),$(feature-$(feat)))))
+     MSG = $(shell printf '...%40s: [ \033[32mon\033[m  ]' $(1))
+   else
+     MSG = $(shell printf '...%40s: [ \033[31mOFF\033[m ]' $(1))
+@@ -244,12 +259,20 @@ ifeq ($(VF),1)
+   feature_verbose := 1
+ endif
  
--feature_print_text = $(eval $(feature_print_text_code)) $(info $(MSG))
-+feature_print_text = $(eval $(feature_print_text_code))
- define feature_print_text_code
-     MSG = $(shell printf '...%30s: %s' $(1) $(2))
- endef
-@@ -247,21 +247,18 @@ endif
++ifneq ($(feature_verbose),1)
++  #
++  # Determine the features to omit from the displayed message, as only the
++  # logical OR of the detection result will be shown.
++  #
++  FEATURE_OMIT := $(foreach feat,$(FEATURE_DISPLAY),$(FEATURE_GROUP_MEMBERS-$(feat)))
++endif
++
  feature_display_entries = $(eval $(feature_display_entries_code))
  define feature_display_entries_code
    ifeq ($(feature_display),1)
--    $(info )
--    $(info Auto-detecting system features:)
--    $(foreach feat,$(FEATURE_DISPLAY),$(call feature_print_status,$(feat),))
--    ifneq ($(feature_verbose),1)
--      $(info )
--    endif
-+    $$(info )
-+    $$(info Auto-detecting system features:)
-+    $(foreach feat,$(FEATURE_DISPLAY),$(call feature_print_status,$(feat),) $$(info $(MSG)))
+     $$(info )
+     $$(info Auto-detecting system features:)
+-    $(foreach feat,$(FEATURE_DISPLAY),$(call feature_print_status,$(feat),) $$(info $(MSG)))
++    $(foreach feat,$(filter-out $(FEATURE_OMIT),$(FEATURE_DISPLAY)),$(call feature_print_status,$(feat),) $$(info $(MSG)))
    endif
  
    ifeq ($(feature_verbose),1)
--    TMP := $(filter-out $(FEATURE_DISPLAY),$(FEATURE_TESTS))
--    $(foreach feat,$(TMP),$(call feature_print_status,$(feat),))
--    $(info )
-+    $(eval TMP := $(filter-out $(FEATURE_DISPLAY),$(FEATURE_TESTS)))
-+    $(foreach feat,$(TMP),$(call feature_print_status,$(feat),) $$(info $(MSG)))
-   endif
- endef
- 
- ifeq ($(FEATURE_DISPLAY_DEFERRED),)
-   $(call feature_display_entries)
-+  $(info )
- endif
-diff --git a/tools/perf/Makefile.config b/tools/perf/Makefile.config
-index 0661a1cf9855..f4de6e16fbe2 100644
---- a/tools/perf/Makefile.config
-+++ b/tools/perf/Makefile.config
-@@ -1304,11 +1304,15 @@ define print_var_code
-     MSG = $(shell printf '...%30s: %s' $(1) $($(1)))
- endef
- 
-+ifeq ($(feature_display),1)
-+  $(call feature_display_entries)
-+endif
-+
- ifeq ($(VF),1)
-   # Display EXTRA features which are detected manualy
-   # from here with feature_check call and thus cannot
-   # be partof global state output.
--  $(foreach feat,$(FEATURE_TESTS_EXTRA),$(call feature_print_status,$(feat),))
-+  $(foreach feat,$(FEATURE_TESTS_EXTRA),$(call feature_print_status,$(feat),) $(info $(MSG)))
-   $(call print_var,prefix)
-   $(call print_var,bindir)
-   $(call print_var,libdir)
-@@ -1318,11 +1322,12 @@ ifeq ($(VF),1)
-   $(call print_var,JDIR)
- 
-   ifeq ($(dwarf-post-unwind),1)
--    $(call feature_print_text,"DWARF post unwind library", $(dwarf-post-unwind-text))
-+    $(call feature_print_text,"DWARF post unwind library", $(dwarf-post-unwind-text)) $(info $(MSG))
-   endif
--  $(info )
- endif
- 
-+$(info )
-+
- $(call detected_var,bindir_SQ)
- $(call detected_var,PYTHON_WORD)
- ifneq ($(OUTPUT),)
-@@ -1352,7 +1357,3 @@ endif
- # tests.
- $(shell rm -f $(FEATURE_DUMP_FILENAME))
- $(foreach feat,$(FEATURE_TESTS),$(shell echo "$(call feature_assign,$(feat))" >> $(FEATURE_DUMP_FILENAME)))
--
--ifeq ($(feature_display),1)
--  $(call feature_display_entries)
--endif
 -- 
 2.25.1
 
