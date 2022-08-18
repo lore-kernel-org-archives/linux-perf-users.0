@@ -2,428 +2,537 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 772E1C32774
-	for <linux-perf-users@archiver.kernel.org>; Thu, 18 Aug 2022 21:11:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5B05FC00140
+	for <linux-perf-users@archiver.kernel.org>; Thu, 18 Aug 2022 21:50:09 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1346636AbiHRVLW (ORCPT
+        id S245502AbiHRVuI (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Thu, 18 Aug 2022 17:11:22 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48752 "EHLO
+        Thu, 18 Aug 2022 17:50:08 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44402 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1346762AbiHRVK3 (ORCPT
+        with ESMTP id S232055AbiHRVuH (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Thu, 18 Aug 2022 17:10:29 -0400
-Received: from mail.zeus03.de (www.zeus03.de [194.117.254.33])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6341ED87D2
-        for <linux-perf-users@vger.kernel.org>; Thu, 18 Aug 2022 14:05:14 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=simple; d=sang-engineering.com; h=
-        from:to:cc:subject:date:message-id:mime-version
-        :content-transfer-encoding; s=k1; bh=HQUnJK+uLeZwjTpp2+z61Sk9IGp
-        2r7zEuY9wjhAxDYo=; b=32csxGwPTmshT51RhlOX/Cm6CR3mc1tQhVPU6HueEDD
-        B6eN+0sGodIpjYFWeu07yrAKz6sgmPDVCdYrjr7uDtth49DZJdR1hIo7iir0S1Hx
-        TdKxLKznufYoO8hhh0xVl0vzqMjzOc7bohomzoMjWpfXcyYffAj0p0sXec+73gIk
-        =
-Received: (qmail 3962787 invoked from network); 18 Aug 2022 23:02:03 +0200
-Received: by mail.zeus03.de with ESMTPSA (TLS_AES_256_GCM_SHA384 encrypted, authenticated); 18 Aug 2022 23:02:03 +0200
-X-UD-Smtp-Session: l3s3148p1@BOQKS4rm79cucref
-From:   Wolfram Sang <wsa+renesas@sang-engineering.com>
-To:     linux-kernel@vger.kernel.org
-Cc:     Wolfram Sang <wsa+renesas@sang-engineering.com>,
-        Alexei Starovoitov <ast@kernel.org>,
-        Daniel Borkmann <daniel@iogearbox.net>,
-        Andrii Nakryiko <andrii@kernel.org>,
-        Martin KaFai Lau <martin.lau@linux.dev>,
-        Song Liu <song@kernel.org>, Yonghong Song <yhs@fb.com>,
-        John Fastabend <john.fastabend@gmail.com>,
-        KP Singh <kpsingh@kernel.org>,
-        Stanislav Fomichev <sdf@google.com>,
-        Hao Luo <haoluo@google.com>, Jiri Olsa <jolsa@kernel.org>,
-        Tejun Heo <tj@kernel.org>, Zefan Li <lizefan.x@bytedance.com>,
-        Johannes Weiner <hannes@cmpxchg.org>,
-        Peter Zijlstra <peterz@infradead.org>,
+        Thu, 18 Aug 2022 17:50:07 -0400
+Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 11AE2CAC8F;
+        Thu, 18 Aug 2022 14:50:05 -0700 (PDT)
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by dfw.source.kernel.org (Postfix) with ESMTPS id 7358B61646;
+        Thu, 18 Aug 2022 21:50:04 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 730CEC433D6;
+        Thu, 18 Aug 2022 21:50:03 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1660859403;
+        bh=DuO0bokyBzLc+U5i30D5Z+Qdx/hgMN2CiYxYTTwwBuk=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=D73AgAzFgL0entkJo3HZtbOi3K4qOxSquvDI3nKwBeI9Dd5HE4CCn14HVStIt5rkK
+         7giza0hMMQbkaiV4IEHt3fQ1Auu6tscyF2NlqxRwDERXkcEejQRg5Ky9qDyXMJMEto
+         K2U7dhA2J3A6n+J1cGLclPMjQyGFLoLXLNw6viUkkUrxTlDQ8nFMdhngYp61HHk/jL
+         eHsGoZrP5FI8A+fe7bMJxvWQKKoGOtodcFUyBlIcb71kSyUOCNjIoLnhUB0n0CnLbt
+         gHxCpNAkkdJx/GOpR2w/dEuB/ZWcnwXX5sKfShsysIlG/WXQ0PJaRyq5wqTd7gezbS
+         OinXhZAUa82cg==
+Received: by quaco.ghostprotocols.net (Postfix, from userid 1000)
+        id 6E8094035A; Thu, 18 Aug 2022 18:50:00 -0300 (-03)
+Date:   Thu, 18 Aug 2022 18:50:00 -0300
+From:   Arnaldo Carvalho de Melo <acme@kernel.org>
+To:     Ian Rogers <irogers@google.com>
+Cc:     Peter Zijlstra <peterz@infradead.org>,
         Ingo Molnar <mingo@redhat.com>,
-        Arnaldo Carvalho de Melo <acme@kernel.org>,
         Mark Rutland <mark.rutland@arm.com>,
         Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Jiri Olsa <jolsa@kernel.org>,
         Namhyung Kim <namhyung@kernel.org>,
-        Petr Mladek <pmladek@suse.com>,
-        Sergey Senozhatsky <senozhatsky@chromium.org>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        John Ogness <john.ogness@linutronix.de>,
-        John Stultz <jstultz@google.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Stephen Boyd <sboyd@kernel.org>, bpf@vger.kernel.org,
-        cgroups@vger.kernel.org, linux-perf-users@vger.kernel.org
-Subject: [PATCH] kernel: move from strlcpy with unused retval to strscpy
-Date:   Thu, 18 Aug 2022 23:02:01 +0200
-Message-Id: <20220818210202.8227-1-wsa+renesas@sang-engineering.com>
-X-Mailer: git-send-email 2.35.1
+        James Clark <james.clark@arm.com>,
+        Kees Cook <keescook@chromium.org>,
+        "Gustavo A. R. Silva" <gustavoars@kernel.org>,
+        Adrian Hunter <adrian.hunter@intel.com>,
+        Riccardo Mancini <rickyman7@gmail.com>,
+        German Gomez <german.gomez@arm.com>,
+        Colin Ian King <colin.king@intel.com>,
+        Song Liu <songliubraving@fb.com>,
+        Dave Marchevsky <davemarchevsky@fb.com>,
+        Athira Rajeev <atrajeev@linux.vnet.ibm.com>,
+        Alexey Bayduraev <alexey.v.bayduraev@linux.intel.com>,
+        Leo Yan <leo.yan@linaro.org>, linux-perf-users@vger.kernel.org,
+        linux-kernel@vger.kernel.org, Stephane Eranian <eranian@google.com>
+Subject: Re: [PATCH v2 4/6] perf cpumap: Fix alignment for masks in event
+ encoding
+Message-ID: <Yv60COAP90TEiWkx@kernel.org>
+References: <20220614143353.1559597-1-irogers@google.com>
+ <20220614143353.1559597-5-irogers@google.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20220614143353.1559597-5-irogers@google.com>
+X-Url:  http://acmel.wordpress.com
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-Follow the advice of the below link and prefer 'strscpy' in this
-subsystem. Conversion is 1:1 because the return value is not used.
-Generated by a coccinelle script.
+Em Tue, Jun 14, 2022 at 07:33:51AM -0700, Ian Rogers escreveu:
+> A mask encoding of a cpu map is laid out as:
+>   u16 nr
+>   u16 long_size
+>   unsigned long mask[];
+> However, the mask may be 8-byte aligned meaning there is a 4-byte pad
+> after long_size. This means 32-bit and 64-bit builds see the mask as
+> being at different offsets. On top of this the structure is in the byte
+> data[] encoded as:
+>   u16 type
+>   char data[]
+> This means the mask's struct isn't the required 4 or 8 byte aligned, but
+> is offset by 2. Consequently the long reads and writes are causing
+> undefined behavior as the alignment is broken.
+> 
+> Fix the mask struct by creating explicit 32 and 64-bit variants, use a
+> union to avoid data[] and casts; the struct must be packed so the
+> layout matches the existing perf.data layout. Taking an address of a
+> member of a packed struct breaks alignment so pass the packed
+> perf_record_cpu_map_data to functions, so they can access variables with
+> the right alignment.
+> 
+> As the 64-bit version has 4 bytes of padding, optimizing writing to only
+> write the 32-bit version.
+> 
+> Signed-off-by: Ian Rogers <irogers@google.com>
+> ---
+>  tools/lib/perf/include/perf/event.h | 36 +++++++++++--
+>  tools/perf/tests/cpumap.c           | 19 ++++---
+>  tools/perf/util/cpumap.c            | 80 +++++++++++++++++++++++------
+>  tools/perf/util/cpumap.h            |  4 +-
+>  tools/perf/util/session.c           | 30 +++++------
+>  tools/perf/util/synthetic-events.c  | 34 +++++++-----
+>  6 files changed, 143 insertions(+), 60 deletions(-)
+> 
+> diff --git a/tools/lib/perf/include/perf/event.h b/tools/lib/perf/include/perf/event.h
+> index e7758707cadd..d2d32589758a 100644
+> --- a/tools/lib/perf/include/perf/event.h
+> +++ b/tools/lib/perf/include/perf/event.h
+> @@ -6,6 +6,7 @@
+>  #include <linux/types.h>
+>  #include <linux/limits.h>
+>  #include <linux/bpf.h>
+> +#include <linux/compiler.h>
+>  #include <sys/types.h> /* pid_t */
+>  
+>  #define event_contains(obj, mem) ((obj).header.size > offsetof(typeof(obj), mem))
+> @@ -153,20 +154,47 @@ enum {
+>  	PERF_CPU_MAP__MASK = 1,
+>  };
+>  
+> +/*
+> + * Array encoding of a perf_cpu_map where nr is the number of entries in cpu[]
+> + * and each entry is a value for a CPU in the map.
+> + */
+>  struct cpu_map_entries {
+>  	__u16			 nr;
+>  	__u16			 cpu[];
+>  };
+>  
+> -struct perf_record_record_cpu_map {
+> +/* Bitmap encoding of a perf_cpu_map where bitmap entries are 32-bit. */
+> +struct perf_record_mask_cpu_map32 {
+> +	/* Number of mask values. */
+>  	__u16			 nr;
+> +	/* Constant 4. */
+>  	__u16			 long_size;
+> -	unsigned long		 mask[];
+> +	/* Bitmap data. */
+> +	__u32			 mask[];
+>  };
+>  
+> -struct perf_record_cpu_map_data {
+> +/* Bitmap encoding of a perf_cpu_map where bitmap entries are 64-bit. */
+> +struct perf_record_mask_cpu_map64 {
+> +	/* Number of mask values. */
+> +	__u16			 nr;
+> +	/* Constant 8. */
+> +	__u16			 long_size;
+> +	/* Legacy padding. */
+> +	char                     __pad[4];
+> +	/* Bitmap data. */
+> +	__u64			 mask[];
+> +};
+> +
+> +struct __packed perf_record_cpu_map_data {
 
-Link: https://lore.kernel.org/r/CAHk-=wgfRnXz0W3D37d01q3JFkr_i_uTL=V6A6G1oUZcprmknw@mail.gmail.com/
-Signed-off-by: Wolfram Sang <wsa+renesas@sang-engineering.com>
----
- kernel/acct.c                         |  2 +-
- kernel/bpf/preload/bpf_preload_kern.c |  4 ++--
- kernel/cgroup/cgroup-v1.c             |  4 ++--
- kernel/events/core.c                  |  6 +++---
- kernel/kallsyms.c                     |  4 ++--
- kernel/params.c                       |  2 +-
- kernel/printk/printk.c                |  2 +-
- kernel/relay.c                        |  4 ++--
- kernel/time/clocksource.c             |  2 +-
- kernel/trace/ftrace.c                 | 18 +++++++++---------
- kernel/trace/trace.c                  |  8 ++++----
- kernel/trace/trace_events.c           |  2 +-
- kernel/trace/trace_events_inject.c    |  4 ++--
- kernel/trace/trace_kprobe.c           |  2 +-
- kernel/trace/trace_probe.c            |  2 +-
- 15 files changed, 33 insertions(+), 33 deletions(-)
+In various places I'm getting this:
 
-diff --git a/kernel/acct.c b/kernel/acct.c
-index 13706356ec54..5ee0b37acf0c 100644
---- a/kernel/acct.c
-+++ b/kernel/acct.c
-@@ -443,7 +443,7 @@ static void fill_ac(acct_t *ac)
- 	memset(ac, 0, sizeof(acct_t));
- 
- 	ac->ac_version = ACCT_VERSION | ACCT_BYTEORDER;
--	strlcpy(ac->ac_comm, current->comm, sizeof(ac->ac_comm));
-+	strscpy(ac->ac_comm, current->comm, sizeof(ac->ac_comm));
- 
- 	/* calculate run_time in nsec*/
- 	run_time = ktime_get_ns();
-diff --git a/kernel/bpf/preload/bpf_preload_kern.c b/kernel/bpf/preload/bpf_preload_kern.c
-index 5106b5372f0c..af8dd3a7c928 100644
---- a/kernel/bpf/preload/bpf_preload_kern.c
-+++ b/kernel/bpf/preload/bpf_preload_kern.c
-@@ -19,9 +19,9 @@ static void free_links_and_skel(void)
- 
- static int preload(struct bpf_preload_info *obj)
- {
--	strlcpy(obj[0].link_name, "maps.debug", sizeof(obj[0].link_name));
-+	strscpy(obj[0].link_name, "maps.debug", sizeof(obj[0].link_name));
- 	obj[0].link = maps_link;
--	strlcpy(obj[1].link_name, "progs.debug", sizeof(obj[1].link_name));
-+	strscpy(obj[1].link_name, "progs.debug", sizeof(obj[1].link_name));
- 	obj[1].link = progs_link;
- 	return 0;
- }
-diff --git a/kernel/cgroup/cgroup-v1.c b/kernel/cgroup/cgroup-v1.c
-index 2ade21b54dc4..ce8bcd2d014a 100644
---- a/kernel/cgroup/cgroup-v1.c
-+++ b/kernel/cgroup/cgroup-v1.c
-@@ -563,7 +563,7 @@ static ssize_t cgroup_release_agent_write(struct kernfs_open_file *of,
- 	if (!cgrp)
- 		return -ENODEV;
- 	spin_lock(&release_agent_path_lock);
--	strlcpy(cgrp->root->release_agent_path, strstrip(buf),
-+	strscpy(cgrp->root->release_agent_path, strstrip(buf),
- 		sizeof(cgrp->root->release_agent_path));
- 	spin_unlock(&release_agent_path_lock);
- 	cgroup_kn_unlock(of->kn);
-@@ -797,7 +797,7 @@ void cgroup1_release_agent(struct work_struct *work)
- 		goto out_free;
- 
- 	spin_lock(&release_agent_path_lock);
--	strlcpy(agentbuf, cgrp->root->release_agent_path, PATH_MAX);
-+	strscpy(agentbuf, cgrp->root->release_agent_path, PATH_MAX);
- 	spin_unlock(&release_agent_path_lock);
- 	if (!agentbuf[0])
- 		goto out_free;
-diff --git a/kernel/events/core.c b/kernel/events/core.c
-index 2621fd24ad26..7c785b64fa3d 100644
---- a/kernel/events/core.c
-+++ b/kernel/events/core.c
-@@ -7954,7 +7954,7 @@ static void perf_event_comm_event(struct perf_comm_event *comm_event)
- 	unsigned int size;
- 
- 	memset(comm, 0, sizeof(comm));
--	strlcpy(comm, comm_event->task->comm, sizeof(comm));
-+	strscpy(comm, comm_event->task->comm, sizeof(comm));
- 	size = ALIGN(strlen(comm)+1, sizeof(u64));
- 
- 	comm_event->comm = comm;
-@@ -8409,7 +8409,7 @@ static void perf_event_mmap_event(struct perf_mmap_event *mmap_event)
- 	}
- 
- cpy_name:
--	strlcpy(tmp, name, sizeof(tmp));
-+	strscpy(tmp, name, sizeof(tmp));
- 	name = tmp;
- got_name:
- 	/*
-@@ -8838,7 +8838,7 @@ void perf_event_ksymbol(u16 ksym_type, u64 addr, u32 len, bool unregister,
- 	    ksym_type == PERF_RECORD_KSYMBOL_TYPE_UNKNOWN)
- 		goto err;
- 
--	strlcpy(name, sym, KSYM_NAME_LEN);
-+	strscpy(name, sym, KSYM_NAME_LEN);
- 	name_len = strlen(name) + 1;
- 	while (!IS_ALIGNED(name_len, sizeof(u64)))
- 		name[name_len++] = '\0';
-diff --git a/kernel/kallsyms.c b/kernel/kallsyms.c
-index 3e7e2c2ad2f7..9a204432bf87 100644
---- a/kernel/kallsyms.c
-+++ b/kernel/kallsyms.c
-@@ -624,7 +624,7 @@ static int get_ksymbol_bpf(struct kallsym_iter *iter)
- {
- 	int ret;
- 
--	strlcpy(iter->module_name, "bpf", MODULE_NAME_LEN);
-+	strscpy(iter->module_name, "bpf", MODULE_NAME_LEN);
- 	iter->exported = 0;
- 	ret = bpf_get_kallsym(iter->pos - iter->pos_ftrace_mod_end,
- 			      &iter->value, &iter->type,
-@@ -644,7 +644,7 @@ static int get_ksymbol_bpf(struct kallsym_iter *iter)
-  */
- static int get_ksymbol_kprobe(struct kallsym_iter *iter)
- {
--	strlcpy(iter->module_name, "__builtin__kprobes", MODULE_NAME_LEN);
-+	strscpy(iter->module_name, "__builtin__kprobes", MODULE_NAME_LEN);
- 	iter->exported = 0;
- 	return kprobe_get_kallsym(iter->pos - iter->pos_bpf_end,
- 				  &iter->value, &iter->type,
-diff --git a/kernel/params.c b/kernel/params.c
-index 5b92310425c5..ee2e3b674dd0 100644
---- a/kernel/params.c
-+++ b/kernel/params.c
-@@ -846,7 +846,7 @@ static void __init param_sysfs_builtin(void)
- 			name_len = 0;
- 		} else {
- 			name_len = dot - kp->name + 1;
--			strlcpy(modname, kp->name, name_len);
-+			strscpy(modname, kp->name, name_len);
- 		}
- 		kernel_add_sysfs_param(modname, kp, name_len);
- 	}
-diff --git a/kernel/printk/printk.c b/kernel/printk/printk.c
-index a1a81fd9889b..7b1ba087b629 100644
---- a/kernel/printk/printk.c
-+++ b/kernel/printk/printk.c
-@@ -2392,7 +2392,7 @@ static int __add_preferred_console(char *name, int idx, char *options,
- 		return -E2BIG;
- 	if (!brl_options)
- 		preferred_console = i;
--	strlcpy(c->name, name, sizeof(c->name));
-+	strscpy(c->name, name, sizeof(c->name));
- 	c->options = options;
- 	set_user_specified(c, user_specified);
- 	braille_set_options(c, brl_options);
-diff --git a/kernel/relay.c b/kernel/relay.c
-index 6a611e779e95..e75bc76c8bfa 100644
---- a/kernel/relay.c
-+++ b/kernel/relay.c
-@@ -510,7 +510,7 @@ struct rchan *relay_open(const char *base_filename,
- 	chan->private_data = private_data;
- 	if (base_filename) {
- 		chan->has_base_filename = 1;
--		strlcpy(chan->base_filename, base_filename, NAME_MAX);
-+		strscpy(chan->base_filename, base_filename, NAME_MAX);
- 	}
- 	chan->cb = cb;
- 	kref_init(&chan->kref);
-@@ -581,7 +581,7 @@ int relay_late_setup_files(struct rchan *chan,
- 	if (!chan || !base_filename)
- 		return -EINVAL;
- 
--	strlcpy(chan->base_filename, base_filename, NAME_MAX);
-+	strscpy(chan->base_filename, base_filename, NAME_MAX);
- 
- 	mutex_lock(&relay_channels_mutex);
- 	/* Is chan already set up? */
-diff --git a/kernel/time/clocksource.c b/kernel/time/clocksource.c
-index cee5da1e54c4..dc95af1fc8cd 100644
---- a/kernel/time/clocksource.c
-+++ b/kernel/time/clocksource.c
-@@ -1450,7 +1450,7 @@ static int __init boot_override_clocksource(char* str)
- {
- 	mutex_lock(&clocksource_mutex);
- 	if (str)
--		strlcpy(override_name, str, sizeof(override_name));
-+		strscpy(override_name, str, sizeof(override_name));
- 	mutex_unlock(&clocksource_mutex);
- 	return 1;
- }
-diff --git a/kernel/trace/ftrace.c b/kernel/trace/ftrace.c
-index bc921a3f7ea8..654cd8ca46b9 100644
---- a/kernel/trace/ftrace.c
-+++ b/kernel/trace/ftrace.c
-@@ -5991,7 +5991,7 @@ bool ftrace_filter_param __initdata;
- static int __init set_ftrace_notrace(char *str)
- {
- 	ftrace_filter_param = true;
--	strlcpy(ftrace_notrace_buf, str, FTRACE_FILTER_SIZE);
-+	strscpy(ftrace_notrace_buf, str, FTRACE_FILTER_SIZE);
- 	return 1;
- }
- __setup("ftrace_notrace=", set_ftrace_notrace);
-@@ -5999,7 +5999,7 @@ __setup("ftrace_notrace=", set_ftrace_notrace);
- static int __init set_ftrace_filter(char *str)
- {
- 	ftrace_filter_param = true;
--	strlcpy(ftrace_filter_buf, str, FTRACE_FILTER_SIZE);
-+	strscpy(ftrace_filter_buf, str, FTRACE_FILTER_SIZE);
- 	return 1;
- }
- __setup("ftrace_filter=", set_ftrace_filter);
-@@ -6011,14 +6011,14 @@ static int ftrace_graph_set_hash(struct ftrace_hash *hash, char *buffer);
- 
- static int __init set_graph_function(char *str)
- {
--	strlcpy(ftrace_graph_buf, str, FTRACE_FILTER_SIZE);
-+	strscpy(ftrace_graph_buf, str, FTRACE_FILTER_SIZE);
- 	return 1;
- }
- __setup("ftrace_graph_filter=", set_graph_function);
- 
- static int __init set_graph_notrace_function(char *str)
- {
--	strlcpy(ftrace_graph_notrace_buf, str, FTRACE_FILTER_SIZE);
-+	strscpy(ftrace_graph_notrace_buf, str, FTRACE_FILTER_SIZE);
- 	return 1;
- }
- __setup("ftrace_graph_notrace=", set_graph_notrace_function);
-@@ -6803,8 +6803,8 @@ static int ftrace_get_trampoline_kallsym(unsigned int symnum,
- 			continue;
- 		*value = op->trampoline;
- 		*type = 't';
--		strlcpy(name, FTRACE_TRAMPOLINE_SYM, KSYM_NAME_LEN);
--		strlcpy(module_name, FTRACE_TRAMPOLINE_MOD, MODULE_NAME_LEN);
-+		strscpy(name, FTRACE_TRAMPOLINE_SYM, KSYM_NAME_LEN);
-+		strscpy(module_name, FTRACE_TRAMPOLINE_MOD, MODULE_NAME_LEN);
- 		*exported = 0;
- 		return 0;
- 	}
-@@ -7135,7 +7135,7 @@ ftrace_func_address_lookup(struct ftrace_mod_map *mod_map,
- 		if (off)
- 			*off = addr - found_func->ip;
- 		if (sym)
--			strlcpy(sym, found_func->name, KSYM_NAME_LEN);
-+			strscpy(sym, found_func->name, KSYM_NAME_LEN);
- 
- 		return found_func->name;
- 	}
-@@ -7189,8 +7189,8 @@ int ftrace_mod_get_kallsym(unsigned int symnum, unsigned long *value,
- 
- 			*value = mod_func->ip;
- 			*type = 'T';
--			strlcpy(name, mod_func->name, KSYM_NAME_LEN);
--			strlcpy(module_name, mod_map->mod->name, MODULE_NAME_LEN);
-+			strscpy(name, mod_func->name, KSYM_NAME_LEN);
-+			strscpy(module_name, mod_map->mod->name, MODULE_NAME_LEN);
- 			*exported = 1;
- 			preempt_enable();
- 			return 0;
-diff --git a/kernel/trace/trace.c b/kernel/trace/trace.c
-index d3005279165d..98ce29d78110 100644
---- a/kernel/trace/trace.c
-+++ b/kernel/trace/trace.c
-@@ -189,7 +189,7 @@ static bool snapshot_at_boot;
- 
- static int __init set_cmdline_ftrace(char *str)
- {
--	strlcpy(bootup_tracer_buf, str, MAX_TRACER_SIZE);
-+	strscpy(bootup_tracer_buf, str, MAX_TRACER_SIZE);
- 	default_bootup_tracer = bootup_tracer_buf;
- 	/* We are using ftrace early, expand it */
- 	ring_buffer_expanded = true;
-@@ -244,7 +244,7 @@ static char trace_boot_options_buf[MAX_TRACER_SIZE] __initdata;
- 
- static int __init set_trace_boot_options(char *str)
- {
--	strlcpy(trace_boot_options_buf, str, MAX_TRACER_SIZE);
-+	strscpy(trace_boot_options_buf, str, MAX_TRACER_SIZE);
- 	return 1;
- }
- __setup("trace_options=", set_trace_boot_options);
-@@ -254,7 +254,7 @@ static char *trace_boot_clock __initdata;
- 
- static int __init set_trace_boot_clock(char *str)
- {
--	strlcpy(trace_boot_clock_buf, str, MAX_TRACER_SIZE);
-+	strscpy(trace_boot_clock_buf, str, MAX_TRACER_SIZE);
- 	trace_boot_clock = trace_boot_clock_buf;
- 	return 1;
- }
-@@ -2452,7 +2452,7 @@ static void __trace_find_cmdline(int pid, char comm[])
- 	if (map != NO_CMDLINE_MAP) {
- 		tpid = savedcmd->map_cmdline_to_pid[map];
- 		if (tpid == pid) {
--			strlcpy(comm, get_saved_cmdlines(map), TASK_COMM_LEN);
-+			strscpy(comm, get_saved_cmdlines(map), TASK_COMM_LEN);
- 			return;
- 		}
- 	}
-diff --git a/kernel/trace/trace_events.c b/kernel/trace/trace_events.c
-index 181f08186d32..c2e65c646980 100644
---- a/kernel/trace/trace_events.c
-+++ b/kernel/trace/trace_events.c
-@@ -3531,7 +3531,7 @@ static char bootup_event_buf[COMMAND_LINE_SIZE] __initdata;
- 
- static __init int setup_trace_event(char *str)
- {
--	strlcpy(bootup_event_buf, str, COMMAND_LINE_SIZE);
-+	strscpy(bootup_event_buf, str, COMMAND_LINE_SIZE);
- 	ring_buffer_expanded = true;
- 	disable_tracing_selftest("running event tracing");
- 
-diff --git a/kernel/trace/trace_events_inject.c b/kernel/trace/trace_events_inject.c
-index d6b4935a78c0..abe805d471eb 100644
---- a/kernel/trace/trace_events_inject.c
-+++ b/kernel/trace/trace_events_inject.c
-@@ -217,7 +217,7 @@ static int parse_entry(char *str, struct trace_event_call *call, void **pentry)
- 			char *addr = (char *)(unsigned long) val;
- 
- 			if (field->filter_type == FILTER_STATIC_STRING) {
--				strlcpy(entry + field->offset, addr, field->size);
-+				strscpy(entry + field->offset, addr, field->size);
- 			} else if (field->filter_type == FILTER_DYN_STRING ||
- 				   field->filter_type == FILTER_RDYN_STRING) {
- 				int str_len = strlen(addr) + 1;
-@@ -232,7 +232,7 @@ static int parse_entry(char *str, struct trace_event_call *call, void **pentry)
- 				}
- 				entry = *pentry;
- 
--				strlcpy(entry + (entry_size - str_len), addr, str_len);
-+				strscpy(entry + (entry_size - str_len), addr, str_len);
- 				str_item = (u32 *)(entry + field->offset);
- 				if (field->filter_type == FILTER_RDYN_STRING)
- 					str_loc -= field->offset + field->size;
-diff --git a/kernel/trace/trace_kprobe.c b/kernel/trace/trace_kprobe.c
-index 23f7f0ec4f4c..0f0262edb48a 100644
---- a/kernel/trace/trace_kprobe.c
-+++ b/kernel/trace/trace_kprobe.c
-@@ -29,7 +29,7 @@ static char kprobe_boot_events_buf[COMMAND_LINE_SIZE] __initdata;
- 
- static int __init set_kprobe_boot_events(char *str)
- {
--	strlcpy(kprobe_boot_events_buf, str, COMMAND_LINE_SIZE);
-+	strscpy(kprobe_boot_events_buf, str, COMMAND_LINE_SIZE);
- 	disable_tracing_selftest("running kprobe events");
- 
- 	return 1;
-diff --git a/kernel/trace/trace_probe.c b/kernel/trace/trace_probe.c
-index 850a88abd33b..24da9a2ce070 100644
---- a/kernel/trace/trace_probe.c
-+++ b/kernel/trace/trace_probe.c
-@@ -245,7 +245,7 @@ int traceprobe_parse_event_name(const char **pevent, const char **pgroup,
- 			trace_probe_log_err(offset, GROUP_TOO_LONG);
- 			return -EINVAL;
- 		}
--		strlcpy(buf, event, slash - event + 1);
-+		strscpy(buf, event, slash - event + 1);
- 		if (!is_good_name(buf)) {
- 			trace_probe_log_err(offset, BAD_GROUP_NAME);
- 			return -EINVAL;
+[perfbuilder@five x-riscv]$ export BUILD_TARBALL=http://192.168.86.14/perf/perf-6.0.0-rc1.tar.xz
+[perfbuilder@five x-riscv]$ time dm .
+   1     5.47 ubuntu:22.04-x-riscv64        : FAIL gcc version 11.2.0 (Ubuntu 11.2.0-16ubuntu1)
+    In file included from mmap.c:10:
+    /git/perf-6.0.0-rc1/tools/lib/perf/include/perf/event.h:190:34: error: packed attribute causes inefficient alignment for 'type' [-Werror=attributes]
+      190 |         __u16                    type;
+          |                                  ^~~~
+    cc1: all warnings being treated as errors
+    In file included from util/event.h:12,
+                     from builtin-diff.c:12:
+    /git/perf-6.0.0-rc1/tools/lib/perf/include/perf/event.h:190:34: error: packed attribute causes inefficient alignment for 'type' [-Werror=attributes]
+      190 |         __u16                    type;
+          |                                  ^~~~
+    In file included from util/events_stats.h:6,
+                     from util/evlist.h:12,
+                     from builtin-evlist.c:11:
+    /git/perf-6.0.0-rc1/tools/lib/perf/include/perf/event.h:190:34: error: packed attribute causes inefficient alignment for 'type' [-Werror=attributes]
+      190 |         __u16                    type;
+          |                                  ^~~~
+
+So probably we need to disable this -Werror=attributes in some
+architectures?
+
+- Arnaldo
+
+>  	__u16			 type;
+> -	char			 data[];
+> +	union {
+> +		/* Used when type == PERF_CPU_MAP__CPUS. */
+> +		struct cpu_map_entries cpus_data;
+> +		/* Used when type == PERF_CPU_MAP__MASK and long_size == 4. */
+> +		struct perf_record_mask_cpu_map32 mask32_data;
+> +		/* Used when type == PERF_CPU_MAP__MASK and long_size == 8. */
+> +		struct perf_record_mask_cpu_map64 mask64_data;
+> +	};
+>  };
+>  
+>  struct perf_record_cpu_map {
+> diff --git a/tools/perf/tests/cpumap.c b/tools/perf/tests/cpumap.c
+> index f94929ebb54b..7ea150cdc137 100644
+> --- a/tools/perf/tests/cpumap.c
+> +++ b/tools/perf/tests/cpumap.c
+> @@ -17,21 +17,23 @@ static int process_event_mask(struct perf_tool *tool __maybe_unused,
+>  			 struct machine *machine __maybe_unused)
+>  {
+>  	struct perf_record_cpu_map *map_event = &event->cpu_map;
+> -	struct perf_record_record_cpu_map *mask;
+>  	struct perf_record_cpu_map_data *data;
+>  	struct perf_cpu_map *map;
+>  	int i;
+> +	unsigned int long_size;
+>  
+>  	data = &map_event->data;
+>  
+>  	TEST_ASSERT_VAL("wrong type", data->type == PERF_CPU_MAP__MASK);
+>  
+> -	mask = (struct perf_record_record_cpu_map *)data->data;
+> +	long_size = data->mask32_data.long_size;
+>  
+> -	TEST_ASSERT_VAL("wrong nr",   mask->nr == 1);
+> +	TEST_ASSERT_VAL("wrong long_size", long_size == 4 || long_size == 8);
+> +
+> +	TEST_ASSERT_VAL("wrong nr",   data->mask32_data.nr == 1);
+>  
+>  	for (i = 0; i < 20; i++) {
+> -		TEST_ASSERT_VAL("wrong cpu", test_bit(i, mask->mask));
+> +		TEST_ASSERT_VAL("wrong cpu", perf_record_cpu_map_data__test_bit(i, data));
+>  	}
+>  
+>  	map = cpu_map__new_data(data);
+> @@ -51,7 +53,6 @@ static int process_event_cpus(struct perf_tool *tool __maybe_unused,
+>  			 struct machine *machine __maybe_unused)
+>  {
+>  	struct perf_record_cpu_map *map_event = &event->cpu_map;
+> -	struct cpu_map_entries *cpus;
+>  	struct perf_record_cpu_map_data *data;
+>  	struct perf_cpu_map *map;
+>  
+> @@ -59,11 +60,9 @@ static int process_event_cpus(struct perf_tool *tool __maybe_unused,
+>  
+>  	TEST_ASSERT_VAL("wrong type", data->type == PERF_CPU_MAP__CPUS);
+>  
+> -	cpus = (struct cpu_map_entries *)data->data;
+> -
+> -	TEST_ASSERT_VAL("wrong nr",   cpus->nr == 2);
+> -	TEST_ASSERT_VAL("wrong cpu",  cpus->cpu[0] == 1);
+> -	TEST_ASSERT_VAL("wrong cpu",  cpus->cpu[1] == 256);
+> +	TEST_ASSERT_VAL("wrong nr",   data->cpus_data.nr == 2);
+> +	TEST_ASSERT_VAL("wrong cpu",  data->cpus_data.cpu[0] == 1);
+> +	TEST_ASSERT_VAL("wrong cpu",  data->cpus_data.cpu[1] == 256);
+>  
+>  	map = cpu_map__new_data(data);
+>  	TEST_ASSERT_VAL("wrong nr",  perf_cpu_map__nr(map) == 2);
+> diff --git a/tools/perf/util/cpumap.c b/tools/perf/util/cpumap.c
+> index 12b2243222b0..ae43fb88f444 100644
+> --- a/tools/perf/util/cpumap.c
+> +++ b/tools/perf/util/cpumap.c
+> @@ -22,54 +22,102 @@ static int max_node_num;
+>   */
+>  static int *cpunode_map;
+>  
+> -static struct perf_cpu_map *cpu_map__from_entries(struct cpu_map_entries *cpus)
+> +bool perf_record_cpu_map_data__test_bit(int i,
+> +					const struct perf_record_cpu_map_data *data)
+> +{
+> +	int bit_word32 = i / 32;
+> +	__u32 bit_mask32 = 1U << (i & 31);
+> +	int bit_word64 = i / 64;
+> +	__u64 bit_mask64 = ((__u64)1) << (i & 63);
+> +
+> +	return (data->mask32_data.long_size == 4)
+> +		? (bit_word32 < data->mask32_data.nr) &&
+> +		(data->mask32_data.mask[bit_word32] & bit_mask32) != 0
+> +		: (bit_word64 < data->mask64_data.nr) &&
+> +		(data->mask64_data.mask[bit_word64] & bit_mask64) != 0;
+> +}
+> +
+> +/* Read ith mask value from data into the given 64-bit sized bitmap */
+> +static void perf_record_cpu_map_data__read_one_mask(const struct perf_record_cpu_map_data *data,
+> +						    int i, unsigned long *bitmap)
+> +{
+> +#if __SIZEOF_LONG__ == 8
+> +	if (data->mask32_data.long_size == 4)
+> +		bitmap[0] = data->mask32_data.mask[i];
+> +	else
+> +		bitmap[0] = data->mask64_data.mask[i];
+> +#else
+> +	if (data->mask32_data.long_size == 4) {
+> +		bitmap[0] = data->mask32_data.mask[i];
+> +		bitmap[1] = 0;
+> +	} else {
+> +#if __BYTE_ORDER__ == __ORDER_BIG_ENDIAN__
+> +		bitmap[0] = (unsigned long)(data->mask64_data.mask[i] >> 32);
+> +		bitmap[1] = (unsigned long)data->mask64_data.mask[i];
+> +#else
+> +		bitmap[0] = (unsigned long)data->mask64_data.mask[i];
+> +		bitmap[1] = (unsigned long)(data->mask64_data.mask[i] >> 32);
+> +#endif
+> +	}
+> +#endif
+> +}
+> +static struct perf_cpu_map *cpu_map__from_entries(const struct perf_record_cpu_map_data *data)
+>  {
+>  	struct perf_cpu_map *map;
+>  
+> -	map = perf_cpu_map__empty_new(cpus->nr);
+> +	map = perf_cpu_map__empty_new(data->cpus_data.nr);
+>  	if (map) {
+>  		unsigned i;
+>  
+> -		for (i = 0; i < cpus->nr; i++) {
+> +		for (i = 0; i < data->cpus_data.nr; i++) {
+>  			/*
+>  			 * Special treatment for -1, which is not real cpu number,
+>  			 * and we need to use (int) -1 to initialize map[i],
+>  			 * otherwise it would become 65535.
+>  			 */
+> -			if (cpus->cpu[i] == (u16) -1)
+> +			if (data->cpus_data.cpu[i] == (u16) -1)
+>  				map->map[i].cpu = -1;
+>  			else
+> -				map->map[i].cpu = (int) cpus->cpu[i];
+> +				map->map[i].cpu = (int) data->cpus_data.cpu[i];
+>  		}
+>  	}
+>  
+>  	return map;
+>  }
+>  
+> -static struct perf_cpu_map *cpu_map__from_mask(struct perf_record_record_cpu_map *mask)
+> +static struct perf_cpu_map *cpu_map__from_mask(const struct perf_record_cpu_map_data *data)
+>  {
+> +	DECLARE_BITMAP(local_copy, 64);
+> +	int weight = 0, mask_nr = data->mask32_data.nr;
+>  	struct perf_cpu_map *map;
+> -	int nr, nbits = mask->nr * mask->long_size * BITS_PER_BYTE;
+>  
+> -	nr = bitmap_weight(mask->mask, nbits);
+> +	for (int i = 0; i < mask_nr; i++) {
+> +		perf_record_cpu_map_data__read_one_mask(data, i, local_copy);
+> +		weight += bitmap_weight(local_copy, 64);
+> +	}
+> +
+> +	map = perf_cpu_map__empty_new(weight);
+> +	if (!map)
+> +		return NULL;
+>  
+> -	map = perf_cpu_map__empty_new(nr);
+> -	if (map) {
+> -		int cpu, i = 0;
+> +	for (int i = 0, j = 0; i < mask_nr; i++) {
+> +		int cpus_per_i = (i * data->mask32_data.long_size  * BITS_PER_BYTE);
+> +		int cpu;
+>  
+> -		for_each_set_bit(cpu, mask->mask, nbits)
+> -			map->map[i++].cpu = cpu;
+> +		perf_record_cpu_map_data__read_one_mask(data, i, local_copy);
+> +		for_each_set_bit(cpu, local_copy, 64)
+> +			map->map[j++].cpu = cpu + cpus_per_i;
+>  	}
+>  	return map;
+>  
+>  }
+>  
+> -struct perf_cpu_map *cpu_map__new_data(struct perf_record_cpu_map_data *data)
+> +struct perf_cpu_map *cpu_map__new_data(const struct perf_record_cpu_map_data *data)
+>  {
+>  	if (data->type == PERF_CPU_MAP__CPUS)
+> -		return cpu_map__from_entries((struct cpu_map_entries *)data->data);
+> +		return cpu_map__from_entries(data);
+>  	else
+> -		return cpu_map__from_mask((struct perf_record_record_cpu_map *)data->data);
+> +		return cpu_map__from_mask(data);
+>  }
+>  
+>  size_t cpu_map__fprintf(struct perf_cpu_map *map, FILE *fp)
+> diff --git a/tools/perf/util/cpumap.h b/tools/perf/util/cpumap.h
+> index 703ae6d3386e..fa8a5acdcae1 100644
+> --- a/tools/perf/util/cpumap.h
+> +++ b/tools/perf/util/cpumap.h
+> @@ -37,9 +37,11 @@ struct cpu_aggr_map {
+>  
+>  struct perf_record_cpu_map_data;
+>  
+> +bool perf_record_cpu_map_data__test_bit(int i, const struct perf_record_cpu_map_data *data);
+> +
+>  struct perf_cpu_map *perf_cpu_map__empty_new(int nr);
+>  
+> -struct perf_cpu_map *cpu_map__new_data(struct perf_record_cpu_map_data *data);
+> +struct perf_cpu_map *cpu_map__new_data(const struct perf_record_cpu_map_data *data);
+>  size_t cpu_map__snprint(struct perf_cpu_map *map, char *buf, size_t size);
+>  size_t cpu_map__snprint_mask(struct perf_cpu_map *map, char *buf, size_t size);
+>  size_t cpu_map__fprintf(struct perf_cpu_map *map, FILE *fp);
+> diff --git a/tools/perf/util/session.c b/tools/perf/util/session.c
+> index 0aa818977d2b..d52a39ba48e3 100644
+> --- a/tools/perf/util/session.c
+> +++ b/tools/perf/util/session.c
+> @@ -914,30 +914,30 @@ static void perf_event__cpu_map_swap(union perf_event *event,
+>  				     bool sample_id_all __maybe_unused)
+>  {
+>  	struct perf_record_cpu_map_data *data = &event->cpu_map.data;
+> -	struct cpu_map_entries *cpus;
+> -	struct perf_record_record_cpu_map *mask;
+> -	unsigned i;
+>  
+>  	data->type = bswap_16(data->type);
+>  
+>  	switch (data->type) {
+>  	case PERF_CPU_MAP__CPUS:
+> -		cpus = (struct cpu_map_entries *)data->data;
+> -
+> -		cpus->nr = bswap_16(cpus->nr);
+> +		data->cpus_data.nr = bswap_16(data->cpus_data.nr);
+>  
+> -		for (i = 0; i < cpus->nr; i++)
+> -			cpus->cpu[i] = bswap_16(cpus->cpu[i]);
+> +		for (unsigned i = 0; i < data->cpus_data.nr; i++)
+> +			data->cpus_data.cpu[i] = bswap_16(data->cpus_data.cpu[i]);
+>  		break;
+>  	case PERF_CPU_MAP__MASK:
+> -		mask = (struct perf_record_record_cpu_map *)data->data;
+> -
+> -		mask->nr = bswap_16(mask->nr);
+> -		mask->long_size = bswap_16(mask->long_size);
+> +		data->mask32_data.long_size = bswap_16(data->mask32_data.long_size);
+>  
+> -		switch (mask->long_size) {
+> -		case 4: mem_bswap_32(&mask->mask, mask->nr); break;
+> -		case 8: mem_bswap_64(&mask->mask, mask->nr); break;
+> +		switch (data->mask32_data.long_size) {
+> +		case 4:
+> +			data->mask32_data.nr = bswap_16(data->mask32_data.nr);
+> +			for (unsigned i = 0; i < data->mask32_data.nr; i++)
+> +				data->mask32_data.mask[i] = bswap_32(data->mask32_data.mask[i]);
+> +			break;
+> +		case 8:
+> +			data->mask64_data.nr = bswap_16(data->mask64_data.nr);
+> +			for (unsigned i = 0; i < data->mask64_data.nr; i++)
+> +				data->mask64_data.mask[i] = bswap_64(data->mask64_data.mask[i]);
+> +			break;
+>  		default:
+>  			pr_err("cpu_map swap: unsupported long size\n");
+>  		}
+> diff --git a/tools/perf/util/synthetic-events.c b/tools/perf/util/synthetic-events.c
+> index 0d87df20ec44..4fa7d0d7dbcf 100644
+> --- a/tools/perf/util/synthetic-events.c
+> +++ b/tools/perf/util/synthetic-events.c
+> @@ -1183,27 +1183,33 @@ int perf_event__synthesize_thread_map2(struct perf_tool *tool,
+>  	return err;
+>  }
+>  
+> -static void synthesize_cpus(struct cpu_map_entries *cpus,
+> +static void synthesize_cpus(struct perf_record_cpu_map_data *data,
+>  			    const struct perf_cpu_map *map)
+>  {
+>  	int i, map_nr = perf_cpu_map__nr(map);
+>  
+> -	cpus->nr = map_nr;
+> +	data->cpus_data.nr = map_nr;
+>  
+>  	for (i = 0; i < map_nr; i++)
+> -		cpus->cpu[i] = perf_cpu_map__cpu(map, i).cpu;
+> +		data->cpus_data.cpu[i] = perf_cpu_map__cpu(map, i).cpu;
+>  }
+>  
+> -static void synthesize_mask(struct perf_record_record_cpu_map *mask,
+> +static void synthesize_mask(struct perf_record_cpu_map_data *data,
+>  			    const struct perf_cpu_map *map, int max)
+>  {
+> -	int i;
+> +	int idx;
+> +	struct perf_cpu cpu;
+> +
+> +	/* Due to padding, the 4bytes per entry mask variant is always smaller. */
+> +	data->mask32_data.nr = BITS_TO_U32(max);
+> +	data->mask32_data.long_size = 4;
+>  
+> -	mask->nr = BITS_TO_LONGS(max);
+> -	mask->long_size = sizeof(long);
+> +	perf_cpu_map__for_each_cpu(cpu, idx, map) {
+> +		int bit_word = cpu.cpu / 32;
+> +		__u32 bit_mask = 1U << (cpu.cpu & 31);
+>  
+> -	for (i = 0; i < perf_cpu_map__nr(map); i++)
+> -		set_bit(perf_cpu_map__cpu(map, i).cpu, mask->mask);
+> +		data->mask32_data.mask[bit_word] |= bit_mask;
+> +	}
+>  }
+>  
+>  static size_t cpus_size(const struct perf_cpu_map *map)
+> @@ -1214,7 +1220,7 @@ static size_t cpus_size(const struct perf_cpu_map *map)
+>  static size_t mask_size(const struct perf_cpu_map *map, int *max)
+>  {
+>  	*max = perf_cpu_map__max(map).cpu;
+> -	return sizeof(struct perf_record_record_cpu_map) + BITS_TO_LONGS(*max) * sizeof(long);
+> +	return sizeof(struct perf_record_mask_cpu_map32) + BITS_TO_U32(*max) * sizeof(__u32);
+>  }
+>  
+>  static void *cpu_map_data__alloc(const struct perf_cpu_map *map, size_t *size,
+> @@ -1247,7 +1253,7 @@ static void *cpu_map_data__alloc(const struct perf_cpu_map *map, size_t *size,
+>  		*type  = PERF_CPU_MAP__MASK;
+>  	}
+>  
+> -	*size += sizeof(struct perf_record_cpu_map_data);
+> +	*size += sizeof(__u16); /* For perf_record_cpu_map_data.type. */
+>  	*size = PERF_ALIGN(*size, sizeof(u64));
+>  	return zalloc(*size);
+>  }
+> @@ -1260,10 +1266,10 @@ static void cpu_map_data__synthesize(struct perf_record_cpu_map_data *data,
+>  
+>  	switch (type) {
+>  	case PERF_CPU_MAP__CPUS:
+> -		synthesize_cpus((struct cpu_map_entries *) data->data, map);
+> +		synthesize_cpus(data, map);
+>  		break;
+>  	case PERF_CPU_MAP__MASK:
+> -		synthesize_mask((struct perf_record_record_cpu_map *)data->data, map, max);
+> +		synthesize_mask(data, map, max);
+>  	default:
+>  		break;
+>  	}
+> @@ -1271,7 +1277,7 @@ static void cpu_map_data__synthesize(struct perf_record_cpu_map_data *data,
+>  
+>  static struct perf_record_cpu_map *cpu_map_event__new(const struct perf_cpu_map *map)
+>  {
+> -	size_t size = sizeof(struct perf_record_cpu_map);
+> +	size_t size = sizeof(struct perf_event_header);
+>  	struct perf_record_cpu_map *event;
+>  	int max;
+>  	u16 type;
+> -- 
+> 2.36.1.476.g0c4daa206d-goog
+
 -- 
-2.35.1
 
+- Arnaldo
