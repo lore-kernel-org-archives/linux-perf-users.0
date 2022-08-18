@@ -2,208 +2,145 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 828D7C25B08
-	for <linux-perf-users@archiver.kernel.org>; Thu, 18 Aug 2022 02:24:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 67A16C25B08
+	for <linux-perf-users@archiver.kernel.org>; Thu, 18 Aug 2022 03:03:49 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S242532AbiHRCYa (ORCPT
+        id S236951AbiHRDDr (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Wed, 17 Aug 2022 22:24:30 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54656 "EHLO
+        Wed, 17 Aug 2022 23:03:47 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35304 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S233588AbiHRCYa (ORCPT
+        with ESMTP id S229684AbiHRDDq (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Wed, 17 Aug 2022 22:24:30 -0400
-Received: from szxga02-in.huawei.com (szxga02-in.huawei.com [45.249.212.188])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 58B3871BFD;
-        Wed, 17 Aug 2022 19:24:28 -0700 (PDT)
-Received: from dggemv711-chm.china.huawei.com (unknown [172.30.72.57])
-        by szxga02-in.huawei.com (SkyGuard) with ESMTP id 4M7TB61KXxzXdpZ;
-        Thu, 18 Aug 2022 10:20:14 +0800 (CST)
-Received: from kwepemm600003.china.huawei.com (7.193.23.202) by
- dggemv711-chm.china.huawei.com (10.1.198.66) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2375.24; Thu, 18 Aug 2022 10:24:26 +0800
-Received: from ubuntu1804.huawei.com (10.67.174.61) by
- kwepemm600003.china.huawei.com (7.193.23.202) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2375.24; Thu, 18 Aug 2022 10:24:25 +0800
-From:   Yang Jihong <yangjihong1@huawei.com>
-To:     <rostedt@goodmis.org>, <peterz@infradead.org>, <mingo@redhat.com>,
-        <acme@kernel.org>, <mark.rutland@arm.com>,
-        <alexander.shishkin@linux.intel.com>, <jolsa@kernel.org>,
-        <namhyung@kernel.org>, <linux-kernel@vger.kernel.org>,
-        <linux-perf-users@vger.kernel.org>
-CC:     <yangjihong1@huawei.com>
-Subject: [PATCH v4] perf/core: Fix reentry problem in perf_output_read_group
-Date:   Thu, 18 Aug 2022 10:21:21 +0800
-Message-ID: <20220818022121.116939-1-yangjihong1@huawei.com>
-X-Mailer: git-send-email 2.30.GIT
+        Wed, 17 Aug 2022 23:03:46 -0400
+Received: from mail-pj1-x102e.google.com (mail-pj1-x102e.google.com [IPv6:2607:f8b0:4864:20::102e])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C20C5B1FD
+        for <linux-perf-users@vger.kernel.org>; Wed, 17 Aug 2022 20:03:42 -0700 (PDT)
+Received: by mail-pj1-x102e.google.com with SMTP id t22so469337pjy.1
+        for <linux-perf-users@vger.kernel.org>; Wed, 17 Aug 2022 20:03:42 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc;
+        bh=dSpYxwksBDIEEwhUV+31aBldVgM9AT/PeqWp8SlrZ9k=;
+        b=bUTUH5+k1T/s7/iyLQofWL2urbMS2u+hA9q6wARrQNxpXg97Wpu4kIVKMhsrrWu6L8
+         bP2cMkJI4Tc2md6VPh3KRsVqzcXpuVEaoWL7VkWpeU3XygeKT2OBQBdsxQiFwyHMEum7
+         p4kLEsnkx1kN3JtNREJ1OY2gcrHI9DNDy2ay70XgFxObbZrowwAxMrsudxpH41maoST0
+         FQpnMW2jBgc7P5ALSNi1tKzMSyilZcbGFbOClZLGEYnbawtB437x+5ghP5MeGLh+4Lgx
+         jn4eJmjDNNJvoXkLozXiqv2PqoO8aTKvkHaT+4CKt7Bmog+R9NQ1MZv8DaFDXpfYHe8C
+         l9UQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc;
+        bh=dSpYxwksBDIEEwhUV+31aBldVgM9AT/PeqWp8SlrZ9k=;
+        b=MsnE+GRMiyMMcDo6oksPVBGIsFnz/tCWbtO/yVM2k7FQr7wRhRxwxR8ENaxH1ed500
+         RjztgHWg3ckz+55VY+WrDxNUvRGjHR4FgvKAjKfZpd0snk8zssWwThb2zOHqfXb+YMVw
+         NceKUF1hezBzQtWHaqpdsBixZziY6o0HKEgLahde2NiJK62wmYlztHn1HsS4Kol2PEbX
+         k2T+5J1OaeSxTrFq+ivfA9XIVp6VOajd1H9ihPFPuNBnaDMyneR03Kz0Z/MDMz8seZi6
+         zLdrFRx5P8DQLpIJ+RMJKehUtzUTmNywAGdftaunV71K3L7EcH7P2zdrv9bRaHJv4WNO
+         K4KQ==
+X-Gm-Message-State: ACgBeo2Ih+uoxxTZ9x1VHzxivAo3jX14TWaQcge5CG5XqgyECXeUyf44
+        vwnA2bMv7fRE3lZwtNGIIUU9vw==
+X-Google-Smtp-Source: AA6agR7KvXLMxpuGzjZ0uQpsub3E6tIZL/TQwIMQDPTUmVVBFlxapTcA9Kz4AUB1bRwA2HKVnbGf+A==
+X-Received: by 2002:a17:902:d54e:b0:16e:f3e4:8c88 with SMTP id z14-20020a170902d54e00b0016ef3e48c88mr851073plf.94.1660791822025;
+        Wed, 17 Aug 2022 20:03:42 -0700 (PDT)
+Received: from leoy-huanghe (ec2-54-176-161-147.us-west-1.compute.amazonaws.com. [54.176.161.147])
+        by smtp.gmail.com with ESMTPSA id i62-20020a626d41000000b0052d27ccea39sm289059pfc.19.2022.08.17.20.03.37
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 17 Aug 2022 20:03:41 -0700 (PDT)
+Date:   Thu, 18 Aug 2022 11:03:35 +0800
+From:   Leo Yan <leo.yan@linaro.org>
+To:     Chuck Zmudzinski <brchuckz@netscape.net>
+Cc:     Ian Rogers <irogers@google.com>,
+        Arnaldo Carvalho de Melo <acme@kernel.org>,
+        Alan Bartlett <ajb@elrepo.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        linux-perf-users@vger.kernel.org, ElRepo <contact@elrepo.org>,
+        Akemi Yagi <toracat@elrepo.org>, Jiri Olsa <jolsa@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Namhyung Kim <namhyung@kernel.org>,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] perf scripts python: Let script to be python2 compliant
+Message-ID: <20220818030335.GB30503@leoy-huanghe>
+References: <20220725104220.1106663-1-leo.yan@linaro.org>
+ <Yt68AZA2VV9d02xZ@kernel.org>
+ <CA+_WhHyZZC=3gtzetEAQQrjtGujHmY5azwtQNZEc90gyOAwUDg@mail.gmail.com>
+ <CAP-5=fWiNdnEawdj_3ExCrcwRSnRxeV8=8RhA6pwbw_bJdPJFg@mail.gmail.com>
+ <YuBDw/+7McESS05X@kernel.org>
+ <CAP-5=fV4+KeGcyyODTNjS01dw1iTXpFyaLXwZ8nBkek+NHL37w@mail.gmail.com>
+ <11781d7e-d9de-f889-ff57-9d26d92ada44@netscape.net>
+ <16cb5f73-ac85-5094-3cd1-ec91cb47fb99@netscape.net>
+ <CAP-5=fXjBBbU3EHD5iY6VMKMo3wj+dJteeqBf5B9m464HtdF3Q@mail.gmail.com>
+ <806d152f-358b-572a-64f2-798fe7783f93@netscape.net>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7BIT
-Content-Type:   text/plain; charset=US-ASCII
-X-Originating-IP: [10.67.174.61]
-X-ClientProxiedBy: dggems705-chm.china.huawei.com (10.3.19.182) To
- kwepemm600003.china.huawei.com (7.193.23.202)
-X-CFilter-Loop: Reflected
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <806d152f-358b-572a-64f2-798fe7783f93@netscape.net>
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-perf_output_read_group may respond to IPI request of other cores and invoke
-__perf_install_in_context function. As a result, hwc configuration is modified.
-causing inconsistency and unexpected consequences.
+On Wed, Aug 17, 2022 at 09:12:24PM -0400, Chuck Zmudzinski wrote:
 
-Syzkaller has reported a problem with this scenario:
+[...]
 
-Internal error: Oops - undefined instruction: 0 [#1] SMP
-Modules linked in:
-CPU: 1 PID: 15523 Comm: syz-executor.3 Not tainted 5.10.0 #6
-Hardware name: linux,dummy-virt (DT)
-pstate: 80400005 (Nzcv daif +PAN -UAO -TCO BTYPE=--)
-pc : read_pmevcntrn+0x1e4/0x1ec arch/arm64/kernel/perf_event.c:423
-lr : read_pmevcntrn+0x1e4/0x1ec arch/arm64/kernel/perf_event.c:423
-sp : ffffa000174d6ee0
-x29: ffffa000174d6ee0 x28: ffffedbca6b17a40
-x27: ffffa000174d7310 x26: ffff4b3ec102e398
-x25: 00000000ffffffff x24: 00000000ffffffff
-x23: ffff4b3ed8afb000 x22: ffff4b3ed8afb160
-x21: ffff4b3ed8afb184 x20: ffffedbca46aa3e0
-x19: ffffedbca2a524bc x18: 0000000000000000
-x17: 0000000000000000 x16: 0000000000000000
-x15: 0000000020000100 x14: 0000000000000000
-x13: 0000000000000000 x12: ffff8967db15f63d
-x11: 1fffe967db15f63c x10: ffff8967db15f63c
-x9 : ffffedbca2a5273c x8 : ffff4b3ed8afb1e7
-x7 : 0000000000000001 x6 : ffff8967db15f63c
-x5 : ffff4b3f08b89400 x4 : 0000000000000000
-x3 : ffffedbca2a00000 x2 : ffffedbca4690000
-x1 : ffff4b3f08b89400 x0 : 0000000000000000
-Call trace:
- read_pmevcntrn+0x1e4/0x1ec arch/arm64/kernel/perf_event.c:423
- armv8pmu_read_evcntr arch/arm64/kernel/perf_event.c:467 [inline]
- armv8pmu_read_hw_counter arch/arm64/kernel/perf_event.c:475 [inline]
- armv8pmu_read_counter+0x10c/0x1f0 arch/arm64/kernel/perf_event.c:528
- armpmu_event_update+0x9c/0x1bc drivers/perf/arm_pmu.c:247
- armpmu_read+0x24/0x30 drivers/perf/arm_pmu.c:264
- perf_output_read_group+0x4cc/0x71c kernel/events/core.c:6806
- perf_output_read+0x78/0x1c4 kernel/events/core.c:6845
- perf_output_sample+0xafc/0x1000 kernel/events/core.c:6892
- __perf_event_output kernel/events/core.c:7273 [inline]
- perf_event_output_forward+0xd8/0x130 kernel/events/core.c:7287
- __perf_event_overflow+0xbc/0x20c kernel/events/core.c:8943
- perf_swevent_overflow kernel/events/core.c:9019 [inline]
- perf_swevent_event+0x274/0x2c0 kernel/events/core.c:9047
- do_perf_sw_event kernel/events/core.c:9160 [inline]
- ___perf_sw_event+0x150/0x1b4 kernel/events/core.c:9191
- __perf_sw_event+0x58/0x7c kernel/events/core.c:9203
- perf_sw_event include/linux/perf_event.h:1177 [inline]
- mm_account_fault mm/memory.c:4707 [inline]
- handle_mm_fault+0x364/0x3f0 mm/memory.c:4758
- __do_page_fault arch/arm64/mm/fault.c:438 [inline]
- do_page_fault+0x334/0x8f0 arch/arm64/mm/fault.c:537
- do_translation_fault+0x188/0x1e0 arch/arm64/mm/fault.c:619
- do_mem_abort+0x68/0x120 arch/arm64/mm/fault.c:743
- el1_abort+0xc0/0x150 arch/arm64/kernel/entry-common.c:119
- el1_sync_handler+0x118/0x150 arch/arm64/kernel/entry-common.c:202
- el1_sync+0x74/0x100 arch/arm64/kernel/entry.S:665
- __arch_clear_user+0x20/0xa0 arch/arm64/lib/clear_user.S:25
- read_iter_zero+0x90/0x16c drivers/char/mem.c:718
- call_read_iter include/linux/fs.h:1954 [inline]
- do_iter_readv_writev+0x394/0x414 fs/read_write.c:735
- do_iter_read+0x1b0/0x280 fs/read_write.c:798
- vfs_readv+0xf0/0x150 fs/read_write.c:918
- do_readv+0x108/0x270 fs/read_write.c:955
- __do_sys_readv fs/read_write.c:1046 [inline]
- __se_sys_readv fs/read_write.c:1043 [inline]
- __arm64_sys_readv+0x54/0x64 fs/read_write.c:1043
- __invoke_syscall arch/arm64/kernel/syscall.c:36 [inline]
- invoke_syscall arch/arm64/kernel/syscall.c:48 [inline]
- el0_svc_common.constprop.0+0xf4/0x414 arch/arm64/kernel/syscall.c:155
- do_el0_svc+0x50/0x11c arch/arm64/kernel/syscall.c:217
- el0_svc+0x20/0x30 arch/arm64/kernel/entry-common.c:353
- el0_sync_handler+0xe4/0x1e0 arch/arm64/kernel/entry-common.c:369
- el0_sync+0x148/0x180 arch/arm64/kernel/entry.S:683
-Code: 940c387b d53be813 17ffff9c 940c3878 (d53bebd3)
----[ end trace 6aab9f4b33ebf0aa ]---
-----------------
-Code disassembly (best guess):
-   0:	940c387b 	bl	0x30e1ec
-   4:	d53be813 	mrs	x19, pmevcntr0_el0
-   8:	17ffff9c 	b	0xfffffffffffffe78
-   c:	940c3878 	bl	0x30e1ec
-* 10:	d53bebd3 	mrs	x19, pmevcntr30_el0 <-- trapping instruction
+> > > > > > Someone reported a problem in a system they used, the author of the code
+> > > > > > in question posted a patch allowing perf to be used in such old systems,
+> > > > > > doesn't get in the way of newer systems, small patch, merged, life goes
+> > > > > > on.
+> > > >
+> > > > Considering the proposed patch, can you be sure that replacing the
+> > > > f-string format with the legacy format won't cause a regression for
+> > > > some python3 user somewhere when this hits the real world? Even
+> > > > if it does not cause a regression today, as new versions and features
+> > > > are added to python3, can you be sure none of those new features
+> > > > will depend on the upgrade from the legacy format to the f-string
+> > > > format here to work properly? So many regressions happen because
+> > > > the people who write patches cannot possibly foresee how their
+> > > > patch is going to affect the millions of Linux users out there, but still
+> > > > they are certain it will not cause a regression somewhere. So how
+> > > > can the chances that this patch will cause a regression be minimized?
+> > > >
+> > > > It seems to me for this to be suitable for the Linux kernel, the
+> > > > default should be to use the modern python3 format and only
+> > > > enable python2 compatibility via a sysctl setting and/or kernel boot
+> > > > option for those who are still using python2. There should be no
+> > > > change to the behavior of the kernel for users who have upgraded
+> > > > to python3. But I don't see any such consideration for python3
+> > > > users in this patch.
+> > >
+> > > Sorry, I didn't see this is a script, LOL! So obviously a sysctl or boot option
+> > > does not apply. But can't the script implement this simple logic:
+> > >
+> > > If python version = 3 use f-string format
+> > > if python version = 2 use traditional string format
+> >
+> > Doing this in the script would be noisy, having two scripts less than
+> > ideal. I'd suggest we wait two weeks, declare the official death of
+> > RHEL7 without "rpm -i python3" and then revert the python3 to python2
+> > patch. There are plenty of things to worry about and python2 shouldn't
+> > be one of them (it died over 2 years ago).
+> 
+> I see this has already been committed. I agree it should not
+> stay in the kernel tree for long. At some point in the future
+> it will most likely cause problems if it is not reverted.
 
-Interrupts are not disabled when perf_output_read_group reads PMU counter.
-In this case, IPI request may be received from other cores.
-As a result, PMU configuration is modified and an error occurs when
-reading PMU counter:
+It is a bit confused me that here actually we are worrying about the
+python distro issue, e.g. python2 is obsolete, so it's risky to keep
+using python2 in the system, especially if python2 has potential
+security issue.  So the system (e.g. RHEL7) needs to upgrade its python
+distro from python2 to python3.
 
-                   CPU0                                         CPU1
-                                                    __se_sys_perf_event_open
-                                                      perf_install_in_context
-perf_output_read_group                                  smp_call_function_single
-  for_each_sibling_event(sub, leader) {                   generic_exec_single
-    if ((sub != event) &&                                   remote_function
-        (sub->state == PERF_EVENT_STATE_ACTIVE))                    |
-<enter IPI handler: __perf_install_in_context>   <----RAISE IPI-----+
-__perf_install_in_context
-  ctx_resched
-    event_sched_out
-      armpmu_del
-        ...
-        hwc->idx = -1; // event->hwc.idx is set to -1
-...
-<exit IPI>
-            sub->pmu->read(sub);
-              armpmu_read
-                armv8pmu_read_counter
-                  armv8pmu_read_hw_counter
-                    int idx = event->hw.idx; // idx = -1
-                    u64 val = armv8pmu_read_evcntr(idx);
-                      u32 counter = ARMV8_IDX_TO_COUNTER(idx); // invalid counter = 30
-                      read_pmevcntrn(counter) // undefined instruction
+But this doesn't mean the python script cannot be compatible for both
+python2 and python3.  I verified this patch, it should can work for
+both python2 and python3 on my PC.
 
-Signed-off-by: Yang Jihong <yangjihong1@huawei.com>
----
-Changes since v3:
-  - Modify commit message according to Peter's suggestion.
+Another concern is there have some python scripts in perf, I think most
+of them are python2 compatible, should we update all of them to be only
+python3 compatible?
 
-Changes since v2:
-  - Update commit message.
-
-Changes since v1:
-  - Adapt patch to mainline branch to solve compilation problem.
-
- kernel/events/core.c | 9 +++++++++
- 1 file changed, 9 insertions(+)
-
-diff --git a/kernel/events/core.c b/kernel/events/core.c
-index 2621fd24ad26..752a9079a807 100644
---- a/kernel/events/core.c
-+++ b/kernel/events/core.c
-@@ -6895,6 +6895,13 @@ static void perf_output_read_group(struct perf_output_handle *handle,
- 	u64 read_format = event->attr.read_format;
- 	u64 values[6];
- 	int n = 0;
-+	unsigned long flags;
-+
-+	/*
-+	 * Disabling interrupts avoids all counter scheduling
-+	 * (context switches, timer based rotation and IPIs).
-+	 */
-+	local_irq_save(flags);
- 
- 	values[n++] = 1 + leader->nr_siblings;
- 
-@@ -6931,6 +6938,8 @@ static void perf_output_read_group(struct perf_output_handle *handle,
- 
- 		__output_copy(handle, values, n * sizeof(u64));
- 	}
-+
-+	local_irq_restore(flags);
- }
- 
- #define PERF_FORMAT_TOTAL_TIMES (PERF_FORMAT_TOTAL_TIME_ENABLED|\
--- 
-2.30.GIT
-
+Thanks,
+Leo
