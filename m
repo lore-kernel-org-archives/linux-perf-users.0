@@ -2,139 +2,141 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2D87BC2BB41
-	for <linux-perf-users@archiver.kernel.org>; Thu, 18 Aug 2022 16:24:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8FAB7C32772
+	for <linux-perf-users@archiver.kernel.org>; Thu, 18 Aug 2022 16:31:05 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1344563AbiHRQYV (ORCPT
+        id S1344713AbiHRQbE (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Thu, 18 Aug 2022 12:24:21 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52892 "EHLO
+        Thu, 18 Aug 2022 12:31:04 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41398 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1343955AbiHRQX7 (ORCPT
+        with ESMTP id S1344682AbiHRQbD (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Thu, 18 Aug 2022 12:23:59 -0400
-Received: from mail-wr1-x432.google.com (mail-wr1-x432.google.com [IPv6:2a00:1450:4864:20::432])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 55695C579D
-        for <linux-perf-users@vger.kernel.org>; Thu, 18 Aug 2022 09:21:24 -0700 (PDT)
-Received: by mail-wr1-x432.google.com with SMTP id h24so2300120wrb.8
-        for <linux-perf-users@vger.kernel.org>; Thu, 18 Aug 2022 09:21:24 -0700 (PDT)
+        Thu, 18 Aug 2022 12:31:03 -0400
+Received: from mail-wr1-x430.google.com (mail-wr1-x430.google.com [IPv6:2a00:1450:4864:20::430])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 445766A49D
+        for <linux-perf-users@vger.kernel.org>; Thu, 18 Aug 2022 09:31:02 -0700 (PDT)
+Received: by mail-wr1-x430.google.com with SMTP id h24so2330115wrb.8
+        for <linux-perf-users@vger.kernel.org>; Thu, 18 Aug 2022 09:31:02 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=google.com; s=20210112;
         h=cc:to:subject:message-id:date:from:in-reply-to:references
          :mime-version:from:to:cc;
-        bh=+GXISQvtaIcczS69+RKhoaC+BLvnMP0XhURL22EwPBU=;
-        b=WHexSDDDQjVU9NY71f0bjUOuwxytNIer3Tv63ip49uSINYcJORiqINdb07+ix16PGN
-         5PTNc8T9hJVyDH2RBz+as8zwM86Low33SAwdhadn5Asd98HMnXqseX6qBMKS6dQXOoAa
-         vT6Hb3DQv/tzL6xGVBpBT/n80onTny5H2Zlxs3yHwQjNdjdU9C9Nfqq834Ov3MYpTbiO
-         XNtbNG8hsPIRN7xIE5HM3NpvkCiui38PbAj1aLUOCu+H6rh7bfyxAhQ4pEunBo90wawO
-         WPSaXyYDe2ba+NXiUBFeQBqP+3eC7YvjoahD/Pzm2bVnbFwMWn0ijoCDtRR5SDdxq5Gu
-         B/Dg==
+        bh=Mj2W/9YQ8CSVcaLjuXP+DmmiR5MM9ERHw2BcymcGKFA=;
+        b=kS4KpE0rlsabzWnpMDsVwTahuARW+OsaJWtYu0nSqaSJYtXJ3Inktf9oVEwqf5oBV7
+         /5RTXa9UKdj2LbuQPGZRPN3IRXzOCkL4rDmuqTEsuHR5MAgE+VsVWZhp6lEXPtSWZrxi
+         tiwtnj2jSsSNDMXmvaNaIf3r3yFUeuSLMsthc3ekMjSAnxCsWDVOdUr5M0iO4yxSsinH
+         gcM0f0m2recGgtPRAiHhXGMr7enPlylCctjjbzG7lM+Cj4V++53YJGgEdBUEauSZGDlv
+         O7rLKCVfQUZh9byFXh8HTW6yp0bervbaO3ldEdReGqy2Jo6UZrHavn7bwumbyOSDbo45
+         Rw1Q==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
         h=cc:to:subject:message-id:date:from:in-reply-to:references
          :mime-version:x-gm-message-state:from:to:cc;
-        bh=+GXISQvtaIcczS69+RKhoaC+BLvnMP0XhURL22EwPBU=;
-        b=wUcWthybZZMj9rBlUb+lPUGkChsmRjyzIr0FEW70YFMyA/TO9d6AG6OWTRjbOgW7SB
-         6ved2C16baAdAp3a1juq9o+rTB3pkZi4aaBcnGluGIVt8ESzHfmsAIlMnOLCx8NXnq7u
-         OhCQTMf/aMu1NYoW4+1iitfVLnAECOsgMJnarjJbPnw7eKlKPNmjOHISBNg8lQCzHbvx
-         ccRdOCHUvAbyKmSkaOc3f8zwXDS3cywGv0hBWN8IYyVsVZwnxu9OX6ZgOG/8oekTIDbw
-         emwpfhd4IKjE1WmS5vSSUmXkgJfBICLJmvA6hvhZ63dr0nzBi1lIs/pSUVEQCPabjX9f
-         PpxQ==
-X-Gm-Message-State: ACgBeo3c7vcMdL3ibgT/HZnpT9xNM7GMc6FJQCiH8qUeHTKeo7hFNnX0
-        S5sTw6vOG6uyTY3+WpxLhQm2eg4w/mbWi1CHvaZK0w==
-X-Google-Smtp-Source: AA6agR5WiRUlNtYVxk55SwJWX8bStnebINMwUik3f8z7aHgP2E1PlCV+C4Trq6lf6Yo0nPXPOIntbx+RvWDS+Cb/vq0=
-X-Received: by 2002:a05:6000:1a87:b0:222:2c85:2f5b with SMTP id
- f7-20020a0560001a8700b002222c852f5bmr2110287wry.654.1660839664062; Thu, 18
- Aug 2022 09:21:04 -0700 (PDT)
+        bh=Mj2W/9YQ8CSVcaLjuXP+DmmiR5MM9ERHw2BcymcGKFA=;
+        b=4vsKkTcHTYQ7JXXzwO+GcY6eQuqq6fS+UVR+b7nmb7PN+U9EXl+U956nkJEDl1ZG+A
+         F2wKRkW6yy2YvIXh7BpudIo2szxmUIFvJzzcd8my52RuyMBvaF3PouE2lrVVTcdaMi4Q
+         98ArZLAdZSP+W+/5vYyiRYf2zHRnfSmm/RavTx1rPjLUFsJdL4Zod1T7ODCIp1VYj+2Y
+         zHKmHT3c1HIy0PVE2/QnoFvJGZJY8WqIPbCGIiUY+GyWjWmb3PEdwiHwEXoz0i8wP5IW
+         eLPFufA1H8/D/62k53+1QUhIkezxhEWhw7/TvhyiWkINZxBYdznx24Cut4/VVhpBTUCV
+         QuWg==
+X-Gm-Message-State: ACgBeo3J8ECAc6UyxJqDu57ZDem5hs7PHT8VSfK6Lc1G71CGUD5bxhmc
+        0qvNIxHvyNFZiv40ytWE4R79C8o94SA+D4eu0DW3GA==
+X-Google-Smtp-Source: AA6agR7ptwgOiN9ve6GHG++tOZb69TaGwVq5lbuz8r6SbFoOXDjW/azm5vFAdP7Toc6aCziPDQNVRfS97n3nj3BrVAo=
+X-Received: by 2002:a5d:4907:0:b0:21f:bc42:989 with SMTP id
+ x7-20020a5d4907000000b0021fbc420989mr2074812wrq.375.1660840260654; Thu, 18
+ Aug 2022 09:31:00 -0700 (PDT)
 MIME-Version: 1.0
-References: <20220817053930.769840-1-irogers@google.com> <20220817053930.769840-7-irogers@google.com>
- <CAM9d7cgd-KsqJNxh_MbX9h4tr8rOtAqKe-t7Qfck0m9pTxWK7w@mail.gmail.com>
- <CAP-5=fVVV8UPppzet7jwvrf9ig8RpWE1x4mxAJBAnuqbdSbP-Q@mail.gmail.com> <CAM9d7ciGRnz-wP+Riz5AYf8k9QOztV-Acfg=jivijeM8UUAPEw@mail.gmail.com>
-In-Reply-To: <CAM9d7ciGRnz-wP+Riz5AYf8k9QOztV-Acfg=jivijeM8UUAPEw@mail.gmail.com>
+References: <cecae74c-6bb2-d7da-bce3-35772b6e3f8c@intel.com>
+ <CAP-5=fXJtRVKuPA_xpa=jBzq66y5JMv+jmr1GFNzh-zQ-7j5QA@mail.gmail.com>
+ <b42344bc-86f6-9047-b015-88ef3b58a619@intel.com> <CAP-5=fUq4N+X+3VMsT=he3Q9_4qHKkqxdPDcMdDE=_3qdV9aCg@mail.gmail.com>
+ <YvzrYLx3RDHAmqbf@kernel.org> <CA+JHD90RuF+sjO7t40voiQrXbaH172Le=KeKGzTrK_tBquVbAg@mail.gmail.com>
+In-Reply-To: <CA+JHD90RuF+sjO7t40voiQrXbaH172Le=KeKGzTrK_tBquVbAg@mail.gmail.com>
 From:   Ian Rogers <irogers@google.com>
-Date:   Thu, 18 Aug 2022 09:20:52 -0700
-Message-ID: <CAP-5=fVuSMcTnjRvjg-xT7yNuAHDcGMrHFE6CZUdPbMtG9eO-w@mail.gmail.com>
-Subject: Re: [PATCH v1 6/6] perf build: Enable -Wthread-safety with clang
-To:     Namhyung Kim <namhyung@kernel.org>
-Cc:     Peter Zijlstra <peterz@infradead.org>,
+Date:   Thu, 18 Aug 2022 09:30:48 -0700
+Message-ID: <CAP-5=fV1_JToqVDqjTcTpLZ48CzfGY-kmH_WOoAD8z+QNyRsaw@mail.gmail.com>
+Subject: Re: perf tools man pages on the web
+To:     Arnaldo Carvalho de Melo <arnaldo.melo@gmail.com>
+Cc:     Arnaldo Carvalho de Melo <acme@kernel.org>,
+        John Kacur <jkacur@redhat.com>,
+        Adrian Hunter <adrian.hunter@intel.com>,
+        Jiri Olsa <jolsa@kernel.org>,
+        Namhyung Kim <namhyung@kernel.org>,
+        Jonathan Corbet <corbet@lwn.net>,
+        Peter Zijlstra <peterz@infradead.org>,
         Ingo Molnar <mingo@redhat.com>,
-        Arnaldo Carvalho de Melo <acme@kernel.org>,
         Mark Rutland <mark.rutland@arm.com>,
         Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Jiri Olsa <jolsa@kernel.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Darren Hart <dvhart@infradead.org>,
-        Davidlohr Bueso <dave@stgolabs.net>,
-        =?UTF-8?Q?Andr=C3=A9_Almeida?= <andrealmeid@igalia.com>,
-        Nathan Chancellor <nathan@kernel.org>,
-        Nick Desaulniers <ndesaulniers@google.com>,
-        Tom Rix <trix@redhat.com>,
-        Athira Rajeev <atrajeev@linux.vnet.ibm.com>,
-        Weiguo Li <liwg06@foxmail.com>,
-        Pavithra Gurushankar <gpavithrasha@gmail.com>,
-        Thomas Richter <tmricht@linux.ibm.com>,
-        Ravi Bangoria <ravi.bangoria@amd.com>,
-        Dario Petrillo <dario.pk1@gmail.com>,
-        Wenyu Liu <liuwenyu7@huawei.com>,
-        Hewenliang <hewenliang4@huawei.com>,
-        yaowenbin <yaowenbin1@huawei.com>,
-        Dave Marchevsky <davemarchevsky@fb.com>,
-        Andrii Nakryiko <andrii@kernel.org>,
-        Alexandre Truong <alexandre.truong@arm.com>,
-        Kim Phillips <kim.phillips@amd.com>,
-        Leo Yan <leo.yan@linaro.org>,
-        Quentin Monnet <quentin@isovalent.com>,
-        William Cohen <wcohen@redhat.com>,
-        Andres Freund <andres@anarazel.de>,
-        Song Liu <songliubraving@fb.com>,
-        Adrian Hunter <adrian.hunter@intel.com>,
-        =?UTF-8?Q?Martin_Li=C5=A1ka?= <mliska@suse.cz>,
-        Colin Ian King <colin.king@intel.com>,
-        James Clark <james.clark@arm.com>,
-        Fangrui Song <maskray@google.com>,
-        Stephane Eranian <eranian@google.com>,
-        Kajol Jain <kjain@linux.ibm.com>,
-        Andi Kleen <ak@linux.intel.com>,
-        Alexey Bayduraev <alexey.v.bayduraev@linux.intel.com>,
-        Riccardo Mancini <rickyman7@gmail.com>,
-        Masami Hiramatsu <mhiramat@kernel.org>,
-        Christophe JAILLET <christophe.jaillet@wanadoo.fr>,
-        Zechuan Chen <chenzechuan1@huawei.com>,
-        Jason Wang <wangborong@cdjrlc.com>,
-        Lexi Shao <shaolexi@huawei.com>,
-        Remi Bernon <rbernon@codeweavers.com>,
-        linux-kernel <linux-kernel@vger.kernel.org>,
         linux-perf-users <linux-perf-users@vger.kernel.org>,
-        llvm@lists.linux.dev
+        LKML <linux-kernel@vger.kernel.org>
 Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-On Thu, Aug 18, 2022 at 8:59 AM Namhyung Kim <namhyung@kernel.org> wrote:
+On Thu, Aug 18, 2022 at 9:24 AM Arnaldo Carvalho de Melo
+<arnaldo.melo@gmail.com> wrote:
 >
-> On Thu, Aug 18, 2022 at 6:17 AM Ian Rogers <irogers@google.com> wrote:
-> >
-> > On Wed, Aug 17, 2022, 11:11 PM Namhyung Kim <namhyung@kernel.org> wrote:
-> > >
-> > > Hi Ian,
-> > >
-> > > On Tue, Aug 16, 2022 at 10:39 PM Ian Rogers <irogers@google.com> wrote:
-> > > >
-> > > > If building with clang then enable -Wthread-safety warnings.
-> > >
-> > > Do you know the minimal supported version for the option?
-> > > I'm not sure we have a check for that kind of thing.
-> >
-> >
-> > It has been supported for a long time, close to 10 years. Looking
-> > around it looks like clang 3.5 had the support. For context, BPF was
-> > supported after clang 3.7. Given this long support, and we don't
-> > version check for BPF, I think it is okay to assume the flag is
-> > supported.
 >
-> Good, thanks for checking it.
+>
+> On Wed, Aug 17, 2022, 10:21 AM Arnaldo Carvalho de Melo <acme@kernel.org> wrote:
+>>
+>> Em Wed, Aug 17, 2022 at 06:02:25AM -0700, Ian Rogers escreveu:
+>> > On Wed, Aug 17, 2022 at 1:55 AM Adrian Hunter <adrian.hunter@intel.com> wrote:
+>> > > Speaking of the wiki, anyone know how to change the
+>> > > "Set $wgLogo to the URL path to your own logo image." image?
+>>
+>> > +1000
+>>
+>> > Someone at RedHat knows :-)
+>>
+>> Documentation is at the Media Wiki site, admin up to a point was John Kacur,
+>> John?
+>>
+>> https://www.mediawiki.org/wiki/Manual:FAQ#Changing_the_interface>
+>>
+>> --------------------- 8< ----------------------------------
+>>
+>> How do I change the logo?
+>>
+>> The logo that appears in the top left of each page is determined by the $wgLogo configuration line in the LocalSettings.php file.
+>>
+>> There are two ways to change the logo:
+>>
+>>     Upload a picture to your wiki using the normal file uploading interface. This allows the logo to be replaced easily, so you may want to protect the page if you use this method.
+>>
+>>         Then add the $wgLogo line to LocalSettings.php, for example:
+>>
+>>         $wgLogo = "{$wgUploadPath}/6/62/mylogo.png";
+>>
+>>     Upload an image to your server by other means (such as FTP).
+>>
+>>         Add the $wgLogo line to LocalSettings.php, for example:
+>>
+>>         $wgLogo = "{$wgScriptPath}/mylogo.jpg";
+>>
+>>         (In this example, the image is in the same folder as the LocalSettings.php file.)
+>>
+>> If you want to change the logo in only specific pages, override #p-logo
+>> css's background-image property or use third party extension like
+>> Extension:LogoFunctions.  Caution! Caution:     Do not simply overwrite
+>> the default logo installed with MediaWiki (/resources/assets/wiki.png);
+>> this file will be overwritten when you upgrade.  A good size for a
+>> square logo is 135x135px or 150x150px, but the logo need not be square,
+>> especially if it contains text below an image. The maximum logo size in
+>> Vector is ~160x160px, while MonoBook's is ~155x155px. A logo that is too
+>> large will be cut off.
+>>
+>> --------------------- 8< ----------------------------------
+>
+>
+> I got it sorted out with the kernel.org admins.
+>
+> Please force reload.
 
-It was a good point, thanks for the reminder!
+You made my day!
 
+Thanks,
 Ian
+
+> - Arnaldo
