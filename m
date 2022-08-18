@@ -2,157 +2,194 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B4AF3C00140
-	for <linux-perf-users@archiver.kernel.org>; Thu, 18 Aug 2022 10:01:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CA58DC00140
+	for <linux-perf-users@archiver.kernel.org>; Thu, 18 Aug 2022 12:04:24 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233335AbiHRKBm (ORCPT
+        id S244512AbiHRMEX (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Thu, 18 Aug 2022 06:01:42 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36362 "EHLO
+        Thu, 18 Aug 2022 08:04:23 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55982 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S243919AbiHRKBk (ORCPT
+        with ESMTP id S244479AbiHRMEW (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Thu, 18 Aug 2022 06:01:40 -0400
-Received: from mga06.intel.com (mga06b.intel.com [134.134.136.31])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 846BA979FD
-        for <linux-perf-users@vger.kernel.org>; Thu, 18 Aug 2022 03:01:39 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1660816899; x=1692352899;
-  h=from:to:cc:subject:date:message-id:mime-version:
-   content-transfer-encoding;
-  bh=7LeBf56IOf53Pscm0kXsYB8ERlNBj3KIW3jRU3mlLxE=;
-  b=Ekr5KtE7iuTJAcQjrDHOHLwtvmlwpu/Ku2Odu5WJbKMZcpat5YooWK7p
-   k+LJ9dmWc4rml150BMJIItzmPiSZSpXAfp/iPhJROcNPur+lXaZHnPC7X
-   FygTZ6qjsbr31GNA6ewCFuAwElT7ulBjSSzHJ75vBiI5usQbXnrmipeda
-   0c0dvg47mGODddoC7Y8WU8C1l00aqfFS27SIrAoWYso3VcibJt6lBUo23
-   nlp3JUX4vfiig/IwnxFp8R+sxGEsxWSIxpmnDrooWc/PKCAV06QSsyveJ
-   HnSC8xAgtdtkkLH6uJVPioUTGPYdwnFrWe6IYoj2Jg0UTOiwnNe+BDHAx
-   w==;
-X-IronPort-AV: E=McAfee;i="6500,9779,10442"; a="354458901"
-X-IronPort-AV: E=Sophos;i="5.93,246,1654585200"; 
-   d="scan'208";a="354458901"
-Received: from orsmga003.jf.intel.com ([10.7.209.27])
-  by orsmga104.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 18 Aug 2022 03:01:39 -0700
-X-IronPort-AV: E=Sophos;i="5.93,246,1654585200"; 
-   d="scan'208";a="558470097"
-Received: from tassilo.jf.intel.com ([10.54.74.11])
-  by orsmga003-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 18 Aug 2022 03:01:39 -0700
-From:   Andi Kleen <ak@linux.intel.com>
-To:     acme@kernel.org
-Cc:     linux-perf-users@vger.kernel.org, zhengjun.xing@intel.com,
-        Andi Kleen <ak@linux.intel.com>
-Subject: [PATCH] perf tools: Improve hybrid description in perf record manpage
-Date:   Thu, 18 Aug 2022 03:01:27 -0700
-Message-Id: <20220818100127.249401-1-ak@linux.intel.com>
-X-Mailer: git-send-email 2.35.3
+        Thu, 18 Aug 2022 08:04:22 -0400
+Received: from mail-ed1-x533.google.com (mail-ed1-x533.google.com [IPv6:2a00:1450:4864:20::533])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C8120895EB;
+        Thu, 18 Aug 2022 05:04:15 -0700 (PDT)
+Received: by mail-ed1-x533.google.com with SMTP id e13so1579232edj.12;
+        Thu, 18 Aug 2022 05:04:15 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20210112;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:date:from:from:to:cc;
+        bh=epVRuEfdEDYUlG3EB1G1lfmyQEEMQQhsfHFNQYC2RJc=;
+        b=XMuB3EuJ7Ml/AoCrVB8jvl+UUpjRL2yblM0CPFQfIHIajRiAwBrlrCjPHLecUiICbk
+         1+xeyvqsk2Xo5GQ1NQXvAh12GD+XWGlvAz4k698clJGDErV7B2zKLf+IE8SVHm57QmHC
+         8Y8cXYRYhWJZ8q1kb2r/XH21NapCbJsBrBRi6cQl6xsvgotR9AOa3+E9iZC3rWM7i8/L
+         BefThtuNTGFPoCIn6A0YGbWNPzkcwj25UNvukY9QHpgb/Ug5NRk9na6sIt69BqXptjaP
+         Nz7pRWvUh64vg9pBj48l+LpXApvMxoS54wQdhDUgAcp37n32cmMLfl3PIa1WfOgizWPn
+         ccbw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:date:from:x-gm-message-state:from:to:cc;
+        bh=epVRuEfdEDYUlG3EB1G1lfmyQEEMQQhsfHFNQYC2RJc=;
+        b=e8EyIMTKzw9lxbkktbfgqOX+IlLLTQhnlgmGfgSuQD1Ax0EANTD2mxkftTe6hPQINg
+         9ChCYOqasaWBS7qQ8pYH/k3NvLDjkjmV3rR4iL702wEB3UpwlVSpI8hQX3yvhd/ML92S
+         qQf69sgzQibxeeuGH2pfteA7jAUtfLbsWFPPRjesxRiFEtWbpyI3bXhwadxVztCTwRrE
+         7f3Q8JA5cjvT/tS8ZTskRwUQ5RgGJe+Kc4tPuJGe9dmi5SzKXHGl03gY4KeoAcyKdiyB
+         atqF4LiVR5WDlkDcTvVa14FUE++X1ml/lvTQ651jew4aLqzh84b6IWHh0zjoeppi6GV3
+         CIBQ==
+X-Gm-Message-State: ACgBeo2gY0vi1QFJZ/oLWHYXlqOylBZtU6Bfm7Z1YWcnDXT4jVvdEDkq
+        OljHwclCKlfd8fx3gp3tXtA=
+X-Google-Smtp-Source: AA6agR7Ohj4R+4cYl8liBBD5MR3+bCm44GDO6PWIAfHL/dWqFLmj0DqLZTt0LVrSyjlmL+0CnzIwdA==
+X-Received: by 2002:a05:6402:2813:b0:442:bfc8:5d34 with SMTP id h19-20020a056402281300b00442bfc85d34mr2005642ede.114.1660824254092;
+        Thu, 18 Aug 2022 05:04:14 -0700 (PDT)
+Received: from krava ([193.85.244.190])
+        by smtp.gmail.com with ESMTPSA id y14-20020a1709063a8e00b0073a644ef803sm737385ejd.101.2022.08.18.05.04.13
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 18 Aug 2022 05:04:13 -0700 (PDT)
+From:   Jiri Olsa <olsajiri@gmail.com>
+X-Google-Original-From: Jiri Olsa <jolsa@kernel.org>
+Date:   Thu, 18 Aug 2022 14:04:11 +0200
+To:     Namhyung Kim <namhyung@kernel.org>
+Cc:     Arnaldo Carvalho de Melo <acme@kernel.org>,
+        Ingo Molnar <mingo@kernel.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Ian Rogers <irogers@google.com>,
+        linux-perf-users@vger.kernel.org
+Subject: Re: [PATCH 4/4] perf tools: Support reading PERF_FORMAT_LOST
+Message-ID: <Yv4qu8xMpfzUQ/8L@krava>
+References: <20220816221747.275828-1-namhyung@kernel.org>
+ <20220816221747.275828-5-namhyung@kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20220816221747.275828-5-namhyung@kernel.org>
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-The Intel hybrid description is written in a different style than
-the rest of the perf record man page. There were some new command line
-options added after it which resulted in very strange section ordering.
-Move the hybrid include last.
+On Tue, Aug 16, 2022 at 03:17:47PM -0700, Namhyung Kim wrote:
 
-Also the sub sections in the hybrid document don't fit the record
-manpage well (especially since it talks about all kinds of unrelated
-commands). I left this for now, but would be better to separate this
-properly in the different man pages.
+SNIP
 
-It would be better to use sub sections for the other sections, but these
-don't seem to be supported in AsciiDoc?
+> diff --git a/tools/perf/util/event.h b/tools/perf/util/event.h
+> index a7b0931d5137..7753368d70d6 100644
+> --- a/tools/perf/util/event.h
+> +++ b/tools/perf/util/event.h
+> @@ -65,7 +65,8 @@ struct stack_dump {
+>  
+>  struct sample_read_value {
+>  	u64 value;
+> -	u64 id;
+> +	u64 id;   /* only if PERF_FORMAT_ID */
+> +	u64 lost; /* only if PERF_FORMAT_LOST */
+>  };
 
-Some of the examples are still misrendered in the manpage with an indented
-troff command, but I don't know how to fix that.
+I was wondering why not to split this patch into smaller piece,
+but once you change this struct you break all the places
 
-In any case it's now better than before.
+SNIP
 
-Signed-off-by: Andi Kleen <ak@linux.intel.com>
----
- tools/perf/Documentation/intel-hybrid.txt | 10 ----------
- tools/perf/Documentation/perf-record.txt  |  4 ++--
- 2 files changed, 2 insertions(+), 12 deletions(-)
+> --- a/tools/perf/util/evsel.c
+> +++ b/tools/perf/util/evsel.c
+> @@ -1541,7 +1541,7 @@ static int evsel__read_one(struct evsel *evsel, int cpu_map_idx, int thread)
+>  }
+>  
+>  static void evsel__set_count(struct evsel *counter, int cpu_map_idx, int thread,
+> -			     u64 val, u64 ena, u64 run)
+> +			     u64 val, u64 ena, u64 run, u64 lost)
+>  {
+>  	struct perf_counts_values *count;
+>  
+> @@ -1550,6 +1550,7 @@ static void evsel__set_count(struct evsel *counter, int cpu_map_idx, int thread,
+>  	count->val    = val;
+>  	count->ena    = ena;
+>  	count->run    = run;
+> +	count->lost   = lost;
+>  
+>  	perf_counts__set_loaded(counter->counts, cpu_map_idx, thread, true);
+>  }
+> @@ -1558,7 +1559,7 @@ static int evsel__process_group_data(struct evsel *leader, int cpu_map_idx, int
+>  {
+>  	u64 read_format = leader->core.attr.read_format;
+>  	struct sample_read_value *v;
+> -	u64 nr, ena = 0, run = 0, i;
+> +	u64 nr, ena = 0, run = 0, lost = 0, i;
+>  
+>  	nr = *data++;
+>  
+> @@ -1573,16 +1574,25 @@ static int evsel__process_group_data(struct evsel *leader, int cpu_map_idx, int
+>  
+>  	v = (struct sample_read_value *) data;
+>  
+> -	evsel__set_count(leader, cpu_map_idx, thread, v[0].value, ena, run);
+> +	if (read_format & PERF_FORMAT_LOST)
+> +		lost = v->lost;
+> +
+> +	evsel__set_count(leader, cpu_map_idx, thread, v[0].value, ena, run, lost);
+> +
+> +	v = next_sample_read_value(v, read_format);
 
-diff --git a/tools/perf/Documentation/intel-hybrid.txt b/tools/perf/Documentation/intel-hybrid.txt
-index c9302096dc46..e7a776ad25d7 100644
---- a/tools/perf/Documentation/intel-hybrid.txt
-+++ b/tools/perf/Documentation/intel-hybrid.txt
-@@ -21,11 +21,6 @@ cat /sys/devices/cpu_atom/cpus
- 
- It indicates cpu0-cpu15 are core cpus and cpu16-cpu23 are atom cpus.
- 
--Quickstart
--
--List hybrid event
-------------------
--
- As before, use perf-list to list the symbolic event.
- 
- perf list
-@@ -40,7 +35,6 @@ the event is belong to. Same event name but with different pmu can
- be supported.
- 
- Enable hybrid event with a specific pmu
-----------------------------------------
- 
- To enable a core only event or atom only event, following syntax is supported:
- 
-@@ -53,7 +47,6 @@ For example, count the 'cycles' event on core cpus.
- 	perf stat -e cpu_core/cycles/
- 
- Create two events for one hardware event automatically
--------------------------------------------------------
- 
- When creating one event and the event is available on both atom and core,
- two events are created automatically. One is for atom, the other is for
-@@ -132,7 +125,6 @@ For perf-stat result, it displays two events:
- The first 'cycles' is core event, the second 'cycles' is atom event.
- 
- Thread mode example:
----------------------
- 
- perf-stat reports the scaled counts for hybrid event and with a percentage
- displayed. The percentage is the event's running time/enabling time.
-@@ -176,14 +168,12 @@ perf_event_attr:
-        604,097,080      cpu_atom/cycles/                                              (99.57%)
- 
- perf-record:
--------------
- 
- If there is no '-e' specified in perf record, on hybrid platform,
- it creates two default 'cycles' and adds them to event list. One
- is for core, the other is for atom.
- 
- perf-stat:
------------
- 
- If there is no '-e' specified in perf stat, on hybrid platform,
- besides of software events, following events are created and
-diff --git a/tools/perf/Documentation/perf-record.txt b/tools/perf/Documentation/perf-record.txt
-index cf8ad50f3de1..0aaaaa7aee68 100644
---- a/tools/perf/Documentation/perf-record.txt
-+++ b/tools/perf/Documentation/perf-record.txt
-@@ -747,8 +747,6 @@ events in data directory files. Option specified with no or empty value
- defaults to CPU layout. Masks defined or provided by the option value are
- filtered through the mask provided by -C option.
- 
--include::intel-hybrid.txt[]
--
- --debuginfod[=URLs]::
- 	Specify debuginfod URL to be used when cacheing perf.data binaries,
- 	it follows the same syntax as the DEBUGINFOD_URLS variable, like:
-@@ -768,6 +766,8 @@ include::intel-hybrid.txt[]
- 	only, as of now.  So the applications built without the frame
- 	pointer might see bogus addresses.
- 
-+include::intel-hybrid.txt[]
-+
- SEE ALSO
- --------
- linkperf:perf-stat[1], linkperf:perf-list[1], linkperf:perf-intel-pt[1]
--- 
-2.35.3
+oneway of making this simpler here and share with other places
+could be adding something like:
 
+  for_each_group_data(v, i, nr, read_format) {
+  }
+
+but not sure how would that turn out, thoughts?
+
+>  
+>  	for (i = 1; i < nr; i++) {
+>  		struct evsel *counter;
+>  
+> -		counter = evlist__id2evsel(leader->evlist, v[i].id);
+> +		counter = evlist__id2evsel(leader->evlist, v->id);
+>  		if (!counter)
+>  			return -EINVAL;
+>  
+> -		evsel__set_count(counter, cpu_map_idx, thread, v[i].value, ena, run);
+> +		if (read_format & PERF_FORMAT_LOST)
+> +			lost = v->lost;
+> +
+> +		evsel__set_count(counter, cpu_map_idx, thread, v->value, ena, run, lost);
+> +		v = next_sample_read_value(v, read_format);
+>  	}
+>  
+>  	return 0;
+> @@ -2475,16 +2485,21 @@ int evsel__parse_sample(struct evsel *evsel, union perf_event *event,
+>  
+>  			if (data->read.group.nr > max_group_nr)
+>  				return -EFAULT;
+> -			sz = data->read.group.nr *
+> -			     sizeof(struct sample_read_value);
+> +
+> +			sz = data->read.group.nr * sample_read_value_size(read_format);
+>  			OVERFLOW_CHECK(array, sz, max_size);
+> -			data->read.group.values =
+> -					(struct sample_read_value *)array;
+> +			data->read.group.values = (void *)array;
+
+nit, is this void casting needed?
+
+thanks,
+jirka
+
+>  			array = (void *)array + sz;
+>  		} else {
+>  			OVERFLOW_CHECK_u64(array);
+>  			data->read.one.id = *array;
+>  			array++;
+> +
+> +			if (read_format & PERF_FORMAT_LOST) {
+> +				OVERFLOW_CHECK_u64(array);
+> +				data->read.one.lost = *array;
+> +				array++;
+> +			}
+>  		}
+>  	}
+>  
+
+SNIP
