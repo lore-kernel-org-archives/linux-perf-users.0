@@ -2,118 +2,206 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C1030C32771
-	for <linux-perf-users@archiver.kernel.org>; Fri, 19 Aug 2022 15:26:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7A4E9C32771
+	for <linux-perf-users@archiver.kernel.org>; Fri, 19 Aug 2022 16:18:18 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1349289AbiHSP0g (ORCPT
+        id S1349932AbiHSQSQ (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Fri, 19 Aug 2022 11:26:36 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44232 "EHLO
+        Fri, 19 Aug 2022 12:18:16 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36824 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1349114AbiHSP0e (ORCPT
+        with ESMTP id S1352108AbiHSQPm (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Fri, 19 Aug 2022 11:26:34 -0400
-Received: from ams.source.kernel.org (ams.source.kernel.org [IPv6:2604:1380:4601:e00::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E3F399412D;
-        Fri, 19 Aug 2022 08:26:33 -0700 (PDT)
+        Fri, 19 Aug 2022 12:15:42 -0400
+Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 330E5D83ED;
+        Fri, 19 Aug 2022 08:58:40 -0700 (PDT)
 Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by ams.source.kernel.org (Postfix) with ESMTPS id 4FB3EB82802;
-        Fri, 19 Aug 2022 15:26:32 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id C8A42C433D6;
-        Fri, 19 Aug 2022 15:26:30 +0000 (UTC)
+        by dfw.source.kernel.org (Postfix) with ESMTPS id 5D94561644;
+        Fri, 19 Aug 2022 15:58:39 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 62CCBC433C1;
+        Fri, 19 Aug 2022 15:58:38 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1660922791;
-        bh=290iPq6XrUTOduo3MsR9/qMMKWLhl0oVMxDv8/pS1aQ=;
+        s=k20201202; t=1660924718;
+        bh=jZkm9DTACQV+CBvNGwKYZM0g86biojOTExli8sSeSBs=;
         h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=MSqxW4r5pCkDl0IVhIw6oimHguJvd4K9Jr1oUuqw9p6V9q1E7I8D/lrqh/TUNr/aJ
-         NJ+V5h4PXXnhv09V/N1hAQqzYrmx+ctXhbUvFvOAAcLHic1P1WnbxbYGIKXeS0BM4Z
-         ky6WY+6TnzMp1UM8inJrO9aJygmh2F5s/g5iVTEz4oq3W23O8WKYxrLTeRYRnLK6mt
-         H2NuNEi4A4kNsXX87aQfgjfqz17nGG1H1rG8Y6QzUOv5rHSPlgS0uq221qBolFmH6V
-         ag6mdEP64uDOK+N2Ribfl+euNbTG4vuniRQG70yvTtUczYnTDw2iB4ylng2Va+RRXI
-         teuy1gnN/x7Ww==
+        b=b9yiSyZeJErT7d9JnfdCGOhfzh3cyYM4ixrg4XFeiNauXu5J3I9j/C8qKwnFdo6Ih
+         9NhAEQqCMNsRIfUxA5xcl07bt5ChbG2uSgpAWasMqkqo5Er5iR7VaI35jDdnhqoTet
+         4G6QkVgp7tDfnvn5loQ5NhX9lAONn0MmnmX5jfKpEKy3G1TsCBG8DKNRl3EMDT9eFM
+         76GRmncGRPQpI6xV1bE3drTV+fRu9+YabOQrzbTomxRzS/qTcRPXpvlsAFaD7GFfnA
+         L/kB8FUACwjYcfw8/YN6SS43ImvyHrLCb5HiIVgjDlkR9i0M9VaKeOy4rHu481zuQ0
+         p78Zi5RCO04xw==
 Received: by quaco.ghostprotocols.net (Postfix, from userid 1000)
-        id 23EF24035A; Fri, 19 Aug 2022 12:26:28 -0300 (-03)
-Date:   Fri, 19 Aug 2022 12:26:28 -0300
+        id 0BEFC4035A; Fri, 19 Aug 2022 12:58:36 -0300 (-03)
+Date:   Fri, 19 Aug 2022 12:58:35 -0300
 From:   Arnaldo Carvalho de Melo <acme@kernel.org>
-To:     Jiri Olsa <olsajiri@gmail.com>
-Cc:     Namhyung Kim <namhyung@kernel.org>, Ingo Molnar <mingo@kernel.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Ian Rogers <irogers@google.com>,
-        linux-perf-users@vger.kernel.org
-Subject: Re: [PATCH 0/4] perf tools: Support reading PERF_FORMAT_LOST (v3)
-Message-ID: <Yv+rpO2Zvt1A5cp3@kernel.org>
-References: <20220819003644.508916-1-namhyung@kernel.org>
- <Yv9rplmtHB5fZsv+@krava>
+To:     Ian Rogers <irogers@google.com>
+Cc:     Peter Zijlstra <peterz@infradead.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Jiri Olsa <jolsa@kernel.org>,
+        Namhyung Kim <namhyung@kernel.org>,
+        James Clark <james.clark@arm.com>,
+        Kees Cook <keescook@chromium.org>,
+        "Gustavo A. R. Silva" <gustavoars@kernel.org>,
+        Adrian Hunter <adrian.hunter@intel.com>,
+        Riccardo Mancini <rickyman7@gmail.com>,
+        German Gomez <german.gomez@arm.com>,
+        Colin Ian King <colin.king@intel.com>,
+        Song Liu <songliubraving@fb.com>,
+        Dave Marchevsky <davemarchevsky@fb.com>,
+        Athira Rajeev <atrajeev@linux.vnet.ibm.com>,
+        Alexey Bayduraev <alexey.v.bayduraev@linux.intel.com>,
+        Leo Yan <leo.yan@linaro.org>, linux-perf-users@vger.kernel.org,
+        linux-kernel@vger.kernel.org, Stephane Eranian <eranian@google.com>
+Subject: Re: [PATCH v2 4/6] perf cpumap: Fix alignment for masks in event
+ encoding
+Message-ID: <Yv+zK8UxUAP83zkp@kernel.org>
+References: <20220614143353.1559597-1-irogers@google.com>
+ <20220614143353.1559597-5-irogers@google.com>
+ <Yv60COAP90TEiWkx@kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <Yv9rplmtHB5fZsv+@krava>
+In-Reply-To: <Yv60COAP90TEiWkx@kernel.org>
 X-Url:  http://acmel.wordpress.com
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-Em Fri, Aug 19, 2022 at 12:53:26PM +0200, Jiri Olsa escreveu:
-> On Thu, Aug 18, 2022 at 05:36:40PM -0700, Namhyung Kim wrote:
-> > Hello,
+Em Thu, Aug 18, 2022 at 06:50:00PM -0300, Arnaldo Carvalho de Melo escreveu:
+> Em Tue, Jun 14, 2022 at 07:33:51AM -0700, Ian Rogers escreveu:
+> > A mask encoding of a cpu map is laid out as:
+> >   u16 nr
+> >   u16 long_size
+> >   unsigned long mask[];
+> > However, the mask may be 8-byte aligned meaning there is a 4-byte pad
+> > after long_size. This means 32-bit and 64-bit builds see the mask as
+> > being at different offsets. On top of this the structure is in the byte
+> > data[] encoded as:
+> >   u16 type
+> >   char data[]
+> > This means the mask's struct isn't the required 4 or 8 byte aligned, but
+> > is offset by 2. Consequently the long reads and writes are causing
+> > undefined behavior as the alignment is broken.
 > > 
-> > The kernel v6.0 added PERF_FORMAT_LOST which can read a number of lost
-> > samples for the given event.  As it can change the output format of
-> > read(2) and perf sample data, it needs to access them carefully.
+> > Fix the mask struct by creating explicit 32 and 64-bit variants, use a
+> > union to avoid data[] and casts; the struct must be packed so the
+> > layout matches the existing perf.data layout. Taking an address of a
+> > member of a packed struct breaks alignment so pass the packed
+> > perf_record_cpu_map_data to functions, so they can access variables with
+> > the right alignment.
 > > 
-> > Changes in v3)
-> >  * add sample_read_group__for_each()  (Jiri)
+> > As the 64-bit version has 4 bytes of padding, optimizing writing to only
+> > write the 32-bit version.
+> > 
+> > Signed-off-by: Ian Rogers <irogers@google.com>
+> > ---
+> >  tools/lib/perf/include/perf/event.h | 36 +++++++++++--
+> >  tools/perf/tests/cpumap.c           | 19 ++++---
+> >  tools/perf/util/cpumap.c            | 80 +++++++++++++++++++++++------
+> >  tools/perf/util/cpumap.h            |  4 +-
+> >  tools/perf/util/session.c           | 30 +++++------
+> >  tools/perf/util/synthetic-events.c  | 34 +++++++-----
+> >  6 files changed, 143 insertions(+), 60 deletions(-)
+> > 
+> > diff --git a/tools/lib/perf/include/perf/event.h b/tools/lib/perf/include/perf/event.h
+> > index e7758707cadd..d2d32589758a 100644
+> > --- a/tools/lib/perf/include/perf/event.h
+> > +++ b/tools/lib/perf/include/perf/event.h
+> > @@ -6,6 +6,7 @@
+> >  #include <linux/types.h>
+> >  #include <linux/limits.h>
+> >  #include <linux/bpf.h>
+> > +#include <linux/compiler.h>
+> >  #include <sys/types.h> /* pid_t */
+> >  
+> >  #define event_contains(obj, mem) ((obj).header.size > offsetof(typeof(obj), mem))
+> > @@ -153,20 +154,47 @@ enum {
+> >  	PERF_CPU_MAP__MASK = 1,
+> >  };
+> >  
+> > +/*
+> > + * Array encoding of a perf_cpu_map where nr is the number of entries in cpu[]
+> > + * and each entry is a value for a CPU in the map.
+> > + */
+> >  struct cpu_map_entries {
+> >  	__u16			 nr;
+> >  	__u16			 cpu[];
+> >  };
+> >  
+> > -struct perf_record_record_cpu_map {
+> > +/* Bitmap encoding of a perf_cpu_map where bitmap entries are 32-bit. */
+> > +struct perf_record_mask_cpu_map32 {
+> > +	/* Number of mask values. */
+> >  	__u16			 nr;
+> > +	/* Constant 4. */
+> >  	__u16			 long_size;
+> > -	unsigned long		 mask[];
+> > +	/* Bitmap data. */
+> > +	__u32			 mask[];
+> >  };
+> >  
+> > -struct perf_record_cpu_map_data {
+> > +/* Bitmap encoding of a perf_cpu_map where bitmap entries are 64-bit. */
+> > +struct perf_record_mask_cpu_map64 {
+> > +	/* Number of mask values. */
+> > +	__u16			 nr;
+> > +	/* Constant 8. */
+> > +	__u16			 long_size;
+> > +	/* Legacy padding. */
+> > +	char                     __pad[4];
+> > +	/* Bitmap data. */
+> > +	__u64			 mask[];
+> > +};
+> > +
+> > +struct __packed perf_record_cpu_map_data {
 > 
-> Acked-by: Jiri Olsa <jolsa@kernel.org>
-
-Thanks, updated the patchset in my branch.
-
-- Arnaldo
- 
-> thanks,
-> jirka
+> In various places I'm getting this:
 > 
-> > 
-> > Changes in v2)
-> >  * add a comment in perf_evsel__read_group()  (Jiri)
-> >  * simplify perf_evsel__adjust_values()  (Jiri)
-> > 
-> > 
-> > You can get the code from 'perf/read-lost-v3' brach on
-> > 
-> >   git://git.kernel.org/pub/scm/linux/kernel/git/namhyung/linux-perf.git
-> > 
-> > Thanks,
-> > Namhyung
-> > 
-> > Namhyung Kim (4):
-> >   tools headers UAPI: Sync linux/perf_event.h with the kernel sources
-> >   tools lib perf: Handle read format in perf_evsel__read()
-> >   tools lib perf: Add a test case for read formats
-> >   perf tools: Support reading PERF_FORMAT_LOST
-> > 
-> >  tools/include/uapi/linux/perf_event.h         |   5 +-
-> >  tools/lib/perf/evsel.c                        |  79 ++++++++-
-> >  tools/lib/perf/include/perf/event.h           |   3 +-
-> >  tools/lib/perf/include/perf/evsel.h           |   4 +-
-> >  tools/lib/perf/tests/test-evsel.c             | 161 ++++++++++++++++++
-> >  tools/perf/tests/sample-parsing.c             |  14 +-
-> >  tools/perf/util/event.h                       |  21 ++-
-> >  tools/perf/util/evsel.c                       |  29 ++--
-> >  .../scripting-engines/trace-event-python.c    |  19 ++-
-> >  tools/perf/util/session.c                     |  35 ++--
-> >  tools/perf/util/synthetic-events.c            |  32 +++-
-> >  11 files changed, 356 insertions(+), 46 deletions(-)
-> > 
-> > 
-> > base-commit: 568035b01cfb107af8d2e4bd2fb9aea22cf5b868
-> > -- 
-> > 2.37.1.595.g718a3a8f04-goog
-> > 
+> [perfbuilder@five x-riscv]$ export BUILD_TARBALL=http://192.168.86.14/perf/perf-6.0.0-rc1.tar.xz
+> [perfbuilder@five x-riscv]$ time dm .
+>    1     5.47 ubuntu:22.04-x-riscv64        : FAIL gcc version 11.2.0 (Ubuntu 11.2.0-16ubuntu1)
+>     In file included from mmap.c:10:
+>     /git/perf-6.0.0-rc1/tools/lib/perf/include/perf/event.h:190:34: error: packed attribute causes inefficient alignment for 'type' [-Werror=attributes]
+>       190 |         __u16                    type;
+>           |                                  ^~~~
+>     cc1: all warnings being treated as errors
+>     In file included from util/event.h:12,
+>                      from builtin-diff.c:12:
+>     /git/perf-6.0.0-rc1/tools/lib/perf/include/perf/event.h:190:34: error: packed attribute causes inefficient alignment for 'type' [-Werror=attributes]
+>       190 |         __u16                    type;
+>           |                                  ^~~~
+>     In file included from util/events_stats.h:6,
+>                      from util/evlist.h:12,
+>                      from builtin-evlist.c:11:
+>     /git/perf-6.0.0-rc1/tools/lib/perf/include/perf/event.h:190:34: error: packed attribute causes inefficient alignment for 'type' [-Werror=attributes]
+>       190 |         __u16                    type;
+>           |                                  ^~~~
+> 
+> So probably we need to disable this -Werror=attributes in some
+> architectures?
 
--- 
+Slapped this there:
 
-- Arnaldo
+#pragma GCC diagnostic push
+#pragma GCC diagnostic ignored "-Wpacked"
+#pragma GCC diagnostic ignored "-Wattributes"
+
+struct __packed perf_record_cpu_map_data {
+        __u16                    type;
+        union {
+                /* Used when type == PERF_CPU_MAP__CPUS. */
+                struct cpu_map_entries cpus_data;
+                /* Used when type == PERF_CPU_MAP__MASK and long_size == 4. */
+                struct perf_record_mask_cpu_map32 mask32_data;
+                /* Used when type == PERF_CPU_MAP__MASK and long_size == 8. */
+                struct perf_record_mask_cpu_map64 mask64_data;
+        };
+};
+
+#pragma GCC diagnostic pop
+
