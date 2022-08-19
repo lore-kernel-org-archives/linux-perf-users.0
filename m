@@ -2,115 +2,118 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 244D6C32771
-	for <linux-perf-users@archiver.kernel.org>; Fri, 19 Aug 2022 13:56:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C1030C32771
+	for <linux-perf-users@archiver.kernel.org>; Fri, 19 Aug 2022 15:26:36 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1348576AbiHSN4j (ORCPT
+        id S1349289AbiHSP0g (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Fri, 19 Aug 2022 09:56:39 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48240 "EHLO
+        Fri, 19 Aug 2022 11:26:36 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44232 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1348948AbiHSN4i (ORCPT
+        with ESMTP id S1349114AbiHSP0e (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Fri, 19 Aug 2022 09:56:38 -0400
-Received: from sonic312-23.consmr.mail.gq1.yahoo.com (sonic312-23.consmr.mail.gq1.yahoo.com [98.137.69.204])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3DFE5FFF7E
-        for <linux-perf-users@vger.kernel.org>; Fri, 19 Aug 2022 06:56:37 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=netscape.net; s=a2048; t=1660917396; bh=tnM+zKSjH7L19hIHm0z0BtpfQ0AKAz/TaSXrO5bzA+U=; h=Date:Subject:To:Cc:References:From:In-Reply-To:From:Subject:Reply-To; b=OKG0dQmV4pWc04Z0AI8XAnWuZjsMaoihRM6i8K8YFUnJzzyzX+sON9KJCt6Tdcsz3kQMuRcfsDvV8m18klmt+aOJoBfD+aYUsDhJ+47Q24/EozJpv6e/rM2Js3yc3o38PoIK8RoTIJs97LVsI1UhKQVCSx8G6h5vxvlw18sJp1l3EpGyypwhrwiNSHhjt2r6ZwLWCHbReBVXXqQWE/93B48wNtB/up+umk4bFXC1Lg7pkeR2mCVxSkUgVTf3BPrhdfbHT5BEQPuV7r74VLNMZSzNLTZKgT8Pdk7qMr9qAZARiKUd8Z5DI1N0KwGm8e4WtLIK0jmKcbGoJVuTDoxdJg==
-X-SONIC-DKIM-SIGN: v=1; a=rsa-sha256; c=relaxed/relaxed; d=yahoo.com; s=s2048; t=1660917396; bh=Ss0gHKmViXvwxcGimleM2UmcX74g9nVFtiIriA+Lz08=; h=X-Sonic-MF:Date:Subject:To:From:From:Subject; b=Gv051tmAuo/E+LJNLmBAvYb9Sphv4/Ra2YqRID8OCTDrzlZvaDttxtwsxmjDkOl/9WV9ZJSg1qiUulYzsLibmjun8T03kj9ArwnO8P8l/DWkl3IFVgt4BpO4jw0RzWar1el3SNCIEvtm6XtPvbI1REuhofU98Ji0VqbjKX8vwItVkYdATiRkBU40uMuYaSbdu6mlQyBJEsfCjoh6MCd3hBysh4mvJkmRxNjBzbFS3mFAr9hwEDAC0PZsfJo3H1Z4sB7gH8030WABstWM87cUmPTbe+rf47QuB8MzFixBnwd3MV+Uq1QbtPGxyvte02dSLGDwUcjZUVLuACeg9taqwA==
-X-YMail-OSG: Fbh1HnQVM1n0LIs_8_mWIhpaUhyi8g9pYCDGqGrXQI924ZBOAzxd61GrL1S3HG7
- JDwJH1FMJi_r1ta8J9Yr38u5v82RRJutbFdVBuzbjQCvifRSTZU6avnSsgJmYEY6wM57Iff8kW30
- 2y0zfIQJN3xGBGy6WcXOjrxOSgljozG_6T1KdnSyhrhtQvpmPtHiy9UfvkX0rKlNVwWDAtHm5Rc5
- HaTSfObDnavkwAq1p.i78SFNbD9prUNh87we.0XDSZjWguDw1_13F2OIM_aKcKK0jqnD5rLq9snm
- lNsriq1H2mqASj0Gaxk9qN4bn.LaHGKxHbv0VSulMVdWeSETmbvEC.RJtusmPy01MVRI1MFSRlp1
- akYbAzK_0HgjGgw_nmRO8ME2QBkamhbT2Oobuv5tgglgZ_EVgyDXDC4SE7UG6sJmAb3mcgMybIjZ
- UemiHHei6VTKE3JAIgL6292ngzrQpQDu35nrNz31kVZMravHBPsV9BSKwSDldBA5X2_W1.lUHiEV
- EHKOHtIkCvOhNp1XcVpdseFa4.icLzp9j5TLKeZ6.G6k8frXsQFT7WyIGRqIdSZcpa7R0Jr9HYoL
- QiJ5Ssm4RJgASXzM_EFu1iL35RGUoWIGfLKuOt4Cj22Zec9p4yPC5EVLx2mgNTWyDLCNVcgI5fDs
- 6qLffISScOgBTdjF9U4xdUixjZamQYfIklHInea7EzxROnK4ML6c674JhvuI9.Lgfj60CZohmvQM
- mbiWqOTIJ1NxMTrYDu_i5img9oa1RzFfjV6RmDLLo0F6PMg1b4TUDPny.QMAySojvbWG2Fi3ErfW
- ivXRQxkcmV1GFb84uzcpxfPmHV4BaNfSVAEN0jxMM.iT0_9JXh3vEQzkPaVRfDq5hNy3FLDZz6Oo
- rhBK3EyRFF_gF.XBomlrQfMPyHU5_If7y0Gmx8NcUNzCb1oMtghInR.JBEk9kUovfYm1FmGjdwdc
- bYT3ATfkl9XpzW1kKyAKmgaA.IvHkVF8XNIqMuUTBrwCGo.eXCv95mnE.IYn9ueM9JsmOKByBeQy
- EN07n30JMnToeEvXPCk9UkuFumO65gNU2vYmLKNL2P4Wp0LxS.E85XT3tYnnZAKUg_dA2P2jecJO
- SDjRAz8Zt3faGFLATrUyfll3O0wARyjXUmD5QI_MApK5vbbh7ZcBfvoWc0DVRjwlhWMXU04qi0BC
- FaguMbjyRdL5pEFKERcdLF7OhksPb8CKJS9RGtXw05eD9vcZmWFAJXcK1LaK3DUKGWFzcIk9Rabe
- oH0nqKks6bmcljSR5W_NXtx8LQAHFszMgto0.tT2P.Rgqrsf1LTdqQoz6R5znjCAtYe9fUklfAq9
- znB3YNeCiCYNv.OM.jfnKcr8gw5RZwmHFoHk5WmhMbU89gezP_yrOsvW2SoBPYDTTkkiBSsEhANg
- lmjmHld5V3AwkdlKn53WLSGwunQtSy7yFcA67JOf4i9jh3Wnt4L8Ud8ApZZPFbFiAcIVqGrVREZG
- gTP4s4v6fATL_5vAFFDAqA9SnJ9YgWFHSZsWiZkqop1nHSdpS3FDY6Bg1KqJ12wj22dDIdck3UCA
- Ll.3kcEYv8UmgwD5nNJTYHZaHwVKKeMJDzc9FBq6aRibK1z7oIcKFsEznOMKXTahOkivWBkdBJ_t
- Cbg98A21ZIrt_3Tr0vj8BNnrzKisk9TfZ1aAoLr6LjHrL9dbo7PNPkhb4HlNq5cyy_.kUz_2hOer
- J0nfkwB7Sg4Yn4ZsGP3ibVA97iC2dkMQ73F8_FaKxcwHT0R9OE9ez6B2rxv6XVFBaCZ8OF3gdjEA
- bHpZyRc7QZ69V4L8PVGyHI9EVhXswU2upRBg4zsObuxwZh_t_FK0JFWySxWlRqWRwTFnK4.Mfys4
- IXQDleaS9paD6mA431YbzBTl6IBH74ar1Q0fI_HSFx7y21Pq4iNFj11u6YUkPab4siXj5XlMbbzr
- 8PGQyT6t.Ybv0jK3mlsikAjRqqozq.bYBidK9rFimI3sbQl.xOnfy90WwUy75dvj3h.4sDo3zjEM
- Tg3xN19wBV.KdHy0ngSJvJlpf3_mKC_eFllip7SNAnVKIHGyRx20l_JJ83vTGDYZ3rnvWcB.kprN
- wAOxB3vnrsyyycgAcQvJGE36RangqnJU6L41ZVdcya_Hawxl9j8Vtv7v2Ag1PhVAPdWxwuAO1hmy
- Abhylu8O7u5fVP1tRN3L3tCOiSrpotEqkQ_HSS5q.eOJSfiDyW6HqX4J09s5d00V8OHzDHOkXJX6
- kOhuoTnYrvwOphE_DWvO125zvSA--
-X-Sonic-MF: <brchuckz@aim.com>
-Received: from sonic.gate.mail.ne1.yahoo.com by sonic312.consmr.mail.gq1.yahoo.com with HTTP; Fri, 19 Aug 2022 13:56:36 +0000
-Received: by hermes--production-ne1-6649c47445-sp72j (Yahoo Inc. Hermes SMTP Server) with ESMTPA ID 3bc1d4565e6c9a7637f3a291096d4067;
-          Fri, 19 Aug 2022 13:56:30 +0000 (UTC)
-Message-ID: <a0950172-aab0-a771-0255-d3654f217ce8@netscape.net>
-Date:   Fri, 19 Aug 2022 09:56:26 -0400
-MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (Windows NT 10.0; rv:102.0) Gecko/20100101
- Thunderbird/102.1.2
-Subject: Re: [PATCH] perf scripts python: Let script to be python2 compliant
-To:     Leo Yan <leo.yan@linaro.org>, Ian Rogers <irogers@google.com>
-Cc:     Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Alan Bartlett <ajb@elrepo.org>,
+        Fri, 19 Aug 2022 11:26:34 -0400
+Received: from ams.source.kernel.org (ams.source.kernel.org [IPv6:2604:1380:4601:e00::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E3F399412D;
+        Fri, 19 Aug 2022 08:26:33 -0700 (PDT)
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by ams.source.kernel.org (Postfix) with ESMTPS id 4FB3EB82802;
+        Fri, 19 Aug 2022 15:26:32 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id C8A42C433D6;
+        Fri, 19 Aug 2022 15:26:30 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1660922791;
+        bh=290iPq6XrUTOduo3MsR9/qMMKWLhl0oVMxDv8/pS1aQ=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=MSqxW4r5pCkDl0IVhIw6oimHguJvd4K9Jr1oUuqw9p6V9q1E7I8D/lrqh/TUNr/aJ
+         NJ+V5h4PXXnhv09V/N1hAQqzYrmx+ctXhbUvFvOAAcLHic1P1WnbxbYGIKXeS0BM4Z
+         ky6WY+6TnzMp1UM8inJrO9aJygmh2F5s/g5iVTEz4oq3W23O8WKYxrLTeRYRnLK6mt
+         H2NuNEi4A4kNsXX87aQfgjfqz17nGG1H1rG8Y6QzUOv5rHSPlgS0uq221qBolFmH6V
+         ag6mdEP64uDOK+N2Ribfl+euNbTG4vuniRQG70yvTtUczYnTDw2iB4ylng2Va+RRXI
+         teuy1gnN/x7Ww==
+Received: by quaco.ghostprotocols.net (Postfix, from userid 1000)
+        id 23EF24035A; Fri, 19 Aug 2022 12:26:28 -0300 (-03)
+Date:   Fri, 19 Aug 2022 12:26:28 -0300
+From:   Arnaldo Carvalho de Melo <acme@kernel.org>
+To:     Jiri Olsa <olsajiri@gmail.com>
+Cc:     Namhyung Kim <namhyung@kernel.org>, Ingo Molnar <mingo@kernel.org>,
         Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        linux-perf-users@vger.kernel.org, ElRepo <contact@elrepo.org>,
-        Akemi Yagi <toracat@elrepo.org>, Jiri Olsa <jolsa@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Namhyung Kim <namhyung@kernel.org>,
-        linux-kernel@vger.kernel.org
-References: <CA+_WhHyZZC=3gtzetEAQQrjtGujHmY5azwtQNZEc90gyOAwUDg@mail.gmail.com>
- <CAP-5=fWiNdnEawdj_3ExCrcwRSnRxeV8=8RhA6pwbw_bJdPJFg@mail.gmail.com>
- <YuBDw/+7McESS05X@kernel.org>
- <CAP-5=fV4+KeGcyyODTNjS01dw1iTXpFyaLXwZ8nBkek+NHL37w@mail.gmail.com>
- <11781d7e-d9de-f889-ff57-9d26d92ada44@netscape.net>
- <16cb5f73-ac85-5094-3cd1-ec91cb47fb99@netscape.net>
- <CAP-5=fXjBBbU3EHD5iY6VMKMo3wj+dJteeqBf5B9m464HtdF3Q@mail.gmail.com>
- <806d152f-358b-572a-64f2-798fe7783f93@netscape.net>
- <20220818030335.GB30503@leoy-huanghe>
- <CAP-5=fX8OVBFGXAgshstMBMFo4ULvMBdZnE_2h-RsamJ6q1qow@mail.gmail.com>
- <Yv8yRv2BMVgmb/n+@leoy-yangtze.lan>
-Content-Language: en-US
-From:   Chuck Zmudzinski <brchuckz@netscape.net>
-In-Reply-To: <Yv8yRv2BMVgmb/n+@leoy-yangtze.lan>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-X-Mailer: WebService/1.1.20560 mail.backend.jedi.jws.acl:role.jedi.acl.token.atz.jws.hermes.aol
+        LKML <linux-kernel@vger.kernel.org>,
+        Ian Rogers <irogers@google.com>,
+        linux-perf-users@vger.kernel.org
+Subject: Re: [PATCH 0/4] perf tools: Support reading PERF_FORMAT_LOST (v3)
+Message-ID: <Yv+rpO2Zvt1A5cp3@kernel.org>
+References: <20220819003644.508916-1-namhyung@kernel.org>
+ <Yv9rplmtHB5fZsv+@krava>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <Yv9rplmtHB5fZsv+@krava>
+X-Url:  http://acmel.wordpress.com
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-On 8/19/2022 2:48 AM, Leo Yan wrote:
-> On Thu, Aug 18, 2022 at 07:52:22AM -0700, Ian Rogers wrote:
->
-> [...]
->
-> > > > I see this has already been committed. I agree it should not
-> > > > stay in the kernel tree for long. At some point in the future
-> > > > it will most likely cause problems if it is not reverted.
-> > >
->
->
-> It's fine for me to revert this patch in an appropriate time.
+Em Fri, Aug 19, 2022 at 12:53:26PM +0200, Jiri Olsa escreveu:
+> On Thu, Aug 18, 2022 at 05:36:40PM -0700, Namhyung Kim wrote:
+> > Hello,
+> > 
+> > The kernel v6.0 added PERF_FORMAT_LOST which can read a number of lost
+> > samples for the given event.  As it can change the output format of
+> > read(2) and perf sample data, it needs to access them carefully.
+> > 
+> > Changes in v3)
+> >  * add sample_read_group__for_each()  (Jiri)
+> 
+> Acked-by: Jiri Olsa <jolsa@kernel.org>
 
-An appropriate time presumably means when there is no more significant
-demand for mainline kernel support on older distros like RHEL 7 and clones
-that are still using python2. I also presume you plan to post the proposed
-revert to the appropriate mailing lists before committing it, giving time for
-anyone who wants to keep python2 compatibility a chance to make their
-case.
+Thanks, updated the patchset in my branch.
 
-Thanks,
+- Arnaldo
+ 
+> thanks,
+> jirka
+> 
+> > 
+> > Changes in v2)
+> >  * add a comment in perf_evsel__read_group()  (Jiri)
+> >  * simplify perf_evsel__adjust_values()  (Jiri)
+> > 
+> > 
+> > You can get the code from 'perf/read-lost-v3' brach on
+> > 
+> >   git://git.kernel.org/pub/scm/linux/kernel/git/namhyung/linux-perf.git
+> > 
+> > Thanks,
+> > Namhyung
+> > 
+> > Namhyung Kim (4):
+> >   tools headers UAPI: Sync linux/perf_event.h with the kernel sources
+> >   tools lib perf: Handle read format in perf_evsel__read()
+> >   tools lib perf: Add a test case for read formats
+> >   perf tools: Support reading PERF_FORMAT_LOST
+> > 
+> >  tools/include/uapi/linux/perf_event.h         |   5 +-
+> >  tools/lib/perf/evsel.c                        |  79 ++++++++-
+> >  tools/lib/perf/include/perf/event.h           |   3 +-
+> >  tools/lib/perf/include/perf/evsel.h           |   4 +-
+> >  tools/lib/perf/tests/test-evsel.c             | 161 ++++++++++++++++++
+> >  tools/perf/tests/sample-parsing.c             |  14 +-
+> >  tools/perf/util/event.h                       |  21 ++-
+> >  tools/perf/util/evsel.c                       |  29 ++--
+> >  .../scripting-engines/trace-event-python.c    |  19 ++-
+> >  tools/perf/util/session.c                     |  35 ++--
+> >  tools/perf/util/synthetic-events.c            |  32 +++-
+> >  11 files changed, 356 insertions(+), 46 deletions(-)
+> > 
+> > 
+> > base-commit: 568035b01cfb107af8d2e4bd2fb9aea22cf5b868
+> > -- 
+> > 2.37.1.595.g718a3a8f04-goog
+> > 
 
-Chuck
+-- 
+
+- Arnaldo
