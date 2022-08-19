@@ -2,227 +2,129 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A9784C00140
-	for <linux-perf-users@archiver.kernel.org>; Fri, 19 Aug 2022 03:17:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DC354C25B0E
+	for <linux-perf-users@archiver.kernel.org>; Fri, 19 Aug 2022 05:54:05 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S244813AbiHSDRF (ORCPT
+        id S1346194AbiHSFyF (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Thu, 18 Aug 2022 23:17:05 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58296 "EHLO
+        Fri, 19 Aug 2022 01:54:05 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51048 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S238585AbiHSDRD (ORCPT
+        with ESMTP id S1346273AbiHSFx7 (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Thu, 18 Aug 2022 23:17:03 -0400
-Received: from mail-ed1-x52a.google.com (mail-ed1-x52a.google.com [IPv6:2a00:1450:4864:20::52a])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4F2FF5282C;
-        Thu, 18 Aug 2022 20:16:59 -0700 (PDT)
-Received: by mail-ed1-x52a.google.com with SMTP id c39so4168580edf.0;
-        Thu, 18 Aug 2022 20:16:59 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20210112;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:from:to:cc;
-        bh=HDElL7NIZL2WbvndTq4kcy0ls9oQ+UMEI0zSzU1XXPk=;
-        b=ZO6AYyZPU3ymxEe4IhRZ3wSLKJbYc3rwxB+8qyavPb7MZAsuaiMsZIj/IVHHlFk1ta
-         eiP/2GqxHxFdcYWudiUXQE/ooDhTZUyM43GonZAPRtOScfM44ONLRGv1qql88tNPC0Yf
-         81fq1+UAHHFMVsprbFg0ZNZkZTqTi3Dr4hGl8yMkOHBKvhcHB9LZkGi58lSWxctgJcyg
-         oyXcmH5X0lb5pzsNS478vfbqSLu3GhF0lgHzTTYwgz8RJ4PMnsYKoy6t6Ca/9wgySZV9
-         1yzPxRuAAZ+BHi45JCBex9SP9ikyV7a2cfvX3FuUA6e7tpMeAjCsCBldqFoMmoh0F2hI
-         9l2w==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc;
-        bh=HDElL7NIZL2WbvndTq4kcy0ls9oQ+UMEI0zSzU1XXPk=;
-        b=MsdjighiJzW1TgN+cDQWYAOM8710/o4ZQUOfTukL16GAi44gKFQDGrSay1S8G55sfq
-         qxsR6M9PgaosSw97LSEEG29/xv22R294jFGTAY3PQfs4yyHwY8u7KNYejcT41pOU++iQ
-         AiHoa8LUxVA8M8SRSMkUOJLjvMPRKqgzRMhofnV544tRKoUhjZ0ZN9reEuGqanV7Qkfz
-         Ef67WnrmDZH1Zz3RTfZDYrnpZQNpkoMYqta+NVNDqMb48QcmRC4csUDz+04zjOXWhIFQ
-         O43t/P/Hdmrc7KdmtrtqICEKLaYyYlPYQK3GhHWm68WOF84g0RvQAjEsTOqCKomH6k9o
-         opcQ==
-X-Gm-Message-State: ACgBeo0iucMXQvrutOajh+MjKnX1irKR+ilwuA+dcDqJ6T9+RVceiftJ
-        LSjOFKsrARrHZVfu+jTP/og4SUon9CafOROT/VY=
-X-Google-Smtp-Source: AA6agR5hufcDZ3BAgZXq3ekWifHid4bZ0OYreqchGdeOM0IVytrwyTtUZ1CgQKMlCc9VuSOVDMlIfNuat4PBF+VbIks=
-X-Received: by 2002:a05:6402:5c9:b0:446:fb0:56bb with SMTP id
- n9-20020a05640205c900b004460fb056bbmr4282301edx.173.1660879017761; Thu, 18
- Aug 2022 20:16:57 -0700 (PDT)
+        Fri, 19 Aug 2022 01:53:59 -0400
+Received: from mail.zeus03.de (www.zeus03.de [194.117.254.33])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9F1243C157
+        for <linux-perf-users@vger.kernel.org>; Thu, 18 Aug 2022 22:53:57 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=simple; d=sang-engineering.com; h=
+        date:from:to:cc:subject:message-id:references:mime-version
+        :content-type:in-reply-to; s=k1; bh=LXIju/pZq7pSNW6LnM8b4sTVTukd
+        FnVNMRzhxn6c1LQ=; b=zuNyA9ScwNDOoqj1m0F1nLXHuOuHWyBfZTuf7kGHaDi/
+        NB2VMiPDZSHWlp3JKPA9dZWtPjROsS909xjd10SGWpkdL5Yb8VLziuAZZEp9Qu2P
+        IYOhMSR8tBCyRo8SibXE9UDWqoiJB+2Xt5E8Z1GcxHj3afBeYJkkn/NU5UnnXTE=
+Received: (qmail 4115059 invoked from network); 19 Aug 2022 07:53:52 +0200
+Received: by mail.zeus03.de with ESMTPSA (TLS_AES_256_GCM_SHA384 encrypted, authenticated); 19 Aug 2022 07:53:52 +0200
+X-UD-Smtp-Session: l3s3148p1@Scn+uJHmpZMucrTL
+Date:   Fri, 19 Aug 2022 07:53:51 +0200
+From:   Wolfram Sang <wsa+renesas@sang-engineering.com>
+To:     Steven Rostedt <rostedt@goodmis.org>
+Cc:     linux-kernel@vger.kernel.org, Alexei Starovoitov <ast@kernel.org>,
+        Daniel Borkmann <daniel@iogearbox.net>,
+        Andrii Nakryiko <andrii@kernel.org>,
+        Martin KaFai Lau <martin.lau@linux.dev>,
+        Song Liu <song@kernel.org>, Yonghong Song <yhs@fb.com>,
+        John Fastabend <john.fastabend@gmail.com>,
+        KP Singh <kpsingh@kernel.org>,
+        Stanislav Fomichev <sdf@google.com>,
+        Hao Luo <haoluo@google.com>, Jiri Olsa <jolsa@kernel.org>,
+        Tejun Heo <tj@kernel.org>, Zefan Li <lizefan.x@bytedance.com>,
+        Johannes Weiner <hannes@cmpxchg.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        Arnaldo Carvalho de Melo <acme@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Namhyung Kim <namhyung@kernel.org>,
+        Petr Mladek <pmladek@suse.com>,
+        Sergey Senozhatsky <senozhatsky@chromium.org>,
+        John Ogness <john.ogness@linutronix.de>,
+        John Stultz <jstultz@google.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Stephen Boyd <sboyd@kernel.org>, bpf@vger.kernel.org,
+        cgroups@vger.kernel.org, linux-perf-users@vger.kernel.org
+Subject: Re: [PATCH] kernel: move from strlcpy with unused retval to strscpy
+Message-ID: <Yv8lb1tUKxYlAcp8@shikoro>
+Mail-Followup-To: Wolfram Sang <wsa+renesas@sang-engineering.com>,
+        Steven Rostedt <rostedt@goodmis.org>, linux-kernel@vger.kernel.org,
+        Alexei Starovoitov <ast@kernel.org>,
+        Daniel Borkmann <daniel@iogearbox.net>,
+        Andrii Nakryiko <andrii@kernel.org>,
+        Martin KaFai Lau <martin.lau@linux.dev>, Song Liu <song@kernel.org>,
+        Yonghong Song <yhs@fb.com>,
+        John Fastabend <john.fastabend@gmail.com>,
+        KP Singh <kpsingh@kernel.org>, Stanislav Fomichev <sdf@google.com>,
+        Hao Luo <haoluo@google.com>, Jiri Olsa <jolsa@kernel.org>,
+        Tejun Heo <tj@kernel.org>, Zefan Li <lizefan.x@bytedance.com>,
+        Johannes Weiner <hannes@cmpxchg.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        Arnaldo Carvalho de Melo <acme@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Namhyung Kim <namhyung@kernel.org>, Petr Mladek <pmladek@suse.com>,
+        Sergey Senozhatsky <senozhatsky@chromium.org>,
+        John Ogness <john.ogness@linutronix.de>,
+        John Stultz <jstultz@google.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Stephen Boyd <sboyd@kernel.org>, bpf@vger.kernel.org,
+        cgroups@vger.kernel.org, linux-perf-users@vger.kernel.org
+References: <20220818210202.8227-1-wsa+renesas@sang-engineering.com>
+ <20220818181506.0d838d02@gandalf.local.home>
 MIME-Version: 1.0
-References: <20220817134324.702278-1-tcwzxx@gmail.com> <CAP-5=fVrpsid2_Ku=5hHeFSQ5Q1zE--5qszWw38ZVciq9Rxd5A@mail.gmail.com>
- <CAHkAAVrhD4Z4=NtwD-sA-vwpQTj=sHB5V7Kr0KNFNSVsu+-DnQ@mail.gmail.com> <CAP-5=fUfpmLPfAP1NZ+O5UTWYrAvzhsepvCkYpj3UE9Q5e6=mg@mail.gmail.com>
-In-Reply-To: <CAP-5=fUfpmLPfAP1NZ+O5UTWYrAvzhsepvCkYpj3UE9Q5e6=mg@mail.gmail.com>
-From:   zhizhi xu <tcwzxx@gmail.com>
-Date:   Fri, 19 Aug 2022 11:18:55 +0800
-Message-ID: <CAHkAAVprHsOnsEcNN2u3VExEXxi6in9UKtVkWymOPebpbjXVpg@mail.gmail.com>
-Subject: Re: [PATCH] perf tool: add skip_not_exec_file_map_events option
-To:     Ian Rogers <irogers@google.com>
-Cc:     peterz@infradead.org, mingo@redhat.com, acme@kernel.org,
-        alexander.shishkin@linux.intel.com, jolsa@kernel.org,
-        linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: multipart/signed; micalg=pgp-sha512;
+        protocol="application/pgp-signature"; boundary="imGX9vdjm3pSRE9T"
+Content-Disposition: inline
+In-Reply-To: <20220818181506.0d838d02@gandalf.local.home>
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-On Thu, 18 Aug 2022 at 23:00, Ian Rogers <irogers@google.com> wrote:
->
-> On Wed, Aug 17, 2022 at 8:24 PM lika you <tcwzxx@gmail.com> wrote:
-> >
-> > I'm so sorry for forgetting to reply to all. Here is the reply again.
-> >
-> > Thanks for the reply.
-> >
-> > The background is we have two types of tasks running on the same host.The high
-> > priority one which is CPU overhead and the low priority which is IO overhead.
-> > The high priority task has mmap many files as shared memory. The low priority
-> > task may load multi TB data from SSD at once time which will cause the high
-> > priority task file page cache to be swapped out. So we mmap all files with the
-> > PROT_EXEC flag to prevent hot page cache to be swapped out. That cause
-> > too many executable memory regions without symbols on it.
-> >
-> > The trick is implementate here.
-> > https://github.com/torvalds/linux/blob/master/mm/vmscan.c#L2572
-> >
-> > Thanks again
->
-> Thanks. So you are making data pages executable for the sake of
-> getting "better chances to stay in memory under moderate memory
-> pressure." Having lots of executable pages in your program isn't
-> great, I'm reminded of efforts to stop stacks from being executable.
-> This also feels like a case where madvise should be being used, for
-> example, the MADV_WILLNEED option. Given this, I'm not sure supporting
-> this case in the perf tool makes sense.
->
-> > On Thu, 18 Aug 2022 at 02:13, Ian Rogers <irogers@google.com> wrote:
-> > >
-> > > On Wed, Aug 17, 2022 at 6:43 AM tcwzxx <tcwzxx@gmail.com> wrote:
-> > > >
-> > > > When generate the flame graph, the perf-script subcommand will
-> > > > process all mmap event and add them to the rbtree. The 240,000
-> > > > mmap region takes about 5 minutes, which is not useful for flame
-> > > > graph. So add the skip-not-exec-file-map-events option to skip
-> > > > not PROT_EXEC flag memory regions.
-> > > >
-> > > > Signed-off-by: tcwzxx <tcwzxx@gmail.com>
-> > >
-> > > Could you provide more context? A reproduction?
-> > >
-> > > When we synthesize mmap events we drop non-executable pages:
-> > > https://github.com/torvalds/linux/blob/master/tools/perf/util/synthetic-events.c#L466
-> > >
-> > > Similarly in the kernel for the "dummy" event:
-> > > https://github.com/torvalds/linux/blob/master/kernel/events/core.c#L8258
-> > >
-> > > Thanks,
-> > > Ian
-> > >
-> > > > ---
-> > > >  tools/perf/builtin-report.c | 2 ++
-> > > >  tools/perf/builtin-script.c | 3 +++
-> > > >  tools/perf/util/machine.c   | 3 +++
-> > > >  tools/perf/util/map.c       | 5 +++++
-> > > >  tools/perf/util/map.h       | 2 ++
-> > > >  5 files changed, 15 insertions(+)
-> > > >
-> > > > diff --git a/tools/perf/builtin-report.c b/tools/perf/builtin-report.c
-> > > > index 91ed41cc7d88..c28eb9450a66 100644
-> > > > --- a/tools/perf/builtin-report.c
-> > > > +++ b/tools/perf/builtin-report.c
-> > > > @@ -1364,6 +1364,8 @@ int cmd_report(int argc, const char **argv)
-> > > >                     "Disable raw trace ordering"),
-> > > >         OPT_BOOLEAN(0, "skip-empty", &report.skip_empty,
-> > > >                     "Do not display empty (or dummy) events in the output"),
-> > > > +       OPT_BOOLEAN(0, "skip-not-exec-file-map_events", &skip_not_exec_file_map_events,
-> > > > +                   "skip not exec map events"),
-> > > >         OPT_END()
-> > > >         };
-> > > >         struct perf_data data = {
-> > > > diff --git a/tools/perf/builtin-script.c b/tools/perf/builtin-script.c
-> > > > index 13580a9c50b8..e3f4e5e654c9 100644
-> > > > --- a/tools/perf/builtin-script.c
-> > > > +++ b/tools/perf/builtin-script.c
-> > > > @@ -32,6 +32,7 @@
-> > > >  #include "util/time-utils.h"
-> > > >  #include "util/path.h"
-> > > >  #include "util/event.h"
-> > > > +#include "util/map.h"
-> > > >  #include "ui/ui.h"
-> > > >  #include "print_binary.h"
-> > > >  #include "archinsn.h"
-> > > > @@ -3936,6 +3937,8 @@ int cmd_script(int argc, const char **argv)
-> > > >                     "Guest code can be found in hypervisor process"),
-> > > >         OPT_BOOLEAN('\0', "stitch-lbr", &script.stitch_lbr,
-> > > >                     "Enable LBR callgraph stitching approach"),
-> > > > +       OPT_BOOLEAN(0, "skip-not-exec-map_events", &skip_not_exec_file_map_events,
-> > > > +                   "skip not exec map events"),
-> > > >         OPTS_EVSWITCH(&script.evswitch),
-> > > >         OPT_END()
-> > > >         };
-> > > > diff --git a/tools/perf/util/machine.c b/tools/perf/util/machine.c
-> > > > index 2a16cae28407..21dde9f9935c 100644
-> > > > --- a/tools/perf/util/machine.c
-> > > > +++ b/tools/perf/util/machine.c
-> > > > @@ -1904,6 +1904,9 @@ int machine__process_mmap2_event(struct machine *machine,
-> > > >         if (thread == NULL)
-> > > >                 goto out_problem;
-> > > >
-> > > > +       if (skip_not_exec_file_map_events && !(event->mmap2.prot & PROT_EXEC))
-> > > > +               goto out_problem;
->
-> Do you mean to drop all executable pages with the flag here or just
-> those with the DSO__TYPE_UNKNOWN (as below)? It reads that all
-> executable pages will be dropped.
->
-> Thanks,
-> Ian
->
 
-Thank you for your advice.
-I mean remove non-executable pages and non-ELF files
+--imGX9vdjm3pSRE9T
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-!(event->mmap2.prot & PROT_EXEC)
+Hi Steven,
 
-Thanks
+> But in my cases I actually do trust the source string. They are all
 
-> > > > +
-> > > >         map = map__new(machine, event->mmap2.start,
-> > > >                         event->mmap2.len, event->mmap2.pgoff,
-> > > >                         &dso_id, event->mmap2.prot,
-> > > > diff --git a/tools/perf/util/map.c b/tools/perf/util/map.c
-> > > > index e0aa4a254583..2b51ca012c91 100644
-> > > > --- a/tools/perf/util/map.c
-> > > > +++ b/tools/perf/util/map.c
-> > > > @@ -16,6 +16,8 @@
-> > > >  #include "thread.h"
-> > > >  #include "vdso.h"
-> > > >
-> > > > +bool skip_not_exec_file_map_events;
-> > > > +
-> > > >  static inline int is_android_lib(const char *filename)
-> > > >  {
-> > > >         return strstarts(filename, "/data/app-lib/") ||
-> > > > @@ -168,6 +170,9 @@ struct map *map__new(struct machine *machine, u64 start, u64 len,
-> > > >                 if (dso == NULL)
-> > > >                         goto out_delete;
-> > > >
-> > > > +               if (skip_not_exec_file_map_events && dso__type(dso, machine) == DSO__TYPE_UNKNOWN)
-> > > > +                       goto out_delete;
-> > > > +
-> > > >                 map__init(map, start, start + len, pgoff, dso);
-> > > >
-> > > >                 if (anon || no_dso) {
-> > > > diff --git a/tools/perf/util/map.h b/tools/perf/util/map.h
-> > > > index 3dcfe06db6b3..67b0e0f9f0ae 100644
-> > > > --- a/tools/perf/util/map.h
-> > > > +++ b/tools/perf/util/map.h
-> > > > @@ -11,6 +11,8 @@
-> > > >  #include <stdbool.h>
-> > > >  #include <linux/types.h>
-> > > >
-> > > > +extern bool skip_not_exec_file_map_events;
-> > > > +
-> > > >  struct dso;
-> > > >  struct maps;
-> > > >  struct machine;
-> > > > --
-> > > > 2.34.1
-> > > >
+The ultimate goal is to remove strlcpy entirely. My motivation is to get
+rid of the extra work for maintainers that they need to ensure that the
+author of a patch paid attention to the detail that the source string
+must be trusted.
+
+Happy hacking,
+
+   Wolfram
+
+--imGX9vdjm3pSRE9T
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAABCgAdFiEEOZGx6rniZ1Gk92RdFA3kzBSgKbYFAmL/JW8ACgkQFA3kzBSg
+Kbb/cxAAnj8gY2iJMJEMUNF2CQXBszyFdlW8pM+4lHflaDhlrdBOhhKlq9vCX5Td
+aAs0S5K8tk2DANywxX4gtQHGIR9h9HfDBFOTAONRnJ5fkmb6olQFUBqhIjQt/uNR
+VxjPKDYmWQqBFv/F4dAxnesfIA8M34Psd0zFVfNMFbu8hVcsE6VaLcUCU2AskKQx
+Q0ULNoIW9MGMSfZhaHH1iO7sowNu+Wy2BrBbb5+Bjzo85BSseCgyHTb1lgio2bSN
+OZTTWZV6AOJWy7C14VMKm5/swgyjcqaiyNZPGqtMUxEakGIer+4fd1AH43ILsEk/
+PoGsHT9F+myYBnlBAyRIhO4eSGxTJGekD4vRT/wVCYe1IrPRqFyfa7MaNitjzSTS
+ObyG7vVbwoCl4tzPCGXMU46b0Ydq8dYw5XBP1xQmcK77Z8IZY9WyIOY0vbcPizo6
+IcRK3ubeUTz/FOw9IG+sZ8kL+TcchTyoKKP6a68IzisCsdeOPPpGT6VEDPxuM0S0
+X7nfso4wX7FXzDUYy9lbhQrJ3YnxUvGuqoBHpM9fAXwYQ0PcBgUWVSaWZEE/X50m
+VB5k/mTzhrnVAjFwhaLyaJei10mjQ4vDUOD5LSvzkGpzbUk8iDHNDKXSKued8t9u
+nH5ZIQ0JLb5roFTZjnvbSHRGEMTkPkIEibxH/uSoEJCWaoJehDo=
+=t18q
+-----END PGP SIGNATURE-----
+
+--imGX9vdjm3pSRE9T--
