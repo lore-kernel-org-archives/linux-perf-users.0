@@ -2,53 +2,54 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4BF01C28B2B
-	for <linux-perf-users@archiver.kernel.org>; Fri, 19 Aug 2022 00:36:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A52F5C00140
+	for <linux-perf-users@archiver.kernel.org>; Fri, 19 Aug 2022 00:36:53 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S243454AbiHSAgu (ORCPT
+        id S242755AbiHSAgw (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Thu, 18 Aug 2022 20:36:50 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35568 "EHLO
+        Thu, 18 Aug 2022 20:36:52 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35588 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S241729AbiHSAgt (ORCPT
+        with ESMTP id S243261AbiHSAgu (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Thu, 18 Aug 2022 20:36:49 -0400
-Received: from mail-pl1-x62c.google.com (mail-pl1-x62c.google.com [IPv6:2607:f8b0:4864:20::62c])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 93D7FDEA78;
-        Thu, 18 Aug 2022 17:36:47 -0700 (PDT)
-Received: by mail-pl1-x62c.google.com with SMTP id jm11so2831855plb.13;
-        Thu, 18 Aug 2022 17:36:47 -0700 (PDT)
+        Thu, 18 Aug 2022 20:36:50 -0400
+Received: from mail-pf1-x42d.google.com (mail-pf1-x42d.google.com [IPv6:2607:f8b0:4864:20::42d])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BEB28DEA78;
+        Thu, 18 Aug 2022 17:36:49 -0700 (PDT)
+Received: by mail-pf1-x42d.google.com with SMTP id x19so204899pfq.1;
+        Thu, 18 Aug 2022 17:36:49 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20210112;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:sender:from:to:cc;
-        bh=pp/XSSy5OE6phmxdJXvlm4Vb1JMIb27/OWFRn//wD5k=;
-        b=LbpnLZb0udj4bL0F73AZ4ywXnPCA/ooyyznzjWvZbNoPKA5S67IN5LcXr5Y1wVZm0D
-         yGUq/JH8Xw3TqB++UybXdJexlBIieRS9TtR2XbVi+tnlHc7o6pslxPDC6Beczj4yRBQo
-         BGP+vn7hyKQvJY3u+94M9LkUtDGuwT0gpEK2ss3Fwyo7jRQUlMnwUyNiN58y9Nmt/djf
-         5E4QZR1m3rHxk1Plel21M1xLfCLuEXGGRS6ZlaaX8RK3AMVvdrtDxknT53ccrvlmOx/4
-         DrKHgxopREyKKX/2GnFybnqeGpBH7lKXO/bHfJHZMgFLcpg69L41SbjX3B+y4PPjS6bf
-         WCuA==
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:sender:from:to:cc;
+        bh=JozqI5HGaTqIqUqt2jBuKrvzFFJykmSG4D6AZASqs+k=;
+        b=CraHROS+NJtL9SDztOre+0LV3k2cwcFvVDvpbMu+G5jpBWjogKNH90GAYIc18Aahxc
+         63LxIuF5eZ0DLYq5BLvZKTePK/kNoYBhvUS1tCkpCQTqGk0J50qznbNkHyypeUxFjWAG
+         4OIi+3wRMDOV82uwc0C4wg+PJQEZlzNpCoupgEjNBmYJLH2GqegJFjyNiWWiMmzr1wQg
+         Q6jvMfoDSySu/gFWKB6ndFQ1Qu4xthMGs9F63iwCmDwtDPgN1KsL87WISz1XZK+1gRED
+         m9Y6b4mN+T++RSsipMPkNIMeBVH8S2sBLWNOZlyhm3N9pNJ101VUVC8DrWEZq+NMLhf7
+         3QgA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:sender:x-gm-message-state:from:to:cc;
-        bh=pp/XSSy5OE6phmxdJXvlm4Vb1JMIb27/OWFRn//wD5k=;
-        b=ITrKrh3yu5irsRDk4Ak/P7z4G0Ygv0mLlA1JHPcOumt6kwb1mwZYDxE1F6sA84PrlG
-         nrFTnOl3od4ZXAnBNslunDlDzDTxeNW76fcwDLZe0Urrtt6IUpn2Z8yKMmsIP4eN0DZ9
-         I8f+TBlzrMg0WX2TGKPQO4frjvYgsRJeGe4liO/HayqFdPR/IV5wHz6Q1IPyTUwDzxjp
-         mOSbbDE/I4dH0v8s56hZ73F7mn0kXDOvfIu6CjNxOwNP8BPlzWwAd5hjlM8P/xfHy00Z
-         WhVRaAuI9vRjIp4uyog1jZKxbo0NktKsnVm6lilHnCwP8PVMhLZOmXWGzdI24fLBrzWv
-         MA+w==
-X-Gm-Message-State: ACgBeo2NhyCECcGKejQd52NnEYmmv+7/gkUrMzFOfGYrSgBJMgO/9ne2
-        npkFJImXl4eISltvtsbyddiUo9D8uhmOkQ==
-X-Google-Smtp-Source: AA6agR4aEl0z5yJsxY1hhPGTnG06y1kUOQXo7IBwmPGEwx6RHZiehfHAAJb9mwd2/5+rUeDcxMBo6w==
-X-Received: by 2002:a17:90b:33c4:b0:1f5:8428:beb9 with SMTP id lk4-20020a17090b33c400b001f58428beb9mr11233991pjb.95.1660869406848;
-        Thu, 18 Aug 2022 17:36:46 -0700 (PDT)
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:sender:x-gm-message-state:from
+         :to:cc;
+        bh=JozqI5HGaTqIqUqt2jBuKrvzFFJykmSG4D6AZASqs+k=;
+        b=w289hpWwH8+4/z5pZqb+BhW7FAwJEM4G6ceq7+59bi4OgED35Mm81LXu5PHw89+FZA
+         Pmcg55+aQYPstBnNBDOmWgAeX0O0sASv84VRnAb/MBRbmsxhemdspZ57qUniRrFm8BVU
+         PBDdQ1rz6MXr4+R/PkRya9NWJx7YkwBdi377IOrAd1tPbx/6iaAMHvtQYXs9edsEAxCk
+         ikidb+pYlkpWT3aks3ZfTvlUufIiYO4F8GiTP7oVXxUqmA8yUxjJwJq9KgfrrGpvZ+Jq
+         DUY+wqvNHG0kK5gD9+6r6ptFm33yJTKhUWT7XBEN3cXXqMm4+UUedf99x/dTGCgUiOEH
+         QmLQ==
+X-Gm-Message-State: ACgBeo0kxfmQp03Po4ivjESxLDxGVKsvtVCuGYdsn0HbqTonl6tyIgIJ
+        sRfpAlz6ZvAKXaSunp4tUhv1Rd0wfEOc/Q==
+X-Google-Smtp-Source: AA6agR7jbzEls61dp0C+sz/vuCAt0Fo6xmASdDDEnzuR5s2axkwcpWNx+poX9JZL908ldPDxmiMgqw==
+X-Received: by 2002:a05:6a00:14d3:b0:52f:918f:c3b8 with SMTP id w19-20020a056a0014d300b0052f918fc3b8mr5391066pfu.1.1660869409160;
+        Thu, 18 Aug 2022 17:36:49 -0700 (PDT)
 Received: from balhae.hsd1.ca.comcast.net ([2601:647:6780:1040:436c:3fa9:2b77:a856])
-        by smtp.gmail.com with ESMTPSA id e5-20020a17090a4a0500b001f303d149casm2057567pjh.50.2022.08.18.17.36.45
+        by smtp.gmail.com with ESMTPSA id e5-20020a17090a4a0500b001f303d149casm2057567pjh.50.2022.08.18.17.36.48
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 18 Aug 2022 17:36:46 -0700 (PDT)
+        Thu, 18 Aug 2022 17:36:48 -0700 (PDT)
 Sender: Namhyung Kim <namhyung@gmail.com>
 From:   Namhyung Kim <namhyung@kernel.org>
 To:     Arnaldo Carvalho de Melo <acme@kernel.org>,
@@ -58,58 +59,187 @@ Cc:     Ingo Molnar <mingo@kernel.org>,
         LKML <linux-kernel@vger.kernel.org>,
         Ian Rogers <irogers@google.com>,
         linux-perf-users@vger.kernel.org
-Subject: [PATCH 0/4] perf tools: Support reading PERF_FORMAT_LOST (v3)
-Date:   Thu, 18 Aug 2022 17:36:40 -0700
-Message-Id: <20220819003644.508916-1-namhyung@kernel.org>
+Subject: [PATCH 2/4] tools lib perf: Handle read format in perf_evsel__read()
+Date:   Thu, 18 Aug 2022 17:36:42 -0700
+Message-Id: <20220819003644.508916-3-namhyung@kernel.org>
 X-Mailer: git-send-email 2.37.1.595.g718a3a8f04-goog
+In-Reply-To: <20220819003644.508916-1-namhyung@kernel.org>
+References: <20220819003644.508916-1-namhyung@kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-Hello,
+The perf_counts_values should be increased to read the new lost data.
+Also adjust values after read according the read format.
 
-The kernel v6.0 added PERF_FORMAT_LOST which can read a number of lost
-samples for the given event.  As it can change the output format of
-read(2) and perf sample data, it needs to access them carefully.
+This supports PERF_FORMAT_GROUP which has a different data format but
+it's only available for leader events.  Currently it doesn't have an API
+to read sibling (member) events in the group.  But users may read the
+sibling event directly.
 
-Changes in v3)
- * add sample_read_group__for_each()  (Jiri)
+Also reading from mmap would be disabled when the read format has ID or
+LOST bit as it's not exposed via mmap.
 
-Changes in v2)
- * add a comment in perf_evsel__read_group()  (Jiri)
- * simplify perf_evsel__adjust_values()  (Jiri)
+Signed-off-by: Namhyung Kim <namhyung@kernel.org>
+---
+ tools/lib/perf/evsel.c              | 79 ++++++++++++++++++++++++++++-
+ tools/lib/perf/include/perf/event.h |  3 +-
+ tools/lib/perf/include/perf/evsel.h |  4 +-
+ 3 files changed, 83 insertions(+), 3 deletions(-)
 
-
-You can get the code from 'perf/read-lost-v3' brach on
-
-  git://git.kernel.org/pub/scm/linux/kernel/git/namhyung/linux-perf.git
-
-Thanks,
-Namhyung
-
-Namhyung Kim (4):
-  tools headers UAPI: Sync linux/perf_event.h with the kernel sources
-  tools lib perf: Handle read format in perf_evsel__read()
-  tools lib perf: Add a test case for read formats
-  perf tools: Support reading PERF_FORMAT_LOST
-
- tools/include/uapi/linux/perf_event.h         |   5 +-
- tools/lib/perf/evsel.c                        |  79 ++++++++-
- tools/lib/perf/include/perf/event.h           |   3 +-
- tools/lib/perf/include/perf/evsel.h           |   4 +-
- tools/lib/perf/tests/test-evsel.c             | 161 ++++++++++++++++++
- tools/perf/tests/sample-parsing.c             |  14 +-
- tools/perf/util/event.h                       |  21 ++-
- tools/perf/util/evsel.c                       |  29 ++--
- .../scripting-engines/trace-event-python.c    |  19 ++-
- tools/perf/util/session.c                     |  35 ++--
- tools/perf/util/synthetic-events.c            |  32 +++-
- 11 files changed, 356 insertions(+), 46 deletions(-)
-
-
-base-commit: 568035b01cfb107af8d2e4bd2fb9aea22cf5b868
+diff --git a/tools/lib/perf/evsel.c b/tools/lib/perf/evsel.c
+index 952f3520d5c2..8ce5bbd09666 100644
+--- a/tools/lib/perf/evsel.c
++++ b/tools/lib/perf/evsel.c
+@@ -305,6 +305,9 @@ int perf_evsel__read_size(struct perf_evsel *evsel)
+ 	if (read_format & PERF_FORMAT_ID)
+ 		entry += sizeof(u64);
+ 
++	if (read_format & PERF_FORMAT_LOST)
++		entry += sizeof(u64);
++
+ 	if (read_format & PERF_FORMAT_GROUP) {
+ 		nr = evsel->nr_members;
+ 		size += sizeof(u64);
+@@ -314,24 +317,98 @@ int perf_evsel__read_size(struct perf_evsel *evsel)
+ 	return size;
+ }
+ 
++/* This only reads values for the leader */
++static int perf_evsel__read_group(struct perf_evsel *evsel, int cpu_map_idx,
++				  int thread, struct perf_counts_values *count)
++{
++	size_t size = perf_evsel__read_size(evsel);
++	int *fd = FD(evsel, cpu_map_idx, thread);
++	u64 read_format = evsel->attr.read_format;
++	u64 *data;
++	int idx = 1;
++
++	if (fd == NULL || *fd < 0)
++		return -EINVAL;
++
++	data = calloc(1, size);
++	if (data == NULL)
++		return -ENOMEM;
++
++	if (readn(*fd, data, size) <= 0) {
++		free(data);
++		return -errno;
++	}
++
++	/*
++	 * This reads only the leader event intentionally since we don't have
++	 * perf counts values for sibling events.
++	 */
++	if (read_format & PERF_FORMAT_TOTAL_TIME_ENABLED)
++		count->ena = data[idx++];
++	if (read_format & PERF_FORMAT_TOTAL_TIME_RUNNING)
++		count->run = data[idx++];
++
++	/* value is always available */
++	count->val = data[idx++];
++	if (read_format & PERF_FORMAT_ID)
++		count->id = data[idx++];
++	if (read_format & PERF_FORMAT_LOST)
++		count->lost = data[idx++];
++
++	free(data);
++	return 0;
++}
++
++/*
++ * The perf read format is very flexible.  It needs to set the proper
++ * values according to the read format.
++ */
++static void perf_evsel__adjust_values(struct perf_evsel *evsel, u64 *buf,
++				      struct perf_counts_values *count)
++{
++	u64 read_format = evsel->attr.read_format;
++	int n = 0;
++
++	count->val = buf[n++];
++
++	if (read_format & PERF_FORMAT_TOTAL_TIME_ENABLED)
++		count->ena = buf[n++];
++
++	if (read_format & PERF_FORMAT_TOTAL_TIME_RUNNING)
++		count->run = buf[n++];
++
++	if (read_format & PERF_FORMAT_ID)
++		count->id = buf[n++];
++
++	if (read_format & PERF_FORMAT_LOST)
++		count->lost = buf[n++];
++}
++
+ int perf_evsel__read(struct perf_evsel *evsel, int cpu_map_idx, int thread,
+ 		     struct perf_counts_values *count)
+ {
+ 	size_t size = perf_evsel__read_size(evsel);
+ 	int *fd = FD(evsel, cpu_map_idx, thread);
++	u64 read_format = evsel->attr.read_format;
++	struct perf_counts_values buf;
+ 
+ 	memset(count, 0, sizeof(*count));
+ 
+ 	if (fd == NULL || *fd < 0)
+ 		return -EINVAL;
+ 
++	if (read_format & PERF_FORMAT_GROUP)
++		return perf_evsel__read_group(evsel, cpu_map_idx, thread, count);
++
+ 	if (MMAP(evsel, cpu_map_idx, thread) &&
++	    !(read_format & (PERF_FORMAT_ID | PERF_FORMAT_LOST)) &&
+ 	    !perf_mmap__read_self(MMAP(evsel, cpu_map_idx, thread), count))
+ 		return 0;
+ 
+-	if (readn(*fd, count->values, size) <= 0)
++	if (readn(*fd, buf.values, size) <= 0)
+ 		return -errno;
+ 
++	perf_evsel__adjust_values(evsel, buf.values, count);
+ 	return 0;
+ }
+ 
+diff --git a/tools/lib/perf/include/perf/event.h b/tools/lib/perf/include/perf/event.h
+index 556bb06798f2..38dd35cbca71 100644
+--- a/tools/lib/perf/include/perf/event.h
++++ b/tools/lib/perf/include/perf/event.h
+@@ -76,7 +76,7 @@ struct perf_record_lost_samples {
+ };
+ 
+ /*
+- * PERF_FORMAT_ENABLED | PERF_FORMAT_RUNNING | PERF_FORMAT_ID
++ * PERF_FORMAT_ENABLED | PERF_FORMAT_RUNNING | PERF_FORMAT_ID | PERF_FORMAT_LOST
+  */
+ struct perf_record_read {
+ 	struct perf_event_header header;
+@@ -85,6 +85,7 @@ struct perf_record_read {
+ 	__u64			 time_enabled;
+ 	__u64			 time_running;
+ 	__u64			 id;
++	__u64			 lost;
+ };
+ 
+ struct perf_record_throttle {
+diff --git a/tools/lib/perf/include/perf/evsel.h b/tools/lib/perf/include/perf/evsel.h
+index 699c0ed97d34..6f92204075c2 100644
+--- a/tools/lib/perf/include/perf/evsel.h
++++ b/tools/lib/perf/include/perf/evsel.h
+@@ -18,8 +18,10 @@ struct perf_counts_values {
+ 			uint64_t val;
+ 			uint64_t ena;
+ 			uint64_t run;
++			uint64_t id;
++			uint64_t lost;
+ 		};
+-		uint64_t values[3];
++		uint64_t values[5];
+ 	};
+ };
+ 
 -- 
 2.37.1.595.g718a3a8f04-goog
 
