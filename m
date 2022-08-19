@@ -2,449 +2,227 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0FC7BC00140
-	for <linux-perf-users@archiver.kernel.org>; Fri, 19 Aug 2022 00:37:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A9784C00140
+	for <linux-perf-users@archiver.kernel.org>; Fri, 19 Aug 2022 03:17:06 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S245581AbiHSAhK (ORCPT
+        id S244813AbiHSDRF (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Thu, 18 Aug 2022 20:37:10 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35710 "EHLO
+        Thu, 18 Aug 2022 23:17:05 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58296 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S244397AbiHSAg7 (ORCPT
+        with ESMTP id S238585AbiHSDRD (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Thu, 18 Aug 2022 20:36:59 -0400
-Received: from mail-pj1-x102d.google.com (mail-pj1-x102d.google.com [IPv6:2607:f8b0:4864:20::102d])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2BFD1DEA57;
-        Thu, 18 Aug 2022 17:36:52 -0700 (PDT)
-Received: by mail-pj1-x102d.google.com with SMTP id s31-20020a17090a2f2200b001faaf9d92easo6143144pjd.3;
-        Thu, 18 Aug 2022 17:36:52 -0700 (PDT)
+        Thu, 18 Aug 2022 23:17:03 -0400
+Received: from mail-ed1-x52a.google.com (mail-ed1-x52a.google.com [IPv6:2a00:1450:4864:20::52a])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4F2FF5282C;
+        Thu, 18 Aug 2022 20:16:59 -0700 (PDT)
+Received: by mail-ed1-x52a.google.com with SMTP id c39so4168580edf.0;
+        Thu, 18 Aug 2022 20:16:59 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20210112;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:sender:from:to:cc;
-        bh=04mrbdeAlasHwvT3Fh9Z1ZRe3mssxYDaUL9Qw3iJ218=;
-        b=W67ugkdGRf0QFsI7qCuz7kAaniBXo08JQsE+T0990WjQpCPoatY6g6RzcvXEevKV8e
-         m5Kow55avUG2gvSP+t0M3O+IGDfrp+WRJ4UkHB/08Z5/LAysqR0MXnck/BPfB6IaADJi
-         ByCud6oazyltIyfKQpCojCeF0/26OUvHqd92Q2MCk0wcRWP1czUuof2jH2UwhBRteomK
-         rMU1ysaPIk2enyeM9yXo5JTG6y9wUNjeCRM7dv1bw/NQ2BXf2Qju73TaVUcdY0jJjqcj
-         c/3gikL8w8Y0+Y/1nS2aoA0pLcIAD77jCYpnCxwElId+sd7nebL0A4B7UOXZ0wm/AwX5
-         Ybaw==
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:from:to:cc;
+        bh=HDElL7NIZL2WbvndTq4kcy0ls9oQ+UMEI0zSzU1XXPk=;
+        b=ZO6AYyZPU3ymxEe4IhRZ3wSLKJbYc3rwxB+8qyavPb7MZAsuaiMsZIj/IVHHlFk1ta
+         eiP/2GqxHxFdcYWudiUXQE/ooDhTZUyM43GonZAPRtOScfM44ONLRGv1qql88tNPC0Yf
+         81fq1+UAHHFMVsprbFg0ZNZkZTqTi3Dr4hGl8yMkOHBKvhcHB9LZkGi58lSWxctgJcyg
+         oyXcmH5X0lb5pzsNS478vfbqSLu3GhF0lgHzTTYwgz8RJ4PMnsYKoy6t6Ca/9wgySZV9
+         1yzPxRuAAZ+BHi45JCBex9SP9ikyV7a2cfvX3FuUA6e7tpMeAjCsCBldqFoMmoh0F2hI
+         9l2w==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:sender:x-gm-message-state:from
-         :to:cc;
-        bh=04mrbdeAlasHwvT3Fh9Z1ZRe3mssxYDaUL9Qw3iJ218=;
-        b=LZTbAFegImgoXi8PUg1XVbfVcdD0Tc9yc3tRLABE9tA2Dh13l2Dj0WG12AzjCAKxiI
-         QGbGKXUutue+6TY3CO0NCC5Lk71/IewVmpHgv3lqHzZBHKS8+p4xn9v5zVk9wK0UZUai
-         NgO0RUIPAGflprGeMZkjvFF49gRot/Ha5Xx9utsuJPqJckAdSYM7ShtuIZIu5ioQmi8J
-         dcGCus7fbinnvTbGCy3VL8fbxeVNzlR2gKYpgqBCDHE9DOFKylsB1WNhIZTjq1LQ8bFt
-         sL4C4DC9aghXQy1LDF5skYgKTnmYqgnlhfqmZYXIYWbmXSD6H0lIAjIHfm/uQ/it+68n
-         eG5w==
-X-Gm-Message-State: ACgBeo2iDSF7r03oRrHiQWuhxVR0pmXUMAEiUAsvkMMtLPLXC5MJLkdu
-        3Ece7cijA/bijIcSLKz2N4sJhABKTEXiyg==
-X-Google-Smtp-Source: AA6agR6hBL12ERR9NACDSfitNt3h81d91kkilJsGr0aC9QzGPirXScD1LcBdrOpJq5wcZDhIlYk3Ng==
-X-Received: by 2002:a17:902:ba96:b0:170:9f15:b997 with SMTP id k22-20020a170902ba9600b001709f15b997mr4693786pls.34.1660869411608;
-        Thu, 18 Aug 2022 17:36:51 -0700 (PDT)
-Received: from balhae.hsd1.ca.comcast.net ([2601:647:6780:1040:436c:3fa9:2b77:a856])
-        by smtp.gmail.com with ESMTPSA id e5-20020a17090a4a0500b001f303d149casm2057567pjh.50.2022.08.18.17.36.50
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 18 Aug 2022 17:36:51 -0700 (PDT)
-Sender: Namhyung Kim <namhyung@gmail.com>
-From:   Namhyung Kim <namhyung@kernel.org>
-To:     Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Jiri Olsa <jolsa@kernel.org>
-Cc:     Ingo Molnar <mingo@kernel.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Ian Rogers <irogers@google.com>,
-        linux-perf-users@vger.kernel.org
-Subject: [PATCH 4/4] perf tools: Support reading PERF_FORMAT_LOST
-Date:   Thu, 18 Aug 2022 17:36:44 -0700
-Message-Id: <20220819003644.508916-5-namhyung@kernel.org>
-X-Mailer: git-send-email 2.37.1.595.g718a3a8f04-goog
-In-Reply-To: <20220819003644.508916-1-namhyung@kernel.org>
-References: <20220819003644.508916-1-namhyung@kernel.org>
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:x-gm-message-state:from:to:cc;
+        bh=HDElL7NIZL2WbvndTq4kcy0ls9oQ+UMEI0zSzU1XXPk=;
+        b=MsdjighiJzW1TgN+cDQWYAOM8710/o4ZQUOfTukL16GAi44gKFQDGrSay1S8G55sfq
+         qxsR6M9PgaosSw97LSEEG29/xv22R294jFGTAY3PQfs4yyHwY8u7KNYejcT41pOU++iQ
+         AiHoa8LUxVA8M8SRSMkUOJLjvMPRKqgzRMhofnV544tRKoUhjZ0ZN9reEuGqanV7Qkfz
+         Ef67WnrmDZH1Zz3RTfZDYrnpZQNpkoMYqta+NVNDqMb48QcmRC4csUDz+04zjOXWhIFQ
+         O43t/P/Hdmrc7KdmtrtqICEKLaYyYlPYQK3GhHWm68WOF84g0RvQAjEsTOqCKomH6k9o
+         opcQ==
+X-Gm-Message-State: ACgBeo0iucMXQvrutOajh+MjKnX1irKR+ilwuA+dcDqJ6T9+RVceiftJ
+        LSjOFKsrARrHZVfu+jTP/og4SUon9CafOROT/VY=
+X-Google-Smtp-Source: AA6agR5hufcDZ3BAgZXq3ekWifHid4bZ0OYreqchGdeOM0IVytrwyTtUZ1CgQKMlCc9VuSOVDMlIfNuat4PBF+VbIks=
+X-Received: by 2002:a05:6402:5c9:b0:446:fb0:56bb with SMTP id
+ n9-20020a05640205c900b004460fb056bbmr4282301edx.173.1660879017761; Thu, 18
+ Aug 2022 20:16:57 -0700 (PDT)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+References: <20220817134324.702278-1-tcwzxx@gmail.com> <CAP-5=fVrpsid2_Ku=5hHeFSQ5Q1zE--5qszWw38ZVciq9Rxd5A@mail.gmail.com>
+ <CAHkAAVrhD4Z4=NtwD-sA-vwpQTj=sHB5V7Kr0KNFNSVsu+-DnQ@mail.gmail.com> <CAP-5=fUfpmLPfAP1NZ+O5UTWYrAvzhsepvCkYpj3UE9Q5e6=mg@mail.gmail.com>
+In-Reply-To: <CAP-5=fUfpmLPfAP1NZ+O5UTWYrAvzhsepvCkYpj3UE9Q5e6=mg@mail.gmail.com>
+From:   zhizhi xu <tcwzxx@gmail.com>
+Date:   Fri, 19 Aug 2022 11:18:55 +0800
+Message-ID: <CAHkAAVprHsOnsEcNN2u3VExEXxi6in9UKtVkWymOPebpbjXVpg@mail.gmail.com>
+Subject: Re: [PATCH] perf tool: add skip_not_exec_file_map_events option
+To:     Ian Rogers <irogers@google.com>
+Cc:     peterz@infradead.org, mingo@redhat.com, acme@kernel.org,
+        alexander.shishkin@linux.intel.com, jolsa@kernel.org,
+        linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-The recent kernel added lost count can be read from either read(2) or
-ring buffer data with PERF_SAMPLE_READ.  As it's a variable length data
-we need to access it according to the format info.
+On Thu, 18 Aug 2022 at 23:00, Ian Rogers <irogers@google.com> wrote:
+>
+> On Wed, Aug 17, 2022 at 8:24 PM lika you <tcwzxx@gmail.com> wrote:
+> >
+> > I'm so sorry for forgetting to reply to all. Here is the reply again.
+> >
+> > Thanks for the reply.
+> >
+> > The background is we have two types of tasks running on the same host.The high
+> > priority one which is CPU overhead and the low priority which is IO overhead.
+> > The high priority task has mmap many files as shared memory. The low priority
+> > task may load multi TB data from SSD at once time which will cause the high
+> > priority task file page cache to be swapped out. So we mmap all files with the
+> > PROT_EXEC flag to prevent hot page cache to be swapped out. That cause
+> > too many executable memory regions without symbols on it.
+> >
+> > The trick is implementate here.
+> > https://github.com/torvalds/linux/blob/master/mm/vmscan.c#L2572
+> >
+> > Thanks again
+>
+> Thanks. So you are making data pages executable for the sake of
+> getting "better chances to stay in memory under moderate memory
+> pressure." Having lots of executable pages in your program isn't
+> great, I'm reminded of efforts to stop stacks from being executable.
+> This also feels like a case where madvise should be being used, for
+> example, the MADV_WILLNEED option. Given this, I'm not sure supporting
+> this case in the perf tool makes sense.
+>
+> > On Thu, 18 Aug 2022 at 02:13, Ian Rogers <irogers@google.com> wrote:
+> > >
+> > > On Wed, Aug 17, 2022 at 6:43 AM tcwzxx <tcwzxx@gmail.com> wrote:
+> > > >
+> > > > When generate the flame graph, the perf-script subcommand will
+> > > > process all mmap event and add them to the rbtree. The 240,000
+> > > > mmap region takes about 5 minutes, which is not useful for flame
+> > > > graph. So add the skip-not-exec-file-map-events option to skip
+> > > > not PROT_EXEC flag memory regions.
+> > > >
+> > > > Signed-off-by: tcwzxx <tcwzxx@gmail.com>
+> > >
+> > > Could you provide more context? A reproduction?
+> > >
+> > > When we synthesize mmap events we drop non-executable pages:
+> > > https://github.com/torvalds/linux/blob/master/tools/perf/util/synthetic-events.c#L466
+> > >
+> > > Similarly in the kernel for the "dummy" event:
+> > > https://github.com/torvalds/linux/blob/master/kernel/events/core.c#L8258
+> > >
+> > > Thanks,
+> > > Ian
+> > >
+> > > > ---
+> > > >  tools/perf/builtin-report.c | 2 ++
+> > > >  tools/perf/builtin-script.c | 3 +++
+> > > >  tools/perf/util/machine.c   | 3 +++
+> > > >  tools/perf/util/map.c       | 5 +++++
+> > > >  tools/perf/util/map.h       | 2 ++
+> > > >  5 files changed, 15 insertions(+)
+> > > >
+> > > > diff --git a/tools/perf/builtin-report.c b/tools/perf/builtin-report.c
+> > > > index 91ed41cc7d88..c28eb9450a66 100644
+> > > > --- a/tools/perf/builtin-report.c
+> > > > +++ b/tools/perf/builtin-report.c
+> > > > @@ -1364,6 +1364,8 @@ int cmd_report(int argc, const char **argv)
+> > > >                     "Disable raw trace ordering"),
+> > > >         OPT_BOOLEAN(0, "skip-empty", &report.skip_empty,
+> > > >                     "Do not display empty (or dummy) events in the output"),
+> > > > +       OPT_BOOLEAN(0, "skip-not-exec-file-map_events", &skip_not_exec_file_map_events,
+> > > > +                   "skip not exec map events"),
+> > > >         OPT_END()
+> > > >         };
+> > > >         struct perf_data data = {
+> > > > diff --git a/tools/perf/builtin-script.c b/tools/perf/builtin-script.c
+> > > > index 13580a9c50b8..e3f4e5e654c9 100644
+> > > > --- a/tools/perf/builtin-script.c
+> > > > +++ b/tools/perf/builtin-script.c
+> > > > @@ -32,6 +32,7 @@
+> > > >  #include "util/time-utils.h"
+> > > >  #include "util/path.h"
+> > > >  #include "util/event.h"
+> > > > +#include "util/map.h"
+> > > >  #include "ui/ui.h"
+> > > >  #include "print_binary.h"
+> > > >  #include "archinsn.h"
+> > > > @@ -3936,6 +3937,8 @@ int cmd_script(int argc, const char **argv)
+> > > >                     "Guest code can be found in hypervisor process"),
+> > > >         OPT_BOOLEAN('\0', "stitch-lbr", &script.stitch_lbr,
+> > > >                     "Enable LBR callgraph stitching approach"),
+> > > > +       OPT_BOOLEAN(0, "skip-not-exec-map_events", &skip_not_exec_file_map_events,
+> > > > +                   "skip not exec map events"),
+> > > >         OPTS_EVSWITCH(&script.evswitch),
+> > > >         OPT_END()
+> > > >         };
+> > > > diff --git a/tools/perf/util/machine.c b/tools/perf/util/machine.c
+> > > > index 2a16cae28407..21dde9f9935c 100644
+> > > > --- a/tools/perf/util/machine.c
+> > > > +++ b/tools/perf/util/machine.c
+> > > > @@ -1904,6 +1904,9 @@ int machine__process_mmap2_event(struct machine *machine,
+> > > >         if (thread == NULL)
+> > > >                 goto out_problem;
+> > > >
+> > > > +       if (skip_not_exec_file_map_events && !(event->mmap2.prot & PROT_EXEC))
+> > > > +               goto out_problem;
+>
+> Do you mean to drop all executable pages with the flag here or just
+> those with the DSO__TYPE_UNKNOWN (as below)? It reads that all
+> executable pages will be dropped.
+>
+> Thanks,
+> Ian
+>
 
-But for perf tools use cases, PERF_FORMAT_ID is always set.  So we can
-only check PERF_FORMAT_LOST bit to determine the data format.
+Thank you for your advice.
+I mean remove non-executable pages and non-ELF files
 
-Add sample_read_value_size() and next_sample_read_value() helpers to
-make it a bit easier to access.  Use them in all places where it reads
-the struct sample_read_value.
+!(event->mmap2.prot & PROT_EXEC)
 
-Signed-off-by: Namhyung Kim <namhyung@kernel.org>
----
- tools/perf/tests/sample-parsing.c             | 14 +++++---
- tools/perf/util/event.h                       | 21 ++++++++++-
- tools/perf/util/evsel.c                       | 29 +++++++++------
- .../scripting-engines/trace-event-python.c    | 19 +++++++---
- tools/perf/util/session.c                     | 35 +++++++++++--------
- tools/perf/util/synthetic-events.c            | 32 +++++++++++++----
- 6 files changed, 108 insertions(+), 42 deletions(-)
+Thanks
 
-diff --git a/tools/perf/tests/sample-parsing.c b/tools/perf/tests/sample-parsing.c
-index 07f2411b0ad4..20930dd48ee0 100644
---- a/tools/perf/tests/sample-parsing.c
-+++ b/tools/perf/tests/sample-parsing.c
-@@ -86,10 +86,15 @@ static bool samples_same(const struct perf_sample *s1,
- 			COMP(read.time_running);
- 		/* PERF_FORMAT_ID is forced for PERF_SAMPLE_READ */
- 		if (read_format & PERF_FORMAT_GROUP) {
--			for (i = 0; i < s1->read.group.nr; i++)
--				MCOMP(read.group.values[i]);
-+			for (i = 0; i < s1->read.group.nr; i++) {
-+				/* FIXME: check values without LOST */
-+				if (read_format & PERF_FORMAT_LOST)
-+					MCOMP(read.group.values[i]);
-+			}
- 		} else {
- 			COMP(read.one.id);
-+			if (read_format & PERF_FORMAT_LOST)
-+				COMP(read.one.lost);
- 		}
- 	}
- 
-@@ -263,7 +268,7 @@ static int do_test(u64 sample_type, u64 sample_regs, u64 read_format)
- 			.data	= (void *)aux_data,
- 		},
- 	};
--	struct sample_read_value values[] = {{1, 5}, {9, 3}, {2, 7}, {6, 4},};
-+	struct sample_read_value values[] = {{1, 5, 0}, {9, 3, 0}, {2, 7, 0}, {6, 4, 1},};
- 	struct perf_sample sample_out, sample_out_endian;
- 	size_t i, sz, bufsz;
- 	int err, ret = -1;
-@@ -286,6 +291,7 @@ static int do_test(u64 sample_type, u64 sample_regs, u64 read_format)
- 	} else {
- 		sample.read.one.value = 0x08789faeb786aa87ULL;
- 		sample.read.one.id    = 99;
-+		sample.read.one.lost  = 1;
- 	}
- 
- 	sz = perf_event__sample_event_size(&sample, sample_type, read_format);
-@@ -370,7 +376,7 @@ static int do_test(u64 sample_type, u64 sample_regs, u64 read_format)
-  */
- static int test__sample_parsing(struct test_suite *test __maybe_unused, int subtest __maybe_unused)
- {
--	const u64 rf[] = {4, 5, 6, 7, 12, 13, 14, 15};
-+	const u64 rf[] = {4, 5, 6, 7, 12, 13, 14, 15, 20, 21, 22, 28, 29, 30, 31};
- 	u64 sample_type;
- 	u64 sample_regs;
- 	size_t i;
-diff --git a/tools/perf/util/event.h b/tools/perf/util/event.h
-index a7b0931d5137..058d07923f04 100644
---- a/tools/perf/util/event.h
-+++ b/tools/perf/util/event.h
-@@ -65,7 +65,8 @@ struct stack_dump {
- 
- struct sample_read_value {
- 	u64 value;
--	u64 id;
-+	u64 id;   /* only if PERF_FORMAT_ID */
-+	u64 lost; /* only if PERF_FORMAT_LOST */
- };
- 
- struct sample_read {
-@@ -80,6 +81,24 @@ struct sample_read {
- 	};
- };
- 
-+static inline size_t sample_read_value_size(u64 read_format)
-+{
-+	/* PERF_FORMAT_ID is forced for PERF_SAMPLE_READ */
-+	if (read_format & PERF_FORMAT_LOST)
-+		return sizeof(struct sample_read_value);
-+	else
-+		return offsetof(struct sample_read_value, lost);
-+}
-+
-+static inline struct sample_read_value *
-+next_sample_read_value(struct sample_read_value *v, u64 read_format)
-+{
-+	return (void *)v + sample_read_value_size(read_format);
-+}
-+
-+#define sample_read_group__for_each(v, nr, rf)		\
-+	for (int __i = 0; __i < (int)nr; v = next_sample_read_value(v, rf), __i++)
-+
- struct ip_callchain {
- 	u64 nr;
- 	u64 ips[];
-diff --git a/tools/perf/util/evsel.c b/tools/perf/util/evsel.c
-index 4852089e1d79..18c3eb864d55 100644
---- a/tools/perf/util/evsel.c
-+++ b/tools/perf/util/evsel.c
-@@ -1541,7 +1541,7 @@ static int evsel__read_one(struct evsel *evsel, int cpu_map_idx, int thread)
- }
- 
- static void evsel__set_count(struct evsel *counter, int cpu_map_idx, int thread,
--			     u64 val, u64 ena, u64 run)
-+			     u64 val, u64 ena, u64 run, u64 lost)
- {
- 	struct perf_counts_values *count;
- 
-@@ -1550,6 +1550,7 @@ static void evsel__set_count(struct evsel *counter, int cpu_map_idx, int thread,
- 	count->val    = val;
- 	count->ena    = ena;
- 	count->run    = run;
-+	count->lost   = lost;
- 
- 	perf_counts__set_loaded(counter->counts, cpu_map_idx, thread, true);
- }
-@@ -1558,7 +1559,7 @@ static int evsel__process_group_data(struct evsel *leader, int cpu_map_idx, int
- {
- 	u64 read_format = leader->core.attr.read_format;
- 	struct sample_read_value *v;
--	u64 nr, ena = 0, run = 0, i;
-+	u64 nr, ena = 0, run = 0, lost = 0;
- 
- 	nr = *data++;
- 
-@@ -1571,18 +1572,18 @@ static int evsel__process_group_data(struct evsel *leader, int cpu_map_idx, int
- 	if (read_format & PERF_FORMAT_TOTAL_TIME_RUNNING)
- 		run = *data++;
- 
--	v = (struct sample_read_value *) data;
--
--	evsel__set_count(leader, cpu_map_idx, thread, v[0].value, ena, run);
--
--	for (i = 1; i < nr; i++) {
-+	v = (void *)data;
-+	sample_read_group__for_each(v, nr, read_format) {
- 		struct evsel *counter;
- 
--		counter = evlist__id2evsel(leader->evlist, v[i].id);
-+		counter = evlist__id2evsel(leader->evlist, v->id);
- 		if (!counter)
- 			return -EINVAL;
- 
--		evsel__set_count(counter, cpu_map_idx, thread, v[i].value, ena, run);
-+		if (read_format & PERF_FORMAT_LOST)
-+			lost = v->lost;
-+
-+		evsel__set_count(counter, cpu_map_idx, thread, v->value, ena, run, lost);
- 	}
- 
- 	return 0;
-@@ -2475,8 +2476,8 @@ int evsel__parse_sample(struct evsel *evsel, union perf_event *event,
- 
- 			if (data->read.group.nr > max_group_nr)
- 				return -EFAULT;
--			sz = data->read.group.nr *
--			     sizeof(struct sample_read_value);
-+
-+			sz = data->read.group.nr * sample_read_value_size(read_format);
- 			OVERFLOW_CHECK(array, sz, max_size);
- 			data->read.group.values =
- 					(struct sample_read_value *)array;
-@@ -2485,6 +2486,12 @@ int evsel__parse_sample(struct evsel *evsel, union perf_event *event,
- 			OVERFLOW_CHECK_u64(array);
- 			data->read.one.id = *array;
- 			array++;
-+
-+			if (read_format & PERF_FORMAT_LOST) {
-+				OVERFLOW_CHECK_u64(array);
-+				data->read.one.lost = *array;
-+				array++;
-+			}
- 		}
- 	}
- 
-diff --git a/tools/perf/util/scripting-engines/trace-event-python.c b/tools/perf/util/scripting-engines/trace-event-python.c
-index 9ef2406e0ede..1f2040f36d4e 100644
---- a/tools/perf/util/scripting-engines/trace-event-python.c
-+++ b/tools/perf/util/scripting-engines/trace-event-python.c
-@@ -642,15 +642,19 @@ static PyObject *python_process_brstacksym(struct perf_sample *sample,
- 	return pylist;
- }
- 
--static PyObject *get_sample_value_as_tuple(struct sample_read_value *value)
-+static PyObject *get_sample_value_as_tuple(struct sample_read_value *value,
-+					   u64 read_format)
- {
- 	PyObject *t;
- 
--	t = PyTuple_New(2);
-+	t = PyTuple_New(3);
- 	if (!t)
- 		Py_FatalError("couldn't create Python tuple");
- 	PyTuple_SetItem(t, 0, PyLong_FromUnsignedLongLong(value->id));
- 	PyTuple_SetItem(t, 1, PyLong_FromUnsignedLongLong(value->value));
-+	if (read_format & PERF_FORMAT_LOST)
-+		PyTuple_SetItem(t, 2, PyLong_FromUnsignedLongLong(value->lost));
-+
- 	return t;
- }
- 
-@@ -681,12 +685,17 @@ static void set_sample_read_in_dict(PyObject *dict_sample,
- 		Py_FatalError("couldn't create Python list");
- 
- 	if (read_format & PERF_FORMAT_GROUP) {
--		for (i = 0; i < sample->read.group.nr; i++) {
--			PyObject *t = get_sample_value_as_tuple(&sample->read.group.values[i]);
-+		struct sample_read_value *v = sample->read.group.values;
-+
-+		i = 0;
-+		sample_read_group__for_each(v, sample->read.group.nr, read_format) {
-+			PyObject *t = get_sample_value_as_tuple(v, read_format);
- 			PyList_SET_ITEM(values, i, t);
-+			i++;
- 		}
- 	} else {
--		PyObject *t = get_sample_value_as_tuple(&sample->read.one);
-+		PyObject *t = get_sample_value_as_tuple(&sample->read.one,
-+							read_format);
- 		PyList_SET_ITEM(values, 0, t);
- 	}
- 	pydict_set_item_string_decref(dict_sample, "values", values);
-diff --git a/tools/perf/util/session.c b/tools/perf/util/session.c
-index 98e16659a149..40a907d95639 100644
---- a/tools/perf/util/session.c
-+++ b/tools/perf/util/session.c
-@@ -1283,21 +1283,25 @@ static void sample_read__printf(struct perf_sample *sample, u64 read_format)
- 		       sample->read.time_running);
- 
- 	if (read_format & PERF_FORMAT_GROUP) {
--		u64 i;
-+		struct sample_read_value *value = sample->read.group.values;
- 
- 		printf(".... group nr %" PRIu64 "\n", sample->read.group.nr);
- 
--		for (i = 0; i < sample->read.group.nr; i++) {
--			struct sample_read_value *value;
--
--			value = &sample->read.group.values[i];
-+		sample_read_group__for_each(value, sample->read.group.nr, read_format) {
- 			printf("..... id %016" PRIx64
--			       ", value %016" PRIx64 "\n",
-+			       ", value %016" PRIx64,
- 			       value->id, value->value);
-+			if (read_format & PERF_FORMAT_LOST)
-+				printf(", lost %" PRIu64, value->lost);
-+			printf("\n");
- 		}
--	} else
--		printf("..... id %016" PRIx64 ", value %016" PRIx64 "\n",
-+	} else {
-+		printf("..... id %016" PRIx64 ", value %016" PRIx64,
- 			sample->read.one.id, sample->read.one.value);
-+		if (read_format & PERF_FORMAT_LOST)
-+			printf(", lost %" PRIu64, sample->read.one.lost);
-+		printf("\n");
-+	}
- }
- 
- static void dump_event(struct evlist *evlist, union perf_event *event,
-@@ -1411,6 +1415,9 @@ static void dump_read(struct evsel *evsel, union perf_event *event)
- 
- 	if (read_format & PERF_FORMAT_ID)
- 		printf("... id           : %" PRI_lu64 "\n", read_event->id);
-+
-+	if (read_format & PERF_FORMAT_LOST)
-+		printf("... lost         : %" PRI_lu64 "\n", read_event->lost);
- }
- 
- static struct machine *machines__find_for_cpumode(struct machines *machines,
-@@ -1479,14 +1486,14 @@ static int deliver_sample_group(struct evlist *evlist,
- 				struct perf_tool *tool,
- 				union  perf_event *event,
- 				struct perf_sample *sample,
--				struct machine *machine)
-+				struct machine *machine,
-+				u64 read_format)
- {
- 	int ret = -EINVAL;
--	u64 i;
-+	struct sample_read_value *v = sample->read.group.values;
- 
--	for (i = 0; i < sample->read.group.nr; i++) {
--		ret = deliver_sample_value(evlist, tool, event, sample,
--					   &sample->read.group.values[i],
-+	sample_read_group__for_each(v, sample->read.group.nr, read_format) {
-+		ret = deliver_sample_value(evlist, tool, event, sample, v,
- 					   machine);
- 		if (ret)
- 			break;
-@@ -1510,7 +1517,7 @@ static int evlist__deliver_sample(struct evlist *evlist, struct perf_tool *tool,
- 	/* For PERF_SAMPLE_READ we have either single or group mode. */
- 	if (read_format & PERF_FORMAT_GROUP)
- 		return deliver_sample_group(evlist, tool, event, sample,
--					    machine);
-+					    machine, read_format);
- 	else
- 		return deliver_sample_value(evlist, tool, event, sample,
- 					    &sample->read.one, machine);
-diff --git a/tools/perf/util/synthetic-events.c b/tools/perf/util/synthetic-events.c
-index 2ae59c03ae77..24df0d9755e4 100644
---- a/tools/perf/util/synthetic-events.c
-+++ b/tools/perf/util/synthetic-events.c
-@@ -1432,11 +1432,12 @@ size_t perf_event__sample_event_size(const struct perf_sample *sample, u64 type,
- 			result += sizeof(u64);
- 		/* PERF_FORMAT_ID is forced for PERF_SAMPLE_READ */
- 		if (read_format & PERF_FORMAT_GROUP) {
--			sz = sample->read.group.nr *
--			     sizeof(struct sample_read_value);
--			result += sz;
-+			sz = sample_read_value_size(read_format);
-+			result += sz * sample->read.group.nr;
- 		} else {
- 			result += sizeof(u64);
-+			if (read_format & PERF_FORMAT_LOST)
-+				result += sizeof(u64);
- 		}
- 	}
- 
-@@ -1521,6 +1522,20 @@ void __weak arch_perf_synthesize_sample_weight(const struct perf_sample *data,
- 	*array = data->weight;
- }
- 
-+static __u64 *copy_read_group_values(__u64 *array, __u64 read_format,
-+				     const struct perf_sample *sample)
-+{
-+	size_t sz = sample_read_value_size(read_format);
-+	struct sample_read_value *v = sample->read.group.values;
-+
-+	sample_read_group__for_each(v, sample->read.group.nr, read_format) {
-+		/* PERF_FORMAT_ID is forced for PERF_SAMPLE_READ */
-+		memcpy(array, v, sz);
-+		array = (void *)array + sz;
-+	}
-+	return array;
-+}
-+
- int perf_event__synthesize_sample(union perf_event *event, u64 type, u64 read_format,
- 				  const struct perf_sample *sample)
- {
-@@ -1602,13 +1617,16 @@ int perf_event__synthesize_sample(union perf_event *event, u64 type, u64 read_fo
- 
- 		/* PERF_FORMAT_ID is forced for PERF_SAMPLE_READ */
- 		if (read_format & PERF_FORMAT_GROUP) {
--			sz = sample->read.group.nr *
--			     sizeof(struct sample_read_value);
--			memcpy(array, sample->read.group.values, sz);
--			array = (void *)array + sz;
-+			array = copy_read_group_values(array, read_format,
-+						       sample);
- 		} else {
- 			*array = sample->read.one.id;
- 			array++;
-+
-+			if (read_format & PERF_FORMAT_LOST) {
-+				*array = sample->read.one.lost;
-+				array++;
-+			}
- 		}
- 	}
- 
--- 
-2.37.1.595.g718a3a8f04-goog
-
+> > > > +
+> > > >         map = map__new(machine, event->mmap2.start,
+> > > >                         event->mmap2.len, event->mmap2.pgoff,
+> > > >                         &dso_id, event->mmap2.prot,
+> > > > diff --git a/tools/perf/util/map.c b/tools/perf/util/map.c
+> > > > index e0aa4a254583..2b51ca012c91 100644
+> > > > --- a/tools/perf/util/map.c
+> > > > +++ b/tools/perf/util/map.c
+> > > > @@ -16,6 +16,8 @@
+> > > >  #include "thread.h"
+> > > >  #include "vdso.h"
+> > > >
+> > > > +bool skip_not_exec_file_map_events;
+> > > > +
+> > > >  static inline int is_android_lib(const char *filename)
+> > > >  {
+> > > >         return strstarts(filename, "/data/app-lib/") ||
+> > > > @@ -168,6 +170,9 @@ struct map *map__new(struct machine *machine, u64 start, u64 len,
+> > > >                 if (dso == NULL)
+> > > >                         goto out_delete;
+> > > >
+> > > > +               if (skip_not_exec_file_map_events && dso__type(dso, machine) == DSO__TYPE_UNKNOWN)
+> > > > +                       goto out_delete;
+> > > > +
+> > > >                 map__init(map, start, start + len, pgoff, dso);
+> > > >
+> > > >                 if (anon || no_dso) {
+> > > > diff --git a/tools/perf/util/map.h b/tools/perf/util/map.h
+> > > > index 3dcfe06db6b3..67b0e0f9f0ae 100644
+> > > > --- a/tools/perf/util/map.h
+> > > > +++ b/tools/perf/util/map.h
+> > > > @@ -11,6 +11,8 @@
+> > > >  #include <stdbool.h>
+> > > >  #include <linux/types.h>
+> > > >
+> > > > +extern bool skip_not_exec_file_map_events;
+> > > > +
+> > > >  struct dso;
+> > > >  struct maps;
+> > > >  struct machine;
+> > > > --
+> > > > 2.34.1
+> > > >
