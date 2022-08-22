@@ -2,122 +2,177 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4B78BC28D13
-	for <linux-perf-users@archiver.kernel.org>; Mon, 22 Aug 2022 10:38:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C1525C3F6B0
+	for <linux-perf-users@archiver.kernel.org>; Mon, 22 Aug 2022 10:59:04 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231290AbiHVKh7 (ORCPT
+        id S234238AbiHVK7C (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Mon, 22 Aug 2022 06:37:59 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59120 "EHLO
+        Mon, 22 Aug 2022 06:59:02 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50038 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229586AbiHVKh7 (ORCPT
+        with ESMTP id S230107AbiHVK64 (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Mon, 22 Aug 2022 06:37:59 -0400
-Received: from mail-ej1-x631.google.com (mail-ej1-x631.google.com [IPv6:2a00:1450:4864:20::631])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1E9642FFC0;
-        Mon, 22 Aug 2022 03:37:58 -0700 (PDT)
-Received: by mail-ej1-x631.google.com with SMTP id bj12so3208168ejb.13;
-        Mon, 22 Aug 2022 03:37:58 -0700 (PDT)
+        Mon, 22 Aug 2022 06:58:56 -0400
+Received: from mail-ed1-x52c.google.com (mail-ed1-x52c.google.com [IPv6:2a00:1450:4864:20::52c])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 80D9C31230;
+        Mon, 22 Aug 2022 03:58:53 -0700 (PDT)
+Received: by mail-ed1-x52c.google.com with SMTP id o22so13336677edc.10;
+        Mon, 22 Aug 2022 03:58:53 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20210112;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date:sender
-         :from:to:cc;
-        bh=Fic3qiVWuOXlTHP1LZdbaPSid2L5A3dsT7KZevdChfs=;
-        b=IHCuOUhy56vMwdwjLTG9NYX3fgcJdjJPjKhyta6Qno0VyVYmrtpv9plgj6qwWD/X2s
-         HwucGO9KuL0+fghF4vJmR4n6VrUCKt9Z1rHhlw2k27NTRRAGdLmbtW4v6PfYv0ohFFge
-         +XizqygcAKRGewcldYjjgWNN5F1sii+PSyPdOcaGhBabVrUjtVUM1abOU8eeWfl3fgEX
-         lUWYUW0pzYBASu2+AuJdgXCGAJVQfzFcGfJiTsq+RXzRk1ILQyG1WUAKMKKmp7/64veg
-         7LGqhggBuNU9M9ktMRIynqbAQVfL3FdjdzZuktCWyNiSuug2eGT+XuMWFl+4q31DvBvO
-         zrwQ==
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:date:from:from:to:cc;
+        bh=l/LzIhPe9ZTwGL9N0G3IR78vwpYSKjEk5JerrPZ+Ejo=;
+        b=Uo63L0oGuXttZhHN4XJDd7Yk9cuKw2mTwcaEljw6hjBYWig7OS9VB7K1mzfL2EFBKr
+         XBP2dIWW+q5jeGJWxci/I7uQ1EAi0SaQAPsFm+bcQQvpOY2BWq4qZEA3dzroYr/ttTMG
+         FNh3IvETdStsqN1/597U/tw//3tgux3GHuX+jdYjKniZkLV4BwBTgscQb59JsslnD3bR
+         hBLgtOlgJBH38JE/rDlFWCUO6BvD+5lpeZmuycDKOvHql6fm5WET93M+rTl5ab3YUKcq
+         Wctx2hTikYI/zIwRKOmIZWB+I8PM6A8O3Q1yLpqFlFymyuqBdR7novHoK7RZCsL0icQ7
+         mkqw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date:sender
-         :x-gm-message-state:from:to:cc;
-        bh=Fic3qiVWuOXlTHP1LZdbaPSid2L5A3dsT7KZevdChfs=;
-        b=4ZO3/CTlBcDlHALq/lCRCMj9ybT+M4X8HKm6VWCCIQ1oNmgIWl+K5JmRPs1IEcg4ix
-         Q72avHcWaNqEiXGQkQVIOk9ectRn+uOaqPcDq1aawzK4upWTSovDw382ELgDg+p1fzPq
-         4kcZqFsDlUjEdJFebS5Ovg5ba18uis+0tl0Aiw5Dz7tk6dDMzQ1je2Gv9y7Dj1aTB4O9
-         P0rad6VWgDaY6zrH7NyA1aOHr9I7Xur0cgiP2RuUjzUIAmY/qo0nPexlUPZRVvxdhSvi
-         Y/ltOORlbPo4ndKQY8NHvLUp5OqUZO8UAKZdB7Q7FhAZ3ZPxSzmhB5MtBUpKOMEPGP3w
-         v+IA==
-X-Gm-Message-State: ACgBeo3iHPvsna1iKBnc157r8oX/taEiKX9zwEpiWgvz0wo59mlLLRDv
-        +s7x5Eyx9Zrj6hKBskhPqYA=
-X-Google-Smtp-Source: AA6agR61ZJH1BrR2M4z9iHGxFWbQH+3OJQa8rlccLSppDIjyOOz9ZmPu5f2e5WGvyZY474HoWqaSiw==
-X-Received: by 2002:a17:907:a408:b0:73d:6696:50af with SMTP id sg8-20020a170907a40800b0073d669650afmr6162308ejc.369.1661164676572;
-        Mon, 22 Aug 2022 03:37:56 -0700 (PDT)
-Received: from gmail.com (195-38-113-151.pool.digikabel.hu. [195.38.113.151])
-        by smtp.gmail.com with ESMTPSA id l17-20020a1709063d3100b00711edab7622sm5941550ejf.40.2022.08.22.03.37.55
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:date:from:x-gm-message-state:from:to:cc;
+        bh=l/LzIhPe9ZTwGL9N0G3IR78vwpYSKjEk5JerrPZ+Ejo=;
+        b=gu9rFgYRSWXGuv1+LSxTfrqugGo8wWc0n1lgKZoBWFMlIVx++aIu960HmUdYPZnK0i
+         D2QupnhQ4WaK1tA99AgIrNPOk59OzRrnDYyeAL9Kq+1o5hyuFYqcPwx/fBKkmIJI9tAg
+         Qw8B+1VZO/auiv5Rqg0iwY9a6QJ3j5WTe7vCUMaybFeIil9ELNw2amSCBQNtkqSgpPaS
+         bnsGXcV3J7oOw9/CsM18/cK7b4I7LPhQ4vzfHhEr8XB0L69lFBStO2OuSLhBhFTjurxX
+         Pe/eNd+EdK/0ELcltfF/+NmL93G7yCaoNcNYm98Yv5v7wOslw6dwWr1cfhqUJeW8qfFm
+         wbtQ==
+X-Gm-Message-State: ACgBeo3VKMkyzrT/RNZa5eirv3punTWKs8gygREA4jPNsveHziVp/qVK
+        gfADMBlWajT9PgYha41WnQM=
+X-Google-Smtp-Source: AA6agR6cWPvpGJFviWOBgVZVY1+3fDdKs6dGgBZXzzVrjPl3a947xyPgoMPCgjTTt4XboZ2i5XPf5g==
+X-Received: by 2002:a05:6402:3805:b0:43e:8335:3a2a with SMTP id es5-20020a056402380500b0043e83353a2amr16055078edb.296.1661165932033;
+        Mon, 22 Aug 2022 03:58:52 -0700 (PDT)
+Received: from krava ([193.85.244.190])
+        by smtp.gmail.com with ESMTPSA id ss2-20020a170907c00200b007309f007d3asm5874225ejc.128.2022.08.22.03.58.51
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 22 Aug 2022 03:37:55 -0700 (PDT)
-Sender: Ingo Molnar <mingo.kernel.org@gmail.com>
-Date:   Mon, 22 Aug 2022 12:37:53 +0200
-From:   Ingo Molnar <mingo@kernel.org>
-To:     Yang Jihong <yangjihong1@huawei.com>
-Cc:     bp@suse.de, ndesaulniers@google.com, nathan@kernel.org,
-        alexandre.belloni@bootlin.com, acme@kernel.org,
-        namhyung@kernel.org, jolsa@kernel.org,
-        linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] perf tools: Fix compile error for x86
-Message-ID: <YwNcgdk/p18Cr+uv@gmail.com>
-References: <20220822092557.210209-1-yangjihong1@huawei.com>
+        Mon, 22 Aug 2022 03:58:51 -0700 (PDT)
+From:   Jiri Olsa <olsajiri@gmail.com>
+X-Google-Original-From: Jiri Olsa <jolsa@kernel.org>
+Date:   Mon, 22 Aug 2022 12:58:49 +0200
+To:     roberto.sassu@huaweicloud.com
+Cc:     peterz@infradead.org, mingo@redhat.com, acme@kernel.org,
+        mark.rutland@arm.com, alexander.shishkin@linux.intel.com,
+        namhyung@kernel.org, quentin@isovalent.com,
+        linux-perf-users@vger.kernel.org, bpf@vger.kernel.org,
+        linux-kernel@vger.kernel.org,
+        Roberto Sassu <roberto.sassu@huawei.com>
+Subject: Re: [PATCH 3/3] tools/build: Display logical OR of a feature flavors
+Message-ID: <YwNhabqHEq3PfNM8@krava>
+References: <20220818120957.319995-1-roberto.sassu@huaweicloud.com>
+ <20220818120957.319995-3-roberto.sassu@huaweicloud.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20220822092557.210209-1-yangjihong1@huawei.com>
+In-Reply-To: <20220818120957.319995-3-roberto.sassu@huaweicloud.com>
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-
-* Yang Jihong <yangjihong1@huawei.com> wrote:
-
-> Commit a0a12c3ed057 ("asm goto: eradicate CC_HAS_ASM_GOTO") eradicates
-> CC_HAS_ASM_GOTO, perf on x86 call asm_volatile_goto when compiling __GEN_RMWcc.
-> However, asm_volatile_goto is not declared, which causes compilation error:
+On Thu, Aug 18, 2022 at 02:09:57PM +0200, roberto.sassu@huaweicloud.com wrote:
+> From: Roberto Sassu <roberto.sassu@huawei.com>
 > 
-> In file included from /home/linux/tools/include/asm/../../arch/x86/include/asm/atomic.h:7,
->                  from /home/linux/tools/include/asm/atomic.h:6,
->                  from /home/linux/tools/include/linux/atomic.h:5,
->                  from /home/linux/tools/include/linux/refcount.h:41,
->                  from /home/linux/tools/lib/perf/include/internal/cpumap.h:5,
->                  from /home/linux/tools/perf/util/cpumap.h:7,
->                  from /home/linux/tools/perf/util/env.h:7,
->                  from /home/linux/tools/perf/util/header.h:12,
->                  from pmu-events/pmu-events.c:9:
-> /home/linux/tools/include/asm/../../arch/x86/include/asm/atomic.h: In function ‘atomic_dec_and_test’:
-> /home/linux/tools/include/asm/../../arch/x86/include/asm/rmwcc.h:7:2: error: implicit declaration of function ‘asm_volatile_goto’ [-Werror=implicit-function-declaration]
->   asm_volatile_goto (fullop "; j" cc " %l[cc_label]"  \
->   ^~~~~~~~~~~~~~~~~
+> Sometimes, features are simply different flavors of another feature, to
+> properly detect the exact dependencies needed by different Linux
+> distributions.
 > 
-> Solution:
-> Define asm_volatile_goto in compiler_types.h if not declared.
+> For example, libbfd has three flavors: libbfd if the distro does not
+> require any additional dependency; libbfd-liberty if it requires libiberty;
+> libbfd-liberty-z if it requires libiberty and libz.
 > 
-> Currently, only x86 architecture uses asm_volatile_goto.
-> Theoretically, this patch affects only the x86 architecture.
+> It might not be clear to the user whether a feature has been successfully
+> detected or not, given that some of its flavors will be set to OFF, others
+> to ON.
 > 
-> Fixes: a0a12c3ed057 ("asm goto: eradicate CC_HAS_ASM_GOTO")
-> Signed-off-by: Yang Jihong <yangjihong1@huawei.com>
+> Instead, display only the feature main flavor if not in verbose mode
+> (VF != 1), and set it to ON if at least one of its flavors has been
+> successfully detected (logical OR), OFF otherwise. Omit the other flavors.
+> 
+> Accomplish that by declaring a FEATURE_GROUP_MEMBERS-<feature main flavor>
+> variable, with the list of the other flavors as variable value. For now, do
+> it just for libbfd.
+> 
+> In verbose mode, of if no group is defined for a feature, show the feature
+> detection result as before.
+> 
+> Signed-off-by: Roberto Sassu <roberto.sassu@huawei.com>
 > ---
->  tools/include/linux/compiler_types.h | 4 ++++
->  1 file changed, 4 insertions(+)
+>  tools/build/Makefile.feature | 27 +++++++++++++++++++++++++--
+>  1 file changed, 25 insertions(+), 2 deletions(-)
 > 
-> diff --git a/tools/include/linux/compiler_types.h b/tools/include/linux/compiler_types.h
-> index 24ae3054f304..1bdd834bdd57 100644
-> --- a/tools/include/linux/compiler_types.h
-> +++ b/tools/include/linux/compiler_types.h
-> @@ -36,4 +36,8 @@
->  #include <linux/compiler-gcc.h>
->  #endif
+> diff --git a/tools/build/Makefile.feature b/tools/build/Makefile.feature
+> index 6c809941ff01..57619f240b56 100644
+> --- a/tools/build/Makefile.feature
+> +++ b/tools/build/Makefile.feature
+> @@ -137,6 +137,12 @@ FEATURE_DISPLAY ?=              \
+>           libaio			\
+>           libzstd
 >  
-> +#ifndef asm_volatile_goto
-> +#define asm_volatile_goto(x...) asm goto(x)
-> +#endif
+> +#
+> +# Declare group members of a feature to display the logical OR of the detection
+> +# result instead of each member result.
+> +#
+> +FEATURE_GROUP_MEMBERS-libbfd = libbfd-liberty libbfd-liberty-z
 
-Tested-by: Ingo Molnar <mingo@kernel.org>
+nice, I checked and could not find any other 'flavours' instance
+like libbfd, but it might happen in future
 
-Thanks,
+for the whole patchset:
 
-	Ingo
+Tested-by: Jiri Olsa <jolsa@kernel.org>
+Acked-by: Jiri Olsa <jolsa@kernel.org>
+
+thanks,
+jirka
+
+
+> +
+>  # Set FEATURE_CHECK_(C|LD)FLAGS-all for all FEATURE_TESTS features.
+>  # If in the future we need per-feature checks/flags for features not
+>  # mentioned in this list we need to refactor this ;-).
+> @@ -179,8 +185,17 @@ endif
+>  #
+>  feature_print_status = $(eval $(feature_print_status_code))
+>  
+> +feature_group = $(eval $(feature_gen_group)) $(GROUP)
+> +
+> +define feature_gen_group
+> +  GROUP := $(1)
+> +  ifneq ($(feature_verbose),1)
+> +    GROUP += $(FEATURE_GROUP_MEMBERS-$(1))
+> +  endif
+> +endef
+> +
+>  define feature_print_status_code
+> -  ifeq ($(feature-$(1)), 1)
+> +  ifneq (,$(filter 1,$(foreach feat,$(call feature_group,$(feat)),$(feature-$(feat)))))
+>      MSG = $(shell printf '...%40s: [ \033[32mon\033[m  ]' $(1))
+>    else
+>      MSG = $(shell printf '...%40s: [ \033[31mOFF\033[m ]' $(1))
+> @@ -244,12 +259,20 @@ ifeq ($(VF),1)
+>    feature_verbose := 1
+>  endif
+>  
+> +ifneq ($(feature_verbose),1)
+> +  #
+> +  # Determine the features to omit from the displayed message, as only the
+> +  # logical OR of the detection result will be shown.
+> +  #
+> +  FEATURE_OMIT := $(foreach feat,$(FEATURE_DISPLAY),$(FEATURE_GROUP_MEMBERS-$(feat)))
+> +endif
+> +
+>  feature_display_entries = $(eval $(feature_display_entries_code))
+>  define feature_display_entries_code
+>    ifeq ($(feature_display),1)
+>      $$(info )
+>      $$(info Auto-detecting system features:)
+> -    $(foreach feat,$(FEATURE_DISPLAY),$(call feature_print_status,$(feat),) $$(info $(MSG)))
+> +    $(foreach feat,$(filter-out $(FEATURE_OMIT),$(FEATURE_DISPLAY)),$(call feature_print_status,$(feat),) $$(info $(MSG)))
+>    endif
+>  
+>    ifeq ($(feature_verbose),1)
+> -- 
+> 2.25.1
+> 
