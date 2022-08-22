@@ -2,102 +2,91 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CFB77C28D13
-	for <linux-perf-users@archiver.kernel.org>; Mon, 22 Aug 2022 13:50:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 845B1C32774
+	for <linux-perf-users@archiver.kernel.org>; Mon, 22 Aug 2022 14:06:11 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231527AbiHVNuI (ORCPT
+        id S235463AbiHVOGK (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Mon, 22 Aug 2022 09:50:08 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37798 "EHLO
+        Mon, 22 Aug 2022 10:06:10 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54228 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231176AbiHVNuH (ORCPT
+        with ESMTP id S235456AbiHVOGI (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Mon, 22 Aug 2022 09:50:07 -0400
-Received: from sin.source.kernel.org (sin.source.kernel.org [IPv6:2604:1380:40e1:4800::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D025E26104;
-        Mon, 22 Aug 2022 06:50:05 -0700 (PDT)
+        Mon, 22 Aug 2022 10:06:08 -0400
+Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0079428725;
+        Mon, 22 Aug 2022 07:06:07 -0700 (PDT)
 Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by sin.source.kernel.org (Postfix) with ESMTPS id 4A5DECE12D4;
-        Mon, 22 Aug 2022 13:50:04 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 6FCD5C433D7;
-        Mon, 22 Aug 2022 13:50:02 +0000 (UTC)
+        by dfw.source.kernel.org (Postfix) with ESMTPS id 91FEE611AC;
+        Mon, 22 Aug 2022 14:06:07 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id CA004C433B5;
+        Mon, 22 Aug 2022 14:06:06 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1661176202;
-        bh=PkPJyZp0RJEudQRyQhF1AVCrZqBQGaVx6WsnuFkdofY=;
+        s=k20201202; t=1661177167;
+        bh=UMkROV881DKPEjhAUa1UoSgjDInquTrOOa9WqRsGrZ4=;
         h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=DaE7Ix7iJ+WK0FJur7tmTaCv1JRfa4OFhEEW4D0zxXr2yLuZ7ij78PFz7ogP1RVab
-         6bNZB4LSBD8L5dD9kskxMLrzPglQc4S0sEqzVC22/XnhRxdZRc97jHMAFCiDfGHMEa
-         5S55Nzj+phrBYvGv5vX7h5EZKmQrOCplwB3Cl7uwg59aL8lfrHZjg8XIQMTyGmx8Ed
-         aI7nUjKiEiaOEFWYM2oqlXKHLsAk7VrT468Jqc7WkF3larrIfg56Q3HQBpSbMqvYEu
-         3AolSIlNN9cjGMD2Yw48mXAGi94hb8ev8jITIIc6ucIED1opyYbWlBcBBDHwRgtNd3
-         baR8iKjy7UarA==
+        b=dgJb8nov/pLvfdf7cJLsb0TqP1hmHnEd/zx6tfx9CctRYnAAWQsl17w998Smg3kUm
+         JbxDEO9PKfQ7zzBcN+fSwORKE2PBO5Qrub7mx3ynrDlDFv59ztm+iNigJnJRUyKUWl
+         cu86/q16v0T3RinDYU0YtVsj1Em1GYrT/rBiY9lZmwiEi6F4GGaMgC9oRDP4aMFVQi
+         1iJQmIPMCuWmYxEAnXFqI4STsZfCA67h5DhstZXjWNMdsVlHkPH4QWVkQnPBP1lu6m
+         dDFz7DwWqS3kkdkionJhAFqoRsAA75y/2VqYb4XMNrjJUh3Y4tRZQ6nN/8QHEpurZm
+         ItrvCcT4bsjCA==
 Received: by quaco.ghostprotocols.net (Postfix, from userid 1000)
-        id 1650E404A1; Mon, 22 Aug 2022 10:50:00 -0300 (-03)
-Date:   Mon, 22 Aug 2022 10:50:00 -0300
+        id 6B20F404A1; Mon, 22 Aug 2022 11:06:04 -0300 (-03)
+Date:   Mon, 22 Aug 2022 11:06:04 -0300
 From:   Arnaldo Carvalho de Melo <acme@kernel.org>
-To:     James Clark <james.clark@arm.com>
-Cc:     Ian Rogers <irogers@google.com>, linux-perf-users@vger.kernel.org,
-        Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Jiri Olsa <jolsa@kernel.org>,
-        Namhyung Kim <namhyung@kernel.org>,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] perf: python: Fix build when PYTHON_CONFIG is user
- supplied
-Message-ID: <YwOJiBG+K877d+Ou@kernel.org>
-References: <20220728093946.1337642-1-james.clark@arm.com>
- <CAP-5=fXnR=LSk-bO02V7HzWTTCrsbnM1w63_YYqSMEgy0vM-PQ@mail.gmail.com>
- <YuLi14u3DQ+ShH9w@kernel.org>
- <f64f6cbf-73cf-e59a-5f6d-7303125bee66@arm.com>
+To:     Jilin Yuan <yuanjilin@cdjrlc.com>
+Cc:     peterz@infradead.org, mingo@redhat.com,
+        linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] tools/perf: fix repeated words in comments
+Message-ID: <YwONTFjom5v6Y1T/@kernel.org>
+References: <20220822123919.32547-1-yuanjilin@cdjrlc.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <f64f6cbf-73cf-e59a-5f6d-7303125bee66@arm.com>
+In-Reply-To: <20220822123919.32547-1-yuanjilin@cdjrlc.com>
 X-Url:  http://acmel.wordpress.com
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-Em Mon, Aug 22, 2022 at 11:08:37AM +0100, James Clark escreveu:
-> 
-> 
-> On 28/07/2022 20:26, Arnaldo Carvalho de Melo wrote:
-> > Em Thu, Jul 28, 2022 at 09:37:32AM -0700, Ian Rogers escreveu:
-> >> On Thu, Jul 28, 2022 at 2:40 AM James Clark <james.clark@arm.com> wrote:
-> >>>
-> >>> The previous change to Python autodetection had a small mistake where
-> >>> the auto value was used to determine the Python binary, rather than the
-> >>> user supplied value. The Python binary is only used for one part of the
-> >>> build process, rather than the final linking, so it was producing
-> >>> correct builds in most scenarios, especially when the auto detected
-> >>> value matched what the user wanted, or the system only had a valid set
-> >>> of Pythons.
-> >>>
-> >>> Change it so that the Python binary path is derived from either the
-> >>> PYTHON_CONFIG value or PYTHON value, depending on what is specified by
-> >>> the user. This was the original intention.
-> >>>
-> >>> This error was spotted in a build failure an odd cross compilation
-> >>> environment after commit 4c41cb46a732fe82 ("perf python: Prefer
-> >>> python3") was merged.
-> >>>
-> >>> Fixes: 630af16eee495f58 ("perf tools: Use Python devtools for version autodetection rather than runtime")
-> >>> Signed-off-by: James Clark <james.clark@arm.com>
-> >>
-> >> Acked-by: Ian Rogers <irogers@google.com>
-> > 
-> > Thanks, applied.
-> 
-> Hi Arnaldo,
-> 
-> I couldn't find this change in any of your branches. Do you know if it
-> got dropped somehow or was there an issue with it?
+Em Mon, Aug 22, 2022 at 08:39:19PM +0800, Jilin Yuan escreveu:
+>  Delete the redundant word 'and'.
 
-Applied it to my local perf/urgent branch, testing now. I thought I had
-processed it, not really :-\
+Applied already https://lore.kernel.org/lkml/20220807084629.23121-1-dengshaomin@cdjrlc.com/
+ 
+> Signed-off-by: Jilin Yuan <yuanjilin@cdjrlc.com>
+> ---
+>  tools/perf/builtin-trace.c | 4 ++--
+>  1 file changed, 2 insertions(+), 2 deletions(-)
+> 
+> diff --git a/tools/perf/builtin-trace.c b/tools/perf/builtin-trace.c
+> index 897fc504918b..2f7b1111d8e9 100644
+> --- a/tools/perf/builtin-trace.c
+> +++ b/tools/perf/builtin-trace.c
+> @@ -2040,7 +2040,7 @@ static size_t syscall__scnprintf_args(struct syscall *sc, char *bf, size_t size,
+>  
+>  			/*
+>   			 * Suppress this argument if its value is zero and
+> - 			 * and we don't have a string associated in an
+> + 			 * we don't have a string associated in an
+>   			 * strarray for it.
+>   			 */
+>  			if (val == 0 &&
+> @@ -2748,7 +2748,7 @@ static size_t trace__fprintf_tp_fields(struct trace *trace, struct evsel *evsel,
+>  
+>  		/*
+>  		 * Suppress this argument if its value is zero and
+> -		 * and we don't have a string associated in an
+> +		 * we don't have a string associated in an
+>  		 * strarray for it.
+>  		 */
+>  		if (val == 0 &&
+> -- 
+> 2.36.1
+
+-- 
 
 - Arnaldo
