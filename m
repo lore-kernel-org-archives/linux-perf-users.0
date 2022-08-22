@@ -2,78 +2,116 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 137CFC3F6B0
-	for <linux-perf-users@archiver.kernel.org>; Sat, 20 Aug 2022 21:59:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2D1FFC32772
+	for <linux-perf-users@archiver.kernel.org>; Mon, 22 Aug 2022 09:05:56 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S235071AbiHTV7r (ORCPT
+        id S233166AbiHVJFy (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Sat, 20 Aug 2022 17:59:47 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50638 "EHLO
+        Mon, 22 Aug 2022 05:05:54 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50996 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S235105AbiHTV7m (ORCPT
+        with ESMTP id S231931AbiHVJFw (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Sat, 20 Aug 2022 17:59:42 -0400
-Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id EEB3C27B30;
-        Sat, 20 Aug 2022 14:59:40 -0700 (PDT)
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id 56CAE60BD3;
-        Sat, 20 Aug 2022 21:59:40 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPS id AED94C433C1;
-        Sat, 20 Aug 2022 21:59:39 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1661032779;
-        bh=+UQtVeg/mBt3ZYbAYsNppNACGD8ZIrHD1zXagvj8Xww=;
-        h=Subject:From:In-Reply-To:References:Date:To:Cc:From;
-        b=HbBN5mvq3SF30nCvftoiPmwL5oDGH9qU2xaWIoQqi+wwuQI+yEqlf7qRsVJpSoGbF
-         +ExMMI2kLzYOuid5x6K3gorAYSidffPSJFctwCOI7c14jSZvZRcJGHRRqNC9mAJPGP
-         jyE0P1RpKqkpv5Ak/kd12Rt7FN6ZYmnILO4KUQ4O9FT1GzL1x7t0aBe3zFdh1Uj6rJ
-         h5Ct+LP54yKkaMa7j21Fb9eu/6ItR6RwMB8tr7Itu/YkrGWITPnCbNbnjZmpIEDde7
-         OxgwcZ6Ocrg2XG6URddjICyvRqzrNUZ0xaQHItEvbrw7C/8ngPeyTvUGzJEYsDmQme
-         TE7a9xdRp+0bA==
-Received: from aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (localhost.localdomain [127.0.0.1])
-        by aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (Postfix) with ESMTP id 9C51AE2A053;
-        Sat, 20 Aug 2022 21:59:39 +0000 (UTC)
-Subject: Re: [GIT PULL] perf tools fixes for v6.0: 1st batch
-From:   pr-tracker-bot@kernel.org
-In-Reply-To: <20220820011109.25811-1-acme@kernel.org>
-References: <20220820011109.25811-1-acme@kernel.org>
-X-PR-Tracked-List-Id: <linux-kernel.vger.kernel.org>
-X-PR-Tracked-Message-Id: <20220820011109.25811-1-acme@kernel.org>
-X-PR-Tracked-Remote: git://git.kernel.org/pub/scm/linux/kernel/git/acme/linux.git tags/perf-tools-fixes-for-v6.0-2022-08-19
-X-PR-Tracked-Commit-Id: f52679b78877f17e95a317e18a4c9c46cc3d845a
-X-PR-Merge-Tree: torvalds/linux.git
-X-PR-Merge-Refname: refs/heads/master
-X-PR-Merge-Commit-Id: 16b3d851c0146123507fe864fdd97411ded51147
-Message-Id: <166103277963.18400.15000815346355554395.pr-tracker-bot@kernel.org>
-Date:   Sat, 20 Aug 2022 21:59:39 +0000
-To:     Arnaldo Carvalho de Melo <acme@kernel.org>
-Cc:     Linus Torvalds <torvalds@linux-foundation.org>,
-        Ingo Molnar <mingo@kernel.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Jiri Olsa <jolsa@kernel.org>,
-        Namhyung Kim <namhyung@kernel.org>,
-        Clark Williams <williams@redhat.com>,
-        Kate Carcia <kcarcia@redhat.com>, linux-kernel@vger.kernel.org,
-        linux-perf-users@vger.kernel.org,
-        Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Ian Rogers <irogers@google.com>,
-        Arnaldo Carvalho de Melo <acme@redhat.com>
+        Mon, 22 Aug 2022 05:05:52 -0400
+Received: from desiato.infradead.org (desiato.infradead.org [IPv6:2001:8b0:10b:1:d65d:64ff:fe57:4e05])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E92142ED4B;
+        Mon, 22 Aug 2022 02:05:50 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=desiato.20200630; h=In-Reply-To:Content-Type:MIME-Version:
+        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description;
+        bh=LWsB3a2GElxXD8l5gqgAM51j5OsBohLTMGRPFhEXfEU=; b=pbTHASZCDUS4YjjOv9eJsQnUcR
+        2nBbGmRDgKBw5929GRTXdqmVYCagoL9OgLAd30QKEjodvx6SzsSE7X4+cPJ9mpkSXSa2JUThr7fgu
+        8a1NBA1JgLWeXAN8bmPmnJA4oJpgRrypTHVaIiWd0aM78D8cH5OJaR7v02Q+THHdNL+rphAvI4ppf
+        HTAGIKgxKD15H/pzOuNklzsihYc6lO5RFV6YbQJ51R8opY/kohnkvwGmBh7eXKWiXNEZ1d/r0xCj7
+        V5JbHFUGNDtWS1vkbPtrPLtH/92uJVKPzx0mhed9qDN2/x/FifNltQ86yxATl6kleB9WeDwr9g2hS
+        Gwpg5p7Q==;
+Received: from j130084.upc-j.chello.nl ([24.132.130.84] helo=worktop.programming.kicks-ass.net)
+        by desiato.infradead.org with esmtpsa (Exim 4.94.2 #2 (Red Hat Linux))
+        id 1oQ3N9-0052yi-Ek; Mon, 22 Aug 2022 09:05:27 +0000
+Received: by worktop.programming.kicks-ass.net (Postfix, from userid 1000)
+        id B9651980BC2; Mon, 22 Aug 2022 11:05:25 +0200 (CEST)
+Date:   Mon, 22 Aug 2022 11:05:25 +0200
+From:   Peter Zijlstra <peterz@infradead.org>
+To:     Stephane Eranian <eranian@google.com>
+Cc:     Sandipan Das <sandipan.das@amd.com>, linux-kernel@vger.kernel.org,
+        linux-perf-users@vger.kernel.org, x86@kernel.org, bp@alien8.de,
+        acme@kernel.org, namhyung@kernel.org, jolsa@kernel.org,
+        tglx@linutronix.de, mingo@redhat.com, mark.rutland@arm.com,
+        alexander.shishkin@linux.intel.com, dave.hansen@linux.intel.com,
+        like.xu.linux@gmail.com, ananth.narayan@amd.com,
+        ravi.bangoria@amd.com, santosh.shukla@amd.com
+Subject: Re: [PATCH 04/13] x86/cpufeatures: Add LbrExtV2 feature bit
+Message-ID: <YwNG1XzcyR5ys+rA@worktop.programming.kicks-ass.net>
+References: <cover.1660211399.git.sandipan.das@amd.com>
+ <172d2b0df39306ed77221c45ee1aa62e8ae0548d.1660211399.git.sandipan.das@amd.com>
+ <YvotoHMaLE1XawiO@worktop.programming.kicks-ass.net>
+ <CABPqkBQ1YLAu+sJC_U4QsQuo3PuzUwRDrNm9KcrUAEUxeBaYbg@mail.gmail.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CABPqkBQ1YLAu+sJC_U4QsQuo3PuzUwRDrNm9KcrUAEUxeBaYbg@mail.gmail.com>
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-The pull request you sent on Fri, 19 Aug 2022 22:11:09 -0300:
+On Mon, Aug 15, 2022 at 12:42:23PM -0700, Stephane Eranian wrote:
+> Hi,
+> 
+> On Mon, Aug 15, 2022 at 4:27 AM Peter Zijlstra <peterz@infradead.org> wrote:
+> >
+> > On Thu, Aug 11, 2022 at 05:59:52PM +0530, Sandipan Das wrote:
+> > > CPUID leaf 0x80000022 i.e. ExtPerfMonAndDbg advertises some new performance
+> > > monitoring features for AMD processors.
+> > >
+> > > Bit 1 of EAX indicates support for Last Branch Record Extension Version 2
+> > > (LbrExtV2) features. If found to be set during PMU initialization, the EBX
+> > > bits of the same leaf can be used to determine the number of available LBR
+> > > entries.
+> > >
+> > > For better utilization of feature words, LbrExtV2 is added as a scattered
+> > > feature bit.
+> > >
+> > > Signed-off-by: Sandipan Das <sandipan.das@amd.com>
+> > > ---
+> > >  arch/x86/include/asm/cpufeatures.h | 2 +-
+> > >  arch/x86/kernel/cpu/scattered.c    | 1 +
+> > >  2 files changed, 2 insertions(+), 1 deletion(-)
+> > >
+> > > diff --git a/arch/x86/include/asm/cpufeatures.h b/arch/x86/include/asm/cpufeatures.h
+> > > index 393f2bbb5e3a..e3fa476a24b0 100644
+> > > --- a/arch/x86/include/asm/cpufeatures.h
+> > > +++ b/arch/x86/include/asm/cpufeatures.h
+> > > @@ -96,7 +96,7 @@
+> > >  #define X86_FEATURE_SYSCALL32                ( 3*32+14) /* "" syscall in IA32 userspace */
+> > >  #define X86_FEATURE_SYSENTER32               ( 3*32+15) /* "" sysenter in IA32 userspace */
+> > >  #define X86_FEATURE_REP_GOOD         ( 3*32+16) /* REP microcode works well */
+> > > -/* FREE!                                ( 3*32+17) */
+> > > +#define X86_FEATURE_LBREXT_V2                ( 3*32+17) /* AMD Last Branch Record Extension Version 2 */
+> > >  #define X86_FEATURE_LFENCE_RDTSC     ( 3*32+18) /* "" LFENCE synchronizes RDTSC */
+> > >  #define X86_FEATURE_ACC_POWER                ( 3*32+19) /* AMD Accumulated Power Mechanism */
+> > >  #define X86_FEATURE_NOPL             ( 3*32+20) /* The NOPL (0F 1F) instructions */
+> > > diff --git a/arch/x86/kernel/cpu/scattered.c b/arch/x86/kernel/cpu/scattered.c
+> > > index dbaa8326d6f2..6be46dffddbf 100644
+> > > --- a/arch/x86/kernel/cpu/scattered.c
+> > > +++ b/arch/x86/kernel/cpu/scattered.c
+> > > @@ -44,6 +44,7 @@ static const struct cpuid_bit cpuid_bits[] = {
+> > >       { X86_FEATURE_PROC_FEEDBACK,    CPUID_EDX, 11, 0x80000007, 0 },
+> > >       { X86_FEATURE_MBA,              CPUID_EBX,  6, 0x80000008, 0 },
+> > >       { X86_FEATURE_PERFMON_V2,       CPUID_EAX,  0, 0x80000022, 0 },
+> > > +     { X86_FEATURE_LBREXT_V2,        CPUID_EAX,  1, 0x80000022, 0 },
+> > >       { 0, 0, 0, 0, 0 }
+> > >  };
+> >
+> > Would LBR_V2 work at all? It being a new version already seems to imply
+> > extention, no? Then again, I suppose there's an argument to be had for
+> > avoiding confusion vs the Intel LBR thing.. Couldn't you have called
+> > this BRS_V2 :-)
+> >
+> I believe it is called v2 because there was already a LBR in previous
+> generations, however it
 
-> git://git.kernel.org/pub/scm/linux/kernel/git/acme/linux.git tags/perf-tools-fixes-for-v6.0-2022-08-19
-
-has been merged into torvalds/linux.git:
-https://git.kernel.org/torvalds/c/16b3d851c0146123507fe864fdd97411ded51147
-
-Thank you!
-
--- 
-Deet-doot-dot, I am a bot.
-https://korg.docs.kernel.org/prtracker.html
+That's not the question; It's currently called LBREXT_V2, which is a bit
+of a shit name. Then again LBR_V2 is too because AMD and Intel LBR are
+quite different. So in that respect BRS_V2 would be an ever so much
+better name.
