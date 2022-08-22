@@ -2,72 +2,99 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 038A3C28D13
-	for <linux-perf-users@archiver.kernel.org>; Mon, 22 Aug 2022 19:37:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E98B6C28D13
+	for <linux-perf-users@archiver.kernel.org>; Mon, 22 Aug 2022 21:34:05 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S238797AbiHVThT (ORCPT
+        id S232096AbiHVVeE (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Mon, 22 Aug 2022 15:37:19 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51562 "EHLO
+        Mon, 22 Aug 2022 17:34:04 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56966 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S238766AbiHVThO (ORCPT
+        with ESMTP id S236898AbiHVVeD (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Mon, 22 Aug 2022 15:37:14 -0400
-Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 557F6120AC;
-        Mon, 22 Aug 2022 12:37:14 -0700 (PDT)
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id DE7A56122C;
-        Mon, 22 Aug 2022 19:37:13 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 22144C433D6;
-        Mon, 22 Aug 2022 19:37:13 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1661197033;
-        bh=FeYGsxzCyb1NGsi9TcyMiumm/NVyPesnRttU2pCPJgI=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=dnf6EkL3sfDIT3ITEXiWFCXln4ziGtCF2o2/BqUTY71/UMaydkmuvKO76lhNgYKKB
-         bWTAlDskcB/BFea2awpx3Aai+LCz6g7PYiDvyGzCFLoL4EChiEpm8CStD49JyT9pDk
-         qUWv/J/26byy6dySt5Zq9Rqsr4viEH1S0jPhuY/a8HLWGKxFmFlDLbjtnAWP8N3wHU
-         N7lhWIGA6WNGKEIMHV3UCU9LOUq0aYwNFKhsuVL7TbPOdW9FuYNiqdoxaKPtzH1Dn6
-         aELdfX9urW1ACCvLBcgWNPSwk63V5Q+c2XykhuyjQ2QNmlu1F6z8gsuCRmyoxrNXK4
-         NcN82MV38URIQ==
-Received: by quaco.ghostprotocols.net (Postfix, from userid 1000)
-        id 14137404A1; Mon, 22 Aug 2022 16:37:10 -0300 (-03)
-Date:   Mon, 22 Aug 2022 16:37:10 -0300
-From:   Arnaldo Carvalho de Melo <acme@kernel.org>
-To:     Linus Torvalds <torvalds@linux-foundation.org>
-Cc:     Ingo Molnar <mingo@kernel.org>,
-        Yang Jihong <yangjihong1@huawei.com>, bp@suse.de,
-        ndesaulniers@google.com, nathan@kernel.org,
-        alexandre.belloni@bootlin.com, namhyung@kernel.org,
-        jolsa@kernel.org, linux-perf-users@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] perf tools: Fix compile error for x86
-Message-ID: <YwPa5gZ0gVTM4Sli@kernel.org>
-References: <20220822092557.210209-1-yangjihong1@huawei.com>
- <YwNcgdk/p18Cr+uv@gmail.com>
- <YwOBKwPmW/FX6hSS@kernel.org>
- <CAHk-=wjRLxmiTWiy4f1wa4S3NRK1kdZoAind_AtBGvNx=CdhYg@mail.gmail.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CAHk-=wjRLxmiTWiy4f1wa4S3NRK1kdZoAind_AtBGvNx=CdhYg@mail.gmail.com>
-X-Url:  http://acmel.wordpress.com
+        Mon, 22 Aug 2022 17:34:03 -0400
+Received: from mail-yw1-x1149.google.com (mail-yw1-x1149.google.com [IPv6:2607:f8b0:4864:20::1149])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0F00B4F194
+        for <linux-perf-users@vger.kernel.org>; Mon, 22 Aug 2022 14:34:02 -0700 (PDT)
+Received: by mail-yw1-x1149.google.com with SMTP id 00721157ae682-333b218f2cbso206750027b3.0
+        for <linux-perf-users@vger.kernel.org>; Mon, 22 Aug 2022 14:34:02 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20210112;
+        h=cc:to:from:subject:mime-version:message-id:date:from:to:cc;
+        bh=PjKTkSpXN7z/1vO6BY9+ZapPx/17h+7Me4eIBkw8jXs=;
+        b=tJw8ADOvD+JfoFv1mCrbL8K9kKBzqqJ1EKt8KjQblt7okK8atz7gbBE6d7S3t4H0i+
+         3WifvVOXU8+vcq7InqpZxvC+4schTKAqIGm6pIGyHvoDfrUlZXYxpi/ols/FVXI7jJdw
+         3bbaqhAW1NVUtEoMy5gI5wXpTNl5MHAw5Uo+tR5DqZmFvhWiLzAAuTiQG+qJeQmRfvp/
+         YBpOIjq9X82GrRPGTW2fvGV3f7FwCISfZcRscWGJuW5z+wz1eNbl8fftQK2nqcDNYzAx
+         TJ7qJuZtHsQKseBizo3gNLa3lUe+hzMv4yU7qNyhMGT1wM1dF0W3HKnNzQV30DfLVK5x
+         UA3w==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=cc:to:from:subject:mime-version:message-id:date:x-gm-message-state
+         :from:to:cc;
+        bh=PjKTkSpXN7z/1vO6BY9+ZapPx/17h+7Me4eIBkw8jXs=;
+        b=cyHuu3yAOz1pl2Rcgk4UhdyzmhzYaIhjoR5eWXbIaTWT0stYOYUPkC9Mdg3pu4wscJ
+         Z/iHwT7AZxO6lPCQccYAXaE1euyNivCpUTB9k76bg6kllZjuKeFlHCWRTgyrxa5bYjdI
+         jy8apXlM5bWR7wJKH10sS3xOZRzNAQ1Bnyf3OAuww9hDg494RKmWFyOiUscJLEGtjLuL
+         J+MX46bRn/Gruoy+LHImlawJQpoB0GpPEWfF6GKTavK9bMnGBKbJJpcJaeOWxDplwgQ5
+         hTupOMR9Ok8Cv93Ak4p4/fbczc0TAvPyNhbg3RVXw/QrAjvaCdKo/I/N8GYry/FGKhMM
+         +xkA==
+X-Gm-Message-State: ACgBeo08eC1g905F9Dgo9t30zwen97QanWoPfBhN4vTEknCI79YBHMUh
+        iUxOlPESJNXmUgZ9QLS/gGStHunfbLde
+X-Google-Smtp-Source: AA6agR6xatGqBGUTcHv4+qKQeK4H3e5wE2VOPYMYZxC/z3a/ux9ueLbCKnh/zlVXmCFy7KgAZCcd0b9ZUOrd
+X-Received: from irogers.svl.corp.google.com ([2620:15c:2d4:203:2768:cfe4:142e:cbca])
+ (user=irogers job=sendgmr) by 2002:a25:5051:0:b0:68f:f31f:b590 with SMTP id
+ e78-20020a255051000000b0068ff31fb590mr19311377ybb.569.1661204041297; Mon, 22
+ Aug 2022 14:34:01 -0700 (PDT)
+Date:   Mon, 22 Aug 2022 14:33:51 -0700
+Message-Id: <20220822213352.75721-1-irogers@google.com>
+Mime-Version: 1.0
+X-Mailer: git-send-email 2.37.2.609.g9ff673ca1a-goog
+Subject: [PATCH v1 1/2] perf stat: Clear reset_group for each stat run
+From:   Ian Rogers <irogers@google.com>
+To:     Peter Zijlstra <peterz@infradead.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        Arnaldo Carvalho de Melo <acme@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Jiri Olsa <jolsa@kernel.org>,
+        Namhyung Kim <namhyung@kernel.org>,
+        Ian Rogers <irogers@google.com>,
+        Kan Liang <kan.liang@linux.intel.com>,
+        Andi Kleen <ak@linux.intel.com>,
+        linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
+Cc:     Stephane Eranian <eranian@google.com>
+Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-Em Mon, Aug 22, 2022 at 09:45:02AM -0700, Linus Torvalds escreveu:
-> On Mon, Aug 22, 2022 at 6:14 AM Arnaldo Carvalho de Melo
-> <acme@kernel.org> wrote:
-> >
-> > Linus, I'll prep a pull req later today or you can apply this so that we
-> > can reduce the window where tools/perf/ isn't building.
-> 
-> Ok, I took that patch directly. Thanks,
+If a weak group is broken then the reset_group flag remains set for
+the next run. Having reset_group set means the counter isn't created
+and ultimately a segfault.
 
-Great, thanks, rebased my local branch, re-tested, all is ok.
+A simple reproduction of this is:
+perf stat -r2 -e '{cycles,cycles,cycles,cycles,cycles,cycles,cycles,cycles,cycles,cycles}:W
+which will be added as a test in the next patch.
 
-- Arnaldo
+Fixes: 4804e0111662 ("perf stat: Use affinity for opening events")
+Signed-off-by: Ian Rogers <irogers@google.com>
+---
+ tools/perf/builtin-stat.c | 1 +
+ 1 file changed, 1 insertion(+)
+
+diff --git a/tools/perf/builtin-stat.c b/tools/perf/builtin-stat.c
+index 7fb81a44672d..54cd29d07ca8 100644
+--- a/tools/perf/builtin-stat.c
++++ b/tools/perf/builtin-stat.c
+@@ -826,6 +826,7 @@ static int __run_perf_stat(int argc, const char **argv, int run_idx)
+ 	}
+ 
+ 	evlist__for_each_entry(evsel_list, counter) {
++		counter->reset_group = false;
+ 		if (bpf_counter__load(counter, &target))
+ 			return -1;
+ 		if (!evsel__is_bpf(counter))
+-- 
+2.37.2.609.g9ff673ca1a-goog
+
