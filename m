@@ -2,75 +2,102 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2E712C28D13
-	for <linux-perf-users@archiver.kernel.org>; Mon, 22 Aug 2022 13:31:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CFB77C28D13
+	for <linux-perf-users@archiver.kernel.org>; Mon, 22 Aug 2022 13:50:10 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S234876AbiHVNba (ORCPT
+        id S231527AbiHVNuI (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Mon, 22 Aug 2022 09:31:30 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43816 "EHLO
+        Mon, 22 Aug 2022 09:50:08 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37798 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S235125AbiHVNb1 (ORCPT
+        with ESMTP id S231176AbiHVNuH (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Mon, 22 Aug 2022 09:31:27 -0400
-Received: from casper.infradead.org (casper.infradead.org [IPv6:2001:8b0:10b:1236::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7CC9F27B20;
-        Mon, 22 Aug 2022 06:31:26 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=casper.20170209; h=In-Reply-To:Content-Transfer-Encoding:
-        Content-Type:MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:
-        Sender:Reply-To:Content-ID:Content-Description;
-        bh=57LbMv2SSV69f3b0nqG0xlqY4irKLICrqXlGHWibQ8I=; b=E9IrOodzNgd5O5GNBf3FPC8G5k
-        2wstz74s2L84/Swr1xrKCKsF2Z5JSjF3mCvcX57Co7549WPmaXErvTjyyDPKpBv/lqTnfTu7CeNJg
-        DcWWzzqndW3hOm2a/t7RhC40pKgrEzCJz7vsMvp9Wq1BgF8nsXC/62+7U6+sgpSejLgr1HX6EUvAi
-        H8hGCIn0GsiRJvn160g8GVRbT+pZLvxdgevjtb7cjJntEaKxdPB0kVzzwVwmf9gsaTbYFw1gTp5Fg
-        3sJA+uXOT/TvfKORiFPbQvfbeF3EHSgC9+UZgVBXfmIYJehP8cQlWirt/to6nKtKiJ+T0SK7SmJFn
-        gFxcQDYA==;
-Received: from j130084.upc-j.chello.nl ([24.132.130.84] helo=worktop.programming.kicks-ass.net)
-        by casper.infradead.org with esmtpsa (Exim 4.94.2 #2 (Red Hat Linux))
-        id 1oQ7W8-00EJNU-IM; Mon, 22 Aug 2022 13:31:00 +0000
-Received: by worktop.programming.kicks-ass.net (Postfix, from userid 1000)
-        id 69B549804A3; Mon, 22 Aug 2022 15:30:59 +0200 (CEST)
-Date:   Mon, 22 Aug 2022 15:30:59 +0200
-From:   Peter Zijlstra <peterz@infradead.org>
-To:     =?utf-8?B?546L5rW35byb?= <wanghaichi@tju.edu.cn>
-Cc:     mingo@redhat.com, acme@kernel.org, mark.rutland@arm.com,
-        alexander.shishkin@linux.intel.com, jolsa@redhat.com,
-        namhyung@kernel.org, ast@kernel.org, daniel@iogearbox.net,
-        andrii@kernel.org, kafai@fb.com, songliubraving@fb.com, yhs@fb.com,
-        john.fastabend@gmail.com, kpsingh@kernel.org,
-        linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org,
-        netdev@vger.kernel.org, bpf@vger.kernel.org,
-        syzkaller@googlegroups.com, lishuochuan@tju.edu.cn
-Subject: Re: possible deadlock in __perf_install_in_context
-Message-ID: <YwOFE1uIYAT+lml2@worktop.programming.kicks-ass.net>
-References: <AFsAbgDYFNbqQK7Ox0JKtqpH.1.1661173960307.Hmail.3014218099@tju.edu.cn>
+        Mon, 22 Aug 2022 09:50:07 -0400
+Received: from sin.source.kernel.org (sin.source.kernel.org [IPv6:2604:1380:40e1:4800::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D025E26104;
+        Mon, 22 Aug 2022 06:50:05 -0700 (PDT)
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by sin.source.kernel.org (Postfix) with ESMTPS id 4A5DECE12D4;
+        Mon, 22 Aug 2022 13:50:04 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 6FCD5C433D7;
+        Mon, 22 Aug 2022 13:50:02 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1661176202;
+        bh=PkPJyZp0RJEudQRyQhF1AVCrZqBQGaVx6WsnuFkdofY=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=DaE7Ix7iJ+WK0FJur7tmTaCv1JRfa4OFhEEW4D0zxXr2yLuZ7ij78PFz7ogP1RVab
+         6bNZB4LSBD8L5dD9kskxMLrzPglQc4S0sEqzVC22/XnhRxdZRc97jHMAFCiDfGHMEa
+         5S55Nzj+phrBYvGv5vX7h5EZKmQrOCplwB3Cl7uwg59aL8lfrHZjg8XIQMTyGmx8Ed
+         aI7nUjKiEiaOEFWYM2oqlXKHLsAk7VrT468Jqc7WkF3larrIfg56Q3HQBpSbMqvYEu
+         3AolSIlNN9cjGMD2Yw48mXAGi94hb8ev8jITIIc6ucIED1opyYbWlBcBBDHwRgtNd3
+         baR8iKjy7UarA==
+Received: by quaco.ghostprotocols.net (Postfix, from userid 1000)
+        id 1650E404A1; Mon, 22 Aug 2022 10:50:00 -0300 (-03)
+Date:   Mon, 22 Aug 2022 10:50:00 -0300
+From:   Arnaldo Carvalho de Melo <acme@kernel.org>
+To:     James Clark <james.clark@arm.com>
+Cc:     Ian Rogers <irogers@google.com>, linux-perf-users@vger.kernel.org,
+        Peter Zijlstra <peterz@infradead.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Jiri Olsa <jolsa@kernel.org>,
+        Namhyung Kim <namhyung@kernel.org>,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] perf: python: Fix build when PYTHON_CONFIG is user
+ supplied
+Message-ID: <YwOJiBG+K877d+Ou@kernel.org>
+References: <20220728093946.1337642-1-james.clark@arm.com>
+ <CAP-5=fXnR=LSk-bO02V7HzWTTCrsbnM1w63_YYqSMEgy0vM-PQ@mail.gmail.com>
+ <YuLi14u3DQ+ShH9w@kernel.org>
+ <f64f6cbf-73cf-e59a-5f6d-7303125bee66@arm.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <AFsAbgDYFNbqQK7Ox0JKtqpH.1.1661173960307.Hmail.3014218099@tju.edu.cn>
+In-Reply-To: <f64f6cbf-73cf-e59a-5f6d-7303125bee66@arm.com>
+X-Url:  http://acmel.wordpress.com
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-On Mon, Aug 22, 2022 at 09:12:40PM +0800, 王海弛 wrote:
-> Dear Linux maintainers and reviewers:
-> We would like to report a linux kernel bug, found by a modified version of syzkaller.
-> May affected file: arch/x86/events/core.c, include/linux/perf_event.h
-> Kernel Version: 8fe31e0995f048d16b378b90926793a0aa4af1e5
-> Kernel Config: see attach, linux.config
-> Syzkaller Version: 3666edfeb55080ebe138d77417fa96fe2555d6bb
-> reproducing program: see attach, reproducing.txt (There are syz-reproducing program, C reproducing program and crash report created by syzkaller, both of which can replay the crash)
-> Feel free to  email us if any other infomations are needed. Hope the provided materials will help finding and fixing the bug.
-> The full log crash log are as follows:(also in the attach, crash.report)
-> -----------------
+Em Mon, Aug 22, 2022 at 11:08:37AM +0100, James Clark escreveu:
 > 
 > 
-> unchecked MSR access error: WRMSR to 0x188 (tried to write 0x0000000300530000) at rIP: 0xffffffff810287de (__wrmsr arch/x86/include/asm/msr.h:103 [inline])
-> unchecked MSR access error: WRMSR to 0x188 (tried to write 0x0000000300530000) at rIP: 0xffffffff810287de (native_write_msr arch/x86/include/asm/msr.h:160 [inline])
-> unchecked MSR access error: WRMSR to 0x188 (tried to write 0x0000000300530000) at rIP: 0xffffffff810287de (wrmsrl arch/x86/include/asm/msr.h:281 [inline])
-> unchecked MSR access error: WRMSR to 0x188 (tried to write 0x0000000300530000) at rIP: 0xffffffff810287de (__x86_pmu_enable_event arch/x86/events/intel/../perf_event.h:1120 [inline])
-> unchecked MSR access error: WRMSR to 0x188 (tried to write 0x0000000300530000) at rIP: 0xffffffff810287de (intel_pmu_enable_event+0x3ce/0xfe0 arch/x86/events/intel/core.c:2693)
+> On 28/07/2022 20:26, Arnaldo Carvalho de Melo wrote:
+> > Em Thu, Jul 28, 2022 at 09:37:32AM -0700, Ian Rogers escreveu:
+> >> On Thu, Jul 28, 2022 at 2:40 AM James Clark <james.clark@arm.com> wrote:
+> >>>
+> >>> The previous change to Python autodetection had a small mistake where
+> >>> the auto value was used to determine the Python binary, rather than the
+> >>> user supplied value. The Python binary is only used for one part of the
+> >>> build process, rather than the final linking, so it was producing
+> >>> correct builds in most scenarios, especially when the auto detected
+> >>> value matched what the user wanted, or the system only had a valid set
+> >>> of Pythons.
+> >>>
+> >>> Change it so that the Python binary path is derived from either the
+> >>> PYTHON_CONFIG value or PYTHON value, depending on what is specified by
+> >>> the user. This was the original intention.
+> >>>
+> >>> This error was spotted in a build failure an odd cross compilation
+> >>> environment after commit 4c41cb46a732fe82 ("perf python: Prefer
+> >>> python3") was merged.
+> >>>
+> >>> Fixes: 630af16eee495f58 ("perf tools: Use Python devtools for version autodetection rather than runtime")
+> >>> Signed-off-by: James Clark <james.clark@arm.com>
+> >>
+> >> Acked-by: Ian Rogers <irogers@google.com>
+> > 
+> > Thanks, applied.
+> 
+> Hi Arnaldo,
+> 
+> I couldn't find this change in any of your branches. Do you know if it
+> got dropped somehow or was there an issue with it?
 
-I'm guess this is some sort of broken virt setup?
+Applied it to my local perf/urgent branch, testing now. I thought I had
+processed it, not really :-\
+
+- Arnaldo
