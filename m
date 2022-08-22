@@ -2,117 +2,122 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5A6F0C32789
-	for <linux-perf-users@archiver.kernel.org>; Mon, 22 Aug 2022 10:08:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4B78BC28D13
+	for <linux-perf-users@archiver.kernel.org>; Mon, 22 Aug 2022 10:38:01 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S234493AbiHVKIw (ORCPT
+        id S231290AbiHVKh7 (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Mon, 22 Aug 2022 06:08:52 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37214 "EHLO
+        Mon, 22 Aug 2022 06:37:59 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59120 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S234584AbiHVKIr (ORCPT
+        with ESMTP id S229586AbiHVKh7 (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Mon, 22 Aug 2022 06:08:47 -0400
-Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTP id 59AF012A97;
-        Mon, 22 Aug 2022 03:08:46 -0700 (PDT)
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 3C1C113D5;
-        Mon, 22 Aug 2022 03:08:49 -0700 (PDT)
-Received: from [10.57.17.196] (unknown [10.57.17.196])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id D3E773F718;
-        Mon, 22 Aug 2022 03:08:43 -0700 (PDT)
-Message-ID: <f64f6cbf-73cf-e59a-5f6d-7303125bee66@arm.com>
-Date:   Mon, 22 Aug 2022 11:08:37 +0100
+        Mon, 22 Aug 2022 06:37:59 -0400
+Received: from mail-ej1-x631.google.com (mail-ej1-x631.google.com [IPv6:2a00:1450:4864:20::631])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1E9642FFC0;
+        Mon, 22 Aug 2022 03:37:58 -0700 (PDT)
+Received: by mail-ej1-x631.google.com with SMTP id bj12so3208168ejb.13;
+        Mon, 22 Aug 2022 03:37:58 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20210112;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date:sender
+         :from:to:cc;
+        bh=Fic3qiVWuOXlTHP1LZdbaPSid2L5A3dsT7KZevdChfs=;
+        b=IHCuOUhy56vMwdwjLTG9NYX3fgcJdjJPjKhyta6Qno0VyVYmrtpv9plgj6qwWD/X2s
+         HwucGO9KuL0+fghF4vJmR4n6VrUCKt9Z1rHhlw2k27NTRRAGdLmbtW4v6PfYv0ohFFge
+         +XizqygcAKRGewcldYjjgWNN5F1sii+PSyPdOcaGhBabVrUjtVUM1abOU8eeWfl3fgEX
+         lUWYUW0pzYBASu2+AuJdgXCGAJVQfzFcGfJiTsq+RXzRk1ILQyG1WUAKMKKmp7/64veg
+         7LGqhggBuNU9M9ktMRIynqbAQVfL3FdjdzZuktCWyNiSuug2eGT+XuMWFl+4q31DvBvO
+         zrwQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date:sender
+         :x-gm-message-state:from:to:cc;
+        bh=Fic3qiVWuOXlTHP1LZdbaPSid2L5A3dsT7KZevdChfs=;
+        b=4ZO3/CTlBcDlHALq/lCRCMj9ybT+M4X8HKm6VWCCIQ1oNmgIWl+K5JmRPs1IEcg4ix
+         Q72avHcWaNqEiXGQkQVIOk9ectRn+uOaqPcDq1aawzK4upWTSovDw382ELgDg+p1fzPq
+         4kcZqFsDlUjEdJFebS5Ovg5ba18uis+0tl0Aiw5Dz7tk6dDMzQ1je2Gv9y7Dj1aTB4O9
+         P0rad6VWgDaY6zrH7NyA1aOHr9I7Xur0cgiP2RuUjzUIAmY/qo0nPexlUPZRVvxdhSvi
+         Y/ltOORlbPo4ndKQY8NHvLUp5OqUZO8UAKZdB7Q7FhAZ3ZPxSzmhB5MtBUpKOMEPGP3w
+         v+IA==
+X-Gm-Message-State: ACgBeo3iHPvsna1iKBnc157r8oX/taEiKX9zwEpiWgvz0wo59mlLLRDv
+        +s7x5Eyx9Zrj6hKBskhPqYA=
+X-Google-Smtp-Source: AA6agR61ZJH1BrR2M4z9iHGxFWbQH+3OJQa8rlccLSppDIjyOOz9ZmPu5f2e5WGvyZY474HoWqaSiw==
+X-Received: by 2002:a17:907:a408:b0:73d:6696:50af with SMTP id sg8-20020a170907a40800b0073d669650afmr6162308ejc.369.1661164676572;
+        Mon, 22 Aug 2022 03:37:56 -0700 (PDT)
+Received: from gmail.com (195-38-113-151.pool.digikabel.hu. [195.38.113.151])
+        by smtp.gmail.com with ESMTPSA id l17-20020a1709063d3100b00711edab7622sm5941550ejf.40.2022.08.22.03.37.55
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 22 Aug 2022 03:37:55 -0700 (PDT)
+Sender: Ingo Molnar <mingo.kernel.org@gmail.com>
+Date:   Mon, 22 Aug 2022 12:37:53 +0200
+From:   Ingo Molnar <mingo@kernel.org>
+To:     Yang Jihong <yangjihong1@huawei.com>
+Cc:     bp@suse.de, ndesaulniers@google.com, nathan@kernel.org,
+        alexandre.belloni@bootlin.com, acme@kernel.org,
+        namhyung@kernel.org, jolsa@kernel.org,
+        linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] perf tools: Fix compile error for x86
+Message-ID: <YwNcgdk/p18Cr+uv@gmail.com>
+References: <20220822092557.210209-1-yangjihong1@huawei.com>
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
- Thunderbird/91.11.0
-Subject: Re: [PATCH] perf: python: Fix build when PYTHON_CONFIG is user
- supplied
-Content-Language: en-US
-To:     Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Ian Rogers <irogers@google.com>
-Cc:     linux-perf-users@vger.kernel.org,
-        Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Jiri Olsa <jolsa@kernel.org>,
-        Namhyung Kim <namhyung@kernel.org>,
-        linux-kernel@vger.kernel.org
-References: <20220728093946.1337642-1-james.clark@arm.com>
- <CAP-5=fXnR=LSk-bO02V7HzWTTCrsbnM1w63_YYqSMEgy0vM-PQ@mail.gmail.com>
- <YuLi14u3DQ+ShH9w@kernel.org>
-From:   James Clark <james.clark@arm.com>
-In-Reply-To: <YuLi14u3DQ+ShH9w@kernel.org>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20220822092557.210209-1-yangjihong1@huawei.com>
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
 
+* Yang Jihong <yangjihong1@huawei.com> wrote:
 
-On 28/07/2022 20:26, Arnaldo Carvalho de Melo wrote:
-> Em Thu, Jul 28, 2022 at 09:37:32AM -0700, Ian Rogers escreveu:
->> On Thu, Jul 28, 2022 at 2:40 AM James Clark <james.clark@arm.com> wrote:
->>>
->>> The previous change to Python autodetection had a small mistake where
->>> the auto value was used to determine the Python binary, rather than the
->>> user supplied value. The Python binary is only used for one part of the
->>> build process, rather than the final linking, so it was producing
->>> correct builds in most scenarios, especially when the auto detected
->>> value matched what the user wanted, or the system only had a valid set
->>> of Pythons.
->>>
->>> Change it so that the Python binary path is derived from either the
->>> PYTHON_CONFIG value or PYTHON value, depending on what is specified by
->>> the user. This was the original intention.
->>>
->>> This error was spotted in a build failure an odd cross compilation
->>> environment after commit 4c41cb46a732fe82 ("perf python: Prefer
->>> python3") was merged.
->>>
->>> Fixes: 630af16eee495f58 ("perf tools: Use Python devtools for version autodetection rather than runtime")
->>> Signed-off-by: James Clark <james.clark@arm.com>
->>
->> Acked-by: Ian Rogers <irogers@google.com>
+> Commit a0a12c3ed057 ("asm goto: eradicate CC_HAS_ASM_GOTO") eradicates
+> CC_HAS_ASM_GOTO, perf on x86 call asm_volatile_goto when compiling __GEN_RMWcc.
+> However, asm_volatile_goto is not declared, which causes compilation error:
 > 
-> Thanks, applied.
-
-Hi Arnaldo,
-
-I couldn't find this change in any of your branches. Do you know if it
-got dropped somehow or was there an issue with it?
-
-Thanks
-James
-
+> In file included from /home/linux/tools/include/asm/../../arch/x86/include/asm/atomic.h:7,
+>                  from /home/linux/tools/include/asm/atomic.h:6,
+>                  from /home/linux/tools/include/linux/atomic.h:5,
+>                  from /home/linux/tools/include/linux/refcount.h:41,
+>                  from /home/linux/tools/lib/perf/include/internal/cpumap.h:5,
+>                  from /home/linux/tools/perf/util/cpumap.h:7,
+>                  from /home/linux/tools/perf/util/env.h:7,
+>                  from /home/linux/tools/perf/util/header.h:12,
+>                  from pmu-events/pmu-events.c:9:
+> /home/linux/tools/include/asm/../../arch/x86/include/asm/atomic.h: In function ‘atomic_dec_and_test’:
+> /home/linux/tools/include/asm/../../arch/x86/include/asm/rmwcc.h:7:2: error: implicit declaration of function ‘asm_volatile_goto’ [-Werror=implicit-function-declaration]
+>   asm_volatile_goto (fullop "; j" cc " %l[cc_label]"  \
+>   ^~~~~~~~~~~~~~~~~
 > 
-> - Arnaldo
+> Solution:
+> Define asm_volatile_goto in compiler_types.h if not declared.
 > 
+> Currently, only x86 architecture uses asm_volatile_goto.
+> Theoretically, this patch affects only the x86 architecture.
+> 
+> Fixes: a0a12c3ed057 ("asm goto: eradicate CC_HAS_ASM_GOTO")
+> Signed-off-by: Yang Jihong <yangjihong1@huawei.com>
+> ---
+>  tools/include/linux/compiler_types.h | 4 ++++
+>  1 file changed, 4 insertions(+)
+> 
+> diff --git a/tools/include/linux/compiler_types.h b/tools/include/linux/compiler_types.h
+> index 24ae3054f304..1bdd834bdd57 100644
+> --- a/tools/include/linux/compiler_types.h
+> +++ b/tools/include/linux/compiler_types.h
+> @@ -36,4 +36,8 @@
+>  #include <linux/compiler-gcc.h>
+>  #endif
 >  
->> Thanks,
->> Ian
->>
->>> ---
->>>  tools/perf/Makefile.config | 2 +-
->>>  1 file changed, 1 insertion(+), 1 deletion(-)
->>>
->>> diff --git a/tools/perf/Makefile.config b/tools/perf/Makefile.config
->>> index d3c254c0f5c6..a69da9f34486 100644
->>> --- a/tools/perf/Makefile.config
->>> +++ b/tools/perf/Makefile.config
->>> @@ -265,7 +265,7 @@ endif
->>>  # defined. get-executable-or-default fails with an error if the first argument is supplied but
->>>  # doesn't exist.
->>>  override PYTHON_CONFIG := $(call get-executable-or-default,PYTHON_CONFIG,$(PYTHON_AUTO))
->>> -override PYTHON := $(call get-executable-or-default,PYTHON,$(subst -config,,$(PYTHON_AUTO)))
->>> +override PYTHON := $(call get-executable-or-default,PYTHON,$(subst -config,,$(PYTHON_CONFIG)))
->>>
->>>  grep-libs  = $(filter -l%,$(1))
->>>  strip-libs  = $(filter-out -l%,$(1))
->>> --
->>> 2.28.0
->>>
-> 
+> +#ifndef asm_volatile_goto
+> +#define asm_volatile_goto(x...) asm goto(x)
+> +#endif
+
+Tested-by: Ingo Molnar <mingo@kernel.org>
+
+Thanks,
+
+	Ingo
