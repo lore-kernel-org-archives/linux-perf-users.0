@@ -2,108 +2,86 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C1619C38159
-	for <linux-perf-users@archiver.kernel.org>; Tue, 23 Aug 2022 17:11:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1BB65C32772
+	for <linux-perf-users@archiver.kernel.org>; Tue, 23 Aug 2022 17:32:49 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1344004AbiHWRLx (ORCPT
+        id S232212AbiHWRcn (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Tue, 23 Aug 2022 13:11:53 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46386 "EHLO
+        Tue, 23 Aug 2022 13:32:43 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54308 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1344850AbiHWRLT (ORCPT
+        with ESMTP id S237624AbiHWRbu (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Tue, 23 Aug 2022 13:11:19 -0400
-Received: from ams.source.kernel.org (ams.source.kernel.org [145.40.68.75])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id F2D5F15CE0F;
-        Tue, 23 Aug 2022 06:38:32 -0700 (PDT)
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by ams.source.kernel.org (Postfix) with ESMTPS id 9D4BCB81B79;
-        Tue, 23 Aug 2022 13:38:31 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id EEFBCC433D6;
-        Tue, 23 Aug 2022 13:38:29 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1661261910;
-        bh=gNcuBVbZTH11tEmptRdziv6KZ2nBwZGGtxerR4UZk/g=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=lBQychxuVnBlnwSnKFGZWdNCjgjLWOAryCTjnRu4zWVeSrahmp7Wc8utuIPFoIcEP
-         wvFhJ6MhioFh/5SUZNfTBLF9mdcClxrVs5kt07KMbMMyON8DOaw2Omgml9SR34NBbJ
-         /DK80a6BsDsuHV/fIO6F2SgQsC2NLJIj1EY0PzC1gnM0GkSBWLrqsf7Lz6q5SwsRr0
-         qN8hJM8r5RG5Wzr0HkUPAoNOXpDr+hVGkbNI0pEOHHtzGQW85b89sJ/9tftvDd3+Ig
-         K5CUuedm5DLqUN7w2Vxt+4Qlll8YZGWhLIfN5x7NJcSpxZ4CHKZ4rH0Hol12uJGXfx
-         Mfb/pxzHV3DSA==
-Received: by quaco.ghostprotocols.net (Postfix, from userid 1000)
-        id 11832404A1; Tue, 23 Aug 2022 10:38:27 -0300 (-03)
-Date:   Tue, 23 Aug 2022 10:38:27 -0300
-From:   Arnaldo Carvalho de Melo <acme@kernel.org>
-To:     Heiko Carstens <hca@linux.ibm.com>
-Cc:     Thomas Richter <tmricht@linux.ibm.com>,
-        linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org,
-        svens@linux.ibm.com, gor@linux.ibm.com, sumanthk@linux.ibm.com
-Subject: Re: [PATCH v2] perf list: Add PMU pai_crypto event description for
- IBM z16
-Message-ID: <YwTYU+xXZJr0kH5u@kernel.org>
-References: <20220804075221.1132849-1-tmricht@linux.ibm.com>
- <YvOq3B02x8GqkVPA@kernel.org>
- <YwSdWUt02SFzrMUm@osiris>
+        Tue, 23 Aug 2022 13:31:50 -0400
+Received: from mga09.intel.com (mga09.intel.com [134.134.136.24])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 44A4C106F9C;
+        Tue, 23 Aug 2022 08:11:08 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1661267468; x=1692803468;
+  h=message-id:date:mime-version:subject:to:cc:references:
+   from:in-reply-to:content-transfer-encoding;
+  bh=jjiwMuWeqdFPYRf2a09O9x3igdhPit5rsRrfCbx9zoY=;
+  b=fmTXMMC13lK4LLM7CAZCddwLfpuL9AI9HWCFC7aPpU1NkBfM1fiwHUxj
+   ulAVl5wbwvaDnNtQ3stSSSFLPQqpjz4X5LvVyu0woE5MUSqmJdg5UnaJq
+   PWzPINHpd/KaCIkeGXMlMcgLoy+KpvU4zkJYa7NLisycE3YuhkGDth2+/
+   rZBHAnpSAqfnfqocprfLm6imwsGh9gVECNR8BKcI78dh/+mIG7BMaO8Qy
+   vFKhRUE63aJs6jY/XHISNRdA8frzefXPXZWn2LFMxFzYztt7F9fSbt+NL
+   6vepOtys5A6/EA9rRPxjrvJdG/ZHxfTfWWtIbBlhMPKSASpa38zq1HUx7
+   Q==;
+X-IronPort-AV: E=McAfee;i="6500,9779,10448"; a="294502943"
+X-IronPort-AV: E=Sophos;i="5.93,258,1654585200"; 
+   d="scan'208";a="294502943"
+Received: from orsmga006.jf.intel.com ([10.7.209.51])
+  by orsmga102.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 23 Aug 2022 08:10:56 -0700
+X-IronPort-AV: E=Sophos;i="5.93,258,1654585200"; 
+   d="scan'208";a="586027125"
+Received: from akleen-mobl1.amr.corp.intel.com (HELO [10.212.239.19]) ([10.212.239.19])
+  by orsmga006-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 23 Aug 2022 08:10:55 -0700
+Message-ID: <dc07fcb8-9a7c-7f74-375f-99ce192c4f39@linux.intel.com>
+Date:   Tue, 23 Aug 2022 17:10:55 +0200
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <YwSdWUt02SFzrMUm@osiris>
-X-Url:  http://acmel.wordpress.com
+User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:91.0) Gecko/20100101
+ Thunderbird/91.12.0
+Subject: Re: [PATCH v1 1/2] perf stat: Clear reset_group for each stat run
+Content-Language: en-US
+To:     Ian Rogers <irogers@google.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        Arnaldo Carvalho de Melo <acme@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Jiri Olsa <jolsa@kernel.org>,
+        Namhyung Kim <namhyung@kernel.org>,
+        Kan Liang <kan.liang@linux.intel.com>,
+        linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
+Cc:     Stephane Eranian <eranian@google.com>
+References: <20220822213352.75721-1-irogers@google.com>
+From:   Andi Kleen <ak@linux.intel.com>
+In-Reply-To: <20220822213352.75721-1-irogers@google.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-Em Tue, Aug 23, 2022 at 11:26:49AM +0200, Heiko Carstens escreveu:
-> On Wed, Aug 10, 2022 at 09:55:56AM -0300, Arnaldo Carvalho de Melo wrote:
-> > Em Thu, Aug 04, 2022 at 09:52:21AM +0200, Thomas Richter escreveu:
-> > > Add the event description for the IBM z16 pai_crypto PMU released with
-> > > commit 1bf54f32f525 ("s390/pai: Add support for cryptography counters")
-> > 
-> > What tree is this? I tried on torvalds/master:
-> > 
-> > ⬢[acme@toolbox perf]$ git remote update torvalds
-> > Fetching torvalds
-> > ⬢[acme@toolbox perf]$ git log --oneline -1 torvalds/master
-> > d4252071b97d2027 (torvalds/master) add barriers to buffer_uptodate and set_buffer_uptodate
-> > ⬢[acme@toolbox perf]$ git show torvalds/master d4252071b97d2027 | head -5
-> > commit d4252071b97d2027d246f6a82cbee4d52f618b47
-> > Author: Mikulas Patocka <mpatocka@redhat.com>
-> > Date:   Tue Aug 9 14:32:13 2022 -0400
-> > 
-> >     add barriers to buffer_uptodate and set_buffer_uptodate
-> > ⬢[acme@toolbox perf]$ git show torvalds/master 1bf54f32f525 | head -5
-> > fatal: ambiguous argument '1bf54f32f525': unknown revision or path not in the working tree.
-> > Use '--' to separate paths from revisions, like this:
-> > 'git <command> [<revision>...] -- [<file>...]'
-> > ⬢[acme@toolbox perf]$ git log --oneline torvalds/master | grep "pai: Add support for cryptography counters"
-> > ⬢[acme@toolbox perf]$
-> > ⬢[acme@toolbox perf]$ git show torvalds/master d4252071b97d2027 | head -4
-> > commit d4252071b97d2027d246f6a82cbee4d52f618b47
-> > Author: Mikulas Patocka <mpatocka@redhat.com>
-> > Date:   Tue Aug 9 14:32:13 2022 -0400
-> > 
-> > I'm applying it locally so that it gets included in testing, but please
-> > clarify where is that 1bf54f32f525 cset.
-> 
-> Thomas mixed up our non public development tree and Linus' tree.
-> Correct commit id + subject are:
-> 
-> 39d62336f5c1 ("s390/pai: add support for cryptography counters")
 
-Ok, this is already upstream, with this note:
+On 8/22/2022 11:33 PM, Ian Rogers wrote:
+> If a weak group is broken then the reset_group flag remains set for
+> the next run. Having reset_group set means the counter isn't created
+> and ultimately a segfault.
+>
+> A simple reproduction of this is:
+> perf stat -r2 -e '{cycles,cycles,cycles,cycles,cycles,cycles,cycles,cycles,cycles,cycles}:W
+> which will be added as a test in the next patch.
+>
+> Fixes: 4804e0111662 ("perf stat: Use affinity for opening events")
+> Signed-off-by: Ian Rogers <irogers@google.com>
 
-----
-    Committer notes:
 
-    Couldn't find 1bf54f32f525 ("s390/pai: Add support for cryptography
-    counters") in torvalds/master, in what tree is that cset?
-----
+Makes sense
 
-Not a biggie, the description was added, which is what really matters,
-right? :)
 
-- Arnaldo
+Reviewed-by: Andi Kleen <ak@linux.intel.com>
+
+
