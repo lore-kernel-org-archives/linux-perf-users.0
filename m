@@ -2,222 +2,116 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2BA21C32792
-	for <linux-perf-users@archiver.kernel.org>; Tue, 23 Aug 2022 10:47:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 017E4C32796
+	for <linux-perf-users@archiver.kernel.org>; Tue, 23 Aug 2022 11:37:15 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1355574AbiHWKrx (ORCPT
+        id S1358225AbiHWLhM (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Tue, 23 Aug 2022 06:47:53 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56448 "EHLO
+        Tue, 23 Aug 2022 07:37:12 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48960 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1355876AbiHWKpW (ORCPT
+        with ESMTP id S1348213AbiHWLdX (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Tue, 23 Aug 2022 06:45:22 -0400
-Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTP id 575326CD21;
-        Tue, 23 Aug 2022 02:11:05 -0700 (PDT)
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 5516B113E;
-        Tue, 23 Aug 2022 02:11:08 -0700 (PDT)
-Received: from [10.57.14.228] (unknown [10.57.14.228])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 3AE6E3F718;
-        Tue, 23 Aug 2022 02:11:03 -0700 (PDT)
-Message-ID: <35d01f5c-6167-497a-ddb9-5882025cc42b@arm.com>
-Date:   Tue, 23 Aug 2022 10:11:01 +0100
+        Tue, 23 Aug 2022 07:33:23 -0400
+Received: from mx0b-001b2d01.pphosted.com (mx0b-001b2d01.pphosted.com [148.163.158.5])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 16405C6CD5;
+        Tue, 23 Aug 2022 02:27:00 -0700 (PDT)
+Received: from pps.filterd (m0098421.ppops.net [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (8.17.1.5/8.17.1.5) with ESMTP id 27N8PGXE022459;
+        Tue, 23 Aug 2022 09:26:56 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=date : from : to : cc :
+ subject : message-id : references : mime-version : content-type :
+ content-transfer-encoding : in-reply-to; s=pp1;
+ bh=2vei+MS82V0X3c1p2oKJzYV81h4jfWZJXKgnSJtOV3M=;
+ b=S6EfbDBsKbuAylSq63HeJxvjxh75ADg29RzhwkY2QP957FAdZQkq+XJKOdVa+oggyprv
+ Km+xxVie6X7gxU24DoCmmwdK5s+tVaos38I/1wIObASUbACaQwx1Ttfi67SM1TULx5+U
+ 2YOcoF2DKPuyLkhup561ZpjMfM+EF7SGjNTHjifB239Wp4R5vsmNOugefHMufjSiuLBD
+ H4WqGbN9Ym9+Jp/FVdshN0yDDfFNuXlOONmHebh+apIYk33/QylzGcqSNAvEeIm06+xz
+ yXfzhPbrvKqpDbh73njwAGY773yXFLt8pdwTquGqqUm4LiWyHub70X42UijSzM2lCwuD NA== 
+Received: from ppma01fra.de.ibm.com (46.49.7a9f.ip4.static.sl-reverse.com [159.122.73.70])
+        by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 3j4uc99q0d-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Tue, 23 Aug 2022 09:26:56 +0000
+Received: from pps.filterd (ppma01fra.de.ibm.com [127.0.0.1])
+        by ppma01fra.de.ibm.com (8.16.1.2/8.16.1.2) with SMTP id 27N9LTvw012628;
+        Tue, 23 Aug 2022 09:26:54 GMT
+Received: from b06cxnps4075.portsmouth.uk.ibm.com (d06relay12.portsmouth.uk.ibm.com [9.149.109.197])
+        by ppma01fra.de.ibm.com with ESMTP id 3j2q88tkhu-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Tue, 23 Aug 2022 09:26:54 +0000
+Received: from d06av21.portsmouth.uk.ibm.com (d06av21.portsmouth.uk.ibm.com [9.149.105.232])
+        by b06cxnps4075.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 27N9QpWQ32113070
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Tue, 23 Aug 2022 09:26:51 GMT
+Received: from d06av21.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 423FF5204F;
+        Tue, 23 Aug 2022 09:26:51 +0000 (GMT)
+Received: from osiris (unknown [9.145.80.88])
+        by d06av21.portsmouth.uk.ibm.com (Postfix) with ESMTPS id E75155204E;
+        Tue, 23 Aug 2022 09:26:50 +0000 (GMT)
+Date:   Tue, 23 Aug 2022 11:26:49 +0200
+From:   Heiko Carstens <hca@linux.ibm.com>
+To:     Arnaldo Carvalho de Melo <acme@kernel.org>
+Cc:     Thomas Richter <tmricht@linux.ibm.com>,
+        linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org,
+        svens@linux.ibm.com, gor@linux.ibm.com, sumanthk@linux.ibm.com
+Subject: Re: [PATCH v2] perf list: Add PMU pai_crypto event description for
+ IBM z16
+Message-ID: <YwSdWUt02SFzrMUm@osiris>
+References: <20220804075221.1132849-1-tmricht@linux.ibm.com>
+ <YvOq3B02x8GqkVPA@kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
- Thunderbird/91.11.0
-Subject: Re: [PATCH v2 09/13] perf: cs-etm: Update record event to use new
- Trace ID protocol
-Content-Language: en-US
-To:     Mike Leach <mike.leach@linaro.org>
-Cc:     mathieu.poirier@linaro.org, peterz@infradead.org, mingo@redhat.com,
-        acme@kernel.org, linux-perf-users@vger.kernel.org,
-        quic_jinlmao@quicinc.com, suzuki.poulose@arm.com,
-        coresight@lists.linaro.org, linux-arm-kernel@lists.infradead.org,
-        linux-kernel@vger.kernel.org
-References: <20220704081149.16797-1-mike.leach@linaro.org>
- <20220704081149.16797-10-mike.leach@linaro.org>
- <5e8981b1-1c32-7ef0-0ef9-93799a8c968b@arm.com>
- <CAJ9a7Vi63XxDXtT8KD2-3=n5+de6_ZfD+X=jtPK+puM7f4koNw@mail.gmail.com>
-From:   James Clark <james.clark@arm.com>
-In-Reply-To: <CAJ9a7Vi63XxDXtT8KD2-3=n5+de6_ZfD+X=jtPK+puM7f4koNw@mail.gmail.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <YvOq3B02x8GqkVPA@kernel.org>
+X-TM-AS-GCONF: 00
+X-Proofpoint-ORIG-GUID: HhpzBzzd8F6ifxvoDAMc2tTnzIpJa4jm
+X-Proofpoint-GUID: HhpzBzzd8F6ifxvoDAMc2tTnzIpJa4jm
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.205,Aquarius:18.0.895,Hydra:6.0.517,FMLib:17.11.122.1
+ definitions=2022-08-23_04,2022-08-22_02,2022-06-22_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 impostorscore=0
+ suspectscore=0 phishscore=0 mlxlogscore=999 priorityscore=1501 mlxscore=0
+ adultscore=0 bulkscore=0 lowpriorityscore=0 malwarescore=0 clxscore=1011
+ spamscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2207270000 definitions=main-2208230035
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
+On Wed, Aug 10, 2022 at 09:55:56AM -0300, Arnaldo Carvalho de Melo wrote:
+> Em Thu, Aug 04, 2022 at 09:52:21AM +0200, Thomas Richter escreveu:
+> > Add the event description for the IBM z16 pai_crypto PMU released with
+> > commit 1bf54f32f525 ("s390/pai: Add support for cryptography counters")
+> 
+> What tree is this? I tried on torvalds/master:
+> 
+> ⬢[acme@toolbox perf]$ git remote update torvalds
+> Fetching torvalds
+> ⬢[acme@toolbox perf]$ git log --oneline -1 torvalds/master
+> d4252071b97d2027 (torvalds/master) add barriers to buffer_uptodate and set_buffer_uptodate
+> ⬢[acme@toolbox perf]$ git show torvalds/master d4252071b97d2027 | head -5
+> commit d4252071b97d2027d246f6a82cbee4d52f618b47
+> Author: Mikulas Patocka <mpatocka@redhat.com>
+> Date:   Tue Aug 9 14:32:13 2022 -0400
+> 
+>     add barriers to buffer_uptodate and set_buffer_uptodate
+> ⬢[acme@toolbox perf]$ git show torvalds/master 1bf54f32f525 | head -5
+> fatal: ambiguous argument '1bf54f32f525': unknown revision or path not in the working tree.
+> Use '--' to separate paths from revisions, like this:
+> 'git <command> [<revision>...] -- [<file>...]'
+> ⬢[acme@toolbox perf]$ git log --oneline torvalds/master | grep "pai: Add support for cryptography counters"
+> ⬢[acme@toolbox perf]$
+> ⬢[acme@toolbox perf]$ git show torvalds/master d4252071b97d2027 | head -4
+> commit d4252071b97d2027d246f6a82cbee4d52f618b47
+> Author: Mikulas Patocka <mpatocka@redhat.com>
+> Date:   Tue Aug 9 14:32:13 2022 -0400
+> 
+> I'm applying it locally so that it gets included in testing, but please
+> clarify where is that 1bf54f32f525 cset.
 
+Thomas mixed up our non public development tree and Linus' tree.
+Correct commit id + subject are:
 
-On 09/08/2022 17:13, Mike Leach wrote:
-> Hi James
-> 
-> On Wed, 20 Jul 2022 at 15:41, James Clark <james.clark@arm.com> wrote:
->>
->>
->>
->> On 04/07/2022 09:11, Mike Leach wrote:
->>> Trace IDs are now dynamically allocated.
->>>
->>> Previously used the static association algorithm that is no longer
->>> used. The 'cpu * 2 + seed' was outdated and broken for systems with high
->>> core counts (>46). as it did not scale and was broken for larger
->>> core counts.
->>>
->>> Trace ID is  as unknown in AUXINFO record, and the ID / CPU association
->>> will now be sent in PERF_RECORD_AUX_OUTPUT_HW_ID record.
->>>
->>> Remove legacy Trace ID allocation algorithm.
->>>
->>> Signed-off-by: Mike Leach <mike.leach@linaro.org>
->>> ---
->>>  include/linux/coresight-pmu.h       | 19 +++++++------------
->>>  tools/include/linux/coresight-pmu.h | 19 +++++++------------
->>
->> I usually see mentions that these header updates need to be separate commits
->> because they are merged through different trees.
->>
->>>  tools/perf/arch/arm/util/cs-etm.c   | 21 ++++++++++++---------
->>>  3 files changed, 26 insertions(+), 33 deletions(-)
->>>
->>> diff --git a/include/linux/coresight-pmu.h b/include/linux/coresight-pmu.h
->>> index 4ac5c081af93..9f7ee380266b 100644
->>> --- a/include/linux/coresight-pmu.h
->>> +++ b/include/linux/coresight-pmu.h
->>> @@ -8,7 +8,13 @@
->>>  #define _LINUX_CORESIGHT_PMU_H
->>>
->>>  #define CORESIGHT_ETM_PMU_NAME "cs_etm"
->>> -#define CORESIGHT_ETM_PMU_SEED  0x10
->>> +
->>> +/*
->>> + * Metadata now contains an unused trace ID - IDs are transmitted using a
->>> + * PERF_RECORD_AUX_OUTPUT_HW_ID record.
->>> + * Value architecturally defined as reserved in CoreSight.
->>> + */
->>> +#define CS_UNUSED_TRACE_ID 0x7F
->>>
->>>  /*
->>>   * Below are the definition of bit offsets for perf option, and works as
->>> @@ -32,15 +38,4 @@
->>>  #define ETM4_CFG_BIT_RETSTK  12
->>>  #define ETM4_CFG_BIT_VMID_OPT        15
->>>
->>> -static inline int coresight_get_trace_id(int cpu)
->>> -{
->>> -     /*
->>> -      * A trace ID of value 0 is invalid, so let's start at some
->>> -      * random value that fits in 7 bits and go from there.  Since
->>> -      * the common convention is to have data trace IDs be I(N) + 1,
->>> -      * set instruction trace IDs as a function of the CPU number.
->>> -      */
->>> -     return (CORESIGHT_ETM_PMU_SEED + (cpu * 2));
->>> -}
->>> -
->>>  #endif
->>> diff --git a/tools/include/linux/coresight-pmu.h b/tools/include/linux/coresight-pmu.h
->>> index 6c2fd6cc5a98..31d007fab3a6 100644
->>> --- a/tools/include/linux/coresight-pmu.h
->>> +++ b/tools/include/linux/coresight-pmu.h
->>> @@ -8,7 +8,13 @@
->>>  #define _LINUX_CORESIGHT_PMU_H
->>>
->>>  #define CORESIGHT_ETM_PMU_NAME "cs_etm"
->>> -#define CORESIGHT_ETM_PMU_SEED  0x10
->>> +
->>> +/*
->>> + * Metadata now contains an unused trace ID - IDs are transmitted using a
->>> + * PERF_RECORD_AUX_OUTPUT_HW_ID record.
->>> + * Value architecturally defined as reserved in CoreSight.
->>> + */
->>> +#define CS_UNUSED_TRACE_ID 0x7F
->>>
->>
->> minor nit: this isn't used in the kernel so only needs to be defined on the
->> tools side.
->>
-> 
-> Unfortunately if the two versions of coresight-pmu.h are different,
-> the build process for perf throws out a warning. So they have to be
-> identical.
-
-I was thinking more along the lines of putting it in a header that is
-only present on the perf side, rather than only having it in one version
-of a shared header.
-
-> 
-> Thanks
-> 
-> Mike
-> 
->>>  /*
->>>   * Below are the definition of bit offsets for perf option, and works as
->>> @@ -34,15 +40,4 @@
->>>  #define ETM4_CFG_BIT_RETSTK  12
->>>  #define ETM4_CFG_BIT_VMID_OPT        15
->>>
->>> -static inline int coresight_get_trace_id(int cpu)
->>> -{
->>> -     /*
->>> -      * A trace ID of value 0 is invalid, so let's start at some
->>> -      * random value that fits in 7 bits and go from there.  Since
->>> -      * the common convention is to have data trace IDs be I(N) + 1,
->>> -      * set instruction trace IDs as a function of the CPU number.
->>> -      */
->>> -     return (CORESIGHT_ETM_PMU_SEED + (cpu * 2));
->>> -}
->>> -
->>>  #endif
->>> diff --git a/tools/perf/arch/arm/util/cs-etm.c b/tools/perf/arch/arm/util/cs-etm.c
->>> index 1b54638d53b0..2d68e6a722ed 100644
->>> --- a/tools/perf/arch/arm/util/cs-etm.c
->>> +++ b/tools/perf/arch/arm/util/cs-etm.c
->>> @@ -421,13 +421,16 @@ static int cs_etm_recording_options(struct auxtrace_record *itr,
->>>       evlist__to_front(evlist, cs_etm_evsel);
->>>
->>>       /*
->>> -      * In the case of per-cpu mmaps, we need the CPU on the
->>> -      * AUX event.  We also need the contextID in order to be notified
->>> +      * get the CPU on the sample - need it to associate trace ID in the
->>> +      * AUX_OUTPUT_HW_ID event, and the AUX event for per-cpu mmaps.
->>> +      */
->>> +     evsel__set_sample_bit(cs_etm_evsel, CPU);
->>> +
->>> +     /*
->>> +      * Also the case of per-cpu mmaps, need the contextID in order to be notified
->>>        * when a context switch happened.
->>>        */
->>>       if (!perf_cpu_map__empty(cpus)) {
->>> -             evsel__set_sample_bit(cs_etm_evsel, CPU);
->>> -
->>>               err = cs_etm_set_option(itr, cs_etm_evsel,
->>>                                       BIT(ETM_OPT_CTXTID) | BIT(ETM_OPT_TS));
->>>               if (err)
->>> @@ -633,8 +636,9 @@ static void cs_etm_save_etmv4_header(__u64 data[], struct auxtrace_record *itr,
->>>
->>>       /* Get trace configuration register */
->>>       data[CS_ETMV4_TRCCONFIGR] = cs_etmv4_get_config(itr);
->>> -     /* Get traceID from the framework */
->>> -     data[CS_ETMV4_TRCTRACEIDR] = coresight_get_trace_id(cpu);
->>> +     /* traceID set to unused */
->>> +     data[CS_ETMV4_TRCTRACEIDR] = CS_UNUSED_TRACE_ID;
->>> +
->>>       /* Get read-only information from sysFS */
->>>       data[CS_ETMV4_TRCIDR0] = cs_etm_get_ro(cs_etm_pmu, cpu,
->>>                                              metadata_etmv4_ro[CS_ETMV4_TRCIDR0]);
->>> @@ -681,9 +685,8 @@ static void cs_etm_get_metadata(int cpu, u32 *offset,
->>>               magic = __perf_cs_etmv3_magic;
->>>               /* Get configuration register */
->>>               info->priv[*offset + CS_ETM_ETMCR] = cs_etm_get_config(itr);
->>> -             /* Get traceID from the framework */
->>> -             info->priv[*offset + CS_ETM_ETMTRACEIDR] =
->>> -                                             coresight_get_trace_id(cpu);
->>> +             /* traceID set to unused */
->>> +             info->priv[*offset + CS_ETM_ETMTRACEIDR] = CS_UNUSED_TRACE_ID;
->>>               /* Get read-only information from sysFS */
->>>               info->priv[*offset + CS_ETM_ETMCCER] =
->>>                       cs_etm_get_ro(cs_etm_pmu, cpu,
-> 
-> 
-> 
+39d62336f5c1 ("s390/pai: add support for cryptography counters")
