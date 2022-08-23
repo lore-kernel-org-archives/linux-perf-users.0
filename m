@@ -2,58 +2,58 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 543D0C32789
-	for <linux-perf-users@archiver.kernel.org>; Tue, 23 Aug 2022 22:10:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 315FAC32772
+	for <linux-perf-users@archiver.kernel.org>; Tue, 23 Aug 2022 22:10:39 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232108AbiHWWKM (ORCPT
+        id S232215AbiHWWKh (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Tue, 23 Aug 2022 18:10:12 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38374 "EHLO
+        Tue, 23 Aug 2022 18:10:37 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36594 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232311AbiHWWKF (ORCPT
+        with ESMTP id S232463AbiHWWKL (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Tue, 23 Aug 2022 18:10:05 -0400
+        Tue, 23 Aug 2022 18:10:11 -0400
 Received: from mail-yw1-x114a.google.com (mail-yw1-x114a.google.com [IPv6:2607:f8b0:4864:20::114a])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E64D474370
-        for <linux-perf-users@vger.kernel.org>; Tue, 23 Aug 2022 15:09:53 -0700 (PDT)
-Received: by mail-yw1-x114a.google.com with SMTP id 00721157ae682-335420c7bfeso261347607b3.16
-        for <linux-perf-users@vger.kernel.org>; Tue, 23 Aug 2022 15:09:53 -0700 (PDT)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id AB500754AD
+        for <linux-perf-users@vger.kernel.org>; Tue, 23 Aug 2022 15:10:00 -0700 (PDT)
+Received: by mail-yw1-x114a.google.com with SMTP id 00721157ae682-33d9f6f4656so15196917b3.21
+        for <linux-perf-users@vger.kernel.org>; Tue, 23 Aug 2022 15:10:00 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=google.com; s=20210112;
         h=cc:to:from:subject:references:mime-version:message-id:in-reply-to
          :date:from:to:cc;
-        bh=1eSbxV8xsUDpc2lqCmn8NmCq3Cnp8BvOk6OZp7THu6w=;
-        b=n2OTj1VLp6o80LdM8jnNvYoBYsCyZzoBStuGJULDdMtK0CWmBVdgrwHF1OaGt+Qwi5
-         eRuRw8mi7HBI8UOxklnAv/41dyMbKaRy1Ta8W9ULGpyZVcLLTz3DwtDqd67GTyKGWGNc
-         UtgVw7As6Jm1/J3mUL9fyRwlIIauby2UvWTWfwctcgAHWhKndmG6tcCi3ocg+hN5MBHD
-         7PrzHzK4NfxF67H7EHTvglpl3oGvbpj+O2s9rEBxedMdYyfuoSgT7++ssJ87Cs60V+kJ
-         1STe+qDjpbrUAdHdO2E34BmTFGbwg/ny4RW9A/kENMkvcl3uei22V7ZagcnPlJSMxpzh
-         H0zg==
+        bh=gT8uGhkPz2QVnzj86f2E281NRyIthHuKkag96DoN/yw=;
+        b=HwVO7m10rOh/3z2v+99/vN50dBJN/AH7VMgWiBoZmpDohvsq0tBv5/cTMrlymx/MOp
+         NzjiIFBvO3kC483MX3eO1YhzMufbSi8rArxF3hwBN+PRxCigNMkJbuHJp1BpgAsYcGtK
+         xMMP9GOnGVEC4usMZ0z8NM9+PnyrOkUSCUhuTQTwIlFDxLmDOuqdmfqRQejdBzQCpOHP
+         RuKH3kz+Nc+u5yio8jwIrQRyc+WxLBygENFC3jryDaUBwb3cm76KzzVe7qDK2mur2ERK
+         vY4M/iXJCWauvG638kIRnVjLoGxefxSYN1WBVRPEmNHY21KRJo6fLu7Vs2S8ZGuZ84Pz
+         raYw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
         h=cc:to:from:subject:references:mime-version:message-id:in-reply-to
          :date:x-gm-message-state:from:to:cc;
-        bh=1eSbxV8xsUDpc2lqCmn8NmCq3Cnp8BvOk6OZp7THu6w=;
-        b=Ba8C/zJ+kcZdePHp9C5HnYMnsWkgvCUXkvZ02TmBjJtP+G+aUNuLm0Q/Q40YDJ8MfH
-         pUNSW7msA8xxIpmOAi2LlMfSMf9KatoKcQdZ6I/GXII92JvBPsTmDgOlIiUwrXhuapSf
-         kWqEIsxWpJiioQOTvK3rw0IcFEuy9slXZk0k53LfYFzKlKzgqgVZg9M0ilVGVa92wWUc
-         yUV4QoPHGxH+f2Y4jX0xLRGW4Xkel9qUEySDTOFfYBUDMO6scp8/dbsJ3jvS+i1BnPqJ
-         KjrVSnj6f4Gkdc31N4j25TOKVF+BjEgRW9WRvbqTjC4ged4jUBagHGXxf/t4edgciYPI
-         +Amw==
-X-Gm-Message-State: ACgBeo2dwgHuOhlUPlWylQ94zJN58eus0Wr3eQPTihpuv2Uwsi/xcS9R
-        zTvssCaCUNDeN5s7Dft1C5L68Yu8Jv18
-X-Google-Smtp-Source: AA6agR5NQD+yIEJJ17qmVE5UxbRtTg+1QVTswl9OUhRV+oUsoSDQ/p9MEH1i7Y0xqkhVQ9084bu0eUFCQccE
+        bh=gT8uGhkPz2QVnzj86f2E281NRyIthHuKkag96DoN/yw=;
+        b=qlLWjVEbKrZmYNua0UGBE2h1GL/Ld6FbuDWAONpyXVa7DlmyPU+Yv1mccYiUkBmd63
+         5sEWZoUmUwopNeBOd2it6AEvWR90GO3VnnB12U6W/4r3x13drA55wFiPD/iqz3EIUXPg
+         HkZseTN0zo/Tv0aDdcxFqGOKkdKi+37UwrKbeMkeIAKm7suuXFg6C4+5dnY/0VlLWsvu
+         fneIvGQ1EATDwq7StdJgZALqCns4OePDKvsXWbaztWYV74+9q+8Yc1zI7S99ouMj22eP
+         uLvB9cLYvx8Ounyya/5maAy7gtCMSzJWFiTpsvB8rHj+vi/jwPwxhlQDHpbJ78/8jHtH
+         Nhrg==
+X-Gm-Message-State: ACgBeo2Y+h23f9a59aS1dd2pyEQfrRt8yLXU0QcMsP6lRWCcA1zAqOFR
+        x8/CXGEwX4PfBSQFHuq7NxmewcLB2/qh
+X-Google-Smtp-Source: AA6agR6oFWKl1LddABFgQgXo6ykLQYEDKjNJ/iL3zLeafkrEI61E24RPG1snXZgYhRAfWO0hv9++V5PTY/iq
 X-Received: from irogers.svl.corp.google.com ([2620:15c:2d4:203:7dbd:c08f:de81:c2a3])
- (user=irogers job=sendgmr) by 2002:a5b:24c:0:b0:68f:b0d7:79d9 with SMTP id
- g12-20020a5b024c000000b0068fb0d779d9mr24803235ybp.26.1661292593105; Tue, 23
- Aug 2022 15:09:53 -0700 (PDT)
-Date:   Tue, 23 Aug 2022 15:09:08 -0700
+ (user=irogers job=sendgmr) by 2002:a81:8003:0:b0:336:be9e:df56 with SMTP id
+ q3-20020a818003000000b00336be9edf56mr27645979ywf.92.1661292599033; Tue, 23
+ Aug 2022 15:09:59 -0700 (PDT)
+Date:   Tue, 23 Aug 2022 15:09:09 -0700
 In-Reply-To: <20220823220922.256001-1-irogers@google.com>
-Message-Id: <20220823220922.256001-5-irogers@google.com>
+Message-Id: <20220823220922.256001-6-irogers@google.com>
 Mime-Version: 1.0
 References: <20220823220922.256001-1-irogers@google.com>
 X-Mailer: git-send-email 2.37.2.609.g9ff673ca1a-goog
-Subject: [PATCH v2 04/18] perf hist: Update use of pthread mutex
+Subject: [PATCH v2 05/18] perf bpf: Remove unused pthread.h include
 From:   Ian Rogers <irogers@google.com>
 To:     Peter Zijlstra <peterz@infradead.org>,
         Ingo Molnar <mingo@redhat.com>,
@@ -109,106 +109,25 @@ Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-Switch to the use of mutex wrappers that provide better error checking.
+No pthread usage in bpf-event.h.
 
 Signed-off-by: Ian Rogers <irogers@google.com>
 ---
- tools/perf/builtin-top.c | 8 ++++----
- tools/perf/util/hist.c   | 6 +++---
- tools/perf/util/hist.h   | 4 ++--
- 3 files changed, 9 insertions(+), 9 deletions(-)
+ tools/perf/util/bpf-event.h | 1 -
+ 1 file changed, 1 deletion(-)
 
-diff --git a/tools/perf/builtin-top.c b/tools/perf/builtin-top.c
-index fd8fd913c533..14e60f6f219c 100644
---- a/tools/perf/builtin-top.c
-+++ b/tools/perf/builtin-top.c
-@@ -220,7 +220,7 @@ static void perf_top__record_precise_ip(struct perf_top *top,
- 		 * This function is now called with he->hists->lock held.
- 		 * Release it before going to sleep.
- 		 */
--		pthread_mutex_unlock(&he->hists->lock);
-+		mutex_unlock(&he->hists->lock);
+diff --git a/tools/perf/util/bpf-event.h b/tools/perf/util/bpf-event.h
+index 144a8a24cc69..1bcbd4fb6c66 100644
+--- a/tools/perf/util/bpf-event.h
++++ b/tools/perf/util/bpf-event.h
+@@ -4,7 +4,6 @@
  
- 		if (err == -ERANGE && !he->ms.map->erange_warned)
- 			ui__warn_map_erange(he->ms.map, sym, ip);
-@@ -230,7 +230,7 @@ static void perf_top__record_precise_ip(struct perf_top *top,
- 			sleep(1);
- 		}
- 
--		pthread_mutex_lock(&he->hists->lock);
-+		mutex_lock(&he->hists->lock);
- 	}
- }
- 
-@@ -836,12 +836,12 @@ static void perf_event__process_sample(struct perf_tool *tool,
- 		else
- 			iter.ops = &hist_iter_normal;
- 
--		pthread_mutex_lock(&hists->lock);
-+		mutex_lock(&hists->lock);
- 
- 		if (hist_entry_iter__add(&iter, &al, top->max_stack, top) < 0)
- 			pr_err("Problem incrementing symbol period, skipping event\n");
- 
--		pthread_mutex_unlock(&hists->lock);
-+		mutex_unlock(&hists->lock);
- 	}
- 
- 	addr_location__put(&al);
-diff --git a/tools/perf/util/hist.c b/tools/perf/util/hist.c
-index 1c085ab56534..bfce88e5eb0d 100644
---- a/tools/perf/util/hist.c
-+++ b/tools/perf/util/hist.c
-@@ -1622,13 +1622,13 @@ struct rb_root_cached *hists__get_rotate_entries_in(struct hists *hists)
- {
- 	struct rb_root_cached *root;
- 
--	pthread_mutex_lock(&hists->lock);
-+	mutex_lock(&hists->lock);
- 
- 	root = hists->entries_in;
- 	if (++hists->entries_in > &hists->entries_in_array[1])
- 		hists->entries_in = &hists->entries_in_array[0];
- 
--	pthread_mutex_unlock(&hists->lock);
-+	mutex_unlock(&hists->lock);
- 
- 	return root;
- }
-@@ -2805,7 +2805,7 @@ int __hists__init(struct hists *hists, struct perf_hpp_list *hpp_list)
- 	hists->entries_in = &hists->entries_in_array[0];
- 	hists->entries_collapsed = RB_ROOT_CACHED;
- 	hists->entries = RB_ROOT_CACHED;
--	pthread_mutex_init(&hists->lock, NULL);
-+	mutex_init(&hists->lock, /*pshared=*/false);
- 	hists->socket_filter = -1;
- 	hists->hpp_list = hpp_list;
- 	INIT_LIST_HEAD(&hists->hpp_formats);
-diff --git a/tools/perf/util/hist.h b/tools/perf/util/hist.h
-index 7ed4648d2fc2..508428b2c1b2 100644
---- a/tools/perf/util/hist.h
-+++ b/tools/perf/util/hist.h
-@@ -4,10 +4,10 @@
- 
+ #include <linux/compiler.h>
  #include <linux/rbtree.h>
- #include <linux/types.h>
 -#include <pthread.h>
- #include "evsel.h"
- #include "color.h"
- #include "events_stats.h"
-+#include "mutex.h"
+ #include <api/fd/array.h>
+ #include <stdio.h>
  
- struct hist_entry;
- struct hist_entry_ops;
-@@ -98,7 +98,7 @@ struct hists {
- 	const struct dso	*dso_filter;
- 	const char		*uid_filter_str;
- 	const char		*symbol_filter_str;
--	pthread_mutex_t		lock;
-+	struct mutex		lock;
- 	struct hists_stats	stats;
- 	u64			event_stream;
- 	u16			col_len[HISTC_NR_COLS];
 -- 
 2.37.2.609.g9ff673ca1a-goog
 
