@@ -2,85 +2,75 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4E92DC32789
-	for <linux-perf-users@archiver.kernel.org>; Tue, 23 Aug 2022 19:42:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3D3C5C32774
+	for <linux-perf-users@archiver.kernel.org>; Tue, 23 Aug 2022 19:43:58 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232016AbiHWTmu (ORCPT
+        id S230503AbiHWTn4 (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Tue, 23 Aug 2022 15:42:50 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47064 "EHLO
+        Tue, 23 Aug 2022 15:43:56 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39536 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232185AbiHWTmi (ORCPT
+        with ESMTP id S229710AbiHWTn0 (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Tue, 23 Aug 2022 15:42:38 -0400
-Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A44503C8CB;
-        Tue, 23 Aug 2022 11:42:18 -0700 (PDT)
+        Tue, 23 Aug 2022 15:43:26 -0400
+Received: from ams.source.kernel.org (ams.source.kernel.org [145.40.68.75])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0537D80026
+        for <linux-perf-users@vger.kernel.org>; Tue, 23 Aug 2022 11:44:45 -0700 (PDT)
 Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id 410C66170B;
-        Tue, 23 Aug 2022 18:42:18 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 6BA2FC433C1;
-        Tue, 23 Aug 2022 18:42:17 +0000 (UTC)
+        by ams.source.kernel.org (Postfix) with ESMTPS id 3B6DDB82053
+        for <linux-perf-users@vger.kernel.org>; Tue, 23 Aug 2022 18:44:44 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id BAF9BC433D6;
+        Tue, 23 Aug 2022 18:44:42 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1661280137;
-        bh=Mi4OM1rqCjF6cIOjGdzw7szRnUp7ZnNMmJ8zusLZ5NM=;
+        s=k20201202; t=1661280282;
+        bh=T0uBLbCmH35SLZ3L6AYdGbqjDJhQzRw68V2UEAxY5bo=;
         h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=acBfzBQtU6hGV3Bl3i6RibFmWvDsiqPk1i8pr5LTrQABjTxxf2oSZ7nrSFyB1d1II
-         5A5eBQc2kLpj0FglnREN6rGcwI2uWPAW6MfaplIyebEa35FloYbf6DRrAPo1KJ3ZHn
-         RU1879AD1VlmmD4nE59+xaUn6BKqRISKEzT44tg5hbqm77PmVb6oyAJs0Nan52ds65
-         CnFfYXJYpLYMfj1UaK7Sp3NG/Ot2SQCTaKigdkQpLJ7OfNdIiLEMtKvpjTwZ92wRmJ
-         /e9N8MX/45Zqx2kgpdgKSHvPpdy+RFQ8DDo5cBwHUkPju2QFz0qW1AeVOOXwreqR4+
-         QwDr+xN9sWAUg==
+        b=IdQ97In7uxvpcU7ypcTniuPEAMoDBxRHhUe4ofUNKR2tXg4r2Xch+rFdnu7b4Hfc/
+         2dPo6AWfnn6+lURVFBJ0/zuDaXq3DdM+KF2enyIYNqwm0QfaQPmFTCtN1BrXIqfpvp
+         0+2Eq/VBzm8yx1qZT7a6zay5XCXIhPkvLIW9enRNnVyYTRy37ohCWpeOzKSV8wsO0v
+         mRZQQcFTpPJoumKSh5lSIkej8PfnjSnjtxh/bGbNMTPfbLvwyoHxbRKZQl5zXjAVjz
+         FOj3uXvEbmXu4jgXDpx7S0Gqt9p6+gMdGOzsdrKMCyphoxyopb7gpJ6TxxO1GQ/0w1
+         VWFFN8gIhLfIw==
 Received: by quaco.ghostprotocols.net (Postfix, from userid 1000)
-        id 5814B404A1; Tue, 23 Aug 2022 15:42:14 -0300 (-03)
-Date:   Tue, 23 Aug 2022 15:42:14 -0300
+        id C0D30404A1; Tue, 23 Aug 2022 15:44:40 -0300 (-03)
+Date:   Tue, 23 Aug 2022 15:44:40 -0300
 From:   Arnaldo Carvalho de Melo <acme@kernel.org>
 To:     Andi Kleen <ak@linux.intel.com>
-Cc:     Ian Rogers <irogers@google.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Jiri Olsa <jolsa@kernel.org>,
-        Namhyung Kim <namhyung@kernel.org>,
-        Kan Liang <kan.liang@linux.intel.com>,
-        linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Stephane Eranian <eranian@google.com>
-Subject: Re: [PATCH v1 1/2] perf stat: Clear reset_group for each stat run
-Message-ID: <YwUfhvMUsE3FwZQ4@kernel.org>
-References: <20220822213352.75721-1-irogers@google.com>
- <dc07fcb8-9a7c-7f74-375f-99ce192c4f39@linux.intel.com>
+Cc:     linux-perf-users@vger.kernel.org, zhengjun.xing@intel.com
+Subject: Re: [PATCH] perf tools: Improve hybrid description in perf record
+ manpage
+Message-ID: <YwUgGMfO2I44e0it@kernel.org>
+References: <20220818100127.249401-1-ak@linux.intel.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <dc07fcb8-9a7c-7f74-375f-99ce192c4f39@linux.intel.com>
+In-Reply-To: <20220818100127.249401-1-ak@linux.intel.com>
 X-Url:  http://acmel.wordpress.com
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-Em Tue, Aug 23, 2022 at 05:10:55PM +0200, Andi Kleen escreveu:
+Em Thu, Aug 18, 2022 at 03:01:27AM -0700, Andi Kleen escreveu:
+> The Intel hybrid description is written in a different style than
+> the rest of the perf record man page. There were some new command line
+> options added after it which resulted in very strange section ordering.
+> Move the hybrid include last.
 > 
-> On 8/22/2022 11:33 PM, Ian Rogers wrote:
-> > If a weak group is broken then the reset_group flag remains set for
-> > the next run. Having reset_group set means the counter isn't created
-> > and ultimately a segfault.
-> > 
-> > A simple reproduction of this is:
-> > perf stat -r2 -e '{cycles,cycles,cycles,cycles,cycles,cycles,cycles,cycles,cycles,cycles}:W
-> > which will be added as a test in the next patch.
-> > 
-> > Fixes: 4804e0111662 ("perf stat: Use affinity for opening events")
-> > Signed-off-by: Ian Rogers <irogers@google.com>
+> Also the sub sections in the hybrid document don't fit the record
+> manpage well (especially since it talks about all kinds of unrelated
+> commands). I left this for now, but would be better to separate this
+> properly in the different man pages.
 > 
+> It would be better to use sub sections for the other sections, but these
+> don't seem to be supported in AsciiDoc?
 > 
-> Makes sense
+> Some of the examples are still misrendered in the manpage with an indented
+> troff command, but I don't know how to fix that.
 > 
-> 
-> Reviewed-by: Andi Kleen <ak@linux.intel.com>
+> In any case it's now better than before.
 
-Ok, applied.
+Thanks, tested and applied.
 
 - Arnaldo
