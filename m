@@ -2,40 +2,40 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DA3CEC00140
-	for <linux-perf-users@archiver.kernel.org>; Wed, 24 Aug 2022 13:30:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CE99AC00140
+	for <linux-perf-users@archiver.kernel.org>; Wed, 24 Aug 2022 13:37:22 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S234864AbiHXNaj (ORCPT
+        id S238289AbiHXNhW (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Wed, 24 Aug 2022 09:30:39 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36036 "EHLO
+        Wed, 24 Aug 2022 09:37:22 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52350 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S237364AbiHXNab (ORCPT
+        with ESMTP id S238265AbiHXNhS (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Wed, 24 Aug 2022 09:30:31 -0400
-Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 134BD564C9;
-        Wed, 24 Aug 2022 06:30:30 -0700 (PDT)
+        Wed, 24 Aug 2022 09:37:18 -0400
+Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B683B7DF53;
+        Wed, 24 Aug 2022 06:37:17 -0700 (PDT)
 Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id A555261724;
-        Wed, 24 Aug 2022 13:30:29 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id D5069C433D6;
-        Wed, 24 Aug 2022 13:30:28 +0000 (UTC)
+        by dfw.source.kernel.org (Postfix) with ESMTPS id 3B4F7614C2;
+        Wed, 24 Aug 2022 13:37:17 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 6EB00C433C1;
+        Wed, 24 Aug 2022 13:37:16 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1661347829;
-        bh=YFeuufGJjRCEIZJE99oiG+vmcFrF+tjiY5Sdh7Go5hs=;
+        s=k20201202; t=1661348236;
+        bh=EQYgx2ILFFg1QXRoYyC52FpjVJo12AMoBM4Wemwr6E8=;
         h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=mdvwLe/dtuo98a0/fKoG2NsWq4jSpVvOh1jp0klUT3v6r3bMekCV1aJ1uAeAi5y0g
-         O7xR7PHjY2QKpuru8pyN8QrGMB4pCpvAt0DA4C7QL8Uve5wzbrFHnExfgFky19KuCt
-         1VV27OD+7MZ2yQZ+FCIEPgS6lxL0TuC24s17pqaVWuIGBvg0ZGfvaSNhZcoSMR6UDe
-         0V3vr2nALWL6II5t/ZCHYV0PaIF+/oFEnxLWVELZZ/LnWYj7CC5UhpkYxiDAr0xKTw
-         nRDA2FF5eqO2dmzdUB7rV7T2ARoKiYdVKigt+XnVm90PEDrGGQ2m9IwOR0t0YKHtAZ
-         Cm6e7tDrcsLMA==
+        b=ou6Myf5+8knuXNUYvfBpdyPabrCMoPcGBOVdHIpa+Ee1BJ8EozZjxJ1DMQt+cDsjh
+         WrCgrBFmA37Vw5TiQZRQEDGDHG02qOVwKjOJAk7G1v2YA7nd0IQEkRdFrqdN1ekGiC
+         EAh982aMRGTDrZ2RNsjCgtKBdzThwR8ki0eJJeGYToxea9ln7fyhOMTwadAzNQ5Ch0
+         NbNoAcdHvAhiX3jiWauEikqUtonUt48clig/bYeVb89WgeaHGTYpvoLqIrLs/b/wjU
+         Qmpzm46YPZdDXmX4jmTbNjTHGvzOfjNePpMHG+jNqY9ZPkO2m5sbt3J32aVs9nk15x
+         wqrqK7f/VK1CA==
 Received: by quaco.ghostprotocols.net (Postfix, from userid 1000)
-        id 5F04F404A1; Wed, 24 Aug 2022 10:30:26 -0300 (-03)
-Date:   Wed, 24 Aug 2022 10:30:26 -0300
+        id 3CB2B404A1; Wed, 24 Aug 2022 10:37:14 -0300 (-03)
+Date:   Wed, 24 Aug 2022 10:37:14 -0300
 From:   Arnaldo Carvalho de Melo <acme@kernel.org>
 To:     Ian Rogers <irogers@google.com>
 Cc:     Peter Zijlstra <peterz@infradead.org>,
@@ -46,112 +46,98 @@ Cc:     Peter Zijlstra <peterz@infradead.org>,
         Namhyung Kim <namhyung@kernel.org>,
         linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org,
         Stephane Eranian <eranian@google.com>
-Subject: Re: [PATCH] perf hashmap: Tidy hashmap dependency
-Message-ID: <YwYn8i6Gy58IKqGm@kernel.org>
-References: <20220824050604.352156-1-irogers@google.com>
+Subject: Re: [PATCH] perf sched: Fix memory leaks in __cmd_record
+Message-ID: <YwYpiuN3VlzVyCiw@kernel.org>
+References: <20220824043825.322827-1-irogers@google.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=iso-8859-1
 Content-Disposition: inline
-In-Reply-To: <20220824050604.352156-1-irogers@google.com>
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20220824043825.322827-1-irogers@google.com>
 X-Url:  http://acmel.wordpress.com
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-Em Tue, Aug 23, 2022 at 10:06:04PM -0700, Ian Rogers escreveu:
-> When libbpf is present the build uses definitions in libbpf hashmap.c,
-> however, libbpf's hashmap.h wasn't being used. Switch to using the
-> correct hashmap.h dependent on the define HAVE_LIBBPF_SUPPORT. This
-> was the original intent in:
-> https://lore.kernel.org/lkml/20200515221732.44078-8-irogers@google.com/
+Em Tue, Aug 23, 2022 at 09:38:25PM -0700, Ian Rogers escreveu:
+> An array of strings is passed to cmd_record but not freed. As
+> cmd_record modifies the array, add another array as a copy that can be
+> mutated allowing the original array contents to all be freed.
+> 
+> Detected with -fsanitize=address.
+> 
+> Signed-off-by: Ian Rogers <irogers@google.com>
+> ---
+>  tools/perf/builtin-sched.c | 21 ++++++++++++++++-----
+>  1 file changed, 16 insertions(+), 5 deletions(-)
+> 
+> diff --git a/tools/perf/builtin-sched.c b/tools/perf/builtin-sched.c
+> index 2f6cd1b8b662..59ba14d2321c 100644
+> --- a/tools/perf/builtin-sched.c
+> +++ b/tools/perf/builtin-sched.c
+> @@ -3355,7 +3355,8 @@ static bool schedstat_events_exposed(void)
+>  static int __cmd_record(int argc, const char **argv)
+>  {
+>  	unsigned int rec_argc, i, j;
+> -	const char **rec_argv;
+> +	char **rec_argv;
+> +	const char **rec_argv_copy;
+>  	const char * const record_args[] = {
+>  		"record",
+>  		"-a",
+> @@ -3384,6 +3385,7 @@ static int __cmd_record(int argc, const char **argv)
+>  		ARRAY_SIZE(schedstat_args) : 0;
+>  
+>  	struct tep_event *waking_event;
+> +	int ret;
+>  
+>  	/*
+>  	 * +2 for either "-e", "sched:sched_wakeup" or
+> @@ -3391,14 +3393,15 @@ static int __cmd_record(int argc, const char **argv)
+>  	 */
+>  	rec_argc = ARRAY_SIZE(record_args) + 2 + schedstat_argc + argc - 1;
+>  	rec_argv = calloc(rec_argc + 1, sizeof(char *));
+> +	rec_argv_copy = calloc(rec_argc + 1, sizeof(char *));
+>  
+> -	if (rec_argv == NULL)
+> +	if (rec_argv == NULL || rec_argv_copy == NULL)
+>  		return -ENOMEM;
 
-Thanks, applied.
+Here you´re leaking rec_argv if rec_argv_copy fails to be allocated, no?
 
 - Arnaldo
 
- 
-> Signed-off-by: Ian Rogers <irogers@google.com>
-> ---
->  tools/perf/util/bpf-loader.c |  6 +++++-
->  tools/perf/util/evsel.c      |  6 +++++-
->  tools/perf/util/expr.h       | 11 ++++-------
->  tools/perf/util/stat.c       |  6 +++++-
->  4 files changed, 19 insertions(+), 10 deletions(-)
-> 
-> diff --git a/tools/perf/util/bpf-loader.c b/tools/perf/util/bpf-loader.c
-> index e2052f4fed33..d657594894cf 100644
-> --- a/tools/perf/util/bpf-loader.c
-> +++ b/tools/perf/util/bpf-loader.c
-> @@ -27,7 +27,11 @@
->  #include "util.h"
->  #include "llvm-utils.h"
->  #include "c++/clang-c.h"
-> -#include "hashmap.h"
-> +#ifdef HAVE_LIBBPF_SUPPORT
-> +#include <bpf/hashmap.h>
-> +#else
-> +#include "util/hashmap.h"
-> +#endif
->  #include "asm/bug.h"
 >  
->  #include <internal/xyarray.h>
-> diff --git a/tools/perf/util/evsel.c b/tools/perf/util/evsel.c
-> index 4852089e1d79..14846b7edb17 100644
-> --- a/tools/perf/util/evsel.c
-> +++ b/tools/perf/util/evsel.c
-> @@ -46,7 +46,11 @@
->  #include "string2.h"
->  #include "memswap.h"
->  #include "util.h"
-> -#include "hashmap.h"
-> +#ifdef HAVE_LIBBPF_SUPPORT
-> +#include <bpf/hashmap.h>
-> +#else
-> +#include "util/hashmap.h"
-> +#endif
->  #include "pmu-hybrid.h"
->  #include "off_cpu.h"
->  #include "../perf-sys.h"
-> diff --git a/tools/perf/util/expr.h b/tools/perf/util/expr.h
-> index bd2116983bbb..0403a92d9dcc 100644
-> --- a/tools/perf/util/expr.h
-> +++ b/tools/perf/util/expr.h
-> @@ -2,14 +2,11 @@
->  #ifndef PARSE_CTX_H
->  #define PARSE_CTX_H 1
+>  	for (i = 0; i < ARRAY_SIZE(record_args); i++)
+>  		rec_argv[i] = strdup(record_args[i]);
 >  
-> -// There are fixes that need to land upstream before we can use libbpf's headers,
-> -// for now use our copy unconditionally, since the data structures at this point
-> -// are exactly the same, no problem.
-> -//#ifdef HAVE_LIBBPF_SUPPORT
-> -//#include <bpf/hashmap.h>
-> -//#else
-> +#ifdef HAVE_LIBBPF_SUPPORT
-> +#include <bpf/hashmap.h>
-> +#else
->  #include "util/hashmap.h"
-> -//#endif
-> +#endif
+> -	rec_argv[i++] = "-e";
+> +	rec_argv[i++] = strdup("-e");
+>  	waking_event = trace_event__tp_format("sched", "sched_waking");
+>  	if (!IS_ERR(waking_event))
+>  		rec_argv[i++] = strdup("sched:sched_waking");
+> @@ -3409,11 +3412,19 @@ static int __cmd_record(int argc, const char **argv)
+>  		rec_argv[i++] = strdup(schedstat_args[j]);
 >  
->  struct metric_ref;
+>  	for (j = 1; j < (unsigned int)argc; j++, i++)
+> -		rec_argv[i] = argv[j];
+> +		rec_argv[i] = strdup(argv[j]);
 >  
-> diff --git a/tools/perf/util/stat.c b/tools/perf/util/stat.c
-> index 0882b4754fcf..ce5e9e372fc4 100644
-> --- a/tools/perf/util/stat.c
-> +++ b/tools/perf/util/stat.c
-> @@ -14,7 +14,11 @@
->  #include "evlist.h"
->  #include "evsel.h"
->  #include "thread_map.h"
-> -#include "hashmap.h"
-> +#ifdef HAVE_LIBBPF_SUPPORT
-> +#include <bpf/hashmap.h>
-> +#else
-> +#include "util/hashmap.h"
-> +#endif
->  #include <linux/zalloc.h>
+>  	BUG_ON(i != rec_argc);
 >  
->  void update_stats(struct stats *stats, u64 val)
+> -	return cmd_record(i, rec_argv);
+> +	memcpy(rec_argv_copy, rec_argv, sizeof(char*) * rec_argc);
+> +	ret = cmd_record(rec_argc, rec_argv_copy);
+> +
+> +	for (i = 0; i < rec_argc; i++)
+> +		free(rec_argv[i]);
+> +	free(rec_argv);
+> +	free(rec_argv_copy);
+> +
+> +	return ret;
+>  }
+>  
+>  int cmd_sched(int argc, const char **argv)
 > -- 
 > 2.37.2.609.g9ff673ca1a-goog
 
