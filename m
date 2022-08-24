@@ -2,150 +2,159 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0C979C32796
-	for <linux-perf-users@archiver.kernel.org>; Wed, 24 Aug 2022 10:38:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DA3CEC00140
+	for <linux-perf-users@archiver.kernel.org>; Wed, 24 Aug 2022 13:30:42 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S234787AbiHXKiX (ORCPT
+        id S234864AbiHXNaj (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Wed, 24 Aug 2022 06:38:23 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55790 "EHLO
+        Wed, 24 Aug 2022 09:30:39 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36036 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229640AbiHXKiW (ORCPT
+        with ESMTP id S237364AbiHXNab (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Wed, 24 Aug 2022 06:38:22 -0400
-Received: from frasgout.his.huawei.com (frasgout.his.huawei.com [185.176.79.56])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 239B9481F7;
-        Wed, 24 Aug 2022 03:38:21 -0700 (PDT)
-Received: from fraeml742-chm.china.huawei.com (unknown [172.18.147.200])
-        by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4MCMxl0VWFz68BcV;
-        Wed, 24 Aug 2022 18:38:03 +0800 (CST)
-Received: from lhrpeml500005.china.huawei.com (7.191.163.240) by
- fraeml742-chm.china.huawei.com (10.206.15.223) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2375.24; Wed, 24 Aug 2022 12:38:19 +0200
-Received: from SecurePC-101-06.china.huawei.com (10.122.247.231) by
- lhrpeml500005.china.huawei.com (7.191.163.240) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2375.24; Wed, 24 Aug 2022 11:38:18 +0100
-From:   Jonathan Cameron <Jonathan.Cameron@huawei.com>
-To:     <linux-cxl@vger.kernel.org>,
-        Dan Williams <dan.j.williams@intel.com>,
-        Alison Schofield <alison.schofield@intel.com>,
-        Vishal Verma <vishal.l.verma@intel.com>,
-        Ira Weiny <ira.weiny@intel.com>,
-        Ben Widawsky <bwidawsk@kernel.org>,
-        <linux-perf-users@vger.kernel.org>, Will Deacon <will@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>
-CC:     <linuxarm@huawei.com>
-Subject: [RFC PATCH v2 4/4] docs: perf: Minimal introduction the the CXL PMU device and driver.
-Date:   Wed, 24 Aug 2022 11:36:17 +0100
-Message-ID: <20220824103617.21781-5-Jonathan.Cameron@huawei.com>
-X-Mailer: git-send-email 2.32.0
-In-Reply-To: <20220824103617.21781-1-Jonathan.Cameron@huawei.com>
-References: <20220824103617.21781-1-Jonathan.Cameron@huawei.com>
+        Wed, 24 Aug 2022 09:30:31 -0400
+Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 134BD564C9;
+        Wed, 24 Aug 2022 06:30:30 -0700 (PDT)
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by dfw.source.kernel.org (Postfix) with ESMTPS id A555261724;
+        Wed, 24 Aug 2022 13:30:29 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id D5069C433D6;
+        Wed, 24 Aug 2022 13:30:28 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1661347829;
+        bh=YFeuufGJjRCEIZJE99oiG+vmcFrF+tjiY5Sdh7Go5hs=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=mdvwLe/dtuo98a0/fKoG2NsWq4jSpVvOh1jp0klUT3v6r3bMekCV1aJ1uAeAi5y0g
+         O7xR7PHjY2QKpuru8pyN8QrGMB4pCpvAt0DA4C7QL8Uve5wzbrFHnExfgFky19KuCt
+         1VV27OD+7MZ2yQZ+FCIEPgS6lxL0TuC24s17pqaVWuIGBvg0ZGfvaSNhZcoSMR6UDe
+         0V3vr2nALWL6II5t/ZCHYV0PaIF+/oFEnxLWVELZZ/LnWYj7CC5UhpkYxiDAr0xKTw
+         nRDA2FF5eqO2dmzdUB7rV7T2ARoKiYdVKigt+XnVm90PEDrGGQ2m9IwOR0t0YKHtAZ
+         Cm6e7tDrcsLMA==
+Received: by quaco.ghostprotocols.net (Postfix, from userid 1000)
+        id 5F04F404A1; Wed, 24 Aug 2022 10:30:26 -0300 (-03)
+Date:   Wed, 24 Aug 2022 10:30:26 -0300
+From:   Arnaldo Carvalho de Melo <acme@kernel.org>
+To:     Ian Rogers <irogers@google.com>
+Cc:     Peter Zijlstra <peterz@infradead.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Jiri Olsa <jolsa@kernel.org>,
+        Namhyung Kim <namhyung@kernel.org>,
+        linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Stephane Eranian <eranian@google.com>
+Subject: Re: [PATCH] perf hashmap: Tidy hashmap dependency
+Message-ID: <YwYn8i6Gy58IKqGm@kernel.org>
+References: <20220824050604.352156-1-irogers@google.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7BIT
-Content-Type:   text/plain; charset=US-ASCII
-X-Originating-IP: [10.122.247.231]
-X-ClientProxiedBy: lhrpeml100006.china.huawei.com (7.191.160.224) To
- lhrpeml500005.china.huawei.com (7.191.163.240)
-X-CFilter-Loop: Reflected
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20220824050604.352156-1-irogers@google.com>
+X-Url:  http://acmel.wordpress.com
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-Very basic introduction to the device and the current driver support
-provided. I expect to expand on this in future versions of this patch
-set.
+Em Tue, Aug 23, 2022 at 10:06:04PM -0700, Ian Rogers escreveu:
+> When libbpf is present the build uses definitions in libbpf hashmap.c,
+> however, libbpf's hashmap.h wasn't being used. Switch to using the
+> correct hashmap.h dependent on the define HAVE_LIBBPF_SUPPORT. This
+> was the original intent in:
+> https://lore.kernel.org/lkml/20200515221732.44078-8-irogers@google.com/
 
-Signed-off-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
+Thanks, applied.
 
---
-RFC:
-- I'll post separately about this shortly, but it seems very odd
-  to me that there is no way to assign a parent to an event_sources
-  device.  As a result we get the messy approach of playing match
-  the name to figure out what the CPMU instance is connected to.
----
- Documentation/admin-guide/perf/cxl.rst   | 60 ++++++++++++++++++++++++
- Documentation/admin-guide/perf/index.rst |  1 +
- 2 files changed, 61 insertions(+)
+- Arnaldo
 
-diff --git a/Documentation/admin-guide/perf/cxl.rst b/Documentation/admin-guide/perf/cxl.rst
-new file mode 100644
-index 000000000000..6ffc057591fb
---- /dev/null
-+++ b/Documentation/admin-guide/perf/cxl.rst
-@@ -0,0 +1,60 @@
-+======================================
-+CXL Performance Monitoring Unit (CPMU)
-+======================================
-+
-+The CXL rev 3.0 specification provides a definition of CXL Performance
-+Monitoring Unit in section 13.2: Performance Monitoring.
-+
-+CXL components (e.g. Root Port, Switch Upstream Port, End Point) may have
-+any number of CPMU instances. CPMU capabilities are fully discoverable from
-+the devices. The specification provides event definitions for all CXL protocol
-+message types and a set of additional events for things commonly counted on
-+CXL devices (e.g. DRAM events).
-+
-+CPMU driver
-+===========
-+
-+The CPMU driver register a perf PMU with the name cpmu<id> on the CXL bus.
-+
-+    /sys/bus/cxl/device/cpmu<id>
-+
-+The associated PMU is registered as
-+
-+   /sys/bus/event_sources/devices/cpmu<id>
-+
-+In common with other CXL bus devices, the id has no specific meaning and the
-+relationship to specific CXL device should be established via the device parent
-+of the device on the CXL bus.
-+
-+PMU driver provides description of available events and filter options in sysfs.
-+
-+The "format" directory describes all formats of the config (event vendor id,
-+group id and mask) config1 (threshold, filter enables) and config2 (filter
-+parameters) fields of the perf_event_attr structure.  The "events" directory
-+describes all documented events show in perf list.
-+
-+The events shown in perf list are the most fine grained events with a single
-+bit of the event mask set. More general events may be enable by setting
-+multiple mask bits in config. For example, all Device to Host Read Requests
-+may be captured on a single counter by setting the bits for all of
-+
-+* d2h_req_rdcurr
-+* d2h_req_rdown
-+* d2h_req_rdshared
-+* d2h_req_rdany
-+* d2h_req_rdownnodata
-+
-+Example of usage::
-+
-+  $#perf list
-+  cpmu0/clock_ticks/                                 [Kernel PMU event]
-+  cpmu0/d2h_req_itomwr/                              [Kernel PMU event]
-+  cpmu0/d2h_req_rdany/                               [Kernel PMU event]
-+  cpmu0/d2h_req_rdcurr/                              [Kernel PMU event]
-+  -----------------------------------------------------------
-+
-+  $# perf stat -e cpmu0/clock_ticks/ -e cpmu0/d2h_req_itowrm/
-+
-+The driver does not support sampling. So "perf record" and attaching to
-+a task are unsupported.
-+
-diff --git a/Documentation/admin-guide/perf/index.rst b/Documentation/admin-guide/perf/index.rst
-index 9c9ece88ce53..f12cfe76e1f0 100644
---- a/Documentation/admin-guide/perf/index.rst
-+++ b/Documentation/admin-guide/perf/index.rst
-@@ -18,3 +18,4 @@ Performance monitor support
-    xgene-pmu
-    arm_dsu_pmu
-    thunderx2-pmu
-+   cxl
+ 
+> Signed-off-by: Ian Rogers <irogers@google.com>
+> ---
+>  tools/perf/util/bpf-loader.c |  6 +++++-
+>  tools/perf/util/evsel.c      |  6 +++++-
+>  tools/perf/util/expr.h       | 11 ++++-------
+>  tools/perf/util/stat.c       |  6 +++++-
+>  4 files changed, 19 insertions(+), 10 deletions(-)
+> 
+> diff --git a/tools/perf/util/bpf-loader.c b/tools/perf/util/bpf-loader.c
+> index e2052f4fed33..d657594894cf 100644
+> --- a/tools/perf/util/bpf-loader.c
+> +++ b/tools/perf/util/bpf-loader.c
+> @@ -27,7 +27,11 @@
+>  #include "util.h"
+>  #include "llvm-utils.h"
+>  #include "c++/clang-c.h"
+> -#include "hashmap.h"
+> +#ifdef HAVE_LIBBPF_SUPPORT
+> +#include <bpf/hashmap.h>
+> +#else
+> +#include "util/hashmap.h"
+> +#endif
+>  #include "asm/bug.h"
+>  
+>  #include <internal/xyarray.h>
+> diff --git a/tools/perf/util/evsel.c b/tools/perf/util/evsel.c
+> index 4852089e1d79..14846b7edb17 100644
+> --- a/tools/perf/util/evsel.c
+> +++ b/tools/perf/util/evsel.c
+> @@ -46,7 +46,11 @@
+>  #include "string2.h"
+>  #include "memswap.h"
+>  #include "util.h"
+> -#include "hashmap.h"
+> +#ifdef HAVE_LIBBPF_SUPPORT
+> +#include <bpf/hashmap.h>
+> +#else
+> +#include "util/hashmap.h"
+> +#endif
+>  #include "pmu-hybrid.h"
+>  #include "off_cpu.h"
+>  #include "../perf-sys.h"
+> diff --git a/tools/perf/util/expr.h b/tools/perf/util/expr.h
+> index bd2116983bbb..0403a92d9dcc 100644
+> --- a/tools/perf/util/expr.h
+> +++ b/tools/perf/util/expr.h
+> @@ -2,14 +2,11 @@
+>  #ifndef PARSE_CTX_H
+>  #define PARSE_CTX_H 1
+>  
+> -// There are fixes that need to land upstream before we can use libbpf's headers,
+> -// for now use our copy unconditionally, since the data structures at this point
+> -// are exactly the same, no problem.
+> -//#ifdef HAVE_LIBBPF_SUPPORT
+> -//#include <bpf/hashmap.h>
+> -//#else
+> +#ifdef HAVE_LIBBPF_SUPPORT
+> +#include <bpf/hashmap.h>
+> +#else
+>  #include "util/hashmap.h"
+> -//#endif
+> +#endif
+>  
+>  struct metric_ref;
+>  
+> diff --git a/tools/perf/util/stat.c b/tools/perf/util/stat.c
+> index 0882b4754fcf..ce5e9e372fc4 100644
+> --- a/tools/perf/util/stat.c
+> +++ b/tools/perf/util/stat.c
+> @@ -14,7 +14,11 @@
+>  #include "evlist.h"
+>  #include "evsel.h"
+>  #include "thread_map.h"
+> -#include "hashmap.h"
+> +#ifdef HAVE_LIBBPF_SUPPORT
+> +#include <bpf/hashmap.h>
+> +#else
+> +#include "util/hashmap.h"
+> +#endif
+>  #include <linux/zalloc.h>
+>  
+>  void update_stats(struct stats *stats, u64 val)
+> -- 
+> 2.37.2.609.g9ff673ca1a-goog
+
 -- 
-2.32.0
 
+- Arnaldo
