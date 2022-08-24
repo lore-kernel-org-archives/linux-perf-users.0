@@ -2,136 +2,68 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7B1A4C00140
-	for <linux-perf-users@archiver.kernel.org>; Wed, 24 Aug 2022 15:42:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0BD50C00140
+	for <linux-perf-users@archiver.kernel.org>; Wed, 24 Aug 2022 19:06:09 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S239897AbiHXPmV (ORCPT
+        id S235764AbiHXTGI (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Wed, 24 Aug 2022 11:42:21 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51196 "EHLO
+        Wed, 24 Aug 2022 15:06:08 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41874 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S239717AbiHXPlj (ORCPT
+        with ESMTP id S240026AbiHXTFw (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Wed, 24 Aug 2022 11:41:39 -0400
-Received: from mail-yw1-x114a.google.com (mail-yw1-x114a.google.com [IPv6:2607:f8b0:4864:20::114a])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C9C2B99B78
-        for <linux-perf-users@vger.kernel.org>; Wed, 24 Aug 2022 08:41:22 -0700 (PDT)
-Received: by mail-yw1-x114a.google.com with SMTP id 00721157ae682-335cf0fd1a4so297296307b3.11
-        for <linux-perf-users@vger.kernel.org>; Wed, 24 Aug 2022 08:41:22 -0700 (PDT)
+        Wed, 24 Aug 2022 15:05:52 -0400
+Received: from mail-wr1-x42d.google.com (mail-wr1-x42d.google.com [IPv6:2a00:1450:4864:20::42d])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 64297BF5F
+        for <linux-perf-users@vger.kernel.org>; Wed, 24 Aug 2022 12:05:45 -0700 (PDT)
+Received: by mail-wr1-x42d.google.com with SMTP id k9so21926674wri.0
+        for <linux-perf-users@vger.kernel.org>; Wed, 24 Aug 2022 12:05:45 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=google.com; s=20210112;
-        h=cc:to:from:subject:references:mime-version:message-id:in-reply-to
-         :date:from:to:cc;
-        bh=GrPou0VZKgNlblC435aJ0/uQRkx4htFwsCEj3e4SObU=;
-        b=N1o6OUXGC/iH2ijb+lNFnDPHgqw3EE+YVt/w/YNG5LZUfFDtYUy7DPSHSoCRfmQwJS
-         GEW628oNDtiSEG+TR9DYt4rWnaj3cDMsOXnilUJ370jMbMm2KfNgR9m9Ztnive72kTrg
-         OaXWIVL0131N9ESH7zWki2HFxKiH1rI35QiprRkAJ13BoDEnL+LlSMy/HEWT438XtiMf
-         WGYAyjrFhnpcRX1qI2eaj3Tz+LyLgSHEugk/D/oOKrB0J9WujNMqEsCeVjZOH7UIoT9C
-         YQYpw/2SUA7LK6rmLDDGa50cJB04mKuYyUDqd0YphGCt9YPiv0IJMleBR3DizoZje5+w
-         Sv/A==
+        h=to:subject:message-id:date:from:mime-version:from:to:cc;
+        bh=px7GQbtr/Q2dJ/FjqBe1Nrw7VFV0pJ4nzRQzHVYZOYQ=;
+        b=JFHUexFCa4LWQwtu7wM7PzQM3rzkG6aC2FZcVyr10cncZ9637yaVAEhNt7SH2EydAS
+         0TLu1PUKjhCGgQWYpASanu91HBbOzC9DNualbYsUKecldcKL7LrAVKg1xNdVRpOIe+wk
+         IxK2PCzf35SFloKGSMPpqkjaIUANq7fFL/CsHBEgd1x0OM/HMmdg0GPHXzcB0Wug5rBu
+         +h0NCSmR7Gjj/0ZRB8trLlulDPzhgG2fowdGayEggQfAGL73rXjwRVFhQF3myscnnDHf
+         qYgCNigiXQge2W3T5u11kIwY2IlhInMrHK3AX/3uY03Kw5ArY50ggRrcFcFaPAp+ubBi
+         y8wQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=cc:to:from:subject:references:mime-version:message-id:in-reply-to
-         :date:x-gm-message-state:from:to:cc;
-        bh=GrPou0VZKgNlblC435aJ0/uQRkx4htFwsCEj3e4SObU=;
-        b=sIOgm1QAJo0bLjHDZXqwnCq0Kn5HcF7s8vxRKE5xKUMbL3AiQB7ZNf9Pn7nCG14wlM
-         RB6Ry4aAJ2pnxJg+CRKBHJb/CLAaES2zwt1viYYJWA4Kvsoiz2KvEtaGgSM4tgMiHpJb
-         QxIPfV5gQezRvz63ME73QyNn3ElBKshTu6HggbmJs6KHXlq72+TUhuyJs4pOkW5q0j5G
-         Bz+LO4wQStUVoOgr9fo/8J67VIxWAOG/7bKwO1aydC156aqhD3ivtWZ8GolLPpzYKijd
-         F0c82uMBX+85QORT08KxF/UiC1Uh5J+cRWVi+/vwykZHxbM1aojxS2T64IJDOHrYaK/6
-         UEbQ==
-X-Gm-Message-State: ACgBeo1fAexLH5Ew7++doKXDhLaVBbiic6gtNIUbnhKaUcm7c3flvtbl
-        dHQeEjAtGKoUzG388z0BF/XBIo9CVEoM
-X-Google-Smtp-Source: AA6agR50UpqAJXTKM7Aszo8uGw/kXlrIkRrRMT0M2mPuVHtgbj+KdyX05ZLo/uA1kRbmgsROvLG/mEAHf0b2
-X-Received: from irogers.svl.corp.google.com ([2620:15c:2d4:203:ab82:a348:500d:1fc4])
- (user=irogers job=sendgmr) by 2002:a25:b3c4:0:b0:68d:d900:837e with SMTP id
- x4-20020a25b3c4000000b0068dd900837emr28057015ybf.501.1661355681725; Wed, 24
- Aug 2022 08:41:21 -0700 (PDT)
-Date:   Wed, 24 Aug 2022 08:39:01 -0700
-In-Reply-To: <20220824153901.488576-1-irogers@google.com>
-Message-Id: <20220824153901.488576-19-irogers@google.com>
-Mime-Version: 1.0
-References: <20220824153901.488576-1-irogers@google.com>
-X-Mailer: git-send-email 2.37.2.609.g9ff673ca1a-goog
-Subject: [PATCH v3 18/18] perf build: Enable -Wthread-safety with clang
+        h=to:subject:message-id:date:from:mime-version:x-gm-message-state
+         :from:to:cc;
+        bh=px7GQbtr/Q2dJ/FjqBe1Nrw7VFV0pJ4nzRQzHVYZOYQ=;
+        b=zBMWcE3B7HD9rA7xnWK+uIMhDstyUWeclE3hP4GwUp5xTIBYOQRpsdgt3GhO40wxQ7
+         hoVMb4TdngF3xlVgttwRzbnol7IR7eC18AY/f3La2Hn23fsQI/f2ydHmAxfH+OXpr9jS
+         dAjjbpDg1F4dwKGi+kDc0RPKKak49VPhGCzqpBSi1qyiJllA1ETn72tTVKJC0aqw4oVM
+         8z/pm3C8cLaY+i9Q9Xv3ds1Z1HAzAiZwZo6NxcDesn84Xyn+UlVBJ576y0ojOI1372BJ
+         pjUdrbiBu8510rlkb9JsuLguA3hPYbC3OZUTjuSbBQcW74MzrknmQNPUG7GMQRJlmmw2
+         1/LA==
+X-Gm-Message-State: ACgBeo0ra7ZK48ZpF5Pqav/ZjcOsUFmJLWgeFiZTi2T6QHV4P0k84LRp
+        hOziO3Rx1GI1xGkkxy+usI7PTIIccPVlUyiYIpxO73pu6YF/XF3a
+X-Google-Smtp-Source: AA6agR4PV+jx5a6vBEMfU+alSA7Z9evYzZcseTeGG9DD/Loll/mROvXUDuaIOyK6WZ92auc9xtPGLanUddX99b7j0Fw=
+X-Received: by 2002:adf:e28d:0:b0:21e:4c3b:b446 with SMTP id
+ v13-20020adfe28d000000b0021e4c3bb446mr313703wri.300.1661367943037; Wed, 24
+ Aug 2022 12:05:43 -0700 (PDT)
+MIME-Version: 1.0
 From:   Ian Rogers <irogers@google.com>
-To:     Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@redhat.com>,
+Date:   Wed, 24 Aug 2022 12:05:30 -0700
+Message-ID: <CAP-5=fUF2SyfTBfh=SugoCpN=7mUroZk85nKbuX3P6cNUkG2sQ@mail.gmail.com>
+Subject: August 25th - no office hours
+To:     linux-perf-users <linux-perf-users@vger.kernel.org>,
         Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Jiri Olsa <jolsa@kernel.org>,
-        Namhyung Kim <namhyung@kernel.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Darren Hart <dvhart@infradead.org>,
-        Davidlohr Bueso <dave@stgolabs.net>,
-        "=?UTF-8?q?Andr=C3=A9=20Almeida?=" <andrealmeid@igalia.com>,
-        Nathan Chancellor <nathan@kernel.org>,
-        Nick Desaulniers <ndesaulniers@google.com>,
-        Tom Rix <trix@redhat.com>, Weiguo Li <liwg06@foxmail.com>,
-        Athira Rajeev <atrajeev@linux.vnet.ibm.com>,
-        Thomas Richter <tmricht@linux.ibm.com>,
-        Ravi Bangoria <ravi.bangoria@amd.com>,
-        Dario Petrillo <dario.pk1@gmail.com>,
-        Hewenliang <hewenliang4@huawei.com>,
-        yaowenbin <yaowenbin1@huawei.com>,
-        Wenyu Liu <liuwenyu7@huawei.com>,
-        Song Liu <songliubraving@fb.com>,
-        Andrii Nakryiko <andrii@kernel.org>,
-        Dave Marchevsky <davemarchevsky@fb.com>,
-        Leo Yan <leo.yan@linaro.org>,
-        Kim Phillips <kim.phillips@amd.com>,
-        Pavithra Gurushankar <gpavithrasha@gmail.com>,
-        Alexandre Truong <alexandre.truong@arm.com>,
-        Quentin Monnet <quentin@isovalent.com>,
-        William Cohen <wcohen@redhat.com>,
-        Andres Freund <andres@anarazel.de>,
-        Adrian Hunter <adrian.hunter@intel.com>,
-        "=?UTF-8?q?Martin=20Li=C5=A1ka?=" <mliska@suse.cz>,
-        Colin Ian King <colin.king@intel.com>,
-        James Clark <james.clark@arm.com>,
-        Fangrui Song <maskray@google.com>,
-        Stephane Eranian <eranian@google.com>,
-        Kajol Jain <kjain@linux.ibm.com>,
-        Alexey Bayduraev <alexey.v.bayduraev@linux.intel.com>,
-        Riccardo Mancini <rickyman7@gmail.com>,
-        Andi Kleen <ak@linux.intel.com>,
-        Masami Hiramatsu <mhiramat@kernel.org>,
-        Zechuan Chen <chenzechuan1@huawei.com>,
-        Jason Wang <wangborong@cdjrlc.com>,
-        Christophe JAILLET <christophe.jaillet@wanadoo.fr>,
-        Remi Bernon <rbernon@codeweavers.com>,
-        linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org,
-        bpf@vger.kernel.org, llvm@lists.linux.dev
-Cc:     Ian Rogers <irogers@google.com>
+        Namhyung Kim <namhyung@kernel.org>
 Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-If building with clang then enable -Wthread-safety warnings.
+Hi,
 
-Signed-off-by: Ian Rogers <irogers@google.com>
----
- tools/perf/Makefile.config | 5 +++++
- 1 file changed, 5 insertions(+)
+there were no suggestions for agenda items for the usual bi-weekly
+office hours, so let's skip this one. Here is link to the last office
+hours 2 weeks ago that contains a link to the notes:
+https://lore.kernel.org/linux-perf-users/CAP-5=fWiQHvYZp5R=uw4xUwBiN1fBLBU8witPkYM+2r8tnYCOg@mail.gmail.com/#t
 
-diff --git a/tools/perf/Makefile.config b/tools/perf/Makefile.config
-index c41a090c0652..72dadafdbad9 100644
---- a/tools/perf/Makefile.config
-+++ b/tools/perf/Makefile.config
-@@ -19,6 +19,11 @@ detected_var = $(shell echo "$(1)=$($(1))" >> $(OUTPUT).config-detected)
- CFLAGS := $(EXTRA_CFLAGS) $(filter-out -Wnested-externs,$(EXTRA_WARNINGS))
- HOSTCFLAGS := $(filter-out -Wnested-externs,$(EXTRA_WARNINGS))
- 
-+# Enabled Wthread-safety analysis for clang builds.
-+ifeq ($(CC_NO_CLANG), 0)
-+  CFLAGS += -Wthread-safety
-+endif
-+
- include $(srctree)/tools/scripts/Makefile.arch
- 
- $(call detected_var,SRCARCH)
--- 
-2.37.2.609.g9ff673ca1a-goog
-
+Thanks,
+Ian
