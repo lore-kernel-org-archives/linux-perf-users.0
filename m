@@ -2,58 +2,58 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 04F78C32796
-	for <linux-perf-users@archiver.kernel.org>; Wed, 24 Aug 2022 15:01:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 88DC6C32793
+	for <linux-perf-users@archiver.kernel.org>; Wed, 24 Aug 2022 15:05:12 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S238935AbiHXPBn (ORCPT
+        id S237392AbiHXPFK (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Wed, 24 Aug 2022 11:01:43 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57376 "EHLO
+        Wed, 24 Aug 2022 11:05:10 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34378 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S239378AbiHXPBh (ORCPT
+        with ESMTP id S237612AbiHXPFJ (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Wed, 24 Aug 2022 11:01:37 -0400
-Received: from mail-wr1-x433.google.com (mail-wr1-x433.google.com [IPv6:2a00:1450:4864:20::433])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CE3428992E
-        for <linux-perf-users@vger.kernel.org>; Wed, 24 Aug 2022 08:01:34 -0700 (PDT)
-Received: by mail-wr1-x433.google.com with SMTP id z16so2317673wrh.10
-        for <linux-perf-users@vger.kernel.org>; Wed, 24 Aug 2022 08:01:34 -0700 (PDT)
+        Wed, 24 Aug 2022 11:05:09 -0400
+Received: from mail-wm1-x336.google.com (mail-wm1-x336.google.com [IPv6:2a00:1450:4864:20::336])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DF4FD82767
+        for <linux-perf-users@vger.kernel.org>; Wed, 24 Aug 2022 08:05:06 -0700 (PDT)
+Received: by mail-wm1-x336.google.com with SMTP id h1so8912690wmd.3
+        for <linux-perf-users@vger.kernel.org>; Wed, 24 Aug 2022 08:05:06 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=google.com; s=20210112;
         h=cc:to:subject:message-id:date:from:in-reply-to:references
          :mime-version:from:to:cc;
-        bh=9MwRKo7p5mGuEOorxe18ICwvOojGU+Msts5Hm6mDUmM=;
-        b=DHIFxLxTXAgmKsbJjZGy1lXpuYDVR2jq+dJVAIM0rh6V3yuD8QQfAom1LDARfKzsl+
-         XPbDIDgDCWkUDgXOm8bmsdVC+BN4+x5CxVuRd51g0EdKzB0v31sXINtSdNwYi2Z/KAFT
-         x+X+cL5bKKpYSzXOkRt2+VEdw3+GdCgMU4FZvP7lg4la1rFMzIknWizCD1JjLUV2QUqX
-         VYMOQdMSGlq7WsX2UyUSEXw4kyK0nIjqFdBzsV7uYhBJ5w/XDJhqZPgnIyAlP/IOup9q
-         w8k3tPvZ2X1ztqdWGHG3EaguNJG7GSJ/0W4ssLRBEzzcFjuVbROv7zXYwfDmkxT+3ZNk
-         lotQ==
+        bh=hGnu2y59OBtorqhLwIUK+o18oWZXjlL2FYRhWhdiwO0=;
+        b=A6qlhecpQzmKJXTAJ7hZpGEQ0tMojsLooAjp0kAbavqDICMZpjH1pwvI1G8L0tjCWi
+         ycOKn2MiSSesS42WM/CAowwbPcvQVWoC98UuZQI5M90uIIcUvi3+w44rEi3XmpI4VAnq
+         8nzhyoAINFfyiULvZZsFG+mKujIQxjBQrXR2C0v8VSzUgqAhmHTA4eBN5w6ge2fTdMCD
+         hngOOap17HTbtL22wpij4w8HdbNW4lzpLQD+wsR3s02n7ivLZgO8n2gFqr8lNrd/G69M
+         kQZPrzjC+uWt/BWrQBe+8q88lVJ8a8imDUDxpnAUSpX2N1B2bgFXxM1EUyHZOVbXS4hW
+         LjSA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
         h=cc:to:subject:message-id:date:from:in-reply-to:references
          :mime-version:x-gm-message-state:from:to:cc;
-        bh=9MwRKo7p5mGuEOorxe18ICwvOojGU+Msts5Hm6mDUmM=;
-        b=7i99H5VsentlwMcHYq2sWByCkM5QnUHpy58cp0wKmvdH67WVl0wFhPLKS8X02QNkje
-         ZilJsYYgC8O5M+eS3BOQhfaORVcngTUDn0f/XgOI3LODofBO72CCj9rZMhgQU+eqYOVT
-         oQvfR2oG/C0Q8ZfmepnMA//DYJk1FpGJKXzEc5IcRJUSKD7mV5ohxeT6is/AcTPXt6ur
-         U1+cfG2eILfRmH9JWtujSYwKUkM2dyPb6D2RIq/tKDNe/2AavIik58keGcKI0s++1Sfr
-         s2zsa4k6Rq5gR+1tUejz6+fy5iCRtcvA+v1L7NfBlmVdvFUahfTuVjfsocmrNK+qoyfy
-         LUHQ==
-X-Gm-Message-State: ACgBeo3B1Jg3FjZpF/Gh/0Ielhr8HCHOBCenz0pASLuPSb+6L3uaE5+J
-        XSFpKAdE0mwPgb7+7uAB5Y6SpCo+268SpF2pC1MR2g==
-X-Google-Smtp-Source: AA6agR7HpNIT/fnUb42DSSIVVlV1mMl/8w4k0TKNasA3YcVRAe/dW1zFnuIFWQttSxtmk0z2PuivVtxuyY0WXQe9Dw0=
-X-Received: by 2002:a05:6000:1008:b0:225:58e0:223f with SMTP id
- a8-20020a056000100800b0022558e0223fmr8713911wrx.375.1661353293134; Wed, 24
- Aug 2022 08:01:33 -0700 (PDT)
+        bh=hGnu2y59OBtorqhLwIUK+o18oWZXjlL2FYRhWhdiwO0=;
+        b=eriV65IMZoBJYcF6yjvUfAI2vLOBObL3lVOMyBmM8VgwcYfZ0bifMuQSjJkpLRE44R
+         Bv3ZbO6kyGZjpadQHXv6Go+ZroxuYGAgba2Rs5ikNiEXD+XaXy2aFBSZrSoY6q0H6AEZ
+         3QUsWWiUOBEZ+23dCAh3prTJePOOrj3r47dwn9TH+rReGXmzc4yh5bcBt/ZsvWKHunit
+         rZ55ggYSgrD20XXzVULXKA9/7ZQ9H0zaUvthAgjSqIQ9+rcKV3XVTuYZZzlqhzumfNQp
+         r0E96nLGRIlsKRGyDVz/22Dpcbdrt1lRjLzs61cSbYoLUj+P1dsMJUwk3vRxmG5SJYi2
+         F3ew==
+X-Gm-Message-State: ACgBeo0atDsSe1tkDuccAJlx0vo2U7YlKAlHTfKrEqsfCT4Ts7WrGF0z
+        VnPIW08DqsQT3yOGMr27Zx0XtuvDucpC7V/4yl68gg==
+X-Google-Smtp-Source: AA6agR499WDzKJBSZv898v0PqTQOgUe7hv6qsT+KpXp2Cc1g39NpRfCYua8LxewTzPevm6USVRlixpygLB9iau6ycVw=
+X-Received: by 2002:a05:600c:25ce:b0:3a5:a3b7:bbfe with SMTP id
+ 14-20020a05600c25ce00b003a5a3b7bbfemr5784783wml.115.1661353504851; Wed, 24
+ Aug 2022 08:05:04 -0700 (PDT)
 MIME-Version: 1.0
-References: <20220823220922.256001-1-irogers@google.com> <20220823220922.256001-2-irogers@google.com>
- <4e68941f-1370-0c23-6f42-44f3e19e65f7@intel.com>
-In-Reply-To: <4e68941f-1370-0c23-6f42-44f3e19e65f7@intel.com>
+References: <20220823220922.256001-1-irogers@google.com> <20220823220922.256001-8-irogers@google.com>
+ <02152f40-1dc5-7f1b-ad88-61ecb146a3da@intel.com>
+In-Reply-To: <02152f40-1dc5-7f1b-ad88-61ecb146a3da@intel.com>
 From:   Ian Rogers <irogers@google.com>
-Date:   Wed, 24 Aug 2022 08:01:21 -0700
-Message-ID: <CAP-5=fVLiY2J2P8p9GY=sn-kxHYp8iVdmpRcgTkLi9YJCT5QHQ@mail.gmail.com>
-Subject: Re: [PATCH v2 01/18] perf mutex: Wrapped usage of mutex and cond
+Date:   Wed, 24 Aug 2022 08:04:53 -0700
+Message-ID: <CAP-5=fWZaN94M1OS2xRYo6M012mi-cRP_boeBi=p6VPnhbOS7g@mail.gmail.com>
+Subject: Re: [PATCH v2 07/18] perf record: Update use of pthread mutex
 To:     Adrian Hunter <adrian.hunter@intel.com>
 Cc:     Peter Zijlstra <peterz@infradead.org>,
         Ingo Molnar <mingo@redhat.com>,
@@ -107,207 +107,88 @@ Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-On Wed, Aug 24, 2022 at 2:45 AM Adrian Hunter <adrian.hunter@intel.com> wrote:
+On Wed, Aug 24, 2022 at 3:15 AM Adrian Hunter <adrian.hunter@intel.com> wrote:
 >
 > On 24/08/22 01:09, Ian Rogers wrote:
-> > From: Pavithra Gurushankar <gpavithrasha@gmail.com>
+> > Switch to the use of mutex wrappers that provide better error checking
+> > for synth_lock.
+>
+> It would be better to distinguish patches that make drop-in
+> replacements from patches like this that change logic.
+
+The only change here is PTHREAD_MUTEX_INITIALIZER to mutex_init
+because PTHREAD_MUTEX_INITIALIZER doesn't have error checking. The two
+are morally equivalent and so no logic change is intended - although
+one may inadvertently happen by the moving initialization from compile
+time to runtime.
+
 > >
-> > Added a new header file mutex.h that wraps the usage of
-> > pthread_mutex_t and pthread_cond_t. By abstracting these it is
-> > possible to introduce error checking.
-> >
-> > Signed-off-by: Pavithra Gurushankar <gpavithrasha@gmail.com>
 > > Signed-off-by: Ian Rogers <irogers@google.com>
 > > ---
-> >  tools/perf/util/Build   |  1 +
-> >  tools/perf/util/mutex.c | 97 +++++++++++++++++++++++++++++++++++++++++
-> >  tools/perf/util/mutex.h | 43 ++++++++++++++++++
-> >  3 files changed, 141 insertions(+)
-> >  create mode 100644 tools/perf/util/mutex.c
-> >  create mode 100644 tools/perf/util/mutex.h
+> >  tools/perf/builtin-record.c | 13 +++++++++----
+> >  1 file changed, 9 insertions(+), 4 deletions(-)
 > >
-> > diff --git a/tools/perf/util/Build b/tools/perf/util/Build
-> > index 9dfae1bda9cc..8fd6dc8de521 100644
-> > --- a/tools/perf/util/Build
-> > +++ b/tools/perf/util/Build
-> > @@ -143,6 +143,7 @@ perf-y += branch.o
-> >  perf-y += mem2node.o
-> >  perf-y += clockid.o
-> >  perf-y += list_sort.o
-> > +perf-y += mutex.o
+> > diff --git a/tools/perf/builtin-record.c b/tools/perf/builtin-record.c
+> > index 4713f0f3a6cf..02eb85677e99 100644
+> > --- a/tools/perf/builtin-record.c
+> > +++ b/tools/perf/builtin-record.c
+> > @@ -21,6 +21,7 @@
+> >  #include "util/evsel.h"
+> >  #include "util/debug.h"
+> >  #include "util/mmap.h"
+> > +#include "util/mutex.h"
+> >  #include "util/target.h"
+> >  #include "util/session.h"
+> >  #include "util/tool.h"
+> > @@ -608,17 +609,18 @@ static int process_synthesized_event(struct perf_tool *tool,
+> >       return record__write(rec, NULL, event, event->header.size);
+> >  }
 > >
-> >  perf-$(CONFIG_LIBBPF) += bpf-loader.o
-> >  perf-$(CONFIG_LIBBPF) += bpf_map.o
-> > diff --git a/tools/perf/util/mutex.c b/tools/perf/util/mutex.c
-> > new file mode 100644
-> > index 000000000000..d12cf0714268
-> > --- /dev/null
-> > +++ b/tools/perf/util/mutex.c
-> > @@ -0,0 +1,97 @@
-> > +// SPDX-License-Identifier: GPL-2.0
-> > +#include "mutex.h"
+> > +static struct mutex synth_lock;
 > > +
-> > +#include "debug.h"
-> > +#include <linux/string.h>
-> > +#include <errno.h>
-> > +
-> > +static void check_err(const char *fn, int err)
-> > +{
-> > +     char sbuf[STRERR_BUFSIZE];
-> > +
-> > +     if (err == 0)
-> > +             return;
-> > +
-> > +     pr_err("%s error: '%s'", fn, str_error_r(err, sbuf, sizeof(sbuf)));
+> >  static int process_locked_synthesized_event(struct perf_tool *tool,
+> >                                    union perf_event *event,
+> >                                    struct perf_sample *sample __maybe_unused,
+> >                                    struct machine *machine __maybe_unused)
+> >  {
+> > -     static pthread_mutex_t synth_lock = PTHREAD_MUTEX_INITIALIZER;
+> >       int ret;
+> >
+> > -     pthread_mutex_lock(&synth_lock);
+> > +     mutex_lock(&synth_lock);
+> >       ret = process_synthesized_event(tool, event, sample, machine);
+> > -     pthread_mutex_unlock(&synth_lock);
+> > +     mutex_unlock(&synth_lock);
+> >       return ret;
+> >  }
+> >
+> > @@ -1917,6 +1919,7 @@ static int record__synthesize(struct record *rec, bool tail)
+> >       }
+> >
+> >       if (rec->opts.nr_threads_synthesize > 1) {
+> > +             mutex_init(&synth_lock, /*pshared=*/false);
 >
-> pr_err() does not add '\n' so it needs to be in the format string.
+> It would be better to have mutex_init() and mutex_init_shared()
+> since /*pshared=*/true is rarely used.
 
-Thanks, will add in v3.
-
-> > +}
-> > +
-> > +#define CHECK_ERR(err) check_err(__func__, err)
-> > +
-> > +void mutex_init(struct mutex *mtx, bool pshared)
-> > +{
-> > +     pthread_mutexattr_t attr;
-> > +
-> > +     CHECK_ERR(pthread_mutexattr_init(&attr));
-> > +
-> > +#ifndef NDEBUG
-> > +     /* In normal builds enable error checking, such as recursive usage. */
-> > +     CHECK_ERR(pthread_mutexattr_settype(&attr, PTHREAD_MUTEX_ERRORCHECK));
-> > +#endif
-> > +     if (pshared)
-> > +             pthread_mutexattr_setpshared(&attr, PTHREAD_PROCESS_SHARED);
-> > +
-> > +     CHECK_ERR(pthread_mutex_init(&mtx->lock, &attr));
-> > +     CHECK_ERR(pthread_mutexattr_destroy(&attr));
-> > +}
-> > +
-> > +void mutex_destroy(struct mutex *mtx)
-> > +{
-> > +     CHECK_ERR(pthread_mutex_destroy(&mtx->lock));
-> > +}
-> > +
-> > +void mutex_lock(struct mutex *mtx)
-> > +{
-> > +     CHECK_ERR(pthread_mutex_lock(&mtx->lock));
-> > +}
-> > +
-> > +void mutex_unlock(struct mutex *mtx)
-> > +{
-> > +     CHECK_ERR(pthread_mutex_unlock(&mtx->lock));
-> > +}
-> > +
-> > +bool mutex_trylock(struct mutex *mtx)
-> > +{
-> > +     int ret = pthread_mutex_trylock(&mtx->lock);
-> > +
-> > +     if (ret == 0)
-> > +             return true; /* Lock acquired. */
-> > +
-> > +     if (ret == EBUSY)
-> > +             return false; /* Lock busy. */
-> > +
-> > +     /* Print error. */
-> > +     CHECK_ERR(ret);
-> > +     return false;
-> > +}
-> > +
-> > +void cond_init(struct cond *cnd, bool pshared)
-> > +{
-> > +     pthread_condattr_t attr;
-> > +
-> > +     CHECK_ERR(pthread_condattr_init(&attr));
-> > +     if (pshared)
-> > +             CHECK_ERR(pthread_condattr_setpshared(&attr, PTHREAD_PROCESS_SHARED));
-> > +
-> > +     CHECK_ERR(pthread_cond_init(&cnd->cond, &attr));
-> > +     CHECK_ERR(pthread_condattr_destroy(&attr));
-> > +}
-> > +
-> > +void cond_destroy(struct cond *cnd)
-> > +{
-> > +     CHECK_ERR(pthread_cond_destroy(&cnd->cond));
-> > +}
-> > +
-> > +void cond_wait(struct cond *cnd, struct mutex *mtx)
-> > +{
-> > +     CHECK_ERR(pthread_cond_wait(&cnd->cond, &mtx->lock));
-> > +}
-> > +
-> > +void cond_signal(struct cond *cnd)
-> > +{
-> > +     CHECK_ERR(pthread_cond_signal(&cnd->cond));
-> > +}
-> > +
-> > +void cond_broadcast(struct cond *cnd)
-> > +{
-> > +     CHECK_ERR(pthread_cond_broadcast(&cnd->cond));
-> > +}
-> > diff --git a/tools/perf/util/mutex.h b/tools/perf/util/mutex.h
-> > new file mode 100644
-> > index 000000000000..952276ad83bd
-> > --- /dev/null
-> > +++ b/tools/perf/util/mutex.h
-> > @@ -0,0 +1,43 @@
-> > +/* SPDX-License-Identifier: GPL-2.0 */
-> > +#ifndef __PERF_MUTEX_H
-> > +#define __PERF_MUTEX_H
-> > +
-> > +#include <pthread.h>
-> > +#include <stdbool.h>
-> > +
-> > +/*
-> > + * A wrapper around the mutex implementation that allows perf to error check
-> > + * usage, etc.
-> > + */
-> > +struct mutex {
-> > +     pthread_mutex_t lock;
-> > +};
-> > +
-> > +/* A wrapper around the condition variable implementation. */
-> > +struct cond {
-> > +     pthread_cond_t cond;
-> > +};
->
-> Do these definitions need to be in the header?
-> What about just:
->
-> struct mutex;
-> struct cond;
->
-> and put the defintions in mutex.c.
-
-Agreed, unfortunately struct mutex is a variable in a bunch of structs
-and without the definition in the header file the size is missing.
+Will change in v3.
 
 Thanks,
 Ian
 
-> > +
-> > +/*
-> > + * Initialize the mtx struct, if pshared is set then specify the process-shared
-> > + * rather than default process-private attribute.
-> > + */
-> > +void mutex_init(struct mutex *mtx, bool pshared);
-> > +void mutex_destroy(struct mutex *mtx);
-> > +
-> > +void mutex_lock(struct mutex *mtx);
-> > +void mutex_unlock(struct mutex *mtx);
-> > +bool mutex_trylock(struct mutex *mtx);
-> > +
-> > +/*
-> > + * Initialize the cond struct, if pshared is set then specify the process-shared
-> > + * rather than default process-private attribute.
-> > + */
-> > +void cond_init(struct cond *cnd, bool pshared);
-> > +void cond_destroy(struct cond *cnd);
-> > +
-> > +void cond_wait(struct cond *cnd, struct mutex *mtx);
-> > +void cond_signal(struct cond *cnd);
-> > +void cond_broadcast(struct cond *cnd);
-> > +
-> > +#endif /* __PERF_MUTEX_H */
+> >               perf_set_multithreaded();
+> >               f = process_locked_synthesized_event;
+> >       }
+> > @@ -1930,8 +1933,10 @@ static int record__synthesize(struct record *rec, bool tail)
+> >                                                   rec->opts.nr_threads_synthesize);
+> >       }
+> >
+> > -     if (rec->opts.nr_threads_synthesize > 1)
+> > +     if (rec->opts.nr_threads_synthesize > 1) {
+> >               perf_set_singlethreaded();
+> > +             mutex_destroy(&synth_lock);
+> > +     }
+> >
+> >  out:
+> >       return err;
 >
