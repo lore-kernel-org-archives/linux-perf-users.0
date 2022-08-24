@@ -2,144 +2,172 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 43CBAC00140
-	for <linux-perf-users@archiver.kernel.org>; Wed, 24 Aug 2022 04:38:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1BD24C00140
+	for <linux-perf-users@archiver.kernel.org>; Wed, 24 Aug 2022 04:48:45 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233735AbiHXEii (ORCPT
+        id S231929AbiHXEso (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Wed, 24 Aug 2022 00:38:38 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46012 "EHLO
+        Wed, 24 Aug 2022 00:48:44 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51406 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232310AbiHXEih (ORCPT
+        with ESMTP id S230245AbiHXEsn (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Wed, 24 Aug 2022 00:38:37 -0400
-Received: from mail-yw1-x1149.google.com (mail-yw1-x1149.google.com [IPv6:2607:f8b0:4864:20::1149])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D8D0E5FAC6
-        for <linux-perf-users@vger.kernel.org>; Tue, 23 Aug 2022 21:38:34 -0700 (PDT)
-Received: by mail-yw1-x1149.google.com with SMTP id 00721157ae682-335ff2ef600so273938187b3.18
-        for <linux-perf-users@vger.kernel.org>; Tue, 23 Aug 2022 21:38:34 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20210112;
-        h=cc:to:from:subject:mime-version:message-id:date:from:to:cc;
-        bh=3opLk4Oz93lm77lsPTBWHBXIaH3afs5uHa/1mKNusGU=;
-        b=PctrHBniebv3hCjyLQ/5fSwmIVjcOOdCc30ReMbNTAzpDzM8H6J4TyM5Q9Y+PLbJ6e
-         JWUBxLGHfwoQIKNTvAEekL2u6Wx8QQAqvhHl2PwJbBPgJx1riqGt1ef66Vfznfnp+k2b
-         Q7+yynShR+LtUQYVLK+PSQ6PxEyMqS86bMY7fO4fgibOgamEGhRP6/Eq6DHcb1IxCJKR
-         iqTPUdlgWFwrY6qGykUmbKC7WigW2cba9zOwlmz0b//n9X63AIsBf7kaRm3V3iq/r5XZ
-         RfBdtIpRzMxE7KBYL54weUCMdD3IqBBoJ9DhPLMfNYz3EGPotmSbwRIL2nMVY23wpkXw
-         462Q==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=cc:to:from:subject:mime-version:message-id:date:x-gm-message-state
-         :from:to:cc;
-        bh=3opLk4Oz93lm77lsPTBWHBXIaH3afs5uHa/1mKNusGU=;
-        b=vpBOo6S1UcBPczRiuJoU9EOuxiTYhrJJIZV65XgMqfPxMquAH/0ssZEML6s/ZW4Udx
-         U8YUgqhIFltNIn3/ZAL/+H9v4e8q4CaPWZ0TLN62xZpLErR7HeMzObYRScNfwhuO5L7h
-         I0kWJOf9Sw/djRIH24N05jfwhbn870C175bXJV1Mj+yLt6nAxcI3Ea2SjYLaNKIoF2dU
-         Wh9Eo7U/hrDCwfnAWef4WE67NdCFoMDzX+MoxP3R8qnO7ZXmg0Rx2LRNbpTwFjQISbIY
-         u+t7ZZi++EMY9mHFBtH2Gn8Ss9wWneApNEAluz/Z6YWWYj7/Bye0UXVBQZoKtWMnjqLk
-         eKuQ==
-X-Gm-Message-State: ACgBeo2qTm3WfTCvU5nSIQepBnbmmwVD7gcghh9iOldHm95hhajzcOjK
-        jFYkwel00vPgRCSWnzw2PgHWH7jvLDTI
-X-Google-Smtp-Source: AA6agR4uUgDd/+U54aisjGd42CsqA7eYed/AKyUrKuesNWvHwO2T7cy58ZG7JxjlpX2p90jcd0327ukTJqjp
-X-Received: from irogers.svl.corp.google.com ([2620:15c:2d4:203:7dbd:c08f:de81:c2a3])
- (user=irogers job=sendgmr) by 2002:a25:4a06:0:b0:695:c6a0:c8e1 with SMTP id
- x6-20020a254a06000000b00695c6a0c8e1mr10110095yba.181.1661315914190; Tue, 23
- Aug 2022 21:38:34 -0700 (PDT)
-Date:   Tue, 23 Aug 2022 21:38:25 -0700
-Message-Id: <20220824043825.322827-1-irogers@google.com>
-Mime-Version: 1.0
-X-Mailer: git-send-email 2.37.2.609.g9ff673ca1a-goog
-Subject: [PATCH] perf sched: Fix memory leaks in __cmd_record
-From:   Ian Rogers <irogers@google.com>
-To:     Peter Zijlstra <peterz@infradead.org>,
+        Wed, 24 Aug 2022 00:48:43 -0400
+Received: from foss.arm.com (foss.arm.com [217.140.110.172])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTP id 1A0347C18C;
+        Tue, 23 Aug 2022 21:48:41 -0700 (PDT)
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 5D16A113E;
+        Tue, 23 Aug 2022 21:48:45 -0700 (PDT)
+Received: from a077893.blr.arm.com (unknown [10.162.43.6])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPA id E57103F67D;
+        Tue, 23 Aug 2022 21:48:35 -0700 (PDT)
+From:   Anshuman Khandual <anshuman.khandual@arm.com>
+To:     linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org,
+        peterz@infradead.org, alexander.shishkin@linux.intel.com,
+        jolsa@redhat.com, acme@kernel.org, mark.rutland@arm.com
+Cc:     Anshuman Khandual <anshuman.khandual@arm.com>,
+        Robin Murphy <robin.murphy@arm.com>,
+        Suzuki Poulose <suzuki.poulose@arm.com>,
+        James Clark <james.clark@arm.com>,
         Ingo Molnar <mingo@redhat.com>,
-        Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Jiri Olsa <jolsa@kernel.org>,
         Namhyung Kim <namhyung@kernel.org>,
-        linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
-Cc:     Stephane Eranian <eranian@google.com>,
-        Ian Rogers <irogers@google.com>
-Content-Type: text/plain; charset="UTF-8"
+        Thomas Gleixner <tglx@linutronix.de>,
+        Will Deacon <will@kernel.org>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        linux-arm-kernel@lists.infradead.org
+Subject: [PATCH V7 0/8] perf: Expand perf_branch_entry
+Date:   Wed, 24 Aug 2022 10:18:14 +0530
+Message-Id: <20220824044822.70230-1-anshuman.khandual@arm.com>
+X-Mailer: git-send-email 2.25.1
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-An array of strings is passed to cmd_record but not freed. As
-cmd_record modifies the array, add another array as a copy that can be
-mutated allowing the original array contents to all be freed.
+Branch Record Buffer Extension (BRBE) implementation on arm64 captures more
+branch type classification which cannot be accommodated in the current perf
+branch record format via perf_branch_entry.type element (4 bit field). Also
+it captures privilege information which does not have a corresponding slot
+in perf_branch_entry. This series expands struct perf_branch_entry, to meet
+both these requirements without breaking the existing user space ABI for
+perf tools.
 
-Detected with -fsanitize=address.
+All architecture specific branch types added via perf_branch_entry.new_type
+field in [PATCH 3/4] will be used in BRBE implementation on arm64 platform
+later on with the following map.
 
-Signed-off-by: Ian Rogers <irogers@google.com>
----
- tools/perf/builtin-sched.c | 21 ++++++++++++++++-----
- 1 file changed, 16 insertions(+), 5 deletions(-)
+#ifdef CONFIG_ARM64
+#define PERF_BR_FIQ		PERF_BR_NEW_ARCH_1
+#define PERF_BR_DEBUG_HALT	PERF_BR_NEW_ARCH_2
+#define PERF_BR_DEBUG_EXIT	PERF_BR_NEW_ARCH_3
+#define PERF_BR_DEBUG_INST	PERF_BR_NEW_ARCH_4
+#define PERF_BR_DEBUG_DATA	PERF_BR_NEW_ARCH_5
+#endif
 
-diff --git a/tools/perf/builtin-sched.c b/tools/perf/builtin-sched.c
-index 2f6cd1b8b662..59ba14d2321c 100644
---- a/tools/perf/builtin-sched.c
-+++ b/tools/perf/builtin-sched.c
-@@ -3355,7 +3355,8 @@ static bool schedstat_events_exposed(void)
- static int __cmd_record(int argc, const char **argv)
- {
- 	unsigned int rec_argc, i, j;
--	const char **rec_argv;
-+	char **rec_argv;
-+	const char **rec_argv_copy;
- 	const char * const record_args[] = {
- 		"record",
- 		"-a",
-@@ -3384,6 +3385,7 @@ static int __cmd_record(int argc, const char **argv)
- 		ARRAY_SIZE(schedstat_args) : 0;
- 
- 	struct tep_event *waking_event;
-+	int ret;
- 
- 	/*
- 	 * +2 for either "-e", "sched:sched_wakeup" or
-@@ -3391,14 +3393,15 @@ static int __cmd_record(int argc, const char **argv)
- 	 */
- 	rec_argc = ARRAY_SIZE(record_args) + 2 + schedstat_argc + argc - 1;
- 	rec_argv = calloc(rec_argc + 1, sizeof(char *));
-+	rec_argv_copy = calloc(rec_argc + 1, sizeof(char *));
- 
--	if (rec_argv == NULL)
-+	if (rec_argv == NULL || rec_argv_copy == NULL)
- 		return -ENOMEM;
- 
- 	for (i = 0; i < ARRAY_SIZE(record_args); i++)
- 		rec_argv[i] = strdup(record_args[i]);
- 
--	rec_argv[i++] = "-e";
-+	rec_argv[i++] = strdup("-e");
- 	waking_event = trace_event__tp_format("sched", "sched_waking");
- 	if (!IS_ERR(waking_event))
- 		rec_argv[i++] = strdup("sched:sched_waking");
-@@ -3409,11 +3412,19 @@ static int __cmd_record(int argc, const char **argv)
- 		rec_argv[i++] = strdup(schedstat_args[j]);
- 
- 	for (j = 1; j < (unsigned int)argc; j++, i++)
--		rec_argv[i] = argv[j];
-+		rec_argv[i] = strdup(argv[j]);
- 
- 	BUG_ON(i != rec_argc);
- 
--	return cmd_record(i, rec_argv);
-+	memcpy(rec_argv_copy, rec_argv, sizeof(char*) * rec_argc);
-+	ret = cmd_record(rec_argc, rec_argv_copy);
-+
-+	for (i = 0; i < rec_argc; i++)
-+		free(rec_argv[i]);
-+	free(rec_argv);
-+	free(rec_argv_copy);
-+
-+	return ret;
- }
- 
- int cmd_sched(int argc, const char **argv)
+This series applies on v6.20-rc2
+
+perf API
+
+The series being applied
+
+- Clean : tools/perf/check-headers.sh
+- Clean : diff -u tools/include/uapi/linux/perf_event.h include/uapi/linux/perf_event.h
+
+References
+
+- BRBE captured branch record information
+
+https://developer.arm.com/documentation/ddi0601/2021-12/AArch64-Registers/BRBINF-n--EL1--Branch-Record-Buffer-Information-Register--n-?lang=en
+
+- BRBE based perf branch stack implementation on arm64 platform
+
+https://lore.kernel.org/all/1642998653-21377-1-git-send-email-anshuman.khandual@arm.com/
+
+Changes in V7:
+
+- Collected earlier 'Reviewed-by:' tags from James Clark
+- Rebased on v6.0-rc2
+
+Changes in V6:
+
+https://lore.kernel.org/linux-arm-kernel/20220610035101.424112-1-anshuman.khandual@arm.com/
+
+- Process PERF_BR_EXTEND_ABI in perf tools and fetch from perf_branch_entry.new_type
+- Modified the commit message for [PATCH 1/8]
+
+Changes in V5:
+
+https://lore.kernel.org/linux-arm-kernel/20220404045046.634522-1-anshuman.khandual@arm.com/
+
+- Dropped patches [PATCH 1/10] and [PATCH 6/10] related to PERF_BR_[RET|IRQ] - merged
+  via the commit cedd3614e5d9c809 ("perf: Add irq and exception return branch types")
+
+- Rebased series on v5.18-rc1
+
+Changes in V4:
+
+https://lore.kernel.org/all/20220315053516.431515-1-anshuman.khandual@arm.com/
+
+- Modified the struct branch_flags as required
+- Dropped CONFIG_ARM64 from perf header file to avoid build problem
+- Renamed PERF_BR_NEW_<BRANCH_TYPE> as PERF_BR_ARM64_<BRANCH_TYPE>
+
+Changes in V3:
+
+https://lore.kernel.org/all/20220314055857.125421-1-anshuman.khandual@arm.com/
+
+- Fixed small typo s/privillege/privilege in include/uapi/linux/perf_event.h
+- Added PRIV_SHIFT in __p_branch_sample_type()
+- Added arm64 platform override of the new arch specific branch types
+- Renamed s/PERF_BR_XXX/PERF_BR_PRIV_XXX/ for privilege level branch types
+- Added PERF_BR_PRIV_UNKNOWN as the starting value
+- Expanded perf_branch_entry.priv into a 3 bits field 
+
+Changes in V2:
+
+https://lore.kernel.org/all/20220309033642.144769-1-anshuman.khandual@arm.com/
+
+Cc: Robin Murphy <robin.murphy@arm.com> 
+Cc: Suzuki Poulose <suzuki.poulose@arm.com>
+Cc: James Clark <james.clark@arm.com>
+Cc: Peter Zijlstra <peterz@infradead.org>
+Cc: Ingo Molnar <mingo@redhat.com>
+Cc: Arnaldo Carvalho de Melo <acme@kernel.org>
+Cc: Mark Rutland <mark.rutland@arm.com>
+Cc: Alexander Shishkin <alexander.shishkin@linux.intel.com>
+Cc: Jiri Olsa <jolsa@redhat.com>
+Cc: Namhyung Kim <namhyung@kernel.org>
+Cc: Thomas Gleixner <tglx@linutronix.de>
+Cc: Will Deacon <will@kernel.org>
+Cc: Catalin Marinas <catalin.marinas@arm.com>
+Cc: linux-arm-kernel@lists.infradead.org
+Cc: linux-perf-users@vger.kernel.org
+Cc: linux-kernel@vger.kernel.org
+
+Anshuman Khandual (8):
+  perf: Add system error and not in transaction branch types
+  perf: Extend branch type classification
+  perf: Capture branch privilege information
+  perf: Add PERF_BR_NEW_ARCH_[N] map for BRBE on arm64 platform
+  perf/tools: Add system error and not in transaction branch types
+  perf/tools: Extend branch type classification
+  perf/tools: Add branch privilege information request flag
+  perf/tools: Add PERF_BR_NEW_ARCH_[N] map for BRBE on arm64 platform
+
+ arch/x86/events/intel/lbr.c               |  2 +-
+ include/uapi/linux/perf_event.h           | 36 +++++++++++-
+ tools/include/uapi/linux/perf_event.h     | 36 +++++++++++-
+ tools/perf/Documentation/perf-record.txt  |  1 +
+ tools/perf/builtin-script.c               |  2 +-
+ tools/perf/util/branch.c                  | 69 ++++++++++++++++++++++-
+ tools/perf/util/branch.h                  |  7 ++-
+ tools/perf/util/parse-branch-options.c    |  1 +
+ tools/perf/util/perf_event_attr_fprintf.c |  2 +-
+ tools/perf/util/session.c                 |  2 +-
+ 10 files changed, 149 insertions(+), 9 deletions(-)
+
 -- 
-2.37.2.609.g9ff673ca1a-goog
+2.25.1
 
