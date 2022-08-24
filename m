@@ -2,159 +2,301 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4E69CC00140
-	for <linux-perf-users@archiver.kernel.org>; Wed, 24 Aug 2022 05:06:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 61607C00140
+	for <linux-perf-users@archiver.kernel.org>; Wed, 24 Aug 2022 09:46:23 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233546AbiHXFGP (ORCPT
+        id S234222AbiHXJqV (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Wed, 24 Aug 2022 01:06:15 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49592 "EHLO
+        Wed, 24 Aug 2022 05:46:21 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43994 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232310AbiHXFGO (ORCPT
+        with ESMTP id S236768AbiHXJpt (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Wed, 24 Aug 2022 01:06:14 -0400
-Received: from mail-yw1-x1149.google.com (mail-yw1-x1149.google.com [IPv6:2607:f8b0:4864:20::1149])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 385775509B
-        for <linux-perf-users@vger.kernel.org>; Tue, 23 Aug 2022 22:06:13 -0700 (PDT)
-Received: by mail-yw1-x1149.google.com with SMTP id 00721157ae682-3328a211611so271898937b3.5
-        for <linux-perf-users@vger.kernel.org>; Tue, 23 Aug 2022 22:06:13 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20210112;
-        h=cc:to:from:subject:mime-version:message-id:date:from:to:cc;
-        bh=6TPsU2u1PMlB6YEiiiYUheNwo8SxpDri4fU5Br0CXQc=;
-        b=YBkaKI8h6AyjFuz63flYtzVgEDtViIr0D7upY2rEoRmQg7fG15/hl32j6Pf/w+UOHn
-         6ew2wXwQfvRTb/vM38DCOMNHvpBfv+rbmHjxhCSmU8PA9O6dP+UEwO0qOOCGKYLrePQh
-         Ml21rDb6bDusGC8ZWRg42X2JiPsvJqMNfJbvcJQYfcK0iGci/fktUMlF27FRs5ni1Iek
-         adhIuUkwQc+vUxZkNklHMG1Gh1KmhfJLg5zj8iugaGR2W5TckfplQioVG9szmc+/bLCa
-         ihGiPbS2ieBCTpEN4jGigJHeIZRHI8uYRePR7nyS9XUcYFp1dTf5YeYbKUrMd12jZ3g2
-         ZifQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=cc:to:from:subject:mime-version:message-id:date:x-gm-message-state
-         :from:to:cc;
-        bh=6TPsU2u1PMlB6YEiiiYUheNwo8SxpDri4fU5Br0CXQc=;
-        b=AFwx+zw6SS+pLvOY46ohaujRVLq/+lzJW8HHa1S263o1tlnpQxmzIkgUygkybW3nE6
-         +kafFrtkFVgjctj5LPHoxO7ImDjkLzaNQO+Ah87f0idZfXL2MNlhpz8DZA7zky34Yg3g
-         QveHdq7wlgztgOhGFZGSVyHsXnkeipT5370Gz/78VxxyRJFlcBfKabkhpTQdzNPpBTI2
-         oZovWwPh1HHoHkra/o/2j6Dlu4f9nCp3pFcOmbhe4z/p0oa+AZ9GsvlGN7xwGLB9nwrh
-         ObmpKwd5Z8PzpNCO+wWBDcY5xsjP5ZoGBdjhe5JYcrDJwma5KN3/k6orXWlyvYN/wE37
-         48/Q==
-X-Gm-Message-State: ACgBeo1AcRMQWv5Rw+nIbZBOAtqv3G4J/u9JJxyH0MJNQBYrdjJCtKTi
-        ZhIpSpzeyZnA8BP8XNUo5zoE4Py9W+Di
-X-Google-Smtp-Source: AA6agR6iMWv1lcKmOl/fH+3BXHWl8wtTx/veQrq/92ytBQenoeT4YYDXoPhBZfZEscrInxF+AY7CFxoGW9N0
-X-Received: from irogers.svl.corp.google.com ([2620:15c:2d4:203:7dbd:c08f:de81:c2a3])
- (user=irogers job=sendgmr) by 2002:a25:6d88:0:b0:695:9728:f253 with SMTP id
- i130-20020a256d88000000b006959728f253mr14593907ybc.39.1661317572529; Tue, 23
- Aug 2022 22:06:12 -0700 (PDT)
-Date:   Tue, 23 Aug 2022 22:06:04 -0700
-Message-Id: <20220824050604.352156-1-irogers@google.com>
-Mime-Version: 1.0
-X-Mailer: git-send-email 2.37.2.609.g9ff673ca1a-goog
-Subject: [PATCH] perf hashmap: Tidy hashmap dependency
-From:   Ian Rogers <irogers@google.com>
-To:     Peter Zijlstra <peterz@infradead.org>,
+        Wed, 24 Aug 2022 05:45:49 -0400
+Received: from mga11.intel.com (mga11.intel.com [192.55.52.93])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4B97E1277F;
+        Wed, 24 Aug 2022 02:45:28 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1661334329; x=1692870329;
+  h=message-id:date:mime-version:subject:to:references:from:
+   in-reply-to:content-transfer-encoding;
+  bh=r14CxE1SBaJlMjpDav35DU25bLbY0RYb1m2G+BUYXHA=;
+  b=l4bz7RWhjllMZQDhvFv3sgzAd1U/6GdKyjzDtbURNgw+2s/Mm+Q+7LZg
+   D/VDnmEIPJI3YbW5BtST3Nn40MjgSxpv0UwjgClSEhx65gAT5X4mUHYNq
+   mGNi12Xyr4TVSf5mRJ9/9He+x76xuBjP5ZkNMwGc/1aP5DUmKN8A5mpgK
+   6mX4MrP+Li9AlAuzgLDky2eHoWBKLUPneMKbJqrj0GTswLELaTQFQjTlI
+   oqKd9KPLRwi7dlhrCsONWFbRQIJeU7YSwpNNeJOymrXO9akHbOEPSRZ7s
+   vpsqeYF2Bo8/c7LU/UYzgxj8kapt8yUpa3BjpZyOjUwl+bZmuVkexFLfl
+   Q==;
+X-IronPort-AV: E=McAfee;i="6500,9779,10448"; a="291488061"
+X-IronPort-AV: E=Sophos;i="5.93,260,1654585200"; 
+   d="scan'208";a="291488061"
+Received: from orsmga006.jf.intel.com ([10.7.209.51])
+  by fmsmga102.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 24 Aug 2022 02:45:27 -0700
+X-IronPort-AV: E=Sophos;i="5.93,260,1654585200"; 
+   d="scan'208";a="586365611"
+Received: from ahunter6-mobl1.ger.corp.intel.com (HELO [10.0.2.15]) ([10.252.51.108])
+  by orsmga006-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 24 Aug 2022 02:45:15 -0700
+Message-ID: <4e68941f-1370-0c23-6f42-44f3e19e65f7@intel.com>
+Date:   Wed, 24 Aug 2022 12:45:10 +0300
+MIME-Version: 1.0
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
+ Firefox/91.0 Thunderbird/91.11.0
+Subject: Re: [PATCH v2 01/18] perf mutex: Wrapped usage of mutex and cond
+Content-Language: en-US
+To:     Ian Rogers <irogers@google.com>,
+        Peter Zijlstra <peterz@infradead.org>,
         Ingo Molnar <mingo@redhat.com>,
         Arnaldo Carvalho de Melo <acme@kernel.org>,
         Mark Rutland <mark.rutland@arm.com>,
         Alexander Shishkin <alexander.shishkin@linux.intel.com>,
         Jiri Olsa <jolsa@kernel.org>,
         Namhyung Kim <namhyung@kernel.org>,
-        linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
-Cc:     Stephane Eranian <eranian@google.com>,
-        Ian Rogers <irogers@google.com>
-Content-Type: text/plain; charset="UTF-8"
+        Thomas Gleixner <tglx@linutronix.de>,
+        Darren Hart <dvhart@infradead.org>,
+        Davidlohr Bueso <dave@stgolabs.net>,
+        =?UTF-8?Q?Andr=c3=a9_Almeida?= <andrealmeid@igalia.com>,
+        Nathan Chancellor <nathan@kernel.org>,
+        Nick Desaulniers <ndesaulniers@google.com>,
+        Tom Rix <trix@redhat.com>, Weiguo Li <liwg06@foxmail.com>,
+        Athira Rajeev <atrajeev@linux.vnet.ibm.com>,
+        Thomas Richter <tmricht@linux.ibm.com>,
+        Ravi Bangoria <ravi.bangoria@amd.com>,
+        Dario Petrillo <dario.pk1@gmail.com>,
+        Hewenliang <hewenliang4@huawei.com>,
+        yaowenbin <yaowenbin1@huawei.com>,
+        Wenyu Liu <liuwenyu7@huawei.com>,
+        Song Liu <songliubraving@fb.com>,
+        Andrii Nakryiko <andrii@kernel.org>,
+        Dave Marchevsky <davemarchevsky@fb.com>,
+        Leo Yan <leo.yan@linaro.org>,
+        Kim Phillips <kim.phillips@amd.com>,
+        Pavithra Gurushankar <gpavithrasha@gmail.com>,
+        Alexandre Truong <alexandre.truong@arm.com>,
+        Quentin Monnet <quentin@isovalent.com>,
+        William Cohen <wcohen@redhat.com>,
+        Andres Freund <andres@anarazel.de>,
+        Adrian Hunter <adrian.hunter@intel.com>,
+        =?UTF-8?Q?Martin_Li=c5=a1ka?= <mliska@suse.cz>,
+        Colin Ian King <colin.king@intel.com>,
+        James Clark <james.clark@arm.com>,
+        Fangrui Song <maskray@google.com>,
+        Stephane Eranian <eranian@google.com>,
+        Kajol Jain <kjain@linux.ibm.com>,
+        Alexey Bayduraev <alexey.v.bayduraev@linux.intel.com>,
+        Riccardo Mancini <rickyman7@gmail.com>,
+        Andi Kleen <ak@linux.intel.com>,
+        Masami Hiramatsu <mhiramat@kernel.org>,
+        Zechuan Chen <chenzechuan1@huawei.com>,
+        Jason Wang <wangborong@cdjrlc.com>,
+        Christophe JAILLET <christophe.jaillet@wanadoo.fr>,
+        Remi Bernon <rbernon@codeweavers.com>,
+        linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org,
+        bpf@vger.kernel.org, llvm@lists.linux.dev
+References: <20220823220922.256001-1-irogers@google.com>
+ <20220823220922.256001-2-irogers@google.com>
+From:   Adrian Hunter <adrian.hunter@intel.com>
+Organization: Intel Finland Oy, Registered Address: PL 281, 00181 Helsinki,
+ Business Identity Code: 0357606 - 4, Domiciled in Helsinki
+In-Reply-To: <20220823220922.256001-2-irogers@google.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-When libbpf is present the build uses definitions in libbpf hashmap.c,
-however, libbpf's hashmap.h wasn't being used. Switch to using the
-correct hashmap.h dependent on the define HAVE_LIBBPF_SUPPORT. This
-was the original intent in:
-https://lore.kernel.org/lkml/20200515221732.44078-8-irogers@google.com/
+On 24/08/22 01:09, Ian Rogers wrote:
+> From: Pavithra Gurushankar <gpavithrasha@gmail.com>
+> 
+> Added a new header file mutex.h that wraps the usage of
+> pthread_mutex_t and pthread_cond_t. By abstracting these it is
+> possible to introduce error checking.
+> 
+> Signed-off-by: Pavithra Gurushankar <gpavithrasha@gmail.com>
+> Signed-off-by: Ian Rogers <irogers@google.com>
+> ---
+>  tools/perf/util/Build   |  1 +
+>  tools/perf/util/mutex.c | 97 +++++++++++++++++++++++++++++++++++++++++
+>  tools/perf/util/mutex.h | 43 ++++++++++++++++++
+>  3 files changed, 141 insertions(+)
+>  create mode 100644 tools/perf/util/mutex.c
+>  create mode 100644 tools/perf/util/mutex.h
+> 
+> diff --git a/tools/perf/util/Build b/tools/perf/util/Build
+> index 9dfae1bda9cc..8fd6dc8de521 100644
+> --- a/tools/perf/util/Build
+> +++ b/tools/perf/util/Build
+> @@ -143,6 +143,7 @@ perf-y += branch.o
+>  perf-y += mem2node.o
+>  perf-y += clockid.o
+>  perf-y += list_sort.o
+> +perf-y += mutex.o
+>  
+>  perf-$(CONFIG_LIBBPF) += bpf-loader.o
+>  perf-$(CONFIG_LIBBPF) += bpf_map.o
+> diff --git a/tools/perf/util/mutex.c b/tools/perf/util/mutex.c
+> new file mode 100644
+> index 000000000000..d12cf0714268
+> --- /dev/null
+> +++ b/tools/perf/util/mutex.c
+> @@ -0,0 +1,97 @@
+> +// SPDX-License-Identifier: GPL-2.0
+> +#include "mutex.h"
+> +
+> +#include "debug.h"
+> +#include <linux/string.h>
+> +#include <errno.h>
+> +
+> +static void check_err(const char *fn, int err)
+> +{
+> +	char sbuf[STRERR_BUFSIZE];
+> +
+> +	if (err == 0)
+> +		return;
+> +
+> +	pr_err("%s error: '%s'", fn, str_error_r(err, sbuf, sizeof(sbuf)));
 
-Signed-off-by: Ian Rogers <irogers@google.com>
----
- tools/perf/util/bpf-loader.c |  6 +++++-
- tools/perf/util/evsel.c      |  6 +++++-
- tools/perf/util/expr.h       | 11 ++++-------
- tools/perf/util/stat.c       |  6 +++++-
- 4 files changed, 19 insertions(+), 10 deletions(-)
+pr_err() does not add '\n' so it needs to be in the format string.
 
-diff --git a/tools/perf/util/bpf-loader.c b/tools/perf/util/bpf-loader.c
-index e2052f4fed33..d657594894cf 100644
---- a/tools/perf/util/bpf-loader.c
-+++ b/tools/perf/util/bpf-loader.c
-@@ -27,7 +27,11 @@
- #include "util.h"
- #include "llvm-utils.h"
- #include "c++/clang-c.h"
--#include "hashmap.h"
-+#ifdef HAVE_LIBBPF_SUPPORT
-+#include <bpf/hashmap.h>
-+#else
-+#include "util/hashmap.h"
-+#endif
- #include "asm/bug.h"
- 
- #include <internal/xyarray.h>
-diff --git a/tools/perf/util/evsel.c b/tools/perf/util/evsel.c
-index 4852089e1d79..14846b7edb17 100644
---- a/tools/perf/util/evsel.c
-+++ b/tools/perf/util/evsel.c
-@@ -46,7 +46,11 @@
- #include "string2.h"
- #include "memswap.h"
- #include "util.h"
--#include "hashmap.h"
-+#ifdef HAVE_LIBBPF_SUPPORT
-+#include <bpf/hashmap.h>
-+#else
-+#include "util/hashmap.h"
-+#endif
- #include "pmu-hybrid.h"
- #include "off_cpu.h"
- #include "../perf-sys.h"
-diff --git a/tools/perf/util/expr.h b/tools/perf/util/expr.h
-index bd2116983bbb..0403a92d9dcc 100644
---- a/tools/perf/util/expr.h
-+++ b/tools/perf/util/expr.h
-@@ -2,14 +2,11 @@
- #ifndef PARSE_CTX_H
- #define PARSE_CTX_H 1
- 
--// There are fixes that need to land upstream before we can use libbpf's headers,
--// for now use our copy unconditionally, since the data structures at this point
--// are exactly the same, no problem.
--//#ifdef HAVE_LIBBPF_SUPPORT
--//#include <bpf/hashmap.h>
--//#else
-+#ifdef HAVE_LIBBPF_SUPPORT
-+#include <bpf/hashmap.h>
-+#else
- #include "util/hashmap.h"
--//#endif
-+#endif
- 
- struct metric_ref;
- 
-diff --git a/tools/perf/util/stat.c b/tools/perf/util/stat.c
-index 0882b4754fcf..ce5e9e372fc4 100644
---- a/tools/perf/util/stat.c
-+++ b/tools/perf/util/stat.c
-@@ -14,7 +14,11 @@
- #include "evlist.h"
- #include "evsel.h"
- #include "thread_map.h"
--#include "hashmap.h"
-+#ifdef HAVE_LIBBPF_SUPPORT
-+#include <bpf/hashmap.h>
-+#else
-+#include "util/hashmap.h"
-+#endif
- #include <linux/zalloc.h>
- 
- void update_stats(struct stats *stats, u64 val)
--- 
-2.37.2.609.g9ff673ca1a-goog
+> +}
+> +
+> +#define CHECK_ERR(err) check_err(__func__, err)
+> +
+> +void mutex_init(struct mutex *mtx, bool pshared)
+> +{
+> +	pthread_mutexattr_t attr;
+> +
+> +	CHECK_ERR(pthread_mutexattr_init(&attr));
+> +
+> +#ifndef NDEBUG
+> +	/* In normal builds enable error checking, such as recursive usage. */
+> +	CHECK_ERR(pthread_mutexattr_settype(&attr, PTHREAD_MUTEX_ERRORCHECK));
+> +#endif
+> +	if (pshared)
+> +		pthread_mutexattr_setpshared(&attr, PTHREAD_PROCESS_SHARED);
+> +
+> +	CHECK_ERR(pthread_mutex_init(&mtx->lock, &attr));
+> +	CHECK_ERR(pthread_mutexattr_destroy(&attr));
+> +}
+> +
+> +void mutex_destroy(struct mutex *mtx)
+> +{
+> +	CHECK_ERR(pthread_mutex_destroy(&mtx->lock));
+> +}
+> +
+> +void mutex_lock(struct mutex *mtx)
+> +{
+> +	CHECK_ERR(pthread_mutex_lock(&mtx->lock));
+> +}
+> +
+> +void mutex_unlock(struct mutex *mtx)
+> +{
+> +	CHECK_ERR(pthread_mutex_unlock(&mtx->lock));
+> +}
+> +
+> +bool mutex_trylock(struct mutex *mtx)
+> +{
+> +	int ret = pthread_mutex_trylock(&mtx->lock);
+> +
+> +	if (ret == 0)
+> +		return true; /* Lock acquired. */
+> +
+> +	if (ret == EBUSY)
+> +		return false; /* Lock busy. */
+> +
+> +	/* Print error. */
+> +	CHECK_ERR(ret);
+> +	return false;
+> +}
+> +
+> +void cond_init(struct cond *cnd, bool pshared)
+> +{
+> +	pthread_condattr_t attr;
+> +
+> +	CHECK_ERR(pthread_condattr_init(&attr));
+> +	if (pshared)
+> +		CHECK_ERR(pthread_condattr_setpshared(&attr, PTHREAD_PROCESS_SHARED));
+> +
+> +	CHECK_ERR(pthread_cond_init(&cnd->cond, &attr));
+> +	CHECK_ERR(pthread_condattr_destroy(&attr));
+> +}
+> +
+> +void cond_destroy(struct cond *cnd)
+> +{
+> +	CHECK_ERR(pthread_cond_destroy(&cnd->cond));
+> +}
+> +
+> +void cond_wait(struct cond *cnd, struct mutex *mtx)
+> +{
+> +	CHECK_ERR(pthread_cond_wait(&cnd->cond, &mtx->lock));
+> +}
+> +
+> +void cond_signal(struct cond *cnd)
+> +{
+> +	CHECK_ERR(pthread_cond_signal(&cnd->cond));
+> +}
+> +
+> +void cond_broadcast(struct cond *cnd)
+> +{
+> +	CHECK_ERR(pthread_cond_broadcast(&cnd->cond));
+> +}
+> diff --git a/tools/perf/util/mutex.h b/tools/perf/util/mutex.h
+> new file mode 100644
+> index 000000000000..952276ad83bd
+> --- /dev/null
+> +++ b/tools/perf/util/mutex.h
+> @@ -0,0 +1,43 @@
+> +/* SPDX-License-Identifier: GPL-2.0 */
+> +#ifndef __PERF_MUTEX_H
+> +#define __PERF_MUTEX_H
+> +
+> +#include <pthread.h>
+> +#include <stdbool.h>
+> +
+> +/*
+> + * A wrapper around the mutex implementation that allows perf to error check
+> + * usage, etc.
+> + */
+> +struct mutex {
+> +	pthread_mutex_t lock;
+> +};
+> +
+> +/* A wrapper around the condition variable implementation. */
+> +struct cond {
+> +	pthread_cond_t cond;
+> +};
+
+Do these definitions need to be in the header?
+What about just:
+
+struct mutex;
+struct cond;
+
+and put the defintions in mutex.c.
+
+> +
+> +/*
+> + * Initialize the mtx struct, if pshared is set then specify the process-shared
+> + * rather than default process-private attribute.
+> + */
+> +void mutex_init(struct mutex *mtx, bool pshared);
+> +void mutex_destroy(struct mutex *mtx);
+> +
+> +void mutex_lock(struct mutex *mtx);
+> +void mutex_unlock(struct mutex *mtx);
+> +bool mutex_trylock(struct mutex *mtx);
+> +
+> +/*
+> + * Initialize the cond struct, if pshared is set then specify the process-shared
+> + * rather than default process-private attribute.
+> + */
+> +void cond_init(struct cond *cnd, bool pshared);
+> +void cond_destroy(struct cond *cnd);
+> +
+> +void cond_wait(struct cond *cnd, struct mutex *mtx);
+> +void cond_signal(struct cond *cnd);
+> +void cond_broadcast(struct cond *cnd);
+> +
+> +#endif /* __PERF_MUTEX_H */
 
