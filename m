@@ -2,108 +2,73 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 52F58C28D13
-	for <linux-perf-users@archiver.kernel.org>; Thu, 25 Aug 2022 09:27:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 29CCFC04AA5
+	for <linux-perf-users@archiver.kernel.org>; Thu, 25 Aug 2022 10:23:20 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S235388AbiHYJ1y (ORCPT
+        id S239693AbiHYKXS (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Thu, 25 Aug 2022 05:27:54 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43438 "EHLO
+        Thu, 25 Aug 2022 06:23:18 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50920 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S233563AbiHYJ1v (ORCPT
+        with ESMTP id S236970AbiHYKXR (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Thu, 25 Aug 2022 05:27:51 -0400
-Received: from smtp-out2.suse.de (smtp-out2.suse.de [IPv6:2001:67c:2178:6::1d])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D7BB09E8BB;
-        Thu, 25 Aug 2022 02:27:50 -0700 (PDT)
-Received: from relay2.suse.de (relay2.suse.de [149.44.160.134])
-        by smtp-out2.suse.de (Postfix) with ESMTP id 8BF8D5BCFF;
-        Thu, 25 Aug 2022 09:27:49 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.com; s=susede1;
-        t=1661419669; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-         mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=oD2ON5ZEmElLgT4EBxpSWyu1ku5LP4DrXwfA23XWjH4=;
-        b=qknJkW1fP0r2UL8UgzODME4WEr79d6P4xEuqkMLZADrhrnaZvBgIbr/L0faRbdiu6dHJmE
-        tvkb1ptlffg/lhWil1eQZUDjhGa6bN1dyT5LO7aJKLLNCh/XcrNqoiWnPzH6p5mvmmoUDQ
-        3JAdcgDNBV8/4sIoa7uVLdV0TcindVs=
-Received: from suse.cz (unknown [10.100.201.202])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by relay2.suse.de (Postfix) with ESMTPS id BBCD22C142;
-        Thu, 25 Aug 2022 09:27:48 +0000 (UTC)
-Date:   Thu, 25 Aug 2022 11:27:46 +0200
-From:   Petr Mladek <pmladek@suse.com>
-To:     Wolfram Sang <wsa+renesas@sang-engineering.com>
-Cc:     linux-kernel@vger.kernel.org, Alexei Starovoitov <ast@kernel.org>,
-        Daniel Borkmann <daniel@iogearbox.net>,
-        Andrii Nakryiko <andrii@kernel.org>,
-        Martin KaFai Lau <martin.lau@linux.dev>,
-        Song Liu <song@kernel.org>, Yonghong Song <yhs@fb.com>,
-        John Fastabend <john.fastabend@gmail.com>,
-        KP Singh <kpsingh@kernel.org>,
-        Stanislav Fomichev <sdf@google.com>,
-        Hao Luo <haoluo@google.com>, Jiri Olsa <jolsa@kernel.org>,
-        Tejun Heo <tj@kernel.org>, Zefan Li <lizefan.x@bytedance.com>,
-        Johannes Weiner <hannes@cmpxchg.org>,
-        Peter Zijlstra <peterz@infradead.org>,
+        Thu, 25 Aug 2022 06:23:17 -0400
+Received: from desiato.infradead.org (desiato.infradead.org [IPv6:2001:8b0:10b:1:d65d:64ff:fe57:4e05])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 58EE54F18A;
+        Thu, 25 Aug 2022 03:23:13 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=desiato.20200630; h=In-Reply-To:Content-Type:MIME-Version:
+        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description;
+        bh=tnPAFjnvlVD7F6omr7d7Jf1+sV6a0bgO1MSet6Ch/mQ=; b=lkmkoN4iSClaaXFDh9FmYeOlQx
+        e/MXCY42EF7WI+W1iliA3JtGlIsx3KC0nJNaK3umLIhTOaikX5TRCPKgtfF6776La+FZ+ere0G5+S
+        w1o95MPXod8ihuR84kqgbHxsCEgM8ZmMP1GqOgqc9rb2zJNKPZEu2eP8pRYH9zvxwqxe7FC9hneg8
+        yr+qhnQ5JbCiNGor+VNMf413/8IUITtAlJxQt2CRjGpNTljpFmsrbGatBSdBaRzewejiXFDtNKLXn
+        J97IhP+KPVUksObRcl0UPet/59AF7Ds71GR1S1tyzrkoxYib+sW1wDyzRUTTNbRb3k+EVAOGZ6+Gd
+        YJChPLPw==;
+Received: from j130084.upc-j.chello.nl ([24.132.130.84] helo=worktop.programming.kicks-ass.net)
+        by desiato.infradead.org with esmtpsa (Exim 4.94.2 #2 (Red Hat Linux))
+        id 1oRA0j-005ysD-3k; Thu, 25 Aug 2022 10:22:53 +0000
+Received: by worktop.programming.kicks-ass.net (Postfix, from userid 1000)
+        id DD4AA98014D; Thu, 25 Aug 2022 12:22:51 +0200 (CEST)
+Date:   Thu, 25 Aug 2022 12:22:51 +0200
+From:   Peter Zijlstra <peterz@infradead.org>
+To:     Anshuman Khandual <anshuman.khandual@arm.com>
+Cc:     linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org,
+        alexander.shishkin@linux.intel.com, jolsa@redhat.com,
+        acme@kernel.org, mark.rutland@arm.com,
+        Robin Murphy <robin.murphy@arm.com>,
+        Suzuki Poulose <suzuki.poulose@arm.com>,
+        James Clark <james.clark@arm.com>,
         Ingo Molnar <mingo@redhat.com>,
-        Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
         Namhyung Kim <namhyung@kernel.org>,
-        Sergey Senozhatsky <senozhatsky@chromium.org>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        John Ogness <john.ogness@linutronix.de>,
-        John Stultz <jstultz@google.com>,
         Thomas Gleixner <tglx@linutronix.de>,
-        Stephen Boyd <sboyd@kernel.org>, bpf@vger.kernel.org,
-        cgroups@vger.kernel.org, linux-perf-users@vger.kernel.org
-Subject: Re: [PATCH] kernel: move from strlcpy with unused retval to strscpy
-Message-ID: <YwdAknZFyKxCXZuL@alley>
-References: <20220818210202.8227-1-wsa+renesas@sang-engineering.com>
+        Will Deacon <will@kernel.org>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        linux-arm-kernel@lists.infradead.org
+Subject: Re: [PATCH V7 0/8] perf: Expand perf_branch_entry
+Message-ID: <YwdNe52eS6LO/KJe@worktop.programming.kicks-ass.net>
+References: <20220824044822.70230-1-anshuman.khandual@arm.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20220818210202.8227-1-wsa+renesas@sang-engineering.com>
+In-Reply-To: <20220824044822.70230-1-anshuman.khandual@arm.com>
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-On Thu 2022-08-18 23:02:01, Wolfram Sang wrote:
-> Follow the advice of the below link and prefer 'strscpy' in this
-> subsystem. Conversion is 1:1 because the return value is not used.
-> Generated by a coccinelle script.
-> 
-> Link: https://lore.kernel.org/r/CAHk-=wgfRnXz0W3D37d01q3JFkr_i_uTL=V6A6G1oUZcprmknw@mail.gmail.com/
-> Signed-off-by: Wolfram Sang <wsa+renesas@sang-engineering.com>
->
-> ---
->  kernel/acct.c                         |  2 +-
->  kernel/bpf/preload/bpf_preload_kern.c |  4 ++--
->  kernel/cgroup/cgroup-v1.c             |  4 ++--
->  kernel/events/core.c                  |  6 +++---
->  kernel/kallsyms.c                     |  4 ++--
->  kernel/params.c                       |  2 +-
->  kernel/printk/printk.c                |  2 +-
->  kernel/relay.c                        |  4 ++--
->  kernel/time/clocksource.c             |  2 +-
->  kernel/trace/ftrace.c                 | 18 +++++++++---------
->  kernel/trace/trace.c                  |  8 ++++----
->  kernel/trace/trace_events.c           |  2 +-
->  kernel/trace/trace_events_inject.c    |  4 ++--
->  kernel/trace/trace_kprobe.c           |  2 +-
->  kernel/trace/trace_probe.c            |  2 +-
->  15 files changed, 33 insertions(+), 33 deletions(-)
+On Wed, Aug 24, 2022 at 10:18:14AM +0530, Anshuman Khandual wrote:
+> Anshuman Khandual (8):
+>   perf: Add system error and not in transaction branch types
+>   perf: Extend branch type classification
+>   perf: Capture branch privilege information
+>   perf: Add PERF_BR_NEW_ARCH_[N] map for BRBE on arm64 platform
 
-This fixes only small part of the kernel code. It would make sense to
-do a tree-wide change using a script.
+I picked up these first 4 and rebased them on top of the recent AMD LBR
+patches.
 
-Would you mind to create one and send it to Linus?
+They live in:
 
-You might want to use Coccinelle if a simple sed/awk gets too
-complicated. See
-https://www.kernel.org/doc/html/v4.15/dev-tools/coccinelle.html
+  git://git.kernel.org/pub/scm/linux/kernel/git/peterz/queue.git perf/core
 
-Best Regards,
-Petr
+for robot exposure. If all goes well they'll land in -tip.
