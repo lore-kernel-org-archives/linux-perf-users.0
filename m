@@ -2,173 +2,215 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EA5A2C6498F
-	for <linux-perf-users@archiver.kernel.org>; Thu, 25 Aug 2022 16:00:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BDDAFECAA25
+	for <linux-perf-users@archiver.kernel.org>; Thu, 25 Aug 2022 16:20:40 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S242909AbiHYP77 (ORCPT
+        id S243037AbiHYQUj (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Thu, 25 Aug 2022 11:59:59 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35526 "EHLO
+        Thu, 25 Aug 2022 12:20:39 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41140 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S242887AbiHYP75 (ORCPT
+        with ESMTP id S243044AbiHYQUa (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Thu, 25 Aug 2022 11:59:57 -0400
-Received: from mail-pf1-x42a.google.com (mail-pf1-x42a.google.com [IPv6:2607:f8b0:4864:20::42a])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 202BB26D1
-        for <linux-perf-users@vger.kernel.org>; Thu, 25 Aug 2022 08:59:55 -0700 (PDT)
-Received: by mail-pf1-x42a.google.com with SMTP id x15so19312006pfp.4
-        for <linux-perf-users@vger.kernel.org>; Thu, 25 Aug 2022 08:59:55 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20210112;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc;
-        bh=s14gyQJTvsj4UP8jOneFH7XrwLl5hvF+f+/gI4nwvs8=;
-        b=nDpy5bAsLMhMmxeaP0eBSG7fSwbg7YyPoAJU7/MYosac9TE/FUJnuSNkYI+ypQU0C+
-         DXId/TBG4A3MTTAWaCAHOgJ4c5biuK2s0dxkPC7fVEbJbL0g03DrUN3TUQmaj62eeJMW
-         DwfMxQfxE//DopQC6lrZEUY15SZ7bn+UAwOoMbNmgTQOiNKWeO9jn5Zg7FNqipRbxhkQ
-         mtq1dfyDbB8/Cg/7aRzXFwXsRSZq2J3TMgoIJULIyhEtP/JLOC36KlJH6A236Yb7Xerj
-         YCwHNzWBglYw4L/cRlnai38LTO9SfVjxdwNLcyad+7fxx+g2QBDDscJHxO2HpTpRlriW
-         b3ww==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc;
-        bh=s14gyQJTvsj4UP8jOneFH7XrwLl5hvF+f+/gI4nwvs8=;
-        b=UYpi//Di0ElS4HJoMZ1RpLsYD/KsHGSoyKfH37o0HQLOXbyaeTjZogHQLzXZ8wZ76P
-         mIvo83g/6OuDQQ51RkkxTVQ2ji5It5nvTHAbeLD2Dw+dItryjoJ9f1BZjngmM/18P0z8
-         Aw8NsBwk5btX0Ufb3MEbIhUZUrzaf0zzaylaszYH/r6aTZdoDSIFFE8RzI/lLCjrvMDi
-         WRRIqDfcVktezPlTYYS/De9xgvNRf0XJf3TavSdQRxUtLPyHGzLx9/FYVeb+PrjZUK4X
-         NjDKxF6n3OoThdKzoCV1Y3OVHAD+5dhxex0lMlMSX/RIeAN4GmP/e8nwE0hgAnf6nX3A
-         Tcyw==
-X-Gm-Message-State: ACgBeo30tqYoiRZ3GQTlduhXCpNA0kS1uHVE77X+b2V41Yuk891YvDYL
-        anQiF94eM73OOUudsY865I7WAg==
-X-Google-Smtp-Source: AA6agR53+X4iJjyIst/MvZeCs6bFcq/30Y8XnjLHDEcSSfwImuoicfydBTS9d7CVYRGjZH3XZ/ERaA==
-X-Received: by 2002:a05:6a00:4acc:b0:536:46c4:d084 with SMTP id ds12-20020a056a004acc00b0053646c4d084mr4569426pfb.71.1661443194448;
-        Thu, 25 Aug 2022 08:59:54 -0700 (PDT)
-Received: from google.com (7.104.168.34.bc.googleusercontent.com. [34.168.104.7])
-        by smtp.gmail.com with ESMTPSA id a20-20020a62d414000000b00535e6dbda16sm14630083pfh.35.2022.08.25.08.59.54
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 25 Aug 2022 08:59:54 -0700 (PDT)
-Date:   Thu, 25 Aug 2022 15:59:50 +0000
-From:   Sean Christopherson <seanjc@google.com>
-To:     Xiaoyao Li <xiaoyao.li@intel.com>
+        Thu, 25 Aug 2022 12:20:30 -0400
+Received: from mga11.intel.com (mga11.intel.com [192.55.52.93])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 44F74A0268;
+        Thu, 25 Aug 2022 09:20:27 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1661444427; x=1692980427;
+  h=message-id:date:mime-version:subject:to:cc:references:
+   from:in-reply-to:content-transfer-encoding;
+  bh=dexjnAFY5uhDar1V0uA27KUIA1B5OYcNy4yxSywmqjs=;
+  b=SFJYUskLRA21SYfnuDUQvU10s/wlLNInvupaDs6v0hSwAnnNz6UDFtAC
+   M9BvN9VmYwkPT7sPvxKElAz093pNxhi9NJjP2JJiO8kg/JTNpJuOeL9TI
+   bNzZCuB21tWOxpjbLP5MmMvq/R4u0Z1Jjqpmy5cnArpWDtIdHd1Aa4KcA
+   PXQBxKrDvkr9MnnECoS867/jbsMRCdzh+8b9MnDyRLt7R7Fs5XKJ96G0w
+   /QmDNzmIGvZOlNbNZUrQmR08apLBMklsb8QdFcemmdnITqAnYCPlrptYO
+   n/yBUoY67pPscNN+6fmuxWGyyMbGevOgGXwCB8SMvj8tswUsT0yJ+4oJe
+   w==;
+X-IronPort-AV: E=McAfee;i="6500,9779,10450"; a="291862665"
+X-IronPort-AV: E=Sophos;i="5.93,263,1654585200"; 
+   d="scan'208";a="291862665"
+Received: from fmsmga008.fm.intel.com ([10.253.24.58])
+  by fmsmga102.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 25 Aug 2022 09:15:04 -0700
+X-IronPort-AV: E=Sophos;i="5.93,263,1654585200"; 
+   d="scan'208";a="671059006"
+Received: from ahunter6-mobl1.ger.corp.intel.com (HELO [10.0.2.15]) ([10.252.52.129])
+  by fmsmga008-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 25 Aug 2022 09:14:52 -0700
+Message-ID: <c422c9b3-d6e2-e1d5-5273-6a720fdde6c4@intel.com>
+Date:   Thu, 25 Aug 2022 19:14:47 +0300
+MIME-Version: 1.0
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
+ Firefox/91.0 Thunderbird/91.11.0
+Subject: Re: [PATCH v3 00/18] Mutex wrapper, locking and memory leak fixes
+Content-Language: en-US
+To:     Arnaldo Carvalho de Melo <arnaldo.melo@gmail.com>,
+        Ian Rogers <irogers@google.com>
 Cc:     Peter Zijlstra <peterz@infradead.org>,
+        Ingo Molnar <mingo@redhat.com>,
         Arnaldo Carvalho de Melo <acme@kernel.org>,
         Mark Rutland <mark.rutland@arm.com>,
         Alexander Shishkin <alexander.shishkin@linux.intel.com>,
         Jiri Olsa <jolsa@kernel.org>,
         Namhyung Kim <namhyung@kernel.org>,
-        Paolo Bonzini <pbonzini@redhat.com>,
-        linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org,
-        kvm@vger.kernel.org
-Subject: Re: [RFC PATCH 2/2] KVM: VMX: Stop/resume host PT before/after VM
- entry when PT_MODE_HOST_GUEST
-Message-ID: <YwecducnM/U6tqJT@google.com>
-References: <20220825085625.867763-1-xiaoyao.li@intel.com>
- <20220825085625.867763-3-xiaoyao.li@intel.com>
- <YweWmF3wMPRnthIh@google.com>
- <6bcab33b-3fde-d470-88b9-7667c7dc4b2d@intel.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <6bcab33b-3fde-d470-88b9-7667c7dc4b2d@intel.com>
+        Thomas Gleixner <tglx@linutronix.de>,
+        Darren Hart <dvhart@infradead.org>,
+        Davidlohr Bueso <dave@stgolabs.net>,
+        =?UTF-8?Q?Andr=c3=a9_Almeida?= <andrealmeid@igalia.com>,
+        Nathan Chancellor <nathan@kernel.org>,
+        Nick Desaulniers <ndesaulniers@google.com>,
+        Tom Rix <trix@redhat.com>, Weiguo Li <liwg06@foxmail.com>,
+        Athira Rajeev <atrajeev@linux.vnet.ibm.com>,
+        Thomas Richter <tmricht@linux.ibm.com>,
+        Ravi Bangoria <ravi.bangoria@amd.com>,
+        Dario Petrillo <dario.pk1@gmail.com>,
+        Hewenliang <hewenliang4@huawei.com>,
+        yaowenbin <yaowenbin1@huawei.com>,
+        Wenyu Liu <liuwenyu7@huawei.com>,
+        Song Liu <songliubraving@fb.com>,
+        Andrii Nakryiko <andrii@kernel.org>,
+        Dave Marchevsky <davemarchevsky@fb.com>,
+        Leo Yan <leo.yan@linaro.org>,
+        Kim Phillips <kim.phillips@amd.com>,
+        Pavithra Gurushankar <gpavithrasha@gmail.com>,
+        Alexandre Truong <alexandre.truong@arm.com>,
+        Quentin Monnet <quentin@isovalent.com>,
+        William Cohen <wcohen@redhat.com>,
+        Andres Freund <andres@anarazel.de>,
+        =?UTF-8?Q?Martin_Li=c5=a1ka?= <mliska@suse.cz>,
+        Colin Ian King <colin.king@intel.com>,
+        James Clark <james.clark@arm.com>,
+        Fangrui Song <maskray@google.com>,
+        Stephane Eranian <eranian@google.com>,
+        Kajol Jain <kjain@linux.ibm.com>,
+        Alexey Bayduraev <alexey.v.bayduraev@linux.intel.com>,
+        Riccardo Mancini <rickyman7@gmail.com>,
+        Andi Kleen <ak@linux.intel.com>,
+        Masami Hiramatsu <mhiramat@kernel.org>,
+        Zechuan Chen <chenzechuan1@huawei.com>,
+        Jason Wang <wangborong@cdjrlc.com>,
+        Christophe JAILLET <christophe.jaillet@wanadoo.fr>,
+        Remi Bernon <rbernon@codeweavers.com>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        linux-perf-users <linux-perf-users@vger.kernel.org>,
+        bpf <bpf@vger.kernel.org>, llvm@lists.linux.dev
+References: <20220824153901.488576-1-irogers@google.com>
+ <CA+JHD906M0truH7wPNZ=eJwdCA=qLhYDonUx_ZQBwJYpiX1hNg@mail.gmail.com>
+From:   Adrian Hunter <adrian.hunter@intel.com>
+Organization: Intel Finland Oy, Registered Address: PL 281, 00181 Helsinki,
+ Business Identity Code: 0357606 - 4, Domiciled in Helsinki
+In-Reply-To: <CA+JHD906M0truH7wPNZ=eJwdCA=qLhYDonUx_ZQBwJYpiX1hNg@mail.gmail.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-On Thu, Aug 25, 2022, Xiaoyao Li wrote:
-> On 8/25/2022 11:34 PM, Sean Christopherson wrote:
-> > On Thu, Aug 25, 2022, Xiaoyao Li wrote:
-> > > diff --git a/arch/x86/kvm/vmx/vmx.c b/arch/x86/kvm/vmx/vmx.c
-> > > index d7f8331d6f7e..3e9ce8f600d2 100644
-> > > --- a/arch/x86/kvm/vmx/vmx.c
-> > > +++ b/arch/x86/kvm/vmx/vmx.c
-> > > @@ -38,6 +38,7 @@
-> > >   #include <asm/fpu/api.h>
-> > >   #include <asm/fpu/xstate.h>
-> > >   #include <asm/idtentry.h>
-> > > +#include <asm/intel_pt.h>
-> > >   #include <asm/io.h>
-> > >   #include <asm/irq_remapping.h>
-> > >   #include <asm/kexec.h>
-> > > @@ -1128,13 +1129,19 @@ static void pt_guest_enter(struct vcpu_vmx *vmx)
-> > >   	if (vmx_pt_mode_is_system())
-> > >   		return;
-> > > +	/*
-> > > +	 * Stop Intel PT on host to avoid vm-entry failure since
-> > > +	 * VM_ENTRY_LOAD_IA32_RTIT_CTL is set
-> > > +	 */
-> > > +	intel_pt_stop();
-> > > +
-> > >   	/*
-> > >   	 * GUEST_IA32_RTIT_CTL is already set in the VMCS.
-> > >   	 * Save host state before VM entry.
-> > >   	 */
-> > >   	rdmsrl(MSR_IA32_RTIT_CTL, vmx->pt_desc.host.ctl);
-> > 
-> > KVM's manual save/restore of MSR_IA32_RTIT_CTL should be dropped.
+On 25/08/22 15:30, Arnaldo Carvalho de Melo wrote:
+> On Wed, Aug 24, 2022, 12:39 PM Ian Rogers <irogers@google.com <mailto:irogers@google.com>> wrote:
 > 
-> No. It cannot. Please see below.
+>     When fixing a locking race and memory leak in:
+>     https://lore.kernel.org/linux-perf-users/20211118193714.2293728-1-irogers@google.com/ <https://lore.kernel.org/linux-perf-users/20211118193714.2293728-1-irogers@google.com/>
 > 
-> > If PT/RTIT can
-> > trace post-VMXON, then intel_pt_stop() will disable tracing and intel_pt_resume()
-> > will restore the host's desired value.
+>     It was requested that debug mutex code be separated out into its own
+>     files. This was, in part, done by Pavithra Gurushankar in:
+>     https://lore.kernel.org/lkml/20220727111954.105118-1-gpavithrasha@gmail.com/ <https://lore.kernel.org/lkml/20220727111954.105118-1-gpavithrasha@gmail.com/>
 > 
-> intel_pt_stop() and intel_pt_resume() touches host's RTIT_CTL only when host
-> enables/uses Intel PT. Otherwise, they're just noop. In this case, we cannot
-> assume host's RTIT_CTL is zero (only the RTIT_CTL.TraceEn is 0). After
-> VM-exit, RTIT_CTL is cleared, we need to restore it.
-
-But ensuring the RTIT_CTL.TraceEn=0 is all that's needed to make VM-Entry happy,
-and if the host isn't using Intel PT, what do we care if other bits that, for all
-intents and purposes are ignored, are lost across VM-Entry/VM-Exit?  I gotta
-imaging the perf will fully initialize RTIT_CTL if it starts using PT.
-
-Actually, if the host isn't actively using Intel PT, can KVM avoid saving the
-other RTIT MSRs?
-
-Even better, can we hand that off to perf?  I really dislike KVM making assumptions
-about perf's internal behavior.  E.g. can this be made to look like
-
-	intel_pt_guest_enter(vmx->pt_desc.guest.ctl & RTIT_CTL_TRACEEN);
-
-and
-
-	intel_pt_guest_exit(vmx->pt_desc.guest.ctl & RTIT_CTL_TRACEEN);
-
-> > >   	if (vmx->pt_desc.guest.ctl & RTIT_CTL_TRACEEN) {
-> > > -		wrmsrl(MSR_IA32_RTIT_CTL, 0);
-> > > +		/* intel_pt_stop() ensures RTIT_CTL.TraceEn is zero */
-> > >   		pt_save_msr(&vmx->pt_desc.host, vmx->pt_desc.num_address_ranges);
-> > 
-> > Isn't this at risk of the same corruption?  What prevents a PT NMI that arrives
-> > after this point from changing other RTIT MSRs, thus causing KVM to restore the
-> > wrong values?
+>     These patches fix issues with the previous patches, add in the
+>     original dso->nsinfo fix and then build on our mutex wrapper with
+>     clang's -Wthread-safety analysis. The analysis found missing unlocks
+>     in builtin-sched.c which are fixed and -Wthread-safety is enabled by
+>     default when building with clang.
 > 
-> intel_pt_stop() -> pt_event_stop() will do
+>     v3. Adds a missing new line to the error messages and removes the
+>         pshared argument to mutex_init by having two functions, mutex_init
+>         and mutex_init_pshared. These changes were suggested by Adrian Hunter.
 > 
-> 	WRITE_ONCE(pt->handle_nmi, 0);
 > 
-> which ensure PT NMI handler as noop that at the beginning of
-> intel_pt_interrupt():
-> 
-> 	if (!READ_ONCE(pt->handle_nmi))
-> 		return;
+> Adrian, can I have your Acked-by or, better, Reviewed-by?
 
-Ah, right.  
+Sure, just let me have another look.  Should get to it
+tomorrow.
 
 > 
-> > >   		pt_load_msr(&vmx->pt_desc.guest, vmx->pt_desc.num_address_ranges);
-> > >   	}
-> > > @@ -1156,6 +1163,8 @@ static void pt_guest_exit(struct vcpu_vmx *vmx)
-> > >   	 */
-> > >   	if (vmx->pt_desc.host.ctl)
-> > >   		wrmsrl(MSR_IA32_RTIT_CTL, vmx->pt_desc.host.ctl);
-> > > +
-> > > +	intel_pt_resume();
-> > >   }
-> > >   void vmx_set_host_fs_gs(struct vmcs_host_state *host, u16 fs_sel, u16 gs_sel,
-> > > -- 
-> > > 2.27.0
-> > > 
+> Thanks, 
 > 
+> -  Arnaldo 
+> 
+>     v2. Breaks apart changes that s/pthread_mutex/mutex/g and the lock
+>         annotations as requested by Arnaldo and Namhyung. A boolean is
+>         added to builtin-sched.c to terminate thread funcs rather than
+>         leaving them blocked on delted mutexes.
+> 
+>     Ian Rogers (17):
+>       perf bench: Update use of pthread mutex/cond
+>       perf tests: Avoid pthread.h inclusion
+>       perf hist: Update use of pthread mutex
+>       perf bpf: Remove unused pthread.h include
+>       perf lock: Remove unused pthread.h include
+>       perf record: Update use of pthread mutex
+>       perf sched: Update use of pthread mutex
+>       perf ui: Update use of pthread mutex
+>       perf mmap: Remove unnecessary pthread.h include
+>       perf dso: Update use of pthread mutex
+>       perf annotate: Update use of pthread mutex
+>       perf top: Update use of pthread mutex
+>       perf dso: Hold lock when accessing nsinfo
+>       perf mutex: Add thread safety annotations
+>       perf sched: Fixes for thread safety analysis
+>       perf top: Fixes for thread safety analysis
+>       perf build: Enable -Wthread-safety with clang
+> 
+>     Pavithra Gurushankar (1):
+>       perf mutex: Wrapped usage of mutex and cond
+> 
+>      tools/perf/Makefile.config                 |   5 +
+>      tools/perf/bench/epoll-ctl.c               |  33 +++---
+>      tools/perf/bench/epoll-wait.c              |  33 +++---
+>      tools/perf/bench/futex-hash.c              |  33 +++---
+>      tools/perf/bench/futex-lock-pi.c           |  33 +++---
+>      tools/perf/bench/futex-requeue.c           |  33 +++---
+>      tools/perf/bench/futex-wake-parallel.c     |  33 +++---
+>      tools/perf/bench/futex-wake.c              |  33 +++---
+>      tools/perf/bench/numa.c                    |  93 ++++++----------
+>      tools/perf/builtin-inject.c                |   4 +
+>      tools/perf/builtin-lock.c                  |   1 -
+>      tools/perf/builtin-record.c                |  13 ++-
+>      tools/perf/builtin-sched.c                 | 105 +++++++++---------
+>      tools/perf/builtin-top.c                   |  45 ++++----
+>      tools/perf/tests/mmap-basic.c              |   2 -
+>      tools/perf/tests/openat-syscall-all-cpus.c |   2 +-
+>      tools/perf/tests/perf-record.c             |   2 -
+>      tools/perf/ui/browser.c                    |  20 ++--
+>      tools/perf/ui/browsers/annotate.c          |  12 +--
+>      tools/perf/ui/setup.c                      |   5 +-
+>      tools/perf/ui/tui/helpline.c               |   5 +-
+>      tools/perf/ui/tui/progress.c               |   8 +-
+>      tools/perf/ui/tui/setup.c                  |   8 +-
+>      tools/perf/ui/tui/util.c                   |  18 ++--
+>      tools/perf/ui/ui.h                         |   4 +-
+>      tools/perf/util/Build                      |   1 +
+>      tools/perf/util/annotate.c                 |  15 +--
+>      tools/perf/util/annotate.h                 |   4 +-
+>      tools/perf/util/bpf-event.h                |   1 -
+>      tools/perf/util/build-id.c                 |  12 ++-
+>      tools/perf/util/dso.c                      |  19 ++--
+>      tools/perf/util/dso.h                      |   4 +-
+>      tools/perf/util/hist.c                     |   6 +-
+>      tools/perf/util/hist.h                     |   4 +-
+>      tools/perf/util/map.c                      |   3 +
+>      tools/perf/util/mmap.h                     |   1 -
+>      tools/perf/util/mutex.c                    | 119 +++++++++++++++++++++
+>      tools/perf/util/mutex.h                    | 109 +++++++++++++++++++
+>      tools/perf/util/probe-event.c              |   3 +
+>      tools/perf/util/symbol.c                   |   4 +-
+>      tools/perf/util/top.h                      |   5 +-
+>      41 files changed, 570 insertions(+), 323 deletions(-)
+>      create mode 100644 tools/perf/util/mutex.c
+>      create mode 100644 tools/perf/util/mutex.h
+> 
+>     -- 
+>     2.37.2.609.g9ff673ca1a-goog
+> 
+
