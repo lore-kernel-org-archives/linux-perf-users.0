@@ -2,84 +2,122 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C0CB9C04AA5
-	for <linux-perf-users@archiver.kernel.org>; Thu, 25 Aug 2022 13:00:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A5B35C64990
+	for <linux-perf-users@archiver.kernel.org>; Thu, 25 Aug 2022 13:51:08 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S242106AbiHYNAn (ORCPT
+        id S242751AbiHYNvG (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Thu, 25 Aug 2022 09:00:43 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36138 "EHLO
+        Thu, 25 Aug 2022 09:51:06 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47590 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S242104AbiHYNAm (ORCPT
+        with ESMTP id S242666AbiHYNvF (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Thu, 25 Aug 2022 09:00:42 -0400
-Received: from mail-ej1-x629.google.com (mail-ej1-x629.google.com [IPv6:2a00:1450:4864:20::629])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1C81072FF8
-        for <linux-perf-users@vger.kernel.org>; Thu, 25 Aug 2022 06:00:40 -0700 (PDT)
-Received: by mail-ej1-x629.google.com with SMTP id cu2so1456504ejb.0
-        for <linux-perf-users@vger.kernel.org>; Thu, 25 Aug 2022 06:00:40 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc;
-        bh=PPQs0KNyvrvT+32AxeaLLndft2dq+PVgDYWSHwX6NY8=;
-        b=AEzCszmaVV8hvqEEVOgP/1t/X0AwnZDO9HEuAF0OrMdzOr8g2irCgHsPLgXC06Yg8A
-         U3GN7p5zkWDQIHzqWOR12onSvncp4fKgaEoSxHqTkSzo9lHjhut2ncyAV86vVNF2aYJu
-         IC53A8osfDkE+pkv91/IxVqZLgKpZAPEhCIibf99/xS99HCZEc26Btl6nOIJnJI/2akB
-         Xo0Xzcd87Amg+9Jz81P0wU7OgkJObgcoYgjdC7qRd5p7Li+3+uePvFGXqJNOQF6kFGx6
-         YgkcWpOOTwk+1KtuSRlBlDkO8L97gccYEbYYl9uZYUMgMUmViiuvmv0VhKy8VH4xfWyW
-         SFMw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc;
-        bh=PPQs0KNyvrvT+32AxeaLLndft2dq+PVgDYWSHwX6NY8=;
-        b=JZE5gaoTeQahbRLjWvk5kJCBEYWsavJSCM4Ss1cbh7uhalSJ1HgHhb2CyhJQsUcLzR
-         LxojKlERnjN8LMS4llyEbruvZKUMzB5gWF1VlvyBRr5kvUDWiL2qLf7KBviKjGwk14h+
-         I2VzlD6w9CwgN/y3rfhhZVAe21Yi+A28Y2pe0yYIYWG8EAS9vzDE1zcsP1z6oBbx63JK
-         wmOonmpYZ0GgYkuOaqhsL1RR8zB9Q5QG9RP6H5+OVhM2JT2veCVzHzU1UZBAc6kurl6Y
-         /jzWqOtqF/u48FxDvcjTWIXRXXIG5EY4xrGeChxK6TfU+lPpJ90QnA+6JAL8EQxvqeGg
-         +CkA==
-X-Gm-Message-State: ACgBeo3LyZJgp7SNiYaSy3FBoU7rKboNz2XUUZUaXk+5oUH3FdSk9TCY
-        A3Sr/XWRxp+N3/5Iaxa6EyMLsJZbGuLpBk8riPclYA==
-X-Google-Smtp-Source: AA6agR4rG0d+Ixit0Yj0toSr1sLaIAFkyaPVvZInrDnnCe5x0uuHeODCbZ4Ez66M48or7dSwPrVJrKtBG3ErJwGG0qc=
-X-Received: by 2002:a17:907:6293:b0:73d:b27b:e594 with SMTP id
- nd19-20020a170907629300b0073db27be594mr2497566ejc.526.1661432438542; Thu, 25
- Aug 2022 06:00:38 -0700 (PDT)
+        Thu, 25 Aug 2022 09:51:05 -0400
+Received: from foss.arm.com (foss.arm.com [217.140.110.172])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTP id 1880957564
+        for <linux-perf-users@vger.kernel.org>; Thu, 25 Aug 2022 06:51:04 -0700 (PDT)
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 65B97D6E;
+        Thu, 25 Aug 2022 06:51:08 -0700 (PDT)
+Received: from [10.57.15.229] (unknown [10.57.15.229])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 395643F71A;
+        Thu, 25 Aug 2022 06:51:03 -0700 (PDT)
+Message-ID: <80f54486-1470-c355-d639-1a27b4d1ea22@arm.com>
+Date:   Thu, 25 Aug 2022 14:51:01 +0100
 MIME-Version: 1.0
-References: <20220727040022.139387-1-lihuafei1@huawei.com> <13e8c9ba-c5ec-a231-5493-3255e1ef9db8@huawei.com>
-In-Reply-To: <13e8c9ba-c5ec-a231-5493-3255e1ef9db8@huawei.com>
-From:   Linus Walleij <linus.walleij@linaro.org>
-Date:   Thu, 25 Aug 2022 15:00:27 +0200
-Message-ID: <CACRpkda=csAw1wZj_Uwpb1B32BBHAin8=rQVXQ0c6TwnTWJSXA@mail.gmail.com>
-Subject: Re: [PATCH v3 0/4] ARM: Convert to ARCH_STACKWALK
-To:     Li Huafei <lihuafei1@huawei.com>
-Cc:     linux@armlinux.org.uk, mark.rutland@arm.com, peterz@infradead.org,
-        mingo@redhat.com, acme@kernel.org,
-        alexander.shishkin@linux.intel.com, jolsa@kernel.org,
-        namhyung@kernel.org, arnd@arndb.de, rostedt@goodmis.org,
-        nick.hawkins@hpe.com, john@phrozen.org, mhiramat@kernel.org,
-        ast@kernel.org, linyujun809@huawei.com, ndesaulniers@google.com,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        linux-perf-users@vger.kernel.org, rmk+kernel@armlinux.org.uk,
-        ardb@kernel.org, will@kernel.org, broonie@kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
+ Thunderbird/91.11.0
+Subject: Re: [PATCH] include program header in elf files generated by perf
+ inject
+Content-Language: en-US
+To:     Lieven Hey <lieven.hey@kdab.com>
+References: <20220825084923.167140-1-lieven.hey@kdab.com>
+Cc:     acme@kernel.org, linux-perf-users@vger.kernel.org
+From:   James Clark <james.clark@arm.com>
+In-Reply-To: <20220825084923.167140-1-lieven.hey@kdab.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-On Thu, Aug 18, 2022 at 11:16 AM Li Huafei <lihuafei1@huawei.com> wrote:
 
-> Hi Russell=EF=BC=8C
->
-> Do you have any more comments on this patch set? Can you add this patch
-> set to your patch tracker? Thanks!
 
-I would rebase the patch on v6.0-rc1 and resend then you can add it
-to Russell's patch tracker yourself, it's not very hard to use, there is
-good documentation for how to use it:
-https://www.arm.linux.org.uk/developer/patches/
+On 25/08/2022 09:49, Lieven Hey wrote:
+> The missing header makes it hard for programs like elfutils to open
+> these files.
 
-Yours,
-Linus Walleij
+Hi Lieven,
+
+Do you have an example command that demonstrates this? I'm interested in
+trying it out.
+
+I was also only aware of the elf files put in ~/.debug after perf
+record, but not perf inject.
+
+Thanks
+James
+
+> ---
+>  tools/perf/util/genelf.c | 14 ++++++++++++++
+>  tools/perf/util/genelf.h |  4 ++++
+>  2 files changed, 18 insertions(+)
+> 
+> diff --git a/tools/perf/util/genelf.c b/tools/perf/util/genelf.c
+> index 953338b9e887..02cd9f75e3d2 100644
+> --- a/tools/perf/util/genelf.c
+> +++ b/tools/perf/util/genelf.c
+> @@ -251,6 +251,7 @@ jit_write_elf(int fd, uint64_t load_addr, const char *sym,
+>  	Elf_Data *d;
+>  	Elf_Scn *scn;
+>  	Elf_Ehdr *ehdr;
+> +	Elf_Phdr *phdr;
+>  	Elf_Shdr *shdr;
+>  	uint64_t eh_frame_base_offset;
+>  	char *strsym = NULL;
+> @@ -285,6 +286,19 @@ jit_write_elf(int fd, uint64_t load_addr, const char *sym,
+>  	ehdr->e_version = EV_CURRENT;
+>  	ehdr->e_shstrndx= unwinding ? 4 : 2; /* shdr index for section name */
+>  
+> +	/*
+> +	 * setup program header
+> +	 */
+> +	phdr = elf_newphdr(e, 1);
+> +	phdr[0].p_type = PT_LOAD;
+> +	phdr[0].p_offset = 0;
+> +	phdr[0].p_vaddr = 0;
+> +	phdr[0].p_paddr = 0;
+> +	phdr[0].p_filesz = csize;
+> +	phdr[0].p_memsz = csize;
+> +	phdr[0].p_flags = PF_X | PF_R;
+> +	phdr[0].p_align = 8;
+> +
+>  	/*
+>  	 * setup text section
+>  	 */
+> diff --git a/tools/perf/util/genelf.h b/tools/perf/util/genelf.h
+> index ae138afe6c56..b5c909546e3f 100644
+> --- a/tools/perf/util/genelf.h
+> +++ b/tools/perf/util/genelf.h
+> @@ -53,8 +53,10 @@ int jit_add_debug_info(Elf *e, uint64_t code_addr, void *debug, int nr_debug_ent
+>  
+>  #if GEN_ELF_CLASS == ELFCLASS64
+>  #define elf_newehdr	elf64_newehdr
+> +#define elf_newphdr	elf64_newphdr
+>  #define elf_getshdr	elf64_getshdr
+>  #define Elf_Ehdr	Elf64_Ehdr
+> +#define Elf_Phdr	Elf64_Phdr
+>  #define Elf_Shdr	Elf64_Shdr
+>  #define Elf_Sym		Elf64_Sym
+>  #define ELF_ST_TYPE(a)	ELF64_ST_TYPE(a)
+> @@ -62,8 +64,10 @@ int jit_add_debug_info(Elf *e, uint64_t code_addr, void *debug, int nr_debug_ent
+>  #define ELF_ST_VIS(a)	ELF64_ST_VISIBILITY(a)
+>  #else
+>  #define elf_newehdr	elf32_newehdr
+> +#define elf_newphdr	elf32_newphdr
+>  #define elf_getshdr	elf32_getshdr
+>  #define Elf_Ehdr	Elf32_Ehdr
+> +#define Elf_Phdr	Elf32_Phdr
+>  #define Elf_Shdr	Elf32_Shdr
+>  #define Elf_Sym		Elf32_Sym
+>  #define ELF_ST_TYPE(a)	ELF32_ST_TYPE(a)
