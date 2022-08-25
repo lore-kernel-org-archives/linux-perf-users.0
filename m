@@ -2,136 +2,128 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B860EECAAA1
-	for <linux-perf-users@archiver.kernel.org>; Thu, 25 Aug 2022 20:17:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B8E65ECAAA1
+	for <linux-perf-users@archiver.kernel.org>; Thu, 25 Aug 2022 20:53:20 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S242106AbiHYURU (ORCPT
+        id S242834AbiHYUxT (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Thu, 25 Aug 2022 16:17:20 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57996 "EHLO
+        Thu, 25 Aug 2022 16:53:19 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55782 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S242428AbiHYURS (ORCPT
+        with ESMTP id S242734AbiHYUxS (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Thu, 25 Aug 2022 16:17:18 -0400
-Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B53DEC00E4;
-        Thu, 25 Aug 2022 13:17:16 -0700 (PDT)
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id 52720614F3;
-        Thu, 25 Aug 2022 20:17:16 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 8B6D4C433C1;
-        Thu, 25 Aug 2022 20:17:15 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1661458635;
-        bh=dLKe38UMDVEYT5k7ufeHLWp48ewEBHqhZ8c9eWlkaCM=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=PjKM1Ak0f3M5+xQQfWzE0Lse4CYpUCFYHMVtNu7yJk/Pam38a9gbg8BavsL8nbZsa
-         JdtthUeA8KilXMEBQM10NBWzS8qL5qZ35TgKdv1ADUmmmrVm7kMg7Z9I0eTNyGGyaY
-         bQBDE50MARwOtPTgRSxgMxBMCBofjtFqRWDmeZIbWCw2OoYv8BARQ32UT1VgGQMgGH
-         p3grRNWwDNW7EyXM0pnrz2Rmr/cqObisuhI9N2QYuJhPMRhP0DzIerSYEe7tgnsLXV
-         oSkOgiQ67qRq2xQQu7/zYRVcXsh2+4+svAE61f5fNkFmZQPNyKN2p8qv6RxbbSZpm8
-         M+l3eVmzzfDlw==
-Received: by quaco.ghostprotocols.net (Postfix, from userid 1000)
-        id 7B885404A1; Thu, 25 Aug 2022 17:17:12 -0300 (-03)
-Date:   Thu, 25 Aug 2022 17:17:12 -0300
-From:   Arnaldo Carvalho de Melo <acme@kernel.org>
-To:     Zixuan Tan <tanzixuan.me@gmail.com>
-Cc:     Peter Zijlstra <peterz@infradead.org>,
+        Thu, 25 Aug 2022 16:53:18 -0400
+Received: from mail.zeus03.de (www.zeus03.de [194.117.254.33])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id ED588AE215
+        for <linux-perf-users@vger.kernel.org>; Thu, 25 Aug 2022 13:53:17 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=simple; d=sang-engineering.com; h=
+        date:from:to:cc:subject:message-id:references:mime-version
+        :content-type:in-reply-to; s=k1; bh=6AQOodmRYhiBHPJku0/KQnZuH4bu
+        aowrp/Re1ISUE2I=; b=zHBzvPwMzrT30ZuQESeQ0WB3zDlH36zoP0o69ouSCYGz
+        pjziUHmiIOIIihWk23x18LpSZky4T04LmoP0uRnPDJrwFJZyBDg217KLeEjeVx31
+        GdMCJ+72b2bbgJn795NCLBl3uEWfapnPLcWUq4lUnC5kLR5bxc6NbwrOVge8eY4=
+Received: (qmail 2843961 invoked from network); 25 Aug 2022 22:53:12 +0200
+Received: by mail.zeus03.de with ESMTPSA (TLS_AES_256_GCM_SHA384 encrypted, authenticated); 25 Aug 2022 22:53:12 +0200
+X-UD-Smtp-Session: l3s3148p1@toIf/BbnAcUucrQf
+Date:   Thu, 25 Aug 2022 22:53:08 +0200
+From:   Wolfram Sang <wsa+renesas@sang-engineering.com>
+To:     Petr Mladek <pmladek@suse.com>
+Cc:     linux-kernel@vger.kernel.org, Alexei Starovoitov <ast@kernel.org>,
+        Daniel Borkmann <daniel@iogearbox.net>,
+        Andrii Nakryiko <andrii@kernel.org>,
+        Martin KaFai Lau <martin.lau@linux.dev>,
+        Song Liu <song@kernel.org>, Yonghong Song <yhs@fb.com>,
+        John Fastabend <john.fastabend@gmail.com>,
+        KP Singh <kpsingh@kernel.org>,
+        Stanislav Fomichev <sdf@google.com>,
+        Hao Luo <haoluo@google.com>, Jiri Olsa <jolsa@kernel.org>,
+        Tejun Heo <tj@kernel.org>, Zefan Li <lizefan.x@bytedance.com>,
+        Johannes Weiner <hannes@cmpxchg.org>,
+        Peter Zijlstra <peterz@infradead.org>,
         Ingo Molnar <mingo@redhat.com>,
+        Arnaldo Carvalho de Melo <acme@kernel.org>,
         Mark Rutland <mark.rutland@arm.com>,
         Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Jiri Olsa <jolsa@kernel.org>,
         Namhyung Kim <namhyung@kernel.org>,
-        linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] perf/genelf: Switch deprecated openssl MD5_* functions
- to new EVP API
-Message-ID: <YwfYyLE3ajSFVHGQ@kernel.org>
-References: <CABwm_eTnARC1GwMD-JF176k8WXU1Z0+H190mvXn61yr369qt6g@mail.gmail.com>
+        Sergey Senozhatsky <senozhatsky@chromium.org>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        John Ogness <john.ogness@linutronix.de>,
+        John Stultz <jstultz@google.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Stephen Boyd <sboyd@kernel.org>, bpf@vger.kernel.org,
+        cgroups@vger.kernel.org, linux-perf-users@vger.kernel.org
+Subject: Re: [PATCH] kernel: move from strlcpy with unused retval to strscpy
+Message-ID: <YwfhNNwis4b3qwdX@shikoro>
+Mail-Followup-To: Wolfram Sang <wsa+renesas@sang-engineering.com>,
+        Petr Mladek <pmladek@suse.com>, linux-kernel@vger.kernel.org,
+        Alexei Starovoitov <ast@kernel.org>,
+        Daniel Borkmann <daniel@iogearbox.net>,
+        Andrii Nakryiko <andrii@kernel.org>,
+        Martin KaFai Lau <martin.lau@linux.dev>, Song Liu <song@kernel.org>,
+        Yonghong Song <yhs@fb.com>,
+        John Fastabend <john.fastabend@gmail.com>,
+        KP Singh <kpsingh@kernel.org>, Stanislav Fomichev <sdf@google.com>,
+        Hao Luo <haoluo@google.com>, Jiri Olsa <jolsa@kernel.org>,
+        Tejun Heo <tj@kernel.org>, Zefan Li <lizefan.x@bytedance.com>,
+        Johannes Weiner <hannes@cmpxchg.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        Arnaldo Carvalho de Melo <acme@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Namhyung Kim <namhyung@kernel.org>,
+        Sergey Senozhatsky <senozhatsky@chromium.org>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        John Ogness <john.ogness@linutronix.de>,
+        John Stultz <jstultz@google.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Stephen Boyd <sboyd@kernel.org>, bpf@vger.kernel.org,
+        cgroups@vger.kernel.org, linux-perf-users@vger.kernel.org
+References: <20220818210202.8227-1-wsa+renesas@sang-engineering.com>
+ <YwdAknZFyKxCXZuL@alley>
+ <YwdtunymYd4VO83D@shikoro>
+ <Ywd+jrlh+6ZJw7u5@alley>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: multipart/signed; micalg=pgp-sha512;
+        protocol="application/pgp-signature"; boundary="fz94ukbbgpPoi98t"
 Content-Disposition: inline
-In-Reply-To: <CABwm_eTnARC1GwMD-JF176k8WXU1Z0+H190mvXn61yr369qt6g@mail.gmail.com>
-X-Url:  http://acmel.wordpress.com
+In-Reply-To: <Ywd+jrlh+6ZJw7u5@alley>
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-Em Fri, Aug 26, 2022 at 01:00:58AM +0800, Zixuan Tan escreveu:
-> Switch to the flavored EVP API like in test-libcrypto.c, and remove the
-> bad gcc #pragma.
-> 
-> Inspired-By: 5b245985a6de ("tools build: Switch to new openssl API for
-> test-libcrypto")
 
-How did you test the end result? Can you please describe step by step?
+--fz94ukbbgpPoi98t
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-Also please consider adding a 'perf test' entry to make sure this
-doesn't regress.
 
-Thanks,
+> Also he might prefer to get the script that did the tree-wide change so
+> that he knows what exactly has changed.
 
-- Arnaldo
+The script was also published in the thread originating all this [1].
 
-> Signed-off-by: Zixuan Tan <tanzixuan.me@gmail.com>
-> ---
->  tools/perf/util/genelf.c | 20 +++++++++++---------
->  1 file changed, 11 insertions(+), 9 deletions(-)
-> 
-> diff --git a/tools/perf/util/genelf.c b/tools/perf/util/genelf.c
-> index 953338b9e887..ed28a0dbcb7f 100644
-> --- a/tools/perf/util/genelf.c
-> +++ b/tools/perf/util/genelf.c
-> @@ -30,10 +30,6 @@
-> 
->  #define BUILD_ID_URANDOM /* different uuid for each run */
-> 
-> -// FIXME, remove this and fix the deprecation warnings before its removed and
-> -// We'll break for good here...
-> -#pragma GCC diagnostic ignored "-Wdeprecated-declarations"
-> -
->  #ifdef HAVE_LIBCRYPTO_SUPPORT
-> 
->  #define BUILD_ID_MD5
-> @@ -45,6 +41,7 @@
->  #endif
-> 
->  #ifdef BUILD_ID_MD5
-> +#include <openssl/evp.h>
->  #include <openssl/md5.h>
->  #endif
->  #endif
-> @@ -142,15 +139,20 @@ gen_build_id(struct buildid_note *note,
->  static void
->  gen_build_id(struct buildid_note *note, unsigned long load_addr,
-> const void *code, size_t csize)
->  {
-> -       MD5_CTX context;
-> +       EVP_MD_CTX *mdctx;
-> 
->         if (sizeof(note->build_id) < 16)
->                 errx(1, "build_id too small for MD5");
-> 
-> -       MD5_Init(&context);
-> -       MD5_Update(&context, &load_addr, sizeof(load_addr));
-> -       MD5_Update(&context, code, csize);
-> -       MD5_Final((unsigned char *)note->build_id, &context);
-> +       mdctx = EVP_MD_CTX_new();
-> +       if (!mdctx)
-> +               errx(2, "failed to create EVP_MD_CTX");
-> +
-> +       EVP_DigestInit_ex(mdctx, EVP_md5(), NULL);
-> +       EVP_DigestUpdate(mdctx, &load_addr, sizeof(load_addr));
-> +       EVP_DigestUpdate(mdctx, code, csize);
-> +       EVP_DigestFinal_ex(mdctx, (unsigned char *)note->build_id, NULL);
-> +       EVP_MD_CTX_free(mdctx);
->  }
->  #endif
-> 
-> -- 
-> 2.34.1
+[1] https://lore.kernel.org/all/YvhXzarjOLEJ8nsW@shikoro/
 
--- 
 
-- Arnaldo
+--fz94ukbbgpPoi98t
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAABCgAdFiEEOZGx6rniZ1Gk92RdFA3kzBSgKbYFAmMH4TAACgkQFA3kzBSg
+KbYP/g//aVNK4imScpt4qSn7pT65itBbV6E0v08ayuKks5ZT2rcrGdfJyCfX6LSV
+PVku2MNOXlDaDdDbgS46m223zggvOiSVmOqOvHykRszXKsm9g+vmZE/UNW8s8Po9
+dKY4gz1eIlQD0+eFlZQEazTdPHohC18xLwHg/IKKk2xt1MZ+5tJM/mDE05vXhvdM
+lyJl8EZsKIE0f6xMAc1JJ/soTxvgzWCOR5IU9j9tp2OyPiEA8oseD9DGUyLoAJ1q
+ORw5KyghzMt4J2cIjONRz/bF82upiijk3y8Llip2dlHiqXIGb2kYd7OECLZQ0+08
+wBwy5Dg9ssBT77nyl2aJjHVDY6x3TzlcCERn+gaF29vmeP4Ks0/AKuJ9cQQ4wbwL
+bknBVNmmnuLv7beMr8LBZHccr2lFAk2M4FovY4nXtRFhFNhszDMCDSCyBNDtqYyX
+2MKs95ejp14Q05FYrAoOVZPWIrOUa0Uk0Gk1bqE7dq9Ym74a4/bneiqPPxhkZbxo
+dukbxVJlJ4NzzuStc4iRS01UDZEO6ewy6FbwijcvUav8zGYu3RkkHbUHEd9LIzIw
+fUqs88whXatJVQr1nda8CrOG1AIa/6LeiGeD+1pS/wORmqskp757mwJhNVBgk38a
+Ev2HkqgZnTkGzI5ecc8nlv7vJonMDl0OPHSVamWTOs/arGcBHmY=
+=lPL3
+-----END PGP SIGNATURE-----
+
+--fz94ukbbgpPoi98t--
