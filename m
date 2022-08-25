@@ -2,131 +2,84 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E6CD7C28D13
-	for <linux-perf-users@archiver.kernel.org>; Thu, 25 Aug 2022 12:40:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C0CB9C04AA5
+	for <linux-perf-users@archiver.kernel.org>; Thu, 25 Aug 2022 13:00:44 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S242026AbiHYMkz (ORCPT
+        id S242106AbiHYNAn (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Thu, 25 Aug 2022 08:40:55 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58218 "EHLO
+        Thu, 25 Aug 2022 09:00:43 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36138 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S242017AbiHYMkv (ORCPT
+        with ESMTP id S242104AbiHYNAm (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Thu, 25 Aug 2022 08:40:51 -0400
-Received: from mail.zeus03.de (www.zeus03.de [194.117.254.33])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1E5B94BA52
-        for <linux-perf-users@vger.kernel.org>; Thu, 25 Aug 2022 05:40:46 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=simple; d=sang-engineering.com; h=
-        date:from:to:cc:subject:message-id:references:mime-version
-        :content-type:in-reply-to; s=k1; bh=aZqNW6W08ih6JS2IUvIIZiIqCV3W
-        gHPNwpTFgHstyik=; b=m2WPERIsCK59vBzWco9kmFaJ/EdlAkSDaOmQX21n+pUB
-        hY77VM8gyKz77N60QfRJXv+nVVZTH7hJ2o86ZUFrXv0a3Rr1uHAgMa3by4QVdlVX
-        IyUWRuZwcj0lfbdsiCZB/p6+2IOScAleePiChPOJEQTOOwHUaYYjG8RzipR6m8s=
-Received: (qmail 2687725 invoked from network); 25 Aug 2022 14:40:29 +0200
-Received: by mail.zeus03.de with ESMTPSA (TLS_AES_256_GCM_SHA384 encrypted, authenticated); 25 Aug 2022 14:40:29 +0200
-X-UD-Smtp-Session: l3s3148p1@UcMaGhDnZNcgAwDtxwoDABxA2q3xYuRb
-Date:   Thu, 25 Aug 2022 14:40:26 +0200
-From:   Wolfram Sang <wsa+renesas@sang-engineering.com>
-To:     Petr Mladek <pmladek@suse.com>
-Cc:     linux-kernel@vger.kernel.org, Alexei Starovoitov <ast@kernel.org>,
-        Daniel Borkmann <daniel@iogearbox.net>,
-        Andrii Nakryiko <andrii@kernel.org>,
-        Martin KaFai Lau <martin.lau@linux.dev>,
-        Song Liu <song@kernel.org>, Yonghong Song <yhs@fb.com>,
-        John Fastabend <john.fastabend@gmail.com>,
-        KP Singh <kpsingh@kernel.org>,
-        Stanislav Fomichev <sdf@google.com>,
-        Hao Luo <haoluo@google.com>, Jiri Olsa <jolsa@kernel.org>,
-        Tejun Heo <tj@kernel.org>, Zefan Li <lizefan.x@bytedance.com>,
-        Johannes Weiner <hannes@cmpxchg.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Namhyung Kim <namhyung@kernel.org>,
-        Sergey Senozhatsky <senozhatsky@chromium.org>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        John Ogness <john.ogness@linutronix.de>,
-        John Stultz <jstultz@google.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Stephen Boyd <sboyd@kernel.org>, bpf@vger.kernel.org,
-        cgroups@vger.kernel.org, linux-perf-users@vger.kernel.org
-Subject: Re: [PATCH] kernel: move from strlcpy with unused retval to strscpy
-Message-ID: <YwdtunymYd4VO83D@shikoro>
-Mail-Followup-To: Wolfram Sang <wsa+renesas@sang-engineering.com>,
-        Petr Mladek <pmladek@suse.com>, linux-kernel@vger.kernel.org,
-        Alexei Starovoitov <ast@kernel.org>,
-        Daniel Borkmann <daniel@iogearbox.net>,
-        Andrii Nakryiko <andrii@kernel.org>,
-        Martin KaFai Lau <martin.lau@linux.dev>, Song Liu <song@kernel.org>,
-        Yonghong Song <yhs@fb.com>,
-        John Fastabend <john.fastabend@gmail.com>,
-        KP Singh <kpsingh@kernel.org>, Stanislav Fomichev <sdf@google.com>,
-        Hao Luo <haoluo@google.com>, Jiri Olsa <jolsa@kernel.org>,
-        Tejun Heo <tj@kernel.org>, Zefan Li <lizefan.x@bytedance.com>,
-        Johannes Weiner <hannes@cmpxchg.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Namhyung Kim <namhyung@kernel.org>,
-        Sergey Senozhatsky <senozhatsky@chromium.org>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        John Ogness <john.ogness@linutronix.de>,
-        John Stultz <jstultz@google.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Stephen Boyd <sboyd@kernel.org>, bpf@vger.kernel.org,
-        cgroups@vger.kernel.org, linux-perf-users@vger.kernel.org
-References: <20220818210202.8227-1-wsa+renesas@sang-engineering.com>
- <YwdAknZFyKxCXZuL@alley>
+        Thu, 25 Aug 2022 09:00:42 -0400
+Received: from mail-ej1-x629.google.com (mail-ej1-x629.google.com [IPv6:2a00:1450:4864:20::629])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1C81072FF8
+        for <linux-perf-users@vger.kernel.org>; Thu, 25 Aug 2022 06:00:40 -0700 (PDT)
+Received: by mail-ej1-x629.google.com with SMTP id cu2so1456504ejb.0
+        for <linux-perf-users@vger.kernel.org>; Thu, 25 Aug 2022 06:00:40 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc;
+        bh=PPQs0KNyvrvT+32AxeaLLndft2dq+PVgDYWSHwX6NY8=;
+        b=AEzCszmaVV8hvqEEVOgP/1t/X0AwnZDO9HEuAF0OrMdzOr8g2irCgHsPLgXC06Yg8A
+         U3GN7p5zkWDQIHzqWOR12onSvncp4fKgaEoSxHqTkSzo9lHjhut2ncyAV86vVNF2aYJu
+         IC53A8osfDkE+pkv91/IxVqZLgKpZAPEhCIibf99/xS99HCZEc26Btl6nOIJnJI/2akB
+         Xo0Xzcd87Amg+9Jz81P0wU7OgkJObgcoYgjdC7qRd5p7Li+3+uePvFGXqJNOQF6kFGx6
+         YgkcWpOOTwk+1KtuSRlBlDkO8L97gccYEbYYl9uZYUMgMUmViiuvmv0VhKy8VH4xfWyW
+         SFMw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc;
+        bh=PPQs0KNyvrvT+32AxeaLLndft2dq+PVgDYWSHwX6NY8=;
+        b=JZE5gaoTeQahbRLjWvk5kJCBEYWsavJSCM4Ss1cbh7uhalSJ1HgHhb2CyhJQsUcLzR
+         LxojKlERnjN8LMS4llyEbruvZKUMzB5gWF1VlvyBRr5kvUDWiL2qLf7KBviKjGwk14h+
+         I2VzlD6w9CwgN/y3rfhhZVAe21Yi+A28Y2pe0yYIYWG8EAS9vzDE1zcsP1z6oBbx63JK
+         wmOonmpYZ0GgYkuOaqhsL1RR8zB9Q5QG9RP6H5+OVhM2JT2veCVzHzU1UZBAc6kurl6Y
+         /jzWqOtqF/u48FxDvcjTWIXRXXIG5EY4xrGeChxK6TfU+lPpJ90QnA+6JAL8EQxvqeGg
+         +CkA==
+X-Gm-Message-State: ACgBeo3LyZJgp7SNiYaSy3FBoU7rKboNz2XUUZUaXk+5oUH3FdSk9TCY
+        A3Sr/XWRxp+N3/5Iaxa6EyMLsJZbGuLpBk8riPclYA==
+X-Google-Smtp-Source: AA6agR4rG0d+Ixit0Yj0toSr1sLaIAFkyaPVvZInrDnnCe5x0uuHeODCbZ4Ez66M48or7dSwPrVJrKtBG3ErJwGG0qc=
+X-Received: by 2002:a17:907:6293:b0:73d:b27b:e594 with SMTP id
+ nd19-20020a170907629300b0073db27be594mr2497566ejc.526.1661432438542; Thu, 25
+ Aug 2022 06:00:38 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="QWwBO+hWQkYuUjLm"
-Content-Disposition: inline
-In-Reply-To: <YwdAknZFyKxCXZuL@alley>
+References: <20220727040022.139387-1-lihuafei1@huawei.com> <13e8c9ba-c5ec-a231-5493-3255e1ef9db8@huawei.com>
+In-Reply-To: <13e8c9ba-c5ec-a231-5493-3255e1ef9db8@huawei.com>
+From:   Linus Walleij <linus.walleij@linaro.org>
+Date:   Thu, 25 Aug 2022 15:00:27 +0200
+Message-ID: <CACRpkda=csAw1wZj_Uwpb1B32BBHAin8=rQVXQ0c6TwnTWJSXA@mail.gmail.com>
+Subject: Re: [PATCH v3 0/4] ARM: Convert to ARCH_STACKWALK
+To:     Li Huafei <lihuafei1@huawei.com>
+Cc:     linux@armlinux.org.uk, mark.rutland@arm.com, peterz@infradead.org,
+        mingo@redhat.com, acme@kernel.org,
+        alexander.shishkin@linux.intel.com, jolsa@kernel.org,
+        namhyung@kernel.org, arnd@arndb.de, rostedt@goodmis.org,
+        nick.hawkins@hpe.com, john@phrozen.org, mhiramat@kernel.org,
+        ast@kernel.org, linyujun809@huawei.com, ndesaulniers@google.com,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        linux-perf-users@vger.kernel.org, rmk+kernel@armlinux.org.uk,
+        ardb@kernel.org, will@kernel.org, broonie@kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
+On Thu, Aug 18, 2022 at 11:16 AM Li Huafei <lihuafei1@huawei.com> wrote:
 
---QWwBO+hWQkYuUjLm
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+> Hi Russell=EF=BC=8C
+>
+> Do you have any more comments on this patch set? Can you add this patch
+> set to your patch tracker? Thanks!
 
+I would rebase the patch on v6.0-rc1 and resend then you can add it
+to Russell's patch tracker yourself, it's not very hard to use, there is
+good documentation for how to use it:
+https://www.arm.linux.org.uk/developer/patches/
 
-> > Generated by a coccinelle script.
-^ ^ ^
-
-> You might want to use Coccinelle if a simple sed/awk gets too
-> complicated. See
-
-:)
-
-So, I did a tree wide conversion and let Linus know that I have a branch
-available. He didn't respond, so I assumed that individual patches is
-the way to go.
-
-
---QWwBO+hWQkYuUjLm
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQIzBAABCgAdFiEEOZGx6rniZ1Gk92RdFA3kzBSgKbYFAmMHbbYACgkQFA3kzBSg
-KbZAYw/+NDqOY8g0Yuz+VlyR09k33L8XgacCAPbI3iIT3HWMPSLM5PILZvw4/KmS
-fbEWjJpCFWjSOoZSM5M+vw6MicaUqwjn7UXrJNLIR25RklM/Re8rfgmmo2iqqyb+
-UPAdKt3tapAX5Yb4BQWBRSNxp8+TOl+CiNtdZjec35ESDaSdAd2vDtHE6C6yxP43
-pY3tgKgjIwpI5jqMU/KxOLMCdQHy7TTr63qbeHZcPPpqeBkMMO55rqucIBrx8h26
-WtCE2di3Uzt4ma7Lo+7NJUiYdzvX17U+98XDxm0MxeeQpEstI6qK/zz0NE9pR1pH
-1AmJjRt72JxP0o7ryWvxcnXHOer2j1vEMI05kS8kmMjwCBeQWiV5/KvbxcA6S4dU
-vsUiHJQfJlzpYjjudEV7De6l3zKbrjf/jJQvhv8Poz4AkrFR8kUIGfvV5sRM06wq
-ASybvskRI+M+7BiyJC/KwHjRePkqsHsp/0FqtjOt+Ztejinu9mFc8xPcfqjiPAXx
-bTzqhvtmyUDn+vxJpfmGh59mBzyp3toKatWCH7Xwr6RYBgwBZLTucH6K64XJp7Gz
-4rb2ubLz8PZhLDCmi01R5z9E3nZD1Jpn8XV0/qYyrA+8zFqdV4iZSFKxMjwL+Csd
-LvvbPt0YRE8mmR9zwZqNoSi6xSDIx6KBrtQpUbs2lCw9H5riV50=
-=lWpT
------END PGP SIGNATURE-----
-
---QWwBO+hWQkYuUjLm--
+Yours,
+Linus Walleij
