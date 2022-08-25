@@ -2,122 +2,95 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A5B35C64990
-	for <linux-perf-users@archiver.kernel.org>; Thu, 25 Aug 2022 13:51:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 65F28C28D13
+	for <linux-perf-users@archiver.kernel.org>; Thu, 25 Aug 2022 13:52:24 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S242751AbiHYNvG (ORCPT
+        id S237921AbiHYNwX (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Thu, 25 Aug 2022 09:51:06 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47590 "EHLO
+        Thu, 25 Aug 2022 09:52:23 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50108 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S242666AbiHYNvF (ORCPT
+        with ESMTP id S241378AbiHYNwT (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Thu, 25 Aug 2022 09:51:05 -0400
-Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTP id 1880957564
-        for <linux-perf-users@vger.kernel.org>; Thu, 25 Aug 2022 06:51:04 -0700 (PDT)
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 65B97D6E;
-        Thu, 25 Aug 2022 06:51:08 -0700 (PDT)
-Received: from [10.57.15.229] (unknown [10.57.15.229])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 395643F71A;
-        Thu, 25 Aug 2022 06:51:03 -0700 (PDT)
-Message-ID: <80f54486-1470-c355-d639-1a27b4d1ea22@arm.com>
-Date:   Thu, 25 Aug 2022 14:51:01 +0100
+        Thu, 25 Aug 2022 09:52:19 -0400
+Received: from smtp-out2.suse.de (smtp-out2.suse.de [195.135.220.29])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 08AC51A3BE;
+        Thu, 25 Aug 2022 06:52:17 -0700 (PDT)
+Received: from relay2.suse.de (relay2.suse.de [149.44.160.134])
+        by smtp-out2.suse.de (Postfix) with ESMTP id 0399F20AE5;
+        Thu, 25 Aug 2022 13:52:16 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.com; s=susede1;
+        t=1661435536; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:
+         mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=SG8vYYGWMAWN9Mvff6IMP73eu6yuDvbm1ewu/sn138A=;
+        b=RWOYQ/ofWltretqyG242UAx8o2hrUiuG20EgcZ3u0Xj78uaymJk52azJltrCnl9SXU58ks
+        BmzGVXICuo8hjW4wGGnFig3EsszDCY1sY5nFEruoVPfGvjNdeBi9DP/CnR/4HqQ/zFX7mc
+        d9gQv3u/qcznWqjn8R08buVVTot4t0Q=
+Received: from suse.cz (unknown [10.100.201.202])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by relay2.suse.de (Postfix) with ESMTPS id 5377D2C141;
+        Thu, 25 Aug 2022 13:52:14 +0000 (UTC)
+Date:   Thu, 25 Aug 2022 15:52:14 +0200
+From:   Petr Mladek <pmladek@suse.com>
+To:     Wolfram Sang <wsa+renesas@sang-engineering.com>,
+        linux-kernel@vger.kernel.org, Alexei Starovoitov <ast@kernel.org>,
+        Daniel Borkmann <daniel@iogearbox.net>,
+        Andrii Nakryiko <andrii@kernel.org>,
+        Martin KaFai Lau <martin.lau@linux.dev>,
+        Song Liu <song@kernel.org>, Yonghong Song <yhs@fb.com>,
+        John Fastabend <john.fastabend@gmail.com>,
+        KP Singh <kpsingh@kernel.org>,
+        Stanislav Fomichev <sdf@google.com>,
+        Hao Luo <haoluo@google.com>, Jiri Olsa <jolsa@kernel.org>,
+        Tejun Heo <tj@kernel.org>, Zefan Li <lizefan.x@bytedance.com>,
+        Johannes Weiner <hannes@cmpxchg.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        Arnaldo Carvalho de Melo <acme@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Namhyung Kim <namhyung@kernel.org>,
+        Sergey Senozhatsky <senozhatsky@chromium.org>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        John Ogness <john.ogness@linutronix.de>,
+        John Stultz <jstultz@google.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Stephen Boyd <sboyd@kernel.org>, bpf@vger.kernel.org,
+        cgroups@vger.kernel.org, linux-perf-users@vger.kernel.org
+Subject: Re: [PATCH] kernel: move from strlcpy with unused retval to strscpy
+Message-ID: <Ywd+jrlh+6ZJw7u5@alley>
+References: <20220818210202.8227-1-wsa+renesas@sang-engineering.com>
+ <YwdAknZFyKxCXZuL@alley>
+ <YwdtunymYd4VO83D@shikoro>
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
- Thunderbird/91.11.0
-Subject: Re: [PATCH] include program header in elf files generated by perf
- inject
-Content-Language: en-US
-To:     Lieven Hey <lieven.hey@kdab.com>
-References: <20220825084923.167140-1-lieven.hey@kdab.com>
-Cc:     acme@kernel.org, linux-perf-users@vger.kernel.org
-From:   James Clark <james.clark@arm.com>
-In-Reply-To: <20220825084923.167140-1-lieven.hey@kdab.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <YwdtunymYd4VO83D@shikoro>
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-
-
-On 25/08/2022 09:49, Lieven Hey wrote:
-> The missing header makes it hard for programs like elfutils to open
-> these files.
-
-Hi Lieven,
-
-Do you have an example command that demonstrates this? I'm interested in
-trying it out.
-
-I was also only aware of the elf files put in ~/.debug after perf
-record, but not perf inject.
-
-Thanks
-James
-
-> ---
->  tools/perf/util/genelf.c | 14 ++++++++++++++
->  tools/perf/util/genelf.h |  4 ++++
->  2 files changed, 18 insertions(+)
+On Thu 2022-08-25 14:40:26, Wolfram Sang wrote:
 > 
-> diff --git a/tools/perf/util/genelf.c b/tools/perf/util/genelf.c
-> index 953338b9e887..02cd9f75e3d2 100644
-> --- a/tools/perf/util/genelf.c
-> +++ b/tools/perf/util/genelf.c
-> @@ -251,6 +251,7 @@ jit_write_elf(int fd, uint64_t load_addr, const char *sym,
->  	Elf_Data *d;
->  	Elf_Scn *scn;
->  	Elf_Ehdr *ehdr;
-> +	Elf_Phdr *phdr;
->  	Elf_Shdr *shdr;
->  	uint64_t eh_frame_base_offset;
->  	char *strsym = NULL;
-> @@ -285,6 +286,19 @@ jit_write_elf(int fd, uint64_t load_addr, const char *sym,
->  	ehdr->e_version = EV_CURRENT;
->  	ehdr->e_shstrndx= unwinding ? 4 : 2; /* shdr index for section name */
->  
-> +	/*
-> +	 * setup program header
-> +	 */
-> +	phdr = elf_newphdr(e, 1);
-> +	phdr[0].p_type = PT_LOAD;
-> +	phdr[0].p_offset = 0;
-> +	phdr[0].p_vaddr = 0;
-> +	phdr[0].p_paddr = 0;
-> +	phdr[0].p_filesz = csize;
-> +	phdr[0].p_memsz = csize;
-> +	phdr[0].p_flags = PF_X | PF_R;
-> +	phdr[0].p_align = 8;
-> +
->  	/*
->  	 * setup text section
->  	 */
-> diff --git a/tools/perf/util/genelf.h b/tools/perf/util/genelf.h
-> index ae138afe6c56..b5c909546e3f 100644
-> --- a/tools/perf/util/genelf.h
-> +++ b/tools/perf/util/genelf.h
-> @@ -53,8 +53,10 @@ int jit_add_debug_info(Elf *e, uint64_t code_addr, void *debug, int nr_debug_ent
->  
->  #if GEN_ELF_CLASS == ELFCLASS64
->  #define elf_newehdr	elf64_newehdr
-> +#define elf_newphdr	elf64_newphdr
->  #define elf_getshdr	elf64_getshdr
->  #define Elf_Ehdr	Elf64_Ehdr
-> +#define Elf_Phdr	Elf64_Phdr
->  #define Elf_Shdr	Elf64_Shdr
->  #define Elf_Sym		Elf64_Sym
->  #define ELF_ST_TYPE(a)	ELF64_ST_TYPE(a)
-> @@ -62,8 +64,10 @@ int jit_add_debug_info(Elf *e, uint64_t code_addr, void *debug, int nr_debug_ent
->  #define ELF_ST_VIS(a)	ELF64_ST_VISIBILITY(a)
->  #else
->  #define elf_newehdr	elf32_newehdr
-> +#define elf_newphdr	elf32_newphdr
->  #define elf_getshdr	elf32_getshdr
->  #define Elf_Ehdr	Elf32_Ehdr
-> +#define Elf_Phdr	Elf32_Phdr
->  #define Elf_Shdr	Elf32_Shdr
->  #define Elf_Sym		Elf32_Sym
->  #define ELF_ST_TYPE(a)	ELF32_ST_TYPE(a)
+> > > Generated by a coccinelle script.
+> ^ ^ ^
+> 
+> > You might want to use Coccinelle if a simple sed/awk gets too
+> > complicated. See
+> 
+> :)
+> 
+> So, I did a tree wide conversion and let Linus know that I have a branch
+> available. He didn't respond, so I assumed that individual patches is
+> the way to go.
+
+I am not sure when exactly you sent it. Linus is very busy during the
+merge window and might miss less important things.
+
+Also he might prefer to get the script that did the tree-wide change so
+that he knows what exactly has changed.
+
+Best Regards,
+Petr
