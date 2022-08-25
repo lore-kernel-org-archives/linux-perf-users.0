@@ -2,130 +2,101 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1EDC0C04AA5
-	for <linux-perf-users@archiver.kernel.org>; Thu, 25 Aug 2022 06:52:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E9567C04AA5
+	for <linux-perf-users@archiver.kernel.org>; Thu, 25 Aug 2022 08:56:38 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232346AbiHYGwS (ORCPT
+        id S233935AbiHYI4h (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Thu, 25 Aug 2022 02:52:18 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41736 "EHLO
+        Thu, 25 Aug 2022 04:56:37 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41432 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S236307AbiHYGwR (ORCPT
+        with ESMTP id S233561AbiHYI4d (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Thu, 25 Aug 2022 02:52:17 -0400
+        Thu, 25 Aug 2022 04:56:33 -0400
 Received: from mga11.intel.com (mga11.intel.com [192.55.52.93])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D408C392;
-        Wed, 24 Aug 2022 23:52:16 -0700 (PDT)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 78AEBA8957;
+        Thu, 25 Aug 2022 01:56:29 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1661410336; x=1692946336;
-  h=message-id:date:mime-version:subject:to:cc:references:
-   from:in-reply-to:content-transfer-encoding;
-  bh=04yCuX7p5BBTYeA/TynP8rNdpmcbvJolmE3P3S679tg=;
-  b=icyhS006ssW4/OjidFoOp/M8szSIkdaJy4ebIYhAjSkczRuGDzRD784r
-   IUIeKRhvGH50Rc95VMXQfFAffCdECuPn3IkhEzn0t0Z/keIk2JdD9XJ9Z
-   rgUfLY65MycICMZmHFdGWk/QAxzBX0mLgSTAE80Aiw5qSsSWDmdn4YK5C
-   Af9ztmtnBpB2qiJB2+uSoUjE4WcDxCBh2XzDPc/FdA917xihen0DNCCvP
-   vCNyvzDjY+wOrtrnRpUZ5hDKYgTBKQefP8Vjp5i+eMxJ4Q4UczbCiYxUM
-   atxwVeBPdZvH2qVw1si83154g7LzU9Lvkvjv4oJIDSUmdCjCy0KNqfEP1
-   w==;
-X-IronPort-AV: E=McAfee;i="6500,9779,10449"; a="291731398"
+  t=1661417789; x=1692953789;
+  h=from:to:cc:subject:date:message-id:mime-version:
+   content-transfer-encoding;
+  bh=WE76IHyjGNLDBHekXScu1Y9Yvmw3u3Jm3KDNzWpAI5w=;
+  b=WE33CwEooipdXi4/GUCj65Y4mx7ksgKN/pXiNqQ9l8TuJpGTir2FP3Ag
+   pJKMildbOpM5qd/zogL6SnvXca8iliSO0xhXlR2yjRNwOIPVp+TCEylAX
+   sUonvieKwvNTfgKxoiL+i6dIuazV2s8XMardHO7b+mZnV0tt2qpRDDmjw
+   u9r5HT0zSJI5TveLviNpHQNk3ZalRmbhUd3IPbF/1g9CBTIuIudvoWsd1
+   CcTkC3oey3m5fyD9DjzFnwxYyASxzs+F2ciQw3bHB246lPzo7DFoIPZjG
+   QhlBfoc7SAOuwK2yYSb2xuTC7GX2o2kIuD8qAuqUY+W7dM2i7Fb66YtLR
+   Q==;
+X-IronPort-AV: E=McAfee;i="6500,9779,10449"; a="291756597"
 X-IronPort-AV: E=Sophos;i="5.93,262,1654585200"; 
-   d="scan'208";a="291731398"
-Received: from fmsmga008.fm.intel.com ([10.253.24.58])
-  by fmsmga102.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 24 Aug 2022 23:52:16 -0700
+   d="scan'208";a="291756597"
+Received: from orsmga008.jf.intel.com ([10.7.209.65])
+  by fmsmga102.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 25 Aug 2022 01:56:29 -0700
+X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="5.93,262,1654585200"; 
-   d="scan'208";a="670847341"
-Received: from ahunter6-mobl1.ger.corp.intel.com (HELO [10.0.2.15]) ([10.252.52.129])
-  by fmsmga008-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 24 Aug 2022 23:52:14 -0700
-Message-ID: <657c3398-36fc-0a0a-22c2-f749e1b5d8e5@intel.com>
-Date:   Thu, 25 Aug 2022 09:52:10 +0300
-MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
- Firefox/91.0 Thunderbird/91.11.0
-Subject: Re: perf tools man pages on the web
-Content-Language: en-US
-To:     Arnaldo Carvalho de Melo <arnaldo.melo@gmail.com>,
-        Arnaldo Carvalho de Melo <acme@kernel.org>
-Cc:     Ian Rogers <irogers@google.com>, John Kacur <jkacur@redhat.com>,
+   d="scan'208";a="639505149"
+Received: from lxy-dell.sh.intel.com ([10.239.48.38])
+  by orsmga008.jf.intel.com with ESMTP; 25 Aug 2022 01:56:26 -0700
+From:   Xiaoyao Li <xiaoyao.li@intel.com>
+To:     Peter Zijlstra <peterz@infradead.org>,
+        Arnaldo Carvalho de Melo <acme@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
         Jiri Olsa <jolsa@kernel.org>,
         Namhyung Kim <namhyung@kernel.org>,
-        linux-perf-users <linux-perf-users@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>
-References: <cecae74c-6bb2-d7da-bce3-35772b6e3f8c@intel.com>
- <CAP-5=fXJtRVKuPA_xpa=jBzq66y5JMv+jmr1GFNzh-zQ-7j5QA@mail.gmail.com>
- <b42344bc-86f6-9047-b015-88ef3b58a619@intel.com>
- <CAP-5=fUq4N+X+3VMsT=he3Q9_4qHKkqxdPDcMdDE=_3qdV9aCg@mail.gmail.com>
- <YvzrYLx3RDHAmqbf@kernel.org>
- <CA+JHD90RuF+sjO7t40voiQrXbaH172Le=KeKGzTrK_tBquVbAg@mail.gmail.com>
-From:   Adrian Hunter <adrian.hunter@intel.com>
-Organization: Intel Finland Oy, Registered Address: PL 281, 00181 Helsinki,
- Business Identity Code: 0357606 - 4, Domiciled in Helsinki
-In-Reply-To: <CA+JHD90RuF+sjO7t40voiQrXbaH172Le=KeKGzTrK_tBquVbAg@mail.gmail.com>
-Content-Type: text/plain; charset=UTF-8
+        Sean Christopherson <seanjc@google.com>,
+        Paolo Bonzini <pbonzini@redhat.com>
+Cc:     Xiaoyao Li <xiaoyao.li@intel.com>,
+        linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org,
+        kvm@vger.kernel.org
+Subject: [RFC PATCH 0/2] KVM: VMX: Fix VM entry failure on PT_MODE_HOST_GUEST while host is using PT
+Date:   Thu, 25 Aug 2022 16:56:23 +0800
+Message-Id: <20220825085625.867763-1-xiaoyao.li@intel.com>
+X-Mailer: git-send-email 2.27.0
+MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-On 18/08/22 19:24, Arnaldo Carvalho de Melo wrote:
-> 
-> 
-> On Wed, Aug 17, 2022, 10:21 AM Arnaldo Carvalho de Melo <acme@kernel.org <mailto:acme@kernel.org>> wrote:
-> 
->     Em Wed, Aug 17, 2022 at 06:02:25AM -0700, Ian Rogers escreveu:
->     > On Wed, Aug 17, 2022 at 1:55 AM Adrian Hunter <adrian.hunter@intel.com <mailto:adrian.hunter@intel.com>> wrote:
->     > > Speaking of the wiki, anyone know how to change the
->     > > "Set $wgLogo to the URL path to your own logo image." image?
-> 
->     > +1000
-> 
->     > Someone at RedHat knows :-)
-> 
->     Documentation is at the Media Wiki site, admin up to a point was John Kacur,
->     John?
-> 
->     https://www.mediawiki.org/wiki/Manual:FAQ#Changing_the_interface <https://www.mediawiki.org/wiki/Manual:FAQ#Changing_the_interface>>
-> 
->     --------------------- 8< ----------------------------------
-> 
->     How do I change the logo?
-> 
->     The logo that appears in the top left of each page is determined by the $wgLogo configuration line in the LocalSettings.php file.
-> 
->     There are two ways to change the logo:
-> 
->         Upload a picture to your wiki using the normal file uploading interface. This allows the logo to be replaced easily, so you may want to protect the page if you use this method.
-> 
->             Then add the $wgLogo line to LocalSettings.php, for example:
-> 
->             $wgLogo = "{$wgUploadPath}/6/62/mylogo.png";
-> 
->         Upload an image to your server by other means (such as FTP).
-> 
->             Add the $wgLogo line to LocalSettings.php, for example:
-> 
->             $wgLogo = "{$wgScriptPath}/mylogo.jpg";
-> 
->             (In this example, the image is in the same folder as the LocalSettings.php file.)
-> 
->     If you want to change the logo in only specific pages, override #p-logo
->     css's background-image property or use third party extension like
->     Extension:LogoFunctions.  Caution! Caution:     Do not simply overwrite
->     the default logo installed with MediaWiki (/resources/assets/wiki.png);
->     this file will be overwritten when you upgrade.  A good size for a
->     square logo is 135x135px or 150x150px, but the logo need not be square,
->     especially if it contains text below an image. The maximum logo size in
->     Vector is ~160x160px, while MonoBook's is ~155x155px. A logo that is too
->     large will be cut off.
-> 
->     --------------------- 8< ----------------------------------
-> 
-> 
-> I got it sorted out with the kernel.org <http://kernel.org> admins.
-> 
-> Please force reload.
+There is one bug in KVM that can hit vm-entry failure 100% on platform
+supporting PT_MODE_HOST_GUEST mode following below steps:
 
-Is it just me or has it disappeared again?
+  1. #modprobe -r kvm_intel
+  2. #modprobe kvm_intel pt_mode=1
+  3. start a VM with QEMU
+  4. on host: #perf record -e intel_pt//
 
+The vm-entry failure happens because it violates the requirement stated
+in Intel SDM 26.2.1.1 VM-Execution Control Fields
+
+  If the logical processor is operating with Intel PT enabled (if
+  IA32_RTIT_CTL.TraceEn = 1) at the time of VM entry, the "load
+  IA32_RTIT_CTL" VM-entry control must be 0.
+
+On PT_MODE_HOST_GUEST node, PT_MODE_HOST_GUEST is always set. Thus KVM
+needs to ensure IA32_RTIT_CTL.TraceEn is 0 before VM-entry. Currently KVM
+manually WRMSR(IA32_RTIT_CTL) to clear TraceEn bit. However, it doesn't
+work everytime since there is a posibility that IA32_RTIT_CTL.TraceEn is
+re-enabled in PT PMI handler before vm-entry. This series tries to fix
+the issue by exposing two interfaces from Intel PT driver for the purose
+to stop and resume Intel PT on host. It prevents PT PMI handler from
+re-enabling PT. By the way, it also fixes another issue that PT PMI
+touches PT MSRs whihc leads to what KVM stores for host bemomes stale.
+
+Xiaoyao Li (2):
+  perf/x86/intel/pt: Introduce intel_pt_{stop,resume}()
+  KVM: VMX: Stop/resume host PT before/after VM entry when
+    PT_MODE_HOST_GUEST
+
+ arch/x86/events/intel/pt.c      | 11 ++++++++++-
+ arch/x86/include/asm/intel_pt.h |  6 ++++--
+ arch/x86/kernel/crash.c         |  4 ++--
+ arch/x86/kvm/vmx/vmx.c          | 11 ++++++++++-
+ 4 files changed, 26 insertions(+), 6 deletions(-)
+
+-- 
+2.27.0
 
