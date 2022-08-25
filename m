@@ -2,225 +2,130 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 64C01C04AA5
-	for <linux-perf-users@archiver.kernel.org>; Thu, 25 Aug 2022 01:59:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1EDC0C04AA5
+	for <linux-perf-users@archiver.kernel.org>; Thu, 25 Aug 2022 06:52:19 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S236307AbiHYB7Q (ORCPT
+        id S232346AbiHYGwS (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Wed, 24 Aug 2022 21:59:16 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48046 "EHLO
+        Thu, 25 Aug 2022 02:52:18 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41736 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S236184AbiHYB7B (ORCPT
+        with ESMTP id S236307AbiHYGwR (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Wed, 24 Aug 2022 21:59:01 -0400
-Received: from mga03.intel.com (mga03.intel.com [134.134.136.65])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9A098A1A69;
-        Wed, 24 Aug 2022 18:53:33 -0700 (PDT)
+        Thu, 25 Aug 2022 02:52:17 -0400
+Received: from mga11.intel.com (mga11.intel.com [192.55.52.93])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D408C392;
+        Wed, 24 Aug 2022 23:52:16 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1661392413; x=1692928413;
-  h=from:to:cc:subject:date:message-id:mime-version:
-   content-transfer-encoding;
-  bh=VttP1yp8X9Ug0VCfHCUVuG0as2qXu0pUjMbvlRMIt3o=;
-  b=DJl+9rWK6Pwe6svs9V+hlZmOXngCmusmf+cEauI+KnFG/4U20WAsisXb
-   /ZUb/4wrEgP3nptg+R0oW9qpQ5CvZDp0BBDvHo+T0P94gBQu4BV8EZb0z
-   6PMgYEz9H4POMz/4d0xAh+TesrS78iiRqlKbmKFXlJF3QcbzkJXnsc01m
-   7RvfBo6/tQL/M8zQbU+XD9PklT+BhL/oJpf6BcZJmbZemR2C7pxnkLKcT
-   LT/2RRPjKfMpo7DOzeZDxa5UzHZzEiaSOQ73G2jD66H+XP9NO7WTkscdz
-   /6lo+77Ll2dMY1gN94LwGimVt+fC7gLJvBrM0YH4hGuBAOjdPLcnPEnoH
-   Q==;
-X-IronPort-AV: E=McAfee;i="6500,9779,10449"; a="295399518"
+  t=1661410336; x=1692946336;
+  h=message-id:date:mime-version:subject:to:cc:references:
+   from:in-reply-to:content-transfer-encoding;
+  bh=04yCuX7p5BBTYeA/TynP8rNdpmcbvJolmE3P3S679tg=;
+  b=icyhS006ssW4/OjidFoOp/M8szSIkdaJy4ebIYhAjSkczRuGDzRD784r
+   IUIeKRhvGH50Rc95VMXQfFAffCdECuPn3IkhEzn0t0Z/keIk2JdD9XJ9Z
+   rgUfLY65MycICMZmHFdGWk/QAxzBX0mLgSTAE80Aiw5qSsSWDmdn4YK5C
+   Af9ztmtnBpB2qiJB2+uSoUjE4WcDxCBh2XzDPc/FdA917xihen0DNCCvP
+   vCNyvzDjY+wOrtrnRpUZ5hDKYgTBKQefP8Vjp5i+eMxJ4Q4UczbCiYxUM
+   atxwVeBPdZvH2qVw1si83154g7LzU9Lvkvjv4oJIDSUmdCjCy0KNqfEP1
+   w==;
+X-IronPort-AV: E=McAfee;i="6500,9779,10449"; a="291731398"
 X-IronPort-AV: E=Sophos;i="5.93,262,1654585200"; 
-   d="scan'208";a="295399518"
-Received: from orsmga008.jf.intel.com ([10.7.209.65])
-  by orsmga103.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 24 Aug 2022 18:53:33 -0700
-X-ExtLoop1: 1
+   d="scan'208";a="291731398"
+Received: from fmsmga008.fm.intel.com ([10.253.24.58])
+  by fmsmga102.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 24 Aug 2022 23:52:16 -0700
 X-IronPort-AV: E=Sophos;i="5.93,262,1654585200"; 
-   d="scan'208";a="639378795"
-Received: from zxingrtx.sh.intel.com ([10.239.159.110])
-  by orsmga008.jf.intel.com with ESMTP; 24 Aug 2022 18:53:30 -0700
-From:   zhengjun.xing@linux.intel.com
-To:     acme@kernel.org, peterz@infradead.org, mingo@redhat.com,
-        alexander.shishkin@intel.com, jolsa@kernel.org, namhyung@kernel.org
-Cc:     linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org,
-        irogers@google.com, ak@linux.intel.com, kan.liang@linux.intel.com,
-        zhengjun.xing@linux.intel.com
-Subject: [PATCH] perf stat: Capitalize topdown metrics' names
-Date:   Thu, 25 Aug 2022 09:54:58 +0800
-Message-Id: <20220825015458.3252239-1-zhengjun.xing@linux.intel.com>
-X-Mailer: git-send-email 2.25.1
+   d="scan'208";a="670847341"
+Received: from ahunter6-mobl1.ger.corp.intel.com (HELO [10.0.2.15]) ([10.252.52.129])
+  by fmsmga008-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 24 Aug 2022 23:52:14 -0700
+Message-ID: <657c3398-36fc-0a0a-22c2-f749e1b5d8e5@intel.com>
+Date:   Thu, 25 Aug 2022 09:52:10 +0300
 MIME-Version: 1.0
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
+ Firefox/91.0 Thunderbird/91.11.0
+Subject: Re: perf tools man pages on the web
+Content-Language: en-US
+To:     Arnaldo Carvalho de Melo <arnaldo.melo@gmail.com>,
+        Arnaldo Carvalho de Melo <acme@kernel.org>
+Cc:     Ian Rogers <irogers@google.com>, John Kacur <jkacur@redhat.com>,
+        Jiri Olsa <jolsa@kernel.org>,
+        Namhyung Kim <namhyung@kernel.org>,
+        linux-perf-users <linux-perf-users@vger.kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>
+References: <cecae74c-6bb2-d7da-bce3-35772b6e3f8c@intel.com>
+ <CAP-5=fXJtRVKuPA_xpa=jBzq66y5JMv+jmr1GFNzh-zQ-7j5QA@mail.gmail.com>
+ <b42344bc-86f6-9047-b015-88ef3b58a619@intel.com>
+ <CAP-5=fUq4N+X+3VMsT=he3Q9_4qHKkqxdPDcMdDE=_3qdV9aCg@mail.gmail.com>
+ <YvzrYLx3RDHAmqbf@kernel.org>
+ <CA+JHD90RuF+sjO7t40voiQrXbaH172Le=KeKGzTrK_tBquVbAg@mail.gmail.com>
+From:   Adrian Hunter <adrian.hunter@intel.com>
+Organization: Intel Finland Oy, Registered Address: PL 281, 00181 Helsinki,
+ Business Identity Code: 0357606 - 4, Domiciled in Helsinki
+In-Reply-To: <CA+JHD90RuF+sjO7t40voiQrXbaH172Le=KeKGzTrK_tBquVbAg@mail.gmail.com>
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-From: Zhengjun Xing <zhengjun.xing@linux.intel.com>
+On 18/08/22 19:24, Arnaldo Carvalho de Melo wrote:
+> 
+> 
+> On Wed, Aug 17, 2022, 10:21 AM Arnaldo Carvalho de Melo <acme@kernel.org <mailto:acme@kernel.org>> wrote:
+> 
+>     Em Wed, Aug 17, 2022 at 06:02:25AM -0700, Ian Rogers escreveu:
+>     > On Wed, Aug 17, 2022 at 1:55 AM Adrian Hunter <adrian.hunter@intel.com <mailto:adrian.hunter@intel.com>> wrote:
+>     > > Speaking of the wiki, anyone know how to change the
+>     > > "Set $wgLogo to the URL path to your own logo image." image?
+> 
+>     > +1000
+> 
+>     > Someone at RedHat knows :-)
+> 
+>     Documentation is at the Media Wiki site, admin up to a point was John Kacur,
+>     John?
+> 
+>     https://www.mediawiki.org/wiki/Manual:FAQ#Changing_the_interface <https://www.mediawiki.org/wiki/Manual:FAQ#Changing_the_interface>>
+> 
+>     --------------------- 8< ----------------------------------
+> 
+>     How do I change the logo?
+> 
+>     The logo that appears in the top left of each page is determined by the $wgLogo configuration line in the LocalSettings.php file.
+> 
+>     There are two ways to change the logo:
+> 
+>         Upload a picture to your wiki using the normal file uploading interface. This allows the logo to be replaced easily, so you may want to protect the page if you use this method.
+> 
+>             Then add the $wgLogo line to LocalSettings.php, for example:
+> 
+>             $wgLogo = "{$wgUploadPath}/6/62/mylogo.png";
+> 
+>         Upload an image to your server by other means (such as FTP).
+> 
+>             Add the $wgLogo line to LocalSettings.php, for example:
+> 
+>             $wgLogo = "{$wgScriptPath}/mylogo.jpg";
+> 
+>             (In this example, the image is in the same folder as the LocalSettings.php file.)
+> 
+>     If you want to change the logo in only specific pages, override #p-logo
+>     css's background-image property or use third party extension like
+>     Extension:LogoFunctions.  Caution! Caution:     Do not simply overwrite
+>     the default logo installed with MediaWiki (/resources/assets/wiki.png);
+>     this file will be overwritten when you upgrade.  A good size for a
+>     square logo is 135x135px or 150x150px, but the logo need not be square,
+>     especially if it contains text below an image. The maximum logo size in
+>     Vector is ~160x160px, while MonoBook's is ~155x155px. A logo that is too
+>     large will be cut off.
+> 
+>     --------------------- 8< ----------------------------------
+> 
+> 
+> I got it sorted out with the kernel.org <http://kernel.org> admins.
+> 
+> Please force reload.
 
-Capitalize topdown metrics' names to follow the intel SDM.
+Is it just me or has it disappeared again?
 
-Before:
-
- # ./perf stat -a  sleep 1
-
- Performance counter stats for 'system wide':
-
-        228,094.05 msec cpu-clock                        #  225.026 CPUs utilized
-               842      context-switches                 #    3.691 /sec
-               224      cpu-migrations                   #    0.982 /sec
-                70      page-faults                      #    0.307 /sec
-        23,164,105      cycles                           #    0.000 GHz
-        29,403,446      instructions                     #    1.27  insn per cycle
-         5,268,185      branches                         #   23.097 K/sec
-            33,239      branch-misses                    #    0.63% of all branches
-       136,248,990      slots                            #  597.337 K/sec
-        32,976,450      topdown-retiring                 #     24.2% retiring
-         4,651,918      topdown-bad-spec                 #      3.4% bad speculation
-        26,148,695      topdown-fe-bound                 #     19.2% frontend bound
-        72,515,776      topdown-be-bound                 #     53.2% backend bound
-         6,008,540      topdown-heavy-ops                #      4.4% heavy operations       #     19.8% light operations
-         3,934,049      topdown-br-mispredict            #      2.9% branch mispredict      #      0.5% machine clears
-        16,655,439      topdown-fetch-lat                #     12.2% fetch latency          #      7.0% fetch bandwidth
-        41,635,972      topdown-mem-bound                #     30.5% memory bound           #     22.7% Core bound
-
-       1.013634593 seconds time elapsed
-
-After:
-
- # ./perf stat -a  sleep 1
-
- Performance counter stats for 'system wide':
-
-        228,081.94 msec cpu-clock                        #  225.003 CPUs utilized
-               824      context-switches                 #    3.613 /sec
-               224      cpu-migrations                   #    0.982 /sec
-                67      page-faults                      #    0.294 /sec
-        22,647,423      cycles                           #    0.000 GHz
-        28,870,551      instructions                     #    1.27  insn per cycle
-         5,167,099      branches                         #   22.655 K/sec
-            32,383      branch-misses                    #    0.63% of all branches
-       133,411,074      slots                            #  584.926 K/sec
-        32,352,607      topdown-retiring                 #     24.3% Retiring
-         4,456,977      topdown-bad-spec                 #      3.3% Bad Speculation
-        25,626,487      topdown-fe-bound                 #     19.2% Frontend Bound
-        70,955,316      topdown-be-bound                 #     53.2% Backend Bound
-         5,834,844      topdown-heavy-ops                #      4.4% Heavy Operations       #     19.9% Light Operations
-         3,738,781      topdown-br-mispredict            #      2.8% Branch Mispredict      #      0.5% Machine Clears
-        16,286,803      topdown-fetch-lat                #     12.2% Fetch Latency          #      7.0% Fetch Bandwidth
-        40,802,069      topdown-mem-bound                #     30.6% Memory Bound           #     22.6% Core Bound
-
-       1.013683125 seconds time elapsed
-
-Signed-off-by: Zhengjun Xing <zhengjun.xing@linux.intel.com>
-Reviewed-by: Kan Liang <kan.liang@linux.intel.com>
----
- tools/perf/util/stat-shadow.c | 24 ++++++++++++------------
- 1 file changed, 12 insertions(+), 12 deletions(-)
-
-diff --git a/tools/perf/util/stat-shadow.c b/tools/perf/util/stat-shadow.c
-index 979c8cb918f7..788ce5e46470 100644
---- a/tools/perf/util/stat-shadow.c
-+++ b/tools/perf/util/stat-shadow.c
-@@ -1193,7 +1193,7 @@ void perf_stat__print_shadow_stats(struct perf_stat_config *config,
- 						  &rsd);
- 		if (retiring > 0.7)
- 			color = PERF_COLOR_GREEN;
--		print_metric(config, ctxp, color, "%8.1f%%", "retiring",
-+		print_metric(config, ctxp, color, "%8.1f%%", "Retiring",
- 				retiring * 100.);
- 	} else if (perf_stat_evsel__is(evsel, TOPDOWN_FE_BOUND) &&
- 		   full_td(cpu_map_idx, st, &rsd)) {
-@@ -1202,7 +1202,7 @@ void perf_stat__print_shadow_stats(struct perf_stat_config *config,
- 						  &rsd);
- 		if (fe_bound > 0.2)
- 			color = PERF_COLOR_RED;
--		print_metric(config, ctxp, color, "%8.1f%%", "frontend bound",
-+		print_metric(config, ctxp, color, "%8.1f%%", "Frontend Bound",
- 				fe_bound * 100.);
- 	} else if (perf_stat_evsel__is(evsel, TOPDOWN_BE_BOUND) &&
- 		   full_td(cpu_map_idx, st, &rsd)) {
-@@ -1211,7 +1211,7 @@ void perf_stat__print_shadow_stats(struct perf_stat_config *config,
- 						  &rsd);
- 		if (be_bound > 0.2)
- 			color = PERF_COLOR_RED;
--		print_metric(config, ctxp, color, "%8.1f%%", "backend bound",
-+		print_metric(config, ctxp, color, "%8.1f%%", "Backend Bound",
- 				be_bound * 100.);
- 	} else if (perf_stat_evsel__is(evsel, TOPDOWN_BAD_SPEC) &&
- 		   full_td(cpu_map_idx, st, &rsd)) {
-@@ -1220,7 +1220,7 @@ void perf_stat__print_shadow_stats(struct perf_stat_config *config,
- 						  &rsd);
- 		if (bad_spec > 0.1)
- 			color = PERF_COLOR_RED;
--		print_metric(config, ctxp, color, "%8.1f%%", "bad speculation",
-+		print_metric(config, ctxp, color, "%8.1f%%", "Bad Speculation",
- 				bad_spec * 100.);
- 	} else if (perf_stat_evsel__is(evsel, TOPDOWN_HEAVY_OPS) &&
- 			full_td(cpu_map_idx, st, &rsd) && (config->topdown_level > 1)) {
-@@ -1234,13 +1234,13 @@ void perf_stat__print_shadow_stats(struct perf_stat_config *config,
- 
- 		if (retiring > 0.7 && heavy_ops > 0.1)
- 			color = PERF_COLOR_GREEN;
--		print_metric(config, ctxp, color, "%8.1f%%", "heavy operations",
-+		print_metric(config, ctxp, color, "%8.1f%%", "Heavy Operations",
- 				heavy_ops * 100.);
- 		if (retiring > 0.7 && light_ops > 0.6)
- 			color = PERF_COLOR_GREEN;
- 		else
- 			color = NULL;
--		print_metric(config, ctxp, color, "%8.1f%%", "light operations",
-+		print_metric(config, ctxp, color, "%8.1f%%", "Light Operations",
- 				light_ops * 100.);
- 	} else if (perf_stat_evsel__is(evsel, TOPDOWN_BR_MISPREDICT) &&
- 			full_td(cpu_map_idx, st, &rsd) && (config->topdown_level > 1)) {
-@@ -1254,13 +1254,13 @@ void perf_stat__print_shadow_stats(struct perf_stat_config *config,
- 
- 		if (bad_spec > 0.1 && br_mis > 0.05)
- 			color = PERF_COLOR_RED;
--		print_metric(config, ctxp, color, "%8.1f%%", "branch mispredict",
-+		print_metric(config, ctxp, color, "%8.1f%%", "Branch Mispredict",
- 				br_mis * 100.);
- 		if (bad_spec > 0.1 && m_clears > 0.05)
- 			color = PERF_COLOR_RED;
- 		else
- 			color = NULL;
--		print_metric(config, ctxp, color, "%8.1f%%", "machine clears",
-+		print_metric(config, ctxp, color, "%8.1f%%", "Machine Clears",
- 				m_clears * 100.);
- 	} else if (perf_stat_evsel__is(evsel, TOPDOWN_FETCH_LAT) &&
- 			full_td(cpu_map_idx, st, &rsd) && (config->topdown_level > 1)) {
-@@ -1274,13 +1274,13 @@ void perf_stat__print_shadow_stats(struct perf_stat_config *config,
- 
- 		if (fe_bound > 0.2 && fetch_lat > 0.15)
- 			color = PERF_COLOR_RED;
--		print_metric(config, ctxp, color, "%8.1f%%", "fetch latency",
-+		print_metric(config, ctxp, color, "%8.1f%%", "Fetch Latency",
- 				fetch_lat * 100.);
- 		if (fe_bound > 0.2 && fetch_bw > 0.1)
- 			color = PERF_COLOR_RED;
- 		else
- 			color = NULL;
--		print_metric(config, ctxp, color, "%8.1f%%", "fetch bandwidth",
-+		print_metric(config, ctxp, color, "%8.1f%%", "Fetch Bandwidth",
- 				fetch_bw * 100.);
- 	} else if (perf_stat_evsel__is(evsel, TOPDOWN_MEM_BOUND) &&
- 			full_td(cpu_map_idx, st, &rsd) && (config->topdown_level > 1)) {
-@@ -1294,13 +1294,13 @@ void perf_stat__print_shadow_stats(struct perf_stat_config *config,
- 
- 		if (be_bound > 0.2 && mem_bound > 0.2)
- 			color = PERF_COLOR_RED;
--		print_metric(config, ctxp, color, "%8.1f%%", "memory bound",
-+		print_metric(config, ctxp, color, "%8.1f%%", "Memory Bound",
- 				mem_bound * 100.);
- 		if (be_bound > 0.2 && core_bound > 0.1)
- 			color = PERF_COLOR_RED;
- 		else
- 			color = NULL;
--		print_metric(config, ctxp, color, "%8.1f%%", "Core bound",
-+		print_metric(config, ctxp, color, "%8.1f%%", "Core Bound",
- 				core_bound * 100.);
- 	} else if (evsel->metric_expr) {
- 		generic_metric(config, evsel->metric_expr, evsel->metric_events, NULL,
--- 
-2.25.1
 
