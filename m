@@ -2,59 +2,59 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A4D83ECAAA3
-	for <linux-perf-users@archiver.kernel.org>; Fri, 26 Aug 2022 16:06:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 85419ECAAD4
+	for <linux-perf-users@archiver.kernel.org>; Fri, 26 Aug 2022 16:20:37 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229717AbiHZQGg (ORCPT
+        id S1344659AbiHZQUg (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Fri, 26 Aug 2022 12:06:36 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33180 "EHLO
+        Fri, 26 Aug 2022 12:20:36 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56138 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232068AbiHZQGf (ORCPT
+        with ESMTP id S1344655AbiHZQUf (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Fri, 26 Aug 2022 12:06:35 -0400
-Received: from mail-wr1-x435.google.com (mail-wr1-x435.google.com [IPv6:2a00:1450:4864:20::435])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id AC69BD3E6A
-        for <linux-perf-users@vger.kernel.org>; Fri, 26 Aug 2022 09:06:34 -0700 (PDT)
-Received: by mail-wr1-x435.google.com with SMTP id m16so2321284wru.9
-        for <linux-perf-users@vger.kernel.org>; Fri, 26 Aug 2022 09:06:34 -0700 (PDT)
+        Fri, 26 Aug 2022 12:20:35 -0400
+Received: from mail-wr1-x42f.google.com (mail-wr1-x42f.google.com [IPv6:2a00:1450:4864:20::42f])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 372DDDB07F
+        for <linux-perf-users@vger.kernel.org>; Fri, 26 Aug 2022 09:20:34 -0700 (PDT)
+Received: by mail-wr1-x42f.google.com with SMTP id e20so2357683wri.13
+        for <linux-perf-users@vger.kernel.org>; Fri, 26 Aug 2022 09:20:34 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=google.com; s=20210112;
         h=cc:to:subject:message-id:date:from:in-reply-to:references
          :mime-version:from:to:cc;
-        bh=L0H2b2GPKZYIuMR6iWTYOgB5/UtrkJG2fxwjDyQeFtE=;
-        b=ntlSXkWi8J2ryefHCTq55BPnbPb2Tas1Jil+sp/Cx9DrtNvaySXbCSUKAFZ1+1uSXJ
-         g8aVWdh4PfNRBWp6P/clzaRfOi8H1idIkp7YVevW1l4LbLHBgZntSjkJthdEwQHUiswo
-         xQOEuPgF9GzCZ2/4A4/kr9nwOIlkk90esnB0tOCt9Kq806CqKx0F5uB7WMSAQxMpEDkQ
-         Tvs4+3fV4fry9twJESAgmRw7qMrZ9Bh/isM+rGLIEt+i0rJn//YBNlQkqTt9c3CpTBKD
-         tomYLfnOJ8HJD8zWgtOV9P9d4WH/L+6bUb9+YWkdZYYRCkKJL+IZRFJsajsi8aO+BDg1
-         Tkew==
+        bh=zzUl8oGEgJMTlOJPy7VJibE5hKJrOS3klLzu+K6mIGI=;
+        b=AUXpZ8o3OzsJFe3HFNnQVRYKL+5Z2LIyptjGTfOIPlrPcqx0kUV9ZrF3HDoPmmvjRK
+         U4hDGe4LP/tZwofzgFGa3f8D6BE2Nogk8L1rW1OqW3SQQV3K71U2YlnZbOUG1Ji99JKN
+         5sZQogZHUiUhbbWAoBQee4Az/ov84ugpEq52Sy2SfEp2b1Mq3J/humyf7lO4IOQtSkhT
+         BKRAfYtaW48wuzb8YgNJoL21kqihA+w4YdhQvWVjQ3NWvUVmHSf5zymQhVFz5wvHZnuG
+         4qeleKj2qJMIW+W88sGPnSbnkeRtdA98Q0Ne2J8ho3EEHhYe6Bxi5O3Rg4cFPv7HNt6g
+         2Rlg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
         h=cc:to:subject:message-id:date:from:in-reply-to:references
          :mime-version:x-gm-message-state:from:to:cc;
-        bh=L0H2b2GPKZYIuMR6iWTYOgB5/UtrkJG2fxwjDyQeFtE=;
-        b=YcK+DPMr5AzlMbhYLK4c1kEMsKr0QHgXfVTIu8FgJ/SeUDJgE9Nw1JfLMcFGLc5vld
-         GcuGHBfIuVlEsUdRYBfwBDcoQzaC0Wi5ka9rj/CpXZK1NXgcIPNfsRKyUzOjRcaLoyFR
-         0JFoTD7v41tuvK5r61AC8iLDg+IonrqyRVhnTp7NnndJzThGZs3wujQz7Rr0jbGnP6VZ
-         LVnWHJHNZof4oKa8hYjWfKHYTG1QCJF23AKZw6Bngr/H+XLo/fO/xH7gs1m//pW56M7K
-         yYuZqL6PZDHMlB8dD8f/qQGT2d3Xfe+Ev+HAvxTpv18hREK2A3RFD1Z1eyEJk8SgyDb4
-         r8Wg==
-X-Gm-Message-State: ACgBeo2Z2G1LE1n+BENqZjHV0tUAWhTAkns/QaVlClW5pHMaA/CjL2x7
-        8FhDAEEg52Xqe7ukepZY4C/GMdHX3hBzdFpJBvOa4w==
-X-Google-Smtp-Source: AA6agR7GbATeJG4gjXTUnx740JnOkntF0bsh5wXXtuvzI4dmU+OBcbKvRbwC4vpMbhWY0TyQoXad/xg1iOGWvXK8XXA=
-X-Received: by 2002:a05:6000:1ac9:b0:220:7f40:49e3 with SMTP id
- i9-20020a0560001ac900b002207f4049e3mr219844wry.40.1661529992826; Fri, 26 Aug
- 2022 09:06:32 -0700 (PDT)
+        bh=zzUl8oGEgJMTlOJPy7VJibE5hKJrOS3klLzu+K6mIGI=;
+        b=sv/omkMBJvGn1c+kuboAU0lSTBVNnsmY/2UY1RCRsB8Zh2rCPyVk0kGqP0J8YTOSM9
+         t06rqdLt46Q8vSaIbzCm0Fz7mwKoPniCT0+omJi/jOPWo/jqrmsrlNSIByHnL31PL1F3
+         FWumHkZ6wljxFpM8Eo5A+YRKPl0jeUeCun0/lGflfKGUtnDN/9+n2kqjcPI9kmfhVbmh
+         /KR2y+LC4c1dfxx/nX7ApbAY5ncR34cWdZs9C9Hl8dc+yvYbNVCB11Yl8zs3G+5OGN7k
+         b18R0mVJ8Y53hE7ShwVgcXY8yVO5DeNZEQ6j9C+LocXVOn7Fws50Q8dXMOTDmoL8SUE0
+         0Sew==
+X-Gm-Message-State: ACgBeo0/TBCuF42sFXgMy+VKgBgS4XaD9PgtF5gqGUkxvI3W+KcjcOqw
+        lKLs/fyxYi7UBprC+UISgM8s777A5T36FUWcOhjxkQ==
+X-Google-Smtp-Source: AA6agR4OxdnySTgDZkCtUgd+3IgyOo9ffBzPm5djKnBcX8tHzsP4orSo0vbogLgM8gN8HZo17s2VIyi8qY6Xiyfc7Aw=
+X-Received: by 2002:a05:6000:1008:b0:225:58e0:223f with SMTP id
+ a8-20020a056000100800b0022558e0223fmr226802wrx.375.1661530832589; Fri, 26 Aug
+ 2022 09:20:32 -0700 (PDT)
 MIME-Version: 1.0
-References: <20220824153901.488576-1-irogers@google.com> <20220824153901.488576-17-irogers@google.com>
- <a7176263-7dc8-6cbd-af2d-5338c4c4b546@intel.com>
-In-Reply-To: <a7176263-7dc8-6cbd-af2d-5338c4c4b546@intel.com>
+References: <20220614143353.1559597-1-irogers@google.com> <20220614143353.1559597-5-irogers@google.com>
+ <YwjDLl8QXQzaCYaS@tuxmaker.boeblingen.de.ibm.com>
+In-Reply-To: <YwjDLl8QXQzaCYaS@tuxmaker.boeblingen.de.ibm.com>
 From:   Ian Rogers <irogers@google.com>
-Date:   Fri, 26 Aug 2022 09:06:20 -0700
-Message-ID: <CAP-5=fXk+mLv=C0CTrvnBeuhCTAtJ=x2O8D2YqvmVZSMHqcLvQ@mail.gmail.com>
-Subject: Re: [PATCH v3 16/18] perf sched: Fixes for thread safety analysis
-To:     Adrian Hunter <adrian.hunter@intel.com>
+Date:   Fri, 26 Aug 2022 09:20:20 -0700
+Message-ID: <CAP-5=fWTP+_6oLhTYowvpvGrn05784rHkzJgBZcoqZobE1M_Tg@mail.gmail.com>
+Subject: Re: [PATCH v2 4/6] perf cpumap: Fix alignment for masks in event encoding
+To:     Alexander Gordeev <agordeev@linux.ibm.com>
 Cc:     Peter Zijlstra <peterz@infradead.org>,
         Ingo Molnar <mingo@redhat.com>,
         Arnaldo Carvalho de Melo <acme@kernel.org>,
@@ -62,169 +62,61 @@ Cc:     Peter Zijlstra <peterz@infradead.org>,
         Alexander Shishkin <alexander.shishkin@linux.intel.com>,
         Jiri Olsa <jolsa@kernel.org>,
         Namhyung Kim <namhyung@kernel.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Darren Hart <dvhart@infradead.org>,
-        Davidlohr Bueso <dave@stgolabs.net>,
-        =?UTF-8?Q?Andr=C3=A9_Almeida?= <andrealmeid@igalia.com>,
-        Nathan Chancellor <nathan@kernel.org>,
-        Nick Desaulniers <ndesaulniers@google.com>,
-        Tom Rix <trix@redhat.com>, Weiguo Li <liwg06@foxmail.com>,
-        Athira Rajeev <atrajeev@linux.vnet.ibm.com>,
-        Thomas Richter <tmricht@linux.ibm.com>,
-        Ravi Bangoria <ravi.bangoria@amd.com>,
-        Dario Petrillo <dario.pk1@gmail.com>,
-        Hewenliang <hewenliang4@huawei.com>,
-        yaowenbin <yaowenbin1@huawei.com>,
-        Wenyu Liu <liuwenyu7@huawei.com>,
-        Song Liu <songliubraving@fb.com>,
-        Andrii Nakryiko <andrii@kernel.org>,
-        Dave Marchevsky <davemarchevsky@fb.com>,
-        Leo Yan <leo.yan@linaro.org>,
-        Kim Phillips <kim.phillips@amd.com>,
-        Pavithra Gurushankar <gpavithrasha@gmail.com>,
-        Alexandre Truong <alexandre.truong@arm.com>,
-        Quentin Monnet <quentin@isovalent.com>,
-        William Cohen <wcohen@redhat.com>,
-        Andres Freund <andres@anarazel.de>,
-        =?UTF-8?Q?Martin_Li=C5=A1ka?= <mliska@suse.cz>,
-        Colin Ian King <colin.king@intel.com>,
         James Clark <james.clark@arm.com>,
-        Fangrui Song <maskray@google.com>,
-        Stephane Eranian <eranian@google.com>,
-        Kajol Jain <kjain@linux.ibm.com>,
-        Alexey Bayduraev <alexey.v.bayduraev@linux.intel.com>,
+        Kees Cook <keescook@chromium.org>,
+        "Gustavo A. R. Silva" <gustavoars@kernel.org>,
+        Adrian Hunter <adrian.hunter@intel.com>,
         Riccardo Mancini <rickyman7@gmail.com>,
-        Andi Kleen <ak@linux.intel.com>,
-        Masami Hiramatsu <mhiramat@kernel.org>,
-        Zechuan Chen <chenzechuan1@huawei.com>,
-        Jason Wang <wangborong@cdjrlc.com>,
-        Christophe JAILLET <christophe.jaillet@wanadoo.fr>,
-        Remi Bernon <rbernon@codeweavers.com>,
-        linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org,
-        bpf@vger.kernel.org, llvm@lists.linux.dev
+        German Gomez <german.gomez@arm.com>,
+        Colin Ian King <colin.king@intel.com>,
+        Song Liu <songliubraving@fb.com>,
+        Dave Marchevsky <davemarchevsky@fb.com>,
+        Athira Rajeev <atrajeev@linux.vnet.ibm.com>,
+        Alexey Bayduraev <alexey.v.bayduraev@linux.intel.com>,
+        Leo Yan <leo.yan@linaro.org>, linux-perf-users@vger.kernel.org,
+        linux-kernel@vger.kernel.org, Stephane Eranian <eranian@google.com>
 Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-On Fri, Aug 26, 2022 at 5:12 AM Adrian Hunter <adrian.hunter@intel.com> wrote:
+On Fri, Aug 26, 2022 at 5:57 AM Alexander Gordeev
+<agordeev@linux.ibm.com> wrote:
 >
-> On 24/08/22 18:38, Ian Rogers wrote:
-> > Add annotations to describe lock behavior. Add unlocks so that mutexes
-> > aren't conditionally held on exit from perf_sched__replay. Add an exit
-> > variable so that thread_func can terminate, rather than leaving the
-> > threads blocked on mutexes.
-> >
-> > Signed-off-by: Ian Rogers <irogers@google.com>
-> > ---
-> >  tools/perf/builtin-sched.c | 46 ++++++++++++++++++++++++--------------
-> >  1 file changed, 29 insertions(+), 17 deletions(-)
-> >
-> > diff --git a/tools/perf/builtin-sched.c b/tools/perf/builtin-sched.c
-> > index 7e4006d6b8bc..b483ff0d432e 100644
-> > --- a/tools/perf/builtin-sched.c
-> > +++ b/tools/perf/builtin-sched.c
-> > @@ -246,6 +246,7 @@ struct perf_sched {
-> >       const char      *time_str;
-> >       struct perf_time_interval ptime;
-> >       struct perf_time_interval hist_time;
-> > +     volatile bool   thread_funcs_exit;
-> >  };
-> >
-> >  /* per thread run time data */
-> > @@ -633,31 +634,34 @@ static void *thread_func(void *ctx)
-> >       prctl(PR_SET_NAME, comm2);
-> >       if (fd < 0)
-> >               return NULL;
-> > -again:
-> > -     ret = sem_post(&this_task->ready_for_work);
-> > -     BUG_ON(ret);
-> > -     mutex_lock(&sched->start_work_mutex);
-> > -     mutex_unlock(&sched->start_work_mutex);
-> >
-> > -     cpu_usage_0 = get_cpu_usage_nsec_self(fd);
-> > +     while (!sched->thread_funcs_exit) {
-> > +             ret = sem_post(&this_task->ready_for_work);
-> > +             BUG_ON(ret);
-> > +             mutex_lock(&sched->start_work_mutex);
-> > +             mutex_unlock(&sched->start_work_mutex);
-> >
-> > -     for (i = 0; i < this_task->nr_events; i++) {
-> > -             this_task->curr_event = i;
-> > -             perf_sched__process_event(sched, this_task->atoms[i]);
-> > -     }
-> > +             cpu_usage_0 = get_cpu_usage_nsec_self(fd);
-> >
-> > -     cpu_usage_1 = get_cpu_usage_nsec_self(fd);
-> > -     this_task->cpu_usage = cpu_usage_1 - cpu_usage_0;
-> > -     ret = sem_post(&this_task->work_done_sem);
-> > -     BUG_ON(ret);
-> > +             for (i = 0; i < this_task->nr_events; i++) {
-> > +                     this_task->curr_event = i;
-> > +                     perf_sched__process_event(sched, this_task->atoms[i]);
-> > +             }
-> >
-> > -     mutex_lock(&sched->work_done_wait_mutex);
-> > -     mutex_unlock(&sched->work_done_wait_mutex);
-> > +             cpu_usage_1 = get_cpu_usage_nsec_self(fd);
-> > +             this_task->cpu_usage = cpu_usage_1 - cpu_usage_0;
-> > +             ret = sem_post(&this_task->work_done_sem);
-> > +             BUG_ON(ret);
-> >
-> > -     goto again;
-> > +             mutex_lock(&sched->work_done_wait_mutex);
-> > +             mutex_unlock(&sched->work_done_wait_mutex);
-> > +     }
-> > +     return NULL;
-> >  }
-> >
-> >  static void create_tasks(struct perf_sched *sched)
-> > +     EXCLUSIVE_LOCK_FUNCTION(sched->start_work_mutex)
-> > +     EXCLUSIVE_LOCK_FUNCTION(sched->work_done_wait_mutex)
-> >  {
-> >       struct task_desc *task;
-> >       pthread_attr_t attr;
-> > @@ -687,6 +691,8 @@ static void create_tasks(struct perf_sched *sched)
-> >  }
-> >
-> >  static void wait_for_tasks(struct perf_sched *sched)
-> > +     EXCLUSIVE_LOCKS_REQUIRED(sched->work_done_wait_mutex)
-> > +     EXCLUSIVE_LOCKS_REQUIRED(sched->start_work_mutex)
-> >  {
-> >       u64 cpu_usage_0, cpu_usage_1;
-> >       struct task_desc *task;
-> > @@ -738,6 +744,8 @@ static void wait_for_tasks(struct perf_sched *sched)
-> >  }
-> >
-> >  static void run_one_test(struct perf_sched *sched)
-> > +     EXCLUSIVE_LOCKS_REQUIRED(sched->work_done_wait_mutex)
-> > +     EXCLUSIVE_LOCKS_REQUIRED(sched->start_work_mutex)
-> >  {
-> >       u64 T0, T1, delta, avg_delta, fluct;
-> >
-> > @@ -3309,11 +3317,15 @@ static int perf_sched__replay(struct perf_sched *sched)
-> >       print_task_traces(sched);
-> >       add_cross_task_wakeups(sched);
-> >
-> > +     sched->thread_funcs_exit = false;
-> >       create_tasks(sched);
-> >       printf("------------------------------------------------------------\n");
-> >       for (i = 0; i < sched->replay_repeat; i++)
-> >               run_one_test(sched);
-> >
-> > +     sched->thread_funcs_exit = true;
-> > +     mutex_unlock(&sched->start_work_mutex);
-> > +     mutex_unlock(&sched->work_done_wait_mutex);
+> On Tue, Jun 14, 2022 at 07:33:51AM -0700, Ian Rogers wrote:
 >
-> I think you still need to wait for the threads to exit before
-> destroying the mutexes.
+> Hi Ian,
+>
+> Although it is committed, still have a question.
+>
+> > index e7758707cadd..d2d32589758a 100644
+> > --- a/tools/lib/perf/include/perf/event.h
+> > +++ b/tools/lib/perf/include/perf/event.h
+> > @@ -6,6 +6,7 @@
+> >  #include <linux/types.h>
+> >  #include <linux/limits.h>
+> >  #include <linux/bpf.h>
+> > +#include <linux/compiler.h>
+>
+> Is it correct approach to include it into user-exposed headers?
+> AFAICT headers_install.sh strips #include <linux/compiler.h> and
+> compiler*.h itself do not get installed with make headers_install.
+>
+> [...]
+>
+> > +struct __packed perf_record_cpu_map_data {
+>
+> And it is only needed to pull __packed macro, right?
+>
+> Thanks!
 
-This is a pre-existing issue and beyond the scope of this patch set.
+Hi Alexander,
+
+I can see your point about compiler.h, it is true that it is just
+being used for the __packed definition. Why don't you write your
+proposed change as a patch and send it to LKML? libperf is more of an
+experimental library than a stable API. We don't currently have any
+build tests for things outside of the kernel tree.
 
 Thanks,
 Ian
-
-> >       return 0;
-> >  }
-> >
->
