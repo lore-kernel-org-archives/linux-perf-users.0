@@ -2,44 +2,44 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4D90DECAAD2
-	for <linux-perf-users@archiver.kernel.org>; Fri, 26 Aug 2022 10:11:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 28CB0ECAAA3
+	for <linux-perf-users@archiver.kernel.org>; Fri, 26 Aug 2022 10:24:50 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S244780AbiHZKLi (ORCPT
+        id S245528AbiHZKYs (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Fri, 26 Aug 2022 06:11:38 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40552 "EHLO
+        Fri, 26 Aug 2022 06:24:48 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58444 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229481AbiHZKLh (ORCPT
+        with ESMTP id S236026AbiHZKYr (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Fri, 26 Aug 2022 06:11:37 -0400
-Received: from mga01.intel.com (mga01.intel.com [192.55.52.88])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 30F63A9C10;
-        Fri, 26 Aug 2022 03:11:36 -0700 (PDT)
+        Fri, 26 Aug 2022 06:24:47 -0400
+Received: from mga11.intel.com (mga11.intel.com [192.55.52.93])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CD8571E1;
+        Fri, 26 Aug 2022 03:24:44 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1661508696; x=1693044696;
+  t=1661509484; x=1693045484;
   h=message-id:date:mime-version:subject:to:references:from:
    in-reply-to:content-transfer-encoding;
-  bh=yNvu6BGSLX3xsDtWd6DweoqiDg0tvzIavq7gCuURtPM=;
-  b=maQY4tNuyWGHsgeA2nBiG5pfMwfWquxLBBjH1zBTbLco5ZzkKzXgn6cI
-   kz3p7NNAyy1MSrbMli6sRFxjLgYvszETRbC/bPJbmTiIVszgpTaWELHD1
-   7M5wEWn9B9g28+DE+gRRd8+ivVruOI/YBDrt2//DIIU5R3Tt8xZmmMjoY
-   Pv2Fu+tHUdZgIFbaBUUs8pNcanFtm6lvg96+B1/trU9VdwKwI5bM38kfu
-   /gHo7dVe8PD3t0wpDxzqCvg9IU1hrd/QhqszkbaUWr74wCK86FnAriH9P
-   rTGgWYInYOgAexmR7be/Jv0zeYi7NzHAybsTXdgbSiVzWGck6h9pc1RSg
-   w==;
-X-IronPort-AV: E=McAfee;i="6500,9779,10450"; a="320567072"
+  bh=gzG5jvF8AiDzT3HIfyzKFCafcG5IQ+Wuj7+aBQMAuWk=;
+  b=bc6RUs6M6bsZIn72h0wE/kwEkBHazZFq28AN9iTXBShSnFNRSEATJ6yB
+   cwYAyZMTfFMUaKZ/aCI/hKW0tFtkyzw4wrX7ePWqNnvpR/y86Ivgfcqsw
+   Ew9091vtbv4AlxBQ7SpF+6Zkb4h57tIewMr0DJ3uxtnjyKUgK6CzQSu/T
+   xN/V/3NuofyU41EpGjY2gi/gETzOicvaWMY4tBDWVXQsg6h/Ad1ZTWmlx
+   DFRywUHq0EUdilCi5Tm7phH3LRxKK7w6/Prio06yBe08qToLcr9av74/I
+   4zrsdNrsyYGBCykOvJXdXLJnAWkPrxpszkqeJrz1AsM0TThMb5EVphhCG
+   g==;
+X-IronPort-AV: E=McAfee;i="6500,9779,10450"; a="292056185"
 X-IronPort-AV: E=Sophos;i="5.93,265,1654585200"; 
-   d="scan'208";a="320567072"
-Received: from fmsmga008.fm.intel.com ([10.253.24.58])
-  by fmsmga101.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 26 Aug 2022 03:11:35 -0700
+   d="scan'208";a="292056185"
+Received: from orsmga007.jf.intel.com ([10.7.209.58])
+  by fmsmga102.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 26 Aug 2022 03:24:44 -0700
 X-IronPort-AV: E=Sophos;i="5.93,265,1654585200"; 
-   d="scan'208";a="671405086"
+   d="scan'208";a="606723974"
 Received: from ahunter6-mobl1.ger.corp.intel.com (HELO [10.0.2.15]) ([10.252.50.209])
-  by fmsmga008-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 26 Aug 2022 03:11:24 -0700
-Message-ID: <0004776a-8c39-9515-fd4e-01bfe1c4a3eb@intel.com>
-Date:   Fri, 26 Aug 2022 13:11:18 +0300
+  by orsmga007-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 26 Aug 2022 03:24:31 -0700
+Message-ID: <2cf6edac-6e41-b43c-2bc1-f49cb739201a@intel.com>
+Date:   Fri, 26 Aug 2022 13:24:26 +0300
 MIME-Version: 1.0
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
  Firefox/91.0 Thunderbird/91.11.0
@@ -112,9 +112,6 @@ On 24/08/22 18:38, Ian Rogers wrote:
 > ---
 >  tools/perf/ui/browser.c           | 20 ++++++++++----------
 >  tools/perf/ui/browsers/annotate.c |  2 +-
-
-Other changes to tools/perf/ui/browsers/annotate.c are in patch 12
-
 >  tools/perf/ui/setup.c             |  5 +++--
 >  tools/perf/ui/tui/helpline.c      |  5 ++---
 >  tools/perf/ui/tui/progress.c      |  8 ++++----
@@ -242,6 +239,13 @@ Other changes to tools/perf/ui/browsers/annotate.c are in patch 12
 >  		break;
 >  	}
 > +	mutex_destroy(&ui__lock);
+
+Looks like exit_browser() can be called even when setup_browser()
+was never called.
+
+Note, it also looks like PTHREAD_MUTEX_INITIALIZER is all zeros so
+pthread won't notice.
+
 >  }
 > diff --git a/tools/perf/ui/tui/helpline.c b/tools/perf/ui/tui/helpline.c
 > index 298d6af82fdd..db4952f5990b 100644
