@@ -2,52 +2,62 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1559FECAAA3
-	for <linux-perf-users@archiver.kernel.org>; Fri, 26 Aug 2022 12:37:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C9D9DECAAA3
+	for <linux-perf-users@archiver.kernel.org>; Fri, 26 Aug 2022 12:58:47 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S245208AbiHZMhI (ORCPT
+        id S245543AbiHZM6q (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Fri, 26 Aug 2022 08:37:08 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56786 "EHLO
+        Fri, 26 Aug 2022 08:58:46 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54470 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S244686AbiHZMhH (ORCPT
+        with ESMTP id S229676AbiHZM6p (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Fri, 26 Aug 2022 08:37:07 -0400
-Received: from mga02.intel.com (mga02.intel.com [134.134.136.20])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 37A00C3F5E;
-        Fri, 26 Aug 2022 05:37:06 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1661517426; x=1693053426;
-  h=message-id:date:mime-version:subject:from:to:cc:
-   references:in-reply-to:content-transfer-encoding;
-  bh=yTOtV6ciy/JdpsT5lvadz9gkIiCcMqq8uplUxtO4454=;
-  b=KILrfgHXoKS0qsmIJnrVY7TYV3nRApZuXkThEWNLcT6L7j+zjeF7Ayw9
-   xfhAdtzdqe1ttNopCmvXZT1y9gYIGCxph26z4aBmMWf1W4sibdeXmzyJQ
-   8kQ9nhLWoPS0d5lDu8zyydBCim77gq27C6EQpnBV3kjagC28cndvKWrCb
-   IDu7LBETEfJ9hEK2P/UYARl1nteDkmImDtMJ2iq4Xdb+Y70RbgWNfCS7J
-   Jkdpa241VZYotjhEiHXOzATicIvFJxyJFD7dkxXvmMzxG7tMCn27a6PCZ
-   zXGBWXS0XzciMr6FRSIy8FHcaAJk+IgNxQPL+iu3RGvN/gk1bmm481Qb6
-   w==;
-X-IronPort-AV: E=McAfee;i="6500,9779,10450"; a="281465791"
-X-IronPort-AV: E=Sophos;i="5.93,265,1654585200"; 
-   d="scan'208";a="281465791"
-Received: from orsmga008.jf.intel.com ([10.7.209.65])
-  by orsmga101.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 26 Aug 2022 05:37:05 -0700
-X-IronPort-AV: E=Sophos;i="5.93,265,1654585200"; 
-   d="scan'208";a="640040886"
-Received: from ahunter6-mobl1.ger.corp.intel.com (HELO [10.0.2.15]) ([10.252.50.209])
-  by orsmga008-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 26 Aug 2022 05:36:52 -0700
-Message-ID: <fd249ce0-f065-e522-d6c7-72985367cc53@intel.com>
-Date:   Fri, 26 Aug 2022 15:36:46 +0300
-MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
- Firefox/91.0 Thunderbird/91.11.0
-Subject: Re: [PATCH v3 00/18] Mutex wrapper, locking and memory leak fixes
-Content-Language: en-US
-From:   Adrian Hunter <adrian.hunter@intel.com>
-To:     Arnaldo Carvalho de Melo <arnaldo.melo@gmail.com>,
-        Ian Rogers <irogers@google.com>
+        Fri, 26 Aug 2022 08:58:45 -0400
+Received: from mx0b-001b2d01.pphosted.com (mx0b-001b2d01.pphosted.com [148.163.158.5])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 135125D0D3;
+        Fri, 26 Aug 2022 05:58:45 -0700 (PDT)
+Received: from pps.filterd (m0127361.ppops.net [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (8.17.1.5/8.17.1.5) with ESMTP id 27QCfpF8034558;
+        Fri, 26 Aug 2022 12:57:26 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=date : from : to : cc :
+ subject : message-id : references : mime-version : content-type :
+ in-reply-to; s=pp1; bh=JUvVbFgb3369Nhi1ivAk/Xyry4AjX+gGSfQseyMHBYw=;
+ b=LbBHP6qE1ooQTD/CSXp1O9KyUFDl41GrJmmug0Jb0JcgM4FyzTsHHehEyPNYYWUcqYd1
+ ad+j3L/5TJEKlOCuxu61k0h52c3RtBlYX8jfe7ZgdcSgifTYiOTSRKS/Pl0yuWbDIOUP
+ /V3JEmXCg9uf36Q8SzBm+h5q031AhzmRZQgJn3hFeAM6kMEy8di/8URyLqm8QwC94T1w
+ /O1nj1A3nwLRjDlYNEc0s4VfcYDFW96u1Xzcu3t///4knDLzygPPlJPRnGFO8AlBsx61
+ KET5ba0MPOcTeS2HiMJX+9VJvfrUa33njTqqzRFuL41ARMWGWV60+CBXlgJufpZUHuBm bw== 
+Received: from pps.reinject (localhost [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 3j6x70rggb-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Fri, 26 Aug 2022 12:57:26 +0000
+Received: from m0127361.ppops.net (m0127361.ppops.net [127.0.0.1])
+        by pps.reinject (8.17.1.5/8.17.1.5) with ESMTP id 27QCg12F034898;
+        Fri, 26 Aug 2022 12:57:25 GMT
+Received: from ppma01fra.de.ibm.com (46.49.7a9f.ip4.static.sl-reverse.com [159.122.73.70])
+        by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 3j6x70rgfm-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Fri, 26 Aug 2022 12:57:25 +0000
+Received: from pps.filterd (ppma01fra.de.ibm.com [127.0.0.1])
+        by ppma01fra.de.ibm.com (8.16.1.2/8.16.1.2) with SMTP id 27QCp6ZK027844;
+        Fri, 26 Aug 2022 12:57:23 GMT
+Received: from b06avi18878370.portsmouth.uk.ibm.com (b06avi18878370.portsmouth.uk.ibm.com [9.149.26.194])
+        by ppma01fra.de.ibm.com with ESMTP id 3j2q88wppn-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Fri, 26 Aug 2022 12:57:23 +0000
+Received: from d06av21.portsmouth.uk.ibm.com (d06av21.portsmouth.uk.ibm.com [9.149.105.232])
+        by b06avi18878370.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 27QCvfnW30540032
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Fri, 26 Aug 2022 12:57:41 GMT
+Received: from d06av21.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id A359E5204E;
+        Fri, 26 Aug 2022 12:57:20 +0000 (GMT)
+Received: from tuxmaker.boeblingen.de.ibm.com (unknown [9.152.85.9])
+        by d06av21.portsmouth.uk.ibm.com (Postfix) with ESMTPS id 0755252050;
+        Fri, 26 Aug 2022 12:57:20 +0000 (GMT)
+Date:   Fri, 26 Aug 2022 14:57:18 +0200
+From:   Alexander Gordeev <agordeev@linux.ibm.com>
+To:     Ian Rogers <irogers@google.com>
 Cc:     Peter Zijlstra <peterz@infradead.org>,
         Ingo Molnar <mingo@redhat.com>,
         Arnaldo Carvalho de Melo <acme@kernel.org>,
@@ -55,168 +65,66 @@ Cc:     Peter Zijlstra <peterz@infradead.org>,
         Alexander Shishkin <alexander.shishkin@linux.intel.com>,
         Jiri Olsa <jolsa@kernel.org>,
         Namhyung Kim <namhyung@kernel.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Darren Hart <dvhart@infradead.org>,
-        Davidlohr Bueso <dave@stgolabs.net>,
-        =?UTF-8?Q?Andr=c3=a9_Almeida?= <andrealmeid@igalia.com>,
-        Nathan Chancellor <nathan@kernel.org>,
-        Nick Desaulniers <ndesaulniers@google.com>,
-        Tom Rix <trix@redhat.com>, Weiguo Li <liwg06@foxmail.com>,
-        Athira Rajeev <atrajeev@linux.vnet.ibm.com>,
-        Thomas Richter <tmricht@linux.ibm.com>,
-        Ravi Bangoria <ravi.bangoria@amd.com>,
-        Dario Petrillo <dario.pk1@gmail.com>,
-        Hewenliang <hewenliang4@huawei.com>,
-        yaowenbin <yaowenbin1@huawei.com>,
-        Wenyu Liu <liuwenyu7@huawei.com>,
-        Song Liu <songliubraving@fb.com>,
-        Andrii Nakryiko <andrii@kernel.org>,
-        Dave Marchevsky <davemarchevsky@fb.com>,
-        Leo Yan <leo.yan@linaro.org>,
-        Kim Phillips <kim.phillips@amd.com>,
-        Pavithra Gurushankar <gpavithrasha@gmail.com>,
-        Alexandre Truong <alexandre.truong@arm.com>,
-        Quentin Monnet <quentin@isovalent.com>,
-        William Cohen <wcohen@redhat.com>,
-        Andres Freund <andres@anarazel.de>,
-        =?UTF-8?Q?Martin_Li=c5=a1ka?= <mliska@suse.cz>,
-        Colin Ian King <colin.king@intel.com>,
         James Clark <james.clark@arm.com>,
-        Fangrui Song <maskray@google.com>,
-        Stephane Eranian <eranian@google.com>,
-        Kajol Jain <kjain@linux.ibm.com>,
-        Alexey Bayduraev <alexey.v.bayduraev@linux.intel.com>,
+        Kees Cook <keescook@chromium.org>,
+        "Gustavo A. R. Silva" <gustavoars@kernel.org>,
+        Adrian Hunter <adrian.hunter@intel.com>,
         Riccardo Mancini <rickyman7@gmail.com>,
-        Andi Kleen <ak@linux.intel.com>,
-        Masami Hiramatsu <mhiramat@kernel.org>,
-        Zechuan Chen <chenzechuan1@huawei.com>,
-        Jason Wang <wangborong@cdjrlc.com>,
-        Christophe JAILLET <christophe.jaillet@wanadoo.fr>,
-        Remi Bernon <rbernon@codeweavers.com>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        linux-perf-users <linux-perf-users@vger.kernel.org>,
-        bpf <bpf@vger.kernel.org>, llvm@lists.linux.dev
-References: <20220824153901.488576-1-irogers@google.com>
- <CA+JHD906M0truH7wPNZ=eJwdCA=qLhYDonUx_ZQBwJYpiX1hNg@mail.gmail.com>
- <c422c9b3-d6e2-e1d5-5273-6a720fdde6c4@intel.com>
-Organization: Intel Finland Oy, Registered Address: PL 281, 00181 Helsinki,
- Business Identity Code: 0357606 - 4, Domiciled in Helsinki
-In-Reply-To: <c422c9b3-d6e2-e1d5-5273-6a720fdde6c4@intel.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+        German Gomez <german.gomez@arm.com>,
+        Colin Ian King <colin.king@intel.com>,
+        Song Liu <songliubraving@fb.com>,
+        Dave Marchevsky <davemarchevsky@fb.com>,
+        Athira Rajeev <atrajeev@linux.vnet.ibm.com>,
+        Alexey Bayduraev <alexey.v.bayduraev@linux.intel.com>,
+        Leo Yan <leo.yan@linaro.org>, linux-perf-users@vger.kernel.org,
+        linux-kernel@vger.kernel.org, Stephane Eranian <eranian@google.com>
+Subject: Re: [PATCH v2 4/6] perf cpumap: Fix alignment for masks in event
+ encoding
+Message-ID: <YwjDLl8QXQzaCYaS@tuxmaker.boeblingen.de.ibm.com>
+References: <20220614143353.1559597-1-irogers@google.com>
+ <20220614143353.1559597-5-irogers@google.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20220614143353.1559597-5-irogers@google.com>
+X-TM-AS-GCONF: 00
+X-Proofpoint-ORIG-GUID: ni8eP2UL1PtshvZUllReDI7B2-JM23NS
+X-Proofpoint-GUID: GqoI1u7sry_i2E8Yk2I2pODVvVaZfjiL
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.205,Aquarius:18.0.895,Hydra:6.0.517,FMLib:17.11.122.1
+ definitions=2022-08-26_06,2022-08-25_01,2022-06-22_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 clxscore=1011 suspectscore=0
+ adultscore=0 bulkscore=0 impostorscore=0 spamscore=0 mlxscore=0
+ priorityscore=1501 mlxlogscore=931 phishscore=0 lowpriorityscore=0
+ malwarescore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2207270000 definitions=main-2208260053
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-On 25/08/22 19:14, Adrian Hunter wrote:
-> On 25/08/22 15:30, Arnaldo Carvalho de Melo wrote:
->> On Wed, Aug 24, 2022, 12:39 PM Ian Rogers <irogers@google.com <mailto:irogers@google.com>> wrote:
->>
->>     When fixing a locking race and memory leak in:
->>     https://lore.kernel.org/linux-perf-users/20211118193714.2293728-1-irogers@google.com/ <https://lore.kernel.org/linux-perf-users/20211118193714.2293728-1-irogers@google.com/>
->>
->>     It was requested that debug mutex code be separated out into its own
->>     files. This was, in part, done by Pavithra Gurushankar in:
->>     https://lore.kernel.org/lkml/20220727111954.105118-1-gpavithrasha@gmail.com/ <https://lore.kernel.org/lkml/20220727111954.105118-1-gpavithrasha@gmail.com/>
->>
->>     These patches fix issues with the previous patches, add in the
->>     original dso->nsinfo fix and then build on our mutex wrapper with
->>     clang's -Wthread-safety analysis. The analysis found missing unlocks
->>     in builtin-sched.c which are fixed and -Wthread-safety is enabled by
->>     default when building with clang.
->>
->>     v3. Adds a missing new line to the error messages and removes the
->>         pshared argument to mutex_init by having two functions, mutex_init
->>         and mutex_init_pshared. These changes were suggested by Adrian Hunter.
->>
->>
->> Adrian, can I have your Acked-by or, better, Reviewed-by?
-> 
-> Sure, just let me have another look.  Should get to it
-> tomorrow.
+On Tue, Jun 14, 2022 at 07:33:51AM -0700, Ian Rogers wrote:
 
-Looks good but a couple of things that need to be fixed up.
+Hi Ian,
 
-> 
->>
->> Thanks, 
->>
->> -  Arnaldo 
->>
->>     v2. Breaks apart changes that s/pthread_mutex/mutex/g and the lock
->>         annotations as requested by Arnaldo and Namhyung. A boolean is
->>         added to builtin-sched.c to terminate thread funcs rather than
->>         leaving them blocked on delted mutexes.
->>
->>     Ian Rogers (17):
->>       perf bench: Update use of pthread mutex/cond
->>       perf tests: Avoid pthread.h inclusion
->>       perf hist: Update use of pthread mutex
->>       perf bpf: Remove unused pthread.h include
->>       perf lock: Remove unused pthread.h include
->>       perf record: Update use of pthread mutex
->>       perf sched: Update use of pthread mutex
->>       perf ui: Update use of pthread mutex
->>       perf mmap: Remove unnecessary pthread.h include
->>       perf dso: Update use of pthread mutex
->>       perf annotate: Update use of pthread mutex
->>       perf top: Update use of pthread mutex
->>       perf dso: Hold lock when accessing nsinfo
->>       perf mutex: Add thread safety annotations
->>       perf sched: Fixes for thread safety analysis
->>       perf top: Fixes for thread safety analysis
->>       perf build: Enable -Wthread-safety with clang
->>
->>     Pavithra Gurushankar (1):
->>       perf mutex: Wrapped usage of mutex and cond
->>
->>      tools/perf/Makefile.config                 |   5 +
->>      tools/perf/bench/epoll-ctl.c               |  33 +++---
->>      tools/perf/bench/epoll-wait.c              |  33 +++---
->>      tools/perf/bench/futex-hash.c              |  33 +++---
->>      tools/perf/bench/futex-lock-pi.c           |  33 +++---
->>      tools/perf/bench/futex-requeue.c           |  33 +++---
->>      tools/perf/bench/futex-wake-parallel.c     |  33 +++---
->>      tools/perf/bench/futex-wake.c              |  33 +++---
->>      tools/perf/bench/numa.c                    |  93 ++++++----------
->>      tools/perf/builtin-inject.c                |   4 +
->>      tools/perf/builtin-lock.c                  |   1 -
->>      tools/perf/builtin-record.c                |  13 ++-
->>      tools/perf/builtin-sched.c                 | 105 +++++++++---------
->>      tools/perf/builtin-top.c                   |  45 ++++----
->>      tools/perf/tests/mmap-basic.c              |   2 -
->>      tools/perf/tests/openat-syscall-all-cpus.c |   2 +-
->>      tools/perf/tests/perf-record.c             |   2 -
->>      tools/perf/ui/browser.c                    |  20 ++--
->>      tools/perf/ui/browsers/annotate.c          |  12 +--
->>      tools/perf/ui/setup.c                      |   5 +-
->>      tools/perf/ui/tui/helpline.c               |   5 +-
->>      tools/perf/ui/tui/progress.c               |   8 +-
->>      tools/perf/ui/tui/setup.c                  |   8 +-
->>      tools/perf/ui/tui/util.c                   |  18 ++--
->>      tools/perf/ui/ui.h                         |   4 +-
->>      tools/perf/util/Build                      |   1 +
->>      tools/perf/util/annotate.c                 |  15 +--
->>      tools/perf/util/annotate.h                 |   4 +-
->>      tools/perf/util/bpf-event.h                |   1 -
->>      tools/perf/util/build-id.c                 |  12 ++-
->>      tools/perf/util/dso.c                      |  19 ++--
->>      tools/perf/util/dso.h                      |   4 +-
->>      tools/perf/util/hist.c                     |   6 +-
->>      tools/perf/util/hist.h                     |   4 +-
->>      tools/perf/util/map.c                      |   3 +
->>      tools/perf/util/mmap.h                     |   1 -
->>      tools/perf/util/mutex.c                    | 119 +++++++++++++++++++++
->>      tools/perf/util/mutex.h                    | 109 +++++++++++++++++++
->>      tools/perf/util/probe-event.c              |   3 +
->>      tools/perf/util/symbol.c                   |   4 +-
->>      tools/perf/util/top.h                      |   5 +-
->>      41 files changed, 570 insertions(+), 323 deletions(-)
->>      create mode 100644 tools/perf/util/mutex.c
->>      create mode 100644 tools/perf/util/mutex.h
->>
->>     -- 
->>     2.37.2.609.g9ff673ca1a-goog
->>
-> 
+Although it is committed, still have a question.
 
+> index e7758707cadd..d2d32589758a 100644
+> --- a/tools/lib/perf/include/perf/event.h
+> +++ b/tools/lib/perf/include/perf/event.h
+> @@ -6,6 +6,7 @@
+>  #include <linux/types.h>
+>  #include <linux/limits.h>
+>  #include <linux/bpf.h>
+> +#include <linux/compiler.h>
+
+Is it correct approach to include it into user-exposed headers?
+AFAICT headers_install.sh strips #include <linux/compiler.h> and
+compiler*.h itself do not get installed with make headers_install.
+
+[...]
+
+> +struct __packed perf_record_cpu_map_data {
+
+And it is only needed to pull __packed macro, right?
+
+Thanks!
