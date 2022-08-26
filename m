@@ -2,57 +2,52 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 88DA8ECAAD7
-	for <linux-perf-users@archiver.kernel.org>; Fri, 26 Aug 2022 19:08:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0A031ECAAA3
+	for <linux-perf-users@archiver.kernel.org>; Fri, 26 Aug 2022 19:13:46 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231585AbiHZTIY (ORCPT
+        id S231655AbiHZTNo (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Fri, 26 Aug 2022 15:08:24 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48244 "EHLO
+        Fri, 26 Aug 2022 15:13:44 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34216 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1344709AbiHZTIT (ORCPT
+        with ESMTP id S230408AbiHZTNl (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Fri, 26 Aug 2022 15:08:19 -0400
-Received: from mail-oa1-f47.google.com (mail-oa1-f47.google.com [209.85.160.47])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 97A45DD751;
-        Fri, 26 Aug 2022 12:08:18 -0700 (PDT)
-Received: by mail-oa1-f47.google.com with SMTP id 586e51a60fabf-11c5505dba2so3181307fac.13;
-        Fri, 26 Aug 2022 12:08:18 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc;
-        bh=squGQK7T4fhu/A2+puelG7xJpkvvOARv9nk4HKG56Rg=;
-        b=dJobb9wROUZ9uskiNEjW5mzFEtlykWzAEsVwHKieW0skqQrlGR1KAubSUZEgNTZR1j
-         WdbYd4sO4ABiJ9S25zfzFTFf782jyDj3RC0vhP9mG25fUcit20nDXZSplNuOkV5L84qx
-         cKaC2YGK4cpMIY2gutTYlHEudeghczS1kszftejewGWs5vkZpS8i5UWU69WqRsjGVDLA
-         18hxP75zJ9rzTX/LTbSiNUBScnH5Jqrq+43F3Ann3dvnSwdw/OWtHHpWNV4Z/NRHoPjM
-         NQRpk0okCOA47lJNdaCbKdjEWjMKLZJ5sYlrAk9mljVle4+V0JGc7ioNPRw+OypKS44J
-         a+RQ==
-X-Gm-Message-State: ACgBeo09yf9xZooahvUgeFz3V9n0/bIQBxrd5WpaEQIgptjNuNFC/QbJ
-        vDoN/fQmyBId6STtEDrH8mZ2tXNs6ZRY+Yg97Lk=
-X-Google-Smtp-Source: AA6agR58gxvkRi0KncHAt6chs7qM7Vpd1++erLoRCXwUTB64LZQ+R+YGyhU1eRiWnbszMjVWh1LNiVpB+ROvHpVBb9E=
-X-Received: by 2002:a05:6870:a184:b0:116:bd39:7f94 with SMTP id
- a4-20020a056870a18400b00116bd397f94mr2582144oaf.5.1661540897768; Fri, 26 Aug
- 2022 12:08:17 -0700 (PDT)
-MIME-Version: 1.0
-References: <20220826164242.43412-1-irogers@google.com>
-In-Reply-To: <20220826164242.43412-1-irogers@google.com>
-From:   Namhyung Kim <namhyung@kernel.org>
-Date:   Fri, 26 Aug 2022 12:08:06 -0700
-Message-ID: <CAM9d7cgQZsbwWSdRNQqUE+GsSgPVqFmKs9LJ5b6ta2-dax5T2Q@mail.gmail.com>
-Subject: Re: [PATCH v4 00/18] Mutex wrapper, locking and memory leak fixes
+        Fri, 26 Aug 2022 15:13:41 -0400
+Received: from ams.source.kernel.org (ams.source.kernel.org [IPv6:2604:1380:4601:e00::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D7B2B98CB4;
+        Fri, 26 Aug 2022 12:13:40 -0700 (PDT)
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by ams.source.kernel.org (Postfix) with ESMTPS id 8726DB83117;
+        Fri, 26 Aug 2022 19:13:39 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id D3BB3C433D6;
+        Fri, 26 Aug 2022 19:13:37 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1661541218;
+        bh=JE597L0A8gq9ni57nPTbmMIrbFvwDzfCUptaHqm/PD8=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=llIVgHlns//rbdeTSXSMeKly1n1//+21QUco6oCapWf30ICEfWmSE0BwDs9Gppwby
+         Q74BxtWgot+r8SAsvro02yInv4G7BD1J7DfBgWrzuuxnJf85wtrzEQTc9CrfjQk0nH
+         ZUksYFBilRTg59WqWKZ7zC+abisJaposQOz8wqKAfpAtFoHcmC5n4TGDhm80QYQ4oI
+         16OsjtzdR6aaaxZLsBoeQRWYilvc8My2Mce4OZI4KL1PNn/T1lkiD/JOFKdoocJXRx
+         u5EMdf1RsMU/4kBFqeiOvqT8Tq4ewyvXyAzeewn0qmVbxXgirW8loLME+y3UBKaHxE
+         SE9puroD7iMcg==
+Received: by quaco.ghostprotocols.net (Postfix, from userid 1000)
+        id 36438404A1; Fri, 26 Aug 2022 16:13:35 -0300 (-03)
+Date:   Fri, 26 Aug 2022 16:13:35 -0300
+From:   Arnaldo Carvalho de Melo <acme@kernel.org>
 To:     Ian Rogers <irogers@google.com>
 Cc:     Peter Zijlstra <peterz@infradead.org>,
         Ingo Molnar <mingo@redhat.com>,
-        Arnaldo Carvalho de Melo <acme@kernel.org>,
         Mark Rutland <mark.rutland@arm.com>,
         Alexander Shishkin <alexander.shishkin@linux.intel.com>,
         Jiri Olsa <jolsa@kernel.org>,
+        Namhyung Kim <namhyung@kernel.org>,
         Thomas Gleixner <tglx@linutronix.de>,
         Darren Hart <dvhart@infradead.org>,
         Davidlohr Bueso <dave@stgolabs.net>,
-        =?UTF-8?Q?Andr=C3=A9_Almeida?= <andrealmeid@igalia.com>,
+        =?iso-8859-1?Q?Andr=E9?= Almeida <andrealmeid@igalia.com>,
         Nathan Chancellor <nathan@kernel.org>,
         Nick Desaulniers <ndesaulniers@google.com>,
         Tom Rix <trix@redhat.com>, Weiguo Li <liwg06@foxmail.com>,
@@ -74,7 +69,7 @@ Cc:     Peter Zijlstra <peterz@infradead.org>,
         William Cohen <wcohen@redhat.com>,
         Andres Freund <andres@anarazel.de>,
         Adrian Hunter <adrian.hunter@intel.com>,
-        =?UTF-8?Q?Martin_Li=C5=A1ka?= <mliska@suse.cz>,
+        Martin =?utf-8?B?TGnFoWth?= <mliska@suse.cz>,
         Colin Ian King <colin.king@intel.com>,
         James Clark <james.clark@arm.com>,
         Fangrui Song <maskray@google.com>,
@@ -88,115 +83,72 @@ Cc:     Peter Zijlstra <peterz@infradead.org>,
         Jason Wang <wangborong@cdjrlc.com>,
         Christophe JAILLET <christophe.jaillet@wanadoo.fr>,
         Remi Bernon <rbernon@codeweavers.com>,
-        linux-kernel <linux-kernel@vger.kernel.org>,
-        linux-perf-users <linux-perf-users@vger.kernel.org>,
-        bpf <bpf@vger.kernel.org>, llvm@lists.linux.dev
-Content-Type: text/plain; charset="UTF-8"
+        linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org,
+        bpf@vger.kernel.org, llvm@lists.linux.dev
+Subject: Re: [PATCH v3 15/18] perf mutex: Add thread safety annotations
+Message-ID: <YwkbXwLGXitFuEfV@kernel.org>
+References: <20220824153901.488576-1-irogers@google.com>
+ <20220824153901.488576-16-irogers@google.com>
+ <Ywj4vnYp6KGrrwl+@kernel.org>
+ <CAP-5=fU0Kc+ZhVBXWz1zup1wFGUf8EOyaRREmfXDfD+hGGoL6w@mail.gmail.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CAP-5=fU0Kc+ZhVBXWz1zup1wFGUf8EOyaRREmfXDfD+hGGoL6w@mail.gmail.com>
+X-Url:  http://acmel.wordpress.com
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-On Fri, Aug 26, 2022 at 9:42 AM Ian Rogers <irogers@google.com> wrote:
->
-> When fixing a locking race and memory leak in:
-> https://lore.kernel.org/linux-perf-users/20211118193714.2293728-1-irogers@google.com/
->
-> It was requested that debug mutex code be separated out into its own
-> files. This was, in part, done by Pavithra Gurushankar in:
-> https://lore.kernel.org/lkml/20220727111954.105118-1-gpavithrasha@gmail.com/
->
-> These patches fix issues with the previous patches, add in the
-> original dso->nsinfo fix and then build on our mutex wrapper with
-> clang's -Wthread-safety analysis. The analysis found missing unlocks
-> in builtin-sched.c which are fixed and -Wthread-safety is enabled by
-> default when building with clang.
->
-> v4. Adds a comment for the trylock result, fixes the new line (missed
->     in v3) and removes two blank lines as suggested by Adrian Hunter.
-> v3. Adds a missing new line to the error messages and removes the
->     pshared argument to mutex_init by having two functions, mutex_init
->     and mutex_init_pshared. These changes were suggested by Adrian Hunter.
-> v2. Breaks apart changes that s/pthread_mutex/mutex/g and the lock
->     annotations as requested by Arnaldo and Namhyung. A boolean is
->     added to builtin-sched.c to terminate thread funcs rather than
->     leaving them blocked on delted mutexes.
->
-> Ian Rogers (17):
->   perf bench: Update use of pthread mutex/cond
->   perf tests: Avoid pthread.h inclusion
->   perf hist: Update use of pthread mutex
->   perf bpf: Remove unused pthread.h include
->   perf lock: Remove unused pthread.h include
->   perf record: Update use of pthread mutex
->   perf sched: Update use of pthread mutex
->   perf ui: Update use of pthread mutex
->   perf mmap: Remove unnecessary pthread.h include
->   perf dso: Update use of pthread mutex
->   perf annotate: Update use of pthread mutex
->   perf top: Update use of pthread mutex
->   perf dso: Hold lock when accessing nsinfo
->   perf mutex: Add thread safety annotations
->   perf sched: Fixes for thread safety analysis
->   perf top: Fixes for thread safety analysis
->   perf build: Enable -Wthread-safety with clang
->
-> Pavithra Gurushankar (1):
->   perf mutex: Wrapped usage of mutex and cond
+Em Fri, Aug 26, 2022 at 10:00:43AM -0700, Ian Rogers escreveu:
+> On Fri, Aug 26, 2022 at 9:45 AM Arnaldo Carvalho de Melo
+> <acme@kernel.org> wrote:
+> >
+> > Em Wed, Aug 24, 2022 at 08:38:58AM -0700, Ian Rogers escreveu:
+> > > Add thread safety annotations to struct mutex so that when compiled with
+> > > clang's -Wthread-safety warnings are generated for erroneous lock
+> > > patterns. NO_THREAD_SAFETY_ANALYSIS is needed for
+> > > mutex_lock/mutex_unlock as the analysis doesn't under pthread calls.
+> >
+> > So even having the guards checking if the attribute is available it
+> > seems at least clang 11.0 is needed, as the "lockable" arg was
+> > introduced there:
+> >
+> >   37    42.61 fedora:32                     : FAIL clang version 10.0.1 (Fedora 10.0.1-3.fc32)
+> >     In file included from /git/perf-6.0.0-rc2/tools/perf/util/../ui/ui.h:5:
+> >     /git/perf-6.0.0-rc2/tools/perf/util/../ui/../util/mutex.h:74:8: error: invalid capability name 'lockable'; capability name must be 'mutex' or 'role' [-Werror,-Wthread-safety-attributes]
+> >     struct LOCKABLE mutex {
+> >            ^
+> >     /git/perf-6.0.0-rc2/tools/perf/util/../ui/../util/mutex.h:35:44: note: expanded from macro 'LOCKABLE'
+> >     #define LOCKABLE __attribute__((capability("lockable")))
+> 
+> 
+> capability("lockable") can just be lockable, the capability
+> generalization came in a later clang release.
+> 
+> That is change:
+> #define LOCKABLE __attribute__((capability("lockable")))
+> to:
+> #define LOCKABLE __attribute__((lockable))
+> 
+> and later clangs take the earlier name. Do you want a v5 for this 1 liner?
 
-For the patches 1-7 and 10-13
+I did it and I'm now testing, thanks.
 
-Acked-by: Namhyung Kim <namhyung@kernel.org>
+- Arnaldo
 
-Thanks,
-Namhyung
+diff --git a/tools/perf/util/mutex.h b/tools/perf/util/mutex.h
+index 48a2d87598f0d725..29b5494b213a3fc9 100644
+--- a/tools/perf/util/mutex.h
++++ b/tools/perf/util/mutex.h
+@@ -32,7 +32,7 @@
+ #define PT_GUARDED_BY(x) __attribute__((pt_guarded_by(x)))
+ 
+ /* Documents if a type is a lockable type. */
+-#define LOCKABLE __attribute__((capability("lockable")))
++#define LOCKABLE __attribute__((lockable))
+ 
+ /* Documents functions that acquire a lock in the body of a function, and do not release it. */
+ #define EXCLUSIVE_LOCK_FUNCTION(...)  __attribute__((exclusive_lock_function(__VA_ARGS__)))
 
-
->
->  tools/perf/Makefile.config                 |   5 +
->  tools/perf/bench/epoll-ctl.c               |  33 +++---
->  tools/perf/bench/epoll-wait.c              |  33 +++---
->  tools/perf/bench/futex-hash.c              |  33 +++---
->  tools/perf/bench/futex-lock-pi.c           |  33 +++---
->  tools/perf/bench/futex-requeue.c           |  33 +++---
->  tools/perf/bench/futex-wake-parallel.c     |  33 +++---
->  tools/perf/bench/futex-wake.c              |  33 +++---
->  tools/perf/bench/numa.c                    |  93 ++++++----------
->  tools/perf/builtin-inject.c                |   4 +
->  tools/perf/builtin-lock.c                  |   1 -
->  tools/perf/builtin-record.c                |  13 ++-
->  tools/perf/builtin-sched.c                 | 105 +++++++++---------
->  tools/perf/builtin-top.c                   |  45 ++++----
->  tools/perf/tests/mmap-basic.c              |   2 -
->  tools/perf/tests/openat-syscall-all-cpus.c |   2 +-
->  tools/perf/tests/perf-record.c             |   2 -
->  tools/perf/ui/browser.c                    |  20 ++--
->  tools/perf/ui/browsers/annotate.c          |  12 +--
->  tools/perf/ui/setup.c                      |   5 +-
->  tools/perf/ui/tui/helpline.c               |   5 +-
->  tools/perf/ui/tui/progress.c               |   8 +-
->  tools/perf/ui/tui/setup.c                  |   8 +-
->  tools/perf/ui/tui/util.c                   |  18 ++--
->  tools/perf/ui/ui.h                         |   4 +-
->  tools/perf/util/Build                      |   1 +
->  tools/perf/util/annotate.c                 |  15 +--
->  tools/perf/util/annotate.h                 |   4 +-
->  tools/perf/util/bpf-event.h                |   1 -
->  tools/perf/util/build-id.c                 |  12 ++-
->  tools/perf/util/dso.c                      |  19 ++--
->  tools/perf/util/dso.h                      |   4 +-
->  tools/perf/util/hist.c                     |   6 +-
->  tools/perf/util/hist.h                     |   4 +-
->  tools/perf/util/map.c                      |   3 +
->  tools/perf/util/mmap.h                     |   1 -
->  tools/perf/util/mutex.c                    | 119 +++++++++++++++++++++
->  tools/perf/util/mutex.h                    | 108 +++++++++++++++++++
->  tools/perf/util/probe-event.c              |   3 +
->  tools/perf/util/symbol.c                   |   4 +-
->  tools/perf/util/top.h                      |   5 +-
->  41 files changed, 569 insertions(+), 323 deletions(-)
->  create mode 100644 tools/perf/util/mutex.c
->  create mode 100644 tools/perf/util/mutex.h
->
-> --
-> 2.37.2.672.g94769d06f0-goog
->
+- Arnaldo
