@@ -2,57 +2,57 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 31087ECAAA3
-	for <linux-perf-users@archiver.kernel.org>; Fri, 26 Aug 2022 16:01:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 62A41ECAAD4
+	for <linux-perf-users@archiver.kernel.org>; Fri, 26 Aug 2022 16:03:11 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230355AbiHZQBm (ORCPT
+        id S245203AbiHZQDK (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Fri, 26 Aug 2022 12:01:42 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53238 "EHLO
+        Fri, 26 Aug 2022 12:03:10 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55006 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231532AbiHZQBl (ORCPT
+        with ESMTP id S236491AbiHZQDJ (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Fri, 26 Aug 2022 12:01:41 -0400
-Received: from mail-wm1-x334.google.com (mail-wm1-x334.google.com [IPv6:2a00:1450:4864:20::334])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B6329D345C
-        for <linux-perf-users@vger.kernel.org>; Fri, 26 Aug 2022 09:01:39 -0700 (PDT)
-Received: by mail-wm1-x334.google.com with SMTP id ay39-20020a05600c1e2700b003a5503a80cfso1085295wmb.2
-        for <linux-perf-users@vger.kernel.org>; Fri, 26 Aug 2022 09:01:39 -0700 (PDT)
+        Fri, 26 Aug 2022 12:03:09 -0400
+Received: from mail-wr1-x436.google.com (mail-wr1-x436.google.com [IPv6:2a00:1450:4864:20::436])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A741ED34CC
+        for <linux-perf-users@vger.kernel.org>; Fri, 26 Aug 2022 09:03:07 -0700 (PDT)
+Received: by mail-wr1-x436.google.com with SMTP id e20so2300127wri.13
+        for <linux-perf-users@vger.kernel.org>; Fri, 26 Aug 2022 09:03:07 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=google.com; s=20210112;
         h=cc:to:subject:message-id:date:from:in-reply-to:references
          :mime-version:from:to:cc;
-        bh=WMh/N9i6ShI11x5i5Ap5lQ7NbFEh/0/DfXEib5aOdCY=;
-        b=VDo6cjzdWsZBHnzIXKYknGzjCgkrWwZProqnWPZ8SxjsD/gM8En6b7rp3waaPbdon1
-         +LnjeDX4CSII5h6slHdqG+/arAkTvvTXvg6HNwnFFL0XWAhMYRF89Wb/zCDNkLzhqd2Q
-         DE+EAITXLiPzgEb841MSFdX3BHMaGiQf59JVLpm/yn6ZB9BmlyjyKTXUqzWceM/BSRk+
-         PtEL5BeGD3ISC1/7HIeGL2uBbMveJVyqAtc7eUJ6k2+Cp3pCUpuOcCAyyy+QQeopy5LK
-         ea2aafxcIVjj7b1WwTixoRNw5Q3ztokQgwoCYtU+dG/Z3NeUEiYoGI+Qg3n2tLigSVA6
-         q2mQ==
+        bh=8vAGKoF9jgn/tUNVyO8o1ITGDSm2GHRMu0jTib9BiWo=;
+        b=VQfpSKZ5DqVyujy15/8n3f/cLMyp8jjtuDNyiEAs3Ry0RotbMvHdE46jBPSAngsrhX
+         aVJTvw3JXdRJHc5HYOZvA+/heOEFvDdXy1LQItozsbcUKAPRNQn0C7l5fUxOPAf1gJ6v
+         2kun9wRTa8eVI85x9T+Um1Zr+QgFBkZuiefUZSrfH/XZI8XLGOt9G0VSM6B7sc+n/2Av
+         i9xJL6EG24UVlQc3Ii1k43nD4yzm0QcYTnwpZ8JSzENMcQf8JXKbFcRx1ijioz/HwXzt
+         tiB8dsAcGHWzjVDtHjFsJytRfd7oUw8K/YeSz65DdNNE3t4zsa9k00rqk5UZS7aH4CYI
+         sWMA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
         h=cc:to:subject:message-id:date:from:in-reply-to:references
          :mime-version:x-gm-message-state:from:to:cc;
-        bh=WMh/N9i6ShI11x5i5Ap5lQ7NbFEh/0/DfXEib5aOdCY=;
-        b=FuJjGwYD3ul53/BezL1+gOhM7h6Tk907cDo3BO8UaKP3nR9SQq3+Vq1vuDdTs1DpJX
-         ODWi+6ufCcp/U4kE0cTNlbA3vb9+ZKslJfltGg9CJFIHONu9RTM8H0f8Cw+4ffliDHiv
-         fLbMuW3H27XbtjssPk+FarV5LVJOHqf3ESH1Bwni64xaIVxFQldQyfrvqOhzXxaYC34D
-         TNTlxo+kQqQqF/VTQ+RNNkVl+bsquDGxlYE2L/F2d67RCavV/iw97kf8xMKubuwspMSC
-         e5jPdinF9vqqscahBxXQI60h6qm2RyQ5meRXDe/egZDhU0jJF6cer1jrKl0fHL1PkUX7
-         1j0Q==
-X-Gm-Message-State: ACgBeo2yoPYKldKS5zd3rbiNgYtFj6GT8P8QKt5cV8XkRGFVrY5XKhvA
-        JFlRtx+vXt3QWU8xNoh9Ec8j0X7c3Dhybf5q9nfHTA==
-X-Google-Smtp-Source: AA6agR7E561D8LFsQk4ma8saD3qEm8XGgnRYFQcpKB6y9EhIc7hh55daiPnl77HzuaSBB5Z5DEDhpU7tVi2gK62P8wE=
-X-Received: by 2002:a05:600c:19c8:b0:3a5:ec6a:8d16 with SMTP id
- u8-20020a05600c19c800b003a5ec6a8d16mr159498wmq.182.1661529697614; Fri, 26 Aug
- 2022 09:01:37 -0700 (PDT)
+        bh=8vAGKoF9jgn/tUNVyO8o1ITGDSm2GHRMu0jTib9BiWo=;
+        b=3HBVm8lLB9QLRFqbyriUuB3znNHchIQYgQ75TcfUdbV0u8JeNF/OsRnKuNQhQBNIa+
+         Qju/lEACV5XdYnZX5pGP2zAwhF0yGl/QMTQ8FN7Gej1vXBwH7GNuBO8imgZsJf2Z29ps
+         tfMT1mjRIUH0pHuEUhW4q/vZ+m6BteHmXC7651ZP6t3nDL4b9io7K40WFL0aAFRNssKU
+         GXDTdXgI6MgYz07jToRu4Vh12iCKKfiIREblk6nDUmTKEiwt0ixi24Wr4zbAp6EyzmCM
+         WaFQSyoy6VxwfL7q5EmlOhx7Ke9YX2grzoL4dxDZxHwKC3FxQGciG/NBYQ7OeIshQe01
+         MQ5g==
+X-Gm-Message-State: ACgBeo3Mkqgtji9ARF9s+OCse8RsuskmrSeFzNoQnCevaAawBFE8/3B9
+        WEQ0+8P6egbxLQHMtdFEFBLmQXD4KjONkHA5hzobGw==
+X-Google-Smtp-Source: AA6agR56LLPgPczHv26VdIBrzy2WI/OHspNLB8HYyLFBpDOrNasYWwIi3kVfMeLR/npl9IPAfjp6/xYQ1KxA/nnEkNI=
+X-Received: by 2002:a05:6000:1a87:b0:222:2c85:2f5b with SMTP id
+ f7-20020a0560001a8700b002222c852f5bmr194383wry.654.1661529785843; Fri, 26 Aug
+ 2022 09:03:05 -0700 (PDT)
 MIME-Version: 1.0
 References: <20220824153901.488576-1-irogers@google.com> <20220824153901.488576-10-irogers@google.com>
- <0004776a-8c39-9515-fd4e-01bfe1c4a3eb@intel.com>
-In-Reply-To: <0004776a-8c39-9515-fd4e-01bfe1c4a3eb@intel.com>
+ <2cf6edac-6e41-b43c-2bc1-f49cb739201a@intel.com>
+In-Reply-To: <2cf6edac-6e41-b43c-2bc1-f49cb739201a@intel.com>
 From:   Ian Rogers <irogers@google.com>
-Date:   Fri, 26 Aug 2022 09:01:25 -0700
-Message-ID: <CAP-5=fVxyDEmis7=jV5TPoLPbBR9vVZ6Diug+Zsdirjjxxt8gA@mail.gmail.com>
+Date:   Fri, 26 Aug 2022 09:02:53 -0700
+Message-ID: <CAP-5=fVVWx=LZAzXsxfuktPHwki1gYbV4mcmvJp_9GTDS6KJcQ@mail.gmail.com>
 Subject: Re: [PATCH v3 09/18] perf ui: Update use of pthread mutex
 To:     Adrian Hunter <adrian.hunter@intel.com>
 Cc:     Peter Zijlstra <peterz@infradead.org>,
@@ -107,7 +107,7 @@ Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-On Fri, Aug 26, 2022 at 3:11 AM Adrian Hunter <adrian.hunter@intel.com> wrote:
+On Fri, Aug 26, 2022 at 3:24 AM Adrian Hunter <adrian.hunter@intel.com> wrote:
 >
 > On 24/08/22 18:38, Ian Rogers wrote:
 > > Switch to the use of mutex wrappers that provide better error checking.
@@ -116,16 +116,6 @@ On Fri, Aug 26, 2022 at 3:11 AM Adrian Hunter <adrian.hunter@intel.com> wrote:
 > > ---
 > >  tools/perf/ui/browser.c           | 20 ++++++++++----------
 > >  tools/perf/ui/browsers/annotate.c |  2 +-
->
-> Other changes to tools/perf/ui/browsers/annotate.c are in patch 12
-
-Yes, these changes relate to the ui__lock and the patch 12 changes
-relate to annotation lock. The grouping was done in this way so that
-the patches would build independently.
-
-Thanks,
-Ian
-
 > >  tools/perf/ui/setup.c             |  5 +++--
 > >  tools/perf/ui/tui/helpline.c      |  5 ++---
 > >  tools/perf/ui/tui/progress.c      |  8 ++++----
@@ -253,6 +243,19 @@ Ian
 > >               break;
 > >       }
 > > +     mutex_destroy(&ui__lock);
+>
+> Looks like exit_browser() can be called even when setup_browser()
+> was never called.
+>
+> Note, it also looks like PTHREAD_MUTEX_INITIALIZER is all zeros so
+> pthread won't notice.
+
+Memory sanitizer will notice some cases of this and so I didn't want
+to code defensively around exit being called ahead of setup.
+
+Thanks,
+Ian
+
 > >  }
 > > diff --git a/tools/perf/ui/tui/helpline.c b/tools/perf/ui/tui/helpline.c
 > > index 298d6af82fdd..db4952f5990b 100644
