@@ -2,97 +2,113 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 86243ECAAA3
-	for <linux-perf-users@archiver.kernel.org>; Fri, 26 Aug 2022 14:28:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D6CE9ECAAD9
+	for <linux-perf-users@archiver.kernel.org>; Fri, 26 Aug 2022 15:09:31 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233529AbiHZO2Z (ORCPT
+        id S244394AbiHZPJa (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Fri, 26 Aug 2022 10:28:25 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49200 "EHLO
+        Fri, 26 Aug 2022 11:09:30 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34572 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S236701AbiHZO2Y (ORCPT
+        with ESMTP id S244427AbiHZPJC (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Fri, 26 Aug 2022 10:28:24 -0400
-Received: from mga09.intel.com (mga09.intel.com [134.134.136.24])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CFE94A50F1
-        for <linux-perf-users@vger.kernel.org>; Fri, 26 Aug 2022 07:28:22 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1661524102; x=1693060102;
-  h=message-id:date:mime-version:subject:to:references:from:
-   in-reply-to:content-transfer-encoding;
-  bh=Cm0451/mKshQSOfDSVXa4prysq/+RDrl1m0al2oPBbo=;
-  b=chuVIUlie+f8N3x/hk6b96dJhqHanntc6rmJWlMNvRiCYlBBzd8rvD37
-   JAlnDebi5TRnU+n969pSngafCpflyARYnp8LFMfYuUZo+I1WeUVsaDhx2
-   lFc5wQWJNPobflw/mG8HqvqopO0vviCRYmbbarHz2jIKg3Dw+O9qWyCPC
-   su1ipKX09r6w3PCyFnz2bQ7j/BhzPeGylR7YHmsYNBiRBbMnMTeLVEVpI
-   uvV9uklgWdR0b1fBxiruEa9grv3GUY74bm9hy8ofol1NIyVld8Gb+ilG6
-   TcPnLMwlML9f3vQs7TqFdn+KSY39XZ7BaFmgQ6QIUGsAEmuU4xSFPkNCZ
-   A==;
-X-IronPort-AV: E=McAfee;i="6500,9779,10451"; a="295295258"
-X-IronPort-AV: E=Sophos;i="5.93,265,1654585200"; 
-   d="scan'208";a="295295258"
-Received: from orsmga005.jf.intel.com ([10.7.209.41])
-  by orsmga102.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 26 Aug 2022 07:28:22 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.93,265,1654585200"; 
-   d="scan'208";a="786397358"
-Received: from linux.intel.com ([10.54.29.200])
-  by orsmga005.jf.intel.com with ESMTP; 26 Aug 2022 07:28:22 -0700
-Received: from [10.252.208.172] (kliang2-mobl1.ccr.corp.intel.com [10.252.208.172])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by linux.intel.com (Postfix) with ESMTPS id 237B1580ABD;
-        Fri, 26 Aug 2022 07:28:22 -0700 (PDT)
-Message-ID: <9b3f785e-1370-cf23-2ba4-2b0163185b2e@linux.intel.com>
-Date:   Fri, 26 Aug 2022 10:28:20 -0400
+        Fri, 26 Aug 2022 11:09:02 -0400
+Received: from mail-pg1-x532.google.com (mail-pg1-x532.google.com [IPv6:2607:f8b0:4864:20::532])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 76247DD4EB
+        for <linux-perf-users@vger.kernel.org>; Fri, 26 Aug 2022 08:08:35 -0700 (PDT)
+Received: by mail-pg1-x532.google.com with SMTP id c24so1626791pgg.11
+        for <linux-perf-users@vger.kernel.org>; Fri, 26 Aug 2022 08:08:35 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20210112;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc;
+        bh=rDCiGRameoc44J7lHWbl0JPQBn/IEONwz9o9l1i/k5o=;
+        b=VQf8EKuL0X7CTzQMT9/lmQ+1rlvFbqSdWJ43L2omf4zYAogNVKx+E1+/4NxJWp71SJ
+         upBbQVhWVUJgfYiXHlKIPENQcY4w5U5t2RiKYJ1PfGxVKiRSReXEYab8Qccb52pLO1Gz
+         9k6Yu3mGdHw96K7FOVQvnspayt0a1/FKDnVi8LZ03IepA9Ug+67nWgCGDqoT3JkI05xu
+         nbk0SFMOuytiK/CcgApCgKitlSaJ+nc/lkDgP+Tj82x0OHPOdPl7qO+otN0tngOpDBh8
+         nQw21ypSGxxW1TEWOIRpqxxDz8wh9kWTKp1xo+SGr3tJ0u90VX3TrVPkKVczUhCGQoZz
+         /e2w==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc;
+        bh=rDCiGRameoc44J7lHWbl0JPQBn/IEONwz9o9l1i/k5o=;
+        b=bBRC17nFrKLjYr92TTFyb6BU1WpkXXGiRVLo/G1kEjfjWuiTeUSj6FVKQD2NYyq6aS
+         /M/Hwp/eXWaMeEOYtM3b2fGYGlbeseFXDVcDWEtaVOUEMdZAI4dfxvdXR9Pwc5M5C23e
+         QMj3mrYtEZ6DAjas2GYRmToIRCnap39Hge/nWN/q4Wd7TfVK1pufQlJxtwCCrdVMEw3o
+         7q2KXUe9SaZC/a/Zly/qa5H+jecxGUuUzvhGWaRC0IEe3fkL8VlERRD1kO0drGRj9MAM
+         AixDtmd9xpVp85LJZL4Dyp9Jx0zL0RZRReBU3bLQlLFvvtftsl7iC6iXwo8F/aLAQgLh
+         GYGw==
+X-Gm-Message-State: ACgBeo2M9mtmdTJNDr3U9NRiD0VLIekkpSvkOW3ZkmeUMi4ShcYmoAWU
+        3Uazd+jHHMbhK478Pka7X4gFmw==
+X-Google-Smtp-Source: AA6agR5uCZ7VBJfvhJmt8rw74pIfwFba099AydbeQHgPwVRGBIy1lChlBYYL7MzvcFd9dTtAf6OYiw==
+X-Received: by 2002:a63:f704:0:b0:42b:7fa6:19bd with SMTP id x4-20020a63f704000000b0042b7fa619bdmr1671900pgh.283.1661526514860;
+        Fri, 26 Aug 2022 08:08:34 -0700 (PDT)
+Received: from google.com (7.104.168.34.bc.googleusercontent.com. [34.168.104.7])
+        by smtp.gmail.com with ESMTPSA id z15-20020a170902cccf00b0016c0eb202a5sm1693664ple.225.2022.08.26.08.08.34
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 26 Aug 2022 08:08:34 -0700 (PDT)
+Date:   Fri, 26 Aug 2022 15:08:28 +0000
+From:   Sean Christopherson <seanjc@google.com>
+To:     Xiaoyao Li <xiaoyao.li@intel.com>
+Cc:     Peter Zijlstra <peterz@infradead.org>,
+        Arnaldo Carvalho de Melo <acme@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Jiri Olsa <jolsa@kernel.org>,
+        Namhyung Kim <namhyung@kernel.org>,
+        Paolo Bonzini <pbonzini@redhat.com>,
+        linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org,
+        kvm@vger.kernel.org
+Subject: Re: [RFC PATCH 2/2] KVM: VMX: Stop/resume host PT before/after VM
+ entry when PT_MODE_HOST_GUEST
+Message-ID: <YwjhaPdvmklwXf9B@google.com>
+References: <20220825085625.867763-1-xiaoyao.li@intel.com>
+ <20220825085625.867763-3-xiaoyao.li@intel.com>
+ <YweWmF3wMPRnthIh@google.com>
+ <6bcab33b-3fde-d470-88b9-7667c7dc4b2d@intel.com>
+ <YwecducnM/U6tqJT@google.com>
+ <4e383b85-6777-4452-a073-4d2f439e28b1@intel.com>
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:102.0) Gecko/20100101
- Thunderbird/102.1.2
-Subject: Re: Cannot use address filtering with user register sampling
-Content-Language: en-US
-To:     Hongtao Yu <Hongtao.Yu@outlook.com>,
-        "linux-perf-users@vger.kernel.org" <linux-perf-users@vger.kernel.org>
-References: <MW4PR18MB503443512239B3F40267004C8A729@MW4PR18MB5034.namprd18.prod.outlook.com>
-From:   "Liang, Kan" <kan.liang@linux.intel.com>
-In-Reply-To: <MW4PR18MB503443512239B3F40267004C8A729@MW4PR18MB5034.namprd18.prod.outlook.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <4e383b85-6777-4452-a073-4d2f439e28b1@intel.com>
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
+On Fri, Aug 26, 2022, Xiaoyao Li wrote:
+> On 8/25/2022 11:59 PM, Sean Christopherson wrote:
+> > But ensuring the RTIT_CTL.TraceEn=0 is all that's needed to make VM-Entry happy,
+> > and if the host isn't using Intel PT, what do we care if other bits that, for all
+> > intents and purposes are ignored, are lost across VM-Entry/VM-Exit?  I gotta
+> > imaging the perf will fully initialize RTIT_CTL if it starts using PT.
+> 
+> Personally, I agree with it.
+> 
+> But I'm not sure if there is a criteria that host context needs to be
+> unchanged after being virtualized.
+> 
+> > Actually, if the host isn't actively using Intel PT, can KVM avoid saving the
+> > other RTIT MSRs?
+> 
+> I don't think it's a good idea that it requires PT driver never and won't
+> rely on the previous value of PT MSRs. But it's OK if handing it over to
+> perf as the idea you gave below.
 
+Yep, my thought exactly.
 
-On 2022-08-24 8:14 p.m., Hongtao Yu wrote:
-> Hi,
->  
-> I was exploring address filtering together with user reg sampling on Intel Skylake hardware. The idea behind it is to make reg sampling more selectively. Unfortunately, I hit ` This CPU does not support address filtering` error. The command I ran is:
->  
->    perf record -e br_inst_retired.all_branches:uppp --user-regs=DI --filter 'filter * @/bin/ls'  ls
->  
->    This CPU does not support address filtering
->  
-> IIUC, the br_inst_retired event is also hardware-based, similarly with the intel_pt event. But the latter works with address filtering while the former doesn’t. What is rational behind this?
+> > Even better, can we hand that off to perf?  I really dislike KVM making assumptions
+> > about perf's internal behavior.  E.g. can this be made to look like
+> 
+> you mean let perf subsystem to do the context save/restore staff of host and
+> KVM focuses on save/restore of guest context, right?
 
-The --filter only supports the tracepoint event(s) or or a hardware
-trace, e.g., Intel PT. They trace and dump each single instruction. You
-can use the --filter option to choose and only retrieve the
-data/instructions you are interested.
-
-Perf record -e br_inst_retired.all_branches event does sampling. I would
-recommend you to use "-c" option to control the event period.(The number
-of events that triggers a single sample.) For example, -c1000 means 1000
-events occur then the HW dumps a sample (only for the 1000th event).
-e.g.,
-    perf record -e br_inst_retired.all_branches:uppp --user-regs=DI
--c1000 ls
-
-Then you can use the post-processing tools, e.g., perf report or perf
-script, to filter and output the results.
-e.g.,
-   perf script --dsos ls -F+uregs
-
-
-Thanks,
-Kan
+Yep!  KVM already more or less does this for "regular" PMU MSRs, though in that
+case perf hands back a list of MSRs+data.  But for Intel PT I don't see any point
+in having KVM do the actual MSR accesses.  Tracing has to be turned off _before_
+VM-Enter, so using the MSR load/save lists doesn't buy us anything. 
+ 
+> I would like to see comment from perf folks on this and maybe need their
+> help on how to implement.
