@@ -2,53 +2,54 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9BBA9ECAAD2
-	for <linux-perf-users@archiver.kernel.org>; Fri, 26 Aug 2022 05:16:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 77E76ECAAA3
+	for <linux-perf-users@archiver.kernel.org>; Fri, 26 Aug 2022 05:17:29 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229455AbiHZFQN (ORCPT
+        id S244860AbiHZFR1 (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Fri, 26 Aug 2022 01:16:13 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43950 "EHLO
+        Fri, 26 Aug 2022 01:17:27 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45762 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229591AbiHZFQM (ORCPT
+        with ESMTP id S231956AbiHZFR0 (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Fri, 26 Aug 2022 01:16:12 -0400
-Received: from mail-pf1-x42c.google.com (mail-pf1-x42c.google.com [IPv6:2607:f8b0:4864:20::42c])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0C3585247E
-        for <linux-perf-users@vger.kernel.org>; Thu, 25 Aug 2022 22:16:11 -0700 (PDT)
-Received: by mail-pf1-x42c.google.com with SMTP id 142so549431pfu.10
-        for <linux-perf-users@vger.kernel.org>; Thu, 25 Aug 2022 22:16:11 -0700 (PDT)
+        Fri, 26 Aug 2022 01:17:26 -0400
+Received: from mail-pj1-x102c.google.com (mail-pj1-x102c.google.com [IPv6:2607:f8b0:4864:20::102c])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DC575C2EB0
+        for <linux-perf-users@vger.kernel.org>; Thu, 25 Aug 2022 22:17:24 -0700 (PDT)
+Received: by mail-pj1-x102c.google.com with SMTP id e19so628001pju.1
+        for <linux-perf-users@vger.kernel.org>; Thu, 25 Aug 2022 22:17:24 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc;
-        bh=PdzAck8H6TTellhEIC00YbxrxMoIOkkFKnJpRC4ha9o=;
-        b=Upu2hz6KsiZui2GhlxlMKDnE23aqRUTR7laNVCIDqhR4NR10aTiV3JFYpvHS3kh6bH
-         EkBj+ITddoCvf+BBiD65urTHi3YqiE/Ye2nTnPrr6JoS2ra1XKsIEyNM2w5WMeNi9tDU
-         S5IQyXUJFtTGhP8VpeALtiMovckdTETj0c4nHHHPIQkx3dp4BrM7Yyp02MlF/e49viaQ
-         3n1DuYAO1wAaX4YM+Uc0RUuarj7etUO3uyoi8V/JeVgeEe1mSIl8yxj18KRoj4ithBH4
-         EF5N248Ilym0a4sNBCIbykFdgC0+oIZlvZ7LuLgkcqn4Lgp5GAi6VpZJabIirw4f7n35
-         +3NA==
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc;
+        bh=NBhfmm8W18tg1OR8/OfEDDSqTYoAFyUg9RoO0VzD8D8=;
+        b=fSgJj9xMVH+ALryiwxjs0GoztWALmqpSifZtVfIzEOzGmUfDMMql4hyhlzyLm2eC3B
+         5XRxIQTdIjSkhmtQq9m9tI6eA2cuUnnSrXOX0xtDN56dOteBG0n5PqAmyQxXmrmJM5Sy
+         ba0ErZ+Vps1Un4uWAn8BOQ30hGPFEc+uFJa8daE4x8Qh8Z925yym/aUQoW5Ub4SdVH33
+         ZKVnadh/y1tVPSt0ZRXJhuyZIzKHmOowYiUlho9wmHh2T3qw8tQGRoqmQLhyX+6/LOkz
+         CXpoXy3rru1czRbf8BIppIZxIxzBwmtXxlEnzoqoJhytx295PPB0B7O1EvyQBNS8+ZvU
+         5DkQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc;
-        bh=PdzAck8H6TTellhEIC00YbxrxMoIOkkFKnJpRC4ha9o=;
-        b=gq154nhvXgJOB7gOBTwl/xtDFtxXYPVIi5uR+bR5vKkMqbD+pfOh4RONgZt4QdcT31
-         Uo1ENu/+4wOThwruHJFmS5Rsc1WkkYwBIGhCTOr/F8eOf/mXxuQbdnEOSOfKJvMPas7r
-         mWYETIxGrG64rYH/wa+FnoIQ1rPEo3kC6aFS03h9CKk3mEZHyyXKtOB7iwAn21nJ0vmm
-         sdDDgfFHa40sQ4RSGuXMMLThvE3vjoQiwKtKUy44VjNnlYRffpSo10LC3297lxF0iDQo
-         bIpxdM8CSFn4OrFYt4uekPLyGBwuH4g2ryj3FT6HfzLyEbjo6ovHPbQx2qvZnnTnK31w
-         BB5Q==
-X-Gm-Message-State: ACgBeo1/TvJIgw8NDpuOYew+vj50mqC0VdJDizdAIYSfNz5U7cZh0gLV
-        E5VV2ZMiFv99cITSQ+SUDwHqrw==
-X-Google-Smtp-Source: AA6agR5ly+Fty/T/+GmNjsVJ6J5APSrNGr24N2jQIK+bRlE2Xnn0tvKE2Ol7fIzOR6zonNV+vC/vsA==
-X-Received: by 2002:a63:6a05:0:b0:42a:3b5d:8084 with SMTP id f5-20020a636a05000000b0042a3b5d8084mr1933159pgc.281.1661490970369;
-        Thu, 25 Aug 2022 22:16:10 -0700 (PDT)
-Received: from localhost (n058152048222.netvigator.com. [58.152.48.222])
-        by smtp.gmail.com with ESMTPSA id n7-20020a170902e54700b0016a6caacaefsm505705plf.103.2022.08.25.22.16.09
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc;
+        bh=NBhfmm8W18tg1OR8/OfEDDSqTYoAFyUg9RoO0VzD8D8=;
+        b=TK1yrtcjdJYQUW9AzsPPVMQT6tulxQ7OOvUJNNxZF3ujMpUr0MhynvA+Vf5RaABRw8
+         4Sy4tYntMrGqLxmUchXYlrCeqDNmosx7g/WBJ/BdVAYvBEjNFVsefltv7kM9t8bSzt4y
+         n3yahFjruNJmCpHAOI202xajVXOSfP2JwNL2I5YxA0lhKvC3jI5kL6PDg430egFiiwF+
+         7kZRA2a0jAnaRNWgYLYFgVyBxGd3vUrGfuyF4bGoklRKekbciXlEtdAb7GCqj9kG4JfR
+         kfiEU4pJxc2U9ijDo+sf8/XcVGDGPpRpzMcEgZ/RLOk8dH0vGOokmyY5u4rncA79O+K5
+         wgHA==
+X-Gm-Message-State: ACgBeo2r/89vLhbQeurQS6NIAAeQSQTh3DPo0FMh1P53hnPtDJnnPsHw
+        Dh1QD3idqZUHYLq9yLMPLe0Sgw==
+X-Google-Smtp-Source: AA6agR7190F/JL5rPrzWrxKmaQD+YMfLjdIkVhVkKzPZLa52R9MrODF+m+RAaJl4J0g5a90WWBSAKA==
+X-Received: by 2002:a17:902:ce81:b0:172:9ac1:6ee with SMTP id f1-20020a170902ce8100b001729ac106eemr2106143plg.93.1661491044200;
+        Thu, 25 Aug 2022 22:17:24 -0700 (PDT)
+Received: from leoy-huanghe.lan (n058152048222.netvigator.com. [58.152.48.222])
+        by smtp.gmail.com with ESMTPSA id r7-20020aa79887000000b005367c6db0a4sm377642pfl.183.2022.08.25.22.17.21
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 25 Aug 2022 22:16:09 -0700 (PDT)
+        Thu, 25 Aug 2022 22:17:23 -0700 (PDT)
+Date:   Fri, 26 Aug 2022 13:17:18 +0800
 From:   Leo Yan <leo.yan@linaro.org>
 To:     Peter Zijlstra <peterz@infradead.org>,
         Arnaldo Carvalho de Melo <acme@kernel.org>,
@@ -58,54 +59,36 @@ To:     Peter Zijlstra <peterz@infradead.org>,
         Jiri Olsa <jolsa@kernel.org>,
         Namhyung Kim <namhyung@kernel.org>,
         linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
-Cc:     Ali Saidi <alisaidi@amazon.com>, Leo Yan <leo.yan@linaro.org>,
-        Kajol Jain <kjain@linux.ibm.com>
-Subject: [PATCH RESEND v6] perf: Add SNOOP_PEER flag to perf mem data struct
-Date:   Fri, 26 Aug 2022 13:16:03 +0800
-Message-Id: <20220826051603.174792-1-leo.yan@linaro.org>
-X-Mailer: git-send-email 2.34.1
+Cc:     Ali Saidi <alisaidi@amazon.com>, Kajol Jain <kjain@linux.ibm.com>
+Subject: Re: [PATCH RESEND v6] perf: Add SNOOP_PEER flag to perf mem data
+ struct
+Message-ID: <YwhXXiuQ2VysVint@leoy-huanghe.lan>
+References: <20220826051603.174792-1-leo.yan@linaro.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20220826051603.174792-1-leo.yan@linaro.org>
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-From: Ali Saidi <alisaidi@amazon.com>
+On Fri, Aug 26, 2022 at 01:16:03PM +0800, Leo Yan wrote:
+> From: Ali Saidi <alisaidi@amazon.com>
+> 
+> Add a flag to the perf mem data struct to signal that a request caused a
+> cache-to-cache transfer of a line from a peer of the requestor and
+> wasn't sourced from a lower cache level.  The line being moved from one
+> peer cache to another has latency and performance implications. On Arm64
+> Neoverse systems the data source can indicate a cache-to-cache transfer
+> but not if the line is dirty or clean, so instead of overloading HITM
+> define a new flag that indicates this type of transfer.
+> 
+> Update notes:
+> 
+> This patch is to sync the headers between kernel and user space, commit
+> 2e21bcf0514a ("perf tools: Sync addition of PERF_MEM_SNOOPX_PEER") for
+> updating kernel header has been merged in the mainline code.
 
-Add a flag to the perf mem data struct to signal that a request caused a
-cache-to-cache transfer of a line from a peer of the requestor and
-wasn't sourced from a lower cache level.  The line being moved from one
-peer cache to another has latency and performance implications. On Arm64
-Neoverse systems the data source can indicate a cache-to-cache transfer
-but not if the line is dirty or clean, so instead of overloading HITM
-define a new flag that indicates this type of transfer.
+Hi Peter, could you help to merge this patch?  Thanks!
 
-Update notes:
-
-This patch is to sync the headers between kernel and user space, commit
-2e21bcf0514a ("perf tools: Sync addition of PERF_MEM_SNOOPX_PEER") for
-updating kernel header has been merged in the mainline code.
-
-Signed-off-by: Ali Saidi <alisaidi@amazon.com>
-Reviewed-by: Leo Yan <leo.yan@linaro.org>
-Reviewed-by: Kajol Jain<kjain@linux.ibm.com>
----
- include/uapi/linux/perf_event.h | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
-
-diff --git a/include/uapi/linux/perf_event.h b/include/uapi/linux/perf_event.h
-index 03b370062741..581ed4bdc062 100644
---- a/include/uapi/linux/perf_event.h
-+++ b/include/uapi/linux/perf_event.h
-@@ -1313,7 +1313,7 @@ union perf_mem_data_src {
- #define PERF_MEM_SNOOP_SHIFT	19
- 
- #define PERF_MEM_SNOOPX_FWD	0x01 /* forward */
--/* 1 free */
-+#define PERF_MEM_SNOOPX_PEER	0x02 /* xfer from peer */
- #define PERF_MEM_SNOOPX_SHIFT  38
- 
- /* locked instruction */
--- 
-2.34.1
-
+Leo
