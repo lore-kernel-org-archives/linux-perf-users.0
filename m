@@ -2,231 +2,97 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1BBF3ECAAD7
-	for <linux-perf-users@archiver.kernel.org>; Fri, 26 Aug 2022 18:27:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 15EE8ECAAA3
+	for <linux-perf-users@archiver.kernel.org>; Fri, 26 Aug 2022 18:32:41 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S235389AbiHZS06 (ORCPT
+        id S1344338AbiHZScj (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Fri, 26 Aug 2022 14:26:58 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42456 "EHLO
+        Fri, 26 Aug 2022 14:32:39 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52834 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229676AbiHZS0z (ORCPT
+        with ESMTP id S1344205AbiHZSch (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Fri, 26 Aug 2022 14:26:55 -0400
-Received: from mail-ot1-f47.google.com (mail-ot1-f47.google.com [209.85.210.47])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9508ED2B35;
-        Fri, 26 Aug 2022 11:26:54 -0700 (PDT)
-Received: by mail-ot1-f47.google.com with SMTP id 6-20020a9d0106000000b0063963134d04so1551205otu.3;
-        Fri, 26 Aug 2022 11:26:54 -0700 (PDT)
+        Fri, 26 Aug 2022 14:32:37 -0400
+Received: from mail-oa1-f44.google.com (mail-oa1-f44.google.com [209.85.160.44])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8321DE3977;
+        Fri, 26 Aug 2022 11:32:34 -0700 (PDT)
+Received: by mail-oa1-f44.google.com with SMTP id 586e51a60fabf-11e9a7135easo596060fac.6;
+        Fri, 26 Aug 2022 11:32:34 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
         h=cc:to:subject:message-id:date:from:in-reply-to:references
          :mime-version:x-gm-message-state:from:to:cc;
-        bh=Nn+QtQucyfx6hcyPZtuaj6djQCVOs1Ze3pe5mHGUDSg=;
-        b=bFgjdebfTpIvwzclDqBA2KmKVAIRLPKkJ/LVr/EV1JSXcFZAxdNWwYEIkE31uEu44g
-         uHC6WjnCRo6i6OQPexTu1F8JtEaf34Bt5gbfPZagxuNv94AXsewo6CLt8rjZPxX/JoYW
-         ruUHhrPZ2gLHVB3zui1qaNWovmEE7gxY3tKQXIRR5hlqsutKm4UMvdX/cC0zx0VohRqF
-         aZshjRXpNuVRSKOgXsfFA7+XQudvGgJSDFAI2kkGLZHXLqDdbPonydQrNSiwsS4Gd7Yz
-         uWCo2f9PmyBEeeLldtFV/mCvJ9tLyM/99rNLrGa88Bm1EFpRAh+NenE2D1p+SZ4yEYOF
-         q8tw==
-X-Gm-Message-State: ACgBeo1A1ff6putp3PSfnjFSYQgGZD6KV6fPo+n6rMRnHyI5MJB9ziKe
-        pIjjh3j+FT3Nou0Voaufoi8MQleVo2tR0nrNF58=
-X-Google-Smtp-Source: AA6agR4N0hqbt734SQVaauOAORRXZ1pYaDIcvUCo7verqNVGgH5aMY/FntbjVqmez72p0/J2Ly8puUOMKyj9MyjthsQ=
-X-Received: by 2002:a9d:6f18:0:b0:638:b4aa:a546 with SMTP id
- n24-20020a9d6f18000000b00638b4aaa546mr1811694otq.124.1661538413803; Fri, 26
- Aug 2022 11:26:53 -0700 (PDT)
+        bh=fJ/8Ppmhz2rOgqo1WRAkAwO2X5ZqhRIREXlDqJL8Pas=;
+        b=0B+pafSEg9i0qfBBgqq6txxOetF+tVdyMio+xmO163WoeF4TpD1+SgcDf/tQ9WkrpU
+         KHgpOSzZfcxgISp6l6J+QoIKtzHqdwuhnhtZmcku9Q6iBfUKF34TuCqZW3hHbz+ktYcX
+         BahYgL1zEyPm5W+vd6hJ99rSOJ4vKumn9SGHKYdRWZt0BW1Htk9XUSzWzgt3cacljqpz
+         Bkgg5K4vv36feNSXwdPtFVJ/NPstWkbPR8nx1J/JX20bAbpeqYptpFKaJeW5vJ20dlI4
+         4bK9Ztwm29CrgbxAIS4h3bVPrjqeCqxUKMl+QcBgBWreAiAuJyetZgTvTdGNIQUoCPym
+         nfJg==
+X-Gm-Message-State: ACgBeo1yMyivBwiqfp18xCpT4/1Hw4ntH03j4EfGuhoLT461ML2ddT0l
+        RkCmUV7XA2yUHdKGvZzSuDK4FgAeqMvZ+eYXWcQ=
+X-Google-Smtp-Source: AA6agR4WfanpQSFAHlsJ2gTSPjnKZ0xCn0qXF2r1Krud3tJ12s4bgt22/0hlIMmsjXvmHpIKXhkYGI7YyM9aOl6/kfc=
+X-Received: by 2002:a05:6870:5b84:b0:10c:d1fa:2f52 with SMTP id
+ em4-20020a0568705b8400b0010cd1fa2f52mr2490201oab.92.1661538753637; Fri, 26
+ Aug 2022 11:32:33 -0700 (PDT)
 MIME-Version: 1.0
-References: <20220824153901.488576-1-irogers@google.com> <20220824153901.488576-17-irogers@google.com>
- <a7176263-7dc8-6cbd-af2d-5338c4c4b546@intel.com> <CAP-5=fXk+mLv=C0CTrvnBeuhCTAtJ=x2O8D2YqvmVZSMHqcLvQ@mail.gmail.com>
- <b9ffea78-48c4-e2cd-20c2-dc0c9c2c69f7@intel.com> <CAP-5=fVXuwxP-REryDShX0RZQjkdy2YJKJ5M+zczUqDE2=59Bg@mail.gmail.com>
-In-Reply-To: <CAP-5=fVXuwxP-REryDShX0RZQjkdy2YJKJ5M+zczUqDE2=59Bg@mail.gmail.com>
+References: <CABwm_eTnARC1GwMD-JF176k8WXU1Z0+H190mvXn61yr369qt6g@mail.gmail.com>
+ <YwfYyLE3ajSFVHGQ@kernel.org> <CABwm_eSvcnygceTU0sNXLkBFaNfEfrThFVmwH=TS4hN=HVGrGg@mail.gmail.com>
+In-Reply-To: <CABwm_eSvcnygceTU0sNXLkBFaNfEfrThFVmwH=TS4hN=HVGrGg@mail.gmail.com>
 From:   Namhyung Kim <namhyung@kernel.org>
-Date:   Fri, 26 Aug 2022 11:26:42 -0700
-Message-ID: <CAM9d7cgcLHYded1w4h22F_KWcHUpuxqak7Ny02Awj1WDFLynDQ@mail.gmail.com>
-Subject: Re: [PATCH v3 16/18] perf sched: Fixes for thread safety analysis
-To:     Ian Rogers <irogers@google.com>
-Cc:     Adrian Hunter <adrian.hunter@intel.com>,
+Date:   Fri, 26 Aug 2022 11:32:22 -0700
+Message-ID: <CAM9d7cjsbhHnaAiHSBb6qAfH0bNgdKrBHdg16esRCt+4DPmvtQ@mail.gmail.com>
+Subject: Re: [PATCH] perf/genelf: Switch deprecated openssl MD5_* functions to
+ new EVP API
+To:     Zixuan Tan <tanzixuan.me@gmail.com>
+Cc:     Arnaldo Carvalho de Melo <arnaldo.melo@gmail.com>,
         Peter Zijlstra <peterz@infradead.org>,
         Ingo Molnar <mingo@redhat.com>,
-        Arnaldo Carvalho de Melo <acme@kernel.org>,
         Mark Rutland <mark.rutland@arm.com>,
         Alexander Shishkin <alexander.shishkin@linux.intel.com>,
         Jiri Olsa <jolsa@kernel.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Darren Hart <dvhart@infradead.org>,
-        Davidlohr Bueso <dave@stgolabs.net>,
-        =?UTF-8?Q?Andr=C3=A9_Almeida?= <andrealmeid@igalia.com>,
-        Nathan Chancellor <nathan@kernel.org>,
-        Nick Desaulniers <ndesaulniers@google.com>,
-        Tom Rix <trix@redhat.com>, Weiguo Li <liwg06@foxmail.com>,
-        Athira Rajeev <atrajeev@linux.vnet.ibm.com>,
-        Thomas Richter <tmricht@linux.ibm.com>,
-        Ravi Bangoria <ravi.bangoria@amd.com>,
-        Dario Petrillo <dario.pk1@gmail.com>,
-        Hewenliang <hewenliang4@huawei.com>,
-        yaowenbin <yaowenbin1@huawei.com>,
-        Wenyu Liu <liuwenyu7@huawei.com>,
-        Song Liu <songliubraving@fb.com>,
-        Andrii Nakryiko <andrii@kernel.org>,
-        Dave Marchevsky <davemarchevsky@fb.com>,
-        Leo Yan <leo.yan@linaro.org>,
-        Kim Phillips <kim.phillips@amd.com>,
-        Pavithra Gurushankar <gpavithrasha@gmail.com>,
-        Alexandre Truong <alexandre.truong@arm.com>,
-        Quentin Monnet <quentin@isovalent.com>,
-        William Cohen <wcohen@redhat.com>,
-        Andres Freund <andres@anarazel.de>,
-        =?UTF-8?Q?Martin_Li=C5=A1ka?= <mliska@suse.cz>,
-        Colin Ian King <colin.king@intel.com>,
-        James Clark <james.clark@arm.com>,
-        Fangrui Song <maskray@google.com>,
-        Stephane Eranian <eranian@google.com>,
-        Kajol Jain <kjain@linux.ibm.com>,
-        Alexey Bayduraev <alexey.v.bayduraev@linux.intel.com>,
-        Riccardo Mancini <rickyman7@gmail.com>,
-        Andi Kleen <ak@linux.intel.com>,
-        Masami Hiramatsu <mhiramat@kernel.org>,
-        Zechuan Chen <chenzechuan1@huawei.com>,
-        Jason Wang <wangborong@cdjrlc.com>,
-        Christophe JAILLET <christophe.jaillet@wanadoo.fr>,
-        Remi Bernon <rbernon@codeweavers.com>,
-        linux-kernel <linux-kernel@vger.kernel.org>,
         linux-perf-users <linux-perf-users@vger.kernel.org>,
-        bpf <bpf@vger.kernel.org>, llvm@lists.linux.dev
+        linux-kernel <linux-kernel@vger.kernel.org>
 Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-On Fri, Aug 26, 2022 at 10:48 AM Ian Rogers <irogers@google.com> wrote:
+Hello,
+
+On Fri, Aug 26, 2022 at 10:22 AM Zixuan Tan <tanzixuan.me@gmail.com> wrote:
 >
-> On Fri, Aug 26, 2022 at 10:41 AM Adrian Hunter <adrian.hunter@intel.com> wrote:
+> On Fri, Aug 26, 2022 at 4:17 AM Arnaldo Carvalho de Melo
+> <arnaldo.melo@gmail.com> wrote:
 > >
-> > On 26/08/22 19:06, Ian Rogers wrote:
-> > > On Fri, Aug 26, 2022 at 5:12 AM Adrian Hunter <adrian.hunter@intel.com> wrote:
-> > >>
-> > >> On 24/08/22 18:38, Ian Rogers wrote:
-> > >>> Add annotations to describe lock behavior. Add unlocks so that mutexes
-> > >>> aren't conditionally held on exit from perf_sched__replay. Add an exit
-> > >>> variable so that thread_func can terminate, rather than leaving the
-> > >>> threads blocked on mutexes.
-> > >>>
-> > >>> Signed-off-by: Ian Rogers <irogers@google.com>
-> > >>> ---
-> > >>>  tools/perf/builtin-sched.c | 46 ++++++++++++++++++++++++--------------
-> > >>>  1 file changed, 29 insertions(+), 17 deletions(-)
-> > >>>
-> > >>> diff --git a/tools/perf/builtin-sched.c b/tools/perf/builtin-sched.c
-> > >>> index 7e4006d6b8bc..b483ff0d432e 100644
-> > >>> --- a/tools/perf/builtin-sched.c
-> > >>> +++ b/tools/perf/builtin-sched.c
-> > >>> @@ -246,6 +246,7 @@ struct perf_sched {
-> > >>>       const char      *time_str;
-> > >>>       struct perf_time_interval ptime;
-> > >>>       struct perf_time_interval hist_time;
-> > >>> +     volatile bool   thread_funcs_exit;
-> > >>>  };
-> > >>>
-> > >>>  /* per thread run time data */
-> > >>> @@ -633,31 +634,34 @@ static void *thread_func(void *ctx)
-> > >>>       prctl(PR_SET_NAME, comm2);
-> > >>>       if (fd < 0)
-> > >>>               return NULL;
-> > >>> -again:
-> > >>> -     ret = sem_post(&this_task->ready_for_work);
-> > >>> -     BUG_ON(ret);
-> > >>> -     mutex_lock(&sched->start_work_mutex);
-> > >>> -     mutex_unlock(&sched->start_work_mutex);
-> > >>>
-> > >>> -     cpu_usage_0 = get_cpu_usage_nsec_self(fd);
-> > >>> +     while (!sched->thread_funcs_exit) {
-> > >>> +             ret = sem_post(&this_task->ready_for_work);
-> > >>> +             BUG_ON(ret);
-> > >>> +             mutex_lock(&sched->start_work_mutex);
-> > >>> +             mutex_unlock(&sched->start_work_mutex);
-> > >>>
-> > >>> -     for (i = 0; i < this_task->nr_events; i++) {
-> > >>> -             this_task->curr_event = i;
-> > >>> -             perf_sched__process_event(sched, this_task->atoms[i]);
-> > >>> -     }
-> > >>> +             cpu_usage_0 = get_cpu_usage_nsec_self(fd);
-> > >>>
-> > >>> -     cpu_usage_1 = get_cpu_usage_nsec_self(fd);
-> > >>> -     this_task->cpu_usage = cpu_usage_1 - cpu_usage_0;
-> > >>> -     ret = sem_post(&this_task->work_done_sem);
-> > >>> -     BUG_ON(ret);
-> > >>> +             for (i = 0; i < this_task->nr_events; i++) {
-> > >>> +                     this_task->curr_event = i;
-> > >>> +                     perf_sched__process_event(sched, this_task->atoms[i]);
-> > >>> +             }
-> > >>>
-> > >>> -     mutex_lock(&sched->work_done_wait_mutex);
-> > >>> -     mutex_unlock(&sched->work_done_wait_mutex);
-> > >>> +             cpu_usage_1 = get_cpu_usage_nsec_self(fd);
-> > >>> +             this_task->cpu_usage = cpu_usage_1 - cpu_usage_0;
-> > >>> +             ret = sem_post(&this_task->work_done_sem);
-> > >>> +             BUG_ON(ret);
-> > >>>
-> > >>> -     goto again;
-> > >>> +             mutex_lock(&sched->work_done_wait_mutex);
-> > >>> +             mutex_unlock(&sched->work_done_wait_mutex);
-> > >>> +     }
-> > >>> +     return NULL;
-> > >>>  }
-> > >>>
-> > >>>  static void create_tasks(struct perf_sched *sched)
-> > >>> +     EXCLUSIVE_LOCK_FUNCTION(sched->start_work_mutex)
-> > >>> +     EXCLUSIVE_LOCK_FUNCTION(sched->work_done_wait_mutex)
-> > >>>  {
-> > >>>       struct task_desc *task;
-> > >>>       pthread_attr_t attr;
-> > >>> @@ -687,6 +691,8 @@ static void create_tasks(struct perf_sched *sched)
-> > >>>  }
-> > >>>
-> > >>>  static void wait_for_tasks(struct perf_sched *sched)
-> > >>> +     EXCLUSIVE_LOCKS_REQUIRED(sched->work_done_wait_mutex)
-> > >>> +     EXCLUSIVE_LOCKS_REQUIRED(sched->start_work_mutex)
-> > >>>  {
-> > >>>       u64 cpu_usage_0, cpu_usage_1;
-> > >>>       struct task_desc *task;
-> > >>> @@ -738,6 +744,8 @@ static void wait_for_tasks(struct perf_sched *sched)
-> > >>>  }
-> > >>>
-> > >>>  static void run_one_test(struct perf_sched *sched)
-> > >>> +     EXCLUSIVE_LOCKS_REQUIRED(sched->work_done_wait_mutex)
-> > >>> +     EXCLUSIVE_LOCKS_REQUIRED(sched->start_work_mutex)
-> > >>>  {
-> > >>>       u64 T0, T1, delta, avg_delta, fluct;
-> > >>>
-> > >>> @@ -3309,11 +3317,15 @@ static int perf_sched__replay(struct perf_sched *sched)
-> > >>>       print_task_traces(sched);
-> > >>>       add_cross_task_wakeups(sched);
-> > >>>
-> > >>> +     sched->thread_funcs_exit = false;
-> > >>>       create_tasks(sched);
-> > >>>       printf("------------------------------------------------------------\n");
-> > >>>       for (i = 0; i < sched->replay_repeat; i++)
-> > >>>               run_one_test(sched);
-> > >>>
-> > >>> +     sched->thread_funcs_exit = true;
-> > >>> +     mutex_unlock(&sched->start_work_mutex);
-> > >>> +     mutex_unlock(&sched->work_done_wait_mutex);
-> > >>
-> > >> I think you still need to wait for the threads to exit before
-> > >> destroying the mutexes.
+> > Em Fri, Aug 26, 2022 at 01:00:58AM +0800, Zixuan Tan escreveu:
+> > > Switch to the flavored EVP API like in test-libcrypto.c, and remove the
+> > > bad gcc #pragma.
 > > >
-> > > This is a pre-existing issue and beyond the scope of this patch set.
+> > > Inspired-By: 5b245985a6de ("tools build: Switch to new openssl API for
+> > > test-libcrypto")
 > >
-> > You added the mutex_destroy functions in patch 8, so it is still
-> > fallout from that.
+> > How did you test the end result? Can you please describe step by step?
+> >
+> > Also please consider adding a 'perf test' entry to make sure this
+> > doesn't regress.
 >
-> In the previous code the threads were blocked on mutexes that were
-> stack allocated and the stack memory went away. You are correct to say
-> that to those locks I added an init and destroy call. The lifetime of
-> the mutex was wrong previously and remains wrong in this change.
+> Sorry but I don't get what you mean, what results do I need to test?
+>
+> These EVP_* APIs are just replacements for the deprecated MD5_* APIs in
+> openssl v3 [1][2]. With the same input, they produce the same MD5 digest.
+>
+> And this patch just does the migration work for the upgrade and does not
+> change the logic of the code. so...what should I test?
 
-I think you fixed the lifetime issue with sched->thread_funcs_exit here.
-All you need to do is calling pthread_join() after the mutex_unlock, no?
+Yeah, I understand that this merely changes the MD5 APIs.
+While it's good to have a test case for the genelf code, I don't think
+it belongs to this patch.  So,
 
-Thanks,
-Namhyung
+Acked-by: Namhyung Kim <namhyung@kernel.org>
+
+
+>
+> Links:
+> [1] https://www.openssl.org/docs/man3.0/man3/MD5.html
+> [2] https://stackoverflow.com/questions/69806220/advice-needed-for-migration-of-low-level-openssl-api-to-high-level-openssl-apis
