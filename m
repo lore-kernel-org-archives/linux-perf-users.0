@@ -2,48 +2,48 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 28CB0ECAAA3
-	for <linux-perf-users@archiver.kernel.org>; Fri, 26 Aug 2022 10:24:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6A266ECAAA3
+	for <linux-perf-users@archiver.kernel.org>; Fri, 26 Aug 2022 10:37:43 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S245528AbiHZKYs (ORCPT
+        id S1343758AbiHZKhm (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Fri, 26 Aug 2022 06:24:48 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58444 "EHLO
+        Fri, 26 Aug 2022 06:37:42 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52534 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S236026AbiHZKYr (ORCPT
+        with ESMTP id S242864AbiHZKhk (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Fri, 26 Aug 2022 06:24:47 -0400
-Received: from mga11.intel.com (mga11.intel.com [192.55.52.93])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CD8571E1;
-        Fri, 26 Aug 2022 03:24:44 -0700 (PDT)
+        Fri, 26 Aug 2022 06:37:40 -0400
+Received: from mga04.intel.com (mga04.intel.com [192.55.52.120])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D23DED570D;
+        Fri, 26 Aug 2022 03:37:39 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1661509484; x=1693045484;
+  t=1661510259; x=1693046259;
   h=message-id:date:mime-version:subject:to:references:from:
    in-reply-to:content-transfer-encoding;
-  bh=gzG5jvF8AiDzT3HIfyzKFCafcG5IQ+Wuj7+aBQMAuWk=;
-  b=bc6RUs6M6bsZIn72h0wE/kwEkBHazZFq28AN9iTXBShSnFNRSEATJ6yB
-   cwYAyZMTfFMUaKZ/aCI/hKW0tFtkyzw4wrX7ePWqNnvpR/y86Ivgfcqsw
-   Ew9091vtbv4AlxBQ7SpF+6Zkb4h57tIewMr0DJ3uxtnjyKUgK6CzQSu/T
-   xN/V/3NuofyU41EpGjY2gi/gETzOicvaWMY4tBDWVXQsg6h/Ad1ZTWmlx
-   DFRywUHq0EUdilCi5Tm7phH3LRxKK7w6/Prio06yBe08qToLcr9av74/I
-   4zrsdNrsyYGBCykOvJXdXLJnAWkPrxpszkqeJrz1AsM0TThMb5EVphhCG
+  bh=9hnCuIQP0Do9Va8hiUiS3qPMSpvIWNQCjLORaXq96rM=;
+  b=SkN7+8A8mFTAywJwapYZC4VN9VBqMP4vOj9mMlam4gdn8rex+34AVvYA
+   jkCrdxf0cXhuzs0exIQ9fsVGQYS1CfbEh27VgMcmeSL3C2Rf2Meubusmq
+   1oer5ZqlWeavcdZyEyOZltAWsoyw5t+eJGDIayszalqzYlqL4edfK6AVr
+   fhHY+h50PEMqZBcvaAHI7qZcaVyHkL1RpmBez/0Rl0cMu49HTAMK+Don0
+   /FEMlYNvh6xs8Ll/r9hACXjuHis34AXg6mV8u0MpCdROhHiOrR1kYnkFI
+   xp9eVdmiJTv7SkHsXVlo8rbu6Iyir0OQtp/x2XfRw+ecUE6gMfsGONl16
    g==;
-X-IronPort-AV: E=McAfee;i="6500,9779,10450"; a="292056185"
+X-IronPort-AV: E=McAfee;i="6500,9779,10450"; a="293220362"
 X-IronPort-AV: E=Sophos;i="5.93,265,1654585200"; 
-   d="scan'208";a="292056185"
+   d="scan'208";a="293220362"
 Received: from orsmga007.jf.intel.com ([10.7.209.58])
-  by fmsmga102.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 26 Aug 2022 03:24:44 -0700
+  by fmsmga104.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 26 Aug 2022 03:37:39 -0700
 X-IronPort-AV: E=Sophos;i="5.93,265,1654585200"; 
-   d="scan'208";a="606723974"
+   d="scan'208";a="606726872"
 Received: from ahunter6-mobl1.ger.corp.intel.com (HELO [10.0.2.15]) ([10.252.50.209])
-  by orsmga007-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 26 Aug 2022 03:24:31 -0700
-Message-ID: <2cf6edac-6e41-b43c-2bc1-f49cb739201a@intel.com>
-Date:   Fri, 26 Aug 2022 13:24:26 +0300
+  by orsmga007-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 26 Aug 2022 03:37:26 -0700
+Message-ID: <12acbe02-bd73-07bb-d0e1-cb13dcd790c0@intel.com>
+Date:   Fri, 26 Aug 2022 13:37:21 +0300
 MIME-Version: 1.0
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
  Firefox/91.0 Thunderbird/91.11.0
-Subject: Re: [PATCH v3 09/18] perf ui: Update use of pthread mutex
+Subject: Re: [PATCH v3 11/18] perf dso: Update use of pthread mutex
 Content-Language: en-US
 To:     Ian Rogers <irogers@google.com>,
         Peter Zijlstra <peterz@infradead.org>,
@@ -94,11 +94,11 @@ To:     Ian Rogers <irogers@google.com>,
         linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org,
         bpf@vger.kernel.org, llvm@lists.linux.dev
 References: <20220824153901.488576-1-irogers@google.com>
- <20220824153901.488576-10-irogers@google.com>
+ <20220824153901.488576-12-irogers@google.com>
 From:   Adrian Hunter <adrian.hunter@intel.com>
 Organization: Intel Finland Oy, Registered Address: PL 281, 00181 Helsinki,
  Business Identity Code: 0357606 - 4, Domiciled in Helsinki
-In-Reply-To: <20220824153901.488576-10-irogers@google.com>
+In-Reply-To: <20220824153901.488576-12-irogers@google.com>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 Precedence: bulk
@@ -110,323 +110,134 @@ On 24/08/22 18:38, Ian Rogers wrote:
 > 
 > Signed-off-by: Ian Rogers <irogers@google.com>
 > ---
->  tools/perf/ui/browser.c           | 20 ++++++++++----------
->  tools/perf/ui/browsers/annotate.c |  2 +-
->  tools/perf/ui/setup.c             |  5 +++--
->  tools/perf/ui/tui/helpline.c      |  5 ++---
->  tools/perf/ui/tui/progress.c      |  8 ++++----
->  tools/perf/ui/tui/setup.c         |  8 ++++----
->  tools/perf/ui/tui/util.c          | 18 +++++++++---------
->  tools/perf/ui/ui.h                |  4 ++--
->  8 files changed, 35 insertions(+), 35 deletions(-)
+>  tools/perf/util/dso.c    | 12 ++++++------
+
+Some not done yet
+
+$ grep -i pthread_mut tools/perf/util/dso.c
+static pthread_mutex_t dso__data_open_lock = PTHREAD_MUTEX_INITIALIZER;
+        pthread_mutex_lock(&dso__data_open_lock);
+        pthread_mutex_unlock(&dso__data_open_lock);
+        if (pthread_mutex_lock(&dso__data_open_lock) < 0)
+                pthread_mutex_unlock(&dso__data_open_lock);
+        pthread_mutex_unlock(&dso__data_open_lock);
+        pthread_mutex_lock(&dso__data_open_lock);
+        pthread_mutex_unlock(&dso__data_open_lock);
+        pthread_mutex_lock(&dso__data_open_lock);
+        pthread_mutex_unlock(&dso__data_open_lock);
+
+
+>  tools/perf/util/dso.h    |  4 ++--
+>  tools/perf/util/symbol.c |  4 ++--
+>  3 files changed, 10 insertions(+), 10 deletions(-)
 > 
-> diff --git a/tools/perf/ui/browser.c b/tools/perf/ui/browser.c
-> index fa5bd5c20e96..78fb01d6ad63 100644
-> --- a/tools/perf/ui/browser.c
-> +++ b/tools/perf/ui/browser.c
-> @@ -268,9 +268,9 @@ void __ui_browser__show_title(struct ui_browser *browser, const char *title)
+> diff --git a/tools/perf/util/dso.c b/tools/perf/util/dso.c
+> index 5ac13958d1bd..a9789a955403 100644
+> --- a/tools/perf/util/dso.c
+> +++ b/tools/perf/util/dso.c
+> @@ -795,7 +795,7 @@ dso_cache__free(struct dso *dso)
+>  	struct rb_root *root = &dso->data.cache;
+>  	struct rb_node *next = rb_first(root);
 >  
->  void ui_browser__show_title(struct ui_browser *browser, const char *title)
->  {
-> -	pthread_mutex_lock(&ui__lock);
-> +	mutex_lock(&ui__lock);
->  	__ui_browser__show_title(browser, title);
-> -	pthread_mutex_unlock(&ui__lock);
-> +	mutex_unlock(&ui__lock);
->  }
+> -	pthread_mutex_lock(&dso->lock);
+> +	mutex_lock(&dso->lock);
+>  	while (next) {
+>  		struct dso_cache *cache;
 >  
->  int ui_browser__show(struct ui_browser *browser, const char *title,
-> @@ -284,7 +284,7 @@ int ui_browser__show(struct ui_browser *browser, const char *title,
->  
->  	browser->refresh_dimensions(browser);
->  
-> -	pthread_mutex_lock(&ui__lock);
-> +	mutex_lock(&ui__lock);
->  	__ui_browser__show_title(browser, title);
->  
->  	browser->title = title;
-> @@ -295,16 +295,16 @@ int ui_browser__show(struct ui_browser *browser, const char *title,
->  	va_end(ap);
->  	if (err > 0)
->  		ui_helpline__push(browser->helpline);
-> -	pthread_mutex_unlock(&ui__lock);
-> +	mutex_unlock(&ui__lock);
->  	return err ? 0 : -1;
->  }
->  
->  void ui_browser__hide(struct ui_browser *browser)
->  {
-> -	pthread_mutex_lock(&ui__lock);
-> +	mutex_lock(&ui__lock);
->  	ui_helpline__pop();
->  	zfree(&browser->helpline);
-> -	pthread_mutex_unlock(&ui__lock);
-> +	mutex_unlock(&ui__lock);
->  }
->  
->  static void ui_browser__scrollbar_set(struct ui_browser *browser)
-> @@ -352,9 +352,9 @@ static int __ui_browser__refresh(struct ui_browser *browser)
->  
->  int ui_browser__refresh(struct ui_browser *browser)
->  {
-> -	pthread_mutex_lock(&ui__lock);
-> +	mutex_lock(&ui__lock);
->  	__ui_browser__refresh(browser);
-> -	pthread_mutex_unlock(&ui__lock);
-> +	mutex_unlock(&ui__lock);
->  
->  	return 0;
->  }
-> @@ -390,10 +390,10 @@ int ui_browser__run(struct ui_browser *browser, int delay_secs)
->  	while (1) {
->  		off_t offset;
->  
-> -		pthread_mutex_lock(&ui__lock);
-> +		mutex_lock(&ui__lock);
->  		err = __ui_browser__refresh(browser);
->  		SLsmg_refresh();
-> -		pthread_mutex_unlock(&ui__lock);
-> +		mutex_unlock(&ui__lock);
->  		if (err < 0)
->  			break;
->  
-> diff --git a/tools/perf/ui/browsers/annotate.c b/tools/perf/ui/browsers/annotate.c
-> index 44ba900828f6..b8747e8dd9ea 100644
-> --- a/tools/perf/ui/browsers/annotate.c
-> +++ b/tools/perf/ui/browsers/annotate.c
-> @@ -8,11 +8,11 @@
->  #include "../../util/hist.h"
->  #include "../../util/sort.h"
->  #include "../../util/map.h"
-> +#include "../../util/mutex.h"
->  #include "../../util/symbol.h"
->  #include "../../util/evsel.h"
->  #include "../../util/evlist.h"
->  #include <inttypes.h>
-> -#include <pthread.h>
->  #include <linux/kernel.h>
->  #include <linux/string.h>
->  #include <linux/zalloc.h>
-> diff --git a/tools/perf/ui/setup.c b/tools/perf/ui/setup.c
-> index 700335cde618..25ded88801a3 100644
-> --- a/tools/perf/ui/setup.c
-> +++ b/tools/perf/ui/setup.c
-> @@ -1,5 +1,4 @@
->  // SPDX-License-Identifier: GPL-2.0
-> -#include <pthread.h>
->  #include <dlfcn.h>
->  #include <unistd.h>
->  
-> @@ -8,7 +7,7 @@
->  #include "../util/hist.h"
->  #include "ui.h"
->  
-> -pthread_mutex_t ui__lock = PTHREAD_MUTEX_INITIALIZER;
-> +struct mutex ui__lock;
->  void *perf_gtk_handle;
->  int use_browser = -1;
->  
-> @@ -76,6 +75,7 @@ int stdio__config_color(const struct option *opt __maybe_unused,
->  
->  void setup_browser(bool fallback_to_pager)
->  {
-> +	mutex_init(&ui__lock);
->  	if (use_browser < 2 && (!isatty(1) || dump_trace))
->  		use_browser = 0;
->  
-> @@ -118,4 +118,5 @@ void exit_browser(bool wait_for_ok)
->  	default:
->  		break;
+> @@ -804,7 +804,7 @@ dso_cache__free(struct dso *dso)
+>  		rb_erase(&cache->rb_node, root);
+>  		free(cache);
 >  	}
-> +	mutex_destroy(&ui__lock);
-
-Looks like exit_browser() can be called even when setup_browser()
-was never called.
-
-Note, it also looks like PTHREAD_MUTEX_INITIALIZER is all zeros so
-pthread won't notice.
-
+> -	pthread_mutex_unlock(&dso->lock);
+> +	mutex_unlock(&dso->lock);
 >  }
-> diff --git a/tools/perf/ui/tui/helpline.c b/tools/perf/ui/tui/helpline.c
-> index 298d6af82fdd..db4952f5990b 100644
-> --- a/tools/perf/ui/tui/helpline.c
-> +++ b/tools/perf/ui/tui/helpline.c
+>  
+>  static struct dso_cache *__dso_cache__find(struct dso *dso, u64 offset)
+> @@ -841,7 +841,7 @@ dso_cache__insert(struct dso *dso, struct dso_cache *new)
+>  	struct dso_cache *cache;
+>  	u64 offset = new->offset;
+>  
+> -	pthread_mutex_lock(&dso->lock);
+> +	mutex_lock(&dso->lock);
+>  	while (*p != NULL) {
+>  		u64 end;
+>  
+> @@ -862,7 +862,7 @@ dso_cache__insert(struct dso *dso, struct dso_cache *new)
+>  
+>  	cache = NULL;
+>  out:
+> -	pthread_mutex_unlock(&dso->lock);
+> +	mutex_unlock(&dso->lock);
+>  	return cache;
+>  }
+>  
+> @@ -1297,7 +1297,7 @@ struct dso *dso__new_id(const char *name, struct dso_id *id)
+>  		dso->root = NULL;
+>  		INIT_LIST_HEAD(&dso->node);
+>  		INIT_LIST_HEAD(&dso->data.open_entry);
+> -		pthread_mutex_init(&dso->lock, NULL);
+> +		mutex_init(&dso->lock);
+>  		refcount_set(&dso->refcnt, 1);
+>  	}
+>  
+> @@ -1336,7 +1336,7 @@ void dso__delete(struct dso *dso)
+>  	dso__free_a2l(dso);
+>  	zfree(&dso->symsrc_filename);
+>  	nsinfo__zput(dso->nsinfo);
+> -	pthread_mutex_destroy(&dso->lock);
+> +	mutex_destroy(&dso->lock);
+>  	free(dso);
+>  }
+>  
+> diff --git a/tools/perf/util/dso.h b/tools/perf/util/dso.h
+> index 66981c7a9a18..58d94175e714 100644
+> --- a/tools/perf/util/dso.h
+> +++ b/tools/perf/util/dso.h
 > @@ -2,7 +2,6 @@
->  #include <stdio.h>
->  #include <stdlib.h>
->  #include <string.h>
+>  #ifndef __PERF_DSO
+>  #define __PERF_DSO
+>  
 > -#include <pthread.h>
->  #include <linux/kernel.h>
->  #include <linux/string.h>
+>  #include <linux/refcount.h>
+>  #include <linux/types.h>
+>  #include <linux/rbtree.h>
+> @@ -11,6 +10,7 @@
+>  #include <stdio.h>
+>  #include <linux/bitops.h>
+>  #include "build-id.h"
+> +#include "mutex.h"
 >  
-> @@ -33,7 +32,7 @@ static int tui_helpline__show(const char *format, va_list ap)
->  	int ret;
->  	static int backlog;
+>  struct machine;
+>  struct map;
+> @@ -145,7 +145,7 @@ struct dso_cache {
+>  struct auxtrace_cache;
 >  
-> -	pthread_mutex_lock(&ui__lock);
-> +	mutex_lock(&ui__lock);
->  	ret = vscnprintf(ui_helpline__last_msg + backlog,
->  			sizeof(ui_helpline__last_msg) - backlog, format, ap);
->  	backlog += ret;
-> @@ -45,7 +44,7 @@ static int tui_helpline__show(const char *format, va_list ap)
->  		SLsmg_refresh();
->  		backlog = 0;
+>  struct dso {
+> -	pthread_mutex_t	 lock;
+> +	struct mutex	 lock;
+>  	struct list_head node;
+>  	struct rb_node	 rb_node;	/* rbtree node sorted by long name */
+>  	struct rb_root	 *root;		/* root of rbtree that rb_node is in */
+> diff --git a/tools/perf/util/symbol.c b/tools/perf/util/symbol.c
+> index a4b22caa7c24..656d9b4dd456 100644
+> --- a/tools/perf/util/symbol.c
+> +++ b/tools/perf/util/symbol.c
+> @@ -1800,7 +1800,7 @@ int dso__load(struct dso *dso, struct map *map)
 >  	}
-> -	pthread_mutex_unlock(&ui__lock);
-> +	mutex_unlock(&ui__lock);
+>  
+>  	nsinfo__mountns_enter(dso->nsinfo, &nsc);
+> -	pthread_mutex_lock(&dso->lock);
+> +	mutex_lock(&dso->lock);
+>  
+>  	/* check again under the dso->lock */
+>  	if (dso__loaded(dso)) {
+> @@ -1964,7 +1964,7 @@ int dso__load(struct dso *dso, struct map *map)
+>  		ret = 0;
+>  out:
+>  	dso__set_loaded(dso);
+> -	pthread_mutex_unlock(&dso->lock);
+> +	mutex_unlock(&dso->lock);
+>  	nsinfo__mountns_exit(&nsc);
 >  
 >  	return ret;
->  }
-> diff --git a/tools/perf/ui/tui/progress.c b/tools/perf/ui/tui/progress.c
-> index 3d74af5a7ece..71b6c8d9474f 100644
-> --- a/tools/perf/ui/tui/progress.c
-> +++ b/tools/perf/ui/tui/progress.c
-> @@ -45,7 +45,7 @@ static void tui_progress__update(struct ui_progress *p)
->  	}
->  
->  	ui__refresh_dimensions(false);
-> -	pthread_mutex_lock(&ui__lock);
-> +	mutex_lock(&ui__lock);
->  	y = SLtt_Screen_Rows / 2 - 2;
->  	SLsmg_set_color(0);
->  	SLsmg_draw_box(y, 0, 3, SLtt_Screen_Cols);
-> @@ -56,7 +56,7 @@ static void tui_progress__update(struct ui_progress *p)
->  	bar = ((SLtt_Screen_Cols - 2) * p->curr) / p->total;
->  	SLsmg_fill_region(y, 1, 1, bar, ' ');
->  	SLsmg_refresh();
-> -	pthread_mutex_unlock(&ui__lock);
-> +	mutex_unlock(&ui__lock);
->  }
->  
->  static void tui_progress__finish(void)
-> @@ -67,12 +67,12 @@ static void tui_progress__finish(void)
->  		return;
->  
->  	ui__refresh_dimensions(false);
-> -	pthread_mutex_lock(&ui__lock);
-> +	mutex_lock(&ui__lock);
->  	y = SLtt_Screen_Rows / 2 - 2;
->  	SLsmg_set_color(0);
->  	SLsmg_fill_region(y, 0, 3, SLtt_Screen_Cols, ' ');
->  	SLsmg_refresh();
-> -	pthread_mutex_unlock(&ui__lock);
-> +	mutex_unlock(&ui__lock);
->  }
->  
->  static struct ui_progress_ops tui_progress__ops = {
-> diff --git a/tools/perf/ui/tui/setup.c b/tools/perf/ui/tui/setup.c
-> index b1be59b4e2a4..a3b8c397c24d 100644
-> --- a/tools/perf/ui/tui/setup.c
-> +++ b/tools/perf/ui/tui/setup.c
-> @@ -29,10 +29,10 @@ void ui__refresh_dimensions(bool force)
->  {
->  	if (force || ui__need_resize) {
->  		ui__need_resize = 0;
-> -		pthread_mutex_lock(&ui__lock);
-> +		mutex_lock(&ui__lock);
->  		SLtt_get_screen_size();
->  		SLsmg_reinit_smg();
-> -		pthread_mutex_unlock(&ui__lock);
-> +		mutex_unlock(&ui__lock);
->  	}
->  }
->  
-> @@ -170,10 +170,10 @@ void ui__exit(bool wait_for_ok)
->  				    "Press any key...", 0);
->  
->  	SLtt_set_cursor_visibility(1);
-> -	if (!pthread_mutex_trylock(&ui__lock)) {
-> +	if (mutex_trylock(&ui__lock)) {
->  		SLsmg_refresh();
->  		SLsmg_reset_smg();
-> -		pthread_mutex_unlock(&ui__lock);
-> +		mutex_unlock(&ui__lock);
->  	}
->  	SLang_reset_tty();
->  	perf_error__unregister(&perf_tui_eops);
-> diff --git a/tools/perf/ui/tui/util.c b/tools/perf/ui/tui/util.c
-> index 0f562e2cb1e8..3c5174854ac8 100644
-> --- a/tools/perf/ui/tui/util.c
-> +++ b/tools/perf/ui/tui/util.c
-> @@ -95,7 +95,7 @@ int ui_browser__input_window(const char *title, const char *text, char *input,
->  		t = sep + 1;
->  	}
->  
-> -	pthread_mutex_lock(&ui__lock);
-> +	mutex_lock(&ui__lock);
->  
->  	max_len += 2;
->  	nr_lines += 8;
-> @@ -125,17 +125,17 @@ int ui_browser__input_window(const char *title, const char *text, char *input,
->  	SLsmg_write_nstring((char *)exit_msg, max_len);
->  	SLsmg_refresh();
->  
-> -	pthread_mutex_unlock(&ui__lock);
-> +	mutex_unlock(&ui__lock);
->  
->  	x += 2;
->  	len = 0;
->  	key = ui__getch(delay_secs);
->  	while (key != K_TIMER && key != K_ENTER && key != K_ESC) {
-> -		pthread_mutex_lock(&ui__lock);
-> +		mutex_lock(&ui__lock);
->  
->  		if (key == K_BKSPC) {
->  			if (len == 0) {
-> -				pthread_mutex_unlock(&ui__lock);
-> +				mutex_unlock(&ui__lock);
->  				goto next_key;
->  			}
->  			SLsmg_gotorc(y, x + --len);
-> @@ -147,7 +147,7 @@ int ui_browser__input_window(const char *title, const char *text, char *input,
->  		}
->  		SLsmg_refresh();
->  
-> -		pthread_mutex_unlock(&ui__lock);
-> +		mutex_unlock(&ui__lock);
->  
->  		/* XXX more graceful overflow handling needed */
->  		if (len == sizeof(buf) - 1) {
-> @@ -215,19 +215,19 @@ void __ui__info_window(const char *title, const char *text, const char *exit_msg
->  
->  void ui__info_window(const char *title, const char *text)
->  {
-> -	pthread_mutex_lock(&ui__lock);
-> +	mutex_lock(&ui__lock);
->  	__ui__info_window(title, text, NULL);
->  	SLsmg_refresh();
-> -	pthread_mutex_unlock(&ui__lock);
-> +	mutex_unlock(&ui__lock);
->  }
->  
->  int ui__question_window(const char *title, const char *text,
->  			const char *exit_msg, int delay_secs)
->  {
-> -	pthread_mutex_lock(&ui__lock);
-> +	mutex_lock(&ui__lock);
->  	__ui__info_window(title, text, exit_msg);
->  	SLsmg_refresh();
-> -	pthread_mutex_unlock(&ui__lock);
-> +	mutex_unlock(&ui__lock);
->  	return ui__getch(delay_secs);
->  }
->  
-> diff --git a/tools/perf/ui/ui.h b/tools/perf/ui/ui.h
-> index 9b6fdf06e1d2..99f8d2fe9bc5 100644
-> --- a/tools/perf/ui/ui.h
-> +++ b/tools/perf/ui/ui.h
-> @@ -2,11 +2,11 @@
->  #ifndef _PERF_UI_H_
->  #define _PERF_UI_H_ 1
->  
-> -#include <pthread.h>
-> +#include "../util/mutex.h"
->  #include <stdbool.h>
->  #include <linux/compiler.h>
->  
-> -extern pthread_mutex_t ui__lock;
-> +extern struct mutex ui__lock;
->  extern void *perf_gtk_handle;
->  
->  extern int use_browser;
 
