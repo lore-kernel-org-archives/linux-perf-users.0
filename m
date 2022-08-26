@@ -2,295 +2,164 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 682C3ECAAA3
-	for <linux-perf-users@archiver.kernel.org>; Fri, 26 Aug 2022 17:01:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 078AFECAAA6
+	for <linux-perf-users@archiver.kernel.org>; Fri, 26 Aug 2022 17:22:08 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1344613AbiHZRBB (ORCPT
+        id S231234AbiHZRWG (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Fri, 26 Aug 2022 13:01:01 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45374 "EHLO
+        Fri, 26 Aug 2022 13:22:06 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47604 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S243585AbiHZRBA (ORCPT
+        with ESMTP id S229991AbiHZRWF (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Fri, 26 Aug 2022 13:01:00 -0400
-Received: from mail-wr1-x431.google.com (mail-wr1-x431.google.com [IPv6:2a00:1450:4864:20::431])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3E933C276C
-        for <linux-perf-users@vger.kernel.org>; Fri, 26 Aug 2022 10:00:58 -0700 (PDT)
-Received: by mail-wr1-x431.google.com with SMTP id k9so2535613wri.0
-        for <linux-perf-users@vger.kernel.org>; Fri, 26 Aug 2022 10:00:58 -0700 (PDT)
+        Fri, 26 Aug 2022 13:22:05 -0400
+Received: from mail-lj1-x244.google.com (mail-lj1-x244.google.com [IPv6:2a00:1450:4864:20::244])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3BA46E1917;
+        Fri, 26 Aug 2022 10:22:04 -0700 (PDT)
+Received: by mail-lj1-x244.google.com with SMTP id q18so2190446ljg.12;
+        Fri, 26 Aug 2022 10:22:04 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20210112;
+        d=gmail.com; s=20210112;
         h=cc:to:subject:message-id:date:from:in-reply-to:references
          :mime-version:from:to:cc;
-        bh=JEhNvpfoNzfDeGW74u3xSSl/MYDbd+EVlekxBTwg3NA=;
-        b=oU00OE4iuFOFTtHrjYbOvALjBpqdpR10gma/0zQjg3/wyIzXAIm5MsztyND0vu+BOj
-         Ps66PxrryfQFWqmvBt87O/ObT403dz5UaUDjrVvtwGVtF9EdYXR8gX8LINqs99/4y7wN
-         A2FnseH1cfFdB8nnaYjBBBsKtwmIhc0vK2/1yY+sndAtB7YlNe0aCOUFBw8YfNqiNhKJ
-         +eeBQwrXAzvDn0ykbNRjeokUDeW1WJgjC3ZRDZk4ctiyUEYH72LNPB7Nr2QS5swcEBaG
-         EBvUn8yJH60WIYLMjU1Rc4fpwwLsE3jDbwIiOHtYpZPtBI//j0O6mMb8effGhTM1uKbY
-         UHPQ==
+        bh=ffGSOF88X3uX2xbMrZKZt1dBqzZeMMBk6p+OyGT0PjQ=;
+        b=nGazRBa11TFATnkRsBK/26sAKjlHVYjFCNfj702IE3sVVdyGzEQAGw7g1SPRSHb4br
+         Q/myZC42xn6beqw7dIqMDscL4HcoM8YiGRW4T78zw9Ai6o+mFNoAU7wu5jJRSPnrPBhz
+         4188eUpPQjNlpp9adYgbRcuA+FiPEZuhNR04b1Bi3PEXUlLYeHQrcV72DRSkDzrky4z1
+         zECK5tx2h2yqiBCv0ppsQUK9uOI5ig7J2mJ+hYDnC5b3p29FS2fa5vB/QHMOJmEUPul5
+         eUMw9gz95Ea5tvN0+J+zOqlZHt6hyagwksp4DdeTGBNT7Id0dV1zSC3KqKyS3mgQmABQ
+         vwlg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
         h=cc:to:subject:message-id:date:from:in-reply-to:references
          :mime-version:x-gm-message-state:from:to:cc;
-        bh=JEhNvpfoNzfDeGW74u3xSSl/MYDbd+EVlekxBTwg3NA=;
-        b=rcP3Vd2POkyiFMMPRO27d6+PO3p9SAvHZaiXHt2d3yPgQ/l4dx1Z1ObvuQEONmTJVj
-         OKOFzcJzU2uz8H6D7Ch/F2IpT5w0M1f3s7OR4tnCYVgX9nac5DoW+qL2nFasCwED1iDH
-         jnH1t9djJEIdHvogOLIsj5mV5OPk9HDFp4aJ4ZD4q22jDghFlcULhL85dFSUEAjUjxx3
-         LM3/PcAfxM/m8I9JcFShQKTk+HrIcGOKNdhBMcOLz9c3igBdUFl69EiQ9R/eF1nLcDJb
-         FcDZwe0zpGpFRyO4b0OR40g6CTtcrtOOP/BGryfbewY8IjXqnbTuYu5PnZJPIwKvSUUJ
-         ad6A==
-X-Gm-Message-State: ACgBeo1++yTAGlisxzxWt4bJH6LzOqWkfFbrD7DJmA/1rzGR0NEcE9AT
-        SdaG2IKaOuMdFvqRSa+34DFy9ZdLT2JE01OYW02agw==
-X-Google-Smtp-Source: AA6agR5LU69lHRvtd54QfGEgYgVcAUVwOrGekk0JU/wP7Dkli07WC8aI6P7tk1Hn5wItAZKvTpstpMMcfheK//oiLhc=
-X-Received: by 2002:a05:6000:1008:b0:225:58e0:223f with SMTP id
- a8-20020a056000100800b0022558e0223fmr315173wrx.375.1661533256385; Fri, 26 Aug
- 2022 10:00:56 -0700 (PDT)
+        bh=ffGSOF88X3uX2xbMrZKZt1dBqzZeMMBk6p+OyGT0PjQ=;
+        b=Is+lfpl+RyBjNNUFmIZ8t4fWKUmFnNYMYcfreOopXQuMNHuL/Gk48yAr09sVnwv8f4
+         W0OpUBzZ5dGc36OesxQt+YYz3eFBckuU/S2TN24NDDTaGHmN3rqfch5wmzAHrwKRRFAr
+         2TY0U7hZniq1hrg39sDRLYCm9L2xf7iSjHrGLucL1ysx7n/EKxIrHsesRr6ktqj4YfgD
+         7tumINyi1wEnxT+uqjdg2eM4npug3Sx+LBnhN842HQfaczg+M0we/Gs1hrynIKnZZuw0
+         M+/avGgFMrWmVCevE5OVfPRsz5ljdrJ7Ag/+JVChn064nX0TCP8OW7OcEhTRrAJyGOe6
+         Zikw==
+X-Gm-Message-State: ACgBeo2DbzO/frmXbYw7RQfm8zqUCv9rI3lDAOs04WXg8aJ9Fupvxu/2
+        RgpNRtAkp+PDyIDw2NhybnxaYwKv7L8VlAiKLeQ=
+X-Google-Smtp-Source: AA6agR5y/N3p69sYfXuEB4tIK33dR8To4WCvyMPi3+slNwkuAmZ/bf84MuF3eY4XLxwKEPcjeJ1WPCtbX1W/G18287E=
+X-Received: by 2002:a2e:a170:0:b0:261:e4e9:818e with SMTP id
+ u16-20020a2ea170000000b00261e4e9818emr2868761ljl.168.1661534522170; Fri, 26
+ Aug 2022 10:22:02 -0700 (PDT)
 MIME-Version: 1.0
-References: <20220824153901.488576-1-irogers@google.com> <20220824153901.488576-16-irogers@google.com>
- <Ywj4vnYp6KGrrwl+@kernel.org>
-In-Reply-To: <Ywj4vnYp6KGrrwl+@kernel.org>
-From:   Ian Rogers <irogers@google.com>
-Date:   Fri, 26 Aug 2022 10:00:43 -0700
-Message-ID: <CAP-5=fU0Kc+ZhVBXWz1zup1wFGUf8EOyaRREmfXDfD+hGGoL6w@mail.gmail.com>
-Subject: Re: [PATCH v3 15/18] perf mutex: Add thread safety annotations
-To:     Arnaldo Carvalho de Melo <acme@kernel.org>
+References: <CABwm_eTnARC1GwMD-JF176k8WXU1Z0+H190mvXn61yr369qt6g@mail.gmail.com>
+ <YwfYyLE3ajSFVHGQ@kernel.org>
+In-Reply-To: <YwfYyLE3ajSFVHGQ@kernel.org>
+From:   Zixuan Tan <tanzixuan.me@gmail.com>
+Date:   Sat, 27 Aug 2022 01:21:50 +0800
+Message-ID: <CABwm_eSvcnygceTU0sNXLkBFaNfEfrThFVmwH=TS4hN=HVGrGg@mail.gmail.com>
+Subject: Re: [PATCH] perf/genelf: Switch deprecated openssl MD5_* functions to
+ new EVP API
+To:     Arnaldo Carvalho de Melo <arnaldo.melo@gmail.com>
 Cc:     Peter Zijlstra <peterz@infradead.org>,
         Ingo Molnar <mingo@redhat.com>,
         Mark Rutland <mark.rutland@arm.com>,
         Alexander Shishkin <alexander.shishkin@linux.intel.com>,
         Jiri Olsa <jolsa@kernel.org>,
         Namhyung Kim <namhyung@kernel.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Darren Hart <dvhart@infradead.org>,
-        Davidlohr Bueso <dave@stgolabs.net>,
-        =?UTF-8?Q?Andr=C3=A9_Almeida?= <andrealmeid@igalia.com>,
-        Nathan Chancellor <nathan@kernel.org>,
-        Nick Desaulniers <ndesaulniers@google.com>,
-        Tom Rix <trix@redhat.com>, Weiguo Li <liwg06@foxmail.com>,
-        Athira Rajeev <atrajeev@linux.vnet.ibm.com>,
-        Thomas Richter <tmricht@linux.ibm.com>,
-        Ravi Bangoria <ravi.bangoria@amd.com>,
-        Dario Petrillo <dario.pk1@gmail.com>,
-        Hewenliang <hewenliang4@huawei.com>,
-        yaowenbin <yaowenbin1@huawei.com>,
-        Wenyu Liu <liuwenyu7@huawei.com>,
-        Song Liu <songliubraving@fb.com>,
-        Andrii Nakryiko <andrii@kernel.org>,
-        Dave Marchevsky <davemarchevsky@fb.com>,
-        Leo Yan <leo.yan@linaro.org>,
-        Kim Phillips <kim.phillips@amd.com>,
-        Pavithra Gurushankar <gpavithrasha@gmail.com>,
-        Alexandre Truong <alexandre.truong@arm.com>,
-        Quentin Monnet <quentin@isovalent.com>,
-        William Cohen <wcohen@redhat.com>,
-        Andres Freund <andres@anarazel.de>,
-        Adrian Hunter <adrian.hunter@intel.com>,
-        =?UTF-8?Q?Martin_Li=C5=A1ka?= <mliska@suse.cz>,
-        Colin Ian King <colin.king@intel.com>,
-        James Clark <james.clark@arm.com>,
-        Fangrui Song <maskray@google.com>,
-        Stephane Eranian <eranian@google.com>,
-        Kajol Jain <kjain@linux.ibm.com>,
-        Alexey Bayduraev <alexey.v.bayduraev@linux.intel.com>,
-        Riccardo Mancini <rickyman7@gmail.com>,
-        Andi Kleen <ak@linux.intel.com>,
-        Masami Hiramatsu <mhiramat@kernel.org>,
-        Zechuan Chen <chenzechuan1@huawei.com>,
-        Jason Wang <wangborong@cdjrlc.com>,
-        Christophe JAILLET <christophe.jaillet@wanadoo.fr>,
-        Remi Bernon <rbernon@codeweavers.com>,
-        linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org,
-        bpf@vger.kernel.org, llvm@lists.linux.dev
+        linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
 Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-On Fri, Aug 26, 2022 at 9:45 AM Arnaldo Carvalho de Melo
-<acme@kernel.org> wrote:
+On Fri, Aug 26, 2022 at 4:17 AM Arnaldo Carvalho de Melo
+<arnaldo.melo@gmail.com> wrote:
 >
-> Em Wed, Aug 24, 2022 at 08:38:58AM -0700, Ian Rogers escreveu:
-> > Add thread safety annotations to struct mutex so that when compiled with
-> > clang's -Wthread-safety warnings are generated for erroneous lock
-> > patterns. NO_THREAD_SAFETY_ANALYSIS is needed for
-> > mutex_lock/mutex_unlock as the analysis doesn't under pthread calls.
+> Em Fri, Aug 26, 2022 at 01:00:58AM +0800, Zixuan Tan escreveu:
+> > Switch to the flavored EVP API like in test-libcrypto.c, and remove the
+> > bad gcc #pragma.
+> >
+> > Inspired-By: 5b245985a6de ("tools build: Switch to new openssl API for
+> > test-libcrypto")
 >
-> So even having the guards checking if the attribute is available it
-> seems at least clang 11.0 is needed, as the "lockable" arg was
-> introduced there:
+> How did you test the end result? Can you please describe step by step?
 >
->   37    42.61 fedora:32                     : FAIL clang version 10.0.1 (Fedora 10.0.1-3.fc32)
->     In file included from /git/perf-6.0.0-rc2/tools/perf/util/../ui/ui.h:5:
->     /git/perf-6.0.0-rc2/tools/perf/util/../ui/../util/mutex.h:74:8: error: invalid capability name 'lockable'; capability name must be 'mutex' or 'role' [-Werror,-Wthread-safety-attributes]
->     struct LOCKABLE mutex {
->            ^
->     /git/perf-6.0.0-rc2/tools/perf/util/../ui/../util/mutex.h:35:44: note: expanded from macro 'LOCKABLE'
->     #define LOCKABLE __attribute__((capability("lockable")))
+> Also please consider adding a 'perf test' entry to make sure this
+> doesn't regress.
 
+Sorry but I don't get what you mean, what results do I need to test?
 
-capability("lockable") can just be lockable, the capability
-generalization came in a later clang release.
+These EVP_* APIs are just replacements for the deprecated MD5_* APIs in
+openssl v3 [1][2]. With the same input, they produce the same MD5 digest.
 
-That is change:
-#define LOCKABLE __attribute__((capability("lockable")))
-to:
-#define LOCKABLE __attribute__((lockable))
+And this patch just does the migration work for the upgrade and does not
+change the logic of the code. so...what should I test?
 
-and later clangs take the earlier name. Do you want a v5 for this 1 liner?
+Links:
+[1] https://www.openssl.org/docs/man3.0/man3/MD5.html
+[2] https://stackoverflow.com/questions/69806220/advice-needed-for-migration-of-low-level-openssl-api-to-high-level-openssl-apis
 
 Thanks,
-Ian
+Zixuan
 
-> The next fedora releases are ok with it:
 >
->   38   124.89 fedora:33                     : Ok   gcc (GCC) 10.3.1 20210422 (Red Hat 10.3.1-1) , clang version 11.0.0 (Fedora 11.0.0-3.fc33)
->   39   132.20 fedora:34                     : Ok   gcc (GCC) 11.3.1 20220421 (Red Hat 11.3.1-2) , clang version 12.0.1 (Fedora 12.0.1-1.fc34)
->   40    21.44 fedora:34-x-ARC-glibc         : Ok   arc-linux-gcc (ARC HS GNU/Linux glibc toolchain 2019.03-rc1) 8.3.1 20190225
->   41    19.43 fedora:34-x-ARC-uClibc        : Ok   arc-linux-gcc (ARCv2 ISA Linux uClibc toolchain 2019.03-rc1) 8.3.1 20190225
->   42   136.33 fedora:35                     : Ok   gcc (GCC) 11.3.1 20220421 (Red Hat 11.3.1-2) , clang version 13.0.0 (Fedora 13.0.0-3.fc35)
->   43   137.73 fedora:36                     : Ok   gcc (GCC) 12.1.1 20220507 (Red Hat 12.1.1-1) , clang version 14.0.0 (Fedora 14.0.0-1.fc36)
->   44   140.45 fedora:37                     : Ok   gcc (GCC) 12.1.1 20220628 (Red Hat 12.1.1-3) , clang version 14.0.5 (Fedora 14.0.5-6.fc37)
->   45   126.80 fedora:38                     : Ok   gcc (GCC) 12.1.1 20220810 (Red Hat 12.1.1-4) , clang version 14.0.5 (Fedora 14.0.5-6.fc38)
->   46   127.00 fedora:rawhide                : Ok   gcc (GCC) 12.1.1 20220810 (Red Hat 12.1.1-4) , clang version 14.0.5 (Fedora 14.0.5-6.fc38)
->
-> Is there a way to check if a "capability" is available for the
-> attribute? Otherwise we can additionally check the clang version?
->
-> For my tests I'll make clang 11.0 to be the oldest supported compiler
-> (i.e. just disable building with older versions), but wanted to let you
-> know since you try to check if the attribute is available and fallback
-> to doing nothing in that case.
+> Thanks,
 >
 > - Arnaldo
 >
-> > Signed-off-by: Ian Rogers <irogers@google.com>
+> > Signed-off-by: Zixuan Tan <tanzixuan.me@gmail.com>
 > > ---
-> >  tools/perf/util/mutex.c |  2 ++
-> >  tools/perf/util/mutex.h | 72 ++++++++++++++++++++++++++++++++++++++---
-> >  2 files changed, 69 insertions(+), 5 deletions(-)
+> >  tools/perf/util/genelf.c | 20 +++++++++++---------
+> >  1 file changed, 11 insertions(+), 9 deletions(-)
 > >
-> > diff --git a/tools/perf/util/mutex.c b/tools/perf/util/mutex.c
-> > index 892294ac1769..ec813093276d 100644
-> > --- a/tools/perf/util/mutex.c
-> > +++ b/tools/perf/util/mutex.c
-> > @@ -50,11 +50,13 @@ void mutex_destroy(struct mutex *mtx)
-> >  }
+> > diff --git a/tools/perf/util/genelf.c b/tools/perf/util/genelf.c
+> > index 953338b9e887..ed28a0dbcb7f 100644
+> > --- a/tools/perf/util/genelf.c
+> > +++ b/tools/perf/util/genelf.c
+> > @@ -30,10 +30,6 @@
 > >
-> >  void mutex_lock(struct mutex *mtx)
-> > +     NO_THREAD_SAFETY_ANALYSIS
+> >  #define BUILD_ID_URANDOM /* different uuid for each run */
+> >
+> > -// FIXME, remove this and fix the deprecation warnings before its removed and
+> > -// We'll break for good here...
+> > -#pragma GCC diagnostic ignored "-Wdeprecated-declarations"
+> > -
+> >  #ifdef HAVE_LIBCRYPTO_SUPPORT
+> >
+> >  #define BUILD_ID_MD5
+> > @@ -45,6 +41,7 @@
+> >  #endif
+> >
+> >  #ifdef BUILD_ID_MD5
+> > +#include <openssl/evp.h>
+> >  #include <openssl/md5.h>
+> >  #endif
+> >  #endif
+> > @@ -142,15 +139,20 @@ gen_build_id(struct buildid_note *note,
+> >  static void
+> >  gen_build_id(struct buildid_note *note, unsigned long load_addr,
+> > const void *code, size_t csize)
 > >  {
-> >       CHECK_ERR(pthread_mutex_lock(&mtx->lock));
+> > -       MD5_CTX context;
+> > +       EVP_MD_CTX *mdctx;
+> >
+> >         if (sizeof(note->build_id) < 16)
+> >                 errx(1, "build_id too small for MD5");
+> >
+> > -       MD5_Init(&context);
+> > -       MD5_Update(&context, &load_addr, sizeof(load_addr));
+> > -       MD5_Update(&context, code, csize);
+> > -       MD5_Final((unsigned char *)note->build_id, &context);
+> > +       mdctx = EVP_MD_CTX_new();
+> > +       if (!mdctx)
+> > +               errx(2, "failed to create EVP_MD_CTX");
+> > +
+> > +       EVP_DigestInit_ex(mdctx, EVP_md5(), NULL);
+> > +       EVP_DigestUpdate(mdctx, &load_addr, sizeof(load_addr));
+> > +       EVP_DigestUpdate(mdctx, code, csize);
+> > +       EVP_DigestFinal_ex(mdctx, (unsigned char *)note->build_id, NULL);
+> > +       EVP_MD_CTX_free(mdctx);
 > >  }
-> >
-> >  void mutex_unlock(struct mutex *mtx)
-> > +     NO_THREAD_SAFETY_ANALYSIS
-> >  {
-> >       CHECK_ERR(pthread_mutex_unlock(&mtx->lock));
-> >  }
-> > diff --git a/tools/perf/util/mutex.h b/tools/perf/util/mutex.h
-> > index c9e110a2b55e..48a2d87598f0 100644
-> > --- a/tools/perf/util/mutex.h
-> > +++ b/tools/perf/util/mutex.h
-> > @@ -5,11 +5,73 @@
-> >  #include <pthread.h>
-> >  #include <stdbool.h>
-> >
-> > +/*
-> > + * A function-like feature checking macro that is a wrapper around
-> > + * `__has_attribute`, which is defined by GCC 5+ and Clang and evaluates to a
-> > + * nonzero constant integer if the attribute is supported or 0 if not.
-> > + */
-> > +#ifdef __has_attribute
-> > +#define HAVE_ATTRIBUTE(x) __has_attribute(x)
-> > +#else
-> > +#define HAVE_ATTRIBUTE(x) 0
-> > +#endif
-> > +
-> > +
-> > +#if HAVE_ATTRIBUTE(guarded_by) && HAVE_ATTRIBUTE(pt_guarded_by) && \
-> > +     HAVE_ATTRIBUTE(lockable) && HAVE_ATTRIBUTE(exclusive_lock_function) && \
-> > +     HAVE_ATTRIBUTE(exclusive_trylock_function) && HAVE_ATTRIBUTE(exclusive_locks_required) && \
-> > +     HAVE_ATTRIBUTE(no_thread_safety_analysis)
-> > +
-> > +/* Documents if a shared field or global variable needs to be protected by a mutex. */
-> > +#define GUARDED_BY(x) __attribute__((guarded_by(x)))
-> > +
-> > +/*
-> > + * Documents if the memory location pointed to by a pointer should be guarded by
-> > + * a mutex when dereferencing the pointer.
-> > + */
-> > +#define PT_GUARDED_BY(x) __attribute__((pt_guarded_by(x)))
-> > +
-> > +/* Documents if a type is a lockable type. */
-> > +#define LOCKABLE __attribute__((capability("lockable")))
-> > +
-> > +/* Documents functions that acquire a lock in the body of a function, and do not release it. */
-> > +#define EXCLUSIVE_LOCK_FUNCTION(...)  __attribute__((exclusive_lock_function(__VA_ARGS__)))
-> > +
-> > +/*
-> > + * Documents functions that expect a lock to be held on entry to the function,
-> > + * and release it in the body of the function.
-> > + */
-> > +#define UNLOCK_FUNCTION(...) __attribute__((unlock_function(__VA_ARGS__)))
-> > +
-> > +/* Documents functions that try to acquire a lock, and return success or failure. */
-> > +#define EXCLUSIVE_TRYLOCK_FUNCTION(...) \
-> > +     __attribute__((exclusive_trylock_function(__VA_ARGS__)))
-> > +
-> > +
-> > +/* Documents a function that expects a mutex to be held prior to entry. */
-> > +#define EXCLUSIVE_LOCKS_REQUIRED(...) __attribute__((exclusive_locks_required(__VA_ARGS__)))
-> > +
-> > +/* Turns off thread safety checking within the body of a particular function. */
-> > +#define NO_THREAD_SAFETY_ANALYSIS __attribute__((no_thread_safety_analysis))
-> > +
-> > +#else
-> > +
-> > +#define GUARDED_BY(x)
-> > +#define PT_GUARDED_BY(x)
-> > +#define LOCKABLE
-> > +#define EXCLUSIVE_LOCK_FUNCTION(...)
-> > +#define UNLOCK_FUNCTION(...)
-> > +#define EXCLUSIVE_TRYLOCK_FUNCTION(...)
-> > +#define EXCLUSIVE_LOCKS_REQUIRED(...)
-> > +#define NO_THREAD_SAFETY_ANALYSIS
-> > +
-> > +#endif
-> > +
-> >  /*
-> >   * A wrapper around the mutex implementation that allows perf to error check
-> >   * usage, etc.
-> >   */
-> > -struct mutex {
-> > +struct LOCKABLE mutex {
-> >       pthread_mutex_t lock;
-> >  };
-> >
-> > @@ -27,9 +89,9 @@ void mutex_init(struct mutex *mtx);
-> >  void mutex_init_pshared(struct mutex *mtx);
-> >  void mutex_destroy(struct mutex *mtx);
-> >
-> > -void mutex_lock(struct mutex *mtx);
-> > -void mutex_unlock(struct mutex *mtx);
-> > -bool mutex_trylock(struct mutex *mtx);
-> > +void mutex_lock(struct mutex *mtx) EXCLUSIVE_LOCK_FUNCTION(*mtx);
-> > +void mutex_unlock(struct mutex *mtx) UNLOCK_FUNCTION(*mtx);
-> > +bool mutex_trylock(struct mutex *mtx) EXCLUSIVE_TRYLOCK_FUNCTION(true, *mtx);
-> >
-> >  /* Default initialize the cond struct. */
-> >  void cond_init(struct cond *cnd);
-> > @@ -40,7 +102,7 @@ void cond_init(struct cond *cnd);
-> >  void cond_init_pshared(struct cond *cnd);
-> >  void cond_destroy(struct cond *cnd);
-> >
-> > -void cond_wait(struct cond *cnd, struct mutex *mtx);
-> > +void cond_wait(struct cond *cnd, struct mutex *mtx) EXCLUSIVE_LOCKS_REQUIRED(mtx);
-> >  void cond_signal(struct cond *cnd);
-> >  void cond_broadcast(struct cond *cnd);
+> >  #endif
 > >
 > > --
-> > 2.37.2.609.g9ff673ca1a-goog
+> > 2.34.1
 >
 > --
 >
