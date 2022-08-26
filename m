@@ -2,50 +2,49 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EE02BECAAA3
-	for <linux-perf-users@archiver.kernel.org>; Fri, 26 Aug 2022 20:40:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7E7CDECAAD6
+	for <linux-perf-users@archiver.kernel.org>; Fri, 26 Aug 2022 20:48:25 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1344914AbiHZUk1 (ORCPT
+        id S234914AbiHZUsY (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Fri, 26 Aug 2022 16:40:27 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43462 "EHLO
+        Fri, 26 Aug 2022 16:48:24 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52050 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S243095AbiHZUkX (ORCPT
+        with ESMTP id S232426AbiHZUsW (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Fri, 26 Aug 2022 16:40:23 -0400
-Received: from mail-oa1-f42.google.com (mail-oa1-f42.google.com [209.85.160.42])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5AD8ED0765;
-        Fri, 26 Aug 2022 13:40:22 -0700 (PDT)
-Received: by mail-oa1-f42.google.com with SMTP id 586e51a60fabf-f2a4c51c45so3504106fac.9;
-        Fri, 26 Aug 2022 13:40:22 -0700 (PDT)
+        Fri, 26 Aug 2022 16:48:22 -0400
+Received: from mail-oa1-f41.google.com (mail-oa1-f41.google.com [209.85.160.41])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2E67BD1E3C;
+        Fri, 26 Aug 2022 13:48:21 -0700 (PDT)
+Received: by mail-oa1-f41.google.com with SMTP id 586e51a60fabf-11d2dcc31dbso3541247fac.7;
+        Fri, 26 Aug 2022 13:48:21 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
         h=cc:to:subject:message-id:date:from:in-reply-to:references
          :mime-version:x-gm-message-state:from:to:cc;
-        bh=VC/B2aCmREbDRB0d5cj7IYjvFuzN89g85WyKxEil/CU=;
-        b=KirXgUr77bdD4gWhDmx7SpUOxQ+sRuVg1t6MA1jzD8f4nbj3F81+86jyK2ppGTiVC9
-         OU0NU+wCCXjOi1pq5bKD/1TyAjbFTBONVWrJS/Vi7WSwA1P8YE39gO0bQfnpijhXetz3
-         9dCsYbkP5ujNeGWAWS+FfHAqJwdG18RfkWIlx0UKXE7v4I9FYOzGaT7vA+1PU55YDWaY
-         2OLlKFhM4a5F4x6Qk7de6Nh0wej14vCDN9w09TMzfr1QCKTm+rDuZwaJGWpHJE/pGUEO
-         H7QHBl5stMBlEM652Q8+EXXRu5PjU4CyFGHL2nCioS6bE1NncOzDrAdXdM+zCp+5oNTt
-         wviw==
-X-Gm-Message-State: ACgBeo1roImPCfFzkRfeCxwOu2ds4a13dGcBCBMgk4/buC+NFri41bXf
-        45n3lXr6aERJidg7K+e1K9WqDoGj6JOKjDqR3KQ=
-X-Google-Smtp-Source: AA6agR4Te3dKQ6g6TKR4BckswAseo5LxEUCtZ4KSfu1JnyrPazLFBIFV26Eo/GzBpNZW/s1MlD6JFM2mGBqa6Jj4oeg=
+        bh=+sFY7D0l2mnCR+yBDf+opIgpmAA2WEbHZKwcSvQkuz0=;
+        b=XZ7s0hXNmEde4ohHK74sH3BCjN8BfQWuAVtuPeoYll6FujPuRx/7MHB46fAzrOANeI
+         cV1m3rpy8yWAcw8d+huZZGtCxQSe9U4c3tB4JgAvZ67g/p+h+/SrqhVJqB348xYEtrrD
+         k2HNPc6avqVRmOfwlDEIUUaArHhDtvqqYaA6p58pNsVxfY4UFi/00D3Bm2f3QfiVwAtm
+         kwrYz1GyRmfbckQy0knBnLbaSvQxw4S6Hkhp1WqlbHXyby8AzK/f6gd+S0srbjo1Ecrd
+         zFbA4Yz5QITn1NTrsDx59C8pAQ4YOtxT6dd14Tn5yCCD4Tx1OMgaEUMHasDMz+r85lOo
+         uCmw==
+X-Gm-Message-State: ACgBeo1GXVxnN4ULki3E9ut2eLDCsLmzWEu9m5LM0N0zG+FM17vHUhuO
+        RMUIT6M6+QqPxnlcjjq9zQluuXAirghgW4nL3V0=
+X-Google-Smtp-Source: AA6agR5zjotJNa9cZNMRCVklNAcj4vN3wXvrE7llGej28AXg2L/RwCW7jMpT+qihLPXgoIk9036xBPWFpfl3w2jC2PQ=
 X-Received: by 2002:a05:6870:5b84:b0:10c:d1fa:2f52 with SMTP id
- em4-20020a0568705b8400b0010cd1fa2f52mr2722690oab.92.1661546421646; Fri, 26
- Aug 2022 13:40:21 -0700 (PDT)
+ em4-20020a0568705b8400b0010cd1fa2f52mr2736185oab.92.1661546900488; Fri, 26
+ Aug 2022 13:48:20 -0700 (PDT)
 MIME-Version: 1.0
-References: <20220824153901.488576-1-irogers@google.com> <20220824153901.488576-10-irogers@google.com>
- <2cf6edac-6e41-b43c-2bc1-f49cb739201a@intel.com> <CAP-5=fVVWx=LZAzXsxfuktPHwki1gYbV4mcmvJp_9GTDS6KJcQ@mail.gmail.com>
- <a9b4f79d-cdea-821e-0e57-cd4854de6cf4@intel.com> <CAP-5=fW7t9tcJpyUbv8JAo-BFna-KS6FC+HkbuGx6S=h+nBMqw@mail.gmail.com>
- <43540a3d-e64e-ec08-e12e-aebb236a2efe@intel.com> <CAM9d7chBnZtrKe6b8k+VYk1Nmz8YnNWSMmyLydH6+Otvw4xGeA@mail.gmail.com>
- <b0f86189-be17-d1e7-d23c-692eeee2b5ec@intel.com>
-In-Reply-To: <b0f86189-be17-d1e7-d23c-692eeee2b5ec@intel.com>
+References: <20220824153901.488576-1-irogers@google.com> <20220824153901.488576-17-irogers@google.com>
+ <a7176263-7dc8-6cbd-af2d-5338c4c4b546@intel.com> <CAP-5=fXk+mLv=C0CTrvnBeuhCTAtJ=x2O8D2YqvmVZSMHqcLvQ@mail.gmail.com>
+ <b9ffea78-48c4-e2cd-20c2-dc0c9c2c69f7@intel.com> <CAP-5=fVXuwxP-REryDShX0RZQjkdy2YJKJ5M+zczUqDE2=59Bg@mail.gmail.com>
+ <CAM9d7cgcLHYded1w4h22F_KWcHUpuxqak7Ny02Awj1WDFLynDQ@mail.gmail.com> <5a0b4083-084a-56b3-a6a1-0fad1100a316@intel.com>
+In-Reply-To: <5a0b4083-084a-56b3-a6a1-0fad1100a316@intel.com>
 From:   Namhyung Kim <namhyung@kernel.org>
-Date:   Fri, 26 Aug 2022 13:40:10 -0700
-Message-ID: <CAM9d7ciroc1XzRL+W34D5G7kCp4KCzRxjyRqnO2OXj=-ZaMTLQ@mail.gmail.com>
-Subject: Re: [PATCH v3 09/18] perf ui: Update use of pthread mutex
+Date:   Fri, 26 Aug 2022 13:48:09 -0700
+Message-ID: <CAM9d7chNUhmULYUfkEuBC3LcD08y7hLGmFn0qeX83KqoPksvCQ@mail.gmail.com>
+Subject: Re: [PATCH v3 16/18] perf sched: Fixes for thread safety analysis
 To:     Adrian Hunter <adrian.hunter@intel.com>
 Cc:     Ian Rogers <irogers@google.com>,
         Peter Zijlstra <peterz@infradead.org>,
@@ -100,25 +99,42 @@ Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-On Fri, Aug 26, 2022 at 12:21 PM Adrian Hunter <adrian.hunter@intel.com> wrote:
+On Fri, Aug 26, 2022 at 12:36 PM Adrian Hunter <adrian.hunter@intel.com> wrote:
 >
-> On 26/08/22 22:00, Namhyung Kim wrote:
-> > On Fri, Aug 26, 2022 at 11:53 AM Adrian Hunter <adrian.hunter@intel.com> wrote:
-> >> Below seems adequate for now, at least logically, but maybe it
-> >> would confuse clang thread-safety analysis?
-> >
-> > I think it's not just about locks, the exit_browser should bail out early
-> > if the setup code was not called.
->
-> In those cases, use_browser is 0 or -1 unless someone has inserted
-> an invalid perf config like "tui.script=on" or "gtk.script=on".
-> So currently, in cases where exit_browser() is called without
-> setup_browser(), it does nothing.  Which means it is only the
-> unconditional mutex_destroy() that needs to be conditional.
+> On 26/08/22 21:26, Namhyung Kim wrote:
+> > On Fri, Aug 26, 2022 at 10:48 AM Ian Rogers <irogers@google.com> wrote:
 
-Yeah there's a possibility that it can be called with > 0 use_browser
-on some broken config or something.  So I think it's safer and better
-for future changes.
+> >> In the previous code the threads were blocked on mutexes that were
+> >> stack allocated and the stack memory went away. You are correct to say
+> >> that to those locks I added an init and destroy call. The lifetime of
+> >> the mutex was wrong previously and remains wrong in this change.
+> >
+> > I think you fixed the lifetime issue with sched->thread_funcs_exit here.
+> > All you need to do is calling pthread_join() after the mutex_unlock, no?
+>
+> Like this maybe:
+
+Yeah, but at this point we might want to factor it out as a function like
+destroy_tasks().
 
 Thanks,
 Namhyung
+
+>
+> diff --git a/tools/perf/builtin-sched.c b/tools/perf/builtin-sched.c
+> index b483ff0d432e..8090c1218855 100644
+> --- a/tools/perf/builtin-sched.c
+> +++ b/tools/perf/builtin-sched.c
+> @@ -3326,6 +3326,13 @@ static int perf_sched__replay(struct perf_sched *sched)
+>         sched->thread_funcs_exit = true;
+>         mutex_unlock(&sched->start_work_mutex);
+>         mutex_unlock(&sched->work_done_wait_mutex);
+> +       /* Get rid of threads so they won't be upset by mutex destruction */
+> +       for (i = 0; i < sched->nr_tasks; i++) {
+> +               int err = pthread_join(sched->tasks[i]->thread, NULL);
+> +
+> +               if (err)
+> +                       pr_err("pthread_join() failed for task nr %lu, error %d\n", i, err);
+> +       }
+>         return 0;
+>  }
