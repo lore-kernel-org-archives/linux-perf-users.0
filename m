@@ -2,52 +2,60 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E5E4BECAAD6
-	for <linux-perf-users@archiver.kernel.org>; Fri, 26 Aug 2022 19:21:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1F568ECAAA3
+	for <linux-perf-users@archiver.kernel.org>; Fri, 26 Aug 2022 19:36:16 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S237347AbiHZTVK (ORCPT
+        id S241517AbiHZTgP (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Fri, 26 Aug 2022 15:21:10 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45946 "EHLO
+        Fri, 26 Aug 2022 15:36:15 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42182 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S235389AbiHZTVJ (ORCPT
+        with ESMTP id S230408AbiHZTgM (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Fri, 26 Aug 2022 15:21:09 -0400
-Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 44FD7B07F6;
-        Fri, 26 Aug 2022 12:21:08 -0700 (PDT)
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id BB19461E86;
-        Fri, 26 Aug 2022 19:21:07 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id C381FC433C1;
-        Fri, 26 Aug 2022 19:21:06 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1661541667;
-        bh=QvGGfd4u3ZgGNQzPE8cvR++tbeSXUZdTtSLRfphuRE0=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=hpZWFIk7lRrtsGJa4ByLTO07Az2diNblNKXw38vxSFZWOD5B5cddPYiKIDDRz4a//
-         9z+u4etBw19PB9BzhBsiLLLgBx4B4Rnxz+QfB3YAMd476DOnri7C5lM19u5jIlagix
-         oyLfXFn7SoKxxcABMjSlmAHd3zMGL7jkuBIlDS3Mcy7ARZF68/7kuiTDVuFYFyO1FP
-         c/1LWUsqCALw5vcgk/UF6mHPL8w0GyN87zfyXVQf4r1XtzTLVJkh6yCcy/brxEi5Hx
-         lZCD8w78PS5G2+p4ExhYnVdXG3fOZfd25Gpr4SPH8C0qPG1Ctj+sXhTeORATjWmyxq
-         JTDkKV//4dBzg==
-Received: by quaco.ghostprotocols.net (Postfix, from userid 1000)
-        id 9B00B404A1; Fri, 26 Aug 2022 16:21:04 -0300 (-03)
-Date:   Fri, 26 Aug 2022 16:21:04 -0300
-From:   Arnaldo Carvalho de Melo <acme@kernel.org>
-To:     Namhyung Kim <namhyung@kernel.org>
-Cc:     Ian Rogers <irogers@google.com>,
-        Peter Zijlstra <peterz@infradead.org>,
+        Fri, 26 Aug 2022 15:36:12 -0400
+Received: from mga12.intel.com (mga12.intel.com [192.55.52.136])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DA82DCE49A;
+        Fri, 26 Aug 2022 12:36:11 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1661542571; x=1693078571;
+  h=message-id:date:mime-version:subject:to:cc:references:
+   from:in-reply-to:content-transfer-encoding;
+  bh=iSj/SuZhPON+rDmdOdwBzP5dOtaScuuVxlTIXwYMKPE=;
+  b=DRt/p4S7CY0viVcYn0LywGrg+HrBcUCJhmQLo8HoqzUeYB+qRvxyVvW4
+   gWyjgvOcuAcIMJ/H1xXOgDwKthBmpEGvKcburnsLqDO6ysDPZ2UFszDkV
+   w8EBCSGY0Bxh69TojQBDItbGWGzWO5GtEP/IIuRGesOdWli5ryVA94Mcj
+   Yh5Df2M0RNiq6ZbL+DJe+ACClc+OMagH9q8VdfUUBzaNPYlBdUv5q2Txm
+   W74U0MebEUWCxTQZZnZkzyzPCwtn700sJwwjcxqFZ06ybZhAYY17fktmn
+   lXNr6sk/J9Fb0rKeMLP3vkCjjk89bpgYqqxtEzA1xqCRjFxi7zPbx2SRC
+   g==;
+X-IronPort-AV: E=McAfee;i="6500,9779,10451"; a="274332374"
+X-IronPort-AV: E=Sophos;i="5.93,266,1654585200"; 
+   d="scan'208";a="274332374"
+Received: from fmsmga008.fm.intel.com ([10.253.24.58])
+  by fmsmga106.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 26 Aug 2022 12:36:11 -0700
+X-IronPort-AV: E=Sophos;i="5.93,266,1654585200"; 
+   d="scan'208";a="671592528"
+Received: from ahunter6-mobl1.ger.corp.intel.com (HELO [10.0.2.15]) ([10.252.50.209])
+  by fmsmga008-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 26 Aug 2022 12:36:00 -0700
+Message-ID: <5a0b4083-084a-56b3-a6a1-0fad1100a316@intel.com>
+Date:   Fri, 26 Aug 2022 22:35:53 +0300
+MIME-Version: 1.0
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
+ Firefox/91.0 Thunderbird/91.11.0
+Subject: Re: [PATCH v3 16/18] perf sched: Fixes for thread safety analysis
+Content-Language: en-US
+To:     Namhyung Kim <namhyung@kernel.org>, Ian Rogers <irogers@google.com>
+Cc:     Peter Zijlstra <peterz@infradead.org>,
         Ingo Molnar <mingo@redhat.com>,
+        Arnaldo Carvalho de Melo <acme@kernel.org>,
         Mark Rutland <mark.rutland@arm.com>,
         Alexander Shishkin <alexander.shishkin@linux.intel.com>,
         Jiri Olsa <jolsa@kernel.org>,
         Thomas Gleixner <tglx@linutronix.de>,
         Darren Hart <dvhart@infradead.org>,
         Davidlohr Bueso <dave@stgolabs.net>,
-        =?iso-8859-1?Q?Andr=E9?= Almeida <andrealmeid@igalia.com>,
+        =?UTF-8?Q?Andr=c3=a9_Almeida?= <andrealmeid@igalia.com>,
         Nathan Chancellor <nathan@kernel.org>,
         Nick Desaulniers <ndesaulniers@google.com>,
         Tom Rix <trix@redhat.com>, Weiguo Li <liwg06@foxmail.com>,
@@ -68,8 +76,7 @@ Cc:     Ian Rogers <irogers@google.com>,
         Quentin Monnet <quentin@isovalent.com>,
         William Cohen <wcohen@redhat.com>,
         Andres Freund <andres@anarazel.de>,
-        Adrian Hunter <adrian.hunter@intel.com>,
-        Martin =?utf-8?B?TGnFoWth?= <mliska@suse.cz>,
+        =?UTF-8?Q?Martin_Li=c5=a1ka?= <mliska@suse.cz>,
         Colin Ian King <colin.king@intel.com>,
         James Clark <james.clark@arm.com>,
         Fangrui Song <maskray@google.com>,
@@ -86,72 +93,173 @@ Cc:     Ian Rogers <irogers@google.com>,
         linux-kernel <linux-kernel@vger.kernel.org>,
         linux-perf-users <linux-perf-users@vger.kernel.org>,
         bpf <bpf@vger.kernel.org>, llvm@lists.linux.dev
-Subject: Re: [PATCH v4 00/18] Mutex wrapper, locking and memory leak fixes
-Message-ID: <YwkdIBsQEKXG3/rE@kernel.org>
-References: <20220826164242.43412-1-irogers@google.com>
- <CAM9d7cgQZsbwWSdRNQqUE+GsSgPVqFmKs9LJ5b6ta2-dax5T2Q@mail.gmail.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CAM9d7cgQZsbwWSdRNQqUE+GsSgPVqFmKs9LJ5b6ta2-dax5T2Q@mail.gmail.com>
-X-Url:  http://acmel.wordpress.com
+References: <20220824153901.488576-1-irogers@google.com>
+ <20220824153901.488576-17-irogers@google.com>
+ <a7176263-7dc8-6cbd-af2d-5338c4c4b546@intel.com>
+ <CAP-5=fXk+mLv=C0CTrvnBeuhCTAtJ=x2O8D2YqvmVZSMHqcLvQ@mail.gmail.com>
+ <b9ffea78-48c4-e2cd-20c2-dc0c9c2c69f7@intel.com>
+ <CAP-5=fVXuwxP-REryDShX0RZQjkdy2YJKJ5M+zczUqDE2=59Bg@mail.gmail.com>
+ <CAM9d7cgcLHYded1w4h22F_KWcHUpuxqak7Ny02Awj1WDFLynDQ@mail.gmail.com>
+From:   Adrian Hunter <adrian.hunter@intel.com>
+Organization: Intel Finland Oy, Registered Address: PL 281, 00181 Helsinki,
+ Business Identity Code: 0357606 - 4, Domiciled in Helsinki
+In-Reply-To: <CAM9d7cgcLHYded1w4h22F_KWcHUpuxqak7Ny02Awj1WDFLynDQ@mail.gmail.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-Em Fri, Aug 26, 2022 at 12:08:06PM -0700, Namhyung Kim escreveu:
-> On Fri, Aug 26, 2022 at 9:42 AM Ian Rogers <irogers@google.com> wrote:
-> >
-> > When fixing a locking race and memory leak in:
-> > https://lore.kernel.org/linux-perf-users/20211118193714.2293728-1-irogers@google.com/
-> >
-> > It was requested that debug mutex code be separated out into its own
-> > files. This was, in part, done by Pavithra Gurushankar in:
-> > https://lore.kernel.org/lkml/20220727111954.105118-1-gpavithrasha@gmail.com/
-> >
-> > These patches fix issues with the previous patches, add in the
-> > original dso->nsinfo fix and then build on our mutex wrapper with
-> > clang's -Wthread-safety analysis. The analysis found missing unlocks
-> > in builtin-sched.c which are fixed and -Wthread-safety is enabled by
-> > default when building with clang.
-> >
-> > v4. Adds a comment for the trylock result, fixes the new line (missed
-> >     in v3) and removes two blank lines as suggested by Adrian Hunter.
-> > v3. Adds a missing new line to the error messages and removes the
-> >     pshared argument to mutex_init by having two functions, mutex_init
-> >     and mutex_init_pshared. These changes were suggested by Adrian Hunter.
-> > v2. Breaks apart changes that s/pthread_mutex/mutex/g and the lock
-> >     annotations as requested by Arnaldo and Namhyung. A boolean is
-> >     added to builtin-sched.c to terminate thread funcs rather than
-> >     leaving them blocked on delted mutexes.
-> >
-> > Ian Rogers (17):
-> >   perf bench: Update use of pthread mutex/cond
-> >   perf tests: Avoid pthread.h inclusion
-> >   perf hist: Update use of pthread mutex
-> >   perf bpf: Remove unused pthread.h include
-> >   perf lock: Remove unused pthread.h include
-> >   perf record: Update use of pthread mutex
-> >   perf sched: Update use of pthread mutex
-> >   perf ui: Update use of pthread mutex
-> >   perf mmap: Remove unnecessary pthread.h include
-> >   perf dso: Update use of pthread mutex
-> >   perf annotate: Update use of pthread mutex
-> >   perf top: Update use of pthread mutex
-> >   perf dso: Hold lock when accessing nsinfo
-> >   perf mutex: Add thread safety annotations
-> >   perf sched: Fixes for thread safety analysis
-> >   perf top: Fixes for thread safety analysis
-> >   perf build: Enable -Wthread-safety with clang
-> >
-> > Pavithra Gurushankar (1):
-> >   perf mutex: Wrapped usage of mutex and cond
+On 26/08/22 21:26, Namhyung Kim wrote:
+> On Fri, Aug 26, 2022 at 10:48 AM Ian Rogers <irogers@google.com> wrote:
+>>
+>> On Fri, Aug 26, 2022 at 10:41 AM Adrian Hunter <adrian.hunter@intel.com> wrote:
+>>>
+>>> On 26/08/22 19:06, Ian Rogers wrote:
+>>>> On Fri, Aug 26, 2022 at 5:12 AM Adrian Hunter <adrian.hunter@intel.com> wrote:
+>>>>>
+>>>>> On 24/08/22 18:38, Ian Rogers wrote:
+>>>>>> Add annotations to describe lock behavior. Add unlocks so that mutexes
+>>>>>> aren't conditionally held on exit from perf_sched__replay. Add an exit
+>>>>>> variable so that thread_func can terminate, rather than leaving the
+>>>>>> threads blocked on mutexes.
+>>>>>>
+>>>>>> Signed-off-by: Ian Rogers <irogers@google.com>
+>>>>>> ---
+>>>>>>  tools/perf/builtin-sched.c | 46 ++++++++++++++++++++++++--------------
+>>>>>>  1 file changed, 29 insertions(+), 17 deletions(-)
+>>>>>>
+>>>>>> diff --git a/tools/perf/builtin-sched.c b/tools/perf/builtin-sched.c
+>>>>>> index 7e4006d6b8bc..b483ff0d432e 100644
+>>>>>> --- a/tools/perf/builtin-sched.c
+>>>>>> +++ b/tools/perf/builtin-sched.c
+>>>>>> @@ -246,6 +246,7 @@ struct perf_sched {
+>>>>>>       const char      *time_str;
+>>>>>>       struct perf_time_interval ptime;
+>>>>>>       struct perf_time_interval hist_time;
+>>>>>> +     volatile bool   thread_funcs_exit;
+>>>>>>  };
+>>>>>>
+>>>>>>  /* per thread run time data */
+>>>>>> @@ -633,31 +634,34 @@ static void *thread_func(void *ctx)
+>>>>>>       prctl(PR_SET_NAME, comm2);
+>>>>>>       if (fd < 0)
+>>>>>>               return NULL;
+>>>>>> -again:
+>>>>>> -     ret = sem_post(&this_task->ready_for_work);
+>>>>>> -     BUG_ON(ret);
+>>>>>> -     mutex_lock(&sched->start_work_mutex);
+>>>>>> -     mutex_unlock(&sched->start_work_mutex);
+>>>>>>
+>>>>>> -     cpu_usage_0 = get_cpu_usage_nsec_self(fd);
+>>>>>> +     while (!sched->thread_funcs_exit) {
+>>>>>> +             ret = sem_post(&this_task->ready_for_work);
+>>>>>> +             BUG_ON(ret);
+>>>>>> +             mutex_lock(&sched->start_work_mutex);
+>>>>>> +             mutex_unlock(&sched->start_work_mutex);
+>>>>>>
+>>>>>> -     for (i = 0; i < this_task->nr_events; i++) {
+>>>>>> -             this_task->curr_event = i;
+>>>>>> -             perf_sched__process_event(sched, this_task->atoms[i]);
+>>>>>> -     }
+>>>>>> +             cpu_usage_0 = get_cpu_usage_nsec_self(fd);
+>>>>>>
+>>>>>> -     cpu_usage_1 = get_cpu_usage_nsec_self(fd);
+>>>>>> -     this_task->cpu_usage = cpu_usage_1 - cpu_usage_0;
+>>>>>> -     ret = sem_post(&this_task->work_done_sem);
+>>>>>> -     BUG_ON(ret);
+>>>>>> +             for (i = 0; i < this_task->nr_events; i++) {
+>>>>>> +                     this_task->curr_event = i;
+>>>>>> +                     perf_sched__process_event(sched, this_task->atoms[i]);
+>>>>>> +             }
+>>>>>>
+>>>>>> -     mutex_lock(&sched->work_done_wait_mutex);
+>>>>>> -     mutex_unlock(&sched->work_done_wait_mutex);
+>>>>>> +             cpu_usage_1 = get_cpu_usage_nsec_self(fd);
+>>>>>> +             this_task->cpu_usage = cpu_usage_1 - cpu_usage_0;
+>>>>>> +             ret = sem_post(&this_task->work_done_sem);
+>>>>>> +             BUG_ON(ret);
+>>>>>>
+>>>>>> -     goto again;
+>>>>>> +             mutex_lock(&sched->work_done_wait_mutex);
+>>>>>> +             mutex_unlock(&sched->work_done_wait_mutex);
+>>>>>> +     }
+>>>>>> +     return NULL;
+>>>>>>  }
+>>>>>>
+>>>>>>  static void create_tasks(struct perf_sched *sched)
+>>>>>> +     EXCLUSIVE_LOCK_FUNCTION(sched->start_work_mutex)
+>>>>>> +     EXCLUSIVE_LOCK_FUNCTION(sched->work_done_wait_mutex)
+>>>>>>  {
+>>>>>>       struct task_desc *task;
+>>>>>>       pthread_attr_t attr;
+>>>>>> @@ -687,6 +691,8 @@ static void create_tasks(struct perf_sched *sched)
+>>>>>>  }
+>>>>>>
+>>>>>>  static void wait_for_tasks(struct perf_sched *sched)
+>>>>>> +     EXCLUSIVE_LOCKS_REQUIRED(sched->work_done_wait_mutex)
+>>>>>> +     EXCLUSIVE_LOCKS_REQUIRED(sched->start_work_mutex)
+>>>>>>  {
+>>>>>>       u64 cpu_usage_0, cpu_usage_1;
+>>>>>>       struct task_desc *task;
+>>>>>> @@ -738,6 +744,8 @@ static void wait_for_tasks(struct perf_sched *sched)
+>>>>>>  }
+>>>>>>
+>>>>>>  static void run_one_test(struct perf_sched *sched)
+>>>>>> +     EXCLUSIVE_LOCKS_REQUIRED(sched->work_done_wait_mutex)
+>>>>>> +     EXCLUSIVE_LOCKS_REQUIRED(sched->start_work_mutex)
+>>>>>>  {
+>>>>>>       u64 T0, T1, delta, avg_delta, fluct;
+>>>>>>
+>>>>>> @@ -3309,11 +3317,15 @@ static int perf_sched__replay(struct perf_sched *sched)
+>>>>>>       print_task_traces(sched);
+>>>>>>       add_cross_task_wakeups(sched);
+>>>>>>
+>>>>>> +     sched->thread_funcs_exit = false;
+>>>>>>       create_tasks(sched);
+>>>>>>       printf("------------------------------------------------------------\n");
+>>>>>>       for (i = 0; i < sched->replay_repeat; i++)
+>>>>>>               run_one_test(sched);
+>>>>>>
+>>>>>> +     sched->thread_funcs_exit = true;
+>>>>>> +     mutex_unlock(&sched->start_work_mutex);
+>>>>>> +     mutex_unlock(&sched->work_done_wait_mutex);
+>>>>>
+>>>>> I think you still need to wait for the threads to exit before
+>>>>> destroying the mutexes.
+>>>>
+>>>> This is a pre-existing issue and beyond the scope of this patch set.
+>>>
+>>> You added the mutex_destroy functions in patch 8, so it is still
+>>> fallout from that.
+>>
+>> In the previous code the threads were blocked on mutexes that were
+>> stack allocated and the stack memory went away. You are correct to say
+>> that to those locks I added an init and destroy call. The lifetime of
+>> the mutex was wrong previously and remains wrong in this change.
 > 
-> For the patches 1-7 and 10-13
-> 
-> Acked-by: Namhyung Kim <namhyung@kernel.org>
+> I think you fixed the lifetime issue with sched->thread_funcs_exit here.
+> All you need to do is calling pthread_join() after the mutex_unlock, no?
 
-Thanks added it, will try to get what is done so far merged and then we
-can go on addressing the other issues brought up in this thread.
+Like this maybe:
 
-- Arnaldo
+diff --git a/tools/perf/builtin-sched.c b/tools/perf/builtin-sched.c
+index b483ff0d432e..8090c1218855 100644
+--- a/tools/perf/builtin-sched.c
++++ b/tools/perf/builtin-sched.c
+@@ -3326,6 +3326,13 @@ static int perf_sched__replay(struct perf_sched *sched)
+ 	sched->thread_funcs_exit = true;
+ 	mutex_unlock(&sched->start_work_mutex);
+ 	mutex_unlock(&sched->work_done_wait_mutex);
++	/* Get rid of threads so they won't be upset by mutex destruction */
++	for (i = 0; i < sched->nr_tasks; i++) {
++		int err = pthread_join(sched->tasks[i]->thread, NULL);
++
++		if (err)
++			pr_err("pthread_join() failed for task nr %lu, error %d\n", i, err);
++	}
+ 	return 0;
+ }
+ 
+
+
