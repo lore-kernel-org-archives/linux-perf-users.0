@@ -2,58 +2,58 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 87B8FECAAA3
-	for <linux-perf-users@archiver.kernel.org>; Fri, 26 Aug 2022 16:44:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 94F42ECAAA6
+	for <linux-perf-users@archiver.kernel.org>; Fri, 26 Aug 2022 16:45:08 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S245617AbiHZQoR (ORCPT
+        id S1344600AbiHZQpF (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Fri, 26 Aug 2022 12:44:17 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33916 "EHLO
+        Fri, 26 Aug 2022 12:45:05 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33888 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1344596AbiHZQnz (ORCPT
+        with ESMTP id S1344718AbiHZQoo (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Fri, 26 Aug 2022 12:43:55 -0400
-Received: from mail-yw1-x114a.google.com (mail-yw1-x114a.google.com [IPv6:2607:f8b0:4864:20::114a])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5FF12E0962
-        for <linux-perf-users@vger.kernel.org>; Fri, 26 Aug 2022 09:43:29 -0700 (PDT)
-Received: by mail-yw1-x114a.google.com with SMTP id 00721157ae682-33e1114437fso33152167b3.19
-        for <linux-perf-users@vger.kernel.org>; Fri, 26 Aug 2022 09:43:29 -0700 (PDT)
+        Fri, 26 Aug 2022 12:44:44 -0400
+Received: from mail-yw1-x1149.google.com (mail-yw1-x1149.google.com [IPv6:2607:f8b0:4864:20::1149])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1F1F5DFB5F
+        for <linux-perf-users@vger.kernel.org>; Fri, 26 Aug 2022 09:43:59 -0700 (PDT)
+Received: by mail-yw1-x1149.google.com with SMTP id 00721157ae682-337ed9110c2so33510787b3.15
+        for <linux-perf-users@vger.kernel.org>; Fri, 26 Aug 2022 09:43:58 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=google.com; s=20210112;
         h=cc:to:from:subject:references:mime-version:message-id:in-reply-to
          :date:from:to:cc;
-        bh=byVpB80TV/x11qGZZj1V9Hbrrk6J+Ff/Bi0KHWzM1Uo=;
-        b=ROEzNU2vLJMBQ/ebGwfQ6eGsi2A4XeOX0z4/AtBTW7uH+wvBDbvD9U7dJUuGUu0/t/
-         RG9SYRmEyQo81EQ6zm3BjTZyRAd/U+mfJ7acDyId27JWIUA+paGfqTwDijvDB5d96jS4
-         0Evlu4LK9nXucMq0urv221+RSew0RsqU7Avx7QFSET/cxIFWkyK8hulDJfmqHHoDNT5d
-         xzKrx5b6n0zWGgGV0Vid5qk43WAwDqZ2pDO3Z9r3V/WssKhdPELqolGKQo+4CFfR2Ggh
-         H3RSQhX3uRz8yinHvLoTXXd77gH0H5rzVUCKfgzHXTupkv1hVDBVI3XndkxCFQPKiQVA
-         mRTw==
+        bh=ACInBWBwNvRh9+ZIkz7xZW+D59fAbxI1HNUoQj5EwTw=;
+        b=A0ERzChba5qfQmN7t7ZnM+aWwRGaH2/CrJK4ga0h0ake/rNiQ1IkyR3JmXhJrMT9a2
+         KnHqRjX6PAnDpWoIkW8DOomTPRLzc1TyRbC3t+/4APWQ++yOkmcb7vZpIh864xKc8YkK
+         TXueOMvwyqUW3p/H3jsDEaZeJ+ManaFKIw162zxrEZglv7KFe53adPbLvLotwONtq3m/
+         VkC4OmR/ajX51K4DFiENSlLRlXTjnnPJs3yS3cx54uVvE0IWijCmALy9ppEdFbi335dQ
+         oYkX423X1tMjhhM+hPZBMshXdSCABfYwEL8duHu/C0YW0phgba8d6AjJngM2mSDJoJtU
+         Qqcg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
         h=cc:to:from:subject:references:mime-version:message-id:in-reply-to
          :date:x-gm-message-state:from:to:cc;
-        bh=byVpB80TV/x11qGZZj1V9Hbrrk6J+Ff/Bi0KHWzM1Uo=;
-        b=34Skg/1D6nR3GDRtjbikoyts+a39Gg92uUr5xQhERy8NMv+0uP6NBHappByIXdM6Y2
-         U9PUzC4YwGwvWWy1UslzKnEN10v1jw04H9VCjAL9ANrvoFG0Q6avvJOl8olP635l0U6J
-         ScM/gy3niJuYGty/l80TIkohJL/STxxSFE5186zDXDsHC8OSzIrhiB/F5CSI6sBATIJp
-         pVZZ+kMD+n8VUHnevrDPUnTF6fI+XfAXJnZF961F0btJm6G2D+VxZ9W/b13gNzac8J+n
-         yeyCUlKXIbDnGnq05bOUI7QgjQ3tkBUyo0XhkBwCy+V7jS/KmvVQO2k7lj6sygJoLWXr
-         abqA==
-X-Gm-Message-State: ACgBeo1OUSqhKCbkEBVhVwmoChShCdIXYxvWzEGZno/edf8huTVb0ULc
-        Jip6KEYsUBeJx6D6kW3vjLk9zfB3Hw1s
-X-Google-Smtp-Source: AA6agR6+TnZFZIJcRd/XLNKJvnwoJOukG+FHhTf/+Ns3Gs61SwVZyHKl1Nu9OjgbFxM6njZlSR8C8NrDOQey
+        bh=ACInBWBwNvRh9+ZIkz7xZW+D59fAbxI1HNUoQj5EwTw=;
+        b=paB9+UZ6sVjnOxn96huUznYpLF3wHR//27hIOnnj1MXyFkxiFvUWmajIlPWUrpRMpp
+         XULIL4os340HYCB1xIDitNeTLCSFhw83RdkbHUJ4WDzVILCOVkD0At510S0JxGaBSryh
+         S3oLR6Uh3JCsmc7IMBswzcpF3lOqikY08XieI5OVIS3fTv3iOTt+Gtoum5qhuMzBjG5n
+         rgV55cdS59dgx/ZiYzIwD8s3GeGHlY4bz7nflXXyLJTW6V8BoFREWFzopQlU4DF79fk8
+         44N5L54u5UBxdSPcwB/gEDskV+iG9jOygf0stvUIqOTYcRhcrmKJ4VN+P5RBqhFMQ6CN
+         qWHg==
+X-Gm-Message-State: ACgBeo22Y5/UPSo0F78m6/n3XEmybdLJoFczh1Rn1/8GimdePD48r59/
+        pOqzpbqAFgZABZ2H3/XtKS0LbHucGkvf
+X-Google-Smtp-Source: AA6agR674nFvhyZ8kZZpDZ9P2qEjEXJiLqOtFWE4EU1fMUMemGrNgewnTe7bwqftGS+iFizSaZUFrMd6XEEw
 X-Received: from irogers.svl.corp.google.com ([2620:15c:2d4:203:ccb1:c46b:7044:2508])
- (user=irogers job=sendgmr) by 2002:a25:afc6:0:b0:695:8a28:1dc6 with SMTP id
- d6-20020a25afc6000000b006958a281dc6mr494579ybj.500.1661532207957; Fri, 26 Aug
- 2022 09:43:27 -0700 (PDT)
-Date:   Fri, 26 Aug 2022 09:42:29 -0700
+ (user=irogers job=sendgmr) by 2002:a5b:6c7:0:b0:66e:3713:9929 with SMTP id
+ r7-20020a5b06c7000000b0066e37139929mr535950ybq.34.1661532237966; Fri, 26 Aug
+ 2022 09:43:57 -0700 (PDT)
+Date:   Fri, 26 Aug 2022 09:42:30 -0700
 In-Reply-To: <20220826164242.43412-1-irogers@google.com>
-Message-Id: <20220826164242.43412-6-irogers@google.com>
+Message-Id: <20220826164242.43412-7-irogers@google.com>
 Mime-Version: 1.0
 References: <20220826164242.43412-1-irogers@google.com>
 X-Mailer: git-send-email 2.37.2.672.g94769d06f0-goog
-Subject: [PATCH v4 05/18] perf bpf: Remove unused pthread.h include
+Subject: [PATCH v4 06/18] perf lock: Remove unused pthread.h include
 From:   Ian Rogers <irogers@google.com>
 To:     Peter Zijlstra <peterz@infradead.org>,
         Ingo Molnar <mingo@redhat.com>,
@@ -109,24 +109,24 @@ Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-No pthread usage in bpf-event.h.
+No pthread usage in builtin-lock.c.
 
 Signed-off-by: Ian Rogers <irogers@google.com>
 ---
- tools/perf/util/bpf-event.h | 1 -
+ tools/perf/builtin-lock.c | 1 -
  1 file changed, 1 deletion(-)
 
-diff --git a/tools/perf/util/bpf-event.h b/tools/perf/util/bpf-event.h
-index 144a8a24cc69..1bcbd4fb6c66 100644
---- a/tools/perf/util/bpf-event.h
-+++ b/tools/perf/util/bpf-event.h
-@@ -4,7 +4,6 @@
- 
- #include <linux/compiler.h>
- #include <linux/rbtree.h>
+diff --git a/tools/perf/builtin-lock.c b/tools/perf/builtin-lock.c
+index dd11d3471baf..70197c0593b1 100644
+--- a/tools/perf/builtin-lock.c
++++ b/tools/perf/builtin-lock.c
+@@ -28,7 +28,6 @@
+ #include <sys/types.h>
+ #include <sys/prctl.h>
+ #include <semaphore.h>
 -#include <pthread.h>
- #include <api/fd/array.h>
- #include <stdio.h>
+ #include <math.h>
+ #include <limits.h>
  
 -- 
 2.37.2.672.g94769d06f0-goog
