@@ -2,98 +2,145 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 31D5FECAAA3
-	for <linux-perf-users@archiver.kernel.org>; Fri, 26 Aug 2022 06:20:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 68C70ECAAA3
+	for <linux-perf-users@archiver.kernel.org>; Fri, 26 Aug 2022 06:32:19 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229810AbiHZGUA (ORCPT
+        id S240011AbiHZGcS (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Fri, 26 Aug 2022 02:20:00 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38714 "EHLO
+        Fri, 26 Aug 2022 02:32:18 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58166 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S244780AbiHZGT7 (ORCPT
+        with ESMTP id S229556AbiHZGcR (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Fri, 26 Aug 2022 02:19:59 -0400
-Received: from mail-pl1-x635.google.com (mail-pl1-x635.google.com [IPv6:2607:f8b0:4864:20::635])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8C57B63F3
-        for <linux-perf-users@vger.kernel.org>; Thu, 25 Aug 2022 23:19:57 -0700 (PDT)
-Received: by mail-pl1-x635.google.com with SMTP id io24so786754plb.1
-        for <linux-perf-users@vger.kernel.org>; Thu, 25 Aug 2022 23:19:57 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc;
-        bh=feSSvQfSIZTTbKIOXODfwXSxUp0ih4gkGwyK7VijaP0=;
-        b=XgDFRm1E8UjNTOgDL5udYLrY3rfl7szKOjxlfoj2UF0hohpr4ppLGZHSckwe23lT/W
-         zxa2FF/iIKpWsCVYwSDydF684UjFCrjEVy2f5leRBss3MTVvPgqoR76PCYGt86UNQdEi
-         N0UqN2hg+A6xm1ZE2FaelV7AiMqK0vMwgw41Wjc/H05fiQCylmtdpfXIgzR12l6I0IY8
-         SC8Ns9qRzM0Erh+Vli8KJ01EsBOXzMwu+Ct8BM5m4s3UvO9F4Ctzbaq1GnEyFsv7v2Mf
-         5Uk6J3PCt+wWNx4Rh9MoGQeZ65B+7RxRGQ1gPyu0O6bU8WFplfmWRZgklWXHsVTEnnyA
-         SdSQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc;
-        bh=feSSvQfSIZTTbKIOXODfwXSxUp0ih4gkGwyK7VijaP0=;
-        b=6Op6nqOcBemZvEikMObVM/MXgYDKqJPRq5E/ZZX+FUm9LZh/uSReJAaK0y3dJne9Kc
-         YGKXJnT8AUvb2Sh0BbI7rX22ZqCLFnaH4aOWw9/u6seRsvJOywMmVUuzNjs/INSXaijd
-         YZl9ehBepZZ7XLK13B3w7VUbRX6vefGSLWPU2gTvgHR/fMC9hqnKOltxw9YhQ6L2J3QI
-         1OMxU1rIZHXQoduVCoZ6e6SExX9cEvLCb4Pqk9QeYV2D8IcZBu8hHeGcMv1uavWK23gb
-         ADush4Redirg5T8keUUW4AJZGeOzW8E76RYoC67CbVfKI6+c+B4KDNYP+8oRf6SC6SXD
-         U0Ng==
-X-Gm-Message-State: ACgBeo1twJCQnTa1jR7wBOZPyLZOSCHa2ynfsclzbh24kt6ICcl4ZpLw
-        brVHmXkyp3faxDqgBbX2UR8fjg==
-X-Google-Smtp-Source: AA6agR5izOHSiZtIGwj1+c6VRv9kb4Nt6ZkJukay+Y+U1Aq3+odozhkh2KBhAAX/gzAij32vGXnc6A==
-X-Received: by 2002:a17:90a:c402:b0:1f8:c335:d4d7 with SMTP id i2-20020a17090ac40200b001f8c335d4d7mr2850632pjt.242.1661494797001;
-        Thu, 25 Aug 2022 23:19:57 -0700 (PDT)
-Received: from leoy-huanghe.lan ([204.124.180.110])
-        by smtp.gmail.com with ESMTPSA id b5-20020aa78ec5000000b00536bbe91b83sm743055pfr.157.2022.08.25.23.19.53
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 25 Aug 2022 23:19:56 -0700 (PDT)
-Date:   Fri, 26 Aug 2022 14:19:50 +0800
-From:   Leo Yan <leo.yan@linaro.org>
-To:     Peter Zijlstra <peterz@infradead.org>,
+        Fri, 26 Aug 2022 02:32:17 -0400
+Received: from mga11.intel.com (mga11.intel.com [192.55.52.93])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 06C89CEB26;
+        Thu, 25 Aug 2022 23:32:16 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1661495537; x=1693031537;
+  h=message-id:date:mime-version:subject:to:cc:references:
+   from:in-reply-to:content-transfer-encoding;
+  bh=ITboVH73O8yQJPDsSk/g1d+cvwKUeF9FmO7f/tWeck8=;
+  b=lCnBVO9qrQRnwN1+8jBiD5Vtn+7YfKLyUnFy620f3ONoKHe/QajbhbAX
+   2XDspsVntvDNQD5ktN/ibfFCVpbY/zS558tBF4l6LEg4Ow5oZ8rNHdAdN
+   78P2ZFGqJjvTYp7I1qEoL9D1GhK+x3PFmNYrxB7GNd/RjM23HbaQjPw3T
+   hzksyaLkdjXe5SCqXKuHEckyDPiXayOH/fapi7ienwmMbFqbrRyaZcR6n
+   5MP2aCwS347ZCH+Bc+yl28XOkOSt2vp0hpN3USS4+azB6elX0aflVWTKn
+   pfsIn3uaPYqs7E48yyc078vV/sBGe0Rwj+qZC75t7kwhuQ9bEI1AesYNp
+   w==;
+X-IronPort-AV: E=McAfee;i="6500,9779,10450"; a="292017237"
+X-IronPort-AV: E=Sophos;i="5.93,264,1654585200"; 
+   d="scan'208";a="292017237"
+Received: from fmsmga008.fm.intel.com ([10.253.24.58])
+  by fmsmga102.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 25 Aug 2022 23:32:16 -0700
+X-IronPort-AV: E=Sophos;i="5.93,264,1654585200"; 
+   d="scan'208";a="671339011"
+Received: from xiaoyaol-hp-g830.ccr.corp.intel.com (HELO [10.255.29.246]) ([10.255.29.246])
+  by fmsmga008-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 25 Aug 2022 23:32:13 -0700
+Message-ID: <4e383b85-6777-4452-a073-4d2f439e28b1@intel.com>
+Date:   Fri, 26 Aug 2022 14:32:10 +0800
+MIME-Version: 1.0
+User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:91.0) Gecko/20100101
+ Firefox/91.0 Thunderbird/91.12.0
+Subject: Re: [RFC PATCH 2/2] KVM: VMX: Stop/resume host PT before/after VM
+ entry when PT_MODE_HOST_GUEST
+Content-Language: en-US
+To:     Sean Christopherson <seanjc@google.com>
+Cc:     Peter Zijlstra <peterz@infradead.org>,
         Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Ingo Molnar <mingo@redhat.com>,
         Mark Rutland <mark.rutland@arm.com>,
         Alexander Shishkin <alexander.shishkin@linux.intel.com>,
         Jiri Olsa <jolsa@kernel.org>,
         Namhyung Kim <namhyung@kernel.org>,
-        linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
-Cc:     Ali Saidi <alisaidi@amazon.com>, Kajol Jain <kjain@linux.ibm.com>
-Subject: Re: [PATCH RESEND v6] perf: Add SNOOP_PEER flag to perf mem data
- struct
-Message-ID: <YwhmBlp0eVtiU5JW@leoy-huanghe.lan>
-References: <20220826051603.174792-1-leo.yan@linaro.org>
- <YwhXXiuQ2VysVint@leoy-huanghe.lan>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <YwhXXiuQ2VysVint@leoy-huanghe.lan>
+        Paolo Bonzini <pbonzini@redhat.com>,
+        linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org,
+        kvm@vger.kernel.org
+References: <20220825085625.867763-1-xiaoyao.li@intel.com>
+ <20220825085625.867763-3-xiaoyao.li@intel.com> <YweWmF3wMPRnthIh@google.com>
+ <6bcab33b-3fde-d470-88b9-7667c7dc4b2d@intel.com>
+ <YwecducnM/U6tqJT@google.com>
+From:   Xiaoyao Li <xiaoyao.li@intel.com>
+In-Reply-To: <YwecducnM/U6tqJT@google.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-On Fri, Aug 26, 2022 at 01:17:18PM +0800, Leo Yan wrote:
-> On Fri, Aug 26, 2022 at 01:16:03PM +0800, Leo Yan wrote:
-> > From: Ali Saidi <alisaidi@amazon.com>
-> > 
-> > Add a flag to the perf mem data struct to signal that a request caused a
-> > cache-to-cache transfer of a line from a peer of the requestor and
-> > wasn't sourced from a lower cache level.  The line being moved from one
-> > peer cache to another has latency and performance implications. On Arm64
-> > Neoverse systems the data source can indicate a cache-to-cache transfer
-> > but not if the line is dirty or clean, so instead of overloading HITM
-> > define a new flag that indicates this type of transfer.
-> > 
-> > Update notes:
-> > 
-> > This patch is to sync the headers between kernel and user space, commit
-> > 2e21bcf0514a ("perf tools: Sync addition of PERF_MEM_SNOOPX_PEER") for
-> > updating kernel header has been merged in the mainline code.
+On 8/25/2022 11:59 PM, Sean Christopherson wrote:
+> On Thu, Aug 25, 2022, Xiaoyao Li wrote:
+>> On 8/25/2022 11:34 PM, Sean Christopherson wrote:
+>>> On Thu, Aug 25, 2022, Xiaoyao Li wrote:
+>>>> diff --git a/arch/x86/kvm/vmx/vmx.c b/arch/x86/kvm/vmx/vmx.c
+>>>> index d7f8331d6f7e..3e9ce8f600d2 100644
+>>>> --- a/arch/x86/kvm/vmx/vmx.c
+>>>> +++ b/arch/x86/kvm/vmx/vmx.c
+>>>> @@ -38,6 +38,7 @@
+>>>>    #include <asm/fpu/api.h>
+>>>>    #include <asm/fpu/xstate.h>
+>>>>    #include <asm/idtentry.h>
+>>>> +#include <asm/intel_pt.h>
+>>>>    #include <asm/io.h>
+>>>>    #include <asm/irq_remapping.h>
+>>>>    #include <asm/kexec.h>
+>>>> @@ -1128,13 +1129,19 @@ static void pt_guest_enter(struct vcpu_vmx *vmx)
+>>>>    	if (vmx_pt_mode_is_system())
+>>>>    		return;
+>>>> +	/*
+>>>> +	 * Stop Intel PT on host to avoid vm-entry failure since
+>>>> +	 * VM_ENTRY_LOAD_IA32_RTIT_CTL is set
+>>>> +	 */
+>>>> +	intel_pt_stop();
+>>>> +
+>>>>    	/*
+>>>>    	 * GUEST_IA32_RTIT_CTL is already set in the VMCS.
+>>>>    	 * Save host state before VM entry.
+>>>>    	 */
+>>>>    	rdmsrl(MSR_IA32_RTIT_CTL, vmx->pt_desc.host.ctl);
+>>>
+>>> KVM's manual save/restore of MSR_IA32_RTIT_CTL should be dropped.
+>>
+>> No. It cannot. Please see below.
+>>
+>>> If PT/RTIT can
+>>> trace post-VMXON, then intel_pt_stop() will disable tracing and intel_pt_resume()
+>>> will restore the host's desired value.
+>>
+>> intel_pt_stop() and intel_pt_resume() touches host's RTIT_CTL only when host
+>> enables/uses Intel PT. Otherwise, they're just noop. In this case, we cannot
+>> assume host's RTIT_CTL is zero (only the RTIT_CTL.TraceEn is 0). After
+>> VM-exit, RTIT_CTL is cleared, we need to restore it.
 > 
-> Hi Peter, could you help to merge this patch?  Thanks!
+> But ensuring the RTIT_CTL.TraceEn=0 is all that's needed to make VM-Entry happy,
+> and if the host isn't using Intel PT, what do we care if other bits that, for all
+> intents and purposes are ignored, are lost across VM-Entry/VM-Exit?  I gotta
+> imaging the perf will fully initialize RTIT_CTL if it starts using PT.
 
-I sent a new patch with adding my SoB:
-https://lore.kernel.org/lkml/20220826060556.176681-1-leo.yan@linaro.org/T/#u
+Personally, I agree with it.
 
-Sorry for spamming.
+But I'm not sure if there is a criteria that host context needs to be 
+unchanged after being virtualized.
+
+> Actually, if the host isn't actively using Intel PT, can KVM avoid saving the
+> other RTIT MSRs?
+
+I don't think it's a good idea that it requires PT driver never and 
+won't rely on the previous value of PT MSRs. But it's OK if handing it 
+over to perf as the idea you gave below.
+
+> Even better, can we hand that off to perf?  I really dislike KVM making assumptions
+> about perf's internal behavior.  E.g. can this be made to look like
+
+you mean let perf subsystem to do the context save/restore staff of host 
+and KVM focuses on save/restore of guest context, right?
+
+I would like to see comment from perf folks on this and maybe need their 
+help on how to implement.
+
+> 	intel_pt_guest_enter(vmx->pt_desc.guest.ctl & RTIT_CTL_TRACEEN);
+> 
+> and
+> 
+> 	intel_pt_guest_exit(vmx->pt_desc.guest.ctl & RTIT_CTL_TRACEEN);
+> 
