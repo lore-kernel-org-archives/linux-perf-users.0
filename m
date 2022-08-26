@@ -2,48 +2,48 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6A266ECAAA3
-	for <linux-perf-users@archiver.kernel.org>; Fri, 26 Aug 2022 10:37:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 25EB3ECAAA3
+	for <linux-perf-users@archiver.kernel.org>; Fri, 26 Aug 2022 11:13:05 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1343758AbiHZKhm (ORCPT
+        id S1343592AbiHZLNE (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Fri, 26 Aug 2022 06:37:42 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52534 "EHLO
+        Fri, 26 Aug 2022 07:13:04 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38590 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S242864AbiHZKhk (ORCPT
+        with ESMTP id S244972AbiHZLNC (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Fri, 26 Aug 2022 06:37:40 -0400
-Received: from mga04.intel.com (mga04.intel.com [192.55.52.120])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D23DED570D;
-        Fri, 26 Aug 2022 03:37:39 -0700 (PDT)
+        Fri, 26 Aug 2022 07:13:02 -0400
+Received: from mga03.intel.com (mga03.intel.com [134.134.136.65])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A01E1D31F7;
+        Fri, 26 Aug 2022 04:13:01 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1661510259; x=1693046259;
+  t=1661512381; x=1693048381;
   h=message-id:date:mime-version:subject:to:references:from:
    in-reply-to:content-transfer-encoding;
-  bh=9hnCuIQP0Do9Va8hiUiS3qPMSpvIWNQCjLORaXq96rM=;
-  b=SkN7+8A8mFTAywJwapYZC4VN9VBqMP4vOj9mMlam4gdn8rex+34AVvYA
-   jkCrdxf0cXhuzs0exIQ9fsVGQYS1CfbEh27VgMcmeSL3C2Rf2Meubusmq
-   1oer5ZqlWeavcdZyEyOZltAWsoyw5t+eJGDIayszalqzYlqL4edfK6AVr
-   fhHY+h50PEMqZBcvaAHI7qZcaVyHkL1RpmBez/0Rl0cMu49HTAMK+Don0
-   /FEMlYNvh6xs8Ll/r9hACXjuHis34AXg6mV8u0MpCdROhHiOrR1kYnkFI
-   xp9eVdmiJTv7SkHsXVlo8rbu6Iyir0OQtp/x2XfRw+ecUE6gMfsGONl16
-   g==;
-X-IronPort-AV: E=McAfee;i="6500,9779,10450"; a="293220362"
+  bh=3r4b9fNqoE5fw/Wja2N6QhB8LgGuDbCrGO8y5pnVRGo=;
+  b=XQNB3MGVNIsumnH+1KSMdSzCsOjAGPSAKFJlW2hEa7NzqY9Ht9fa2rl2
+   w+hmIugXPgZsgP6PKSMkZnn4ft27cZHNs69PP/lpbPAR+oZENBDfxRPWi
+   snqhnQZv3P3vY5yylmFTbri/Y0ulfVGz6GC1xL7BmMVRWYhQi5AmrQz8t
+   BDhMYcF2gKfi/D1LOolVqsOSsJt7U3v+Ahr3kk7hTgQj9gvmkBXYUYr1d
+   90z/+chKdiLTQJItMS9cUZk280oe7HpjVDOmY8Ao9zo4l2q8vDyT5RMUm
+   IImAq3pZf/hezFMkDELan1GCsxraIS0KVXHkfSOLIGQexMZ9m5yphYKcI
+   A==;
+X-IronPort-AV: E=McAfee;i="6500,9779,10450"; a="295756583"
 X-IronPort-AV: E=Sophos;i="5.93,265,1654585200"; 
-   d="scan'208";a="293220362"
+   d="scan'208";a="295756583"
 Received: from orsmga007.jf.intel.com ([10.7.209.58])
-  by fmsmga104.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 26 Aug 2022 03:37:39 -0700
+  by orsmga103.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 26 Aug 2022 04:12:59 -0700
 X-IronPort-AV: E=Sophos;i="5.93,265,1654585200"; 
-   d="scan'208";a="606726872"
+   d="scan'208";a="606734124"
 Received: from ahunter6-mobl1.ger.corp.intel.com (HELO [10.0.2.15]) ([10.252.50.209])
-  by orsmga007-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 26 Aug 2022 03:37:26 -0700
-Message-ID: <12acbe02-bd73-07bb-d0e1-cb13dcd790c0@intel.com>
-Date:   Fri, 26 Aug 2022 13:37:21 +0300
+  by orsmga007-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 26 Aug 2022 04:12:47 -0700
+Message-ID: <b87631c8-aa36-b72d-64d7-9343ddeebdc3@intel.com>
+Date:   Fri, 26 Aug 2022 14:12:42 +0300
 MIME-Version: 1.0
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
  Firefox/91.0 Thunderbird/91.11.0
-Subject: Re: [PATCH v3 11/18] perf dso: Update use of pthread mutex
+Subject: Re: [PATCH v3 15/18] perf mutex: Add thread safety annotations
 Content-Language: en-US
 To:     Ian Rogers <irogers@google.com>,
         Peter Zijlstra <peterz@infradead.org>,
@@ -94,11 +94,11 @@ To:     Ian Rogers <irogers@google.com>,
         linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org,
         bpf@vger.kernel.org, llvm@lists.linux.dev
 References: <20220824153901.488576-1-irogers@google.com>
- <20220824153901.488576-12-irogers@google.com>
+ <20220824153901.488576-16-irogers@google.com>
 From:   Adrian Hunter <adrian.hunter@intel.com>
 Organization: Intel Finland Oy, Registered Address: PL 281, 00181 Helsinki,
  Business Identity Code: 0357606 - 4, Domiciled in Helsinki
-In-Reply-To: <20220824153901.488576-12-irogers@google.com>
+In-Reply-To: <20220824153901.488576-16-irogers@google.com>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 Precedence: bulk
@@ -106,138 +106,140 @@ List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
 On 24/08/22 18:38, Ian Rogers wrote:
-> Switch to the use of mutex wrappers that provide better error checking.
+> Add thread safety annotations to struct mutex so that when compiled with
+> clang's -Wthread-safety warnings are generated for erroneous lock
+> patterns. NO_THREAD_SAFETY_ANALYSIS is needed for
+> mutex_lock/mutex_unlock as the analysis doesn't under pthread calls.
 > 
 > Signed-off-by: Ian Rogers <irogers@google.com>
 > ---
->  tools/perf/util/dso.c    | 12 ++++++------
-
-Some not done yet
-
-$ grep -i pthread_mut tools/perf/util/dso.c
-static pthread_mutex_t dso__data_open_lock = PTHREAD_MUTEX_INITIALIZER;
-        pthread_mutex_lock(&dso__data_open_lock);
-        pthread_mutex_unlock(&dso__data_open_lock);
-        if (pthread_mutex_lock(&dso__data_open_lock) < 0)
-                pthread_mutex_unlock(&dso__data_open_lock);
-        pthread_mutex_unlock(&dso__data_open_lock);
-        pthread_mutex_lock(&dso__data_open_lock);
-        pthread_mutex_unlock(&dso__data_open_lock);
-        pthread_mutex_lock(&dso__data_open_lock);
-        pthread_mutex_unlock(&dso__data_open_lock);
-
-
->  tools/perf/util/dso.h    |  4 ++--
->  tools/perf/util/symbol.c |  4 ++--
->  3 files changed, 10 insertions(+), 10 deletions(-)
+>  tools/perf/util/mutex.c |  2 ++
+>  tools/perf/util/mutex.h | 72 ++++++++++++++++++++++++++++++++++++++---
+>  2 files changed, 69 insertions(+), 5 deletions(-)
 > 
-> diff --git a/tools/perf/util/dso.c b/tools/perf/util/dso.c
-> index 5ac13958d1bd..a9789a955403 100644
-> --- a/tools/perf/util/dso.c
-> +++ b/tools/perf/util/dso.c
-> @@ -795,7 +795,7 @@ dso_cache__free(struct dso *dso)
->  	struct rb_root *root = &dso->data.cache;
->  	struct rb_node *next = rb_first(root);
->  
-> -	pthread_mutex_lock(&dso->lock);
-> +	mutex_lock(&dso->lock);
->  	while (next) {
->  		struct dso_cache *cache;
->  
-> @@ -804,7 +804,7 @@ dso_cache__free(struct dso *dso)
->  		rb_erase(&cache->rb_node, root);
->  		free(cache);
->  	}
-> -	pthread_mutex_unlock(&dso->lock);
-> +	mutex_unlock(&dso->lock);
+> diff --git a/tools/perf/util/mutex.c b/tools/perf/util/mutex.c
+> index 892294ac1769..ec813093276d 100644
+> --- a/tools/perf/util/mutex.c
+> +++ b/tools/perf/util/mutex.c
+> @@ -50,11 +50,13 @@ void mutex_destroy(struct mutex *mtx)
 >  }
 >  
->  static struct dso_cache *__dso_cache__find(struct dso *dso, u64 offset)
-> @@ -841,7 +841,7 @@ dso_cache__insert(struct dso *dso, struct dso_cache *new)
->  	struct dso_cache *cache;
->  	u64 offset = new->offset;
->  
-> -	pthread_mutex_lock(&dso->lock);
-> +	mutex_lock(&dso->lock);
->  	while (*p != NULL) {
->  		u64 end;
->  
-> @@ -862,7 +862,7 @@ dso_cache__insert(struct dso *dso, struct dso_cache *new)
->  
->  	cache = NULL;
->  out:
-> -	pthread_mutex_unlock(&dso->lock);
-> +	mutex_unlock(&dso->lock);
->  	return cache;
+>  void mutex_lock(struct mutex *mtx)
+> +	NO_THREAD_SAFETY_ANALYSIS
+>  {
+>  	CHECK_ERR(pthread_mutex_lock(&mtx->lock));
 >  }
 >  
-> @@ -1297,7 +1297,7 @@ struct dso *dso__new_id(const char *name, struct dso_id *id)
->  		dso->root = NULL;
->  		INIT_LIST_HEAD(&dso->node);
->  		INIT_LIST_HEAD(&dso->data.open_entry);
-> -		pthread_mutex_init(&dso->lock, NULL);
-> +		mutex_init(&dso->lock);
->  		refcount_set(&dso->refcnt, 1);
->  	}
->  
-> @@ -1336,7 +1336,7 @@ void dso__delete(struct dso *dso)
->  	dso__free_a2l(dso);
->  	zfree(&dso->symsrc_filename);
->  	nsinfo__zput(dso->nsinfo);
-> -	pthread_mutex_destroy(&dso->lock);
-> +	mutex_destroy(&dso->lock);
->  	free(dso);
+>  void mutex_unlock(struct mutex *mtx)
+> +	NO_THREAD_SAFETY_ANALYSIS
+>  {
+>  	CHECK_ERR(pthread_mutex_unlock(&mtx->lock));
 >  }
+> diff --git a/tools/perf/util/mutex.h b/tools/perf/util/mutex.h
+> index c9e110a2b55e..48a2d87598f0 100644
+> --- a/tools/perf/util/mutex.h
+> +++ b/tools/perf/util/mutex.h
+> @@ -5,11 +5,73 @@
+>  #include <pthread.h>
+>  #include <stdbool.h>
 >  
-> diff --git a/tools/perf/util/dso.h b/tools/perf/util/dso.h
-> index 66981c7a9a18..58d94175e714 100644
-> --- a/tools/perf/util/dso.h
-> +++ b/tools/perf/util/dso.h
-> @@ -2,7 +2,6 @@
->  #ifndef __PERF_DSO
->  #define __PERF_DSO
+> +/*
+> + * A function-like feature checking macro that is a wrapper around
+> + * `__has_attribute`, which is defined by GCC 5+ and Clang and evaluates to a
+> + * nonzero constant integer if the attribute is supported or 0 if not.
+> + */
+> +#ifdef __has_attribute
+> +#define HAVE_ATTRIBUTE(x) __has_attribute(x)
+> +#else
+> +#define HAVE_ATTRIBUTE(x) 0
+> +#endif
+> +
+> +
+
+Multiple blank lines
+
+> +#if HAVE_ATTRIBUTE(guarded_by) && HAVE_ATTRIBUTE(pt_guarded_by) && \
+> +	HAVE_ATTRIBUTE(lockable) && HAVE_ATTRIBUTE(exclusive_lock_function) && \
+> +	HAVE_ATTRIBUTE(exclusive_trylock_function) && HAVE_ATTRIBUTE(exclusive_locks_required) && \
+> +	HAVE_ATTRIBUTE(no_thread_safety_analysis)
+> +
+> +/* Documents if a shared field or global variable needs to be protected by a mutex. */
+> +#define GUARDED_BY(x) __attribute__((guarded_by(x)))
+> +
+> +/*
+> + * Documents if the memory location pointed to by a pointer should be guarded by
+> + * a mutex when dereferencing the pointer.
+> + */
+> +#define PT_GUARDED_BY(x) __attribute__((pt_guarded_by(x)))
+> +
+> +/* Documents if a type is a lockable type. */
+> +#define LOCKABLE __attribute__((capability("lockable")))
+> +
+> +/* Documents functions that acquire a lock in the body of a function, and do not release it. */
+> +#define EXCLUSIVE_LOCK_FUNCTION(...)  __attribute__((exclusive_lock_function(__VA_ARGS__)))
+> +
+> +/*
+> + * Documents functions that expect a lock to be held on entry to the function,
+> + * and release it in the body of the function.
+> + */
+> +#define UNLOCK_FUNCTION(...) __attribute__((unlock_function(__VA_ARGS__)))
+> +
+> +/* Documents functions that try to acquire a lock, and return success or failure. */
+> +#define EXCLUSIVE_TRYLOCK_FUNCTION(...) \
+> +	__attribute__((exclusive_trylock_function(__VA_ARGS__)))
+> +
+> +
+
+Multiple blank lines
+
+> +/* Documents a function that expects a mutex to be held prior to entry. */
+> +#define EXCLUSIVE_LOCKS_REQUIRED(...) __attribute__((exclusive_locks_required(__VA_ARGS__)))
+> +
+> +/* Turns off thread safety checking within the body of a particular function. */
+> +#define NO_THREAD_SAFETY_ANALYSIS __attribute__((no_thread_safety_analysis))
+> +
+> +#else
+> +
+> +#define GUARDED_BY(x)
+> +#define PT_GUARDED_BY(x)
+> +#define LOCKABLE
+> +#define EXCLUSIVE_LOCK_FUNCTION(...)
+> +#define UNLOCK_FUNCTION(...)
+> +#define EXCLUSIVE_TRYLOCK_FUNCTION(...)
+> +#define EXCLUSIVE_LOCKS_REQUIRED(...)
+> +#define NO_THREAD_SAFETY_ANALYSIS
+> +
+> +#endif
+> +
+>  /*
+>   * A wrapper around the mutex implementation that allows perf to error check
+>   * usage, etc.
+>   */
+> -struct mutex {
+> +struct LOCKABLE mutex {
+>  	pthread_mutex_t lock;
+>  };
 >  
-> -#include <pthread.h>
->  #include <linux/refcount.h>
->  #include <linux/types.h>
->  #include <linux/rbtree.h>
-> @@ -11,6 +10,7 @@
->  #include <stdio.h>
->  #include <linux/bitops.h>
->  #include "build-id.h"
-> +#include "mutex.h"
+> @@ -27,9 +89,9 @@ void mutex_init(struct mutex *mtx);
+>  void mutex_init_pshared(struct mutex *mtx);
+>  void mutex_destroy(struct mutex *mtx);
 >  
->  struct machine;
->  struct map;
-> @@ -145,7 +145,7 @@ struct dso_cache {
->  struct auxtrace_cache;
+> -void mutex_lock(struct mutex *mtx);
+> -void mutex_unlock(struct mutex *mtx);
+> -bool mutex_trylock(struct mutex *mtx);
+> +void mutex_lock(struct mutex *mtx) EXCLUSIVE_LOCK_FUNCTION(*mtx);
+> +void mutex_unlock(struct mutex *mtx) UNLOCK_FUNCTION(*mtx);
+> +bool mutex_trylock(struct mutex *mtx) EXCLUSIVE_TRYLOCK_FUNCTION(true, *mtx);
 >  
->  struct dso {
-> -	pthread_mutex_t	 lock;
-> +	struct mutex	 lock;
->  	struct list_head node;
->  	struct rb_node	 rb_node;	/* rbtree node sorted by long name */
->  	struct rb_root	 *root;		/* root of rbtree that rb_node is in */
-> diff --git a/tools/perf/util/symbol.c b/tools/perf/util/symbol.c
-> index a4b22caa7c24..656d9b4dd456 100644
-> --- a/tools/perf/util/symbol.c
-> +++ b/tools/perf/util/symbol.c
-> @@ -1800,7 +1800,7 @@ int dso__load(struct dso *dso, struct map *map)
->  	}
+>  /* Default initialize the cond struct. */
+>  void cond_init(struct cond *cnd);
+> @@ -40,7 +102,7 @@ void cond_init(struct cond *cnd);
+>  void cond_init_pshared(struct cond *cnd);
+>  void cond_destroy(struct cond *cnd);
 >  
->  	nsinfo__mountns_enter(dso->nsinfo, &nsc);
-> -	pthread_mutex_lock(&dso->lock);
-> +	mutex_lock(&dso->lock);
+> -void cond_wait(struct cond *cnd, struct mutex *mtx);
+> +void cond_wait(struct cond *cnd, struct mutex *mtx) EXCLUSIVE_LOCKS_REQUIRED(mtx);
+>  void cond_signal(struct cond *cnd);
+>  void cond_broadcast(struct cond *cnd);
 >  
->  	/* check again under the dso->lock */
->  	if (dso__loaded(dso)) {
-> @@ -1964,7 +1964,7 @@ int dso__load(struct dso *dso, struct map *map)
->  		ret = 0;
->  out:
->  	dso__set_loaded(dso);
-> -	pthread_mutex_unlock(&dso->lock);
-> +	mutex_unlock(&dso->lock);
->  	nsinfo__mountns_exit(&nsc);
->  
->  	return ret;
 
