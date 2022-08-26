@@ -2,113 +2,438 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D6CE9ECAAD9
-	for <linux-perf-users@archiver.kernel.org>; Fri, 26 Aug 2022 15:09:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 31087ECAAA3
+	for <linux-perf-users@archiver.kernel.org>; Fri, 26 Aug 2022 16:01:43 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S244394AbiHZPJa (ORCPT
+        id S230355AbiHZQBm (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Fri, 26 Aug 2022 11:09:30 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34572 "EHLO
+        Fri, 26 Aug 2022 12:01:42 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53238 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S244427AbiHZPJC (ORCPT
+        with ESMTP id S231532AbiHZQBl (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Fri, 26 Aug 2022 11:09:02 -0400
-Received: from mail-pg1-x532.google.com (mail-pg1-x532.google.com [IPv6:2607:f8b0:4864:20::532])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 76247DD4EB
-        for <linux-perf-users@vger.kernel.org>; Fri, 26 Aug 2022 08:08:35 -0700 (PDT)
-Received: by mail-pg1-x532.google.com with SMTP id c24so1626791pgg.11
-        for <linux-perf-users@vger.kernel.org>; Fri, 26 Aug 2022 08:08:35 -0700 (PDT)
+        Fri, 26 Aug 2022 12:01:41 -0400
+Received: from mail-wm1-x334.google.com (mail-wm1-x334.google.com [IPv6:2a00:1450:4864:20::334])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B6329D345C
+        for <linux-perf-users@vger.kernel.org>; Fri, 26 Aug 2022 09:01:39 -0700 (PDT)
+Received: by mail-wm1-x334.google.com with SMTP id ay39-20020a05600c1e2700b003a5503a80cfso1085295wmb.2
+        for <linux-perf-users@vger.kernel.org>; Fri, 26 Aug 2022 09:01:39 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=google.com; s=20210112;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc;
-        bh=rDCiGRameoc44J7lHWbl0JPQBn/IEONwz9o9l1i/k5o=;
-        b=VQf8EKuL0X7CTzQMT9/lmQ+1rlvFbqSdWJ43L2omf4zYAogNVKx+E1+/4NxJWp71SJ
-         upBbQVhWVUJgfYiXHlKIPENQcY4w5U5t2RiKYJ1PfGxVKiRSReXEYab8Qccb52pLO1Gz
-         9k6Yu3mGdHw96K7FOVQvnspayt0a1/FKDnVi8LZ03IepA9Ug+67nWgCGDqoT3JkI05xu
-         nbk0SFMOuytiK/CcgApCgKitlSaJ+nc/lkDgP+Tj82x0OHPOdPl7qO+otN0tngOpDBh8
-         nQw21ypSGxxW1TEWOIRpqxxDz8wh9kWTKp1xo+SGr3tJ0u90VX3TrVPkKVczUhCGQoZz
-         /e2w==
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:from:to:cc;
+        bh=WMh/N9i6ShI11x5i5Ap5lQ7NbFEh/0/DfXEib5aOdCY=;
+        b=VDo6cjzdWsZBHnzIXKYknGzjCgkrWwZProqnWPZ8SxjsD/gM8En6b7rp3waaPbdon1
+         +LnjeDX4CSII5h6slHdqG+/arAkTvvTXvg6HNwnFFL0XWAhMYRF89Wb/zCDNkLzhqd2Q
+         DE+EAITXLiPzgEb841MSFdX3BHMaGiQf59JVLpm/yn6ZB9BmlyjyKTXUqzWceM/BSRk+
+         PtEL5BeGD3ISC1/7HIeGL2uBbMveJVyqAtc7eUJ6k2+Cp3pCUpuOcCAyyy+QQeopy5LK
+         ea2aafxcIVjj7b1WwTixoRNw5Q3ztokQgwoCYtU+dG/Z3NeUEiYoGI+Qg3n2tLigSVA6
+         q2mQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc;
-        bh=rDCiGRameoc44J7lHWbl0JPQBn/IEONwz9o9l1i/k5o=;
-        b=bBRC17nFrKLjYr92TTFyb6BU1WpkXXGiRVLo/G1kEjfjWuiTeUSj6FVKQD2NYyq6aS
-         /M/Hwp/eXWaMeEOYtM3b2fGYGlbeseFXDVcDWEtaVOUEMdZAI4dfxvdXR9Pwc5M5C23e
-         QMj3mrYtEZ6DAjas2GYRmToIRCnap39Hge/nWN/q4Wd7TfVK1pufQlJxtwCCrdVMEw3o
-         7q2KXUe9SaZC/a/Zly/qa5H+jecxGUuUzvhGWaRC0IEe3fkL8VlERRD1kO0drGRj9MAM
-         AixDtmd9xpVp85LJZL4Dyp9Jx0zL0RZRReBU3bLQlLFvvtftsl7iC6iXwo8F/aLAQgLh
-         GYGw==
-X-Gm-Message-State: ACgBeo2M9mtmdTJNDr3U9NRiD0VLIekkpSvkOW3ZkmeUMi4ShcYmoAWU
-        3Uazd+jHHMbhK478Pka7X4gFmw==
-X-Google-Smtp-Source: AA6agR5uCZ7VBJfvhJmt8rw74pIfwFba099AydbeQHgPwVRGBIy1lChlBYYL7MzvcFd9dTtAf6OYiw==
-X-Received: by 2002:a63:f704:0:b0:42b:7fa6:19bd with SMTP id x4-20020a63f704000000b0042b7fa619bdmr1671900pgh.283.1661526514860;
-        Fri, 26 Aug 2022 08:08:34 -0700 (PDT)
-Received: from google.com (7.104.168.34.bc.googleusercontent.com. [34.168.104.7])
-        by smtp.gmail.com with ESMTPSA id z15-20020a170902cccf00b0016c0eb202a5sm1693664ple.225.2022.08.26.08.08.34
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 26 Aug 2022 08:08:34 -0700 (PDT)
-Date:   Fri, 26 Aug 2022 15:08:28 +0000
-From:   Sean Christopherson <seanjc@google.com>
-To:     Xiaoyao Li <xiaoyao.li@intel.com>
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:x-gm-message-state:from:to:cc;
+        bh=WMh/N9i6ShI11x5i5Ap5lQ7NbFEh/0/DfXEib5aOdCY=;
+        b=FuJjGwYD3ul53/BezL1+gOhM7h6Tk907cDo3BO8UaKP3nR9SQq3+Vq1vuDdTs1DpJX
+         ODWi+6ufCcp/U4kE0cTNlbA3vb9+ZKslJfltGg9CJFIHONu9RTM8H0f8Cw+4ffliDHiv
+         fLbMuW3H27XbtjssPk+FarV5LVJOHqf3ESH1Bwni64xaIVxFQldQyfrvqOhzXxaYC34D
+         TNTlxo+kQqQqF/VTQ+RNNkVl+bsquDGxlYE2L/F2d67RCavV/iw97kf8xMKubuwspMSC
+         e5jPdinF9vqqscahBxXQI60h6qm2RyQ5meRXDe/egZDhU0jJF6cer1jrKl0fHL1PkUX7
+         1j0Q==
+X-Gm-Message-State: ACgBeo2yoPYKldKS5zd3rbiNgYtFj6GT8P8QKt5cV8XkRGFVrY5XKhvA
+        JFlRtx+vXt3QWU8xNoh9Ec8j0X7c3Dhybf5q9nfHTA==
+X-Google-Smtp-Source: AA6agR7E561D8LFsQk4ma8saD3qEm8XGgnRYFQcpKB6y9EhIc7hh55daiPnl77HzuaSBB5Z5DEDhpU7tVi2gK62P8wE=
+X-Received: by 2002:a05:600c:19c8:b0:3a5:ec6a:8d16 with SMTP id
+ u8-20020a05600c19c800b003a5ec6a8d16mr159498wmq.182.1661529697614; Fri, 26 Aug
+ 2022 09:01:37 -0700 (PDT)
+MIME-Version: 1.0
+References: <20220824153901.488576-1-irogers@google.com> <20220824153901.488576-10-irogers@google.com>
+ <0004776a-8c39-9515-fd4e-01bfe1c4a3eb@intel.com>
+In-Reply-To: <0004776a-8c39-9515-fd4e-01bfe1c4a3eb@intel.com>
+From:   Ian Rogers <irogers@google.com>
+Date:   Fri, 26 Aug 2022 09:01:25 -0700
+Message-ID: <CAP-5=fVxyDEmis7=jV5TPoLPbBR9vVZ6Diug+Zsdirjjxxt8gA@mail.gmail.com>
+Subject: Re: [PATCH v3 09/18] perf ui: Update use of pthread mutex
+To:     Adrian Hunter <adrian.hunter@intel.com>
 Cc:     Peter Zijlstra <peterz@infradead.org>,
+        Ingo Molnar <mingo@redhat.com>,
         Arnaldo Carvalho de Melo <acme@kernel.org>,
         Mark Rutland <mark.rutland@arm.com>,
         Alexander Shishkin <alexander.shishkin@linux.intel.com>,
         Jiri Olsa <jolsa@kernel.org>,
         Namhyung Kim <namhyung@kernel.org>,
-        Paolo Bonzini <pbonzini@redhat.com>,
-        linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org,
-        kvm@vger.kernel.org
-Subject: Re: [RFC PATCH 2/2] KVM: VMX: Stop/resume host PT before/after VM
- entry when PT_MODE_HOST_GUEST
-Message-ID: <YwjhaPdvmklwXf9B@google.com>
-References: <20220825085625.867763-1-xiaoyao.li@intel.com>
- <20220825085625.867763-3-xiaoyao.li@intel.com>
- <YweWmF3wMPRnthIh@google.com>
- <6bcab33b-3fde-d470-88b9-7667c7dc4b2d@intel.com>
- <YwecducnM/U6tqJT@google.com>
- <4e383b85-6777-4452-a073-4d2f439e28b1@intel.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <4e383b85-6777-4452-a073-4d2f439e28b1@intel.com>
+        Thomas Gleixner <tglx@linutronix.de>,
+        Darren Hart <dvhart@infradead.org>,
+        Davidlohr Bueso <dave@stgolabs.net>,
+        =?UTF-8?Q?Andr=C3=A9_Almeida?= <andrealmeid@igalia.com>,
+        Nathan Chancellor <nathan@kernel.org>,
+        Nick Desaulniers <ndesaulniers@google.com>,
+        Tom Rix <trix@redhat.com>, Weiguo Li <liwg06@foxmail.com>,
+        Athira Rajeev <atrajeev@linux.vnet.ibm.com>,
+        Thomas Richter <tmricht@linux.ibm.com>,
+        Ravi Bangoria <ravi.bangoria@amd.com>,
+        Dario Petrillo <dario.pk1@gmail.com>,
+        Hewenliang <hewenliang4@huawei.com>,
+        yaowenbin <yaowenbin1@huawei.com>,
+        Wenyu Liu <liuwenyu7@huawei.com>,
+        Song Liu <songliubraving@fb.com>,
+        Andrii Nakryiko <andrii@kernel.org>,
+        Dave Marchevsky <davemarchevsky@fb.com>,
+        Leo Yan <leo.yan@linaro.org>,
+        Kim Phillips <kim.phillips@amd.com>,
+        Pavithra Gurushankar <gpavithrasha@gmail.com>,
+        Alexandre Truong <alexandre.truong@arm.com>,
+        Quentin Monnet <quentin@isovalent.com>,
+        William Cohen <wcohen@redhat.com>,
+        Andres Freund <andres@anarazel.de>,
+        =?UTF-8?Q?Martin_Li=C5=A1ka?= <mliska@suse.cz>,
+        Colin Ian King <colin.king@intel.com>,
+        James Clark <james.clark@arm.com>,
+        Fangrui Song <maskray@google.com>,
+        Stephane Eranian <eranian@google.com>,
+        Kajol Jain <kjain@linux.ibm.com>,
+        Alexey Bayduraev <alexey.v.bayduraev@linux.intel.com>,
+        Riccardo Mancini <rickyman7@gmail.com>,
+        Andi Kleen <ak@linux.intel.com>,
+        Masami Hiramatsu <mhiramat@kernel.org>,
+        Zechuan Chen <chenzechuan1@huawei.com>,
+        Jason Wang <wangborong@cdjrlc.com>,
+        Christophe JAILLET <christophe.jaillet@wanadoo.fr>,
+        Remi Bernon <rbernon@codeweavers.com>,
+        linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org,
+        bpf@vger.kernel.org, llvm@lists.linux.dev
+Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-On Fri, Aug 26, 2022, Xiaoyao Li wrote:
-> On 8/25/2022 11:59 PM, Sean Christopherson wrote:
-> > But ensuring the RTIT_CTL.TraceEn=0 is all that's needed to make VM-Entry happy,
-> > and if the host isn't using Intel PT, what do we care if other bits that, for all
-> > intents and purposes are ignored, are lost across VM-Entry/VM-Exit?  I gotta
-> > imaging the perf will fully initialize RTIT_CTL if it starts using PT.
-> 
-> Personally, I agree with it.
-> 
-> But I'm not sure if there is a criteria that host context needs to be
-> unchanged after being virtualized.
-> 
-> > Actually, if the host isn't actively using Intel PT, can KVM avoid saving the
-> > other RTIT MSRs?
-> 
-> I don't think it's a good idea that it requires PT driver never and won't
-> rely on the previous value of PT MSRs. But it's OK if handing it over to
-> perf as the idea you gave below.
+On Fri, Aug 26, 2022 at 3:11 AM Adrian Hunter <adrian.hunter@intel.com> wrote:
+>
+> On 24/08/22 18:38, Ian Rogers wrote:
+> > Switch to the use of mutex wrappers that provide better error checking.
+> >
+> > Signed-off-by: Ian Rogers <irogers@google.com>
+> > ---
+> >  tools/perf/ui/browser.c           | 20 ++++++++++----------
+> >  tools/perf/ui/browsers/annotate.c |  2 +-
+>
+> Other changes to tools/perf/ui/browsers/annotate.c are in patch 12
 
-Yep, my thought exactly.
+Yes, these changes relate to the ui__lock and the patch 12 changes
+relate to annotation lock. The grouping was done in this way so that
+the patches would build independently.
 
-> > Even better, can we hand that off to perf?  I really dislike KVM making assumptions
-> > about perf's internal behavior.  E.g. can this be made to look like
-> 
-> you mean let perf subsystem to do the context save/restore staff of host and
-> KVM focuses on save/restore of guest context, right?
+Thanks,
+Ian
 
-Yep!  KVM already more or less does this for "regular" PMU MSRs, though in that
-case perf hands back a list of MSRs+data.  But for Intel PT I don't see any point
-in having KVM do the actual MSR accesses.  Tracing has to be turned off _before_
-VM-Enter, so using the MSR load/save lists doesn't buy us anything. 
- 
-> I would like to see comment from perf folks on this and maybe need their
-> help on how to implement.
+> >  tools/perf/ui/setup.c             |  5 +++--
+> >  tools/perf/ui/tui/helpline.c      |  5 ++---
+> >  tools/perf/ui/tui/progress.c      |  8 ++++----
+> >  tools/perf/ui/tui/setup.c         |  8 ++++----
+> >  tools/perf/ui/tui/util.c          | 18 +++++++++---------
+> >  tools/perf/ui/ui.h                |  4 ++--
+> >  8 files changed, 35 insertions(+), 35 deletions(-)
+> >
+> > diff --git a/tools/perf/ui/browser.c b/tools/perf/ui/browser.c
+> > index fa5bd5c20e96..78fb01d6ad63 100644
+> > --- a/tools/perf/ui/browser.c
+> > +++ b/tools/perf/ui/browser.c
+> > @@ -268,9 +268,9 @@ void __ui_browser__show_title(struct ui_browser *browser, const char *title)
+> >
+> >  void ui_browser__show_title(struct ui_browser *browser, const char *title)
+> >  {
+> > -     pthread_mutex_lock(&ui__lock);
+> > +     mutex_lock(&ui__lock);
+> >       __ui_browser__show_title(browser, title);
+> > -     pthread_mutex_unlock(&ui__lock);
+> > +     mutex_unlock(&ui__lock);
+> >  }
+> >
+> >  int ui_browser__show(struct ui_browser *browser, const char *title,
+> > @@ -284,7 +284,7 @@ int ui_browser__show(struct ui_browser *browser, const char *title,
+> >
+> >       browser->refresh_dimensions(browser);
+> >
+> > -     pthread_mutex_lock(&ui__lock);
+> > +     mutex_lock(&ui__lock);
+> >       __ui_browser__show_title(browser, title);
+> >
+> >       browser->title = title;
+> > @@ -295,16 +295,16 @@ int ui_browser__show(struct ui_browser *browser, const char *title,
+> >       va_end(ap);
+> >       if (err > 0)
+> >               ui_helpline__push(browser->helpline);
+> > -     pthread_mutex_unlock(&ui__lock);
+> > +     mutex_unlock(&ui__lock);
+> >       return err ? 0 : -1;
+> >  }
+> >
+> >  void ui_browser__hide(struct ui_browser *browser)
+> >  {
+> > -     pthread_mutex_lock(&ui__lock);
+> > +     mutex_lock(&ui__lock);
+> >       ui_helpline__pop();
+> >       zfree(&browser->helpline);
+> > -     pthread_mutex_unlock(&ui__lock);
+> > +     mutex_unlock(&ui__lock);
+> >  }
+> >
+> >  static void ui_browser__scrollbar_set(struct ui_browser *browser)
+> > @@ -352,9 +352,9 @@ static int __ui_browser__refresh(struct ui_browser *browser)
+> >
+> >  int ui_browser__refresh(struct ui_browser *browser)
+> >  {
+> > -     pthread_mutex_lock(&ui__lock);
+> > +     mutex_lock(&ui__lock);
+> >       __ui_browser__refresh(browser);
+> > -     pthread_mutex_unlock(&ui__lock);
+> > +     mutex_unlock(&ui__lock);
+> >
+> >       return 0;
+> >  }
+> > @@ -390,10 +390,10 @@ int ui_browser__run(struct ui_browser *browser, int delay_secs)
+> >       while (1) {
+> >               off_t offset;
+> >
+> > -             pthread_mutex_lock(&ui__lock);
+> > +             mutex_lock(&ui__lock);
+> >               err = __ui_browser__refresh(browser);
+> >               SLsmg_refresh();
+> > -             pthread_mutex_unlock(&ui__lock);
+> > +             mutex_unlock(&ui__lock);
+> >               if (err < 0)
+> >                       break;
+> >
+> > diff --git a/tools/perf/ui/browsers/annotate.c b/tools/perf/ui/browsers/annotate.c
+> > index 44ba900828f6..b8747e8dd9ea 100644
+> > --- a/tools/perf/ui/browsers/annotate.c
+> > +++ b/tools/perf/ui/browsers/annotate.c
+> > @@ -8,11 +8,11 @@
+> >  #include "../../util/hist.h"
+> >  #include "../../util/sort.h"
+> >  #include "../../util/map.h"
+> > +#include "../../util/mutex.h"
+> >  #include "../../util/symbol.h"
+> >  #include "../../util/evsel.h"
+> >  #include "../../util/evlist.h"
+> >  #include <inttypes.h>
+> > -#include <pthread.h>
+> >  #include <linux/kernel.h>
+> >  #include <linux/string.h>
+> >  #include <linux/zalloc.h>
+> > diff --git a/tools/perf/ui/setup.c b/tools/perf/ui/setup.c
+> > index 700335cde618..25ded88801a3 100644
+> > --- a/tools/perf/ui/setup.c
+> > +++ b/tools/perf/ui/setup.c
+> > @@ -1,5 +1,4 @@
+> >  // SPDX-License-Identifier: GPL-2.0
+> > -#include <pthread.h>
+> >  #include <dlfcn.h>
+> >  #include <unistd.h>
+> >
+> > @@ -8,7 +7,7 @@
+> >  #include "../util/hist.h"
+> >  #include "ui.h"
+> >
+> > -pthread_mutex_t ui__lock = PTHREAD_MUTEX_INITIALIZER;
+> > +struct mutex ui__lock;
+> >  void *perf_gtk_handle;
+> >  int use_browser = -1;
+> >
+> > @@ -76,6 +75,7 @@ int stdio__config_color(const struct option *opt __maybe_unused,
+> >
+> >  void setup_browser(bool fallback_to_pager)
+> >  {
+> > +     mutex_init(&ui__lock);
+> >       if (use_browser < 2 && (!isatty(1) || dump_trace))
+> >               use_browser = 0;
+> >
+> > @@ -118,4 +118,5 @@ void exit_browser(bool wait_for_ok)
+> >       default:
+> >               break;
+> >       }
+> > +     mutex_destroy(&ui__lock);
+> >  }
+> > diff --git a/tools/perf/ui/tui/helpline.c b/tools/perf/ui/tui/helpline.c
+> > index 298d6af82fdd..db4952f5990b 100644
+> > --- a/tools/perf/ui/tui/helpline.c
+> > +++ b/tools/perf/ui/tui/helpline.c
+> > @@ -2,7 +2,6 @@
+> >  #include <stdio.h>
+> >  #include <stdlib.h>
+> >  #include <string.h>
+> > -#include <pthread.h>
+> >  #include <linux/kernel.h>
+> >  #include <linux/string.h>
+> >
+> > @@ -33,7 +32,7 @@ static int tui_helpline__show(const char *format, va_list ap)
+> >       int ret;
+> >       static int backlog;
+> >
+> > -     pthread_mutex_lock(&ui__lock);
+> > +     mutex_lock(&ui__lock);
+> >       ret = vscnprintf(ui_helpline__last_msg + backlog,
+> >                       sizeof(ui_helpline__last_msg) - backlog, format, ap);
+> >       backlog += ret;
+> > @@ -45,7 +44,7 @@ static int tui_helpline__show(const char *format, va_list ap)
+> >               SLsmg_refresh();
+> >               backlog = 0;
+> >       }
+> > -     pthread_mutex_unlock(&ui__lock);
+> > +     mutex_unlock(&ui__lock);
+> >
+> >       return ret;
+> >  }
+> > diff --git a/tools/perf/ui/tui/progress.c b/tools/perf/ui/tui/progress.c
+> > index 3d74af5a7ece..71b6c8d9474f 100644
+> > --- a/tools/perf/ui/tui/progress.c
+> > +++ b/tools/perf/ui/tui/progress.c
+> > @@ -45,7 +45,7 @@ static void tui_progress__update(struct ui_progress *p)
+> >       }
+> >
+> >       ui__refresh_dimensions(false);
+> > -     pthread_mutex_lock(&ui__lock);
+> > +     mutex_lock(&ui__lock);
+> >       y = SLtt_Screen_Rows / 2 - 2;
+> >       SLsmg_set_color(0);
+> >       SLsmg_draw_box(y, 0, 3, SLtt_Screen_Cols);
+> > @@ -56,7 +56,7 @@ static void tui_progress__update(struct ui_progress *p)
+> >       bar = ((SLtt_Screen_Cols - 2) * p->curr) / p->total;
+> >       SLsmg_fill_region(y, 1, 1, bar, ' ');
+> >       SLsmg_refresh();
+> > -     pthread_mutex_unlock(&ui__lock);
+> > +     mutex_unlock(&ui__lock);
+> >  }
+> >
+> >  static void tui_progress__finish(void)
+> > @@ -67,12 +67,12 @@ static void tui_progress__finish(void)
+> >               return;
+> >
+> >       ui__refresh_dimensions(false);
+> > -     pthread_mutex_lock(&ui__lock);
+> > +     mutex_lock(&ui__lock);
+> >       y = SLtt_Screen_Rows / 2 - 2;
+> >       SLsmg_set_color(0);
+> >       SLsmg_fill_region(y, 0, 3, SLtt_Screen_Cols, ' ');
+> >       SLsmg_refresh();
+> > -     pthread_mutex_unlock(&ui__lock);
+> > +     mutex_unlock(&ui__lock);
+> >  }
+> >
+> >  static struct ui_progress_ops tui_progress__ops = {
+> > diff --git a/tools/perf/ui/tui/setup.c b/tools/perf/ui/tui/setup.c
+> > index b1be59b4e2a4..a3b8c397c24d 100644
+> > --- a/tools/perf/ui/tui/setup.c
+> > +++ b/tools/perf/ui/tui/setup.c
+> > @@ -29,10 +29,10 @@ void ui__refresh_dimensions(bool force)
+> >  {
+> >       if (force || ui__need_resize) {
+> >               ui__need_resize = 0;
+> > -             pthread_mutex_lock(&ui__lock);
+> > +             mutex_lock(&ui__lock);
+> >               SLtt_get_screen_size();
+> >               SLsmg_reinit_smg();
+> > -             pthread_mutex_unlock(&ui__lock);
+> > +             mutex_unlock(&ui__lock);
+> >       }
+> >  }
+> >
+> > @@ -170,10 +170,10 @@ void ui__exit(bool wait_for_ok)
+> >                                   "Press any key...", 0);
+> >
+> >       SLtt_set_cursor_visibility(1);
+> > -     if (!pthread_mutex_trylock(&ui__lock)) {
+> > +     if (mutex_trylock(&ui__lock)) {
+> >               SLsmg_refresh();
+> >               SLsmg_reset_smg();
+> > -             pthread_mutex_unlock(&ui__lock);
+> > +             mutex_unlock(&ui__lock);
+> >       }
+> >       SLang_reset_tty();
+> >       perf_error__unregister(&perf_tui_eops);
+> > diff --git a/tools/perf/ui/tui/util.c b/tools/perf/ui/tui/util.c
+> > index 0f562e2cb1e8..3c5174854ac8 100644
+> > --- a/tools/perf/ui/tui/util.c
+> > +++ b/tools/perf/ui/tui/util.c
+> > @@ -95,7 +95,7 @@ int ui_browser__input_window(const char *title, const char *text, char *input,
+> >               t = sep + 1;
+> >       }
+> >
+> > -     pthread_mutex_lock(&ui__lock);
+> > +     mutex_lock(&ui__lock);
+> >
+> >       max_len += 2;
+> >       nr_lines += 8;
+> > @@ -125,17 +125,17 @@ int ui_browser__input_window(const char *title, const char *text, char *input,
+> >       SLsmg_write_nstring((char *)exit_msg, max_len);
+> >       SLsmg_refresh();
+> >
+> > -     pthread_mutex_unlock(&ui__lock);
+> > +     mutex_unlock(&ui__lock);
+> >
+> >       x += 2;
+> >       len = 0;
+> >       key = ui__getch(delay_secs);
+> >       while (key != K_TIMER && key != K_ENTER && key != K_ESC) {
+> > -             pthread_mutex_lock(&ui__lock);
+> > +             mutex_lock(&ui__lock);
+> >
+> >               if (key == K_BKSPC) {
+> >                       if (len == 0) {
+> > -                             pthread_mutex_unlock(&ui__lock);
+> > +                             mutex_unlock(&ui__lock);
+> >                               goto next_key;
+> >                       }
+> >                       SLsmg_gotorc(y, x + --len);
+> > @@ -147,7 +147,7 @@ int ui_browser__input_window(const char *title, const char *text, char *input,
+> >               }
+> >               SLsmg_refresh();
+> >
+> > -             pthread_mutex_unlock(&ui__lock);
+> > +             mutex_unlock(&ui__lock);
+> >
+> >               /* XXX more graceful overflow handling needed */
+> >               if (len == sizeof(buf) - 1) {
+> > @@ -215,19 +215,19 @@ void __ui__info_window(const char *title, const char *text, const char *exit_msg
+> >
+> >  void ui__info_window(const char *title, const char *text)
+> >  {
+> > -     pthread_mutex_lock(&ui__lock);
+> > +     mutex_lock(&ui__lock);
+> >       __ui__info_window(title, text, NULL);
+> >       SLsmg_refresh();
+> > -     pthread_mutex_unlock(&ui__lock);
+> > +     mutex_unlock(&ui__lock);
+> >  }
+> >
+> >  int ui__question_window(const char *title, const char *text,
+> >                       const char *exit_msg, int delay_secs)
+> >  {
+> > -     pthread_mutex_lock(&ui__lock);
+> > +     mutex_lock(&ui__lock);
+> >       __ui__info_window(title, text, exit_msg);
+> >       SLsmg_refresh();
+> > -     pthread_mutex_unlock(&ui__lock);
+> > +     mutex_unlock(&ui__lock);
+> >       return ui__getch(delay_secs);
+> >  }
+> >
+> > diff --git a/tools/perf/ui/ui.h b/tools/perf/ui/ui.h
+> > index 9b6fdf06e1d2..99f8d2fe9bc5 100644
+> > --- a/tools/perf/ui/ui.h
+> > +++ b/tools/perf/ui/ui.h
+> > @@ -2,11 +2,11 @@
+> >  #ifndef _PERF_UI_H_
+> >  #define _PERF_UI_H_ 1
+> >
+> > -#include <pthread.h>
+> > +#include "../util/mutex.h"
+> >  #include <stdbool.h>
+> >  #include <linux/compiler.h>
+> >
+> > -extern pthread_mutex_t ui__lock;
+> > +extern struct mutex ui__lock;
+> >  extern void *perf_gtk_handle;
+> >
+> >  extern int use_browser;
+>
