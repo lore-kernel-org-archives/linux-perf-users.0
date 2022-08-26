@@ -2,48 +2,48 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AE775ECAAD6
-	for <linux-perf-users@archiver.kernel.org>; Fri, 26 Aug 2022 08:50:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4D90DECAAD2
+	for <linux-perf-users@archiver.kernel.org>; Fri, 26 Aug 2022 10:11:39 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S245472AbiHZIud (ORCPT
+        id S244780AbiHZKLi (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Fri, 26 Aug 2022 04:50:33 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59122 "EHLO
+        Fri, 26 Aug 2022 06:11:38 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40552 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S245511AbiHZIuS (ORCPT
+        with ESMTP id S229481AbiHZKLh (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Fri, 26 Aug 2022 04:50:18 -0400
-Received: from mga14.intel.com (mga14.intel.com [192.55.52.115])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id EC1C032DB9;
-        Fri, 26 Aug 2022 01:50:14 -0700 (PDT)
+        Fri, 26 Aug 2022 06:11:37 -0400
+Received: from mga01.intel.com (mga01.intel.com [192.55.52.88])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 30F63A9C10;
+        Fri, 26 Aug 2022 03:11:36 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1661503815; x=1693039815;
+  t=1661508696; x=1693044696;
   h=message-id:date:mime-version:subject:to:references:from:
    in-reply-to:content-transfer-encoding;
-  bh=QBRLETGvncTRL0lzh7ch6U3+EDLdG+HLMX8Hw3Ab734=;
-  b=clA/n1vuiM1T4wjHhwqxeptIAHtaawyUHWuiAUB5j0vWO1xTluEE7kUu
-   /lxxW4NlZEpbOqnyCJqHMQLiMy+Cc7dKjAE0ONzEFsTNugUWIqRmvf0Q6
-   WL4+4QlFVvxaC4svEN6rnt1YdshuE6mtbidcEVCkVbMXropxjGuA7T/Vp
-   TNRy1PKieQC2LaJ3MQnOplH1TvJp6qlha0xTeoamrRrZX31JRFldPATAh
-   Rw6aN4tF1Lo8xpXIdrEGWLN+fmvPPoF4gcbJLkP9gnI8dpVJ2pu0Kd/+L
-   Fyl2cfkgZcxDdnez3spmeuP2NexhPXRGZ90NlSkFKpfXkxAUIpHjb9ofw
-   g==;
-X-IronPort-AV: E=McAfee;i="6500,9779,10450"; a="294464126"
-X-IronPort-AV: E=Sophos;i="5.93,264,1654585200"; 
-   d="scan'208";a="294464126"
+  bh=yNvu6BGSLX3xsDtWd6DweoqiDg0tvzIavq7gCuURtPM=;
+  b=maQY4tNuyWGHsgeA2nBiG5pfMwfWquxLBBjH1zBTbLco5ZzkKzXgn6cI
+   kz3p7NNAyy1MSrbMli6sRFxjLgYvszETRbC/bPJbmTiIVszgpTaWELHD1
+   7M5wEWn9B9g28+DE+gRRd8+ivVruOI/YBDrt2//DIIU5R3Tt8xZmmMjoY
+   Pv2Fu+tHUdZgIFbaBUUs8pNcanFtm6lvg96+B1/trU9VdwKwI5bM38kfu
+   /gHo7dVe8PD3t0wpDxzqCvg9IU1hrd/QhqszkbaUWr74wCK86FnAriH9P
+   rTGgWYInYOgAexmR7be/Jv0zeYi7NzHAybsTXdgbSiVzWGck6h9pc1RSg
+   w==;
+X-IronPort-AV: E=McAfee;i="6500,9779,10450"; a="320567072"
+X-IronPort-AV: E=Sophos;i="5.93,265,1654585200"; 
+   d="scan'208";a="320567072"
 Received: from fmsmga008.fm.intel.com ([10.253.24.58])
-  by fmsmga103.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 26 Aug 2022 01:50:13 -0700
-X-IronPort-AV: E=Sophos;i="5.93,264,1654585200"; 
-   d="scan'208";a="671381337"
+  by fmsmga101.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 26 Aug 2022 03:11:35 -0700
+X-IronPort-AV: E=Sophos;i="5.93,265,1654585200"; 
+   d="scan'208";a="671405086"
 Received: from ahunter6-mobl1.ger.corp.intel.com (HELO [10.0.2.15]) ([10.252.50.209])
-  by fmsmga008-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 26 Aug 2022 01:50:01 -0700
-Message-ID: <40f723d1-a030-983b-93b3-63791321ae4c@intel.com>
-Date:   Fri, 26 Aug 2022 11:49:56 +0300
+  by fmsmga008-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 26 Aug 2022 03:11:24 -0700
+Message-ID: <0004776a-8c39-9515-fd4e-01bfe1c4a3eb@intel.com>
+Date:   Fri, 26 Aug 2022 13:11:18 +0300
 MIME-Version: 1.0
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
  Firefox/91.0 Thunderbird/91.11.0
-Subject: Re: [PATCH v3 01/18] perf mutex: Wrapped usage of mutex and cond
+Subject: Re: [PATCH v3 09/18] perf ui: Update use of pthread mutex
 Content-Language: en-US
 To:     Ian Rogers <irogers@google.com>,
         Peter Zijlstra <peterz@infradead.org>,
@@ -94,11 +94,11 @@ To:     Ian Rogers <irogers@google.com>,
         linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org,
         bpf@vger.kernel.org, llvm@lists.linux.dev
 References: <20220824153901.488576-1-irogers@google.com>
- <20220824153901.488576-2-irogers@google.com>
+ <20220824153901.488576-10-irogers@google.com>
 From:   Adrian Hunter <adrian.hunter@intel.com>
 Organization: Intel Finland Oy, Registered Address: PL 281, 00181 Helsinki,
  Business Identity Code: 0357606 - 4, Domiciled in Helsinki
-In-Reply-To: <20220824153901.488576-2-irogers@google.com>
+In-Reply-To: <20220824153901.488576-10-irogers@google.com>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 Precedence: bulk
@@ -106,216 +106,323 @@ List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
 On 24/08/22 18:38, Ian Rogers wrote:
-> From: Pavithra Gurushankar <gpavithrasha@gmail.com>
+> Switch to the use of mutex wrappers that provide better error checking.
 > 
-> Added a new header file mutex.h that wraps the usage of
-> pthread_mutex_t and pthread_cond_t. By abstracting these it is
-> possible to introduce error checking.
-> 
-> Signed-off-by: Pavithra Gurushankar <gpavithrasha@gmail.com>
 > Signed-off-by: Ian Rogers <irogers@google.com>
 > ---
->  tools/perf/util/Build   |   1 +
->  tools/perf/util/mutex.c | 117 ++++++++++++++++++++++++++++++++++++++++
->  tools/perf/util/mutex.h |  47 ++++++++++++++++
->  3 files changed, 165 insertions(+)
->  create mode 100644 tools/perf/util/mutex.c
->  create mode 100644 tools/perf/util/mutex.h
+>  tools/perf/ui/browser.c           | 20 ++++++++++----------
+>  tools/perf/ui/browsers/annotate.c |  2 +-
+
+Other changes to tools/perf/ui/browsers/annotate.c are in patch 12
+
+>  tools/perf/ui/setup.c             |  5 +++--
+>  tools/perf/ui/tui/helpline.c      |  5 ++---
+>  tools/perf/ui/tui/progress.c      |  8 ++++----
+>  tools/perf/ui/tui/setup.c         |  8 ++++----
+>  tools/perf/ui/tui/util.c          | 18 +++++++++---------
+>  tools/perf/ui/ui.h                |  4 ++--
+>  8 files changed, 35 insertions(+), 35 deletions(-)
 > 
-> diff --git a/tools/perf/util/Build b/tools/perf/util/Build
-> index 9dfae1bda9cc..8fd6dc8de521 100644
-> --- a/tools/perf/util/Build
-> +++ b/tools/perf/util/Build
-> @@ -143,6 +143,7 @@ perf-y += branch.o
->  perf-y += mem2node.o
->  perf-y += clockid.o
->  perf-y += list_sort.o
-> +perf-y += mutex.o
+> diff --git a/tools/perf/ui/browser.c b/tools/perf/ui/browser.c
+> index fa5bd5c20e96..78fb01d6ad63 100644
+> --- a/tools/perf/ui/browser.c
+> +++ b/tools/perf/ui/browser.c
+> @@ -268,9 +268,9 @@ void __ui_browser__show_title(struct ui_browser *browser, const char *title)
 >  
->  perf-$(CONFIG_LIBBPF) += bpf-loader.o
->  perf-$(CONFIG_LIBBPF) += bpf_map.o
-> diff --git a/tools/perf/util/mutex.c b/tools/perf/util/mutex.c
-> new file mode 100644
-> index 000000000000..892294ac1769
-> --- /dev/null
-> +++ b/tools/perf/util/mutex.c
-> @@ -0,0 +1,117 @@
-> +// SPDX-License-Identifier: GPL-2.0
-> +#include "mutex.h"
-> +
-> +#include "debug.h"
-> +#include <linux/string.h>
-> +#include <errno.h>
-> +
-> +static void check_err(const char *fn, int err)
-> +{
-> +	char sbuf[STRERR_BUFSIZE];
-> +
-> +	if (err == 0)
-> +		return;
-> +
-> +	pr_err("%s error: '%s'", fn, str_error_r(err, sbuf, sizeof(sbuf)));
-                              ^
-Still needs \n here >---------^
-
-> +}
-> +
-> +#define CHECK_ERR(err) check_err(__func__, err)
-> +
-> +static void __mutex_init(struct mutex *mtx, bool pshared)
-> +{
-> +	pthread_mutexattr_t attr;
-> +
-> +	CHECK_ERR(pthread_mutexattr_init(&attr));
-> +
-> +#ifndef NDEBUG
-> +	/* In normal builds enable error checking, such as recursive usage. */
-> +	CHECK_ERR(pthread_mutexattr_settype(&attr, PTHREAD_MUTEX_ERRORCHECK));
-> +#endif
-> +	if (pshared)
-> +		CHECK_ERR(pthread_mutexattr_setpshared(&attr, PTHREAD_PROCESS_SHARED));
-> +
-> +	CHECK_ERR(pthread_mutex_init(&mtx->lock, &attr));
-> +	CHECK_ERR(pthread_mutexattr_destroy(&attr));
-> +}
-> +
-> +void mutex_init(struct mutex *mtx)
-> +{
-> +	__mutex_init(mtx, /*pshared=*/false);
-> +}
-> +
-> +void mutex_init_pshared(struct mutex *mtx)
-> +{
-> +	__mutex_init(mtx, /*pshared=*/true);
-> +}
-> +
-> +void mutex_destroy(struct mutex *mtx)
-> +{
-> +	CHECK_ERR(pthread_mutex_destroy(&mtx->lock));
-> +}
-> +
-> +void mutex_lock(struct mutex *mtx)
-> +{
-> +	CHECK_ERR(pthread_mutex_lock(&mtx->lock));
-> +}
-> +
-> +void mutex_unlock(struct mutex *mtx)
-> +{
-> +	CHECK_ERR(pthread_mutex_unlock(&mtx->lock));
-> +}
-> +
-> +bool mutex_trylock(struct mutex *mtx)
-> +{
-> +	int ret = pthread_mutex_trylock(&mtx->lock);
-> +
-> +	if (ret == 0)
-> +		return true; /* Lock acquired. */
-> +
-> +	if (ret == EBUSY)
-> +		return false; /* Lock busy. */
-> +
-> +	/* Print error. */
-> +	CHECK_ERR(ret);
-> +	return false;
-> +}
-> +
-> +static void __cond_init(struct cond *cnd, bool pshared)
-> +{
-> +	pthread_condattr_t attr;
-> +
-> +	CHECK_ERR(pthread_condattr_init(&attr));
-> +	if (pshared)
-> +		CHECK_ERR(pthread_condattr_setpshared(&attr, PTHREAD_PROCESS_SHARED));
-> +
-> +	CHECK_ERR(pthread_cond_init(&cnd->cond, &attr));
-> +	CHECK_ERR(pthread_condattr_destroy(&attr));
-> +}
-> +
-> +void cond_init(struct cond *cnd)
-> +{
-> +	__cond_init(cnd, /*pshared=*/false);
-> +}
-> +
-> +void cond_init_pshared(struct cond *cnd)
-> +{
-> +	__cond_init(cnd, /*pshared=*/true);
-> +}
-> +
-> +void cond_destroy(struct cond *cnd)
-> +{
-> +	CHECK_ERR(pthread_cond_destroy(&cnd->cond));
-> +}
-> +
-> +void cond_wait(struct cond *cnd, struct mutex *mtx)
-> +{
-> +	CHECK_ERR(pthread_cond_wait(&cnd->cond, &mtx->lock));
-> +}
-> +
-> +void cond_signal(struct cond *cnd)
-> +{
-> +	CHECK_ERR(pthread_cond_signal(&cnd->cond));
-> +}
-> +
-> +void cond_broadcast(struct cond *cnd)
-> +{
-> +	CHECK_ERR(pthread_cond_broadcast(&cnd->cond));
-> +}
-> diff --git a/tools/perf/util/mutex.h b/tools/perf/util/mutex.h
-> new file mode 100644
-> index 000000000000..c9e110a2b55e
-> --- /dev/null
-> +++ b/tools/perf/util/mutex.h
-> @@ -0,0 +1,47 @@
-> +/* SPDX-License-Identifier: GPL-2.0 */
-> +#ifndef __PERF_MUTEX_H
-> +#define __PERF_MUTEX_H
-> +
-> +#include <pthread.h>
-> +#include <stdbool.h>
-> +
-> +/*
-> + * A wrapper around the mutex implementation that allows perf to error check
-> + * usage, etc.
-> + */
-> +struct mutex {
-> +	pthread_mutex_t lock;
-> +};
-> +
-> +/* A wrapper around the condition variable implementation. */
-> +struct cond {
-> +	pthread_cond_t cond;
-> +};
-> +
-> +/* Default initialize the mtx struct. */
-> +void mutex_init(struct mutex *mtx);
-> +/*
-> + * Initialize the mtx struct and set the process-shared rather than default
-> + * process-private attribute.
-> + */
-> +void mutex_init_pshared(struct mutex *mtx);
-> +void mutex_destroy(struct mutex *mtx);
-> +
-> +void mutex_lock(struct mutex *mtx);
-> +void mutex_unlock(struct mutex *mtx);
-> +bool mutex_trylock(struct mutex *mtx);
-
-Might be worth noting that mutex_trylock() returns true if the
-lock is acquired, inverting the logic from pthread_mutex_trylock()
-but consistent with the kernel's mutex_trylock().
-
-> +
-> +/* Default initialize the cond struct. */
-> +void cond_init(struct cond *cnd);
-> +/*
-> + * Initialize the cond struct and specify the process-shared rather than default
-> + * process-private attribute.
-> + */
-> +void cond_init_pshared(struct cond *cnd);
-> +void cond_destroy(struct cond *cnd);
-> +
-> +void cond_wait(struct cond *cnd, struct mutex *mtx);
-> +void cond_signal(struct cond *cnd);
-> +void cond_broadcast(struct cond *cnd);
-> +
-> +#endif /* __PERF_MUTEX_H */
+>  void ui_browser__show_title(struct ui_browser *browser, const char *title)
+>  {
+> -	pthread_mutex_lock(&ui__lock);
+> +	mutex_lock(&ui__lock);
+>  	__ui_browser__show_title(browser, title);
+> -	pthread_mutex_unlock(&ui__lock);
+> +	mutex_unlock(&ui__lock);
+>  }
+>  
+>  int ui_browser__show(struct ui_browser *browser, const char *title,
+> @@ -284,7 +284,7 @@ int ui_browser__show(struct ui_browser *browser, const char *title,
+>  
+>  	browser->refresh_dimensions(browser);
+>  
+> -	pthread_mutex_lock(&ui__lock);
+> +	mutex_lock(&ui__lock);
+>  	__ui_browser__show_title(browser, title);
+>  
+>  	browser->title = title;
+> @@ -295,16 +295,16 @@ int ui_browser__show(struct ui_browser *browser, const char *title,
+>  	va_end(ap);
+>  	if (err > 0)
+>  		ui_helpline__push(browser->helpline);
+> -	pthread_mutex_unlock(&ui__lock);
+> +	mutex_unlock(&ui__lock);
+>  	return err ? 0 : -1;
+>  }
+>  
+>  void ui_browser__hide(struct ui_browser *browser)
+>  {
+> -	pthread_mutex_lock(&ui__lock);
+> +	mutex_lock(&ui__lock);
+>  	ui_helpline__pop();
+>  	zfree(&browser->helpline);
+> -	pthread_mutex_unlock(&ui__lock);
+> +	mutex_unlock(&ui__lock);
+>  }
+>  
+>  static void ui_browser__scrollbar_set(struct ui_browser *browser)
+> @@ -352,9 +352,9 @@ static int __ui_browser__refresh(struct ui_browser *browser)
+>  
+>  int ui_browser__refresh(struct ui_browser *browser)
+>  {
+> -	pthread_mutex_lock(&ui__lock);
+> +	mutex_lock(&ui__lock);
+>  	__ui_browser__refresh(browser);
+> -	pthread_mutex_unlock(&ui__lock);
+> +	mutex_unlock(&ui__lock);
+>  
+>  	return 0;
+>  }
+> @@ -390,10 +390,10 @@ int ui_browser__run(struct ui_browser *browser, int delay_secs)
+>  	while (1) {
+>  		off_t offset;
+>  
+> -		pthread_mutex_lock(&ui__lock);
+> +		mutex_lock(&ui__lock);
+>  		err = __ui_browser__refresh(browser);
+>  		SLsmg_refresh();
+> -		pthread_mutex_unlock(&ui__lock);
+> +		mutex_unlock(&ui__lock);
+>  		if (err < 0)
+>  			break;
+>  
+> diff --git a/tools/perf/ui/browsers/annotate.c b/tools/perf/ui/browsers/annotate.c
+> index 44ba900828f6..b8747e8dd9ea 100644
+> --- a/tools/perf/ui/browsers/annotate.c
+> +++ b/tools/perf/ui/browsers/annotate.c
+> @@ -8,11 +8,11 @@
+>  #include "../../util/hist.h"
+>  #include "../../util/sort.h"
+>  #include "../../util/map.h"
+> +#include "../../util/mutex.h"
+>  #include "../../util/symbol.h"
+>  #include "../../util/evsel.h"
+>  #include "../../util/evlist.h"
+>  #include <inttypes.h>
+> -#include <pthread.h>
+>  #include <linux/kernel.h>
+>  #include <linux/string.h>
+>  #include <linux/zalloc.h>
+> diff --git a/tools/perf/ui/setup.c b/tools/perf/ui/setup.c
+> index 700335cde618..25ded88801a3 100644
+> --- a/tools/perf/ui/setup.c
+> +++ b/tools/perf/ui/setup.c
+> @@ -1,5 +1,4 @@
+>  // SPDX-License-Identifier: GPL-2.0
+> -#include <pthread.h>
+>  #include <dlfcn.h>
+>  #include <unistd.h>
+>  
+> @@ -8,7 +7,7 @@
+>  #include "../util/hist.h"
+>  #include "ui.h"
+>  
+> -pthread_mutex_t ui__lock = PTHREAD_MUTEX_INITIALIZER;
+> +struct mutex ui__lock;
+>  void *perf_gtk_handle;
+>  int use_browser = -1;
+>  
+> @@ -76,6 +75,7 @@ int stdio__config_color(const struct option *opt __maybe_unused,
+>  
+>  void setup_browser(bool fallback_to_pager)
+>  {
+> +	mutex_init(&ui__lock);
+>  	if (use_browser < 2 && (!isatty(1) || dump_trace))
+>  		use_browser = 0;
+>  
+> @@ -118,4 +118,5 @@ void exit_browser(bool wait_for_ok)
+>  	default:
+>  		break;
+>  	}
+> +	mutex_destroy(&ui__lock);
+>  }
+> diff --git a/tools/perf/ui/tui/helpline.c b/tools/perf/ui/tui/helpline.c
+> index 298d6af82fdd..db4952f5990b 100644
+> --- a/tools/perf/ui/tui/helpline.c
+> +++ b/tools/perf/ui/tui/helpline.c
+> @@ -2,7 +2,6 @@
+>  #include <stdio.h>
+>  #include <stdlib.h>
+>  #include <string.h>
+> -#include <pthread.h>
+>  #include <linux/kernel.h>
+>  #include <linux/string.h>
+>  
+> @@ -33,7 +32,7 @@ static int tui_helpline__show(const char *format, va_list ap)
+>  	int ret;
+>  	static int backlog;
+>  
+> -	pthread_mutex_lock(&ui__lock);
+> +	mutex_lock(&ui__lock);
+>  	ret = vscnprintf(ui_helpline__last_msg + backlog,
+>  			sizeof(ui_helpline__last_msg) - backlog, format, ap);
+>  	backlog += ret;
+> @@ -45,7 +44,7 @@ static int tui_helpline__show(const char *format, va_list ap)
+>  		SLsmg_refresh();
+>  		backlog = 0;
+>  	}
+> -	pthread_mutex_unlock(&ui__lock);
+> +	mutex_unlock(&ui__lock);
+>  
+>  	return ret;
+>  }
+> diff --git a/tools/perf/ui/tui/progress.c b/tools/perf/ui/tui/progress.c
+> index 3d74af5a7ece..71b6c8d9474f 100644
+> --- a/tools/perf/ui/tui/progress.c
+> +++ b/tools/perf/ui/tui/progress.c
+> @@ -45,7 +45,7 @@ static void tui_progress__update(struct ui_progress *p)
+>  	}
+>  
+>  	ui__refresh_dimensions(false);
+> -	pthread_mutex_lock(&ui__lock);
+> +	mutex_lock(&ui__lock);
+>  	y = SLtt_Screen_Rows / 2 - 2;
+>  	SLsmg_set_color(0);
+>  	SLsmg_draw_box(y, 0, 3, SLtt_Screen_Cols);
+> @@ -56,7 +56,7 @@ static void tui_progress__update(struct ui_progress *p)
+>  	bar = ((SLtt_Screen_Cols - 2) * p->curr) / p->total;
+>  	SLsmg_fill_region(y, 1, 1, bar, ' ');
+>  	SLsmg_refresh();
+> -	pthread_mutex_unlock(&ui__lock);
+> +	mutex_unlock(&ui__lock);
+>  }
+>  
+>  static void tui_progress__finish(void)
+> @@ -67,12 +67,12 @@ static void tui_progress__finish(void)
+>  		return;
+>  
+>  	ui__refresh_dimensions(false);
+> -	pthread_mutex_lock(&ui__lock);
+> +	mutex_lock(&ui__lock);
+>  	y = SLtt_Screen_Rows / 2 - 2;
+>  	SLsmg_set_color(0);
+>  	SLsmg_fill_region(y, 0, 3, SLtt_Screen_Cols, ' ');
+>  	SLsmg_refresh();
+> -	pthread_mutex_unlock(&ui__lock);
+> +	mutex_unlock(&ui__lock);
+>  }
+>  
+>  static struct ui_progress_ops tui_progress__ops = {
+> diff --git a/tools/perf/ui/tui/setup.c b/tools/perf/ui/tui/setup.c
+> index b1be59b4e2a4..a3b8c397c24d 100644
+> --- a/tools/perf/ui/tui/setup.c
+> +++ b/tools/perf/ui/tui/setup.c
+> @@ -29,10 +29,10 @@ void ui__refresh_dimensions(bool force)
+>  {
+>  	if (force || ui__need_resize) {
+>  		ui__need_resize = 0;
+> -		pthread_mutex_lock(&ui__lock);
+> +		mutex_lock(&ui__lock);
+>  		SLtt_get_screen_size();
+>  		SLsmg_reinit_smg();
+> -		pthread_mutex_unlock(&ui__lock);
+> +		mutex_unlock(&ui__lock);
+>  	}
+>  }
+>  
+> @@ -170,10 +170,10 @@ void ui__exit(bool wait_for_ok)
+>  				    "Press any key...", 0);
+>  
+>  	SLtt_set_cursor_visibility(1);
+> -	if (!pthread_mutex_trylock(&ui__lock)) {
+> +	if (mutex_trylock(&ui__lock)) {
+>  		SLsmg_refresh();
+>  		SLsmg_reset_smg();
+> -		pthread_mutex_unlock(&ui__lock);
+> +		mutex_unlock(&ui__lock);
+>  	}
+>  	SLang_reset_tty();
+>  	perf_error__unregister(&perf_tui_eops);
+> diff --git a/tools/perf/ui/tui/util.c b/tools/perf/ui/tui/util.c
+> index 0f562e2cb1e8..3c5174854ac8 100644
+> --- a/tools/perf/ui/tui/util.c
+> +++ b/tools/perf/ui/tui/util.c
+> @@ -95,7 +95,7 @@ int ui_browser__input_window(const char *title, const char *text, char *input,
+>  		t = sep + 1;
+>  	}
+>  
+> -	pthread_mutex_lock(&ui__lock);
+> +	mutex_lock(&ui__lock);
+>  
+>  	max_len += 2;
+>  	nr_lines += 8;
+> @@ -125,17 +125,17 @@ int ui_browser__input_window(const char *title, const char *text, char *input,
+>  	SLsmg_write_nstring((char *)exit_msg, max_len);
+>  	SLsmg_refresh();
+>  
+> -	pthread_mutex_unlock(&ui__lock);
+> +	mutex_unlock(&ui__lock);
+>  
+>  	x += 2;
+>  	len = 0;
+>  	key = ui__getch(delay_secs);
+>  	while (key != K_TIMER && key != K_ENTER && key != K_ESC) {
+> -		pthread_mutex_lock(&ui__lock);
+> +		mutex_lock(&ui__lock);
+>  
+>  		if (key == K_BKSPC) {
+>  			if (len == 0) {
+> -				pthread_mutex_unlock(&ui__lock);
+> +				mutex_unlock(&ui__lock);
+>  				goto next_key;
+>  			}
+>  			SLsmg_gotorc(y, x + --len);
+> @@ -147,7 +147,7 @@ int ui_browser__input_window(const char *title, const char *text, char *input,
+>  		}
+>  		SLsmg_refresh();
+>  
+> -		pthread_mutex_unlock(&ui__lock);
+> +		mutex_unlock(&ui__lock);
+>  
+>  		/* XXX more graceful overflow handling needed */
+>  		if (len == sizeof(buf) - 1) {
+> @@ -215,19 +215,19 @@ void __ui__info_window(const char *title, const char *text, const char *exit_msg
+>  
+>  void ui__info_window(const char *title, const char *text)
+>  {
+> -	pthread_mutex_lock(&ui__lock);
+> +	mutex_lock(&ui__lock);
+>  	__ui__info_window(title, text, NULL);
+>  	SLsmg_refresh();
+> -	pthread_mutex_unlock(&ui__lock);
+> +	mutex_unlock(&ui__lock);
+>  }
+>  
+>  int ui__question_window(const char *title, const char *text,
+>  			const char *exit_msg, int delay_secs)
+>  {
+> -	pthread_mutex_lock(&ui__lock);
+> +	mutex_lock(&ui__lock);
+>  	__ui__info_window(title, text, exit_msg);
+>  	SLsmg_refresh();
+> -	pthread_mutex_unlock(&ui__lock);
+> +	mutex_unlock(&ui__lock);
+>  	return ui__getch(delay_secs);
+>  }
+>  
+> diff --git a/tools/perf/ui/ui.h b/tools/perf/ui/ui.h
+> index 9b6fdf06e1d2..99f8d2fe9bc5 100644
+> --- a/tools/perf/ui/ui.h
+> +++ b/tools/perf/ui/ui.h
+> @@ -2,11 +2,11 @@
+>  #ifndef _PERF_UI_H_
+>  #define _PERF_UI_H_ 1
+>  
+> -#include <pthread.h>
+> +#include "../util/mutex.h"
+>  #include <stdbool.h>
+>  #include <linux/compiler.h>
+>  
+> -extern pthread_mutex_t ui__lock;
+> +extern struct mutex ui__lock;
+>  extern void *perf_gtk_handle;
+>  
+>  extern int use_browser;
 
