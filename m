@@ -2,128 +2,110 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B8E65ECAAA1
-	for <linux-perf-users@archiver.kernel.org>; Thu, 25 Aug 2022 20:53:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9BBA9ECAAD2
+	for <linux-perf-users@archiver.kernel.org>; Fri, 26 Aug 2022 05:16:14 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S242834AbiHYUxT (ORCPT
+        id S229455AbiHZFQN (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Thu, 25 Aug 2022 16:53:19 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55782 "EHLO
+        Fri, 26 Aug 2022 01:16:13 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43950 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S242734AbiHYUxS (ORCPT
+        with ESMTP id S229591AbiHZFQM (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Thu, 25 Aug 2022 16:53:18 -0400
-Received: from mail.zeus03.de (www.zeus03.de [194.117.254.33])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id ED588AE215
-        for <linux-perf-users@vger.kernel.org>; Thu, 25 Aug 2022 13:53:17 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=simple; d=sang-engineering.com; h=
-        date:from:to:cc:subject:message-id:references:mime-version
-        :content-type:in-reply-to; s=k1; bh=6AQOodmRYhiBHPJku0/KQnZuH4bu
-        aowrp/Re1ISUE2I=; b=zHBzvPwMzrT30ZuQESeQ0WB3zDlH36zoP0o69ouSCYGz
-        pjziUHmiIOIIihWk23x18LpSZky4T04LmoP0uRnPDJrwFJZyBDg217KLeEjeVx31
-        GdMCJ+72b2bbgJn795NCLBl3uEWfapnPLcWUq4lUnC5kLR5bxc6NbwrOVge8eY4=
-Received: (qmail 2843961 invoked from network); 25 Aug 2022 22:53:12 +0200
-Received: by mail.zeus03.de with ESMTPSA (TLS_AES_256_GCM_SHA384 encrypted, authenticated); 25 Aug 2022 22:53:12 +0200
-X-UD-Smtp-Session: l3s3148p1@toIf/BbnAcUucrQf
-Date:   Thu, 25 Aug 2022 22:53:08 +0200
-From:   Wolfram Sang <wsa+renesas@sang-engineering.com>
-To:     Petr Mladek <pmladek@suse.com>
-Cc:     linux-kernel@vger.kernel.org, Alexei Starovoitov <ast@kernel.org>,
-        Daniel Borkmann <daniel@iogearbox.net>,
-        Andrii Nakryiko <andrii@kernel.org>,
-        Martin KaFai Lau <martin.lau@linux.dev>,
-        Song Liu <song@kernel.org>, Yonghong Song <yhs@fb.com>,
-        John Fastabend <john.fastabend@gmail.com>,
-        KP Singh <kpsingh@kernel.org>,
-        Stanislav Fomichev <sdf@google.com>,
-        Hao Luo <haoluo@google.com>, Jiri Olsa <jolsa@kernel.org>,
-        Tejun Heo <tj@kernel.org>, Zefan Li <lizefan.x@bytedance.com>,
-        Johannes Weiner <hannes@cmpxchg.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@redhat.com>,
+        Fri, 26 Aug 2022 01:16:12 -0400
+Received: from mail-pf1-x42c.google.com (mail-pf1-x42c.google.com [IPv6:2607:f8b0:4864:20::42c])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0C3585247E
+        for <linux-perf-users@vger.kernel.org>; Thu, 25 Aug 2022 22:16:11 -0700 (PDT)
+Received: by mail-pf1-x42c.google.com with SMTP id 142so549431pfu.10
+        for <linux-perf-users@vger.kernel.org>; Thu, 25 Aug 2022 22:16:11 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc;
+        bh=PdzAck8H6TTellhEIC00YbxrxMoIOkkFKnJpRC4ha9o=;
+        b=Upu2hz6KsiZui2GhlxlMKDnE23aqRUTR7laNVCIDqhR4NR10aTiV3JFYpvHS3kh6bH
+         EkBj+ITddoCvf+BBiD65urTHi3YqiE/Ye2nTnPrr6JoS2ra1XKsIEyNM2w5WMeNi9tDU
+         S5IQyXUJFtTGhP8VpeALtiMovckdTETj0c4nHHHPIQkx3dp4BrM7Yyp02MlF/e49viaQ
+         3n1DuYAO1wAaX4YM+Uc0RUuarj7etUO3uyoi8V/JeVgeEe1mSIl8yxj18KRoj4ithBH4
+         EF5N248Ilym0a4sNBCIbykFdgC0+oIZlvZ7LuLgkcqn4Lgp5GAi6VpZJabIirw4f7n35
+         +3NA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc;
+        bh=PdzAck8H6TTellhEIC00YbxrxMoIOkkFKnJpRC4ha9o=;
+        b=gq154nhvXgJOB7gOBTwl/xtDFtxXYPVIi5uR+bR5vKkMqbD+pfOh4RONgZt4QdcT31
+         Uo1ENu/+4wOThwruHJFmS5Rsc1WkkYwBIGhCTOr/F8eOf/mXxuQbdnEOSOfKJvMPas7r
+         mWYETIxGrG64rYH/wa+FnoIQ1rPEo3kC6aFS03h9CKk3mEZHyyXKtOB7iwAn21nJ0vmm
+         sdDDgfFHa40sQ4RSGuXMMLThvE3vjoQiwKtKUy44VjNnlYRffpSo10LC3297lxF0iDQo
+         bIpxdM8CSFn4OrFYt4uekPLyGBwuH4g2ryj3FT6HfzLyEbjo6ovHPbQx2qvZnnTnK31w
+         BB5Q==
+X-Gm-Message-State: ACgBeo1/TvJIgw8NDpuOYew+vj50mqC0VdJDizdAIYSfNz5U7cZh0gLV
+        E5VV2ZMiFv99cITSQ+SUDwHqrw==
+X-Google-Smtp-Source: AA6agR5ly+Fty/T/+GmNjsVJ6J5APSrNGr24N2jQIK+bRlE2Xnn0tvKE2Ol7fIzOR6zonNV+vC/vsA==
+X-Received: by 2002:a63:6a05:0:b0:42a:3b5d:8084 with SMTP id f5-20020a636a05000000b0042a3b5d8084mr1933159pgc.281.1661490970369;
+        Thu, 25 Aug 2022 22:16:10 -0700 (PDT)
+Received: from localhost (n058152048222.netvigator.com. [58.152.48.222])
+        by smtp.gmail.com with ESMTPSA id n7-20020a170902e54700b0016a6caacaefsm505705plf.103.2022.08.25.22.16.09
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 25 Aug 2022 22:16:09 -0700 (PDT)
+From:   Leo Yan <leo.yan@linaro.org>
+To:     Peter Zijlstra <peterz@infradead.org>,
         Arnaldo Carvalho de Melo <acme@kernel.org>,
+        Ingo Molnar <mingo@redhat.com>,
         Mark Rutland <mark.rutland@arm.com>,
         Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Jiri Olsa <jolsa@kernel.org>,
         Namhyung Kim <namhyung@kernel.org>,
-        Sergey Senozhatsky <senozhatsky@chromium.org>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        John Ogness <john.ogness@linutronix.de>,
-        John Stultz <jstultz@google.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Stephen Boyd <sboyd@kernel.org>, bpf@vger.kernel.org,
-        cgroups@vger.kernel.org, linux-perf-users@vger.kernel.org
-Subject: Re: [PATCH] kernel: move from strlcpy with unused retval to strscpy
-Message-ID: <YwfhNNwis4b3qwdX@shikoro>
-Mail-Followup-To: Wolfram Sang <wsa+renesas@sang-engineering.com>,
-        Petr Mladek <pmladek@suse.com>, linux-kernel@vger.kernel.org,
-        Alexei Starovoitov <ast@kernel.org>,
-        Daniel Borkmann <daniel@iogearbox.net>,
-        Andrii Nakryiko <andrii@kernel.org>,
-        Martin KaFai Lau <martin.lau@linux.dev>, Song Liu <song@kernel.org>,
-        Yonghong Song <yhs@fb.com>,
-        John Fastabend <john.fastabend@gmail.com>,
-        KP Singh <kpsingh@kernel.org>, Stanislav Fomichev <sdf@google.com>,
-        Hao Luo <haoluo@google.com>, Jiri Olsa <jolsa@kernel.org>,
-        Tejun Heo <tj@kernel.org>, Zefan Li <lizefan.x@bytedance.com>,
-        Johannes Weiner <hannes@cmpxchg.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Namhyung Kim <namhyung@kernel.org>,
-        Sergey Senozhatsky <senozhatsky@chromium.org>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        John Ogness <john.ogness@linutronix.de>,
-        John Stultz <jstultz@google.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Stephen Boyd <sboyd@kernel.org>, bpf@vger.kernel.org,
-        cgroups@vger.kernel.org, linux-perf-users@vger.kernel.org
-References: <20220818210202.8227-1-wsa+renesas@sang-engineering.com>
- <YwdAknZFyKxCXZuL@alley>
- <YwdtunymYd4VO83D@shikoro>
- <Ywd+jrlh+6ZJw7u5@alley>
+        linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
+Cc:     Ali Saidi <alisaidi@amazon.com>, Leo Yan <leo.yan@linaro.org>,
+        Kajol Jain <kjain@linux.ibm.com>
+Subject: [PATCH RESEND v6] perf: Add SNOOP_PEER flag to perf mem data struct
+Date:   Fri, 26 Aug 2022 13:16:03 +0800
+Message-Id: <20220826051603.174792-1-leo.yan@linaro.org>
+X-Mailer: git-send-email 2.34.1
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="fz94ukbbgpPoi98t"
-Content-Disposition: inline
-In-Reply-To: <Ywd+jrlh+6ZJw7u5@alley>
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
+From: Ali Saidi <alisaidi@amazon.com>
 
---fz94ukbbgpPoi98t
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+Add a flag to the perf mem data struct to signal that a request caused a
+cache-to-cache transfer of a line from a peer of the requestor and
+wasn't sourced from a lower cache level.  The line being moved from one
+peer cache to another has latency and performance implications. On Arm64
+Neoverse systems the data source can indicate a cache-to-cache transfer
+but not if the line is dirty or clean, so instead of overloading HITM
+define a new flag that indicates this type of transfer.
 
+Update notes:
 
-> Also he might prefer to get the script that did the tree-wide change so
-> that he knows what exactly has changed.
+This patch is to sync the headers between kernel and user space, commit
+2e21bcf0514a ("perf tools: Sync addition of PERF_MEM_SNOOPX_PEER") for
+updating kernel header has been merged in the mainline code.
 
-The script was also published in the thread originating all this [1].
+Signed-off-by: Ali Saidi <alisaidi@amazon.com>
+Reviewed-by: Leo Yan <leo.yan@linaro.org>
+Reviewed-by: Kajol Jain<kjain@linux.ibm.com>
+---
+ include/uapi/linux/perf_event.h | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-[1] https://lore.kernel.org/all/YvhXzarjOLEJ8nsW@shikoro/
+diff --git a/include/uapi/linux/perf_event.h b/include/uapi/linux/perf_event.h
+index 03b370062741..581ed4bdc062 100644
+--- a/include/uapi/linux/perf_event.h
++++ b/include/uapi/linux/perf_event.h
+@@ -1313,7 +1313,7 @@ union perf_mem_data_src {
+ #define PERF_MEM_SNOOP_SHIFT	19
+ 
+ #define PERF_MEM_SNOOPX_FWD	0x01 /* forward */
+-/* 1 free */
++#define PERF_MEM_SNOOPX_PEER	0x02 /* xfer from peer */
+ #define PERF_MEM_SNOOPX_SHIFT  38
+ 
+ /* locked instruction */
+-- 
+2.34.1
 
-
---fz94ukbbgpPoi98t
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQIzBAABCgAdFiEEOZGx6rniZ1Gk92RdFA3kzBSgKbYFAmMH4TAACgkQFA3kzBSg
-KbYP/g//aVNK4imScpt4qSn7pT65itBbV6E0v08ayuKks5ZT2rcrGdfJyCfX6LSV
-PVku2MNOXlDaDdDbgS46m223zggvOiSVmOqOvHykRszXKsm9g+vmZE/UNW8s8Po9
-dKY4gz1eIlQD0+eFlZQEazTdPHohC18xLwHg/IKKk2xt1MZ+5tJM/mDE05vXhvdM
-lyJl8EZsKIE0f6xMAc1JJ/soTxvgzWCOR5IU9j9tp2OyPiEA8oseD9DGUyLoAJ1q
-ORw5KyghzMt4J2cIjONRz/bF82upiijk3y8Llip2dlHiqXIGb2kYd7OECLZQ0+08
-wBwy5Dg9ssBT77nyl2aJjHVDY6x3TzlcCERn+gaF29vmeP4Ks0/AKuJ9cQQ4wbwL
-bknBVNmmnuLv7beMr8LBZHccr2lFAk2M4FovY4nXtRFhFNhszDMCDSCyBNDtqYyX
-2MKs95ejp14Q05FYrAoOVZPWIrOUa0Uk0Gk1bqE7dq9Ym74a4/bneiqPPxhkZbxo
-dukbxVJlJ4NzzuStc4iRS01UDZEO6ewy6FbwijcvUav8zGYu3RkkHbUHEd9LIzIw
-fUqs88whXatJVQr1nda8CrOG1AIa/6LeiGeD+1pS/wORmqskp757mwJhNVBgk38a
-Ev2HkqgZnTkGzI5ecc8nlv7vJonMDl0OPHSVamWTOs/arGcBHmY=
-=lPL3
------END PGP SIGNATURE-----
-
---fz94ukbbgpPoi98t--
