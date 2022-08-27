@@ -2,143 +2,71 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 926C6C0502C
-	for <linux-perf-users@archiver.kernel.org>; Sat, 27 Aug 2022 07:11:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D5E4AECAAD2
+	for <linux-perf-users@archiver.kernel.org>; Sat, 27 Aug 2022 08:27:38 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S236435AbiH0HLh (ORCPT
+        id S233634AbiH0I1h (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Sat, 27 Aug 2022 03:11:37 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42840 "EHLO
+        Sat, 27 Aug 2022 04:27:37 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50562 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S233391AbiH0HLg (ORCPT
+        with ESMTP id S233766AbiH0I1f (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Sat, 27 Aug 2022 03:11:36 -0400
-Received: from mga09.intel.com (mga09.intel.com [134.134.136.24])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8B7DFB9403;
-        Sat, 27 Aug 2022 00:11:35 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1661584295; x=1693120295;
-  h=message-id:date:mime-version:subject:to:cc:references:
-   from:in-reply-to:content-transfer-encoding;
-  bh=5//vesnR6q4a/EAJehddmLIvKMXBYIPt2MNCh84f7z8=;
-  b=HDGGL2FSw2Z0BqVL3O0LKqQY8SzAMplJSwPbGFk+YQX+txVqwGad30PR
-   V+/bHgeHK3JYGP3pG5/ZuzL3kJyVrKY4xdXO1TU8pvG1pyz1RcRrlgxX9
-   VarGk0DzuY6wypE3j8ibXEA8sku6AwV79A8EI42VM7xakKevLN9e45fx8
-   baIbola4VjhCoQ8Q+lRocAsxseCenHK9ie+/4WeckpvuJmalqs0ARDVyI
-   7WJw7eq3SUdBOREF9lLJoCp/KL3e4HZG2PwrDrUbX4lvB4rUs62acsw1J
-   uE4VSNtyDjFpyA1NzoCOY1ep6uGUl3xD8+a5Liin46C0YIZ5R2WGcnrf4
-   w==;
-X-IronPort-AV: E=McAfee;i="6500,9779,10451"; a="295418832"
-X-IronPort-AV: E=Sophos;i="5.93,267,1654585200"; 
-   d="scan'208";a="295418832"
-Received: from fmsmga008.fm.intel.com ([10.253.24.58])
-  by orsmga102.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 27 Aug 2022 00:11:35 -0700
-X-IronPort-AV: E=Sophos;i="5.93,267,1654585200"; 
-   d="scan'208";a="671747248"
-Received: from ahunter6-mobl1.ger.corp.intel.com (HELO [10.0.2.15]) ([10.252.52.233])
-  by fmsmga008-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 27 Aug 2022 00:11:23 -0700
-Message-ID: <bdbd520a-b1c4-01c4-18bb-f1c2b553371d@intel.com>
-Date:   Sat, 27 Aug 2022 10:11:19 +0300
+        Sat, 27 Aug 2022 04:27:35 -0400
+Received: from szxga02-in.huawei.com (szxga02-in.huawei.com [45.249.212.188])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 16220A6AF4;
+        Sat, 27 Aug 2022 01:27:34 -0700 (PDT)
+Received: from dggemv703-chm.china.huawei.com (unknown [172.30.72.56])
+        by szxga02-in.huawei.com (SkyGuard) with ESMTP id 4MF8qx3YMwzlVys;
+        Sat, 27 Aug 2022 16:24:13 +0800 (CST)
+Received: from kwepemm600010.china.huawei.com (7.193.23.86) by
+ dggemv703-chm.china.huawei.com (10.3.19.46) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2375.24; Sat, 27 Aug 2022 16:27:32 +0800
+Received: from huawei.com (10.175.127.227) by kwepemm600010.china.huawei.com
+ (7.193.23.86) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2375.24; Sat, 27 Aug
+ 2022 16:27:31 +0800
+From:   Sun Ke <sunke32@huawei.com>
+To:     <peterz@infradead.org>, <mingo@redhat.com>, <acme@kernel.org>
+CC:     <linux-perf-users@vger.kernel.org>, <bpf@vger.kernel.org>,
+        <kernel-janitors@vger.kernel.org>, <rsilvera@google.com>,
+        <sunke32@huawei.com>
+Subject: [PATCH] perf inject: Fix error return code in cmd_inject()
+Date:   Sat, 27 Aug 2022 16:38:51 +0800
+Message-ID: <20220827083851.1431424-1-sunke32@huawei.com>
+X-Mailer: git-send-email 2.31.1
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
- Firefox/91.0 Thunderbird/91.11.0
-Subject: Re: [PATCH v3 09/18] perf ui: Update use of pthread mutex
-Content-Language: en-US
-To:     Ian Rogers <irogers@google.com>, Namhyung Kim <namhyung@kernel.org>
-Cc:     Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Jiri Olsa <jolsa@kernel.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Darren Hart <dvhart@infradead.org>,
-        Davidlohr Bueso <dave@stgolabs.net>,
-        =?UTF-8?Q?Andr=c3=a9_Almeida?= <andrealmeid@igalia.com>,
-        Nathan Chancellor <nathan@kernel.org>,
-        Nick Desaulniers <ndesaulniers@google.com>,
-        Tom Rix <trix@redhat.com>, Weiguo Li <liwg06@foxmail.com>,
-        Athira Rajeev <atrajeev@linux.vnet.ibm.com>,
-        Thomas Richter <tmricht@linux.ibm.com>,
-        Ravi Bangoria <ravi.bangoria@amd.com>,
-        Dario Petrillo <dario.pk1@gmail.com>,
-        Hewenliang <hewenliang4@huawei.com>,
-        yaowenbin <yaowenbin1@huawei.com>,
-        Wenyu Liu <liuwenyu7@huawei.com>,
-        Song Liu <songliubraving@fb.com>,
-        Andrii Nakryiko <andrii@kernel.org>,
-        Dave Marchevsky <davemarchevsky@fb.com>,
-        Leo Yan <leo.yan@linaro.org>,
-        Kim Phillips <kim.phillips@amd.com>,
-        Pavithra Gurushankar <gpavithrasha@gmail.com>,
-        Alexandre Truong <alexandre.truong@arm.com>,
-        Quentin Monnet <quentin@isovalent.com>,
-        William Cohen <wcohen@redhat.com>,
-        Andres Freund <andres@anarazel.de>,
-        =?UTF-8?Q?Martin_Li=c5=a1ka?= <mliska@suse.cz>,
-        Colin Ian King <colin.king@intel.com>,
-        James Clark <james.clark@arm.com>,
-        Fangrui Song <maskray@google.com>,
-        Stephane Eranian <eranian@google.com>,
-        Kajol Jain <kjain@linux.ibm.com>,
-        Alexey Bayduraev <alexey.v.bayduraev@linux.intel.com>,
-        Riccardo Mancini <rickyman7@gmail.com>,
-        Andi Kleen <ak@linux.intel.com>,
-        Masami Hiramatsu <mhiramat@kernel.org>,
-        Zechuan Chen <chenzechuan1@huawei.com>,
-        Jason Wang <wangborong@cdjrlc.com>,
-        Christophe JAILLET <christophe.jaillet@wanadoo.fr>,
-        Remi Bernon <rbernon@codeweavers.com>,
-        linux-kernel <linux-kernel@vger.kernel.org>,
-        linux-perf-users <linux-perf-users@vger.kernel.org>,
-        bpf <bpf@vger.kernel.org>, llvm@lists.linux.dev
-References: <20220824153901.488576-1-irogers@google.com>
- <20220824153901.488576-10-irogers@google.com>
- <2cf6edac-6e41-b43c-2bc1-f49cb739201a@intel.com>
- <CAP-5=fVVWx=LZAzXsxfuktPHwki1gYbV4mcmvJp_9GTDS6KJcQ@mail.gmail.com>
- <a9b4f79d-cdea-821e-0e57-cd4854de6cf4@intel.com>
- <CAP-5=fW7t9tcJpyUbv8JAo-BFna-KS6FC+HkbuGx6S=h+nBMqw@mail.gmail.com>
- <43540a3d-e64e-ec08-e12e-aebb236a2efe@intel.com>
- <CAM9d7chBnZtrKe6b8k+VYk1Nmz8YnNWSMmyLydH6+Otvw4xGeA@mail.gmail.com>
- <b0f86189-be17-d1e7-d23c-692eeee2b5ec@intel.com>
- <CAM9d7ciroc1XzRL+W34D5G7kCp4KCzRxjyRqnO2OXj=-ZaMTLQ@mail.gmail.com>
- <CAP-5=fWvf66snfmUfaTQ6BZ9EmsmBs0PUT8PAfehW74bnEE5nQ@mail.gmail.com>
-From:   Adrian Hunter <adrian.hunter@intel.com>
-Organization: Intel Finland Oy, Registered Address: PL 281, 00181 Helsinki,
- Business Identity Code: 0357606 - 4, Domiciled in Helsinki
-In-Reply-To: <CAP-5=fWvf66snfmUfaTQ6BZ9EmsmBs0PUT8PAfehW74bnEE5nQ@mail.gmail.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 7BIT
+Content-Type:   text/plain; charset=US-ASCII
+X-Originating-IP: [10.175.127.227]
+X-ClientProxiedBy: dggems704-chm.china.huawei.com (10.3.19.181) To
+ kwepemm600010.china.huawei.com (7.193.23.86)
+X-CFilter-Loop: Reflected
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-On 26/08/22 23:52, Ian Rogers wrote:
-> On Fri, Aug 26, 2022 at 1:40 PM Namhyung Kim <namhyung@kernel.org> wrote:
->>
->> On Fri, Aug 26, 2022 at 12:21 PM Adrian Hunter <adrian.hunter@intel.com> wrote:
->>>
->>> On 26/08/22 22:00, Namhyung Kim wrote:
->>>> On Fri, Aug 26, 2022 at 11:53 AM Adrian Hunter <adrian.hunter@intel.com> wrote:
->>>>> Below seems adequate for now, at least logically, but maybe it
->>>>> would confuse clang thread-safety analysis?
->>>>
->>>> I think it's not just about locks, the exit_browser should bail out early
->>>> if the setup code was not called.
->>>
->>> In those cases, use_browser is 0 or -1 unless someone has inserted
->>> an invalid perf config like "tui.script=on" or "gtk.script=on".
->>> So currently, in cases where exit_browser() is called without
->>> setup_browser(), it does nothing.  Which means it is only the
->>> unconditional mutex_destroy() that needs to be conditional.
->>
->> Yeah there's a possibility that it can be called with > 0 use_browser
->> on some broken config or something.  So I think it's safer and better
->> for future changes.
-> 
-> I'd thought about a:
-> static bool ui__lock_initialized;
-> but the issue is shouldn't it be atomic?
+If couldn't parse known build ids. cmd_inject should return a negative error code.
 
-No, it is only accessed from the main thread.
+Fixes: a59d0164e202 ("perf inject: Add a command line option to specify build ids.")
+Signed-off-by: Sun Ke <sunke32@huawei.com>
+---
+ tools/perf/builtin-inject.c | 1 +
+ 1 file changed, 1 insertion(+)
+
+diff --git a/tools/perf/builtin-inject.c b/tools/perf/builtin-inject.c
+index 8ec955402488..5bea538e2380 100644
+--- a/tools/perf/builtin-inject.c
++++ b/tools/perf/builtin-inject.c
+@@ -2338,6 +2338,7 @@ int cmd_inject(int argc, const char **argv)
+ 
+ 			if (inject.known_build_ids == NULL) {
+ 				pr_err("Couldn't parse known build ids.\n");
++				ret = -1;
+ 				goto out_delete;
+ 			}
+ 		}
+-- 
+2.31.1
+
