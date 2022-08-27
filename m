@@ -2,158 +2,136 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 38F82C0502A
-	for <linux-perf-users@archiver.kernel.org>; Sat, 27 Aug 2022 15:18:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1FF4CECAAD5
+	for <linux-perf-users@archiver.kernel.org>; Sat, 27 Aug 2022 18:17:09 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232600AbiH0PSm (ORCPT
+        id S229532AbiH0SRI (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Sat, 27 Aug 2022 11:18:42 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46608 "EHLO
+        Sat, 27 Aug 2022 14:17:08 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34410 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230088AbiH0PSl (ORCPT
+        with ESMTP id S229445AbiH0SRH (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Sat, 27 Aug 2022 11:18:41 -0400
-Received: from ams.source.kernel.org (ams.source.kernel.org [IPv6:2604:1380:4601:e00::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id F0BB83F32C;
-        Sat, 27 Aug 2022 08:18:39 -0700 (PDT)
+        Sat, 27 Aug 2022 14:17:07 -0400
+Received: from ams.source.kernel.org (ams.source.kernel.org [145.40.68.75])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 69113CEB11;
+        Sat, 27 Aug 2022 11:17:06 -0700 (PDT)
 Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by ams.source.kernel.org (Postfix) with ESMTPS id A9BA9B808C0;
-        Sat, 27 Aug 2022 15:18:38 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 133A0C433C1;
-        Sat, 27 Aug 2022 15:18:37 +0000 (UTC)
+        by ams.source.kernel.org (Postfix) with ESMTPS id 03C2BB80966;
+        Sat, 27 Aug 2022 18:17:05 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 5EC26C433C1;
+        Sat, 27 Aug 2022 18:17:00 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1661613517;
-        bh=R/FPlgh+i14+wvCo3ye35JKDBc9ySPLXlmivzP/hCn0=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=dzCuGaUc9VTghk2gQjzIr5ca2JYaVqPKhs5InSyKAUWLn6G34sldIYA9Bm8aGsyzY
-         sBMhnrfQRz0j8wOM2KUcn8QN5HUEPyDyy6TgLbqbRAXr2BU++Z/rzQLKp4Uc+WH9jW
-         aRVf3Xok72JKal9Wbw+Jkq0bw40HNdZ78v3IOVDd+PahpwdcogBh3Le2zKBtcpay6C
-         cS/jGJAZt5YQD9+blS+03LYa2wqowTeC/bv6fQUA8qgGWiMhlVhw85IEM0hTjydhMM
-         IkUrcHOY2WsFYsBeHQ5q7VN8YvIHgOJ4l+LNH7R2y1J7D/GA3JLiW6MWSlAewWKzVZ
-         sSXKNw0KvlSAw==
-Received: by quaco.ghostprotocols.net (Postfix, from userid 1000)
-        id 58330404A1; Sat, 27 Aug 2022 12:18:34 -0300 (-03)
-Date:   Sat, 27 Aug 2022 12:18:34 -0300
+        s=k20201202; t=1661624223;
+        bh=wT/bJMPMaWT/N+KIlfrP2TdLyTC5KnPrUm8pbZpJJJ8=;
+        h=From:To:Cc:Subject:Date:From;
+        b=PsFwtIasgjlbdGANRINQdd30B/47vuTUgDk5yYWXXZzwwLuVcvgIMnQXfRLDMjxs+
+         5FT9wZctXXJAvx4AX0XI09q+pk0uOYei1kJ7B/oBMIgh7SCP6426e49GG6ULVDhvGu
+         Qbtz+gOLZBWEKRQMMSy79lu+2E5GvXG+ZCZ3RbW0oxk5sXQCVIv6rJNYKvp27S6vn3
+         p6a0Cr4msGFNd94ywW0+MTcPL6k6GaoajL+UXLSpJ/Gr16jsZpDW3M7GWrg3wAxqk0
+         VGOgK0rqScSQs+F5wvHJ758mbEP6GcJJhOlbgDawMnVHHtk1z126DwOUmxy38WNa5E
+         U4zhdSdKuDG4g==
 From:   Arnaldo Carvalho de Melo <acme@kernel.org>
-To:     Adrian Hunter <adrian.hunter@intel.com>
-Cc:     Ian Rogers <irogers@google.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+To:     Linus Torvalds <torvalds@linux-foundation.org>
+Cc:     Ingo Molnar <mingo@kernel.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
         Jiri Olsa <jolsa@kernel.org>,
         Namhyung Kim <namhyung@kernel.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Darren Hart <dvhart@infradead.org>,
-        Davidlohr Bueso <dave@stgolabs.net>,
-        =?iso-8859-1?Q?Andr=E9?= Almeida <andrealmeid@igalia.com>,
-        Nathan Chancellor <nathan@kernel.org>,
-        Nick Desaulniers <ndesaulniers@google.com>,
-        Tom Rix <trix@redhat.com>, Weiguo Li <liwg06@foxmail.com>,
-        Athira Rajeev <atrajeev@linux.vnet.ibm.com>,
-        Thomas Richter <tmricht@linux.ibm.com>,
-        Ravi Bangoria <ravi.bangoria@amd.com>,
-        Dario Petrillo <dario.pk1@gmail.com>,
-        Hewenliang <hewenliang4@huawei.com>,
-        yaowenbin <yaowenbin1@huawei.com>,
-        Wenyu Liu <liuwenyu7@huawei.com>,
-        Song Liu <songliubraving@fb.com>,
-        Andrii Nakryiko <andrii@kernel.org>,
-        Dave Marchevsky <davemarchevsky@fb.com>,
-        Leo Yan <leo.yan@linaro.org>,
-        Kim Phillips <kim.phillips@amd.com>,
-        Pavithra Gurushankar <gpavithrasha@gmail.com>,
-        Alexandre Truong <alexandre.truong@arm.com>,
-        Quentin Monnet <quentin@isovalent.com>,
-        William Cohen <wcohen@redhat.com>,
-        Andres Freund <andres@anarazel.de>,
-        Martin =?utf-8?B?TGnFoWth?= <mliska@suse.cz>,
-        Colin Ian King <colin.king@intel.com>,
-        James Clark <james.clark@arm.com>,
-        Fangrui Song <maskray@google.com>,
-        Stephane Eranian <eranian@google.com>,
-        Kajol Jain <kjain@linux.ibm.com>,
-        Alexey Bayduraev <alexey.v.bayduraev@linux.intel.com>,
-        Riccardo Mancini <rickyman7@gmail.com>,
+        Clark Williams <williams@redhat.com>,
+        Kate Carcia <kcarcia@redhat.com>, linux-kernel@vger.kernel.org,
+        linux-perf-users@vger.kernel.org,
+        Arnaldo Carvalho de Melo <acme@kernel.org>,
         Andi Kleen <ak@linux.intel.com>,
-        Masami Hiramatsu <mhiramat@kernel.org>,
-        Zechuan Chen <chenzechuan1@huawei.com>,
-        Jason Wang <wangborong@cdjrlc.com>,
-        Christophe JAILLET <christophe.jaillet@wanadoo.fr>,
-        Remi Bernon <rbernon@codeweavers.com>,
-        linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org,
-        bpf@vger.kernel.org, llvm@lists.linux.dev
-Subject: Re: [PATCH v4 00/18] Mutex wrapper, locking and memory leak fixes
-Message-ID: <Ywo1yt/2liQwDQot@kernel.org>
-References: <20220826164027.42929-1-irogers@google.com>
- <0026becb-4e17-9e5f-0f59-9796d689c238@intel.com>
+        Ian Rogers <irogers@google.com>,
+        James Clark <james.clark@arm.com>,
+        Kan Liang <kan.liang@linux.intel.com>,
+        Xing Zhengjun <zhengjun.xing@linux.intel.com>,
+        Arnaldo Carvalho de Melo <acme@redhat.com>
+Subject: [GIT PULL] perf tools fixes for v6.0: 2nd batch
+Date:   Sat, 27 Aug 2022 15:16:55 -0300
+Message-Id: <20220827181655.406024-1-acme@kernel.org>
+X-Mailer: git-send-email 2.37.2
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <0026becb-4e17-9e5f-0f59-9796d689c238@intel.com>
-X-Url:  http://acmel.wordpress.com
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-Em Sat, Aug 27, 2022 at 10:04:44AM +0300, Adrian Hunter escreveu:
-> On 26/08/22 19:40, Ian Rogers wrote:
-> > When fixing a locking race and memory leak in:
-> > https://lore.kernel.org/linux-perf-users/20211118193714.2293728-1-irogers@google.com/
-> > 
-> > It was requested that debug mutex code be separated out into its own
-> > files. This was, in part, done by Pavithra Gurushankar in:
-> > https://lore.kernel.org/lkml/20220727111954.105118-1-gpavithrasha@gmail.com/
-> > 
-> > These patches fix issues with the previous patches, add in the
-> > original dso->nsinfo fix and then build on our mutex wrapper with
-> > clang's -Wthread-safety analysis. The analysis found missing unlocks
-> > in builtin-sched.c which are fixed and -Wthread-safety is enabled by
-> > default when building with clang.
-> > 
-> > v4. Adds a comment for the trylock result, fixes the new line (missed
-> >     in v3) and removes two blank lines as suggested by Adrian Hunter.
-> > v3. Adds a missing new line to the error messages and removes the
-> >     pshared argument to mutex_init by having two functions, mutex_init
-> >     and mutex_init_pshared. These changes were suggested by Adrian Hunter.
-> > v2. Breaks apart changes that s/pthread_mutex/mutex/g and the lock
-> >     annotations as requested by Arnaldo and Namhyung. A boolean is
-> >     added to builtin-sched.c to terminate thread funcs rather than
-> >     leaving them blocked on delted mutexes.
-> > 
-> > Ian Rogers (17):
-> >   perf bench: Update use of pthread mutex/cond
-> >   perf tests: Avoid pthread.h inclusion
-> >   perf hist: Update use of pthread mutex
-> >   perf bpf: Remove unused pthread.h include
-> >   perf lock: Remove unused pthread.h include
-> >   perf record: Update use of pthread mutex
-> >   perf sched: Update use of pthread mutex
-> >   perf ui: Update use of pthread mutex
-> >   perf mmap: Remove unnecessary pthread.h include
-> >   perf dso: Update use of pthread mutex
-> >   perf annotate: Update use of pthread mutex
-> >   perf top: Update use of pthread mutex
-> >   perf dso: Hold lock when accessing nsinfo
-> >   perf mutex: Add thread safety annotations
-> >   perf sched: Fixes for thread safety analysis
-> >   perf top: Fixes for thread safety analysis
-> >   perf build: Enable -Wthread-safety with clang
-> > 
-> > Pavithra Gurushankar (1):
-> >   perf mutex: Wrapped usage of mutex and cond
-> 
-> For all patches except 9 and 16
-> 
-> Reviewed-by: Adrian Hunter <adrian.hunter@intel.com>
+Hi Linus,
 
-Added it, did the usual round of tests and pushed out perf/core, we can
-continue from there.
+	Please consider pulling,
 
-It also contains Adrian's "multiple recording time ranges" series.
-
-Thanks!
+Best regards,
 
 - Arnaldo
+
+Test results at the end of this message, as usual.
+
+The following changes since commit e022620b5d056e822e42eb9bc0f24fcb97389d86:
+
+  Merge tag 'arm64-fixes' of git://git.kernel.org/pub/scm/linux/kernel/git/arm64/linux (2022-08-26 11:32:53 -0700)
+
+are available in the Git repository at:
+
+  git://git.kernel.org/pub/scm/linux/kernel/git/acme/linux.git tags/perf-tools-fixes-for-v6.0-2022-08-27
+
+for you to fetch changes up to 48648548ef764dcb1f6ffc9c9f9057f7c610caa4:
+
+  perf stat: Capitalize topdown metrics' names (2022-08-27 11:55:17 -0300)
+
+----------------------------------------------------------------
+perf tools fixes for v6.0: 2nd batch
+
+- Fixup setup of weak groups when using 'perf stat --repeat', add a
+  'perf test' for it.
+
+- Fix memory leaks in 'perf sched record' detected with -fsanitize=address.
+
+- Fix build when PYTHON_CONFIG is user supplied.
+
+- Capitalize topdown metrics' names in 'perf stat', so that the output,
+  sometimes parsed, matches the Intel SDM docs.
+
+- Make sure the documentation for the save_type filter about Intel
+  systems with Arch LBR support (12th-Gen+ client or 4th-Gen Xeon+
+  server) reflects recent related kernel changes.
+
+- Fix 'perf record' man page formatting of description of support to hybrid systems.
+
+- Update arm64´s  KVM header from the kernel sources.
+
+Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
+
+----------------------------------------------------------------
+Andi Kleen (1):
+      perf record: Fix manpage formatting of description of support to hybrid systems
+
+Arnaldo Carvalho de Melo (1):
+      tools kvm headers arm64: Update KVM header from the kernel sources
+
+Ian Rogers (3):
+      perf stat: Clear evsel->reset_group for each stat run
+      perf test: Stat test for repeat with a weak group
+      perf sched: Fix memory leaks in __cmd_record detected with -fsanitize=address
+
+James Clark (1):
+      perf python: Fix build when PYTHON_CONFIG is user supplied
+
+Kan Liang (1):
+      perf docs: Update the documentation for the save_type filter
+
+Zhengjun Xing (1):
+      perf stat: Capitalize topdown metrics' names
+
+ tools/arch/arm64/include/uapi/asm/kvm.h   |  6 ++++--
+ tools/perf/Documentation/intel-hybrid.txt | 10 ----------
+ tools/perf/Documentation/perf-record.txt  |  7 +++++--
+ tools/perf/Makefile.config                |  2 +-
+ tools/perf/builtin-sched.c                | 24 +++++++++++++++++++-----
+ tools/perf/builtin-stat.c                 |  1 +
+ tools/perf/tests/shell/stat.sh            | 19 +++++++++++++++++++
+ tools/perf/util/stat-shadow.c             | 24 ++++++++++++------------
+ 8 files changed, 61 insertions(+), 32 deletions(-)
