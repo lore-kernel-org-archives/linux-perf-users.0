@@ -2,58 +2,58 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C8B63C0502E
-	for <linux-perf-users@archiver.kernel.org>; Mon, 29 Aug 2022 12:56:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C2815C64991
+	for <linux-perf-users@archiver.kernel.org>; Mon, 29 Aug 2022 12:56:58 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230394AbiH2M4z (ORCPT
+        id S229988AbiH2M46 (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Mon, 29 Aug 2022 08:56:55 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49666 "EHLO
+        Mon, 29 Aug 2022 08:56:58 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49764 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230054AbiH2M4X (ORCPT
+        with ESMTP id S229664AbiH2M4Z (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Mon, 29 Aug 2022 08:56:23 -0400
-Received: from mail-ed1-x549.google.com (mail-ed1-x549.google.com [IPv6:2a00:1450:4864:20::549])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0F22167468
-        for <linux-perf-users@vger.kernel.org>; Mon, 29 Aug 2022 05:48:02 -0700 (PDT)
-Received: by mail-ed1-x549.google.com with SMTP id p4-20020a056402500400b00447e8b6f62bso5427115eda.17
-        for <linux-perf-users@vger.kernel.org>; Mon, 29 Aug 2022 05:48:02 -0700 (PDT)
+        Mon, 29 Aug 2022 08:56:25 -0400
+Received: from mail-ej1-x649.google.com (mail-ej1-x649.google.com [IPv6:2a00:1450:4864:20::649])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4234C7170C
+        for <linux-perf-users@vger.kernel.org>; Mon, 29 Aug 2022 05:48:08 -0700 (PDT)
+Received: by mail-ej1-x649.google.com with SMTP id sg35-20020a170907a42300b007414343814bso1482203ejc.18
+        for <linux-perf-users@vger.kernel.org>; Mon, 29 Aug 2022 05:48:08 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=google.com; s=20210112;
         h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
          :date:from:to:cc;
-        bh=2wzFsLYHBSO+bSg9K3lLWWvk30GMleRrtWDuIqbsYXA=;
-        b=M9Rqk2DZbWx+M0j2ZNREBFTuUmUql9FGMSZUdPStSv1BolmPhWMDlNgK+7vyNFFD5J
-         sB4HOcmHm3qjS4OpBDfSzHbX4S4haFyminVHG6seqVv7pn+u3VXdnaVSql4j6aDu2YJ4
-         cSH8NpoH8lS7T3FrhvZAZAGuJ1yW0fPguBXtAP3lbFS0AQ8qnn+2vyiZZdQUUt6hP70X
-         mHWF5w3tnlLXIWh18vif9ntbngOeROkc7fz5meyo4vV507tjq+y5Rbm7lBpb+t0hM9AT
-         GvVWCnJc8dTM7rD6ATQjIQ+F5pjOp49ZjN9tC1AhYQoO6CRk8fw3MjIF5X/3xRhh0X+x
-         nMnw==
+        bh=Xnrbr4NWXpH3ILMfaL+Hqy6Mh/173nAe6Rh4Ql+SwwA=;
+        b=aoWdQSkdpteyXmYAo1c6eiVE2udp1iPCkTbGD3cqc5tyTEc5w9TDE5eQ2pH/aC5ONx
+         wvITjNHuqGva9IIaS4Jy/kRGfM87daq+ZT24dKaI5knatHyVNPce7SKxJrvTIxK+jpRV
+         T+oUK6JwmqGiqfWOw+qZfCjfKSncTUyCL/rTKrD/R/uwr1cZQDo2BiYCLIVtBSK8KpsZ
+         CLE54Tvl9hptOey0GrB4CQxeXWFE0oHlZwm2u/7tiypSnfTXu/PJqf5/FBc4ceMvlGJj
+         bS8z75PhngVBIBAZf6h+e4wkxi/WQq7RrV8yo3ue7h3N/zwN5y8SZVpJk5+wDM79X8yf
+         2pgw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
         h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
          :date:x-gm-message-state:from:to:cc;
-        bh=2wzFsLYHBSO+bSg9K3lLWWvk30GMleRrtWDuIqbsYXA=;
-        b=G4lT6glWsbcTqf2M7/4ZQC1NEebh1hGrIZZRZZTwQwqwQ4WhhKNJXsPvcpmCJSPFTk
-         zKV6tQG79SU8jDW1IJm2oGQtTSaS8XYd3ykDKnAJn6qUyRAz0nTVLkWXWEWobkqLxgys
-         Wp0fbOjKI0VdILZ3lzeD49TY9ildIwlmsm0+Vh1CBBFPNNdwM6qH3qUp1ezT48FgO6lj
-         rk/DBuNRv5uiYzH6BQ24fyd+D4x3S/IBxtbCLo7+rono03lo+ZXVIupRDmFBT7sHbUX4
-         dloi3QPTtr1sw8tnNSpITq0yXeoh9dwtUMlGXU4l2JlKxFXh6oxPjK3pNPY7rhrjPFlt
-         85JA==
-X-Gm-Message-State: ACgBeo2FUE5AjwOOtB/AB9fcr12b7WSvqrJX+tQ2PI4BHWjnItdYfLzA
-        t6RIUUoRVsBW7ibBXKjiGwJjfevDNw==
-X-Google-Smtp-Source: AA6agR7nspJ0efbTxsLMD8rT8iQXj1XN4d3UZQvBYWAOzeWOis7eXggMAwfZ1bw7AqzT6uKNdiec7FvHMg==
+        bh=Xnrbr4NWXpH3ILMfaL+Hqy6Mh/173nAe6Rh4Ql+SwwA=;
+        b=wA+jIHkxPG24gPPSgm2Q6/cQFejkum1/48K4XVYSbYMVkFgZZn3No2E9yeeBdgGN09
+         rzPtcoTW4TV0LLLxEkhEwzeuhybuJTNnDvAi9sUNrHTHs5f1omekQi3gupO9dj8DnIaV
+         g30FQ6sazSI4CHtO1RP6/ga5d0FGKzUOTaql3Ei7G/FWXdlKr6N51qZrr3meMtOmWQBo
+         yyt8w6FsPvs1RIie8UJTnFxm3SY08Rt5jBPs0+JbI8UPiT3ixn6tGBpeic2fyjpDD366
+         iDcUI4xqQ+sFHTxxmHThsZXRHJR0Mgf6m9BGW4ZXRLqV0tYWDvfpMZ84bJxxz+qJeajL
+         wVDg==
+X-Gm-Message-State: ACgBeo1+uEDZr09zPXi0ki2OJTIPJK01tZ224G19NXEVhXsNa36HcJOl
+        elHkhfuYV1DBNPbF6fuCS401BCPkJw==
+X-Google-Smtp-Source: AA6agR42dMVaiS+cJuLOtzyugHi3iaDb9VrUvxxRA/60qGgLveidvAmI7LaoSF8LrpwtVNgvbP26lurGuA==
 X-Received: from elver.muc.corp.google.com ([2a00:79e0:9c:201:196d:4fc7:fa9c:62e3])
- (user=elver job=sendgmr) by 2002:a17:907:97d3:b0:73d:8b9b:a6c1 with SMTP id
- js19-20020a17090797d300b0073d8b9ba6c1mr13449067ejc.71.1661777281218; Mon, 29
- Aug 2022 05:48:01 -0700 (PDT)
-Date:   Mon, 29 Aug 2022 14:47:06 +0200
+ (user=elver job=sendgmr) by 2002:aa7:c946:0:b0:43d:3038:1381 with SMTP id
+ h6-20020aa7c946000000b0043d30381381mr16380942edt.354.1661777286713; Mon, 29
+ Aug 2022 05:48:06 -0700 (PDT)
+Date:   Mon, 29 Aug 2022 14:47:08 +0200
 In-Reply-To: <20220829124719.675715-1-elver@google.com>
 Mime-Version: 1.0
 References: <20220829124719.675715-1-elver@google.com>
 X-Mailer: git-send-email 2.37.2.672.g94769d06f0-goog
-Message-ID: <20220829124719.675715-2-elver@google.com>
-Subject: [PATCH v4 01/14] perf/hw_breakpoint: Add KUnit test for constraints accounting
+Message-ID: <20220829124719.675715-4-elver@google.com>
+Subject: [PATCH v4 03/14] perf/hw_breakpoint: Clean up headers
 From:   Marco Elver <elver@google.com>
 To:     elver@google.com, Peter Zijlstra <peterz@infradead.org>,
         Frederic Weisbecker <frederic@kernel.org>,
@@ -75,390 +75,71 @@ Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-Add KUnit test for hw_breakpoint constraints accounting, with various
-interesting mixes of breakpoint targets (some care was taken to catch
-interesting corner cases via bug-injection).
+Clean up headers:
 
-The test cannot be built as a module because it requires access to
-hw_breakpoint_slots(), which is not inlinable or exported on all
-architectures.
+ - Remove unused <linux/kallsyms.h>
+
+ - Remove unused <linux/kprobes.h>
+
+ - Remove unused <linux/module.h>
+
+ - Remove unused <linux/smp.h>
+
+ - Add <linux/export.h> for EXPORT_SYMBOL_GPL().
+
+ - Add <linux/mutex.h> for mutex.
+
+ - Sort alphabetically.
+
+ - Move <linux/hw_breakpoint.h> to top to test it compiles on its own.
 
 Signed-off-by: Marco Elver <elver@google.com>
-Reviewed-by: Dmitry Vyukov <dvyukov@google.com>
+Acked-by: Dmitry Vyukov <dvyukov@google.com>
 Acked-by: Ian Rogers <irogers@google.com>
 ---
-v3:
-* Don't use raw_smp_processor_id().
-
 v2:
-* New patch.
+* Move to start of series.
 ---
- kernel/events/Makefile             |   1 +
- kernel/events/hw_breakpoint_test.c | 323 +++++++++++++++++++++++++++++
- lib/Kconfig.debug                  |  10 +
- 3 files changed, 334 insertions(+)
- create mode 100644 kernel/events/hw_breakpoint_test.c
+ kernel/events/hw_breakpoint.c | 19 +++++++++----------
+ 1 file changed, 9 insertions(+), 10 deletions(-)
 
-diff --git a/kernel/events/Makefile b/kernel/events/Makefile
-index 8591c180b52b..91a62f566743 100644
---- a/kernel/events/Makefile
-+++ b/kernel/events/Makefile
-@@ -2,4 +2,5 @@
- obj-y := core.o ring_buffer.o callchain.o
+diff --git a/kernel/events/hw_breakpoint.c b/kernel/events/hw_breakpoint.c
+index fd5cd1f9e7fc..6076c6346291 100644
+--- a/kernel/events/hw_breakpoint.c
++++ b/kernel/events/hw_breakpoint.c
+@@ -17,23 +17,22 @@
+  * This file contains the arch-independent routines.
+  */
  
- obj-$(CONFIG_HAVE_HW_BREAKPOINT) += hw_breakpoint.o
-+obj-$(CONFIG_HW_BREAKPOINT_KUNIT_TEST) += hw_breakpoint_test.o
- obj-$(CONFIG_UPROBES) += uprobes.o
-diff --git a/kernel/events/hw_breakpoint_test.c b/kernel/events/hw_breakpoint_test.c
-new file mode 100644
-index 000000000000..433c5c45e2a5
---- /dev/null
-+++ b/kernel/events/hw_breakpoint_test.c
-@@ -0,0 +1,323 @@
-+// SPDX-License-Identifier: GPL-2.0
-+/*
-+ * KUnit test for hw_breakpoint constraints accounting logic.
-+ *
-+ * Copyright (C) 2022, Google LLC.
-+ */
-+
-+#include <kunit/test.h>
-+#include <linux/cpumask.h>
 +#include <linux/hw_breakpoint.h>
-+#include <linux/kthread.h>
-+#include <linux/perf_event.h>
-+#include <asm/hw_breakpoint.h>
 +
-+#define TEST_REQUIRES_BP_SLOTS(test, slots)						\
-+	do {										\
-+		if ((slots) > get_test_bp_slots()) {					\
-+			kunit_skip((test), "Requires breakpoint slots: %d > %d", slots,	\
-+				   get_test_bp_slots());				\
-+		}									\
-+	} while (0)
-+
-+#define TEST_EXPECT_NOSPC(expr) KUNIT_EXPECT_EQ(test, -ENOSPC, PTR_ERR(expr))
-+
-+#define MAX_TEST_BREAKPOINTS 512
-+
-+static char break_vars[MAX_TEST_BREAKPOINTS];
-+static struct perf_event *test_bps[MAX_TEST_BREAKPOINTS];
-+static struct task_struct *__other_task;
-+
-+static struct perf_event *register_test_bp(int cpu, struct task_struct *tsk, int idx)
-+{
-+	struct perf_event_attr attr = {};
-+
-+	if (WARN_ON(idx < 0 || idx >= MAX_TEST_BREAKPOINTS))
-+		return NULL;
-+
-+	hw_breakpoint_init(&attr);
-+	attr.bp_addr = (unsigned long)&break_vars[idx];
-+	attr.bp_len = HW_BREAKPOINT_LEN_1;
-+	attr.bp_type = HW_BREAKPOINT_RW;
-+	return perf_event_create_kernel_counter(&attr, cpu, tsk, NULL, NULL);
-+}
-+
-+static void unregister_test_bp(struct perf_event **bp)
-+{
-+	if (WARN_ON(IS_ERR(*bp)))
-+		return;
-+	if (WARN_ON(!*bp))
-+		return;
-+	unregister_hw_breakpoint(*bp);
-+	*bp = NULL;
-+}
-+
-+static int get_test_bp_slots(void)
-+{
-+	static int slots;
-+
-+	if (!slots)
-+		slots = hw_breakpoint_slots(TYPE_DATA);
-+
-+	return slots;
-+}
-+
-+static void fill_one_bp_slot(struct kunit *test, int *id, int cpu, struct task_struct *tsk)
-+{
-+	struct perf_event *bp = register_test_bp(cpu, tsk, *id);
-+
-+	KUNIT_ASSERT_NOT_NULL(test, bp);
-+	KUNIT_ASSERT_FALSE(test, IS_ERR(bp));
-+	KUNIT_ASSERT_NULL(test, test_bps[*id]);
-+	test_bps[(*id)++] = bp;
-+}
-+
-+/*
-+ * Fills up the given @cpu/@tsk with breakpoints, only leaving @skip slots free.
-+ *
-+ * Returns true if this can be called again, continuing at @id.
-+ */
-+static bool fill_bp_slots(struct kunit *test, int *id, int cpu, struct task_struct *tsk, int skip)
-+{
-+	for (int i = 0; i < get_test_bp_slots() - skip; ++i)
-+		fill_one_bp_slot(test, id, cpu, tsk);
-+
-+	return *id + get_test_bp_slots() <= MAX_TEST_BREAKPOINTS;
-+}
-+
-+static int dummy_kthread(void *arg)
-+{
-+	return 0;
-+}
-+
-+static struct task_struct *get_other_task(struct kunit *test)
-+{
-+	struct task_struct *tsk;
-+
-+	if (__other_task)
-+		return __other_task;
-+
-+	tsk = kthread_create(dummy_kthread, NULL, "hw_breakpoint_dummy_task");
-+	KUNIT_ASSERT_FALSE(test, IS_ERR(tsk));
-+	__other_task = tsk;
-+	return __other_task;
-+}
-+
-+static int get_test_cpu(int num)
-+{
-+	int cpu;
-+
-+	WARN_ON(num < 0);
-+
-+	for_each_online_cpu(cpu) {
-+		if (num-- <= 0)
-+			break;
-+	}
-+
-+	return cpu;
-+}
-+
-+/* ===== Test cases ===== */
-+
-+static void test_one_cpu(struct kunit *test)
-+{
-+	int idx = 0;
-+
-+	fill_bp_slots(test, &idx, get_test_cpu(0), NULL, 0);
-+	TEST_EXPECT_NOSPC(register_test_bp(-1, current, idx));
-+	TEST_EXPECT_NOSPC(register_test_bp(get_test_cpu(0), NULL, idx));
-+}
-+
-+static void test_many_cpus(struct kunit *test)
-+{
-+	int idx = 0;
-+	int cpu;
-+
-+	/* Test that CPUs are independent. */
-+	for_each_online_cpu(cpu) {
-+		bool do_continue = fill_bp_slots(test, &idx, cpu, NULL, 0);
-+
-+		TEST_EXPECT_NOSPC(register_test_bp(cpu, NULL, idx));
-+		if (!do_continue)
-+			break;
-+	}
-+}
-+
-+static void test_one_task_on_all_cpus(struct kunit *test)
-+{
-+	int idx = 0;
-+
-+	fill_bp_slots(test, &idx, -1, current, 0);
-+	TEST_EXPECT_NOSPC(register_test_bp(-1, current, idx));
-+	TEST_EXPECT_NOSPC(register_test_bp(get_test_cpu(0), current, idx));
-+	TEST_EXPECT_NOSPC(register_test_bp(get_test_cpu(0), NULL, idx));
-+	/* Remove one and adding back CPU-target should work. */
-+	unregister_test_bp(&test_bps[0]);
-+	fill_one_bp_slot(test, &idx, get_test_cpu(0), NULL);
-+}
-+
-+static void test_two_tasks_on_all_cpus(struct kunit *test)
-+{
-+	int idx = 0;
-+
-+	/* Test that tasks are independent. */
-+	fill_bp_slots(test, &idx, -1, current, 0);
-+	fill_bp_slots(test, &idx, -1, get_other_task(test), 0);
-+
-+	TEST_EXPECT_NOSPC(register_test_bp(-1, current, idx));
-+	TEST_EXPECT_NOSPC(register_test_bp(-1, get_other_task(test), idx));
-+	TEST_EXPECT_NOSPC(register_test_bp(get_test_cpu(0), current, idx));
-+	TEST_EXPECT_NOSPC(register_test_bp(get_test_cpu(0), get_other_task(test), idx));
-+	TEST_EXPECT_NOSPC(register_test_bp(get_test_cpu(0), NULL, idx));
-+	/* Remove one from first task and adding back CPU-target should not work. */
-+	unregister_test_bp(&test_bps[0]);
-+	TEST_EXPECT_NOSPC(register_test_bp(get_test_cpu(0), NULL, idx));
-+}
-+
-+static void test_one_task_on_one_cpu(struct kunit *test)
-+{
-+	int idx = 0;
-+
-+	fill_bp_slots(test, &idx, get_test_cpu(0), current, 0);
-+	TEST_EXPECT_NOSPC(register_test_bp(-1, current, idx));
-+	TEST_EXPECT_NOSPC(register_test_bp(get_test_cpu(0), current, idx));
-+	TEST_EXPECT_NOSPC(register_test_bp(get_test_cpu(0), NULL, idx));
-+	/*
-+	 * Remove one and adding back CPU-target should work; this case is
-+	 * special vs. above because the task's constraints are CPU-dependent.
-+	 */
-+	unregister_test_bp(&test_bps[0]);
-+	fill_one_bp_slot(test, &idx, get_test_cpu(0), NULL);
-+}
-+
-+static void test_one_task_mixed(struct kunit *test)
-+{
-+	int idx = 0;
-+
-+	TEST_REQUIRES_BP_SLOTS(test, 3);
-+
-+	fill_one_bp_slot(test, &idx, get_test_cpu(0), current);
-+	fill_bp_slots(test, &idx, -1, current, 1);
-+	TEST_EXPECT_NOSPC(register_test_bp(-1, current, idx));
-+	TEST_EXPECT_NOSPC(register_test_bp(get_test_cpu(0), current, idx));
-+	TEST_EXPECT_NOSPC(register_test_bp(get_test_cpu(0), NULL, idx));
-+
-+	/* Transition from CPU-dependent pinned count to CPU-independent. */
-+	unregister_test_bp(&test_bps[0]);
-+	unregister_test_bp(&test_bps[1]);
-+	fill_one_bp_slot(test, &idx, get_test_cpu(0), NULL);
-+	fill_one_bp_slot(test, &idx, get_test_cpu(0), NULL);
-+	TEST_EXPECT_NOSPC(register_test_bp(get_test_cpu(0), NULL, idx));
-+}
-+
-+static void test_two_tasks_on_one_cpu(struct kunit *test)
-+{
-+	int idx = 0;
-+
-+	fill_bp_slots(test, &idx, get_test_cpu(0), current, 0);
-+	fill_bp_slots(test, &idx, get_test_cpu(0), get_other_task(test), 0);
-+
-+	TEST_EXPECT_NOSPC(register_test_bp(-1, current, idx));
-+	TEST_EXPECT_NOSPC(register_test_bp(-1, get_other_task(test), idx));
-+	TEST_EXPECT_NOSPC(register_test_bp(get_test_cpu(0), current, idx));
-+	TEST_EXPECT_NOSPC(register_test_bp(get_test_cpu(0), get_other_task(test), idx));
-+	TEST_EXPECT_NOSPC(register_test_bp(get_test_cpu(0), NULL, idx));
-+	/* Can still create breakpoints on some other CPU. */
-+	fill_bp_slots(test, &idx, get_test_cpu(1), NULL, 0);
-+}
-+
-+static void test_two_tasks_on_one_all_cpus(struct kunit *test)
-+{
-+	int idx = 0;
-+
-+	fill_bp_slots(test, &idx, get_test_cpu(0), current, 0);
-+	fill_bp_slots(test, &idx, -1, get_other_task(test), 0);
-+
-+	TEST_EXPECT_NOSPC(register_test_bp(-1, current, idx));
-+	TEST_EXPECT_NOSPC(register_test_bp(-1, get_other_task(test), idx));
-+	TEST_EXPECT_NOSPC(register_test_bp(get_test_cpu(0), current, idx));
-+	TEST_EXPECT_NOSPC(register_test_bp(get_test_cpu(0), get_other_task(test), idx));
-+	TEST_EXPECT_NOSPC(register_test_bp(get_test_cpu(0), NULL, idx));
-+	/* Cannot create breakpoints on some other CPU either. */
-+	TEST_EXPECT_NOSPC(register_test_bp(get_test_cpu(1), NULL, idx));
-+}
-+
-+static void test_task_on_all_and_one_cpu(struct kunit *test)
-+{
-+	int tsk_on_cpu_idx, cpu_idx;
-+	int idx = 0;
-+
-+	TEST_REQUIRES_BP_SLOTS(test, 3);
-+
-+	fill_bp_slots(test, &idx, -1, current, 2);
-+	/* Transitioning from only all CPU breakpoints to mixed. */
-+	tsk_on_cpu_idx = idx;
-+	fill_one_bp_slot(test, &idx, get_test_cpu(0), current);
-+	fill_one_bp_slot(test, &idx, -1, current);
-+
-+	TEST_EXPECT_NOSPC(register_test_bp(-1, current, idx));
-+	TEST_EXPECT_NOSPC(register_test_bp(get_test_cpu(0), current, idx));
-+	TEST_EXPECT_NOSPC(register_test_bp(get_test_cpu(0), NULL, idx));
-+
-+	/* We should still be able to use up another CPU's slots. */
-+	cpu_idx = idx;
-+	fill_one_bp_slot(test, &idx, get_test_cpu(1), NULL);
-+	TEST_EXPECT_NOSPC(register_test_bp(get_test_cpu(1), NULL, idx));
-+
-+	/* Transitioning back to task target on all CPUs. */
-+	unregister_test_bp(&test_bps[tsk_on_cpu_idx]);
-+	/* Still have a CPU target breakpoint in get_test_cpu(1). */
-+	TEST_EXPECT_NOSPC(register_test_bp(-1, current, idx));
-+	/* Remove it and try again. */
-+	unregister_test_bp(&test_bps[cpu_idx]);
-+	fill_one_bp_slot(test, &idx, -1, current);
-+
-+	TEST_EXPECT_NOSPC(register_test_bp(-1, current, idx));
-+	TEST_EXPECT_NOSPC(register_test_bp(get_test_cpu(0), current, idx));
-+	TEST_EXPECT_NOSPC(register_test_bp(get_test_cpu(0), NULL, idx));
-+	TEST_EXPECT_NOSPC(register_test_bp(get_test_cpu(1), NULL, idx));
-+}
-+
-+static struct kunit_case hw_breakpoint_test_cases[] = {
-+	KUNIT_CASE(test_one_cpu),
-+	KUNIT_CASE(test_many_cpus),
-+	KUNIT_CASE(test_one_task_on_all_cpus),
-+	KUNIT_CASE(test_two_tasks_on_all_cpus),
-+	KUNIT_CASE(test_one_task_on_one_cpu),
-+	KUNIT_CASE(test_one_task_mixed),
-+	KUNIT_CASE(test_two_tasks_on_one_cpu),
-+	KUNIT_CASE(test_two_tasks_on_one_all_cpus),
-+	KUNIT_CASE(test_task_on_all_and_one_cpu),
-+	{},
-+};
-+
-+static int test_init(struct kunit *test)
-+{
-+	/* Most test cases want 2 distinct CPUs. */
-+	return num_online_cpus() < 2 ? -EINVAL : 0;
-+}
-+
-+static void test_exit(struct kunit *test)
-+{
-+	for (int i = 0; i < MAX_TEST_BREAKPOINTS; ++i) {
-+		if (test_bps[i])
-+			unregister_test_bp(&test_bps[i]);
-+	}
-+
-+	if (__other_task) {
-+		kthread_stop(__other_task);
-+		__other_task = NULL;
-+	}
-+}
-+
-+static struct kunit_suite hw_breakpoint_test_suite = {
-+	.name = "hw_breakpoint",
-+	.test_cases = hw_breakpoint_test_cases,
-+	.init = test_init,
-+	.exit = test_exit,
-+};
-+
-+kunit_test_suites(&hw_breakpoint_test_suite);
-+
-+MODULE_LICENSE("GPL");
-+MODULE_AUTHOR("Marco Elver <elver@google.com>");
-diff --git a/lib/Kconfig.debug b/lib/Kconfig.debug
-index bcbe60d6c80c..84309a00f9aa 100644
---- a/lib/Kconfig.debug
-+++ b/lib/Kconfig.debug
-@@ -2533,6 +2533,16 @@ config STACKINIT_KUNIT_TEST
- 	  CONFIG_GCC_PLUGIN_STRUCTLEAK, CONFIG_GCC_PLUGIN_STRUCTLEAK_BYREF,
- 	  or CONFIG_GCC_PLUGIN_STRUCTLEAK_BYREF_ALL.
++#include <linux/bug.h>
++#include <linux/cpu.h>
++#include <linux/export.h>
++#include <linux/init.h>
+ #include <linux/irqflags.h>
+-#include <linux/kallsyms.h>
+-#include <linux/notifier.h>
+-#include <linux/kprobes.h>
+ #include <linux/kdebug.h>
+ #include <linux/kernel.h>
+-#include <linux/module.h>
++#include <linux/list.h>
++#include <linux/mutex.h>
++#include <linux/notifier.h>
+ #include <linux/percpu.h>
+ #include <linux/sched.h>
+-#include <linux/init.h>
+ #include <linux/slab.h>
+-#include <linux/list.h>
+-#include <linux/cpu.h>
+-#include <linux/smp.h>
+-#include <linux/bug.h>
  
-+config HW_BREAKPOINT_KUNIT_TEST
-+	bool "Test hw_breakpoint constraints accounting" if !KUNIT_ALL_TESTS
-+	depends on HAVE_HW_BREAKPOINT
-+	depends on KUNIT=y
-+	default KUNIT_ALL_TESTS
-+	help
-+	  Tests for hw_breakpoint constraints accounting.
-+
-+	  If unsure, say N.
-+
- config TEST_UDELAY
- 	tristate "udelay test driver"
- 	help
+-#include <linux/hw_breakpoint.h>
+ /*
+  * Constraints data
+  */
 -- 
 2.37.2.672.g94769d06f0-goog
 
