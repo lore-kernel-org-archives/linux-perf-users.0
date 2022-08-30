@@ -2,212 +2,147 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9D9B2ECAAD4
-	for <linux-perf-users@archiver.kernel.org>; Tue, 30 Aug 2022 10:59:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D8717ECAAD1
+	for <linux-perf-users@archiver.kernel.org>; Tue, 30 Aug 2022 14:21:53 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230006AbiH3K7k (ORCPT
+        id S230064AbiH3OVw (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Tue, 30 Aug 2022 06:59:40 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42088 "EHLO
+        Tue, 30 Aug 2022 10:21:52 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37468 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229481AbiH3K7k (ORCPT
+        with ESMTP id S230319AbiH3OVu (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Tue, 30 Aug 2022 06:59:40 -0400
-Received: from szxga01-in.huawei.com (szxga01-in.huawei.com [45.249.212.187])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4CBEA9DFAA;
-        Tue, 30 Aug 2022 03:59:37 -0700 (PDT)
-Received: from canpemm500009.china.huawei.com (unknown [172.30.72.56])
-        by szxga01-in.huawei.com (SkyGuard) with ESMTP id 4MH4513GpTznTqy;
-        Tue, 30 Aug 2022 18:57:09 +0800 (CST)
-Received: from [10.67.102.169] (10.67.102.169) by
- canpemm500009.china.huawei.com (7.192.105.203) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2375.24; Tue, 30 Aug 2022 18:59:34 +0800
-CC:     <yangyicong@hisilicon.com>, <helgaas@kernel.org>,
-        <lorenzo.pieralisi@arm.com>, <suzuki.poulose@arm.com>,
-        <joro@8bytes.org>, <shameerali.kolothum.thodi@huawei.com>,
-        <mingo@redhat.com>, <linux-kernel@vger.kernel.org>,
-        <linux-arm-kernel@lists.infradead.org>,
-        <linux-pci@vger.kernel.org>, <linux-perf-users@vger.kernel.org>,
-        <iommu@lists.linux-foundation.org>, <iommu@lists.linux.dev>,
-        <linux-doc@vger.kernel.org>, <prime.zeng@huawei.com>,
-        <liuqi115@huawei.com>, <zhangshaokun@hisilicon.com>,
-        <linuxarm@huawei.com>, <bagasdotme@gmail.com>,
-        <john.garry@huawei.com>, <jonathan.cameron@huawei.com>,
-        <leo.yan@linaro.org>, <james.clark@arm.com>,
-        <robin.murphy@arm.com>, <will@kernel.org>, <acme@kernel.org>,
-        <mark.rutland@arm.com>
-Subject: Re: [PATCH v12 0/5] Add driver support for HiSilicon PCIe Tune and
- Trace device
-To:     <mathieu.poirier@linaro.org>, <alexander.shishkin@linux.intel.com>,
-        <peterz@infradead.org>, <corbet@lwn.net>,
-        <gregkh@linuxfoundation.org>
-References: <20220816114414.4092-1-yangyicong@huawei.com>
-From:   Yicong Yang <yangyicong@huawei.com>
-Message-ID: <86bfaabc-43e3-bcfb-faf9-74a0d79ab2ec@huawei.com>
-Date:   Tue, 30 Aug 2022 18:59:34 +0800
-User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:78.0) Gecko/20100101
- Thunderbird/78.5.1
+        Tue, 30 Aug 2022 10:21:50 -0400
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DA9C5AF494
+        for <linux-perf-users@vger.kernel.org>; Tue, 30 Aug 2022 07:21:44 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1661869303;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type;
+        bh=jyN/gbd0XxSyznl/5jYtc0nwOpm14/J2h4soXed+O0k=;
+        b=eBNQtKImo4CNt8/Bla+Z/HXhI6ceVV6Dd5R0tkKh7TQXPhzP2gWivjOBflETS+cXrAM0m4
+        JKlBoQIfyjj1VPan37MwwMr03JK7Z1lfZAGRWiUNnTzo5for4MC3Aq8khWSiC8g8Tr3iHn
+        uk1X/e8cpi2eedMQjhjgAW4FYyCaw5s=
+Received: from mimecast-mx02.redhat.com (mx3-rdu2.redhat.com
+ [66.187.233.73]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ us-mta-589-wktcH5IMN8KHSnZcUuulCg-1; Tue, 30 Aug 2022 10:21:30 -0400
+X-MC-Unique: wktcH5IMN8KHSnZcUuulCg-1
+Received: from smtp.corp.redhat.com (int-mx03.intmail.prod.int.rdu2.redhat.com [10.11.54.3])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx02.redhat.com (Postfix) with ESMTPS id 6464A1C05EC3
+        for <linux-perf-users@vger.kernel.org>; Tue, 30 Aug 2022 14:21:30 +0000 (UTC)
+Received: from [10.22.32.101] (unknown [10.22.32.101])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id D74EA1121314;
+        Tue, 30 Aug 2022 14:21:29 +0000 (UTC)
+Content-Type: multipart/mixed; boundary="------------oFAoaECnVykd63M9jOHcygq3"
+Message-ID: <cb3efad5-37eb-29e4-03b0-f0bcc8be9918@redhat.com>
+Date:   Tue, 30 Aug 2022 10:21:28 -0400
 MIME-Version: 1.0
-In-Reply-To: <20220816114414.4092-1-yangyicong@huawei.com>
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-X-Originating-IP: [10.67.102.169]
-X-ClientProxiedBy: dggems706-chm.china.huawei.com (10.3.19.183) To
- canpemm500009.china.huawei.com (7.192.105.203)
-X-CFilter-Loop: Reflected
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
+ Thunderbird/102.2.0
+To:     linux-perf-users@vger.kernel.org
+Cc:     wcohen@redhat.com
+Content-Language: en-US
+From:   William Cohen <wcohen@redhat.com>
+Subject: PROBLEM: The --call-graph=fp data does do not agree with the
+ --call-graph=dwarf results
+X-Scanned-By: MIMEDefang 2.78 on 10.11.54.3
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-A gentle ping for this...
+This is a multi-part message in MIME format.
+--------------oFAoaECnVykd63M9jOHcygq3
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-Thanks.
+With a perf Fedora 36 perf-tools-5.18.13-200.fc36 I was examining
+where perf-report was spending its time when generating its report and
+found there was an efficiency issue in Fedora 36's binutils-2.37.  The
+efficient issue been addressed in Fedora rawhide and will be
+backported to Fedora 36
+(https://bugzilla.redhat.com/show_bug.cgi?id=2120752).  This was
+initially discovered when processing perf.data files created with
+--call-graph=dwarf.  The output of the perf-report call-graph for
+dwarf information notes inlined functions in the report. The excessive
+time spent in binutils bfd's lookup_func_by_offset was caused by perf-report
+building up a red-black tree mapping IP addresses to functions
+including inlined functions.
 
-On 2022/8/16 19:44, Yicong Yang wrote:
-> From: Yicong Yang <yangyicong@hisilicon.com>
-> 
-> HiSilicon PCIe tune and trace device (PTT) is a PCIe Root Complex integrated
-> Endpoint (RCiEP) device, providing the capability to dynamically monitor and
-> tune the PCIe traffic (tune), and trace the TLP headers (trace).
-> 
-> PTT tune is designed for monitoring and adjusting PCIe link parameters. We provide
-> several parameters of the PCIe link. Through the driver, user can adjust the value
-> of certain parameter to affect the PCIe link for the purpose of enhancing the
-> performance in certian situation.
-> 
-> PTT trace is designed for dumping the TLP headers to the memory, which can be
-> used to analyze the transactions and usage condition of the PCIe Link. Users
-> can choose filters to trace headers, by either requester ID, or those downstream
-> of a set of Root Ports on the same core of the PTT device. It's also supported
-> to trace the headers of certain type and of certain direction.
-> 
-> The driver registers a PMU device for each PTT device. The trace can be used
-> through `perf record` and the traced headers can be decoded by `perf report`.
-> The tune can be used through the sysfs attributes of related PMU device. See
-> the documentation for the detailed usage.
-> 
-> This patchset adds an initial driver support for the PTT device. The userspace
-> perf tool support will be sent in a separate patchset.
-> 
-> Change since v11:
-> - Drop WARN_ON() for irq_set_affinity() failure per Greg
-> - Split out userspace perf support patches according to the comments
-> Link: https://lore.kernel.org/lkml/20220721130116.43366-1-yangyicong@huawei.com/
-> 
-> Change since v10:
-> - Use title case in the documentation
-> - Add RB from Bagas, thanks.
-> Link: https://lore.kernel.org/lkml/20220714092710.53486-1-yangyicong@hisilicon.com/
-> 
-> Change since v9:
-> - Add sysfs ABI description documentation
-> - Remove the controversial available_{root_port, requester}_filters sysfs file
-> - Shorten 2 tune sysfs attributes name and add some comments
-> - Move hisi_ptt_process_auxtrace_info() to Patch 6.
-> - Add RB from Leo and Ack-by from Mathieu, thanks!
-> Link: https://lore.kernel.org/lkml/20220606115555.41103-1-yangyicong@hisilicon.com/
-> 
-> Change since v8:
-> - Cleanups and one minor fix from Jonathan and John, thanks
-> Link: https://lore.kernel.org/lkml/20220516125223.32012-1-yangyicong@hisilicon.com/
-> 
-> Change since v7:
-> - Configure the DMA in probe rather than in runtime. Also use devres to manage
->   PMU device as we have no order problem now
-> - Refactor the config validation function per John and Leo
-> - Use a spinlock hisi_ptt::pmu_lock instead of mutex to serialize the perf process
->   in pmu::start as it's in atomic context
-> - Only commit the traced data when stop, per Leo and James
-> - Drop the filter dynamically updating patch from this series to simply the review
->   of the driver. That patch will be send separately.
-> - add a cpumask sysfs attribute and handle the cpu hotplug events, follow the
->   uncore PMU convention
-> - Other cleanups and fixes, both in driver and perf tool
-> Link: https://lore.kernel.org/lkml/20220407125841.3678-1-yangyicong@hisilicon.com/
-> 
-> Change since v6:
-> - Fix W=1 errors reported by lkp test, thanks
-> 
-> Change since v5:
-> - Squash the PMU patch into PATCH 2 suggested by John
-> - refine the commit message of PATCH 1 and some comments
-> Link: https://lore.kernel.org/lkml/20220308084930.5142-1-yangyicong@hisilicon.com/
-> 
-> Change since v4:
-> Address the comments from Jonathan, John and Ma Ca, thanks.
-> - Use devm* also for allocating the DMA buffers
-> - Remove the IRQ handler stub in Patch 2
-> - Make functions waiting for hardware state return boolean
-> - Manual remove the PMU device as it should be removed first
-> - Modifier the orders in probe and removal to make them matched well
-> - Make available {directions,type,format} array const and non-global
-> - Using the right filter list in filters show and well protect the
->   list with mutex
-> - Record the trace status with a boolean @started rather than enum
-> - Optimize the process of finding the PTT devices of the perf-tool
-> Link: https://lore.kernel.org/linux-pci/20220221084307.33712-1-yangyicong@hisilicon.com/
-> 
-> Change since v3:
-> Address the comments from Jonathan and John, thanks.
-> - drop members in the common struct which can be get on the fly
-> - reduce buffer struct and organize the buffers with array instead of list
-> - reduce the DMA reset wait time to avoid long time busy loop
-> - split the available_filters sysfs attribute into two files, for root port
->   and requester respectively. Update the documentation accordingly
-> - make IOMMU mapping check earlier in probe to avoid race condition. Also
->   make IOMMU quirk patch prior to driver in the series
-> - Cleanups and typos fixes from John and Jonathan
-> Link: https://lore.kernel.org/linux-pci/20220124131118.17887-1-yangyicong@hisilicon.com/
-> 
-> Change since v2:
-> - address the comments from Mathieu, thanks.
->   - rename the directory to ptt to match the function of the device
->   - spinoff the declarations to a separate header
->   - split the trace function to several patches
->   - some other comments.
-> - make default smmu domain type of PTT device to identity
->   Drop the RMR as it's not recommended and use an iommu_def_domain_type
->   quirk to passthrough the device DMA as suggested by Robin. 
-> Link: https://lore.kernel.org/linux-pci/20211116090625.53702-1-yangyicong@hisilicon.com/
-> 
-> Change since v1:
-> - switch the user interface of trace to perf from debugfs
-> - switch the user interface of tune to sysfs from debugfs
-> - add perf tool support to start trace and decode the trace data
-> - address the comments of documentation from Bjorn
-> - add RMR[1] support of the device as trace works in RMR mode or
->   direct DMA mode. RMR support is achieved by common APIs rather
->   than the APIs implemented in [1].
-> Link: https://lore.kernel.org/lkml/1618654631-42454-1-git-send-email-yangyicong@hisilicon.com/
-> [1] https://lore.kernel.org/linux-acpi/20210805080724.480-1-shameerali.kolothum.thodi@huawei.com/
-> 
-> Yicong Yang (5):
->   iommu/arm-smmu-v3: Make default domain type of HiSilicon PTT device to
->     identity
->   hwtracing: hisi_ptt: Add trace function support for HiSilicon PCIe
->     Tune and Trace device
->   hwtracing: hisi_ptt: Add tune function support for HiSilicon PCIe Tune
->     and Trace device
->   docs: trace: Add HiSilicon PTT device driver documentation
->   MAINTAINERS: Add maintainer for HiSilicon PTT driver
-> 
->  .../ABI/testing/sysfs-devices-hisi_ptt        |   61 +
->  Documentation/trace/hisi-ptt.rst              |  298 +++++
->  Documentation/trace/index.rst                 |    1 +
->  MAINTAINERS                                   |    8 +
->  drivers/Makefile                              |    1 +
->  drivers/hwtracing/Kconfig                     |    2 +
->  drivers/hwtracing/ptt/Kconfig                 |   12 +
->  drivers/hwtracing/ptt/Makefile                |    2 +
->  drivers/hwtracing/ptt/hisi_ptt.c              | 1047 +++++++++++++++++
->  drivers/hwtracing/ptt/hisi_ptt.h              |  200 ++++
->  drivers/iommu/arm/arm-smmu-v3/arm-smmu-v3.c   |   21 +
->  11 files changed, 1653 insertions(+)
->  create mode 100644 Documentation/ABI/testing/sysfs-devices-hisi_ptt
->  create mode 100644 Documentation/trace/hisi-ptt.rst
->  create mode 100644 drivers/hwtracing/ptt/Kconfig
->  create mode 100644 drivers/hwtracing/ptt/Makefile
->  create mode 100644 drivers/hwtracing/ptt/hisi_ptt.c
->  create mode 100644 drivers/hwtracing/ptt/hisi_ptt.h
-> 
+I ran a similar experiment with --call-graph=fp to see if it triggered
+the same execessive overhead in building the red-black tree for
+inlined functions.  It did not.  The resulting output of the perf-report
+for --call-graph=fp does not include information about inlined functions.
+
+I have a small reproducer in the attached perf_inlined.tar.gz that
+demonstrates the difference between the two methods of storing
+call-chain information. Compile and collect data with:
+
+tar xvfz perf_inlined.tar.gz
+cd perf_inlined
+make all
+perf report --input=perf_fp.data > fp.log
+perf report --input=perf_dwarf.data > dwarf.log
+
+The dwarf.log has the expected call structure for main:
+
+
+               main
+               |          
+                --85.72%--fill_array (inlined)
+                          |          
+                          |--78.09%--rand
+                          |          |          
+                          |           --75.10%--__random
+                          |                     |          
+                          |                      --9.14%--__random_r
+                          |          
+                          |--1.58%--compute_sqrt (inlined)
+                          |          
+                           --1.32%--_init
+
+The fp.log looks odd given program:
+
+   99.99%     0.00%  time_waste  libc.so.6             [.] __libc_start_call_main
+            |
+            ---__libc_start_call_main
+               |          
+               |--66.07%--__random
+               |          
+               |--21.28%--main
+               |          
+               |--8.42%--__random_r
+               |          
+               |--2.91%--rand
+               |          
+                --1.31%--_init
+
+Given how common that functions are inlined in optimized code it seems
+like perf-report of --call-graph=fp should include information about
+time spent in inlined functions.
+
+-Will Cohen
+--------------oFAoaECnVykd63M9jOHcygq3
+Content-Type: application/gzip; name="perf_inlined.tar.gz"
+Content-Disposition: attachment; filename="perf_inlined.tar.gz"
+Content-Transfer-Encoding: base64
+
+H4sIAAAAAAAAA+2VUU/bMBDH+4o/xQk0KR24TZYEJEr3xsOksUnT9gSoMo7dujhx5iYghPju
+s5NC0zKENJVJ0+730Nh39v3Pvl5SCisnqtCqENmw9zaEjqM09c/oKA27z0d6URKHcRJFSXLY
+C6M4TJIepG+Uzxr1omIWoHfLzUwUL697zf+PUnbrf8auhVRabFnDF/jQFfSl+h8eRW394zBN
+P/j6J2kU9SDcch6/5T+vP9P6GJo/gSwHGatYO8lumZXNnJBK5WJyyxaVOIbVeMDJzpRzoFOg
+Ogf6NQYqC0NNrioqLcsFLY0qKmHXNgE1nTkhXelueLLjPWAFNzYDKoCXNeXa8GuglLus6dSy
+cjaWpZubuirrarx2jMHwmczqUH+i1OzeEFtF3NDjWrDimOxYdzNu18oFF63eS9e96R8YnW2u
+8Taypfqv9X+3UFuK73ml/6MwjZ7e/3HT/2mcxNj/f4M9VXBdZwJOFlWm1dVg9pGs2ZR5Znq2
+LGfVzFvIXua+H4WAT99Pv0Hkavtk+fLjbHL6+fSssTo7kdqwCtj5o+NyREhm6ivtGtDkrsPE
+ZPHTVsHSJvvknoDr0qq2BTQe2R+RB0JujMrAfbX0hFnL7oJ2oXvzgBq5gTQ2UONwBOrkUWoE
++/uq73wedq4uYbyuuRTtW1ZkQb+V8QFzporAD5id8gPgM2bf+/HN+WVH9WDudZd5s5upix4O
+Qne8JhkI5j6b+UlzST6VeR/um2S6hxi1lteSd9H3x80Z2g2tnP8dPl259zyQjm/YKDtLaV3C
+MthtPe/kRbF74Bc06surDv3pAbb1vkEQBEEQBEEQBEEQBEEQBEEQBEEQBEHehl9qgLc/ACgA
+AA==
+
+--------------oFAoaECnVykd63M9jOHcygq3--
+
