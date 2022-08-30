@@ -2,58 +2,58 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B39E0ECAAA1
-	for <linux-perf-users@archiver.kernel.org>; Tue, 30 Aug 2022 16:49:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E7B54ECAAA1
+	for <linux-perf-users@archiver.kernel.org>; Tue, 30 Aug 2022 16:49:48 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230242AbiH3Qt3 (ORCPT
+        id S230117AbiH3Qts (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Tue, 30 Aug 2022 12:49:29 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33814 "EHLO
+        Tue, 30 Aug 2022 12:49:48 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34108 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230226AbiH3Qt3 (ORCPT
+        with ESMTP id S229904AbiH3Qto (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Tue, 30 Aug 2022 12:49:29 -0400
-Received: from mail-yw1-x1149.google.com (mail-yw1-x1149.google.com [IPv6:2607:f8b0:4864:20::1149])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E6E2ECCE05
-        for <linux-perf-users@vger.kernel.org>; Tue, 30 Aug 2022 09:49:16 -0700 (PDT)
-Received: by mail-yw1-x1149.google.com with SMTP id 00721157ae682-33dbfb6d2a3so183381307b3.11
-        for <linux-perf-users@vger.kernel.org>; Tue, 30 Aug 2022 09:49:16 -0700 (PDT)
+        Tue, 30 Aug 2022 12:49:44 -0400
+Received: from mail-yw1-x114a.google.com (mail-yw1-x114a.google.com [IPv6:2607:f8b0:4864:20::114a])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5A0F8C0E47
+        for <linux-perf-users@vger.kernel.org>; Tue, 30 Aug 2022 09:49:24 -0700 (PDT)
+Received: by mail-yw1-x114a.google.com with SMTP id 00721157ae682-3328a211611so182160397b3.5
+        for <linux-perf-users@vger.kernel.org>; Tue, 30 Aug 2022 09:49:24 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=google.com; s=20210112;
         h=cc:to:from:subject:references:mime-version:message-id:in-reply-to
          :date:from:to:cc;
-        bh=odHu9oIdvGG5Uqss/fdCBkUP/s7a3MyMjrudizWvuiM=;
-        b=YqaB/84L6355lUp5qA3G0U1TjM6sLP6qlWRS90aHbw+JCID++v+ocFenvaXukcRZiz
-         btEjNZ3jE5bZwwC20MfuhJ0MLicERf+azMwjwY04ynDTGtmg5phjXV82ZKYQVsHxcAlK
-         eXyy9LBy3yWhKs2plbSsBL3wXLcsUv7i7zHgS5qnLEMQFItk6ifWkXsjklnQCf5Qx77k
-         3dRPNSdqnHVtyCgNPMw7SdAxw01UnEZT8wfnsySTEtVw3M+H+GJZv5gWJf15zhGmtbhh
-         S2P0WuabjciP8msWLGYRjgApvAMAzHiE/qeoolHc0Gug1fMjX+s5Pexz7YKxgw7VCVw0
-         LWCw==
+        bh=UUVPQFoHB4SWNXVjnYdqps9D8vjoKXb+eUEK4kYsPDY=;
+        b=COs46NUpjp4Yte74wDg1/odWFzJUV7jAt3zpJRCqIY02yX9ausfsQfvjUlbGQl3f02
+         ItysQbeKJ0jGa1lQ62ak1VCH0ToVtRnVX2LXkSLPxGaV33UCDj3znT5TGIOMCvb7ETre
+         ONrbfUylCSA5fU5v3NkZuF/GyNbBkz+bAmFHoDeHrZLyxrBwDIinQefO6c+lWHWtZs9X
+         n+cvC6dwpeZMPIBNsYS/jwefRZJ64a2FMSpGJElTmJRPxwNONiJCx17oIrNcGgVjChd4
+         a5t/85hiHyjUQHCmkt5K2OSlLAM50mke+1aSHuVsfwSvxpNVpzDdWvlJSHxDY2BJjYO+
+         6I2g==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
         h=cc:to:from:subject:references:mime-version:message-id:in-reply-to
          :date:x-gm-message-state:from:to:cc;
-        bh=odHu9oIdvGG5Uqss/fdCBkUP/s7a3MyMjrudizWvuiM=;
-        b=fIMMZslPgIsl3JJklncXz0pyDyQ4LhBdRRoQT5NIOFBQtRkyxlllcF0wxVPUUvZCRh
-         Z6myLI55sK/SYvjJHiMPJDGB5XI/JATkjAEDxoYYW4N+UWtbreG94qGrGvq+lU53WAuF
-         pv42Um3ikgeAr00HTUJwy92cIMSr3VQiG7psvcT0e0Bf5WiXZ6OKjRuuBQ3DAqbKU7oe
-         frt8Hh7W+DDAq8ZH/uDQSbiwflBJNbeWgjdmKq/aBq1ESKvYa3IyfcgbvHcp1cn+AtP1
-         ncK/eJdfcVRZO1zNCLFwcO/OUnI+j6u1Ds1D2PDawyY9zTZ0Z1ElVBzZQr+eVLzMDxOK
-         W6wg==
-X-Gm-Message-State: ACgBeo0Qy25p0kq4gPJuBqM0gvkr5DHWc183XF8H94tXm124qLt2FTjP
-        n0gtkXPWi1B7H16wQOc+CmW1LQ9VqzeU
-X-Google-Smtp-Source: AA6agR7X9hKxwDIGVbB6qPRnX3EOKZxMUd5dAbThYH3DDmSTRtjl079C74XG6sfYzgdS/gfe7Y0MmIGx06Ik
+        bh=UUVPQFoHB4SWNXVjnYdqps9D8vjoKXb+eUEK4kYsPDY=;
+        b=ilAvjg5h4S/DLF8T6fjfqW+NMYQpu0wBQ6aIuKSRVNRy7OANWb3IuWSHRywnurfvid
+         MlaFxaRUkDl7oh72khw7nDLBRQAjijjyLxTa2oSWGk+FShkCQx1WWGHmhHvUN4rAad0R
+         tSymdVZmurTwtSbaalWqjzmQ4FGix9h+CrtMGDbVvfjehzwVHtaZkztfMnIsdY/iJH9t
+         oO4uAVUxx8uWbaQ9mIp+E/ZfpI8YDafCDMWgSoi3TfLC/a/xpwX3PWbKNJ1QLte8310g
+         gO2Ju4qpoixQfXaG37lMLx8kzvoeQGrqx9gTdY8nolc8PtTJLa1ycYhKN5BZqSHuhq36
+         mBXw==
+X-Gm-Message-State: ACgBeo3/ffR4qtsLYKlQjAaPTeTLCThoUA/XRRpc8JBDUJYuP9e+CRNn
+        Pzis6lAp3rxTEw0/pHSEfRpyvkYK2zrd
+X-Google-Smtp-Source: AA6agR6ejKKMnALfMTb+Uq2QIuTOe4fgEpnF47oNN5AqXYHOwcaTrWguvq9WPjPtJsSUOSMxFYrVkkAFwSfv
 X-Received: from irogers.svl.corp.google.com ([2620:15c:2d4:203:902c:b0fa:dec9:8767])
- (user=irogers job=sendgmr) by 2002:a25:4110:0:b0:696:4e11:3b9 with SMTP id
- o16-20020a254110000000b006964e1103b9mr11849466yba.287.1661878156138; Tue, 30
- Aug 2022 09:49:16 -0700 (PDT)
-Date:   Tue, 30 Aug 2022 09:48:41 -0700
+ (user=irogers job=sendgmr) by 2002:a0d:c681:0:b0:33c:2e21:4756 with SMTP id
+ i123-20020a0dc681000000b0033c2e214756mr14585065ywd.467.1661878163051; Tue, 30
+ Aug 2022 09:49:23 -0700 (PDT)
+Date:   Tue, 30 Aug 2022 09:48:42 -0700
 In-Reply-To: <20220830164846.401143-1-irogers@google.com>
-Message-Id: <20220830164846.401143-4-irogers@google.com>
+Message-Id: <20220830164846.401143-5-irogers@google.com>
 Mime-Version: 1.0
 References: <20220830164846.401143-1-irogers@google.com>
 X-Mailer: git-send-email 2.37.2.672.g94769d06f0-goog
-Subject: [PATCH v1 3/8] perf expr: Move the scanner_ctx into the parse_ctx
+Subject: [PATCH v1 4/8] perf smt: Compute SMT from topology
 From:   Ian Rogers <irogers@google.com>
 To:     Peter Zijlstra <peterz@infradead.org>,
         Ingo Molnar <mingo@redhat.com>,
@@ -80,125 +80,255 @@ Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-We currently maintain the two independently and copy from one to the
-other. This is a burden when additional scanner context values are
-necessary, so combine them.
+The topology records sibling threads. Rather than computing SMT using
+siblings in sysfs, reuse the values in topology. This only applies
+when the file smt/active isn't available.
 
 Signed-off-by: Ian Rogers <irogers@google.com>
 ---
- tools/perf/tests/expr.c       |  2 +-
- tools/perf/util/expr.c        |  7 ++-----
- tools/perf/util/expr.h        | 10 +++++-----
- tools/perf/util/metricgroup.c |  4 ++--
- tools/perf/util/stat-shadow.c |  2 +-
- 5 files changed, 11 insertions(+), 14 deletions(-)
+ tools/perf/tests/expr.c   | 24 ++++++----
+ tools/perf/util/cputopo.c | 15 +++++++
+ tools/perf/util/cputopo.h |  2 +
+ tools/perf/util/expr.c    |  9 ++--
+ tools/perf/util/smt.c     | 95 ++++-----------------------------------
+ tools/perf/util/smt.h     |  5 ++-
+ 6 files changed, 49 insertions(+), 101 deletions(-)
 
 diff --git a/tools/perf/tests/expr.c b/tools/perf/tests/expr.c
-index 2efe9e3a63b8..7ca5e37de560 100644
+index 7ca5e37de560..db736ed49556 100644
 --- a/tools/perf/tests/expr.c
 +++ b/tools/perf/tests/expr.c
-@@ -133,7 +133,7 @@ static int test__expr(struct test_suite *t __maybe_unused, int subtest __maybe_u
+@@ -1,4 +1,5 @@
+ // SPDX-License-Identifier: GPL-2.0
++#include "util/cputopo.h"
+ #include "util/debug.h"
+ #include "util/expr.h"
+ #include "util/header.h"
+@@ -154,15 +155,20 @@ static int test__expr(struct test_suite *t __maybe_unused, int subtest __maybe_u
  						    (void **)&val_ptr));
  
+ 	/* Only EVENT1 or EVENT2 need be measured depending on the value of smt_on. */
+-	expr__ctx_clear(ctx);
+-	TEST_ASSERT_VAL("find ids",
+-			expr__find_ids("EVENT1 if #smt_on else EVENT2",
+-				NULL, ctx) == 0);
+-	TEST_ASSERT_VAL("find ids", hashmap__size(ctx->ids) == 1);
+-	TEST_ASSERT_VAL("find ids", hashmap__find(ctx->ids,
+-						  smt_on() ? "EVENT1" : "EVENT2",
+-						  (void **)&val_ptr));
+-
++	{
++		struct cpu_topology *topology = cpu_topology__new();
++		bool smton = smt_on(topology);
++
++		cpu_topology__delete(topology);
++		expr__ctx_clear(ctx);
++		TEST_ASSERT_VAL("find ids",
++				expr__find_ids("EVENT1 if #smt_on else EVENT2",
++					NULL, ctx) == 0);
++		TEST_ASSERT_VAL("find ids", hashmap__size(ctx->ids) == 1);
++		TEST_ASSERT_VAL("find ids", hashmap__find(ctx->ids,
++							  smton ? "EVENT1" : "EVENT2",
++							  (void **)&val_ptr));
++	}
+ 	/* The expression is a constant 1.0 without needing to evaluate EVENT1. */
  	expr__ctx_clear(ctx);
--	ctx->runtime = 3;
-+	ctx->sctx.runtime = 3;
  	TEST_ASSERT_VAL("find ids",
- 			expr__find_ids("EVENT1\\,param\\=?@ + EVENT2\\,param\\=?@",
- 					NULL, ctx) == 0);
+diff --git a/tools/perf/util/cputopo.c b/tools/perf/util/cputopo.c
+index d275d843c155..511002e52714 100644
+--- a/tools/perf/util/cputopo.c
++++ b/tools/perf/util/cputopo.c
+@@ -157,6 +157,21 @@ void cpu_topology__delete(struct cpu_topology *tp)
+ 	free(tp);
+ }
+ 
++bool cpu_topology__smt_on(const struct cpu_topology *topology)
++{
++	for (u32 i = 0; i < topology->core_cpus_lists; i++) {
++		const char *cpu_list = topology->core_cpus_list[i];
++
++		/*
++		 * If there is a need to separate siblings in a core then SMT is
++		 * enabled.
++		 */
++		if (strchr(cpu_list, ',') || strchr(cpu_list, '-'))
++			return true;
++	}
++	return false;
++}
++
+ static bool has_die_topology(void)
+ {
+ 	char filename[MAXPATHLEN];
+diff --git a/tools/perf/util/cputopo.h b/tools/perf/util/cputopo.h
+index 854e18f9041e..469db775a13c 100644
+--- a/tools/perf/util/cputopo.h
++++ b/tools/perf/util/cputopo.h
+@@ -58,6 +58,8 @@ struct hybrid_topology {
+ 
+ struct cpu_topology *cpu_topology__new(void);
+ void cpu_topology__delete(struct cpu_topology *tp);
++/* Determine from the core list whether SMT was enabled. */
++bool cpu_topology__smt_on(const struct cpu_topology *topology);
+ 
+ struct numa_topology *numa_topology__new(void);
+ void numa_topology__delete(struct numa_topology *tp);
 diff --git a/tools/perf/util/expr.c b/tools/perf/util/expr.c
-index c15a9852fa41..00bde682e743 100644
+index 00bde682e743..8aa7dafa18b3 100644
 --- a/tools/perf/util/expr.c
 +++ b/tools/perf/util/expr.c
-@@ -310,7 +310,7 @@ struct expr_parse_ctx *expr__ctx_new(void)
- 		free(ctx);
- 		return NULL;
- 	}
--	ctx->runtime = 0;
-+	ctx->sctx.runtime = 0;
+@@ -412,11 +412,6 @@ double expr__get_literal(const char *literal)
+ 	static struct cpu_topology *topology;
+ 	double result = NAN;
  
- 	return ctx;
- }
-@@ -344,16 +344,13 @@ static int
- __expr__parse(double *val, struct expr_parse_ctx *ctx, const char *expr,
- 	      bool compute_ids)
- {
--	struct expr_scanner_ctx scanner_ctx = {
--		.runtime = ctx->runtime,
--	};
- 	YY_BUFFER_STATE buffer;
- 	void *scanner;
- 	int ret;
- 
- 	pr_debug2("parsing metric: %s\n", expr);
- 
--	ret = expr_lex_init_extra(&scanner_ctx, &scanner);
-+	ret = expr_lex_init_extra(&ctx->sctx, &scanner);
- 	if (ret)
- 		return ret;
- 
-diff --git a/tools/perf/util/expr.h b/tools/perf/util/expr.h
-index bd2116983bbb..de9b886ec49a 100644
---- a/tools/perf/util/expr.h
-+++ b/tools/perf/util/expr.h
-@@ -13,17 +13,17 @@
- 
- struct metric_ref;
- 
-+struct expr_scanner_ctx {
-+	int runtime;
-+};
-+
- struct expr_parse_ctx {
- 	struct hashmap	*ids;
--	int runtime;
-+	struct expr_scanner_ctx sctx;
- };
- 
- struct expr_id_data;
- 
--struct expr_scanner_ctx {
--	int runtime;
--};
+-	if (!strcasecmp("#smt_on", literal)) {
+-		result = smt_on() > 0 ? 1.0 : 0.0;
+-		goto out;
+-	}
 -
- struct hashmap *ids__new(void);
- void ids__free(struct hashmap *ids);
- int ids__insert(struct hashmap *ids, const char *id);
-diff --git a/tools/perf/util/metricgroup.c b/tools/perf/util/metricgroup.c
-index 18aae040d61d..b144c3e35264 100644
---- a/tools/perf/util/metricgroup.c
-+++ b/tools/perf/util/metricgroup.c
-@@ -215,7 +215,7 @@ static struct metric *metric__new(const struct pmu_event *pe,
- 	}
- 	m->metric_expr = pe->metric_expr;
- 	m->metric_unit = pe->unit;
--	m->pctx->runtime = runtime;
-+	m->pctx->sctx.runtime = runtime;
- 	m->has_constraint = metric_no_group || metricgroup__has_constraint(pe);
- 	m->metric_refs = NULL;
- 	m->evlist = NULL;
-@@ -1626,7 +1626,7 @@ static int parse_groups(struct evlist *perf_evlist, const char *str,
+ 	if (!strcmp("#num_cpus", literal)) {
+ 		result = cpu__max_present_cpu().cpu;
+ 		goto out;
+@@ -440,6 +435,10 @@ double expr__get_literal(const char *literal)
+ 			goto out;
  		}
- 		expr->metric_unit = m->metric_unit;
- 		expr->metric_events = metric_events;
--		expr->runtime = m->pctx->runtime;
-+		expr->runtime = m->pctx->sctx.runtime;
- 		list_add(&expr->nd, &me->head);
  	}
++	if (!strcasecmp("#smt_on", literal)) {
++		result = smt_on(topology) ? 1.0 : 0.0;
++		goto out;
++	}
+ 	if (!strcmp("#num_packages", literal)) {
+ 		result = topology->package_cpus_lists;
+ 		goto out;
+diff --git a/tools/perf/util/smt.c b/tools/perf/util/smt.c
+index 8fed03283c85..ce90c4ee4138 100644
+--- a/tools/perf/util/smt.c
++++ b/tools/perf/util/smt.c
+@@ -1,100 +1,23 @@
+ // SPDX-License-Identifier: GPL-2.0-only
+-#include <stdio.h>
+-#include <stdlib.h>
+-#include <unistd.h>
+-#include <linux/bitops.h>
++#include <string.h>
+ #include "api/fs/fs.h"
++#include "cputopo.h"
+ #include "smt.h"
  
-diff --git a/tools/perf/util/stat-shadow.c b/tools/perf/util/stat-shadow.c
-index 979c8cb918f7..1439acd109db 100644
---- a/tools/perf/util/stat-shadow.c
-+++ b/tools/perf/util/stat-shadow.c
-@@ -911,7 +911,7 @@ static void generic_metric(struct perf_stat_config *config,
- 	if (!pctx)
- 		return;
+-/**
+- * hweight_str - Returns the number of bits set in str. Stops at first non-hex
+- *	       or ',' character.
+- */
+-static int hweight_str(char *str)
+-{
+-	int result = 0;
+-
+-	while (*str) {
+-		switch (*str++) {
+-		case '0':
+-		case ',':
+-			break;
+-		case '1':
+-		case '2':
+-		case '4':
+-		case '8':
+-			result++;
+-			break;
+-		case '3':
+-		case '5':
+-		case '6':
+-		case '9':
+-		case 'a':
+-		case 'A':
+-		case 'c':
+-		case 'C':
+-			result += 2;
+-			break;
+-		case '7':
+-		case 'b':
+-		case 'B':
+-		case 'd':
+-		case 'D':
+-		case 'e':
+-		case 'E':
+-			result += 3;
+-			break;
+-		case 'f':
+-		case 'F':
+-			result += 4;
+-			break;
+-		default:
+-			goto done;
+-		}
+-	}
+-done:
+-	return result;
+-}
+-
+-int smt_on(void)
++bool smt_on(const struct cpu_topology *topology)
+ {
+ 	static bool cached;
+-	static int cached_result;
+-	int cpu;
+-	int ncpu;
++	static bool cached_result;
++	int fs_value;
  
--	pctx->runtime = runtime;
-+	pctx->sctx.runtime = runtime;
- 	i = prepare_metric(metric_events, metric_refs, pctx, cpu_map_idx, st);
- 	if (i < 0) {
- 		expr__ctx_free(pctx);
+ 	if (cached)
+ 		return cached_result;
+ 
+-	if (sysfs__read_int("devices/system/cpu/smt/active", &cached_result) >= 0) {
+-		cached = true;
+-		return cached_result;
+-	}
+-
+-	cached_result = 0;
+-	ncpu = sysconf(_SC_NPROCESSORS_CONF);
+-	for (cpu = 0; cpu < ncpu; cpu++) {
+-		unsigned long long siblings;
+-		char *str;
+-		size_t strlen;
+-		char fn[256];
++	if (sysfs__read_int("devices/system/cpu/smt/active", &fs_value) >= 0)
++		cached_result = (fs_value == 1);
++	else
++		cached_result = cpu_topology__smt_on(topology);
+ 
+-		snprintf(fn, sizeof fn,
+-			"devices/system/cpu/cpu%d/topology/thread_siblings", cpu);
+-		if (sysfs__read_str(fn, &str, &strlen) < 0) {
+-			snprintf(fn, sizeof fn,
+-				"devices/system/cpu/cpu%d/topology/core_cpus", cpu);
+-			if (sysfs__read_str(fn, &str, &strlen) < 0)
+-				continue;
+-		}
+-		/* Entry is hex, but does not have 0x, so need custom parser */
+-		siblings = hweight_str(str);
+-		free(str);
+-		if (siblings > 1) {
+-			cached_result = 1;
+-			break;
+-		}
+-	}
+ 	cached = true;
+ 	return cached_result;
+ }
+diff --git a/tools/perf/util/smt.h b/tools/perf/util/smt.h
+index a98d65808f6a..e26999c6b8d4 100644
+--- a/tools/perf/util/smt.h
++++ b/tools/perf/util/smt.h
+@@ -2,6 +2,9 @@
+ #ifndef __SMT_H
+ #define __SMT_H 1
+ 
+-int smt_on(void);
++struct cpu_topology;
++
++/* Returns true if SMT (aka hyperthreading) is enabled. */
++bool smt_on(const struct cpu_topology *topology);
+ 
+ #endif /* __SMT_H */
 -- 
 2.37.2.672.g94769d06f0-goog
 
