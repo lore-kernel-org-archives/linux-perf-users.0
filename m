@@ -2,37 +2,37 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E4CADC54EE9
-	for <linux-perf-users@archiver.kernel.org>; Tue, 30 Aug 2022 17:18:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AE350ECAAA1
+	for <linux-perf-users@archiver.kernel.org>; Tue, 30 Aug 2022 17:24:41 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229973AbiH3RSu (ORCPT
+        id S231407AbiH3RYj (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Tue, 30 Aug 2022 13:18:50 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58880 "EHLO
+        Tue, 30 Aug 2022 13:24:39 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34398 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230321AbiH3RSo (ORCPT
+        with ESMTP id S231370AbiH3RYR (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Tue, 30 Aug 2022 13:18:44 -0400
-Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3B3CCD6BB7;
-        Tue, 30 Aug 2022 10:18:42 -0700 (PDT)
+        Tue, 30 Aug 2022 13:24:17 -0400
+Received: from ams.source.kernel.org (ams.source.kernel.org [IPv6:2604:1380:4601:e00::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 949A083F26;
+        Tue, 30 Aug 2022 10:22:15 -0700 (PDT)
 Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id CC1556172F;
-        Tue, 30 Aug 2022 17:18:41 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id E28BCC433C1;
-        Tue, 30 Aug 2022 17:18:39 +0000 (UTC)
+        by ams.source.kernel.org (Postfix) with ESMTPS id 1DFE1B81C55;
+        Tue, 30 Aug 2022 17:21:53 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 7736BC433D6;
+        Tue, 30 Aug 2022 17:21:50 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1661879921;
-        bh=DPpbkP2lFMPQDukymNsUNw6LZGndApTSvx4rsplIZp8=;
+        s=k20201202; t=1661880111;
+        bh=IcePTnMHihrsUWlbeyVz9D8TRa7GQlmOaSor87kg+Os=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=GAJrHU1NGEdQq284WLXcBAl28m6ykn/Iqd+GGAEwBNBspl/Fz34zctfBoy2gLpd7U
-         dPbc1sI/xKZUVC3ekdhMP8k0OivjhR/Zgb4h+LFoEtgyJ+ue2OE8fjtvtcymAu0XFr
-         P/3MrQuC0RfCnzmJqF38L91tQwR/P7wR+GNAGp4RPqN2qZSL93sGBx6k0gfnwzXdRC
-         ds/xhNCk1Hzncr7QZqnGWq1IDpN1mdAfrYtEnTPK8INZJOBB87x4Z5ns/WN1QB+CLy
-         NUJxd9Vhus2XzK4XNDUZVfJ5drQOIq5szxokGdKnX4htewLBRl3fYZeZJK+M0aZNaO
-         REq16EGlhwF3w==
+        b=URMp7UB+PHx09AM4ii0lQZWw3KVMyYnQgmqXi13tsT0O1ZmejMzT/zVudxNO54YNC
+         06Bi5HY+WQz9qk03TYD1qWrVI/2emqbeGKqqq0PYgM8vb6QhX/63c76WyhkhtmYlD9
+         AvyOE/tuT+PVeZQrB3R3zRt7Om/JeH5OA7SW/44TNAnGqNuKfRQv/VS7bBcglAdUrf
+         M/oBMU8Lc55fD/HmabXam0+D4i3MXosabyhujALajLItbh5mG/ipgE/Ve436eKlz5r
+         gM0wkGV+TV54u6UFfTU0vH7WfQtG//T4fUUesdZx0uaK1ZAa3AINiKc9+oIpljAEHM
+         BjiGyr2PDKQow==
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
 Cc:     Peter Zijlstra <peterz@infradead.org>,
@@ -42,12 +42,12 @@ Cc:     Peter Zijlstra <peterz@infradead.org>,
         acme@kernel.org, tglx@linutronix.de, bp@alien8.de,
         dave.hansen@linux.intel.com, x86@kernel.org,
         linux-perf-users@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.19 08/33] perf/x86/core: Set pebs_capable and PMU_FL_PEBS_ALL for the Baseline
-Date:   Tue, 30 Aug 2022 13:17:59 -0400
-Message-Id: <20220830171825.580603-8-sashal@kernel.org>
+Subject: [PATCH AUTOSEL 5.15 05/23] perf/x86/core: Set pebs_capable and PMU_FL_PEBS_ALL for the Baseline
+Date:   Tue, 30 Aug 2022 13:21:22 -0400
+Message-Id: <20220830172141.581086-5-sashal@kernel.org>
 X-Mailer: git-send-email 2.35.1
-In-Reply-To: <20220830171825.580603-1-sashal@kernel.org>
-References: <20220830171825.580603-1-sashal@kernel.org>
+In-Reply-To: <20220830172141.581086-1-sashal@kernel.org>
+References: <20220830172141.581086-1-sashal@kernel.org>
 MIME-Version: 1.0
 X-stable: review
 X-Patchwork-Hint: Ignore
@@ -79,10 +79,10 @@ Signed-off-by: Sasha Levin <sashal@kernel.org>
  2 files changed, 1 insertion(+), 2 deletions(-)
 
 diff --git a/arch/x86/events/intel/core.c b/arch/x86/events/intel/core.c
-index bd8b988576097..7333f505d790e 100644
+index 588b83cc730d3..4fa4ee7fa6076 100644
 --- a/arch/x86/events/intel/core.c
 +++ b/arch/x86/events/intel/core.c
-@@ -6192,7 +6192,6 @@ __init int intel_pmu_init(void)
+@@ -6122,7 +6122,6 @@ __init int intel_pmu_init(void)
  		x86_pmu.pebs_block = true;
  		x86_pmu.flags |= PMU_FL_HAS_RSP_1;
  		x86_pmu.flags |= PMU_FL_NO_HT_SHARING;
@@ -90,7 +90,7 @@ index bd8b988576097..7333f505d790e 100644
  		x86_pmu.flags |= PMU_FL_INSTR_LATENCY;
  		x86_pmu.flags |= PMU_FL_MEM_LOADS_AUX;
  
-@@ -6237,7 +6236,6 @@ __init int intel_pmu_init(void)
+@@ -6164,7 +6163,6 @@ __init int intel_pmu_init(void)
  		x86_pmu.pebs_block = true;
  		x86_pmu.flags |= PMU_FL_HAS_RSP_1;
  		x86_pmu.flags |= PMU_FL_NO_HT_SHARING;
@@ -99,10 +99,10 @@ index bd8b988576097..7333f505d790e 100644
  		x86_pmu.flags |= PMU_FL_MEM_LOADS_AUX;
  		x86_pmu.lbr_pt_coexist = true;
 diff --git a/arch/x86/events/intel/ds.c b/arch/x86/events/intel/ds.c
-index ba60427caa6d3..ac6dd4c96dbc1 100644
+index 4dbb55a43dad2..78d3050fbfb88 100644
 --- a/arch/x86/events/intel/ds.c
 +++ b/arch/x86/events/intel/ds.c
-@@ -2262,6 +2262,7 @@ void __init intel_ds_init(void)
+@@ -2211,6 +2211,7 @@ void __init intel_ds_init(void)
  					PERF_SAMPLE_BRANCH_STACK |
  					PERF_SAMPLE_TIME;
  				x86_pmu.flags |= PMU_FL_PEBS_ALL;
