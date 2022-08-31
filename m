@@ -2,92 +2,142 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1ED9AECAAD3
-	for <linux-perf-users@archiver.kernel.org>; Wed, 31 Aug 2022 07:27:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 103F7ECAAD4
+	for <linux-perf-users@archiver.kernel.org>; Wed, 31 Aug 2022 09:50:10 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229636AbiHaH1g (ORCPT
+        id S229847AbiHaJuJ (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Wed, 31 Aug 2022 03:27:36 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51940 "EHLO
+        Wed, 31 Aug 2022 05:50:09 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60410 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229437AbiHaH1f (ORCPT
+        with ESMTP id S229453AbiHaJuI (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Wed, 31 Aug 2022 03:27:35 -0400
-Received: from desiato.infradead.org (desiato.infradead.org [IPv6:2001:8b0:10b:1:d65d:64ff:fe57:4e05])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9D40EBBA5C;
-        Wed, 31 Aug 2022 00:27:31 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=desiato.20200630; h=In-Reply-To:Content-Type:MIME-Version:
-        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description;
-        bh=aSjQx4zTSl4T130c1oUVgBbdvM/iu6syC3U3W+yrRPU=; b=dv87PGod13q5vEEeHqEIl4GR1/
-        j2Y7LzcWd949yj79i6GwRKUkTYtpL1tyeYQIG+xpLym/I4I98x/L5qz6uLCLjgUxpVPUUni83td7Y
-        9QvGs67O6XbckmQb1nIPaUTwlMDYvDHapLda+Ksvp/NFuYvWrlo1TrjPn5XApak3dBnDzwHYW0s+w
-        K6Z6iEqHPWuNE1XyZnVfxgHrOfgTadvSsAwuR48QBHBQheaw/Sars2zFpVjE/G8PGysKHb8TI+uSn
-        WrkSQMi5Lyrr4SQfl1vpGPoCyptXXP+zyz1gTpgxlRhNo1AgT0u5H4+F5fdV8qZIpHRlX9lngU6tV
-        7o0D2VpQ==;
-Received: from j130084.upc-j.chello.nl ([24.132.130.84] helo=noisy.programming.kicks-ass.net)
-        by desiato.infradead.org with esmtpsa (Exim 4.94.2 #2 (Red Hat Linux))
-        id 1oTI7z-0085hl-W4; Wed, 31 Aug 2022 07:27:12 +0000
-Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-        (Client did not present a certificate)
-        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id 1002E3002CD;
-        Wed, 31 Aug 2022 09:27:11 +0200 (CEST)
-Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
-        id E0F732B842EDD; Wed, 31 Aug 2022 09:27:10 +0200 (CEST)
-Date:   Wed, 31 Aug 2022 09:27:10 +0200
-From:   Peter Zijlstra <peterz@infradead.org>
-To:     Like Xu <like.xu.linux@gmail.com>
-Cc:     Sean Christopherson <seanjc@google.com>, kvm@vger.kernel.org,
-        Kan Liang <kan.liang@linux.intel.com>,
-        Paolo Bonzini <pbonzini@redhat.com>,
+        Wed, 31 Aug 2022 05:50:08 -0400
+Received: from mga01.intel.com (mga01.intel.com [192.55.52.88])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6145313D14;
+        Wed, 31 Aug 2022 02:50:06 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1661939406; x=1693475406;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=w8dohBsUnNgNN5IHL66P9ft9i1qrWZxpzUPmgsUyMx4=;
+  b=AxuD2o3jER0cNKyCdZg6dRpjPX6ragzmECxiB5wPA6S905oav/U2fE7H
+   ZFCWCAHbDjBiIUXtWa2l5xOH4gaOC6Df4YhXt1BQRnLgvJH5Mu38RYBe/
+   7dsmsnRkYgU6CDS7UjtzJJjnfHHOVCNrZUVw5J4zjM8JNqsSFOQOfVrmO
+   /FrwZRnlMSbNgo4nH42wv9HwtlYJRltUKdE8HFqaF6nBIdvK9s5wai05H
+   o7oJH7IqpCfQfcix3Qh8S5xobAn+NQEGfZPChbe86YgdbVfruJoVM6CtG
+   9VdGOMIgBBxSAbfYwsWnBWYOo/0FugU13MzJtE42UcmjcBWvw9DUuIAUx
+   Q==;
+X-IronPort-AV: E=McAfee;i="6500,9779,10455"; a="321552591"
+X-IronPort-AV: E=Sophos;i="5.93,277,1654585200"; 
+   d="scan'208";a="321552591"
+Received: from orsmga001.jf.intel.com ([10.7.209.18])
+  by fmsmga101.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 31 Aug 2022 02:50:05 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.93,277,1654585200"; 
+   d="scan'208";a="645177250"
+Received: from lkp-server02.sh.intel.com (HELO 811e2ceaf0e5) ([10.239.97.151])
+  by orsmga001.jf.intel.com with ESMTP; 31 Aug 2022 02:50:02 -0700
+Received: from kbuild by 811e2ceaf0e5 with local (Exim 4.96)
+        (envelope-from <lkp@intel.com>)
+        id 1oTKMD-0000BB-1x;
+        Wed, 31 Aug 2022 09:50:01 +0000
+Date:   Wed, 31 Aug 2022 17:49:27 +0800
+From:   kernel test robot <lkp@intel.com>
+To:     Sean Christopherson <seanjc@google.com>,
+        Peter Zijlstra <peterz@infradead.org>,
         Ingo Molnar <mingo@redhat.com>,
         Arnaldo Carvalho de Melo <acme@kernel.org>,
+        Paolo Bonzini <pbonzini@redhat.com>
+Cc:     llvm@lists.linux.dev, kbuild-all@lists.01.org,
         Mark Rutland <mark.rutland@arm.com>,
         Alexander Shishkin <alexander.shishkin@linux.intel.com>,
         Jiri Olsa <jolsa@kernel.org>,
         Namhyung Kim <namhyung@kernel.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Borislav Petkov <bp@alien8.de>,
-        Dave Hansen <dave.hansen@linux.intel.com>, x86@kernel.org,
-        "'H . Peter Anvin'" <hpa@zytor.com>,
-        linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH RESEND] perf/x86/core: Completely disable guest PEBS via
- guest's global_ctrl
-Message-ID: <Yw8NToJ5reQ+1rzt@hirez.programming.kicks-ass.net>
-References: <20220831033524.58561-1-likexu@tencent.com>
+        linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org,
+        kvm@vger.kernel.org, Like Xu <like.xu.linux@gmail.com>
+Subject: Re: [PATCH v3 3/3] KVM: VMX: Advertise PMU LBRs if and only if perf
+ supports LBRs
+Message-ID: <202208311746.VAzmtgNx-lkp@intel.com>
+References: <20220831000051.4015031-4-seanjc@google.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20220831033524.58561-1-likexu@tencent.com>
+In-Reply-To: <20220831000051.4015031-4-seanjc@google.com>
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-On Wed, Aug 31, 2022 at 11:35:24AM +0800, Like Xu wrote:
-> From: Like Xu <likexu@tencent.com>
-> 
-> When a guest PEBS counter is cross-mapped by a host counter, software
-> will remove the corresponding bit in the arr[global_ctrl].guest and
-> expect hardware to perform a change of state "from enable to disable"
-> via the msr_slot[] switch during the vmx transaction.
-> 
-> The real world is that if user adjust the counter overflow value small
-> enough, it still opens a tiny race window for the previously PEBS-enabled
-> counter to write cross-mapped PEBS records into the guest's PEBS buffer,
-> when arr[global_ctrl].guest has been prioritised (switch_msr_special stuff)
-> to switch into the enabled state, while the arr[pebs_enable].guest has not.
-> 
-> Close this window by clearing invalid bits in the arr[global_ctrl].guest.
-> 
-> Cc: linux-perf-users@vger.kernel.org
-> Cc: Kan Liang <kan.liang@linux.intel.com>
-> Cc: Peter Zijlstra <peterz@infradead.org>
-> Cc: Sean Christopherson <seanjc@google.com>
-> Fixes: 854250329c02 ("KVM: x86/pmu: Disable guest PEBS temporarily in two rare situations")
-> Signed-off-by: Like Xu <likexu@tencent.com>
-> ---
+Hi Sean,
 
-Thanks!
+I love your patch! Yet something to improve:
+
+[auto build test ERROR on 372d07084593dc7a399bf9bee815711b1fb1bcf2]
+
+url:    https://github.com/intel-lab-lkp/linux/commits/Sean-Christopherson/KVM-x86-Intel-LBR-related-perf-cleanups/20220831-080309
+base:   372d07084593dc7a399bf9bee815711b1fb1bcf2
+config: x86_64-randconfig-a012 (https://download.01.org/0day-ci/archive/20220831/202208311746.VAzmtgNx-lkp@intel.com/config)
+compiler: clang version 14.0.6 (https://github.com/llvm/llvm-project f28c006a5895fc0e329fe15fead81e37457cb1d1)
+reproduce (this is a W=1 build):
+        wget https://raw.githubusercontent.com/intel/lkp-tests/master/sbin/make.cross -O ~/bin/make.cross
+        chmod +x ~/bin/make.cross
+        # https://github.com/intel-lab-lkp/linux/commit/094f42374997562fff3f9f9637ec9aa8257490a0
+        git remote add linux-review https://github.com/intel-lab-lkp/linux
+        git fetch --no-tags linux-review Sean-Christopherson/KVM-x86-Intel-LBR-related-perf-cleanups/20220831-080309
+        git checkout 094f42374997562fff3f9f9637ec9aa8257490a0
+        # save the config file
+        mkdir build_dir && cp config build_dir/.config
+        COMPILER_INSTALL_PATH=$HOME/0day COMPILER=clang make.cross W=1 O=build_dir ARCH=x86_64 prepare
+
+If you fix the issue, kindly add following tag where applicable
+Reported-by: kernel test robot <lkp@intel.com>
+
+All errors (new ones prefixed by >>):
+
+   In file included from arch/x86/kernel/asm-offsets.c:22:
+   In file included from arch/x86/kernel/../kvm/vmx/vmx.h:11:
+>> arch/x86/kernel/../kvm/vmx/capabilities.h:416:2: error: implicit declaration of function 'x86_perf_get_lbr' is invalid in C99 [-Werror,-Wimplicit-function-declaration]
+           x86_perf_get_lbr(&lbr);
+           ^
+   1 error generated.
+   make[2]: *** [scripts/Makefile.build:117: arch/x86/kernel/asm-offsets.s] Error 1
+   make[2]: Target '__build' not remade because of errors.
+   make[1]: *** [Makefile:1207: prepare0] Error 2
+   make[1]: Target 'prepare' not remade because of errors.
+   make: *** [Makefile:222: __sub-make] Error 2
+   make: Target 'prepare' not remade because of errors.
+
+
+vim +/x86_perf_get_lbr +416 arch/x86/kernel/../kvm/vmx/capabilities.h
+
+   403	
+   404	static inline u64 vmx_get_perf_capabilities(void)
+   405	{
+   406		u64 perf_cap = PMU_CAP_FW_WRITES;
+   407		struct x86_pmu_lbr lbr;
+   408		u64 host_perf_cap = 0;
+   409	
+   410		if (!enable_pmu)
+   411			return 0;
+   412	
+   413		if (boot_cpu_has(X86_FEATURE_PDCM))
+   414			rdmsrl(MSR_IA32_PERF_CAPABILITIES, host_perf_cap);
+   415	
+ > 416		x86_perf_get_lbr(&lbr);
+   417		if (lbr.nr)
+   418			perf_cap |= host_perf_cap & PMU_CAP_LBR_FMT;
+   419	
+   420		if (vmx_pebs_supported()) {
+   421			perf_cap |= host_perf_cap & PERF_CAP_PEBS_MASK;
+   422			if ((perf_cap & PERF_CAP_PEBS_FORMAT) < 4)
+   423				perf_cap &= ~PERF_CAP_PEBS_BASELINE;
+   424		}
+   425	
+   426		return perf_cap;
+   427	}
+   428	
+
+-- 
+0-DAY CI Kernel Test Service
+https://01.org/lkp
