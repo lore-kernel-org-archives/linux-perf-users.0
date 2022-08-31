@@ -2,59 +2,60 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 280BEECAAD5
-	for <linux-perf-users@archiver.kernel.org>; Wed, 31 Aug 2022 00:01:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B5C12C64991
+	for <linux-perf-users@archiver.kernel.org>; Wed, 31 Aug 2022 00:01:02 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230334AbiHaAA7 (ORCPT
+        id S229647AbiHaAA7 (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
         Tue, 30 Aug 2022 20:00:59 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34338 "EHLO
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34288 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229875AbiHaAA7 (ORCPT
+        with ESMTP id S229775AbiHaAA5 (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Tue, 30 Aug 2022 20:00:59 -0400
+        Tue, 30 Aug 2022 20:00:57 -0400
 Received: from mail-pl1-x649.google.com (mail-pl1-x649.google.com [IPv6:2607:f8b0:4864:20::649])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id EF8F967C97
-        for <linux-perf-users@vger.kernel.org>; Tue, 30 Aug 2022 17:00:57 -0700 (PDT)
-Received: by mail-pl1-x649.google.com with SMTP id p18-20020a170902a41200b00172b0dc71e0so8815585plq.0
-        for <linux-perf-users@vger.kernel.org>; Tue, 30 Aug 2022 17:00:57 -0700 (PDT)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 51D1166A53
+        for <linux-perf-users@vger.kernel.org>; Tue, 30 Aug 2022 17:00:56 -0700 (PDT)
+Received: by mail-pl1-x649.google.com with SMTP id q6-20020a17090311c600b0017266460b8fso8815852plh.4
+        for <linux-perf-users@vger.kernel.org>; Tue, 30 Aug 2022 17:00:56 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=google.com; s=20210112;
         h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
          :date:reply-to:from:to:cc;
-        bh=HjUp0+XGX7I9pp1rwUfEKS1ZQ3tXMZ53vYRIKHPszec=;
-        b=PlaHhbkkfyCu7zAcx6wxZJlKMNEW34EZejuQEmTlmm/CP0cfEaYlGWVW+MWr/AV5on
-         +9Oyj7XiMxBnejeGsablgXp8wfcg9qHu0UoKA058ojeBK+tKlHXp5uOdm2nzdaVIAlkt
-         2+CWPToHxPAWcYeDdq2V9cI9MgjzEH0ius2XrFiohVZ963FjaSoIpPJqZd3VmFtjfF29
-         chObz/FQ32Ff+LwhplTN6N3SGyVJ8lIYqgyvMJwaLy2XwGiwsgaF6S4MbLVAUlNrrw4y
-         Fcrlrhgl8ECpYQ4nCCju3y6RtZmxmBo0N9OAgbLJaX1X/LR3yXURMLUeaNG4vwr5lp4Y
-         Eieg==
+        bh=vo5HdwRPjV6Nw++vuMl/iEPDJH4m1OFL3i5pfdtXoVE=;
+        b=Djuq1dwHroOnQMQJ3UVirD/6ihOvXXj1ckAIf1EOYJDaxNuanAHVo827cEL2o4/Nb8
+         mqplmhj7jxCZ0vMvojiQth3c7E0kBTGWG4K9/7bOE75vCjprxG7+fAHKLyfeF6YlULtm
+         y/5+zEqsBTaZR/8IkBQnEBu5ZmBFi0fW41NOVgpdywtBHBpeFGx66WIrT78dlom7Hinp
+         ElCeCcdjGisfx8p4V4EwNh/+m8Qf5Xpn4bBCagGSeZmw8Z9BIWBSolh20CvzNtQN94VC
+         vXbCNoTAHTHmkN426naO9FoD6WCtxDaLTdneAAWLAxrOOIYcHYfwjBvWJ0tgS+txafWN
+         jzFg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
         h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
          :date:reply-to:x-gm-message-state:from:to:cc;
-        bh=HjUp0+XGX7I9pp1rwUfEKS1ZQ3tXMZ53vYRIKHPszec=;
-        b=1vLw70iMegh9TQFxXeqQIOpEvMqJEsYBrODKkOCKdN/m97VGBBTmQi5dUatFdwBz9+
-         WjoVh/T6Fi+p9GSPOOxR/hS1U0xxh1k+9PUVxR3ptZaONPTwav0ey6+Ui+i3t+N/umof
-         /KvH4bDSXmNXMjeCICaZ555BkygubkG9zsR3TT9n3QuU0aPUz95Vrk8UYj8hh3Qyt7ou
-         S3hfds7SsRyoHyfqIGQeDBhPDj/EKfZjFT+hDsKlkyYe7YE6HwKXwWD/xw33mWU75L92
-         OoRbKssv22NpxDi8DTvp8WdH5+rfzBOF0uyjZ4mR73BlIAd8SXRFtPKxXXzEpkZGXt7x
-         YoFg==
-X-Gm-Message-State: ACgBeo0LXlc43SpQG70ELtSP6SMUIGvUkIADhWssQCHmkZAWLbvJ4D+1
-        v8LvHb/h6BV8wuoXouzpd6luqyUC0Qo=
-X-Google-Smtp-Source: AA6agR4bzFoFtOfSYApxa64iuwbXdswW+XlYkRQHFxA89Xel0/yW91r0PpgxrKN76mN32s9Iu5kl3UX2uEU=
+        bh=vo5HdwRPjV6Nw++vuMl/iEPDJH4m1OFL3i5pfdtXoVE=;
+        b=nP0tCdazRhDlCI67JuZkQSrDR7ay7XIrpy9en3T8Q5V/cWaD0k9qj0AbjZ2MeocVAN
+         xGD5IFQHLZoRWUPd1HQvCoj8l5dGozvXvP8jZyUSS91kw2vVkBRfs2wp8wbCoO8jTuPe
+         4qHOuZU6v6cK3TDQih0TRkjrNV3bMyqqg66ZPvMmqVqvEBvPlZWVbDIxqX5Mo9Q51EGQ
+         eaYSNI6ycqtWNB2w1xVBdy4ppJNOQKGccZDsMuGbpqQgC6yw9WLgOnF1LzSNa37ndGs0
+         52M+CywHYLtuHoMLfZovSz9FVnfy7S/i8kesg0Lx9OqMBquGrYdvvncMVIuu+ku1Cf3n
+         eehQ==
+X-Gm-Message-State: ACgBeo1FVMhCMTq4jSmuDt3EcB22wF01qGRFKg58xs2vVG4QACOumeW8
+        jfzKyotuA4mW9EyPIkrRyIvC+SSRuGo=
+X-Google-Smtp-Source: AA6agR5m+62T7xHSzPIU2GAafdzd2hDCL8JP1w40ZoO3eUABfskgZ+ViDXGRJuTI6f9RjxggnW67RBjMx4c=
 X-Received: from zagreus.c.googlers.com ([fda3:e722:ac3:cc00:7f:e700:c0a8:5c37])
- (user=seanjc job=sendgmr) by 2002:aa7:8882:0:b0:52f:1ead:2c21 with SMTP id
- z2-20020aa78882000000b0052f1ead2c21mr23652721pfe.15.1661904057468; Tue, 30
- Aug 2022 17:00:57 -0700 (PDT)
+ (user=seanjc job=sendgmr) by 2002:a17:902:e884:b0:174:9834:53 with SMTP id
+ w4-20020a170902e88400b0017498340053mr14868368plg.2.1661904055854; Tue, 30 Aug
+ 2022 17:00:55 -0700 (PDT)
 Reply-To: Sean Christopherson <seanjc@google.com>
-Date:   Wed, 31 Aug 2022 00:00:50 +0000
+Date:   Wed, 31 Aug 2022 00:00:49 +0000
 In-Reply-To: <20220831000051.4015031-1-seanjc@google.com>
 Mime-Version: 1.0
 References: <20220831000051.4015031-1-seanjc@google.com>
 X-Mailer: git-send-email 2.37.2.672.g94769d06f0-goog
-Message-ID: <20220831000051.4015031-3-seanjc@google.com>
-Subject: [PATCH v3 2/3] perf/x86/core: Drop the unnecessary return value from x86_perf_get_lbr()
+Message-ID: <20220831000051.4015031-2-seanjc@google.com>
+Subject: [PATCH v3 1/3] perf/x86/core: Remove unnecessary stubs provided for
+ KVM-only helpers
 From:   Sean Christopherson <seanjc@google.com>
 To:     Peter Zijlstra <peterz@infradead.org>,
         Ingo Molnar <mingo@redhat.com>,
@@ -72,53 +73,96 @@ Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-Drop the return value from x86_perf_get_lbr() now that there's no stub,
-i.e. now that success is guaranteed (which is a bit of a lie since
-success was always guaranteed, it's just more obvious now).
+Remove CONFIG_PERF_EVENT=n stubs for functions that are effectively
+KVM-only.  KVM selects PERF_EVENT and will never consume the stubs.
+Dropping the unnecessary stubs will allow simplifying x86_perf_get_lbr()
+by getting rid of the impossible-to-hit error path (which KVM doesn't
+even check).
+
+Opportunstically reorganize the declarations to collapse multiple
+CONFIG_PERF_EVENTS #ifdefs.
 
 Signed-off-by: Sean Christopherson <seanjc@google.com>
 ---
- arch/x86/events/intel/lbr.c       | 6 +-----
- arch/x86/include/asm/perf_event.h | 2 +-
- 2 files changed, 2 insertions(+), 6 deletions(-)
+ arch/x86/include/asm/perf_event.h | 53 ++++++++-----------------------
+ 1 file changed, 13 insertions(+), 40 deletions(-)
 
-diff --git a/arch/x86/events/intel/lbr.c b/arch/x86/events/intel/lbr.c
-index 4f70fb6c2c1e..b8ad31c52cf0 100644
---- a/arch/x86/events/intel/lbr.c
-+++ b/arch/x86/events/intel/lbr.c
-@@ -1868,10 +1868,8 @@ void __init intel_pmu_arch_lbr_init(void)
-  * x86_perf_get_lbr - get the LBR records information
-  *
-  * @lbr: the caller's memory to store the LBR records information
-- *
-- * Returns: 0 indicates the LBR info has been successfully obtained
-  */
--int x86_perf_get_lbr(struct x86_pmu_lbr *lbr)
-+void x86_perf_get_lbr(struct x86_pmu_lbr *lbr)
- {
- 	int lbr_fmt = x86_pmu.intel_cap.lbr_format;
- 
-@@ -1879,8 +1877,6 @@ int x86_perf_get_lbr(struct x86_pmu_lbr *lbr)
- 	lbr->from = x86_pmu.lbr_from;
- 	lbr->to = x86_pmu.lbr_to;
- 	lbr->info = (lbr_fmt == LBR_FORMAT_INFO) ? x86_pmu.lbr_info : 0;
--
--	return 0;
- }
- EXPORT_SYMBOL_GPL(x86_perf_get_lbr);
- 
 diff --git a/arch/x86/include/asm/perf_event.h b/arch/x86/include/asm/perf_event.h
-index f839eb55f298..f6d9230cdfab 100644
+index f6fc8dd51ef4..f839eb55f298 100644
 --- a/arch/x86/include/asm/perf_event.h
 +++ b/arch/x86/include/asm/perf_event.h
-@@ -528,7 +528,7 @@ extern int x86_perf_rdpmc_index(struct perf_event *event);
+@@ -525,46 +525,18 @@ extern u64 perf_get_hw_event_config(int hw_event);
+ extern void perf_check_microcode(void);
+ extern void perf_clear_dirty_counters(void);
+ extern int x86_perf_rdpmc_index(struct perf_event *event);
+-#else
+-static inline void perf_get_x86_pmu_capability(struct x86_pmu_capability *cap)
+-{
+-	memset(cap, 0, sizeof(*cap));
+-}
  
- #ifdef CONFIG_CPU_SUP_INTEL
+-static inline u64 perf_get_hw_event_config(int hw_event)
+-{
+-	return 0;
+-}
+-
+-static inline void perf_events_lapic_init(void)	{ }
+-static inline void perf_check_microcode(void) { }
+-#endif
+-
+-#if defined(CONFIG_PERF_EVENTS) && defined(CONFIG_CPU_SUP_INTEL)
++#ifdef CONFIG_CPU_SUP_INTEL
  extern struct perf_guest_switch_msr *perf_guest_get_msrs(int *nr, void *data);
--extern int x86_perf_get_lbr(struct x86_pmu_lbr *lbr);
-+extern void x86_perf_get_lbr(struct x86_pmu_lbr *lbr);
- extern void intel_pt_handle_vmx(int on);
- #endif /* CONFIG_CPU_SUP_INTEL */
+ extern int x86_perf_get_lbr(struct x86_pmu_lbr *lbr);
+-#else
+-struct perf_guest_switch_msr *perf_guest_get_msrs(int *nr, void *data);
+-static inline int x86_perf_get_lbr(struct x86_pmu_lbr *lbr)
+-{
+-	return -1;
+-}
+-#endif
++extern void intel_pt_handle_vmx(int on);
++#endif /* CONFIG_CPU_SUP_INTEL */
+ 
+-#ifdef CONFIG_CPU_SUP_INTEL
+- extern void intel_pt_handle_vmx(int on);
+-#else
+-static inline void intel_pt_handle_vmx(int on)
+-{
++#ifdef CONFIG_CPU_SUP_AMD
++extern void amd_pmu_enable_virt(void);
++extern void amd_pmu_disable_virt(void);
+ 
+-}
+-#endif
+-
+-#if defined(CONFIG_PERF_EVENTS) && defined(CONFIG_CPU_SUP_AMD)
+- extern void amd_pmu_enable_virt(void);
+- extern void amd_pmu_disable_virt(void);
+-
+-#if defined(CONFIG_PERF_EVENTS_AMD_BRS)
++#ifdef CONFIG_PERF_EVENTS_AMD_BRS
+ 
+ #define PERF_NEEDS_LOPWR_CB 1
+ 
+@@ -582,12 +554,13 @@ static inline void perf_lopwr_cb(bool lopwr_in)
+ 	static_call_mod(perf_lopwr_cb)(lopwr_in);
+ }
+ 
+-#endif /* PERF_NEEDS_LOPWR_CB */
++#endif /* CONFIG_PERF_EVENTS_AMD_BRS */
++#endif /* CONFIG_CPU_SUP_AMD */
+ 
+-#else
+- static inline void amd_pmu_enable_virt(void) { }
+- static inline void amd_pmu_disable_virt(void) { }
+-#endif
++#else  /* !CONFIG_PERF_EVENTS */
++static inline void perf_events_lapic_init(void)	{ }
++static inline void perf_check_microcode(void) { }
++#endif /* CONFIG_PERF_EVENTS */
+ 
+ #define arch_perf_out_copy_user copy_from_user_nmi
  
 -- 
 2.37.2.672.g94769d06f0-goog
