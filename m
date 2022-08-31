@@ -2,111 +2,249 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0035BECAAD4
-	for <linux-perf-users@archiver.kernel.org>; Wed, 31 Aug 2022 16:03:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 189E7ECAAD3
+	for <linux-perf-users@archiver.kernel.org>; Wed, 31 Aug 2022 16:14:20 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229625AbiHaQDx (ORCPT
+        id S231844AbiHaQOT (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Wed, 31 Aug 2022 12:03:53 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56212 "EHLO
+        Wed, 31 Aug 2022 12:14:19 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47886 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231594AbiHaQDB (ORCPT
+        with ESMTP id S231801AbiHaQOP (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Wed, 31 Aug 2022 12:03:01 -0400
-Received: from mail-wm1-x32f.google.com (mail-wm1-x32f.google.com [IPv6:2a00:1450:4864:20::32f])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C5C62B2760
-        for <linux-perf-users@vger.kernel.org>; Wed, 31 Aug 2022 09:02:59 -0700 (PDT)
-Received: by mail-wm1-x32f.google.com with SMTP id ay12so7607891wmb.1
-        for <linux-perf-users@vger.kernel.org>; Wed, 31 Aug 2022 09:02:59 -0700 (PDT)
+        Wed, 31 Aug 2022 12:14:15 -0400
+Received: from mail-wm1-x32e.google.com (mail-wm1-x32e.google.com [IPv6:2a00:1450:4864:20::32e])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C59B5D3E41
+        for <linux-perf-users@vger.kernel.org>; Wed, 31 Aug 2022 09:14:13 -0700 (PDT)
+Received: by mail-wm1-x32e.google.com with SMTP id ay12so7624584wmb.1
+        for <linux-perf-users@vger.kernel.org>; Wed, 31 Aug 2022 09:14:13 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=google.com; s=20210112;
         h=cc:to:subject:message-id:date:from:in-reply-to:references
          :mime-version:from:to:cc;
-        bh=1bB7tQtCppbl15pSiTQsgDbN8ntnJOFVfGoL4e77fQM=;
-        b=MlISibdNRllyuJ2XZ0NiDnL5OA7Oxj3FtEBi7U3GDrhDg3Tg7juqQpBFWGw3TXRBSr
-         +NbervZgo2ypCctTi9mHrQINXCWoKyrSvxM9P5fUBo8E2i8U0xVwtsPubRQixRq252TD
-         vqi051fEgRvSsSeoR1DmtRNvyWYRGFjSUQUNouI5cxXw8BvzTY4D4AugObg4tJnVxYXW
-         AXV23giSr6I+gnZ2AyU6tX+GFw6M25+WFpGRaxpLgB2GS84fjxIhC7NU5I3JspWVghpx
-         JViNTMHE8WFO/bgnGuj/TYMnOz1BRcAQWX2Sxvf1nBmWu1032C9u7k3IzplCJscd0/vC
-         zR4Q==
+        bh=IWp/nrGyciEfU1XYNypVD2gVXNEtS7OFhjckBxMvnpM=;
+        b=NWBO58yc8VsOw8kfv2ixgptXXeR/onyFS6nEi9an/QZ0nSPw9Ivgu5Bhiq3upVBPVr
+         yumHGlD8out1bds+9QMTsvwkIEnobzHH8juv4uT8S4Tnj4m3U94oJ0edgu6poTbPIG7s
+         Y35ZdF6g8AJCmSZypTI4NTZ8gliqxWJEuHgh1X6Em5PCMbfb0uqWJlQXYBMTHt6lQIoH
+         NsMH4DfZLb75CvhYAe+UXxXex/sMc8O7mxv4yZHiAVJ/bpkfbubcCVr8UhzgBaHoiHgY
+         A3+nHOirBmT6pNMQLIZJXtt1DuEb9X9dzGEvawmGRDmtKd9wv/j9AeTZURAEeleecjm+
+         UwEw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
         h=cc:to:subject:message-id:date:from:in-reply-to:references
          :mime-version:x-gm-message-state:from:to:cc;
-        bh=1bB7tQtCppbl15pSiTQsgDbN8ntnJOFVfGoL4e77fQM=;
-        b=6T4pDJzHlqhRRbpwAvhFc5i2zZrBXaqNZpRFrzRDhvZnbtMZLL306Ycom88HsY50NQ
-         CHmtHfkY6ZAi31lZZZpHT25ILd/L08PbR2IN91EGq3Wg/xg4K0I1qi74b6l9Vxe4AA6I
-         TEkRfas4vRB27qugEXVDuHZf+q6CWSVW1CfkVMS/GpCMK3tDaE75Y0z0PvxjXuZApxbO
-         fKT8gGG09E7SCrg+nMIc9Lxj/8e7g1CYQG9D8M2CCa/TG/AcChEuZ1uqBY1pZJyElxtc
-         mBzCMaGyU3bUeoWgdHlMR/OtQKLoIFfXwdUv3v5fywRT7HeUfP7oHlXIYSKc4iM2I81o
-         Y+1w==
-X-Gm-Message-State: ACgBeo3yysVoYEGfRfxojnzA9Zz9XoQe61Fftt2B4incWoeo3YaXXQcU
-        GNwrJ7ZprbgXkit1bzv/bUXvYGdHiSpuOxyzM7likw==
-X-Google-Smtp-Source: AA6agR6WdXjH4ZbfUSKI+Ue/geK+PwtjHMwxl+GrSrxpX7Jk4KDVoHR8IIJumtHTPQSrrU97y4H3qhEaOM4OMWlmugU=
-X-Received: by 2002:a05:600c:1d89:b0:3a5:c1db:21c6 with SMTP id
- p9-20020a05600c1d8900b003a5c1db21c6mr2337210wms.174.1661961778110; Wed, 31
- Aug 2022 09:02:58 -0700 (PDT)
+        bh=IWp/nrGyciEfU1XYNypVD2gVXNEtS7OFhjckBxMvnpM=;
+        b=X5UUmMCCMSgapvXJc5f4Mp7AwxLGFtctVp6heF53QfVf2zHa7i9aCGykB6yxNM6ZIW
+         NfwDGaoezX1MkBwXH0TX/8tTtEtd26IxsDm5RGjYEjYeVnEJmMet5yb9iECHjoxzgp+k
+         K7SDGBl/SGMAXc4Q4rVwDtEPkMhGhXus1yidb3g7R/Yskyhie99N4yAG4yD3+pk1YQfx
+         szF0z5+q04t2+nFJB7HKRAXaQVqDtF5UtZthj3waTlcWI7hidrWiVFb3JcCRTapP8F/E
+         c3R3eUq5smVU2SVHVQu+EAWNRW7qzR6+r/yBxbFC0J8HszW0cY1ZbUOupRk248/MP/ka
+         qOEg==
+X-Gm-Message-State: ACgBeo1dvVd0J0SeLc5C669NSAx5L1KyzjNYfzPPEWzusoMu4eLGH0VN
+        Nw1jWcUGoXFsICP04y8HhakJqB87sm4ibtytZ0dYsQ==
+X-Google-Smtp-Source: AA6agR7hCrdUB9fYlOGi4RFsZkmar3bWBKgS3WY4LhnhXIKnJ7zn7EZG+mYny26ZH1ITX5dFwJsxAasoe3SCQNpZ6XE=
+X-Received: by 2002:a05:600c:25ce:b0:3a5:a3b7:bbfe with SMTP id
+ 14-20020a05600c25ce00b003a5a3b7bbfemr2591617wml.115.1661962452014; Wed, 31
+ Aug 2022 09:14:12 -0700 (PDT)
 MIME-Version: 1.0
-References: <20220831124041.219925-1-jolsa@kernel.org>
-In-Reply-To: <20220831124041.219925-1-jolsa@kernel.org>
+References: <20220830164846.401143-1-irogers@google.com> <20220830164846.401143-7-irogers@google.com>
+ <Yw9zPxVqbfkSOdbu@kernel.org>
+In-Reply-To: <Yw9zPxVqbfkSOdbu@kernel.org>
 From:   Ian Rogers <irogers@google.com>
-Date:   Wed, 31 Aug 2022 09:02:46 -0700
-Message-ID: <CAP-5=fX-=ph8g3VKbQXSRT8SiOZ3XqQLd3T9-ZTNZ5L+ye5L-A@mail.gmail.com>
-Subject: Re: [PATCH] perf script: Skip dummy event attr check
-To:     Jiri Olsa <jolsa@kernel.org>
-Cc:     Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Hongtao Yu <hoy@fb.com>, Namhyung Kim <namhyung@kernel.org>,
-        lkml <linux-kernel@vger.kernel.org>,
-        Peter Zijlstra <a.p.zijlstra@chello.nl>,
-        Ingo Molnar <mingo@kernel.org>,
+Date:   Wed, 31 Aug 2022 09:13:59 -0700
+Message-ID: <CAP-5=fU7zxoLoen7PH+a0gehSfd0zJzfxsXN+oP_jySTO0=mPg@mail.gmail.com>
+Subject: Re: [PATCH v1 6/8] perf stat: Delay metric parsing
+To:     Arnaldo Carvalho de Melo <acme@kernel.org>
+Cc:     Peter Zijlstra <peterz@infradead.org>,
+        Ingo Molnar <mingo@redhat.com>,
         Mark Rutland <mark.rutland@arm.com>,
         Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        linux-perf-users@vger.kernel.org
+        Jiri Olsa <jolsa@kernel.org>,
+        Namhyung Kim <namhyung@kernel.org>,
+        Andi Kleen <ak@linux.intel.com>,
+        Kan Liang <kan.liang@linux.intel.com>,
+        Thomas Richter <tmricht@linux.ibm.com>,
+        James Clark <james.clark@arm.com>,
+        Miaoqian Lin <linmq006@gmail.com>,
+        John Garry <john.garry@huawei.com>,
+        Zhengjun Xing <zhengjun.xing@linux.intel.com>,
+        Florian Fischer <florian.fischer@muhq.space>,
+        linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org,
+        perry.taylor@intel.com, caleb.biggers@intel.com,
+        kshipra.bopardikar@intel.com, Stephane Eranian <eranian@google.com>
 Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-On Wed, Aug 31, 2022 at 5:40 AM Jiri Olsa <jolsa@kernel.org> wrote:
+On Wed, Aug 31, 2022 at 7:42 AM Arnaldo Carvalho de Melo
+<acme@kernel.org> wrote:
 >
-> Hongtao Yu reported problem when displaying uregs in perf script
-> for system wide perf.data:
+> Em Tue, Aug 30, 2022 at 09:48:44AM -0700, Ian Rogers escreveu:
+> > Having metric parsing as part of argument processing causes issues as
+> > flags like metric-no-group may be specified later. It also denies the
+> > opportunity to optimize the events on SMT systems where fewer events
+> > may be possible if we know the target is system-wide. Move metric
+> > parsing to after command line option parsing. Because of how stat runs
+> > this moves the parsing after record/report which fail to work with
+> > metrics currently anyway.
+> >
+> > Signed-off-by: Ian Rogers <irogers@google.com>
+> > ---
+> >  tools/perf/builtin-stat.c     | 48 ++++++++++++++++++++++++-----------
+> >  tools/perf/util/metricgroup.c |  3 +--
+> >  tools/perf/util/metricgroup.h |  2 +-
+> >  3 files changed, 35 insertions(+), 18 deletions(-)
+> >
+> > diff --git a/tools/perf/builtin-stat.c b/tools/perf/builtin-stat.c
+> > index 7fb81a44672d..c813b1aa7d7c 100644
+> > --- a/tools/perf/builtin-stat.c
+> > +++ b/tools/perf/builtin-stat.c
+> > @@ -191,6 +191,7 @@ static bool                       append_file;
+> >  static bool                  interval_count;
+> >  static const char            *output_name;
+> >  static int                   output_fd;
+> > +static char                  *metrics;
+> >
+> >  struct perf_stat {
+> >       bool                     record;
+> > @@ -1147,14 +1148,21 @@ static int enable_metric_only(const struct option *opt __maybe_unused,
+> >       return 0;
+> >  }
+> >
+> > -static int parse_metric_groups(const struct option *opt,
+> > +static int append_metric_groups(const struct option *opt __maybe_unused,
+> >                              const char *str,
+> >                              int unset __maybe_unused)
+> >  {
+> > -     return metricgroup__parse_groups(opt, str,
+> > -                                      stat_config.metric_no_group,
+> > -                                      stat_config.metric_no_merge,
+> > -                                      &stat_config.metric_events);
+> > +     if (metrics) {
+> > +             char *tmp;
+> > +
+> > +             if (asprintf(&tmp, "%s,%s", metrics, str) < 0)
+> > +                     return -ENOMEM;
 >
->   # perf script -F uregs | head -10
->   Samples for 'dummy:HG' event do not have UREGS attribute set. Cannot print 'uregs' field.
->
-> The problem is the extra dummy event added for system wide,
-> which does not have proper sample_type setup.
->
-> Skipping attr check completely for dummy event as suggested
-> by Namhyung, because it does not have any samples anyway.
->
-> Reported-by: Hongtao Yu <hoy@fb.com>
-> Suggested-by: Namhyung Kim <namhyung@kernel.org>
-> Signed-off-by: Jiri Olsa <jolsa@kernel.org>
+> We check if we managed to allocate memory here, but not later at
+> strdup()?
 
-Acked-by: Ian Rogers <irogers@google.com>
+Added to v2.
 
 Thanks,
 Ian
 
-> ---
->  tools/perf/builtin-script.c | 2 ++
->  1 file changed, 2 insertions(+)
+> > +             free(metrics);
+> > +             metrics = tmp;
+> > +     } else {
+> > +             metrics = strdup(str);
+> > +     }
+> > +     return 0;
+> >  }
+> >
+> >  static int parse_control_option(const struct option *opt,
+> > @@ -1298,7 +1306,7 @@ static struct option stat_options[] = {
+> >                       "measure SMI cost"),
+> >       OPT_CALLBACK('M', "metrics", &evsel_list, "metric/metric group list",
+> >                    "monitor specified metrics or metric groups (separated by ,)",
+> > -                  parse_metric_groups),
+> > +                  append_metric_groups),
+> >       OPT_BOOLEAN_FLAG(0, "all-kernel", &stat_config.all_kernel,
+> >                        "Configure all used events to run in kernel space.",
+> >                        PARSE_OPT_EXCLUSIVE),
+> > @@ -1791,11 +1799,9 @@ static int add_default_attributes(void)
+> >                * on an architecture test for such a metric name.
+> >                */
+> >               if (metricgroup__has_metric("transaction")) {
+> > -                     struct option opt = { .value = &evsel_list };
+> > -
+> > -                     return metricgroup__parse_groups(&opt, "transaction",
+> > +                     return metricgroup__parse_groups(evsel_list, "transaction",
+> >                                                        stat_config.metric_no_group,
+> > -                                                     stat_config.metric_no_merge,
+> > +                                                      stat_config.metric_no_merge,
+> >                                                        &stat_config.metric_events);
+> >               }
+> >
+> > @@ -2260,8 +2266,6 @@ int cmd_stat(int argc, const char **argv)
+> >       argc = parse_options_subcommand(argc, argv, stat_options, stat_subcommands,
+> >                                       (const char **) stat_usage,
+> >                                       PARSE_OPT_STOP_AT_NON_OPTION);
+> > -     perf_stat__collect_metric_expr(evsel_list);
+> > -     perf_stat__init_shadow_stats();
+> >
+> >       if (stat_config.csv_sep) {
+> >               stat_config.csv_output = true;
+> > @@ -2428,6 +2432,23 @@ int cmd_stat(int argc, const char **argv)
+> >                       target.system_wide = true;
+> >       }
+> >
+> > +     if ((stat_config.aggr_mode == AGGR_THREAD) && (target.system_wide))
+> > +             target.per_thread = true;
+> > +
+> > +     /*
+> > +      * Metric parsing needs to be delayed as metrics may optimize events
+> > +      * knowing the target is system-wide.
+> > +      */
+> > +     if (metrics) {
+> > +             metricgroup__parse_groups(evsel_list, metrics,
+> > +                                     stat_config.metric_no_group,
+> > +                                     stat_config.metric_no_merge,
+> > +                                     &stat_config.metric_events);
+> > +             zfree(&metrics);
+> > +     }
+> > +     perf_stat__collect_metric_expr(evsel_list);
+> > +     perf_stat__init_shadow_stats();
+> > +
+> >       if (add_default_attributes())
+> >               goto out;
+> >
+> > @@ -2447,9 +2468,6 @@ int cmd_stat(int argc, const char **argv)
+> >               }
+> >       }
+> >
+> > -     if ((stat_config.aggr_mode == AGGR_THREAD) && (target.system_wide))
+> > -             target.per_thread = true;
+> > -
+> >       if (evlist__fix_hybrid_cpus(evsel_list, target.cpu_list)) {
+> >               pr_err("failed to use cpu list %s\n", target.cpu_list);
+> >               goto out;
+> > diff --git a/tools/perf/util/metricgroup.c b/tools/perf/util/metricgroup.c
+> > index b144c3e35264..9151346a16ab 100644
+> > --- a/tools/perf/util/metricgroup.c
+> > +++ b/tools/perf/util/metricgroup.c
+> > @@ -1646,13 +1646,12 @@ static int parse_groups(struct evlist *perf_evlist, const char *str,
+> >       return ret;
+> >  }
+> >
+> > -int metricgroup__parse_groups(const struct option *opt,
+> > +int metricgroup__parse_groups(struct evlist *perf_evlist,
+> >                             const char *str,
+> >                             bool metric_no_group,
+> >                             bool metric_no_merge,
+> >                             struct rblist *metric_events)
+> >  {
+> > -     struct evlist *perf_evlist = *(struct evlist **)opt->value;
+> >       const struct pmu_events_table *table = pmu_events_table__find();
+> >
+> >       if (!table)
+> > diff --git a/tools/perf/util/metricgroup.h b/tools/perf/util/metricgroup.h
+> > index 016b3b1a289a..af9ceadaec0f 100644
+> > --- a/tools/perf/util/metricgroup.h
+> > +++ b/tools/perf/util/metricgroup.h
+> > @@ -64,7 +64,7 @@ struct metric_expr {
+> >  struct metric_event *metricgroup__lookup(struct rblist *metric_events,
+> >                                        struct evsel *evsel,
+> >                                        bool create);
+> > -int metricgroup__parse_groups(const struct option *opt,
+> > +int metricgroup__parse_groups(struct evlist *perf_evlist,
+> >                             const char *str,
+> >                             bool metric_no_group,
+> >                             bool metric_no_merge,
+> > --
+> > 2.37.2.672.g94769d06f0-goog
 >
-> diff --git a/tools/perf/builtin-script.c b/tools/perf/builtin-script.c
-> index 13580a9c50b8..304d234d8e84 100644
-> --- a/tools/perf/builtin-script.c
-> +++ b/tools/perf/builtin-script.c
-> @@ -566,6 +566,8 @@ static struct evsel *find_first_output_type(struct evlist *evlist,
->         struct evsel *evsel;
->
->         evlist__for_each_entry(evlist, evsel) {
-> +               if (evsel__is_dummy_event(evsel))
-> +                       continue;
->                 if (output_type(evsel->core.attr.type) == (int)type)
->                         return evsel;
->         }
 > --
-> 2.37.2
 >
+> - Arnaldo
