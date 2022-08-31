@@ -2,128 +2,89 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6B8D4ECAAD4
-	for <linux-perf-users@archiver.kernel.org>; Wed, 31 Aug 2022 12:30:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3118FECAAD4
+	for <linux-perf-users@archiver.kernel.org>; Wed, 31 Aug 2022 12:41:01 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229555AbiHaMaJ (ORCPT
+        id S230431AbiHaMlA (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Wed, 31 Aug 2022 08:30:09 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46734 "EHLO
+        Wed, 31 Aug 2022 08:41:00 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39044 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229561AbiHaMaI (ORCPT
+        with ESMTP id S231304AbiHaMkv (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Wed, 31 Aug 2022 08:30:08 -0400
-Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D1BABB1E3;
-        Wed, 31 Aug 2022 05:30:06 -0700 (PDT)
+        Wed, 31 Aug 2022 08:40:51 -0400
+Received: from ams.source.kernel.org (ams.source.kernel.org [145.40.68.75])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7C99961DA3;
+        Wed, 31 Aug 2022 05:40:50 -0700 (PDT)
 Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id 63B3C61999;
-        Wed, 31 Aug 2022 12:30:06 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 8D51DC433C1;
-        Wed, 31 Aug 2022 12:30:05 +0000 (UTC)
+        by ams.source.kernel.org (Postfix) with ESMTPS id B607BB82077;
+        Wed, 31 Aug 2022 12:40:48 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id D537BC433D7;
+        Wed, 31 Aug 2022 12:40:43 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1661949005;
-        bh=xUAe/8husFmwnBA0zfVEAqWyrCl83ZcMIyiwRkNQ/A0=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=Tq+5F6knMwcUy7jvIG0XcNJ+kcjbinj3aLlcszl+ZsZjV7F6Q6DUccGBrae5H1VJp
-         MP9eanqJzI0BF5vq1V+Cy3z/NfbuCMTG5mzKrQyU9W46S/+vynmLiO5qi6JeTn9w1R
-         aLRS+eCJKey1uCkpwoi+7sCeV9TsyvoGyWHFVF/NrFBcuVj/LwSJES2Mlh3v6duLzN
-         AH7VIXkUuyOF6yMankiGQ2HAb3G+higOdsRRJIYVt9VRwfLnzyKK13mbpeZKqTI2Hs
-         Zg6SkcFPcxGg20jHsiUmHPhnX2lz3oeR5G/01wi3BkDsxBjZF9MOavScLUoNXjLQJV
-         iOkMaD/gWLyrQ==
-Received: by quaco.ghostprotocols.net (Postfix, from userid 1000)
-        id 4F3DA404A1; Wed, 31 Aug 2022 09:30:03 -0300 (-03)
-Date:   Wed, 31 Aug 2022 09:30:03 -0300
-From:   Arnaldo Carvalho de Melo <acme@kernel.org>
-To:     Ian Rogers <irogers@google.com>
-Cc:     Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@redhat.com>,
+        s=k20201202; t=1661949647;
+        bh=TPSgl0I2qWuKYC5cFtJ2UDufyO2SqJMLBEL1mtc1IZ4=;
+        h=From:To:Cc:Subject:Date:From;
+        b=K28Wx2IBN5YI4BT3HcgU5dtMPA6/Smwouty2BafiJeBXCnUipgktQ6of/M+JQH2nN
+         8lqlJnGWglNTmfvP3l6HC1B1OLyy+SKOQf6bQnkSxRTzHYIUg7Hysfw+M8Lcv0YbeB
+         EYHp/8sDD5HhJxHKl9rVI63EzEto8jzVxvCYa4lgY5lORQmyti8Y124MzSCryh/PqH
+         CbRVKG1M+jELswfW2chwNCWz9OhHyyO/g1eYrbkI91wCuH8N+N2wXZkw4gINcPBySr
+         sgOJEXYfIfnEKG9s8IMLzQ25+kGwZkaHeG68Pesf0w0e4jcXP25hu0KAVZKQvt6GCZ
+         mp98dII/CUBSA==
+From:   Jiri Olsa <jolsa@kernel.org>
+To:     Arnaldo Carvalho de Melo <acme@kernel.org>
+Cc:     Hongtao Yu <hoy@fb.com>, Namhyung Kim <namhyung@kernel.org>,
+        lkml <linux-kernel@vger.kernel.org>,
+        Peter Zijlstra <a.p.zijlstra@chello.nl>,
+        Ingo Molnar <mingo@kernel.org>,
         Mark Rutland <mark.rutland@arm.com>,
         Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Jiri Olsa <jolsa@kernel.org>,
-        Namhyung Kim <namhyung@kernel.org>,
-        Andi Kleen <ak@linux.intel.com>,
-        Kan Liang <kan.liang@linux.intel.com>,
-        Thomas Richter <tmricht@linux.ibm.com>,
-        James Clark <james.clark@arm.com>,
-        Miaoqian Lin <linmq006@gmail.com>,
-        John Garry <john.garry@huawei.com>,
-        Zhengjun Xing <zhengjun.xing@linux.intel.com>,
-        Florian Fischer <florian.fischer@muhq.space>,
-        linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org,
-        perry.taylor@intel.com, caleb.biggers@intel.com,
-        kshipra.bopardikar@intel.com, Stephane Eranian <eranian@google.com>
-Subject: Re: [PATCH v1 2/8] perf metric: Return early if no CPU PMU table
- exists
-Message-ID: <Yw9US7HG0hDsc+FA@kernel.org>
-References: <20220830164846.401143-1-irogers@google.com>
- <20220830164846.401143-3-irogers@google.com>
+        Ian Rogers <irogers@google.com>,
+        linux-perf-users@vger.kernel.org
+Subject: [PATCH] perf script: Skip dummy event attr check
+Date:   Wed, 31 Aug 2022 14:40:41 +0200
+Message-Id: <20220831124041.219925-1-jolsa@kernel.org>
+X-Mailer: git-send-email 2.37.2
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20220830164846.401143-3-irogers@google.com>
-X-Url:  http://acmel.wordpress.com
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-Em Tue, Aug 30, 2022 at 09:48:40AM -0700, Ian Rogers escreveu:
-> Previous behavior is to segfault if there is no CPU PMU table and a
-> metric is sought. To reproduce compile with NO_JEVENTS=1 then request
-> a metric, for example, "perf stat -M IPC true".
-> 
-> Fixes: 00facc760903 ("perf jevents: Switch build to use jevents.py")
-> Signed-off-by: Ian Rogers <irogers@google.com>
+Hongtao Yu reported problem when displaying uregs in perf script
+for system wide perf.data:
 
-Before:
+  # perf script -F uregs | head -10
+  Samples for 'dummy:HG' event do not have UREGS attribute set. Cannot print 'uregs' field.
 
-  $ make -k NO_JEVENTS=1 BUILD_BPF_SKEL=1 O=/tmp/build/perf-urgent -C tools/perf install-bin
-  $ perf stat -M IPC true
-  Segmentation fault (core dumped)
-  $
+The problem is the extra dummy event added for system wide,
+which does not have proper sample_type setup.
 
-After:
+Skipping attr check completely for dummy event as suggested
+by Namhyung, because it does not have any samples anyway.
 
-  $ perf stat -M IPC true
+Reported-by: Hongtao Yu <hoy@fb.com>
+Suggested-by: Namhyung Kim <namhyung@kernel.org>
+Signed-off-by: Jiri Olsa <jolsa@kernel.org>
+---
+ tools/perf/builtin-script.c | 2 ++
+ 1 file changed, 2 insertions(+)
 
-   Usage: perf stat [<options>] [<command>]
-
-      -M, --metrics <metric/metric group list>
-                            monitor specified metrics or metric groups (separated by ,)
-  $
-
-Better, but perhaps we could provide some better message as to why the
-metric provided isn't acceptable?
-
-Anyway, applied to perf/urgent.
-
-Thanks,
-
-- Arnaldo
-
-> ---
->  tools/perf/util/metricgroup.c | 3 +++
->  1 file changed, 3 insertions(+)
-> 
-> diff --git a/tools/perf/util/metricgroup.c b/tools/perf/util/metricgroup.c
-> index ad5cacdecd81..18aae040d61d 100644
-> --- a/tools/perf/util/metricgroup.c
-> +++ b/tools/perf/util/metricgroup.c
-> @@ -1655,6 +1655,9 @@ int metricgroup__parse_groups(const struct option *opt,
->  	struct evlist *perf_evlist = *(struct evlist **)opt->value;
->  	const struct pmu_events_table *table = pmu_events_table__find();
->  
-> +	if (!table)
-> +		return -EINVAL;
-> +
->  	return parse_groups(perf_evlist, str, metric_no_group,
->  			    metric_no_merge, NULL, metric_events, table);
->  }
-> -- 
-> 2.37.2.672.g94769d06f0-goog
-
+diff --git a/tools/perf/builtin-script.c b/tools/perf/builtin-script.c
+index 13580a9c50b8..304d234d8e84 100644
+--- a/tools/perf/builtin-script.c
++++ b/tools/perf/builtin-script.c
+@@ -566,6 +566,8 @@ static struct evsel *find_first_output_type(struct evlist *evlist,
+ 	struct evsel *evsel;
+ 
+ 	evlist__for_each_entry(evlist, evsel) {
++		if (evsel__is_dummy_event(evsel))
++			continue;
+ 		if (output_type(evsel->core.attr.type) == (int)type)
+ 			return evsel;
+ 	}
 -- 
+2.37.2
 
-- Arnaldo
