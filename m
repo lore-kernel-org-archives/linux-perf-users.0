@@ -2,249 +2,177 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 189E7ECAAD3
-	for <linux-perf-users@archiver.kernel.org>; Wed, 31 Aug 2022 16:14:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4DDB4ECAAD3
+	for <linux-perf-users@archiver.kernel.org>; Wed, 31 Aug 2022 16:16:06 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231844AbiHaQOT (ORCPT
+        id S232038AbiHaQQF (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Wed, 31 Aug 2022 12:14:19 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47886 "EHLO
+        Wed, 31 Aug 2022 12:16:05 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52750 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231801AbiHaQOP (ORCPT
+        with ESMTP id S231891AbiHaQPz (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Wed, 31 Aug 2022 12:14:15 -0400
-Received: from mail-wm1-x32e.google.com (mail-wm1-x32e.google.com [IPv6:2a00:1450:4864:20::32e])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C59B5D3E41
-        for <linux-perf-users@vger.kernel.org>; Wed, 31 Aug 2022 09:14:13 -0700 (PDT)
-Received: by mail-wm1-x32e.google.com with SMTP id ay12so7624584wmb.1
-        for <linux-perf-users@vger.kernel.org>; Wed, 31 Aug 2022 09:14:13 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20210112;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:from:to:cc;
-        bh=IWp/nrGyciEfU1XYNypVD2gVXNEtS7OFhjckBxMvnpM=;
-        b=NWBO58yc8VsOw8kfv2ixgptXXeR/onyFS6nEi9an/QZ0nSPw9Ivgu5Bhiq3upVBPVr
-         yumHGlD8out1bds+9QMTsvwkIEnobzHH8juv4uT8S4Tnj4m3U94oJ0edgu6poTbPIG7s
-         Y35ZdF6g8AJCmSZypTI4NTZ8gliqxWJEuHgh1X6Em5PCMbfb0uqWJlQXYBMTHt6lQIoH
-         NsMH4DfZLb75CvhYAe+UXxXex/sMc8O7mxv4yZHiAVJ/bpkfbubcCVr8UhzgBaHoiHgY
-         A3+nHOirBmT6pNMQLIZJXtt1DuEb9X9dzGEvawmGRDmtKd9wv/j9AeTZURAEeleecjm+
-         UwEw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc;
-        bh=IWp/nrGyciEfU1XYNypVD2gVXNEtS7OFhjckBxMvnpM=;
-        b=X5UUmMCCMSgapvXJc5f4Mp7AwxLGFtctVp6heF53QfVf2zHa7i9aCGykB6yxNM6ZIW
-         NfwDGaoezX1MkBwXH0TX/8tTtEtd26IxsDm5RGjYEjYeVnEJmMet5yb9iECHjoxzgp+k
-         K7SDGBl/SGMAXc4Q4rVwDtEPkMhGhXus1yidb3g7R/Yskyhie99N4yAG4yD3+pk1YQfx
-         szF0z5+q04t2+nFJB7HKRAXaQVqDtF5UtZthj3waTlcWI7hidrWiVFb3JcCRTapP8F/E
-         c3R3eUq5smVU2SVHVQu+EAWNRW7qzR6+r/yBxbFC0J8HszW0cY1ZbUOupRk248/MP/ka
-         qOEg==
-X-Gm-Message-State: ACgBeo1dvVd0J0SeLc5C669NSAx5L1KyzjNYfzPPEWzusoMu4eLGH0VN
-        Nw1jWcUGoXFsICP04y8HhakJqB87sm4ibtytZ0dYsQ==
-X-Google-Smtp-Source: AA6agR7hCrdUB9fYlOGi4RFsZkmar3bWBKgS3WY4LhnhXIKnJ7zn7EZG+mYny26ZH1ITX5dFwJsxAasoe3SCQNpZ6XE=
-X-Received: by 2002:a05:600c:25ce:b0:3a5:a3b7:bbfe with SMTP id
- 14-20020a05600c25ce00b003a5a3b7bbfemr2591617wml.115.1661962452014; Wed, 31
- Aug 2022 09:14:12 -0700 (PDT)
+        Wed, 31 Aug 2022 12:15:55 -0400
+Received: from ams.source.kernel.org (ams.source.kernel.org [145.40.68.75])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6BEB015FC5
+        for <linux-perf-users@vger.kernel.org>; Wed, 31 Aug 2022 09:15:54 -0700 (PDT)
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by ams.source.kernel.org (Postfix) with ESMTPS id 8EC7AB821E7
+        for <linux-perf-users@vger.kernel.org>; Wed, 31 Aug 2022 16:15:52 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 006DFC433D6;
+        Wed, 31 Aug 2022 16:15:51 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1661962551;
+        bh=W7akWVCk7SwY/cZltR04pZb//YBrWYi2mWc4lS/sQFU=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=FvIGP87K+P0Q3aNUNsExGucN3ZIO9B0Gq/xvWN/xqg9uiE9aY6JPo5s1PQLV5yqcV
+         Il//CHbm6MaW5f9dzPBiWpmsA5SY6c81B94hVwZPXmqoj5qhYO0ISBzMbuJ63bJAPC
+         Ey40+PA9FT0Ssv0B7x3RdxnvHz8/j370Riuu01XLRrQuVbAQDNW0D/FoFUfwm3I0iF
+         qTuXiiogQYCSyKIw5ntPQSg6uZOI9u3j/lzSzw8OK64wcgEfRgwCTbFU5By9gobEgw
+         SN+zeOP3FohxcSOB1bkBAuZW9jiLS1x/jIp7Zpo3mqvZcMN0JsbsKo0JA05H/DwmYX
+         79yt65UtNEOQg==
+Received: by quaco.ghostprotocols.net (Postfix, from userid 1000)
+        id 1B5E8404A1; Wed, 31 Aug 2022 13:15:48 -0300 (-03)
+Date:   Wed, 31 Aug 2022 13:15:48 -0300
+From:   Arnaldo Carvalho de Melo <acme@kernel.org>
+To:     Milian Wolff <milian.wolff@kdab.com>
+Cc:     William Cohen <wcohen@redhat.com>, Jiri Olsa <olsajiri@gmail.com>,
+        linux-perf-users@vger.kernel.org
+Subject: Re: PROBLEM: The --call-graph=fp data does do not agree with the
+ --call-graph=dwarf results
+Message-ID: <Yw+JNCAHEylfxmsr@kernel.org>
+References: <cb3efad5-37eb-29e4-03b0-f0bcc8be9918@redhat.com>
+ <Yw9RVlb3YxpTxROw@krava>
+ <4906849.bAGh5ZhPcH@milian-workstation>
 MIME-Version: 1.0
-References: <20220830164846.401143-1-irogers@google.com> <20220830164846.401143-7-irogers@google.com>
- <Yw9zPxVqbfkSOdbu@kernel.org>
-In-Reply-To: <Yw9zPxVqbfkSOdbu@kernel.org>
-From:   Ian Rogers <irogers@google.com>
-Date:   Wed, 31 Aug 2022 09:13:59 -0700
-Message-ID: <CAP-5=fU7zxoLoen7PH+a0gehSfd0zJzfxsXN+oP_jySTO0=mPg@mail.gmail.com>
-Subject: Re: [PATCH v1 6/8] perf stat: Delay metric parsing
-To:     Arnaldo Carvalho de Melo <acme@kernel.org>
-Cc:     Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Jiri Olsa <jolsa@kernel.org>,
-        Namhyung Kim <namhyung@kernel.org>,
-        Andi Kleen <ak@linux.intel.com>,
-        Kan Liang <kan.liang@linux.intel.com>,
-        Thomas Richter <tmricht@linux.ibm.com>,
-        James Clark <james.clark@arm.com>,
-        Miaoqian Lin <linmq006@gmail.com>,
-        John Garry <john.garry@huawei.com>,
-        Zhengjun Xing <zhengjun.xing@linux.intel.com>,
-        Florian Fischer <florian.fischer@muhq.space>,
-        linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org,
-        perry.taylor@intel.com, caleb.biggers@intel.com,
-        kshipra.bopardikar@intel.com, Stephane Eranian <eranian@google.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <4906849.bAGh5ZhPcH@milian-workstation>
+X-Url:  http://acmel.wordpress.com
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-On Wed, Aug 31, 2022 at 7:42 AM Arnaldo Carvalho de Melo
-<acme@kernel.org> wrote:
->
-> Em Tue, Aug 30, 2022 at 09:48:44AM -0700, Ian Rogers escreveu:
-> > Having metric parsing as part of argument processing causes issues as
-> > flags like metric-no-group may be specified later. It also denies the
-> > opportunity to optimize the events on SMT systems where fewer events
-> > may be possible if we know the target is system-wide. Move metric
-> > parsing to after command line option parsing. Because of how stat runs
-> > this moves the parsing after record/report which fail to work with
-> > metrics currently anyway.
-> >
-> > Signed-off-by: Ian Rogers <irogers@google.com>
-> > ---
-> >  tools/perf/builtin-stat.c     | 48 ++++++++++++++++++++++++-----------
-> >  tools/perf/util/metricgroup.c |  3 +--
-> >  tools/perf/util/metricgroup.h |  2 +-
-> >  3 files changed, 35 insertions(+), 18 deletions(-)
-> >
-> > diff --git a/tools/perf/builtin-stat.c b/tools/perf/builtin-stat.c
-> > index 7fb81a44672d..c813b1aa7d7c 100644
-> > --- a/tools/perf/builtin-stat.c
-> > +++ b/tools/perf/builtin-stat.c
-> > @@ -191,6 +191,7 @@ static bool                       append_file;
-> >  static bool                  interval_count;
-> >  static const char            *output_name;
-> >  static int                   output_fd;
-> > +static char                  *metrics;
-> >
-> >  struct perf_stat {
-> >       bool                     record;
-> > @@ -1147,14 +1148,21 @@ static int enable_metric_only(const struct option *opt __maybe_unused,
-> >       return 0;
-> >  }
-> >
-> > -static int parse_metric_groups(const struct option *opt,
-> > +static int append_metric_groups(const struct option *opt __maybe_unused,
-> >                              const char *str,
-> >                              int unset __maybe_unused)
-> >  {
-> > -     return metricgroup__parse_groups(opt, str,
-> > -                                      stat_config.metric_no_group,
-> > -                                      stat_config.metric_no_merge,
-> > -                                      &stat_config.metric_events);
-> > +     if (metrics) {
-> > +             char *tmp;
-> > +
-> > +             if (asprintf(&tmp, "%s,%s", metrics, str) < 0)
-> > +                     return -ENOMEM;
->
-> We check if we managed to allocate memory here, but not later at
-> strdup()?
+Em Wed, Aug 31, 2022 at 04:22:31PM +0200, Milian Wolff escreveu:
+> On Mittwoch, 31. August 2022 14:17:26 CEST Jiri Olsa wrote:
 
-Added to v2.
+> > > initially discovered when processing perf.data files created with
+> > > --call-graph=dwarf.  The output of the perf-report call-graph for
+> > > dwarf information notes inlined functions in the report. The
+> > > excessive time spent in binutils bfd's lookup_func_by_offset was
+> > > caused by perf-report building up a red-black tree mapping IP
+> > > addresses to functions including inlined functions.
 
-Thanks,
-Ian
+> > > I ran a similar experiment with --call-graph=fp to see if it
+> > > triggered the same execessive overhead in building the red-black
+> > > tree for inlined functions.  It did not.  The resulting output of
+> > > the perf-report for --call-graph=fp does not include information
+> > > about inlined functions.
 
-> > +             free(metrics);
-> > +             metrics = tmp;
-> > +     } else {
-> > +             metrics = strdup(str);
-> > +     }
-> > +     return 0;
-> >  }
-> >
-> >  static int parse_control_option(const struct option *opt,
-> > @@ -1298,7 +1306,7 @@ static struct option stat_options[] = {
-> >                       "measure SMI cost"),
-> >       OPT_CALLBACK('M', "metrics", &evsel_list, "metric/metric group list",
-> >                    "monitor specified metrics or metric groups (separated by ,)",
-> > -                  parse_metric_groups),
-> > +                  append_metric_groups),
-> >       OPT_BOOLEAN_FLAG(0, "all-kernel", &stat_config.all_kernel,
-> >                        "Configure all used events to run in kernel space.",
-> >                        PARSE_OPT_EXCLUSIVE),
-> > @@ -1791,11 +1799,9 @@ static int add_default_attributes(void)
-> >                * on an architecture test for such a metric name.
-> >                */
-> >               if (metricgroup__has_metric("transaction")) {
-> > -                     struct option opt = { .value = &evsel_list };
-> > -
-> > -                     return metricgroup__parse_groups(&opt, "transaction",
-> > +                     return metricgroup__parse_groups(evsel_list, "transaction",
-> >                                                        stat_config.metric_no_group,
-> > -                                                     stat_config.metric_no_merge,
-> > +                                                      stat_config.metric_no_merge,
-> >                                                        &stat_config.metric_events);
-> >               }
-> >
-> > @@ -2260,8 +2266,6 @@ int cmd_stat(int argc, const char **argv)
-> >       argc = parse_options_subcommand(argc, argv, stat_options, stat_subcommands,
-> >                                       (const char **) stat_usage,
-> >                                       PARSE_OPT_STOP_AT_NON_OPTION);
-> > -     perf_stat__collect_metric_expr(evsel_list);
-> > -     perf_stat__init_shadow_stats();
-> >
-> >       if (stat_config.csv_sep) {
-> >               stat_config.csv_output = true;
-> > @@ -2428,6 +2432,23 @@ int cmd_stat(int argc, const char **argv)
-> >                       target.system_wide = true;
-> >       }
-> >
-> > +     if ((stat_config.aggr_mode == AGGR_THREAD) && (target.system_wide))
-> > +             target.per_thread = true;
-> > +
-> > +     /*
-> > +      * Metric parsing needs to be delayed as metrics may optimize events
-> > +      * knowing the target is system-wide.
-> > +      */
-> > +     if (metrics) {
-> > +             metricgroup__parse_groups(evsel_list, metrics,
-> > +                                     stat_config.metric_no_group,
-> > +                                     stat_config.metric_no_merge,
-> > +                                     &stat_config.metric_events);
-> > +             zfree(&metrics);
-> > +     }
-> > +     perf_stat__collect_metric_expr(evsel_list);
-> > +     perf_stat__init_shadow_stats();
-> > +
-> >       if (add_default_attributes())
-> >               goto out;
-> >
-> > @@ -2447,9 +2468,6 @@ int cmd_stat(int argc, const char **argv)
-> >               }
-> >       }
-> >
-> > -     if ((stat_config.aggr_mode == AGGR_THREAD) && (target.system_wide))
-> > -             target.per_thread = true;
-> > -
-> >       if (evlist__fix_hybrid_cpus(evsel_list, target.cpu_list)) {
-> >               pr_err("failed to use cpu list %s\n", target.cpu_list);
-> >               goto out;
-> > diff --git a/tools/perf/util/metricgroup.c b/tools/perf/util/metricgroup.c
-> > index b144c3e35264..9151346a16ab 100644
-> > --- a/tools/perf/util/metricgroup.c
-> > +++ b/tools/perf/util/metricgroup.c
-> > @@ -1646,13 +1646,12 @@ static int parse_groups(struct evlist *perf_evlist, const char *str,
-> >       return ret;
-> >  }
-> >
-> > -int metricgroup__parse_groups(const struct option *opt,
-> > +int metricgroup__parse_groups(struct evlist *perf_evlist,
-> >                             const char *str,
-> >                             bool metric_no_group,
-> >                             bool metric_no_merge,
-> >                             struct rblist *metric_events)
-> >  {
-> > -     struct evlist *perf_evlist = *(struct evlist **)opt->value;
-> >       const struct pmu_events_table *table = pmu_events_table__find();
-> >
-> >       if (!table)
-> > diff --git a/tools/perf/util/metricgroup.h b/tools/perf/util/metricgroup.h
-> > index 016b3b1a289a..af9ceadaec0f 100644
-> > --- a/tools/perf/util/metricgroup.h
-> > +++ b/tools/perf/util/metricgroup.h
-> > @@ -64,7 +64,7 @@ struct metric_expr {
-> >  struct metric_event *metricgroup__lookup(struct rblist *metric_events,
-> >                                        struct evsel *evsel,
-> >                                        bool create);
-> > -int metricgroup__parse_groups(const struct option *opt,
-> > +int metricgroup__parse_groups(struct evlist *perf_evlist,
-> >                             const char *str,
-> >                             bool metric_no_group,
-> >                             bool metric_no_merge,
-> > --
-> > 2.37.2.672.g94769d06f0-goog
->
-> --
->
-> - Arnaldo
+> > > I have a small reproducer in the attached perf_inlined.tar.gz that
+> > > demonstrates the difference between the two methods of storing
+> > > call-chain information. Compile and collect data with:
+
+> > > tar xvfz perf_inlined.tar.gz
+> > > cd perf_inlined
+> > > make all
+> > > perf report --input=perf_fp.data > fp.log
+> > > perf report --input=perf_dwarf.data > dwarf.log
+> > > 
+> > > The dwarf.log has the expected call structure for main:
+> > >                main
+> > >                
+> > >                 --85.72%--fill_array (inlined)
+> > >                 
+> > >                           |--78.09%--rand
+> > >                           |
+> > >                           |           --75.10%--__random
+> > >                           |           
+> > >                           |                      --9.14%--__random_r
+> > >                           |
+> > >                           |--1.58%--compute_sqrt (inlined)
+> > >                           |
+> > >                            --1.32%--_init
+> > > 
+> > > The fp.log looks odd given program:
+> > what's odd about that? perhaps the confusion is that you are
+> > in children mode? you could try --no-children
+> > 
+> > >    99.99%     0.00%  time_waste  libc.so.6             [.]
+> > >    __libc_start_call_main>    
+> > >             ---__libc_start_call_main
+> > >             
+> > >                |--66.07%--__random
+> > >                |
+> > >                |--21.28%--main
+> > >                |
+> > >                |--8.42%--__random_r
+> > >                |
+> > >                |--2.91%--rand
+> > >                |
+> > >                 --1.31%--_init
+ 
+> > > Given how common that functions are inlined in optimized code it seems
+> > > like perf-report of --call-graph=fp should include information about
+> > > time spent in inlined functions.
+ 
+> > hum, so 'fp' call graph is tracersing frame pointers which I would
+> > not expect for inlined functions
+ 
+> I think the oddity is that there is no mention of any (inlined) frames at all 
+> in frame pointer unwinding. I guess this is simply an oversight - I never had 
+> a setup where frame pointers are available and thus never implemented that. It 
+> might be that similar issues arises for LBR unwinding? Hopefully it's just a 
+> matter of reusing some of the DWARF code for FP/LBR.
+
+Right, probably add the inlining info in DWARF for the ranges where its
+expanded, things like:
+
+ <1><9da>: Abbrev Number: 54 (DW_TAG_subprogram)
+    <9db>   DW_AT_external    : 1
+    <9db>   DW_AT_name        : (indirect string, offset: 0x5680): cmd_bench
+    <9df>   DW_AT_decl_file   : 1
+    <9e0>   DW_AT_decl_line   : 252
+    <9e1>   DW_AT_decl_column : 5
+    <9e2>   DW_AT_prototyped  : 1
+    <9e2>   DW_AT_type        : <0x55>
+    <9e6>   DW_AT_low_pc      : 0x40fa40
+    <9ee>   DW_AT_high_pc     : 0x461
+    <9f6>   DW_AT_frame_base  : 1 byte block: 9c        (DW_OP_call_frame_cfa)
+    <9f8>   DW_AT_call_all_calls: 1
+    <9f8>   DW_AT_sibling     : <0x11b4>
+<SNIP>
+ <3><a76>: Abbrev Number: 24 (DW_TAG_inlined_subroutine)
+    <a77>   DW_AT_abstract_origin: <0x177b>
+    <a7b>   DW_AT_entry_pc    : 0x40fc15
+    <a83>   DW_AT_GNU_entry_view: 1
+    <a84>   DW_AT_low_pc      : 0x40fc15
+    <a8c>   DW_AT_high_pc     : 0x4c
+    <a94>   DW_AT_call_file   : 1
+    <a94>   DW_AT_call_line   : 318
+    <a96>   DW_AT_call_column : 4
+    <a97>   DW_AT_sibling     : <0xb48>
+<SNIP>
+ <1><177b>: Abbrev Number: 43 (DW_TAG_subprogram)
+    <177c>   DW_AT_name        : (indirect string, offset: 0xa42b): dump_benchmarks
+    <1780>   DW_AT_decl_file   : 1
+    <1780>   DW_AT_decl_line   : 133
+    <1781>   DW_AT_decl_column : 13
+    <1781>   DW_AT_prototyped  : 1
+    <1781>   DW_AT_inline      : 1      (inlined)
+    <1781>   DW_AT_sibling     : <0x179d>
+
+
+Where, in the perf binary, cmd_bench() calls dump_benchmarks() that gets
+inlined at that DW_AT_entry_pc/DW_AT_low_pc/DW_AT_high_pc range inside
+cmd_bench().
+
+Probably we could add those to the dso symbols list with some flag to
+mean its an inline and from where to get more info about it.
+
+This is important, as Will points out as functions not explicitely
+marked inline end up being inlined by the compiler.
+
+- Arnaldo
