@@ -2,58 +2,58 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 55AA8ECAAD1
-	for <linux-perf-users@archiver.kernel.org>; Wed, 31 Aug 2022 17:50:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9008CECAAD4
+	for <linux-perf-users@archiver.kernel.org>; Wed, 31 Aug 2022 17:50:49 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231451AbiHaRum (ORCPT
+        id S231894AbiHaRur (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Wed, 31 Aug 2022 13:50:42 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37212 "EHLO
+        Wed, 31 Aug 2022 13:50:47 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37420 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231837AbiHaRuQ (ORCPT
+        with ESMTP id S232034AbiHaRuY (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Wed, 31 Aug 2022 13:50:16 -0400
+        Wed, 31 Aug 2022 13:50:24 -0400
 Received: from mail-yw1-x1149.google.com (mail-yw1-x1149.google.com [IPv6:2607:f8b0:4864:20::1149])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DE6BC1005
-        for <linux-perf-users@vger.kernel.org>; Wed, 31 Aug 2022 10:50:14 -0700 (PDT)
-Received: by mail-yw1-x1149.google.com with SMTP id 00721157ae682-33f8988daecso200849097b3.12
-        for <linux-perf-users@vger.kernel.org>; Wed, 31 Aug 2022 10:50:14 -0700 (PDT)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5C07C27FF3
+        for <linux-perf-users@vger.kernel.org>; Wed, 31 Aug 2022 10:50:22 -0700 (PDT)
+Received: by mail-yw1-x1149.google.com with SMTP id 00721157ae682-340e618b145so140862507b3.2
+        for <linux-perf-users@vger.kernel.org>; Wed, 31 Aug 2022 10:50:22 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=google.com; s=20210112;
         h=cc:to:from:subject:references:mime-version:message-id:in-reply-to
          :date:from:to:cc;
-        bh=DV+gDUOPXsEDpKSEUMrteZ0JJtXsJvhmDLffo2hWpR8=;
-        b=HBb+XvmRItArfa2t5gRHf8PcZ1GxONOZ475mZIhqV15S9MNKFUVIiybXVFMVncm9hy
-         SamFWQCwqiU70VJ2JltGjOim0xPwkz80VlPOKbJAxiQ1WVYrNm6SXSGOJ4XQ6vHDEd/R
-         po8Y0+m643ma3R85P6d41Ax67a11/2yjBmJuaVO/M6knVwv5motiuEctD+MzCmjkaDPO
-         d1g+2EVSAsBC1KQ09LRFYCZ1K28n15tqvhg1nQbN2w+C5uyHSeG59ajSer2ytjROK8NY
-         OyZ3oRgpsAyEZApj2PM4+z6L2nmCk1h3WxB1ApSxzcHd1AcV4p5bNnWSkV/V8eM9mqFW
-         iC1g==
+        bh=O7x06VUny1WCJ5jSjqCJ7MNg10Zy7tcLBLmPAud8Uz8=;
+        b=bBL/aY/COX7dr13JZAVO91/L9R2cA2sjMumCJH6SupSkJP/jUSXfqvu5Gr6Sv3xXkP
+         V5XVzEHUUlO1jybAxfUnBpSchByqH6igaEA2vPn746d0MautUJVZZt+Dlx2viM773IKS
+         kve7eukSwj9QuAvvHKohMH7uo6y3fWD26gFufwuV1HWUhbeYfX6De6ttrAg04j2T/11A
+         3HINdOWhlt8ae4E8jNLQHRy0uR48PNvh2esmDt1o7vE84aQc0CaeBdJRU58MknFguEeW
+         XWbuIxRdKuaMb4nnUx8VdrWtcJpEq8OOOSqzLrwNgcqsFMOIFmMxN615tJVFQAAgD94j
+         neZg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
         h=cc:to:from:subject:references:mime-version:message-id:in-reply-to
          :date:x-gm-message-state:from:to:cc;
-        bh=DV+gDUOPXsEDpKSEUMrteZ0JJtXsJvhmDLffo2hWpR8=;
-        b=09+sF7h1vWx82VfowX6oSwnQZZGXSy1u8fDy0aLvk9wdAv9qHlRHxX+5anTPtUk0xG
-         wld8mqWc3U4R+selOCNfxDbGn1webMUJRgRHBnthAO30vzAfRHvGyzIQtVNyfl4IO0N0
-         MpRQYAh0BItpgoq/xuTLWJs6MYJnkLCledhqU+FgpclEYfVBXCsO0ZyoCtNKgz9Y+OOb
-         xRWUHOWv851q+PdlZIfR5rpItHgER4R4gODE0Zs1ksLqJIjf6QNrpZ01fbbQMEEEuJjV
-         l7y3dpbyDUBbeU0R3Fe00ZgcFw2jyvnqvOIrdXzqaXlB41Hy5tpCbz8/e772LIpCs9PY
-         Aywg==
-X-Gm-Message-State: ACgBeo0nTvSPAMOwj4IiBD7Xnl/DKyfqGosZM42xMtMLOo+CA17fydF6
-        KIhd1DBUn3k/6COxWRxTPO5vEh28UAE3
-X-Google-Smtp-Source: AA6agR7KHG0Q/Eku109go1TslC6JmYdAv6tQ1sws4sdXYpB85CQ5uLYs8ghrj+5NvhzsJTTbeRyiDeP2FiMq
+        bh=O7x06VUny1WCJ5jSjqCJ7MNg10Zy7tcLBLmPAud8Uz8=;
+        b=6nwr3NkTjPc0kJf4A20PPTbBktVMlkdHXf2RTQ0tBYb09YQXpBGsKXqDOle9bLhFHy
+         ZpZtDnplCG1U6y1u0ROd/dzQIAcMTXQ+90HFwrzuCEPrf9H4oo04C37dv+aRPTLZqPz3
+         UoGFgvIuH+2Ezh/fsXmjSM8sej1UpSUkx0+us5aVyI/ONq7DJScEIX5QyLCk2xE0ZJo8
+         1VxrMxcIWr54uvOhpD4q+oO/BsJqX9gyFFC2hznE3rMDNp+uEMsvp2BhTIfmYvJA3Kkx
+         0Q8PIq9teX5En461UilLs3XJ5bjqz2rLcd5NwWdIfIxti/NCVFsVs71s4CDD28AtCGBC
+         IxbQ==
+X-Gm-Message-State: ACgBeo2G4UaSiyrprkiue8tKkMJt5DuE47fgqXuPyCHcAQAG/Us99fBS
+        N7hBTqDfSIQveedVHScQqphsbQ1+rLge
+X-Google-Smtp-Source: AA6agR7Reb+rz8coWZuWhV5Z/psyQzkhB6djteex6853ySMfywnmw+Q5549aUw1c+GhCV/Ct/1EyjWPpsYSe
 X-Received: from irogers.svl.corp.google.com ([2620:15c:2d4:203:c8e4:a3e5:9d09:d3d4])
- (user=irogers job=sendgmr) by 2002:a25:cf8b:0:b0:695:79fa:14c2 with SMTP id
- f133-20020a25cf8b000000b0069579fa14c2mr16824533ybg.636.1661968213868; Wed, 31
- Aug 2022 10:50:13 -0700 (PDT)
-Date:   Wed, 31 Aug 2022 10:49:23 -0700
+ (user=irogers job=sendgmr) by 2002:a81:ad06:0:b0:33f:77cf:523f with SMTP id
+ l6-20020a81ad06000000b0033f77cf523fmr19164824ywh.173.1661968221618; Wed, 31
+ Aug 2022 10:50:21 -0700 (PDT)
+Date:   Wed, 31 Aug 2022 10:49:24 -0700
 In-Reply-To: <20220831174926.579643-1-irogers@google.com>
-Message-Id: <20220831174926.579643-5-irogers@google.com>
+Message-Id: <20220831174926.579643-6-irogers@google.com>
 Mime-Version: 1.0
 References: <20220831174926.579643-1-irogers@google.com>
 X-Mailer: git-send-email 2.37.2.672.g94769d06f0-goog
-Subject: [PATCH v2 4/7] perf topology: Add core_wide
+Subject: [PATCH v2 5/7] perf stat: Delay metric parsing
 From:   Ian Rogers <irogers@google.com>
 To:     Peter Zijlstra <peterz@infradead.org>,
         Ingo Molnar <mingo@redhat.com>,
@@ -80,142 +80,169 @@ Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-It is possible to optimize metrics when all SMT threads (CPUs) on a
-core are measuring events in system wide mode. For example, TMA
-metrics defines CORE_CLKS for Sandybrdige as:
-
-if SMT is disabled:
-  CPU_CLK_UNHALTED.THREAD
-if SMT is enabled and recording on all SMT threads:
-  CPU_CLK_UNHALTED.THREAD_ANY / 2
-if SMT is enabled and not recording on all SMT threads:
-  (CPU_CLK_UNHALTED.THREAD/2)*
-  (1+CPU_CLK_UNHALTED.ONE_THREAD_ACTIVE/CPU_CLK_UNHALTED.REF_XCLK )
-
-That is two more events are necessary when not gathering counts on all
-SMT threads. To distinguish all SMT threads on a core vs system wide
-(all CPUs) call the new property core wide.  Add a core wide test that
-determines the property from user requested CPUs, the topology and
-system wide. System wide is required as other processes running on a
-SMT thread will change the counts.
+Having metric parsing as part of argument processing causes issues as
+flags like metric-no-group may be specified later. It also denies the
+opportunity to optimize the events on SMT systems where fewer events
+may be possible if we know the target is system-wide. Move metric
+parsing to after command line option parsing. Because of how stat runs
+this moves the parsing after record/report which fail to work with
+metrics currently anyway.
 
 Signed-off-by: Ian Rogers <irogers@google.com>
 ---
- tools/perf/util/cputopo.c | 46 +++++++++++++++++++++++++++++++++++++++
- tools/perf/util/cputopo.h |  3 +++
- tools/perf/util/smt.c     | 14 ++++++++++++
- tools/perf/util/smt.h     |  7 ++++++
- 4 files changed, 70 insertions(+)
+ tools/perf/builtin-stat.c     | 52 +++++++++++++++++++++++++----------
+ tools/perf/util/metricgroup.c |  3 +-
+ tools/perf/util/metricgroup.h |  2 +-
+ 3 files changed, 39 insertions(+), 18 deletions(-)
 
-diff --git a/tools/perf/util/cputopo.c b/tools/perf/util/cputopo.c
-index 511002e52714..1a3ff6449158 100644
---- a/tools/perf/util/cputopo.c
-+++ b/tools/perf/util/cputopo.c
-@@ -172,6 +172,52 @@ bool cpu_topology__smt_on(const struct cpu_topology *topology)
- 	return false;
+diff --git a/tools/perf/builtin-stat.c b/tools/perf/builtin-stat.c
+index 54cd29d07ca8..a59c23f4ffd2 100644
+--- a/tools/perf/builtin-stat.c
++++ b/tools/perf/builtin-stat.c
+@@ -191,6 +191,7 @@ static bool			append_file;
+ static bool			interval_count;
+ static const char		*output_name;
+ static int			output_fd;
++static char			*metrics;
+ 
+ struct perf_stat {
+ 	bool			 record;
+@@ -1148,14 +1149,23 @@ static int enable_metric_only(const struct option *opt __maybe_unused,
+ 	return 0;
  }
  
-+bool cpu_topology__core_wide(const struct cpu_topology *topology,
-+			     const char *user_requested_cpu_list)
-+{
-+	struct perf_cpu_map *user_requested_cpus;
+-static int parse_metric_groups(const struct option *opt,
++static int append_metric_groups(const struct option *opt __maybe_unused,
+ 			       const char *str,
+ 			       int unset __maybe_unused)
+ {
+-	return metricgroup__parse_groups(opt, str,
+-					 stat_config.metric_no_group,
+-					 stat_config.metric_no_merge,
+-					 &stat_config.metric_events);
++	if (metrics) {
++		char *tmp;
++
++		if (asprintf(&tmp, "%s,%s", metrics, str) < 0)
++			return -ENOMEM;
++		free(metrics);
++		metrics = tmp;
++	} else {
++		metrics = strdup(str);
++		if (!metrics)
++			return -ENOMEM;
++	}
++	return 0;
+ }
+ 
+ static int parse_control_option(const struct option *opt,
+@@ -1299,7 +1309,7 @@ static struct option stat_options[] = {
+ 			"measure SMI cost"),
+ 	OPT_CALLBACK('M', "metrics", &evsel_list, "metric/metric group list",
+ 		     "monitor specified metrics or metric groups (separated by ,)",
+-		     parse_metric_groups),
++		     append_metric_groups),
+ 	OPT_BOOLEAN_FLAG(0, "all-kernel", &stat_config.all_kernel,
+ 			 "Configure all used events to run in kernel space.",
+ 			 PARSE_OPT_EXCLUSIVE),
+@@ -1792,11 +1802,9 @@ static int add_default_attributes(void)
+ 		 * on an architecture test for such a metric name.
+ 		 */
+ 		if (metricgroup__has_metric("transaction")) {
+-			struct option opt = { .value = &evsel_list };
+-
+-			return metricgroup__parse_groups(&opt, "transaction",
++			return metricgroup__parse_groups(evsel_list, "transaction",
+ 							 stat_config.metric_no_group,
+-							stat_config.metric_no_merge,
++							 stat_config.metric_no_merge,
+ 							 &stat_config.metric_events);
+ 		}
+ 
+@@ -2182,6 +2190,8 @@ static int __cmd_report(int argc, const char **argv)
+ 			input_name = "perf.data";
+ 	}
+ 
++	perf_stat__init_shadow_stats();
++
+ 	perf_stat.data.path = input_name;
+ 	perf_stat.data.mode = PERF_DATA_MODE_READ;
+ 
+@@ -2261,8 +2271,6 @@ int cmd_stat(int argc, const char **argv)
+ 	argc = parse_options_subcommand(argc, argv, stat_options, stat_subcommands,
+ 					(const char **) stat_usage,
+ 					PARSE_OPT_STOP_AT_NON_OPTION);
+-	perf_stat__collect_metric_expr(evsel_list);
+-	perf_stat__init_shadow_stats();
+ 
+ 	if (stat_config.csv_sep) {
+ 		stat_config.csv_output = true;
+@@ -2429,6 +2437,23 @@ int cmd_stat(int argc, const char **argv)
+ 			target.system_wide = true;
+ 	}
+ 
++	if ((stat_config.aggr_mode == AGGR_THREAD) && (target.system_wide))
++		target.per_thread = true;
 +
 +	/*
-+	 * If user_requested_cpu_list is empty then all CPUs are recorded and so
-+	 * core_wide is true.
++	 * Metric parsing needs to be delayed as metrics may optimize events
++	 * knowing the target is system-wide.
 +	 */
-+	if (!user_requested_cpu_list)
-+		return true;
-+
-+	user_requested_cpus = perf_cpu_map__new(user_requested_cpu_list);
-+	/* Check that every user requested CPU is the complete set of SMT threads on a core. */
-+	for (u32 i = 0; i < topology->core_cpus_lists; i++) {
-+		const char *core_cpu_list = topology->core_cpus_list[i];
-+		struct perf_cpu_map *core_cpus = perf_cpu_map__new(core_cpu_list);
-+		struct perf_cpu cpu;
-+		int idx;
-+		bool has_first, first = true;
-+
-+		perf_cpu_map__for_each_cpu(cpu, idx, core_cpus) {
-+			if (first) {
-+				has_first = perf_cpu_map__has(user_requested_cpus, cpu);
-+				first = false;
-+			} else {
-+				/*
-+				 * If the first core CPU is user requested then
-+				 * all subsequent CPUs in the core must be user
-+				 * requested too. If the first CPU isn't user
-+				 * requested then none of the others must be
-+				 * too.
-+				 */
-+				if (perf_cpu_map__has(user_requested_cpus, cpu) != has_first) {
-+					perf_cpu_map__put(core_cpus);
-+					perf_cpu_map__put(user_requested_cpus);
-+					return false;
-+				}
-+			}
-+		}
-+		perf_cpu_map__put(core_cpus);
++	if (metrics) {
++		metricgroup__parse_groups(evsel_list, metrics,
++					stat_config.metric_no_group,
++					stat_config.metric_no_merge,
++					&stat_config.metric_events);
++		zfree(&metrics);
 +	}
-+	perf_cpu_map__put(user_requested_cpus);
-+	return true;
-+}
++	perf_stat__collect_metric_expr(evsel_list);
++	perf_stat__init_shadow_stats();
 +
- static bool has_die_topology(void)
- {
- 	char filename[MAXPATHLEN];
-diff --git a/tools/perf/util/cputopo.h b/tools/perf/util/cputopo.h
-index 469db775a13c..969e5920a00e 100644
---- a/tools/perf/util/cputopo.h
-+++ b/tools/perf/util/cputopo.h
-@@ -60,6 +60,9 @@ struct cpu_topology *cpu_topology__new(void);
- void cpu_topology__delete(struct cpu_topology *tp);
- /* Determine from the core list whether SMT was enabled. */
- bool cpu_topology__smt_on(const struct cpu_topology *topology);
-+/* Are the sets of SMT siblings all enabled or all disabled in user_requested_cpus. */
-+bool cpu_topology__core_wide(const struct cpu_topology *topology,
-+			     const char *user_requested_cpu_list);
+ 	if (add_default_attributes())
+ 		goto out;
  
- struct numa_topology *numa_topology__new(void);
- void numa_topology__delete(struct numa_topology *tp);
-diff --git a/tools/perf/util/smt.c b/tools/perf/util/smt.c
-index ce90c4ee4138..994e9e418227 100644
---- a/tools/perf/util/smt.c
-+++ b/tools/perf/util/smt.c
-@@ -21,3 +21,17 @@ bool smt_on(const struct cpu_topology *topology)
- 	cached = true;
- 	return cached_result;
+@@ -2448,9 +2473,6 @@ int cmd_stat(int argc, const char **argv)
+ 		}
+ 	}
+ 
+-	if ((stat_config.aggr_mode == AGGR_THREAD) && (target.system_wide))
+-		target.per_thread = true;
+-
+ 	if (evlist__fix_hybrid_cpus(evsel_list, target.cpu_list)) {
+ 		pr_err("failed to use cpu list %s\n", target.cpu_list);
+ 		goto out;
+diff --git a/tools/perf/util/metricgroup.c b/tools/perf/util/metricgroup.c
+index b144c3e35264..9151346a16ab 100644
+--- a/tools/perf/util/metricgroup.c
++++ b/tools/perf/util/metricgroup.c
+@@ -1646,13 +1646,12 @@ static int parse_groups(struct evlist *perf_evlist, const char *str,
+ 	return ret;
  }
-+
-+bool core_wide(bool system_wide, const char *user_requested_cpu_list,
-+	       const struct cpu_topology *topology)
-+{
-+	/* If not everything running on a core is being recorded then we can't use core_wide. */
-+	if (!system_wide)
-+		return false;
-+
-+	/* Cheap case that SMT is disabled and therefore we're inherently core_wide. */
-+	if (!smt_on(topology))
-+		return true;
-+
-+	return cpu_topology__core_wide(topology, user_requested_cpu_list);
-+}
-diff --git a/tools/perf/util/smt.h b/tools/perf/util/smt.h
-index e26999c6b8d4..ae9095f2c38c 100644
---- a/tools/perf/util/smt.h
-+++ b/tools/perf/util/smt.h
-@@ -7,4 +7,11 @@ struct cpu_topology;
- /* Returns true if SMT (aka hyperthreading) is enabled. */
- bool smt_on(const struct cpu_topology *topology);
  
-+/*
-+ * Returns true when system wide and all SMT threads for a core are in the
-+ * user_requested_cpus map.
-+ */
-+bool core_wide(bool system_wide, const char *user_requested_cpu_list,
-+	       const struct cpu_topology *topology);
-+
- #endif /* __SMT_H */
+-int metricgroup__parse_groups(const struct option *opt,
++int metricgroup__parse_groups(struct evlist *perf_evlist,
+ 			      const char *str,
+ 			      bool metric_no_group,
+ 			      bool metric_no_merge,
+ 			      struct rblist *metric_events)
+ {
+-	struct evlist *perf_evlist = *(struct evlist **)opt->value;
+ 	const struct pmu_events_table *table = pmu_events_table__find();
+ 
+ 	if (!table)
+diff --git a/tools/perf/util/metricgroup.h b/tools/perf/util/metricgroup.h
+index 016b3b1a289a..af9ceadaec0f 100644
+--- a/tools/perf/util/metricgroup.h
++++ b/tools/perf/util/metricgroup.h
+@@ -64,7 +64,7 @@ struct metric_expr {
+ struct metric_event *metricgroup__lookup(struct rblist *metric_events,
+ 					 struct evsel *evsel,
+ 					 bool create);
+-int metricgroup__parse_groups(const struct option *opt,
++int metricgroup__parse_groups(struct evlist *perf_evlist,
+ 			      const char *str,
+ 			      bool metric_no_group,
+ 			      bool metric_no_merge,
 -- 
 2.37.2.672.g94769d06f0-goog
 
