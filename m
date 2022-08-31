@@ -2,142 +2,144 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 648BDECAAD1
-	for <linux-perf-users@archiver.kernel.org>; Wed, 31 Aug 2022 11:13:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AEC24ECAAD4
+	for <linux-perf-users@archiver.kernel.org>; Wed, 31 Aug 2022 12:17:33 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230034AbiHaLNM (ORCPT
+        id S229643AbiHaMRc (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Wed, 31 Aug 2022 07:13:12 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52478 "EHLO
+        Wed, 31 Aug 2022 08:17:32 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59090 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230468AbiHaLNL (ORCPT
+        with ESMTP id S229518AbiHaMRb (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Wed, 31 Aug 2022 07:13:11 -0400
-Received: from mga07.intel.com (mga07.intel.com [134.134.136.100])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DA363D0228;
-        Wed, 31 Aug 2022 04:13:09 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1661944389; x=1693480389;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=ZXYlj1IqxZaV4DXbBX1YoGEIIdFLaXU6ViVzynme9rE=;
-  b=EqsvE2y2OIrhxVfvacZwcJMO8qX4+Nj9bpy5TuqSYh8465koGxwd2jkH
-   gbFZ1vRJnUQLcxbpa0e+EIjQLh9rcK0ssHJERzGQfncXgG7yILrzOddEo
-   NplAgX186sw2v/jE5e++bbITaOrsagWYJynpPOl9gh8m8EEFgcNnGPQiH
-   1oJoLDjH8nyUuSPD7RxV11TUlcNjymttLha90l0etVeECfDTM9Y37aEWB
-   3zT9X+S5EHG1FsI5LZUXlT66qE/lArmik0KCQTPEx7CAg5QjqJjZcWnKU
-   DbVtlN11AgHREIKqLdbhqMZXyb07I8rP1xTHBhDGQEWicwvrRY+2e1BH6
-   Q==;
-X-IronPort-AV: E=McAfee;i="6500,9779,10455"; a="359383043"
-X-IronPort-AV: E=Sophos;i="5.93,277,1654585200"; 
-   d="scan'208";a="359383043"
-Received: from fmsmga003.fm.intel.com ([10.253.24.29])
-  by orsmga105.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 31 Aug 2022 04:13:09 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.93,277,1654585200"; 
-   d="scan'208";a="701332161"
-Received: from lkp-server02.sh.intel.com (HELO 811e2ceaf0e5) ([10.239.97.151])
-  by FMSMGA003.fm.intel.com with ESMTP; 31 Aug 2022 04:13:06 -0700
-Received: from kbuild by 811e2ceaf0e5 with local (Exim 4.96)
-        (envelope-from <lkp@intel.com>)
-        id 1oTLeb-0000Di-1k;
-        Wed, 31 Aug 2022 11:13:05 +0000
-Date:   Wed, 31 Aug 2022 19:12:34 +0800
-From:   kernel test robot <lkp@intel.com>
-To:     Sean Christopherson <seanjc@google.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Paolo Bonzini <pbonzini@redhat.com>
-Cc:     kbuild-all@lists.01.org, Mark Rutland <mark.rutland@arm.com>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Jiri Olsa <jolsa@kernel.org>,
-        Namhyung Kim <namhyung@kernel.org>,
-        linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org,
-        kvm@vger.kernel.org, Like Xu <like.xu.linux@gmail.com>
-Subject: Re: [PATCH v3 3/3] KVM: VMX: Advertise PMU LBRs if and only if perf
- supports LBRs
-Message-ID: <202208311831.zQ4oCG1b-lkp@intel.com>
-References: <20220831000051.4015031-4-seanjc@google.com>
+        Wed, 31 Aug 2022 08:17:31 -0400
+Received: from mail-ej1-x633.google.com (mail-ej1-x633.google.com [IPv6:2a00:1450:4864:20::633])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id F2730D345E
+        for <linux-perf-users@vger.kernel.org>; Wed, 31 Aug 2022 05:17:29 -0700 (PDT)
+Received: by mail-ej1-x633.google.com with SMTP id nc14so23047849ejc.4
+        for <linux-perf-users@vger.kernel.org>; Wed, 31 Aug 2022 05:17:29 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20210112;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:date:from:from:to:cc:subject:date;
+        bh=EQwAVWOYu1smF9HWgIKONGZof8TcBcJZfeqOzv82cgA=;
+        b=UU6MTM5xrjjybbBT4IWLXbrnbEtw1ttQdRo9vCZ6hUr9qhNdejAvGHz1ATfaqPDvy8
+         DqLBS56aGeMyDc33wuomcdd4E0o7Cxx6wQWwJfN6k5Cl1Xn7fg3mjJapwkf+NZxiTMk7
+         yHK8JbqY5E3lhM/bGZbRKooRi7S1YJKUEQ9ZUvXxwuaOUWjg6+MBXbgkr7MwRZH1cmIq
+         R9Kb3c8p723NxQqR6qGZz196eiI5CqExhgfRu/YjrQ0aNWCQ6iYHi6+XT659IBjLDI5u
+         se/ZNBwANa4aGSbphvQpHyDkO9EFuGP2mFpZO0j4MPRxZcKPz6BsDet/W8EcYqYdPxDJ
+         KnBQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:date:from:x-gm-message-state:from:to:cc:subject:date;
+        bh=EQwAVWOYu1smF9HWgIKONGZof8TcBcJZfeqOzv82cgA=;
+        b=GvRvZSxEhiSjGIZ8sOkx1tW9KHNyqF7YuctOhpWNtO4CHlUYVNAleXuP+bBH+OyN7b
+         SlvzIs3RUmaQHpotBslGZBuGiwg8aFlZPU6pyG4IEt9Wyvd16CUaT3ij4S6iZzuGEapD
+         mbSvnyrFU5vXIfjH7r7zt3gnFDwCyp5tKkxRIlFQCm/DqrLh2F7bPAS4+fslYppdiZSZ
+         oGUDAEgY3peINSaw/AP9wAUGctu7jUWFDfCB7FDWQ2VsaJkkDGbFfxdbg/r7d1pFA6CS
+         61QpUo9HIQL43K1s+Y2PcJJft3i4kInHehKodwk817z8qAmWiofqlmhBZ+Kkj7uaC/yY
+         dGag==
+X-Gm-Message-State: ACgBeo068SweqS8CY2416uFhV8f5pDtyEWGdcc3kw5VLORbp/5RZgUPU
+        C0osCUR81mkLEcC9RCydpK0=
+X-Google-Smtp-Source: AA6agR5sa526C4FKv+4/rr+lVtlyijoSEFKsq4aMjbio1SIwEB0KMNE6slLEbMZ+DRgFSH7YlyQxvw==
+X-Received: by 2002:a17:907:a04d:b0:741:37f5:56d2 with SMTP id gz13-20020a170907a04d00b0074137f556d2mr15304295ejc.668.1661948248163;
+        Wed, 31 Aug 2022 05:17:28 -0700 (PDT)
+Received: from krava ([193.85.244.190])
+        by smtp.gmail.com with ESMTPSA id n11-20020aa7db4b000000b004482dd03fe8sm6888773edt.91.2022.08.31.05.17.27
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 31 Aug 2022 05:17:27 -0700 (PDT)
+From:   Jiri Olsa <olsajiri@gmail.com>
+X-Google-Original-From: Jiri Olsa <jolsa@kernel.org>
+Date:   Wed, 31 Aug 2022 14:17:26 +0200
+To:     William Cohen <wcohen@redhat.com>
+Cc:     linux-perf-users@vger.kernel.org
+Subject: Re: PROBLEM: The --call-graph=fp data does do not agree with the
+ --call-graph=dwarf results
+Message-ID: <Yw9RVlb3YxpTxROw@krava>
+References: <cb3efad5-37eb-29e4-03b0-f0bcc8be9918@redhat.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20220831000051.4015031-4-seanjc@google.com>
+In-Reply-To: <cb3efad5-37eb-29e4-03b0-f0bcc8be9918@redhat.com>
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-Hi Sean,
+On Tue, Aug 30, 2022 at 10:21:28AM -0400, William Cohen wrote:
+> With a perf Fedora 36 perf-tools-5.18.13-200.fc36 I was examining
+> where perf-report was spending its time when generating its report and
+> found there was an efficiency issue in Fedora 36's binutils-2.37.  The
+> efficient issue been addressed in Fedora rawhide and will be
+> backported to Fedora 36
+> (https://bugzilla.redhat.com/show_bug.cgi?id=2120752).  This was
 
-I love your patch! Yet something to improve:
+nice :)
 
-[auto build test ERROR on 372d07084593dc7a399bf9bee815711b1fb1bcf2]
+> initially discovered when processing perf.data files created with
+> --call-graph=dwarf.  The output of the perf-report call-graph for
+> dwarf information notes inlined functions in the report. The excessive
+> time spent in binutils bfd's lookup_func_by_offset was caused by perf-report
+> building up a red-black tree mapping IP addresses to functions
+> including inlined functions.
+> 
+> I ran a similar experiment with --call-graph=fp to see if it triggered
+> the same execessive overhead in building the red-black tree for
+> inlined functions.  It did not.  The resulting output of the perf-report
+> for --call-graph=fp does not include information about inlined functions.
+> 
+> I have a small reproducer in the attached perf_inlined.tar.gz that
+> demonstrates the difference between the two methods of storing
+> call-chain information. Compile and collect data with:
+> 
+> tar xvfz perf_inlined.tar.gz
+> cd perf_inlined
+> make all
+> perf report --input=perf_fp.data > fp.log
+> perf report --input=perf_dwarf.data > dwarf.log
+> 
+> The dwarf.log has the expected call structure for main:
+> 
+> 
+>                main
+>                |          
+>                 --85.72%--fill_array (inlined)
+>                           |          
+>                           |--78.09%--rand
+>                           |          |          
+>                           |           --75.10%--__random
+>                           |                     |          
+>                           |                      --9.14%--__random_r
+>                           |          
+>                           |--1.58%--compute_sqrt (inlined)
+>                           |          
+>                            --1.32%--_init
+> 
+> The fp.log looks odd given program:
 
-url:    https://github.com/intel-lab-lkp/linux/commits/Sean-Christopherson/KVM-x86-Intel-LBR-related-perf-cleanups/20220831-080309
-base:   372d07084593dc7a399bf9bee815711b1fb1bcf2
-config: i386-randconfig-s001 (https://download.01.org/0day-ci/archive/20220831/202208311831.zQ4oCG1b-lkp@intel.com/config)
-compiler: gcc-11 (Debian 11.3.0-5) 11.3.0
-reproduce:
-        # apt-get install sparse
-        # sparse version: v0.6.4-39-gce1a6720-dirty
-        # https://github.com/intel-lab-lkp/linux/commit/094f42374997562fff3f9f9637ec9aa8257490a0
-        git remote add linux-review https://github.com/intel-lab-lkp/linux
-        git fetch --no-tags linux-review Sean-Christopherson/KVM-x86-Intel-LBR-related-perf-cleanups/20220831-080309
-        git checkout 094f42374997562fff3f9f9637ec9aa8257490a0
-        # save the config file
-        mkdir build_dir && cp config build_dir/.config
-        make W=1 C=1 CF='-fdiagnostic-prefix -D__CHECK_ENDIAN__' O=build_dir ARCH=i386 prepare
+what's odd about that? perhaps the confusion is that you are
+in children mode? you could try --no-children
 
-If you fix the issue, kindly add following tag where applicable
-Reported-by: kernel test robot <lkp@intel.com>
+> 
+>    99.99%     0.00%  time_waste  libc.so.6             [.] __libc_start_call_main
+>             |
+>             ---__libc_start_call_main
+>                |          
+>                |--66.07%--__random
+>                |          
+>                |--21.28%--main
+>                |          
+>                |--8.42%--__random_r
+>                |          
+>                |--2.91%--rand
+>                |          
+>                 --1.31%--_init
+> 
+> Given how common that functions are inlined in optimized code it seems
+> like perf-report of --call-graph=fp should include information about
+> time spent in inlined functions.
 
-All errors (new ones prefixed by >>):
+hum, so 'fp' call graph is tracersing frame pointers which I would
+not expect for inlined functions
 
-   In file included from arch/x86/kernel/../kvm/vmx/vmx.h:11,
-                    from arch/x86/kernel/asm-offsets.c:22:
-   arch/x86/kernel/../kvm/vmx/capabilities.h: In function 'vmx_get_perf_capabilities':
->> arch/x86/kernel/../kvm/vmx/capabilities.h:416:9: error: implicit declaration of function 'x86_perf_get_lbr' [-Werror=implicit-function-declaration]
-     416 |         x86_perf_get_lbr(&lbr);
-         |         ^~~~~~~~~~~~~~~~
-   cc1: some warnings being treated as errors
-   make[2]: *** [scripts/Makefile.build:117: arch/x86/kernel/asm-offsets.s] Error 1
-   make[2]: Target '__build' not remade because of errors.
-   make[1]: *** [Makefile:1207: prepare0] Error 2
-   make[1]: Target 'prepare' not remade because of errors.
-   make: *** [Makefile:222: __sub-make] Error 2
-   make: Target 'prepare' not remade because of errors.
-
-
-vim +/x86_perf_get_lbr +416 arch/x86/kernel/../kvm/vmx/capabilities.h
-
-   403	
-   404	static inline u64 vmx_get_perf_capabilities(void)
-   405	{
-   406		u64 perf_cap = PMU_CAP_FW_WRITES;
-   407		struct x86_pmu_lbr lbr;
-   408		u64 host_perf_cap = 0;
-   409	
-   410		if (!enable_pmu)
-   411			return 0;
-   412	
-   413		if (boot_cpu_has(X86_FEATURE_PDCM))
-   414			rdmsrl(MSR_IA32_PERF_CAPABILITIES, host_perf_cap);
-   415	
- > 416		x86_perf_get_lbr(&lbr);
-   417		if (lbr.nr)
-   418			perf_cap |= host_perf_cap & PMU_CAP_LBR_FMT;
-   419	
-   420		if (vmx_pebs_supported()) {
-   421			perf_cap |= host_perf_cap & PERF_CAP_PEBS_MASK;
-   422			if ((perf_cap & PERF_CAP_PEBS_FORMAT) < 4)
-   423				perf_cap &= ~PERF_CAP_PEBS_BASELINE;
-   424		}
-   425	
-   426		return perf_cap;
-   427	}
-   428	
-
--- 
-0-DAY CI Kernel Test Service
-https://01.org/lkp
+jirka
