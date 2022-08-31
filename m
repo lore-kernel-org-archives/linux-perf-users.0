@@ -2,112 +2,120 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D774AECAAD5
-	for <linux-perf-users@archiver.kernel.org>; Wed, 31 Aug 2022 00:01:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 67508ECAAA1
+	for <linux-perf-users@archiver.kernel.org>; Wed, 31 Aug 2022 03:35:56 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229875AbiHaABH (ORCPT
+        id S232276AbiHaDfy (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Tue, 30 Aug 2022 20:01:07 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34446 "EHLO
+        Tue, 30 Aug 2022 23:35:54 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53934 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230246AbiHaABB (ORCPT
+        with ESMTP id S232282AbiHaDfs (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Tue, 30 Aug 2022 20:01:01 -0400
-Received: from mail-pl1-x649.google.com (mail-pl1-x649.google.com [IPv6:2607:f8b0:4864:20::649])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DE94F6BD4A
-        for <linux-perf-users@vger.kernel.org>; Tue, 30 Aug 2022 17:00:59 -0700 (PDT)
-Received: by mail-pl1-x649.google.com with SMTP id d6-20020a170902cec600b00174be1616c4so4888973plg.22
-        for <linux-perf-users@vger.kernel.org>; Tue, 30 Aug 2022 17:00:59 -0700 (PDT)
+        Tue, 30 Aug 2022 23:35:48 -0400
+Received: from mail-pg1-x530.google.com (mail-pg1-x530.google.com [IPv6:2607:f8b0:4864:20::530])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 555DE6AA2D;
+        Tue, 30 Aug 2022 20:35:46 -0700 (PDT)
+Received: by mail-pg1-x530.google.com with SMTP id c24so12409891pgg.11;
+        Tue, 30 Aug 2022 20:35:46 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20210112;
-        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
-         :date:reply-to:from:to:cc;
-        bh=qJXKs+ZLE9emDk3uVMrPeQaTARYDAHlXW11oK3RW2Wc=;
-        b=SeC4SpEUA9Pj0gJ4NsFdHazet6GE9bdJ1dT6nWyveIfGZuo4CKCEVpytHC64cm9plj
-         wOdcAYiLeQSXoHXjHQY2kqRBjQVhPudE0imZ22YGjYoIbrM6bDxeQOE8AH7eLW7f0ezd
-         WH2vXQB6njqucYikofJ7Ee/NM6nFuGUTwz+7SftSDtbcPOENu0gg/MUl2PUczy8BJJz2
-         hyExUDUd77eEx4pxmLpyzU7b8ABB1IT93OerKqZeCNQBastYtbtlIAtEIRdyfksk+1oR
-         ONRzuizCjC3rQ1A3LaB9bt6kB1/BWGcmbDAw/SZNbE+uA0DXDJMXodqMZrpiCfvsJWxA
-         SMWw==
+        d=gmail.com; s=20210112;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc;
+        bh=aZHvtwv2XnuRZengAlGS32mVmp48gK9Mf0I2+nyLx2U=;
+        b=ozg/V1kVrSGAnHM9e5iJ5XdEDXdwPJUKf3Sb5EGVsApTZ13vLm1exUfTrb8vSa+WGX
+         V7EuIRag+z/anLgaPR4pYIMn0RkoJNJOPnxs5NcDkm4bFHgTwyKhRmE4WYWzDvnHxYys
+         ZtBZbQScDGTPs9XGNXrwgl2gW4p/gdNLBTEEVLMSnqAEQckSqzDJflE9iEqni92iS/Iu
+         WUGM/5KBotgYVUiRdB+aWnDwdO3mzvQ7e/cnR87ioDuqAUu3Rl99GoXr/2i8u5UVAV5n
+         Y1CSaT6F0Kh2lODmw78DImNoJUWEKcPvsD9OZeKF/JS0RdGJlGZh0xvzwkgl1IuVvPUz
+         uolA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
-         :date:reply-to:x-gm-message-state:from:to:cc;
-        bh=qJXKs+ZLE9emDk3uVMrPeQaTARYDAHlXW11oK3RW2Wc=;
-        b=UkmuSp8eNskJoXIdqMK1N4O+Ad/UHTmJNKc/eeEsSPPI5dkxtEJX9dpAbd1DPmijNU
-         CQnINxuUH4XPU4ZJVCXFu4DXID3TO90gD2E63zWDypx+XLYDRle4EK/m5/6sDdbtPRwC
-         5jR5mABrPIjKxJ1J40l9mRzv96LuKt+CffSVTJsSCRi5WtbnzSDKKqXvI+nqtaAgfXIK
-         tFeR7uStn0SZBUW53KgLo7KGBBYdUxO0NsIUXXzlKm9wMvTLNcDkYOpSgbyBQm/mC8p2
-         iyGFkm6fApqbBwwuB01ZkaiCzEpZhgTONjDLoE0Vnqa7rxY3s3UBT0CXC8ngCDp61x02
-         /2+g==
-X-Gm-Message-State: ACgBeo2FZbtZwCOZqT7nEDQk7CPaXvUKKF/UJzWzGMdxa4ltPgGKJxJU
-        kjZdAGQxwpv5cTv6sh2EFfti2OYLkXI=
-X-Google-Smtp-Source: AA6agR7Ex184XlJZTk1AEwJjTtBbOvVyb+1EL7HgzEsb95OcRUH5oln+KYkb9WpAdL/XG36FFJKIVlM6JxA=
-X-Received: from zagreus.c.googlers.com ([fda3:e722:ac3:cc00:7f:e700:c0a8:5c37])
- (user=seanjc job=sendgmr) by 2002:aa7:9430:0:b0:537:ab14:6cd8 with SMTP id
- y16-20020aa79430000000b00537ab146cd8mr23155574pfo.29.1661904059303; Tue, 30
- Aug 2022 17:00:59 -0700 (PDT)
-Reply-To: Sean Christopherson <seanjc@google.com>
-Date:   Wed, 31 Aug 2022 00:00:51 +0000
-In-Reply-To: <20220831000051.4015031-1-seanjc@google.com>
-Mime-Version: 1.0
-References: <20220831000051.4015031-1-seanjc@google.com>
-X-Mailer: git-send-email 2.37.2.672.g94769d06f0-goog
-Message-ID: <20220831000051.4015031-4-seanjc@google.com>
-Subject: [PATCH v3 3/3] KVM: VMX: Advertise PMU LBRs if and only if perf
- supports LBRs
-From:   Sean Christopherson <seanjc@google.com>
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc;
+        bh=aZHvtwv2XnuRZengAlGS32mVmp48gK9Mf0I2+nyLx2U=;
+        b=xU8YTRfeGKcnHNqjpNltDvPeXhMQmb9PmGbynFdsf/vjfghu+JZbVXyuVwLCCzcbIf
+         cU4h/n+cZW3zaACBmRzoqgWfAJYzbOdNPOYXqVFh38UeaOe78Nc+D9smPXweHYNaeqNs
+         tyT8A7ODZ8hyw3/nySZRLqxNc4NikoEys0g7xxdKMcrCgJX3bm7dK7cjUjyMGLq5u8ND
+         Ba7hko8zFHJobLAsCbLswY4aTOYFv6pZXhfMNxPK7AesoJXucTKPf29+wpaGdyN3gjan
+         7eFse4A27xzpaCsah7gi5Btti0q40I0prIwaoO5n6GWBsqloPuav4BaSa3axzNF/7b8l
+         PXhA==
+X-Gm-Message-State: ACgBeo3OUwt9rjywNVo5OSqyEyaPkn/GknKJs9Z3s4J7D5PtD3vz8cWc
+        GeIqVoK+wW0J5HCijulyaTU=
+X-Google-Smtp-Source: AA6agR4bcTmeiwN76VrnVSJbzcK//92qn7CdQi9FhPqYvV4O7mvQXTQh9g5csfCI8dri5xyq/V+hVg==
+X-Received: by 2002:a05:6a00:180b:b0:536:816b:f770 with SMTP id y11-20020a056a00180b00b00536816bf770mr24652171pfa.3.1661916945757;
+        Tue, 30 Aug 2022 20:35:45 -0700 (PDT)
+Received: from localhost.localdomain ([103.7.29.32])
+        by smtp.gmail.com with ESMTPSA id q63-20020a634342000000b0042bea8405a3sm2347022pga.14.2022.08.30.20.35.41
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 30 Aug 2022 20:35:45 -0700 (PDT)
+From:   Like Xu <like.xu.linux@gmail.com>
+X-Google-Original-From: Like Xu <likexu@tencent.com>
 To:     Peter Zijlstra <peterz@infradead.org>,
+        Sean Christopherson <seanjc@google.com>
+Cc:     kvm@vger.kernel.org, Kan Liang <kan.liang@linux.intel.com>,
+        Paolo Bonzini <pbonzini@redhat.com>,
         Ingo Molnar <mingo@redhat.com>,
         Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Sean Christopherson <seanjc@google.com>,
-        Paolo Bonzini <pbonzini@redhat.com>
-Cc:     Mark Rutland <mark.rutland@arm.com>,
+        Mark Rutland <mark.rutland@arm.com>,
         Alexander Shishkin <alexander.shishkin@linux.intel.com>,
         Jiri Olsa <jolsa@kernel.org>,
         Namhyung Kim <namhyung@kernel.org>,
-        linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org,
-        kvm@vger.kernel.org, Like Xu <like.xu.linux@gmail.com>
-Content-Type: text/plain; charset="UTF-8"
+        Thomas Gleixner <tglx@linutronix.de>,
+        Borislav Petkov <bp@alien8.de>,
+        Dave Hansen <dave.hansen@linux.intel.com>, x86@kernel.org,
+        "'H . Peter Anvin'" <hpa@zytor.com>,
+        linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: [PATCH RESEND] perf/x86/core: Completely disable guest PEBS via guest's global_ctrl
+Date:   Wed, 31 Aug 2022 11:35:24 +0800
+Message-Id: <20220831033524.58561-1-likexu@tencent.com>
+X-Mailer: git-send-email 2.37.3
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-Advertise LBR support to userspace via MSR_IA32_PERF_CAPABILITIES if and
-only if perf fully supports LBRs.  Perf may disable LBRs (by zeroing the
-number of LBRs) even on platforms the allegedly support LBRs, e.g. if
-probing any LBR MSRs during setup fails.
+From: Like Xu <likexu@tencent.com>
 
-Fixes: be635e34c284 ("KVM: vmx/pmu: Expose LBR_FMT in the MSR_IA32_PERF_CAPABILITIES")
-Reported-by: Like Xu <like.xu.linux@gmail.com>
-Signed-off-by: Sean Christopherson <seanjc@google.com>
+When a guest PEBS counter is cross-mapped by a host counter, software
+will remove the corresponding bit in the arr[global_ctrl].guest and
+expect hardware to perform a change of state "from enable to disable"
+via the msr_slot[] switch during the vmx transaction.
+
+The real world is that if user adjust the counter overflow value small
+enough, it still opens a tiny race window for the previously PEBS-enabled
+counter to write cross-mapped PEBS records into the guest's PEBS buffer,
+when arr[global_ctrl].guest has been prioritised (switch_msr_special stuff)
+to switch into the enabled state, while the arr[pebs_enable].guest has not.
+
+Close this window by clearing invalid bits in the arr[global_ctrl].guest.
+
+Cc: linux-perf-users@vger.kernel.org
+Cc: Kan Liang <kan.liang@linux.intel.com>
+Cc: Peter Zijlstra <peterz@infradead.org>
+Cc: Sean Christopherson <seanjc@google.com>
+Fixes: 854250329c02 ("KVM: x86/pmu: Disable guest PEBS temporarily in two rare situations")
+Signed-off-by: Like Xu <likexu@tencent.com>
 ---
- arch/x86/kvm/vmx/capabilities.h | 5 ++++-
- 1 file changed, 4 insertions(+), 1 deletion(-)
+ arch/x86/events/intel/core.c | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
 
-diff --git a/arch/x86/kvm/vmx/capabilities.h b/arch/x86/kvm/vmx/capabilities.h
-index c5e5dfef69c7..d2fdaf888d33 100644
---- a/arch/x86/kvm/vmx/capabilities.h
-+++ b/arch/x86/kvm/vmx/capabilities.h
-@@ -404,6 +404,7 @@ static inline bool vmx_pebs_supported(void)
- static inline u64 vmx_get_perf_capabilities(void)
- {
- 	u64 perf_cap = PMU_CAP_FW_WRITES;
-+	struct x86_pmu_lbr lbr;
- 	u64 host_perf_cap = 0;
- 
- 	if (!enable_pmu)
-@@ -412,7 +413,9 @@ static inline u64 vmx_get_perf_capabilities(void)
- 	if (boot_cpu_has(X86_FEATURE_PDCM))
- 		rdmsrl(MSR_IA32_PERF_CAPABILITIES, host_perf_cap);
- 
--	perf_cap |= host_perf_cap & PMU_CAP_LBR_FMT;
-+	x86_perf_get_lbr(&lbr);
-+	if (lbr.nr)
-+		perf_cap |= host_perf_cap & PMU_CAP_LBR_FMT;
- 
- 	if (vmx_pebs_supported()) {
- 		perf_cap |= host_perf_cap & PERF_CAP_PEBS_MASK;
+diff --git a/arch/x86/events/intel/core.c b/arch/x86/events/intel/core.c
+index 2db93498ff71..75cdd11ab014 100644
+--- a/arch/x86/events/intel/core.c
++++ b/arch/x86/events/intel/core.c
+@@ -4052,8 +4052,9 @@ static struct perf_guest_switch_msr *intel_guest_get_msrs(int *nr, void *data)
+ 		/* Disable guest PEBS if host PEBS is enabled. */
+ 		arr[pebs_enable].guest = 0;
+ 	} else {
+-		/* Disable guest PEBS for cross-mapped PEBS counters. */
++		/* Disable guest PEBS thoroughly for cross-mapped PEBS counters. */
+ 		arr[pebs_enable].guest &= ~kvm_pmu->host_cross_mapped_mask;
++		arr[global_ctrl].guest &= ~kvm_pmu->host_cross_mapped_mask;
+ 		/* Set hw GLOBAL_CTRL bits for PEBS counter when it runs for guest */
+ 		arr[global_ctrl].guest |= arr[pebs_enable].guest;
+ 	}
 -- 
-2.37.2.672.g94769d06f0-goog
+2.37.3
 
