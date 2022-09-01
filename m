@@ -2,159 +2,180 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 25C49ECAAD1
-	for <linux-perf-users@archiver.kernel.org>; Thu,  1 Sep 2022 10:36:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4EDFAECAAD3
+	for <linux-perf-users@archiver.kernel.org>; Thu,  1 Sep 2022 11:23:04 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233947AbiIAKgM (ORCPT
+        id S233262AbiIALXD (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Thu, 1 Sep 2022 06:36:12 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46280 "EHLO
+        Thu, 1 Sep 2022 07:23:03 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47624 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S233057AbiIAKgK (ORCPT
+        with ESMTP id S233046AbiIALXA (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Thu, 1 Sep 2022 06:36:10 -0400
-Received: from NAM04-BN8-obe.outbound.protection.outlook.com (mail-bn8nam04on2071.outbound.protection.outlook.com [40.107.100.71])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0D2ADDFB7A;
-        Thu,  1 Sep 2022 03:36:09 -0700 (PDT)
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=CfxaWdes4PUs+oPZDs8VZyzYdw1VjpI6EpsE0tRKBdhfYGQWARDqwseyl1c8GjRRPHxc1M+iHa6KoxZYKakDUNoFeCQTINOt/YjNBQ2vmTIQXWKjCVOuXOsx/apLQVtdftJ68hIGrMpaxo2oDhbiLQ1+AFTR9o9cIGmo4rZ4caXkjGb+B++c03fu/Fy/Yzv7G4QVD5qUk0zqaafsCQ/1xho7E+KCF1ezU3f6XNJl/feKkSaim2nvSyRexGB09lTl7d7DMn6MVD7Zbpo9t9qWihdN5ws92sBN9+9MjkAIGUM0/mNzKLMRLvHRXt6nsZLlB3aDe68k5aV4J97iY0FT0w==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=nH92cuMwS6n/ybagev9dAYT5CUWIIHJy5czEC6iAMTQ=;
- b=VLkbLxfoLcH3/19S2WpFYn9WocbYS3c/GolCKDXA6KvNLd+mDgwoht0Dq2TIC5X8SwgONskHu2SDisS4a/x/gKnuDgJ7Lz4ElMt3k2dh4IUR1exNfVUht898WNKYaj5QkvVMsoZH7EiN3wrRxqVw4xRbIQkQXUjd78mkcLLsq63G5qL1UNnObOiJ/IGMFrFtXNoBO+V0jWmsZ2ewfGds5813RcnzssAOBMwzbHhpoTUrJQIY1YL4Z3ZCl8mlAfCiebYTxTQAJzs7pi/kVAaYX/Tae07nrFbpKOAU+XkmemLAPKiOTL04msNrWCg5D2FDWlHrTW8irkdnsgBBIbEcmw==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=amd.com; dmarc=pass action=none header.from=amd.com; dkim=pass
- header.d=amd.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=nH92cuMwS6n/ybagev9dAYT5CUWIIHJy5czEC6iAMTQ=;
- b=GtS6RylsV7rn+rxiDiF7irjqGW8fxQqXUzytMZuXB/GNZ7jrQNJnxacaLTStNEN1sP9+Mecf8F1MHIUszidqlOfbiJYC/Ml420FhtJonWKwSeeKF3HJryC3na/QlU+4hhhL46fg4RucZU4EMvzLRVpH/35TzQCTgN9GuAgAr5KY=
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=amd.com;
-Received: from PH7PR12MB6588.namprd12.prod.outlook.com (2603:10b6:510:210::10)
- by IA1PR12MB6627.namprd12.prod.outlook.com (2603:10b6:208:3a1::21) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.5566.15; Thu, 1 Sep
- 2022 10:36:06 +0000
-Received: from PH7PR12MB6588.namprd12.prod.outlook.com
- ([fe80::d058:d925:c09b:de2]) by PH7PR12MB6588.namprd12.prod.outlook.com
- ([fe80::d058:d925:c09b:de2%5]) with mapi id 15.20.5588.010; Thu, 1 Sep 2022
- 10:36:06 +0000
-Message-ID: <c5a6aea9-4f3a-495e-78fa-e426de9b0496@amd.com>
-Date:   Thu, 1 Sep 2022 16:05:53 +0530
-User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:91.0) Gecko/20100101
- Thunderbird/91.9.1
-Subject: Re: [PATCH] perf: Rewrite core context handling
+        Thu, 1 Sep 2022 07:23:00 -0400
+Received: from mga06.intel.com (mga06b.intel.com [134.134.136.31])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7C5F1130AB5;
+        Thu,  1 Sep 2022 04:22:59 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1662031379; x=1693567379;
+  h=message-id:date:mime-version:subject:to:cc:references:
+   from:in-reply-to:content-transfer-encoding;
+  bh=LJpwv4nmPcDFSfFd0jKborocjPGboSu89Q9vhnfXHdE=;
+  b=CyczCA1V6JtMr6o7UEe7uH7fJCAA1jcQY1LeRF7DYQ39nVeIetNdwcy1
+   3B7vH0UowO5DButcqWqXStdW4dYAqbygBj2ZCqHKDWX1qpwZeo6RPDNJn
+   cTpWHuWpHqMtCzTsNKKrrUlh/tB4o+d0n9C3Kv920wn2U920/BIfJZ+fe
+   c3+impoBa1rkvIkAgDJkVN+LFFJRo7Ra+oegrWAVbvcwF9FFZP/FOdDgD
+   FvX2Gpt7D7owGNHrFfjSbtayew+uFwG43UMMJV7mzL1WNMbrBt0GiwUUW
+   fN744Wh+uCVz62wIxInFxQw0H904T0GLEtkmBfIs76hc9mftoe2KGt0pf
+   w==;
+X-IronPort-AV: E=McAfee;i="6500,9779,10456"; a="357406120"
+X-IronPort-AV: E=Sophos;i="5.93,280,1654585200"; 
+   d="scan'208";a="357406120"
+Received: from orsmga008.jf.intel.com ([10.7.209.65])
+  by orsmga104.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 01 Sep 2022 04:22:58 -0700
+X-IronPort-AV: E=Sophos;i="5.93,280,1654585200"; 
+   d="scan'208";a="642291964"
+Received: from ahunter6-mobl1.ger.corp.intel.com (HELO [10.0.2.15]) ([10.252.42.13])
+  by orsmga008-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 01 Sep 2022 04:22:55 -0700
+Message-ID: <86ca3041-3327-622c-1c23-67fc6af412f6@intel.com>
+Date:   Thu, 1 Sep 2022 14:22:45 +0300
+MIME-Version: 1.0
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
+ Firefox/91.0 Thunderbird/91.11.0
+Subject: Re: [PATCH 3/5] perf record: Read and inject LOST_SAMPLES events
 Content-Language: en-US
-To:     Peter Zijlstra <peterz@infradead.org>
-Cc:     acme@kernel.org, alexander.shishkin@linux.intel.com,
-        jolsa@redhat.com, namhyung@kernel.org, songliubraving@fb.com,
-        eranian@google.com, ak@linux.intel.com, mark.rutland@arm.com,
-        frederic@kernel.org, maddy@linux.ibm.com, irogers@google.com,
-        will@kernel.org, robh@kernel.org, mingo@redhat.com,
-        catalin.marinas@arm.com, linux-arm-kernel@lists.infradead.org,
-        linux-perf-users@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
-        linux-s390@vger.kernel.org, linux-kernel@vger.kernel.org,
-        sandipan.das@amd.com, ananth.narayan@amd.com, kim.phillips@amd.com,
-        santosh.shukla@amd.com, ravi.bangoria@amd.com
-References: <20220829113347.295-1-ravi.bangoria@amd.com>
- <YwyrUYS30gVbxc2D@hirez.programming.kicks-ass.net>
- <YwzP+AFWCx4Ni/kx@hirez.programming.kicks-ass.net>
-From:   Ravi Bangoria <ravi.bangoria@amd.com>
-In-Reply-To: <YwzP+AFWCx4Ni/kx@hirez.programming.kicks-ass.net>
+To:     Namhyung Kim <namhyung@kernel.org>,
+        Arnaldo Carvalho de Melo <acme@kernel.org>,
+        Jiri Olsa <jolsa@kernel.org>
+Cc:     Ingo Molnar <mingo@kernel.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Ian Rogers <irogers@google.com>,
+        linux-perf-users@vger.kernel.org
+References: <20220831210352.145753-1-namhyung@kernel.org>
+ <20220831210352.145753-4-namhyung@kernel.org>
+From:   Adrian Hunter <adrian.hunter@intel.com>
+Organization: Intel Finland Oy, Registered Address: PL 281, 00181 Helsinki,
+ Business Identity Code: 0357606 - 4, Domiciled in Helsinki
+In-Reply-To: <20220831210352.145753-4-namhyung@kernel.org>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: PN3PR01CA0002.INDPRD01.PROD.OUTLOOK.COM
- (2603:1096:c01:95::22) To PH7PR12MB6588.namprd12.prod.outlook.com
- (2603:10b6:510:210::10)
-MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-Office365-Filtering-Correlation-Id: 9820242a-ec4c-45c0-324f-08da8c05c6a5
-X-MS-TrafficTypeDiagnostic: IA1PR12MB6627:EE_
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: DxNvT0ZbL46OdXy17Cs7f7+Cdf0Sto6jdvhgd2RBDb6QSiSktiRT2s+ZXEFQlc/3vH+fgGugAdMR3wQ5URwk9WNZ/4/JH4/GSgBOZkJdyRiEE8Ys0Gr0DfXLVI9x9jA6vrJT9IJjgyIitgiVM0SZtprKS6d0boOz9k69UvMJeHQFUpLHMuIr0Z/BkdFZDA7+W/ZWzD8dQ4wAlt2KMq9TVt1jJL70xjWh+hXwPNiVvLeH6sTl5uTsqGmNs5iznm8g967kCe07GJCBm7UIZLrMGDzFTyCtYX9A+Nyz43N94LCdJ8JuLGa+j0hzobcik+0xculLhu7HAhKBPqOXJapIejfRLLFZGk6gAcVroI3dltuhTFZ8XchAMupIAnZYOzMhv6ozwQUsDp3/zCImIDBMejxjlEO4mrr6vs1Sr0ximsUkxhNlbMWzB0ShAIjdWNcivL35CnO7jNOwcjAP/GVmDuFdHJtMcCFvFohHbb2bnYc89TEyhzh8nSFNgegcycn0QzpXFsxyfHg7wGyNAkr3YTc61veDZgAcR+5yTEBSgS0UhAbGte4OVge7JDt3y4LqVUume0j1vlcS980C/L8rwVpGoZwGYErMRr9ny3xjlfYMhkX3ZpJ2ylwCVggjvzNWTCgDXjV0xHGHduLPgllg6Wh+dEkwNtVv2SyLWaksji0Hwu9wjRLsoHDTN3kIYKFY5pBbYrBLt6E0L7RxLuUfQHhYFcXGwDLlxQklr6N1eGTt65coJWdeOwAnMrgQFuyI4xmPXU96C03LfVa+66UnjsoSWX5h1HkfiDhKRkMSkudNsz/ilDhar6D003EVXvVp
-X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:PH7PR12MB6588.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230016)(4636009)(396003)(39860400002)(136003)(376002)(346002)(366004)(8936002)(53546011)(6506007)(186003)(41300700001)(478600001)(6916009)(83380400001)(6512007)(5660300002)(2616005)(6666004)(7416002)(2906002)(44832011)(316002)(8676002)(4326008)(38100700002)(31696002)(66946007)(26005)(66556008)(6486002)(66476007)(36756003)(31686004)(4744005)(86362001)(21314003)(43740500002)(45980500001);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0: =?utf-8?B?L1d6QUNweEtJVFRiRU1MZERtZ3ZyUElLVVZEL1o4NzRJellleGZkaVhmaU91?=
- =?utf-8?B?aWtMVDdpQmhyVHB6YUxRQk5vVEphQ1ROVjE1SW5UVUdaUWJLNnkvdHdNTHpp?=
- =?utf-8?B?L3JlMlpqQ1VHMG8xdDhCcTJJSTBLWFlWWWtGZmRhbGFlNnd4SG41L0hxM2dE?=
- =?utf-8?B?alN4bnM1WTRaZ04vNlN1YXJrUm9EVzJiSVV5ZzUvaHZERHpSamRvMEQ5MVcv?=
- =?utf-8?B?bFJ6c0crZnRCL0RnSnhLQUFrdnk5TXVuaHFyc0VxdXpnR0FnV2R3MkRCcDls?=
- =?utf-8?B?OFpnSTdWcXY0dVNiVlpMZG1nbUl4MnQxbTNSZWtzZDRPVWliOFJXdjI4QVp2?=
- =?utf-8?B?aEMzV2pXbW9yM2ZEQ3ZUVzlGakdIMytNbjJVM3pPQ1pMRm9uSmtOM1pxOWN1?=
- =?utf-8?B?SU4rMDQxYkdiSFhQVXN6cFlEVWI5WkdmWUNleUZTNE9IYTF4UElLQ0djWFpI?=
- =?utf-8?B?T1VUNXk2eEhMZXpUM2tRa2t0aS81VjVOblgxTDUvamNJSng1NDl3OVZHWGR3?=
- =?utf-8?B?S1BUeEkrVG9FbVliSGxCRTZyeGRzaEtVMmpwU2lTQURxWDYvMUhkK3ZQdG1a?=
- =?utf-8?B?dmZzSUhsbmg0TFBMRCtCSHNHSmxPVyt5U3dvQ2VBWmFXSHp3a0FnQWJacGVP?=
- =?utf-8?B?OHZSR2FibW13MGZWY3FDbFRIVDNYcnJDbkNZVzNBMEkyWFRvSTBMLzcwZUR2?=
- =?utf-8?B?MDN3ZVVYQzFlcCtEeDZDaFJIUkM0VVVPUE1XZWhHT01rKy9FQ3N5WGMvUk9K?=
- =?utf-8?B?b2ovM3JRenhZV3pKdEJaRWZwc2tIcmFjakJWOHRNcDVvd2EyU25KanFCaDY3?=
- =?utf-8?B?WDI1RmxlSDZtaU51eGlmKzBxR1dUMUY0d3pyK00wTHgwVEhNZ2JlRDYwT2dw?=
- =?utf-8?B?akRlY3RjWVg4WjZ3VHF3VG9OblRDMno2VDhUb2Nvc1RVYzBLMi9YdkJDRkRj?=
- =?utf-8?B?UEUwcmRFZWpSRExxSXc2anA0TVV0V1FWbEZkaDhtUnUwYnZBZ3lqZ3RyZTh5?=
- =?utf-8?B?ZmV6MUlCOC9hNWJUK2ZIMTJLZzhENHFXc2E4dXMwUUx4R2FReUM4TzZHSDhX?=
- =?utf-8?B?M0dGZzlxaDROWForY1FnUjlSOThOUmNSRnJObnhXME5taDZhRWZUVTI5QVlw?=
- =?utf-8?B?UktXYlRmSExVS0NBUG9xVTJ1VU1ZNkIxRlE2ZWJIczlBN08vdmJYbnRqM1Bx?=
- =?utf-8?B?S2M0SW4xVHpCM3ZqK2N0ampiWjFscHhXNjRrcVRIRmg1b3NKb1RTYk5HSXdk?=
- =?utf-8?B?UWRHaU5pRWZPcTJ2VXUrZGpWZ1RoMnF5cys0NjlXcWRaZjlKOWQxUk1ocWd2?=
- =?utf-8?B?bmQvMUVFY01YeTVHc1U0RGM5bVJYYTZtYVRqL3RjbnJpazlLWWlwUUE0a2Js?=
- =?utf-8?B?WU1BN2VxalpVeUtsd2JNb0RUK0d1SVJ6LzNIMWRQL2FrZHhKOEJjZnBpSUtB?=
- =?utf-8?B?NlNHVG92K04yU1d4ZDNCdXRwbXBIdk5CY1FmbWM1U3diY2F4UW1jc1dVeDNZ?=
- =?utf-8?B?dmdRU25tdjdVRkJTN0dkcjBtNkl5QnRLS0J0NXdONkY5YUEyT29ob1dsK3JP?=
- =?utf-8?B?N2owSHZaNm5vcVo0aFp3UytqN2JTQU8xUmJ6ZHdvVmdzMmZrM0NEY1pMSjdw?=
- =?utf-8?B?a2FwRVE2UG9IdUdWZ3UxMUJuUWNhdy9za2EvQmRoUUppOGVqMUR4SE54Q0lv?=
- =?utf-8?B?MUNHZnprRTBNbnNQOSt6eXhlQU91bUQvb1NwWkxCNkYydS9Fa2lJa1ZvRk5x?=
- =?utf-8?B?eTVWT2hFZjJVcEM4emZxSGtya2Jrd2syVDhkaXBFajRFekljZDJEbWZmZFBP?=
- =?utf-8?B?Q3JZL0xyUGI4UmVsaENMdnk0VisxWkVrZDF2SFNnWTJNNnBiNmZQM2lWdTNB?=
- =?utf-8?B?OEUra1pFZ2MwTUMrWi9uUzVBeDUzWG5tbzJQWkJXWWZvcGdoQk5xMUE2Y05o?=
- =?utf-8?B?WnowcndrWk0wSFlWMEh2cldGSm1uVU0vSDFqYzRYWjVRb2JaWnAzK1hPS2tj?=
- =?utf-8?B?eVpKTXhMemVkaWV2TnFzY0ovdWxZR3FJTkpHeUsrdWlZRXBzS2U3RUdNMjBE?=
- =?utf-8?B?L25ocnp2SWlMU3FpczRpY1dVZ0RHTGNEUktJN3JndXUrWldJNjN0U1BGVHdk?=
- =?utf-8?Q?sOSMKVuFuPuaRdFwyANqOocRp?=
-X-OriginatorOrg: amd.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 9820242a-ec4c-45c0-324f-08da8c05c6a5
-X-MS-Exchange-CrossTenant-AuthSource: PH7PR12MB6588.namprd12.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 01 Sep 2022 10:36:06.5848
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: l3dzTv12C+49+QVg52kTGhInCHr30ol5JLdW++VHzCBozPrYzkmd0PkLttTguFVkOJeDKOhPZn2CHTMaPAYt3w==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: IA1PR12MB6627
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-On 29-Aug-22 8:10 PM, Peter Zijlstra wrote:
-> On Mon, Aug 29, 2022 at 02:04:33PM +0200, Peter Zijlstra wrote:
->> On Mon, Aug 29, 2022 at 05:03:47PM +0530, Ravi Bangoria wrote:
->>> @@ -12598,6 +12590,7 @@ EXPORT_SYMBOL_GPL(perf_event_create_kernel_counter);
->>>  
->>>  void perf_pmu_migrate_context(struct pmu *pmu, int src_cpu, int dst_cpu)
->>>  {
->>> +#if 0 // XXX buggered - cpu hotplug, who cares
->>>  	struct perf_event_context *src_ctx;
->>>  	struct perf_event_context *dst_ctx;
->>>  	struct perf_event *event, *tmp;
->>> @@ -12658,6 +12651,7 @@ void perf_pmu_migrate_context(struct pmu *pmu, int src_cpu, int dst_cpu)
->>>  	}
->>>  	mutex_unlock(&dst_ctx->mutex);
->>>  	mutex_unlock(&src_ctx->mutex);
->>> +#endif
->>>  }
->>>  EXPORT_SYMBOL_GPL(perf_pmu_migrate_context);
->>>  
->>
->> Note to self; fix this :-) I'll see if I have time for that later today.
+On 1/09/22 00:03, Namhyung Kim wrote:
+> When there are lost samples, it can read the number of PERF_FORMAT_LOST and
+> convert it to PERF_RECORD_LOST_SAMPLES and write to the data file at the end.
 > 
-> Urgh, while going through that it appears the whole refcounting thing
-> isn't fully done either.
+> Signed-off-by: Namhyung Kim <namhyung@kernel.org>
+> ---
+>  tools/perf/builtin-record.c | 60 +++++++++++++++++++++++++++++++++++++
+>  1 file changed, 60 insertions(+)
+> 
+> diff --git a/tools/perf/builtin-record.c b/tools/perf/builtin-record.c
+> index bce8c941d558..cb9881543a07 100644
+> --- a/tools/perf/builtin-record.c
+> +++ b/tools/perf/builtin-record.c
+> @@ -10,6 +10,7 @@
+>  
+>  #include "util/build-id.h"
+>  #include <subcmd/parse-options.h>
+> +#include <internal/xyarray.h>
+>  #include "util/parse-events.h"
+>  #include "util/config.h"
+>  
+> @@ -1852,6 +1853,64 @@ record__switch_output(struct record *rec, bool at_exit)
+>  	return fd;
+>  }
+>  
+> +static void __record__read_lost_samples(struct record *rec, struct evsel *evsel,
+> +					struct perf_record_lost_samples *lost,
+> +					int size, int cpu_idx, int thread_idx)
+> +{
+> +	struct perf_counts_values count;
+> +	struct perf_sample_id *sid;
+> +	struct perf_sample sample = {};
+> +
+> +	if (perf_evsel__read(&evsel->core, cpu_idx, thread_idx, &count) < 0) {
+> +		pr_err("read LOST count failed\n");
+> +		return;
+> +	}
+> +
+> +	if (count.lost == 0)
+> +		return;
+> +
+> +	lost->lost = count.lost;
+> +	if (evsel->core.ids) {
+> +		sid = xyarray__entry(evsel->core.sample_id, cpu_idx, thread_idx);
+> +		sample.id = sid->id;
+> +	}
+> +
+> +	perf_event__synthesize_id_sample((void *)(lost + 1),
+> +					 evsel->core.attr.sample_type, &sample);
 
-Not sure I follow. Can you please elaborate.
+The ID sample size can vary with sample_type and is not necessarily the same as
+machine->id_hdr_size.
 
-Thanks,
-Ravi
+The following might be more robust:
+
+	id_hdr_size = perf_event__synthesize_id_sample((void *)(lost + 1), evsel->core.attr.sample_type, &sample);
+	lost->header.size = sizeof(*lost) + id_hdr_size;
+
+> +	record__write(rec, NULL, lost, size);
+> +}
+> +
+> +static void record__read_lost_samples(struct record *rec)
+> +{
+> +	struct perf_session *session = rec->session;
+> +	struct machine *machine = &session->machines.host;
+> +	struct perf_record_lost_samples *lost;
+> +	struct evsel *evsel;
+> +	int size = sizeof(*lost) + machine->id_hdr_size;
+
+  -	int size = sizeof(*lost) + machine->id_hdr_size;
+
+> +
+> +	lost = zalloc(size);
+
+	lost = zalloc(PERF_SAMPLE_MAX_SIZE);
+
+
+> +	lost->header.type = PERF_RECORD_LOST_SAMPLES;
+> +	lost->header.size = size;
+
+  -	lost->header.size = size;
+
+> +
+> +	evlist__for_each_entry(session->evlist, evsel) {
+> +		struct xyarray *xy = evsel->core.sample_id;
+> +
+> +		if (xyarray__max_x(evsel->core.fd) != xyarray__max_x(xy) ||
+> +		    xyarray__max_y(evsel->core.fd) != xyarray__max_y(xy)) {
+> +			pr_debug("Unmatched FD vs. sample ID: skip reading LOST count\n");
+> +			continue;
+> +		}
+> +
+> +		for (int x = 0; x < xyarray__max_x(xy); x++) {
+> +			for (int y = 0; y < xyarray__max_y(xy); y++) {
+> +				__record__read_lost_samples(rec, evsel, lost,
+> +							    size, x, y);
+> +			}
+> +		}
+> +	}
+> +
+> +}
+> +
+>  static volatile int workload_exec_errno;
+>  
+>  /*
+> @@ -2710,6 +2769,7 @@ static int __cmd_record(struct record *rec, int argc, const char **argv)
+>  	if (rec->off_cpu)
+>  		rec->bytes_written += off_cpu_write(rec->session);
+>  
+> +	record__read_lost_samples(rec);
+>  	record__synthesize(rec, true);
+>  	/* this will be recalculated during process_buildids() */
+>  	rec->samples = 0;
+
