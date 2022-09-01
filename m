@@ -2,104 +2,115 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4D600C6FA81
-	for <linux-perf-users@archiver.kernel.org>; Thu,  1 Sep 2022 19:29:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 43865ECAAD3
+	for <linux-perf-users@archiver.kernel.org>; Thu,  1 Sep 2022 19:57:45 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232517AbiIAT3D (ORCPT
+        id S233329AbiIAT5o (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Thu, 1 Sep 2022 15:29:03 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49520 "EHLO
+        Thu, 1 Sep 2022 15:57:44 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47036 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S233151AbiIAT24 (ORCPT
+        with ESMTP id S233218AbiIAT5n (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Thu, 1 Sep 2022 15:28:56 -0400
-Received: from sin.source.kernel.org (sin.source.kernel.org [145.40.73.55])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6C12279A4E;
-        Thu,  1 Sep 2022 12:28:55 -0700 (PDT)
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by sin.source.kernel.org (Postfix) with ESMTPS id 952C5CE2949;
-        Thu,  1 Sep 2022 19:28:53 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 4811EC433D7;
-        Thu,  1 Sep 2022 19:28:51 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1662060531;
-        bh=wPGJi1HYQfzdkkC89+e/MCcsIJMqTVYm3fW789MbPn8=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=Y/6VIhw8ct4HHtcXOrxI4FCzZqPeilyN6llgRP5TATov6yt+nLIeApjVTlUzMUHIQ
-         r8jUpPCKcxPCdvWF2J9eAdYnyH01pDUTTshLIuLCWSpDPYZAEnjC1qO26BHvR4yVug
-         vy5+vaZGUih/xn22/GaUqsgG484pTKUYaCwe8vl6kTHl08PTF2yKhNPW5tFFVMJdpW
-         foIJgk/Sfr2C2w57UHWSiRYgHSCTJmJ2M97gOkQuZ6of8xYW2+I0u1XwWUHmaJAbZe
-         97UK0HCr/JApbF3yDxMqCM7S4solcrj4/OslwOgY4oTlBe+LhnV8QD6urV/h1dhoQx
-         wAf5lWAyJWQ3g==
-Received: by mail-ua1-f52.google.com with SMTP id a18so39582uat.11;
-        Thu, 01 Sep 2022 12:28:51 -0700 (PDT)
-X-Gm-Message-State: ACgBeo0wW89xObdnBN5sASfkAus0QS8MUG3yKJUeNHqBZexw7tbXjiYl
-        +t4+cl0UbL+a6nr6dYUB43mPmW+lUVuttwJQwg==
-X-Google-Smtp-Source: AA6agR7VHuEcnFA5n4ZVUkDfVEkdIBa9x92i7DYGLhMLYv4WJB9UjEZ3YID74DSaJ8wUn2D0rPrWT2MzLZdQFo+tlIs=
-X-Received: by 2002:ab0:35d4:0:b0:3a2:b85:c04b with SMTP id
- x20-20020ab035d4000000b003a20b85c04bmr4929355uat.43.1662060530264; Thu, 01
- Sep 2022 12:28:50 -0700 (PDT)
+        Thu, 1 Sep 2022 15:57:43 -0400
+Received: from mail-pj1-x1031.google.com (mail-pj1-x1031.google.com [IPv6:2607:f8b0:4864:20::1031])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0251F883E0;
+        Thu,  1 Sep 2022 12:57:43 -0700 (PDT)
+Received: by mail-pj1-x1031.google.com with SMTP id i5-20020a17090a2a0500b001fd8708ffdfso3456301pjd.2;
+        Thu, 01 Sep 2022 12:57:42 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20210112;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:sender:from:to:cc:subject:date;
+        bh=Bd+rXb3069I5Z5vldvEZpgf/hYsFoBoCUXm5L5yp/BY=;
+        b=jcht6nBIKryIds7W6HMSeIt+XUi9hXl2sA8c0gFTbSRjKEGRI2US6JQfwMff5avJRs
+         cUP8kUhK99YSAkyEXoSjizcSJdU+/Fi+P/jt3wFhShMNwFZyzufJcmfL9bBlHEJHvgJP
+         vpWdGRqgDX4Ae+0rhAXQSB691cHvXNxR6tuwnZ3J1goer/jceohRv528INPgwe1VvDF5
+         o2Ngu5bXOrCYYh9f6WLi/++INlhYB1/0veeT/+WIYbDo95NDcPVBKqBvw0RDmwJ5M0Tp
+         e0Rc1pCa1tnA5FRmPe4+yBetAF71YUl0HsfG8NHzLtgN4pLeozftaXnq02UJ2tcTr6a1
+         3YOw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:sender:x-gm-message-state:from:to:cc:subject:date;
+        bh=Bd+rXb3069I5Z5vldvEZpgf/hYsFoBoCUXm5L5yp/BY=;
+        b=B8Yy496r5C219m1Q7q0Eet/bZGvSnFY3haOV0sgtuQLEepNPEwPHkwLkV/Dsfe6oUx
+         JF+IUWHdzpehZIQ1Ax/b9RjlMYIHnqTRnWPp2k+EP2AkDMYvRBn83Dzj6frJGQ7JP97w
+         Ed0lY5P+uqLeczAqq0hM3ap5KLqghgNWno9gxVQABzXNzCVxRN91Wi7fuV1uiUZcn7VN
+         0TIaYdDYcNr6qdQFxcKn63u1SpzQ/p/EpE7sUzBfLQeLq/f6uRWHtuNcX/jCL2jwibYD
+         uhFmz2yWAPR2KNJyGZYTnrPcY65a5UjaEeJ6Syw6r+ezys1yAQpnr9JAGrlS9IeHVxfp
+         WHDg==
+X-Gm-Message-State: ACgBeo21uu6jI/nw/XpT8KP7XTChgQG/ab8vvE9e9JOplqzLDjdEJxQc
+        xnongjcWNAZVdjyviVpppJY=
+X-Google-Smtp-Source: AA6agR5WgfOwMQzuWcuYT0sAq4P/AdNPcYqQfh15cyWdgzC/xe7q8/dgNRK1kVZLe6YkaHKMSEH7qA==
+X-Received: by 2002:a17:902:bd48:b0:172:bb9d:d6d5 with SMTP id b8-20020a170902bd4800b00172bb9dd6d5mr31869287plx.59.1662062262410;
+        Thu, 01 Sep 2022 12:57:42 -0700 (PDT)
+Received: from youngsil.svl.corp.google.com ([2620:15c:2d4:203:87ff:65c0:eb6a:d2b3])
+        by smtp.gmail.com with ESMTPSA id z10-20020a17090a1fca00b001fb23c28e9asm3728500pjz.2.2022.09.01.12.57.41
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 01 Sep 2022 12:57:41 -0700 (PDT)
+Sender: Namhyung Kim <namhyung@gmail.com>
+From:   Namhyung Kim <namhyung@kernel.org>
+To:     Arnaldo Carvalho de Melo <acme@kernel.org>,
+        Jiri Olsa <jolsa@kernel.org>
+Cc:     Ingo Molnar <mingo@kernel.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Ian Rogers <irogers@google.com>,
+        linux-perf-users@vger.kernel.org,
+        Adrian Hunter <adrian.hunter@intel.com>
+Subject: [PATCHSET 0/5] perf tools: Show per-event lost sample count (v2)
+Date:   Thu,  1 Sep 2022 12:57:34 -0700
+Message-Id: <20220901195739.668604-1-namhyung@kernel.org>
+X-Mailer: git-send-email 2.37.2.789.g6183377224-goog
 MIME-Version: 1.0
-References: <20220901184709.2179309-1-robh@kernel.org> <3361AE1E-778E-46F7-A51B-D143DF29FEAD@gmail.com>
-In-Reply-To: <3361AE1E-778E-46F7-A51B-D143DF29FEAD@gmail.com>
-From:   Rob Herring <robh@kernel.org>
-Date:   Thu, 1 Sep 2022 14:28:39 -0500
-X-Gmail-Original-Message-ID: <CAL_JsqLW=Vd=isvPd7_X3Vwp=0XUYjKqLkGYW2cztkd6JnGntQ@mail.gmail.com>
-Message-ID: <CAL_JsqLW=Vd=isvPd7_X3Vwp=0XUYjKqLkGYW2cztkd6JnGntQ@mail.gmail.com>
-Subject: Re: [PATCH] perf: Ignore format attributes with an unknown
- perf_event_attr field
-To:     Arnaldo Carvalho de Melo <arnaldo.melo@gmail.com>
-Cc:     Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Jiri Olsa <jolsa@kernel.org>,
-        Namhyung Kim <namhyung@kernel.org>,
-        James Clark <james.clark@arm.com>,
-        linux-perf-users <linux-perf-users@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-On Thu, Sep 1, 2022 at 2:22 PM Arnaldo Carvalho de Melo
-<arnaldo.melo@gmail.com> wrote:
->
->
->
-> On September 1, 2022 3:47:10 PM GMT-03:00, Rob Herring <robh@kernel.org> wrote:
-> >If the kernel exposes a new perf_event_attr field in a format attr, perf
-> >will return an error stating the specified PMU can't be found. For
-> >example, a format attr with 'config3:0-63' causes an error if config3 is
-> >unknown to perf. This causes a compatibility issue between a newer
-> >kernel and an older perf tool.
-> >
-> >The addition here makes any attr string up to the ':' ignored, but
-> >still checks the 'bits' portion.
->
-> So, can you please show what is the behavior of the tool, with an actual command line and it's output, before and after your patch?
+Hello,
 
-Before this patch with a kernel adding 'config3' I get:
+Now we have PERF_FORMAT_LOST support, add it to perf record and report so that
+it can show number of lost samples per event.  This can be useful if you want
+to reconstruct number of events from the samples like when using -c option.
 
-# perf record -e arm_spe// -- true
-event syntax error: 'arm_spe//'
-                     \___ Cannot find PMU `arm_spe'. Missing kernel support?
-Run 'perf list' for a list of valid events
+Changes in v2)
+ * fix id_hdr_size calculation  (Adrian)
+ * fix a memory leak
+ * display lost samples even if no samples
+ 
+ 
+Currently it adds PERF_RECORD_LOST_SAMPLES at the end of perf data after reading
+event values by read(2).  The perf record unconditionally sets the lost bit if
+the kernel supports it.  Users can see the number with `perf report --stat`.
 
- Usage: perf record [<options>] [<command>]
-    or: perf record [<options>] -- <command> [<options>]
+You can get the code from 'perf/report-lost-v2' brach on
 
-    -e, --event <event>   event selector. use 'perf list' to list
-available events
+  git://git.kernel.org/pub/scm/linux/kernel/git/namhyung/linux-perf.git
 
-After this patch, I get:
+Thanks,
+Namhyung
 
-# perf record -e arm_spe// -- true
-[ perf record: Woken up 2 times to write data ]
-[ perf record: Captured and wrote 0.091 MB perf.data ]
+Namhyung Kim (5):
+  perf tools: Print LOST read format in the verbose mode
+  perf record: Set PERF_FORMAT_LOST by default
+  perf record: Read and inject LOST_SAMPLES events
+  perf hist: Add nr_lost_samples to hist_stats
+  perf report: Show per-event LOST SAMPLES stat
 
-Rob
+ tools/perf/builtin-record.c               | 64 +++++++++++++++++++++++
+ tools/perf/builtin-report.c               | 17 ++++++
+ tools/perf/util/events_stats.h            |  1 +
+ tools/perf/util/evsel.c                   | 10 +++-
+ tools/perf/util/evsel.h                   |  1 +
+ tools/perf/util/hist.c                    | 15 ++++--
+ tools/perf/util/hist.h                    |  1 +
+ tools/perf/util/perf_event_attr_fprintf.c |  2 +-
+ 8 files changed, 106 insertions(+), 5 deletions(-)
+
+
+base-commit: 6c3bd8d3e01d9014312caa52e4ef1c29d5249648
+-- 
+2.37.2.789.g6183377224-goog
+
