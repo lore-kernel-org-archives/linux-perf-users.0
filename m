@@ -2,227 +2,159 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EB0B3ECAAD2
-	for <linux-perf-users@archiver.kernel.org>; Thu,  1 Sep 2022 05:07:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 25C49ECAAD1
+	for <linux-perf-users@archiver.kernel.org>; Thu,  1 Sep 2022 10:36:13 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232699AbiIAFHf (ORCPT
+        id S233947AbiIAKgM (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Thu, 1 Sep 2022 01:07:35 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39490 "EHLO
+        Thu, 1 Sep 2022 06:36:12 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46280 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231447AbiIAFHe (ORCPT
+        with ESMTP id S233057AbiIAKgK (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Thu, 1 Sep 2022 01:07:34 -0400
-Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTP id 020FA112EC7;
-        Wed, 31 Aug 2022 22:07:32 -0700 (PDT)
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id AA834D6E;
-        Wed, 31 Aug 2022 22:07:38 -0700 (PDT)
-Received: from [10.162.43.7] (unknown [10.162.43.7])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 610963F71A;
-        Wed, 31 Aug 2022 22:07:27 -0700 (PDT)
-Message-ID: <9b1a8ebd-0562-f104-7439-308282f7fb52@arm.com>
-Date:   Thu, 1 Sep 2022 10:37:24 +0530
-MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
- Thunderbird/91.11.0
-Subject: Re: [PATCH V7 6/8] perf/tools: Extend branch type classification
+        Thu, 1 Sep 2022 06:36:10 -0400
+Received: from NAM04-BN8-obe.outbound.protection.outlook.com (mail-bn8nam04on2071.outbound.protection.outlook.com [40.107.100.71])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0D2ADDFB7A;
+        Thu,  1 Sep 2022 03:36:09 -0700 (PDT)
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=CfxaWdes4PUs+oPZDs8VZyzYdw1VjpI6EpsE0tRKBdhfYGQWARDqwseyl1c8GjRRPHxc1M+iHa6KoxZYKakDUNoFeCQTINOt/YjNBQ2vmTIQXWKjCVOuXOsx/apLQVtdftJ68hIGrMpaxo2oDhbiLQ1+AFTR9o9cIGmo4rZ4caXkjGb+B++c03fu/Fy/Yzv7G4QVD5qUk0zqaafsCQ/1xho7E+KCF1ezU3f6XNJl/feKkSaim2nvSyRexGB09lTl7d7DMn6MVD7Zbpo9t9qWihdN5ws92sBN9+9MjkAIGUM0/mNzKLMRLvHRXt6nsZLlB3aDe68k5aV4J97iY0FT0w==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=nH92cuMwS6n/ybagev9dAYT5CUWIIHJy5czEC6iAMTQ=;
+ b=VLkbLxfoLcH3/19S2WpFYn9WocbYS3c/GolCKDXA6KvNLd+mDgwoht0Dq2TIC5X8SwgONskHu2SDisS4a/x/gKnuDgJ7Lz4ElMt3k2dh4IUR1exNfVUht898WNKYaj5QkvVMsoZH7EiN3wrRxqVw4xRbIQkQXUjd78mkcLLsq63G5qL1UNnObOiJ/IGMFrFtXNoBO+V0jWmsZ2ewfGds5813RcnzssAOBMwzbHhpoTUrJQIY1YL4Z3ZCl8mlAfCiebYTxTQAJzs7pi/kVAaYX/Tae07nrFbpKOAU+XkmemLAPKiOTL04msNrWCg5D2FDWlHrTW8irkdnsgBBIbEcmw==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=amd.com; dmarc=pass action=none header.from=amd.com; dkim=pass
+ header.d=amd.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=nH92cuMwS6n/ybagev9dAYT5CUWIIHJy5czEC6iAMTQ=;
+ b=GtS6RylsV7rn+rxiDiF7irjqGW8fxQqXUzytMZuXB/GNZ7jrQNJnxacaLTStNEN1sP9+Mecf8F1MHIUszidqlOfbiJYC/Ml420FhtJonWKwSeeKF3HJryC3na/QlU+4hhhL46fg4RucZU4EMvzLRVpH/35TzQCTgN9GuAgAr5KY=
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=amd.com;
+Received: from PH7PR12MB6588.namprd12.prod.outlook.com (2603:10b6:510:210::10)
+ by IA1PR12MB6627.namprd12.prod.outlook.com (2603:10b6:208:3a1::21) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.5566.15; Thu, 1 Sep
+ 2022 10:36:06 +0000
+Received: from PH7PR12MB6588.namprd12.prod.outlook.com
+ ([fe80::d058:d925:c09b:de2]) by PH7PR12MB6588.namprd12.prod.outlook.com
+ ([fe80::d058:d925:c09b:de2%5]) with mapi id 15.20.5588.010; Thu, 1 Sep 2022
+ 10:36:06 +0000
+Message-ID: <c5a6aea9-4f3a-495e-78fa-e426de9b0496@amd.com>
+Date:   Thu, 1 Sep 2022 16:05:53 +0530
+User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:91.0) Gecko/20100101
+ Thunderbird/91.9.1
+Subject: Re: [PATCH] perf: Rewrite core context handling
 Content-Language: en-US
-To:     Arnaldo Carvalho de Melo <acme@kernel.org>
-Cc:     linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org,
-        peterz@infradead.org, alexander.shishkin@linux.intel.com,
-        jolsa@redhat.com, mark.rutland@arm.com,
-        Robin Murphy <robin.murphy@arm.com>,
-        Suzuki Poulose <suzuki.poulose@arm.com>,
-        James Clark <james.clark@arm.com>,
-        Ingo Molnar <mingo@redhat.com>,
-        Namhyung Kim <namhyung@kernel.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Will Deacon <will@kernel.org>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        linux-arm-kernel@lists.infradead.org
-References: <20220824044822.70230-1-anshuman.khandual@arm.com>
- <20220824044822.70230-7-anshuman.khandual@arm.com>
- <Yw59CkHUVbfrHdkh@kernel.org>
-From:   Anshuman Khandual <anshuman.khandual@arm.com>
-In-Reply-To: <Yw59CkHUVbfrHdkh@kernel.org>
+To:     Peter Zijlstra <peterz@infradead.org>
+Cc:     acme@kernel.org, alexander.shishkin@linux.intel.com,
+        jolsa@redhat.com, namhyung@kernel.org, songliubraving@fb.com,
+        eranian@google.com, ak@linux.intel.com, mark.rutland@arm.com,
+        frederic@kernel.org, maddy@linux.ibm.com, irogers@google.com,
+        will@kernel.org, robh@kernel.org, mingo@redhat.com,
+        catalin.marinas@arm.com, linux-arm-kernel@lists.infradead.org,
+        linux-perf-users@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
+        linux-s390@vger.kernel.org, linux-kernel@vger.kernel.org,
+        sandipan.das@amd.com, ananth.narayan@amd.com, kim.phillips@amd.com,
+        santosh.shukla@amd.com, ravi.bangoria@amd.com
+References: <20220829113347.295-1-ravi.bangoria@amd.com>
+ <YwyrUYS30gVbxc2D@hirez.programming.kicks-ass.net>
+ <YwzP+AFWCx4Ni/kx@hirez.programming.kicks-ass.net>
+From:   Ravi Bangoria <ravi.bangoria@amd.com>
+In-Reply-To: <YwzP+AFWCx4Ni/kx@hirez.programming.kicks-ass.net>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: PN3PR01CA0002.INDPRD01.PROD.OUTLOOK.COM
+ (2603:1096:c01:95::22) To PH7PR12MB6588.namprd12.prod.outlook.com
+ (2603:10b6:510:210::10)
+MIME-Version: 1.0
+X-MS-PublicTrafficType: Email
+X-MS-Office365-Filtering-Correlation-Id: 9820242a-ec4c-45c0-324f-08da8c05c6a5
+X-MS-TrafficTypeDiagnostic: IA1PR12MB6627:EE_
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info: DxNvT0ZbL46OdXy17Cs7f7+Cdf0Sto6jdvhgd2RBDb6QSiSktiRT2s+ZXEFQlc/3vH+fgGugAdMR3wQ5URwk9WNZ/4/JH4/GSgBOZkJdyRiEE8Ys0Gr0DfXLVI9x9jA6vrJT9IJjgyIitgiVM0SZtprKS6d0boOz9k69UvMJeHQFUpLHMuIr0Z/BkdFZDA7+W/ZWzD8dQ4wAlt2KMq9TVt1jJL70xjWh+hXwPNiVvLeH6sTl5uTsqGmNs5iznm8g967kCe07GJCBm7UIZLrMGDzFTyCtYX9A+Nyz43N94LCdJ8JuLGa+j0hzobcik+0xculLhu7HAhKBPqOXJapIejfRLLFZGk6gAcVroI3dltuhTFZ8XchAMupIAnZYOzMhv6ozwQUsDp3/zCImIDBMejxjlEO4mrr6vs1Sr0ximsUkxhNlbMWzB0ShAIjdWNcivL35CnO7jNOwcjAP/GVmDuFdHJtMcCFvFohHbb2bnYc89TEyhzh8nSFNgegcycn0QzpXFsxyfHg7wGyNAkr3YTc61veDZgAcR+5yTEBSgS0UhAbGte4OVge7JDt3y4LqVUume0j1vlcS980C/L8rwVpGoZwGYErMRr9ny3xjlfYMhkX3ZpJ2ylwCVggjvzNWTCgDXjV0xHGHduLPgllg6Wh+dEkwNtVv2SyLWaksji0Hwu9wjRLsoHDTN3kIYKFY5pBbYrBLt6E0L7RxLuUfQHhYFcXGwDLlxQklr6N1eGTt65coJWdeOwAnMrgQFuyI4xmPXU96C03LfVa+66UnjsoSWX5h1HkfiDhKRkMSkudNsz/ilDhar6D003EVXvVp
+X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:PH7PR12MB6588.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230016)(4636009)(396003)(39860400002)(136003)(376002)(346002)(366004)(8936002)(53546011)(6506007)(186003)(41300700001)(478600001)(6916009)(83380400001)(6512007)(5660300002)(2616005)(6666004)(7416002)(2906002)(44832011)(316002)(8676002)(4326008)(38100700002)(31696002)(66946007)(26005)(66556008)(6486002)(66476007)(36756003)(31686004)(4744005)(86362001)(21314003)(43740500002)(45980500001);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0: =?utf-8?B?L1d6QUNweEtJVFRiRU1MZERtZ3ZyUElLVVZEL1o4NzRJellleGZkaVhmaU91?=
+ =?utf-8?B?aWtMVDdpQmhyVHB6YUxRQk5vVEphQ1ROVjE1SW5UVUdaUWJLNnkvdHdNTHpp?=
+ =?utf-8?B?L3JlMlpqQ1VHMG8xdDhCcTJJSTBLWFlWWWtGZmRhbGFlNnd4SG41L0hxM2dE?=
+ =?utf-8?B?alN4bnM1WTRaZ04vNlN1YXJrUm9EVzJiSVV5ZzUvaHZERHpSamRvMEQ5MVcv?=
+ =?utf-8?B?bFJ6c0crZnRCL0RnSnhLQUFrdnk5TXVuaHFyc0VxdXpnR0FnV2R3MkRCcDls?=
+ =?utf-8?B?OFpnSTdWcXY0dVNiVlpMZG1nbUl4MnQxbTNSZWtzZDRPVWliOFJXdjI4QVp2?=
+ =?utf-8?B?aEMzV2pXbW9yM2ZEQ3ZUVzlGakdIMytNbjJVM3pPQ1pMRm9uSmtOM1pxOWN1?=
+ =?utf-8?B?SU4rMDQxYkdiSFhQVXN6cFlEVWI5WkdmWUNleUZTNE9IYTF4UElLQ0djWFpI?=
+ =?utf-8?B?T1VUNXk2eEhMZXpUM2tRa2t0aS81VjVOblgxTDUvamNJSng1NDl3OVZHWGR3?=
+ =?utf-8?B?S1BUeEkrVG9FbVliSGxCRTZyeGRzaEtVMmpwU2lTQURxWDYvMUhkK3ZQdG1a?=
+ =?utf-8?B?dmZzSUhsbmg0TFBMRCtCSHNHSmxPVyt5U3dvQ2VBWmFXSHp3a0FnQWJacGVP?=
+ =?utf-8?B?OHZSR2FibW13MGZWY3FDbFRIVDNYcnJDbkNZVzNBMEkyWFRvSTBMLzcwZUR2?=
+ =?utf-8?B?MDN3ZVVYQzFlcCtEeDZDaFJIUkM0VVVPUE1XZWhHT01rKy9FQ3N5WGMvUk9K?=
+ =?utf-8?B?b2ovM3JRenhZV3pKdEJaRWZwc2tIcmFjakJWOHRNcDVvd2EyU25KanFCaDY3?=
+ =?utf-8?B?WDI1RmxlSDZtaU51eGlmKzBxR1dUMUY0d3pyK00wTHgwVEhNZ2JlRDYwT2dw?=
+ =?utf-8?B?akRlY3RjWVg4WjZ3VHF3VG9OblRDMno2VDhUb2Nvc1RVYzBLMi9YdkJDRkRj?=
+ =?utf-8?B?UEUwcmRFZWpSRExxSXc2anA0TVV0V1FWbEZkaDhtUnUwYnZBZ3lqZ3RyZTh5?=
+ =?utf-8?B?ZmV6MUlCOC9hNWJUK2ZIMTJLZzhENHFXc2E4dXMwUUx4R2FReUM4TzZHSDhX?=
+ =?utf-8?B?M0dGZzlxaDROWForY1FnUjlSOThOUmNSRnJObnhXME5taDZhRWZUVTI5QVlw?=
+ =?utf-8?B?UktXYlRmSExVS0NBUG9xVTJ1VU1ZNkIxRlE2ZWJIczlBN08vdmJYbnRqM1Bx?=
+ =?utf-8?B?S2M0SW4xVHpCM3ZqK2N0ampiWjFscHhXNjRrcVRIRmg1b3NKb1RTYk5HSXdk?=
+ =?utf-8?B?UWRHaU5pRWZPcTJ2VXUrZGpWZ1RoMnF5cys0NjlXcWRaZjlKOWQxUk1ocWd2?=
+ =?utf-8?B?bmQvMUVFY01YeTVHc1U0RGM5bVJYYTZtYVRqL3RjbnJpazlLWWlwUUE0a2Js?=
+ =?utf-8?B?WU1BN2VxalpVeUtsd2JNb0RUK0d1SVJ6LzNIMWRQL2FrZHhKOEJjZnBpSUtB?=
+ =?utf-8?B?NlNHVG92K04yU1d4ZDNCdXRwbXBIdk5CY1FmbWM1U3diY2F4UW1jc1dVeDNZ?=
+ =?utf-8?B?dmdRU25tdjdVRkJTN0dkcjBtNkl5QnRLS0J0NXdONkY5YUEyT29ob1dsK3JP?=
+ =?utf-8?B?N2owSHZaNm5vcVo0aFp3UytqN2JTQU8xUmJ6ZHdvVmdzMmZrM0NEY1pMSjdw?=
+ =?utf-8?B?a2FwRVE2UG9IdUdWZ3UxMUJuUWNhdy9za2EvQmRoUUppOGVqMUR4SE54Q0lv?=
+ =?utf-8?B?MUNHZnprRTBNbnNQOSt6eXhlQU91bUQvb1NwWkxCNkYydS9Fa2lJa1ZvRk5x?=
+ =?utf-8?B?eTVWT2hFZjJVcEM4emZxSGtya2Jrd2syVDhkaXBFajRFekljZDJEbWZmZFBP?=
+ =?utf-8?B?Q3JZL0xyUGI4UmVsaENMdnk0VisxWkVrZDF2SFNnWTJNNnBiNmZQM2lWdTNB?=
+ =?utf-8?B?OEUra1pFZ2MwTUMrWi9uUzVBeDUzWG5tbzJQWkJXWWZvcGdoQk5xMUE2Y05o?=
+ =?utf-8?B?WnowcndrWk0wSFlWMEh2cldGSm1uVU0vSDFqYzRYWjVRb2JaWnAzK1hPS2tj?=
+ =?utf-8?B?eVpKTXhMemVkaWV2TnFzY0ovdWxZR3FJTkpHeUsrdWlZRXBzS2U3RUdNMjBE?=
+ =?utf-8?B?L25ocnp2SWlMU3FpczRpY1dVZ0RHTGNEUktJN3JndXUrWldJNjN0U1BGVHdk?=
+ =?utf-8?Q?sOSMKVuFuPuaRdFwyANqOocRp?=
+X-OriginatorOrg: amd.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 9820242a-ec4c-45c0-324f-08da8c05c6a5
+X-MS-Exchange-CrossTenant-AuthSource: PH7PR12MB6588.namprd12.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 01 Sep 2022 10:36:06.5848
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: l3dzTv12C+49+QVg52kTGhInCHr30ol5JLdW++VHzCBozPrYzkmd0PkLttTguFVkOJeDKOhPZn2CHTMaPAYt3w==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: IA1PR12MB6627
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-
-
-On 8/31/22 02:41, Arnaldo Carvalho de Melo wrote:
-> Em Wed, Aug 24, 2022 at 10:18:20AM +0530, Anshuman Khandual escreveu:
->> This updates the perf tool with generic branch type classification with new
->> ABI extender place holder i.e PERF_BR_EXTEND_ABI, the new 4 bit branch type
->> field i.e perf_branch_entry.new_type, new generic page fault related branch
->> types and some arch specific branch types as added earlier in the kernel.
+On 29-Aug-22 8:10 PM, Peter Zijlstra wrote:
+> On Mon, Aug 29, 2022 at 02:04:33PM +0200, Peter Zijlstra wrote:
+>> On Mon, Aug 29, 2022 at 05:03:47PM +0530, Ravi Bangoria wrote:
+>>> @@ -12598,6 +12590,7 @@ EXPORT_SYMBOL_GPL(perf_event_create_kernel_counter);
+>>>  
+>>>  void perf_pmu_migrate_context(struct pmu *pmu, int src_cpu, int dst_cpu)
+>>>  {
+>>> +#if 0 // XXX buggered - cpu hotplug, who cares
+>>>  	struct perf_event_context *src_ctx;
+>>>  	struct perf_event_context *dst_ctx;
+>>>  	struct perf_event *event, *tmp;
+>>> @@ -12658,6 +12651,7 @@ void perf_pmu_migrate_context(struct pmu *pmu, int src_cpu, int dst_cpu)
+>>>  	}
+>>>  	mutex_unlock(&dst_ctx->mutex);
+>>>  	mutex_unlock(&src_ctx->mutex);
+>>> +#endif
+>>>  }
+>>>  EXPORT_SYMBOL_GPL(perf_pmu_migrate_context);
+>>>  
 >>
->> Cc: Peter Zijlstra <peterz@infradead.org>
->> Cc: Ingo Molnar <mingo@redhat.com>
->> Cc: Arnaldo Carvalho de Melo <acme@kernel.org>
->> Cc: Mark Rutland <mark.rutland@arm.com>
->> Cc: Alexander Shishkin <alexander.shishkin@linux.intel.com>
->> Cc: Jiri Olsa <jolsa@redhat.com>
->> Cc: Namhyung Kim <namhyung@kernel.org>
->> Cc: Thomas Gleixner <tglx@linutronix.de>
->> Cc: Will Deacon <will@kernel.org>
->> Cc: linux-arm-kernel@lists.infradead.org
->> Cc: linux-perf-users@vger.kernel.org
->> Cc: linux-kernel@vger.kernel.org
->> Signed-off-by: Anshuman Khandual <anshuman.khandual@arm.com>
->> ---
->>  tools/include/uapi/linux/perf_event.h | 16 ++++++++-
->>  tools/perf/builtin-script.c           |  2 +-
->>  tools/perf/util/branch.c              | 52 ++++++++++++++++++++++++++-
->>  tools/perf/util/branch.h              |  6 +++-
->>  tools/perf/util/session.c             |  2 +-
->>  5 files changed, 73 insertions(+), 5 deletions(-)
->>
->> diff --git a/tools/include/uapi/linux/perf_event.h b/tools/include/uapi/linux/perf_event.h
->> index 146c137ff0c1..0f7c7ce29899 100644
->> --- a/tools/include/uapi/linux/perf_event.h
->> +++ b/tools/include/uapi/linux/perf_event.h
->> @@ -255,9 +255,22 @@ enum {
->>  	PERF_BR_IRQ		= 12,	/* irq */
->>  	PERF_BR_SERROR		= 13,	/* system error */
->>  	PERF_BR_NO_TX		= 14,	/* not in transaction */
->> +	PERF_BR_EXTEND_ABI	= 15,	/* extend ABI */
->>  	PERF_BR_MAX,
->>  };
->>  
->> +enum {
->> +	PERF_BR_NEW_FAULT_ALGN		= 0,    /* Alignment fault */
->> +	PERF_BR_NEW_FAULT_DATA		= 1,    /* Data fault */
->> +	PERF_BR_NEW_FAULT_INST		= 2,    /* Inst fault */
->> +	PERF_BR_NEW_ARCH_1		= 3,    /* Architecture specific */
->> +	PERF_BR_NEW_ARCH_2		= 4,    /* Architecture specific */
->> +	PERF_BR_NEW_ARCH_3		= 5,    /* Architecture specific */
->> +	PERF_BR_NEW_ARCH_4		= 6,    /* Architecture specific */
->> +	PERF_BR_NEW_ARCH_5		= 7,    /* Architecture specific */
->> +	PERF_BR_NEW_MAX,
->> +};
->> +
->>  #define PERF_SAMPLE_BRANCH_PLM_ALL \
->>  	(PERF_SAMPLE_BRANCH_USER|\
->>  	 PERF_SAMPLE_BRANCH_KERNEL|\
->> @@ -1375,7 +1388,8 @@ struct perf_branch_entry {
->>  		abort:1,    /* transaction abort */
->>  		cycles:16,  /* cycle count to last branch */
->>  		type:4,     /* branch type */
->> -		reserved:40;
->> +		new_type:4, /* additional branch type */
->> +		reserved:36;
->>  };
->>  
->>  union perf_sample_weight {
->> diff --git a/tools/perf/builtin-script.c b/tools/perf/builtin-script.c
->> index 13580a9c50b8..585171479876 100644
->> --- a/tools/perf/builtin-script.c
->> +++ b/tools/perf/builtin-script.c
->> @@ -877,7 +877,7 @@ static int print_bstack_flags(FILE *fp, struct branch_entry *br)
->>  		       br->flags.in_tx ? 'X' : '-',
->>  		       br->flags.abort ? 'A' : '-',
->>  		       br->flags.cycles,
->> -		       br->flags.type ? branch_type_name(br->flags.type) : "-");
->> +		       get_branch_type(br));
->>  }
->>  
->>  static int perf_sample__fprintf_brstack(struct perf_sample *sample,
->> diff --git a/tools/perf/util/branch.c b/tools/perf/util/branch.c
->> index abc673347bee..6d962b0a4532 100644
->> --- a/tools/perf/util/branch.c
->> +++ b/tools/perf/util/branch.c
->> @@ -21,7 +21,10 @@ void branch_type_count(struct branch_type_stat *st, struct branch_flags *flags,
->>  	if (flags->type == PERF_BR_UNKNOWN || from == 0)
->>  		return;
->>  
->> -	st->counts[flags->type]++;
->> +	if (flags->type == PERF_BR_EXTEND_ABI)
->> +		st->new_counts[flags->new_type]++;
->> +	else
->> +		st->counts[flags->type]++;
->>  
->>  	if (flags->type == PERF_BR_COND) {
->>  		if (to > from)
->> @@ -36,6 +39,25 @@ void branch_type_count(struct branch_type_stat *st, struct branch_flags *flags,
->>  		st->cross_4k++;
->>  }
->>  
->> +const char *branch_new_type_name(int new_type)
->> +{
->> +	const char *branch_new_names[PERF_BR_NEW_MAX] = {
->> +		"FAULT_ALGN",
->> +		"FAULT_DATA",
->> +		"FAULT_INST",
->> +		"ARCH_1",
->> +		"ARCH_2",
->> +		"ARCH_3",
->> +		"ARCH_4",
->> +		"ARCH_5"
->> +	};
->> +
->> +	if (new_type >= 0 && new_type < PERF_BR_NEW_MAX)
->> +		return branch_new_names[new_type];
->> +
->> +	return NULL;
->> +}
->> +
->>  const char *branch_type_name(int type)
->>  {
->>  	const char *branch_names[PERF_BR_MAX] = {
->> @@ -62,6 +84,17 @@ const char *branch_type_name(int type)
->>  	return NULL;
->>  }
->>  
->> +const char *get_branch_type(struct branch_entry *e)
->> +{
->> +	if (e->flags.type == PERF_BR_UNKNOWN)
->> +		return "";
->> +
->> +	if (e->flags.type == PERF_BR_EXTEND_ABI)
->> +		return branch_new_type_name(e->flags.new_type);
->> +
->> +	return branch_type_name(e->flags.type);
->> +}
->> +
->>  void branch_type_stat_display(FILE *fp, struct branch_type_stat *st)
->>  {
->>  	u64 total = 0;
->> @@ -108,6 +141,15 @@ void branch_type_stat_display(FILE *fp, struct branch_type_stat *st)
->>  				100.0 *
->>  				(double)st->counts[i] / (double)total);
->>  	}
->> +
->> +	for (i = 0; i < PERF_BR_NEW_MAX; i++) {
->> +		if (st->new_counts[i] > 0)
->> +			fprintf(fp, "\n%8s: %5.1f%%",
->> +				branch_new_type_name(i),
->> +				100.0 *
->> +				(double)st->new_counts[i] / (double)total);
->> +	}
->> +
-> Strange:
+>> Note to self; fix this :-) I'll see if I have time for that later today.
 > 
->   75     8.89 ubuntu:20.04-x-powerpc64el    : FAIL gcc version 10.3.0 (Ubuntu 10.3.0-1ubuntu1~20.04)
->         inlined from 'branch_type_stat_display' at util/branch.c:152:4:
->     /usr/powerpc64le-linux-gnu/include/bits/stdio2.h:100:10: error: '%8s' directive argument is null [-Werror=format-overflow=]
->       100 |   return __fprintf_chk (__stream, __USE_FORTIFY_LEVEL - 1, __fmt,
->           |          ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
->       101 |    __va_arg_pack ());
->           |    ~~~~~~~~~~~~~~~~~
-> 
+> Urgh, while going through that it appears the whole refcounting thing
+> isn't fully done either.
 
-Indeed. But this new code block here looks exact same like the previous and existing one
-i.e with branch_new_name() and PERF_BR_NEW_MAX. The complain is that - '%8s' directive
-argument is NULL. This warning might just be a false positive [1], because of a compiler
-problem on powerpc64el ? But please do let me know if something needs to be changed here
-to avoid this warning.
+Not sure I follow. Can you please elaborate.
 
-[1] https://gcc.gnu.org/bugzilla/show_bug.cgi?id=90036
-
-- Anshuman
+Thanks,
+Ravi
