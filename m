@@ -2,83 +2,143 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 645F4ECAAD3
-	for <linux-perf-users@archiver.kernel.org>; Thu,  1 Sep 2022 13:36:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9A03DECAAD3
+	for <linux-perf-users@archiver.kernel.org>; Thu,  1 Sep 2022 15:19:25 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233159AbiIANgL (ORCPT
+        id S233329AbiIAPTY (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Thu, 1 Sep 2022 09:36:11 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60810 "EHLO
+        Thu, 1 Sep 2022 11:19:24 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50032 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S234057AbiIANfj (ORCPT
+        with ESMTP id S232790AbiIAPTY (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Thu, 1 Sep 2022 09:35:39 -0400
-Received: from ams.source.kernel.org (ams.source.kernel.org [IPv6:2604:1380:4601:e00::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 801766262;
-        Thu,  1 Sep 2022 06:33:44 -0700 (PDT)
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by ams.source.kernel.org (Postfix) with ESMTPS id 3C163B82622;
-        Thu,  1 Sep 2022 13:33:43 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 533DAC433D6;
-        Thu,  1 Sep 2022 13:33:39 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1662039221;
-        bh=X05rer4E7Vrs6fmpGuILpb3YeS1Pl/B7CuPAsThsJlQ=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=TvCWq4/PpnS3BKsuQFnijcM2qQ5+1M5XiW6pL9G3Vg+nvaO+1kHPoQVxWgP3QJ6Dc
-         tQ6HM6XZJFK+PyMRcF2yD2iN0WlHErtq8WOfKdqyhro9q85xHzfcq5hCli0t4Z5BY+
-         03xcPvl11GtoEUO93ND6OYfZFkB9B2n9KCMWEl5mpRwA7sYLQBy0xYMaw8fS2geWgF
-         GrNDWp7dfqO3JiquEDNxcJUOum5sM6ILnLIgC6hmHksm0kqKo69Ht9KHWxW/LLBIZP
-         8bSM7HgwPDCxu3rbHXbdmPkYItCiqDVGg7AGFyrTQ/OVowZqioRr9aAYp79CP3u9hY
-         bFuD+EGigh0LQ==
-Date:   Thu, 1 Sep 2022 14:33:35 +0100
-From:   Mark Brown <broonie@kernel.org>
-To:     James Clark <james.clark@arm.com>
-Cc:     linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        linux-perf-users@vger.kernel.org, acme@kernel.org,
-        leo.yan@linaro.org, john.garry@huawei.com, catalin.marinas@arm.com,
-        will@kernel.org, Jonathan Corbet <corbet@lwn.net>,
-        Mark Rutland <mark.rutland@arm.com>, linux-doc@vger.kernel.org
-Subject: Re: [PATCH v3 2/2] arm64/sve: Add Perf extensions documentation
-Message-ID: <YxC0r6RCffBXXllT@sirena.org.uk>
-References: <20220901132658.1024635-1-james.clark@arm.com>
- <20220901132658.1024635-3-james.clark@arm.com>
+        Thu, 1 Sep 2022 11:19:24 -0400
+Received: from foss.arm.com (foss.arm.com [217.140.110.172])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTP id D59A583F0D;
+        Thu,  1 Sep 2022 08:19:22 -0700 (PDT)
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id C5F20ED1;
+        Thu,  1 Sep 2022 08:19:28 -0700 (PDT)
+Received: from hype-n1-sdp.warwick.arm.com (hype-n1-sdp.warwick.arm.com [10.32.32.32])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPA id AEBB63F766;
+        Thu,  1 Sep 2022 08:19:20 -0700 (PDT)
+From:   Nick Forrington <nick.forrington@arm.com>
+To:     linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org,
+        acme@kernel.org
+Cc:     Nick Forrington <nick.forrington@arm.com>,
+        John Garry <john.garry@huawei.com>,
+        Will Deacon <will@kernel.org>,
+        James Clark <james.clark@arm.com>,
+        Mike Leach <mike.leach@linaro.org>,
+        Leo Yan <leo.yan@linaro.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Jiri Olsa <jolsa@kernel.org>,
+        Namhyung Kim <namhyung@kernel.org>,
+        linux-arm-kernel@lists.infradead.org
+Subject: [PATCH] perf vendor events: Add missing Neoverse V1 events
+Date:   Thu,  1 Sep 2022 16:18:04 +0100
+Message-Id: <20220901151804.294823-1-nick.forrington@arm.com>
+X-Mailer: git-send-email 2.25.1
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="1A0ScQ3wnA1aHvzl"
-Content-Disposition: inline
-In-Reply-To: <20220901132658.1024635-3-james.clark@arm.com>
-X-Cookie: This bag is recyclable.
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
+Based on updated data from:
+https://github.com/ARM-software/data/blob/master/pmu/neoverse-v1.json
 
---1A0ScQ3wnA1aHvzl
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+which is based on PMU event descriptions from the Arm Neoverse V1
+Technical Reference Manual.
 
-On Thu, Sep 01, 2022 at 02:26:58PM +0100, James Clark wrote:
+This adds the following missing events:
+ASE_INST_SPEC
+SVE_INST_SPEC
+SVE_PRED_SPEC
+SVE_PRED_EMPTY_SPEC
+SVE_PRED_FULL_SPEC
+SVE_PRED_PARTIAL_SPEC
+SVE_LDFF_SPEC
+SVE_LDFF_FAULT_SPEC
+FP_SCALE_OPS_SPEC
+FP_FIXED_OPS_SPEC
 
-> Document that the VG register is available in Perf samples
+It also moves REMOTE_ACCESS from other.json to memory.json.
 
-Reviewed-by: Mark Brown <broonie@kernel.org>
+Signed-off-by: Nick Forrington <nick.forrington@arm.com>
+---
+ .../arm64/arm/neoverse-v1/instruction.json    | 30 +++++++++++++++++++
+ .../arch/arm64/arm/neoverse-v1/memory.json    |  3 ++
+ .../arch/arm64/arm/neoverse-v1/other.json     |  5 ----
+ 3 files changed, 33 insertions(+), 5 deletions(-)
+ delete mode 100644 tools/perf/pmu-events/arch/arm64/arm/neoverse-v1/other.json
 
---1A0ScQ3wnA1aHvzl
-Content-Type: application/pgp-signature; name="signature.asc"
+diff --git a/tools/perf/pmu-events/arch/arm64/arm/neoverse-v1/instruction.json b/tools/perf/pmu-events/arch/arm64/arm/neoverse-v1/instruction.json
+index 25825e14c535..e29b88fb7f24 100644
+--- a/tools/perf/pmu-events/arch/arm64/arm/neoverse-v1/instruction.json
++++ b/tools/perf/pmu-events/arch/arm64/arm/neoverse-v1/instruction.json
+@@ -85,5 +85,35 @@
+     },
+     {
+         "ArchStdEvent": "RC_ST_SPEC"
++    },
++    {
++        "ArchStdEvent": "ASE_INST_SPEC"
++    },
++    {
++        "ArchStdEvent": "SVE_INST_SPEC"
++    },
++    {
++        "ArchStdEvent": "SVE_PRED_SPEC"
++    },
++    {
++        "ArchStdEvent": "SVE_PRED_EMPTY_SPEC"
++    },
++    {
++        "ArchStdEvent": "SVE_PRED_FULL_SPEC"
++    },
++    {
++        "ArchStdEvent": "SVE_PRED_PARTIAL_SPEC"
++    },
++    {
++        "ArchStdEvent": "SVE_LDFF_SPEC"
++    },
++    {
++        "ArchStdEvent": "SVE_LDFF_FAULT_SPEC"
++    },
++    {
++        "ArchStdEvent": "FP_SCALE_OPS_SPEC"
++    },
++    {
++        "ArchStdEvent": "FP_FIXED_OPS_SPEC"
+     }
+ ]
+diff --git a/tools/perf/pmu-events/arch/arm64/arm/neoverse-v1/memory.json b/tools/perf/pmu-events/arch/arm64/arm/neoverse-v1/memory.json
+index e3d08f1f7c92..5aff6e93c1ad 100644
+--- a/tools/perf/pmu-events/arch/arm64/arm/neoverse-v1/memory.json
++++ b/tools/perf/pmu-events/arch/arm64/arm/neoverse-v1/memory.json
+@@ -2,6 +2,9 @@
+     {
+         "ArchStdEvent": "MEM_ACCESS"
+     },
++    {
++        "ArchStdEvent": "REMOTE_ACCESS"
++    },
+     {
+         "ArchStdEvent": "MEM_ACCESS_RD"
+     },
+diff --git a/tools/perf/pmu-events/arch/arm64/arm/neoverse-v1/other.json b/tools/perf/pmu-events/arch/arm64/arm/neoverse-v1/other.json
+deleted file mode 100644
+index 20d8365756c5..000000000000
+--- a/tools/perf/pmu-events/arch/arm64/arm/neoverse-v1/other.json
++++ /dev/null
+@@ -1,5 +0,0 @@
+-[
+-    {
+-        "ArchStdEvent": "REMOTE_ACCESS"
+-    }
+-]
+-- 
+2.25.1
 
------BEGIN PGP SIGNATURE-----
-
-iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAmMQtK8ACgkQJNaLcl1U
-h9BVKgf/eYlwFhdS4iCAem8v1b27aPMGcA20gbkv0QPE1EOEANQSFXHqASc892k2
-HILdKyxxXbwDdeEySiiVquI1vYeZPTlRp7uoj3ZkxvwfLIJFoT4yuLOBf6Nz8Pwi
-pgG9hnHG94O8dvJp46fxyawg0OJC28OGhO2SziYNRW4HDLKvMdQcnOhWi7+G4g3Y
-/XjjtzafhmqW6L2Su0kc5+Gqoyt3PdLVp2boeZLpp0DMoJd7XSITOO/1VQWN4RJF
-kwq+n9oZFQF7sDZo/RdbB7BnYTTifNruOqTj5saKwPUEn2hOOocvtjPF62jyQ584
-PS/n+8PfRLuqK3vqsdpHjIu+cENLGw==
-=S2Mp
------END PGP SIGNATURE-----
-
---1A0ScQ3wnA1aHvzl--
