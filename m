@@ -2,97 +2,90 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EDC9CECAAD5
-	for <linux-perf-users@archiver.kernel.org>; Fri,  2 Sep 2022 12:02:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 853E3ECAAD5
+	for <linux-perf-users@archiver.kernel.org>; Fri,  2 Sep 2022 14:51:38 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S235697AbiIBMCX (ORCPT
+        id S236800AbiIBOvg (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Fri, 2 Sep 2022 08:02:23 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43214 "EHLO
+        Fri, 2 Sep 2022 10:51:36 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57428 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S235637AbiIBMCW (ORCPT
+        with ESMTP id S236811AbiIBOvM (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Fri, 2 Sep 2022 08:02:22 -0400
-Received: from desiato.infradead.org (desiato.infradead.org [IPv6:2001:8b0:10b:1:d65d:64ff:fe57:4e05])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 74462C0B4D;
-        Fri,  2 Sep 2022 05:02:21 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=desiato.20200630; h=In-Reply-To:Content-Type:MIME-Version:
-        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description;
-        bh=Nz8Tz1uBfArPzrTbA5QgwTqK/y15M7AwWAm6DXoAXqU=; b=dzVLQ+ITUI1Ov9D5o9xTJSFt4p
-        mOLLn0YcKkRuViRI7VyEeyozgdZF/Ar3cklopmx5UjHmQN06fE1jcQrHLEj3c6IkgcR0zXMSe7pTT
-        MVVH6hjfs6xWx2kY+E/QnrRFhgdovhsxlKSW7Et1l3omPAhJ1aPenTCMV046kwQdRio4GiRZgrQTV
-        JKc8liKe3U90Li+tPS589EaZAnOaYeVpOZkYZml5FHMw8HFf0Z0v1qQFLJNzZXy9EdDHVwAL2+wxi
-        HRThC6s5E5XUhR2/bKLs9DtLgLqBoxRDwBF1yHVuPxoX67ocDXH+fFRogakH6JGm0TB1w0KNPbo7x
-        Yd2EBW6Q==;
-Received: from j130084.upc-j.chello.nl ([24.132.130.84] helo=noisy.programming.kicks-ass.net)
-        by desiato.infradead.org with esmtpsa (Exim 4.94.2 #2 (Red Hat Linux))
-        id 1oU5Mz-008evC-BL; Fri, 02 Sep 2022 12:01:57 +0000
-Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange X25519 server-signature RSA-PSS (4096 bits))
-        (Client did not present a certificate)
-        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id 84B75300413;
-        Fri,  2 Sep 2022 14:01:55 +0200 (CEST)
-Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
-        id 63AD520853050; Fri,  2 Sep 2022 14:01:55 +0200 (CEST)
-Date:   Fri, 2 Sep 2022 14:01:55 +0200
-From:   Peter Zijlstra <peterz@infradead.org>
-To:     Yang Jihong <yangjihong1@huawei.com>
-Cc:     rostedt@goodmis.org, mingo@redhat.com, acme@kernel.org,
-        mark.rutland@arm.com, alexander.shishkin@linux.intel.com,
-        jolsa@kernel.org, namhyung@kernel.org,
-        linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org
-Subject: Re: [PATCH RESEND v4] perf/core: Fix reentry problem in
- perf_output_read_group
-Message-ID: <YxHws5sL16hz4ZKc@hirez.programming.kicks-ass.net>
-References: <20220902082918.179248-1-yangjihong1@huawei.com>
+        Fri, 2 Sep 2022 10:51:12 -0400
+Received: from foss.arm.com (foss.arm.com [217.140.110.172])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTP id 518D0C7422;
+        Fri,  2 Sep 2022 07:13:18 -0700 (PDT)
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 0C223D6E;
+        Fri,  2 Sep 2022 07:13:24 -0700 (PDT)
+Received: from [10.57.15.84] (unknown [10.57.15.84])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 0D7AF3F766;
+        Fri,  2 Sep 2022 07:13:14 -0700 (PDT)
+Message-ID: <6813a737-736d-7e15-a44f-d800ed9248be@arm.com>
+Date:   Fri, 2 Sep 2022 15:12:49 +0100
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20220902082918.179248-1-yangjihong1@huawei.com>
+User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.15; rv:91.0)
+ Gecko/20100101 Thunderbird/91.11.0
+Subject: Re: [PATCH] perf vendor events: Add missing Neoverse V1 events
+To:     John Garry <john.garry@huawei.com>, linux-kernel@vger.kernel.org,
+        linux-perf-users@vger.kernel.org, acme@kernel.org
+Cc:     Will Deacon <will@kernel.org>, James Clark <james.clark@arm.com>,
+        Mike Leach <mike.leach@linaro.org>,
+        Leo Yan <leo.yan@linaro.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Jiri Olsa <jolsa@kernel.org>,
+        Namhyung Kim <namhyung@kernel.org>,
+        linux-arm-kernel@lists.infradead.org
+References: <20220901151804.294823-1-nick.forrington@arm.com>
+ <c17d8229-6029-3fd6-1ce5-f406962eae8f@huawei.com>
+From:   Nick Forrington <nick.forrington@arm.com>
+In-Reply-To: <c17d8229-6029-3fd6-1ce5-f406962eae8f@huawei.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-On Fri, Sep 02, 2022 at 04:29:18PM +0800, Yang Jihong wrote:
-> perf_output_read_group may respond to IPI request of other cores and invoke
-> __perf_install_in_context function. As a result, hwc configuration is modified.
-> causing inconsistency and unexpected consequences.
-> 
-> Interrupts are not disabled when perf_output_read_group reads PMU counter.
-> In this case, IPI request may be received from other cores.
-> As a result, PMU configuration is modified and an error occurs when
-> reading PMU counter:
-> 
->                    CPU0                                         CPU1
->                                                     __se_sys_perf_event_open
->                                                       perf_install_in_context
-> perf_output_read_group                                  smp_call_function_single
->   for_each_sibling_event(sub, leader) {                   generic_exec_single
->     if ((sub != event) &&                                   remote_function
->         (sub->state == PERF_EVENT_STATE_ACTIVE))                    |
-> <enter IPI handler: __perf_install_in_context>   <----RAISE IPI-----+
-> __perf_install_in_context
->   ctx_resched
->     event_sched_out
->       armpmu_del
->         ...
->         hwc->idx = -1; // event->hwc.idx is set to -1
-> ...
-> <exit IPI>
->             sub->pmu->read(sub);
->               armpmu_read
->                 armv8pmu_read_counter
->                   armv8pmu_read_hw_counter
->                     int idx = event->hw.idx; // idx = -1
->                     u64 val = armv8pmu_read_evcntr(idx);
->                       u32 counter = ARMV8_IDX_TO_COUNTER(idx); // invalid counter = 30
->                       read_pmevcntrn(counter) // undefined instruction
-> 
-> Signed-off-by: Yang Jihong <yangjihong1@huawei.com>
-> ---
+On 02/09/2022 09:04, John Garry wrote:
+> On 01/09/2022 16:18, Nick Forrington wrote:
+>> Based on updated data from:
+>> https://github.com/ARM-software/data/blob/master/pmu/neoverse-v1.json
+>>
+>> which is based on PMU event descriptions from the Arm Neoverse V1
+>> Technical Reference Manual.
+>>
+>> This adds the following missing events:
+>> ASE_INST_SPEC
+>> SVE_INST_SPEC
+>> SVE_PRED_SPEC
+>> SVE_PRED_EMPTY_SPEC
+>> SVE_PRED_FULL_SPEC
+>> SVE_PRED_PARTIAL_SPEC
+>> SVE_LDFF_SPEC
+>> SVE_LDFF_FAULT_SPEC
+>> FP_SCALE_OPS_SPEC
+>> FP_FIXED_OPS_SPEC
+>>
+>> It also moves REMOTE_ACCESS from other.json to memory.json.
+>
+> Any specific reason why? I see that neoverse n2 and a76-n1 still use 
+> "other" json for REMOTE_ACCESS. Nicer to be consistent.
 
-Right; thanks for reminding me. I had hoped you'd pick up and test the
-extra assertion some, but I'll just do that on top.
+Thanks John, I agree on consistency.
+
+I think memory is a better categorisation (for all CPUs), and this is 
+consistent with what I submitted for various Cortex CPUs a while back.
+
+I'd be happy to remove the REMOTE_ACCESS change here and update (or not) 
+REMOTE_ACCESS for Neoverse separately.
+
+>
+>>
+>> Signed-off-by: Nick Forrington<nick.forrington@arm.com>
+>> ---
+>
+> Apart from above:
+> Reviewed-by: John Garry <john.garry@huawei.com>
+Thanks, Nick
