@@ -2,95 +2,98 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EF210ECAAD5
-	for <linux-perf-users@archiver.kernel.org>; Fri,  2 Sep 2022 19:09:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 99546ECAAD5
+	for <linux-perf-users@archiver.kernel.org>; Fri,  2 Sep 2022 19:17:50 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230235AbiIBTJf (ORCPT
+        id S230242AbiIBTRt (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Fri, 2 Sep 2022 15:09:35 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42604 "EHLO
+        Fri, 2 Sep 2022 15:17:49 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56574 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230207AbiIBTJe (ORCPT
+        with ESMTP id S229920AbiIBTRs (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Fri, 2 Sep 2022 15:09:34 -0400
-Received: from ams.source.kernel.org (ams.source.kernel.org [145.40.68.75])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1BF6413E88;
-        Fri,  2 Sep 2022 12:09:33 -0700 (PDT)
+        Fri, 2 Sep 2022 15:17:48 -0400
+Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 99DCEF32C5;
+        Fri,  2 Sep 2022 12:17:47 -0700 (PDT)
 Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by ams.source.kernel.org (Postfix) with ESMTPS id BDE67B82D6B;
-        Fri,  2 Sep 2022 19:09:31 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 568BEC433D7;
-        Fri,  2 Sep 2022 19:09:30 +0000 (UTC)
+        by dfw.source.kernel.org (Postfix) with ESMTPS id 36B5B622A6;
+        Fri,  2 Sep 2022 19:17:47 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 736C1C433D6;
+        Fri,  2 Sep 2022 19:17:46 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1662145770;
-        bh=JgbTsvyX+Nxm+CbzSBYRYr/ejplaYINRqEHHMS7q/2o=;
+        s=k20201202; t=1662146266;
+        bh=sOsKQGQG/JU/8JEqfY8COImteIEYSw1VOSMiywIl1iE=;
         h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=KaN+qsET2GDv9Q4Ifk4pA/Achrq/6l7EPYiXmu9TapL9PQZBIHpYXI77hHl8ylS+m
-         7QMFwk9J15Gn7I8ZdeQg6r9H9sGHWgd+XSPh8bQ9jodrVfA+NDS6hnvgH1rTRh65QL
-         nm7Qn6mnG7g/Erd1SpibM+fPvHWvxBXZiTAPV5CYPMpQTnS4gH7J22kPeyf5ywi8dz
-         JuB3MnhOPGOsox2Ys1eYi4CtBb7pGJUbD4xNTDgrN7IuQMkSsUpBLxW84VO21OZzCg
-         03EG5F/gaEmksp+ywA0yOrHlqIDaNOu2VxLnQZ1ipfOHvG4iuHRd64R7S9Aq+B2Xk1
-         ElPe/jalzUmbg==
+        b=a28bxLGeVEp7adLLiC0vKLzoSnEyXo36lWyYMpquXd2Sr+m6xcyJOy/tgqYKQh+9n
+         1gYMir/O/WsntCkz/F1y5o0NGfEfeCcJR6SRQDtUFoyrLNRSFsdatGizE6zEV1EBe0
+         z1vjTTr5omAJz48vtbYy+PpxfIAlGK0djD/QI2HitWCy+EgF8InWN3ZY3qJ/YDP6QH
+         CYDpcklPOHWZOrGkWAASIN9am4Gs5cJhU143wk4/U8ytQBLMxJx4tlTHFTiWV7y6u3
+         FMFmt+KiYlynztcaleWEqfZYS06F69+ROm4xxvW2oGPR1HwEFrrDgHfRPGyM9HA/6d
+         lHNfaZxbgyO7g==
 Received: by quaco.ghostprotocols.net (Postfix, from userid 1000)
-        id 96389404A1; Fri,  2 Sep 2022 16:09:27 -0300 (-03)
-Date:   Fri, 2 Sep 2022 16:09:27 -0300
+        id C4917404A1; Fri,  2 Sep 2022 16:17:43 -0300 (-03)
+Date:   Fri, 2 Sep 2022 16:17:43 -0300
 From:   Arnaldo Carvalho de Melo <acme@kernel.org>
 To:     Adrian Hunter <adrian.hunter@intel.com>
-Cc:     Namhyung Kim <namhyung@kernel.org>, Jiri Olsa <jolsa@kernel.org>,
-        Ingo Molnar <mingo@kernel.org>,
+Cc:     =?utf-8?B?VG9tw6HFoQ==?= Trnka <trnka@scm.com>,
+        linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org,
         Peter Zijlstra <peterz@infradead.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Ian Rogers <irogers@google.com>,
-        linux-perf-users@vger.kernel.org
-Subject: Re: [PATCHSET 0/5] perf tools: Show per-event lost sample count (v2)
-Message-ID: <YxJU5yfFC0bI545e@kernel.org>
-References: <20220901195739.668604-1-namhyung@kernel.org>
- <5466ec6a-e964-ea8a-d253-f7d3d4af4ea1@intel.com>
+        Ingo Molnar <mingo@redhat.com>
+Subject: Re: perf top -p broken for multithreaded processes since 5.19
+Message-ID: <YxJW19MwaMOb8D30@kernel.org>
+References: <10137382.nUPlyArG6x@mintaka.ncbr.muni.cz>
+ <2fd9b620-e9a8-9cd9-1b4a-6b13d829b2ae@intel.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <5466ec6a-e964-ea8a-d253-f7d3d4af4ea1@intel.com>
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <2fd9b620-e9a8-9cd9-1b4a-6b13d829b2ae@intel.com>
 X-Url:  http://acmel.wordpress.com
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-Em Fri, Sep 02, 2022 at 08:44:25PM +0300, Adrian Hunter escreveu:
-> On 1/09/22 22:57, Namhyung Kim wrote:
+Em Fri, Sep 02, 2022 at 05:50:22PM +0300, Adrian Hunter escreveu:
+> On 2/09/22 17:46, Tomáš Trnka wrote:
 > > Hello,
 > > 
-> > Now we have PERF_FORMAT_LOST support, add it to perf record and report so that
-> > it can show number of lost samples per event.  This can be useful if you want
-> > to reconstruct number of events from the samples like when using -c option.
-> > 
-> > Changes in v2)
-> >  * fix id_hdr_size calculation  (Adrian)
-> >  * fix a memory leak
-> >  * display lost samples even if no samples
-> >  
-> >  
-> > Currently it adds PERF_RECORD_LOST_SAMPLES at the end of perf data after reading
-> > event values by read(2).  The perf record unconditionally sets the lost bit if
-> > the kernel supports it.  Users can see the number with `perf report --stat`.
-> > 
-> > You can get the code from 'perf/report-lost-v2' brach on
-> > 
-> >   git://git.kernel.org/pub/scm/linux/kernel/git/namhyung/linux-perf.git
-> > 
-> > Thanks,
-> > Namhyung
-> > 
-> > Namhyung Kim (5):
-> >   perf tools: Print LOST read format in the verbose mode
-> >   perf record: Set PERF_FORMAT_LOST by default
-> >   perf record: Read and inject LOST_SAMPLES events
-> >   perf hist: Add nr_lost_samples to hist_stats
-> >   perf report: Show per-event LOST SAMPLES stat
+> > A bug in perf v5.19 and newer completely breaks monitoring multithreaded
+> > processes using "perf top -p". The tool fails to start with "Failed to mmap
+> > with 22 (Invalid argument)". It still seems to work fine on single-threaded
+> > processes. "perf record" is also unaffected.
 > 
-> Reviewed-by: Adrian Hunter <adrian.hunter@intel.com>
+> It has been reported here:
+> 
+> 	https://bugzilla.kernel.org/show_bug.cgi?id=216441
 
-Thanks, applied.
+If I do:
+
+⬢[acme@toolbox perf-urgent]$ git log -2
+commit dfeb0bc60782471c293938e71b1a1117cfac2cb3 (HEAD -> perf/urgent)
+Author: Arnaldo Carvalho de Melo <acme@redhat.com>
+Date:   Fri Sep 2 16:15:39 2022 -0300
+
+    Revert "libperf evlist: Check nr_mmaps is correct"
+
+    This reverts commit 4ce47d842d4c16c07b135b8a7975b8f0672bcc0e.
+
+    Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
+
+commit 78cd283f6b8ab701cb35eafd5af8140560a88f16
+Author: Arnaldo Carvalho de Melo <acme@redhat.com>
+Date:   Fri Sep 2 16:13:41 2022 -0300
+
+    Revert "libperf evlist: Allow mixing per-thread and per-cpu mmaps"
+
+    This reverts commit ae4f8ae16a07896403c90305d4b9be27f657c1fc.
+
+    Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
+⬢[acme@toolbox perf-urgent]$
+
+It works again, Tomáš can you please try doing this to see if this works
+for you?
 
 - Arnaldo
