@@ -2,162 +2,95 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7D493C001B5
-	for <linux-perf-users@archiver.kernel.org>; Fri,  2 Sep 2022 17:46:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EF210ECAAD5
+	for <linux-perf-users@archiver.kernel.org>; Fri,  2 Sep 2022 19:09:36 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S235492AbiIBRq6 (ORCPT
+        id S230235AbiIBTJf (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Fri, 2 Sep 2022 13:46:58 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58342 "EHLO
+        Fri, 2 Sep 2022 15:09:35 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42604 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S235287AbiIBRq5 (ORCPT
+        with ESMTP id S230207AbiIBTJe (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Fri, 2 Sep 2022 13:46:57 -0400
-Received: from ams.source.kernel.org (ams.source.kernel.org [IPv6:2604:1380:4601:e00::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 50FE7F1B78;
-        Fri,  2 Sep 2022 10:46:53 -0700 (PDT)
+        Fri, 2 Sep 2022 15:09:34 -0400
+Received: from ams.source.kernel.org (ams.source.kernel.org [145.40.68.75])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1BF6413E88;
+        Fri,  2 Sep 2022 12:09:33 -0700 (PDT)
 Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by ams.source.kernel.org (Postfix) with ESMTPS id 7B656B82CD1;
-        Fri,  2 Sep 2022 17:46:51 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id DC5A4C433C1;
-        Fri,  2 Sep 2022 17:46:49 +0000 (UTC)
+        by ams.source.kernel.org (Postfix) with ESMTPS id BDE67B82D6B;
+        Fri,  2 Sep 2022 19:09:31 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 568BEC433D7;
+        Fri,  2 Sep 2022 19:09:30 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1662140810;
-        bh=GhWFeoeGibIDNi/9fUOpKvO9bflsC+HCNk2h4a3XhD4=;
+        s=k20201202; t=1662145770;
+        bh=JgbTsvyX+Nxm+CbzSBYRYr/ejplaYINRqEHHMS7q/2o=;
         h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=oAqAvdUIDlS7hOfkH9a9qp98rwd2s52YPlxSqsejLAVNar3O/YpQu62ZBQPUmq86A
-         SsG8ludJ8cgHWWemseQe/5lWX/LRy7A1264JBI3wwOb4cpQAWoadj8LP41leFq3zUx
-         btfaxSfjmuHFP6soat0S6bCo3G61A7+ExDLfOX4IXyBrhUcK/jtdsk0r3HnMMGmMwd
-         UmAkIVZZFzcHTNTVk6xPfNGPNmQNdnAkyKuRewATj0jNLMfPBCICwEpfFusBcBJ7up
-         malW5kE1cyfD/8ZfPinLihT+fldOY+sLplLkKUe067FRA89xDlDDPZbquTAgmGv/Ym
-         p3AkB6EJ/ZWrg==
+        b=KaN+qsET2GDv9Q4Ifk4pA/Achrq/6l7EPYiXmu9TapL9PQZBIHpYXI77hHl8ylS+m
+         7QMFwk9J15Gn7I8ZdeQg6r9H9sGHWgd+XSPh8bQ9jodrVfA+NDS6hnvgH1rTRh65QL
+         nm7Qn6mnG7g/Erd1SpibM+fPvHWvxBXZiTAPV5CYPMpQTnS4gH7J22kPeyf5ywi8dz
+         JuB3MnhOPGOsox2Ys1eYi4CtBb7pGJUbD4xNTDgrN7IuQMkSsUpBLxW84VO21OZzCg
+         03EG5F/gaEmksp+ywA0yOrHlqIDaNOu2VxLnQZ1ipfOHvG4iuHRd64R7S9Aq+B2Xk1
+         ElPe/jalzUmbg==
 Received: by quaco.ghostprotocols.net (Postfix, from userid 1000)
-        id 64F9F404A1; Fri,  2 Sep 2022 14:46:47 -0300 (-03)
-Date:   Fri, 2 Sep 2022 14:46:47 -0300
+        id 96389404A1; Fri,  2 Sep 2022 16:09:27 -0300 (-03)
+Date:   Fri, 2 Sep 2022 16:09:27 -0300
 From:   Arnaldo Carvalho de Melo <acme@kernel.org>
-To:     Anshuman Khandual <anshuman.khandual@arm.com>,
-        Stephen Rothwell <sfr@canb.auug.org.au>
-Cc:     linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org,
-        peterz@infradead.org, alexander.shishkin@linux.intel.com,
-        jolsa@redhat.com, mark.rutland@arm.com,
-        Robin Murphy <robin.murphy@arm.com>,
-        Suzuki Poulose <suzuki.poulose@arm.com>,
-        James Clark <james.clark@arm.com>,
-        Ingo Molnar <mingo@redhat.com>,
-        Namhyung Kim <namhyung@kernel.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Will Deacon <will@kernel.org>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        linux-arm-kernel@lists.infradead.org
-Subject: Re: [PATCH V7 6/8] perf/tools: Extend branch type classification
-Message-ID: <YxJBh3wvAGol+Ekq@kernel.org>
-References: <20220824044822.70230-1-anshuman.khandual@arm.com>
- <20220824044822.70230-7-anshuman.khandual@arm.com>
- <Yw59CkHUVbfrHdkh@kernel.org>
- <9b1a8ebd-0562-f104-7439-308282f7fb52@arm.com>
- <YxI99uLvpgAZjm2r@kernel.org>
+To:     Adrian Hunter <adrian.hunter@intel.com>
+Cc:     Namhyung Kim <namhyung@kernel.org>, Jiri Olsa <jolsa@kernel.org>,
+        Ingo Molnar <mingo@kernel.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Ian Rogers <irogers@google.com>,
+        linux-perf-users@vger.kernel.org
+Subject: Re: [PATCHSET 0/5] perf tools: Show per-event lost sample count (v2)
+Message-ID: <YxJU5yfFC0bI545e@kernel.org>
+References: <20220901195739.668604-1-namhyung@kernel.org>
+ <5466ec6a-e964-ea8a-d253-f7d3d4af4ea1@intel.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <YxI99uLvpgAZjm2r@kernel.org>
+In-Reply-To: <5466ec6a-e964-ea8a-d253-f7d3d4af4ea1@intel.com>
 X-Url:  http://acmel.wordpress.com
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-Em Fri, Sep 02, 2022 at 02:31:34PM -0300, Arnaldo Carvalho de Melo escreveu:
-> Em Thu, Sep 01, 2022 at 10:37:24AM +0530, Anshuman Khandual escreveu:
-> > On 8/31/22 02:41, Arnaldo Carvalho de Melo wrote:
-> > > Strange:
-> > > 
-> > >   75     8.89 ubuntu:20.04-x-powerpc64el    : FAIL gcc version 10.3.0 (Ubuntu 10.3.0-1ubuntu1~20.04)
-> > >         inlined from 'branch_type_stat_display' at util/branch.c:152:4:
-> > >     /usr/powerpc64le-linux-gnu/include/bits/stdio2.h:100:10: error: '%8s' directive argument is null [-Werror=format-overflow=]
-> > >       100 |   return __fprintf_chk (__stream, __USE_FORTIFY_LEVEL - 1, __fmt,
-> > >           |          ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-> > >       101 |    __va_arg_pack ());
-> > >           |    ~~~~~~~~~~~~~~~~~
-> > > 
+Em Fri, Sep 02, 2022 at 08:44:25PM +0300, Adrian Hunter escreveu:
+> On 1/09/22 22:57, Namhyung Kim wrote:
+> > Hello,
 > > 
-> > Indeed. But this new code block here looks exact same like the previous and existing one
-> > i.e with branch_new_name() and PERF_BR_NEW_MAX. The complain is that - '%8s' directive
-> > argument is NULL. This warning might just be a false positive [1], because of a compiler
-> > problem on powerpc64el ? But please do let me know if something needs to be changed here
-> > to avoid this warning.
+> > Now we have PERF_FORMAT_LOST support, add it to perf record and report so that
+> > it can show number of lost samples per event.  This can be useful if you want
+> > to reconstruct number of events from the samples like when using -c option.
 > > 
-> > [1] https://gcc.gnu.org/bugzilla/show_bug.cgi?id=90036
+> > Changes in v2)
+> >  * fix id_hdr_size calculation  (Adrian)
+> >  * fix a memory leak
+> >  * display lost samples even if no samples
+> >  
+> >  
+> > Currently it adds PERF_RECORD_LOST_SAMPLES at the end of perf data after reading
+> > event values by read(2).  The perf record unconditionally sets the lost bit if
+> > the kernel supports it.  Users can see the number with `perf report --stat`.
 > > 
+> > You can get the code from 'perf/report-lost-v2' brach on
+> > 
+> >   git://git.kernel.org/pub/scm/linux/kernel/git/namhyung/linux-perf.git
+> > 
+> > Thanks,
+> > Namhyung
+> > 
+> > Namhyung Kim (5):
+> >   perf tools: Print LOST read format in the verbose mode
+> >   perf record: Set PERF_FORMAT_LOST by default
+> >   perf record: Read and inject LOST_SAMPLES events
+> >   perf hist: Add nr_lost_samples to hist_stats
+> >   perf report: Show per-event LOST SAMPLES stat
 > 
-> So, I tried not returning NULL in the functions that are ultimately
-> called, but that didn't help, so I'll try just disabling that specific
-> warning for this specific file.
+> Reviewed-by: Adrian Hunter <adrian.hunter@intel.com>
 
-Got it building:
+Thanks, applied.
 
-    23.68 ubuntu:20.04-x-powerpc64el    : Ok   powerpc64le-linux-gnu-gcc (Ubuntu 10.3.0-1ubuntu1~20.04) 10.3.0
-BUILD_TARBALL_HEAD=b0f700972d9d0c9b8e73f69ccf0e56d74c580d71
-
-With:
-
-From b0f700972d9d0c9b8e73f69ccf0e56d74c580d71 Mon Sep 17 00:00:00 2001
-From: Arnaldo Carvalho de Melo <acme@redhat.com>
-Date: Fri, 2 Sep 2022 14:35:26 -0300
-Subject: [PATCH 1/1] perf build: Avoid false positive with
- -Werror=format-overflow= with gcc 10.3.0 on powerpc
-
-When building with gcc 10.3.0 on powerpc this is happening:
-
-   75     8.89 ubuntu:20.04-x-powerpc64el    : FAIL gcc version 10.3.0 (Ubuntu 10.3.0-1ubuntu1~20.04)
-         inlined from 'branch_type_stat_display' at util/branch.c:152:4:
-     /usr/powerpc64le-linux-gnu/include/bits/stdio2.h:100:10: error: '%8s' directive argument is null [-Werror=format-overflow=]
-       100 |   return __fprintf_chk (__stream, __USE_FORTIFY_LEVEL - 1, __fmt,
-           |          ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-       101 |    __va_arg_pack ());
-           |    ~~~~~~~~~~~~~~~~~
-
-Looks related to:
-
-  [10/11/12/13 Regression] false positive: directive argument is null [-Werror=format-overflow=]
-  https://gcc.gnu.org/bugzilla/show_bug.cgi?id=90036
-
-So lets disable this just for the util/branch.o file.
-
-Cc: Alexander Shishkin <alexander.shishkin@linux.intel.com>
-Cc: Anshuman Khandual <anshuman.khandual@arm.com>
-Cc: Catalin Marinas <catalin.marinas@arm.com>
-Cc: Ingo Molnar <mingo@redhat.com>
-Cc: James Clark <james.clark@arm.com>
-Cc: Jiri Olsa <jolsa@kernel.org>
-Cc: Mark Rutland <mark.rutland@arm.com>
-Cc: Namhyung Kim <namhyung@kernel.org>
-Cc: Peter Zijlstra <peterz@infradead.org>
-Cc: Robin Murphy <robin.murphy@arm.com>
-Cc: Suzuki Poulouse <suzuki.poulose@arm.com>
-Cc: Thomas Gleixner <tglx@linutronix.de>
-Cc: Will Deacon <will@kernel.org>
-Link: http://lore.kernel.org/lkml/YxI99uLvpgAZjm2r@kernel.org
-Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
----
- tools/perf/util/Build | 4 ++++
- 1 file changed, 4 insertions(+)
-
-diff --git a/tools/perf/util/Build b/tools/perf/util/Build
-index 8fd6dc8de5210336..20a5524e88a04d44 100644
---- a/tools/perf/util/Build
-+++ b/tools/perf/util/Build
-@@ -223,6 +223,10 @@ CFLAGS_llvm-utils.o += -DPERF_INCLUDE_DIR="BUILD_STR($(perf_include_dir_SQ))"
- # avoid compiler warnings in 32-bit mode
- CFLAGS_genelf_debug.o  += -Wno-packed
- 
-+# avoid false positive when building with gcc 10.3.0 on powerpc
-+# See https://gcc.gnu.org/bugzilla/show_bug.cgi?id=90036
-+CFLAGS_branch.o += -Wno-format-overflow
-+
- $(OUTPUT)util/parse-events-flex.c $(OUTPUT)util/parse-events-flex.h: util/parse-events.l $(OUTPUT)util/parse-events-bison.c
- 	$(call rule_mkdir)
- 	$(Q)$(call echo-cmd,flex)$(FLEX) -o $(OUTPUT)util/parse-events-flex.c \
--- 
-2.37.2
-
+- Arnaldo
