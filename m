@@ -2,97 +2,104 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E22DCECAAD5
-	for <linux-perf-users@archiver.kernel.org>; Fri,  2 Sep 2022 15:53:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1BF77ECAAD5
+	for <linux-perf-users@archiver.kernel.org>; Fri,  2 Sep 2022 16:26:37 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S236652AbiIBPxw (ORCPT
+        id S234507AbiIBQ0e (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Fri, 2 Sep 2022 11:53:52 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40876 "EHLO
+        Fri, 2 Sep 2022 12:26:34 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40160 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S236360AbiIBPxV (ORCPT
+        with ESMTP id S235064AbiIBQ0c (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Fri, 2 Sep 2022 11:53:21 -0400
-Received: from mail-ed1-x52f.google.com (mail-ed1-x52f.google.com [IPv6:2a00:1450:4864:20::52f])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 47F792C675
-        for <linux-perf-users@vger.kernel.org>; Fri,  2 Sep 2022 08:46:30 -0700 (PDT)
-Received: by mail-ed1-x52f.google.com with SMTP id e18so3246500edj.3
-        for <linux-perf-users@vger.kernel.org>; Fri, 02 Sep 2022 08:46:30 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=cloudflare.com; s=google;
-        h=to:subject:message-id:date:from:mime-version:from:to:cc:subject
-         :date;
-        bh=ajoXh4q3PNvCbvJn5Mn8VzhtUwG+56ZVXC4P9Vh7Iio=;
-        b=AcFYMnesQZY/pzw/djkTkqEyJAkyM2UZNOGDWb08JKBl77YnKSn4v+kXmuSuHe0+Pv
-         X1iBwDBY2EW3PRqyif6AwJL1z3GB8P+AFj0G9FZq4b3po+Rtnbk5iBTwHHPABDfP3VlJ
-         KmragM/2oL1dN3/W7VPp0R1NqfwhKVt0vp1QE=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=to:subject:message-id:date:from:mime-version:x-gm-message-state
-         :from:to:cc:subject:date;
-        bh=ajoXh4q3PNvCbvJn5Mn8VzhtUwG+56ZVXC4P9Vh7Iio=;
-        b=SPmIqdDlARrWJfTYHY2CtXAMirOS/8gCWpBYTg4IkjY+8nKupO+tMCkNGL7knBrvHG
-         0wOPw2vbnJ+k2PLRyrRtUg8HQY/Y4sS3iusjxRNxW2D4LqX0BJ1l7Tkjo4H7o/I8bcU/
-         oT8HbpXyYs1VEu7Tw+5Gxkg0QZ7eyYZV4XuCtPDnYGDmhhvZeAeWRuPl+FN1kj50QFI/
-         XAVd1fb0O3m+kvqdmg7D0rPckKNawqL7Mg8gRpAOSVwQCjFuHIP/hkd4szLuibRcLeQM
-         H+mGoZHeIkHvt4xgumbGI+2C48DcFIROysBalUuR7Ql/gSLDrbueuy1MZgy7uG1UsPLS
-         4Jow==
-X-Gm-Message-State: ACgBeo2pHQK5GwtW4wHpz2iNHz2ZbMprp/jtBFoqQd+w0UxiTTQuXR/D
-        b1rs0wZoqIBk3QWo04ipXWhjNuor8xtQ6kP5BiD0DA==
-X-Google-Smtp-Source: AA6agR7MBoEsTm2riDwZzZu/buGQeydSuaVH4Rx/57NDi177e/XV2qQZIVsLMw0TLGjOe9t5LMKHgJ6gxLI9H11/qZA=
-X-Received: by 2002:a05:6402:268d:b0:43d:b9d0:9efc with SMTP id
- w13-20020a056402268d00b0043db9d09efcmr34194052edd.92.1662133588729; Fri, 02
- Sep 2022 08:46:28 -0700 (PDT)
+        Fri, 2 Sep 2022 12:26:32 -0400
+Received: from mga11.intel.com (mga11.intel.com [192.55.52.93])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D202295AEA;
+        Fri,  2 Sep 2022 09:26:31 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1662135991; x=1693671991;
+  h=message-id:date:mime-version:subject:to:references:from:
+   in-reply-to:content-transfer-encoding;
+  bh=+zsnx7XILF5i1LZxX69+MDnUgD+gGFY/9ckzzb8j+iU=;
+  b=MK1KKAKy7jn9BOl9kV8eOkEPXZkNG4yfFKmVNeWxAQMa7HEeTGnbUr1V
+   mKS4VfenuvKnfcWFaG0kPNpIT8rNSvmGBK3/CUPDZgnxqQz7t3PN8TVyF
+   WQGZpD3iLDtbE8FhSQocAsoLfaIl5X3tGnYPB6uCSaRVcQ4stqRrYi/qy
+   GNU4+z7cGn4TBxYJ+HqVRdyFjNjiMCix1K6KZfLRThkhuRl5vCa2cr8/B
+   8q5wuLZCDv9cgftCPtHvCEouoCXW8xEFpHVNSw4aF2T3h84L8hzrshS4k
+   +V27RXipc63iinPIkTG87vV0wJbIjeRcnyf2WP0V0PyOL74IrMqzK5KXg
+   g==;
+X-IronPort-AV: E=McAfee;i="6500,9779,10458"; a="293596371"
+X-IronPort-AV: E=Sophos;i="5.93,283,1654585200"; 
+   d="scan'208";a="293596371"
+Received: from fmsmga008.fm.intel.com ([10.253.24.58])
+  by fmsmga102.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 02 Sep 2022 09:08:47 -0700
+X-IronPort-AV: E=Sophos;i="5.93,283,1654585200"; 
+   d="scan'208";a="674406814"
+Received: from ahunter6-mobl1.ger.corp.intel.com (HELO [10.0.2.15]) ([10.252.42.34])
+  by fmsmga008-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 02 Sep 2022 09:08:44 -0700
+Message-ID: <8ed21b90-07e5-f611-2a7c-ce185c4d2a8c@intel.com>
+Date:   Fri, 2 Sep 2022 19:08:38 +0300
 MIME-Version: 1.0
-From:   Daniel Dao <dqminh@cloudflare.com>
-Date:   Fri, 2 Sep 2022 16:46:18 +0100
-Message-ID: <CA+wXwBT_fiBrFG-=C=eWGHuJ3XzxDLe-Ba4ybOvuxvu5A1+Tig@mail.gmail.com>
-Subject: perf record --kcore does not work when /proc/modules changed during copy
-To:     acme@kernel.org, linux-perf-users@vger.kernel.org,
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
+ Firefox/91.0 Thunderbird/91.11.0
+Subject: Re: perf record --kcore does not work when /proc/modules changed
+ during copy
+Content-Language: en-US
+To:     Daniel Dao <dqminh@cloudflare.com>, acme@kernel.org,
+        linux-perf-users@vger.kernel.org,
         kernel-team <kernel-team@cloudflare.com>,
         linux-kernel <linux-kernel@vger.kernel.org>, jolsa@redhat.com,
-        adrian.hunter@intel.com, namhyung@kernel.org
-Content-Type: text/plain; charset="UTF-8"
+        namhyung@kernel.org
+References: <CA+wXwBT_fiBrFG-=C=eWGHuJ3XzxDLe-Ba4ybOvuxvu5A1+Tig@mail.gmail.com>
+From:   Adrian Hunter <adrian.hunter@intel.com>
+Organization: Intel Finland Oy, Registered Address: PL 281, 00181 Helsinki,
+ Business Identity Code: 0357606 - 4, Domiciled in Helsinki
+In-Reply-To: <CA+wXwBT_fiBrFG-=C=eWGHuJ3XzxDLe-Ba4ybOvuxvu5A1+Tig@mail.gmail.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-Hi Perf tools maintainers,
+On 2/09/22 18:46, Daniel Dao wrote:
+> Hi Perf tools maintainers,
+> 
+> `perf record --kcore` frequently did not work on a somewhat busy system.
+> For example:
+> 
+>   sudo perf record --kcore -- sleep 1
+>   ERROR: Failed to copy kcore
+> 
+> Using strace to look at the invocation, the failure looks like:
+> 
+>   ...
+>   openat(AT_FDCWD, "/proc/modules", O_RDONLY) = 56
+>   openat(AT_FDCWD, "perf.data/kcore_dir/modules", O_RDONLY) = 57
+>   read(56, "mpls_gso 16384 0 - Live 0xffffff"..., 4096) = 4070
+>   read(57, "mpls_gso 16384 0 - Live 0xffffff"..., 4070) = 4070
+>   read(56, "xt_conntrack 24576 22 - Live 0xf"..., 4096) = 3738
+>   read(57, "xt_conntrack 24576 22 - Live 0xf"..., 3738) = 3738
+>   close(57)                               = 0
+>   close(56)                               = 0
+>   close(55)                               = 0
+>   unlink("perf.data/kcore_dir/kcore")     = 0
+>   close(54)                               = 0
+>   unlink("perf.data/kcore_dir/modules")   = 0
+>   unlink("perf.data/kcore_dir/kallsyms")  = 0
+>   write(2, "ERROR: Failed to copy kcore\n", 28ERROR: Failed to copy kcore
+>   ...
+> 
+> We can see that the verification of proc/modules failed because /proc/modules
+> output changed after we copied kcore. When i looked at it, they are caused by
+> changes of module refcount which seems expected on busy systems, such as
+> 
+>   < tcp_bbr 40960 12644 - Live 0x0000000000000000
+>   ---
+>   > tcp_bbr 40960 12678 - Live 0x0000000000000000
+> 
+> Any suggestions on how to make this work is much appreciated.
 
-`perf record --kcore` frequently did not work on a somewhat busy system.
-For example:
-
-  sudo perf record --kcore -- sleep 1
-  ERROR: Failed to copy kcore
-
-Using strace to look at the invocation, the failure looks like:
-
-  ...
-  openat(AT_FDCWD, "/proc/modules", O_RDONLY) = 56
-  openat(AT_FDCWD, "perf.data/kcore_dir/modules", O_RDONLY) = 57
-  read(56, "mpls_gso 16384 0 - Live 0xffffff"..., 4096) = 4070
-  read(57, "mpls_gso 16384 0 - Live 0xffffff"..., 4070) = 4070
-  read(56, "xt_conntrack 24576 22 - Live 0xf"..., 4096) = 3738
-  read(57, "xt_conntrack 24576 22 - Live 0xf"..., 3738) = 3738
-  close(57)                               = 0
-  close(56)                               = 0
-  close(55)                               = 0
-  unlink("perf.data/kcore_dir/kcore")     = 0
-  close(54)                               = 0
-  unlink("perf.data/kcore_dir/modules")   = 0
-  unlink("perf.data/kcore_dir/kallsyms")  = 0
-  write(2, "ERROR: Failed to copy kcore\n", 28ERROR: Failed to copy kcore
-  ...
-
-We can see that the verification of proc/modules failed because /proc/modules
-output changed after we copied kcore. When i looked at it, they are caused by
-changes of module refcount which seems expected on busy systems, such as
-
-  < tcp_bbr 40960 12644 - Live 0x0000000000000000
-  ---
-  > tcp_bbr 40960 12678 - Live 0x0000000000000000
-
-Any suggestions on how to make this work is much appreciated.
-
-Cheers,
-Daniel.
+At the moment I can't think why the proc/modules file needs to be
+compared at all since we also compare proc/kallsyms which should be
+enough.
