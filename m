@@ -2,117 +2,103 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BC10BC001B5
-	for <linux-perf-users@archiver.kernel.org>; Fri,  2 Sep 2022 15:29:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1A9A0C6FA82
+	for <linux-perf-users@archiver.kernel.org>; Fri,  2 Sep 2022 15:39:08 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S235679AbiIBP3I (ORCPT
+        id S236395AbiIBPjG (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Fri, 2 Sep 2022 11:29:08 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34624 "EHLO
+        Fri, 2 Sep 2022 11:39:06 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57040 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S237073AbiIBP2f (ORCPT
+        with ESMTP id S236673AbiIBPi2 (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Fri, 2 Sep 2022 11:28:35 -0400
-X-Greylist: delayed 598 seconds by postgrey-1.37 at lindbergh.monkeyblade.net; Fri, 02 Sep 2022 08:04:48 PDT
-Received: from ext6.scm.com (ext6.scm.com [5.9.60.231])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8E09F5F60;
-        Fri,  2 Sep 2022 08:04:48 -0700 (PDT)
-Received: from mintaka.ncbr.muni.cz (mintaka.ncbr.muni.cz [147.251.90.119])
-        by ext6.scm.com (Postfix) with ESMTPSA id 8E07E7E803ED;
-        Fri,  2 Sep 2022 16:46:47 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=scm.com;
-        s=dkim20220819; t=1662130007;
-        bh=QipHUAFLlQN8U0AxHQTuwbsAVXcDR9FKYRB7FW1CTBE=;
-        h=From:To:Cc:Subject:Date:From;
-        b=AfN0yqr9om7o+c6a7MhakZ4jromiLK15f5sJbWN7DQA4RyZ2XOttED2bN0E3my+be
-         nHIPjP6PqX8PXXsB5TJ3BcUr2vhHKR5RKXAxpU9guMzDPG8R8ZPFg+QtAYAAvoPUjS
-         kpwegXHb/+DcEBQDVhNspRiMVqSu3C7R8jafQj9ZnR+J8SuI0RO7/kZycDbUUSEqsF
-         XqOQewDqkXvefRyzntnvFQusutDT+fjVL18/mooXF/BdPvikrRR0Pd6uZdWd9rceTx
-         Sv2Td07oph8vEvSQOYBtxS/YG55kbrtWUslb7gpNySf+J0gD5H6Ka+fAz/YCysLM0K
-         7UzCyVyjyvfcQ==
-From:   =?utf-8?B?VG9tw6HFoQ==?= Trnka <trnka@scm.com>
-To:     Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        Arnaldo Carvalho de Melo <acme@kernel.org>
-Cc:     linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Adrian Hunter <adrian.hunter@intel.com>
-Subject: perf top -p broken for multithreaded processes since 5.19
-Date:   Fri, 02 Sep 2022 16:46:45 +0200
-Message-ID: <10137382.nUPlyArG6x@mintaka.ncbr.muni.cz>
+        Fri, 2 Sep 2022 11:38:28 -0400
+Received: from ams.source.kernel.org (ams.source.kernel.org [IPv6:2604:1380:4601:e00::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 78778E68ED;
+        Fri,  2 Sep 2022 08:25:50 -0700 (PDT)
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by ams.source.kernel.org (Postfix) with ESMTPS id 9F779B82C79;
+        Fri,  2 Sep 2022 15:25:49 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 61F30C433D6;
+        Fri,  2 Sep 2022 15:25:48 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1662132348;
+        bh=FrFg+xmdEDkMXv1wDlDQ6uNNvv9sbAcSL1qiGhUUHdg=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=qAzEyJ1361X9yBv3PliR9wcd4XO7H+RmdlGFAu390ZDMbmvYP/CjsF42JrqBMXz0l
+         xB44489KSJ9azPNBg8p+l+o5zdvGJVaeVN1tbsFAEUqD4WGxAqaT0a9Ly22xhSizvt
+         nNhY7xtyWXtuO45YX3ntyDDuskIDaY9xJIkOeO9oAHtF8RMWWldFHxBAGMv3kIJO29
+         BYztCdgzS8MRIVGSw4AQZv1oV2WHzc0JcUB7kWj3EPLi8TB1bGUfIUtoEH40w+DdbI
+         zYB6AVm6+N/Yuiiuq0z8Dofa2jANlRfMxfpmXqFxtIwFdR14bKuZvK3kIyVVooigQb
+         7FStAgoJri4Sg==
+Received: by mail-vk1-f169.google.com with SMTP id o12so1129954vkn.7;
+        Fri, 02 Sep 2022 08:25:48 -0700 (PDT)
+X-Gm-Message-State: ACgBeo31uNpKv8N04c0HTB6ct6jRDXf5LQYmY7cm2/91kNF0pddOum5d
+        DYK3M0R4bgWBAVZqhyZ7b5lRgTL5Sa9W9FiUSQ==
+X-Google-Smtp-Source: AA6agR50oV56jYwuRURRAX9mWAXKrjgKJL8ObI8pOpCwrhYhlFYAz/zsj5ffn6XwdO7wZKYS9DBW31KW+9iwTRLO1nU=
+X-Received: by 2002:a1f:1d4d:0:b0:382:59cd:596c with SMTP id
+ d74-20020a1f1d4d000000b0038259cd596cmr10769792vkd.35.1662132347322; Fri, 02
+ Sep 2022 08:25:47 -0700 (PDT)
 MIME-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
+References: <20220901184709.2179309-1-robh@kernel.org> <CAM9d7chY6T-EAN3BT487MUK0LbfGp27X+2Dd_+S0azgh2GQn9w@mail.gmail.com>
+In-Reply-To: <CAM9d7chY6T-EAN3BT487MUK0LbfGp27X+2Dd_+S0azgh2GQn9w@mail.gmail.com>
+From:   Rob Herring <robh@kernel.org>
+Date:   Fri, 2 Sep 2022 10:25:36 -0500
+X-Gmail-Original-Message-ID: <CAL_JsqLmszK=NzD_2nYnZG1dD=tU1fKGUtYL-dUG2a497LkEcg@mail.gmail.com>
+Message-ID: <CAL_JsqLmszK=NzD_2nYnZG1dD=tU1fKGUtYL-dUG2a497LkEcg@mail.gmail.com>
+Subject: Re: [PATCH] perf: Ignore format attributes with an unknown
+ perf_event_attr field
+To:     Namhyung Kim <namhyung@kernel.org>
+Cc:     Peter Zijlstra <peterz@infradead.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        Arnaldo Carvalho de Melo <acme@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Jiri Olsa <jolsa@kernel.org>,
+        James Clark <james.clark@arm.com>,
+        linux-perf-users <linux-perf-users@vger.kernel.org>,
+        linux-kernel <linux-kernel@vger.kernel.org>
 Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-Hello,
+On Fri, Sep 2, 2022 at 1:53 AM Namhyung Kim <namhyung@kernel.org> wrote:
+>
+> Hello,
+>
+> On Thu, Sep 1, 2022 at 11:55 AM Rob Herring <robh@kernel.org> wrote:
+> >
+> > If the kernel exposes a new perf_event_attr field in a format attr, perf
+> > will return an error stating the specified PMU can't be found. For
+> > example, a format attr with 'config3:0-63' causes an error if config3 is
+> > unknown to perf. This causes a compatibility issue between a newer
+> > kernel and an older perf tool.
+> >
+> > The addition here makes any attr string up to the ':' ignored, but
+> > still checks the 'bits' portion.
+> >
+> > Signed-off-by: Rob Herring <robh@kernel.org>
+> > ---
+> > This is the YACC mud I threw and seems to stick. Maybe there's a better
+> > way to handle this. It doesn't seem like there's a way to do wildcards
+> > (i.e. config.*) in YACC.
+> >
+> > This is needed for this series[1]. Unfortunately the best we do to avoid
+> > the issue is applying this to stable. I think there's some time before
+> > v8.7 h/w is deployed, too.
+>
+> Maybe you could change the format_term rule to take an identifier instead
+> of PP_CONFIG* directly and pass it to perf_pmu__new_format().  Then
+> it could check the string and create an appropriate PERF_PMU_FORMAT_VALUE_*
+> or ignore it according to the PERF_ATTR_SIZE_VER*.
 
-A bug in perf v5.19 and newer completely breaks monitoring multithreaded
-processes using "perf top -p". The tool fails to start with "Failed to mmap
-with 22 (Invalid argument)". It still seems to work fine on single-threaded
-processes. "perf record" is also unaffected.
+That only moves parsing of configN from YACC to strcmp in C. In doing
+so, we'd be left with just the 'error' token case which seems a bit
+odd (if there's another way to do it, I don't know. yacc is not my
+thing). Is that really better? Unless there is some way to retrieve
+the PERF_ATTR_SIZE_VER* from the kernel at runtime?
 
-I have bisected the issue to the following commit:
-
-commit ae4f8ae16a07896403c90305d4b9be27f657c1fc
-Author: Adrian Hunter <adrian.hunter@intel.com>
-Date:   Tue May 24 10:54:31 2022 +0300
-
-    libperf evlist: Allow mixing per-thread and per-cpu mmaps
-   =20
-    mmap_per_evsel() will skip events that do not match the CPU, so all CPUs
-    can be iterated in any case.
-
-The issue can be easily reproduced using the following test:
-
-$ python - <<EOF
-import time
-import threading
-th =3D threading.Thread(target=3Dtime.sleep, args=3D(3600,))
-th.start()
-th.join()
-EOF
-
-stracing "perf top -p $(pgrep python)" yields this:
-
-145184 perf_event_open({type=3DPERF_TYPE_HARDWARE, size=3DPERF_ATTR_SIZE_VE=
-R7, config=3DPERF_COUNT_HW_CPU_CYCLES, sample_freq=3D4000, sample_type=3DPE=
-RF_SAMPLE_IP|PERF_SAMPLE_TID|PERF_SAMPLE_TIME|PERF_SAMPLE_PERIOD, read_form=
-at=3DPERF_FORMAT_ID, disabled=3D1, exclude_kernel=3D1, mmap=3D1, comm=3D1, =
-freq=3D1, task=3D1, precise_ip=3D0 /* arbitrary skid */, sample_id_all=3D1,=
- mmap2=3D1, comm_exec=3D1, ksymbol=3D1, ...}, 92061, -1, -1, PERF_FLAG_FD_C=
-LOEXEC) =3D 3
- > tools/perf/perf(evsel__open_cpu+0x287) [0x4c8ad7]
- > tools/perf/perf(cmd_top+0x1996) [0x439b26]
- > tools/perf/perf(run_builtin+0x68) [0x4a91f8]
- > tools/perf/perf(main+0x645) [0x40cad5]
-145184 perf_event_open({type=3DPERF_TYPE_HARDWARE, size=3DPERF_ATTR_SIZE_VE=
-R7, config=3DPERF_COUNT_HW_CPU_CYCLES, sample_freq=3D4000, sample_type=3DPE=
-RF_SAMPLE_IP|PERF_SAMPLE_TID|PERF_SAMPLE_TIME|PERF_SAMPLE_PERIOD, read_form=
-at=3DPERF_FORMAT_ID, disabled=3D1, exclude_kernel=3D1, mmap=3D1, comm=3D1, =
-freq=3D1, task=3D1, precise_ip=3D0 /* arbitrary skid */, sample_id_all=3D1,=
- mmap2=3D1, comm_exec=3D1, ksymbol=3D1, ...}, 104619, -1, -1, PERF_FLAG_FD_=
-CLOEXEC) =3D 5
- > tools/perf/perf(evsel__open_cpu+0x287) [0x4c8ad7]
- > tools/perf/perf(cmd_top+0x1996) [0x439b26]
- > tools/perf/perf(run_builtin+0x68) [0x4a91f8]
- > tools/perf/perf(main+0x645) [0x40cad5]
-=E2=80=A6(snip)=E2=80=A6
-145184 ioctl(5, PERF_EVENT_IOC_SET_OUTPUT, 3) =3D -1 EINVAL (Invalid argume=
-nt)
- > tools/perf/perf(perf_evlist__mmap_ops+0x2cf) [0x5d497f]
- > tools/perf/perf(evlist__mmap+0xa7) [0x4c09b7]
- > perf/perf(cmd_top+0x1ccd) [0x439e5d]
- > tools/perf/perf(run_builtin+0x68) [0x4a91f8]
- > tools/perf/perf(main+0x645) [0x40cad5]
-
-Best regards,
-
-Tom=C3=A1=C5=A1
-=2D-
-Tom=C3=A1=C5=A1 Trnka
-Software for Chemistry & Materials B.V.
-
-
-
+Rob
