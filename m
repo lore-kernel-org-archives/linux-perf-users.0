@@ -2,116 +2,87 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F1C7DC6FA81
-	for <linux-perf-users@archiver.kernel.org>; Fri,  2 Sep 2022 06:53:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 79DBCC54EE9
+	for <linux-perf-users@archiver.kernel.org>; Fri,  2 Sep 2022 08:04:36 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S235571AbiIBGxK (ORCPT
+        id S235709AbiIBIEf (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Fri, 2 Sep 2022 02:53:10 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59464 "EHLO
+        Fri, 2 Sep 2022 04:04:35 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36172 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S235563AbiIBGxJ (ORCPT
+        with ESMTP id S235705AbiIBIEe (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Fri, 2 Sep 2022 02:53:09 -0400
-Received: from mail-ot1-f51.google.com (mail-ot1-f51.google.com [209.85.210.51])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6675FAA345;
-        Thu,  1 Sep 2022 23:53:08 -0700 (PDT)
-Received: by mail-ot1-f51.google.com with SMTP id 92-20020a9d0be5000000b0063946111607so844080oth.10;
-        Thu, 01 Sep 2022 23:53:08 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date;
-        bh=kljxdECqJZOyxDQ4X50tiBQvLj6Z7Laiz45KlKlPDwQ=;
-        b=l65GnPEmcapIn3yiJbFuiMxY9PWnTdMsMHmzhh2oNl87iws/HeS4+hJRv008kx2OEt
-         N9gorSrf7eWLp7GjZphzz0I++jc9cOEmF/+dnJWqSYTr+chEmHy1nuhWFu4mfRGObyIt
-         hxRlCUxm4iqLJSHiYcQdpz2FlkP2aaAwm6ezX9hrGG5ZX+CbGifoVd9H0JsOgSkSVakN
-         enn8AS4B4ffxHxsobpokpqFlCvzyG2Ifce3h+/sRbkhLCHoFqv3IrHc7zZET8CNWoxso
-         9lERHM1Ld5kJCizw02pGXPmg34iypFoX/tCb7W6+KcAY5erR9KqRK/RL02x9ZU5zxyca
-         OckA==
-X-Gm-Message-State: ACgBeo38ympLDTx8f2/VFJAAb7UaN3pPGjHzWKZIORRrq1LVLMHx7cpf
-        t2R336YX3vNsJ1NCK/omTx7M3qno0gMSivm8+p4=
-X-Google-Smtp-Source: AA6agR7g4fE4+zjF6i7bVAuoDrD/9iAOk6+5sznzlRtEp2vResweR9Tp4Gy6BghWD7ig/WCzk0IXUv8+O5774F2ZxmM=
-X-Received: by 2002:a9d:6a59:0:b0:638:92fd:d5b4 with SMTP id
- h25-20020a9d6a59000000b0063892fdd5b4mr14306119otn.247.1662101587717; Thu, 01
- Sep 2022 23:53:07 -0700 (PDT)
+        Fri, 2 Sep 2022 04:04:34 -0400
+Received: from frasgout.his.huawei.com (frasgout.his.huawei.com [185.176.79.56])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7BEA0BBA7E;
+        Fri,  2 Sep 2022 01:04:30 -0700 (PDT)
+Received: from fraeml745-chm.china.huawei.com (unknown [172.18.147.207])
+        by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4MJr5W5vh6z67Vdy;
+        Fri,  2 Sep 2022 16:03:43 +0800 (CST)
+Received: from lhrpeml500003.china.huawei.com (7.191.162.67) by
+ fraeml745-chm.china.huawei.com (10.206.15.226) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2375.31; Fri, 2 Sep 2022 10:04:27 +0200
+Received: from [10.195.34.23] (10.195.34.23) by lhrpeml500003.china.huawei.com
+ (7.191.162.67) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2375.24; Fri, 2 Sep
+ 2022 09:04:26 +0100
+Message-ID: <c17d8229-6029-3fd6-1ce5-f406962eae8f@huawei.com>
+Date:   Fri, 2 Sep 2022 09:04:25 +0100
 MIME-Version: 1.0
-References: <20220901184709.2179309-1-robh@kernel.org>
-In-Reply-To: <20220901184709.2179309-1-robh@kernel.org>
-From:   Namhyung Kim <namhyung@kernel.org>
-Date:   Thu, 1 Sep 2022 23:52:56 -0700
-Message-ID: <CAM9d7chY6T-EAN3BT487MUK0LbfGp27X+2Dd_+S0azgh2GQn9w@mail.gmail.com>
-Subject: Re: [PATCH] perf: Ignore format attributes with an unknown
- perf_event_attr field
-To:     Rob Herring <robh@kernel.org>
-Cc:     Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        Arnaldo Carvalho de Melo <acme@kernel.org>,
+User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:91.0) Gecko/20100101
+ Thunderbird/91.6.1
+From:   John Garry <john.garry@huawei.com>
+Subject: Re: [PATCH] perf vendor events: Add missing Neoverse V1 events
+To:     Nick Forrington <nick.forrington@arm.com>,
+        <linux-kernel@vger.kernel.org>, <linux-perf-users@vger.kernel.org>,
+        <acme@kernel.org>
+CC:     Will Deacon <will@kernel.org>, James Clark <james.clark@arm.com>,
+        "Mike Leach" <mike.leach@linaro.org>, Leo Yan <leo.yan@linaro.org>,
         Mark Rutland <mark.rutland@arm.com>,
         Alexander Shishkin <alexander.shishkin@linux.intel.com>,
         Jiri Olsa <jolsa@kernel.org>,
-        James Clark <james.clark@arm.com>,
-        linux-perf-users <linux-perf-users@vger.kernel.org>,
-        linux-kernel <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+        "Namhyung Kim" <namhyung@kernel.org>,
+        <linux-arm-kernel@lists.infradead.org>
+References: <20220901151804.294823-1-nick.forrington@arm.com>
+In-Reply-To: <20220901151804.294823-1-nick.forrington@arm.com>
+Content-Type: text/plain; charset="UTF-8"; format=flowed
+Content-Transfer-Encoding: 7bit
+X-Originating-IP: [10.195.34.23]
+X-ClientProxiedBy: lhrpeml100003.china.huawei.com (7.191.160.210) To
+ lhrpeml500003.china.huawei.com (7.191.162.67)
+X-CFilter-Loop: Reflected
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-Hello,
+On 01/09/2022 16:18, Nick Forrington wrote:
+> Based on updated data from:
+> https://github.com/ARM-software/data/blob/master/pmu/neoverse-v1.json
+> 
+> which is based on PMU event descriptions from the Arm Neoverse V1
+> Technical Reference Manual.
+> 
+> This adds the following missing events:
+> ASE_INST_SPEC
+> SVE_INST_SPEC
+> SVE_PRED_SPEC
+> SVE_PRED_EMPTY_SPEC
+> SVE_PRED_FULL_SPEC
+> SVE_PRED_PARTIAL_SPEC
+> SVE_LDFF_SPEC
+> SVE_LDFF_FAULT_SPEC
+> FP_SCALE_OPS_SPEC
+> FP_FIXED_OPS_SPEC
+> 
+> It also moves REMOTE_ACCESS from other.json to memory.json.
 
-On Thu, Sep 1, 2022 at 11:55 AM Rob Herring <robh@kernel.org> wrote:
->
-> If the kernel exposes a new perf_event_attr field in a format attr, perf
-> will return an error stating the specified PMU can't be found. For
-> example, a format attr with 'config3:0-63' causes an error if config3 is
-> unknown to perf. This causes a compatibility issue between a newer
-> kernel and an older perf tool.
->
-> The addition here makes any attr string up to the ':' ignored, but
-> still checks the 'bits' portion.
->
-> Signed-off-by: Rob Herring <robh@kernel.org>
+Any specific reason why? I see that neoverse n2 and a76-n1 still use 
+"other" json for REMOTE_ACCESS. Nicer to be consistent.
+
+> 
+> Signed-off-by: Nick Forrington<nick.forrington@arm.com>
 > ---
-> This is the YACC mud I threw and seems to stick. Maybe there's a better
-> way to handle this. It doesn't seem like there's a way to do wildcards
-> (i.e. config.*) in YACC.
->
-> This is needed for this series[1]. Unfortunately the best we do to avoid
-> the issue is applying this to stable. I think there's some time before
-> v8.7 h/w is deployed, too.
 
-Maybe you could change the format_term rule to take an identifier instead
-of PP_CONFIG* directly and pass it to perf_pmu__new_format().  Then
-it could check the string and create an appropriate PERF_PMU_FORMAT_VALUE_*
-or ignore it according to the PERF_ATTR_SIZE_VER*.
-
-Thanks,
-Namhyung
-
-
->
-> Rob
->
-> [1] https://lore.kernel.org/all/20220825-arm-spe-v8-7-v1-0-c75b8d92e692@kernel.org/
->
->  tools/perf/util/pmu.y | 3 +++
->  1 file changed, 3 insertions(+)
->
-> diff --git a/tools/perf/util/pmu.y b/tools/perf/util/pmu.y
-> index bfd7e8509869..3096864ec9b9 100644
-> --- a/tools/perf/util/pmu.y
-> +++ b/tools/perf/util/pmu.y
-> @@ -60,6 +60,9 @@ PP_CONFIG2 ':' bits
->                                       PERF_PMU_FORMAT_VALUE_CONFIG2,
->                                       $3));
->  }
-> +|
-> +error ':' bits
-> +{}
->
->  bits:
->  bits ',' bit_term
-> --
-> 2.34.1
->
+Apart from above:
+Reviewed-by: John Garry <john.garry@huawei.com>
