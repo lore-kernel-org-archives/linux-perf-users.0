@@ -2,140 +2,110 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 75834ECAAD3
-	for <linux-perf-users@archiver.kernel.org>; Fri,  2 Sep 2022 01:36:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2A4E5ECAAD2
+	for <linux-perf-users@archiver.kernel.org>; Fri,  2 Sep 2022 02:41:13 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232186AbiIBBgy (ORCPT
+        id S233616AbiIBClL (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Thu, 1 Sep 2022 21:36:54 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59898 "EHLO
+        Thu, 1 Sep 2022 22:41:11 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50880 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232014AbiIBBgy (ORCPT
+        with ESMTP id S234836AbiIBCk6 (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Thu, 1 Sep 2022 21:36:54 -0400
-Received: from szxga01-in.huawei.com (szxga01-in.huawei.com [45.249.212.187])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0F93C901B0;
-        Thu,  1 Sep 2022 18:36:53 -0700 (PDT)
-Received: from dggemv704-chm.china.huawei.com (unknown [172.30.72.54])
-        by szxga01-in.huawei.com (SkyGuard) with ESMTP id 4MJgQr6hRvzkWpQ;
-        Fri,  2 Sep 2022 09:33:08 +0800 (CST)
-Received: from kwepemm600008.china.huawei.com (7.193.23.88) by
- dggemv704-chm.china.huawei.com (10.3.19.47) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2375.24; Fri, 2 Sep 2022 09:36:30 +0800
-Received: from huawei.com (10.175.100.227) by kwepemm600008.china.huawei.com
- (7.193.23.88) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2375.24; Fri, 2 Sep
- 2022 09:36:29 +0800
-From:   Shang XiaoJing <shangxiaojing@huawei.com>
-To:     <peterz@infradead.org>, <mingo@redhat.com>, <acme@kernel.org>,
-        <mark.rutland@arm.com>, <alexander.shishkin@linux.intel.com>,
-        <jolsa@kernel.org>, <namhyung@kernel.org>,
-        <linux-perf-users@vger.kernel.org>, <linux-kernel@vger.kernel.org>
-CC:     <shangxiaojing@huawei.com>
-Subject: [PATCH] perf: Add build_id_cahce__read_build_id helper
-Date:   Fri, 2 Sep 2022 10:11:22 +0800
-Message-ID: <20220902021122.18142-1-shangxiaojing@huawei.com>
-X-Mailer: git-send-email 2.17.1
+        Thu, 1 Sep 2022 22:40:58 -0400
+Received: from mga01.intel.com (mga01.intel.com [192.55.52.88])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B9E6278BE1;
+        Thu,  1 Sep 2022 19:40:55 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1662086455; x=1693622455;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=PjoNQgEOAKhe4BaRmT8CU4V28Ymn0nWV4aYU8zY1myk=;
+  b=IkfgfOjAVpaM+aEL+1iEhDS6jYHW6XDTJMwf4zM0KAjuwoHpjv/x2Srs
+   CKB2YRgyh6U732+NMmk/MsWklUlCh8RolLYJU7IsQbY8YKBS9AXofbQGz
+   cuBy8+imPQZtLAOB5s6MUHex+wevQYNvzrVFQmPhkBxcFcePiqPLvtaxs
+   CbP9pdxidcsTodTGUtFdRjZgmSiakjkBwTrDYNzOAHvH5bL5sZSsYzE/Y
+   LT00cNf63pem6u6WXEgVryg7/8TBy8nhLeC0gmwCSAMTr800gLOnrVb9G
+   afMgxVGqDyaN2+CLImMtKtpdId+9Jpo7Hdl5jZp+nf2bJBR5x8G2XOBPa
+   Q==;
+X-IronPort-AV: E=McAfee;i="6500,9779,10457"; a="322032248"
+X-IronPort-AV: E=Sophos;i="5.93,281,1654585200"; 
+   d="scan'208";a="322032248"
+Received: from fmsmga001.fm.intel.com ([10.253.24.23])
+  by fmsmga101.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 01 Sep 2022 19:40:55 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.93,281,1654585200"; 
+   d="scan'208";a="755092656"
+Received: from lkp-server02.sh.intel.com (HELO fccc941c3034) ([10.239.97.151])
+  by fmsmga001.fm.intel.com with ESMTP; 01 Sep 2022 19:40:52 -0700
+Received: from kbuild by fccc941c3034 with local (Exim 4.96)
+        (envelope-from <lkp@intel.com>)
+        id 1oTwbv-00001h-0c;
+        Fri, 02 Sep 2022 02:40:47 +0000
+Date:   Fri, 2 Sep 2022 10:39:59 +0800
+From:   kernel test robot <lkp@intel.com>
+To:     Sean Christopherson <seanjc@google.com>,
+        Ingo Molnar <mingo@redhat.com>,
+        Arnaldo Carvalho de Melo <acme@kernel.org>,
+        Paolo Bonzini <pbonzini@redhat.com>
+Cc:     kbuild-all@lists.01.org, Mark Rutland <mark.rutland@arm.com>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Jiri Olsa <jolsa@kernel.org>,
+        Namhyung Kim <namhyung@kernel.org>,
+        linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org,
+        kvm@vger.kernel.org, Like Xu <like.xu.linux@gmail.com>
+Subject: Re: [PATCH v4 1/5] perf/x86/core: Remove unnecessary stubs provided
+ for KVM-only helpers
+Message-ID: <202209021042.UcDPO3lL-lkp@intel.com>
+References: <20220901173258.925729-2-seanjc@google.com>
 MIME-Version: 1.0
-Content-Type: text/plain
-X-Originating-IP: [10.175.100.227]
-X-ClientProxiedBy: dggems705-chm.china.huawei.com (10.3.19.182) To
- kwepemm600008.china.huawei.com (7.193.23.88)
-X-CFilter-Loop: Reflected
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20220901173258.925729-2-seanjc@google.com>
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-Wrap repeated code in helper function build_id_cahce__read_build_id, which
-gets build id if success, or return -1 for failed to read build id.
+Hi Sean,
 
-Signed-off-by: Shang XiaoJing <shangxiaojing@huawei.com>
----
- tools/perf/builtin-buildid-cache.c | 41 +++++++++++++++---------------
- 1 file changed, 20 insertions(+), 21 deletions(-)
+I love your patch! Perhaps something to improve:
 
-diff --git a/tools/perf/builtin-buildid-cache.c b/tools/perf/builtin-buildid-cache.c
-index cd381693658b..a55d1c6496ea 100644
---- a/tools/perf/builtin-buildid-cache.c
-+++ b/tools/perf/builtin-buildid-cache.c
-@@ -172,20 +172,31 @@ static int build_id_cache__add_kcore(const char *filename, bool force)
- 	return 0;
- }
- 
--static int build_id_cache__add_file(const char *filename, struct nsinfo *nsi)
-+static int build_id_cahce__read_build_id(const char *filename, struct nsinfo *nsi,
-+					  struct build_id *bid)
- {
--	char sbuild_id[SBUILD_ID_SIZE];
--	struct build_id bid;
--	int err;
- 	struct nscookie nsc;
-+	int err;
- 
- 	nsinfo__mountns_enter(nsi, &nsc);
--	err = filename__read_build_id(filename, &bid);
-+	err = filename__read_build_id(filename, bid);
- 	nsinfo__mountns_exit(&nsc);
- 	if (err < 0) {
- 		pr_debug("Couldn't read a build-id in %s\n", filename);
- 		return -1;
- 	}
-+	return err;
-+}
-+
-+static int build_id_cache__add_file(const char *filename, struct nsinfo *nsi)
-+{
-+	char sbuild_id[SBUILD_ID_SIZE];
-+	struct build_id bid;
-+	int err;
-+
-+	err = build_id_cahce__read_build_id(filename, nsi, &bid);
-+	if (err < 0)
-+		return -1;
- 
- 	build_id__sprintf(&bid, sbuild_id);
- 	err = build_id_cache__add_s(sbuild_id, filename, nsi,
-@@ -199,17 +210,11 @@ static int build_id_cache__remove_file(const char *filename, struct nsinfo *nsi)
- {
- 	char sbuild_id[SBUILD_ID_SIZE];
- 	struct build_id bid;
--	struct nscookie nsc;
--
- 	int err;
- 
--	nsinfo__mountns_enter(nsi, &nsc);
--	err = filename__read_build_id(filename, &bid);
--	nsinfo__mountns_exit(&nsc);
--	if (err < 0) {
--		pr_debug("Couldn't read a build-id in %s\n", filename);
-+	err = build_id_cahce__read_build_id(filename, nsi, &bid);
-+	if (err < 0)
- 		return -1;
--	}
- 
- 	build_id__sprintf(&bid, sbuild_id);
- 	err = build_id_cache__remove_s(sbuild_id);
-@@ -302,17 +307,11 @@ static int build_id_cache__update_file(const char *filename, struct nsinfo *nsi)
- {
- 	char sbuild_id[SBUILD_ID_SIZE];
- 	struct build_id bid;
--	struct nscookie nsc;
--
- 	int err;
- 
--	nsinfo__mountns_enter(nsi, &nsc);
--	err = filename__read_build_id(filename, &bid);
--	nsinfo__mountns_exit(&nsc);
--	if (err < 0) {
--		pr_debug("Couldn't read a build-id in %s\n", filename);
-+	err = build_id_cahce__read_build_id(filename, nsi, &bid);
-+	if (err < 0)
- 		return -1;
--	}
- 	err = 0;
- 
- 	build_id__sprintf(&bid, sbuild_id);
+[auto build test WARNING on 372d07084593dc7a399bf9bee815711b1fb1bcf2]
+
+url:    https://github.com/intel-lab-lkp/linux/commits/Sean-Christopherson/KVM-x86-Intel-LBR-related-perf-cleanups/20220902-013352
+base:   372d07084593dc7a399bf9bee815711b1fb1bcf2
+config: i386-randconfig-m021 (https://download.01.org/0day-ci/archive/20220902/202209021042.UcDPO3lL-lkp@intel.com/config)
+compiler: gcc-11 (Debian 11.3.0-5) 11.3.0
+reproduce (this is a W=1 build):
+        # https://github.com/intel-lab-lkp/linux/commit/b1f1d2f5eb44253f5d059757c03e7fd413b2e306
+        git remote add linux-review https://github.com/intel-lab-lkp/linux
+        git fetch --no-tags linux-review Sean-Christopherson/KVM-x86-Intel-LBR-related-perf-cleanups/20220902-013352
+        git checkout b1f1d2f5eb44253f5d059757c03e7fd413b2e306
+        # save the config file
+        mkdir build_dir && cp config build_dir/.config
+        make W=1 O=build_dir ARCH=i386 SHELL=/bin/bash arch/x86/events/
+
+If you fix the issue, kindly add following tag where applicable
+Reported-by: kernel test robot <lkp@intel.com>
+
+All warnings (new ones prefixed by >>):
+
+>> arch/x86/events/core.c:696:31: warning: no previous prototype for 'perf_guest_get_msrs' [-Wmissing-prototypes]
+     696 | struct perf_guest_switch_msr *perf_guest_get_msrs(int *nr, void *data)
+         |                               ^~~~~~~~~~~~~~~~~~~
+
+
+vim +/perf_guest_get_msrs +696 arch/x86/events/core.c
+
+f87ad35d37fa54 arch/x86/kernel/cpu/perf_counter.c Jaswinder Singh Rajput 2009-02-27  695  
+39a4d779546a99 arch/x86/events/core.c             Like Xu                2022-04-11 @696  struct perf_guest_switch_msr *perf_guest_get_msrs(int *nr, void *data)
+abd562df94d19d arch/x86/events/core.c             Like Xu                2021-01-25  697  {
+39a4d779546a99 arch/x86/events/core.c             Like Xu                2022-04-11  698  	return static_call(x86_pmu_guest_get_msrs)(nr, data);
+abd562df94d19d arch/x86/events/core.c             Like Xu                2021-01-25  699  }
+abd562df94d19d arch/x86/events/core.c             Like Xu                2021-01-25  700  EXPORT_SYMBOL_GPL(perf_guest_get_msrs);
+abd562df94d19d arch/x86/events/core.c             Like Xu                2021-01-25  701  
+
 -- 
-2.17.1
-
+0-DAY CI Kernel Test Service
+https://01.org/lkp
