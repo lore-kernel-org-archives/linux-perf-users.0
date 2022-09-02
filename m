@@ -2,90 +2,73 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 853E3ECAAD5
-	for <linux-perf-users@archiver.kernel.org>; Fri,  2 Sep 2022 14:51:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 84A44C001B5
+	for <linux-perf-users@archiver.kernel.org>; Fri,  2 Sep 2022 15:18:27 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S236800AbiIBOvg (ORCPT
+        id S236517AbiIBPS0 (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Fri, 2 Sep 2022 10:51:36 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57428 "EHLO
+        Fri, 2 Sep 2022 11:18:26 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33002 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S236811AbiIBOvM (ORCPT
+        with ESMTP id S236446AbiIBPRy (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Fri, 2 Sep 2022 10:51:12 -0400
-Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTP id 518D0C7422;
-        Fri,  2 Sep 2022 07:13:18 -0700 (PDT)
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 0C223D6E;
-        Fri,  2 Sep 2022 07:13:24 -0700 (PDT)
-Received: from [10.57.15.84] (unknown [10.57.15.84])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 0D7AF3F766;
-        Fri,  2 Sep 2022 07:13:14 -0700 (PDT)
-Message-ID: <6813a737-736d-7e15-a44f-d800ed9248be@arm.com>
-Date:   Fri, 2 Sep 2022 15:12:49 +0100
+        Fri, 2 Sep 2022 11:17:54 -0400
+Received: from mga02.intel.com (mga02.intel.com [134.134.136.20])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 36005A61C1;
+        Fri,  2 Sep 2022 07:50:30 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1662130231; x=1693666231;
+  h=message-id:date:mime-version:subject:to:cc:references:
+   from:in-reply-to:content-transfer-encoding;
+  bh=IfcmcDyZGedEV2F81LC74u+mbSHwKTFMejAo0aMOmFk=;
+  b=mj98jTD9NDVUknPCke903QAUVjR/5p1g609LZ5eVuG3jrnMKWuKrhjs1
+   QLSOHPqw4iGF76HgTnFvwvmLpgrrXQR7iV5IhgpjoyoEjClX+B0J4/GCe
+   NyfFXTjG0BAgaOtNTDlYStQNco12VryVvG87pNWp8mO8Iqj5nAR2nHH+J
+   tpyIdUYV59VcRsbGZAiSDuv9SFskuUBwvonGV1IfZv2LUGuyXLHnViajm
+   0aWBI+W0E0SGitGgZ5nEoSq70HYJYZSxy1EnvHkiSPZL1X1R1Kv1TuEPs
+   CC5407yXHjG8RRqk7PpugvbZ/6lfHBMyfwm0C/jC7vy0cyCNYGyRmXtfW
+   w==;
+X-IronPort-AV: E=McAfee;i="6500,9779,10458"; a="282981858"
+X-IronPort-AV: E=Sophos;i="5.93,283,1654585200"; 
+   d="scan'208";a="282981858"
+Received: from orsmga008.jf.intel.com ([10.7.209.65])
+  by orsmga101.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 02 Sep 2022 07:50:30 -0700
+X-IronPort-AV: E=Sophos;i="5.93,283,1654585200"; 
+   d="scan'208";a="642930461"
+Received: from ahunter6-mobl1.ger.corp.intel.com (HELO [10.0.2.15]) ([10.252.42.34])
+  by orsmga008-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 02 Sep 2022 07:50:27 -0700
+Message-ID: <2fd9b620-e9a8-9cd9-1b4a-6b13d829b2ae@intel.com>
+Date:   Fri, 2 Sep 2022 17:50:22 +0300
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.15; rv:91.0)
- Gecko/20100101 Thunderbird/91.11.0
-Subject: Re: [PATCH] perf vendor events: Add missing Neoverse V1 events
-To:     John Garry <john.garry@huawei.com>, linux-kernel@vger.kernel.org,
-        linux-perf-users@vger.kernel.org, acme@kernel.org
-Cc:     Will Deacon <will@kernel.org>, James Clark <james.clark@arm.com>,
-        Mike Leach <mike.leach@linaro.org>,
-        Leo Yan <leo.yan@linaro.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Jiri Olsa <jolsa@kernel.org>,
-        Namhyung Kim <namhyung@kernel.org>,
-        linux-arm-kernel@lists.infradead.org
-References: <20220901151804.294823-1-nick.forrington@arm.com>
- <c17d8229-6029-3fd6-1ce5-f406962eae8f@huawei.com>
-From:   Nick Forrington <nick.forrington@arm.com>
-In-Reply-To: <c17d8229-6029-3fd6-1ce5-f406962eae8f@huawei.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
+ Firefox/91.0 Thunderbird/91.11.0
+Subject: Re: perf top -p broken for multithreaded processes since 5.19
+Content-Language: en-US
+To:     =?UTF-8?B?VG9tw6HFoSBUcm5rYQ==?= <trnka@scm.com>
+Cc:     linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Peter Zijlstra <peterz@infradead.org>,
+        Arnaldo Carvalho de Melo <acme@kernel.org>,
+        Ingo Molnar <mingo@redhat.com>
+References: <10137382.nUPlyArG6x@mintaka.ncbr.muni.cz>
+From:   Adrian Hunter <adrian.hunter@intel.com>
+Organization: Intel Finland Oy, Registered Address: PL 281, 00181 Helsinki,
+ Business Identity Code: 0357606 - 4, Domiciled in Helsinki
+In-Reply-To: <10137382.nUPlyArG6x@mintaka.ncbr.muni.cz>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-On 02/09/2022 09:04, John Garry wrote:
-> On 01/09/2022 16:18, Nick Forrington wrote:
->> Based on updated data from:
->> https://github.com/ARM-software/data/blob/master/pmu/neoverse-v1.json
->>
->> which is based on PMU event descriptions from the Arm Neoverse V1
->> Technical Reference Manual.
->>
->> This adds the following missing events:
->> ASE_INST_SPEC
->> SVE_INST_SPEC
->> SVE_PRED_SPEC
->> SVE_PRED_EMPTY_SPEC
->> SVE_PRED_FULL_SPEC
->> SVE_PRED_PARTIAL_SPEC
->> SVE_LDFF_SPEC
->> SVE_LDFF_FAULT_SPEC
->> FP_SCALE_OPS_SPEC
->> FP_FIXED_OPS_SPEC
->>
->> It also moves REMOTE_ACCESS from other.json to memory.json.
->
-> Any specific reason why? I see that neoverse n2 and a76-n1 still use 
-> "other" json for REMOTE_ACCESS. Nicer to be consistent.
+On 2/09/22 17:46, Tomáš Trnka wrote:
+> Hello,
+> 
+> A bug in perf v5.19 and newer completely breaks monitoring multithreaded
+> processes using "perf top -p". The tool fails to start with "Failed to mmap
+> with 22 (Invalid argument)". It still seems to work fine on single-threaded
+> processes. "perf record" is also unaffected.
 
-Thanks John, I agree on consistency.
+It has been reported here:
 
-I think memory is a better categorisation (for all CPUs), and this is 
-consistent with what I submitted for various Cortex CPUs a while back.
-
-I'd be happy to remove the REMOTE_ACCESS change here and update (or not) 
-REMOTE_ACCESS for Neoverse separately.
-
->
->>
->> Signed-off-by: Nick Forrington<nick.forrington@arm.com>
->> ---
->
-> Apart from above:
-> Reviewed-by: John Garry <john.garry@huawei.com>
-Thanks, Nick
+	https://bugzilla.kernel.org/show_bug.cgi?id=216441
