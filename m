@@ -2,87 +2,208 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 79DBCC54EE9
-	for <linux-perf-users@archiver.kernel.org>; Fri,  2 Sep 2022 08:04:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D6380ECAAD5
+	for <linux-perf-users@archiver.kernel.org>; Fri,  2 Sep 2022 08:33:54 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S235709AbiIBIEf (ORCPT
+        id S235642AbiIBIdx (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Fri, 2 Sep 2022 04:04:35 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36172 "EHLO
+        Fri, 2 Sep 2022 04:33:53 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35224 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S235705AbiIBIEe (ORCPT
+        with ESMTP id S235804AbiIBIcn (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Fri, 2 Sep 2022 04:04:34 -0400
-Received: from frasgout.his.huawei.com (frasgout.his.huawei.com [185.176.79.56])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7BEA0BBA7E;
-        Fri,  2 Sep 2022 01:04:30 -0700 (PDT)
-Received: from fraeml745-chm.china.huawei.com (unknown [172.18.147.207])
-        by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4MJr5W5vh6z67Vdy;
-        Fri,  2 Sep 2022 16:03:43 +0800 (CST)
-Received: from lhrpeml500003.china.huawei.com (7.191.162.67) by
- fraeml745-chm.china.huawei.com (10.206.15.226) with Microsoft SMTP Server
+        Fri, 2 Sep 2022 04:32:43 -0400
+Received: from szxga02-in.huawei.com (szxga02-in.huawei.com [45.249.212.188])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2C37BC1230;
+        Fri,  2 Sep 2022 01:32:41 -0700 (PDT)
+Received: from dggemv704-chm.china.huawei.com (unknown [172.30.72.53])
+        by szxga02-in.huawei.com (SkyGuard) with ESMTP id 4MJrdn5mV2zRhSy;
+        Fri,  2 Sep 2022 16:28:13 +0800 (CST)
+Received: from kwepemm600003.china.huawei.com (7.193.23.202) by
+ dggemv704-chm.china.huawei.com (10.3.19.47) with Microsoft SMTP Server
  (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2375.31; Fri, 2 Sep 2022 10:04:27 +0200
-Received: from [10.195.34.23] (10.195.34.23) by lhrpeml500003.china.huawei.com
- (7.191.162.67) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2375.24; Fri, 2 Sep
- 2022 09:04:26 +0100
-Message-ID: <c17d8229-6029-3fd6-1ce5-f406962eae8f@huawei.com>
-Date:   Fri, 2 Sep 2022 09:04:25 +0100
+ 15.1.2375.24; Fri, 2 Sep 2022 16:32:39 +0800
+Received: from ubuntu1804.huawei.com (10.67.174.61) by
+ kwepemm600003.china.huawei.com (7.193.23.202) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2375.24; Fri, 2 Sep 2022 16:32:38 +0800
+From:   Yang Jihong <yangjihong1@huawei.com>
+To:     <rostedt@goodmis.org>, <peterz@infradead.org>, <mingo@redhat.com>,
+        <acme@kernel.org>, <mark.rutland@arm.com>,
+        <alexander.shishkin@linux.intel.com>, <jolsa@kernel.org>,
+        <namhyung@kernel.org>, <linux-kernel@vger.kernel.org>,
+        <linux-perf-users@vger.kernel.org>
+CC:     <yangjihong1@huawei.com>
+Subject: [PATCH RESEND v4] perf/core: Fix reentry problem in perf_output_read_group
+Date:   Fri, 2 Sep 2022 16:29:18 +0800
+Message-ID: <20220902082918.179248-1-yangjihong1@huawei.com>
+X-Mailer: git-send-email 2.30.GIT
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:91.0) Gecko/20100101
- Thunderbird/91.6.1
-From:   John Garry <john.garry@huawei.com>
-Subject: Re: [PATCH] perf vendor events: Add missing Neoverse V1 events
-To:     Nick Forrington <nick.forrington@arm.com>,
-        <linux-kernel@vger.kernel.org>, <linux-perf-users@vger.kernel.org>,
-        <acme@kernel.org>
-CC:     Will Deacon <will@kernel.org>, James Clark <james.clark@arm.com>,
-        "Mike Leach" <mike.leach@linaro.org>, Leo Yan <leo.yan@linaro.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Jiri Olsa <jolsa@kernel.org>,
-        "Namhyung Kim" <namhyung@kernel.org>,
-        <linux-arm-kernel@lists.infradead.org>
-References: <20220901151804.294823-1-nick.forrington@arm.com>
-In-Reply-To: <20220901151804.294823-1-nick.forrington@arm.com>
-Content-Type: text/plain; charset="UTF-8"; format=flowed
-Content-Transfer-Encoding: 7bit
-X-Originating-IP: [10.195.34.23]
-X-ClientProxiedBy: lhrpeml100003.china.huawei.com (7.191.160.210) To
- lhrpeml500003.china.huawei.com (7.191.162.67)
+Content-Transfer-Encoding: 7BIT
+Content-Type:   text/plain; charset=US-ASCII
+X-Originating-IP: [10.67.174.61]
+X-ClientProxiedBy: dggems704-chm.china.huawei.com (10.3.19.181) To
+ kwepemm600003.china.huawei.com (7.193.23.202)
 X-CFilter-Loop: Reflected
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-On 01/09/2022 16:18, Nick Forrington wrote:
-> Based on updated data from:
-> https://github.com/ARM-software/data/blob/master/pmu/neoverse-v1.json
-> 
-> which is based on PMU event descriptions from the Arm Neoverse V1
-> Technical Reference Manual.
-> 
-> This adds the following missing events:
-> ASE_INST_SPEC
-> SVE_INST_SPEC
-> SVE_PRED_SPEC
-> SVE_PRED_EMPTY_SPEC
-> SVE_PRED_FULL_SPEC
-> SVE_PRED_PARTIAL_SPEC
-> SVE_LDFF_SPEC
-> SVE_LDFF_FAULT_SPEC
-> FP_SCALE_OPS_SPEC
-> FP_FIXED_OPS_SPEC
-> 
-> It also moves REMOTE_ACCESS from other.json to memory.json.
+perf_output_read_group may respond to IPI request of other cores and invoke
+__perf_install_in_context function. As a result, hwc configuration is modified.
+causing inconsistency and unexpected consequences.
 
-Any specific reason why? I see that neoverse n2 and a76-n1 still use 
-"other" json for REMOTE_ACCESS. Nicer to be consistent.
+Syzkaller has reported a problem with this scenario:
 
-> 
-> Signed-off-by: Nick Forrington<nick.forrington@arm.com>
-> ---
+Internal error: Oops - undefined instruction: 0 [#1] SMP
+Modules linked in:
+CPU: 1 PID: 15523 Comm: syz-executor.3 Not tainted 5.10.0 #6
+Hardware name: linux,dummy-virt (DT)
+pstate: 80400005 (Nzcv daif +PAN -UAO -TCO BTYPE=--)
+pc : read_pmevcntrn+0x1e4/0x1ec arch/arm64/kernel/perf_event.c:423
+lr : read_pmevcntrn+0x1e4/0x1ec arch/arm64/kernel/perf_event.c:423
+sp : ffffa000174d6ee0
+x29: ffffa000174d6ee0 x28: ffffedbca6b17a40
+x27: ffffa000174d7310 x26: ffff4b3ec102e398
+x25: 00000000ffffffff x24: 00000000ffffffff
+x23: ffff4b3ed8afb000 x22: ffff4b3ed8afb160
+x21: ffff4b3ed8afb184 x20: ffffedbca46aa3e0
+x19: ffffedbca2a524bc x18: 0000000000000000
+x17: 0000000000000000 x16: 0000000000000000
+x15: 0000000020000100 x14: 0000000000000000
+x13: 0000000000000000 x12: ffff8967db15f63d
+x11: 1fffe967db15f63c x10: ffff8967db15f63c
+x9 : ffffedbca2a5273c x8 : ffff4b3ed8afb1e7
+x7 : 0000000000000001 x6 : ffff8967db15f63c
+x5 : ffff4b3f08b89400 x4 : 0000000000000000
+x3 : ffffedbca2a00000 x2 : ffffedbca4690000
+x1 : ffff4b3f08b89400 x0 : 0000000000000000
+Call trace:
+ read_pmevcntrn+0x1e4/0x1ec arch/arm64/kernel/perf_event.c:423
+ armv8pmu_read_evcntr arch/arm64/kernel/perf_event.c:467 [inline]
+ armv8pmu_read_hw_counter arch/arm64/kernel/perf_event.c:475 [inline]
+ armv8pmu_read_counter+0x10c/0x1f0 arch/arm64/kernel/perf_event.c:528
+ armpmu_event_update+0x9c/0x1bc drivers/perf/arm_pmu.c:247
+ armpmu_read+0x24/0x30 drivers/perf/arm_pmu.c:264
+ perf_output_read_group+0x4cc/0x71c kernel/events/core.c:6806
+ perf_output_read+0x78/0x1c4 kernel/events/core.c:6845
+ perf_output_sample+0xafc/0x1000 kernel/events/core.c:6892
+ __perf_event_output kernel/events/core.c:7273 [inline]
+ perf_event_output_forward+0xd8/0x130 kernel/events/core.c:7287
+ __perf_event_overflow+0xbc/0x20c kernel/events/core.c:8943
+ perf_swevent_overflow kernel/events/core.c:9019 [inline]
+ perf_swevent_event+0x274/0x2c0 kernel/events/core.c:9047
+ do_perf_sw_event kernel/events/core.c:9160 [inline]
+ ___perf_sw_event+0x150/0x1b4 kernel/events/core.c:9191
+ __perf_sw_event+0x58/0x7c kernel/events/core.c:9203
+ perf_sw_event include/linux/perf_event.h:1177 [inline]
+ mm_account_fault mm/memory.c:4707 [inline]
+ handle_mm_fault+0x364/0x3f0 mm/memory.c:4758
+ __do_page_fault arch/arm64/mm/fault.c:438 [inline]
+ do_page_fault+0x334/0x8f0 arch/arm64/mm/fault.c:537
+ do_translation_fault+0x188/0x1e0 arch/arm64/mm/fault.c:619
+ do_mem_abort+0x68/0x120 arch/arm64/mm/fault.c:743
+ el1_abort+0xc0/0x150 arch/arm64/kernel/entry-common.c:119
+ el1_sync_handler+0x118/0x150 arch/arm64/kernel/entry-common.c:202
+ el1_sync+0x74/0x100 arch/arm64/kernel/entry.S:665
+ __arch_clear_user+0x20/0xa0 arch/arm64/lib/clear_user.S:25
+ read_iter_zero+0x90/0x16c drivers/char/mem.c:718
+ call_read_iter include/linux/fs.h:1954 [inline]
+ do_iter_readv_writev+0x394/0x414 fs/read_write.c:735
+ do_iter_read+0x1b0/0x280 fs/read_write.c:798
+ vfs_readv+0xf0/0x150 fs/read_write.c:918
+ do_readv+0x108/0x270 fs/read_write.c:955
+ __do_sys_readv fs/read_write.c:1046 [inline]
+ __se_sys_readv fs/read_write.c:1043 [inline]
+ __arm64_sys_readv+0x54/0x64 fs/read_write.c:1043
+ __invoke_syscall arch/arm64/kernel/syscall.c:36 [inline]
+ invoke_syscall arch/arm64/kernel/syscall.c:48 [inline]
+ el0_svc_common.constprop.0+0xf4/0x414 arch/arm64/kernel/syscall.c:155
+ do_el0_svc+0x50/0x11c arch/arm64/kernel/syscall.c:217
+ el0_svc+0x20/0x30 arch/arm64/kernel/entry-common.c:353
+ el0_sync_handler+0xe4/0x1e0 arch/arm64/kernel/entry-common.c:369
+ el0_sync+0x148/0x180 arch/arm64/kernel/entry.S:683
+Code: 940c387b d53be813 17ffff9c 940c3878 (d53bebd3)
+---[ end trace 6aab9f4b33ebf0aa ]---
+----------------
+Code disassembly (best guess):
+   0:	940c387b 	bl	0x30e1ec
+   4:	d53be813 	mrs	x19, pmevcntr0_el0
+   8:	17ffff9c 	b	0xfffffffffffffe78
+   c:	940c3878 	bl	0x30e1ec
+* 10:	d53bebd3 	mrs	x19, pmevcntr30_el0 <-- trapping instruction
 
-Apart from above:
-Reviewed-by: John Garry <john.garry@huawei.com>
+Interrupts are not disabled when perf_output_read_group reads PMU counter.
+In this case, IPI request may be received from other cores.
+As a result, PMU configuration is modified and an error occurs when
+reading PMU counter:
+
+                   CPU0                                         CPU1
+                                                    __se_sys_perf_event_open
+                                                      perf_install_in_context
+perf_output_read_group                                  smp_call_function_single
+  for_each_sibling_event(sub, leader) {                   generic_exec_single
+    if ((sub != event) &&                                   remote_function
+        (sub->state == PERF_EVENT_STATE_ACTIVE))                    |
+<enter IPI handler: __perf_install_in_context>   <----RAISE IPI-----+
+__perf_install_in_context
+  ctx_resched
+    event_sched_out
+      armpmu_del
+        ...
+        hwc->idx = -1; // event->hwc.idx is set to -1
+...
+<exit IPI>
+            sub->pmu->read(sub);
+              armpmu_read
+                armv8pmu_read_counter
+                  armv8pmu_read_hw_counter
+                    int idx = event->hw.idx; // idx = -1
+                    u64 val = armv8pmu_read_evcntr(idx);
+                      u32 counter = ARMV8_IDX_TO_COUNTER(idx); // invalid counter = 30
+                      read_pmevcntrn(counter) // undefined instruction
+
+Signed-off-by: Yang Jihong <yangjihong1@huawei.com>
+---
+Changes since v3:
+  - Modify commit message according to Peter's suggestion.
+
+Changes since v2:
+  - Update commit message.
+
+Changes since v1:
+  - Adapt patch to mainline branch to solve compilation problem.
+
+ kernel/events/core.c | 9 +++++++++
+ 1 file changed, 9 insertions(+)
+
+diff --git a/kernel/events/core.c b/kernel/events/core.c
+index 2621fd24ad26..752a9079a807 100644
+--- a/kernel/events/core.c
++++ b/kernel/events/core.c
+@@ -6895,6 +6895,13 @@ static void perf_output_read_group(struct perf_output_handle *handle,
+ 	u64 read_format = event->attr.read_format;
+ 	u64 values[6];
+ 	int n = 0;
++	unsigned long flags;
++
++	/*
++	 * Disabling interrupts avoids all counter scheduling
++	 * (context switches, timer based rotation and IPIs).
++	 */
++	local_irq_save(flags);
+ 
+ 	values[n++] = 1 + leader->nr_siblings;
+ 
+@@ -6931,6 +6938,8 @@ static void perf_output_read_group(struct perf_output_handle *handle,
+ 
+ 		__output_copy(handle, values, n * sizeof(u64));
+ 	}
++
++	local_irq_restore(flags);
+ }
+ 
+ #define PERF_FORMAT_TOTAL_TIMES (PERF_FORMAT_TOTAL_TIME_ENABLED|\
+-- 
+2.30.GIT
+
