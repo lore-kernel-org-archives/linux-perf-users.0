@@ -2,233 +2,124 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AA04DC38145
-	for <linux-perf-users@archiver.kernel.org>; Sat,  3 Sep 2022 14:08:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 50E67ECAAD4
+	for <linux-perf-users@archiver.kernel.org>; Sat,  3 Sep 2022 17:35:18 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230163AbiICOIg (ORCPT
+        id S229526AbiICRfQ (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Sat, 3 Sep 2022 10:08:36 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42502 "EHLO
+        Sat, 3 Sep 2022 13:35:16 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45480 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231396AbiICOIf (ORCPT
+        with ESMTP id S229525AbiICRfQ (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Sat, 3 Sep 2022 10:08:35 -0400
-Received: from ams.source.kernel.org (ams.source.kernel.org [IPv6:2604:1380:4601:e00::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id F2F625C9EE;
-        Sat,  3 Sep 2022 07:08:33 -0700 (PDT)
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by ams.source.kernel.org (Postfix) with ESMTPS id B5EACB801B8;
-        Sat,  3 Sep 2022 14:08:32 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 23E00C433D6;
-        Sat,  3 Sep 2022 14:08:31 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1662214111;
-        bh=RcY6pfyqSpiTwcrwiHlvE793ReDC3aOUyFtm10pHOLM=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=Z+t3kgWGYC5mZYYxv4X5fJKA/DGF81AZcbeh4Rav+Rzt7W4jLZOxBNEO/x8yrT76V
-         7e8HOs3SRbuVCBGVmGIyCNh47envrimRSNAUhYFRK3q9lTxOzJHSHRpBdWHXO1oC8t
-         445L7OIQJZZY5FiT2ep2Y3odjtzO+RW6mXRIslJy5UZAzi1o4t3q21EdC1e8nZJwbP
-         kX+AUzjeAAa5jyu9Kwl0DPA56eq0Ud/Ssk2W7DZlmfNnQb7lKSEgeGfy7pHYqJrtVI
-         INiJJTBJRUkeHRqkJKKBSB796GOp8G+38+Wa9/EH1Yugv0eGsjrd+jFazOqVw3Rv4m
-         QndV+Ey2Erv8g==
-Received: by quaco.ghostprotocols.net (Postfix, from userid 1000)
-        id AE6AC404A1; Sat,  3 Sep 2022 11:08:27 -0300 (-03)
-Date:   Sat, 3 Sep 2022 11:08:27 -0300
-From:   Arnaldo Carvalho de Melo <acme@kernel.org>
-To:     Adrian Hunter <adrian.hunter@intel.com>
-Cc:     =?utf-8?B?VG9tw6HFoQ==?= Trnka <trnka@scm.com>,
+        Sat, 3 Sep 2022 13:35:16 -0400
+Received: from mga11.intel.com (mga11.intel.com [192.55.52.93])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 90F4E23BEF;
+        Sat,  3 Sep 2022 10:35:14 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1662226514; x=1693762514;
+  h=message-id:date:mime-version:subject:to:cc:references:
+   from:in-reply-to:content-transfer-encoding;
+  bh=bQmJFm6kayaAxD5+OxmTtLH14Ox/blH2BcitTjW6+pA=;
+  b=aPjY2ijl5F8gitGrQzCCsD45VqJXPjlzM8d3v3A1M2bdbYz3j3YyTFvt
+   BFhv0winGlJjICkUsekd/XVpDhw4T+ayqAnAEdtn04TzR1El1VdivkDZm
+   TWSbJDSy4fTLamarf2dAAEfdrmC1E4g2p4xRLhxT4lB6wpy/8fC41fDnw
+   U780IQnpT9F4GZ1mcOoYKg7GHN78mbNP2eHtZMRetmT3fvWHjUaRoIjP/
+   Mb26tAwha+zRDqBLX+u/zjrX5Yl+t2N5MOYSsga43GBDqUHsXBGyfp+U/
+   FLQMHngv3KaoPRiS8m49OJdWH22hcGfdIqvTkaLaYsCy/ah/wASNZNURT
+   w==;
+X-IronPort-AV: E=McAfee;i="6500,9779,10459"; a="293762905"
+X-IronPort-AV: E=Sophos;i="5.93,287,1654585200"; 
+   d="scan'208";a="293762905"
+Received: from fmsmga008.fm.intel.com ([10.253.24.58])
+  by fmsmga102.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 03 Sep 2022 10:35:14 -0700
+X-IronPort-AV: E=Sophos;i="5.93,287,1654585200"; 
+   d="scan'208";a="674750030"
+Received: from ahunter6-mobl1.ger.corp.intel.com (HELO [10.0.2.15]) ([10.252.55.218])
+  by fmsmga008-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 03 Sep 2022 10:35:12 -0700
+Message-ID: <9a7bc232-e647-0667-4402-2f207003854b@intel.com>
+Date:   Sat, 3 Sep 2022 20:35:09 +0300
+MIME-Version: 1.0
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
+ Firefox/91.0 Thunderbird/91.11.0
+Subject: Re: perf top -p broken for multithreaded processes since 5.19
+Content-Language: en-US
+To:     Arnaldo Carvalho de Melo <acme@kernel.org>
+Cc:     =?UTF-8?B?VG9tw6HFoSBUcm5rYQ==?= <trnka@scm.com>,
         linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org,
         Peter Zijlstra <peterz@infradead.org>,
         Ingo Molnar <mingo@redhat.com>
-Subject: Re: perf top -p broken for multithreaded processes since 5.19
-Message-ID: <YxNf2/H5Iyz5M8sn@kernel.org>
 References: <10137382.nUPlyArG6x@mintaka.ncbr.muni.cz>
  <2fd9b620-e9a8-9cd9-1b4a-6b13d829b2ae@intel.com>
  <YxJW19MwaMOb8D30@kernel.org>
  <ca905aa0-9d7b-d6d8-c789-2bd22057619b@intel.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
+ <YxNf2/H5Iyz5M8sn@kernel.org>
+From:   Adrian Hunter <adrian.hunter@intel.com>
+Organization: Intel Finland Oy, Registered Address: PL 281, 00181 Helsinki,
+ Business Identity Code: 0357606 - 4, Domiciled in Helsinki
+In-Reply-To: <YxNf2/H5Iyz5M8sn@kernel.org>
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <ca905aa0-9d7b-d6d8-c789-2bd22057619b@intel.com>
-X-Url:  http://acmel.wordpress.com
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-Em Sat, Sep 03, 2022 at 10:14:25AM +0300, Adrian Hunter escreveu:
-> On 2/09/22 22:17, Arnaldo Carvalho de Melo wrote:
-> > Em Fri, Sep 02, 2022 at 05:50:22PM +0300, Adrian Hunter escreveu:
-> >> On 2/09/22 17:46, Tomáš Trnka wrote:
-> >>> Hello,
-> >>>
-> >>> A bug in perf v5.19 and newer completely breaks monitoring multithreaded
-> >>> processes using "perf top -p". The tool fails to start with "Failed to mmap
-> >>> with 22 (Invalid argument)". It still seems to work fine on single-threaded
-> >>> processes. "perf record" is also unaffected.
-> >>
-> >> It has been reported here:
-> >>
-> >> 	https://bugzilla.kernel.org/show_bug.cgi?id=216441
-> > 
-> > If I do:
-> > 
-> > ⬢[acme@toolbox perf-urgent]$ git log -2
-> > commit dfeb0bc60782471c293938e71b1a1117cfac2cb3 (HEAD -> perf/urgent)
-> > Author: Arnaldo Carvalho de Melo <acme@redhat.com>
-> > Date:   Fri Sep 2 16:15:39 2022 -0300
-> > 
-> >     Revert "libperf evlist: Check nr_mmaps is correct"
-> > 
-> >     This reverts commit 4ce47d842d4c16c07b135b8a7975b8f0672bcc0e.
-> > 
-> >     Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
-> > 
-> > commit 78cd283f6b8ab701cb35eafd5af8140560a88f16
-> > Author: Arnaldo Carvalho de Melo <acme@redhat.com>
-> > Date:   Fri Sep 2 16:13:41 2022 -0300
-> > 
-> >     Revert "libperf evlist: Allow mixing per-thread and per-cpu mmaps"
-> > 
-> >     This reverts commit ae4f8ae16a07896403c90305d4b9be27f657c1fc.
-> > 
-> >     Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
-> > ⬢[acme@toolbox perf-urgent]$
-> > 
-> > It works again, Tomáš can you please try doing this to see if this works
-> > for you?
-> > 
+On 3/09/22 17:08, Arnaldo Carvalho de Melo wrote:
+> Em Sat, Sep 03, 2022 at 10:14:25AM +0300, Adrian Hunter escreveu:
+>> On 2/09/22 22:17, Arnaldo Carvalho de Melo wrote:
+>>> Em Fri, Sep 02, 2022 at 05:50:22PM +0300, Adrian Hunter escreveu:
+>>>> On 2/09/22 17:46, Tomáš Trnka wrote:
+>>>>> Hello,
+>>>>>
+>>>>> A bug in perf v5.19 and newer completely breaks monitoring multithreaded
+>>>>> processes using "perf top -p". The tool fails to start with "Failed to mmap
+>>>>> with 22 (Invalid argument)". It still seems to work fine on single-threaded
+>>>>> processes. "perf record" is also unaffected.
+>>>>
+>>>> It has been reported here:
+>>>>
+>>>> 	https://bugzilla.kernel.org/show_bug.cgi?id=216441
+>>>
+>>> If I do:
+>>>
+>>> ⬢[acme@toolbox perf-urgent]$ git log -2
+>>> commit dfeb0bc60782471c293938e71b1a1117cfac2cb3 (HEAD -> perf/urgent)
+>>> Author: Arnaldo Carvalho de Melo <acme@redhat.com>
+>>> Date:   Fri Sep 2 16:15:39 2022 -0300
+>>>
+>>>     Revert "libperf evlist: Check nr_mmaps is correct"
+>>>
+>>>     This reverts commit 4ce47d842d4c16c07b135b8a7975b8f0672bcc0e.
+>>>
+>>>     Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
+>>>
+>>> commit 78cd283f6b8ab701cb35eafd5af8140560a88f16
+>>> Author: Arnaldo Carvalho de Melo <acme@redhat.com>
+>>> Date:   Fri Sep 2 16:13:41 2022 -0300
+>>>
+>>>     Revert "libperf evlist: Allow mixing per-thread and per-cpu mmaps"
+>>>
+>>>     This reverts commit ae4f8ae16a07896403c90305d4b9be27f657c1fc.
+>>>
+>>>     Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
+>>> ⬢[acme@toolbox perf-urgent]$
+>>>
+>>> It works again, Tomáš can you please try doing this to see if this works
+>>> for you?
+>>>
+>>
+>> This is the fix I have so far.  I would like to test it some more though.
 > 
-> This is the fix I have so far.  I would like to test it some more though.
+> Ok, so I'll leave it for the next pull req, possibly after Linux
+> Plumbers.
+> 
+> What do you think about reverting those two patches for v6.0 and then
+> add this for v6.1?
 
-Ok, so I'll leave it for the next pull req, possibly after Linux
-Plumbers.
+That would break sideband collection with selected CPUs, so I would
+prefer to avoid that.
 
-What do you think about reverting those two patches for v6.0 and then
-add this for v6.1?
-
-- Arnaldo
- 
-> From: Adrian Hunter <adrian.hunter@intel.com>
-> Date: Sat, 3 Sep 2022 10:05:08 +0300
-> Subject: [PATCH] libperf evlist: Fix per-thread mmaps for multi-threaded
->  targets
-> 
-> Offending commit did not consider the different set-output rules for
-> per-thread mmaps i.e. in the per-thread case set-output is used for
-> mmaps of the same thread not the same cpu.
-> 
-> This was not immediately noticed because it only happens with
-> multi-threaded targets and we do not have a test for that yet.
-> 
-> Fixes: ae4f8ae16a07 ("libperf evlist: Allow mixing per-thread and per-cpu mmaps")
-> Signed-off-by: Adrian Hunter <adrian.hunter@intel.com>
-> ---
->  tools/lib/perf/evlist.c | 49 +++++++++++++++++++++++++++++++++++++++++
->  1 file changed, 49 insertions(+)
-> 
-> diff --git a/tools/lib/perf/evlist.c b/tools/lib/perf/evlist.c
-> index e6c98a6e3908e..24280c887520c 100644
-> --- a/tools/lib/perf/evlist.c
-> +++ b/tools/lib/perf/evlist.c
-> @@ -486,6 +486,7 @@ mmap_per_evsel(struct perf_evlist *evlist, struct perf_evlist_mmap_ops *ops,
->  			if (ops->idx)
->  				ops->idx(evlist, evsel, mp, idx);
->  
-> +			pr_debug("idx %d: mmapping fd %d\n", idx, *output);
->  			if (ops->mmap(map, mp, *output, evlist_cpu) < 0)
->  				return -1;
->  
-> @@ -494,6 +495,7 @@ mmap_per_evsel(struct perf_evlist *evlist, struct perf_evlist_mmap_ops *ops,
->  			if (!idx)
->  				perf_evlist__set_mmap_first(evlist, map, overwrite);
->  		} else {
-> +			pr_debug("idx %d: set output fd %d -> %d\n", idx, fd, *output);
->  			if (ioctl(fd, PERF_EVENT_IOC_SET_OUTPUT, *output) != 0)
->  				return -1;
->  
-> @@ -519,6 +521,47 @@ mmap_per_evsel(struct perf_evlist *evlist, struct perf_evlist_mmap_ops *ops,
->  	return 0;
->  }
->  
-> +static int
-> +mmap_per_thread(struct perf_evlist *evlist, struct perf_evlist_mmap_ops *ops,
-> +		struct perf_mmap_param *mp)
-> +{
-> +	int nr_threads = perf_thread_map__nr(evlist->threads);
-> +	int nr_cpus    = perf_cpu_map__nr(evlist->all_cpus);
-> +	int cpu, thread, idx = 0;
-> +	int nr_mmaps = 0;
-> +
-> +	pr_debug("%s: nr cpu values (may include -1) %d nr threads %d\n", __func__, nr_cpus, nr_threads);
-> +
-> +	/* per-thread mmaps */
-> +	for (thread = 0; thread < nr_threads; thread++, idx++) {
-> +		int output = -1;
-> +		int output_overwrite = -1;
-> +
-> +		if (mmap_per_evsel(evlist, ops, idx, mp, 0, thread, &output,
-> +				   &output_overwrite, &nr_mmaps))
-> +			goto out_unmap;
-> +	}
-> +
-> +	/* system-wide mmaps i.e. per-cpu */
-> +	for (cpu = 1; cpu < nr_cpus; cpu++, idx ++) {
-> +		int output = -1;
-> +		int output_overwrite = -1;
-> +
-> +		if (mmap_per_evsel(evlist, ops, idx, mp, cpu, 0, &output,
-> +				   &output_overwrite, &nr_mmaps))
-> +			goto out_unmap;
-> +	}
-> +
-> +	if (nr_mmaps != evlist->nr_mmaps)
-> +		pr_err("Miscounted nr_mmaps %d vs %d\n", nr_mmaps, evlist->nr_mmaps);
-> +
-> +	return 0;
-> +
-> +out_unmap:
-> +	perf_evlist__munmap(evlist);
-> +	return -1;
-> +}
-> +
->  static int
->  mmap_per_cpu(struct perf_evlist *evlist, struct perf_evlist_mmap_ops *ops,
->  	     struct perf_mmap_param *mp)
-> @@ -528,6 +571,8 @@ mmap_per_cpu(struct perf_evlist *evlist, struct perf_evlist_mmap_ops *ops,
->  	int nr_mmaps = 0;
->  	int cpu, thread;
->  
-> +	pr_debug("%s: nr cpu values %d nr threads %d\n", __func__, nr_cpus, nr_threads);
-> +
->  	for (cpu = 0; cpu < nr_cpus; cpu++) {
->  		int output = -1;
->  		int output_overwrite = -1;
-> @@ -569,6 +614,7 @@ int perf_evlist__mmap_ops(struct perf_evlist *evlist,
->  			  struct perf_evlist_mmap_ops *ops,
->  			  struct perf_mmap_param *mp)
->  {
-> +	const struct perf_cpu_map *cpus = evlist->all_cpus;
->  	struct perf_evsel *evsel;
->  
->  	if (!ops || !ops->get || !ops->mmap)
-> @@ -588,6 +634,9 @@ int perf_evlist__mmap_ops(struct perf_evlist *evlist,
->  	if (evlist->pollfd.entries == NULL && perf_evlist__alloc_pollfd(evlist) < 0)
->  		return -ENOMEM;
->  
-> +	if (perf_cpu_map__empty(cpus))
-> +		return mmap_per_thread(evlist, ops, mp);
-> +
->  	return mmap_per_cpu(evlist, ops, mp);
->  }
->  
-> -- 
-> 2.34.1
-> 
-> 
-
--- 
-
-- Arnaldo
+The fix is a effectively a partial revert of "libperf evlist: Allow
+mixing per-thread and per-cpu mmaps" anyway.  I just need a few days
+to do more testing.
