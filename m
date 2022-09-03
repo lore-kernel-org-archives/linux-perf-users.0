@@ -2,126 +2,233 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A941CC6FA82
-	for <linux-perf-users@archiver.kernel.org>; Sat,  3 Sep 2022 09:45:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AA04DC38145
+	for <linux-perf-users@archiver.kernel.org>; Sat,  3 Sep 2022 14:08:37 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229589AbiICJpf (ORCPT
+        id S230163AbiICOIg (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Sat, 3 Sep 2022 05:45:35 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53526 "EHLO
+        Sat, 3 Sep 2022 10:08:36 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42502 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229451AbiICJpd (ORCPT
+        with ESMTP id S231396AbiICOIf (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Sat, 3 Sep 2022 05:45:33 -0400
-Received: from mailgw01.mediatek.com (unknown [60.244.123.138])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 95B824B0C4;
-        Sat,  3 Sep 2022 02:45:31 -0700 (PDT)
-X-UUID: 16d58f0892984158981941aca84ff6b6-20220903
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=mediatek.com; s=dk;
-        h=Content-Type:MIME-Version:References:In-Reply-To:Message-ID:Date:Subject:CC:To:From; bh=C7v8EPLTEZmZ1anSY1oDPlwBHyvM0IIQ7mwyVrAfIGI=;
-        b=VcqMn0TJV8maJJiYiReo3rWuElI1R/9vAJigezoDh4G7lXdBjSX1FV50lIJ9HYEOLlC1XhHlQ3u4KnqqAzWNaNIumuaFEV16RaLmvEYvfrvVr8GmAGFG3Akhua0bHAOg4svigEWnuW3Z6vPG+BhqOcpsHx8GxCgyP41cj5YztoI=;
-X-CID-P-RULE: Release_Ham
-X-CID-O-INFO: VERSION:1.1.10,REQID:306089ba-8c64-48b9-81b5-4ecc718f1e25,OB:0,L
-        OB:0,IP:0,URL:0,TC:0,Content:-5,EDM:0,RT:0,SF:45,FILE:0,BULK:0,RULE:Releas
-        e_Ham,ACTION:release,TS:40
-X-CID-INFO: VERSION:1.1.10,REQID:306089ba-8c64-48b9-81b5-4ecc718f1e25,OB:0,LOB
-        :0,IP:0,URL:0,TC:0,Content:-5,EDM:0,RT:0,SF:45,FILE:0,BULK:0,RULE:Release_
-        Ham,ACTION:release,TS:40
-X-CID-META: VersionHash:84eae18,CLOUDID:246786d0-20bd-4e5e-ace8-00692b7ab380,C
-        OID:fb7138c31022,Recheck:0,SF:28|17|19|48,TC:nil,Content:0,EDM:-3,IP:nil,U
-        RL:1,File:nil,Bulk:nil,QS:nil,BEC:nil,COL:0
-X-UUID: 16d58f0892984158981941aca84ff6b6-20220903
-Received: from mtkcas10.mediatek.inc [(172.21.101.39)] by mailgw01.mediatek.com
-        (envelope-from <lecopzer.chen@mediatek.com>)
-        (Generic MTA with TLSv1.2 ECDHE-RSA-AES256-SHA384 256/256)
-        with ESMTP id 1090876215; Sat, 03 Sep 2022 17:45:26 +0800
-Received: from mtkmbs11n1.mediatek.inc (172.21.101.185) by
- mtkmbs11n1.mediatek.inc (172.21.101.185) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.792.15; Sat, 3 Sep 2022 17:45:24 +0800
-Received: from mtksdccf07.mediatek.inc (172.21.84.99) by
- mtkmbs11n1.mediatek.inc (172.21.101.73) with Microsoft SMTP Server id
- 15.2.792.15 via Frontend Transport; Sat, 3 Sep 2022 17:45:24 +0800
-From:   Lecopzer Chen <lecopzer.chen@mediatek.com>
-To:     <mark.rutland@arm.com>, <will@kernel.org>
-CC:     <lecopzer.chen@mediatek.com>, <acme@kernel.org>,
-        <akpm@linux-foundation.org>, <alexander.shishkin@linux.intel.com>,
-        <catalin.marinas@arm.com>, <davem@davemloft.net>,
-        <jolsa@redhat.com>, <jthierry@redhat.com>, <keescook@chromium.org>,
-        <kernelfans@gmail.com>, <linux-arm-kernel@lists.infradead.org>,
-        <linux-kernel@vger.kernel.org>, <linux-perf-users@vger.kernel.org>,
-        <masahiroy@kernel.org>, <matthias.bgg@gmail.com>, <maz@kernel.org>,
-        <mcgrof@kernel.org>, <mingo@redhat.com>, <namhyung@kernel.org>,
-        <nixiaoming@huawei.com>, <peterz@infradead.org>,
-        <pmladek@suse.com>, <sparclinux@vger.kernel.org>,
-        <sumit.garg@linaro.org>, <wangqing@vivo.com>,
-        <yj.chiang@mediatek.com>
-Subject: RE: [PATCH v7 0/6] Support hld delayed init based on Pseudo-NMI for arm64
-Date:   Sat, 3 Sep 2022 17:45:23 +0800
-Message-ID: <20220903094523.16002-1-lecopzer.chen@mediatek.com>
-X-Mailer: git-send-email 2.18.0
-In-Reply-To: <20220903093415.15850-1-lecopzer.chen@mediatek.com>
-References: <20220903093415.15850-1-lecopzer.chen@mediatek.com>
+        Sat, 3 Sep 2022 10:08:35 -0400
+Received: from ams.source.kernel.org (ams.source.kernel.org [IPv6:2604:1380:4601:e00::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id F2F625C9EE;
+        Sat,  3 Sep 2022 07:08:33 -0700 (PDT)
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by ams.source.kernel.org (Postfix) with ESMTPS id B5EACB801B8;
+        Sat,  3 Sep 2022 14:08:32 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 23E00C433D6;
+        Sat,  3 Sep 2022 14:08:31 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1662214111;
+        bh=RcY6pfyqSpiTwcrwiHlvE793ReDC3aOUyFtm10pHOLM=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=Z+t3kgWGYC5mZYYxv4X5fJKA/DGF81AZcbeh4Rav+Rzt7W4jLZOxBNEO/x8yrT76V
+         7e8HOs3SRbuVCBGVmGIyCNh47envrimRSNAUhYFRK3q9lTxOzJHSHRpBdWHXO1oC8t
+         445L7OIQJZZY5FiT2ep2Y3odjtzO+RW6mXRIslJy5UZAzi1o4t3q21EdC1e8nZJwbP
+         kX+AUzjeAAa5jyu9Kwl0DPA56eq0Ud/Ssk2W7DZlmfNnQb7lKSEgeGfy7pHYqJrtVI
+         INiJJTBJRUkeHRqkJKKBSB796GOp8G+38+Wa9/EH1Yugv0eGsjrd+jFazOqVw3Rv4m
+         QndV+Ey2Erv8g==
+Received: by quaco.ghostprotocols.net (Postfix, from userid 1000)
+        id AE6AC404A1; Sat,  3 Sep 2022 11:08:27 -0300 (-03)
+Date:   Sat, 3 Sep 2022 11:08:27 -0300
+From:   Arnaldo Carvalho de Melo <acme@kernel.org>
+To:     Adrian Hunter <adrian.hunter@intel.com>
+Cc:     =?utf-8?B?VG9tw6HFoQ==?= Trnka <trnka@scm.com>,
+        linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Peter Zijlstra <peterz@infradead.org>,
+        Ingo Molnar <mingo@redhat.com>
+Subject: Re: perf top -p broken for multithreaded processes since 5.19
+Message-ID: <YxNf2/H5Iyz5M8sn@kernel.org>
+References: <10137382.nUPlyArG6x@mintaka.ncbr.muni.cz>
+ <2fd9b620-e9a8-9cd9-1b4a-6b13d829b2ae@intel.com>
+ <YxJW19MwaMOb8D30@kernel.org>
+ <ca905aa0-9d7b-d6d8-c789-2bd22057619b@intel.com>
 MIME-Version: 1.0
-Content-Type: text/plain
-X-MTK:  N
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <ca905aa0-9d7b-d6d8-c789-2bd22057619b@intel.com>
+X-Url:  http://acmel.wordpress.com
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-Hi Will, Mark
+Em Sat, Sep 03, 2022 at 10:14:25AM +0300, Adrian Hunter escreveu:
+> On 2/09/22 22:17, Arnaldo Carvalho de Melo wrote:
+> > Em Fri, Sep 02, 2022 at 05:50:22PM +0300, Adrian Hunter escreveu:
+> >> On 2/09/22 17:46, Tomáš Trnka wrote:
+> >>> Hello,
+> >>>
+> >>> A bug in perf v5.19 and newer completely breaks monitoring multithreaded
+> >>> processes using "perf top -p". The tool fails to start with "Failed to mmap
+> >>> with 22 (Invalid argument)". It still seems to work fine on single-threaded
+> >>> processes. "perf record" is also unaffected.
+> >>
+> >> It has been reported here:
+> >>
+> >> 	https://bugzilla.kernel.org/show_bug.cgi?id=216441
+> > 
+> > If I do:
+> > 
+> > ⬢[acme@toolbox perf-urgent]$ git log -2
+> > commit dfeb0bc60782471c293938e71b1a1117cfac2cb3 (HEAD -> perf/urgent)
+> > Author: Arnaldo Carvalho de Melo <acme@redhat.com>
+> > Date:   Fri Sep 2 16:15:39 2022 -0300
+> > 
+> >     Revert "libperf evlist: Check nr_mmaps is correct"
+> > 
+> >     This reverts commit 4ce47d842d4c16c07b135b8a7975b8f0672bcc0e.
+> > 
+> >     Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
+> > 
+> > commit 78cd283f6b8ab701cb35eafd5af8140560a88f16
+> > Author: Arnaldo Carvalho de Melo <acme@redhat.com>
+> > Date:   Fri Sep 2 16:13:41 2022 -0300
+> > 
+> >     Revert "libperf evlist: Allow mixing per-thread and per-cpu mmaps"
+> > 
+> >     This reverts commit ae4f8ae16a07896403c90305d4b9be27f657c1fc.
+> > 
+> >     Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
+> > ⬢[acme@toolbox perf-urgent]$
+> > 
+> > It works again, Tomáš can you please try doing this to see if this works
+> > for you?
+> > 
+> 
+> This is the fix I have so far.  I would like to test it some more though.
+
+Ok, so I'll leave it for the next pull req, possibly after Linux
+Plumbers.
+
+What do you think about reverting those two patches for v6.0 and then
+add this for v6.1?
+
+- Arnaldo
  
-Sorry for bothering you, this need to be reviewed by ARM Perf maintainer,
+> From: Adrian Hunter <adrian.hunter@intel.com>
+> Date: Sat, 3 Sep 2022 10:05:08 +0300
+> Subject: [PATCH] libperf evlist: Fix per-thread mmaps for multi-threaded
+>  targets
+> 
+> Offending commit did not consider the different set-output rules for
+> per-thread mmaps i.e. in the per-thread case set-output is used for
+> mmaps of the same thread not the same cpu.
+> 
+> This was not immediately noticed because it only happens with
+> multi-threaded targets and we do not have a test for that yet.
+> 
+> Fixes: ae4f8ae16a07 ("libperf evlist: Allow mixing per-thread and per-cpu mmaps")
+> Signed-off-by: Adrian Hunter <adrian.hunter@intel.com>
+> ---
+>  tools/lib/perf/evlist.c | 49 +++++++++++++++++++++++++++++++++++++++++
+>  1 file changed, 49 insertions(+)
+> 
+> diff --git a/tools/lib/perf/evlist.c b/tools/lib/perf/evlist.c
+> index e6c98a6e3908e..24280c887520c 100644
+> --- a/tools/lib/perf/evlist.c
+> +++ b/tools/lib/perf/evlist.c
+> @@ -486,6 +486,7 @@ mmap_per_evsel(struct perf_evlist *evlist, struct perf_evlist_mmap_ops *ops,
+>  			if (ops->idx)
+>  				ops->idx(evlist, evsel, mp, idx);
+>  
+> +			pr_debug("idx %d: mmapping fd %d\n", idx, *output);
+>  			if (ops->mmap(map, mp, *output, evlist_cpu) < 0)
+>  				return -1;
+>  
+> @@ -494,6 +495,7 @@ mmap_per_evsel(struct perf_evlist *evlist, struct perf_evlist_mmap_ops *ops,
+>  			if (!idx)
+>  				perf_evlist__set_mmap_first(evlist, map, overwrite);
+>  		} else {
+> +			pr_debug("idx %d: set output fd %d -> %d\n", idx, fd, *output);
+>  			if (ioctl(fd, PERF_EVENT_IOC_SET_OUTPUT, *output) != 0)
+>  				return -1;
+>  
+> @@ -519,6 +521,47 @@ mmap_per_evsel(struct perf_evlist *evlist, struct perf_evlist_mmap_ops *ops,
+>  	return 0;
+>  }
+>  
+> +static int
+> +mmap_per_thread(struct perf_evlist *evlist, struct perf_evlist_mmap_ops *ops,
+> +		struct perf_mmap_param *mp)
+> +{
+> +	int nr_threads = perf_thread_map__nr(evlist->threads);
+> +	int nr_cpus    = perf_cpu_map__nr(evlist->all_cpus);
+> +	int cpu, thread, idx = 0;
+> +	int nr_mmaps = 0;
+> +
+> +	pr_debug("%s: nr cpu values (may include -1) %d nr threads %d\n", __func__, nr_cpus, nr_threads);
+> +
+> +	/* per-thread mmaps */
+> +	for (thread = 0; thread < nr_threads; thread++, idx++) {
+> +		int output = -1;
+> +		int output_overwrite = -1;
+> +
+> +		if (mmap_per_evsel(evlist, ops, idx, mp, 0, thread, &output,
+> +				   &output_overwrite, &nr_mmaps))
+> +			goto out_unmap;
+> +	}
+> +
+> +	/* system-wide mmaps i.e. per-cpu */
+> +	for (cpu = 1; cpu < nr_cpus; cpu++, idx ++) {
+> +		int output = -1;
+> +		int output_overwrite = -1;
+> +
+> +		if (mmap_per_evsel(evlist, ops, idx, mp, cpu, 0, &output,
+> +				   &output_overwrite, &nr_mmaps))
+> +			goto out_unmap;
+> +	}
+> +
+> +	if (nr_mmaps != evlist->nr_mmaps)
+> +		pr_err("Miscounted nr_mmaps %d vs %d\n", nr_mmaps, evlist->nr_mmaps);
+> +
+> +	return 0;
+> +
+> +out_unmap:
+> +	perf_evlist__munmap(evlist);
+> +	return -1;
+> +}
+> +
+>  static int
+>  mmap_per_cpu(struct perf_evlist *evlist, struct perf_evlist_mmap_ops *ops,
+>  	     struct perf_mmap_param *mp)
+> @@ -528,6 +571,8 @@ mmap_per_cpu(struct perf_evlist *evlist, struct perf_evlist_mmap_ops *ops,
+>  	int nr_mmaps = 0;
+>  	int cpu, thread;
+>  
+> +	pr_debug("%s: nr cpu values %d nr threads %d\n", __func__, nr_cpus, nr_threads);
+> +
+>  	for (cpu = 0; cpu < nr_cpus; cpu++) {
+>  		int output = -1;
+>  		int output_overwrite = -1;
+> @@ -569,6 +614,7 @@ int perf_evlist__mmap_ops(struct perf_evlist *evlist,
+>  			  struct perf_evlist_mmap_ops *ops,
+>  			  struct perf_mmap_param *mp)
+>  {
+> +	const struct perf_cpu_map *cpus = evlist->all_cpus;
+>  	struct perf_evsel *evsel;
+>  
+>  	if (!ops || !ops->get || !ops->mmap)
+> @@ -588,6 +634,9 @@ int perf_evlist__mmap_ops(struct perf_evlist *evlist,
+>  	if (evlist->pollfd.entries == NULL && perf_evlist__alloc_pollfd(evlist) < 0)
+>  		return -ENOMEM;
+>  
+> +	if (perf_cpu_map__empty(cpus))
+> +		return mmap_per_thread(evlist, ops, mp);
+> +
+>  	return mmap_per_cpu(evlist, ops, mp);
+>  }
+>  
+> -- 
+> 2.34.1
+> 
+> 
 
-could you please help review this pathset or comment about it?
+-- 
 
-
-
-
-Thanks a lot.
-
- 
-> Hi Will, Mark
->
-> Could you help review arm parts of this patchset, please?
-> 
-> For the question mention in both [1] and [2],
-> 
-> > I'd still like Mark's Ack on this, as the approach you have taken doesn't
-> > really sit with what he was suggesting.
-> >
-> > I also don't understand how all the CPUs get initialised with your patch,
-> > since the PMU driver will be initialised after SMP is up and running.
-> 
-> The hardlock detector utilizes the softlockup_start_all() to start all
-> the cpu on watchdog_allowed_mask, which will do watchdog_nmi_enable()
-> that registers perf event on each CPUs.
-> Thus we simply need to retry lockup_detector_init() in a single cpu which
-> will reconfig and call to softlockup_start_all().
-> 
-> Also, the CONFIG_HARDLOCKUP_DETECTOR_PERF selects SOFTLOCKUP_DETECTOR,
-> IMO, this shows that hardlockup detector supports from softlockup.
-> 
-> 
-> > We should know whether pNMIs are possible once we've completed
-> > setup_arch() (and possibly init_IRQ()), long before SMP, so so I reckon
-> > we should have all the information available once we get to
-> > lockup_detector_init(), even if that requires some preparatory rework.
-> 
-> Hardlockup depends on PMU driver , I think the only way is moving
-> pmu driver at setup_arch() or any point which is earlier than
-> lockup_detector_init(), and I guess we have to reorganize the architecture
-> of arm PMU.
-> 
-> The retry function should benifit all the arch/ not only for arm64.
-> Any arch who needs to probe its pmu as module can use this without providing
-> a chance to mess up the setup order. 
-> 
-> 
-> Please let me know if you have any concern about this, thank you
-> 
-> 
-> [1] https://lore.kernel.org/all/CAFA6WYPPgUvHCpN5=EpJ2Us5h5uVWCbBA59C-YwYQX2ovyVeEw@mail.gmail.com/
-> [2] https://lore.kernel.org/linux-arm-kernel/20210419170331.GB31045@willie-the-truck/
-> 
-> 
+- Arnaldo
