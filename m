@@ -2,111 +2,93 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 44091ECAAD5
-	for <linux-perf-users@archiver.kernel.org>; Fri,  2 Sep 2022 19:26:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DE229C38145
+	for <linux-perf-users@archiver.kernel.org>; Sat,  3 Sep 2022 00:02:15 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229829AbiIBT0A (ORCPT
+        id S230143AbiICACP (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Fri, 2 Sep 2022 15:26:00 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44202 "EHLO
+        Fri, 2 Sep 2022 20:02:15 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52400 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229538AbiIBTZ7 (ORCPT
+        with ESMTP id S229595AbiICACO (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Fri, 2 Sep 2022 15:25:59 -0400
-Received: from sin.source.kernel.org (sin.source.kernel.org [IPv6:2604:1380:40e1:4800::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 221B21CFD3;
-        Fri,  2 Sep 2022 12:25:58 -0700 (PDT)
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by sin.source.kernel.org (Postfix) with ESMTPS id 5DC21CE30C7;
-        Fri,  2 Sep 2022 19:25:56 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 04E10C433C1;
-        Fri,  2 Sep 2022 19:25:54 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1662146754;
-        bh=OXshCiSi6O3h3plOqJ6wkUls2kJW/yXQDTlsExEXJM4=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=oBWrJjJgGcCxYju+mSj+YLLLLYmYnb2DHtSDcBsriTOVBRFpSrHXCRdg6huRhmo2O
-         v7N5lxKS+DtwxXQ0lNQ8oL5WaM6icuXqVaqLnUiHFg+5wjo2uiymILQe+CtAfAx8cY
-         4ojqRx2WjCPLfGWA6RSWU7AAqIPU0H9DiNm+C1I+/PQjGW3MrTbadMa1bKDkMsSYOJ
-         iO5VFPVX5OOniUcLse1J5VDQu4Q3jz1JRIZom2rlk9IJW/BIFyY63W6AZdRuOhG1Z5
-         AABB3sUen+CJ1zfW9f7I3AfdQiYtHoiQPHVBTuqTjUV1po+5fkOGi5cDTxre3ohCpq
-         0BRKf3TbrrGoQ==
-Received: by quaco.ghostprotocols.net (Postfix, from userid 1000)
-        id AA4CB404A1; Fri,  2 Sep 2022 16:25:51 -0300 (-03)
-Date:   Fri, 2 Sep 2022 16:25:51 -0300
-From:   Arnaldo Carvalho de Melo <acme@kernel.org>
-To:     Nick Forrington <nick.forrington@arm.com>
-Cc:     John Garry <john.garry@huawei.com>, linux-kernel@vger.kernel.org,
-        linux-perf-users@vger.kernel.org, Will Deacon <will@kernel.org>,
-        James Clark <james.clark@arm.com>,
-        Mike Leach <mike.leach@linaro.org>,
-        Leo Yan <leo.yan@linaro.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Jiri Olsa <jolsa@kernel.org>,
-        Namhyung Kim <namhyung@kernel.org>,
-        linux-arm-kernel@lists.infradead.org
-Subject: Re: [PATCH] perf vendor events: Add missing Neoverse V1 events
-Message-ID: <YxJYv0IfvmL1BTrX@kernel.org>
-References: <20220901151804.294823-1-nick.forrington@arm.com>
- <c17d8229-6029-3fd6-1ce5-f406962eae8f@huawei.com>
- <6813a737-736d-7e15-a44f-d800ed9248be@arm.com>
+        Fri, 2 Sep 2022 20:02:14 -0400
+Received: from mail-pj1-x102a.google.com (mail-pj1-x102a.google.com [IPv6:2607:f8b0:4864:20::102a])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 53C1FC00F9;
+        Fri,  2 Sep 2022 17:02:13 -0700 (PDT)
+Received: by mail-pj1-x102a.google.com with SMTP id t11-20020a17090a510b00b001fac77e9d1fso6911679pjh.5;
+        Fri, 02 Sep 2022 17:02:13 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20210112;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:sender:from:to:cc:subject:date;
+        bh=XorKwMQUb7K+kigdhgsfq6FPDdCfAHrNSX7HqJ58NXI=;
+        b=j1nWZwRJhwlI8JwKYHmo6F1VXpip1//WhpRZo2Z+IR6SdKNBiqJiKPeEymfD5MVUam
+         JVJ1vl5GgmIlLEsKsGnHRlWGU6Jacl0tNB7w0B/qMuiJ7UFGSclB8KVA7bGprfvm8gbb
+         7gcNQLCtmKasik6SXKkAq8gH4wxiI8VH6jleo5X1wVtdjwU9C4fSP6AgRVGCRJFALBmY
+         2a/nUJyj8n5e+khA2gHm7OlnAPz7UXn65rGch38bQM5SqyEJU2a3htOFmsl7HCzgaXsP
+         qsFDUZwgW4oVoefazuyjnVBw+81V9TGmd5PuMHhz4lqu4n1Il3e9AHJtMo2G5iHiWlwk
+         Ja6Q==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:sender:x-gm-message-state:from:to:cc:subject:date;
+        bh=XorKwMQUb7K+kigdhgsfq6FPDdCfAHrNSX7HqJ58NXI=;
+        b=rr59b+v6PJm6ENRxqQCVuoTG9hcYn7ATY9rK1qSUs4tu1RP1puL2adZh7oDKgf8o26
+         f+O4PVisXCejrnnoFAdDly8GBrYgyBLNo2Pu8aPlvSjZBJCXqhQxRsJ6NbkgoZl9SIjl
+         glUZ3CRG+DXFQ494knZjQsoeeb80OYptyqsI6Nco8Q6/SJesnXBcq5MHn9cKmoojE2E0
+         KVsk3q5nfCePS07nYjnRV8JYJPiiuzqE6XWGSzsYJyHoCxHt8+a/65x4PuDogZaRCYgI
+         R79k+OLOIDJiBvDbZI/mBiOQKQSfV4JqFBxKtkh6gSpg4gIWl6bpU8gZHENWq54SLZ99
+         coOQ==
+X-Gm-Message-State: ACgBeo2ZXPTNyKPGYarXi1Xu3WhaE8Yaixq+g+U6KHXIYfvnYoxq/AYN
+        XfoweoC+37/7txh/D8x2vVw=
+X-Google-Smtp-Source: AA6agR5FEGcvGRW6flcnqPAR+kdwIVsfk4sIhq6pMs/2o9yJDcgKq7lmVJ/rv8TdNI4w8rV+ZlUqJg==
+X-Received: by 2002:a17:903:244c:b0:16e:fa53:a54c with SMTP id l12-20020a170903244c00b0016efa53a54cmr37059049pls.46.1662163332680;
+        Fri, 02 Sep 2022 17:02:12 -0700 (PDT)
+Received: from balhae.hsd1.ca.comcast.net ([2601:647:6780:1040:5512:f0c2:97f5:28f4])
+        by smtp.gmail.com with ESMTPSA id a25-20020a62d419000000b005366696b735sm2391302pfh.77.2022.09.02.17.02.11
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 02 Sep 2022 17:02:11 -0700 (PDT)
+Sender: Namhyung Kim <namhyung@gmail.com>
+From:   Namhyung Kim <namhyung@kernel.org>
+To:     Arnaldo Carvalho de Melo <acme@kernel.org>,
+        Jiri Olsa <jolsa@kernel.org>
+Cc:     Ingo Molnar <mingo@kernel.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Ian Rogers <irogers@google.com>,
+        linux-perf-users@vger.kernel.org, Marco Elver <elver@google.com>
+Subject: [PATCH] perf test: Skip sigtrap test on old kernels
+Date:   Fri,  2 Sep 2022 17:02:10 -0700
+Message-Id: <20220903000210.1112014-1-namhyung@kernel.org>
+X-Mailer: git-send-email 2.37.2.789.g6183377224-goog
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <6813a737-736d-7e15-a44f-d800ed9248be@arm.com>
-X-Url:  http://acmel.wordpress.com
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-Em Fri, Sep 02, 2022 at 03:12:49PM +0100, Nick Forrington escreveu:
-> On 02/09/2022 09:04, John Garry wrote:
-> > On 01/09/2022 16:18, Nick Forrington wrote:
-> > > Based on updated data from:
-> > > https://github.com/ARM-software/data/blob/master/pmu/neoverse-v1.json
-> > > 
-> > > which is based on PMU event descriptions from the Arm Neoverse V1
-> > > Technical Reference Manual.
-> > > 
-> > > This adds the following missing events:
-> > > ASE_INST_SPEC
-> > > SVE_INST_SPEC
-> > > SVE_PRED_SPEC
-> > > SVE_PRED_EMPTY_SPEC
-> > > SVE_PRED_FULL_SPEC
-> > > SVE_PRED_PARTIAL_SPEC
-> > > SVE_LDFF_SPEC
-> > > SVE_LDFF_FAULT_SPEC
-> > > FP_SCALE_OPS_SPEC
-> > > FP_FIXED_OPS_SPEC
-> > > 
-> > > It also moves REMOTE_ACCESS from other.json to memory.json.
-> > 
-> > Any specific reason why? I see that neoverse n2 and a76-n1 still use
-> > "other" json for REMOTE_ACCESS. Nicer to be consistent.
-> 
-> Thanks John, I agree on consistency.
-> 
-> I think memory is a better categorisation (for all CPUs), and this is
-> consistent with what I submitted for various Cortex CPUs a while back.
+If it runs on an old kernel, perf_event_open would fail because of the
+new fields sigtrap and sig_data.  Just skip the test if it failed.
 
-Were those patches processed or is some still outstanding?
+Cc: Marco Elver <elver@google.com>
+Signed-off-by: Namhyung Kim <namhyung@kernel.org>
+---
+ tools/perf/tests/sigtrap.c | 1 +
+ 1 file changed, 1 insertion(+)
+
+diff --git a/tools/perf/tests/sigtrap.c b/tools/perf/tests/sigtrap.c
+index e32ece90e164..7057566e6ae4 100644
+--- a/tools/perf/tests/sigtrap.c
++++ b/tools/perf/tests/sigtrap.c
+@@ -140,6 +140,7 @@ static int test__sigtrap(struct test_suite *test __maybe_unused, int subtest __m
+ 	fd = sys_perf_event_open(&attr, 0, -1, -1, perf_event_open_cloexec_flag());
+ 	if (fd < 0) {
+ 		pr_debug("FAILED sys_perf_event_open(): %s\n", str_error_r(errno, sbuf, sizeof(sbuf)));
++		ret = TEST_SKIP;
+ 		goto out_restore_sigaction;
+ 	}
  
-> I'd be happy to remove the REMOTE_ACCESS change here and update (or not)
-> REMOTE_ACCESS for Neoverse separately.
-> 
-> > 
-> > > 
-> > > Signed-off-by: Nick Forrington<nick.forrington@arm.com>
-> > > ---
-> > 
-> > Apart from above:
-> > Reviewed-by: John Garry <john.garry@huawei.com>
-> Thanks, Nick
+-- 
+2.37.2.789.g6183377224-goog
 
-So, how should we proceed?
-
-- Arnaldo
