@@ -2,140 +2,154 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E012BECAAD5
-	for <linux-perf-users@archiver.kernel.org>; Mon,  5 Sep 2022 11:47:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E089CECAAD3
+	for <linux-perf-users@archiver.kernel.org>; Mon,  5 Sep 2022 14:20:01 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S238281AbiIELrB (ORCPT
+        id S238278AbiIEOT7 (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Mon, 5 Sep 2022 07:47:01 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34922 "EHLO
+        Mon, 5 Sep 2022 10:19:59 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39996 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S238282AbiIELq5 (ORCPT
+        with ESMTP id S238060AbiIEOTv (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Mon, 5 Sep 2022 07:46:57 -0400
-Received: from mga17.intel.com (mga17.intel.com [192.55.52.151])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9B2F85B7BE;
-        Mon,  5 Sep 2022 04:46:56 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1662378416; x=1693914416;
-  h=message-id:date:mime-version:subject:to:cc:references:
-   from:in-reply-to:content-transfer-encoding;
-  bh=rmq9EipHS9L8xFuFMT+S4A7GTg/VyYZlxDZR36o9V9g=;
-  b=BRZmBspeJtgEzhH/0yaLv1RaiA0yzs2rFX9wldtnDBWYQBGlIzB8KsI1
-   fu9yHd+pAbM10Ps4G2mUPNZrPq9i5/C2TD6rZHW8qS9jY6W8NyM/yJnBE
-   B4ON0IqOVebu7/fYMrCl0ln1mSUl6sX5ux92cMRTFVwbUYS46fBUQSlr4
-   flqET9prekWSoVupPr38qU2r6fLtQPeFb3bQ8ZUZBb99IxNGRKlTY09cJ
-   aFEmJunIX3ohW+SDwNCuQqRGE5lkElHpOCg0ljLeSUvsAdRXsTbrHE4Xa
-   zEWSrMbDLPY8VXg6zKjzpOYx6b7XhTzEMlW6tCgUEhpMJyL+tnHbSHLJH
-   Q==;
-X-IronPort-AV: E=McAfee;i="6500,9779,10460"; a="276766910"
-X-IronPort-AV: E=Sophos;i="5.93,291,1654585200"; 
-   d="scan'208";a="276766910"
-Received: from orsmga007.jf.intel.com ([10.7.209.58])
-  by fmsmga107.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 05 Sep 2022 04:46:56 -0700
-X-IronPort-AV: E=Sophos;i="5.93,291,1654585200"; 
-   d="scan'208";a="609654202"
-Received: from ahunter6-mobl1.ger.corp.intel.com (HELO [10.0.2.15]) ([10.252.56.151])
-  by orsmga007-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 05 Sep 2022 04:46:53 -0700
-Message-ID: <030c90fe-a09b-eff2-a1cf-55f6609825fb@intel.com>
-Date:   Mon, 5 Sep 2022 14:46:49 +0300
+        Mon, 5 Sep 2022 10:19:51 -0400
+Received: from mx0a-001b2d01.pphosted.com (mx0b-001b2d01.pphosted.com [148.163.158.5])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1F17514D1A
+        for <linux-perf-users@vger.kernel.org>; Mon,  5 Sep 2022 07:19:51 -0700 (PDT)
+Received: from pps.filterd (m0098419.ppops.net [127.0.0.1])
+        by mx0b-001b2d01.pphosted.com (8.17.1.5/8.17.1.5) with ESMTP id 285D0ceM011284;
+        Mon, 5 Sep 2022 14:19:39 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=from : to : cc : subject
+ : date : message-id : mime-version : content-transfer-encoding; s=pp1;
+ bh=FraiXt2QxafFMXEBwYIVY6B6bOaa1PFeujW1/oKLjsQ=;
+ b=h00m5mDRVjJc94qvtT3YyCPs/FYSkyu9RHo4PP6aoqfXa0b8ugBokFVgG17cp6qRmDnT
+ pUJMcQtG1aRlNmq4YxrQr+MOybxhOhcp99BlG38uUZWqsiUDuRA2G4a3DAMF3nR39Zd8
+ 07LQ59xMnS3kBPjb1jK8Olc+8Lav6GODOleL2cRYu4LVCdmnQDhHjfsVrNp325AOvWIz
+ qy28jq4APaUpdwBa3bufPgI5je4tHX5tLiayyMqCq7YMwyfz4+/wPbLNte19a1cOgpIp
+ zYObo6OZg/vXswk/uLf13OaKQ//D9G+Ag8pl1vrDlGQGQU1bwg4xE3mqpjwB+KL8jVWO Kg== 
+Received: from ppma01fra.de.ibm.com (46.49.7a9f.ip4.static.sl-reverse.com [159.122.73.70])
+        by mx0b-001b2d01.pphosted.com (PPS) with ESMTPS id 3jdhm5affh-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Mon, 05 Sep 2022 14:19:38 +0000
+Received: from pps.filterd (ppma01fra.de.ibm.com [127.0.0.1])
+        by ppma01fra.de.ibm.com (8.16.1.2/8.16.1.2) with SMTP id 285E85hw001848;
+        Mon, 5 Sep 2022 14:19:37 GMT
+Received: from b06cxnps3075.portsmouth.uk.ibm.com (d06relay10.portsmouth.uk.ibm.com [9.149.109.195])
+        by ppma01fra.de.ibm.com with ESMTP id 3jbxj8svd7-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Mon, 05 Sep 2022 14:19:36 +0000
+Received: from d06av26.portsmouth.uk.ibm.com (d06av26.portsmouth.uk.ibm.com [9.149.105.62])
+        by b06cxnps3075.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 285EJX6430736716
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Mon, 5 Sep 2022 14:19:33 GMT
+Received: from d06av26.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 8E982AE04D;
+        Mon,  5 Sep 2022 14:19:33 +0000 (GMT)
+Received: from d06av26.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 8D1DCAE045;
+        Mon,  5 Sep 2022 14:19:31 +0000 (GMT)
+Received: from localhost.localdomain (unknown [9.43.39.18])
+        by d06av26.portsmouth.uk.ibm.com (Postfix) with ESMTP;
+        Mon,  5 Sep 2022 14:19:31 +0000 (GMT)
+From:   Athira Rajeev <atrajeev@linux.vnet.ibm.com>
+To:     acme@kernel.org, jolsa@kernel.org
+Cc:     mpe@ellerman.id.au, linux-perf-users@vger.kernel.org,
+        linuxppc-dev@lists.ozlabs.org, maddy@linux.vnet.ibm.com,
+        rnsastry@linux.ibm.com, kjain@linux.ibm.com
+Subject: [PATCH V2 1/2] tools/perf: Fix out of bound access to affinity "sched_cpus"
+Date:   Mon,  5 Sep 2022 19:49:28 +0530
+Message-Id: <20220905141929.7171-1-atrajeev@linux.vnet.ibm.com>
+X-Mailer: git-send-email 2.35.1
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
- Firefox/91.0 Thunderbird/91.11.0
-Subject: Re: perf top -p broken for multithreaded processes since 5.19
-Content-Language: en-US
-To:     Arnaldo Carvalho de Melo <arnaldo.melo@gmail.com>,
-        Arnaldo Carvalho de Melo <acme@kernel.org>
-Cc:     =?UTF-8?B?VG9tw6HFoSBUcm5rYQ==?= <trnka@scm.com>,
-        linux-perf-users <linux-perf-users@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@redhat.com>
-References: <10137382.nUPlyArG6x@mintaka.ncbr.muni.cz>
- <2fd9b620-e9a8-9cd9-1b4a-6b13d829b2ae@intel.com>
- <YxJW19MwaMOb8D30@kernel.org>
- <ca905aa0-9d7b-d6d8-c789-2bd22057619b@intel.com>
- <YxNf2/H5Iyz5M8sn@kernel.org>
- <9a7bc232-e647-0667-4402-2f207003854b@intel.com>
- <CA+JHD91ReRGYNiBuO=1CGNZy1egcMjDo+VFO=kmCFrqE0mnK7w@mail.gmail.com>
-From:   Adrian Hunter <adrian.hunter@intel.com>
-Organization: Intel Finland Oy, Registered Address: PL 281, 00181 Helsinki,
- Business Identity Code: 0357606 - 4, Domiciled in Helsinki
-In-Reply-To: <CA+JHD91ReRGYNiBuO=1CGNZy1egcMjDo+VFO=kmCFrqE0mnK7w@mail.gmail.com>
-Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
+X-TM-AS-GCONF: 00
+X-Proofpoint-GUID: -bf6OPbPgPdRbus08R138QXWKuHYfxlk
+X-Proofpoint-ORIG-GUID: -bf6OPbPgPdRbus08R138QXWKuHYfxlk
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.205,Aquarius:18.0.895,Hydra:6.0.528,FMLib:17.11.122.1
+ definitions=2022-09-05_09,2022-09-05_03,2022-06-22_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
+ phishscore=0 mlxlogscore=999 spamscore=0 suspectscore=0 impostorscore=0
+ lowpriorityscore=0 malwarescore=0 clxscore=1015 adultscore=0 mlxscore=0
+ bulkscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2207270000 definitions=main-2209050067
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-On 3/09/22 21:42, Arnaldo Carvalho de Melo wrote:
-> 
-> 
-> On September 3, 2022 2:35:09 PM GMT-03:00, Adrian Hunter <adrian.hunter@intel.com <mailto:adrian.hunter@intel.com>> wrote:
->>On 3/09/22 17:08, Arnaldo Carvalho de Melo wrote:
->>> Em Sat, Sep 03, 2022 at 10:14:25AM +0300, Adrian Hunter escreveu:
->>>> On 2/09/22 22:17, Arnaldo Carvalho de Melo wrote:
->>>>> Em Fri, Sep 02, 2022 at 05:50:22PM +0300, Adrian Hunter escreveu:
->>>>>> On 2/09/22 17:46, Tomáš Trnka wrote:
->>>>>>> Hello,
->>>>>>>
->>>>>>> A bug in perf v5.19 and newer completely breaks monitoring multithreaded
->>>>>>> processes using "perf top -p". The tool fails to start with "Failed to mmap
->>>>>>> with 22 (Invalid argument)". It still seems to work fine on single-threaded
->>>>>>> processes. "perf record" is also unaffected.
->>>>>>
->>>>>> It has been reported here:
->>>>>>
->>>>>>   https://bugzilla.kernel.org/show_bug.cgi?id=216441 <https://bugzilla.kernel.org/show_bug.cgi?id=216441>
->>>>>
->>>>> If I do:
->>>>>
->>>>> ⬢[acme@toolbox perf-urgent]$ git log -2
->>>>> commit dfeb0bc60782471c293938e71b1a1117cfac2cb3 (HEAD -> perf/urgent)
->>>>> Author: Arnaldo Carvalho de Melo <acme@redhat.com <mailto:acme@redhat.com>>
->>>>> Date:   Fri Sep 2 16:15:39 2022 -0300
->>>>>
->>>>>     Revert "libperf evlist: Check nr_mmaps is correct"
->>>>>
->>>>>     This reverts commit 4ce47d842d4c16c07b135b8a7975b8f0672bcc0e.
->>>>>
->>>>>     Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com <mailto:acme@redhat.com>>
->>>>>
->>>>> commit 78cd283f6b8ab701cb35eafd5af8140560a88f16
->>>>> Author: Arnaldo Carvalho de Melo <acme@redhat.com <mailto:acme@redhat.com>>
->>>>> Date:   Fri Sep 2 16:13:41 2022 -0300
->>>>>
->>>>>     Revert "libperf evlist: Allow mixing per-thread and per-cpu mmaps"
->>>>>
->>>>>     This reverts commit ae4f8ae16a07896403c90305d4b9be27f657c1fc.
->>>>>
->>>>>     Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com <mailto:acme@redhat.com>>
->>>>> ⬢[acme@toolbox perf-urgent]$
->>>>>
->>>>> It works again, Tomáš can you please try doing this to see if this works
->>>>> for you?
->>>>>
->>>>
->>>> This is the fix I have so far.  I would like to test it some more though.
->>>
->>> Ok, so I'll leave it for the next pull req, possibly after Linux
->>> Plumbers.
->>>
->>> What do you think about reverting those two patches for v6.0 and then
->>> add this for v6.1?
->>
->>That would break sideband collection with selected CPUs, so I would
->>prefer to avoid that.
->>
->>The fix is a effectively a partial revert of "libperf evlist: Allow
->>mixing per-thread and per-cpu mmaps" anyway.  I just need a few days
->>to do more testing.
-> 
-> Ok, please add any insight or clarification you find while testing to the end result patch, like this sideband collection with selected CPUs.
-> 
-> This is all complex, so even comments being prone to drift from code, having them added in the commit log message, associated with the codebase at that time may help us in the future when fixing problems, using 'git blame'.
+The affinity code in "affinity_set" function access array
+named "sched_cpus". The size for this array is allocated in
+affinity_setup function which is nothing but value from
+get_cpu_set_size. This is used to contain the cpumask value
+for each cpu. While setting bit for each cpu, it calls
+"set_bit" function which access index in sched_cpus array.
+If we provide a command-line option to -C which is more than
+the number of CPU's present in the system, the set_bit could
+access an array member which is out-of the array size. This
+is because currently, there is no boundary check for the CPU.
+This will result in seg fault:
 
-I finished the testing I wanted to do, and sent V2 of the patch with an expanded commit message:
+<<>>
+ ./perf stat -C 12323431 ls
+Perf can support 2048 CPUs. Consider raising MAX_NR_CPUS
+Segmentation fault (core dumped)
+<<>>
 
-https://lore.kernel.org/lkml/20220905114209.8389-1-adrian.hunter@intel.com/T/#u
+Fix this by adding boundary check for the array.
+
+After the fix from powerpc system:
+
+<<>>
+./perf stat -C 12323431 ls 1>out
+Perf can support 2048 CPUs. Consider raising MAX_NR_CPUS
+
+ Performance counter stats for 'CPU(s) 12323431':
+
+   <not supported> msec cpu-clock
+   <not supported>      context-switches
+   <not supported>      cpu-migrations
+   <not supported>      page-faults
+   <not supported>      cycles
+   <not supported>      instructions
+   <not supported>      branches
+   <not supported>      branch-misses
+
+       0.001192373 seconds time elapsed
+<<>>
+
+Reported-by: Nageswara Sastry <rnsastry@linux.ibm.com>
+Tested-by: Nageswara Sastry <rnsastry@linux.ibm.com>
+Signed-off-by: Athira Rajeev <atrajeev@linux.vnet.ibm.com>
+---
+Changelog:
+ From v1 -> v2:
+ Addressed review comment from Jiri Olsa by changing condition
+ check to directly use "cpu_set_size * 8" for comparing with the
+ cpu number.
+
+ tools/perf/util/affinity.c | 8 +++++++-
+ 1 file changed, 7 insertions(+), 1 deletion(-)
+
+diff --git a/tools/perf/util/affinity.c b/tools/perf/util/affinity.c
+index 4d216c0dc425..4ee96b3c755b 100644
+--- a/tools/perf/util/affinity.c
++++ b/tools/perf/util/affinity.c
+@@ -49,8 +49,14 @@ void affinity__set(struct affinity *a, int cpu)
+ {
+ 	int cpu_set_size = get_cpu_set_size();
+ 
+-	if (cpu == -1)
++	/*
++	 * Return:
++	 * - if cpu is -1
++	 * - restrict out of bound access to sched_cpus
++	 */
++	if (cpu == -1 || ((cpu >= (cpu_set_size * 8))))
+ 		return;
++
+ 	a->changed = true;
+ 	set_bit(cpu, a->sched_cpus);
+ 	/*
+-- 
+2.35.1
+
