@@ -2,110 +2,131 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E5B7CC6FA82
-	for <linux-perf-users@archiver.kernel.org>; Mon,  5 Sep 2022 01:33:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E9A4FECAAD5
+	for <linux-perf-users@archiver.kernel.org>; Mon,  5 Sep 2022 04:05:16 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S235254AbiIEBdu (ORCPT
+        id S232053AbiIEEFM (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Sun, 4 Sep 2022 21:33:50 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43440 "EHLO
+        Mon, 5 Sep 2022 00:05:12 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60800 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230286AbiIEBds (ORCPT
+        with ESMTP id S231540AbiIEEFL (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Sun, 4 Sep 2022 21:33:48 -0400
-Received: from szxga03-in.huawei.com (szxga03-in.huawei.com [45.249.212.189])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5ED411EED1;
-        Sun,  4 Sep 2022 18:33:47 -0700 (PDT)
-Received: from dggemv703-chm.china.huawei.com (unknown [172.30.72.54])
-        by szxga03-in.huawei.com (SkyGuard) with ESMTP id 4MLWG112H2zrS7H;
-        Mon,  5 Sep 2022 09:31:53 +0800 (CST)
-Received: from kwepemm600003.china.huawei.com (7.193.23.202) by
- dggemv703-chm.china.huawei.com (10.3.19.46) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2375.24; Mon, 5 Sep 2022 09:33:44 +0800
-Received: from [10.67.111.205] (10.67.111.205) by
- kwepemm600003.china.huawei.com (7.193.23.202) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2375.24; Mon, 5 Sep 2022 09:33:44 +0800
-Subject: Re: [PATCH RESEND v4] perf/core: Fix reentry problem in
- perf_output_read_group
-To:     Steven Rostedt <rostedt@goodmis.org>
-References: <0ed8a3fe-f2f3-ed47-413a-b53b6fd9ac8f@huawei.com>
-CC:     Ingo Molnar <mingo@redhat.com>,
+        Mon, 5 Sep 2022 00:05:11 -0400
+Received: from foss.arm.com (foss.arm.com [217.140.110.172])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTP id 5190C1C104;
+        Sun,  4 Sep 2022 21:05:10 -0700 (PDT)
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id C659BD6E;
+        Sun,  4 Sep 2022 21:05:15 -0700 (PDT)
+Received: from [10.162.40.17] (unknown [10.162.40.17])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 550A83F7B4;
+        Sun,  4 Sep 2022 21:05:05 -0700 (PDT)
+Message-ID: <0fb67f6f-4dcb-44bd-81aa-b268fb7a6805@arm.com>
+Date:   Mon, 5 Sep 2022 09:35:02 +0530
+MIME-Version: 1.0
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
+ Thunderbird/91.11.0
+Subject: Re: [PATCH 3/3] x86/perf: Assert all platform event flags are within
+ PERF_EVENT_FLAG_ARCH
+Content-Language: en-US
+To:     James Clark <james.clark@arm.com>
+Cc:     Ingo Molnar <mingo@redhat.com>,
         Arnaldo Carvalho de Melo <acme@kernel.org>,
         Mark Rutland <mark.rutland@arm.com>,
         Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Jiri Olsa <jolsa@kernel.org>,
         Namhyung Kim <namhyung@kernel.org>,
-        linux-kernel <linux-kernel@vger.kernel.org>,
-        linux-perf-users <linux-perf-users@vger.kernel.org>,
-        Yang Jihong <yangjihong1@huawei.com>,
-        Jiri Olsa <jolsa@kernel.org>
-From:   Yang Jihong <yangjihong1@huawei.com>
-Message-ID: <5aec1311-6fa9-b7f9-bbef-e58a6ab6eb73@huawei.com>
-Date:   Mon, 5 Sep 2022 09:33:43 +0800
-User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:78.0) Gecko/20100101
- Thunderbird/78.6.1
-MIME-Version: 1.0
-In-Reply-To: <0ed8a3fe-f2f3-ed47-413a-b53b6fd9ac8f@huawei.com>
-Content-Type: text/plain; charset="utf-8"; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
-X-Originating-IP: [10.67.111.205]
-X-ClientProxiedBy: dggems704-chm.china.huawei.com (10.3.19.181) To
- kwepemm600003.china.huawei.com (7.193.23.202)
-X-CFilter-Loop: Reflected
+        Thomas Gleixner <tglx@linutronix.de>,
+        Borislav Petkov <bp@alien8.de>, x86@kernel.org,
+        linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org,
+        peterz@infradead.org
+References: <20220829065507.177781-1-anshuman.khandual@arm.com>
+ <20220829065507.177781-4-anshuman.khandual@arm.com>
+ <ebf02244-abd7-150a-7f41-54d766c39f02@arm.com>
+From:   Anshuman Khandual <anshuman.khandual@arm.com>
+In-Reply-To: <ebf02244-abd7-150a-7f41-54d766c39f02@arm.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-Hello,
 
-On 2022/9/5 9:25, Yang Jihong wrote:
-> On Fri, Sep 02, 2022 at 04:29:18PM +0800, Yang Jihong wrote:
->  > perf_output_read_group may respond to IPI request of other cores and
->  > invoke __perf_install_in_context function. As a result, hwc 
-> configuration is modified.
->  > causing inconsistency and unexpected consequences.
->  >
->  > Interrupts are not disabled when perf_output_read_group reads PMU 
-> counter.
->  > In this case, IPI request may be received from other cores.
->  > As a result, PMU configuration is modified and an error occurs when
->  > reading PMU counter:
->  >
->  >                    CPU0                                         CPU1
->  > __se_sys_perf_event_open
->  > perf_install_in_context
->  > perf_output_read_group smp_call_function_single
->  >   for_each_sibling_event(sub, leader) { generic_exec_single
->  >     if ((sub != event) && remote_function
->  >         (sub->state == PERF_EVENT_STATE_ACTIVE))                    |
->  > <enter IPI handler: __perf_install_in_context>   <----RAISE IPI-----+
->  > __perf_install_in_context
->  >   ctx_resched
->  >     event_sched_out
->  >       armpmu_del
->  >         ...
->  >         hwc->idx = -1; // event->hwc.idx is set to -1 ...
->  > <exit IPI>
->  >             sub->pmu->read(sub);
->  >               armpmu_read
->  >                 armv8pmu_read_counter
->  >                   armv8pmu_read_hw_counter
->  >                     int idx = event->hw.idx; // idx = -1
->  >                     u64 val = armv8pmu_read_evcntr(idx);
->  >                       u32 counter = ARMV8_IDX_TO_COUNTER(idx); // 
-> invalid counter = 30
->  >                       read_pmevcntrn(counter) // undefined instruction
->  >
->  > Signed-off-by: Yang Jihong <yangjihong1@huawei.com>
->  > ---
+
+On 8/30/22 15:30, James Clark wrote:
 > 
-> Right; thanks for reminding me. I had hoped you'd pick up and test the 
-> extra assertion some, but I'll just do that on top.
-> .
-OK, if you want me to do assertion testing on any scenarios,
-please send me the patch.
+> 
+> On 29/08/2022 07:55, Anshuman Khandual wrote:
+>> Ensure all platform specific event flags are within PERF_EVENT_FLAG_ARCH.
+>>
+>> Cc: Peter Zijlstra <peterz@infradead.org>
+>> Cc: Ingo Molnar <mingo@redhat.com>
+>> Cc: Arnaldo Carvalho de Melo <acme@kernel.org>
+>> Cc: Mark Rutland <mark.rutland@arm.com>
+>> Cc: Alexander Shishkin <alexander.shishkin@linux.intel.com>
+>> Cc: Jiri Olsa <jolsa@kernel.org>
+>> Cc: Namhyung Kim <namhyung@kernel.org>
+>> Cc: Thomas Gleixner <tglx@linutronix.de>
+>> Cc: Borislav Petkov <bp@alien8.de>
+>> Cc: x86@kernel.org
+>> Cc: linux-perf-users@vger.kernel.org
+>> Cc: linux-kernel@vger.kernel.org
+>> Signed-off-by: Anshuman Khandual <anshuman.khandual@arm.com>
+>> ---
+>>  arch/x86/events/amd/core.c |  2 ++
+>>  arch/x86/events/core.c     | 16 ++++++++++++++++
+>>  2 files changed, 18 insertions(+)
+>>
+>> diff --git a/arch/x86/events/amd/core.c b/arch/x86/events/amd/core.c
+>> index 9ac3718410ce..7aee514285ba 100644
+>> --- a/arch/x86/events/amd/core.c
+>> +++ b/arch/x86/events/amd/core.c
+>> @@ -1469,6 +1469,8 @@ __init int amd_pmu_init(void)
+>>  	else
+>>  		memcpy(hw_cache_event_ids, amd_hw_cache_event_ids, sizeof(hw_cache_event_ids));
+>>  
+>> +	BUILD_BUG_ON(~PERF_EVENT_FLAG_ARCH & PERF_X86_EVENT_PAIR);
+>> +	BUILD_BUG_ON(~PERF_EVENT_FLAG_ARCH & PERF_X86_EVENT_AMD_BRS);
+>>  	return 0;
+>>  }
+>>  
+>> diff --git a/arch/x86/events/core.c b/arch/x86/events/core.c
+>> index f969410d0c90..98fe13f50632 100644
+>> --- a/arch/x86/events/core.c
+>> +++ b/arch/x86/events/core.c
+>> @@ -2083,6 +2083,22 @@ static int __init init_hw_perf_events(void)
+>>  
+>>  	pr_info("Performance Events: ");
+>>  
+>> +	BUILD_BUG_ON(~PERF_EVENT_FLAG_ARCH & PERF_X86_EVENT_PEBS_LDLAT);
+>> +	BUILD_BUG_ON(~PERF_EVENT_FLAG_ARCH & PERF_X86_EVENT_PEBS_ST);
+>> +	BUILD_BUG_ON(~PERF_EVENT_FLAG_ARCH & PERF_X86_EVENT_PEBS_ST_HSW);
+>> +	BUILD_BUG_ON(~PERF_EVENT_FLAG_ARCH & PERF_X86_EVENT_PEBS_LD_HSW);
+>> +	BUILD_BUG_ON(~PERF_EVENT_FLAG_ARCH & PERF_X86_EVENT_PEBS_NA_HSW);
+>> +	BUILD_BUG_ON(~PERF_EVENT_FLAG_ARCH & PERF_X86_EVENT_EXCL);
+>> +	BUILD_BUG_ON(~PERF_EVENT_FLAG_ARCH & PERF_X86_EVENT_DYNAMIC);
+>> +	BUILD_BUG_ON(~PERF_EVENT_FLAG_ARCH & PERF_X86_EVENT_EXCL_ACCT);
+>> +	BUILD_BUG_ON(~PERF_EVENT_FLAG_ARCH & PERF_X86_EVENT_AUTO_RELOAD);
+>> +	BUILD_BUG_ON(~PERF_EVENT_FLAG_ARCH & PERF_X86_EVENT_LARGE_PEBS);
+>> +	BUILD_BUG_ON(~PERF_EVENT_FLAG_ARCH & PERF_X86_EVENT_PEBS_VIA_PT);
+>> +	BUILD_BUG_ON(~PERF_EVENT_FLAG_ARCH & PERF_X86_EVENT_LBR_SELECT);
+>> +	BUILD_BUG_ON(~PERF_EVENT_FLAG_ARCH & PERF_X86_EVENT_TOPDOWN);
+>> +	BUILD_BUG_ON(~PERF_EVENT_FLAG_ARCH & PERF_X86_EVENT_PEBS_STLAT);
+>> +	BUILD_BUG_ON(~PERF_EVENT_FLAG_ARCH & PERF_X86_EVENT_PEBS_LAT_HYBRID);
+>> +
+> 
+> Hi Anshuman,
+> 
+> You can use static_assert() and then put them in the global scope. If
+> they're next to the definition of these it will be clearer and easier to
+> maintain.
 
-Thanks,
-Yang
+Right, will do the required change.
+
+> 
+> Also, I'm assuming that this now causes a build failure, so I would
+> include the change to expand PERF_EVENT_FLAG_ARCH as the first commit in
+> the set. That way we can see at least one proposed solution.
+
+Sure, will expand PERF_EVENT_FLAG_ARCH into 0x000FFFFF.
