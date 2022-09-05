@@ -2,186 +2,173 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0C043ECAAD3
-	for <linux-perf-users@archiver.kernel.org>; Mon,  5 Sep 2022 10:42:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9BE6CECAAD3
+	for <linux-perf-users@archiver.kernel.org>; Mon,  5 Sep 2022 10:45:02 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S237395AbiIEKmV (ORCPT
+        id S231738AbiIEKpB (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Mon, 5 Sep 2022 06:42:21 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43770 "EHLO
+        Mon, 5 Sep 2022 06:45:01 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48082 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S237017AbiIEKmU (ORCPT
+        with ESMTP id S230054AbiIEKpA (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Mon, 5 Sep 2022 06:42:20 -0400
-Received: from mail-ed1-x52d.google.com (mail-ed1-x52d.google.com [IPv6:2a00:1450:4864:20::52d])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1DAC54CA11;
-        Mon,  5 Sep 2022 03:42:18 -0700 (PDT)
-Received: by mail-ed1-x52d.google.com with SMTP id z8so10794581edb.6;
-        Mon, 05 Sep 2022 03:42:18 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20210112;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:date:from:from:to
-         :cc:subject:date;
-        bh=gCTzFCzMXflFKHOJqnuqrRXeTvpKIEd+vaSetzeKxoc=;
-        b=qV90qOFaA4IcMsWm4Q3WZfEOIeYu7qrQv34TfbCTG/S8VLD864QkPRjWPdbMzf7PAr
-         wnZ+D6RIVUH5Yq/+gz8G3lz8kD0dCQ2O6jHzdLHNdsw00mH/nWzXF9TzEZFXhk9JmH9U
-         fErkEMFz/u0+c0EOjpe+/D1DZvwXXh1a465mKEJVNA6iIEgTFuDC5IaThQnWqpP1+4eD
-         /ij6+9F/p4yEkb6lBR52vEYJui7XCWJqM0xzekbphOmeFgxakXFrbHO2xAtjU2ieqh4H
-         fJkl0qj39m2d7beYQhkmhpn66CMWMcPajQ16wyZoPiifQeptcC5SgntRXma6IdqyV2nl
-         pMuQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:date:from
-         :x-gm-message-state:from:to:cc:subject:date;
-        bh=gCTzFCzMXflFKHOJqnuqrRXeTvpKIEd+vaSetzeKxoc=;
-        b=OKNRlOHnM5HlzSfprgLe7BB0qOFZIfgcf4KmXv/bkY4tnzzERTbyjoNATck2VmrIrt
-         UlxPCChykuFklAjlXob90DmGezPEzLeaFUt+KP4GxPVdShAyK8y0sIZ+0kfY0Lek9M6J
-         qp96Vq6Xut6rZ2uRGstJR2xxLXB4Wh/xbwbC1eehl++kUQ72jeMo+29Xl+s46o7jB6c2
-         J30gOjCps+zF63jkGBS3r0aO2vBzS9qYXMIZ21/HAdgqb+LMPltj0wA+cq4hn5XmeL1u
-         Q06m+T3buS28Uk1uzt1X61FBD/MgII+54SmP4N8cCJVweCDaPtpQjTYtMRQ90iwAMGKl
-         En4Q==
-X-Gm-Message-State: ACgBeo3p36ED1FZmGGwMTG7WuOep30ORXjEY07M72ofnAztGE04ys4P0
-        BITDYuT5/wAIxma52YLwwaw=
-X-Google-Smtp-Source: AA6agR7u9fTqZVIsmI/Sxa/JaibFRI0toGVy/kKmOZEN/mWZAUAXAr17Tbv5IyixVpavtfwYeXdNcQ==
-X-Received: by 2002:a05:6402:2945:b0:446:1144:f1aa with SMTP id ed5-20020a056402294500b004461144f1aamr42098217edb.79.1662374536696;
-        Mon, 05 Sep 2022 03:42:16 -0700 (PDT)
-Received: from krava ([193.85.244.190])
-        by smtp.gmail.com with ESMTPSA id i10-20020a170906264a00b0073cf8e0355fsm4731400ejc.208.2022.09.05.03.42.15
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 05 Sep 2022 03:42:16 -0700 (PDT)
-From:   Jiri Olsa <olsajiri@gmail.com>
-X-Google-Original-From: Jiri Olsa <jolsa@kernel.org>
-Date:   Mon, 5 Sep 2022 12:42:14 +0200
-To:     Adrian Hunter <adrian.hunter@intel.com>
-Cc:     Arnaldo Carvalho de Melo <acme@kernel.org>,
-        =?utf-8?B?VG9tw6HFoQ==?= Trnka <trnka@scm.com>,
-        linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@redhat.com>
-Subject: Re: perf top -p broken for multithreaded processes since 5.19
-Message-ID: <YxXShjsmy+iQi07I@krava>
-References: <10137382.nUPlyArG6x@mintaka.ncbr.muni.cz>
- <2fd9b620-e9a8-9cd9-1b4a-6b13d829b2ae@intel.com>
- <YxJW19MwaMOb8D30@kernel.org>
- <ca905aa0-9d7b-d6d8-c789-2bd22057619b@intel.com>
+        Mon, 5 Sep 2022 06:45:00 -0400
+Received: from foss.arm.com (foss.arm.com [217.140.110.172])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTP id D34531EEEF;
+        Mon,  5 Sep 2022 03:44:58 -0700 (PDT)
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id D87CAD6E;
+        Mon,  5 Sep 2022 03:45:04 -0700 (PDT)
+Received: from [10.57.16.151] (unknown [10.57.16.151])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 365873F7B4;
+        Mon,  5 Sep 2022 03:44:57 -0700 (PDT)
+Message-ID: <37ad0c68-55ad-2bac-b401-2dc26ad9ca3a@arm.com>
+Date:   Mon, 5 Sep 2022 11:44:55 +0100
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <ca905aa0-9d7b-d6d8-c789-2bd22057619b@intel.com>
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
+ Thunderbird/91.11.0
+Subject: Re: [PATCH v4 00/13] coresight: Add new API to allocate trace source
+ ID values
+Content-Language: en-US
+To:     Mike Leach <mike.leach@linaro.org>, coresight@lists.linaro.org,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+Cc:     mathieu.poirier@linaro.org, peterz@infradead.org, mingo@redhat.com,
+        acme@kernel.org, linux-perf-users@vger.kernel.org,
+        quic_jinlmao@quicinc.com
+References: <20220823091009.14121-1-mike.leach@linaro.org>
+From:   James Clark <james.clark@arm.com>
+In-Reply-To: <20220823091009.14121-1-mike.leach@linaro.org>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-On Sat, Sep 03, 2022 at 10:14:25AM +0300, Adrian Hunter wrote:
-> On 2/09/22 22:17, Arnaldo Carvalho de Melo wrote:
-> > Em Fri, Sep 02, 2022 at 05:50:22PM +0300, Adrian Hunter escreveu:
-> >> On 2/09/22 17:46, Tomáš Trnka wrote:
-> >>> Hello,
-> >>>
-> >>> A bug in perf v5.19 and newer completely breaks monitoring multithreaded
-> >>> processes using "perf top -p". The tool fails to start with "Failed to mmap
-> >>> with 22 (Invalid argument)". It still seems to work fine on single-threaded
-> >>> processes. "perf record" is also unaffected.
-> >>
-> >> It has been reported here:
-> >>
-> >> 	https://bugzilla.kernel.org/show_bug.cgi?id=216441
-> > 
-> > If I do:
-> > 
-> > ⬢[acme@toolbox perf-urgent]$ git log -2
-> > commit dfeb0bc60782471c293938e71b1a1117cfac2cb3 (HEAD -> perf/urgent)
-> > Author: Arnaldo Carvalho de Melo <acme@redhat.com>
-> > Date:   Fri Sep 2 16:15:39 2022 -0300
-> > 
-> >     Revert "libperf evlist: Check nr_mmaps is correct"
-> > 
-> >     This reverts commit 4ce47d842d4c16c07b135b8a7975b8f0672bcc0e.
-> > 
-> >     Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
-> > 
-> > commit 78cd283f6b8ab701cb35eafd5af8140560a88f16
-> > Author: Arnaldo Carvalho de Melo <acme@redhat.com>
-> > Date:   Fri Sep 2 16:13:41 2022 -0300
-> > 
-> >     Revert "libperf evlist: Allow mixing per-thread and per-cpu mmaps"
-> > 
-> >     This reverts commit ae4f8ae16a07896403c90305d4b9be27f657c1fc.
-> > 
-> >     Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
-> > ⬢[acme@toolbox perf-urgent]$
-> > 
-> > It works again, Tomáš can you please try doing this to see if this works
-> > for you?
-> > 
+
+
+On 23/08/2022 10:09, Mike Leach wrote:
+> The current method for allocating trace source ID values to sources is
+> to use a fixed algorithm for CPU based sources of (cpu_num * 2 + 0x10).
+> The STM is allocated ID 0x1.
 > 
-> This is the fix I have so far.  I would like to test it some more though.
+> This fixed algorithm is used in both the CoreSight driver code, and by
+> perf when writing the trace metadata in the AUXTRACE_INFO record.
 > 
-> From: Adrian Hunter <adrian.hunter@intel.com>
-> Date: Sat, 3 Sep 2022 10:05:08 +0300
-> Subject: [PATCH] libperf evlist: Fix per-thread mmaps for multi-threaded
->  targets
+> The method needs replacing as currently:-
+> 1. It is inefficient in using available IDs.
+> 2. Does not scale to larger systems with many cores and the algorithm
+> has no limits so will generate invalid trace IDs for cpu number > 44.
 > 
-> Offending commit did not consider the different set-output rules for
-> per-thread mmaps i.e. in the per-thread case set-output is used for
-> mmaps of the same thread not the same cpu.
+> Additionally requirements to allocate additional system IDs on some
+> systems have been seen.
 > 
-> This was not immediately noticed because it only happens with
-> multi-threaded targets and we do not have a test for that yet.
+> This patch set  introduces an API that allows the allocation of trace IDs
+> in a dynamic manner.
 > 
-> Fixes: ae4f8ae16a07 ("libperf evlist: Allow mixing per-thread and per-cpu mmaps")
-> Signed-off-by: Adrian Hunter <adrian.hunter@intel.com>
+> Architecturally reserved IDs are never allocated, and the system is
+> limited to allocating only valid IDs.
+> 
+> Each of the current trace sources ETM3.x, ETM4.x and STM is updated to use
+> the new API.
+> 
+> For the ETMx.x devices IDs are allocated on certain events
+> a) When using sysfs, an ID will be allocated on hardware enable, or a read of
+> sysfs TRCTRACEID register and freed when the sysfs reset is written.
+> 
+> b) When using perf, ID is allocated on during setup AUX event, and freed on
+> event free. IDs are communicated using the AUX_OUTPUT_HW_ID packet.
+> The ID allocator is notified when perf sessions start and stop
+> so CPU based IDs are kept constant throughout any perf session.
+> 
+> 
+> Note: This patchset breaks some backward compatibility for perf record and
+> perf report.
+> 
+> The version of the AUXTRACE_INFO has been updated to reflect the fact that
+> the trace source IDs are generated differently. This will
+> mean older versions of perf report cannot decode the newer file.
+> 
+> Applies to coresight/next [4d45bc82df66]
+> Tested on DB410c
+> 
 
-SNIP
+Tested-by: James Clark <james.clark@arm.com>
 
->  static int
->  mmap_per_cpu(struct perf_evlist *evlist, struct perf_evlist_mmap_ops *ops,
->  	     struct perf_mmap_param *mp)
-> @@ -528,6 +571,8 @@ mmap_per_cpu(struct perf_evlist *evlist, struct perf_evlist_mmap_ops *ops,
->  	int nr_mmaps = 0;
->  	int cpu, thread;
->  
-> +	pr_debug("%s: nr cpu values %d nr threads %d\n", __func__, nr_cpus, nr_threads);
-> +
->  	for (cpu = 0; cpu < nr_cpus; cpu++) {
->  		int output = -1;
->  		int output_overwrite = -1;
-> @@ -569,6 +614,7 @@ int perf_evlist__mmap_ops(struct perf_evlist *evlist,
->  			  struct perf_evlist_mmap_ops *ops,
->  			  struct perf_mmap_param *mp)
->  {
-> +	const struct perf_cpu_map *cpus = evlist->all_cpus;
->  	struct perf_evsel *evsel;
->  
->  	if (!ops || !ops->get || !ops->mmap)
-> @@ -588,6 +634,9 @@ int perf_evlist__mmap_ops(struct perf_evlist *evlist,
->  	if (evlist->pollfd.entries == NULL && perf_evlist__alloc_pollfd(evlist) < 0)
->  		return -ENOMEM;
->  
-> +	if (perf_cpu_map__empty(cpus))
-> +		return mmap_per_thread(evlist, ops, mp);
-> +
+Tested on N1SDP. Checked new Perf on new and old kernels. Confirmed that
+HW_ID packets are output, decoding still looks good in system-wide,
+per-thread modes.
 
-could we just enable per-cpu mapping in top? I'd think it should be
-enabled anyway because we need ring buffers on all cpus for sampling
-
-jirka
-
-
----
-diff --git a/tools/perf/builtin-top.c b/tools/perf/builtin-top.c
-index e89208b4ad4b..d6be82315dd8 100644
---- a/tools/perf/builtin-top.c
-+++ b/tools/perf/builtin-top.c
-@@ -1422,6 +1422,7 @@ int cmd_top(int argc, const char **argv)
- 			.freq		= 4000, /* 4 KHz */
- 			.target		= {
- 				.uses_mmap   = true,
-+				.default_per_cpu = true,
- 			},
- 			/*
- 			 * FIXME: This will lose PERF_RECORD_MMAP and other metadata
-
+> Changes since v3:
+> 1) Fixed aarch32 build error in ETM3.x driver.
+> Reported-by: kernel test robot <lkp@intel.com>
+> 
+> Changes since v2:
+> 1) Improved backward compatibility: (requested by James)
+> 
+> Using the new version of perf on an old kernel will generate a usable file
+> legacy metadata values are set by the new perf and will be used if mew
+> ID packets are not present in the file.
+> 
+> Using an older version of perf / simpleperf on an updated kernel may still
+> work. The trace ID allocator has been updated to use the legacy ID values
+> where possible, so generated file and used trace IDs will match up to the
+> point where the legacy algorithm is broken anyway.
+> 
+> 2) Various changes to the ID allocator and ID packet format.
+> (suggested by Suzuki)
+> 
+> 3) per CPU ID info in allocator now stored as atomic type to allow a passive read
+> without taking the allocator spinlock. perf flow now allocates and releases ID
+> values in setup_aux / free_event. Device enable and event enable use the passive
+> read to set the allocated values. This simplifies the locking mechanisms on the
+> perf run and fixes issues that arose with locking dependencies.
+> 
+> Changes since v1:
+> (after feedback & discussion with Mathieu & Suzuki).
+> 
+> 1) API has changed. The global trace ID map is managed internally, so it
+> is no longer passed in to the API functions.
+> 
+> 2) perf record does not use sysfs to find the trace IDs. These are now
+> output as AUX_OUTPUT_HW_ID events. The drivers, perf record, and perf report
+> have been updated accordingly to generate and handle these events.
+> 
+> Mike Leach (13):
+>   coresight: trace-id: Add API to dynamically assign Trace ID values
+>   coresight: Remove obsolete Trace ID unniqueness checks
+>   coresight: stm: Update STM driver to use Trace ID API
+>   coresight: etm4x: Update ETM4 driver to use Trace ID API
+>   coresight: etm3x: Update ETM3 driver to use Trace ID API
+>   coresight: etmX.X: stm: Remove trace_id() callback
+>   coresight: perf: traceid: Add perf notifiers for Trace ID
+>   perf: cs-etm: Move mapping of Trace ID and cpu into helper function
+>   perf: cs-etm: Update record event to use new Trace ID protocol
+>   kernel: events: Export perf_report_aux_output_id()
+>   perf: cs-etm: Handle PERF_RECORD_AUX_OUTPUT_HW_ID packet
+>   coresight: events: PERF_RECORD_AUX_OUTPUT_HW_ID used for Trace ID
+>   coresight: trace-id: Add debug & test macros to Trace ID allocation
+> 
+>  drivers/hwtracing/coresight/Makefile          |   2 +-
+>  drivers/hwtracing/coresight/coresight-core.c  |  49 +--
+>  .../hwtracing/coresight/coresight-etm-perf.c  |  23 ++
+>  drivers/hwtracing/coresight/coresight-etm.h   |   3 +-
+>  .../coresight/coresight-etm3x-core.c          |  92 +++--
+>  .../coresight/coresight-etm3x-sysfs.c         |  27 +-
+>  .../coresight/coresight-etm4x-core.c          |  79 ++++-
+>  .../coresight/coresight-etm4x-sysfs.c         |  27 +-
+>  drivers/hwtracing/coresight/coresight-etm4x.h |   3 +
+>  drivers/hwtracing/coresight/coresight-stm.c   |  49 +--
+>  .../hwtracing/coresight/coresight-trace-id.c  | 266 ++++++++++++++
+>  .../hwtracing/coresight/coresight-trace-id.h  |  78 +++++
+>  include/linux/coresight-pmu.h                 |  35 +-
+>  include/linux/coresight.h                     |   3 -
+>  kernel/events/core.c                          |   1 +
+>  tools/include/linux/coresight-pmu.h           |  48 ++-
+>  tools/perf/arch/arm/util/cs-etm.c             |  21 +-
+>  .../perf/util/cs-etm-decoder/cs-etm-decoder.c |   7 +
+>  tools/perf/util/cs-etm.c                      | 331 +++++++++++++++---
+>  tools/perf/util/cs-etm.h                      |  14 +-
+>  20 files changed, 933 insertions(+), 225 deletions(-)
+>  create mode 100644 drivers/hwtracing/coresight/coresight-trace-id.c
+>  create mode 100644 drivers/hwtracing/coresight/coresight-trace-id.h
+> 
