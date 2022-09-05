@@ -2,116 +2,262 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 381DCECAAD3
-	for <linux-perf-users@archiver.kernel.org>; Mon,  5 Sep 2022 11:40:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7F593ECAAD5
+	for <linux-perf-users@archiver.kernel.org>; Mon,  5 Sep 2022 11:42:24 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S236898AbiIELkj (ORCPT
+        id S238067AbiIELmX (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Mon, 5 Sep 2022 07:40:39 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55224 "EHLO
+        Mon, 5 Sep 2022 07:42:23 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56748 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S236506AbiIELkh (ORCPT
+        with ESMTP id S236202AbiIELmW (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Mon, 5 Sep 2022 07:40:37 -0400
-Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTP id DADCD27B38;
-        Mon,  5 Sep 2022 04:40:36 -0700 (PDT)
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id DFE64ED1;
-        Mon,  5 Sep 2022 04:40:42 -0700 (PDT)
-Received: from hype-n1-sdp.warwick.arm.com (hype-n1-sdp.warwick.arm.com [10.32.32.32])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPA id B6D723F7B4;
-        Mon,  5 Sep 2022 04:40:34 -0700 (PDT)
-From:   Nick Forrington <nick.forrington@arm.com>
-To:     linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org,
-        acme@kernel.org
-Cc:     Nick Forrington <nick.forrington@arm.com>,
-        John Garry <john.garry@huawei.com>,
-        Will Deacon <will@kernel.org>,
-        James Clark <james.clark@arm.com>,
-        Mike Leach <mike.leach@linaro.org>,
-        Leo Yan <leo.yan@linaro.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Jiri Olsa <jolsa@kernel.org>,
-        Namhyung Kim <namhyung@kernel.org>,
-        linux-arm-kernel@lists.infradead.org
-Subject: [PATCH v2] perf vendor events: Add missing Neoverse V1 events
-Date:   Mon,  5 Sep 2022 12:40:24 +0100
-Message-Id: <20220905114024.7552-1-nick.forrington@arm.com>
+        Mon, 5 Sep 2022 07:42:22 -0400
+Received: from mga09.intel.com (mga09.intel.com [134.134.136.24])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 618C35A8A9;
+        Mon,  5 Sep 2022 04:42:21 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1662378141; x=1693914141;
+  h=from:to:cc:subject:date:message-id:mime-version:
+   content-transfer-encoding;
+  bh=CK6a+K6xVlEufmYnfhljih8pAOpl8B6zMfeDVzimZHM=;
+  b=SfO0vGxtN+T7Zh6tCmxyEaGbRvOSlHl1xMCvVp3ERcFkwB4X1mZSECCj
+   Swxiw2KzBWHV1gettJejL9a2oGV+igin1RFJjMVLJ54da+YZW4A6fiWfN
+   ubLhsYuswMTDfLeJRt5sa/zJ0Unu3krYCLsWZ62P+kBplRX81yLsz0F7o
+   rdYW5vI1nvr5F4HwIrd7I9Y0oiSMlKqLmt7P8QsJHTPMuEkzOhn8/zyEP
+   wJwj3YpxgdjLuQfxbhZ0EzniDgk+HC0d11NJbzcXXk+8USXIoeuITUGlj
+   1X1vlHJcpf6A9una5Z2HJu0yjK9hIk0vvFEpAmVNp5BPWBZW+S/z6YSn4
+   w==;
+X-IronPort-AV: E=McAfee;i="6500,9779,10460"; a="297159210"
+X-IronPort-AV: E=Sophos;i="5.93,291,1654585200"; 
+   d="scan'208";a="297159210"
+Received: from orsmga007.jf.intel.com ([10.7.209.58])
+  by orsmga102.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 05 Sep 2022 04:42:21 -0700
+X-IronPort-AV: E=Sophos;i="5.93,291,1654585200"; 
+   d="scan'208";a="609653245"
+Received: from ahunter6-mobl1.ger.corp.intel.com (HELO ahunter-VirtualBox.home\044ger.corp.intel.com) ([10.252.56.151])
+  by orsmga007-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 05 Sep 2022 04:42:18 -0700
+From:   Adrian Hunter <adrian.hunter@intel.com>
+To:     Arnaldo Carvalho de Melo <acme@kernel.org>
+Cc:     Jiri Olsa <jolsa@redhat.com>, Namhyung Kim <namhyung@kernel.org>,
+        Ian Rogers <irogers@google.com>, linux-kernel@vger.kernel.org,
+        linux-perf-users@vger.kernel.org,
+        Peter Zijlstra <peterz@infradead.org>,
+        Ingo Molnar <mingo@redhat.com>
+Subject: [PATCH V2] libperf evlist: Fix per-thread mmaps for multi-threaded targets
+Date:   Mon,  5 Sep 2022 14:42:09 +0300
+Message-Id: <20220905114209.8389-1-adrian.hunter@intel.com>
 X-Mailer: git-send-email 2.25.1
 MIME-Version: 1.0
+Organization: Intel Finland Oy, Registered Address: PL 281, 00181 Helsinki, Business Identity Code: 0357606 - 4, Domiciled in Helsinki
 Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-Based on updated data from:
-https://github.com/ARM-software/data/blob/master/pmu/neoverse-v1.json
+The offending commit removed mmap_per_thread(), which did not consider
+the different set-output rules for per-thread mmaps i.e. in the per-thread
+case set-output is used for file descriptors of the same thread not the
+same cpu.
 
-which is based on PMU event descriptions from the Arm Neoverse V1
-Technical Reference Manual.
+This was not immediately noticed because it only happens with
+multi-threaded targets and we do not have a test for that yet.
 
-This adds the following missing events:
-ASE_INST_SPEC
-SVE_INST_SPEC
-SVE_PRED_SPEC
-SVE_PRED_EMPTY_SPEC
-SVE_PRED_FULL_SPEC
-SVE_PRED_PARTIAL_SPEC
-SVE_LDFF_SPEC
-SVE_LDFF_FAULT_SPEC
-FP_SCALE_OPS_SPEC
-FP_FIXED_OPS_SPEC
+Reinstate mmap_per_thread() expanding it to cover also system-wide per-cpu
+events i.e. to continue to allow the mixing of per-thread and per-cpu
+mmaps.
 
-Reviewed-by: John Garry <john.garry@huawei.com> 
-Signed-off-by: Nick Forrington <nick.forrington@arm.com>
+Debug messages (with -vv) show the file descriptors that are opened with
+sys_perf_event_open. New debug messages are added (needs -vvv) that show
+also which file descriptors are mmapped and which are redirected with
+set-output.
+
+In the per-cpu case (cpu != -1) file descriptors for the same CPU are
+set-output to the first file descriptor for that CPU.
+
+In the per-thread case (cpu == -1) file descriptors for the same thread are
+set-output to the first file descriptor for that thread.
+
+Example (process 17489 has 2 threads):
+
+ Before (but with new debug prints):
+
+   $ perf record --no-bpf-event -vvv --per-thread -p 17489
+   <SNIP>
+   sys_perf_event_open: pid 17489  cpu -1  group_fd -1  flags 0x8 = 5
+   sys_perf_event_open: pid 17490  cpu -1  group_fd -1  flags 0x8 = 6
+   <SNIP>
+   libperf: idx 0: mmapping fd 5
+   libperf: idx 0: set output fd 6 -> 5
+   failed to mmap with 22 (Invalid argument)
+
+ After:
+
+   $ perf record --no-bpf-event -vvv --per-thread -p 17489
+   <SNIP>
+   sys_perf_event_open: pid 17489  cpu -1  group_fd -1  flags 0x8 = 5
+   sys_perf_event_open: pid 17490  cpu -1  group_fd -1  flags 0x8 = 6
+   <SNIP>
+   libperf: mmap_per_thread: nr cpu values (may include -1) 1 nr threads 2
+   libperf: idx 0: mmapping fd 5
+   libperf: idx 1: mmapping fd 6
+   <SNIP>
+   [ perf record: Woken up 2 times to write data ]
+   [ perf record: Captured and wrote 0.018 MB perf.data (15 samples) ]
+
+Per-cpu example (process 20341 has 2 threads, same as above):
+
+   $ perf record --no-bpf-event -vvv -p 20341
+   <SNIP>
+   sys_perf_event_open: pid 20341  cpu 0  group_fd -1  flags 0x8 = 5
+   sys_perf_event_open: pid 20342  cpu 0  group_fd -1  flags 0x8 = 6
+   sys_perf_event_open: pid 20341  cpu 1  group_fd -1  flags 0x8 = 7
+   sys_perf_event_open: pid 20342  cpu 1  group_fd -1  flags 0x8 = 8
+   sys_perf_event_open: pid 20341  cpu 2  group_fd -1  flags 0x8 = 9
+   sys_perf_event_open: pid 20342  cpu 2  group_fd -1  flags 0x8 = 10
+   sys_perf_event_open: pid 20341  cpu 3  group_fd -1  flags 0x8 = 11
+   sys_perf_event_open: pid 20342  cpu 3  group_fd -1  flags 0x8 = 12
+   sys_perf_event_open: pid 20341  cpu 4  group_fd -1  flags 0x8 = 13
+   sys_perf_event_open: pid 20342  cpu 4  group_fd -1  flags 0x8 = 14
+   sys_perf_event_open: pid 20341  cpu 5  group_fd -1  flags 0x8 = 15
+   sys_perf_event_open: pid 20342  cpu 5  group_fd -1  flags 0x8 = 16
+   sys_perf_event_open: pid 20341  cpu 6  group_fd -1  flags 0x8 = 17
+   sys_perf_event_open: pid 20342  cpu 6  group_fd -1  flags 0x8 = 18
+   sys_perf_event_open: pid 20341  cpu 7  group_fd -1  flags 0x8 = 19
+   sys_perf_event_open: pid 20342  cpu 7  group_fd -1  flags 0x8 = 20
+   <SNIP>
+   libperf: mmap_per_cpu: nr cpu values 8 nr threads 2
+   libperf: idx 0: mmapping fd 5
+   libperf: idx 0: set output fd 6 -> 5
+   libperf: idx 1: mmapping fd 7
+   libperf: idx 1: set output fd 8 -> 7
+   libperf: idx 2: mmapping fd 9
+   libperf: idx 2: set output fd 10 -> 9
+   libperf: idx 3: mmapping fd 11
+   libperf: idx 3: set output fd 12 -> 11
+   libperf: idx 4: mmapping fd 13
+   libperf: idx 4: set output fd 14 -> 13
+   libperf: idx 5: mmapping fd 15
+   libperf: idx 5: set output fd 16 -> 15
+   libperf: idx 6: mmapping fd 17
+   libperf: idx 6: set output fd 18 -> 17
+   libperf: idx 7: mmapping fd 19
+   libperf: idx 7: set output fd 20 -> 19
+   <SNIP>
+   [ perf record: Woken up 7 times to write data ]
+   [ perf record: Captured and wrote 0.020 MB perf.data (17 samples) ]
+
+Fixes: ae4f8ae16a07 ("libperf evlist: Allow mixing per-thread and per-cpu mmaps")
+Signed-off-by: Adrian Hunter <adrian.hunter@intel.com>
 ---
-V1 -> V2: Remove REMOTE_ACCESS re-categorisation (to be submitted
-separately)
- .../arm64/arm/neoverse-v1/instruction.json    | 30 +++++++++++++++++++
- 1 file changed, 30 insertions(+)
 
-diff --git a/tools/perf/pmu-events/arch/arm64/arm/neoverse-v1/instruction.json b/tools/perf/pmu-events/arch/arm64/arm/neoverse-v1/instruction.json
-index 25825e14c535..e29b88fb7f24 100644
---- a/tools/perf/pmu-events/arch/arm64/arm/neoverse-v1/instruction.json
-+++ b/tools/perf/pmu-events/arch/arm64/arm/neoverse-v1/instruction.json
-@@ -85,5 +85,35 @@
-     },
-     {
-         "ArchStdEvent": "RC_ST_SPEC"
-+    },
-+    {
-+        "ArchStdEvent": "ASE_INST_SPEC"
-+    },
-+    {
-+        "ArchStdEvent": "SVE_INST_SPEC"
-+    },
-+    {
-+        "ArchStdEvent": "SVE_PRED_SPEC"
-+    },
-+    {
-+        "ArchStdEvent": "SVE_PRED_EMPTY_SPEC"
-+    },
-+    {
-+        "ArchStdEvent": "SVE_PRED_FULL_SPEC"
-+    },
-+    {
-+        "ArchStdEvent": "SVE_PRED_PARTIAL_SPEC"
-+    },
-+    {
-+        "ArchStdEvent": "SVE_LDFF_SPEC"
-+    },
-+    {
-+        "ArchStdEvent": "SVE_LDFF_FAULT_SPEC"
-+    },
-+    {
-+        "ArchStdEvent": "FP_SCALE_OPS_SPEC"
-+    },
-+    {
-+        "ArchStdEvent": "FP_FIXED_OPS_SPEC"
-     }
- ]
+
+Changes in V2:
+
+	Expand commit message.
+	White-space fixups.
+
+
+ tools/lib/perf/evlist.c | 50 +++++++++++++++++++++++++++++++++++++++++
+ 1 file changed, 50 insertions(+)
+
+diff --git a/tools/lib/perf/evlist.c b/tools/lib/perf/evlist.c
+index e6c98a6e3908..6b1bafe267a4 100644
+--- a/tools/lib/perf/evlist.c
++++ b/tools/lib/perf/evlist.c
+@@ -486,6 +486,7 @@ mmap_per_evsel(struct perf_evlist *evlist, struct perf_evlist_mmap_ops *ops,
+ 			if (ops->idx)
+ 				ops->idx(evlist, evsel, mp, idx);
+ 
++			pr_debug("idx %d: mmapping fd %d\n", idx, *output);
+ 			if (ops->mmap(map, mp, *output, evlist_cpu) < 0)
+ 				return -1;
+ 
+@@ -494,6 +495,7 @@ mmap_per_evsel(struct perf_evlist *evlist, struct perf_evlist_mmap_ops *ops,
+ 			if (!idx)
+ 				perf_evlist__set_mmap_first(evlist, map, overwrite);
+ 		} else {
++			pr_debug("idx %d: set output fd %d -> %d\n", idx, fd, *output);
+ 			if (ioctl(fd, PERF_EVENT_IOC_SET_OUTPUT, *output) != 0)
+ 				return -1;
+ 
+@@ -519,6 +521,48 @@ mmap_per_evsel(struct perf_evlist *evlist, struct perf_evlist_mmap_ops *ops,
+ 	return 0;
+ }
+ 
++static int
++mmap_per_thread(struct perf_evlist *evlist, struct perf_evlist_mmap_ops *ops,
++		struct perf_mmap_param *mp)
++{
++	int nr_threads = perf_thread_map__nr(evlist->threads);
++	int nr_cpus    = perf_cpu_map__nr(evlist->all_cpus);
++	int cpu, thread, idx = 0;
++	int nr_mmaps = 0;
++
++	pr_debug("%s: nr cpu values (may include -1) %d nr threads %d\n",
++		 __func__, nr_cpus, nr_threads);
++
++	/* per-thread mmaps */
++	for (thread = 0; thread < nr_threads; thread++, idx++) {
++		int output = -1;
++		int output_overwrite = -1;
++
++		if (mmap_per_evsel(evlist, ops, idx, mp, 0, thread, &output,
++				   &output_overwrite, &nr_mmaps))
++			goto out_unmap;
++	}
++
++	/* system-wide mmaps i.e. per-cpu */
++	for (cpu = 1; cpu < nr_cpus; cpu++, idx++) {
++		int output = -1;
++		int output_overwrite = -1;
++
++		if (mmap_per_evsel(evlist, ops, idx, mp, cpu, 0, &output,
++				   &output_overwrite, &nr_mmaps))
++			goto out_unmap;
++	}
++
++	if (nr_mmaps != evlist->nr_mmaps)
++		pr_err("Miscounted nr_mmaps %d vs %d\n", nr_mmaps, evlist->nr_mmaps);
++
++	return 0;
++
++out_unmap:
++	perf_evlist__munmap(evlist);
++	return -1;
++}
++
+ static int
+ mmap_per_cpu(struct perf_evlist *evlist, struct perf_evlist_mmap_ops *ops,
+ 	     struct perf_mmap_param *mp)
+@@ -528,6 +572,8 @@ mmap_per_cpu(struct perf_evlist *evlist, struct perf_evlist_mmap_ops *ops,
+ 	int nr_mmaps = 0;
+ 	int cpu, thread;
+ 
++	pr_debug("%s: nr cpu values %d nr threads %d\n", __func__, nr_cpus, nr_threads);
++
+ 	for (cpu = 0; cpu < nr_cpus; cpu++) {
+ 		int output = -1;
+ 		int output_overwrite = -1;
+@@ -569,6 +615,7 @@ int perf_evlist__mmap_ops(struct perf_evlist *evlist,
+ 			  struct perf_evlist_mmap_ops *ops,
+ 			  struct perf_mmap_param *mp)
+ {
++	const struct perf_cpu_map *cpus = evlist->all_cpus;
+ 	struct perf_evsel *evsel;
+ 
+ 	if (!ops || !ops->get || !ops->mmap)
+@@ -588,6 +635,9 @@ int perf_evlist__mmap_ops(struct perf_evlist *evlist,
+ 	if (evlist->pollfd.entries == NULL && perf_evlist__alloc_pollfd(evlist) < 0)
+ 		return -ENOMEM;
+ 
++	if (perf_cpu_map__empty(cpus))
++		return mmap_per_thread(evlist, ops, mp);
++
+ 	return mmap_per_cpu(evlist, ops, mp);
+ }
+ 
 -- 
 2.25.1
 
