@@ -2,124 +2,153 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 705BBECAAD3
-	for <linux-perf-users@archiver.kernel.org>; Mon,  5 Sep 2022 11:22:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4D603ECAAD3
+	for <linux-perf-users@archiver.kernel.org>; Mon,  5 Sep 2022 11:36:50 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S237724AbiIELWF (ORCPT
+        id S236134AbiIELgs (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Mon, 5 Sep 2022 07:22:05 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58196 "EHLO
+        Mon, 5 Sep 2022 07:36:48 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49392 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S237123AbiIELWE (ORCPT
+        with ESMTP id S230038AbiIELgr (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Mon, 5 Sep 2022 07:22:04 -0400
-Received: from szxga01-in.huawei.com (szxga01-in.huawei.com [45.249.212.187])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C63A63DBCB;
-        Mon,  5 Sep 2022 04:22:03 -0700 (PDT)
-Received: from dggemv711-chm.china.huawei.com (unknown [172.30.72.53])
-        by szxga01-in.huawei.com (SkyGuard) with ESMTP id 4MLmGb73YLzkWxF;
-        Mon,  5 Sep 2022 19:18:15 +0800 (CST)
-Received: from kwepemm600008.china.huawei.com (7.193.23.88) by
- dggemv711-chm.china.huawei.com (10.1.198.66) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2375.24; Mon, 5 Sep 2022 19:22:02 +0800
-Received: from [10.174.176.230] (10.174.176.230) by
- kwepemm600008.china.huawei.com (7.193.23.88) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2375.24; Mon, 5 Sep 2022 19:22:01 +0800
-Message-ID: <7bb62639-a94e-907c-7110-aad45dda4db4@huawei.com>
-Date:   Mon, 5 Sep 2022 19:22:00 +0800
+        Mon, 5 Sep 2022 07:36:47 -0400
+Received: from foss.arm.com (foss.arm.com [217.140.110.172])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTP id 1D9DF24F0C;
+        Mon,  5 Sep 2022 04:36:46 -0700 (PDT)
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 15C1CED1;
+        Mon,  5 Sep 2022 04:36:52 -0700 (PDT)
+Received: from [10.57.16.151] (unknown [10.57.16.151])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 63E0F3F7B4;
+        Mon,  5 Sep 2022 04:36:44 -0700 (PDT)
+Message-ID: <cad6b3c2-f78f-a6c4-25fd-3402b02a4944@arm.com>
+Date:   Mon, 5 Sep 2022 12:36:43 +0100
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:102.0) Gecko/20100101
- Thunderbird/102.1.0
-Subject: Re: [PATCH 3/3] perf c2c: Prevent potential memory leak in
- c2c_he_zalloc
-To:     Jiri Olsa <olsajiri@gmail.com>
-CC:     <peterz@infradead.org>, <mingo@redhat.com>, <acme@kernel.org>,
-        <mark.rutland@arm.com>, <alexander.shishkin@linux.intel.com>,
-        <namhyung@kernel.org>, <linux-perf-users@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>
-References: <20220903072542.27678-1-shangxiaojing@huawei.com>
- <20220903072542.27678-4-shangxiaojing@huawei.com> <YxXNHtXoOeZG9Bzb@krava>
-From:   shangxiaojing <shangxiaojing@huawei.com>
-In-Reply-To: <YxXNHtXoOeZG9Bzb@krava>
-Content-Type: text/plain; charset="UTF-8"; format=flowed
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
+ Thunderbird/91.11.0
+Subject: Re: [PATCH v4 11/13] perf: cs-etm: Handle
+ PERF_RECORD_AUX_OUTPUT_HW_ID packet
+Content-Language: en-US
+To:     Mike Leach <mike.leach@linaro.org>, coresight@lists.linaro.org,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+Cc:     mathieu.poirier@linaro.org, peterz@infradead.org, mingo@redhat.com,
+        acme@kernel.org, linux-perf-users@vger.kernel.org,
+        quic_jinlmao@quicinc.com
+References: <20220823091009.14121-1-mike.leach@linaro.org>
+ <20220823091009.14121-12-mike.leach@linaro.org>
+From:   James Clark <james.clark@arm.com>
+In-Reply-To: <20220823091009.14121-12-mike.leach@linaro.org>
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
-X-Originating-IP: [10.174.176.230]
-X-ClientProxiedBy: dggems703-chm.china.huawei.com (10.3.19.180) To
- kwepemm600008.china.huawei.com (7.193.23.88)
-X-CFilter-Loop: Reflected
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
 
-On 2022/9/5 18:19, Jiri Olsa wrote:
-> On Sat, Sep 03, 2022 at 03:25:42PM +0800, Shang XiaoJing wrote:
->> Free allocated resources when zalloc is failed for members in c2c_he, to
->> prevent potential memory leak in c2c_he_zalloc.
->>
->> Signed-off-by: Shang XiaoJing <shangxiaojing@huawei.com>
->> ---
->>   tools/perf/builtin-c2c.c | 14 +++++++++++---
->>   1 file changed, 11 insertions(+), 3 deletions(-)
->>
->> diff --git a/tools/perf/builtin-c2c.c b/tools/perf/builtin-c2c.c
->> index 12f272811487..5530433eda80 100644
->> --- a/tools/perf/builtin-c2c.c
->> +++ b/tools/perf/builtin-c2c.c
->> @@ -146,15 +146,15 @@ static void *c2c_he_zalloc(size_t size)
->>   
->>   	c2c_he->cpuset = bitmap_zalloc(c2c.cpus_cnt);
->>   	if (!c2c_he->cpuset)
->> -		return NULL;
->> +		goto out_free_he;
->>   
->>   	c2c_he->nodeset = bitmap_zalloc(c2c.nodes_cnt);
->>   	if (!c2c_he->nodeset)
->> -		return NULL;
->> +		goto out_free_cpuset;
->>   
->>   	c2c_he->node_stats = zalloc(c2c.nodes_cnt * sizeof(*c2c_he->node_stats));
->>   	if (!c2c_he->node_stats)
->> -		return NULL;
->> +		goto out_free_nodeset;
->>   
->>   	init_stats(&c2c_he->cstats.lcl_hitm);
->>   	init_stats(&c2c_he->cstats.rmt_hitm);
->> @@ -163,6 +163,14 @@ static void *c2c_he_zalloc(size_t size)
->>   	init_stats(&c2c_he->cstats.load);
->>   
->>   	return &c2c_he->he;
-> nit, given that c2c_he is zero allocated we could just have
-> single error label that would free everything
->
-> for the patchset:
->
-> Acked-by: Jiri Olsa <jolsa@kernel.org>
->
-> thanks,
-> jirka
 
-right, i'll be mindful of that in future.
+On 23/08/2022 10:10, Mike Leach wrote:
+> When using dynamically assigned CoreSight trace IDs the drivers can output
+> the ID / CPU association as a PERF_RECORD_AUX_OUTPUT_HW_ID packet.
+> 
+> Update cs-etm decoder to handle this packet by setting the CPU/Trace ID
+> mapping.
+> 
+> Signed-off-by: Mike Leach <mike.leach@linaro.org>
+> ---
 
-this will be done in v2.
+[...]
 
->> +
->> +out_free_nodeset:
->> +	free(c2c_he->nodeset);
->> +out_free_cpuset:
->> +	free(c2c_he->cpuset);
->> +out_free_he:
->> +	free(c2c_he);
->> +	return NULL;
->>   }
->>   
->>   static void c2c_he_free(void *he)
->> -- 
->> 2.17.1
+> -	/* before aux records are queued, need to map metadata to trace IDs */
+> -	err = cs_etm__map_trace_ids_metadata(num_cpu, metadata);
+> +	/*
+> +	 * Map Trace ID values to CPU metadata.
+> +	 *
+> +	 * Trace metadata will always contain Trace ID values from the legacy algorithm. If the
+> +	 * files has been recorded by a "new" perf updated to handle AUX_HW_ID then the metadata
+> +	 * ID value will also have the CORESIGHT_TRACE_ID_UNUSED_FLAG set.
+> +	 *
+> +	 * The updated kernel drivers that use AUX_HW_ID to sent Trace IDs will attempt to use
+> +	 * the same IDs as the old algorithm as far as is possible, unless there are clashes
+> +	 * in which case a different value will be used. This means an older perf may still
+> +	 * be able to record and read files generate on a newer system.
+> +	 *
+> +	 * For a perf able to interpret AUX_HW_ID packets we first check for the presence of
+> +	 * those packets. If they are there then the values will be mapped and plugged into
+> +	 * the metadata. We then set any remaining metadata values with the used flag to a
+> +	 * value CORESIGHT_TRACE_ID_UNUSED_VAL - which indicates no decoder is required.
+> +	 *
+> +	 * If no AUX_HW_ID packets are present - which means a file recorded on an old kernel
+> +	 * then we map Trace ID values to CPU directly from the metadata - clearing any unused
+> +	 * flags if present.
+> +	 */
+> +
+> +	/* first scan for AUX_OUTPUT_HW_ID records to map trace ID values to CPU metadata */
+> +	aux_hw_id_found = 0;
+> +	err = perf_session__peek_events(session, session->header.data_offset,
+> +					session->header.data_size,
+> +					cs_etm__process_aux_hw_id_cb, &aux_hw_id_found);
+> +	if (err)
+> +		goto err_delete_thread;
+> +
+> +	/* if HW ID found then clear any unused metadata ID values */
+> +	if (aux_hw_id_found)
+> +		err = cs_etm__clear_unused_trace_ids_metadata(num_cpu, metadata);
+> +	/* otherwise, this is a file with metadata values only, map from metadata */
+> +	else
+> +		err = cs_etm__map_trace_ids_metadata(num_cpu, metadata);
+> +
+>  	if (err)
+>  		goto err_delete_thread;
+>  
+> @@ -3124,13 +3342,14 @@ int cs_etm__process_auxtrace_info(union perf_event *event,
+>  
+>  	etm->data_queued = etm->queues.populated;
+>  	/*
+> -	 * Print warning in pipe mode, see cs_etm__process_auxtrace_event() and
+> +	 * Print error in pipe mode, see cs_etm__process_auxtrace_event() and
+>  	 * cs_etm__queue_aux_fragment() for details relating to limitations.
+>  	 */
+> -	if (!etm->data_queued)
+> -		pr_warning("CS ETM warning: Coresight decode and TRBE support requires random file access.\n"
+> -			   "Continuing with best effort decoding in piped mode.\n\n");
+> -
+> +	if (!etm->data_queued) {
+> +		pr_err("CS ETM: Coresight decode and TRBE support need random file access.\n");
+> +		err = -EINVAL;
+> +		goto err_delete_thread;
+> +	}
 
-Thanks,
+This error message is never hit because the peek that was added is
+followed by:
 
-Shang XiaoJing
+  if (err)
+      goto err_delete_thread;
 
+Peek will return -1 in pipe mode so then you get this output instead:
+
+  ./perf record -e cs_etm//u -o - -- ls > stdio.data
+  cat stdio.data | ./perf report -i -
+
+  0x1464 [0x168]: failed to process type: 70
+  Error:
+  failed to process sample
+
+It would be simpler to add this new check to the very beginning of
+cs_etm__process_auxtrace_info() and print the message/quit there instead:
+
+  if (perf_data__is_pipe(session->data))
+      return -1;
+
+Then etm->data_queued can also be removed because it's always true.
+
+Apart from that issue:
+
+Reviewed-by: James Clark <james.clark@arm.com>
+
+Thanks
+James
+
+>  	return 0;
+>  
+>  err_delete_thread:
