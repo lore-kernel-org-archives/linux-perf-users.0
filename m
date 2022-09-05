@@ -2,132 +2,186 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A6EFCECAAD5
-	for <linux-perf-users@archiver.kernel.org>; Mon,  5 Sep 2022 10:20:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0C043ECAAD3
+	for <linux-perf-users@archiver.kernel.org>; Mon,  5 Sep 2022 10:42:22 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S237218AbiIEKU1 (ORCPT
+        id S237395AbiIEKmV (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Mon, 5 Sep 2022 06:20:27 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59184 "EHLO
+        Mon, 5 Sep 2022 06:42:21 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43770 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S237307AbiIEKTp (ORCPT
+        with ESMTP id S237017AbiIEKmU (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Mon, 5 Sep 2022 06:19:45 -0400
-Received: from mail-ej1-x631.google.com (mail-ej1-x631.google.com [IPv6:2a00:1450:4864:20::631])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6C9AF578AF;
-        Mon,  5 Sep 2022 03:19:14 -0700 (PDT)
-Received: by mail-ej1-x631.google.com with SMTP id nc14so16097972ejc.4;
-        Mon, 05 Sep 2022 03:19:13 -0700 (PDT)
+        Mon, 5 Sep 2022 06:42:20 -0400
+Received: from mail-ed1-x52d.google.com (mail-ed1-x52d.google.com [IPv6:2a00:1450:4864:20::52d])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1DAC54CA11;
+        Mon,  5 Sep 2022 03:42:18 -0700 (PDT)
+Received: by mail-ed1-x52d.google.com with SMTP id z8so10794581edb.6;
+        Mon, 05 Sep 2022 03:42:18 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20210112;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:date:from:from:to:cc:subject:date;
-        bh=hq9S7cyR2dxsLgQQf9Da5fdBhaAZlofiS7OnzuWQkA4=;
-        b=enS/dVRccNUcTzSwDmjPE7Y8IWNF/bSR24RCFsTnoWcb1emBYDfls+IxZ5lxOlNEzv
-         GKnLEl1YGiNDbSDzm87okIIouF/6jLm7hcKKQ1MdNmIRlZiltTMFmFmC7xPu11KXu7zV
-         pXDDKUmp4Y7Ed5bq2NZjzNZnfiTWfj2wWFhpIIXY6XXHY779JXOrfFJ0Z9KdfsWLsxev
-         V2U0rV24RMe9rhDcAIIZYGcznHujk+6aurfDuKxetkzas+1hddLLP3umznG/lZ5ZY4So
-         cCauNtHa9Fx0TvuCjwevyRyF0OQ4BMvVZCjDkYFZwLuHCSP1zBZBNIOu8QeBf3PGvDIG
-         1YDw==
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:date:from:from:to
+         :cc:subject:date;
+        bh=gCTzFCzMXflFKHOJqnuqrRXeTvpKIEd+vaSetzeKxoc=;
+        b=qV90qOFaA4IcMsWm4Q3WZfEOIeYu7qrQv34TfbCTG/S8VLD864QkPRjWPdbMzf7PAr
+         wnZ+D6RIVUH5Yq/+gz8G3lz8kD0dCQ2O6jHzdLHNdsw00mH/nWzXF9TzEZFXhk9JmH9U
+         fErkEMFz/u0+c0EOjpe+/D1DZvwXXh1a465mKEJVNA6iIEgTFuDC5IaThQnWqpP1+4eD
+         /ij6+9F/p4yEkb6lBR52vEYJui7XCWJqM0xzekbphOmeFgxakXFrbHO2xAtjU2ieqh4H
+         fJkl0qj39m2d7beYQhkmhpn66CMWMcPajQ16wyZoPiifQeptcC5SgntRXma6IdqyV2nl
+         pMuQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:date:from:x-gm-message-state:from:to:cc:subject:date;
-        bh=hq9S7cyR2dxsLgQQf9Da5fdBhaAZlofiS7OnzuWQkA4=;
-        b=aCy+HHecJxhp386qcow9kNt4kSfrnilvSSglcIA9lqXfoxhySki17vujSgDT//5vtV
-         L0TGoU7+x6lRqFJh8c7bKo5FjiHBH5HEDwVQn3EbyFQqcKxH8OBKuvOD5rFoXT7JZz85
-         fMaJLwkImwyKIuISqjziGpNG2oYNWTjndxTb+00Rg0maEQZH8FZhOgRhi5W7NZaRCy8/
-         bWxzHypN6wjOl4NB7XZKj4JhmsZFvO4G47mjp877MwsynDD84ZRj5zO4lWVMfbAy3Q75
-         YgUqVGsqcpAbOY5uiqH+PEmcJOT0mXRPONd00UBLUPUOpiK61irMc5XYKBKiWoaBwuU5
-         r27Q==
-X-Gm-Message-State: ACgBeo0lxiZ6QNk+lNFlxUTpffR/wFN4rP+aENwfHhHikpWh4CjafYYw
-        lGj+02raZh1ozEFOuFFWf9o=
-X-Google-Smtp-Source: AA6agR4zMDhI7xLR+yuIdS6+wZrs6umOCMaHX1ji0XevKCB0sgmE1JpOs82NMO+Pm12Pr6vAOmA5DA==
-X-Received: by 2002:a17:906:6a0a:b0:741:55b6:83ef with SMTP id qw10-20020a1709066a0a00b0074155b683efmr28072869ejc.210.1662373152226;
-        Mon, 05 Sep 2022 03:19:12 -0700 (PDT)
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:date:from
+         :x-gm-message-state:from:to:cc:subject:date;
+        bh=gCTzFCzMXflFKHOJqnuqrRXeTvpKIEd+vaSetzeKxoc=;
+        b=OKNRlOHnM5HlzSfprgLe7BB0qOFZIfgcf4KmXv/bkY4tnzzERTbyjoNATck2VmrIrt
+         UlxPCChykuFklAjlXob90DmGezPEzLeaFUt+KP4GxPVdShAyK8y0sIZ+0kfY0Lek9M6J
+         qp96Vq6Xut6rZ2uRGstJR2xxLXB4Wh/xbwbC1eehl++kUQ72jeMo+29Xl+s46o7jB6c2
+         J30gOjCps+zF63jkGBS3r0aO2vBzS9qYXMIZ21/HAdgqb+LMPltj0wA+cq4hn5XmeL1u
+         Q06m+T3buS28Uk1uzt1X61FBD/MgII+54SmP4N8cCJVweCDaPtpQjTYtMRQ90iwAMGKl
+         En4Q==
+X-Gm-Message-State: ACgBeo3p36ED1FZmGGwMTG7WuOep30ORXjEY07M72ofnAztGE04ys4P0
+        BITDYuT5/wAIxma52YLwwaw=
+X-Google-Smtp-Source: AA6agR7u9fTqZVIsmI/Sxa/JaibFRI0toGVy/kKmOZEN/mWZAUAXAr17Tbv5IyixVpavtfwYeXdNcQ==
+X-Received: by 2002:a05:6402:2945:b0:446:1144:f1aa with SMTP id ed5-20020a056402294500b004461144f1aamr42098217edb.79.1662374536696;
+        Mon, 05 Sep 2022 03:42:16 -0700 (PDT)
 Received: from krava ([193.85.244.190])
-        by smtp.gmail.com with ESMTPSA id e12-20020a170906314c00b00764a76d5888sm2364475eje.27.2022.09.05.03.19.11
+        by smtp.gmail.com with ESMTPSA id i10-20020a170906264a00b0073cf8e0355fsm4731400ejc.208.2022.09.05.03.42.15
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 05 Sep 2022 03:19:11 -0700 (PDT)
+        Mon, 05 Sep 2022 03:42:16 -0700 (PDT)
 From:   Jiri Olsa <olsajiri@gmail.com>
 X-Google-Original-From: Jiri Olsa <jolsa@kernel.org>
-Date:   Mon, 5 Sep 2022 12:19:10 +0200
-To:     Shang XiaoJing <shangxiaojing@huawei.com>
-Cc:     peterz@infradead.org, mingo@redhat.com, acme@kernel.org,
-        mark.rutland@arm.com, alexander.shishkin@linux.intel.com,
-        namhyung@kernel.org, linux-perf-users@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 3/3] perf c2c: Prevent potential memory leak in
- c2c_he_zalloc
-Message-ID: <YxXNHtXoOeZG9Bzb@krava>
-References: <20220903072542.27678-1-shangxiaojing@huawei.com>
- <20220903072542.27678-4-shangxiaojing@huawei.com>
+Date:   Mon, 5 Sep 2022 12:42:14 +0200
+To:     Adrian Hunter <adrian.hunter@intel.com>
+Cc:     Arnaldo Carvalho de Melo <acme@kernel.org>,
+        =?utf-8?B?VG9tw6HFoQ==?= Trnka <trnka@scm.com>,
+        linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Peter Zijlstra <peterz@infradead.org>,
+        Ingo Molnar <mingo@redhat.com>
+Subject: Re: perf top -p broken for multithreaded processes since 5.19
+Message-ID: <YxXShjsmy+iQi07I@krava>
+References: <10137382.nUPlyArG6x@mintaka.ncbr.muni.cz>
+ <2fd9b620-e9a8-9cd9-1b4a-6b13d829b2ae@intel.com>
+ <YxJW19MwaMOb8D30@kernel.org>
+ <ca905aa0-9d7b-d6d8-c789-2bd22057619b@intel.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <20220903072542.27678-4-shangxiaojing@huawei.com>
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <ca905aa0-9d7b-d6d8-c789-2bd22057619b@intel.com>
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-On Sat, Sep 03, 2022 at 03:25:42PM +0800, Shang XiaoJing wrote:
-> Free allocated resources when zalloc is failed for members in c2c_he, to
-> prevent potential memory leak in c2c_he_zalloc.
+On Sat, Sep 03, 2022 at 10:14:25AM +0300, Adrian Hunter wrote:
+> On 2/09/22 22:17, Arnaldo Carvalho de Melo wrote:
+> > Em Fri, Sep 02, 2022 at 05:50:22PM +0300, Adrian Hunter escreveu:
+> >> On 2/09/22 17:46, Tomáš Trnka wrote:
+> >>> Hello,
+> >>>
+> >>> A bug in perf v5.19 and newer completely breaks monitoring multithreaded
+> >>> processes using "perf top -p". The tool fails to start with "Failed to mmap
+> >>> with 22 (Invalid argument)". It still seems to work fine on single-threaded
+> >>> processes. "perf record" is also unaffected.
+> >>
+> >> It has been reported here:
+> >>
+> >> 	https://bugzilla.kernel.org/show_bug.cgi?id=216441
+> > 
+> > If I do:
+> > 
+> > ⬢[acme@toolbox perf-urgent]$ git log -2
+> > commit dfeb0bc60782471c293938e71b1a1117cfac2cb3 (HEAD -> perf/urgent)
+> > Author: Arnaldo Carvalho de Melo <acme@redhat.com>
+> > Date:   Fri Sep 2 16:15:39 2022 -0300
+> > 
+> >     Revert "libperf evlist: Check nr_mmaps is correct"
+> > 
+> >     This reverts commit 4ce47d842d4c16c07b135b8a7975b8f0672bcc0e.
+> > 
+> >     Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
+> > 
+> > commit 78cd283f6b8ab701cb35eafd5af8140560a88f16
+> > Author: Arnaldo Carvalho de Melo <acme@redhat.com>
+> > Date:   Fri Sep 2 16:13:41 2022 -0300
+> > 
+> >     Revert "libperf evlist: Allow mixing per-thread and per-cpu mmaps"
+> > 
+> >     This reverts commit ae4f8ae16a07896403c90305d4b9be27f657c1fc.
+> > 
+> >     Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
+> > ⬢[acme@toolbox perf-urgent]$
+> > 
+> > It works again, Tomáš can you please try doing this to see if this works
+> > for you?
+> > 
 > 
-> Signed-off-by: Shang XiaoJing <shangxiaojing@huawei.com>
-> ---
->  tools/perf/builtin-c2c.c | 14 +++++++++++---
->  1 file changed, 11 insertions(+), 3 deletions(-)
+> This is the fix I have so far.  I would like to test it some more though.
 > 
-> diff --git a/tools/perf/builtin-c2c.c b/tools/perf/builtin-c2c.c
-> index 12f272811487..5530433eda80 100644
-> --- a/tools/perf/builtin-c2c.c
-> +++ b/tools/perf/builtin-c2c.c
-> @@ -146,15 +146,15 @@ static void *c2c_he_zalloc(size_t size)
->  
->  	c2c_he->cpuset = bitmap_zalloc(c2c.cpus_cnt);
->  	if (!c2c_he->cpuset)
-> -		return NULL;
-> +		goto out_free_he;
->  
->  	c2c_he->nodeset = bitmap_zalloc(c2c.nodes_cnt);
->  	if (!c2c_he->nodeset)
-> -		return NULL;
-> +		goto out_free_cpuset;
->  
->  	c2c_he->node_stats = zalloc(c2c.nodes_cnt * sizeof(*c2c_he->node_stats));
->  	if (!c2c_he->node_stats)
-> -		return NULL;
-> +		goto out_free_nodeset;
->  
->  	init_stats(&c2c_he->cstats.lcl_hitm);
->  	init_stats(&c2c_he->cstats.rmt_hitm);
-> @@ -163,6 +163,14 @@ static void *c2c_he_zalloc(size_t size)
->  	init_stats(&c2c_he->cstats.load);
->  
->  	return &c2c_he->he;
+> From: Adrian Hunter <adrian.hunter@intel.com>
+> Date: Sat, 3 Sep 2022 10:05:08 +0300
+> Subject: [PATCH] libperf evlist: Fix per-thread mmaps for multi-threaded
+>  targets
+> 
+> Offending commit did not consider the different set-output rules for
+> per-thread mmaps i.e. in the per-thread case set-output is used for
+> mmaps of the same thread not the same cpu.
+> 
+> This was not immediately noticed because it only happens with
+> multi-threaded targets and we do not have a test for that yet.
+> 
+> Fixes: ae4f8ae16a07 ("libperf evlist: Allow mixing per-thread and per-cpu mmaps")
+> Signed-off-by: Adrian Hunter <adrian.hunter@intel.com>
 
-nit, given that c2c_he is zero allocated we could just have
-single error label that would free everything
+SNIP
 
-for the patchset:
+>  static int
+>  mmap_per_cpu(struct perf_evlist *evlist, struct perf_evlist_mmap_ops *ops,
+>  	     struct perf_mmap_param *mp)
+> @@ -528,6 +571,8 @@ mmap_per_cpu(struct perf_evlist *evlist, struct perf_evlist_mmap_ops *ops,
+>  	int nr_mmaps = 0;
+>  	int cpu, thread;
+>  
+> +	pr_debug("%s: nr cpu values %d nr threads %d\n", __func__, nr_cpus, nr_threads);
+> +
+>  	for (cpu = 0; cpu < nr_cpus; cpu++) {
+>  		int output = -1;
+>  		int output_overwrite = -1;
+> @@ -569,6 +614,7 @@ int perf_evlist__mmap_ops(struct perf_evlist *evlist,
+>  			  struct perf_evlist_mmap_ops *ops,
+>  			  struct perf_mmap_param *mp)
+>  {
+> +	const struct perf_cpu_map *cpus = evlist->all_cpus;
+>  	struct perf_evsel *evsel;
+>  
+>  	if (!ops || !ops->get || !ops->mmap)
+> @@ -588,6 +634,9 @@ int perf_evlist__mmap_ops(struct perf_evlist *evlist,
+>  	if (evlist->pollfd.entries == NULL && perf_evlist__alloc_pollfd(evlist) < 0)
+>  		return -ENOMEM;
+>  
+> +	if (perf_cpu_map__empty(cpus))
+> +		return mmap_per_thread(evlist, ops, mp);
+> +
 
-Acked-by: Jiri Olsa <jolsa@kernel.org>
+could we just enable per-cpu mapping in top? I'd think it should be
+enabled anyway because we need ring buffers on all cpus for sampling
 
-thanks,
 jirka
 
-> +
-> +out_free_nodeset:
-> +	free(c2c_he->nodeset);
-> +out_free_cpuset:
-> +	free(c2c_he->cpuset);
-> +out_free_he:
-> +	free(c2c_he);
-> +	return NULL;
->  }
->  
->  static void c2c_he_free(void *he)
-> -- 
-> 2.17.1
-> 
+
+---
+diff --git a/tools/perf/builtin-top.c b/tools/perf/builtin-top.c
+index e89208b4ad4b..d6be82315dd8 100644
+--- a/tools/perf/builtin-top.c
++++ b/tools/perf/builtin-top.c
+@@ -1422,6 +1422,7 @@ int cmd_top(int argc, const char **argv)
+ 			.freq		= 4000, /* 4 KHz */
+ 			.target		= {
+ 				.uses_mmap   = true,
++				.default_per_cpu = true,
+ 			},
+ 			/*
+ 			 * FIXME: This will lose PERF_RECORD_MMAP and other metadata
+
