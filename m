@@ -2,173 +2,185 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9BE6CECAAD3
-	for <linux-perf-users@archiver.kernel.org>; Mon,  5 Sep 2022 10:45:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B84A0C6FA83
+	for <linux-perf-users@archiver.kernel.org>; Mon,  5 Sep 2022 11:03:30 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231738AbiIEKpB (ORCPT
+        id S237908AbiIELD3 (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Mon, 5 Sep 2022 06:45:01 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48082 "EHLO
+        Mon, 5 Sep 2022 07:03:29 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56408 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230054AbiIEKpA (ORCPT
+        with ESMTP id S237242AbiIELD2 (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Mon, 5 Sep 2022 06:45:00 -0400
-Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTP id D34531EEEF;
-        Mon,  5 Sep 2022 03:44:58 -0700 (PDT)
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id D87CAD6E;
-        Mon,  5 Sep 2022 03:45:04 -0700 (PDT)
-Received: from [10.57.16.151] (unknown [10.57.16.151])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 365873F7B4;
-        Mon,  5 Sep 2022 03:44:57 -0700 (PDT)
-Message-ID: <37ad0c68-55ad-2bac-b401-2dc26ad9ca3a@arm.com>
-Date:   Mon, 5 Sep 2022 11:44:55 +0100
-MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
- Thunderbird/91.11.0
-Subject: Re: [PATCH v4 00/13] coresight: Add new API to allocate trace source
- ID values
-Content-Language: en-US
-To:     Mike Leach <mike.leach@linaro.org>, coresight@lists.linaro.org,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
-Cc:     mathieu.poirier@linaro.org, peterz@infradead.org, mingo@redhat.com,
-        acme@kernel.org, linux-perf-users@vger.kernel.org,
-        quic_jinlmao@quicinc.com
-References: <20220823091009.14121-1-mike.leach@linaro.org>
-From:   James Clark <james.clark@arm.com>
-In-Reply-To: <20220823091009.14121-1-mike.leach@linaro.org>
-Content-Type: text/plain; charset=UTF-8
+        Mon, 5 Sep 2022 07:03:28 -0400
+Received: from mx0a-001b2d01.pphosted.com (mx0a-001b2d01.pphosted.com [148.163.156.1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6D5EB3883
+        for <linux-perf-users@vger.kernel.org>; Mon,  5 Sep 2022 04:03:27 -0700 (PDT)
+Received: from pps.filterd (m0187473.ppops.net [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (8.17.1.5/8.17.1.5) with ESMTP id 285AgjQf000480;
+        Mon, 5 Sep 2022 11:03:20 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=content-type :
+ mime-version : subject : from : in-reply-to : date : cc :
+ content-transfer-encoding : message-id : references : to; s=pp1;
+ bh=jPUTA1sjFk5Qua0mKUp7vBqpeV9RlgMsBbWUAkEGzjA=;
+ b=qz7YOdoRoZFytApz8EMZFLbV6UszrgTfeXz0MUNv+ZOpWuSKbuw20OSsUzLF/wwHHpGI
+ KreE1D+oMqxEtLPKHESM0b+LfEGMSQe0aoeL2+j2NVQTbMTLeqSA5VU3fG0/xIp0sTnt
+ srFiSO5IMdXSlOse5NJCN2p42BJqR4Mtdi5L6kG7jUtyAk5vDaUA2SnjD9Yb7W6q1VmY
+ FAvx1qeaHap9py+qooD6C/6kJWSPj6tYdBvdqsDhdLQwTC5ZxGp/sNPDPVii0SUyJDRO
+ PIFANK0We2sCdcxKM2tEvBOgYHLHRStSBhgbdXOKeZ/8BZCaPzpre5aDpoeUUtTHKuhA oQ== 
+Received: from pps.reinject (localhost [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 3jdfkerg80-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Mon, 05 Sep 2022 11:03:19 +0000
+Received: from m0187473.ppops.net (m0187473.ppops.net [127.0.0.1])
+        by pps.reinject (8.17.1.5/8.17.1.5) with ESMTP id 285AjaU0011652;
+        Mon, 5 Sep 2022 11:03:15 GMT
+Received: from ppma06ams.nl.ibm.com (66.31.33a9.ip4.static.sl-reverse.com [169.51.49.102])
+        by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 3jdfkerf4q-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Mon, 05 Sep 2022 11:03:13 +0000
+Received: from pps.filterd (ppma06ams.nl.ibm.com [127.0.0.1])
+        by ppma06ams.nl.ibm.com (8.16.1.2/8.16.1.2) with SMTP id 285Aq00F014234;
+        Mon, 5 Sep 2022 11:01:39 GMT
+Received: from b06cxnps4074.portsmouth.uk.ibm.com (d06relay11.portsmouth.uk.ibm.com [9.149.109.196])
+        by ppma06ams.nl.ibm.com with ESMTP id 3jbx6hjbkh-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Mon, 05 Sep 2022 11:01:39 +0000
+Received: from d06av24.portsmouth.uk.ibm.com (mk.ibm.com [9.149.105.60])
+        by b06cxnps4074.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 285B1aHj39387556
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Mon, 5 Sep 2022 11:01:36 GMT
+Received: from d06av24.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 91FF24205F;
+        Mon,  5 Sep 2022 11:01:36 +0000 (GMT)
+Received: from d06av24.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id BDDE242059;
+        Mon,  5 Sep 2022 11:01:34 +0000 (GMT)
+Received: from smtpclient.apple (unknown [9.43.39.18])
+        by d06av24.portsmouth.uk.ibm.com (Postfix) with ESMTPS;
+        Mon,  5 Sep 2022 11:01:34 +0000 (GMT)
+Content-Type: text/plain;
+        charset=us-ascii
+Mime-Version: 1.0 (Mac OS X Mail 16.0 \(3696.120.41.1.1\))
+Subject: Re: [PATCH 1/2] tools/perf: Fix out of bound access to affinity
+ "sched_cpus"
+From:   Athira Rajeev <atrajeev@linux.vnet.ibm.com>
+In-Reply-To: <YxXIvno0W1UeiH8K@krava>
+Date:   Mon, 5 Sep 2022 16:31:32 +0530
+Cc:     Arnaldo Carvalho de Melo <acme@kernel.org>,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        linux-perf-users@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
+        maddy@linux.vnet.ibm.com,
+        Nageswara Sastry <rnsastry@linux.ibm.com>, kjain@linux.ibm.com
 Content-Transfer-Encoding: 7bit
+Message-Id: <F14D7769-52B0-4B0E-A30C-9282A31035D9@linux.vnet.ibm.com>
+References: <20220905045441.1643-1-atrajeev@linux.vnet.ibm.com>
+ <YxXIvno0W1UeiH8K@krava>
+To:     Jiri Olsa <olsajiri@gmail.com>
+X-Mailer: Apple Mail (2.3696.120.41.1.1)
+X-TM-AS-GCONF: 00
+X-Proofpoint-GUID: dxToyjVPiwqOyLj3M1L_Gw_kdo3tTcgP
+X-Proofpoint-ORIG-GUID: SyKYqfVVmivwvYRHhoUX_qTtVEYdvN69
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.205,Aquarius:18.0.895,Hydra:6.0.517,FMLib:17.11.122.1
+ definitions=2022-09-05_08,2022-09-05_02,2022-06-22_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 adultscore=0
+ priorityscore=1501 mlxscore=0 lowpriorityscore=0 bulkscore=0 phishscore=0
+ suspectscore=0 clxscore=1015 impostorscore=0 malwarescore=0 spamscore=0
+ mlxlogscore=999 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2207270000 definitions=main-2209050053
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
 
 
-On 23/08/2022 10:09, Mike Leach wrote:
-> The current method for allocating trace source ID values to sources is
-> to use a fixed algorithm for CPU based sources of (cpu_num * 2 + 0x10).
-> The STM is allocated ID 0x1.
+> On 05-Sep-2022, at 3:30 PM, Jiri Olsa <olsajiri@gmail.com> wrote:
 > 
-> This fixed algorithm is used in both the CoreSight driver code, and by
-> perf when writing the trace metadata in the AUXTRACE_INFO record.
+> On Mon, Sep 05, 2022 at 10:24:40AM +0530, Athira Rajeev wrote:
+>> The affinity code in "affinity_set" function access array
+>> named "sched_cpus". The size for this array is allocated in
+>> affinity_setup function which is nothing but value from
+>> get_cpu_set_size. This is used to contain the cpumask value
+>> for each cpu. While setting bit for each cpu, it calls
+>> "set_bit" function which access index in sched_cpus array.
+>> If we provide a command-line option to -C which is more than
+>> the number of CPU's present in the system, the set_bit could
+>> access an array member which is out-of the array size. This
+>> is because currently, there is no boundary check for the CPU.
+>> This will result in seg fault:
+>> 
+>> <<>>
+>> ./perf stat -C 12323431 ls
+>> Perf can support 2048 CPUs. Consider raising MAX_NR_CPUS
+>> Segmentation fault (core dumped)
+>> <<>>
+>> 
+>> Fix this by adding boundary check for the array.
+>> 
+>> After the fix from powerpc system:
+>> 
+>> <<>>
+>> ./perf stat -C 12323431 ls 1>out
+>> Perf can support 2048 CPUs. Consider raising MAX_NR_CPUS
+>> 
+>> Performance counter stats for 'CPU(s) 12323431':
+>> 
+>>   <not supported> msec cpu-clock
+>>   <not supported>      context-switches
+>>   <not supported>      cpu-migrations
+>>   <not supported>      page-faults
+>>   <not supported>      cycles
+>>   <not supported>      instructions
+>>   <not supported>      branches
+>>   <not supported>      branch-misses
+>> 
+>>       0.001192373 seconds time elapsed
+>> <<>>
+>> 
+>> Reported-by: Nageswara Sastry <rnsastry@linux.ibm.com>
+>> Signed-off-by: Athira Rajeev <atrajeev@linux.vnet.ibm.com>
+>> ---
+>> tools/perf/util/affinity.c | 8 +++++++-
+>> 1 file changed, 7 insertions(+), 1 deletion(-)
+>> 
+>> diff --git a/tools/perf/util/affinity.c b/tools/perf/util/affinity.c
+>> index 4d216c0dc425..a1dd37347abc 100644
+>> --- a/tools/perf/util/affinity.c
+>> +++ b/tools/perf/util/affinity.c
+>> @@ -49,8 +49,14 @@ void affinity__set(struct affinity *a, int cpu)
+>> {
+>> 	int cpu_set_size = get_cpu_set_size();
+>> 
+>> -	if (cpu == -1)
+>> +	/*
+>> +	 * Return:
+>> +	 * - if cpu is -1
+>> +	 * - restrict out of bound access to sched_cpus
+>> +	 */
+>> +	if (cpu == -1 || ((cpu / __BITS_PER_LONG) >= (cpu_set_size / 8)))
 > 
-> The method needs replacing as currently:-
-> 1. It is inefficient in using available IDs.
-> 2. Does not scale to larger systems with many cores and the algorithm
-> has no limits so will generate invalid trace IDs for cpu number > 44.
+> hm, there's __BITS_PER_LONG in one case, but then there's hardcoded 8
 > 
-> Additionally requirements to allocate additional system IDs on some
-> systems have been seen.
+> would this be simpler:
 > 
-> This patch set  introduces an API that allows the allocation of trace IDs
-> in a dynamic manner.
+> 	if (cpu == -1 || ((cpu >= (cpu_set_size * 8))))
+> 		return;
 > 
-> Architecturally reserved IDs are never allocated, and the system is
-> limited to allocating only valid IDs.
-> 
-> Each of the current trace sources ETM3.x, ETM4.x and STM is updated to use
-> the new API.
-> 
-> For the ETMx.x devices IDs are allocated on certain events
-> a) When using sysfs, an ID will be allocated on hardware enable, or a read of
-> sysfs TRCTRACEID register and freed when the sysfs reset is written.
-> 
-> b) When using perf, ID is allocated on during setup AUX event, and freed on
-> event free. IDs are communicated using the AUX_OUTPUT_HW_ID packet.
-> The ID allocator is notified when perf sessions start and stop
-> so CPU based IDs are kept constant throughout any perf session.
-> 
-> 
-> Note: This patchset breaks some backward compatibility for perf record and
-> perf report.
-> 
-> The version of the AUXTRACE_INFO has been updated to reflect the fact that
-> the trace source IDs are generated differently. This will
-> mean older versions of perf report cannot decode the newer file.
-> 
-> Applies to coresight/next [4d45bc82df66]
-> Tested on DB410c
-> 
+> jirka
 
-Tested-by: James Clark <james.clark@arm.com>
+Hi Jiri,
 
-Tested on N1SDP. Checked new Perf on new and old kernels. Confirmed that
-HW_ID packets are output, decoding still looks good in system-wide,
-per-thread modes.
+Thanks for the review. I will post a V2 with this change
 
-> Changes since v3:
-> 1) Fixed aarch32 build error in ETM3.x driver.
-> Reported-by: kernel test robot <lkp@intel.com>
+Athira
+
 > 
-> Changes since v2:
-> 1) Improved backward compatibility: (requested by James)
-> 
-> Using the new version of perf on an old kernel will generate a usable file
-> legacy metadata values are set by the new perf and will be used if mew
-> ID packets are not present in the file.
-> 
-> Using an older version of perf / simpleperf on an updated kernel may still
-> work. The trace ID allocator has been updated to use the legacy ID values
-> where possible, so generated file and used trace IDs will match up to the
-> point where the legacy algorithm is broken anyway.
-> 
-> 2) Various changes to the ID allocator and ID packet format.
-> (suggested by Suzuki)
-> 
-> 3) per CPU ID info in allocator now stored as atomic type to allow a passive read
-> without taking the allocator spinlock. perf flow now allocates and releases ID
-> values in setup_aux / free_event. Device enable and event enable use the passive
-> read to set the allocated values. This simplifies the locking mechanisms on the
-> perf run and fixes issues that arose with locking dependencies.
-> 
-> Changes since v1:
-> (after feedback & discussion with Mathieu & Suzuki).
-> 
-> 1) API has changed. The global trace ID map is managed internally, so it
-> is no longer passed in to the API functions.
-> 
-> 2) perf record does not use sysfs to find the trace IDs. These are now
-> output as AUX_OUTPUT_HW_ID events. The drivers, perf record, and perf report
-> have been updated accordingly to generate and handle these events.
-> 
-> Mike Leach (13):
->   coresight: trace-id: Add API to dynamically assign Trace ID values
->   coresight: Remove obsolete Trace ID unniqueness checks
->   coresight: stm: Update STM driver to use Trace ID API
->   coresight: etm4x: Update ETM4 driver to use Trace ID API
->   coresight: etm3x: Update ETM3 driver to use Trace ID API
->   coresight: etmX.X: stm: Remove trace_id() callback
->   coresight: perf: traceid: Add perf notifiers for Trace ID
->   perf: cs-etm: Move mapping of Trace ID and cpu into helper function
->   perf: cs-etm: Update record event to use new Trace ID protocol
->   kernel: events: Export perf_report_aux_output_id()
->   perf: cs-etm: Handle PERF_RECORD_AUX_OUTPUT_HW_ID packet
->   coresight: events: PERF_RECORD_AUX_OUTPUT_HW_ID used for Trace ID
->   coresight: trace-id: Add debug & test macros to Trace ID allocation
-> 
->  drivers/hwtracing/coresight/Makefile          |   2 +-
->  drivers/hwtracing/coresight/coresight-core.c  |  49 +--
->  .../hwtracing/coresight/coresight-etm-perf.c  |  23 ++
->  drivers/hwtracing/coresight/coresight-etm.h   |   3 +-
->  .../coresight/coresight-etm3x-core.c          |  92 +++--
->  .../coresight/coresight-etm3x-sysfs.c         |  27 +-
->  .../coresight/coresight-etm4x-core.c          |  79 ++++-
->  .../coresight/coresight-etm4x-sysfs.c         |  27 +-
->  drivers/hwtracing/coresight/coresight-etm4x.h |   3 +
->  drivers/hwtracing/coresight/coresight-stm.c   |  49 +--
->  .../hwtracing/coresight/coresight-trace-id.c  | 266 ++++++++++++++
->  .../hwtracing/coresight/coresight-trace-id.h  |  78 +++++
->  include/linux/coresight-pmu.h                 |  35 +-
->  include/linux/coresight.h                     |   3 -
->  kernel/events/core.c                          |   1 +
->  tools/include/linux/coresight-pmu.h           |  48 ++-
->  tools/perf/arch/arm/util/cs-etm.c             |  21 +-
->  .../perf/util/cs-etm-decoder/cs-etm-decoder.c |   7 +
->  tools/perf/util/cs-etm.c                      | 331 +++++++++++++++---
->  tools/perf/util/cs-etm.h                      |  14 +-
->  20 files changed, 933 insertions(+), 225 deletions(-)
->  create mode 100644 drivers/hwtracing/coresight/coresight-trace-id.c
->  create mode 100644 drivers/hwtracing/coresight/coresight-trace-id.h
-> 
+>> 		return;
+>> +
+>> 	a->changed = true;
+>> 	set_bit(cpu, a->sched_cpus);
+>> 	/*
+>> -- 
+>> 2.35.1
+
