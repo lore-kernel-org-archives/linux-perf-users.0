@@ -2,143 +2,116 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AFF7CECAAA1
-	for <linux-perf-users@archiver.kernel.org>; Tue,  6 Sep 2022 08:47:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8CA9DC38145
+	for <linux-perf-users@archiver.kernel.org>; Tue,  6 Sep 2022 09:40:50 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S239522AbiIFIru (ORCPT
+        id S233912AbiIFJkt (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Tue, 6 Sep 2022 04:47:50 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39766 "EHLO
+        Tue, 6 Sep 2022 05:40:49 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56156 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S233537AbiIFIra (ORCPT
+        with ESMTP id S239445AbiIFJkk (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Tue, 6 Sep 2022 04:47:30 -0400
-Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTP id C7C20E1D;
-        Tue,  6 Sep 2022 01:44:22 -0700 (PDT)
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id B00A5139F;
-        Tue,  6 Sep 2022 01:44:28 -0700 (PDT)
-Received: from a077893.blr.arm.com (unknown [10.162.42.8])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPA id 3F3763F73D;
-        Tue,  6 Sep 2022 01:44:19 -0700 (PDT)
-From:   Anshuman Khandual <anshuman.khandual@arm.com>
-To:     linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, peterz@infradead.org
-Cc:     Anshuman Khandual <anshuman.khandual@arm.com>,
-        Ingo Molnar <mingo@redhat.com>,
-        Arnaldo Carvalho de Melo <acme@kernel.org>
-Subject: [PATCH] perf: Consolidate branch sample filter helpers
-Date:   Tue,  6 Sep 2022 14:14:14 +0530
-Message-Id: <20220906084414.396220-1-anshuman.khandual@arm.com>
-X-Mailer: git-send-email 2.25.1
+        Tue, 6 Sep 2022 05:40:40 -0400
+Received: from mail-lj1-x241.google.com (mail-lj1-x241.google.com [IPv6:2a00:1450:4864:20::241])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 97E846715C;
+        Tue,  6 Sep 2022 02:40:37 -0700 (PDT)
+Received: by mail-lj1-x241.google.com with SMTP id bn9so11635537ljb.6;
+        Tue, 06 Sep 2022 02:40:37 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20210112;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:from:to:cc:subject:date;
+        bh=0+DYhezzLoWJqNIc57WnwGVIa9MiDZ24BuWYzD1fu+E=;
+        b=QfhVfLE7cbyCLEVbhkK2byK+qK6mOOuYXbIjS4LmizJCcEOX7fqAR2ogsRIGL4C9Nv
+         o3mDYc04W7CshfYS9DFquBLGiOA2RTwXckd5CbDmOqRWoRs9SJcvqHmr3zj22Blermkr
+         6viFYSYUaZr8sey5m+vPz4QiFoZbddss0ecdvyrnggDuZi6l2QUQ0tIaTGriGRIlWQfL
+         wFNErzbCFDFn34fQTHHAjvREuryKHoopG3gH8H0v3OB12Yetzmrq1LRCZRoO79H6V2CE
+         hUFk9S5pbZX7ku+XGhSAXuc1b4Zg4f7LEc0Y52mcDFgoMVBhOACez1yLlFfyyaVp9sT9
+         nVYQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:x-gm-message-state:from:to:cc:subject:date;
+        bh=0+DYhezzLoWJqNIc57WnwGVIa9MiDZ24BuWYzD1fu+E=;
+        b=Fwbur+mvJZFBPe5UVWy4DTGuVucIhQLobobEaTDRNZO8McRIdr8gQg41870U9L4D2S
+         WMZr5HHPgUWHYB8T1RrX5qccfYdiyAzinrf6XYIgqm08sg0jtx9oJHp80JAYQoK3u/x2
+         V6BsQ+KXQX1AdHQPwCsKmlcjdP3gRppNAph6LnDu4VaCWqH2qBGXccjbg6N72ibQP7Y0
+         i1w25CNyWoSvhZElHkCQuo9IZxNrE6hoG0j4LBkpDybu+rRp7vmw3Kyw/XF5xY9a+jVp
+         /UNv7mMFwElcyak8E/AyqAEmBelNglTS1Whoen8CoXatiwdBQDOPoqb/rol682i9C9LA
+         D9ZA==
+X-Gm-Message-State: ACgBeo3ElMXRNUM7NwCyGnKl52d7Stk1pHTP02m7F100L0M1gFiM6xyP
+        X6COK9lfJOVosrV/Okr8RppEGW+oQoZNtNqpUFU=
+X-Google-Smtp-Source: AA6agR5YuY4SFg1XgmCZPq4Aud7zXbg+NlWVbVfhM+/2UuQ+H7lRm8h/SYVKor0DYHsA7gDwIc3iFXSEq5/j7dw6ifY=
+X-Received: by 2002:a2e:9d94:0:b0:263:c964:4970 with SMTP id
+ c20-20020a2e9d94000000b00263c9644970mr12003839ljj.345.1662457235608; Tue, 06
+ Sep 2022 02:40:35 -0700 (PDT)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+References: <CABwm_eTnARC1GwMD-JF176k8WXU1Z0+H190mvXn61yr369qt6g@mail.gmail.com>
+ <YwfYyLE3ajSFVHGQ@kernel.org> <CABwm_eSvcnygceTU0sNXLkBFaNfEfrThFVmwH=TS4hN=HVGrGg@mail.gmail.com>
+ <CAM9d7cjsbhHnaAiHSBb6qAfH0bNgdKrBHdg16esRCt+4DPmvtQ@mail.gmail.com>
+In-Reply-To: <CAM9d7cjsbhHnaAiHSBb6qAfH0bNgdKrBHdg16esRCt+4DPmvtQ@mail.gmail.com>
+From:   Zixuan Tan <tanzixuan.me@gmail.com>
+Date:   Tue, 6 Sep 2022 17:40:24 +0800
+Message-ID: <CABwm_eT=BHQB=ELEWTZtXG61WyYVqQfp+gy85aD3xMRycKtLwA@mail.gmail.com>
+Subject: Re: [PATCH] perf/genelf: Switch deprecated openssl MD5_* functions to
+ new EVP API
+To:     Arnaldo Carvalho de Melo <arnaldo.melo@gmail.com>
+Cc:     Namhyung Kim <namhyung@kernel.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Jiri Olsa <jolsa@kernel.org>,
+        linux-perf-users <linux-perf-users@vger.kernel.org>,
+        linux-kernel <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-Besides the branch type filtering requests, 'event.attr.branch_sample_type'
-also contains various flags indicating which additional information should
-be captured, along with the base branch record. These flags help configure
-the underlying hardware, and capture the branch records appropriately when
-required e.g after PMU interrupt. But first, this moves an existing helper
-perf_sample_save_hw_index() into the header before adding some more helpers
-for other branch sample filter flags.
+Hi Arnaldo, are there any updates?
 
-Cc: Peter Zijlstra <peterz@infradead.org>
-Cc: Ingo Molnar <mingo@redhat.com>
-Cc: Arnaldo Carvalho de Melo <acme@kernel.org>
-Cc: linux-perf-users@vger.kernel.org
-Cc: linux-kernel@vger.kernel.org
-Acked-by: Peter Zijlstra (Intel) <peterz@infradead.org>
-Signed-off-by: Anshuman Khandual <anshuman.khandual@arm.com>
----
-Hello Peter,
+Thanks,
+- Zixuan
 
-Could you please consider taking this patch along with others on the perf
-ABI series. This patch has been part of the original BRBE driver series,
-which will have one less patch to include going forward. Thank you.
-
-- Anshuman
-
-This applies on v6.0-rc4 but after applying the following patch series
-
-https://lore.kernel.org/all/20220824044822.70230-1-anshuman.khandual@arm.com/
-
- include/linux/perf_event.h | 26 ++++++++++++++++++++++++++
- kernel/events/core.c       |  9 ++-------
- 2 files changed, 28 insertions(+), 7 deletions(-)
-
-diff --git a/include/linux/perf_event.h b/include/linux/perf_event.h
-index ee8b9ecdc03b..236375938eeb 100644
---- a/include/linux/perf_event.h
-+++ b/include/linux/perf_event.h
-@@ -1684,4 +1684,30 @@ static inline void perf_lopwr_cb(bool mode)
- }
- #endif
- 
-+#ifdef CONFIG_PERF_EVENTS
-+static inline bool branch_sample_no_flags(const struct perf_event *event)
-+{
-+	return event->attr.branch_sample_type & PERF_SAMPLE_BRANCH_NO_FLAGS;
-+}
-+
-+static inline bool branch_sample_no_cycles(const struct perf_event *event)
-+{
-+	return event->attr.branch_sample_type & PERF_SAMPLE_BRANCH_NO_CYCLES;
-+}
-+
-+static inline bool branch_sample_type(const struct perf_event *event)
-+{
-+	return event->attr.branch_sample_type & PERF_SAMPLE_BRANCH_TYPE_SAVE;
-+}
-+
-+static inline bool branch_sample_hw_index(const struct perf_event *event)
-+{
-+	return event->attr.branch_sample_type & PERF_SAMPLE_BRANCH_HW_INDEX;
-+}
-+
-+static inline bool branch_sample_priv(const struct perf_event *event)
-+{
-+	return event->attr.branch_sample_type & PERF_SAMPLE_BRANCH_PRIV_SAVE;
-+}
-+#endif /* CONFIG_PERF_EVENTS */
- #endif /* _LINUX_PERF_EVENT_H */
-diff --git a/kernel/events/core.c b/kernel/events/core.c
-index 2621fd24ad26..ff62d357a27b 100644
---- a/kernel/events/core.c
-+++ b/kernel/events/core.c
-@@ -6967,11 +6967,6 @@ static void perf_output_read(struct perf_output_handle *handle,
- 		perf_output_read_one(handle, event, enabled, running);
- }
- 
--static inline bool perf_sample_save_hw_index(struct perf_event *event)
--{
--	return event->attr.branch_sample_type & PERF_SAMPLE_BRANCH_HW_INDEX;
--}
--
- void perf_output_sample(struct perf_output_handle *handle,
- 			struct perf_event_header *header,
- 			struct perf_sample_data *data,
-@@ -7060,7 +7055,7 @@ void perf_output_sample(struct perf_output_handle *handle,
- 			     * sizeof(struct perf_branch_entry);
- 
- 			perf_output_put(handle, data->br_stack->nr);
--			if (perf_sample_save_hw_index(event))
-+			if (branch_sample_hw_index(event))
- 				perf_output_put(handle, data->br_stack->hw_idx);
- 			perf_output_copy(handle, data->br_stack->entries, size);
- 		} else {
-@@ -7354,7 +7349,7 @@ void perf_prepare_sample(struct perf_event_header *header,
- 	if (sample_type & PERF_SAMPLE_BRANCH_STACK) {
- 		int size = sizeof(u64); /* nr */
- 		if (data->br_stack) {
--			if (perf_sample_save_hw_index(event))
-+			if (branch_sample_hw_index(event))
- 				size += sizeof(u64);
- 
- 			size += data->br_stack->nr
--- 
-2.25.1
-
+On Sat, Aug 27, 2022 at 2:32 AM Namhyung Kim <namhyung@kernel.org> wrote:
+>
+> Hello,
+>
+> On Fri, Aug 26, 2022 at 10:22 AM Zixuan Tan <tanzixuan.me@gmail.com> wrote:
+> >
+> > On Fri, Aug 26, 2022 at 4:17 AM Arnaldo Carvalho de Melo
+> > <arnaldo.melo@gmail.com> wrote:
+> > >
+> > > Em Fri, Aug 26, 2022 at 01:00:58AM +0800, Zixuan Tan escreveu:
+> > > > Switch to the flavored EVP API like in test-libcrypto.c, and remove the
+> > > > bad gcc #pragma.
+> > > >
+> > > > Inspired-By: 5b245985a6de ("tools build: Switch to new openssl API for
+> > > > test-libcrypto")
+> > >
+> > > How did you test the end result? Can you please describe step by step?
+> > >
+> > > Also please consider adding a 'perf test' entry to make sure this
+> > > doesn't regress.
+> >
+> > Sorry but I don't get what you mean, what results do I need to test?
+> >
+> > These EVP_* APIs are just replacements for the deprecated MD5_* APIs in
+> > openssl v3 [1][2]. With the same input, they produce the same MD5 digest.
+> >
+> > And this patch just does the migration work for the upgrade and does not
+> > change the logic of the code. so...what should I test?
+>
+> Yeah, I understand that this merely changes the MD5 APIs.
+> While it's good to have a test case for the genelf code, I don't think
+> it belongs to this patch.  So,
+>
+> Acked-by: Namhyung Kim <namhyung@kernel.org>
+>
+>
+> >
+> > Links:
+> > [1] https://www.openssl.org/docs/man3.0/man3/MD5.html
+> > [2] https://stackoverflow.com/questions/69806220/advice-needed-for-migration-of-low-level-openssl-api-to-high-level-openssl-apis
