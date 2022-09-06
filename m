@@ -2,116 +2,101 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3E7E1ECAAA1
-	for <linux-perf-users@archiver.kernel.org>; Tue,  6 Sep 2022 18:16:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 31FF7ECAAD5
+	for <linux-perf-users@archiver.kernel.org>; Tue,  6 Sep 2022 18:31:19 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229461AbiIFSQB (ORCPT
+        id S229557AbiIFSbS (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Tue, 6 Sep 2022 14:16:01 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57758 "EHLO
+        Tue, 6 Sep 2022 14:31:18 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56352 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229436AbiIFSQA (ORCPT
+        with ESMTP id S229526AbiIFSbR (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Tue, 6 Sep 2022 14:16:00 -0400
-Received: from mail-ot1-f48.google.com (mail-ot1-f48.google.com [209.85.210.48])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1A3D6175B6;
-        Tue,  6 Sep 2022 11:15:59 -0700 (PDT)
-Received: by mail-ot1-f48.google.com with SMTP id l5-20020a05683004a500b0063707ff8244so8591875otd.12;
-        Tue, 06 Sep 2022 11:15:59 -0700 (PDT)
+        Tue, 6 Sep 2022 14:31:17 -0400
+Received: from mail-ot1-f43.google.com (mail-ot1-f43.google.com [209.85.210.43])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id AEBE232056;
+        Tue,  6 Sep 2022 11:31:16 -0700 (PDT)
+Received: by mail-ot1-f43.google.com with SMTP id l5-20020a05683004a500b0063707ff8244so8618724otd.12;
+        Tue, 06 Sep 2022 11:31:16 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
         h=cc:to:subject:message-id:date:from:in-reply-to:references
          :mime-version:x-gm-message-state:from:to:cc:subject:date;
-        bh=hBUXfmibKdlSbtIrqsYrNBA32p96PcJy+wSALtFh9OU=;
-        b=Z85negoeWIHJovp9PFLXTYVUweNb9ZWtfe+nROqa6aATaJGZzYyoxm9eSl0UfuGxPl
-         0JTGNGI+uw61ilhPlQ7YkEQ8FRlHkKkvqEisrgnI+uK5HJXn1Gq5exImDdyI+FvzmAbK
-         0hdqoGieJOsBKb/0+NqATV5bjvBEaRwYFyy26cMESCpkbtiO3E6R4qRGUl7BgzvDWu50
-         7ek+Mt7a8H3uk6hFqdRVqOtWNPnuDYUB3Yh8WB0+f6mrBQfmAVMqH7u7Tra8e8/f5yQ6
-         wQPUVugrvoRYXYrDuYyFYxnhRY0+zXIOAGSuC+Mf3GJ6sggFx+kHDahYclFqwjMIFASL
-         yC1w==
-X-Gm-Message-State: ACgBeo23f/K6fkRaI2lD0vQPGY2FjtXpWq1HEPDpjQjlqqCsDZ6lOHtj
-        LnYfK/gKm5Pe6agvvPlafjYeH+Z9XEZSn0w4DOU=
-X-Google-Smtp-Source: AA6agR6MdKws1lzVrLIGA+Aqnumnskn2/NeYygL21WuU70r6lfB7AcklD4hFIuqPBtNw86wuQfsjvUIKmtvxiTqi7ZA=
+        bh=KTMC4sgGs4iMTIRHGtHX14ygc35A9XeknD+0EJXhRfs=;
+        b=tuB3YEpGuU0bj3K2vM2zYY5zKFkkLbBkhtKfkzXAO8IgevDSoE5OF9CdNAB0Szt71A
+         Mv68yu3e/cBo2gkqWQiLg+M2ApFFRvKDjImDOh+zOwqyAvFyJmJ/aXWi5Vv89E/gsS6P
+         x/t08t1kOP26ooHXQfGrpY2U2F0yXz8Poyo36ySe1x0PTip9nHKasEmCwFQ8kgykc8Mr
+         dSaqlBOr42/cJW+xxlxoO2YLbhxf5L/4n4voJ0q0JOh6uubhWh7dU/dLdRYtX0jckHLA
+         wZqSNr20zPGN5X2Fkn+Mu+IiMke1UpWQUG3rFWGSm0ry/ppsbNRNHvGccnffJGPFi8B/
+         PGjQ==
+X-Gm-Message-State: ACgBeo12Qg6KBeIiXGSTskVNAkSjDyGOhYgrXM6p/D/fEijPXwy/kc/o
+        ng0kSFNOjux/y4Mxm+FiItuLp7l9DVHkyGbEYR4ZUdO2
+X-Google-Smtp-Source: AA6agR5wIKuqeybuaOjh8IZNxiROzu/OFeaNSVGnVmevPf9aFwUSW1gEMxZT2SMQ83z9S3QPMVk6pFV0NPNc9oeKCmw=
 X-Received: by 2002:a9d:6f18:0:b0:638:b4aa:a546 with SMTP id
- n24-20020a9d6f18000000b00638b4aaa546mr21367162otq.124.1662488158396; Tue, 06
- Sep 2022 11:15:58 -0700 (PDT)
+ n24-20020a9d6f18000000b00638b4aaa546mr21388276otq.124.1662489075965; Tue, 06
+ Sep 2022 11:31:15 -0700 (PDT)
 MIME-Version: 1.0
-References: <20220901184709.2179309-1-robh@kernel.org> <CAM9d7chY6T-EAN3BT487MUK0LbfGp27X+2Dd_+S0azgh2GQn9w@mail.gmail.com>
- <CAL_JsqLmszK=NzD_2nYnZG1dD=tU1fKGUtYL-dUG2a497LkEcg@mail.gmail.com>
-In-Reply-To: <CAL_JsqLmszK=NzD_2nYnZG1dD=tU1fKGUtYL-dUG2a497LkEcg@mail.gmail.com>
+References: <20220903000210.1112014-1-namhyung@kernel.org> <CANpmjNMPh5QjdxXtrCc5FApjgzV=81CNNiwbeg_rE3NxN_WCZw@mail.gmail.com>
+ <YxdA1CVzy9hzE3i1@kernel.org>
+In-Reply-To: <YxdA1CVzy9hzE3i1@kernel.org>
 From:   Namhyung Kim <namhyung@kernel.org>
-Date:   Tue, 6 Sep 2022 11:15:47 -0700
-Message-ID: <CAM9d7ci0Dn3hAX9dp1UMGK7SN-w1BoRqQz6hk8Oykfaa=LnWwg@mail.gmail.com>
-Subject: Re: [PATCH] perf: Ignore format attributes with an unknown
- perf_event_attr field
-To:     Rob Herring <robh@kernel.org>
-Cc:     Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Jiri Olsa <jolsa@kernel.org>,
-        James Clark <james.clark@arm.com>,
-        linux-perf-users <linux-perf-users@vger.kernel.org>,
-        linux-kernel <linux-kernel@vger.kernel.org>
+Date:   Tue, 6 Sep 2022 11:31:04 -0700
+Message-ID: <CAM9d7ci2ZujdY75DUtZA+f=fru7yh8VJrj8-r2RgZetu57u61A@mail.gmail.com>
+Subject: Re: [PATCH] perf test: Skip sigtrap test on old kernels
+To:     Arnaldo Carvalho de Melo <acme@kernel.org>
+Cc:     Marco Elver <elver@google.com>, Jiri Olsa <jolsa@kernel.org>,
+        Ingo Molnar <mingo@kernel.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Ian Rogers <irogers@google.com>,
+        linux-perf-users <linux-perf-users@vger.kernel.org>
 Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-On Fri, Sep 2, 2022 at 8:25 AM Rob Herring <robh@kernel.org> wrote:
+On Tue, Sep 6, 2022 at 5:45 AM Arnaldo Carvalho de Melo <acme@kernel.org> wrote:
 >
-> On Fri, Sep 2, 2022 at 1:53 AM Namhyung Kim <namhyung@kernel.org> wrote:
-> >
-> > Hello,
-> >
-> > On Thu, Sep 1, 2022 at 11:55 AM Rob Herring <robh@kernel.org> wrote:
+> Em Sat, Sep 03, 2022 at 08:52:01AM +0200, Marco Elver escreveu:
+> > On Sat, 3 Sept 2022 at 02:02, Namhyung Kim <namhyung@kernel.org> wrote:
 > > >
-> > > If the kernel exposes a new perf_event_attr field in a format attr, perf
-> > > will return an error stating the specified PMU can't be found. For
-> > > example, a format attr with 'config3:0-63' causes an error if config3 is
-> > > unknown to perf. This causes a compatibility issue between a newer
-> > > kernel and an older perf tool.
+> > > If it runs on an old kernel, perf_event_open would fail because of the
+> > > new fields sigtrap and sig_data.  Just skip the test if it failed.
 > > >
-> > > The addition here makes any attr string up to the ':' ignored, but
-> > > still checks the 'bits' portion.
-> > >
-> > > Signed-off-by: Rob Herring <robh@kernel.org>
+> > > Cc: Marco Elver <elver@google.com>
+> > > Signed-off-by: Namhyung Kim <namhyung@kernel.org>
 > > > ---
-> > > This is the YACC mud I threw and seems to stick. Maybe there's a better
-> > > way to handle this. It doesn't seem like there's a way to do wildcards
-> > > (i.e. config.*) in YACC.
+> > >  tools/perf/tests/sigtrap.c | 1 +
+> > >  1 file changed, 1 insertion(+)
 > > >
-> > > This is needed for this series[1]. Unfortunately the best we do to avoid
-> > > the issue is applying this to stable. I think there's some time before
-> > > v8.7 h/w is deployed, too.
+> > > diff --git a/tools/perf/tests/sigtrap.c b/tools/perf/tests/sigtrap.c
+> > > index e32ece90e164..7057566e6ae4 100644
+> > > --- a/tools/perf/tests/sigtrap.c
+> > > +++ b/tools/perf/tests/sigtrap.c
+> > > @@ -140,6 +140,7 @@ static int test__sigtrap(struct test_suite *test __maybe_unused, int subtest __m
+> > >         fd = sys_perf_event_open(&attr, 0, -1, -1, perf_event_open_cloexec_flag());
+> > >         if (fd < 0) {
+> > >                 pr_debug("FAILED sys_perf_event_open(): %s\n", str_error_r(errno, sbuf, sizeof(sbuf)));
+> > > +               ret = TEST_SKIP;
 > >
-> > Maybe you could change the format_term rule to take an identifier instead
-> > of PP_CONFIG* directly and pass it to perf_pmu__new_format().  Then
-> > it could check the string and create an appropriate PERF_PMU_FORMAT_VALUE_*
-> > or ignore it according to the PERF_ATTR_SIZE_VER*.
+> > Wouldn't we be interested if perf_event_open() fails because it could
+> > actually be a bug? By skipping we'll be more likely to miss the fact
+> > there's a real problem.
+> >
+> > That's my naive thinking at least - what do other perf tests usually
+> > do in this case?
 >
-> That only moves parsing of configN from YACC to strcmp in C. In doing
-> so, we'd be left with just the 'error' token case which seems a bit
-> odd (if there's another way to do it, I don't know. yacc is not my
-> thing). Is that really better?
+> Yeah, I was going to try and check if this is the only way that, with
+> the given arguments, perf_event_open would fail, but its better to at
+> least check errno against -EINVAL or something?
 
-I thought we could do more flexible handling and detailed error reporting
-in the C code.  But it could be done in the lex/yacc as well..
+EINVAL would be too generic and the kernel returns it in many places.
+I really wish we could have a better error reporting mechanism.
 
-I think the general idea is that we want to run a more recent version of
-perf tools than the kernel.  So if it detects the tool is older, it can show
-a warning message like:
-
-"config3 is not in the perf_event_attr.. skipping.
- Maybe you're running on a newer kernel. Please upgrade the perf tool."
-
-
-> Unless there is some way to retrieve
-> the PERF_ATTR_SIZE_VER* from the kernel at runtime?
-
-Even if it can retrieve the info at runtime, perf tool might not know
-how to use the new config term.
+Maybe we could retry perf_event_open with sigtrap and sig_data cleared.
+If it succeeded, then we can skip the test.  If it still failed, then report
+the error.  But it still couldn't find a bug in the sigtrap code.
+What do you think?
 
 Thanks,
 Namhyung
