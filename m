@@ -2,35 +2,35 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D11AFC38145
-	for <linux-perf-users@archiver.kernel.org>; Tue,  6 Sep 2022 10:46:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 87064ECAAD5
+	for <linux-perf-users@archiver.kernel.org>; Tue,  6 Sep 2022 10:47:20 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S239122AbiIFKqQ (ORCPT
+        id S231543AbiIFKqs (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Tue, 6 Sep 2022 06:46:16 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58068 "EHLO
+        Tue, 6 Sep 2022 06:46:48 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57532 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S239697AbiIFKpu (ORCPT
+        with ESMTP id S239811AbiIFKqY (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Tue, 6 Sep 2022 06:45:50 -0400
+        Tue, 6 Sep 2022 06:46:24 -0400
 Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTP id B67561EADC;
-        Tue,  6 Sep 2022 03:44:47 -0700 (PDT)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTP id 61B346F24A;
+        Tue,  6 Sep 2022 03:45:22 -0700 (PDT)
 Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 1FECD1756;
-        Tue,  6 Sep 2022 03:43:57 -0700 (PDT)
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 402C31A9A;
+        Tue,  6 Sep 2022 03:44:07 -0700 (PDT)
 Received: from e126387.arm.com (unknown [10.57.15.16])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id A03E73F534;
-        Tue,  6 Sep 2022 03:43:49 -0700 (PDT)
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id C03343F534;
+        Tue,  6 Sep 2022 03:43:59 -0700 (PDT)
 From:   carsten.haitzler@foss.arm.com
 To:     linux-kernel@vger.kernel.org
 Cc:     coresight@lists.linaro.org, suzuki.poulose@arm.com,
         mathieu.poirier@linaro.org, mike.leach@linaro.org,
         leo.yan@linaro.org, linux-perf-users@vger.kernel.org,
         acme@kernel.org
-Subject: [PATCH v8 01/13] perf test: Add CoreSight shell lib shared code for future tests
-Date:   Tue,  6 Sep 2022 11:30:32 +0100
-Message-Id: <20220906103044.761250-2-carsten.haitzler@foss.arm.com>
+Subject: [PATCH v8 08/13] perf test: Add thread loop test tool
+Date:   Tue,  6 Sep 2022 11:30:39 +0100
+Message-Id: <20220906103044.761250-9-carsten.haitzler@foss.arm.com>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20220906103044.761250-1-carsten.haitzler@foss.arm.com>
 References: <20220906103044.761250-1-carsten.haitzler@foss.arm.com>
@@ -42,153 +42,172 @@ X-Mailing-List: linux-perf-users@vger.kernel.org
 
 From: Carsten Haitzler <carsten.haitzler@arm.com>
 
-This adds a library of shell "code" to be shared and used by future
-tests that target quality testing for Arm CoreSight support in perf
-and the Linux kernel.
+Add test tool to be driven by further test scripts. This is a simple C
+based loop with threads test to drive from scripts that can output TIDs
+for tracking/checking.
 
 Signed-off-by: Carsten Haitzler <carsten.haitzler@arm.com>
 ---
- tools/perf/tests/shell/lib/coresight.sh | 132 ++++++++++++++++++++++++
- 1 file changed, 132 insertions(+)
- create mode 100644 tools/perf/tests/shell/lib/coresight.sh
+ tools/perf/tests/shell/coresight/Makefile     |  3 +-
+ .../shell/coresight/thread_loop/.gitignore    |  1 +
+ .../shell/coresight/thread_loop/Makefile      | 33 +++++++
+ .../shell/coresight/thread_loop/thread_loop.c | 86 +++++++++++++++++++
+ 4 files changed, 122 insertions(+), 1 deletion(-)
+ create mode 100644 tools/perf/tests/shell/coresight/thread_loop/.gitignore
+ create mode 100644 tools/perf/tests/shell/coresight/thread_loop/Makefile
+ create mode 100644 tools/perf/tests/shell/coresight/thread_loop/thread_loop.c
 
-diff --git a/tools/perf/tests/shell/lib/coresight.sh b/tools/perf/tests/shell/lib/coresight.sh
+diff --git a/tools/perf/tests/shell/coresight/Makefile b/tools/perf/tests/shell/coresight/Makefile
+index 561c807022ec..004974a71fb8 100644
+--- a/tools/perf/tests/shell/coresight/Makefile
++++ b/tools/perf/tests/shell/coresight/Makefile
+@@ -6,7 +6,8 @@ include ../../../../../tools/scripts/utilities.mak
+ 
+ SUBDIRS = \
+ 	asm_pure_loop \
+-	memcpy_thread
++	memcpy_thread \
++	thread_loop
+ 
+ all: $(SUBDIRS)
+ $(SUBDIRS):
+diff --git a/tools/perf/tests/shell/coresight/thread_loop/.gitignore b/tools/perf/tests/shell/coresight/thread_loop/.gitignore
 new file mode 100644
-index 000000000000..45a1477256b6
+index 000000000000..6d4c33eaa9e8
 --- /dev/null
-+++ b/tools/perf/tests/shell/lib/coresight.sh
-@@ -0,0 +1,132 @@
++++ b/tools/perf/tests/shell/coresight/thread_loop/.gitignore
+@@ -0,0 +1 @@
++thread_loop
+diff --git a/tools/perf/tests/shell/coresight/thread_loop/Makefile b/tools/perf/tests/shell/coresight/thread_loop/Makefile
+new file mode 100644
+index 000000000000..ea846c038e7a
+--- /dev/null
++++ b/tools/perf/tests/shell/coresight/thread_loop/Makefile
+@@ -0,0 +1,33 @@
 +# SPDX-License-Identifier: GPL-2.0
 +# Carsten Haitzler <carsten.haitzler@arm.com>, 2021
++include ../Makefile.miniconfig
 +
-+# This is sourced from a driver script so no need for #!/bin... etc. at the
-+# top - the assumption below is that it runs as part of sourcing after the
-+# test sets up some basic env vars to say what it is.
++# Binary to produce
++BIN=thread_loop
++# Any linking/libraries needed for the binary - empty if none needed
++LIB=-pthread
 +
-+# This currently works with ETMv4 / ETF not any other packet types at thi
-+# point. This will need changes if that changes.
++all: $(BIN)
 +
-+# perf record options for the perf tests to use
-+PERFRECMEM="-m ,16M"
-+PERFRECOPT="$PERFRECMEM -e cs_etm//u"
++$(BIN): $(BIN).c
++ifdef CORESIGHT
++ifeq ($(ARCH),arm64)
++# Build line
++	$(Q)$(CC) $(BIN).c -o $(BIN) $(LIB)
++endif
++endif
 +
-+TOOLS=$(dirname $0)
-+DIR="$TOOLS/$TEST"
-+BIN="$DIR/$TEST"
-+# If the test tool/binary does not exist and is executable then skip the test
-+if ! test -x "$BIN"; then exit 2; fi
-+DATD="."
-+# If the data dir env is set then make the data dir use that instead of ./
-+if test -n "$PERF_TEST_CORESIGHT_DATADIR"; then
-+	DATD="$PERF_TEST_CORESIGHT_DATADIR";
-+fi
-+# If the stat dir env is set then make the data dir use that instead of ./
-+STATD="."
-+if test -n "$PERF_TEST_CORESIGHT_STATDIR"; then
-+	STATD="$PERF_TEST_CORESIGHT_STATDIR";
-+fi
++install-tests: all
++ifdef CORESIGHT
++ifeq ($(ARCH),arm64)
++# Install the test tool in the right place
++	$(call QUIET_INSTALL, tests) \
++		$(INSTALL) -d -m 755 '$(DESTDIR_SQ)$(perfexec_instdir_SQ)/$(INSTDIR_SUB)/$(BIN)'; \
++		$(INSTALL) $(BIN) '$(DESTDIR_SQ)$(perfexec_instdir_SQ)/$(INSTDIR_SUB)/$(BIN)/$(BIN)'
++endif
++endif
 +
-+# Called if the test fails - error code 1
-+err() {
-+	echo "$1"
-+	exit 1
++clean:
++	$(Q)$(RM) -f $(BIN)
++
++.PHONY: all clean install-tests
+diff --git a/tools/perf/tests/shell/coresight/thread_loop/thread_loop.c b/tools/perf/tests/shell/coresight/thread_loop/thread_loop.c
+new file mode 100644
+index 000000000000..c0158fac7d0b
+--- /dev/null
++++ b/tools/perf/tests/shell/coresight/thread_loop/thread_loop.c
+@@ -0,0 +1,86 @@
++// SPDX-License-Identifier: GPL-2.0
++// Carsten Haitzler <carsten.haitzler@arm.com>, 2021
++
++// define this for gettid()
++#define _GNU_SOURCE
++
++#include <stdio.h>
++#include <stdlib.h>
++#include <unistd.h>
++#include <string.h>
++#include <pthread.h>
++#include <sys/syscall.h>
++#ifndef SYS_gettid
++// gettid is 178 on arm64
++# define SYS_gettid 178
++#endif
++#define gettid() syscall(SYS_gettid)
++
++struct args {
++	unsigned int loops;
++	pthread_t th;
++	void *ret;
++};
++
++static void *thrfn(void *arg)
++{
++	struct args *a = arg;
++	int i = 0, len = a->loops;
++
++	if (getenv("SHOW_TID")) {
++		unsigned long long tid = gettid();
++
++		printf("%llu\n", tid);
++	}
++	asm volatile(
++		"loop:\n"
++		"add %[i], %[i], #1\n"
++		"cmp %[i], %[len]\n"
++		"blt loop\n"
++		: /* out */
++		: /* in */ [i] "r" (i), [len] "r" (len)
++		: /* clobber */
++	);
++	return (void *)(long)i;
 +}
 +
-+# Check that some statistics from our perf
-+check_val_min() {
-+	STATF="$4"
-+	if test "$2" -lt "$3"; then
-+		echo ", FAILED" >> "$STATF"
-+		err "Sanity check number of $1 is too low ($2 < $3)"
-+	fi
++static pthread_t new_thr(void *(*fn) (void *arg), void *arg)
++{
++	pthread_t t;
++	pthread_attr_t attr;
++
++	pthread_attr_init(&attr);
++	pthread_create(&t, &attr, fn, arg);
++	return t;
 +}
 +
-+perf_dump_aux_verify() {
-+	# Some basic checking that the AUX chunk contains some sensible data
-+	# to see that we are recording something and at least a minimum
-+	# amount of it. We should almost always see Fn packets in just about
-+	# anything but certainly we will see some trace info and async
-+	# packets
-+	DUMP="$DATD/perf-tmp-aux-dump.txt"
-+	perf report --stdio --dump -i "$1" | \
-+		grep -o -e I_ATOM_F -e I_ASYNC -e I_TRACE_INFO > "$DUMP"
-+	# Simply count how many of these packets we find to see that we are
-+	# producing a reasonable amount of data - exact checks are not sane
-+	# as this is a lossy process where we may lose some blocks and the
-+	# compiler may produce different code depending on the compiler and
-+	# optimization options, so this is rough just to see if we're
-+	# either missing almost all the data or all of it
-+	ATOM_FX_NUM=`grep I_ATOM_F "$DUMP" | wc -l`
-+	ASYNC_NUM=`grep I_ASYNC "$DUMP" | wc -l`
-+	TRACE_INFO_NUM=`grep I_TRACE_INFO "$DUMP" | wc -l`
-+	rm -f "$DUMP"
++int main(int argc, char **argv)
++{
++	unsigned int i, len, thr;
++	pthread_t threads[256];
++	struct args args[256];
 +
-+	# Arguments provide minimums for a pass
-+	CHECK_FX_MIN="$2"
-+	CHECK_ASYNC_MIN="$3"
-+	CHECK_TRACE_INFO_MIN="$4"
++	if (argc < 3) {
++		printf("ERR: %s [numthreads] [numloops (millions)]\n", argv[0]);
++		exit(1);
++	}
 +
-+	# Write out statistics, so over time you can track results to see if
-+	# there is a pattern - for example we have less "noisy" results that
-+	# produce more consistent amounts of data each run, to see if over
-+	# time any techinques to  minimize data loss are having an effect or
-+	# not
-+	STATF="$STATD/stats-$TEST-$DATV.csv"
-+	if ! test -f "$STATF"; then
-+		echo "ATOM Fx Count, Minimum, ASYNC Count, Minimum, TRACE INFO Count, Minimum" > "$STATF"
-+	fi
-+	echo -n "$ATOM_FX_NUM, $CHECK_FX_MIN, $ASYNC_NUM, $CHECK_ASYNC_MIN, $TRACE_INFO_NUM, $CHECK_TRACE_INFO_MIN" >> "$STATF"
-+
-+	# Actually check to see if we passed or failed.
-+	check_val_min "ATOM_FX" "$ATOM_FX_NUM" "$CHECK_FX_MIN" "$STATF"
-+	check_val_min "ASYNC" "$ASYNC_NUM" "$CHECK_ASYNC_MIN" "$STATF"
-+	check_val_min "TRACE_INFO" "$TRACE_INFO_NUM" "$CHECK_TRACE_INFO_MIN" "$STATF"
-+	echo ", Ok" >> "$STATF"
-+}
-+
-+perf_dump_aux_tid_verify() {
-+	# Specifically crafted test will produce a list of Tread ID's to
-+	# stdout that need to be checked to  see that they have had trace
-+	# info collected in AUX blocks in the perf data. This will go
-+	# through all the TID's that are listed as CID=0xabcdef and see
-+	# that all the Thread IDs the test tool reports are  in the perf
-+	# data AUX chunks
-+
-+	# The TID test tools will print a TID per stdout line that are being
-+	# tested
-+	TIDS=`cat "$2"`
-+	# Scan the perf report to find the TIDs that are actually CID in hex
-+	# and build a list of the ones found
-+	FOUND_TIDS=`perf report --stdio --dump -i "$1" | \
-+			grep -o "CID=0x[0-9a-z]\+" | sed 's/CID=//g' | \
-+			uniq | sort | uniq`
-+	# No CID=xxx found - maybe your kernel is reporting these as
-+	# VMID=xxx so look there
-+	if test -z "$FOUND_TIDS"; then
-+		FOUND_TIDS=`perf report --stdio --dump -i "$1" | \
-+				grep -o "VMID=0x[0-9a-z]\+" | sed 's/VMID=//g' | \
-+				uniq | sort | uniq`
-+	fi
-+
-+	# Iterate over the list of TIDs that the test says it has and find
-+	# them in the TIDs found in the perf report
-+	MISSING=""
-+	for TID2 in $TIDS; do
-+		FOUND=""
-+		for TIDHEX in $FOUND_TIDS; do
-+			TID=`printf "%i" $TIDHEX`
-+			if test "$TID" -eq "$TID2"; then
-+				FOUND="y"
-+				break
-+			fi
-+		done
-+		if test -z "$FOUND"; then
-+			MISSING="$MISSING $TID"
-+		fi
-+	done
-+	if test -n "$MISSING"; then
-+		err "Thread IDs $MISSING not found in perf AUX data"
-+	fi
++	thr = atoi(argv[1]);
++	if ((thr < 1) || (thr > 256)) {
++		printf("ERR: threads 1-256\n");
++		exit(1);
++	}
++	len = atoi(argv[2]);
++	if ((len < 1) || (len > 4000)) {
++		printf("ERR: max loops 4000 (millions)\n");
++		exit(1);
++	}
++	len *= 1000000;
++	for (i = 0; i < thr; i++) {
++		args[i].loops = len;
++		args[i].th = new_thr(thrfn, &(args[i]));
++	}
++	for (i = 0; i < thr; i++)
++		pthread_join(args[i].th, &(args[i].ret));
++	return 0;
 +}
 -- 
 2.32.0
