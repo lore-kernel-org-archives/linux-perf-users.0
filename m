@@ -2,177 +2,73 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4C83EECAAD5
-	for <linux-perf-users@archiver.kernel.org>; Tue,  6 Sep 2022 12:38:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4F4CFECAAA1
+	for <linux-perf-users@archiver.kernel.org>; Tue,  6 Sep 2022 12:40:34 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S237610AbiIFMiU (ORCPT
+        id S231700AbiIFMkd (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Tue, 6 Sep 2022 08:38:20 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48712 "EHLO
+        Tue, 6 Sep 2022 08:40:33 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53468 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S239822AbiIFMiT (ORCPT
+        with ESMTP id S232538AbiIFMkc (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Tue, 6 Sep 2022 08:38:19 -0400
-Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 98D1B2983F;
-        Tue,  6 Sep 2022 05:38:18 -0700 (PDT)
+        Tue, 6 Sep 2022 08:40:32 -0400
+Received: from ams.source.kernel.org (ams.source.kernel.org [IPv6:2604:1380:4601:e00::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6F911205FF;
+        Tue,  6 Sep 2022 05:40:31 -0700 (PDT)
 Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id 373E46150F;
-        Tue,  6 Sep 2022 12:38:18 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 6EEB3C433D6;
-        Tue,  6 Sep 2022 12:38:17 +0000 (UTC)
+        by ams.source.kernel.org (Postfix) with ESMTPS id 32989B818B2;
+        Tue,  6 Sep 2022 12:40:30 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id A67C7C433D6;
+        Tue,  6 Sep 2022 12:40:28 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1662467897;
-        bh=0vHsV5HC+l1IsaFdtMuDEtBLZW+5drwFHn/b6WUSBFg=;
+        s=k20201202; t=1662468028;
+        bh=64MnIBlf3nXfbgX7wKE4SP5skV8w3Oj9k/TpTG/Suso=;
         h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=C7EVwfeWliv+TmYW0Q2xyZsPL+0vPbALYlgyeneap+E1265wKlj3qm9lxRKCgksIE
-         1r+SJis0Yaq3UNDvAyABlbqROnon0/luM+VxTwVXiBZJ04A1dPyccObpf0BMRwCOrS
-         e9q3+TdZuGx4P6g9TLyxR8bXruUhj33HDvjfxPWVAeO2htTENhaqGzUEDOLHWHNMyU
-         wJVOoWgM1qUCPnv0924wt3HFfxY9C0ZfSpxq+Si/bQEX2Mmp1mogc+KhSifDBvvCpA
-         fjVTdDz+OWfnbzNlQ1ymCUBUYGO+5porc5cUxe3fiGCX8KHnHF4auPzSbzIP9zsW4K
-         xjnPXBQpnUGZw==
+        b=bty7AqftWEGxpLqI8jZn8i6vKSSczbuL0N8RlWUOTMiY1mFcTfLT9cv9mn1hKzhyH
+         Q4piwCfxR4u66lfwxDZZV3kC5qinLKbZtrtKL9NJkoShAFM+D3Mh4pbH0Hxr2eoXT5
+         Cx6D5cpknoSGp2uXjfsiQiu4Z6/VuY+yTXNIUTdIF0c1mBbHzbadNZ2zjVcDiOY08k
+         YXTaI7U+BIxkLcdBmT3BknTzqkDxO1sQ7g/quOu9bPABtUq8igaL6YlzrIsf7vzpCQ
+         yYbgUg0zXIJG6SRqQ1X15/5nhaP4idsH5a6BELZbZJ71mrBC2bNyavLYYCTPehCp4N
+         eDF/OJOuecqnQ==
 Received: by quaco.ghostprotocols.net (Postfix, from userid 1000)
-        id 322BD404A1; Tue,  6 Sep 2022 09:38:15 -0300 (-03)
-Date:   Tue, 6 Sep 2022 09:38:15 -0300
+        id 771A2404A1; Tue,  6 Sep 2022 09:40:26 -0300 (-03)
+Date:   Tue, 6 Sep 2022 09:40:26 -0300
 From:   Arnaldo Carvalho de Melo <acme@kernel.org>
-To:     Zixuan Tan <tanzixuan.me@gmail.com>
-Cc:     Arnaldo Carvalho de Melo <arnaldo.melo@gmail.com>,
-        Namhyung Kim <namhyung@kernel.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Jiri Olsa <jolsa@kernel.org>,
-        linux-perf-users <linux-perf-users@vger.kernel.org>,
-        linux-kernel <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH] perf/genelf: Switch deprecated openssl MD5_* functions
- to new EVP API
-Message-ID: <Yxc/N52oVNz8oE+r@kernel.org>
-References: <CABwm_eTnARC1GwMD-JF176k8WXU1Z0+H190mvXn61yr369qt6g@mail.gmail.com>
- <YwfYyLE3ajSFVHGQ@kernel.org>
- <CABwm_eSvcnygceTU0sNXLkBFaNfEfrThFVmwH=TS4hN=HVGrGg@mail.gmail.com>
- <CAM9d7cjsbhHnaAiHSBb6qAfH0bNgdKrBHdg16esRCt+4DPmvtQ@mail.gmail.com>
- <CABwm_eT=BHQB=ELEWTZtXG61WyYVqQfp+gy85aD3xMRycKtLwA@mail.gmail.com>
- <Yxc+H/JHcKmvRWLr@kernel.org>
+To:     Leo Yan <leo.yan@linaro.org>
+Cc:     Shang XiaoJing <shangxiaojing@huawei.com>, peterz@infradead.org,
+        mingo@redhat.com, mark.rutland@arm.com,
+        alexander.shishkin@linux.intel.com, jolsa@kernel.org,
+        namhyung@kernel.org, linux-perf-users@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v2 3/3] perf c2c: Prevent potential memory leak in
+ c2c_he_zalloc
+Message-ID: <Yxc/ug4Xtk0BjXMX@kernel.org>
+References: <20220906032906.21395-1-shangxiaojing@huawei.com>
+ <20220906032906.21395-4-shangxiaojing@huawei.com>
+ <YxbNLphbuGjCezww@leoy-huanghe.lan>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <Yxc+H/JHcKmvRWLr@kernel.org>
+In-Reply-To: <YxbNLphbuGjCezww@leoy-huanghe.lan>
 X-Url:  http://acmel.wordpress.com
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-Em Tue, Sep 06, 2022 at 09:33:35AM -0300, Arnaldo Carvalho de Melo escreveu:
-> Em Tue, Sep 06, 2022 at 05:40:24PM +0800, Zixuan Tan escreveu:
-> > Hi Arnaldo, are there any updates?
-> 
-> Trying to apply it manually:
-
-Done. Thanks.
-
-- Arnaldo
- 
-> ⬢[acme@toolbox perf-urgent]$ am
-> Applying: perf/genelf: Switch deprecated openssl MD5_* functions to new EVP API
-> error: corrupt patch at line 31
-> Patch failed at 0001 perf/genelf: Switch deprecated openssl MD5_* functions to new EVP API
-> hint: Use 'git am --show-current-patch=diff' to see the failed patch
-> When you have resolved this problem, run "git am --continue".
-> If you prefer to skip this patch, run "git am --skip" instead.
-> To restore the original branch and stop patching, run "git am --abort".
-> ⬢[acme@toolbox perf-urgent]$ git am --abort
-> ⬢[acme@toolbox perf-urgent]$
-> ⬢[acme@toolbox perf-urgent]$ patch -p1 < ~/wb/1.patch
-> patching file tools/perf/util/genelf.c
-> patch: **** malformed patch at line 141: const void *code, size_t csize)
-> 
-> ⬢[acme@toolbox perf-urgent]$
-> 
-> ⬢[acme@toolbox perf-urgent]$ tail -30  ~/wb/1.patch
->  #endif
-> @@ -142,15 +139,20 @@ gen_build_id(struct buildid_note *note,
->  static void
->  gen_build_id(struct buildid_note *note, unsigned long load_addr,
-> const void *code, size_t csize)
->  {
-> -       MD5_CTX context;
-> +       EVP_MD_CTX *mdctx;
-> 
->         if (sizeof(note->build_id) < 16)
->                 errx(1, "build_id too small for MD5");
-> 
-> -       MD5_Init(&context);
-> -       MD5_Update(&context, &load_addr, sizeof(load_addr));
-> -       MD5_Update(&context, code, csize);
-> -       MD5_Final((unsigned char *)note->build_id, &context);
-> +       mdctx = EVP_MD_CTX_new();
-> +       if (!mdctx)
-> +               errx(2, "failed to create EVP_MD_CTX");
-> +
-> +       EVP_DigestInit_ex(mdctx, EVP_md5(), NULL);
-> +       EVP_DigestUpdate(mdctx, &load_addr, sizeof(load_addr));
-> +       EVP_DigestUpdate(mdctx, code, csize);
-> +       EVP_DigestFinal_ex(mdctx, (unsigned char *)note->build_id, NULL);
-> +       EVP_MD_CTX_free(mdctx);
->  }
->  #endif
-> 
-> --
-> 2.34.1
-> ⬢[acme@toolbox perf-urgent]$
->  
-> > Thanks,
-> > - Zixuan
+Em Tue, Sep 06, 2022 at 12:31:42PM +0800, Leo Yan escreveu:
+> On Tue, Sep 06, 2022 at 11:29:06AM +0800, Shang XiaoJing wrote:
+> > Free allocated resources when zalloc is failed for members in c2c_he, to
+> > prevent potential memory leak in c2c_he_zalloc.
 > > 
-> > On Sat, Aug 27, 2022 at 2:32 AM Namhyung Kim <namhyung@kernel.org> wrote:
-> > >
-> > > Hello,
-> > >
-> > > On Fri, Aug 26, 2022 at 10:22 AM Zixuan Tan <tanzixuan.me@gmail.com> wrote:
-> > > >
-> > > > On Fri, Aug 26, 2022 at 4:17 AM Arnaldo Carvalho de Melo
-> > > > <arnaldo.melo@gmail.com> wrote:
-> > > > >
-> > > > > Em Fri, Aug 26, 2022 at 01:00:58AM +0800, Zixuan Tan escreveu:
-> > > > > > Switch to the flavored EVP API like in test-libcrypto.c, and remove the
-> > > > > > bad gcc #pragma.
-> > > > > >
-> > > > > > Inspired-By: 5b245985a6de ("tools build: Switch to new openssl API for
-> > > > > > test-libcrypto")
-> > > > >
-> > > > > How did you test the end result? Can you please describe step by step?
-> > > > >
-> > > > > Also please consider adding a 'perf test' entry to make sure this
-> > > > > doesn't regress.
-> > > >
-> > > > Sorry but I don't get what you mean, what results do I need to test?
-> > > >
-> > > > These EVP_* APIs are just replacements for the deprecated MD5_* APIs in
-> > > > openssl v3 [1][2]. With the same input, they produce the same MD5 digest.
-> > > >
-> > > > And this patch just does the migration work for the upgrade and does not
-> > > > change the logic of the code. so...what should I test?
-> > >
-> > > Yeah, I understand that this merely changes the MD5 APIs.
-> > > While it's good to have a test case for the genelf code, I don't think
-> > > it belongs to this patch.  So,
-> > >
-> > > Acked-by: Namhyung Kim <namhyung@kernel.org>
-> > >
-> > >
-> > > >
-> > > > Links:
-> > > > [1] https://www.openssl.org/docs/man3.0/man3/MD5.html
-> > > > [2] https://stackoverflow.com/questions/69806220/advice-needed-for-migration-of-low-level-openssl-api-to-high-level-openssl-apis
+> > Signed-off-by: Shang XiaoJing <shangxiaojing@huawei.com>
+> > Acked-by: Jiri Olsa <jolsa@kernel.org>
 > 
-> -- 
-> 
-> - Arnaldo
+> Reviewed-by: Leo Yan <leo.yan@linaro.org>
 
--- 
+Thanks, applied to perf/urgent.
 
 - Arnaldo
+
