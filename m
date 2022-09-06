@@ -2,89 +2,126 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CA442ECAAA1
-	for <linux-perf-users@archiver.kernel.org>; Tue,  6 Sep 2022 21:17:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D6CC2C38145
+	for <linux-perf-users@archiver.kernel.org>; Tue,  6 Sep 2022 22:52:18 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230191AbiIFVRT (ORCPT
+        id S229491AbiIFWwR (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Tue, 6 Sep 2022 17:17:19 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55448 "EHLO
+        Tue, 6 Sep 2022 18:52:17 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37592 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230005AbiIFVRT (ORCPT
+        with ESMTP id S229472AbiIFWwR (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Tue, 6 Sep 2022 17:17:19 -0400
-Received: from mail-qk1-x732.google.com (mail-qk1-x732.google.com [IPv6:2607:f8b0:4864:20::732])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C1623B8F24
-        for <linux-perf-users@vger.kernel.org>; Tue,  6 Sep 2022 14:17:17 -0700 (PDT)
-Received: by mail-qk1-x732.google.com with SMTP id g16so9155504qkl.11
-        for <linux-perf-users@vger.kernel.org>; Tue, 06 Sep 2022 14:17:17 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=maine.edu; s=google;
-        h=mime-version:references:message-id:in-reply-to:subject:cc:to:date
-         :from:from:to:cc:subject:date;
-        bh=iphfHBoIMOL1lNTHRr252fzN2iLvPwqaZYRfa0FBIl0=;
-        b=chgn4pbDbcOp3ZbEZ0S3NHjfUXE16m4I6KQGo5MTe7zZewnaoKHfkshoAk8SQR2Wj/
-         Lf3bH9ZA+yPsCOdwrmnauTe8etrWFMzUhP/ePs9pWiM0lnoGIYNe76MgkiXNzpzgOuLQ
-         p74cCqKyLqxws1X/4yHYvVnREU6i1eAM3FLHA=
+        Tue, 6 Sep 2022 18:52:17 -0400
+Received: from mail-ot1-f41.google.com (mail-ot1-f41.google.com [209.85.210.41])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 39F1385FB7;
+        Tue,  6 Sep 2022 15:52:16 -0700 (PDT)
+Received: by mail-ot1-f41.google.com with SMTP id v2-20020a056830090200b006397457afecso9045411ott.13;
+        Tue, 06 Sep 2022 15:52:16 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=mime-version:references:message-id:in-reply-to:subject:cc:to:date
-         :from:x-gm-message-state:from:to:cc:subject:date;
-        bh=iphfHBoIMOL1lNTHRr252fzN2iLvPwqaZYRfa0FBIl0=;
-        b=is8OJ7suHtTsc/EsIGLHZGoQ8q4se4dGeN4p9QzMz3XlkgbfykzkuOC6mxuB8IYlIH
-         /zfJKNYDOTx8ugxXFn3lxCANhlS3smvLnFVERJiZZXA42Lwadiv9fR+fb/hw4qVpku8t
-         2DC6OKqvq3wDQCcJh6q6iDc61Ata/RbuS7eeeKamYaG5kCridF8YbXdwou19uSFxYzQV
-         fJ/OdCfs/WiGEksN98PxHgymQt7k1wh0sCdx0X3rmapYYc6eB6N60bU2ojQsE2W3SCdO
-         QYvbskUdXpOL9cyCxpK500H0NMXljaOBZxY+kMIN24NHfQimxjPz7tAXQ9SPPNhPQuqK
-         /+mg==
-X-Gm-Message-State: ACgBeo1K3oHMOAlzhbXymwSPx+4c1qc+XCZ9TMeYWjUjrONSW/hA4OR0
-        s+M4sSx7sb0kk/tbkeIVHrRQs9qUD/RGPw==
-X-Google-Smtp-Source: AA6agR6naAyf9NJUVt1eu65uLtRd9YOTQnBFylX4LLJ88vMlQ4yZsGYOqgew0EWn3OLhCnCBmlX5DQ==
-X-Received: by 2002:a05:620a:4e1:b0:6bb:5c0e:ab58 with SMTP id b1-20020a05620a04e100b006bb5c0eab58mr504151qkh.730.1662499036977;
-        Tue, 06 Sep 2022 14:17:16 -0700 (PDT)
-Received: from macbook-air.local (weaver.eece.maine.edu. [130.111.218.23])
-        by smtp.gmail.com with ESMTPSA id y22-20020a37f616000000b006b893d135basm11381881qkj.86.2022.09.06.14.17.15
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 06 Sep 2022 14:17:16 -0700 (PDT)
-From:   Vince Weaver <vincent.weaver@maine.edu>
-X-Google-Original-From: Vince Weaver <vince@maine.edu>
-Date:   Tue, 6 Sep 2022 17:17:14 -0400 (EDT)
-To:     Ian Rogers <irogers@google.com>
-cc:     Adrian Hunter <adrian.hunter@intel.com>,
-        Jiri Olsa <olsajiri@gmail.com>,
-        Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Jiri Olsa <jolsa@redhat.com>,
-        Namhyung Kim <namhyung@kernel.org>,
-        linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org,
-        Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@redhat.com>
-Subject: Re: [PATCH V2] libperf evlist: Fix per-thread mmaps for multi-threaded
- targets
-In-Reply-To: <CAP-5=fW3MLdzA01gWRx7yH-b=J4oqUTj9KMtrB0ZDpb0wucZ4A@mail.gmail.com>
-Message-ID: <69bf3c5b-e3e8-9099-bd7b-b05beea7bd1f@maine.edu>
-References: <20220905114209.8389-1-adrian.hunter@intel.com> <YxdEQkmkZjBC6wGb@krava> <60b5c9bf-4ec9-957e-17dd-aa0a50411ff9@intel.com> <CAP-5=fW3MLdzA01gWRx7yH-b=J4oqUTj9KMtrB0ZDpb0wucZ4A@mail.gmail.com>
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:x-gm-message-state:from:to:cc:subject:date;
+        bh=m9lRH378v02nM3+uAQbjodYmGXDtyYl3efgPvWYoaJw=;
+        b=14imkXoi7XDyFpktufeVwBmKfFrNjUutP8v1ss7qquaM7rHvlz0XztYtbXd2ECj5Ui
+         pAT1teSMzauLCb/cZ9RUKULDT/Q9MNCFHX6/V9nkk5qQiruf9m7xAN2gjBLo5v3oL3A5
+         hKoaNOp3cpmLL54eVAwUKuD09JCwHlJPbuWXabjOmdSLbEuKlrrxeIsvRGOqcPRGZ0rL
+         ub+fERHLwP/wbaj370qqv4WNZSLUuqmqw+LSfEQpeXlepwZHumWATuhmrvDitn7qrU/M
+         0I8usP3CirfVML0iG+2mCEr4a23Mf88ZAIYIvLnfzJJDg7YrAkedynb9FlZHjCDrP0q5
+         9ETg==
+X-Gm-Message-State: ACgBeo2mJqIg3J+QfyCVJM/suR0jeURGPuyoC7FCsPwtK7hPu27eTFOY
+        Qw0AVhUQwgZlOd/C5ErbRStfo9tP8ou7zA6pRaE=
+X-Google-Smtp-Source: AA6agR7oKSSizgcg1FnRj1qVpnPwVmnQkqBreO7IGDIbBbkLWNlhj4aN8o7718CX5YjQm6uzJAVGEj8ataDGJSbnyiE=
+X-Received: by 2002:a9d:6a59:0:b0:638:92fd:d5b4 with SMTP id
+ h25-20020a9d6a59000000b0063892fdd5b4mr311940otn.247.1662504735143; Tue, 06
+ Sep 2022 15:52:15 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+References: <20220903000210.1112014-1-namhyung@kernel.org> <CANpmjNMPh5QjdxXtrCc5FApjgzV=81CNNiwbeg_rE3NxN_WCZw@mail.gmail.com>
+ <YxdA1CVzy9hzE3i1@kernel.org> <CAM9d7ci2ZujdY75DUtZA+f=fru7yh8VJrj8-r2RgZetu57u61A@mail.gmail.com>
+ <CANpmjNMHX2S-29Tyw+zKyaWT7saAiEegxbJapQFs7duJTTncdw@mail.gmail.com> <F172EC4B-1CFC-46A5-9DC3-146EDF8F5BDF@gmail.com>
+In-Reply-To: <F172EC4B-1CFC-46A5-9DC3-146EDF8F5BDF@gmail.com>
+From:   Namhyung Kim <namhyung@kernel.org>
+Date:   Tue, 6 Sep 2022 15:52:04 -0700
+Message-ID: <CAM9d7chkXTtuzc+5eHq7vvTcw05RS6MqYK-WTVrfZxPaC_ppjQ@mail.gmail.com>
+Subject: Re: [PATCH] perf test: Skip sigtrap test on old kernels
+To:     Arnaldo Carvalho de Melo <arnaldo.melo@gmail.com>
+Cc:     Marco Elver <elver@google.com>,
+        Arnaldo Carvalho de Melo <acme@kernel.org>,
+        Jiri Olsa <jolsa@kernel.org>, Ingo Molnar <mingo@kernel.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Ian Rogers <irogers@google.com>,
+        linux-perf-users <linux-perf-users@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-On Tue, 6 Sep 2022, Ian Rogers wrote:
+On Tue, Sep 6, 2022 at 1:56 PM Arnaldo Carvalho de Melo
+<arnaldo.melo@gmail.com> wrote:
+>
+>
+>
+> On September 6, 2022 5:50:05 PM GMT-03:00, Marco Elver <elver@google.com> wrote:
+> >On Tue, 6 Sept 2022 at 20:31, Namhyung Kim <namhyung@kernel.org> wrote:
+> >>
+> >> On Tue, Sep 6, 2022 at 5:45 AM Arnaldo Carvalho de Melo <acme@kernel.org> wrote:
+> >> >
+> >> > Em Sat, Sep 03, 2022 at 08:52:01AM +0200, Marco Elver escreveu:
+> >> > > On Sat, 3 Sept 2022 at 02:02, Namhyung Kim <namhyung@kernel.org> wrote:
+> >> > > >
+> >> > > > If it runs on an old kernel, perf_event_open would fail because of the
+> >> > > > new fields sigtrap and sig_data.  Just skip the test if it failed.
+> >> > > >
+> >> > > > Cc: Marco Elver <elver@google.com>
+> >> > > > Signed-off-by: Namhyung Kim <namhyung@kernel.org>
+> >> > > > ---
+> >> > > >  tools/perf/tests/sigtrap.c | 1 +
+> >> > > >  1 file changed, 1 insertion(+)
+> >> > > >
+> >> > > > diff --git a/tools/perf/tests/sigtrap.c b/tools/perf/tests/sigtrap.c
+> >> > > > index e32ece90e164..7057566e6ae4 100644
+> >> > > > --- a/tools/perf/tests/sigtrap.c
+> >> > > > +++ b/tools/perf/tests/sigtrap.c
+> >> > > > @@ -140,6 +140,7 @@ static int test__sigtrap(struct test_suite *test __maybe_unused, int subtest __m
+> >> > > >         fd = sys_perf_event_open(&attr, 0, -1, -1, perf_event_open_cloexec_flag());
+> >> > > >         if (fd < 0) {
+> >> > > >                 pr_debug("FAILED sys_perf_event_open(): %s\n", str_error_r(errno, sbuf, sizeof(sbuf)));
+> >> > > > +               ret = TEST_SKIP;
+> >> > >
+> >> > > Wouldn't we be interested if perf_event_open() fails because it could
+> >> > > actually be a bug? By skipping we'll be more likely to miss the fact
+> >> > > there's a real problem.
+> >> > >
+> >> > > That's my naive thinking at least - what do other perf tests usually
+> >> > > do in this case?
+> >> >
+> >> > Yeah, I was going to try and check if this is the only way that, with
+> >> > the given arguments, perf_event_open would fail, but its better to at
+> >> > least check errno against -EINVAL or something?
+> >>
+> >> EINVAL would be too generic and the kernel returns it in many places.
+> >> I really wish we could have a better error reporting mechanism.
+> >>
+> >> Maybe we could retry perf_event_open with sigtrap and sig_data cleared.
+> >> If it succeeded, then we can skip the test.  If it still failed, then report
+> >> the error.  But it still couldn't find a bug in the sigtrap code.
+> >> What do you think?
+> >
+> >Yes, that's what I meant, that it could point out an issue with
+> >sigtrap perf_event_open().
+> >
+> >If there's no clear way to determine if it's just not supported or a
+> >bug, it'd be better to leave it as-is.
+>
+> perf could go fancy and try to add a probe using a source file+line where older kernels would fail 8-)
+>
+> Anyway, perf already does all sorts of kernel capability checks, perhaps this is one of can for sure detect it's something available :-/
+>
+> One new way could be to look at BTF?
 
-> > >>                              perf_evlist__set_mmap_first(evlist, map, overwrite);
-> > >>              } else {
-> libperf CPU map code as I'd like to propose we start a libperf2 (with
-> LPC coming up it'd be a good place to discuss this, there's also the
-> office hours on Thursday). What I hope for libperf2 is that we can
-> make its license the same as libbpf, so the code can be more widely
-> included in projects.
+Yeah, we could check BTF if it had the attr.sigtrap field and skip if not.
+Let me see how I can do that. :)
 
-If you did plan to do this, it might be nice to include some 
-representatives from groups that would be likely to use such a library.  
-This might include the PAPI library developers, and there are various 
-other tools (especially in the HPC area) who are coding to 
-perf_event_open() directly but probably would like to use a library 
-instead if possible.
-
-Vince Weaver
-vincent.weaver@maine.edu
+Thanks,
+Namhyung
