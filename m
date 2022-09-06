@@ -2,175 +2,192 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B094BECAAA1
-	for <linux-perf-users@archiver.kernel.org>; Tue,  6 Sep 2022 19:22:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 416ACC38145
+	for <linux-perf-users@archiver.kernel.org>; Tue,  6 Sep 2022 19:45:20 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229456AbiIFTWh (ORCPT
+        id S229527AbiIFTpT (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Tue, 6 Sep 2022 15:22:37 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50098 "EHLO
+        Tue, 6 Sep 2022 15:45:19 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59628 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229823AbiIFTWg (ORCPT
+        with ESMTP id S229491AbiIFTpS (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Tue, 6 Sep 2022 15:22:36 -0400
-Received: from casper.infradead.org (casper.infradead.org [IPv6:2001:8b0:10b:1236::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D864AA9262;
-        Tue,  6 Sep 2022 12:22:34 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=casper.20170209; h=In-Reply-To:Content-Type:MIME-Version:
-        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description;
-        bh=3GsMXUauB5utuEXv1jDmKoUBdqmBEdZQ5N5O8GX8KS8=; b=lobpDkUTBm1BgXceQdblKqADOJ
-        R3CgWOaoofntBmHZnnPPUdL7z6rPA8k7tPrZsd81Y+GRNrncrNGRrPwu8ae/qcDWlgS38a7H8irke
-        3eZAphqb8aoprdffabGDRGHCBfr6EcmWC9oe4SYAffOL9pZXFMYgwJVA+gwfDvKYDgEf7+TUM0bzR
-        TyDsmpEwf1gnmia1mNIY4XKS7EB62smcgf6DSTokDh1bEa97CUc1bcWyE7wxdyp42IE1nEKdCwSVW
-        v64hda0sbzRR/VWRuZwa/YIXoNxxg45Dm+cxjo/GhErqZKYyTz0L/tStNbxI+56gNnVMf9owY7B0N
-        mmD8jzug==;
-Received: from j130084.upc-j.chello.nl ([24.132.130.84] helo=noisy.programming.kicks-ass.net)
-        by casper.infradead.org with esmtpsa (Exim 4.94.2 #2 (Red Hat Linux))
-        id 1oVe9K-00Ah4Z-Pu; Tue, 06 Sep 2022 19:22:18 +0000
-Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-        (Client did not present a certificate)
-        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id C76BC300244;
-        Tue,  6 Sep 2022 21:22:14 +0200 (CEST)
-Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
-        id A2EC92B576966; Tue,  6 Sep 2022 21:22:14 +0200 (CEST)
-Date:   Tue, 6 Sep 2022 21:22:14 +0200
-From:   Peter Zijlstra <peterz@infradead.org>
-To:     Anshuman Khandual <anshuman.khandual@arm.com>
-Cc:     linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org,
-        James Clark <james.clark@arm.com>,
-        Ingo Molnar <mingo@redhat.com>,
+        Tue, 6 Sep 2022 15:45:18 -0400
+Received: from mail-ej1-x636.google.com (mail-ej1-x636.google.com [IPv6:2a00:1450:4864:20::636])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3707C76446;
+        Tue,  6 Sep 2022 12:45:17 -0700 (PDT)
+Received: by mail-ej1-x636.google.com with SMTP id gh9so3729055ejc.8;
+        Tue, 06 Sep 2022 12:45:17 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20210112;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:date:from:from:to:cc:subject:date;
+        bh=IvjgiEgsvkGUAgt8KiSYXHu54u57Qk5KGBecEOEMqDc=;
+        b=ImgTx5OrGISz4NWZJ9G7eF4mOeKvJIXRf8LoLhTaGFv6SoFUK9QcVmAHdTOcemLisP
+         HRj4kUb92expxR4XKdq6lJS1+BWFTIX2E5i5XB24h4QKLVJcrzrxgEJrvqOBZ1v961Kw
+         UE60V+q4pB0cNklbY64jZdwt6mmaL9xUmne1Hmd8O1XvtvVOWLa9blsQdUovkdEtTtU8
+         EClT3HXHJCiPK4YQuHVF4t7quyvKd5gaNCZLwSBXWhBgWDylqc5OB9YcDeJujXj3tV9V
+         lZpvAByNI79GUcWGblnr3F9QjgcQbjV+61slr72QksFpGvBvgU2E4Yykg/zWffKrbQmo
+         Mc7w==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:date:from:x-gm-message-state:from:to:cc:subject:date;
+        bh=IvjgiEgsvkGUAgt8KiSYXHu54u57Qk5KGBecEOEMqDc=;
+        b=AWDS2IXSRYOABtaNd+YxpVvqbeDmWJJzPgO7aLUKZZgJyEPRZsHGLdZTAnkcsLAmGj
+         lG+b4p7zzrHQPImRvOf0XpWus7+sqbAj+T2E6vj9SWib2nxuybAC2cT9QMvbnf6WgPEV
+         0ddum2odRX75Dp7Se/YbewtAC9y0lLrPlh8LT0Pli2sOHPUmQczwQWYOvsWBEt7xJvk8
+         EjBoXeZ3CfQM5OeZ32AMA9Jllwo7jbUD31K4QLvDwbfndjPCStX/gtEHdpYRXy54eQva
+         CLVV/HhcACYROpUah51sQKJ+J+s11PzAQW/LaiSBa+PrNh0KSRG9eYZ9h17kLptlSK2+
+         6L8g==
+X-Gm-Message-State: ACgBeo0byGYRcW4ISoHpt/LHAf5qGbq+qw8V98I4tgd01+fmb6JM+CWF
+        ovJZ2GqwnThF28oIaAjmFuA=
+X-Google-Smtp-Source: AA6agR4C/ZlvryTOPOEhC2ZzUUamswZYK5ABqpZ115fyYtiQMAyN99tFcsx85yOaJ+73kT11WW0RQg==
+X-Received: by 2002:a17:907:845:b0:731:2f6c:6dbd with SMTP id ww5-20020a170907084500b007312f6c6dbdmr29515ejb.551.1662493515527;
+        Tue, 06 Sep 2022 12:45:15 -0700 (PDT)
+Received: from krava ([83.240.62.96])
+        by smtp.gmail.com with ESMTPSA id l16-20020a50d6d0000000b0044625884285sm9129694edj.49.2022.09.06.12.45.14
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 06 Sep 2022 12:45:15 -0700 (PDT)
+From:   Jiri Olsa <olsajiri@gmail.com>
+X-Google-Original-From: Jiri Olsa <jolsa@kernel.org>
+Date:   Tue, 6 Sep 2022 21:45:08 +0200
+To:     Adrian Hunter <adrian.hunter@intel.com>
+Cc:     Jiri Olsa <olsajiri@gmail.com>,
         Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Jiri Olsa <jolsa@kernel.org>,
+        Jiri Olsa <jolsa@redhat.com>,
         Namhyung Kim <namhyung@kernel.org>,
-        linux-arm-kernel@lists.infradead.org, x86@kernel.org,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Borislav Petkov <bp@alien8.de>
-Subject: Re: [PATCH V2 4/4] x86/perf: Assert all platform event flags are
- within PERF_EVENT_FLAG_ARCH
-Message-ID: <Yxed5u9X2PKGAKGf@hirez.programming.kicks-ass.net>
-References: <20220905054239.324029-1-anshuman.khandual@arm.com>
- <20220905054239.324029-5-anshuman.khandual@arm.com>
+        Ian Rogers <irogers@google.com>, linux-kernel@vger.kernel.org,
+        linux-perf-users@vger.kernel.org,
+        Peter Zijlstra <peterz@infradead.org>,
+        Ingo Molnar <mingo@redhat.com>
+Subject: Re: [PATCH V2] libperf evlist: Fix per-thread mmaps for
+ multi-threaded targets
+Message-ID: <YxejRK2/LO7QouOZ@krava>
+References: <20220905114209.8389-1-adrian.hunter@intel.com>
+ <YxdEQkmkZjBC6wGb@krava>
+ <60b5c9bf-4ec9-957e-17dd-aa0a50411ff9@intel.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20220905054239.324029-5-anshuman.khandual@arm.com>
+In-Reply-To: <60b5c9bf-4ec9-957e-17dd-aa0a50411ff9@intel.com>
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-On Mon, Sep 05, 2022 at 11:12:39AM +0530, Anshuman Khandual wrote:
-
->  arch/x86/events/perf_event.h | 20 ++++++++++++++++++++
->  1 file changed, 20 insertions(+)
+On Tue, Sep 06, 2022 at 05:04:45PM +0300, Adrian Hunter wrote:
+> On 6/09/22 15:59, Jiri Olsa wrote:
+> > On Mon, Sep 05, 2022 at 02:42:09PM +0300, Adrian Hunter wrote:
+> > 
+> > SNIP
+> > 
+> >> diff --git a/tools/lib/perf/evlist.c b/tools/lib/perf/evlist.c
+> >> index e6c98a6e3908..6b1bafe267a4 100644
+> >> --- a/tools/lib/perf/evlist.c
+> >> +++ b/tools/lib/perf/evlist.c
+> >> @@ -486,6 +486,7 @@ mmap_per_evsel(struct perf_evlist *evlist, struct perf_evlist_mmap_ops *ops,
+> >>  			if (ops->idx)
+> >>  				ops->idx(evlist, evsel, mp, idx);
+> >>  
+> >> +			pr_debug("idx %d: mmapping fd %d\n", idx, *output);
+> >>  			if (ops->mmap(map, mp, *output, evlist_cpu) < 0)
+> >>  				return -1;
+> >>  
+> >> @@ -494,6 +495,7 @@ mmap_per_evsel(struct perf_evlist *evlist, struct perf_evlist_mmap_ops *ops,
+> >>  			if (!idx)
+> >>  				perf_evlist__set_mmap_first(evlist, map, overwrite);
+> >>  		} else {
+> >> +			pr_debug("idx %d: set output fd %d -> %d\n", idx, fd, *output);
+> >>  			if (ioctl(fd, PERF_EVENT_IOC_SET_OUTPUT, *output) != 0)
+> >>  				return -1;
+> >>  
+> >> @@ -519,6 +521,48 @@ mmap_per_evsel(struct perf_evlist *evlist, struct perf_evlist_mmap_ops *ops,
+> >>  	return 0;
+> >>  }
+> >>  
+> >> +static int
+> >> +mmap_per_thread(struct perf_evlist *evlist, struct perf_evlist_mmap_ops *ops,
+> >> +		struct perf_mmap_param *mp)
+> >> +{
+> >> +	int nr_threads = perf_thread_map__nr(evlist->threads);
+> >> +	int nr_cpus    = perf_cpu_map__nr(evlist->all_cpus);
+> >> +	int cpu, thread, idx = 0;
+> >> +	int nr_mmaps = 0;
+> >> +
+> >> +	pr_debug("%s: nr cpu values (may include -1) %d nr threads %d\n",
+> >> +		 __func__, nr_cpus, nr_threads);
+> > 
+> > -1 as cpu value is only for 'empty' perf_cpu_map, right?
 > 
-> diff --git a/arch/x86/events/perf_event.h b/arch/x86/events/perf_event.h
-> index ba3d24a6a4ec..12136a33e9b7 100644
-> --- a/arch/x86/events/perf_event.h
-> +++ b/arch/x86/events/perf_event.h
-> @@ -86,6 +86,26 @@ static inline bool constraint_match(struct event_constraint *c, u64 ecode)
->  #define PERF_X86_EVENT_AMD_BRS		0x10000 /* AMD Branch Sampling */
->  #define PERF_X86_EVENT_PEBS_LAT_HYBRID	0x20000 /* ld and st lat for hybrid */
->  
-> +static_assert((PERF_EVENT_FLAG_ARCH & PERF_X86_EVENT_PEBS_LDLAT) == PERF_X86_EVENT_PEBS_LDLAT);
-> +static_assert((PERF_EVENT_FLAG_ARCH & PERF_X86_EVENT_PEBS_ST) == PERF_X86_EVENT_PEBS_ST);
-> +static_assert((PERF_EVENT_FLAG_ARCH & PERF_X86_EVENT_PEBS_ST_HSW) == PERF_X86_EVENT_PEBS_ST_HSW);
-> +static_assert((PERF_EVENT_FLAG_ARCH & PERF_X86_EVENT_PEBS_LD_HSW) == PERF_X86_EVENT_PEBS_LD_HSW);
-> +static_assert((PERF_EVENT_FLAG_ARCH & PERF_X86_EVENT_PEBS_NA_HSW) == PERF_X86_EVENT_PEBS_NA_HSW);
-> +static_assert((PERF_EVENT_FLAG_ARCH & PERF_X86_EVENT_EXCL) == PERF_X86_EVENT_EXCL);
-> +static_assert((PERF_EVENT_FLAG_ARCH & PERF_X86_EVENT_DYNAMIC) == PERF_X86_EVENT_DYNAMIC);
-> +
-> +static_assert((PERF_EVENT_FLAG_ARCH & PERF_X86_EVENT_EXCL_ACCT) == PERF_X86_EVENT_EXCL_ACCT);
-> +static_assert((PERF_EVENT_FLAG_ARCH & PERF_X86_EVENT_AUTO_RELOAD) == PERF_X86_EVENT_AUTO_RELOAD);
-> +static_assert((PERF_EVENT_FLAG_ARCH & PERF_X86_EVENT_LARGE_PEBS) == PERF_X86_EVENT_LARGE_PEBS);
-> +static_assert((PERF_EVENT_FLAG_ARCH & PERF_X86_EVENT_PEBS_VIA_PT) == PERF_X86_EVENT_PEBS_VIA_PT);
-> +static_assert((PERF_EVENT_FLAG_ARCH & PERF_X86_EVENT_PAIR) == PERF_X86_EVENT_PAIR);
-> +static_assert((PERF_EVENT_FLAG_ARCH & PERF_X86_EVENT_LBR_SELECT) == PERF_X86_EVENT_LBR_SELECT);
-> +static_assert((PERF_EVENT_FLAG_ARCH & PERF_X86_EVENT_TOPDOWN) == PERF_X86_EVENT_TOPDOWN);
-> +static_assert((PERF_EVENT_FLAG_ARCH & PERF_X86_EVENT_PEBS_STLAT) == PERF_X86_EVENT_PEBS_STLAT);
-> +static_assert((PERF_EVENT_FLAG_ARCH & PERF_X86_EVENT_AMD_BRS) == PERF_X86_EVENT_AMD_BRS);
-> +static_assert((PERF_EVENT_FLAG_ARCH & PERF_X86_EVENT_PEBS_LAT_HYBRID)
-> +				   == PERF_X86_EVENT_PEBS_LAT_HYBRID);
+> The cpu map is a map of valid 3rd arguments to perf_event_open, so -1
+> means all CPUs which is per-thread by necessity.
+> 
+> > 
+> >> +
+> >> +	/* per-thread mmaps */
+> >> +	for (thread = 0; thread < nr_threads; thread++, idx++) {
+> >> +		int output = -1;
+> >> +		int output_overwrite = -1;
+> >> +
+> >> +		if (mmap_per_evsel(evlist, ops, idx, mp, 0, thread, &output,
+> >> +				   &output_overwrite, &nr_mmaps))
+> >> +			goto out_unmap;
+> >> +	}
+> >> +
+> >> +	/* system-wide mmaps i.e. per-cpu */
+> >> +	for (cpu = 1; cpu < nr_cpus; cpu++, idx++) {
+> >> +		int output = -1;
+> >> +		int output_overwrite = -1;
+> >> +
+> >> +		if (mmap_per_evsel(evlist, ops, idx, mp, cpu, 0, &output,
+> >> +				   &output_overwrite, &nr_mmaps))
+> >> +			goto out_unmap;
+> >> +	}
+> > 
+> > will this loop be executed? we are in here because all_cpus is empty, right?
+> 
+> Yes it is executed.  I put back the code that was there before ae4f8ae16a07
+> ("libperf evlist: Allow mixing per-thread and per-cpu mmaps"), which uses
 
+hm, but commit ae4f8ae16a07 does not have similar cpu loop
 
-That's not half tedious...
+> perf_cpu_map__empty() which only checks the first entry is -1:
+> 
+> bool perf_cpu_map__empty(const struct perf_cpu_map *map)
+> {
+> 	return map ? map->map[0].cpu == -1 : true;
+> }
+> 
+> But there can be more CPUs in the map, so perf_cpu_map__empty()
+> returns true for the per-thread case, as desired, even if there
+> are also system-wide CPUs.
 
-How about something like so?
+I don't see how, if I'd see -1 together with other cpu values in
+perf_cpu_map I'd think it's a bug, but I might be missing some
+auxtrace usage,
 
----
---- a/arch/x86/events/perf_event.h
-+++ b/arch/x86/events/perf_event.h
-@@ -64,27 +64,25 @@ static inline bool constraint_match(stru
- 	return ((ecode & c->cmask) - c->code) <= (u64)c->size;
- }
- 
-+#define PERF_ARCH(name, val)	\
-+	PERF_X86_EVENT_##name = val,
-+
- /*
-  * struct hw_perf_event.flags flags
-  */
--#define PERF_X86_EVENT_PEBS_LDLAT	0x00001 /* ld+ldlat data address sampling */
--#define PERF_X86_EVENT_PEBS_ST		0x00002 /* st data address sampling */
--#define PERF_X86_EVENT_PEBS_ST_HSW	0x00004 /* haswell style datala, store */
--#define PERF_X86_EVENT_PEBS_LD_HSW	0x00008 /* haswell style datala, load */
--#define PERF_X86_EVENT_PEBS_NA_HSW	0x00010 /* haswell style datala, unknown */
--#define PERF_X86_EVENT_EXCL		0x00020 /* HT exclusivity on counter */
--#define PERF_X86_EVENT_DYNAMIC		0x00040 /* dynamic alloc'd constraint */
--
--#define PERF_X86_EVENT_EXCL_ACCT	0x00100 /* accounted EXCL event */
--#define PERF_X86_EVENT_AUTO_RELOAD	0x00200 /* use PEBS auto-reload */
--#define PERF_X86_EVENT_LARGE_PEBS	0x00400 /* use large PEBS */
--#define PERF_X86_EVENT_PEBS_VIA_PT	0x00800 /* use PT buffer for PEBS */
--#define PERF_X86_EVENT_PAIR		0x01000 /* Large Increment per Cycle */
--#define PERF_X86_EVENT_LBR_SELECT	0x02000 /* Save/Restore MSR_LBR_SELECT */
--#define PERF_X86_EVENT_TOPDOWN		0x04000 /* Count Topdown slots/metrics events */
--#define PERF_X86_EVENT_PEBS_STLAT	0x08000 /* st+stlat data address sampling */
--#define PERF_X86_EVENT_AMD_BRS		0x10000 /* AMD Branch Sampling */
--#define PERF_X86_EVENT_PEBS_LAT_HYBRID	0x20000 /* ld and st lat for hybrid */
-+enum {
-+#include "perf_event_flags.h"
-+};
-+
-+#undef PERF_ARCH
-+
-+#define PERF_ARCH(name, val)						\
-+	static_assert((PERF_X86_EVENT_##name & PERF_EVENT_FLAG_ARCH) ==	\
-+		      PERF_X86_EVENT_##name);
-+
-+#include "perf_event_flags.h"
-+
-+#undef PERF_ARCH
- 
- static inline bool is_topdown_count(struct perf_event *event)
- {
---- /dev/null
-+++ b/arch/x86/events/perf_event_flags.h
-@@ -0,0 +1,22 @@
-+
-+/*
-+ * struct hw_perf_event.flags flags
-+ */
-+PERF_ARCH(PEBS_LDLAT,		0x00001) /* ld+ldlat data address sampling */
-+PERF_ARCH(PEBS_ST,		0x00002) /* st data address sampling */
-+PERF_ARCH(PEBS_ST_HSW,		0x00004) /* haswell style datala, store */
-+PERF_ARCH(PEBS_LD_HSW,		0x00008) /* haswell style datala, load */
-+PERF_ARCH(PEBS_NA_HSW,		0x00010) /* haswell style datala, unknown */
-+PERF_ARCH(EXCL,			0x00020) /* HT exclusivity on counter */
-+PERF_ARCH(DYNAMIC,		0x00040) /* dynamic alloc'd constraint */
-+			/*	0x00080	*/
-+PERF_ARCH(EXCL_ACCT,		0x00100) /* accounted EXCL event */
-+PERF_ARCH(AUTO_RELOAD,		0x00200) /* use PEBS auto-reload */
-+PERF_ARCH(LARGE_PEBS,		0x00400) /* use large PEBS */
-+PERF_ARCH(PEBS_VIA_PT,		0x00800) /* use PT buffer for PEBS */
-+PERF_ARCH(PAIR,			0x01000) /* Large Increment per Cycle */
-+PERF_ARCH(LBR_SELECT,		0x02000) /* Save/Restore MSR_LBR_SELECT */
-+PERF_ARCH(TOPDOWN,		0x04000) /* Count Topdown slots/metrics events */
-+PERF_ARCH(PEBS_STLAT,		0x08000) /* st+stlat data address sampling */
-+PERF_ARCH(AMD_BRS,		0x10000) /* AMD Branch Sampling */
-+PERF_ARCH(PEBS_LAT_HYBRID,	0x20000) /* ld and st lat for hybrid */
+I thought we use -1 just for empty cpu map, so in per-thread case
+-1 is properly passed to perf_event_open syscall
+
+jirka
+
+> 
+> I guess perf_cpu_map__empty() needs renaming.
+> 
+> > 
+> > thanks,
+> > jirka
+> > 
+> >> +
+> >> +	if (nr_mmaps != evlist->nr_mmaps)
+> >> +		pr_err("Miscounted nr_mmaps %d vs %d\n", nr_mmaps, evlist->nr_mmaps);
+> >> +
+> >> +	return 0;
+> >> +
+> >> +out_unmap:
+> >> +	perf_evlist__munmap(evlist);
+> >> +	return -1;
+> >> +}
+> > 
+> > SNIP
+> 
