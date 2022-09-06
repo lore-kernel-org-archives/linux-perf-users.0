@@ -2,92 +2,79 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EE8E2C6FA83
-	for <linux-perf-users@archiver.kernel.org>; Tue,  6 Sep 2022 12:45:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5FA59ECAAD5
+	for <linux-perf-users@archiver.kernel.org>; Tue,  6 Sep 2022 12:54:16 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S240064AbiIFMpS (ORCPT
+        id S240013AbiIFMyP (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Tue, 6 Sep 2022 08:45:18 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59602 "EHLO
+        Tue, 6 Sep 2022 08:54:15 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41048 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S240059AbiIFMpQ (ORCPT
+        with ESMTP id S240211AbiIFMyA (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Tue, 6 Sep 2022 08:45:16 -0400
-Received: from sin.source.kernel.org (sin.source.kernel.org [145.40.73.55])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7D03B3B97F;
-        Tue,  6 Sep 2022 05:45:14 -0700 (PDT)
+        Tue, 6 Sep 2022 08:54:00 -0400
+Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BD07D74E26;
+        Tue,  6 Sep 2022 05:53:31 -0700 (PDT)
 Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by sin.source.kernel.org (Postfix) with ESMTPS id DE82ACE173B;
-        Tue,  6 Sep 2022 12:45:12 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 8EE68C433D6;
-        Tue,  6 Sep 2022 12:45:10 +0000 (UTC)
+        by dfw.source.kernel.org (Postfix) with ESMTPS id 8E6B661500;
+        Tue,  6 Sep 2022 12:53:30 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id C12C3C433C1;
+        Tue,  6 Sep 2022 12:53:29 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1662468310;
-        bh=QeHtG9X1lWUK95xHdfILY1ToyTHiAJs89SubC+l4SH0=;
+        s=k20201202; t=1662468809;
+        bh=fldsy+P2Q7PF4mFLFUGFtLZ/KojrACP13eE47+4QOLs=;
         h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=qk6s8V0cUJ0BGyXuuVOQdYgilVDQC6LxZvyy3NDdxZ8N7UNtVdr+/+K1oBguy6DjR
-         +BfPlwr+lfpMoxtF76Wav1IIll4qR6GDxEUr7tDynsrFMLifWLm9kUcuVNk8NU7Q7x
-         VDC2zGriWHp82Sppio9npowjCFJvOl5OCSwXBm6mKE8gELt90/JjjRes4ml921QH6V
-         tWhJIyg0WSO3PhrlxxIfx4T3wfAwdlWmbMJYFVgzX4fRgY/u5yh6IyaK++vjhzVNbl
-         mYdrzmFmOq9/WVw4VSs+NeBni88D1YEnKbiXkYvlQmD6nTOwzpnoHntBb7j2lzCY9E
-         eqzOZ7j0gVTsA==
+        b=ucylPzXrD7R0fNl3OILAPn6lz+kQHL5B9dok/3TaEJwy3KnlDGitr9hTyiSekDiQh
+         5VuZvSYD6NEPcREhkN07Xkfvw0HQbuaPgKeDhKCHwiQjh8UuoDiSnESGR2yAe1FJVS
+         o4oFsHDScad7GIEe0i0F57qOvna5Np7Yvr+4xSyVQYQJ5boQQ4bmqHWeRdkC8OCVu0
+         JooftswuuOGi01wdQBIrLio2pKEOvLixctayUf8XiiJ6sggHG8NICrHgPnPU7kSNNb
+         K+9EKGKsWrcJ0KIDTw4F2umkPmJJQBjRygFfWt0yOIAdsMqw1OUG616hGKMu++Bu6m
+         /OuUEKVFxY6sA==
 Received: by quaco.ghostprotocols.net (Postfix, from userid 1000)
-        id 4338F404A1; Tue,  6 Sep 2022 09:45:08 -0300 (-03)
-Date:   Tue, 6 Sep 2022 09:45:08 -0300
+        id 8253D404A1; Tue,  6 Sep 2022 09:53:27 -0300 (-03)
+Date:   Tue, 6 Sep 2022 09:53:27 -0300
 From:   Arnaldo Carvalho de Melo <acme@kernel.org>
-To:     Marco Elver <elver@google.com>
-Cc:     Namhyung Kim <namhyung@kernel.org>, Jiri Olsa <jolsa@kernel.org>,
-        Ingo Molnar <mingo@kernel.org>,
+To:     Adrian Hunter <adrian.hunter@intel.com>
+Cc:     Jiri Olsa <jolsa@redhat.com>, Namhyung Kim <namhyung@kernel.org>,
+        Ian Rogers <irogers@google.com>, linux-kernel@vger.kernel.org,
+        linux-perf-users@vger.kernel.org,
         Peter Zijlstra <peterz@infradead.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Ian Rogers <irogers@google.com>,
-        linux-perf-users@vger.kernel.org
-Subject: Re: [PATCH] perf test: Skip sigtrap test on old kernels
-Message-ID: <YxdA1CVzy9hzE3i1@kernel.org>
-References: <20220903000210.1112014-1-namhyung@kernel.org>
- <CANpmjNMPh5QjdxXtrCc5FApjgzV=81CNNiwbeg_rE3NxN_WCZw@mail.gmail.com>
+        Ingo Molnar <mingo@redhat.com>
+Subject: Re: [PATCH V2] libperf evlist: Fix per-thread mmaps for
+ multi-threaded targets
+Message-ID: <YxdCx6UPU6wI95kc@kernel.org>
+References: <20220905114209.8389-1-adrian.hunter@intel.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <CANpmjNMPh5QjdxXtrCc5FApjgzV=81CNNiwbeg_rE3NxN_WCZw@mail.gmail.com>
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20220905114209.8389-1-adrian.hunter@intel.com>
 X-Url:  http://acmel.wordpress.com
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-Em Sat, Sep 03, 2022 at 08:52:01AM +0200, Marco Elver escreveu:
-> On Sat, 3 Sept 2022 at 02:02, Namhyung Kim <namhyung@kernel.org> wrote:
-> >
-> > If it runs on an old kernel, perf_event_open would fail because of the
-> > new fields sigtrap and sig_data.  Just skip the test if it failed.
-> >
-> > Cc: Marco Elver <elver@google.com>
-> > Signed-off-by: Namhyung Kim <namhyung@kernel.org>
-> > ---
-> >  tools/perf/tests/sigtrap.c | 1 +
-> >  1 file changed, 1 insertion(+)
-> >
-> > diff --git a/tools/perf/tests/sigtrap.c b/tools/perf/tests/sigtrap.c
-> > index e32ece90e164..7057566e6ae4 100644
-> > --- a/tools/perf/tests/sigtrap.c
-> > +++ b/tools/perf/tests/sigtrap.c
-> > @@ -140,6 +140,7 @@ static int test__sigtrap(struct test_suite *test __maybe_unused, int subtest __m
-> >         fd = sys_perf_event_open(&attr, 0, -1, -1, perf_event_open_cloexec_flag());
-> >         if (fd < 0) {
-> >                 pr_debug("FAILED sys_perf_event_open(): %s\n", str_error_r(errno, sbuf, sizeof(sbuf)));
-> > +               ret = TEST_SKIP;
+Em Mon, Sep 05, 2022 at 02:42:09PM +0300, Adrian Hunter escreveu:
+> The offending commit removed mmap_per_thread(), which did not consider
+> the different set-output rules for per-thread mmaps i.e. in the per-thread
+> case set-output is used for file descriptors of the same thread not the
+> same cpu.
 > 
-> Wouldn't we be interested if perf_event_open() fails because it could
-> actually be a bug? By skipping we'll be more likely to miss the fact
-> there's a real problem.
-> 
-> That's my naive thinking at least - what do other perf tests usually
-> do in this case?
+> Fixes: ae4f8ae16a07 ("libperf evlist: Allow mixing per-thread and per-cpu mmaps")
+> Signed-off-by: Adrian Hunter <adrian.hunter@intel.com>
 
-Yeah, I was going to try and check if this is the only way that, with
-the given arguments, perf_event_open would fail, but its better to at
-least check errno against -EINVAL or something?
+I added these:
+
+Reported-by: Tomáš Trnka <trnka@scm.com>
+Bugzilla: https://bugzilla.kernel.org/show_bug.cgi?id=216441
+
+Jiri made a comment, can you please reply?
+
+Applied locally for further tests,
+
+Thanks,
 
 - Arnaldo
