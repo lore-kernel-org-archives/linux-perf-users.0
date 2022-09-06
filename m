@@ -2,35 +2,35 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E6956C6FA8C
-	for <linux-perf-users@archiver.kernel.org>; Tue,  6 Sep 2022 10:47:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 20BA5C6FA8E
+	for <linux-perf-users@archiver.kernel.org>; Tue,  6 Sep 2022 10:47:53 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S238792AbiIFKrV (ORCPT
+        id S239639AbiIFKrX (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Tue, 6 Sep 2022 06:47:21 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59452 "EHLO
+        Tue, 6 Sep 2022 06:47:23 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57784 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S239825AbiIFKqc (ORCPT
+        with ESMTP id S239854AbiIFKqi (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Tue, 6 Sep 2022 06:46:32 -0400
+        Tue, 6 Sep 2022 06:46:38 -0400
 Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTP id E91407B7A8;
-        Tue,  6 Sep 2022 03:45:23 -0700 (PDT)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTP id 5774D7A529;
+        Tue,  6 Sep 2022 03:45:35 -0700 (PDT)
 Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 296221AED;
-        Tue,  6 Sep 2022 03:44:10 -0700 (PDT)
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 7D8E01BB2;
+        Tue,  6 Sep 2022 03:44:14 -0700 (PDT)
 Received: from e126387.arm.com (unknown [10.57.15.16])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id A96F33F534;
-        Tue,  6 Sep 2022 03:44:02 -0700 (PDT)
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 0987F3F534;
+        Tue,  6 Sep 2022 03:44:06 -0700 (PDT)
 From:   carsten.haitzler@foss.arm.com
 To:     linux-kernel@vger.kernel.org
 Cc:     coresight@lists.linaro.org, suzuki.poulose@arm.com,
         mathieu.poirier@linaro.org, mike.leach@linaro.org,
         leo.yan@linaro.org, linux-perf-users@vger.kernel.org,
         acme@kernel.org
-Subject: [PATCH v8 10/13] perf test: Add unroll thread test tool
-Date:   Tue,  6 Sep 2022 11:30:41 +0100
-Message-Id: <20220906103044.761250-11-carsten.haitzler@foss.arm.com>
+Subject: [PATCH v8 13/13] perf test: Add relevant documentation about CoreSight testing
+Date:   Tue,  6 Sep 2022 11:30:44 +0100
+Message-Id: <20220906103044.761250-14-carsten.haitzler@foss.arm.com>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20220906103044.761250-1-carsten.haitzler@foss.arm.com>
 References: <20220906103044.761250-1-carsten.haitzler@foss.arm.com>
@@ -42,161 +42,193 @@ X-Mailing-List: linux-perf-users@vger.kernel.org
 
 From: Carsten Haitzler <carsten.haitzler@arm.com>
 
-Add test tool to be driven by further test scripts. This is a simple C
-based test that is for arm64 with some inline ASM to manually unroll a
-lot of code to have a very long sequence of commands.
+Add/improve documentation helping people get started with CoreSight and
+perf as well as describe the testing and how it works.
 
+Cc: linux-doc@vger.kernel.org
 Signed-off-by: Carsten Haitzler <carsten.haitzler@arm.com>
 ---
- tools/perf/tests/shell/coresight/Makefile     |  3 +-
- .../coresight/unroll_loop_thread/.gitignore   |  1 +
- .../coresight/unroll_loop_thread/Makefile     | 33 +++++++++
- .../unroll_loop_thread/unroll_loop_thread.c   | 74 +++++++++++++++++++
- 4 files changed, 110 insertions(+), 1 deletion(-)
- create mode 100644 tools/perf/tests/shell/coresight/unroll_loop_thread/.gitignore
- create mode 100644 tools/perf/tests/shell/coresight/unroll_loop_thread/Makefile
- create mode 100644 tools/perf/tests/shell/coresight/unroll_loop_thread/unroll_loop_thread.c
+ .../trace/coresight/coresight-perf.rst        | 158 ++++++++++++++++++
+ .../perf/Documentation/perf-arm-coresight.txt |   5 +
+ 2 files changed, 163 insertions(+)
+ create mode 100644 Documentation/trace/coresight/coresight-perf.rst
+ create mode 100644 tools/perf/Documentation/perf-arm-coresight.txt
 
-diff --git a/tools/perf/tests/shell/coresight/Makefile b/tools/perf/tests/shell/coresight/Makefile
-index 004974a71fb8..3b2b876cd9e2 100644
---- a/tools/perf/tests/shell/coresight/Makefile
-+++ b/tools/perf/tests/shell/coresight/Makefile
-@@ -7,7 +7,8 @@ include ../../../../../tools/scripts/utilities.mak
- SUBDIRS = \
- 	asm_pure_loop \
- 	memcpy_thread \
--	thread_loop
-+	thread_loop \
-+	unroll_loop_thread
- 
- all: $(SUBDIRS)
- $(SUBDIRS):
-diff --git a/tools/perf/tests/shell/coresight/unroll_loop_thread/.gitignore b/tools/perf/tests/shell/coresight/unroll_loop_thread/.gitignore
+diff --git a/Documentation/trace/coresight/coresight-perf.rst b/Documentation/trace/coresight/coresight-perf.rst
 new file mode 100644
-index 000000000000..2cb4e996dbf3
+index 000000000000..a34c622826b8
 --- /dev/null
-+++ b/tools/perf/tests/shell/coresight/unroll_loop_thread/.gitignore
-@@ -0,0 +1 @@
-+unroll_loop_thread
-diff --git a/tools/perf/tests/shell/coresight/unroll_loop_thread/Makefile b/tools/perf/tests/shell/coresight/unroll_loop_thread/Makefile
++++ b/Documentation/trace/coresight/coresight-perf.rst
+@@ -0,0 +1,158 @@
++.. SPDX-License-Identifier: GPL-2.0
++
++================
++CoreSight - Perf
++================
++
++    :Author:   Carsten Haitzler <carsten.haitzler@arm.com>
++    :Date:     June 29th, 2022
++
++Perf is able to locally access CoreSight trace data and store it to the
++output perf data files. This data can then be later decoded to give the
++instructions that were traced for debugging or profiling purposes. You
++can log such data with a perf record command like::
++
++   perf record -e cs_etm//u testbinary
++
++This would run some test binary (testbinary) until it exits and record
++a perf.data trace file. That file would have AUX sections if CoreSight
++is working correctly. You can dump the content of this file as
++readable text with a command like::
++
++   perf report --stdio --dump -i perf.data
++
++You should find some sections of this file have AUX data blocks like::
++
++   0x1e78 [0x30]: PERF_RECORD_AUXTRACE size: 0x11dd0  offset: 0  ref: 0x1b614fc1061b0ad1  idx: 0  tid: 531230  cpu: -1
++
++   . ... CoreSight ETM Trace data: size 73168 bytes
++           Idx:0; ID:10;   I_ASYNC : Alignment Synchronisation.
++             Idx:12; ID:10;  I_TRACE_INFO : Trace Info.; INFO=0x0 { CC.0 }
++             Idx:17; ID:10;  I_ADDR_L_64IS0 : Address, Long, 64 bit, IS0.; Addr=0x0000000000000000;
++             Idx:26; ID:10;  I_TRACE_ON : Trace On.
++             Idx:27; ID:10;  I_ADDR_CTXT_L_64IS0 : Address & Context, Long, 64 bit, IS0.; Addr=0x0000FFFFB6069140; Ctxt: AArch64,EL0, NS;
++             Idx:38; ID:10;  I_ATOM_F6 : Atom format 6.; EEEEEEEEEEEEEEEEEEEEEEEE
++             Idx:39; ID:10;  I_ATOM_F6 : Atom format 6.; EEEEEEEEEEEEEEEEEEEEEEEE
++             Idx:40; ID:10;  I_ATOM_F6 : Atom format 6.; EEEEEEEEEEEEEEEEEEEEEEEE
++             Idx:41; ID:10;  I_ATOM_F6 : Atom format 6.; EEEEEEEEEEEN
++             ...
++
++If you see these above, then your system is tracing CoreSight data
++correctly.
++
++To compile perf with CoreSight support in the tools/perf directory do::
++
++    make CORESIGHT=1
++
++This requires OpenCSD to build. You may install distribution packages
++for the support such as libopencsd and libopencsd-dev or download it
++and build yourself. Upstream OpenCSD is located at:
++
++  https://github.com/Linaro/OpenCSD
++
++For complete information on building perf with CoreSight support and
++more extensive usage look at:
++
++  https://github.com/Linaro/OpenCSD/blob/master/HOWTO.md
++
++
++Kernel CoreSight Support
++------------------------
++
++You will also want CoreSight support enabled in your kernel config.
++Ensure it is enabled with::
++
++   CONFIG_CORESIGHT=y
++
++There are various other CoreSight options you probably also want
++enabled like::
++
++   CONFIG_CORESIGHT_LINKS_AND_SINKS=y
++   CONFIG_CORESIGHT_LINK_AND_SINK_TMC=y
++   CONFIG_CORESIGHT_CATU=y
++   CONFIG_CORESIGHT_SINK_TPIU=y
++   CONFIG_CORESIGHT_SINK_ETBV10=y
++   CONFIG_CORESIGHT_SOURCE_ETM4X=y
++   CONFIG_CORESIGHT_CTI=y
++   CONFIG_CORESIGHT_CTI_INTEGRATION_REGS=y
++
++Please refer to the kernel configuration help for more information.
++
++Perf test - Verify kernel and userspace perf CoreSight work
++-----------------------------------------------------------
++
++When you run perf test, it will do a lot of self tests. Some of those
++tests will cover CoreSight (only if enabled and on ARM64). You
++generally would run perf test from the tools/perf directory in the
++kernel tree. Some tests will check some internal perf support like:
++
++   Check Arm CoreSight trace data recording and synthesized samples
++   Check Arm SPE trace data recording and synthesized samples
++
++Some others will actually use perf record and some test binaries that
++are in tests/shell/coresight and will collect traces to ensure a
++minimum level of functionality is met. The scripts that launch these
++tests are in the same directory. These will all look like:
++
++   CoreSight / ASM Pure Loop
++   CoreSight / Memcpy 16k 10 Threads
++   CoreSight / Thread Loop 10 Threads - Check TID
++   etc.
++
++These perf record tests will not run if the tool binaries do not exist
++in tests/shell/coresight/*/ and will be skipped. If you do not have
++CoreSight support in hardware then either do not build perf with
++CoreSight support or remove these binaries in order to not have these
++tests fail and have them skip instead.
++
++These tests will log historical results in the current working
++directory (e.g. tools/perf) and will be named stats-\*.csv like:
++
++   stats-asm_pure_loop-out.csv
++   stats-memcpy_thread-16k_10.csv
++   ...
++
++These statistic files log some aspects of the AUX data sections in
++the perf data output counting some numbers of certain encodings (a
++good way to know that it's working in a very simple way). One problem
++with CoreSight is that given a large enough amount of data needing to
++be logged, some of it can be lost due to the processor not waking up
++in time to read out all the data from buffers etc.. You will notice
++that the amount of data collected can vary a lot per run of perf test.
++If you wish to see how this changes over time, simply run perf test
++multiple times and all these csv files will have more and more data
++appended to it that you can later examine, graph and otherwise use to
++figure out if things have become worse or better.
++
++This means sometimes these tests fail as they don't capture all the
++data needed. This is about tracking quality and amount of data
++produced over time and to see when changes to the Linux kernel improve
++quality of traces.
++
++Be aware that some of these tests take quite a while to run, specifically
++in processing the perf data file and dumping contents to then examine what
++is inside.
++
++You can change where these csv logs are stored by setting the
++PERF_TEST_CORESIGHT_STATDIR environment variable before running perf
++test like::
++
++   export PERF_TEST_CORESIGHT_STATDIR=/var/tmp
++   perf test
++
++They will also store resulting perf output data in the current
++directory for later inspection like::
++
++   perf-asm_pure_loop-out.data
++   perf-memcpy_thread-16k_10.data
++   ...
++
++You can alter where the perf data files are stored by setting the
++PERF_TEST_CORESIGHT_DATADIR environment variable such as::
++
++   PERF_TEST_CORESIGHT_DATADIR=/var/tmp
++   perf test
++
++You may wish to set these above environment variables if you wish to
++keep the output of tests outside of the current working directory for
++longer term storage and examination.
+diff --git a/tools/perf/Documentation/perf-arm-coresight.txt b/tools/perf/Documentation/perf-arm-coresight.txt
 new file mode 100644
-index 000000000000..6264c4e3abd1
+index 000000000000..c117fc50a2a9
 --- /dev/null
-+++ b/tools/perf/tests/shell/coresight/unroll_loop_thread/Makefile
-@@ -0,0 +1,33 @@
-+# SPDX-License-Identifier: GPL-2.0
-+# Carsten Haitzler <carsten.haitzler@arm.com>, 2021
-+include ../Makefile.miniconfig
++++ b/tools/perf/Documentation/perf-arm-coresight.txt
+@@ -0,0 +1,5 @@
++Arm CoreSight Support
++=====================
 +
-+# Binary to produce
-+BIN=unroll_loop_thread
-+# Any linking/libraries needed for the binary - empty if none needed
-+LIB=-pthread
-+
-+all: $(BIN)
-+
-+$(BIN): $(BIN).c
-+ifdef CORESIGHT
-+ifeq ($(ARCH),arm64)
-+# Build line
-+	$(Q)$(CC) $(BIN).c -o $(BIN) $(LIB)
-+endif
-+endif
-+
-+install-tests: all
-+ifdef CORESIGHT
-+ifeq ($(ARCH),arm64)
-+# Install the test tool in the right place
-+	$(call QUIET_INSTALL, tests) \
-+		$(INSTALL) -d -m 755 '$(DESTDIR_SQ)$(perfexec_instdir_SQ)/$(INSTDIR_SUB)/$(BIN)'; \
-+		$(INSTALL) $(BIN) '$(DESTDIR_SQ)$(perfexec_instdir_SQ)/$(INSTDIR_SUB)/$(BIN)/$(BIN)'
-+endif
-+endif
-+
-+clean:
-+	$(Q)$(RM) -f $(BIN)
-+
-+.PHONY: all clean install-tests
-diff --git a/tools/perf/tests/shell/coresight/unroll_loop_thread/unroll_loop_thread.c b/tools/perf/tests/shell/coresight/unroll_loop_thread/unroll_loop_thread.c
-new file mode 100644
-index 000000000000..8f6d384208ed
---- /dev/null
-+++ b/tools/perf/tests/shell/coresight/unroll_loop_thread/unroll_loop_thread.c
-@@ -0,0 +1,74 @@
-+// SPDX-License-Identifier: GPL-2.0
-+// Carsten Haitzler <carsten.haitzler@arm.com>, 2021
-+#include <stdio.h>
-+#include <stdlib.h>
-+#include <unistd.h>
-+#include <string.h>
-+#include <pthread.h>
-+
-+struct args {
-+	pthread_t th;
-+	unsigned int in;
-+	void *ret;
-+};
-+
-+static void *thrfn(void *arg)
-+{
-+	struct args *a = arg;
-+	unsigned int i, in = a->in;
-+
-+	for (i = 0; i < 10000; i++) {
-+		asm volatile (
-+// force an unroll of thia add instruction so we can test long runs of code
-+#define SNIP1 "add %[in], %[in], #1\n"
-+// 10
-+#define SNIP2 SNIP1 SNIP1 SNIP1 SNIP1 SNIP1 SNIP1 SNIP1 SNIP1 SNIP1 SNIP1
-+// 100
-+#define SNIP3 SNIP2 SNIP2 SNIP2 SNIP2 SNIP2 SNIP2 SNIP2 SNIP2 SNIP2 SNIP2
-+// 1000
-+#define SNIP4 SNIP3 SNIP3 SNIP3 SNIP3 SNIP3 SNIP3 SNIP3 SNIP3 SNIP3 SNIP3
-+// 10000
-+#define SNIP5 SNIP4 SNIP4 SNIP4 SNIP4 SNIP4 SNIP4 SNIP4 SNIP4 SNIP4 SNIP4
-+// 100000
-+			SNIP5 SNIP5 SNIP5 SNIP5 SNIP5 SNIP5 SNIP5 SNIP5 SNIP5 SNIP5
-+			: /* out */
-+			: /* in */ [in] "r" (in)
-+			: /* clobber */
-+		);
-+	}
-+}
-+
-+static pthread_t new_thr(void *(*fn) (void *arg), void *arg)
-+{
-+	pthread_t t;
-+	pthread_attr_t attr;
-+
-+	pthread_attr_init(&attr);
-+	pthread_create(&t, &attr, fn, arg);
-+	return t;
-+}
-+
-+int main(int argc, char **argv)
-+{
-+	unsigned int i, thr;
-+	pthread_t threads[256];
-+	struct args args[256];
-+
-+	if (argc < 2) {
-+		printf("ERR: %s [numthreads]\n", argv[0]);
-+		exit(1);
-+	}
-+
-+	thr = atoi(argv[1]);
-+	if ((thr > 256) || (thr < 1)) {
-+		printf("ERR: threads 1-256\n");
-+		exit(1);
-+	}
-+	for (i = 0; i < thr; i++) {
-+		args[i].in = rand();
-+		args[i].th = new_thr(thrfn, &(args[i]));
-+	}
-+	for (i = 0; i < thr; i++)
-+		pthread_join(args[i].th, &(args[i].ret));
-+	return 0;
-+}
++For full documentation, see Documentation/trace/coresight/coresight-perf.rst
++in the kernel tree.
 -- 
 2.32.0
 
