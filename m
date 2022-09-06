@@ -2,157 +2,143 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1A7F4ECAAD5
-	for <linux-perf-users@archiver.kernel.org>; Tue,  6 Sep 2022 10:54:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CBF5FECAAA1
+	for <linux-perf-users@archiver.kernel.org>; Tue,  6 Sep 2022 12:31:02 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232391AbiIFKyh (ORCPT
+        id S240121AbiIFMbB (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Tue, 6 Sep 2022 06:54:37 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53068 "EHLO
+        Tue, 6 Sep 2022 08:31:01 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60128 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S239833AbiIFKx4 (ORCPT
+        with ESMTP id S232608AbiIFMa0 (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Tue, 6 Sep 2022 06:53:56 -0400
-Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTP id B44AEE2;
-        Tue,  6 Sep 2022 03:53:53 -0700 (PDT)
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 03F99176C;
-        Tue,  6 Sep 2022 03:44:00 -0700 (PDT)
-Received: from e126387.arm.com (unknown [10.57.15.16])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 845CB3F534;
-        Tue,  6 Sep 2022 03:43:52 -0700 (PDT)
-From:   carsten.haitzler@foss.arm.com
-To:     linux-kernel@vger.kernel.org
-Cc:     coresight@lists.linaro.org, suzuki.poulose@arm.com,
-        mathieu.poirier@linaro.org, mike.leach@linaro.org,
-        leo.yan@linaro.org, linux-perf-users@vger.kernel.org,
-        acme@kernel.org
-Subject: [PATCH v8 03/13] perf test: Add asm pureloop test tool
-Date:   Tue,  6 Sep 2022 11:30:34 +0100
-Message-Id: <20220906103044.761250-4-carsten.haitzler@foss.arm.com>
-X-Mailer: git-send-email 2.25.1
-In-Reply-To: <20220906103044.761250-1-carsten.haitzler@foss.arm.com>
-References: <20220906103044.761250-1-carsten.haitzler@foss.arm.com>
+        Tue, 6 Sep 2022 08:30:26 -0400
+Received: from ams.source.kernel.org (ams.source.kernel.org [145.40.68.75])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 90A3D7F13C
+        for <linux-perf-users@vger.kernel.org>; Tue,  6 Sep 2022 05:27:13 -0700 (PDT)
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by ams.source.kernel.org (Postfix) with ESMTPS id 14468B818AB
+        for <linux-perf-users@vger.kernel.org>; Tue,  6 Sep 2022 12:27:12 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id ACB90C433D6;
+        Tue,  6 Sep 2022 12:27:10 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1662467230;
+        bh=ROd6gADFJ3cfF/PWA6JaxGXAfhNHmr3DVsYT1UhA9Uc=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=o0FOon/0ilITbYQDLBQOk3fCwYw2o3M4ivW8tzeoQI3sS57RJoSaaa8y8r3/1ldxk
+         XXpPvsamz5GA+/c3i635FuaQ69QQGU9BxL5n4HRzr4WyEWYwJ5cHmIAdAZ2x4fJ2Mk
+         9ObkEC/r/5dz/7ilZ0Av4kD17wVNldTPN961IrUqNjrn/0HLdv6/9x1EVHi4kggUFX
+         lFsZFzkXwiKCMkP8LbiQBsSMfTgK/E2BuHpUc0MuGRsDAJC6RNMwobAfyzncmqtXfo
+         ALmTE4Hdv6o9V8r1eE88CSv/qAkHoqltLiTZykr2769c9DcEgKm69G91Ihxyu4feir
+         4GzdJNox39+Pg==
+Received: by quaco.ghostprotocols.net (Postfix, from userid 1000)
+        id 72FDB404A1; Tue,  6 Sep 2022 09:27:08 -0300 (-03)
+Date:   Tue, 6 Sep 2022 09:27:08 -0300
+From:   Arnaldo Carvalho de Melo <acme@kernel.org>
+To:     Athira Rajeev <atrajeev@linux.vnet.ibm.com>
+Cc:     jolsa@kernel.org, mpe@ellerman.id.au,
+        linux-perf-users@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
+        maddy@linux.vnet.ibm.com, rnsastry@linux.ibm.com,
+        kjain@linux.ibm.com
+Subject: Re: [PATCH V2 1/2] tools/perf: Fix out of bound access to affinity
+ "sched_cpus"
+Message-ID: <Yxc8nFLFsiOD/hHu@kernel.org>
+References: <20220905141929.7171-1-atrajeev@linux.vnet.ibm.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20220905141929.7171-1-atrajeev@linux.vnet.ibm.com>
+X-Url:  http://acmel.wordpress.com
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-From: Carsten Haitzler <carsten.haitzler@arm.com>
+Em Mon, Sep 05, 2022 at 07:49:28PM +0530, Athira Rajeev escreveu:
+> The affinity code in "affinity_set" function access array
+> named "sched_cpus". The size for this array is allocated in
+> affinity_setup function which is nothing but value from
+> get_cpu_set_size. This is used to contain the cpumask value
+> for each cpu. While setting bit for each cpu, it calls
+> "set_bit" function which access index in sched_cpus array.
+> If we provide a command-line option to -C which is more than
+> the number of CPU's present in the system, the set_bit could
+> access an array member which is out-of the array size. This
+> is because currently, there is no boundary check for the CPU.
+> This will result in seg fault:
 
-Add test tool to be driven by further test scripts. This tool is pure
-arm64 ASM with no libc usage to ensure it is the same exact
-binary/code every time so it can also be re-used for many uses. It
-just loops for a given fixed number of loops.
 
-Signed-off-by: Carsten Haitzler <carsten.haitzler@arm.com>
----
- tools/perf/tests/shell/coresight/Makefile     |  3 +-
- .../shell/coresight/asm_pure_loop/.gitignore  |  1 +
- .../shell/coresight/asm_pure_loop/Makefile    | 34 +++++++++++++++++++
- .../coresight/asm_pure_loop/asm_pure_loop.S   | 28 +++++++++++++++
- 4 files changed, 65 insertions(+), 1 deletion(-)
- create mode 100644 tools/perf/tests/shell/coresight/asm_pure_loop/.gitignore
- create mode 100644 tools/perf/tests/shell/coresight/asm_pure_loop/Makefile
- create mode 100644 tools/perf/tests/shell/coresight/asm_pure_loop/asm_pure_loop.S
+Thanks, tested, reproduced the problem before, and the fix after,
+applied.
 
-diff --git a/tools/perf/tests/shell/coresight/Makefile b/tools/perf/tests/shell/coresight/Makefile
-index 3b816bb4ced3..d4f868d55773 100644
---- a/tools/perf/tests/shell/coresight/Makefile
-+++ b/tools/perf/tests/shell/coresight/Makefile
-@@ -4,7 +4,8 @@ include ../../../../../tools/scripts/Makefile.include
- include ../../../../../tools/scripts/Makefile.arch
- include ../../../../../tools/scripts/utilities.mak
+- Arnaldo
+
  
--SUBDIRS =
-+SUBDIRS = \
-+	asm_pure_loop
- 
- all: $(SUBDIRS)
- $(SUBDIRS):
-diff --git a/tools/perf/tests/shell/coresight/asm_pure_loop/.gitignore b/tools/perf/tests/shell/coresight/asm_pure_loop/.gitignore
-new file mode 100644
-index 000000000000..468673ac32e8
---- /dev/null
-+++ b/tools/perf/tests/shell/coresight/asm_pure_loop/.gitignore
-@@ -0,0 +1 @@
-+asm_pure_loop
-diff --git a/tools/perf/tests/shell/coresight/asm_pure_loop/Makefile b/tools/perf/tests/shell/coresight/asm_pure_loop/Makefile
-new file mode 100644
-index 000000000000..206849e92bc9
---- /dev/null
-+++ b/tools/perf/tests/shell/coresight/asm_pure_loop/Makefile
-@@ -0,0 +1,34 @@
-+# SPDX-License-Identifier: GPL-2.0
-+# Carsten Haitzler <carsten.haitzler@arm.com>, 2021
-+
-+include ../Makefile.miniconfig
-+
-+# Binary to produce
-+BIN=asm_pure_loop
-+# Any linking/libraries needed for the binary - empty if none needed
-+LIB=
-+
-+all: $(BIN)
-+
-+$(BIN): $(BIN).S
-+ifdef CORESIGHT
-+ifeq ($(ARCH),arm64)
-+# Build line - this is raw asm with no libc to have an always exact binary
-+	$(Q)$(CC) $(BIN).S -nostdlib -static -o $(BIN) $(LIB)
-+endif
-+endif
-+
-+install-tests: all
-+ifdef CORESIGHT
-+ifeq ($(ARCH),arm64)
-+# Install the test tool in the right place
-+	$(call QUIET_INSTALL, tests) \
-+		$(INSTALL) -d -m 755 '$(DESTDIR_SQ)$(perfexec_instdir_SQ)/$(INSTDIR_SUB)/$(BIN)'; \
-+		$(INSTALL) $(BIN) '$(DESTDIR_SQ)$(perfexec_instdir_SQ)/$(INSTDIR_SUB)/$(BIN)/$(BIN)'
-+endif
-+endif
-+
-+clean:
-+	$(Q)$(RM) -f $(BIN)
-+
-+.PHONY: all clean install-tests
-diff --git a/tools/perf/tests/shell/coresight/asm_pure_loop/asm_pure_loop.S b/tools/perf/tests/shell/coresight/asm_pure_loop/asm_pure_loop.S
-new file mode 100644
-index 000000000000..75cf084a927d
---- /dev/null
-+++ b/tools/perf/tests/shell/coresight/asm_pure_loop/asm_pure_loop.S
-@@ -0,0 +1,28 @@
-+/* SPDX-License-Identifier: GPL-2.0 */
-+/* Tamas Zsoldos <tamas.zsoldos@arm.com>, 2021 */
-+
-+.globl _start
-+_start:
-+	mov	x0, 0x0000ffff
-+	mov	x1, xzr
-+loop:
-+	nop
-+	nop
-+	cbnz	x1, noskip
-+	nop
-+	nop
-+	adrp	x2, skip
-+	add 	x2, x2, :lo12:skip
-+	br	x2
-+	nop
-+	nop
-+noskip:
-+	nop
-+	nop
-+skip:
-+	sub	x0, x0, 1
-+	cbnz	x0, loop
-+
-+	mov	x0, #0
-+	mov	x8, #93 // __NR_exit syscall
-+	svc	#0
+> <<>>
+>  ./perf stat -C 12323431 ls
+> Perf can support 2048 CPUs. Consider raising MAX_NR_CPUS
+> Segmentation fault (core dumped)
+> <<>>
+> 
+> Fix this by adding boundary check for the array.
+> 
+> After the fix from powerpc system:
+> 
+> <<>>
+> ./perf stat -C 12323431 ls 1>out
+> Perf can support 2048 CPUs. Consider raising MAX_NR_CPUS
+> 
+>  Performance counter stats for 'CPU(s) 12323431':
+> 
+>    <not supported> msec cpu-clock
+>    <not supported>      context-switches
+>    <not supported>      cpu-migrations
+>    <not supported>      page-faults
+>    <not supported>      cycles
+>    <not supported>      instructions
+>    <not supported>      branches
+>    <not supported>      branch-misses
+> 
+>        0.001192373 seconds time elapsed
+> <<>>
+> 
+> Reported-by: Nageswara Sastry <rnsastry@linux.ibm.com>
+> Tested-by: Nageswara Sastry <rnsastry@linux.ibm.com>
+> Signed-off-by: Athira Rajeev <atrajeev@linux.vnet.ibm.com>
+> ---
+> Changelog:
+>  From v1 -> v2:
+>  Addressed review comment from Jiri Olsa by changing condition
+>  check to directly use "cpu_set_size * 8" for comparing with the
+>  cpu number.
+> 
+>  tools/perf/util/affinity.c | 8 +++++++-
+>  1 file changed, 7 insertions(+), 1 deletion(-)
+> 
+> diff --git a/tools/perf/util/affinity.c b/tools/perf/util/affinity.c
+> index 4d216c0dc425..4ee96b3c755b 100644
+> --- a/tools/perf/util/affinity.c
+> +++ b/tools/perf/util/affinity.c
+> @@ -49,8 +49,14 @@ void affinity__set(struct affinity *a, int cpu)
+>  {
+>  	int cpu_set_size = get_cpu_set_size();
+>  
+> -	if (cpu == -1)
+> +	/*
+> +	 * Return:
+> +	 * - if cpu is -1
+> +	 * - restrict out of bound access to sched_cpus
+> +	 */
+> +	if (cpu == -1 || ((cpu >= (cpu_set_size * 8))))
+>  		return;
+> +
+>  	a->changed = true;
+>  	set_bit(cpu, a->sched_cpus);
+>  	/*
+> -- 
+> 2.35.1
+
 -- 
-2.32.0
 
+- Arnaldo
