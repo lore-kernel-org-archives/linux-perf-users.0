@@ -2,162 +2,116 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0A331ECAAA1
-	for <linux-perf-users@archiver.kernel.org>; Tue,  6 Sep 2022 17:50:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3E7E1ECAAA1
+	for <linux-perf-users@archiver.kernel.org>; Tue,  6 Sep 2022 18:16:03 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229492AbiIFRux (ORCPT
+        id S229461AbiIFSQB (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Tue, 6 Sep 2022 13:50:53 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50744 "EHLO
+        Tue, 6 Sep 2022 14:16:01 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57758 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229636AbiIFRuw (ORCPT
+        with ESMTP id S229436AbiIFSQA (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Tue, 6 Sep 2022 13:50:52 -0400
-Received: from mail-oa1-f48.google.com (mail-oa1-f48.google.com [209.85.160.48])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1005B915CB;
-        Tue,  6 Sep 2022 10:50:44 -0700 (PDT)
-Received: by mail-oa1-f48.google.com with SMTP id 586e51a60fabf-12243fcaa67so30010309fac.8;
-        Tue, 06 Sep 2022 10:50:44 -0700 (PDT)
+        Tue, 6 Sep 2022 14:16:00 -0400
+Received: from mail-ot1-f48.google.com (mail-ot1-f48.google.com [209.85.210.48])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1A3D6175B6;
+        Tue,  6 Sep 2022 11:15:59 -0700 (PDT)
+Received: by mail-ot1-f48.google.com with SMTP id l5-20020a05683004a500b0063707ff8244so8591875otd.12;
+        Tue, 06 Sep 2022 11:15:59 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
         h=cc:to:subject:message-id:date:from:in-reply-to:references
          :mime-version:x-gm-message-state:from:to:cc:subject:date;
-        bh=FQOU2gtbGHU8P+SfVNiDNcpCtIq0ymlv0rdzv/pE/OE=;
-        b=l9Qbd73bBw7Ib1TXtqEzZe3uXaRXY5IOakZlB2BjxH7nfTwVXvRlxt9+dOhYNwPrus
-         643MitL7rL2oMJ7zgUrCFtX6y1XsRXwfX0Ca6fJJ/gdUagdkdPEnQVoxzkRPcThUS+FI
-         IPXO/cW2gyOALCigMnJ4L/pjJrKRK2UlOAi9yXfA1zMbqZaT4Y8zjbjdnp7uyq1N8g6y
-         8UvHz2wxRtJ224kh+v1jazaxEQxD0AXOxzU1ws+LjNzsyDGYr9Hs6z+HdvbBnv3NPSoO
-         gQOAHOoWfhxE4Wj+gAFrWXlGbY2YdM4faUsMh8qOB0JLxvAeOSLAzeMNuZedmZe07XWA
-         bvow==
-X-Gm-Message-State: ACgBeo1m70XxipPwLbxOgUxCloheOqZ9bhe0+QdB8bta5SXAkmwwI9JK
-        LTlximQWPklL2AXC7j1zJfIarq6JvykdrkOCchM=
-X-Google-Smtp-Source: AA6agR6grDYciA8oSOQETrO/w0otbXHspFX2ViD83ps/ULz1jk/FB4tFzmk2i55+ZWzPY93F70shNQqE0t6yM/BhYEs=
-X-Received: by 2002:a05:6808:302a:b0:345:ec04:8f11 with SMTP id
- ay42-20020a056808302a00b00345ec048f11mr10483844oib.5.1662486642612; Tue, 06
- Sep 2022 10:50:42 -0700 (PDT)
+        bh=hBUXfmibKdlSbtIrqsYrNBA32p96PcJy+wSALtFh9OU=;
+        b=Z85negoeWIHJovp9PFLXTYVUweNb9ZWtfe+nROqa6aATaJGZzYyoxm9eSl0UfuGxPl
+         0JTGNGI+uw61ilhPlQ7YkEQ8FRlHkKkvqEisrgnI+uK5HJXn1Gq5exImDdyI+FvzmAbK
+         0hdqoGieJOsBKb/0+NqATV5bjvBEaRwYFyy26cMESCpkbtiO3E6R4qRGUl7BgzvDWu50
+         7ek+Mt7a8H3uk6hFqdRVqOtWNPnuDYUB3Yh8WB0+f6mrBQfmAVMqH7u7Tra8e8/f5yQ6
+         wQPUVugrvoRYXYrDuYyFYxnhRY0+zXIOAGSuC+Mf3GJ6sggFx+kHDahYclFqwjMIFASL
+         yC1w==
+X-Gm-Message-State: ACgBeo23f/K6fkRaI2lD0vQPGY2FjtXpWq1HEPDpjQjlqqCsDZ6lOHtj
+        LnYfK/gKm5Pe6agvvPlafjYeH+Z9XEZSn0w4DOU=
+X-Google-Smtp-Source: AA6agR6MdKws1lzVrLIGA+Aqnumnskn2/NeYygL21WuU70r6lfB7AcklD4hFIuqPBtNw86wuQfsjvUIKmtvxiTqi7ZA=
+X-Received: by 2002:a9d:6f18:0:b0:638:b4aa:a546 with SMTP id
+ n24-20020a9d6f18000000b00638b4aaa546mr21367162otq.124.1662488158396; Tue, 06
+ Sep 2022 11:15:58 -0700 (PDT)
 MIME-Version: 1.0
-References: <20220905114209.8389-1-adrian.hunter@intel.com>
-In-Reply-To: <20220905114209.8389-1-adrian.hunter@intel.com>
+References: <20220901184709.2179309-1-robh@kernel.org> <CAM9d7chY6T-EAN3BT487MUK0LbfGp27X+2Dd_+S0azgh2GQn9w@mail.gmail.com>
+ <CAL_JsqLmszK=NzD_2nYnZG1dD=tU1fKGUtYL-dUG2a497LkEcg@mail.gmail.com>
+In-Reply-To: <CAL_JsqLmszK=NzD_2nYnZG1dD=tU1fKGUtYL-dUG2a497LkEcg@mail.gmail.com>
 From:   Namhyung Kim <namhyung@kernel.org>
-Date:   Tue, 6 Sep 2022 10:50:31 -0700
-Message-ID: <CAM9d7cibk1OU95v56J15RG-zZmJ9TccUVZGAp=VHu7F3HwFY8g@mail.gmail.com>
-Subject: Re: [PATCH V2] libperf evlist: Fix per-thread mmaps for
- multi-threaded targets
-To:     Adrian Hunter <adrian.hunter@intel.com>
-Cc:     Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Jiri Olsa <jolsa@redhat.com>, Ian Rogers <irogers@google.com>,
-        linux-kernel <linux-kernel@vger.kernel.org>,
+Date:   Tue, 6 Sep 2022 11:15:47 -0700
+Message-ID: <CAM9d7ci0Dn3hAX9dp1UMGK7SN-w1BoRqQz6hk8Oykfaa=LnWwg@mail.gmail.com>
+Subject: Re: [PATCH] perf: Ignore format attributes with an unknown
+ perf_event_attr field
+To:     Rob Herring <robh@kernel.org>
+Cc:     Peter Zijlstra <peterz@infradead.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        Arnaldo Carvalho de Melo <acme@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Jiri Olsa <jolsa@kernel.org>,
+        James Clark <james.clark@arm.com>,
         linux-perf-users <linux-perf-users@vger.kernel.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@redhat.com>
+        linux-kernel <linux-kernel@vger.kernel.org>
 Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-On Mon, Sep 5, 2022 at 4:42 AM Adrian Hunter <adrian.hunter@intel.com> wrote:
+On Fri, Sep 2, 2022 at 8:25 AM Rob Herring <robh@kernel.org> wrote:
 >
-> The offending commit removed mmap_per_thread(), which did not consider
-> the different set-output rules for per-thread mmaps i.e. in the per-thread
-> case set-output is used for file descriptors of the same thread not the
-> same cpu.
+> On Fri, Sep 2, 2022 at 1:53 AM Namhyung Kim <namhyung@kernel.org> wrote:
+> >
+> > Hello,
+> >
+> > On Thu, Sep 1, 2022 at 11:55 AM Rob Herring <robh@kernel.org> wrote:
+> > >
+> > > If the kernel exposes a new perf_event_attr field in a format attr, perf
+> > > will return an error stating the specified PMU can't be found. For
+> > > example, a format attr with 'config3:0-63' causes an error if config3 is
+> > > unknown to perf. This causes a compatibility issue between a newer
+> > > kernel and an older perf tool.
+> > >
+> > > The addition here makes any attr string up to the ':' ignored, but
+> > > still checks the 'bits' portion.
+> > >
+> > > Signed-off-by: Rob Herring <robh@kernel.org>
+> > > ---
+> > > This is the YACC mud I threw and seems to stick. Maybe there's a better
+> > > way to handle this. It doesn't seem like there's a way to do wildcards
+> > > (i.e. config.*) in YACC.
+> > >
+> > > This is needed for this series[1]. Unfortunately the best we do to avoid
+> > > the issue is applying this to stable. I think there's some time before
+> > > v8.7 h/w is deployed, too.
+> >
+> > Maybe you could change the format_term rule to take an identifier instead
+> > of PP_CONFIG* directly and pass it to perf_pmu__new_format().  Then
+> > it could check the string and create an appropriate PERF_PMU_FORMAT_VALUE_*
+> > or ignore it according to the PERF_ATTR_SIZE_VER*.
 >
-> This was not immediately noticed because it only happens with
-> multi-threaded targets and we do not have a test for that yet.
+> That only moves parsing of configN from YACC to strcmp in C. In doing
+> so, we'd be left with just the 'error' token case which seems a bit
+> odd (if there's another way to do it, I don't know. yacc is not my
+> thing). Is that really better?
 
-Yeah, this is unfortunate.  I feel like I need to spend some time on it.
+I thought we could do more flexible handling and detailed error reporting
+in the C code.  But it could be done in the lex/yacc as well..
 
->
-> Reinstate mmap_per_thread() expanding it to cover also system-wide per-cpu
-> events i.e. to continue to allow the mixing of per-thread and per-cpu
-> mmaps.
->
-> Debug messages (with -vv) show the file descriptors that are opened with
-> sys_perf_event_open. New debug messages are added (needs -vvv) that show
-> also which file descriptors are mmapped and which are redirected with
-> set-output.
->
-> In the per-cpu case (cpu != -1) file descriptors for the same CPU are
-> set-output to the first file descriptor for that CPU.
->
-> In the per-thread case (cpu == -1) file descriptors for the same thread are
-> set-output to the first file descriptor for that thread.
->
-> Example (process 17489 has 2 threads):
->
->  Before (but with new debug prints):
->
->    $ perf record --no-bpf-event -vvv --per-thread -p 17489
->    <SNIP>
->    sys_perf_event_open: pid 17489  cpu -1  group_fd -1  flags 0x8 = 5
->    sys_perf_event_open: pid 17490  cpu -1  group_fd -1  flags 0x8 = 6
->    <SNIP>
->    libperf: idx 0: mmapping fd 5
->    libperf: idx 0: set output fd 6 -> 5
->    failed to mmap with 22 (Invalid argument)
->
->  After:
->
->    $ perf record --no-bpf-event -vvv --per-thread -p 17489
->    <SNIP>
->    sys_perf_event_open: pid 17489  cpu -1  group_fd -1  flags 0x8 = 5
->    sys_perf_event_open: pid 17490  cpu -1  group_fd -1  flags 0x8 = 6
->    <SNIP>
->    libperf: mmap_per_thread: nr cpu values (may include -1) 1 nr threads 2
->    libperf: idx 0: mmapping fd 5
->    libperf: idx 1: mmapping fd 6
->    <SNIP>
->    [ perf record: Woken up 2 times to write data ]
->    [ perf record: Captured and wrote 0.018 MB perf.data (15 samples) ]
+I think the general idea is that we want to run a more recent version of
+perf tools than the kernel.  So if it detects the tool is older, it can show
+a warning message like:
 
-It'd be nice if the example had 2 events so that it could check the
-set-output rule actually worked.
+"config3 is not in the perf_event_attr.. skipping.
+ Maybe you're running on a newer kernel. Please upgrade the perf tool."
+
+
+> Unless there is some way to retrieve
+> the PERF_ATTR_SIZE_VER* from the kernel at runtime?
+
+Even if it can retrieve the info at runtime, perf tool might not know
+how to use the new config term.
 
 Thanks,
 Namhyung
-
->
-> Per-cpu example (process 20341 has 2 threads, same as above):
->
->    $ perf record --no-bpf-event -vvv -p 20341
->    <SNIP>
->    sys_perf_event_open: pid 20341  cpu 0  group_fd -1  flags 0x8 = 5
->    sys_perf_event_open: pid 20342  cpu 0  group_fd -1  flags 0x8 = 6
->    sys_perf_event_open: pid 20341  cpu 1  group_fd -1  flags 0x8 = 7
->    sys_perf_event_open: pid 20342  cpu 1  group_fd -1  flags 0x8 = 8
->    sys_perf_event_open: pid 20341  cpu 2  group_fd -1  flags 0x8 = 9
->    sys_perf_event_open: pid 20342  cpu 2  group_fd -1  flags 0x8 = 10
->    sys_perf_event_open: pid 20341  cpu 3  group_fd -1  flags 0x8 = 11
->    sys_perf_event_open: pid 20342  cpu 3  group_fd -1  flags 0x8 = 12
->    sys_perf_event_open: pid 20341  cpu 4  group_fd -1  flags 0x8 = 13
->    sys_perf_event_open: pid 20342  cpu 4  group_fd -1  flags 0x8 = 14
->    sys_perf_event_open: pid 20341  cpu 5  group_fd -1  flags 0x8 = 15
->    sys_perf_event_open: pid 20342  cpu 5  group_fd -1  flags 0x8 = 16
->    sys_perf_event_open: pid 20341  cpu 6  group_fd -1  flags 0x8 = 17
->    sys_perf_event_open: pid 20342  cpu 6  group_fd -1  flags 0x8 = 18
->    sys_perf_event_open: pid 20341  cpu 7  group_fd -1  flags 0x8 = 19
->    sys_perf_event_open: pid 20342  cpu 7  group_fd -1  flags 0x8 = 20
->    <SNIP>
->    libperf: mmap_per_cpu: nr cpu values 8 nr threads 2
->    libperf: idx 0: mmapping fd 5
->    libperf: idx 0: set output fd 6 -> 5
->    libperf: idx 1: mmapping fd 7
->    libperf: idx 1: set output fd 8 -> 7
->    libperf: idx 2: mmapping fd 9
->    libperf: idx 2: set output fd 10 -> 9
->    libperf: idx 3: mmapping fd 11
->    libperf: idx 3: set output fd 12 -> 11
->    libperf: idx 4: mmapping fd 13
->    libperf: idx 4: set output fd 14 -> 13
->    libperf: idx 5: mmapping fd 15
->    libperf: idx 5: set output fd 16 -> 15
->    libperf: idx 6: mmapping fd 17
->    libperf: idx 6: set output fd 18 -> 17
->    libperf: idx 7: mmapping fd 19
->    libperf: idx 7: set output fd 20 -> 19
->    <SNIP>
->    [ perf record: Woken up 7 times to write data ]
->    [ perf record: Captured and wrote 0.020 MB perf.data (17 samples) ]
->
-> Fixes: ae4f8ae16a07 ("libperf evlist: Allow mixing per-thread and per-cpu mmaps")
-> Signed-off-by: Adrian Hunter <adrian.hunter@intel.com>
