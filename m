@@ -2,35 +2,35 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 91E38C6FA94
-	for <linux-perf-users@archiver.kernel.org>; Tue,  6 Sep 2022 10:47:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1A7F4ECAAD5
+	for <linux-perf-users@archiver.kernel.org>; Tue,  6 Sep 2022 10:54:39 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S239662AbiIFKrX (ORCPT
+        id S232391AbiIFKyh (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Tue, 6 Sep 2022 06:47:23 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58046 "EHLO
+        Tue, 6 Sep 2022 06:54:37 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53068 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S239853AbiIFKqi (ORCPT
+        with ESMTP id S239833AbiIFKx4 (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Tue, 6 Sep 2022 06:46:38 -0400
+        Tue, 6 Sep 2022 06:53:56 -0400
 Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTP id 6FA4377EB3;
-        Tue,  6 Sep 2022 03:45:35 -0700 (PDT)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTP id B44AEE2;
+        Tue,  6 Sep 2022 03:53:53 -0700 (PDT)
 Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 101261BB0;
-        Tue,  6 Sep 2022 03:44:13 -0700 (PDT)
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 03F99176C;
+        Tue,  6 Sep 2022 03:44:00 -0700 (PDT)
 Received: from e126387.arm.com (unknown [10.57.15.16])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 90BA33F534;
-        Tue,  6 Sep 2022 03:44:05 -0700 (PDT)
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 845CB3F534;
+        Tue,  6 Sep 2022 03:43:52 -0700 (PDT)
 From:   carsten.haitzler@foss.arm.com
 To:     linux-kernel@vger.kernel.org
 Cc:     coresight@lists.linaro.org, suzuki.poulose@arm.com,
         mathieu.poirier@linaro.org, mike.leach@linaro.org,
         leo.yan@linaro.org, linux-perf-users@vger.kernel.org,
         acme@kernel.org
-Subject: [PATCH v8 12/13] perf test: Add git ignore for tmp and output files of CoreSight tests
-Date:   Tue,  6 Sep 2022 11:30:43 +0100
-Message-Id: <20220906103044.761250-13-carsten.haitzler@foss.arm.com>
+Subject: [PATCH v8 03/13] perf test: Add asm pureloop test tool
+Date:   Tue,  6 Sep 2022 11:30:34 +0100
+Message-Id: <20220906103044.761250-4-carsten.haitzler@foss.arm.com>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20220906103044.761250-1-carsten.haitzler@foss.arm.com>
 References: <20220906103044.761250-1-carsten.haitzler@foss.arm.com>
@@ -42,34 +42,117 @@ X-Mailing-List: linux-perf-users@vger.kernel.org
 
 From: Carsten Haitzler <carsten.haitzler@arm.com>
 
-Ignore other output files of the new CoreSight tests so they don't
-fill git status with noise we don't need or want.
+Add test tool to be driven by further test scripts. This tool is pure
+arm64 ASM with no libc usage to ensure it is the same exact
+binary/code every time so it can also be re-used for many uses. It
+just loops for a given fixed number of loops.
 
 Signed-off-by: Carsten Haitzler <carsten.haitzler@arm.com>
 ---
- tools/perf/.gitignore | 2 ++
- 1 file changed, 2 insertions(+)
+ tools/perf/tests/shell/coresight/Makefile     |  3 +-
+ .../shell/coresight/asm_pure_loop/.gitignore  |  1 +
+ .../shell/coresight/asm_pure_loop/Makefile    | 34 +++++++++++++++++++
+ .../coresight/asm_pure_loop/asm_pure_loop.S   | 28 +++++++++++++++
+ 4 files changed, 65 insertions(+), 1 deletion(-)
+ create mode 100644 tools/perf/tests/shell/coresight/asm_pure_loop/.gitignore
+ create mode 100644 tools/perf/tests/shell/coresight/asm_pure_loop/Makefile
+ create mode 100644 tools/perf/tests/shell/coresight/asm_pure_loop/asm_pure_loop.S
 
-diff --git a/tools/perf/.gitignore b/tools/perf/.gitignore
-index faa23b5d32f5..a653311d9693 100644
---- a/tools/perf/.gitignore
-+++ b/tools/perf/.gitignore
-@@ -22,6 +22,7 @@ perf-archive
- perf-iostat
- tags
- TAGS
-+stats-*.csv
- cscope*
- config.mak
- config.mak.autogen
-@@ -29,6 +30,7 @@ config.mak.autogen
- *-flex.*
- *.pyc
- *.pyo
-+*.stdout
- .config-detected
- util/intel-pt-decoder/inat-tables.c
- arch/*/include/generated/
+diff --git a/tools/perf/tests/shell/coresight/Makefile b/tools/perf/tests/shell/coresight/Makefile
+index 3b816bb4ced3..d4f868d55773 100644
+--- a/tools/perf/tests/shell/coresight/Makefile
++++ b/tools/perf/tests/shell/coresight/Makefile
+@@ -4,7 +4,8 @@ include ../../../../../tools/scripts/Makefile.include
+ include ../../../../../tools/scripts/Makefile.arch
+ include ../../../../../tools/scripts/utilities.mak
+ 
+-SUBDIRS =
++SUBDIRS = \
++	asm_pure_loop
+ 
+ all: $(SUBDIRS)
+ $(SUBDIRS):
+diff --git a/tools/perf/tests/shell/coresight/asm_pure_loop/.gitignore b/tools/perf/tests/shell/coresight/asm_pure_loop/.gitignore
+new file mode 100644
+index 000000000000..468673ac32e8
+--- /dev/null
++++ b/tools/perf/tests/shell/coresight/asm_pure_loop/.gitignore
+@@ -0,0 +1 @@
++asm_pure_loop
+diff --git a/tools/perf/tests/shell/coresight/asm_pure_loop/Makefile b/tools/perf/tests/shell/coresight/asm_pure_loop/Makefile
+new file mode 100644
+index 000000000000..206849e92bc9
+--- /dev/null
++++ b/tools/perf/tests/shell/coresight/asm_pure_loop/Makefile
+@@ -0,0 +1,34 @@
++# SPDX-License-Identifier: GPL-2.0
++# Carsten Haitzler <carsten.haitzler@arm.com>, 2021
++
++include ../Makefile.miniconfig
++
++# Binary to produce
++BIN=asm_pure_loop
++# Any linking/libraries needed for the binary - empty if none needed
++LIB=
++
++all: $(BIN)
++
++$(BIN): $(BIN).S
++ifdef CORESIGHT
++ifeq ($(ARCH),arm64)
++# Build line - this is raw asm with no libc to have an always exact binary
++	$(Q)$(CC) $(BIN).S -nostdlib -static -o $(BIN) $(LIB)
++endif
++endif
++
++install-tests: all
++ifdef CORESIGHT
++ifeq ($(ARCH),arm64)
++# Install the test tool in the right place
++	$(call QUIET_INSTALL, tests) \
++		$(INSTALL) -d -m 755 '$(DESTDIR_SQ)$(perfexec_instdir_SQ)/$(INSTDIR_SUB)/$(BIN)'; \
++		$(INSTALL) $(BIN) '$(DESTDIR_SQ)$(perfexec_instdir_SQ)/$(INSTDIR_SUB)/$(BIN)/$(BIN)'
++endif
++endif
++
++clean:
++	$(Q)$(RM) -f $(BIN)
++
++.PHONY: all clean install-tests
+diff --git a/tools/perf/tests/shell/coresight/asm_pure_loop/asm_pure_loop.S b/tools/perf/tests/shell/coresight/asm_pure_loop/asm_pure_loop.S
+new file mode 100644
+index 000000000000..75cf084a927d
+--- /dev/null
++++ b/tools/perf/tests/shell/coresight/asm_pure_loop/asm_pure_loop.S
+@@ -0,0 +1,28 @@
++/* SPDX-License-Identifier: GPL-2.0 */
++/* Tamas Zsoldos <tamas.zsoldos@arm.com>, 2021 */
++
++.globl _start
++_start:
++	mov	x0, 0x0000ffff
++	mov	x1, xzr
++loop:
++	nop
++	nop
++	cbnz	x1, noskip
++	nop
++	nop
++	adrp	x2, skip
++	add 	x2, x2, :lo12:skip
++	br	x2
++	nop
++	nop
++noskip:
++	nop
++	nop
++skip:
++	sub	x0, x0, 1
++	cbnz	x0, loop
++
++	mov	x0, #0
++	mov	x8, #93 // __NR_exit syscall
++	svc	#0
 -- 
 2.32.0
 
