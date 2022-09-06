@@ -2,65 +2,52 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1DB53ECAAA1
-	for <linux-perf-users@archiver.kernel.org>; Tue,  6 Sep 2022 17:44:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0A331ECAAA1
+	for <linux-perf-users@archiver.kernel.org>; Tue,  6 Sep 2022 17:50:55 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229711AbiIFRoG (ORCPT
+        id S229492AbiIFRux (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Tue, 6 Sep 2022 13:44:06 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54240 "EHLO
+        Tue, 6 Sep 2022 13:50:53 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50744 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229784AbiIFRoD (ORCPT
+        with ESMTP id S229636AbiIFRuw (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Tue, 6 Sep 2022 13:44:03 -0400
-Received: from mail-wr1-x430.google.com (mail-wr1-x430.google.com [IPv6:2a00:1450:4864:20::430])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id AA0CA260E
-        for <linux-perf-users@vger.kernel.org>; Tue,  6 Sep 2022 10:44:00 -0700 (PDT)
-Received: by mail-wr1-x430.google.com with SMTP id bz13so13157680wrb.2
-        for <linux-perf-users@vger.kernel.org>; Tue, 06 Sep 2022 10:44:00 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20210112;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:from:to:cc:subject:date;
-        bh=mmejXIhnispIqTZmUKcammd2NH7OYQosIOOt0JAydyA=;
-        b=jYb46OsRLzHu5ur3bZaftMs/yXoKBA675Naqu1Dna673MxzBvDE0F4+5Ml9KfHk1FU
-         JX902+8QwapqQgLxbKFmPivt+548g4g9p/caiqbrJ44gu7rbO0HhUFY7OfWZeb/JWBp6
-         48W6ek3aEnA3MhUIkx6qywVTQrF50wLFDBJQCv6fKzGPgmww04/GRh412sqEqtsEvet6
-         r9W6W1OxyKgfCAwaz0zEO9ARdQHOALw1I2qBdDDDUHd/TGVGN/55wnAkiazihLetPH8P
-         jbz5k+xSUtNwF+YvVlMPvfYZ+0v9Tug6qTp2uAWaVyeZxOawdpplQfJBuI9l7eON3uNk
-         t/6g==
+        Tue, 6 Sep 2022 13:50:52 -0400
+Received: from mail-oa1-f48.google.com (mail-oa1-f48.google.com [209.85.160.48])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1005B915CB;
+        Tue,  6 Sep 2022 10:50:44 -0700 (PDT)
+Received: by mail-oa1-f48.google.com with SMTP id 586e51a60fabf-12243fcaa67so30010309fac.8;
+        Tue, 06 Sep 2022 10:50:44 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
         h=cc:to:subject:message-id:date:from:in-reply-to:references
          :mime-version:x-gm-message-state:from:to:cc:subject:date;
-        bh=mmejXIhnispIqTZmUKcammd2NH7OYQosIOOt0JAydyA=;
-        b=r15wjm20Q1yyjxxIjsEGn7HvRPbRUomePMU+vobpP3dRe8BwEjtmUFsYbIP0bvwWT0
-         +vU8lda/fGcwIEb64biPhkx0fiS8uE6bF2sF7VYTd5gJhpRjNcMnth8HP4VQ8YeNzX1g
-         8jXdEobV/czsOuFwVXPWN7v//DplPYNv7nuj3eqoDnzz3GhFbtN9RaJsuVJ5NLD1ccjT
-         IjvU7uL0WA3iNEApjSM/Zy7yNFiQ3rCekmWgVCwC922Wu22oeavpCFfkoMoPNX9qf6Cr
-         5cjH6b/5i3+ysC1BIWpqJ1ywMxt3xlIJ+9gq8QlWN1KQQtRfQtDZcs1pdMd1I0ukd2O0
-         Kxiw==
-X-Gm-Message-State: ACgBeo0hGJKlWfAL3Bz8u0sXyAsQ0DfWH5GvER9RlWFZXmTpwgH0R5h3
-        8tz4q+TQbYh0I5/EkuT6XGsLg/Bt3WpOuT2Gz5Vv7Q==
-X-Google-Smtp-Source: AA6agR53WKeyMqSJhWY/+hkox4xbUh5fsIM4xda1qewXJeS+1McaAW1nq2DR6KvlRWrdlQGCnbG9al4r6+AIUvsIFMc=
-X-Received: by 2002:a5d:64a8:0:b0:226:f3f3:9914 with SMTP id
- m8-20020a5d64a8000000b00226f3f39914mr15096010wrp.343.1662486238444; Tue, 06
- Sep 2022 10:43:58 -0700 (PDT)
+        bh=FQOU2gtbGHU8P+SfVNiDNcpCtIq0ymlv0rdzv/pE/OE=;
+        b=l9Qbd73bBw7Ib1TXtqEzZe3uXaRXY5IOakZlB2BjxH7nfTwVXvRlxt9+dOhYNwPrus
+         643MitL7rL2oMJ7zgUrCFtX6y1XsRXwfX0Ca6fJJ/gdUagdkdPEnQVoxzkRPcThUS+FI
+         IPXO/cW2gyOALCigMnJ4L/pjJrKRK2UlOAi9yXfA1zMbqZaT4Y8zjbjdnp7uyq1N8g6y
+         8UvHz2wxRtJ224kh+v1jazaxEQxD0AXOxzU1ws+LjNzsyDGYr9Hs6z+HdvbBnv3NPSoO
+         gQOAHOoWfhxE4Wj+gAFrWXlGbY2YdM4faUsMh8qOB0JLxvAeOSLAzeMNuZedmZe07XWA
+         bvow==
+X-Gm-Message-State: ACgBeo1m70XxipPwLbxOgUxCloheOqZ9bhe0+QdB8bta5SXAkmwwI9JK
+        LTlximQWPklL2AXC7j1zJfIarq6JvykdrkOCchM=
+X-Google-Smtp-Source: AA6agR6grDYciA8oSOQETrO/w0otbXHspFX2ViD83ps/ULz1jk/FB4tFzmk2i55+ZWzPY93F70shNQqE0t6yM/BhYEs=
+X-Received: by 2002:a05:6808:302a:b0:345:ec04:8f11 with SMTP id
+ ay42-20020a056808302a00b00345ec048f11mr10483844oib.5.1662486642612; Tue, 06
+ Sep 2022 10:50:42 -0700 (PDT)
 MIME-Version: 1.0
 References: <20220905114209.8389-1-adrian.hunter@intel.com>
- <YxdEQkmkZjBC6wGb@krava> <60b5c9bf-4ec9-957e-17dd-aa0a50411ff9@intel.com>
-In-Reply-To: <60b5c9bf-4ec9-957e-17dd-aa0a50411ff9@intel.com>
-From:   Ian Rogers <irogers@google.com>
-Date:   Tue, 6 Sep 2022 10:43:45 -0700
-Message-ID: <CAP-5=fW3MLdzA01gWRx7yH-b=J4oqUTj9KMtrB0ZDpb0wucZ4A@mail.gmail.com>
+In-Reply-To: <20220905114209.8389-1-adrian.hunter@intel.com>
+From:   Namhyung Kim <namhyung@kernel.org>
+Date:   Tue, 6 Sep 2022 10:50:31 -0700
+Message-ID: <CAM9d7cibk1OU95v56J15RG-zZmJ9TccUVZGAp=VHu7F3HwFY8g@mail.gmail.com>
 Subject: Re: [PATCH V2] libperf evlist: Fix per-thread mmaps for
  multi-threaded targets
 To:     Adrian Hunter <adrian.hunter@intel.com>
-Cc:     Jiri Olsa <olsajiri@gmail.com>,
-        Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Jiri Olsa <jolsa@redhat.com>,
-        Namhyung Kim <namhyung@kernel.org>,
-        linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org,
+Cc:     Arnaldo Carvalho de Melo <acme@kernel.org>,
+        Jiri Olsa <jolsa@redhat.com>, Ian Rogers <irogers@google.com>,
+        linux-kernel <linux-kernel@vger.kernel.org>,
+        linux-perf-users <linux-perf-users@vger.kernel.org>,
         Peter Zijlstra <peterz@infradead.org>,
         Ingo Molnar <mingo@redhat.com>
 Content-Type: text/plain; charset="UTF-8"
@@ -68,126 +55,109 @@ Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-On Tue, Sep 6, 2022 at 7:04 AM Adrian Hunter <adrian.hunter@intel.com> wrote:
+On Mon, Sep 5, 2022 at 4:42 AM Adrian Hunter <adrian.hunter@intel.com> wrote:
 >
-> On 6/09/22 15:59, Jiri Olsa wrote:
-> > On Mon, Sep 05, 2022 at 02:42:09PM +0300, Adrian Hunter wrote:
-> >
-> > SNIP
-> >
-> >> diff --git a/tools/lib/perf/evlist.c b/tools/lib/perf/evlist.c
-> >> index e6c98a6e3908..6b1bafe267a4 100644
-> >> --- a/tools/lib/perf/evlist.c
-> >> +++ b/tools/lib/perf/evlist.c
-> >> @@ -486,6 +486,7 @@ mmap_per_evsel(struct perf_evlist *evlist, struct perf_evlist_mmap_ops *ops,
-> >>                      if (ops->idx)
-> >>                              ops->idx(evlist, evsel, mp, idx);
-> >>
-> >> +                    pr_debug("idx %d: mmapping fd %d\n", idx, *output);
-> >>                      if (ops->mmap(map, mp, *output, evlist_cpu) < 0)
-> >>                              return -1;
-> >>
-> >> @@ -494,6 +495,7 @@ mmap_per_evsel(struct perf_evlist *evlist, struct perf_evlist_mmap_ops *ops,
-> >>                      if (!idx)
-> >>                              perf_evlist__set_mmap_first(evlist, map, overwrite);
-> >>              } else {
-> >> +                    pr_debug("idx %d: set output fd %d -> %d\n", idx, fd, *output);
-> >>                      if (ioctl(fd, PERF_EVENT_IOC_SET_OUTPUT, *output) != 0)
-> >>                              return -1;
-> >>
-> >> @@ -519,6 +521,48 @@ mmap_per_evsel(struct perf_evlist *evlist, struct perf_evlist_mmap_ops *ops,
-> >>      return 0;
-> >>  }
-> >>
-> >> +static int
-> >> +mmap_per_thread(struct perf_evlist *evlist, struct perf_evlist_mmap_ops *ops,
-> >> +            struct perf_mmap_param *mp)
-> >> +{
-> >> +    int nr_threads = perf_thread_map__nr(evlist->threads);
-> >> +    int nr_cpus    = perf_cpu_map__nr(evlist->all_cpus);
-> >> +    int cpu, thread, idx = 0;
-> >> +    int nr_mmaps = 0;
-> >> +
-> >> +    pr_debug("%s: nr cpu values (may include -1) %d nr threads %d\n",
-> >> +             __func__, nr_cpus, nr_threads);
-> >
-> > -1 as cpu value is only for 'empty' perf_cpu_map, right?
+> The offending commit removed mmap_per_thread(), which did not consider
+> the different set-output rules for per-thread mmaps i.e. in the per-thread
+> case set-output is used for file descriptors of the same thread not the
+> same cpu.
 >
-> The cpu map is a map of valid 3rd arguments to perf_event_open, so -1
-> means all CPUs which is per-thread by necessity.
->
-> >
-> >> +
-> >> +    /* per-thread mmaps */
-> >> +    for (thread = 0; thread < nr_threads; thread++, idx++) {
-> >> +            int output = -1;
-> >> +            int output_overwrite = -1;
-> >> +
-> >> +            if (mmap_per_evsel(evlist, ops, idx, mp, 0, thread, &output,
-> >> +                               &output_overwrite, &nr_mmaps))
-> >> +                    goto out_unmap;
-> >> +    }
-> >> +
-> >> +    /* system-wide mmaps i.e. per-cpu */
-> >> +    for (cpu = 1; cpu < nr_cpus; cpu++, idx++) {
-> >> +            int output = -1;
-> >> +            int output_overwrite = -1;
-> >> +
-> >> +            if (mmap_per_evsel(evlist, ops, idx, mp, cpu, 0, &output,
-> >> +                               &output_overwrite, &nr_mmaps))
-> >> +                    goto out_unmap;
-> >> +    }
-> >
-> > will this loop be executed? we are in here because all_cpus is empty, right?
->
-> Yes it is executed.  I put back the code that was there before ae4f8ae16a07
-> ("libperf evlist: Allow mixing per-thread and per-cpu mmaps"), which uses
-> perf_cpu_map__empty() which only checks the first entry is -1:
->
-> bool perf_cpu_map__empty(const struct perf_cpu_map *map)
-> {
->         return map ? map->map[0].cpu == -1 : true;
-> }
->
-> But there can be more CPUs in the map, so perf_cpu_map__empty()
-> returns true for the per-thread case, as desired, even if there
-> are also system-wide CPUs.
->
-> I guess perf_cpu_map__empty() needs renaming.
+> This was not immediately noticed because it only happens with
+> multi-threaded targets and we do not have a test for that yet.
 
-Let me nitpick :-) -1 means any CPU, as per the perf_event_open man
-page, all CPUs would be a CPU map with every CPU on the system in it -
-all CPUs can have some ambiguity in whether it includes offline CPUs,
-which isn't true for any. I've not sent out a patch to clean up the
-libperf CPU map code as I'd like to propose we start a libperf2 (with
-LPC coming up it'd be a good place to discuss this, there's also the
-office hours on Thursday). What I hope for libperf2 is that we can
-make its license the same as libbpf, so the code can be more widely
-included in projects. As such it wouldn't be valid to copy paste
-libperf's CPU map into libperf2, but a larger clean up and refactor
-could be put into libperf2 with libperf and perf depending upon it.
-There are other areas that'd benefit from cleanup such as how a dash
-is handled by parse events. It makes sense (imo) for this all to
-become libperf2 work, and once we're happy with libperf2 we can
-replace libperf completely.
+Yeah, this is unfortunate.  I feel like I need to spend some time on it.
+
+>
+> Reinstate mmap_per_thread() expanding it to cover also system-wide per-cpu
+> events i.e. to continue to allow the mixing of per-thread and per-cpu
+> mmaps.
+>
+> Debug messages (with -vv) show the file descriptors that are opened with
+> sys_perf_event_open. New debug messages are added (needs -vvv) that show
+> also which file descriptors are mmapped and which are redirected with
+> set-output.
+>
+> In the per-cpu case (cpu != -1) file descriptors for the same CPU are
+> set-output to the first file descriptor for that CPU.
+>
+> In the per-thread case (cpu == -1) file descriptors for the same thread are
+> set-output to the first file descriptor for that thread.
+>
+> Example (process 17489 has 2 threads):
+>
+>  Before (but with new debug prints):
+>
+>    $ perf record --no-bpf-event -vvv --per-thread -p 17489
+>    <SNIP>
+>    sys_perf_event_open: pid 17489  cpu -1  group_fd -1  flags 0x8 = 5
+>    sys_perf_event_open: pid 17490  cpu -1  group_fd -1  flags 0x8 = 6
+>    <SNIP>
+>    libperf: idx 0: mmapping fd 5
+>    libperf: idx 0: set output fd 6 -> 5
+>    failed to mmap with 22 (Invalid argument)
+>
+>  After:
+>
+>    $ perf record --no-bpf-event -vvv --per-thread -p 17489
+>    <SNIP>
+>    sys_perf_event_open: pid 17489  cpu -1  group_fd -1  flags 0x8 = 5
+>    sys_perf_event_open: pid 17490  cpu -1  group_fd -1  flags 0x8 = 6
+>    <SNIP>
+>    libperf: mmap_per_thread: nr cpu values (may include -1) 1 nr threads 2
+>    libperf: idx 0: mmapping fd 5
+>    libperf: idx 1: mmapping fd 6
+>    <SNIP>
+>    [ perf record: Woken up 2 times to write data ]
+>    [ perf record: Captured and wrote 0.018 MB perf.data (15 samples) ]
+
+It'd be nice if the example had 2 events so that it could check the
+set-output rule actually worked.
 
 Thanks,
-Ian
+Namhyung
 
-> >
-> > thanks,
-> > jirka
-> >
-> >> +
-> >> +    if (nr_mmaps != evlist->nr_mmaps)
-> >> +            pr_err("Miscounted nr_mmaps %d vs %d\n", nr_mmaps, evlist->nr_mmaps);
-> >> +
-> >> +    return 0;
-> >> +
-> >> +out_unmap:
-> >> +    perf_evlist__munmap(evlist);
-> >> +    return -1;
-> >> +}
-> >
-> > SNIP
 >
+> Per-cpu example (process 20341 has 2 threads, same as above):
+>
+>    $ perf record --no-bpf-event -vvv -p 20341
+>    <SNIP>
+>    sys_perf_event_open: pid 20341  cpu 0  group_fd -1  flags 0x8 = 5
+>    sys_perf_event_open: pid 20342  cpu 0  group_fd -1  flags 0x8 = 6
+>    sys_perf_event_open: pid 20341  cpu 1  group_fd -1  flags 0x8 = 7
+>    sys_perf_event_open: pid 20342  cpu 1  group_fd -1  flags 0x8 = 8
+>    sys_perf_event_open: pid 20341  cpu 2  group_fd -1  flags 0x8 = 9
+>    sys_perf_event_open: pid 20342  cpu 2  group_fd -1  flags 0x8 = 10
+>    sys_perf_event_open: pid 20341  cpu 3  group_fd -1  flags 0x8 = 11
+>    sys_perf_event_open: pid 20342  cpu 3  group_fd -1  flags 0x8 = 12
+>    sys_perf_event_open: pid 20341  cpu 4  group_fd -1  flags 0x8 = 13
+>    sys_perf_event_open: pid 20342  cpu 4  group_fd -1  flags 0x8 = 14
+>    sys_perf_event_open: pid 20341  cpu 5  group_fd -1  flags 0x8 = 15
+>    sys_perf_event_open: pid 20342  cpu 5  group_fd -1  flags 0x8 = 16
+>    sys_perf_event_open: pid 20341  cpu 6  group_fd -1  flags 0x8 = 17
+>    sys_perf_event_open: pid 20342  cpu 6  group_fd -1  flags 0x8 = 18
+>    sys_perf_event_open: pid 20341  cpu 7  group_fd -1  flags 0x8 = 19
+>    sys_perf_event_open: pid 20342  cpu 7  group_fd -1  flags 0x8 = 20
+>    <SNIP>
+>    libperf: mmap_per_cpu: nr cpu values 8 nr threads 2
+>    libperf: idx 0: mmapping fd 5
+>    libperf: idx 0: set output fd 6 -> 5
+>    libperf: idx 1: mmapping fd 7
+>    libperf: idx 1: set output fd 8 -> 7
+>    libperf: idx 2: mmapping fd 9
+>    libperf: idx 2: set output fd 10 -> 9
+>    libperf: idx 3: mmapping fd 11
+>    libperf: idx 3: set output fd 12 -> 11
+>    libperf: idx 4: mmapping fd 13
+>    libperf: idx 4: set output fd 14 -> 13
+>    libperf: idx 5: mmapping fd 15
+>    libperf: idx 5: set output fd 16 -> 15
+>    libperf: idx 6: mmapping fd 17
+>    libperf: idx 6: set output fd 18 -> 17
+>    libperf: idx 7: mmapping fd 19
+>    libperf: idx 7: set output fd 20 -> 19
+>    <SNIP>
+>    [ perf record: Woken up 7 times to write data ]
+>    [ perf record: Captured and wrote 0.020 MB perf.data (17 samples) ]
+>
+> Fixes: ae4f8ae16a07 ("libperf evlist: Allow mixing per-thread and per-cpu mmaps")
+> Signed-off-by: Adrian Hunter <adrian.hunter@intel.com>
