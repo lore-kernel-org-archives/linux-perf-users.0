@@ -2,101 +2,77 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4286DECAAA1
-	for <linux-perf-users@archiver.kernel.org>; Tue,  6 Sep 2022 02:54:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 840A4ECAAD3
+	for <linux-perf-users@archiver.kernel.org>; Tue,  6 Sep 2022 02:57:59 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232900AbiIFCyz (ORCPT
+        id S232204AbiIFC55 (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Mon, 5 Sep 2022 22:54:55 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41102 "EHLO
+        Mon, 5 Sep 2022 22:57:57 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44664 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S237992AbiIFCyx (ORCPT
+        with ESMTP id S229974AbiIFC54 (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Mon, 5 Sep 2022 22:54:53 -0400
-Received: from szxga02-in.huawei.com (szxga02-in.huawei.com [45.249.212.188])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 396EE15736;
-        Mon,  5 Sep 2022 19:54:46 -0700 (PDT)
-Received: from dggemv711-chm.china.huawei.com (unknown [172.30.72.57])
-        by szxga02-in.huawei.com (SkyGuard) with ESMTP id 4MM8z40fY1zmV9w;
-        Tue,  6 Sep 2022 10:51:12 +0800 (CST)
-Received: from kwepemm600008.china.huawei.com (7.193.23.88) by
- dggemv711-chm.china.huawei.com (10.1.198.66) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2375.24; Tue, 6 Sep 2022 10:54:24 +0800
-Received: from huawei.com (10.175.100.227) by kwepemm600008.china.huawei.com
- (7.193.23.88) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2375.24; Tue, 6 Sep
- 2022 10:54:23 +0800
-From:   Shang XiaoJing <shangxiaojing@huawei.com>
-To:     <peterz@infradead.org>, <mingo@redhat.com>, <acme@kernel.org>,
-        <mark.rutland@arm.com>, <alexander.shishkin@linux.intel.com>,
-        <jolsa@kernel.org>, <namhyung@kernel.org>,
-        <linux-perf-users@vger.kernel.org>, <linux-kernel@vger.kernel.org>
-CC:     <shangxiaojing@huawei.com>
-Subject: [PATCH v2 3/3] perf c2c: Prevent potential memory leak in c2c_he_zalloc
-Date:   Tue, 6 Sep 2022 11:29:06 +0800
-Message-ID: <20220906032906.21395-4-shangxiaojing@huawei.com>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20220906032906.21395-1-shangxiaojing@huawei.com>
-References: <20220906032906.21395-1-shangxiaojing@huawei.com>
+        Mon, 5 Sep 2022 22:57:56 -0400
+Received: from foss.arm.com (foss.arm.com [217.140.110.172])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTP id 81ABF6BCD7;
+        Mon,  5 Sep 2022 19:57:53 -0700 (PDT)
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 5FEE8139F;
+        Mon,  5 Sep 2022 19:57:59 -0700 (PDT)
+Received: from [10.162.42.8] (unknown [10.162.42.8])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id E43D93F534;
+        Mon,  5 Sep 2022 19:57:48 -0700 (PDT)
+Message-ID: <d4e24bcc-8974-f835-1d95-4b520413b011@arm.com>
+Date:   Tue, 6 Sep 2022 08:27:45 +0530
 MIME-Version: 1.0
-Content-Type: text/plain
-X-Originating-IP: [10.175.100.227]
-X-ClientProxiedBy: dggems701-chm.china.huawei.com (10.3.19.178) To
- kwepemm600008.china.huawei.com (7.193.23.88)
-X-CFilter-Loop: Reflected
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
+ Thunderbird/91.11.0
+Subject: Re: [PATCH V2 3/4] arm64/perf: Assert all platform event flags are
+ within PERF_EVENT_FLAG_ARCH
+Content-Language: en-US
+To:     James Clark <james.clark@arm.com>
+Cc:     Ingo Molnar <mingo@redhat.com>,
+        Arnaldo Carvalho de Melo <acme@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Jiri Olsa <jolsa@kernel.org>,
+        Namhyung Kim <namhyung@kernel.org>,
+        linux-arm-kernel@lists.infradead.org, x86@kernel.org,
+        Will Deacon <will@kernel.org>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org,
+        peterz@infradead.org
+References: <20220905054239.324029-1-anshuman.khandual@arm.com>
+ <20220905054239.324029-4-anshuman.khandual@arm.com>
+ <3ad268df-f6fd-a899-ce0e-131b5fdfeae8@arm.com>
+From:   Anshuman Khandual <anshuman.khandual@arm.com>
+In-Reply-To: <3ad268df-f6fd-a899-ce0e-131b5fdfeae8@arm.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-Free allocated resources when zalloc is failed for members in c2c_he, to
-prevent potential memory leak in c2c_he_zalloc.
 
-Signed-off-by: Shang XiaoJing <shangxiaojing@huawei.com>
-Acked-by: Jiri Olsa <jolsa@kernel.org>
----
-changes in v2:
-- clear omissible free labels due to zero allocated c2c_he.
----
- tools/perf/builtin-c2c.c | 12 +++++++++---
- 1 file changed, 9 insertions(+), 3 deletions(-)
 
-diff --git a/tools/perf/builtin-c2c.c b/tools/perf/builtin-c2c.c
-index 12f272811487..f35a47b2dbe4 100644
---- a/tools/perf/builtin-c2c.c
-+++ b/tools/perf/builtin-c2c.c
-@@ -146,15 +146,15 @@ static void *c2c_he_zalloc(size_t size)
- 
- 	c2c_he->cpuset = bitmap_zalloc(c2c.cpus_cnt);
- 	if (!c2c_he->cpuset)
--		return NULL;
-+		goto out_free;
- 
- 	c2c_he->nodeset = bitmap_zalloc(c2c.nodes_cnt);
- 	if (!c2c_he->nodeset)
--		return NULL;
-+		goto out_free;
- 
- 	c2c_he->node_stats = zalloc(c2c.nodes_cnt * sizeof(*c2c_he->node_stats));
- 	if (!c2c_he->node_stats)
--		return NULL;
-+		goto out_free;
- 
- 	init_stats(&c2c_he->cstats.lcl_hitm);
- 	init_stats(&c2c_he->cstats.rmt_hitm);
-@@ -163,6 +163,12 @@ static void *c2c_he_zalloc(size_t size)
- 	init_stats(&c2c_he->cstats.load);
- 
- 	return &c2c_he->he;
-+
-+out_free:
-+	free(c2c_he->nodeset);
-+	free(c2c_he->cpuset);
-+	free(c2c_he);
-+	return NULL;
- }
- 
- static void c2c_he_free(void *he)
--- 
-2.17.1
+On 9/5/22 14:40, James Clark wrote:
+>> --- a/include/linux/perf/arm_pmu.h
+>> +++ b/include/linux/perf/arm_pmu.h
+>> @@ -24,10 +24,11 @@
+>>  /*
+>>   * ARM PMU hw_event flags
+>>   */
+>> -/* Event uses a 64bit counter */
+>> -#define ARMPMU_EVT_64BIT		1
+>> -/* Event uses a 47bit counter */
+>> -#define ARMPMU_EVT_47BIT		2
+>> +#define ARMPMU_EVT_64BIT		0x00001 /* Event uses a 64bit counter */
+>> +#define ARMPMU_EVT_47BIT		0x00002 /* Event uses a 47bit counter */
+>> +
+> Minor nit:
+> 
+> I don't think changing the definitions to hex adds anything except more
+> noise in the git blame.
 
+The idea here was just to make these five digit hex, in accordance with
+PERF_EVENT_FLAG_ARCH mask like the existing x86 platform event flags.
