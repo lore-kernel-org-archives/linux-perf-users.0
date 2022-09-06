@@ -2,252 +2,175 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B3A93ECAAA1
-	for <linux-perf-users@archiver.kernel.org>; Tue,  6 Sep 2022 18:56:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B094BECAAA1
+	for <linux-perf-users@archiver.kernel.org>; Tue,  6 Sep 2022 19:22:37 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229508AbiIFS40 (ORCPT
+        id S229456AbiIFTWh (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Tue, 6 Sep 2022 14:56:26 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39736 "EHLO
+        Tue, 6 Sep 2022 15:22:37 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50098 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229461AbiIFS4Z (ORCPT
+        with ESMTP id S229823AbiIFTWg (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Tue, 6 Sep 2022 14:56:25 -0400
-Received: from mail-wr1-x42b.google.com (mail-wr1-x42b.google.com [IPv6:2a00:1450:4864:20::42b])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 47A5857E23
-        for <linux-perf-users@vger.kernel.org>; Tue,  6 Sep 2022 11:56:22 -0700 (PDT)
-Received: by mail-wr1-x42b.google.com with SMTP id bj14so3557402wrb.12
-        for <linux-perf-users@vger.kernel.org>; Tue, 06 Sep 2022 11:56:22 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20210112;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:from:to:cc:subject:date;
-        bh=mVD0IDf4vFuc1b0w2Rkf2gOwBBGFdMNZB9N2hm12IS4=;
-        b=LCuCg21uszaecDuXsrJyrMIKNi1K6QOXw6VYNepdmduxP1UzFltTJfd8d/HyQh0rXN
-         zc7i4x5QdcEhoMawRzcrJBtyuUMb9TdffNUI/7F4Xi0QT1UO3mPtnK5ti60T/0bLJ97F
-         4rq9F+iK9XoM3qHP9gql5pOjvfAlaJPLYYWvpzcOIqmNg9dezfNuQQTQVnwfpGZAyyDk
-         r0Qd+T3D+IjGFxZD0wP0XxhC4CWrBZzhbmJa/kU2D+1KiZxvImjzhED3f9tFADx+f4up
-         6oIOSVfXRag72JHXGqZRqd/izVhcRbFOvik8OWohAngd1NnnBkmBABVWZUi+6xjgUGSQ
-         5h8A==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date;
-        bh=mVD0IDf4vFuc1b0w2Rkf2gOwBBGFdMNZB9N2hm12IS4=;
-        b=lU+Jts6Nxw9eh+E6o9nzbJikyk2yhsyYk5YQgcJZ9LptUz7BtQHuLEktB6J3YQuvrR
-         tcapY8ncMn1EhN0n/0LwBdI9NazAe1/5HaQ1OPOdv+c90QxcTUmw3PHoN4kJbDak3SOc
-         XbGxGgPLVToIir7XHq+IM37PyD2CBrgbexSqwewevjkvhpPlDmMsNSSspWWaMW+xouvb
-         L5pkdrNWsp7snrBFeHC1H44uTUPTp5Vkq6B9+WX81Vpta4mr9mtyS2jfq1WtY25QOAQr
-         OB/uv5pwp7fuwMPcVzTS3UAOzlgG/XwVPhJAm7IBSGg5No+1QqPl4Ywni26vA9IbiHtP
-         RqEw==
-X-Gm-Message-State: ACgBeo1nYpFFqb/+p6l5r0jAwzEAUBBvNeq4SlduW2wnMboIJQk29vFC
-        mIJUsQQWpObS8KXaazxU2OmIZVYxRSzcvNf6jap35g==
-X-Google-Smtp-Source: AA6agR46hahzJdc5E/HR0uJwAe8S3ikQpAgzLEBcoGGKWuG3OQhIWkIxCuk4qcbCn3AiJDMZXfOaXhvFvCMFvCeOYCk=
-X-Received: by 2002:adf:e4ca:0:b0:228:d8b7:48a7 with SMTP id
- v10-20020adfe4ca000000b00228d8b748a7mr2849133wrm.300.1662490580638; Tue, 06
- Sep 2022 11:56:20 -0700 (PDT)
-MIME-Version: 1.0
-References: <20220831174926.579643-1-irogers@google.com> <20220831174926.579643-5-irogers@google.com>
- <CAM9d7cgRb6_jFXCfoZZ+=K5WSH42hj4U2ZH-i-4oZTMKw+LAiA@mail.gmail.com>
-In-Reply-To: <CAM9d7cgRb6_jFXCfoZZ+=K5WSH42hj4U2ZH-i-4oZTMKw+LAiA@mail.gmail.com>
-From:   Ian Rogers <irogers@google.com>
-Date:   Tue, 6 Sep 2022 11:56:08 -0700
-Message-ID: <CAP-5=fXVE+vLB2GN9pkvfj4jLa2Bdg6LY24yFtZ+ix5bP9QGpQ@mail.gmail.com>
-Subject: Re: [PATCH v2 4/7] perf topology: Add core_wide
-To:     Namhyung Kim <namhyung@kernel.org>
-Cc:     Peter Zijlstra <peterz@infradead.org>,
+        Tue, 6 Sep 2022 15:22:36 -0400
+Received: from casper.infradead.org (casper.infradead.org [IPv6:2001:8b0:10b:1236::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D864AA9262;
+        Tue,  6 Sep 2022 12:22:34 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=casper.20170209; h=In-Reply-To:Content-Type:MIME-Version:
+        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description;
+        bh=3GsMXUauB5utuEXv1jDmKoUBdqmBEdZQ5N5O8GX8KS8=; b=lobpDkUTBm1BgXceQdblKqADOJ
+        R3CgWOaoofntBmHZnnPPUdL7z6rPA8k7tPrZsd81Y+GRNrncrNGRrPwu8ae/qcDWlgS38a7H8irke
+        3eZAphqb8aoprdffabGDRGHCBfr6EcmWC9oe4SYAffOL9pZXFMYgwJVA+gwfDvKYDgEf7+TUM0bzR
+        TyDsmpEwf1gnmia1mNIY4XKS7EB62smcgf6DSTokDh1bEa97CUc1bcWyE7wxdyp42IE1nEKdCwSVW
+        v64hda0sbzRR/VWRuZwa/YIXoNxxg45Dm+cxjo/GhErqZKYyTz0L/tStNbxI+56gNnVMf9owY7B0N
+        mmD8jzug==;
+Received: from j130084.upc-j.chello.nl ([24.132.130.84] helo=noisy.programming.kicks-ass.net)
+        by casper.infradead.org with esmtpsa (Exim 4.94.2 #2 (Red Hat Linux))
+        id 1oVe9K-00Ah4Z-Pu; Tue, 06 Sep 2022 19:22:18 +0000
+Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+        (Client did not present a certificate)
+        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id C76BC300244;
+        Tue,  6 Sep 2022 21:22:14 +0200 (CEST)
+Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
+        id A2EC92B576966; Tue,  6 Sep 2022 21:22:14 +0200 (CEST)
+Date:   Tue, 6 Sep 2022 21:22:14 +0200
+From:   Peter Zijlstra <peterz@infradead.org>
+To:     Anshuman Khandual <anshuman.khandual@arm.com>
+Cc:     linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org,
+        James Clark <james.clark@arm.com>,
         Ingo Molnar <mingo@redhat.com>,
         Arnaldo Carvalho de Melo <acme@kernel.org>,
         Mark Rutland <mark.rutland@arm.com>,
         Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Jiri Olsa <jolsa@kernel.org>, Andi Kleen <ak@linux.intel.com>,
-        Kan Liang <kan.liang@linux.intel.com>,
-        Thomas Richter <tmricht@linux.ibm.com>,
-        James Clark <james.clark@arm.com>,
-        Miaoqian Lin <linmq006@gmail.com>,
-        John Garry <john.garry@huawei.com>,
-        Zhengjun Xing <zhengjun.xing@linux.intel.com>,
-        Florian Fischer <florian.fischer@muhq.space>,
-        linux-perf-users <linux-perf-users@vger.kernel.org>,
-        linux-kernel <linux-kernel@vger.kernel.org>,
-        perry.taylor@intel.com, caleb.biggers@intel.com,
-        kshipra.bopardikar@intel.com, ahmad.yasin@intel.com,
-        Stephane Eranian <eranian@google.com>
-Content-Type: text/plain; charset="UTF-8"
+        Jiri Olsa <jolsa@kernel.org>,
+        Namhyung Kim <namhyung@kernel.org>,
+        linux-arm-kernel@lists.infradead.org, x86@kernel.org,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Borislav Petkov <bp@alien8.de>
+Subject: Re: [PATCH V2 4/4] x86/perf: Assert all platform event flags are
+ within PERF_EVENT_FLAG_ARCH
+Message-ID: <Yxed5u9X2PKGAKGf@hirez.programming.kicks-ass.net>
+References: <20220905054239.324029-1-anshuman.khandual@arm.com>
+ <20220905054239.324029-5-anshuman.khandual@arm.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20220905054239.324029-5-anshuman.khandual@arm.com>
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-On Thu, Sep 1, 2022 at 11:29 PM Namhyung Kim <namhyung@kernel.org> wrote:
->
-> Hi Ian,
->
-> On Wed, Aug 31, 2022 at 10:50 AM Ian Rogers <irogers@google.com> wrote:
-> >
-> > It is possible to optimize metrics when all SMT threads (CPUs) on a
-> > core are measuring events in system wide mode. For example, TMA
-> > metrics defines CORE_CLKS for Sandybrdige as:
-> >
-> > if SMT is disabled:
-> >   CPU_CLK_UNHALTED.THREAD
-> > if SMT is enabled and recording on all SMT threads:
-> >   CPU_CLK_UNHALTED.THREAD_ANY / 2
-> > if SMT is enabled and not recording on all SMT threads:
-> >   (CPU_CLK_UNHALTED.THREAD/2)*
-> >   (1+CPU_CLK_UNHALTED.ONE_THREAD_ACTIVE/CPU_CLK_UNHALTED.REF_XCLK )
-> >
-> > That is two more events are necessary when not gathering counts on all
-> > SMT threads. To distinguish all SMT threads on a core vs system wide
-> > (all CPUs) call the new property core wide.  Add a core wide test that
-> > determines the property from user requested CPUs, the topology and
-> > system wide. System wide is required as other processes running on a
-> > SMT thread will change the counts.
-> >
-> > Signed-off-by: Ian Rogers <irogers@google.com>
-> > ---
-> [SNIP]
-> > diff --git a/tools/perf/util/smt.c b/tools/perf/util/smt.c
-> > index ce90c4ee4138..994e9e418227 100644
-> > --- a/tools/perf/util/smt.c
-> > +++ b/tools/perf/util/smt.c
-> > @@ -21,3 +21,17 @@ bool smt_on(const struct cpu_topology *topology)
-> >         cached = true;
-> >         return cached_result;
-> >  }
-> > +
-> > +bool core_wide(bool system_wide, const char *user_requested_cpu_list,
-> > +              const struct cpu_topology *topology)
-> > +{
-> > +       /* If not everything running on a core is being recorded then we can't use core_wide. */
-> > +       if (!system_wide)
-> > +               return false;
->
-> I'm not sure if it's correct.  Wouldn't it be ok if it runs on all
-> threads in a core
-> even if system wide is off?  I thought that's what the below code checks.
->
-> In fact I thought the opposite logic like
->
->     if (system_wide)
->         return true;
->
-> But it seems the code allows to have cpu_list in the system wide mode.
-> Then it also needs to check the user requested cpus being NULL.
-> (IMHO system_wide should be cleared when it has a cpu list...)
->
->     if (system_wide && !user_requested_cpu_list)
->         return true;
->
-> And if we have a target pointer, we could add this too.
->
->     if (!target__has_cpu(target))
->         return false;
->
-> Thanks,
-> Namhyung
+On Mon, Sep 05, 2022 at 11:12:39AM +0530, Anshuman Khandual wrote:
 
-Thanks Namhyung,
-
-It may be correct or may not be without the system wide flag, and so I
-want to be conservative and say we need the flag. Let me provide more
-detail with an example:
-
-I'm going to assume we want to measure how many slots there were for
-an SMT thread. In the "Count Domain" of TMA metrics before Icelake
-slots is a core wide metric, meaning that you are measuring >1 hyper
-thread. As we are measuring >1 hyper thread and we don't control the
-scheduling of the other hyperthread, the only valid mode is system
-wide on all CPUs, or all CPUs on a core (aka core wide in this patch
-set). However, the slots count domain information also says "Slots -
-ICL onwards or EBS_Mode before ICL" meaning the count domain is valid
-for an SMT thread. If I look at SkylakeX currently we have two
-metrics:
-
-https://git.kernel.org/pub/scm/linux/kernel/git/acme/linux.git/tree/tools/perf/pmu-events/arch/x86/skylakex/skx-metrics.json?h=perf/core#n167
-
-    {
-       "BriefDescription": "Total issue-pipeline slots (per-Physical
-Core till ICL; per-Logical Processor ICL onward)",
-       "MetricExpr": "4 * CPU_CLK_UNHALTED.THREAD",
-       "MetricGroup": "TmaL1",
-       "MetricName": "SLOTS"
-   },
-   {
-       "BriefDescription": "Total issue-pipeline slots (per-Physical
-Core till ICL; per-Logical Processor ICL onward)",
-       "MetricExpr": "4 * ( ( CPU_CLK_UNHALTED.THREAD / 2 ) * ( 1 +
-CPU_CLK_UNHALTED.ONE_THREAD_ACTIVE / CPU_CLK_UNHALTED.REF_XCLK ) )",
-       "MetricGroup": "TmaL1_SMT",
-       "MetricName": "SLOTS_SMT"
-   },
-
-The SLOTS metrics is going to compute a valid value if hyperthreading
-is disabled, in other metrics you will see
-(CPU_CLK_UNHALTED.THREAD_ANY / 2) where THREAD.ANY and THREAD are the
-same event encoding. The reason for the divide by 2 is to adjust the
-count down so that when we add the other hyperthreads count we get the
-core wide value in the aggregation - the perf event on the 2nd hyper
-thread isn't necessary, but that's a separate problem. SLOTS_SMT is
-funny so let's dig into it:
-The 4 is the pipeline width.
-CPU_CLK_UNHALTED.THREAD is defined as, "Counts the number of core
-cycles while the thread is not in a halt state.."
-The divide by 2 is because of 2 hyperthreads.
-The 1 is because we assume that half the slots are going to be given
-to our hyperthread.
-The CPU_CLK_UNHALTED.ONE_THREAD_ACTIVE / CPU_CLK_UNHALTED.REF_XCLK
-will give a ratio for how many cycles our SMT thread was the only one
-running, and so we got those slots from the other hyperthread.
-
-With #core_wide we can have a single SLOTS metric of (new lines and //
-comments for clarity):
-
-// If we're #core_wide with SMT and we know the work on both
-hyperthreads are being measured for all processes then use a single
-counter
-(4 * CPU_CLK_UNHALTED.THREAD_ANY / 2
-  if #core_wide else
-// We're not core wide so we need thread counters to adjust the slots
-metric based on the time this SMT thread is active
-  4 * ( CPU_CLK_UNHALTED.THREAD / 2 ) * ( 1 +
-CPU_CLK_UNHALTED.ONE_THREAD_ACTIVE / CPU_CLK_UNHALTED.REF_XCLK )
-) if #smt_on
-// No hyper threading can just use the core wide counter
-else 4 * CPU_CLK_UNHALTED.THREAD
-
-As this metric is a foundation for many others then there is a great
-deal of use for it and the current pre-Icelake computation is
-generally only valid if on the command line you happen to have
-specified a core wide set up - which is error prone.
-
-Thanks,
-Ian
+>  arch/x86/events/perf_event.h | 20 ++++++++++++++++++++
+>  1 file changed, 20 insertions(+)
+> 
+> diff --git a/arch/x86/events/perf_event.h b/arch/x86/events/perf_event.h
+> index ba3d24a6a4ec..12136a33e9b7 100644
+> --- a/arch/x86/events/perf_event.h
+> +++ b/arch/x86/events/perf_event.h
+> @@ -86,6 +86,26 @@ static inline bool constraint_match(struct event_constraint *c, u64 ecode)
+>  #define PERF_X86_EVENT_AMD_BRS		0x10000 /* AMD Branch Sampling */
+>  #define PERF_X86_EVENT_PEBS_LAT_HYBRID	0x20000 /* ld and st lat for hybrid */
+>  
+> +static_assert((PERF_EVENT_FLAG_ARCH & PERF_X86_EVENT_PEBS_LDLAT) == PERF_X86_EVENT_PEBS_LDLAT);
+> +static_assert((PERF_EVENT_FLAG_ARCH & PERF_X86_EVENT_PEBS_ST) == PERF_X86_EVENT_PEBS_ST);
+> +static_assert((PERF_EVENT_FLAG_ARCH & PERF_X86_EVENT_PEBS_ST_HSW) == PERF_X86_EVENT_PEBS_ST_HSW);
+> +static_assert((PERF_EVENT_FLAG_ARCH & PERF_X86_EVENT_PEBS_LD_HSW) == PERF_X86_EVENT_PEBS_LD_HSW);
+> +static_assert((PERF_EVENT_FLAG_ARCH & PERF_X86_EVENT_PEBS_NA_HSW) == PERF_X86_EVENT_PEBS_NA_HSW);
+> +static_assert((PERF_EVENT_FLAG_ARCH & PERF_X86_EVENT_EXCL) == PERF_X86_EVENT_EXCL);
+> +static_assert((PERF_EVENT_FLAG_ARCH & PERF_X86_EVENT_DYNAMIC) == PERF_X86_EVENT_DYNAMIC);
+> +
+> +static_assert((PERF_EVENT_FLAG_ARCH & PERF_X86_EVENT_EXCL_ACCT) == PERF_X86_EVENT_EXCL_ACCT);
+> +static_assert((PERF_EVENT_FLAG_ARCH & PERF_X86_EVENT_AUTO_RELOAD) == PERF_X86_EVENT_AUTO_RELOAD);
+> +static_assert((PERF_EVENT_FLAG_ARCH & PERF_X86_EVENT_LARGE_PEBS) == PERF_X86_EVENT_LARGE_PEBS);
+> +static_assert((PERF_EVENT_FLAG_ARCH & PERF_X86_EVENT_PEBS_VIA_PT) == PERF_X86_EVENT_PEBS_VIA_PT);
+> +static_assert((PERF_EVENT_FLAG_ARCH & PERF_X86_EVENT_PAIR) == PERF_X86_EVENT_PAIR);
+> +static_assert((PERF_EVENT_FLAG_ARCH & PERF_X86_EVENT_LBR_SELECT) == PERF_X86_EVENT_LBR_SELECT);
+> +static_assert((PERF_EVENT_FLAG_ARCH & PERF_X86_EVENT_TOPDOWN) == PERF_X86_EVENT_TOPDOWN);
+> +static_assert((PERF_EVENT_FLAG_ARCH & PERF_X86_EVENT_PEBS_STLAT) == PERF_X86_EVENT_PEBS_STLAT);
+> +static_assert((PERF_EVENT_FLAG_ARCH & PERF_X86_EVENT_AMD_BRS) == PERF_X86_EVENT_AMD_BRS);
+> +static_assert((PERF_EVENT_FLAG_ARCH & PERF_X86_EVENT_PEBS_LAT_HYBRID)
+> +				   == PERF_X86_EVENT_PEBS_LAT_HYBRID);
 
 
+That's not half tedious...
 
-> > +
-> > +       /* Cheap case that SMT is disabled and therefore we're inherently core_wide. */
-> > +       if (!smt_on(topology))
-> > +               return true;
-> > +
-> > +       return cpu_topology__core_wide(topology, user_requested_cpu_list);
-> > +}
-> > diff --git a/tools/perf/util/smt.h b/tools/perf/util/smt.h
-> > index e26999c6b8d4..ae9095f2c38c 100644
-> > --- a/tools/perf/util/smt.h
-> > +++ b/tools/perf/util/smt.h
-> > @@ -7,4 +7,11 @@ struct cpu_topology;
-> >  /* Returns true if SMT (aka hyperthreading) is enabled. */
-> >  bool smt_on(const struct cpu_topology *topology);
-> >
-> > +/*
-> > + * Returns true when system wide and all SMT threads for a core are in the
-> > + * user_requested_cpus map.
-> > + */
-> > +bool core_wide(bool system_wide, const char *user_requested_cpu_list,
-> > +              const struct cpu_topology *topology);
-> > +
-> >  #endif /* __SMT_H */
-> > --
-> > 2.37.2.672.g94769d06f0-goog
-> >
+How about something like so?
+
+---
+--- a/arch/x86/events/perf_event.h
++++ b/arch/x86/events/perf_event.h
+@@ -64,27 +64,25 @@ static inline bool constraint_match(stru
+ 	return ((ecode & c->cmask) - c->code) <= (u64)c->size;
+ }
+ 
++#define PERF_ARCH(name, val)	\
++	PERF_X86_EVENT_##name = val,
++
+ /*
+  * struct hw_perf_event.flags flags
+  */
+-#define PERF_X86_EVENT_PEBS_LDLAT	0x00001 /* ld+ldlat data address sampling */
+-#define PERF_X86_EVENT_PEBS_ST		0x00002 /* st data address sampling */
+-#define PERF_X86_EVENT_PEBS_ST_HSW	0x00004 /* haswell style datala, store */
+-#define PERF_X86_EVENT_PEBS_LD_HSW	0x00008 /* haswell style datala, load */
+-#define PERF_X86_EVENT_PEBS_NA_HSW	0x00010 /* haswell style datala, unknown */
+-#define PERF_X86_EVENT_EXCL		0x00020 /* HT exclusivity on counter */
+-#define PERF_X86_EVENT_DYNAMIC		0x00040 /* dynamic alloc'd constraint */
+-
+-#define PERF_X86_EVENT_EXCL_ACCT	0x00100 /* accounted EXCL event */
+-#define PERF_X86_EVENT_AUTO_RELOAD	0x00200 /* use PEBS auto-reload */
+-#define PERF_X86_EVENT_LARGE_PEBS	0x00400 /* use large PEBS */
+-#define PERF_X86_EVENT_PEBS_VIA_PT	0x00800 /* use PT buffer for PEBS */
+-#define PERF_X86_EVENT_PAIR		0x01000 /* Large Increment per Cycle */
+-#define PERF_X86_EVENT_LBR_SELECT	0x02000 /* Save/Restore MSR_LBR_SELECT */
+-#define PERF_X86_EVENT_TOPDOWN		0x04000 /* Count Topdown slots/metrics events */
+-#define PERF_X86_EVENT_PEBS_STLAT	0x08000 /* st+stlat data address sampling */
+-#define PERF_X86_EVENT_AMD_BRS		0x10000 /* AMD Branch Sampling */
+-#define PERF_X86_EVENT_PEBS_LAT_HYBRID	0x20000 /* ld and st lat for hybrid */
++enum {
++#include "perf_event_flags.h"
++};
++
++#undef PERF_ARCH
++
++#define PERF_ARCH(name, val)						\
++	static_assert((PERF_X86_EVENT_##name & PERF_EVENT_FLAG_ARCH) ==	\
++		      PERF_X86_EVENT_##name);
++
++#include "perf_event_flags.h"
++
++#undef PERF_ARCH
+ 
+ static inline bool is_topdown_count(struct perf_event *event)
+ {
+--- /dev/null
++++ b/arch/x86/events/perf_event_flags.h
+@@ -0,0 +1,22 @@
++
++/*
++ * struct hw_perf_event.flags flags
++ */
++PERF_ARCH(PEBS_LDLAT,		0x00001) /* ld+ldlat data address sampling */
++PERF_ARCH(PEBS_ST,		0x00002) /* st data address sampling */
++PERF_ARCH(PEBS_ST_HSW,		0x00004) /* haswell style datala, store */
++PERF_ARCH(PEBS_LD_HSW,		0x00008) /* haswell style datala, load */
++PERF_ARCH(PEBS_NA_HSW,		0x00010) /* haswell style datala, unknown */
++PERF_ARCH(EXCL,			0x00020) /* HT exclusivity on counter */
++PERF_ARCH(DYNAMIC,		0x00040) /* dynamic alloc'd constraint */
++			/*	0x00080	*/
++PERF_ARCH(EXCL_ACCT,		0x00100) /* accounted EXCL event */
++PERF_ARCH(AUTO_RELOAD,		0x00200) /* use PEBS auto-reload */
++PERF_ARCH(LARGE_PEBS,		0x00400) /* use large PEBS */
++PERF_ARCH(PEBS_VIA_PT,		0x00800) /* use PT buffer for PEBS */
++PERF_ARCH(PAIR,			0x01000) /* Large Increment per Cycle */
++PERF_ARCH(LBR_SELECT,		0x02000) /* Save/Restore MSR_LBR_SELECT */
++PERF_ARCH(TOPDOWN,		0x04000) /* Count Topdown slots/metrics events */
++PERF_ARCH(PEBS_STLAT,		0x08000) /* st+stlat data address sampling */
++PERF_ARCH(AMD_BRS,		0x10000) /* AMD Branch Sampling */
++PERF_ARCH(PEBS_LAT_HYBRID,	0x20000) /* ld and st lat for hybrid */
