@@ -2,128 +2,127 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 123E6ECAAD3
-	for <linux-perf-users@archiver.kernel.org>; Tue,  6 Sep 2022 03:06:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 32254ECAAD3
+	for <linux-perf-users@archiver.kernel.org>; Tue,  6 Sep 2022 03:31:58 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232871AbiIFDGc (ORCPT
+        id S231607AbiIFDb5 convert rfc822-to-8bit (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Mon, 5 Sep 2022 23:06:32 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55662 "EHLO
+        Mon, 5 Sep 2022 23:31:57 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51980 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S238210AbiIFDG3 (ORCPT
+        with ESMTP id S238328AbiIFDb3 (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Mon, 5 Sep 2022 23:06:29 -0400
-Received: from loongson.cn (mail.loongson.cn [114.242.206.163])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTP id AEBEA27DD4;
-        Mon,  5 Sep 2022 20:06:27 -0700 (PDT)
-Received: from linux.localdomain (unknown [113.200.148.30])
-        by localhost.localdomain (Coremail) with SMTP id AQAAf8Cx72spuRZj310SAA--.6686S3;
-        Tue, 06 Sep 2022 11:06:18 +0800 (CST)
-From:   Tiezhu Yang <yangtiezhu@loongson.cn>
-To:     Peter Zijlstra <peterz@infradead.org>,
+        Mon, 5 Sep 2022 23:31:29 -0400
+Received: from eu-smtp-delivery-151.mimecast.com (eu-smtp-delivery-151.mimecast.com [185.58.85.151])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id EFAB76D548
+        for <linux-perf-users@vger.kernel.org>; Mon,  5 Sep 2022 20:30:40 -0700 (PDT)
+Received: from AcuMS.aculab.com (156.67.243.121 [156.67.243.121]) by
+ relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_CBC_SHA384) id
+ uk-mta-122-ZNshubgrNpWgD0cjxuFveQ-1; Tue, 06 Sep 2022 04:30:34 +0100
+X-MC-Unique: ZNshubgrNpWgD0cjxuFveQ-1
+Received: from AcuMS.Aculab.com (10.202.163.4) by AcuMS.aculab.com
+ (10.202.163.4) with Microsoft SMTP Server (TLS) id 15.0.1497.38; Tue, 6 Sep
+ 2022 04:30:34 +0100
+Received: from AcuMS.Aculab.com ([::1]) by AcuMS.aculab.com ([::1]) with mapi
+ id 15.00.1497.040; Tue, 6 Sep 2022 04:30:34 +0100
+From:   David Laight <David.Laight@ACULAB.COM>
+To:     'Tiezhu Yang' <yangtiezhu@loongson.cn>,
+        Peter Zijlstra <peterz@infradead.org>,
         Ingo Molnar <mingo@redhat.com>,
-        Arnaldo Carvalho de Melo <acme@kernel.org>,
+        "Arnaldo Carvalho de Melo" <acme@kernel.org>,
         Mark Rutland <mark.rutland@arm.com>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        "Alexander Shishkin" <alexander.shishkin@linux.intel.com>,
         Jiri Olsa <jolsa@kernel.org>,
         Namhyung Kim <namhyung@kernel.org>
-Cc:     linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [PATCH 1/3] perf bench syscall: Introduce bench_syscall_common()
-Date:   Tue,  6 Sep 2022 11:06:15 +0800
-Message-Id: <1662433577-23266-2-git-send-email-yangtiezhu@loongson.cn>
-X-Mailer: git-send-email 2.1.0
-In-Reply-To: <1662433577-23266-1-git-send-email-yangtiezhu@loongson.cn>
+CC:     "linux-perf-users@vger.kernel.org" <linux-perf-users@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Subject: RE: [PATCH 2/3] perf bench syscall: Add close syscall benchmark
+Thread-Topic: [PATCH 2/3] perf bench syscall: Add close syscall benchmark
+Thread-Index: AQHYwZ3Hi0lkR53PnkGoJIdk12O6V63Rua3A
+Date:   Tue, 6 Sep 2022 03:30:33 +0000
+Message-ID: <3d1e08929fb74938998bd9aa2e370424@AcuMS.aculab.com>
 References: <1662433577-23266-1-git-send-email-yangtiezhu@loongson.cn>
-X-CM-TRANSID: AQAAf8Cx72spuRZj310SAA--.6686S3
-X-Coremail-Antispam: 1UD129KBjvJXoW7WrWfuF4fKFyfGrW5ZFy3twb_yoW8AFWUpr
-        47Cw4rJw4rCaySva1fXw4v9FyrJr93JF1YkrsFkws5Ar47X345tw42ga4FvF17urWxKFW5
-        uanYvFyrWF4UZaUanT9S1TB71UUUUUUqnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
-        9KBjDU0xBIdaVrnRJUUUB2b7Iv0xC_Cr1lb4IE77IF4wAFF20E14v26ryj6rWUM7CY07I2
-        0VC2zVCF04k26cxKx2IYs7xG6rWj6s0DM7CIcVAFz4kK6r1j6r18M28IrcIa0xkI8VA2jI
-        8067AKxVWUGwA2048vs2IY020Ec7CjxVAFwI0_JFI_Gr1l8cAvFVAK0II2c7xJM28CjxkF
-        64kEwVA0rcxSw2x7M28EF7xvwVC0I7IYx2IY67AKxVW5JVW7JwA2z4x0Y4vE2Ix0cI8IcV
-        CY1x0267AKxVWxJVW8Jr1l84ACjcxK6I8E87Iv67AKxVW8Jr0_Cr1UM28EF7xvwVC2z280
-        aVCY1x0267AKxVWxJr0_GcWle2I262IYc4CY6c8Ij28IcVAaY2xG8wAqx4xG64xvF2IEw4
-        CE5I8CrVC2j2WlYx0E2Ix0cI8IcVAFwI0_Jr0_Jr4lYx0Ex4A2jsIE14v26r1j6r4UMcvj
-        eVCFs4IE7xkEbVWUJVW8JwACjcxG0xvY0x0EwIxGrwCY02Avz4vE14v_Gr4l42xK82IYc2
-        Ij64vIr41l4I8I3I0E4IkC6x0Yz7v_Jr0_Gr1lx2IqxVAqx4xG67AKxVWUJVWUGwC20s02
-        6x8GjcxK67AKxVWUGVWUWwC2zVAF1VAY17CE14v26r1q6r43MIIYrxkI7VAKI48JMIIF0x
-        vE2Ix0cI8IcVAFwI0_Jr0_JF4lIxAIcVC0I7IYx2IY6xkF7I0E14v26r4j6F4UMIIF0xvE
-        42xK8VAvwI8IcIk0rVWUJVWUCwCI42IY6I8E87Iv67AKxVWUJVW8JwCI42IY6I8E87Iv6x
-        kF7I0E14v26r4j6r4UJbIYCTnIWIevJa73UjIFyTuYvjxUx38nDUUUU
-X-CM-SenderInfo: p1dqw3xlh2x3gn0dqz5rrqw2lrqou0/
+ <1662433577-23266-3-git-send-email-yangtiezhu@loongson.cn>
+In-Reply-To: <1662433577-23266-3-git-send-email-yangtiezhu@loongson.cn>
+Accept-Language: en-GB, en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-ms-exchange-transport-fromentityheader: Hosted
+x-originating-ip: [10.202.205.107]
+MIME-Version: 1.0
+X-Mimecast-Spam-Score: 0
+X-Mimecast-Originator: aculab.com
+Content-Language: en-US
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8BIT
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-In the current code, there is only a basic syscall benchmark via getppid,
-this is not enough. Introduce bench_syscall_common() so that we can add
-more syscalls to benchmark. This is preparation for later patch.
+From: Tiezhu Yang
+> Sent: 06 September 2022 04:06
+> 
+> This commit adds a simple close syscall benchmark, more syscall
+> benchmarks can be added in the future.
+> 
+...
+> 
+> Signed-off-by: Tiezhu Yang <yangtiezhu@loongson.cn>
+> ---
+>  tools/perf/bench/bench.h   |  1 +
+>  tools/perf/bench/syscall.c | 11 +++++++++++
+>  tools/perf/builtin-bench.c |  1 +
+>  3 files changed, 13 insertions(+)
+> 
+> diff --git a/tools/perf/bench/bench.h b/tools/perf/bench/bench.h
+> index 6cefb43..916cd47 100644
+...
+> diff --git a/tools/perf/bench/syscall.c b/tools/perf/bench/syscall.c
+> index 746fd71..058394b 100644
+> --- a/tools/perf/bench/syscall.c
+> +++ b/tools/perf/bench/syscall.c
+> @@ -46,6 +46,9 @@ static int bench_syscall_common(int argc, const char **argv, int syscall)
+>  		case __NR_getppid:
+>  			getppid();
+>  			break;
+> +		case __NR_close:
+> +			close(dup(0));
 
-Signed-off-by: Tiezhu Yang <yangtiezhu@loongson.cn>
----
- tools/perf/bench/syscall.c | 29 +++++++++++++++++++++++++----
- 1 file changed, 25 insertions(+), 4 deletions(-)
+Not really a close() test.
+The dup(0) call will be significant and may take longer.
 
-diff --git a/tools/perf/bench/syscall.c b/tools/perf/bench/syscall.c
-index 9b75101..746fd71 100644
---- a/tools/perf/bench/syscall.c
-+++ b/tools/perf/bench/syscall.c
-@@ -30,25 +30,41 @@ static const char * const bench_syscall_usage[] = {
- 	NULL
- };
- 
--int bench_syscall_basic(int argc, const char **argv)
-+static int bench_syscall_common(int argc, const char **argv, int syscall)
- {
- 	struct timeval start, stop, diff;
- 	unsigned long long result_usec = 0;
-+	const char *name = NULL;
- 	int i;
- 
- 	argc = parse_options(argc, argv, options, bench_syscall_usage, 0);
- 
- 	gettimeofday(&start, NULL);
- 
--	for (i = 0; i < loops; i++)
--		getppid();
-+	for (i = 0; i < loops; i++) {
-+		switch (syscall) {
-+		case __NR_getppid:
-+			getppid();
-+			break;
-+		default:
-+			break;
-+		}
-+	}
- 
- 	gettimeofday(&stop, NULL);
- 	timersub(&stop, &start, &diff);
- 
-+	switch (syscall) {
-+	case __NR_getppid:
-+		name = "getppid()";
-+		break;
-+	default:
-+		break;
-+	}
-+
- 	switch (bench_format) {
- 	case BENCH_FORMAT_DEFAULT:
--		printf("# Executed %'d getppid() calls\n", loops);
-+		printf("# Executed %'d %s calls\n", loops, name);
- 
- 		result_usec = diff.tv_sec * 1000000;
- 		result_usec += diff.tv_usec;
-@@ -79,3 +95,8 @@ int bench_syscall_basic(int argc, const char **argv)
- 
- 	return 0;
- }
-+
-+int bench_syscall_basic(int argc, const char **argv)
-+{
-+	return bench_syscall_common(argc, argv, __NR_getppid);
-+}
--- 
-2.1.0
+I'm also not sure that using the syscall number for the
+test number is entirely sensible.
+
+One thing I have measured in the past is the time taken
+to read in an iov[] array.
+This can be measured quite nicely using writev() on /dev/null.
+(No copies ever happen and iov_iter() is never used.)
+But you need to test a few different iov lengths.
+
+I'm also not 100% sure how accurate/repeatable/sensible it
+is to use the 'wall clock time' for 1000000 iterations.
+A lot of modern cpu will dynamically change the clock speed
+underneath you and other system code (like ethernet receive)
+can badly perturb the results.
+
+What you really want to use is a TSC - but they are now
+useless for counting cycles.
+The x86 performance counters to have a cycle counter.
+I've used that to measure single calls of both library
+functions and system calls.
+Just 10 iterations give a 'cold cache' value and some
+very consistent counts (remove real outliers).
+Indeed the fastest value is really the right one.
+
+For functions like the IP checksum you can even
+show that the code is executing in the expected number
+of clock cycles (usually limited by memory reads).
+
+	David
+
+-
+Registered Address Lakeside, Bramley Road, Mount Farm, Milton Keynes, MK1 1PT, UK
+Registration No: 1397386 (Wales)
 
