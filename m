@@ -2,77 +2,66 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 840A4ECAAD3
-	for <linux-perf-users@archiver.kernel.org>; Tue,  6 Sep 2022 02:57:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EF484ECAAD3
+	for <linux-perf-users@archiver.kernel.org>; Tue,  6 Sep 2022 03:06:31 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232204AbiIFC55 (ORCPT
+        id S238230AbiIFDGa (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Mon, 5 Sep 2022 22:57:57 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44664 "EHLO
+        Mon, 5 Sep 2022 23:06:30 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55642 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229974AbiIFC54 (ORCPT
+        with ESMTP id S232871AbiIFDG2 (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Mon, 5 Sep 2022 22:57:56 -0400
-Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTP id 81ABF6BCD7;
-        Mon,  5 Sep 2022 19:57:53 -0700 (PDT)
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 5FEE8139F;
-        Mon,  5 Sep 2022 19:57:59 -0700 (PDT)
-Received: from [10.162.42.8] (unknown [10.162.42.8])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id E43D93F534;
-        Mon,  5 Sep 2022 19:57:48 -0700 (PDT)
-Message-ID: <d4e24bcc-8974-f835-1d95-4b520413b011@arm.com>
-Date:   Tue, 6 Sep 2022 08:27:45 +0530
-MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
- Thunderbird/91.11.0
-Subject: Re: [PATCH V2 3/4] arm64/perf: Assert all platform event flags are
- within PERF_EVENT_FLAG_ARCH
-Content-Language: en-US
-To:     James Clark <james.clark@arm.com>
-Cc:     Ingo Molnar <mingo@redhat.com>,
+        Mon, 5 Sep 2022 23:06:28 -0400
+Received: from loongson.cn (mail.loongson.cn [114.242.206.163])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTP id E37AC27DD8;
+        Mon,  5 Sep 2022 20:06:25 -0700 (PDT)
+Received: from linux.localdomain (unknown [113.200.148.30])
+        by localhost.localdomain (Coremail) with SMTP id AQAAf8Cx72spuRZj310SAA--.6686S2;
+        Tue, 06 Sep 2022 11:06:17 +0800 (CST)
+From:   Tiezhu Yang <yangtiezhu@loongson.cn>
+To:     Peter Zijlstra <peterz@infradead.org>,
+        Ingo Molnar <mingo@redhat.com>,
         Arnaldo Carvalho de Melo <acme@kernel.org>,
         Mark Rutland <mark.rutland@arm.com>,
         Alexander Shishkin <alexander.shishkin@linux.intel.com>,
         Jiri Olsa <jolsa@kernel.org>,
-        Namhyung Kim <namhyung@kernel.org>,
-        linux-arm-kernel@lists.infradead.org, x86@kernel.org,
-        Will Deacon <will@kernel.org>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org,
-        peterz@infradead.org
-References: <20220905054239.324029-1-anshuman.khandual@arm.com>
- <20220905054239.324029-4-anshuman.khandual@arm.com>
- <3ad268df-f6fd-a899-ce0e-131b5fdfeae8@arm.com>
-From:   Anshuman Khandual <anshuman.khandual@arm.com>
-In-Reply-To: <3ad268df-f6fd-a899-ce0e-131b5fdfeae8@arm.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+        Namhyung Kim <namhyung@kernel.org>
+Cc:     linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: [PATCH 0/3] perf: Add more syscalls to benchmark
+Date:   Tue,  6 Sep 2022 11:06:14 +0800
+Message-Id: <1662433577-23266-1-git-send-email-yangtiezhu@loongson.cn>
+X-Mailer: git-send-email 2.1.0
+X-CM-TRANSID: AQAAf8Cx72spuRZj310SAA--.6686S2
+X-Coremail-Antispam: 1UD129KBjDUn29KB7ZKAUJUUUUU529EdanIXcx71UUUUU7v73
+        VFW2AGmfu7bjvjm3AaLaJ3UjIYCTnIWjp_UUUY87k0a2IF6F4UM7kC6x804xWl14x267AK
+        xVW8JVW5JwAFc2x0x2IEx4CE42xK8VAvwI8IcIk0rVWrJVCq3wAFIxvE14AKwVWUJVWUGw
+        A2ocxC64kIII0Yj41l84x0c7CEw4AK67xGY2AK021l84ACjcxK6xIIjxv20xvE14v26ryj
+        6F1UM28EF7xvwVC0I7IYx2IY6xkF7I0E14v26F4j6r4UJwA2z4x0Y4vEx4A2jsIE14v26r
+        4UJVWxJr1l84ACjcxK6I8E87Iv6xkF7I0E14v26F4UJVW0owAS0I0E0xvYzxvE52x082IY
+        62kv0487Mc02F40EFcxC0VAKzVAqx4xG6I80ewAv7VC0I7IYx2IY67AKxVWUJVWUGwAv7V
+        C2z280aVAFwI0_Jr0_Gr1lOx8S6xCaFVCjc4AY6r1j6r4UM4x0Y48IcxkI7VAKI48JMxkI
+        ecxEwVAFwVW8GwCF04k20xvY0x0EwIxGrwCFx2IqxVCFs4IE7xkEbVWUJVW8JwC20s026c
+        02F40E14v26r1j6r18MI8I3I0E7480Y4vE14v26r106r1rMI8E67AF67kF1VAFwI0_Jw0_
+        GFylIxkGc2Ij64vIr41lIxAIcVC0I7IYx2IY67AKxVWUJVWUCwCI42IY6xIIjxv20xvEc7
+        CjxVAFwI0_Jr0_Gr1lIxAIcVCF04k26cxKx2IYs7xG6r1j6r1xMIIF0xvEx4A2jsIE14v2
+        6r1j6r4UMIIF0xvEx4A2jsIEc7CjxVAFwI0_Jr0_GrUvcSsGvfC2KfnxnUUI43ZEXa7IU8
+        JxhJUUUUU==
+X-CM-SenderInfo: p1dqw3xlh2x3gn0dqz5rrqw2lrqou0/
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
+Tiezhu Yang (3):
+  perf bench syscall: Introduce bench_syscall_common()
+  perf bench syscall: Add close syscall benchmark
+  perf bench syscall: Add execve syscall benchmark
 
+ tools/perf/bench/bench.h   |  2 ++
+ tools/perf/bench/syscall.c | 76 +++++++++++++++++++++++++++++++++++++++++++---
+ tools/perf/builtin-bench.c |  2 ++
+ 3 files changed, 76 insertions(+), 4 deletions(-)
 
-On 9/5/22 14:40, James Clark wrote:
->> --- a/include/linux/perf/arm_pmu.h
->> +++ b/include/linux/perf/arm_pmu.h
->> @@ -24,10 +24,11 @@
->>  /*
->>   * ARM PMU hw_event flags
->>   */
->> -/* Event uses a 64bit counter */
->> -#define ARMPMU_EVT_64BIT		1
->> -/* Event uses a 47bit counter */
->> -#define ARMPMU_EVT_47BIT		2
->> +#define ARMPMU_EVT_64BIT		0x00001 /* Event uses a 64bit counter */
->> +#define ARMPMU_EVT_47BIT		0x00002 /* Event uses a 47bit counter */
->> +
-> Minor nit:
-> 
-> I don't think changing the definitions to hex adds anything except more
-> noise in the git blame.
+-- 
+2.1.0
 
-The idea here was just to make these five digit hex, in accordance with
-PERF_EVENT_FLAG_ARCH mask like the existing x86 platform event flags.
