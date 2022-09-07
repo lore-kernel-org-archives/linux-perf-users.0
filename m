@@ -2,173 +2,160 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1AFD3ECAAD3
-	for <linux-perf-users@archiver.kernel.org>; Wed,  7 Sep 2022 05:27:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D1200C38145
+	for <linux-perf-users@archiver.kernel.org>; Wed,  7 Sep 2022 05:58:52 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229662AbiIGF1o (ORCPT
+        id S229831AbiIGF6v (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Wed, 7 Sep 2022 01:27:44 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51774 "EHLO
+        Wed, 7 Sep 2022 01:58:51 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40446 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229594AbiIGF1n (ORCPT
+        with ESMTP id S229459AbiIGF6u (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Wed, 7 Sep 2022 01:27:43 -0400
-Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTP id 49F3F9D669;
-        Tue,  6 Sep 2022 22:27:42 -0700 (PDT)
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 2F02E1042;
-        Tue,  6 Sep 2022 22:27:48 -0700 (PDT)
-Received: from [10.162.40.15] (unknown [10.162.40.15])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 434763F534;
-        Tue,  6 Sep 2022 22:28:05 -0700 (PDT)
-Message-ID: <763825a2-67a1-6288-1b12-15768eef1d75@arm.com>
-Date:   Wed, 7 Sep 2022 10:57:35 +0530
+        Wed, 7 Sep 2022 01:58:50 -0400
+Received: from ams.source.kernel.org (ams.source.kernel.org [IPv6:2604:1380:4601:e00::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 82F53895F4;
+        Tue,  6 Sep 2022 22:58:49 -0700 (PDT)
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by ams.source.kernel.org (Postfix) with ESMTPS id 3EE46B81B4E;
+        Wed,  7 Sep 2022 05:58:48 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 01F32C433C1;
+        Wed,  7 Sep 2022 05:58:46 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1662530327;
+        bh=Usb7RB0E/4pZu8ET3H5EzLquGfLSkSzBMYKG6bPNTzs=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=UN//H31Y8ALCcivYHKUF+F5B9ft7nhl9qTcm1cqjCVsXbf4nx+P0FebUGmzQU5vKM
+         vbGK0+eASpQJjpuppHcarVZ24213YeaRFzRDW1osNACF0C4ojnNFfS8teBTMLoYxjN
+         9bps6/kEJ0TuDOjjj6ORMu59Hh8sL/r4MMY1XFRjp/X+ojM3gkZhU1yk0uhnlUog/Q
+         7+CsQlnxbAJL1U44x+OoVanu7CGt88uM5Tfc8ZVTYilf4a8DanXd4sSIbWkpsFGc4H
+         jycMA9S/e+N2oS64wWJ7h7SCiYlkOgcX2Q6VCCFzuumsJgoaF0ZN40Cj2VRdPevYXX
+         ezzYrO+gUFmiw==
+Received: by mail-oa1-f47.google.com with SMTP id 586e51a60fabf-1274ec87ad5so18674122fac.0;
+        Tue, 06 Sep 2022 22:58:46 -0700 (PDT)
+X-Gm-Message-State: ACgBeo1Excr8ZglEHTRa12Rkqj+51sD30PWhkpw+/ob0TAogDnFF3cBz
+        LSM/7EoNj0Uxcl28/u2lrx6fJyUEjleRuRQ8yS0=
+X-Google-Smtp-Source: AA6agR6RtWs+tc7D5XKa1brovVgMCpoLJSxZbYT4qLoxWFAdV2b9Hb63gLuxccgct1L52t1nUxgJv5AbRnVpvUromAc=
+X-Received: by 2002:a05:6870:3127:b0:11c:8c2c:9015 with SMTP id
+ v39-20020a056870312700b0011c8c2c9015mr13117547oaa.31.1662530326147; Tue, 06
+ Sep 2022 22:58:46 -0700 (PDT)
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
- Thunderbird/91.11.0
-Subject: Re: [PATCH V2 4/4] x86/perf: Assert all platform event flags are
- within PERF_EVENT_FLAG_ARCH
-Content-Language: en-US
-To:     Peter Zijlstra <peterz@infradead.org>
-Cc:     linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org,
-        James Clark <james.clark@arm.com>,
-        Ingo Molnar <mingo@redhat.com>,
-        Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Jiri Olsa <jolsa@kernel.org>,
-        Namhyung Kim <namhyung@kernel.org>,
-        linux-arm-kernel@lists.infradead.org, x86@kernel.org,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Borislav Petkov <bp@alien8.de>
-References: <20220905054239.324029-1-anshuman.khandual@arm.com>
- <20220905054239.324029-5-anshuman.khandual@arm.com>
- <Yxed5u9X2PKGAKGf@hirez.programming.kicks-ass.net>
-From:   Anshuman Khandual <anshuman.khandual@arm.com>
-In-Reply-To: <Yxed5u9X2PKGAKGf@hirez.programming.kicks-ass.net>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+References: <20220907050407.2711513-1-namhyung@kernel.org>
+In-Reply-To: <20220907050407.2711513-1-namhyung@kernel.org>
+From:   Song Liu <song@kernel.org>
+Date:   Tue, 6 Sep 2022 22:58:35 -0700
+X-Gmail-Original-Message-ID: <CAPhsuW4OT3XC8oREZBNreesYyVvU9hSGs5Hgz=r-cwsQSkiXRQ@mail.gmail.com>
+Message-ID: <CAPhsuW4OT3XC8oREZBNreesYyVvU9hSGs5Hgz=r-cwsQSkiXRQ@mail.gmail.com>
+Subject: Re: [PATCH v2] perf test: Skip sigtrap test on old kernels
+To:     Namhyung Kim <namhyung@kernel.org>
+Cc:     Arnaldo Carvalho de Melo <acme@kernel.org>,
+        Jiri Olsa <jolsa@kernel.org>, Ingo Molnar <mingo@kernel.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Ian Rogers <irogers@google.com>,
+        linux-perf-users@vger.kernel.org, bpf <bpf@vger.kernel.org>,
+        Marco Elver <elver@google.com>,
+        Song Liu <songliubraving@fb.com>
+Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-
-
-On 9/7/22 00:52, Peter Zijlstra wrote:
-> On Mon, Sep 05, 2022 at 11:12:39AM +0530, Anshuman Khandual wrote:
-> 
->>  arch/x86/events/perf_event.h | 20 ++++++++++++++++++++
->>  1 file changed, 20 insertions(+)
->>
->> diff --git a/arch/x86/events/perf_event.h b/arch/x86/events/perf_event.h
->> index ba3d24a6a4ec..12136a33e9b7 100644
->> --- a/arch/x86/events/perf_event.h
->> +++ b/arch/x86/events/perf_event.h
->> @@ -86,6 +86,26 @@ static inline bool constraint_match(struct event_constraint *c, u64 ecode)
->>  #define PERF_X86_EVENT_AMD_BRS		0x10000 /* AMD Branch Sampling */
->>  #define PERF_X86_EVENT_PEBS_LAT_HYBRID	0x20000 /* ld and st lat for hybrid */
->>  
->> +static_assert((PERF_EVENT_FLAG_ARCH & PERF_X86_EVENT_PEBS_LDLAT) == PERF_X86_EVENT_PEBS_LDLAT);
->> +static_assert((PERF_EVENT_FLAG_ARCH & PERF_X86_EVENT_PEBS_ST) == PERF_X86_EVENT_PEBS_ST);
->> +static_assert((PERF_EVENT_FLAG_ARCH & PERF_X86_EVENT_PEBS_ST_HSW) == PERF_X86_EVENT_PEBS_ST_HSW);
->> +static_assert((PERF_EVENT_FLAG_ARCH & PERF_X86_EVENT_PEBS_LD_HSW) == PERF_X86_EVENT_PEBS_LD_HSW);
->> +static_assert((PERF_EVENT_FLAG_ARCH & PERF_X86_EVENT_PEBS_NA_HSW) == PERF_X86_EVENT_PEBS_NA_HSW);
->> +static_assert((PERF_EVENT_FLAG_ARCH & PERF_X86_EVENT_EXCL) == PERF_X86_EVENT_EXCL);
->> +static_assert((PERF_EVENT_FLAG_ARCH & PERF_X86_EVENT_DYNAMIC) == PERF_X86_EVENT_DYNAMIC);
->> +
->> +static_assert((PERF_EVENT_FLAG_ARCH & PERF_X86_EVENT_EXCL_ACCT) == PERF_X86_EVENT_EXCL_ACCT);
->> +static_assert((PERF_EVENT_FLAG_ARCH & PERF_X86_EVENT_AUTO_RELOAD) == PERF_X86_EVENT_AUTO_RELOAD);
->> +static_assert((PERF_EVENT_FLAG_ARCH & PERF_X86_EVENT_LARGE_PEBS) == PERF_X86_EVENT_LARGE_PEBS);
->> +static_assert((PERF_EVENT_FLAG_ARCH & PERF_X86_EVENT_PEBS_VIA_PT) == PERF_X86_EVENT_PEBS_VIA_PT);
->> +static_assert((PERF_EVENT_FLAG_ARCH & PERF_X86_EVENT_PAIR) == PERF_X86_EVENT_PAIR);
->> +static_assert((PERF_EVENT_FLAG_ARCH & PERF_X86_EVENT_LBR_SELECT) == PERF_X86_EVENT_LBR_SELECT);
->> +static_assert((PERF_EVENT_FLAG_ARCH & PERF_X86_EVENT_TOPDOWN) == PERF_X86_EVENT_TOPDOWN);
->> +static_assert((PERF_EVENT_FLAG_ARCH & PERF_X86_EVENT_PEBS_STLAT) == PERF_X86_EVENT_PEBS_STLAT);
->> +static_assert((PERF_EVENT_FLAG_ARCH & PERF_X86_EVENT_AMD_BRS) == PERF_X86_EVENT_AMD_BRS);
->> +static_assert((PERF_EVENT_FLAG_ARCH & PERF_X86_EVENT_PEBS_LAT_HYBRID)
->> +				   == PERF_X86_EVENT_PEBS_LAT_HYBRID);
-> 
-> 
-> That's not half tedious...
-> 
-> How about something like so?
-
-Makes sense, will fold this back. Could I also include your "Signed-off-by:"
-for this patch ?
-
-- Anshuman
-
-> 
+On Tue, Sep 6, 2022 at 10:04 PM Namhyung Kim <namhyung@kernel.org> wrote:
+>
+> If it runs on an old kernel, perf_event_open would fail because of the
+> new fields sigtrap and sig_data.  Just skipping the test could miss an
+> actual bug in the kernel.
+>
+> Let's check BTF if it has the perf_event_attr.sigtrap field.
+>
+> Cc: Marco Elver <elver@google.com>
+> Cc: Song Liu <songliubraving@fb.com>
+> Signed-off-by: Namhyung Kim <namhyung@kernel.org>
 > ---
-> --- a/arch/x86/events/perf_event.h
-> +++ b/arch/x86/events/perf_event.h
-> @@ -64,27 +64,25 @@ static inline bool constraint_match(stru
->  	return ((ecode & c->cmask) - c->code) <= (u64)c->size;
+>  tools/perf/tests/sigtrap.c | 46 +++++++++++++++++++++++++++++++++++++-
+>  1 file changed, 45 insertions(+), 1 deletion(-)
+>
+> diff --git a/tools/perf/tests/sigtrap.c b/tools/perf/tests/sigtrap.c
+> index e32ece90e164..32f08ce0f2b0 100644
+> --- a/tools/perf/tests/sigtrap.c
+> +++ b/tools/perf/tests/sigtrap.c
+> @@ -16,6 +16,8 @@
+>  #include <sys/syscall.h>
+>  #include <unistd.h>
+>
+> +#include <bpf/btf.h>
+> +
+
+Do we need "#ifdef HAVE_BPF_SKEL" for the include part?
+
+Other than this, looks good to me.
+
+Acked-by: Song Liu <song@kernel.org>
+
+>  #include "cloexec.h"
+>  #include "debug.h"
+>  #include "event.h"
+> @@ -54,6 +56,42 @@ static struct perf_event_attr make_event_attr(void)
+>         return attr;
 >  }
->  
-> +#define PERF_ARCH(name, val)	\
-> +	PERF_X86_EVENT_##name = val,
+>
+> +static bool attr_has_sigtrap(void)
+> +{
+> +       bool ret = false;
 > +
->  /*
->   * struct hw_perf_event.flags flags
->   */
-> -#define PERF_X86_EVENT_PEBS_LDLAT	0x00001 /* ld+ldlat data address sampling */
-> -#define PERF_X86_EVENT_PEBS_ST		0x00002 /* st data address sampling */
-> -#define PERF_X86_EVENT_PEBS_ST_HSW	0x00004 /* haswell style datala, store */
-> -#define PERF_X86_EVENT_PEBS_LD_HSW	0x00008 /* haswell style datala, load */
-> -#define PERF_X86_EVENT_PEBS_NA_HSW	0x00010 /* haswell style datala, unknown */
-> -#define PERF_X86_EVENT_EXCL		0x00020 /* HT exclusivity on counter */
-> -#define PERF_X86_EVENT_DYNAMIC		0x00040 /* dynamic alloc'd constraint */
-> -
-> -#define PERF_X86_EVENT_EXCL_ACCT	0x00100 /* accounted EXCL event */
-> -#define PERF_X86_EVENT_AUTO_RELOAD	0x00200 /* use PEBS auto-reload */
-> -#define PERF_X86_EVENT_LARGE_PEBS	0x00400 /* use large PEBS */
-> -#define PERF_X86_EVENT_PEBS_VIA_PT	0x00800 /* use PT buffer for PEBS */
-> -#define PERF_X86_EVENT_PAIR		0x01000 /* Large Increment per Cycle */
-> -#define PERF_X86_EVENT_LBR_SELECT	0x02000 /* Save/Restore MSR_LBR_SELECT */
-> -#define PERF_X86_EVENT_TOPDOWN		0x04000 /* Count Topdown slots/metrics events */
-> -#define PERF_X86_EVENT_PEBS_STLAT	0x08000 /* st+stlat data address sampling */
-> -#define PERF_X86_EVENT_AMD_BRS		0x10000 /* AMD Branch Sampling */
-> -#define PERF_X86_EVENT_PEBS_LAT_HYBRID	0x20000 /* ld and st lat for hybrid */
-> +enum {
-> +#include "perf_event_flags.h"
-> +};
+> +#ifdef HAVE_BPF_SKEL
 > +
-> +#undef PERF_ARCH
+> +       struct btf *btf;
+> +       const struct btf_type *t;
+> +       const struct btf_member *m;
+> +       const char *name;
+> +       int i, id;
 > +
-> +#define PERF_ARCH(name, val)						\
-> +	static_assert((PERF_X86_EVENT_##name & PERF_EVENT_FLAG_ARCH) ==	\
-> +		      PERF_X86_EVENT_##name);
+> +       /* just assume it doesn't have the field */
+> +       btf = btf__load_vmlinux_btf();
+> +       if (btf == NULL)
+> +               return false;
 > +
-> +#include "perf_event_flags.h"
+> +       id = btf__find_by_name_kind(btf, "perf_event_attr", BTF_KIND_STRUCT);
+> +       if (id < 0)
+> +               goto out;
 > +
-> +#undef PERF_ARCH
->  
->  static inline bool is_topdown_count(struct perf_event *event)
+> +       t = btf__type_by_id(btf, id);
+> +       for (i = 0, m = btf_members(t); i < btf_vlen(t); i++, m++) {
+> +               name = btf__name_by_offset(btf, m->name_off);
+> +               if (!strcmp(name, "sigtrap")) {
+> +                       ret = true;
+> +                       break;
+> +               }
+> +       }
+> +out:
+> +       btf__free(btf);
+> +#endif
+> +
+> +       return ret;
+> +}
+> +
+>  static void
+>  sigtrap_handler(int signum __maybe_unused, siginfo_t *info, void *ucontext __maybe_unused)
 >  {
-> --- /dev/null
-> +++ b/arch/x86/events/perf_event_flags.h
-> @@ -0,0 +1,22 @@
-> +
-> +/*
-> + * struct hw_perf_event.flags flags
-> + */
-> +PERF_ARCH(PEBS_LDLAT,		0x00001) /* ld+ldlat data address sampling */
-> +PERF_ARCH(PEBS_ST,		0x00002) /* st data address sampling */
-> +PERF_ARCH(PEBS_ST_HSW,		0x00004) /* haswell style datala, store */
-> +PERF_ARCH(PEBS_LD_HSW,		0x00008) /* haswell style datala, load */
-> +PERF_ARCH(PEBS_NA_HSW,		0x00010) /* haswell style datala, unknown */
-> +PERF_ARCH(EXCL,			0x00020) /* HT exclusivity on counter */
-> +PERF_ARCH(DYNAMIC,		0x00040) /* dynamic alloc'd constraint */
-> +			/*	0x00080	*/
-> +PERF_ARCH(EXCL_ACCT,		0x00100) /* accounted EXCL event */
-> +PERF_ARCH(AUTO_RELOAD,		0x00200) /* use PEBS auto-reload */
-> +PERF_ARCH(LARGE_PEBS,		0x00400) /* use large PEBS */
-> +PERF_ARCH(PEBS_VIA_PT,		0x00800) /* use PT buffer for PEBS */
-> +PERF_ARCH(PAIR,			0x01000) /* Large Increment per Cycle */
-> +PERF_ARCH(LBR_SELECT,		0x02000) /* Save/Restore MSR_LBR_SELECT */
-> +PERF_ARCH(TOPDOWN,		0x04000) /* Count Topdown slots/metrics events */
-> +PERF_ARCH(PEBS_STLAT,		0x08000) /* st+stlat data address sampling */
-> +PERF_ARCH(AMD_BRS,		0x10000) /* AMD Branch Sampling */
-> +PERF_ARCH(PEBS_LAT_HYBRID,	0x20000) /* ld and st lat for hybrid */
+> @@ -139,7 +177,13 @@ static int test__sigtrap(struct test_suite *test __maybe_unused, int subtest __m
+>
+>         fd = sys_perf_event_open(&attr, 0, -1, -1, perf_event_open_cloexec_flag());
+>         if (fd < 0) {
+> -               pr_debug("FAILED sys_perf_event_open(): %s\n", str_error_r(errno, sbuf, sizeof(sbuf)));
+> +               if (attr_has_sigtrap()) {
+> +                       pr_debug("FAILED sys_perf_event_open(): %s\n",
+> +                                str_error_r(errno, sbuf, sizeof(sbuf)));
+> +               } else {
+> +                       pr_debug("perf_event_attr doesn't have sigtrap\n");
+> +                       ret = TEST_SKIP;
+> +               }
+>                 goto out_restore_sigaction;
+>         }
+>
+> --
+> 2.37.2.789.g6183377224-goog
+>
