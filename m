@@ -2,213 +2,173 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B75BAC38145
-	for <linux-perf-users@archiver.kernel.org>; Wed,  7 Sep 2022 14:16:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B5CF1C6FA8A
+	for <linux-perf-users@archiver.kernel.org>; Wed,  7 Sep 2022 14:21:05 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229489AbiIGOQN (ORCPT
+        id S230083AbiIGOVE (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Wed, 7 Sep 2022 10:16:13 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45318 "EHLO
+        Wed, 7 Sep 2022 10:21:04 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51840 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229864AbiIGOQL (ORCPT
+        with ESMTP id S229837AbiIGOVD (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Wed, 7 Sep 2022 10:16:11 -0400
-Received: from mail-ej1-x62f.google.com (mail-ej1-x62f.google.com [IPv6:2a00:1450:4864:20::62f])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9302466A6D;
-        Wed,  7 Sep 2022 07:16:10 -0700 (PDT)
-Received: by mail-ej1-x62f.google.com with SMTP id r18so3455415eja.11;
-        Wed, 07 Sep 2022 07:16:10 -0700 (PDT)
+        Wed, 7 Sep 2022 10:21:03 -0400
+Received: from mail-ej1-x62d.google.com (mail-ej1-x62d.google.com [IPv6:2a00:1450:4864:20::62d])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7337332AB4;
+        Wed,  7 Sep 2022 07:21:02 -0700 (PDT)
+Received: by mail-ej1-x62d.google.com with SMTP id y3so30793998ejc.1;
+        Wed, 07 Sep 2022 07:21:02 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20210112;
         h=in-reply-to:content-disposition:mime-version:references:message-id
          :subject:cc:to:date:from:from:to:cc:subject:date;
-        bh=kEKL+fo7xHfaZ34YCEmADi9rhQSq+ShtLVPHWCsl7cE=;
-        b=H4X8nhunBh4QYEayWgu+fKakYz7KOeCkGamxdD2ja/mxY+Ort86Dw6VDIWhfjnxq37
-         hmZtp+YqLjHcJ7DewWUh7/7+LMqNlsoNlxfqrwQIKzRAFKtzsa+AJdGPsKNUEh9dbnuD
-         vwrWXO+yIFrzqSykFJnuCyjsnjNxWrQf98TJnZ8fB9cnwUA0pcQ5/l+GUxnPv7Frprlg
-         Zfc63mtHCAcm2ScW+iWkGBCtoz+snOpY4t0QdM8oiNA9QCCiaV4/cKh5zjH3OQhT6pRZ
-         cIMkhiPM48ZBK/zoGs8nM0ikM2AHoIuV5sQvFdgnCeOINNmHCmRKaqi52CarkpLolUFI
-         frgw==
+        bh=GmjHydQzDqYVY9OvbE5Eqn2I6DrHbPQiC0wDwCk2Kro=;
+        b=GoFA2Px6880+LWoG+/91mOILp7eQwkt9KwCEOA+XNj45hoBf9r8y2Bq6k3vwKVn7qB
+         xdX3RYDKCbehUWnKwcOMLlSS395nD8C5/qO48Xiwv4twvJrQmzRYjzBOfnPaT07o+wTn
+         /j4mVb0MTYRHo+I0ZU8YNlKMedcxmtUGYVBb6qOajmLT2fjmyOJdDv3KtwPLNbNzeFRb
+         bNMOCsc+gO9xmxP/HtC3CvKMSzRF6/k2YcvhsAOnokjR8qxxAsMQ/0NgZjnS2NGzEQye
+         IsuMm4DC+Qedl8dpRRCloaDziZQvVovnlO7+I1OwFjB8oeA515qC1tZLxBpwXozq7CgM
+         X7/A==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
         h=in-reply-to:content-disposition:mime-version:references:message-id
          :subject:cc:to:date:from:x-gm-message-state:from:to:cc:subject:date;
-        bh=kEKL+fo7xHfaZ34YCEmADi9rhQSq+ShtLVPHWCsl7cE=;
-        b=ZEo33jX0bDiFhQ6D+1R0YlXfbTWZjBAQItKqmpRjixEyiIrgC8EZdfBgloimmI2RaQ
-         VDTaonBQ21A4zfkgUB4/l2yvRIfA+IFHphf3u4xYMs/M+5zsHhyOONLhKwFeANUc2Ij/
-         4ln3nwyOTUR70aRagjPwfT8hNMO5C/TzAyOL+q3IOiBTP4MdOgK83JLiPQdu7W5S7BX7
-         O6Q3jibZvBiw6bikObwdPl+IEbxNMCljym6jhAPPtTmhWeID1kCyv19ythpeO+GYH3G7
-         hmykwEAjX32EzG31+fRPP8xDOVLuUpXgn8PPlwgbeYicEJXtpR1jP8uyJeAme7r3GMMw
-         RFlQ==
-X-Gm-Message-State: ACgBeo0sqaz6J33GOnsIE7VulQjTH7A3mO8ko/y5MJGL7/glyZx3DpsI
-        0sMadakd/qcuJCPs9b7nGiJwG39vz6fCqg==
-X-Google-Smtp-Source: AA6agR4m5ytGyU8mqS+l1hv9Fp5txj4qSQh5Q8LHLlU54e/iZ09lo4KCIeNLQqseCXjo0hIgoMqFBw==
-X-Received: by 2002:a17:907:a04f:b0:771:6b84:b28 with SMTP id gz15-20020a170907a04f00b007716b840b28mr518615ejc.563.1662560168834;
-        Wed, 07 Sep 2022 07:16:08 -0700 (PDT)
+        bh=GmjHydQzDqYVY9OvbE5Eqn2I6DrHbPQiC0wDwCk2Kro=;
+        b=dkzgDXv/CWBYDaTmZucl7rL2D8N0hbgwaSXUxv8omR6dgY27nKSnrdjXQZAL/BP8hT
+         mCLg34e1tbqsS+gieOGD3tQiOL6mFJyPxX7j38PsuIexLcWlw+EjWLvR+ir5Sm3ooUJo
+         lsPbSeBVdasO9o+aFKX0h1IzB8TpOPtd34lH0prSfL+CqJ1ahJKam5jCpjZxfRwiVIyn
+         p7h6cI5vsyyy7RRejqo0giU1NhPHsQSFw5rD609UCqVsK+/NxZFjG1rO91qEVPrqkXPp
+         wqPXX5YjZfi5o52uekiTnhsi5/gzgf75/1HDU2ItVbyqMTZX0rcmLr/oiuLs6hsTbD2P
+         oXkA==
+X-Gm-Message-State: ACgBeo0BE6V/tA6ezicZHtBObOSyMjWOV7ckRSYF6ZIoO/M6dEikWMzk
+        aY7F4kcTduVFHyBHqkqGGjY=
+X-Google-Smtp-Source: AA6agR4FZNDDktIK/bO660wPtAu3DNWXz8BT0H8es9LQxHCV0EzEdAMCRZ4QKRdFV4a+ZLHqwVIo+A==
+X-Received: by 2002:a17:907:1688:b0:730:b3ae:347 with SMTP id hc8-20020a170907168800b00730b3ae0347mr2446498ejc.756.1662560460959;
+        Wed, 07 Sep 2022 07:21:00 -0700 (PDT)
 Received: from krava ([193.85.244.190])
-        by smtp.gmail.com with ESMTPSA id f10-20020a17090631ca00b00730860b6c43sm8559831ejf.173.2022.09.07.07.16.07
+        by smtp.gmail.com with ESMTPSA id h6-20020a1709060f4600b0071cbc7487e1sm8460075ejj.69.2022.09.07.07.21.00
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 07 Sep 2022 07:16:08 -0700 (PDT)
+        Wed, 07 Sep 2022 07:21:00 -0700 (PDT)
 From:   Jiri Olsa <olsajiri@gmail.com>
 X-Google-Original-From: Jiri Olsa <jolsa@kernel.org>
-Date:   Wed, 7 Sep 2022 16:16:06 +0200
-To:     Namhyung Kim <namhyung@kernel.org>
-Cc:     Jiri Olsa <olsajiri@gmail.com>,
-        Xing Zhengjun <zhengjun.xing@linux.intel.com>,
-        Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Ian Rogers <irogers@google.com>, Hongtao Yu <hoy@fb.com>,
-        lkml <linux-kernel@vger.kernel.org>,
-        Peter Zijlstra <a.p.zijlstra@chello.nl>,
-        Ingo Molnar <mingo@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        linux-perf-users <linux-perf-users@vger.kernel.org>,
-        "Liang, Kan" <kan.liang@linux.intel.com>
-Subject: Re: [PATCH] perf script: Skip dummy event attr check
-Message-ID: <YxinpgT93BIyTqLc@krava>
-References: <20220831124041.219925-1-jolsa@kernel.org>
- <CAP-5=fX-=ph8g3VKbQXSRT8SiOZ3XqQLd3T9-ZTNZ5L+ye5L-A@mail.gmail.com>
- <Yw+LCN2cX9peweWV@kernel.org>
- <3aa4c863-24cc-9fdf-9960-2b1983b3322b@linux.intel.com>
- <CAM9d7chpoqB18r3TXPuTAA4_4TsCYq+p+j90vKspv++X1RBU+w@mail.gmail.com>
- <78bedcf4-3ef8-2ccf-d846-74d0de0c67ad@linux.intel.com>
- <YxhRr0tyPSpGZ+MP@krava>
- <CAM9d7chsKkO_+pyvv-sWa-qSdw+PU1Am7NRgjXKnsWCaeyZm-A@mail.gmail.com>
+Date:   Wed, 7 Sep 2022 16:20:59 +0200
+To:     Adrian Hunter <adrian.hunter@intel.com>
+Cc:     Arnaldo Carvalho de Melo <acme@kernel.org>,
+        Jiri Olsa <jolsa@redhat.com>,
+        Namhyung Kim <namhyung@kernel.org>,
+        Ian Rogers <irogers@google.com>, linux-kernel@vger.kernel.org,
+        linux-perf-users@vger.kernel.org,
+        Peter Zijlstra <peterz@infradead.org>,
+        Ingo Molnar <mingo@redhat.com>
+Subject: Re: [PATCH V2] libperf evlist: Fix per-thread mmaps for
+ multi-threaded targets
+Message-ID: <Yxioy/TXc/KDLoDL@krava>
+References: <20220905114209.8389-1-adrian.hunter@intel.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <CAM9d7chsKkO_+pyvv-sWa-qSdw+PU1Am7NRgjXKnsWCaeyZm-A@mail.gmail.com>
+In-Reply-To: <20220905114209.8389-1-adrian.hunter@intel.com>
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-On Wed, Sep 07, 2022 at 01:14:52AM -0700, Namhyung Kim wrote:
-> On Wed, Sep 7, 2022 at 1:09 AM Jiri Olsa <olsajiri@gmail.com> wrote:
-> >
-> > On Wed, Sep 07, 2022 at 01:19:32PM +0800, Xing Zhengjun wrote:
-> > >
-> > >
-> > > On 9/7/2022 12:50 PM, Namhyung Kim wrote:
-> > > > Hello,
-> > > >
-> > > > On Tue, Sep 6, 2022 at 7:49 PM Xing Zhengjun
-> > > > <zhengjun.xing@linux.intel.com> wrote:
-> > > > >
-> > > > > Hi,
-> > > > >
-> > > > > On 9/1/2022 12:23 AM, Arnaldo Carvalho de Melo wrote:
-> > > > > > Em Wed, Aug 31, 2022 at 09:02:46AM -0700, Ian Rogers escreveu:
-> > > > > > > On Wed, Aug 31, 2022 at 5:40 AM Jiri Olsa <jolsa@kernel.org> wrote:
-> > > > > > > >
-> > > > > > > > Hongtao Yu reported problem when displaying uregs in perf script
-> > > > > > > > for system wide perf.data:
-> > > > > > > >
-> > > > > > > >     # perf script -F uregs | head -10
-> > > > > > > >     Samples for 'dummy:HG' event do not have UREGS attribute set. Cannot print 'uregs' field.
-> > > > > > > >
-> > > > > > > > The problem is the extra dummy event added for system wide,
-> > > > > > > > which does not have proper sample_type setup.
-> > > > > > > >
-> > > > > > > > Skipping attr check completely for dummy event as suggested
-> > > > > > > > by Namhyung, because it does not have any samples anyway.
-> > > > > > > >
-> > > > > > > > Reported-by: Hongtao Yu <hoy@fb.com>
-> > > > > > > > Suggested-by: Namhyung Kim <namhyung@kernel.org>
-> > > > > > > > Signed-off-by: Jiri Olsa <jolsa@kernel.org>
-> > > > > > >
-> > > > > > > Acked-by: Ian Rogers <irogers@google.com>
-> > > > > >
-> > > > > > Thanks, applied to perf/urgent.
-> > > > > >
-> > > > > > - Arnaldo
-> > > > >
-> > > > > I have met a similar issue on hybrid systems such as ADL, I apply the
-> > > > > patch, and it works OK for the normal mode.
-> > > > >    # ./perf record  --intr-regs=di,r8,dx,cx -e
-> > > > > br_inst_retired.near_call:p -c 1000 --per-thread true
-> > > > > [ perf record: Woken up 1 times to write data ]
-> > > > > [ perf record: Captured and wrote 0.024 MB perf.data (25 samples) ]
-> > > > >
-> > > > > # ./perf script -F iregs |head -5
-> > > > >    ABI:2    CX:0xffff90e19d024ed8    DX:0x1    DI:0xffff90e19d024ed8
-> > > > > R8:0xffffba5e437e7b30
-> > > > >    ABI:2    CX:0x7f5239783000    DX:0x80000000    DI:0xffff90e1801eea00
-> > > > >    R8:0x71
-> > > > >    ABI:2    CX:0x40    DX:0x60    DI:0xffffffff9fde5ab8    R8:0x40
-> > > > >    ABI:2    CX:0x0    DX:0xffffffffffffffff    DI:0xffff90e1877408e8
-> > > > > R8:0x1
-> > > > >    ABI:2    CX:0xcc0    DX:0x1    DI:0xffff90e187d17c60    R8:0x40
-> > > > >
-> > > > > But the issue still happened when running the test in the pipe mode. In
-> > > > > the pipe mode, it calls process_attr() which still checks the attr for
-> > > > > the dummy event, so the issue happened.
-> > > > >
-> > > > >    # ./perf record -o - --intr-regs=di,r8,dx,cx -e
-> > > > > br_inst_retired.near_call:p -c 1000 --per-thread true 2>/dev/null|./perf
-> > > > > script -F iregs |head -5
-> > > > > Samples for 'dummy:HG' event do not have IREGS attribute set. Cannot
-> > > > > print 'iregs' field.
-> > > > > 0x120 [0x90]: failed to process type: 64
-> > > > >
-> > > > > I have one test patch which can fix the pipe mode issue.
-> > > > >
-> > > > >    ./perf record -o - --intr-regs=di,r8,dx,cx -e
-> > > > > br_inst_retired.near_call:p -c 1000 --per-thread true 2>/dev/null|./perf
-> > > > > script -F iregs |head -5
-> > > > >    ABI:2    CX:0xffff90e18119e278    DX:0x0    DI:0xffff90e18119f858
-> > > > > R8:0xffff90e18119e278
-> > > > >    ABI:2    CX:0x0    DX:0x1    DI:0xfffffa2844a91580    R8:0x402
-> > > > >    ABI:2    CX:0x0    DX:0x0    DI:0x100cca    R8:0x0
-> > > > >    ABI:2    CX:0x0    DX:0x0    DI:0xffffffff9e997ca5    R8:0x0
-> > > > >    ABI:2    CX:0x113ce8000    DX:0xffff90e198f46600
-> > > > > DI:0xffff90e189de8000    R8:0x290
-> > > > >
-> > > > >
-> > > > > Fixes: b91e5492f9d7 ("perf record: Add a dummy event on hybrid systems
-> > > > > to collect metadata records")
-> > > > > Signed-off-by: Zhengjun Xing <zhengjun.xing@linux.intel.com>
-> > > > > ---
-> > > > >    tools/perf/builtin-script.c | 2 ++
-> > > > >    1 file changed, 2 insertions(+)
-> > > > >
-> > > > > diff --git a/tools/perf/builtin-script.c b/tools/perf/builtin-script.c
-> > > > > index 9152e3e45b69..2d863cdb19fe 100644
-> > > > > --- a/tools/perf/builtin-script.c
-> > > > > +++ b/tools/perf/builtin-script.c
-> > > > > @@ -2429,6 +2429,8 @@ static int process_attr(struct perf_tool *tool,
-> > > > > union perf_event *event,
-> > > > >           }
-> > > > >
-> > > > >           if (evsel->core.attr.sample_type) {
-> > > > > +               if (evsel__is_dummy_event(evsel))
-> > > > > +                       return 0;
-> > > >
-> > > > Maybe we can move this into evsel__check_attr().
-> > > >
-> > > > Thanks,
-> > > > Namhyung
-> > >
-> > > Yes, the following changes in evsel__check_attr() can fix both normal and
-> > > pipe mode issues, Otherwise, we have to patch everywhere when
-> > > evsel__check_attr() is called.
-> > >
-> > > diff --git a/tools/perf/builtin-script.c b/tools/perf/builtin-script.c
-> > > index 13580a9c50b8..fb76e3191858 100644
-> > > --- a/tools/perf/builtin-script.c
-> > > +++ b/tools/perf/builtin-script.c
-> > > @@ -451,6 +451,9 @@ static int evsel__check_attr(struct evsel *evsel, struct
-> > > perf_session *session)
-> > >         allow_user_set = perf_header__has_feat(&session->header,
-> > >                                                HEADER_AUXTRACE);
-> > >
-> > > +       if (evsel__is_dummy_event(evsel))
-> > > +               allow_user_set = true;
-> > > +
-> >
-> > hm, do you need to pass allow_user_set to UREGS check then?
+On Mon, Sep 05, 2022 at 02:42:09PM +0300, Adrian Hunter wrote:
+> The offending commit removed mmap_per_thread(), which did not consider
+> the different set-output rules for per-thread mmaps i.e. in the per-thread
+> case set-output is used for file descriptors of the same thread not the
+> same cpu.
 > 
-> Well.. actually I thought we can simply return 0 for a dummy event.
+> This was not immediately noticed because it only happens with
+> multi-threaded targets and we do not have a test for that yet.
+> 
+> Reinstate mmap_per_thread() expanding it to cover also system-wide per-cpu
+> events i.e. to continue to allow the mixing of per-thread and per-cpu
+> mmaps.
+> 
+> Debug messages (with -vv) show the file descriptors that are opened with
+> sys_perf_event_open. New debug messages are added (needs -vvv) that show
+> also which file descriptors are mmapped and which are redirected with
+> set-output.
+> 
+> In the per-cpu case (cpu != -1) file descriptors for the same CPU are
+> set-output to the first file descriptor for that CPU.
+> 
+> In the per-thread case (cpu == -1) file descriptors for the same thread are
+> set-output to the first file descriptor for that thread.
+> 
+> Example (process 17489 has 2 threads):
+> 
+>  Before (but with new debug prints):
+> 
+>    $ perf record --no-bpf-event -vvv --per-thread -p 17489
+>    <SNIP>
+>    sys_perf_event_open: pid 17489  cpu -1  group_fd -1  flags 0x8 = 5
+>    sys_perf_event_open: pid 17490  cpu -1  group_fd -1  flags 0x8 = 6
+>    <SNIP>
+>    libperf: idx 0: mmapping fd 5
+>    libperf: idx 0: set output fd 6 -> 5
+>    failed to mmap with 22 (Invalid argument)
+> 
+>  After:
+> 
+>    $ perf record --no-bpf-event -vvv --per-thread -p 17489
+>    <SNIP>
+>    sys_perf_event_open: pid 17489  cpu -1  group_fd -1  flags 0x8 = 5
+>    sys_perf_event_open: pid 17490  cpu -1  group_fd -1  flags 0x8 = 6
+>    <SNIP>
+>    libperf: mmap_per_thread: nr cpu values (may include -1) 1 nr threads 2
+>    libperf: idx 0: mmapping fd 5
+>    libperf: idx 1: mmapping fd 6
+>    <SNIP>
+>    [ perf record: Woken up 2 times to write data ]
+>    [ perf record: Captured and wrote 0.018 MB perf.data (15 samples) ]
+> 
+> Per-cpu example (process 20341 has 2 threads, same as above):
+> 
+>    $ perf record --no-bpf-event -vvv -p 20341
+>    <SNIP>
+>    sys_perf_event_open: pid 20341  cpu 0  group_fd -1  flags 0x8 = 5
+>    sys_perf_event_open: pid 20342  cpu 0  group_fd -1  flags 0x8 = 6
+>    sys_perf_event_open: pid 20341  cpu 1  group_fd -1  flags 0x8 = 7
+>    sys_perf_event_open: pid 20342  cpu 1  group_fd -1  flags 0x8 = 8
+>    sys_perf_event_open: pid 20341  cpu 2  group_fd -1  flags 0x8 = 9
+>    sys_perf_event_open: pid 20342  cpu 2  group_fd -1  flags 0x8 = 10
+>    sys_perf_event_open: pid 20341  cpu 3  group_fd -1  flags 0x8 = 11
+>    sys_perf_event_open: pid 20342  cpu 3  group_fd -1  flags 0x8 = 12
+>    sys_perf_event_open: pid 20341  cpu 4  group_fd -1  flags 0x8 = 13
+>    sys_perf_event_open: pid 20342  cpu 4  group_fd -1  flags 0x8 = 14
+>    sys_perf_event_open: pid 20341  cpu 5  group_fd -1  flags 0x8 = 15
+>    sys_perf_event_open: pid 20342  cpu 5  group_fd -1  flags 0x8 = 16
+>    sys_perf_event_open: pid 20341  cpu 6  group_fd -1  flags 0x8 = 17
+>    sys_perf_event_open: pid 20342  cpu 6  group_fd -1  flags 0x8 = 18
+>    sys_perf_event_open: pid 20341  cpu 7  group_fd -1  flags 0x8 = 19
+>    sys_perf_event_open: pid 20342  cpu 7  group_fd -1  flags 0x8 = 20
+>    <SNIP>
+>    libperf: mmap_per_cpu: nr cpu values 8 nr threads 2
+>    libperf: idx 0: mmapping fd 5
+>    libperf: idx 0: set output fd 6 -> 5
+>    libperf: idx 1: mmapping fd 7
+>    libperf: idx 1: set output fd 8 -> 7
+>    libperf: idx 2: mmapping fd 9
+>    libperf: idx 2: set output fd 10 -> 9
+>    libperf: idx 3: mmapping fd 11
+>    libperf: idx 3: set output fd 12 -> 11
+>    libperf: idx 4: mmapping fd 13
+>    libperf: idx 4: set output fd 14 -> 13
+>    libperf: idx 5: mmapping fd 15
+>    libperf: idx 5: set output fd 16 -> 15
+>    libperf: idx 6: mmapping fd 17
+>    libperf: idx 6: set output fd 18 -> 17
+>    libperf: idx 7: mmapping fd 19
+>    libperf: idx 7: set output fd 20 -> 19
+>    <SNIP>
+>    [ perf record: Woken up 7 times to write data ]
+>    [ perf record: Captured and wrote 0.020 MB perf.data (17 samples) ]
+> 
+> Fixes: ae4f8ae16a07 ("libperf evlist: Allow mixing per-thread and per-cpu mmaps")
+> Signed-off-by: Adrian Hunter <adrian.hunter@intel.com>
 
-true :-)
+Acked-by: Jiri Olsa <jolsa@kernel.org>
 
+thanks,
 jirka
