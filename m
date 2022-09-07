@@ -2,70 +2,81 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2C653C38145
-	for <linux-perf-users@archiver.kernel.org>; Wed,  7 Sep 2022 15:53:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 049F4C54EE9
+	for <linux-perf-users@archiver.kernel.org>; Wed,  7 Sep 2022 17:38:48 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229637AbiIGPw7 (ORCPT
+        id S229502AbiIGRir (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Wed, 7 Sep 2022 11:52:59 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36934 "EHLO
+        Wed, 7 Sep 2022 13:38:47 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36726 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229608AbiIGPw6 (ORCPT
+        with ESMTP id S229492AbiIGRiq (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Wed, 7 Sep 2022 11:52:58 -0400
-Received: from mail-wr1-x42e.google.com (mail-wr1-x42e.google.com [IPv6:2a00:1450:4864:20::42e])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 285356CF76
-        for <linux-perf-users@vger.kernel.org>; Wed,  7 Sep 2022 08:52:57 -0700 (PDT)
-Received: by mail-wr1-x42e.google.com with SMTP id e16so1826534wrx.7
-        for <linux-perf-users@vger.kernel.org>; Wed, 07 Sep 2022 08:52:57 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20210112;
-        h=to:subject:message-id:date:from:mime-version:from:to:cc:subject
-         :date;
-        bh=YREwwYu67CUzBm9KWJywNNZTcrAW2lD4CmOmrO9hVs4=;
-        b=CzVmp404Y3DT213xqplLqeeC+PwyDAwVaddhm+lH35mGEHJkNRYUT5MfstrRSabukx
-         PfR9ZXzqX3mTyJYS5QaMoSHZAaDjEEuLzYUPmhxcO32pJwu7BqQx+JrtZAV/iuShyBRL
-         mLkjgyZfIUpd+rL6RURP6yhYXjGenUOp9qmF69Yy3SngsXdGzUqNmDuXatll1NX2/vLY
-         1et5XRnhT7yZfdWjMQcYEKcCxzjP/+cEk6KP8w7dwUbkyekFyeruSzcb6f2mhG13VgZk
-         KQ2vpAsm9JHwClVp8e4In8nrAXpCEnRbWIfdeYHTMWjCk82dTBSRSLJoIoFzZAVskzj/
-         QEwg==
+        Wed, 7 Sep 2022 13:38:46 -0400
+Received: from mail-oa1-f41.google.com (mail-oa1-f41.google.com [209.85.160.41])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2BC7A80F7E;
+        Wed,  7 Sep 2022 10:38:46 -0700 (PDT)
+Received: by mail-oa1-f41.google.com with SMTP id 586e51a60fabf-1278a61bd57so19289306fac.7;
+        Wed, 07 Sep 2022 10:38:46 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=to:subject:message-id:date:from:mime-version:x-gm-message-state
-         :from:to:cc:subject:date;
-        bh=YREwwYu67CUzBm9KWJywNNZTcrAW2lD4CmOmrO9hVs4=;
-        b=68oSb3iGXwIIPz/ZQQZ5zTg4XMM6PqxU45eXPKq+v2zejmc1NIm8f/Mvz+BI+gmCrG
-         kjLusIkN/yHx0T5Yw4ec+nZHF7vdvKKScrUf6AE8snsRZmnXJ7ZAZOcTj0KLt+6sSDoW
-         6fZfw3vAvVg6MITLtdXFkgCOxclkLOln1A4L6z1AHqab9CaScdDCzYHVRsS15JfDGHSY
-         UAHj0+GKTLmT1AWM3ggBmQdx1HAbgQYi952podpINuf3ZfiKFkYLoiD3i1rAayCLpE2G
-         keQM/ShzYW0kZ9JNPW/odlbDokWO3eTFJ6MEGBbvguBwxAGWE00i81TdPrvklUQ/tiRC
-         DUdQ==
-X-Gm-Message-State: ACgBeo1Aogcwlrqsh7iYOEOaAYWM+bfqRE0ylSMTZRalgtJcQkIPd/fL
-        T6dzsqd3XhUW6kUH8Nr++6wHsduHcHasKR3V7/5fb1M/0v4MzQ==
-X-Google-Smtp-Source: AA6agR6bbU88WSpLrj0nOcahzOzzGWP4Y7RUBfjq+IjzqbEnJBhpsVpE+6LG0KpnzEfpZorZXAk01wGMPRWvvoUbQIk=
-X-Received: by 2002:adf:e4ca:0:b0:228:d8b7:48a7 with SMTP id
- v10-20020adfe4ca000000b00228d8b748a7mr2471816wrm.300.1662565975143; Wed, 07
- Sep 2022 08:52:55 -0700 (PDT)
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:x-gm-message-state:from:to:cc:subject:date;
+        bh=jrbDME+3IknpwK7T80xrbsU1d+5VCb9CXfVWDJjbDgQ=;
+        b=j8xsYkhLvBrDxwqQ0n2Canlahf+hWyYkkqRxOVqC2mXM4y/eRAmA/qI3KqajTqrXCF
+         HXqWm0zqpLu0rxPD3ID0c9VurAYAAZmM8N5H2GAt0R1iP9Ed8UUViPW81+m1vUHO6gPP
+         KjMwHi5Bdq3HJRRJTcSRZ0jSYdLrNH9Iiw5CTsrI/javlJXEaP0HMlsTuUYB/9KJrbhz
+         IWRsM34AJ6hGV2ssblTRAnMmiIJnx1mNolJHXpUEK1cLzJoU/6437+KD+lfm3c1OC6uX
+         XnBqZTHh4PZytK90T4JvJo4l5CftBLUj/B2LM92IpSJy/eCyQME/biig/Z4LSLQZU/N+
+         Ojwg==
+X-Gm-Message-State: ACgBeo0ZMGIRFIYDV9yheD9xQ1QOYrPugkVm7ka4Q7ssB6DETS0snDsS
+        2uUolOr0IlBMMMy2LqpwBnRtEcIBhDmy48DC3dMqqROy
+X-Google-Smtp-Source: AA6agR7H9RtmXrxAWSU01huuRXY46j6q/NAqpkmfxgS1t91X3ic8OCvPFAuqLMdNvHhPew0USxOyyQfgMCptjfIQd1s=
+X-Received: by 2002:a05:6808:d46:b0:345:7b42:f987 with SMTP id
+ w6-20020a0568080d4600b003457b42f987mr2016690oik.92.1662572325466; Wed, 07 Sep
+ 2022 10:38:45 -0700 (PDT)
 MIME-Version: 1.0
-From:   Ian Rogers <irogers@google.com>
-Date:   Wed, 7 Sep 2022 08:52:43 -0700
-Message-ID: <CAP-5=fXpQqJsidXP8hfqPF1rPaCjBNGAdg2n6dp375Jre3FjMA@mail.gmail.com>
-Subject: Sept 8th - no office hours
-To:     linux-perf-users <linux-perf-users@vger.kernel.org>,
-        Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Namhyung Kim <namhyung@kernel.org>,
-        Jiri Olsa <jolsa@kernel.org>
+References: <20220907064645.1197894-1-namhyung@kernel.org> <20220907064645.1197894-3-namhyung@kernel.org>
+ <eea20a5c-df2a-979b-ff85-a7e2b978a4b8@intel.com>
+In-Reply-To: <eea20a5c-df2a-979b-ff85-a7e2b978a4b8@intel.com>
+From:   Namhyung Kim <namhyung@kernel.org>
+Date:   Wed, 7 Sep 2022 10:38:34 -0700
+Message-ID: <CAM9d7cgKwidyjWOH5uf-Y2BHF0VACOrR=fdXLz5szuzbHdVaaQ@mail.gmail.com>
+Subject: Re: [PATCH 2/6] perf test: Use a test program in perf record tests
+To:     Adrian Hunter <adrian.hunter@intel.com>
+Cc:     Arnaldo Carvalho de Melo <acme@kernel.org>,
+        Jiri Olsa <jolsa@kernel.org>, Ingo Molnar <mingo@kernel.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Ian Rogers <irogers@google.com>,
+        linux-perf-users <linux-perf-users@vger.kernel.org>
 Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-Hi,
+Hi Adrian,
 
-I think there are a few things to discuss but let's save it for LPC next week.
+On Wed, Sep 7, 2022 at 3:45 AM Adrian Hunter <adrian.hunter@intel.com> wrote:
+>
+> On 7/09/22 09:46, Namhyung Kim wrote:
+> > If the system has cc it could build a test program with two threads
+> > and then use it for more detailed testing.  Also it adds initial delay
+> > of 3ms to profile a multi-threaded target.  This change make the test
+> > failing but that's what we want to check for now.
+>
+> So the delay is just to get a separate dummy event?
+
+No, it's actually to wait for the new thread.
+
+>
+> I hit the issue from this patch:
+>
+> https://lore.kernel.org/lkml/20220711180706.3418612-1-kan.liang@linux.intel.com/
+>
+> That is, if I apply the patch above then the test passes, otherwise it fails always.
+
+It's good to find/verify the bug with this :)
 
 Thanks,
-Ian
-
-Link to the last "no office hours" e-mail:
-https://lore.kernel.org/linux-perf-users/CAP-5=fUF2SyfTBfh=SugoCpN=7mUroZk85nKbuX3P6cNUkG2sQ@mail.gmail.com/
+Namhyung
