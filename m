@@ -2,135 +2,138 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E5808C54EE9
-	for <linux-perf-users@archiver.kernel.org>; Wed,  7 Sep 2022 17:51:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D1C5BC38145
+	for <linux-perf-users@archiver.kernel.org>; Wed,  7 Sep 2022 18:06:21 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230077AbiIGRvn (ORCPT
+        id S230262AbiIGSGT (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Wed, 7 Sep 2022 13:51:43 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34582 "EHLO
+        Wed, 7 Sep 2022 14:06:19 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:32980 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229808AbiIGRvk (ORCPT
+        with ESMTP id S229668AbiIGSGM (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Wed, 7 Sep 2022 13:51:40 -0400
-Received: from mail-oa1-f53.google.com (mail-oa1-f53.google.com [209.85.160.53])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3218C71726;
-        Wed,  7 Sep 2022 10:51:39 -0700 (PDT)
-Received: by mail-oa1-f53.google.com with SMTP id 586e51a60fabf-1279948d93dso18096307fac.10;
-        Wed, 07 Sep 2022 10:51:39 -0700 (PDT)
+        Wed, 7 Sep 2022 14:06:12 -0400
+Received: from mail-ot1-f41.google.com (mail-ot1-f41.google.com [209.85.210.41])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6AB0E77EBD;
+        Wed,  7 Sep 2022 11:06:10 -0700 (PDT)
+Received: by mail-ot1-f41.google.com with SMTP id 6-20020a9d0106000000b0063963134d04so10807149otu.3;
+        Wed, 07 Sep 2022 11:06:10 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
         h=cc:to:subject:message-id:date:from:in-reply-to:references
          :mime-version:x-gm-message-state:from:to:cc:subject:date;
-        bh=ATQFV9UxDijnVCKvjh8wgAiSEZcUIEydhgrlvOLLULw=;
-        b=IPPnEI6ako2KxEoPezfb6EpSdHRThfPVTNFafi0v7VP7ENGEn3YOWHFxl9ZN2+aLDQ
-         V5SvjdKhizUpk+OO8q/5VJfr/wHpwY1FAW1iNvtcWYjuukw9YL8mUeNdpbzAEWUmP4sI
-         vuT8NfC28SzHexZnkl0iFSjku1jOiZ34tAiNWCVoypT/TVGKeS1Vf54cYLkpQdYV5MaI
-         xnqK/vmiA+vE9FIyhGuXVHlD8IT6Lylx2CaNc8tivzJsnvjZsKCLgmL85AGF0p6nFcyo
-         IYyEe7oFhG2A6Gars/09jz/WsDmr+nwxu93pBXr4LCE3JeK5N1NPU6KnQcB9kbZ7VQIj
-         Tt5w==
-X-Gm-Message-State: ACgBeo2QVgWNy2IfMhGrp6UCX5InuKsYTHYNhxzsLlmY5w5ULb45ogRb
-        yuocNvtWRpyTS8KTMXNpUAO8V+j5XoRRXoaGrrY=
-X-Google-Smtp-Source: AA6agR7bzc4ly6e0V8xYN8ae6VkT7YfN/xsK5oXoZN+zl19bnzwzuKJgxyngYxaWXTCJhq3nJThtKLHdjHN2YhNMpVI=
-X-Received: by 2002:a05:6808:302a:b0:345:ec04:8f11 with SMTP id
- ay42-20020a056808302a00b00345ec048f11mr12709479oib.5.1662573098429; Wed, 07
- Sep 2022 10:51:38 -0700 (PDT)
+        bh=cwQcMikn8PY/begH6mMZDx9ENCQa5sG31sOsvQOo7/o=;
+        b=WqQnu6PIEW7n1nUgrcWf63mnUg9vk4d9mU7tffbJbMJb6iLHf+aFoKSxkO2AupGHLQ
+         qkDcxsUkMFAynW7Vbt2xEtMRsk5uGgnxJEsGUPdt1bFmLiVqdW6szF8fdiFDx8r7kJcs
+         3jrYbtbsBjQg+xkXgW2hw9tBb7iCNJeiubHjLZrXpe5be9mM3F2gKLEZ7buRXdMZ0iBB
+         xTVATKUW1JBBDhHbm6lIhQ65d7C5aYYZ4QyAYid8GqyWyjgW1c+okiJ703A3v1B1xR+P
+         Nt6Fv06HxXsSuxgdvykMsmgo/V4IXHLjbCL2LYiQQ+sLA8fi+50tofpqa1M1hteNFejm
+         HDcw==
+X-Gm-Message-State: ACgBeo2HyVItHEix/dC8Hc5fmWC/Ql/DV7JHwmfkvN2HxPvo36zStYcV
+        WViJM5xj1/PCOO7qjQXvn5jrDkq62tKarZ1pWhY=
+X-Google-Smtp-Source: AA6agR5/jZHCxw7ViqcIaWpsfgM5JHTM8/6JkEPpzd28+g/aL8HtSeYdzEFXej9/DAFCxlF51VWDfeHLWoUSwmZEzYw=
+X-Received: by 2002:a9d:6f18:0:b0:638:b4aa:a546 with SMTP id
+ n24-20020a9d6f18000000b00638b4aaa546mr1910734otq.124.1662573969481; Wed, 07
+ Sep 2022 11:06:09 -0700 (PDT)
 MIME-Version: 1.0
-References: <20220907071203.2729746-1-namhyung@kernel.org> <CAP-5=fXyY_aGYW4R-PZvzG3FiTtHvLfS+s9bp_oCQUaRCGrcwg@mail.gmail.com>
-In-Reply-To: <CAP-5=fXyY_aGYW4R-PZvzG3FiTtHvLfS+s9bp_oCQUaRCGrcwg@mail.gmail.com>
+References: <20220907050407.2711513-1-namhyung@kernel.org> <YxhXLQ9aOuLRLrAJ@krava>
+ <CAM9d7chVuOyY0Nhecj0J=AU6iRkFoKY6hQ5mAMrS8k=-26WeCg@mail.gmail.com>
+In-Reply-To: <CAM9d7chVuOyY0Nhecj0J=AU6iRkFoKY6hQ5mAMrS8k=-26WeCg@mail.gmail.com>
 From:   Namhyung Kim <namhyung@kernel.org>
-Date:   Wed, 7 Sep 2022 10:51:27 -0700
-Message-ID: <CAM9d7chEOJJTX3F-5Nzy+BBpr5dBnayHDx9MOSmkC0axrttzJQ@mail.gmail.com>
-Subject: Re: [PATCH v3] perf test: Skip sigtrap test on old kernels
-To:     Ian Rogers <irogers@google.com>
+Date:   Wed, 7 Sep 2022 11:05:58 -0700
+Message-ID: <CAM9d7cgG_Jwb1Z98svrk0Q1X9RmeodOyHBvbqxGijP3eyBU_uw@mail.gmail.com>
+Subject: Re: [PATCH v2] perf test: Skip sigtrap test on old kernels
+To:     Jiri Olsa <olsajiri@gmail.com>
 Cc:     Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Jiri Olsa <jolsa@kernel.org>, Ingo Molnar <mingo@kernel.org>,
+        Ingo Molnar <mingo@kernel.org>,
         Peter Zijlstra <peterz@infradead.org>,
         LKML <linux-kernel@vger.kernel.org>,
+        Ian Rogers <irogers@google.com>,
         linux-perf-users <linux-perf-users@vger.kernel.org>,
-        Marco Elver <elver@google.com>, Song Liu <song@kernel.org>
+        bpf <bpf@vger.kernel.org>, Marco Elver <elver@google.com>,
+        Song Liu <songliubraving@fb.com>
 Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-Hi Ian,
-
-On Wed, Sep 7, 2022 at 8:48 AM Ian Rogers <irogers@google.com> wrote:
+On Wed, Sep 7, 2022 at 10:50 AM Namhyung Kim <namhyung@kernel.org> wrote:
 >
-> On Wed, Sep 7, 2022 at 12:12 AM Namhyung Kim <namhyung@kernel.org> wrote:
+> On Wed, Sep 7, 2022 at 1:32 AM Jiri Olsa <olsajiri@gmail.com> wrote:
 > >
-> > If it runs on an old kernel, perf_event_open would fail because of the
-> > new fields sigtrap and sig_data.  Just skipping the test could miss an
-> > actual bug in the kernel.
+> > On Tue, Sep 06, 2022 at 10:04:07PM -0700, Namhyung Kim wrote:
+> > > If it runs on an old kernel, perf_event_open would fail because of the
+> > > new fields sigtrap and sig_data.  Just skipping the test could miss an
+> > > actual bug in the kernel.
+> > >
+> > > Let's check BTF if it has the perf_event_attr.sigtrap field.
+> > >
+> > > Cc: Marco Elver <elver@google.com>
+> > > Cc: Song Liu <songliubraving@fb.com>
+> > > Signed-off-by: Namhyung Kim <namhyung@kernel.org>
+> > > ---
+> > >  tools/perf/tests/sigtrap.c | 46 +++++++++++++++++++++++++++++++++++++-
+> > >  1 file changed, 45 insertions(+), 1 deletion(-)
+> > >
+> > > diff --git a/tools/perf/tests/sigtrap.c b/tools/perf/tests/sigtrap.c
+> > > index e32ece90e164..32f08ce0f2b0 100644
+> > > --- a/tools/perf/tests/sigtrap.c
+> > > +++ b/tools/perf/tests/sigtrap.c
+> > > @@ -16,6 +16,8 @@
+> > >  #include <sys/syscall.h>
+> > >  #include <unistd.h>
+> > >
+> > > +#include <bpf/btf.h>
+> > > +
+> > >  #include "cloexec.h"
+> > >  #include "debug.h"
+> > >  #include "event.h"
+> > > @@ -54,6 +56,42 @@ static struct perf_event_attr make_event_attr(void)
+> > >       return attr;
+> > >  }
+> > >
+> > > +static bool attr_has_sigtrap(void)
+> > > +{
+> > > +     bool ret = false;
+> > > +
+> > > +#ifdef HAVE_BPF_SKEL
+> > > +
+> > > +     struct btf *btf;
+> > > +     const struct btf_type *t;
+> > > +     const struct btf_member *m;
+> > > +     const char *name;
+> > > +     int i, id;
+> > > +
+> > > +     /* just assume it doesn't have the field */
+> > > +     btf = btf__load_vmlinux_btf();
+> > > +     if (btf == NULL)
+> > > +             return false;
+> > > +
+> > > +     id = btf__find_by_name_kind(btf, "perf_event_attr", BTF_KIND_STRUCT);
+> > > +     if (id < 0)
+> > > +             goto out;
+> > > +
+> > > +     t = btf__type_by_id(btf, id);
+> > > +     for (i = 0, m = btf_members(t); i < btf_vlen(t); i++, m++) {
+> > > +             name = btf__name_by_offset(btf, m->name_off);
+> > > +             if (!strcmp(name, "sigtrap")) {
+> > > +                     ret = true;
+> > > +                     break;
+> > > +             }
+> > > +     }
+> > > +out:
+> > > +     btf__free(btf);
+> > > +#endif
 > >
-> > Let's check BTF if it has the perf_event_attr.sigtrap field.
-> >
-> > Cc: Marco Elver <elver@google.com>
-> > Acked-by: Song Liu <song@kernel.org>
-> > Signed-off-by: Namhyung Kim <namhyung@kernel.org>
-> > ---
-> > * move #include under #ifdef
-> > * return true when BPF is not supported
-> > * update comment
-> >
-> >  tools/perf/tests/sigtrap.c | 50 +++++++++++++++++++++++++++++++++++++-
-> >  1 file changed, 49 insertions(+), 1 deletion(-)
-> >
-> > diff --git a/tools/perf/tests/sigtrap.c b/tools/perf/tests/sigtrap.c
-> > index e32ece90e164..cdf75eab6a8a 100644
-> > --- a/tools/perf/tests/sigtrap.c
-> > +++ b/tools/perf/tests/sigtrap.c
-> > @@ -54,6 +54,48 @@ static struct perf_event_attr make_event_attr(void)
-> >         return attr;
-> >  }
-> >
-> > +#ifdef HAVE_BPF_SKEL
-> > +#include <bpf/btf.h>
-> > +
-> > +static bool attr_has_sigtrap(void)
-> > +{
-> > +       bool ret = false;
-> > +       struct btf *btf;
-> > +       const struct btf_type *t;
-> > +       const struct btf_member *m;
-> > +       const char *name;
-> > +       int i, id;
-> > +
-> > +       btf = btf__load_vmlinux_btf();
-> > +       if (btf == NULL) {
-> > +               /* should be an old kernel */
-> > +               return false;
-> > +       }
-> > +
-> > +       id = btf__find_by_name_kind(btf, "perf_event_attr", BTF_KIND_STRUCT);
-> > +       if (id < 0)
-> > +               goto out;
-> > +
-> > +       t = btf__type_by_id(btf, id);
-> > +       for (i = 0, m = btf_members(t); i < btf_vlen(t); i++, m++) {
-> > +               name = btf__name_by_offset(btf, m->name_off);
-> > +               if (!strcmp(name, "sigtrap")) {
-> > +                       ret = true;
-> > +                       break;
-> > +               }
-> > +       }
-> > +out:
-> > +       btf__free(btf);
-> > +       return ret;
-> > +}
-> > +#else  /* !HAVE_BPF_SKEL */
-> > +static bool attr_has_sigtrap(void)
-> > +{
-> > +       /* to maintain current behavior */
+> > would it be easier to call perf_event_open for simple event with
+> > sigtrap set (and perhaps remove_on_exec) ? perf_copy_attr checks
+> > on reserved fields
 >
-> nit: I don't think this comment will age well and the behavior of the
-> function is a bit counterintuitive. Perhaps:
->
-> /* If we don't have libbpf then guess we're on a newer kernel with
-> sigtrap support. This will mean the test will fail on older kernels.
-> */
+> Hmm.. right.  we could do that too.  But it might still fail if there's a
+> bug in the path handling in sigtrap even for the simple case.  I'm not
+> sure if it's a realistic concern though. :)
 
-Thanks for the clarification, will update!
+I think we can do that when libbpf is not available.
 
+Thanks,
 Namhyung
