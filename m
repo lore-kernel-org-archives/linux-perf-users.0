@@ -2,160 +2,83 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D1200C38145
-	for <linux-perf-users@archiver.kernel.org>; Wed,  7 Sep 2022 05:58:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8B29EECAAD3
+	for <linux-perf-users@archiver.kernel.org>; Wed,  7 Sep 2022 06:22:04 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229831AbiIGF6v (ORCPT
+        id S229557AbiIGGWD (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Wed, 7 Sep 2022 01:58:51 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40446 "EHLO
+        Wed, 7 Sep 2022 02:22:03 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48498 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229459AbiIGF6u (ORCPT
+        with ESMTP id S229586AbiIGGWC (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Wed, 7 Sep 2022 01:58:50 -0400
-Received: from ams.source.kernel.org (ams.source.kernel.org [IPv6:2604:1380:4601:e00::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 82F53895F4;
-        Tue,  6 Sep 2022 22:58:49 -0700 (PDT)
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by ams.source.kernel.org (Postfix) with ESMTPS id 3EE46B81B4E;
-        Wed,  7 Sep 2022 05:58:48 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 01F32C433C1;
-        Wed,  7 Sep 2022 05:58:46 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1662530327;
-        bh=Usb7RB0E/4pZu8ET3H5EzLquGfLSkSzBMYKG6bPNTzs=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=UN//H31Y8ALCcivYHKUF+F5B9ft7nhl9qTcm1cqjCVsXbf4nx+P0FebUGmzQU5vKM
-         vbGK0+eASpQJjpuppHcarVZ24213YeaRFzRDW1osNACF0C4ojnNFfS8teBTMLoYxjN
-         9bps6/kEJ0TuDOjjj6ORMu59Hh8sL/r4MMY1XFRjp/X+ojM3gkZhU1yk0uhnlUog/Q
-         7+CsQlnxbAJL1U44x+OoVanu7CGt88uM5Tfc8ZVTYilf4a8DanXd4sSIbWkpsFGc4H
-         jycMA9S/e+N2oS64wWJ7h7SCiYlkOgcX2Q6VCCFzuumsJgoaF0ZN40Cj2VRdPevYXX
-         ezzYrO+gUFmiw==
-Received: by mail-oa1-f47.google.com with SMTP id 586e51a60fabf-1274ec87ad5so18674122fac.0;
-        Tue, 06 Sep 2022 22:58:46 -0700 (PDT)
-X-Gm-Message-State: ACgBeo1Excr8ZglEHTRa12Rkqj+51sD30PWhkpw+/ob0TAogDnFF3cBz
-        LSM/7EoNj0Uxcl28/u2lrx6fJyUEjleRuRQ8yS0=
-X-Google-Smtp-Source: AA6agR6RtWs+tc7D5XKa1brovVgMCpoLJSxZbYT4qLoxWFAdV2b9Hb63gLuxccgct1L52t1nUxgJv5AbRnVpvUromAc=
-X-Received: by 2002:a05:6870:3127:b0:11c:8c2c:9015 with SMTP id
- v39-20020a056870312700b0011c8c2c9015mr13117547oaa.31.1662530326147; Tue, 06
- Sep 2022 22:58:46 -0700 (PDT)
+        Wed, 7 Sep 2022 02:22:02 -0400
+Received: from foss.arm.com (foss.arm.com [217.140.110.172])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTP id B0E109CCF1;
+        Tue,  6 Sep 2022 23:22:00 -0700 (PDT)
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id BFA881042;
+        Tue,  6 Sep 2022 23:22:06 -0700 (PDT)
+Received: from [10.162.40.15] (unknown [10.162.40.15])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id EDD963F534;
+        Tue,  6 Sep 2022 23:22:26 -0700 (PDT)
+Message-ID: <808b31ab-f4d7-ede4-abaf-def639455c36@arm.com>
+Date:   Wed, 7 Sep 2022 11:51:56 +0530
 MIME-Version: 1.0
-References: <20220907050407.2711513-1-namhyung@kernel.org>
-In-Reply-To: <20220907050407.2711513-1-namhyung@kernel.org>
-From:   Song Liu <song@kernel.org>
-Date:   Tue, 6 Sep 2022 22:58:35 -0700
-X-Gmail-Original-Message-ID: <CAPhsuW4OT3XC8oREZBNreesYyVvU9hSGs5Hgz=r-cwsQSkiXRQ@mail.gmail.com>
-Message-ID: <CAPhsuW4OT3XC8oREZBNreesYyVvU9hSGs5Hgz=r-cwsQSkiXRQ@mail.gmail.com>
-Subject: Re: [PATCH v2] perf test: Skip sigtrap test on old kernels
-To:     Namhyung Kim <namhyung@kernel.org>
-Cc:     Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Jiri Olsa <jolsa@kernel.org>, Ingo Molnar <mingo@kernel.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Ian Rogers <irogers@google.com>,
-        linux-perf-users@vger.kernel.org, bpf <bpf@vger.kernel.org>,
-        Marco Elver <elver@google.com>,
-        Song Liu <songliubraving@fb.com>
-Content-Type: text/plain; charset="UTF-8"
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
+ Thunderbird/91.11.0
+Subject: Re: [PATCH] perf: Consolidate branch sample filter helpers
+Content-Language: en-US
+To:     Peter Zijlstra <peterz@infradead.org>
+Cc:     linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org,
+        Ingo Molnar <mingo@redhat.com>,
+        Arnaldo Carvalho de Melo <acme@kernel.org>
+References: <20220906084414.396220-1-anshuman.khandual@arm.com>
+ <YxccSZOGAwdiYrsj@hirez.programming.kicks-ass.net>
+From:   Anshuman Khandual <anshuman.khandual@arm.com>
+In-Reply-To: <YxccSZOGAwdiYrsj@hirez.programming.kicks-ass.net>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-On Tue, Sep 6, 2022 at 10:04 PM Namhyung Kim <namhyung@kernel.org> wrote:
->
-> If it runs on an old kernel, perf_event_open would fail because of the
-> new fields sigtrap and sig_data.  Just skipping the test could miss an
-> actual bug in the kernel.
->
-> Let's check BTF if it has the perf_event_attr.sigtrap field.
->
-> Cc: Marco Elver <elver@google.com>
-> Cc: Song Liu <songliubraving@fb.com>
-> Signed-off-by: Namhyung Kim <namhyung@kernel.org>
-> ---
->  tools/perf/tests/sigtrap.c | 46 +++++++++++++++++++++++++++++++++++++-
->  1 file changed, 45 insertions(+), 1 deletion(-)
->
-> diff --git a/tools/perf/tests/sigtrap.c b/tools/perf/tests/sigtrap.c
-> index e32ece90e164..32f08ce0f2b0 100644
-> --- a/tools/perf/tests/sigtrap.c
-> +++ b/tools/perf/tests/sigtrap.c
-> @@ -16,6 +16,8 @@
->  #include <sys/syscall.h>
->  #include <unistd.h>
->
-> +#include <bpf/btf.h>
-> +
 
-Do we need "#ifdef HAVE_BPF_SKEL" for the include part?
 
-Other than this, looks good to me.
+On 9/6/22 15:39, Peter Zijlstra wrote:
+> On Tue, Sep 06, 2022 at 02:14:14PM +0530, Anshuman Khandual wrote:
+>> Besides the branch type filtering requests, 'event.attr.branch_sample_type'
+>> also contains various flags indicating which additional information should
+>> be captured, along with the base branch record. These flags help configure
+>> the underlying hardware, and capture the branch records appropriately when
+>> required e.g after PMU interrupt. But first, this moves an existing helper
+>> perf_sample_save_hw_index() into the header before adding some more helpers
+>> for other branch sample filter flags.
+>>
+>> Cc: Peter Zijlstra <peterz@infradead.org>
+>> Cc: Ingo Molnar <mingo@redhat.com>
+>> Cc: Arnaldo Carvalho de Melo <acme@kernel.org>
+>> Cc: linux-perf-users@vger.kernel.org
+>> Cc: linux-kernel@vger.kernel.org
+>> Acked-by: Peter Zijlstra (Intel) <peterz@infradead.org>
+>> Signed-off-by: Anshuman Khandual <anshuman.khandual@arm.com>
+>> ---
+>> Hello Peter,
+>>
+>> Could you please consider taking this patch along with others on the perf
+>> ABI series. This patch has been part of the original BRBE driver series,
+>> which will have one less patch to include going forward. Thank you.
+>>
+>> - Anshuman
+>>
+>> This applies on v6.0-rc4 but after applying the following patch series
+>>
+>> https://lore.kernel.org/all/20220824044822.70230-1-anshuman.khandual@arm.com/
+>>
+> 
+> Yeah, but it doesn't cleanly apply to tip/perf/core....
+> 
+> The conflict looks trivial, let me stomp on it to make it fit :-)
 
-Acked-by: Song Liu <song@kernel.org>
-
->  #include "cloexec.h"
->  #include "debug.h"
->  #include "event.h"
-> @@ -54,6 +56,42 @@ static struct perf_event_attr make_event_attr(void)
->         return attr;
->  }
->
-> +static bool attr_has_sigtrap(void)
-> +{
-> +       bool ret = false;
-> +
-> +#ifdef HAVE_BPF_SKEL
-> +
-> +       struct btf *btf;
-> +       const struct btf_type *t;
-> +       const struct btf_member *m;
-> +       const char *name;
-> +       int i, id;
-> +
-> +       /* just assume it doesn't have the field */
-> +       btf = btf__load_vmlinux_btf();
-> +       if (btf == NULL)
-> +               return false;
-> +
-> +       id = btf__find_by_name_kind(btf, "perf_event_attr", BTF_KIND_STRUCT);
-> +       if (id < 0)
-> +               goto out;
-> +
-> +       t = btf__type_by_id(btf, id);
-> +       for (i = 0, m = btf_members(t); i < btf_vlen(t); i++, m++) {
-> +               name = btf__name_by_offset(btf, m->name_off);
-> +               if (!strcmp(name, "sigtrap")) {
-> +                       ret = true;
-> +                       break;
-> +               }
-> +       }
-> +out:
-> +       btf__free(btf);
-> +#endif
-> +
-> +       return ret;
-> +}
-> +
->  static void
->  sigtrap_handler(int signum __maybe_unused, siginfo_t *info, void *ucontext __maybe_unused)
->  {
-> @@ -139,7 +177,13 @@ static int test__sigtrap(struct test_suite *test __maybe_unused, int subtest __m
->
->         fd = sys_perf_event_open(&attr, 0, -1, -1, perf_event_open_cloexec_flag());
->         if (fd < 0) {
-> -               pr_debug("FAILED sys_perf_event_open(): %s\n", str_error_r(errno, sbuf, sizeof(sbuf)));
-> +               if (attr_has_sigtrap()) {
-> +                       pr_debug("FAILED sys_perf_event_open(): %s\n",
-> +                                str_error_r(errno, sbuf, sizeof(sbuf)));
-> +               } else {
-> +                       pr_debug("perf_event_attr doesn't have sigtrap\n");
-> +                       ret = TEST_SKIP;
-> +               }
->                 goto out_restore_sigaction;
->         }
->
-> --
-> 2.37.2.789.g6183377224-goog
->
+Thank you.
