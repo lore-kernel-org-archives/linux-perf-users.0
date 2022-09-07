@@ -2,164 +2,475 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CFAE6C38145
-	for <linux-perf-users@archiver.kernel.org>; Wed,  7 Sep 2022 15:48:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0EAC8C54EE9
+	for <linux-perf-users@archiver.kernel.org>; Wed,  7 Sep 2022 15:49:53 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229451AbiIGPsS (ORCPT
+        id S230054AbiIGPtv (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Wed, 7 Sep 2022 11:48:18 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52990 "EHLO
+        Wed, 7 Sep 2022 11:49:51 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56708 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229500AbiIGPsO (ORCPT
+        with ESMTP id S230102AbiIGPtq (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Wed, 7 Sep 2022 11:48:14 -0400
-Received: from mail-wr1-x42f.google.com (mail-wr1-x42f.google.com [IPv6:2a00:1450:4864:20::42f])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 101F1B99DD
-        for <linux-perf-users@vger.kernel.org>; Wed,  7 Sep 2022 08:48:11 -0700 (PDT)
-Received: by mail-wr1-x42f.google.com with SMTP id bq9so8164377wrb.4
-        for <linux-perf-users@vger.kernel.org>; Wed, 07 Sep 2022 08:48:11 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20210112;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:from:to:cc:subject:date;
-        bh=JTKHE/mFfLQpKZtovEaQfx9ypT3LHElNlUe4JnUW+14=;
-        b=WAsZiFgX+fq4TgLbLKr1C2FPzy0zzLEBiLGhl7S10aI8B0ejD7vbYjtqDhvYDJa+pq
-         PwrI9N/oSp4hcM4LN9fCMzDwBq1+dkcniJuvhnsFiZarDf7DC8bcF7vuSWsy39sjh90O
-         Dfn8uE41jAcGdO3HapuR782JId+uUmYm+6U2vbqg2YK8/9G2QCzVS1kV8HQfswKKfUlw
-         1wG4my2b8huUlHI/VocGop8xusQkcOI1r9jhAqLUCsEcFWRv/sXpPknUrY0ckyNsdK9M
-         9e9+/nkcCXAa69f4f4O0HmDmNaUGk0IeyrWptGlPZkzGxun3nJ9/gaQEbMI0xqfh4qfV
-         2ZwA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date;
-        bh=JTKHE/mFfLQpKZtovEaQfx9ypT3LHElNlUe4JnUW+14=;
-        b=MolV6vKC/MltVg6WpyvHrQDrjIyGqN4qmUHICeW0VXlYjNvZrhtcG0xGJI8T1ntQNp
-         LCXyYho1/siYom7A9/SkqTPLHh8Y3MFABVAiwp6MUNNLJUkicN01cAZkVFZrpxUS5xRl
-         7aci1i2U8HDm6vE9KFqi3uIBYAnyDcqeoxZXhnoKxj3sIEKeMT/t2qcGkXvc6LWlXefM
-         a7OT4H5vfcq2QevtV8ObLX0GSitk7el4BOs5R2edWr2liktvSkLghd0jAAOqkR6E84tn
-         NRsVlZZ0s1lnAwAQCZnhHlFogHbbX9N+2fyvGlMqSUCch1imbMlDY1kOd2ZDYdOSlflC
-         5QfA==
-X-Gm-Message-State: ACgBeo0GbNEi5Vaqi4Dy4beG3I73jpakyf0x+mgtaMcAP+IxLs9KzNqi
-        U5jm2bw0jOk63BEeHKr2vZJffVEnhRnQCj6srrKteQ==
-X-Google-Smtp-Source: AA6agR6svjr5kCW9JMi5qqKrWFsmgmj9cfash5uryDYATh7wRkTgMyGmvfsaiACCUup2oI4IwUoDACFRH5ioOWAE1r0=
-X-Received: by 2002:a5d:64a8:0:b0:226:f3f3:9914 with SMTP id
- m8-20020a5d64a8000000b00226f3f39914mr2416185wrp.343.1662565689640; Wed, 07
- Sep 2022 08:48:09 -0700 (PDT)
+        Wed, 7 Sep 2022 11:49:46 -0400
+Received: from foss.arm.com (foss.arm.com [217.140.110.172])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTP id 92FAB1CB06;
+        Wed,  7 Sep 2022 08:49:43 -0700 (PDT)
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id E7077106F;
+        Wed,  7 Sep 2022 08:49:48 -0700 (PDT)
+Received: from hype-n1-sdp.warwick.arm.com (hype-n1-sdp.warwick.arm.com [10.32.32.32])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPA id B42B53F71A;
+        Wed,  7 Sep 2022 08:49:40 -0700 (PDT)
+From:   Nick Forrington <nick.forrington@arm.com>
+To:     linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org,
+        acme@kernel.org
+Cc:     Nick Forrington <nick.forrington@arm.com>,
+        John Garry <john.garry@huawei.com>,
+        Will Deacon <will@kernel.org>,
+        James Clark <james.clark@arm.com>,
+        Mike Leach <mike.leach@linaro.org>,
+        Leo Yan <leo.yan@linaro.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Jiri Olsa <jolsa@kernel.org>,
+        Namhyung Kim <namhyung@kernel.org>,
+        linux-arm-kernel@lists.infradead.org
+Subject: [PATCH v2] perf vendor events: Update events for Neoverse E1
+Date:   Wed,  7 Sep 2022 16:49:30 +0100
+Message-Id: <20220907154932.60808-1-nick.forrington@arm.com>
+X-Mailer: git-send-email 2.25.1
 MIME-Version: 1.0
-References: <20220907071203.2729746-1-namhyung@kernel.org>
-In-Reply-To: <20220907071203.2729746-1-namhyung@kernel.org>
-From:   Ian Rogers <irogers@google.com>
-Date:   Wed, 7 Sep 2022 08:47:57 -0700
-Message-ID: <CAP-5=fXyY_aGYW4R-PZvzG3FiTtHvLfS+s9bp_oCQUaRCGrcwg@mail.gmail.com>
-Subject: Re: [PATCH v3] perf test: Skip sigtrap test on old kernels
-To:     Namhyung Kim <namhyung@kernel.org>
-Cc:     Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Jiri Olsa <jolsa@kernel.org>, Ingo Molnar <mingo@kernel.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        linux-perf-users@vger.kernel.org, Marco Elver <elver@google.com>,
-        Song Liu <song@kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-On Wed, Sep 7, 2022 at 12:12 AM Namhyung Kim <namhyung@kernel.org> wrote:
->
-> If it runs on an old kernel, perf_event_open would fail because of the
-> new fields sigtrap and sig_data.  Just skipping the test could miss an
-> actual bug in the kernel.
->
-> Let's check BTF if it has the perf_event_attr.sigtrap field.
->
-> Cc: Marco Elver <elver@google.com>
-> Acked-by: Song Liu <song@kernel.org>
-> Signed-off-by: Namhyung Kim <namhyung@kernel.org>
-> ---
-> * move #include under #ifdef
-> * return true when BPF is not supported
-> * update comment
->
->  tools/perf/tests/sigtrap.c | 50 +++++++++++++++++++++++++++++++++++++-
->  1 file changed, 49 insertions(+), 1 deletion(-)
->
-> diff --git a/tools/perf/tests/sigtrap.c b/tools/perf/tests/sigtrap.c
-> index e32ece90e164..cdf75eab6a8a 100644
-> --- a/tools/perf/tests/sigtrap.c
-> +++ b/tools/perf/tests/sigtrap.c
-> @@ -54,6 +54,48 @@ static struct perf_event_attr make_event_attr(void)
->         return attr;
->  }
->
-> +#ifdef HAVE_BPF_SKEL
-> +#include <bpf/btf.h>
-> +
-> +static bool attr_has_sigtrap(void)
-> +{
-> +       bool ret = false;
-> +       struct btf *btf;
-> +       const struct btf_type *t;
-> +       const struct btf_member *m;
-> +       const char *name;
-> +       int i, id;
-> +
-> +       btf = btf__load_vmlinux_btf();
-> +       if (btf == NULL) {
-> +               /* should be an old kernel */
-> +               return false;
-> +       }
-> +
-> +       id = btf__find_by_name_kind(btf, "perf_event_attr", BTF_KIND_STRUCT);
-> +       if (id < 0)
-> +               goto out;
-> +
-> +       t = btf__type_by_id(btf, id);
-> +       for (i = 0, m = btf_members(t); i < btf_vlen(t); i++, m++) {
-> +               name = btf__name_by_offset(btf, m->name_off);
-> +               if (!strcmp(name, "sigtrap")) {
-> +                       ret = true;
-> +                       break;
-> +               }
-> +       }
-> +out:
-> +       btf__free(btf);
-> +       return ret;
-> +}
-> +#else  /* !HAVE_BPF_SKEL */
-> +static bool attr_has_sigtrap(void)
-> +{
-> +       /* to maintain current behavior */
+These CPUs contain the same PMU events (as per the Arm Technical
+Reference manuals for Cortex A65 and Neoverse E1)
 
-nit: I don't think this comment will age well and the behavior of the
-function is a bit counterintuitive. Perhaps:
+This de-duplicates event data, and avoids issues in previous E1 event
+data (not present in A65 data)
+* Missing implementation defined events
+* Inclusion of events that are not implemented:
+  - L1D_CACHE_ALLOCATE
+  - SAMPLE_POP
+  - SAMPLE_FEED
+  - SAMPLE_FILTRATE
+  - SAMPLE_COLLISION
 
-/* If we don't have libbpf then guess we're on a newer kernel with
-sigtrap support. This will mean the test will fail on older kernels.
-*/
+Signed-off-by: Nick Forrington <nick.forrington@arm.com>
+---
+V1 -> V2: Remove proposed E1 changes. Use A65 data for A65 and E1 instead
 
-> +       return true;
-> +}
-> +#endif  /* HAVE_BPF_SKEL */
-> +
->  static void
->  sigtrap_handler(int signum __maybe_unused, siginfo_t *info, void *ucontext __maybe_unused)
->  {
-> @@ -139,7 +181,13 @@ static int test__sigtrap(struct test_suite *test __maybe_unused, int subtest __m
->
->         fd = sys_perf_event_open(&attr, 0, -1, -1, perf_event_open_cloexec_flag());
->         if (fd < 0) {
-> -               pr_debug("FAILED sys_perf_event_open(): %s\n", str_error_r(errno, sbuf, sizeof(sbuf)));
-> +               if (attr_has_sigtrap()) {
-> +                       pr_debug("FAILED sys_perf_event_open(): %s\n",
-> +                                str_error_r(errno, sbuf, sizeof(sbuf)));
-> +               } else {
-> +                       pr_debug("perf_event_attr doesn't have sigtrap\n");
-> +                       ret = TEST_SKIP;
-> +               }
->                 goto out_restore_sigaction;
->         }
->
-> --
-> 2.37.2.789.g6183377224-goog
->
+.../{cortex-a65 => cortex-a65-e1}/branch.json |   0
+ .../{cortex-a65 => cortex-a65-e1}/bus.json    |   0
+ .../{cortex-a65 => cortex-a65-e1}/cache.json  |   0
+ .../{cortex-a65 => cortex-a65-e1}/dpu.json    |   0
+ .../exception.json                            |   0
+ .../{cortex-a65 => cortex-a65-e1}/ifu.json    |   0
+ .../instruction.json                          |   0
+ .../{cortex-a65 => cortex-a65-e1}/memory.json |   0
+ .../pipeline.json                             |   0
+ .../arch/arm64/arm/neoverse-e1/branch.json    |  17 ---
+ .../arch/arm64/arm/neoverse-e1/bus.json       |  17 ---
+ .../arch/arm64/arm/neoverse-e1/cache.json     | 107 ------------------
+ .../arch/arm64/arm/neoverse-e1/exception.json |  14 ---
+ .../arm64/arm/neoverse-e1/instruction.json    |  65 -----------
+ .../arch/arm64/arm/neoverse-e1/memory.json    |  23 ----
+ .../arch/arm64/arm/neoverse-e1/pipeline.json  |   8 --
+ .../arch/arm64/arm/neoverse-e1/spe.json       |  14 ---
+ tools/perf/pmu-events/arch/arm64/mapfile.csv  |   4 +-
+ 18 files changed, 2 insertions(+), 267 deletions(-)
+ rename tools/perf/pmu-events/arch/arm64/arm/{cortex-a65 => cortex-a65-e1}/branch.json (100%)
+ rename tools/perf/pmu-events/arch/arm64/arm/{cortex-a65 => cortex-a65-e1}/bus.json (100%)
+ rename tools/perf/pmu-events/arch/arm64/arm/{cortex-a65 => cortex-a65-e1}/cache.json (100%)
+ rename tools/perf/pmu-events/arch/arm64/arm/{cortex-a65 => cortex-a65-e1}/dpu.json (100%)
+ rename tools/perf/pmu-events/arch/arm64/arm/{cortex-a65 => cortex-a65-e1}/exception.json (100%)
+ rename tools/perf/pmu-events/arch/arm64/arm/{cortex-a65 => cortex-a65-e1}/ifu.json (100%)
+ rename tools/perf/pmu-events/arch/arm64/arm/{cortex-a65 => cortex-a65-e1}/instruction.json (100%)
+ rename tools/perf/pmu-events/arch/arm64/arm/{cortex-a65 => cortex-a65-e1}/memory.json (100%)
+ rename tools/perf/pmu-events/arch/arm64/arm/{cortex-a65 => cortex-a65-e1}/pipeline.json (100%)
+ delete mode 100644 tools/perf/pmu-events/arch/arm64/arm/neoverse-e1/branch.json
+ delete mode 100644 tools/perf/pmu-events/arch/arm64/arm/neoverse-e1/bus.json
+ delete mode 100644 tools/perf/pmu-events/arch/arm64/arm/neoverse-e1/cache.json
+ delete mode 100644 tools/perf/pmu-events/arch/arm64/arm/neoverse-e1/exception.json
+ delete mode 100644 tools/perf/pmu-events/arch/arm64/arm/neoverse-e1/instruction.json
+ delete mode 100644 tools/perf/pmu-events/arch/arm64/arm/neoverse-e1/memory.json
+ delete mode 100644 tools/perf/pmu-events/arch/arm64/arm/neoverse-e1/pipeline.json
+ delete mode 100644 tools/perf/pmu-events/arch/arm64/arm/neoverse-e1/spe.json
+
+diff --git a/tools/perf/pmu-events/arch/arm64/arm/cortex-a65/branch.json b/tools/perf/pmu-events/arch/arm64/arm/cortex-a65-e1/branch.json
+similarity index 100%
+rename from tools/perf/pmu-events/arch/arm64/arm/cortex-a65/branch.json
+rename to tools/perf/pmu-events/arch/arm64/arm/cortex-a65-e1/branch.json
+diff --git a/tools/perf/pmu-events/arch/arm64/arm/cortex-a65/bus.json b/tools/perf/pmu-events/arch/arm64/arm/cortex-a65-e1/bus.json
+similarity index 100%
+rename from tools/perf/pmu-events/arch/arm64/arm/cortex-a65/bus.json
+rename to tools/perf/pmu-events/arch/arm64/arm/cortex-a65-e1/bus.json
+diff --git a/tools/perf/pmu-events/arch/arm64/arm/cortex-a65/cache.json b/tools/perf/pmu-events/arch/arm64/arm/cortex-a65-e1/cache.json
+similarity index 100%
+rename from tools/perf/pmu-events/arch/arm64/arm/cortex-a65/cache.json
+rename to tools/perf/pmu-events/arch/arm64/arm/cortex-a65-e1/cache.json
+diff --git a/tools/perf/pmu-events/arch/arm64/arm/cortex-a65/dpu.json b/tools/perf/pmu-events/arch/arm64/arm/cortex-a65-e1/dpu.json
+similarity index 100%
+rename from tools/perf/pmu-events/arch/arm64/arm/cortex-a65/dpu.json
+rename to tools/perf/pmu-events/arch/arm64/arm/cortex-a65-e1/dpu.json
+diff --git a/tools/perf/pmu-events/arch/arm64/arm/cortex-a65/exception.json b/tools/perf/pmu-events/arch/arm64/arm/cortex-a65-e1/exception.json
+similarity index 100%
+rename from tools/perf/pmu-events/arch/arm64/arm/cortex-a65/exception.json
+rename to tools/perf/pmu-events/arch/arm64/arm/cortex-a65-e1/exception.json
+diff --git a/tools/perf/pmu-events/arch/arm64/arm/cortex-a65/ifu.json b/tools/perf/pmu-events/arch/arm64/arm/cortex-a65-e1/ifu.json
+similarity index 100%
+rename from tools/perf/pmu-events/arch/arm64/arm/cortex-a65/ifu.json
+rename to tools/perf/pmu-events/arch/arm64/arm/cortex-a65-e1/ifu.json
+diff --git a/tools/perf/pmu-events/arch/arm64/arm/cortex-a65/instruction.json b/tools/perf/pmu-events/arch/arm64/arm/cortex-a65-e1/instruction.json
+similarity index 100%
+rename from tools/perf/pmu-events/arch/arm64/arm/cortex-a65/instruction.json
+rename to tools/perf/pmu-events/arch/arm64/arm/cortex-a65-e1/instruction.json
+diff --git a/tools/perf/pmu-events/arch/arm64/arm/cortex-a65/memory.json b/tools/perf/pmu-events/arch/arm64/arm/cortex-a65-e1/memory.json
+similarity index 100%
+rename from tools/perf/pmu-events/arch/arm64/arm/cortex-a65/memory.json
+rename to tools/perf/pmu-events/arch/arm64/arm/cortex-a65-e1/memory.json
+diff --git a/tools/perf/pmu-events/arch/arm64/arm/cortex-a65/pipeline.json b/tools/perf/pmu-events/arch/arm64/arm/cortex-a65-e1/pipeline.json
+similarity index 100%
+rename from tools/perf/pmu-events/arch/arm64/arm/cortex-a65/pipeline.json
+rename to tools/perf/pmu-events/arch/arm64/arm/cortex-a65-e1/pipeline.json
+diff --git a/tools/perf/pmu-events/arch/arm64/arm/neoverse-e1/branch.json b/tools/perf/pmu-events/arch/arm64/arm/neoverse-e1/branch.json
+deleted file mode 100644
+index 2f2d137f5f55..000000000000
+--- a/tools/perf/pmu-events/arch/arm64/arm/neoverse-e1/branch.json
++++ /dev/null
+@@ -1,17 +0,0 @@
+-[
+-    {
+-        "ArchStdEvent": "BR_MIS_PRED"
+-    },
+-    {
+-        "ArchStdEvent": "BR_PRED"
+-    },
+-    {
+-        "ArchStdEvent": "BR_IMMED_SPEC"
+-    },
+-    {
+-        "ArchStdEvent": "BR_RETURN_SPEC"
+-    },
+-    {
+-        "ArchStdEvent": "BR_INDIRECT_SPEC"
+-    }
+-]
+diff --git a/tools/perf/pmu-events/arch/arm64/arm/neoverse-e1/bus.json b/tools/perf/pmu-events/arch/arm64/arm/neoverse-e1/bus.json
+deleted file mode 100644
+index 75d850b781ac..000000000000
+--- a/tools/perf/pmu-events/arch/arm64/arm/neoverse-e1/bus.json
++++ /dev/null
+@@ -1,17 +0,0 @@
+-[
+-    {
+-        "ArchStdEvent": "CPU_CYCLES"
+-    },
+-    {
+-        "ArchStdEvent": "BUS_ACCESS"
+-    },
+-    {
+-        "ArchStdEvent": "BUS_CYCLES"
+-    },
+-    {
+-        "ArchStdEvent": "BUS_ACCESS_RD"
+-    },
+-    {
+-        "ArchStdEvent": "BUS_ACCESS_WR"
+-    }
+-]
+diff --git a/tools/perf/pmu-events/arch/arm64/arm/neoverse-e1/cache.json b/tools/perf/pmu-events/arch/arm64/arm/neoverse-e1/cache.json
+deleted file mode 100644
+index 3ad15e3a93a9..000000000000
+--- a/tools/perf/pmu-events/arch/arm64/arm/neoverse-e1/cache.json
++++ /dev/null
+@@ -1,107 +0,0 @@
+-[
+-    {
+-        "ArchStdEvent": "L1I_CACHE_REFILL"
+-    },
+-    {
+-        "ArchStdEvent": "L1I_TLB_REFILL"
+-    },
+-    {
+-        "ArchStdEvent": "L1D_CACHE_REFILL"
+-    },
+-    {
+-        "ArchStdEvent": "L1D_CACHE"
+-    },
+-    {
+-        "ArchStdEvent": "L1D_TLB_REFILL"
+-    },
+-    {
+-        "ArchStdEvent": "L1I_CACHE"
+-    },
+-    {
+-        "ArchStdEvent": "L1D_CACHE_WB"
+-    },
+-    {
+-        "ArchStdEvent": "L2D_CACHE"
+-    },
+-    {
+-        "ArchStdEvent": "L2D_CACHE_REFILL"
+-    },
+-    {
+-        "ArchStdEvent": "L2D_CACHE_WB"
+-    },
+-    {
+-        "ArchStdEvent": "L1D_CACHE_ALLOCATE"
+-    },
+-    {
+-        "ArchStdEvent": "L2D_CACHE_ALLOCATE"
+-    },
+-    {
+-        "ArchStdEvent": "L1D_TLB"
+-    },
+-    {
+-        "ArchStdEvent": "L1I_TLB"
+-    },
+-    {
+-        "ArchStdEvent": "L3D_CACHE_ALLOCATE"
+-    },
+-    {
+-        "ArchStdEvent": "L3D_CACHE_REFILL"
+-    },
+-    {
+-        "ArchStdEvent": "L3D_CACHE"
+-    },
+-    {
+-        "ArchStdEvent": "L2D_TLB_REFILL"
+-    },
+-    {
+-        "ArchStdEvent": "L2D_TLB"
+-    },
+-    {
+-        "ArchStdEvent": "DTLB_WALK"
+-    },
+-    {
+-        "ArchStdEvent": "ITLB_WALK"
+-    },
+-    {
+-        "ArchStdEvent": "LL_CACHE_RD"
+-    },
+-    {
+-        "ArchStdEvent": "LL_CACHE_MISS_RD"
+-    },
+-    {
+-        "ArchStdEvent": "L1D_CACHE_RD"
+-    },
+-    {
+-        "ArchStdEvent": "L1D_CACHE_WR"
+-    },
+-    {
+-        "ArchStdEvent": "L1D_CACHE_REFILL_RD"
+-    },
+-    {
+-        "ArchStdEvent": "L1D_CACHE_REFILL_WR"
+-    },
+-    {
+-        "ArchStdEvent": "L1D_CACHE_REFILL_INNER"
+-    },
+-    {
+-        "ArchStdEvent": "L1D_CACHE_REFILL_OUTER"
+-    },
+-    {
+-        "ArchStdEvent": "L2D_CACHE_RD"
+-    },
+-    {
+-        "ArchStdEvent": "L2D_CACHE_WR"
+-    },
+-    {
+-        "ArchStdEvent": "L2D_CACHE_REFILL_RD"
+-    },
+-    {
+-        "ArchStdEvent": "L2D_CACHE_REFILL_WR"
+-    },
+-    {
+-        "ArchStdEvent": "L3D_CACHE_RD"
+-    },
+-    {
+-        "ArchStdEvent": "L3D_CACHE_REFILL_RD"
+-    }
+-]
+diff --git a/tools/perf/pmu-events/arch/arm64/arm/neoverse-e1/exception.json b/tools/perf/pmu-events/arch/arm64/arm/neoverse-e1/exception.json
+deleted file mode 100644
+index 27c3fe9c831a..000000000000
+--- a/tools/perf/pmu-events/arch/arm64/arm/neoverse-e1/exception.json
++++ /dev/null
+@@ -1,14 +0,0 @@
+-[
+-    {
+-        "ArchStdEvent": "EXC_TAKEN"
+-    },
+-    {
+-        "ArchStdEvent": "MEMORY_ERROR"
+-    },
+-    {
+-        "ArchStdEvent": "EXC_IRQ"
+-    },
+-    {
+-        "ArchStdEvent": "EXC_FIQ"
+-    }
+-]
+diff --git a/tools/perf/pmu-events/arch/arm64/arm/neoverse-e1/instruction.json b/tools/perf/pmu-events/arch/arm64/arm/neoverse-e1/instruction.json
+deleted file mode 100644
+index 6c3b8f772e7f..000000000000
+--- a/tools/perf/pmu-events/arch/arm64/arm/neoverse-e1/instruction.json
++++ /dev/null
+@@ -1,65 +0,0 @@
+-[
+-    {
+-        "ArchStdEvent": "SW_INCR"
+-    },
+-    {
+-        "ArchStdEvent": "LD_RETIRED"
+-    },
+-    {
+-        "ArchStdEvent": "ST_RETIRED"
+-    },
+-    {
+-        "ArchStdEvent": "INST_RETIRED"
+-    },
+-    {
+-        "ArchStdEvent": "EXC_RETURN"
+-    },
+-    {
+-        "ArchStdEvent": "CID_WRITE_RETIRED"
+-    },
+-    {
+-        "ArchStdEvent": "PC_WRITE_RETIRED"
+-    },
+-    {
+-        "ArchStdEvent": "BR_IMMED_RETIRED"
+-    },
+-    {
+-        "ArchStdEvent": "BR_RETURN_RETIRED"
+-    },
+-    {
+-        "ArchStdEvent": "INST_SPEC"
+-    },
+-    {
+-        "ArchStdEvent": "TTBR_WRITE_RETIRED"
+-    },
+-    {
+-        "ArchStdEvent": "BR_RETIRED"
+-    },
+-    {
+-        "ArchStdEvent": "BR_MIS_PRED_RETIRED"
+-    },
+-    {
+-        "ArchStdEvent": "LD_SPEC"
+-    },
+-    {
+-        "ArchStdEvent": "ST_SPEC"
+-    },
+-    {
+-        "ArchStdEvent": "LDST_SPEC"
+-    },
+-    {
+-        "ArchStdEvent": "DP_SPEC"
+-    },
+-    {
+-        "ArchStdEvent": "ASE_SPEC"
+-    },
+-    {
+-        "ArchStdEvent": "VFP_SPEC"
+-    },
+-    {
+-        "ArchStdEvent": "CRYPTO_SPEC"
+-    },
+-    {
+-        "ArchStdEvent": "ISB_SPEC"
+-    }
+-]
+diff --git a/tools/perf/pmu-events/arch/arm64/arm/neoverse-e1/memory.json b/tools/perf/pmu-events/arch/arm64/arm/neoverse-e1/memory.json
+deleted file mode 100644
+index 78ed6dfcedc1..000000000000
+--- a/tools/perf/pmu-events/arch/arm64/arm/neoverse-e1/memory.json
++++ /dev/null
+@@ -1,23 +0,0 @@
+-[
+-    {
+-        "ArchStdEvent": "MEM_ACCESS"
+-    },
+-    {
+-        "ArchStdEvent": "REMOTE_ACCESS_RD"
+-    },
+-    {
+-        "ArchStdEvent": "MEM_ACCESS_RD"
+-    },
+-    {
+-        "ArchStdEvent": "MEM_ACCESS_WR"
+-    },
+-    {
+-        "ArchStdEvent": "UNALIGNED_LD_SPEC"
+-    },
+-    {
+-        "ArchStdEvent": "UNALIGNED_ST_SPEC"
+-    },
+-    {
+-        "ArchStdEvent": "UNALIGNED_LDST_SPEC"
+-    }
+-]
+diff --git a/tools/perf/pmu-events/arch/arm64/arm/neoverse-e1/pipeline.json b/tools/perf/pmu-events/arch/arm64/arm/neoverse-e1/pipeline.json
+deleted file mode 100644
+index eeac798d403a..000000000000
+--- a/tools/perf/pmu-events/arch/arm64/arm/neoverse-e1/pipeline.json
++++ /dev/null
+@@ -1,8 +0,0 @@
+-[
+-    {
+-        "ArchStdEvent": "STALL_FRONTEND"
+-    },
+-    {
+-        "ArchStdEvent": "STALL_BACKEND"
+-    }
+-]
+diff --git a/tools/perf/pmu-events/arch/arm64/arm/neoverse-e1/spe.json b/tools/perf/pmu-events/arch/arm64/arm/neoverse-e1/spe.json
+deleted file mode 100644
+index 20f2165c85fe..000000000000
+--- a/tools/perf/pmu-events/arch/arm64/arm/neoverse-e1/spe.json
++++ /dev/null
+@@ -1,14 +0,0 @@
+-[
+-    {
+-        "ArchStdEvent": "SAMPLE_POP"
+-    },
+-    {
+-        "ArchStdEvent": "SAMPLE_FEED"
+-    },
+-    {
+-        "ArchStdEvent": "SAMPLE_FILTRATE"
+-    },
+-    {
+-        "ArchStdEvent": "SAMPLE_COLLISION"
+-    }
+-]
+diff --git a/tools/perf/pmu-events/arch/arm64/mapfile.csv b/tools/perf/pmu-events/arch/arm64/mapfile.csv
+index 406f6edd4e12..ad502d00f460 100644
+--- a/tools/perf/pmu-events/arch/arm64/mapfile.csv
++++ b/tools/perf/pmu-events/arch/arm64/mapfile.csv
+@@ -17,7 +17,8 @@
+ 0x00000000420f1000,v1,arm/cortex-a53,core
+ 0x00000000410fd040,v1,arm/cortex-a35,core
+ 0x00000000410fd050,v1,arm/cortex-a55,core
+-0x00000000410fd060,v1,arm/cortex-a65,core
++0x00000000410fd060,v1,arm/cortex-a65-e1,core
++0x00000000410fd4a0,v1,arm/cortex-a65-e1,core
+ 0x00000000410fd070,v1,arm/cortex-a57-a72,core
+ 0x00000000410fd080,v1,arm/cortex-a57-a72,core
+ 0x00000000410fd090,v1,arm/cortex-a73,core
+@@ -34,7 +35,6 @@
+ 0x00000000410fd470,v1,arm/cortex-a710,core
+ 0x00000000410fd480,v1,arm/cortex-x2,core
+ 0x00000000410fd490,v1,arm/neoverse-n2,core
+-0x00000000410fd4a0,v1,arm/neoverse-e1,core
+ 0x00000000420f5160,v1,cavium/thunderx2,core
+ 0x00000000430f0af0,v1,cavium/thunderx2,core
+ 0x00000000460f0010,v1,fujitsu/a64fx,core
+-- 
+2.25.1
+
