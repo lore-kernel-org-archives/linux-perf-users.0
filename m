@@ -2,75 +2,161 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 77525C38145
-	for <linux-perf-users@archiver.kernel.org>; Wed,  7 Sep 2022 17:41:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8C6B1C54EE9
+	for <linux-perf-users@archiver.kernel.org>; Wed,  7 Sep 2022 17:50:20 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229767AbiIGRl2 (ORCPT
+        id S229913AbiIGRuT (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Wed, 7 Sep 2022 13:41:28 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42864 "EHLO
+        Wed, 7 Sep 2022 13:50:19 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60990 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229546AbiIGRl1 (ORCPT
+        with ESMTP id S229830AbiIGRuS (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Wed, 7 Sep 2022 13:41:27 -0400
-Received: from mail-oa1-f49.google.com (mail-oa1-f49.google.com [209.85.160.49])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1791F80036;
-        Wed,  7 Sep 2022 10:41:24 -0700 (PDT)
-Received: by mail-oa1-f49.google.com with SMTP id 586e51a60fabf-127d10b4f19so12082173fac.9;
-        Wed, 07 Sep 2022 10:41:24 -0700 (PDT)
+        Wed, 7 Sep 2022 13:50:18 -0400
+Received: from mail-oa1-f50.google.com (mail-oa1-f50.google.com [209.85.160.50])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DDB2C3FA32;
+        Wed,  7 Sep 2022 10:50:15 -0700 (PDT)
+Received: by mail-oa1-f50.google.com with SMTP id 586e51a60fabf-128121a9851so2546916fac.13;
+        Wed, 07 Sep 2022 10:50:15 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
         h=cc:to:subject:message-id:date:from:in-reply-to:references
          :mime-version:x-gm-message-state:from:to:cc:subject:date;
-        bh=xGuDMmDzq7UaA8hKjq2V/tnGAyEjuyD+utX1RCUB6Qo=;
-        b=BK1EBYOFR3qzrlXnotwulm+s5GHmRtUBkYpB0XgdFgH5T4ZIOigJ9HuYoZDzsXLFcs
-         sb3Kz16ihmzrp1imqH2TjckcdhGYOSWLB5LcSE8CtCggcQgZWEpVvg90u6NpDpCDgk2v
-         KAxj1qCNvsx29vcsuRE2/0SVJV04XJfm1cw4ETer5TFJ2UsMC3sHjcLtIMvCQFCKBqxd
-         pmJ+KDDgnie8Lmo02hj0iltdpHxpjZB4d2tfWhSWj1xQRzT35DIpHZPsEOWD4m0HL0hw
-         gVNlYeqhR/HBpftHB2e3ymGCUCaFEXJLdBINlRqnkGOeVyFS9FK428rv1650ZfIiuTA6
-         BJgQ==
-X-Gm-Message-State: ACgBeo0dVZPpcP40kD7snBkxjizKT3xw2LyYDzG9aTZZ4s14DmmGB2ip
-        3NeOVVQ1I2465p7RZrwRuK4l5guXJhiLEjnS192u8ETq
-X-Google-Smtp-Source: AA6agR4J+9L9211ExKe5kfIrdyxb4+ocXtS1Lzy8AaC1BZ2k1xUvKgM+KvMWwuOv4QK/Ga/Pk8Ht9oUaI9FNXittvY4=
+        bh=o+vZIo7vWZhi9jMgze8rEVP2MoMz8p7K3ku8PnOZlC8=;
+        b=lm69WbKrY8Bc9Ld41bUCgd3UT0V7yUOFQRcTERfXiO3LEmNMfZAd5LhtBy21sgBYb7
+         BEIy86MQwz0B9H2cz8sdy/b0SlKBgOKzWAUTdm9jT3lBuZBY93zD7ESztyyzTjOdWEQX
+         WQSPZAzIgyTCmhHm5OVXvfOIMilU9kLBMJ5sSJPdGwsl4Ldcoad59vbx0srlAYSpw3nY
+         EiS5z1huJOjr7IBUp5oRzgcRbmfe1iQ/XSh4jwtTt+MxgDSgVUdNE2CLgsdv705+rfsW
+         t4G7cB/p1WCyEAkjiX/3VIwNR6TZC3TOscQpYmycWXz69xBpZeZqfF23ALrqpgj4gRgh
+         daEQ==
+X-Gm-Message-State: ACgBeo2kQzfuFFENVEV3TUfFdMgQFE8PMxdZOHUdgIDf+U0ykJSBU5n3
+        MkFbZnqThplnxPzQ17kxL4yGc88B2hiIhDr4P4Kna7pg
+X-Google-Smtp-Source: AA6agR4BYQ2Nvxvc6Z+g6x+cYOlhaVE7imQ4sWWJnPFXNtCfQC0Oe5T49sOEGO4NWqXLBAts7C0xFWV+JSOdhYXCQPk=
 X-Received: by 2002:a05:6870:a184:b0:116:bd39:7f94 with SMTP id
- a4-20020a056870a18400b00116bd397f94mr15316368oaf.5.1662572483092; Wed, 07 Sep
- 2022 10:41:23 -0700 (PDT)
+ a4-20020a056870a18400b00116bd397f94mr15334457oaf.5.1662573014962; Wed, 07 Sep
+ 2022 10:50:14 -0700 (PDT)
 MIME-Version: 1.0
-References: <20220907064645.1197894-1-namhyung@kernel.org> <20220907064645.1197894-4-namhyung@kernel.org>
- <2546f051-95be-1d8d-133c-2dac639b317d@intel.com>
-In-Reply-To: <2546f051-95be-1d8d-133c-2dac639b317d@intel.com>
+References: <20220907050407.2711513-1-namhyung@kernel.org> <YxhXLQ9aOuLRLrAJ@krava>
+In-Reply-To: <YxhXLQ9aOuLRLrAJ@krava>
 From:   Namhyung Kim <namhyung@kernel.org>
-Date:   Wed, 7 Sep 2022 10:41:12 -0700
-Message-ID: <CAM9d7cjKo5Xzmwqk1tNFdbhiDbzDisPgBgd2m1N66j05nt5b9A@mail.gmail.com>
-Subject: Re: [PATCH 3/6] perf test: Test record with --threads option
-To:     Adrian Hunter <adrian.hunter@intel.com>
+Date:   Wed, 7 Sep 2022 10:50:04 -0700
+Message-ID: <CAM9d7chVuOyY0Nhecj0J=AU6iRkFoKY6hQ5mAMrS8k=-26WeCg@mail.gmail.com>
+Subject: Re: [PATCH v2] perf test: Skip sigtrap test on old kernels
+To:     Jiri Olsa <olsajiri@gmail.com>
 Cc:     Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Jiri Olsa <jolsa@kernel.org>, Ingo Molnar <mingo@kernel.org>,
+        Ingo Molnar <mingo@kernel.org>,
         Peter Zijlstra <peterz@infradead.org>,
         LKML <linux-kernel@vger.kernel.org>,
         Ian Rogers <irogers@google.com>,
-        linux-perf-users <linux-perf-users@vger.kernel.org>
+        linux-perf-users <linux-perf-users@vger.kernel.org>,
+        bpf <bpf@vger.kernel.org>, Marco Elver <elver@google.com>,
+        Song Liu <songliubraving@fb.com>
 Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-On Wed, Sep 7, 2022 at 6:33 AM Adrian Hunter <adrian.hunter@intel.com> wrote:
+On Wed, Sep 7, 2022 at 1:32 AM Jiri Olsa <olsajiri@gmail.com> wrote:
 >
-> On 7/09/22 09:46, Namhyung Kim wrote:
-> > @@ -90,6 +90,19 @@ test_per_thread() {
-> >      err=1
-> >      return
-> >    fi
-> > +  if ! perf record -e cpu-clock,cs --per-thread --threads=core ${testopt} \
-> > +    -o ${perfdata} ${testprog} 2> /dev/null
+> On Tue, Sep 06, 2022 at 10:04:07PM -0700, Namhyung Kim wrote:
+> > If it runs on an old kernel, perf_event_open would fail because of the
+> > new fields sigtrap and sig_data.  Just skipping the test could miss an
+> > actual bug in the kernel.
+> >
+> > Let's check BTF if it has the perf_event_attr.sigtrap field.
+> >
+> > Cc: Marco Elver <elver@google.com>
+> > Cc: Song Liu <songliubraving@fb.com>
+> > Signed-off-by: Namhyung Kim <namhyung@kernel.org>
+> > ---
+> >  tools/perf/tests/sigtrap.c | 46 +++++++++++++++++++++++++++++++++++++-
+> >  1 file changed, 45 insertions(+), 1 deletion(-)
+> >
+> > diff --git a/tools/perf/tests/sigtrap.c b/tools/perf/tests/sigtrap.c
+> > index e32ece90e164..32f08ce0f2b0 100644
+> > --- a/tools/perf/tests/sigtrap.c
+> > +++ b/tools/perf/tests/sigtrap.c
+> > @@ -16,6 +16,8 @@
+> >  #include <sys/syscall.h>
+> >  #include <unistd.h>
+> >
+> > +#include <bpf/btf.h>
+> > +
+> >  #include "cloexec.h"
+> >  #include "debug.h"
+> >  #include "event.h"
+> > @@ -54,6 +56,42 @@ static struct perf_event_attr make_event_attr(void)
+> >       return attr;
+> >  }
+> >
+> > +static bool attr_has_sigtrap(void)
+> > +{
+> > +     bool ret = false;
+> > +
+> > +#ifdef HAVE_BPF_SKEL
+> > +
+> > +     struct btf *btf;
+> > +     const struct btf_type *t;
+> > +     const struct btf_member *m;
+> > +     const char *name;
+> > +     int i, id;
+> > +
+> > +     /* just assume it doesn't have the field */
+> > +     btf = btf__load_vmlinux_btf();
+> > +     if (btf == NULL)
+> > +             return false;
+> > +
+> > +     id = btf__find_by_name_kind(btf, "perf_event_attr", BTF_KIND_STRUCT);
+> > +     if (id < 0)
+> > +             goto out;
+> > +
+> > +     t = btf__type_by_id(btf, id);
+> > +     for (i = 0, m = btf_members(t); i < btf_vlen(t); i++, m++) {
+> > +             name = btf__name_by_offset(btf, m->name_off);
+> > +             if (!strcmp(name, "sigtrap")) {
+> > +                     ret = true;
+> > +                     break;
+> > +             }
+> > +     }
+> > +out:
+> > +     btf__free(btf);
+> > +#endif
 >
-> This does not seem to be possible, because it gives the error:
->
-> --per-thread option is mutually exclusive to parallel streaming mode.
-> Failed to initialize parallel data streaming masks
+> would it be easier to call perf_event_open for simple event with
+> sigtrap set (and perhaps remove_on_exec) ? perf_copy_attr checks
+> on reserved fields
 
-Oh, ok.  Let's drop this change then.
+Hmm.. right.  we could do that too.  But it might still fail if there's a
+bug in the path handling in sigtrap even for the simple case.  I'm not
+sure if it's a realistic concern though. :)
 
 Thanks,
 Namhyung
+
+>
+>
+> > +
+> > +     return ret;
+> > +}
+> > +
+> >  static void
+> >  sigtrap_handler(int signum __maybe_unused, siginfo_t *info, void *ucontext __maybe_unused)
+> >  {
+> > @@ -139,7 +177,13 @@ static int test__sigtrap(struct test_suite *test __maybe_unused, int subtest __m
+> >
+> >       fd = sys_perf_event_open(&attr, 0, -1, -1, perf_event_open_cloexec_flag());
+> >       if (fd < 0) {
+> > -             pr_debug("FAILED sys_perf_event_open(): %s\n", str_error_r(errno, sbuf, sizeof(sbuf)));
+> > +             if (attr_has_sigtrap()) {
+> > +                     pr_debug("FAILED sys_perf_event_open(): %s\n",
+> > +                              str_error_r(errno, sbuf, sizeof(sbuf)));
+> > +             } else {
+> > +                     pr_debug("perf_event_attr doesn't have sigtrap\n");
+> > +                     ret = TEST_SKIP;
+> > +             }
+> >               goto out_restore_sigaction;
+> >       }
+> >
+> > --
+> > 2.37.2.789.g6183377224-goog
+> >
