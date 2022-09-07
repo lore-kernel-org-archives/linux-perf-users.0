@@ -2,150 +2,197 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BED90C38145
-	for <linux-perf-users@archiver.kernel.org>; Wed,  7 Sep 2022 09:20:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 606BDC54EE9
+	for <linux-perf-users@archiver.kernel.org>; Wed,  7 Sep 2022 10:45:09 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230246AbiIGJT7 (ORCPT
+        id S229484AbiIGKpI (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Wed, 7 Sep 2022 05:19:59 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34800 "EHLO
+        Wed, 7 Sep 2022 06:45:08 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33796 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230203AbiIGJT4 (ORCPT
+        with ESMTP id S229657AbiIGKpG (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Wed, 7 Sep 2022 05:19:56 -0400
-Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTP id 851EB1A393;
-        Wed,  7 Sep 2022 02:19:53 -0700 (PDT)
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 6B759D6E;
-        Wed,  7 Sep 2022 02:19:59 -0700 (PDT)
-Received: from a077893.blr.arm.com (unknown [10.162.40.15])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPA id DE44E3F73D;
-        Wed,  7 Sep 2022 02:20:16 -0700 (PDT)
-From:   Anshuman Khandual <anshuman.khandual@arm.com>
-To:     linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, peterz@infradead.org
-Cc:     Anshuman Khandual <anshuman.khandual@arm.com>,
-        James Clark <james.clark@arm.com>,
-        Ingo Molnar <mingo@redhat.com>,
-        Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Jiri Olsa <jolsa@kernel.org>,
-        Namhyung Kim <namhyung@kernel.org>, x86@kernel.org,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Borislav Petkov <bp@alien8.de>
-Subject: [PATCH V3 4/4] x86/perf: Assert all platform event flags are within PERF_EVENT_FLAG_ARCH
-Date:   Wed,  7 Sep 2022 14:49:24 +0530
-Message-Id: <20220907091924.439193-5-anshuman.khandual@arm.com>
-X-Mailer: git-send-email 2.25.1
-In-Reply-To: <20220907091924.439193-1-anshuman.khandual@arm.com>
-References: <20220907091924.439193-1-anshuman.khandual@arm.com>
+        Wed, 7 Sep 2022 06:45:06 -0400
+Received: from mga11.intel.com (mga11.intel.com [192.55.52.93])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BAB9D40565;
+        Wed,  7 Sep 2022 03:45:04 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1662547504; x=1694083504;
+  h=message-id:date:mime-version:subject:to:cc:references:
+   from:in-reply-to:content-transfer-encoding;
+  bh=CS9G31DSFuHg1NRAtruzjLC9/pg4sb0QXPWD8EfCHi8=;
+  b=KT34o6p0wy5vr5GtnofHvxzkXI3x62+PqAgbyRJOnkiU8+h61T3Vh3FT
+   gw35a/VFxfPz7r9FpF1eGCoCu6hgvoRCDQTrzNZkwOKZnS+GUt71Z0F76
+   NDFsaujx8jbHsHqhqTeihCkkLrriDu7S/E4VwsLLvQ034BbYQELs3t1mA
+   g4mLiiiZ0H5vagT7tMLFQ0H7egDGSghEQoPekwJBTh3dj7FJONexn9r+b
+   Mwyg0lezyUUeFJhpziI0nrYwaKLnq4ZmuW2rwa2R4xA2KES9IqfV2QYrG
+   KNKA/zQ/BA6GsOXP7+RdxeAt/K7VfjRrPtC4jWYnScW/5Dt6tdz4Oto8c
+   g==;
+X-IronPort-AV: E=McAfee;i="6500,9779,10462"; a="294423502"
+X-IronPort-AV: E=Sophos;i="5.93,296,1654585200"; 
+   d="scan'208";a="294423502"
+Received: from fmsmga008.fm.intel.com ([10.253.24.58])
+  by fmsmga102.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 07 Sep 2022 03:45:04 -0700
+X-IronPort-AV: E=Sophos;i="5.93,296,1654585200"; 
+   d="scan'208";a="676130417"
+Received: from ahunter6-mobl1.ger.corp.intel.com (HELO [10.0.2.15]) ([10.252.58.27])
+  by fmsmga008-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 07 Sep 2022 03:45:01 -0700
+Message-ID: <eea20a5c-df2a-979b-ff85-a7e2b978a4b8@intel.com>
+Date:   Wed, 7 Sep 2022 13:44:57 +0300
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
+ Firefox/91.0 Thunderbird/91.11.0
+Subject: Re: [PATCH 2/6] perf test: Use a test program in perf record tests
+Content-Language: en-US
+To:     Namhyung Kim <namhyung@kernel.org>,
+        Arnaldo Carvalho de Melo <acme@kernel.org>,
+        Jiri Olsa <jolsa@kernel.org>
+Cc:     Ingo Molnar <mingo@kernel.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Ian Rogers <irogers@google.com>,
+        linux-perf-users@vger.kernel.org
+References: <20220907064645.1197894-1-namhyung@kernel.org>
+ <20220907064645.1197894-3-namhyung@kernel.org>
+From:   Adrian Hunter <adrian.hunter@intel.com>
+Organization: Intel Finland Oy, Registered Address: PL 281, 00181 Helsinki,
+ Business Identity Code: 0357606 - 4, Domiciled in Helsinki
+In-Reply-To: <20220907064645.1197894-3-namhyung@kernel.org>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-Ensure all platform specific event flags are within PERF_EVENT_FLAG_ARCH.
+On 7/09/22 09:46, Namhyung Kim wrote:
+> If the system has cc it could build a test program with two threads
+> and then use it for more detailed testing.  Also it adds initial delay
+> of 3ms to profile a multi-threaded target.  This change make the test
+> failing but that's what we want to check for now.
 
-Cc: Peter Zijlstra <peterz@infradead.org>
-Cc: Ingo Molnar <mingo@redhat.com>
-Cc: Arnaldo Carvalho de Melo <acme@kernel.org>
-Cc: Mark Rutland <mark.rutland@arm.com>
-Cc: Alexander Shishkin <alexander.shishkin@linux.intel.com>
-Cc: Jiri Olsa <jolsa@kernel.org>
-Cc: Namhyung Kim <namhyung@kernel.org>
-Cc: Thomas Gleixner <tglx@linutronix.de>
-Cc: Borislav Petkov <bp@alien8.de>
-Cc: x86@kernel.org
-Cc: linux-perf-users@vger.kernel.org
-Cc: linux-kernel@vger.kernel.org
-Reviewed-by: James Clark <james.clark@arm.com>
-Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
-Signed-off-by: Anshuman Khandual <anshuman.khandual@arm.com>
----
- arch/x86/events/perf_event.h       | 34 ++++++++++++++----------------
- arch/x86/events/perf_event_flags.h | 22 +++++++++++++++++++
- 2 files changed, 38 insertions(+), 18 deletions(-)
- create mode 100644 arch/x86/events/perf_event_flags.h
+So the delay is just to get a separate dummy event?
 
-diff --git a/arch/x86/events/perf_event.h b/arch/x86/events/perf_event.h
-index ba3d24a6a4ec..60cf8132e1e1 100644
---- a/arch/x86/events/perf_event.h
-+++ b/arch/x86/events/perf_event.h
-@@ -64,27 +64,25 @@ static inline bool constraint_match(struct event_constraint *c, u64 ecode)
- 	return ((ecode & c->cmask) - c->code) <= (u64)c->size;
- }
- 
-+#define PERF_ARCH(name, val)	\
-+	PERF_X86_EVENT_##name = val,
-+
- /*
-  * struct hw_perf_event.flags flags
-  */
--#define PERF_X86_EVENT_PEBS_LDLAT	0x00001 /* ld+ldlat data address sampling */
--#define PERF_X86_EVENT_PEBS_ST		0x00002 /* st data address sampling */
--#define PERF_X86_EVENT_PEBS_ST_HSW	0x00004 /* haswell style datala, store */
--#define PERF_X86_EVENT_PEBS_LD_HSW	0x00008 /* haswell style datala, load */
--#define PERF_X86_EVENT_PEBS_NA_HSW	0x00010 /* haswell style datala, unknown */
--#define PERF_X86_EVENT_EXCL		0x00020 /* HT exclusivity on counter */
--#define PERF_X86_EVENT_DYNAMIC		0x00040 /* dynamic alloc'd constraint */
--
--#define PERF_X86_EVENT_EXCL_ACCT	0x00100 /* accounted EXCL event */
--#define PERF_X86_EVENT_AUTO_RELOAD	0x00200 /* use PEBS auto-reload */
--#define PERF_X86_EVENT_LARGE_PEBS	0x00400 /* use large PEBS */
--#define PERF_X86_EVENT_PEBS_VIA_PT	0x00800 /* use PT buffer for PEBS */
--#define PERF_X86_EVENT_PAIR		0x01000 /* Large Increment per Cycle */
--#define PERF_X86_EVENT_LBR_SELECT	0x02000 /* Save/Restore MSR_LBR_SELECT */
--#define PERF_X86_EVENT_TOPDOWN		0x04000 /* Count Topdown slots/metrics events */
--#define PERF_X86_EVENT_PEBS_STLAT	0x08000 /* st+stlat data address sampling */
--#define PERF_X86_EVENT_AMD_BRS		0x10000 /* AMD Branch Sampling */
--#define PERF_X86_EVENT_PEBS_LAT_HYBRID	0x20000 /* ld and st lat for hybrid */
-+enum {
-+#include "perf_event_flags.h"
-+};
-+
-+#undef PERF_ARCH
-+
-+#define PERF_ARCH(name, val)						\
-+	static_assert((PERF_X86_EVENT_##name & PERF_EVENT_FLAG_ARCH) ==	\
-+		      PERF_X86_EVENT_##name);
-+
-+#include "perf_event_flags.h"
-+
-+#undef PERF_ARCH
- 
- static inline bool is_topdown_count(struct perf_event *event)
- {
-diff --git a/arch/x86/events/perf_event_flags.h b/arch/x86/events/perf_event_flags.h
-new file mode 100644
-index 000000000000..1dc19b9b4426
---- /dev/null
-+++ b/arch/x86/events/perf_event_flags.h
-@@ -0,0 +1,22 @@
-+
-+/*
-+ * struct hw_perf_event.flags flags
-+ */
-+PERF_ARCH(PEBS_LDLAT,		0x00001) /* ld+ldlat data address sampling */
-+PERF_ARCH(PEBS_ST,		0x00002) /* st data address sampling */
-+PERF_ARCH(PEBS_ST_HSW,		0x00004) /* haswell style datala, store */
-+PERF_ARCH(PEBS_LD_HSW,		0x00008) /* haswell style datala, load */
-+PERF_ARCH(PEBS_NA_HSW,		0x00010) /* haswell style datala, unknown */
-+PERF_ARCH(EXCL,			0x00020) /* HT exclusivity on counter */
-+PERF_ARCH(DYNAMIC,		0x00040) /* dynamic alloc'd constraint */
-+			/*	0x00080	*/
-+PERF_ARCH(EXCL_ACCT,		0x00100) /* accounted EXCL event */
-+PERF_ARCH(AUTO_RELOAD,		0x00200) /* use PEBS auto-reload */
-+PERF_ARCH(LARGE_PEBS,		0x00400) /* use large PEBS */
-+PERF_ARCH(PEBS_VIA_PT,		0x00800) /* use PT buffer for PEBS */
-+PERF_ARCH(PAIR,			0x01000) /* Large Increment per Cycle */
-+PERF_ARCH(LBR_SELECT,		0x02000) /* Save/Restore MSR_LBR_SELECT */
-+PERF_ARCH(TOPDOWN,		0x04000) /* Count Topdown slots/metrics events */
-+PERF_ARCH(PEBS_STLAT,		0x08000) /* st+stlat data address sampling */
-+PERF_ARCH(AMD_BRS,		0x10000) /* AMD Branch Sampling */
-+PERF_ARCH(PEBS_LAT_HYBRID,	0x20000) /* ld and st lat for hybrid */
--- 
-2.25.1
+I hit the issue from this patch:
+
+https://lore.kernel.org/lkml/20220711180706.3418612-1-kan.liang@linux.intel.com/
+
+That is, if I apply the patch above then the test passes, otherwise it fails always.
+
+> 
+> If cc is not found, it falls back to use the default value 'true'.
+> 
+> Signed-off-by: Namhyung Kim <namhyung@kernel.org>
+> ---
+>  tools/perf/tests/shell/record.sh | 58 +++++++++++++++++++++++++++++---
+>  1 file changed, 54 insertions(+), 4 deletions(-)
+> 
+> diff --git a/tools/perf/tests/shell/record.sh b/tools/perf/tests/shell/record.sh
+> index 40b087bfdb76..cea3c7b7e2cd 100755
+> --- a/tools/perf/tests/shell/record.sh
+> +++ b/tools/perf/tests/shell/record.sh
+> @@ -6,10 +6,18 @@ set -e
+>  
+>  err=0
+>  perfdata=$(mktemp /tmp/__perf_test.perf.data.XXXXX)
+> +testprog=$(mktemp /tmp/__perf_test.prog.XXXXXX)
+> +testsym="test_loop"
+> +testopt="-D 3"
+>  
+>  cleanup() {
+>    rm -f ${perfdata}
+>    rm -f ${perfdata}.old
+> +
+> +  if [ "${testprog}" != "true" ]; then
+> +    rm -f ${testprog}
+> +  fi
+> +
+>    trap - exit term int
+>  }
+>  
+> @@ -19,9 +27,49 @@ trap_cleanup() {
+>  }
+>  trap trap_cleanup exit term int
+>  
+> +build_test_program() {
+> +  if ! [ -x "$(command -v cc)" ]; then
+> +    # No CC found. Fall back to 'true'
+> +    testprog=true
+> +    testsym=true
+> +    testopt=''
+> +    return
+> +  fi
+> +
+> +  echo "Build a test program"
+> +  cat <<EOF | cc -o ${testprog} -xc - -pthread
+> +#include <stdio.h>
+> +#include <unistd.h>
+> +#include <pthread.h>
+> +
+> +void test_loop(void) {
+> +  volatile int count = 1000000;
+> +
+> +  // wait for perf record
+> +  usleep(5000);
+> +
+> +  while (count--)
+> +    continue;
+> +}
+> +
+> +void *thfunc(void *arg) {
+> +  test_loop();
+> +  return NULL;
+> +}
+> +
+> +int main(void) {
+> +  pthread_t th;
+> +  pthread_create(&th, NULL, thfunc, NULL);
+> +  test_loop();
+> +  pthread_join(th, NULL);
+> +  return 0;
+> +}
+> +EOF
+> +}
+> +
+>  test_per_thread() {
+>    echo "Basic --per-thread mode test"
+> -  if ! perf record -o /dev/null --quiet true 2> /dev/null
+> +  if ! perf record -o /dev/null --quiet ${testprog} 2> /dev/null
+>    then
+>      echo "Per-thread record [Skipped event not supported]"
+>      if [ $err -ne 1 ]
+> @@ -30,13 +78,13 @@ test_per_thread() {
+>      fi
+>      return
+>    fi
+> -  if ! perf record --per-thread -o ${perfdata} true 2> /dev/null
+> +  if ! perf record --per-thread ${testopt} -o ${perfdata} ${testprog} 2> /dev/null
+>    then
+>      echo "Per-thread record [Failed record]"
+>      err=1
+>      return
+>    fi
+> -  if ! perf report -i ${perfdata} -q | egrep -q true
+> +  if ! perf report -i ${perfdata} -q | egrep -q ${testsym}
+>    then
+>      echo "Per-thread record [Failed missing output]"
+>      err=1
+> @@ -62,7 +110,7 @@ test_register_capture() {
+>      return
+>    fi
+>    if ! perf record -o - --intr-regs=di,r8,dx,cx -e cpu/br_inst_retired.near_call/p \
+> -    -c 1000 --per-thread true 2> /dev/null \
+> +    -c 1000 --per-thread ${testopt} ${testprog} 2> /dev/null \
+>      | perf script -F ip,sym,iregs -i - 2> /dev/null \
+>      | egrep -q "DI:"
+>    then
+> @@ -73,6 +121,8 @@ test_register_capture() {
+>    echo "Register capture test [Success]"
+>  }
+>  
+> +build_test_program
+> +
+>  test_per_thread
+>  test_register_capture
+>  
 
