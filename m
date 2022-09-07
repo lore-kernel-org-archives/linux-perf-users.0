@@ -2,26 +2,26 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8B9D9C54EE9
-	for <linux-perf-users@archiver.kernel.org>; Wed,  7 Sep 2022 09:19:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 21C19C38145
+	for <linux-perf-users@archiver.kernel.org>; Wed,  7 Sep 2022 09:19:54 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230122AbiIGJTt (ORCPT
+        id S230133AbiIGJTv (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Wed, 7 Sep 2022 05:19:49 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34140 "EHLO
+        Wed, 7 Sep 2022 05:19:51 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34550 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230092AbiIGJTp (ORCPT
+        with ESMTP id S230155AbiIGJTu (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Wed, 7 Sep 2022 05:19:45 -0400
+        Wed, 7 Sep 2022 05:19:50 -0400
 Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTP id 0A725DEA1;
-        Wed,  7 Sep 2022 02:19:34 -0700 (PDT)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTP id 35F1F15700;
+        Wed,  7 Sep 2022 02:19:48 -0700 (PDT)
 Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 8F9EAD6E;
-        Wed,  7 Sep 2022 02:19:40 -0700 (PDT)
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 4958B106F;
+        Wed,  7 Sep 2022 02:19:54 -0700 (PDT)
 Received: from a077893.blr.arm.com (unknown [10.162.40.15])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPA id BBCD33F73D;
-        Wed,  7 Sep 2022 02:19:58 -0700 (PDT)
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPA id E0FAC3F73D;
+        Wed,  7 Sep 2022 02:20:11 -0700 (PDT)
 From:   Anshuman Khandual <anshuman.khandual@arm.com>
 To:     linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org,
         linux-arm-kernel@lists.infradead.org, peterz@infradead.org
@@ -32,40 +32,25 @@ Cc:     Anshuman Khandual <anshuman.khandual@arm.com>,
         Mark Rutland <mark.rutland@arm.com>,
         Alexander Shishkin <alexander.shishkin@linux.intel.com>,
         Jiri Olsa <jolsa@kernel.org>,
-        Namhyung Kim <namhyung@kernel.org>, x86@kernel.org
-Subject: [PATCH V3 0/4] perf/core: Assert PERF_EVENT_FLAG_ARCH is followed
-Date:   Wed,  7 Sep 2022 14:49:20 +0530
-Message-Id: <20220907091924.439193-1-anshuman.khandual@arm.com>
+        Namhyung Kim <namhyung@kernel.org>, x86@kernel.org,
+        Will Deacon <will@kernel.org>,
+        Catalin Marinas <catalin.marinas@arm.com>
+Subject: [PATCH V3 3/4] arm64/perf: Assert all platform event flags are within PERF_EVENT_FLAG_ARCH
+Date:   Wed,  7 Sep 2022 14:49:23 +0530
+Message-Id: <20220907091924.439193-4-anshuman.khandual@arm.com>
 X-Mailer: git-send-email 2.25.1
+In-Reply-To: <20220907091924.439193-1-anshuman.khandual@arm.com>
+References: <20220907091924.439193-1-anshuman.khandual@arm.com>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-This series ensures that PERF_EVENT_FLAG_ARCH mask is followed correctly
-while defining all the platform specific hardware event flags. But first
-this expands PERF_EVENT_FLAG_ARCH with another four bits, to accommodate
-some x86 platform event flags which were going beyond the existing mask.
+Ensure all platform specific event flags are within PERF_EVENT_FLAG_ARCH.
 
-This series applies on v6.0-rc4.
-
-Changes in V3:
-
-- Reworked event flags check on x86 platform as per Peter
-
-Changes in V2:
-
-https://lore.kernel.org/all/20220905054239.324029-1-anshuman.khandual@arm.com/
-
-- Added first patch to expand PERF_EVENT_FLAG_ARCH
-- Converted all BUILD_BUG_ON() into static_assert() 
-
-Changes in V1:
-
-https://lore.kernel.org/all/20220829065507.177781-1-anshuman.khandual@arm.com/
-
-Cc: James Clark <james.clark@arm.com>
+Cc: Will Deacon <will@kernel.org>
+Cc: Catalin Marinas <catalin.marinas@arm.com>
 Cc: Peter Zijlstra <peterz@infradead.org>
 Cc: Ingo Molnar <mingo@redhat.com>
 Cc: Arnaldo Carvalho de Melo <acme@kernel.org>
@@ -76,22 +61,48 @@ Cc: Namhyung Kim <namhyung@kernel.org>
 Cc: linux-arm-kernel@lists.infradead.org
 Cc: linux-perf-users@vger.kernel.org
 Cc: linux-kernel@vger.kernel.org
-Cc: x86@kernel.org
+Reviewed-by: James Clark <james.clark@arm.com>
+Signed-off-by: Anshuman Khandual <anshuman.khandual@arm.com>
+---
+ drivers/perf/arm_spe_pmu.c   | 4 +++-
+ include/linux/perf/arm_pmu.h | 9 +++++----
+ 2 files changed, 8 insertions(+), 5 deletions(-)
 
-Anshuman Khandual (4):
-  perf/core: Expand PERF_EVENT_FLAG_ARCH
-  perf/core: Assert PERF_EVENT_FLAG_ARCH does not overlap with generic flags
-  arm64/perf: Assert all platform event flags are within PERF_EVENT_FLAG_ARCH
-  x86/perf: Assert all platform event flags are within PERF_EVENT_FLAG_ARCH
-
- arch/x86/events/perf_event.h       | 34 ++++++++++++++----------------
- arch/x86/events/perf_event_flags.h | 22 +++++++++++++++++++
- drivers/perf/arm_spe_pmu.c         |  4 +++-
- include/linux/perf/arm_pmu.h       |  9 ++++----
- include/linux/perf_event.h         |  4 +++-
- 5 files changed, 49 insertions(+), 24 deletions(-)
- create mode 100644 arch/x86/events/perf_event_flags.h
-
+diff --git a/drivers/perf/arm_spe_pmu.c b/drivers/perf/arm_spe_pmu.c
+index b65a7d9640e1..db8a0a841062 100644
+--- a/drivers/perf/arm_spe_pmu.c
++++ b/drivers/perf/arm_spe_pmu.c
+@@ -44,7 +44,9 @@
+  * This allows us to perform the check, i.e, perfmon_capable(),
+  * in the context of the event owner, once, during the event_init().
+  */
+-#define SPE_PMU_HW_FLAGS_CX			BIT(0)
++#define SPE_PMU_HW_FLAGS_CX			0x00001
++
++static_assert((PERF_EVENT_FLAG_ARCH & SPE_PMU_HW_FLAGS_CX) == SPE_PMU_HW_FLAGS_CX);
+ 
+ static void set_spe_event_has_cx(struct perf_event *event)
+ {
+diff --git a/include/linux/perf/arm_pmu.h b/include/linux/perf/arm_pmu.h
+index 0407a38b470a..0356cb6a215d 100644
+--- a/include/linux/perf/arm_pmu.h
++++ b/include/linux/perf/arm_pmu.h
+@@ -24,10 +24,11 @@
+ /*
+  * ARM PMU hw_event flags
+  */
+-/* Event uses a 64bit counter */
+-#define ARMPMU_EVT_64BIT		1
+-/* Event uses a 47bit counter */
+-#define ARMPMU_EVT_47BIT		2
++#define ARMPMU_EVT_64BIT		0x00001 /* Event uses a 64bit counter */
++#define ARMPMU_EVT_47BIT		0x00002 /* Event uses a 47bit counter */
++
++static_assert((PERF_EVENT_FLAG_ARCH & ARMPMU_EVT_64BIT) == ARMPMU_EVT_64BIT);
++static_assert((PERF_EVENT_FLAG_ARCH & ARMPMU_EVT_47BIT) == ARMPMU_EVT_47BIT);
+ 
+ #define HW_OP_UNSUPPORTED		0xFFFF
+ #define C(_x)				PERF_COUNT_HW_CACHE_##_x
 -- 
 2.25.1
 
