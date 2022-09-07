@@ -2,190 +2,150 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0540FC38145
-	for <linux-perf-users@archiver.kernel.org>; Wed,  7 Sep 2022 08:15:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id ABF89ECAAD3
+	for <linux-perf-users@archiver.kernel.org>; Wed,  7 Sep 2022 08:31:27 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230250AbiIGIPH (ORCPT
+        id S230024AbiIGIb0 (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Wed, 7 Sep 2022 04:15:07 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47864 "EHLO
+        Wed, 7 Sep 2022 04:31:26 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50482 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229829AbiIGIPF (ORCPT
+        with ESMTP id S229964AbiIGIbV (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Wed, 7 Sep 2022 04:15:05 -0400
-Received: from mail-ot1-f43.google.com (mail-ot1-f43.google.com [209.85.210.43])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1E09B5A809;
-        Wed,  7 Sep 2022 01:15:04 -0700 (PDT)
-Received: by mail-ot1-f43.google.com with SMTP id h20-20020a056830165400b00638ac7ddba5so9751898otr.4;
-        Wed, 07 Sep 2022 01:15:04 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date;
-        bh=hT62DWTSy6knC9p3laWXRZgjtHdVoD2JfLuKF9xvov0=;
-        b=kX5D7lPHcVBuR/qGKFpZQPBRH+fXksV8SZMh/cNeq/7RtOQBjN7pCg/QCadjWiMNrE
-         AxFo8nCZf/sBCoJtKI2nmRXqZrMV4e+E7/d2iS4oRLYEk+pxBOZNhguw6/JRikw+2HVH
-         qHaevdYDAhqhxYPVhKL+Ue8y4ExtVwkyme+1WzbHKlZCqBm3lGAFeKxn5qbyskproSGF
-         y8Ni85XIyYQ641434hcFqVhSi4S21J19sgqlQlrv3lIw/aYiuE5WzN9uduwhQLwI8gPC
-         XpWd0XmcG4b60VB5OgvPBjJi1/qUz/zIxPKFbnUwCYM1CjdYqBId51zMHP47s1iGoJIu
-         vqIg==
-X-Gm-Message-State: ACgBeo2yy94eZ6nHGggjzZcEXjom7Z4dSekkKR/DHK/o1X8Cm1Z+PGBz
-        HQr+UXrVplYV0PKZziLbcLs5qStn9FsFQ0Voji8=
-X-Google-Smtp-Source: AA6agR67GaGIRkaTfX0Pfq2ubqiGKRoLb+DI57QXw7eF11ettfu+WLELbWnmy9jQvLuFXvYG6CQq3SdUGQg8KwHhS14=
-X-Received: by 2002:a9d:6a59:0:b0:638:92fd:d5b4 with SMTP id
- h25-20020a9d6a59000000b0063892fdd5b4mr974570otn.247.1662538503379; Wed, 07
- Sep 2022 01:15:03 -0700 (PDT)
-MIME-Version: 1.0
-References: <20220831124041.219925-1-jolsa@kernel.org> <CAP-5=fX-=ph8g3VKbQXSRT8SiOZ3XqQLd3T9-ZTNZ5L+ye5L-A@mail.gmail.com>
- <Yw+LCN2cX9peweWV@kernel.org> <3aa4c863-24cc-9fdf-9960-2b1983b3322b@linux.intel.com>
- <CAM9d7chpoqB18r3TXPuTAA4_4TsCYq+p+j90vKspv++X1RBU+w@mail.gmail.com>
- <78bedcf4-3ef8-2ccf-d846-74d0de0c67ad@linux.intel.com> <YxhRr0tyPSpGZ+MP@krava>
-In-Reply-To: <YxhRr0tyPSpGZ+MP@krava>
-From:   Namhyung Kim <namhyung@kernel.org>
-Date:   Wed, 7 Sep 2022 01:14:52 -0700
-Message-ID: <CAM9d7chsKkO_+pyvv-sWa-qSdw+PU1Am7NRgjXKnsWCaeyZm-A@mail.gmail.com>
-Subject: Re: [PATCH] perf script: Skip dummy event attr check
-To:     Jiri Olsa <olsajiri@gmail.com>
-Cc:     Xing Zhengjun <zhengjun.xing@linux.intel.com>,
+        Wed, 7 Sep 2022 04:31:21 -0400
+Received: from casper.infradead.org (casper.infradead.org [IPv6:2001:8b0:10b:1236::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 92F1CA346F;
+        Wed,  7 Sep 2022 01:31:14 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=casper.20170209; h=In-Reply-To:Content-Type:MIME-Version:
+        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description;
+        bh=bKV8rZMiMMl7GemBDeOjBwLts2fa7GmujNh4pWx/iH4=; b=DO3PVdlNsrZTfbljOD3O2emLY0
+        Y3EyqWYmRaLfywpUt+Wtw3ilhBj17cQ5xFJZE9zlkwx/0E1qeCIwL/rsme5GXqIZ5Vp0uVp+dGC7V
+        KgxmvNsY+t9f29MLsks5mFv5Fr1tg2FDX4T+SUto3UXnAQmflOdJM6duEd/0MBaoKkF+Ezkl1CFoF
+        Md38klA6/qZK72naq06cz/H1QmlKq1mN0KpKMeX34hHe/8QW7IZBrNYlo8PYrVwKA+XGnGKorLyrx
+        crH8CalEIrtoMn3dcOaWmaxqOXqSv6AtEACgnWA8wTiEEzKK3AlgbyMCxZFXHSv6829sxCW+KSKlf
+        0iPC5uug==;
+Received: from j130084.upc-j.chello.nl ([24.132.130.84] helo=noisy.programming.kicks-ass.net)
+        by casper.infradead.org with esmtpsa (Exim 4.94.2 #2 (Red Hat Linux))
+        id 1oVqSc-00BCIv-Ht; Wed, 07 Sep 2022 08:31:02 +0000
+Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange X25519 server-signature RSA-PSS (4096 bits))
+        (Client did not present a certificate)
+        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id 1C164300244;
+        Wed,  7 Sep 2022 10:31:00 +0200 (CEST)
+Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
+        id 0492E2022E4D8; Wed,  7 Sep 2022 10:30:59 +0200 (CEST)
+Date:   Wed, 7 Sep 2022 10:30:59 +0200
+From:   Peter Zijlstra <peterz@infradead.org>
+To:     Anshuman Khandual <anshuman.khandual@arm.com>
+Cc:     linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org,
+        James Clark <james.clark@arm.com>,
+        Ingo Molnar <mingo@redhat.com>,
         Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Ian Rogers <irogers@google.com>, Hongtao Yu <hoy@fb.com>,
-        lkml <linux-kernel@vger.kernel.org>,
-        Peter Zijlstra <a.p.zijlstra@chello.nl>,
-        Ingo Molnar <mingo@kernel.org>,
         Mark Rutland <mark.rutland@arm.com>,
         Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        linux-perf-users <linux-perf-users@vger.kernel.org>,
-        "Liang, Kan" <kan.liang@linux.intel.com>
-Content-Type: text/plain; charset="UTF-8"
+        Jiri Olsa <jolsa@kernel.org>,
+        Namhyung Kim <namhyung@kernel.org>,
+        linux-arm-kernel@lists.infradead.org, x86@kernel.org,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Borislav Petkov <bp@alien8.de>
+Subject: Re: [PATCH V2 4/4] x86/perf: Assert all platform event flags are
+ within PERF_EVENT_FLAG_ARCH
+Message-ID: <YxhWwxhtFMh1aPMh@hirez.programming.kicks-ass.net>
+References: <20220905054239.324029-1-anshuman.khandual@arm.com>
+ <20220905054239.324029-5-anshuman.khandual@arm.com>
+ <Yxed5u9X2PKGAKGf@hirez.programming.kicks-ass.net>
+ <763825a2-67a1-6288-1b12-15768eef1d75@arm.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <763825a2-67a1-6288-1b12-15768eef1d75@arm.com>
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-On Wed, Sep 7, 2022 at 1:09 AM Jiri Olsa <olsajiri@gmail.com> wrote:
->
-> On Wed, Sep 07, 2022 at 01:19:32PM +0800, Xing Zhengjun wrote:
-> >
-> >
-> > On 9/7/2022 12:50 PM, Namhyung Kim wrote:
-> > > Hello,
-> > >
-> > > On Tue, Sep 6, 2022 at 7:49 PM Xing Zhengjun
-> > > <zhengjun.xing@linux.intel.com> wrote:
-> > > >
-> > > > Hi,
-> > > >
-> > > > On 9/1/2022 12:23 AM, Arnaldo Carvalho de Melo wrote:
-> > > > > Em Wed, Aug 31, 2022 at 09:02:46AM -0700, Ian Rogers escreveu:
-> > > > > > On Wed, Aug 31, 2022 at 5:40 AM Jiri Olsa <jolsa@kernel.org> wrote:
-> > > > > > >
-> > > > > > > Hongtao Yu reported problem when displaying uregs in perf script
-> > > > > > > for system wide perf.data:
-> > > > > > >
-> > > > > > >     # perf script -F uregs | head -10
-> > > > > > >     Samples for 'dummy:HG' event do not have UREGS attribute set. Cannot print 'uregs' field.
-> > > > > > >
-> > > > > > > The problem is the extra dummy event added for system wide,
-> > > > > > > which does not have proper sample_type setup.
-> > > > > > >
-> > > > > > > Skipping attr check completely for dummy event as suggested
-> > > > > > > by Namhyung, because it does not have any samples anyway.
-> > > > > > >
-> > > > > > > Reported-by: Hongtao Yu <hoy@fb.com>
-> > > > > > > Suggested-by: Namhyung Kim <namhyung@kernel.org>
-> > > > > > > Signed-off-by: Jiri Olsa <jolsa@kernel.org>
-> > > > > >
-> > > > > > Acked-by: Ian Rogers <irogers@google.com>
-> > > > >
-> > > > > Thanks, applied to perf/urgent.
-> > > > >
-> > > > > - Arnaldo
-> > > >
-> > > > I have met a similar issue on hybrid systems such as ADL, I apply the
-> > > > patch, and it works OK for the normal mode.
-> > > >    # ./perf record  --intr-regs=di,r8,dx,cx -e
-> > > > br_inst_retired.near_call:p -c 1000 --per-thread true
-> > > > [ perf record: Woken up 1 times to write data ]
-> > > > [ perf record: Captured and wrote 0.024 MB perf.data (25 samples) ]
-> > > >
-> > > > # ./perf script -F iregs |head -5
-> > > >    ABI:2    CX:0xffff90e19d024ed8    DX:0x1    DI:0xffff90e19d024ed8
-> > > > R8:0xffffba5e437e7b30
-> > > >    ABI:2    CX:0x7f5239783000    DX:0x80000000    DI:0xffff90e1801eea00
-> > > >    R8:0x71
-> > > >    ABI:2    CX:0x40    DX:0x60    DI:0xffffffff9fde5ab8    R8:0x40
-> > > >    ABI:2    CX:0x0    DX:0xffffffffffffffff    DI:0xffff90e1877408e8
-> > > > R8:0x1
-> > > >    ABI:2    CX:0xcc0    DX:0x1    DI:0xffff90e187d17c60    R8:0x40
-> > > >
-> > > > But the issue still happened when running the test in the pipe mode. In
-> > > > the pipe mode, it calls process_attr() which still checks the attr for
-> > > > the dummy event, so the issue happened.
-> > > >
-> > > >    # ./perf record -o - --intr-regs=di,r8,dx,cx -e
-> > > > br_inst_retired.near_call:p -c 1000 --per-thread true 2>/dev/null|./perf
-> > > > script -F iregs |head -5
-> > > > Samples for 'dummy:HG' event do not have IREGS attribute set. Cannot
-> > > > print 'iregs' field.
-> > > > 0x120 [0x90]: failed to process type: 64
-> > > >
-> > > > I have one test patch which can fix the pipe mode issue.
-> > > >
-> > > >    ./perf record -o - --intr-regs=di,r8,dx,cx -e
-> > > > br_inst_retired.near_call:p -c 1000 --per-thread true 2>/dev/null|./perf
-> > > > script -F iregs |head -5
-> > > >    ABI:2    CX:0xffff90e18119e278    DX:0x0    DI:0xffff90e18119f858
-> > > > R8:0xffff90e18119e278
-> > > >    ABI:2    CX:0x0    DX:0x1    DI:0xfffffa2844a91580    R8:0x402
-> > > >    ABI:2    CX:0x0    DX:0x0    DI:0x100cca    R8:0x0
-> > > >    ABI:2    CX:0x0    DX:0x0    DI:0xffffffff9e997ca5    R8:0x0
-> > > >    ABI:2    CX:0x113ce8000    DX:0xffff90e198f46600
-> > > > DI:0xffff90e189de8000    R8:0x290
-> > > >
-> > > >
-> > > > Fixes: b91e5492f9d7 ("perf record: Add a dummy event on hybrid systems
-> > > > to collect metadata records")
-> > > > Signed-off-by: Zhengjun Xing <zhengjun.xing@linux.intel.com>
-> > > > ---
-> > > >    tools/perf/builtin-script.c | 2 ++
-> > > >    1 file changed, 2 insertions(+)
-> > > >
-> > > > diff --git a/tools/perf/builtin-script.c b/tools/perf/builtin-script.c
-> > > > index 9152e3e45b69..2d863cdb19fe 100644
-> > > > --- a/tools/perf/builtin-script.c
-> > > > +++ b/tools/perf/builtin-script.c
-> > > > @@ -2429,6 +2429,8 @@ static int process_attr(struct perf_tool *tool,
-> > > > union perf_event *event,
-> > > >           }
-> > > >
-> > > >           if (evsel->core.attr.sample_type) {
-> > > > +               if (evsel__is_dummy_event(evsel))
-> > > > +                       return 0;
-> > >
-> > > Maybe we can move this into evsel__check_attr().
-> > >
-> > > Thanks,
-> > > Namhyung
-> >
-> > Yes, the following changes in evsel__check_attr() can fix both normal and
-> > pipe mode issues, Otherwise, we have to patch everywhere when
-> > evsel__check_attr() is called.
-> >
-> > diff --git a/tools/perf/builtin-script.c b/tools/perf/builtin-script.c
-> > index 13580a9c50b8..fb76e3191858 100644
-> > --- a/tools/perf/builtin-script.c
-> > +++ b/tools/perf/builtin-script.c
-> > @@ -451,6 +451,9 @@ static int evsel__check_attr(struct evsel *evsel, struct
-> > perf_session *session)
-> >         allow_user_set = perf_header__has_feat(&session->header,
-> >                                                HEADER_AUXTRACE);
-> >
-> > +       if (evsel__is_dummy_event(evsel))
-> > +               allow_user_set = true;
+On Wed, Sep 07, 2022 at 10:57:35AM +0530, Anshuman Khandual wrote:
+
+> > How about something like so?
+> 
+> Makes sense, will fold this back. Could I also include your "Signed-off-by:"
+> for this patch ?
+> 
+
+Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
+
+> > 
+> > ---
+> > --- a/arch/x86/events/perf_event.h
+> > +++ b/arch/x86/events/perf_event.h
+> > @@ -64,27 +64,25 @@ static inline bool constraint_match(stru
+> >  	return ((ecode & c->cmask) - c->code) <= (u64)c->size;
+> >  }
+> >  
+> > +#define PERF_ARCH(name, val)	\
+> > +	PERF_X86_EVENT_##name = val,
 > > +
->
-> hm, do you need to pass allow_user_set to UREGS check then?
-
-Well.. actually I thought we can simply return 0 for a dummy event.
-
-Thanks,
-Namhyung
+> >  /*
+> >   * struct hw_perf_event.flags flags
+> >   */
+> > -#define PERF_X86_EVENT_PEBS_LDLAT	0x00001 /* ld+ldlat data address sampling */
+> > -#define PERF_X86_EVENT_PEBS_ST		0x00002 /* st data address sampling */
+> > -#define PERF_X86_EVENT_PEBS_ST_HSW	0x00004 /* haswell style datala, store */
+> > -#define PERF_X86_EVENT_PEBS_LD_HSW	0x00008 /* haswell style datala, load */
+> > -#define PERF_X86_EVENT_PEBS_NA_HSW	0x00010 /* haswell style datala, unknown */
+> > -#define PERF_X86_EVENT_EXCL		0x00020 /* HT exclusivity on counter */
+> > -#define PERF_X86_EVENT_DYNAMIC		0x00040 /* dynamic alloc'd constraint */
+> > -
+> > -#define PERF_X86_EVENT_EXCL_ACCT	0x00100 /* accounted EXCL event */
+> > -#define PERF_X86_EVENT_AUTO_RELOAD	0x00200 /* use PEBS auto-reload */
+> > -#define PERF_X86_EVENT_LARGE_PEBS	0x00400 /* use large PEBS */
+> > -#define PERF_X86_EVENT_PEBS_VIA_PT	0x00800 /* use PT buffer for PEBS */
+> > -#define PERF_X86_EVENT_PAIR		0x01000 /* Large Increment per Cycle */
+> > -#define PERF_X86_EVENT_LBR_SELECT	0x02000 /* Save/Restore MSR_LBR_SELECT */
+> > -#define PERF_X86_EVENT_TOPDOWN		0x04000 /* Count Topdown slots/metrics events */
+> > -#define PERF_X86_EVENT_PEBS_STLAT	0x08000 /* st+stlat data address sampling */
+> > -#define PERF_X86_EVENT_AMD_BRS		0x10000 /* AMD Branch Sampling */
+> > -#define PERF_X86_EVENT_PEBS_LAT_HYBRID	0x20000 /* ld and st lat for hybrid */
+> > +enum {
+> > +#include "perf_event_flags.h"
+> > +};
+> > +
+> > +#undef PERF_ARCH
+> > +
+> > +#define PERF_ARCH(name, val)						\
+> > +	static_assert((PERF_X86_EVENT_##name & PERF_EVENT_FLAG_ARCH) ==	\
+> > +		      PERF_X86_EVENT_##name);
+> > +
+> > +#include "perf_event_flags.h"
+> > +
+> > +#undef PERF_ARCH
+> >  
+> >  static inline bool is_topdown_count(struct perf_event *event)
+> >  {
+> > --- /dev/null
+> > +++ b/arch/x86/events/perf_event_flags.h
+> > @@ -0,0 +1,22 @@
+> > +
+> > +/*
+> > + * struct hw_perf_event.flags flags
+> > + */
+> > +PERF_ARCH(PEBS_LDLAT,		0x00001) /* ld+ldlat data address sampling */
+> > +PERF_ARCH(PEBS_ST,		0x00002) /* st data address sampling */
+> > +PERF_ARCH(PEBS_ST_HSW,		0x00004) /* haswell style datala, store */
+> > +PERF_ARCH(PEBS_LD_HSW,		0x00008) /* haswell style datala, load */
+> > +PERF_ARCH(PEBS_NA_HSW,		0x00010) /* haswell style datala, unknown */
+> > +PERF_ARCH(EXCL,			0x00020) /* HT exclusivity on counter */
+> > +PERF_ARCH(DYNAMIC,		0x00040) /* dynamic alloc'd constraint */
+> > +			/*	0x00080	*/
+> > +PERF_ARCH(EXCL_ACCT,		0x00100) /* accounted EXCL event */
+> > +PERF_ARCH(AUTO_RELOAD,		0x00200) /* use PEBS auto-reload */
+> > +PERF_ARCH(LARGE_PEBS,		0x00400) /* use large PEBS */
+> > +PERF_ARCH(PEBS_VIA_PT,		0x00800) /* use PT buffer for PEBS */
+> > +PERF_ARCH(PAIR,			0x01000) /* Large Increment per Cycle */
+> > +PERF_ARCH(LBR_SELECT,		0x02000) /* Save/Restore MSR_LBR_SELECT */
+> > +PERF_ARCH(TOPDOWN,		0x04000) /* Count Topdown slots/metrics events */
+> > +PERF_ARCH(PEBS_STLAT,		0x08000) /* st+stlat data address sampling */
+> > +PERF_ARCH(AMD_BRS,		0x10000) /* AMD Branch Sampling */
+> > +PERF_ARCH(PEBS_LAT_HYBRID,	0x20000) /* ld and st lat for hybrid */
