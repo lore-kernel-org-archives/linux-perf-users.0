@@ -2,126 +2,98 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B31BDC54EE9
-	for <linux-perf-users@archiver.kernel.org>; Wed,  7 Sep 2022 06:47:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 817FFC38145
+	for <linux-perf-users@archiver.kernel.org>; Wed,  7 Sep 2022 06:58:24 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229838AbiIGGrG (ORCPT
+        id S229845AbiIGG6X (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Wed, 7 Sep 2022 02:47:06 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44492 "EHLO
+        Wed, 7 Sep 2022 02:58:23 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35020 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230045AbiIGGrD (ORCPT
+        with ESMTP id S229506AbiIGG6W (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Wed, 7 Sep 2022 02:47:03 -0400
-Received: from mail-pf1-x430.google.com (mail-pf1-x430.google.com [IPv6:2607:f8b0:4864:20::430])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4C41091096;
-        Tue,  6 Sep 2022 23:47:00 -0700 (PDT)
-Received: by mail-pf1-x430.google.com with SMTP id z187so13647757pfb.12;
-        Tue, 06 Sep 2022 23:47:00 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20210112;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:sender:from:to:cc:subject:date;
-        bh=BUSuJ/7Ci0Mvei01EbqJd2VOB/lHA3wgZ4n5NX58oL8=;
-        b=I/HHWjtWubOsRjx1w9Tbou41mtlzBt5rW3Y8O4gTCvJnSpQjgXpKvQJN2Dpy1eubXm
-         eme3cpTRcuJb3VkAkz3SQyREtECIp1oBQgyS8NnPOfN4ZXROwWoDZO1MMO3NHa4Gr/Cq
-         yMhkgnqnBPPMu2zu95heyTNjojMGNdWWAcr/rt+/+NXmUcaytbxMhsKZdxZ+h0+KnjUm
-         dBf/P+OWEdxAZL+VJ7inStOfkH6/NoH5VsxK0/C4ber2o8UvB1ysgvlXh2bue+XzeRpY
-         S2053IM8s5zF9MdKw0N5XJnw+eyj+wib5r0a6EVmDXDznFE1dnSzDfZkCOPCS9H6OvC1
-         vKvg==
+        Wed, 7 Sep 2022 02:58:22 -0400
+Received: from mail-oa1-f46.google.com (mail-oa1-f46.google.com [209.85.160.46])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B82C48FD52;
+        Tue,  6 Sep 2022 23:58:21 -0700 (PDT)
+Received: by mail-oa1-f46.google.com with SMTP id 586e51a60fabf-1278a61bd57so15293821fac.7;
+        Tue, 06 Sep 2022 23:58:21 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:sender:x-gm-message-state:from
-         :to:cc:subject:date;
-        bh=BUSuJ/7Ci0Mvei01EbqJd2VOB/lHA3wgZ4n5NX58oL8=;
-        b=QUokTfLyRTPEprcBPxS0TMxGNg596PdEyLHmJyHITiMzaLSp8sqfNbz5xVy0W2eHdv
-         +kyDpRYlm/qEbXmS/K2v96R7QTJ9L90fHDErfeWrBqZRFT5CmfzLERQRaGOepG1984+y
-         hjCL2E129i9eNUVtRQg9esN0JnVlfrkBL3/CGHZJvq/stJFrw030Rq7BdOUe+JsAonyK
-         f64pvT9zFGvf5cpVJa6Kc1yQTp+US9mraDz4acnClBK7rrvieIGMKBSplqnmn9gIkZiV
-         fPUhOiY8oIhmAfxdKfhSjS5LUXmbXzfCioBjRNA/s01eFpdkHCAf0XxnEUrmbGGHQRuG
-         zSbw==
-X-Gm-Message-State: ACgBeo3d3JI8zA8yLQKk8qiVS6GEfDaq8fA67olpIL1qowl25zN/WScN
-        wvceIv7GTr0mHOiRcIjkf0c=
-X-Google-Smtp-Source: AA6agR6UXZGAG2rabT+vl7nvyoosoapU0XTcWk8XHuDb80cyFWwqVpKmmHJcK9yCN8rbyfXMEAhueQ==
-X-Received: by 2002:a63:4e44:0:b0:42b:1fff:72d1 with SMTP id o4-20020a634e44000000b0042b1fff72d1mr2209761pgl.432.1662533219763;
-        Tue, 06 Sep 2022 23:46:59 -0700 (PDT)
-Received: from balhae.hsd1.ca.comcast.net ([2601:647:6780:1040:f249:9066:7da7:4a37])
-        by smtp.gmail.com with ESMTPSA id z4-20020a170902ccc400b00172c7a2c662sm11192192ple.48.2022.09.06.23.46.58
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 06 Sep 2022 23:46:59 -0700 (PDT)
-Sender: Namhyung Kim <namhyung@gmail.com>
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:x-gm-message-state:from:to:cc:subject:date;
+        bh=d2GxsBffUoX3eM3Z9JvRT1gNftYOiyqMQZCPJIetS/o=;
+        b=397koPNSKD4670SYO4FRp68vrXpBO5cEGeGBxcNN+jr9smvMTa+X1KS1PWbw6sDPGN
+         9x7+G4TnWpnkFxqonTPY/H1DII+57+USRZi21DuQoNbARLcMv4GJeKO2+vbVuers9xBP
+         KMckgp38yzWJbpFnfCZi3JkqqsG9f0rQaVMEX7IY35sf+ddpbaV48SX8li/PVcI1mTIU
+         +oRIAgQrvpdWZzKXUSkzz5J8zqiu0P+EUZHyy7xsN7QekAaZ/FUmZ/Bdp9c35kWwBoUs
+         MJol3fXMSdNqmiMrKWi/p69/Zj+9S1gMWbfaa0IA0UDywZshq22w+c5Jnqaq9xFTIxFn
+         2omw==
+X-Gm-Message-State: ACgBeo1LroH0okj1Tpnoiq78sg6HSyMs88OFhmBTaFXllEZqMuAGVP+W
+        E6W/dpGS9i8SMP6jxiHjkCv33b9BaU8g2qSWYwwzlzw0
+X-Google-Smtp-Source: AA6agR7eviQAT6IDpbbvRlqqBpL0NbF0igKjLYiuZbEZCoA+REG/y+NW3RA8tVNkQUMhLtD3+GIeVNNgs3+WFH+kyy0=
+X-Received: by 2002:a05:6808:d46:b0:345:7b42:f987 with SMTP id
+ w6-20020a0568080d4600b003457b42f987mr910550oik.92.1662533901033; Tue, 06 Sep
+ 2022 23:58:21 -0700 (PDT)
+MIME-Version: 1.0
+References: <20220907050407.2711513-1-namhyung@kernel.org> <CAPhsuW4OT3XC8oREZBNreesYyVvU9hSGs5Hgz=r-cwsQSkiXRQ@mail.gmail.com>
+In-Reply-To: <CAPhsuW4OT3XC8oREZBNreesYyVvU9hSGs5Hgz=r-cwsQSkiXRQ@mail.gmail.com>
 From:   Namhyung Kim <namhyung@kernel.org>
-To:     Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Jiri Olsa <jolsa@kernel.org>
-Cc:     Ingo Molnar <mingo@kernel.org>,
+Date:   Tue, 6 Sep 2022 23:58:10 -0700
+Message-ID: <CAM9d7cjZ4jJDx0wL5BQ1f4BvT=r0S72Z_q83WwvOdB8cQGzRKw@mail.gmail.com>
+Subject: Re: [PATCH v2] perf test: Skip sigtrap test on old kernels
+To:     Song Liu <song@kernel.org>
+Cc:     Arnaldo Carvalho de Melo <acme@kernel.org>,
+        Jiri Olsa <jolsa@kernel.org>, Ingo Molnar <mingo@kernel.org>,
         Peter Zijlstra <peterz@infradead.org>,
         LKML <linux-kernel@vger.kernel.org>,
         Ian Rogers <irogers@google.com>,
-        linux-perf-users@vger.kernel.org,
-        Adrian Hunter <adrian.hunter@intel.com>
-Subject: [PATCH 6/6] perf test: Do not set TEST_SKIP for record subtests
-Date:   Tue,  6 Sep 2022 23:46:45 -0700
-Message-Id: <20220907064645.1197894-7-namhyung@kernel.org>
-X-Mailer: git-send-email 2.37.2.789.g6183377224-goog
-In-Reply-To: <20220907064645.1197894-1-namhyung@kernel.org>
-References: <20220907064645.1197894-1-namhyung@kernel.org>
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+        linux-perf-users <linux-perf-users@vger.kernel.org>,
+        bpf <bpf@vger.kernel.org>, Marco Elver <elver@google.com>,
+        Song Liu <songliubraving@fb.com>
+Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-It now has 4 sub tests and one of them should run at least.
-But once TEST_SKIP (= 2) return value is set, it won't be overwritten
-unless there's a failure.  I think we should return success when one
-or more tested are skipped but the remaining subtests are passed.
+Hi Song,
 
-So update the test code not to set the err variable when it skips
-the test.
+On Tue, Sep 6, 2022 at 10:58 PM Song Liu <song@kernel.org> wrote:
+>
+> On Tue, Sep 6, 2022 at 10:04 PM Namhyung Kim <namhyung@kernel.org> wrote:
+> >
+> > If it runs on an old kernel, perf_event_open would fail because of the
+> > new fields sigtrap and sig_data.  Just skipping the test could miss an
+> > actual bug in the kernel.
+> >
+> > Let's check BTF if it has the perf_event_attr.sigtrap field.
+> >
+> > Cc: Marco Elver <elver@google.com>
+> > Cc: Song Liu <songliubraving@fb.com>
+> > Signed-off-by: Namhyung Kim <namhyung@kernel.org>
+> > ---
+> >  tools/perf/tests/sigtrap.c | 46 +++++++++++++++++++++++++++++++++++++-
+> >  1 file changed, 45 insertions(+), 1 deletion(-)
+> >
+> > diff --git a/tools/perf/tests/sigtrap.c b/tools/perf/tests/sigtrap.c
+> > index e32ece90e164..32f08ce0f2b0 100644
+> > --- a/tools/perf/tests/sigtrap.c
+> > +++ b/tools/perf/tests/sigtrap.c
+> > @@ -16,6 +16,8 @@
+> >  #include <sys/syscall.h>
+> >  #include <unistd.h>
+> >
+> > +#include <bpf/btf.h>
+> > +
+>
+> Do we need "#ifdef HAVE_BPF_SKEL" for the include part?
 
-Signed-off-by: Namhyung Kim <namhyung@kernel.org>
----
- tools/perf/tests/shell/record.sh | 12 ------------
- 1 file changed, 12 deletions(-)
+Right, it'd be better to move it under the #ifdef.  Will change.
 
-diff --git a/tools/perf/tests/shell/record.sh b/tools/perf/tests/shell/record.sh
-index ff66e58f3a26..487981767455 100755
---- a/tools/perf/tests/shell/record.sh
-+++ b/tools/perf/tests/shell/record.sh
-@@ -72,10 +72,6 @@ test_per_thread() {
-   if ! perf record -o /dev/null --quiet ${testprog} 2> /dev/null
-   then
-     echo "Per-thread record [Skipped event not supported]"
--    if [ $err -ne 1 ]
--    then
--      err=2
--    fi
-     return
-   fi
-   if ! perf record --per-thread ${testopt} -o ${perfdata} ${testprog} 2> /dev/null
-@@ -111,10 +107,6 @@ test_register_capture() {
-   if ! perf list | egrep -q 'br_inst_retired.near_call'
-   then
-     echo "Register capture test [Skipped missing event]"
--    if [ $err -ne 1 ]
--    then
--      err=2
--    fi
-     return
-   fi
-   if ! perf record --intr-regs=\? 2>&1 | egrep -q 'available registers: AX BX CX DX SI DI BP SP IP FLAGS CS SS R8 R9 R10 R11 R12 R13 R14 R15'
-@@ -139,10 +131,6 @@ test_system_wide() {
-   if ! perf record -aB --synth=no ${testopt} -o ${perfdata} ${testprog} 2> /dev/null
-   then
-     echo "System-wide record [Skipped not supported]"
--    if [ $err -ne 1 ]
--    then
--      err=2
--    fi
-     return
-   fi
-   if ! perf report -i ${perfdata} -q | egrep -q ${testsym}
--- 
-2.37.2.789.g6183377224-goog
+>
+> Other than this, looks good to me.
+>
+> Acked-by: Song Liu <song@kernel.org>
 
+Thanks for the review!
+Namhyung
