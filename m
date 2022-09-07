@@ -2,26 +2,26 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 508A8C38145
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F3E17ECAAD3
 	for <linux-perf-users@archiver.kernel.org>; Wed,  7 Sep 2022 09:19:49 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229977AbiIGJTs (ORCPT
+        id S230046AbiIGJTs (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
         Wed, 7 Sep 2022 05:19:48 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34130 "EHLO
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34148 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230111AbiIGJTq (ORCPT
+        with ESMTP id S230086AbiIGJTp (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Wed, 7 Sep 2022 05:19:46 -0400
+        Wed, 7 Sep 2022 05:19:45 -0400
 Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTP id 69C3E55B3;
-        Wed,  7 Sep 2022 02:19:43 -0700 (PDT)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTP id ADF3613E3E;
+        Wed,  7 Sep 2022 02:19:38 -0700 (PDT)
 Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 37EB8139F;
-        Wed,  7 Sep 2022 02:19:49 -0700 (PDT)
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id BBEA3106F;
+        Wed,  7 Sep 2022 02:19:44 -0700 (PDT)
 Received: from a077893.blr.arm.com (unknown [10.162.40.15])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPA id 4EF9D3F73D;
-        Wed,  7 Sep 2022 02:20:07 -0700 (PDT)
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPA id 1FA863F73D;
+        Wed,  7 Sep 2022 02:20:02 -0700 (PDT)
 From:   Anshuman Khandual <anshuman.khandual@arm.com>
 To:     linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org,
         linux-arm-kernel@lists.infradead.org, peterz@infradead.org
@@ -33,9 +33,9 @@ Cc:     Anshuman Khandual <anshuman.khandual@arm.com>,
         Alexander Shishkin <alexander.shishkin@linux.intel.com>,
         Jiri Olsa <jolsa@kernel.org>,
         Namhyung Kim <namhyung@kernel.org>, x86@kernel.org
-Subject: [PATCH V3 2/4] perf/core: Assert PERF_EVENT_FLAG_ARCH does not overlap with generic flags
-Date:   Wed,  7 Sep 2022 14:49:22 +0530
-Message-Id: <20220907091924.439193-3-anshuman.khandual@arm.com>
+Subject: [PATCH V3 1/4] perf/core: Expand PERF_EVENT_FLAG_ARCH
+Date:   Wed,  7 Sep 2022 14:49:21 +0530
+Message-Id: <20220907091924.439193-2-anshuman.khandual@arm.com>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20220907091924.439193-1-anshuman.khandual@arm.com>
 References: <20220907091924.439193-1-anshuman.khandual@arm.com>
@@ -45,8 +45,10 @@ Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-This just ensures that PERF_EVENT_FLAG_ARCH does not overlap with generic
-hardware event flags.
+Two hardware event flags on x86 platform has overshot PERF_EVENT_FLAG_ARCH
+(0x0000ffff). These flags are PERF_X86_EVENT_PEBS_LAT_HYBRID (0x20000) and
+PERF_X86_EVENT_AMD_BRS (0x10000). Lets expand PERF_EVENT_FLAG_ARCH mask to
+accommodate those flags, and also create room for two more in the future.
 
 Cc: Peter Zijlstra <peterz@infradead.org>
 Cc: Ingo Molnar <mingo@redhat.com>
@@ -60,22 +62,22 @@ Cc: linux-kernel@vger.kernel.org
 Reviewed-by: James Clark <james.clark@arm.com>
 Signed-off-by: Anshuman Khandual <anshuman.khandual@arm.com>
 ---
- include/linux/perf_event.h | 2 ++
- 1 file changed, 2 insertions(+)
+ include/linux/perf_event.h | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
 diff --git a/include/linux/perf_event.h b/include/linux/perf_event.h
-index 3f51fbf4a595..10e23a0f9db0 100644
+index ee8b9ecdc03b..3f51fbf4a595 100644
 --- a/include/linux/perf_event.h
 +++ b/include/linux/perf_event.h
-@@ -140,6 +140,8 @@ struct hw_perf_event_extra {
- #define PERF_EVENT_FLAG_ARCH			0x000fffff
+@@ -137,7 +137,7 @@ struct hw_perf_event_extra {
+  * PERF_EVENT_FLAG_ARCH bits are reserved for architecture-specific
+  * usage.
+  */
+-#define PERF_EVENT_FLAG_ARCH			0x0000ffff
++#define PERF_EVENT_FLAG_ARCH			0x000fffff
  #define PERF_EVENT_FLAG_USER_READ_CNT		0x80000000
  
-+static_assert((PERF_EVENT_FLAG_USER_READ_CNT & PERF_EVENT_FLAG_ARCH) == 0);
-+
  /**
-  * struct hw_perf_event - performance event hardware details:
-  */
 -- 
 2.25.1
 
