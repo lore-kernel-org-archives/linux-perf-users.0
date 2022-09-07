@@ -2,304 +2,158 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 459B8ECAAD3
-	for <linux-perf-users@archiver.kernel.org>; Wed,  7 Sep 2022 04:52:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F1B54ECAAD3
+	for <linux-perf-users@archiver.kernel.org>; Wed,  7 Sep 2022 05:04:22 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229493AbiIGEwP (ORCPT
+        id S229528AbiIGFEU (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Wed, 7 Sep 2022 00:52:15 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58356 "EHLO
+        Wed, 7 Sep 2022 01:04:20 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45586 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229436AbiIGEwO (ORCPT
+        with ESMTP id S229449AbiIGFEU (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Wed, 7 Sep 2022 00:52:14 -0400
-Received: from mga18.intel.com (mga18.intel.com [134.134.136.126])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 43CEB85AB5;
-        Tue,  6 Sep 2022 21:52:10 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1662526330; x=1694062330;
-  h=message-id:date:mime-version:subject:to:cc:references:
-   from:in-reply-to:content-transfer-encoding;
-  bh=9F0zAaH33oC4rqXkuHnBrqUOPAQEq6KgcFVAYKgK2Vs=;
-  b=ct7JY5A3KEKGl0VinDXHi4X99zWQ4r7YVICzbc+9rrnn40UPxYk9Y3YC
-   cMkBMqIHhIITMzII+N+OLAuQdW5p4kd5B7maR5Q77NckbpEQ/JnR+YAG5
-   PimmKsJDASRXsx/ykVMV+47AGYW4+TS8eKmAl3L60VG6xdVwnnUO929Mp
-   76M6OU3QbaVIE3F/0JIphdrCyjVZ9BZuvZGO+E83vF87t5wyLNsHkyvdo
-   zuy5ML6OcpkttZCr0T1VfueP1cHf+KIfLSFAOiwQ0r2A1lR8W1m2QEbRR
-   8ZYXWA4HCXfFwrCf6+Mt3EH8Uyz4pFUlRDSPy3xvtWLqg3YmY4DxRTDsC
-   g==;
-X-IronPort-AV: E=McAfee;i="6500,9779,10462"; a="279792345"
-X-IronPort-AV: E=Sophos;i="5.93,295,1654585200"; 
-   d="scan'208";a="279792345"
-Received: from fmsmga008.fm.intel.com ([10.253.24.58])
-  by orsmga106.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 06 Sep 2022 21:52:09 -0700
-X-IronPort-AV: E=Sophos;i="5.93,295,1654585200"; 
-   d="scan'208";a="676008617"
-Received: from alinassi-mobl1.ger.corp.intel.com (HELO [10.0.2.15]) ([10.252.58.27])
-  by fmsmga008-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 06 Sep 2022 21:52:06 -0700
-Message-ID: <15afb29c-ca33-adf5-b685-a43d5be78a28@intel.com>
-Date:   Wed, 7 Sep 2022 07:52:03 +0300
-MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
- Firefox/91.0 Thunderbird/91.11.0
-Subject: Re: [PATCH V2] libperf evlist: Fix per-thread mmaps for
- multi-threaded targets
-Content-Language: en-US
-To:     Namhyung Kim <namhyung@kernel.org>
-Cc:     Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Jiri Olsa <jolsa@redhat.com>, Ian Rogers <irogers@google.com>,
-        linux-kernel <linux-kernel@vger.kernel.org>,
-        linux-perf-users <linux-perf-users@vger.kernel.org>,
+        Wed, 7 Sep 2022 01:04:20 -0400
+Received: from mail-pg1-x52e.google.com (mail-pg1-x52e.google.com [IPv6:2607:f8b0:4864:20::52e])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 27C9E9C2F1;
+        Tue,  6 Sep 2022 22:04:19 -0700 (PDT)
+Received: by mail-pg1-x52e.google.com with SMTP id 78so12491671pgb.13;
+        Tue, 06 Sep 2022 22:04:19 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20210112;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:sender:from:to:cc:subject:date;
+        bh=Q5bAnJtVFnp319EIgRFa2Zj3l9LOhyIDjH73ZWT66P8=;
+        b=QN2Fh+10PlxGBEB1nyhgecUXLy1tcGt3bU5t8A00gEsdgPGA0IYD71YML0yG7OnVon
+         oZ4q6iidhcx7nEl3/vEaRoI7GAVFF5d2djWXM0XAW8X6rNTuUgljv6FPwYqohtWCoePB
+         5reK0An5RPtU8rhr5Dw9zK7jD+7QnlbSaJO876HCL8Ekj7jjSdvwvJqKkX2LBkjtCJ5j
+         DiWje0Rv4BTEdcicnrtytcDXnPXUWEHpjPaWrLmE0kVT5ODsH1f5Yrs1m5eu6S78yhoz
+         nrqph/tt6EKamrViUTK5uIuiuCa5eRWnAA/fhROTgqqGeCFEJqOCVxbZK1134Lk0QsPl
+         PGpA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:sender:x-gm-message-state:from:to:cc:subject:date;
+        bh=Q5bAnJtVFnp319EIgRFa2Zj3l9LOhyIDjH73ZWT66P8=;
+        b=lj8IXV+7r0yCQO+m5LIXOJ0MhiAf+LFCS/pTtrhe6qLOIxBsE0TsJpS+nUmM3BGHhz
+         3Ct73Au6HhzS1M049zUKpy7OkzCd2x/55KAoE+7nS2YmzVZFCdAZmUwxF643umQdOCRO
+         xayfqOKSl1mSfp3zoPGCr+hK4UR0wEJHL5KiWtO4F/HAbhqm7kgZxp03mStwA4ECS6tP
+         hm+4qIb2GIFmjsc+4EoqdnGWtIApfCuv1F4qyzHn8SAknMrz3YLakN13eLzXUL9pcbkT
+         p4jVgjDWt+e0r4Bfn6MQfE6o8XGJ6klQXqeNgpHgiy+3t3DAPNFb4SgRItO+lno4OaOJ
+         YtQw==
+X-Gm-Message-State: ACgBeo0TErcu7zC1TODYNskXYV+0leZwKlsbc5ZY3FeQ7ILznITSBmOp
+        WykRJSXGjEeuaPeV9Yoxhbw=
+X-Google-Smtp-Source: AA6agR6sTiTHSLBvwr+g6HRi6Ga/xBnUJar+Hfzxq2qEV5M6iE82lFM2UvwP+JZs0fhors2gUDFqnw==
+X-Received: by 2002:a63:fe54:0:b0:42b:d11d:1490 with SMTP id x20-20020a63fe54000000b0042bd11d1490mr1937714pgj.51.1662527058372;
+        Tue, 06 Sep 2022 22:04:18 -0700 (PDT)
+Received: from youngsil.svl.corp.google.com ([2620:15c:2d4:203:31b5:b507:23a9:c4ba])
+        by smtp.gmail.com with ESMTPSA id q8-20020a170902a3c800b00172897952a0sm6492116plb.283.2022.09.06.22.04.16
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 06 Sep 2022 22:04:17 -0700 (PDT)
+Sender: Namhyung Kim <namhyung@gmail.com>
+From:   Namhyung Kim <namhyung@kernel.org>
+To:     Arnaldo Carvalho de Melo <acme@kernel.org>,
+        Jiri Olsa <jolsa@kernel.org>
+Cc:     Ingo Molnar <mingo@kernel.org>,
         Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@redhat.com>
-References: <20220905114209.8389-1-adrian.hunter@intel.com>
- <CAM9d7cibk1OU95v56J15RG-zZmJ9TccUVZGAp=VHu7F3HwFY8g@mail.gmail.com>
-From:   Adrian Hunter <adrian.hunter@intel.com>
-Organization: Intel Finland Oy, Registered Address: PL 281, 00181 Helsinki,
- Business Identity Code: 0357606 - 4, Domiciled in Helsinki
-In-Reply-To: <CAM9d7cibk1OU95v56J15RG-zZmJ9TccUVZGAp=VHu7F3HwFY8g@mail.gmail.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+        LKML <linux-kernel@vger.kernel.org>,
+        Ian Rogers <irogers@google.com>,
+        linux-perf-users@vger.kernel.org, bpf@vger.kernel.org,
+        Marco Elver <elver@google.com>,
+        Song Liu <songliubraving@fb.com>
+Subject: [PATCH v2] perf test: Skip sigtrap test on old kernels
+Date:   Tue,  6 Sep 2022 22:04:07 -0700
+Message-Id: <20220907050407.2711513-1-namhyung@kernel.org>
+X-Mailer: git-send-email 2.37.2.789.g6183377224-goog
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-On 6/09/22 20:50, Namhyung Kim wrote:
-> On Mon, Sep 5, 2022 at 4:42 AM Adrian Hunter <adrian.hunter@intel.com> wrote:
->>
->> The offending commit removed mmap_per_thread(), which did not consider
->> the different set-output rules for per-thread mmaps i.e. in the per-thread
->> case set-output is used for file descriptors of the same thread not the
->> same cpu.
->>
->> This was not immediately noticed because it only happens with
->> multi-threaded targets and we do not have a test for that yet.
-> 
-> Yeah, this is unfortunate.  I feel like I need to spend some time on it.
-> 
->>
->> Reinstate mmap_per_thread() expanding it to cover also system-wide per-cpu
->> events i.e. to continue to allow the mixing of per-thread and per-cpu
->> mmaps.
->>
->> Debug messages (with -vv) show the file descriptors that are opened with
->> sys_perf_event_open. New debug messages are added (needs -vvv) that show
->> also which file descriptors are mmapped and which are redirected with
->> set-output.
->>
->> In the per-cpu case (cpu != -1) file descriptors for the same CPU are
->> set-output to the first file descriptor for that CPU.
->>
->> In the per-thread case (cpu == -1) file descriptors for the same thread are
->> set-output to the first file descriptor for that thread.
->>
->> Example (process 17489 has 2 threads):
->>
->>  Before (but with new debug prints):
->>
->>    $ perf record --no-bpf-event -vvv --per-thread -p 17489
->>    <SNIP>
->>    sys_perf_event_open: pid 17489  cpu -1  group_fd -1  flags 0x8 = 5
->>    sys_perf_event_open: pid 17490  cpu -1  group_fd -1  flags 0x8 = 6
->>    <SNIP>
->>    libperf: idx 0: mmapping fd 5
->>    libperf: idx 0: set output fd 6 -> 5
->>    failed to mmap with 22 (Invalid argument)
->>
->>  After:
->>
->>    $ perf record --no-bpf-event -vvv --per-thread -p 17489
->>    <SNIP>
->>    sys_perf_event_open: pid 17489  cpu -1  group_fd -1  flags 0x8 = 5
->>    sys_perf_event_open: pid 17490  cpu -1  group_fd -1  flags 0x8 = 6
->>    <SNIP>
->>    libperf: mmap_per_thread: nr cpu values (may include -1) 1 nr threads 2
->>    libperf: idx 0: mmapping fd 5
->>    libperf: idx 1: mmapping fd 6
->>    <SNIP>
->>    [ perf record: Woken up 2 times to write data ]
->>    [ perf record: Captured and wrote 0.018 MB perf.data (15 samples) ]
-> 
-> It'd be nice if the example had 2 events so that it could check the
-> set-output rule actually worked.
+If it runs on an old kernel, perf_event_open would fail because of the
+new fields sigtrap and sig_data.  Just skipping the test could miss an
+actual bug in the kernel.
 
-Here is an Intel PT example
+Let's check BTF if it has the perf_event_attr.sigtrap field.
 
-$ perf record -vvv --per-thread -p 1521 -e intel_pt//
-Using CPUID GenuineIntel-6-8C-1
-intel_pt default config: tsc,mtc,mtc_period=3,psb_period=3,pt,branch
-DEBUGINFOD_URLS=
-nr_cblocks: 0
-affinity: SYS
-mmap flush: 1
-comp level: 0
-------------------------------------------------------------
-perf_event_attr:
-  type                             9
-  size                             128
-  config                           0x300e601
-  { sample_period, sample_freq }   1
-  sample_type                      IP|TID|IDENTIFIER
-  read_format                      ID
-  disabled                         1
-  sample_id_all                    1
-  exclude_guest                    1
-  aux_watermark                    1048576
-------------------------------------------------------------
-sys_perf_event_open: pid 1521  cpu -1  group_fd -1  flags 0x8 = 5
-sys_perf_event_open: pid 1522  cpu -1  group_fd -1  flags 0x8 = 6
-------------------------------------------------------------
-perf_event_attr:
-  type                             1
-  size                             128
-  config                           0x9
-  { sample_period, sample_freq }   1
-  sample_type                      IP|TID|IDENTIFIER
-  read_format                      ID
-  disabled                         1
-  exclude_kernel                   1
-  exclude_hv                       1
-  mmap                             1
-  comm                             1
-  task                             1
-  sample_id_all                    1
-  exclude_guest                    1
-  mmap2                            1
-  comm_exec                        1
-  bpf_event                        1
-------------------------------------------------------------
-sys_perf_event_open: pid 1521  cpu -1  group_fd -1  flags 0x8 = 7
-sys_perf_event_open: pid 1522  cpu -1  group_fd -1  flags 0x8 = 8
-------------------------------------------------------------
-perf_event_attr:
-  type                             1
-  size                             128
-  config                           0x9
-  { sample_period, sample_freq }   1
-  sample_type                      IP|TID|TIME|IDENTIFIER
-  read_format                      ID
-  exclude_kernel                   1
-  exclude_hv                       1
-  sample_id_all                    1
-  exclude_guest                    1
-  ksymbol                          1
-  text_poke                        1
-------------------------------------------------------------
-sys_perf_event_open: pid -1  cpu 0  group_fd -1  flags 0x8 = 9
-sys_perf_event_open: pid -1  cpu 1  group_fd -1  flags 0x8 = 10
-sys_perf_event_open: pid -1  cpu 2  group_fd -1  flags 0x8 = 11
-sys_perf_event_open: pid -1  cpu 3  group_fd -1  flags 0x8 = 12
-sys_perf_event_open: pid -1  cpu 4  group_fd -1  flags 0x8 = 13
-sys_perf_event_open: pid -1  cpu 5  group_fd -1  flags 0x8 = 14
-sys_perf_event_open: pid -1  cpu 6  group_fd -1  flags 0x8 = 15
-sys_perf_event_open: pid -1  cpu 7  group_fd -1  flags 0x8 = 16
-mmap size 528384B
-AUX area mmap length 4194304
-libperf: mmap_per_thread: nr cpu values (may include -1) 9 nr threads 2
-libperf: idx 0: mmapping fd 5
-libperf: idx 0: set output fd 7 -> 5
-libperf: idx 1: mmapping fd 6
-libperf: idx 1: set output fd 8 -> 6
-libperf: idx 2: mmapping fd 9
-libperf: idx 3: mmapping fd 10
-libperf: idx 4: mmapping fd 11
-libperf: idx 5: mmapping fd 12
-libperf: idx 6: mmapping fd 13
-libperf: idx 7: mmapping fd 14
-libperf: idx 8: mmapping fd 15
-libperf: idx 9: mmapping fd 16
-Control descriptor is not initialized
-thread_data[0x5572a73ec2f0]: nr_mmaps=10, maps=0x5572a73ec380, ow_maps=(nil)
-thread_data[0x5572a73ec2f0]: cpu-1: maps[0] -> mmap[0]
-thread_data[0x5572a73ec2f0]: cpu0: maps[1] -> mmap[1]
-thread_data[0x5572a73ec2f0]: cpu1: maps[2] -> mmap[2]
-thread_data[0x5572a73ec2f0]: cpu2: maps[3] -> mmap[3]
-thread_data[0x5572a73ec2f0]: cpu3: maps[4] -> mmap[4]
-thread_data[0x5572a73ec2f0]: cpu4: maps[5] -> mmap[5]
-thread_data[0x5572a73ec2f0]: cpu5: maps[6] -> mmap[6]
-thread_data[0x5572a73ec2f0]: cpu6: maps[7] -> mmap[7]
-thread_data[0x5572a73ec2f0]: cpu7: maps[8] -> mmap[8]
-thread_data[0x5572a73ec2f0]: cpu-1: maps[9] -> mmap[9]
-thread_data[0x5572a73ec2f0]: pollfd[0] <- event_fd=5
-thread_data[0x5572a73ec2f0]: pollfd[1] <- event_fd=7
-thread_data[0x5572a73ec2f0]: pollfd[2] <- event_fd=6
-thread_data[0x5572a73ec2f0]: pollfd[3] <- event_fd=8
-thread_data[0x5572a73ec2f0]: pollfd[4] <- non_perf_event fd=4
-------------------------------------------------------------
-perf_event_attr:
-  type                             1
-  size                             128
-  config                           0x9
-  watermark                        1
-  sample_id_all                    1
-  bpf_event                        1
-  { wakeup_events, wakeup_watermark } 1
-------------------------------------------------------------
-sys_perf_event_open: pid 1521  cpu -1  group_fd -1  flags 0x8 = 17
-sys_perf_event_open: pid 1522  cpu -1  group_fd -1  flags 0x8 = 18
-mmap size 528384B
-libperf: mmap_per_thread: nr cpu values (may include -1) 1 nr threads 2
-libperf: idx 0: mmapping fd 17
-libperf: idx 1: mmapping fd 18
-Synthesizing TSC conversion information
-Synthesizing id index
-Synthesizing auxtrace information
-auxtrace idx 1 old 0 head 0x2c0 diff 0x2c0
-auxtrace idx 0 old 0 head 0x2060 diff 0x2060
-[ perf record: Woken up 2 times to write data ]
-[ perf record: Captured and wrote 0.029 MB perf.data ]
+Cc: Marco Elver <elver@google.com>
+Cc: Song Liu <songliubraving@fb.com>
+Signed-off-by: Namhyung Kim <namhyung@kernel.org>
+---
+ tools/perf/tests/sigtrap.c | 46 +++++++++++++++++++++++++++++++++++++-
+ 1 file changed, 45 insertions(+), 1 deletion(-)
 
-
-
-
-> 
-> Thanks,
-> Namhyung
-> 
->>
->> Per-cpu example (process 20341 has 2 threads, same as above):
->>
->>    $ perf record --no-bpf-event -vvv -p 20341
->>    <SNIP>
->>    sys_perf_event_open: pid 20341  cpu 0  group_fd -1  flags 0x8 = 5
->>    sys_perf_event_open: pid 20342  cpu 0  group_fd -1  flags 0x8 = 6
->>    sys_perf_event_open: pid 20341  cpu 1  group_fd -1  flags 0x8 = 7
->>    sys_perf_event_open: pid 20342  cpu 1  group_fd -1  flags 0x8 = 8
->>    sys_perf_event_open: pid 20341  cpu 2  group_fd -1  flags 0x8 = 9
->>    sys_perf_event_open: pid 20342  cpu 2  group_fd -1  flags 0x8 = 10
->>    sys_perf_event_open: pid 20341  cpu 3  group_fd -1  flags 0x8 = 11
->>    sys_perf_event_open: pid 20342  cpu 3  group_fd -1  flags 0x8 = 12
->>    sys_perf_event_open: pid 20341  cpu 4  group_fd -1  flags 0x8 = 13
->>    sys_perf_event_open: pid 20342  cpu 4  group_fd -1  flags 0x8 = 14
->>    sys_perf_event_open: pid 20341  cpu 5  group_fd -1  flags 0x8 = 15
->>    sys_perf_event_open: pid 20342  cpu 5  group_fd -1  flags 0x8 = 16
->>    sys_perf_event_open: pid 20341  cpu 6  group_fd -1  flags 0x8 = 17
->>    sys_perf_event_open: pid 20342  cpu 6  group_fd -1  flags 0x8 = 18
->>    sys_perf_event_open: pid 20341  cpu 7  group_fd -1  flags 0x8 = 19
->>    sys_perf_event_open: pid 20342  cpu 7  group_fd -1  flags 0x8 = 20
->>    <SNIP>
->>    libperf: mmap_per_cpu: nr cpu values 8 nr threads 2
->>    libperf: idx 0: mmapping fd 5
->>    libperf: idx 0: set output fd 6 -> 5
->>    libperf: idx 1: mmapping fd 7
->>    libperf: idx 1: set output fd 8 -> 7
->>    libperf: idx 2: mmapping fd 9
->>    libperf: idx 2: set output fd 10 -> 9
->>    libperf: idx 3: mmapping fd 11
->>    libperf: idx 3: set output fd 12 -> 11
->>    libperf: idx 4: mmapping fd 13
->>    libperf: idx 4: set output fd 14 -> 13
->>    libperf: idx 5: mmapping fd 15
->>    libperf: idx 5: set output fd 16 -> 15
->>    libperf: idx 6: mmapping fd 17
->>    libperf: idx 6: set output fd 18 -> 17
->>    libperf: idx 7: mmapping fd 19
->>    libperf: idx 7: set output fd 20 -> 19
->>    <SNIP>
->>    [ perf record: Woken up 7 times to write data ]
->>    [ perf record: Captured and wrote 0.020 MB perf.data (17 samples) ]
->>
->> Fixes: ae4f8ae16a07 ("libperf evlist: Allow mixing per-thread and per-cpu mmaps")
->> Signed-off-by: Adrian Hunter <adrian.hunter@intel.com>
+diff --git a/tools/perf/tests/sigtrap.c b/tools/perf/tests/sigtrap.c
+index e32ece90e164..32f08ce0f2b0 100644
+--- a/tools/perf/tests/sigtrap.c
++++ b/tools/perf/tests/sigtrap.c
+@@ -16,6 +16,8 @@
+ #include <sys/syscall.h>
+ #include <unistd.h>
+ 
++#include <bpf/btf.h>
++
+ #include "cloexec.h"
+ #include "debug.h"
+ #include "event.h"
+@@ -54,6 +56,42 @@ static struct perf_event_attr make_event_attr(void)
+ 	return attr;
+ }
+ 
++static bool attr_has_sigtrap(void)
++{
++	bool ret = false;
++
++#ifdef HAVE_BPF_SKEL
++
++	struct btf *btf;
++	const struct btf_type *t;
++	const struct btf_member *m;
++	const char *name;
++	int i, id;
++
++	/* just assume it doesn't have the field */
++	btf = btf__load_vmlinux_btf();
++	if (btf == NULL)
++		return false;
++
++	id = btf__find_by_name_kind(btf, "perf_event_attr", BTF_KIND_STRUCT);
++	if (id < 0)
++		goto out;
++
++	t = btf__type_by_id(btf, id);
++	for (i = 0, m = btf_members(t); i < btf_vlen(t); i++, m++) {
++		name = btf__name_by_offset(btf, m->name_off);
++		if (!strcmp(name, "sigtrap")) {
++			ret = true;
++			break;
++		}
++	}
++out:
++	btf__free(btf);
++#endif
++
++	return ret;
++}
++
+ static void
+ sigtrap_handler(int signum __maybe_unused, siginfo_t *info, void *ucontext __maybe_unused)
+ {
+@@ -139,7 +177,13 @@ static int test__sigtrap(struct test_suite *test __maybe_unused, int subtest __m
+ 
+ 	fd = sys_perf_event_open(&attr, 0, -1, -1, perf_event_open_cloexec_flag());
+ 	if (fd < 0) {
+-		pr_debug("FAILED sys_perf_event_open(): %s\n", str_error_r(errno, sbuf, sizeof(sbuf)));
++		if (attr_has_sigtrap()) {
++			pr_debug("FAILED sys_perf_event_open(): %s\n",
++				 str_error_r(errno, sbuf, sizeof(sbuf)));
++		} else {
++			pr_debug("perf_event_attr doesn't have sigtrap\n");
++			ret = TEST_SKIP;
++		}
+ 		goto out_restore_sigaction;
+ 	}
+ 
+-- 
+2.37.2.789.g6183377224-goog
 
