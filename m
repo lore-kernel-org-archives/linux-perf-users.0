@@ -2,200 +2,206 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 98F0CC38145
-	for <linux-perf-users@archiver.kernel.org>; Wed,  7 Sep 2022 05:05:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CB9C8C38145
+	for <linux-perf-users@archiver.kernel.org>; Wed,  7 Sep 2022 05:19:42 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229640AbiIGFFh (ORCPT
+        id S229464AbiIGFTl (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Wed, 7 Sep 2022 01:05:37 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49954 "EHLO
+        Wed, 7 Sep 2022 01:19:41 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38354 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229605AbiIGFFg (ORCPT
+        with ESMTP id S229436AbiIGFTk (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Wed, 7 Sep 2022 01:05:36 -0400
-Received: from mga05.intel.com (mga05.intel.com [192.55.52.43])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 540BA7C1FB;
-        Tue,  6 Sep 2022 22:05:35 -0700 (PDT)
+        Wed, 7 Sep 2022 01:19:40 -0400
+Received: from mga14.intel.com (mga14.intel.com [192.55.52.115])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 525406578;
+        Tue,  6 Sep 2022 22:19:38 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1662527135; x=1694063135;
+  t=1662527978; x=1694063978;
   h=message-id:date:mime-version:subject:to:cc:references:
    from:in-reply-to:content-transfer-encoding;
-  bh=3hKO8goXwPPBPFjOJolVzOo3e+yHPR0/w089nXehW1I=;
-  b=I0+tJ5eH0fHbcnrVEk4XkXfsu9ZIKm3I58yG/glLDcLygbPErXRkPjAe
-   /QlQdsLkbHzqDz/QhamHV4GU4yx9wxp5UaMBbLS/J2B9R5NbcnZNLBIbN
-   WRJL7d9CIHJYh9JEweEUzOuZQVl4vO9dUpaYxBSz6/JL+/rF1WVMs5XPW
-   Bq7x0DfXoWKebnu8D3IbekbYDjhj4M9PHP2UtVMNeQdfVsFwG4goKkSFg
-   J2oo5bjGk1UzBpqzlUghKjYgulHQM9BAeRDoovdRZd6uXanLoYFP/NwDE
-   CmIANsu7D+oRHS/C10hBdOXKY2IgEB/j6D/mhxAJW4q5MjBtYmFKtt/pX
+  bh=rN2sCIy/q49w+B3VQ4o0ZIAby9RVgbPnBx7iKkBemUI=;
+  b=PZJmbRRFtC50mD3L60+7TyPwdDB6b8YFMfRq186DaLSnfe2tU0/VQ5W+
+   BxQSRDNz5krZlJ+1BXhcrvhRWyJRygFxKu+i0ssbY+dqNWdvWuj1iQMT8
+   aaCGbMbfJ1+Dvy8v5oVjAynBhTOR3BPhnB7lo6BNAriTyhXBxUg9ZBTLT
+   z9fG+1n+7AiDgL2zSMEY13UpUKimKuL9CjCfvsCPXkqnXeXRRlHGtEeiX
+   2VUZdQGgqptHdYOwqtpBWYlThV25goUc6Ic4UrUL1TWTWtWAZ0ykDlPzW
+   HgrL1mueRpvOtDj6ZyeZLWmUKAG19WuiAG4cxYXbbjQhFbUG4qo/fsYf+
    Q==;
-X-IronPort-AV: E=McAfee;i="6500,9779,10462"; a="383076154"
+X-IronPort-AV: E=McAfee;i="6500,9779,10462"; a="296782261"
 X-IronPort-AV: E=Sophos;i="5.93,295,1654585200"; 
-   d="scan'208";a="383076154"
-Received: from fmsmga008.fm.intel.com ([10.253.24.58])
-  by fmsmga105.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 06 Sep 2022 22:05:35 -0700
+   d="scan'208";a="296782261"
+Received: from fmsmga005.fm.intel.com ([10.253.24.32])
+  by fmsmga103.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 06 Sep 2022 22:19:38 -0700
 X-IronPort-AV: E=Sophos;i="5.93,295,1654585200"; 
-   d="scan'208";a="676011657"
-Received: from alinassi-mobl1.ger.corp.intel.com (HELO [10.0.2.15]) ([10.252.58.27])
-  by fmsmga008-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 06 Sep 2022 22:05:31 -0700
-Message-ID: <4763358a-91fa-3607-dd54-749b40f977fc@intel.com>
-Date:   Wed, 7 Sep 2022 08:05:27 +0300
+   d="scan'208";a="942744229"
+Received: from xingzhen-mobl.ccr.corp.intel.com (HELO [10.238.4.113]) ([10.238.4.113])
+  by fmsmga005-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 06 Sep 2022 22:19:34 -0700
+Message-ID: <78bedcf4-3ef8-2ccf-d846-74d0de0c67ad@linux.intel.com>
+Date:   Wed, 7 Sep 2022 13:19:32 +0800
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
- Firefox/91.0 Thunderbird/91.11.0
-Subject: Re: [PATCH V2] libperf evlist: Fix per-thread mmaps for
- multi-threaded targets
+User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:102.0) Gecko/20100101
+ Thunderbird/102.2.1
+Subject: Re: [PATCH] perf script: Skip dummy event attr check
 Content-Language: en-US
-To:     Jiri Olsa <olsajiri@gmail.com>
+To:     Namhyung Kim <namhyung@kernel.org>
 Cc:     Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Jiri Olsa <jolsa@redhat.com>,
-        Namhyung Kim <namhyung@kernel.org>,
-        Ian Rogers <irogers@google.com>, linux-kernel@vger.kernel.org,
-        linux-perf-users@vger.kernel.org,
-        Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@redhat.com>
-References: <20220905114209.8389-1-adrian.hunter@intel.com>
- <YxdEQkmkZjBC6wGb@krava> <60b5c9bf-4ec9-957e-17dd-aa0a50411ff9@intel.com>
- <YxejRK2/LO7QouOZ@krava>
-From:   Adrian Hunter <adrian.hunter@intel.com>
-Organization: Intel Finland Oy, Registered Address: PL 281, 00181 Helsinki,
- Business Identity Code: 0357606 - 4, Domiciled in Helsinki
-In-Reply-To: <YxejRK2/LO7QouOZ@krava>
-Content-Type: text/plain; charset=UTF-8
+        Ian Rogers <irogers@google.com>, Jiri Olsa <jolsa@kernel.org>,
+        Hongtao Yu <hoy@fb.com>, lkml <linux-kernel@vger.kernel.org>,
+        Peter Zijlstra <a.p.zijlstra@chello.nl>,
+        Ingo Molnar <mingo@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        linux-perf-users <linux-perf-users@vger.kernel.org>,
+        "Liang, Kan" <kan.liang@linux.intel.com>
+References: <20220831124041.219925-1-jolsa@kernel.org>
+ <CAP-5=fX-=ph8g3VKbQXSRT8SiOZ3XqQLd3T9-ZTNZ5L+ye5L-A@mail.gmail.com>
+ <Yw+LCN2cX9peweWV@kernel.org>
+ <3aa4c863-24cc-9fdf-9960-2b1983b3322b@linux.intel.com>
+ <CAM9d7chpoqB18r3TXPuTAA4_4TsCYq+p+j90vKspv++X1RBU+w@mail.gmail.com>
+From:   Xing Zhengjun <zhengjun.xing@linux.intel.com>
+In-Reply-To: <CAM9d7chpoqB18r3TXPuTAA4_4TsCYq+p+j90vKspv++X1RBU+w@mail.gmail.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 7bit
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-On 6/09/22 22:45, Jiri Olsa wrote:
-> On Tue, Sep 06, 2022 at 05:04:45PM +0300, Adrian Hunter wrote:
->> On 6/09/22 15:59, Jiri Olsa wrote:
->>> On Mon, Sep 05, 2022 at 02:42:09PM +0300, Adrian Hunter wrote:
->>>
->>> SNIP
->>>
->>>> diff --git a/tools/lib/perf/evlist.c b/tools/lib/perf/evlist.c
->>>> index e6c98a6e3908..6b1bafe267a4 100644
->>>> --- a/tools/lib/perf/evlist.c
->>>> +++ b/tools/lib/perf/evlist.c
->>>> @@ -486,6 +486,7 @@ mmap_per_evsel(struct perf_evlist *evlist, struct perf_evlist_mmap_ops *ops,
->>>>  			if (ops->idx)
->>>>  				ops->idx(evlist, evsel, mp, idx);
->>>>  
->>>> +			pr_debug("idx %d: mmapping fd %d\n", idx, *output);
->>>>  			if (ops->mmap(map, mp, *output, evlist_cpu) < 0)
->>>>  				return -1;
->>>>  
->>>> @@ -494,6 +495,7 @@ mmap_per_evsel(struct perf_evlist *evlist, struct perf_evlist_mmap_ops *ops,
->>>>  			if (!idx)
->>>>  				perf_evlist__set_mmap_first(evlist, map, overwrite);
->>>>  		} else {
->>>> +			pr_debug("idx %d: set output fd %d -> %d\n", idx, fd, *output);
->>>>  			if (ioctl(fd, PERF_EVENT_IOC_SET_OUTPUT, *output) != 0)
->>>>  				return -1;
->>>>  
->>>> @@ -519,6 +521,48 @@ mmap_per_evsel(struct perf_evlist *evlist, struct perf_evlist_mmap_ops *ops,
->>>>  	return 0;
->>>>  }
->>>>  
->>>> +static int
->>>> +mmap_per_thread(struct perf_evlist *evlist, struct perf_evlist_mmap_ops *ops,
->>>> +		struct perf_mmap_param *mp)
->>>> +{
->>>> +	int nr_threads = perf_thread_map__nr(evlist->threads);
->>>> +	int nr_cpus    = perf_cpu_map__nr(evlist->all_cpus);
->>>> +	int cpu, thread, idx = 0;
->>>> +	int nr_mmaps = 0;
->>>> +
->>>> +	pr_debug("%s: nr cpu values (may include -1) %d nr threads %d\n",
->>>> +		 __func__, nr_cpus, nr_threads);
->>>
->>> -1 as cpu value is only for 'empty' perf_cpu_map, right?
->>
->> The cpu map is a map of valid 3rd arguments to perf_event_open, so -1
->> means all CPUs which is per-thread by necessity.
->>
->>>
->>>> +
->>>> +	/* per-thread mmaps */
->>>> +	for (thread = 0; thread < nr_threads; thread++, idx++) {
->>>> +		int output = -1;
->>>> +		int output_overwrite = -1;
->>>> +
->>>> +		if (mmap_per_evsel(evlist, ops, idx, mp, 0, thread, &output,
->>>> +				   &output_overwrite, &nr_mmaps))
->>>> +			goto out_unmap;
->>>> +	}
->>>> +
->>>> +	/* system-wide mmaps i.e. per-cpu */
->>>> +	for (cpu = 1; cpu < nr_cpus; cpu++, idx++) {
->>>> +		int output = -1;
->>>> +		int output_overwrite = -1;
->>>> +
->>>> +		if (mmap_per_evsel(evlist, ops, idx, mp, cpu, 0, &output,
->>>> +				   &output_overwrite, &nr_mmaps))
->>>> +			goto out_unmap;
->>>> +	}
->>>
->>> will this loop be executed? we are in here because all_cpus is empty, right?
->>
->> Yes it is executed.  I put back the code that was there before ae4f8ae16a07
->> ("libperf evlist: Allow mixing per-thread and per-cpu mmaps"), which uses
+
+
+On 9/7/2022 12:50 PM, Namhyung Kim wrote:
+> Hello,
 > 
-> hm, but commit ae4f8ae16a07 does not have similar cpu loop
-
-It was calling mmap_per_cpu() for that case.
-
-The 2 cases: mmap_per_cpu() and mmap_per_thread() could still be
-combined into a single function.
-
-> 
->> perf_cpu_map__empty() which only checks the first entry is -1:
+> On Tue, Sep 6, 2022 at 7:49 PM Xing Zhengjun
+> <zhengjun.xing@linux.intel.com> wrote:
 >>
->> bool perf_cpu_map__empty(const struct perf_cpu_map *map)
->> {
->> 	return map ? map->map[0].cpu == -1 : true;
->> }
+>> Hi,
 >>
->> But there can be more CPUs in the map, so perf_cpu_map__empty()
->> returns true for the per-thread case, as desired, even if there
->> are also system-wide CPUs.
-> 
-> I don't see how, if I'd see -1 together with other cpu values in
-> perf_cpu_map I'd think it's a bug, but I might be missing some
-> auxtrace usage,
-
-Yes, it is for system-wide collection of events that can affect
-every CPU.  Currently text_poke is always system-wide - see the
-Intel PT example.
-
-> 
-> I thought we use -1 just for empty cpu map, so in per-thread case
-> -1 is properly passed to perf_event_open syscall
-
-Yes, but it does not need to be limited to that case.
-
-> 
-> jirka
-> 
->>
->> I guess perf_cpu_map__empty() needs renaming.
->>
+>> On 9/1/2022 12:23 AM, Arnaldo Carvalho de Melo wrote:
+>>> Em Wed, Aug 31, 2022 at 09:02:46AM -0700, Ian Rogers escreveu:
+>>>> On Wed, Aug 31, 2022 at 5:40 AM Jiri Olsa <jolsa@kernel.org> wrote:
+>>>>>
+>>>>> Hongtao Yu reported problem when displaying uregs in perf script
+>>>>> for system wide perf.data:
+>>>>>
+>>>>>     # perf script -F uregs | head -10
+>>>>>     Samples for 'dummy:HG' event do not have UREGS attribute set. Cannot print 'uregs' field.
+>>>>>
+>>>>> The problem is the extra dummy event added for system wide,
+>>>>> which does not have proper sample_type setup.
+>>>>>
+>>>>> Skipping attr check completely for dummy event as suggested
+>>>>> by Namhyung, because it does not have any samples anyway.
+>>>>>
+>>>>> Reported-by: Hongtao Yu <hoy@fb.com>
+>>>>> Suggested-by: Namhyung Kim <namhyung@kernel.org>
+>>>>> Signed-off-by: Jiri Olsa <jolsa@kernel.org>
+>>>>
+>>>> Acked-by: Ian Rogers <irogers@google.com>
 >>>
->>> thanks,
->>> jirka
+>>> Thanks, applied to perf/urgent.
 >>>
->>>> +
->>>> +	if (nr_mmaps != evlist->nr_mmaps)
->>>> +		pr_err("Miscounted nr_mmaps %d vs %d\n", nr_mmaps, evlist->nr_mmaps);
->>>> +
->>>> +	return 0;
->>>> +
->>>> +out_unmap:
->>>> +	perf_evlist__munmap(evlist);
->>>> +	return -1;
->>>> +}
->>>
->>> SNIP
+>>> - Arnaldo
 >>
+>> I have met a similar issue on hybrid systems such as ADL, I apply the
+>> patch, and it works OK for the normal mode.
+>>    # ./perf record  --intr-regs=di,r8,dx,cx -e
+>> br_inst_retired.near_call:p -c 1000 --per-thread true
+>> [ perf record: Woken up 1 times to write data ]
+>> [ perf record: Captured and wrote 0.024 MB perf.data (25 samples) ]
+>>
+>> # ./perf script -F iregs |head -5
+>>    ABI:2    CX:0xffff90e19d024ed8    DX:0x1    DI:0xffff90e19d024ed8
+>> R8:0xffffba5e437e7b30
+>>    ABI:2    CX:0x7f5239783000    DX:0x80000000    DI:0xffff90e1801eea00
+>>    R8:0x71
+>>    ABI:2    CX:0x40    DX:0x60    DI:0xffffffff9fde5ab8    R8:0x40
+>>    ABI:2    CX:0x0    DX:0xffffffffffffffff    DI:0xffff90e1877408e8
+>> R8:0x1
+>>    ABI:2    CX:0xcc0    DX:0x1    DI:0xffff90e187d17c60    R8:0x40
+>>
+>> But the issue still happened when running the test in the pipe mode. In
+>> the pipe mode, it calls process_attr() which still checks the attr for
+>> the dummy event, so the issue happened.
+>>
+>>    # ./perf record -o - --intr-regs=di,r8,dx,cx -e
+>> br_inst_retired.near_call:p -c 1000 --per-thread true 2>/dev/null|./perf
+>> script -F iregs |head -5
+>> Samples for 'dummy:HG' event do not have IREGS attribute set. Cannot
+>> print 'iregs' field.
+>> 0x120 [0x90]: failed to process type: 64
+>>
+>> I have one test patch which can fix the pipe mode issue.
+>>
+>>    ./perf record -o - --intr-regs=di,r8,dx,cx -e
+>> br_inst_retired.near_call:p -c 1000 --per-thread true 2>/dev/null|./perf
+>> script -F iregs |head -5
+>>    ABI:2    CX:0xffff90e18119e278    DX:0x0    DI:0xffff90e18119f858
+>> R8:0xffff90e18119e278
+>>    ABI:2    CX:0x0    DX:0x1    DI:0xfffffa2844a91580    R8:0x402
+>>    ABI:2    CX:0x0    DX:0x0    DI:0x100cca    R8:0x0
+>>    ABI:2    CX:0x0    DX:0x0    DI:0xffffffff9e997ca5    R8:0x0
+>>    ABI:2    CX:0x113ce8000    DX:0xffff90e198f46600
+>> DI:0xffff90e189de8000    R8:0x290
+>>
+>>
+>> Fixes: b91e5492f9d7 ("perf record: Add a dummy event on hybrid systems
+>> to collect metadata records")
+>> Signed-off-by: Zhengjun Xing <zhengjun.xing@linux.intel.com>
+>> ---
+>>    tools/perf/builtin-script.c | 2 ++
+>>    1 file changed, 2 insertions(+)
+>>
+>> diff --git a/tools/perf/builtin-script.c b/tools/perf/builtin-script.c
+>> index 9152e3e45b69..2d863cdb19fe 100644
+>> --- a/tools/perf/builtin-script.c
+>> +++ b/tools/perf/builtin-script.c
+>> @@ -2429,6 +2429,8 @@ static int process_attr(struct perf_tool *tool,
+>> union perf_event *event,
+>>           }
+>>
+>>           if (evsel->core.attr.sample_type) {
+>> +               if (evsel__is_dummy_event(evsel))
+>> +                       return 0;
+> 
+> Maybe we can move this into evsel__check_attr().
+> 
+> Thanks,
+> Namhyung
 
+Yes, the following changes in evsel__check_attr() can fix both normal 
+and pipe mode issues, Otherwise, we have to patch everywhere when 
+evsel__check_attr() is called.
+
+diff --git a/tools/perf/builtin-script.c b/tools/perf/builtin-script.c
+index 13580a9c50b8..fb76e3191858 100644
+--- a/tools/perf/builtin-script.c
++++ b/tools/perf/builtin-script.c
+@@ -451,6 +451,9 @@ static int evsel__check_attr(struct evsel *evsel, 
+struct perf_session *session)
+         allow_user_set = perf_header__has_feat(&session->header,
+                                                HEADER_AUXTRACE);
+
++       if (evsel__is_dummy_event(evsel))
++               allow_user_set = true;
++
+         if (PRINT_FIELD(TRACE) &&
+             !perf_session__has_traces(session, "record -R"))
+                 return -EINVAL;
+--
+2.25.1
+
+> 
+> 
+>>                   err = evsel__check_attr(evsel, scr->session);
+>>                   if (err)
+>>                           return err;
+>> --
+>> 2.25.1
+>>
+>> --
+>> Zhengjun Xing
+
+-- 
+Zhengjun Xing
