@@ -2,117 +2,229 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CC811C38145
-	for <linux-perf-users@archiver.kernel.org>; Wed,  7 Sep 2022 07:56:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E2FB1ECAAD3
+	for <linux-perf-users@archiver.kernel.org>; Wed,  7 Sep 2022 08:09:29 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229707AbiIGH4a (ORCPT
+        id S229517AbiIGIJ3 (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Wed, 7 Sep 2022 03:56:30 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39042 "EHLO
+        Wed, 7 Sep 2022 04:09:29 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36898 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229461AbiIGH43 (ORCPT
+        with ESMTP id S229567AbiIGIJ0 (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Wed, 7 Sep 2022 03:56:29 -0400
-Received: from mga04.intel.com (mga04.intel.com [192.55.52.120])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 19CDF80EBB;
-        Wed,  7 Sep 2022 00:56:28 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1662537388; x=1694073388;
-  h=message-id:date:mime-version:subject:to:cc:references:
-   from:in-reply-to:content-transfer-encoding;
-  bh=fMopzFhNruDXSSOJQ85hMcY11cZHcvUeUbTELdU0sWk=;
-  b=STJ4K5Nei9nuRULladUDy+JZ6a70bLVmT1ELHLmcjjKcCZtRHBOwCKlk
-   YDz8OLs1yO+NFGXFN7X3SMH1aYzYzzlLeqhOnJ6twZlWCi8Bgw7rb6Z1T
-   PBbouZEYPXX1l5KfMXJ3XOaex2C+IcIv5tmMr1jnTn5jtODY6ak61Jfjm
-   2vWYqzNKCoGXm8iWR0Kik0KguptApJHaHdpzIZrkOfd/hp8yGMzltqmoB
-   7XUtRCf7zn+ErDYFadorXG46e9fGPKMDlPwov4Eb3WJUMyy3RmGP9hFPX
-   jTa0owQ7X2NIxhawzg346KS0w/M9+CLZToquCwTHJk99lebKWAukOFVys
-   A==;
-X-IronPort-AV: E=McAfee;i="6500,9779,10462"; a="295543639"
-X-IronPort-AV: E=Sophos;i="5.93,296,1654585200"; 
-   d="scan'208";a="295543639"
-Received: from fmsmga008.fm.intel.com ([10.253.24.58])
-  by fmsmga104.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 07 Sep 2022 00:56:27 -0700
-X-IronPort-AV: E=Sophos;i="5.93,296,1654585200"; 
-   d="scan'208";a="676069652"
-Received: from ahunter6-mobl1.ger.corp.intel.com (HELO [10.0.2.15]) ([10.252.58.27])
-  by fmsmga008-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 07 Sep 2022 00:56:25 -0700
-Message-ID: <a8a01dc8-a8ae-f102-5f08-42a646a837a1@intel.com>
-Date:   Wed, 7 Sep 2022 10:56:21 +0300
-MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
- Firefox/91.0 Thunderbird/91.11.0
-Subject: Re: [PATCH 1/6] perf test: Do not use instructions:u explicitly
-Content-Language: en-US
-To:     Namhyung Kim <namhyung@kernel.org>,
+        Wed, 7 Sep 2022 04:09:26 -0400
+Received: from mail-ed1-x52f.google.com (mail-ed1-x52f.google.com [IPv6:2a00:1450:4864:20::52f])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B4615CE6;
+        Wed,  7 Sep 2022 01:09:22 -0700 (PDT)
+Received: by mail-ed1-x52f.google.com with SMTP id r4so18490248edi.8;
+        Wed, 07 Sep 2022 01:09:22 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20210112;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:date:from:from:to:cc:subject:date;
+        bh=nZBZtJ297XmLiu2NLiapRd+TBjFWmiba0rgJxYibHic=;
+        b=mVPcYJGCFdaDYI+deWCritlXrD0tWbvzIFTIVsEocrT3R+CgiuTdOm3ey7wO5zEwBS
+         F9PVZEs3+auo6qTMQMOsHhICCjGaRWMLFJEfen5ZUS+tIHPSzNf44ynfbCKviXbEk5h2
+         ruK93GRIePgNAmoWIaHd/E4N9DV5NULRo/f1VzRie3dllR16Qthqg2tOcaSj2AepTLnr
+         ExwH9dEL9AB8bxlW6oUSElWNPWyC88Usvu40aAPBf+g0TAtJXh6oz2ed81B35+ge4e0i
+         D9l2b9xs0rG34eGd/MSEfP3oC+RTn7jxTjNqrsaHYD0kWAuwllwStYHGglH/CQgNOcoT
+         +Xdg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:date:from:x-gm-message-state:from:to:cc:subject:date;
+        bh=nZBZtJ297XmLiu2NLiapRd+TBjFWmiba0rgJxYibHic=;
+        b=GqxHpExIzpbrjnaLNKz01UkK4Ml8fKrvn5s+WHejtFxHHh+Rm6QdRAxgjMiQKYds1b
+         +QjXtYbpmaEbL6NelYcPq+KdrEY8lWcu0BtbhoDx+Kp8QbKGHRHlkeQzQdFq89NWD9xJ
+         0nO+HLutTDJlxzNZ3rfZL0qebHfQeVo5e7Td94Jm56kg7N8M/H09GcAtiP4IhImisV15
+         VVVf+sjWOK9lT3/yk4dxDZXch2fUToqwWswCmJG+B4xBigxnuFE/fHDJ2b4ATE5Styj6
+         9Nil4ARj48ZbQcyBobNeCDww1NGiFtrQPsaiVN6T0U77JF8eNTu4UXJwpMK/6pumRiTx
+         c2yw==
+X-Gm-Message-State: ACgBeo0+Bcr0F2ex49zCCgkT4oODGXD3CyjQye04YfX9NZwnm9tsxcpC
+        I0gYPetZ2Hrrr0RPsM5SurM=
+X-Google-Smtp-Source: AA6agR6T9NntUeh9DJxS7EElVcSV27CmeUyXC0LL8oGudhc3M1AA/vtzbCbpgQe2cQG0vdpjUsIvjg==
+X-Received: by 2002:a05:6402:348f:b0:448:6005:68af with SMTP id v15-20020a056402348f00b00448600568afmr2083798edc.184.1662538161229;
+        Wed, 07 Sep 2022 01:09:21 -0700 (PDT)
+Received: from krava ([193.85.244.190])
+        by smtp.gmail.com with ESMTPSA id 1-20020a170906218100b0073872f367cesm7864399eju.112.2022.09.07.01.09.20
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 07 Sep 2022 01:09:20 -0700 (PDT)
+From:   Jiri Olsa <olsajiri@gmail.com>
+X-Google-Original-From: Jiri Olsa <jolsa@kernel.org>
+Date:   Wed, 7 Sep 2022 10:09:19 +0200
+To:     Xing Zhengjun <zhengjun.xing@linux.intel.com>
+Cc:     Namhyung Kim <namhyung@kernel.org>,
         Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Jiri Olsa <jolsa@kernel.org>
-Cc:     Ingo Molnar <mingo@kernel.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Ian Rogers <irogers@google.com>,
-        linux-perf-users@vger.kernel.org
-References: <20220907064645.1197894-1-namhyung@kernel.org>
- <20220907064645.1197894-2-namhyung@kernel.org>
-From:   Adrian Hunter <adrian.hunter@intel.com>
-Organization: Intel Finland Oy, Registered Address: PL 281, 00181 Helsinki,
- Business Identity Code: 0357606 - 4, Domiciled in Helsinki
-In-Reply-To: <20220907064645.1197894-2-namhyung@kernel.org>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+        Ian Rogers <irogers@google.com>, Hongtao Yu <hoy@fb.com>,
+        lkml <linux-kernel@vger.kernel.org>,
+        Peter Zijlstra <a.p.zijlstra@chello.nl>,
+        Ingo Molnar <mingo@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        linux-perf-users <linux-perf-users@vger.kernel.org>,
+        "Liang, Kan" <kan.liang@linux.intel.com>
+Subject: Re: [PATCH] perf script: Skip dummy event attr check
+Message-ID: <YxhRr0tyPSpGZ+MP@krava>
+References: <20220831124041.219925-1-jolsa@kernel.org>
+ <CAP-5=fX-=ph8g3VKbQXSRT8SiOZ3XqQLd3T9-ZTNZ5L+ye5L-A@mail.gmail.com>
+ <Yw+LCN2cX9peweWV@kernel.org>
+ <3aa4c863-24cc-9fdf-9960-2b1983b3322b@linux.intel.com>
+ <CAM9d7chpoqB18r3TXPuTAA4_4TsCYq+p+j90vKspv++X1RBU+w@mail.gmail.com>
+ <78bedcf4-3ef8-2ccf-d846-74d0de0c67ad@linux.intel.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <78bedcf4-3ef8-2ccf-d846-74d0de0c67ad@linux.intel.com>
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-On 7/09/22 09:46, Namhyung Kim wrote:
-> I think it's to support non-root user tests.  But perf record can handle
-> the case and fall back to a software event (cpu-clock).  Practically this
-> would affect when it's run on a VM, but it seems no reason to prevent running
-> the test in the guest.
+On Wed, Sep 07, 2022 at 01:19:32PM +0800, Xing Zhengjun wrote:
 > 
-> Signed-off-by: Namhyung Kim <namhyung@kernel.org>
-
-Reviewed-by: Adrian Hunter <adrian.hunter@intel.com>
-
-> ---
->  tools/perf/tests/shell/record.sh | 10 +++++-----
->  1 file changed, 5 insertions(+), 5 deletions(-)
 > 
-> diff --git a/tools/perf/tests/shell/record.sh b/tools/perf/tests/shell/record.sh
-> index 00c7285ce1ac..40b087bfdb76 100755
-> --- a/tools/perf/tests/shell/record.sh
-> +++ b/tools/perf/tests/shell/record.sh
-> @@ -21,18 +21,18 @@ trap trap_cleanup exit term int
->  
->  test_per_thread() {
->    echo "Basic --per-thread mode test"
-> -  if ! perf record -e instructions:u -o ${perfdata} --quiet true 2> /dev/null
-> +  if ! perf record -o /dev/null --quiet true 2> /dev/null
->    then
-> -    echo "Per-thread record [Skipped instructions:u not supported]"
-> +    echo "Per-thread record [Skipped event not supported]"
->      if [ $err -ne 1 ]
->      then
->        err=2
->      fi
->      return
->    fi
-> -  if ! perf record -e instructions:u --per-thread -o ${perfdata} true 2> /dev/null
-> +  if ! perf record --per-thread -o ${perfdata} true 2> /dev/null
->    then
-> -    echo "Per-thread record of instructions:u [Failed]"
-> +    echo "Per-thread record [Failed record]"
->      err=1
->      return
->    fi
-> @@ -49,7 +49,7 @@ test_register_capture() {
->    echo "Register capture test"
->    if ! perf list | egrep -q 'br_inst_retired.near_call'
->    then
-> -    echo "Register capture test [Skipped missing instruction]"
-> +    echo "Register capture test [Skipped missing event]"
->      if [ $err -ne 1 ]
->      then
->        err=2
+> On 9/7/2022 12:50 PM, Namhyung Kim wrote:
+> > Hello,
+> > 
+> > On Tue, Sep 6, 2022 at 7:49 PM Xing Zhengjun
+> > <zhengjun.xing@linux.intel.com> wrote:
+> > > 
+> > > Hi,
+> > > 
+> > > On 9/1/2022 12:23 AM, Arnaldo Carvalho de Melo wrote:
+> > > > Em Wed, Aug 31, 2022 at 09:02:46AM -0700, Ian Rogers escreveu:
+> > > > > On Wed, Aug 31, 2022 at 5:40 AM Jiri Olsa <jolsa@kernel.org> wrote:
+> > > > > > 
+> > > > > > Hongtao Yu reported problem when displaying uregs in perf script
+> > > > > > for system wide perf.data:
+> > > > > > 
+> > > > > >     # perf script -F uregs | head -10
+> > > > > >     Samples for 'dummy:HG' event do not have UREGS attribute set. Cannot print 'uregs' field.
+> > > > > > 
+> > > > > > The problem is the extra dummy event added for system wide,
+> > > > > > which does not have proper sample_type setup.
+> > > > > > 
+> > > > > > Skipping attr check completely for dummy event as suggested
+> > > > > > by Namhyung, because it does not have any samples anyway.
+> > > > > > 
+> > > > > > Reported-by: Hongtao Yu <hoy@fb.com>
+> > > > > > Suggested-by: Namhyung Kim <namhyung@kernel.org>
+> > > > > > Signed-off-by: Jiri Olsa <jolsa@kernel.org>
+> > > > > 
+> > > > > Acked-by: Ian Rogers <irogers@google.com>
+> > > > 
+> > > > Thanks, applied to perf/urgent.
+> > > > 
+> > > > - Arnaldo
+> > > 
+> > > I have met a similar issue on hybrid systems such as ADL, I apply the
+> > > patch, and it works OK for the normal mode.
+> > >    # ./perf record  --intr-regs=di,r8,dx,cx -e
+> > > br_inst_retired.near_call:p -c 1000 --per-thread true
+> > > [ perf record: Woken up 1 times to write data ]
+> > > [ perf record: Captured and wrote 0.024 MB perf.data (25 samples) ]
+> > > 
+> > > # ./perf script -F iregs |head -5
+> > >    ABI:2    CX:0xffff90e19d024ed8    DX:0x1    DI:0xffff90e19d024ed8
+> > > R8:0xffffba5e437e7b30
+> > >    ABI:2    CX:0x7f5239783000    DX:0x80000000    DI:0xffff90e1801eea00
+> > >    R8:0x71
+> > >    ABI:2    CX:0x40    DX:0x60    DI:0xffffffff9fde5ab8    R8:0x40
+> > >    ABI:2    CX:0x0    DX:0xffffffffffffffff    DI:0xffff90e1877408e8
+> > > R8:0x1
+> > >    ABI:2    CX:0xcc0    DX:0x1    DI:0xffff90e187d17c60    R8:0x40
+> > > 
+> > > But the issue still happened when running the test in the pipe mode. In
+> > > the pipe mode, it calls process_attr() which still checks the attr for
+> > > the dummy event, so the issue happened.
+> > > 
+> > >    # ./perf record -o - --intr-regs=di,r8,dx,cx -e
+> > > br_inst_retired.near_call:p -c 1000 --per-thread true 2>/dev/null|./perf
+> > > script -F iregs |head -5
+> > > Samples for 'dummy:HG' event do not have IREGS attribute set. Cannot
+> > > print 'iregs' field.
+> > > 0x120 [0x90]: failed to process type: 64
+> > > 
+> > > I have one test patch which can fix the pipe mode issue.
+> > > 
+> > >    ./perf record -o - --intr-regs=di,r8,dx,cx -e
+> > > br_inst_retired.near_call:p -c 1000 --per-thread true 2>/dev/null|./perf
+> > > script -F iregs |head -5
+> > >    ABI:2    CX:0xffff90e18119e278    DX:0x0    DI:0xffff90e18119f858
+> > > R8:0xffff90e18119e278
+> > >    ABI:2    CX:0x0    DX:0x1    DI:0xfffffa2844a91580    R8:0x402
+> > >    ABI:2    CX:0x0    DX:0x0    DI:0x100cca    R8:0x0
+> > >    ABI:2    CX:0x0    DX:0x0    DI:0xffffffff9e997ca5    R8:0x0
+> > >    ABI:2    CX:0x113ce8000    DX:0xffff90e198f46600
+> > > DI:0xffff90e189de8000    R8:0x290
+> > > 
+> > > 
+> > > Fixes: b91e5492f9d7 ("perf record: Add a dummy event on hybrid systems
+> > > to collect metadata records")
+> > > Signed-off-by: Zhengjun Xing <zhengjun.xing@linux.intel.com>
+> > > ---
+> > >    tools/perf/builtin-script.c | 2 ++
+> > >    1 file changed, 2 insertions(+)
+> > > 
+> > > diff --git a/tools/perf/builtin-script.c b/tools/perf/builtin-script.c
+> > > index 9152e3e45b69..2d863cdb19fe 100644
+> > > --- a/tools/perf/builtin-script.c
+> > > +++ b/tools/perf/builtin-script.c
+> > > @@ -2429,6 +2429,8 @@ static int process_attr(struct perf_tool *tool,
+> > > union perf_event *event,
+> > >           }
+> > > 
+> > >           if (evsel->core.attr.sample_type) {
+> > > +               if (evsel__is_dummy_event(evsel))
+> > > +                       return 0;
+> > 
+> > Maybe we can move this into evsel__check_attr().
+> > 
+> > Thanks,
+> > Namhyung
+> 
+> Yes, the following changes in evsel__check_attr() can fix both normal and
+> pipe mode issues, Otherwise, we have to patch everywhere when
+> evsel__check_attr() is called.
+> 
+> diff --git a/tools/perf/builtin-script.c b/tools/perf/builtin-script.c
+> index 13580a9c50b8..fb76e3191858 100644
+> --- a/tools/perf/builtin-script.c
+> +++ b/tools/perf/builtin-script.c
+> @@ -451,6 +451,9 @@ static int evsel__check_attr(struct evsel *evsel, struct
+> perf_session *session)
+>         allow_user_set = perf_header__has_feat(&session->header,
+>                                                HEADER_AUXTRACE);
+> 
+> +       if (evsel__is_dummy_event(evsel))
+> +               allow_user_set = true;
+> +
 
+hm, do you need to pass allow_user_set to UREGS check then?
+
+jirka
+
+
+---
+diff --git a/tools/perf/builtin-script.c b/tools/perf/builtin-script.c
+index 13580a9c50b8..30c9cbdee98d 100644
+--- a/tools/perf/builtin-script.c
++++ b/tools/perf/builtin-script.c
+@@ -451,6 +451,9 @@ static int evsel__check_attr(struct evsel *evsel, struct perf_session *session)
+ 	allow_user_set = perf_header__has_feat(&session->header,
+ 					       HEADER_AUXTRACE);
+ 
++	if (evsel__is_dummy_event(evsel))
++		allow_user_set = true;
++
+ 	if (PRINT_FIELD(TRACE) &&
+ 	    !perf_session__has_traces(session, "record -R"))
+ 		return -EINVAL;
+@@ -517,7 +520,7 @@ static int evsel__check_attr(struct evsel *evsel, struct perf_session *session)
+ 		return -EINVAL;
+ 
+ 	if (PRINT_FIELD(UREGS) &&
+-	    evsel__check_stype(evsel, PERF_SAMPLE_REGS_USER, "UREGS", PERF_OUTPUT_UREGS))
++	    evsel__do_check_stype(evsel, PERF_SAMPLE_REGS_USER, "UREGS", PERF_OUTPUT_UREGS, allow_user_set))
+ 		return -EINVAL;
+ 
+ 	if (PRINT_FIELD(PHYS_ADDR) &&
