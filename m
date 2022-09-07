@@ -2,169 +2,80 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AEB52C38145
-	for <linux-perf-users@archiver.kernel.org>; Wed,  7 Sep 2022 08:32:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 508A8C38145
+	for <linux-perf-users@archiver.kernel.org>; Wed,  7 Sep 2022 09:19:49 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229840AbiIGIcu (ORCPT
+        id S229977AbiIGJTs (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Wed, 7 Sep 2022 04:32:50 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52218 "EHLO
+        Wed, 7 Sep 2022 05:19:48 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34130 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229589AbiIGIct (ORCPT
+        with ESMTP id S230111AbiIGJTq (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Wed, 7 Sep 2022 04:32:49 -0400
-Received: from mail-ej1-x62b.google.com (mail-ej1-x62b.google.com [IPv6:2a00:1450:4864:20::62b])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B5B7F9DB69;
-        Wed,  7 Sep 2022 01:32:48 -0700 (PDT)
-Received: by mail-ej1-x62b.google.com with SMTP id kg20so1887750ejc.12;
-        Wed, 07 Sep 2022 01:32:48 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20210112;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:date:from:from:to:cc:subject:date;
-        bh=oNhXNN48XioBo9TdpjvtJUsMY1FigZdVdgZ98bYIOdo=;
-        b=nJpwq+gHDtRIMVL7mDIoX+pB/1iJhaSnYn1uo5g1bEu7GAqi6bpDVsjAMHOJVEdP/R
-         +3NebSOUiO9iKD4vNfY5x3wyrzNe28ZAh8oJskQkw/l9ctk4a/dFVLXIAPPAzrZT6l6I
-         Jc9ND3UyiyYlFdClN3bM6iBLqGXI0BOSERUK9X1pmO0NoldME0Y7Xj4Fy26ZyCfvDC+B
-         R+xMIjsoRPx1dvcj9IBa1C+OYk2lirivddKGLuo9XPYdVlL6gmRbIqvqfrBqwhmTY8Td
-         nE3V6kz3eBIVRr7dfkPeI8cgZMIldBoiuD8WcVWi2hGRoaLXvTQY7rpuOUBWQpywcwpy
-         X/4A==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:date:from:x-gm-message-state:from:to:cc:subject:date;
-        bh=oNhXNN48XioBo9TdpjvtJUsMY1FigZdVdgZ98bYIOdo=;
-        b=WbHvUrCiVd0r0ND8KJWhKu9zWgQ+SFHKP3+yJj5mlPBrFUKScxLs1uMYKALK4qBvBo
-         VhH8T2S3QvyfzMv4NRMEUCH3k3J15nUiW9ekkj4Co+vZPsYQ80QIrI0oyyBpMkNih4Yk
-         Rbqjsvmb2NdXr9en/0VwLPQp20w2RhKQNoCrHX3Ucf8w9YNjoKNmx/r0jo7B18YBmzgk
-         82cTlSM2IEe39vFywsD8AW8AkKjVxl03NAR5r0SeGV3b4eInt68zww4ikp7MFT4V95Zo
-         pg3Ue2KzBZw2EB7XfBnjQD4hsxb80b7GELuGvHfWSF7kdUwGKYADqxkyXmD8fllVK09d
-         r4Wg==
-X-Gm-Message-State: ACgBeo3JGdY4i/TKzEUDwuiQ+8McehkYT9TPedCX1Ap05H+dNg0V6BAi
-        CPl4GD+rmbnE2g8hD4bppBH5/R0+QqemXw==
-X-Google-Smtp-Source: AA6agR5hBOqvhHEtaFtI2wOJZEnn984q0gfddLB8+6YLPEd1/t+okY9dufrbE8bpiQjtZshI6K4IMw==
-X-Received: by 2002:a17:906:847c:b0:73f:d7cf:bf2d with SMTP id hx28-20020a170906847c00b0073fd7cfbf2dmr1591785ejc.327.1662539567297;
-        Wed, 07 Sep 2022 01:32:47 -0700 (PDT)
-Received: from krava ([193.85.244.190])
-        by smtp.gmail.com with ESMTPSA id i10-20020a170906264a00b0073cf8e0355fsm7750137ejc.208.2022.09.07.01.32.46
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 07 Sep 2022 01:32:47 -0700 (PDT)
-From:   Jiri Olsa <olsajiri@gmail.com>
-X-Google-Original-From: Jiri Olsa <jolsa@kernel.org>
-Date:   Wed, 7 Sep 2022 10:32:45 +0200
-To:     Namhyung Kim <namhyung@kernel.org>
-Cc:     Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Ingo Molnar <mingo@kernel.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Ian Rogers <irogers@google.com>,
-        linux-perf-users@vger.kernel.org, bpf@vger.kernel.org,
-        Marco Elver <elver@google.com>,
-        Song Liu <songliubraving@fb.com>
-Subject: Re: [PATCH v2] perf test: Skip sigtrap test on old kernels
-Message-ID: <YxhXLQ9aOuLRLrAJ@krava>
-References: <20220907050407.2711513-1-namhyung@kernel.org>
+        Wed, 7 Sep 2022 05:19:46 -0400
+Received: from foss.arm.com (foss.arm.com [217.140.110.172])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTP id 69C3E55B3;
+        Wed,  7 Sep 2022 02:19:43 -0700 (PDT)
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 37EB8139F;
+        Wed,  7 Sep 2022 02:19:49 -0700 (PDT)
+Received: from a077893.blr.arm.com (unknown [10.162.40.15])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPA id 4EF9D3F73D;
+        Wed,  7 Sep 2022 02:20:07 -0700 (PDT)
+From:   Anshuman Khandual <anshuman.khandual@arm.com>
+To:     linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, peterz@infradead.org
+Cc:     Anshuman Khandual <anshuman.khandual@arm.com>,
+        James Clark <james.clark@arm.com>,
+        Ingo Molnar <mingo@redhat.com>,
+        Arnaldo Carvalho de Melo <acme@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Jiri Olsa <jolsa@kernel.org>,
+        Namhyung Kim <namhyung@kernel.org>, x86@kernel.org
+Subject: [PATCH V3 2/4] perf/core: Assert PERF_EVENT_FLAG_ARCH does not overlap with generic flags
+Date:   Wed,  7 Sep 2022 14:49:22 +0530
+Message-Id: <20220907091924.439193-3-anshuman.khandual@arm.com>
+X-Mailer: git-send-email 2.25.1
+In-Reply-To: <20220907091924.439193-1-anshuman.khandual@arm.com>
+References: <20220907091924.439193-1-anshuman.khandual@arm.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20220907050407.2711513-1-namhyung@kernel.org>
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-On Tue, Sep 06, 2022 at 10:04:07PM -0700, Namhyung Kim wrote:
-> If it runs on an old kernel, perf_event_open would fail because of the
-> new fields sigtrap and sig_data.  Just skipping the test could miss an
-> actual bug in the kernel.
-> 
-> Let's check BTF if it has the perf_event_attr.sigtrap field.
-> 
-> Cc: Marco Elver <elver@google.com>
-> Cc: Song Liu <songliubraving@fb.com>
-> Signed-off-by: Namhyung Kim <namhyung@kernel.org>
-> ---
->  tools/perf/tests/sigtrap.c | 46 +++++++++++++++++++++++++++++++++++++-
->  1 file changed, 45 insertions(+), 1 deletion(-)
-> 
-> diff --git a/tools/perf/tests/sigtrap.c b/tools/perf/tests/sigtrap.c
-> index e32ece90e164..32f08ce0f2b0 100644
-> --- a/tools/perf/tests/sigtrap.c
-> +++ b/tools/perf/tests/sigtrap.c
-> @@ -16,6 +16,8 @@
->  #include <sys/syscall.h>
->  #include <unistd.h>
->  
-> +#include <bpf/btf.h>
-> +
->  #include "cloexec.h"
->  #include "debug.h"
->  #include "event.h"
-> @@ -54,6 +56,42 @@ static struct perf_event_attr make_event_attr(void)
->  	return attr;
->  }
->  
-> +static bool attr_has_sigtrap(void)
-> +{
-> +	bool ret = false;
-> +
-> +#ifdef HAVE_BPF_SKEL
-> +
-> +	struct btf *btf;
-> +	const struct btf_type *t;
-> +	const struct btf_member *m;
-> +	const char *name;
-> +	int i, id;
-> +
-> +	/* just assume it doesn't have the field */
-> +	btf = btf__load_vmlinux_btf();
-> +	if (btf == NULL)
-> +		return false;
-> +
-> +	id = btf__find_by_name_kind(btf, "perf_event_attr", BTF_KIND_STRUCT);
-> +	if (id < 0)
-> +		goto out;
-> +
-> +	t = btf__type_by_id(btf, id);
-> +	for (i = 0, m = btf_members(t); i < btf_vlen(t); i++, m++) {
-> +		name = btf__name_by_offset(btf, m->name_off);
-> +		if (!strcmp(name, "sigtrap")) {
-> +			ret = true;
-> +			break;
-> +		}
-> +	}
-> +out:
-> +	btf__free(btf);
-> +#endif
+This just ensures that PERF_EVENT_FLAG_ARCH does not overlap with generic
+hardware event flags.
 
-would it be easier to call perf_event_open for simple event with
-sigtrap set (and perhaps remove_on_exec) ? perf_copy_attr checks
-on reserved fields
+Cc: Peter Zijlstra <peterz@infradead.org>
+Cc: Ingo Molnar <mingo@redhat.com>
+Cc: Arnaldo Carvalho de Melo <acme@kernel.org>
+Cc: Mark Rutland <mark.rutland@arm.com>
+Cc: Alexander Shishkin <alexander.shishkin@linux.intel.com>
+Cc: Jiri Olsa <jolsa@kernel.org>
+Cc: Namhyung Kim <namhyung@kernel.org>
+Cc: linux-perf-users@vger.kernel.org
+Cc: linux-kernel@vger.kernel.org
+Reviewed-by: James Clark <james.clark@arm.com>
+Signed-off-by: Anshuman Khandual <anshuman.khandual@arm.com>
+---
+ include/linux/perf_event.h | 2 ++
+ 1 file changed, 2 insertions(+)
 
-jirka
+diff --git a/include/linux/perf_event.h b/include/linux/perf_event.h
+index 3f51fbf4a595..10e23a0f9db0 100644
+--- a/include/linux/perf_event.h
++++ b/include/linux/perf_event.h
+@@ -140,6 +140,8 @@ struct hw_perf_event_extra {
+ #define PERF_EVENT_FLAG_ARCH			0x000fffff
+ #define PERF_EVENT_FLAG_USER_READ_CNT		0x80000000
+ 
++static_assert((PERF_EVENT_FLAG_USER_READ_CNT & PERF_EVENT_FLAG_ARCH) == 0);
++
+ /**
+  * struct hw_perf_event - performance event hardware details:
+  */
+-- 
+2.25.1
 
-
-> +
-> +	return ret;
-> +}
-> +
->  static void
->  sigtrap_handler(int signum __maybe_unused, siginfo_t *info, void *ucontext __maybe_unused)
->  {
-> @@ -139,7 +177,13 @@ static int test__sigtrap(struct test_suite *test __maybe_unused, int subtest __m
->  
->  	fd = sys_perf_event_open(&attr, 0, -1, -1, perf_event_open_cloexec_flag());
->  	if (fd < 0) {
-> -		pr_debug("FAILED sys_perf_event_open(): %s\n", str_error_r(errno, sbuf, sizeof(sbuf)));
-> +		if (attr_has_sigtrap()) {
-> +			pr_debug("FAILED sys_perf_event_open(): %s\n",
-> +				 str_error_r(errno, sbuf, sizeof(sbuf)));
-> +		} else {
-> +			pr_debug("perf_event_attr doesn't have sigtrap\n");
-> +			ret = TEST_SKIP;
-> +		}
->  		goto out_restore_sigaction;
->  	}
->  
-> -- 
-> 2.37.2.789.g6183377224-goog
-> 
