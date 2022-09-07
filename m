@@ -2,138 +2,161 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D1C5BC38145
-	for <linux-perf-users@archiver.kernel.org>; Wed,  7 Sep 2022 18:06:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C472FC54EE9
+	for <linux-perf-users@archiver.kernel.org>; Wed,  7 Sep 2022 22:41:53 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230262AbiIGSGT (ORCPT
+        id S229498AbiIGWlw (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Wed, 7 Sep 2022 14:06:19 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:32980 "EHLO
+        Wed, 7 Sep 2022 18:41:52 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54646 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229668AbiIGSGM (ORCPT
+        with ESMTP id S229653AbiIGWlg (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Wed, 7 Sep 2022 14:06:12 -0400
-Received: from mail-ot1-f41.google.com (mail-ot1-f41.google.com [209.85.210.41])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6AB0E77EBD;
-        Wed,  7 Sep 2022 11:06:10 -0700 (PDT)
-Received: by mail-ot1-f41.google.com with SMTP id 6-20020a9d0106000000b0063963134d04so10807149otu.3;
-        Wed, 07 Sep 2022 11:06:10 -0700 (PDT)
+        Wed, 7 Sep 2022 18:41:36 -0400
+Received: from mail-wr1-x435.google.com (mail-wr1-x435.google.com [IPv6:2a00:1450:4864:20::435])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1F86F647F0
+        for <linux-perf-users@vger.kernel.org>; Wed,  7 Sep 2022 15:41:33 -0700 (PDT)
+Received: by mail-wr1-x435.google.com with SMTP id bz13so19428918wrb.2
+        for <linux-perf-users@vger.kernel.org>; Wed, 07 Sep 2022 15:41:33 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20210112;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:from:to:cc:subject:date;
+        bh=YH4gAbT+oR/XTHxxly1yVDATtdpiees7bO5OLCaKPwY=;
+        b=YlXSUUUmGnjsqPH9qZotOiPiwMkzhSEKyQR0uEVY076HW++qYanPJdJo29q9+PDOk8
+         UVAtc7OJ/wDLEBEdrNDHQe5Sp8ND8zLeDV0h4BpVOeYz5RQr5Wpkwt3LpTFgHYCwTuw1
+         ag4urK2VGhnppqkVCBZdUIz6794hrJAUdXwjQqsMCDsB1Carm7jsEaAgKXQom4T+6DCR
+         IOvKTIxQgoN3M6AK5iDvBy/wKYcKjSXk8e+yYQdlaRrr7YGEot3bezUW/zCH/akKTCLP
+         iAp+bC8hsKsvixINCk7H9pgoi0QbKOEjBjAzbaYsRjhC56SlaYWhMKszXAhSFZ/WtMwa
+         pRLQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
         h=cc:to:subject:message-id:date:from:in-reply-to:references
          :mime-version:x-gm-message-state:from:to:cc:subject:date;
-        bh=cwQcMikn8PY/begH6mMZDx9ENCQa5sG31sOsvQOo7/o=;
-        b=WqQnu6PIEW7n1nUgrcWf63mnUg9vk4d9mU7tffbJbMJb6iLHf+aFoKSxkO2AupGHLQ
-         qkDcxsUkMFAynW7Vbt2xEtMRsk5uGgnxJEsGUPdt1bFmLiVqdW6szF8fdiFDx8r7kJcs
-         3jrYbtbsBjQg+xkXgW2hw9tBb7iCNJeiubHjLZrXpe5be9mM3F2gKLEZ7buRXdMZ0iBB
-         xTVATKUW1JBBDhHbm6lIhQ65d7C5aYYZ4QyAYid8GqyWyjgW1c+okiJ703A3v1B1xR+P
-         Nt6Fv06HxXsSuxgdvykMsmgo/V4IXHLjbCL2LYiQQ+sLA8fi+50tofpqa1M1hteNFejm
-         HDcw==
-X-Gm-Message-State: ACgBeo2HyVItHEix/dC8Hc5fmWC/Ql/DV7JHwmfkvN2HxPvo36zStYcV
-        WViJM5xj1/PCOO7qjQXvn5jrDkq62tKarZ1pWhY=
-X-Google-Smtp-Source: AA6agR5/jZHCxw7ViqcIaWpsfgM5JHTM8/6JkEPpzd28+g/aL8HtSeYdzEFXej9/DAFCxlF51VWDfeHLWoUSwmZEzYw=
-X-Received: by 2002:a9d:6f18:0:b0:638:b4aa:a546 with SMTP id
- n24-20020a9d6f18000000b00638b4aaa546mr1910734otq.124.1662573969481; Wed, 07
- Sep 2022 11:06:09 -0700 (PDT)
+        bh=YH4gAbT+oR/XTHxxly1yVDATtdpiees7bO5OLCaKPwY=;
+        b=n5U/BVJDRbIw/6UYwOxP0cmkBW1QxNw8TFvQfD5tJ2kiNzsKiYtwIgIuf1WZET0Brj
+         R+sf6/BvH+wOTdg/mIFjU59KEVq/29M3fLJMH8EC3dulD7hsHIkOS0ykAYPlEBiHheVo
+         V3rejz1bAZlkOJh0rZi/NyDAgf0oe6vvNZyo/k4VMBn0Uk+ttzi/DZFQHullg07YNzrI
+         VQVnCXcK+kfOjRXB+wSQGypdHX+rXT72apUQ3jqU2b+1wIQfT2jWJKIFhiBSXgCIMjpL
+         9boOU1tPVzpgfhGkCxv02NAfPZbcQI1zfagjzwGidouOYG777PyKfmXGUhdkIFqJ5sOg
+         TtfA==
+X-Gm-Message-State: ACgBeo1pteOfU27oKLWk4cOCdlc2+boQLtNYh6TwQM8JSiv0Y/P7xHEY
+        YwR69Du2zJfFHsfJrB0uGVPgONF3wE63+kz4mk2f8w==
+X-Google-Smtp-Source: AA6agR4s9n0rZWwC0Jokan10uATNxTlZgQDh/BU11g7JTUk7e1DId0idNPdXqxT0GUVDPpxC5gjMPKQpPOMTsDSjW0M=
+X-Received: by 2002:adf:bc13:0:b0:228:6d28:d2cb with SMTP id
+ s19-20020adfbc13000000b002286d28d2cbmr3356293wrg.375.1662590491453; Wed, 07
+ Sep 2022 15:41:31 -0700 (PDT)
 MIME-Version: 1.0
-References: <20220907050407.2711513-1-namhyung@kernel.org> <YxhXLQ9aOuLRLrAJ@krava>
- <CAM9d7chVuOyY0Nhecj0J=AU6iRkFoKY6hQ5mAMrS8k=-26WeCg@mail.gmail.com>
-In-Reply-To: <CAM9d7chVuOyY0Nhecj0J=AU6iRkFoKY6hQ5mAMrS8k=-26WeCg@mail.gmail.com>
-From:   Namhyung Kim <namhyung@kernel.org>
-Date:   Wed, 7 Sep 2022 11:05:58 -0700
-Message-ID: <CAM9d7cgG_Jwb1Z98svrk0Q1X9RmeodOyHBvbqxGijP3eyBU_uw@mail.gmail.com>
-Subject: Re: [PATCH v2] perf test: Skip sigtrap test on old kernels
+References: <20220614143353.1559597-1-irogers@google.com> <20220614143353.1559597-7-irogers@google.com>
+ <YuZ4CEnken8U4HO5@krava> <CAP-5=fVczMiasS15UovH8kzOaNw=TC_adeqjC+xBzv8jVJ3DTQ@mail.gmail.com>
+In-Reply-To: <CAP-5=fVczMiasS15UovH8kzOaNw=TC_adeqjC+xBzv8jVJ3DTQ@mail.gmail.com>
+From:   Ian Rogers <irogers@google.com>
+Date:   Wed, 7 Sep 2022 15:41:19 -0700
+Message-ID: <CAP-5=fWVN4Fig5GEwyWwwUc9_iZyZ5rObTFkyNcuFp1GApy4tg@mail.gmail.com>
+Subject: Re: [PATCH v2 6/6] perf cpumap: Add range data encoding
 To:     Jiri Olsa <olsajiri@gmail.com>
-Cc:     Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Ingo Molnar <mingo@kernel.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Ian Rogers <irogers@google.com>,
-        linux-perf-users <linux-perf-users@vger.kernel.org>,
-        bpf <bpf@vger.kernel.org>, Marco Elver <elver@google.com>,
-        Song Liu <songliubraving@fb.com>
+Cc:     Peter Zijlstra <peterz@infradead.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        Arnaldo Carvalho de Melo <acme@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Namhyung Kim <namhyung@kernel.org>,
+        James Clark <james.clark@arm.com>,
+        Kees Cook <keescook@chromium.org>,
+        "Gustavo A. R. Silva" <gustavoars@kernel.org>,
+        Adrian Hunter <adrian.hunter@intel.com>,
+        Riccardo Mancini <rickyman7@gmail.com>,
+        German Gomez <german.gomez@arm.com>,
+        Colin Ian King <colin.king@intel.com>,
+        Song Liu <songliubraving@fb.com>,
+        Dave Marchevsky <davemarchevsky@fb.com>,
+        Athira Rajeev <atrajeev@linux.vnet.ibm.com>,
+        Alexey Bayduraev <alexey.v.bayduraev@linux.intel.com>,
+        Leo Yan <leo.yan@linaro.org>, linux-perf-users@vger.kernel.org,
+        linux-kernel@vger.kernel.org, Stephane Eranian <eranian@google.com>
 Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-On Wed, Sep 7, 2022 at 10:50 AM Namhyung Kim <namhyung@kernel.org> wrote:
+On Thu, Aug 4, 2022 at 12:30 PM Ian Rogers <irogers@google.com> wrote:
 >
-> On Wed, Sep 7, 2022 at 1:32 AM Jiri Olsa <olsajiri@gmail.com> wrote:
+> On Sun, Jul 31, 2022 at 5:39 AM Jiri Olsa <olsajiri@gmail.com> wrote:
 > >
-> > On Tue, Sep 06, 2022 at 10:04:07PM -0700, Namhyung Kim wrote:
-> > > If it runs on an old kernel, perf_event_open would fail because of the
-> > > new fields sigtrap and sig_data.  Just skipping the test could miss an
-> > > actual bug in the kernel.
+> > On Tue, Jun 14, 2022 at 07:33:53AM -0700, Ian Rogers wrote:
+> >
+> > SNIP
+> >
+> > > +     event = cpu_map_data__alloc(&syn_data, sizeof(struct perf_event_header));
+> > >       if (!event)
+> > >               return NULL;
 > > >
-> > > Let's check BTF if it has the perf_event_attr.sigtrap field.
-> > >
-> > > Cc: Marco Elver <elver@google.com>
-> > > Cc: Song Liu <songliubraving@fb.com>
-> > > Signed-off-by: Namhyung Kim <namhyung@kernel.org>
-> > > ---
-> > >  tools/perf/tests/sigtrap.c | 46 +++++++++++++++++++++++++++++++++++++-
-> > >  1 file changed, 45 insertions(+), 1 deletion(-)
-> > >
-> > > diff --git a/tools/perf/tests/sigtrap.c b/tools/perf/tests/sigtrap.c
-> > > index e32ece90e164..32f08ce0f2b0 100644
-> > > --- a/tools/perf/tests/sigtrap.c
-> > > +++ b/tools/perf/tests/sigtrap.c
-> > > @@ -16,6 +16,8 @@
-> > >  #include <sys/syscall.h>
-> > >  #include <unistd.h>
-> > >
-> > > +#include <bpf/btf.h>
-> > > +
-> > >  #include "cloexec.h"
-> > >  #include "debug.h"
-> > >  #include "event.h"
-> > > @@ -54,6 +56,42 @@ static struct perf_event_attr make_event_attr(void)
-> > >       return attr;
+> > > +     syn_data.data = &event->data;
+> > >       event->header.type = PERF_RECORD_CPU_MAP;
+> > > -     event->header.size = size;
+> > > -     event->data.type   = type;
+> > > -
+> > > -     cpu_map_data__synthesize(&event->data, map, type, max);
+> > > +     event->header.size = syn_data.size;
+> > > +     cpu_map_data__synthesize(&syn_data);
+> > >       return event;
 > > >  }
 > > >
-> > > +static bool attr_has_sigtrap(void)
-> > > +{
-> > > +     bool ret = false;
 > > > +
-> > > +#ifdef HAVE_BPF_SKEL
-> > > +
-> > > +     struct btf *btf;
-> > > +     const struct btf_type *t;
-> > > +     const struct btf_member *m;
-> > > +     const char *name;
-> > > +     int i, id;
-> > > +
-> > > +     /* just assume it doesn't have the field */
-> > > +     btf = btf__load_vmlinux_btf();
-> > > +     if (btf == NULL)
-> > > +             return false;
-> > > +
-> > > +     id = btf__find_by_name_kind(btf, "perf_event_attr", BTF_KIND_STRUCT);
-> > > +     if (id < 0)
-> > > +             goto out;
-> > > +
-> > > +     t = btf__type_by_id(btf, id);
-> > > +     for (i = 0, m = btf_members(t); i < btf_vlen(t); i++, m++) {
-> > > +             name = btf__name_by_offset(btf, m->name_off);
-> > > +             if (!strcmp(name, "sigtrap")) {
-> > > +                     ret = true;
-> > > +                     break;
-> > > +             }
-> > > +     }
-> > > +out:
-> > > +     btf__free(btf);
-> > > +#endif
+> > >  int perf_event__synthesize_cpu_map(struct perf_tool *tool,
+> > >                                  const struct perf_cpu_map *map,
+> > >                                  perf_event__handler_t process,
+> > > @@ -1891,24 +1894,20 @@ int perf_event__synthesize_event_update_name(struct perf_tool *tool, struct evse
+> > >  int perf_event__synthesize_event_update_cpus(struct perf_tool *tool, struct evsel *evsel,
+> > >                                            perf_event__handler_t process)
+> > >  {
+> > > -     size_t size = sizeof(struct perf_event_header) + sizeof(u64) + sizeof(u64);
+> > > +     struct synthesize_cpu_map_data syn_data = { .map = evsel->core.own_cpus };
+> > >       struct perf_record_event_update *ev;
+> > > -     int max, err;
+> > > -     u16 type;
+> > > -
+> > > -     if (!evsel->core.own_cpus)
+> > > -             return 0;
 > >
-> > would it be easier to call perf_event_open for simple event with
-> > sigtrap set (and perhaps remove_on_exec) ? perf_copy_attr checks
-> > on reserved fields
+> > all seems fine, just looks like we no longer do this check,
+> > might not be needed anymore, as that changed in past
 >
-> Hmm.. right.  we could do that too.  But it might still fail if there's a
-> bug in the path handling in sigtrap even for the simple case.  I'm not
-> sure if it's a realistic concern though. :)
+> This function is called in a test and in this file. The caller already
+> does this test and so the check is redundant plus a little confusing:
+> https://git.kernel.org/pub/scm/linux/kernel/git/acme/linux.git/tree/tools/perf/util/synthetic-events.c?h=perf/core#n2062
+> As you say, it wasn't needed any more and so I removed it.
+>
+> Thanks,
+> Ian
 
-I think we can do that when libbpf is not available.
+Would be nice to land this imo. Anything outstanding?
 
 Thanks,
-Namhyung
+Ian
+
+> > thanks,
+> > jirka
+> >
+> > > +     int err;
+> > >
+> > > -     ev = cpu_map_data__alloc(evsel->core.own_cpus, &size, &type, &max);
+> > > +     ev = cpu_map_data__alloc(&syn_data, sizeof(struct perf_event_header) + 2 * sizeof(u64));
+> > >       if (!ev)
+> > >               return -ENOMEM;
+> > >
+> > > +     syn_data.data = &ev->cpus.cpus;
+> > >       ev->header.type = PERF_RECORD_EVENT_UPDATE;
+> > > -     ev->header.size = (u16)size;
+> > > +     ev->header.size = (u16)syn_data.size;
+> > >       ev->type        = PERF_EVENT_UPDATE__CPUS;
+> > >       ev->id          = evsel->core.id[0];
+> > > -
+> > > -     cpu_map_data__synthesize(&ev->cpus.cpus, evsel->core.own_cpus, type, max);
+> > > +     cpu_map_data__synthesize(&syn_data);
+> > >
+> > >       err = process(tool, (union perf_event *)ev, NULL, NULL);
+> > >       free(ev);
+> > > --
+> > > 2.36.1.476.g0c4daa206d-goog
+> > >
