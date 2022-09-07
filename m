@@ -2,173 +2,175 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B5CF1C6FA8A
-	for <linux-perf-users@archiver.kernel.org>; Wed,  7 Sep 2022 14:21:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id ED96FC54EE9
+	for <linux-perf-users@archiver.kernel.org>; Wed,  7 Sep 2022 15:01:08 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230083AbiIGOVE (ORCPT
+        id S230352AbiIGPBH (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Wed, 7 Sep 2022 10:21:04 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51840 "EHLO
+        Wed, 7 Sep 2022 11:01:07 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51792 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229837AbiIGOVD (ORCPT
+        with ESMTP id S230100AbiIGPAo (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Wed, 7 Sep 2022 10:21:03 -0400
-Received: from mail-ej1-x62d.google.com (mail-ej1-x62d.google.com [IPv6:2a00:1450:4864:20::62d])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7337332AB4;
-        Wed,  7 Sep 2022 07:21:02 -0700 (PDT)
-Received: by mail-ej1-x62d.google.com with SMTP id y3so30793998ejc.1;
-        Wed, 07 Sep 2022 07:21:02 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20210112;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:date:from:from:to:cc:subject:date;
-        bh=GmjHydQzDqYVY9OvbE5Eqn2I6DrHbPQiC0wDwCk2Kro=;
-        b=GoFA2Px6880+LWoG+/91mOILp7eQwkt9KwCEOA+XNj45hoBf9r8y2Bq6k3vwKVn7qB
-         xdX3RYDKCbehUWnKwcOMLlSS395nD8C5/qO48Xiwv4twvJrQmzRYjzBOfnPaT07o+wTn
-         /j4mVb0MTYRHo+I0ZU8YNlKMedcxmtUGYVBb6qOajmLT2fjmyOJdDv3KtwPLNbNzeFRb
-         bNMOCsc+gO9xmxP/HtC3CvKMSzRF6/k2YcvhsAOnokjR8qxxAsMQ/0NgZjnS2NGzEQye
-         IsuMm4DC+Qedl8dpRRCloaDziZQvVovnlO7+I1OwFjB8oeA515qC1tZLxBpwXozq7CgM
-         X7/A==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:date:from:x-gm-message-state:from:to:cc:subject:date;
-        bh=GmjHydQzDqYVY9OvbE5Eqn2I6DrHbPQiC0wDwCk2Kro=;
-        b=dkzgDXv/CWBYDaTmZucl7rL2D8N0hbgwaSXUxv8omR6dgY27nKSnrdjXQZAL/BP8hT
-         mCLg34e1tbqsS+gieOGD3tQiOL6mFJyPxX7j38PsuIexLcWlw+EjWLvR+ir5Sm3ooUJo
-         lsPbSeBVdasO9o+aFKX0h1IzB8TpOPtd34lH0prSfL+CqJ1ahJKam5jCpjZxfRwiVIyn
-         p7h6cI5vsyyy7RRejqo0giU1NhPHsQSFw5rD609UCqVsK+/NxZFjG1rO91qEVPrqkXPp
-         wqPXX5YjZfi5o52uekiTnhsi5/gzgf75/1HDU2ItVbyqMTZX0rcmLr/oiuLs6hsTbD2P
-         oXkA==
-X-Gm-Message-State: ACgBeo0BE6V/tA6ezicZHtBObOSyMjWOV7ckRSYF6ZIoO/M6dEikWMzk
-        aY7F4kcTduVFHyBHqkqGGjY=
-X-Google-Smtp-Source: AA6agR4FZNDDktIK/bO660wPtAu3DNWXz8BT0H8es9LQxHCV0EzEdAMCRZ4QKRdFV4a+ZLHqwVIo+A==
-X-Received: by 2002:a17:907:1688:b0:730:b3ae:347 with SMTP id hc8-20020a170907168800b00730b3ae0347mr2446498ejc.756.1662560460959;
-        Wed, 07 Sep 2022 07:21:00 -0700 (PDT)
-Received: from krava ([193.85.244.190])
-        by smtp.gmail.com with ESMTPSA id h6-20020a1709060f4600b0071cbc7487e1sm8460075ejj.69.2022.09.07.07.21.00
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 07 Sep 2022 07:21:00 -0700 (PDT)
-From:   Jiri Olsa <olsajiri@gmail.com>
-X-Google-Original-From: Jiri Olsa <jolsa@kernel.org>
-Date:   Wed, 7 Sep 2022 16:20:59 +0200
-To:     Adrian Hunter <adrian.hunter@intel.com>
-Cc:     Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Jiri Olsa <jolsa@redhat.com>,
-        Namhyung Kim <namhyung@kernel.org>,
-        Ian Rogers <irogers@google.com>, linux-kernel@vger.kernel.org,
-        linux-perf-users@vger.kernel.org,
-        Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@redhat.com>
-Subject: Re: [PATCH V2] libperf evlist: Fix per-thread mmaps for
- multi-threaded targets
-Message-ID: <Yxioy/TXc/KDLoDL@krava>
-References: <20220905114209.8389-1-adrian.hunter@intel.com>
+        Wed, 7 Sep 2022 11:00:44 -0400
+Received: from foss.arm.com (foss.arm.com [217.140.110.172])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTP id 4CD6EA571C;
+        Wed,  7 Sep 2022 08:00:43 -0700 (PDT)
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 228E9106F;
+        Wed,  7 Sep 2022 08:00:49 -0700 (PDT)
+Received: from [10.57.77.239] (unknown [10.57.77.239])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id E64D33F71A;
+        Wed,  7 Sep 2022 08:00:38 -0700 (PDT)
+Message-ID: <507e18c3-684b-3642-3d8d-27b79e492a47@arm.com>
+Date:   Wed, 7 Sep 2022 16:00:36 +0100
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20220905114209.8389-1-adrian.hunter@intel.com>
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
+ Thunderbird/91.11.0
+Subject: Re: [PATCH 0/8] Perf stack unwinding with pointer authentication
+Content-Language: en-US
+To:     linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org,
+        acme@kernel.org, "peterz@infradead.org" <peterz@infradead.org>
+Cc:     Mark Rutland <mark.rutland@arm.com>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Jiri Olsa <jolsa@kernel.org>,
+        Namhyung Kim <namhyung@kernel.org>,
+        Martin KaFai Lau <kafai@fb.com>,
+        Song Liu <songliubraving@fb.com>, Yonghong Song <yhs@fb.com>,
+        John Fastabend <john.fastabend@gmail.com>,
+        KP Singh <kpsingh@kernel.org>, Tom Rix <trix@redhat.com>,
+        linux-arm-kernel@lists.infradead.org, netdev@vger.kernel.org,
+        bpf@vger.kernel.org, llvm@lists.linux.dev,
+        Andrew Kilroy <andrew.kilroy@arm.com>
+References: <20220704145333.22557-1-andrew.kilroy@arm.com>
+From:   James Clark <james.clark@arm.com>
+In-Reply-To: <20220704145333.22557-1-andrew.kilroy@arm.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-On Mon, Sep 05, 2022 at 02:42:09PM +0300, Adrian Hunter wrote:
-> The offending commit removed mmap_per_thread(), which did not consider
-> the different set-output rules for per-thread mmaps i.e. in the per-thread
-> case set-output is used for file descriptors of the same thread not the
-> same cpu.
-> 
-> This was not immediately noticed because it only happens with
-> multi-threaded targets and we do not have a test for that yet.
-> 
-> Reinstate mmap_per_thread() expanding it to cover also system-wide per-cpu
-> events i.e. to continue to allow the mixing of per-thread and per-cpu
-> mmaps.
-> 
-> Debug messages (with -vv) show the file descriptors that are opened with
-> sys_perf_event_open. New debug messages are added (needs -vvv) that show
-> also which file descriptors are mmapped and which are redirected with
-> set-output.
-> 
-> In the per-cpu case (cpu != -1) file descriptors for the same CPU are
-> set-output to the first file descriptor for that CPU.
-> 
-> In the per-thread case (cpu == -1) file descriptors for the same thread are
-> set-output to the first file descriptor for that thread.
-> 
-> Example (process 17489 has 2 threads):
-> 
->  Before (but with new debug prints):
-> 
->    $ perf record --no-bpf-event -vvv --per-thread -p 17489
->    <SNIP>
->    sys_perf_event_open: pid 17489  cpu -1  group_fd -1  flags 0x8 = 5
->    sys_perf_event_open: pid 17490  cpu -1  group_fd -1  flags 0x8 = 6
->    <SNIP>
->    libperf: idx 0: mmapping fd 5
->    libperf: idx 0: set output fd 6 -> 5
->    failed to mmap with 22 (Invalid argument)
-> 
->  After:
-> 
->    $ perf record --no-bpf-event -vvv --per-thread -p 17489
->    <SNIP>
->    sys_perf_event_open: pid 17489  cpu -1  group_fd -1  flags 0x8 = 5
->    sys_perf_event_open: pid 17490  cpu -1  group_fd -1  flags 0x8 = 6
->    <SNIP>
->    libperf: mmap_per_thread: nr cpu values (may include -1) 1 nr threads 2
->    libperf: idx 0: mmapping fd 5
->    libperf: idx 1: mmapping fd 6
->    <SNIP>
->    [ perf record: Woken up 2 times to write data ]
->    [ perf record: Captured and wrote 0.018 MB perf.data (15 samples) ]
-> 
-> Per-cpu example (process 20341 has 2 threads, same as above):
-> 
->    $ perf record --no-bpf-event -vvv -p 20341
->    <SNIP>
->    sys_perf_event_open: pid 20341  cpu 0  group_fd -1  flags 0x8 = 5
->    sys_perf_event_open: pid 20342  cpu 0  group_fd -1  flags 0x8 = 6
->    sys_perf_event_open: pid 20341  cpu 1  group_fd -1  flags 0x8 = 7
->    sys_perf_event_open: pid 20342  cpu 1  group_fd -1  flags 0x8 = 8
->    sys_perf_event_open: pid 20341  cpu 2  group_fd -1  flags 0x8 = 9
->    sys_perf_event_open: pid 20342  cpu 2  group_fd -1  flags 0x8 = 10
->    sys_perf_event_open: pid 20341  cpu 3  group_fd -1  flags 0x8 = 11
->    sys_perf_event_open: pid 20342  cpu 3  group_fd -1  flags 0x8 = 12
->    sys_perf_event_open: pid 20341  cpu 4  group_fd -1  flags 0x8 = 13
->    sys_perf_event_open: pid 20342  cpu 4  group_fd -1  flags 0x8 = 14
->    sys_perf_event_open: pid 20341  cpu 5  group_fd -1  flags 0x8 = 15
->    sys_perf_event_open: pid 20342  cpu 5  group_fd -1  flags 0x8 = 16
->    sys_perf_event_open: pid 20341  cpu 6  group_fd -1  flags 0x8 = 17
->    sys_perf_event_open: pid 20342  cpu 6  group_fd -1  flags 0x8 = 18
->    sys_perf_event_open: pid 20341  cpu 7  group_fd -1  flags 0x8 = 19
->    sys_perf_event_open: pid 20342  cpu 7  group_fd -1  flags 0x8 = 20
->    <SNIP>
->    libperf: mmap_per_cpu: nr cpu values 8 nr threads 2
->    libperf: idx 0: mmapping fd 5
->    libperf: idx 0: set output fd 6 -> 5
->    libperf: idx 1: mmapping fd 7
->    libperf: idx 1: set output fd 8 -> 7
->    libperf: idx 2: mmapping fd 9
->    libperf: idx 2: set output fd 10 -> 9
->    libperf: idx 3: mmapping fd 11
->    libperf: idx 3: set output fd 12 -> 11
->    libperf: idx 4: mmapping fd 13
->    libperf: idx 4: set output fd 14 -> 13
->    libperf: idx 5: mmapping fd 15
->    libperf: idx 5: set output fd 16 -> 15
->    libperf: idx 6: mmapping fd 17
->    libperf: idx 6: set output fd 18 -> 17
->    libperf: idx 7: mmapping fd 19
->    libperf: idx 7: set output fd 20 -> 19
->    <SNIP>
->    [ perf record: Woken up 7 times to write data ]
->    [ perf record: Captured and wrote 0.020 MB perf.data (17 samples) ]
-> 
-> Fixes: ae4f8ae16a07 ("libperf evlist: Allow mixing per-thread and per-cpu mmaps")
-> Signed-off-by: Adrian Hunter <adrian.hunter@intel.com>
 
-Acked-by: Jiri Olsa <jolsa@kernel.org>
 
-thanks,
-jirka
+On 04/07/2022 15:53, Andrew Kilroy wrote:
+> This patch series addresses issues that perf has when attempting to show
+> userspace stacks in the presence of pointer authentication on arm64.
+> 
+> Depending on whether libunwind or libdw is used, perf incorrectly
+> displays the userspace stack in 'perf report --stdio'.  With libunwind,
+> only the leaf function is shown.
+> 
+>             |
+>             ---0x200000004005bf
+>                0x200000004005bf
+>                my_leaf_function
+> 
+> With libdw, only the leaf function is shown even though there are
+> callers in the application.
+> 
+>             |
+>             ---my_leaf_function
+> 
+> 
+> The reason perf cannot show the stack upon a perf report --stdio is
+> because the unwinders are given instruction pointers which contain a
+> pointer authentication code (PAC).  For the libraries to correctly
+> unwind, they need to know which bits of the instruction pointer to turn
+> off.
+> 
+> The kernel exposes the set of PAC bits via the NT_ARM_PAC_MASK regset.
+> It is expected that this may vary per-task in future. The kernel also
+> exposes which pointer authentication keys are enabled via the
+> NT_ARM_PAC_ENABLED_KEYS regset, and this can change dynamically. These
+> are per-task state which perf would need to sample.
+> 
+> It's not always feasible for perf to acquire these regsets via ptrace.
+> When sampling system-wide or with inherited events this may require a
+> large volume of ptrace requests, and by the time the perf tool processes
+> a sample for a task, that task might already have terminated.
+> 
+> Instead, these patches allow this state to be sampled into the perf
+> ringbuffer, where it can be consumed more easily by the perf tool.
+> 
+> The first patch changes the kernel to send the authentication PAC masks
+> to userspace perf via the perf ring buffer.  This is published in the
+> sample, using a new sample field PERF_SAMPLE_ARCH_1.
+> 
+> The subsequent patches are changes to userspace perf to
+> 
+> 1) request the PERF_SAMPLE_ARCH_1
+> 2) supply the instruction mask to libunwind
+> 3) ensure perf can cope with an older kernel that does not know about
+>    the PERF_SAMPLE_ARCH_1 sample field.
+> 4) checks if the version of libunwind has the capability to accept
+>    an instruction mask from perf and if so enable the feature.
+> 
+> These changes depend on a change to libunwind, that is yet to be
+> released, although the patch has been merged.
+> 
+>   https://github.com/libunwind/libunwind/pull/360
+> 
+
+For the whole set:
+
+Reviewed-by: James Clark <james.clark@arm.com>
+
+I checked that the new test passes on an AWS Graviton 3 instance and
+with a build of mainline libunwind. I also checked that the PAC masks on
+the samples look sensible.
+
+The tests also still pass when run on N1SDP which doesn't have pointer
+authentication.
+
+> 
+> Andrew Kilroy (6):
+>   perf arm64: Send pointer auth masks to ring buffer
+>   perf evsel: Do not request ptrauth sample field if not supported
+>   perf tools: arm64: Read ptrauth data from kernel
+>   perf libunwind: Feature check for libunwind ptrauth callback
+>   perf libunwind: arm64 pointer authentication
+>   perf tools: Print ptrauth struct in perf report
+> 
+> German Gomez (2):
+>   perf test: Update arm64 tests to expect ptrauth masks
+>   perf test arm64: Test unwinding with PACs on gcc & clang compilers
+> 
+>  arch/arm64/include/asm/arch_sample_data.h     |  38 ++++++
+>  arch/arm64/kernel/Makefile                    |   2 +-
+>  arch/arm64/kernel/arch_sample_data.c          |  37 ++++++
+>  include/linux/perf_event.h                    |  24 ++++
+>  include/uapi/linux/perf_event.h               |   5 +-
+>  kernel/events/core.c                          |  35 ++++++
+>  tools/build/Makefile.feature                  |   2 +
+>  tools/build/feature/Makefile                  |   4 +
+>  tools/build/feature/test-all.c                |   5 +
+>  .../feature/test-libunwind-arm64-ptrauth.c    |  26 ++++
+>  tools/include/uapi/linux/perf_event.h         |   5 +-
+>  tools/perf/Makefile.config                    |  10 ++
+>  tools/perf/Makefile.perf                      |   1 +
+>  tools/perf/tests/Build                        |   1 +
+>  tools/perf/tests/arm_unwind_pac.c             | 113 ++++++++++++++++++
+>  tools/perf/tests/arm_unwind_pac.sh            |  57 +++++++++
+>  tools/perf/tests/attr/README                  |   1 +
+>  .../attr/test-record-graph-default-aarch64    |   3 +-
+>  tools/perf/tests/attr/test-record-graph-dwarf |   1 +
+>  .../attr/test-record-graph-dwarf-aarch64      |  13 ++
+>  .../tests/attr/test-record-graph-fp-aarch64   |   3 +-
+>  tools/perf/tests/builtin-test.c               |   1 +
+>  tools/perf/tests/sample-parsing.c             |   2 +-
+>  tools/perf/tests/tests.h                      |   1 +
+>  tools/perf/util/event.h                       |   8 ++
+>  tools/perf/util/evsel.c                       |  64 ++++++++++
+>  tools/perf/util/evsel.h                       |   1 +
+>  tools/perf/util/perf_event_attr_fprintf.c     |   2 +-
+>  tools/perf/util/session.c                     |  15 +++
+>  tools/perf/util/unwind-libunwind-local.c      |  12 ++
+>  30 files changed, 485 insertions(+), 7 deletions(-)
+>  create mode 100644 arch/arm64/include/asm/arch_sample_data.h
+>  create mode 100644 arch/arm64/kernel/arch_sample_data.c
+>  create mode 100644 tools/build/feature/test-libunwind-arm64-ptrauth.c
+>  create mode 100644 tools/perf/tests/arm_unwind_pac.c
+>  create mode 100755 tools/perf/tests/arm_unwind_pac.sh
+>  create mode 100644 tools/perf/tests/attr/test-record-graph-dwarf-aarch64
+> 
