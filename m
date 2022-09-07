@@ -2,158 +2,200 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F1B54ECAAD3
-	for <linux-perf-users@archiver.kernel.org>; Wed,  7 Sep 2022 05:04:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 98F0CC38145
+	for <linux-perf-users@archiver.kernel.org>; Wed,  7 Sep 2022 05:05:38 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229528AbiIGFEU (ORCPT
+        id S229640AbiIGFFh (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Wed, 7 Sep 2022 01:04:20 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45586 "EHLO
+        Wed, 7 Sep 2022 01:05:37 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49954 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229449AbiIGFEU (ORCPT
+        with ESMTP id S229605AbiIGFFg (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Wed, 7 Sep 2022 01:04:20 -0400
-Received: from mail-pg1-x52e.google.com (mail-pg1-x52e.google.com [IPv6:2607:f8b0:4864:20::52e])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 27C9E9C2F1;
-        Tue,  6 Sep 2022 22:04:19 -0700 (PDT)
-Received: by mail-pg1-x52e.google.com with SMTP id 78so12491671pgb.13;
-        Tue, 06 Sep 2022 22:04:19 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20210112;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:sender:from:to:cc:subject:date;
-        bh=Q5bAnJtVFnp319EIgRFa2Zj3l9LOhyIDjH73ZWT66P8=;
-        b=QN2Fh+10PlxGBEB1nyhgecUXLy1tcGt3bU5t8A00gEsdgPGA0IYD71YML0yG7OnVon
-         oZ4q6iidhcx7nEl3/vEaRoI7GAVFF5d2djWXM0XAW8X6rNTuUgljv6FPwYqohtWCoePB
-         5reK0An5RPtU8rhr5Dw9zK7jD+7QnlbSaJO876HCL8Ekj7jjSdvwvJqKkX2LBkjtCJ5j
-         DiWje0Rv4BTEdcicnrtytcDXnPXUWEHpjPaWrLmE0kVT5ODsH1f5Yrs1m5eu6S78yhoz
-         nrqph/tt6EKamrViUTK5uIuiuCa5eRWnAA/fhROTgqqGeCFEJqOCVxbZK1134Lk0QsPl
-         PGpA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:sender:x-gm-message-state:from:to:cc:subject:date;
-        bh=Q5bAnJtVFnp319EIgRFa2Zj3l9LOhyIDjH73ZWT66P8=;
-        b=lj8IXV+7r0yCQO+m5LIXOJ0MhiAf+LFCS/pTtrhe6qLOIxBsE0TsJpS+nUmM3BGHhz
-         3Ct73Au6HhzS1M049zUKpy7OkzCd2x/55KAoE+7nS2YmzVZFCdAZmUwxF643umQdOCRO
-         xayfqOKSl1mSfp3zoPGCr+hK4UR0wEJHL5KiWtO4F/HAbhqm7kgZxp03mStwA4ECS6tP
-         hm+4qIb2GIFmjsc+4EoqdnGWtIApfCuv1F4qyzHn8SAknMrz3YLakN13eLzXUL9pcbkT
-         p4jVgjDWt+e0r4Bfn6MQfE6o8XGJ6klQXqeNgpHgiy+3t3DAPNFb4SgRItO+lno4OaOJ
-         YtQw==
-X-Gm-Message-State: ACgBeo0TErcu7zC1TODYNskXYV+0leZwKlsbc5ZY3FeQ7ILznITSBmOp
-        WykRJSXGjEeuaPeV9Yoxhbw=
-X-Google-Smtp-Source: AA6agR6sTiTHSLBvwr+g6HRi6Ga/xBnUJar+Hfzxq2qEV5M6iE82lFM2UvwP+JZs0fhors2gUDFqnw==
-X-Received: by 2002:a63:fe54:0:b0:42b:d11d:1490 with SMTP id x20-20020a63fe54000000b0042bd11d1490mr1937714pgj.51.1662527058372;
-        Tue, 06 Sep 2022 22:04:18 -0700 (PDT)
-Received: from youngsil.svl.corp.google.com ([2620:15c:2d4:203:31b5:b507:23a9:c4ba])
-        by smtp.gmail.com with ESMTPSA id q8-20020a170902a3c800b00172897952a0sm6492116plb.283.2022.09.06.22.04.16
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 06 Sep 2022 22:04:17 -0700 (PDT)
-Sender: Namhyung Kim <namhyung@gmail.com>
-From:   Namhyung Kim <namhyung@kernel.org>
-To:     Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Jiri Olsa <jolsa@kernel.org>
-Cc:     Ingo Molnar <mingo@kernel.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Ian Rogers <irogers@google.com>,
-        linux-perf-users@vger.kernel.org, bpf@vger.kernel.org,
-        Marco Elver <elver@google.com>,
-        Song Liu <songliubraving@fb.com>
-Subject: [PATCH v2] perf test: Skip sigtrap test on old kernels
-Date:   Tue,  6 Sep 2022 22:04:07 -0700
-Message-Id: <20220907050407.2711513-1-namhyung@kernel.org>
-X-Mailer: git-send-email 2.37.2.789.g6183377224-goog
+        Wed, 7 Sep 2022 01:05:36 -0400
+Received: from mga05.intel.com (mga05.intel.com [192.55.52.43])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 540BA7C1FB;
+        Tue,  6 Sep 2022 22:05:35 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1662527135; x=1694063135;
+  h=message-id:date:mime-version:subject:to:cc:references:
+   from:in-reply-to:content-transfer-encoding;
+  bh=3hKO8goXwPPBPFjOJolVzOo3e+yHPR0/w089nXehW1I=;
+  b=I0+tJ5eH0fHbcnrVEk4XkXfsu9ZIKm3I58yG/glLDcLygbPErXRkPjAe
+   /QlQdsLkbHzqDz/QhamHV4GU4yx9wxp5UaMBbLS/J2B9R5NbcnZNLBIbN
+   WRJL7d9CIHJYh9JEweEUzOuZQVl4vO9dUpaYxBSz6/JL+/rF1WVMs5XPW
+   Bq7x0DfXoWKebnu8D3IbekbYDjhj4M9PHP2UtVMNeQdfVsFwG4goKkSFg
+   J2oo5bjGk1UzBpqzlUghKjYgulHQM9BAeRDoovdRZd6uXanLoYFP/NwDE
+   CmIANsu7D+oRHS/C10hBdOXKY2IgEB/j6D/mhxAJW4q5MjBtYmFKtt/pX
+   Q==;
+X-IronPort-AV: E=McAfee;i="6500,9779,10462"; a="383076154"
+X-IronPort-AV: E=Sophos;i="5.93,295,1654585200"; 
+   d="scan'208";a="383076154"
+Received: from fmsmga008.fm.intel.com ([10.253.24.58])
+  by fmsmga105.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 06 Sep 2022 22:05:35 -0700
+X-IronPort-AV: E=Sophos;i="5.93,295,1654585200"; 
+   d="scan'208";a="676011657"
+Received: from alinassi-mobl1.ger.corp.intel.com (HELO [10.0.2.15]) ([10.252.58.27])
+  by fmsmga008-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 06 Sep 2022 22:05:31 -0700
+Message-ID: <4763358a-91fa-3607-dd54-749b40f977fc@intel.com>
+Date:   Wed, 7 Sep 2022 08:05:27 +0300
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
+ Firefox/91.0 Thunderbird/91.11.0
+Subject: Re: [PATCH V2] libperf evlist: Fix per-thread mmaps for
+ multi-threaded targets
+Content-Language: en-US
+To:     Jiri Olsa <olsajiri@gmail.com>
+Cc:     Arnaldo Carvalho de Melo <acme@kernel.org>,
+        Jiri Olsa <jolsa@redhat.com>,
+        Namhyung Kim <namhyung@kernel.org>,
+        Ian Rogers <irogers@google.com>, linux-kernel@vger.kernel.org,
+        linux-perf-users@vger.kernel.org,
+        Peter Zijlstra <peterz@infradead.org>,
+        Ingo Molnar <mingo@redhat.com>
+References: <20220905114209.8389-1-adrian.hunter@intel.com>
+ <YxdEQkmkZjBC6wGb@krava> <60b5c9bf-4ec9-957e-17dd-aa0a50411ff9@intel.com>
+ <YxejRK2/LO7QouOZ@krava>
+From:   Adrian Hunter <adrian.hunter@intel.com>
+Organization: Intel Finland Oy, Registered Address: PL 281, 00181 Helsinki,
+ Business Identity Code: 0357606 - 4, Domiciled in Helsinki
+In-Reply-To: <YxejRK2/LO7QouOZ@krava>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-If it runs on an old kernel, perf_event_open would fail because of the
-new fields sigtrap and sig_data.  Just skipping the test could miss an
-actual bug in the kernel.
+On 6/09/22 22:45, Jiri Olsa wrote:
+> On Tue, Sep 06, 2022 at 05:04:45PM +0300, Adrian Hunter wrote:
+>> On 6/09/22 15:59, Jiri Olsa wrote:
+>>> On Mon, Sep 05, 2022 at 02:42:09PM +0300, Adrian Hunter wrote:
+>>>
+>>> SNIP
+>>>
+>>>> diff --git a/tools/lib/perf/evlist.c b/tools/lib/perf/evlist.c
+>>>> index e6c98a6e3908..6b1bafe267a4 100644
+>>>> --- a/tools/lib/perf/evlist.c
+>>>> +++ b/tools/lib/perf/evlist.c
+>>>> @@ -486,6 +486,7 @@ mmap_per_evsel(struct perf_evlist *evlist, struct perf_evlist_mmap_ops *ops,
+>>>>  			if (ops->idx)
+>>>>  				ops->idx(evlist, evsel, mp, idx);
+>>>>  
+>>>> +			pr_debug("idx %d: mmapping fd %d\n", idx, *output);
+>>>>  			if (ops->mmap(map, mp, *output, evlist_cpu) < 0)
+>>>>  				return -1;
+>>>>  
+>>>> @@ -494,6 +495,7 @@ mmap_per_evsel(struct perf_evlist *evlist, struct perf_evlist_mmap_ops *ops,
+>>>>  			if (!idx)
+>>>>  				perf_evlist__set_mmap_first(evlist, map, overwrite);
+>>>>  		} else {
+>>>> +			pr_debug("idx %d: set output fd %d -> %d\n", idx, fd, *output);
+>>>>  			if (ioctl(fd, PERF_EVENT_IOC_SET_OUTPUT, *output) != 0)
+>>>>  				return -1;
+>>>>  
+>>>> @@ -519,6 +521,48 @@ mmap_per_evsel(struct perf_evlist *evlist, struct perf_evlist_mmap_ops *ops,
+>>>>  	return 0;
+>>>>  }
+>>>>  
+>>>> +static int
+>>>> +mmap_per_thread(struct perf_evlist *evlist, struct perf_evlist_mmap_ops *ops,
+>>>> +		struct perf_mmap_param *mp)
+>>>> +{
+>>>> +	int nr_threads = perf_thread_map__nr(evlist->threads);
+>>>> +	int nr_cpus    = perf_cpu_map__nr(evlist->all_cpus);
+>>>> +	int cpu, thread, idx = 0;
+>>>> +	int nr_mmaps = 0;
+>>>> +
+>>>> +	pr_debug("%s: nr cpu values (may include -1) %d nr threads %d\n",
+>>>> +		 __func__, nr_cpus, nr_threads);
+>>>
+>>> -1 as cpu value is only for 'empty' perf_cpu_map, right?
+>>
+>> The cpu map is a map of valid 3rd arguments to perf_event_open, so -1
+>> means all CPUs which is per-thread by necessity.
+>>
+>>>
+>>>> +
+>>>> +	/* per-thread mmaps */
+>>>> +	for (thread = 0; thread < nr_threads; thread++, idx++) {
+>>>> +		int output = -1;
+>>>> +		int output_overwrite = -1;
+>>>> +
+>>>> +		if (mmap_per_evsel(evlist, ops, idx, mp, 0, thread, &output,
+>>>> +				   &output_overwrite, &nr_mmaps))
+>>>> +			goto out_unmap;
+>>>> +	}
+>>>> +
+>>>> +	/* system-wide mmaps i.e. per-cpu */
+>>>> +	for (cpu = 1; cpu < nr_cpus; cpu++, idx++) {
+>>>> +		int output = -1;
+>>>> +		int output_overwrite = -1;
+>>>> +
+>>>> +		if (mmap_per_evsel(evlist, ops, idx, mp, cpu, 0, &output,
+>>>> +				   &output_overwrite, &nr_mmaps))
+>>>> +			goto out_unmap;
+>>>> +	}
+>>>
+>>> will this loop be executed? we are in here because all_cpus is empty, right?
+>>
+>> Yes it is executed.  I put back the code that was there before ae4f8ae16a07
+>> ("libperf evlist: Allow mixing per-thread and per-cpu mmaps"), which uses
+> 
+> hm, but commit ae4f8ae16a07 does not have similar cpu loop
 
-Let's check BTF if it has the perf_event_attr.sigtrap field.
+It was calling mmap_per_cpu() for that case.
 
-Cc: Marco Elver <elver@google.com>
-Cc: Song Liu <songliubraving@fb.com>
-Signed-off-by: Namhyung Kim <namhyung@kernel.org>
----
- tools/perf/tests/sigtrap.c | 46 +++++++++++++++++++++++++++++++++++++-
- 1 file changed, 45 insertions(+), 1 deletion(-)
+The 2 cases: mmap_per_cpu() and mmap_per_thread() could still be
+combined into a single function.
 
-diff --git a/tools/perf/tests/sigtrap.c b/tools/perf/tests/sigtrap.c
-index e32ece90e164..32f08ce0f2b0 100644
---- a/tools/perf/tests/sigtrap.c
-+++ b/tools/perf/tests/sigtrap.c
-@@ -16,6 +16,8 @@
- #include <sys/syscall.h>
- #include <unistd.h>
- 
-+#include <bpf/btf.h>
-+
- #include "cloexec.h"
- #include "debug.h"
- #include "event.h"
-@@ -54,6 +56,42 @@ static struct perf_event_attr make_event_attr(void)
- 	return attr;
- }
- 
-+static bool attr_has_sigtrap(void)
-+{
-+	bool ret = false;
-+
-+#ifdef HAVE_BPF_SKEL
-+
-+	struct btf *btf;
-+	const struct btf_type *t;
-+	const struct btf_member *m;
-+	const char *name;
-+	int i, id;
-+
-+	/* just assume it doesn't have the field */
-+	btf = btf__load_vmlinux_btf();
-+	if (btf == NULL)
-+		return false;
-+
-+	id = btf__find_by_name_kind(btf, "perf_event_attr", BTF_KIND_STRUCT);
-+	if (id < 0)
-+		goto out;
-+
-+	t = btf__type_by_id(btf, id);
-+	for (i = 0, m = btf_members(t); i < btf_vlen(t); i++, m++) {
-+		name = btf__name_by_offset(btf, m->name_off);
-+		if (!strcmp(name, "sigtrap")) {
-+			ret = true;
-+			break;
-+		}
-+	}
-+out:
-+	btf__free(btf);
-+#endif
-+
-+	return ret;
-+}
-+
- static void
- sigtrap_handler(int signum __maybe_unused, siginfo_t *info, void *ucontext __maybe_unused)
- {
-@@ -139,7 +177,13 @@ static int test__sigtrap(struct test_suite *test __maybe_unused, int subtest __m
- 
- 	fd = sys_perf_event_open(&attr, 0, -1, -1, perf_event_open_cloexec_flag());
- 	if (fd < 0) {
--		pr_debug("FAILED sys_perf_event_open(): %s\n", str_error_r(errno, sbuf, sizeof(sbuf)));
-+		if (attr_has_sigtrap()) {
-+			pr_debug("FAILED sys_perf_event_open(): %s\n",
-+				 str_error_r(errno, sbuf, sizeof(sbuf)));
-+		} else {
-+			pr_debug("perf_event_attr doesn't have sigtrap\n");
-+			ret = TEST_SKIP;
-+		}
- 		goto out_restore_sigaction;
- 	}
- 
--- 
-2.37.2.789.g6183377224-goog
+> 
+>> perf_cpu_map__empty() which only checks the first entry is -1:
+>>
+>> bool perf_cpu_map__empty(const struct perf_cpu_map *map)
+>> {
+>> 	return map ? map->map[0].cpu == -1 : true;
+>> }
+>>
+>> But there can be more CPUs in the map, so perf_cpu_map__empty()
+>> returns true for the per-thread case, as desired, even if there
+>> are also system-wide CPUs.
+> 
+> I don't see how, if I'd see -1 together with other cpu values in
+> perf_cpu_map I'd think it's a bug, but I might be missing some
+> auxtrace usage,
+
+Yes, it is for system-wide collection of events that can affect
+every CPU.  Currently text_poke is always system-wide - see the
+Intel PT example.
+
+> 
+> I thought we use -1 just for empty cpu map, so in per-thread case
+> -1 is properly passed to perf_event_open syscall
+
+Yes, but it does not need to be limited to that case.
+
+> 
+> jirka
+> 
+>>
+>> I guess perf_cpu_map__empty() needs renaming.
+>>
+>>>
+>>> thanks,
+>>> jirka
+>>>
+>>>> +
+>>>> +	if (nr_mmaps != evlist->nr_mmaps)
+>>>> +		pr_err("Miscounted nr_mmaps %d vs %d\n", nr_mmaps, evlist->nr_mmaps);
+>>>> +
+>>>> +	return 0;
+>>>> +
+>>>> +out_unmap:
+>>>> +	perf_evlist__munmap(evlist);
+>>>> +	return -1;
+>>>> +}
+>>>
+>>> SNIP
+>>
 
