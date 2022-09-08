@@ -2,75 +2,100 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 184DAC54EE9
-	for <linux-perf-users@archiver.kernel.org>; Thu,  8 Sep 2022 13:45:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9BE1CC54EE9
+	for <linux-perf-users@archiver.kernel.org>; Thu,  8 Sep 2022 15:00:13 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230461AbiIHNpl (ORCPT
+        id S231822AbiIHPAM (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Thu, 8 Sep 2022 09:45:41 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38272 "EHLO
+        Thu, 8 Sep 2022 11:00:12 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50878 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230451AbiIHNpk (ORCPT
+        with ESMTP id S232685AbiIHPAL (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Thu, 8 Sep 2022 09:45:40 -0400
-Received: from desiato.infradead.org (desiato.infradead.org [IPv6:2001:8b0:10b:1:d65d:64ff:fe57:4e05])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D4ACB5C956;
-        Thu,  8 Sep 2022 06:45:34 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=desiato.20200630; h=In-Reply-To:Content-Type:MIME-Version:
-        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description;
-        bh=twY36YI+Be9YAlDEXSHaceHAZcOE50tyeV0xFsPeMQc=; b=mcWsEqKY9fToo/d5WOKSIiaU/+
-        c9m1nn0Fjz+ycqPz886l04XsEVOmCTHE1uwdgKBF+9EB+HMm9Ar5BBeoZAmEy3jfZIq+6OiRa8niy
-        xCUGSjrKAvkrah8NZ4IlpBM3qJICx2aqX3mO1dYKSE5ithkYarsrw8bu7x/XY1O6OLsLV8ld7lSF5
-        sHmWirU5ndTkGSI3Gh4mu/cVsRe2/J+p5xyhvicoYAH909H1sGYd+7LQsXUFRG/ahT443YElt3zDP
-        kc+bKPTRRXKq4d5hgpcS9R+kzluYZkbg76nqb3nnVHI1ZuPPXtv5GeaZoJzZyUn3NnSGZ4mA0mK9I
-        OYNfTfrw==;
-Received: from j130084.upc-j.chello.nl ([24.132.130.84] helo=noisy.programming.kicks-ass.net)
-        by desiato.infradead.org with esmtpsa (Exim 4.94.2 #2 (Red Hat Linux))
-        id 1oWHqM-00AkJb-5L; Thu, 08 Sep 2022 13:45:22 +0000
-Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange X25519 server-signature RSA-PSS (4096 bits))
-        (Client did not present a certificate)
-        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id BC7AE30013F;
-        Thu,  8 Sep 2022 15:45:20 +0200 (CEST)
-Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
-        id 918BB207AB808; Thu,  8 Sep 2022 15:45:20 +0200 (CEST)
-Date:   Thu, 8 Sep 2022 15:45:20 +0200
-From:   Peter Zijlstra <peterz@infradead.org>
-To:     Sean Christopherson <seanjc@google.com>
-Cc:     Ingo Molnar <mingo@redhat.com>,
+        Thu, 8 Sep 2022 11:00:11 -0400
+Received: from mail-pf1-x42e.google.com (mail-pf1-x42e.google.com [IPv6:2607:f8b0:4864:20::42e])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5F2696BD78
+        for <linux-perf-users@vger.kernel.org>; Thu,  8 Sep 2022 08:00:10 -0700 (PDT)
+Received: by mail-pf1-x42e.google.com with SMTP id e5so370444pfl.2
+        for <linux-perf-users@vger.kernel.org>; Thu, 08 Sep 2022 08:00:10 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date;
+        bh=6mOtRJiMPyonv/bkW5gp+WSqwfTGGUhwL8zA7GLIfu8=;
+        b=MBw0I19ZIV+EImtz/TADUZsN1wzNaUIByF+dV8m5aK05JyWyMK3B5ZH0lMheqOvBpH
+         jXBQEEeEL5AEBwu0Cs2LE67tSIVtijmCZNuwhm1ZZNcZvyR59TjVq6ZuMRJFhO07aH0D
+         cSu8CSkYhyKbx25YXsrGPKmifPxQ7Lr9QA6GG73XjswoQaLXOXqYLqOATe82EwIxAVq6
+         RdThPwZ8c2v65T610vPdPkguHXjYNMZeAQdDRnwI3smvdM8Lfw/s4gLzo4eas5mOu6ta
+         yeXcykalp8vfbVHGvJc9TJGa0vsgEhD8Hh4BSXC7BLTZ/fv5dpDJ+45yonelavKFrw58
+         K8tw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date;
+        bh=6mOtRJiMPyonv/bkW5gp+WSqwfTGGUhwL8zA7GLIfu8=;
+        b=f5//08V25ToTIplkEpPBeXFH2QwtW22sCQrb3vYlAtoalo+U+eLzC9qbMVbtdQWt0R
+         x5J+TXhZt4UqJzEdTuC0OygFh4YE3+USxja1RxrLrnWnZC86hsAYq2I3Tqiffwcysu7+
+         1cfS8q4JkJYctadaslJ8s4GfrfWUQ9Wp7HjH4/XGFtdf8C5Y6Ez7mVqPvTCuD46Gbhjj
+         wheUWFhrz6tdDbRPl3FytrTgQgWxu4PHRUK8v1ofyCXAX+BDXNjtAX/D5CjKzi2VVCCS
+         N7G6rV7Fv5n7IlGRFBpiaRscows4EDo3Lt5AHxka17ZJdjr0R0BPlXKQHGGAxI1wCSCd
+         7HHg==
+X-Gm-Message-State: ACgBeo2M1aFfpmi3IbvCcA/iKmiWyPv6rFpOUA9tLUpXbovqAMFkl3dq
+        3ET734I1RokyXMghGtEtSrB5nA==
+X-Google-Smtp-Source: AA6agR725v+e8+/Njs0timpLfPIxaymME9lYcuVqRRvk0am9g6wfKCRleYvdHse+nLSvS5YVvYwO5g==
+X-Received: by 2002:a05:6a00:4146:b0:537:df7d:d5d2 with SMTP id bv6-20020a056a00414600b00537df7dd5d2mr9550317pfb.31.1662649209772;
+        Thu, 08 Sep 2022 08:00:09 -0700 (PDT)
+Received: from leoy-huanghe.lan (n058152077182.netvigator.com. [58.152.77.182])
+        by smtp.gmail.com with ESMTPSA id m3-20020a170902f64300b0016c9e5f291bsm14622104plg.111.2022.09.08.08.00.05
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 08 Sep 2022 08:00:09 -0700 (PDT)
+Date:   Thu, 8 Sep 2022 23:00:03 +0800
+From:   Leo Yan <leo.yan@linaro.org>
+To:     Peter Zijlstra <peterz@infradead.org>,
         Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Paolo Bonzini <pbonzini@redhat.com>,
+        Ingo Molnar <mingo@redhat.com>,
         Mark Rutland <mark.rutland@arm.com>,
         Alexander Shishkin <alexander.shishkin@linux.intel.com>,
         Jiri Olsa <jolsa@kernel.org>,
         Namhyung Kim <namhyung@kernel.org>,
-        linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org,
-        kvm@vger.kernel.org, Like Xu <like.xu.linux@gmail.com>
-Subject: Re: [PATCH v4 0/5]  KVM: x86: Intel LBR related perf cleanups
-Message-ID: <Yxnx8InRcF94zi0n@hirez.programming.kicks-ass.net>
-References: <20220901173258.925729-1-seanjc@google.com>
+        linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
+Cc:     Ali Saidi <alisaidi@amazon.com>, Kajol Jain <kjain@linux.ibm.com>
+Subject: Re: [PATCH v7] perf: Add SNOOP_PEER flag to perf mem data struct
+Message-ID: <YxoDc8k3YEbzw7KI@leoy-huanghe.lan>
+References: <20220826060556.176681-1-leo.yan@linaro.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20220901173258.925729-1-seanjc@google.com>
+In-Reply-To: <20220826060556.176681-1-leo.yan@linaro.org>
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-On Thu, Sep 01, 2022 at 05:32:53PM +0000, Sean Christopherson wrote:
+On Fri, Aug 26, 2022 at 02:05:56PM +0800, Leo Yan wrote:
+> From: Ali Saidi <alisaidi@amazon.com>
+> 
+> Add a flag to the perf mem data struct to signal that a request caused a
+> cache-to-cache transfer of a line from a peer of the requestor and
+> wasn't sourced from a lower cache level.  The line being moved from one
+> peer cache to another has latency and performance implications. On Arm64
+> Neoverse systems the data source can indicate a cache-to-cache transfer
+> but not if the line is dirty or clean, so instead of overloading HITM
+> define a new flag that indicates this type of transfer.
+> 
+> Update notes:
+> 
+> This patch is to sync the headers between kernel and user space, commit
+> 2e21bcf0514a ("perf tools: Sync addition of PERF_MEM_SNOOPX_PEER") for
+> updating kernel header has been merged in the mainline code.
+> 
+> Signed-off-by: Ali Saidi <alisaidi@amazon.com>
+> Reviewed-by: Leo Yan <leo.yan@linaro.org>
+> Reviewed-by: Kajol Jain<kjain@linux.ibm.com>
+> Signed-off-by: Leo Yan <leo.yan@linaro.org>
 
-> Sean Christopherson (5):
->   perf/x86/core: Remove unnecessary stubs provided for KVM-only helpers
->   perf/x86/core: Drop the unnecessary return value from
->     x86_perf_get_lbr()
->   KVM: VMX: Move vmx_get_perf_capabilities() definition to vmx.c
->   KVM: VMX: Fold vmx_supported_debugctl() into vcpu_supported_debugctl()
->   KVM: VMX: Advertise PMU LBRs if and only if perf supports LBRs
+Gentle ping ...
 
-These look good to me; how do you want this routed, if through the KVM
-tree:
+Hi Peter, could you pick this patch if it's okay for you?
 
-Acked-by: Peter Zijlstra (Intel) <peterz@infradead.org>
+Thanks,
+Leo
