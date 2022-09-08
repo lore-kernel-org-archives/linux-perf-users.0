@@ -2,47 +2,47 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 572E6C38145
-	for <linux-perf-users@archiver.kernel.org>; Thu,  8 Sep 2022 06:59:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 69393ECAAD5
+	for <linux-perf-users@archiver.kernel.org>; Thu,  8 Sep 2022 07:08:29 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231200AbiIHG7s (ORCPT
+        id S230108AbiIHHI1 (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Thu, 8 Sep 2022 02:59:48 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51228 "EHLO
+        Thu, 8 Sep 2022 03:08:27 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39122 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231201AbiIHG7p (ORCPT
+        with ESMTP id S229884AbiIHHIX (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Thu, 8 Sep 2022 02:59:45 -0400
-Received: from mail-oa1-f53.google.com (mail-oa1-f53.google.com [209.85.160.53])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1E3C6B1E2;
-        Wed,  7 Sep 2022 23:59:39 -0700 (PDT)
-Received: by mail-oa1-f53.google.com with SMTP id 586e51a60fabf-1278a61bd57so23465634fac.7;
-        Wed, 07 Sep 2022 23:59:39 -0700 (PDT)
+        Thu, 8 Sep 2022 03:08:23 -0400
+Received: from mail-oa1-f50.google.com (mail-oa1-f50.google.com [209.85.160.50])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6C79DA1D54;
+        Thu,  8 Sep 2022 00:08:18 -0700 (PDT)
+Received: by mail-oa1-f50.google.com with SMTP id 586e51a60fabf-1279948d93dso22228760fac.10;
+        Thu, 08 Sep 2022 00:08:18 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
         h=cc:to:subject:message-id:date:from:in-reply-to:references
          :mime-version:x-gm-message-state:from:to:cc:subject:date;
-        bh=PL5sFutse4CuxEfTtpSy/YygDoAtPS3qoXDa8gawEm8=;
-        b=AJ5hPhg4/qg9iMKZvpW+NcKUjXT5JPU4T1ss3T+By2VzK3BP+PbWt4JwaP8Lmhkbb0
-         pqG4CedSfKj1SyXpCA2vFjsYvZIF0j5iCzKdULZJkZBQACvoKM+2YFKOpiKb0LoRw5ml
-         AUPIJckFHSjANi/cPYL8GUfrLHUlveNx9KR1MDwxyOLuk3BOSM5rYMVZX4mM2CdnDZRk
-         NYjO5zN2t07DHnlrDju9FDKwJJuwb6EKT6GImR1uIxQ0EtBOlXzQwkcr4HG3l8KC8oCj
-         z2z30S0C/PvSH6xTOMeA+Bvc1/DeQHIxDUpiwNyJfcZ+toMuEOSBgahMg9YysOeq4iE3
-         fsRw==
-X-Gm-Message-State: ACgBeo3f3dBjQiFipb6MWEI53vYZACDEBB24RHyMg81wxX+cf9faO2nA
-        kf8VTLwMIBHWNU8lOB6OGNpp9uL4UvW8SH3JD2Q=
-X-Google-Smtp-Source: AA6agR77tCrqb7/HX1SoQqqTfvx/HEve3UlERGZqx3jX1p5BWKbmxqvSBEnIV9yuTVXek2CF/RW9hkoJYJqdEhlzt5c=
-X-Received: by 2002:a05:6808:302a:b0:345:ec04:8f11 with SMTP id
- ay42-20020a056808302a00b00345ec048f11mr851693oib.5.1662620378888; Wed, 07 Sep
- 2022 23:59:38 -0700 (PDT)
+        bh=RhnrPpOs8U7U5e/dDJlH9qsFhHWq2idwdbhm4KgyDo4=;
+        b=lYW3S3bB/fE704zu/ErhyTkBvFw+M4YZOzIBsKsTTBUTSQeZsgEcanqEm1gbvDCgao
+         3Vtl/tLIdz8pGuIu57x+oBCHoe1zNsqRAeMLFY2D+ofTEoPJR8OIsbQD8dAZd2iiLUGG
+         UGaEV/cogSLnpOb/qh1GySGkXbvUGKybj16Dl+rHsHnCbBOPN45NtWScVUyXJiDbSRk4
+         CIKUgWSUTAm0nvCLGbUkbyfbH20bljJu8+iownsPZLFcT+/KeR3Ak6LTbcjrqwVccqrA
+         gTIBUHMnee69//hg8rYKewfcubvaWRQBU6RZtnBQoRyUnN+1vt50zsGm2M9lpj0bLVjQ
+         KB4w==
+X-Gm-Message-State: ACgBeo3FwqW2DcmWRAHG2GRjfFZio6Grt+WWwvyTcoFnh15tCyCDnYh1
+        O9+wrpwdO31dWPh7yi7yjyeOeauUzNoC9iteHYs=
+X-Google-Smtp-Source: AA6agR5OR9+PcRlakwJ5yROIppbvT89qJRBPOVNcKbTPRIqlXsnSpnWcnzUjTp+kb2uksFNQ1ock3rtw8nvbvjtuvGg=
+X-Received: by 2002:a05:6870:5b84:b0:10c:d1fa:2f52 with SMTP id
+ em4-20020a0568705b8400b0010cd1fa2f52mr1158961oab.92.1662620897764; Thu, 08
+ Sep 2022 00:08:17 -0700 (PDT)
 MIME-Version: 1.0
-References: <20220908014854.151203-1-yangjihong1@huawei.com>
-In-Reply-To: <20220908014854.151203-1-yangjihong1@huawei.com>
+References: <20220908021141.27134-1-shangxiaojing@huawei.com>
+In-Reply-To: <20220908021141.27134-1-shangxiaojing@huawei.com>
 From:   Namhyung Kim <namhyung@kernel.org>
-Date:   Wed, 7 Sep 2022 23:59:27 -0700
-Message-ID: <CAM9d7ciPd4vf3v1rdOD43vR-bh0pjj1LCcrMVTLfH6Fcxx_Dsw@mail.gmail.com>
-Subject: Re: [PATCH] perf lock: Remove redundant word 'contention' in help message
-To:     Yang Jihong <yangjihong1@huawei.com>
+Date:   Thu, 8 Sep 2022 00:08:06 -0700
+Message-ID: <CAM9d7cgOVSohQ6cLnPc3QJZ9aus_pq8xjiRf8WRy8WOuaogoTQ@mail.gmail.com>
+Subject: Re: [PATCH 0/4] perf: Clean up by adding helpers
+To:     Shang XiaoJing <shangxiaojing@huawei.com>
 Cc:     Peter Zijlstra <peterz@infradead.org>,
         Ingo Molnar <mingo@redhat.com>,
         Arnaldo Carvalho de Melo <acme@kernel.org>,
@@ -58,62 +58,29 @@ X-Mailing-List: linux-perf-users@vger.kernel.org
 
 Hello,
 
-On Wed, Sep 7, 2022 at 6:52 PM Yang Jihong <yangjihong1@huawei.com> wrote:
+On Wed, Sep 7, 2022 at 6:37 PM Shang XiaoJing <shangxiaojing@huawei.com> wrote:
 >
-> Before:
->   # perf lock -h
+> Some clean up in builtin-lock.c, builtin-timechart.c, and
+> builtin-trace.c.
 >
->    Usage: perf lock [<options>] {record|report|script|info|contention|contention}
->
->       -D, --dump-raw-trace  dump raw trace in ASCII
->       -f, --force           don't complain, do it
->       -i, --input <file>    input file name
->       -v, --verbose         be more verbose (show symbol address, etc)
->           --kallsyms <file>
->                             kallsyms pathname
->           --vmlinux <file>  vmlinux pathname
->
-> After:
->   # perf lock -h
->
->    Usage: perf lock [<options>] {record|report|script|info|contention}
->
->       -D, --dump-raw-trace  dump raw trace in ASCII
->       -f, --force           don't complain, do it
->       -i, --input <file>    input file name
->       -v, --verbose         be more verbose (show symbol address, etc)
->           --kallsyms <file>
->                             kallsyms pathname
->           --vmlinux <file>  vmlinux pathname
->
-> Fixes: 528b9cab3b81 ("perf lock: Add 'contention' subcommand")
-> Signed-off-by: Yang Jihong <yangjihong1@huawei.com>
+> Shang XiaoJing (4):
+>   perf trace: Use zalloc to save initialization of syscall_stats
+>   perf lock: Add get_key_by_aggr_mode helper
+>   perf timechart: Add create_pidcomm helper
+>   perf timechart: Add p_state_end helper
 
 Acked-by: Namhyung Kim <namhyung@kernel.org>
 
-Thanks for the fix!
-
+Thanks,
 Namhyung
 
 
-> ---
->  tools/perf/builtin-lock.c | 3 +--
->  1 file changed, 1 insertion(+), 2 deletions(-)
 >
-> diff --git a/tools/perf/builtin-lock.c b/tools/perf/builtin-lock.c
-> index dd11d3471baf..ea40ae52cd2c 100644
-> --- a/tools/perf/builtin-lock.c
-> +++ b/tools/perf/builtin-lock.c
-> @@ -1874,8 +1874,7 @@ int cmd_lock(int argc, const char **argv)
->                 NULL
->         };
->         const char *const lock_subcommands[] = { "record", "report", "script",
-> -                                                "info", "contention",
-> -                                                "contention", NULL };
-> +                                                "info", "contention", NULL };
->         const char *lock_usage[] = {
->                 NULL,
->                 NULL
+>  tools/perf/builtin-lock.c      | 129 ++++++++++++++-------------------
+>  tools/perf/builtin-timechart.c |  65 +++++++++--------
+>  tools/perf/builtin-trace.c     |   5 +-
+>  3 files changed, 88 insertions(+), 111 deletions(-)
+>
 > --
-> 2.30.GIT
+> 2.17.1
 >
