@@ -2,126 +2,98 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 60754C6FA89
-	for <linux-perf-users@archiver.kernel.org>; Thu,  8 Sep 2022 01:37:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 119BCECAAD3
+	for <linux-perf-users@archiver.kernel.org>; Thu,  8 Sep 2022 01:52:27 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229866AbiIHBhH (ORCPT
+        id S229974AbiIHBwZ (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Wed, 7 Sep 2022 21:37:07 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37840 "EHLO
+        Wed, 7 Sep 2022 21:52:25 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58084 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229637AbiIHBhF (ORCPT
+        with ESMTP id S229957AbiIHBwZ (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Wed, 7 Sep 2022 21:37:05 -0400
-Received: from szxga03-in.huawei.com (szxga03-in.huawei.com [45.249.212.189])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CEF38C6CF5;
-        Wed,  7 Sep 2022 18:37:04 -0700 (PDT)
-Received: from dggemv704-chm.china.huawei.com (unknown [172.30.72.56])
-        by szxga03-in.huawei.com (SkyGuard) with ESMTP id 4MNMBM66fGzHncw;
-        Thu,  8 Sep 2022 09:35:07 +0800 (CST)
-Received: from kwepemm600008.china.huawei.com (7.193.23.88) by
- dggemv704-chm.china.huawei.com (10.3.19.47) with Microsoft SMTP Server
+        Wed, 7 Sep 2022 21:52:25 -0400
+Received: from szxga01-in.huawei.com (szxga01-in.huawei.com [45.249.212.187])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D43FA99279;
+        Wed,  7 Sep 2022 18:52:22 -0700 (PDT)
+Received: from dggemv703-chm.china.huawei.com (unknown [172.30.72.57])
+        by szxga01-in.huawei.com (SkyGuard) with ESMTP id 4MNMWG21cHznV2h;
+        Thu,  8 Sep 2022 09:49:46 +0800 (CST)
+Received: from kwepemm600003.china.huawei.com (7.193.23.202) by
+ dggemv703-chm.china.huawei.com (10.3.19.46) with Microsoft SMTP Server
  (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2375.24; Thu, 8 Sep 2022 09:37:03 +0800
-Received: from huawei.com (10.175.100.227) by kwepemm600008.china.huawei.com
- (7.193.23.88) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2375.24; Thu, 8 Sep
- 2022 09:37:02 +0800
-From:   Shang XiaoJing <shangxiaojing@huawei.com>
+ 15.1.2375.24; Thu, 8 Sep 2022 09:52:20 +0800
+Received: from ubuntu1804.huawei.com (10.67.174.61) by
+ kwepemm600003.china.huawei.com (7.193.23.202) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2375.24; Thu, 8 Sep 2022 09:52:20 +0800
+From:   Yang Jihong <yangjihong1@huawei.com>
 To:     <peterz@infradead.org>, <mingo@redhat.com>, <acme@kernel.org>,
         <mark.rutland@arm.com>, <alexander.shishkin@linux.intel.com>,
         <jolsa@kernel.org>, <namhyung@kernel.org>,
         <linux-perf-users@vger.kernel.org>, <linux-kernel@vger.kernel.org>
-CC:     <shangxiaojing@huawei.com>
-Subject: [PATCH 3/4] perf timechart: Add create_pidcomm helper
-Date:   Thu, 8 Sep 2022 10:11:40 +0800
-Message-ID: <20220908021141.27134-4-shangxiaojing@huawei.com>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20220908021141.27134-1-shangxiaojing@huawei.com>
-References: <20220908021141.27134-1-shangxiaojing@huawei.com>
+CC:     <yangjihong1@huawei.com>
+Subject: [PATCH] perf lock: Remove redundant word 'contention' in help message
+Date:   Thu, 8 Sep 2022 09:48:54 +0800
+Message-ID: <20220908014854.151203-1-yangjihong1@huawei.com>
+X-Mailer: git-send-email 2.30.GIT
 MIME-Version: 1.0
-Content-Type: text/plain
-X-Originating-IP: [10.175.100.227]
-X-ClientProxiedBy: dggems703-chm.china.huawei.com (10.3.19.180) To
- kwepemm600008.china.huawei.com (7.193.23.88)
+Content-Transfer-Encoding: 7BIT
+Content-Type:   text/plain; charset=US-ASCII
+X-Originating-IP: [10.67.174.61]
+X-ClientProxiedBy: dggems702-chm.china.huawei.com (10.3.19.179) To
+ kwepemm600003.china.huawei.com (7.193.23.202)
 X-CFilter-Loop: Reflected
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-Wrap repeated code combined with alloc of per_pidcomm in helper function
-create_pidcomm.
+Before:
+  # perf lock -h
 
-Signed-off-by: Shang XiaoJing <shangxiaojing@huawei.com>
+   Usage: perf lock [<options>] {record|report|script|info|contention|contention}
+
+      -D, --dump-raw-trace  dump raw trace in ASCII
+      -f, --force           don't complain, do it
+      -i, --input <file>    input file name
+      -v, --verbose         be more verbose (show symbol address, etc)
+          --kallsyms <file>
+                            kallsyms pathname
+          --vmlinux <file>  vmlinux pathname
+
+After:
+  # perf lock -h
+
+   Usage: perf lock [<options>] {record|report|script|info|contention}
+
+      -D, --dump-raw-trace  dump raw trace in ASCII
+      -f, --force           don't complain, do it
+      -i, --input <file>    input file name
+      -v, --verbose         be more verbose (show symbol address, etc)
+          --kallsyms <file>
+                            kallsyms pathname
+          --vmlinux <file>  vmlinux pathname
+
+Fixes: 528b9cab3b81 ("perf lock: Add 'contention' subcommand")
+Signed-off-by: Yang Jihong <yangjihong1@huawei.com>
 ---
- tools/perf/builtin-timechart.c | 28 ++++++++++++++++------------
- 1 file changed, 16 insertions(+), 12 deletions(-)
+ tools/perf/builtin-lock.c | 3 +--
+ 1 file changed, 1 insertion(+), 2 deletions(-)
 
-diff --git a/tools/perf/builtin-timechart.c b/tools/perf/builtin-timechart.c
-index e2e9ad929baf..667a94d45493 100644
---- a/tools/perf/builtin-timechart.c
-+++ b/tools/perf/builtin-timechart.c
-@@ -215,6 +215,19 @@ static struct per_pid *find_create_pid(struct timechart *tchart, int pid)
- 	return cursor;
- }
- 
-+static struct per_pidcomm *create_pidcomm(struct per_pid *p)
-+{
-+	struct per_pidcomm *c;
-+
-+	c = zalloc(sizeof(*c));
-+	if (!c)
-+		return NULL;
-+	p->current = c;
-+	c->next = p->all;
-+	p->all = c;
-+	return c;
-+}
-+
- static void pid_set_comm(struct timechart *tchart, int pid, char *comm)
- {
- 	struct per_pid *p;
-@@ -233,12 +246,9 @@ static void pid_set_comm(struct timechart *tchart, int pid, char *comm)
- 		}
- 		c = c->next;
- 	}
--	c = zalloc(sizeof(*c));
-+	c = create_pidcomm(p);
- 	assert(c != NULL);
- 	c->comm = strdup(comm);
--	p->current = c;
--	c->next = p->all;
--	p->all = c;
- }
- 
- static void pid_fork(struct timechart *tchart, int pid, int ppid, u64 timestamp)
-@@ -277,11 +287,8 @@ static void pid_put_sample(struct timechart *tchart, int pid, int type,
- 	p = find_create_pid(tchart, pid);
- 	c = p->current;
- 	if (!c) {
--		c = zalloc(sizeof(*c));
-+		c = create_pidcomm(p);
- 		assert(c != NULL);
--		p->current = c;
--		c->next = p->all;
--		p->all = c;
- 	}
- 
- 	sample = zalloc(sizeof(*sample));
-@@ -726,12 +733,9 @@ static int pid_begin_io_sample(struct timechart *tchart, int pid, int type,
- 	struct io_sample *prev;
- 
- 	if (!c) {
--		c = zalloc(sizeof(*c));
-+		c = create_pidcomm(p);
- 		if (!c)
- 			return -ENOMEM;
--		p->current = c;
--		c->next = p->all;
--		p->all = c;
- 	}
- 
- 	prev = c->io_samples;
+diff --git a/tools/perf/builtin-lock.c b/tools/perf/builtin-lock.c
+index dd11d3471baf..ea40ae52cd2c 100644
+--- a/tools/perf/builtin-lock.c
++++ b/tools/perf/builtin-lock.c
+@@ -1874,8 +1874,7 @@ int cmd_lock(int argc, const char **argv)
+ 		NULL
+ 	};
+ 	const char *const lock_subcommands[] = { "record", "report", "script",
+-						 "info", "contention",
+-						 "contention", NULL };
++						 "info", "contention", NULL };
+ 	const char *lock_usage[] = {
+ 		NULL,
+ 		NULL
 -- 
-2.17.1
+2.30.GIT
 
