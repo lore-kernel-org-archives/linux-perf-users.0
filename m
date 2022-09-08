@@ -2,27 +2,27 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 24C48C38145
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 60754C6FA89
 	for <linux-perf-users@archiver.kernel.org>; Thu,  8 Sep 2022 01:37:10 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229940AbiIHBhJ (ORCPT
+        id S229866AbiIHBhH (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Wed, 7 Sep 2022 21:37:09 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37858 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229853AbiIHBhH (ORCPT
-        <rfc822;linux-perf-users@vger.kernel.org>);
         Wed, 7 Sep 2022 21:37:07 -0400
-Received: from szxga08-in.huawei.com (szxga08-in.huawei.com [45.249.212.255])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1A4E8C6CF5;
-        Wed,  7 Sep 2022 18:37:05 -0700 (PDT)
-Received: from dggemv703-chm.china.huawei.com (unknown [172.30.72.53])
-        by szxga08-in.huawei.com (SkyGuard) with ESMTP id 4MNM8B6HHfz1P6jw;
-        Thu,  8 Sep 2022 09:33:14 +0800 (CST)
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37840 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S229637AbiIHBhF (ORCPT
+        <rfc822;linux-perf-users@vger.kernel.org>);
+        Wed, 7 Sep 2022 21:37:05 -0400
+Received: from szxga03-in.huawei.com (szxga03-in.huawei.com [45.249.212.189])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CEF38C6CF5;
+        Wed,  7 Sep 2022 18:37:04 -0700 (PDT)
+Received: from dggemv704-chm.china.huawei.com (unknown [172.30.72.56])
+        by szxga03-in.huawei.com (SkyGuard) with ESMTP id 4MNMBM66fGzHncw;
+        Thu,  8 Sep 2022 09:35:07 +0800 (CST)
 Received: from kwepemm600008.china.huawei.com (7.193.23.88) by
- dggemv703-chm.china.huawei.com (10.3.19.46) with Microsoft SMTP Server
+ dggemv704-chm.china.huawei.com (10.3.19.47) with Microsoft SMTP Server
  (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2375.24; Thu, 8 Sep 2022 09:37:04 +0800
+ 15.1.2375.24; Thu, 8 Sep 2022 09:37:03 +0800
 Received: from huawei.com (10.175.100.227) by kwepemm600008.china.huawei.com
  (7.193.23.88) with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2375.24; Thu, 8 Sep
@@ -33,9 +33,9 @@ To:     <peterz@infradead.org>, <mingo@redhat.com>, <acme@kernel.org>,
         <jolsa@kernel.org>, <namhyung@kernel.org>,
         <linux-perf-users@vger.kernel.org>, <linux-kernel@vger.kernel.org>
 CC:     <shangxiaojing@huawei.com>
-Subject: [PATCH 4/4] perf timechart: Add p_state_end helper
-Date:   Thu, 8 Sep 2022 10:11:41 +0800
-Message-ID: <20220908021141.27134-5-shangxiaojing@huawei.com>
+Subject: [PATCH 3/4] perf timechart: Add create_pidcomm helper
+Date:   Thu, 8 Sep 2022 10:11:40 +0800
+Message-ID: <20220908021141.27134-4-shangxiaojing@huawei.com>
 X-Mailer: git-send-email 2.17.1
 In-Reply-To: <20220908021141.27134-1-shangxiaojing@huawei.com>
 References: <20220908021141.27134-1-shangxiaojing@huawei.com>
@@ -49,89 +49,79 @@ Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-Wrap repeated code in helper functions p_state_end, which alloc a new
-power_event recording last pstate, and insert to the head of
-tchart->power_events.
+Wrap repeated code combined with alloc of per_pidcomm in helper function
+create_pidcomm.
 
 Signed-off-by: Shang XiaoJing <shangxiaojing@huawei.com>
 ---
- tools/perf/builtin-timechart.c | 37 +++++++++++++++++-----------------
- 1 file changed, 18 insertions(+), 19 deletions(-)
+ tools/perf/builtin-timechart.c | 28 ++++++++++++++++------------
+ 1 file changed, 16 insertions(+), 12 deletions(-)
 
 diff --git a/tools/perf/builtin-timechart.c b/tools/perf/builtin-timechart.c
-index 667a94d45493..c36296bb7637 100644
+index e2e9ad929baf..667a94d45493 100644
 --- a/tools/perf/builtin-timechart.c
 +++ b/tools/perf/builtin-timechart.c
-@@ -376,16 +376,13 @@ static void c_state_end(struct timechart *tchart, int cpu, u64 timestamp)
- 	tchart->power_events = pwr;
+@@ -215,6 +215,19 @@ static struct per_pid *find_create_pid(struct timechart *tchart, int pid)
+ 	return cursor;
  }
  
--static void p_state_change(struct timechart *tchart, int cpu, u64 timestamp, u64 new_freq)
-+static struct power_event *p_state_end(struct timechart *tchart, int cpu,
-+					u64 timestamp)
- {
--	struct power_event *pwr;
--
--	if (new_freq > 8000000) /* detect invalid data */
--		return;
-+	struct power_event *pwr = zalloc(sizeof(*pwr));
- 
--	pwr = zalloc(sizeof(*pwr));
- 	if (!pwr)
--		return;
++static struct per_pidcomm *create_pidcomm(struct per_pid *p)
++{
++	struct per_pidcomm *c;
++
++	c = zalloc(sizeof(*c));
++	if (!c)
 +		return NULL;
- 
- 	pwr->state = cpus_pstate_state[cpu];
- 	pwr->start_time = cpus_pstate_start_times[cpu];
-@@ -393,11 +390,23 @@ static void p_state_change(struct timechart *tchart, int cpu, u64 timestamp, u64
- 	pwr->cpu = cpu;
- 	pwr->type = PSTATE;
- 	pwr->next = tchart->power_events;
--
- 	if (!pwr->start_time)
- 		pwr->start_time = tchart->first_time;
- 
- 	tchart->power_events = pwr;
-+	return pwr;
++	p->current = c;
++	c->next = p->all;
++	p->all = c;
++	return c;
 +}
 +
-+static void p_state_change(struct timechart *tchart, int cpu, u64 timestamp, u64 new_freq)
-+{
-+	struct power_event *pwr;
-+
-+	if (new_freq > 8000000) /* detect invalid data */
-+		return;
-+
-+	pwr = p_state_end(tchart, cpu, timestamp);
-+	if (!pwr)
-+		return;
- 
- 	cpus_pstate_state[cpu] = new_freq;
- 	cpus_pstate_start_times[cpu] = timestamp;
-@@ -705,22 +714,12 @@ static void end_sample_processing(struct timechart *tchart)
- #endif
- 		/* P state */
- 
--		pwr = zalloc(sizeof(*pwr));
-+		pwr = p_state_end(tchart, cpu, tchart->last_time);
- 		if (!pwr)
- 			return;
- 
--		pwr->state = cpus_pstate_state[cpu];
--		pwr->start_time = cpus_pstate_start_times[cpu];
--		pwr->end_time = tchart->last_time;
--		pwr->cpu = cpu;
--		pwr->type = PSTATE;
--		pwr->next = tchart->power_events;
--
--		if (!pwr->start_time)
--			pwr->start_time = tchart->first_time;
- 		if (!pwr->state)
- 			pwr->state = tchart->min_freq;
--		tchart->power_events = pwr;
+ static void pid_set_comm(struct timechart *tchart, int pid, char *comm)
+ {
+ 	struct per_pid *p;
+@@ -233,12 +246,9 @@ static void pid_set_comm(struct timechart *tchart, int pid, char *comm)
+ 		}
+ 		c = c->next;
  	}
+-	c = zalloc(sizeof(*c));
++	c = create_pidcomm(p);
+ 	assert(c != NULL);
+ 	c->comm = strdup(comm);
+-	p->current = c;
+-	c->next = p->all;
+-	p->all = c;
  }
  
+ static void pid_fork(struct timechart *tchart, int pid, int ppid, u64 timestamp)
+@@ -277,11 +287,8 @@ static void pid_put_sample(struct timechart *tchart, int pid, int type,
+ 	p = find_create_pid(tchart, pid);
+ 	c = p->current;
+ 	if (!c) {
+-		c = zalloc(sizeof(*c));
++		c = create_pidcomm(p);
+ 		assert(c != NULL);
+-		p->current = c;
+-		c->next = p->all;
+-		p->all = c;
+ 	}
+ 
+ 	sample = zalloc(sizeof(*sample));
+@@ -726,12 +733,9 @@ static int pid_begin_io_sample(struct timechart *tchart, int pid, int type,
+ 	struct io_sample *prev;
+ 
+ 	if (!c) {
+-		c = zalloc(sizeof(*c));
++		c = create_pidcomm(p);
+ 		if (!c)
+ 			return -ENOMEM;
+-		p->current = c;
+-		c->next = p->all;
+-		p->all = c;
+ 	}
+ 
+ 	prev = c->io_samples;
 -- 
 2.17.1
 
