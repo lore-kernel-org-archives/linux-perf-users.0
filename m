@@ -2,171 +2,239 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2BB6BC54EE9
-	for <linux-perf-users@archiver.kernel.org>; Thu,  8 Sep 2022 23:02:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 38E59C6FA83
+	for <linux-perf-users@archiver.kernel.org>; Thu,  8 Sep 2022 23:09:22 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229718AbiIHXCI (ORCPT
+        id S229567AbiIHXJV (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Thu, 8 Sep 2022 19:02:08 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55474 "EHLO
+        Thu, 8 Sep 2022 19:09:21 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37362 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229508AbiIHXCH (ORCPT
+        with ESMTP id S229531AbiIHXJU (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Thu, 8 Sep 2022 19:02:07 -0400
-Received: from mail-pl1-x632.google.com (mail-pl1-x632.google.com [IPv6:2607:f8b0:4864:20::632])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3F6C02529B;
-        Thu,  8 Sep 2022 16:02:06 -0700 (PDT)
-Received: by mail-pl1-x632.google.com with SMTP id jm11so120172plb.13;
-        Thu, 08 Sep 2022 16:02:06 -0700 (PDT)
+        Thu, 8 Sep 2022 19:09:20 -0400
+Received: from mail-pf1-x42c.google.com (mail-pf1-x42c.google.com [IPv6:2607:f8b0:4864:20::42c])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9B0CAAE227
+        for <linux-perf-users@vger.kernel.org>; Thu,  8 Sep 2022 16:09:18 -0700 (PDT)
+Received: by mail-pf1-x42c.google.com with SMTP id y136so14476765pfb.3
+        for <linux-perf-users@vger.kernel.org>; Thu, 08 Sep 2022 16:09:18 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20210112;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:sender:from:to:cc:subject:date;
-        bh=NHcEwmsstqIOlIz3moRAOT/hW63/MeqC/fZR0hJqwjs=;
-        b=DRYwpjUFac0zr2ZfI4cOt/nxoEYrZpIuOj8NBQQbxFW9hiO8nZ8goqkWx+af5btkHR
-         1RFlvGVTY6aMH3Y8M5C2dJ1Z7cCgWxL/cPqc6cBbFcqP7YQaaeKp1Q74DovwXxDStTU6
-         fSKFeVYuTBwCw/DhTK6aujw3kLDKtT59ixHvE3Sio303oDuotDAy1FnQa9z7eLnmzPlk
-         SRiTJ+DHQYJdiDjM3y2KVNqRz46wW7WTfLEA/pw0ndgtbu/IjPQ1taOLMD8oovHOYXPD
-         gVrUp19mCCSPQG2m4vqbhZ91dkOkDI2ntCV/dDuQJgaUR49lWAzn3hsaHdj5vTSJI7VO
-         2EjQ==
+        d=linaro.org; s=google;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date;
+        bh=f98sLP35JmRNa3ghGz3efCT4en0KZ7a760/UmAkHCjI=;
+        b=UnU2+Jt4Afybiz3e8PilNSxgg/DcystvKZWmU7BhBOyYghZl5EEbQPkFDT90H8rt+6
+         Mr4XpK0A8NRIkhNsUj0C4P55T4oTyDrynyWJ2yEkuskV2rVi5mTDS+HF2DKgqCRSS8Wi
+         /3ZYYNELbIBPrAo5L8iz08edvtdL4ecpAEIm4yN+gdTgxEqNzd53/8emNQfe8qmRczwf
+         FR7qi6fEV9gFkNqkzkadOzqOXn4nnDs1yt0dZVgPbhnksjrMTfxYX+zUkq0MAh08woAr
+         GMSoKhMYae5yTxe7eJvhaWJrChHLuLOBQ6EFzkSzD7+zCXm+nBvg95UmXJRyEqupkfVD
+         CrHA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:sender:x-gm-message-state:from:to:cc:subject:date;
-        bh=NHcEwmsstqIOlIz3moRAOT/hW63/MeqC/fZR0hJqwjs=;
-        b=MRzU6J26u486KnKQkPXOMVlsiOLVf3lE+ALqKFX9uYNFCMt/KNWCT9SGm89SYrK51r
-         ylu90k/+6L5Dj8lyJXkf+zx0m55RrI4x99TpMU+KCai8xnwfeFVaSTAlWxzOINcUj791
-         HRnKGdAGxIqxitocJfEjK9wIraOHtIV7THT8gAYipXgVoS87F1SGcaKenp5Sghs9Bn7L
-         7TFvbqMktGW0fO4D8PV9fG0Yw1W+EYoZ8zvacWfz0NhYR6oyjWEA8YvyBZaZXrZ8d3+E
-         HmlV0n9SE6SV+6DE06T8tvOflt6X/RI37zzyfVjnkMhONoYv/2697ARU03sIa5THt187
-         XspQ==
-X-Gm-Message-State: ACgBeo0U2/6h6bIVhrl0m0IQaejKu00LjPif7LfOk8mDZsS99LzYecu0
-        AwzQeBmpA3uEhbJe8qKdOjo=
-X-Google-Smtp-Source: AA6agR4j0GT838XqGLx0/jhdoTsv4JzUgzMbNuTXzxMxzLpAXdnv8miR9iH5jIRpD+bgIW6eF2sIBQ==
-X-Received: by 2002:a17:903:1248:b0:172:f3c7:97a6 with SMTP id u8-20020a170903124800b00172f3c797a6mr10994327plh.128.1662678125654;
-        Thu, 08 Sep 2022 16:02:05 -0700 (PDT)
-Received: from youngsil.svl.corp.google.com ([2620:15c:2d4:203:b77b:e812:1879:ec2f])
-        by smtp.gmail.com with ESMTPSA id o7-20020a656a47000000b004308422060csm12872839pgu.69.2022.09.08.16.02.04
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date;
+        bh=f98sLP35JmRNa3ghGz3efCT4en0KZ7a760/UmAkHCjI=;
+        b=fhA6qqIK9Iz83MWTdwQgnGcMfxzHlwDJnaqamZzyuZl5uLE7AcsSD0OZfnI3bhTbDV
+         hfurLPAOGfgN8zmCYYyjcWmw+8Hxiwk03kxwZRXdpFnvKyrOKURSmx3bTBxC2ykMc0cu
+         yT+qTU+M2uAKSPdiiY+VIWd2vwwwMr70Z9UNU+G3OpaakPsEvzNvMIKA5HyJaMDi5Bhp
+         qATxBxIHaW9Solr6GSMt1NV7CAMphL3mfuza9GEHrpcohd+t0Lgzi97obNbiWSHsxW0w
+         uMTLk5rw9Q48+xbFSZNtZWxzP82ExvOEJ8IfXbDQ3TfgaqxS+qhC/QdCqEHiMEe30ICj
+         4/rw==
+X-Gm-Message-State: ACgBeo1E+1mY00e+6MshrcoR3CFZckUe9/0FNyN0DXoejNhj+pqDv7ct
+        TkDzW10cBoIMbRDiGBOf7vzU/w==
+X-Google-Smtp-Source: AA6agR6hWmrLOA/Yfr9DsTqVQzlc/p7LFycuMzeasMzvyqc7LN3bL3gj6HgrGQamOk9wfVRbNdtTbA==
+X-Received: by 2002:a05:6a00:23c1:b0:52e:28f5:4e13 with SMTP id g1-20020a056a0023c100b0052e28f54e13mr11182736pfc.20.1662678558019;
+        Thu, 08 Sep 2022 16:09:18 -0700 (PDT)
+Received: from p14s (S0106889e681aac74.cg.shawcable.net. [68.147.0.187])
+        by smtp.gmail.com with ESMTPSA id d3-20020a170903230300b0016cf3f124e1sm43719plh.234.2022.09.08.16.09.15
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 08 Sep 2022 16:02:05 -0700 (PDT)
-Sender: Namhyung Kim <namhyung@gmail.com>
-From:   Namhyung Kim <namhyung@kernel.org>
-To:     Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Jiri Olsa <jolsa@kernel.org>
-Cc:     Ingo Molnar <mingo@kernel.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Ian Rogers <irogers@google.com>,
-        Adrian Hunter <adrian.hunter@intel.com>,
-        linux-perf-users@vger.kernel.org, Marco Elver <elver@google.com>,
-        Song Liu <song@kernel.org>
-Subject: [PATCH v3] perf test: Skip sigtrap test on old kernels
-Date:   Thu,  8 Sep 2022 16:01:50 -0700
-Message-Id: <20220908230150.4105955-1-namhyung@kernel.org>
-X-Mailer: git-send-email 2.37.2.789.g6183377224-goog
+        Thu, 08 Sep 2022 16:09:17 -0700 (PDT)
+Date:   Thu, 8 Sep 2022 17:09:14 -0600
+From:   Mathieu Poirier <mathieu.poirier@linaro.org>
+To:     Yicong Yang <yangyicong@huawei.com>
+Cc:     gregkh@linuxfoundation.org, alexander.shishkin@linux.intel.com,
+        leo.yan@linaro.org, james.clark@arm.com, will@kernel.org,
+        robin.murphy@arm.com, acme@kernel.org, peterz@infradead.org,
+        corbet@lwn.net, mark.rutland@arm.com, jonathan.cameron@huawei.com,
+        john.garry@huawei.com, helgaas@kernel.org,
+        lorenzo.pieralisi@arm.com, suzuki.poulose@arm.com, joro@8bytes.org,
+        shameerali.kolothum.thodi@huawei.com, mingo@redhat.com,
+        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-pci@vger.kernel.org, linux-perf-users@vger.kernel.org,
+        iommu@lists.linux-foundation.org, iommu@lists.linux.dev,
+        linux-doc@vger.kernel.org, prime.zeng@huawei.com,
+        liuqi115@huawei.com, zhangshaokun@hisilicon.com,
+        linuxarm@huawei.com, yangyicong@hisilicon.com, bagasdotme@gmail.com
+Subject: Re: [PATCH v12 0/5] Add driver support for HiSilicon PCIe Tune and
+ Trace device
+Message-ID: <20220908230914.GA246683@p14s>
+References: <20220816114414.4092-1-yangyicong@huawei.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20220816114414.4092-1-yangyicong@huawei.com>
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-If it runs on an old kernel, perf_event_open would fail because of the
-new fields sigtrap and sig_data.  Just skipping the test could miss an
-actual bug in the kernel.
+On Tue, Aug 16, 2022 at 07:44:09PM +0800, Yicong Yang wrote:
+> From: Yicong Yang <yangyicong@hisilicon.com>
+> 
+> HiSilicon PCIe tune and trace device (PTT) is a PCIe Root Complex integrated
+> Endpoint (RCiEP) device, providing the capability to dynamically monitor and
+> tune the PCIe traffic (tune), and trace the TLP headers (trace).
+> 
+> PTT tune is designed for monitoring and adjusting PCIe link parameters. We provide
+> several parameters of the PCIe link. Through the driver, user can adjust the value
+> of certain parameter to affect the PCIe link for the purpose of enhancing the
+> performance in certian situation.
+> 
+> PTT trace is designed for dumping the TLP headers to the memory, which can be
+> used to analyze the transactions and usage condition of the PCIe Link. Users
+> can choose filters to trace headers, by either requester ID, or those downstream
+> of a set of Root Ports on the same core of the PTT device. It's also supported
+> to trace the headers of certain type and of certain direction.
+> 
+> The driver registers a PMU device for each PTT device. The trace can be used
+> through `perf record` and the traced headers can be decoded by `perf report`.
+> The tune can be used through the sysfs attributes of related PMU device. See
+> the documentation for the detailed usage.
+> 
+> This patchset adds an initial driver support for the PTT device. The userspace
+> perf tool support will be sent in a separate patchset.
+> 
+> Change since v11:
+> - Drop WARN_ON() for irq_set_affinity() failure per Greg
+> - Split out userspace perf support patches according to the comments
+> Link: https://lore.kernel.org/lkml/20220721130116.43366-1-yangyicong@huawei.com/
+> 
+> Change since v10:
+> - Use title case in the documentation
+> - Add RB from Bagas, thanks.
+> Link: https://lore.kernel.org/lkml/20220714092710.53486-1-yangyicong@hisilicon.com/
+> 
+> Change since v9:
+> - Add sysfs ABI description documentation
+> - Remove the controversial available_{root_port, requester}_filters sysfs file
+> - Shorten 2 tune sysfs attributes name and add some comments
+> - Move hisi_ptt_process_auxtrace_info() to Patch 6.
+> - Add RB from Leo and Ack-by from Mathieu, thanks!
+> Link: https://lore.kernel.org/lkml/20220606115555.41103-1-yangyicong@hisilicon.com/
+> 
+> Change since v8:
+> - Cleanups and one minor fix from Jonathan and John, thanks
+> Link: https://lore.kernel.org/lkml/20220516125223.32012-1-yangyicong@hisilicon.com/
+> 
+> Change since v7:
+> - Configure the DMA in probe rather than in runtime. Also use devres to manage
+>   PMU device as we have no order problem now
+> - Refactor the config validation function per John and Leo
+> - Use a spinlock hisi_ptt::pmu_lock instead of mutex to serialize the perf process
+>   in pmu::start as it's in atomic context
+> - Only commit the traced data when stop, per Leo and James
+> - Drop the filter dynamically updating patch from this series to simply the review
+>   of the driver. That patch will be send separately.
+> - add a cpumask sysfs attribute and handle the cpu hotplug events, follow the
+>   uncore PMU convention
+> - Other cleanups and fixes, both in driver and perf tool
+> Link: https://lore.kernel.org/lkml/20220407125841.3678-1-yangyicong@hisilicon.com/
+> 
+> Change since v6:
+> - Fix W=1 errors reported by lkp test, thanks
+> 
+> Change since v5:
+> - Squash the PMU patch into PATCH 2 suggested by John
+> - refine the commit message of PATCH 1 and some comments
+> Link: https://lore.kernel.org/lkml/20220308084930.5142-1-yangyicong@hisilicon.com/
+> 
+> Change since v4:
+> Address the comments from Jonathan, John and Ma Ca, thanks.
+> - Use devm* also for allocating the DMA buffers
+> - Remove the IRQ handler stub in Patch 2
+> - Make functions waiting for hardware state return boolean
+> - Manual remove the PMU device as it should be removed first
+> - Modifier the orders in probe and removal to make them matched well
+> - Make available {directions,type,format} array const and non-global
+> - Using the right filter list in filters show and well protect the
+>   list with mutex
+> - Record the trace status with a boolean @started rather than enum
+> - Optimize the process of finding the PTT devices of the perf-tool
+> Link: https://lore.kernel.org/linux-pci/20220221084307.33712-1-yangyicong@hisilicon.com/
+> 
+> Change since v3:
+> Address the comments from Jonathan and John, thanks.
+> - drop members in the common struct which can be get on the fly
+> - reduce buffer struct and organize the buffers with array instead of list
+> - reduce the DMA reset wait time to avoid long time busy loop
+> - split the available_filters sysfs attribute into two files, for root port
+>   and requester respectively. Update the documentation accordingly
+> - make IOMMU mapping check earlier in probe to avoid race condition. Also
+>   make IOMMU quirk patch prior to driver in the series
+> - Cleanups and typos fixes from John and Jonathan
+> Link: https://lore.kernel.org/linux-pci/20220124131118.17887-1-yangyicong@hisilicon.com/
+> 
+> Change since v2:
+> - address the comments from Mathieu, thanks.
+>   - rename the directory to ptt to match the function of the device
+>   - spinoff the declarations to a separate header
+>   - split the trace function to several patches
+>   - some other comments.
+> - make default smmu domain type of PTT device to identity
+>   Drop the RMR as it's not recommended and use an iommu_def_domain_type
+>   quirk to passthrough the device DMA as suggested by Robin. 
+> Link: https://lore.kernel.org/linux-pci/20211116090625.53702-1-yangyicong@hisilicon.com/
+> 
+> Change since v1:
+> - switch the user interface of trace to perf from debugfs
+> - switch the user interface of tune to sysfs from debugfs
+> - add perf tool support to start trace and decode the trace data
+> - address the comments of documentation from Bjorn
+> - add RMR[1] support of the device as trace works in RMR mode or
+>   direct DMA mode. RMR support is achieved by common APIs rather
+>   than the APIs implemented in [1].
+> Link: https://lore.kernel.org/lkml/1618654631-42454-1-git-send-email-yangyicong@hisilicon.com/
+> [1] https://lore.kernel.org/linux-acpi/20210805080724.480-1-shameerali.kolothum.thodi@huawei.com/
+> 
+> Yicong Yang (5):
+>   iommu/arm-smmu-v3: Make default domain type of HiSilicon PTT device to
+>     identity
+>   hwtracing: hisi_ptt: Add trace function support for HiSilicon PCIe
+>     Tune and Trace device
+>   hwtracing: hisi_ptt: Add tune function support for HiSilicon PCIe Tune
+>     and Trace device
+>   docs: trace: Add HiSilicon PTT device driver documentation
+>   MAINTAINERS: Add maintainer for HiSilicon PTT driver
+> 
+>  .../ABI/testing/sysfs-devices-hisi_ptt        |   61 +
+>  Documentation/trace/hisi-ptt.rst              |  298 +++++
+>  Documentation/trace/index.rst                 |    1 +
+>  MAINTAINERS                                   |    8 +
+>  drivers/Makefile                              |    1 +
+>  drivers/hwtracing/Kconfig                     |    2 +
+>  drivers/hwtracing/ptt/Kconfig                 |   12 +
+>  drivers/hwtracing/ptt/Makefile                |    2 +
+>  drivers/hwtracing/ptt/hisi_ptt.c              | 1047 +++++++++++++++++
+>  drivers/hwtracing/ptt/hisi_ptt.h              |  200 ++++
+>  drivers/iommu/arm/arm-smmu-v3/arm-smmu-v3.c   |   21 +
 
-Let's check BTF (when we have libbpf) if it has the sigtrap field in the
-perf_event_attr.  Otherwise, we can check it with a minimal event config.
+I fixed the month and kernel revision in sysfs-devices-hisi_ptt before applying
+this set.  You can double check that everything is to your liking in the
+coresight next tree[1].
 
-Cc: Marco Elver <elver@google.com>
-Acked-by: Song Liu <song@kernel.org>
-Signed-off-by: Namhyung Kim <namhyung@kernel.org>
----
- tools/perf/tests/sigtrap.c | 65 +++++++++++++++++++++++++++++++++++++-
- 1 file changed, 64 insertions(+), 1 deletion(-)
+Thanks,
+Mathieu
 
-diff --git a/tools/perf/tests/sigtrap.c b/tools/perf/tests/sigtrap.c
-index e32ece90e164..1de7478ec189 100644
---- a/tools/perf/tests/sigtrap.c
-+++ b/tools/perf/tests/sigtrap.c
-@@ -54,6 +54,63 @@ static struct perf_event_attr make_event_attr(void)
- 	return attr;
- }
- 
-+#ifdef HAVE_BPF_SKEL
-+#include <bpf/btf.h>
-+
-+static bool attr_has_sigtrap(void)
-+{
-+	bool ret = false;
-+	struct btf *btf;
-+	const struct btf_type *t;
-+	const struct btf_member *m;
-+	const char *name;
-+	int i, id;
-+
-+	btf = btf__load_vmlinux_btf();
-+	if (btf == NULL) {
-+		/* should be an old kernel */
-+		return false;
-+	}
-+
-+	id = btf__find_by_name_kind(btf, "perf_event_attr", BTF_KIND_STRUCT);
-+	if (id < 0)
-+		goto out;
-+
-+	t = btf__type_by_id(btf, id);
-+	for (i = 0, m = btf_members(t); i < btf_vlen(t); i++, m++) {
-+		name = btf__name_by_offset(btf, m->name_off);
-+		if (!strcmp(name, "sigtrap")) {
-+			ret = true;
-+			break;
-+		}
-+	}
-+out:
-+	btf__free(btf);
-+	return ret;
-+}
-+#else  /* !HAVE_BPF_SKEL */
-+static bool attr_has_sigtrap(void)
-+{
-+	struct perf_event_attr attr = {
-+		.type		= PERF_TYPE_SOFTWARE,
-+		.config		= PERF_COUNT_SW_DUMMY,
-+		.size		= sizeof(attr),
-+		.remove_on_exec = 1, /* Required by sigtrap. */
-+		.sigtrap	= 1, /* Request synchronous SIGTRAP on event. */
-+	};
-+	int fd;
-+	bool ret = false;
-+
-+	fd = sys_perf_event_open(&attr, 0, -1, -1, perf_event_open_cloexec_flag());
-+	if (fd >= 0) {
-+		ret = true;
-+		close(fd);
-+	}
-+
-+	return ret;
-+}
-+#endif  /* HAVE_BPF_SKEL */
-+
- static void
- sigtrap_handler(int signum __maybe_unused, siginfo_t *info, void *ucontext __maybe_unused)
- {
-@@ -139,7 +196,13 @@ static int test__sigtrap(struct test_suite *test __maybe_unused, int subtest __m
- 
- 	fd = sys_perf_event_open(&attr, 0, -1, -1, perf_event_open_cloexec_flag());
- 	if (fd < 0) {
--		pr_debug("FAILED sys_perf_event_open(): %s\n", str_error_r(errno, sbuf, sizeof(sbuf)));
-+		if (attr_has_sigtrap()) {
-+			pr_debug("FAILED sys_perf_event_open(): %s\n",
-+				 str_error_r(errno, sbuf, sizeof(sbuf)));
-+		} else {
-+			pr_debug("perf_event_attr doesn't have sigtrap\n");
-+			ret = TEST_SKIP;
-+		}
- 		goto out_restore_sigaction;
- 	}
- 
--- 
-2.37.2.789.g6183377224-goog
+[1]. https://git.kernel.org/pub/scm/linux/kernel/git/coresight/linux.git/log/?h=next
 
+
+>  11 files changed, 1653 insertions(+)
+>  create mode 100644 Documentation/ABI/testing/sysfs-devices-hisi_ptt
+>  create mode 100644 Documentation/trace/hisi-ptt.rst
+>  create mode 100644 drivers/hwtracing/ptt/Kconfig
+>  create mode 100644 drivers/hwtracing/ptt/Makefile
+>  create mode 100644 drivers/hwtracing/ptt/hisi_ptt.c
+>  create mode 100644 drivers/hwtracing/ptt/hisi_ptt.h
+> 
+> -- 
+> 2.24.0
+> 
