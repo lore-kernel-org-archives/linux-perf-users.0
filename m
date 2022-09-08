@@ -2,85 +2,174 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 69393ECAAD5
-	for <linux-perf-users@archiver.kernel.org>; Thu,  8 Sep 2022 07:08:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EA3D9ECAAD5
+	for <linux-perf-users@archiver.kernel.org>; Thu,  8 Sep 2022 07:25:50 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230108AbiIHHI1 (ORCPT
+        id S229989AbiIHHZt (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Thu, 8 Sep 2022 03:08:27 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39122 "EHLO
+        Thu, 8 Sep 2022 03:25:49 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40148 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229884AbiIHHIX (ORCPT
+        with ESMTP id S229656AbiIHHZs (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Thu, 8 Sep 2022 03:08:23 -0400
-Received: from mail-oa1-f50.google.com (mail-oa1-f50.google.com [209.85.160.50])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6C79DA1D54;
-        Thu,  8 Sep 2022 00:08:18 -0700 (PDT)
-Received: by mail-oa1-f50.google.com with SMTP id 586e51a60fabf-1279948d93dso22228760fac.10;
-        Thu, 08 Sep 2022 00:08:18 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date;
-        bh=RhnrPpOs8U7U5e/dDJlH9qsFhHWq2idwdbhm4KgyDo4=;
-        b=lYW3S3bB/fE704zu/ErhyTkBvFw+M4YZOzIBsKsTTBUTSQeZsgEcanqEm1gbvDCgao
-         3Vtl/tLIdz8pGuIu57x+oBCHoe1zNsqRAeMLFY2D+ofTEoPJR8OIsbQD8dAZd2iiLUGG
-         UGaEV/cogSLnpOb/qh1GySGkXbvUGKybj16Dl+rHsHnCbBOPN45NtWScVUyXJiDbSRk4
-         CIKUgWSUTAm0nvCLGbUkbyfbH20bljJu8+iownsPZLFcT+/KeR3Ak6LTbcjrqwVccqrA
-         gTIBUHMnee69//hg8rYKewfcubvaWRQBU6RZtnBQoRyUnN+1vt50zsGm2M9lpj0bLVjQ
-         KB4w==
-X-Gm-Message-State: ACgBeo3FwqW2DcmWRAHG2GRjfFZio6Grt+WWwvyTcoFnh15tCyCDnYh1
-        O9+wrpwdO31dWPh7yi7yjyeOeauUzNoC9iteHYs=
-X-Google-Smtp-Source: AA6agR5OR9+PcRlakwJ5yROIppbvT89qJRBPOVNcKbTPRIqlXsnSpnWcnzUjTp+kb2uksFNQ1ock3rtw8nvbvjtuvGg=
-X-Received: by 2002:a05:6870:5b84:b0:10c:d1fa:2f52 with SMTP id
- em4-20020a0568705b8400b0010cd1fa2f52mr1158961oab.92.1662620897764; Thu, 08
- Sep 2022 00:08:17 -0700 (PDT)
+        Thu, 8 Sep 2022 03:25:48 -0400
+Received: from mga02.intel.com (mga02.intel.com [134.134.136.20])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 548F180F5F;
+        Thu,  8 Sep 2022 00:25:47 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1662621947; x=1694157947;
+  h=message-id:date:mime-version:subject:to:cc:references:
+   from:in-reply-to:content-transfer-encoding;
+  bh=pKsF5uQWUHQU4hDEQ8RNMaO1sn4gtBd+JNvACFAQ7uA=;
+  b=lPl3oNyRd6seIMERKBDUg3GXYm22MRLPq/9PHtX0GJ98bUl1mcalwBkB
+   Fs+YWIkRAz+oGJV6xMHXrzo4HbAKWdR7q1/5zLC6WNEqVR2h+O50s9AlA
+   l6bAXtQK907nvKeHo/VCU/Hp5X4ztO8oz8mM62QvHKfjgwz7DhgznASTV
+   HQ1JE+/QX5gvg99NybN4bFhBzgIDcJu2TBg1tIcWKkK8SPnkBzpgmyOSV
+   YNGlZ6BuYUnDm98YGAzVW94E3BYISbMW1LNnt/wRiXWQRV71lvgeYfwPT
+   O5PEI0j4V+ppvKDyB5Lk2hFgRGfFpqOppGOLNgsGck0AtqrJUUAJJYTy0
+   A==;
+X-IronPort-AV: E=McAfee;i="6500,9779,10463"; a="284112570"
+X-IronPort-AV: E=Sophos;i="5.93,299,1654585200"; 
+   d="scan'208";a="284112570"
+Received: from orsmga008.jf.intel.com ([10.7.209.65])
+  by orsmga101.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 08 Sep 2022 00:25:46 -0700
+X-IronPort-AV: E=Sophos;i="5.93,299,1654585200"; 
+   d="scan'208";a="644960899"
+Received: from xiaoyaol-hp-g830.ccr.corp.intel.com (HELO [10.249.172.13]) ([10.249.172.13])
+  by orsmga008-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 08 Sep 2022 00:25:43 -0700
+Message-ID: <3b78a0c7-de8f-fe44-ec58-bcc4e231191b@intel.com>
+Date:   Thu, 8 Sep 2022 15:25:40 +0800
 MIME-Version: 1.0
-References: <20220908021141.27134-1-shangxiaojing@huawei.com>
-In-Reply-To: <20220908021141.27134-1-shangxiaojing@huawei.com>
-From:   Namhyung Kim <namhyung@kernel.org>
-Date:   Thu, 8 Sep 2022 00:08:06 -0700
-Message-ID: <CAM9d7cgOVSohQ6cLnPc3QJZ9aus_pq8xjiRf8WRy8WOuaogoTQ@mail.gmail.com>
-Subject: Re: [PATCH 0/4] perf: Clean up by adding helpers
-To:     Shang XiaoJing <shangxiaojing@huawei.com>
-Cc:     Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@redhat.com>,
+User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:91.0) Gecko/20100101
+ Firefox/91.0 Thunderbird/91.13.0
+Subject: Re: [RFC PATCH 0/2] KVM: VMX: Fix VM entry failure on
+ PT_MODE_HOST_GUEST while host is using PT
+Content-Language: en-US
+To:     "Wang, Wei W" <wei.w.wang@intel.com>,
+        Peter Zijlstra <peterz@infradead.org>,
         Arnaldo Carvalho de Melo <acme@kernel.org>,
         Mark Rutland <mark.rutland@arm.com>,
         Alexander Shishkin <alexander.shishkin@linux.intel.com>,
         Jiri Olsa <jolsa@kernel.org>,
-        linux-perf-users <linux-perf-users@vger.kernel.org>,
-        linux-kernel <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+        Namhyung Kim <namhyung@kernel.org>,
+        "Christopherson,, Sean" <seanjc@google.com>,
+        Paolo Bonzini <pbonzini@redhat.com>
+Cc:     "linux-perf-users@vger.kernel.org" <linux-perf-users@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "kvm@vger.kernel.org" <kvm@vger.kernel.org>
+References: <20220825085625.867763-1-xiaoyao.li@intel.com>
+ <CY5PR11MB6365897E8E6D0B590A298FA0DC769@CY5PR11MB6365.namprd11.prod.outlook.com>
+From:   Xiaoyao Li <xiaoyao.li@intel.com>
+In-Reply-To: <CY5PR11MB6365897E8E6D0B590A298FA0DC769@CY5PR11MB6365.namprd11.prod.outlook.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-Hello,
+On 8/29/2022 3:49 PM, Wang, Wei W wrote:
+> On Thursday, August 25, 2022 4:56 PM, Xiaoyao Li wrote:
+>> There is one bug in KVM that can hit vm-entry failure 100% on platform
+>> supporting PT_MODE_HOST_GUEST mode following below steps:
+>>
+>>    1. #modprobe -r kvm_intel
+>>    2. #modprobe kvm_intel pt_mode=1
+>>    3. start a VM with QEMU
+>>    4. on host: #perf record -e intel_pt//
+>>
+>> The vm-entry failure happens because it violates the requirement stated in
+>> Intel SDM 26.2.1.1 VM-Execution Control Fields
+>>
+>>    If the logical processor is operating with Intel PT enabled (if
+>>    IA32_RTIT_CTL.TraceEn = 1) at the time of VM entry, the "load
+>>    IA32_RTIT_CTL" VM-entry control must be 0.
+>>
+>> On PT_MODE_HOST_GUEST node, PT_MODE_HOST_GUEST is always set. Thus
+>> KVM needs to ensure IA32_RTIT_CTL.TraceEn is 0 before VM-entry. Currently
+>> KVM manually WRMSR(IA32_RTIT_CTL) to clear TraceEn bit. However, it
+>> doesn't work everytime since there is a posibility that IA32_RTIT_CTL.TraceEn
+>> is re-enabled in PT PMI handler before vm-entry. This series tries to fix the
+>> issue by exposing two interfaces from Intel PT driver for the purose to stop and
+>> resume Intel PT on host. It prevents PT PMI handler from re-enabling PT. By the
+>> way, it also fixes another issue that PT PMI touches PT MSRs whihc leads to
+>> what KVM stores for host bemomes stale.
+> 
+> I'm thinking about another approach to fixing it. I think we need to have the
+> running host pt event disabled when we switch to guest and don't expect to
+> receive the host pt interrupt at this point. Also, the host pt context can be
+> save/restored by host perf core (instead of KVM) when we disable/enable
+> the event.
+> 
+> diff --git a/arch/x86/events/intel/pt.c b/arch/x86/events/intel/pt.c
+> index 82ef87e9a897..1d3e03ecaf6a 100644
+> --- a/arch/x86/events/intel/pt.c
+> +++ b/arch/x86/events/intel/pt.c
+> @@ -1575,6 +1575,7 @@ static void pt_event_start(struct perf_event *event, int mode)
+> 
+>          pt_config_buffer(buf);
+>          pt_config(event);
+> +       pt->event = event;
+> 
+>          return;
+> 
+> @@ -1600,6 +1601,7 @@ static void pt_event_stop(struct perf_event *event, int mode)
+>                  return;
+> 
+>          event->hw.state = PERF_HES_STOPPED;
+> +       pt->event = NULL;
+> 
+>          if (mode & PERF_EF_UPDATE) {
+>                  struct pt_buffer *buf = perf_get_aux(&pt->handle);
+> @@ -1624,6 +1626,15 @@ static void pt_event_stop(struct perf_event *event, int mode)
+>          }
+>   }
+> 
+> +
+> +struct perf_event *pt_get_curr_event(void)
+> +{
+> +       struct pt *pt = this_cpu_ptr(&pt_ctx);
 
-On Wed, Sep 7, 2022 at 6:37 PM Shang XiaoJing <shangxiaojing@huawei.com> wrote:
->
-> Some clean up in builtin-lock.c, builtin-timechart.c, and
-> builtin-trace.c.
->
-> Shang XiaoJing (4):
->   perf trace: Use zalloc to save initialization of syscall_stats
->   perf lock: Add get_key_by_aggr_mode helper
->   perf timechart: Add create_pidcomm helper
->   perf timechart: Add p_state_end helper
+Wei,
 
-Acked-by: Namhyung Kim <namhyung@kernel.org>
+I'm not sure if we can use pt->handle.event instead or not.
 
-Thanks,
-Namhyung
+> +       return pt->event;
+> +}
+> +EXPORT_SYMBOL_GPL(pt_get_curr_event);
+> +
+>   static long pt_event_snapshot_aux(struct perf_event *event,
+>                                    struct perf_output_handle *handle,
+>                                    unsigned long size)
+> diff --git a/arch/x86/events/intel/pt.h b/arch/x86/events/intel/pt.h
+> index 96906a62aacd..d46a85bb06bb 100644
+> --- a/arch/x86/events/intel/pt.h
+> +++ b/arch/x86/events/intel/pt.h
+> @@ -121,6 +121,7 @@ struct pt_filters {
+>    * @output_mask:       cached RTIT_OUTPUT_MASK MSR value
+>    */
+>   struct pt {
+> +       struct perf_event       *event;
+>          struct perf_output_handle handle;
+>          struct pt_filters       filters;
+>          int                     handle_nmi;
+> diff --git a/arch/x86/include/asm/perf_event.h b/arch/x86/include/asm/perf_event.h
+> index f6fc8dd51ef4..be8dd24922a7 100644
+> --- a/arch/x86/include/asm/perf_event.h
+> +++ b/arch/x86/include/asm/perf_event.h
+> @@ -553,11 +553,14 @@ static inline int x86_perf_get_lbr(struct x86_pmu_lbr *lbr)
+> 
+>   #ifdef CONFIG_CPU_SUP_INTEL
+>    extern void intel_pt_handle_vmx(int on);
+> + extern struct perf_event *pt_get_curr_event(void);
+>   #else
+>   static inline void intel_pt_handle_vmx(int on)
+>   {
+> 
+> +
+>   }
+> +struct perf_event *pt_get_curr_event(void) { }
+>   #endif
+> 
 
 
->
->  tools/perf/builtin-lock.c      | 129 ++++++++++++++-------------------
->  tools/perf/builtin-timechart.c |  65 +++++++++--------
->  tools/perf/builtin-trace.c     |   5 +-
->  3 files changed, 88 insertions(+), 111 deletions(-)
->
-> --
-> 2.17.1
->
