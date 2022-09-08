@@ -2,107 +2,123 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E85ABC38145
-	for <linux-perf-users@archiver.kernel.org>; Thu,  8 Sep 2022 19:12:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C3FAEC6FA8A
+	for <linux-perf-users@archiver.kernel.org>; Thu,  8 Sep 2022 22:55:51 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230260AbiIHTM4 (ORCPT
+        id S229594AbiIHWzu (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Thu, 8 Sep 2022 15:12:56 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46882 "EHLO
+        Thu, 8 Sep 2022 18:55:50 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34454 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229874AbiIHTMy (ORCPT
+        with ESMTP id S229640AbiIHWzb (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Thu, 8 Sep 2022 15:12:54 -0400
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B02E3EB2C8
-        for <linux-perf-users@vger.kernel.org>; Thu,  8 Sep 2022 12:12:52 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1662664371;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=e8KJR3c/Hw03TXcM9/xQhxaGMAUQA14sxyqZ0rkWO5U=;
-        b=iMjt4heSziWx4pEDGOO7CBd534mgJuhaesrpi2LJUkqb6p2DEgCHprRWla78cKXPc/q/nx
-        6Jyc4vvc1Gm96WNumjI7U2RmyYySb6CY8QzC8ahQ/4GMAUrm/jr/Rpobq2xNYU2yUrANUZ
-        LK+LcdbBAjE53t8poOB631+GNzhsqlM=
-Received: from mimecast-mx02.redhat.com (mx3-rdu2.redhat.com
- [66.187.233.73]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- us-mta-520-7q1Ay1sJMxGALt5Yk-ZREQ-1; Thu, 08 Sep 2022 15:12:50 -0400
-X-MC-Unique: 7q1Ay1sJMxGALt5Yk-ZREQ-1
-Received: from smtp.corp.redhat.com (int-mx01.intmail.prod.int.rdu2.redhat.com [10.11.54.1])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx02.redhat.com (Postfix) with ESMTPS id 2619E29AA3AE
-        for <linux-perf-users@vger.kernel.org>; Thu,  8 Sep 2022 19:12:50 +0000 (UTC)
-Received: from [10.22.32.3] (unknown [10.22.32.3])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 0C3284011A3E;
-        Thu,  8 Sep 2022 19:12:50 +0000 (UTC)
-Message-ID: <2ff91b93-0daf-afef-682a-437fcffe46f3@redhat.com>
-Date:   Thu, 8 Sep 2022 15:12:49 -0400
+        Thu, 8 Sep 2022 18:55:31 -0400
+Received: from mail-pj1-x1036.google.com (mail-pj1-x1036.google.com [IPv6:2607:f8b0:4864:20::1036])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 283D546D92;
+        Thu,  8 Sep 2022 15:54:53 -0700 (PDT)
+Received: by mail-pj1-x1036.google.com with SMTP id u9-20020a17090a1f0900b001fde6477464so3692376pja.4;
+        Thu, 08 Sep 2022 15:54:52 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20210112;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:sender:from:to:cc:subject:date;
+        bh=yE7asha12oJsClX0486fIbY+2Edin8Oonu/08W/7mO8=;
+        b=CB9vVS7z4+/o8MAGSCW+yJLd6RtJMem+QqxTC3yBjfHrjlmi7vmvaktB0nM5COE5aV
+         t6v0OFtjfe0i42iOY1mFVHZUWc73r07Kzdoq0cDlpo6WdwGquGaqJtXjiCtRX7dh232z
+         qgfLA/KmIC0kAuaE73PUM8dRKtbYG3yw5hf+L9HhmtqL+ev/QNvEAI42qH35lDCze4zA
+         3FwN9hpqPON/QK6qtDvTI1XSKSRrUubdKV7fd0IdeMMXyWam9kkdRD8ZUMnV43qjRGrK
+         s7MLcwisVm8H1mCie+55X7vVZtAHVjunAdGW8mePexWjyWSqnhLf3LF9ggxj3uWaEAu+
+         dkCQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:sender:x-gm-message-state:from:to:cc:subject:date;
+        bh=yE7asha12oJsClX0486fIbY+2Edin8Oonu/08W/7mO8=;
+        b=FXDqWdQl5bRZktvQoxPBvS7pLGJrodcqwFo1F+w3mj1rVO8fI4lmfTClP8JUrLBFw8
+         kaVrvYT2DOKtenq8DhMA4nJSXi+U0KabmKCrpKmNYYUx9J2JRZ3Lbq/1vMaWvGz9iX+n
+         3gf4In+iNAX0xQcWZ507SIcAkaE1mwFOfADtjt5oxy2Z4sBDjKek+5rp4oWJeUSYnj8z
+         3QpkJt5lCK7Z46XlMqIWHecCzoFRXge40V6N+Z5P10s+iEdClOyYRXOSt7d0xRk/yGMs
+         Tyj1mGkpR5BLA6xWkBpyG+aq9Ul8QNzLp5lT1PcjbscBQHTDI5HuSYKEkBIBULYNlppA
+         b1Sw==
+X-Gm-Message-State: ACgBeo0LFb+aOjTBCsu1taK8Tv1YFrApW4pCu4WOgMlMzWNQONnc33IY
+        n4DZJGjjWtYv3iVKkDZxwsA=
+X-Google-Smtp-Source: AA6agR73UH55jDdKQhuSB9N7O3ScSi2cCP4wOvanQgCyw9jjYsRB4I6hR9EZLuf3URAsrGrTktQDcA==
+X-Received: by 2002:a17:90b:2807:b0:1fd:ea9f:5a89 with SMTP id qb7-20020a17090b280700b001fdea9f5a89mr6538755pjb.52.1662677691865;
+        Thu, 08 Sep 2022 15:54:51 -0700 (PDT)
+Received: from youngsil.svl.corp.google.com ([2620:15c:2d4:203:b77b:e812:1879:ec2f])
+        by smtp.gmail.com with ESMTPSA id s7-20020a170902988700b0017440342b5bsm38752plp.206.2022.09.08.15.54.50
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 08 Sep 2022 15:54:51 -0700 (PDT)
+Sender: Namhyung Kim <namhyung@gmail.com>
+From:   Namhyung Kim <namhyung@kernel.org>
+To:     Arnaldo Carvalho de Melo <acme@kernel.org>,
+        Jiri Olsa <jolsa@kernel.org>
+Cc:     Ingo Molnar <mingo@kernel.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Ian Rogers <irogers@google.com>,
+        Adrian Hunter <adrian.hunter@intel.com>,
+        linux-perf-users@vger.kernel.org
+Subject: [PATCH] perf sched: Factor out destroy_tasks()
+Date:   Thu,  8 Sep 2022 15:54:48 -0700
+Message-Id: <20220908225448.4105056-1-namhyung@kernel.org>
+X-Mailer: git-send-email 2.37.2.789.g6183377224-goog
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
- Thunderbird/102.2.1
-Cc:     wcohen@redhat.com
-Subject: Re: PROBLEM: The --call-graph=fp data does do not agree with the
- --call-graph=dwarf results
-Content-Language: en-US
-To:     William Cohen <wcohen@redhat.com>,
-        "linux-perf-users@vger.kernel.org" <linux-perf-users@vger.kernel.org>
-References: <cb3efad5-37eb-29e4-03b0-f0bcc8be9918@redhat.com>
-From:   William Cohen <wcohen@redhat.com>
-In-Reply-To: <cb3efad5-37eb-29e4-03b0-f0bcc8be9918@redhat.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-X-Scanned-By: MIMEDefang 2.84 on 10.11.54.1
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-Hi,
+Add destroy_tasks() as a counterpart of create_tasks() and put the
+thread safety notations there.  After join, it destroys semaphores too.
 
-Because of the previous issue of fp unwinding not including
-information about inlined functions I wanted to get an idea how often
-inline functions occurring in the code.  I have a simple script that
-uses dwgrep to extract the number of actual functions and inlined
-function then compute the average number of inlined functions for each
-actual function
-(https://github.com/wcohen/quality_info/blob/master/dwgrep/inlined_funcs).
-I ran some quick a quick experiment a few binaries on various
-architectures running Fedora to get some actual numbers.
+Signed-off-by: Namhyung Kim <namhyung@kernel.org>
+---
+ tools/perf/builtin-sched.c | 24 ++++++++++++++++++++++--
+ 1 file changed, 22 insertions(+), 2 deletions(-)
 
-
-	      average inlined functions per real function
-
-	       architecture
-binary		i386	 x86_64	    armv7    aarch64  riscv
-vmlinux		-	 6.9	    3.5	     7.4      7.7
-libc		1.33	 1.3	    1.3	     1.3      1.1
-emacs		-	 17.3	    16.8     18.3     18.6	
-stap		-	 75.9	    82.3     77.3     50.3		
-libdw-0.187.so  -	 3.3	    3.7	     3.7      3.7
-Xwayland	-	 3.9	    -	     3.9      -
-libxul.so	-	 19.2	    -	     27.8     -
-
-One thing to note is that for some executables like emacs and
-systemtap's stap command there are a significant number of inlined
-functions per function.  For stap part of this might be due to it
-using C++.  With that ratio of inline functions to real function
-omitting the inline functions from the backtrace information is likely
-to provide an incomplete picture of what is occurring in the code.
-
-One concern would be sampling skid for inlined functions in the
-current function.  Rather than marking the sample to the instruction
-that triggered the event it gets attached to another instruction for a
-inlined function that doesn't have anything to do with the sample.
-The triggering instructions could have been from another inlined
-function or the real function everything has been inlined into.  That
-might cause people to look in the wrong area of source code.  This
-would only be an issue for the current function that is executing.
-For the unwinding of the callers that information should be more
-precise.
-
-
--Will
+diff --git a/tools/perf/builtin-sched.c b/tools/perf/builtin-sched.c
+index a92610eac4bf..f93737eef07b 100644
+--- a/tools/perf/builtin-sched.c
++++ b/tools/perf/builtin-sched.c
+@@ -690,6 +690,27 @@ static void create_tasks(struct perf_sched *sched)
+ 	}
+ }
+ 
++static void destroy_tasks(struct perf_sched *sched)
++	UNLOCK_FUNCTION(sched->start_work_mutex)
++	UNLOCK_FUNCTION(sched->work_done_wait_mutex)
++{
++	struct task_desc *task;
++	unsigned long i;
++	int err;
++
++	mutex_unlock(&sched->start_work_mutex);
++	mutex_unlock(&sched->work_done_wait_mutex);
++	/* Get rid of threads so they won't be upset by mutex destrunction */
++	for (i = 0; i < sched->nr_tasks; i++) {
++		task = sched->tasks[i];
++		err = pthread_join(task->thread, NULL);
++		BUG_ON(err);
++		sem_destroy(&task->sleep_sem);
++		sem_destroy(&task->ready_for_work);
++		sem_destroy(&task->work_done_sem);
++	}
++}
++
+ static void wait_for_tasks(struct perf_sched *sched)
+ 	EXCLUSIVE_LOCKS_REQUIRED(sched->work_done_wait_mutex)
+ 	EXCLUSIVE_LOCKS_REQUIRED(sched->start_work_mutex)
+@@ -3324,8 +3345,7 @@ static int perf_sched__replay(struct perf_sched *sched)
+ 		run_one_test(sched);
+ 
+ 	sched->thread_funcs_exit = true;
+-	mutex_unlock(&sched->start_work_mutex);
+-	mutex_unlock(&sched->work_done_wait_mutex);
++	destroy_tasks(sched);
+ 	return 0;
+ }
+ 
+-- 
+2.37.2.789.g6183377224-goog
 
