@@ -2,72 +2,104 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7E479C38145
-	for <linux-perf-users@archiver.kernel.org>; Thu,  8 Sep 2022 18:24:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 08E25C38145
+	for <linux-perf-users@archiver.kernel.org>; Thu,  8 Sep 2022 18:28:47 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230232AbiIHSYQ (ORCPT
+        id S229742AbiIHS2q (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Thu, 8 Sep 2022 14:24:16 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34310 "EHLO
+        Thu, 8 Sep 2022 14:28:46 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43940 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229964AbiIHSYO (ORCPT
+        with ESMTP id S229576AbiIHS2i (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Thu, 8 Sep 2022 14:24:14 -0400
-Received: from ams.source.kernel.org (ams.source.kernel.org [IPv6:2604:1380:4601:e00::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0A49EF2945;
-        Thu,  8 Sep 2022 11:24:14 -0700 (PDT)
+        Thu, 8 Sep 2022 14:28:38 -0400
+Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C41B5F2D77;
+        Thu,  8 Sep 2022 11:28:36 -0700 (PDT)
 Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by ams.source.kernel.org (Postfix) with ESMTPS id C1ABFB821DB;
-        Thu,  8 Sep 2022 18:24:12 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 5E836C433C1;
-        Thu,  8 Sep 2022 18:24:11 +0000 (UTC)
+        by dfw.source.kernel.org (Postfix) with ESMTPS id 530EE61DA2;
+        Thu,  8 Sep 2022 18:28:36 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 82810C433C1;
+        Thu,  8 Sep 2022 18:28:35 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1662661451;
-        bh=i1IlDHKxy8OFtCHlFz7v4XemmtvEnPd4tiCVmhk3mn8=;
+        s=k20201202; t=1662661715;
+        bh=3AXjNts7Tbdp8pO716rrzrAZGO4quDSRXH9N7rRJviw=;
         h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=Vr2GLrF921V8MmUwFrNYq7iQ1vTMddvuKCjl9f36TMxcYKfxBr3ZWDuxkX21YydHw
-         yo/zkFKT0aGGINn9VTK7guhq3Aa4KDYLsXAfxWBkWA12Dx7hn6lmRlgRHieORqeYkC
-         hteaWd43wm6zAQ1VXwnBXd+Qpc70QXjOIrgf6CnozWq7EHz8P0L7LNW5F+4WiAHe8L
-         ZfyroGiDv4q9aY5CxADOT4F6S9dmgF5l2OtemMrcrSP0is1/jeCRYiLXZ/7WDThn7O
-         fyIhJzeGpzU5u3w1ExkqpRYhBF1rzF5waa31o0IE08UqZmPF1nbgCvlnYu3F2pSLoM
-         nSKSxoph/ASUg==
+        b=KrZz6L/ogWWO4c6AMpWK3rmHOJVLTjjJOlSDv0VnDKwaMjQkLJ0Wd9VfFb9biqsN6
+         IyqKkAAspUF6ZMqmggHgxq8t1BC2IeBYBcwf/Rrr1w5FV6y3O/OcBG/PtURD8Cw/cn
+         q6tHPzKM3wqxKbskIE6jiYtT9gQGhwV01tJkqZDCsqm0XdRPQcjnMI+Q0MO6NkTBRN
+         Es3IRgrbIWoPMYRWFcHXJPmAWnoucUJhyVhR6d6Wz3r5xKTrdyRO12aRUNJQSWTbzv
+         HP0nx31pVN495IzdRrjnqB7y9yn4cYd9fctCpknBtlSInczDGcrdDKN2Ag1L3/4Eml
+         eacZdKfnfU2FQ==
 Received: by quaco.ghostprotocols.net (Postfix, from userid 1000)
-        id D4488404A1; Thu,  8 Sep 2022 15:24:08 -0300 (-03)
-Date:   Thu, 8 Sep 2022 15:24:08 -0300
+        id 20613404A1; Thu,  8 Sep 2022 15:28:33 -0300 (-03)
+Date:   Thu, 8 Sep 2022 15:28:33 -0300
 From:   Arnaldo Carvalho de Melo <acme@kernel.org>
-To:     Namhyung Kim <namhyung@kernel.org>
-Cc:     Yang Jihong <yangjihong1@huawei.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Jiri Olsa <jolsa@kernel.org>,
-        linux-perf-users <linux-perf-users@vger.kernel.org>,
-        linux-kernel <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH] perf lock: Remove redundant word 'contention' in help
- message
-Message-ID: <YxozSIIVx4UwseYS@kernel.org>
-References: <20220908014854.151203-1-yangjihong1@huawei.com>
- <CAM9d7ciPd4vf3v1rdOD43vR-bh0pjj1LCcrMVTLfH6Fcxx_Dsw@mail.gmail.com>
+To:     Jiri Olsa <olsajiri@gmail.com>
+Cc:     zhengjun.xing@linux.intel.com, peterz@infradead.org,
+        mingo@redhat.com, alexander.shishkin@intel.com,
+        namhyung@kernel.org, linux-kernel@vger.kernel.org,
+        linux-perf-users@vger.kernel.org, irogers@google.com,
+        ak@linux.intel.com, kan.liang@linux.intel.com
+Subject: Re: [PATCH] perf script: Fix Cannot print 'iregs' field for hybrid
+ systems
+Message-ID: <Yxo0URZAZeZ0LsvS@kernel.org>
+References: <20220908070030.3455164-1-zhengjun.xing@linux.intel.com>
+ <Yxmmu6eyO/baR0Vo@krava>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <CAM9d7ciPd4vf3v1rdOD43vR-bh0pjj1LCcrMVTLfH6Fcxx_Dsw@mail.gmail.com>
+In-Reply-To: <Yxmmu6eyO/baR0Vo@krava>
 X-Url:  http://acmel.wordpress.com
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-Em Wed, Sep 07, 2022 at 11:59:27PM -0700, Namhyung Kim escreveu:
-> On Wed, Sep 7, 2022 at 6:52 PM Yang Jihong <yangjihong1@huawei.com> wrote:
-> > Fixes: 528b9cab3b81 ("perf lock: Add 'contention' subcommand")
-> > Signed-off-by: Yang Jihong <yangjihong1@huawei.com>
- 
-> Acked-by: Namhyung Kim <namhyung@kernel.org>
- 
-> Thanks for the fix!
+Em Thu, Sep 08, 2022 at 10:24:27AM +0200, Jiri Olsa escreveu:
+> On Thu, Sep 08, 2022 at 03:00:30PM +0800, zhengjun.xing@linux.intel.com wrote:
+> > From: Zhengjun Xing <zhengjun.xing@linux.intel.com>
+> > 
+> > Commit b91e5492f9d7 ("perf record: Add a dummy event on hybrid systems to
+> > collect metadata records") adds a dummy event on hybrid systems to fix the
+> > symbol "unknown" issue when the workload is created in a P-core but runs
+> > on an E-core. The added dummy event will cause "perf script -F iregs" to
+> > fail. Dummy events do not have "iregs" attribute set, so when we do
+> > evsel__check_attr, the "iregs" attribute check will fail, so the issue
+> > happened.
+> > 
+> > The following commit [1] has fixed a similar issue by skipping the attr
+> > check for the dummy event because it does not have any samples anyway. It
+> > works okay for the normal mode, but the issue still happened when running
+> > the test in the pipe mode. In the pipe mode, it calls process_attr() which
+> > still checks the attr for the dummy event. This commit fixed the issue by
+> > skipping the attr check for the dummy event in the API evsel__check_attr,
+> > Otherwise, we have to patch everywhere when evsel__check_attr() is called.
+> > 
+> > Before:
+> > 
+> >  #./perf record -o - --intr-regs=di,r8,dx,cx -e br_inst_retired.near_call:p -c 1000 --per-thread true 2>/dev/null|./perf script -F iregs |head -5
+> > Samples for 'dummy:HG' event do not have IREGS attribute set. Cannot print 'iregs' field.
+> > 0x120 [0x90]: failed to process type: 64
+> > 
+> > After:
+> > 
+> >  # ./perf record -o - --intr-regs=di,r8,dx,cx -e br_inst_retired.near_call:p -c 1000 --per-thread true 2>/dev/null|./perf script -F iregs |head -5
+> >  ABI:2    CX:0x55b8efa87000    DX:0x55b8efa7e000    DI:0xffffba5e625efbb0    R8:0xffff90e51f8ae100
+> >  ABI:2    CX:0x7f1dae1e4000    DX:0xd0    DI:0xffff90e18c675ac0    R8:0x71
+> >  ABI:2    CX:0xcc0    DX:0x1    DI:0xffff90e199880240    R8:0x0
+> >  ABI:2    CX:0xffff90e180dd7500    DX:0xffff90e180dd7500    DI:0xffff90e180043500    R8:0x1
+> >  ABI:2    CX:0x50    DX:0xffff90e18c583bd0    DI:0xffff90e1998803c0    R8:0x58
+> > 
+> > [1]https://lore.kernel.org/lkml/20220831124041.219925-1-jolsa@kernel.org/
+> > 
+> > Fixes: b91e5492f9d7 ("perf record: Add a dummy event on hybrid systems to collect metadata records")
+> > 
+> > Signed-off-by: Zhengjun Xing <zhengjun.xing@linux.intel.com>
+> > Suggested-by: Namhyung Kim <namhyung@kernel.org>
+> 
+> Acked-by: Jiri Olsa <jolsa@kernel.org>
 
 Thanks, applied.
 
