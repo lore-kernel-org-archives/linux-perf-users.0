@@ -2,70 +2,76 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 22D1AC54EE9
-	for <linux-perf-users@archiver.kernel.org>; Thu,  8 Sep 2022 15:18:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 71B66C38145
+	for <linux-perf-users@archiver.kernel.org>; Thu,  8 Sep 2022 15:20:32 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229789AbiIHPSa (ORCPT
+        id S231752AbiIHPU3 (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Thu, 8 Sep 2022 11:18:30 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60410 "EHLO
+        Thu, 8 Sep 2022 11:20:29 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36856 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229658AbiIHPS3 (ORCPT
+        with ESMTP id S232148AbiIHPUZ (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Thu, 8 Sep 2022 11:18:29 -0400
-Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 13405F3BF6;
-        Thu,  8 Sep 2022 08:18:28 -0700 (PDT)
+        Thu, 8 Sep 2022 11:20:25 -0400
+Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C855549B40;
+        Thu,  8 Sep 2022 08:20:22 -0700 (PDT)
 Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id A46A161D56;
-        Thu,  8 Sep 2022 15:18:27 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id DABF3C433D6;
-        Thu,  8 Sep 2022 15:18:26 +0000 (UTC)
+        by dfw.source.kernel.org (Postfix) with ESMTPS id 63B2D61D52;
+        Thu,  8 Sep 2022 15:20:22 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 96112C433C1;
+        Thu,  8 Sep 2022 15:20:21 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1662650307;
-        bh=Zi2AYs3hspJ01ETB39xKF96aCDXF/4NVThJlfyqh6A4=;
+        s=k20201202; t=1662650421;
+        bh=9rwo6DpUJrmMV35qND1EFSDHN+K75sepibyztupsdGA=;
         h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=K+RMQO19CtfeCyO/7vbpKMXIueWkcjv5KqcSoHrjJuiHMSqsdr4FSFieE/loamTbN
-         CWvsDV8ZGDj+xDZeuI6lWYcE5f+IHUzUhNVPTlUCaSZMi9WqUVIDqewCtxP/VSUsgD
-         /YT024G91MwWXBiO+pTroNlqMe1OR1AUOR5rE5FFwMZ2SwNJ/dnbGg4bBA9mIwltND
-         QTqR8GdYLkOsEgchlHLbtEmk+l9jX/vp9cQrPpSMDQdh89H+EasOzSujWA8PPGEtLb
-         UOkPlDffyM7LNBPEBRd69WJhZ3HZj1NGcAW8YVJR9nMcD0iDdjKwX1lazghkXdniQI
-         AuY3ef/fEfdlw==
+        b=aqrDksBflFye4sWMwGBJ6usvEs8IAQA1JOhmLbMvPS8qxUJwCxbkF+352CcJa/m+M
+         zRqKLFzLbRHbRcuUMY+RVn1CERG5sig0m1Lh2I7fE7wQdPr26bVfeoNf21WgzI/tIJ
+         X94vntR1pT3TrNzP7o5yubq8ph1lRNzy/yX1ykj/VzoeZmD/1Xe46pzETGgnZpCFLV
+         MmmNeX2NaauRq7z/VHnZSQse7L9Z9fcMlheHPsNaIUdEiTHOtKO01RVZjY1hnfNBeZ
+         Ri7hMyZukRguyNFHnl3f4JwHeUvJDycC6FLX42JwTteaansBi7YIZ61Tbd1VOmU49U
+         F/8qoE0u7BczQ==
 Received: by quaco.ghostprotocols.net (Postfix, from userid 1000)
-        id 43CDF404A1; Thu,  8 Sep 2022 12:18:24 -0300 (-03)
-Date:   Thu, 8 Sep 2022 12:18:24 -0300
+        id 4D1AB404A1; Thu,  8 Sep 2022 12:20:19 -0300 (-03)
+Date:   Thu, 8 Sep 2022 12:20:19 -0300
 From:   Arnaldo Carvalho de Melo <acme@kernel.org>
-To:     Jiri Olsa <olsajiri@gmail.com>
-Cc:     Adrian Hunter <adrian.hunter@intel.com>,
-        Jiri Olsa <jolsa@redhat.com>,
+To:     John Garry <john.garry@huawei.com>
+Cc:     Nick Forrington <nick.forrington@arm.com>,
+        linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org,
+        Will Deacon <will@kernel.org>,
+        James Clark <james.clark@arm.com>,
+        Mike Leach <mike.leach@linaro.org>,
+        Leo Yan <leo.yan@linaro.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Jiri Olsa <jolsa@kernel.org>,
         Namhyung Kim <namhyung@kernel.org>,
-        Ian Rogers <irogers@google.com>, linux-kernel@vger.kernel.org,
-        linux-perf-users@vger.kernel.org,
-        Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@redhat.com>
-Subject: Re: [PATCH V2] libperf evlist: Fix per-thread mmaps for
- multi-threaded targets
-Message-ID: <YxoHwE6gL7WLmZqk@kernel.org>
-References: <20220905114209.8389-1-adrian.hunter@intel.com>
- <Yxioy/TXc/KDLoDL@krava>
+        linux-arm-kernel@lists.infradead.org
+Subject: Re: [PATCH] perf vendor events arm64: Move REMOTE_ACCESS to "memory"
+ category
+Message-ID: <YxoIMxKp7OyrU286@kernel.org>
+References: <20220908112519.64614-1-nick.forrington@arm.com>
+ <39abfee9-4a9b-ec44-9b02-a6cd34cfe64d@huawei.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <Yxioy/TXc/KDLoDL@krava>
+In-Reply-To: <39abfee9-4a9b-ec44-9b02-a6cd34cfe64d@huawei.com>
 X-Url:  http://acmel.wordpress.com
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-Em Wed, Sep 07, 2022 at 04:20:59PM +0200, Jiri Olsa escreveu:
-> On Mon, Sep 05, 2022 at 02:42:09PM +0300, Adrian Hunter wrote:
-> > Fixes: ae4f8ae16a07 ("libperf evlist: Allow mixing per-thread and per-cpu mmaps")
-> > Signed-off-by: Adrian Hunter <adrian.hunter@intel.com>
+Em Thu, Sep 08, 2022 at 12:47:47PM +0100, John Garry escreveu:
+> On 08/09/2022 12:25, Nick Forrington wrote:
+> > Move REMOTE_ACCESS event from other.json to memory.json for Neoverse
+> > CPUs. This is consistent with other Arm (Cortex) CPUs.
+> > 
+> > Signed-off-by: Nick Forrington<nick.forrington@arm.com>
 > 
-> Acked-by: Jiri Olsa <jolsa@kernel.org>
+> Reviewed-by: John Garry <john.garry@huawei.com>
 
-Thanks, added,
+Thanks, queued up for 6.1.
 
 - Arnaldo
