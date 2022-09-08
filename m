@@ -2,111 +2,133 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 22DCBC54EE9
-	for <linux-perf-users@archiver.kernel.org>; Thu,  8 Sep 2022 18:43:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D932CC54EE9
+	for <linux-perf-users@archiver.kernel.org>; Thu,  8 Sep 2022 18:53:27 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232289AbiIHSnp (ORCPT
+        id S232281AbiIHSxZ (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Thu, 8 Sep 2022 14:43:45 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47062 "EHLO
+        Thu, 8 Sep 2022 14:53:25 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40224 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231342AbiIHSno (ORCPT
+        with ESMTP id S232500AbiIHSxT (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Thu, 8 Sep 2022 14:43:44 -0400
-Received: from ams.source.kernel.org (ams.source.kernel.org [IPv6:2604:1380:4601:e00::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A74D9B2DAF;
-        Thu,  8 Sep 2022 11:43:43 -0700 (PDT)
+        Thu, 8 Sep 2022 14:53:19 -0400
+Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1492B103061;
+        Thu,  8 Sep 2022 11:53:04 -0700 (PDT)
 Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by ams.source.kernel.org (Postfix) with ESMTPS id 52DADB82220;
-        Thu,  8 Sep 2022 18:43:42 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id C5F2CC433D6;
-        Thu,  8 Sep 2022 18:43:40 +0000 (UTC)
+        by dfw.source.kernel.org (Postfix) with ESMTPS id 1C22C61DCB;
+        Thu,  8 Sep 2022 18:53:00 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 5375EC433C1;
+        Thu,  8 Sep 2022 18:52:59 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1662662621;
-        bh=9o8UhnmvSSPQAX15Og0MpXzXj8mBI1uz6bugcbcXZ3w=;
+        s=k20201202; t=1662663179;
+        bh=OfEwE92FvUQTZ2OVXWPHaUk+Ohbu1SzoKoKbJOo2mgA=;
         h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=Vh5ViOxtHE8L/b75nj2myzQzSBr6t6JiYtj/GTWhSx5rpQk3/S6Hh7aGOQJm5K2+9
-         25gO3JcWwgcVzFvQL/V6D8eTFRmWZ0CpkLuCB5hctH2Z5RNep9zBvHSj1sP2C/VDYc
-         iPTzl2un/oFhShla4hnB59+v+rBPKaptwLGjRh5diJ2F1L8RfQpW9o/A1trGPqm/PP
-         cPVDgeWip7GUbwUl3CYfJ3lXqWzVcP3y2ToApjtiGDlpj3gq0TQ2EGN3DX19sz/owU
-         mmCLYLgJNSfdO8GVCLUEFOr+IeS8YxFtR354baTezosAPq4pkn62UBma+B2qYKO3LO
-         gxHeIBeVVv0qA==
+        b=GVsF88Gsv6xnzlYC4hcwd7V9Ser2eLDknyGibf4FfThXQyfwn/omW+Ct0MCVl7wlL
+         INroToWOpe6rCdNKmLJXLzyJY3o3IkX7LLx2uZGuF7v8TYkSn1adHphcepHiOLN1F8
+         Apr+y4uhmfH8HzSmPLiPZjFHn4xyP+KLYRyuy9FbVE5IbeW5dtnXObvjMjvEYj24px
+         ztuHLIOIt1RW64mh8fm6op6GvyGXpOJ8GbdAEUqD23h2fV6EJ2N7KJQX7hSacvpHwn
+         yiDlz/9z6TPFVVuTA+u8SFTb1rrXfBDEEkX+46GrdKAXZU65xDYN15YsRwmQ0OGGwW
+         /9zpvb5oQ5N4Q==
 Received: by quaco.ghostprotocols.net (Postfix, from userid 1000)
-        id C0BBF404A1; Thu,  8 Sep 2022 15:43:38 -0300 (-03)
-Date:   Thu, 8 Sep 2022 15:43:38 -0300
+        id 333FD404A1; Thu,  8 Sep 2022 15:52:57 -0300 (-03)
+Date:   Thu, 8 Sep 2022 15:52:57 -0300
 From:   Arnaldo Carvalho de Melo <acme@kernel.org>
-To:     Namhyung Kim <namhyung@kernel.org>
-Cc:     Jiri Olsa <jolsa@kernel.org>, Ingo Molnar <mingo@kernel.org>,
+To:     Ian Rogers <irogers@google.com>
+Cc:     Jiri Olsa <olsajiri@gmail.com>,
         Peter Zijlstra <peterz@infradead.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Ian Rogers <irogers@google.com>,
-        linux-perf-users@vger.kernel.org, Song Liu <songliubraving@fb.com>,
-        bpf@vger.kernel.org
-Subject: Re: [PATCH 0/4] perf lock contention: Improve call stack handling
- (v1)
-Message-ID: <Yxo32kpxsl9Mr7Mt@kernel.org>
-References: <20220908063754.1369709-1-namhyung@kernel.org>
+        Ingo Molnar <mingo@redhat.com>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Namhyung Kim <namhyung@kernel.org>,
+        James Clark <james.clark@arm.com>,
+        Kees Cook <keescook@chromium.org>,
+        "Gustavo A. R. Silva" <gustavoars@kernel.org>,
+        Adrian Hunter <adrian.hunter@intel.com>,
+        Riccardo Mancini <rickyman7@gmail.com>,
+        German Gomez <german.gomez@arm.com>,
+        Colin Ian King <colin.king@intel.com>,
+        Song Liu <songliubraving@fb.com>,
+        Dave Marchevsky <davemarchevsky@fb.com>,
+        Athira Rajeev <atrajeev@linux.vnet.ibm.com>,
+        Alexey Bayduraev <alexey.v.bayduraev@linux.intel.com>,
+        Leo Yan <leo.yan@linaro.org>, linux-perf-users@vger.kernel.org,
+        linux-kernel@vger.kernel.org, Stephane Eranian <eranian@google.com>
+Subject: Re: [PATCH v2 6/6] perf cpumap: Add range data encoding
+Message-ID: <Yxo6Ccp/Hb4qAxZS@kernel.org>
+References: <20220614143353.1559597-1-irogers@google.com>
+ <20220614143353.1559597-7-irogers@google.com>
+ <YuZ4CEnken8U4HO5@krava>
+ <CAP-5=fVczMiasS15UovH8kzOaNw=TC_adeqjC+xBzv8jVJ3DTQ@mail.gmail.com>
+ <CAP-5=fWVN4Fig5GEwyWwwUc9_iZyZ5rObTFkyNcuFp1GApy4tg@mail.gmail.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20220908063754.1369709-1-namhyung@kernel.org>
+In-Reply-To: <CAP-5=fWVN4Fig5GEwyWwwUc9_iZyZ5rObTFkyNcuFp1GApy4tg@mail.gmail.com>
 X-Url:  http://acmel.wordpress.com
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-Em Wed, Sep 07, 2022 at 11:37:50PM -0700, Namhyung Kim escreveu:
-> Hello,
+Em Wed, Sep 07, 2022 at 03:41:19PM -0700, Ian Rogers escreveu:
+> On Thu, Aug 4, 2022 at 12:30 PM Ian Rogers <irogers@google.com> wrote:
+> >
+> > On Sun, Jul 31, 2022 at 5:39 AM Jiri Olsa <olsajiri@gmail.com> wrote:
+> > >
+> > > On Tue, Jun 14, 2022 at 07:33:53AM -0700, Ian Rogers wrote:
+> > >
+> > > SNIP
+> > >
+> > > > +     event = cpu_map_data__alloc(&syn_data, sizeof(struct perf_event_header));
+> > > >       if (!event)
+> > > >               return NULL;
+> > > >
+> > > > +     syn_data.data = &event->data;
+> > > >       event->header.type = PERF_RECORD_CPU_MAP;
+> > > > -     event->header.size = size;
+> > > > -     event->data.type   = type;
+> > > > -
+> > > > -     cpu_map_data__synthesize(&event->data, map, type, max);
+> > > > +     event->header.size = syn_data.size;
+> > > > +     cpu_map_data__synthesize(&syn_data);
+> > > >       return event;
+> > > >  }
+> > > >
+> > > > +
+> > > >  int perf_event__synthesize_cpu_map(struct perf_tool *tool,
+> > > >                                  const struct perf_cpu_map *map,
+> > > >                                  perf_event__handler_t process,
+> > > > @@ -1891,24 +1894,20 @@ int perf_event__synthesize_event_update_name(struct perf_tool *tool, struct evse
+> > > >  int perf_event__synthesize_event_update_cpus(struct perf_tool *tool, struct evsel *evsel,
+> > > >                                            perf_event__handler_t process)
+> > > >  {
+> > > > -     size_t size = sizeof(struct perf_event_header) + sizeof(u64) + sizeof(u64);
+> > > > +     struct synthesize_cpu_map_data syn_data = { .map = evsel->core.own_cpus };
+> > > >       struct perf_record_event_update *ev;
+> > > > -     int max, err;
+> > > > -     u16 type;
+> > > > -
+> > > > -     if (!evsel->core.own_cpus)
+> > > > -             return 0;
+> > >
+> > > all seems fine, just looks like we no longer do this check,
+> > > might not be needed anymore, as that changed in past
+> >
+> > This function is called in a test and in this file. The caller already
+> > does this test and so the check is redundant plus a little confusing:
+> > https://git.kernel.org/pub/scm/linux/kernel/git/acme/linux.git/tree/tools/perf/util/synthetic-events.c?h=perf/core#n2062
+> > As you say, it wasn't needed any more and so I removed it.
+> >
+> > Thanks,
+> > Ian
 > 
-> I found that call stack from the lock tracepoint (using bpf_get_stackid)
-> can be different on each configuration.  For example it's very different
-> when I run it on a VM than on a real machine.
-> 
-> The perf lock contention relies on the stack trace to get the lock
-> caller names, this kind of difference can be annoying.  Ideally we could
-> skip stack trace entries for internal BPF or lock functions and get the
-> correct caller, but it's not the case as of today.  Currently it's hard
-> coded to control the behavior of stack traces for the lock contention
-> tracepoints.
-> 
-> To handle those differences, add two new options to control the number of
-> stack entries and how many it skips.  The default value worked well on
-> my VM setup, but I had to use --stack-skip=5 on real machines.
-> 
-> You can get it from 'perf/lock-stack-v1' branch in
-> 
->   git://git.kernel.org/pub/scm/linux/kernel/git/namhyung/linux-perf.git
+> Would be nice to land this imo. Anything outstanding?
 
-This clashed with a patch you Acked earlier, so lets see if someone has
-extra review comments and a v2 become needed for other reason, when you
-can refresh it, ok?
-
-- Arnaldo
- 
-> Thanks,
-> Namhyung
-> 
-> 
-> Namhyung Kim (4):
->   perf lock contention: Factor out get_symbol_name_offset()
->   perf lock contention: Show full callstack with -v option
->   perf lock contention: Allow to change stack depth and skip
->   perf lock contention: Skip stack trace from BPF
-> 
->  tools/perf/Documentation/perf-lock.txt        |  6 ++
->  tools/perf/builtin-lock.c                     | 89 ++++++++++++++-----
->  tools/perf/util/bpf_lock_contention.c         | 21 +++--
->  .../perf/util/bpf_skel/lock_contention.bpf.c  |  3 +-
->  tools/perf/util/lock-contention.h             |  3 +
->  5 files changed, 96 insertions(+), 26 deletions(-)
-> 
-> 
-> base-commit: 6c3bd8d3e01d9014312caa52e4ef1c29d5249648
-> -- 
-> 2.37.2.789.g6183377224-goog
-
--- 
+So the last two patches were outstanding, 5/6 applied cleanly, 6/6 had
+some fuzzes, minimal stuff, applied, I'll push it out soon, please
+check.
 
 - Arnaldo
