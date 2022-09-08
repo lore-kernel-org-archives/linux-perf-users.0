@@ -2,122 +2,137 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 79B68C38145
-	for <linux-perf-users@archiver.kernel.org>; Thu,  8 Sep 2022 07:59:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 92475ECAAD5
+	for <linux-perf-users@archiver.kernel.org>; Thu,  8 Sep 2022 08:24:35 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229845AbiIHH7a (ORCPT
+        id S231459AbiIHIYe (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Thu, 8 Sep 2022 03:59:30 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35210 "EHLO
+        Thu, 8 Sep 2022 04:24:34 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34652 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231288AbiIHH72 (ORCPT
+        with ESMTP id S229991AbiIHIYc (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Thu, 8 Sep 2022 03:59:28 -0400
-Received: from mail-yw1-x112d.google.com (mail-yw1-x112d.google.com [IPv6:2607:f8b0:4864:20::112d])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BE427C7BAD
-        for <linux-perf-users@vger.kernel.org>; Thu,  8 Sep 2022 00:59:19 -0700 (PDT)
-Received: by mail-yw1-x112d.google.com with SMTP id 00721157ae682-3454b0b1b6dso98889047b3.4
-        for <linux-perf-users@vger.kernel.org>; Thu, 08 Sep 2022 00:59:19 -0700 (PDT)
+        Thu, 8 Sep 2022 04:24:32 -0400
+Received: from mail-wm1-x336.google.com (mail-wm1-x336.google.com [IPv6:2a00:1450:4864:20::336])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 633E6DEC0;
+        Thu,  8 Sep 2022 01:24:31 -0700 (PDT)
+Received: by mail-wm1-x336.google.com with SMTP id n17-20020a05600c3b9100b003b3235574dbso749256wms.2;
+        Thu, 08 Sep 2022 01:24:31 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20210112;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:from:to:cc:subject:date;
-        bh=AED3bGnj1lFXZEETrGBbS5jh6P5l9CcrTpBF9lOrNE0=;
-        b=HkUFRA8CPFJAvpaFZE0A48bh8ebNvRB0c9TxZNw2wdVrMoeLJdR4QnLUPPcniJEcKY
-         VNaFMEeLnmR7AJ9Lbgz25CYZ94/GBFshTL5meP9gXvTjKp6JSXBNwu1vmE3RdSN+oxET
-         0pKAeWTyTxvf9nXIJYIVEG7+0eeGUB3FAh/IYdLo1NfWohokuzLXDvbWU6mF9v+UKcUd
-         pVlXqPU7xT9Zm+riPxfay1Dr8EHuoKrj2TOgjNijoKvfzP+kMXfiQje1gC3rVWy4ZtDs
-         YAA/J1b5zmDei7hTit3O4zQ+eNvcbntqnMQB2lnuY+1qegnjgPbTWdVMZTw1i1yH2GDj
-         +RRw==
+        d=gmail.com; s=20210112;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:date:from:from:to:cc:subject:date;
+        bh=/ohG8DwSItaCcxoY9t3BLCfb93uhCkZwCq+xnGDP9xw=;
+        b=bqMso4RQbyQNgYUzQ+4Fk4CQujHDZMJZEIazWNBBqm6nqaRQTwEKcVjipeg6l3pIhu
+         KUw2ysMcisuVn97nTzRcaSgNllcVT9V4hTpIRmFC0j3Q4sqVY8oWyCJqhSw/5jySrQmb
+         2dKnjeAIVdtbmEcJD3+GT3dqhiI6sWGZEJWgFj00T74Wj9jKrc1Vm9zDb+zf/utFUd0W
+         zpKxx2omRme6eRaZc3Q3X0VmyyFwf+IJGvkoKxEAfhoO6Y6iqVBFYe9nqeQUmP6R+lDQ
+         w7IDZzD+tjGXzkV3Y86F12C6gnLuOy5+/tNE5RgB3ue9qID/ur9+g8UuB7PQ1ZM84yXo
+         XARg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date;
-        bh=AED3bGnj1lFXZEETrGBbS5jh6P5l9CcrTpBF9lOrNE0=;
-        b=5CkJ3rgNRCXZd/0mooNoV+FtLkvIY6zT6h5awI2wtznyHJ5zCRNWOtmSepHIZRCYBA
-         L7UMGErJvaqQhWfiyLGdXPFrbWjjmFAgTw4Ko9HU1ViujHNAXK2jmRtPqmgNPcINzss2
-         bmEUEji8VfdX7KrVg3o7S9p108vBoUzdNftNPGKKEbxhkjLKeKwd3qn245EqclEiVpgG
-         xGwUdsMA+X2HF3MPaVehNcMg6Z7PpHvaRJeYnvcUcXTvR291dZa7aNcKwM0AUZ8tsZfc
-         ucoBF/G2HBdca7XkWDX5qqIxJv7RlvZjkGGRFKHzumzGD+Nqgl4ZHa5jvJbOdrSKefGZ
-         dMOw==
-X-Gm-Message-State: ACgBeo1HqOiPKCS8Bvsr7CDVvDhSpPrzYEkGj0NmCk2dD47kUZQYGe8F
-        KyCNsRqP6/Cj8z9H0/ZrRjJI7OUFY+GGFgSe6iPMvg==
-X-Google-Smtp-Source: AA6agR4X0jTEHkYV5U40zvcN89k17FaKDFHNabGZ3PT+KFUU19cT6H4djk8nh2JaC2JxqJ8Gtff8FgF8cCPzupgqq20=
-X-Received: by 2002:a81:a16:0:b0:345:afa:5961 with SMTP id 22-20020a810a16000000b003450afa5961mr6297647ywk.11.1662623958715;
- Thu, 08 Sep 2022 00:59:18 -0700 (PDT)
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:date:from:x-gm-message-state:from:to:cc:subject:date;
+        bh=/ohG8DwSItaCcxoY9t3BLCfb93uhCkZwCq+xnGDP9xw=;
+        b=CKGfuy/W3En2U4jdPsinmTNXzJRqIpDq4XYhuLRXlUWpOckcvZAUaxY4/EnGII4JdM
+         9o3qbXE3w/X31FoA4u6AcbXF6OShnYxwkjphk/2qP+2uMDrGOmEO9weH+jogBDZCYsEr
+         6SFRaTBisFLBHFT+74rFo7xGr9wZozhCFJzwUBi4W1h0Seur9693RoPDNVFJDXDJDnzE
+         iWxTr6VxdQFKY3lFmpMGO+0McvBNZsqEljIr3iSVCjlPXse5/7Q8lz5rAg/nlkgLY75P
+         SQ+R2WjCb7KS5XHN6TIzkc6PffWZuPWovkbVagNO+DbRPalRZAvVK1IIGZdi0584kQpX
+         w1XA==
+X-Gm-Message-State: ACgBeo3n0qvJrFQqdH6Eg17VC92nhy2vc9bAs9zCFjDUKbuZeVmtqzgT
+        1GKVasg5fAR89PFXmg8wdTQ=
+X-Google-Smtp-Source: AA6agR4/Pxrf1WQ9mp4qqlP31Iz19Bi0knkCR4tItgQutaY2U7Vd9pbxJcyfJSexsdl12TyhJ7Wj8Q==
+X-Received: by 2002:a7b:ce10:0:b0:3a5:3f91:e2fb with SMTP id m16-20020a7bce10000000b003a53f91e2fbmr1472519wmc.138.1662625469786;
+        Thu, 08 Sep 2022 01:24:29 -0700 (PDT)
+Received: from krava ([193.85.244.190])
+        by smtp.gmail.com with ESMTPSA id n6-20020a05600c3b8600b003a846a014c1sm1926257wms.23.2022.09.08.01.24.28
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 08 Sep 2022 01:24:29 -0700 (PDT)
+From:   Jiri Olsa <olsajiri@gmail.com>
+X-Google-Original-From: Jiri Olsa <jolsa@kernel.org>
+Date:   Thu, 8 Sep 2022 10:24:27 +0200
+To:     zhengjun.xing@linux.intel.com
+Cc:     acme@kernel.org, peterz@infradead.org, mingo@redhat.com,
+        alexander.shishkin@intel.com, namhyung@kernel.org,
+        linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org,
+        irogers@google.com, ak@linux.intel.com, kan.liang@linux.intel.com
+Subject: Re: [PATCH] perf script: Fix Cannot print 'iregs' field for hybrid
+ systems
+Message-ID: <Yxmmu6eyO/baR0Vo@krava>
+References: <20220908070030.3455164-1-zhengjun.xing@linux.intel.com>
 MIME-Version: 1.0
-References: <20220902100057.404817-1-elver@google.com> <YxiQ87X1eUB2rrtF@hirez.programming.kicks-ass.net>
-In-Reply-To: <YxiQ87X1eUB2rrtF@hirez.programming.kicks-ass.net>
-From:   Marco Elver <elver@google.com>
-Date:   Thu, 8 Sep 2022 09:58:42 +0200
-Message-ID: <CANpmjNPwtmRbj3zRTWS9hL0wawuSQV_2SL0fvnb5e0J43MaNag@mail.gmail.com>
-Subject: Re: [PATCH] perf: Allow restricted kernel breakpoints on user addresses
-To:     Peter Zijlstra <peterz@infradead.org>
-Cc:     Ingo Molnar <mingo@redhat.com>,
-        Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Jiri Olsa <jolsa@kernel.org>,
-        Namhyung Kim <namhyung@kernel.org>,
-        linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org,
-        kasan-dev@googlegroups.com, Dmitry Vyukov <dvyukov@google.com>,
-        Jann Horn <jannh@google.com>,
-        Thomas Gleixner <tglx@linutronix.de>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20220908070030.3455164-1-zhengjun.xing@linux.intel.com>
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-On Wed, 7 Sept 2022 at 14:39, Peter Zijlstra <peterz@infradead.org> wrote:
->
-> On Fri, Sep 02, 2022 at 12:00:57PM +0200, Marco Elver wrote:
->
-> > +/*
-> > + * Check if unprivileged users are allowed to set up breakpoints on user
-> > + * addresses that also count when the kernel accesses them.
-> > + */
-> > +static bool perf_allow_kernel_breakpoint(struct perf_event_attr *attr)
-> > +{
-> > +     if (attr->type != PERF_TYPE_BREAKPOINT)
-> > +             return false;
-> > +
-> > +     /*
-> > +      * The sample may contain IPs, registers, or other information that may
-> > +      * disclose kernel addresses or timing information. Disallow any kind of
-> > +      * additional sample information.
-> > +      */
-> > +     if (attr->sample_type)
-> > +             return false;
->
-> This feels a bit weird; should that perhaps be is_sampling_event()?
+On Thu, Sep 08, 2022 at 03:00:30PM +0800, zhengjun.xing@linux.intel.com wrote:
+> From: Zhengjun Xing <zhengjun.xing@linux.intel.com>
+> 
+> Commit b91e5492f9d7 ("perf record: Add a dummy event on hybrid systems to
+> collect metadata records") adds a dummy event on hybrid systems to fix the
+> symbol "unknown" issue when the workload is created in a P-core but runs
+> on an E-core. The added dummy event will cause "perf script -F iregs" to
+> fail. Dummy events do not have "iregs" attribute set, so when we do
+> evsel__check_attr, the "iregs" attribute check will fail, so the issue
+> happened.
+> 
+> The following commit [1] has fixed a similar issue by skipping the attr
+> check for the dummy event because it does not have any samples anyway. It
+> works okay for the normal mode, but the issue still happened when running
+> the test in the pipe mode. In the pipe mode, it calls process_attr() which
+> still checks the attr for the dummy event. This commit fixed the issue by
+> skipping the attr check for the dummy event in the API evsel__check_attr,
+> Otherwise, we have to patch everywhere when evsel__check_attr() is called.
+> 
+> Before:
+> 
+>  #./perf record -o - --intr-regs=di,r8,dx,cx -e br_inst_retired.near_call:p -c 1000 --per-thread true 2>/dev/null|./perf script -F iregs |head -5
+> Samples for 'dummy:HG' event do not have IREGS attribute set. Cannot print 'iregs' field.
+> 0x120 [0x90]: failed to process type: 64
+> 
+> After:
+> 
+>  # ./perf record -o - --intr-regs=di,r8,dx,cx -e br_inst_retired.near_call:p -c 1000 --per-thread true 2>/dev/null|./perf script -F iregs |head -5
+>  ABI:2    CX:0x55b8efa87000    DX:0x55b8efa7e000    DI:0xffffba5e625efbb0    R8:0xffff90e51f8ae100
+>  ABI:2    CX:0x7f1dae1e4000    DX:0xd0    DI:0xffff90e18c675ac0    R8:0x71
+>  ABI:2    CX:0xcc0    DX:0x1    DI:0xffff90e199880240    R8:0x0
+>  ABI:2    CX:0xffff90e180dd7500    DX:0xffff90e180dd7500    DI:0xffff90e180043500    R8:0x1
+>  ABI:2    CX:0x50    DX:0xffff90e18c583bd0    DI:0xffff90e1998803c0    R8:0x58
+> 
+> [1]https://lore.kernel.org/lkml/20220831124041.219925-1-jolsa@kernel.org/
+> 
+> Fixes: b91e5492f9d7 ("perf record: Add a dummy event on hybrid systems to collect metadata records")
+> 
+> Signed-off-by: Zhengjun Xing <zhengjun.xing@linux.intel.com>
+> Suggested-by: Namhyung Kim <namhyung@kernel.org>
 
-is_sampling_event() just checks for sample_period. In fact, we still
-want to set sample_period to get overflow events. That in itself is
-not dangerous.
+Acked-by: Jiri Olsa <jolsa@kernel.org>
 
-What's problematic is if the samples contain additional information,
-which can be specified in sample_type. For example if PERF_SAMPLE_IP
-is set, it might leak kernel IPs, and that's bad. Since it's safest to
-disallow any kind of extra information, we just check if sample_type
-is zero.
+thanks,
+jirka
 
-> > +
-> > +     /*
-> > +      * Only allow kernel breakpoints on user addresses.
-> > +      */
-> > +     return access_ok((void __user *)(unsigned long)attr->bp_addr, attr->bp_len);
-> > +}
-> > +
-> > +int perf_allow_kernel(struct perf_event_attr *attr)
-> > +{
-> > +     if (sysctl_perf_event_paranoid > 1 && !perfmon_capable() &&
-> > +         !perf_allow_kernel_breakpoint(attr))
->
-> I'm on the fence about this; one the one hand it feels weird to have a
-> breakpoint exception here and not a pmu specific callback for instance;
-> OTOH, leaving security policy like that up to pmu drivers sounds like a
-> really bad idea too.
->
-> Keep it as is I suppose, just me thinking out loud or so.
-
-Ack. I also think this should stay in core, as it's also easier to audit.
+> ---
+>  tools/perf/builtin-script.c | 3 +++
+>  1 file changed, 3 insertions(+)
+> 
+> diff --git a/tools/perf/builtin-script.c b/tools/perf/builtin-script.c
+> index 585171479876..1a8790385eba 100644
+> --- a/tools/perf/builtin-script.c
+> +++ b/tools/perf/builtin-script.c
+> @@ -445,6 +445,9 @@ static int evsel__check_attr(struct evsel *evsel, struct perf_session *session)
+>  	struct perf_event_attr *attr = &evsel->core.attr;
+>  	bool allow_user_set;
+>  
+> +	if (evsel__is_dummy_event(evsel))
+> +		return 0;
+> +
+>  	if (perf_header__has_feat(&session->header, HEADER_STAT))
+>  		return 0;
+>  
+> -- 
+> 2.25.1
+> 
