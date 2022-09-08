@@ -2,171 +2,113 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 26DA2ECAAD5
-	for <linux-perf-users@archiver.kernel.org>; Thu,  8 Sep 2022 06:04:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 97EBAC38145
+	for <linux-perf-users@archiver.kernel.org>; Thu,  8 Sep 2022 06:38:03 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230026AbiIHGEh (ORCPT
+        id S230363AbiIHGiC (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Thu, 8 Sep 2022 02:04:37 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38238 "EHLO
+        Thu, 8 Sep 2022 02:38:02 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33774 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229941AbiIHGEd (ORCPT
+        with ESMTP id S229970AbiIHGiB (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Thu, 8 Sep 2022 02:04:33 -0400
-Received: from smtp-out2.suse.de (smtp-out2.suse.de [195.135.220.29])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9AFB613DE2;
-        Wed,  7 Sep 2022 23:04:30 -0700 (PDT)
-Received: from relay2.suse.de (relay2.suse.de [149.44.160.134])
-        by smtp-out2.suse.de (Postfix) with ESMTP id AC5C11F898;
-        Thu,  8 Sep 2022 06:04:28 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.cz; s=susede2_rsa;
-        t=1662617068; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-         mime-version:mime-version:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=6XNvd7PE5nl7t/a/K/O/kEdO7nXoqbzvy4397Ve+BQw=;
-        b=OYHR1psj1uRVSfIy9lHEaHQXe5QWNHmyiZSNvvVPdqs3bsmPz++JcSQtBP4HEl13lB9JYm
-        wusNVFlXjIj1YHiHA4llJ9Zvz5/wHArWSRyQAHMT2ubPdNk6trsYVEU+qHwx16yZ51R/ps
-        LYEKAvcgK9bMq/uABTRSR8dlRZbBjN0=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.cz;
-        s=susede2_ed25519; t=1662617068;
-        h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-         mime-version:mime-version:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=6XNvd7PE5nl7t/a/K/O/kEdO7nXoqbzvy4397Ve+BQw=;
-        b=1ME56MWG4/3NZXhd8AZCgedaH+5Twkvwb6W/PwJfdKi4JrOgrtXtn/OkfeuiBUqX4HGvf5
-        J5Etqo8fVOAlH1Ag==
-Received: from localhost.localdomain (unknown [10.100.208.98])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by relay2.suse.de (Postfix) with ESMTPS id 0051C2C141;
-        Thu,  8 Sep 2022 06:04:27 +0000 (UTC)
-From:   Jiri Slaby <jslaby@suse.cz>
-To:     acme@redhat.com
-Cc:     linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Jiri Slaby <jslaby@suse.cz>,
-        Adrian Hunter <adrian.hunter@intel.com>,
-        Andi Kleen <ak@linux.intel.com>,
-        Ingo Molnar <mingo@redhat.com>, Jiri Olsa <jolsa@redhat.com>,
-        Kan Liang <kan.liang@linux.intel.com>,
-        Leo Yan <leo.yan@linaro.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Namhyung Kim <namhyung@kernel.org>,
-        Peter Zijlstra <peterz@infradead.org>
-Subject: [PATCH v2] perf: don't install data files with x permissions
-Date:   Thu,  8 Sep 2022 08:04:26 +0200
-Message-Id: <20220908060426.9619-1-jslaby@suse.cz>
-X-Mailer: git-send-email 2.37.3
-In-Reply-To: <20220907105634.29649-1-jslaby@suse.cz>
-References: <20220907105634.29649-1-jslaby@suse.cz>
+        Thu, 8 Sep 2022 02:38:01 -0400
+Received: from mail-pf1-x42b.google.com (mail-pf1-x42b.google.com [IPv6:2607:f8b0:4864:20::42b])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BB3FEC6515;
+        Wed,  7 Sep 2022 23:37:59 -0700 (PDT)
+Received: by mail-pf1-x42b.google.com with SMTP id z187so16919677pfb.12;
+        Wed, 07 Sep 2022 23:37:59 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20210112;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:sender:from:to:cc:subject:date;
+        bh=cvQFVKfsfpYxMErEhYXJffwhmqD/tkknSq1Emm1w1rc=;
+        b=OG40dAmcsya0mIfrs6M7VTGhsPQyc99M2zpnYeKUWlGxufzblnKLD/nYUPy/4B242c
+         PJj8eBvGrP7BtFMn0mr5prdEbu5LAT9j5o7d/nuGcYH9f2HLhkhsc7RGC8gDVmdc7J3G
+         tzq3zR+BUw5sSdJ6By3uj/31+WciaGyDV2UWLhkTTFXf3QhfufE79HLfGrMMBMyp+ufh
+         NyrR/9LU9nqQw3dsHNwJJrsqrgbNAGLUU0uzg2y2HmvGaSQWt4F1sR4k03w/FrwUUtuR
+         rMqv/xKkEy36HVFUD3E4daujJ7oZd3Dda5/aszKzA2NhcRDa2r9cKFQc/3ftaj5mEixu
+         vLNA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:sender:x-gm-message-state:from:to:cc:subject:date;
+        bh=cvQFVKfsfpYxMErEhYXJffwhmqD/tkknSq1Emm1w1rc=;
+        b=2K1tqeUQ9D9sC/+Cgf4eNmD5RKwBgP5GD3Mi6DETPkYSJVNoDqhFMTdvxRwV+QNBeQ
+         X/VuvMvtP36LBVWlE5ABNMEAuvzLVh5usDBj0UmddszwIJc37EX4x+C7r5e7vx13ntA2
+         XbsZ6iaMW2Uzp5poxflFs3b5YmlFH/2NGrQQP8LNcq+4PvTJSbPGc6tHPEOkgYSd8X6v
+         OXYQ6/ctFCTkOgw+gYWuBDfk/7xsVnHZ1wKxfbb5QrZTIkVeASbl29ivG1689ofDkDBG
+         QU1FmWtSD32VGKL89+8nJKI9WbP33lN0OhzNINP5uvnavGHgmXNhkx3B/nG+JPKMNV4L
+         01/A==
+X-Gm-Message-State: ACgBeo1kiVBTLo/ndpXy8l1nNF4M7/GCR4UT5SR+aM91wVgnUKnWlPRE
+        BAv0O5txUEgeBidLdyNrGHWPgfmn99k=
+X-Google-Smtp-Source: AA6agR5HuV/ew0Uwj8ErnMLTC7jyrabpINK0Zcppz8U66W1F9QiUbP2zlOOEyMagiUtMQOTWu1S+PA==
+X-Received: by 2002:a65:5941:0:b0:41d:a203:c043 with SMTP id g1-20020a655941000000b0041da203c043mr6466422pgu.483.1662619078869;
+        Wed, 07 Sep 2022 23:37:58 -0700 (PDT)
+Received: from balhae.hsd1.ca.comcast.net ([2601:647:6780:1040:7f21:d032:3f14:a4e6])
+        by smtp.gmail.com with ESMTPSA id o33-20020a17090a0a2400b001fb0fc33d72sm890716pjo.47.2022.09.07.23.37.55
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 07 Sep 2022 23:37:56 -0700 (PDT)
+Sender: Namhyung Kim <namhyung@gmail.com>
+From:   Namhyung Kim <namhyung@kernel.org>
+To:     Arnaldo Carvalho de Melo <acme@kernel.org>,
+        Jiri Olsa <jolsa@kernel.org>
+Cc:     Ingo Molnar <mingo@kernel.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Ian Rogers <irogers@google.com>,
+        linux-perf-users@vger.kernel.org, Song Liu <songliubraving@fb.com>,
+        bpf@vger.kernel.org
+Subject: [PATCH 0/4] perf lock contention: Improve call stack handling (v1)
+Date:   Wed,  7 Sep 2022 23:37:50 -0700
+Message-Id: <20220908063754.1369709-1-namhyung@kernel.org>
+X-Mailer: git-send-email 2.37.2.789.g6183377224-goog
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-install(1), by default, installs with rwxr-xr-x permissions. Modify
-perf's Makefile to pass '-m 644' when installing:
-* Documentation/tips.txt
-* examples/bpf/*
-* perf-completion.sh
-* perf_dlfilter.h header
-* scripts/perl/Perf-Trace-Util/lib/Perf/Trace/*
-* scripts/perl/*.pl
-* tests/attr/*
-* tests/attr.py
-* tests/shell/lib/*.sh
-* trace/strace/groups/*
+Hello,
 
-All those are supposed to be non-executable. Either they are not scripts
-at all, or they don't have shebang.
+I found that call stack from the lock tracepoint (using bpf_get_stackid)
+can be different on each configuration.  For example it's very different
+when I run it on a VM than on a real machine.
 
-Cc: Adrian Hunter <adrian.hunter@intel.com>
-Cc: Andi Kleen <ak@linux.intel.com>
-Cc: Ingo Molnar <mingo@redhat.com>
-Cc: Jiri Olsa <jolsa@redhat.com>
-Cc: Kan Liang <kan.liang@linux.intel.com>
-Cc: Leo Yan <leo.yan@linaro.org>
-Cc: Mark Rutland <mark.rutland@arm.com>
-Cc: Namhyung Kim <namhyung@kernel.org>
-Cc: Peter Zijlstra <peterz@infradead.org>
-Cc: Arnaldo Carvalho de Melo <acme@redhat.com>
-Signed-off-by: Jiri Slaby <jslaby@suse.cz>
----
+The perf lock contention relies on the stack trace to get the lock
+caller names, this kind of difference can be annoying.  Ideally we could
+skip stack trace entries for internal BPF or lock functions and get the
+correct caller, but it's not the case as of today.  Currently it's hard
+coded to control the behavior of stack traces for the lock contention
+tracepoints.
 
-Notes:
-    [v2] include also bpf example sources
+To handle those differences, add two new options to control the number of
+stack entries and how many it skips.  The default value worked well on
+my VM setup, but I had to use --stack-skip=5 on real machines.
 
- tools/perf/Makefile.perf | 24 ++++++++++++------------
- 1 file changed, 12 insertions(+), 12 deletions(-)
+You can get it from 'perf/lock-stack-v1' branch in
 
-diff --git a/tools/perf/Makefile.perf b/tools/perf/Makefile.perf
-index e5921b347153..bd947885a639 100644
---- a/tools/perf/Makefile.perf
-+++ b/tools/perf/Makefile.perf
-@@ -954,11 +954,11 @@ ifndef NO_LIBBPF
- 	$(call QUIET_INSTALL, bpf-headers) \
- 		$(INSTALL) -d -m 755 '$(DESTDIR_SQ)$(perf_include_instdir_SQ)/bpf'; \
- 		$(INSTALL) -d -m 755 '$(DESTDIR_SQ)$(perf_include_instdir_SQ)/bpf/linux'; \
--		$(INSTALL) include/bpf/*.h -t '$(DESTDIR_SQ)$(perf_include_instdir_SQ)/bpf'; \
--		$(INSTALL) include/bpf/linux/*.h -t '$(DESTDIR_SQ)$(perf_include_instdir_SQ)/bpf/linux'
-+		$(INSTALL) include/bpf/*.h -m 644 -t '$(DESTDIR_SQ)$(perf_include_instdir_SQ)/bpf'; \
-+		$(INSTALL) include/bpf/linux/*.h -m 644 -t '$(DESTDIR_SQ)$(perf_include_instdir_SQ)/bpf/linux'
- 	$(call QUIET_INSTALL, bpf-examples) \
- 		$(INSTALL) -d -m 755 '$(DESTDIR_SQ)$(perf_examples_instdir_SQ)/bpf'; \
--		$(INSTALL) examples/bpf/*.c -t '$(DESTDIR_SQ)$(perf_examples_instdir_SQ)/bpf'
-+		$(INSTALL) examples/bpf/*.c -m 644 -t '$(DESTDIR_SQ)$(perf_examples_instdir_SQ)/bpf'
- endif
- 	$(call QUIET_INSTALL, perf-archive) \
- 		$(INSTALL) $(OUTPUT)perf-archive -t '$(DESTDIR_SQ)$(perfexec_instdir_SQ)'
-@@ -967,13 +967,13 @@ endif
- ifndef NO_LIBAUDIT
- 	$(call QUIET_INSTALL, strace/groups) \
- 		$(INSTALL) -d -m 755 '$(DESTDIR_SQ)$(STRACE_GROUPS_INSTDIR_SQ)'; \
--		$(INSTALL) trace/strace/groups/* -t '$(DESTDIR_SQ)$(STRACE_GROUPS_INSTDIR_SQ)'
-+		$(INSTALL) trace/strace/groups/* -m 644 -t '$(DESTDIR_SQ)$(STRACE_GROUPS_INSTDIR_SQ)'
- endif
- ifndef NO_LIBPERL
- 	$(call QUIET_INSTALL, perl-scripts) \
- 		$(INSTALL) -d -m 755 '$(DESTDIR_SQ)$(perfexec_instdir_SQ)/scripts/perl/Perf-Trace-Util/lib/Perf/Trace'; \
--		$(INSTALL) scripts/perl/Perf-Trace-Util/lib/Perf/Trace/* -t '$(DESTDIR_SQ)$(perfexec_instdir_SQ)/scripts/perl/Perf-Trace-Util/lib/Perf/Trace'; \
--		$(INSTALL) scripts/perl/*.pl -t '$(DESTDIR_SQ)$(perfexec_instdir_SQ)/scripts/perl'; \
-+		$(INSTALL) scripts/perl/Perf-Trace-Util/lib/Perf/Trace/* -m 644 -t '$(DESTDIR_SQ)$(perfexec_instdir_SQ)/scripts/perl/Perf-Trace-Util/lib/Perf/Trace'; \
-+		$(INSTALL) scripts/perl/*.pl -m 644 -t '$(DESTDIR_SQ)$(perfexec_instdir_SQ)/scripts/perl'; \
- 		$(INSTALL) -d -m 755 '$(DESTDIR_SQ)$(perfexec_instdir_SQ)/scripts/perl/bin'; \
- 		$(INSTALL) scripts/perl/bin/* -t '$(DESTDIR_SQ)$(perfexec_instdir_SQ)/scripts/perl/bin'
- endif
-@@ -990,23 +990,23 @@ endif
- 		$(INSTALL) $(DLFILTERS) '$(DESTDIR_SQ)$(perfexec_instdir_SQ)/dlfilters';
- 	$(call QUIET_INSTALL, perf_completion-script) \
- 		$(INSTALL) -d -m 755 '$(DESTDIR_SQ)$(sysconfdir_SQ)/bash_completion.d'; \
--		$(INSTALL) perf-completion.sh '$(DESTDIR_SQ)$(sysconfdir_SQ)/bash_completion.d/perf'
-+		$(INSTALL) perf-completion.sh -m 644 '$(DESTDIR_SQ)$(sysconfdir_SQ)/bash_completion.d/perf'
- 	$(call QUIET_INSTALL, perf-tip) \
- 		$(INSTALL) -d -m 755 '$(DESTDIR_SQ)$(tip_instdir_SQ)'; \
--		$(INSTALL) Documentation/tips.txt -t '$(DESTDIR_SQ)$(tip_instdir_SQ)'
-+		$(INSTALL) Documentation/tips.txt -m 644 -t '$(DESTDIR_SQ)$(tip_instdir_SQ)'
- 
- install-tests: all install-gtk
- 	$(call QUIET_INSTALL, tests) \
- 		$(INSTALL) -d -m 755 '$(DESTDIR_SQ)$(perfexec_instdir_SQ)/tests'; \
--		$(INSTALL) tests/attr.py '$(DESTDIR_SQ)$(perfexec_instdir_SQ)/tests'; \
-+		$(INSTALL) tests/attr.py -m 644 '$(DESTDIR_SQ)$(perfexec_instdir_SQ)/tests'; \
- 		$(INSTALL) tests/pe-file.exe* '$(DESTDIR_SQ)$(perfexec_instdir_SQ)/tests'; \
- 		$(INSTALL) -d -m 755 '$(DESTDIR_SQ)$(perfexec_instdir_SQ)/tests/attr'; \
--		$(INSTALL) tests/attr/* '$(DESTDIR_SQ)$(perfexec_instdir_SQ)/tests/attr'; \
-+		$(INSTALL) tests/attr/* -m 644 '$(DESTDIR_SQ)$(perfexec_instdir_SQ)/tests/attr'; \
- 		$(INSTALL) -d -m 755 '$(DESTDIR_SQ)$(perfexec_instdir_SQ)/tests/shell'; \
- 		$(INSTALL) tests/shell/*.sh '$(DESTDIR_SQ)$(perfexec_instdir_SQ)/tests/shell'; \
- 		$(INSTALL) -d -m 755 '$(DESTDIR_SQ)$(perfexec_instdir_SQ)/tests/shell/lib'; \
--		$(INSTALL) tests/shell/lib/*.sh '$(DESTDIR_SQ)$(perfexec_instdir_SQ)/tests/shell/lib'; \
--		$(INSTALL) tests/shell/lib/*.py '$(DESTDIR_SQ)$(perfexec_instdir_SQ)/tests/shell/lib'
-+		$(INSTALL) tests/shell/lib/*.sh -m 644 '$(DESTDIR_SQ)$(perfexec_instdir_SQ)/tests/shell/lib'; \
-+		$(INSTALL) tests/shell/lib/*.py -m 644 '$(DESTDIR_SQ)$(perfexec_instdir_SQ)/tests/shell/lib'
- 
- install-bin: install-tools install-tests install-traceevent-plugins
- 
+  git://git.kernel.org/pub/scm/linux/kernel/git/namhyung/linux-perf.git
+
+Thanks,
+Namhyung
+
+
+Namhyung Kim (4):
+  perf lock contention: Factor out get_symbol_name_offset()
+  perf lock contention: Show full callstack with -v option
+  perf lock contention: Allow to change stack depth and skip
+  perf lock contention: Skip stack trace from BPF
+
+ tools/perf/Documentation/perf-lock.txt        |  6 ++
+ tools/perf/builtin-lock.c                     | 89 ++++++++++++++-----
+ tools/perf/util/bpf_lock_contention.c         | 21 +++--
+ .../perf/util/bpf_skel/lock_contention.bpf.c  |  3 +-
+ tools/perf/util/lock-contention.h             |  3 +
+ 5 files changed, 96 insertions(+), 26 deletions(-)
+
+
+base-commit: 6c3bd8d3e01d9014312caa52e4ef1c29d5249648
 -- 
-2.37.3
+2.37.2.789.g6183377224-goog
 
