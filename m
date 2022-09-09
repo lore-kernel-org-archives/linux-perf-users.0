@@ -2,79 +2,87 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9C001ECAAA1
-	for <linux-perf-users@archiver.kernel.org>; Fri,  9 Sep 2022 10:30:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 23C14C6FA82
+	for <linux-perf-users@archiver.kernel.org>; Fri,  9 Sep 2022 12:00:00 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229774AbiIIKat (ORCPT
+        id S231459AbiIIL76 (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Fri, 9 Sep 2022 06:30:49 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34732 "EHLO
+        Fri, 9 Sep 2022 07:59:58 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59244 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229881AbiIIKaC (ORCPT
+        with ESMTP id S231458AbiIIL75 (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Fri, 9 Sep 2022 06:30:02 -0400
-Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTP id 0FF8732A8E;
-        Fri,  9 Sep 2022 03:29:48 -0700 (PDT)
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 163FC15DB;
-        Fri,  9 Sep 2022 03:29:53 -0700 (PDT)
-Received: from [10.57.77.227] (unknown [10.57.77.227])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 217483F73D;
-        Fri,  9 Sep 2022 03:29:45 -0700 (PDT)
-Message-ID: <50fba997-d8c1-257b-fd11-db2bb1e53f70@arm.com>
-Date:   Fri, 9 Sep 2022 11:29:43 +0100
-MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
- Thunderbird/91.11.0
-Subject: Re: [PATCH 2/2] perf tools: remove perf_pmu_lex declaration
-Content-Language: en-US
-To:     Gaosheng Cui <cuigaosheng1@huawei.com>
-Cc:     linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org,
-        peterz@infradead.org, mingo@redhat.com, acme@kernel.org,
-        mark.rutland@arm.com, alexander.shishkin@linux.intel.com,
-        jolsa@kernel.org, namhyung@kernel.org, atrajeev@linux.vnet.ibm.com,
-        eranian@google.com
-References: <20220909044542.1087870-1-cuigaosheng1@huawei.com>
- <20220909044542.1087870-3-cuigaosheng1@huawei.com>
-From:   James Clark <james.clark@arm.com>
-In-Reply-To: <20220909044542.1087870-3-cuigaosheng1@huawei.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+        Fri, 9 Sep 2022 07:59:57 -0400
+Received: from ams.source.kernel.org (ams.source.kernel.org [145.40.68.75])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6F64A5AA17;
+        Fri,  9 Sep 2022 04:59:56 -0700 (PDT)
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by ams.source.kernel.org (Postfix) with ESMTPS id 06F26B824F9;
+        Fri,  9 Sep 2022 11:59:55 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPS id 9B35BC4347C;
+        Fri,  9 Sep 2022 11:59:53 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1662724793;
+        bh=q8qb4HTSazpfnRVzkkknH5aVK2E2DTfL9RYzfyWoZaw=;
+        h=Subject:From:In-Reply-To:References:Date:To:Cc:From;
+        b=g9UjVZMQfSgWjmklKORT1Jjqb6MDPR1R7dNF0UIRuHld3PJXuyXV6FIwgB3zRIPVY
+         dQos3TuNQ3e9P9XJh5D0sLfue4j2kqv13jz9Wj/QA1Nfwti7sJbijFwUjuplg78Y+f
+         aMll3qFANoWZSq2sEzJKzBtuv64m798eByustrrPZZdg9Bo4XyhsB0rxIszY/LYDTU
+         alSnXYDeiEUjlBeBCtBFgJAM01PcRqJr+ZZXucggo4fY3TPrJcc1B2Si7ggLIJT3vh
+         WKKop8d+NkZd4CLmslNku3ZdMWhWVXxkslBPx93lV7X68GazII6Z+7AHtBvZ324bi/
+         mRDgZ8Zncp3og==
+Received: from aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (localhost.localdomain [127.0.0.1])
+        by aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (Postfix) with ESMTP id 82BD6C4166F;
+        Fri,  9 Sep 2022 11:59:53 +0000 (UTC)
+Subject: Re: [GIT PULL] perf tools changes for v6.0: 3rd batch
+From:   pr-tracker-bot@kernel.org
+In-Reply-To: <20220909001054.1415163-1-acme@kernel.org>
+References: <20220909001054.1415163-1-acme@kernel.org>
+X-PR-Tracked-List-Id: <linux-kernel.vger.kernel.org>
+X-PR-Tracked-Message-Id: <20220909001054.1415163-1-acme@kernel.org>
+X-PR-Tracked-Remote: git://git.kernel.org/pub/scm/linux/kernel/git/acme/linux.git tags/perf-tools-fixes-for-v6.0-2022-09-08
+X-PR-Tracked-Commit-Id: faf59ec8c3c3708c64ff76b50e6f757c6b4a1054
+X-PR-Merge-Tree: torvalds/linux.git
+X-PR-Merge-Refname: refs/heads/master
+X-PR-Merge-Commit-Id: d8a450a80ef1c858c3095180f75284873d8297e8
+Message-Id: <166272479352.31182.127311350797922431.pr-tracker-bot@kernel.org>
+Date:   Fri, 09 Sep 2022 11:59:53 +0000
+To:     Arnaldo Carvalho de Melo <acme@kernel.org>
+Cc:     Linus Torvalds <torvalds@linux-foundation.org>,
+        Ingo Molnar <mingo@kernel.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Jiri Olsa <jolsa@kernel.org>,
+        Namhyung Kim <namhyung@kernel.org>,
+        Clark Williams <williams@redhat.com>,
+        Kate Carcia <kcarcia@redhat.com>, linux-kernel@vger.kernel.org,
+        linux-perf-users@vger.kernel.org,
+        Arnaldo Carvalho de Melo <acme@kernel.org>,
+        Adrian Hunter <adrian.hunter@intel.com>,
+        Athira Jajeev <atrajeev@linux.vnet.ibm.com>,
+        Hongtao Yu <hoy@fb.com>, Ian Rogers <irogers@google.com>,
+        Jiri Slaby <jslaby@suse.cz>,
+        Nageswara R Sastry <rnsastry@linux.ibm.com>,
+        Shang XiaoJing <shangxiaojing@huawei.com>,
+        =?UTF-8?q?Tom=C3=A1=C5=A1=20Trnka?= <trnka@scm.com>,
+        Xing Zhengjun <zhengjun.xing@linux.intel.com>,
+        Yang Jihong <yangjihong1@huawei.com>,
+        Zixuan Tan <tanzixuan.me@gmail.com>,
+        Arnaldo Carvalho de Melo <acme@redhat.com>
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
+The pull request you sent on Thu,  8 Sep 2022 21:10:54 -0300:
 
+> git://git.kernel.org/pub/scm/linux/kernel/git/acme/linux.git tags/perf-tools-fixes-for-v6.0-2022-09-08
 
-On 09/09/2022 05:45, Gaosheng Cui wrote:
-> perf_pmu_lex has been removed since
-> commit 65f3e56e0c81 ("perf tools: Remove auto-generated bison/flex files"),
-> so remove it.
+has been merged into torvalds/linux.git:
+https://git.kernel.org/torvalds/c/d8a450a80ef1c858c3095180f75284873d8297e8
 
-Not 100% sure if that is the right commit to reference because it didn't
-touch pmu.y.
+Thank you!
 
-perf_pmu_lex is still used and there are plenty of references to it, but
-maybe the extern declaration isn't needed anymore because it still
-builds for me with this change.
-
-> 
-> Signed-off-by: Gaosheng Cui <cuigaosheng1@huawei.com>
-> ---
->  tools/perf/util/pmu.y | 2 --
->  1 file changed, 2 deletions(-)
-> 
-> diff --git a/tools/perf/util/pmu.y b/tools/perf/util/pmu.y
-> index bfd7e8509869..0dab0ec2eff7 100644
-> --- a/tools/perf/util/pmu.y
-> +++ b/tools/perf/util/pmu.y
-> @@ -10,8 +10,6 @@
->  #include <string.h>
->  #include "pmu.h"
->  
-> -extern int perf_pmu_lex (void);
-> -
->  #define ABORT_ON(val) \
->  do { \
->          if (val) \
+-- 
+Deet-doot-dot, I am a bot.
+https://korg.docs.kernel.org/prtracker.html
