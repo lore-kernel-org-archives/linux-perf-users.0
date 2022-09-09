@@ -2,226 +2,127 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A01AFECAAA1
-	for <linux-perf-users@archiver.kernel.org>; Fri,  9 Sep 2022 18:30:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F0A03ECAAD3
+	for <linux-perf-users@archiver.kernel.org>; Fri,  9 Sep 2022 20:11:47 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230475AbiIISaH (ORCPT
+        id S229760AbiIIULr (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Fri, 9 Sep 2022 14:30:07 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48780 "EHLO
+        Fri, 9 Sep 2022 16:11:47 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54124 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229796AbiIISaH (ORCPT
+        with ESMTP id S231376AbiIIULp (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Fri, 9 Sep 2022 14:30:07 -0400
-Received: from mail-ot1-f51.google.com (mail-ot1-f51.google.com [209.85.210.51])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0D6ED4F667;
-        Fri,  9 Sep 2022 11:30:03 -0700 (PDT)
-Received: by mail-ot1-f51.google.com with SMTP id c39-20020a05683034a700b006540d515722so1605885otu.5;
-        Fri, 09 Sep 2022 11:30:03 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date;
-        bh=ilSfsHuauaBaX7YxuMRWUeTBHI+PdUdFPCrzpUDbHMY=;
-        b=cy9gszyn/rYHzNSs4P7exOIuFXdG4JA8NBcAlk2Cm1BbBe7+um0/n7+GKgbXBx47vv
-         2GVBfkJMbsgsoqiuUfISCBcd7yzzhjFDOhEYzNP6bQHHqI3y7+lFUN84U3bpshUM+dTU
-         n6Q29jzRpcMWSX58Q6+oN0lR6Ng8bySVonUHBFCmUQUJ5oGmJJxlwWLBGk4ca2HUjC8A
-         iisXTUSauYa0MVsy3nv9fXPluee3H6yEEH/Wlwk2kbqgujIDhs+Gd2QT9cwNPkDnkMjA
-         VHPrLCwdYHOzPqMeTnMc3LKmjdGFFxYU1kfViAWBv4DBtQbDtD9F6QojckJOBMZ+eO6A
-         TROQ==
-X-Gm-Message-State: ACgBeo0OMbUCKbI0VYXvFDVwiAbINJUTXjo+Hzzea2hjzIi97krIqxWr
-        w/c31yIkZKSbowh4VkXENwqlu5UCtbCth/vKTvU=
-X-Google-Smtp-Source: AA6agR5p3LgCV7mS2TJog8tMWIY2dbAGHYewjtjKJ4n1pSVRVxk52zv2tKxs71TkwfUkEtLZehQsHbk8TxRTRxivyyU=
-X-Received: by 2002:a9d:2f48:0:b0:655:bba3:2e1a with SMTP id
- h66-20020a9d2f48000000b00655bba32e1amr434229otb.124.1662748202258; Fri, 09
- Sep 2022 11:30:02 -0700 (PDT)
+        Fri, 9 Sep 2022 16:11:45 -0400
+Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 48C52FA6B0;
+        Fri,  9 Sep 2022 13:11:34 -0700 (PDT)
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by dfw.source.kernel.org (Postfix) with ESMTPS id BF6C6620D0;
+        Fri,  9 Sep 2022 20:11:33 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 2B96CC43143;
+        Fri,  9 Sep 2022 20:11:33 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1662754293;
+        bh=ZyQHJST4ZVIaWfwjlZdDoC0RmIGVsAQzzbsyYCsIjzY=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=NEYXGoAYq21lDKwDdvGnTwFocggaCXRncKksiBW0ElR+445tBAuHbCnFkys96WBgb
+         n5g5mgyEX1MAe0RGuhsyhF9yJhyOSQP8tELw3ZFxzUgQg3Je6FQa4sJRQuAAfep6KO
+         1yXtvXbjkYRtmIlO8I5XxyZVkkmkFZI0cE9e23klaHchrsmMBDlA+1MqaP8YhgEI/C
+         /w0+c87iyajvS9Ktm1ic+uFyj70FLDGlXXax+zFF0TN2mojlx+2QLn+0ANjjyrzb/k
+         cHZdlw2OO2xP5VTgG4xii4Py5cVVzD5Xh0yWWLWjCuTlbMSq4PLF6GHB5V8H/TwOKz
+         3aaHgwUIO7GDQ==
+Received: by mail-ua1-f52.google.com with SMTP id e3so1037240uax.4;
+        Fri, 09 Sep 2022 13:11:33 -0700 (PDT)
+X-Gm-Message-State: ACgBeo232zhG8yVkUs9UvliDwul/NKwD+8+an/HVyTrP3xYK2lkjtVDQ
+        YoCvMvmDmDcuW80SFyOvFIuMAxug9RCSCo5Gtw==
+X-Google-Smtp-Source: AA6agR7L8BM4EqH0EFc6zhZyM8oNIMUSoBkdc9sv4+SucH0wffHiTzgWrqGNnHw0j7SWKRWe8l8KG5ubScvJYzwjCs8=
+X-Received: by 2002:ab0:4467:0:b0:39f:52ec:46d7 with SMTP id
+ m94-20020ab04467000000b0039f52ec46d7mr5492127uam.77.1662754292043; Fri, 09
+ Sep 2022 13:11:32 -0700 (PDT)
 MIME-Version: 1.0
-References: <20220831174926.579643-1-irogers@google.com> <20220831174926.579643-5-irogers@google.com>
- <CAM9d7cgRb6_jFXCfoZZ+=K5WSH42hj4U2ZH-i-4oZTMKw+LAiA@mail.gmail.com> <CAP-5=fXVE+vLB2GN9pkvfj4jLa2Bdg6LY24yFtZ+ix5bP9QGpQ@mail.gmail.com>
-In-Reply-To: <CAP-5=fXVE+vLB2GN9pkvfj4jLa2Bdg6LY24yFtZ+ix5bP9QGpQ@mail.gmail.com>
-From:   Namhyung Kim <namhyung@kernel.org>
-Date:   Fri, 9 Sep 2022 11:29:51 -0700
-Message-ID: <CAM9d7chqT957GZ0SyroU7Yt5T+y-iJxixAqqwmBqLNLeq-wWCQ@mail.gmail.com>
-Subject: Re: [PATCH v2 4/7] perf topology: Add core_wide
-To:     Ian Rogers <irogers@google.com>
+References: <20220901184709.2179309-1-robh@kernel.org> <CAM9d7chY6T-EAN3BT487MUK0LbfGp27X+2Dd_+S0azgh2GQn9w@mail.gmail.com>
+ <CAL_JsqLmszK=NzD_2nYnZG1dD=tU1fKGUtYL-dUG2a497LkEcg@mail.gmail.com> <CAM9d7ci0Dn3hAX9dp1UMGK7SN-w1BoRqQz6hk8Oykfaa=LnWwg@mail.gmail.com>
+In-Reply-To: <CAM9d7ci0Dn3hAX9dp1UMGK7SN-w1BoRqQz6hk8Oykfaa=LnWwg@mail.gmail.com>
+From:   Rob Herring <robh@kernel.org>
+Date:   Fri, 9 Sep 2022 15:11:20 -0500
+X-Gmail-Original-Message-ID: <CAL_Jsq+CH13TASeAb5VMa=hXGyAT4bDdGeS2XJj9ym6_WM4HRw@mail.gmail.com>
+Message-ID: <CAL_Jsq+CH13TASeAb5VMa=hXGyAT4bDdGeS2XJj9ym6_WM4HRw@mail.gmail.com>
+Subject: Re: [PATCH] perf: Ignore format attributes with an unknown
+ perf_event_attr field
+To:     Namhyung Kim <namhyung@kernel.org>
 Cc:     Peter Zijlstra <peterz@infradead.org>,
         Ingo Molnar <mingo@redhat.com>,
         Arnaldo Carvalho de Melo <acme@kernel.org>,
         Mark Rutland <mark.rutland@arm.com>,
         Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Jiri Olsa <jolsa@kernel.org>, Andi Kleen <ak@linux.intel.com>,
-        Kan Liang <kan.liang@linux.intel.com>,
-        Thomas Richter <tmricht@linux.ibm.com>,
+        Jiri Olsa <jolsa@kernel.org>,
         James Clark <james.clark@arm.com>,
-        Miaoqian Lin <linmq006@gmail.com>,
-        John Garry <john.garry@huawei.com>,
-        Zhengjun Xing <zhengjun.xing@linux.intel.com>,
-        Florian Fischer <florian.fischer@muhq.space>,
         linux-perf-users <linux-perf-users@vger.kernel.org>,
-        linux-kernel <linux-kernel@vger.kernel.org>,
-        perry.taylor@intel.com, caleb.biggers@intel.com,
-        kshipra.bopardikar@intel.com, ahmad.yasin@intel.com,
-        Stephane Eranian <eranian@google.com>
+        linux-kernel <linux-kernel@vger.kernel.org>
 Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-On Tue, Sep 6, 2022 at 11:56 AM Ian Rogers <irogers@google.com> wrote:
+On Tue, Sep 6, 2022 at 1:16 PM Namhyung Kim <namhyung@kernel.org> wrote:
 >
-> On Thu, Sep 1, 2022 at 11:29 PM Namhyung Kim <namhyung@kernel.org> wrote:
+> On Fri, Sep 2, 2022 at 8:25 AM Rob Herring <robh@kernel.org> wrote:
 > >
-> > Hi Ian,
-> >
-> > On Wed, Aug 31, 2022 at 10:50 AM Ian Rogers <irogers@google.com> wrote:
+> > On Fri, Sep 2, 2022 at 1:53 AM Namhyung Kim <namhyung@kernel.org> wrote:
 > > >
-> > > It is possible to optimize metrics when all SMT threads (CPUs) on a
-> > > core are measuring events in system wide mode. For example, TMA
-> > > metrics defines CORE_CLKS for Sandybrdige as:
+> > > Hello,
 > > >
-> > > if SMT is disabled:
-> > >   CPU_CLK_UNHALTED.THREAD
-> > > if SMT is enabled and recording on all SMT threads:
-> > >   CPU_CLK_UNHALTED.THREAD_ANY / 2
-> > > if SMT is enabled and not recording on all SMT threads:
-> > >   (CPU_CLK_UNHALTED.THREAD/2)*
-> > >   (1+CPU_CLK_UNHALTED.ONE_THREAD_ACTIVE/CPU_CLK_UNHALTED.REF_XCLK )
+> > > On Thu, Sep 1, 2022 at 11:55 AM Rob Herring <robh@kernel.org> wrote:
+> > > >
+> > > > If the kernel exposes a new perf_event_attr field in a format attr, perf
+> > > > will return an error stating the specified PMU can't be found. For
+> > > > example, a format attr with 'config3:0-63' causes an error if config3 is
+> > > > unknown to perf. This causes a compatibility issue between a newer
+> > > > kernel and an older perf tool.
+> > > >
+> > > > The addition here makes any attr string up to the ':' ignored, but
+> > > > still checks the 'bits' portion.
+> > > >
+> > > > Signed-off-by: Rob Herring <robh@kernel.org>
+> > > > ---
+> > > > This is the YACC mud I threw and seems to stick. Maybe there's a better
+> > > > way to handle this. It doesn't seem like there's a way to do wildcards
+> > > > (i.e. config.*) in YACC.
+> > > >
+> > > > This is needed for this series[1]. Unfortunately the best we do to avoid
+> > > > the issue is applying this to stable. I think there's some time before
+> > > > v8.7 h/w is deployed, too.
 > > >
-> > > That is two more events are necessary when not gathering counts on all
-> > > SMT threads. To distinguish all SMT threads on a core vs system wide
-> > > (all CPUs) call the new property core wide.  Add a core wide test that
-> > > determines the property from user requested CPUs, the topology and
-> > > system wide. System wide is required as other processes running on a
-> > > SMT thread will change the counts.
-> > >
-> > > Signed-off-by: Ian Rogers <irogers@google.com>
-> > > ---
-> > [SNIP]
-> > > diff --git a/tools/perf/util/smt.c b/tools/perf/util/smt.c
-> > > index ce90c4ee4138..994e9e418227 100644
-> > > --- a/tools/perf/util/smt.c
-> > > +++ b/tools/perf/util/smt.c
-> > > @@ -21,3 +21,17 @@ bool smt_on(const struct cpu_topology *topology)
-> > >         cached = true;
-> > >         return cached_result;
-> > >  }
-> > > +
-> > > +bool core_wide(bool system_wide, const char *user_requested_cpu_list,
-> > > +              const struct cpu_topology *topology)
-> > > +{
-> > > +       /* If not everything running on a core is being recorded then we can't use core_wide. */
-> > > +       if (!system_wide)
-> > > +               return false;
+> > > Maybe you could change the format_term rule to take an identifier instead
+> > > of PP_CONFIG* directly and pass it to perf_pmu__new_format().  Then
+> > > it could check the string and create an appropriate PERF_PMU_FORMAT_VALUE_*
+> > > or ignore it according to the PERF_ATTR_SIZE_VER*.
 > >
-> > I'm not sure if it's correct.  Wouldn't it be ok if it runs on all
-> > threads in a core
-> > even if system wide is off?  I thought that's what the below code checks.
-> >
-> > In fact I thought the opposite logic like
-> >
-> >     if (system_wide)
-> >         return true;
-> >
-> > But it seems the code allows to have cpu_list in the system wide mode.
-> > Then it also needs to check the user requested cpus being NULL.
-> > (IMHO system_wide should be cleared when it has a cpu list...)
-> >
-> >     if (system_wide && !user_requested_cpu_list)
-> >         return true;
-> >
-> > And if we have a target pointer, we could add this too.
-> >
-> >     if (!target__has_cpu(target))
-> >         return false;
-> >
-> > Thanks,
-> > Namhyung
+> > That only moves parsing of configN from YACC to strcmp in C. In doing
+> > so, we'd be left with just the 'error' token case which seems a bit
+> > odd (if there's another way to do it, I don't know. yacc is not my
+> > thing). Is that really better?
 >
-> Thanks Namhyung,
+> I thought we could do more flexible handling and detailed error reporting
+> in the C code.  But it could be done in the lex/yacc as well..
 >
-> It may be correct or may not be without the system wide flag, and so I
-> want to be conservative and say we need the flag. Let me provide more
-> detail with an example:
+> I think the general idea is that we want to run a more recent version of
+> perf tools than the kernel.  So if it detects the tool is older, it can show
+> a warning message like:
+>
+> "config3 is not in the perf_event_attr.. skipping.
+>  Maybe you're running on a newer kernel. Please upgrade the perf tool."
 
-Ok.
+I figured out how to simplify the yacc code and add a warning.
+However, one thing to note is that we'll always get the warning if any
+PMU has an unsupported format attr because all the PMUs are scanned.
+For example, just this gives a warning even though the SPE PMU is not
+used:
 
->
-> I'm going to assume we want to measure how many slots there were for
-> an SMT thread. In the "Count Domain" of TMA metrics before Icelake
-> slots is a core wide metric, meaning that you are measuring >1 hyper
-> thread. As we are measuring >1 hyper thread and we don't control the
-> scheduling of the other hyperthread, the only valid mode is system
-> wide on all CPUs, or all CPUs on a core (aka core wide in this patch
-> set). However, the slots count domain information also says "Slots -
-> ICL onwards or EBS_Mode before ICL" meaning the count domain is valid
-> for an SMT thread. If I look at SkylakeX currently we have two
-> metrics:
->
-> https://git.kernel.org/pub/scm/linux/kernel/git/acme/linux.git/tree/tools/perf/pmu-events/arch/x86/skylakex/skx-metrics.json?h=perf/core#n167
->
->     {
->        "BriefDescription": "Total issue-pipeline slots (per-Physical
-> Core till ICL; per-Logical Processor ICL onward)",
->        "MetricExpr": "4 * CPU_CLK_UNHALTED.THREAD",
->        "MetricGroup": "TmaL1",
->        "MetricName": "SLOTS"
->    },
->    {
->        "BriefDescription": "Total issue-pipeline slots (per-Physical
-> Core till ICL; per-Logical Processor ICL onward)",
->        "MetricExpr": "4 * ( ( CPU_CLK_UNHALTED.THREAD / 2 ) * ( 1 +
-> CPU_CLK_UNHALTED.ONE_THREAD_ACTIVE / CPU_CLK_UNHALTED.REF_XCLK ) )",
->        "MetricGroup": "TmaL1_SMT",
->        "MetricName": "SLOTS_SMT"
->    },
->
-> The SLOTS metrics is going to compute a valid value if hyperthreading
-> is disabled, in other metrics you will see
-> (CPU_CLK_UNHALTED.THREAD_ANY / 2) where THREAD.ANY and THREAD are the
-> same event encoding. The reason for the divide by 2 is to adjust the
-> count down so that when we add the other hyperthreads count we get the
-> core wide value in the aggregation - the perf event on the 2nd hyper
-> thread isn't necessary, but that's a separate problem. SLOTS_SMT is
-> funny so let's dig into it:
-> The 4 is the pipeline width.
-> CPU_CLK_UNHALTED.THREAD is defined as, "Counts the number of core
-> cycles while the thread is not in a halt state.."
-> The divide by 2 is because of 2 hyperthreads.
-> The 1 is because we assume that half the slots are going to be given
-> to our hyperthread.
-> The CPU_CLK_UNHALTED.ONE_THREAD_ACTIVE / CPU_CLK_UNHALTED.REF_XCLK
-> will give a ratio for how many cycles our SMT thread was the only one
-> running, and so we got those slots from the other hyperthread.
->
-> With #core_wide we can have a single SLOTS metric of (new lines and //
-> comments for clarity):
->
-> // If we're #core_wide with SMT and we know the work on both
-> hyperthreads are being measured for all processes then use a single
-> counter
-> (4 * CPU_CLK_UNHALTED.THREAD_ANY / 2
->   if #core_wide else
-> // We're not core wide so we need thread counters to adjust the slots
-> metric based on the time this SMT thread is active
->   4 * ( CPU_CLK_UNHALTED.THREAD / 2 ) * ( 1 +
-> CPU_CLK_UNHALTED.ONE_THREAD_ACTIVE / CPU_CLK_UNHALTED.REF_XCLK )
-> ) if #smt_on
-> // No hyper threading can just use the core wide counter
-> else 4 * CPU_CLK_UNHALTED.THREAD
->
-> As this metric is a foundation for many others then there is a great
-> deal of use for it and the current pre-Icelake computation is
-> generally only valid if on the command line you happen to have
-> specified a core wide set up - which is error prone.
+perf record -e cycles -- true
 
-Thanks for the explanation.  I understand why we need core_wide
-for accurate metrics.  My concern was just to have a clear
-relationship between system-wide mode and user requested cpu list.
+So the warning might be misleading. On the flip side, new additions are rare.
 
-But I think it should be a separate thread, let me work on cpu map
-cleanups as we discussed earlier in:
-
-https://lore.kernel.org/r/20220506122601.367589-23-adrian.hunter@intel.com/
-
-Thanks,
-Namhyung
+Rob
