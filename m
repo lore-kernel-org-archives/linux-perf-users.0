@@ -2,130 +2,174 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F1C01ECAAD3
-	for <linux-perf-users@archiver.kernel.org>; Fri,  9 Sep 2022 20:31:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B1A56ECAAA1
+	for <linux-perf-users@archiver.kernel.org>; Fri,  9 Sep 2022 20:45:51 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232149AbiIIUbK (ORCPT
+        id S231243AbiIIUpt (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Fri, 9 Sep 2022 16:31:10 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54334 "EHLO
+        Fri, 9 Sep 2022 16:45:49 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38750 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232154AbiIIUaT (ORCPT
+        with ESMTP id S231756AbiIIUpa (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Fri, 9 Sep 2022 16:30:19 -0400
-Received: from mail-ed1-f46.google.com (mail-ed1-f46.google.com [209.85.208.46])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C7CC33CBC1;
-        Fri,  9 Sep 2022 13:30:14 -0700 (PDT)
-Received: by mail-ed1-f46.google.com with SMTP id b16so4231735edd.4;
-        Fri, 09 Sep 2022 13:30:14 -0700 (PDT)
+        Fri, 9 Sep 2022 16:45:30 -0400
+Received: from mail-oa1-f44.google.com (mail-oa1-f44.google.com [209.85.160.44])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0C43DE5827;
+        Fri,  9 Sep 2022 13:45:26 -0700 (PDT)
+Received: by mail-oa1-f44.google.com with SMTP id 586e51a60fabf-1279948d93dso6957477fac.10;
+        Fri, 09 Sep 2022 13:45:26 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date;
-        bh=kpEcg4wYbPXSLUksqLgqfaDecUEI9K/L7cnxAiNm308=;
-        b=0KvHL1XTK8Ip/MxFjGAxHWC5hwgC29eTgOwGiAP8ZoieD04DAeYCJ73Y7fJqZV8VIE
-         pPSPP1Sze1JQx3uElCXNbJKipGq1eaP4J00z8GeM2bh8PlVRKFJ5CR+XJyKvtv1w2vfo
-         yL/eaCqbwpVwbLPDEuvmIHyR9uqzyG4iE3x2d1k2r+p07xQqBF8P1f92izbbq3oUJe8q
-         hERJcaRfeNKlrBo3A/ZM4vK9gfK0P4vwTHSNWyETk52MLZqNrx5UgWhs2way4TM+B8Km
-         CCmNlf3kX6Itt6e1/IsSxqqTYIkTQBmMO4YN846nxUey6DyDLC4PqfJgelc/SHjkKWke
-         9zqQ==
-X-Gm-Message-State: ACgBeo3Y5PMaJ9jsedplmrukGj0wzV0WlyCVOTvZMdkeT0obcVWHAR1k
-        E+t1/t/RQiliDS3+DJfM64CGnKgKF2RIFHm7GE14Nzu7
-X-Google-Smtp-Source: AA6agR5k1e7Sf8b0Ne7PPtH0lpIFZpZ2n0V3pRe0lMeNNgLcoX3mjLwQkMGyX1uOFkhEXiiwavJRe6aSzpqWaIE+El4=
-X-Received: by 2002:a05:6402:f07:b0:450:bf95:59e9 with SMTP id
- i7-20020a0564020f0700b00450bf9559e9mr7941898eda.46.1662755413210; Fri, 09 Sep
- 2022 13:30:13 -0700 (PDT)
-MIME-Version: 1.0
-References: <20220901184709.2179309-1-robh@kernel.org> <CAM9d7chY6T-EAN3BT487MUK0LbfGp27X+2Dd_+S0azgh2GQn9w@mail.gmail.com>
- <CAL_JsqLmszK=NzD_2nYnZG1dD=tU1fKGUtYL-dUG2a497LkEcg@mail.gmail.com>
- <CAM9d7ci0Dn3hAX9dp1UMGK7SN-w1BoRqQz6hk8Oykfaa=LnWwg@mail.gmail.com> <CAL_Jsq+CH13TASeAb5VMa=hXGyAT4bDdGeS2XJj9ym6_WM4HRw@mail.gmail.com>
-In-Reply-To: <CAL_Jsq+CH13TASeAb5VMa=hXGyAT4bDdGeS2XJj9ym6_WM4HRw@mail.gmail.com>
-From:   Namhyung Kim <namhyung@kernel.org>
-Date:   Fri, 9 Sep 2022 13:30:01 -0700
-Message-ID: <CAM9d7ciFbgK8PfNmNFo37GPkXNhp=2es5StDEG+m+deLTP8Hpw@mail.gmail.com>
-Subject: Re: [PATCH] perf: Ignore format attributes with an unknown
- perf_event_attr field
-To:     Rob Herring <robh@kernel.org>
-Cc:     Peter Zijlstra <peterz@infradead.org>,
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date;
+        bh=wJHPlwUtvZUMl13qkXUAr67z5VRLYGwRp7OVgCggcQ8=;
+        b=SWtryOq2AxWUM1vWmaOoeQ9AmOJgGD6iaG3IneNHL31AJzBrc168A/aOLCqAOp6WWq
+         jxJmNJp3PZSa7WdVYPfzqKE9ge4yRa27lV1UxPlPGJezaMaCc+oiuBTHAuCPzBUfEyMz
+         I0W/bduiSIyvYiF/9r/HGCFHQFhoT9Y0yuf+sKKw2x+GB+F8VAYpnWocgVG2gw+2CYU3
+         ByRaxq7mM9kO+Jh1vpbjI+wn5GzR8vrQoZe8lAu2AVuxvat0HJqpljWQaZbSscjV1srk
+         u89YyLCaNCBns5vrJrB0x0OP0lh5j7dIWRhPMnc8rkD0jE7QwIAdBcYXFQ82qhcfMfQm
+         P12g==
+X-Gm-Message-State: ACgBeo2C38ua8nRMHA52U/XH3A7LYRUiofSsnlTVrHlbRiaIRvNhk+yT
+        376QWJDaG63lPpL1v848fQ==
+X-Google-Smtp-Source: AA6agR72dTUvUYth3SpEr5goOZl3+nCyxA8MljUI5f9EQmBiFXK73tYkzF5DmGOuvPjZj42APSiY5A==
+X-Received: by 2002:a05:6871:a4:b0:127:2ef5:f66e with SMTP id u36-20020a05687100a400b001272ef5f66emr5879727oaa.213.1662756325737;
+        Fri, 09 Sep 2022 13:45:25 -0700 (PDT)
+Received: from xps15.. (66-90-144-107.dyn.grandenetworks.net. [66.90.144.107])
+        by smtp.googlemail.com with ESMTPSA id a4-20020a9d5c84000000b006370b948974sm213742oti.32.2022.09.09.13.45.25
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 09 Sep 2022 13:45:25 -0700 (PDT)
+From:   Rob Herring <robh@kernel.org>
+To:     Peter Zijlstra <peterz@infradead.org>,
         Ingo Molnar <mingo@redhat.com>,
         Arnaldo Carvalho de Melo <acme@kernel.org>,
         Mark Rutland <mark.rutland@arm.com>,
         Alexander Shishkin <alexander.shishkin@linux.intel.com>,
         Jiri Olsa <jolsa@kernel.org>,
-        James Clark <james.clark@arm.com>,
-        linux-perf-users <linux-perf-users@vger.kernel.org>,
-        linux-kernel <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+        Namhyung Kim <namhyung@kernel.org>
+Cc:     James Clark <james.clark@arm.com>,
+        linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: [PATCH v2] perf: Skip and warn on unknown format 'configN' attrs
+Date:   Fri,  9 Sep 2022 15:45:09 -0500
+Message-Id: <20220909204509.2169512-1-robh@kernel.org>
+X-Mailer: git-send-email 2.34.1
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-On Fri, Sep 9, 2022 at 1:11 PM Rob Herring <robh@kernel.org> wrote:
->
-> On Tue, Sep 6, 2022 at 1:16 PM Namhyung Kim <namhyung@kernel.org> wrote:
-> >
-> > On Fri, Sep 2, 2022 at 8:25 AM Rob Herring <robh@kernel.org> wrote:
-> > >
-> > > On Fri, Sep 2, 2022 at 1:53 AM Namhyung Kim <namhyung@kernel.org> wrote:
-> > > >
-> > > > Hello,
-> > > >
-> > > > On Thu, Sep 1, 2022 at 11:55 AM Rob Herring <robh@kernel.org> wrote:
-> > > > >
-> > > > > If the kernel exposes a new perf_event_attr field in a format attr, perf
-> > > > > will return an error stating the specified PMU can't be found. For
-> > > > > example, a format attr with 'config3:0-63' causes an error if config3 is
-> > > > > unknown to perf. This causes a compatibility issue between a newer
-> > > > > kernel and an older perf tool.
-> > > > >
-> > > > > The addition here makes any attr string up to the ':' ignored, but
-> > > > > still checks the 'bits' portion.
-> > > > >
-> > > > > Signed-off-by: Rob Herring <robh@kernel.org>
-> > > > > ---
-> > > > > This is the YACC mud I threw and seems to stick. Maybe there's a better
-> > > > > way to handle this. It doesn't seem like there's a way to do wildcards
-> > > > > (i.e. config.*) in YACC.
-> > > > >
-> > > > > This is needed for this series[1]. Unfortunately the best we do to avoid
-> > > > > the issue is applying this to stable. I think there's some time before
-> > > > > v8.7 h/w is deployed, too.
-> > > >
-> > > > Maybe you could change the format_term rule to take an identifier instead
-> > > > of PP_CONFIG* directly and pass it to perf_pmu__new_format().  Then
-> > > > it could check the string and create an appropriate PERF_PMU_FORMAT_VALUE_*
-> > > > or ignore it according to the PERF_ATTR_SIZE_VER*.
-> > >
-> > > That only moves parsing of configN from YACC to strcmp in C. In doing
-> > > so, we'd be left with just the 'error' token case which seems a bit
-> > > odd (if there's another way to do it, I don't know. yacc is not my
-> > > thing). Is that really better?
-> >
-> > I thought we could do more flexible handling and detailed error reporting
-> > in the C code.  But it could be done in the lex/yacc as well..
-> >
-> > I think the general idea is that we want to run a more recent version of
-> > perf tools than the kernel.  So if it detects the tool is older, it can show
-> > a warning message like:
-> >
-> > "config3 is not in the perf_event_attr.. skipping.
-> >  Maybe you're running on a newer kernel. Please upgrade the perf tool."
->
-> I figured out how to simplify the yacc code and add a warning.
-> However, one thing to note is that we'll always get the warning if any
-> PMU has an unsupported format attr because all the PMUs are scanned.
+If the kernel exposes a new perf_event_attr field in a format attr, perf
+will return an error stating the specified PMU can't be found. For
+example, a format attr with 'config3:0-63' causes an error as config3 is
+unknown to perf. This causes a compatibility issue between a newer
+kernel with older perf tool.
 
-Right, I think we need to change this behavior.
+Before this change with a kernel adding 'config3' I get:
 
+$ perf record -e arm_spe// -- true
+event syntax error: 'arm_spe//'
+                     \___ Cannot find PMU `arm_spe'. Missing kernel support?
+Run 'perf list' for a list of valid events
 
-> For example, just this gives a warning even though the SPE PMU is not
-> used:
->
-> perf record -e cycles -- true
->
-> So the warning might be misleading. On the flip side, new additions are rare.
+ Usage: perf record [<options>] [<command>]
+    or: perf record [<options>] -- <command> [<options>]
 
-Yeah, we should not warn at parsing, do when it's actually used.
+    -e, --event <event>   event selector. use 'perf list' to list
+available events
 
-Thanks,
-Namhyung
+After this change, I get:
+
+$ perf record -e arm_spe// -- true
+WARNING: format 'inv_event_filter' requires 'config3' which is not supported by this version of perf!
+[ perf record: Woken up 2 times to write data ]
+[ perf record: Captured and wrote 0.091 MB perf.data ]
+
+To support unknown configN formats, rework the YACC implementation to
+pass any config[0-9]+ format to perf_pmu__new_format() to handle with a
+warning.
+
+Note that the user will get the warning if *any* PMU has an unsupported
+format attr even if that PMU isn't used. This is because perf tool scans
+all the PMUs.
+
+Signed-off-by: Rob Herring <robh@kernel.org>
+---
+v2:
+ - Rework YACC code to handle configN formats in C code
+ - Add a warning when an unknown configN attr is found
+
+v1: https://lore.kernel.org/all/20220901184709.2179309-1-robh@kernel.org/
+---
+ tools/perf/util/pmu.c |  6 ++++++
+ tools/perf/util/pmu.l |  2 --
+ tools/perf/util/pmu.y | 15 ++++-----------
+ 3 files changed, 10 insertions(+), 13 deletions(-)
+
+diff --git a/tools/perf/util/pmu.c b/tools/perf/util/pmu.c
+index 89655d53117a..6757db7d559c 100644
+--- a/tools/perf/util/pmu.c
++++ b/tools/perf/util/pmu.c
+@@ -1475,6 +1475,12 @@ int perf_pmu__new_format(struct list_head *list, char *name,
+ {
+ 	struct perf_pmu_format *format;
+ 
++	if (config > PERF_PMU_FORMAT_VALUE_CONFIG2) {
++		pr_warning("WARNING: format '%s' requires 'config%d' which is not supported by this version of perf!\n",
++			   name, config);
++		return 0;
++	}
++
+ 	format = zalloc(sizeof(*format));
+ 	if (!format)
+ 		return -ENOMEM;
+diff --git a/tools/perf/util/pmu.l b/tools/perf/util/pmu.l
+index a15d9fbd7c0e..58b4926cfaca 100644
+--- a/tools/perf/util/pmu.l
++++ b/tools/perf/util/pmu.l
+@@ -27,8 +27,6 @@ num_dec         [0-9]+
+ 
+ {num_dec}	{ return value(10); }
+ config		{ return PP_CONFIG; }
+-config1		{ return PP_CONFIG1; }
+-config2		{ return PP_CONFIG2; }
+ -		{ return '-'; }
+ :		{ return ':'; }
+ ,		{ return ','; }
+diff --git a/tools/perf/util/pmu.y b/tools/perf/util/pmu.y
+index bfd7e8509869..283efe059819 100644
+--- a/tools/perf/util/pmu.y
++++ b/tools/perf/util/pmu.y
+@@ -20,7 +20,7 @@ do { \
+ 
+ %}
+ 
+-%token PP_CONFIG PP_CONFIG1 PP_CONFIG2
++%token PP_CONFIG
+ %token PP_VALUE PP_ERROR
+ %type <num> PP_VALUE
+ %type <bits> bit_term
+@@ -47,18 +47,11 @@ PP_CONFIG ':' bits
+ 				      $3));
+ }
+ |
+-PP_CONFIG1 ':' bits
++PP_CONFIG PP_VALUE ':' bits
+ {
+ 	ABORT_ON(perf_pmu__new_format(format, name,
+-				      PERF_PMU_FORMAT_VALUE_CONFIG1,
+-				      $3));
+-}
+-|
+-PP_CONFIG2 ':' bits
+-{
+-	ABORT_ON(perf_pmu__new_format(format, name,
+-				      PERF_PMU_FORMAT_VALUE_CONFIG2,
+-				      $3));
++				      $2,
++				      $4));
+ }
+ 
+ bits:
+-- 
+2.34.1
+
