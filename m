@@ -2,28 +2,28 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 38456ECAAD5
-	for <linux-perf-users@archiver.kernel.org>; Fri,  9 Sep 2022 03:14:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 58A55C54EE9
+	for <linux-perf-users@archiver.kernel.org>; Fri,  9 Sep 2022 03:15:06 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229659AbiIIDOX (ORCPT
+        id S230326AbiIIDPF (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Thu, 8 Sep 2022 23:14:23 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60850 "EHLO
+        Thu, 8 Sep 2022 23:15:05 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37680 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230464AbiIIDNW (ORCPT
+        with ESMTP id S230369AbiIIDO6 (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Thu, 8 Sep 2022 23:13:22 -0400
+        Thu, 8 Sep 2022 23:14:58 -0400
 Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTP id 41B7B12168D;
-        Thu,  8 Sep 2022 20:11:37 -0700 (PDT)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTP id 8E4BD20F6A;
+        Thu,  8 Sep 2022 20:14:53 -0700 (PDT)
 Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id EAA24153B;
-        Thu,  8 Sep 2022 20:11:43 -0700 (PDT)
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 9EE22153B;
+        Thu,  8 Sep 2022 20:14:59 -0700 (PDT)
 Received: from [10.162.41.8] (unknown [10.162.41.8])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 298F03F71A;
-        Thu,  8 Sep 2022 20:11:32 -0700 (PDT)
-Message-ID: <d964d645-479c-4e71-75eb-7b88f18d45c8@arm.com>
-Date:   Fri, 9 Sep 2022 08:41:30 +0530
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 7C09E3F71A;
+        Thu,  8 Sep 2022 20:14:48 -0700 (PDT)
+Message-ID: <41b499f7-ade5-b067-4979-15c3988ea4e5@arm.com>
+Date:   Fri, 9 Sep 2022 08:44:45 +0530
 MIME-Version: 1.0
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
  Thunderbird/91.11.0
@@ -34,22 +34,21 @@ To:     kernel test robot <lkp@intel.com>, linux-kernel@vger.kernel.org,
         linux-arm-kernel@lists.infradead.org, peterz@infradead.org,
         acme@kernel.org, mark.rutland@arm.com, will@kernel.org,
         catalin.marinas@arm.com
-Cc:     kbuild-all@lists.01.org, James Clark <james.clark@arm.com>,
+Cc:     llvm@lists.linux.dev, kbuild-all@lists.01.org,
+        James Clark <james.clark@arm.com>,
         Rob Herring <robh@kernel.org>, Marc Zyngier <maz@kernel.org>,
         Ingo Molnar <mingo@redhat.com>
 References: <20220908051046.465307-4-anshuman.khandual@arm.com>
- <202209082022.6BPdyQn8-lkp@intel.com>
+ <202209082259.XDCTMY9g-lkp@intel.com>
 From:   Anshuman Khandual <anshuman.khandual@arm.com>
-In-Reply-To: <202209082022.6BPdyQn8-lkp@intel.com>
+In-Reply-To: <202209082259.XDCTMY9g-lkp@intel.com>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-
-
-On 9/8/22 18:02, kernel test robot wrote:
+On 9/8/22 19:44, kernel test robot wrote:
 > Hi Anshuman,
 > 
 > Thank you for the patch! Perhaps something to improve:
@@ -62,36 +61,30 @@ On 9/8/22 18:02, kernel test robot wrote:
 > 
 > url:    https://github.com/intel-lab-lkp/linux/commits/Anshuman-Khandual/arm64-perf-Enable-branch-stack-sampling/20220908-131425
 > base:   https://git.kernel.org/pub/scm/linux/kernel/git/acme/linux.git perf/core
-> config: arm-defconfig
-> compiler: arm-linux-gnueabi-gcc (GCC) 12.1.0
+> config: arm-spitz_defconfig
+> compiler: clang version 16.0.0 (https://github.com/llvm/llvm-project 1546df49f5a6d09df78f569e4137ddb365a3e827)
 > reproduce (this is a W=1 build):
 >         wget https://raw.githubusercontent.com/intel/lkp-tests/master/sbin/make.cross -O ~/bin/make.cross
 >         chmod +x ~/bin/make.cross
+>         # install arm cross compiling tool for clang build
+>         # apt-get install binutils-arm-linux-gnueabi
 >         # https://github.com/intel-lab-lkp/linux/commit/d3c4ba711027d312a2f4e16cdbdbec5fcbf2913b
 >         git remote add linux-review https://github.com/intel-lab-lkp/linux
 >         git fetch --no-tags linux-review Anshuman-Khandual/arm64-perf-Enable-branch-stack-sampling/20220908-131425
 >         git checkout d3c4ba711027d312a2f4e16cdbdbec5fcbf2913b
 >         # save the config file
 >         mkdir build_dir && cp config build_dir/.config
->         COMPILER_INSTALL_PATH=$HOME/0day COMPILER=gcc-12.1.0 make.cross W=1 O=build_dir ARCH=arm SHELL=/bin/bash drivers/perf/
+>         COMPILER_INSTALL_PATH=$HOME/0day COMPILER=clang make.cross W=1 O=build_dir ARCH=arm SHELL=/bin/bash drivers/perf/
 > 
 > If you fix the issue, kindly add following tag where applicable
 > Reported-by: kernel test robot <lkp@intel.com>
 > 
 > All warnings (new ones prefixed by >>):
 > 
->    drivers/perf/arm_pmu.c: In function 'validate_group':
->>> drivers/perf/arm_pmu.c:415:1: warning: the frame size of 1744 bytes is larger than 1024 bytes [-Wframe-larger-than=]
->      415 | }
->          | ^
+>>> drivers/perf/arm_pmu.c:498:12: warning: stack frame size (1760) exceeds limit (1024) in 'armpmu_event_init' [-Wframe-larger-than]
+>    static int armpmu_event_init(struct perf_event *event)
+>               ^
+>    1 warning generated.
 
-Guess this might just be complaining because of the local variable 'fake_pmu'
-as 'struct pmu_hw_events' now has been expanded to accommodate BRBE related
-elements. But these are essential elements for BRBE branch record processing.
-
-static int
-validate_group(struct perf_event *event)
-{
-        struct perf_event *sibling, *leader = event->group_leader;
-        struct pmu_hw_events fake_pmu;
-....
+This is a similar problem like the previous one, new elements are
+required in struct pmu_hw_events for BRBE records processing.
