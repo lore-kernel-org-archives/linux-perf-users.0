@@ -2,35 +2,35 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CDDF8ECAAD3
-	for <linux-perf-users@archiver.kernel.org>; Fri,  9 Sep 2022 15:33:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 76A30ECAAD5
+	for <linux-perf-users@archiver.kernel.org>; Fri,  9 Sep 2022 15:33:08 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232378AbiIIPdG (ORCPT
+        id S232388AbiIIPdH (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Fri, 9 Sep 2022 11:33:06 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40242 "EHLO
+        Fri, 9 Sep 2022 11:33:07 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40294 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232023AbiIIPck (ORCPT
+        with ESMTP id S232040AbiIIPcm (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Fri, 9 Sep 2022 11:32:40 -0400
+        Fri, 9 Sep 2022 11:32:42 -0400
 Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTP id 39FE23E75E;
-        Fri,  9 Sep 2022 08:32:27 -0700 (PDT)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTP id BFF1AC165D;
+        Fri,  9 Sep 2022 08:32:29 -0700 (PDT)
 Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 44D421A9A;
-        Fri,  9 Sep 2022 08:28:49 -0700 (PDT)
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 9DDF91BA8;
+        Fri,  9 Sep 2022 08:28:52 -0700 (PDT)
 Received: from e126387.arm.com (unknown [10.57.17.154])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 7A6B43F73D;
-        Fri,  9 Sep 2022 08:28:41 -0700 (PDT)
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id E22D13F73D;
+        Fri,  9 Sep 2022 08:28:44 -0700 (PDT)
 From:   carsten.haitzler@foss.arm.com
 To:     linux-kernel@vger.kernel.org
 Cc:     coresight@lists.linaro.org, suzuki.poulose@arm.com,
         mathieu.poirier@linaro.org, mike.leach@linaro.org,
         leo.yan@linaro.org, linux-perf-users@vger.kernel.org,
         acme@kernel.org
-Subject: [PATCH v9 10/13] perf test: Add unroll thread test tool
-Date:   Fri,  9 Sep 2022 16:28:00 +0100
-Message-Id: <20220909152803.2317006-11-carsten.haitzler@foss.arm.com>
+Subject: [PATCH v9 12/13] perf test: Add git ignore for tmp and output files of CoreSight tests
+Date:   Fri,  9 Sep 2022 16:28:02 +0100
+Message-Id: <20220909152803.2317006-13-carsten.haitzler@foss.arm.com>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20220909152803.2317006-1-carsten.haitzler@foss.arm.com>
 References: <20220909152803.2317006-1-carsten.haitzler@foss.arm.com>
@@ -42,161 +42,34 @@ X-Mailing-List: linux-perf-users@vger.kernel.org
 
 From: Carsten Haitzler <carsten.haitzler@arm.com>
 
-Add test tool to be driven by further test scripts. This is a simple C
-based test that is for arm64 with some inline ASM to manually unroll a
-lot of code to have a very long sequence of commands.
+Ignore other output files of the new CoreSight tests so they don't
+fill git status with noise we don't need or want.
 
 Signed-off-by: Carsten Haitzler <carsten.haitzler@arm.com>
 ---
- tools/perf/tests/shell/coresight/Makefile     |  3 +-
- .../coresight/unroll_loop_thread/.gitignore   |  1 +
- .../coresight/unroll_loop_thread/Makefile     | 33 +++++++++
- .../unroll_loop_thread/unroll_loop_thread.c   | 74 +++++++++++++++++++
- 4 files changed, 110 insertions(+), 1 deletion(-)
- create mode 100644 tools/perf/tests/shell/coresight/unroll_loop_thread/.gitignore
- create mode 100644 tools/perf/tests/shell/coresight/unroll_loop_thread/Makefile
- create mode 100644 tools/perf/tests/shell/coresight/unroll_loop_thread/unroll_loop_thread.c
+ tools/perf/.gitignore | 2 ++
+ 1 file changed, 2 insertions(+)
 
-diff --git a/tools/perf/tests/shell/coresight/Makefile b/tools/perf/tests/shell/coresight/Makefile
-index 9330e4f62656..c8e3b2b6d5b5 100644
---- a/tools/perf/tests/shell/coresight/Makefile
-+++ b/tools/perf/tests/shell/coresight/Makefile
-@@ -7,7 +7,8 @@ include ../../../../../tools/scripts/utilities.mak
- SUBDIRS = \
- 	asm_pure_loop \
- 	memcpy_thread \
--	thread_loop
-+	thread_loop \
-+	unroll_loop_thread
- 
- all: $(SUBDIRS)
- $(SUBDIRS):
-diff --git a/tools/perf/tests/shell/coresight/unroll_loop_thread/.gitignore b/tools/perf/tests/shell/coresight/unroll_loop_thread/.gitignore
-new file mode 100644
-index 000000000000..2cb4e996dbf3
---- /dev/null
-+++ b/tools/perf/tests/shell/coresight/unroll_loop_thread/.gitignore
-@@ -0,0 +1 @@
-+unroll_loop_thread
-diff --git a/tools/perf/tests/shell/coresight/unroll_loop_thread/Makefile b/tools/perf/tests/shell/coresight/unroll_loop_thread/Makefile
-new file mode 100644
-index 000000000000..6264c4e3abd1
---- /dev/null
-+++ b/tools/perf/tests/shell/coresight/unroll_loop_thread/Makefile
-@@ -0,0 +1,33 @@
-+# SPDX-License-Identifier: GPL-2.0
-+# Carsten Haitzler <carsten.haitzler@arm.com>, 2021
-+include ../Makefile.miniconfig
-+
-+# Binary to produce
-+BIN=unroll_loop_thread
-+# Any linking/libraries needed for the binary - empty if none needed
-+LIB=-pthread
-+
-+all: $(BIN)
-+
-+$(BIN): $(BIN).c
-+ifdef CORESIGHT
-+ifeq ($(ARCH),arm64)
-+# Build line
-+	$(Q)$(CC) $(BIN).c -o $(BIN) $(LIB)
-+endif
-+endif
-+
-+install-tests: all
-+ifdef CORESIGHT
-+ifeq ($(ARCH),arm64)
-+# Install the test tool in the right place
-+	$(call QUIET_INSTALL, tests) \
-+		$(INSTALL) -d -m 755 '$(DESTDIR_SQ)$(perfexec_instdir_SQ)/$(INSTDIR_SUB)/$(BIN)'; \
-+		$(INSTALL) $(BIN) '$(DESTDIR_SQ)$(perfexec_instdir_SQ)/$(INSTDIR_SUB)/$(BIN)/$(BIN)'
-+endif
-+endif
-+
-+clean:
-+	$(Q)$(RM) -f $(BIN)
-+
-+.PHONY: all clean install-tests
-diff --git a/tools/perf/tests/shell/coresight/unroll_loop_thread/unroll_loop_thread.c b/tools/perf/tests/shell/coresight/unroll_loop_thread/unroll_loop_thread.c
-new file mode 100644
-index 000000000000..8f6d384208ed
---- /dev/null
-+++ b/tools/perf/tests/shell/coresight/unroll_loop_thread/unroll_loop_thread.c
-@@ -0,0 +1,74 @@
-+// SPDX-License-Identifier: GPL-2.0
-+// Carsten Haitzler <carsten.haitzler@arm.com>, 2021
-+#include <stdio.h>
-+#include <stdlib.h>
-+#include <unistd.h>
-+#include <string.h>
-+#include <pthread.h>
-+
-+struct args {
-+	pthread_t th;
-+	unsigned int in;
-+	void *ret;
-+};
-+
-+static void *thrfn(void *arg)
-+{
-+	struct args *a = arg;
-+	unsigned int i, in = a->in;
-+
-+	for (i = 0; i < 10000; i++) {
-+		asm volatile (
-+// force an unroll of thia add instruction so we can test long runs of code
-+#define SNIP1 "add %[in], %[in], #1\n"
-+// 10
-+#define SNIP2 SNIP1 SNIP1 SNIP1 SNIP1 SNIP1 SNIP1 SNIP1 SNIP1 SNIP1 SNIP1
-+// 100
-+#define SNIP3 SNIP2 SNIP2 SNIP2 SNIP2 SNIP2 SNIP2 SNIP2 SNIP2 SNIP2 SNIP2
-+// 1000
-+#define SNIP4 SNIP3 SNIP3 SNIP3 SNIP3 SNIP3 SNIP3 SNIP3 SNIP3 SNIP3 SNIP3
-+// 10000
-+#define SNIP5 SNIP4 SNIP4 SNIP4 SNIP4 SNIP4 SNIP4 SNIP4 SNIP4 SNIP4 SNIP4
-+// 100000
-+			SNIP5 SNIP5 SNIP5 SNIP5 SNIP5 SNIP5 SNIP5 SNIP5 SNIP5 SNIP5
-+			: /* out */
-+			: /* in */ [in] "r" (in)
-+			: /* clobber */
-+		);
-+	}
-+}
-+
-+static pthread_t new_thr(void *(*fn) (void *arg), void *arg)
-+{
-+	pthread_t t;
-+	pthread_attr_t attr;
-+
-+	pthread_attr_init(&attr);
-+	pthread_create(&t, &attr, fn, arg);
-+	return t;
-+}
-+
-+int main(int argc, char **argv)
-+{
-+	unsigned int i, thr;
-+	pthread_t threads[256];
-+	struct args args[256];
-+
-+	if (argc < 2) {
-+		printf("ERR: %s [numthreads]\n", argv[0]);
-+		exit(1);
-+	}
-+
-+	thr = atoi(argv[1]);
-+	if ((thr > 256) || (thr < 1)) {
-+		printf("ERR: threads 1-256\n");
-+		exit(1);
-+	}
-+	for (i = 0; i < thr; i++) {
-+		args[i].in = rand();
-+		args[i].th = new_thr(thrfn, &(args[i]));
-+	}
-+	for (i = 0; i < thr; i++)
-+		pthread_join(args[i].th, &(args[i].ret));
-+	return 0;
-+}
+diff --git a/tools/perf/.gitignore b/tools/perf/.gitignore
+index faa23b5d32f5..a653311d9693 100644
+--- a/tools/perf/.gitignore
++++ b/tools/perf/.gitignore
+@@ -22,6 +22,7 @@ perf-archive
+ perf-iostat
+ tags
+ TAGS
++stats-*.csv
+ cscope*
+ config.mak
+ config.mak.autogen
+@@ -29,6 +30,7 @@ config.mak.autogen
+ *-flex.*
+ *.pyc
+ *.pyo
++*.stdout
+ .config-detected
+ util/intel-pt-decoder/inat-tables.c
+ arch/*/include/generated/
 -- 
 2.32.0
 
