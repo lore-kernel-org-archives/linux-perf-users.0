@@ -2,107 +2,113 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C7D3EECAAD3
-	for <linux-perf-users@archiver.kernel.org>; Fri,  9 Sep 2022 06:22:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E0AB2ECAAA1
+	for <linux-perf-users@archiver.kernel.org>; Fri,  9 Sep 2022 08:57:20 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229596AbiIIGWb (ORCPT
+        id S230435AbiIII5U (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Fri, 9 Sep 2022 02:22:31 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37022 "EHLO
+        Fri, 9 Sep 2022 04:57:20 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56970 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229679AbiIIGWa (ORCPT
+        with ESMTP id S230200AbiIII4u (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Fri, 9 Sep 2022 02:22:30 -0400
+        Fri, 9 Sep 2022 04:56:50 -0400
 Received: from szxga02-in.huawei.com (szxga02-in.huawei.com [45.249.212.188])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3590A1216BD;
-        Thu,  8 Sep 2022 23:22:26 -0700 (PDT)
-Received: from canpemm500009.china.huawei.com (unknown [172.30.72.55])
-        by szxga02-in.huawei.com (SkyGuard) with ESMTP id 4MP5Q76xMhzZcmB;
-        Fri,  9 Sep 2022 14:17:51 +0800 (CST)
-Received: from [10.67.102.169] (10.67.102.169) by
- canpemm500009.china.huawei.com (7.192.105.203) with Microsoft SMTP Server
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 45F521377B4;
+        Fri,  9 Sep 2022 01:55:31 -0700 (PDT)
+Received: from kwepemi500013.china.huawei.com (unknown [172.30.72.54])
+        by szxga02-in.huawei.com (SkyGuard) with ESMTP id 4MP8qY38KyzmVBb;
+        Fri,  9 Sep 2022 16:51:37 +0800 (CST)
+Received: from M910t.huawei.com (10.110.54.157) by
+ kwepemi500013.china.huawei.com (7.221.188.120) with Microsoft SMTP Server
  (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2375.24; Fri, 9 Sep 2022 14:22:23 +0800
-CC:     <yangyicong@hisilicon.com>, <gregkh@linuxfoundation.org>,
-        <helgaas@kernel.org>, <lorenzo.pieralisi@arm.com>,
-        <shameerali.kolothum.thodi@huawei.com>, <mingo@redhat.com>,
-        <linux-kernel@vger.kernel.org>,
-        <linux-arm-kernel@lists.infradead.org>,
-        <linux-pci@vger.kernel.org>, <linux-perf-users@vger.kernel.org>,
-        <prime.zeng@huawei.com>, <zhangshaokun@hisilicon.com>,
-        <linuxarm@huawei.com>
-Subject: Re: [PATCH v12 0/3] Add perf support for HiSilicon PCIe Tune and
- Trace device
-To:     <acme@kernel.org>, <peterz@infradead.org>,
-        <alexander.shishkin@linux.intel.com>, <leo.yan@linaro.org>,
-        <james.clark@arm.com>, <will@kernel.org>,
-        <mathieu.poirier@linaro.org>, <mark.rutland@arm.com>,
-        <suzuki.poulose@arm.com>, <jonathan.cameron@huawei.com>,
-        <john.garry@huawei.com>, <mike.leach@linaro.org>
-References: <20220816125757.60302-1-yangyicong@huawei.com>
-From:   Yicong Yang <yangyicong@huawei.com>
-Message-ID: <bf7ca4f8-315c-cde4-3f31-24a50a007511@huawei.com>
-Date:   Fri, 9 Sep 2022 14:22:22 +0800
-User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:78.0) Gecko/20100101
- Thunderbird/78.5.1
+ 15.1.2375.24; Fri, 9 Sep 2022 16:55:14 +0800
+From:   Changbin Du <changbin.du@huawei.com>
+To:     Arnaldo Carvalho de Melo <acme@kernel.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Ingo Molnar <mingo@redhat.com>
+CC:     Mark Rutland <mark.rutland@arm.com>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Jiri Olsa <jolsa@kernel.org>,
+        Namhyung Kim <namhyung@kernel.org>,
+        <linux-kernel@vger.kernel.org>, <linux-perf-users@vger.kernel.org>,
+        Hui Wang <hw.huiwang@huawei.com>, <changbin.du@gmail.com>,
+        Changbin Du <changbin.du@huawei.com>
+Subject: [PATCH 0/3] perf: script: use capstone to show disassembly instructions for samples
+Date:   Fri, 9 Sep 2022 16:48:18 +0800
+Message-ID: <20220909084821.7894-1-changbin.du@huawei.com>
+X-Mailer: git-send-email 2.17.1
 MIME-Version: 1.0
-In-Reply-To: <20220816125757.60302-1-yangyicong@huawei.com>
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-X-Originating-IP: [10.67.102.169]
-X-ClientProxiedBy: dggems703-chm.china.huawei.com (10.3.19.180) To
- canpemm500009.china.huawei.com (7.192.105.203)
+Content-Type: text/plain
+X-Originating-IP: [10.110.54.157]
+X-ClientProxiedBy: dggems706-chm.china.huawei.com (10.3.19.183) To
+ kwepemi500013.china.huawei.com (7.221.188.120)
 X-CFilter-Loop: Reflected
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-Hi Perf maintainers,
+Currently, the instructions of samples are shown as raw hex strings
+which are hard to read. x86 has a special option '--xed' to disassemble
+the hex string via intel XED.
 
-A gentle ping for this. Since the driver part has been accepted, hope the
-corresponding perf part can catch this kernel version as well.
+Here we use capstone as our disassembly engine to do that. We select
+libcapstone because capstone can provide more insn details.
 
-Thanks!
+The improvements compared to xed:
+     * support arm, arm64, x86-32, x86_64 (more could be supported),
+       xed only for x86_64.
+     * immediate address operands are shown as symbol+offs.
 
-On 2022/8/16 20:57, Yicong Yang wrote:
-> From: Yicong Yang <yangyicong@hisilicon.com>
-> 
-> This patchset adds the perf tool support for HiSilicon PCIe Tune and Trace
-> device [1]. The device driver makes use of perf AUX trace for tracing
-> TLP(Transaction Layer Packet) headers of PCIe. The trace can be used by
-> `perf record` and the traced data can be decoded by `perf report` with
-> this patchset. The detailed usage is documented in [1].
-> 
-> This is split from the v11 series as suggested to send driver part and
-> perf tool part separately. The perf tool part has no change since v11.
-> The whole changelog can be found at [2].
-> 
-> [1] https://lore.kernel.org/lkml/20220816114414.4092-5-yangyicong@huawei.com/
-> [2] https://lore.kernel.org/lkml/20220816114414.4092-1-yangyicong@huawei.com/
-> 
-> Qi Liu (3):
->   perf tool: arm: Refactor event list iteration in
->     auxtrace_record__init()
->   perf tool: Add support for HiSilicon PCIe Tune and Trace device driver
->   perf tool: Add support for parsing HiSilicon PCIe Trace packet
-> 
->  tools/perf/arch/arm/util/auxtrace.c           | 116 +++++++++--
->  tools/perf/arch/arm/util/pmu.c                |   3 +
->  tools/perf/arch/arm64/util/Build              |   2 +-
->  tools/perf/arch/arm64/util/hisi-ptt.c         | 188 +++++++++++++++++
->  tools/perf/util/Build                         |   2 +
->  tools/perf/util/auxtrace.c                    |   4 +
->  tools/perf/util/auxtrace.h                    |   1 +
->  tools/perf/util/hisi-ptt-decoder/Build        |   1 +
->  .../hisi-ptt-decoder/hisi-ptt-pkt-decoder.c   | 164 +++++++++++++++
->  .../hisi-ptt-decoder/hisi-ptt-pkt-decoder.h   |  31 +++
->  tools/perf/util/hisi-ptt.c                    | 192 ++++++++++++++++++
->  tools/perf/util/hisi-ptt.h                    |  19 ++
->  12 files changed, 703 insertions(+), 20 deletions(-)
->  create mode 100644 tools/perf/arch/arm64/util/hisi-ptt.c
->  create mode 100644 tools/perf/util/hisi-ptt-decoder/Build
->  create mode 100644 tools/perf/util/hisi-ptt-decoder/hisi-ptt-pkt-decoder.c
->  create mode 100644 tools/perf/util/hisi-ptt-decoder/hisi-ptt-pkt-decoder.h
->  create mode 100644 tools/perf/util/hisi-ptt.c
->  create mode 100644 tools/perf/util/hisi-ptt.h
-> 
+Before:
+$ sudo perf script --insn-trace
+  perf 17423 [000] 423271.557970005:      7f2d95f16217 __GI___ioctl+0x7 (/lib/x86_64-linux-gnu/libc-2.27.so) insn: 48 3d 01 f0 ff ff
+  perf 17423 [000] 423271.557970005:      7f2d95f1621d __GI___ioctl+0xd (/lib/x86_64-linux-gnu/libc-2.27.so) insn: 73 01
+  perf 17423 [000] 423271.557970338:      7f2d95f1621f __GI___ioctl+0xf (/lib/x86_64-linux-gnu/libc-2.27.so) insn: c3
+  perf 17423 [000] 423271.557970338:      5593ad3346d7 perf_evsel__enable_cpu+0x97 (/work/linux/tools/perf/perf) insn: 85 c0
+  perf 17423 [000] 423271.557970338:      5593ad3346d9 perf_evsel__enable_cpu+0x99 (/work/linux/tools/perf/perf) insn: 75 12
+  perf 17423 [000] 423271.557970338:      5593ad3346db perf_evsel__enable_cpu+0x9b (/work/linux/tools/perf/perf) insn: 49 8b 84 24 a8 00 00 00
+  perf 17423 [000] 423271.557970338:      5593ad3346e3 perf_evsel__enable_cpu+0xa3 (/work/linux/tools/perf/perf) insn: 48 8b 50 20
+
+After:
+$ sudo perf script --insn-trace
+  perf 17423 [000] 423271.557970005:      7f2d95f16217 __GI___ioctl+0x7 (/lib/x86_64-linux-gnu/libc-2.27.so) insn: cmpq $-0xfff, %rax
+  perf 17423 [000] 423271.557970005:      7f2d95f1621d __GI___ioctl+0xd (/lib/x86_64-linux-gnu/libc-2.27.so) insn: jae __GI___ioctl+0x10
+  perf 17423 [000] 423271.557970338:      7f2d95f1621f __GI___ioctl+0xf (/lib/x86_64-linux-gnu/libc-2.27.so) insn: retq
+  perf 17423 [000] 423271.557970338:      5593ad3346d7 perf_evsel__enable_cpu+0x97 (/work/linux/tools/perf/perf) insn: testl %eax, %eax
+  perf 17423 [000] 423271.557970338:      5593ad3346d9 perf_evsel__enable_cpu+0x99 (/work/linux/tools/perf/perf) insn: jne perf_evsel__enable_cpu+0xad
+  perf 17423 [000] 423271.557970338:      5593ad3346db perf_evsel__enable_cpu+0x9b (/work/linux/tools/perf/perf) insn: movq 0xa8(%r12), %rax
+  perf 17423 [000] 423271.557970338:      5593ad3346e3 perf_evsel__enable_cpu+0xa3 (/work/linux/tools/perf/perf) insn: movq 0x20(%rax), %rdx
+  perf 17423 [000] 423271.557970338:      5593ad3346e7 perf_evsel__enable_cpu+0xa7 (/work/linux/tools/perf/perf) insn: cmpl %edx, %ebx
+
+Changbin Du (3):
+  perf: build: introduce the libcapstone
+  perf: script: use capstone disasm engine to show disassembly
+    instructions
+  perf: script: Deprecate the '--xed' option
+
+ tools/build/Makefile.feature               |   2 +
+ tools/build/feature/Makefile               |   4 +
+ tools/build/feature/test-all.c             |   4 +
+ tools/build/feature/test-libcapstone.c     |  11 ++
+ tools/perf/Documentation/build-xed.txt     |  19 ----
+ tools/perf/Documentation/perf-intel-pt.txt |  17 +--
+ tools/perf/Documentation/perf-script.txt   |   5 +-
+ tools/perf/Documentation/tips.txt          |   2 +-
+ tools/perf/Makefile.config                 |  21 ++++
+ tools/perf/Makefile.perf                   |   3 +
+ tools/perf/builtin-script.c                |  15 +--
+ tools/perf/ui/browsers/res_sample.c        |   2 +-
+ tools/perf/ui/browsers/scripts.c           |   4 +-
+ tools/perf/util/Build                      |   1 +
+ tools/perf/util/print_insn.c               | 126 +++++++++++++++++++++
+ tools/perf/util/print_insn.h               |  13 +++
+ 16 files changed, 201 insertions(+), 48 deletions(-)
+ create mode 100644 tools/build/feature/test-libcapstone.c
+ delete mode 100644 tools/perf/Documentation/build-xed.txt
+ create mode 100644 tools/perf/util/print_insn.c
+ create mode 100644 tools/perf/util/print_insn.h
+
+-- 
+2.17.1
+
