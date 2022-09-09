@@ -2,174 +2,120 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B1A56ECAAA1
-	for <linux-perf-users@archiver.kernel.org>; Fri,  9 Sep 2022 20:45:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6FCACC6FA82
+	for <linux-perf-users@archiver.kernel.org>; Fri,  9 Sep 2022 23:50:32 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231243AbiIIUpt (ORCPT
+        id S230324AbiIIXub (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Fri, 9 Sep 2022 16:45:49 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38750 "EHLO
+        Fri, 9 Sep 2022 19:50:31 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48470 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231756AbiIIUpa (ORCPT
+        with ESMTP id S229506AbiIIXua (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Fri, 9 Sep 2022 16:45:30 -0400
-Received: from mail-oa1-f44.google.com (mail-oa1-f44.google.com [209.85.160.44])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0C43DE5827;
-        Fri,  9 Sep 2022 13:45:26 -0700 (PDT)
-Received: by mail-oa1-f44.google.com with SMTP id 586e51a60fabf-1279948d93dso6957477fac.10;
-        Fri, 09 Sep 2022 13:45:26 -0700 (PDT)
+        Fri, 9 Sep 2022 19:50:30 -0400
+Received: from mail-pj1-x1029.google.com (mail-pj1-x1029.google.com [IPv6:2607:f8b0:4864:20::1029])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7509E6CD29;
+        Fri,  9 Sep 2022 16:50:28 -0700 (PDT)
+Received: by mail-pj1-x1029.google.com with SMTP id s14-20020a17090a6e4e00b0020057c70943so6809263pjm.1;
+        Fri, 09 Sep 2022 16:50:28 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20210112;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:sender:from:to:cc:subject:date;
+        bh=uqNGHBaxQiO3zHKtcKrEz0wmZHMWANgckYzO3CzGdLY=;
+        b=E+ZKmg2n23E0vzSyOd6haKeLiJoq7hROyUB1hus9euLbLbgHjyt1Se2cg3/2WGdDb0
+         73cnIqDzadw8Pxl05oYweYWCeVXaIMq4a33rVU0Rd1SotvMxbYUtv/RY3DAVvWGfEtUM
+         pVYQmJ4jCQDukIhnVT57O/22OGzpaS2CDZKLNKFOb5j0wIaKAt8NzZkWHpvHB6KMxq6R
+         /LBHYpQXN7I3t5Xp2Jv4VmBF8dfNc5DB3uhEJBbvxqHtYcjOHNpuCUFxcpjR+CCEroXp
+         kvc8o/WN2kdHUsN6rQEZNK4Qmc05IPscQT/Xd4ogRdkDmf5jIuQowfqF2Meyo0IsB07/
+         Vscw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
         h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date;
-        bh=wJHPlwUtvZUMl13qkXUAr67z5VRLYGwRp7OVgCggcQ8=;
-        b=SWtryOq2AxWUM1vWmaOoeQ9AmOJgGD6iaG3IneNHL31AJzBrc168A/aOLCqAOp6WWq
-         jxJmNJp3PZSa7WdVYPfzqKE9ge4yRa27lV1UxPlPGJezaMaCc+oiuBTHAuCPzBUfEyMz
-         I0W/bduiSIyvYiF/9r/HGCFHQFhoT9Y0yuf+sKKw2x+GB+F8VAYpnWocgVG2gw+2CYU3
-         ByRaxq7mM9kO+Jh1vpbjI+wn5GzR8vrQoZe8lAu2AVuxvat0HJqpljWQaZbSscjV1srk
-         u89YyLCaNCBns5vrJrB0x0OP0lh5j7dIWRhPMnc8rkD0jE7QwIAdBcYXFQ82qhcfMfQm
-         P12g==
-X-Gm-Message-State: ACgBeo2C38ua8nRMHA52U/XH3A7LYRUiofSsnlTVrHlbRiaIRvNhk+yT
-        376QWJDaG63lPpL1v848fQ==
-X-Google-Smtp-Source: AA6agR72dTUvUYth3SpEr5goOZl3+nCyxA8MljUI5f9EQmBiFXK73tYkzF5DmGOuvPjZj42APSiY5A==
-X-Received: by 2002:a05:6871:a4:b0:127:2ef5:f66e with SMTP id u36-20020a05687100a400b001272ef5f66emr5879727oaa.213.1662756325737;
-        Fri, 09 Sep 2022 13:45:25 -0700 (PDT)
-Received: from xps15.. (66-90-144-107.dyn.grandenetworks.net. [66.90.144.107])
-        by smtp.googlemail.com with ESMTPSA id a4-20020a9d5c84000000b006370b948974sm213742oti.32.2022.09.09.13.45.25
+         :to:from:sender:x-gm-message-state:from:to:cc:subject:date;
+        bh=uqNGHBaxQiO3zHKtcKrEz0wmZHMWANgckYzO3CzGdLY=;
+        b=fjmvQvFLnOQ1WB5MQyEnOr9A0W8EJzFS1dD0jp7Ynom4D5cRU6aaBgtZH9qho3JgkY
+         GpyAgNSY6srGXFo86x/+W95OegUwF8LN6xDRut9gFbYzJbAPCLCcY0S36YMGMsX4U9tB
+         1HxcQdBrXA8DCH4AEcMtTNMkkmuU51z4iy3DnSYPmupECUPUZiAg/6j5ZJD3DL3fEXfd
+         7UxuX/YgmG2l7iCeMzGMC+T1PcMJCnyPRINx/ppiSVv6jBswnM323giTZs6GFXvjC9w7
+         4dTiBregErgXMOBOE2yKHsO11heXU4uL+/yYKgBQfRzUl6gdxHLQwT0G8FNDPX7Qdyc7
+         N4ug==
+X-Gm-Message-State: ACgBeo3Dvql0r3kxFmJYhPrZVvyItgu4roLuQKC9L/7h5l+JpIpTX6E0
+        d9Xu76qrzUK0sEis9fqvR6s=
+X-Google-Smtp-Source: AA6agR6O38xvUzMJViUv8mpOAoSfybwwUUcAGWtU1G5Cv1HulnR03mkMyWepqKTDUPUmTAqPOCj+hw==
+X-Received: by 2002:a17:903:120a:b0:172:5a63:7442 with SMTP id l10-20020a170903120a00b001725a637442mr16182615plh.55.1662767427814;
+        Fri, 09 Sep 2022 16:50:27 -0700 (PDT)
+Received: from youngsil.svl.corp.google.com ([2620:15c:2d4:203:f2b:e437:9e3e:53ec])
+        by smtp.gmail.com with ESMTPSA id r16-20020aa79630000000b0053e75395705sm305837pfg.127.2022.09.09.16.50.26
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 09 Sep 2022 13:45:25 -0700 (PDT)
-From:   Rob Herring <robh@kernel.org>
-To:     Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Jiri Olsa <jolsa@kernel.org>,
-        Namhyung Kim <namhyung@kernel.org>
-Cc:     James Clark <james.clark@arm.com>,
-        linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [PATCH v2] perf: Skip and warn on unknown format 'configN' attrs
-Date:   Fri,  9 Sep 2022 15:45:09 -0500
-Message-Id: <20220909204509.2169512-1-robh@kernel.org>
-X-Mailer: git-send-email 2.34.1
+        Fri, 09 Sep 2022 16:50:27 -0700 (PDT)
+Sender: Namhyung Kim <namhyung@gmail.com>
+From:   Namhyung Kim <namhyung@kernel.org>
+To:     Arnaldo Carvalho de Melo <acme@kernel.org>,
+        Jiri Olsa <jolsa@kernel.org>
+Cc:     Ingo Molnar <mingo@kernel.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Ian Rogers <irogers@google.com>,
+        Adrian Hunter <adrian.hunter@intel.com>,
+        linux-perf-users@vger.kernel.org,
+        Stephane Eranian <eranian@google.com>
+Subject: [PATCH] perf record: Fix a segfault in record__read_lost_samples()
+Date:   Fri,  9 Sep 2022 16:50:24 -0700
+Message-Id: <20220909235024.278281-1-namhyung@kernel.org>
+X-Mailer: git-send-email 2.37.2.789.g6183377224-goog
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-If the kernel exposes a new perf_event_attr field in a format attr, perf
-will return an error stating the specified PMU can't be found. For
-example, a format attr with 'config3:0-63' causes an error as config3 is
-unknown to perf. This causes a compatibility issue between a newer
-kernel with older perf tool.
+When it fails to open events record__open() returns without setting the
+session->evlist.  Then it gets a segfault in the function trying to read
+lost sample counts.  You can easily reproduce it as a normal user like:
 
-Before this change with a kernel adding 'config3' I get:
+  $ perf record -p 1 true
+  ...
+  perf: Segmentation fault
+  ...
 
-$ perf record -e arm_spe// -- true
-event syntax error: 'arm_spe//'
-                     \___ Cannot find PMU `arm_spe'. Missing kernel support?
-Run 'perf list' for a list of valid events
+Skip the function if it has no evlist.  And add more protection for evsels
+which are not properly initialized.
 
- Usage: perf record [<options>] [<command>]
-    or: perf record [<options>] -- <command> [<options>]
-
-    -e, --event <event>   event selector. use 'perf list' to list
-available events
-
-After this change, I get:
-
-$ perf record -e arm_spe// -- true
-WARNING: format 'inv_event_filter' requires 'config3' which is not supported by this version of perf!
-[ perf record: Woken up 2 times to write data ]
-[ perf record: Captured and wrote 0.091 MB perf.data ]
-
-To support unknown configN formats, rework the YACC implementation to
-pass any config[0-9]+ format to perf_pmu__new_format() to handle with a
-warning.
-
-Note that the user will get the warning if *any* PMU has an unsupported
-format attr even if that PMU isn't used. This is because perf tool scans
-all the PMUs.
-
-Signed-off-by: Rob Herring <robh@kernel.org>
+Signed-off-by: Namhyung Kim <namhyung@kernel.org>
 ---
-v2:
- - Rework YACC code to handle configN formats in C code
- - Add a warning when an unknown configN attr is found
+I didn't add a Fixes tag as it's not sent to Linus yet.
+But in case you want it.
 
-v1: https://lore.kernel.org/all/20220901184709.2179309-1-robh@kernel.org/
----
- tools/perf/util/pmu.c |  6 ++++++
- tools/perf/util/pmu.l |  2 --
- tools/perf/util/pmu.y | 15 ++++-----------
- 3 files changed, 10 insertions(+), 13 deletions(-)
+  Fixes: a49aa8a54e86 ("perf record: Read and inject LOST_SAMPLES events")
 
-diff --git a/tools/perf/util/pmu.c b/tools/perf/util/pmu.c
-index 89655d53117a..6757db7d559c 100644
---- a/tools/perf/util/pmu.c
-+++ b/tools/perf/util/pmu.c
-@@ -1475,6 +1475,12 @@ int perf_pmu__new_format(struct list_head *list, char *name,
- {
- 	struct perf_pmu_format *format;
+ tools/perf/builtin-record.c | 6 ++++++
+ 1 file changed, 6 insertions(+)
+
+diff --git a/tools/perf/builtin-record.c b/tools/perf/builtin-record.c
+index 9df77b81a3bb..fe34d5db23bd 100644
+--- a/tools/perf/builtin-record.c
++++ b/tools/perf/builtin-record.c
+@@ -1888,6 +1888,10 @@ static void record__read_lost_samples(struct record *rec)
+ 	struct perf_record_lost_samples *lost;
+ 	struct evsel *evsel;
  
-+	if (config > PERF_PMU_FORMAT_VALUE_CONFIG2) {
-+		pr_warning("WARNING: format '%s' requires 'config%d' which is not supported by this version of perf!\n",
-+			   name, config);
-+		return 0;
-+	}
++	/* there was an error during record__open */
++	if (session->evlist == NULL)
++		return;
 +
- 	format = zalloc(sizeof(*format));
- 	if (!format)
- 		return -ENOMEM;
-diff --git a/tools/perf/util/pmu.l b/tools/perf/util/pmu.l
-index a15d9fbd7c0e..58b4926cfaca 100644
---- a/tools/perf/util/pmu.l
-+++ b/tools/perf/util/pmu.l
-@@ -27,8 +27,6 @@ num_dec         [0-9]+
+ 	lost = zalloc(PERF_SAMPLE_MAX_SIZE);
+ 	if (lost == NULL) {
+ 		pr_debug("Memory allocation failed\n");
+@@ -1899,6 +1903,8 @@ static void record__read_lost_samples(struct record *rec)
+ 	evlist__for_each_entry(session->evlist, evsel) {
+ 		struct xyarray *xy = evsel->core.sample_id;
  
- {num_dec}	{ return value(10); }
- config		{ return PP_CONFIG; }
--config1		{ return PP_CONFIG1; }
--config2		{ return PP_CONFIG2; }
- -		{ return '-'; }
- :		{ return ':'; }
- ,		{ return ','; }
-diff --git a/tools/perf/util/pmu.y b/tools/perf/util/pmu.y
-index bfd7e8509869..283efe059819 100644
---- a/tools/perf/util/pmu.y
-+++ b/tools/perf/util/pmu.y
-@@ -20,7 +20,7 @@ do { \
- 
- %}
- 
--%token PP_CONFIG PP_CONFIG1 PP_CONFIG2
-+%token PP_CONFIG
- %token PP_VALUE PP_ERROR
- %type <num> PP_VALUE
- %type <bits> bit_term
-@@ -47,18 +47,11 @@ PP_CONFIG ':' bits
- 				      $3));
- }
- |
--PP_CONFIG1 ':' bits
-+PP_CONFIG PP_VALUE ':' bits
- {
- 	ABORT_ON(perf_pmu__new_format(format, name,
--				      PERF_PMU_FORMAT_VALUE_CONFIG1,
--				      $3));
--}
--|
--PP_CONFIG2 ':' bits
--{
--	ABORT_ON(perf_pmu__new_format(format, name,
--				      PERF_PMU_FORMAT_VALUE_CONFIG2,
--				      $3));
-+				      $2,
-+				      $4));
- }
- 
- bits:
++		if (xy == NULL || evsel->core.fd == NULL)
++			continue;
+ 		if (xyarray__max_x(evsel->core.fd) != xyarray__max_x(xy) ||
+ 		    xyarray__max_y(evsel->core.fd) != xyarray__max_y(xy)) {
+ 			pr_debug("Unmatched FD vs. sample ID: skip reading LOST count\n");
 -- 
-2.34.1
+2.37.2.789.g6183377224-goog
 
