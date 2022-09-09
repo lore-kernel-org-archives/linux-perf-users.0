@@ -2,166 +2,79 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9D83DECAAA1
-	for <linux-perf-users@archiver.kernel.org>; Fri,  9 Sep 2022 13:23:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8F46FECAAA1
+	for <linux-perf-users@archiver.kernel.org>; Fri,  9 Sep 2022 13:30:21 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230302AbiIINXJ (ORCPT
+        id S230484AbiIINaU (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Fri, 9 Sep 2022 09:23:09 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53004 "EHLO
+        Fri, 9 Sep 2022 09:30:20 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39298 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229585AbiIINXF (ORCPT
+        with ESMTP id S229742AbiIINaT (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Fri, 9 Sep 2022 09:23:05 -0400
-Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3F54C10B578;
-        Fri,  9 Sep 2022 06:23:05 -0700 (PDT)
+        Fri, 9 Sep 2022 09:30:19 -0400
+Received: from ams.source.kernel.org (ams.source.kernel.org [IPv6:2604:1380:4601:e00::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 424734BD13;
+        Fri,  9 Sep 2022 06:30:18 -0700 (PDT)
 Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id D246561FE4;
-        Fri,  9 Sep 2022 13:23:04 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 0C240C43142;
-        Fri,  9 Sep 2022 13:23:04 +0000 (UTC)
+        by ams.source.kernel.org (Postfix) with ESMTPS id 02C7EB824F7;
+        Fri,  9 Sep 2022 13:30:17 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 5B36DC433D7;
+        Fri,  9 Sep 2022 13:30:15 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1662729784;
-        bh=Wk0bJyJfH/o7KA0o1KB3udTJXEgUndQ3l/7kpVZGGXE=;
+        s=k20201202; t=1662730215;
+        bh=EEGq+IdvooaP0lFaWFPxgnWqvDpi0mvAYTKZobEYsM0=;
         h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=CIHFhOb91bNGL4jXREjW5SAvMLo2tjvzE0L4Jbv+m+n21Eu0thmTMJ32wsDd0bxWS
-         TfFo7qVcVFRJinDcdIy56QcROZ8o5w/HidlGqB4P+kdqHTguCqec6Jx+E1Hw8vYxq7
-         E5tUK/pEh9U+8P6Ef3MaBtcDDFS9rZLB55xsHAyuKAvjxK84jPFhqkGp3etF7ppoQd
-         tTersIwy7UZtQv0aURTrcrRCUGE0gisr9McdLNf7XBJsV/dvs19o1eF8/RHkW5GR92
-         Tu3vDEQ79Oh9c2ZRa/dEwrYZOsXOqsOiJdb8VCC0oyvUl/cAmfBLDI361TNOOQfK8I
-         Xh6VsMt0jkXEA==
+        b=T3BTj5RdZWBa7U0ALppB4kpbvJVVC81AisTt8jG+FshRpNrilwNM3F/TJKSjQ5a86
+         39biMVyb+9mOyRo7zM+5a7a+oBP3SdA5gqnBp89tclmSgDZ3ojcLHoSyt6f12AujhG
+         dfvPlSVZIW+dwgLzkQZdOv+7XhhyMaqFxx7FdwmIkZh0L0MJal1uJFDSQiCXpEohce
+         vc9GrRkIn5CNLXDxhrjTteeJ2Y83+nCGBuZno0NY8bhj0KHOMBEKfd0No4K6Mxzp+R
+         PZ3jD2I7babtKxUIYy4Zijg6M1FHWU9QrxPEbAet8RgEaRREfsuFlTHdTKiuEFNVeR
+         qauUQ9u/QF0WQ==
 Received: by quaco.ghostprotocols.net (Postfix, from userid 1000)
-        id 6F2D6404A1; Fri,  9 Sep 2022 10:23:01 -0300 (-03)
-Date:   Fri, 9 Sep 2022 10:23:01 -0300
+        id 9E596404A1; Fri,  9 Sep 2022 10:30:12 -0300 (-03)
+Date:   Fri, 9 Sep 2022 10:30:12 -0300
 From:   Arnaldo Carvalho de Melo <acme@kernel.org>
-To:     Namhyung Kim <namhyung@kernel.org>
-Cc:     Jiri Olsa <jolsa@kernel.org>, Ingo Molnar <mingo@kernel.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Ian Rogers <irogers@google.com>,
-        Adrian Hunter <adrian.hunter@intel.com>,
-        linux-perf-users@vger.kernel.org, Marco Elver <elver@google.com>,
-        Song Liu <song@kernel.org>
-Subject: Re: [PATCH v3] perf test: Skip sigtrap test on old kernels
-Message-ID: <Yxs+NVE+6sQkIhEo@kernel.org>
-References: <20220908230150.4105955-1-namhyung@kernel.org>
+To:     Gaosheng Cui <cuigaosheng1@huawei.com>
+Cc:     peterz@infradead.org, mingo@redhat.com, mark.rutland@arm.com,
+        alexander.shishkin@linux.intel.com, jolsa@kernel.org,
+        namhyung@kernel.org, atrajeev@linux.vnet.ibm.com,
+        eranian@google.com, linux-perf-users@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 0/2] Remove unused declarations
+Message-ID: <Yxs/5FvhOKg4i9lb@kernel.org>
+References: <20220909044542.1087870-1-cuigaosheng1@huawei.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20220908230150.4105955-1-namhyung@kernel.org>
+In-Reply-To: <20220909044542.1087870-1-cuigaosheng1@huawei.com>
 X-Url:  http://acmel.wordpress.com
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-Em Thu, Sep 08, 2022 at 04:01:50PM -0700, Namhyung Kim escreveu:
-> If it runs on an old kernel, perf_event_open would fail because of the
-> new fields sigtrap and sig_data.  Just skipping the test could miss an
-> actual bug in the kernel.
-> 
-> Let's check BTF (when we have libbpf) if it has the sigtrap field in the
-> perf_event_attr.  Otherwise, we can check it with a minimal event config.
+Em Fri, Sep 09, 2022 at 12:45:40PM +0800, Gaosheng Cui escreveu:
+> This series contains a few cleanup patches, to remove unused
+> declarations which have been removed. Thanks!
 
 Thanks, applied.
 
 - Arnaldo
 
  
-> Cc: Marco Elver <elver@google.com>
-> Acked-by: Song Liu <song@kernel.org>
-> Signed-off-by: Namhyung Kim <namhyung@kernel.org>
-> ---
->  tools/perf/tests/sigtrap.c | 65 +++++++++++++++++++++++++++++++++++++-
->  1 file changed, 64 insertions(+), 1 deletion(-)
+> Gaosheng Cui (2):
+>   perf sort: remove hist_entry__sort_list and sort__first_dimension
+>     declaration
+>   perf tools: remove perf_pmu_lex declaration
 > 
-> diff --git a/tools/perf/tests/sigtrap.c b/tools/perf/tests/sigtrap.c
-> index e32ece90e164..1de7478ec189 100644
-> --- a/tools/perf/tests/sigtrap.c
-> +++ b/tools/perf/tests/sigtrap.c
-> @@ -54,6 +54,63 @@ static struct perf_event_attr make_event_attr(void)
->  	return attr;
->  }
->  
-> +#ifdef HAVE_BPF_SKEL
-> +#include <bpf/btf.h>
-> +
-> +static bool attr_has_sigtrap(void)
-> +{
-> +	bool ret = false;
-> +	struct btf *btf;
-> +	const struct btf_type *t;
-> +	const struct btf_member *m;
-> +	const char *name;
-> +	int i, id;
-> +
-> +	btf = btf__load_vmlinux_btf();
-> +	if (btf == NULL) {
-> +		/* should be an old kernel */
-> +		return false;
-> +	}
-> +
-> +	id = btf__find_by_name_kind(btf, "perf_event_attr", BTF_KIND_STRUCT);
-> +	if (id < 0)
-> +		goto out;
-> +
-> +	t = btf__type_by_id(btf, id);
-> +	for (i = 0, m = btf_members(t); i < btf_vlen(t); i++, m++) {
-> +		name = btf__name_by_offset(btf, m->name_off);
-> +		if (!strcmp(name, "sigtrap")) {
-> +			ret = true;
-> +			break;
-> +		}
-> +	}
-> +out:
-> +	btf__free(btf);
-> +	return ret;
-> +}
-> +#else  /* !HAVE_BPF_SKEL */
-> +static bool attr_has_sigtrap(void)
-> +{
-> +	struct perf_event_attr attr = {
-> +		.type		= PERF_TYPE_SOFTWARE,
-> +		.config		= PERF_COUNT_SW_DUMMY,
-> +		.size		= sizeof(attr),
-> +		.remove_on_exec = 1, /* Required by sigtrap. */
-> +		.sigtrap	= 1, /* Request synchronous SIGTRAP on event. */
-> +	};
-> +	int fd;
-> +	bool ret = false;
-> +
-> +	fd = sys_perf_event_open(&attr, 0, -1, -1, perf_event_open_cloexec_flag());
-> +	if (fd >= 0) {
-> +		ret = true;
-> +		close(fd);
-> +	}
-> +
-> +	return ret;
-> +}
-> +#endif  /* HAVE_BPF_SKEL */
-> +
->  static void
->  sigtrap_handler(int signum __maybe_unused, siginfo_t *info, void *ucontext __maybe_unused)
->  {
-> @@ -139,7 +196,13 @@ static int test__sigtrap(struct test_suite *test __maybe_unused, int subtest __m
->  
->  	fd = sys_perf_event_open(&attr, 0, -1, -1, perf_event_open_cloexec_flag());
->  	if (fd < 0) {
-> -		pr_debug("FAILED sys_perf_event_open(): %s\n", str_error_r(errno, sbuf, sizeof(sbuf)));
-> +		if (attr_has_sigtrap()) {
-> +			pr_debug("FAILED sys_perf_event_open(): %s\n",
-> +				 str_error_r(errno, sbuf, sizeof(sbuf)));
-> +		} else {
-> +			pr_debug("perf_event_attr doesn't have sigtrap\n");
-> +			ret = TEST_SKIP;
-> +		}
->  		goto out_restore_sigaction;
->  	}
->  
+>  tools/perf/util/pmu.y  | 2 --
+>  tools/perf/util/sort.h | 2 --
+>  2 files changed, 4 deletions(-)
+> 
 > -- 
-> 2.37.2.789.g6183377224-goog
+> 2.25.1
 
 -- 
 
