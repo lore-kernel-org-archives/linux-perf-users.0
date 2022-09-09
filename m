@@ -2,87 +2,119 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 23C14C6FA82
-	for <linux-perf-users@archiver.kernel.org>; Fri,  9 Sep 2022 12:00:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 26427C6FA82
+	for <linux-perf-users@archiver.kernel.org>; Fri,  9 Sep 2022 13:23:02 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231459AbiIIL76 (ORCPT
+        id S229946AbiIINXA (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Fri, 9 Sep 2022 07:59:58 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59244 "EHLO
+        Fri, 9 Sep 2022 09:23:00 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52948 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231458AbiIIL75 (ORCPT
+        with ESMTP id S229821AbiIINXA (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Fri, 9 Sep 2022 07:59:57 -0400
+        Fri, 9 Sep 2022 09:23:00 -0400
 Received: from ams.source.kernel.org (ams.source.kernel.org [145.40.68.75])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6F64A5AA17;
-        Fri,  9 Sep 2022 04:59:56 -0700 (PDT)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id AF55E10E847;
+        Fri,  9 Sep 2022 06:22:59 -0700 (PDT)
 Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by ams.source.kernel.org (Postfix) with ESMTPS id 06F26B824F9;
-        Fri,  9 Sep 2022 11:59:55 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPS id 9B35BC4347C;
-        Fri,  9 Sep 2022 11:59:53 +0000 (UTC)
+        by ams.source.kernel.org (Postfix) with ESMTPS id 0F3DCB824F2;
+        Fri,  9 Sep 2022 13:22:58 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 9595BC433D6;
+        Fri,  9 Sep 2022 13:22:56 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1662724793;
-        bh=q8qb4HTSazpfnRVzkkknH5aVK2E2DTfL9RYzfyWoZaw=;
-        h=Subject:From:In-Reply-To:References:Date:To:Cc:From;
-        b=g9UjVZMQfSgWjmklKORT1Jjqb6MDPR1R7dNF0UIRuHld3PJXuyXV6FIwgB3zRIPVY
-         dQos3TuNQ3e9P9XJh5D0sLfue4j2kqv13jz9Wj/QA1Nfwti7sJbijFwUjuplg78Y+f
-         aMll3qFANoWZSq2sEzJKzBtuv64m798eByustrrPZZdg9Bo4XyhsB0rxIszY/LYDTU
-         alSnXYDeiEUjlBeBCtBFgJAM01PcRqJr+ZZXucggo4fY3TPrJcc1B2Si7ggLIJT3vh
-         WKKop8d+NkZd4CLmslNku3ZdMWhWVXxkslBPx93lV7X68GazII6Z+7AHtBvZ324bi/
-         mRDgZ8Zncp3og==
-Received: from aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (localhost.localdomain [127.0.0.1])
-        by aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (Postfix) with ESMTP id 82BD6C4166F;
-        Fri,  9 Sep 2022 11:59:53 +0000 (UTC)
-Subject: Re: [GIT PULL] perf tools changes for v6.0: 3rd batch
-From:   pr-tracker-bot@kernel.org
-In-Reply-To: <20220909001054.1415163-1-acme@kernel.org>
-References: <20220909001054.1415163-1-acme@kernel.org>
-X-PR-Tracked-List-Id: <linux-kernel.vger.kernel.org>
-X-PR-Tracked-Message-Id: <20220909001054.1415163-1-acme@kernel.org>
-X-PR-Tracked-Remote: git://git.kernel.org/pub/scm/linux/kernel/git/acme/linux.git tags/perf-tools-fixes-for-v6.0-2022-09-08
-X-PR-Tracked-Commit-Id: faf59ec8c3c3708c64ff76b50e6f757c6b4a1054
-X-PR-Merge-Tree: torvalds/linux.git
-X-PR-Merge-Refname: refs/heads/master
-X-PR-Merge-Commit-Id: d8a450a80ef1c858c3095180f75284873d8297e8
-Message-Id: <166272479352.31182.127311350797922431.pr-tracker-bot@kernel.org>
-Date:   Fri, 09 Sep 2022 11:59:53 +0000
-To:     Arnaldo Carvalho de Melo <acme@kernel.org>
-Cc:     Linus Torvalds <torvalds@linux-foundation.org>,
-        Ingo Molnar <mingo@kernel.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Jiri Olsa <jolsa@kernel.org>,
-        Namhyung Kim <namhyung@kernel.org>,
-        Clark Williams <williams@redhat.com>,
-        Kate Carcia <kcarcia@redhat.com>, linux-kernel@vger.kernel.org,
-        linux-perf-users@vger.kernel.org,
-        Arnaldo Carvalho de Melo <acme@kernel.org>,
+        s=k20201202; t=1662729776;
+        bh=0qlI03x70o2stWy2Z82lL0xNFhhXGdqy1dPrjQ/6HAY=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=Y9fbyNCpBxmzwrne7N/iOw35GYyjk2ttvIyDSY2TfIHTGGXOfH/JJpDnc01K9nxxI
+         CdceMka/P8vqu2O2d+YlRQam4nS6m490jxmx0yezCgNcgpLPeLyPvHww96rUcES/Uk
+         t3BwQaHPH9DjnPrRqW1qEIljVb+GU8g9pass8cNU7645aBe/AW0A2HGI95YzbC/ouE
+         ObwZafEPYaanMwt60As0HxHFEbVdoylo3UT2+hoQGUKnC7OoE864I3Slz9FAqJrdMg
+         UBo/Eju3ZX3cl/CLcK3U7SugzMEfsRM51xMyIWZdBUkJUI9xJeMKGWEQ+csmWCyMPD
+         GBGhPYCK1SDnA==
+Received: by quaco.ghostprotocols.net (Postfix, from userid 1000)
+        id B675F404A1; Fri,  9 Sep 2022 10:22:53 -0300 (-03)
+Date:   Fri, 9 Sep 2022 10:22:53 -0300
+From:   Arnaldo Carvalho de Melo <acme@kernel.org>
+To:     Namhyung Kim <namhyung@kernel.org>
+Cc:     Jiri Olsa <jolsa@kernel.org>, Ingo Molnar <mingo@kernel.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Ian Rogers <irogers@google.com>,
         Adrian Hunter <adrian.hunter@intel.com>,
-        Athira Jajeev <atrajeev@linux.vnet.ibm.com>,
-        Hongtao Yu <hoy@fb.com>, Ian Rogers <irogers@google.com>,
-        Jiri Slaby <jslaby@suse.cz>,
-        Nageswara R Sastry <rnsastry@linux.ibm.com>,
-        Shang XiaoJing <shangxiaojing@huawei.com>,
-        =?UTF-8?q?Tom=C3=A1=C5=A1=20Trnka?= <trnka@scm.com>,
-        Xing Zhengjun <zhengjun.xing@linux.intel.com>,
-        Yang Jihong <yangjihong1@huawei.com>,
-        Zixuan Tan <tanzixuan.me@gmail.com>,
-        Arnaldo Carvalho de Melo <acme@redhat.com>
+        linux-perf-users@vger.kernel.org
+Subject: Re: [PATCH] perf sched: Factor out destroy_tasks()
+Message-ID: <Yxs+LbaBWrUhLBgw@kernel.org>
+References: <20220908225448.4105056-1-namhyung@kernel.org>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20220908225448.4105056-1-namhyung@kernel.org>
+X-Url:  http://acmel.wordpress.com
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-The pull request you sent on Thu,  8 Sep 2022 21:10:54 -0300:
+Em Thu, Sep 08, 2022 at 03:54:48PM -0700, Namhyung Kim escreveu:
+> Add destroy_tasks() as a counterpart of create_tasks() and put the
+> thread safety notations there.  After join, it destroys semaphores too.
 
-> git://git.kernel.org/pub/scm/linux/kernel/git/acme/linux.git tags/perf-tools-fixes-for-v6.0-2022-09-08
+Thanks, applied.
 
-has been merged into torvalds/linux.git:
-https://git.kernel.org/torvalds/c/d8a450a80ef1c858c3095180f75284873d8297e8
+- Arnaldo
 
-Thank you!
+ 
+> Signed-off-by: Namhyung Kim <namhyung@kernel.org>
+> ---
+>  tools/perf/builtin-sched.c | 24 ++++++++++++++++++++++--
+>  1 file changed, 22 insertions(+), 2 deletions(-)
+> 
+> diff --git a/tools/perf/builtin-sched.c b/tools/perf/builtin-sched.c
+> index a92610eac4bf..f93737eef07b 100644
+> --- a/tools/perf/builtin-sched.c
+> +++ b/tools/perf/builtin-sched.c
+> @@ -690,6 +690,27 @@ static void create_tasks(struct perf_sched *sched)
+>  	}
+>  }
+>  
+> +static void destroy_tasks(struct perf_sched *sched)
+> +	UNLOCK_FUNCTION(sched->start_work_mutex)
+> +	UNLOCK_FUNCTION(sched->work_done_wait_mutex)
+> +{
+> +	struct task_desc *task;
+> +	unsigned long i;
+> +	int err;
+> +
+> +	mutex_unlock(&sched->start_work_mutex);
+> +	mutex_unlock(&sched->work_done_wait_mutex);
+> +	/* Get rid of threads so they won't be upset by mutex destrunction */
+> +	for (i = 0; i < sched->nr_tasks; i++) {
+> +		task = sched->tasks[i];
+> +		err = pthread_join(task->thread, NULL);
+> +		BUG_ON(err);
+> +		sem_destroy(&task->sleep_sem);
+> +		sem_destroy(&task->ready_for_work);
+> +		sem_destroy(&task->work_done_sem);
+> +	}
+> +}
+> +
+>  static void wait_for_tasks(struct perf_sched *sched)
+>  	EXCLUSIVE_LOCKS_REQUIRED(sched->work_done_wait_mutex)
+>  	EXCLUSIVE_LOCKS_REQUIRED(sched->start_work_mutex)
+> @@ -3324,8 +3345,7 @@ static int perf_sched__replay(struct perf_sched *sched)
+>  		run_one_test(sched);
+>  
+>  	sched->thread_funcs_exit = true;
+> -	mutex_unlock(&sched->start_work_mutex);
+> -	mutex_unlock(&sched->work_done_wait_mutex);
+> +	destroy_tasks(sched);
+>  	return 0;
+>  }
+>  
+> -- 
+> 2.37.2.789.g6183377224-goog
 
 -- 
-Deet-doot-dot, I am a bot.
-https://korg.docs.kernel.org/prtracker.html
+
+- Arnaldo
