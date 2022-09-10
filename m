@@ -2,53 +2,53 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 37BF5ECAAA1
-	for <linux-perf-users@archiver.kernel.org>; Sat, 10 Sep 2022 01:08:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 657EEC6FA82
+	for <linux-perf-users@archiver.kernel.org>; Sat, 10 Sep 2022 03:22:27 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229806AbiIJBIg (ORCPT
+        id S229643AbiIJDW0 (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Fri, 9 Sep 2022 21:08:36 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53508 "EHLO
+        Fri, 9 Sep 2022 23:22:26 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56474 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229585AbiIJBIf (ORCPT
+        with ESMTP id S229585AbiIJDWZ (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Fri, 9 Sep 2022 21:08:35 -0400
-Received: from mail-pj1-x1029.google.com (mail-pj1-x1029.google.com [IPv6:2607:f8b0:4864:20::1029])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 56788F7540;
-        Fri,  9 Sep 2022 18:08:30 -0700 (PDT)
-Received: by mail-pj1-x1029.google.com with SMTP id pj10so2969638pjb.2;
-        Fri, 09 Sep 2022 18:08:30 -0700 (PDT)
+        Fri, 9 Sep 2022 23:22:25 -0400
+Received: from mail-pj1-x1035.google.com (mail-pj1-x1035.google.com [IPv6:2607:f8b0:4864:20::1035])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 20BC2ACA21;
+        Fri,  9 Sep 2022 20:22:24 -0700 (PDT)
+Received: by mail-pj1-x1035.google.com with SMTP id fv3so3157371pjb.0;
+        Fri, 09 Sep 2022 20:22:24 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20210112;
         h=content-transfer-encoding:mime-version:message-id:date:subject:cc
          :to:from:sender:from:to:cc:subject:date;
-        bh=E0zQ0wgtvLvPGvwKbWqlgBysADfyfAACYnsMMSrEBmM=;
-        b=h+E5Zu1z93IojTLtyv6sClDG5YvE2NYT6N9r8zAgPtePlZj/spo7wVCWEHIlsgIM3A
-         K676WV67a5stcp0tAEcZMvjLvM6JOcvtwtxOFr6N7vfNM4gBlJU9loRKMQiv9wUTbNP/
-         PonZ4AkdZC7dKF4kr3U/yPavuH+Ulr126n4bloQg1LIWLHO5wqXQw0hs4MxMBmi5bcCW
-         UbZiTena4uDt7zZ16m9q3qgQc3z0IAO82oK/JDe/zPXUfF6IfCPIYOn9YlIWRFsFnZsH
-         wGBb2UlR4RjvWIQA2KsIbnRrG46uArWJEc7LCX2Y1ZGUwXLJinwyzjFluBFtbTtoJohm
-         ORrg==
+        bh=ivEe/6CaBN4d6CdnY/1R094xJCrtyZ2lPrVGrUZlaug=;
+        b=ALgm0Bc5vcMIbXQqcq/u8v6dLZMEXvyhaPcdt1Nxig9D1n7YEoxWTzXmvu8RrtPcBI
+         xLvLLaan7pRJ3LebnXKDqi+MTjOSjyilEdt19i/7JynI9m9mLDApEYPQSnEFGoozTtuo
+         msZC8R+LdMxXMzOa1o8rWtIpr+211hBcDaTbrB0yBGdawg8kHJKKKMUOf7e9/pdd+7MV
+         QMdCldBvtThdGHkcyokWjmaYN2w2sJk4yiZxfgaEgHOJs/Vt7qyvocnaRpwKEZgD6x71
+         H2mRmD0p/esVGv2vpI6FCdpmYnCk/sLLhTY94k/54grrsQwvGQXd83C/b7nUG7w+YEw5
+         2Knw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
         h=content-transfer-encoding:mime-version:message-id:date:subject:cc
          :to:from:sender:x-gm-message-state:from:to:cc:subject:date;
-        bh=E0zQ0wgtvLvPGvwKbWqlgBysADfyfAACYnsMMSrEBmM=;
-        b=M40lnH4UrRTV0Kj1naHvwS0xAk0Dfo4Vm7cxKg9mqyuYkuudI55Hd4GBp6e3xfj4hg
-         z7jhxlQck2p4rS47HfQrnMru3xNzG+D4sdsqpwf5xqZ6kct+Av3GA9gUY7k3myfC1EEJ
-         2JPql9u63tTz2z/5hTVSc+h8H0Lh9nJmjXlCPG3elHkRL7r0dI4rPRTYPl6IPjVWNUDf
-         foqYrAcVLrZB8GolasoBVdRRs2lwcU/x69H1J0L4IBfH1csc+22zmi26zNAiGkekutRf
-         qI6oEt+ykkuP8jE0yCzH4k7+jqERKJSdQG2tozaJQmHsBDvJxaQUt8V5E6Art/6r/i9V
-         J26Q==
-X-Gm-Message-State: ACgBeo0LtXTwo9UxKWpHBsyrID2RN2EGZtJII3ERTJD4xgaSjI/DzX/+
-        ntJxtCgg7/YtGoEkihBM04c=
-X-Google-Smtp-Source: AA6agR7ycBD8yDYLiyXHygfhRUUmo8DhlbR8z1WKiTg+rdWcQxNG41z3noj8OB/veB1PkDpp4bt5SQ==
-X-Received: by 2002:a17:90b:33cf:b0:202:5183:c1ab with SMTP id lk15-20020a17090b33cf00b002025183c1abmr12195572pjb.117.1662772109717;
-        Fri, 09 Sep 2022 18:08:29 -0700 (PDT)
-Received: from youngsil.svl.corp.google.com ([2620:15c:2d4:203:f2b:e437:9e3e:53ec])
-        by smtp.gmail.com with ESMTPSA id x8-20020a170902a38800b00176c891c893sm1069493pla.131.2022.09.09.18.08.28
+        bh=ivEe/6CaBN4d6CdnY/1R094xJCrtyZ2lPrVGrUZlaug=;
+        b=dQY4kDhlHuaxMuqGJFLqdgY2vnrZufaE5pBx5y7f//r+e3QfYrOFpdOkHoK0mx3jdg
+         fnU0ZAtSaBu+7m3y6yFnLbE9++VGbnETLGFk2dIN+kOvDqdcIQbJEgFDPcmoDcB0+ZNj
+         CBuZvw5Np9JcFzVrMrk5CK4/PNf1P26kd1+eYu7w27L0lMPk30l34dVlb7R8OhFbLeVG
+         nhBH+DRd7iILlArOdBWtqWqZpRJW1KbppAB4imV2NqWtQcaLGu634sSaNsOdj6AmVnl9
+         liSt7eTVv67tkJNPY9mn0Z77AfErNSUJoBmOCBuAcMXei4XRkTmG9hac/JyZ9b0LClV5
+         q04w==
+X-Gm-Message-State: ACgBeo0bNamC84cY0VUDcxRpXx0c5I9ZMTlGOGHZK1zrB+m/zPbq9rEH
+        2QdK3HL/DHhj6idom2YTTD80V5cCMiQ=
+X-Google-Smtp-Source: AA6agR4UlCdUed7bcQ2yu9e3yvtEmOIHrSUxSZZuiLBWlKJXXrlST52P1qyFBnABTiFjkdOOPzcq5g==
+X-Received: by 2002:a17:90b:4c91:b0:202:a345:b771 with SMTP id my17-20020a17090b4c9100b00202a345b771mr1933115pjb.128.1662780143480;
+        Fri, 09 Sep 2022 20:22:23 -0700 (PDT)
+Received: from balhae.corp.google.com ([2620:15c:2c1:200:b593:d80c:9f14:83ba])
+        by smtp.gmail.com with ESMTPSA id nh12-20020a17090b364c00b002006428f01esm1095780pjb.55.2022.09.09.20.22.21
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 09 Sep 2022 18:08:28 -0700 (PDT)
+        Fri, 09 Sep 2022 20:22:22 -0700 (PDT)
 Sender: Namhyung Kim <namhyung@gmail.com>
 From:   Namhyung Kim <namhyung@kernel.org>
 To:     Arnaldo Carvalho de Melo <acme@kernel.org>,
@@ -57,12 +57,12 @@ Cc:     Ingo Molnar <mingo@kernel.org>,
         Peter Zijlstra <peterz@infradead.org>,
         LKML <linux-kernel@vger.kernel.org>,
         Ian Rogers <irogers@google.com>,
+        linux-perf-users@vger.kernel.org, Andi Kleen <ak@linux.intel.com>,
         Adrian Hunter <adrian.hunter@intel.com>,
-        linux-perf-users@vger.kernel.org,
         Stephane Eranian <eranian@google.com>
-Subject: [PATCH] perf tools: Add 'addr' sort key
-Date:   Fri,  9 Sep 2022 18:08:18 -0700
-Message-Id: <20220910010818.318746-1-namhyung@kernel.org>
+Subject: [PATCH] perf annotate: Toggle full address <-> offset display
+Date:   Fri,  9 Sep 2022 20:22:20 -0700
+Message-Id: <20220910032220.132500-1-namhyung@kernel.org>
 X-Mailer: git-send-email 2.37.2.789.g6183377224-goog
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
@@ -70,157 +70,109 @@ Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-Sometimes users want to see actual (virtual) address of sampled instructions.
-Add a new 'addr' sort key to display the raw addresses.
-
-  $ perf record -o- true | perf report -i- -s addr
-  # To display the perf.data header info, please use --header/--header-only options.
-  #
-  [ perf record: Woken up 1 times to write data ]
-  [ perf record: Captured and wrote 0.000 MB - ]
-  #
-  # Total Lost Samples: 0
-  #
-  # Samples: 12  of event 'cycles:u'
-  # Event count (approx.): 252512
-  #
-  # Overhead  Address
-  # ........  ..................
-  #
-      42.96%  0x7f96f08443d7
-      29.55%  0x7f96f0859b50
-      14.76%  0x7f96f0852e02
-       8.30%  0x7f96f0855028
-       4.43%  0xffffffff8de01087
-
-Note that it just compares and displays the sample ip.  Each process can
-have a different memory layout and the ip will be different even if they run
-the same binary.  So this sort key is mostly meaningful for per-process
-profile data.
+Handle 'f' key to toggle the display offset and full address.  Obviously
+it only works when users set to see disassembler output ('o' key).  It'd
+be useful when users want to see the full virtual address in the TUI
+annotate browser.
 
 Cc: Stephane Eranian <eranian@google.com>
 Signed-off-by: Namhyung Kim <namhyung@kernel.org>
 ---
- tools/perf/Documentation/perf-report.txt |  3 +-
- tools/perf/util/hist.c                   |  1 +
- tools/perf/util/hist.h                   |  1 +
- tools/perf/util/sort.c                   | 38 ++++++++++++++++++++++++
- tools/perf/util/sort.h                   |  1 +
- 5 files changed, 43 insertions(+), 1 deletion(-)
+ tools/perf/ui/browsers/annotate.c |  6 +++++-
+ tools/perf/util/annotate.c        | 19 ++++++++++++++++++-
+ tools/perf/util/annotate.h        |  4 +++-
+ 3 files changed, 26 insertions(+), 3 deletions(-)
 
-diff --git a/tools/perf/Documentation/perf-report.txt b/tools/perf/Documentation/perf-report.txt
-index 24efc0583c93..4533db2ee56b 100644
---- a/tools/perf/Documentation/perf-report.txt
-+++ b/tools/perf/Documentation/perf-report.txt
-@@ -73,7 +73,7 @@ OPTIONS
- 	Sort histogram entries by given key(s) - multiple keys can be specified
- 	in CSV format.  Following sort keys are available:
- 	pid, comm, dso, symbol, parent, cpu, socket, srcline, weight,
--	local_weight, cgroup_id.
-+	local_weight, cgroup_id, addr.
+diff --git a/tools/perf/ui/browsers/annotate.c b/tools/perf/ui/browsers/annotate.c
+index 9bc1076374ff..725662e21b23 100644
+--- a/tools/perf/ui/browsers/annotate.c
++++ b/tools/perf/ui/browsers/annotate.c
+@@ -805,7 +805,8 @@ static int annotate_browser__run(struct annotate_browser *browser,
+ 		"r             Run available scripts\n"
+ 		"p             Toggle percent type [local/global]\n"
+ 		"b             Toggle percent base [period/hits]\n"
+-		"?             Search string backwards\n");
++		"?             Search string backwards\n"
++		"f             Toggle showing offsets to full address\n");
+ 			continue;
+ 		case 'r':
+ 			script_browse(NULL, NULL);
+@@ -912,6 +913,9 @@ static int annotate_browser__run(struct annotate_browser *browser,
+ 			hists__scnprintf_title(hists, title, sizeof(title));
+ 			annotate_browser__show(&browser->b, title, help);
+ 			continue;
++		case 'f':
++			annotation__toggle_full_addr(notes, ms);
++			continue;
+ 		case K_LEFT:
+ 		case K_ESC:
+ 		case 'q':
+diff --git a/tools/perf/util/annotate.c b/tools/perf/util/annotate.c
+index 5bc63c9e0324..db475e44f42f 100644
+--- a/tools/perf/util/annotate.c
++++ b/tools/perf/util/annotate.c
+@@ -2239,7 +2239,10 @@ int symbol__annotate(struct map_symbol *ms, struct evsel *evsel,
+ 	}
  
- 	Each key has following meaning:
+ 	args.ms = *ms;
+-	notes->start = map__rip_2objdump(ms->map, sym->start);
++	if (notes->options && notes->options->full_addr)
++		notes->start = map__objdump_2mem(ms->map, ms->sym->start);
++	else
++		notes->start = map__rip_2objdump(ms->map, ms->sym->start);
  
-@@ -114,6 +114,7 @@ OPTIONS
- 	- local_ins_lat: Local instruction latency version
- 	- p_stage_cyc: On powerpc, this presents the number of cycles spent in a
- 	  pipeline stage. And currently supported only on powerpc.
-+	- addr: (Full) virtual address of the sampled instruction
+ 	return symbol__disassemble(sym, &args);
+ }
+@@ -2762,6 +2765,8 @@ void annotation__update_column_widths(struct annotation *notes)
+ {
+ 	if (notes->options->use_offset)
+ 		notes->widths.target = notes->widths.min_addr;
++	else if (notes->options->full_addr)
++		notes->widths.target = BITS_PER_LONG / 4;
+ 	else
+ 		notes->widths.target = notes->widths.max_addr;
  
- 	By default, comm, dso and symbol keys are used.
- 	(i.e. --sort comm,dso,symbol)
-diff --git a/tools/perf/util/hist.c b/tools/perf/util/hist.c
-index 06f5dbf213ad..17a05e943b44 100644
---- a/tools/perf/util/hist.c
-+++ b/tools/perf/util/hist.c
-@@ -215,6 +215,7 @@ void hists__calc_col_len(struct hists *hists, struct hist_entry *h)
- 	hists__new_col_len(hists, HISTC_GLOBAL_INS_LAT, 13);
- 	hists__new_col_len(hists, HISTC_LOCAL_P_STAGE_CYC, 13);
- 	hists__new_col_len(hists, HISTC_GLOBAL_P_STAGE_CYC, 13);
-+	hists__new_col_len(hists, HISTC_ADDR, BITS_PER_LONG / 4 + 2);
+@@ -2771,6 +2776,18 @@ void annotation__update_column_widths(struct annotation *notes)
+ 		notes->widths.addr += notes->widths.jumps + 1;
+ }
  
- 	if (symbol_conf.nanosecs)
- 		hists__new_col_len(hists, HISTC_TIME, 16);
-diff --git a/tools/perf/util/hist.h b/tools/perf/util/hist.h
-index c7a7a3fa0b87..ebd8a8f783ee 100644
---- a/tools/perf/util/hist.h
-+++ b/tools/perf/util/hist.h
-@@ -79,6 +79,7 @@ enum hist_column {
- 	HISTC_GLOBAL_P_STAGE_CYC,
- 	HISTC_ADDR_FROM,
- 	HISTC_ADDR_TO,
-+	HISTC_ADDR,
- 	HISTC_NR_COLS, /* Last entry */
- };
- 
-diff --git a/tools/perf/util/sort.c b/tools/perf/util/sort.c
-index 6d5588e80935..2e7330867e2e 100644
---- a/tools/perf/util/sort.c
-+++ b/tools/perf/util/sort.c
-@@ -1948,6 +1948,43 @@ struct sort_entry sort_dso_size = {
- 	.se_width_idx	= HISTC_DSO_SIZE,
- };
- 
-+/* --sort dso_size */
-+
-+static int64_t
-+sort__addr_cmp(struct hist_entry *left, struct hist_entry *right)
++void annotation__toggle_full_addr(struct annotation *notes, struct map_symbol *ms)
 +{
-+	u64 left_ip = left->ip;
-+	u64 right_ip = right->ip;
-+	struct map *left_map = left->ms.map;
-+	struct map *right_map = right->ms.map;
++	notes->options->full_addr = !notes->options->full_addr;
 +
-+	if (left_map)
-+		left_ip = left_map->unmap_ip(left_map, left_ip);
-+	if (right_map)
-+		right_ip = right_map->unmap_ip(right_map, right_ip);
++	if (notes->options->full_addr)
++		notes->start = map__objdump_2mem(ms->map, ms->sym->start);
++	else
++		notes->start = map__rip_2objdump(ms->map, ms->sym->start);
 +
-+	return _sort__addr_cmp(left_ip, right_ip);
++	annotation__update_column_widths(notes);
 +}
 +
-+static int hist_entry__addr_snprintf(struct hist_entry *he, char *bf,
-+				     size_t size, unsigned int width)
-+{
-+	u64 ip = he->ip;
-+	struct map *map = he->ms.map;
-+
-+	if (map)
-+		ip = map->unmap_ip(map, ip);
-+
-+	return repsep_snprintf(bf, size, "%-#*llx", width, ip);
-+}
-+
-+struct sort_entry sort_addr = {
-+	.se_header	= "Address",
-+	.se_cmp		= sort__addr_cmp,
-+	.se_snprintf	= hist_entry__addr_snprintf,
-+	.se_width_idx	= HISTC_ADDR,
-+};
-+
+ static void annotation__calc_lines(struct annotation *notes, struct map *map,
+ 				   struct rb_root *root,
+ 				   struct annotation_options *opts)
+diff --git a/tools/perf/util/annotate.h b/tools/perf/util/annotate.h
+index 3cbd883e4d7a..8934072c39e6 100644
+--- a/tools/perf/util/annotate.h
++++ b/tools/perf/util/annotate.h
+@@ -88,7 +88,8 @@ struct annotation_options {
+ 	     show_nr_jumps,
+ 	     show_minmax_cycle,
+ 	     show_asm_raw,
+-	     annotate_src;
++	     annotate_src,
++	     full_addr;
+ 	u8   offset_level;
+ 	int  min_pcnt;
+ 	int  max_lines;
+@@ -325,6 +326,7 @@ void annotation__compute_ipc(struct annotation *notes, size_t size);
+ void annotation__mark_jump_targets(struct annotation *notes, struct symbol *sym);
+ void annotation__update_column_widths(struct annotation *notes);
+ void annotation__init_column_widths(struct annotation *notes, struct symbol *sym);
++void annotation__toggle_full_addr(struct annotation *notes, struct map_symbol *ms);
  
- struct sort_dimension {
- 	const char		*name;
-@@ -1997,6 +2034,7 @@ static struct sort_dimension common_sort_dimensions[] = {
- 	DIM(SORT_GLOBAL_INS_LAT, "ins_lat", sort_global_ins_lat),
- 	DIM(SORT_LOCAL_PIPELINE_STAGE_CYC, "local_p_stage_cyc", sort_local_p_stage_cyc),
- 	DIM(SORT_GLOBAL_PIPELINE_STAGE_CYC, "p_stage_cyc", sort_global_p_stage_cyc),
-+	DIM(SORT_ADDR, "addr", sort_addr),
- };
- 
- #undef DIM
-diff --git a/tools/perf/util/sort.h b/tools/perf/util/sort.h
-index 2ddc00d1c464..4023d8ea6b8e 100644
---- a/tools/perf/util/sort.h
-+++ b/tools/perf/util/sort.h
-@@ -237,6 +237,7 @@ enum sort_type {
- 	SORT_GLOBAL_INS_LAT,
- 	SORT_LOCAL_PIPELINE_STAGE_CYC,
- 	SORT_GLOBAL_PIPELINE_STAGE_CYC,
-+	SORT_ADDR,
- 
- 	/* branch stack specific sort keys */
- 	__SORT_BRANCH_STACK,
+ static inline struct sym_hist *annotated_source__histogram(struct annotated_source *src, int idx)
+ {
 -- 
 2.37.2.789.g6183377224-goog
 
