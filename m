@@ -2,53 +2,53 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6FCACC6FA82
-	for <linux-perf-users@archiver.kernel.org>; Fri,  9 Sep 2022 23:50:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 37BF5ECAAA1
+	for <linux-perf-users@archiver.kernel.org>; Sat, 10 Sep 2022 01:08:37 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230324AbiIIXub (ORCPT
+        id S229806AbiIJBIg (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Fri, 9 Sep 2022 19:50:31 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48470 "EHLO
+        Fri, 9 Sep 2022 21:08:36 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53508 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229506AbiIIXua (ORCPT
+        with ESMTP id S229585AbiIJBIf (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Fri, 9 Sep 2022 19:50:30 -0400
+        Fri, 9 Sep 2022 21:08:35 -0400
 Received: from mail-pj1-x1029.google.com (mail-pj1-x1029.google.com [IPv6:2607:f8b0:4864:20::1029])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7509E6CD29;
-        Fri,  9 Sep 2022 16:50:28 -0700 (PDT)
-Received: by mail-pj1-x1029.google.com with SMTP id s14-20020a17090a6e4e00b0020057c70943so6809263pjm.1;
-        Fri, 09 Sep 2022 16:50:28 -0700 (PDT)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 56788F7540;
+        Fri,  9 Sep 2022 18:08:30 -0700 (PDT)
+Received: by mail-pj1-x1029.google.com with SMTP id pj10so2969638pjb.2;
+        Fri, 09 Sep 2022 18:08:30 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20210112;
         h=content-transfer-encoding:mime-version:message-id:date:subject:cc
          :to:from:sender:from:to:cc:subject:date;
-        bh=uqNGHBaxQiO3zHKtcKrEz0wmZHMWANgckYzO3CzGdLY=;
-        b=E+ZKmg2n23E0vzSyOd6haKeLiJoq7hROyUB1hus9euLbLbgHjyt1Se2cg3/2WGdDb0
-         73cnIqDzadw8Pxl05oYweYWCeVXaIMq4a33rVU0Rd1SotvMxbYUtv/RY3DAVvWGfEtUM
-         pVYQmJ4jCQDukIhnVT57O/22OGzpaS2CDZKLNKFOb5j0wIaKAt8NzZkWHpvHB6KMxq6R
-         /LBHYpQXN7I3t5Xp2Jv4VmBF8dfNc5DB3uhEJBbvxqHtYcjOHNpuCUFxcpjR+CCEroXp
-         kvc8o/WN2kdHUsN6rQEZNK4Qmc05IPscQT/Xd4ogRdkDmf5jIuQowfqF2Meyo0IsB07/
-         Vscw==
+        bh=E0zQ0wgtvLvPGvwKbWqlgBysADfyfAACYnsMMSrEBmM=;
+        b=h+E5Zu1z93IojTLtyv6sClDG5YvE2NYT6N9r8zAgPtePlZj/spo7wVCWEHIlsgIM3A
+         K676WV67a5stcp0tAEcZMvjLvM6JOcvtwtxOFr6N7vfNM4gBlJU9loRKMQiv9wUTbNP/
+         PonZ4AkdZC7dKF4kr3U/yPavuH+Ulr126n4bloQg1LIWLHO5wqXQw0hs4MxMBmi5bcCW
+         UbZiTena4uDt7zZ16m9q3qgQc3z0IAO82oK/JDe/zPXUfF6IfCPIYOn9YlIWRFsFnZsH
+         wGBb2UlR4RjvWIQA2KsIbnRrG46uArWJEc7LCX2Y1ZGUwXLJinwyzjFluBFtbTtoJohm
+         ORrg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
         h=content-transfer-encoding:mime-version:message-id:date:subject:cc
          :to:from:sender:x-gm-message-state:from:to:cc:subject:date;
-        bh=uqNGHBaxQiO3zHKtcKrEz0wmZHMWANgckYzO3CzGdLY=;
-        b=fjmvQvFLnOQ1WB5MQyEnOr9A0W8EJzFS1dD0jp7Ynom4D5cRU6aaBgtZH9qho3JgkY
-         GpyAgNSY6srGXFo86x/+W95OegUwF8LN6xDRut9gFbYzJbAPCLCcY0S36YMGMsX4U9tB
-         1HxcQdBrXA8DCH4AEcMtTNMkkmuU51z4iy3DnSYPmupECUPUZiAg/6j5ZJD3DL3fEXfd
-         7UxuX/YgmG2l7iCeMzGMC+T1PcMJCnyPRINx/ppiSVv6jBswnM323giTZs6GFXvjC9w7
-         4dTiBregErgXMOBOE2yKHsO11heXU4uL+/yYKgBQfRzUl6gdxHLQwT0G8FNDPX7Qdyc7
-         N4ug==
-X-Gm-Message-State: ACgBeo3Dvql0r3kxFmJYhPrZVvyItgu4roLuQKC9L/7h5l+JpIpTX6E0
-        d9Xu76qrzUK0sEis9fqvR6s=
-X-Google-Smtp-Source: AA6agR6O38xvUzMJViUv8mpOAoSfybwwUUcAGWtU1G5Cv1HulnR03mkMyWepqKTDUPUmTAqPOCj+hw==
-X-Received: by 2002:a17:903:120a:b0:172:5a63:7442 with SMTP id l10-20020a170903120a00b001725a637442mr16182615plh.55.1662767427814;
-        Fri, 09 Sep 2022 16:50:27 -0700 (PDT)
+        bh=E0zQ0wgtvLvPGvwKbWqlgBysADfyfAACYnsMMSrEBmM=;
+        b=M40lnH4UrRTV0Kj1naHvwS0xAk0Dfo4Vm7cxKg9mqyuYkuudI55Hd4GBp6e3xfj4hg
+         z7jhxlQck2p4rS47HfQrnMru3xNzG+D4sdsqpwf5xqZ6kct+Av3GA9gUY7k3myfC1EEJ
+         2JPql9u63tTz2z/5hTVSc+h8H0Lh9nJmjXlCPG3elHkRL7r0dI4rPRTYPl6IPjVWNUDf
+         foqYrAcVLrZB8GolasoBVdRRs2lwcU/x69H1J0L4IBfH1csc+22zmi26zNAiGkekutRf
+         qI6oEt+ykkuP8jE0yCzH4k7+jqERKJSdQG2tozaJQmHsBDvJxaQUt8V5E6Art/6r/i9V
+         J26Q==
+X-Gm-Message-State: ACgBeo0LtXTwo9UxKWpHBsyrID2RN2EGZtJII3ERTJD4xgaSjI/DzX/+
+        ntJxtCgg7/YtGoEkihBM04c=
+X-Google-Smtp-Source: AA6agR7ycBD8yDYLiyXHygfhRUUmo8DhlbR8z1WKiTg+rdWcQxNG41z3noj8OB/veB1PkDpp4bt5SQ==
+X-Received: by 2002:a17:90b:33cf:b0:202:5183:c1ab with SMTP id lk15-20020a17090b33cf00b002025183c1abmr12195572pjb.117.1662772109717;
+        Fri, 09 Sep 2022 18:08:29 -0700 (PDT)
 Received: from youngsil.svl.corp.google.com ([2620:15c:2d4:203:f2b:e437:9e3e:53ec])
-        by smtp.gmail.com with ESMTPSA id r16-20020aa79630000000b0053e75395705sm305837pfg.127.2022.09.09.16.50.26
+        by smtp.gmail.com with ESMTPSA id x8-20020a170902a38800b00176c891c893sm1069493pla.131.2022.09.09.18.08.28
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 09 Sep 2022 16:50:27 -0700 (PDT)
+        Fri, 09 Sep 2022 18:08:28 -0700 (PDT)
 Sender: Namhyung Kim <namhyung@gmail.com>
 From:   Namhyung Kim <namhyung@kernel.org>
 To:     Arnaldo Carvalho de Melo <acme@kernel.org>,
@@ -60,9 +60,9 @@ Cc:     Ingo Molnar <mingo@kernel.org>,
         Adrian Hunter <adrian.hunter@intel.com>,
         linux-perf-users@vger.kernel.org,
         Stephane Eranian <eranian@google.com>
-Subject: [PATCH] perf record: Fix a segfault in record__read_lost_samples()
-Date:   Fri,  9 Sep 2022 16:50:24 -0700
-Message-Id: <20220909235024.278281-1-namhyung@kernel.org>
+Subject: [PATCH] perf tools: Add 'addr' sort key
+Date:   Fri,  9 Sep 2022 18:08:18 -0700
+Message-Id: <20220910010818.318746-1-namhyung@kernel.org>
 X-Mailer: git-send-email 2.37.2.789.g6183377224-goog
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
@@ -70,52 +70,157 @@ Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-When it fails to open events record__open() returns without setting the
-session->evlist.  Then it gets a segfault in the function trying to read
-lost sample counts.  You can easily reproduce it as a normal user like:
+Sometimes users want to see actual (virtual) address of sampled instructions.
+Add a new 'addr' sort key to display the raw addresses.
 
-  $ perf record -p 1 true
-  ...
-  perf: Segmentation fault
-  ...
+  $ perf record -o- true | perf report -i- -s addr
+  # To display the perf.data header info, please use --header/--header-only options.
+  #
+  [ perf record: Woken up 1 times to write data ]
+  [ perf record: Captured and wrote 0.000 MB - ]
+  #
+  # Total Lost Samples: 0
+  #
+  # Samples: 12  of event 'cycles:u'
+  # Event count (approx.): 252512
+  #
+  # Overhead  Address
+  # ........  ..................
+  #
+      42.96%  0x7f96f08443d7
+      29.55%  0x7f96f0859b50
+      14.76%  0x7f96f0852e02
+       8.30%  0x7f96f0855028
+       4.43%  0xffffffff8de01087
 
-Skip the function if it has no evlist.  And add more protection for evsels
-which are not properly initialized.
+Note that it just compares and displays the sample ip.  Each process can
+have a different memory layout and the ip will be different even if they run
+the same binary.  So this sort key is mostly meaningful for per-process
+profile data.
 
+Cc: Stephane Eranian <eranian@google.com>
 Signed-off-by: Namhyung Kim <namhyung@kernel.org>
 ---
-I didn't add a Fixes tag as it's not sent to Linus yet.
-But in case you want it.
+ tools/perf/Documentation/perf-report.txt |  3 +-
+ tools/perf/util/hist.c                   |  1 +
+ tools/perf/util/hist.h                   |  1 +
+ tools/perf/util/sort.c                   | 38 ++++++++++++++++++++++++
+ tools/perf/util/sort.h                   |  1 +
+ 5 files changed, 43 insertions(+), 1 deletion(-)
 
-  Fixes: a49aa8a54e86 ("perf record: Read and inject LOST_SAMPLES events")
-
- tools/perf/builtin-record.c | 6 ++++++
- 1 file changed, 6 insertions(+)
-
-diff --git a/tools/perf/builtin-record.c b/tools/perf/builtin-record.c
-index 9df77b81a3bb..fe34d5db23bd 100644
---- a/tools/perf/builtin-record.c
-+++ b/tools/perf/builtin-record.c
-@@ -1888,6 +1888,10 @@ static void record__read_lost_samples(struct record *rec)
- 	struct perf_record_lost_samples *lost;
- 	struct evsel *evsel;
+diff --git a/tools/perf/Documentation/perf-report.txt b/tools/perf/Documentation/perf-report.txt
+index 24efc0583c93..4533db2ee56b 100644
+--- a/tools/perf/Documentation/perf-report.txt
++++ b/tools/perf/Documentation/perf-report.txt
+@@ -73,7 +73,7 @@ OPTIONS
+ 	Sort histogram entries by given key(s) - multiple keys can be specified
+ 	in CSV format.  Following sort keys are available:
+ 	pid, comm, dso, symbol, parent, cpu, socket, srcline, weight,
+-	local_weight, cgroup_id.
++	local_weight, cgroup_id, addr.
  
-+	/* there was an error during record__open */
-+	if (session->evlist == NULL)
-+		return;
+ 	Each key has following meaning:
+ 
+@@ -114,6 +114,7 @@ OPTIONS
+ 	- local_ins_lat: Local instruction latency version
+ 	- p_stage_cyc: On powerpc, this presents the number of cycles spent in a
+ 	  pipeline stage. And currently supported only on powerpc.
++	- addr: (Full) virtual address of the sampled instruction
+ 
+ 	By default, comm, dso and symbol keys are used.
+ 	(i.e. --sort comm,dso,symbol)
+diff --git a/tools/perf/util/hist.c b/tools/perf/util/hist.c
+index 06f5dbf213ad..17a05e943b44 100644
+--- a/tools/perf/util/hist.c
++++ b/tools/perf/util/hist.c
+@@ -215,6 +215,7 @@ void hists__calc_col_len(struct hists *hists, struct hist_entry *h)
+ 	hists__new_col_len(hists, HISTC_GLOBAL_INS_LAT, 13);
+ 	hists__new_col_len(hists, HISTC_LOCAL_P_STAGE_CYC, 13);
+ 	hists__new_col_len(hists, HISTC_GLOBAL_P_STAGE_CYC, 13);
++	hists__new_col_len(hists, HISTC_ADDR, BITS_PER_LONG / 4 + 2);
+ 
+ 	if (symbol_conf.nanosecs)
+ 		hists__new_col_len(hists, HISTC_TIME, 16);
+diff --git a/tools/perf/util/hist.h b/tools/perf/util/hist.h
+index c7a7a3fa0b87..ebd8a8f783ee 100644
+--- a/tools/perf/util/hist.h
++++ b/tools/perf/util/hist.h
+@@ -79,6 +79,7 @@ enum hist_column {
+ 	HISTC_GLOBAL_P_STAGE_CYC,
+ 	HISTC_ADDR_FROM,
+ 	HISTC_ADDR_TO,
++	HISTC_ADDR,
+ 	HISTC_NR_COLS, /* Last entry */
+ };
+ 
+diff --git a/tools/perf/util/sort.c b/tools/perf/util/sort.c
+index 6d5588e80935..2e7330867e2e 100644
+--- a/tools/perf/util/sort.c
++++ b/tools/perf/util/sort.c
+@@ -1948,6 +1948,43 @@ struct sort_entry sort_dso_size = {
+ 	.se_width_idx	= HISTC_DSO_SIZE,
+ };
+ 
++/* --sort dso_size */
 +
- 	lost = zalloc(PERF_SAMPLE_MAX_SIZE);
- 	if (lost == NULL) {
- 		pr_debug("Memory allocation failed\n");
-@@ -1899,6 +1903,8 @@ static void record__read_lost_samples(struct record *rec)
- 	evlist__for_each_entry(session->evlist, evsel) {
- 		struct xyarray *xy = evsel->core.sample_id;
++static int64_t
++sort__addr_cmp(struct hist_entry *left, struct hist_entry *right)
++{
++	u64 left_ip = left->ip;
++	u64 right_ip = right->ip;
++	struct map *left_map = left->ms.map;
++	struct map *right_map = right->ms.map;
++
++	if (left_map)
++		left_ip = left_map->unmap_ip(left_map, left_ip);
++	if (right_map)
++		right_ip = right_map->unmap_ip(right_map, right_ip);
++
++	return _sort__addr_cmp(left_ip, right_ip);
++}
++
++static int hist_entry__addr_snprintf(struct hist_entry *he, char *bf,
++				     size_t size, unsigned int width)
++{
++	u64 ip = he->ip;
++	struct map *map = he->ms.map;
++
++	if (map)
++		ip = map->unmap_ip(map, ip);
++
++	return repsep_snprintf(bf, size, "%-#*llx", width, ip);
++}
++
++struct sort_entry sort_addr = {
++	.se_header	= "Address",
++	.se_cmp		= sort__addr_cmp,
++	.se_snprintf	= hist_entry__addr_snprintf,
++	.se_width_idx	= HISTC_ADDR,
++};
++
  
-+		if (xy == NULL || evsel->core.fd == NULL)
-+			continue;
- 		if (xyarray__max_x(evsel->core.fd) != xyarray__max_x(xy) ||
- 		    xyarray__max_y(evsel->core.fd) != xyarray__max_y(xy)) {
- 			pr_debug("Unmatched FD vs. sample ID: skip reading LOST count\n");
+ struct sort_dimension {
+ 	const char		*name;
+@@ -1997,6 +2034,7 @@ static struct sort_dimension common_sort_dimensions[] = {
+ 	DIM(SORT_GLOBAL_INS_LAT, "ins_lat", sort_global_ins_lat),
+ 	DIM(SORT_LOCAL_PIPELINE_STAGE_CYC, "local_p_stage_cyc", sort_local_p_stage_cyc),
+ 	DIM(SORT_GLOBAL_PIPELINE_STAGE_CYC, "p_stage_cyc", sort_global_p_stage_cyc),
++	DIM(SORT_ADDR, "addr", sort_addr),
+ };
+ 
+ #undef DIM
+diff --git a/tools/perf/util/sort.h b/tools/perf/util/sort.h
+index 2ddc00d1c464..4023d8ea6b8e 100644
+--- a/tools/perf/util/sort.h
++++ b/tools/perf/util/sort.h
+@@ -237,6 +237,7 @@ enum sort_type {
+ 	SORT_GLOBAL_INS_LAT,
+ 	SORT_LOCAL_PIPELINE_STAGE_CYC,
+ 	SORT_GLOBAL_PIPELINE_STAGE_CYC,
++	SORT_ADDR,
+ 
+ 	/* branch stack specific sort keys */
+ 	__SORT_BRANCH_STACK,
 -- 
 2.37.2.789.g6183377224-goog
 
