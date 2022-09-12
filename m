@@ -2,38 +2,38 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 89630ECAAD5
-	for <linux-perf-users@archiver.kernel.org>; Mon, 12 Sep 2022 09:57:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C4C8AECAAA1
+	for <linux-perf-users@archiver.kernel.org>; Mon, 12 Sep 2022 10:12:28 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229959AbiILJ53 (ORCPT
+        id S229614AbiILKM1 (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Mon, 12 Sep 2022 05:57:29 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58922 "EHLO
+        Mon, 12 Sep 2022 06:12:27 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52676 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229919AbiILJ52 (ORCPT
+        with ESMTP id S229463AbiILKM1 (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Mon, 12 Sep 2022 05:57:28 -0400
+        Mon, 12 Sep 2022 06:12:27 -0400
 Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8B140B1E;
-        Mon, 12 Sep 2022 02:57:27 -0700 (PDT)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8AE4F1D0E2;
+        Mon, 12 Sep 2022 03:12:26 -0700 (PDT)
 Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id 316BC611A3;
-        Mon, 12 Sep 2022 09:57:27 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 020C4C433C1;
-        Mon, 12 Sep 2022 09:57:25 +0000 (UTC)
+        by dfw.source.kernel.org (Postfix) with ESMTPS id 26EDA60B52;
+        Mon, 12 Sep 2022 10:12:26 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 0EAF8C433C1;
+        Mon, 12 Sep 2022 10:12:24 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1662976646;
-        bh=oxNRRd+/qnc5PG+8zykOVxGBoTfoKYP7uOymT2bCbxw=;
+        s=k20201202; t=1662977545;
+        bh=VIKYDpqyGbroUoNfBiwgULkR1+Ovyz/eqrGuBsLpdLQ=;
         h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=FbdpohZGzTH348w2x8A0rEPWMFgzO1xdYsIj01NJ9ckmQlWj/rYY+XhM/dfZXYT55
-         Ag8rRC2TKbdcl86Igyew/j7TrzKqQJqEW+0W/Ew4cRsa7lZxI052BvSW5RVsSzFD+Q
-         ztfoCeU0EgxePvUG751fUEVm6zkBi5qEnxq5QCdVaNcBKspV5ct/7tBXrbItN8tkhe
-         Xv8O8WV/Gaey61v+xqfS138v2gU9dOK1aoBQD0OIt4OQZRx3Jo3OzsfqPCclxHZNAs
-         0qPNYqLnJKLltu6bt23/EgcoD9VVl6mkdop/H8x3BszE9xqgx01thXaFZQjxcQzVuk
-         nWVxXjqgeRA4w==
-Date:   Mon, 12 Sep 2022 10:57:23 +0100
+        b=r747C6I5iUCHTk7nAe+/r3uIi1HvgeSSyWLtqhCl5tLu175t2mZKpynMnUL7IXDZi
+         Yd6dT8KgoRHVk0YTzXgvLsksasJWzB2pH1CKK1rovoYjMJnVDxvV2C/LPmlS3+JShm
+         koe5P/sNmACKrfY6Jb5ejTTX3n7M5Gd8NRBEYSYMKIcomj9ABljDqpIuChSfbdFapE
+         vJyJQiw4UGoFRYIoCNiLybHNiDq8QgAcYKoxPB/sRv/RMgOGPnHwD9Svt8XD4+2Aft
+         WNkSQ7IH+Zq7XNlXEHZgtB4cmA612L4TAklKlh+mm1jca02V7xLO/8+3IGl1A+mMfg
+         lDviOiPbf4pUw==
+Date:   Mon, 12 Sep 2022 11:12:22 +0100
 From:   Mark Brown <broonie@kernel.org>
 To:     Anshuman Khandual <anshuman.khandual@arm.com>
 Cc:     linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org,
@@ -42,48 +42,51 @@ Cc:     linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org,
         catalin.marinas@arm.com, James Clark <james.clark@arm.com>,
         Rob Herring <robh@kernel.org>, Marc Zyngier <maz@kernel.org>,
         Ingo Molnar <mingo@redhat.com>
-Subject: Re: [PATCH V2 1/7] arm64/perf: Add register definitions for BRBE
-Message-ID: <Yx8Cgzr7lQdMLX+P@sirena.org.uk>
+Subject: Re: [PATCH V2 3/7] arm64/perf: Update struct pmu_hw_events for BRBE
+Message-ID: <Yx8GBq1FJN49iJs9@sirena.org.uk>
 References: <20220908051046.465307-1-anshuman.khandual@arm.com>
- <20220908051046.465307-2-anshuman.khandual@arm.com>
+ <20220908051046.465307-4-anshuman.khandual@arm.com>
 MIME-Version: 1.0
 Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="dmQSrbmLl2fa1iHv"
+        protocol="application/pgp-signature"; boundary="5XiVip4R+LpcC6tm"
 Content-Disposition: inline
-In-Reply-To: <20220908051046.465307-2-anshuman.khandual@arm.com>
+In-Reply-To: <20220908051046.465307-4-anshuman.khandual@arm.com>
 X-Cookie: One FISHWICH coming up!!
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
 
---dmQSrbmLl2fa1iHv
+--5XiVip4R+LpcC6tm
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
 
-On Thu, Sep 08, 2022 at 10:40:40AM +0530, Anshuman Khandual wrote:
+On Thu, Sep 08, 2022 at 10:40:42AM +0530, Anshuman Khandual wrote:
 
-> ---
->  arch/arm64/include/asm/sysreg.h | 222 ++++++++++++++++++++++++++++++++
->  1 file changed, 222 insertions(+)
+> +	/* Captured BRBE buffer - copied as is into perf_sample_data */
+> +	struct perf_branch_stack	brbe_stack;
+> +	struct perf_branch_entry	brbe_entries[BRBE_MAX_ENTRIES];
 
-Rather than manually encoding register definitions in sysreg.h
-can we add them to arch/arm64/tools/sysreg so that all the
-#defines and so on are generated instead?
+It looks like perf_branch_entry is intended to be the variably
+sized entries array at the end of perf_branch_stack?  That could
+probably do with being called out if it's the case.  It feels
+like it would be clearer and safer to allocate these dynamically
+when BRBE is used if that's possible, I'd expect that should also
+deal with the stack frame size issues as well.
 
---dmQSrbmLl2fa1iHv
+--5XiVip4R+LpcC6tm
 Content-Type: application/pgp-signature; name="signature.asc"
 
 -----BEGIN PGP SIGNATURE-----
 
-iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAmMfAoIACgkQJNaLcl1U
-h9A04wf/SOgxJF9+6OYpMjh9mbiNsTbNTGbbkkCxc/qdLlCVOQaU7gPYldHik/ko
-OQuRpS8874xd3/lf6/y5fBDOCyovXDDh4tIoQjCQVr7zpS83t3fkIbIbC2Y3mOMc
-rmRUZ/7JEIi9MeydZu0tj5BnDqqsM5+afgOjbf0wa45veyakZoLp0xsCx28PrepI
-IEyGlgzJ3OlWiSYjq9yGqwb5YKKOw0dkC0T4fygwiiG5zecRxoUSoy4FbdFWv1yx
-9YSsjM8ScLnb7zTwztWpPu9ZXbOwRwTemYRJZvBrWU1MScuU/+Qc6NdWCixCnr0m
-S2k3IvEWnbeMt2bv1kP4cY5LvjR5/g==
-=9mtK
+iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAmMfBgMACgkQJNaLcl1U
+h9BcUQf+NthdBgB+7qMcAeRLU5+8cGaYh4H8LiNFo9B7mWOF8fxLqYmdbA/IqptW
+jJJ7+yEuNsJBVUo2nlcQPoWxhwfLS2LFi4LsckC0zMNujzzN7SdKzxym62sop1eX
+ArMmIVYR55msvOch5GK36xXGEldpXacL4aksPddKvoFT+j6owOLV2SLwSc3SJX2R
+P/DG8564fgjhYewhbJf/0piJUu4Rf8dF0g76+8eIVsTJjdOGDB4Y+mpnWWiukHe/
+QMOjyo1RJQ6SmvRLm4Ff82Vj78ViTJ6EAr8jbnPBK0OL8Dtf9biVuNnxtERtdYb/
+oItU2hje6TMiYpLwLUS9NwgWXlWnxg==
+=nu0L
 -----END PGP SIGNATURE-----
 
---dmQSrbmLl2fa1iHv--
+--5XiVip4R+LpcC6tm--
