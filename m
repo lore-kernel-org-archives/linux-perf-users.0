@@ -2,269 +2,90 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 68E8AC6FA89
-	for <linux-perf-users@archiver.kernel.org>; Mon, 12 Sep 2022 05:53:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 38471ECAAA1
+	for <linux-perf-users@archiver.kernel.org>; Mon, 12 Sep 2022 08:34:34 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229729AbiILFxe (ORCPT
+        id S230138AbiILIec (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Mon, 12 Sep 2022 01:53:34 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50640 "EHLO
+        Mon, 12 Sep 2022 04:34:32 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55098 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229615AbiILFxb (ORCPT
+        with ESMTP id S229575AbiILIeb (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Mon, 12 Sep 2022 01:53:31 -0400
-Received: from mail-pl1-x62f.google.com (mail-pl1-x62f.google.com [IPv6:2607:f8b0:4864:20::62f])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D1A45255BA;
-        Sun, 11 Sep 2022 22:53:23 -0700 (PDT)
-Received: by mail-pl1-x62f.google.com with SMTP id c2so7583379plo.3;
-        Sun, 11 Sep 2022 22:53:23 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20210112;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:sender:from:to:cc:subject:date;
-        bh=VZ4ZKi2LPoTeZRL8wpsaNHCGDJSV43IWeEv/p4e0aFg=;
-        b=iJcO9ACPZ2R0/MfNRVibiDu7NSMfQT0wG3hi7T1XRmBs+HtuTQ+LOlasFaWomn12AD
-         Z1HRkoHjIj+dM/FeXbGGyeg5pLt5o7CmVLHjxJMRvFw/uQuZKrgvVE7qo9PxTTvUL0BS
-         vQLOivNLJdS4agKnxsTvk1ujA5pMgP35KqKe65NsD/tk2kTkH34caS9eP8gdJS/40q94
-         lY6FWC02wDxklEAVqnMislNrH/gQ4K2gxIPh6RrtxZcyiPFeBOE3gX3JFUs2k3n7Heze
-         1ZCaRpB5n2taaRACwVHZfR9CcAWhxx7bwpPsXcBQaaUzo+c4LfXz8v94e9oSfZQNCCo1
-         RsSw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:sender:x-gm-message-state:from
-         :to:cc:subject:date;
-        bh=VZ4ZKi2LPoTeZRL8wpsaNHCGDJSV43IWeEv/p4e0aFg=;
-        b=xJ0gUs9k4IC6nu1HmlBL1LRGCWfmbwIisYYa7ba9GTKIl553dsS6N8446ErmB0EbtT
-         ji5i2CWg21bZqFEDWTqyt8p4haTEa4soKmGUgHn2TOycnyTOwgnS91DxZb56NZabcWYp
-         +C4Y+MZAplXs2T6ZCyO3WyaDW1wOD+9Y7HDNNVMr6c3wEX7NAU3+gaXpYmtIkplGfhbR
-         MBzuZEhsnQmFsK+tkTCei3LLa4QdJ1wutc190W7ctBwSw4U4YiwJ74O7F5kclTC7uWKi
-         K/GrTLDCI1GkjktzbhxXVhq6LKuC/C+7mI1OYnnYTTDU6cou+F7M10l4dVnBAI1zuke/
-         OTbQ==
-X-Gm-Message-State: ACgBeo0X5SwjSwCJpBnav7idotsjOE4HxHAtoUo9dke5AfZHWrdMw4mU
-        k1MFBgWXRcR/oMjkemw0iTM=
-X-Google-Smtp-Source: AA6agR5hHNuALS4EZ8avXAv4TGpC5QINdVvwHAn3VI/N0Lr9bKUHAl2AkoSAwdVS0a5ClzDVskXo3A==
-X-Received: by 2002:a17:902:8503:b0:173:368b:dce3 with SMTP id bj3-20020a170902850300b00173368bdce3mr25396809plb.104.1662962003174;
-        Sun, 11 Sep 2022 22:53:23 -0700 (PDT)
-Received: from youngsil.svl.corp.google.com ([2620:15c:2d4:203:cfe7:8794:a807:6746])
-        by smtp.gmail.com with ESMTPSA id l10-20020a170903244a00b00176b87a697fsm4882736pls.269.2022.09.11.22.53.21
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 11 Sep 2022 22:53:22 -0700 (PDT)
-Sender: Namhyung Kim <namhyung@gmail.com>
-From:   Namhyung Kim <namhyung@kernel.org>
-To:     Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Jiri Olsa <jolsa@kernel.org>
-Cc:     Ingo Molnar <mingo@kernel.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Ian Rogers <irogers@google.com>,
-        Adrian Hunter <adrian.hunter@intel.com>,
-        linux-perf-users@vger.kernel.org, Song Liu <songliubraving@fb.com>,
-        bpf@vger.kernel.org
-Subject: [PATCH 3/4] perf lock contention: Allow to change stack depth and skip
-Date:   Sun, 11 Sep 2022 22:53:13 -0700
-Message-Id: <20220912055314.744552-4-namhyung@kernel.org>
-X-Mailer: git-send-email 2.37.2.789.g6183377224-goog
-In-Reply-To: <20220912055314.744552-1-namhyung@kernel.org>
-References: <20220912055314.744552-1-namhyung@kernel.org>
+        Mon, 12 Sep 2022 04:34:31 -0400
+Received: from mga03.intel.com (mga03.intel.com [134.134.136.65])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 426F611A;
+        Mon, 12 Sep 2022 01:34:26 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1662971666; x=1694507666;
+  h=from:to:cc:subject:date:message-id:mime-version:
+   content-transfer-encoding;
+  bh=jUWs7b1wiwhbL79/C/zNbX3tOcTeD7M8gF3DAD9mbgg=;
+  b=UTiUJXWAgoDpnGlNgtH0I88SukxygP3n7TbObJKJ+CLS+dlaoBqq8AWG
+   8m2hzxJiNiLjSwrBoMmxXycsZ/Jj7MkiKZgHkRLJnptslSMazBFu9vsoi
+   4P1I9mFa+C+9O5UMUh4qgO4RxEwI+wGLf5lo6RXtVD8J18UcuAmeXCDe+
+   PoiKHCFAztGeDw4cPXXTgOtPRKG8sicapWFplYKPOaghtjeXZ6xXzZkAp
+   ntyYboFrc+DNfgWeT3Mf1h48SDVfDg7VlBLDB/wjpc2kM0wmHGe317Na3
+   jrxn3BHikiV9t1SrPNzdelLDPBn1mILscVMZ+66GMG0cEGZIrFn1CAzDG
+   g==;
+X-IronPort-AV: E=McAfee;i="6500,9779,10467"; a="299153602"
+X-IronPort-AV: E=Sophos;i="5.93,308,1654585200"; 
+   d="scan'208";a="299153602"
+Received: from orsmga007.jf.intel.com ([10.7.209.58])
+  by orsmga103.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 12 Sep 2022 01:34:25 -0700
+X-IronPort-AV: E=Sophos;i="5.93,308,1654585200"; 
+   d="scan'208";a="611688229"
+Received: from ahunter6-mobl1.ger.corp.intel.com (HELO ahunter-VirtualBox.home\044ger.corp.intel.com) ([10.252.46.215])
+  by orsmga007-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 12 Sep 2022 01:34:23 -0700
+From:   Adrian Hunter <adrian.hunter@intel.com>
+To:     Arnaldo Carvalho de Melo <acme@kernel.org>
+Cc:     Jiri Olsa <jolsa@redhat.com>, Namhyung Kim <namhyung@kernel.org>,
+        Ian Rogers <irogers@google.com>, linux-kernel@vger.kernel.org,
+        linux-perf-users@vger.kernel.org
+Subject: [PATCH 00/11] perf test: test_intel_pt.sh: Add per-thread test
+Date:   Mon, 12 Sep 2022 11:34:01 +0300
+Message-Id: <20220912083412.7058-1-adrian.hunter@intel.com>
+X-Mailer: git-send-email 2.25.1
 MIME-Version: 1.0
+Organization: Intel Finland Oy, Registered Address: PL 281, 00181 Helsinki, Business Identity Code: 0357606 - 4, Domiciled in Helsinki
 Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-It needs stack traces to find callers of locks.  To minimize the
-performance overhead it only collects up to 8 entries for each stack
-trace.  And it skips first 3 entries as they came from BPF, tracepoint
-and lock functions which are not interested for most users.
+Hi
 
-But it turned out that those numbers are different in some
-configuration.  Using fixed number can result in non meaningful caller
-names.  Let's make them adjustable with --stack-depth and --skip-stack
-options.
+Here is a new per-thread test for the test_intel_pt.sh test script.
 
-On my setup, the default output is like below:
+The first 9 patches are tidy-ups for the script, mostly based on results
+from the shellcheck utility.
 
-  # /perf lock con -ab -F contended,wait_total sleep 3
-   contended   total wait         type   caller
+The 10th patch adds debug prints that the script will capture to help
+verify correct operation.
 
-          28      4.55 ms     rwlock:W   __bpf_trace_contention_begin+0xb
-          33      1.67 ms     rwlock:W   __bpf_trace_contention_begin+0xb
-          12    580.28 us     spinlock   __bpf_trace_contention_begin+0xb
-          60    240.54 us      rwsem:R   __bpf_trace_contention_begin+0xb
-          27     64.45 us     spinlock   __bpf_trace_contention_begin+0xb
+The final patch actually adds the new test.
 
-If I change the stack skip to 5, the result will be like:
 
-  # perf lock con -ab -F contended,wait_total --stack-skip 5 sleep 3
-   contended   total wait         type   caller
+Adrian Hunter (11):
+      perf test: test_intel_pt.sh: Add cleanup function
+      perf test: test_intel_pt.sh: Use a temp directory
+      perf test: test_intel_pt.sh: Fix redirection
+      perf test: test_intel_pt.sh: Stop using expr
+      perf test: test_intel_pt.sh: Stop using backticks
+      perf test: test_intel_pt.sh: Use grep -c instead of grep plus wc -l
+      perf test: test_intel_pt.sh: Use quotes around variable expansion
+      perf test: test_intel_pt.sh: Fix return checking
+      perf test: test_intel_pt.sh: Add more output in preparation for more tests
+      perf tools: Add debug messages and comments for testing
+      perf test: test_intel_pt.sh: Add per-thread test
 
-          32    715.45 us     spinlock   folio_lruvec_lock_irqsave+0x61
-          26    550.22 us     spinlock   folio_lruvec_lock_irqsave+0x61
-          15    486.93 us      rwsem:R   mmap_read_lock+0x13
-          12    139.66 us      rwsem:W   vm_mmap_pgoff+0x93
-           1      7.04 us     spinlock   tick_do_update_jiffies64+0x25
+ tools/lib/perf/evlist.c                 |   2 +
+ tools/perf/builtin-record.c             |   8 +
+ tools/perf/tests/shell/test_intel_pt.sh | 307 ++++++++++++++++++++++++++++++--
+ tools/perf/util/evsel.c                 |   2 +
+ 4 files changed, 304 insertions(+), 15 deletions(-)
 
-Signed-off-by: Namhyung Kim <namhyung@kernel.org>
----
- tools/perf/Documentation/perf-lock.txt |  6 ++++++
- tools/perf/builtin-lock.c              | 22 ++++++++++++++++------
- tools/perf/util/bpf_lock_contention.c  |  7 ++++---
- tools/perf/util/lock-contention.h      |  2 ++
- 4 files changed, 28 insertions(+), 9 deletions(-)
 
-diff --git a/tools/perf/Documentation/perf-lock.txt b/tools/perf/Documentation/perf-lock.txt
-index 193c5d8b8db9..5f2dc634258e 100644
---- a/tools/perf/Documentation/perf-lock.txt
-+++ b/tools/perf/Documentation/perf-lock.txt
-@@ -148,6 +148,12 @@ CONTENTION OPTIONS
- --map-nr-entries::
- 	Maximum number of BPF map entries (default: 10240).
- 
-+--max-stack::
-+	Maximum stack depth when collecting lock contention (default: 8).
-+
-+--stack-skip
-+	Number of stack depth to skip when finding a lock caller (default: 3).
-+
- 
- SEE ALSO
- --------
-diff --git a/tools/perf/builtin-lock.c b/tools/perf/builtin-lock.c
-index 371539049358..25d75fa09b90 100644
---- a/tools/perf/builtin-lock.c
-+++ b/tools/perf/builtin-lock.c
-@@ -56,6 +56,8 @@ static bool combine_locks;
- static bool show_thread_stats;
- static bool use_bpf;
- static unsigned long bpf_map_entries = 10240;
-+static int max_stack_depth = CONTENTION_STACK_DEPTH;
-+static int stack_skip = CONTENTION_STACK_SKIP;
- 
- static enum {
- 	LOCK_AGGR_ADDR,
-@@ -936,7 +938,7 @@ static int lock_contention_caller(struct evsel *evsel, struct perf_sample *sampl
- 
- 	/* use caller function name from the callchain */
- 	ret = thread__resolve_callchain(thread, cursor, evsel, sample,
--					NULL, NULL, CONTENTION_STACK_DEPTH);
-+					NULL, NULL, max_stack_depth);
- 	if (ret != 0) {
- 		thread__put(thread);
- 		return -1;
-@@ -953,7 +955,7 @@ static int lock_contention_caller(struct evsel *evsel, struct perf_sample *sampl
- 			break;
- 
- 		/* skip first few entries - for lock functions */
--		if (++skip <= CONTENTION_STACK_SKIP)
-+		if (++skip <= stack_skip)
- 			goto next;
- 
- 		sym = node->ms.sym;
-@@ -984,7 +986,7 @@ static u64 callchain_id(struct evsel *evsel, struct perf_sample *sample)
- 
- 	/* use caller function name from the callchain */
- 	ret = thread__resolve_callchain(thread, cursor, evsel, sample,
--					NULL, NULL, CONTENTION_STACK_DEPTH);
-+					NULL, NULL, max_stack_depth);
- 	thread__put(thread);
- 
- 	if (ret != 0)
-@@ -1000,7 +1002,7 @@ static u64 callchain_id(struct evsel *evsel, struct perf_sample *sample)
- 			break;
- 
- 		/* skip first few entries - for lock functions */
--		if (++skip <= CONTENTION_STACK_SKIP)
-+		if (++skip <= stack_skip)
- 			goto next;
- 
- 		if (node->ms.sym && is_lock_function(machine, node->ip))
-@@ -1063,7 +1065,7 @@ static int report_lock_contention_begin_event(struct evsel *evsel,
- 			return -ENOMEM;
- 
- 		if (aggr_mode == LOCK_AGGR_CALLER && verbose) {
--			ls->callstack = get_callstack(sample, CONTENTION_STACK_DEPTH);
-+			ls->callstack = get_callstack(sample, max_stack_depth);
- 			if (ls->callstack == NULL)
- 				return -ENOMEM;
- 		}
-@@ -1515,7 +1517,7 @@ static void print_contention_result(struct lock_contention *con)
- 			char buf[128];
- 			u64 ip;
- 
--			for (int i = 0; i < CONTENTION_STACK_DEPTH; i++) {
-+			for (int i = 0; i < max_stack_depth; i++) {
- 				if (!st->callstack || !st->callstack[i])
- 					break;
- 
-@@ -1632,6 +1634,8 @@ static int __cmd_contention(int argc, const char **argv)
- 		.target = &target,
- 		.result = &lockhash_table[0],
- 		.map_nr_entries = bpf_map_entries,
-+		.max_stack = max_stack_depth,
-+		.stack_skip = stack_skip,
- 	};
- 
- 	session = perf_session__new(use_bpf ? NULL : &data, &eops);
-@@ -1895,6 +1899,12 @@ int cmd_lock(int argc, const char **argv)
- 		   "Trace on existing thread id (exclusive to --pid)"),
- 	OPT_CALLBACK(0, "map-nr-entries", &bpf_map_entries, "num",
- 		     "Max number of BPF map entries", parse_map_entry),
-+	OPT_INTEGER(0, "max-stack", &max_stack_depth,
-+		    "Set the maximum stack depth when collecting lock contention, "
-+		    "Default: " __stringify(CONTENTION_STACK_DEPTH)),
-+	OPT_INTEGER(0, "stack-skip", &stack_skip,
-+		    "Set the number of stack depth to skip when finding a lock caller, "
-+		    "Default: " __stringify(CONTENTION_STACK_SKIP)),
- 	OPT_PARENT(lock_options)
- 	};
- 
-diff --git a/tools/perf/util/bpf_lock_contention.c b/tools/perf/util/bpf_lock_contention.c
-index 6545bee65347..ef5323c78ffc 100644
---- a/tools/perf/util/bpf_lock_contention.c
-+++ b/tools/perf/util/bpf_lock_contention.c
-@@ -41,6 +41,7 @@ int lock_contention_prepare(struct lock_contention *con)
- 		return -1;
- 	}
- 
-+	bpf_map__set_value_size(skel->maps.stacks, con->max_stack * sizeof(u64));
- 	bpf_map__set_max_entries(skel->maps.stacks, con->map_nr_entries);
- 	bpf_map__set_max_entries(skel->maps.lock_stat, con->map_nr_entries);
- 
-@@ -115,7 +116,7 @@ int lock_contention_read(struct lock_contention *con)
- 	struct lock_contention_data data;
- 	struct lock_stat *st;
- 	struct machine *machine = con->machine;
--	u64 stack_trace[CONTENTION_STACK_DEPTH];
-+	u64 stack_trace[con->max_stack];
- 
- 	fd = bpf_map__fd(skel->maps.lock_stat);
- 	stack = bpf_map__fd(skel->maps.stacks);
-@@ -146,9 +147,9 @@ int lock_contention_read(struct lock_contention *con)
- 		bpf_map_lookup_elem(stack, &key, stack_trace);
- 
- 		/* skip BPF + lock internal functions */
--		idx = CONTENTION_STACK_SKIP;
-+		idx = con->stack_skip;
- 		while (is_lock_function(machine, stack_trace[idx]) &&
--		       idx < CONTENTION_STACK_DEPTH - 1)
-+		       idx < con->max_stack - 1)
- 			idx++;
- 
- 		st->addr = stack_trace[idx];
-diff --git a/tools/perf/util/lock-contention.h b/tools/perf/util/lock-contention.h
-index bdb6e2a61e5b..67db311fc9df 100644
---- a/tools/perf/util/lock-contention.h
-+++ b/tools/perf/util/lock-contention.h
-@@ -115,6 +115,8 @@ struct lock_contention {
- 	struct hlist_head *result;
- 	unsigned long map_nr_entries;
- 	unsigned long lost;
-+	int max_stack;
-+	int stack_skip;
- };
- 
- #ifdef HAVE_BPF_SKEL
--- 
-2.37.2.789.g6183377224-goog
-
+Regards
+Adrian
