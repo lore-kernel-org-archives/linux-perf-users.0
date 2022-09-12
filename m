@@ -2,176 +2,113 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3CA54C6FA82
-	for <linux-perf-users@archiver.kernel.org>; Mon, 12 Sep 2022 13:55:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3812CECAAD5
+	for <linux-perf-users@archiver.kernel.org>; Mon, 12 Sep 2022 17:13:47 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229560AbiILNzu (ORCPT
+        id S230024AbiILRNp (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Mon, 12 Sep 2022 09:55:50 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48642 "EHLO
+        Mon, 12 Sep 2022 13:13:45 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42874 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229533AbiILNzt (ORCPT
+        with ESMTP id S230023AbiILRNo (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Mon, 12 Sep 2022 09:55:49 -0400
-Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5D7BA1A816;
-        Mon, 12 Sep 2022 06:55:46 -0700 (PDT)
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id 90382611EA;
-        Mon, 12 Sep 2022 13:55:45 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id E3DB5C4347C;
-        Mon, 12 Sep 2022 13:55:44 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1662990944;
-        bh=Dy2EbJ5ni9M55FI7K6zj6jzmJK0ch5Evbutzxm1MYz8=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=UU4oaQoNj99lkBihNfx9r1I1X9ZAOkYcG6NeqjUQmLi1Jsbt4Au7ojaeI8X6mpVZS
-         D2HMG4++0QPh+8ZZ7rzBhXiKj1hNPDre971B6cZUb4q6SKmMszQf/5ofQ7BPffnxwZ
-         JkJmlvPlgDnuh2g33or6/HgVHfaKnqIgnHccAgoxxVnGwaw6VQDsSMkuVQRHbc/5OI
-         Ivn2XnYU39e1oYuZKsfMi29Zq8TspNOExXCLq+Rzp2dHMc062B1N2WGOZ886RNsfhj
-         oqV3ga/fahafMeSwLrrLyd9wtKA4+Y3dGhdd7qPqavcF+PT0tKQZGzW/f5UT8bgB9E
-         ZfETrCGSBagGw==
-Received: by mail-ua1-f54.google.com with SMTP id r17so3166986uat.8;
-        Mon, 12 Sep 2022 06:55:44 -0700 (PDT)
-X-Gm-Message-State: ACgBeo1kMUyrI6T/ZAZBtGwRzmv272n1c0FRZgUMltW2ZHSPlZws6JfB
-        FUZI56LNHmlxYcswspvTDAYUDbSNYV00M9XSEA==
-X-Google-Smtp-Source: AA6agR52m9u/aPYhTJ7g7+9jJJHlszALmFaQiQKVK8jFXXqKZfz55U4iBk969LFKfa7El3bj8dp49U0d6GckxMhnwWQ=
-X-Received: by 2002:ab0:32d1:0:b0:3ab:7f86:2121 with SMTP id
- f17-20020ab032d1000000b003ab7f862121mr8410006uao.86.1662990943721; Mon, 12
- Sep 2022 06:55:43 -0700 (PDT)
+        Mon, 12 Sep 2022 13:13:44 -0400
+Received: from foss.arm.com (foss.arm.com [217.140.110.172])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTP id 56D5313CD8;
+        Mon, 12 Sep 2022 10:13:43 -0700 (PDT)
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 56BCC106F;
+        Mon, 12 Sep 2022 10:13:49 -0700 (PDT)
+Received: from [10.57.17.34] (unknown [10.57.17.34])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id D2E443F73D;
+        Mon, 12 Sep 2022 10:13:40 -0700 (PDT)
+Message-ID: <c8af4295-0e28-d205-3220-f3e00ab509de@arm.com>
+Date:   Mon, 12 Sep 2022 18:13:39 +0100
 MIME-Version: 1.0
-References: <20220909204509.2169512-1-robh@kernel.org> <Yx8LgqUtDh5TwWmV@leoy-huanghe.lan>
-In-Reply-To: <Yx8LgqUtDh5TwWmV@leoy-huanghe.lan>
-From:   Rob Herring <robh@kernel.org>
-Date:   Mon, 12 Sep 2022 08:55:32 -0500
-X-Gmail-Original-Message-ID: <CAL_JsqJGrUrahj-T+k7T9GAF+T8=y03YUTG2V+v52styFFDW_Q@mail.gmail.com>
-Message-ID: <CAL_JsqJGrUrahj-T+k7T9GAF+T8=y03YUTG2V+v52styFFDW_Q@mail.gmail.com>
-Subject: Re: [PATCH v2] perf: Skip and warn on unknown format 'configN' attrs
-To:     Leo Yan <leo.yan@linaro.org>
-Cc:     Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        Arnaldo Carvalho de Melo <acme@kernel.org>,
+User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.15; rv:91.0)
+ Gecko/20100101 Thunderbird/91.13.0
+Subject: Re: [PATCH] perf vendor events: Update events for Neoverse E1
+To:     Arnaldo Carvalho de Melo <acme@kernel.org>,
+        John Garry <john.garry@huawei.com>
+Cc:     linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org,
+        Will Deacon <will@kernel.org>,
+        James Clark <james.clark@arm.com>,
+        Mike Leach <mike.leach@linaro.org>,
+        Leo Yan <leo.yan@linaro.org>,
         Mark Rutland <mark.rutland@arm.com>,
         Alexander Shishkin <alexander.shishkin@linux.intel.com>,
         Jiri Olsa <jolsa@kernel.org>,
         Namhyung Kim <namhyung@kernel.org>,
-        James Clark <james.clark@arm.com>,
-        linux-perf-users <linux-perf-users@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+        linux-arm-kernel@lists.infradead.org
+References: <20220905153020.1792-1-nick.forrington@arm.com>
+ <YxdGFAYHeO/j5uJF@kernel.org>
+ <496f98ce-a0c4-9587-853c-9ba05323523a@huawei.com>
+ <Yxo2ZSKtne7E/2Sn@kernel.org>
+From:   Nick Forrington <nick.forrington@arm.com>
+In-Reply-To: <Yxo2ZSKtne7E/2Sn@kernel.org>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-On Mon, Sep 12, 2022 at 5:35 AM Leo Yan <leo.yan@linaro.org> wrote:
->
-> Hi Rob,
->
-> On Fri, Sep 09, 2022 at 03:45:09PM -0500, Rob Herring wrote:
-> > If the kernel exposes a new perf_event_attr field in a format attr, perf
-> > will return an error stating the specified PMU can't be found. For
-> > example, a format attr with 'config3:0-63' causes an error as config3 is
-> > unknown to perf. This causes a compatibility issue between a newer
-> > kernel with older perf tool.
-> >
-> > Before this change with a kernel adding 'config3' I get:
-> >
-> > $ perf record -e arm_spe// -- true
-> > event syntax error: 'arm_spe//'
-> >                      \___ Cannot find PMU `arm_spe'. Missing kernel support?
-> > Run 'perf list' for a list of valid events
-> >
-> >  Usage: perf record [<options>] [<command>]
-> >     or: perf record [<options>] -- <command> [<options>]
-> >
-> >     -e, --event <event>   event selector. use 'perf list' to list
-> > available events
-> >
-> > After this change, I get:
-> >
-> > $ perf record -e arm_spe// -- true
-> > WARNING: format 'inv_event_filter' requires 'config3' which is not supported by this version of perf!
-> > [ perf record: Woken up 2 times to write data ]
-> > [ perf record: Captured and wrote 0.091 MB perf.data ]
-> >
-> > To support unknown configN formats, rework the YACC implementation to
-> > pass any config[0-9]+ format to perf_pmu__new_format() to handle with a
-> > warning.
-> >
-> > Note that the user will get the warning if *any* PMU has an unsupported
-> > format attr even if that PMU isn't used. This is because perf tool scans
-> > all the PMUs.
->
-> I think essentially you want to provide a bug fixing and the fixing can
-> be back ported on long term supported kernels?
 
-Yes, certainly. I forgot to note that on this version.
-
-> If this is the case,
-> it's good to add a fixes tag like below?
+On 08/09/2022 19:37, Arnaldo Carvalho de Melo wrote:
+> Em Tue, Sep 06, 2022 at 02:22:54PM +0100, John Garry escreveu:
+>> On 06/09/2022 14:07, Arnaldo Carvalho de Melo wrote:
+>>> Em Mon, Sep 05, 2022 at 04:30:19PM +0100, Nick Forrington escreveu:
+>>>> Based on updated data from:
+>>>> https://github.com/ARM-software/data/blob/master/pmu/neoverse-e1.json
+>>>>
+>>>> which is based on PMU event descriptions from the Arm Neoverse E1
+>>>> Technical Reference Manual.
+>>>>
+>>>> This includes additional implementation defined fields not previously
+>>>> included, and removes unimplemented events related to Arm's Statistical
+>>>> Profiling Extension (SPE).
+>>> Applied locally, would be good to have an Acked-by or Reviewed-by, John?
+>> Regardless of comment, below:
+>> Reviewed-by: John Garry <john.garry@huawei.com>
+> So, I removed this one, applied v2, now trying to apply the other patch
+> from Nick, the one moving some events to a different file, but not being
+> able to:
 >
-> Fixes: cd82a32e9924 ("perf tools: Add perf pmu object to access pmu format definition")
+> ⬢[acme@toolbox perf]$ b4 am -ctsl --cc-trailers 39abfee9-4a9b-ec44-9b02-a6cd34cfe64d@huawei.com
+> Grabbing thread from lore.kernel.org/all/39abfee9-4a9b-ec44-9b02-a6cd34cfe64d%40huawei.com/t.mbox.gz
+> Checking for newer revisions on https://lore.kernel.org/all/
+> Analyzing 3 messages in the thread
+> Checking attestation on all messages, may take a moment...
+> ---
+>    [PATCH] perf vendor events arm64: Move REMOTE_ACCESS to "memory" category
+>      + Reviewed-by: John Garry <john.garry@huawei.com>
+> ---
+> Total patches: 1
+> ---
+>   Link: https://lore.kernel.org/r/20220908112519.64614-1-nick.forrington@arm.com
+>   Base: not specified
+>         git am ./20220908_nick_forrington_perf_vendor_events_arm64_move_remote_access_to_memory_category.mbx
+> ⬢[acme@toolbox perf]$        git am ./20220908_nick_forrington_perf_vendor_events_arm64_move_remote_access_to_memory_category.mbx
+> Applying: perf vendor events arm64: Move REMOTE_ACCESS to "memory" category
+> error: patch failed: tools/perf/pmu-events/arch/arm64/arm/cortex-a76-n1/memory.json:3
+> error: tools/perf/pmu-events/arch/arm64/arm/cortex-a76-n1/memory.json: patch does not apply
+> error: tools/perf/pmu-events/arch/arm64/arm/cortex-a76-n1/other.json: does not exist in index
+> error: patch failed: tools/perf/pmu-events/arch/arm64/arm/neoverse-n2/memory.json:2
+> error: tools/perf/pmu-events/arch/arm64/arm/neoverse-n2/memory.json: patch does not apply
+> error: tools/perf/pmu-events/arch/arm64/arm/neoverse-n2/other.json: does not exist in index
+> error: patch failed: tools/perf/pmu-events/arch/arm64/arm/neoverse-v1/memory.json:2
+> error: tools/perf/pmu-events/arch/arm64/arm/neoverse-v1/memory.json: patch does not apply
+> error: tools/perf/pmu-events/arch/arm64/arm/neoverse-v1/other.json: does not exist in index
+> Patch failed at 0001 perf vendor events arm64: Move REMOTE_ACCESS to "memory" category
+> hint: Use 'git am --show-current-patch=diff' to see the failed patch
+> When you have resolved this problem, run "git am --continue".
+> If you prefer to skip this patch, run "git am --skip" instead.
+> To restore the original branch and stop patching, run "git am --abort".
+> ⬢[acme@toolbox perf]$
 
-Probably not too important given this is from 2012.
+I think this was already applied via 
+1081fb0f6d6e68186e1088db33396b11770a0710
 
->
-> > Signed-off-by: Rob Herring <robh@kernel.org>
-> > ---
-> > v2:
-> >  - Rework YACC code to handle configN formats in C code
-> >  - Add a warning when an unknown configN attr is found
-> >
-> > v1: https://lore.kernel.org/all/20220901184709.2179309-1-robh@kernel.org/
-> > ---
-> >  tools/perf/util/pmu.c |  6 ++++++
-> >  tools/perf/util/pmu.l |  2 --
-> >  tools/perf/util/pmu.y | 15 ++++-----------
-> >  3 files changed, 10 insertions(+), 13 deletions(-)
-> >
-> > diff --git a/tools/perf/util/pmu.c b/tools/perf/util/pmu.c
-> > index 89655d53117a..6757db7d559c 100644
-> > --- a/tools/perf/util/pmu.c
-> > +++ b/tools/perf/util/pmu.c
-> > @@ -1475,6 +1475,12 @@ int perf_pmu__new_format(struct list_head *list, char *name,
-> >  {
-> >       struct perf_pmu_format *format;
-> >
-> > +     if (config > PERF_PMU_FORMAT_VALUE_CONFIG2) {
->
-> It's good to add a new macro PERF_PMU_FORMAT_VALUE_CONFIG_END in
-> util/pmu.h. Then at here we can check the condition:
+All 3 patches appear to be present.
 
-Sure.
+Thanks, Nick
 
->
->        if (config >= PERF_PMU_FORMAT_VALUE_CONFIG_END) {
->
-> > +             pr_warning("WARNING: format '%s' requires 'config%d' which is not supported by this version of perf!\n",
-> > +                        name, config);
->
-> ... so at here we can print log like:
->
->        pr_warning("WARNING: format '%s' requires 'config%d' which is not "
->                   "supported by this version of perf (maximum config%d)!\n",
->                   name, config, PERF_PMU_FORMAT_VALUE_CONFIG_END - 1);
-
-I was trying to keep it to one line and given configN isn't expanded
-frequently it should be simple enough to figure out what version you
-need.
-
->
-> The rest of this patch is fine for me.
->
-> As a side topic, I know you want to support the SPEv1.2 feature with
-> config3, seems to me a complete patch set series should include the
-> changes for supporting config3 as well.  This can give more clear view
-> for how to fix incompatibility issue between old and new kernels, and
-> how to support config3 in the latest kernel, but it's fine for me if
-> you want to split into two patch sets.
-
-I've sent out the SPE kernel support separately. I was told by Arnaldo
-to split perf tool and kernel side changes.
-
-Rob
