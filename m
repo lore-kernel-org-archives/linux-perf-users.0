@@ -2,113 +2,104 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CCCCFC54EE9
-	for <linux-perf-users@archiver.kernel.org>; Tue, 13 Sep 2022 11:38:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5303CC6FA82
+	for <linux-perf-users@archiver.kernel.org>; Tue, 13 Sep 2022 11:43:24 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231912AbiIMLij (ORCPT
+        id S231459AbiIMLnX (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Tue, 13 Sep 2022 07:38:39 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56874 "EHLO
+        Tue, 13 Sep 2022 07:43:23 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34084 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229782AbiIMLii (ORCPT
+        with ESMTP id S231351AbiIMLnW (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Tue, 13 Sep 2022 07:38:38 -0400
-Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTP id C4E082EF24;
-        Tue, 13 Sep 2022 04:38:37 -0700 (PDT)
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id EAAE81063;
-        Tue, 13 Sep 2022 04:38:43 -0700 (PDT)
-Received: from [10.163.58.193] (unknown [10.163.58.193])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 731DB3F71A;
-        Tue, 13 Sep 2022 04:38:33 -0700 (PDT)
-Message-ID: <ea242aea-0470-4eb8-fe44-03551dbbaaba@arm.com>
-Date:   Tue, 13 Sep 2022 17:08:30 +0530
-MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
- Thunderbird/91.11.0
-Subject: Re: [PATCH V2 6/7] arm64/perf: Add BRBE driver
-Content-Language: en-US
-To:     James Clark <james.clark@arm.com>
-Cc:     Rob Herring <robh@kernel.org>, Marc Zyngier <maz@kernel.org>,
-        Ingo Molnar <mingo@redhat.com>, linux-kernel@vger.kernel.org,
-        linux-perf-users@vger.kernel.org,
+        Tue, 13 Sep 2022 07:43:22 -0400
+Received: from ams.source.kernel.org (ams.source.kernel.org [IPv6:2604:1380:4601:e00::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C0DE9564F4;
+        Tue, 13 Sep 2022 04:43:21 -0700 (PDT)
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by ams.source.kernel.org (Postfix) with ESMTPS id 79C42B80E5B;
+        Tue, 13 Sep 2022 11:43:20 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id B85A9C433C1;
+        Tue, 13 Sep 2022 11:43:18 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1663069399;
+        bh=+nJ7Rj3FLsg7DuXb+iDl45ORA6bPO0PKiH+GGv2hjNg=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=oLWvuKIPOoWJF+ZTTvEA1lBCgy3shcWi3dEoRFVXLnwx5oDO6FIh7la9jkdSfvMb9
+         M2TJHAftRctnwila9sZiMhd8CfaTUckW9NezCucYGgyDsu3NOHJ6aKjjH7hkcRCtkZ
+         lc7E5yPrIepoz6j2seYprP0ZjZv/4cQUXpC79b6H62d9lynb9CgyWW5I27KEFI0HCO
+         +SqlHFZA1zaF+mOT68hjV73C3NW9nwrfmnSpDYPDq3uXjUeRGmgBKjYHkG72Z8ZqiH
+         tAE2Jm2cUoISe79v3jvsXpUp9n6cNxkYzu/sAgON9hZTxmbpFLFtvX3RGhB+pRhLVf
+         /gOImxd69s5cg==
+Date:   Tue, 13 Sep 2022 12:43:16 +0100
+From:   Mark Brown <broonie@kernel.org>
+To:     Anshuman Khandual <anshuman.khandual@arm.com>
+Cc:     linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org,
         linux-arm-kernel@lists.infradead.org, peterz@infradead.org,
         acme@kernel.org, mark.rutland@arm.com, will@kernel.org,
-        catalin.marinas@arm.com, German Gomez <german.gomez@arm.com>
+        catalin.marinas@arm.com, James Clark <james.clark@arm.com>,
+        Rob Herring <robh@kernel.org>, Marc Zyngier <maz@kernel.org>,
+        Ingo Molnar <mingo@redhat.com>
+Subject: Re: [PATCH V2 3/7] arm64/perf: Update struct pmu_hw_events for BRBE
+Message-ID: <YyBs1PJwNoNYv4NJ@sirena.org.uk>
 References: <20220908051046.465307-1-anshuman.khandual@arm.com>
- <20220908051046.465307-7-anshuman.khandual@arm.com>
- <740298c9-0cae-251d-97b4-d2724399ba40@arm.com>
-From:   Anshuman Khandual <anshuman.khandual@arm.com>
-In-Reply-To: <740298c9-0cae-251d-97b4-d2724399ba40@arm.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+ <20220908051046.465307-4-anshuman.khandual@arm.com>
+ <Yx8GBq1FJN49iJs9@sirena.org.uk>
+ <84683aa7-58ad-85f8-327b-daed2f704834@arm.com>
+MIME-Version: 1.0
+Content-Type: multipart/signed; micalg=pgp-sha512;
+        protocol="application/pgp-signature"; boundary="u7UoJoh5Bi3vxoGn"
+Content-Disposition: inline
+In-Reply-To: <84683aa7-58ad-85f8-327b-daed2f704834@arm.com>
+X-Cookie: One FISHWICH coming up!!
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
 
+--u7UoJoh5Bi3vxoGn
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-On 9/13/22 16:09, James Clark wrote:
-> 
-> 
-> On 08/09/2022 06:10, Anshuman Khandual wrote:
->> This adds a BRBE driver which implements all the required helper functions
->> for struct arm_pmu. Following functions are defined by this driver which
->> will configure, enable, capture, reset and disable BRBE buffer HW as and
->> when requested via perf branch stack sampling framework.
->>
->> - arm64_pmu_brbe_filter()
->> - arm64_pmu_brbe_enable()
->> - arm64_pmu_brbe_disable()
->> - arm64_pmu_brbe_read()
->> - arm64_pmu_brbe_probe()
->> - arm64_pmu_brbe_reset()
->> - arm64_pmu_brbe_supported()
->>
->> Cc: Peter Zijlstra <peterz@infradead.org>
->> Cc: Ingo Molnar <mingo@redhat.com>
->> Cc: Arnaldo Carvalho de Melo <acme@kernel.org>
->> Cc: Mark Rutland <mark.rutland@arm.com>
->> Cc: Will Deacon <will@kernel.org>
->> Cc: Catalin Marinas <catalin.marinas@arm.com>
->> Cc: linux-arm-kernel@lists.infradead.org
->> Cc: linux-perf-users@vger.kernel.org
->> Cc: linux-kernel@vger.kernel.org
->> Signed-off-by: Anshuman Khandual <anshuman.khandual@arm.com>
->> ---
->>  arch/arm64/kernel/perf_event.c |   8 +-
->>  drivers/perf/Kconfig           |  11 +
->>  drivers/perf/Makefile          |   1 +
->>  drivers/perf/arm_pmu_brbe.c    | 448 +++++++++++++++++++++++++++++++++
->>  drivers/perf/arm_pmu_brbe.h    | 259 +++++++++++++++++++
->>  include/linux/perf/arm_pmu.h   |  20 ++
->>  6 files changed, 746 insertions(+), 1 deletion(-)
->>  create mode 100644 drivers/perf/arm_pmu_brbe.c
->>  create mode 100644 drivers/perf/arm_pmu_brbe.h
->>
-> [...]
->> +
->> +static int brbe_fetch_perf_priv(u64 brbinf)
->> +{
->> +       int brbe_el = brbe_fetch_el(brbinf);
->> +
->> +       switch (brbe_el) {
->> +       case BRBINF_EL_EL0:
->> +               return PERF_BR_PRIV_USER;
->> +       case BRBINF_EL_EL1:
->> +               return PERF_BR_PRIV_KERNEL;
->> +       case BRBINF_EL_EL2:
->> +               if (is_kernel_in_hyp_mode())
->> +                       return PERF_BR_PRIV_KERNEL;
->> +               return PERF_BR_PRIV_HV;
->> +       default:
->> +               pr_warn("unknown branch privilege captured\n");
->> +               return -1;
-> 
-> On V1 you said that you would change this to PERF_BR_PRIV_UNKNOWN, looks
-> like that was dropped. Unless it didn't work out?
+On Tue, Sep 13, 2022 at 11:03:45AM +0530, Anshuman Khandual wrote:
+> On 9/12/22 15:42, Mark Brown wrote:
 
-Seems like it just got dropped unintentionally. Yes, PERF_BR_PRIV_UNKNOWN
-can be returned here instead of "-1", similar to brbe_fetch_perf_type()
-which returns PERF_BR_UNKNOWN.
+> > like it would be clearer and safer to allocate these dynamically
+> > when BRBE is used if that's possible, I'd expect that should also
+> > deal with the stack frame size issues as well.
+
+> That might not be possible because the generic 'struct perf_branch_stack'
+> expects 'perf_branch_stack.entries' to be a variable array which is also
+> contiguous in memory, with other elements in 'perf_branch_stack'. Besides
+> that will be a deviation from similar implementations on x86 and powerpc
+> platforms.
+
+> The stack frame size came up because BRBE_MAX_ENTRIES is 64 compared to
+> just 32 on other platforms, which follow the exact same method.
+
+If this is a pattern used by other architectures and relied on by
+the core that doesn't mean it's impossible to do anything, it
+means that the existing code needs to be updated to allow the
+larger number of entries for BRBE if we want to change things.
+That is a lot of effort of course so something that moves the
+allocation off the stack would be more expedient in the short
+term.
+
+--u7UoJoh5Bi3vxoGn
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAmMgbNMACgkQJNaLcl1U
+h9D4MAf/aF3z/1es9J2nzieR93V2tWd1/bqxJk8jf0Cd/sv59XIF8zPUT5zPp3/N
++DkehTrDcO3uWrL8N7fZKgjb0Tvv69IJC2+QJ5fs3HCkp1qxX/Aqm9nhDqQGjp/p
+t1xOni9vVwDImqq8dedD/DYLhTAAqEKFfvR11XA9l4RH96FdShRKF77tFyicKsFg
+D8HdwiVJsqSdqWC82tukThKcMHoJ/HYQ0B7UxkF3gHqUkgRfqyzaU0O5VHm2frxu
+IK6VJxeV2WNMzqFz9Gl4fmD3wri3tC4DvtTKCSu8LOt7nmdHqY309I2wNN+iKMY9
+7q7wTAAlnSnqOPeXnngfOJ2H4IevoQ==
+=S8Rj
+-----END PGP SIGNATURE-----
+
+--u7UoJoh5Bi3vxoGn--
