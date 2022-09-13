@@ -2,156 +2,136 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0ED23C54EE9
-	for <linux-perf-users@archiver.kernel.org>; Tue, 13 Sep 2022 10:55:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 036A7C6FA89
+	for <linux-perf-users@archiver.kernel.org>; Tue, 13 Sep 2022 11:03:46 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231775AbiIMKzM (ORCPT
+        id S231799AbiIMLDo (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Tue, 13 Sep 2022 06:55:12 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35834 "EHLO
+        Tue, 13 Sep 2022 07:03:44 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46180 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231664AbiIMKzK (ORCPT
+        with ESMTP id S231811AbiIMLDi (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Tue, 13 Sep 2022 06:55:10 -0400
-Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTP id A509B1A38F;
-        Tue, 13 Sep 2022 03:55:08 -0700 (PDT)
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id CE1B11063;
-        Tue, 13 Sep 2022 03:55:14 -0700 (PDT)
-Received: from [10.57.77.29] (unknown [10.57.77.29])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id C4D373F71A;
-        Tue, 13 Sep 2022 03:55:06 -0700 (PDT)
-Message-ID: <e44d0bd6-7809-59db-0133-1c6c9ba8cd55@arm.com>
-Date:   Tue, 13 Sep 2022 11:55:05 +0100
+        Tue, 13 Sep 2022 07:03:38 -0400
+Received: from mga01.intel.com (mga01.intel.com [192.55.52.88])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 28AC4580B2;
+        Tue, 13 Sep 2022 04:03:36 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1663067016; x=1694603016;
+  h=message-id:date:mime-version:subject:to:cc:references:
+   from:in-reply-to:content-transfer-encoding;
+  bh=RlRFv9tcot/tQwfhzKboadhEcrQNg8scVcikCi9xRI0=;
+  b=M2smG6H0MVIsfgUrchUOpP1PEzFj2sJXjGihlX7dVvJo9ZcelfLK4RV8
+   cPSk/0pb8xpaFfFneQaBDm6QqM5JWL1tgKlExaUOSLYe8U6e8tOTjoqGz
+   vd8DlWmrV1ilBKrwcr9YUPi96sZ2J759YWTBmmgncEMM9xm+ZFKaI4BLb
+   iFtQWTGy7cY5ym/Uf+Cy6rz7P6BcJP+vJsHZRzPYfcYtdQIWrLDws27ei
+   zZUYK8VCI1jxCuXGphtj2ipZoUDz9Wqju6jklSr4BjuEjQ3qxprNSW7vW
+   BnDK+ZnJEde17f3vb+3yW9hcnQbLeVotCU3RF+Tw2+EtNx+5zexRQYxmV
+   A==;
+X-IronPort-AV: E=McAfee;i="6500,9779,10468"; a="324352280"
+X-IronPort-AV: E=Sophos;i="5.93,312,1654585200"; 
+   d="scan'208";a="324352280"
+Received: from fmsmga008.fm.intel.com ([10.253.24.58])
+  by fmsmga101.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 13 Sep 2022 04:03:34 -0700
+X-IronPort-AV: E=Sophos;i="5.93,312,1654585200"; 
+   d="scan'208";a="678521328"
+Received: from ahunter6-mobl1.ger.corp.intel.com (HELO [10.0.2.15]) ([10.252.59.98])
+  by fmsmga008-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 13 Sep 2022 04:03:31 -0700
+Message-ID: <f69ccb77-b60a-c901-3bec-5b8d1a518043@intel.com>
+Date:   Tue, 13 Sep 2022 14:03:26 +0300
 MIME-Version: 1.0
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
- Thunderbird/91.11.0
-Subject: Re: [PATCH V2 0/7] arm64/perf: Enable branch stack sampling
+ Firefox/91.0 Thunderbird/91.11.0
+Subject: Re: [PATCH 5/6] perf test: Add target workload test in perf record
+ tests
 Content-Language: en-US
-To:     Anshuman Khandual <anshuman.khandual@arm.com>
-Cc:     Rob Herring <robh@kernel.org>, Marc Zyngier <maz@kernel.org>,
-        Ingo Molnar <mingo@redhat.com>, linux-kernel@vger.kernel.org,
-        linux-perf-users@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, peterz@infradead.org,
-        acme@kernel.org, mark.rutland@arm.com, will@kernel.org,
-        catalin.marinas@arm.com
-References: <20220908051046.465307-1-anshuman.khandual@arm.com>
-From:   James Clark <james.clark@arm.com>
-In-Reply-To: <20220908051046.465307-1-anshuman.khandual@arm.com>
+To:     Namhyung Kim <namhyung@kernel.org>,
+        Arnaldo Carvalho de Melo <acme@kernel.org>,
+        Jiri Olsa <jolsa@kernel.org>
+Cc:     Ingo Molnar <mingo@kernel.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Ian Rogers <irogers@google.com>,
+        linux-perf-users@vger.kernel.org
+References: <20220907064645.1197894-1-namhyung@kernel.org>
+ <20220907064645.1197894-6-namhyung@kernel.org>
+From:   Adrian Hunter <adrian.hunter@intel.com>
+Organization: Intel Finland Oy, Registered Address: PL 281, 00181 Helsinki,
+ Business Identity Code: 0357606 - 4, Domiciled in Helsinki
+In-Reply-To: <20220907064645.1197894-6-namhyung@kernel.org>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
+On 7/09/22 09:46, Namhyung Kim wrote:
+> Add a subtest which profiles the given workload on the command line.
+> As it's a minimal requirement, test should run ok so it doesn't skip
+> the test even if it failed to run the perf record.
+> 
+> Signed-off-by: Namhyung Kim <namhyung@kernel.org>
+> ---
+>  tools/perf/tests/shell/record.sh | 31 +++++++++++++++++++++++++++++++
+>  1 file changed, 31 insertions(+)
+> 
+> diff --git a/tools/perf/tests/shell/record.sh b/tools/perf/tests/shell/record.sh
+> index bd4ef60948bd..ff66e58f3a26 100755
+> --- a/tools/perf/tests/shell/record.sh
+> +++ b/tools/perf/tests/shell/record.sh
+> @@ -167,11 +167,42 @@ test_system_wide() {
+>    echo "Basic --system-wide mode test [Success]"
+>  }
+>  
+> +test_workload() {
+> +  echo "Basic target workload test"
+> +  if ! perf record ${testopt} -o ${perfdata} ${testprog} 2> /dev/null
+> +  then
+> +    echo "Workload record [Failed record]"
+> +    err=1
+> +    return
+> +  fi
+> +  if ! perf report -i ${perfdata} -q | egrep -q ${testsym}
+> +  then
+> +    echo "Workload record [Failed missing output]"
+> +    err=1
+> +    return
+> +  fi
+> +  if ! perf record -e cpu-clock,cs --threads=package ${testopt} \
+> +    -o ${perfdata} ${testprog} 2> /dev/null
+> +  then
+> +    echo "Workload record [Failed recording with threads]"
+> +    err=1
+> +    return
+> +  fi
+> +  if ! perf report -i ${perfdata} -q | egrep -q ${testsym}
+> +  then
+> +    echo "Workload record [Failed missing output]"
+
+When testing, this was happening always until changing the delay
+from 3 to 1 ms.  It might be a bit racy to work consistently on
+different machines.
+
+Another approach is to wait for threads to appear in /proc/N/task
+like wait_for_threads() here:
+
+	https://lore.kernel.org/linux-perf-users/20220912083412.7058-12-adrian.hunter@intel.com/T/#u
 
 
-On 08/09/2022 06:10, Anshuman Khandual wrote:
-> This series enables perf branch stack sampling support on arm64 platform
-> via a new arch feature called Branch Record Buffer Extension (BRBE). All
-> relevant register definitions could be accessed here.
-> 
-> https://developer.arm.com/documentation/ddi0601/2021-12/AArch64-Registers
-> 
-> This series applies on v6.0-rc4 after the BRBE related perf ABI changes series
-> (V7) that was posted earlier, and a branch sample filter helper patch.
-> 
-> https://lore.kernel.org/all/20220824044822.70230-1-anshuman.khandual@arm.com/
-> 
-> https://lore.kernel.org/all/20220906084414.396220-1-anshuman.khandual@arm.com/
-> 
-> Following issues have been resolved
-> 
-> - Jame's concerns regarding permission inadequacy related to perfmon_capable()
-> - Jame's concerns regarding using perf_event_paranoid along with perfmon_capable()
+> +    err=1
+> +    return
+> +  fi
+> +  echo "Basic target workload test [Success]"
+> +}
+> +
+>  build_test_program
+>  
+>  test_per_thread
+>  test_register_capture
+>  test_system_wide
+> +test_workload
+>  
+>  cleanup
+>  exit $err
 
-I don't see the resolution to this one. I'm not 100% sure of the code
-path used for LBR, but I think you just need to take perf_allow_kernel()
-into account somewhere to make this command have the same result with
-BRBE. Is there any contention that the permissions shouldn't behave in
-the same way across platforms? This is when perf_event_paranoid < 2:
-
-Intel:
-
-  $ perf record -j any -- ls
-
-  [ perf record: Woken up 1 times to write data ]
-  [ perf record: Captured and wrote 0.014 MB perf.data (16 samples) ]
-
-Arm:
-
-  $ perf record -j any -- ls
-
-  Error:
-  No permission to enable cycles event.
-
-> 
-> Following issues remain inconclusive
-> 
-> - Rob's concerns regarding the series structure, arm_pmu callbacks based framework
-> 
-> Changes in V2:
-> 
-> - Dropped branch sample filter helpers consolidation patch from this series 
-> - Added new hw_perf_event.flags element ARMPMU_EVT_PRIV to cache perfmon_capable()
-> - Use cached perfmon_capable() while configuring BRBE branch record filters
-> 
-> Changes in V1:
-> 
-> https://lore.kernel.org/linux-arm-kernel/20220613100119.684673-1-anshuman.khandual@arm.com/
-> 
-> - Added CONFIG_PERF_EVENTS wrapper for all branch sample filter helpers
-> - Process new perf branch types via PERF_BR_EXTEND_ABI
-> 
-> Changes in RFC V2:
-> 
-> https://lore.kernel.org/linux-arm-kernel/20220412115455.293119-1-anshuman.khandual@arm.com/
-> 
-> - Added branch_sample_priv() while consolidating other branch sample filter helpers
-> - Changed all SYS_BRBXXXN_EL1 register definition encodings per Marc
-> - Changed the BRBE driver as per proposed BRBE related perf ABI changes (V5)
-> - Added documentation for struct arm_pmu changes, updated commit message
-> - Updated commit message for BRBE detection infrastructure patch
-> - PERF_SAMPLE_BRANCH_KERNEL gets checked during arm event init (outside the driver)
-> - Branch privilege state capture mechanism has now moved inside the driver
-> 
-> Changes in RFC V1:
-> 
-> https://lore.kernel.org/all/1642998653-21377-1-git-send-email-anshuman.khandual@arm.com/
-> 
-> Cc: Catalin Marinas <catalin.marinas@arm.com>
-> Cc: Will Deacon <will@kernel.org>
-> Cc: Mark Rutland <mark.rutland@arm.com>
-> Cc: James Clark <james.clark@arm.com>
-> Cc: Rob Herring <robh@kernel.org>
-> Cc: Marc Zyngier <maz@kernel.org>
-> Cc: Peter Zijlstra <peterz@infradead.org>
-> Cc: Ingo Molnar <mingo@redhat.com>
-> Cc: Arnaldo Carvalho de Melo <acme@kernel.org>
-> Cc: linux-arm-kernel@lists.infradead.org
-> Cc: linux-perf-users@vger.kernel.org
-> Cc: linux-kernel@vger.kernel.org
-> 
-> Anshuman Khandual (7):
->   arm64/perf: Add register definitions for BRBE
->   arm64/perf: Update struct arm_pmu for BRBE
->   arm64/perf: Update struct pmu_hw_events for BRBE
->   driver/perf/arm_pmu_platform: Add support for BRBE attributes detection
->   arm64/perf: Drive BRBE from perf event states
->   arm64/perf: Add BRBE driver
->   arm64/perf: Enable branch stack sampling
-> 
->  arch/arm64/include/asm/sysreg.h | 222 ++++++++++++++++
->  arch/arm64/kernel/perf_event.c  |  48 ++++
->  drivers/perf/Kconfig            |  11 +
->  drivers/perf/Makefile           |   1 +
->  drivers/perf/arm_pmu.c          |  82 +++++-
->  drivers/perf/arm_pmu_brbe.c     | 448 ++++++++++++++++++++++++++++++++
->  drivers/perf/arm_pmu_brbe.h     | 259 ++++++++++++++++++
->  drivers/perf/arm_pmu_platform.c |  34 +++
->  include/linux/perf/arm_pmu.h    |  67 +++++
->  9 files changed, 1169 insertions(+), 3 deletions(-)
->  create mode 100644 drivers/perf/arm_pmu_brbe.c
->  create mode 100644 drivers/perf/arm_pmu_brbe.h
-> 
