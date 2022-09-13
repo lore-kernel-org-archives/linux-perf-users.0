@@ -2,104 +2,117 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5303CC6FA82
-	for <linux-perf-users@archiver.kernel.org>; Tue, 13 Sep 2022 11:43:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 61710C6FA82
+	for <linux-perf-users@archiver.kernel.org>; Tue, 13 Sep 2022 11:56:14 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231459AbiIMLnX (ORCPT
+        id S230323AbiIML4N (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Tue, 13 Sep 2022 07:43:23 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34084 "EHLO
+        Tue, 13 Sep 2022 07:56:13 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52066 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231351AbiIMLnW (ORCPT
+        with ESMTP id S231335AbiIML4L (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Tue, 13 Sep 2022 07:43:22 -0400
-Received: from ams.source.kernel.org (ams.source.kernel.org [IPv6:2604:1380:4601:e00::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C0DE9564F4;
-        Tue, 13 Sep 2022 04:43:21 -0700 (PDT)
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by ams.source.kernel.org (Postfix) with ESMTPS id 79C42B80E5B;
-        Tue, 13 Sep 2022 11:43:20 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id B85A9C433C1;
-        Tue, 13 Sep 2022 11:43:18 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1663069399;
-        bh=+nJ7Rj3FLsg7DuXb+iDl45ORA6bPO0PKiH+GGv2hjNg=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=oLWvuKIPOoWJF+ZTTvEA1lBCgy3shcWi3dEoRFVXLnwx5oDO6FIh7la9jkdSfvMb9
-         M2TJHAftRctnwila9sZiMhd8CfaTUckW9NezCucYGgyDsu3NOHJ6aKjjH7hkcRCtkZ
-         lc7E5yPrIepoz6j2seYprP0ZjZv/4cQUXpC79b6H62d9lynb9CgyWW5I27KEFI0HCO
-         +SqlHFZA1zaF+mOT68hjV73C3NW9nwrfmnSpDYPDq3uXjUeRGmgBKjYHkG72Z8ZqiH
-         tAE2Jm2cUoISe79v3jvsXpUp9n6cNxkYzu/sAgON9hZTxmbpFLFtvX3RGhB+pRhLVf
-         /gOImxd69s5cg==
-Date:   Tue, 13 Sep 2022 12:43:16 +0100
-From:   Mark Brown <broonie@kernel.org>
-To:     Anshuman Khandual <anshuman.khandual@arm.com>
-Cc:     linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, peterz@infradead.org,
-        acme@kernel.org, mark.rutland@arm.com, will@kernel.org,
-        catalin.marinas@arm.com, James Clark <james.clark@arm.com>,
-        Rob Herring <robh@kernel.org>, Marc Zyngier <maz@kernel.org>,
-        Ingo Molnar <mingo@redhat.com>
-Subject: Re: [PATCH V2 3/7] arm64/perf: Update struct pmu_hw_events for BRBE
-Message-ID: <YyBs1PJwNoNYv4NJ@sirena.org.uk>
-References: <20220908051046.465307-1-anshuman.khandual@arm.com>
- <20220908051046.465307-4-anshuman.khandual@arm.com>
- <Yx8GBq1FJN49iJs9@sirena.org.uk>
- <84683aa7-58ad-85f8-327b-daed2f704834@arm.com>
+        Tue, 13 Sep 2022 07:56:11 -0400
+Received: from mx0a-001b2d01.pphosted.com (mx0a-001b2d01.pphosted.com [148.163.156.1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 57FE85EDE3
+        for <linux-perf-users@vger.kernel.org>; Tue, 13 Sep 2022 04:56:10 -0700 (PDT)
+Received: from pps.filterd (m0098410.ppops.net [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (8.17.1.5/8.17.1.5) with ESMTP id 28DBfhvr030746;
+        Tue, 13 Sep 2022 11:56:04 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=from : to : cc : subject
+ : date : message-id : in-reply-to : references : mime-version :
+ content-transfer-encoding; s=pp1;
+ bh=OF+O4cVMeto1du/udwN+AFR+lGcq1cPITa+yNswzK5Q=;
+ b=hvoG7G0nfpUMWCKRyHGGOy53fi8vnPFGnprr+GSkNeQ/xHuyXIoQJwVP3bf3HBcuuKuO
+ U1vBIuiASSovhRDhd8SQRsW8/jFeLvS6kCEsRxcvTU5IJ/RDB4cV+JHPWga8e2HxH+HC
+ i7hpdv94O+bYAxNaa731k59Nu2SoJ1aEW5PmUFx6n0KO15asCmU81tKNK7o2uZoz20T0
+ S2Yu1rcgRMjwBMBJSRI5504UEeaa/0y2JbzJ6SbtnCivYRulOWu6mvrvu7iFWlExAWTk
+ hEHdRJL7o17CmIM1Xi8fhhLynMqfpQretpu20zHeY8oS/GPuYQ3F1MRQz7c7sE6mIWpR gA== 
+Received: from ppma03ams.nl.ibm.com (62.31.33a9.ip4.static.sl-reverse.com [169.51.49.98])
+        by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 3jjs7aremc-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Tue, 13 Sep 2022 11:56:03 +0000
+Received: from pps.filterd (ppma03ams.nl.ibm.com [127.0.0.1])
+        by ppma03ams.nl.ibm.com (8.16.1.2/8.16.1.2) with SMTP id 28DBof89012971;
+        Tue, 13 Sep 2022 11:56:01 GMT
+Received: from b06cxnps3075.portsmouth.uk.ibm.com (d06relay10.portsmouth.uk.ibm.com [9.149.109.195])
+        by ppma03ams.nl.ibm.com with ESMTP id 3jgj79krd0-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Tue, 13 Sep 2022 11:56:01 +0000
+Received: from d06av23.portsmouth.uk.ibm.com (d06av23.portsmouth.uk.ibm.com [9.149.105.59])
+        by b06cxnps3075.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 28DBtwjU41419216
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Tue, 13 Sep 2022 11:55:58 GMT
+Received: from d06av23.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 82BAEA404D;
+        Tue, 13 Sep 2022 11:55:58 +0000 (GMT)
+Received: from d06av23.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 2CD9CA4040;
+        Tue, 13 Sep 2022 11:55:56 +0000 (GMT)
+Received: from localhost.localdomain (unknown [9.43.78.239])
+        by d06av23.portsmouth.uk.ibm.com (Postfix) with ESMTP;
+        Tue, 13 Sep 2022 11:55:55 +0000 (GMT)
+From:   Athira Rajeev <atrajeev@linux.vnet.ibm.com>
+To:     acme@kernel.org, jolsa@kernel.org, mpe@ellerman.id.au
+Cc:     linux-perf-users@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
+        maddy@linux.vnet.ibm.com, rnsastry@linux.ibm.com,
+        kjain@linux.ibm.com, disgoel@linux.vnet.ibm.com
+Subject: [PATCH 3/3] tools/testing/selftests/powerpc: Update the bhrb filter sampling test to test for multiple branch filters
+Date:   Tue, 13 Sep 2022 17:25:46 +0530
+Message-Id: <20220913115546.36179-3-atrajeev@linux.vnet.ibm.com>
+X-Mailer: git-send-email 2.35.1
+In-Reply-To: <20220913115546.36179-1-atrajeev@linux.vnet.ibm.com>
+References: <20220913115546.36179-1-atrajeev@linux.vnet.ibm.com>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="u7UoJoh5Bi3vxoGn"
-Content-Disposition: inline
-In-Reply-To: <84683aa7-58ad-85f8-327b-daed2f704834@arm.com>
-X-Cookie: One FISHWICH coming up!!
+Content-Transfer-Encoding: 8bit
+X-TM-AS-GCONF: 00
+X-Proofpoint-ORIG-GUID: Qd_P7xtogQ4u0cS5VMPqDxCKoCVm0Vgh
+X-Proofpoint-GUID: Qd_P7xtogQ4u0cS5VMPqDxCKoCVm0Vgh
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.205,Aquarius:18.0.895,Hydra:6.0.528,FMLib:17.11.122.1
+ definitions=2022-09-13_05,2022-09-13_01,2022-06-22_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 mlxscore=0 impostorscore=0
+ phishscore=0 mlxlogscore=999 lowpriorityscore=0 suspectscore=0
+ priorityscore=1501 adultscore=0 spamscore=0 clxscore=1015 malwarescore=0
+ bulkscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2207270000 definitions=main-2209130052
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
+For PERF_SAMPLE_BRANCH_STACK sample type, different branch_sample_type,
+ie branch filters are supported. The testcase "bhrb_filter_map_test"
+tests the valid and invalid filter maps in different powerpc platforms.
+Update this testcase to include scenario to cover multiple branch
+filters at sametime. Since powerpc doesn't support multiple filters at
+sametime, expect failure during perf_event_open.
 
---u7UoJoh5Bi3vxoGn
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+Reported-by: Disha Goel <disgoel@linux.vnet.ibm.com>
+Signed-off-by: Athira Rajeev <atrajeev@linux.vnet.ibm.com>
+---
+ .../powerpc/pmu/sampling_tests/bhrb_filter_map_test.c    | 9 +++++++++
+ 1 file changed, 9 insertions(+)
 
-On Tue, Sep 13, 2022 at 11:03:45AM +0530, Anshuman Khandual wrote:
-> On 9/12/22 15:42, Mark Brown wrote:
+diff --git a/tools/testing/selftests/powerpc/pmu/sampling_tests/bhrb_filter_map_test.c b/tools/testing/selftests/powerpc/pmu/sampling_tests/bhrb_filter_map_test.c
+index 8182647c63c8..605669d4e4cb 100644
+--- a/tools/testing/selftests/powerpc/pmu/sampling_tests/bhrb_filter_map_test.c
++++ b/tools/testing/selftests/powerpc/pmu/sampling_tests/bhrb_filter_map_test.c
+@@ -96,6 +96,15 @@ static int bhrb_filter_map_test(void)
+ 		}
+ 	}
+ 
++	/*
++	 * Combine filter maps which includes a valid branch filter and an invalid branch
++	 * filter. Example: any ( PERF_SAMPLE_BRANCH_ANY) and save_type
++	 * (PERF_SAMPLE_BRANCH_TYPE_SAVE).
++	 * The perf_event_open should fail in this case.
++	 */
++	event.attr.branch_sample_type = PERF_SAMPLE_BRANCH_ANY | PERF_SAMPLE_BRANCH_TYPE_SAVE;
++	FAIL_IF(!event_open(&event));
++
+ 	return 0;
+ }
+ 
+-- 
+2.31.1
 
-> > like it would be clearer and safer to allocate these dynamically
-> > when BRBE is used if that's possible, I'd expect that should also
-> > deal with the stack frame size issues as well.
-
-> That might not be possible because the generic 'struct perf_branch_stack'
-> expects 'perf_branch_stack.entries' to be a variable array which is also
-> contiguous in memory, with other elements in 'perf_branch_stack'. Besides
-> that will be a deviation from similar implementations on x86 and powerpc
-> platforms.
-
-> The stack frame size came up because BRBE_MAX_ENTRIES is 64 compared to
-> just 32 on other platforms, which follow the exact same method.
-
-If this is a pattern used by other architectures and relied on by
-the core that doesn't mean it's impossible to do anything, it
-means that the existing code needs to be updated to allow the
-larger number of entries for BRBE if we want to change things.
-That is a lot of effort of course so something that moves the
-allocation off the stack would be more expedient in the short
-term.
-
---u7UoJoh5Bi3vxoGn
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAmMgbNMACgkQJNaLcl1U
-h9D4MAf/aF3z/1es9J2nzieR93V2tWd1/bqxJk8jf0Cd/sv59XIF8zPUT5zPp3/N
-+DkehTrDcO3uWrL8N7fZKgjb0Tvv69IJC2+QJ5fs3HCkp1qxX/Aqm9nhDqQGjp/p
-t1xOni9vVwDImqq8dedD/DYLhTAAqEKFfvR11XA9l4RH96FdShRKF77tFyicKsFg
-D8HdwiVJsqSdqWC82tukThKcMHoJ/HYQ0B7UxkF3gHqUkgRfqyzaU0O5VHm2frxu
-IK6VJxeV2WNMzqFz9Gl4fmD3wri3tC4DvtTKCSu8LOt7nmdHqY309I2wNN+iKMY9
-7q7wTAAlnSnqOPeXnngfOJ2H4IevoQ==
-=S8Rj
------END PGP SIGNATURE-----
-
---u7UoJoh5Bi3vxoGn--
