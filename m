@@ -2,160 +2,123 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B4174C6FA82
-	for <linux-perf-users@archiver.kernel.org>; Tue, 13 Sep 2022 02:17:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C0E32C54EE9
+	for <linux-perf-users@archiver.kernel.org>; Tue, 13 Sep 2022 05:33:57 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229629AbiIMCRR (ORCPT
+        id S229762AbiIMFdz (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Mon, 12 Sep 2022 22:17:17 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54278 "EHLO
+        Tue, 13 Sep 2022 01:33:55 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42482 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229610AbiIMCRQ (ORCPT
+        with ESMTP id S229677AbiIMFdy (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Mon, 12 Sep 2022 22:17:16 -0400
-Received: from mail-pg1-x536.google.com (mail-pg1-x536.google.com [IPv6:2607:f8b0:4864:20::536])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0611552DCA
-        for <linux-perf-users@vger.kernel.org>; Mon, 12 Sep 2022 19:17:14 -0700 (PDT)
-Received: by mail-pg1-x536.google.com with SMTP id 207so1572308pgc.7
-        for <linux-perf-users@vger.kernel.org>; Mon, 12 Sep 2022 19:17:14 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date;
-        bh=mNIi18X3rLwN7bNjOQgmycw3pgOrOB3gKZL4IhqTm0Y=;
-        b=pkf7liHixkCnKG6153BxNwx5r85qeEvrfDd8Xv+ijxHa4yEP2+nSqEAm+zJ//bD2OL
-         yndpzP6KpxqtWMYB1az234Slh8fmKt3zQBakDMewxqyeujWb0FJlyWaQRjtvFoQFun7B
-         CZ6dNKTWcOa0eC+kjcUj+u6ZjVbd0TJ7y1DQIOfsdtCaeFdlmjyspsQZ92eRhyKd6xOv
-         maOy0LG7ed0vfwMUZ/+pD/5STBRw/Dr7Ew+MIqrimco/pZKKJXAN5lI2V9fObnAI8upu
-         dZHJETVz/Z+rTDcuW9zo06M3xNx2DA5fxpHLkqTpuEYSNBmxG4Whb3X7ESqviPmTqjMP
-         q1lg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date;
-        bh=mNIi18X3rLwN7bNjOQgmycw3pgOrOB3gKZL4IhqTm0Y=;
-        b=Jqw0zPkX+wE5DeMe3se44mpUIjNt+q65Y53AwJGEONqho/LaydCWDXPyJYxd6h+XkB
-         PotKAM8v55OVkKQH/pu67BqY+A3Nz2Qc8aOnyzqV5wmGlg7F1IoXSIOLobCmWwdmVZzh
-         P0kskHrkpxD00A8g/MVsTCna/Q2bx4Hg9cA3qjmhuQqteRmGBEExp8vblHTBe8FYoypa
-         +KNDTuSg9zjo5B/yDog3wGEVkSFc24eGk8FuFXBfGqjK/sdZ+QJUPRmaLoS6HbCwwzoS
-         kP+ygEBSvr3c2EA02/qvl2xLpwGlduaRQnT+W36hjsRb0xEp5lfou6nBwJGdHXtMXsA4
-         jMeQ==
-X-Gm-Message-State: ACgBeo07f8u2UN4P95TVzd6HQ+w29UNBtgjo174h4UstrGwuZkMOXhfE
-        qUU1nYw1rsuZ6AJpZWxm0Akv+HCSNfuxZJ+f
-X-Google-Smtp-Source: AA6agR6RX1U2gyW4RI0OqD6Leu4mPHYm5EFqoUfispvjgEYXh5UtA+Lxmd57WzWFCVFmNmtyreHuFw==
-X-Received: by 2002:a63:4816:0:b0:438:aece:3738 with SMTP id v22-20020a634816000000b00438aece3738mr13381201pga.279.1663035433786;
-        Mon, 12 Sep 2022 19:17:13 -0700 (PDT)
-Received: from leoy-yangtze.lan (173.242.123.178.16clouds.com. [173.242.123.178])
-        by smtp.gmail.com with ESMTPSA id u16-20020a62d450000000b0053e66f57334sm6341291pfl.112.2022.09.12.19.17.10
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 12 Sep 2022 19:17:13 -0700 (PDT)
-Date:   Tue, 13 Sep 2022 10:17:08 +0800
-From:   Leo Yan <leo.yan@linaro.org>
-To:     Rob Herring <robh@kernel.org>
-Cc:     Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Jiri Olsa <jolsa@kernel.org>,
-        Namhyung Kim <namhyung@kernel.org>,
-        James Clark <james.clark@arm.com>,
-        linux-perf-users <linux-perf-users@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH v2] perf: Skip and warn on unknown format 'configN' attrs
-Message-ID: <Yx/oJDvan6ctGYtX@leoy-yangtze.lan>
-References: <20220909204509.2169512-1-robh@kernel.org>
- <Yx8LgqUtDh5TwWmV@leoy-huanghe.lan>
- <CAL_JsqJGrUrahj-T+k7T9GAF+T8=y03YUTG2V+v52styFFDW_Q@mail.gmail.com>
+        Tue, 13 Sep 2022 01:33:54 -0400
+Received: from foss.arm.com (foss.arm.com [217.140.110.172])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTP id CABDE54C80;
+        Mon, 12 Sep 2022 22:33:53 -0700 (PDT)
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 692B8106F;
+        Mon, 12 Sep 2022 22:33:59 -0700 (PDT)
+Received: from [10.162.42.9] (unknown [10.162.42.9])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 3C8373F73B;
+        Mon, 12 Sep 2022 22:34:16 -0700 (PDT)
+Message-ID: <84683aa7-58ad-85f8-327b-daed2f704834@arm.com>
+Date:   Tue, 13 Sep 2022 11:03:45 +0530
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CAL_JsqJGrUrahj-T+k7T9GAF+T8=y03YUTG2V+v52styFFDW_Q@mail.gmail.com>
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
+ Thunderbird/91.11.0
+Subject: Re: [PATCH V2 3/7] arm64/perf: Update struct pmu_hw_events for BRBE
+Content-Language: en-US
+To:     Mark Brown <broonie@kernel.org>
+Cc:     linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, peterz@infradead.org,
+        acme@kernel.org, mark.rutland@arm.com, will@kernel.org,
+        catalin.marinas@arm.com, James Clark <james.clark@arm.com>,
+        Rob Herring <robh@kernel.org>, Marc Zyngier <maz@kernel.org>,
+        Ingo Molnar <mingo@redhat.com>
+References: <20220908051046.465307-1-anshuman.khandual@arm.com>
+ <20220908051046.465307-4-anshuman.khandual@arm.com>
+ <Yx8GBq1FJN49iJs9@sirena.org.uk>
+From:   Anshuman Khandual <anshuman.khandual@arm.com>
+In-Reply-To: <Yx8GBq1FJN49iJs9@sirena.org.uk>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-On Mon, Sep 12, 2022 at 08:55:32AM -0500, Rob Herring wrote:
 
-[...]
 
-> > If this is the case,
-> > it's good to add a fixes tag like below?
-> >
-> > Fixes: cd82a32e9924 ("perf tools: Add perf pmu object to access pmu format definition")
+On 9/12/22 15:42, Mark Brown wrote:
+> On Thu, Sep 08, 2022 at 10:40:42AM +0530, Anshuman Khandual wrote:
 > 
-> Probably not too important given this is from 2012.
-
-Which means since 2012 there have no requirement for config3 :)
-
-AFAICT, perf tool should be forward compatible, so I think it's good
-for this patch to be landed on (old) LTS kernels.
-
-> > > Signed-off-by: Rob Herring <robh@kernel.org>
-> > > ---
-> > > v2:
-> > >  - Rework YACC code to handle configN formats in C code
-> > >  - Add a warning when an unknown configN attr is found
-> > >
-> > > v1: https://lore.kernel.org/all/20220901184709.2179309-1-robh@kernel.org/
-> > > ---
-> > >  tools/perf/util/pmu.c |  6 ++++++
-> > >  tools/perf/util/pmu.l |  2 --
-> > >  tools/perf/util/pmu.y | 15 ++++-----------
-> > >  3 files changed, 10 insertions(+), 13 deletions(-)
-> > >
-> > > diff --git a/tools/perf/util/pmu.c b/tools/perf/util/pmu.c
-> > > index 89655d53117a..6757db7d559c 100644
-> > > --- a/tools/perf/util/pmu.c
-> > > +++ b/tools/perf/util/pmu.c
-> > > @@ -1475,6 +1475,12 @@ int perf_pmu__new_format(struct list_head *list, char *name,
-> > >  {
-> > >       struct perf_pmu_format *format;
-> > >
-> > > +     if (config > PERF_PMU_FORMAT_VALUE_CONFIG2) {
-> >
-> > It's good to add a new macro PERF_PMU_FORMAT_VALUE_CONFIG_END in
-> > util/pmu.h. Then at here we can check the condition:
+>> +	/* Captured BRBE buffer - copied as is into perf_sample_data */
+>> +	struct perf_branch_stack	brbe_stack;
+>> +	struct perf_branch_entry	brbe_entries[BRBE_MAX_ENTRIES];
 > 
-> Sure.
-> 
-> >
-> >        if (config >= PERF_PMU_FORMAT_VALUE_CONFIG_END) {
-> >
-> > > +             pr_warning("WARNING: format '%s' requires 'config%d' which is not supported by this version of perf!\n",
-> > > +                        name, config);
-> >
-> > ... so at here we can print log like:
-> >
-> >        pr_warning("WARNING: format '%s' requires 'config%d' which is not "
-> >                   "supported by this version of perf (maximum config%d)!\n",
-> >                   name, config, PERF_PMU_FORMAT_VALUE_CONFIG_END - 1);
-> 
-> I was trying to keep it to one line and given configN isn't expanded
-> frequently it should be simple enough to figure out what version you
-> need.
+> It looks like perf_branch_entry is intended to be the variably
+> sized entries array at the end of perf_branch_stack?  That could
 
-It's fine for me.
+That is right. Because max number of entries for brbe_entries[] array
+is platform dependent i.e BHRB_MAX_ENTRIES on powerpc, MAX_LBR_ENTRIES
+on x86 and BRBE_MAX_ENTRIES on arm64.
 
-> > The rest of this patch is fine for me.
-> >
-> > As a side topic, I know you want to support the SPEv1.2 feature with
-> > config3, seems to me a complete patch set series should include the
-> > changes for supporting config3 as well.  This can give more clear view
-> > for how to fix incompatibility issue between old and new kernels, and
-> > how to support config3 in the latest kernel, but it's fine for me if
-> > you want to split into two patch sets.
-> 
-> I've sent out the SPE kernel support separately. I was told by Arnaldo
-> to split perf tool and kernel side changes.
+The generic definition
 
-To be clear, it's right to split kernel and userspace parts into two
-patch set, but for userspace change I cannot find you sent patch
-to support config3 in perf tool, something in the [1] is missed,
-otherwise I don't think you provide complete support for config3 (and
-thus we have no chance to use new event format).
+struct perf_branch_stack {
+        __u64                           nr;
+        __u64                           hw_idx;
+        struct perf_branch_entry        entries[];
+};
 
-Thanks,
-Leo
+On x86 platform
 
-[1] https://termbin.com/vdph
+#define MAX_LBR_ENTRIES         32
+
+struct cpu_hw_events {
+	....
+	struct perf_branch_stack        lbr_stack;
+        struct perf_branch_entry        lbr_entries[MAX_LBR_ENTRIES];
+	....
+}
+
+On powerpc platform
+
+#define BHRB_MAX_ENTRIES        32
+
+struct cpu_hw_events {
+	....
+        struct  perf_branch_stack       bhrb_stack;
+        struct  perf_branch_entry       bhrb_entries[BHRB_MAX_ENTRIES];
+	....
+}
+
+Followed same format on arm64 platform as well
+
+#define BRBE_MAX_ENTRIES	64
+
+struct pmu_hw_events {
+	....
+	....
+	struct perf_branch_stack	brbe_stack;
+	struct perf_branch_entry	brbe_entries[BRBE_MAX_ENTRIES];
+	....
+	....
+}
+
+> probably do with being called out if it's the case.  It feels
+
+Right, we could add a comment in this regard.
+
+> like it would be clearer and safer to allocate these dynamically
+> when BRBE is used if that's possible, I'd expect that should also
+> deal with the stack frame size issues as well.
+
+That might not be possible because the generic 'struct perf_branch_stack'
+expects 'perf_branch_stack.entries' to be a variable array which is also
+contiguous in memory, with other elements in 'perf_branch_stack'. Besides
+that will be a deviation from similar implementations on x86 and powerpc
+platforms.
+
+The stack frame size came up because BRBE_MAX_ENTRIES is 64 compared to
+just 32 on other platforms, which follow the exact same method.
