@@ -2,49 +2,48 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 036A7C6FA89
-	for <linux-perf-users@archiver.kernel.org>; Tue, 13 Sep 2022 11:03:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 310B9C54EE9
+	for <linux-perf-users@archiver.kernel.org>; Tue, 13 Sep 2022 11:28:11 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231799AbiIMLDo (ORCPT
+        id S231624AbiIML2J (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Tue, 13 Sep 2022 07:03:44 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46180 "EHLO
+        Tue, 13 Sep 2022 07:28:09 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47210 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231811AbiIMLDi (ORCPT
+        with ESMTP id S231304AbiIML2I (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Tue, 13 Sep 2022 07:03:38 -0400
-Received: from mga01.intel.com (mga01.intel.com [192.55.52.88])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 28AC4580B2;
-        Tue, 13 Sep 2022 04:03:36 -0700 (PDT)
+        Tue, 13 Sep 2022 07:28:08 -0400
+Received: from mga11.intel.com (mga11.intel.com [192.55.52.93])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 215BC140D5;
+        Tue, 13 Sep 2022 04:28:08 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1663067016; x=1694603016;
+  t=1663068488; x=1694604488;
   h=message-id:date:mime-version:subject:to:cc:references:
    from:in-reply-to:content-transfer-encoding;
-  bh=RlRFv9tcot/tQwfhzKboadhEcrQNg8scVcikCi9xRI0=;
-  b=M2smG6H0MVIsfgUrchUOpP1PEzFj2sJXjGihlX7dVvJo9ZcelfLK4RV8
-   cPSk/0pb8xpaFfFneQaBDm6QqM5JWL1tgKlExaUOSLYe8U6e8tOTjoqGz
-   vd8DlWmrV1ilBKrwcr9YUPi96sZ2J759YWTBmmgncEMM9xm+ZFKaI4BLb
-   iFtQWTGy7cY5ym/Uf+Cy6rz7P6BcJP+vJsHZRzPYfcYtdQIWrLDws27ei
-   zZUYK8VCI1jxCuXGphtj2ipZoUDz9Wqju6jklSr4BjuEjQ3qxprNSW7vW
-   BnDK+ZnJEde17f3vb+3yW9hcnQbLeVotCU3RF+Tw2+EtNx+5zexRQYxmV
-   A==;
-X-IronPort-AV: E=McAfee;i="6500,9779,10468"; a="324352280"
+  bh=lFJSry97VcpEHk7tQe7VqaRgwuUpn7inJZ/bt4fPAyY=;
+  b=eOsv09eI26uHCHXin+jBIJr2tH45UmdO6NATgZlpstv7dzl/zsPuimx8
+   7//YaVldI+QxB2/4z0oLN9dC2txTXR8Qsd836PUVZxUQbbCFyRR5T3o4y
+   9AZj5IVcV/i+0SkBZ8SjLUBnkIqNApf9/Wv7axCrSYQmQDDvLZDkRfCzP
+   BrgdBk2RLSs8183nYZJlQbWAPubyUWIA+Dyc3Gnr2yQkXzp6009ma9JPo
+   5jsk1S2Wsgv8Ppt0f13ECWSoUMpYNIg1F3mwlIEG2IlO50oKcD4DChqUS
+   a5/j0UjlzFEiQVd5jtYy4WeHQrHSPM/dYnWAkLcTdPPnrYmNBfoYPt4iA
+   w==;
+X-IronPort-AV: E=McAfee;i="6500,9779,10468"; a="295703890"
 X-IronPort-AV: E=Sophos;i="5.93,312,1654585200"; 
-   d="scan'208";a="324352280"
+   d="scan'208";a="295703890"
 Received: from fmsmga008.fm.intel.com ([10.253.24.58])
-  by fmsmga101.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 13 Sep 2022 04:03:34 -0700
+  by fmsmga102.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 13 Sep 2022 04:28:07 -0700
 X-IronPort-AV: E=Sophos;i="5.93,312,1654585200"; 
-   d="scan'208";a="678521328"
+   d="scan'208";a="678527823"
 Received: from ahunter6-mobl1.ger.corp.intel.com (HELO [10.0.2.15]) ([10.252.59.98])
-  by fmsmga008-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 13 Sep 2022 04:03:31 -0700
-Message-ID: <f69ccb77-b60a-c901-3bec-5b8d1a518043@intel.com>
-Date:   Tue, 13 Sep 2022 14:03:26 +0300
+  by fmsmga008-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 13 Sep 2022 04:28:05 -0700
+Message-ID: <756848e6-19a4-d4f0-00b3-b6c945ac8dda@intel.com>
+Date:   Tue, 13 Sep 2022 14:28:00 +0300
 MIME-Version: 1.0
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
  Firefox/91.0 Thunderbird/91.11.0
-Subject: Re: [PATCH 5/6] perf test: Add target workload test in perf record
- tests
+Subject: Re: [PATCH 6/6] perf test: Do not set TEST_SKIP for record subtests
 Content-Language: en-US
 To:     Namhyung Kim <namhyung@kernel.org>,
         Arnaldo Carvalho de Melo <acme@kernel.org>,
@@ -55,11 +54,11 @@ Cc:     Ingo Molnar <mingo@kernel.org>,
         Ian Rogers <irogers@google.com>,
         linux-perf-users@vger.kernel.org
 References: <20220907064645.1197894-1-namhyung@kernel.org>
- <20220907064645.1197894-6-namhyung@kernel.org>
+ <20220907064645.1197894-7-namhyung@kernel.org>
 From:   Adrian Hunter <adrian.hunter@intel.com>
 Organization: Intel Finland Oy, Registered Address: PL 281, 00181 Helsinki,
  Business Identity Code: 0357606 - 4, Domiciled in Helsinki
-In-Reply-To: <20220907064645.1197894-6-namhyung@kernel.org>
+In-Reply-To: <20220907064645.1197894-7-namhyung@kernel.org>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 Precedence: bulk
@@ -67,71 +66,60 @@ List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
 On 7/09/22 09:46, Namhyung Kim wrote:
-> Add a subtest which profiles the given workload on the command line.
-> As it's a minimal requirement, test should run ok so it doesn't skip
-> the test even if it failed to run the perf record.
+> It now has 4 sub tests and one of them should run at least.
+> But once TEST_SKIP (= 2) return value is set, it won't be overwritten
+> unless there's a failure.  I think we should return success when one
+> or more tested are skipped but the remaining subtests are passed.
+> 
+> So update the test code not to set the err variable when it skips
+> the test.
 > 
 > Signed-off-by: Namhyung Kim <namhyung@kernel.org>
+
+I tend to agree that the perf's default event should work.
+
+Reviewed-by: Adrian Hunter <adrian.hunter@intel.com>
+
+
 > ---
->  tools/perf/tests/shell/record.sh | 31 +++++++++++++++++++++++++++++++
->  1 file changed, 31 insertions(+)
+>  tools/perf/tests/shell/record.sh | 12 ------------
+>  1 file changed, 12 deletions(-)
 > 
 > diff --git a/tools/perf/tests/shell/record.sh b/tools/perf/tests/shell/record.sh
-> index bd4ef60948bd..ff66e58f3a26 100755
+> index ff66e58f3a26..487981767455 100755
 > --- a/tools/perf/tests/shell/record.sh
 > +++ b/tools/perf/tests/shell/record.sh
-> @@ -167,11 +167,42 @@ test_system_wide() {
->    echo "Basic --system-wide mode test [Success]"
->  }
->  
-> +test_workload() {
-> +  echo "Basic target workload test"
-> +  if ! perf record ${testopt} -o ${perfdata} ${testprog} 2> /dev/null
-> +  then
-> +    echo "Workload record [Failed record]"
-> +    err=1
-> +    return
-> +  fi
-> +  if ! perf report -i ${perfdata} -q | egrep -q ${testsym}
-> +  then
-> +    echo "Workload record [Failed missing output]"
-> +    err=1
-> +    return
-> +  fi
-> +  if ! perf record -e cpu-clock,cs --threads=package ${testopt} \
-> +    -o ${perfdata} ${testprog} 2> /dev/null
-> +  then
-> +    echo "Workload record [Failed recording with threads]"
-> +    err=1
-> +    return
-> +  fi
-> +  if ! perf report -i ${perfdata} -q | egrep -q ${testsym}
-> +  then
-> +    echo "Workload record [Failed missing output]"
-
-When testing, this was happening always until changing the delay
-from 3 to 1 ms.  It might be a bit racy to work consistently on
-different machines.
-
-Another approach is to wait for threads to appear in /proc/N/task
-like wait_for_threads() here:
-
-	https://lore.kernel.org/linux-perf-users/20220912083412.7058-12-adrian.hunter@intel.com/T/#u
-
-
-> +    err=1
-> +    return
-> +  fi
-> +  echo "Basic target workload test [Success]"
-> +}
-> +
->  build_test_program
->  
->  test_per_thread
->  test_register_capture
->  test_system_wide
-> +test_workload
->  
->  cleanup
->  exit $err
+> @@ -72,10 +72,6 @@ test_per_thread() {
+>    if ! perf record -o /dev/null --quiet ${testprog} 2> /dev/null
+>    then
+>      echo "Per-thread record [Skipped event not supported]"
+> -    if [ $err -ne 1 ]
+> -    then
+> -      err=2
+> -    fi
+>      return
+>    fi
+>    if ! perf record --per-thread ${testopt} -o ${perfdata} ${testprog} 2> /dev/null
+> @@ -111,10 +107,6 @@ test_register_capture() {
+>    if ! perf list | egrep -q 'br_inst_retired.near_call'
+>    then
+>      echo "Register capture test [Skipped missing event]"
+> -    if [ $err -ne 1 ]
+> -    then
+> -      err=2
+> -    fi
+>      return
+>    fi
+>    if ! perf record --intr-regs=\? 2>&1 | egrep -q 'available registers: AX BX CX DX SI DI BP SP IP FLAGS CS SS R8 R9 R10 R11 R12 R13 R14 R15'
+> @@ -139,10 +131,6 @@ test_system_wide() {
+>    if ! perf record -aB --synth=no ${testopt} -o ${perfdata} ${testprog} 2> /dev/null
+>    then
+>      echo "System-wide record [Skipped not supported]"
+> -    if [ $err -ne 1 ]
+> -    then
+> -      err=2
+> -    fi
+>      return
+>    fi
+>    if ! perf report -i ${perfdata} -q | egrep -q ${testsym}
 
