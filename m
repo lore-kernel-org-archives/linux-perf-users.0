@@ -2,277 +2,111 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E804CC6FA82
-	for <linux-perf-users@archiver.kernel.org>; Tue, 13 Sep 2022 13:34:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 526E7C6FA82
+	for <linux-perf-users@archiver.kernel.org>; Tue, 13 Sep 2022 13:49:44 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231500AbiIMNeZ (ORCPT
+        id S232328AbiIMNtm (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Tue, 13 Sep 2022 09:34:25 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38802 "EHLO
+        Tue, 13 Sep 2022 09:49:42 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56900 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230108AbiIMNeX (ORCPT
+        with ESMTP id S232327AbiIMNtl (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Tue, 13 Sep 2022 09:34:23 -0400
-Received: from mail.kdab.com (mail.kdab.com [176.9.126.58])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 49F1F20189
-        for <linux-perf-users@vger.kernel.org>; Tue, 13 Sep 2022 06:34:22 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kdab.com; h=
- content-transfer-encoding:content-type:content-type:in-reply-to
- :from:from:references:content-language:subject:subject
- :mime-version:date:date:message-id; s=dkim; t=1663076059; x=
- 1663940060; bh=SBmn9TN4QrEBobGltSfTOn4OJaEs7iHgnoE+mtJAoeY=; b=e
- 5tTRH2c5lPljvnfvNfjJIC4KMFVQUr+f5J5LgoLO2hoKXDTye0jaKu3PzDEuVEtk
- gNAHyLcacJtYWlpJ7OXE/JXRW6i+s9krYdIipv4r50qZ+OPA9IaCwTuupYURBHuh
- 7e6EFlABcoL5EKJfGTBrepiNldSBlPZEEQawpvTIMA=
-X-Virus-Scanned: amavisd-new at kdab.com
-Message-ID: <1b701f63-4f78-dbc8-cac4-bfbf7be84134@kdab.com>
-Date:   Tue, 13 Sep 2022 15:34:18 +0200
-MIME-Version: 1.0
+        Tue, 13 Sep 2022 09:49:41 -0400
+Received: from mail-pj1-x102f.google.com (mail-pj1-x102f.google.com [IPv6:2607:f8b0:4864:20::102f])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4FE2A64CD
+        for <linux-perf-users@vger.kernel.org>; Tue, 13 Sep 2022 06:49:37 -0700 (PDT)
+Received: by mail-pj1-x102f.google.com with SMTP id x1-20020a17090ab00100b001fda21bbc90so15702324pjq.3
+        for <linux-perf-users@vger.kernel.org>; Tue, 13 Sep 2022 06:49:37 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date;
+        bh=d0uddMmYZrlJ4pXTnSKkzXxSBOp6ki56m+IY7uEzXgc=;
+        b=UqK7Vgmw9oMGp0TDLE5jjl+qjUuZ+y6osp8blbrUcbiMAwZqJmr6ZG4264SvMiEYGt
+         0jcYEaf34CVbl3eTCDOwoAE7w3rrge6hgUrZ4rVHQ82skjGGvxpaNtsAFH1oJbQJDRmN
+         B19PQ4CkCDOPR/Mo0OIv5OzV4NpCHCKF1QqrlUtbvJZzS3vSmhbZ4s5yOGxjcuEw4Vms
+         UslifkkanipXbNR7mwKSKOrBcnwtVwbaLojZBWHvSlltC17LrGrFPL443vjvQ6Mw/OO/
+         8xUhz3lX0uyqUvKhP0GRx4/U0AlUEyO2Hh7HIg5tWGf0QUBT4vXl6tuqAD/KUKMTT67u
+         SOPg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date;
+        bh=d0uddMmYZrlJ4pXTnSKkzXxSBOp6ki56m+IY7uEzXgc=;
+        b=FdsSbs6EmAlQypTcI97RpaGnVt5G9VV1oNGivHyaMpic5AJkLtBROrgUKt/BUJrP3o
+         SYcInK4rlT72PnGQ6JuCOkaly/lGW6OeW1GO1hZnpSgqfoBJq987UAhf7d7c/tgp7c56
+         6dr4wq40Vl9pQczty8fKDR6ScSkyQoGzrieR2WAC2IjxH8cbdfvD3nu3hcbhONAXlC3c
+         KuzRDSCdR6bwRuTFXWhM0APwiScy+u7u8DjmTT/OF3RCYSOOPy6ARBmG+1pNO8m/NN94
+         wN/OTumyNjCdZ6vX5CKMn+UZDJSUJL6xIJ6aR7wgEe9s55TPhzffjsbJRsxpYkD0FroO
+         RCDA==
+X-Gm-Message-State: ACgBeo2W4xuDNS/vFDWTUsBjqSH0NbWd26zsbIu955gC2PaJbQ8BCWMx
+        D8mCRGp9xVunLD3Yunp3RexuD8orAbuHFgbz
+X-Google-Smtp-Source: AA6agR5QUen22HbyOjAjGVXUzwoQN7CB9EmZuip9Go9LqzaCxgKFazX7GBsHBzJhhKLQX3FEYMkxzA==
+X-Received: by 2002:a17:902:c104:b0:176:e2fa:2154 with SMTP id 4-20020a170902c10400b00176e2fa2154mr32041981pli.98.1663076976423;
+        Tue, 13 Sep 2022 06:49:36 -0700 (PDT)
+Received: from leoy-yangtze.lan (173.242.123.178.16clouds.com. [173.242.123.178])
+        by smtp.gmail.com with ESMTPSA id o5-20020a655205000000b0042b87fd1081sm7728011pgp.46.2022.09.13.06.49.34
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 13 Sep 2022 06:49:35 -0700 (PDT)
+Date:   Tue, 13 Sep 2022 21:49:32 +0800
+From:   Leo Yan <leo.yan@linaro.org>
+To:     Lieven Hey <lieven.hey@kdab.com>
+Cc:     James Clark <james.clark@arm.com>,
+        linux-perf-users@vger.kernel.org, acme@kernel.org
 Subject: Re: [PATCH] include program header in elf files generated by perf
  inject
-Content-Language: en-US
-To:     James Clark <james.clark@arm.com>, leo.yan@linaro.org
+Message-ID: <YyCKbAFmZohv0ISJ@leoy-yangtze.lan>
 References: <20220825084923.167140-1-lieven.hey@kdab.com>
  <80f54486-1470-c355-d639-1a27b4d1ea22@arm.com>
  <6e0ebfb6-9fbf-073c-94b0-a799b9ec657f@kdab.com>
  <e3c57763-eb3d-e8cc-c3b7-36a33e86ad6a@arm.com>
  <1cc13a5d-bb41-edbb-ade7-62d4a678c0f9@kdab.com>
  <cf2f3f27-1002-dbd0-d851-465b169c2031@arm.com>
-Cc:     linux-perf-users@vger.kernel.org, acme@kernel.org
-From:   Lieven Hey <lieven.hey@kdab.com>
-In-Reply-To: <cf2f3f27-1002-dbd0-d851-465b169c2031@arm.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: quoted-printable
+ <1b701f63-4f78-dbc8-cac4-bfbf7be84134@kdab.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <1b701f63-4f78-dbc8-cac4-bfbf7be84134@kdab.com>
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-Hi,
+Hi Lieven,
 
-perf is unable to open elf files generated by perf inject.
+On Tue, Sep 13, 2022 at 03:34:18PM +0200, Lieven Hey wrote:
+> Hi,
+> 
+> perf is unable to open elf files generated by perf inject.
+> 
+> Example:
+> Create a file named test.dart with the following content:
+> 
+> void main() {
+>     print("Hello World");
+> }
+> 
+> and then run
+> 
+> perf record --call-graph dwarf -k 1 dart --generate-perf-jitdump test.dart
+> perf inject -j -i perf.data -o perf.data.jitted
+> 
+> The problem exists since 2d86612aacb78. The commit added some code that now
+> requires an elf file to have a valid program header.
 
-Example:
-Create a file named test.dart with the following content:
+Sorry I missed this patch.
 
-void main() {
-     print("Hello World");
-}
+Could you confirm if the commit 6d518ac7be62 ("perf symbol: Fail to read
+phdr workaround") is included in your local code base?
 
-and then run
+After a quick look for this patch, I think it is doing right thing.
+Just want to check if this is the same issue with the one fixed by the
+commit 6d518ac7be62.  I will review it in details in my next 1~2 days.
 
-perf record --call-graph dwarf -k 1 dart --generate-perf-jitdump test.dar=
-t
-perf inject -j -i perf.data -o perf.data.jitted
+> > Can you reply-all on the original mailing list thread with this and a
+> > 'to' to Leo. It's probably best to continue the discussion there so Leo
+> > is aware.
 
-The problem exists since 2d86612aacb78. The commit added some code that=20
-now requires an elf file to have a valid program header.
+Thanks a lot, James.
 
-Cheers
-Lieven
-
-Am 13.09.22 um 11:56 schrieb James Clark:
->=20
->=20
-> On 09/09/2022 14:47, Lieven Hey wrote:
->> Hi James,
->>
->> I looked into this again. Commit 2d86612aacb78 changed the elf loading
->> code so that a program header is now required.
->>
->=20
-> Can you reply-all on the original mailing list thread with this and a
-> 'to' to Leo. It's probably best to continue the discussion there so Leo
-> is aware.
->=20
-> Thanks
->=20
->> Am 25.08.22 um 17:24 schrieb James Clark:
->>>
->>>
->>> On 25/08/2022 14:56, Lieven Hey wrote:
->>>> Hi James,
->>>>
->>>> I created a file named test.dart with the following content:
->>>>
->>>> void main() {
->>>>  =C2=A0=C2=A0 print("Hello World");
->>>> }
->>>>
->>>> and then run
->>>>
->>>> perf record --call-graph dwarf -k 1 dart --generate-perf-jitdump
->>>> test.dart
->>>> perf inject -j -i perf.data -o perf.data.jitted
->>>>
->>>> If you now open perf.data.jitted with perf report you can see lots o=
-f
->>>> errors regarding the missing program header.
->>>
->>> Do I need a debug build of dart or some extra dependency linked into
->>> perf? I don't see any errors but I do see a load of addresses without
->>> symbols:
->>>
->>>  =C2=A0=C2=A0=C2=A0=C2=A0 13.27%=C2=A0=C2=A0=C2=A0=C2=A0 0.00%=C2=A0 =
-dart=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 ld-2.31.so=C2=A0=
-=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 [.] dl_main
->>>  =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
-=A0 |
->>>  =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
-=A0 ---dl_main
->>>  =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
-=A0=C2=A0=C2=A0=C2=A0 |
->>>  =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
-=A0=C2=A0=C2=A0=C2=A0 |--11.82%--_dl_relocate_object
->>>  =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
-=A0=C2=A0=C2=A0=C2=A0 |=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
-=A0 |
->>>  =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
-=A0=C2=A0=C2=A0=C2=A0 |=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
-=A0 |--9.56%--0xffffffff85c01284
->>>  =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
-=A0=C2=A0=C2=A0=C2=A0 |=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
-=A0 |=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 0xffffffff850=
-7b04c
->>>  =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
-=A0=C2=A0=C2=A0=C2=A0 |=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
-=A0 |=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 0xffffffff850=
-7afe8
->>>  =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
-=A0=C2=A0=C2=A0=C2=A0 |=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
-=A0 |=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 0xffffffff850=
-7aa59
->>>  =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
-=A0=C2=A0=C2=A0=C2=A0 |=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
-=A0 |=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 0xffffffff852=
-53dda
->>>  =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
-=A0=C2=A0=C2=A0=C2=A0 |=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
-=A0 |=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 0xffffffff852=
-53a35
->>>  =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
-=A0=C2=A0=C2=A0=C2=A0 |=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
-=A0 |=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 |
->>>  =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
-=A0=C2=A0=C2=A0=C2=A0 |=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
-=A0 |=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 |--3.81%--0xf=
-fffffff85a7831a
->>>  =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
-=A0=C2=A0=C2=A0=C2=A0 |=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
-=A0 |=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 |
->>>  =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
-=A0=C2=A0=C2=A0=C2=A0 |=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
-=A0 |=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 |--2.49%--0xf=
-fffffff85252e72
->>>
->>>
->>>
->>>>
->>>> Cheers,
->>>> Lieven
->>>>
->>>> Am 25.08.22 um 15:51 schrieb James Clark:
->>>>>
->>>>>
->>>>> On 25/08/2022 09:49, Lieven Hey wrote:
->>>>>> The missing header makes it hard for programs like elfutils to ope=
-n
->>>>>> these files.
->>>>>
->>>>> Hi Lieven,
->>>>>
->>>>> Do you have an example command that demonstrates this? I'm
->>>>> interested in
->>>>> trying it out.
->>>>>
->>>>> I was also only aware of the elf files put in ~/.debug after perf
->>>>> record, but not perf inject.
->>>>>
->>>>> Thanks
->>>>> James
->>>>>
->>>>>> ---
->>>>>>  =C2=A0=C2=A0 tools/perf/util/genelf.c | 14 ++++++++++++++
->>>>>>  =C2=A0=C2=A0 tools/perf/util/genelf.h |=C2=A0 4 ++++
->>>>>>  =C2=A0=C2=A0 2 files changed, 18 insertions(+)
->>>>>>
->>>>>> diff --git a/tools/perf/util/genelf.c b/tools/perf/util/genelf.c
->>>>>> index 953338b9e887..02cd9f75e3d2 100644
->>>>>> --- a/tools/perf/util/genelf.c
->>>>>> +++ b/tools/perf/util/genelf.c
->>>>>> @@ -251,6 +251,7 @@ jit_write_elf(int fd, uint64_t load_addr, cons=
-t
->>>>>> char *sym,
->>>>>>  =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 Elf_Data *d;
->>>>>>  =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 Elf_Scn *scn;
->>>>>>  =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 Elf_Ehdr *ehdr;
->>>>>> +=C2=A0=C2=A0=C2=A0 Elf_Phdr *phdr;
->>>>>>  =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 Elf_Shdr *shdr;
->>>>>>  =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 uint64_t eh_frame_base_offse=
-t;
->>>>>>  =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 char *strsym =3D NULL;
->>>>>> @@ -285,6 +286,19 @@ jit_write_elf(int fd, uint64_t load_addr, con=
-st
->>>>>> char *sym,
->>>>>>  =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 ehdr->e_version =3D EV_CURRE=
-NT;
->>>>>>  =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 ehdr->e_shstrndx=3D unwindin=
-g ? 4 : 2; /* shdr index for section
->>>>>> name */
->>>>>>  =C2=A0=C2=A0 +=C2=A0=C2=A0=C2=A0 /*
->>>>>> +=C2=A0=C2=A0=C2=A0=C2=A0 * setup program header
->>>>>> +=C2=A0=C2=A0=C2=A0=C2=A0 */
->>>>>> +=C2=A0=C2=A0=C2=A0 phdr =3D elf_newphdr(e, 1);
->>>>>> +=C2=A0=C2=A0=C2=A0 phdr[0].p_type =3D PT_LOAD;
->>>>>> +=C2=A0=C2=A0=C2=A0 phdr[0].p_offset =3D 0;
->>>>>> +=C2=A0=C2=A0=C2=A0 phdr[0].p_vaddr =3D 0;
->>>>>> +=C2=A0=C2=A0=C2=A0 phdr[0].p_paddr =3D 0;
->>>>>> +=C2=A0=C2=A0=C2=A0 phdr[0].p_filesz =3D csize;
->>>>>> +=C2=A0=C2=A0=C2=A0 phdr[0].p_memsz =3D csize;
->>>>>> +=C2=A0=C2=A0=C2=A0 phdr[0].p_flags =3D PF_X | PF_R;
->>>>>> +=C2=A0=C2=A0=C2=A0 phdr[0].p_align =3D 8;
->>>>>> +
->>>>>>  =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 /*
->>>>>>  =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 * setup text section
->>>>>>  =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 */
->>>>>> diff --git a/tools/perf/util/genelf.h b/tools/perf/util/genelf.h
->>>>>> index ae138afe6c56..b5c909546e3f 100644
->>>>>> --- a/tools/perf/util/genelf.h
->>>>>> +++ b/tools/perf/util/genelf.h
->>>>>> @@ -53,8 +53,10 @@ int jit_add_debug_info(Elf *e, uint64_t code_ad=
-dr,
->>>>>> void *debug, int nr_debug_ent
->>>>>>  =C2=A0=C2=A0 =C2=A0 #if GEN_ELF_CLASS =3D=3D ELFCLASS64
->>>>>>  =C2=A0=C2=A0 #define elf_newehdr=C2=A0=C2=A0=C2=A0 elf64_newehdr
->>>>>> +#define elf_newphdr=C2=A0=C2=A0=C2=A0 elf64_newphdr
->>>>>>  =C2=A0=C2=A0 #define elf_getshdr=C2=A0=C2=A0=C2=A0 elf64_getshdr
->>>>>>  =C2=A0=C2=A0 #define Elf_Ehdr=C2=A0=C2=A0=C2=A0 Elf64_Ehdr
->>>>>> +#define Elf_Phdr=C2=A0=C2=A0=C2=A0 Elf64_Phdr
->>>>>>  =C2=A0=C2=A0 #define Elf_Shdr=C2=A0=C2=A0=C2=A0 Elf64_Shdr
->>>>>>  =C2=A0=C2=A0 #define Elf_Sym=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
-=A0 Elf64_Sym
->>>>>>  =C2=A0=C2=A0 #define ELF_ST_TYPE(a)=C2=A0=C2=A0=C2=A0 ELF64_ST_TY=
-PE(a)
->>>>>> @@ -62,8 +64,10 @@ int jit_add_debug_info(Elf *e, uint64_t code_ad=
-dr,
->>>>>> void *debug, int nr_debug_ent
->>>>>>  =C2=A0=C2=A0 #define ELF_ST_VIS(a)=C2=A0=C2=A0=C2=A0 ELF64_ST_VIS=
-IBILITY(a)
->>>>>>  =C2=A0=C2=A0 #else
->>>>>>  =C2=A0=C2=A0 #define elf_newehdr=C2=A0=C2=A0=C2=A0 elf32_newehdr
->>>>>> +#define elf_newphdr=C2=A0=C2=A0=C2=A0 elf32_newphdr
->>>>>>  =C2=A0=C2=A0 #define elf_getshdr=C2=A0=C2=A0=C2=A0 elf32_getshdr
->>>>>>  =C2=A0=C2=A0 #define Elf_Ehdr=C2=A0=C2=A0=C2=A0 Elf32_Ehdr
->>>>>> +#define Elf_Phdr=C2=A0=C2=A0=C2=A0 Elf32_Phdr
->>>>>>  =C2=A0=C2=A0 #define Elf_Shdr=C2=A0=C2=A0=C2=A0 Elf32_Shdr
->>>>>>  =C2=A0=C2=A0 #define Elf_Sym=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
-=A0 Elf32_Sym
->>>>>>  =C2=A0=C2=A0 #define ELF_ST_TYPE(a)=C2=A0=C2=A0=C2=A0 ELF32_ST_TY=
-PE(a)
->>>>
->>
-
---=20
-Lieven Hey | lieven.hey@kdab.com | Software Developer
-KDAB (Deutschland) GmbH, a KDAB Group company
-Tel: +49-30-521325470
-KDAB - The Qt, C++ and OpenGL Experts
+Leo
