@@ -2,61 +2,38 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 526E7C6FA82
-	for <linux-perf-users@archiver.kernel.org>; Tue, 13 Sep 2022 13:49:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2CCC8ECAAD8
+	for <linux-perf-users@archiver.kernel.org>; Tue, 13 Sep 2022 16:40:40 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232328AbiIMNtm (ORCPT
+        id S231748AbiIMQki (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Tue, 13 Sep 2022 09:49:42 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56900 "EHLO
+        Tue, 13 Sep 2022 12:40:38 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49240 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232327AbiIMNtl (ORCPT
+        with ESMTP id S231971AbiIMQkP (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Tue, 13 Sep 2022 09:49:41 -0400
-Received: from mail-pj1-x102f.google.com (mail-pj1-x102f.google.com [IPv6:2607:f8b0:4864:20::102f])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4FE2A64CD
-        for <linux-perf-users@vger.kernel.org>; Tue, 13 Sep 2022 06:49:37 -0700 (PDT)
-Received: by mail-pj1-x102f.google.com with SMTP id x1-20020a17090ab00100b001fda21bbc90so15702324pjq.3
-        for <linux-perf-users@vger.kernel.org>; Tue, 13 Sep 2022 06:49:37 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date;
-        bh=d0uddMmYZrlJ4pXTnSKkzXxSBOp6ki56m+IY7uEzXgc=;
-        b=UqK7Vgmw9oMGp0TDLE5jjl+qjUuZ+y6osp8blbrUcbiMAwZqJmr6ZG4264SvMiEYGt
-         0jcYEaf34CVbl3eTCDOwoAE7w3rrge6hgUrZ4rVHQ82skjGGvxpaNtsAFH1oJbQJDRmN
-         B19PQ4CkCDOPR/Mo0OIv5OzV4NpCHCKF1QqrlUtbvJZzS3vSmhbZ4s5yOGxjcuEw4Vms
-         UslifkkanipXbNR7mwKSKOrBcnwtVwbaLojZBWHvSlltC17LrGrFPL443vjvQ6Mw/OO/
-         8xUhz3lX0uyqUvKhP0GRx4/U0AlUEyO2Hh7HIg5tWGf0QUBT4vXl6tuqAD/KUKMTT67u
-         SOPg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date;
-        bh=d0uddMmYZrlJ4pXTnSKkzXxSBOp6ki56m+IY7uEzXgc=;
-        b=FdsSbs6EmAlQypTcI97RpaGnVt5G9VV1oNGivHyaMpic5AJkLtBROrgUKt/BUJrP3o
-         SYcInK4rlT72PnGQ6JuCOkaly/lGW6OeW1GO1hZnpSgqfoBJq987UAhf7d7c/tgp7c56
-         6dr4wq40Vl9pQczty8fKDR6ScSkyQoGzrieR2WAC2IjxH8cbdfvD3nu3hcbhONAXlC3c
-         KuzRDSCdR6bwRuTFXWhM0APwiScy+u7u8DjmTT/OF3RCYSOOPy6ARBmG+1pNO8m/NN94
-         wN/OTumyNjCdZ6vX5CKMn+UZDJSUJL6xIJ6aR7wgEe9s55TPhzffjsbJRsxpYkD0FroO
-         RCDA==
-X-Gm-Message-State: ACgBeo2W4xuDNS/vFDWTUsBjqSH0NbWd26zsbIu955gC2PaJbQ8BCWMx
-        D8mCRGp9xVunLD3Yunp3RexuD8orAbuHFgbz
-X-Google-Smtp-Source: AA6agR5QUen22HbyOjAjGVXUzwoQN7CB9EmZuip9Go9LqzaCxgKFazX7GBsHBzJhhKLQX3FEYMkxzA==
-X-Received: by 2002:a17:902:c104:b0:176:e2fa:2154 with SMTP id 4-20020a170902c10400b00176e2fa2154mr32041981pli.98.1663076976423;
-        Tue, 13 Sep 2022 06:49:36 -0700 (PDT)
-Received: from leoy-yangtze.lan (173.242.123.178.16clouds.com. [173.242.123.178])
-        by smtp.gmail.com with ESMTPSA id o5-20020a655205000000b0042b87fd1081sm7728011pgp.46.2022.09.13.06.49.34
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 13 Sep 2022 06:49:35 -0700 (PDT)
-Date:   Tue, 13 Sep 2022 21:49:32 +0800
-From:   Leo Yan <leo.yan@linaro.org>
-To:     Lieven Hey <lieven.hey@kdab.com>
-Cc:     James Clark <james.clark@arm.com>,
-        linux-perf-users@vger.kernel.org, acme@kernel.org
+        Tue, 13 Sep 2022 12:40:15 -0400
+Received: from mail.kdab.com (mail.kdab.com [176.9.126.58])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 220407D78F
+        for <linux-perf-users@vger.kernel.org>; Tue, 13 Sep 2022 08:35:00 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kdab.com; h=
+ content-transfer-encoding:content-type:content-type:in-reply-to
+ :from:from:references:content-language:subject:subject
+ :mime-version:date:date:message-id; s=dkim; t=1663079683; x=
+ 1663943684; bh=V3xq57NCbuNmE0W6bgIqv6xTtCgJmZcHFnBJvF9yWrM=; b=T
+ 9VRznsrvcWyPiPO+tJoD9NZaGJWmOjYUGDD7Q/tELLx+Gfu+0VSe/6eu/MMzwRqW
+ YhZnRxMf8FQqiPXGzeKU5bSi0Nh8/h0gMaWt0UZu6djgSwDuYdf22biYl2W8l4RG
+ 3oTeRRAzdMfFTt29QGR/QP7cBs4MLZyoxbGJxozR44=
+X-Virus-Scanned: amavisd-new at kdab.com
+Message-ID: <5cc0869d-99fd-628d-b2f8-73aa9dd8f88c@kdab.com>
+Date:   Tue, 13 Sep 2022 16:34:42 +0200
+MIME-Version: 1.0
 Subject: Re: [PATCH] include program header in elf files generated by perf
  inject
-Message-ID: <YyCKbAFmZohv0ISJ@leoy-yangtze.lan>
+Content-Language: en-US
+To:     Leo Yan <leo.yan@linaro.org>
+Cc:     James Clark <james.clark@arm.com>,
+        linux-perf-users@vger.kernel.org, acme@kernel.org
 References: <20220825084923.167140-1-lieven.hey@kdab.com>
  <80f54486-1470-c355-d639-1a27b4d1ea22@arm.com>
  <6e0ebfb6-9fbf-073c-94b0-a799b9ec657f@kdab.com>
@@ -64,49 +41,60 @@ References: <20220825084923.167140-1-lieven.hey@kdab.com>
  <1cc13a5d-bb41-edbb-ade7-62d4a678c0f9@kdab.com>
  <cf2f3f27-1002-dbd0-d851-465b169c2031@arm.com>
  <1b701f63-4f78-dbc8-cac4-bfbf7be84134@kdab.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <1b701f63-4f78-dbc8-cac4-bfbf7be84134@kdab.com>
+ <YyCKbAFmZohv0ISJ@leoy-yangtze.lan>
+From:   Lieven Hey <lieven.hey@kdab.com>
+In-Reply-To: <YyCKbAFmZohv0ISJ@leoy-yangtze.lan>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-Hi Lieven,
+Hi Leo,
 
-On Tue, Sep 13, 2022 at 03:34:18PM +0200, Lieven Hey wrote:
-> Hi,
+6d518ac7be62 was not in my code base. It fixes the issue, but not in my 
+usecase. In my usecase I open the elf files with elfutils, but elfutils 
+requires a program header to be present.
+
+Cheers,
+Lieven
+
+Am 13.09.22 um 15:49 schrieb Leo Yan:
+> Hi Lieven,
 > 
-> perf is unable to open elf files generated by perf inject.
+> On Tue, Sep 13, 2022 at 03:34:18PM +0200, Lieven Hey wrote:
+>> Hi,
+>>
+>> perf is unable to open elf files generated by perf inject.
+>>
+>> Example:
+>> Create a file named test.dart with the following content:
+>>
+>> void main() {
+>>      print("Hello World");
+>> }
+>>
+>> and then run
+>>
+>> perf record --call-graph dwarf -k 1 dart --generate-perf-jitdump test.dart
+>> perf inject -j -i perf.data -o perf.data.jitted
+>>
+>> The problem exists since 2d86612aacb78. The commit added some code that now
+>> requires an elf file to have a valid program header.
 > 
-> Example:
-> Create a file named test.dart with the following content:
+> Sorry I missed this patch.
 > 
-> void main() {
->     print("Hello World");
-> }
+> Could you confirm if the commit 6d518ac7be62 ("perf symbol: Fail to read
+> phdr workaround") is included in your local code base?
 > 
-> and then run
+> After a quick look for this patch, I think it is doing right thing.
+> Just want to check if this is the same issue with the one fixed by the
+> commit 6d518ac7be62.  I will review it in details in my next 1~2 days.
 > 
-> perf record --call-graph dwarf -k 1 dart --generate-perf-jitdump test.dart
-> perf inject -j -i perf.data -o perf.data.jitted
+>>> Can you reply-all on the original mailing list thread with this and a
+>>> 'to' to Leo. It's probably best to continue the discussion there so Leo
+>>> is aware.
 > 
-> The problem exists since 2d86612aacb78. The commit added some code that now
-> requires an elf file to have a valid program header.
-
-Sorry I missed this patch.
-
-Could you confirm if the commit 6d518ac7be62 ("perf symbol: Fail to read
-phdr workaround") is included in your local code base?
-
-After a quick look for this patch, I think it is doing right thing.
-Just want to check if this is the same issue with the one fixed by the
-commit 6d518ac7be62.  I will review it in details in my next 1~2 days.
-
-> > Can you reply-all on the original mailing list thread with this and a
-> > 'to' to Leo. It's probably best to continue the discussion there so Leo
-> > is aware.
-
-Thanks a lot, James.
-
-Leo
+> Thanks a lot, James.
+> 
+> Leo
