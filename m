@@ -2,123 +2,105 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3C12CC54EE9
-	for <linux-perf-users@archiver.kernel.org>; Tue, 13 Sep 2022 07:24:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 634F1C6FA82
+	for <linux-perf-users@archiver.kernel.org>; Tue, 13 Sep 2022 10:39:45 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230168AbiIMHYn (ORCPT
+        id S230323AbiIMKjo (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Tue, 13 Sep 2022 03:24:43 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57482 "EHLO
+        Tue, 13 Sep 2022 06:39:44 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42106 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229763AbiIMHYl (ORCPT
+        with ESMTP id S230203AbiIMKjn (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Tue, 13 Sep 2022 03:24:41 -0400
-X-Greylist: delayed 391 seconds by postgrey-1.37 at lindbergh.monkeyblade.net; Tue, 13 Sep 2022 00:24:38 PDT
-Received: from mx1.emlix.com (mx1.emlix.com [136.243.223.33])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4C67A2657
-        for <linux-perf-users@vger.kernel.org>; Tue, 13 Sep 2022 00:24:35 -0700 (PDT)
-Received: from mailer.emlix.com (p5098be52.dip0.t-ipconnect.de [80.152.190.82])
-        (using TLSv1.2 with cipher ADH-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mx1.emlix.com (Postfix) with ESMTPS id 1205C5FBEF;
-        Tue, 13 Sep 2022 09:18:01 +0200 (CEST)
-From:   Rolf Eike Beer <eb@emlix.com>
-To:     Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Jiri Olsa <jolsa@kernel.org>,
-        Namhyung Kim <namhyung@kernel.org>
-Cc:     linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: perf patches needed for 4.19 stable
-Date:   Tue, 13 Sep 2022 09:17:55 +0200
-Message-ID: <4425509.LvFx2qVVIh@mobilepool36.emlix.com>
+        Tue, 13 Sep 2022 06:39:43 -0400
+Received: from foss.arm.com (foss.arm.com [217.140.110.172])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTP id B4954B49B;
+        Tue, 13 Sep 2022 03:39:41 -0700 (PDT)
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id AC82A1063;
+        Tue, 13 Sep 2022 03:39:47 -0700 (PDT)
+Received: from [10.57.77.29] (unknown [10.57.77.29])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 81D613F71A;
+        Tue, 13 Sep 2022 03:39:39 -0700 (PDT)
+Message-ID: <740298c9-0cae-251d-97b4-d2724399ba40@arm.com>
+Date:   Tue, 13 Sep 2022 11:39:38 +0100
 MIME-Version: 1.0
-Content-Type: multipart/signed; boundary="nextPart2252905.ElGaqSPkdT"; micalg="pgp-sha256"; protocol="application/pgp-signature"
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
+ Thunderbird/91.11.0
+Subject: Re: [PATCH V2 6/7] arm64/perf: Add BRBE driver
+Content-Language: en-US
+To:     Anshuman Khandual <anshuman.khandual@arm.com>
+Cc:     Rob Herring <robh@kernel.org>, Marc Zyngier <maz@kernel.org>,
+        Ingo Molnar <mingo@redhat.com>, linux-kernel@vger.kernel.org,
+        linux-perf-users@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, peterz@infradead.org,
+        acme@kernel.org, mark.rutland@arm.com, will@kernel.org,
+        catalin.marinas@arm.com, German Gomez <german.gomez@arm.com>
+References: <20220908051046.465307-1-anshuman.khandual@arm.com>
+ <20220908051046.465307-7-anshuman.khandual@arm.com>
+From:   James Clark <james.clark@arm.com>
+In-Reply-To: <20220908051046.465307-7-anshuman.khandual@arm.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
---nextPart2252905.ElGaqSPkdT
-Content-Transfer-Encoding: quoted-printable
-Content-Type: text/plain; charset="UTF-8"; protected-headers="v1"
-From: Rolf Eike Beer <eb@emlix.com>
-Cc: linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: perf patches needed for 4.19 stable
-Date: Tue, 13 Sep 2022 09:17:55 +0200
-Message-ID: <4425509.LvFx2qVVIh@mobilepool36.emlix.com>
-MIME-Version: 1.0
-
-Greetings,
-
-I had to compile perf for a 4.19 kernel with gcc 10.4 and glibc 2.36. It=20
-failed because some patches seem to be missing there.
-
-I have identified these 2 at least:
-
-ebcb9464a2ae3a547e97de476575c82ece0e93e2
-perf env: Do not return pointers to local variables
-
-d08c84e01afa7a7eee6badab25d5420fa847f783
-perf sched: Cast PTHREAD_STACK_MIN to int as it may turn into=20
-sysconf(__SC_THREAD_STACK_MIN_VALUE)
-
-The former was introduced in 5.7, the latter in 5.14, so backports to 5.4 a=
-nd=20
-5.10 may also be missing.
-
-At the end the build still has failed because of this:
-
-In file included from /opt/emlix/master/sysroot/usr/include/stdio.h:906,
-                 from /tmp/e2/build/linux-4.19.254/tools/lib/traceevent/eve=
-nt-
-parse.h:25,
-                 from util/session.c:5:
-In function 'printf',
-    inlined from 'regs_dump__printf' at util/session.c:968:3,
-    inlined from 'regs__printf' at util/session.c:996:2:
-/opt/emlix/master/sysroot/usr/include/bits/stdio2.h:86:10: warning: '%-5s'=
-=20
-directive argument is null [-Wformat-overflow=3D]
-   86 |   return __printf_chk (__USE_FORTIFY_LEVEL - 1, __fmt, __va_arg_pac=
-k=20
-());
-
-I was not able to identify a patch for that, so I went with WERROR=3D0, but=
-=20
-maybe someone knows how to get that fixed as well.
-
-If you agree that these should be added to stable please either send them=20
-there or tell me to do so.
-
-Regards,
-
-Eike
-=2D-=20
-Rolf Eike Beer, emlix GmbH, https://www.emlix.com
-=46on +49 551 30664-0, Fax +49 551 30664-11
-Gothaer Platz 3, 37083 G=C3=B6ttingen, Germany
-Sitz der Gesellschaft: G=C3=B6ttingen, Amtsgericht G=C3=B6ttingen HR B 3160
-Gesch=C3=A4ftsf=C3=BChrung: Heike Jordan, Dr. Uwe Kracke =E2=80=93 Ust-IdNr=
-=2E: DE 205 198 055
-
-emlix - smart embedded open source
---nextPart2252905.ElGaqSPkdT
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: This is a digitally signed message part.
-Content-Transfer-Encoding: 7Bit
-
------BEGIN PGP SIGNATURE-----
-
-iLMEAAEIAB0WIQQ/Uctzh31xzAxFCLur5FH7Xu2t/AUCYyAuowAKCRCr5FH7Xu2t
-/F1zBACRo6wtV+HJ2iuu+6Fk5Jilk2/Hv3kJUxEihmoMlthOXwwmv1WkRZbfHuDw
-tfpyJorEMhbFwfKWST/vutEBZlrvFwviHlDtKLcWXRADqu7KKx5tR4Zy3vy1vAuf
-BernDlU48aiinaMmJuZcY168kV+6Edl+F77sG7oeIzh+/5Zixg==
-=0E+u
------END PGP SIGNATURE-----
-
---nextPart2252905.ElGaqSPkdT--
 
 
+On 08/09/2022 06:10, Anshuman Khandual wrote:
+> This adds a BRBE driver which implements all the required helper functions
+> for struct arm_pmu. Following functions are defined by this driver which
+> will configure, enable, capture, reset and disable BRBE buffer HW as and
+> when requested via perf branch stack sampling framework.
+> 
+> - arm64_pmu_brbe_filter()
+> - arm64_pmu_brbe_enable()
+> - arm64_pmu_brbe_disable()
+> - arm64_pmu_brbe_read()
+> - arm64_pmu_brbe_probe()
+> - arm64_pmu_brbe_reset()
+> - arm64_pmu_brbe_supported()
+> 
+> Cc: Peter Zijlstra <peterz@infradead.org>
+> Cc: Ingo Molnar <mingo@redhat.com>
+> Cc: Arnaldo Carvalho de Melo <acme@kernel.org>
+> Cc: Mark Rutland <mark.rutland@arm.com>
+> Cc: Will Deacon <will@kernel.org>
+> Cc: Catalin Marinas <catalin.marinas@arm.com>
+> Cc: linux-arm-kernel@lists.infradead.org
+> Cc: linux-perf-users@vger.kernel.org
+> Cc: linux-kernel@vger.kernel.org
+> Signed-off-by: Anshuman Khandual <anshuman.khandual@arm.com>
+> ---
+>  arch/arm64/kernel/perf_event.c |   8 +-
+>  drivers/perf/Kconfig           |  11 +
+>  drivers/perf/Makefile          |   1 +
+>  drivers/perf/arm_pmu_brbe.c    | 448 +++++++++++++++++++++++++++++++++
+>  drivers/perf/arm_pmu_brbe.h    | 259 +++++++++++++++++++
+>  include/linux/perf/arm_pmu.h   |  20 ++
+>  6 files changed, 746 insertions(+), 1 deletion(-)
+>  create mode 100644 drivers/perf/arm_pmu_brbe.c
+>  create mode 100644 drivers/perf/arm_pmu_brbe.h
+> 
+[...]
+> +
+> +static int brbe_fetch_perf_priv(u64 brbinf)
+> +{
+> +       int brbe_el = brbe_fetch_el(brbinf);
+> +
+> +       switch (brbe_el) {
+> +       case BRBINF_EL_EL0:
+> +               return PERF_BR_PRIV_USER;
+> +       case BRBINF_EL_EL1:
+> +               return PERF_BR_PRIV_KERNEL;
+> +       case BRBINF_EL_EL2:
+> +               if (is_kernel_in_hyp_mode())
+> +                       return PERF_BR_PRIV_KERNEL;
+> +               return PERF_BR_PRIV_HV;
+> +       default:
+> +               pr_warn("unknown branch privilege captured\n");
+> +               return -1;
 
+On V1 you said that you would change this to PERF_BR_PRIV_UNKNOWN, looks
+like that was dropped. Unless it didn't work out?
