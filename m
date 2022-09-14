@@ -2,120 +2,94 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C3FFCC6FA82
-	for <linux-perf-users@archiver.kernel.org>; Wed, 14 Sep 2022 18:33:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A304AECAAD3
+	for <linux-perf-users@archiver.kernel.org>; Wed, 14 Sep 2022 20:09:23 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229815AbiINSdz (ORCPT
+        id S229736AbiINUJW (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Wed, 14 Sep 2022 14:33:55 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43046 "EHLO
+        Wed, 14 Sep 2022 16:09:22 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52352 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229852AbiINSdu (ORCPT
+        with ESMTP id S229724AbiINUJV (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Wed, 14 Sep 2022 14:33:50 -0400
-Received: from mail-pj1-x1036.google.com (mail-pj1-x1036.google.com [IPv6:2607:f8b0:4864:20::1036])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id EDFD281693;
-        Wed, 14 Sep 2022 11:33:48 -0700 (PDT)
-Received: by mail-pj1-x1036.google.com with SMTP id x1-20020a17090ab00100b001fda21bbc90so19906110pjq.3;
-        Wed, 14 Sep 2022 11:33:48 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20210112;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:sender:from:to:cc:subject:date;
-        bh=iSoULPQWHCxzuyccY9QXbYwCw6NT6wZa9kyRRus/6yo=;
-        b=LuXH7/26EMAVjurSfaKGZztyeArTr4xXhVt4XGgBSiaMZUlCG+5kWMfNiLH8yj7tsD
-         P+g8fAa2XMWBk+qUI8Bk3s5PEEpnPko51UtwUeN/xQvrEz/X3Ux8bFiIJ8poxmOWbCc3
-         o1xyblaiZ0MCNo0oeb+ehiTEBbpUqxuCzwhZnXooYlr8rn5GQNBPYxJs0ptGLfaNptB+
-         sIl8/ry8bNH8WziTcSwzYIjdmueMh5uPg61OaNNFnYbmCbf6aCYJDJAdsMg2/GilIegf
-         jIU+bTVCfUStYzFuKaFm3Jtk/WCSNCfmHeemcMSTItSXA7MocnK55f0Iztomo2gT5cHV
-         uImQ==
+        Wed, 14 Sep 2022 16:09:21 -0400
+Received: from mail-oa1-f48.google.com (mail-oa1-f48.google.com [209.85.160.48])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id ADDCC844DE;
+        Wed, 14 Sep 2022 13:09:15 -0700 (PDT)
+Received: by mail-oa1-f48.google.com with SMTP id 586e51a60fabf-11e9a7135easo44085491fac.6;
+        Wed, 14 Sep 2022 13:09:15 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:sender:x-gm-message-state:from:to:cc:subject:date;
-        bh=iSoULPQWHCxzuyccY9QXbYwCw6NT6wZa9kyRRus/6yo=;
-        b=cM/T8kzLMA/eVJwrwB7ILv0RaSSiK71aK/vogKH71/EOsg9gMRBQvRqMdvzwkVTOvR
-         1P4wLbfEbTVETjMi1G4akK67UtY1dhDYWTzI1bM8KG/M/A1qAUz0/VHWNzQ9Z4wTWT0A
-         d59zoXg9Vbs56sK4aoF+7Yw2sttyYLcekGm4ZmpV6P2IKpKQ5tjyO5F0g6hUEI3RN7fp
-         TJZepg9YnmriHL7GvjukrA+M2z2+OBI2DzjLSnzo9YoBjzb7uyl7f+SiFIR7vCaRu1X9
-         P42DdxSECoFK5rC38+K0PF74OwBckl1pEKPu4ijNRmXFi5+VyDi66UTT32qPl9IYKkL2
-         rIPg==
-X-Gm-Message-State: ACrzQf3mn24Hm0uzTDAzlwvNdTCau46jFpuigeIc6x2VTh8bBhka+hCM
-        I37QmA1PL4NRVgCOcaPSS7U=
-X-Google-Smtp-Source: AMsMyM4HnK9AwaGr5z5zDzKLgVhSIpGEQrcTg3ciEf0r1Te0S0qFmJEHDGfzEn/dtiyVb6IELzVq9A==
-X-Received: by 2002:a17:902:b692:b0:176:d346:b56f with SMTP id c18-20020a170902b69200b00176d346b56fmr315803pls.140.1663180428248;
-        Wed, 14 Sep 2022 11:33:48 -0700 (PDT)
-Received: from youngsil.svl.corp.google.com ([2620:15c:2d4:203:ba6:e12b:9910:5ea])
-        by smtp.gmail.com with ESMTPSA id i7-20020a170902c94700b001728ac8af94sm11190842pla.248.2022.09.14.11.33.46
+        h=cc:to:message-id:date:from:content-transfer-encoding:mime-version
+         :subject:x-gm-message-state:from:to:cc:subject:date;
+        bh=vWFLS0gZLXO9OIHvqTdorCpbMwFElLZDmi2Y+4PHdxw=;
+        b=1rDbT5SBF+EnTjfe9vD/3Jk1CncEtPL+KZ7dczd41rNwoDFZTHgJvUQXBN8FdqeLIa
+         JZ/0n1GqD1A2VTTukB+yCcF4Bh/53OU6kxhelIWEpxDxnuuxeCnLiKEi9NKDu6WT0plG
+         l9qtdswQxKtetJQ0b+qATtOxRA6AOr6H92bvNv+JOUS32uSv3ySmB+Nwo0O5ENdonFO1
+         h3NxvDxR9N3owuE+rZI6hJuz4ZbXBsd4LM2NDxuFsevbMw2lDrauCUBulqh30rj4IH3k
+         K2Wtd/CInOh9ozhD8VuXmRf3s+l4GKj3F2kzM9WHu3OP0LtkqzerNwvXuKRbGzNYMR9c
+         wwAQ==
+X-Gm-Message-State: ACgBeo270l1sp5CHyzal9OZUAkREgCU7QfmCnC5O/q4kUZtmtYOzdxMa
+        uG5yeZH5aKDdIG/xKimlYw==
+X-Google-Smtp-Source: AA6agR6O4yTb/UaVRq8uwHX69CkO0wLmto8mg2j5AFejv1dyb9y0K9mUIE0ztP5eQDRoDs8Yx19cuw==
+X-Received: by 2002:a05:6870:5810:b0:127:a331:1e76 with SMTP id r16-20020a056870581000b00127a3311e76mr3455406oap.292.1663186154401;
+        Wed, 14 Sep 2022 13:09:14 -0700 (PDT)
+Received: from [127.0.1.1] (66-90-144-107.dyn.grandenetworks.net. [66.90.144.107])
+        by smtp.googlemail.com with ESMTPSA id r22-20020a544896000000b0033a37114eb0sm6745050oic.19.2022.09.14.13.09.13
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 14 Sep 2022 11:33:47 -0700 (PDT)
-Sender: Namhyung Kim <namhyung@gmail.com>
-From:   Namhyung Kim <namhyung@kernel.org>
-To:     Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Jiri Olsa <jolsa@kernel.org>
-Cc:     Ingo Molnar <mingo@kernel.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Ian Rogers <irogers@google.com>,
-        Adrian Hunter <adrian.hunter@intel.com>,
-        linux-perf-users@vger.kernel.org,
-        Ravi Bangoria <ravi.bangoria@amd.com>
-Subject: [PATCH] perf test: Skip wp modify test on old kernels
-Date:   Wed, 14 Sep 2022 11:33:38 -0700
-Message-Id: <20220914183338.546357-1-namhyung@kernel.org>
-X-Mailer: git-send-email 2.37.2.789.g6183377224-goog
+        Wed, 14 Sep 2022 13:09:14 -0700 (PDT)
+Subject: [PATCH v3 0/3] perf tool: 'config3' attribute support
 MIME-Version: 1.0
+Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 8bit
+X-b4-tracking: H4sIAME0ImMC/w3LMQ6DMAwAwK8gz1gCAyrpb5xgSqQ0QTawIP5OxhvuBhONYvBtblC5osWSK4a2gb
+ Bx/gnGpRqoI+pcPyLrH3fRFY9SEtouPRJehIH9Z3ZhWiY3Q92eTdAr57DVn8+UnucFAC114G4AAAA=
+From:   Rob Herring <robh@kernel.org>
+Date:   Wed, 14 Sep 2022 15:08:33 -0500
+Message-Id: <20220914-arm-perf-tool-spe1-2-v2-v3-0-8189fc04dcc6@kernel.org>
+To:     Peter Zijlstra <peterz@infradead.org>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Arnaldo Carvalho de Melo <acme@kernel.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Jiri Olsa <jolsa@kernel.org>,
+        Namhyung Kim <namhyung@kernel.org>
+Cc:     Leo Yan <leo.yan@linaro.org>, linux-perf-users@vger.kernel.org,
+        James Clark <james.clark@arm.com>, linux-kernel@vger.kernel.org
+X-Mailer: b4 0.10.0-dev
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-It uses PERF_EVENT_IOC_MODIFY_ATTRIBUTES ioctl.	 The kernel would return
-ENOTTY if it's not supported.  Update the skip reason in that case.
+This series is a fix to allow unknown 'configN' attrs and then extends 
+perf tool to support a new config3 attr.
 
-Cc: Ravi Bangoria <ravi.bangoria@amd.com>
-Signed-off-by: Namhyung Kim <namhyung@kernel.org>
+The config3 support is RFC for context as the kernel side support[1] is 
+not yet accepted.
+
+[1] https://lore.kernel.org/all/20220825-arm-spe-v8-7-v1-0-c75b8d92e692@kernel.org/
+
+Signed-off-by: Rob Herring <robh@kernel.org>
 ---
-I'd like to add Fixes: 2e85d5979e8d tag here but it'd conlict with the
-later change in e47c6ecaae1d.
+Rob Herring (3):
+      perf: Skip and warn on unknown format 'configN' attrs
+      perf tools: Sync perf_event_attr::config3 addition
+      perf: Add support for perf_event_attr::config3
 
- tools/perf/tests/wp.c | 9 +++++++--
- 1 file changed, 7 insertions(+), 2 deletions(-)
+ include/uapi/linux/perf_event.h       |  3 +++
+ tools/include/uapi/linux/perf_event.h |  3 +++
+ tools/perf/util/parse-events.c        |  9 +++++++++
+ tools/perf/util/parse-events.h        |  1 +
+ tools/perf/util/parse-events.l        |  1 +
+ tools/perf/util/pmu.c                 | 16 ++++++++++++++++
+ tools/perf/util/pmu.h                 |  3 +++
+ tools/perf/util/pmu.l                 |  2 --
+ tools/perf/util/pmu.y                 | 15 ++++-----------
+ 9 files changed, 40 insertions(+), 13 deletions(-)
+---
+base-commit: 1c23f9e627a7b412978b4e852793c5e3c3efc555
+change-id: 20220914-arm-perf-tool-spe1-2-v2-cab789c5d598
 
-diff --git a/tools/perf/tests/wp.c b/tools/perf/tests/wp.c
-index 9d4c45184e71..99f048cd6faa 100644
---- a/tools/perf/tests/wp.c
-+++ b/tools/perf/tests/wp.c
-@@ -2,6 +2,7 @@
- #include <stdlib.h>
- #include <string.h>
- #include <unistd.h>
-+#include <errno.h>
- #include <sys/ioctl.h>
- #include <linux/hw_breakpoint.h>
- #include <linux/kernel.h>
-@@ -137,8 +138,7 @@ static int test__wp_rw(struct test_suite *test __maybe_unused,
- #endif
- }
- 
--static int test__wp_modify(struct test_suite *test __maybe_unused,
--			   int subtest __maybe_unused)
-+static int test__wp_modify(struct test_suite *test, int subtest)
- {
- #if defined(__s390x__)
- 	return TEST_SKIP;
-@@ -160,6 +160,11 @@ static int test__wp_modify(struct test_suite *test __maybe_unused,
- 	new_attr.disabled = 1;
- 	ret = ioctl(fd, PERF_EVENT_IOC_MODIFY_ATTRIBUTES, &new_attr);
- 	if (ret < 0) {
-+		if (errno == ENOTTY) {
-+			test->test_cases[subtest].skip_reason = "missing kernel support";
-+			ret = TEST_SKIP;
-+		}
-+
- 		pr_debug("ioctl(PERF_EVENT_IOC_MODIFY_ATTRIBUTES) failed\n");
- 		close(fd);
- 		return ret;
+Best regards,
 -- 
-2.37.2.789.g6183377224-goog
-
+Rob Herring <robh@kernel.org>
