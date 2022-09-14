@@ -2,112 +2,165 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CB88EECAAD8
-	for <linux-perf-users@archiver.kernel.org>; Wed, 14 Sep 2022 13:12:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 27EEEECAAD3
+	for <linux-perf-users@archiver.kernel.org>; Wed, 14 Sep 2022 13:48:11 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229693AbiINNMn (ORCPT
+        id S229873AbiINNsI (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Wed, 14 Sep 2022 09:12:43 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46678 "EHLO
+        Wed, 14 Sep 2022 09:48:08 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35600 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229531AbiINNMm (ORCPT
+        with ESMTP id S229824AbiINNsF (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Wed, 14 Sep 2022 09:12:42 -0400
-Received: from mail-ej1-x631.google.com (mail-ej1-x631.google.com [IPv6:2a00:1450:4864:20::631])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 77B014F3A7
-        for <linux-perf-users@vger.kernel.org>; Wed, 14 Sep 2022 06:12:41 -0700 (PDT)
-Received: by mail-ej1-x631.google.com with SMTP id u9so34670457ejy.5
-        for <linux-perf-users@vger.kernel.org>; Wed, 14 Sep 2022 06:12:41 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=cloudflare.com; s=google;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:from:to:cc:subject:date;
-        bh=ib5mswjR1x7cIBGgOeaYy3ofTlgkjtf1YQmH317wwYc=;
-        b=EyGvls+PPR5gSq51ImovQ9Aykw+f1UwYvKrRnvXUiUMLmdsoj3OZKautZPAbv6yI4S
-         c05fPCDH/izs82miJZsc7xYU6USh/RTsgrfHyuphN64PJYH3IwytNrBNkVgofyZ4MDix
-         +DVuyNg81rdHSCkfrAzOD4MJbUQ6lT2C4FvAI=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date;
-        bh=ib5mswjR1x7cIBGgOeaYy3ofTlgkjtf1YQmH317wwYc=;
-        b=XeEhZpatYTAFdweV5FPQkGkhcWbrve8i7nsn/X3OKhkmPEkw+X4veYVgyR7e24aCJk
-         Zo3Mm+3PppQBscC5YkGu4LTSoAPFLejkWOjir4JYngF92B+bo8Ft1JggIj2HBCRKawre
-         dGhofZjf/deDk1IgT18I8RKIBpOeZJqh7FTHd4sjcnRLza8sp4WPKTeF+LKNGkte7XHB
-         2+GlZ8fsx8tUbxOYvIDSpg27z95uoZGAcOctYL6jRSoCc7KJ001jaY4qGyQql0A0cxYa
-         OnSzaq1zb02ZDUYJkWCd0DTHmQQNaNNPTn1W14Y7Ezv987i3FjJxasAk+7SmoXyIxfAU
-         kKPw==
-X-Gm-Message-State: ACgBeo0FXh5OVFng4R6lCH3EmjEwG+drLdeWV0AhDw33SU9kn/tnHHXD
-        3wscCL4a2S1b1dYWHQZ+PbGZSIfXL8x/0N+Zb6vVJawTrcsnvg==
-X-Google-Smtp-Source: AA6agR7HbQRqYLgqzMyg41PD/aaS4tbp5xqGmUix+XS3s2ihXKF7L99Xf7M2vZLQ4r9NymjcYSMHaJ+RBBpZ6aWhRRE=
-X-Received: by 2002:a17:907:c23:b0:779:237a:4218 with SMTP id
- ga35-20020a1709070c2300b00779237a4218mr19917347ejc.277.1663161159807; Wed, 14
- Sep 2022 06:12:39 -0700 (PDT)
+        Wed, 14 Sep 2022 09:48:05 -0400
+Received: from frasgout.his.huawei.com (frasgout.his.huawei.com [185.176.79.56])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6F46A73918;
+        Wed, 14 Sep 2022 06:47:47 -0700 (PDT)
+Received: from fraeml739-chm.china.huawei.com (unknown [172.18.147.201])
+        by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4MSM7v3WRLz67xfT;
+        Wed, 14 Sep 2022 21:46:51 +0800 (CST)
+Received: from lhrpeml500003.china.huawei.com (7.191.162.67) by
+ fraeml739-chm.china.huawei.com (10.206.15.220) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2375.31; Wed, 14 Sep 2022 15:47:45 +0200
+Received: from [10.48.151.55] (10.48.151.55) by lhrpeml500003.china.huawei.com
+ (7.191.162.67) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2375.31; Wed, 14 Sep
+ 2022 14:47:43 +0100
+Message-ID: <c5577971-946e-405b-b0ee-23b556ea3f72@huawei.com>
+Date:   Wed, 14 Sep 2022 14:47:43 +0100
 MIME-Version: 1.0
-References: <20220914122429.8770-1-adrian.hunter@intel.com>
-In-Reply-To: <20220914122429.8770-1-adrian.hunter@intel.com>
-From:   Daniel Dao <dqminh@cloudflare.com>
-Date:   Wed, 14 Sep 2022 14:12:29 +0100
-Message-ID: <CA+wXwBRN3kJLVxVupLLXTBC_GbSzvmDch4ry2jWW2aqZXJgp2w@mail.gmail.com>
-Subject: Re: [PATCH] perf kcore_copy: Do not check /proc/modules is unchanged
-To:     Adrian Hunter <adrian.hunter@intel.com>
-Cc:     Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Jiri Olsa <jolsa@redhat.com>,
-        Namhyung Kim <namhyung@kernel.org>,
-        Ian Rogers <irogers@google.com>,
-        linux-kernel <linux-kernel@vger.kernel.org>,
-        linux-perf-users@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:91.0) Gecko/20100101
+ Thunderbird/91.6.1
+Subject: Re: [RESEND PATCH v12 1/3] perf tool: arm: Refactor event list
+ iteration in auxtrace_record__init()
+To:     Yicong Yang <yangyicong@huawei.com>, <acme@kernel.org>,
+        <peterz@infradead.org>, <alexander.shishkin@linux.intel.com>,
+        <leo.yan@linaro.org>, <james.clark@arm.com>, <will@kernel.org>,
+        <mathieu.poirier@linaro.org>, <mark.rutland@arm.com>,
+        <suzuki.poulose@arm.com>, <jonathan.cameron@huawei.com>,
+        <mike.leach@linaro.org>
+CC:     <gregkh@linuxfoundation.org>, <helgaas@kernel.org>,
+        <lorenzo.pieralisi@arm.com>,
+        <shameerali.kolothum.thodi@huawei.com>, <mingo@redhat.com>,
+        <linux-kernel@vger.kernel.org>,
+        <linux-arm-kernel@lists.infradead.org>,
+        <linux-pci@vger.kernel.org>, <linux-perf-users@vger.kernel.org>,
+        <prime.zeng@huawei.com>, <zhangshaokun@hisilicon.com>,
+        <linuxarm@huawei.com>, <yangyicong@hisilicon.com>,
+        <liuqi6124@gmail.com>
+References: <20220914075925.48549-1-yangyicong@huawei.com>
+ <20220914075925.48549-2-yangyicong@huawei.com>
+From:   John Garry <john.garry@huawei.com>
+In-Reply-To: <20220914075925.48549-2-yangyicong@huawei.com>
+Content-Type: text/plain; charset="UTF-8"; format=flowed
+Content-Transfer-Encoding: 7bit
+X-Originating-IP: [10.48.151.55]
+X-ClientProxiedBy: lhrpeml100001.china.huawei.com (7.191.160.183) To
+ lhrpeml500003.china.huawei.com (7.191.162.67)
+X-CFilter-Loop: Reflected
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-On Wed, Sep 14, 2022 at 1:24 PM Adrian Hunter <adrian.hunter@intel.com> wrote:
->
-> /proc/kallsyms and /proc/modules are compared before and after the copy
-> in order to ensure no changes during the copy. However /proc/modules
-> also might change due to reference counts changing even though that
-> does not make any difference. Any modules loaded or unloaded should be
-> visible in changes to kallsyms, so it is not necessary to check
-> /proc/modules also anyway.
->
-> Remove the comparison checking that /proc/modules is unchanged.
->
-> Reported-by: Daniel Dao <dqminh@cloudflare.com>
-> Fixes: fc1b691d7651 ("perf buildid-cache: Add ability to add kcore to the cache")
-> Signed-off-by: Adrian Hunter <adrian.hunter@intel.com>
+On 14/09/2022 08:59, Yicong Yang wrote:
+> From: Qi Liu <liuqi115@huawei.com>
+> 
+> Add find_pmu_for_event() and use to simplify logic in
+> auxtrace_record_init(). find_pmu_for_event() will be
+> reused in subsequent patches.
+> 
+> Reviewed-by: Leo Yan <leo.yan@linaro.org>
+> Reviewed-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
+> Signed-off-by: Qi Liu <liuqi115@huawei.com>
+> Signed-off-by: Yicong Yang <yangyicong@hisilicon.com>
 > ---
->  tools/perf/util/symbol-elf.c | 7 ++-----
->  1 file changed, 2 insertions(+), 5 deletions(-)
->
-> diff --git a/tools/perf/util/symbol-elf.c b/tools/perf/util/symbol-elf.c
-> index 75bec32d4f57..647b7dff8ef3 100644
-> --- a/tools/perf/util/symbol-elf.c
-> +++ b/tools/perf/util/symbol-elf.c
-> @@ -2102,8 +2102,8 @@ static int kcore_copy__compare_file(const char *from_dir, const char *to_dir,
->   * unusual.  One significant peculiarity is that the mapping (start -> pgoff)
->   * is not the same for the kernel map and the modules map.  That happens because
->   * the data is copied adjacently whereas the original kcore has gaps.  Finally,
-> - * kallsyms and modules files are compared with their copies to check that
-> - * modules have not been loaded or unloaded while the copies were taking place.
-> + * kallsyms file is compared with its copy to check that modules have not been
-> + * loaded or unloaded while the copies were taking place.
->   *
->   * Return: %0 on success, %-1 on failure.
->   */
-> @@ -2166,9 +2166,6 @@ int kcore_copy(const char *from_dir, const char *to_dir)
->                         goto out_extract_close;
->         }
->
-> -       if (kcore_copy__compare_file(from_dir, to_dir, "modules"))
-> -               goto out_extract_close;
+>   tools/perf/arch/arm/util/auxtrace.c | 53 ++++++++++++++++++-----------
+>   1 file changed, 34 insertions(+), 19 deletions(-)
+> 
+> diff --git a/tools/perf/arch/arm/util/auxtrace.c b/tools/perf/arch/arm/util/auxtrace.c
+> index 5fc6a2a3dbc5..384c7cfda0fd 100644
+> --- a/tools/perf/arch/arm/util/auxtrace.c
+> +++ b/tools/perf/arch/arm/util/auxtrace.c
+> @@ -50,16 +50,32 @@ static struct perf_pmu **find_all_arm_spe_pmus(int *nr_spes, int *err)
+>   	return arm_spe_pmus;
+>   }
+>   
+> +static struct perf_pmu *find_pmu_for_event(struct perf_pmu **pmus,
+> +					   int pmu_nr, struct evsel *evsel)
+> +{
+> +	int i;
+> +
+> +	if (!pmus)
+> +		return NULL;
+> +
+> +	for (i = 0; i < pmu_nr; i++) {
+> +		if (evsel->core.attr.type == pmus[i]->type)
+> +			return pmus[i];
+> +	}
+> +
+> +	return NULL;
+> +}
+> +
+>   struct auxtrace_record
+>   *auxtrace_record__init(struct evlist *evlist, int *err)
+>   {
+> -	struct perf_pmu	*cs_etm_pmu;
+> +	struct perf_pmu	*cs_etm_pmu = NULL;
+> +	struct perf_pmu **arm_spe_pmus = NULL;
+>   	struct evsel *evsel;
+> -	bool found_etm = false;
+> +	struct perf_pmu *found_etm = NULL;
+>   	struct perf_pmu *found_spe = NULL;
+> -	struct perf_pmu **arm_spe_pmus = NULL;
+> +	int auxtrace_event_cnt = 0;
+>   	int nr_spes = 0;
+> -	int i = 0;
+>   
+>   	if (!evlist)
+>   		return NULL;
+> @@ -68,24 +84,23 @@ struct auxtrace_record
+>   	arm_spe_pmus = find_all_arm_spe_pmus(&nr_spes, err);
+>   
+>   	evlist__for_each_entry(evlist, evsel) {
+> -		if (cs_etm_pmu &&
+> -		    evsel->core.attr.type == cs_etm_pmu->type)
+> -			found_etm = true;
 > -
->         if (kcore_copy__compare_file(from_dir, to_dir, "kallsyms"))
->                 goto out_extract_close;
->
-> --
-> 2.25.1
->
-Thanks Adrian,
+> -		if (!nr_spes || found_spe)
+> -			continue;
+> -
+> -		for (i = 0; i < nr_spes; i++) {
+> -			if (evsel->core.attr.type == arm_spe_pmus[i]->type) {
+> -				found_spe = arm_spe_pmus[i];
+> -				break;
+> -			}
+> -		}
+> +		if (cs_etm_pmu && !found_etm) 
+> +			found_etm = find_pmu_for_event(&cs_etm_pmu, 1, evsel);
+> +
+> +		if (arm_spe_pmus && !found_spe)
+> +			found_spe = find_pmu_for_event(arm_spe_pmus, nr_spes, evsel);
 
-Tested-by: Daniel Dao <dqminh@cloudflare.com>
+should you break if found_etm and found_spe are set? Or, indeed, error 
+and return directly as we do below? Indeed, I am not sure why you even 
+require auxtrace_event_cnt
+
+>   	}
+> +
+>   	free(arm_spe_pmus);
+>   
+> -	if (found_etm && found_spe) {
+> -		pr_err("Concurrent ARM Coresight ETM and SPE operation not currently supported\n");
+> +	if (found_etm)
+> +		auxtrace_event_cnt++;
+> +
+> +	if (found_spe)
+> +		auxtrace_event_cnt++;
+> +
+> +	if (auxtrace_event_cnt > 1) {
+> +		pr_err("Concurrent AUX trace operation not currently supported\n");
+>   		*err = -EOPNOTSUPP;
+>   		return NULL;
+>   	}
+
