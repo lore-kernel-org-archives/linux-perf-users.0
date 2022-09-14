@@ -2,197 +2,97 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5C865ECAAD3
-	for <linux-perf-users@archiver.kernel.org>; Wed, 14 Sep 2022 08:25:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DEBC1ECAAD3
+	for <linux-perf-users@archiver.kernel.org>; Wed, 14 Sep 2022 09:37:39 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229764AbiINIZR (ORCPT
+        id S230026AbiINJhi (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Wed, 14 Sep 2022 04:25:17 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50666 "EHLO
+        Wed, 14 Sep 2022 05:37:38 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46706 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229718AbiINIZQ (ORCPT
+        with ESMTP id S231302AbiINJhV (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Wed, 14 Sep 2022 04:25:16 -0400
-Received: from mga04.intel.com (mga04.intel.com [192.55.52.120])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5E9DD21815;
-        Wed, 14 Sep 2022 01:25:14 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1663143914; x=1694679914;
-  h=message-id:date:mime-version:subject:to:cc:references:
-   from:in-reply-to:content-transfer-encoding;
-  bh=/MrEuffiTlBloWoItG/YCkossJlWMHolvgOHQGsREGM=;
-  b=M2+dM7mSIZz6/HCy8XQfZu8urujco8oLuwLhFQSY5c7x6luCI+A123m3
-   lE+U3Cv6xJ8rgCO59seIVeqtl/iZu98GwODJVuFw6ls2bpRGXBXDhlb9J
-   GUWYm/9XeYosMd/bouF+PXGdkBIzLIwcMcaW2o825GlBzzPWI8Ft88emF
-   K8ntK1C/QywLQdVoLEI4168Ik4JSGRRNuKQ5Ncs7zZe9KJtK5UOU4W9bx
-   sDGLfjTkwctiDTx/aqmCOwIxOEzc9fmdIHrVB6CaOAwQoi/4Idox8brSf
-   /QhtJd1o1i/iYavvLZjuvKsZEFY0Djm+4nDliA+scYRsF5z4PeWSQHq0U
-   g==;
-X-IronPort-AV: E=McAfee;i="6500,9779,10469"; a="297100936"
-X-IronPort-AV: E=Sophos;i="5.93,315,1654585200"; 
-   d="scan'208";a="297100936"
-Received: from fmsmga008.fm.intel.com ([10.253.24.58])
-  by fmsmga104.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 14 Sep 2022 01:25:14 -0700
-X-IronPort-AV: E=Sophos;i="5.93,315,1654585200"; 
-   d="scan'208";a="678949294"
-Received: from ahunter6-mobl1.ger.corp.intel.com (HELO [10.0.2.15]) ([10.252.32.55])
-  by fmsmga008-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 14 Sep 2022 01:25:11 -0700
-Message-ID: <02c1e116-28e3-fe6f-5197-fae2f79c64bb@intel.com>
-Date:   Wed, 14 Sep 2022 11:25:07 +0300
+        Wed, 14 Sep 2022 05:37:21 -0400
+Received: from ams.source.kernel.org (ams.source.kernel.org [IPv6:2604:1380:4601:e00::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C6B5C1CFD1;
+        Wed, 14 Sep 2022 02:35:54 -0700 (PDT)
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by ams.source.kernel.org (Postfix) with ESMTPS id 7E34DB816F4;
+        Wed, 14 Sep 2022 09:35:52 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 86DDAC433D6;
+        Wed, 14 Sep 2022 09:35:50 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1663148151;
+        bh=rjKoWpCPT6MqSNSlR40glepnjwId59HKNZTsSUmJ5Wc=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=hM/uXR1fV1nmxauituR2Mo+zpNwoeNdELsDqyZU3tRnTlM2OeW3uQM/NNHbjFsToM
+         KcdNtrC/UisnNdiG74vTnWNL8Z8nmeiwllJzIyKAr6W1vHraFuCY55um2lMrOtPEXs
+         DD3hvGStO/LYSZ7QgoPPhUzaFxE52p1fdsW3ZGJWjhiJLX0K3PlzAZ9bKpdswmAxSV
+         EnmAKcQhCzO/N2ecdhHV00lTB1PmixIy+bukuNA3O7v4hU+hfMi9h82TBaSN8syHWI
+         C9AjAipnHowAkgwUd0rS2B/I1JJrpbCBO2dAoYAUG5WLDaEH7NuvPHbgIihHqikNwW
+         WGLYDmE05hN/A==
+Date:   Wed, 14 Sep 2022 10:35:48 +0100
+From:   Mark Brown <broonie@kernel.org>
+To:     Anshuman Khandual <anshuman.khandual@arm.com>
+Cc:     linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, peterz@infradead.org,
+        acme@kernel.org, mark.rutland@arm.com, will@kernel.org,
+        catalin.marinas@arm.com, James Clark <james.clark@arm.com>,
+        Rob Herring <robh@kernel.org>, Marc Zyngier <maz@kernel.org>,
+        Ingo Molnar <mingo@redhat.com>
+Subject: Re: [PATCH V2 3/7] arm64/perf: Update struct pmu_hw_events for BRBE
+Message-ID: <YyGgdPzJG3+0nCC4@sirena.org.uk>
+References: <20220908051046.465307-1-anshuman.khandual@arm.com>
+ <20220908051046.465307-4-anshuman.khandual@arm.com>
+ <Yx8GBq1FJN49iJs9@sirena.org.uk>
+ <84683aa7-58ad-85f8-327b-daed2f704834@arm.com>
+ <YyBs1PJwNoNYv4NJ@sirena.org.uk>
+ <c4800957-825c-a5c7-d8d4-946d9c6cdf6c@arm.com>
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
- Firefox/91.0 Thunderbird/91.11.0
-Subject: Re: [PATCH 00/11] perf test: test_intel_pt.sh: Add per-thread test
-Content-Language: en-US
-To:     Namhyung Kim <namhyung@kernel.org>
-Cc:     Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Jiri Olsa <jolsa@redhat.com>, Ian Rogers <irogers@google.com>,
-        linux-kernel <linux-kernel@vger.kernel.org>,
-        linux-perf-users <linux-perf-users@vger.kernel.org>
-References: <20220912083412.7058-1-adrian.hunter@intel.com>
- <CAM9d7ciRCnpNjOfoEbO27pNk28ddjg1vVdgrZtvWQ-mbD7jg0w@mail.gmail.com>
-From:   Adrian Hunter <adrian.hunter@intel.com>
-Organization: Intel Finland Oy, Registered Address: PL 281, 00181 Helsinki,
- Business Identity Code: 0357606 - 4, Domiciled in Helsinki
-In-Reply-To: <CAM9d7ciRCnpNjOfoEbO27pNk28ddjg1vVdgrZtvWQ-mbD7jg0w@mail.gmail.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Type: multipart/signed; micalg=pgp-sha512;
+        protocol="application/pgp-signature"; boundary="Qd4GMgCzvle7Q0M+"
+Content-Disposition: inline
+In-Reply-To: <c4800957-825c-a5c7-d8d4-946d9c6cdf6c@arm.com>
+X-Cookie: One FISHWICH coming up!!
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-On 13/09/22 20:41, Namhyung Kim wrote:
-> On Mon, Sep 12, 2022 at 1:34 AM Adrian Hunter <adrian.hunter@intel.com> wrote:
->>
->> Hi
->>
->> Here is a new per-thread test for the test_intel_pt.sh test script.
->>
->> The first 9 patches are tidy-ups for the script, mostly based on results
->> from the shellcheck utility.
->>
->> The 10th patch adds debug prints that the script will capture to help
->> verify correct operation.
->>
->> The final patch actually adds the new test.
->>
->>
->> Adrian Hunter (11):
->>       perf test: test_intel_pt.sh: Add cleanup function
->>       perf test: test_intel_pt.sh: Use a temp directory
->>       perf test: test_intel_pt.sh: Fix redirection
->>       perf test: test_intel_pt.sh: Stop using expr
->>       perf test: test_intel_pt.sh: Stop using backticks
->>       perf test: test_intel_pt.sh: Use grep -c instead of grep plus wc -l
->>       perf test: test_intel_pt.sh: Use quotes around variable expansion
->>       perf test: test_intel_pt.sh: Fix return checking
->>       perf test: test_intel_pt.sh: Add more output in preparation for more tests
->>       perf tools: Add debug messages and comments for testing
->>       perf test: test_intel_pt.sh: Add per-thread test
-> 
-> I don't think I understood all the black magic in patch 11. :)
 
-It is not that bad :-)
+--Qd4GMgCzvle7Q0M+
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-Consider the output from the test:
+On Wed, Sep 14, 2022 at 09:09:10AM +0530, Anshuman Khandual wrote:
 
+> Something like the following change moves the buffer allocation off the stack,
+> although it requires updating the driver, and buffer assignment during a PMU
+> interrupt. But it does seem to work (will require some more testing).
 
-	$ perf test -v " intel pt"
-	Couldn't bump rlimit(MEMLOCK), failures may take place when creating BPF maps, etc
-	102: Miscellaneous Intel PT testing                                  :
-	--- start ---
-	test child forked, pid 155646
-<SNIP>
-	--- Test per-thread recording ---
-	Workload PIDs are 155669 and 155670
-	perf PID is 155681
-	Waiting for "perf record has started" message
-	OK
-	pid 155669 cpu -1 fd 5 : sys_perf_event_open: pid 155669  cpu -1 group_fd -1  flags 0x8 = 5
+Yeah, looks like it should do the trick.
 
-awk has matched the debug message and determined the values for pid, cpu and fd
+> +
+> +               events->branch_records = kmalloc(sizeof(struct brbe_records), flags);
+> +               WARN_ON(!events->branch_records);
 
-	pid 155673 cpu -1 fd 6 : sys_perf_event_open: pid 155673  cpu -1 group_fd -1  flags 0x8 = 6
-	pid 155670 cpu -1 fd 7 : sys_perf_event_open: pid 155670  cpu -1 group_fd -1  flags 0x8 = 7
-	pid 155672 cpu -1 fd 8 : sys_perf_event_open: pid 155672  cpu -1 group_fd -1  flags 0x8 = 8
-	pid 155669 cpu -1 fd 9 : sys_perf_event_open: pid 155669  cpu -1 group_fd -1  flags 0x8 = 9
-	pid 155673 cpu -1 fd 10 : sys_perf_event_open: pid 155673  cpu -1 group_fd -1  flags 0x8 = 10
-	pid 155670 cpu -1 fd 11 : sys_perf_event_open: pid 155670  cpu -1 group_fd -1  flags 0x8 = 11
-	pid 155672 cpu -1 fd 12 : sys_perf_event_open: pid 155672  cpu -1 group_fd -1  flags 0x8 = 12
-	fd 5 : idx 0: mmapping fd 5
-	
-awk has matched the debug message and determined the values for fd
-	
-	fd 9 fd_to 5 : idx 0: set output fd 9 -> 5
-	
-awk has matched the debug message and determined the values for fd and fd_to
+No need for the WARN_ON(), if we run out of memory the memory
+management code is already very loud about it.
 
-	fd 6 : idx 1: mmapping fd 6
-	fd 10 fd_to 6 : idx 1: set output fd 10 -> 6
-	fd 7 : idx 2: mmapping fd 7
-	fd 11 fd_to 7 : idx 2: set output fd 11 -> 7
-	fd 8 : idx 3: mmapping fd 8
-	fd 12 fd_to 8 : idx 3: set output fd 12 -> 8
-	Checking 8 fds
+--Qd4GMgCzvle7Q0M+
+Content-Type: application/pgp-signature; name="signature.asc"
 
-Now awk is checking:
-- every fd is mmapped or set-output
-- there is 1 mmap per unique pid
-- there is 1 mmap per unique cpu
-- there are the right number of different pids
-i.e.
-	END {
-		print "Checking " length(fd_array) " fds"
-		for (fd in fd_array) {
-			if (fd in mmap_array) {
-				pid = pid_array[fd]
-				if (pid != -1) {
-					if (pid in pids) {
-						print "More than 1 mmap for PID " pid
-						exit 1
-					}
-					pids[pid] = 1
-				}
-				cpu = cpu_array[fd]
-				if (cpu != -1) {
-					if (cpu in cpus) {
-						print "More than 1 mmap for CPU " cpu
-						exit 1
-					}
-					cpus[cpu] = 1
-				}
-			} else if (!(fd in set_output_array)) {
-				print "No mmap for fd " fd
-				exit 1
-			}
-		}
-		n = length(pids)
-		if (n != thread_cnt) {
-			print "Expected " thread_cnt " per-thread mmaps - found " n
-			exit 1
-		}
-	}
+-----BEGIN PGP SIGNATURE-----
 
-> At least we can move some helper functions to the lib and
-> reuse them in other tests.  I'll test that later..
-> 
-> So for patch 01-10,
-> 
-> Acked-by: Namhyung Kim <namhyung@kernel.org>
-> 
-> Thanks,
-> Namhyung
-> 
-> 
->>
->>  tools/lib/perf/evlist.c                 |   2 +
->>  tools/perf/builtin-record.c             |   8 +
->>  tools/perf/tests/shell/test_intel_pt.sh | 307 ++++++++++++++++++++++++++++++--
->>  tools/perf/util/evsel.c                 |   2 +
->>  4 files changed, 304 insertions(+), 15 deletions(-)
->>
->>
->> Regards
->> Adrian
+iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAmMhoHMACgkQJNaLcl1U
+h9DcGQf+OXKRIda5SncAckSpROuZfhe2UQmsc1HWBOT6Fh/spEWHHaY/qBM7f4pb
+cV/ZmKOyWxVQ4NrMAp2QqN2rq4EUGc//GYlWZbwNJ8l+YqA0oo60MVFD4U06T9zE
+vduwXIxKA2hcIzFceYmRfDGNx55TPEQsBuv15eiCa+llq5mu7VUhTgYjXZlNj506
+YqQCX2lirtAPn0WrFURTnnzUPQCp9Su10G1AwbGj1UA9YTbC1ezXL/jp8KvkNU02
+uc7P3OexKcJ2MuLcvkauJvrPI0i1w4lBt6sEHyswdXfmfElb3JH+X6WG8KwWR+rQ
+i7lTTsVtEiv9UowTSTZ9kclR07YujQ==
+=V9+X
+-----END PGP SIGNATURE-----
 
+--Qd4GMgCzvle7Q0M+--
