@@ -2,161 +2,120 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B6817C6FA8A
-	for <linux-perf-users@archiver.kernel.org>; Wed, 14 Sep 2022 14:27:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C3FFCC6FA82
+	for <linux-perf-users@archiver.kernel.org>; Wed, 14 Sep 2022 18:33:56 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229499AbiINO1g (ORCPT
+        id S229815AbiINSdz (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Wed, 14 Sep 2022 10:27:36 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46224 "EHLO
+        Wed, 14 Sep 2022 14:33:55 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43046 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229521AbiINO1e (ORCPT
+        with ESMTP id S229852AbiINSdu (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Wed, 14 Sep 2022 10:27:34 -0400
-Received: from mail-pj1-x102b.google.com (mail-pj1-x102b.google.com [IPv6:2607:f8b0:4864:20::102b])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1FDD42646
-        for <linux-perf-users@vger.kernel.org>; Wed, 14 Sep 2022 07:27:33 -0700 (PDT)
-Received: by mail-pj1-x102b.google.com with SMTP id go6so10558537pjb.2
-        for <linux-perf-users@vger.kernel.org>; Wed, 14 Sep 2022 07:27:33 -0700 (PDT)
+        Wed, 14 Sep 2022 14:33:50 -0400
+Received: from mail-pj1-x1036.google.com (mail-pj1-x1036.google.com [IPv6:2607:f8b0:4864:20::1036])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id EDFD281693;
+        Wed, 14 Sep 2022 11:33:48 -0700 (PDT)
+Received: by mail-pj1-x1036.google.com with SMTP id x1-20020a17090ab00100b001fda21bbc90so19906110pjq.3;
+        Wed, 14 Sep 2022 11:33:48 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date;
-        bh=CamYkk6hyQ6W/FkGD4SGaKOkaQ0RW1D0VrreKLd+PLg=;
-        b=u56wYV3aH2fK+ZrJQ7oF8346nuZfmInRSgBL9Eje8NRerq3bY8k0Jh2pJg816PYes/
-         wEAvIXe9IfB4nfpjkFYTFzzS4O7vwVohql7MNPbovpQOTOZqThUOAD64Zm1DBJXLnV2w
-         LHCtank+3g29r4y919GrOShxdbBFa33PUjJ/scg3+/s22znmZTchZqmZ2xPchIM2rYPn
-         C5NWGITdMShhMfkUPVA1Lmqy2mbB0Jp0vQLHJ8vzsCx8X9QB8Rnj6lBSwHvTArzB8yND
-         9MSqnSGzoADtPGHzNdVTynGMpSLm/3rvfzs/QYFIwSBu9PQPV73gA6WEjk5dfxo83y9F
-         z21A==
+        d=gmail.com; s=20210112;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:sender:from:to:cc:subject:date;
+        bh=iSoULPQWHCxzuyccY9QXbYwCw6NT6wZa9kyRRus/6yo=;
+        b=LuXH7/26EMAVjurSfaKGZztyeArTr4xXhVt4XGgBSiaMZUlCG+5kWMfNiLH8yj7tsD
+         P+g8fAa2XMWBk+qUI8Bk3s5PEEpnPko51UtwUeN/xQvrEz/X3Ux8bFiIJ8poxmOWbCc3
+         o1xyblaiZ0MCNo0oeb+ehiTEBbpUqxuCzwhZnXooYlr8rn5GQNBPYxJs0ptGLfaNptB+
+         sIl8/ry8bNH8WziTcSwzYIjdmueMh5uPg61OaNNFnYbmCbf6aCYJDJAdsMg2/GilIegf
+         jIU+bTVCfUStYzFuKaFm3Jtk/WCSNCfmHeemcMSTItSXA7MocnK55f0Iztomo2gT5cHV
+         uImQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date;
-        bh=CamYkk6hyQ6W/FkGD4SGaKOkaQ0RW1D0VrreKLd+PLg=;
-        b=fX5rUqZXOwrLey67XVd8yyOo/j6TFL6lPeelOxULZDjymbQfLknl52YqilZ30Pe+/6
-         hwc0cov/xNtlMUUmhm1JBafVehboB0nnEscNPRhoQRP1bSC2NU7ij1g334OG9HGQlFrs
-         proppuUptu2uYpQ90LUGXE8f3TJqG56PmVi4PLzM2GS7loutOsyh0be5tExToy5YZm0+
-         Ho2GPcF44aGXU+fBIrBoV6zEL+Os3BIzbme5fa2CzJGmNTfBS8O3YLlORemJhpNKq77e
-         sLhvCTwoEK38ds4pR4BIsfH/cMkcjJZzCw1I36rFNHPso/2DI7B/NfHDdqztz1PjBKc4
-         mxeg==
-X-Gm-Message-State: ACgBeo1+kU/uuf1dCs3lZRehm0lHswIMk8OEkLoEUzoyXeLEEkBISLI3
-        2M4iG/3UdrYPTxW7RFZ5bbCaUA==
-X-Google-Smtp-Source: AA6agR7ddK1vjr6d4fM0btt2VKYOJv+hLk9FU08MkTY7GtSdpIPrZcYUITBky6DhvELRaz/2FyChNw==
-X-Received: by 2002:a17:902:ecd2:b0:178:3b53:ebf7 with SMTP id a18-20020a170902ecd200b001783b53ebf7mr11608823plh.28.1663165652471;
-        Wed, 14 Sep 2022 07:27:32 -0700 (PDT)
-Received: from leoy-yangtze.lan (n058152048222.netvigator.com. [58.152.48.222])
-        by smtp.gmail.com with ESMTPSA id c3-20020a654203000000b0042c0ffa0e62sm9857405pgq.47.2022.09.14.07.27.26
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:sender:x-gm-message-state:from:to:cc:subject:date;
+        bh=iSoULPQWHCxzuyccY9QXbYwCw6NT6wZa9kyRRus/6yo=;
+        b=cM/T8kzLMA/eVJwrwB7ILv0RaSSiK71aK/vogKH71/EOsg9gMRBQvRqMdvzwkVTOvR
+         1P4wLbfEbTVETjMi1G4akK67UtY1dhDYWTzI1bM8KG/M/A1qAUz0/VHWNzQ9Z4wTWT0A
+         d59zoXg9Vbs56sK4aoF+7Yw2sttyYLcekGm4ZmpV6P2IKpKQ5tjyO5F0g6hUEI3RN7fp
+         TJZepg9YnmriHL7GvjukrA+M2z2+OBI2DzjLSnzo9YoBjzb7uyl7f+SiFIR7vCaRu1X9
+         P42DdxSECoFK5rC38+K0PF74OwBckl1pEKPu4ijNRmXFi5+VyDi66UTT32qPl9IYKkL2
+         rIPg==
+X-Gm-Message-State: ACrzQf3mn24Hm0uzTDAzlwvNdTCau46jFpuigeIc6x2VTh8bBhka+hCM
+        I37QmA1PL4NRVgCOcaPSS7U=
+X-Google-Smtp-Source: AMsMyM4HnK9AwaGr5z5zDzKLgVhSIpGEQrcTg3ciEf0r1Te0S0qFmJEHDGfzEn/dtiyVb6IELzVq9A==
+X-Received: by 2002:a17:902:b692:b0:176:d346:b56f with SMTP id c18-20020a170902b69200b00176d346b56fmr315803pls.140.1663180428248;
+        Wed, 14 Sep 2022 11:33:48 -0700 (PDT)
+Received: from youngsil.svl.corp.google.com ([2620:15c:2d4:203:ba6:e12b:9910:5ea])
+        by smtp.gmail.com with ESMTPSA id i7-20020a170902c94700b001728ac8af94sm11190842pla.248.2022.09.14.11.33.46
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 14 Sep 2022 07:27:32 -0700 (PDT)
-Date:   Wed, 14 Sep 2022 22:27:23 +0800
-From:   Leo Yan <leo.yan@linaro.org>
-To:     John Garry <john.garry@huawei.com>
-Cc:     Yicong Yang <yangyicong@huawei.com>, acme@kernel.org,
-        peterz@infradead.org, alexander.shishkin@linux.intel.com,
-        james.clark@arm.com, will@kernel.org, mathieu.poirier@linaro.org,
-        mark.rutland@arm.com, suzuki.poulose@arm.com,
-        jonathan.cameron@huawei.com, mike.leach@linaro.org,
-        gregkh@linuxfoundation.org, helgaas@kernel.org,
-        lorenzo.pieralisi@arm.com, shameerali.kolothum.thodi@huawei.com,
-        mingo@redhat.com, linux-kernel@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, linux-pci@vger.kernel.org,
-        linux-perf-users@vger.kernel.org, prime.zeng@huawei.com,
-        zhangshaokun@hisilicon.com, linuxarm@huawei.com,
-        yangyicong@hisilicon.com, liuqi6124@gmail.com
-Subject: Re: [RESEND PATCH v12 1/3] perf tool: arm: Refactor event list
- iteration in auxtrace_record__init()
-Message-ID: <YyHkywZUVPL3GNq8@leoy-yangtze.lan>
-References: <20220914075925.48549-1-yangyicong@huawei.com>
- <20220914075925.48549-2-yangyicong@huawei.com>
- <c5577971-946e-405b-b0ee-23b556ea3f72@huawei.com>
+        Wed, 14 Sep 2022 11:33:47 -0700 (PDT)
+Sender: Namhyung Kim <namhyung@gmail.com>
+From:   Namhyung Kim <namhyung@kernel.org>
+To:     Arnaldo Carvalho de Melo <acme@kernel.org>,
+        Jiri Olsa <jolsa@kernel.org>
+Cc:     Ingo Molnar <mingo@kernel.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Ian Rogers <irogers@google.com>,
+        Adrian Hunter <adrian.hunter@intel.com>,
+        linux-perf-users@vger.kernel.org,
+        Ravi Bangoria <ravi.bangoria@amd.com>
+Subject: [PATCH] perf test: Skip wp modify test on old kernels
+Date:   Wed, 14 Sep 2022 11:33:38 -0700
+Message-Id: <20220914183338.546357-1-namhyung@kernel.org>
+X-Mailer: git-send-email 2.37.2.789.g6183377224-goog
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <c5577971-946e-405b-b0ee-23b556ea3f72@huawei.com>
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-On Wed, Sep 14, 2022 at 02:47:43PM +0100, John Garry wrote:
+It uses PERF_EVENT_IOC_MODIFY_ATTRIBUTES ioctl.	 The kernel would return
+ENOTTY if it's not supported.  Update the skip reason in that case.
 
-[...]
+Cc: Ravi Bangoria <ravi.bangoria@amd.com>
+Signed-off-by: Namhyung Kim <namhyung@kernel.org>
+---
+I'd like to add Fixes: 2e85d5979e8d tag here but it'd conlict with the
+later change in e47c6ecaae1d.
 
-> >   struct auxtrace_record
-> >   *auxtrace_record__init(struct evlist *evlist, int *err)
-> >   {
-> > -	struct perf_pmu	*cs_etm_pmu;
-> > +	struct perf_pmu	*cs_etm_pmu = NULL;
-> > +	struct perf_pmu **arm_spe_pmus = NULL;
-> >   	struct evsel *evsel;
-> > -	bool found_etm = false;
-> > +	struct perf_pmu *found_etm = NULL;
-> >   	struct perf_pmu *found_spe = NULL;
-> > -	struct perf_pmu **arm_spe_pmus = NULL;
-> > +	int auxtrace_event_cnt = 0;
-> >   	int nr_spes = 0;
-> > -	int i = 0;
-> >   	if (!evlist)
-> >   		return NULL;
-> > @@ -68,24 +84,23 @@ struct auxtrace_record
-> >   	arm_spe_pmus = find_all_arm_spe_pmus(&nr_spes, err);
-> >   	evlist__for_each_entry(evlist, evsel) {
-> > -		if (cs_etm_pmu &&
-> > -		    evsel->core.attr.type == cs_etm_pmu->type)
-> > -			found_etm = true;
-> > -
-> > -		if (!nr_spes || found_spe)
-> > -			continue;
-> > -
-> > -		for (i = 0; i < nr_spes; i++) {
-> > -			if (evsel->core.attr.type == arm_spe_pmus[i]->type) {
-> > -				found_spe = arm_spe_pmus[i];
-> > -				break;
-> > -			}
-> > -		}
-> > +		if (cs_etm_pmu && !found_etm) +			found_etm =
-> > find_pmu_for_event(&cs_etm_pmu, 1, evsel);
-> > +
-> > +		if (arm_spe_pmus && !found_spe)
-> > +			found_spe = find_pmu_for_event(arm_spe_pmus, nr_spes, evsel);
-> 
-> should you break if found_etm and found_spe are set? Or, indeed, error and
-> return directly as we do below? Indeed, I am not sure why you even require
-> auxtrace_event_cnt
+ tools/perf/tests/wp.c | 9 +++++++--
+ 1 file changed, 7 insertions(+), 2 deletions(-)
 
-I think this was my suggestion :)
+diff --git a/tools/perf/tests/wp.c b/tools/perf/tests/wp.c
+index 9d4c45184e71..99f048cd6faa 100644
+--- a/tools/perf/tests/wp.c
++++ b/tools/perf/tests/wp.c
+@@ -2,6 +2,7 @@
+ #include <stdlib.h>
+ #include <string.h>
+ #include <unistd.h>
++#include <errno.h>
+ #include <sys/ioctl.h>
+ #include <linux/hw_breakpoint.h>
+ #include <linux/kernel.h>
+@@ -137,8 +138,7 @@ static int test__wp_rw(struct test_suite *test __maybe_unused,
+ #endif
+ }
+ 
+-static int test__wp_modify(struct test_suite *test __maybe_unused,
+-			   int subtest __maybe_unused)
++static int test__wp_modify(struct test_suite *test, int subtest)
+ {
+ #if defined(__s390x__)
+ 	return TEST_SKIP;
+@@ -160,6 +160,11 @@ static int test__wp_modify(struct test_suite *test __maybe_unused,
+ 	new_attr.disabled = 1;
+ 	ret = ioctl(fd, PERF_EVENT_IOC_MODIFY_ATTRIBUTES, &new_attr);
+ 	if (ret < 0) {
++		if (errno == ENOTTY) {
++			test->test_cases[subtest].skip_reason = "missing kernel support";
++			ret = TEST_SKIP;
++		}
++
+ 		pr_debug("ioctl(PERF_EVENT_IOC_MODIFY_ATTRIBUTES) failed\n");
+ 		close(fd);
+ 		return ret;
+-- 
+2.37.2.789.g6183377224-goog
 
-We can check if both 'found_etm' and 'found_spe' are set and directly
-break (and bail out) for this case.  But it would introduce more complex
-checking if we connect with patch 2 with new flag 'found_ptt', something
-like:
-
-  if ((found_etm && found_spe) ||
-      (found_etm && found_ptt) ||
-      (found_spe && found_ptt))
-      break;
-
-This is hard for later's extension if we need to support a new auxtrace
-event, so using auxtrace_event_cnt would be easier to extend more
-auxtrace event on Arm platforms.
-
-Thanks,
-Leo
-
-> >   	}
-> > +
-> >   	free(arm_spe_pmus);
-> > -	if (found_etm && found_spe) {
-> > -		pr_err("Concurrent ARM Coresight ETM and SPE operation not currently supported\n");
-> > +	if (found_etm)
-> > +		auxtrace_event_cnt++;
-> > +
-> > +	if (found_spe)
-> > +		auxtrace_event_cnt++;
-> > +
-> > +	if (auxtrace_event_cnt > 1) {
-> > +		pr_err("Concurrent AUX trace operation not currently supported\n");
-> >   		*err = -EOPNOTSUPP;
-> >   		return NULL;
-> >   	}
-> 
