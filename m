@@ -2,140 +2,99 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 626E5ECAAD3
-	for <linux-perf-users@archiver.kernel.org>; Wed, 14 Sep 2022 04:43:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B3323ECAAD3
+	for <linux-perf-users@archiver.kernel.org>; Wed, 14 Sep 2022 05:11:32 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229683AbiINEna (ORCPT
+        id S229457AbiINFL3 (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Wed, 14 Sep 2022 00:43:30 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60070 "EHLO
+        Wed, 14 Sep 2022 01:11:29 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59620 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229615AbiINEn1 (ORCPT
+        with ESMTP id S229463AbiINFL1 (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Wed, 14 Sep 2022 00:43:27 -0400
-Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTP id 7E85154CB6;
-        Tue, 13 Sep 2022 21:43:26 -0700 (PDT)
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 22E8515BF;
-        Tue, 13 Sep 2022 21:43:32 -0700 (PDT)
-Received: from [10.162.43.6] (unknown [10.162.43.6])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id A4A5F3F73D;
-        Tue, 13 Sep 2022 21:43:21 -0700 (PDT)
-Message-ID: <88cf1cb2-5964-5ef0-2487-1334cd08ee98@arm.com>
-Date:   Wed, 14 Sep 2022 10:13:18 +0530
+        Wed, 14 Sep 2022 01:11:27 -0400
+Received: from mga09.intel.com (mga09.intel.com [134.134.136.24])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 775D346605;
+        Tue, 13 Sep 2022 22:11:26 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1663132286; x=1694668286;
+  h=message-id:date:mime-version:subject:to:cc:references:
+   from:in-reply-to:content-transfer-encoding;
+  bh=dlIkkaMKGQF7N/2BgFt96GCxbvKLNSarA0u+VVorGrA=;
+  b=eCrpaOtw7Qeb0WQAVrGHh28AyXTk80jVAXpOAdqSEbj31KTaE1bN5QgT
+   OXILZWwXakAHUi5FPGOW7vmH5a1dB+oHmqyk6ydCPnYbSxhAWhA5Em0yq
+   6gB5GnXV4IJNKZeU9tqxriSsQy2guJj8VtmZgoeoFGgoLbdZhGW5544aQ
+   SSirp5kjUXtMEQfpWzDcIG1CaL32lrn+ohYEALHl6nnNXM4umzJZB3XcE
+   AHzpiOelZS3l7hX5UEU8hDf78nE7TaKj5ICIbKIcU1S9b2IEnrmNz4+vh
+   C5MJuJAw4925/fzGiXRlqywToxzU1Afyxlqx8XQy5+4iQE72D83ba/gCE
+   g==;
+X-IronPort-AV: E=McAfee;i="6500,9779,10469"; a="299149703"
+X-IronPort-AV: E=Sophos;i="5.93,313,1654585200"; 
+   d="scan'208";a="299149703"
+Received: from fmsmga008.fm.intel.com ([10.253.24.58])
+  by orsmga102.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 13 Sep 2022 22:11:25 -0700
+X-IronPort-AV: E=Sophos;i="5.93,313,1654585200"; 
+   d="scan'208";a="678892519"
+Received: from malbecki-mobl.ger.corp.intel.com (HELO [10.0.2.15]) ([10.252.32.55])
+  by fmsmga008-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 13 Sep 2022 22:11:23 -0700
+Message-ID: <ca460f5e-644f-8c55-670f-76d8a6f95e40@intel.com>
+Date:   Wed, 14 Sep 2022 08:11:20 +0300
 MIME-Version: 1.0
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
- Thunderbird/91.11.0
-Subject: Re: [PATCH V2 0/7] arm64/perf: Enable branch stack sampling
+ Firefox/91.0 Thunderbird/91.11.0
+Subject: Re: [PATCH] perf inject: Clarify build-id options a little bit
 Content-Language: en-US
-To:     James Clark <james.clark@arm.com>
-Cc:     Rob Herring <robh@kernel.org>, Marc Zyngier <maz@kernel.org>,
-        Ingo Molnar <mingo@redhat.com>, linux-kernel@vger.kernel.org,
-        linux-perf-users@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, peterz@infradead.org,
-        acme@kernel.org, mark.rutland@arm.com, will@kernel.org,
-        catalin.marinas@arm.com
-References: <20220908051046.465307-1-anshuman.khandual@arm.com>
- <e44d0bd6-7809-59db-0133-1c6c9ba8cd55@arm.com>
- <14c0b04b-f9f0-632c-4813-f1952e3320bc@arm.com>
- <8d39eb33-3347-4fbd-bf72-9c8eaa756648@arm.com>
-From:   Anshuman Khandual <anshuman.khandual@arm.com>
-In-Reply-To: <8d39eb33-3347-4fbd-bf72-9c8eaa756648@arm.com>
+To:     Namhyung Kim <namhyung@kernel.org>,
+        Arnaldo Carvalho de Melo <acme@kernel.org>,
+        Jiri Olsa <jolsa@kernel.org>
+Cc:     Ingo Molnar <mingo@kernel.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Ian Rogers <irogers@google.com>,
+        linux-perf-users@vger.kernel.org
+References: <20220914040844.352514-1-namhyung@kernel.org>
+From:   Adrian Hunter <adrian.hunter@intel.com>
+Organization: Intel Finland Oy, Registered Address: PL 281, 00181 Helsinki,
+ Business Identity Code: 0357606 - 4, Domiciled in Helsinki
+In-Reply-To: <20220914040844.352514-1-namhyung@kernel.org>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
+On 14/09/22 07:08, Namhyung Kim wrote:
+> Update the documentation of --build-id and --buildid-all options to
+> clarify the difference between them.  The former requires full sample
+> processing to find which DSOs are actually used.  While the latter simply
+> injects every DSO's build-id from MMAP{,2} records, skipping SAMPLEs.
+> 
+> Signed-off-by: Namhyung Kim <namhyung@kernel.org>
 
+Reviewed-by: Adrian Hunter <adrian.hunter@intel.com>
 
-On 9/13/22 18:42, James Clark wrote:
+> ---
+>  tools/perf/Documentation/perf-inject.txt | 6 ++++--
+>  1 file changed, 4 insertions(+), 2 deletions(-)
 > 
-> 
-> On 13/09/2022 13:12, Anshuman Khandual wrote:
->>
->>
->> On 9/13/22 16:25, James Clark wrote:
->>>
->>> On 08/09/2022 06:10, Anshuman Khandual wrote:
->>>> This series enables perf branch stack sampling support on arm64 platform
->>>> via a new arch feature called Branch Record Buffer Extension (BRBE). All
->>>> relevant register definitions could be accessed here.
->>>>
->>>> https://developer.arm.com/documentation/ddi0601/2021-12/AArch64-Registers
->>>>
->>>> This series applies on v6.0-rc4 after the BRBE related perf ABI changes series
->>>> (V7) that was posted earlier, and a branch sample filter helper patch.
->>>>
->>>> https://lore.kernel.org/all/20220824044822.70230-1-anshuman.khandual@arm.com/
->>>>
->>>> https://lore.kernel.org/all/20220906084414.396220-1-anshuman.khandual@arm.com/
->>>>
->>>> Following issues have been resolved
->>>>
->>>> - Jame's concerns regarding permission inadequacy related to perfmon_capable()
->>>> - Jame's concerns regarding using perf_event_paranoid along with perfmon_capable()
->>> I don't see the resolution to this one. I'm not 100% sure of the code
->>> path used for LBR, but I think you just need to take perf_allow_kernel()
->>> into account somewhere to make this command have the same result with
->>> BRBE. Is there any contention that the permissions shouldn't behave in
->>> the same way across platforms? This is when perf_event_paranoid < 2:
->>>
->>> Intel:
->>>
->>>   $ perf record -j any -- ls
->>>
->>>   [ perf record: Woken up 1 times to write data ]
->>>   [ perf record: Captured and wrote 0.014 MB perf.data (16 samples) ]
->>>
->>> Arm:
->>>
->>>   $ perf record -j any -- ls
->>>
->>>   Error:
->>>   No permission to enable cycles event.
->>>
->> Proposed solution here just follows what we did for the SPE driver recently.
->> I would not be surprised, if there is difference in semantics in permission
->> checking across various platform perf drivers. 
-> 
-> SPE isn't too relevant because it's its own thing and there is no SPE
-> command that can be run on other platforms. There may be something like
-> perf c2c that uses SPE under the hood but if it works differently across
-> platforms I would also consider that a bug and not something to be copied.
-> 
->> Ideally permission should not
->> even be checked in platform drivers - either capability or perf_event_paranoid.
-> 
-> But it is currently. Users don't care about the code or how complicated
-> the implementation is, only that the behaviour is sane. We're not
-> helping Arm users or adoption of BRBE if the same command that someone
-> runs somewhere else fails inexplicably, without any justification other
-> than "the code didn't look right".
-> 
->>
->> Unfortunately changing the permission checking framework across generic perf
->> is beyond the scope for this BRBE proposal and might be taken up later via a
-> 
-> Permissions are definitely not beyond the scope of this proposal because
-> the code to check the permissions has been added right here:
-> 
->   +		if (perfmon_capable())
->   +			event->hw.flags |= ARMPMU_EVT_PRIV;
-> 
-> And all it needs extra is a check of perf_allow_kernel() or similar.
-> 
->> different series. Although I would be willing to accommodate any alternate
->> suggestions to improve permission checking here in the BRBE driver.
-> 
-> I don't think planning to change it in the future is very user friendly
-> either, otherwise any help we give to people stuck will have to start
-> with an explanation about how we changed the permissions model across
-> versions, and their command or setup also depends on the kernel version.
+> diff --git a/tools/perf/Documentation/perf-inject.txt b/tools/perf/Documentation/perf-inject.txt
+> index 70e2ac3cc91a..c972032f4ca0 100644
+> --- a/tools/perf/Documentation/perf-inject.txt
+> +++ b/tools/perf/Documentation/perf-inject.txt
+> @@ -25,10 +25,12 @@ OPTIONS
+>  -------
+>  -b::
+>  --build-ids::
+> -        Inject build-ids into the output stream
+> +	Inject build-ids of DSOs hit by samples into the output stream.
+> +	This means it needs to process all SAMPLE records to find the DSOs.
+>  
+>  --buildid-all::
+> -	Inject build-ids of all DSOs into the output stream
+> +	Inject build-ids of all DSOs into the output stream regardless of hits
+> +	and skip SAMPLE processing.
+>  
+>  --known-build-ids=::
+>  	Override build-ids to inject using these comma-separated pairs of
 
-I guess this discussion regarding perfmon_capable(), perf_event_paranoid,
-and perf_allow_kernel() has been happening in a rather cyclical manner :)
-There are multiple approaches to solve this problem both in near and long
-term, and there seems to be disagreement over which is the preferred path
-to be taken. Hence, will just leave the decision up to the maintainers.
