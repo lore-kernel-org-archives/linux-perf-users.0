@@ -2,66 +2,100 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 842DDECAAD3
-	for <linux-perf-users@archiver.kernel.org>; Wed, 14 Sep 2022 12:13:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 180A6ECAAD3
+	for <linux-perf-users@archiver.kernel.org>; Wed, 14 Sep 2022 12:24:47 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229518AbiINMNq (ORCPT
+        id S229570AbiINMYq (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Wed, 14 Sep 2022 08:13:46 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48320 "EHLO
+        Wed, 14 Sep 2022 08:24:46 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37240 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229480AbiINMNp (ORCPT
+        with ESMTP id S229520AbiINMYp (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Wed, 14 Sep 2022 08:13:45 -0400
-Received: from desiato.infradead.org (desiato.infradead.org [IPv6:2001:8b0:10b:1:d65d:64ff:fe57:4e05])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 629B22C13E;
-        Wed, 14 Sep 2022 05:13:44 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=desiato.20200630; h=In-Reply-To:Content-Type:MIME-Version:
-        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description;
-        bh=W5j1Ml4/FGhqmMtCc95aFu4AVQsz1Mj8TqQkpBHoMxs=; b=WLJj4M0rV4tUTtnynNBIdEAd1U
-        V3oKAsGc0iGaN1MleNa5z6efNVmmmsWL01bthSmyYxIXCmFRsPMo08m0aMDwjfpVIeJLNQ+AJD65j
-        Om9Rr7vGAOAqXYUW00o/aj83DfLGc8Y5m4wRMnJOoPsyBuFIujgHBp/BBrwbZLgKxQgN5dvhClNIF
-        iAApv+rNUMoovnStQEJIXg28oFxBWbf9BgZB3lAswMN2mfozEP7eWmW7TocGMl907sFf0+RJyf0PT
-        InCig9B+9dr1mL0y1aHytN/33KpSXsSicc+uQ3kY7vLad0ZL82LXT96MofzZMIgWqKD3OW5iuzajx
-        t6EZOb7w==;
-Received: from j130084.upc-j.chello.nl ([24.132.130.84] helo=noisy.programming.kicks-ass.net)
-        by desiato.infradead.org with esmtpsa (Exim 4.94.2 #2 (Red Hat Linux))
-        id 1oYRGp-00CLtS-AT; Wed, 14 Sep 2022 12:13:35 +0000
-Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange X25519 server-signature RSA-PSS (4096 bits))
-        (Client did not present a certificate)
-        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id A559D3002AE;
-        Wed, 14 Sep 2022 14:13:34 +0200 (CEST)
-Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
-        id 8E1F02B1255A4; Wed, 14 Sep 2022 14:13:34 +0200 (CEST)
-Date:   Wed, 14 Sep 2022 14:13:34 +0200
-From:   Peter Zijlstra <peterz@infradead.org>
-To:     Sergey Senozhatsky <senozhatsky@chromium.org>
-Cc:     Petr Mladek <pmladek@suse.com>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        John Ogness <john.ogness@linutronix.de>,
+        Wed, 14 Sep 2022 08:24:45 -0400
+Received: from mga01.intel.com (mga01.intel.com [192.55.52.88])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DF1446461;
+        Wed, 14 Sep 2022 05:24:43 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1663158283; x=1694694283;
+  h=from:to:cc:subject:date:message-id:mime-version:
+   content-transfer-encoding;
+  bh=Q+9dbMUMn5Gtzb8375/dbn8RO/Ru0bbyWDSY78Ma/lU=;
+  b=KIzi0VJQM+XJ8c4tC8NK4eax6PrPxlNi8kndFQNPDY3+2nKK0HEuBKLM
+   J6AkcdUDc0eDpnpqIJPh4YUas7ZrWt1mdqwqoUin+m7urkstn2XBGx0qd
+   aSf9U82Ap3J4Qc/SdHUaj+auWGool8X3jew1M+cwow+m9dLYtzgSKbakm
+   ed3TTh6pstGBRkL/lQ8U3m0ZkwcQn7eDaIrTM8CpZi4IaMCdRTGH3v30H
+   8Kh+TVgt06VDMVtcZgDdSPaBYzz+KQFH9TS1Edd+PdGEx0YPzMTDFC4ec
+   tM2Q0zCVNVoURVTrq4AFGDufUuuEh23TWqipHBV3ddQijioXlwyFeHIvP
+   w==;
+X-IronPort-AV: E=McAfee;i="6500,9779,10470"; a="324666316"
+X-IronPort-AV: E=Sophos;i="5.93,315,1654585200"; 
+   d="scan'208";a="324666316"
+Received: from orsmga007.jf.intel.com ([10.7.209.58])
+  by fmsmga101.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 14 Sep 2022 05:24:43 -0700
+X-IronPort-AV: E=Sophos;i="5.93,315,1654585200"; 
+   d="scan'208";a="612489606"
+Received: from ahunter6-mobl1.ger.corp.intel.com (HELO ahunter-VirtualBox.home\044ger.corp.intel.com) ([10.252.32.55])
+  by orsmga007-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 14 Sep 2022 05:24:40 -0700
+From:   Adrian Hunter <adrian.hunter@intel.com>
+To:     Arnaldo Carvalho de Melo <acme@kernel.org>
+Cc:     Jiri Olsa <jolsa@redhat.com>, Namhyung Kim <namhyung@kernel.org>,
+        Ian Rogers <irogers@google.com>,
+        Daniel Dao <dqminh@cloudflare.com>,
         linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org
-Subject: Re: next: possible circular locking dependency: perf vs printk
-Message-ID: <YyHFbhDIvU++Q4Hh@hirez.programming.kicks-ass.net>
-References: <YyGrVxN8HD9Bks0/@google.com>
+Subject: [PATCH] perf kcore_copy: Do not check /proc/modules is unchanged
+Date:   Wed, 14 Sep 2022 15:24:29 +0300
+Message-Id: <20220914122429.8770-1-adrian.hunter@intel.com>
+X-Mailer: git-send-email 2.25.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <YyGrVxN8HD9Bks0/@google.com>
+Organization: Intel Finland Oy, Registered Address: PL 281, 00181 Helsinki, Business Identity Code: 0357606 - 4, Domiciled in Helsinki
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-On Wed, Sep 14, 2022 at 07:22:15PM +0900, Sergey Senozhatsky wrote:
-> Hello folks,
-> 
-> The lockdep splat below is pretty interesting. If I understand it
-> correctly:
+/proc/kallsyms and /proc/modules are compared before and after the copy
+in order to ensure no changes during the copy. However /proc/modules
+also might change due to reference counts changing even though that
+does not make any difference. Any modules loaded or unloaded should be
+visible in changes to kallsyms, so it is not necessary to check
+/proc/modules also anyway.
 
-Known thing; only happens because you trip a WARN, fix that, problem
-goes away.
+Remove the comparison checking that /proc/modules is unchanged.
 
+Reported-by: Daniel Dao <dqminh@cloudflare.com>
+Fixes: fc1b691d7651 ("perf buildid-cache: Add ability to add kcore to the cache")
+Signed-off-by: Adrian Hunter <adrian.hunter@intel.com>
+---
+ tools/perf/util/symbol-elf.c | 7 ++-----
+ 1 file changed, 2 insertions(+), 5 deletions(-)
+
+diff --git a/tools/perf/util/symbol-elf.c b/tools/perf/util/symbol-elf.c
+index 75bec32d4f57..647b7dff8ef3 100644
+--- a/tools/perf/util/symbol-elf.c
++++ b/tools/perf/util/symbol-elf.c
+@@ -2102,8 +2102,8 @@ static int kcore_copy__compare_file(const char *from_dir, const char *to_dir,
+  * unusual.  One significant peculiarity is that the mapping (start -> pgoff)
+  * is not the same for the kernel map and the modules map.  That happens because
+  * the data is copied adjacently whereas the original kcore has gaps.  Finally,
+- * kallsyms and modules files are compared with their copies to check that
+- * modules have not been loaded or unloaded while the copies were taking place.
++ * kallsyms file is compared with its copy to check that modules have not been
++ * loaded or unloaded while the copies were taking place.
+  *
+  * Return: %0 on success, %-1 on failure.
+  */
+@@ -2166,9 +2166,6 @@ int kcore_copy(const char *from_dir, const char *to_dir)
+ 			goto out_extract_close;
+ 	}
+ 
+-	if (kcore_copy__compare_file(from_dir, to_dir, "modules"))
+-		goto out_extract_close;
+-
+ 	if (kcore_copy__compare_file(from_dir, to_dir, "kallsyms"))
+ 		goto out_extract_close;
+ 
+-- 
+2.25.1
 
