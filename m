@@ -2,165 +2,179 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 27EEEECAAD3
-	for <linux-perf-users@archiver.kernel.org>; Wed, 14 Sep 2022 13:48:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 767E7ECAAD3
+	for <linux-perf-users@archiver.kernel.org>; Wed, 14 Sep 2022 13:52:20 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229873AbiINNsI (ORCPT
+        id S229510AbiINNwT (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Wed, 14 Sep 2022 09:48:08 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35600 "EHLO
+        Wed, 14 Sep 2022 09:52:19 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42486 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229824AbiINNsF (ORCPT
+        with ESMTP id S229490AbiINNwS (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Wed, 14 Sep 2022 09:48:05 -0400
-Received: from frasgout.his.huawei.com (frasgout.his.huawei.com [185.176.79.56])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6F46A73918;
-        Wed, 14 Sep 2022 06:47:47 -0700 (PDT)
-Received: from fraeml739-chm.china.huawei.com (unknown [172.18.147.201])
-        by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4MSM7v3WRLz67xfT;
-        Wed, 14 Sep 2022 21:46:51 +0800 (CST)
-Received: from lhrpeml500003.china.huawei.com (7.191.162.67) by
- fraeml739-chm.china.huawei.com (10.206.15.220) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2375.31; Wed, 14 Sep 2022 15:47:45 +0200
-Received: from [10.48.151.55] (10.48.151.55) by lhrpeml500003.china.huawei.com
- (7.191.162.67) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2375.31; Wed, 14 Sep
- 2022 14:47:43 +0100
-Message-ID: <c5577971-946e-405b-b0ee-23b556ea3f72@huawei.com>
-Date:   Wed, 14 Sep 2022 14:47:43 +0100
+        Wed, 14 Sep 2022 09:52:18 -0400
+Received: from mail-pf1-x435.google.com (mail-pf1-x435.google.com [IPv6:2607:f8b0:4864:20::435])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5BE6A63F36
+        for <linux-perf-users@vger.kernel.org>; Wed, 14 Sep 2022 06:52:17 -0700 (PDT)
+Received: by mail-pf1-x435.google.com with SMTP id c198so14972910pfc.13
+        for <linux-perf-users@vger.kernel.org>; Wed, 14 Sep 2022 06:52:17 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date;
+        bh=QDJ2JWyA6l+gPOwnUJUyy3G4nzXouV2tuamKHXrAI5k=;
+        b=S++E2D0N0Ew44KWcwdwiIoTOdfBgO8+kKcZ+A7xZ9dsWKKQDZwFBu26GFb9rt+Ulu7
+         W2eNgo/SzQuD5EZdLL7XtQcVB5T9bXFu6+DCE2yDL/N5LaE5QkSkb+XYVO38htBdaFb4
+         Wbgb8/T5kN4Tdy86s7LzSGblT7GXELa4zMy2zzVbm20+udhIC1gCUQkH4cWd0LZHkcvQ
+         fnp+wUXkiH9jzGeMmiamO57BcD9N2bI1Donf6oRU2NtUhfYIzjBXqt5jynt0WfUf6tbM
+         MtKR+TAsnA7FOFwq98EnXe4KU9hzT4I7cp3nqDk/Y65zDXJlxzJ/eZ2kOSdZsaKMtuHz
+         PMiQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date;
+        bh=QDJ2JWyA6l+gPOwnUJUyy3G4nzXouV2tuamKHXrAI5k=;
+        b=uwx6YKSih6nneHGAgudBXFUyVKndRWYBqqaJH5w6KQMPNKDja3Ol8rnFbPofX12z6j
+         p3fjbW2A6JBrBpyJnVNJBzwBIG2ddv+jVjFeqWf4w30xyasW7otZ2URsw3lJDrQNz9W9
+         0UjWBFcwJiMmJ6SdfzerEymdkZr7A2ms4MDQKxasdBn8ERJLH9ftI/Qv1/4RIhlm+1wn
+         DLdljOu1Q/fi2Xp/oLRyxS57Tbrgtdw4lend6ydd3QkJN4LyhXFAVtRxszcEVyaoZGaL
+         z5lzXpC7IkzSAy5vrG6UYzPrH9AVAMY5NRelLofIpllEB1Wik1YOXZe6dbCMJyhmlX+1
+         Zovg==
+X-Gm-Message-State: ACgBeo0DSQOhaA3brH8WTx00hgDQfaSmOIcRxkSFtdLembTQrkNpJ80d
+        pWQKtnXz5rlznd5LTwzlGM1mICLFU7uEw6xH
+X-Google-Smtp-Source: AA6agR7tAiJ+BKajfVYhu41SR9ZgkTyWfjRtjpCexhVtlUr7gvfPBXiPKilDzVnmY8wwp5NIRlFnEg==
+X-Received: by 2002:a63:2c0b:0:b0:434:ebb6:7594 with SMTP id s11-20020a632c0b000000b00434ebb67594mr30112749pgs.245.1663163536731;
+        Wed, 14 Sep 2022 06:52:16 -0700 (PDT)
+Received: from leoy-yangtze.lan (n058152048222.netvigator.com. [58.152.48.222])
+        by smtp.gmail.com with ESMTPSA id p15-20020a1709027ecf00b0017825ab5320sm8579335plb.251.2022.09.14.06.52.14
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 14 Sep 2022 06:52:16 -0700 (PDT)
+Date:   Wed, 14 Sep 2022 21:52:10 +0800
+From:   Leo Yan <leo.yan@linaro.org>
+To:     Lieven Hey <lieven.hey@kdab.com>,
+        James Clark <James.Clark@arm.com>,
+        Ian Rogers <irogers@google.com>
+Cc:     acme@kernel.org, linux-perf-users@vger.kernel.org
+Subject: Re: [PATCH] include program header in elf files generated by perf
+ inject
+Message-ID: <YyHcikq+Xp5j6A4H@leoy-yangtze.lan>
+References: <20220825084923.167140-1-lieven.hey@kdab.com>
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:91.0) Gecko/20100101
- Thunderbird/91.6.1
-Subject: Re: [RESEND PATCH v12 1/3] perf tool: arm: Refactor event list
- iteration in auxtrace_record__init()
-To:     Yicong Yang <yangyicong@huawei.com>, <acme@kernel.org>,
-        <peterz@infradead.org>, <alexander.shishkin@linux.intel.com>,
-        <leo.yan@linaro.org>, <james.clark@arm.com>, <will@kernel.org>,
-        <mathieu.poirier@linaro.org>, <mark.rutland@arm.com>,
-        <suzuki.poulose@arm.com>, <jonathan.cameron@huawei.com>,
-        <mike.leach@linaro.org>
-CC:     <gregkh@linuxfoundation.org>, <helgaas@kernel.org>,
-        <lorenzo.pieralisi@arm.com>,
-        <shameerali.kolothum.thodi@huawei.com>, <mingo@redhat.com>,
-        <linux-kernel@vger.kernel.org>,
-        <linux-arm-kernel@lists.infradead.org>,
-        <linux-pci@vger.kernel.org>, <linux-perf-users@vger.kernel.org>,
-        <prime.zeng@huawei.com>, <zhangshaokun@hisilicon.com>,
-        <linuxarm@huawei.com>, <yangyicong@hisilicon.com>,
-        <liuqi6124@gmail.com>
-References: <20220914075925.48549-1-yangyicong@huawei.com>
- <20220914075925.48549-2-yangyicong@huawei.com>
-From:   John Garry <john.garry@huawei.com>
-In-Reply-To: <20220914075925.48549-2-yangyicong@huawei.com>
-Content-Type: text/plain; charset="UTF-8"; format=flowed
-Content-Transfer-Encoding: 7bit
-X-Originating-IP: [10.48.151.55]
-X-ClientProxiedBy: lhrpeml100001.china.huawei.com (7.191.160.183) To
- lhrpeml500003.china.huawei.com (7.191.162.67)
-X-CFilter-Loop: Reflected
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20220825084923.167140-1-lieven.hey@kdab.com>
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-On 14/09/2022 08:59, Yicong Yang wrote:
-> From: Qi Liu <liuqi115@huawei.com>
-> 
-> Add find_pmu_for_event() and use to simplify logic in
-> auxtrace_record_init(). find_pmu_for_event() will be
-> reused in subsequent patches.
-> 
-> Reviewed-by: Leo Yan <leo.yan@linaro.org>
-> Reviewed-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
-> Signed-off-by: Qi Liu <liuqi115@huawei.com>
-> Signed-off-by: Yicong Yang <yangyicong@hisilicon.com>
+Hi Lieven,
+
+On Thu, Aug 25, 2022 at 10:49:23AM +0200, Lieven Hey wrote:
+> The missing header makes it hard for programs like elfutils to open
+> these files.
+
+Several minor suggestions:
+
+- I would suggest to change the subject as:
+  perf jit: Include program header in elf files
+- Please add your Signed-off-by tag in the commit log.
+- I confirmed this patch works for Java jitted symbols with the test
+  case [1], this is a real fixing for 2d86612aacb7805f, it's good to
+  add the fix tag:
+  Fixes: 2d86612aacb7805f ("perf symbol: Correct address for bss symbols")
+
+[1] https://lore.kernel.org/lkml/20220806033434.121908-1-leo.yan@linaro.org/
+
+I also followed you suggested commands to verify dart jitted symbols:
+
+  # perf record --call-graph dwarf -k 1 dart --generate-perf-jitdump test.dart
+  # perf inject -j -i perf.data -o perf.data.jitted
+  # perf --debug verbose=4 report -i perf.data.jitted
+
+Before change:
+
+  unwind: find_proc_info dso /tmp/jitted-287756-38.so
+  dso__load_sym_internal: failed to find program header for symbol: CallToRuntime st_value: 0x40
+  dso__load_sym_internal: adjusting symbol: st_value: 0x40 sh_addr: 0x40 sh_offset: 0x40
+  symbol__new: CallToRuntime 0x40-0xc0
+
+After change:
+
+  unwind: find_proc_info dso /tmp/jitted-287756-38.so
+  dso__load_sym_internal: adjusting symbol: st_value: 0x40 p_vaddr: 0 p_offset: 0
+  symbol__new: CallToRuntime 0x40-0xc0
+
+Which proves the program header has been added for jitted symbols in
+the generated elf file.
+
+So with addressing above comments:
+
+Reviewed-by: Leo Yan <leo.yan@linaro.org>
+Tested-by: Leo Yan <leo.yan@linaro.org>
+
+
 > ---
->   tools/perf/arch/arm/util/auxtrace.c | 53 ++++++++++++++++++-----------
->   1 file changed, 34 insertions(+), 19 deletions(-)
+>  tools/perf/util/genelf.c | 14 ++++++++++++++
+>  tools/perf/util/genelf.h |  4 ++++
+>  2 files changed, 18 insertions(+)
 > 
-> diff --git a/tools/perf/arch/arm/util/auxtrace.c b/tools/perf/arch/arm/util/auxtrace.c
-> index 5fc6a2a3dbc5..384c7cfda0fd 100644
-> --- a/tools/perf/arch/arm/util/auxtrace.c
-> +++ b/tools/perf/arch/arm/util/auxtrace.c
-> @@ -50,16 +50,32 @@ static struct perf_pmu **find_all_arm_spe_pmus(int *nr_spes, int *err)
->   	return arm_spe_pmus;
->   }
->   
-> +static struct perf_pmu *find_pmu_for_event(struct perf_pmu **pmus,
-> +					   int pmu_nr, struct evsel *evsel)
-> +{
-> +	int i;
+> diff --git a/tools/perf/util/genelf.c b/tools/perf/util/genelf.c
+> index 953338b9e887..02cd9f75e3d2 100644
+> --- a/tools/perf/util/genelf.c
+> +++ b/tools/perf/util/genelf.c
+> @@ -251,6 +251,7 @@ jit_write_elf(int fd, uint64_t load_addr, const char *sym,
+>  	Elf_Data *d;
+>  	Elf_Scn *scn;
+>  	Elf_Ehdr *ehdr;
+> +	Elf_Phdr *phdr;
+>  	Elf_Shdr *shdr;
+>  	uint64_t eh_frame_base_offset;
+>  	char *strsym = NULL;
+> @@ -285,6 +286,19 @@ jit_write_elf(int fd, uint64_t load_addr, const char *sym,
+>  	ehdr->e_version = EV_CURRENT;
+>  	ehdr->e_shstrndx= unwinding ? 4 : 2; /* shdr index for section name */
+>  
+> +	/*
+> +	 * setup program header
+> +	 */
+> +	phdr = elf_newphdr(e, 1);
+> +	phdr[0].p_type = PT_LOAD;
+> +	phdr[0].p_offset = 0;
+> +	phdr[0].p_vaddr = 0;
+> +	phdr[0].p_paddr = 0;
+> +	phdr[0].p_filesz = csize;
+> +	phdr[0].p_memsz = csize;
+> +	phdr[0].p_flags = PF_X | PF_R;
+> +	phdr[0].p_align = 8;
 > +
-> +	if (!pmus)
-> +		return NULL;
-> +
-> +	for (i = 0; i < pmu_nr; i++) {
-> +		if (evsel->core.attr.type == pmus[i]->type)
-> +			return pmus[i];
-> +	}
-> +
-> +	return NULL;
-> +}
-> +
->   struct auxtrace_record
->   *auxtrace_record__init(struct evlist *evlist, int *err)
->   {
-> -	struct perf_pmu	*cs_etm_pmu;
-> +	struct perf_pmu	*cs_etm_pmu = NULL;
-> +	struct perf_pmu **arm_spe_pmus = NULL;
->   	struct evsel *evsel;
-> -	bool found_etm = false;
-> +	struct perf_pmu *found_etm = NULL;
->   	struct perf_pmu *found_spe = NULL;
-> -	struct perf_pmu **arm_spe_pmus = NULL;
-> +	int auxtrace_event_cnt = 0;
->   	int nr_spes = 0;
-> -	int i = 0;
->   
->   	if (!evlist)
->   		return NULL;
-> @@ -68,24 +84,23 @@ struct auxtrace_record
->   	arm_spe_pmus = find_all_arm_spe_pmus(&nr_spes, err);
->   
->   	evlist__for_each_entry(evlist, evsel) {
-> -		if (cs_etm_pmu &&
-> -		    evsel->core.attr.type == cs_etm_pmu->type)
-> -			found_etm = true;
-> -
-> -		if (!nr_spes || found_spe)
-> -			continue;
-> -
-> -		for (i = 0; i < nr_spes; i++) {
-> -			if (evsel->core.attr.type == arm_spe_pmus[i]->type) {
-> -				found_spe = arm_spe_pmus[i];
-> -				break;
-> -			}
-> -		}
-> +		if (cs_etm_pmu && !found_etm) 
-> +			found_etm = find_pmu_for_event(&cs_etm_pmu, 1, evsel);
-> +
-> +		if (arm_spe_pmus && !found_spe)
-> +			found_spe = find_pmu_for_event(arm_spe_pmus, nr_spes, evsel);
-
-should you break if found_etm and found_spe are set? Or, indeed, error 
-and return directly as we do below? Indeed, I am not sure why you even 
-require auxtrace_event_cnt
-
->   	}
-> +
->   	free(arm_spe_pmus);
->   
-> -	if (found_etm && found_spe) {
-> -		pr_err("Concurrent ARM Coresight ETM and SPE operation not currently supported\n");
-> +	if (found_etm)
-> +		auxtrace_event_cnt++;
-> +
-> +	if (found_spe)
-> +		auxtrace_event_cnt++;
-> +
-> +	if (auxtrace_event_cnt > 1) {
-> +		pr_err("Concurrent AUX trace operation not currently supported\n");
->   		*err = -EOPNOTSUPP;
->   		return NULL;
->   	}
-
+>  	/*
+>  	 * setup text section
+>  	 */
+> diff --git a/tools/perf/util/genelf.h b/tools/perf/util/genelf.h
+> index ae138afe6c56..b5c909546e3f 100644
+> --- a/tools/perf/util/genelf.h
+> +++ b/tools/perf/util/genelf.h
+> @@ -53,8 +53,10 @@ int jit_add_debug_info(Elf *e, uint64_t code_addr, void *debug, int nr_debug_ent
+>  
+>  #if GEN_ELF_CLASS == ELFCLASS64
+>  #define elf_newehdr	elf64_newehdr
+> +#define elf_newphdr	elf64_newphdr
+>  #define elf_getshdr	elf64_getshdr
+>  #define Elf_Ehdr	Elf64_Ehdr
+> +#define Elf_Phdr	Elf64_Phdr
+>  #define Elf_Shdr	Elf64_Shdr
+>  #define Elf_Sym		Elf64_Sym
+>  #define ELF_ST_TYPE(a)	ELF64_ST_TYPE(a)
+> @@ -62,8 +64,10 @@ int jit_add_debug_info(Elf *e, uint64_t code_addr, void *debug, int nr_debug_ent
+>  #define ELF_ST_VIS(a)	ELF64_ST_VISIBILITY(a)
+>  #else
+>  #define elf_newehdr	elf32_newehdr
+> +#define elf_newphdr	elf32_newphdr
+>  #define elf_getshdr	elf32_getshdr
+>  #define Elf_Ehdr	Elf32_Ehdr
+> +#define Elf_Phdr	Elf32_Phdr
+>  #define Elf_Shdr	Elf32_Shdr
+>  #define Elf_Sym		Elf32_Sym
+>  #define ELF_ST_TYPE(a)	ELF32_ST_TYPE(a)
+> -- 
+> 2.37.2
