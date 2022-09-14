@@ -2,121 +2,102 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BCD39ECAAD3
-	for <linux-perf-users@archiver.kernel.org>; Wed, 14 Sep 2022 03:39:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D4DAEECAAD3
+	for <linux-perf-users@archiver.kernel.org>; Wed, 14 Sep 2022 04:08:53 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229751AbiINDjX (ORCPT
+        id S229802AbiINEIv (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Tue, 13 Sep 2022 23:39:23 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48134 "EHLO
+        Wed, 14 Sep 2022 00:08:51 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55316 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229728AbiINDjW (ORCPT
+        with ESMTP id S229641AbiINEIu (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Tue, 13 Sep 2022 23:39:22 -0400
-Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTP id BA84B6DFB7;
-        Tue, 13 Sep 2022 20:39:18 -0700 (PDT)
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 30F2F1BB2;
-        Tue, 13 Sep 2022 20:39:24 -0700 (PDT)
-Received: from [10.162.43.6] (unknown [10.162.43.6])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 8AE753F73D;
-        Tue, 13 Sep 2022 20:39:13 -0700 (PDT)
-Message-ID: <c4800957-825c-a5c7-d8d4-946d9c6cdf6c@arm.com>
-Date:   Wed, 14 Sep 2022 09:09:10 +0530
+        Wed, 14 Sep 2022 00:08:50 -0400
+Received: from mail-pf1-x434.google.com (mail-pf1-x434.google.com [IPv6:2607:f8b0:4864:20::434])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B2F7C52FE3;
+        Tue, 13 Sep 2022 21:08:48 -0700 (PDT)
+Received: by mail-pf1-x434.google.com with SMTP id e5so13689650pfl.2;
+        Tue, 13 Sep 2022 21:08:48 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20210112;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:sender:from:to:cc:subject:date;
+        bh=vkTUPelBaMMS0AcNTHv6inlXSwf/g/n3Muib02HR8rw=;
+        b=WUX/WTfxD1Cj8P2Uh0cheahPn65msmTsmjW/hWShrPlhFXIhw9qevIm3HCvtRNwR2W
+         nR8HP1qtD5sgGZmKXR2HMIqdZl3WH1WzTuLegDPTqhcSmJtARFc6UxH+J6GayJQhO3UA
+         5P5MTkUcgv8MrwgQK7nI8UKFc+8NBmVqsvomWpSkfTRumuBjri0Nto/hhrGI+I9y6TEy
+         P7sa6tBkQWp51MH336kfEPNEZmz4YJ/6TJT9mWPbEdGXdfHCoEisdrLDU97Ze3G6cpzD
+         tm5g0t/FHDvySmhQYZVv7USw90X4X+tDpvOSuh7gbL87a4uEyunn9D2E/P2HPmlmYqw4
+         9hGQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:sender:x-gm-message-state:from:to:cc:subject:date;
+        bh=vkTUPelBaMMS0AcNTHv6inlXSwf/g/n3Muib02HR8rw=;
+        b=rmrBKpDiWcMuErYd2Zm8QVN5K4KXtQeodReA97VtgLlsckEuvcWTr7PQFDIdcvwncP
+         5kXiAUdett1zpS/sUJYmaNHJsXQZ54CtJy/yDuhqpEp94rBpmmuOv8i2EG0ZzMun/1kA
+         c6UikCigtMGcPqoB2hA/K89Rxo1JH2ouSImzbdTjKwB8CaeykOHNVarPPYfqHesF6hMg
+         TedVeJ5cmXo4hTZKSCCCINTszx0B8eRcIn2g3n1c4E4ow+kckuNkAehLPjD1NVnywE/b
+         qx6FRlEw9V98iivVLBByPIIdpXDJWBFDX/u2YQpE05NqGS++4xZ22uoaESeHhq3D/yLl
+         0itQ==
+X-Gm-Message-State: ACgBeo1BC58pdzQyr0eNv3AYRwa1eWmbxivMX6ewHOhIELSw783g0NCv
+        +3XPzxS8PEj3UOtnqahj7XY=
+X-Google-Smtp-Source: AA6agR5rkYRReg8evD/ll0BCDiTQLVJ6PU6iZSe83H2295gLmDZQd6QJBR57pE7x2mmRkPlSbyd/Cg==
+X-Received: by 2002:a63:8843:0:b0:439:3c8e:c2c0 with SMTP id l64-20020a638843000000b004393c8ec2c0mr6010674pgd.404.1663128528050;
+        Tue, 13 Sep 2022 21:08:48 -0700 (PDT)
+Received: from youngsil.svl.corp.google.com ([2620:15c:2d4:203:d82e:84ee:b2c9:9acd])
+        by smtp.gmail.com with ESMTPSA id o13-20020a170902d4cd00b0016d773aae60sm9423662plg.19.2022.09.13.21.08.46
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 13 Sep 2022 21:08:47 -0700 (PDT)
+Sender: Namhyung Kim <namhyung@gmail.com>
+From:   Namhyung Kim <namhyung@kernel.org>
+To:     Arnaldo Carvalho de Melo <acme@kernel.org>,
+        Jiri Olsa <jolsa@kernel.org>
+Cc:     Ingo Molnar <mingo@kernel.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Ian Rogers <irogers@google.com>,
+        Adrian Hunter <adrian.hunter@intel.com>,
+        linux-perf-users@vger.kernel.org
+Subject: [PATCH] perf inject: Clarify build-id options a little bit
+Date:   Tue, 13 Sep 2022 21:08:44 -0700
+Message-Id: <20220914040844.352514-1-namhyung@kernel.org>
+X-Mailer: git-send-email 2.37.2.789.g6183377224-goog
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
- Thunderbird/91.11.0
-Subject: Re: [PATCH V2 3/7] arm64/perf: Update struct pmu_hw_events for BRBE
-Content-Language: en-US
-To:     Mark Brown <broonie@kernel.org>
-Cc:     linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, peterz@infradead.org,
-        acme@kernel.org, mark.rutland@arm.com, will@kernel.org,
-        catalin.marinas@arm.com, James Clark <james.clark@arm.com>,
-        Rob Herring <robh@kernel.org>, Marc Zyngier <maz@kernel.org>,
-        Ingo Molnar <mingo@redhat.com>
-References: <20220908051046.465307-1-anshuman.khandual@arm.com>
- <20220908051046.465307-4-anshuman.khandual@arm.com>
- <Yx8GBq1FJN49iJs9@sirena.org.uk>
- <84683aa7-58ad-85f8-327b-daed2f704834@arm.com>
- <YyBs1PJwNoNYv4NJ@sirena.org.uk>
-From:   Anshuman Khandual <anshuman.khandual@arm.com>
-In-Reply-To: <YyBs1PJwNoNYv4NJ@sirena.org.uk>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
+Update the documentation of --build-id and --buildid-all options to
+clarify the difference between them.  The former requires full sample
+processing to find which DSOs are actually used.  While the latter simply
+injects every DSO's build-id from MMAP{,2} records, skipping SAMPLEs.
 
+Signed-off-by: Namhyung Kim <namhyung@kernel.org>
+---
+ tools/perf/Documentation/perf-inject.txt | 6 ++++--
+ 1 file changed, 4 insertions(+), 2 deletions(-)
 
-On 9/13/22 17:13, Mark Brown wrote:
-> On Tue, Sep 13, 2022 at 11:03:45AM +0530, Anshuman Khandual wrote:
->> On 9/12/22 15:42, Mark Brown wrote:
-> 
->>> like it would be clearer and safer to allocate these dynamically
->>> when BRBE is used if that's possible, I'd expect that should also
->>> deal with the stack frame size issues as well.
-> 
->> That might not be possible because the generic 'struct perf_branch_stack'
->> expects 'perf_branch_stack.entries' to be a variable array which is also
->> contiguous in memory, with other elements in 'perf_branch_stack'. Besides
->> that will be a deviation from similar implementations on x86 and powerpc
->> platforms.
-> 
->> The stack frame size came up because BRBE_MAX_ENTRIES is 64 compared to
->> just 32 on other platforms, which follow the exact same method.
-> 
-> If this is a pattern used by other architectures and relied on by
-> the core that doesn't mean it's impossible to do anything, it
-> means that the existing code needs to be updated to allow the
-> larger number of entries for BRBE if we want to change things.
-> That is a lot of effort of course so something that moves the
-> allocation off the stack would be more expedient in the short
-> term.
-
-Something like the following change moves the buffer allocation off the stack,
-although it requires updating the driver, and buffer assignment during a PMU
-interrupt. But it does seem to work (will require some more testing).
-
-diff --git a/include/linux/perf/arm_pmu.h b/include/linux/perf/arm_pmu.h
-index 3e7757d05146..a3401122d855 100644
---- a/include/linux/perf/arm_pmu.h
-+++ b/include/linux/perf/arm_pmu.h
-@@ -52,6 +52,12 @@ static_assert((PERF_EVENT_FLAG_ARCH & ARMPMU_EVT_PRIV) == ARMPMU_EVT_PRIV);
-  */
- #define BRBE_MAX_ENTRIES 64
+diff --git a/tools/perf/Documentation/perf-inject.txt b/tools/perf/Documentation/perf-inject.txt
+index 70e2ac3cc91a..c972032f4ca0 100644
+--- a/tools/perf/Documentation/perf-inject.txt
++++ b/tools/perf/Documentation/perf-inject.txt
+@@ -25,10 +25,12 @@ OPTIONS
+ -------
+ -b::
+ --build-ids::
+-        Inject build-ids into the output stream
++	Inject build-ids of DSOs hit by samples into the output stream.
++	This means it needs to process all SAMPLE records to find the DSOs.
  
-+/* Captured BRBE buffer - copied as is into perf_sample_data */
-+struct brbe_records {
-+       struct perf_branch_stack        brbe_stack;
-+       struct perf_branch_entry        brbe_entries[BRBE_MAX_ENTRIES];
-+};
-+
- /* The events for a given PMU register set. */
- struct pmu_hw_events {
-        /*
-@@ -92,9 +98,7 @@ struct pmu_hw_events {
-        unsigned int                    brbe_users;
-        void                            *brbe_context;
+ --buildid-all::
+-	Inject build-ids of all DSOs into the output stream
++	Inject build-ids of all DSOs into the output stream regardless of hits
++	and skip SAMPLE processing.
  
--       /* Captured BRBE buffer - copied as is into perf_sample_data */
--       struct perf_branch_stack        brbe_stack;
--       struct perf_branch_entry        brbe_entries[BRBE_MAX_ENTRIES];
-+       struct brbe_records             *branch_records;
- };
-diff --git a/drivers/perf/arm_pmu.c b/drivers/perf/arm_pmu.c
-index 05848c6d955c..2f0957519307 100644
---- a/drivers/perf/arm_pmu.c
-+++ b/drivers/perf/arm_pmu.c
-@@ -951,6 +951,13 @@ static struct arm_pmu *__armpmu_alloc(gfp_t flags)
-                goto out_free_pmu;
-        }
- 
-+       for_each_possible_cpu(cpu) {
-+               struct pmu_hw_events *events = per_cpu_ptr(pmu->hw_events, cpu);
-+
-+               events->branch_records = kmalloc(sizeof(struct brbe_records), flags);
-+               WARN_ON(!events->branch_records);
-+       }
+ --known-build-ids=::
+ 	Override build-ids to inject using these comma-separated pairs of
+-- 
+2.37.2.789.g6183377224-goog
+
