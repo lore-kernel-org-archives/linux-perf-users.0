@@ -2,168 +2,98 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D2D7BC6FA86
-	for <linux-perf-users@archiver.kernel.org>; Thu, 15 Sep 2022 08:17:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8531EECAAA1
+	for <linux-perf-users@archiver.kernel.org>; Thu, 15 Sep 2022 08:36:47 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229941AbiIOIRY (ORCPT
+        id S229637AbiIOIgQ (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Thu, 15 Sep 2022 04:17:24 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53054 "EHLO
+        Thu, 15 Sep 2022 04:36:16 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52758 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230058AbiIOIRX (ORCPT
+        with ESMTP id S230115AbiIOIfq (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Thu, 15 Sep 2022 04:17:23 -0400
-Received: from mail.kdab.com (mail.kdab.com [176.9.126.58])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 09FE297515
-        for <linux-perf-users@vger.kernel.org>; Thu, 15 Sep 2022 01:17:20 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kdab.com; h=
- content-transfer-encoding:content-type:content-type:in-reply-to
- :from:from:references:content-language:subject:subject
- :mime-version:date:date:message-id; s=dkim; t=1663229838; x=
- 1664093839; bh=wj2xfIliAGAyzfwNmwFnfQSQTaKEGw7ug0+tJJFlnNk=; b=Q
- 7NxiGrcELxqMkHQgAaB3kRd5Rl5eglmpwg/pQyhikQAn+JolhMjMhSiTR68tWIAd
- Viw7UitCDYKuqMrLyktwLfNxObt/lP//RRYPzLkpE7py17pafl3onyeRNWHLMk+U
- vcooC2AclXQfgnpFqBqgXE3DqD+FPWYSoV64BBUNTo=
-X-Virus-Scanned: amavisd-new at kdab.com
-Message-ID: <c3f97585-e329-c3b6-e0c0-52a7f6100523@kdab.com>
-Date:   Thu, 15 Sep 2022 10:17:17 +0200
-MIME-Version: 1.0
+        Thu, 15 Sep 2022 04:35:46 -0400
+Received: from mail-pj1-x1029.google.com (mail-pj1-x1029.google.com [IPv6:2607:f8b0:4864:20::1029])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B6789901A2
+        for <linux-perf-users@vger.kernel.org>; Thu, 15 Sep 2022 01:35:45 -0700 (PDT)
+Received: by mail-pj1-x1029.google.com with SMTP id y11so108943pjv.4
+        for <linux-perf-users@vger.kernel.org>; Thu, 15 Sep 2022 01:35:45 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date;
+        bh=nQ4pB3Q2WqyE8NLbUmneqbCNIIq2E/a1ppzs02lnbkI=;
+        b=ZiTY+KMiznptGPccDzUuAe4OzZPc5xJ1bx44Yu7H4+ATvWjuz4g3HvWEYtwCG1QiLI
+         +/eYvg3GTJXcMKptmlKI1xexSOF56R3Wtx4NQBoRRAGx3WfRl/O1tX9xfqt0k8eZPmMJ
+         rapZWLN1lT+xhCarEOTf9FORVwurv+llnkwTshASWsgfk71YMlVG6WiVFQJ1O6y8mhBx
+         tSMyGqy5g44R7qH8H8Y3Y1k2y8kNckx5opVi/ewsL9Fx/tgk9MASf6DCTLc2OOcTrYT1
+         pBcwPuDFbuiE7MoplG6xE46HyY+HvFH2G9QXn/QO1eGS1a9ZjjwbDtAwOF7Ys2ov7kWF
+         637w==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date;
+        bh=nQ4pB3Q2WqyE8NLbUmneqbCNIIq2E/a1ppzs02lnbkI=;
+        b=4aq/RCmFi+OFwOx0lNAikmpp+Onhx8QSZXKcBqT27Ohp3OJ+lJkO22LYyLdzvRcH7T
+         nVAez17dV7xj5J0cRz7XNw7mRr2+RvHxZydB1Ht9hJnJnyBQ6ZeveeuLUMgEwbPoUjEw
+         th8w9n4IxiiRy2AzzLqUGFHgFOkCaCvY2grTQFb7DePuz+iKBEU85ESMffjN9J9Fvfa3
+         ZKc1dUEHd5+t52zJbvmDopmG47FtFLTPB3WkoPX5xjxKpTMzaEHnpjo1KCO1vL0I6rpI
+         Uj818OM9zEUVjt4LtFeA/7t2Ff+1lHwkP/5UhtXQ17n4lpqjkVDdValVruewwGSn/ZEI
+         eVyw==
+X-Gm-Message-State: ACrzQf1/gpXNSMvUL3XAqkmXXTIMGL9HzoLoWpoV+oh+MBrlXfVwjQpz
+        Retux/1TKC+8xuB2U+hWd/ussg==
+X-Google-Smtp-Source: AMsMyM6NXyZeqJbB8xxBrZNOsNmGWYw25BeeSh+LshylbmRSO68fhidEGyzZ0uyrXEBK+rqDkHIF7A==
+X-Received: by 2002:a17:902:724c:b0:177:5080:cbeb with SMTP id c12-20020a170902724c00b001775080cbebmr3197900pll.67.1663230945081;
+        Thu, 15 Sep 2022 01:35:45 -0700 (PDT)
+Received: from leoy-yangtze.lan (ec2-54-219-84-159.us-west-1.compute.amazonaws.com. [54.219.84.159])
+        by smtp.gmail.com with ESMTPSA id j3-20020a170902da8300b001714e7608fdsm12400725plx.256.2022.09.15.01.35.42
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 15 Sep 2022 01:35:44 -0700 (PDT)
+Date:   Thu, 15 Sep 2022 16:35:39 +0800
+From:   Leo Yan <leo.yan@linaro.org>
+To:     Lieven Hey <lieven.hey@kdab.com>
+Cc:     James Clark <James.Clark@arm.com>, Ian Rogers <irogers@google.com>,
+        acme@kernel.org, linux-perf-users@vger.kernel.org
 Subject: Re: [PATCH] include program header in elf files generated by perf
  inject
-Content-Language: en-US
-To:     Leo Yan <leo.yan@linaro.org>, James Clark <James.Clark@arm.com>,
-        Ian Rogers <irogers@google.com>
-Cc:     acme@kernel.org, linux-perf-users@vger.kernel.org
+Message-ID: <YyLjqSLywp5PO9jh@leoy-yangtze.lan>
 References: <20220825084923.167140-1-lieven.hey@kdab.com>
  <YyHcikq+Xp5j6A4H@leoy-yangtze.lan>
-From:   Lieven Hey <lieven.hey@kdab.com>
-In-Reply-To: <YyHcikq+Xp5j6A4H@leoy-yangtze.lan>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+ <c3f97585-e329-c3b6-e0c0-52a7f6100523@kdab.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <c3f97585-e329-c3b6-e0c0-52a7f6100523@kdab.com>
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-Hi Leo,
+Hi Lieven,
 
-can I simply call git send-email after amending my commit or do I need 
-to add some kind of id or reference to the old patch?
+On Thu, Sep 15, 2022 at 10:17:17AM +0200, Lieven Hey wrote:
+> Hi Leo,
+> 
+> can I simply call git send-email after amending my commit or do I need to
+> add some kind of id or reference to the old patch?
 
-Am 14.09.22 um 15:52 schrieb Leo Yan:
-> Hi Lieven,
-> 
-> On Thu, Aug 25, 2022 at 10:49:23AM +0200, Lieven Hey wrote:
->> The missing header makes it hard for programs like elfutils to open
->> these files.
-> 
-> Several minor suggestions:
-> 
-> - I would suggest to change the subject as:
->    perf jit: Include program header in elf files
-> - Please add your Signed-off-by tag in the commit log.
-> - I confirmed this patch works for Java jitted symbols with the test
->    case [1], this is a real fixing for 2d86612aacb7805f, it's good to
->    add the fix tag:
->    Fixes: 2d86612aacb7805f ("perf symbol: Correct address for bss symbols")
-> 
-> [1] https://lore.kernel.org/lkml/20220806033434.121908-1-leo.yan@linaro.org/
-> 
-> I also followed you suggested commands to verify dart jitted symbols:
-> 
->    # perf record --call-graph dwarf -k 1 dart --generate-perf-jitdump test.dart
->    # perf inject -j -i perf.data -o perf.data.jitted
->    # perf --debug verbose=4 report -i perf.data.jitted
-> 
-> Before change:
-> 
->    unwind: find_proc_info dso /tmp/jitted-287756-38.so
->    dso__load_sym_internal: failed to find program header for symbol: CallToRuntime st_value: 0x40
->    dso__load_sym_internal: adjusting symbol: st_value: 0x40 sh_addr: 0x40 sh_offset: 0x40
->    symbol__new: CallToRuntime 0x40-0xc0
-> 
-> After change:
-> 
->    unwind: find_proc_info dso /tmp/jitted-287756-38.so
->    dso__load_sym_internal: adjusting symbol: st_value: 0x40 p_vaddr: 0 p_offset: 0
->    symbol__new: CallToRuntime 0x40-0xc0
-> 
-> Which proves the program header has been added for jitted symbols in
-> the generated elf file.
-> 
-> So with addressing above comments:
-> 
-> Reviewed-by: Leo Yan <leo.yan@linaro.org>
-> Tested-by: Leo Yan <leo.yan@linaro.org>
-> 
-> 
->> ---
->>   tools/perf/util/genelf.c | 14 ++++++++++++++
->>   tools/perf/util/genelf.h |  4 ++++
->>   2 files changed, 18 insertions(+)
->>
->> diff --git a/tools/perf/util/genelf.c b/tools/perf/util/genelf.c
->> index 953338b9e887..02cd9f75e3d2 100644
->> --- a/tools/perf/util/genelf.c
->> +++ b/tools/perf/util/genelf.c
->> @@ -251,6 +251,7 @@ jit_write_elf(int fd, uint64_t load_addr, const char *sym,
->>   	Elf_Data *d;
->>   	Elf_Scn *scn;
->>   	Elf_Ehdr *ehdr;
->> +	Elf_Phdr *phdr;
->>   	Elf_Shdr *shdr;
->>   	uint64_t eh_frame_base_offset;
->>   	char *strsym = NULL;
->> @@ -285,6 +286,19 @@ jit_write_elf(int fd, uint64_t load_addr, const char *sym,
->>   	ehdr->e_version = EV_CURRENT;
->>   	ehdr->e_shstrndx= unwinding ? 4 : 2; /* shdr index for section name */
->>   
->> +	/*
->> +	 * setup program header
->> +	 */
->> +	phdr = elf_newphdr(e, 1);
->> +	phdr[0].p_type = PT_LOAD;
->> +	phdr[0].p_offset = 0;
->> +	phdr[0].p_vaddr = 0;
->> +	phdr[0].p_paddr = 0;
->> +	phdr[0].p_filesz = csize;
->> +	phdr[0].p_memsz = csize;
->> +	phdr[0].p_flags = PF_X | PF_R;
->> +	phdr[0].p_align = 8;
->> +
->>   	/*
->>   	 * setup text section
->>   	 */
->> diff --git a/tools/perf/util/genelf.h b/tools/perf/util/genelf.h
->> index ae138afe6c56..b5c909546e3f 100644
->> --- a/tools/perf/util/genelf.h
->> +++ b/tools/perf/util/genelf.h
->> @@ -53,8 +53,10 @@ int jit_add_debug_info(Elf *e, uint64_t code_addr, void *debug, int nr_debug_ent
->>   
->>   #if GEN_ELF_CLASS == ELFCLASS64
->>   #define elf_newehdr	elf64_newehdr
->> +#define elf_newphdr	elf64_newphdr
->>   #define elf_getshdr	elf64_getshdr
->>   #define Elf_Ehdr	Elf64_Ehdr
->> +#define Elf_Phdr	Elf64_Phdr
->>   #define Elf_Shdr	Elf64_Shdr
->>   #define Elf_Sym		Elf64_Sym
->>   #define ELF_ST_TYPE(a)	ELF64_ST_TYPE(a)
->> @@ -62,8 +64,10 @@ int jit_add_debug_info(Elf *e, uint64_t code_addr, void *debug, int nr_debug_ent
->>   #define ELF_ST_VIS(a)	ELF64_ST_VISIBILITY(a)
->>   #else
->>   #define elf_newehdr	elf32_newehdr
->> +#define elf_newphdr	elf32_newphdr
->>   #define elf_getshdr	elf32_getshdr
->>   #define Elf_Ehdr	Elf32_Ehdr
->> +#define Elf_Phdr	Elf32_Phdr
->>   #define Elf_Shdr	Elf32_Shdr
->>   #define Elf_Sym		Elf32_Sym
->>   #define ELF_ST_TYPE(a)	ELF32_ST_TYPE(a)
->> -- 
->> 2.37.2
+Yeah, you just need to use "git send-email" to send the patch; so
+far we doesn't need something like gerrit's SHA ID.
 
--- 
-Lieven Hey | lieven.hey@kdab.com | Software Developer
-KDAB (Deutschland) GmbH, a KDAB Group company
-Tel: +49-30-521325470
-KDAB - The Qt, C++ and OpenGL Experts
+Some tips: it's good to use b4 tool and generate patch with increment
+version number, this would be easier for maintainers to track your
+patch.  Something like:
+
+  $ cd $LINUX_SRC
+
+  # Download the patch v1 and append review / test tags automatically
+  $ b4 am 20220825084923.167140-1-lieven.hey@kdab.com
+  $ git am 20220825_lieven_hey_include_program_header_in_elf_files_generated_by_perf_inject.mbx
+
+  # Do yourself's modificantion for the change ....
+
+  # ... Generate the patch v2
+  $ git format-patch -v2 HEAD~1
+  $ git send-email v2-...patch
+
+Thanks,
+Leo
