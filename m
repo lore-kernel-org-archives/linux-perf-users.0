@@ -2,107 +2,95 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 81558ECAAD8
-	for <linux-perf-users@archiver.kernel.org>; Fri, 16 Sep 2022 18:02:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 44E8FECAAA1
+	for <linux-perf-users@archiver.kernel.org>; Fri, 16 Sep 2022 18:12:23 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229492AbiIPSCi (ORCPT
+        id S229572AbiIPSMW (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Fri, 16 Sep 2022 14:02:38 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40458 "EHLO
+        Fri, 16 Sep 2022 14:12:22 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51524 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229484AbiIPSCh (ORCPT
+        with ESMTP id S229579AbiIPSMV (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Fri, 16 Sep 2022 14:02:37 -0400
-Received: from mail-oa1-f50.google.com (mail-oa1-f50.google.com [209.85.160.50])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2705DB6D21;
-        Fri, 16 Sep 2022 11:02:37 -0700 (PDT)
-Received: by mail-oa1-f50.google.com with SMTP id 586e51a60fabf-127dca21a7dso53147552fac.12;
-        Fri, 16 Sep 2022 11:02:37 -0700 (PDT)
+        Fri, 16 Sep 2022 14:12:21 -0400
+Received: from mail-oi1-f169.google.com (mail-oi1-f169.google.com [209.85.167.169])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C224CB6D5D;
+        Fri, 16 Sep 2022 11:12:18 -0700 (PDT)
+Received: by mail-oi1-f169.google.com with SMTP id n83so7081756oif.11;
+        Fri, 16 Sep 2022 11:12:18 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
         h=cc:to:subject:message-id:date:from:in-reply-to:references
          :mime-version:x-gm-message-state:from:to:cc:subject:date;
-        bh=Suhd8y7qr16vgZ/mrX8LMlHAfVu2gygWJS3j6CdOblY=;
-        b=4YVhrgoY9qucGkAYyFE3sEibg0vbL1p7a7spgSgwuWZf2MAYcYQtoDWWSeEUQ0qHqr
-         6cb9zq+QwGlUVmRmgHilpUXowVHsDuECszYLIFnz8SqDvURklGSi56wNgvo9NtaLGRvt
-         MznoQ1TWKbKx/8t0bqoc6pjLhfpY46G8+lIPgSBIsE9IuwMHXf74IZjUI788FF6h0Sf0
-         v49wyGtfSAPeG1djqxkwUWVWLFMYTS/ySUG305XOtAECgrexdoERdpax7ZC15zoWHfB6
-         MmX9aBWkCl8wZp3YdRVlK4PfJ1zOiQuEHUz2HHqq8aCGplNzM6G/jNYkN/DV6+9jg78m
-         o2kg==
-X-Gm-Message-State: ACrzQf0xcnBjNdnv8RxHFgGN673OIYkwwRplISU+m75tLlnSNoVqGL0i
-        QaKnOU/+YWISF89tYwvlnV3egRKpy1RC0eSlVw8=
-X-Google-Smtp-Source: AMsMyM5uFIknlqd+rJtK0f9cQUwW8kuyFP8xycdbM1zD1YDvpjYh+XwoPZSUOEF6MSpBjBMI1jZpIk2NB8B/x2oAzl4=
-X-Received: by 2002:a05:6870:a70f:b0:127:666a:658 with SMTP id
- g15-20020a056870a70f00b00127666a0658mr3564175oam.218.1663351356429; Fri, 16
- Sep 2022 11:02:36 -0700 (PDT)
+        bh=S9PIV64pGtjaPrT9t4m6JJ+cZj+i70+NGMZ0t+i2gas=;
+        b=5wGNsOnQLmqqGdhjCCuxnlKr+EAU0PGU2rhl0vaIIutonXBvjD4yTHqRYleicb3k6w
+         J1tcrX/Xi4BCVgei2M95CitmXQcVES4lkRDkn5+B87ol9cQQHJ/+/xZ/pRkAMOotFAdT
+         1UQfgrvJ2bxSNKyvs4rY61IrsCV651Sex9NqAcKvyWn86M4I+J5J2VIDvuH7lCyoeLKj
+         UPXKeuB7gcmrJ5ag3i7DuFPjBYssdTjev1kFQXGBFnPzqisqMGixHOT35R8QiaYVpbsM
+         DD1LWZzswGZ5UKkt2rZVKE9MpQzSw1z4CKPADaqC1oQTU+axRXqY+SM7qTyN0SDMIBsJ
+         hMRA==
+X-Gm-Message-State: ACrzQf071H/VzI4IcL2InxD0sMfOTR2Nrl0RG+EjiDpItfHGuv3cqJon
+        T3d26IaT+rZyxmMMPqGHZ4Nmzh8KdbQl2t+vcnJAotKQ
+X-Google-Smtp-Source: AMsMyM56vTjLBa2hmmNMuTinTTNT+gXsBXyo9xSoWc5u4UxGYEFGFjjzEvMZSNg1b3wLAKsRWDf4QQG7n3WSMsaOh8s=
+X-Received: by 2002:a05:6808:1a09:b0:350:107b:f89a with SMTP id
+ bk9-20020a0568081a0900b00350107bf89amr2961208oib.218.1663351937491; Fri, 16
+ Sep 2022 11:12:17 -0700 (PDT)
 MIME-Version: 1.0
-References: <20220914122429.8770-1-adrian.hunter@intel.com>
-In-Reply-To: <20220914122429.8770-1-adrian.hunter@intel.com>
+References: <20220914-arm-perf-tool-spe1-2-v2-v3-0-8189fc04dcc6@kernel.org> <20220914-arm-perf-tool-spe1-2-v2-v3-1-8189fc04dcc6@kernel.org>
+In-Reply-To: <20220914-arm-perf-tool-spe1-2-v2-v3-1-8189fc04dcc6@kernel.org>
 From:   Namhyung Kim <namhyung@kernel.org>
-Date:   Fri, 16 Sep 2022 11:02:25 -0700
-Message-ID: <CAM9d7chgWF_iCFeSN0ovoiq=c+JCmD16VVopKzFjjr5En9Eqaw@mail.gmail.com>
-Subject: Re: [PATCH] perf kcore_copy: Do not check /proc/modules is unchanged
-To:     Adrian Hunter <adrian.hunter@intel.com>
-Cc:     Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Jiri Olsa <jolsa@redhat.com>, Ian Rogers <irogers@google.com>,
-        Daniel Dao <dqminh@cloudflare.com>,
-        linux-kernel <linux-kernel@vger.kernel.org>,
-        linux-perf-users <linux-perf-users@vger.kernel.org>
+Date:   Fri, 16 Sep 2022 11:12:06 -0700
+Message-ID: <CAM9d7ciNwe1HaYXjau6hv8yUmnZvvQU0=bNdf=EA589frkjptg@mail.gmail.com>
+Subject: Re: [PATCH v3 1/3] perf: Skip and warn on unknown format 'configN' attrs
+To:     Rob Herring <robh@kernel.org>
+Cc:     Peter Zijlstra <peterz@infradead.org>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Arnaldo Carvalho de Melo <acme@kernel.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Jiri Olsa <jolsa@kernel.org>, Leo Yan <leo.yan@linaro.org>,
+        linux-perf-users <linux-perf-users@vger.kernel.org>,
+        James Clark <james.clark@arm.com>,
+        linux-kernel <linux-kernel@vger.kernel.org>
 Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-On Wed, Sep 14, 2022 at 5:24 AM Adrian Hunter <adrian.hunter@intel.com> wrote:
+On Wed, Sep 14, 2022 at 1:09 PM Rob Herring <robh@kernel.org> wrote:
 >
-> /proc/kallsyms and /proc/modules are compared before and after the copy
-> in order to ensure no changes during the copy. However /proc/modules
-> also might change due to reference counts changing even though that
-> does not make any difference. Any modules loaded or unloaded should be
-> visible in changes to kallsyms, so it is not necessary to check
-> /proc/modules also anyway.
+> If the kernel exposes a new perf_event_attr field in a format attr, perf
+> will return an error stating the specified PMU can't be found. For
+> example, a format attr with 'config3:0-63' causes an error as config3 is
+> unknown to perf. This causes a compatibility issue between a newer
+> kernel with older perf tool.
 >
-> Remove the comparison checking that /proc/modules is unchanged.
+> Before this change with a kernel adding 'config3' I get:
 >
-> Reported-by: Daniel Dao <dqminh@cloudflare.com>
-> Fixes: fc1b691d7651 ("perf buildid-cache: Add ability to add kcore to the cache")
-> Signed-off-by: Adrian Hunter <adrian.hunter@intel.com>
+> $ perf record -e arm_spe// -- true
+> event syntax error: 'arm_spe//'
+>                      \___ Cannot find PMU `arm_spe'. Missing kernel support?
+> Run 'perf list' for a list of valid events
+>
+>  Usage: perf record [<options>] [<command>]
+>     or: perf record [<options>] -- <command> [<options>]
+>
+>     -e, --event <event>   event selector. use 'perf list' to list
+> available events
+>
+> After this change, I get:
+>
+> $ perf record -e arm_spe// -- true
+> WARNING: 'arm_spe_0' format 'inv_event_filter' requires 'perf_event_attr::config3' which is not supported by this version of perf!
+> [ perf record: Woken up 2 times to write data ]
+> [ perf record: Captured and wrote 0.091 MB perf.data ]
+>
+> To support unknown configN formats, rework the YACC implementation to
+> pass any config[0-9]+ format to perf_pmu__new_format() to handle with a
+> warning.
 
-Acked-by: Namhyung Kim <namhyung@kernel.org>
+It only handles configN formats but it might add a completely different
+name later, right?
 
 Thanks,
 Namhyung
-
-
-> ---
->  tools/perf/util/symbol-elf.c | 7 ++-----
->  1 file changed, 2 insertions(+), 5 deletions(-)
->
-> diff --git a/tools/perf/util/symbol-elf.c b/tools/perf/util/symbol-elf.c
-> index 75bec32d4f57..647b7dff8ef3 100644
-> --- a/tools/perf/util/symbol-elf.c
-> +++ b/tools/perf/util/symbol-elf.c
-> @@ -2102,8 +2102,8 @@ static int kcore_copy__compare_file(const char *from_dir, const char *to_dir,
->   * unusual.  One significant peculiarity is that the mapping (start -> pgoff)
->   * is not the same for the kernel map and the modules map.  That happens because
->   * the data is copied adjacently whereas the original kcore has gaps.  Finally,
-> - * kallsyms and modules files are compared with their copies to check that
-> - * modules have not been loaded or unloaded while the copies were taking place.
-> + * kallsyms file is compared with its copy to check that modules have not been
-> + * loaded or unloaded while the copies were taking place.
->   *
->   * Return: %0 on success, %-1 on failure.
->   */
-> @@ -2166,9 +2166,6 @@ int kcore_copy(const char *from_dir, const char *to_dir)
->                         goto out_extract_close;
->         }
->
-> -       if (kcore_copy__compare_file(from_dir, to_dir, "modules"))
-> -               goto out_extract_close;
-> -
->         if (kcore_copy__compare_file(from_dir, to_dir, "kallsyms"))
->                 goto out_extract_close;
->
-> --
-> 2.25.1
->
