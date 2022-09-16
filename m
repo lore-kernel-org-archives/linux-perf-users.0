@@ -2,78 +2,104 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 36030ECAAD8
-	for <linux-perf-users@archiver.kernel.org>; Fri, 16 Sep 2022 18:28:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 87CBFECAAA1
+	for <linux-perf-users@archiver.kernel.org>; Fri, 16 Sep 2022 18:41:39 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229484AbiIPS2x (ORCPT
+        id S230163AbiIPSli (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Fri, 16 Sep 2022 14:28:53 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43216 "EHLO
+        Fri, 16 Sep 2022 14:41:38 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39180 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229655AbiIPS2w (ORCPT
+        with ESMTP id S229745AbiIPSlh (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Fri, 16 Sep 2022 14:28:52 -0400
-Received: from mail-oa1-f52.google.com (mail-oa1-f52.google.com [209.85.160.52])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3BC8CB72B8;
-        Fri, 16 Sep 2022 11:28:48 -0700 (PDT)
-Received: by mail-oa1-f52.google.com with SMTP id 586e51a60fabf-11e9a7135easo53319419fac.6;
-        Fri, 16 Sep 2022 11:28:48 -0700 (PDT)
+        Fri, 16 Sep 2022 14:41:37 -0400
+Received: from mail-pj1-x1032.google.com (mail-pj1-x1032.google.com [IPv6:2607:f8b0:4864:20::1032])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 64E23B72B3;
+        Fri, 16 Sep 2022 11:41:36 -0700 (PDT)
+Received: by mail-pj1-x1032.google.com with SMTP id d64-20020a17090a6f4600b00202ce056566so538845pjk.4;
+        Fri, 16 Sep 2022 11:41:36 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20210112;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:sender:from:to:cc:subject:date;
+        bh=MsSWtdWwfm5LI2aqosdwjTcepxpQuXiiTGguKXhf+OM=;
+        b=ZX3v+k6yLkRZCjM4GLmnEOKZ+IIHCQyHvdURpyjbdh0z1Aqikn2rg4Qzg2m/YW1Jv1
+         4KRdCS4xX2Wk0yqWP9nxN7uVEQQa5PauMFGsr24NguSAZT4OD8dIZ19hjTPyTJv7q8AK
+         MG2KOLJR8KrdBooRbfWkX3+YehfW7C7xhdafppQ0Y2WKMdncaCpQbXpuZALg3OiGVJ36
+         579THWCfst73XI8FvQ+VFHtUCjkAElFWTuOXTmELHNf84o/9aVkvOHf33xBT1PYHLliM
+         u0FD3gsvI2IOvg1oSMV15Avb8s6e5if/pBpVSSJ02TCnxPYCq7j5F+Kl1lo3wr9HuI6T
+         AVYA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date;
-        bh=zi1Bcco3wttFztQb7EEIQxAraREvY1fhjOcV7AduqQA=;
-        b=InTLDbhaTclTTIcawx5+Omo47pM+nBex0K5dneDPxi1daCqePGdw/x4EyE/nVtM+1m
-         Lv/EIiK6MIPyxNehcpiLC1UzoiahUxu+KoS7he7di3Nm4a5SYRW0rqXz4fKKqVwVRPM6
-         kyeE6w4PiL5Ub4s6dGfj78L8FxPpI+7wLlRaHtUOKAF4iYgoJLcMJCpSCHHlrFNUNQUW
-         Un+iTyj/50ORXO0I4yJ70ljBaHkSBn2XPGBEMl0TODDNmOvJWBAzYmwSBBRFXS69RFSW
-         /9bH+UY1HeRO5BalzqRfbb0jsWhE0MeFFtWZj0srwYxWFP13tnHz3RVLeotCmXMhCSzJ
-         DKbw==
-X-Gm-Message-State: ACrzQf3RemKcx6vZg2jkra+dcD3kFKpO9ZeOQTfik7e9K/zK7nwIGo5+
-        dGqIsCINv6QZNjaTeFVr+omKt3SBOCvLXkf/Zny/Yve0
-X-Google-Smtp-Source: AMsMyM6Gt/OveS0+hy3cvyZwJzsJtpB4g7r8DX03Z7lVkFPK14eMTjFW1Bl7Rou4e2n3TlKYXBprEZzjrQ+mqrmkOcU=
-X-Received: by 2002:a05:6870:45a9:b0:10a:9ebc:63ab with SMTP id
- y41-20020a05687045a900b0010a9ebc63abmr3518844oao.209.1663352927308; Fri, 16
- Sep 2022 11:28:47 -0700 (PDT)
-MIME-Version: 1.0
-References: <20220915122612.81738-1-adrian.hunter@intel.com>
-In-Reply-To: <20220915122612.81738-1-adrian.hunter@intel.com>
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:sender:x-gm-message-state:from:to:cc:subject:date;
+        bh=MsSWtdWwfm5LI2aqosdwjTcepxpQuXiiTGguKXhf+OM=;
+        b=pVlnlOePSKJldq6vEc2gAuPmT1kSEW7Y7Dcex5B8rtndgkU7q9jJ+5jkfElk1071Fl
+         aCcyxKOoxkLzb2IuxPsicaBArlugqpVNfzB2jIsrDAD9zUVyFwqWd6EBNHoyU74vSAzq
+         sdKaD15vbd45NjgC7pYHdWX3Q7St1wFTSOhKUgziKJtcK2N/L4gf/Rbor2l6EKUDTaH1
+         CzkptcbcyuWdyzklYEF0HhjHFnkhg6w3iDSLK4LGjMA+A7N4OWTsbIWIvY9AA9RIAOdr
+         aSOEg0J61FYAwc7gmrLl/LVfxNOcE3Btn+dYATG5blpGGDqA6e3xqrgQ2nVDaP8ZVryP
+         /QLQ==
+X-Gm-Message-State: ACrzQf3Yg/bo8hL3F8psOLQ0D9+HJCFPkXfQgfIGj4jCO8jqDmS/+8wp
+        Z7zkYfYlRWB0xgM2i0Wwpf8=
+X-Google-Smtp-Source: AMsMyM6ZtfrD+bhBriidhHqxTVdNbmggn6FfJIIvwYTcJTMVcQyWCrt0Ir1LwpV911dN90MusAD4kw==
+X-Received: by 2002:a17:90a:5993:b0:202:be54:1689 with SMTP id l19-20020a17090a599300b00202be541689mr17222955pji.207.1663353695770;
+        Fri, 16 Sep 2022 11:41:35 -0700 (PDT)
+Received: from youngsil.svl.corp.google.com ([2620:15c:2d4:203:2952:dee7:a35e:6428])
+        by smtp.gmail.com with ESMTPSA id y18-20020a170902b49200b0016dcbdf9492sm15093004plr.92.2022.09.16.11.41.34
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 16 Sep 2022 11:41:35 -0700 (PDT)
+Sender: Namhyung Kim <namhyung@gmail.com>
 From:   Namhyung Kim <namhyung@kernel.org>
-Date:   Fri, 16 Sep 2022 11:28:35 -0700
-Message-ID: <CAM9d7chkt13mLFfFhYZJpHHYi83-f-BxdGs1Eyw8sF9X9BX2jQ@mail.gmail.com>
-Subject: Re: [PATCH 0/2] perf tools: Fixes for mixing per-thread and per-cpu mmaps
-To:     Adrian Hunter <adrian.hunter@intel.com>
-Cc:     Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Jiri Olsa <jolsa@redhat.com>, Ian Rogers <irogers@google.com>,
-        linux-kernel <linux-kernel@vger.kernel.org>,
-        linux-perf-users <linux-perf-users@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+To:     Arnaldo Carvalho de Melo <acme@kernel.org>,
+        Jiri Olsa <jolsa@kernel.org>
+Cc:     Ingo Molnar <mingo@kernel.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Ian Rogers <irogers@google.com>,
+        Adrian Hunter <adrian.hunter@intel.com>,
+        linux-perf-users@vger.kernel.org, Song Liu <songliubraving@fb.com>,
+        bpf@vger.kernel.org
+Subject: [PATCH 0/4] perf stat: Fix bperf cgroup counters (v2)
+Date:   Fri, 16 Sep 2022 11:41:28 -0700
+Message-Id: <20220916184132.1161506-1-namhyung@kernel.org>
+X-Mailer: git-send-email 2.37.3.968.ga6b4b080e4-goog
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-On Thu, Sep 15, 2022 at 5:26 AM Adrian Hunter <adrian.hunter@intel.com> wrote:
->
-> Hi
->
-> Here are a couple more small fixes.
->
->
-> Adrian Hunter (2):
->       perf record: Fix cpu mask bit setting for mixed mmaps
->       libperf evlist: Fix polling of system-wide events
+Hello,
 
-Acked-by: Namhyung Kim <namhyung@kernel.org>
+This fixes random failures in the perf stat cgroup BPF counters (bperf).
+I've also added a new test to ensure it working properly.
+
+v2 changes)
+ * fix a segfault with uncore event
+
+You can get it from 'perf/bperf-cgrp-fix-v2' branch in
+
+  git://git.kernel.org/pub/scm/linux/kernel/git/namhyung/linux-perf.git
 
 Thanks,
 Namhyung
 
 
->
->  tools/lib/perf/evlist.c     | 5 +++--
->  tools/perf/builtin-record.c | 2 ++
->  2 files changed, 5 insertions(+), 2 deletions(-)
->
->
-> Regards
-> Adrian
+Namhyung Kim (4):
+  perf stat: Fix BPF program section name
+  perf stat: Fix cpu map index in bperf cgroup code
+  perf stat: Use evsel->core.cpus to iterate cpus in BPF cgroup counters
+  perf test: Add a new test for perf stat cgroup BPF counter
+
+ .../tests/shell/stat_bpf_counters_cgrp.sh     | 83 +++++++++++++++++++
+ tools/perf/util/bpf_counter_cgroup.c          | 10 +--
+ tools/perf/util/bpf_skel/bperf_cgroup.bpf.c   |  2 +-
+ 3 files changed, 89 insertions(+), 6 deletions(-)
+ create mode 100755 tools/perf/tests/shell/stat_bpf_counters_cgrp.sh
+
+
+base-commit: 62e64c9d2fd12839c02f1b3e8b873e7cb34e8720
+-- 
+2.37.3.968.ga6b4b080e4-goog
+
