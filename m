@@ -2,95 +2,78 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 44E8FECAAA1
-	for <linux-perf-users@archiver.kernel.org>; Fri, 16 Sep 2022 18:12:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 36030ECAAD8
+	for <linux-perf-users@archiver.kernel.org>; Fri, 16 Sep 2022 18:28:55 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229572AbiIPSMW (ORCPT
+        id S229484AbiIPS2x (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Fri, 16 Sep 2022 14:12:22 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51524 "EHLO
+        Fri, 16 Sep 2022 14:28:53 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43216 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229579AbiIPSMV (ORCPT
+        with ESMTP id S229655AbiIPS2w (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Fri, 16 Sep 2022 14:12:21 -0400
-Received: from mail-oi1-f169.google.com (mail-oi1-f169.google.com [209.85.167.169])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C224CB6D5D;
-        Fri, 16 Sep 2022 11:12:18 -0700 (PDT)
-Received: by mail-oi1-f169.google.com with SMTP id n83so7081756oif.11;
-        Fri, 16 Sep 2022 11:12:18 -0700 (PDT)
+        Fri, 16 Sep 2022 14:28:52 -0400
+Received: from mail-oa1-f52.google.com (mail-oa1-f52.google.com [209.85.160.52])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3BC8CB72B8;
+        Fri, 16 Sep 2022 11:28:48 -0700 (PDT)
+Received: by mail-oa1-f52.google.com with SMTP id 586e51a60fabf-11e9a7135easo53319419fac.6;
+        Fri, 16 Sep 2022 11:28:48 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
         h=cc:to:subject:message-id:date:from:in-reply-to:references
          :mime-version:x-gm-message-state:from:to:cc:subject:date;
-        bh=S9PIV64pGtjaPrT9t4m6JJ+cZj+i70+NGMZ0t+i2gas=;
-        b=5wGNsOnQLmqqGdhjCCuxnlKr+EAU0PGU2rhl0vaIIutonXBvjD4yTHqRYleicb3k6w
-         J1tcrX/Xi4BCVgei2M95CitmXQcVES4lkRDkn5+B87ol9cQQHJ/+/xZ/pRkAMOotFAdT
-         1UQfgrvJ2bxSNKyvs4rY61IrsCV651Sex9NqAcKvyWn86M4I+J5J2VIDvuH7lCyoeLKj
-         UPXKeuB7gcmrJ5ag3i7DuFPjBYssdTjev1kFQXGBFnPzqisqMGixHOT35R8QiaYVpbsM
-         DD1LWZzswGZ5UKkt2rZVKE9MpQzSw1z4CKPADaqC1oQTU+axRXqY+SM7qTyN0SDMIBsJ
-         hMRA==
-X-Gm-Message-State: ACrzQf071H/VzI4IcL2InxD0sMfOTR2Nrl0RG+EjiDpItfHGuv3cqJon
-        T3d26IaT+rZyxmMMPqGHZ4Nmzh8KdbQl2t+vcnJAotKQ
-X-Google-Smtp-Source: AMsMyM56vTjLBa2hmmNMuTinTTNT+gXsBXyo9xSoWc5u4UxGYEFGFjjzEvMZSNg1b3wLAKsRWDf4QQG7n3WSMsaOh8s=
-X-Received: by 2002:a05:6808:1a09:b0:350:107b:f89a with SMTP id
- bk9-20020a0568081a0900b00350107bf89amr2961208oib.218.1663351937491; Fri, 16
- Sep 2022 11:12:17 -0700 (PDT)
+        bh=zi1Bcco3wttFztQb7EEIQxAraREvY1fhjOcV7AduqQA=;
+        b=InTLDbhaTclTTIcawx5+Omo47pM+nBex0K5dneDPxi1daCqePGdw/x4EyE/nVtM+1m
+         Lv/EIiK6MIPyxNehcpiLC1UzoiahUxu+KoS7he7di3Nm4a5SYRW0rqXz4fKKqVwVRPM6
+         kyeE6w4PiL5Ub4s6dGfj78L8FxPpI+7wLlRaHtUOKAF4iYgoJLcMJCpSCHHlrFNUNQUW
+         Un+iTyj/50ORXO0I4yJ70ljBaHkSBn2XPGBEMl0TODDNmOvJWBAzYmwSBBRFXS69RFSW
+         /9bH+UY1HeRO5BalzqRfbb0jsWhE0MeFFtWZj0srwYxWFP13tnHz3RVLeotCmXMhCSzJ
+         DKbw==
+X-Gm-Message-State: ACrzQf3RemKcx6vZg2jkra+dcD3kFKpO9ZeOQTfik7e9K/zK7nwIGo5+
+        dGqIsCINv6QZNjaTeFVr+omKt3SBOCvLXkf/Zny/Yve0
+X-Google-Smtp-Source: AMsMyM6Gt/OveS0+hy3cvyZwJzsJtpB4g7r8DX03Z7lVkFPK14eMTjFW1Bl7Rou4e2n3TlKYXBprEZzjrQ+mqrmkOcU=
+X-Received: by 2002:a05:6870:45a9:b0:10a:9ebc:63ab with SMTP id
+ y41-20020a05687045a900b0010a9ebc63abmr3518844oao.209.1663352927308; Fri, 16
+ Sep 2022 11:28:47 -0700 (PDT)
 MIME-Version: 1.0
-References: <20220914-arm-perf-tool-spe1-2-v2-v3-0-8189fc04dcc6@kernel.org> <20220914-arm-perf-tool-spe1-2-v2-v3-1-8189fc04dcc6@kernel.org>
-In-Reply-To: <20220914-arm-perf-tool-spe1-2-v2-v3-1-8189fc04dcc6@kernel.org>
+References: <20220915122612.81738-1-adrian.hunter@intel.com>
+In-Reply-To: <20220915122612.81738-1-adrian.hunter@intel.com>
 From:   Namhyung Kim <namhyung@kernel.org>
-Date:   Fri, 16 Sep 2022 11:12:06 -0700
-Message-ID: <CAM9d7ciNwe1HaYXjau6hv8yUmnZvvQU0=bNdf=EA589frkjptg@mail.gmail.com>
-Subject: Re: [PATCH v3 1/3] perf: Skip and warn on unknown format 'configN' attrs
-To:     Rob Herring <robh@kernel.org>
-Cc:     Peter Zijlstra <peterz@infradead.org>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Jiri Olsa <jolsa@kernel.org>, Leo Yan <leo.yan@linaro.org>,
-        linux-perf-users <linux-perf-users@vger.kernel.org>,
-        James Clark <james.clark@arm.com>,
-        linux-kernel <linux-kernel@vger.kernel.org>
+Date:   Fri, 16 Sep 2022 11:28:35 -0700
+Message-ID: <CAM9d7chkt13mLFfFhYZJpHHYi83-f-BxdGs1Eyw8sF9X9BX2jQ@mail.gmail.com>
+Subject: Re: [PATCH 0/2] perf tools: Fixes for mixing per-thread and per-cpu mmaps
+To:     Adrian Hunter <adrian.hunter@intel.com>
+Cc:     Arnaldo Carvalho de Melo <acme@kernel.org>,
+        Jiri Olsa <jolsa@redhat.com>, Ian Rogers <irogers@google.com>,
+        linux-kernel <linux-kernel@vger.kernel.org>,
+        linux-perf-users <linux-perf-users@vger.kernel.org>
 Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-On Wed, Sep 14, 2022 at 1:09 PM Rob Herring <robh@kernel.org> wrote:
+On Thu, Sep 15, 2022 at 5:26 AM Adrian Hunter <adrian.hunter@intel.com> wrote:
 >
-> If the kernel exposes a new perf_event_attr field in a format attr, perf
-> will return an error stating the specified PMU can't be found. For
-> example, a format attr with 'config3:0-63' causes an error as config3 is
-> unknown to perf. This causes a compatibility issue between a newer
-> kernel with older perf tool.
+> Hi
 >
-> Before this change with a kernel adding 'config3' I get:
+> Here are a couple more small fixes.
 >
-> $ perf record -e arm_spe// -- true
-> event syntax error: 'arm_spe//'
->                      \___ Cannot find PMU `arm_spe'. Missing kernel support?
-> Run 'perf list' for a list of valid events
 >
->  Usage: perf record [<options>] [<command>]
->     or: perf record [<options>] -- <command> [<options>]
->
->     -e, --event <event>   event selector. use 'perf list' to list
-> available events
->
-> After this change, I get:
->
-> $ perf record -e arm_spe// -- true
-> WARNING: 'arm_spe_0' format 'inv_event_filter' requires 'perf_event_attr::config3' which is not supported by this version of perf!
-> [ perf record: Woken up 2 times to write data ]
-> [ perf record: Captured and wrote 0.091 MB perf.data ]
->
-> To support unknown configN formats, rework the YACC implementation to
-> pass any config[0-9]+ format to perf_pmu__new_format() to handle with a
-> warning.
+> Adrian Hunter (2):
+>       perf record: Fix cpu mask bit setting for mixed mmaps
+>       libperf evlist: Fix polling of system-wide events
 
-It only handles configN formats but it might add a completely different
-name later, right?
+Acked-by: Namhyung Kim <namhyung@kernel.org>
 
 Thanks,
 Namhyung
+
+
+>
+>  tools/lib/perf/evlist.c     | 5 +++--
+>  tools/perf/builtin-record.c | 2 ++
+>  2 files changed, 5 insertions(+), 2 deletions(-)
+>
+>
+> Regards
+> Adrian
