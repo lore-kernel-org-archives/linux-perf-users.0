@@ -2,132 +2,216 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E75DBC54EE9
-	for <linux-perf-users@archiver.kernel.org>; Fri, 16 Sep 2022 13:07:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 10024C54EE9
+	for <linux-perf-users@archiver.kernel.org>; Fri, 16 Sep 2022 13:27:16 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229627AbiIPNH2 (ORCPT
+        id S231239AbiIPN1O (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Fri, 16 Sep 2022 09:07:28 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60234 "EHLO
+        Fri, 16 Sep 2022 09:27:14 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59878 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231419AbiIPNH1 (ORCPT
+        with ESMTP id S229718AbiIPN1N (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Fri, 16 Sep 2022 09:07:27 -0400
-Received: from mx0b-001b2d01.pphosted.com (mx0b-001b2d01.pphosted.com [148.163.158.5])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E2F9B9AF96
-        for <linux-perf-users@vger.kernel.org>; Fri, 16 Sep 2022 06:07:26 -0700 (PDT)
-Received: from pps.filterd (m0127361.ppops.net [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (8.17.1.5/8.17.1.5) with ESMTP id 28GCx5LK033984;
-        Fri, 16 Sep 2022 13:07:18 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=message-id : date :
- mime-version : subject : to : cc : references : from : in-reply-to :
- content-type : content-transfer-encoding; s=pp1;
- bh=gpMGg5exULCmsPvdSRtzQwgHyaEPzwXR1TlEx2ARkgw=;
- b=eQW1iP+p4LKLwYKJ6NcNI1OS4uAU9j6aL9KxUOTRXaDXIXh+8dMyYyFGLK4rjKFmiym+
- 3oY0QgYoTO6shoQnVL7BmKrwMvLc/qlIm+fAfp19Qb1JnSkcBzRNCjqszY8UQ/NN5ZOM
- 3eETZy0QtBJjVHWkL8TSvJIZ2tF2FVkL5Zs5HzRXAC88AxPghYvkANQHZuTuotSAtIhL
- CFAzYhRhHgMjdIdGMudABG7vm8JHljoM7ZZVEaanFAIqWCGil7GUJUCak6M0SB1HZk9b
- nNordCKB2YyvwWSg3h97RNpAlAMd249yqQWlNzBHo3ekJVLcpZvN3W959hI6J4tfuZsp Vw== 
-Received: from ppma04ams.nl.ibm.com (63.31.33a9.ip4.static.sl-reverse.com [169.51.49.99])
-        by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 3jms6m1gqh-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Fri, 16 Sep 2022 13:07:18 +0000
-Received: from pps.filterd (ppma04ams.nl.ibm.com [127.0.0.1])
-        by ppma04ams.nl.ibm.com (8.16.1.2/8.16.1.2) with SMTP id 28GD6i1d008212;
-        Fri, 16 Sep 2022 13:07:16 GMT
-Received: from b06cxnps3075.portsmouth.uk.ibm.com (d06relay10.portsmouth.uk.ibm.com [9.149.109.195])
-        by ppma04ams.nl.ibm.com with ESMTP id 3jm921h1s8-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Fri, 16 Sep 2022 13:07:16 +0000
-Received: from d06av23.portsmouth.uk.ibm.com (d06av23.portsmouth.uk.ibm.com [9.149.105.59])
-        by b06cxnps3075.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 28GD7Dkr38666538
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Fri, 16 Sep 2022 13:07:13 GMT
-Received: from d06av23.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id DA1D8A4040;
-        Fri, 16 Sep 2022 13:07:13 +0000 (GMT)
-Received: from d06av23.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 613CCA4053;
-        Fri, 16 Sep 2022 13:07:11 +0000 (GMT)
-Received: from [9.43.57.125] (unknown [9.43.57.125])
-        by d06av23.portsmouth.uk.ibm.com (Postfix) with ESMTP;
-        Fri, 16 Sep 2022 13:07:11 +0000 (GMT)
-Message-ID: <5430757d-678f-9f49-5fd7-c510e5c7ceff@linux.ibm.com>
-Date:   Fri, 16 Sep 2022 18:37:10 +0530
+        Fri, 16 Sep 2022 09:27:13 -0400
+Received: from mga02.intel.com (mga02.intel.com [134.134.136.20])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7770C39BB2;
+        Fri, 16 Sep 2022 06:27:11 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1663334831; x=1694870831;
+  h=message-id:date:mime-version:to:cc:references:from:
+   subject:in-reply-to:content-transfer-encoding;
+  bh=HNoxeDL5qT17zhAlh+G+qfDO7ou8sVZ/+dkAXvYVPZw=;
+  b=f4TV8roCms6fGxFG/7IGmRwgHT2Bbfw9oT6Df0fvLgszLN16BYP6xJyg
+   XEfWXvix1lHoh1VTS+A2vnxHD7yMNg9XP+Ztz57ln2zCGDacvGOpvZb5J
+   hcwEpp758yf8rXSU62XgkF7aONE6oq2CUI+sSUY3YpnL66Ng+ZtxOF3x9
+   6TTMli5Xm1E3DRmDPrtGGiTjqnKHKjTRUut9Be0c9oR+if5LheDSTuRbx
+   5LPkEljIGj04yLm2I8wgioLe3hl8/KH4RReSEuX2ID9crgDbby4EHQDgZ
+   OlCkQwl4nqxBSWtiqps1BFLC2W17XgdUHK9HVdF5r2zYmqdXKnfFV9wkM
+   Q==;
+X-IronPort-AV: E=McAfee;i="6500,9779,10472"; a="286029674"
+X-IronPort-AV: E=Sophos;i="5.93,320,1654585200"; 
+   d="scan'208";a="286029674"
+Received: from orsmga005.jf.intel.com ([10.7.209.41])
+  by orsmga101.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 16 Sep 2022 06:27:10 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.93,320,1654585200"; 
+   d="scan'208";a="793098671"
+Received: from linux.intel.com ([10.54.29.200])
+  by orsmga005.jf.intel.com with ESMTP; 16 Sep 2022 06:27:10 -0700
+Received: from [10.252.210.67] (kliang2-mobl1.ccr.corp.intel.com [10.252.210.67])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by linux.intel.com (Postfix) with ESMTPS id 8908F5807E8;
+        Fri, 16 Sep 2022 06:27:08 -0700 (PDT)
+Message-ID: <da8fe1d8-8cce-7378-18e8-41fd7009ff8d@linux.intel.com>
+Date:   Fri, 16 Sep 2022 09:27:07 -0400
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
- Thunderbird/91.11.0
-Subject: Re: [PATCH 3/3] tools/testing/selftests/powerpc: Update the bhrb
- filter sampling test to test for multiple branch filters
+User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:102.0) Gecko/20100101
+ Thunderbird/102.2.2
+To:     "Wang, Wei W" <wei.w.wang@intel.com>,
+        "Li, Xiaoyao" <xiaoyao.li@intel.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Arnaldo Carvalho de Melo <acme@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Jiri Olsa <jolsa@kernel.org>,
+        Namhyung Kim <namhyung@kernel.org>,
+        "Christopherson,, Sean" <seanjc@google.com>,
+        Paolo Bonzini <pbonzini@redhat.com>,
+        "Liang, Kan" <kan.liang@intel.com>,
+        "Kleen, Andi" <andi.kleen@intel.com>
+Cc:     "linux-perf-users@vger.kernel.org" <linux-perf-users@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "kvm@vger.kernel.org" <kvm@vger.kernel.org>
+References: <20220825085625.867763-1-xiaoyao.li@intel.com>
+ <CY5PR11MB6365897E8E6D0B590A298FA0DC769@CY5PR11MB6365.namprd11.prod.outlook.com>
+ <815586ac-1eaa-5e38-1e08-492c29d0729d@intel.com>
+ <CY5PR11MB63659EBEAEA0E64812E96111DC469@CY5PR11MB6365.namprd11.prod.outlook.com>
+ <f7cfb391-c38b-84d2-b2fe-5e289d82862c@linux.intel.com>
+ <CY5PR11MB6365676799EBF86B3931D336DC499@CY5PR11MB6365.namprd11.prod.outlook.com>
+ <ef391316-cde5-3cda-ff0d-980e8ecc9aef@linux.intel.com>
+ <CY5PR11MB636535BE57F8CC07B1B2770DDC499@CY5PR11MB6365.namprd11.prod.outlook.com>
+ <4c6a5663-778e-a509-638c-92cfd5315274@linux.intel.com>
+ <CY5PR11MB6365EE3B1C4BCED02A1E40D8DC489@CY5PR11MB6365.namprd11.prod.outlook.com>
 Content-Language: en-US
-To:     Athira Rajeev <atrajeev@linux.vnet.ibm.com>, acme@kernel.org,
-        jolsa@kernel.org, mpe@ellerman.id.au
-Cc:     maddy@linux.vnet.ibm.com, rnsastry@linux.ibm.com,
-        linux-perf-users@vger.kernel.org, disgoel@linux.vnet.ibm.com,
-        linuxppc-dev@lists.ozlabs.org
-References: <20220913115546.36179-1-atrajeev@linux.vnet.ibm.com>
- <20220913115546.36179-3-atrajeev@linux.vnet.ibm.com>
-From:   kajoljain <kjain@linux.ibm.com>
-In-Reply-To: <20220913115546.36179-3-atrajeev@linux.vnet.ibm.com>
+From:   "Liang, Kan" <kan.liang@linux.intel.com>
+Subject: Re: [RFC PATCH 0/2] KVM: VMX: Fix VM entry failure on
+ PT_MODE_HOST_GUEST while host is using PT
+In-Reply-To: <CY5PR11MB6365EE3B1C4BCED02A1E40D8DC489@CY5PR11MB6365.namprd11.prod.outlook.com>
 Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-X-TM-AS-GCONF: 00
-X-Proofpoint-ORIG-GUID: 0s0Pvqv8jweLwajy5xUTUq8I2M61M2To
-X-Proofpoint-GUID: 0s0Pvqv8jweLwajy5xUTUq8I2M61M2To
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.205,Aquarius:18.0.895,Hydra:6.0.528,FMLib:17.11.122.1
- definitions=2022-09-16_08,2022-09-16_01,2022-06-22_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 spamscore=0 mlxscore=0
- suspectscore=0 phishscore=0 adultscore=0 mlxlogscore=999 malwarescore=0
- clxscore=1015 lowpriorityscore=0 priorityscore=1501 impostorscore=0
- bulkscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2209130000 definitions=main-2209160096
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
 
 
-On 9/13/22 17:25, Athira Rajeev wrote:
-> For PERF_SAMPLE_BRANCH_STACK sample type, different branch_sample_type,
-> ie branch filters are supported. The testcase "bhrb_filter_map_test"
-> tests the valid and invalid filter maps in different powerpc platforms.
-> Update this testcase to include scenario to cover multiple branch
-> filters at sametime. Since powerpc doesn't support multiple filters at
-> sametime, expect failure during perf_event_open.
+On 2022-09-15 10:30 p.m., Wang, Wei W wrote:
+> On Thursday, September 15, 2022 11:43 PM, Liang, Kan wrote:
+>> On 2022-09-15 10:39 a.m., Wang, Wei W wrote:
+>>> On Thursday, September 15, 2022 9:55 PM Liang, Kan wrote:
+>>>> On 2022-09-14 10:46 p.m., Wang, Wei W wrote:
+>>>>> On Thursday, September 15, 2022 4:26 AM, Liang, Kan wrote:
+>>>>>> The perf_event_disable() eventually invokes the intel_pt_stop().
+>>>>>> We already expose the intel_pt_stop()/cpu_emergency_stop_pt() to
+>>>>>> other modules. I don't think we have to use the perf_event_disable().
+>>>>>> Also, the
+>>>>>> perf_event_disable() requires extra codes.
+>>>>>>
+>>>>>> I went through the discussions. I agree with Sean's suggestion.
+>>>>>> We should only put the logic in the KVM but all the MSR access
+>>>>>> details into the PT driver.
+>>>>>
+>>>>> Even the driver itself doesn’t drive the save/restore of the MSRs,
+>>>>> it is drived
+>>>> by perf.
+>>>>
+>>>> It through perf_event, not driven by perf_event. The perf_event
+>>>> generic code never knows when should invokes each driver to
+>>>> save/restore information. It should be driven by the other subsystem e.g.,
+>> scheduler.
+>>>
+>>> Yes. The cpu scheduler does this via the perf subsystem, though.
+>>>
+>>>>
+>>>> For this case, KVM should drive the save/restore, and the PT driver
+>>>> eventually does all the MSR access details.
+>>>>
+>>>>> 1. If we make KVM a user of perf, we should do this via
+>>>> perf_event_disable/enable_*.
+>>>>> 2. If we make KVM an alternative to perf (i.e. have direct control
+>>>>> over PMU HW), we can do this via driver interfaces like perf.
+>>>>> Per my experience, we should go for 1. Probably need Peter's
+>>>>> opinions on
+>>>> this.
+>>>>>
+>>>>
+>>>> For 1, the perf_event_disable/enable_* are not enough. They don't
+>>>> save/restore MSRs.
+>>>
+>>> perf_event_disable will go through perf to call pt_event_stop which saves
+>> the related MSRs, right?
+>>
+>> I don't think so. The pt_event_stop() doesn't save all the
+>> MSR_IA32_RTIT_* MSRs.
 > 
-> Reported-by: Disha Goel <disgoel@linux.vnet.ibm.com>
-> Signed-off-by: Athira Rajeev <atrajeev@linux.vnet.ibm.com>
-> ---
->  .../powerpc/pmu/sampling_tests/bhrb_filter_map_test.c    | 9 +++++++++
->  1 file changed, 9 insertions(+)
+> Not all the MSRs are required to be saved. In general, pt_event_stop should have
+> saved all the MSRs required for an event switching. Otherwise the general usages
+> of PT have been broken. To be more precise, the following MSRs are not saved by
+> pt_event_stop, but I don’t see they are required to be saved:
 > 
-> diff --git a/tools/testing/selftests/powerpc/pmu/sampling_tests/bhrb_filter_map_test.c b/tools/testing/selftests/powerpc/pmu/sampling_tests/bhrb_filter_map_test.c
-> index 8182647c63c8..605669d4e4cb 100644
-> --- a/tools/testing/selftests/powerpc/pmu/sampling_tests/bhrb_filter_map_test.c
-> +++ b/tools/testing/selftests/powerpc/pmu/sampling_tests/bhrb_filter_map_test.c
-> @@ -96,6 +96,15 @@ static int bhrb_filter_map_test(void)
->  		}
->  	}
->  
+> - MSR_IA32_RTIT_CR3_MATCH: I don’t see it is used by perf. 
+> Seems like KVM saved an MSR that's not even used by the host.
+> 
+> - Address range MSRs (MSR_IA32_RTIT_ADDR0_A etc.): Those are provided by s/w and not updated by h/w.
+> So they're just set to MSRs when event gets scheduled in. There is no need to save. 
+>
 
-Patch looks good to me.
+OK. I think you need a clean-up patch to fix them first.
 
-Reviewed-By: Kajol Jain <kjain@linux.ibm.com>
+
+>>
+>>> (if so, what large changes did you mean?)
+>>>
+>>>> If we go to this way, we have to introduce a new generic interface to
+>>>> ask each driver to save/restore their MSRs when the guest is
+>>>> entering/exiting. We'd better combine the new interface with the
+>>>> existing
+>>>> perf_guest_get_msrs() of the core driver.
+>>>> I think that's an ideal solution, but requires big changes in the code.
+>>>>
+>>>> 2 is the current KVM implementation. See pt_save_msr()/pt_load_msr().
+>>>> I don't think it's a right way. We'd better fix it.
+>>>>
+>>>> The suggestion should be 3. The KVM notify the PT driver via the
+>>>> interface provided by PT. The PT driver save/restore all the registers.
+>>>> I think it's an acceptable solution with small code changes.
+>>>
+>>> This looks like we just relocate the save/restore functions to the PT driver
+>> and KVM still directly call them - still not going through perf's management.
+>> Imagine every user operates on the pmu h/w directly like this, things would be
+>> a mess.
+>>>
+>>
+>>
+>> The pt_event_stop() and the proposed interface still manipulate the PT event
+>> pt->handle.event. The event status is updated as well. It's still under control of
+>> the perf_event.
+> 
+> Did you mean to handle the PT event in the proposed driver API? Event status is just
+> one of the things. There are other things if we want to make it complete for this,
+> e.g. event->oncpu = -1, and eventually seems we will re-implement perf_event_disable_*.
+>
+
+As my understand, perf always check the status first. If it's a stopped
+or inactivated event, I don't think event->oncpu will be touched. That's
+why I think the proposed driver API should be acceptable.
+
+> Btw, Xiaoyao has made it work with perf_event_disable_local, and don’t have that many changes.
+> If necessary, we can post the 2nd version out to double check.
+>
+
+I'm not worry about which ways (either perf_event_disable_local() or the
+proposed PT driver API) are chosen to stop the PT. If the existing
+perf_event interfaces can meet your requirement, that's perfect.
+
+My real concern is the pt_save_msr()/pt_load_msr(). I don't think it's a
+job for KVM. See atomic_switch_perf_msrs(). It is the perf core driver
+rather than KVM that tells which MSRs should be saved/restored in VMCS.
+We should do the same thing for PT. (Actually, I think we already
+encounter issues with the current KVM-dominated method. KVM
+saves/restores unnecessary MSRs. Right?)
+
+To do so, I think there may be two ways.
+- Since MSRs have to be switched for both PT and core drivers, it sounds
+reasonable to provide a new generic interface in the perf_event. The new
+interface is to tell KVM which MSRs should be saved/restored. Then KVM
+can decide to save/restore via VMCS or direct MSR access. I suspect this
+way requires big change, but it will benefit all the drivers which have
+similar requirements.
+- The proposed driver API. The MSRs are saved/restored in the PT driver.
+
 
 Thanks,
-Kajol Jain
-
-
-> +	/*
-> +	 * Combine filter maps which includes a valid branch filter and an invalid branch
-> +	 * filter. Example: any ( PERF_SAMPLE_BRANCH_ANY) and save_type
-> +	 * (PERF_SAMPLE_BRANCH_TYPE_SAVE).
-> +	 * The perf_event_open should fail in this case.
-> +	 */
-> +	event.attr.branch_sample_type = PERF_SAMPLE_BRANCH_ANY | PERF_SAMPLE_BRANCH_TYPE_SAVE;
-> +	FAIL_IF(!event_open(&event));
-> +
->  	return 0;
->  }
->  
+Kan
