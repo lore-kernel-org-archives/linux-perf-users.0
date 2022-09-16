@@ -2,141 +2,128 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7FD4DECAAD8
-	for <linux-perf-users@archiver.kernel.org>; Fri, 16 Sep 2022 07:31:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CE0C9ECAAD8
+	for <linux-perf-users@archiver.kernel.org>; Fri, 16 Sep 2022 11:00:01 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229579AbiIPHbE (ORCPT
+        id S231490AbiIPK76 (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Fri, 16 Sep 2022 03:31:04 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38260 "EHLO
+        Fri, 16 Sep 2022 06:59:58 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34834 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229479AbiIPHbD (ORCPT
+        with ESMTP id S232328AbiIPK7P (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Fri, 16 Sep 2022 03:31:03 -0400
-Received: from szxga01-in.huawei.com (szxga01-in.huawei.com [45.249.212.187])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 99D7B67C9C;
-        Fri, 16 Sep 2022 00:30:58 -0700 (PDT)
-Received: from dggemv703-chm.china.huawei.com (unknown [172.30.72.55])
-        by szxga01-in.huawei.com (SkyGuard) with ESMTP id 4MTQcc44YFzlVxM;
-        Fri, 16 Sep 2022 15:26:56 +0800 (CST)
-Received: from kwepemm600006.china.huawei.com (7.193.23.105) by
- dggemv703-chm.china.huawei.com (10.3.19.46) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2375.24; Fri, 16 Sep 2022 15:30:57 +0800
-Received: from huawei.com (10.44.142.108) by kwepemm600006.china.huawei.com
- (7.193.23.105) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2375.31; Fri, 16 Sep
- 2022 15:30:56 +0800
-From:   <luolongjun@huawei.com>
-To:     <peterz@infradead.org>, <mingo@redhat.com>, <acme@kernel.org>,
-        <mark.rutland@arm.com>, <alexander.shishkin@linux.intel.com>,
-        <jolsa@kernel.org>, <namhyung@kernel.org>
-CC:     <linux-kernel@vger.kernel.org>, <linux-perf-users@vger.kernel.org>,
-        <sangyan@huawei.com>, <luanjianhai@huawei.com>,
-        <zhuling8@huawei.com>, <lizongwu@huawei.com>,
-        Longjun Luo <luolongjun@huawei.com>
-Subject: [PATCH] uprobe: add UPROBE_ALTER_PC flag for uprobe handlers
-Date:   Fri, 16 Sep 2022 15:28:46 +0800
-Message-ID: <20220916072846.2145735-1-luolongjun@huawei.com>
-X-Mailer: git-send-email 2.37.3
+        Fri, 16 Sep 2022 06:59:15 -0400
+Received: from mx0a-001b2d01.pphosted.com (mx0a-001b2d01.pphosted.com [148.163.156.1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8028665675
+        for <linux-perf-users@vger.kernel.org>; Fri, 16 Sep 2022 03:49:25 -0700 (PDT)
+Received: from pps.filterd (m0098399.ppops.net [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (8.17.1.5/8.17.1.5) with ESMTP id 28GAKLeb026737;
+        Fri, 16 Sep 2022 10:49:16 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=from : to : cc : subject
+ : date : message-id : mime-version : content-transfer-encoding; s=pp1;
+ bh=JUTVnl4mffl+C2+FYFiMX9wT346L2On9+JQsXLzqudM=;
+ b=m1xe9LQMoTEFP1CFQ/eR4fOyqQ9y0bAn1ghTTUVKouuT/v4U7iqpjsKzs32SuNp4zFbA
+ RrCI8XUXQBLl43x1X86K22LyvPB5lgjV3OhiLGmWQNzYZqrcs7dfNiD8f4OjPXAMYbRR
+ wjFf/RaI533gZpGXEHs4YEP40Ti9/Gxpbv2cGJQLf5XBpRnUNtgUuX/ih/zfnTG1ZKnG
+ pczmo135kMwteYuQZ0nb2Qf07j4ZeoNeyUCOsAAOfEuDEYEjgaB7wc0tVnvHevKl/z4H
+ pO+ZNSSTAlQdf2Go5uKJq4IobsVTja377vd2X4Bop1nvohuvmJPl/rIuWZF3X8C/1IaD Pw== 
+Received: from ppma04fra.de.ibm.com (6a.4a.5195.ip4.static.sl-reverse.com [149.81.74.106])
+        by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 3jmq9xgu45-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Fri, 16 Sep 2022 10:49:16 +0000
+Received: from pps.filterd (ppma04fra.de.ibm.com [127.0.0.1])
+        by ppma04fra.de.ibm.com (8.16.1.2/8.16.1.2) with SMTP id 28GAa5p8017385;
+        Fri, 16 Sep 2022 10:49:13 GMT
+Received: from b06cxnps4074.portsmouth.uk.ibm.com (d06relay11.portsmouth.uk.ibm.com [9.149.109.196])
+        by ppma04fra.de.ibm.com with ESMTP id 3jm9198mwa-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Fri, 16 Sep 2022 10:49:13 +0000
+Received: from d06av21.portsmouth.uk.ibm.com (d06av21.portsmouth.uk.ibm.com [9.149.105.232])
+        by b06cxnps4074.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 28GAn9ga36635060
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Fri, 16 Sep 2022 10:49:09 GMT
+Received: from d06av21.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id D06705204E;
+        Fri, 16 Sep 2022 10:49:09 +0000 (GMT)
+Received: from localhost.localdomain (unknown [9.43.62.13])
+        by d06av21.portsmouth.uk.ibm.com (Postfix) with ESMTP id 9787552050;
+        Fri, 16 Sep 2022 10:49:07 +0000 (GMT)
+From:   Athira Rajeev <atrajeev@linux.vnet.ibm.com>
+To:     acme@kernel.org, jolsa@kernel.org, mpe@ellerman.id.au
+Cc:     linux-perf-users@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
+        maddy@linux.vnet.ibm.com, rnsastry@linux.ibm.com,
+        kjain@linux.ibm.com, disgoel@linux.vnet.ibm.com
+Subject: [PATCH V2] tools/perf/tests: Fix perf probe error log check in  skip_if_no_debuginfo
+Date:   Fri, 16 Sep 2022 16:19:04 +0530
+Message-Id: <20220916104904.99798-1-atrajeev@linux.vnet.ibm.com>
+X-Mailer: git-send-email 2.35.1
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7BIT
-Content-Type:   text/plain; charset=US-ASCII
-X-Originating-IP: [10.44.142.108]
-X-ClientProxiedBy: dggems705-chm.china.huawei.com (10.3.19.182) To
- kwepemm600006.china.huawei.com (7.193.23.105)
-X-CFilter-Loop: Reflected
+Content-Transfer-Encoding: 8bit
+X-TM-AS-GCONF: 00
+X-Proofpoint-ORIG-GUID: cB6LJb50pwuG3rZJzNb9P29cjtnAnh0o
+X-Proofpoint-GUID: cB6LJb50pwuG3rZJzNb9P29cjtnAnh0o
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.205,Aquarius:18.0.895,Hydra:6.0.528,FMLib:17.11.122.1
+ definitions=2022-09-16_05,2022-09-16_01,2022-06-22_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
+ impostorscore=0 bulkscore=0 phishscore=0 suspectscore=0 malwarescore=0
+ adultscore=0 mlxscore=0 lowpriorityscore=0 clxscore=1015 mlxlogscore=999
+ spamscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2209130000 definitions=main-2209160074
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-From: Longjun Luo <luolongjun@huawei.com>
+The perf probe related tests like probe_vfs_getname.sh which
+is in "tools/perf/tests/shell" directory have dependency on
+debuginfo information in the kernel. Currently debuginfo
+check is handled by skip_if_no_debuginfo function in the
+file "lib/probe_vfs_getname.sh". skip_if_no_debuginfo function
+looks for this specific error log from perf probe to skip
+the testcase:
 
-Within uprobe handlers, the pc register could be
-modified. In this situation, there is no need to
-do a single stepping. Just like the kprobe, we
-skip it.
+<<>>
+Failed to find the path for the kernel|Debuginfo-analysis is
+not supported
+<>>
 
-Signed-off-by: Longjun Luo <luolongjun@huawei.com>
+But in some case, like this one in powerpc, while running this
+test, observed error logs is:
+
+<<>>
+The /lib/modules/<version>/build/vmlinux file has no debug information.
+Rebuild with CONFIG_DEBUG_INFO=y, or install an appropriate debuginfo
+package.
+  Error: Failed to add events.
+<<>>
+
+Update the skip_if_no_debuginfo function to include the above
+error, to skip the test in these scenarios too.
+
+Reported-by: Disha Goel <disgoel@linux.vnet.ibm.com>
+Signed-off-by: Athira Rajeev <atrajeev@linux.vnet.ibm.com>
 ---
- include/linux/uprobes.h |  5 +++--
- kernel/events/uprobes.c | 16 +++++++++++++---
- 2 files changed, 16 insertions(+), 5 deletions(-)
+changelog:
+ v1 -> v2:
+ Corrected formatting of spaces in error log.
+ With spaces in v1 of the patch, the egrep search was
+ considering spaces also.
 
-diff --git a/include/linux/uprobes.h b/include/linux/uprobes.h
-index f46e0ca0169c..0670fecbe1ce 100644
---- a/include/linux/uprobes.h
-+++ b/include/linux/uprobes.h
-@@ -22,8 +22,9 @@ struct inode;
- struct notifier_block;
- struct page;
- 
--#define UPROBE_HANDLER_REMOVE		1
--#define UPROBE_HANDLER_MASK		1
-+#define UPROBE_HANDLER_REMOVE   0x1
-+#define UPROBE_ALTER_PC         0x2
-+#define UPROBE_HANDLER_MASK     0x3 /* (UPROBE_HANDLER_REMOVE | UPROBE_ALTER_PC) */
- 
- #define MAX_URETPROBE_DEPTH		64
- 
-diff --git a/kernel/events/uprobes.c b/kernel/events/uprobes.c
-index 2eaa327f8158..d01a668fecae 100644
---- a/kernel/events/uprobes.c
-+++ b/kernel/events/uprobes.c
-@@ -2064,10 +2064,16 @@ static struct uprobe *find_active_uprobe(unsigned long bp_vaddr, int *is_swbp)
- 	return uprobe;
+ tools/perf/tests/shell/lib/probe_vfs_getname.sh | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/tools/perf/tests/shell/lib/probe_vfs_getname.sh b/tools/perf/tests/shell/lib/probe_vfs_getname.sh
+index 5b17d916c555..b616d42bd19d 100644
+--- a/tools/perf/tests/shell/lib/probe_vfs_getname.sh
++++ b/tools/perf/tests/shell/lib/probe_vfs_getname.sh
+@@ -19,6 +19,6 @@ add_probe_vfs_getname() {
  }
  
--static void handler_chain(struct uprobe *uprobe, struct pt_regs *regs)
-+/*
-+ * The return value of handler_chain tags events that happen during
-+ * calling handlers. If UPROBE_ALTER_PC happens, we must skip the
-+ * single stepping.
-+ */
-+static int handler_chain(struct uprobe *uprobe, struct pt_regs *regs)
- {
- 	struct uprobe_consumer *uc;
- 	int remove = UPROBE_HANDLER_REMOVE;
-+	int all_events = 0;
- 	bool need_prep = false; /* prepare return uprobe, when needed */
- 
- 	down_read(&uprobe->register_rwsem);
-@@ -2084,6 +2090,7 @@ static void handler_chain(struct uprobe *uprobe, struct pt_regs *regs)
- 			need_prep = true;
- 
- 		remove &= rc;
-+		all_events |= rc;
- 	}
- 
- 	if (need_prep && !remove)
-@@ -2094,6 +2101,7 @@ static void handler_chain(struct uprobe *uprobe, struct pt_regs *regs)
- 		unapply_uprobe(uprobe, current->mm);
- 	}
- 	up_read(&uprobe->register_rwsem);
-+	return all_events;
+ skip_if_no_debuginfo() {
+-	add_probe_vfs_getname -v 2>&1 | egrep -q "^(Failed to find the path for the kernel|Debuginfo-analysis is not supported)" && return 2
++	add_probe_vfs_getname -v 2>&1 | egrep -q "^(Failed to find the path for the kernel|Debuginfo-analysis is not supported)|(file has no debug information)" && return 2
+ 	return 1
  }
- 
- static void
-@@ -2183,7 +2191,7 @@ static void handle_swbp(struct pt_regs *regs)
- {
- 	struct uprobe *uprobe;
- 	unsigned long bp_vaddr;
--	int is_swbp;
-+	int is_swbp, all_events;
- 
- 	bp_vaddr = uprobe_get_swbp_addr(regs);
- 	if (bp_vaddr == get_trampoline_vaddr())
-@@ -2235,7 +2243,9 @@ static void handle_swbp(struct pt_regs *regs)
- 	if (arch_uprobe_ignore(&uprobe->arch, regs))
- 		goto out;
- 
--	handler_chain(uprobe, regs);
-+	all_events = handler_chain(uprobe, regs);
-+	if (all_events & UPROBE_ALTER_PC)
-+		goto out;
- 
- 	if (arch_uprobe_skip_sstep(&uprobe->arch, regs))
- 		goto out;
 -- 
-2.37.3
+2.31.1
 
