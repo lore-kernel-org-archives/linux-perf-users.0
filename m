@@ -2,180 +2,171 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 81745C6FA8B
-	for <linux-perf-users@archiver.kernel.org>; Fri, 16 Sep 2022 18:41:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BF5EAC6FA8B
+	for <linux-perf-users@archiver.kernel.org>; Fri, 16 Sep 2022 19:15:38 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230149AbiIPSlv (ORCPT
+        id S229947AbiIPTPh (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Fri, 16 Sep 2022 14:41:51 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39574 "EHLO
+        Fri, 16 Sep 2022 15:15:37 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57366 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230212AbiIPSlq (ORCPT
+        with ESMTP id S229625AbiIPTPg (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Fri, 16 Sep 2022 14:41:46 -0400
-Received: from mail-pj1-x1036.google.com (mail-pj1-x1036.google.com [IPv6:2607:f8b0:4864:20::1036])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A383CB8A52;
-        Fri, 16 Sep 2022 11:41:41 -0700 (PDT)
-Received: by mail-pj1-x1036.google.com with SMTP id ge9so10362528pjb.1;
-        Fri, 16 Sep 2022 11:41:41 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20210112;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:sender:from:to:cc:subject:date;
-        bh=0/bkNBIX3FOAe3t6O/p7ZuS8G0HQozWMCrCw3+mytvI=;
-        b=GvEkctg++Q6fJds7LzttNVl0aKX4dNXXNkoMO0dhUrNIjoZ9wvpwE+Hd9/C1fZiJXL
-         bDXHvObELfjOqhy9FrzfJE730SLk9vD2A2m5uvjZo93kZixkWCrgBTFdg8V6EqUDv/a2
-         0pLvmgGeWMYD5KmbPTR5IzfOGw6wsoZUPgzLe4ZQyS7vYuwOuzeJPaf4WyzyQYD6n9xM
-         m8WLYBFjQampXy0PM7+SO7gV2ECyPCHx4LmSMam3RwNBJ20+0ZoeDJBS2bXBM4jsaiph
-         JGbTS+47OTz1mnCyc62iCu29Mkj7bf3JtS3Q9egCkhIA4kwpwTy8ZW+lHhgVLAEwmmXC
-         KQhw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:sender:x-gm-message-state:from
-         :to:cc:subject:date;
-        bh=0/bkNBIX3FOAe3t6O/p7ZuS8G0HQozWMCrCw3+mytvI=;
-        b=jxOMmMxMSIkKC0j3L1UADTb0m4knNptCB/YOwOcFvSi4Zk4EcsARbcxLFYDdNgeWII
-         coJcLdBuV373oNJDrQMpVeibeN2rNiFRoDwVpSpGTYFLRxpWHUsEBgbg5DTf3OCB+dmF
-         +cQooU5mMkgkpWPFrMWrCWYLmiiYTtaiHE9omq/Miy+NEXUvPpAfcVXckMHDM68xFRVA
-         dqWN5qePXgqR6eWrjg0OcCCFnBKNpoDDujVrJ6dD40NwWzbZmijKWwAEaen514GVJLDX
-         a4ehg2/tqiytuLUQi5rkaEqSB0+aiqxR4OWsNa+xSbnY4dABjhmP3m3kmRCRFi6zTMtw
-         kLgA==
-X-Gm-Message-State: ACrzQf1nPUH7q1SPrFSfvhCvkcOKf3KXUPbcKUDVFPrlU45V3e1LVGC1
-        +4AiHw1yeLxFNkxgvIY1g2Gzc3Mxm9k=
-X-Google-Smtp-Source: AMsMyM7jcgvmzEsZVo12t0OpJ0R1AciFz3zwCi5TRJg0s+6ib/GU+qgvBWSJXeDOaB7b7chBonw2uw==
-X-Received: by 2002:a17:90b:4c45:b0:202:6308:d9c4 with SMTP id np5-20020a17090b4c4500b002026308d9c4mr6982509pjb.40.1663353700675;
-        Fri, 16 Sep 2022 11:41:40 -0700 (PDT)
-Received: from youngsil.svl.corp.google.com ([2620:15c:2d4:203:2952:dee7:a35e:6428])
-        by smtp.gmail.com with ESMTPSA id y18-20020a170902b49200b0016dcbdf9492sm15093004plr.92.2022.09.16.11.41.39
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 16 Sep 2022 11:41:40 -0700 (PDT)
-Sender: Namhyung Kim <namhyung@gmail.com>
-From:   Namhyung Kim <namhyung@kernel.org>
-To:     Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Jiri Olsa <jolsa@kernel.org>
-Cc:     Ingo Molnar <mingo@kernel.org>,
+        Fri, 16 Sep 2022 15:15:36 -0400
+Received: from casper.infradead.org (casper.infradead.org [IPv6:2001:8b0:10b:1236::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 048ACAB071;
+        Fri, 16 Sep 2022 12:15:32 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=casper.20170209; h=In-Reply-To:Content-Type:MIME-Version:
+        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description;
+        bh=ypkdyUP1JcI6s7cVs4ktcAodUubTPEOwr3HQWpEnFKY=; b=Pw3hxWjjBMOCUduKA/HxQ14yPx
+        EtpjxuqhNVlO7xUAG1GiuC9mpTmG/QTVPro7HxagyGxN9VkBlmLvx7NMHh9wSumjLFYepfiELs9Cd
+        L/F8LVbEUlI/SOg273mukg4YjcT9UvosbxETburGeC8B4GIgZIn7VUaChHcA6m/iOWjes4AkxKI+U
+        bimitz6WRDlt12TsreTRphNaObbIwWrzmCYNmcmsdtqtqwKy36NMaDH9g55Q+UE+jHuQbArDIH+mt
+        EHMkZ3fvkf3sOqfueGzEP/a22mk7pmGwjlYP7tZ7dsmsMc08W0SHQAwpqWR80JJbmUFra+g5P6dGf
+        gh9aVtwA==;
+Received: from willy by casper.infradead.org with local (Exim 4.94.2 #2 (Red Hat Linux))
+        id 1oZGo8-002Xle-ME; Fri, 16 Sep 2022 19:15:24 +0000
+Date:   Fri, 16 Sep 2022 20:15:24 +0100
+From:   Matthew Wilcox <willy@infradead.org>
+To:     Kees Cook <keescook@chromium.org>
+Cc:     Uladzislau Rezki <urezki@gmail.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Yu Zhao <yuzhao@google.com>, dev@der-flo.net,
+        linux-mm@kvack.org, linux-hardening@vger.kernel.org,
         Peter Zijlstra <peterz@infradead.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Ian Rogers <irogers@google.com>,
-        Adrian Hunter <adrian.hunter@intel.com>,
-        linux-perf-users@vger.kernel.org, Song Liu <songliubraving@fb.com>,
-        bpf@vger.kernel.org
-Subject: [PATCH 4/4] perf test: Add a new test for perf stat cgroup BPF counter
-Date:   Fri, 16 Sep 2022 11:41:32 -0700
-Message-Id: <20220916184132.1161506-5-namhyung@kernel.org>
-X-Mailer: git-send-email 2.37.3.968.ga6b4b080e4-goog
-In-Reply-To: <20220916184132.1161506-1-namhyung@kernel.org>
-References: <20220916184132.1161506-1-namhyung@kernel.org>
+        Ingo Molnar <mingo@redhat.com>, linux-kernel@vger.kernel.org,
+        x86@kernel.org, linux-perf-users@vger.kernel.org,
+        linux-arch@vger.kernel.org
+Subject: Re: [PATCH 3/3] usercopy: Add find_vmap_area_try() to avoid deadlocks
+Message-ID: <YyTLTBM4OC6/RnjG@casper.infradead.org>
+References: <20220916135953.1320601-1-keescook@chromium.org>
+ <20220916135953.1320601-4-keescook@chromium.org>
+ <YySML2HfqaE/wXBU@casper.infradead.org>
+ <202209160805.CA47B2D673@keescook>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <202209160805.CA47B2D673@keescook>
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-  $ sudo ./perf test -v each-cgroup
-   96: perf stat --bpf-counters --for-each-cgroup test                 :
-  --- start ---
-  test child forked, pid 79600
-  test child finished with 0
-  ---- end ----
-  perf stat --bpf-counters --for-each-cgroup test: Ok
+On Fri, Sep 16, 2022 at 08:09:16AM -0700, Kees Cook wrote:
+> On Fri, Sep 16, 2022 at 03:46:07PM +0100, Matthew Wilcox wrote:
+> > On Fri, Sep 16, 2022 at 06:59:57AM -0700, Kees Cook wrote:
+> > > The check_object_size() checks under CONFIG_HARDENED_USERCOPY need to be
+> > > more defensive against running from interrupt context. Use a best-effort
+> > > check for VMAP areas when running in interrupt context
+> > 
+> > I had something more like this in mind:
+> 
+> Yeah, I like -EAGAIN. I'd like to keep the interrupt test to choose lock
+> vs trylock, otherwise it's trivial to bypass the hardening test by having
+> all the other CPUs beating on the spinlock.
 
-Signed-off-by: Namhyung Kim <namhyung@kernel.org>
----
- .../tests/shell/stat_bpf_counters_cgrp.sh     | 83 +++++++++++++++++++
- 1 file changed, 83 insertions(+)
- create mode 100755 tools/perf/tests/shell/stat_bpf_counters_cgrp.sh
+I was thinking about this:
 
-diff --git a/tools/perf/tests/shell/stat_bpf_counters_cgrp.sh b/tools/perf/tests/shell/stat_bpf_counters_cgrp.sh
-new file mode 100755
-index 000000000000..d724855d097c
---- /dev/null
-+++ b/tools/perf/tests/shell/stat_bpf_counters_cgrp.sh
-@@ -0,0 +1,83 @@
-+#!/bin/sh
-+# perf stat --bpf-counters --for-each-cgroup test
-+# SPDX-License-Identifier: GPL-2.0
-+
-+set -e
-+
-+test_cgroups=
-+if [ "$1" = "-v" ]; then
-+	verbose="1"
-+fi
-+
-+# skip if --bpf-counters --for-each-cgroup is not supported
-+check_bpf_counter()
-+{
-+	if ! perf stat -a --bpf-counters --for-each-cgroup / true > /dev/null 2>&1; then
-+		if [ "${verbose}" = "1" ]; then
-+			echo "Skipping: --bpf-counters --for-each-cgroup not supported"
-+			perf --no-pager stat -a --bpf-counters --for-each-cgroup / true || true
-+		fi
-+		exit 2
-+	fi
-+}
-+
-+# find two cgroups to measure
-+find_cgroups()
-+{
-+	# try usual systemd slices first
-+	if [ -d /sys/fs/cgroup/system.slice -a -d /sys/fs/cgroup/user.slice ]; then
-+		test_cgroups="system.slice,user.slice"
-+		return
-+	fi
-+
-+	# try root and self cgroups
-+	local self_cgrp=$(grep perf_event /proc/self/cgroup | cut -d: -f3)
-+	if [ -z ${self_cgrp} ]; then
-+		# cgroup v2 doesn't specify perf_event
-+		self_cgrp=$(grep ^0: /proc/self/cgroup | cut -d: -f3)
-+	fi
-+
-+	if [ -z ${self_cgrp} ]; then
-+		test_cgroups="/"
-+	else
-+		test_cgroups="/,${self_cgrp}"
-+	fi
-+}
-+
-+# As cgroup events are cpu-wide, we cannot simply compare the result.
-+# Just check if it runs without failure and has non-zero results.
-+check_system_wide_counted()
-+{
-+	local output
-+
-+	output=$(perf stat -a --bpf-counters --for-each-cgroup ${test_cgroups} -e cpu-clock -x, sleep 1  2>&1)
-+	if echo ${output} | grep -q -F "<not "; then
-+		echo "Some system-wide events are not counted"
-+		if [ "${verbose}" = "1" ]; then
-+			echo ${output}
-+		fi
-+		exit 1
-+	fi
-+}
-+
-+check_cpu_list_counted()
-+{
-+	local output
-+
-+	output=$(perf stat -C 1 --bpf-counters --for-each-cgroup ${test_cgroups} -e cpu-clock -x, taskset -c 1 sleep 1  2>&1)
-+	if echo ${output} | grep -q -F "<not "; then
-+		echo "Some CPU events are not counted"
-+		if [ "${verbose}" = "1" ]; then
-+			echo ${output}
-+		fi
-+		exit 1
-+	fi
-+}
-+
-+check_bpf_counter
-+find_cgroups
-+
-+check_system_wide_counted
-+check_cpu_list_counted
-+
-+exit 0
--- 
-2.37.3.968.ga6b4b080e4-goog
++++ b/mm/vmalloc.c
+@@ -1844,12 +1844,19 @@
+ {
+ 	struct vmap_area *va;
 
+-	if (!spin_lock(&vmap_area_lock))
+-		return ERR_PTR(-EAGAIN);
++	/*
++	 * It's safe to walk the rbtree under the RCU lock, but we may
++	 * incorrectly find no vmap_area if the tree is being modified.
++	 */
++	rcu_read_lock();
+ 	va = __find_vmap_area(addr, &vmap_area_root);
+-	spin_unlock(&vmap_area_lock);
++	if (!va && in_interrupt())
++		va = ERR_PTR(-EAGAIN);
++	rcu_read_unlock();
+
+-	return va;
++	if (va)
++		return va;
++	return find_vmap_area(addr);
+ }
+
+ /*** Per cpu kva allocator ***/
+
+... but I don't think that works since vmap_areas aren't freed by RCU,
+and I think they're reused without going through an RCU cycle.
+
+So here's attempt #4, which actually compiles, and is, I think, what you
+had in mind.
+
+diff --git a/include/linux/vmalloc.h b/include/linux/vmalloc.h
+index 096d48aa3437..2b7c52e76856 100644
+--- a/include/linux/vmalloc.h
++++ b/include/linux/vmalloc.h
+@@ -215,7 +215,7 @@ extern struct vm_struct *__get_vm_area_caller(unsigned long size,
+ void free_vm_area(struct vm_struct *area);
+ extern struct vm_struct *remove_vm_area(const void *addr);
+ extern struct vm_struct *find_vm_area(const void *addr);
+-struct vmap_area *find_vmap_area(unsigned long addr);
++struct vmap_area *find_vmap_area_try(unsigned long addr);
+ 
+ static inline bool is_vm_area_hugepages(const void *addr)
+ {
+diff --git a/mm/usercopy.c b/mm/usercopy.c
+index c1ee15a98633..e0fb605c1b38 100644
+--- a/mm/usercopy.c
++++ b/mm/usercopy.c
+@@ -173,7 +173,11 @@ static inline void check_heap_object(const void *ptr, unsigned long n,
+ 	}
+ 
+ 	if (is_vmalloc_addr(ptr)) {
+-		struct vmap_area *area = find_vmap_area(addr);
++		struct vmap_area *area = find_vmap_area_try(addr);
++
++		/* We may be in NMI context */
++		if (area == ERR_PTR(-EAGAIN))
++			return;
+ 
+ 		if (!area)
+ 			usercopy_abort("vmalloc", "no area", to_user, 0, n);
+diff --git a/mm/vmalloc.c b/mm/vmalloc.c
+index dd6cdb201195..c47b3b5d1c2d 100644
+--- a/mm/vmalloc.c
++++ b/mm/vmalloc.c
+@@ -1829,7 +1829,7 @@ static void free_unmap_vmap_area(struct vmap_area *va)
+ 	free_vmap_area_noflush(va);
+ }
+ 
+-struct vmap_area *find_vmap_area(unsigned long addr)
++static struct vmap_area *find_vmap_area(unsigned long addr)
+ {
+ 	struct vmap_area *va;
+ 
+@@ -1840,6 +1840,26 @@ struct vmap_area *find_vmap_area(unsigned long addr)
+ 	return va;
+ }
+ 
++/*
++ * The vmap_area_lock is not interrupt-safe, and we can end up here from
++ * NMI context, so it's not worth even trying to make it IRQ-safe.
++ */
++struct vmap_area *find_vmap_area_try(unsigned long addr)
++{
++	struct vmap_area *va;
++
++	if (in_interrupt()) {
++		if (!spin_trylock(&vmap_area_lock))
++			return ERR_PTR(-EAGAIN);
++	} else {
++		spin_lock(&vmap_area_lock);
++	}
++	va = __find_vmap_area(addr, &vmap_area_root);
++	spin_unlock(&vmap_area_lock);
++
++	return va;
++}
++
+ /*** Per cpu kva allocator ***/
+ 
+ /*
