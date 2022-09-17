@@ -2,158 +2,108 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 829DFC6FA94
-	for <linux-perf-users@archiver.kernel.org>; Sat, 17 Sep 2022 01:59:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5213DECAAD8
+	for <linux-perf-users@archiver.kernel.org>; Sat, 17 Sep 2022 02:20:43 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229869AbiIQB7g (ORCPT
+        id S229635AbiIQCUl (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Fri, 16 Sep 2022 21:59:36 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34734 "EHLO
+        Fri, 16 Sep 2022 22:20:41 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59724 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229728AbiIQB7d (ORCPT
+        with ESMTP id S229495AbiIQCUk (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Fri, 16 Sep 2022 21:59:33 -0400
-Received: from szxga01-in.huawei.com (szxga01-in.huawei.com [45.249.212.187])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 241FFE24;
-        Fri, 16 Sep 2022 18:59:31 -0700 (PDT)
-Received: from dggpemm500024.china.huawei.com (unknown [172.30.72.54])
-        by szxga01-in.huawei.com (SkyGuard) with ESMTP id 4MTvCh2PtNzlVkl;
-        Sat, 17 Sep 2022 09:55:28 +0800 (CST)
-Received: from dggpemm500016.china.huawei.com (7.185.36.25) by
- dggpemm500024.china.huawei.com (7.185.36.203) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2375.24; Sat, 17 Sep 2022 09:59:29 +0800
-Received: from huawei.com (10.67.175.41) by dggpemm500016.china.huawei.com
- (7.185.36.25) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2375.24; Sat, 17 Sep
- 2022 09:59:29 +0800
-From:   Yipeng Zou <zouyipeng@huawei.com>
-To:     <x86@kernel.org>, <linux-arm-kernel@lists.infradead.org>,
-        <linux-kernel@vger.kernel.org>, <linux-csky@vger.kernel.org>,
-        <linux-riscv@lists.infradead.org>,
-        <linux-perf-users@vger.kernel.org>, <linux-s390@vger.kernel.org>,
-        <guoren@kernel.org>, <paul.walmsley@sifive.com>,
-        <palmer@dabbelt.com>, <hca@linux.ibm.com>, <gor@linux.ibm.com>,
-        <borntraeger@linux.ibm.com>, <dave.hansen@linux.intel.com>,
-        <hpa@zytor.com>, <naveen.n.rao@linux.ibm.com>,
-        <anil.s.keshavamurthy@intel.com>, <mhiramat@kernel.org>,
-        <namit@vmware.com>, <catalin.marinas@arm.com>,
-        <peterz@infradead.org>, <mark.rutland@arm.com>
-CC:     <liaochang1@huawei.com>, <chris.zjh@huawei.com>,
-        <zouyipeng@huawei.com>
-Subject: [PATCH 2/2] uprobes: make arch_uprobe_exception_notify as weak
-Date:   Sat, 17 Sep 2022 09:55:22 +0800
-Message-ID: <20220917015522.44583-3-zouyipeng@huawei.com>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20220917015522.44583-1-zouyipeng@huawei.com>
-References: <20220917015522.44583-1-zouyipeng@huawei.com>
+        Fri, 16 Sep 2022 22:20:40 -0400
+Received: from mail-vs1-xe34.google.com (mail-vs1-xe34.google.com [IPv6:2607:f8b0:4864:20::e34])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6B9A45A16C
+        for <linux-perf-users@vger.kernel.org>; Fri, 16 Sep 2022 19:20:38 -0700 (PDT)
+Received: by mail-vs1-xe34.google.com with SMTP id h1so24453960vsr.11
+        for <linux-perf-users@vger.kernel.org>; Fri, 16 Sep 2022 19:20:38 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20210112;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:from:to:cc:subject:date;
+        bh=oGVwvUbROocDCKmIi63dwILH5RW1QiYjDieu+3HIGsc=;
+        b=p4xe7FkTwPfgqVWHMfckvfXbZ74PEfbA+zGhE3mwURum3Wtwo6VikqJgSAObdpAFke
+         MHgaf3cMGbcsp7NKYQST+kgVWi7QA/7EfeeoGpttq5en4rUxgqRWjbhB3n/S//vgR2uv
+         S6WlzAYbgM9x6YRypeUAifzcU+4agyXG2WIF5YjQTmbFQQQ9PuFPqhCcTxCqC21V8Oma
+         fehUSROGSD31s8uKBl1as5duo/aDD+hrtnyxHZxLITS42/VP+0byTiZn/qi2IZK9QjXQ
+         G0LgZLpYHmcT0na0Uoui2L7qNB6jaNUt1Ej0X2zNAazPs/ALCYW+dn5M3uVKopRR+64h
+         qv+A==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:x-gm-message-state:from:to:cc:subject:date;
+        bh=oGVwvUbROocDCKmIi63dwILH5RW1QiYjDieu+3HIGsc=;
+        b=OaS6iPU1hHrewYhW5R9LGXfrSK7e0/7W2E8MtCON1R863x9tPFDsaOhACwqRgHiuMe
+         hXXbv7IKGSjTSJyht/hV5dDYJobhLRLyJKMbBa9QFxJmnqobixhvGZkQSukBwpjJBF7G
+         QGQ3h1azkff739gIeDgK3q9pSgfJta+ru4UVK6oY1LWjChwDBkDMPHs94m3b2cO0A4pB
+         SY9/LJvBeb0DstTrXNRRAxtkqcoFjdRFsmzqbwGpqRaA91sfQZ+2CVrAsWQsnheD5bE8
+         QLfmqeSXDuNSlWRFhZaXHCjpXjhq6dJjKVNINwVg3k77/DC1HVXLFShYvXiYe4btD4qM
+         vnxQ==
+X-Gm-Message-State: ACrzQf1N2ZvtYC7lMbM/8ZlouJ40GJbXkHc1iAHjAv5Ur2hFe1VUxUlE
+        hca9tOqUef9HRILdjqHE/6kfSx1f5GMZM3v6o1FdLw==
+X-Google-Smtp-Source: AMsMyM5q6QRJAwXaZJ4XFbVgFggwa1+pamVcYJuzMq6iNMYJMIVWBOPdicQlAri+7OMdOIMIErnmt4nZD65EK0hktVA=
+X-Received: by 2002:a67:ed55:0:b0:39a:7942:f574 with SMTP id
+ m21-20020a67ed55000000b0039a7942f574mr3217830vsp.65.1663381237345; Fri, 16
+ Sep 2022 19:20:37 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain
-X-Originating-IP: [10.67.175.41]
-X-ClientProxiedBy: dggems705-chm.china.huawei.com (10.3.19.182) To
- dggpemm500016.china.huawei.com (7.185.36.25)
-X-CFilter-Loop: Reflected
+References: <20220916135953.1320601-1-keescook@chromium.org>
+In-Reply-To: <20220916135953.1320601-1-keescook@chromium.org>
+From:   Yu Zhao <yuzhao@google.com>
+Date:   Fri, 16 Sep 2022 20:20:00 -0600
+Message-ID: <CAOUHufbUUf1--=qiseAYzjN2DdyCkf_x=CQboWYDduH7VgpXmQ@mail.gmail.com>
+Subject: Re: [PATCH 0/3] x86/dumpstack: Inline copy_from_user_nmi()
+To:     Kees Cook <keescook@chromium.org>
+Cc:     Matthew Wilcox <willy@infradead.org>,
+        Uladzislau Rezki <urezki@gmail.com>,
+        Andrew Morton <akpm@linux-foundation.org>, dev@der-flo.net,
+        Peter Zijlstra <peterz@infradead.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        linux-kernel <linux-kernel@vger.kernel.org>,
+        "the arch/x86 maintainers" <x86@kernel.org>,
+        linux-perf-users@vger.kernel.org, Linux-MM <linux-mm@kvack.org>,
+        linux-hardening@vger.kernel.org,
+        Linux-Arch <linux-arch@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-The function implementation under some arch does nothing.
-We can mark it with weak attributes to improve.
+On Fri, Sep 16, 2022 at 8:01 AM Kees Cook <keescook@chromium.org> wrote:
+>
+> Hi,
+>
+> This fixes a find_vmap_area() deadlock. The main fix is patch 2, repeated here:
+>
+>     The check_object_size() helper under CONFIG_HARDENED_USERCOPY is
+>     designed to skip any checks where the length is known at compile time as
+>     a reasonable heuristic to avoid "likely known-good" cases. However, it can
+>     only do this when the copy_*_user() helpers are, themselves, inline too.
+>
+>     Using find_vmap_area() requires taking a spinlock. The check_object_size()
+>     helper can call find_vmap_area() when the destination is in vmap memory.
+>     If show_regs() is called in interrupt context, it will attempt a call to
+>     copy_from_user_nmi(), which may call check_object_size() and then
+>     find_vmap_area(). If something in normal context happens to be in the
+>     middle of calling find_vmap_area() (with the spinlock held), the interrupt
+>     handler will hang forever.
+>
+>     The copy_from_user_nmi() call is actually being called with a fixed-size
+>     length, so check_object_size() should never have been called in the
+>     first place. In order for check_object_size() to see that the length is
+>     a fixed size, inline copy_from_user_nmi(), as already done with all the
+>     other uaccess helpers.
+>
+>     Reported-by: Yu Zhao <yuzhao@google.com>
+>     Link: https://lore.kernel.org/all/CAOUHufaPshtKrTWOz7T7QFYUNVGFm0JBjvM700Nhf9qEL9b3EQ@mail.gmail.com
+>     Reported-by: dev@der-flo.net
+>
+> Patch 1 is a refactor for patch 2, and patch 3 should make sure we avoid
+> future deadlocks.
 
-Signed-off-by: Yipeng Zou <zouyipeng@huawei.com>
----
- arch/arm/probes/uprobes/core.c     | 6 ------
- arch/arm64/kernel/probes/uprobes.c | 6 ------
- arch/csky/kernel/probes/uprobes.c  | 6 ------
- arch/riscv/kernel/probes/uprobes.c | 6 ------
- kernel/events/uprobes.c            | 6 ++++++
- 5 files changed, 6 insertions(+), 24 deletions(-)
+Thanks!
 
-diff --git a/arch/arm/probes/uprobes/core.c b/arch/arm/probes/uprobes/core.c
-index f5f790c6e5f8..535ea1b355ed 100644
---- a/arch/arm/probes/uprobes/core.c
-+++ b/arch/arm/probes/uprobes/core.c
-@@ -175,12 +175,6 @@ void arch_uprobe_abort_xol(struct arch_uprobe *auprobe, struct pt_regs *regs)
- 	instruction_pointer_set(regs, utask->vaddr);
- }
- 
--int arch_uprobe_exception_notify(struct notifier_block *self,
--				 unsigned long val, void *data)
--{
--	return NOTIFY_DONE;
--}
--
- static int uprobe_trap_handler(struct pt_regs *regs, unsigned int instr)
- {
- 	unsigned long flags;
-diff --git a/arch/arm64/kernel/probes/uprobes.c b/arch/arm64/kernel/probes/uprobes.c
-index d49aef2657cd..687ede3375a6 100644
---- a/arch/arm64/kernel/probes/uprobes.c
-+++ b/arch/arm64/kernel/probes/uprobes.c
-@@ -159,12 +159,6 @@ arch_uretprobe_hijack_return_addr(unsigned long trampoline_vaddr,
- 	return orig_ret_vaddr;
- }
- 
--int arch_uprobe_exception_notify(struct notifier_block *self,
--				 unsigned long val, void *data)
--{
--	return NOTIFY_DONE;
--}
--
- static int uprobe_breakpoint_handler(struct pt_regs *regs,
- 				     unsigned long esr)
- {
-diff --git a/arch/csky/kernel/probes/uprobes.c b/arch/csky/kernel/probes/uprobes.c
-index 2d31a12e46cf..67ff13d960e8 100644
---- a/arch/csky/kernel/probes/uprobes.c
-+++ b/arch/csky/kernel/probes/uprobes.c
-@@ -132,12 +132,6 @@ arch_uretprobe_hijack_return_addr(unsigned long trampoline_vaddr,
- 	return ra;
- }
- 
--int arch_uprobe_exception_notify(struct notifier_block *self,
--				 unsigned long val, void *data)
--{
--	return NOTIFY_DONE;
--}
--
- int uprobe_breakpoint_handler(struct pt_regs *regs)
- {
- 	if (uprobe_pre_sstep_notifier(regs))
-diff --git a/arch/riscv/kernel/probes/uprobes.c b/arch/riscv/kernel/probes/uprobes.c
-index c976a21cd4bd..770f16c6e00f 100644
---- a/arch/riscv/kernel/probes/uprobes.c
-+++ b/arch/riscv/kernel/probes/uprobes.c
-@@ -131,12 +131,6 @@ arch_uretprobe_hijack_return_addr(unsigned long trampoline_vaddr,
- 	return ra;
- }
- 
--int arch_uprobe_exception_notify(struct notifier_block *self,
--				 unsigned long val, void *data)
--{
--	return NOTIFY_DONE;
--}
--
- bool uprobe_breakpoint_handler(struct pt_regs *regs)
- {
- 	if (uprobe_pre_sstep_notifier(regs))
-diff --git a/kernel/events/uprobes.c b/kernel/events/uprobes.c
-index d9e357b7e17c..33e637f7a202 100644
---- a/kernel/events/uprobes.c
-+++ b/kernel/events/uprobes.c
-@@ -2343,6 +2343,12 @@ int uprobe_post_sstep_notifier(struct pt_regs *regs)
- 	return 1;
- }
- 
-+int __weak arch_uprobe_exception_notify(struct notifier_block *self,
-+				 unsigned long val, void *data)
-+{
-+	return NOTIFY_DONE;
-+}
-+
- static struct notifier_block uprobe_exception_nb = {
- 	.notifier_call		= arch_uprobe_exception_notify,
- 	.priority		= INT_MAX-1,	/* notified after kprobes, kgdb */
--- 
-2.17.1
+Tested-by: Yu Zhao <yuzhao@google.com>
 
+The same test has been holding up well for a few hours now. It used to
+throw that warning in less than half an hour.
