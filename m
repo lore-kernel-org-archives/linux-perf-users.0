@@ -2,92 +2,80 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BFEB5ECAAA1
-	for <linux-perf-users@archiver.kernel.org>; Sat, 17 Sep 2022 01:48:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C6FD9C6FA92
+	for <linux-perf-users@archiver.kernel.org>; Sat, 17 Sep 2022 01:59:35 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229750AbiIQBsX (ORCPT
+        id S229838AbiIQB7e (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Fri, 16 Sep 2022 21:48:23 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52602 "EHLO
+        Fri, 16 Sep 2022 21:59:34 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34672 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229851AbiIQBsO (ORCPT
+        with ESMTP id S229570AbiIQB7c (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Fri, 16 Sep 2022 21:48:14 -0400
-Received: from mail-pl1-x634.google.com (mail-pl1-x634.google.com [IPv6:2607:f8b0:4864:20::634])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 13E14AE23F;
-        Fri, 16 Sep 2022 18:48:10 -0700 (PDT)
-Received: by mail-pl1-x634.google.com with SMTP id s18so17038918plr.4;
-        Fri, 16 Sep 2022 18:48:10 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20210112;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date;
-        bh=Xlm3IEiv0QUQAA+pAhB6W56+eUuQAk/ZKcHmJT3d2iI=;
-        b=WUFhdrju3oCC2ZIYRNQeYXdQrNpq+G6g/uZ4r+gWofnMWMTmRk/FyTD8VDr6u3qPWR
-         +rvB9hUPYXvVQpA49zlXfrJkuSo/DRE+vgr7K3E0hqB1zWEnIdTY8//qRWlZGTNExNCL
-         90G27MiG/C9vOCozrz+ICZ1bxaYSQdZ6lU3mKGFs/sjPh57y8+QoY/0RBYuIi8OHZiq7
-         PcVAup9KumXxYKamx1mTGVB/krZn2CdQMlNab7G0Pa8foF4Z2fVENl2vK7o0xqhcHP/F
-         bTdbRPUj7Hj1sJBb2mgBA+jWfq3VejAEfiyivrM7Bqg3CMjJEr57JqtUPEr3w11Ta3mV
-         QG/g==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date;
-        bh=Xlm3IEiv0QUQAA+pAhB6W56+eUuQAk/ZKcHmJT3d2iI=;
-        b=7CS8x5CS23nBaBn51EcD8mD79m6PRWEhu4C5iXpoygQhdanU2ai1VMDP3tsglmr2gP
-         6cf5lWHslBg+jHuMDKoHiicMzsbeiUZ1ah9NCBc1OAMH1tk3Zz2z98BK+tbw2ymWpVTa
-         9X0tseZQDM8AHM9jWECPeSuUtwgwNrV9SOxGEEW0yHx2vJo8a3/B7jr8l7St09kQaLKE
-         Yb4zz8qONXlTgfep54SKFgQb12Gdv/YVp7X7S+9TK2YjoSzPgBLd+rLw2mUBTPiuQd3A
-         azVPoB08PO5aflnDuKejy/71g8zTpv3+SFKL987xastK7aFgbHIquVcDXS/VaYe9+jJs
-         uicQ==
-X-Gm-Message-State: ACrzQf0PRvUu9s8AnDJtdNHV5dmnkPWReNdLT1lCrA94vsgtu40aQtw0
-        1GbZk9PRc0UZsaeZwsCrWdAkG1BhV//PMw==
-X-Google-Smtp-Source: AMsMyM71xMgaiF/8/lbKBPDtmeqx0ps4MzQRwy8FzckWsZE2Y4/DPMbQNUVQZwvjoTyKyWgp+9+X9Q==
-X-Received: by 2002:a17:90b:4a06:b0:202:c03b:eb5c with SMTP id kk6-20020a17090b4a0600b00202c03beb5cmr8636550pjb.6.1663379289294;
-        Fri, 16 Sep 2022 18:48:09 -0700 (PDT)
-Received: from localhost.localdomain (lily-optiplex-3070.dynamic.ucsd.edu. [2607:f720:1300:3033::1:4dd])
-        by smtp.googlemail.com with ESMTPSA id g3-20020aa79f03000000b005465ffaa89dsm8972011pfr.184.2022.09.16.18.48.07
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 16 Sep 2022 18:48:08 -0700 (PDT)
-From:   Li Zhong <floridsleeves@gmail.com>
-To:     linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org,
-        bpf@vger.kernel.org
-Cc:     namhyung@kernel.org, jolsa@kernel.org,
-        alexander.shishkin@linux.intel.com, mark.rutland@arm.com,
-        acme@kernel.org, mingo@redhat.com, peterz@infradead.org,
-        Li Zhong <floridsleeves@gmail.com>
-Subject: [PATCH v1] kernel/events/core: check return value of task_function_call()
-Date:   Fri, 16 Sep 2022 18:47:46 -0700
-Message-Id: <20220917014746.3828349-1-floridsleeves@gmail.com>
-X-Mailer: git-send-email 2.25.1
+        Fri, 16 Sep 2022 21:59:32 -0400
+Received: from szxga03-in.huawei.com (szxga03-in.huawei.com [45.249.212.189])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1C726E43;
+        Fri, 16 Sep 2022 18:59:30 -0700 (PDT)
+Received: from dggpemm500022.china.huawei.com (unknown [172.30.72.57])
+        by szxga03-in.huawei.com (SkyGuard) with ESMTP id 4MTvFv11TLzBsMr;
+        Sat, 17 Sep 2022 09:57:23 +0800 (CST)
+Received: from dggpemm500016.china.huawei.com (7.185.36.25) by
+ dggpemm500022.china.huawei.com (7.185.36.162) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2375.24; Sat, 17 Sep 2022 09:59:28 +0800
+Received: from huawei.com (10.67.175.41) by dggpemm500016.china.huawei.com
+ (7.185.36.25) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2375.24; Sat, 17 Sep
+ 2022 09:59:27 +0800
+From:   Yipeng Zou <zouyipeng@huawei.com>
+To:     <x86@kernel.org>, <linux-arm-kernel@lists.infradead.org>,
+        <linux-kernel@vger.kernel.org>, <linux-csky@vger.kernel.org>,
+        <linux-riscv@lists.infradead.org>,
+        <linux-perf-users@vger.kernel.org>, <linux-s390@vger.kernel.org>,
+        <guoren@kernel.org>, <paul.walmsley@sifive.com>,
+        <palmer@dabbelt.com>, <hca@linux.ibm.com>, <gor@linux.ibm.com>,
+        <borntraeger@linux.ibm.com>, <dave.hansen@linux.intel.com>,
+        <hpa@zytor.com>, <naveen.n.rao@linux.ibm.com>,
+        <anil.s.keshavamurthy@intel.com>, <mhiramat@kernel.org>,
+        <namit@vmware.com>, <catalin.marinas@arm.com>,
+        <peterz@infradead.org>, <mark.rutland@arm.com>
+CC:     <liaochang1@huawei.com>, <chris.zjh@huawei.com>,
+        <zouyipeng@huawei.com>
+Subject: [PATCH 0/2] make weak attributes in {k,u}probes
+Date:   Sat, 17 Sep 2022 09:55:20 +0800
+Message-ID: <20220917015522.44583-1-zouyipeng@huawei.com>
+X-Mailer: git-send-email 2.17.1
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-Originating-IP: [10.67.175.41]
+X-ClientProxiedBy: dggems705-chm.china.huawei.com (10.3.19.182) To
+ dggpemm500016.china.huawei.com (7.185.36.25)
+X-CFilter-Loop: Reflected
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-Check the return value of task_function_call(), which could be error
-code when the execution fails.
+We have some function implementation under some arch does nothing.
+We can mark it with weak attributes to improve.
+1. arch_init_kprobes in kprobes
+2. arch_uprobe_exception_notify in uprobes
 
-Signed-off-by: Li Zhong <floridsleeves@gmail.com>
----
- kernel/events/core.c | 3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
+Yipeng Zou (2):
+  kprobes: make arch_init_kprobes as weak
+  uprobes: make arch_uprobe_exception_notify as weak
 
-diff --git a/kernel/events/core.c b/kernel/events/core.c
-index 2621fd24ad26..ac0cf611b12a 100644
---- a/kernel/events/core.c
-+++ b/kernel/events/core.c
-@@ -13520,7 +13520,8 @@ static void perf_cgroup_attach(struct cgroup_taskset *tset)
- 	struct cgroup_subsys_state *css;
- 
- 	cgroup_taskset_for_each(task, css, tset)
--		task_function_call(task, __perf_cgroup_move, task);
-+		if (!task_function_call(task, __perf_cgroup_move, task))
-+			return;
- }
- 
- struct cgroup_subsys perf_event_cgrp_subsys = {
+ arch/arm/probes/uprobes/core.c     | 6 ------
+ arch/arm64/kernel/probes/uprobes.c | 6 ------
+ arch/csky/kernel/probes/kprobes.c  | 5 -----
+ arch/csky/kernel/probes/uprobes.c  | 6 ------
+ arch/riscv/kernel/probes/kprobes.c | 5 -----
+ arch/riscv/kernel/probes/uprobes.c | 6 ------
+ arch/s390/kernel/kprobes.c         | 5 -----
+ arch/x86/kernel/kprobes/core.c     | 5 -----
+ kernel/events/uprobes.c            | 6 ++++++
+ kernel/kprobes.c                   | 5 +++++
+ 10 files changed, 11 insertions(+), 44 deletions(-)
+
 -- 
-2.25.1
+2.17.1
 
