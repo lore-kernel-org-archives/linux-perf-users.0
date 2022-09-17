@@ -2,98 +2,93 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1DCC5C6FA93
-	for <linux-perf-users@archiver.kernel.org>; Fri, 16 Sep 2022 19:57:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D78CDECAAD8
+	for <linux-perf-users@archiver.kernel.org>; Sat, 17 Sep 2022 01:11:49 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229587AbiIPT52 (ORCPT
+        id S229561AbiIQBLs (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Fri, 16 Sep 2022 15:57:28 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51102 "EHLO
+        Fri, 16 Sep 2022 21:11:48 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40978 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229684AbiIPT50 (ORCPT
+        with ESMTP id S229484AbiIQBLr (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Fri, 16 Sep 2022 15:57:26 -0400
-Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C2EC4B6D68;
-        Fri, 16 Sep 2022 12:57:25 -0700 (PDT)
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id 5E48562CA2;
-        Fri, 16 Sep 2022 19:57:25 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 4599FC433D6;
-        Fri, 16 Sep 2022 19:57:24 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linux-foundation.org;
-        s=korg; t=1663358244;
-        bh=toDD/DKP6ej2h13IFCfqAwO2xnElND7IEzQWcWOhAqI=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=fhlmuao9gEG+AEm6I2K7+XKwGMFg0YwspJcIDXhJE3SqUlTamt3OveKskBKFPKz7e
-         7vt/kU0mHM9Nzc0uzQSp9mKiWSIbf+Mbfsy6aLoW1h0glwmkKUk8EaeFBHea3rxm0I
-         QJQ64gI3IHdtu9eZ+E6nOBptuTupvwO0jn6Rffoc=
-Date:   Fri, 16 Sep 2022 12:57:23 -0700
-From:   Andrew Morton <akpm@linux-foundation.org>
-To:     Kees Cook <keescook@chromium.org>
-Cc:     Matthew Wilcox <willy@infradead.org>,
-        Uladzislau Rezki <urezki@gmail.com>,
-        Yu Zhao <yuzhao@google.com>, dev@der-flo.net,
-        Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@redhat.com>, linux-kernel@vger.kernel.org,
-        x86@kernel.org, linux-perf-users@vger.kernel.org,
-        linux-mm@kvack.org, linux-hardening@vger.kernel.org,
-        linux-arch@vger.kernel.org
-Subject: Re: [PATCH 0/3] x86/dumpstack: Inline copy_from_user_nmi()
-Message-Id: <20220916125723.b4c189d09bcd8fd211a73c32@linux-foundation.org>
-In-Reply-To: <20220916135953.1320601-1-keescook@chromium.org>
-References: <20220916135953.1320601-1-keescook@chromium.org>
-X-Mailer: Sylpheed 3.7.0 (GTK+ 2.24.33; x86_64-redhat-linux-gnu)
-Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+        Fri, 16 Sep 2022 21:11:47 -0400
+Received: from mail-pf1-x42f.google.com (mail-pf1-x42f.google.com [IPv6:2607:f8b0:4864:20::42f])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DEE6F89812
+        for <linux-perf-users@vger.kernel.org>; Fri, 16 Sep 2022 18:11:44 -0700 (PDT)
+Received: by mail-pf1-x42f.google.com with SMTP id w2so12530082pfb.0
+        for <linux-perf-users@vger.kernel.org>; Fri, 16 Sep 2022 18:11:44 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20210112;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date;
+        bh=n13QfpMRXmDif9Ywxtk6V+caQ5bgGbqn2A0+iIQn+tY=;
+        b=qfLW6F3pou51VzTJ/QQ0Pwe6CKNy5zHahGOLfniT+u8khdm4jo1kxuRCM79N/0HyX2
+         mdDOeeCGadOrIebMCsjDcEx+UvnxNAqyw6icMgqQi35WQKCopCQnLVctGe72tv5pZJAB
+         ydz7M4Us/1MwczwjsNnFU7igVoS6nA9nZVbV/IgVQHOF9GHWbWxDNF2wDYc0a7vMa3B/
+         xOztEEIFh7NlTbmr8ISMoW1MLcbgvOxIvpehIUGG77sBNlDpeMpVmLNOrYPE6DCKXaWu
+         zvR1Rz78zbboKaofQ1vfxa+OUpgx5flMBrZlfpd4L+oA/jkzDIFVQkuuKb9bH16ZhZk4
+         KZZA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date;
+        bh=n13QfpMRXmDif9Ywxtk6V+caQ5bgGbqn2A0+iIQn+tY=;
+        b=4f+yAu9O3XLIkxUBmCnXY1wnIOUyNpRIbaSf0sK9BWuxoHIqQ5pgvu52pdgvWWeMWu
+         hXqmuEuMSC8DWENSp3QIv8m1NTRpTDOn7hrwPw/vBjpbjprCIrx74sI/miVRKyYbh+cr
+         xUO+dTJQcaor8TkEIF4NnRScCTDiptLYFEGQcbaLuPOaei5sz9mrrcX80fDPPLexY0aa
+         OuWdj/RZ+WQ/xj7hoHvV4ti2czA1kyJIaU8GAR2nn36yTfuedosUSuHA24m0ryg5f80h
+         yQGRHuwaGt1vnq1QOtxYZWNUPjOHHL+4O4R8dQVg6i+2u7NCEMbIFXzu1SAZZKNl7m91
+         e+0w==
+X-Gm-Message-State: ACrzQf1GkxfUCjh0jdwPFbnGkwGgdi7MYcsXCDLIBqoR0AS/m/aLAlLR
+        UGW2vhD1T0CtWOTnDLtNYReeYA==
+X-Google-Smtp-Source: AMsMyM4kI354lqIKYGsxpElBQcSqRNND/4C9RtIg6LWogqDiQy5mexXv5di4E2fDO2qy88aBtkCQtw==
+X-Received: by 2002:a63:4e5e:0:b0:439:a09d:92eb with SMTP id o30-20020a634e5e000000b00439a09d92ebmr6723155pgl.369.1663377104335;
+        Fri, 16 Sep 2022 18:11:44 -0700 (PDT)
+Received: from google.com (7.104.168.34.bc.googleusercontent.com. [34.168.104.7])
+        by smtp.gmail.com with ESMTPSA id 133-20020a62198b000000b005321340753fsm15175215pfz.103.2022.09.16.18.11.43
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 16 Sep 2022 18:11:43 -0700 (PDT)
+Date:   Sat, 17 Sep 2022 01:11:40 +0000
+From:   Sean Christopherson <seanjc@google.com>
+To:     Peter Zijlstra <peterz@infradead.org>
+Cc:     Ingo Molnar <mingo@redhat.com>,
+        Arnaldo Carvalho de Melo <acme@kernel.org>,
+        Paolo Bonzini <pbonzini@redhat.com>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Jiri Olsa <jolsa@kernel.org>,
+        Namhyung Kim <namhyung@kernel.org>,
+        linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org,
+        kvm@vger.kernel.org, Like Xu <like.xu.linux@gmail.com>
+Subject: Re: [PATCH v4 0/5]  KVM: x86: Intel LBR related perf cleanups
+Message-ID: <YyUezO4WQSArXPI+@google.com>
+References: <20220901173258.925729-1-seanjc@google.com>
+ <Yxnx8InRcF94zi0n@hirez.programming.kicks-ass.net>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <Yxnx8InRcF94zi0n@hirez.programming.kicks-ass.net>
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-On Fri, 16 Sep 2022 06:59:51 -0700 Kees Cook <keescook@chromium.org> wrote:
-
-> Hi,
+On Thu, Sep 08, 2022, Peter Zijlstra wrote:
+> On Thu, Sep 01, 2022 at 05:32:53PM +0000, Sean Christopherson wrote:
 > 
-> This fixes a find_vmap_area() deadlock. The main fix is patch 2, repeated here:
+> > Sean Christopherson (5):
+> >   perf/x86/core: Remove unnecessary stubs provided for KVM-only helpers
+> >   perf/x86/core: Drop the unnecessary return value from
+> >     x86_perf_get_lbr()
+> >   KVM: VMX: Move vmx_get_perf_capabilities() definition to vmx.c
+> >   KVM: VMX: Fold vmx_supported_debugctl() into vcpu_supported_debugctl()
+> >   KVM: VMX: Advertise PMU LBRs if and only if perf supports LBRs
 > 
->     The check_object_size() helper under CONFIG_HARDENED_USERCOPY is
->     designed to skip any checks where the length is known at compile time as
->     a reasonable heuristic to avoid "likely known-good" cases. However, it can
->     only do this when the copy_*_user() helpers are, themselves, inline too.
+> These look good to me; how do you want this routed, if through the KVM
+> tree:
 > 
->     Using find_vmap_area() requires taking a spinlock. The check_object_size()
->     helper can call find_vmap_area() when the destination is in vmap memory.
->     If show_regs() is called in interrupt context, it will attempt a call to
->     copy_from_user_nmi(), which may call check_object_size() and then
->     find_vmap_area(). If something in normal context happens to be in the
->     middle of calling find_vmap_area() (with the spinlock held), the interrupt
->     handler will hang forever.
-> 
->     The copy_from_user_nmi() call is actually being called with a fixed-size
->     length, so check_object_size() should never have been called in the
->     first place. In order for check_object_size() to see that the length is
->     a fixed size, inline copy_from_user_nmi(), as already done with all the
->     other uaccess helpers.
-> 
+> Acked-by: Peter Zijlstra (Intel) <peterz@infradead.org>
 
-Why is this so complicated.
-
-There's virtually zero value in running all those debug checks from within
-copy_from_user_nmi().
-
---- a/arch/x86/lib/usercopy.c~a
-+++ a/arch/x86/lib/usercopy.c
-@@ -44,7 +44,7 @@ copy_from_user_nmi(void *to, const void
- 	 * called from other contexts.
- 	 */
- 	pagefault_disable();
--	ret = __copy_from_user_inatomic(to, from, n);
-+	ret = raw_copy_from_user(to, from, n);
- 	pagefault_enable();
- 
- 	return ret;
-_
-
+Thanks!  If you don't anticipate conflicts in the perf headers, I'll take 'em
+through KVM, patch 01 introduced a new warning that I need to resolve (hopefully
+it doesn't throw a wrench into things).
