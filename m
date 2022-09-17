@@ -2,93 +2,92 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D78CDECAAD8
-	for <linux-perf-users@archiver.kernel.org>; Sat, 17 Sep 2022 01:11:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BFEB5ECAAA1
+	for <linux-perf-users@archiver.kernel.org>; Sat, 17 Sep 2022 01:48:24 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229561AbiIQBLs (ORCPT
+        id S229750AbiIQBsX (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Fri, 16 Sep 2022 21:11:48 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40978 "EHLO
+        Fri, 16 Sep 2022 21:48:23 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52602 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229484AbiIQBLr (ORCPT
+        with ESMTP id S229851AbiIQBsO (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Fri, 16 Sep 2022 21:11:47 -0400
-Received: from mail-pf1-x42f.google.com (mail-pf1-x42f.google.com [IPv6:2607:f8b0:4864:20::42f])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DEE6F89812
-        for <linux-perf-users@vger.kernel.org>; Fri, 16 Sep 2022 18:11:44 -0700 (PDT)
-Received: by mail-pf1-x42f.google.com with SMTP id w2so12530082pfb.0
-        for <linux-perf-users@vger.kernel.org>; Fri, 16 Sep 2022 18:11:44 -0700 (PDT)
+        Fri, 16 Sep 2022 21:48:14 -0400
+Received: from mail-pl1-x634.google.com (mail-pl1-x634.google.com [IPv6:2607:f8b0:4864:20::634])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 13E14AE23F;
+        Fri, 16 Sep 2022 18:48:10 -0700 (PDT)
+Received: by mail-pl1-x634.google.com with SMTP id s18so17038918plr.4;
+        Fri, 16 Sep 2022 18:48:10 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20210112;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date;
-        bh=n13QfpMRXmDif9Ywxtk6V+caQ5bgGbqn2A0+iIQn+tY=;
-        b=qfLW6F3pou51VzTJ/QQ0Pwe6CKNy5zHahGOLfniT+u8khdm4jo1kxuRCM79N/0HyX2
-         mdDOeeCGadOrIebMCsjDcEx+UvnxNAqyw6icMgqQi35WQKCopCQnLVctGe72tv5pZJAB
-         ydz7M4Us/1MwczwjsNnFU7igVoS6nA9nZVbV/IgVQHOF9GHWbWxDNF2wDYc0a7vMa3B/
-         xOztEEIFh7NlTbmr8ISMoW1MLcbgvOxIvpehIUGG77sBNlDpeMpVmLNOrYPE6DCKXaWu
-         zvR1Rz78zbboKaofQ1vfxa+OUpgx5flMBrZlfpd4L+oA/jkzDIFVQkuuKb9bH16ZhZk4
-         KZZA==
+        d=gmail.com; s=20210112;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date;
+        bh=Xlm3IEiv0QUQAA+pAhB6W56+eUuQAk/ZKcHmJT3d2iI=;
+        b=WUFhdrju3oCC2ZIYRNQeYXdQrNpq+G6g/uZ4r+gWofnMWMTmRk/FyTD8VDr6u3qPWR
+         +rvB9hUPYXvVQpA49zlXfrJkuSo/DRE+vgr7K3E0hqB1zWEnIdTY8//qRWlZGTNExNCL
+         90G27MiG/C9vOCozrz+ICZ1bxaYSQdZ6lU3mKGFs/sjPh57y8+QoY/0RBYuIi8OHZiq7
+         PcVAup9KumXxYKamx1mTGVB/krZn2CdQMlNab7G0Pa8foF4Z2fVENl2vK7o0xqhcHP/F
+         bTdbRPUj7Hj1sJBb2mgBA+jWfq3VejAEfiyivrM7Bqg3CMjJEr57JqtUPEr3w11Ta3mV
+         QG/g==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date;
-        bh=n13QfpMRXmDif9Ywxtk6V+caQ5bgGbqn2A0+iIQn+tY=;
-        b=4f+yAu9O3XLIkxUBmCnXY1wnIOUyNpRIbaSf0sK9BWuxoHIqQ5pgvu52pdgvWWeMWu
-         hXqmuEuMSC8DWENSp3QIv8m1NTRpTDOn7hrwPw/vBjpbjprCIrx74sI/miVRKyYbh+cr
-         xUO+dTJQcaor8TkEIF4NnRScCTDiptLYFEGQcbaLuPOaei5sz9mrrcX80fDPPLexY0aa
-         OuWdj/RZ+WQ/xj7hoHvV4ti2czA1kyJIaU8GAR2nn36yTfuedosUSuHA24m0ryg5f80h
-         yQGRHuwaGt1vnq1QOtxYZWNUPjOHHL+4O4R8dQVg6i+2u7NCEMbIFXzu1SAZZKNl7m91
-         e+0w==
-X-Gm-Message-State: ACrzQf1GkxfUCjh0jdwPFbnGkwGgdi7MYcsXCDLIBqoR0AS/m/aLAlLR
-        UGW2vhD1T0CtWOTnDLtNYReeYA==
-X-Google-Smtp-Source: AMsMyM4kI354lqIKYGsxpElBQcSqRNND/4C9RtIg6LWogqDiQy5mexXv5di4E2fDO2qy88aBtkCQtw==
-X-Received: by 2002:a63:4e5e:0:b0:439:a09d:92eb with SMTP id o30-20020a634e5e000000b00439a09d92ebmr6723155pgl.369.1663377104335;
-        Fri, 16 Sep 2022 18:11:44 -0700 (PDT)
-Received: from google.com (7.104.168.34.bc.googleusercontent.com. [34.168.104.7])
-        by smtp.gmail.com with ESMTPSA id 133-20020a62198b000000b005321340753fsm15175215pfz.103.2022.09.16.18.11.43
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date;
+        bh=Xlm3IEiv0QUQAA+pAhB6W56+eUuQAk/ZKcHmJT3d2iI=;
+        b=7CS8x5CS23nBaBn51EcD8mD79m6PRWEhu4C5iXpoygQhdanU2ai1VMDP3tsglmr2gP
+         6cf5lWHslBg+jHuMDKoHiicMzsbeiUZ1ah9NCBc1OAMH1tk3Zz2z98BK+tbw2ymWpVTa
+         9X0tseZQDM8AHM9jWECPeSuUtwgwNrV9SOxGEEW0yHx2vJo8a3/B7jr8l7St09kQaLKE
+         Yb4zz8qONXlTgfep54SKFgQb12Gdv/YVp7X7S+9TK2YjoSzPgBLd+rLw2mUBTPiuQd3A
+         azVPoB08PO5aflnDuKejy/71g8zTpv3+SFKL987xastK7aFgbHIquVcDXS/VaYe9+jJs
+         uicQ==
+X-Gm-Message-State: ACrzQf0PRvUu9s8AnDJtdNHV5dmnkPWReNdLT1lCrA94vsgtu40aQtw0
+        1GbZk9PRc0UZsaeZwsCrWdAkG1BhV//PMw==
+X-Google-Smtp-Source: AMsMyM71xMgaiF/8/lbKBPDtmeqx0ps4MzQRwy8FzckWsZE2Y4/DPMbQNUVQZwvjoTyKyWgp+9+X9Q==
+X-Received: by 2002:a17:90b:4a06:b0:202:c03b:eb5c with SMTP id kk6-20020a17090b4a0600b00202c03beb5cmr8636550pjb.6.1663379289294;
+        Fri, 16 Sep 2022 18:48:09 -0700 (PDT)
+Received: from localhost.localdomain (lily-optiplex-3070.dynamic.ucsd.edu. [2607:f720:1300:3033::1:4dd])
+        by smtp.googlemail.com with ESMTPSA id g3-20020aa79f03000000b005465ffaa89dsm8972011pfr.184.2022.09.16.18.48.07
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 16 Sep 2022 18:11:43 -0700 (PDT)
-Date:   Sat, 17 Sep 2022 01:11:40 +0000
-From:   Sean Christopherson <seanjc@google.com>
-To:     Peter Zijlstra <peterz@infradead.org>
-Cc:     Ingo Molnar <mingo@redhat.com>,
-        Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Paolo Bonzini <pbonzini@redhat.com>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Jiri Olsa <jolsa@kernel.org>,
-        Namhyung Kim <namhyung@kernel.org>,
-        linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org,
-        kvm@vger.kernel.org, Like Xu <like.xu.linux@gmail.com>
-Subject: Re: [PATCH v4 0/5]  KVM: x86: Intel LBR related perf cleanups
-Message-ID: <YyUezO4WQSArXPI+@google.com>
-References: <20220901173258.925729-1-seanjc@google.com>
- <Yxnx8InRcF94zi0n@hirez.programming.kicks-ass.net>
+        Fri, 16 Sep 2022 18:48:08 -0700 (PDT)
+From:   Li Zhong <floridsleeves@gmail.com>
+To:     linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org,
+        bpf@vger.kernel.org
+Cc:     namhyung@kernel.org, jolsa@kernel.org,
+        alexander.shishkin@linux.intel.com, mark.rutland@arm.com,
+        acme@kernel.org, mingo@redhat.com, peterz@infradead.org,
+        Li Zhong <floridsleeves@gmail.com>
+Subject: [PATCH v1] kernel/events/core: check return value of task_function_call()
+Date:   Fri, 16 Sep 2022 18:47:46 -0700
+Message-Id: <20220917014746.3828349-1-floridsleeves@gmail.com>
+X-Mailer: git-send-email 2.25.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <Yxnx8InRcF94zi0n@hirez.programming.kicks-ass.net>
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-On Thu, Sep 08, 2022, Peter Zijlstra wrote:
-> On Thu, Sep 01, 2022 at 05:32:53PM +0000, Sean Christopherson wrote:
-> 
-> > Sean Christopherson (5):
-> >   perf/x86/core: Remove unnecessary stubs provided for KVM-only helpers
-> >   perf/x86/core: Drop the unnecessary return value from
-> >     x86_perf_get_lbr()
-> >   KVM: VMX: Move vmx_get_perf_capabilities() definition to vmx.c
-> >   KVM: VMX: Fold vmx_supported_debugctl() into vcpu_supported_debugctl()
-> >   KVM: VMX: Advertise PMU LBRs if and only if perf supports LBRs
-> 
-> These look good to me; how do you want this routed, if through the KVM
-> tree:
-> 
-> Acked-by: Peter Zijlstra (Intel) <peterz@infradead.org>
+Check the return value of task_function_call(), which could be error
+code when the execution fails.
 
-Thanks!  If you don't anticipate conflicts in the perf headers, I'll take 'em
-through KVM, patch 01 introduced a new warning that I need to resolve (hopefully
-it doesn't throw a wrench into things).
+Signed-off-by: Li Zhong <floridsleeves@gmail.com>
+---
+ kernel/events/core.c | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
+
+diff --git a/kernel/events/core.c b/kernel/events/core.c
+index 2621fd24ad26..ac0cf611b12a 100644
+--- a/kernel/events/core.c
++++ b/kernel/events/core.c
+@@ -13520,7 +13520,8 @@ static void perf_cgroup_attach(struct cgroup_taskset *tset)
+ 	struct cgroup_subsys_state *css;
+ 
+ 	cgroup_taskset_for_each(task, css, tset)
+-		task_function_call(task, __perf_cgroup_move, task);
++		if (!task_function_call(task, __perf_cgroup_move, task))
++			return;
+ }
+ 
+ struct cgroup_subsys perf_event_cgrp_subsys = {
+-- 
+2.25.1
+
