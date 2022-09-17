@@ -2,108 +2,101 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5213DECAAD8
-	for <linux-perf-users@archiver.kernel.org>; Sat, 17 Sep 2022 02:20:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BA178C54EE9
+	for <linux-perf-users@archiver.kernel.org>; Sat, 17 Sep 2022 10:59:16 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229635AbiIQCUl (ORCPT
+        id S229532AbiIQK7P (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Fri, 16 Sep 2022 22:20:41 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59724 "EHLO
+        Sat, 17 Sep 2022 06:59:15 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56160 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229495AbiIQCUk (ORCPT
+        with ESMTP id S229454AbiIQK7O (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Fri, 16 Sep 2022 22:20:40 -0400
-Received: from mail-vs1-xe34.google.com (mail-vs1-xe34.google.com [IPv6:2607:f8b0:4864:20::e34])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6B9A45A16C
-        for <linux-perf-users@vger.kernel.org>; Fri, 16 Sep 2022 19:20:38 -0700 (PDT)
-Received: by mail-vs1-xe34.google.com with SMTP id h1so24453960vsr.11
-        for <linux-perf-users@vger.kernel.org>; Fri, 16 Sep 2022 19:20:38 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20210112;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:from:to:cc:subject:date;
-        bh=oGVwvUbROocDCKmIi63dwILH5RW1QiYjDieu+3HIGsc=;
-        b=p4xe7FkTwPfgqVWHMfckvfXbZ74PEfbA+zGhE3mwURum3Wtwo6VikqJgSAObdpAFke
-         MHgaf3cMGbcsp7NKYQST+kgVWi7QA/7EfeeoGpttq5en4rUxgqRWjbhB3n/S//vgR2uv
-         S6WlzAYbgM9x6YRypeUAifzcU+4agyXG2WIF5YjQTmbFQQQ9PuFPqhCcTxCqC21V8Oma
-         fehUSROGSD31s8uKBl1as5duo/aDD+hrtnyxHZxLITS42/VP+0byTiZn/qi2IZK9QjXQ
-         G0LgZLpYHmcT0na0Uoui2L7qNB6jaNUt1Ej0X2zNAazPs/ALCYW+dn5M3uVKopRR+64h
-         qv+A==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date;
-        bh=oGVwvUbROocDCKmIi63dwILH5RW1QiYjDieu+3HIGsc=;
-        b=OaS6iPU1hHrewYhW5R9LGXfrSK7e0/7W2E8MtCON1R863x9tPFDsaOhACwqRgHiuMe
-         hXXbv7IKGSjTSJyht/hV5dDYJobhLRLyJKMbBa9QFxJmnqobixhvGZkQSukBwpjJBF7G
-         QGQ3h1azkff739gIeDgK3q9pSgfJta+ru4UVK6oY1LWjChwDBkDMPHs94m3b2cO0A4pB
-         SY9/LJvBeb0DstTrXNRRAxtkqcoFjdRFsmzqbwGpqRaA91sfQZ+2CVrAsWQsnheD5bE8
-         QLfmqeSXDuNSlWRFhZaXHCjpXjhq6dJjKVNINwVg3k77/DC1HVXLFShYvXiYe4btD4qM
-         vnxQ==
-X-Gm-Message-State: ACrzQf1N2ZvtYC7lMbM/8ZlouJ40GJbXkHc1iAHjAv5Ur2hFe1VUxUlE
-        hca9tOqUef9HRILdjqHE/6kfSx1f5GMZM3v6o1FdLw==
-X-Google-Smtp-Source: AMsMyM5q6QRJAwXaZJ4XFbVgFggwa1+pamVcYJuzMq6iNMYJMIVWBOPdicQlAri+7OMdOIMIErnmt4nZD65EK0hktVA=
-X-Received: by 2002:a67:ed55:0:b0:39a:7942:f574 with SMTP id
- m21-20020a67ed55000000b0039a7942f574mr3217830vsp.65.1663381237345; Fri, 16
- Sep 2022 19:20:37 -0700 (PDT)
+        Sat, 17 Sep 2022 06:59:14 -0400
+Received: from ams.source.kernel.org (ams.source.kernel.org [IPv6:2604:1380:4601:e00::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 22740419B2;
+        Sat, 17 Sep 2022 03:59:12 -0700 (PDT)
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by ams.source.kernel.org (Postfix) with ESMTPS id ACD86B80D31;
+        Sat, 17 Sep 2022 10:59:11 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 4BA25C433D7;
+        Sat, 17 Sep 2022 10:59:10 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1663412350;
+        bh=4YhfXXVITaxyZ7ickgJk1+TK+jaPswSVW817YmzQetg=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=mlHCnKP0WB2uWbChrk4q6RL0Qx2r/gHQDC9oSJpxW2EbflDButPVeikbnLPDqRuAa
+         uMBNIAxUK9YP6cJ8t088PZToAtuG+fNjSjR1cCN+UFjy1NSR4Fe+vii3eIQ++5/J2t
+         G32gzhZbqibD7HIndba0d3nwaO6DhkgEj8JWwI484H7lSPNjcKiuf+lKgZzp145UKc
+         /rWyFp393Jz382lw1mp0vKr2MFARtOSXzRJp2N2/VdtnThMFXTJB+055ZPSba5Qla3
+         eNal325u2+WTwCZYezJX9gJTu2HlqZJ1v6xPyr5h7svm/gR+KopGdwkenk6Ht9hg4Y
+         p3TMKbSRfTsXg==
+Received: by mail-oa1-f49.google.com with SMTP id 586e51a60fabf-12b542cb1d3so45846254fac.13;
+        Sat, 17 Sep 2022 03:59:10 -0700 (PDT)
+X-Gm-Message-State: ACgBeo2gA5hQW41IZNTfbbaN6JnxCrOOkENcL2knzPs4YVmtEyH5J3oA
+        Rvq06M1fkvQLw/lMZCbMDXKHTE9ypd6TaVGgyck=
+X-Google-Smtp-Source: AA6agR4sClFlGuDsJqtKaYj0hkDas61Hr4pLmOYJ+LWicDByGyz5Jc5/SoMTyBglnH1gA6Au8ZBBCEB98KwdYTTgtGU=
+X-Received: by 2002:a05:6870:a78e:b0:12b:542b:e5b2 with SMTP id
+ x14-20020a056870a78e00b0012b542be5b2mr10590424oao.112.1663412349408; Sat, 17
+ Sep 2022 03:59:09 -0700 (PDT)
 MIME-Version: 1.0
-References: <20220916135953.1320601-1-keescook@chromium.org>
-In-Reply-To: <20220916135953.1320601-1-keescook@chromium.org>
-From:   Yu Zhao <yuzhao@google.com>
-Date:   Fri, 16 Sep 2022 20:20:00 -0600
-Message-ID: <CAOUHufbUUf1--=qiseAYzjN2DdyCkf_x=CQboWYDduH7VgpXmQ@mail.gmail.com>
-Subject: Re: [PATCH 0/3] x86/dumpstack: Inline copy_from_user_nmi()
-To:     Kees Cook <keescook@chromium.org>
-Cc:     Matthew Wilcox <willy@infradead.org>,
-        Uladzislau Rezki <urezki@gmail.com>,
-        Andrew Morton <akpm@linux-foundation.org>, dev@der-flo.net,
-        Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        linux-kernel <linux-kernel@vger.kernel.org>,
-        "the arch/x86 maintainers" <x86@kernel.org>,
-        linux-perf-users@vger.kernel.org, Linux-MM <linux-mm@kvack.org>,
-        linux-hardening@vger.kernel.org,
-        Linux-Arch <linux-arch@vger.kernel.org>
+References: <20220917015522.44583-1-zouyipeng@huawei.com>
+In-Reply-To: <20220917015522.44583-1-zouyipeng@huawei.com>
+From:   Guo Ren <guoren@kernel.org>
+Date:   Sat, 17 Sep 2022 18:58:56 +0800
+X-Gmail-Original-Message-ID: <CAJF2gTRDspQZUZk=KAC_P+YCr=86o4EgOGAVGcB1kdgsymhyVQ@mail.gmail.com>
+Message-ID: <CAJF2gTRDspQZUZk=KAC_P+YCr=86o4EgOGAVGcB1kdgsymhyVQ@mail.gmail.com>
+Subject: Re: [PATCH 0/2] make weak attributes in {k,u}probes
+To:     Yipeng Zou <zouyipeng@huawei.com>
+Cc:     x86@kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-kernel@vger.kernel.org, linux-csky@vger.kernel.org,
+        linux-riscv@lists.infradead.org, linux-perf-users@vger.kernel.org,
+        linux-s390@vger.kernel.org, paul.walmsley@sifive.com,
+        palmer@dabbelt.com, hca@linux.ibm.com, gor@linux.ibm.com,
+        borntraeger@linux.ibm.com, dave.hansen@linux.intel.com,
+        hpa@zytor.com, naveen.n.rao@linux.ibm.com,
+        anil.s.keshavamurthy@intel.com, mhiramat@kernel.org,
+        namit@vmware.com, catalin.marinas@arm.com, peterz@infradead.org,
+        mark.rutland@arm.com, liaochang1@huawei.com, chris.zjh@huawei.com
 Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-On Fri, Sep 16, 2022 at 8:01 AM Kees Cook <keescook@chromium.org> wrote:
->
-> Hi,
->
-> This fixes a find_vmap_area() deadlock. The main fix is patch 2, repeated here:
->
->     The check_object_size() helper under CONFIG_HARDENED_USERCOPY is
->     designed to skip any checks where the length is known at compile time as
->     a reasonable heuristic to avoid "likely known-good" cases. However, it can
->     only do this when the copy_*_user() helpers are, themselves, inline too.
->
->     Using find_vmap_area() requires taking a spinlock. The check_object_size()
->     helper can call find_vmap_area() when the destination is in vmap memory.
->     If show_regs() is called in interrupt context, it will attempt a call to
->     copy_from_user_nmi(), which may call check_object_size() and then
->     find_vmap_area(). If something in normal context happens to be in the
->     middle of calling find_vmap_area() (with the spinlock held), the interrupt
->     handler will hang forever.
->
->     The copy_from_user_nmi() call is actually being called with a fixed-size
->     length, so check_object_size() should never have been called in the
->     first place. In order for check_object_size() to see that the length is
->     a fixed size, inline copy_from_user_nmi(), as already done with all the
->     other uaccess helpers.
->
->     Reported-by: Yu Zhao <yuzhao@google.com>
->     Link: https://lore.kernel.org/all/CAOUHufaPshtKrTWOz7T7QFYUNVGFm0JBjvM700Nhf9qEL9b3EQ@mail.gmail.com
->     Reported-by: dev@der-flo.net
->
-> Patch 1 is a refactor for patch 2, and patch 3 should make sure we avoid
-> future deadlocks.
+It's a riskless cleanup.
 
-Thanks!
+Acked-by: Guo Ren <guoren@kernel.org>
 
-Tested-by: Yu Zhao <yuzhao@google.com>
+On Sat, Sep 17, 2022 at 9:59 AM Yipeng Zou <zouyipeng@huawei.com> wrote:
+>
+> We have some function implementation under some arch does nothing.
+> We can mark it with weak attributes to improve.
+> 1. arch_init_kprobes in kprobes
+> 2. arch_uprobe_exception_notify in uprobes
+>
+> Yipeng Zou (2):
+>   kprobes: make arch_init_kprobes as weak
+>   uprobes: make arch_uprobe_exception_notify as weak
+>
+>  arch/arm/probes/uprobes/core.c     | 6 ------
+>  arch/arm64/kernel/probes/uprobes.c | 6 ------
+>  arch/csky/kernel/probes/kprobes.c  | 5 -----
+>  arch/csky/kernel/probes/uprobes.c  | 6 ------
+>  arch/riscv/kernel/probes/kprobes.c | 5 -----
+>  arch/riscv/kernel/probes/uprobes.c | 6 ------
+>  arch/s390/kernel/kprobes.c         | 5 -----
+>  arch/x86/kernel/kprobes/core.c     | 5 -----
+>  kernel/events/uprobes.c            | 6 ++++++
+>  kernel/kprobes.c                   | 5 +++++
+>  10 files changed, 11 insertions(+), 44 deletions(-)
+>
+> --
+> 2.17.1
+>
 
-The same test has been holding up well for a few hours now. It used to
-throw that warning in less than half an hour.
+
+-- 
+Best Regards
+ Guo Ren
