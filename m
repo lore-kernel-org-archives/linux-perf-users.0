@@ -2,115 +2,113 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 38504ECAAD3
-	for <linux-perf-users@archiver.kernel.org>; Sat, 17 Sep 2022 14:48:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C0120C54EE9
+	for <linux-perf-users@archiver.kernel.org>; Sat, 17 Sep 2022 23:41:24 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229711AbiIQOsN (ORCPT
+        id S229458AbiIQXlX (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Sat, 17 Sep 2022 10:48:13 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46180 "EHLO
+        Sat, 17 Sep 2022 19:41:23 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39810 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229498AbiIQOsM (ORCPT
+        with ESMTP id S229450AbiIQXlX (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Sat, 17 Sep 2022 10:48:12 -0400
-Received: from zju.edu.cn (mail.zju.edu.cn [61.164.42.155])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTP id D43E230F53;
-        Sat, 17 Sep 2022 07:48:08 -0700 (PDT)
-Received: from ubuntu.localdomain (unknown [10.162.98.155])
-        by mail-app3 (Coremail) with SMTP id cC_KCgBXz6oC3iVjOZWXBg--.23155S2;
-        Sat, 17 Sep 2022 22:47:40 +0800 (CST)
-From:   Duoming Zhou <duoming@zju.edu.cn>
-To:     linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org
-Cc:     peterz@infradead.org, mingo@redhat.com, acme@kernel.org,
-        mark.rutland@arm.com, alexander.shishkin@linux.intel.com,
-        jolsa@kernel.org, namhyung@kernel.org, tglx@linutronix.de,
-        bp@alien8.de, dave.hansen@linux.intel.com, x86@kernel.org,
-        hpa@zytor.com, Duoming Zhou <duoming@zju.edu.cn>
-Subject: [PATCH] perf/x86/rapl: fix deadlock in rapl_pmu_event_stop
-Date:   Sat, 17 Sep 2022 22:47:29 +0800
-Message-Id: <20220917144729.118500-1-duoming@zju.edu.cn>
-X-Mailer: git-send-email 2.17.1
-X-CM-TRANSID: cC_KCgBXz6oC3iVjOZWXBg--.23155S2
-X-Coremail-Antispam: 1UD129KBjvJXoW7ZF47XryxCr4rWFW5WFyfWFg_yoW8ur13pr
-        WxAFy3tF18uw10qayUK3WkXrW7Zw4kGwsxJw4fGw1rAanxWws8J3Z7GayF9a15ArWfWr9x
-        Aw10vryrAFWDAa7anT9S1TB71UUUUUUqnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
-        9KBjDU0xBIdaVrnRJUUUvl1xkIjI8I6I8E6xAIw20EY4v20xvaj40_Wr0E3s1l1IIY67AE
-        w4v_Jr0_Jr4l8cAvFVAK0II2c7xJM28CjxkF64kEwVA0rcxSw2x7M28EF7xvwVC0I7IYx2
-        IY67AKxVWDJVCq3wA2z4x0Y4vE2Ix0cI8IcVCY1x0267AKxVW8Jr0_Cr1UM28EF7xvwVC2
-        z280aVAFwI0_GcCE3s1l84ACjcxK6I8E87Iv6xkF7I0E14v26rxl6s0DM2AIxVAIcxkEcV
-        Aq07x20xvEncxIr21l5I8CrVACY4xI64kE6c02F40Ex7xfMcIj6xIIjxv20xvE14v26r1j
-        6r18McIj6I8E87Iv67AKxVWUJVW8JwAm72CE4IkC6x0Yz7v_Jr0_Gr1lF7xvr2IYc2Ij64
-        vIr41lF7I21c0EjII2zVCS5cI20VAGYxC7M4IIrI8v6xkF7I0E8cxan2IY04v7MxAIw28I
-        cxkI7VAKI48JMxAIw28IcVCjz48v1sIEY20_GFWkJr1UJwCFx2IqxVCFs4IE7xkEbVWUJV
-        W8JwC20s026c02F40E14v26r1j6r18MI8I3I0E7480Y4vE14v26r106r1rMI8E67AF67kF
-        1VAFwI0_Jw0_GFylIxkGc2Ij64vIr41lIxAIcVC0I7IYx2IY67AKxVWUJVWUCwCI42IY6x
-        IIjxv20xvEc7CjxVAFwI0_Gr0_Cr1lIxAIcVCF04k26cxKx2IYs7xG6r1j6r1xMIIF0xvE
-        x4A2jsIE14v26r1j6r4UMIIF0xvEx4A2jsIEc7CjxVAFwI0_Gr0_Gr1UYxBIdaVFxhVjvj
-        DU0xZFpf9x0JUdHUDUUUUU=
-X-CM-SenderInfo: qssqjiasttq6lmxovvfxof0/1tbiAgEQAVZdtbgTUQADsV
+        Sat, 17 Sep 2022 19:41:23 -0400
+Received: from mail-wr1-x42a.google.com (mail-wr1-x42a.google.com [IPv6:2a00:1450:4864:20::42a])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 833E222299
+        for <linux-perf-users@vger.kernel.org>; Sat, 17 Sep 2022 16:41:21 -0700 (PDT)
+Received: by mail-wr1-x42a.google.com with SMTP id r7so536616wrm.2
+        for <linux-perf-users@vger.kernel.org>; Sat, 17 Sep 2022 16:41:21 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20210112;
+        h=content-disposition:mime-version:message-id:subject:cc:to:from:date
+         :from:to:cc:subject:date;
+        bh=oWOIBNUdsLJwcEjs9drp0WNmb5uwCxSvrbqI+0uFx/8=;
+        b=k9+Nhx1QrR9eli4d6oTqKdAmHLNvT4OVBM/E8HZpU6tbL5bNhXavmDUJJCDPoQHL7L
+         BVERMzWUsIrcbizBV4C73fdqC1VJMhdmnxTf+UNWDPF2ryT0UTJdr88aBwfPgcqNBbQY
+         JtvjrmIFbkpBu9VqXKABISAr2qxHtlUGNRrHpjtfnBx9ct/2QHAlLuFsXfYVdbKoVMeC
+         dTthqRoU0JzNPVyf0AiRKrdCFJsJWm04I2f5X9mckotXpz44MZqDV407YzQi1ESQ14ye
+         pN40Iu5Jlp+D4jx6b/tF00Q/V4CsqQ9tBjkslF7ICcRnpCAbBWg7iHH4k8iJNeHYfHe9
+         Njrw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=content-disposition:mime-version:message-id:subject:cc:to:from:date
+         :x-gm-message-state:from:to:cc:subject:date;
+        bh=oWOIBNUdsLJwcEjs9drp0WNmb5uwCxSvrbqI+0uFx/8=;
+        b=1o9Q4FxPB/qd/GYMLzv8BjszFiZ1Icl/uWAZ5I3PScwGH+BaUeeifH8Rv6iJAZ/4qs
+         UZQdiAhkW4sZ5k+A+W6Hy7yo2ET4tWtbhOyFbJnPnCFxmgLRLTh6uJwhVvyBCa2FEs+f
+         fquvxUD2uwGj2kqkzIovTTW28vaskq/rgnvu83t87OIvNUasO/XwCwRCv2lYojbpr48j
+         yNYpJ9ktZY5d9KV5a6UiAYTKoQI6cZUBwXS7wZW+JVTYaNc5oITQGhKchxDMWTtZImA6
+         sJJRx0G2tgIQvB43mFkJm6Qq3jaxkRYkJqbUjkS30VUIrIUrvt7IIQn9xthkD5ixKz4D
+         l4Xg==
+X-Gm-Message-State: ACrzQf00cIb7MpTzjK9hGiS9/dnmfWD67P4Nzw5YElYnqTZd7Td+8oVl
+        4O1Em/3lAP5nA86NZHDG8rGODgqDjA==
+X-Google-Smtp-Source: AMsMyM7br9R1/xZ9hHBLYSVgZ+MhStTCt1+TWRLq9MFiuHLajuAFkuM7sgu8/u2iiRv6UdkTva6WyQ==
+X-Received: by 2002:adf:f00b:0:b0:22a:906d:358d with SMTP id j11-20020adff00b000000b0022a906d358dmr6796521wro.464.1663458079660;
+        Sat, 17 Sep 2022 16:41:19 -0700 (PDT)
+Received: from playground (host-92-29-143-165.as13285.net. [92.29.143.165])
+        by smtp.gmail.com with ESMTPSA id n2-20020a1ca402000000b003a5ca627333sm7581851wme.8.2022.09.17.16.41.18
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sat, 17 Sep 2022 16:41:19 -0700 (PDT)
+Date:   Sun, 18 Sep 2022 00:41:08 +0100
+From:   Jules Irenge <jbi.octave@gmail.com>
+To:     peterz@infradead.org
+Cc:     mingo@redhat.com, acme@kernel.org, mark.rutland@arm.com,
+        jolsa@kernel.org, namhyung@kernel.org,
+        linux-perf-users@vger.kernel.org, Elana.Copperman@mobileye.com
+Subject: [PATCH 1/2] perf/core: convert snprintf to scnprintf
+Message-ID: <YyZbFOmp9bW3B3s6@playground>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-There is a deadlock in rapl_pmu_event_stop(), the process is
-shown below:
+Coccinelle reports a warning
 
-    (thread 1)                 |        (thread 2)
-rapl_pmu_event_stop()          | rapl_hrtimer_handle()
- ...                           |  if (!pmu->n_active)
- raw_spin_lock_irqsave() //(1) |  ...
-  ...                          |
-  hrtimer_cancel()             |  raw_spin_lock_irqsave() //(2)
-  (block forever)
+WARNING: use scnprintf or sprintf
 
-We hold pmu->lock in position (1) and use hrtimer_cancel() to wait
-rapl_hrtimer_handle() to stop, but rapl_hrtimer_handle() also need
-pmu->lock in position (2). As a result, the rapl_pmu_event_stop()
-will be blocked forever.
+Adding to that,
+there has also been some slow migration from snprintf to scnprintf
+The article explains the rationale for this change
 
-This patch extracts hrtimer_cancel() from the protection of
-raw_spin_lock_irqsave(). As a result, the rapl_hrtimer_handle() could
-obtain the pmu->lock. In order to prevent race conditions, we put
-"if (!pmu->n_active)" in rapl_hrtimer_handle() under the protection
-of raw_spin_lock_irqsave().
-
-Fixes: 65661f96d3b3 ("perf/x86: Add RAPL hrtimer support")
-Signed-off-by: Duoming Zhou <duoming@zju.edu.cn>
+https: //lwn.net/Articles/69419/
+Signed-off-by: Jules Irenge <jbi.octave@gmail.com>
 ---
- arch/x86/events/rapl.c | 9 ++++++---
- 1 file changed, 6 insertions(+), 3 deletions(-)
+ kernel/events/core.c | 6 +++---
+ 1 file changed, 3 insertions(+), 3 deletions(-)
 
-diff --git a/arch/x86/events/rapl.c b/arch/x86/events/rapl.c
-index 77e3a47af5a..97c71538d01 100644
---- a/arch/x86/events/rapl.c
-+++ b/arch/x86/events/rapl.c
-@@ -219,11 +219,11 @@ static enum hrtimer_restart rapl_hrtimer_handle(struct hrtimer *hrtimer)
- 	struct perf_event *event;
- 	unsigned long flags;
+diff --git a/kernel/events/core.c b/kernel/events/core.c
+index 2621fd24ad26..0b03a98945eb 100644
+--- a/kernel/events/core.c
++++ b/kernel/events/core.c
+@@ -10933,7 +10933,7 @@ static ssize_t nr_addr_filters_show(struct device *dev,
+ {
+ 	struct pmu *pmu = dev_get_drvdata(dev);
  
-+	raw_spin_lock_irqsave(&pmu->lock, flags);
-+
- 	if (!pmu->n_active)
- 		return HRTIMER_NORESTART;
+-	return snprintf(page, PAGE_SIZE - 1, "%d\n", pmu->nr_addr_filters);
++	return scnprintf(page, PAGE_SIZE - 1, "%d\n", pmu->nr_addr_filters);
+ }
+ DEVICE_ATTR_RO(nr_addr_filters);
  
--	raw_spin_lock_irqsave(&pmu->lock, flags);
--
- 	list_for_each_entry(event, &pmu->active_list, active_entry)
- 		rapl_event_update(event);
+@@ -10944,7 +10944,7 @@ type_show(struct device *dev, struct device_attribute *attr, char *page)
+ {
+ 	struct pmu *pmu = dev_get_drvdata(dev);
  
-@@ -281,8 +281,11 @@ static void rapl_pmu_event_stop(struct perf_event *event, int mode)
- 	if (!(hwc->state & PERF_HES_STOPPED)) {
- 		WARN_ON_ONCE(pmu->n_active <= 0);
- 		pmu->n_active--;
--		if (pmu->n_active == 0)
-+		if (!pmu->n_active) {
-+			raw_spin_unlock_irqrestore(&pmu->lock, flags);
- 			hrtimer_cancel(&pmu->hrtimer);
-+			raw_spin_lock_irqsave(&pmu->lock, flags);
-+		}
+-	return snprintf(page, PAGE_SIZE-1, "%d\n", pmu->type);
++	return scnprintf(page, PAGE_SIZE - 1, "%d\n", pmu->type);
+ }
+ static DEVICE_ATTR_RO(type);
  
- 		list_del(&event->active_entry);
+@@ -10955,7 +10955,7 @@ perf_event_mux_interval_ms_show(struct device *dev,
+ {
+ 	struct pmu *pmu = dev_get_drvdata(dev);
  
+-	return snprintf(page, PAGE_SIZE-1, "%d\n", pmu->hrtimer_interval_ms);
++	return scnprintf(page, PAGE_SIZE - 1, "%d\n", pmu->hrtimer_interval_ms);
+ }
+ 
+ static DEFINE_MUTEX(mux_interval_mutex);
 -- 
-2.17.1
+2.35.1
 
