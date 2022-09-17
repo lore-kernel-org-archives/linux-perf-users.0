@@ -2,101 +2,115 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BA178C54EE9
-	for <linux-perf-users@archiver.kernel.org>; Sat, 17 Sep 2022 10:59:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 38504ECAAD3
+	for <linux-perf-users@archiver.kernel.org>; Sat, 17 Sep 2022 14:48:15 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229532AbiIQK7P (ORCPT
+        id S229711AbiIQOsN (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Sat, 17 Sep 2022 06:59:15 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56160 "EHLO
+        Sat, 17 Sep 2022 10:48:13 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46180 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229454AbiIQK7O (ORCPT
+        with ESMTP id S229498AbiIQOsM (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Sat, 17 Sep 2022 06:59:14 -0400
-Received: from ams.source.kernel.org (ams.source.kernel.org [IPv6:2604:1380:4601:e00::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 22740419B2;
-        Sat, 17 Sep 2022 03:59:12 -0700 (PDT)
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by ams.source.kernel.org (Postfix) with ESMTPS id ACD86B80D31;
-        Sat, 17 Sep 2022 10:59:11 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 4BA25C433D7;
-        Sat, 17 Sep 2022 10:59:10 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1663412350;
-        bh=4YhfXXVITaxyZ7ickgJk1+TK+jaPswSVW817YmzQetg=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=mlHCnKP0WB2uWbChrk4q6RL0Qx2r/gHQDC9oSJpxW2EbflDButPVeikbnLPDqRuAa
-         uMBNIAxUK9YP6cJ8t088PZToAtuG+fNjSjR1cCN+UFjy1NSR4Fe+vii3eIQ++5/J2t
-         G32gzhZbqibD7HIndba0d3nwaO6DhkgEj8JWwI484H7lSPNjcKiuf+lKgZzp145UKc
-         /rWyFp393Jz382lw1mp0vKr2MFARtOSXzRJp2N2/VdtnThMFXTJB+055ZPSba5Qla3
-         eNal325u2+WTwCZYezJX9gJTu2HlqZJ1v6xPyr5h7svm/gR+KopGdwkenk6Ht9hg4Y
-         p3TMKbSRfTsXg==
-Received: by mail-oa1-f49.google.com with SMTP id 586e51a60fabf-12b542cb1d3so45846254fac.13;
-        Sat, 17 Sep 2022 03:59:10 -0700 (PDT)
-X-Gm-Message-State: ACgBeo2gA5hQW41IZNTfbbaN6JnxCrOOkENcL2knzPs4YVmtEyH5J3oA
-        Rvq06M1fkvQLw/lMZCbMDXKHTE9ypd6TaVGgyck=
-X-Google-Smtp-Source: AA6agR4sClFlGuDsJqtKaYj0hkDas61Hr4pLmOYJ+LWicDByGyz5Jc5/SoMTyBglnH1gA6Au8ZBBCEB98KwdYTTgtGU=
-X-Received: by 2002:a05:6870:a78e:b0:12b:542b:e5b2 with SMTP id
- x14-20020a056870a78e00b0012b542be5b2mr10590424oao.112.1663412349408; Sat, 17
- Sep 2022 03:59:09 -0700 (PDT)
-MIME-Version: 1.0
-References: <20220917015522.44583-1-zouyipeng@huawei.com>
-In-Reply-To: <20220917015522.44583-1-zouyipeng@huawei.com>
-From:   Guo Ren <guoren@kernel.org>
-Date:   Sat, 17 Sep 2022 18:58:56 +0800
-X-Gmail-Original-Message-ID: <CAJF2gTRDspQZUZk=KAC_P+YCr=86o4EgOGAVGcB1kdgsymhyVQ@mail.gmail.com>
-Message-ID: <CAJF2gTRDspQZUZk=KAC_P+YCr=86o4EgOGAVGcB1kdgsymhyVQ@mail.gmail.com>
-Subject: Re: [PATCH 0/2] make weak attributes in {k,u}probes
-To:     Yipeng Zou <zouyipeng@huawei.com>
-Cc:     x86@kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-kernel@vger.kernel.org, linux-csky@vger.kernel.org,
-        linux-riscv@lists.infradead.org, linux-perf-users@vger.kernel.org,
-        linux-s390@vger.kernel.org, paul.walmsley@sifive.com,
-        palmer@dabbelt.com, hca@linux.ibm.com, gor@linux.ibm.com,
-        borntraeger@linux.ibm.com, dave.hansen@linux.intel.com,
-        hpa@zytor.com, naveen.n.rao@linux.ibm.com,
-        anil.s.keshavamurthy@intel.com, mhiramat@kernel.org,
-        namit@vmware.com, catalin.marinas@arm.com, peterz@infradead.org,
-        mark.rutland@arm.com, liaochang1@huawei.com, chris.zjh@huawei.com
-Content-Type: text/plain; charset="UTF-8"
+        Sat, 17 Sep 2022 10:48:12 -0400
+Received: from zju.edu.cn (mail.zju.edu.cn [61.164.42.155])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTP id D43E230F53;
+        Sat, 17 Sep 2022 07:48:08 -0700 (PDT)
+Received: from ubuntu.localdomain (unknown [10.162.98.155])
+        by mail-app3 (Coremail) with SMTP id cC_KCgBXz6oC3iVjOZWXBg--.23155S2;
+        Sat, 17 Sep 2022 22:47:40 +0800 (CST)
+From:   Duoming Zhou <duoming@zju.edu.cn>
+To:     linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org
+Cc:     peterz@infradead.org, mingo@redhat.com, acme@kernel.org,
+        mark.rutland@arm.com, alexander.shishkin@linux.intel.com,
+        jolsa@kernel.org, namhyung@kernel.org, tglx@linutronix.de,
+        bp@alien8.de, dave.hansen@linux.intel.com, x86@kernel.org,
+        hpa@zytor.com, Duoming Zhou <duoming@zju.edu.cn>
+Subject: [PATCH] perf/x86/rapl: fix deadlock in rapl_pmu_event_stop
+Date:   Sat, 17 Sep 2022 22:47:29 +0800
+Message-Id: <20220917144729.118500-1-duoming@zju.edu.cn>
+X-Mailer: git-send-email 2.17.1
+X-CM-TRANSID: cC_KCgBXz6oC3iVjOZWXBg--.23155S2
+X-Coremail-Antispam: 1UD129KBjvJXoW7ZF47XryxCr4rWFW5WFyfWFg_yoW8ur13pr
+        WxAFy3tF18uw10qayUK3WkXrW7Zw4kGwsxJw4fGw1rAanxWws8J3Z7GayF9a15ArWfWr9x
+        Aw10vryrAFWDAa7anT9S1TB71UUUUUUqnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
+        9KBjDU0xBIdaVrnRJUUUvl1xkIjI8I6I8E6xAIw20EY4v20xvaj40_Wr0E3s1l1IIY67AE
+        w4v_Jr0_Jr4l8cAvFVAK0II2c7xJM28CjxkF64kEwVA0rcxSw2x7M28EF7xvwVC0I7IYx2
+        IY67AKxVWDJVCq3wA2z4x0Y4vE2Ix0cI8IcVCY1x0267AKxVW8Jr0_Cr1UM28EF7xvwVC2
+        z280aVAFwI0_GcCE3s1l84ACjcxK6I8E87Iv6xkF7I0E14v26rxl6s0DM2AIxVAIcxkEcV
+        Aq07x20xvEncxIr21l5I8CrVACY4xI64kE6c02F40Ex7xfMcIj6xIIjxv20xvE14v26r1j
+        6r18McIj6I8E87Iv67AKxVWUJVW8JwAm72CE4IkC6x0Yz7v_Jr0_Gr1lF7xvr2IYc2Ij64
+        vIr41lF7I21c0EjII2zVCS5cI20VAGYxC7M4IIrI8v6xkF7I0E8cxan2IY04v7MxAIw28I
+        cxkI7VAKI48JMxAIw28IcVCjz48v1sIEY20_GFWkJr1UJwCFx2IqxVCFs4IE7xkEbVWUJV
+        W8JwC20s026c02F40E14v26r1j6r18MI8I3I0E7480Y4vE14v26r106r1rMI8E67AF67kF
+        1VAFwI0_Jw0_GFylIxkGc2Ij64vIr41lIxAIcVC0I7IYx2IY67AKxVWUJVWUCwCI42IY6x
+        IIjxv20xvEc7CjxVAFwI0_Gr0_Cr1lIxAIcVCF04k26cxKx2IYs7xG6r1j6r1xMIIF0xvE
+        x4A2jsIE14v26r1j6r4UMIIF0xvEx4A2jsIEc7CjxVAFwI0_Gr0_Gr1UYxBIdaVFxhVjvj
+        DU0xZFpf9x0JUdHUDUUUUU=
+X-CM-SenderInfo: qssqjiasttq6lmxovvfxof0/1tbiAgEQAVZdtbgTUQADsV
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-It's a riskless cleanup.
+There is a deadlock in rapl_pmu_event_stop(), the process is
+shown below:
 
-Acked-by: Guo Ren <guoren@kernel.org>
+    (thread 1)                 |        (thread 2)
+rapl_pmu_event_stop()          | rapl_hrtimer_handle()
+ ...                           |  if (!pmu->n_active)
+ raw_spin_lock_irqsave() //(1) |  ...
+  ...                          |
+  hrtimer_cancel()             |  raw_spin_lock_irqsave() //(2)
+  (block forever)
 
-On Sat, Sep 17, 2022 at 9:59 AM Yipeng Zou <zouyipeng@huawei.com> wrote:
->
-> We have some function implementation under some arch does nothing.
-> We can mark it with weak attributes to improve.
-> 1. arch_init_kprobes in kprobes
-> 2. arch_uprobe_exception_notify in uprobes
->
-> Yipeng Zou (2):
->   kprobes: make arch_init_kprobes as weak
->   uprobes: make arch_uprobe_exception_notify as weak
->
->  arch/arm/probes/uprobes/core.c     | 6 ------
->  arch/arm64/kernel/probes/uprobes.c | 6 ------
->  arch/csky/kernel/probes/kprobes.c  | 5 -----
->  arch/csky/kernel/probes/uprobes.c  | 6 ------
->  arch/riscv/kernel/probes/kprobes.c | 5 -----
->  arch/riscv/kernel/probes/uprobes.c | 6 ------
->  arch/s390/kernel/kprobes.c         | 5 -----
->  arch/x86/kernel/kprobes/core.c     | 5 -----
->  kernel/events/uprobes.c            | 6 ++++++
->  kernel/kprobes.c                   | 5 +++++
->  10 files changed, 11 insertions(+), 44 deletions(-)
->
-> --
-> 2.17.1
->
+We hold pmu->lock in position (1) and use hrtimer_cancel() to wait
+rapl_hrtimer_handle() to stop, but rapl_hrtimer_handle() also need
+pmu->lock in position (2). As a result, the rapl_pmu_event_stop()
+will be blocked forever.
 
+This patch extracts hrtimer_cancel() from the protection of
+raw_spin_lock_irqsave(). As a result, the rapl_hrtimer_handle() could
+obtain the pmu->lock. In order to prevent race conditions, we put
+"if (!pmu->n_active)" in rapl_hrtimer_handle() under the protection
+of raw_spin_lock_irqsave().
 
+Fixes: 65661f96d3b3 ("perf/x86: Add RAPL hrtimer support")
+Signed-off-by: Duoming Zhou <duoming@zju.edu.cn>
+---
+ arch/x86/events/rapl.c | 9 ++++++---
+ 1 file changed, 6 insertions(+), 3 deletions(-)
+
+diff --git a/arch/x86/events/rapl.c b/arch/x86/events/rapl.c
+index 77e3a47af5a..97c71538d01 100644
+--- a/arch/x86/events/rapl.c
++++ b/arch/x86/events/rapl.c
+@@ -219,11 +219,11 @@ static enum hrtimer_restart rapl_hrtimer_handle(struct hrtimer *hrtimer)
+ 	struct perf_event *event;
+ 	unsigned long flags;
+ 
++	raw_spin_lock_irqsave(&pmu->lock, flags);
++
+ 	if (!pmu->n_active)
+ 		return HRTIMER_NORESTART;
+ 
+-	raw_spin_lock_irqsave(&pmu->lock, flags);
+-
+ 	list_for_each_entry(event, &pmu->active_list, active_entry)
+ 		rapl_event_update(event);
+ 
+@@ -281,8 +281,11 @@ static void rapl_pmu_event_stop(struct perf_event *event, int mode)
+ 	if (!(hwc->state & PERF_HES_STOPPED)) {
+ 		WARN_ON_ONCE(pmu->n_active <= 0);
+ 		pmu->n_active--;
+-		if (pmu->n_active == 0)
++		if (!pmu->n_active) {
++			raw_spin_unlock_irqrestore(&pmu->lock, flags);
+ 			hrtimer_cancel(&pmu->hrtimer);
++			raw_spin_lock_irqsave(&pmu->lock, flags);
++		}
+ 
+ 		list_del(&event->active_entry);
+ 
 -- 
-Best Regards
- Guo Ren
+2.17.1
+
