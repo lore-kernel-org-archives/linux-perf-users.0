@@ -2,54 +2,54 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1A756ECAAD8
-	for <linux-perf-users@archiver.kernel.org>; Sun, 18 Sep 2022 03:15:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0A33BC32771
+	for <linux-perf-users@archiver.kernel.org>; Sun, 18 Sep 2022 03:15:48 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229609AbiIRDPm (ORCPT
+        id S229599AbiIRDPp (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Sat, 17 Sep 2022 23:15:42 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60418 "EHLO
+        Sat, 17 Sep 2022 23:15:45 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:32900 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229496AbiIRDPe (ORCPT
+        with ESMTP id S229608AbiIRDPj (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Sat, 17 Sep 2022 23:15:34 -0400
-Received: from mail-pl1-x631.google.com (mail-pl1-x631.google.com [IPv6:2607:f8b0:4864:20::631])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 38D6D22BEE
-        for <linux-perf-users@vger.kernel.org>; Sat, 17 Sep 2022 20:15:33 -0700 (PDT)
-Received: by mail-pl1-x631.google.com with SMTP id b21so24996348plz.7
-        for <linux-perf-users@vger.kernel.org>; Sat, 17 Sep 2022 20:15:33 -0700 (PDT)
+        Sat, 17 Sep 2022 23:15:39 -0400
+Received: from mail-pf1-x42c.google.com (mail-pf1-x42c.google.com [IPv6:2607:f8b0:4864:20::42c])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 97BEA27FED
+        for <linux-perf-users@vger.kernel.org>; Sat, 17 Sep 2022 20:15:37 -0700 (PDT)
+Received: by mail-pf1-x42c.google.com with SMTP id e5so24941455pfl.2
+        for <linux-perf-users@vger.kernel.org>; Sat, 17 Sep 2022 20:15:37 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:from:to:cc:subject:date;
-        bh=OS4UYZ8DIUkJDvQP5tRmIq0ewNPcm5dr1beINkDXglI=;
-        b=TeaGBrs24ZanM/HhDvim4InqF+clK+TEuKanEY4Qnu85x12T07n0VtWqplkYIXJTBC
-         KttvxGMKbG6aQBKsS054AZX2oJhYt04ZGPmzG0f5KhpStYZFmo9JyJtbqnCDNyAp0aw3
-         jn9VEoaZ0ohW5CEc6Wcr20EsxRBYSyj3/XE1H1CQOc5fLzSQiBPxypWF0W3vjV+UNQsO
-         pGhGPA0FBc/sicFLqBS+GtoGo1ulND4DtvVJ3zlWkK2HssBqR5yentQEqwtbzmVVkw2U
-         lp5k3pI3Mac9pQ+MaDouf9II8T6wMl7Utk19PBxxiMXdcgw4OszWSI0LAAYXTulaujkL
-         X3rw==
+        bh=/tDGwzAC/IwmP8HRle5sxobILjM+kn0MjdGIbElVqmc=;
+        b=vBM4YlSUyA2cOuccMVcA5pzbosx7UpZ1THfDYtswOaOPlk93Ad3eWDAvc/kEm9aErw
+         B7hTk79kCIwXQA5E9fAwZQkeeQ4zWB9AOganKNyrvpFP3WM+YDMW2Hej9f/2zyVURltL
+         biVSH65GTPcyxMALXnOS8MXWeHVfiQr8siAo8pDO4D1e2RbMNWAKYk4zP3CcPgwFdtAl
+         tPUWbZEE8/Z/iV7ZSb2k2CeFnFEb+bBpTXiB60BIOcFes+DdkfoxMzg2WtVVwBI1IIZs
+         fHi2D0evwWGelMccqLnpRKGvVRt6UUMq7SsPn99/1wY7B5jy7qtsIGgeZXmscY0A8Feq
+         BUqQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
          :subject:date;
-        bh=OS4UYZ8DIUkJDvQP5tRmIq0ewNPcm5dr1beINkDXglI=;
-        b=AmHzJ06CgiLMyYrlhGQv+3G7iYixy4kzlJ1gSE+QBP+hwESoBf2WQYBX3ZRO1rJtHX
-         vE73WzG7r96TQPE8bGeZIu1JU4bdU1IC0poTf1pnKewvQ4B9qfT4d78fkFmy9SpvbfuE
-         R1MupTXsoMrNECrEfl/g7ecVOSBMrCU5yPzoUOxBkqiIA1PsVKeWzK1Pu3B//lhyFV73
-         7rbucuq4p7SwpmWROA9iHt+PPQkinjfnF5pP/rg6QVhjrayNEcBoWwgX4L2++WU7H0To
-         YDQNZxlZEkJf85Wv5akWRIXrtanEahHsAPhbRWCNTo1qwHc6xI52WKHpKmW2msyXZD8D
-         JjzQ==
-X-Gm-Message-State: ACrzQf3AcgcDQa+YV8lLn6M40hxgFIB99OP1hV/6Tmuc+gKZAmwMR9Ak
-        mUoBHnnyvo/ghW68t83RRiKQIA==
-X-Google-Smtp-Source: AMsMyM7qxFQRgCk07DjoucrzWeRWhfxIw3/DC+osQydxwrq/UjTjNm9dpGDI8OYLwiSRCKpbM1Y4/Q==
-X-Received: by 2002:a17:90a:c782:b0:202:c73e:5488 with SMTP id gn2-20020a17090ac78200b00202c73e5488mr23516835pjb.202.1663470932638;
-        Sat, 17 Sep 2022 20:15:32 -0700 (PDT)
+        bh=/tDGwzAC/IwmP8HRle5sxobILjM+kn0MjdGIbElVqmc=;
+        b=UlMfuQ7U7InbPoecgbQ6stC7qXtLFwMBrqC4gYy8J1abhEGbCFEUC7jSQRLweRGCpJ
+         eeok9YJswkvJ6wIxHN4/jDpnBd4IJM/2992YYidGRG4NkQB2znPE+chSwLDjQ9I9yx4m
+         EALNPew94F8Fo7SAsIB2uLap0Ig3Plq46wpinlhTMonh/A6/LRYuzLXAT67B2b5XN71C
+         MZi8P2BkX1pTXKs3Jbxp18QfjQ3KTg3LtLtHg35MRlS/kikv+ikXSyKXVaq/tFXoU3+v
+         DkBWm+bNgjFSrD9IDoJMpEHARc1Rki457F2u4CaE44R8tZc+bxXxgcgjsQj3wSEDeO5l
+         2vHA==
+X-Gm-Message-State: ACrzQf061wRCU430bLmxfvzvZSWyLl54vboBUlXcP2zh17bYnMtPz/eV
+        UiBz5UJcwBU2lDJjwslot91h1Q==
+X-Google-Smtp-Source: AMsMyM6Cfk0nFXuMVmKDmCkPtqp+n750u2jSmTe7Qqmj8zHJ1GEyjXffIY2N/4HQ9Aug6obakPnQdg==
+X-Received: by 2002:a63:c3:0:b0:439:72d7:7e1f with SMTP id 186-20020a6300c3000000b0043972d77e1fmr10466498pga.524.1663470935526;
+        Sat, 17 Sep 2022 20:15:35 -0700 (PDT)
 Received: from leoy-yangtze.lan (45.78.11.189.16clouds.com. [45.78.11.189])
-        by smtp.gmail.com with ESMTPSA id e13-20020a17090301cd00b00177f4ef7970sm17822647plh.11.2022.09.17.20.15.30
+        by smtp.gmail.com with ESMTPSA id e13-20020a17090301cd00b00177f4ef7970sm17822647plh.11.2022.09.17.20.15.32
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sat, 17 Sep 2022 20:15:32 -0700 (PDT)
+        Sat, 17 Sep 2022 20:15:35 -0700 (PDT)
 From:   Leo Yan <leo.yan@linaro.org>
 To:     Arnaldo Carvalho de Melo <acme@kernel.org>,
         Peter Zijlstra <peterz@infradead.org>,
@@ -59,10 +59,10 @@ To:     Arnaldo Carvalho de Melo <acme@kernel.org>,
         Jiri Olsa <jolsa@kernel.org>,
         Namhyung Kim <namhyung@kernel.org>,
         linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org
-Cc:     Leo Yan <leo.yan@linaro.org>
-Subject: [PATCH v2 1/2] perf subcmd: Set environment variable "PREFIX"
-Date:   Sun, 18 Sep 2022 11:15:23 +0800
-Message-Id: <20220918031524.26719-2-leo.yan@linaro.org>
+Cc:     Leo Yan <leo.yan@linaro.org>, Ian Rogers <irogers@google.com>
+Subject: [PATCH v2 2/2] perf test: Introduce script for java symbol testing
+Date:   Sun, 18 Sep 2022 11:15:24 +0800
+Message-Id: <20220918031524.26719-3-leo.yan@linaro.org>
 X-Mailer: git-send-email 2.34.1
 In-Reply-To: <20220918031524.26719-1-leo.yan@linaro.org>
 References: <20220918031524.26719-1-leo.yan@linaro.org>
@@ -72,28 +72,94 @@ Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-Set environment variable "PREFIX", it will be used by invoked shell
-script, e.g. the shell script uses it to find lib paths.
+This commit introduces a script for testing java symbols.
 
+The test records java program, inject samples with JIT samples, check
+specific JIT symbols in the report, the test will pass only when these
+two symbols are detected.
+
+Suggested-by: Ian Rogers <irogers@google.com>
 Signed-off-by: Leo Yan <leo.yan@linaro.org>
 ---
- tools/lib/subcmd/exec-cmd.c | 3 +++
- 1 file changed, 3 insertions(+)
+ tools/perf/tests/shell/test_java_symbol.sh | 69 ++++++++++++++++++++++
+ 1 file changed, 69 insertions(+)
+ create mode 100755 tools/perf/tests/shell/test_java_symbol.sh
 
-diff --git a/tools/lib/subcmd/exec-cmd.c b/tools/lib/subcmd/exec-cmd.c
-index 33e94fb83986..5dbea456973e 100644
---- a/tools/lib/subcmd/exec-cmd.c
-+++ b/tools/lib/subcmd/exec-cmd.c
-@@ -24,6 +24,9 @@ void exec_cmd_init(const char *exec_name, const char *prefix,
- 	subcmd_config.prefix		= prefix;
- 	subcmd_config.exec_path		= exec_path;
- 	subcmd_config.exec_path_env	= exec_path_env;
+diff --git a/tools/perf/tests/shell/test_java_symbol.sh b/tools/perf/tests/shell/test_java_symbol.sh
+new file mode 100755
+index 000000000000..d96fea405ea9
+--- /dev/null
++++ b/tools/perf/tests/shell/test_java_symbol.sh
+@@ -0,0 +1,69 @@
++#!/bin/bash
++# Test java symbol
 +
-+	/* Setup environment variable for invoked shell script. */
-+	setenv("PREFIX", prefix, 1);
- }
- 
- #define is_dir_sep(c) ((c) == '/')
++# SPDX-License-Identifier: GPL-2.0
++# Leo Yan <leo.yan@linaro.org>, 2022
++
++PERF_DATA=$(mktemp /tmp/__perf_test.perf.data.XXXXX)
++PERF_INJ_DATA=$(mktemp /tmp/__perf_test.perf.data.inj.XXXXX)
++
++cleanup_files()
++{
++	echo "Cleaning up files..."
++	rm -f ${PERF_DATA}
++	rm -f ${PERF_INJ_DATA}
++}
++
++trap cleanup_files exit term int
++
++if [ -e "$PWD/tools/perf/libperf-jvmti.so" ]; then
++	LIBJVMTI=$PWD/tools/perf/libperf-jvmti.so
++elif [ -e "$PWD/libperf-jvmti.so" ]; then
++	LIBJVMTI=$PWD/libperf-jvmti.so
++elif [ -e "$PREFIX/lib64/libperf-jvmti.so" ]; then
++	LIBJVMTI=$PREFIX/lib64/libperf-jvmti.so
++elif [ -e "$PREFIX/lib/libperf-jvmti.so" ]; then
++	LIBJVMTI=$PREFIX/lib/libperf-jvmti.so
++if [ -e "/usr/lib/linux-tools-$(uname -a | awk '{ print $3 }' | sed -r 's/-generic//')/libperf-jvmti.so" ]; then
++	LIBJVMTI=/usr/lib/linux-tools-$(uname -a | awk '{ print $3 }' | sed -r 's/-generic//')/libperf-jvmti.so
++else
++	echo "Fail to find libperf-jvmti.so"
++	# JVMTI is a build option, skip the test if fail to find lib
++	exit 2
++fi
++
++cat <<EOF | perf record -k 1 -o $PERF_DATA jshell -s -J-agentpath:$LIBJVMTI
++int fib(int x) {
++	return x > 1 ? fib(x - 2) + fib(x - 1) : 1;
++}
++
++int q = 0;
++
++for (int i = 0; i < 10; i++)
++	q += fib(i);
++
++System.out.println(q);
++EOF
++
++if [ $? -ne 0 ]; then
++	echo "Fail to record for java program"
++	exit 1
++fi
++
++if ! perf inject -i $PERF_DATA -o $PERF_INJ_DATA -j; then
++	echo "Fail to inject samples"
++	exit 1
++fi
++
++# Below is an example of the instruction samples reporting:
++#   8.18%  jshell           jitted-50116-29.so    [.] Interpreter
++#   0.75%  Thread-1         jitted-83602-1670.so  [.] jdk.internal.jimage.BasicImageReader.getString(int)
++perf report --stdio -i ${PERF_INJ_DATA} 2>&1 | \
++	egrep " +[0-9]+\.[0-9]+% .* (Interpreter|jdk\.internal).*" > /dev/null 2>&1
++
++if [ $? -ne 0 ]; then
++	echo "Fail to find java symbols"
++	exit 1
++fi
++
++exit 0
 -- 
 2.34.1
 
