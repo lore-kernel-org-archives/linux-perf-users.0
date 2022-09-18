@@ -2,113 +2,99 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C0120C54EE9
-	for <linux-perf-users@archiver.kernel.org>; Sat, 17 Sep 2022 23:41:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A4AF4C32771
+	for <linux-perf-users@archiver.kernel.org>; Sun, 18 Sep 2022 03:15:42 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229458AbiIQXlX (ORCPT
+        id S229567AbiIRDPk (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Sat, 17 Sep 2022 19:41:23 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39810 "EHLO
+        Sat, 17 Sep 2022 23:15:40 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:32902 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229450AbiIQXlX (ORCPT
+        with ESMTP id S229609AbiIRDPd (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Sat, 17 Sep 2022 19:41:23 -0400
-Received: from mail-wr1-x42a.google.com (mail-wr1-x42a.google.com [IPv6:2a00:1450:4864:20::42a])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 833E222299
-        for <linux-perf-users@vger.kernel.org>; Sat, 17 Sep 2022 16:41:21 -0700 (PDT)
-Received: by mail-wr1-x42a.google.com with SMTP id r7so536616wrm.2
-        for <linux-perf-users@vger.kernel.org>; Sat, 17 Sep 2022 16:41:21 -0700 (PDT)
+        Sat, 17 Sep 2022 23:15:33 -0400
+Received: from mail-pj1-x1034.google.com (mail-pj1-x1034.google.com [IPv6:2607:f8b0:4864:20::1034])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C8BEA2314F
+        for <linux-perf-users@vger.kernel.org>; Sat, 17 Sep 2022 20:15:30 -0700 (PDT)
+Received: by mail-pj1-x1034.google.com with SMTP id q9-20020a17090a178900b0020265d92ae3so3552263pja.5
+        for <linux-perf-users@vger.kernel.org>; Sat, 17 Sep 2022 20:15:30 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20210112;
-        h=content-disposition:mime-version:message-id:subject:cc:to:from:date
-         :from:to:cc:subject:date;
-        bh=oWOIBNUdsLJwcEjs9drp0WNmb5uwCxSvrbqI+0uFx/8=;
-        b=k9+Nhx1QrR9eli4d6oTqKdAmHLNvT4OVBM/E8HZpU6tbL5bNhXavmDUJJCDPoQHL7L
-         BVERMzWUsIrcbizBV4C73fdqC1VJMhdmnxTf+UNWDPF2ryT0UTJdr88aBwfPgcqNBbQY
-         JtvjrmIFbkpBu9VqXKABISAr2qxHtlUGNRrHpjtfnBx9ct/2QHAlLuFsXfYVdbKoVMeC
-         dTthqRoU0JzNPVyf0AiRKrdCFJsJWm04I2f5X9mckotXpz44MZqDV407YzQi1ESQ14ye
-         pN40Iu5Jlp+D4jx6b/tF00Q/V4CsqQ9tBjkslF7ICcRnpCAbBWg7iHH4k8iJNeHYfHe9
-         Njrw==
+        d=linaro.org; s=google;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date;
+        bh=O9R+a6tAKsKk3N09bqIfrqrBjzSc1SVHcDt6BGSwBbI=;
+        b=yMUkeddPLijVmgHg0vaH4Z2lzAsOv5lqJWsNwvrz4pdGCuNIU3ITXeOaE2O8PQRH+j
+         NiqCR0KDbQ7aQkicZQW5A9JagoeiONKqHNfib2jccR9vGdCik5VSjdF/oWjBXizJkMdF
+         GMT9qujyqEaCbLFlcgSxFfbT7GYSYtPY1GQSnXfA7vndK+mzljALtJqtTyZodo9oUf49
+         Z3Ej8TwHBfXQpnL7ExUxbpReRl/DHwzCNvL2+MiqZ+O9faoM0Y6/9OT1rc6FT33AojqS
+         DfFHBsor3ETKQrkcMhvEFuZIGydl6mQx3TzNUyVXjrUWZtcYPRo8yAnb0m3CH/w0m5Rs
+         0DBg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=content-disposition:mime-version:message-id:subject:cc:to:from:date
-         :x-gm-message-state:from:to:cc:subject:date;
-        bh=oWOIBNUdsLJwcEjs9drp0WNmb5uwCxSvrbqI+0uFx/8=;
-        b=1o9Q4FxPB/qd/GYMLzv8BjszFiZ1Icl/uWAZ5I3PScwGH+BaUeeifH8Rv6iJAZ/4qs
-         UZQdiAhkW4sZ5k+A+W6Hy7yo2ET4tWtbhOyFbJnPnCFxmgLRLTh6uJwhVvyBCa2FEs+f
-         fquvxUD2uwGj2kqkzIovTTW28vaskq/rgnvu83t87OIvNUasO/XwCwRCv2lYojbpr48j
-         yNYpJ9ktZY5d9KV5a6UiAYTKoQI6cZUBwXS7wZW+JVTYaNc5oITQGhKchxDMWTtZImA6
-         sJJRx0G2tgIQvB43mFkJm6Qq3jaxkRYkJqbUjkS30VUIrIUrvt7IIQn9xthkD5ixKz4D
-         l4Xg==
-X-Gm-Message-State: ACrzQf00cIb7MpTzjK9hGiS9/dnmfWD67P4Nzw5YElYnqTZd7Td+8oVl
-        4O1Em/3lAP5nA86NZHDG8rGODgqDjA==
-X-Google-Smtp-Source: AMsMyM7br9R1/xZ9hHBLYSVgZ+MhStTCt1+TWRLq9MFiuHLajuAFkuM7sgu8/u2iiRv6UdkTva6WyQ==
-X-Received: by 2002:adf:f00b:0:b0:22a:906d:358d with SMTP id j11-20020adff00b000000b0022a906d358dmr6796521wro.464.1663458079660;
-        Sat, 17 Sep 2022 16:41:19 -0700 (PDT)
-Received: from playground (host-92-29-143-165.as13285.net. [92.29.143.165])
-        by smtp.gmail.com with ESMTPSA id n2-20020a1ca402000000b003a5ca627333sm7581851wme.8.2022.09.17.16.41.18
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date;
+        bh=O9R+a6tAKsKk3N09bqIfrqrBjzSc1SVHcDt6BGSwBbI=;
+        b=dMtuypthDXrjt+nNBBux9NmXG0abX85ZH3Y6MT+UL3/I9trbsqOElGVg3WRe/0G8KC
+         6OxA7kld1HYZYAmexxdf5dAjWvl6mdJ5gH6ELMTMaoj2CbSLGORYiW74m5gfoO8QBOdS
+         B+/m4p6mJPKz8bzqwUYqQli2o2yeP6su1t1CfL0Ds+l8Tr+2jxMbqcZjE+UtExuBJyO0
+         QL92oPWI9EcrSKCqC+UIGNeQ2XcmL1w3KmVvGG+Tzaxp6TXg0iv/Z3bBc3PcP25EHql9
+         qMqZ/Ry9mwlMHLjElV8tdGdnXi/2EtNmulcdzP8cimmVTbwRse8Fv1B96HczsQ8rmr6m
+         lSjg==
+X-Gm-Message-State: ACrzQf04Odi1wUobZNU4byy/wg2ycG5sV/NCL61P9WNvj8I3bD5JtRk3
+        2acZE3Z0ILD1tzwT2mR7IuG9eQ==
+X-Google-Smtp-Source: AMsMyM7CZdMKQ7bgSSm5w4wMnhxPvff7yX9FEUgaZXnRC82lIKPWLzdibfpUAbFu/EQsXg0+2Go04Q==
+X-Received: by 2002:a17:902:7c0b:b0:174:abfc:f5 with SMTP id x11-20020a1709027c0b00b00174abfc00f5mr7007397pll.124.1663470929916;
+        Sat, 17 Sep 2022 20:15:29 -0700 (PDT)
+Received: from leoy-yangtze.lan (45.78.11.189.16clouds.com. [45.78.11.189])
+        by smtp.gmail.com with ESMTPSA id e13-20020a17090301cd00b00177f4ef7970sm17822647plh.11.2022.09.17.20.15.27
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sat, 17 Sep 2022 16:41:19 -0700 (PDT)
-Date:   Sun, 18 Sep 2022 00:41:08 +0100
-From:   Jules Irenge <jbi.octave@gmail.com>
-To:     peterz@infradead.org
-Cc:     mingo@redhat.com, acme@kernel.org, mark.rutland@arm.com,
-        jolsa@kernel.org, namhyung@kernel.org,
-        linux-perf-users@vger.kernel.org, Elana.Copperman@mobileye.com
-Subject: [PATCH 1/2] perf/core: convert snprintf to scnprintf
-Message-ID: <YyZbFOmp9bW3B3s6@playground>
+        Sat, 17 Sep 2022 20:15:29 -0700 (PDT)
+From:   Leo Yan <leo.yan@linaro.org>
+To:     Arnaldo Carvalho de Melo <acme@kernel.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Jiri Olsa <jolsa@kernel.org>,
+        Namhyung Kim <namhyung@kernel.org>,
+        linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org
+Cc:     Leo Yan <leo.yan@linaro.org>
+Subject: [PATCH v2 0/2] perf test: Add test for java symbol
+Date:   Sun, 18 Sep 2022 11:15:22 +0800
+Message-Id: <20220918031524.26719-1-leo.yan@linaro.org>
+X-Mailer: git-send-email 2.34.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-Coccinelle reports a warning
+This patch set is to add a test for java symbol.
 
-WARNING: use scnprintf or sprintf
+To allow a shell script to know the installed lib path, we need to
+export the environment variable "PREFIX" in the C code.  We use the
+first patch for this purpose.  The second patch introduces the java
+symbol testing.
 
-Adding to that,
-there has also been some slow migration from snprintf to scnprintf
-The article explains the rationale for this change
+The test has been verified on x86_64 machine with mainline kernel, with
+the latest commit 62e64c9d2fd1 ("perf test: Add basic core_wide
+expression test").
 
-https: //lwn.net/Articles/69419/
-Signed-off-by: Jules Irenge <jbi.octave@gmail.com>
----
- kernel/events/core.c | 6 +++---
- 1 file changed, 3 insertions(+), 3 deletions(-)
+Changes from v1:
+- Added Ian's suggested tag;
+- Added the search folder for the system lib libperf-jvmti.so;
+- Skip the test if fail to find jvmti lib.
 
-diff --git a/kernel/events/core.c b/kernel/events/core.c
-index 2621fd24ad26..0b03a98945eb 100644
---- a/kernel/events/core.c
-+++ b/kernel/events/core.c
-@@ -10933,7 +10933,7 @@ static ssize_t nr_addr_filters_show(struct device *dev,
- {
- 	struct pmu *pmu = dev_get_drvdata(dev);
- 
--	return snprintf(page, PAGE_SIZE - 1, "%d\n", pmu->nr_addr_filters);
-+	return scnprintf(page, PAGE_SIZE - 1, "%d\n", pmu->nr_addr_filters);
- }
- DEVICE_ATTR_RO(nr_addr_filters);
- 
-@@ -10944,7 +10944,7 @@ type_show(struct device *dev, struct device_attribute *attr, char *page)
- {
- 	struct pmu *pmu = dev_get_drvdata(dev);
- 
--	return snprintf(page, PAGE_SIZE-1, "%d\n", pmu->type);
-+	return scnprintf(page, PAGE_SIZE - 1, "%d\n", pmu->type);
- }
- static DEVICE_ATTR_RO(type);
- 
-@@ -10955,7 +10955,7 @@ perf_event_mux_interval_ms_show(struct device *dev,
- {
- 	struct pmu *pmu = dev_get_drvdata(dev);
- 
--	return snprintf(page, PAGE_SIZE-1, "%d\n", pmu->hrtimer_interval_ms);
-+	return scnprintf(page, PAGE_SIZE - 1, "%d\n", pmu->hrtimer_interval_ms);
- }
- 
- static DEFINE_MUTEX(mux_interval_mutex);
+
+Leo Yan (2):
+  perf subcmd: Set environment variable "PREFIX"
+  perf test: Introduce script for java symbol testing
+
+ tools/lib/subcmd/exec-cmd.c                |  3 +
+ tools/perf/tests/shell/test_java_symbol.sh | 69 ++++++++++++++++++++++
+ 2 files changed, 72 insertions(+)
+ create mode 100755 tools/perf/tests/shell/test_java_symbol.sh
+
 -- 
-2.35.1
+2.34.1
 
