@@ -2,54 +2,53 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0A33BC32771
-	for <linux-perf-users@archiver.kernel.org>; Sun, 18 Sep 2022 03:15:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B040BC32771
+	for <linux-perf-users@archiver.kernel.org>; Sun, 18 Sep 2022 03:28:58 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229599AbiIRDPp (ORCPT
+        id S229483AbiIRD24 (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Sat, 17 Sep 2022 23:15:45 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:32900 "EHLO
+        Sat, 17 Sep 2022 23:28:56 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44658 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229608AbiIRDPj (ORCPT
+        with ESMTP id S229496AbiIRD2y (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Sat, 17 Sep 2022 23:15:39 -0400
-Received: from mail-pf1-x42c.google.com (mail-pf1-x42c.google.com [IPv6:2607:f8b0:4864:20::42c])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 97BEA27FED
-        for <linux-perf-users@vger.kernel.org>; Sat, 17 Sep 2022 20:15:37 -0700 (PDT)
-Received: by mail-pf1-x42c.google.com with SMTP id e5so24941455pfl.2
-        for <linux-perf-users@vger.kernel.org>; Sat, 17 Sep 2022 20:15:37 -0700 (PDT)
+        Sat, 17 Sep 2022 23:28:54 -0400
+Received: from mail-pg1-x52d.google.com (mail-pg1-x52d.google.com [IPv6:2607:f8b0:4864:20::52d])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0BF6D28E29
+        for <linux-perf-users@vger.kernel.org>; Sat, 17 Sep 2022 20:28:50 -0700 (PDT)
+Received: by mail-pg1-x52d.google.com with SMTP id t65so23879328pgt.2
+        for <linux-perf-users@vger.kernel.org>; Sat, 17 Sep 2022 20:28:50 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date;
-        bh=/tDGwzAC/IwmP8HRle5sxobILjM+kn0MjdGIbElVqmc=;
-        b=vBM4YlSUyA2cOuccMVcA5pzbosx7UpZ1THfDYtswOaOPlk93Ad3eWDAvc/kEm9aErw
-         B7hTk79kCIwXQA5E9fAwZQkeeQ4zWB9AOganKNyrvpFP3WM+YDMW2Hej9f/2zyVURltL
-         biVSH65GTPcyxMALXnOS8MXWeHVfiQr8siAo8pDO4D1e2RbMNWAKYk4zP3CcPgwFdtAl
-         tPUWbZEE8/Z/iV7ZSb2k2CeFnFEb+bBpTXiB60BIOcFes+DdkfoxMzg2WtVVwBI1IIZs
-         fHi2D0evwWGelMccqLnpRKGvVRt6UUMq7SsPn99/1wY7B5jy7qtsIGgeZXmscY0A8Feq
-         BUqQ==
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date;
+        bh=TO1lgjEBuoqSH/1skNlkmUo8mpA3J4adLJy7sHWwA2o=;
+        b=rKZF6xhdNr3PJxqpQpbc/Ae97AzUZQwTi6Nf/2ESmMf9CywgFPxaKM17UmPnjFTclU
+         wA5xFNIcHWSUw902PRTt3TTiPbKAuU4hfLSuj9fdwaACpgXZnvQBqakmZH+tnPDzWOQ5
+         oOuYLjZM/Aiuz83r8UWWNEHi5nmlfOtIeyX5ku5FXBXqJ2lowwNTcJR6fUc+tusLGt2e
+         Ofoekhj3IdbObjXJashnXNJLYjxo72qdjn1Yr7wLG9uP2hBwSJxIq6/hka+QlWOmT4qc
+         Vsj1kY692We2O8c/nOpL3LCDUM2JL7ATaRqbCtwbrmDlPWRk/31rqxQhO4PPfjQo04YS
+         Vh5Q==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
-         :subject:date;
-        bh=/tDGwzAC/IwmP8HRle5sxobILjM+kn0MjdGIbElVqmc=;
-        b=UlMfuQ7U7InbPoecgbQ6stC7qXtLFwMBrqC4gYy8J1abhEGbCFEUC7jSQRLweRGCpJ
-         eeok9YJswkvJ6wIxHN4/jDpnBd4IJM/2992YYidGRG4NkQB2znPE+chSwLDjQ9I9yx4m
-         EALNPew94F8Fo7SAsIB2uLap0Ig3Plq46wpinlhTMonh/A6/LRYuzLXAT67B2b5XN71C
-         MZi8P2BkX1pTXKs3Jbxp18QfjQ3KTg3LtLtHg35MRlS/kikv+ikXSyKXVaq/tFXoU3+v
-         DkBWm+bNgjFSrD9IDoJMpEHARc1Rki457F2u4CaE44R8tZc+bxXxgcgjsQj3wSEDeO5l
-         2vHA==
-X-Gm-Message-State: ACrzQf061wRCU430bLmxfvzvZSWyLl54vboBUlXcP2zh17bYnMtPz/eV
-        UiBz5UJcwBU2lDJjwslot91h1Q==
-X-Google-Smtp-Source: AMsMyM6Cfk0nFXuMVmKDmCkPtqp+n750u2jSmTe7Qqmj8zHJ1GEyjXffIY2N/4HQ9Aug6obakPnQdg==
-X-Received: by 2002:a63:c3:0:b0:439:72d7:7e1f with SMTP id 186-20020a6300c3000000b0043972d77e1fmr10466498pga.524.1663470935526;
-        Sat, 17 Sep 2022 20:15:35 -0700 (PDT)
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date;
+        bh=TO1lgjEBuoqSH/1skNlkmUo8mpA3J4adLJy7sHWwA2o=;
+        b=z4RdMAi2b8POt+SfTNsos2GNzpDMrP84Jt3HwDJWy3jy/6mj5yQPnENdJe5WJ3DcrQ
+         HUCLgUz/MWgLjmSTRuw1wiSNd9mXn1lnMAeGkf8j5DdRs0O/D5tOuhr02kF2NfmlAsyU
+         g8sWiFe0GZxnEFg5SkdfFZwt3U9vrUQAvR/KVXWEM7TyMbm0OzfLiex+rT0yTsGKWERz
+         C+FuwaGP/hQ8KsR+H2ZQdY0pyXRCj5woQcuQoVfHoP5nPWvCi4uQ7qPSZ5Vx0+DUasJH
+         kRJ9QLzxq0tOZppM58exL7cSVenFO1krsm29HEUgw55eJv/Oc5/km7KgTVe+t9wldJYK
+         crpw==
+X-Gm-Message-State: ACrzQf1/Thd7d5xH8QphWNqMQyaZu53fQnPnJ/T/JkcRZsl+hfcBLmMB
+        YJI04jJzHIuF9u3sFTfd5mBK4g==
+X-Google-Smtp-Source: AMsMyM6nbZPZvj09ZSNhXJDObtdCCywFh8IDURznRTcNZJxGognZEJvWXDiqkX9cNoTTbYUQ1BX77Q==
+X-Received: by 2002:a65:6955:0:b0:439:a99b:bca5 with SMTP id w21-20020a656955000000b00439a99bbca5mr10642998pgq.80.1663471729271;
+        Sat, 17 Sep 2022 20:28:49 -0700 (PDT)
 Received: from leoy-yangtze.lan (45.78.11.189.16clouds.com. [45.78.11.189])
-        by smtp.gmail.com with ESMTPSA id e13-20020a17090301cd00b00177f4ef7970sm17822647plh.11.2022.09.17.20.15.32
+        by smtp.gmail.com with ESMTPSA id 68-20020a620647000000b00545832dd969sm12255075pfg.145.2022.09.17.20.28.46
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sat, 17 Sep 2022 20:15:35 -0700 (PDT)
+        Sat, 17 Sep 2022 20:28:48 -0700 (PDT)
 From:   Leo Yan <leo.yan@linaro.org>
 To:     Arnaldo Carvalho de Melo <acme@kernel.org>,
         Peter Zijlstra <peterz@infradead.org>,
@@ -59,107 +58,138 @@ To:     Arnaldo Carvalho de Melo <acme@kernel.org>,
         Jiri Olsa <jolsa@kernel.org>,
         Namhyung Kim <namhyung@kernel.org>,
         linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org
-Cc:     Leo Yan <leo.yan@linaro.org>, Ian Rogers <irogers@google.com>
-Subject: [PATCH v2 2/2] perf test: Introduce script for java symbol testing
-Date:   Sun, 18 Sep 2022 11:15:24 +0800
-Message-Id: <20220918031524.26719-3-leo.yan@linaro.org>
+Cc:     Leo Yan <leo.yan@linaro.org>
+Subject: [PATCH RESEND v2] perf test: Introduce script for data symbol testing
+Date:   Sun, 18 Sep 2022 11:28:43 +0800
+Message-Id: <20220918032843.27285-1-leo.yan@linaro.org>
 X-Mailer: git-send-email 2.34.1
-In-Reply-To: <20220918031524.26719-1-leo.yan@linaro.org>
-References: <20220918031524.26719-1-leo.yan@linaro.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-This commit introduces a script for testing java symbols.
+This commit introduces a shell script for data symbol testing.
 
-The test records java program, inject samples with JIT samples, check
-specific JIT symbols in the report, the test will pass only when these
-two symbols are detected.
+The testing is designed a data structure with 64-byte alignment, it has
+two fields "data1" and "data2", and other fields are reserved.
 
-Suggested-by: Ian Rogers <irogers@google.com>
+Using "perf mem" command, we can record and report memory samples for a
+self-contained workload with 1 second duration.  If have no any memory
+sample for the data structure "buf1", it reports failure;  and by
+checking the offset in structure "buf1", if any memory accessing is not
+for "data1" and "data2" fields, it means wrong data symbol parsing and
+returns failure.
+
 Signed-off-by: Leo Yan <leo.yan@linaro.org>
 ---
- tools/perf/tests/shell/test_java_symbol.sh | 69 ++++++++++++++++++++++
- 1 file changed, 69 insertions(+)
- create mode 100755 tools/perf/tests/shell/test_java_symbol.sh
 
-diff --git a/tools/perf/tests/shell/test_java_symbol.sh b/tools/perf/tests/shell/test_java_symbol.sh
+Changes from v1:
+- Removed "killall" since the test has no child process (Ian);
+- Used "char" instead of "long" in the buf structure.
+
+ tools/perf/tests/shell/test_data_symbol.sh | 92 ++++++++++++++++++++++
+ 1 file changed, 92 insertions(+)
+ create mode 100755 tools/perf/tests/shell/test_data_symbol.sh
+
+diff --git a/tools/perf/tests/shell/test_data_symbol.sh b/tools/perf/tests/shell/test_data_symbol.sh
 new file mode 100755
-index 000000000000..d96fea405ea9
+index 000000000000..d007513ecfbe
 --- /dev/null
-+++ b/tools/perf/tests/shell/test_java_symbol.sh
-@@ -0,0 +1,69 @@
++++ b/tools/perf/tests/shell/test_data_symbol.sh
+@@ -0,0 +1,92 @@
 +#!/bin/bash
-+# Test java symbol
++# Test data symbol
 +
 +# SPDX-License-Identifier: GPL-2.0
 +# Leo Yan <leo.yan@linaro.org>, 2022
 +
++skip_if_no_mem_event() {
++	perf mem record -e list 2>&1 | egrep -q 'available' && return 0
++	return 2
++}
++
++skip_if_no_mem_event || exit 2
++
++# skip if there's no compiler
++if ! [ -x "$(command -v cc)" ]; then
++	echo "skip: no compiler, install gcc"
++	exit 2
++fi
++
++TEST_PROGRAM_SOURCE=$(mktemp /tmp/__perf_test.program.XXXXX.c)
++TEST_PROGRAM=$(mktemp /tmp/__perf_test.program.XXXXX)
 +PERF_DATA=$(mktemp /tmp/__perf_test.perf.data.XXXXX)
-+PERF_INJ_DATA=$(mktemp /tmp/__perf_test.perf.data.inj.XXXXX)
++
++check_result() {
++	# The memory report format is as below:
++	#    99.92%  ...  [.] buf1+0x38  ...
++	result=$(perf mem report -i ${PERF_DATA} --stdio 2>&1 | egrep "buf1" | \
++		awk '{ for (i = 1; i <= NF; i++) { if ($i ~ /^buf1/) { print $i; break; } } }')
++
++	# Testing is failed if has no any sample for "buf1"
++	[ -z "$result" ] && return 1
++
++	while IFS= read -r line; do
++		# The "data1" and "data2" fields in structure "buf1" have
++		# offset "0x0" and "0x38", returns failure if detect any
++		# other offset value.
++		if [ "$line" != "buf1+0x0" ] && [ "$line" != "buf1+0x38" ]; then
++			return 1
++		fi
++	done <<< "$result"
++
++	return 0
++}
 +
 +cleanup_files()
 +{
 +	echo "Cleaning up files..."
 +	rm -f ${PERF_DATA}
-+	rm -f ${PERF_INJ_DATA}
++	rm -f ${TEST_PROGRAM_SOURCE}
++	rm -f ${TEST_PROGRAM}
 +}
 +
 +trap cleanup_files exit term int
 +
-+if [ -e "$PWD/tools/perf/libperf-jvmti.so" ]; then
-+	LIBJVMTI=$PWD/tools/perf/libperf-jvmti.so
-+elif [ -e "$PWD/libperf-jvmti.so" ]; then
-+	LIBJVMTI=$PWD/libperf-jvmti.so
-+elif [ -e "$PREFIX/lib64/libperf-jvmti.so" ]; then
-+	LIBJVMTI=$PREFIX/lib64/libperf-jvmti.so
-+elif [ -e "$PREFIX/lib/libperf-jvmti.so" ]; then
-+	LIBJVMTI=$PREFIX/lib/libperf-jvmti.so
-+if [ -e "/usr/lib/linux-tools-$(uname -a | awk '{ print $3 }' | sed -r 's/-generic//')/libperf-jvmti.so" ]; then
-+	LIBJVMTI=/usr/lib/linux-tools-$(uname -a | awk '{ print $3 }' | sed -r 's/-generic//')/libperf-jvmti.so
-+else
-+	echo "Fail to find libperf-jvmti.so"
-+	# JVMTI is a build option, skip the test if fail to find lib
-+	exit 2
-+fi
++# compile test program
++cat << EOF > $TEST_PROGRAM_SOURCE
++#include <stdio.h>
++#include <stdlib.h>
++#include <unistd.h>
 +
-+cat <<EOF | perf record -k 1 -o $PERF_DATA jshell -s -J-agentpath:$LIBJVMTI
-+int fib(int x) {
-+	return x > 1 ? fib(x - 2) + fib(x - 1) : 1;
++typedef struct _buf {
++	char data1;
++	char reserved[55];
++	char data2;
++} buf __attribute__((aligned(64)));
++
++static buf buf1;
++
++int main() {
++	int i;
++	for (;;) {
++		buf1.data1++;
++		buf1.data2 += buf1.data1;
++	}
++	return 0;
 +}
-+
-+int q = 0;
-+
-+for (int i = 0; i < 10; i++)
-+	q += fib(i);
-+
-+System.out.println(q);
 +EOF
 +
-+if [ $? -ne 0 ]; then
-+	echo "Fail to record for java program"
-+	exit 1
-+fi
++echo "Compiling test program..."
++cc $TEST_PROGRAM_SOURCE -o $TEST_PROGRAM || exit 1
 +
-+if ! perf inject -i $PERF_DATA -o $PERF_INJ_DATA -j; then
-+	echo "Fail to inject samples"
-+	exit 1
-+fi
++echo "Recording workload..."
++perf mem record --all-user -o ${PERF_DATA} -- $TEST_PROGRAM &
++PERFPID=$!
 +
-+# Below is an example of the instruction samples reporting:
-+#   8.18%  jshell           jitted-50116-29.so    [.] Interpreter
-+#   0.75%  Thread-1         jitted-83602-1670.so  [.] jdk.internal.jimage.BasicImageReader.getString(int)
-+perf report --stdio -i ${PERF_INJ_DATA} 2>&1 | \
-+	egrep " +[0-9]+\.[0-9]+% .* (Interpreter|jdk\.internal).*" > /dev/null 2>&1
++sleep 1
 +
-+if [ $? -ne 0 ]; then
-+	echo "Fail to find java symbols"
-+	exit 1
-+fi
++kill $PERFPID
++wait $PERFPID
 +
-+exit 0
++check_result
++exit $?
 -- 
 2.34.1
 
