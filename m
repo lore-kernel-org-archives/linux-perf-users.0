@@ -2,129 +2,181 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BEED1C54EE9
-	for <linux-perf-users@archiver.kernel.org>; Mon, 19 Sep 2022 11:46:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 93516C6FA8B
+	for <linux-perf-users@archiver.kernel.org>; Mon, 19 Sep 2022 11:56:07 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229689AbiISLp7 (ORCPT
+        id S230201AbiISL4F (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Mon, 19 Sep 2022 07:45:59 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39812 "EHLO
+        Mon, 19 Sep 2022 07:56:05 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45444 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229797AbiISLp6 (ORCPT
+        with ESMTP id S230084AbiISLzl (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Mon, 19 Sep 2022 07:45:58 -0400
-Received: from desiato.infradead.org (desiato.infradead.org [IPv6:2001:8b0:10b:1:d65d:64ff:fe57:4e05])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 913012AE12;
-        Mon, 19 Sep 2022 04:45:55 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=desiato.20200630; h=In-Reply-To:Content-Type:MIME-Version:
-        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description;
-        bh=/3DW1goWuoKer9u+A3DtQ9jlkLup9NoDTU3kbas6vLw=; b=N9OI/owuvMz9blgRWzlwoesiBL
-        OTC+fa+ODBPVgmLMgQ+BbcchiiwfIK71hMcuQQ1exYfDdG+L+PV0252Bzkx8/NfHoYqnyjBCQcU0K
-        Hiqvvma4rZxDVrJiYuF4eY1QUO9nVdMXSzCXM7gFrWnbJGpWu6mktfJg90PZ3o6PRURA6uk92gw7W
-        TnmuKIhYU4DtdvaModSpQKsDcwvrWs5JJP0UrYzxBH7y8NlrAuQ4xu/pPTtZQQUbgdDwO89FYgRyW
-        KOvsYNhKvWKCi769nlTYbEtvGdPmNvQRZvjkrtSZgkKO1MAUWiRx38i5+n76BrTrVF0zftvQ0EJvY
-        M7V1lIVQ==;
-Received: from j130084.upc-j.chello.nl ([24.132.130.84] helo=noisy.programming.kicks-ass.net)
-        by desiato.infradead.org with esmtpsa (Exim 4.94.2 #2 (Red Hat Linux))
-        id 1oaFDX-00E4Q6-V2; Mon, 19 Sep 2022 11:45:40 +0000
-Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange X25519 server-signature RSA-PSS (4096 bits))
-        (Client did not present a certificate)
-        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id 8EE30300342;
-        Mon, 19 Sep 2022 13:45:38 +0200 (CEST)
-Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
-        id 7480F2B6335FA; Mon, 19 Sep 2022 13:45:38 +0200 (CEST)
-Date:   Mon, 19 Sep 2022 13:45:38 +0200
-From:   Peter Zijlstra <peterz@infradead.org>
-To:     Duoming Zhou <duoming@zju.edu.cn>
-Cc:     linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org,
-        mingo@redhat.com, acme@kernel.org, mark.rutland@arm.com,
-        alexander.shishkin@linux.intel.com, jolsa@kernel.org,
-        namhyung@kernel.org, tglx@linutronix.de, bp@alien8.de,
-        dave.hansen@linux.intel.com, x86@kernel.org, hpa@zytor.com
-Subject: Re: [PATCH] perf/x86/rapl: fix deadlock in rapl_pmu_event_stop
-Message-ID: <YyhWYt9iSAay+QL9@hirez.programming.kicks-ass.net>
-References: <20220917144729.118500-1-duoming@zju.edu.cn>
+        Mon, 19 Sep 2022 07:55:41 -0400
+Received: from mail-il1-x133.google.com (mail-il1-x133.google.com [IPv6:2607:f8b0:4864:20::133])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3251460F7
+        for <linux-perf-users@vger.kernel.org>; Mon, 19 Sep 2022 04:54:33 -0700 (PDT)
+Received: by mail-il1-x133.google.com with SMTP id a9so14673554ilh.1
+        for <linux-perf-users@vger.kernel.org>; Mon, 19 Sep 2022 04:54:33 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=brainfault-org.20210112.gappssmtp.com; s=20210112;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:from:to:cc:subject:date;
+        bh=gUsv6szv6dsUeM9asVJnwaGmSGG17UchvxqwxLA3h8g=;
+        b=6l84clV/ev4Ho0Nth4fVfA2YCUlnkvOSgxbqusFUXjXpfQuFFf0cscM9H6JstjQMUy
+         xw7M8POcVaD8G3v3xGng54KrmjSgvwQL7sqhL179TVnFSdqvL9DEfhAXmZU08DpaVB+z
+         zSiunmo3VbmTof1vxAp/v47yQ2WgOGXeXG6GB3Gf7pE1ScGjC0bqV7TAtd/m+fpfq3CI
+         YOLPMuA/GgjNIfHOrOGhD0cM6H3P5LBBOn3aCDWtNVZfJPWoGE1cWKKtEz9Dpfs/6i2d
+         YxcNqnYUQtbiNuONYqqIai1SFElgvUv464Vcz0iTXK3yncl0+rss3soTmcg3IhW6Gf/K
+         H/3g==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:x-gm-message-state:from:to:cc:subject:date;
+        bh=gUsv6szv6dsUeM9asVJnwaGmSGG17UchvxqwxLA3h8g=;
+        b=mjgcCeSXjLs/AM+vAB+Jr2Lsb7svkiKMOPuHgFUwFhuI88aFQmThilj8Bu6QtNv/rN
+         tMwHcAQHKEM0LK7nQNajdZ7N7yrLUVUBsehbUY0EC0WbDtO/ZXHq0y1W9SRGx0K3N5M3
+         QFKzrKruru9v2IyrWNJ/wzSOd3ZG29Qef2D6VuKHVB6Y+/BWMKYLLDHfyg5JSSKZI7tM
+         wK1NYMLaDqjr4I8KI1UC7+fTJ6ahzWN54uuI8ILRDR++I3ms+oyW4z5ndNFxvWf2HbRx
+         VaAWETg29RRCUSRbv3cxA8MDkevC+UV77j8Xo4oyeI8PeoLs8uduold0PiE2WjrH2BTD
+         gO8w==
+X-Gm-Message-State: ACrzQf2pLCDL/NB8BSSKc8FgVvs90n5A8H/TwdltKF6AesiW7rR4vqyF
+        Lb8K5Ehd6rtPV+elGlZHhdVwdQYKRG/hoTCabxbgPA==
+X-Google-Smtp-Source: AMsMyM5SaQPoV1xlIMZRfmPqKRzR7kAhfhGoUGwZ5KM3JobcN8dh6yNRCyMvHHbKVsfAJAruxygcE1W13IXNCB18i9o=
+X-Received: by 2002:a92:c04d:0:b0:2f5:1175:c7a3 with SMTP id
+ o13-20020a92c04d000000b002f51175c7a3mr5681407ilf.165.1663588472670; Mon, 19
+ Sep 2022 04:54:32 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20220917144729.118500-1-duoming@zju.edu.cn>
+References: <20220919095939.761690562@infradead.org> <20220919101520.669962810@infradead.org>
+In-Reply-To: <20220919101520.669962810@infradead.org>
+From:   Anup Patel <anup@brainfault.org>
+Date:   Mon, 19 Sep 2022 17:24:19 +0530
+Message-ID: <CAAhSdy004HaNUNYRD8tcn24LZWdTmOVkF1QN14uLmSw1UXuXqA@mail.gmail.com>
+Subject: Re: [PATCH v2 05/44] cpuidle,riscv: Push RCU-idle into driver
+To:     Peter Zijlstra <peterz@infradead.org>
+Cc:     richard.henderson@linaro.org, ink@jurassic.park.msu.ru,
+        mattst88@gmail.com, vgupta@kernel.org, linux@armlinux.org.uk,
+        ulli.kroll@googlemail.com, linus.walleij@linaro.org,
+        shawnguo@kernel.org, Sascha Hauer <s.hauer@pengutronix.de>,
+        kernel@pengutronix.de, festevam@gmail.com, linux-imx@nxp.com,
+        tony@atomide.com, khilman@kernel.org, catalin.marinas@arm.com,
+        will@kernel.org, guoren@kernel.org, bcain@quicinc.com,
+        chenhuacai@kernel.org, kernel@xen0n.name, geert@linux-m68k.org,
+        sammy@sammy.net, monstr@monstr.eu, tsbogend@alpha.franken.de,
+        dinguyen@kernel.org, jonas@southpole.se,
+        stefan.kristiansson@saunalahti.fi, shorne@gmail.com,
+        James.Bottomley@hansenpartnership.com, deller@gmx.de,
+        mpe@ellerman.id.au, npiggin@gmail.com, christophe.leroy@csgroup.eu,
+        paul.walmsley@sifive.com, palmer@dabbelt.com,
+        aou@eecs.berkeley.edu, hca@linux.ibm.com, gor@linux.ibm.com,
+        agordeev@linux.ibm.com, borntraeger@linux.ibm.com,
+        svens@linux.ibm.com, ysato@users.sourceforge.jp, dalias@libc.org,
+        davem@davemloft.net, richard@nod.at,
+        anton.ivanov@cambridgegreys.com, johannes@sipsolutions.net,
+        tglx@linutronix.de, mingo@redhat.com, bp@alien8.de,
+        dave.hansen@linux.intel.com, x86@kernel.org, hpa@zytor.com,
+        acme@kernel.org, mark.rutland@arm.com,
+        alexander.shishkin@linux.intel.com, jolsa@kernel.org,
+        namhyung@kernel.org, jgross@suse.com, srivatsa@csail.mit.edu,
+        amakhalov@vmware.com, pv-drivers@vmware.com,
+        boris.ostrovsky@oracle.com, chris@zankel.net, jcmvbkbc@gmail.com,
+        rafael@kernel.org, lenb@kernel.org, pavel@ucw.cz,
+        gregkh@linuxfoundation.org, mturquette@baylibre.com,
+        sboyd@kernel.org, daniel.lezcano@linaro.org, lpieralisi@kernel.org,
+        sudeep.holla@arm.com, agross@kernel.org,
+        bjorn.andersson@linaro.org, konrad.dybcio@somainline.org,
+        thierry.reding@gmail.com, jonathanh@nvidia.com,
+        jacob.jun.pan@linux.intel.com, atishp@atishpatra.org,
+        Arnd Bergmann <arnd@arndb.de>, yury.norov@gmail.com,
+        andriy.shevchenko@linux.intel.com, linux@rasmusvillemoes.dk,
+        dennis@kernel.org, tj@kernel.org, cl@linux.com,
+        rostedt@goodmis.org, pmladek@suse.com, senozhatsky@chromium.org,
+        john.ogness@linutronix.de, juri.lelli@redhat.com,
+        vincent.guittot@linaro.org, dietmar.eggemann@arm.com,
+        bsegall@google.com, mgorman@suse.de, bristot@redhat.com,
+        vschneid@redhat.com, fweisbec@gmail.com, ryabinin.a.a@gmail.com,
+        glider@google.com, andreyknvl@gmail.com, dvyukov@google.com,
+        vincenzo.frascino@arm.com,
+        Andrew Morton <akpm@linux-foundation.org>, jpoimboe@kernel.org,
+        linux-alpha@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-snps-arc@lists.infradead.org, linux-omap@vger.kernel.org,
+        linux-csky@vger.kernel.org, linux-hexagon@vger.kernel.org,
+        linux-ia64@vger.kernel.org, loongarch@lists.linux.dev,
+        linux-m68k@lists.linux-m68k.org, linux-mips@vger.kernel.org,
+        openrisc@lists.librecores.org, linux-parisc@vger.kernel.org,
+        linuxppc-dev@lists.ozlabs.org, linux-riscv@lists.infradead.org,
+        linux-s390@vger.kernel.org, linux-sh@vger.kernel.org,
+        sparclinux@vger.kernel.org, linux-um@lists.infradead.org,
+        linux-perf-users@vger.kernel.org,
+        virtualization@lists.linux-foundation.org,
+        linux-xtensa@linux-xtensa.org, linux-acpi@vger.kernel.org,
+        linux-pm@vger.kernel.org, linux-clk@vger.kernel.org,
+        linux-arm-msm@vger.kernel.org, linux-tegra@vger.kernel.org,
+        linux-arch@vger.kernel.org, kasan-dev@googlegroups.com
+Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-On Sat, Sep 17, 2022 at 10:47:29PM +0800, Duoming Zhou wrote:
-> There is a deadlock in rapl_pmu_event_stop(), the process is
-> shown below:
-> 
->     (thread 1)                 |        (thread 2)
-> rapl_pmu_event_stop()          | rapl_hrtimer_handle()
->  ...                           |  if (!pmu->n_active)
->  raw_spin_lock_irqsave() //(1) |  ...
->   ...                          |
->   hrtimer_cancel()             |  raw_spin_lock_irqsave() //(2)
->   (block forever)
-> 
-> We hold pmu->lock in position (1) and use hrtimer_cancel() to wait
-> rapl_hrtimer_handle() to stop, but rapl_hrtimer_handle() also need
-> pmu->lock in position (2). As a result, the rapl_pmu_event_stop()
-> will be blocked forever.
-> 
-> This patch extracts hrtimer_cancel() from the protection of
-> raw_spin_lock_irqsave(). As a result, the rapl_hrtimer_handle() could
-> obtain the pmu->lock. In order to prevent race conditions, we put
-> "if (!pmu->n_active)" in rapl_hrtimer_handle() under the protection
-> of raw_spin_lock_irqsave().
-> 
-> Fixes: 65661f96d3b3 ("perf/x86: Add RAPL hrtimer support")
-> Signed-off-by: Duoming Zhou <duoming@zju.edu.cn>
+On Mon, Sep 19, 2022 at 3:47 PM Peter Zijlstra <peterz@infradead.org> wrote:
+>
+> Doing RCU-idle outside the driver, only to then temporarily enable it
+> again, at least twice, before going idle is daft.
+>
+> Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
+
+Looks good to me.
+
+For RISC-V cpuidle:
+Reviewed-by: Anup Patel <anup@brainfault.org>
+
+Regards,
+Anup
+
+
 > ---
->  arch/x86/events/rapl.c | 9 ++++++---
->  1 file changed, 6 insertions(+), 3 deletions(-)
-> 
-> diff --git a/arch/x86/events/rapl.c b/arch/x86/events/rapl.c
-> index 77e3a47af5a..97c71538d01 100644
-> --- a/arch/x86/events/rapl.c
-> +++ b/arch/x86/events/rapl.c
-> @@ -219,11 +219,11 @@ static enum hrtimer_restart rapl_hrtimer_handle(struct hrtimer *hrtimer)
->  	struct perf_event *event;
->  	unsigned long flags;
->  
-> +	raw_spin_lock_irqsave(&pmu->lock, flags);
+>  drivers/cpuidle/cpuidle-riscv-sbi.c |    9 +++++----
+>  1 file changed, 5 insertions(+), 4 deletions(-)
+>
+> --- a/drivers/cpuidle/cpuidle-riscv-sbi.c
+> +++ b/drivers/cpuidle/cpuidle-riscv-sbi.c
+> @@ -116,12 +116,12 @@ static int __sbi_enter_domain_idle_state
+>                 return -1;
+>
+>         /* Do runtime PM to manage a hierarchical CPU toplogy. */
+> -       ct_irq_enter_irqson();
+>         if (s2idle)
+>                 dev_pm_genpd_suspend(pd_dev);
+>         else
+>                 pm_runtime_put_sync_suspend(pd_dev);
+> -       ct_irq_exit_irqson();
 > +
->  	if (!pmu->n_active)
->  		return HRTIMER_NORESTART;
-
-Except now you return with the lock held...
-
->  
-> -	raw_spin_lock_irqsave(&pmu->lock, flags);
-> -
->  	list_for_each_entry(event, &pmu->active_list, active_entry)
->  		rapl_event_update(event);
->  
-> @@ -281,8 +281,11 @@ static void rapl_pmu_event_stop(struct perf_event *event, int mode)
->  	if (!(hwc->state & PERF_HES_STOPPED)) {
->  		WARN_ON_ONCE(pmu->n_active <= 0);
->  		pmu->n_active--;
-> -		if (pmu->n_active == 0)
-> +		if (!pmu->n_active) {
-> +			raw_spin_unlock_irqrestore(&pmu->lock, flags);
->  			hrtimer_cancel(&pmu->hrtimer);
-> +			raw_spin_lock_irqsave(&pmu->lock, flags);
-
-Doing a lock-break makes the nr_active and list_del thing non-atomic,
-breaking the whole purpose of the lock.
-
-> +		}
->  
->  		list_del(&event->active_entry);
-
-
-Now; did you actually observe this deadlock or is this a code-reading
-exercise? If you saw an actual deadlock, was cpu-hotplug involved?
-
-
+> +       ct_idle_enter();
+>
+>         if (sbi_is_domain_state_available())
+>                 state = sbi_get_domain_state();
+> @@ -130,12 +130,12 @@ static int __sbi_enter_domain_idle_state
+>
+>         ret = sbi_suspend(state) ? -1 : idx;
+>
+> -       ct_irq_enter_irqson();
+> +       ct_idle_exit();
+> +
+>         if (s2idle)
+>                 dev_pm_genpd_resume(pd_dev);
+>         else
+>                 pm_runtime_get_sync(pd_dev);
+> -       ct_irq_exit_irqson();
+>
+>         cpu_pm_exit();
+>
+> @@ -246,6 +246,7 @@ static int sbi_dt_cpu_init_topology(stru
+>          * of a shared state for the domain, assumes the domain states are all
+>          * deeper states.
+>          */
+> +       drv->states[state_count - 1].flags |= CPUIDLE_FLAG_RCU_IDLE;
+>         drv->states[state_count - 1].enter = sbi_enter_domain_idle_state;
+>         drv->states[state_count - 1].enter_s2idle =
+>                                         sbi_enter_s2idle_domain_idle_state;
+>
+>
