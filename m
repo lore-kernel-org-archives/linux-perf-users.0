@@ -2,139 +2,207 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C4992C54EE9
-	for <linux-perf-users@archiver.kernel.org>; Mon, 19 Sep 2022 05:54:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CE2F9C54EE9
+	for <linux-perf-users@archiver.kernel.org>; Mon, 19 Sep 2022 08:30:00 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229566AbiISFy1 (ORCPT
+        id S229942AbiISI37 (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Mon, 19 Sep 2022 01:54:27 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35646 "EHLO
+        Mon, 19 Sep 2022 04:29:59 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47916 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229458AbiISFyZ (ORCPT
+        with ESMTP id S229996AbiISI3t (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Mon, 19 Sep 2022 01:54:25 -0400
-Received: from NAM10-MW2-obe.outbound.protection.outlook.com (mail-mw2nam10on2046.outbound.protection.outlook.com [40.107.94.46])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 791A313F32;
-        Sun, 18 Sep 2022 22:54:24 -0700 (PDT)
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=aOQFTPIvjseqVxx0aq6u/hTd7YmEwjY44GrSGav4+oKzf0abH6Iy4Gh17p6uUbTMMltZ0CqU9FBjKdb7vUHA6BBn4yClu9qEO9pxyj4nB0dEoWnnzGxp9ECQ1Q0H/GzFJNmOX58GwH3ubsrKqHVm9uDPhYFZ88fB/7+VOGeUFe20+gEz7RaOP+WaS0ljoED85CMoDGVsn/kGNOm64m7+LOfKYf/hVrY1YYFUwT+4BCQSHUwEAqItEE1hqHBI6/4hmdfGhDws3T3n+/OxLyTFr3GH1RegzVhuIKapXoeDnQobf9iqfLCrmAGir4t4J0x2JYNxk2fK+l4cxwJ3MeGY5A==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=Sr8IHySFCPTeOXNSOCpcp3HK3jnefZ/UIH/m4Rw3vBM=;
- b=l03PgMycSMyxVMWGVYLhZIxAVOrtVnjtf3MJzfIZEcIIF7cXuEnLFsHPo//GxdlHvHN5ejUvbIlXr/BYm7X7pUOkvHjZszjfHtmd0nf8akZTy+hjBMXHir8ferKJsrsZkNeiUyQ0cyNUpcxKx0gCE7pB2WYkT9/wzrV+H/0Wf5+gEZV6vUtfRg+WtDVzZHemlWEJi9AUAGYc6RmqD6v0vAAOVSjAE7aufiEyv9I6P5WHB051Oi9WegCcbgcwv6RFKMzd9WJM/WdK7KdeNMIXA8ZpunNK43Ls4XOyECar3qXUXCSWvC74dbsRMRscyURI0XegaPsnoRKKe/rsvmxh+A==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=amd.com; dmarc=pass action=none header.from=amd.com; dkim=pass
- header.d=amd.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=Sr8IHySFCPTeOXNSOCpcp3HK3jnefZ/UIH/m4Rw3vBM=;
- b=toGGXRXnv4ijoMqm/ME5yw3gZq04T12HJkEGO8yf01hk2r9AbkyIgHWIoQ/ck6ptPTSRDZZFx+xkiAu0ruwXNFi4tss40tquo23D5URqZNJDPB/Q3oY8DUP2xBZLWmXhlHduH3rDehpfD3Y4NUjEG26wZDy0c7iF/dv6iivrC6Y=
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=amd.com;
-Received: from PH7PR12MB6588.namprd12.prod.outlook.com (2603:10b6:510:210::10)
- by BN9PR12MB5226.namprd12.prod.outlook.com (2603:10b6:408:11f::11) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.5632.21; Mon, 19 Sep
- 2022 05:54:21 +0000
-Received: from PH7PR12MB6588.namprd12.prod.outlook.com
- ([fe80::3c18:7a48:4291:c9b]) by PH7PR12MB6588.namprd12.prod.outlook.com
- ([fe80::3c18:7a48:4291:c9b%6]) with mapi id 15.20.5632.019; Mon, 19 Sep 2022
- 05:54:21 +0000
-Message-ID: <ecb6c1b6-132e-ae75-88f3-20b6793a3d23@amd.com>
-Date:   Mon, 19 Sep 2022 11:24:05 +0530
-User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:91.0) Gecko/20100101
- Thunderbird/91.9.1
-Subject: Re: [PATCH] perf test: Skip wp modify test on old kernels
-Content-Language: en-US
-To:     Namhyung Kim <namhyung@kernel.org>
-Cc:     Ingo Molnar <mingo@kernel.org>,
+        Mon, 19 Sep 2022 04:29:49 -0400
+Received: from mail-ej1-x631.google.com (mail-ej1-x631.google.com [IPv6:2a00:1450:4864:20::631])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C7FB065EF;
+        Mon, 19 Sep 2022 01:29:47 -0700 (PDT)
+Received: by mail-ej1-x631.google.com with SMTP id sb3so33080313ejb.9;
+        Mon, 19 Sep 2022 01:29:47 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20210112;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:date:from:from:to:cc:subject:date;
+        bh=xoymz8faVzT0wsOgDh8GpMXHhgQOtJ4iGMWiJ5WcE5M=;
+        b=Lm7BO126imBfW2p86+6dSuKs+lWUTMbm5eMgm9pFu/j9M/kqYbL3JPu1nJiCf2uXr4
+         I7IjQVG8rbtLB0O7vzXFYE+FtBv2dj5kEBIvcsHegeo10YjZOcoRy1WxnAtjcEC/iNDW
+         LcZ876QNCiVqfZB64ohts2NklO+0MWD4dVJ/IzGNrK5jBfbQMOHyIOKpjO4KZqmvbhZZ
+         wUdEFhlwl+rhhZZ3tSlF8mb5iHWsovbVUpVkoOGA/EKZVYlXfCdv2ngNkltl17K4xVE6
+         tXMXyO/wJ7y8GipOINg2yZTi0v86atZT9vywEtsJ82Dsk6Aw4RVBVqeYs5+x1cRDgJyy
+         0rEg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:date:from:x-gm-message-state:from:to:cc:subject:date;
+        bh=xoymz8faVzT0wsOgDh8GpMXHhgQOtJ4iGMWiJ5WcE5M=;
+        b=4pCH6dZyol4FmHtqoeQaDQckaCfIEYpfi49CKaIR/iRlJhj2Y/uQ5NXXe7OCMYqZ9b
+         1qbicvvbQ2wlr6E/fdV4zOQ+J2hniYt5qAE63XjVvtD8koyP4PTUjEEsgNRVlNpySeNV
+         xNv8/Vl9GYi1HRfWX7Vyu5W0NuCK/4J+RCx/2g0NY9bz6kV6JxnCbJdN0Yy2zGw7amHt
+         szjuNCG+tjxGDMIKMXwT23WOcRReOAYJn95bvrE41PZ6RnAvDCpvx/kj3XidGJDGJBTY
+         IRY+aHVX4S0/eSaPrrtzXBB1XFDk62fD5ee5SMV2bmtlTwpwLjAiu7bEAPdsKAt8bz1u
+         Hi2g==
+X-Gm-Message-State: ACrzQf30Mw+B7khMu7rjtnDOPePYufZnwD+c4mDyoYmJCZ4ygxl7ARba
+        SA8rS/gZLXsQiNmi9kOr2jU=
+X-Google-Smtp-Source: AMsMyM7YDpMsT8S/fBs/dBZJOSrjXi9Pb8U6bCYB3DP/597jg0tInZfxP8MG7aCnJ70pWKg7ildXhA==
+X-Received: by 2002:a17:906:ee86:b0:741:89bc:27a1 with SMTP id wt6-20020a170906ee8600b0074189bc27a1mr12414411ejb.725.1663576185705;
+        Mon, 19 Sep 2022 01:29:45 -0700 (PDT)
+Received: from pc636 ([155.137.26.201])
+        by smtp.gmail.com with ESMTPSA id s15-20020a1709067b8f00b00775f6081a87sm2271881ejo.121.2022.09.19.01.29.44
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 19 Sep 2022 01:29:45 -0700 (PDT)
+From:   Uladzislau Rezki <urezki@gmail.com>
+X-Google-Original-From: Uladzislau Rezki <urezki@pc636>
+Date:   Mon, 19 Sep 2022 10:29:43 +0200
+To:     Matthew Wilcox <willy@infradead.org>,
+        Kees Cook <keescook@chromium.org>
+Cc:     Kees Cook <keescook@chromium.org>,
+        Uladzislau Rezki <urezki@gmail.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Yu Zhao <yuzhao@google.com>, dev@der-flo.net,
+        linux-mm@kvack.org, linux-hardening@vger.kernel.org,
         Peter Zijlstra <peterz@infradead.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Ian Rogers <irogers@google.com>,
-        Adrian Hunter <adrian.hunter@intel.com>,
-        linux-perf-users@vger.kernel.org,
-        Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Jiri Olsa <jolsa@kernel.org>, ravi.bangoria@amd.com
-References: <20220914183338.546357-1-namhyung@kernel.org>
-From:   Ravi Bangoria <ravi.bangoria@amd.com>
-In-Reply-To: <20220914183338.546357-1-namhyung@kernel.org>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: PN2PR01CA0020.INDPRD01.PROD.OUTLOOK.COM
- (2603:1096:c01:25::25) To PH7PR12MB6588.namprd12.prod.outlook.com
- (2603:10b6:510:210::10)
+        Ingo Molnar <mingo@redhat.com>, linux-kernel@vger.kernel.org,
+        x86@kernel.org, linux-perf-users@vger.kernel.org,
+        linux-arch@vger.kernel.org
+Subject: Re: [PATCH 3/3] usercopy: Add find_vmap_area_try() to avoid deadlocks
+Message-ID: <Yygod+YBwzbMPmgA@pc636>
+References: <20220916135953.1320601-1-keescook@chromium.org>
+ <20220916135953.1320601-4-keescook@chromium.org>
+ <YySML2HfqaE/wXBU@casper.infradead.org>
+ <202209160805.CA47B2D673@keescook>
+ <YyTLTBM4OC6/RnjG@casper.infradead.org>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: PH7PR12MB6588:EE_|BN9PR12MB5226:EE_
-X-MS-Office365-Filtering-Correlation-Id: c3549d62-6efe-4cda-7bd2-08da9a0365cb
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: ObrAIy7ArBc8+BGOAVkl3TuR1mgnRvMw01V09cAd3wo8hzMAcAFDjx1c+Ua5mPU0+nsdc2CRcXpya46UOX8G2tzRdg2iqufYfxm7sGTwXdPtogU2qatRrgMAszsGzMdgwkVa8tXqBBAxNKgqlg6pxFvHmDEAfcT3JUPB7E8po6opyqJThAGg1rxkkMQ3nyYybaG2F7//hmqPLtZEHX76wxdignH1sqohKs8POfUmwnctlgJxsa+0/xPG/FlBMqFLlNKEDWvUqd3cpd852IqB6JjooQHmym7UJ+yMqh9uE4lE4Fp+CXZCO/yfW5ECZ+9PZ/ptCBbLQAhqUA2YC6RCkr6NWDFdVQ4sey75Z86kXCgqvVczt+wAyqF22MvrXrP3DPznm/b6t43n/hS4qTFjLel/tr/yVeJH6VmDtts5jgTN9oYfV+aBABCVl8vGXYo7iiaDOrCS6pf1jOa/hPBSXVIkV/4oTwIglbYWrzOJhW4CdOqsLq3PZYR0cYKOz5cUWWGhB1QxKECco488NfVUAPpZPYjwGmEVlVpW92cJCffd12jJ+1ABababBwR50fuVXriMHqDyLPMgjCWuG+IupUvwuN1a+rcVbwaskOYPIKdmcS9xha+9/radvopSFgqS+yBUspM6pojUuVLk5/KeZ2Xo7YMox6Xz9bu6cKjATpauNKkiY0G//UJoVf4wWoIGAoBcRrXa04G/zsGavUU+39976LRR0ACBdhPT2deh4lqDPI/94L01W1L1F5esKPYXpvgM2Eq8jOn+ZyIsuLebWS/rlVyG7lGeQlWeSbXHgG8=
-X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:PH7PR12MB6588.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230022)(4636009)(366004)(39860400002)(396003)(346002)(136003)(376002)(451199015)(44832011)(4744005)(31686004)(5660300002)(83380400001)(6512007)(26005)(2906002)(6486002)(316002)(54906003)(6916009)(478600001)(38100700002)(2616005)(41300700001)(8936002)(186003)(31696002)(6666004)(86362001)(36756003)(66946007)(66476007)(8676002)(66556008)(6506007)(4326008)(53546011)(43740500002)(45980500001);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0: =?utf-8?B?b2JKSFV1WlhPZzAzRmhhaWcvTHNrOWZmeDdKUVIwN0pUZUg5UGhpOE0wUmFN?=
- =?utf-8?B?SG9Ld0pFN1lGbzRacFRoTU12NjNoNnIxMkRGanJaYmtYSVhrRU9lMjhwbVRm?=
- =?utf-8?B?TzlDc1JaOEROd0FvcisyQ1k0WE1rVGhCdXh0TnVpKzBWSVBmVGtTMDJmRmZL?=
- =?utf-8?B?NWJNRGxPQ1hNNE5YZ0RXeUFRWG9PYnRoMlM4dkVUYlNxQmdqaWd2djNIdlRX?=
- =?utf-8?B?alZScy9NV3RKV1NYQzVIeG4vSjNETW96Nm9HQStvWHUyYTF3UnFuL0RkdFIy?=
- =?utf-8?B?dExTTFNoamZHVmZNV2habFdxbXNPQ05JRzFJbmVtM2I2QWprWWYvMWdQM3o3?=
- =?utf-8?B?cXZCcUpHSXR3cUhuVzd6Y2s4V3FVOHQzb01yZU8wenlxekprRE1ZVzR5cmwx?=
- =?utf-8?B?UXdrMDRVVlNCWUI5VERCdXFDTCtkY2g0K3NpelNIRG8weVYwbkNHOElNSVZD?=
- =?utf-8?B?bHNhV09KbEd4ZmpnUmZtWUFDeXBQL0tKVFlKMnFjU0pmaW9Ed0Noa1BmTnIy?=
- =?utf-8?B?WGFHemNLK0tNNGFOWU5kN3N6WUlZT0phWEc3eTU2TDJVRlh2eHFlbjhsN1VP?=
- =?utf-8?B?N0k1WjJ0TWFUcDcvMGtXaDRDZXFKdkR3WitKRDVseHNSYU8vRGgxdmZOYUZQ?=
- =?utf-8?B?dGU2czhoQmp4L2VTSVpyNVdaNXRuaWRDWFM3TDM5SUs4QmdWRkRRODNobUJO?=
- =?utf-8?B?anhNM1BWZDlGTkhqc1Nub1dKT2MrL1I3YTYyaWlhL1RPRUE1MXZXMGVacGdo?=
- =?utf-8?B?NmtzM3g1aGRTNUhYWEpWaklnUjU1OEhZd3hJSGhnTGVqVkxhMUhoRFU0M0JM?=
- =?utf-8?B?a0VoVUR0MnpPOUlUSHUxUmw0TUFrN013aVRXMzNtUWVHVmZUK2ErY1VoRzFX?=
- =?utf-8?B?WTlCSjBQY1Q1M3g2aWNBbW5sSlZBTXN0VlBucHJWRUhybHF3cE9QQ0hqU1Zm?=
- =?utf-8?B?cUdLMVJkVFBFMjhOZGxkUDF2dmdrYVFGVG1hMU5IdVBla2dobG1vblI4ZXlw?=
- =?utf-8?B?UUJtV2ptSFdwcE5QQ1I5VW5pZnl3VHdkcEJGTGdpend0UG53dytQWWxDd0xI?=
- =?utf-8?B?LzNHVUtmQ0VwL29OZnhXRlVhVDlXeUdzMDRmcDBaQlUrek1ZeUdCajh2UENv?=
- =?utf-8?B?L3BXQTAwQmZqVHlLZkVSc0dkOVQ0aU5IL1U5MVVMNFNCc2M2Tmhnd0NDQ2FR?=
- =?utf-8?B?b0tRUDBxZzMrK253V2JWQjZySCtZTUw5M0VGbjFZcnlLSm5kTEJtckZaOFBW?=
- =?utf-8?B?aG42OTJ6bW9aSGtaS1ZnK0FaOHV0R2FlVGlhcGJkcHdEcjVReWhDMk1uRzBO?=
- =?utf-8?B?TkdIeWhZSk9kUDhWWkNEZnJvYzhaTU1IRXM3RE9objQyUDRsMmNwVFZvN205?=
- =?utf-8?B?SkwvOHVhVnFOZGNRWENPeENXY281SGlSYVdFcjcxSitLL05YbU16Yy9rYWlx?=
- =?utf-8?B?Vi9iLzVubVNRVnZROWxJd3ltVzRSYko2Zzd6amUvTUhlM1lvOW5yWk55YnJG?=
- =?utf-8?B?R0k2elZEd05pUzBUZlQvM0lzQzQxTXBzbHFKLzRMQUdVazFYbU9wY2Zjc2h2?=
- =?utf-8?B?cEQ5bFNCN1JqanRHQmJCQ2RtT05pRFpKNmwxU0ttS0tHNjhBOWo1aDBXQmQ4?=
- =?utf-8?B?VkIxbzliaFJyeDZ0UkJBRW5Xbkk2RE9mSG8vU1g3ZWd3Mkwrdm9kYTlNQU44?=
- =?utf-8?B?RTN3b0lrekxmQjQ3WnJURCthZ0hXQzlEK3ZsUHRVUGdnWFZ2V3ozZnRwWStl?=
- =?utf-8?B?bGw4VlN4WHJsTDlrYVlIalJMUDQ2Ry9ZRGQ2RW9QM3BiWmMwc0tVbUEwcDBM?=
- =?utf-8?B?c1BmRmRvVUNENzZIaDI0YWNNWmp2RXdSL1orMXpVdVhOaFN6TXgwL080bGl2?=
- =?utf-8?B?NGtUNUd5RnhSdmlDemQyV2tpZ2l1QXBPRUhaeXdQRFNDVkVSRlVLWUJuR0JQ?=
- =?utf-8?B?NUNnMFdyY21LYmZZQXphc1h4eFpwVi9UUUNUdHRUYjFSOE9vNHE3RnJ0dld0?=
- =?utf-8?B?NzFtOGk0M1lBUkx2Ylkrb3BQUmY1YlVpakFxQUUvdUU2dUgrUUJnVWx5Q0U0?=
- =?utf-8?B?RmNQbTg4UkFiQkIwTmJCa1RHZS81NXh5WllqQVFZVVB1cFlOb3cxUVdHL2xO?=
- =?utf-8?Q?RqK5xTjbYmZcynOmMafjhVVJz?=
-X-OriginatorOrg: amd.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: c3549d62-6efe-4cda-7bd2-08da9a0365cb
-X-MS-Exchange-CrossTenant-AuthSource: PH7PR12MB6588.namprd12.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 19 Sep 2022 05:54:21.3978
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: r+FGXcwtj/pS8PRwAIWVt2sjTHnza0IIONBA/hrjZWhPP2Ci82SDjle/5T0DBW5+WH+vRb8Y9UfvPW7ZScFnhA==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: BN9PR12MB5226
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <YyTLTBM4OC6/RnjG@casper.infradead.org>
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-On 15-Sep-22 12:03 AM, Namhyung Kim wrote:
-> It uses PERF_EVENT_IOC_MODIFY_ATTRIBUTES ioctl. The kernel would return
-> ENOTTY if it's not supported.  Update the skip reason in that case.
+On Fri, Sep 16, 2022 at 08:15:24PM +0100, Matthew Wilcox wrote:
+> On Fri, Sep 16, 2022 at 08:09:16AM -0700, Kees Cook wrote:
+> > On Fri, Sep 16, 2022 at 03:46:07PM +0100, Matthew Wilcox wrote:
+> > > On Fri, Sep 16, 2022 at 06:59:57AM -0700, Kees Cook wrote:
+> > > > The check_object_size() checks under CONFIG_HARDENED_USERCOPY need to be
+> > > > more defensive against running from interrupt context. Use a best-effort
+> > > > check for VMAP areas when running in interrupt context
+> > > 
+> > > I had something more like this in mind:
+> > 
+> > Yeah, I like -EAGAIN. I'd like to keep the interrupt test to choose lock
+> > vs trylock, otherwise it's trivial to bypass the hardening test by having
+> > all the other CPUs beating on the spinlock.
+> 
+> I was thinking about this:
+> 
+> +++ b/mm/vmalloc.c
+> @@ -1844,12 +1844,19 @@
+>  {
+>  	struct vmap_area *va;
+> 
+> -	if (!spin_lock(&vmap_area_lock))
+> -		return ERR_PTR(-EAGAIN);
+> +	/*
+> +	 * It's safe to walk the rbtree under the RCU lock, but we may
+> +	 * incorrectly find no vmap_area if the tree is being modified.
+> +	 */
+> +	rcu_read_lock();
+>  	va = __find_vmap_area(addr, &vmap_area_root);
+> -	spin_unlock(&vmap_area_lock);
+> +	if (!va && in_interrupt())
+> +		va = ERR_PTR(-EAGAIN);
+> +	rcu_read_unlock();
+> 
+> -	return va;
+> +	if (va)
+> +		return va;
+> +	return find_vmap_area(addr);
+>  }
+> 
+>  /*** Per cpu kva allocator ***/
+> 
+> ... but I don't think that works since vmap_areas aren't freed by RCU,
+> and I think they're reused without going through an RCU cycle.
+>
+Right you are. It should be freed via RCU-core. So wrapping by rcu_* is
+useless here.
 
-Reviewed-by: Ravi Bangoria <ravi.bangoria@amd.com>
+> 
+> So here's attempt #4, which actually compiles, and is, I think, what you
+> had in mind.
+> 
+> diff --git a/include/linux/vmalloc.h b/include/linux/vmalloc.h
+> index 096d48aa3437..2b7c52e76856 100644
+> --- a/include/linux/vmalloc.h
+> +++ b/include/linux/vmalloc.h
+> @@ -215,7 +215,7 @@ extern struct vm_struct *__get_vm_area_caller(unsigned long size,
+>  void free_vm_area(struct vm_struct *area);
+>  extern struct vm_struct *remove_vm_area(const void *addr);
+>  extern struct vm_struct *find_vm_area(const void *addr);
+> -struct vmap_area *find_vmap_area(unsigned long addr);
+> +struct vmap_area *find_vmap_area_try(unsigned long addr);
+>  
+>  static inline bool is_vm_area_hugepages(const void *addr)
+>  {
+> diff --git a/mm/usercopy.c b/mm/usercopy.c
+> index c1ee15a98633..e0fb605c1b38 100644
+> --- a/mm/usercopy.c
+> +++ b/mm/usercopy.c
+> @@ -173,7 +173,11 @@ static inline void check_heap_object(const void *ptr, unsigned long n,
+>  	}
+>  
+>  	if (is_vmalloc_addr(ptr)) {
+> -		struct vmap_area *area = find_vmap_area(addr);
+> +		struct vmap_area *area = find_vmap_area_try(addr);
+> +
+> +		/* We may be in NMI context */
+> +		if (area == ERR_PTR(-EAGAIN))
+> +			return;
+>  
+>  		if (!area)
+>  			usercopy_abort("vmalloc", "no area", to_user, 0, n);
+> diff --git a/mm/vmalloc.c b/mm/vmalloc.c
+> index dd6cdb201195..c47b3b5d1c2d 100644
+> --- a/mm/vmalloc.c
+> +++ b/mm/vmalloc.c
+> @@ -1829,7 +1829,7 @@ static void free_unmap_vmap_area(struct vmap_area *va)
+>  	free_vmap_area_noflush(va);
+>  }
+>  
+> -struct vmap_area *find_vmap_area(unsigned long addr)
+> +static struct vmap_area *find_vmap_area(unsigned long addr)
+>  {
+>  	struct vmap_area *va;
+>  
+> @@ -1840,6 +1840,26 @@ struct vmap_area *find_vmap_area(unsigned long addr)
+>  	return va;
+>  }
+>  
+> +/*
+> + * The vmap_area_lock is not interrupt-safe, and we can end up here from
+> + * NMI context, so it's not worth even trying to make it IRQ-safe.
+> + */
+> +struct vmap_area *find_vmap_area_try(unsigned long addr)
+> +{
+> +	struct vmap_area *va;
+> +
+> +	if (in_interrupt()) {
+> +		if (!spin_trylock(&vmap_area_lock))
+> +			return ERR_PTR(-EAGAIN);
+> +	} else {
+> +		spin_lock(&vmap_area_lock);
+> +	}
+> +	va = __find_vmap_area(addr, &vmap_area_root);
+> +	spin_unlock(&vmap_area_lock);
+> +
+> +	return va;
+> +}
+> +
+>
+If we look at it other way around. There is a user that tries to access
+the tree from IRQ context. Can we just extend the find_vmap_area() with?
 
-> I'd like to add Fixes: 2e85d5979e8d tag here but it'd conlict with the
-> later change in e47c6ecaae1d.
+   - in_interrupt();
+   - use trylock if so.
 
-Is it worth to backport?
-
-Thanks,
-Ravi
+--
+Uladzislau Rezki
