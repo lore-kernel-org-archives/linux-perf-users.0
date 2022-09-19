@@ -2,194 +2,139 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B040BC32771
-	for <linux-perf-users@archiver.kernel.org>; Sun, 18 Sep 2022 03:28:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C4992C54EE9
+	for <linux-perf-users@archiver.kernel.org>; Mon, 19 Sep 2022 05:54:27 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229483AbiIRD24 (ORCPT
+        id S229566AbiISFy1 (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Sat, 17 Sep 2022 23:28:56 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44658 "EHLO
+        Mon, 19 Sep 2022 01:54:27 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35646 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229496AbiIRD2y (ORCPT
+        with ESMTP id S229458AbiISFyZ (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Sat, 17 Sep 2022 23:28:54 -0400
-Received: from mail-pg1-x52d.google.com (mail-pg1-x52d.google.com [IPv6:2607:f8b0:4864:20::52d])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0BF6D28E29
-        for <linux-perf-users@vger.kernel.org>; Sat, 17 Sep 2022 20:28:50 -0700 (PDT)
-Received: by mail-pg1-x52d.google.com with SMTP id t65so23879328pgt.2
-        for <linux-perf-users@vger.kernel.org>; Sat, 17 Sep 2022 20:28:50 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date;
-        bh=TO1lgjEBuoqSH/1skNlkmUo8mpA3J4adLJy7sHWwA2o=;
-        b=rKZF6xhdNr3PJxqpQpbc/Ae97AzUZQwTi6Nf/2ESmMf9CywgFPxaKM17UmPnjFTclU
-         wA5xFNIcHWSUw902PRTt3TTiPbKAuU4hfLSuj9fdwaACpgXZnvQBqakmZH+tnPDzWOQ5
-         oOuYLjZM/Aiuz83r8UWWNEHi5nmlfOtIeyX5ku5FXBXqJ2lowwNTcJR6fUc+tusLGt2e
-         Ofoekhj3IdbObjXJashnXNJLYjxo72qdjn1Yr7wLG9uP2hBwSJxIq6/hka+QlWOmT4qc
-         Vsj1kY692We2O8c/nOpL3LCDUM2JL7ATaRqbCtwbrmDlPWRk/31rqxQhO4PPfjQo04YS
-         Vh5Q==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date;
-        bh=TO1lgjEBuoqSH/1skNlkmUo8mpA3J4adLJy7sHWwA2o=;
-        b=z4RdMAi2b8POt+SfTNsos2GNzpDMrP84Jt3HwDJWy3jy/6mj5yQPnENdJe5WJ3DcrQ
-         HUCLgUz/MWgLjmSTRuw1wiSNd9mXn1lnMAeGkf8j5DdRs0O/D5tOuhr02kF2NfmlAsyU
-         g8sWiFe0GZxnEFg5SkdfFZwt3U9vrUQAvR/KVXWEM7TyMbm0OzfLiex+rT0yTsGKWERz
-         C+FuwaGP/hQ8KsR+H2ZQdY0pyXRCj5woQcuQoVfHoP5nPWvCi4uQ7qPSZ5Vx0+DUasJH
-         kRJ9QLzxq0tOZppM58exL7cSVenFO1krsm29HEUgw55eJv/Oc5/km7KgTVe+t9wldJYK
-         crpw==
-X-Gm-Message-State: ACrzQf1/Thd7d5xH8QphWNqMQyaZu53fQnPnJ/T/JkcRZsl+hfcBLmMB
-        YJI04jJzHIuF9u3sFTfd5mBK4g==
-X-Google-Smtp-Source: AMsMyM6nbZPZvj09ZSNhXJDObtdCCywFh8IDURznRTcNZJxGognZEJvWXDiqkX9cNoTTbYUQ1BX77Q==
-X-Received: by 2002:a65:6955:0:b0:439:a99b:bca5 with SMTP id w21-20020a656955000000b00439a99bbca5mr10642998pgq.80.1663471729271;
-        Sat, 17 Sep 2022 20:28:49 -0700 (PDT)
-Received: from leoy-yangtze.lan (45.78.11.189.16clouds.com. [45.78.11.189])
-        by smtp.gmail.com with ESMTPSA id 68-20020a620647000000b00545832dd969sm12255075pfg.145.2022.09.17.20.28.46
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sat, 17 Sep 2022 20:28:48 -0700 (PDT)
-From:   Leo Yan <leo.yan@linaro.org>
-To:     Arnaldo Carvalho de Melo <acme@kernel.org>,
+        Mon, 19 Sep 2022 01:54:25 -0400
+Received: from NAM10-MW2-obe.outbound.protection.outlook.com (mail-mw2nam10on2046.outbound.protection.outlook.com [40.107.94.46])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 791A313F32;
+        Sun, 18 Sep 2022 22:54:24 -0700 (PDT)
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=aOQFTPIvjseqVxx0aq6u/hTd7YmEwjY44GrSGav4+oKzf0abH6Iy4Gh17p6uUbTMMltZ0CqU9FBjKdb7vUHA6BBn4yClu9qEO9pxyj4nB0dEoWnnzGxp9ECQ1Q0H/GzFJNmOX58GwH3ubsrKqHVm9uDPhYFZ88fB/7+VOGeUFe20+gEz7RaOP+WaS0ljoED85CMoDGVsn/kGNOm64m7+LOfKYf/hVrY1YYFUwT+4BCQSHUwEAqItEE1hqHBI6/4hmdfGhDws3T3n+/OxLyTFr3GH1RegzVhuIKapXoeDnQobf9iqfLCrmAGir4t4J0x2JYNxk2fK+l4cxwJ3MeGY5A==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=Sr8IHySFCPTeOXNSOCpcp3HK3jnefZ/UIH/m4Rw3vBM=;
+ b=l03PgMycSMyxVMWGVYLhZIxAVOrtVnjtf3MJzfIZEcIIF7cXuEnLFsHPo//GxdlHvHN5ejUvbIlXr/BYm7X7pUOkvHjZszjfHtmd0nf8akZTy+hjBMXHir8ferKJsrsZkNeiUyQ0cyNUpcxKx0gCE7pB2WYkT9/wzrV+H/0Wf5+gEZV6vUtfRg+WtDVzZHemlWEJi9AUAGYc6RmqD6v0vAAOVSjAE7aufiEyv9I6P5WHB051Oi9WegCcbgcwv6RFKMzd9WJM/WdK7KdeNMIXA8ZpunNK43Ls4XOyECar3qXUXCSWvC74dbsRMRscyURI0XegaPsnoRKKe/rsvmxh+A==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=amd.com; dmarc=pass action=none header.from=amd.com; dkim=pass
+ header.d=amd.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=Sr8IHySFCPTeOXNSOCpcp3HK3jnefZ/UIH/m4Rw3vBM=;
+ b=toGGXRXnv4ijoMqm/ME5yw3gZq04T12HJkEGO8yf01hk2r9AbkyIgHWIoQ/ck6ptPTSRDZZFx+xkiAu0ruwXNFi4tss40tquo23D5URqZNJDPB/Q3oY8DUP2xBZLWmXhlHduH3rDehpfD3Y4NUjEG26wZDy0c7iF/dv6iivrC6Y=
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=amd.com;
+Received: from PH7PR12MB6588.namprd12.prod.outlook.com (2603:10b6:510:210::10)
+ by BN9PR12MB5226.namprd12.prod.outlook.com (2603:10b6:408:11f::11) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.5632.21; Mon, 19 Sep
+ 2022 05:54:21 +0000
+Received: from PH7PR12MB6588.namprd12.prod.outlook.com
+ ([fe80::3c18:7a48:4291:c9b]) by PH7PR12MB6588.namprd12.prod.outlook.com
+ ([fe80::3c18:7a48:4291:c9b%6]) with mapi id 15.20.5632.019; Mon, 19 Sep 2022
+ 05:54:21 +0000
+Message-ID: <ecb6c1b6-132e-ae75-88f3-20b6793a3d23@amd.com>
+Date:   Mon, 19 Sep 2022 11:24:05 +0530
+User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:91.0) Gecko/20100101
+ Thunderbird/91.9.1
+Subject: Re: [PATCH] perf test: Skip wp modify test on old kernels
+Content-Language: en-US
+To:     Namhyung Kim <namhyung@kernel.org>
+Cc:     Ingo Molnar <mingo@kernel.org>,
         Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Jiri Olsa <jolsa@kernel.org>,
-        Namhyung Kim <namhyung@kernel.org>,
-        linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org
-Cc:     Leo Yan <leo.yan@linaro.org>
-Subject: [PATCH RESEND v2] perf test: Introduce script for data symbol testing
-Date:   Sun, 18 Sep 2022 11:28:43 +0800
-Message-Id: <20220918032843.27285-1-leo.yan@linaro.org>
-X-Mailer: git-send-email 2.34.1
+        LKML <linux-kernel@vger.kernel.org>,
+        Ian Rogers <irogers@google.com>,
+        Adrian Hunter <adrian.hunter@intel.com>,
+        linux-perf-users@vger.kernel.org,
+        Arnaldo Carvalho de Melo <acme@kernel.org>,
+        Jiri Olsa <jolsa@kernel.org>, ravi.bangoria@amd.com
+References: <20220914183338.546357-1-namhyung@kernel.org>
+From:   Ravi Bangoria <ravi.bangoria@amd.com>
+In-Reply-To: <20220914183338.546357-1-namhyung@kernel.org>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: PN2PR01CA0020.INDPRD01.PROD.OUTLOOK.COM
+ (2603:1096:c01:25::25) To PH7PR12MB6588.namprd12.prod.outlook.com
+ (2603:10b6:510:210::10)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: PH7PR12MB6588:EE_|BN9PR12MB5226:EE_
+X-MS-Office365-Filtering-Correlation-Id: c3549d62-6efe-4cda-7bd2-08da9a0365cb
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info: ObrAIy7ArBc8+BGOAVkl3TuR1mgnRvMw01V09cAd3wo8hzMAcAFDjx1c+Ua5mPU0+nsdc2CRcXpya46UOX8G2tzRdg2iqufYfxm7sGTwXdPtogU2qatRrgMAszsGzMdgwkVa8tXqBBAxNKgqlg6pxFvHmDEAfcT3JUPB7E8po6opyqJThAGg1rxkkMQ3nyYybaG2F7//hmqPLtZEHX76wxdignH1sqohKs8POfUmwnctlgJxsa+0/xPG/FlBMqFLlNKEDWvUqd3cpd852IqB6JjooQHmym7UJ+yMqh9uE4lE4Fp+CXZCO/yfW5ECZ+9PZ/ptCBbLQAhqUA2YC6RCkr6NWDFdVQ4sey75Z86kXCgqvVczt+wAyqF22MvrXrP3DPznm/b6t43n/hS4qTFjLel/tr/yVeJH6VmDtts5jgTN9oYfV+aBABCVl8vGXYo7iiaDOrCS6pf1jOa/hPBSXVIkV/4oTwIglbYWrzOJhW4CdOqsLq3PZYR0cYKOz5cUWWGhB1QxKECco488NfVUAPpZPYjwGmEVlVpW92cJCffd12jJ+1ABababBwR50fuVXriMHqDyLPMgjCWuG+IupUvwuN1a+rcVbwaskOYPIKdmcS9xha+9/radvopSFgqS+yBUspM6pojUuVLk5/KeZ2Xo7YMox6Xz9bu6cKjATpauNKkiY0G//UJoVf4wWoIGAoBcRrXa04G/zsGavUU+39976LRR0ACBdhPT2deh4lqDPI/94L01W1L1F5esKPYXpvgM2Eq8jOn+ZyIsuLebWS/rlVyG7lGeQlWeSbXHgG8=
+X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:PH7PR12MB6588.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230022)(4636009)(366004)(39860400002)(396003)(346002)(136003)(376002)(451199015)(44832011)(4744005)(31686004)(5660300002)(83380400001)(6512007)(26005)(2906002)(6486002)(316002)(54906003)(6916009)(478600001)(38100700002)(2616005)(41300700001)(8936002)(186003)(31696002)(6666004)(86362001)(36756003)(66946007)(66476007)(8676002)(66556008)(6506007)(4326008)(53546011)(43740500002)(45980500001);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0: =?utf-8?B?b2JKSFV1WlhPZzAzRmhhaWcvTHNrOWZmeDdKUVIwN0pUZUg5UGhpOE0wUmFN?=
+ =?utf-8?B?SG9Ld0pFN1lGbzRacFRoTU12NjNoNnIxMkRGanJaYmtYSVhrRU9lMjhwbVRm?=
+ =?utf-8?B?TzlDc1JaOEROd0FvcisyQ1k0WE1rVGhCdXh0TnVpKzBWSVBmVGtTMDJmRmZL?=
+ =?utf-8?B?NWJNRGxPQ1hNNE5YZ0RXeUFRWG9PYnRoMlM4dkVUYlNxQmdqaWd2djNIdlRX?=
+ =?utf-8?B?alZScy9NV3RKV1NYQzVIeG4vSjNETW96Nm9HQStvWHUyYTF3UnFuL0RkdFIy?=
+ =?utf-8?B?dExTTFNoamZHVmZNV2habFdxbXNPQ05JRzFJbmVtM2I2QWprWWYvMWdQM3o3?=
+ =?utf-8?B?cXZCcUpHSXR3cUhuVzd6Y2s4V3FVOHQzb01yZU8wenlxekprRE1ZVzR5cmwx?=
+ =?utf-8?B?UXdrMDRVVlNCWUI5VERCdXFDTCtkY2g0K3NpelNIRG8weVYwbkNHOElNSVZD?=
+ =?utf-8?B?bHNhV09KbEd4ZmpnUmZtWUFDeXBQL0tKVFlKMnFjU0pmaW9Ed0Noa1BmTnIy?=
+ =?utf-8?B?WGFHemNLK0tNNGFOWU5kN3N6WUlZT0phWEc3eTU2TDJVRlh2eHFlbjhsN1VP?=
+ =?utf-8?B?N0k1WjJ0TWFUcDcvMGtXaDRDZXFKdkR3WitKRDVseHNSYU8vRGgxdmZOYUZQ?=
+ =?utf-8?B?dGU2czhoQmp4L2VTSVpyNVdaNXRuaWRDWFM3TDM5SUs4QmdWRkRRODNobUJO?=
+ =?utf-8?B?anhNM1BWZDlGTkhqc1Nub1dKT2MrL1I3YTYyaWlhL1RPRUE1MXZXMGVacGdo?=
+ =?utf-8?B?NmtzM3g1aGRTNUhYWEpWaklnUjU1OEhZd3hJSGhnTGVqVkxhMUhoRFU0M0JM?=
+ =?utf-8?B?a0VoVUR0MnpPOUlUSHUxUmw0TUFrN013aVRXMzNtUWVHVmZUK2ErY1VoRzFX?=
+ =?utf-8?B?WTlCSjBQY1Q1M3g2aWNBbW5sSlZBTXN0VlBucHJWRUhybHF3cE9QQ0hqU1Zm?=
+ =?utf-8?B?cUdLMVJkVFBFMjhOZGxkUDF2dmdrYVFGVG1hMU5IdVBla2dobG1vblI4ZXlw?=
+ =?utf-8?B?UUJtV2ptSFdwcE5QQ1I5VW5pZnl3VHdkcEJGTGdpend0UG53dytQWWxDd0xI?=
+ =?utf-8?B?LzNHVUtmQ0VwL29OZnhXRlVhVDlXeUdzMDRmcDBaQlUrek1ZeUdCajh2UENv?=
+ =?utf-8?B?L3BXQTAwQmZqVHlLZkVSc0dkOVQ0aU5IL1U5MVVMNFNCc2M2Tmhnd0NDQ2FR?=
+ =?utf-8?B?b0tRUDBxZzMrK253V2JWQjZySCtZTUw5M0VGbjFZcnlLSm5kTEJtckZaOFBW?=
+ =?utf-8?B?aG42OTJ6bW9aSGtaS1ZnK0FaOHV0R2FlVGlhcGJkcHdEcjVReWhDMk1uRzBO?=
+ =?utf-8?B?TkdIeWhZSk9kUDhWWkNEZnJvYzhaTU1IRXM3RE9objQyUDRsMmNwVFZvN205?=
+ =?utf-8?B?SkwvOHVhVnFOZGNRWENPeENXY281SGlSYVdFcjcxSitLL05YbU16Yy9rYWlx?=
+ =?utf-8?B?Vi9iLzVubVNRVnZROWxJd3ltVzRSYko2Zzd6amUvTUhlM1lvOW5yWk55YnJG?=
+ =?utf-8?B?R0k2elZEd05pUzBUZlQvM0lzQzQxTXBzbHFKLzRMQUdVazFYbU9wY2Zjc2h2?=
+ =?utf-8?B?cEQ5bFNCN1JqanRHQmJCQ2RtT05pRFpKNmwxU0ttS0tHNjhBOWo1aDBXQmQ4?=
+ =?utf-8?B?VkIxbzliaFJyeDZ0UkJBRW5Xbkk2RE9mSG8vU1g3ZWd3Mkwrdm9kYTlNQU44?=
+ =?utf-8?B?RTN3b0lrekxmQjQ3WnJURCthZ0hXQzlEK3ZsUHRVUGdnWFZ2V3ozZnRwWStl?=
+ =?utf-8?B?bGw4VlN4WHJsTDlrYVlIalJMUDQ2Ry9ZRGQ2RW9QM3BiWmMwc0tVbUEwcDBM?=
+ =?utf-8?B?c1BmRmRvVUNENzZIaDI0YWNNWmp2RXdSL1orMXpVdVhOaFN6TXgwL080bGl2?=
+ =?utf-8?B?NGtUNUd5RnhSdmlDemQyV2tpZ2l1QXBPRUhaeXdQRFNDVkVSRlVLWUJuR0JQ?=
+ =?utf-8?B?NUNnMFdyY21LYmZZQXphc1h4eFpwVi9UUUNUdHRUYjFSOE9vNHE3RnJ0dld0?=
+ =?utf-8?B?NzFtOGk0M1lBUkx2Ylkrb3BQUmY1YlVpakFxQUUvdUU2dUgrUUJnVWx5Q0U0?=
+ =?utf-8?B?RmNQbTg4UkFiQkIwTmJCa1RHZS81NXh5WllqQVFZVVB1cFlOb3cxUVdHL2xO?=
+ =?utf-8?Q?RqK5xTjbYmZcynOmMafjhVVJz?=
+X-OriginatorOrg: amd.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: c3549d62-6efe-4cda-7bd2-08da9a0365cb
+X-MS-Exchange-CrossTenant-AuthSource: PH7PR12MB6588.namprd12.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 19 Sep 2022 05:54:21.3978
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: r+FGXcwtj/pS8PRwAIWVt2sjTHnza0IIONBA/hrjZWhPP2Ci82SDjle/5T0DBW5+WH+vRb8Y9UfvPW7ZScFnhA==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: BN9PR12MB5226
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-This commit introduces a shell script for data symbol testing.
+On 15-Sep-22 12:03 AM, Namhyung Kim wrote:
+> It uses PERF_EVENT_IOC_MODIFY_ATTRIBUTES ioctl. The kernel would return
+> ENOTTY if it's not supported.  Update the skip reason in that case.
 
-The testing is designed a data structure with 64-byte alignment, it has
-two fields "data1" and "data2", and other fields are reserved.
+Reviewed-by: Ravi Bangoria <ravi.bangoria@amd.com>
 
-Using "perf mem" command, we can record and report memory samples for a
-self-contained workload with 1 second duration.  If have no any memory
-sample for the data structure "buf1", it reports failure;  and by
-checking the offset in structure "buf1", if any memory accessing is not
-for "data1" and "data2" fields, it means wrong data symbol parsing and
-returns failure.
+> I'd like to add Fixes: 2e85d5979e8d tag here but it'd conlict with the
+> later change in e47c6ecaae1d.
 
-Signed-off-by: Leo Yan <leo.yan@linaro.org>
----
+Is it worth to backport?
 
-Changes from v1:
-- Removed "killall" since the test has no child process (Ian);
-- Used "char" instead of "long" in the buf structure.
-
- tools/perf/tests/shell/test_data_symbol.sh | 92 ++++++++++++++++++++++
- 1 file changed, 92 insertions(+)
- create mode 100755 tools/perf/tests/shell/test_data_symbol.sh
-
-diff --git a/tools/perf/tests/shell/test_data_symbol.sh b/tools/perf/tests/shell/test_data_symbol.sh
-new file mode 100755
-index 000000000000..d007513ecfbe
---- /dev/null
-+++ b/tools/perf/tests/shell/test_data_symbol.sh
-@@ -0,0 +1,92 @@
-+#!/bin/bash
-+# Test data symbol
-+
-+# SPDX-License-Identifier: GPL-2.0
-+# Leo Yan <leo.yan@linaro.org>, 2022
-+
-+skip_if_no_mem_event() {
-+	perf mem record -e list 2>&1 | egrep -q 'available' && return 0
-+	return 2
-+}
-+
-+skip_if_no_mem_event || exit 2
-+
-+# skip if there's no compiler
-+if ! [ -x "$(command -v cc)" ]; then
-+	echo "skip: no compiler, install gcc"
-+	exit 2
-+fi
-+
-+TEST_PROGRAM_SOURCE=$(mktemp /tmp/__perf_test.program.XXXXX.c)
-+TEST_PROGRAM=$(mktemp /tmp/__perf_test.program.XXXXX)
-+PERF_DATA=$(mktemp /tmp/__perf_test.perf.data.XXXXX)
-+
-+check_result() {
-+	# The memory report format is as below:
-+	#    99.92%  ...  [.] buf1+0x38  ...
-+	result=$(perf mem report -i ${PERF_DATA} --stdio 2>&1 | egrep "buf1" | \
-+		awk '{ for (i = 1; i <= NF; i++) { if ($i ~ /^buf1/) { print $i; break; } } }')
-+
-+	# Testing is failed if has no any sample for "buf1"
-+	[ -z "$result" ] && return 1
-+
-+	while IFS= read -r line; do
-+		# The "data1" and "data2" fields in structure "buf1" have
-+		# offset "0x0" and "0x38", returns failure if detect any
-+		# other offset value.
-+		if [ "$line" != "buf1+0x0" ] && [ "$line" != "buf1+0x38" ]; then
-+			return 1
-+		fi
-+	done <<< "$result"
-+
-+	return 0
-+}
-+
-+cleanup_files()
-+{
-+	echo "Cleaning up files..."
-+	rm -f ${PERF_DATA}
-+	rm -f ${TEST_PROGRAM_SOURCE}
-+	rm -f ${TEST_PROGRAM}
-+}
-+
-+trap cleanup_files exit term int
-+
-+# compile test program
-+cat << EOF > $TEST_PROGRAM_SOURCE
-+#include <stdio.h>
-+#include <stdlib.h>
-+#include <unistd.h>
-+
-+typedef struct _buf {
-+	char data1;
-+	char reserved[55];
-+	char data2;
-+} buf __attribute__((aligned(64)));
-+
-+static buf buf1;
-+
-+int main() {
-+	int i;
-+	for (;;) {
-+		buf1.data1++;
-+		buf1.data2 += buf1.data1;
-+	}
-+	return 0;
-+}
-+EOF
-+
-+echo "Compiling test program..."
-+cc $TEST_PROGRAM_SOURCE -o $TEST_PROGRAM || exit 1
-+
-+echo "Recording workload..."
-+perf mem record --all-user -o ${PERF_DATA} -- $TEST_PROGRAM &
-+PERFPID=$!
-+
-+sleep 1
-+
-+kill $PERFPID
-+wait $PERFPID
-+
-+check_result
-+exit $?
--- 
-2.34.1
-
+Thanks,
+Ravi
