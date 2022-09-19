@@ -2,95 +2,99 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1862AECAAD3
-	for <linux-perf-users@archiver.kernel.org>; Mon, 19 Sep 2022 19:16:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D11D3ECAAD3
+	for <linux-perf-users@archiver.kernel.org>; Mon, 19 Sep 2022 19:26:29 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229582AbiISTQl (ORCPT
+        id S229693AbiIST02 (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Mon, 19 Sep 2022 15:16:41 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46216 "EHLO
+        Mon, 19 Sep 2022 15:26:28 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55184 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229560AbiISTQk (ORCPT
+        with ESMTP id S229678AbiIST00 (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Mon, 19 Sep 2022 15:16:40 -0400
-Received: from mail-pj1-x1030.google.com (mail-pj1-x1030.google.com [IPv6:2607:f8b0:4864:20::1030])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 52F163D5AB;
-        Mon, 19 Sep 2022 12:16:38 -0700 (PDT)
-Received: by mail-pj1-x1030.google.com with SMTP id o70-20020a17090a0a4c00b00202f898fa86so200062pjo.2;
-        Mon, 19 Sep 2022 12:16:38 -0700 (PDT)
+        Mon, 19 Sep 2022 15:26:26 -0400
+Received: from mail-pj1-x102b.google.com (mail-pj1-x102b.google.com [IPv6:2607:f8b0:4864:20::102b])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4FD5F40BE5
+        for <linux-perf-users@vger.kernel.org>; Mon, 19 Sep 2022 12:26:24 -0700 (PDT)
+Received: by mail-pj1-x102b.google.com with SMTP id d64-20020a17090a6f4600b00202ce056566so8385099pjk.4
+        for <linux-perf-users@vger.kernel.org>; Mon, 19 Sep 2022 12:26:24 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20210112;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date;
-        bh=kto0Fw6Y7MnDKJFxsFF5qnCzEUoaNF/I4dExXU0Pygg=;
-        b=VjiDfYA94Wdlty7c8PpPHHR0SAiAw8suAjvRNZl8DKr1ranNySZCyYU6Uc8wKMmlO4
-         ajWPSD9nTUHcAyKWhydh2AmBADKS3ryImaF28B4BpcUq92zdpaAtILLrkHnZowwm4wIu
-         ulnReooR/Jk3kASlu6wkM3brhC6U40ftHElGBfuvvx0p4yUREnDrOcorOHKjcl6FG+7H
-         x6NeGsag+WvbMH+WhlrAONcnd2zEW7SvRw82iSb5Ulz7NtIVW0NAyodqrTTtWy4U0hG4
-         2WMRYUrCMCPDDKMhNpQj2KYdrrys97VBhbReUd3ajT/bY+Ls/28feJEqMcrwC8ACma9J
-         KTag==
+        d=chromium.org; s=google;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date;
+        bh=RmR4iKksLM46UToapAYzrq41XElOopC0q9ix9wCyuKs=;
+        b=PVp6YfOyhZha6HJBZg4yMtXtA6aL/+bfSb1OxdA/ZExOmbVQM2yfYZsTWjQ6063o+g
+         O/WXQa7b/F65Rx7p9dmtXDkLgZhqolfdom4zM4hw974cbNh9+jBHQds5pbZU4LQk7WHZ
+         1voIXAXh0NcOJOcUipffT2wyw4qSXZ8I5NPMg=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date;
-        bh=kto0Fw6Y7MnDKJFxsFF5qnCzEUoaNF/I4dExXU0Pygg=;
-        b=6KV+OFKu8pUUImK/aLMgaKbYjxclLaK9MmNWx7h8bq+8WZyKJLkFwMqgVWVtMxH26b
-         k5Bsdm91Bf9QLaZ114Z4l0xk24nX5EHInmRzLVd6jcwO0WaxrKAR9LmxA0Lx1X1J+kB9
-         BKcI3GHJMKnd9kXGPNwr2TaG4/tf3mg1TcI/bfwwi4L26nfAQgR52KZYAR6CXSIit/2A
-         UCONiGsBptrQsYpaQCaxcxsRRPuSa6Vir56X4QOo5CvItsCdeQJujxXDw/HRIVSy61T5
-         eyn1GcDrDx3D+jBGZiK/RpUNMznMWjkOv623D2tEhzY83IqUZb0KNEjT4FWd8HpSPeZ4
-         poZw==
-X-Gm-Message-State: ACrzQf1l+aoDKdbvCMns3EVi65CJQo3Xv6/r2G6CZJkSUikogkaFouYV
-        jgcUqueMdNu2TU4hyELySQZ/Tfte4Yo72A==
-X-Google-Smtp-Source: AMsMyM7TbdBoV4FPU1gJ/1qkP30y9Ubrg2U2ktp5ncedp6FZk8W3EAqIpCWVyg4nMMP2mI6Tg41ezA==
-X-Received: by 2002:a17:902:e212:b0:178:5c:8248 with SMTP id u18-20020a170902e21200b00178005c8248mr1260783plb.102.1663614997503;
-        Mon, 19 Sep 2022 12:16:37 -0700 (PDT)
-Received: from localhost.localdomain (lily-optiplex-3070.dynamic.ucsd.edu. [2607:f720:1300:3033::1:4dd])
-        by smtp.googlemail.com with ESMTPSA id s11-20020a17090aba0b00b002036006d65bsm5965185pjr.39.2022.09.19.12.16.35
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date;
+        bh=RmR4iKksLM46UToapAYzrq41XElOopC0q9ix9wCyuKs=;
+        b=u6649QkcZhm26Ur2+2xUcXLXiIVMglpcxtRZBbsoDkA4r8ojJ0ElWkNwnzDmrLmhxG
+         I0Diw7gJ5pdp0GxlwMUwhjEik6tVoWJQwXEO+s+evNWRuM2Wlbfdp8aMEsGRebTIXPkE
+         UDQoKMGc6q+d5skj6WVwT7UK1V5EfEJWgWEy5eWu+9o1DH/i89ZP3ITOocqHpWmGfBoU
+         NiWXLKobm/NixxymgJY0bwIITloFSCpGVIkibEprCcfjYh51+XvoZ73u+UrtjXXZjOS6
+         3kY9UoVngPA4WO0Z/EZcZGODCPV8JxtvMXsdpa2NAOKln6+LOr3fhlzdG3GwvkbkJTYp
+         FMsw==
+X-Gm-Message-State: ACrzQf2tWD2hX9YTGrEdMW4vK3xtBaDbH364S+jWeJqLpB+d0al6NnDr
+        dYgEEqY52vVVqnX+AAudE+/I9Q==
+X-Google-Smtp-Source: AMsMyM7jddefl5071rxvDEg9p60KFOEMQVhTHRe5BfeqSqt5aIP+GxxXxhHHyIaoiGWYhH5Gh+7ztw==
+X-Received: by 2002:a17:90a:ab91:b0:202:a520:56c9 with SMTP id n17-20020a17090aab9100b00202a52056c9mr33416244pjq.1.1663615583818;
+        Mon, 19 Sep 2022 12:26:23 -0700 (PDT)
+Received: from www.outflux.net (smtp.outflux.net. [198.145.64.163])
+        by smtp.gmail.com with ESMTPSA id n17-20020a170902e55100b001752cb111e0sm21243619plf.69.2022.09.19.12.26.22
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 19 Sep 2022 12:16:36 -0700 (PDT)
-From:   Li Zhong <floridsleeves@gmail.com>
-To:     linux-perf-users@vger.kernel.org, bpf@vger.kernel.org
-Cc:     namhyung@kernel.org, jolsa@kernel.org,
-        alexander.shishkin@linux.intel.com, mark.rutland@arm.com,
-        acme@kernel.org, mingo@redhat.com, peterz@infradead.org,
-        lily <floridsleeves@gmail.com>
-Subject: [PATCH v2] kernel/events/core: check return value of task_function_call()
-Date:   Mon, 19 Sep 2022 12:16:11 -0700
-Message-Id: <20220919191611.1589661-1-floridsleeves@gmail.com>
-X-Mailer: git-send-email 2.25.1
+        Mon, 19 Sep 2022 12:26:23 -0700 (PDT)
+Date:   Mon, 19 Sep 2022 12:26:22 -0700
+From:   Kees Cook <keescook@chromium.org>
+To:     Peter Zijlstra <peterz@infradead.org>
+Cc:     Andrew Morton <akpm@linux-foundation.org>,
+        Matthew Wilcox <willy@infradead.org>,
+        Uladzislau Rezki <urezki@gmail.com>,
+        Yu Zhao <yuzhao@google.com>, dev@der-flo.net,
+        Ingo Molnar <mingo@redhat.com>, linux-kernel@vger.kernel.org,
+        x86@kernel.org, linux-perf-users@vger.kernel.org,
+        linux-mm@kvack.org, linux-hardening@vger.kernel.org,
+        linux-arch@vger.kernel.org
+Subject: Re: [PATCH 0/3] x86/dumpstack: Inline copy_from_user_nmi()
+Message-ID: <202209191225.B3A759134@keescook>
+References: <20220916135953.1320601-1-keescook@chromium.org>
+ <20220916125723.b4c189d09bcd8fd211a73c32@linux-foundation.org>
+ <YyiAz4gs4TvTqrvI@hirez.programming.kicks-ass.net>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <YyiAz4gs4TvTqrvI@hirez.programming.kicks-ass.net>
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-From: lily <floridsleeves@gmail.com>
+On Mon, Sep 19, 2022 at 04:46:39PM +0200, Peter Zijlstra wrote:
+> On Fri, Sep 16, 2022 at 12:57:23PM -0700, Andrew Morton wrote:
+> > Why is this so complicated.
+> > 
+> > There's virtually zero value in running all those debug checks from within
+> > copy_from_user_nmi().
+> > 
+> > --- a/arch/x86/lib/usercopy.c~a
+> > +++ a/arch/x86/lib/usercopy.c
+> > @@ -44,7 +44,7 @@ copy_from_user_nmi(void *to, const void
+> >  	 * called from other contexts.
+> >  	 */
+> >  	pagefault_disable();
+> > -	ret = __copy_from_user_inatomic(to, from, n);
+> > +	ret = raw_copy_from_user(to, from, n);
+> >  	pagefault_enable();
+> >  
+> >  	return ret;
+> 
+> I'm with Andrew here; this looks a *LOT* saner than all the other stuff.
 
-Check the return value of task_function_call(), which could be error
-code when the execution fails. We log this on info level.
+Yeah, I'd agree -- it's a special case of a special case. I'll send a
+new patch.
 
-Signed-off-by: Li Zhong <floridsleeves@gmail.com>
----
- kernel/events/core.c | 5 ++++-
- 1 file changed, 4 insertions(+), 1 deletion(-)
+Thanks!
 
-diff --git a/kernel/events/core.c b/kernel/events/core.c
-index 2621fd24ad26..3848631b009c 100644
---- a/kernel/events/core.c
-+++ b/kernel/events/core.c
-@@ -13520,7 +13520,10 @@ static void perf_cgroup_attach(struct cgroup_taskset *tset)
- 	struct cgroup_subsys_state *css;
- 
- 	cgroup_taskset_for_each(task, css, tset)
--		task_function_call(task, __perf_cgroup_move, task);
-+		if (!task_function_call(task, __perf_cgroup_move, task)) {
-+			printk(KERN_INFO "perf: this process isn't running!\n");
-+			continue;
-+		}
- }
- 
- struct cgroup_subsys perf_event_cgrp_subsys = {
 -- 
-2.25.1
-
+Kees Cook
