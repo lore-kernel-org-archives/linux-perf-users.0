@@ -2,44 +2,44 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6C178C6FD26
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4C059C6FD24
 	for <linux-perf-users@archiver.kernel.org>; Mon, 19 Sep 2022 10:20:46 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231448AbiISKU1 (ORCPT
+        id S231444AbiISKUZ (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Mon, 19 Sep 2022 06:20:27 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49992 "EHLO
+        Mon, 19 Sep 2022 06:20:25 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50000 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230431AbiISKRv (ORCPT
+        with ESMTP id S230464AbiISKSK (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Mon, 19 Sep 2022 06:17:51 -0400
-Received: from casper.infradead.org (casper.infradead.org [IPv6:2001:8b0:10b:1236::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 387C723162;
-        Mon, 19 Sep 2022 03:17:44 -0700 (PDT)
+        Mon, 19 Sep 2022 06:18:10 -0400
+Received: from desiato.infradead.org (desiato.infradead.org [IPv6:2001:8b0:10b:1:d65d:64ff:fe57:4e05])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id EAC8F237C0;
+        Mon, 19 Sep 2022 03:17:51 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=casper.20170209; h=Content-Type:MIME-Version:References:
+        d=infradead.org; s=desiato.20200630; h=Content-Type:MIME-Version:References:
         Subject:Cc:To:From:Date:Message-ID:Sender:Reply-To:Content-Transfer-Encoding:
         Content-ID:Content-Description:In-Reply-To;
-        bh=iz2Rk0uC5rGU+Kb0LRDsuPxksHM6C3EYKvZGNmPgVNM=; b=nD07AhPNWRzGO9yRGe9Z4jBcdS
-        XFuuPNxdhpdhfMtRAwSfshNcWIDdV8FJPraXQXdSIbeti8tBPsu6DMxAwX23ulMjc4n4CViWV1BFL
-        SSGt0VLqFI+mkqMQaXoj38Uj1aDwZlpA03nUVY/BU2wAbNQ5sxDeGUL2nORQYE/Nzihl4nlu0xCx4
-        YFMPPmS3riqz3N9PO//k03NmNN6TFNvMr47YU0Zuan07IUeCeFy2lXLZ9FwnEUUDAKeYP2FxVSDf3
-        tOKlR5pQlWR2dK5GWoz9Tye+tJn08cqm5ITpuaszwslCI7e+BWAeEByAeWKvZaYdr+1Grionva68h
-        5jhW4TQA==;
+        bh=nefRY1zld6SB6gly/BgzrvcXEKwr/pOkUZl11QGpgL8=; b=Xd8EiaTsS7o5BZ8X5/O0m/fwRs
+        qKjZJcpEI4THHPTWSrbVBcJMysEDtIsbmnzBFGeOQse9wcpk4h4FYRHKGuFZ2xMFqMJvXOxBYscj4
+        uV33lvE7mAPQeo08mWfTWuLoeQQDcuPWfjgAPBCFy3U0Sfzp8/1k8Vrp9HE+sTKR0J7fLc8MLYBVi
+        /rUp0ys1N9pIg0S+fWwlw3ooeLNCtqQFqvsYVKws0Va2i9bYhy3cCnMYC9EEqnglEYFshJmWPJ5Qt
+        XvkGWIN+O83z1NgYKZ+YxNRtwb41x3EUndvYBaE4V7BTa9OHXR630BTfUsWS3dvH+Rk05FQqXgdUF
+        GOrnrpMw==;
 Received: from j130084.upc-j.chello.nl ([24.132.130.84] helo=noisy.programming.kicks-ass.net)
-        by casper.infradead.org with esmtpsa (Exim 4.94.2 #2 (Red Hat Linux))
-        id 1oaDq8-004bA5-Cc; Mon, 19 Sep 2022 10:17:24 +0000
+        by desiato.infradead.org with esmtpsa (Exim 4.94.2 #2 (Red Hat Linux))
+        id 1oaDpD-00E28s-IX; Mon, 19 Sep 2022 10:17:17 +0000
 Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
         (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
          key-exchange X25519 server-signature RSA-PSS (4096 bits))
         (Client did not present a certificate)
-        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id 5BDF3302F50;
-        Mon, 19 Sep 2022 12:16:25 +0200 (CEST)
+        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id BE4BE302DE2;
+        Mon, 19 Sep 2022 12:16:24 +0200 (CEST)
 Received: by hirez.programming.kicks-ass.net (Postfix, from userid 0)
-        id 736AC2BAC75AD; Mon, 19 Sep 2022 12:16:22 +0200 (CEST)
-Message-ID: <20220919101522.497914983@infradead.org>
+        id E23492BA4903C; Mon, 19 Sep 2022 12:16:21 +0200 (CEST)
+Message-ID: <20220919101520.802976773@infradead.org>
 User-Agent: quilt/0.66
-Date:   Mon, 19 Sep 2022 12:00:11 +0200
+Date:   Mon, 19 Sep 2022 11:59:46 +0200
 From:   Peter Zijlstra <peterz@infradead.org>
 To:     peterz@infradead.org
 Cc:     richard.henderson@linaro.org, ink@jurassic.park.msu.ru,
@@ -100,9 +100,8 @@ Cc:     richard.henderson@linaro.org, ink@jurassic.park.msu.ru,
         linux-xtensa@linux-xtensa.org, linux-acpi@vger.kernel.org,
         linux-pm@vger.kernel.org, linux-clk@vger.kernel.org,
         linux-arm-msm@vger.kernel.org, linux-tegra@vger.kernel.org,
-        linux-arch@vger.kernel.org, kasan-dev@googlegroups.com,
-        "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>
-Subject: [PATCH v2 32/44] cpuidle,acpi: Make noinstr clean
+        linux-arch@vger.kernel.org, kasan-dev@googlegroups.com
+Subject: [PATCH v2 07/44] cpuidle,psci: Push RCU-idle into driver
 References: <20220919095939.761690562@infradead.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
@@ -110,60 +109,53 @@ Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-vmlinux.o: warning: objtool: io_idle+0xc: call to __inb.isra.0() leaves .noinstr.text section
-vmlinux.o: warning: objtool: acpi_idle_enter+0xfe: call to num_online_cpus() leaves .noinstr.text section
-vmlinux.o: warning: objtool: acpi_idle_enter+0x115: call to acpi_idle_fallback_to_c1.isra.0() leaves .noinstr.text section
+Doing RCU-idle outside the driver, only to then temporarily enable it
+again, at least twice, before going idle is daft.
 
 Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
-Acked-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
 ---
- arch/x86/include/asm/shared/io.h |    4 ++--
- drivers/acpi/processor_idle.c    |    2 +-
- include/linux/cpumask.h          |    4 ++--
- 3 files changed, 5 insertions(+), 5 deletions(-)
+ drivers/cpuidle/cpuidle-psci.c |    9 +++++----
+ 1 file changed, 5 insertions(+), 4 deletions(-)
 
---- a/arch/x86/include/asm/shared/io.h
-+++ b/arch/x86/include/asm/shared/io.h
-@@ -5,13 +5,13 @@
- #include <linux/types.h>
+--- a/drivers/cpuidle/cpuidle-psci.c
++++ b/drivers/cpuidle/cpuidle-psci.c
+@@ -69,12 +69,12 @@ static int __psci_enter_domain_idle_stat
+ 		return -1;
  
- #define BUILDIO(bwl, bw, type)						\
--static inline void __out##bwl(type value, u16 port)			\
-+static __always_inline void __out##bwl(type value, u16 port)		\
- {									\
- 	asm volatile("out" #bwl " %" #bw "0, %w1"			\
- 		     : : "a"(value), "Nd"(port));			\
- }									\
- 									\
--static inline type __in##bwl(u16 port)					\
-+static __always_inline type __in##bwl(u16 port)				\
- {									\
- 	type value;							\
- 	asm volatile("in" #bwl " %w1, %" #bw "0"			\
---- a/drivers/acpi/processor_idle.c
-+++ b/drivers/acpi/processor_idle.c
-@@ -593,7 +593,7 @@ static int acpi_idle_play_dead(struct cp
- 	return 0;
- }
+ 	/* Do runtime PM to manage a hierarchical CPU toplogy. */
+-	ct_irq_enter_irqson();
+ 	if (s2idle)
+ 		dev_pm_genpd_suspend(pd_dev);
+ 	else
+ 		pm_runtime_put_sync_suspend(pd_dev);
+-	ct_irq_exit_irqson();
++
++	ct_idle_enter();
  
--static bool acpi_idle_fallback_to_c1(struct acpi_processor *pr)
-+static __always_inline bool acpi_idle_fallback_to_c1(struct acpi_processor *pr)
- {
- 	return IS_ENABLED(CONFIG_HOTPLUG_CPU) && !pr->flags.has_cst &&
- 		!(acpi_gbl_FADT.flags & ACPI_FADT_C2_MP_SUPPORTED);
---- a/include/linux/cpumask.h
-+++ b/include/linux/cpumask.h
-@@ -908,9 +908,9 @@ static inline const struct cpumask *get_
-  * concurrent CPU hotplug operations unless invoked from a cpuhp_lock held
-  * region.
-  */
--static inline unsigned int num_online_cpus(void)
-+static __always_inline unsigned int num_online_cpus(void)
- {
--	return atomic_read(&__num_online_cpus);
-+	return arch_atomic_read(&__num_online_cpus);
- }
- #define num_possible_cpus()	cpumask_weight(cpu_possible_mask)
- #define num_present_cpus()	cpumask_weight(cpu_present_mask)
+ 	state = psci_get_domain_state();
+ 	if (!state)
+@@ -82,12 +82,12 @@ static int __psci_enter_domain_idle_stat
+ 
+ 	ret = psci_cpu_suspend_enter(state) ? -1 : idx;
+ 
+-	ct_irq_enter_irqson();
++	ct_idle_exit();
++
+ 	if (s2idle)
+ 		dev_pm_genpd_resume(pd_dev);
+ 	else
+ 		pm_runtime_get_sync(pd_dev);
+-	ct_irq_exit_irqson();
+ 
+ 	cpu_pm_exit();
+ 
+@@ -240,6 +240,7 @@ static int psci_dt_cpu_init_topology(str
+ 	 * of a shared state for the domain, assumes the domain states are all
+ 	 * deeper states.
+ 	 */
++	drv->states[state_count - 1].flags |= CPUIDLE_FLAG_RCU_IDLE;
+ 	drv->states[state_count - 1].enter = psci_enter_domain_idle_state;
+ 	drv->states[state_count - 1].enter_s2idle = psci_enter_s2idle_domain_idle_state;
+ 	psci_cpuidle_use_cpuhp = true;
 
 
