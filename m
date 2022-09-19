@@ -2,95 +2,99 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E1033ECAAD3
-	for <linux-perf-users@archiver.kernel.org>; Mon, 19 Sep 2022 17:32:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 30B4BECAAA1
+	for <linux-perf-users@archiver.kernel.org>; Mon, 19 Sep 2022 18:36:10 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229881AbiISRco (ORCPT
+        id S229493AbiISSgJ (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Mon, 19 Sep 2022 13:32:44 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42092 "EHLO
+        Mon, 19 Sep 2022 14:36:09 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36660 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229722AbiISRcm (ORCPT
+        with ESMTP id S229437AbiISSgI (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Mon, 19 Sep 2022 13:32:42 -0400
-Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 238FD31DC2;
-        Mon, 19 Sep 2022 10:32:41 -0700 (PDT)
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id B1AEF61BD4;
-        Mon, 19 Sep 2022 17:32:40 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id CE097C433C1;
-        Mon, 19 Sep 2022 17:32:39 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1663608760;
-        bh=TB+0gRSIN5rcKrjh40MuTk8n8S3NBnRNudCQ11g3VQY=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:From;
-        b=O0pmtZQoaOtjsmjSOBs8DglqGNou81tOxyfEbcewNAAhJntyY/ukqaKZpN2xNC6GP
-         tS3s9K9ayax6mIIcNAVRTzkFymC6+r47W+ZVjfeJpgInWCg7bdvQZWK+OylIKmk7Kw
-         HvtKXvYFQZCcPYskb5yJSQ8O1WNzqKrRBSeHkHOVAOpeCj+0vyQvY+SmYfrMc6LrI5
-         iSHHzfSHrIrm8Orx94SzEKUj1UaJPgNW2cwLCHi7pYe67n2yNhq8TAK/G8SJE3JbGv
-         JaiTD6X7YtyRAn2klgr5xoZM2qGXwynR99CewVitDEQJk+DB8cIYxJpmerQFp9x4iW
-         Zzs2bZQ2StdQw==
-Date:   Mon, 19 Sep 2022 12:32:38 -0500
-From:   Bjorn Helgaas <helgaas@kernel.org>
-To:     Yicong Yang <yangyicong@huawei.com>
-Cc:     acme@kernel.org, peterz@infradead.org,
-        alexander.shishkin@linux.intel.com, leo.yan@linaro.org,
-        james.clark@arm.com, will@kernel.org, mathieu.poirier@linaro.org,
-        mark.rutland@arm.com, suzuki.poulose@arm.com,
-        jonathan.cameron@huawei.com, john.garry@huawei.com,
-        mike.leach@linaro.org, gregkh@linuxfoundation.org,
-        lorenzo.pieralisi@arm.com, shameerali.kolothum.thodi@huawei.com,
-        mingo@redhat.com, linux-kernel@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, linux-pci@vger.kernel.org,
-        linux-perf-users@vger.kernel.org, prime.zeng@huawei.com,
-        zhangshaokun@hisilicon.com, linuxarm@huawei.com,
-        yangyicong@hisilicon.com, liuqi6124@gmail.com
-Subject: Re: [PATCH v13 3/3] perf tool: Add support for parsing HiSilicon
- PCIe Trace packet
-Message-ID: <20220919173238.GA1014074@bhelgaas>
+        Mon, 19 Sep 2022 14:36:08 -0400
+Received: from mail-ej1-x631.google.com (mail-ej1-x631.google.com [IPv6:2a00:1450:4864:20::631])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 44424205CA;
+        Mon, 19 Sep 2022 11:36:03 -0700 (PDT)
+Received: by mail-ej1-x631.google.com with SMTP id 13so763627ejn.3;
+        Mon, 19 Sep 2022 11:36:03 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20210112;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:from:to:cc:subject:date;
+        bh=xysQoAG8p++2395HYwD09N+AaN5kwY2ODmTAdpS3GA4=;
+        b=i8Y6XgiE5SIkU2Jgqa5ydeIJWZzjno9Z6C8UHoyF27aIDGFqYb0xwIUNx1xiObiTcA
+         pZYp+CeZjNWulZCWQfM1BZLMGZK+m4U2jmdhAnHs8x0k8c9RxzQOdlsZRmBhMCoeFzES
+         u2wET8dDm0abuLMjUrpcJSb3P07OYHodvI9Ej/AiugO1FrcB+KyEtFneSuFXOj8rJtgl
+         VyaTqgtX4Xj502OySsFJaddWjVOGRn7M0/kZEiuNhp0sXoTcWWXM6z7Gx46x2DC8Y9x5
+         BneRTdT6Tvty25qV7c8UmFKPK3h9X8ZJUDfu7ZhnvoOZmFaqqkr6haE6kAmDsLwIbefA
+         3W3A==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:x-gm-message-state:from:to:cc:subject:date;
+        bh=xysQoAG8p++2395HYwD09N+AaN5kwY2ODmTAdpS3GA4=;
+        b=F2qOYpCoOIKdqXE2Hcnq6ARyaABREymyr12HyRJ5743jVUHmL5yc1TeSBdEtamTxzH
+         /xmOYp5xnBP7l23488uIM389DpzUhnBxhcx7svHTVhnyRqLNumR2xQtYyPswbCPeowj/
+         QVuJN2Ui6wEiMjMOtf2dxrggVJ6tCl0meIk0ZKAQCLMMRw8qvC4g7hprEdbZmFEJWJtA
+         XyFoNh5ie0YnSr5jLI347+jHUAju+dQ/FgswRAHnqMb9406H0idjRTE2kqlfp0e4I3gV
+         7tsqIoTr4MtVOOJEGqkssM/Q6fadd1jkiitjghH8082IKgcQ+LtD/j4n2YjtYxszQXBC
+         6t3A==
+X-Gm-Message-State: ACrzQf0osy82mrQEACoVr1n3sCU9HJI4hY3JY5gQLNumAgZsOnhiyGQ9
+        ii43DaF0+Emp5qHTvQKdrdmF9j/a9d2diGdQb49M6VKNCfe3fA==
+X-Google-Smtp-Source: AMsMyM7OCjj0N2lq7ypdTFS9K9fbZtKqPqYIrGEwsOjGa9TK9uds8w2DeniWItXZkmVPW5Fx5OcFiYprKjIR0sXIzn0=
+X-Received: by 2002:a17:907:74a:b0:77e:9455:b4e3 with SMTP id
+ xc10-20020a170907074a00b0077e9455b4e3mr14078318ejb.471.1663612561632; Mon, 19
+ Sep 2022 11:36:01 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20220919090045.6778-4-yangyicong@huawei.com>
+References: <20220917014746.3828349-1-floridsleeves@gmail.com> <Yyh/BmvAHNMlENFw@hirez.programming.kicks-ass.net>
+In-Reply-To: <Yyh/BmvAHNMlENFw@hirez.programming.kicks-ass.net>
+From:   Li Zhong <floridsleeves@gmail.com>
+Date:   Mon, 19 Sep 2022 11:36:13 -0700
+Message-ID: <CAMEuxRrmNT6xdLDiHLKb9COkRO31QuvwMX5zPFKw0uVAnJ6Yjg@mail.gmail.com>
+Subject: Re: [PATCH v1] kernel/events/core: check return value of task_function_call()
+To:     Peter Zijlstra <peterz@infradead.org>
+Cc:     linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org,
+        bpf@vger.kernel.org, namhyung@kernel.org, jolsa@kernel.org,
+        alexander.shishkin@linux.intel.com, mark.rutland@arm.com,
+        acme@kernel.org, mingo@redhat.com
+Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-On Mon, Sep 19, 2022 at 05:00:45PM +0800, Yicong Yang wrote:
-> From: Qi Liu <liuqi115@huawei.com>
-> 
-> Add support for using 'perf report --dump-raw-trace' to parse PTT packet.
-> 
-> Example usage:
-> 
-> Output will contain raw PTT data and its textual representation, such
-> as:
-> 
-> 0 0 0x5810 [0x30]: PERF_RECORD_AUXTRACE size: 0x400000  offset: 0
-> ref: 0xa5d50c725  idx: 0  tid: -1  cpu: 0
-> .
-> . ... HISI PTT data: size 4194304 bytes
-> .  00000000: 00 00 00 00                                 Prefix
-> .  00000004: 08 20 00 60                                 Header DW0
-> .  00000008: ff 02 00 01                                 Header DW1
-> .  0000000c: 20 08 00 00                                 Header DW2
-> .  00000010: 10 e7 44 ab                                 Header DW3
-> .  00000014: 2a a8 1e 01                                 Time
-> .  00000020: 00 00 00 00                                 Prefix
-> .  00000024: 01 00 00 60                                 Header DW0
-> .  00000028: 0f 1e 00 01                                 Header DW1
-> .  0000002c: 04 00 00 00                                 Header DW2
-> .  00000030: 40 00 81 02                                 Header DW3
-> .  00000034: ee 02 00 00                                 Time
+On Mon, Sep 19, 2022 at 7:39 AM Peter Zijlstra <peterz@infradead.org> wrote:
+>
+> On Fri, Sep 16, 2022 at 06:47:46PM -0700, Li Zhong wrote:
+> > Check the return value of task_function_call(), which could be error
+> > code when the execution fails.
+>
+> How is terminating the cgroup task iteration a useful thing? Also coding
+> style fail for not adding { }
 
-This is great!  Is there a way to actually decode the TLP headers?
-E.g., something along the lines of what this does?
-https://github.com/NetTLP/wireshark-nettlp/blob/master/plugins/nettlp.lua
+Thanks for your reply! Skip and continue the execution is more appropriate
+here. Change it in v2 patch.
 
-If there is, it might be nice if the commit log included a hint about
-how to do more decoding.
-
-Bjorn
+>
+> > Signed-off-by: Li Zhong <floridsleeves@gmail.com>
+> > ---
+> >  kernel/events/core.c | 3 ++-
+> >  1 file changed, 2 insertions(+), 1 deletion(-)
+> >
+> > diff --git a/kernel/events/core.c b/kernel/events/core.c
+> > index 2621fd24ad26..ac0cf611b12a 100644
+> > --- a/kernel/events/core.c
+> > +++ b/kernel/events/core.c
+> > @@ -13520,7 +13520,8 @@ static void perf_cgroup_attach(struct cgroup_taskset *tset)
+> >       struct cgroup_subsys_state *css;
+> >
+> >       cgroup_taskset_for_each(task, css, tset)
+> > -             task_function_call(task, __perf_cgroup_move, task);
+> > +             if (!task_function_call(task, __perf_cgroup_move, task))
+> > +                     return;
+> >  }
+> >
+> >  struct cgroup_subsys perf_event_cgrp_subsys = {
+> > --
+> > 2.25.1
+> >
