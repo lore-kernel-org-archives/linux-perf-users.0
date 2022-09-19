@@ -2,44 +2,44 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 59BFCC6FA95
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8CE44C6FA96
 	for <linux-perf-users@archiver.kernel.org>; Mon, 19 Sep 2022 10:20:44 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231377AbiISKUN (ORCPT
+        id S231390AbiISKUO (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Mon, 19 Sep 2022 06:20:13 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50030 "EHLO
+        Mon, 19 Sep 2022 06:20:14 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50552 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230265AbiISKSA (ORCPT
+        with ESMTP id S230031AbiISKSE (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Mon, 19 Sep 2022 06:18:00 -0400
+        Mon, 19 Sep 2022 06:18:04 -0400
 Received: from desiato.infradead.org (desiato.infradead.org [IPv6:2001:8b0:10b:1:d65d:64ff:fe57:4e05])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E397022535;
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0FB2922B1F;
         Mon, 19 Sep 2022 03:17:52 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
         d=infradead.org; s=desiato.20200630; h=Content-Type:MIME-Version:References:
         Subject:Cc:To:From:Date:Message-ID:Sender:Reply-To:Content-Transfer-Encoding:
         Content-ID:Content-Description:In-Reply-To;
-        bh=rYkYazBjkfDgerhAXoQmSQo0bqbhUZdR/pxZJBUI/ng=; b=j7VwHdvJUfpJH3M/C7bNI0fYzi
-        seoc8ty7YJnfxokbt/BLTFoifGyqn9n4jsPBhSt+5t8tmssXRVAO+GRqMJVGymJLBKzkutdtO9Sdz
-        oIaKl7W8lqcyl/3+1rAbT3Thg4db29y5kj+CwsR3JWuHOooT0HKMUviyG7ei6rSe4ly/5I2eH8+AB
-        HbNraLNrtL/jagcFhAFzbry04DYjRaVVc7OCetHjkExP12eYDoBQ6hEDVozmVdy+049bCrPauut7q
-        M20UFI5OxMwqz7G+3fc2C79u76ErzYjFYrDvPTe7eEHgzoNC01T2voh4MquJ9W9ZaviddsGs6QKba
-        Dg1Fp9+w==;
+        bh=KSLnjMu353Hxa4O11Me8JnVia/sjgKM0LDIwoSdP0MI=; b=Ick7cd7MD8jj+jy/FoOvcOldv4
+        BXzqJ9/zYCWxDMBoaCpMKWTDlkrsjm+ciYbDhTzmEduHgIHGZFU8eu/9UCVWqxQV5DHTA1YUSp8Tx
+        faKa0oJE6mpLjVarzv5uwBfakpGivkUsYKynKrWjgGyaJKHf7nQ9405HsIrOCwT0Hbb/sk63vSfvE
+        BnxzmNvGwkIXkzdN929OghR8ABtTQgm7zoz4WiUA1zH89oWT84eGaf1f8VAx4krcpDtLRD5v1HZmI
+        M9aENqhsFuSeArxTtlOkUckCjONRAV+wT1xYhtyTytfY6G6hBn+L1OC7ifjz0W0zmPKhKL2PE+41m
+        nB7zCSpw==;
 Received: from j130084.upc-j.chello.nl ([24.132.130.84] helo=noisy.programming.kicks-ass.net)
         by desiato.infradead.org with esmtpsa (Exim 4.94.2 #2 (Red Hat Linux))
-        id 1oaDq5-00E2B5-Td; Mon, 19 Sep 2022 10:17:22 +0000
+        id 1oaDq3-00E2Ag-Bh; Mon, 19 Sep 2022 10:17:20 +0000
 Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
         (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
          key-exchange X25519 server-signature RSA-PSS (4096 bits))
         (Client did not present a certificate)
-        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id 503DF302F4A;
+        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id 182C0302F08;
         Mon, 19 Sep 2022 12:16:25 +0200 (CEST)
 Received: by hirez.programming.kicks-ass.net (Postfix, from userid 0)
-        id 6E0182BAC75AC; Mon, 19 Sep 2022 12:16:22 +0200 (CEST)
-Message-ID: <20220919101522.426692140@infradead.org>
+        id 2E67C2BAB86FF; Mon, 19 Sep 2022 12:16:22 +0200 (CEST)
+Message-ID: <20220919101521.676713943@infradead.org>
 User-Agent: quilt/0.66
-Date:   Mon, 19 Sep 2022 12:00:10 +0200
+Date:   Mon, 19 Sep 2022 11:59:59 +0200
 From:   Peter Zijlstra <peterz@infradead.org>
 To:     peterz@infradead.org
 Cc:     richard.henderson@linaro.org, ink@jurassic.park.msu.ru,
@@ -101,7 +101,7 @@ Cc:     richard.henderson@linaro.org, ink@jurassic.park.msu.ru,
         linux-pm@vger.kernel.org, linux-clk@vger.kernel.org,
         linux-arm-msm@vger.kernel.org, linux-tegra@vger.kernel.org,
         linux-arch@vger.kernel.org, kasan-dev@googlegroups.com
-Subject: [PATCH v2 31/44] cpuidle,nospec: Make noinstr clean
+Subject: [PATCH v2 20/44] cpuidle,intel_idle: Fix CPUIDLE_FLAG_IBRS
 References: <20220919095939.761690562@infradead.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
@@ -109,27 +109,42 @@ Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-vmlinux.o: warning: objtool: mwait_idle+0x47: call to mds_idle_clear_cpu_buffers() leaves .noinstr.text section
-vmlinux.o: warning: objtool: acpi_processor_ffh_cstate_enter+0xa2: call to mds_idle_clear_cpu_buffers() leaves .noinstr.text section
-vmlinux.o: warning: objtool: intel_idle+0x91: call to mds_idle_clear_cpu_buffers() leaves .noinstr.text section
-vmlinux.o: warning: objtool: intel_idle_s2idle+0x8c: call to mds_idle_clear_cpu_buffers() leaves .noinstr.text section
-vmlinux.o: warning: objtool: intel_idle_irq+0xaa: call to mds_idle_clear_cpu_buffers() leaves .noinstr.text section
+vmlinux.o: warning: objtool: intel_idle_ibrs+0x17: call to spec_ctrl_current() leaves .noinstr.text section
+vmlinux.o: warning: objtool: intel_idle_ibrs+0x27: call to wrmsrl.constprop.0() leaves .noinstr.text section
 
 Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
 ---
- arch/x86/include/asm/nospec-branch.h |    2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ arch/x86/kernel/cpu/bugs.c |    2 +-
+ drivers/idle/intel_idle.c  |    4 ++--
+ 2 files changed, 3 insertions(+), 3 deletions(-)
 
---- a/arch/x86/include/asm/nospec-branch.h
-+++ b/arch/x86/include/asm/nospec-branch.h
-@@ -310,7 +310,7 @@ static __always_inline void mds_user_cle
-  *
-  * Clear CPU buffers if the corresponding static key is enabled
-  */
--static inline void mds_idle_clear_cpu_buffers(void)
-+static __always_inline void mds_idle_clear_cpu_buffers(void)
+--- a/arch/x86/kernel/cpu/bugs.c
++++ b/arch/x86/kernel/cpu/bugs.c
+@@ -79,7 +79,7 @@ void write_spec_ctrl_current(u64 val, bo
+ 		wrmsrl(MSR_IA32_SPEC_CTRL, val);
+ }
+ 
+-u64 spec_ctrl_current(void)
++noinstr u64 spec_ctrl_current(void)
  {
- 	if (static_branch_likely(&mds_idle_clear))
- 		mds_clear_cpu_buffers();
+ 	return this_cpu_read(x86_spec_ctrl_current);
+ }
+--- a/drivers/idle/intel_idle.c
++++ b/drivers/idle/intel_idle.c
+@@ -181,12 +181,12 @@ static __cpuidle int intel_idle_ibrs(str
+ 	int ret;
+ 
+ 	if (smt_active)
+-		wrmsrl(MSR_IA32_SPEC_CTRL, 0);
++		native_wrmsrl(MSR_IA32_SPEC_CTRL, 0);
+ 
+ 	ret = __intel_idle(dev, drv, index);
+ 
+ 	if (smt_active)
+-		wrmsrl(MSR_IA32_SPEC_CTRL, spec_ctrl);
++		native_wrmsrl(MSR_IA32_SPEC_CTRL, spec_ctrl);
+ 
+ 	return ret;
+ }
 
 
