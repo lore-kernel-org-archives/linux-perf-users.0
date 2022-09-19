@@ -2,148 +2,142 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8D21FC6FA93
-	for <linux-perf-users@archiver.kernel.org>; Mon, 19 Sep 2022 13:20:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 04992C54EE9
+	for <linux-perf-users@archiver.kernel.org>; Mon, 19 Sep 2022 13:43:18 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230398AbiISNT5 (ORCPT
+        id S230100AbiISNnQ (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Mon, 19 Sep 2022 09:19:57 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44912 "EHLO
+        Mon, 19 Sep 2022 09:43:16 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50564 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230441AbiISNTk (ORCPT
+        with ESMTP id S230155AbiISNnO (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Mon, 19 Sep 2022 09:19:40 -0400
-Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BDFFD2727;
-        Mon, 19 Sep 2022 06:19:32 -0700 (PDT)
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        Mon, 19 Sep 2022 09:43:14 -0400
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id F402617051
+        for <linux-perf-users@vger.kernel.org>; Mon, 19 Sep 2022 06:43:13 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1663594993;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=XAQ4C8p526IwfywWHvDt2bP3t+cfJKiAuugWFxjBeBk=;
+        b=XEe3RghFCqbMNEeTEBMpfUJG7+enKiKy19z3Rnft3whJSLGy1jjbMsmasKcyTHQwm1eUot
+        zfAXVkVpA0tFUi/HjIGpsfr0ukeT+RqyCLbuqQInyl89EpwMof6PtW7u9ohBce7o65EPQI
+        iMF/pCTdgXZNdAQggT7g3Krjf+1wLLo=
+Received: from mimecast-mx02.redhat.com (mx3-rdu2.redhat.com
+ [66.187.233.73]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ us-mta-175-m7uMEVL3PEO3rwyjHKygLg-1; Mon, 19 Sep 2022 09:43:10 -0400
+X-MC-Unique: m7uMEVL3PEO3rwyjHKygLg-1
+Received: from smtp.corp.redhat.com (int-mx03.intmail.prod.int.rdu2.redhat.com [10.11.54.3])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
         (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id A417961C83;
-        Mon, 19 Sep 2022 13:19:31 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id D334CC433D6;
-        Mon, 19 Sep 2022 13:19:29 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1663593571;
-        bh=CWxeSKy8kiP3vLBtnTdjMO9HxV48EKwdW/OqmPtC6l0=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=QSt/tYd0fqkRxl3AMLkOfW8jOo29uPNAUTrqCEiKcW4GPIFYazQI+7GdaoR9WjHP/
-         C3f1Cn90J1fcSJRomBPO2R4SafD0GeCOnjMu8GrC0DI9SRc41HhHQAuGu6/ePf7CIl
-         1tpNMlSYxVEEkgVVGnt9sORkREiG3UwgD6k+rAvp+k8Ymdzy6EmONNUtQQ0FPwJrZz
-         E4kynvoBow0vT5f8AL2kEtRjwbRixVHhtNIY4x7IXbFVctpkPsLDVFZ3AmASNufD84
-         LJuwBz9RlC4vCLjpY3pQPKjt4W7RUs6cFBM07ypkDZ4M4AFgldiHx3H7zbxKMROjNw
-         AklJSa90tpIbg==
-Date:   Mon, 19 Sep 2022 15:19:27 +0200
-From:   Frederic Weisbecker <frederic@kernel.org>
-To:     Peter Zijlstra <peterz@infradead.org>
-Cc:     richard.henderson@linaro.org, ink@jurassic.park.msu.ru,
-        mattst88@gmail.com, vgupta@kernel.org, linux@armlinux.org.uk,
-        ulli.kroll@googlemail.com, linus.walleij@linaro.org,
-        shawnguo@kernel.org, Sascha Hauer <s.hauer@pengutronix.de>,
-        kernel@pengutronix.de, festevam@gmail.com, linux-imx@nxp.com,
-        tony@atomide.com, khilman@kernel.org, catalin.marinas@arm.com,
-        will@kernel.org, guoren@kernel.org, bcain@quicinc.com,
-        chenhuacai@kernel.org, kernel@xen0n.name, geert@linux-m68k.org,
-        sammy@sammy.net, monstr@monstr.eu, tsbogend@alpha.franken.de,
-        dinguyen@kernel.org, jonas@southpole.se,
-        stefan.kristiansson@saunalahti.fi, shorne@gmail.com,
-        James.Bottomley@HansenPartnership.com, deller@gmx.de,
-        mpe@ellerman.id.au, npiggin@gmail.com, christophe.leroy@csgroup.eu,
-        paul.walmsley@sifive.com, palmer@dabbelt.com,
-        aou@eecs.berkeley.edu, hca@linux.ibm.com, gor@linux.ibm.com,
-        agordeev@linux.ibm.com, borntraeger@linux.ibm.com,
-        svens@linux.ibm.com, ysato@users.sourceforge.jp, dalias@libc.org,
-        davem@davemloft.net, richard@nod.at,
-        anton.ivanov@cambridgegreys.com, johannes@sipsolutions.net,
-        tglx@linutronix.de, mingo@redhat.com, bp@alien8.de,
-        dave.hansen@linux.intel.com, x86@kernel.org, hpa@zytor.com,
-        acme@kernel.org, mark.rutland@arm.com,
-        alexander.shishkin@linux.intel.com, jolsa@kernel.org,
-        namhyung@kernel.org, jgross@suse.com, srivatsa@csail.mit.edu,
-        amakhalov@vmware.com, pv-drivers@vmware.com,
-        boris.ostrovsky@oracle.com, chris@zankel.net, jcmvbkbc@gmail.com,
-        rafael@kernel.org, lenb@kernel.org, pavel@ucw.cz,
-        gregkh@linuxfoundation.org, mturquette@baylibre.com,
-        sboyd@kernel.org, daniel.lezcano@linaro.org, lpieralisi@kernel.org,
-        sudeep.holla@arm.com, agross@kernel.org,
-        bjorn.andersson@linaro.org, konrad.dybcio@somainline.org,
-        anup@brainfault.org, thierry.reding@gmail.com,
-        jonathanh@nvidia.com, jacob.jun.pan@linux.intel.com,
-        atishp@atishpatra.org, Arnd Bergmann <arnd@arndb.de>,
-        yury.norov@gmail.com, andriy.shevchenko@linux.intel.com,
-        linux@rasmusvillemoes.dk, dennis@kernel.org, tj@kernel.org,
-        cl@linux.com, rostedt@goodmis.org, pmladek@suse.com,
-        senozhatsky@chromium.org, john.ogness@linutronix.de,
-        juri.lelli@redhat.com, vincent.guittot@linaro.org,
-        dietmar.eggemann@arm.com, bsegall@google.com, mgorman@suse.de,
-        bristot@redhat.com, vschneid@redhat.com, fweisbec@gmail.com,
-        ryabinin.a.a@gmail.com, glider@google.com, andreyknvl@gmail.com,
-        dvyukov@google.com, vincenzo.frascino@arm.com,
-        Andrew Morton <akpm@linux-foundation.org>, jpoimboe@kernel.org,
-        linux-alpha@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-snps-arc@lists.infradead.org, linux-omap@vger.kernel.org,
-        linux-csky@vger.kernel.org, linux-hexagon@vger.kernel.org,
-        linux-ia64@vger.kernel.org, loongarch@lists.linux.dev,
-        linux-m68k@lists.linux-m68k.org, linux-mips@vger.kernel.org,
-        openrisc@lists.librecores.org, linux-parisc@vger.kernel.org,
-        linuxppc-dev@lists.ozlabs.org, linux-riscv@lists.infradead.org,
-        linux-s390@vger.kernel.org, linux-sh@vger.kernel.org,
-        sparclinux@vger.kernel.org, linux-um@lists.infradead.org,
+        by mimecast-mx02.redhat.com (Postfix) with ESMTPS id DB7301C0BC6D;
+        Mon, 19 Sep 2022 13:43:08 +0000 (UTC)
+Received: from starship (unknown [10.40.192.163])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 681AD1121314;
+        Mon, 19 Sep 2022 13:43:02 +0000 (UTC)
+Message-ID: <ec4b176036d33ad99fceb43b104cf9be8aca105a.camel@redhat.com>
+Subject: Re: [PATCH v2 0/5] x86: cpuid: improve support for broken CPUID
+ configurations
+From:   Maxim Levitsky <mlevitsk@redhat.com>
+To:     linux-kernel@vger.kernel.org, kvm@vger.kernel.org
+Cc:     Pawan Gupta <pawan.kumar.gupta@linux.intel.com>,
+        Ingo Molnar <mingo@redhat.com>,
+        Josh Poimboeuf <jpoimboe@kernel.org>,
+        Namhyung Kim <namhyung@kernel.org>,
+        Tony Luck <tony.luck@intel.com>,
+        Paolo Bonzini <pbonzini@redhat.com>,
+        "H. Peter Anvin" <hpa@zytor.com>,
+        Arnaldo Carvalho de Melo <acme@kernel.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Tim Chen <tim.c.chen@linux.intel.com>,
+        Borislav Petkov <bp@alien8.de>,
+        "David S. Miller" <davem@davemloft.net>,
+        Dave Hansen <dave.hansen@linux.intel.com>,
+        "Chang S. Bae" <chang.seok.bae@intel.com>,
+        Jane Malalane <jane.malalane@citrix.com>,
+        Kees Cook <keescook@chromium.org>,
+        Kan Liang <kan.liang@linux.intel.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        "maintainer:X86 ARCHITECTURE (32-BIT AND 64-BIT)" <x86@kernel.org>,
+        Herbert Xu <herbert@gondor.apana.org.au>,
+        Jiri Olsa <jolsa@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
         linux-perf-users@vger.kernel.org,
-        virtualization@lists.linux-foundation.org,
-        linux-xtensa@linux-xtensa.org, linux-acpi@vger.kernel.org,
-        linux-pm@vger.kernel.org, linux-clk@vger.kernel.org,
-        linux-arm-msm@vger.kernel.org, linux-tegra@vger.kernel.org,
-        linux-arch@vger.kernel.org, kasan-dev@googlegroups.com,
-        "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>
-Subject: Re: [PATCH v2 03/44] cpuidle/poll: Ensure IRQ state is invariant
-Message-ID: <20220919131927.GA58444@lothringen>
-References: <20220919095939.761690562@infradead.org>
- <20220919101520.534233547@infradead.org>
+        "open list:CRYPTO API" <linux-crypto@vger.kernel.org>
+Date:   Mon, 19 Sep 2022 16:43:00 +0300
+In-Reply-To: <4a327f06f6e5da6f3badb5ccf80d22a5c9e18b97.camel@redhat.com>
+References: <20220718141123.136106-1-mlevitsk@redhat.com>
+         <fad05f161cc6425d8c36fb6322de2bbaa683dcb3.camel@redhat.com>
+         <4a327f06f6e5da6f3badb5ccf80d22a5c9e18b97.camel@redhat.com>
+Content-Type: text/plain; charset="UTF-8"
+User-Agent: Evolution 3.36.5 (3.36.5-2.fc32) 
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20220919101520.534233547@infradead.org>
+Content-Transfer-Encoding: 7bit
+X-Scanned-By: MIMEDefang 3.1 on 10.11.54.3
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-On Mon, Sep 19, 2022 at 11:59:42AM +0200, Peter Zijlstra wrote:
-> cpuidle_state::enter() methods should be IRQ invariant
-
-Got a bit confused with the invariant thing since the first chunck I
-see in this patch is a conversion to an non-traceable local_irq_enable().
-
-Maybe just add a short mention about that and why?
-
-Thanks.
-
+On Mon, 2022-08-01 at 19:05 +0300, Maxim Levitsky wrote:
+> On Thu, 2022-07-28 at 10:30 +0300, Maxim Levitsky wrote:
+> > On Mon, 2022-07-18 at 17:11 +0300, Maxim Levitsky wrote:
+> > > This patch series aims to harden the cpuid code against the case when
+> > > the hypervisor exposes a broken CPUID configuration to the guest,
+> > > in the form of having a feature disabled but not features that depend on it.
+> > > 
+> > > This is the more generic way to fix kernel panic in aes-ni kernel driver,
+> > > which was triggered by CPUID configuration in which AVX is disabled but
+> > > not AVX2.
+> > > 
+> > > https://lore.kernel.org/all/20211103145231.GA4485@gondor.apana.org.au/T/
+> > > 
+> > > This was tested by booting a guest with AVX disabled and not AVX2,
+> > > and observing that both a warning is now printed in dmesg, and
+> > > that avx2 is gone from /proc/cpuinfo.
+> > > 
+> > > V2:
+> > > 
+> > > I hopefully addressed all the (very good) review feedback.
+> > > 
+> > > Best regards,
+> > > 	Maxim Levitsky
+> > > 
+> > > Maxim Levitsky (5):
+> > >   perf/x86/intel/lbr: use setup_clear_cpu_cap instead of clear_cpu_cap
+> > >   x86/cpuid: refactor setup_clear_cpu_cap()/clear_cpu_cap()
+> > >   x86/cpuid: move filter_cpuid_features to cpuid-deps.c
+> > >   x86/cpuid: remove 'warn' parameter from filter_cpuid_features
+> > >   x86/cpuid: check for dependencies violations in CPUID and attempt to
+> > >     fix them
+> > > 
+> > >  arch/x86/events/intel/lbr.c       |  2 +-
+> > >  arch/x86/include/asm/cpufeature.h |  1 +
+> > >  arch/x86/kernel/cpu/common.c      | 51 +-------------------
+> > >  arch/x86/kernel/cpu/cpuid-deps.c  | 80 +++++++++++++++++++++++++++----
+> > >  4 files changed, 74 insertions(+), 60 deletions(-)
+> > > 
+> > > -- 
+> > > 2.34.3
+> > > 
+> > > 
+> > A very kind ping on these patches.
 > 
-> Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
-> Reviewed-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
-> ---
->  drivers/cpuidle/poll_state.c |    4 +++-
->  1 file changed, 3 insertions(+), 1 deletion(-)
-> 
-> --- a/drivers/cpuidle/poll_state.c
-> +++ b/drivers/cpuidle/poll_state.c
-> @@ -17,7 +17,7 @@ static int __cpuidle poll_idle(struct cp
->  
->  	dev->poll_time_limit = false;
->  
-> -	local_irq_enable();
-> +	raw_local_irq_enable();
->  	if (!current_set_polling_and_test()) {
->  		unsigned int loop_count = 0;
->  		u64 limit;
-> @@ -36,6 +36,8 @@ static int __cpuidle poll_idle(struct cp
->  			}
->  		}
->  	}
-> +	raw_local_irq_disable();
-> +
->  	current_clr_polling();
->  
->  	return index;
+> Another kind ping on these patches.
+
+Another very gentle ping on these patches.
+
+Best regards,
+	Maxim Levitsky
 > 
 > 
+> Best regards,
+> 	Maxim Levitsky
+> > Best regards,
+> > 	Maxim Levitsky
+
+
