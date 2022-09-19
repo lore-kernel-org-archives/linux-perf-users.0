@@ -2,44 +2,44 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 23062C54EE9
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 009CCC6FA95
 	for <linux-perf-users@archiver.kernel.org>; Mon, 19 Sep 2022 10:21:20 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231558AbiISKU4 (ORCPT
+        id S231567AbiISKVE (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Mon, 19 Sep 2022 06:20:56 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51200 "EHLO
+        Mon, 19 Sep 2022 06:21:04 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53160 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230492AbiISKSY (ORCPT
+        with ESMTP id S231221AbiISKT0 (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Mon, 19 Sep 2022 06:18:24 -0400
-Received: from casper.infradead.org (casper.infradead.org [IPv6:2001:8b0:10b:1236::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6EA552315E;
-        Mon, 19 Sep 2022 03:17:50 -0700 (PDT)
+        Mon, 19 Sep 2022 06:19:26 -0400
+Received: from desiato.infradead.org (desiato.infradead.org [IPv6:2001:8b0:10b:1:d65d:64ff:fe57:4e05])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 12E2C237EE;
+        Mon, 19 Sep 2022 03:17:57 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=casper.20170209; h=Content-Type:MIME-Version:References:
+        d=infradead.org; s=desiato.20200630; h=Content-Type:MIME-Version:References:
         Subject:Cc:To:From:Date:Message-ID:Sender:Reply-To:Content-Transfer-Encoding:
         Content-ID:Content-Description:In-Reply-To;
-        bh=E91useHlyUUQoMsCvOSeJGEyanvxTuAtV3Y/d5ylPRM=; b=hGt/xJ2SQRXoXSrBCbxX3cFd8f
-        52HmfdiOntPDCU+hb1dkcsUWs1PzLBY2j/KzLbtzGuUNUOlYNPVcRxNjCMNI5Mq4XICjpVk9r4hpE
-        sSIsz45MXZm83EbAluQ7KjR828woKYnLyNCOZvsU8Vqgt6rfl5vlkY1XkGM+Vz/KtViumtIMSbGTI
-        WF2th3sTSJxy+Nfah7YTGb1Gn9ajQ3fJuoC6fJvhSqopNBK+/+yMX9y2koHhYw0/wu0pWx9jslbcL
-        8Z90brg5YcoQiGBXmwoEPvStLEQX1f852nePfFmBYgNhfOMc2MSitQxznYyWh9kw2qJjIetYbDajg
-        r/+okNeA==;
+        bh=VPG6Pv8mWlQqWm+kW/xAIKtiRyMjOEN9R6RnNMCwxdw=; b=aME6C/8+HgBnIgUShs0iVrDgU4
+        WUTlykx4KEu15yY7uY9/GSFf/ytkCt9YNNaEqQu1EjIe4KKoD3gJPCLl8kcyQcFwG4sYKxfLbss/p
+        5BdDWUPUb2fSsyDTEE+YS6N3hjXQSCTaVTMT1Ot3maJuLPyBBoJrhNA7C7AimBePDdxWZd8yxhjMi
+        7lFvkgw3sBMbiYbyaSlm0AGrSPQ5qTv2Hi/4GxuPvqUTbtDat7xBHtkqshYDoydE+tvs0eSgo/vs4
+        pWX1gDqTMWyXmbBwjBYTdUtHQ/Vu93f/WvnhTgSCmVlYBHWHpdTTEi0elY8oRvZq4WEdPb0PCdlcR
+        /6UHTe1w==;
 Received: from j130084.upc-j.chello.nl ([24.132.130.84] helo=noisy.programming.kicks-ass.net)
-        by casper.infradead.org with esmtpsa (Exim 4.94.2 #2 (Red Hat Linux))
-        id 1oaDqA-004bEF-S9; Mon, 19 Sep 2022 10:17:26 +0000
+        by desiato.infradead.org with esmtpsa (Exim 4.94.2 #2 (Red Hat Linux))
+        id 1oaDq3-00E2Au-Pz; Mon, 19 Sep 2022 10:17:21 +0000
 Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
         (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
          key-exchange X25519 server-signature RSA-PSS (4096 bits))
         (Client did not present a certificate)
-        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id A0CC2302F81;
+        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id 35A41302F29;
         Mon, 19 Sep 2022 12:16:25 +0200 (CEST)
 Received: by hirez.programming.kicks-ass.net (Postfix, from userid 0)
-        id A6ECA2BAC75A5; Mon, 19 Sep 2022 12:16:22 +0200 (CEST)
-Message-ID: <20220919101523.177759249@infradead.org>
+        id 4F9B32BABC0C9; Mon, 19 Sep 2022 12:16:22 +0200 (CEST)
+Message-ID: <20220919101522.021681292@infradead.org>
 User-Agent: quilt/0.66
-Date:   Mon, 19 Sep 2022 12:00:21 +0200
+Date:   Mon, 19 Sep 2022 12:00:04 +0200
 From:   Peter Zijlstra <peterz@infradead.org>
 To:     peterz@infradead.org
 Cc:     richard.henderson@linaro.org, ink@jurassic.park.msu.ru,
@@ -101,7 +101,7 @@ Cc:     richard.henderson@linaro.org, ink@jurassic.park.msu.ru,
         linux-pm@vger.kernel.org, linux-clk@vger.kernel.org,
         linux-arm-msm@vger.kernel.org, linux-tegra@vger.kernel.org,
         linux-arch@vger.kernel.org, kasan-dev@googlegroups.com
-Subject: [PATCH v2 42/44] entry,kasan,x86: Disallow overriding mem*() functions
+Subject: [PATCH v2 25/44] printk: Remove trace_.*_rcuidle() usage
 References: <20220919095939.761690562@infradead.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
@@ -109,170 +109,29 @@ Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-KASAN cannot just hijack the mem*() functions, it needs to emit
-__asan_mem*() variants if it wants instrumentation (other sanitizers
-already do this).
+The problem, per commit fc98c3c8c9dc ("printk: use rcuidle console
+tracepoint"), was printk usage from the cpuidle path where RCU was
+already disabled.
 
-vmlinux.o: warning: objtool: sync_regs+0x24: call to memcpy() leaves .noinstr.text section
-vmlinux.o: warning: objtool: vc_switch_off_ist+0xbe: call to memcpy() leaves .noinstr.text section
-vmlinux.o: warning: objtool: fixup_bad_iret+0x36: call to memset() leaves .noinstr.text section
-vmlinux.o: warning: objtool: __sev_get_ghcb+0xa0: call to memcpy() leaves .noinstr.text section
-vmlinux.o: warning: objtool: __sev_put_ghcb+0x35: call to memcpy() leaves .noinstr.text section
-
-Remove the weak aliases to ensure nobody hijacks these functions and
-add them to the noinstr section.
+Per the patches earlier in this series, this is no longer the case.
 
 Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
+Reviewed-by: Sergey Senozhatsky <senozhatsky@chromium.org>
+Acked-by: Petr Mladek <pmladek@suse.com>
 ---
- arch/x86/lib/memcpy_64.S  |    5 ++---
- arch/x86/lib/memmove_64.S |    4 +++-
- arch/x86/lib/memset_64.S  |    4 +++-
- mm/kasan/kasan.h          |    4 ++++
- mm/kasan/shadow.c         |   38 ++++++++++++++++++++++++++++++++++++++
- tools/objtool/check.c     |    3 +++
- 6 files changed, 53 insertions(+), 5 deletions(-)
+ kernel/printk/printk.c |    2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
---- a/arch/x86/lib/memcpy_64.S
-+++ b/arch/x86/lib/memcpy_64.S
-@@ -7,7 +7,7 @@
- #include <asm/alternative.h>
- #include <asm/export.h>
+--- a/kernel/printk/printk.c
++++ b/kernel/printk/printk.c
+@@ -2238,7 +2238,7 @@ static u16 printk_sprint(char *text, u16
+ 		}
+ 	}
  
--.pushsection .noinstr.text, "ax"
-+.section .noinstr.text, "ax"
+-	trace_console_rcuidle(text, text_len);
++	trace_console(text, text_len);
  
- /*
-  * We build a jump to memcpy_orig by default which gets NOPped out on
-@@ -42,7 +42,7 @@ SYM_FUNC_START(__memcpy)
- SYM_FUNC_END(__memcpy)
- EXPORT_SYMBOL(__memcpy)
- 
--SYM_FUNC_ALIAS_WEAK(memcpy, __memcpy)
-+SYM_FUNC_ALIAS(memcpy, __memcpy)
- EXPORT_SYMBOL(memcpy)
- 
- /*
-@@ -183,4 +183,3 @@ SYM_FUNC_START_LOCAL(memcpy_orig)
- 	RET
- SYM_FUNC_END(memcpy_orig)
- 
--.popsection
---- a/arch/x86/lib/memmove_64.S
-+++ b/arch/x86/lib/memmove_64.S
-@@ -13,6 +13,8 @@
- 
- #undef memmove
- 
-+.section .noinstr.text, "ax"
-+
- /*
-  * Implement memmove(). This can handle overlap between src and dst.
-  *
-@@ -213,5 +215,5 @@ SYM_FUNC_START(__memmove)
- SYM_FUNC_END(__memmove)
- EXPORT_SYMBOL(__memmove)
- 
--SYM_FUNC_ALIAS_WEAK(memmove, __memmove)
-+SYM_FUNC_ALIAS(memmove, __memmove)
- EXPORT_SYMBOL(memmove)
---- a/arch/x86/lib/memset_64.S
-+++ b/arch/x86/lib/memset_64.S
-@@ -6,6 +6,8 @@
- #include <asm/alternative.h>
- #include <asm/export.h>
- 
-+.section .noinstr.text, "ax"
-+
- /*
-  * ISO C memset - set a memory block to a byte value. This function uses fast
-  * string to get better performance than the original function. The code is
-@@ -43,7 +45,7 @@ SYM_FUNC_START(__memset)
- SYM_FUNC_END(__memset)
- EXPORT_SYMBOL(__memset)
- 
--SYM_FUNC_ALIAS_WEAK(memset, __memset)
-+SYM_FUNC_ALIAS(memset, __memset)
- EXPORT_SYMBOL(memset)
- 
- /*
---- a/mm/kasan/kasan.h
-+++ b/mm/kasan/kasan.h
-@@ -551,6 +551,10 @@ void __asan_set_shadow_f3(const void *ad
- void __asan_set_shadow_f5(const void *addr, size_t size);
- void __asan_set_shadow_f8(const void *addr, size_t size);
- 
-+void *__asan_memset(void *addr, int c, size_t len);
-+void *__asan_memmove(void *dest, const void *src, size_t len);
-+void *__asan_memcpy(void *dest, const void *src, size_t len);
-+
- void __hwasan_load1_noabort(unsigned long addr);
- void __hwasan_store1_noabort(unsigned long addr);
- void __hwasan_load2_noabort(unsigned long addr);
---- a/mm/kasan/shadow.c
-+++ b/mm/kasan/shadow.c
-@@ -38,6 +38,12 @@ bool __kasan_check_write(const volatile
+ 	return text_len;
  }
- EXPORT_SYMBOL(__kasan_check_write);
- 
-+#ifndef CONFIG_GENERIC_ENTRY
-+/*
-+ * CONFIG_GENERIC_ENTRY relies on compiler emitted mem*() calls to not be
-+ * instrumented. KASAN enabled toolchains should emit __asan_mem*() functions
-+ * for the sites they want to instrument.
-+ */
- #undef memset
- void *memset(void *addr, int c, size_t len)
- {
-@@ -68,6 +74,38 @@ void *memcpy(void *dest, const void *src
- 
- 	return __memcpy(dest, src, len);
- }
-+#endif
-+
-+void *__asan_memset(void *addr, int c, size_t len)
-+{
-+	if (!kasan_check_range((unsigned long)addr, len, true, _RET_IP_))
-+		return NULL;
-+
-+	return __memset(addr, c, len);
-+}
-+EXPORT_SYMBOL(__asan_memset);
-+
-+#ifdef __HAVE_ARCH_MEMMOVE
-+void *__asan_memmove(void *dest, const void *src, size_t len)
-+{
-+	if (!kasan_check_range((unsigned long)src, len, false, _RET_IP_) ||
-+	    !kasan_check_range((unsigned long)dest, len, true, _RET_IP_))
-+		return NULL;
-+
-+	return __memmove(dest, src, len);
-+}
-+EXPORT_SYMBOL(__asan_memmove);
-+#endif
-+
-+void *__asan_memcpy(void *dest, const void *src, size_t len)
-+{
-+	if (!kasan_check_range((unsigned long)src, len, false, _RET_IP_) ||
-+	    !kasan_check_range((unsigned long)dest, len, true, _RET_IP_))
-+		return NULL;
-+
-+	return __memcpy(dest, src, len);
-+}
-+EXPORT_SYMBOL(__asan_memcpy);
- 
- void kasan_poison(const void *addr, size_t size, u8 value, bool init)
- {
---- a/tools/objtool/check.c
-+++ b/tools/objtool/check.c
-@@ -956,6 +956,9 @@ static const char *uaccess_safe_builtin[
- 	"__asan_store16_noabort",
- 	"__kasan_check_read",
- 	"__kasan_check_write",
-+	"__asan_memset",
-+	"__asan_memmove",
-+	"__asan_memcpy",
- 	/* KASAN in-line */
- 	"__asan_report_load_n_noabort",
- 	"__asan_report_load1_noabort",
 
 
