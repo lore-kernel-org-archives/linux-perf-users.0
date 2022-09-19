@@ -2,153 +2,115 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6D18CC6FA92
-	for <linux-perf-users@archiver.kernel.org>; Mon, 19 Sep 2022 15:18:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9C4B6ECAAD3
+	for <linux-perf-users@archiver.kernel.org>; Mon, 19 Sep 2022 15:20:41 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229995AbiISPS5 (ORCPT
+        id S229952AbiISPUk (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Mon, 19 Sep 2022 11:18:57 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42198 "EHLO
+        Mon, 19 Sep 2022 11:20:40 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43236 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230144AbiISPSX (ORCPT
+        with ESMTP id S229909AbiISPUP (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Mon, 19 Sep 2022 11:18:23 -0400
-Received: from ams.source.kernel.org (ams.source.kernel.org [IPv6:2604:1380:4601:e00::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E1A24371BD;
-        Mon, 19 Sep 2022 08:17:40 -0700 (PDT)
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by ams.source.kernel.org (Postfix) with ESMTPS id 3C525B81D70;
-        Mon, 19 Sep 2022 15:17:39 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id D47AEC433D6;
-        Mon, 19 Sep 2022 15:17:36 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1663600657;
-        bh=SGRWSsWxhYnFNcVdXVanCp7r8VhObbFain7vrJ2pf9o=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=fxVxz+v2ZKRYGR2RcB+jwqcdhOAyWFuA63mrtcEpyRTpMkbyS6WHs4N4WpL6wD55y
-         MEw4vseCOHKlzHluXBoBp/tNbhBozucjByJQwggqB8cSL766iSR/fB5p7HP2XX3V5a
-         W432aviHiF1CtVbY9+02lVZyqI6r7f0Y+oEmkgLbQeCLJ6mZ8QHUtL9Cb1Rt7pnsGN
-         oU9BgJeognmYR5a7tpyKmtArG/qTrOVW6g6oNhiIq3bF6GOaiMj1jdkgNeNp7u/R+2
-         PWnZiOvApDwvdE77MAQCyvfpVSOU+ZSH1CmsYL840fIy4Yva2osOuqdAr10RKbdLw3
-         uLMmSqj+LM5sA==
-Date:   Mon, 19 Sep 2022 17:17:34 +0200
-From:   Frederic Weisbecker <frederic@kernel.org>
-To:     Peter Zijlstra <peterz@infradead.org>
-Cc:     richard.henderson@linaro.org, ink@jurassic.park.msu.ru,
-        mattst88@gmail.com, vgupta@kernel.org, linux@armlinux.org.uk,
-        ulli.kroll@googlemail.com, linus.walleij@linaro.org,
-        shawnguo@kernel.org, Sascha Hauer <s.hauer@pengutronix.de>,
-        kernel@pengutronix.de, festevam@gmail.com, linux-imx@nxp.com,
-        tony@atomide.com, khilman@kernel.org, catalin.marinas@arm.com,
-        will@kernel.org, guoren@kernel.org, bcain@quicinc.com,
-        chenhuacai@kernel.org, kernel@xen0n.name, geert@linux-m68k.org,
-        sammy@sammy.net, monstr@monstr.eu, tsbogend@alpha.franken.de,
-        dinguyen@kernel.org, jonas@southpole.se,
-        stefan.kristiansson@saunalahti.fi, shorne@gmail.com,
-        James.Bottomley@hansenpartnership.com, deller@gmx.de,
-        mpe@ellerman.id.au, npiggin@gmail.com, christophe.leroy@csgroup.eu,
-        paul.walmsley@sifive.com, palmer@dabbelt.com,
-        aou@eecs.berkeley.edu, hca@linux.ibm.com, gor@linux.ibm.com,
-        agordeev@linux.ibm.com, borntraeger@linux.ibm.com,
-        svens@linux.ibm.com, ysato@users.sourceforge.jp, dalias@libc.org,
-        davem@davemloft.net, richard@nod.at,
-        anton.ivanov@cambridgegreys.com, johannes@sipsolutions.net,
-        tglx@linutronix.de, mingo@redhat.com, bp@alien8.de,
-        dave.hansen@linux.intel.com, x86@kernel.org, hpa@zytor.com,
-        acme@kernel.org, mark.rutland@arm.com,
-        alexander.shishkin@linux.intel.com, jolsa@kernel.org,
-        namhyung@kernel.org, jgross@suse.com, srivatsa@csail.mit.edu,
-        amakhalov@vmware.com, pv-drivers@vmware.com,
-        boris.ostrovsky@oracle.com, chris@zankel.net, jcmvbkbc@gmail.com,
-        rafael@kernel.org, lenb@kernel.org, pavel@ucw.cz,
-        gregkh@linuxfoundation.org, mturquette@baylibre.com,
-        sboyd@kernel.org, daniel.lezcano@linaro.org, lpieralisi@kernel.org,
-        sudeep.holla@arm.com, agross@kernel.org,
-        bjorn.andersson@linaro.org, konrad.dybcio@somainline.org,
-        anup@brainfault.org, thierry.reding@gmail.com,
-        jonathanh@nvidia.com, jacob.jun.pan@linux.intel.com,
-        atishp@atishpatra.org, Arnd Bergmann <arnd@arndb.de>,
-        yury.norov@gmail.com, andriy.shevchenko@linux.intel.com,
-        linux@rasmusvillemoes.dk, dennis@kernel.org, tj@kernel.org,
-        cl@linux.com, rostedt@goodmis.org, pmladek@suse.com,
-        senozhatsky@chromium.org, john.ogness@linutronix.de,
-        juri.lelli@redhat.com, vincent.guittot@linaro.org,
-        dietmar.eggemann@arm.com, bsegall@google.com, mgorman@suse.de,
-        bristot@redhat.com, vschneid@redhat.com, fweisbec@gmail.com,
-        ryabinin.a.a@gmail.com, glider@google.com, andreyknvl@gmail.com,
-        dvyukov@google.com, vincenzo.frascino@arm.com,
-        Andrew Morton <akpm@linux-foundation.org>, jpoimboe@kernel.org,
-        linux-alpha@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-snps-arc@lists.infradead.org, linux-omap@vger.kernel.org,
-        linux-csky@vger.kernel.org, linux-hexagon@vger.kernel.org,
-        linux-ia64@vger.kernel.org, loongarch@lists.linux.dev,
-        linux-m68k@lists.linux-m68k.org, linux-mips@vger.kernel.org,
-        openrisc@lists.librecores.org, linux-parisc@vger.kernel.org,
-        linuxppc-dev@lists.ozlabs.org, linux-riscv@lists.infradead.org,
-        linux-s390@vger.kernel.org, linux-sh@vger.kernel.org,
-        sparclinux@vger.kernel.org, linux-um@lists.infradead.org,
-        linux-perf-users@vger.kernel.org,
-        virtualization@lists.linux-foundation.org,
-        linux-xtensa@linux-xtensa.org, linux-acpi@vger.kernel.org,
-        linux-pm@vger.kernel.org, linux-clk@vger.kernel.org,
-        linux-arm-msm@vger.kernel.org, linux-tegra@vger.kernel.org,
-        linux-arch@vger.kernel.org, kasan-dev@googlegroups.com
-Subject: Re: [PATCH v2 08/44] cpuidle,imx6: Push RCU-idle into driver
-Message-ID: <20220919151734.GB62211@lothringen>
-References: <20220919095939.761690562@infradead.org>
- <20220919101520.869531945@infradead.org>
- <20220919144941.GA62211@lothringen>
- <YyiEqDSJVOZrQYg8@hirez.programming.kicks-ass.net>
+        Mon, 19 Sep 2022 11:20:15 -0400
+Received: from wp530.webpack.hosteurope.de (wp530.webpack.hosteurope.de [IPv6:2a01:488:42:1000:50ed:8234::])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 403AF5FBE;
+        Mon, 19 Sep 2022 08:18:53 -0700 (PDT)
+Received: from [2a02:8108:963f:de38:eca4:7d19:f9a2:22c5]; authenticated
+        by wp530.webpack.hosteurope.de running ExIM with esmtpsa (TLS1.3:ECDHE_RSA_AES_128_GCM_SHA256:128)
+        id 1oaIXr-0000KX-7S; Mon, 19 Sep 2022 17:18:51 +0200
+Message-ID: <a46a1845-adab-1139-302c-3f4dd5adc2f0@leemhuis.info>
+Date:   Mon, 19 Sep 2022 17:18:50 +0200
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <YyiEqDSJVOZrQYg8@hirez.programming.kicks-ass.net>
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
+ Thunderbird/102.2.1
+Subject: Re: perf top -p broken for multithreaded processes since 5.19
+ #forregzbot
+Content-Language: en-US, de-DE
+From:   Thorsten Leemhuis <regressions@leemhuis.info>
+To:     "regressions@lists.linux.dev" <regressions@lists.linux.dev>
+Cc:     linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <10137382.nUPlyArG6x@mintaka.ncbr.muni.cz>
+ <5eca514c-2f05-2714-b496-233e8a39fe29@leemhuis.info>
+In-Reply-To: <5eca514c-2f05-2714-b496-233e8a39fe29@leemhuis.info>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+X-bounce-key: webpack.hosteurope.de;regressions@leemhuis.info;1663600734;7005e1be;
+X-HE-SMSGID: 1oaIXr-0000KX-7S
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-On Mon, Sep 19, 2022 at 05:03:04PM +0200, Peter Zijlstra wrote:
-> On Mon, Sep 19, 2022 at 04:49:41PM +0200, Frederic Weisbecker wrote:
-> > On Mon, Sep 19, 2022 at 11:59:47AM +0200, Peter Zijlstra wrote:
-> > > Doing RCU-idle outside the driver, only to then temporarily enable it
-> > > again, at least twice, before going idle is daft.
-> > > 
-> > > Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
-> > > ---
-> > >  arch/arm/mach-imx/cpuidle-imx6sx.c |    5 ++++-
-> > >  1 file changed, 4 insertions(+), 1 deletion(-)
-> > > 
-> > > --- a/arch/arm/mach-imx/cpuidle-imx6sx.c
-> > > +++ b/arch/arm/mach-imx/cpuidle-imx6sx.c
-> > > @@ -47,7 +47,9 @@ static int imx6sx_enter_wait(struct cpui
-> > >  		cpu_pm_enter();
-> > >  		cpu_cluster_pm_enter();
-> > >  
-> > > +		ct_idle_enter();
-> > >  		cpu_suspend(0, imx6sx_idle_finish);
-> > > +		ct_idle_exit();
-> > >  
-> > >  		cpu_cluster_pm_exit();
-> > >  		cpu_pm_exit();
-> > > @@ -87,7 +89,8 @@ static struct cpuidle_driver imx6sx_cpui
-> > >  			 */
-> > >  			.exit_latency = 300,
-> > >  			.target_residency = 500,
-> > > -			.flags = CPUIDLE_FLAG_TIMER_STOP,
-> > > +			.flags = CPUIDLE_FLAG_TIMER_STOP |
-> > > +				 CPUIDLE_FLAG_RCU_IDLE,
-> > >  			.enter = imx6sx_enter_wait,
-> > 
-> > There is a second one below that also uses imx6sx_enter_wait.
+On 04.09.22 12:15, Thorsten Leemhuis wrote:
+> TWIMC: this mail is primarily send for documentation purposes and for
+> regzbot, my Linux kernel regression tracking bot. These mails usually
+> contain '#forregzbot' in the subject, to make them easy to spot and filter.
 > 
-> Oh, above you mean; but only @index==2 gets us into the whole PM crud.
-> @index==1 is fine afaict.
+> [...]
+> On 02.09.22 16:46, Tomáš Trnka wrote:
+>>
+>> A bug in perf v5.19 and newer completely breaks monitoring multithreaded
+>> processes using "perf top -p". The tool fails to start with "Failed to mmap
+>> with 22 (Invalid argument)". It still seems to work fine on single-threaded
+>> processes. "perf record" is also unaffected.
+>>
+>> I have bisected the issue to the following commit:
+>>
+>> commit ae4f8ae16a07896403c90305d4b9be27f657c1fc
+>> Author: Adrian Hunter <adrian.hunter@intel.com>
+>> Date:   Tue May 24 10:54:31 2022 +0300
+>>
+>>     libperf evlist: Allow mixing per-thread and per-cpu mmaps
+>>     
+>>     mmap_per_evsel() will skip events that do not match the CPU, so all CPUs
+>>     can be iterated in any case.
+>>
+>> The issue can be easily reproduced using the following test:
+>>
+>> $ python - <<EOF
+>> import time
+>> import threading
+>> th = threading.Thread(target=time.sleep, args=(3600,))
+>> th.start()
+>> th.join()
+>> EOF
+>>
+>> stracing "perf top -p $(pgrep python)" yields this:
+>>
+>> 145184 perf_event_open({type=PERF_TYPE_HARDWARE, size=PERF_ATTR_SIZE_VER7, config=PERF_COUNT_HW_CPU_CYCLES, sample_freq=4000, sample_type=PERF_SAMPLE_IP|PERF_SAMPLE_TID|PERF_SAMPLE_TIME|PERF_SAMPLE_PERIOD, read_format=PERF_FORMAT_ID, disabled=1, exclude_kernel=1, mmap=1, comm=1, freq=1, task=1, precise_ip=0 /* arbitrary skid */, sample_id_all=1, mmap2=1, comm_exec=1, ksymbol=1, ...}, 92061, -1, -1, PERF_FLAG_FD_CLOEXEC) = 3
+>>  > tools/perf/perf(evsel__open_cpu+0x287) [0x4c8ad7]
+>>  > tools/perf/perf(cmd_top+0x1996) [0x439b26]
+>>  > tools/perf/perf(run_builtin+0x68) [0x4a91f8]
+>>  > tools/perf/perf(main+0x645) [0x40cad5]
+>> 145184 perf_event_open({type=PERF_TYPE_HARDWARE, size=PERF_ATTR_SIZE_VER7, config=PERF_COUNT_HW_CPU_CYCLES, sample_freq=4000, sample_type=PERF_SAMPLE_IP|PERF_SAMPLE_TID|PERF_SAMPLE_TIME|PERF_SAMPLE_PERIOD, read_format=PERF_FORMAT_ID, disabled=1, exclude_kernel=1, mmap=1, comm=1, freq=1, task=1, precise_ip=0 /* arbitrary skid */, sample_id_all=1, mmap2=1, comm_exec=1, ksymbol=1, ...}, 104619, -1, -1, PERF_FLAG_FD_CLOEXEC) = 5
+>>  > tools/perf/perf(evsel__open_cpu+0x287) [0x4c8ad7]
+>>  > tools/perf/perf(cmd_top+0x1996) [0x439b26]
+>>  > tools/perf/perf(run_builtin+0x68) [0x4a91f8]
+>>  > tools/perf/perf(main+0x645) [0x40cad5]
+>> …(snip)…
+>> 145184 ioctl(5, PERF_EVENT_IOC_SET_OUTPUT, 3) = -1 EINVAL (Invalid argument)
+>>  > tools/perf/perf(perf_evlist__mmap_ops+0x2cf) [0x5d497f]
+>>  > tools/perf/perf(evlist__mmap+0xa7) [0x4c09b7]
+>>  > perf/perf(cmd_top+0x1ccd) [0x439e5d]
+>>  > tools/perf/perf(run_builtin+0x68) [0x4a91f8]
+>>  > tools/perf/perf(main+0x645) [0x40cad5]
+>>
+>> Best regards,
+>>
+>> Tomáš
+>> --
+>> Tomáš Trnka
+>> Software for Chemistry & Materials B.V.
+> 
+> Thanks for the report. To be sure below issue doesn't fall through the
+> cracks unnoticed, I'm adding it to regzbot, my Linux kernel regression
+> tracking bot:
+> 
+> #regzbot introduced ae4f8ae16a07896 ^
+> https://bugzilla.kernel.org/show_bug.cgi?id=216441
+> #regzbot title perf: perf top -p broken for multithreaded processes
+> since 5.19
+> #regzbot ignore-activity
 
-Ah ok, got it, hence why you didn't touch cpu_do_idle()...
-May need to comment that somewhere...
+#regzbot fixed-by: 7864d8f7c088aad988c44c631f1ceed9179cf2cf
 
-Reviewed-by: Frederic Weisbecker <frederic@kernel.org>
-
-Thanks!
