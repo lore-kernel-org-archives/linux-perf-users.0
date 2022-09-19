@@ -2,44 +2,44 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 476E7C6FD19
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 138E5C6FD18
 	for <linux-perf-users@archiver.kernel.org>; Mon, 19 Sep 2022 10:20:45 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231420AbiISKUU (ORCPT
+        id S231408AbiISKUS (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Mon, 19 Sep 2022 06:20:20 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49628 "EHLO
+        Mon, 19 Sep 2022 06:20:18 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49990 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229984AbiISKRk (ORCPT
+        with ESMTP id S230448AbiISKRy (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Mon, 19 Sep 2022 06:17:40 -0400
+        Mon, 19 Sep 2022 06:17:54 -0400
 Received: from casper.infradead.org (casper.infradead.org [IPv6:2001:8b0:10b:1236::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DF95BEE17;
-        Mon, 19 Sep 2022 03:17:38 -0700 (PDT)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B6288237EC;
+        Mon, 19 Sep 2022 03:17:48 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
         d=infradead.org; s=casper.20170209; h=Content-Type:MIME-Version:References:
         Subject:Cc:To:From:Date:Message-ID:Sender:Reply-To:Content-Transfer-Encoding:
         Content-ID:Content-Description:In-Reply-To;
-        bh=Vr6T2clVTCKzoOuqPun2LzaBPyz9xLY6Bd2T3LwNb5Y=; b=l6JY0yWli0iEZp32b7Bby14YD2
-        39493K1NJwG1SAUm/vCDnDKz4SLvbKnyOjPlUTGB4naV3RyAE0714sa9gSs3tdL+FC1ToX1uTACXc
-        Ewpt1OpyvnzzGvA3zzGqdvaSQ/yio6jDOot75ThUnZjNdLwnDn0/IZ+lZYn691hsTAHsQFOXvV/r9
-        9/DjyEmGT0x/AXRbm9f287QwOjNi6XX75sjBEn2gepQshrAgXueUWFkoaZTytsBgMPC/PvIzgaXMF
-        9qP38XhX8galq11nQytQnaDfnKD7LOIvfp19c22HE/GrpeMVZE+FZzkERfBMpihVLG9fwvb0QlNKg
-        s8ffbpdQ==;
+        bh=RR6lW9yNo9DZO38N/e4p2MZQ6Q7RTpDFv4YAvZRPRqw=; b=PZP3Zc9fRVMiNlT58tSnNmgCYZ
+        EM4DzzAVKcQG5z/X+VmqADzofVQQAm+cSpAgBZwGA9usrPjB3POE1K0jWJUPBlOnQE2cMkjO6DDXv
+        8OzA51FOzwjhOwUJf4OskOY6gqslyL9pO2CajIhKocpTpWFbpqbup14D56sFuD4VmT2BSJBsMC/wy
+        uurzyMKT5oOwiFKOsoNC+63U7Q6s6OxiOteB8jm0ZgEAvDseuq8ILqKpxtXowmUgw3LMss/tKVE2e
+        y1+0ri1BNN+p3IWKmX0rszZlPiAjdULcb/XAzsHZK7W562XJxcP190LTNVqcoA9LVIjWIdxaDMu97
+        1l1vc33w==;
 Received: from j130084.upc-j.chello.nl ([24.132.130.84] helo=noisy.programming.kicks-ass.net)
         by casper.infradead.org with esmtpsa (Exim 4.94.2 #2 (Red Hat Linux))
-        id 1oaDq6-004b8G-7d; Mon, 19 Sep 2022 10:17:22 +0000
+        id 1oaDqA-004bDb-E4; Mon, 19 Sep 2022 10:17:26 +0000
 Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
         (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
          key-exchange X25519 server-signature RSA-PSS (4096 bits))
         (Client did not present a certificate)
-        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id 28F6A302F1F;
+        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id 99550302F79;
         Mon, 19 Sep 2022 12:16:25 +0200 (CEST)
 Received: by hirez.programming.kicks-ass.net (Postfix, from userid 0)
-        id 4AD7D2BA9210F; Mon, 19 Sep 2022 12:16:22 +0200 (CEST)
-Message-ID: <20220919101521.953707131@infradead.org>
+        id A2A092BAC75A3; Mon, 19 Sep 2022 12:16:22 +0200 (CEST)
+Message-ID: <20220919101523.110221113@infradead.org>
 User-Agent: quilt/0.66
-Date:   Mon, 19 Sep 2022 12:00:03 +0200
+Date:   Mon, 19 Sep 2022 12:00:20 +0200
 From:   Peter Zijlstra <peterz@infradead.org>
 To:     peterz@infradead.org
 Cc:     richard.henderson@linaro.org, ink@jurassic.park.msu.ru,
@@ -100,9 +100,8 @@ Cc:     richard.henderson@linaro.org, ink@jurassic.park.msu.ru,
         linux-xtensa@linux-xtensa.org, linux-acpi@vger.kernel.org,
         linux-pm@vger.kernel.org, linux-clk@vger.kernel.org,
         linux-arm-msm@vger.kernel.org, linux-tegra@vger.kernel.org,
-        linux-arch@vger.kernel.org, kasan-dev@googlegroups.com,
-        Marc Zyngier <maz@kernel.org>
-Subject: [PATCH v2 24/44] arm64,smp: Remove trace_.*_rcuidle() usage
+        linux-arch@vger.kernel.org, kasan-dev@googlegroups.com
+Subject: [PATCH v2 41/44] intel_idle: Add force_irq_on module param
 References: <20220919095939.761690562@infradead.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
@@ -110,35 +109,36 @@ Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-Ever since commit d3afc7f12987 ("arm64: Allow IPIs to be handled as
-normal interrupts") this function is called in regular IRQ context.
+For testing purposes.
 
 Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
-Acked-by: Mark Rutland <mark.rutland@arm.com>
-Acked-by: Marc Zyngier <maz@kernel.org>
 ---
- arch/arm64/kernel/smp.c |    4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+ drivers/idle/intel_idle.c |    7 ++++++-
+ 1 file changed, 6 insertions(+), 1 deletion(-)
 
---- a/arch/arm64/kernel/smp.c
-+++ b/arch/arm64/kernel/smp.c
-@@ -865,7 +865,7 @@ static void do_handle_IPI(int ipinr)
- 	unsigned int cpu = smp_processor_id();
- 
- 	if ((unsigned)ipinr < NR_IPI)
--		trace_ipi_entry_rcuidle(ipi_types[ipinr]);
-+		trace_ipi_entry(ipi_types[ipinr]);
- 
- 	switch (ipinr) {
- 	case IPI_RESCHEDULE:
-@@ -914,7 +914,7 @@ static void do_handle_IPI(int ipinr)
- 	}
- 
- 	if ((unsigned)ipinr < NR_IPI)
--		trace_ipi_exit_rcuidle(ipi_types[ipinr]);
-+		trace_ipi_exit(ipi_types[ipinr]);
+--- a/drivers/idle/intel_idle.c
++++ b/drivers/idle/intel_idle.c
+@@ -1787,6 +1787,9 @@ static bool __init intel_idle_verify_cst
+ 	return true;
  }
  
- static irqreturn_t ipi_handler(int irq, void *data)
++static bool force_irq_on __read_mostly;
++module_param(force_irq_on, bool, 0444);
++
+ static void __init intel_idle_init_cstates_icpu(struct cpuidle_driver *drv)
+ {
+ 	int cstate;
+@@ -1838,8 +1841,10 @@ static void __init intel_idle_init_cstat
+ 		/* Structure copy. */
+ 		drv->states[drv->state_count] = cpuidle_state_table[cstate];
+ 
+-		if (cpuidle_state_table[cstate].flags & CPUIDLE_FLAG_IRQ_ENABLE)
++		if ((cpuidle_state_table[cstate].flags & CPUIDLE_FLAG_IRQ_ENABLE) || force_irq_on) {
++			printk("intel_idle: forced intel_idle_irq for state %d\n", cstate);
+ 			drv->states[drv->state_count].enter = intel_idle_irq;
++		}
+ 
+ 		if (cpu_feature_enabled(X86_FEATURE_KERNEL_IBRS) &&
+ 		    cpuidle_state_table[cstate].flags & CPUIDLE_FLAG_IBRS) {
 
 
