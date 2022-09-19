@@ -2,337 +2,204 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 06ED6C6FA90
-	for <linux-perf-users@archiver.kernel.org>; Mon, 19 Sep 2022 15:22:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id ECD48C6FA86
+	for <linux-perf-users@archiver.kernel.org>; Mon, 19 Sep 2022 15:24:42 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230124AbiISPWk (ORCPT
+        id S229833AbiISPYk (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Mon, 19 Sep 2022 11:22:40 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44028 "EHLO
+        Mon, 19 Sep 2022 11:24:40 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54010 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230125AbiISPWK (ORCPT
+        with ESMTP id S229847AbiISPYL (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Mon, 19 Sep 2022 11:22:10 -0400
-Received: from mail-qk1-f173.google.com (mail-qk1-f173.google.com [209.85.222.173])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3C880C25;
-        Mon, 19 Sep 2022 08:21:27 -0700 (PDT)
-Received: by mail-qk1-f173.google.com with SMTP id q11so17656501qkc.12;
-        Mon, 19 Sep 2022 08:21:27 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date;
-        bh=zwk8/QhMZpatQGQHcLa6CxC1A70tMAO9HDHY25D5feE=;
-        b=seiQiH7oSb1o4bKfTfhPNtyABHn9SIpDT+BCJEyKS2ufotknqwNpdADiJT3lR5JHyk
-         PcrkFUhV0mxkxTw2QEPHLmVjny2b5wb95WE4wrC8jXYEvRHYHQgY7nXJsXp1VjNErWDW
-         qwAiYgZGtb1n9RZucbvLX/RRQ/bs1KiA1m7dJ78BzMsqbvlBF0xbn5cHOM0HghJr89Gl
-         BkCAdJtV+jWvdu2+DUE0EcrhiMl1WuIAVkIVQXeullRcJli7p0/iat2prsfWoeK7GjTH
-         SFzQxnNVAEPFWuXOW8g1VEpndUEAZNTKjevjzoX9uJy3+ZTnx0DTdsm7wyh834tzRzMO
-         xQZQ==
-X-Gm-Message-State: ACrzQf0efWM6jvkl7l16vaJXUlbSH/d4jS+7jyVOzUx4T9p3OGuYR/Eb
-        4PnPlbdy6XiP2txJ2sOg7rYSEQGZR/aqvbawP9E=
-X-Google-Smtp-Source: AMsMyM5cgrHdHMwYAR2D2ZjqABuHY9UEfVqKvTwIhmR6+N901HRJWzEi9ZfhaQwzx+J2b350jxNOS+DoidFDWdYllGY=
-X-Received: by 2002:a05:620a:46ac:b0:6ce:3e55:fc21 with SMTP id
- bq44-20020a05620a46ac00b006ce3e55fc21mr12973834qkb.285.1663600885830; Mon, 19
- Sep 2022 08:21:25 -0700 (PDT)
-MIME-Version: 1.0
-References: <20220919095939.761690562@infradead.org>
-In-Reply-To: <20220919095939.761690562@infradead.org>
-From:   "Rafael J. Wysocki" <rafael@kernel.org>
-Date:   Mon, 19 Sep 2022 17:21:12 +0200
-Message-ID: <CAJZ5v0h3y-MRzHmbzrr6B4vBxkkw07LOdCVmBqSS4JDhtGSKXg@mail.gmail.com>
-Subject: Re: [PATCH v2 00/44] cpuidle,rcu: Clean up the mess
-To:     Peter Zijlstra <peterz@infradead.org>
-Cc:     richard.henderson@linaro.org,
-        Ivan Kokshaysky <ink@jurassic.park.msu.ru>,
-        Matt Turner <mattst88@gmail.com>, vgupta@kernel.org,
-        Russell King - ARM Linux <linux@armlinux.org.uk>,
-        ulli.kroll@googlemail.com,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Shawn Guo <shawnguo@kernel.org>,
-        Sascha Hauer <s.hauer@pengutronix.de>,
-        Sascha Hauer <kernel@pengutronix.de>,
-        Fabio Estevam <festevam@gmail.com>,
-        dl-linux-imx <linux-imx@nxp.com>,
-        Tony Lindgren <tony@atomide.com>,
-        Kevin Hilman <khilman@kernel.org>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Will Deacon <will@kernel.org>, Guo Ren <guoren@kernel.org>,
-        bcain@quicinc.com, Huacai Chen <chenhuacai@kernel.org>,
-        kernel@xen0n.name, Geert Uytterhoeven <geert@linux-m68k.org>,
-        sammy@sammy.net, Michal Simek <monstr@monstr.eu>,
-        Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
-        dinguyen@kernel.org, jonas@southpole.se,
-        stefan.kristiansson@saunalahti.fi,
-        Stafford Horne <shorne@gmail.com>,
-        James Bottomley <James.Bottomley@hansenpartnership.com>,
-        Helge Deller <deller@gmx.de>,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        Nicholas Piggin <npiggin@gmail.com>,
-        Christophe Leroy <christophe.leroy@csgroup.eu>,
-        Paul Walmsley <paul.walmsley@sifive.com>,
-        Palmer Dabbelt <palmer@dabbelt.com>,
-        Albert Ou <aou@eecs.berkeley.edu>,
-        Heiko Carstens <hca@linux.ibm.com>,
-        Vasily Gorbik <gor@linux.ibm.com>,
-        Alexander Gordeev <agordeev@linux.ibm.com>,
-        Christian Borntraeger <borntraeger@linux.ibm.com>,
-        Sven Schnelle <svens@linux.ibm.com>,
-        Yoshinori Sato <ysato@users.sourceforge.jp>,
-        Rich Felker <dalias@libc.org>,
-        David Miller <davem@davemloft.net>,
-        Richard Weinberger <richard@nod.at>,
-        anton.ivanov@cambridgegreys.com,
-        Johannes Berg <johannes@sipsolutions.net>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-        Dave Hansen <dave.hansen@linux.intel.com>,
-        "the arch/x86 maintainers" <x86@kernel.org>,
-        "H. Peter Anvin" <hpa@zytor.com>, acme@kernel.org,
+        Mon, 19 Sep 2022 11:24:11 -0400
+Received: from mga04.intel.com (mga04.intel.com [192.55.52.120])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E430339BB0;
+        Mon, 19 Sep 2022 08:23:13 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1663600996; x=1695136996;
+  h=from:to:cc:subject:date:message-id:references:
+   in-reply-to:content-transfer-encoding:mime-version;
+  bh=jjwwXBCXifPE0EQ06pBt/mptMV58ps8/bfpbrOvOfxI=;
+  b=SY//7caeBzdTWdsH+gkvEVVtym2EidUi66tq/tMERwZRqc3LdVXx8FEv
+   DeL3ynu9VpJzYmleZPsAuWyI7t0X4EbIQMmXrEbttX4XF2Latr2CPVOWU
+   GF6gRCEb/thCxTiss09Tunb3WoMrC35SzclZiZH5FugYj8ywd0NeSItaX
+   g+7gbwaHjo4ekV61/K9aEI9NdSYnsXAALIVVQB4VJCdHhY2i6tSA4wnsV
+   X3GNpACLWk4tQELLVrQB5kd9OnproadjXsy0F3QgfsiMdh81avCDWj1Zt
+   OKxo0s5/AUYvpFgbo7pTY125T7Zr1JRqBhpSRpsCTEHz4FzMsh7eJFYP+
+   Q==;
+X-IronPort-AV: E=McAfee;i="6500,9779,10475"; a="298156919"
+X-IronPort-AV: E=Sophos;i="5.93,328,1654585200"; 
+   d="scan'208";a="298156919"
+Received: from orsmga001.jf.intel.com ([10.7.209.18])
+  by fmsmga104.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 19 Sep 2022 08:23:09 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.93,328,1654585200"; 
+   d="scan'208";a="651716032"
+Received: from orsmsx601.amr.corp.intel.com ([10.22.229.14])
+  by orsmga001.jf.intel.com with ESMTP; 19 Sep 2022 08:23:08 -0700
+Received: from orsmsx610.amr.corp.intel.com (10.22.229.23) by
+ ORSMSX601.amr.corp.intel.com (10.22.229.14) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2375.31; Mon, 19 Sep 2022 08:23:08 -0700
+Received: from orsmsx611.amr.corp.intel.com (10.22.229.24) by
+ ORSMSX610.amr.corp.intel.com (10.22.229.23) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2375.31; Mon, 19 Sep 2022 08:23:07 -0700
+Received: from orsedg603.ED.cps.intel.com (10.7.248.4) by
+ orsmsx611.amr.corp.intel.com (10.22.229.24) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2375.31 via Frontend Transport; Mon, 19 Sep 2022 08:23:07 -0700
+Received: from NAM04-DM6-obe.outbound.protection.outlook.com (104.47.73.44) by
+ edgegateway.intel.com (134.134.137.100) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.1.2375.31; Mon, 19 Sep 2022 08:23:07 -0700
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=dKSJsjR8O5mq3w6Bj7hi2DN+MDmc5HZ+ETLxUeKVBjDErC6cOQS3l94tgimXYKU4qX28MXGd+VFlvX4Fz3+arDaq+W+rg9wy07jAiuV0dc+KMeLEEN692qroLkBLqCw0fzairpj2ujg+7ZPj5kOCqATia0OI7Sm4TXGsvdBIR/lqPAPBb7AdWBtyaJNMMveadNcU3kwwSu4VdL0Sj0ORgaxi5S5oOykS95hmg3RU5cWu5P5VUBX9m70JsygFByKjyBBoQ/9ONrEf8uiQSt4fxs+Cy2p7ZYws4gpCBxkBY0tDaQE5Jj4lqPlgzx3vLeOPuuGjU6uvhJfXz2WCoutneQ==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=jjwwXBCXifPE0EQ06pBt/mptMV58ps8/bfpbrOvOfxI=;
+ b=hrJOwfRJXkV8cYG8/Veq1TMedGcn6ytMiYbgUKhF9S1Y1+LkODtGpAUB8+QWRaWdVy4ot1qzCGGGjyq+U1AmfpI6Ws+bV43LjG8/BhAf270r92om7c6tBxMQFhKUHrcGx3NqUZ0OAvrgUXSKWrNpst2S2x+G0rBv9WhPj/ldPIczw7Q8QQO5TXnqbxAZl8e4S3oKfFbDmP1CDYn0wildz8HXGNlECICQuapi3mqaUX94sG0/TuB5m4zc1iy6FvW1du1+7nl/sqzgZ4dMOqBovsogQXlWrthKF/CEtni/YAhVD2ahFeu9mdju8+KBWC+/Vc9JLIe5rezIdFxEvbMGyg==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=intel.com; dmarc=pass action=none header.from=intel.com;
+ dkim=pass header.d=intel.com; arc=none
+Received: from DS0PR11MB6373.namprd11.prod.outlook.com (2603:10b6:8:cb::20) by
+ PH0PR11MB5675.namprd11.prod.outlook.com (2603:10b6:510:d4::17) with Microsoft
+ SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.5632.21; Mon, 19 Sep 2022 15:22:58 +0000
+Received: from DS0PR11MB6373.namprd11.prod.outlook.com
+ ([fe80::817a:fd68:f270:1ea0]) by DS0PR11MB6373.namprd11.prod.outlook.com
+ ([fe80::817a:fd68:f270:1ea0%7]) with mapi id 15.20.5632.018; Mon, 19 Sep 2022
+ 15:22:58 +0000
+From:   "Wang, Wei W" <wei.w.wang@intel.com>
+To:     "Liang, Kan" <kan.liang@linux.intel.com>,
+        "Li, Xiaoyao" <xiaoyao.li@intel.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        "Arnaldo Carvalho de Melo" <acme@kernel.org>,
         Mark Rutland <mark.rutland@arm.com>,
         Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        jolsa@kernel.org, namhyung@kernel.org,
-        Juergen Gross <jgross@suse.com>, srivatsa@csail.mit.edu,
-        amakhalov@vmware.com, pv-drivers@vmware.com,
-        Boris Ostrovsky <boris.ostrovsky@oracle.com>,
-        Chris Zankel <chris@zankel.net>,
-        Max Filippov <jcmvbkbc@gmail.com>,
-        "Rafael J. Wysocki" <rafael@kernel.org>,
-        Len Brown <lenb@kernel.org>, Pavel Machek <pavel@ucw.cz>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Michael Turquette <mturquette@baylibre.com>,
-        Stephen Boyd <sboyd@kernel.org>,
-        Daniel Lezcano <daniel.lezcano@linaro.org>,
-        Lorenzo Pieralisi <lpieralisi@kernel.org>,
-        Sudeep Holla <sudeep.holla@arm.com>,
-        Andy Gross <agross@kernel.org>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Konrad Dybcio <konrad.dybcio@somainline.org>,
-        Anup Patel <anup@brainfault.org>,
-        Thierry Reding <thierry.reding@gmail.com>,
-        Jon Hunter <jonathanh@nvidia.com>,
-        Jacob Pan <jacob.jun.pan@linux.intel.com>,
-        Atish Patra <atishp@atishpatra.org>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Yury Norov <yury.norov@gmail.com>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Rasmus Villemoes <linux@rasmusvillemoes.dk>,
-        Dennis Zhou <dennis@kernel.org>, Tejun Heo <tj@kernel.org>,
-        Christoph Lameter <cl@linux.com>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Petr Mladek <pmladek@suse.com>, senozhatsky@chromium.org,
-        John Ogness <john.ogness@linutronix.de>,
-        Juri Lelli <juri.lelli@redhat.com>,
-        Vincent Guittot <vincent.guittot@linaro.org>,
-        Dietmar Eggemann <dietmar.eggemann@arm.com>,
-        Benjamin Segall <bsegall@google.com>,
-        Mel Gorman <mgorman@suse.de>,
-        Daniel Bristot de Oliveira <bristot@redhat.com>,
-        vschneid@redhat.com, Frederic Weisbecker <fweisbec@gmail.com>,
-        ryabinin.a.a@gmail.com, Alexander Potapenko <glider@google.com>,
-        andreyknvl@gmail.com, Dmitry Vyukov <dvyukov@google.com>,
-        vincenzo.frascino@arm.com,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Josh Poimboeuf <jpoimboe@kernel.org>,
-        linux-alpha@vger.kernel.org,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        linux-snps-arc@lists.infradead.org,
-        Linux OMAP Mailing List <linux-omap@vger.kernel.org>,
-        linux-csky@vger.kernel.org, linux-hexagon@vger.kernel.org,
-        linux-ia64@vger.kernel.org, loongarch@lists.linux.dev,
-        linux-m68k <linux-m68k@lists.linux-m68k.org>,
-        "open list:BROADCOM NVRAM DRIVER" <linux-mips@vger.kernel.org>,
-        openrisc@lists.librecores.org,
-        Parisc List <linux-parisc@vger.kernel.org>,
-        linuxppc-dev <linuxppc-dev@lists.ozlabs.org>,
-        linux-riscv <linux-riscv@lists.infradead.org>,
-        linux-s390@vger.kernel.org,
-        Linux-sh list <linux-sh@vger.kernel.org>,
-        sparclinux@vger.kernel.org, linux-um@lists.infradead.org,
-        linux-perf-users@vger.kernel.org,
-        virtualization@lists.linux-foundation.org,
-        linux-xtensa@linux-xtensa.org,
-        ACPI Devel Maling List <linux-acpi@vger.kernel.org>,
-        Linux PM <linux-pm@vger.kernel.org>,
-        linux-clk <linux-clk@vger.kernel.org>,
-        linux-arm-msm <linux-arm-msm@vger.kernel.org>,
-        linux-tegra <linux-tegra@vger.kernel.org>,
-        linux-arch <linux-arch@vger.kernel.org>,
-        kasan-dev@googlegroups.com
-Content-Type: text/plain; charset="UTF-8"
+        Jiri Olsa <jolsa@kernel.org>,
+        Namhyung Kim <namhyung@kernel.org>,
+        "Christopherson,, Sean" <seanjc@google.com>,
+        Paolo Bonzini <pbonzini@redhat.com>,
+        "Liang, Kan" <kan.liang@intel.com>,
+        "Kleen, Andi" <andi.kleen@intel.com>
+CC:     "linux-perf-users@vger.kernel.org" <linux-perf-users@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "kvm@vger.kernel.org" <kvm@vger.kernel.org>
+Subject: RE: [RFC PATCH 0/2] KVM: VMX: Fix VM entry failure on
+ PT_MODE_HOST_GUEST while host is using PT
+Thread-Topic: [RFC PATCH 0/2] KVM: VMX: Fix VM entry failure on
+ PT_MODE_HOST_GUEST while host is using PT
+Thread-Index: AQHYuGCfKwYxaXR4306din/WULaC4K3Fff5wgBjymACAABFugIAA/X4AgABj1pCAAMFbAIAABJpggAAZlICAAKvIEIAAwJ6AgAPziBCAANgwAIAABnZQ
+Date:   Mon, 19 Sep 2022 15:22:58 +0000
+Message-ID: <DS0PR11MB6373ACD91938CE70EBADA831DC4D9@DS0PR11MB6373.namprd11.prod.outlook.com>
+References: <20220825085625.867763-1-xiaoyao.li@intel.com>
+ <CY5PR11MB6365897E8E6D0B590A298FA0DC769@CY5PR11MB6365.namprd11.prod.outlook.com>
+ <815586ac-1eaa-5e38-1e08-492c29d0729d@intel.com>
+ <CY5PR11MB63659EBEAEA0E64812E96111DC469@CY5PR11MB6365.namprd11.prod.outlook.com>
+ <f7cfb391-c38b-84d2-b2fe-5e289d82862c@linux.intel.com>
+ <CY5PR11MB6365676799EBF86B3931D336DC499@CY5PR11MB6365.namprd11.prod.outlook.com>
+ <ef391316-cde5-3cda-ff0d-980e8ecc9aef@linux.intel.com>
+ <CY5PR11MB636535BE57F8CC07B1B2770DDC499@CY5PR11MB6365.namprd11.prod.outlook.com>
+ <4c6a5663-778e-a509-638c-92cfd5315274@linux.intel.com>
+ <CY5PR11MB6365EE3B1C4BCED02A1E40D8DC489@CY5PR11MB6365.namprd11.prod.outlook.com>
+ <da8fe1d8-8cce-7378-18e8-41fd7009ff8d@linux.intel.com>
+ <DS0PR11MB63739F4DA17F30B3162837B9DC4D9@DS0PR11MB6373.namprd11.prod.outlook.com>
+ <b3d3fd4c-b191-c4e4-ac95-c46f944c65d6@linux.intel.com>
+In-Reply-To: <b3d3fd4c-b191-c4e4-ac95-c46f944c65d6@linux.intel.com>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+dlp-product: dlpe-windows
+dlp-reaction: no-action
+dlp-version: 11.6.500.17
+authentication-results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=intel.com;
+x-ms-publictraffictype: Email
+x-ms-traffictypediagnostic: DS0PR11MB6373:EE_|PH0PR11MB5675:EE_
+x-ms-office365-filtering-correlation-id: 9b021a1b-3fd6-4d86-7b6a-08da9a52d56d
+x-ld-processed: 46c98d88-e344-4ed4-8496-4ed7712e255d,ExtAddr
+x-ms-exchange-senderadcheck: 1
+x-ms-exchange-antispam-relay: 0
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info: mecaItZo9kxj4dQohJxrJlyIFACH5Nqg+KBrWPaUeSMzQezlmHOQCiYQe9swSl/awbK6UtWu6ufrPOFzK9YYyzvqseuoelzeeSCpaWs3JmG5QvaZB2Q9hyti0Zeg90KMdmzZc4sXTPG0l9+VLN6pPI2OTqC7BUEs1g59fhiuFauLa/u8wpswSXdpCtrki6O0o5LES0mcMdMylLszEuO5zeqpkUEbGv0ZKDn4Hrd8vMV4iA9eQ5V0zrULAww718xIRIzvUqJs2dl2odJu4fwFQNGJZSnxipTBhU/xkLSzmwUS3iepwM2Oy3UxP9aoJF5WXJUKeGS1TYjgEpVIvbCUuWWZFTle4ENlvJCsbcZOFJK9p/63VN5Y24VZYgkrhE99v2qaKFY5JR7A12z+ptjZCUrmYUn+RPjm87k84gwyV0AuHAJVWE6Rs+rJyr2rvO4+dXz/H3gRemY4KlFtMSh8eRQkh9qmK6ptR+n3IF7y4N+seQipl0l00isdQ+9T3BwwqKPYyEmXn8A1zBDxSmMYYT2pIfhwPkBWSLAGvJO0L3bLBpXNurYVCmV99QOQmGUInE0kSvkC9KE6pbxBTm8Bm2Rn5hEZGDEO8+kihYv9EmDLUNhZIrT4TEJ36ilWLwS04BujyJl9YNf1rXUWR01ddzouxPr7o7OYsr2FY5ajaQP5MROk9fNcPr1w88tNFruQXZmZd+ro+ohch09+jEQfimDd8LWQf2shWK5XpSHDDRcbwG68QSpng5o0206a7+a7X8UPi24kDcLP227UDOP877/6wZ0EUoz2UEYGH2LsZ1c=
+x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DS0PR11MB6373.namprd11.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230022)(346002)(136003)(376002)(396003)(39860400002)(366004)(451199015)(53546011)(9686003)(6506007)(7696005)(478600001)(26005)(122000001)(921005)(38100700002)(82960400001)(8676002)(71200400001)(316002)(33656002)(86362001)(38070700005)(55016003)(83380400001)(186003)(8936002)(2906002)(110136005)(6636002)(52536014)(54906003)(66556008)(66946007)(41300700001)(4326008)(76116006)(66446008)(64756008)(7416002)(66476007)(5660300002);DIR:OUT;SFP:1102;
+x-ms-exchange-antispam-messagedata-chunkcount: 1
+x-ms-exchange-antispam-messagedata-0: =?utf-8?B?RGp1bHFmRklUbURwOUl1R1I4KzhTUmdFN05OR3pkazY5Um9SMFA2eHpacmJJ?=
+ =?utf-8?B?KzBUMkJTR3RZaDFZalptRGsvdHNpSWZjb3FSZDcxeDRkQXQwSytvbEYvYWVV?=
+ =?utf-8?B?cDlneTA2WVp2VXFyL21vUXh1TE5EV1h2Mk9za3RMWWRqbHhSK1B2K1NLVHI4?=
+ =?utf-8?B?clZJa0IyMVhtNVdQSXJuc1JNa2R4YWJXdmVxQ1FtYlBkN24zc2lUcE5YRWZX?=
+ =?utf-8?B?VGNFcnNMZ04wcWY4bURLMU5lK0EyME83UlFZNjlnUmUycW9sWHpCNE9EWHBH?=
+ =?utf-8?B?Q1V2U2N2Y0pOS0IxNm9FdXBRclF3U2swWXREeHIxM1hubHorS3dncjk3SDM2?=
+ =?utf-8?B?QU1QMyt2dnQ5NU5OUm1ZM2J5SWxCZzFBa3ZzTUFHY2dBZFB4WDBDbllnNzdn?=
+ =?utf-8?B?RlJvWm5FT0VOYjMzSVBibWxqSlNtNms0bTM0Y3JpN21uZVRJbDVkcGM0NTdN?=
+ =?utf-8?B?MjdMdlFHNXJBZElWWWxIWnlFZndKdjBUTmNKTHVleHNDd1ZZY3o0czRPWlhS?=
+ =?utf-8?B?UjV5ei9Td0R4V0FIT1hDQTU2L25LWE8yVCtjTVE2VWlhN3Zoc2pJcnJDS3E4?=
+ =?utf-8?B?cFlob0Z3UXRPVi9GSGNYSWNQY3RRZmxwR1pjYjdxSDdDdWp1dkczNWVta0Rx?=
+ =?utf-8?B?YlZBN0Z6eUNnY3lYRCszazYwN3FMK3RacG1WN2tFVVhYL0l1d3ZJQnh3TFMz?=
+ =?utf-8?B?bFVPejAyK1hvS1d1ZzhJRmxTdjFETGlybDJUZVdvSTRHaDY3bnY2T0puYlYz?=
+ =?utf-8?B?dzdCZmhNbW1CcVFRdU5YMVpRbE9NcUdKVkdBbW1jMmZjQ3hndTVENWRYMHFY?=
+ =?utf-8?B?VTFGY1V3QnpSVkNoZklYL1V2R0ZEbWRyMWhkTWJ3dzBPTzlOdVFmV0g2TGcy?=
+ =?utf-8?B?SFNua0NUajhOZUFwQ2xHTnVta3RwMEMrN0tYRGRXdXRiMENhZXJ0TVErOGFH?=
+ =?utf-8?B?L2lvWkNMc0Z1cFBEOGIxQU9EdGY3djRXcCs2bERYMDNZYWFudkZKOVhNcktl?=
+ =?utf-8?B?a1Q1a2FEM0gyMUpsQlRUd0VwNCtwZ0NVa3ZUUElpSWVReGxSUDZxdFVldXFC?=
+ =?utf-8?B?V1dHRWc5WWR0QkM0SnNuSHI2YlBidHE0RVdsZ280eGdZOUFKWHBldWF2dTNR?=
+ =?utf-8?B?ZTVSS3M0WnFHTlQrb2xLMmh4LzM4SW5WZ2FWRXYzeFZhcVdyR2JuRU5Hc0lw?=
+ =?utf-8?B?RmpZYUpEUE5qd242YmdlQXZPYkZncmd2L2Y3dTJiSW1wZmgxZFhoRTdwQ2tn?=
+ =?utf-8?B?Nzd4N1BqM2lUMktOOEErQmlVQ3l1a1krV2U5K1VucnhFOUxNZEROd1JqN3hr?=
+ =?utf-8?B?MFNUZ0Q0azMzUW9aSThCeTN2YjhVYUIwSk1xWWdIenBIN2JibFRUVmpqWWlR?=
+ =?utf-8?B?RTdVNEZJU05PWmcxbk55RUp5YUlzR0U4Z2pUZHo5WmhSbHN5bCtNVnBBMk80?=
+ =?utf-8?B?cWZ2bTIrdG5nTCtVNGFXaUdnS2ZOYkVOaS82RVhCL0FkTjZITlRQaTR6STRE?=
+ =?utf-8?B?b1JGaHdva0JTK0l4VzBMbnF4eWFyc25QN2FTQTZVWXg1bFJ4R28zUkZXemd5?=
+ =?utf-8?B?ZzZnV0YxaVJxY0lZNWZ4a05LZnVoOHNJRllydWdKd0MzVzJWTlR4VVgrdVVI?=
+ =?utf-8?B?U3FKcUpoL0p2VStHVWtLWkFMdHhteHlrLzhmdFJNV2ZqLy9IR2tLZEhBbEx4?=
+ =?utf-8?B?UTlWQ2w2M2VydWplU2JSRUZkS0tvUmVLbUFrVGJUUXdhdjFHSHhPSVBVcUtR?=
+ =?utf-8?B?Wkk3UERTNmUwK0NMWkVIelhrbFFOZ3pIM0tPcjVOVGVMZG9MeHR1UlZkM2x5?=
+ =?utf-8?B?R29YNFE5YXFJN3VnZm1IdS9MM3MxWGlsaXZtVUc1TWJCN1Ywcm12cnhkMXhi?=
+ =?utf-8?B?c0lRNmVEMHNJZ2FaRU1YcHp5bWVOWG9NUHMyT05SeXJXU1I2ckluOFRrRnlQ?=
+ =?utf-8?B?a0hGUWtmSHAxMXVWbUZ6dWRaUUtKMHRnZUVlUlNsMjlXaDFEdDFkMHI0Y2p0?=
+ =?utf-8?B?M3AvQnUvanppWUgrL2p1ekRRcU15VVNVd1YyS1J2NTBud3RmSmswZ2p1bjU5?=
+ =?utf-8?B?MTdlSmYvTUg4ZWJ4dEp5Ky9zQUtiUjhvQ2srTWtyRGRJQUFxeURxZWNXdnYv?=
+ =?utf-8?Q?y2ZwfY6tnBqJFh+bV5w5mN0/I?=
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+MIME-Version: 1.0
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-AuthSource: DS0PR11MB6373.namprd11.prod.outlook.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 9b021a1b-3fd6-4d86-7b6a-08da9a52d56d
+X-MS-Exchange-CrossTenant-originalarrivaltime: 19 Sep 2022 15:22:58.4595
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 46c98d88-e344-4ed4-8496-4ed7712e255d
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: PvbyMvgl6rIJR1qVNP1fERjGZIB59hqdm9prEMwmMfoM7MU11pDSJ5TL3QCHjWd0Ie1JOuPBxr4FnP3zzzlLmA==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: PH0PR11MB5675
+X-OriginatorOrg: intel.com
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-On Mon, Sep 19, 2022 at 12:17 PM Peter Zijlstra <peterz@infradead.org> wrote:
->
-> Hi All!
->
-> At long last, a respin of the cpuidle vs rcu cleanup patches.
->
-> v1: https://lkml.kernel.org/r/20220608142723.103523089@infradead.org
->
-> These here patches clean up the mess that is cpuidle vs rcuidle.
->
-> At the end of the ride there's only on RCU_NONIDLE user left:
->
->   arch/arm64/kernel/suspend.c:            RCU_NONIDLE(__cpu_suspend_exit());
->
-> and 'one' trace_*_rcuidle() user:
->
->   kernel/trace/trace_preemptirq.c:                        trace_irq_enable_rcuidle(CALLER_ADDR0, CALLER_ADDR1);
->   kernel/trace/trace_preemptirq.c:                        trace_irq_disable_rcuidle(CALLER_ADDR0, CALLER_ADDR1);
->   kernel/trace/trace_preemptirq.c:                        trace_irq_enable_rcuidle(CALLER_ADDR0, caller_addr);
->   kernel/trace/trace_preemptirq.c:                        trace_irq_disable_rcuidle(CALLER_ADDR0, caller_addr);
->   kernel/trace/trace_preemptirq.c:                trace_preempt_enable_rcuidle(a0, a1);
->   kernel/trace/trace_preemptirq.c:                trace_preempt_disable_rcuidle(a0, a1);
->
-> However this last is all in deprecated code that should be unused for GENERIC_ENTRY.
->
-> I've touched a lot of code that I can't test and I might've broken something by
-> accident. In particular the whole ARM cpuidle stuff was quite involved.
->
-> Please all; have a look where you haven't already.
->
->
-> New since v1:
->
->  - rebase on top of Frederic's rcu-context-tracking rename fest
->  - more omap goodness as per the last discusion (thanks Tony!)
->  - removed one more RCU_NONIDLE() from arm64/risc-v perf code
->  - ubsan/kasan fixes
->  - intel_idle module-param for testing
->  - a bunch of extra __always_inline, because compilers are silly.
-
-Acked-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
-
-for the whole set and let me know if you want me to merge any of these
-through cpuidle.
-
-Thanks!
-
->
-> ---
->  arch/alpha/kernel/process.c               |  1 -
->  arch/alpha/kernel/vmlinux.lds.S           |  1 -
->  arch/arc/kernel/process.c                 |  3 ++
->  arch/arc/kernel/vmlinux.lds.S             |  1 -
->  arch/arm/include/asm/vmlinux.lds.h        |  1 -
->  arch/arm/kernel/process.c                 |  1 -
->  arch/arm/kernel/smp.c                     |  6 +--
->  arch/arm/mach-gemini/board-dt.c           |  3 +-
->  arch/arm/mach-imx/cpuidle-imx6q.c         |  4 +-
->  arch/arm/mach-imx/cpuidle-imx6sx.c        |  5 ++-
->  arch/arm/mach-omap2/common.h              |  6 ++-
->  arch/arm/mach-omap2/cpuidle34xx.c         | 16 +++++++-
->  arch/arm/mach-omap2/cpuidle44xx.c         | 29 +++++++-------
->  arch/arm/mach-omap2/omap-mpuss-lowpower.c | 12 +++++-
->  arch/arm/mach-omap2/pm.h                  |  2 +-
->  arch/arm/mach-omap2/pm24xx.c              | 51 +-----------------------
->  arch/arm/mach-omap2/pm34xx.c              | 14 +++++--
->  arch/arm/mach-omap2/pm44xx.c              |  2 +-
->  arch/arm/mach-omap2/powerdomain.c         | 10 ++---
->  arch/arm64/kernel/idle.c                  |  1 -
->  arch/arm64/kernel/smp.c                   |  4 +-
->  arch/arm64/kernel/vmlinux.lds.S           |  1 -
->  arch/csky/kernel/process.c                |  1 -
->  arch/csky/kernel/smp.c                    |  2 +-
->  arch/csky/kernel/vmlinux.lds.S            |  1 -
->  arch/hexagon/kernel/process.c             |  1 -
->  arch/hexagon/kernel/vmlinux.lds.S         |  1 -
->  arch/ia64/kernel/process.c                |  1 +
->  arch/ia64/kernel/vmlinux.lds.S            |  1 -
->  arch/loongarch/kernel/idle.c              |  1 +
->  arch/loongarch/kernel/vmlinux.lds.S       |  1 -
->  arch/m68k/kernel/vmlinux-nommu.lds        |  1 -
->  arch/m68k/kernel/vmlinux-std.lds          |  1 -
->  arch/m68k/kernel/vmlinux-sun3.lds         |  1 -
->  arch/microblaze/kernel/process.c          |  1 -
->  arch/microblaze/kernel/vmlinux.lds.S      |  1 -
->  arch/mips/kernel/idle.c                   |  8 ++--
->  arch/mips/kernel/vmlinux.lds.S            |  1 -
->  arch/nios2/kernel/process.c               |  1 -
->  arch/nios2/kernel/vmlinux.lds.S           |  1 -
->  arch/openrisc/kernel/process.c            |  1 +
->  arch/openrisc/kernel/vmlinux.lds.S        |  1 -
->  arch/parisc/kernel/process.c              |  2 -
->  arch/parisc/kernel/vmlinux.lds.S          |  1 -
->  arch/powerpc/kernel/idle.c                |  5 +--
->  arch/powerpc/kernel/vmlinux.lds.S         |  1 -
->  arch/riscv/kernel/process.c               |  1 -
->  arch/riscv/kernel/vmlinux-xip.lds.S       |  1 -
->  arch/riscv/kernel/vmlinux.lds.S           |  1 -
->  arch/s390/kernel/idle.c                   |  1 -
->  arch/s390/kernel/vmlinux.lds.S            |  1 -
->  arch/sh/kernel/idle.c                     |  1 +
->  arch/sh/kernel/vmlinux.lds.S              |  1 -
->  arch/sparc/kernel/leon_pmc.c              |  4 ++
->  arch/sparc/kernel/process_32.c            |  1 -
->  arch/sparc/kernel/process_64.c            |  3 +-
->  arch/sparc/kernel/vmlinux.lds.S           |  1 -
->  arch/um/kernel/dyn.lds.S                  |  1 -
->  arch/um/kernel/process.c                  |  1 -
->  arch/um/kernel/uml.lds.S                  |  1 -
->  arch/x86/boot/compressed/vmlinux.lds.S    |  1 +
->  arch/x86/coco/tdx/tdcall.S                | 15 +------
->  arch/x86/coco/tdx/tdx.c                   | 25 ++++--------
->  arch/x86/events/amd/brs.c                 | 13 +++----
->  arch/x86/include/asm/fpu/xcr.h            |  4 +-
->  arch/x86/include/asm/irqflags.h           | 11 ++----
->  arch/x86/include/asm/mwait.h              | 14 +++----
->  arch/x86/include/asm/nospec-branch.h      |  2 +-
->  arch/x86/include/asm/paravirt.h           |  6 ++-
->  arch/x86/include/asm/perf_event.h         |  2 +-
->  arch/x86/include/asm/shared/io.h          |  4 +-
->  arch/x86/include/asm/shared/tdx.h         |  1 -
->  arch/x86/include/asm/special_insns.h      |  8 ++--
->  arch/x86/include/asm/xen/hypercall.h      |  2 +-
->  arch/x86/kernel/cpu/bugs.c                |  2 +-
->  arch/x86/kernel/fpu/core.c                |  4 +-
->  arch/x86/kernel/paravirt.c                | 14 ++++++-
->  arch/x86/kernel/process.c                 | 65 +++++++++++++++----------------
->  arch/x86/kernel/vmlinux.lds.S             |  1 -
->  arch/x86/lib/memcpy_64.S                  |  5 +--
->  arch/x86/lib/memmove_64.S                 |  4 +-
->  arch/x86/lib/memset_64.S                  |  4 +-
->  arch/x86/xen/enlighten_pv.c               |  2 +-
->  arch/x86/xen/irq.c                        |  2 +-
->  arch/xtensa/kernel/process.c              |  1 +
->  arch/xtensa/kernel/vmlinux.lds.S          |  1 -
->  drivers/acpi/processor_idle.c             | 36 ++++++++++-------
->  drivers/base/power/runtime.c              | 24 ++++++------
->  drivers/clk/clk.c                         |  8 ++--
->  drivers/cpuidle/cpuidle-arm.c             |  1 +
->  drivers/cpuidle/cpuidle-big_little.c      |  8 +++-
->  drivers/cpuidle/cpuidle-mvebu-v7.c        |  7 ++++
->  drivers/cpuidle/cpuidle-psci.c            | 10 +++--
->  drivers/cpuidle/cpuidle-qcom-spm.c        |  1 +
->  drivers/cpuidle/cpuidle-riscv-sbi.c       | 10 +++--
->  drivers/cpuidle/cpuidle-tegra.c           | 21 +++++++---
->  drivers/cpuidle/cpuidle.c                 | 21 +++++-----
->  drivers/cpuidle/dt_idle_states.c          |  2 +-
->  drivers/cpuidle/poll_state.c              | 10 ++++-
->  drivers/idle/intel_idle.c                 | 19 +++++----
->  drivers/perf/arm_pmu.c                    | 11 +-----
->  drivers/perf/riscv_pmu_sbi.c              |  8 +---
->  include/asm-generic/vmlinux.lds.h         |  9 ++---
->  include/linux/compiler_types.h            |  8 +++-
->  include/linux/cpu.h                       |  3 --
->  include/linux/cpuidle.h                   | 34 ++++++++++++++++
->  include/linux/cpumask.h                   |  4 +-
->  include/linux/percpu-defs.h               |  2 +-
->  include/linux/sched/idle.h                | 40 ++++++++++++++-----
->  include/linux/thread_info.h               | 18 ++++++++-
->  include/linux/tracepoint.h                | 13 ++++++-
->  kernel/cpu_pm.c                           |  9 -----
->  kernel/printk/printk.c                    |  2 +-
->  kernel/sched/idle.c                       | 47 +++++++---------------
->  kernel/time/tick-broadcast-hrtimer.c      | 29 ++++++--------
->  kernel/time/tick-broadcast.c              |  6 ++-
->  kernel/trace/trace.c                      |  3 ++
->  lib/ubsan.c                               |  5 ++-
->  mm/kasan/kasan.h                          |  4 ++
->  mm/kasan/shadow.c                         | 38 ++++++++++++++++++
->  tools/objtool/check.c                     | 17 ++++++++
->  121 files changed, 511 insertions(+), 420 deletions(-)
->
+T24gTW9uZGF5LCBTZXB0ZW1iZXIgMTksIDIwMjIgMTA6NDEgUE0sIExpYW5nLCBLYW4gd3JvdGU6
+DQo+IEFub3RoZXIgZmFrZSBldmVudD8gV2UgaGF2ZSB0byBzcGVjaWFsbHkgaGFuZGxlIGl0IGlu
+IHRoZSBwZXJmIGNvZGUuIEkgZG9uJ3QNCj4gdGhpbmsgaXQncyBhIGNsZWFuIHdheSBmb3IgcGVy
+Zi4NCg0KV2UgY2FuIGNoZWNrIHRoZSBwYXRjaCBsYXRlci4gSSB0aGluayBpdCBzaG91bGQgYmUg
+Y2xlYW4sIGxpa2UgdGhlIExCUiBzaWRlLg0KDQo+IA0KPiA+IC0gb24gVk1FbnRlcjoNCj4gPiAg
+IC0tIHBlcmZfZGlzYWJsZV9ldmVudF9sb2NhbChob3N0X2V2ZW50KTsNCj4gPiAgIC0tIHBlcmZf
+ZW5hYmxlX2V2ZW50X2xvY2FsKGd1ZXN0X2V2ZW50KTsNCj4gPiAtIG9uIFZNRXhpdDoNCj4gPiAg
+IC0tIHBlcmZfZGlzYWJsZV9ldmVudF9sb2NhbChndWVzdF9ldmVudCk7DQo+ID4gICAtLSBwZXJm
+X2VuYWJsZV9ldmVudF9sb2NhbChob3N0X2V2ZW50KTsNCj4gDQo+IFdoeSB3ZSBjYW5ub3QgdXNl
+IHRoZSBzYW1lIHdheSBhcyB0aGUgcGVyZiBjb3JlIGRyaXZlciB0byBzd2l0Y2ggdGhlIE1TUnMg
+aW4NCj4gdGhlIFZNQ1M/DQoNClRoZSBjdXJyZW50IE1TUiBzd2l0Y2hpbmcgbGlzdCBmcm9tIFZN
+Q1MgaXNu4oCZdCBmYXN0LA0Kc2hvdWxkIGJlIHRoZSBsYXN0IHJlc29ydCB3aGVuIHJlYWxseSBu
+ZWNlc3NhcnkuDQoNCj4gDQo+IFlvdSBqdXN0IG5lZWQgb25lIGdlbmVyaWMgZnVuY3Rpb24sIHBl
+cmZfZ3Vlc3RfZ2V0X21zcnMoKSwgZm9yIGJvdGggUFQgYW5kDQo+IGNvcmUgZHJpdmVyLiBJZiB5
+b3UgaGF2ZSB0byBkaXNhYmxlIFBUIGV4cGxpY2l0bHkgYmVmb3JlIFZNQ1MsIEkgdGhpbmsgeW91
+IGNhbiBkbw0KPiBpdCBpbiB0aGUgUFQgc3BlY2lmaWMgcGVyZl9ndWVzdF9nZXRfbXNycygpLg0K
+DQpUaGUgZGlzYWJsZSBpcyBkb25lIHZpYSAiIENsZWFyIElBMzJfUlRJVF9DVEwiIFZNRXhpdCBj
+b250cm9sLg0KSXQgY2FuIGVuc3VyZSBQVCBkaXNhYmxlZCBpbiB0aW1lIG9uIFZNRXhpdCwgc28g
+bm8gbmVlZCB0byBnbyB0aHJvdWdoIHBlcmZfZ3Vlc3RfZ2V0X21zcnMuDQoNClRoYW5rcywNCldl
+aQ0K
