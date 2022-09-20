@@ -2,105 +2,72 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6E3AEC6FA91
-	for <linux-perf-users@archiver.kernel.org>; Tue, 20 Sep 2022 17:03:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0DDD7C54EE9
+	for <linux-perf-users@archiver.kernel.org>; Tue, 20 Sep 2022 17:50:57 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230269AbiITRD1 (ORCPT
+        id S231388AbiITRuz (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Tue, 20 Sep 2022 13:03:27 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50312 "EHLO
+        Tue, 20 Sep 2022 13:50:55 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46628 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229717AbiITRD1 (ORCPT
+        with ESMTP id S231510AbiITRuh (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Tue, 20 Sep 2022 13:03:27 -0400
-Received: from mx0a-001b2d01.pphosted.com (mx0a-001b2d01.pphosted.com [148.163.156.1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4523A4DB05;
-        Tue, 20 Sep 2022 10:03:26 -0700 (PDT)
-Received: from pps.filterd (m0098409.ppops.net [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (8.17.1.5/8.17.1.5) with ESMTP id 28KH2VNZ031286;
-        Tue, 20 Sep 2022 17:02:54 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=date : from : subject :
- to : cc : references : in-reply-to : message-id : content-type :
- content-transfer-encoding : mime-version; s=pp1;
- bh=fQCvxPU61NHYx0I3QmM1H3vlAIyZOE2m1uOWdTdchJ4=;
- b=mf8cvIizT4KVk3Wd13JhpU+v5Q3vdjgCILM6O/ECQCioNVqlrCneyCRlazCnIYCH0ied
- AZ1OvVq1r0uPMKN6PZxDbM6NJQdIcTvnshFsIlRRYFKzZtdqoVWfL5uTEpt5CdV0xDNY
- c6oamHg9XNrrSJsFMQWFCVAbs2Yriin7w7viwJGZDtI5TB3gwMfrZNsCX41yY5NVSQxB
- WlCJu3oys8EtPD65pmNORlHq4z6piklcIYdTxcsRp3SKvaMpPyeovyox5L1lPNeVsnt/
- xzpFpHjO4JOF0yLq7I7Bq19LpOU9YS6zlUT2jr/AjLoxt0Ixxg43ct9T20qmzxfTL4oM GQ== 
-Received: from ppma04ams.nl.ibm.com (63.31.33a9.ip4.static.sl-reverse.com [169.51.49.99])
-        by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 3jqhjs80h1-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Tue, 20 Sep 2022 17:02:54 +0000
-Received: from pps.filterd (ppma04ams.nl.ibm.com [127.0.0.1])
-        by ppma04ams.nl.ibm.com (8.16.1.2/8.16.1.2) with SMTP id 28KGp8ir020400;
-        Tue, 20 Sep 2022 17:02:51 GMT
-Received: from b06avi18878370.portsmouth.uk.ibm.com (b06avi18878370.portsmouth.uk.ibm.com [9.149.26.194])
-        by ppma04ams.nl.ibm.com with ESMTP id 3jn5v8m6u6-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Tue, 20 Sep 2022 17:02:51 +0000
-Received: from d06av26.portsmouth.uk.ibm.com (d06av26.portsmouth.uk.ibm.com [9.149.105.62])
-        by b06avi18878370.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 28KH3EsG52691370
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Tue, 20 Sep 2022 17:03:14 GMT
-Received: from d06av26.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 47A13AE04D;
-        Tue, 20 Sep 2022 17:02:48 +0000 (GMT)
-Received: from d06av26.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id C22B1AE051;
-        Tue, 20 Sep 2022 17:02:47 +0000 (GMT)
-Received: from localhost (unknown [9.43.42.171])
-        by d06av26.portsmouth.uk.ibm.com (Postfix) with ESMTP;
-        Tue, 20 Sep 2022 17:02:47 +0000 (GMT)
-Date:   Tue, 20 Sep 2022 22:32:46 +0530
-From:   "Naveen N. Rao" <naveen.n.rao@linux.ibm.com>
-Subject: Re: [PATCH 0/2] make weak attributes in {k,u}probes
-To:     anil.s.keshavamurthy@intel.com, borntraeger@linux.ibm.com,
-        catalin.marinas@arm.com, dave.hansen@linux.intel.com,
-        gor@linux.ibm.com, guoren@kernel.org, hca@linux.ibm.com,
-        hpa@zytor.com, linux-arm-kernel@lists.infradead.org,
-        linux-csky@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-perf-users@vger.kernel.org, linux-riscv@lists.infradead.org,
-        linux-s390@vger.kernel.org, mark.rutland@arm.com,
-        mhiramat@kernel.org, namit@vmware.com, palmer@dabbelt.com,
-        paul.walmsley@sifive.com, peterz@infradead.org, x86@kernel.org,
-        Yipeng Zou <zouyipeng@huawei.com>
-Cc:     chris.zjh@huawei.com, liaochang1@huawei.com
-References: <20220917015522.44583-1-zouyipeng@huawei.com>
-In-Reply-To: <20220917015522.44583-1-zouyipeng@huawei.com>
-User-Agent: astroid/4d6b06ad (https://github.com/astroidmail/astroid)
-Message-Id: <1663692878.h3l8c563n8.naveen@linux.ibm.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-X-TM-AS-GCONF: 00
-X-Proofpoint-ORIG-GUID: yRFZ6NnVwkeJV_6MthdEmUtO_Y_I2tyz
-X-Proofpoint-GUID: yRFZ6NnVwkeJV_6MthdEmUtO_Y_I2tyz
-Content-Transfer-Encoding: quoted-printable
-X-Proofpoint-UnRewURL: 0 URL was un-rewritten
+        Tue, 20 Sep 2022 13:50:37 -0400
+Received: from mail-oi1-f179.google.com (mail-oi1-f179.google.com [209.85.167.179])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4F5517268A;
+        Tue, 20 Sep 2022 10:50:10 -0700 (PDT)
+Received: by mail-oi1-f179.google.com with SMTP id d64so1697106oia.9;
+        Tue, 20 Sep 2022 10:50:10 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:x-gm-message-state:from:to:cc:subject:date;
+        bh=dEq3miA90nnhWePTqwceDKZJGT2lKqCEv5HRnWi6sM4=;
+        b=p7HhJ5eKdu3AyvajqBcQMA8w0MydGVY/0N5lNOeIP9z70cjL8DxIK2O3yPmOobkAVk
+         6BBGwfH2XM6CtLGOZGUwF/qWYgnkqb7jq87v2sThdUF3YDIwlj3ITARq42XUYTwFmS9S
+         tKMblmAE5EDqzWspumTag5eXn0V7gQcoM61ep0gU97INQGKt4qP2HU9tZF1tcP7UbPCa
+         Vy7Dx6oc+t9h3E+5c2gnx4yl7FE0dwqqK/XDkD0OXpEM1WJu+mRtK56BC5XjEPkujILV
+         BGUJ2VQy6Sg0VlBp7gHI1s0KKT31j+y3UsirGY+WsQmEI+Q64DeyEedZKAuEt5VJ3V24
+         KU+A==
+X-Gm-Message-State: ACrzQf0XUGM5CRWSA6q6nRrt34g5nAoV/Cu5dHOsVvAWDQ/zYUcuR+Co
+        q0nAK2/qfagXBNSSKjt/lMJh+CWUGSAMiGdND/o=
+X-Google-Smtp-Source: AMsMyM7XyOmptTlhO200qzK2yey2JR2OAbI+uPoYgS7BIVM22Sd1S+5GSNLtH6vASn6Dd1bBM+t1AjmN1Eft/rlFhqA=
+X-Received: by 2002:a05:6808:1a09:b0:350:107b:f89a with SMTP id
+ bk9-20020a0568081a0900b00350107bf89amr2179916oib.218.1663696200257; Tue, 20
+ Sep 2022 10:50:00 -0700 (PDT)
 MIME-Version: 1.0
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.205,Aquarius:18.0.895,Hydra:6.0.528,FMLib:17.11.122.1
- definitions=2022-09-20_07,2022-09-20_02,2022-06-22_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 suspectscore=0
- priorityscore=1501 malwarescore=0 impostorscore=0 spamscore=0
- mlxlogscore=677 bulkscore=0 clxscore=1011 adultscore=0 mlxscore=0
- phishscore=0 lowpriorityscore=0 classifier=spam adjust=0 reason=mlx
- scancount=1 engine=8.12.0-2209130000 definitions=main-2209200098
+References: <20220916175902.1155177-1-namhyung@kernel.org> <20220916175902.1155177-2-namhyung@kernel.org>
+ <bf8988d7-2fd7-fa5d-25ff-2b439f1c0649@intel.com>
+In-Reply-To: <bf8988d7-2fd7-fa5d-25ff-2b439f1c0649@intel.com>
+From:   Namhyung Kim <namhyung@kernel.org>
+Date:   Tue, 20 Sep 2022 10:49:49 -0700
+Message-ID: <CAM9d7cj8hs37+V4pVzLm-PL8A7ZnvnTMcXpVHg6CvKYXOjO3OA@mail.gmail.com>
+Subject: Re: [PATCH 1/4] perf tools: Move dsos functions to util/dsos.c
+To:     Adrian Hunter <adrian.hunter@intel.com>
+Cc:     Arnaldo Carvalho de Melo <acme@kernel.org>,
+        Jiri Olsa <jolsa@kernel.org>, Ingo Molnar <mingo@kernel.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Ian Rogers <irogers@google.com>,
+        linux-perf-users <linux-perf-users@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-Yipeng Zou wrote:
-> We have some function implementation under some arch does nothing.
-> We can mark it with weak attributes to improve.
+Hi Adrian,
 
-That's not always an improvement. See [1] for an example, among many=20
-other patches to reduce use of __weak functions in the kernel.
+On Tue, Sep 20, 2022 at 6:51 AM Adrian Hunter <adrian.hunter@intel.com> wrote:
+>
+> On 16/09/22 20:58, Namhyung Kim wrote:
+>
+> Maybe say why the move.
 
-As an alternative, please consider the approach used in [1].
+Sure, I'll add something like this.
+
+"The dsos routines will be used in other places soon.  As they have a
+separate file already, let's move them to a proper place."
 
 
-- Naveen
-
-[1] https://lore.kernel.org/all/20220519091237.676736-1-naveen.n.rao@linux.=
-vnet.ibm.com/
-
+Thanks for your review!
+Namhyung
