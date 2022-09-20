@@ -2,111 +2,94 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B16C5C6FA82
-	for <linux-perf-users@archiver.kernel.org>; Tue, 20 Sep 2022 01:45:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 57466C6FA94
+	for <linux-perf-users@archiver.kernel.org>; Tue, 20 Sep 2022 02:49:37 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229566AbiITBpR (ORCPT
+        id S230118AbiITCtf (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Mon, 19 Sep 2022 21:45:17 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34930 "EHLO
+        Mon, 19 Sep 2022 22:49:35 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54414 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229612AbiITBpP (ORCPT
+        with ESMTP id S229874AbiITCtd (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Mon, 19 Sep 2022 21:45:15 -0400
-Received: from zju.edu.cn (mail.zju.edu.cn [61.164.42.155])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTP id 36C0540BFC;
-        Mon, 19 Sep 2022 18:45:12 -0700 (PDT)
-Received: from ubuntu.localdomain (unknown [10.162.98.155])
-        by mail-app3 (Coremail) with SMTP id cC_KCgBnbQwPGyljNLDDBg--.19579S2;
-        Tue, 20 Sep 2022 09:44:53 +0800 (CST)
-From:   Duoming Zhou <duoming@zju.edu.cn>
-To:     peterz@infradead.org, linux-perf-users@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Cc:     mingo@redhat.com, acme@kernel.org, mark.rutland@arm.com,
-        alexander.shishkin@linux.intel.com, jolsa@kernel.org,
-        namhyung@kernel.org, tglx@linutronix.de, bp@alien8.de,
-        dave.hansen@linux.intel.com, x86@kernel.org, hpa@zytor.com,
-        Duoming Zhou <duoming@zju.edu.cn>
-Subject: [PATCH V2] perf/x86/rapl: fix deadlock in rapl_pmu_event_stop
-Date:   Tue, 20 Sep 2022 09:44:47 +0800
-Message-Id: <20220920014447.71946-1-duoming@zju.edu.cn>
-X-Mailer: git-send-email 2.17.1
-X-CM-TRANSID: cC_KCgBnbQwPGyljNLDDBg--.19579S2
-X-Coremail-Antispam: 1UD129KBjvJXoW7ZF47XryxCr4rWFW5WFyfWFg_yoW8AFWrpr
-        WxAFy5tF1jv3Z2qayUK3WkXw4fua1kXanrJryfGw1rAan8Wan8J3W8WayFvF45JrZ7XasI
-        yw10qrWrAFyDAa7anT9S1TB71UUUUUUqnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
-        9KBjDU0xBIdaVrnRJUUUvm1xkIjI8I6I8E6xAIw20EY4v20xvaj40_Wr0E3s1l1IIY67AE
-        w4v_Jr0_Jr4l8cAvFVAK0II2c7xJM28CjxkF64kEwVA0rcxSw2x7M28EF7xvwVC0I7IYx2
-        IY67AKxVWDJVCq3wA2z4x0Y4vE2Ix0cI8IcVCY1x0267AKxVWxJr0_GcWl84ACjcxK6I8E
-        87Iv67AKxVW0oVCq3wA2z4x0Y4vEx4A2jsIEc7CjxVAFwI0_GcCE3s1le2I262IYc4CY6c
-        8Ij28IcVAaY2xG8wAqx4xG64xvF2IEw4CE5I8CrVC2j2WlYx0E2Ix0cI8IcVAFwI0_Jr0_
-        Jr4lYx0Ex4A2jsIE14v26r1j6r4UMcvjeVCFs4IE7xkEbVWUJVW8JwACjcxG0xvY0x0EwI
-        xGrwACjI8F5VA0II8E6IAqYI8I648v4I1lFIxGxcIEc7CjxVA2Y2ka0xkIwI1l42xK82IY
-        c2Ij64vIr41l42xK82IY6x8ErcxFaVAv8VW8uw4UJr1UMxC20s026xCaFVCjc4AY6r1j6r
-        4UMI8I3I0E5I8CrVAFwI0_Jr0_Jr4lx2IqxVCjr7xvwVAFwI0_JrI_JrWlx4CE17CEb7AF
-        67AKxVWUtVW8ZwCIc40Y0x0EwIxGrwCI42IY6xIIjxv20xvE14v26r1j6r1xMIIF0xvE2I
-        x0cI8IcVCY1x0267AKxVW8JVWxJwCI42IY6xAIw20EY4v20xvaj40_Jr0_JF4lIxAIcVC2
-        z280aVAFwI0_Jr0_Gr1lIxAIcVC2z280aVCY1x0267AKxVW8JVW8JrUvcSsGvfC2KfnxnU
-        UI43ZEXa7VUbXdbUUUUUU==
-X-CM-SenderInfo: qssqjiasttq6lmxovvfxof0/1tbiAgkTAVZdtbikRgAHs6
+        Mon, 19 Sep 2022 22:49:33 -0400
+Received: from mail-pj1-x1034.google.com (mail-pj1-x1034.google.com [IPv6:2607:f8b0:4864:20::1034])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 77EA6397
+        for <linux-perf-users@vger.kernel.org>; Mon, 19 Sep 2022 19:49:27 -0700 (PDT)
+Received: by mail-pj1-x1034.google.com with SMTP id q9-20020a17090a178900b0020265d92ae3so9338673pja.5
+        for <linux-perf-users@vger.kernel.org>; Mon, 19 Sep 2022 19:49:27 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date;
+        bh=rI0IpfDVb05suW6mssP/QFC86Iigix9NLenW3JQ6Phs=;
+        b=lnIljFKp1ED3j5wPYTN7mdVUfk7FiKkjAkcUsYSYUMCZpdQ5U8vkDdIo4K0hiw1RH3
+         +GFslTzjK43l0+rnV0YItKzr73eqf7dBzWl3BzQNkwS39xy9TTbRZE0df01R7//5oEJr
+         gCiIxE6Vh5vvSGpkucOrRiDvI3G32scMCweV8=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date;
+        bh=rI0IpfDVb05suW6mssP/QFC86Iigix9NLenW3JQ6Phs=;
+        b=69xWN0Hkj84rpPFRuwde/nt8d9Vi3lCNUaQpR2Q3stCq3kOrfMdf4RDm051sGa9YIl
+         G01tYeIrjTHTVcR3N4tUC4t6ynGK9oSHLjqq1nWPd+fb8niIBa9UG66PkeKAD09/Lrrr
+         KYJ1TQqNb4MqhbaMneOKNLMJJ84/CRLWTiE7XfzGO8hmIfubnTvdrCGcaiT2C7al9fI/
+         coZdTaRvOMKq6J6AY8x+hFgGxIz/cbDRTm9+dgmnh1r6PrcI1V+kBJALybsrOzjLinT1
+         yh+bGA1dYtoCECFTiCVFLDh/6natMTUl043s5xUq4UOy6LcInCZ2Z4SVcz60CnWUJ8fc
+         tkvg==
+X-Gm-Message-State: ACrzQf3ZLyoih3EzpAawgEHaLz7SUZJ3n8rP2cmdef64HZNJS9mXb106
+        GPGFDT/QZusRCZvjJy1TiXjHxA==
+X-Google-Smtp-Source: AMsMyM7S+Aze7xjQjfeMxV1IycjxiN9uStAZCOz26LYAWGHUeF519ICUTt9w2zkpb7un7hJ/v+di5Q==
+X-Received: by 2002:a17:902:8e84:b0:178:57e4:805b with SMTP id bg4-20020a1709028e8400b0017857e4805bmr2741327plb.144.1663642166279;
+        Mon, 19 Sep 2022 19:49:26 -0700 (PDT)
+Received: from google.com ([240f:75:7537:3187:5744:3726:1f8b:92ad])
+        by smtp.gmail.com with ESMTPSA id j6-20020a170903024600b00178a9b193cfsm119779plh.140.2022.09.19.19.49.17
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 19 Sep 2022 19:49:25 -0700 (PDT)
+Date:   Tue, 20 Sep 2022 11:49:14 +0900
+From:   Sergey Senozhatsky <senozhatsky@chromium.org>
+To:     Peter Zijlstra <peterz@infradead.org>
+Cc:     linux@armlinux.org.uk, linux-imx@nxp.com, tglx@linutronix.de,
+        mingo@redhat.com, x86@kernel.org, rostedt@goodmis.org,
+        pmladek@suse.com, senozhatsky@chromium.org,
+        john.ogness@linutronix.de,
+        Andrew Morton <akpm@linux-foundation.org>,
+        linux-alpha@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-snps-arc@lists.infradead.org, linux-omap@vger.kernel.org,
+        linux-csky@vger.kernel.org, linux-hexagon@vger.kernel.org,
+        linux-ia64@vger.kernel.org, loongarch@lists.linux.dev,
+        linux-m68k@lists.linux-m68k.org, linux-mips@vger.kernel.org,
+        openrisc@lists.librecores.org, linux-parisc@vger.kernel.org,
+        linuxppc-dev@lists.ozlabs.org, linux-riscv@lists.infradead.org,
+        linux-s390@vger.kernel.org, linux-sh@vger.kernel.org,
+        sparclinux@vger.kernel.org, linux-um@lists.infradead.org,
+        linux-perf-users@vger.kernel.org,
+        virtualization@lists.linux-foundation.org,
+        linux-xtensa@linux-xtensa.org, linux-acpi@vger.kernel.org,
+        linux-pm@vger.kernel.org, linux-clk@vger.kernel.org,
+        linux-arm-msm@vger.kernel.org, linux-tegra@vger.kernel.org,
+        linux-arch@vger.kernel.org, kasan-dev@googlegroups.com
+Subject: Re: [PATCH v2 25/44] printk: Remove trace_.*_rcuidle() usage
+Message-ID: <YykqKm5j5q9DEKk7@google.com>
+References: <20220919095939.761690562@infradead.org>
+ <20220919101522.021681292@infradead.org>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20220919101522.021681292@infradead.org>
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-There is a deadlock in rapl_pmu_event_stop(), the process is
-shown below:
+On (22/09/19 12:00), Peter Zijlstra wrote:
+> The problem, per commit fc98c3c8c9dc ("printk: use rcuidle console
+> tracepoint"), was printk usage from the cpuidle path where RCU was
+> already disabled.
+> 
+> Per the patches earlier in this series, this is no longer the case.
+> 
+> Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
+> Reviewed-by: Sergey Senozhatsky <senozhatsky@chromium.org>
+> Acked-by: Petr Mladek <pmladek@suse.com>
 
-    (thread 1)                 |        (thread 2)
-rapl_pmu_event_stop()          | rapl_hrtimer_handle()
- ...                           |  if (!pmu->n_active)
- raw_spin_lock_irqsave() //(1) |  ...
-  ...                          |
-  hrtimer_cancel()             |  raw_spin_lock_irqsave() //(2)
-  (block forever)
-
-We hold pmu->lock in position (1) and use hrtimer_cancel() to wait
-rapl_hrtimer_handle() to stop, but rapl_hrtimer_handle() also need
-pmu->lock in position (2). As a result, the rapl_pmu_event_stop()
-will be blocked forever.
-
-This patch extracts hrtimer_cancel() from the protection of
-raw_spin_lock_irqsave(). As a result, the rapl_hrtimer_handle()
-could obtain the pmu->lock.
-
-Fixes: 65661f96d3b3 ("perf/x86: Add RAPL hrtimer support")
-Signed-off-by: Duoming Zhou <duoming@zju.edu.cn>
----
-Changes in v2:
-  - Move hrtimer_cancel() to the end of rapl_pmu_event_stop() function.
-
- arch/x86/events/rapl.c | 7 +++++--
- 1 file changed, 5 insertions(+), 2 deletions(-)
-
-diff --git a/arch/x86/events/rapl.c b/arch/x86/events/rapl.c
-index 77e3a47af5a..7c110092c83 100644
---- a/arch/x86/events/rapl.c
-+++ b/arch/x86/events/rapl.c
-@@ -281,8 +281,6 @@ static void rapl_pmu_event_stop(struct perf_event *event, int mode)
- 	if (!(hwc->state & PERF_HES_STOPPED)) {
- 		WARN_ON_ONCE(pmu->n_active <= 0);
- 		pmu->n_active--;
--		if (pmu->n_active == 0)
--			hrtimer_cancel(&pmu->hrtimer);
- 
- 		list_del(&event->active_entry);
- 
-@@ -300,6 +298,11 @@ static void rapl_pmu_event_stop(struct perf_event *event, int mode)
- 		hwc->state |= PERF_HES_UPTODATE;
- 	}
- 
-+	if (!pmu->n_active) {
-+		raw_spin_unlock_irqrestore(&pmu->lock, flags);
-+		hrtimer_cancel(&pmu->hrtimer);
-+		return;
-+	}
- 	raw_spin_unlock_irqrestore(&pmu->lock, flags);
- }
- 
--- 
-2.17.1
-
+Acked-by: Sergey Senozhatsky <senozhatsky@chromium.org>
