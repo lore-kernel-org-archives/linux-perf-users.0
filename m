@@ -2,47 +2,47 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E1893C6FA82
-	for <linux-perf-users@archiver.kernel.org>; Tue, 20 Sep 2022 18:17:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 73CEDC6FA82
+	for <linux-perf-users@archiver.kernel.org>; Tue, 20 Sep 2022 18:31:05 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230168AbiITSRa (ORCPT
+        id S229928AbiITSbE (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Tue, 20 Sep 2022 14:17:30 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51090 "EHLO
+        Tue, 20 Sep 2022 14:31:04 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36602 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230040AbiITSR2 (ORCPT
+        with ESMTP id S229482AbiITSbD (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Tue, 20 Sep 2022 14:17:28 -0400
-Received: from mail-oa1-f41.google.com (mail-oa1-f41.google.com [209.85.160.41])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C3D0352451;
-        Tue, 20 Sep 2022 11:17:27 -0700 (PDT)
-Received: by mail-oa1-f41.google.com with SMTP id 586e51a60fabf-11eab59db71so5422132fac.11;
-        Tue, 20 Sep 2022 11:17:27 -0700 (PDT)
+        Tue, 20 Sep 2022 14:31:03 -0400
+Received: from mail-oa1-f53.google.com (mail-oa1-f53.google.com [209.85.160.53])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BD6571DA78;
+        Tue, 20 Sep 2022 11:31:02 -0700 (PDT)
+Received: by mail-oa1-f53.google.com with SMTP id 586e51a60fabf-1278624b7c4so5521990fac.5;
+        Tue, 20 Sep 2022 11:31:02 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
         h=cc:to:subject:message-id:date:from:in-reply-to:references
          :mime-version:x-gm-message-state:from:to:cc:subject:date;
-        bh=lzAR5EIrusYB8W382hzaSsfUkXSCRt/ZC1GFR4BZOo8=;
-        b=nDjhXNqB5DW3KAteDacrYYmzUOtWeOUxAM8Q2/wI0TSD1qJLSreEzyV7eOn49wHZXL
-         VLpuuPYnE+QbMFhC1MNhDcmwB/lv/83Ys75qUKKogjQzMCEAoTh8ilj2tru2YZodwlfe
-         mReIQiwMQiVo9DMewVrKquhszeL0Hxjhmmdp4SrHdrO/vr+RY3SysNLlbc9vax6AYEID
-         VO14CxQVA0KsDoww5eL6aL77rkErGOOZVkQWDTx7WsJIvu1MiAAaeeOXVQO2ZjhONtN+
-         r383gA8+2xZhLHHymKjRd0v8tBv1wysH9+YUqE8FUb2fC0so4EYGQ0NsPgZP5c1NDfWr
-         VPEg==
-X-Gm-Message-State: ACrzQf2CDu0gmY0vskdu5nCXd5VZOCXFWrMyWM0kTNfajdKnsBljZYDD
-        H8ndMsTRciH6DGAqIAjkfZOAYbOF6utpXX+15VM=
-X-Google-Smtp-Source: AMsMyM6yY8aQAEYs/HCM5tZw43I1H4/dfwjXYKjPAxOI6LLdm+HHngcMP747BCxZiuxw2pEs13DF0cQMCO+YPvrF9G0=
-X-Received: by 2002:a05:6870:524b:b0:12c:cfd2:81c0 with SMTP id
- o11-20020a056870524b00b0012ccfd281c0mr2771362oai.209.1663697846788; Tue, 20
- Sep 2022 11:17:26 -0700 (PDT)
+        bh=rpWaSRyoPMcbkF/pZyIay3C62HyTK6rD7xQiTaVHlUQ=;
+        b=AVOlprK0yeomglgHKeUGNEP9mj63jy78C1hSnt1HH5j6f9t0hbtkV3iaUhDdyMuQKN
+         b6KEYCpvpUZslxAxBcTxpkbQsFPrOB+v8yA0PqK1WtxGwjm/uQFn1+t+6mdoqutKnXaJ
+         +CS/Xe9xB6NrHEPo57jB/EGHKz/9hCgCvzFn3SvNDCQerwt0u7SMPQlzMFmhkyDtsMUq
+         csDaHKgAs36/XRpL0qrNkScQQu8S3ZqS2KdA2DuIWoMAacN4FLRGDh9dk0MTj9uFy0G4
+         0QWdOMaLrnMYTlvoB76VC+W2i9R/PpNQikp7Tw7ux91KG8ULvU4fvrr0FRQsa27E8BOr
+         xbyg==
+X-Gm-Message-State: ACrzQf0JuMeqiXq3qXYUVWg8K6GMZD9ft3p9+UB7ch7oVJwiMx44W3+7
+        4ZnRBazOlGMUueyDM+Ztcc6b2xuY1eBzYwYwasc=
+X-Google-Smtp-Source: AMsMyM5L00q500FPaTNsYPys3hFAvkhZioJDhim6wJnEsr2mRWOzbas/O3/K9vVYOD/RwY/omvEiDnVRgY4fyyBaJB4=
+X-Received: by 2002:a05:6870:a70f:b0:127:666a:658 with SMTP id
+ g15-20020a056870a70f00b00127666a0658mr2874617oam.218.1663698662011; Tue, 20
+ Sep 2022 11:31:02 -0700 (PDT)
 MIME-Version: 1.0
-References: <20220916175902.1155177-1-namhyung@kernel.org> <20220916175902.1155177-3-namhyung@kernel.org>
- <5116611b-2d91-a9fe-5760-65a9a9b50747@intel.com>
-In-Reply-To: <5116611b-2d91-a9fe-5760-65a9a9b50747@intel.com>
+References: <20220916175902.1155177-1-namhyung@kernel.org> <20220916175902.1155177-4-namhyung@kernel.org>
+ <571fb9aa-98e7-b42a-aa81-01658e131f11@intel.com>
+In-Reply-To: <571fb9aa-98e7-b42a-aa81-01658e131f11@intel.com>
 From:   Namhyung Kim <namhyung@kernel.org>
-Date:   Tue, 20 Sep 2022 11:17:15 -0700
-Message-ID: <CAM9d7cizZ3Ztdqe8fXfWNOTk0Rg5v6tuSO3KbX2O_c-7a0-vNg@mail.gmail.com>
-Subject: Re: [PATCH 2/4] perf tools: Add perf_event__synthesize_{start,stop}()
+Date:   Tue, 20 Sep 2022 11:30:50 -0700
+Message-ID: <CAM9d7ch4Rb6GxGc2NrHFVz=S5__XdCNCRy2=5Fj=XCYn2b6d3A@mail.gmail.com>
+Subject: Re: [PATCH 3/4] perf record: Save DSO build-ID for synthesizing
 To:     Adrian Hunter <adrian.hunter@intel.com>
 Cc:     Arnaldo Carvalho de Melo <acme@kernel.org>,
         Jiri Olsa <jolsa@kernel.org>, Ingo Molnar <mingo@kernel.org>,
@@ -55,186 +55,135 @@ Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-On Tue, Sep 20, 2022 at 6:50 AM Adrian Hunter <adrian.hunter@intel.com> wrote:
+On Tue, Sep 20, 2022 at 7:00 AM Adrian Hunter <adrian.hunter@intel.com> wrote:
 >
 > On 16/09/22 20:59, Namhyung Kim wrote:
-> > These functions are to prepare and cleanup necessary work for synthesizing.
-> > It doesn't do anything yet but later patch will add it.
+> > When synthesizing MMAP2 with build-id, it'd read the same file repeatedly as
+> > it has no idea if it's done already.  Maintain a dsos to check that and skip
+> > the file access if possible.
 > >
 > > Signed-off-by: Namhyung Kim <namhyung@kernel.org>
 > > ---
-> >  tools/perf/builtin-inject.c        | 3 +++
-> >  tools/perf/builtin-record.c        | 3 +++
-> >  tools/perf/builtin-stat.c          | 2 ++
-> >  tools/perf/builtin-top.c           | 4 ++++
-> >  tools/perf/util/auxtrace.c         | 2 ++
-> >  tools/perf/util/synthetic-events.c | 8 ++++++++
-> >  tools/perf/util/synthetic-events.h | 3 +++
-> >  7 files changed, 25 insertions(+)
+> >  tools/perf/util/synthetic-events.c | 49 +++++++++++++++++++++++++-----
+> >  1 file changed, 42 insertions(+), 7 deletions(-)
 > >
-> > diff --git a/tools/perf/builtin-inject.c b/tools/perf/builtin-inject.c
-> > index e254f18986f7..2e91a887919b 100644
-> > --- a/tools/perf/builtin-inject.c
-> > +++ b/tools/perf/builtin-inject.c
-> > @@ -2368,9 +2368,12 @@ int cmd_inject(int argc, const char **argv)
-> >       if (ret < 0)
-> >               goto out_delete;
+> > diff --git a/tools/perf/util/synthetic-events.c b/tools/perf/util/synthetic-events.c
+> > index 9d4f5dacd154..e6978b2dee8f 100644
+> > --- a/tools/perf/util/synthetic-events.c
+> > +++ b/tools/perf/util/synthetic-events.c
+> > @@ -4,6 +4,7 @@
+> >  #include "util/data.h"
+> >  #include "util/debug.h"
+> >  #include "util/dso.h"
+> > +#include "util/dsos.h"
+> >  #include "util/event.h"
+> >  #include "util/evlist.h"
+> >  #include "util/machine.h"
+> > @@ -47,12 +48,25 @@
 > >
-> > +     perf_event__synthesize_start();
+> >  unsigned int proc_map_timeout = DEFAULT_PROC_MAP_PARSE_TIMEOUT;
+> >
+> > +static bool synth_init_done;
+> > +static struct dsos synth_dsos;
 > > +
-> >       ret = __cmd_inject(&inject);
-> >
-> >       guest_session__exit(&inject.guest_session);
-> > +     perf_event__synthesize_stop();
->
-> AFAICT perf inject synthesizes mmap events only for JIT and that is
-> open-coded in jitdump.c. i.e. perf_event__synthesize_start / stop
-> not needed
-
-Right, it's not strictly necessary.  While perf inject -b can synthesize
-some build-id events but it also doesn't require this even with the
-patch 3.
-
-Originally I thought this might be a good place to add something
-we want to do for synthesis.  But I only need it for DSO build-IDs
-in MMAP2 and we can remove it from other places.
-
->
-> >
-> >  out_delete:
-> >       strlist__delete(inject.known_build_ids);
-> > diff --git a/tools/perf/builtin-record.c b/tools/perf/builtin-record.c
-> > index 02e38f50a138..5b7b9ad2a280 100644
-> > --- a/tools/perf/builtin-record.c
-> > +++ b/tools/perf/builtin-record.c
-> > @@ -1966,6 +1966,8 @@ static int record__synthesize(struct record *rec, bool tail)
-> >       if (rec->opts.tail_synthesize != tail)
-> >               return 0;
-> >
-> > +     perf_event__synthesize_start();
->
-> Perhaps also record__synthesize_workload() ?
-
-Oh, right.  I thought it's handled during exec but it seems
-switch-output things need it additionally.  Will add.
-
->
+> >  void perf_event__synthesize_start(void)
+> >  {
+> > +     if (synth_init_done)
+> > +             return;
 > > +
-> >       if (data->is_pipe) {
-> >               err = perf_event__synthesize_for_pipe(tool, session, data,
-> >                                                     process_synthesized_event);
-> > @@ -2072,6 +2074,7 @@ static int record__synthesize(struct record *rec, bool tail)
-> >       }
-> >
-> >  out:
-> > +     perf_event__synthesize_stop();
-> >       return err;
+> > +     dsos__init(&synth_dsos);
+> > +
+> > +     synth_init_done = true;
 > >  }
 > >
-> > diff --git a/tools/perf/builtin-stat.c b/tools/perf/builtin-stat.c
-> > index e05fe72c1d87..f6f61e08f4c2 100644
-> > --- a/tools/perf/builtin-stat.c
-> > +++ b/tools/perf/builtin-stat.c
-> > @@ -962,6 +962,7 @@ static int __run_perf_stat(int argc, const char **argv, int run_idx)
-> >               if (err < 0)
-> >                       return err;
-> >
-> > +             perf_event__synthesize_start();
-> >               err = perf_event__synthesize_stat_events(&stat_config, NULL, evsel_list,
-> >                                                        process_synthesized_event, is_pipe);
-> >               if (err < 0)
-> > @@ -2641,6 +2642,7 @@ int cmd_stat(int argc, const char **argv)
-> >                       perf_session__write_header(perf_stat.session, evsel_list, fd, true);
-> >               }
-> >
-> > +             perf_event__synthesize_stop();
-> >               evlist__close(evsel_list);
-> >               perf_session__delete(perf_stat.session);
-> >       }
-> > diff --git a/tools/perf/builtin-top.c b/tools/perf/builtin-top.c
-> > index e89208b4ad4b..1eff894e6b5f 100644
-> > --- a/tools/perf/builtin-top.c
-> > +++ b/tools/perf/builtin-top.c
-> > @@ -1258,6 +1258,8 @@ static int __cmd_top(struct perf_top *top)
-> >  #endif
-> >       }
-> >
-> > +     perf_event__synthesize_start();
+> >  void perf_event__synthesize_stop(void)
+> >  {
+> > +     if (!synth_init_done)
+> > +             return;
 > > +
-> >       ret = perf_event__synthesize_bpf_events(top->session, perf_event__process,
-> >                                               &top->session->machines.host,
-> >                                               &top->record_opts);
-> > @@ -1273,6 +1275,8 @@ static int __cmd_top(struct perf_top *top)
-> >                                   top->evlist->core.threads, true, false,
-> >                                   top->nr_threads_synthesize);
+> > +     dsos__exit(&synth_dsos);
+> >  }
 > >
-> > +     perf_event__synthesize_stop();
+> >  int perf_tool__process_synth_event(struct perf_tool *tool,
+> > @@ -374,26 +388,47 @@ static bool read_proc_maps_line(struct io *io, __u64 *start, __u64 *end,
+> >  static void perf_record_mmap2__read_build_id(struct perf_record_mmap2 *event,
+> >                                            bool is_kernel)
+> >  {
+> > -     struct build_id bid;
+> > +     struct build_id _bid, *bid = &_bid;
+> > +     struct dso *dso = NULL;
+> > +     struct dso_id id;
+> >       int rc;
+> >
+> > -     if (is_kernel)
+> > -             rc = sysfs__read_build_id("/sys/kernel/notes", &bid);
+> > -     else
+> > -             rc = filename__read_build_id(event->filename, &bid) > 0 ? 0 : -1;
+> > +     if (is_kernel) {
+> > +             rc = sysfs__read_build_id("/sys/kernel/notes", bid);
+> > +             goto out;
+> > +     }
 > > +
-> >       if (top->nr_threads_synthesize > 1)
-> >               perf_set_singlethreaded();
+> > +     id.maj = event->maj;
+> > +     id.min = event->min;
+> > +     id.ino = event->ino;
+> > +     id.ino_generation = event->ino_generation;
 > >
-> > diff --git a/tools/perf/util/auxtrace.c b/tools/perf/util/auxtrace.c
-> > index b59c278fe9ed..1bfe076c22fb 100644
-> > --- a/tools/perf/util/auxtrace.c
-> > +++ b/tools/perf/util/auxtrace.c
-> > @@ -1328,6 +1328,7 @@ int perf_event__process_auxtrace_info(struct perf_session *session,
-> >       if (err)
-> >               return err;
-> >
-> > +     perf_event__synthesize_start();
-> >       unleader_auxtrace(session);
-> >
-> >       return 0;
-> > @@ -2834,6 +2835,7 @@ void auxtrace__free(struct perf_session *session)
-> >       if (!session->auxtrace)
-> >               return;
-> >
-> > +     perf_event__synthesize_stop();
 >
-> auxtrace does not synthesize mmap events
+> There might be some paths missing perf_event__synthesize_start()
+> e.g. perf trace
+> So it would probably be safer to use lazy initialization for
+> synth_dsos.
 
-Yeah, I don't have a strong need for it.  I just added it in case
-we need something for synthesis later.  But I will remove it
-if you don't think it's worth it.
+I thought about that too, but it'd need a cleanup routine at the end
+anyway.  So I ended up having a pair of start/stop routines.
+
+>
+> Also, callers of perf_record_mmap2__read_build_id() have a struct
+> machine so I wonder about putting synth_dsos in struct machine ?
+> Or even just using machine->dsos ?
+
+My intention was to use minimal info from struct dso - name, id and
+build-id.  But as it already uses dsos/dso routines, it's not much
+different from using the existing machine->dsos.
+
+So yeah, I think it's good to reuse the existing one as it'd benefit
+the build-id processing at the end.  Will change.
 
 Thanks,
 Namhyung
 
+
 >
-> >       return session->auxtrace->free(session);
+> > +     dso = dsos__findnew_id(&synth_dsos, event->filename, &id);
+> > +     if (dso && dso->has_build_id) {
+> > +             bid = &dso->bid;
+> > +             rc = 0;
+> > +             goto out;
+> > +     }
+> > +
+> > +     rc = filename__read_build_id(event->filename, bid) > 0 ? 0 : -1;
+> > +
+> > +out:
+> >       if (rc == 0) {
+> > -             memcpy(event->build_id, bid.data, sizeof(bid.data));
+> > -             event->build_id_size = (u8) bid.size;
+> > +             memcpy(event->build_id, bid->data, sizeof(bid->data));
+> > +             event->build_id_size = (u8) bid->size;
+> >               event->header.misc |= PERF_RECORD_MISC_MMAP_BUILD_ID;
+> >               event->__reserved_1 = 0;
+> >               event->__reserved_2 = 0;
+> > +
+> > +             if (dso && !dso->has_build_id)
+> > +                     dso__set_build_id(dso, bid);
+> >       } else {
+> >               if (event->filename[0] == '/') {
+> >                       pr_debug2("Failed to read build ID for %s\n",
+> >                                 event->filename);
+> >               }
+> >       }
+> > +     dso__put(dso);
 > >  }
 > >
-> > diff --git a/tools/perf/util/synthetic-events.c b/tools/perf/util/synthetic-events.c
-> > index 0ff57ca24577..9d4f5dacd154 100644
-> > --- a/tools/perf/util/synthetic-events.c
-> > +++ b/tools/perf/util/synthetic-events.c
-> > @@ -47,6 +47,14 @@
-> >
-> >  unsigned int proc_map_timeout = DEFAULT_PROC_MAP_PARSE_TIMEOUT;
-> >
-> > +void perf_event__synthesize_start(void)
-> > +{
-> > +}
-> > +
-> > +void perf_event__synthesize_stop(void)
-> > +{
-> > +}
-> > +
-> >  int perf_tool__process_synth_event(struct perf_tool *tool,
-> >                                  union perf_event *event,
-> >                                  struct machine *machine,
-> > diff --git a/tools/perf/util/synthetic-events.h b/tools/perf/util/synthetic-events.h
-> > index 53737d1619a4..e4414616080c 100644
-> > --- a/tools/perf/util/synthetic-events.h
-> > +++ b/tools/perf/util/synthetic-events.h
-> > @@ -43,6 +43,9 @@ int parse_synth_opt(char *str);
-> >  typedef int (*perf_event__handler_t)(struct perf_tool *tool, union perf_event *event,
-> >                                    struct perf_sample *sample, struct machine *machine);
-> >
-> > +void perf_event__synthesize_start(void);
-> > +void perf_event__synthesize_stop(void);
-> > +
-> >  int perf_event__synthesize_attrs(struct perf_tool *tool, struct evlist *evlist, perf_event__handler_t process);
-> >  int perf_event__synthesize_attr(struct perf_tool *tool, struct perf_event_attr *attr, u32 ids, u64 *id, perf_event__handler_t process);
-> >  int perf_event__synthesize_build_id(struct perf_tool *tool, struct dso *pos, u16 misc, perf_event__handler_t process, struct machine *machine);
+> >  int perf_event__synthesize_mmap_events(struct perf_tool *tool,
 >
