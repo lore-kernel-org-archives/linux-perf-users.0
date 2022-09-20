@@ -2,106 +2,100 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 36943C6FA82
-	for <linux-perf-users@archiver.kernel.org>; Tue, 20 Sep 2022 18:31:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2D127C54EE9
+	for <linux-perf-users@archiver.kernel.org>; Tue, 20 Sep 2022 19:53:48 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230176AbiITSbg (ORCPT
+        id S229489AbiITTxq (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Tue, 20 Sep 2022 14:31:36 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36970 "EHLO
+        Tue, 20 Sep 2022 15:53:46 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47680 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229473AbiITSbf (ORCPT
+        with ESMTP id S230049AbiITTxo (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Tue, 20 Sep 2022 14:31:35 -0400
-Received: from mail-oa1-f54.google.com (mail-oa1-f54.google.com [209.85.160.54])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A0A7D5C97C;
-        Tue, 20 Sep 2022 11:31:34 -0700 (PDT)
-Received: by mail-oa1-f54.google.com with SMTP id 586e51a60fabf-12c8312131fso5537287fac.4;
-        Tue, 20 Sep 2022 11:31:34 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date;
-        bh=I/JfvoNxXRGwUjwmsGrmIv5Ml238tRphNCPJqlYEg1Q=;
-        b=pY75707wvPeI3s3v0ocmWHwo/OeKcrzVEQlI27DFYIWWb1IAyHIrGgHvD2aD6JBoWr
-         oWaQYcgReArB5yHfintP4AcTu8arrpOmH6a9GETWpISPprxqIk1w/eZkk1iO7Do3gdek
-         sVWKMY1vxlara/PCbXHJNULx5A3Edo4q+U+/3sa7X5wgG3DOWMrV12XxZC5XOqox3Uue
-         UBokkQ2Nra3TKlYkLLlsEY1sPx/I9E5Q51U4iN3Y4d0D7TgfWO7lmtifcOh19bZOsYIA
-         ewGCV7vke6+/gdFfNBiwPD9unos4MfgXbeLrhHuBECpU7vxj/3vhBri6N6m/QGieegyg
-         45dA==
-X-Gm-Message-State: ACrzQf1jlZbVSe0z3a8Jp5rA8jHzuFWpkceUR3HKI4D3fEz84xwVGmzh
-        gJ7W8Lm8l9NrC1vkgcdTjmzi6MBAYZreewjal24=
-X-Google-Smtp-Source: AMsMyM6a5iemjvOUCYYn43gXObzlr02xv2lEqpbUwc3NAhah3zzGHGNaKsFo2LR8aAJhStDZcEQkLkydW04+2sbfk4s=
-X-Received: by 2002:a05:6870:524b:b0:12c:cfd2:81c0 with SMTP id
- o11-20020a056870524b00b0012ccfd281c0mr2802232oai.209.1663698693918; Tue, 20
- Sep 2022 11:31:33 -0700 (PDT)
-MIME-Version: 1.0
-References: <20220916175902.1155177-1-namhyung@kernel.org> <20220916175902.1155177-5-namhyung@kernel.org>
- <a50941ad-ae74-933e-4d22-f4c67bafc0c1@intel.com>
-In-Reply-To: <a50941ad-ae74-933e-4d22-f4c67bafc0c1@intel.com>
-From:   Namhyung Kim <namhyung@kernel.org>
-Date:   Tue, 20 Sep 2022 11:31:22 -0700
-Message-ID: <CAM9d7cgXj=fuie=Tz3L+-fNmd=ZA1B+ia9-Myh49EDGc4yxJ0A@mail.gmail.com>
-Subject: Re: [PATCH 4/4] perf tools: Honor namespace when synthesizing build-id
-To:     Adrian Hunter <adrian.hunter@intel.com>
-Cc:     Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Jiri Olsa <jolsa@kernel.org>, Ingo Molnar <mingo@kernel.org>,
+        Tue, 20 Sep 2022 15:53:44 -0400
+Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 68B6174356;
+        Tue, 20 Sep 2022 12:53:42 -0700 (PDT)
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by dfw.source.kernel.org (Postfix) with ESMTPS id CB3DD621DD;
+        Tue, 20 Sep 2022 19:53:41 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 0733AC433C1;
+        Tue, 20 Sep 2022 19:53:41 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1663703621;
+        bh=K5D/cvhmWjxK0VnS1qCjWGXgGazK2EgtutCIcApbmxQ=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=rL7fTkTZDNCKo7hSdqwlfp2xVwaPupoyqnSYzapd1FdPVNpHAOeBHfwi7H9imZ+iF
+         jEcaMnFOHPb6YerGWT/8ZhVGkvYZVMs/v1dhfvrMxjaPiRl65hu+Vetz3FRU+E1Kad
+         nvfbsvh6WgWnFy17kzYUDdQnvkHUpXel9orrYQbQFCJGL1mhpHEtxXDGTbFyBSjCC5
+         ZdGZ6IMb1rnFAzk32dlJwk98MNljLyhjVJ4SRRJyWqEAwmcZGMxEh6NAolktF6Ef7b
+         pq3QHa3WHiiCYLyp+8N9z9ufUWIeJeWfSzgxBiOWAC2jgW6br71Li4KbyyBKaC0wTQ
+         vX6G1lwpUd0LQ==
+Received: by quaco.ghostprotocols.net (Postfix, from userid 1000)
+        id EB03540856; Tue, 20 Sep 2022 20:53:37 +0100 (IST)
+Date:   Tue, 20 Sep 2022 20:53:37 +0100
+From:   Arnaldo Carvalho de Melo <acme@kernel.org>
+To:     Namhyung Kim <namhyung@kernel.org>
+Cc:     Jiri Olsa <jolsa@kernel.org>, Ingo Molnar <mingo@kernel.org>,
         Peter Zijlstra <peterz@infradead.org>,
         LKML <linux-kernel@vger.kernel.org>,
         Ian Rogers <irogers@google.com>,
-        linux-perf-users <linux-perf-users@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+        Adrian Hunter <adrian.hunter@intel.com>,
+        linux-perf-users@vger.kernel.org, Song Liu <songliubraving@fb.com>,
+        bpf@vger.kernel.org
+Subject: Re: [PATCH 0/4] perf stat: Fix bperf cgroup counters (v2)
+Message-ID: <YyoaQZIrAO+1HgD5@kernel.org>
+References: <20220916184132.1161506-1-namhyung@kernel.org>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20220916184132.1161506-1-namhyung@kernel.org>
+X-Url:  http://acmel.wordpress.com
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-On Tue, Sep 20, 2022 at 6:36 AM Adrian Hunter <adrian.hunter@intel.com> wrote:
->
-> On 16/09/22 20:59, Namhyung Kim wrote:
-> > It needs to go into a namespace before reading a file.
->
-> This looks like a fix, in which case make it the first patch
-> and add a fixes tag?
+Em Fri, Sep 16, 2022 at 11:41:28AM -0700, Namhyung Kim escreveu:
+> Hello,
+> 
+> This fixes random failures in the perf stat cgroup BPF counters (bperf).
+> I've also added a new test to ensure it working properly.
+> 
+> v2 changes)
+>  * fix a segfault with uncore event
 
-Good point, will do.
+Thanks, applied.
 
-Thanks,
-Namhyung
+- Arnaldo
 
+ 
+> You can get it from 'perf/bperf-cgrp-fix-v2' branch in
+> 
+>   git://git.kernel.org/pub/scm/linux/kernel/git/namhyung/linux-perf.git
+> 
+> Thanks,
+> Namhyung
+> 
+> 
+> Namhyung Kim (4):
+>   perf stat: Fix BPF program section name
+>   perf stat: Fix cpu map index in bperf cgroup code
+>   perf stat: Use evsel->core.cpus to iterate cpus in BPF cgroup counters
+>   perf test: Add a new test for perf stat cgroup BPF counter
+> 
+>  .../tests/shell/stat_bpf_counters_cgrp.sh     | 83 +++++++++++++++++++
+>  tools/perf/util/bpf_counter_cgroup.c          | 10 +--
+>  tools/perf/util/bpf_skel/bperf_cgroup.bpf.c   |  2 +-
+>  3 files changed, 89 insertions(+), 6 deletions(-)
+>  create mode 100755 tools/perf/tests/shell/stat_bpf_counters_cgrp.sh
+> 
+> 
+> base-commit: 62e64c9d2fd12839c02f1b3e8b873e7cb34e8720
+> -- 
+> 2.37.3.968.ga6b4b080e4-goog
 
->
-> >
-> > Signed-off-by: Namhyung Kim <namhyung@kernel.org>
-> > ---
-> >  tools/perf/util/synthetic-events.c | 8 ++++++++
-> >  1 file changed, 8 insertions(+)
-> >
-> > diff --git a/tools/perf/util/synthetic-events.c b/tools/perf/util/synthetic-events.c
-> > index e6978b2dee8f..d0d540d09196 100644
-> > --- a/tools/perf/util/synthetic-events.c
-> > +++ b/tools/perf/util/synthetic-events.c
-> > @@ -391,6 +391,8 @@ static void perf_record_mmap2__read_build_id(struct perf_record_mmap2 *event,
-> >       struct build_id _bid, *bid = &_bid;
-> >       struct dso *dso = NULL;
-> >       struct dso_id id;
-> > +     struct nsinfo *nsi;
-> > +     struct nscookie nc;
-> >       int rc;
-> >
-> >       if (is_kernel) {
-> > @@ -410,8 +412,14 @@ static void perf_record_mmap2__read_build_id(struct perf_record_mmap2 *event,
-> >               goto out;
-> >       }
-> >
-> > +     nsi = nsinfo__new(event->pid);
-> > +     nsinfo__mountns_enter(nsi, &nc);
-> > +
-> >       rc = filename__read_build_id(event->filename, bid) > 0 ? 0 : -1;
-> >
-> > +     nsinfo__mountns_exit(&nc);
-> > +     nsinfo__put(nsi);
-> > +
-> >  out:
-> >       if (rc == 0) {
-> >               memcpy(event->build_id, bid->data, sizeof(bid->data));
->
+-- 
+
+- Arnaldo
