@@ -2,179 +2,105 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 961A7C54EE9
-	for <linux-perf-users@archiver.kernel.org>; Tue, 20 Sep 2022 15:16:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6E3AEC6FA91
+	for <linux-perf-users@archiver.kernel.org>; Tue, 20 Sep 2022 17:03:30 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231452AbiITPQN (ORCPT
+        id S230269AbiITRD1 (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Tue, 20 Sep 2022 11:16:13 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:32904 "EHLO
+        Tue, 20 Sep 2022 13:03:27 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50312 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231379AbiITPPv (ORCPT
+        with ESMTP id S229717AbiITRD1 (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Tue, 20 Sep 2022 11:15:51 -0400
-Received: from szxga03-in.huawei.com (szxga03-in.huawei.com [45.249.212.189])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E1DEA22B1A;
-        Tue, 20 Sep 2022 08:15:49 -0700 (PDT)
-Received: from dggpemm500022.china.huawei.com (unknown [172.30.72.56])
-        by szxga03-in.huawei.com (SkyGuard) with ESMTP id 4MX4nG3fd6zHpCw;
-        Tue, 20 Sep 2022 23:13:38 +0800 (CST)
-Received: from dggpemm500013.china.huawei.com (7.185.36.172) by
- dggpemm500022.china.huawei.com (7.185.36.162) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2375.31; Tue, 20 Sep 2022 23:15:47 +0800
-Received: from ubuntu1804.huawei.com (10.67.175.36) by
- dggpemm500013.china.huawei.com (7.185.36.172) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2375.31; Tue, 20 Sep 2022 23:15:46 +0800
-From:   Chen Zhongjin <chenzhongjin@huawei.com>
-To:     <linux-kernel@vger.kernel.org>, <linux-riscv@lists.infradead.org>,
-        <linux-perf-users@vger.kernel.org>
-CC:     <paul.walmsley@sifive.com>, <palmer@dabbelt.com>,
-        <aou@eecs.berkeley.edu>, <peterz@infradead.org>,
-        <mingo@redhat.com>, <acme@kernel.org>, <mark.rutland@arm.com>,
-        <alexander.shishkin@linux.intel.com>, <namhyung@kernel.org>,
-        <jolsa@kernel.org>, <guoren@kernel.org>, <nsaenzju@redhat.com>,
-        <frederic@kernel.org>, <changbin.du@intel.com>,
-        <vincent.chen@sifive.com>, <ardb@kernel.org>,
-        <mhiramat@kernel.org>, <rostedt@goodmis.org>,
-        <keescook@chromium.org>, <catalin.marinas@arm.com>,
-        <chenzhongjin@huawei.com>
-Subject: [PATCH -next 7/7] riscv: stacktrace: Fix unwinding on __kretporbe_trampoline
-Date:   Tue, 20 Sep 2022 23:12:02 +0800
-Message-ID: <20220920151202.180057-8-chenzhongjin@huawei.com>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20220920151202.180057-1-chenzhongjin@huawei.com>
-References: <20220920151202.180057-1-chenzhongjin@huawei.com>
+        Tue, 20 Sep 2022 13:03:27 -0400
+Received: from mx0a-001b2d01.pphosted.com (mx0a-001b2d01.pphosted.com [148.163.156.1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4523A4DB05;
+        Tue, 20 Sep 2022 10:03:26 -0700 (PDT)
+Received: from pps.filterd (m0098409.ppops.net [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (8.17.1.5/8.17.1.5) with ESMTP id 28KH2VNZ031286;
+        Tue, 20 Sep 2022 17:02:54 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=date : from : subject :
+ to : cc : references : in-reply-to : message-id : content-type :
+ content-transfer-encoding : mime-version; s=pp1;
+ bh=fQCvxPU61NHYx0I3QmM1H3vlAIyZOE2m1uOWdTdchJ4=;
+ b=mf8cvIizT4KVk3Wd13JhpU+v5Q3vdjgCILM6O/ECQCioNVqlrCneyCRlazCnIYCH0ied
+ AZ1OvVq1r0uPMKN6PZxDbM6NJQdIcTvnshFsIlRRYFKzZtdqoVWfL5uTEpt5CdV0xDNY
+ c6oamHg9XNrrSJsFMQWFCVAbs2Yriin7w7viwJGZDtI5TB3gwMfrZNsCX41yY5NVSQxB
+ WlCJu3oys8EtPD65pmNORlHq4z6piklcIYdTxcsRp3SKvaMpPyeovyox5L1lPNeVsnt/
+ xzpFpHjO4JOF0yLq7I7Bq19LpOU9YS6zlUT2jr/AjLoxt0Ixxg43ct9T20qmzxfTL4oM GQ== 
+Received: from ppma04ams.nl.ibm.com (63.31.33a9.ip4.static.sl-reverse.com [169.51.49.99])
+        by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 3jqhjs80h1-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Tue, 20 Sep 2022 17:02:54 +0000
+Received: from pps.filterd (ppma04ams.nl.ibm.com [127.0.0.1])
+        by ppma04ams.nl.ibm.com (8.16.1.2/8.16.1.2) with SMTP id 28KGp8ir020400;
+        Tue, 20 Sep 2022 17:02:51 GMT
+Received: from b06avi18878370.portsmouth.uk.ibm.com (b06avi18878370.portsmouth.uk.ibm.com [9.149.26.194])
+        by ppma04ams.nl.ibm.com with ESMTP id 3jn5v8m6u6-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Tue, 20 Sep 2022 17:02:51 +0000
+Received: from d06av26.portsmouth.uk.ibm.com (d06av26.portsmouth.uk.ibm.com [9.149.105.62])
+        by b06avi18878370.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 28KH3EsG52691370
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Tue, 20 Sep 2022 17:03:14 GMT
+Received: from d06av26.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 47A13AE04D;
+        Tue, 20 Sep 2022 17:02:48 +0000 (GMT)
+Received: from d06av26.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id C22B1AE051;
+        Tue, 20 Sep 2022 17:02:47 +0000 (GMT)
+Received: from localhost (unknown [9.43.42.171])
+        by d06av26.portsmouth.uk.ibm.com (Postfix) with ESMTP;
+        Tue, 20 Sep 2022 17:02:47 +0000 (GMT)
+Date:   Tue, 20 Sep 2022 22:32:46 +0530
+From:   "Naveen N. Rao" <naveen.n.rao@linux.ibm.com>
+Subject: Re: [PATCH 0/2] make weak attributes in {k,u}probes
+To:     anil.s.keshavamurthy@intel.com, borntraeger@linux.ibm.com,
+        catalin.marinas@arm.com, dave.hansen@linux.intel.com,
+        gor@linux.ibm.com, guoren@kernel.org, hca@linux.ibm.com,
+        hpa@zytor.com, linux-arm-kernel@lists.infradead.org,
+        linux-csky@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-perf-users@vger.kernel.org, linux-riscv@lists.infradead.org,
+        linux-s390@vger.kernel.org, mark.rutland@arm.com,
+        mhiramat@kernel.org, namit@vmware.com, palmer@dabbelt.com,
+        paul.walmsley@sifive.com, peterz@infradead.org, x86@kernel.org,
+        Yipeng Zou <zouyipeng@huawei.com>
+Cc:     chris.zjh@huawei.com, liaochang1@huawei.com
+References: <20220917015522.44583-1-zouyipeng@huawei.com>
+In-Reply-To: <20220917015522.44583-1-zouyipeng@huawei.com>
+User-Agent: astroid/4d6b06ad (https://github.com/astroidmail/astroid)
+Message-Id: <1663692878.h3l8c563n8.naveen@linux.ibm.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+X-TM-AS-GCONF: 00
+X-Proofpoint-ORIG-GUID: yRFZ6NnVwkeJV_6MthdEmUtO_Y_I2tyz
+X-Proofpoint-GUID: yRFZ6NnVwkeJV_6MthdEmUtO_Y_I2tyz
+Content-Transfer-Encoding: quoted-printable
+X-Proofpoint-UnRewURL: 0 URL was un-rewritten
 MIME-Version: 1.0
-Content-Type: text/plain
-X-Originating-IP: [10.67.175.36]
-X-ClientProxiedBy: dggems703-chm.china.huawei.com (10.3.19.180) To
- dggpemm500013.china.huawei.com (7.185.36.172)
-X-CFilter-Loop: Reflected
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.205,Aquarius:18.0.895,Hydra:6.0.528,FMLib:17.11.122.1
+ definitions=2022-09-20_07,2022-09-20_02,2022-06-22_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 suspectscore=0
+ priorityscore=1501 malwarescore=0 impostorscore=0 spamscore=0
+ mlxlogscore=677 bulkscore=0 clxscore=1011 adultscore=0 mlxscore=0
+ phishscore=0 lowpriorityscore=0 classifier=spam adjust=0 reason=mlx
+ scancount=1 engine=8.12.0-2209130000 definitions=main-2209200098
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-When unwinding on __kretprobe_trampoline, the caller of traced function
-will be skipped because unwinder doesn't read the saved pt_regs.
+Yipeng Zou wrote:
+> We have some function implementation under some arch does nothing.
+> We can mark it with weak attributes to improve.
 
-Things going like this:
+That's not always an improvement. See [1] for an example, among many=20
+other patches to reduce use of __weak functions in the kernel.
 
-caller's caller		|       ...                 |<---+
-caller			+---------------------------+    |
-			| ra caller's caller        |    |
-			| s0 of caller's caller     |    |
-			|       ...                 |    |
-probed func returned	+---------------------------+    |
-__kretprobe_trampoline	| pt_regs:                  |    |
-			| epc caller                |    |
-                        | ra  __kretprobe_trampoline|    |
-			|       ...                 |    |
-                        | s0 of caller              | {ra, fp}
-			|       ...                 |
+As an alternative, please consider the approach used in [1].
 
-Since from caller to __kretprobe_trampoline, the {ra, fp} are not
-changed, unwinder will go directly to caller's caller.
 
-Now we can have an ENCODED_FRAME_POINTER on stack and read the pt_regs,
-kretporbe will set the epc to correct_ret_addr so that we can unwind
-to the correct caller.
+- Naveen
 
-Stacktrace before this patch:
-
- Call Trace:
-  ...
-  [<ffffffff800d5d48>] __kretprobe_trampoline_handler+0xc2/0x13e
-  [<ffffffff808b766c>] trampoline_probe_handler+0x30/0x46
-  [<ffffffff800070de>] __kretprobe_trampoline+0x52/0x92
-  [<ffffffff0163809c>] kprobe_init+0x9c/0x1000 [kprobe_unwind]
-  [<ffffffff800027c8>] do_one_initcall+0x4c/0x1f2
-  ...
-
-Stacktrace after this patch:
-
- Call Trace:
-  ...
-  [<ffffffff800d5d48>] __kretprobe_trampoline_handler+0xc2/0x13e
-  [<ffffffff808b766c>] trampoline_probe_handler+0x30/0x46
-  [<ffffffff800070de>] __kretprobe_trampoline+0x52/0x92
-+ [<ffffffff01633076>] the_caller+0x2c/0x38 [kprobe_unwind]
-  [<ffffffff0163809c>] kprobe_init+0x9c/0x1000 [kprobe_unwind]
-  [<ffffffff800027c8>] do_one_initcall+0x4c/0x1f2
-  ...
-
-Signed-off-by: Chen Zhongjin <chenzhongjin@huawei.com>
----
- arch/riscv/include/asm/stacktrace.h           | 4 ++++
- arch/riscv/kernel/probes/kprobes_trampoline.S | 8 ++++++++
- arch/riscv/kernel/stacktrace.c                | 5 +++++
- 3 files changed, 17 insertions(+)
-
-diff --git a/arch/riscv/include/asm/stacktrace.h b/arch/riscv/include/asm/stacktrace.h
-index a39e4ef1dbd5..506c7c38b6cb 100644
---- a/arch/riscv/include/asm/stacktrace.h
-+++ b/arch/riscv/include/asm/stacktrace.h
-@@ -16,6 +16,10 @@ struct unwind_state {
- 	unsigned long sp;
- 	unsigned long pc;
- 	struct pt_regs *regs;
-+#ifdef CONFIG_KRETPROBES
-+	struct llist_node *kr_cur;
-+	struct task_struct *task;
-+#endif
- };
- 
- extern void dump_backtrace(struct pt_regs *regs, struct task_struct *task,
-diff --git a/arch/riscv/kernel/probes/kprobes_trampoline.S b/arch/riscv/kernel/probes/kprobes_trampoline.S
-index 7bdb09ded39b..3c0677a714a6 100644
---- a/arch/riscv/kernel/probes/kprobes_trampoline.S
-+++ b/arch/riscv/kernel/probes/kprobes_trampoline.S
-@@ -6,6 +6,8 @@
- 
- #include <asm/asm.h>
- #include <asm/asm-offsets.h>
-+#include <asm/frame.h>
-+#include <asm/csr.h>
- 
- 	.text
- 	.altmacro
-@@ -79,6 +81,12 @@ ENTRY(__kretprobe_trampoline)
- 	addi sp, sp, -(PT_SIZE_ON_STACK)
- 	save_all_base_regs
- 
-+#ifdef CONFIG_FRAME_POINTER
-+	li s0, SR_PP
-+	REG_S s0, PT_STATUS(sp)
-+	ENCODE_FRAME_POINTER
-+#endif
-+
- 	move a0, sp /* pt_regs */
- 
- 	call trampoline_probe_handler
-diff --git a/arch/riscv/kernel/stacktrace.c b/arch/riscv/kernel/stacktrace.c
-index 976dc298ab3b..53edc685ca18 100644
---- a/arch/riscv/kernel/stacktrace.c
-+++ b/arch/riscv/kernel/stacktrace.c
-@@ -11,6 +11,7 @@
- #include <linux/sched/task_stack.h>
- #include <linux/stacktrace.h>
- #include <linux/ftrace.h>
-+#include <linux/kprobes.h>
- 
- #include <asm/stacktrace.h>
- 
-@@ -123,6 +124,10 @@ noinline notrace void arch_stack_walk(stack_trace_consume_fn consume_entry,
- 		state.sp = task->thread.sp;
- 		state.pc = task->thread.ra;
- 	}
-+#ifdef CONFIG_KRETPROBES
-+	state.kr_cur = NULL;
-+	state.task = task;
-+#endif
- 
- 	unwind(&state, consume_entry, cookie);
- }
--- 
-2.17.1
+[1] https://lore.kernel.org/all/20220519091237.676736-1-naveen.n.rao@linux.=
+vnet.ibm.com/
 
