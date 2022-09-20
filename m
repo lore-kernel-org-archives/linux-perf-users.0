@@ -2,80 +2,93 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4BEBBC6FA82
-	for <linux-perf-users@archiver.kernel.org>; Tue, 20 Sep 2022 20:13:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AA76EC6FA82
+	for <linux-perf-users@archiver.kernel.org>; Tue, 20 Sep 2022 20:16:32 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229962AbiITUNE (ORCPT
+        id S230506AbiITUQb (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Tue, 20 Sep 2022 16:13:04 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40426 "EHLO
+        Tue, 20 Sep 2022 16:16:31 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45110 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229751AbiITUND (ORCPT
+        with ESMTP id S230193AbiITUQ3 (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Tue, 20 Sep 2022 16:13:03 -0400
-Received: from ams.source.kernel.org (ams.source.kernel.org [IPv6:2604:1380:4601:e00::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D0F7E72856;
-        Tue, 20 Sep 2022 13:13:02 -0700 (PDT)
+        Tue, 20 Sep 2022 16:16:29 -0400
+Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D0BD736844;
+        Tue, 20 Sep 2022 13:16:28 -0700 (PDT)
 Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by ams.source.kernel.org (Postfix) with ESMTPS id 8A61FB82CBE;
-        Tue, 20 Sep 2022 20:13:01 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 125C3C433D6;
-        Tue, 20 Sep 2022 20:13:00 +0000 (UTC)
+        by dfw.source.kernel.org (Postfix) with ESMTPS id 5E47E62D0F;
+        Tue, 20 Sep 2022 20:16:28 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 945F5C433C1;
+        Tue, 20 Sep 2022 20:16:27 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1663704780;
-        bh=kxx7btcaXrcTwks5lCzuaDoGDyG0BYIdlbhdeBb8TQs=;
+        s=k20201202; t=1663704987;
+        bh=+ChkXvaDMIaT28k+Efej/RqaJDrHwaiGxGqSiV6vfE4=;
         h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=TWWuhlj+XKFabdRAPRQSa+LUv2rPEM7cifJxzUuRsmVb/ikfGS5feOUeNiRIFbTk1
-         VweVNoiA3DXpKLK006EXn3bH1jjzd9z7CsFr7xoTzg3WzlRI1ABWw9jH6dloOp45dI
-         7Yq5lNWMdt/FVj+5CmcNClnCLNPt4DmAjfrcEx60i1I+77rcXjuQekkYoTmZSqnVpJ
-         yQkwjcgW23+x0wdWkOuB8JgBSZ2tq5d9qDjCxTDOVyufJ73Wj4BI4+c6xJp/BffuTB
-         riWOJNgy8qa3ZcnMxDheqdC8dnSUiyLhj1uPe0JrjytYI6CKsQy9LNw/T7CK4IZtJ5
-         IlF8Wom3vdUyA==
+        b=EtB9ko9EVd0lVma9cOVnGhv/tw7EosatqrQRCxL6Z9YXfLxzhLgz7uqSuS9dOARLW
+         StZhvNjujufILHmLzIwV68r5FZKIxEetT58Ui/vilyXV97rwmrAhfwQbxMmLWqN3/P
+         uW3d4kVWyvb0pYbcQQSdGNZmZiB2+QzhPgeBZ7Jkc90r8cX7PYHinysUjvu13DGKUt
+         4QXKFSEMuS5SEOnJGDBtPqzmK5/Wy3bJUQRCE2ce5PPB1ESSgKPX5ufMQm6PuAibGg
+         WDQStCyfsIhQKCJ6gzr4WJisMEwNCEvPMpvvWJxHgO8aI9l8dj6/xbva1yyi3NT+iL
+         FWBd6DvSROzGQ==
 Received: by quaco.ghostprotocols.net (Postfix, from userid 1000)
-        id DF00F40856; Tue, 20 Sep 2022 21:12:57 +0100 (IST)
-Date:   Tue, 20 Sep 2022 21:12:57 +0100
+        id 4106540856; Tue, 20 Sep 2022 21:16:25 +0100 (IST)
+Date:   Tue, 20 Sep 2022 21:16:25 +0100
 From:   Arnaldo Carvalho de Melo <acme@kernel.org>
-To:     Ravi Bangoria <ravi.bangoria@amd.com>
-Cc:     Namhyung Kim <namhyung@kernel.org>, Ingo Molnar <mingo@kernel.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        LKML <linux-kernel@vger.kernel.org>,
+To:     Namhyung Kim <namhyung@kernel.org>
+Cc:     Adrian Hunter <adrian.hunter@intel.com>,
+        Jiri Olsa <jolsa@redhat.com>,
+        Athira Rajeev <atrajeev@linux.vnet.ibm.com>,
         Ian Rogers <irogers@google.com>,
-        Adrian Hunter <adrian.hunter@intel.com>,
-        linux-perf-users@vger.kernel.org, Jiri Olsa <jolsa@kernel.org>
-Subject: Re: [PATCH] perf test: Skip wp modify test on old kernels
-Message-ID: <YyoeyZATlcrSjz0s@kernel.org>
-References: <20220914183338.546357-1-namhyung@kernel.org>
- <ecb6c1b6-132e-ae75-88f3-20b6793a3d23@amd.com>
+        linux-kernel <linux-kernel@vger.kernel.org>,
+        linux-perf-users <linux-perf-users@vger.kernel.org>
+Subject: Re: [PATCH 0/2] perf tools: Fixes for mixing per-thread and per-cpu
+ mmaps
+Message-ID: <YyofmSXYtJoFb0Mg@kernel.org>
+References: <20220915122612.81738-1-adrian.hunter@intel.com>
+ <CAM9d7chkt13mLFfFhYZJpHHYi83-f-BxdGs1Eyw8sF9X9BX2jQ@mail.gmail.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <ecb6c1b6-132e-ae75-88f3-20b6793a3d23@amd.com>
+In-Reply-To: <CAM9d7chkt13mLFfFhYZJpHHYi83-f-BxdGs1Eyw8sF9X9BX2jQ@mail.gmail.com>
 X-Url:  http://acmel.wordpress.com
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-Em Mon, Sep 19, 2022 at 11:24:05AM +0530, Ravi Bangoria escreveu:
-> On 15-Sep-22 12:03 AM, Namhyung Kim wrote:
-> > It uses PERF_EVENT_IOC_MODIFY_ATTRIBUTES ioctl. The kernel would return
-> > ENOTTY if it's not supported.  Update the skip reason in that case.
+Em Fri, Sep 16, 2022 at 11:28:35AM -0700, Namhyung Kim escreveu:
+> On Thu, Sep 15, 2022 at 5:26 AM Adrian Hunter <adrian.hunter@intel.com> wrote:
+> >
+> > Hi
+> >
+> > Here are a couple more small fixes.
+> >
+> >
+> > Adrian Hunter (2):
+> >       perf record: Fix cpu mask bit setting for mixed mmaps
+> >       libperf evlist: Fix polling of system-wide events
 > 
-> Reviewed-by: Ravi Bangoria <ravi.bangoria@amd.com>
+> Acked-by: Namhyung Kim <namhyung@kernel.org>
 
 Thanks, applied.
 
 - Arnaldo
 
  
-> > I'd like to add Fixes: 2e85d5979e8d tag here but it'd conlict with the
-> > later change in e47c6ecaae1d.
-> 
-> Is it worth to backport?
-> 
 > Thanks,
-> Ravi
+> Namhyung
+> 
+> 
+> >
+> >  tools/lib/perf/evlist.c     | 5 +++--
+> >  tools/perf/builtin-record.c | 2 ++
+> >  2 files changed, 5 insertions(+), 2 deletions(-)
+> >
+> >
+> > Regards
+> > Adrian
 
 -- 
 
