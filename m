@@ -2,97 +2,97 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 382F8C6FA82
-	for <linux-perf-users@archiver.kernel.org>; Tue, 20 Sep 2022 20:22:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0DEC3C54EE9
+	for <linux-perf-users@archiver.kernel.org>; Tue, 20 Sep 2022 21:05:22 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230146AbiITUWx (ORCPT
+        id S230368AbiITVFU (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Tue, 20 Sep 2022 16:22:53 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50552 "EHLO
+        Tue, 20 Sep 2022 17:05:20 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38302 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230011AbiITUWx (ORCPT
+        with ESMTP id S230414AbiITVFD (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Tue, 20 Sep 2022 16:22:53 -0400
-Received: from ams.source.kernel.org (ams.source.kernel.org [145.40.68.75])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A97A452FD2;
-        Tue, 20 Sep 2022 13:22:52 -0700 (PDT)
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by ams.source.kernel.org (Postfix) with ESMTPS id 5F56AB82165;
-        Tue, 20 Sep 2022 20:22:51 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id E9481C433D6;
-        Tue, 20 Sep 2022 20:22:49 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1663705370;
-        bh=yQ224x/KrEEAdjWrdFZBkvXO6pVB/k1ucaZQMmGTboc=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=myWZxC1j9Gg/CtZg6QO7GjvCZhu8V3YqN85dIEye9PbrBZc/vLt+yD4l8XBFTFH9h
-         oUiV2vWQy85UFtyvKpDRWOGPr5S4wWCg7PVqasQfhZ19OUT5LSzpTXm9V0s0lllYGL
-         6zWqhbPi/AXJtbrNlNdPs++dLtt2rIjdzU0oVpY5Q/lcpmI7tABwEdTvv5ut5pXC5N
-         RCFDzd3a575jHqCxtaXPFiWdpWBai3IISupogEVfK4z/T0VO4HkuD28lRBsBYuYqZO
-         AjztXrbfIiWEAA5jLiudn0k38nEhDF0Ah7N4P6UTWOSHUH5bfO5vO3xd9fyz6XWWFY
-         jIyVJh/Jf/BbQ==
-Received: by quaco.ghostprotocols.net (Postfix, from userid 1000)
-        id 2376C40856; Tue, 20 Sep 2022 21:22:48 +0100 (IST)
-Date:   Tue, 20 Sep 2022 21:22:48 +0100
-From:   Arnaldo Carvalho de Melo <acme@kernel.org>
-To:     Namhyung Kim <namhyung@kernel.org>
+        Tue, 20 Sep 2022 17:05:03 -0400
+Received: from mail-ot1-f46.google.com (mail-ot1-f46.google.com [209.85.210.46])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E42413ED52;
+        Tue, 20 Sep 2022 14:04:59 -0700 (PDT)
+Received: by mail-ot1-f46.google.com with SMTP id f20-20020a9d7b54000000b006574e21f1b6so2614536oto.5;
+        Tue, 20 Sep 2022 14:04:59 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:x-gm-message-state:from:to:cc:subject:date;
+        bh=h+5c+YAd8qnEXFc7fGMxvZO7wvFtjw5sICYJeM59wF0=;
+        b=LQ2wiIdemgCzdLZ6gdFfOBUGjdvJG/MpUg0o7T1m1ONLwGbpT2jhPCzpNjIzmVRMUv
+         gtY0ZaqkU+/5JUW3pqd16Y5dpaXYdPdRQEbQItkTvVGVjmPcE9wGzmWvWBriGIsRX5Jq
+         Q2sErO/V7NogKi7UByBl/8zHxhktIL3XilTA/eaNALZ9ARRbuy6ksdM5MjgO6g/Dd95U
+         8M5FdniifnjZOow/q79H3plCvHflKjVO85hziCBcO69sgJ8lgGF8y3nr2f483NdwA39h
+         MrZHVrPOsoqyVMAkDcTTk8t7oed0/UVN+v55dMbxZfSrE/HJJak3TWQCE/n56s0zQEWO
+         ClXA==
+X-Gm-Message-State: ACrzQf1QIWKxg7Q3gd4Kew0E2AcCQSi2mAlWv+MSIW0cMrRPCqsZtxGA
+        7nHb+2C4hlUST3PFcc8KiASICLSs7Dp4uO3P4pU=
+X-Google-Smtp-Source: AMsMyM5nGKKKGoptudRJdUoFlMuenxndpYAOpTPmBbm79CYxd+RQ5I9/R5KyzB/IngkAoSDOPicGHKV5ecsxRnSzWzg=
+X-Received: by 2002:a9d:805:0:b0:63b:1981:588 with SMTP id 5-20020a9d0805000000b0063b19810588mr10974504oty.190.1663707898592;
+ Tue, 20 Sep 2022 14:04:58 -0700 (PDT)
+MIME-Version: 1.0
+References: <20220908063754.1369709-1-namhyung@kernel.org> <Yxo32kpxsl9Mr7Mt@kernel.org>
+ <CAM9d7cgOPUoGr96yc=M=bBTQG-jkW269Lc7-uEYTWGURiCAjyQ@mail.gmail.com> <YyohGGdnX88YOXtR@kernel.org>
+In-Reply-To: <YyohGGdnX88YOXtR@kernel.org>
+From:   Namhyung Kim <namhyung@kernel.org>
+Date:   Tue, 20 Sep 2022 14:04:47 -0700
+Message-ID: <CAM9d7ch7owDKkn9a89qkZ-KpSf02+OVJd01_76xMadA+vv3owQ@mail.gmail.com>
+Subject: Re: [PATCH 0/4] perf lock contention: Improve call stack handling (v1)
+To:     Arnaldo Carvalho de Melo <acme@kernel.org>
 Cc:     Jiri Olsa <jolsa@kernel.org>, Ingo Molnar <mingo@kernel.org>,
         Peter Zijlstra <peterz@infradead.org>,
         LKML <linux-kernel@vger.kernel.org>,
         Ian Rogers <irogers@google.com>,
         linux-perf-users <linux-perf-users@vger.kernel.org>,
         Song Liu <songliubraving@fb.com>, bpf <bpf@vger.kernel.org>
-Subject: Re: [PATCH 0/4] perf lock contention: Improve call stack handling
- (v1)
-Message-ID: <YyohGGdnX88YOXtR@kernel.org>
-References: <20220908063754.1369709-1-namhyung@kernel.org>
- <Yxo32kpxsl9Mr7Mt@kernel.org>
- <CAM9d7cgOPUoGr96yc=M=bBTQG-jkW269Lc7-uEYTWGURiCAjyQ@mail.gmail.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CAM9d7cgOPUoGr96yc=M=bBTQG-jkW269Lc7-uEYTWGURiCAjyQ@mail.gmail.com>
-X-Url:  http://acmel.wordpress.com
+Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-Em Thu, Sep 08, 2022 at 04:44:15PM -0700, Namhyung Kim escreveu:
-> Hi Arnaldo,
-> 
-> On Thu, Sep 8, 2022 at 11:43 AM Arnaldo Carvalho de Melo
-> <acme@kernel.org> wrote:
+On Tue, Sep 20, 2022 at 1:22 PM Arnaldo Carvalho de Melo
+<acme@kernel.org> wrote:
+>
+> Em Thu, Sep 08, 2022 at 04:44:15PM -0700, Namhyung Kim escreveu:
+> > Hi Arnaldo,
 > >
-> > Em Wed, Sep 07, 2022 at 11:37:50PM -0700, Namhyung Kim escreveu:
-> > > Hello,
+> > On Thu, Sep 8, 2022 at 11:43 AM Arnaldo Carvalho de Melo
+> > <acme@kernel.org> wrote:
 > > >
-> > > I found that call stack from the lock tracepoint (using bpf_get_stackid)
-> > > can be different on each configuration.  For example it's very different
-> > > when I run it on a VM than on a real machine.
+> > > Em Wed, Sep 07, 2022 at 11:37:50PM -0700, Namhyung Kim escreveu:
+> > > > Hello,
+> > > >
+> > > > I found that call stack from the lock tracepoint (using bpf_get_stackid)
+> > > > can be different on each configuration.  For example it's very different
+> > > > when I run it on a VM than on a real machine.
+> > > >
+> > > > The perf lock contention relies on the stack trace to get the lock
+> > > > caller names, this kind of difference can be annoying.  Ideally we could
+> > > > skip stack trace entries for internal BPF or lock functions and get the
+> > > > correct caller, but it's not the case as of today.  Currently it's hard
+> > > > coded to control the behavior of stack traces for the lock contention
+> > > > tracepoints.
+> > > >
+> > > > To handle those differences, add two new options to control the number of
+> > > > stack entries and how many it skips.  The default value worked well on
+> > > > my VM setup, but I had to use --stack-skip=5 on real machines.
+> > > >
+> > > > You can get it from 'perf/lock-stack-v1' branch in
+> > > >
+> > > >   git://git.kernel.org/pub/scm/linux/kernel/git/namhyung/linux-perf.git
 > > >
-> > > The perf lock contention relies on the stack trace to get the lock
-> > > caller names, this kind of difference can be annoying.  Ideally we could
-> > > skip stack trace entries for internal BPF or lock functions and get the
-> > > correct caller, but it's not the case as of today.  Currently it's hard
-> > > coded to control the behavior of stack traces for the lock contention
-> > > tracepoints.
-> > >
-> > > To handle those differences, add two new options to control the number of
-> > > stack entries and how many it skips.  The default value worked well on
-> > > my VM setup, but I had to use --stack-skip=5 on real machines.
-> > >
-> > > You can get it from 'perf/lock-stack-v1' branch in
-> > >
-> > >   git://git.kernel.org/pub/scm/linux/kernel/git/namhyung/linux-perf.git
+> > > This clashed with a patch you Acked earlier, so lets see if someone has
+> > > extra review comments and a v2 become needed for other reason, when you
+> > > can refresh it, ok?
 > >
-> > This clashed with a patch you Acked earlier, so lets see if someone has
-> > extra review comments and a v2 become needed for other reason, when you
-> > can refresh it, ok?
-> 
-> Sounds good!
+> > Sounds good!
+>
+> Have you resubmitted this? /me goes on the backlog...
 
-Have you resubmitted this? /me goes on the backlog...
+Yep :)
 
-- Arnaldo
+https://lore.kernel.org/r/20220912055314.744552-1-namhyung@kernel.org
