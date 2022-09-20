@@ -2,31 +2,31 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3A37FC54EE9
-	for <linux-perf-users@archiver.kernel.org>; Tue, 20 Sep 2022 15:16:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 02DF5C6FA91
+	for <linux-perf-users@archiver.kernel.org>; Tue, 20 Sep 2022 15:16:10 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231343AbiITPQG (ORCPT
+        id S231371AbiITPQG (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
         Tue, 20 Sep 2022 11:16:06 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:32884 "EHLO
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:32880 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231363AbiITPPv (ORCPT
+        with ESMTP id S231347AbiITPPv (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
         Tue, 20 Sep 2022 11:15:51 -0400
 Received: from szxga01-in.huawei.com (szxga01-in.huawei.com [45.249.212.187])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 31718606A7;
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 316305AC72;
         Tue, 20 Sep 2022 08:15:49 -0700 (PDT)
-Received: from dggpemm500023.china.huawei.com (unknown [172.30.72.57])
-        by szxga01-in.huawei.com (SkyGuard) with ESMTP id 4MX4mV3FPczpTJm;
-        Tue, 20 Sep 2022 23:12:58 +0800 (CST)
+Received: from dggpemm500021.china.huawei.com (unknown [172.30.72.53])
+        by szxga01-in.huawei.com (SkyGuard) with ESMTP id 4MX4kz4rknzlW0y;
+        Tue, 20 Sep 2022 23:11:39 +0800 (CST)
 Received: from dggpemm500013.china.huawei.com (7.185.36.172) by
- dggpemm500023.china.huawei.com (7.185.36.83) with Microsoft SMTP Server
+ dggpemm500021.china.huawei.com (7.185.36.109) with Microsoft SMTP Server
  (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2375.31; Tue, 20 Sep 2022 23:15:46 +0800
+ 15.1.2375.31; Tue, 20 Sep 2022 23:15:45 +0800
 Received: from ubuntu1804.huawei.com (10.67.175.36) by
  dggpemm500013.china.huawei.com (7.185.36.172) with Microsoft SMTP Server
  (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2375.31; Tue, 20 Sep 2022 23:15:46 +0800
+ 15.1.2375.31; Tue, 20 Sep 2022 23:15:45 +0800
 From:   Chen Zhongjin <chenzhongjin@huawei.com>
 To:     <linux-kernel@vger.kernel.org>, <linux-riscv@lists.infradead.org>,
         <linux-perf-users@vger.kernel.org>
@@ -40,12 +40,10 @@ CC:     <paul.walmsley@sifive.com>, <palmer@dabbelt.com>,
         <mhiramat@kernel.org>, <rostedt@goodmis.org>,
         <keescook@chromium.org>, <catalin.marinas@arm.com>,
         <chenzhongjin@huawei.com>
-Subject: [PATCH -next 3/7] riscv: stacktrace: Save pt_regs in encoded fp on irq entry
-Date:   Tue, 20 Sep 2022 23:11:58 +0800
-Message-ID: <20220920151202.180057-4-chenzhongjin@huawei.com>
+Subject: [PATCH -next 0/7] riscv: Improvments for stacktrace
+Date:   Tue, 20 Sep 2022 23:11:55 +0800
+Message-ID: <20220920151202.180057-1-chenzhongjin@huawei.com>
 X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20220920151202.180057-1-chenzhongjin@huawei.com>
-References: <20220920151202.180057-1-chenzhongjin@huawei.com>
 MIME-Version: 1.0
 Content-Type: text/plain
 X-Originating-IP: [10.67.175.36]
@@ -56,122 +54,47 @@ Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-To support stack unwinding at irq entry, the position of pt_regs saved
-on stack is nessesary. Because for some functions, compiler only push
-s0/fp on stack without ra.
+Currently, the stacktrace with FRAME_POINTER on riscv has some problem:
 
-As the situation described in
+1. stacktrace will stop at irq so it can't get the stack frames before
+irq entry.
+2. stacktrace can't unwind all the real stack frames when there is
+k{ret}probes or ftrace.
+
+These are mainly becase when there is a pt_regs on stack, we can't unwind
+the stack frame as normal function.
+
+Some architectures (e.g. arm64) create a extra stackframe inside pt_regs.
+However this doesn't work for riscv because the ra is not ensured to be
+pushed to stack. As explained in:
 commit f766f77a74f5("riscv/stacktrace: Fix stack output without ra on the stack top")
 
-When irq happens there, the the function frame looks like:
+So, I choosed the method of x86 that, if there is a pt_regs on stack,
+we encoded the frame pointer and save it. When unwinding stack frame,
+we can get pt_regs and registers required for unwinding stacks.
 
-prev function	|       ...       |
-		|                 |
-normal function +-----------------+
-		| ra to prev      |
-		| s0 of prev      |
-		|       ...       |<-+
-leaf function	+-----------------+  |
-		| s0 of normal    |  |
-		| empty slot      |  |
-irq pt_regs	+-----------------+  |
-		| epc (ra to leaf)|  |
-		| ra  (ra to norm)|  |
-		| ...             |  |
-                | s0 of leaf      |--+
-		| ...             |
-		+-----------------+
+In addition, the patch set contains some refactoring of stacktrace.c to
+keep the stacktrace code on riscv consistent with other architectures.
 
-If the position of register in pt_regs is {epc, s0}, we can easily
-unwind from irq frame to leaf function, as normal functions do.
+Chen Zhongjin (7):
+  riscv: stacktrace: Replace walk_stackframe with arch_stack_walk
+  riscv: stacktrace: Introduce unwind functions
+  riscv: stacktrace: Save pt_regs in encoded fp on irq entry
+  riscv: syscall: Don't clobber s0 when syscall
+  riscv: stacktrace: Implement stacktrace for irq
+  riscv: stacktrace: Fix unwinding on ftrace_regs_call
+  riscv: stacktrace: Fix unwinding on __kretporbe_trampoline
 
-However when unwinding from unwinding from leaf to normal, beacause
-(ra to norm) is saved in pt_regs, but not stackframe of leaf, we
-have to get pt_regs for that.
-
-To get pt_regs position on stack, we can save the encoded *pt_regs
-in s0, as x86 architecture did. Then we can get s0, epc and ra
-easily.
-
-Signed-off-by: Chen Zhongjin <chenzhongjin@huawei.com>
----
- arch/riscv/include/asm/frame.h | 45 ++++++++++++++++++++++++++++++++++
- arch/riscv/kernel/entry.S      |  3 +++
- 2 files changed, 48 insertions(+)
+ arch/riscv/include/asm/frame.h                |  45 +++++
+ arch/riscv/include/asm/stacktrace.h           |  13 +-
+ arch/riscv/kernel/entry.S                     |  23 +--
+ arch/riscv/kernel/mcount-dyn.S                |   8 +
+ arch/riscv/kernel/perf_callchain.c            |   2 +-
+ arch/riscv/kernel/probes/kprobes_trampoline.S |   8 +
+ arch/riscv/kernel/stacktrace.c                | 155 ++++++++++++------
+ 7 files changed, 195 insertions(+), 59 deletions(-)
  create mode 100644 arch/riscv/include/asm/frame.h
 
-diff --git a/arch/riscv/include/asm/frame.h b/arch/riscv/include/asm/frame.h
-new file mode 100644
-index 000000000000..2a1f45cf3a4e
---- /dev/null
-+++ b/arch/riscv/include/asm/frame.h
-@@ -0,0 +1,45 @@
-+/* SPDX-License-Identifier: GPL-2.0 */
-+#ifndef _ASM_RISCV_FRAME_H
-+#define _ASM_RISCV_FRAME_H
-+
-+#include <asm/asm.h>
-+
-+#ifdef CONFIG_FRAME_POINTER
-+
-+#ifdef __ASSEMBLY__
-+
-+/*
-+ * This is a sneaky trick to help the unwinder find pt_regs on the stack.  The
-+ * frame pointer is replaced with an encoded pointer to pt_regs.  The encoding
-+ * is just setting the LSB, which makes it an invalid stack address and is also
-+ * a signal to the unwinder that it's a pt_regs pointer in disguise.
-+ *
-+ * This macro must be used when sp point to pt_regs
-+ */
-+.macro ENCODE_FRAME_POINTER
-+	add s0, sp, 0x1
-+.endm
-+
-+#else /* !__ASSEMBLY__ */
-+
-+#define ENCODE_FRAME_POINTER			\
-+	"add s0, sp, 0x1\n\t"
-+
-+#endif /* __ASSEMBLY__ */
-+
-+#else /* !CONFIG_FRAME_POINTER */
-+
-+#ifdef __ASSEMBLY__
-+
-+.macro ENCODE_FRAME_POINTER ptregs_offset=0
-+.endm
-+
-+#else /* !__ASSEMBLY */
-+
-+#define ENCODE_FRAME_POINTER
-+
-+#endif /* !__ASSEMBLY */
-+
-+#endif /* CONFIG_FRAME_POINTER */
-+
-+#endif /* _ASM_RISCV_FRAME_H */
-diff --git a/arch/riscv/kernel/entry.S b/arch/riscv/kernel/entry.S
-index b9eda3fcbd6d..ecb15c7430b4 100644
---- a/arch/riscv/kernel/entry.S
-+++ b/arch/riscv/kernel/entry.S
-@@ -13,6 +13,7 @@
- #include <asm/thread_info.h>
- #include <asm/asm-offsets.h>
- #include <asm/errata_list.h>
-+#include <asm/frame.h>
- 
- #if !IS_ENABLED(CONFIG_PREEMPTION)
- .set resume_kernel, restore_all
-@@ -95,6 +96,8 @@ _save_context:
- 	REG_S s4, PT_CAUSE(sp)
- 	REG_S s5, PT_TP(sp)
- 
-+	ENCODE_FRAME_POINTER
-+
- 	/*
- 	 * Set the scratch register to 0, so that if a recursive exception
- 	 * occurs, the exception vector knows it came from the kernel
 -- 
 2.17.1
 
