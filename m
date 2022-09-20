@@ -2,48 +2,48 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1ABF0C54EE9
-	for <linux-perf-users@archiver.kernel.org>; Tue, 20 Sep 2022 13:51:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E8972ECAAD8
+	for <linux-perf-users@archiver.kernel.org>; Tue, 20 Sep 2022 14:00:09 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231409AbiITNvi (ORCPT
+        id S230220AbiITOAI (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Tue, 20 Sep 2022 09:51:38 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43342 "EHLO
+        Tue, 20 Sep 2022 10:00:08 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57842 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231285AbiITNvY (ORCPT
+        with ESMTP id S229470AbiITOAH (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Tue, 20 Sep 2022 09:51:24 -0400
-Received: from mga11.intel.com (mga11.intel.com [192.55.52.93])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D78243C8C2;
-        Tue, 20 Sep 2022 06:51:22 -0700 (PDT)
+        Tue, 20 Sep 2022 10:00:07 -0400
+Received: from mga04.intel.com (mga04.intel.com [192.55.52.120])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A3D1413F27;
+        Tue, 20 Sep 2022 07:00:06 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1663681882; x=1695217882;
+  t=1663682406; x=1695218406;
   h=message-id:date:mime-version:subject:to:cc:references:
    from:in-reply-to:content-transfer-encoding;
-  bh=QgwIHoXybvmVSGl2JEjPwELkQGe2gdvnwkl/24eQF+g=;
-  b=dnokYIVXD3b8jPC+I2aC3rysLeEBIa3KwWmqZUuqTjCiy34KRgokNh+0
-   3eNgaG6nOTKKsW2R81QxzFXG7xD2t71/Jp2DZpIc8WFFZgzSubAc2e71n
-   fPkASiQLal+OTkLyXucF9KIRB3KDsuzlPwIJ6js9BE578YEhw1NI+yZ+C
-   aw04mJtqfRuIvxUCgBVSrMi5wodxkM/1XUMv3K2LY8CjPvMjSZuJRLsQC
-   KlD+JE3MS3lhlM/Bm+JY+eNY2IowH0ijouAgSu2FscNrzuWxE36cIZjT/
-   qw32m9pxJ9U2B1X/tRJDQ07liwe8InPCNcfJUbNRWlGJstKjtxiKCpadC
-   Q==;
-X-IronPort-AV: E=McAfee;i="6500,9779,10476"; a="297292572"
+  bh=RHAlT1tmtQpRmnr86saDeoL2upzLNqG6AJXpqitAz+0=;
+  b=WKh4leqb8+mVSOrEdzUHMy6Qcbhm9kBodcUasg1QaO/0SE4TXp5t3g8t
+   HY32sI/QV1CLUlkYK66e20T6KvUX3ScBTFvrZGoHLkjXZQRBACzH7AFZa
+   SdZVYi73pU+FEtjMBS0qfnCdKRKoeu3CbHgGnmPRBl/kWjc9lD3RoEgrz
+   o3wvw8kTc2v69Ei3TFFsF67+EWtGn5y5gkcoaa5dxwtQEPs4ll0RTsjHP
+   HoYkNgfFgmGED9E7tSGdnOzJFC5g5s3gbP2oftTqiZle1cGxPGR2NrnVQ
+   F8NvQ9zDLVB/gRy9sOIwYMynnt870JqNx/u989tJs6aWhvmhwl6u8oyYe
+   w==;
+X-IronPort-AV: E=McAfee;i="6500,9779,10476"; a="298424944"
 X-IronPort-AV: E=Sophos;i="5.93,330,1654585200"; 
-   d="scan'208";a="297292572"
+   d="scan'208";a="298424944"
 Received: from orsmga004.jf.intel.com ([10.7.209.38])
-  by fmsmga102.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 20 Sep 2022 06:51:19 -0700
+  by fmsmga104.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 20 Sep 2022 07:00:06 -0700
 X-IronPort-AV: E=Sophos;i="5.93,330,1654585200"; 
-   d="scan'208";a="744540749"
+   d="scan'208";a="744543055"
 Received: from ahunter6-mobl1.ger.corp.intel.com (HELO [10.0.2.15]) ([10.252.58.32])
-  by orsmga004-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 20 Sep 2022 06:51:16 -0700
-Message-ID: <bf8988d7-2fd7-fa5d-25ff-2b439f1c0649@intel.com>
-Date:   Tue, 20 Sep 2022 16:51:12 +0300
+  by orsmga004-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 20 Sep 2022 07:00:03 -0700
+Message-ID: <571fb9aa-98e7-b42a-aa81-01658e131f11@intel.com>
+Date:   Tue, 20 Sep 2022 16:59:59 +0300
 MIME-Version: 1.0
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
  Firefox/91.0 Thunderbird/91.11.0
-Subject: Re: [PATCH 1/4] perf tools: Move dsos functions to util/dsos.c
+Subject: Re: [PATCH 3/4] perf record: Save DSO build-ID for synthesizing
 Content-Language: en-US
 To:     Namhyung Kim <namhyung@kernel.org>,
         Arnaldo Carvalho de Melo <acme@kernel.org>,
@@ -54,127 +54,128 @@ Cc:     Ingo Molnar <mingo@kernel.org>,
         Ian Rogers <irogers@google.com>,
         linux-perf-users@vger.kernel.org
 References: <20220916175902.1155177-1-namhyung@kernel.org>
- <20220916175902.1155177-2-namhyung@kernel.org>
+ <20220916175902.1155177-4-namhyung@kernel.org>
 From:   Adrian Hunter <adrian.hunter@intel.com>
 Organization: Intel Finland Oy, Registered Address: PL 281, 00181 Helsinki,
  Business Identity Code: 0357606 - 4, Domiciled in Helsinki
-In-Reply-To: <20220916175902.1155177-2-namhyung@kernel.org>
+In-Reply-To: <20220916175902.1155177-4-namhyung@kernel.org>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-On 16/09/22 20:58, Namhyung Kim wrote:
-
-Maybe say why the move.
-
+On 16/09/22 20:59, Namhyung Kim wrote:
+> When synthesizing MMAP2 with build-id, it'd read the same file repeatedly as
+> it has no idea if it's done already.  Maintain a dsos to check that and skip
+> the file access if possible.
+> 
 > Signed-off-by: Namhyung Kim <namhyung@kernel.org>
 > ---
->  tools/perf/util/dsos.c    | 29 +++++++++++++++++++++++++++++
->  tools/perf/util/dsos.h    |  3 +++
->  tools/perf/util/machine.c | 29 -----------------------------
->  3 files changed, 32 insertions(+), 29 deletions(-)
+>  tools/perf/util/synthetic-events.c | 49 +++++++++++++++++++++++++-----
+>  1 file changed, 42 insertions(+), 7 deletions(-)
 > 
-> diff --git a/tools/perf/util/dsos.c b/tools/perf/util/dsos.c
-> index 2bd23e4cf19e..90a800625110 100644
-> --- a/tools/perf/util/dsos.c
-> +++ b/tools/perf/util/dsos.c
-> @@ -12,6 +12,35 @@
->  #include <symbol.h> // filename__read_build_id
->  #include <unistd.h>
+> diff --git a/tools/perf/util/synthetic-events.c b/tools/perf/util/synthetic-events.c
+> index 9d4f5dacd154..e6978b2dee8f 100644
+> --- a/tools/perf/util/synthetic-events.c
+> +++ b/tools/perf/util/synthetic-events.c
+> @@ -4,6 +4,7 @@
+>  #include "util/data.h"
+>  #include "util/debug.h"
+>  #include "util/dso.h"
+> +#include "util/dsos.h"
+>  #include "util/event.h"
+>  #include "util/evlist.h"
+>  #include "util/machine.h"
+> @@ -47,12 +48,25 @@
 >  
-> +void dsos__init(struct dsos *dsos)
-> +{
-> +	INIT_LIST_HEAD(&dsos->head);
-> +	dsos->root = RB_ROOT;
-> +	init_rwsem(&dsos->lock);
-> +}
+>  unsigned int proc_map_timeout = DEFAULT_PROC_MAP_PARSE_TIMEOUT;
+>  
+> +static bool synth_init_done;
+> +static struct dsos synth_dsos;
 > +
-> +static void dsos__purge(struct dsos *dsos)
-> +{
-> +	struct dso *pos, *n;
+>  void perf_event__synthesize_start(void)
+>  {
+> +	if (synth_init_done)
+> +		return;
 > +
-> +	down_write(&dsos->lock);
+> +	dsos__init(&synth_dsos);
 > +
-> +	list_for_each_entry_safe(pos, n, &dsos->head, node) {
-> +		RB_CLEAR_NODE(&pos->rb_node);
-> +		pos->root = NULL;
-> +		list_del_init(&pos->node);
-> +		dso__put(pos);
+> +	synth_init_done = true;
+>  }
+>  
+>  void perf_event__synthesize_stop(void)
+>  {
+> +	if (!synth_init_done)
+> +		return;
+> +
+> +	dsos__exit(&synth_dsos);
+>  }
+>  
+>  int perf_tool__process_synth_event(struct perf_tool *tool,
+> @@ -374,26 +388,47 @@ static bool read_proc_maps_line(struct io *io, __u64 *start, __u64 *end,
+>  static void perf_record_mmap2__read_build_id(struct perf_record_mmap2 *event,
+>  					     bool is_kernel)
+>  {
+> -	struct build_id bid;
+> +	struct build_id _bid, *bid = &_bid;
+> +	struct dso *dso = NULL;
+> +	struct dso_id id;
+>  	int rc;
+>  
+> -	if (is_kernel)
+> -		rc = sysfs__read_build_id("/sys/kernel/notes", &bid);
+> -	else
+> -		rc = filename__read_build_id(event->filename, &bid) > 0 ? 0 : -1;
+> +	if (is_kernel) {
+> +		rc = sysfs__read_build_id("/sys/kernel/notes", bid);
+> +		goto out;
 > +	}
 > +
-> +	up_write(&dsos->lock);
-> +}
-> +
-> +void dsos__exit(struct dsos *dsos)
-> +{
-> +	dsos__purge(dsos);
-> +	exit_rwsem(&dsos->lock);
-> +}
-> +
->  static int __dso_id__cmp(struct dso_id *a, struct dso_id *b)
->  {
->  	if (a->maj > b->maj) return -1;
-> diff --git a/tools/perf/util/dsos.h b/tools/perf/util/dsos.h
-> index 5dbec2bc6966..49f448f106f8 100644
-> --- a/tools/perf/util/dsos.h
-> +++ b/tools/perf/util/dsos.h
-> @@ -21,6 +21,9 @@ struct dsos {
->  	struct rw_semaphore lock;
->  };
+> +	id.maj = event->maj;
+> +	id.min = event->min;
+> +	id.ino = event->ino;
+> +	id.ino_generation = event->ino_generation;
 >  
-> +void dsos__init(struct dsos *dsos);
-> +void dsos__exit(struct dsos *dsos);
+
+There might be some paths missing perf_event__synthesize_start()
+e.g. perf trace
+So it would probably be safer to use lazy initialization for
+synth_dsos.
+
+Also, callers of perf_record_mmap2__read_build_id() have a struct
+machine so I wonder about putting synth_dsos in struct machine ?
+Or even just using machine->dsos ?
+
+> +	dso = dsos__findnew_id(&synth_dsos, event->filename, &id);
+> +	if (dso && dso->has_build_id) {
+> +		bid = &dso->bid;
+> +		rc = 0;
+> +		goto out;
+> +	}
 > +
->  void __dsos__add(struct dsos *dsos, struct dso *dso);
->  void dsos__add(struct dsos *dsos, struct dso *dso);
->  struct dso *__dsos__addnew(struct dsos *dsos, const char *name);
-> diff --git a/tools/perf/util/machine.c b/tools/perf/util/machine.c
-> index 2a16cae28407..4c5540f5c753 100644
-> --- a/tools/perf/util/machine.c
-> +++ b/tools/perf/util/machine.c
-> @@ -50,13 +50,6 @@ static struct dso *machine__kernel_dso(struct machine *machine)
->  	return machine->vmlinux_map->dso;
+> +	rc = filename__read_build_id(event->filename, bid) > 0 ? 0 : -1;
+> +
+> +out:
+>  	if (rc == 0) {
+> -		memcpy(event->build_id, bid.data, sizeof(bid.data));
+> -		event->build_id_size = (u8) bid.size;
+> +		memcpy(event->build_id, bid->data, sizeof(bid->data));
+> +		event->build_id_size = (u8) bid->size;
+>  		event->header.misc |= PERF_RECORD_MISC_MMAP_BUILD_ID;
+>  		event->__reserved_1 = 0;
+>  		event->__reserved_2 = 0;
+> +
+> +		if (dso && !dso->has_build_id)
+> +			dso__set_build_id(dso, bid);
+>  	} else {
+>  		if (event->filename[0] == '/') {
+>  			pr_debug2("Failed to read build ID for %s\n",
+>  				  event->filename);
+>  		}
+>  	}
+> +	dso__put(dso);
 >  }
 >  
-> -static void dsos__init(struct dsos *dsos)
-> -{
-> -	INIT_LIST_HEAD(&dsos->head);
-> -	dsos->root = RB_ROOT;
-> -	init_rwsem(&dsos->lock);
-> -}
-> -
->  static void machine__threads_init(struct machine *machine)
->  {
->  	int i;
-> @@ -181,28 +174,6 @@ struct machine *machine__new_kallsyms(void)
->  	return machine;
->  }
->  
-> -static void dsos__purge(struct dsos *dsos)
-> -{
-> -	struct dso *pos, *n;
-> -
-> -	down_write(&dsos->lock);
-> -
-> -	list_for_each_entry_safe(pos, n, &dsos->head, node) {
-> -		RB_CLEAR_NODE(&pos->rb_node);
-> -		pos->root = NULL;
-> -		list_del_init(&pos->node);
-> -		dso__put(pos);
-> -	}
-> -
-> -	up_write(&dsos->lock);
-> -}
-> -
-> -static void dsos__exit(struct dsos *dsos)
-> -{
-> -	dsos__purge(dsos);
-> -	exit_rwsem(&dsos->lock);
-> -}
-> -
->  void machine__delete_threads(struct machine *machine)
->  {
->  	struct rb_node *nd;
+>  int perf_event__synthesize_mmap_events(struct perf_tool *tool,
 
