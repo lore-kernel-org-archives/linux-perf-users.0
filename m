@@ -2,48 +2,48 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8F08DECAAD8
-	for <linux-perf-users@archiver.kernel.org>; Tue, 20 Sep 2022 13:50:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1ABF0C54EE9
+	for <linux-perf-users@archiver.kernel.org>; Tue, 20 Sep 2022 13:51:41 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229805AbiITNul (ORCPT
+        id S231409AbiITNvi (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Tue, 20 Sep 2022 09:50:41 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42194 "EHLO
+        Tue, 20 Sep 2022 09:51:38 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43342 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229802AbiITNuj (ORCPT
+        with ESMTP id S231285AbiITNvY (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Tue, 20 Sep 2022 09:50:39 -0400
-Received: from mga18.intel.com (mga18.intel.com [134.134.136.126])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E85131C938;
-        Tue, 20 Sep 2022 06:50:27 -0700 (PDT)
+        Tue, 20 Sep 2022 09:51:24 -0400
+Received: from mga11.intel.com (mga11.intel.com [192.55.52.93])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D78243C8C2;
+        Tue, 20 Sep 2022 06:51:22 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1663681827; x=1695217827;
+  t=1663681882; x=1695217882;
   h=message-id:date:mime-version:subject:to:cc:references:
    from:in-reply-to:content-transfer-encoding;
-  bh=WoF6r5ZGB6LgvY0+cK9qehlp8Ly2mv+a6H//Hxs+g3M=;
-  b=fq7dUJJUqW5yhn1Ki9UWV4NfKv51XNSqbPR5P9+mEbpMCldqB/ZJxSnc
-   IBXOeTetAj6jOVZKTAFxB5O1XWVayi64KwPuVlaR4JMxLsXtIm865NOO2
-   en+wH3dF1qTQbhzbD1qGNei1Q/UJKi7zSWsaGC6RpIjBsz5YOhG4xO5pH
-   ri+nyGONSlS0SOKXPFCE0YTvuZpJDObEjXbdemo/XrpoK/RCt5i7MkK8c
-   zVG21zvHhFvYq7sJ7JBkuI+j+l8xXBbuU6FTd2ygiJeetAh8+We44vuQ4
-   q0XANKBEzcf9RiE3Z1+iOtOel1I+7yro2+EBDEkL3Uws+5m4CXrJ4il1T
-   g==;
-X-IronPort-AV: E=McAfee;i="6500,9779,10476"; a="282726920"
+  bh=QgwIHoXybvmVSGl2JEjPwELkQGe2gdvnwkl/24eQF+g=;
+  b=dnokYIVXD3b8jPC+I2aC3rysLeEBIa3KwWmqZUuqTjCiy34KRgokNh+0
+   3eNgaG6nOTKKsW2R81QxzFXG7xD2t71/Jp2DZpIc8WFFZgzSubAc2e71n
+   fPkASiQLal+OTkLyXucF9KIRB3KDsuzlPwIJ6js9BE578YEhw1NI+yZ+C
+   aw04mJtqfRuIvxUCgBVSrMi5wodxkM/1XUMv3K2LY8CjPvMjSZuJRLsQC
+   KlD+JE3MS3lhlM/Bm+JY+eNY2IowH0ijouAgSu2FscNrzuWxE36cIZjT/
+   qw32m9pxJ9U2B1X/tRJDQ07liwe8InPCNcfJUbNRWlGJstKjtxiKCpadC
+   Q==;
+X-IronPort-AV: E=McAfee;i="6500,9779,10476"; a="297292572"
 X-IronPort-AV: E=Sophos;i="5.93,330,1654585200"; 
-   d="scan'208";a="282726920"
+   d="scan'208";a="297292572"
 Received: from orsmga004.jf.intel.com ([10.7.209.38])
-  by orsmga106.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 20 Sep 2022 06:50:27 -0700
+  by fmsmga102.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 20 Sep 2022 06:51:19 -0700
 X-IronPort-AV: E=Sophos;i="5.93,330,1654585200"; 
-   d="scan'208";a="744540582"
+   d="scan'208";a="744540749"
 Received: from ahunter6-mobl1.ger.corp.intel.com (HELO [10.0.2.15]) ([10.252.58.32])
-  by orsmga004-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 20 Sep 2022 06:50:24 -0700
-Message-ID: <5116611b-2d91-a9fe-5760-65a9a9b50747@intel.com>
-Date:   Tue, 20 Sep 2022 16:50:20 +0300
+  by orsmga004-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 20 Sep 2022 06:51:16 -0700
+Message-ID: <bf8988d7-2fd7-fa5d-25ff-2b439f1c0649@intel.com>
+Date:   Tue, 20 Sep 2022 16:51:12 +0300
 MIME-Version: 1.0
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
  Firefox/91.0 Thunderbird/91.11.0
-Subject: Re: [PATCH 2/4] perf tools: Add perf_event__synthesize_{start,stop}()
+Subject: Re: [PATCH 1/4] perf tools: Move dsos functions to util/dsos.c
 Content-Language: en-US
 To:     Namhyung Kim <namhyung@kernel.org>,
         Arnaldo Carvalho de Melo <acme@kernel.org>,
@@ -54,174 +54,127 @@ Cc:     Ingo Molnar <mingo@kernel.org>,
         Ian Rogers <irogers@google.com>,
         linux-perf-users@vger.kernel.org
 References: <20220916175902.1155177-1-namhyung@kernel.org>
- <20220916175902.1155177-3-namhyung@kernel.org>
+ <20220916175902.1155177-2-namhyung@kernel.org>
 From:   Adrian Hunter <adrian.hunter@intel.com>
 Organization: Intel Finland Oy, Registered Address: PL 281, 00181 Helsinki,
  Business Identity Code: 0357606 - 4, Domiciled in Helsinki
-In-Reply-To: <20220916175902.1155177-3-namhyung@kernel.org>
+In-Reply-To: <20220916175902.1155177-2-namhyung@kernel.org>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-On 16/09/22 20:59, Namhyung Kim wrote:
-> These functions are to prepare and cleanup necessary work for synthesizing.
-> It doesn't do anything yet but later patch will add it.
-> 
+On 16/09/22 20:58, Namhyung Kim wrote:
+
+Maybe say why the move.
+
 > Signed-off-by: Namhyung Kim <namhyung@kernel.org>
 > ---
->  tools/perf/builtin-inject.c        | 3 +++
->  tools/perf/builtin-record.c        | 3 +++
->  tools/perf/builtin-stat.c          | 2 ++
->  tools/perf/builtin-top.c           | 4 ++++
->  tools/perf/util/auxtrace.c         | 2 ++
->  tools/perf/util/synthetic-events.c | 8 ++++++++
->  tools/perf/util/synthetic-events.h | 3 +++
->  7 files changed, 25 insertions(+)
+>  tools/perf/util/dsos.c    | 29 +++++++++++++++++++++++++++++
+>  tools/perf/util/dsos.h    |  3 +++
+>  tools/perf/util/machine.c | 29 -----------------------------
+>  3 files changed, 32 insertions(+), 29 deletions(-)
 > 
-> diff --git a/tools/perf/builtin-inject.c b/tools/perf/builtin-inject.c
-> index e254f18986f7..2e91a887919b 100644
-> --- a/tools/perf/builtin-inject.c
-> +++ b/tools/perf/builtin-inject.c
-> @@ -2368,9 +2368,12 @@ int cmd_inject(int argc, const char **argv)
->  	if (ret < 0)
->  		goto out_delete;
+> diff --git a/tools/perf/util/dsos.c b/tools/perf/util/dsos.c
+> index 2bd23e4cf19e..90a800625110 100644
+> --- a/tools/perf/util/dsos.c
+> +++ b/tools/perf/util/dsos.c
+> @@ -12,6 +12,35 @@
+>  #include <symbol.h> // filename__read_build_id
+>  #include <unistd.h>
 >  
-> +	perf_event__synthesize_start();
-> +
->  	ret = __cmd_inject(&inject);
->  
->  	guest_session__exit(&inject.guest_session);
-> +	perf_event__synthesize_stop();
-
-AFAICT perf inject synthesizes mmap events only for JIT and that is
-open-coded in jitdump.c. i.e. perf_event__synthesize_start / stop
-not needed
-
->  
->  out_delete:
->  	strlist__delete(inject.known_build_ids);
-> diff --git a/tools/perf/builtin-record.c b/tools/perf/builtin-record.c
-> index 02e38f50a138..5b7b9ad2a280 100644
-> --- a/tools/perf/builtin-record.c
-> +++ b/tools/perf/builtin-record.c
-> @@ -1966,6 +1966,8 @@ static int record__synthesize(struct record *rec, bool tail)
->  	if (rec->opts.tail_synthesize != tail)
->  		return 0;
->  
-> +	perf_event__synthesize_start();
-
-Perhaps also record__synthesize_workload() ?
-
-> +
->  	if (data->is_pipe) {
->  		err = perf_event__synthesize_for_pipe(tool, session, data,
->  						      process_synthesized_event);
-> @@ -2072,6 +2074,7 @@ static int record__synthesize(struct record *rec, bool tail)
->  	}
->  
->  out:
-> +	perf_event__synthesize_stop();
->  	return err;
->  }
->  
-> diff --git a/tools/perf/builtin-stat.c b/tools/perf/builtin-stat.c
-> index e05fe72c1d87..f6f61e08f4c2 100644
-> --- a/tools/perf/builtin-stat.c
-> +++ b/tools/perf/builtin-stat.c
-> @@ -962,6 +962,7 @@ static int __run_perf_stat(int argc, const char **argv, int run_idx)
->  		if (err < 0)
->  			return err;
->  
-> +		perf_event__synthesize_start();
->  		err = perf_event__synthesize_stat_events(&stat_config, NULL, evsel_list,
->  							 process_synthesized_event, is_pipe);
->  		if (err < 0)
-> @@ -2641,6 +2642,7 @@ int cmd_stat(int argc, const char **argv)
->  			perf_session__write_header(perf_stat.session, evsel_list, fd, true);
->  		}
->  
-> +		perf_event__synthesize_stop();
->  		evlist__close(evsel_list);
->  		perf_session__delete(perf_stat.session);
->  	}
-> diff --git a/tools/perf/builtin-top.c b/tools/perf/builtin-top.c
-> index e89208b4ad4b..1eff894e6b5f 100644
-> --- a/tools/perf/builtin-top.c
-> +++ b/tools/perf/builtin-top.c
-> @@ -1258,6 +1258,8 @@ static int __cmd_top(struct perf_top *top)
->  #endif
->  	}
->  
-> +	perf_event__synthesize_start();
-> +
->  	ret = perf_event__synthesize_bpf_events(top->session, perf_event__process,
->  						&top->session->machines.host,
->  						&top->record_opts);
-> @@ -1273,6 +1275,8 @@ static int __cmd_top(struct perf_top *top)
->  				    top->evlist->core.threads, true, false,
->  				    top->nr_threads_synthesize);
->  
-> +	perf_event__synthesize_stop();
-> +
->  	if (top->nr_threads_synthesize > 1)
->  		perf_set_singlethreaded();
->  
-> diff --git a/tools/perf/util/auxtrace.c b/tools/perf/util/auxtrace.c
-> index b59c278fe9ed..1bfe076c22fb 100644
-> --- a/tools/perf/util/auxtrace.c
-> +++ b/tools/perf/util/auxtrace.c
-> @@ -1328,6 +1328,7 @@ int perf_event__process_auxtrace_info(struct perf_session *session,
->  	if (err)
->  		return err;
->  
-> +	perf_event__synthesize_start();
->  	unleader_auxtrace(session);
->  
->  	return 0;
-> @@ -2834,6 +2835,7 @@ void auxtrace__free(struct perf_session *session)
->  	if (!session->auxtrace)
->  		return;
->  
-> +	perf_event__synthesize_stop();
-
-auxtrace does not synthesize mmap events
-
->  	return session->auxtrace->free(session);
->  }
->  
-> diff --git a/tools/perf/util/synthetic-events.c b/tools/perf/util/synthetic-events.c
-> index 0ff57ca24577..9d4f5dacd154 100644
-> --- a/tools/perf/util/synthetic-events.c
-> +++ b/tools/perf/util/synthetic-events.c
-> @@ -47,6 +47,14 @@
->  
->  unsigned int proc_map_timeout = DEFAULT_PROC_MAP_PARSE_TIMEOUT;
->  
-> +void perf_event__synthesize_start(void)
+> +void dsos__init(struct dsos *dsos)
 > +{
+> +	INIT_LIST_HEAD(&dsos->head);
+> +	dsos->root = RB_ROOT;
+> +	init_rwsem(&dsos->lock);
 > +}
 > +
-> +void perf_event__synthesize_stop(void)
+> +static void dsos__purge(struct dsos *dsos)
 > +{
+> +	struct dso *pos, *n;
+> +
+> +	down_write(&dsos->lock);
+> +
+> +	list_for_each_entry_safe(pos, n, &dsos->head, node) {
+> +		RB_CLEAR_NODE(&pos->rb_node);
+> +		pos->root = NULL;
+> +		list_del_init(&pos->node);
+> +		dso__put(pos);
+> +	}
+> +
+> +	up_write(&dsos->lock);
 > +}
 > +
->  int perf_tool__process_synth_event(struct perf_tool *tool,
->  				   union perf_event *event,
->  				   struct machine *machine,
-> diff --git a/tools/perf/util/synthetic-events.h b/tools/perf/util/synthetic-events.h
-> index 53737d1619a4..e4414616080c 100644
-> --- a/tools/perf/util/synthetic-events.h
-> +++ b/tools/perf/util/synthetic-events.h
-> @@ -43,6 +43,9 @@ int parse_synth_opt(char *str);
->  typedef int (*perf_event__handler_t)(struct perf_tool *tool, union perf_event *event,
->  				     struct perf_sample *sample, struct machine *machine);
->  
-> +void perf_event__synthesize_start(void);
-> +void perf_event__synthesize_stop(void);
+> +void dsos__exit(struct dsos *dsos)
+> +{
+> +	dsos__purge(dsos);
+> +	exit_rwsem(&dsos->lock);
+> +}
 > +
->  int perf_event__synthesize_attrs(struct perf_tool *tool, struct evlist *evlist, perf_event__handler_t process);
->  int perf_event__synthesize_attr(struct perf_tool *tool, struct perf_event_attr *attr, u32 ids, u64 *id, perf_event__handler_t process);
->  int perf_event__synthesize_build_id(struct perf_tool *tool, struct dso *pos, u16 misc, perf_event__handler_t process, struct machine *machine);
+>  static int __dso_id__cmp(struct dso_id *a, struct dso_id *b)
+>  {
+>  	if (a->maj > b->maj) return -1;
+> diff --git a/tools/perf/util/dsos.h b/tools/perf/util/dsos.h
+> index 5dbec2bc6966..49f448f106f8 100644
+> --- a/tools/perf/util/dsos.h
+> +++ b/tools/perf/util/dsos.h
+> @@ -21,6 +21,9 @@ struct dsos {
+>  	struct rw_semaphore lock;
+>  };
+>  
+> +void dsos__init(struct dsos *dsos);
+> +void dsos__exit(struct dsos *dsos);
+> +
+>  void __dsos__add(struct dsos *dsos, struct dso *dso);
+>  void dsos__add(struct dsos *dsos, struct dso *dso);
+>  struct dso *__dsos__addnew(struct dsos *dsos, const char *name);
+> diff --git a/tools/perf/util/machine.c b/tools/perf/util/machine.c
+> index 2a16cae28407..4c5540f5c753 100644
+> --- a/tools/perf/util/machine.c
+> +++ b/tools/perf/util/machine.c
+> @@ -50,13 +50,6 @@ static struct dso *machine__kernel_dso(struct machine *machine)
+>  	return machine->vmlinux_map->dso;
+>  }
+>  
+> -static void dsos__init(struct dsos *dsos)
+> -{
+> -	INIT_LIST_HEAD(&dsos->head);
+> -	dsos->root = RB_ROOT;
+> -	init_rwsem(&dsos->lock);
+> -}
+> -
+>  static void machine__threads_init(struct machine *machine)
+>  {
+>  	int i;
+> @@ -181,28 +174,6 @@ struct machine *machine__new_kallsyms(void)
+>  	return machine;
+>  }
+>  
+> -static void dsos__purge(struct dsos *dsos)
+> -{
+> -	struct dso *pos, *n;
+> -
+> -	down_write(&dsos->lock);
+> -
+> -	list_for_each_entry_safe(pos, n, &dsos->head, node) {
+> -		RB_CLEAR_NODE(&pos->rb_node);
+> -		pos->root = NULL;
+> -		list_del_init(&pos->node);
+> -		dso__put(pos);
+> -	}
+> -
+> -	up_write(&dsos->lock);
+> -}
+> -
+> -static void dsos__exit(struct dsos *dsos)
+> -{
+> -	dsos__purge(dsos);
+> -	exit_rwsem(&dsos->lock);
+> -}
+> -
+>  void machine__delete_threads(struct machine *machine)
+>  {
+>  	struct rb_node *nd;
 
