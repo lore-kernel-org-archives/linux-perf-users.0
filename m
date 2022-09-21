@@ -2,64 +2,66 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CDF10ECAAD8
-	for <linux-perf-users@archiver.kernel.org>; Wed, 21 Sep 2022 09:36:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5DFEFECAAD8
+	for <linux-perf-users@archiver.kernel.org>; Wed, 21 Sep 2022 09:37:04 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229852AbiIUJgJ (ORCPT
+        id S230072AbiIUJhD (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Wed, 21 Sep 2022 05:36:09 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34796 "EHLO
+        Wed, 21 Sep 2022 05:37:03 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36150 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229555AbiIUJgI (ORCPT
+        with ESMTP id S229992AbiIUJhC (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Wed, 21 Sep 2022 05:36:08 -0400
-Received: from mail-pf1-x434.google.com (mail-pf1-x434.google.com [IPv6:2607:f8b0:4864:20::434])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 14F4E8F966;
-        Wed, 21 Sep 2022 02:36:06 -0700 (PDT)
-Received: by mail-pf1-x434.google.com with SMTP id 9so5312954pfz.12;
-        Wed, 21 Sep 2022 02:36:06 -0700 (PDT)
+        Wed, 21 Sep 2022 05:37:02 -0400
+Received: from mail-pj1-x1031.google.com (mail-pj1-x1031.google.com [IPv6:2607:f8b0:4864:20::1031])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 93FE38A1DC;
+        Wed, 21 Sep 2022 02:37:01 -0700 (PDT)
+Received: by mail-pj1-x1031.google.com with SMTP id j6-20020a17090a694600b00200bba67dadso5191322pjm.5;
+        Wed, 21 Sep 2022 02:37:01 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20210112;
         h=content-transfer-encoding:mime-version:message-id:date:subject:cc
          :to:from:from:to:cc:subject:date;
-        bh=EY7f1vye1qs5rWXV1baAbSmWO5OxmPowtv9FR9+ng6A=;
-        b=He6eVgwxCpvM7FQUloccwnQCjSmNWQO5WVzHyHQ1TdXo7p5QPBqdmNjTcbS+9Kc+eN
-         7tuXkc5/B9THod1wvklYIgD5Ubq99gLiKyNlWZ6UT6DtPjHHpTae3PIQbdHnzIFgaGUf
-         IPr/aAMHNiM/F8N7iGFKvXNCLdOVJt1eLXUqIsgy5MYzuWa/k79YG7SF8Z11rlRTKC41
-         06EoD6MoaOnaDr2CS4HnRyMLvn5d2uvF5Eb/Fw6kHCq8f4e1/7a6rEksLJ2/mCfyYyF0
-         8dySI1AMW8az5Ssqpx8vHKdXOieTt74scGpsllToIadpaIqxCZ2D13dfLKlfXKhbhFXn
-         xw4w==
+        bh=sJJX94+/0btCCV0Ia97XtFOi6t10e2FyYXS5c7QNc2Y=;
+        b=VuS7lgBrSbeDQc2IODEN0g+qBQ4v0QM/IDN9g+xfeunYPG+Bw96+o21dgt0l5TcVsA
+         EV/18pVXN/4kgeykZOjEME3GhEuw2OvmZiTZIZQe8PYyN3ca6PFixW2l+B4mQhjAXvVT
+         xJJIhT4FkwjVEP6E5aJbGvyLU+Ks8dtY4NUDDHByxKJCRbhLSh/mhxsECZCUIxDn17Qv
+         mD5ouwldSzKS9yuP3hBa/0enezkP2n1G3WvFpcg8ZhvIW2NQ9c0by4yF62shWXpUUn5G
+         VcxheWM1NXIljkAIogn26QUNwmPBhpXydUqFJDozPR3mpl/jOBDGbHg5k7SyYg9al5Nt
+         Yflg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
         h=content-transfer-encoding:mime-version:message-id:date:subject:cc
          :to:from:x-gm-message-state:from:to:cc:subject:date;
-        bh=EY7f1vye1qs5rWXV1baAbSmWO5OxmPowtv9FR9+ng6A=;
-        b=QWK+VsrJibKopdkIcdrk2b58DndfBH8R/OI4JX6dw5TUIvnGhaatveY5GL3sjutvIU
-         R1EHk80bgLmEGR1AVAFd/yCzkzoueYRn+q19Z1FVA9AlfnkhCjzcbvF6VuGIzXY2lcjE
-         sPT2TUnjMJ5llUM4XEWmPlpDHmdDVxl38eEUVS9f4cnc3vfSglE1Za1g7ugBGde42JeP
-         F6DSJahYXjjs/Vt3mGcMOxAdo5jTTz+VELyt/ZzPuUBY9Hz55Ix+5ccktUgE46Qii4oh
-         WcJK1tz9F3fSn3FLZsu7KosFyqlGe2JIRGW1+isfjkoP/18q5yuA7EZOPnG3/GCZ1nsi
-         TChQ==
-X-Gm-Message-State: ACrzQf3fEUMnR0yegK3uj3VCFMZ1YU06fBTKuhlKyUaPDR1kGBKsQw+w
-        36ycXP28Ml2G+AB4jL4KRzE=
-X-Google-Smtp-Source: AMsMyM5B7rUk20yozOmMtYjdlwFX6VJiuf/VXkruaO2wVY4NOoEniG8ap3MLWcIdJcRoPsBJjVUTEQ==
-X-Received: by 2002:a63:da13:0:b0:438:e3cb:7a8c with SMTP id c19-20020a63da13000000b00438e3cb7a8cmr24169179pgh.31.1663752966383;
-        Wed, 21 Sep 2022 02:36:06 -0700 (PDT)
+        bh=sJJX94+/0btCCV0Ia97XtFOi6t10e2FyYXS5c7QNc2Y=;
+        b=MAdWEB6nqdyiG4jE7ZCaqmzzK8CYOq1IoH2pAWl/XmBP1gBlPkGW2e4H+sJUoouZpu
+         mJBfTxqmrIwZa9tLR0SBXc/dIKI2CvPz5/8sk2+VZ/rn25lwxhFMX/oxcUEvH1Bhcwpx
+         TDou5x/5qs0eB7oYri8GsxjUeFxlvxEuUq57ZbsHQqKVXyEYKksID4VWPe1hNPWLqnC0
+         YwEIU42rWR5/gtODH41lEK48Vw6zVEGMVUjMvg0PTeIPCbpjRdOB6BOWQbtEGrwVE/Z7
+         rck8Y+FEf0bOEnul+bdko83rPS268JLLi4222W3yDlEEpUg7+D6hVur+EbLr36Q6t0hV
+         mvQw==
+X-Gm-Message-State: ACrzQf2sA+uozYLZiA2+4+2eJ2z2Uj4uDvqAFqgJeYeC/jOl/PyMGzkI
+        Xg2eRbuBaK3/RKOflreQeuk=
+X-Google-Smtp-Source: AMsMyM6GNJSwlUtliFAUq2n4xXwYL/tbtbMb8gCUBtfq7LixVOSOfnDQvVSU/rXtGFclvPjrHW1Y6g==
+X-Received: by 2002:a17:90a:fc98:b0:202:52cf:c117 with SMTP id ci24-20020a17090afc9800b0020252cfc117mr8367520pjb.26.1663753021133;
+        Wed, 21 Sep 2022 02:37:01 -0700 (PDT)
 Received: from localhost.localdomain ([193.203.214.57])
-        by smtp.gmail.com with ESMTPSA id z188-20020a6265c5000000b0053e7293be0bsm1625372pfb.121.2022.09.21.02.36.04
+        by smtp.gmail.com with ESMTPSA id f126-20020a623884000000b0052e987c64efsm1663993pfa.174.2022.09.21.02.36.57
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 21 Sep 2022 02:36:06 -0700 (PDT)
+        Wed, 21 Sep 2022 02:37:00 -0700 (PDT)
 From:   cgel.zte@gmail.com
 X-Google-Original-From: ye.xingchen@zte.com.cn
 To:     acme@kernel.org
 Cc:     mingo@redhat.com, mark.rutland@arm.com,
         alexander.shishkin@linux.intel.com, jolsa@kernel.org,
-        namhyung@kernel.org, linux-perf-users@vger.kernel.org,
-        linux-kernel@vger.kernel.org, ye xingchen <ye.xingchen@zte.com.cn>,
+        namhyung@kernel.org, adrian.hunter@intel.com, andrii@kernel.org,
+        songliubraving@fb.com, irogers@google.com, davemarchevsky@fb.com,
+        linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org,
+        ye xingchen <ye.xingchen@zte.com.cn>,
         Zeal Robot <zealci@zte.com.cn>
-Subject: [PATCH linux-next] tools x86 machine: use strscpy() is more robust and safer
-Date:   Wed, 21 Sep 2022 09:36:01 +0000
-Message-Id: <20220921093601.230800-1-ye.xingchen@zte.com.cn>
+Subject: [PATCH linux-next] perf dso: use strscpy() is more robust and safer
+Date:   Wed, 21 Sep 2022 09:36:54 +0000
+Message-Id: <20220921093654.230855-1-ye.xingchen@zte.com.cn>
 X-Mailer: git-send-email 2.25.1
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
@@ -76,21 +78,21 @@ That's now the recommended way to copy NUL terminated strings.
 Reported-by: Zeal Robot <zealci@zte.com.cn>
 Signed-off-by: ye xingchen <ye.xingchen@zte.com.cn>
 ---
- tools/perf/arch/x86/util/machine.c | 2 +-
+ tools/perf/util/dso.c | 2 +-
  1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/tools/perf/arch/x86/util/machine.c b/tools/perf/arch/x86/util/machine.c
-index 31679c35d493..1ff0be147205 100644
---- a/tools/perf/arch/x86/util/machine.c
-+++ b/tools/perf/arch/x86/util/machine.c
-@@ -40,7 +40,7 @@ static int add_extra_kernel_map(struct extra_kernel_map_info *mi, u64 start,
- 	mi->maps[mi->cnt].start = start;
- 	mi->maps[mi->cnt].end   = end;
- 	mi->maps[mi->cnt].pgoff = pgoff;
--	strlcpy(mi->maps[mi->cnt].name, name, KMAP_NAME_LEN);
-+	strscpy(mi->maps[mi->cnt].name, name, KMAP_NAME_LEN);
+diff --git a/tools/perf/util/dso.c b/tools/perf/util/dso.c
+index f1a14c0ad26d..f2a684f86b82 100644
+--- a/tools/perf/util/dso.c
++++ b/tools/perf/util/dso.c
+@@ -318,7 +318,7 @@ int filename__decompress(const char *name, char *pathname,
+ 		unlink(tmpbuf);
  
- 	mi->cnt += 1;
+ 	if (pathname && (fd >= 0))
+-		strlcpy(pathname, tmpbuf, len);
++		strscpy(pathname, tmpbuf, len);
  
+ 	return fd;
+ }
 -- 
 2.25.1
