@@ -2,75 +2,96 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id ECFC1C6FA8B
-	for <linux-perf-users@archiver.kernel.org>; Wed, 21 Sep 2022 08:27:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8CF60C32771
+	for <linux-perf-users@archiver.kernel.org>; Wed, 21 Sep 2022 09:31:13 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229578AbiIUI1G (ORCPT
+        id S231589AbiIUJbK (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Wed, 21 Sep 2022 04:27:06 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47954 "EHLO
+        Wed, 21 Sep 2022 05:31:10 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53162 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230030AbiIUI0h (ORCPT
+        with ESMTP id S231718AbiIUJaw (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Wed, 21 Sep 2022 04:26:37 -0400
-Received: from casper.infradead.org (casper.infradead.org [IPv6:2001:8b0:10b:1236::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1F05162C4;
-        Wed, 21 Sep 2022 01:25:57 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=casper.20170209; h=In-Reply-To:Content-Type:MIME-Version:
-        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description;
-        bh=N+sWBwv5MxF+6L51ydEyB/jrgY323m4Yuf+2/IegXt4=; b=O7cVp4ViyjbDED2MT57s8CArTF
-        J7kYu9tRk1fnkzTktLGQXVs586llVSIWhD/yW4lryR7aPAkol4HRjkMiV1t+Nfz9hueTNgekkURIO
-        z+yUMSQ4OFaWQ49/SUgLunFG49kuif1zJp57EW1uIukdqKgKpI9GO4fpdunpOPVTBXTrTBQGnwGsf
-        9bAE3n5MrZFnNnLHrJSJcljwllDRsasEoah/KhT0pzpT2pyRAq40XdRB+k90yJo5u67lLd/SZYvLE
-        ii/M9BMy5W8s49SjqmvD/EfTCTVa7WuFktvF8/eE5sreUcEjbU8lWm+6fGBXDyYtVxJinG5S6czIU
-        wYN6zxEA==;
-Received: from j130084.upc-j.chello.nl ([24.132.130.84] helo=noisy.programming.kicks-ass.net)
-        by casper.infradead.org with esmtpsa (Exim 4.94.2 #2 (Red Hat Linux))
-        id 1oav2u-0069Vh-1E; Wed, 21 Sep 2022 08:25:28 +0000
-Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange X25519 server-signature RSA-PSS (4096 bits))
-        (Client did not present a certificate)
-        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id 948DD300074;
-        Wed, 21 Sep 2022 10:25:23 +0200 (CEST)
-Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
-        id 775192BB085DD; Wed, 21 Sep 2022 10:25:23 +0200 (CEST)
-Date:   Wed, 21 Sep 2022 10:25:23 +0200
-From:   Peter Zijlstra <peterz@infradead.org>
-To:     "Naveen N. Rao" <naveen.n.rao@linux.ibm.com>
-Cc:     anil.s.keshavamurthy@intel.com, borntraeger@linux.ibm.com,
-        catalin.marinas@arm.com, dave.hansen@linux.intel.com,
-        gor@linux.ibm.com, guoren@kernel.org, hca@linux.ibm.com,
-        hpa@zytor.com, linux-arm-kernel@lists.infradead.org,
-        linux-csky@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-perf-users@vger.kernel.org, linux-riscv@lists.infradead.org,
-        linux-s390@vger.kernel.org, mark.rutland@arm.com,
-        mhiramat@kernel.org, namit@vmware.com, palmer@dabbelt.com,
-        paul.walmsley@sifive.com, x86@kernel.org,
-        Yipeng Zou <zouyipeng@huawei.com>, chris.zjh@huawei.com,
-        liaochang1@huawei.com
-Subject: Re: [PATCH 0/2] make weak attributes in {k,u}probes
-Message-ID: <YyrKc/tpLllEBH/m@hirez.programming.kicks-ass.net>
-References: <20220917015522.44583-1-zouyipeng@huawei.com>
- <1663692878.h3l8c563n8.naveen@linux.ibm.com>
+        Wed, 21 Sep 2022 05:30:52 -0400
+Received: from mail-pl1-x62a.google.com (mail-pl1-x62a.google.com [IPv6:2607:f8b0:4864:20::62a])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E454390C43;
+        Wed, 21 Sep 2022 02:30:50 -0700 (PDT)
+Received: by mail-pl1-x62a.google.com with SMTP id jm5so4067153plb.13;
+        Wed, 21 Sep 2022 02:30:50 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20210112;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date;
+        bh=kgfZA96d0PwscAXe2/1ba6uFwFqh9GxR0E2lMqdA+hs=;
+        b=ZmLGfW5iGxdi5f6zDz48UPLyANPZyhi5zqo0Ajda8u2zHRJRWdu0AbaLvinw5AHr84
+         a9sSRaf4SeUx58NcVUjL4h/XwLt+TZalm5env/82KEhEovn4jH1XONssw9WqiwRox+Aw
+         TB+UYj3KkSPiLljzC6CbCJqIVeNrgeM1nTGOygO9LvfxsuNeHyQ3QH6suruIePBeOJF0
+         CAbHmriVEYGJqiXvw5D34eM4K4EPOr9qudnk/YBBmEGrcorDfGxTQv7NUIfTVV5Edapz
+         y4OlJ61DjYNykSr47ID6UlTWQR2uZQZeQGFO8Tusa29h1FC2M/mZYIMB2CWWygzIajxd
+         m8Kg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date;
+        bh=kgfZA96d0PwscAXe2/1ba6uFwFqh9GxR0E2lMqdA+hs=;
+        b=JUbblLEZffPSRi9Gn6WpoghiXJiSZBcHC5qdBCDs+CvtnBO25OAgZcdjdvZiJZ3xVh
+         7zY108ey7QIcydlsQ2ycNVSrNuAkFo1UOB09Jp2P9HSYUniPDONg4hbvqsbFTdJcKBF8
+         0z5oNEGTtcuGhz2tw0MhPFSmRbclekbj2ynJMNt6Afs1wtxjd0zI9ftqu9ISZXtnak0z
+         a9DXJkPc0PEYXC4zoS24QoeoyuCTiPiTD8AV91hJUAbAK369MSDHH1Esr7k6H8cdZPRe
+         Cw+SJ/JzFV+fPOnVx4szH82fb81PHsNdsrWLVpcEz6nocZFju8Y3xJObNbiAVfQwt1MP
+         19aA==
+X-Gm-Message-State: ACrzQf3Es2Sq+AvSAYilTYhwyuQvDGiDdWsArR7zE5YQaCxpi/QWJeKf
+        2JF4ceeWXSQigeyW2NsSz9c=
+X-Google-Smtp-Source: AMsMyM7uD1SUb9QLAu8VTbRYkgWpFwiFnjve+4NHST/sOmX7eM2m7L70Bc3I11ii3AaDXEJSS8Izvw==
+X-Received: by 2002:a17:902:ccc2:b0:178:29f9:5c5e with SMTP id z2-20020a170902ccc200b0017829f95c5emr3658773ple.21.1663752650254;
+        Wed, 21 Sep 2022 02:30:50 -0700 (PDT)
+Received: from localhost.localdomain ([193.203.214.57])
+        by smtp.gmail.com with ESMTPSA id c196-20020a621ccd000000b00537b8deef41sm1615141pfc.136.2022.09.21.02.30.47
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 21 Sep 2022 02:30:49 -0700 (PDT)
+From:   cgel.zte@gmail.com
+X-Google-Original-From: ye.xingchen@zte.com.cn
+To:     acme@kernel.org
+Cc:     mingo@redhat.com, mark.rutland@arm.com,
+        alexander.shishkin@linux.intel.com, jolsa@kernel.org,
+        namhyung@kernel.org, irogers@google.com,
+        linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org,
+        ye xingchen <ye.xingchen@zte.com.cn>,
+        Zeal Robot <zealci@zte.com.cn>
+Subject: [PATCH linux-next] perf svghelper: use strscpy() is more robust and safer
+Date:   Wed, 21 Sep 2022 09:30:45 +0000
+Message-Id: <20220921093045.230468-1-ye.xingchen@zte.com.cn>
+X-Mailer: git-send-email 2.25.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <1663692878.h3l8c563n8.naveen@linux.ibm.com>
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-On Tue, Sep 20, 2022 at 10:32:46PM +0530, Naveen N. Rao wrote:
-> Yipeng Zou wrote:
-> > We have some function implementation under some arch does nothing.
-> > We can mark it with weak attributes to improve.
-> 
-> That's not always an improvement. See [1] for an example, among many other
-> patches to reduce use of __weak functions in the kernel.
+From: ye xingchen <ye.xingchen@zte.com.cn>
 
-More weak 'fun':
+The implementation of strscpy() is more robust and safer.
 
-  https://lkml.kernel.org/r/20220419203807.655552918@infradead.org
+That's now the recommended way to copy NUL terminated strings.
+
+Reported-by: Zeal Robot <zealci@zte.com.cn>
+Signed-off-by: ye xingchen <ye.xingchen@zte.com.cn>
+---
+ tools/perf/util/svghelper.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/tools/perf/util/svghelper.c b/tools/perf/util/svghelper.c
+index 1e0c731fc539..1e40bcb479c2 100644
+--- a/tools/perf/util/svghelper.c
++++ b/tools/perf/util/svghelper.c
+@@ -332,7 +332,7 @@ static char *cpu_model(void)
+ 	if (file) {
+ 		while (fgets(buf, 255, file)) {
+ 			if (strstr(buf, "model name")) {
+-				strlcpy(cpu_m, &buf[13], 255);
++				strscpy(cpu_m, &buf[13], 255);
+ 				break;
+ 			}
+ 		}
+-- 
+2.25.1
