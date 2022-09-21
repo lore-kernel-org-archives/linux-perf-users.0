@@ -2,187 +2,154 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 85EA5C6FA95
-	for <linux-perf-users@archiver.kernel.org>; Wed, 21 Sep 2022 14:10:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BEF16C6FA82
+	for <linux-perf-users@archiver.kernel.org>; Wed, 21 Sep 2022 14:53:23 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229970AbiIUOKw (ORCPT
+        id S229885AbiIUOxW (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Wed, 21 Sep 2022 10:10:52 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43530 "EHLO
+        Wed, 21 Sep 2022 10:53:22 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42210 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230133AbiIUOKp (ORCPT
+        with ESMTP id S229490AbiIUOxV (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Wed, 21 Sep 2022 10:10:45 -0400
-Received: from mga04.intel.com (mga04.intel.com [192.55.52.120])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 81CD296FCD;
-        Wed, 21 Sep 2022 07:10:39 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1663769439; x=1695305439;
-  h=message-id:date:mime-version:to:cc:references:from:
-   subject:in-reply-to:content-transfer-encoding;
-  bh=1B7Dyw77wD4eqWT6V7NIZ8Z1Kfyko1bRqXwoldD6JEY=;
-  b=I8yIVKFL6tSjRIR0A8IX1Etcq/o9o2m5JqlMiBUn8GH8AAjjPUIzqie9
-   y9uDLDIagUB2VGA2Gc1vQEHjxvKz2TnnGHkMLxgOt8jceEA36MBDbSWih
-   5qnjwy9n8jptFNoJjy9zecNS7sHifyc4DNwgBiVauN4oUycyeFyPNKQfD
-   Kk+c7qogb+OPDi/nvrwBsFUV8791Hu7BslW8vM2jYpGRdZ19e6WjnI1P7
-   /N+m1d82UKg8cxz6SRXKVNMbFW1HB6Mwlyce6jhnsLxwa4WZJspvvKS/N
-   Abbt7SnbvCUWogoihlA5Xh9Zs//pP3ax0lAwCDNOhwgg49blhwwfeQP8f
-   g==;
-X-IronPort-AV: E=McAfee;i="6500,9779,10477"; a="298728605"
-X-IronPort-AV: E=Sophos;i="5.93,333,1654585200"; 
-   d="scan'208";a="298728605"
-Received: from fmsmga007.fm.intel.com ([10.253.24.52])
-  by fmsmga104.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 21 Sep 2022 07:10:39 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.93,333,1654585200"; 
-   d="scan'208";a="621699266"
-Received: from linux.intel.com ([10.54.29.200])
-  by fmsmga007.fm.intel.com with ESMTP; 21 Sep 2022 07:10:38 -0700
-Received: from [10.252.210.198] (kliang2-mobl1.ccr.corp.intel.com [10.252.210.198])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by linux.intel.com (Postfix) with ESMTPS id 98608580D43;
-        Wed, 21 Sep 2022 07:10:37 -0700 (PDT)
-Message-ID: <610fa0f0-39da-0bb2-11f5-249341e1ae7d@linux.intel.com>
-Date:   Wed, 21 Sep 2022 10:10:36 -0400
+        Wed, 21 Sep 2022 10:53:21 -0400
+Received: from mx0a-001b2d01.pphosted.com (mx0a-001b2d01.pphosted.com [148.163.156.1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3FFBF5D0CB
+        for <linux-perf-users@vger.kernel.org>; Wed, 21 Sep 2022 07:53:17 -0700 (PDT)
+Received: from pps.filterd (m0187473.ppops.net [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (8.17.1.5/8.17.1.5) with ESMTP id 28LE7Dth017301;
+        Wed, 21 Sep 2022 14:53:05 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=from : to : cc : subject
+ : date : message-id : mime-version : content-transfer-encoding; s=pp1;
+ bh=YmV7+SR+naPySmui2WtOrJWH4gwxSgpGu/JELmjByHs=;
+ b=j1imbdrF3YLDo2tYpNTdwRJDgOR8o7Tj5f8C0e8019UN+2C1bgAeHZfVyaMRVvGn3gld
+ bYjIijMNULwbWDPwhUQPzVocqibNyJf4/pDiOrDyCxwJCHXsWLazf/Lmex40NQxJXRwg
+ xOj2gwNFfu5/NmZYPmRgLe5a3ylZiCNvEPBIgxWKwYb96pvu4neM0sTJX/w4FBU2EQt5
+ 5g97U9VSe/bGrUparxjG2/+Xfy3ivenzc1t4rihPr1jRJtA/JtMQs7+lEq38GCftHned
+ fnhJUvV7W9DCJzX9t9DYX/2LYq9FFn1dJdMhgqqT8eq8OvFirZxKywcW4pRumhmZxhrr /Q== 
+Received: from ppma04fra.de.ibm.com (6a.4a.5195.ip4.static.sl-reverse.com [149.81.74.106])
+        by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 3jr3vx26nc-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Wed, 21 Sep 2022 14:53:05 +0000
+Received: from pps.filterd (ppma04fra.de.ibm.com [127.0.0.1])
+        by ppma04fra.de.ibm.com (8.16.1.2/8.16.1.2) with SMTP id 28LEprcR002568;
+        Wed, 21 Sep 2022 14:53:02 GMT
+Received: from b06avi18878370.portsmouth.uk.ibm.com (b06avi18878370.portsmouth.uk.ibm.com [9.149.26.194])
+        by ppma04fra.de.ibm.com with ESMTP id 3jn5v9412x-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Wed, 21 Sep 2022 14:53:02 +0000
+Received: from d06av25.portsmouth.uk.ibm.com (d06av25.portsmouth.uk.ibm.com [9.149.105.61])
+        by b06avi18878370.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 28LErPap41157070
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Wed, 21 Sep 2022 14:53:25 GMT
+Received: from d06av25.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 7D4E611C04C;
+        Wed, 21 Sep 2022 14:52:59 +0000 (GMT)
+Received: from d06av25.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 4FCD811C04A;
+        Wed, 21 Sep 2022 14:52:57 +0000 (GMT)
+Received: from localhost.localdomain (unknown [9.43.4.79])
+        by d06av25.portsmouth.uk.ibm.com (Postfix) with ESMTP;
+        Wed, 21 Sep 2022 14:52:57 +0000 (GMT)
+From:   Athira Rajeev <atrajeev@linux.vnet.ibm.com>
+To:     acme@kernel.org, jolsa@kernel.org, mpe@ellerman.id.au
+Cc:     linux-perf-users@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
+        maddy@linux.vnet.ibm.com, rnsastry@linux.ibm.com,
+        kjain@linux.ibm.com, disgoel@linux.vnet.ibm.com
+Subject: [PATCH V2 1/3] powerpc/perf: Fix branch_filter support for multiple filters in powerpc
+Date:   Wed, 21 Sep 2022 20:22:53 +0530
+Message-Id: <20220921145255.20972-1-atrajeev@linux.vnet.ibm.com>
+X-Mailer: git-send-email 2.35.1
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:102.0) Gecko/20100101
- Thunderbird/102.2.2
-Content-Language: en-US
-To:     Like Xu <like.xu.linux@gmail.com>,
-        Sean Christopherson <seanjc@google.com>,
-        Paolo Bonzini <pbonzini@redhat.com>
-Cc:     Peter Zijlstra <peterz@infradead.org>,
-        Jim Mattson <jmattson@google.com>,
-        linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org,
-        kvm@vger.kernel.org
-References: <20220921064827.936-1-likexu@tencent.com>
-From:   "Liang, Kan" <kan.liang@linux.intel.com>
-Subject: Re: [PATCH] KVM: x86/pmu: Add PEBS support for Intel Sapphire Rapids
-In-Reply-To: <20220921064827.936-1-likexu@tencent.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
+X-TM-AS-GCONF: 00
+X-Proofpoint-GUID: rkGd131DKWhAy6pHHNDQl0_XXTPD2-1f
+X-Proofpoint-ORIG-GUID: rkGd131DKWhAy6pHHNDQl0_XXTPD2-1f
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.205,Aquarius:18.0.895,Hydra:6.0.528,FMLib:17.11.122.1
+ definitions=2022-09-21_08,2022-09-20_02,2022-06-22_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 phishscore=0 bulkscore=0
+ lowpriorityscore=0 clxscore=1011 impostorscore=0 mlxscore=0 malwarescore=0
+ mlxlogscore=999 priorityscore=1501 spamscore=0 adultscore=0 suspectscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2209130000
+ definitions=main-2209210099
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
+For PERF_SAMPLE_BRANCH_STACK sample type, different branch_sample_type
+ie branch filters are supported. The branch filters are requested via
+event attribute "branch_sample_type". Multiple branch filters can be
+passed in event attribute.
 
+Example:
+perf record -b -o- -B --branch-filter any,ind_call true
 
-On 2022-09-21 2:48 a.m., Like Xu wrote:
-> From: Like Xu <likexu@tencent.com>
-> 
-> Virtualization support for SPR PEBS has officially available in the
-> Intel SDM (June 2022) and has been validated on late stepping machines:
-> 
-> Compared to Ice Lake Server, the PDIR counter available (Fixed 0) on SPR
-> is unchanged, but the capability is enhanced to Instruction-Accurate PDIR
-> (PDIR++), where PEBS is taken on the next instruction after the one that
-> caused the overflow. Also, it introduces a new Precise Distribution (PDist)
-> facility that eliminates the skid when a precise event is programmed
-> on general programmable counter 0.
-> 
-> For guest usage, KVM will raise attr.precise_ip to 3 in both cases
-> mentioned above, requesting the correct hardware counter (PRIR++
-> or PDist) from the perf sub-system on the host as usual.
-> 
-> Cc: Kan Liang <kan.liang@linux.intel.com>
-> Cc: Peter Zijlstra <peterz@infradead.org>
-> Signed-off-by: Like Xu <likexu@tencent.com>
-> ---
->  arch/x86/events/intel/core.c |  1 +
->  arch/x86/kvm/pmu.c           | 17 ++++++++++++++---
->  2 files changed, 15 insertions(+), 3 deletions(-)
-> 
-> diff --git a/arch/x86/events/intel/core.c b/arch/x86/events/intel/core.c
-> index 2db93498ff71..804540ba4599 100644
-> --- a/arch/x86/events/intel/core.c
-> +++ b/arch/x86/events/intel/core.c
-> @@ -6288,6 +6288,7 @@ __init int intel_pmu_init(void)
->  		x86_pmu.pebs_constraints = intel_spr_pebs_event_constraints;
->  		x86_pmu.extra_regs = intel_spr_extra_regs;
->  		x86_pmu.limit_period = spr_limit_period;
-> +		x86_pmu.pebs_ept = 1;
->  		x86_pmu.pebs_aliases = NULL;
->  		x86_pmu.pebs_prec_dist = true;
->  		x86_pmu.pebs_block = true;
+Powerpc does not support having multiple branch filters at
+sametime. In powerpc, branch filters for branch stack sampling
+is set via MMCRA IFM bits [32:33]. But currently when requesting
+for multiple filter types, the "perf record" command does not
+report any error.
 
+Example:
+perf record -b -o- -B --branch-filter any,save_type true
+perf record -b -o- -B --branch-filter any,ind_call true
 
-I think the perf patch should be a separate patch.
+The "bhrb_filter_map" function in PMU driver code does the
+validity check for supported branch filters. But this check
+is done for single filter. Hence "perf record" will proceed
+here without reporting any error.
 
-According to the SDM, the EPT-friendly PEBS is supported by all the
-platforms after ICX and ADL.
+Fix power_pmu_event_init to return EOPNOTSUPP when multiple
+branch filters are requested in the event attr.
 
-Besides the SPR, I think we should further patch the future platforms
-with PEBS format 5 as below as well, to avoid patching every future model.
+After the fix:
+perf record --branch-filter any,ind_call -- ls
+Error:
+cycles: PMU Hardware doesn't support sampling/overflow-interrupts.
+Try 'perf stat'
 
-diff --git a/arch/x86/events/intel/ds.c b/arch/x86/events/intel/ds.c
-index 3ece4ab54d2c..4608d5821e38 100644
---- a/arch/x86/events/intel/ds.c
-+++ b/arch/x86/events/intel/ds.c
-@@ -2333,8 +2333,10 @@ void __init intel_ds_init(void)
- 			x86_pmu.large_pebs_flags |= PERF_SAMPLE_TIME;
- 			break;
+Reported-by: Disha Goel <disgoel@linux.vnet.ibm.com>
+Signed-off-by: Athira Rajeev <atrajeev@linux.vnet.ibm.com>
+Reviewed-by: Madhavan Srinivasan <maddy@linux.ibm.com>
+Tested-by: Disha Goel<disgoel@linux.vnet.ibm.com>
+Reviewed-by: Kajol Jain <kjain@linux.ibm.com>
+---
+Changelog:
+ Addressed review comment from Michael Ellerman to
+ do irq restore before returning EOPNOTSUPP
 
--		case 4:
- 		case 5:
-+			x86_pmu.pebs_ept = 1;
-+			fallthrough;
-+		case 4:
- 			x86_pmu.drain_pebs = intel_pmu_drain_pebs_icl;
- 			x86_pmu.pebs_record_size = sizeof(struct pebs_basic);
- 			if (x86_pmu.intel_cap.pebs_baseline) {
+ arch/powerpc/perf/core-book3s.c | 17 +++++++++++++++++
+ 1 file changed, 17 insertions(+)
 
+diff --git a/arch/powerpc/perf/core-book3s.c b/arch/powerpc/perf/core-book3s.c
+index 13919eb96931..a939ac3b3a84 100644
+--- a/arch/powerpc/perf/core-book3s.c
++++ b/arch/powerpc/perf/core-book3s.c
+@@ -2131,6 +2131,23 @@ static int power_pmu_event_init(struct perf_event *event)
+ 	if (has_branch_stack(event)) {
+ 		u64 bhrb_filter = -1;
+ 
++		/*
++		 * powerpc does not support having multiple branch filters
++		 * at sametime. Branch filters are set via MMCRA IFM[32:33]
++		 * bits for power8 and above. Return EOPNOTSUPP when multiple
++		 * branch filters are requested in the event attr.
++		 *
++		 * When opening event via perf_event_open, branch_sample_type
++		 * gets adjusted in perf_copy_attr function. Kernel will
++		 * automatically adjust the branch_sample_type based on the
++		 * event modifier settings to include PERF_SAMPLE_BRANCH_PLM_ALL.
++		 * Hence drop the check for PERF_SAMPLE_BRANCH_PLM_ALL.
++		 */
++		if (hweight64(event->attr.branch_sample_type & ~PERF_SAMPLE_BRANCH_PLM_ALL) > 1) {
++			local_irq_restore(irq_flags);
++			return -EOPNOTSUPP;
++		}
++
+ 		if (ppmu->bhrb_filter_map)
+ 			bhrb_filter = ppmu->bhrb_filter_map(
+ 					event->attr.branch_sample_type);
+-- 
+2.31.1
 
-
-
-> diff --git a/arch/x86/kvm/pmu.c b/arch/x86/kvm/pmu.c
-> index 02f9e4f245bd..81e9d7c2332d 100644
-> --- a/arch/x86/kvm/pmu.c
-> +++ b/arch/x86/kvm/pmu.c
-> @@ -28,9 +28,18 @@
->  struct x86_pmu_capability __read_mostly kvm_pmu_cap;
->  EXPORT_SYMBOL_GPL(kvm_pmu_cap);
->  
-> -static const struct x86_cpu_id vmx_icl_pebs_cpu[] = {
-> +/* Precise Distribution of Instructions Retired (PDIR) */
-> +static const struct x86_cpu_id vmx_pebs_pdir_cpu[] = {
->  	X86_MATCH_INTEL_FAM6_MODEL(ICELAKE_D, NULL),
->  	X86_MATCH_INTEL_FAM6_MODEL(ICELAKE_X, NULL),
-> +	/* Instruction-Accurate PDIR (PDIR++) */
-> +	X86_MATCH_INTEL_FAM6_MODEL(SAPPHIRERAPIDS_X, NULL),
-> +	{}
-> +};
-> +
-> +/* Precise Distribution (PDist) */
-> +static const struct x86_cpu_id vmx_pebs_pdist_cpu[] = {
-> +	X86_MATCH_INTEL_FAM6_MODEL(SAPPHIRERAPIDS_X, NULL),
->  	{}
->  };
->  
-> @@ -181,12 +190,14 @@ static void pmc_reprogram_counter(struct kvm_pmc *pmc, u32 type,
->  		 * the accuracy of the PEBS profiling result, because the "event IP"
->  		 * in the PEBS record is calibrated on the guest side.
->  		 *
-> -		 * On Icelake everything is fine. Other hardware (GLC+, TNT+) that
-> +		 * On Icelake everything is fine. Other hardware (TNT+) that
->  		 * could possibly care here is unsupported and needs changes.
->  		 */
->  		attr.precise_ip = 1;
-> -		if (x86_match_cpu(vmx_icl_pebs_cpu) && pmc->idx == 32)
-> +		if ((pmc->idx == 32 && x86_match_cpu(vmx_pebs_pdir_cpu)) ||
-> +		    (pmc->idx == 0 && x86_match_cpu(vmx_pebs_pdist_cpu))) {
-
-
-It may be better to move the check into a function. There may be other
-conditions that require the max precise level later. Something like below.
-	if (need_max_precise(pmc))
-
-Thanks,
-Kan
-
->  			attr.precise_ip = 3;
-> +		}
->  	}
->  
->  	event = perf_event_create_kernel_counter(&attr, -1, current,
