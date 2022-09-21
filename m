@@ -2,94 +2,75 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D3C39ECAAD8
-	for <linux-perf-users@archiver.kernel.org>; Wed, 21 Sep 2022 08:10:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id ECFC1C6FA8B
+	for <linux-perf-users@archiver.kernel.org>; Wed, 21 Sep 2022 08:27:07 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229542AbiIUIKO (ORCPT
+        id S229578AbiIUI1G (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Wed, 21 Sep 2022 04:10:14 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50984 "EHLO
+        Wed, 21 Sep 2022 04:27:06 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47954 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230182AbiIUIKN (ORCPT
+        with ESMTP id S230030AbiIUI0h (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Wed, 21 Sep 2022 04:10:13 -0400
-Received: from desiato.infradead.org (desiato.infradead.org [IPv6:2001:8b0:10b:1:d65d:64ff:fe57:4e05])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0EB8D5A3E0;
-        Wed, 21 Sep 2022 01:10:12 -0700 (PDT)
+        Wed, 21 Sep 2022 04:26:37 -0400
+Received: from casper.infradead.org (casper.infradead.org [IPv6:2001:8b0:10b:1236::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1F05162C4;
+        Wed, 21 Sep 2022 01:25:57 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=desiato.20200630; h=In-Reply-To:Content-Type:MIME-Version:
+        d=infradead.org; s=casper.20170209; h=In-Reply-To:Content-Type:MIME-Version:
         References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
         Content-Transfer-Encoding:Content-ID:Content-Description;
-        bh=myAgx7o2VpwH7wgyiVn6SVJH48L3A2jtjDJPqzDduIo=; b=ZhN2CSbEv3TDZywjH9v0Tom8Mt
-        1fVSlBY6XYC0DJh8N9POo1Tx6BszTsbns5k3bvqVU9nj3p3ZxcmUbQxzRdWt+t2M/MBNbedZ3foHN
-        j8ABBziJvFA/wG1as8ZiMXtspAMLfxf8pvuUJvuC3ZLXtDMsMiaMjcZK7T5yg1mxvtodcjGZxrzyq
-        1mGdgMObKhl+YMrSr/h7pEFfu3bwQeyM8a0gcTWRJ6G123oQKkUotwxzCHpa1SpstmpuTM/gDoYnP
-        LSiPY8yfXn+bodZPVgZw4BdYhDDAf2vP6d5RRphCsimj3pYjcjqLn6GhS4RNRkHqDskmFZnNpOV4i
-        jqgZFaxA==;
+        bh=N+sWBwv5MxF+6L51ydEyB/jrgY323m4Yuf+2/IegXt4=; b=O7cVp4ViyjbDED2MT57s8CArTF
+        J7kYu9tRk1fnkzTktLGQXVs586llVSIWhD/yW4lryR7aPAkol4HRjkMiV1t+Nfz9hueTNgekkURIO
+        z+yUMSQ4OFaWQ49/SUgLunFG49kuif1zJp57EW1uIukdqKgKpI9GO4fpdunpOPVTBXTrTBQGnwGsf
+        9bAE3n5MrZFnNnLHrJSJcljwllDRsasEoah/KhT0pzpT2pyRAq40XdRB+k90yJo5u67lLd/SZYvLE
+        ii/M9BMy5W8s49SjqmvD/EfTCTVa7WuFktvF8/eE5sreUcEjbU8lWm+6fGBXDyYtVxJinG5S6czIU
+        wYN6zxEA==;
 Received: from j130084.upc-j.chello.nl ([24.132.130.84] helo=noisy.programming.kicks-ass.net)
-        by desiato.infradead.org with esmtpsa (Exim 4.94.2 #2 (Red Hat Linux))
-        id 1oaunx-00EYo0-7C; Wed, 21 Sep 2022 08:10:01 +0000
+        by casper.infradead.org with esmtpsa (Exim 4.94.2 #2 (Red Hat Linux))
+        id 1oav2u-0069Vh-1E; Wed, 21 Sep 2022 08:25:28 +0000
 Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
         (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
          key-exchange X25519 server-signature RSA-PSS (4096 bits))
         (Client did not present a certificate)
-        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id 9CC683001F3;
-        Wed, 21 Sep 2022 10:10:00 +0200 (CEST)
+        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id 948DD300074;
+        Wed, 21 Sep 2022 10:25:23 +0200 (CEST)
 Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
-        id 535882019EC98; Wed, 21 Sep 2022 10:10:00 +0200 (CEST)
-Date:   Wed, 21 Sep 2022 10:10:00 +0200
+        id 775192BB085DD; Wed, 21 Sep 2022 10:25:23 +0200 (CEST)
+Date:   Wed, 21 Sep 2022 10:25:23 +0200
 From:   Peter Zijlstra <peterz@infradead.org>
-To:     Ingo Molnar <mingo@kernel.org>
-Cc:     Li Zhong <floridsleeves@gmail.com>,
-        linux-perf-users@vger.kernel.org, bpf@vger.kernel.org,
-        namhyung@kernel.org, jolsa@kernel.org,
-        alexander.shishkin@linux.intel.com, mark.rutland@arm.com,
-        acme@kernel.org, mingo@redhat.com
-Subject: Re: [PATCH v2] kernel/events/core: check return value of
- task_function_call()
-Message-ID: <YyrG2JL/hW5m7gSl@hirez.programming.kicks-ass.net>
-References: <20220919191611.1589661-1-floridsleeves@gmail.com>
- <YyrBYE4iMvei/nNC@gmail.com>
+To:     "Naveen N. Rao" <naveen.n.rao@linux.ibm.com>
+Cc:     anil.s.keshavamurthy@intel.com, borntraeger@linux.ibm.com,
+        catalin.marinas@arm.com, dave.hansen@linux.intel.com,
+        gor@linux.ibm.com, guoren@kernel.org, hca@linux.ibm.com,
+        hpa@zytor.com, linux-arm-kernel@lists.infradead.org,
+        linux-csky@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-perf-users@vger.kernel.org, linux-riscv@lists.infradead.org,
+        linux-s390@vger.kernel.org, mark.rutland@arm.com,
+        mhiramat@kernel.org, namit@vmware.com, palmer@dabbelt.com,
+        paul.walmsley@sifive.com, x86@kernel.org,
+        Yipeng Zou <zouyipeng@huawei.com>, chris.zjh@huawei.com,
+        liaochang1@huawei.com
+Subject: Re: [PATCH 0/2] make weak attributes in {k,u}probes
+Message-ID: <YyrKc/tpLllEBH/m@hirez.programming.kicks-ass.net>
+References: <20220917015522.44583-1-zouyipeng@huawei.com>
+ <1663692878.h3l8c563n8.naveen@linux.ibm.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <YyrBYE4iMvei/nNC@gmail.com>
+In-Reply-To: <1663692878.h3l8c563n8.naveen@linux.ibm.com>
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-On Wed, Sep 21, 2022 at 09:46:40AM +0200, Ingo Molnar wrote:
+On Tue, Sep 20, 2022 at 10:32:46PM +0530, Naveen N. Rao wrote:
+> Yipeng Zou wrote:
+> > We have some function implementation under some arch does nothing.
+> > We can mark it with weak attributes to improve.
 > 
-> * Li Zhong <floridsleeves@gmail.com> wrote:
-> 
-> > From: lily <floridsleeves@gmail.com>
-> > 
-> > Check the return value of task_function_call(), which could be error
-> > code when the execution fails. We log this on info level.
-> > 
-> > Signed-off-by: Li Zhong <floridsleeves@gmail.com>
-> > ---
-> >  kernel/events/core.c | 5 ++++-
-> >  1 file changed, 4 insertions(+), 1 deletion(-)
-> > 
-> > diff --git a/kernel/events/core.c b/kernel/events/core.c
-> > index 2621fd24ad26..3848631b009c 100644
-> > --- a/kernel/events/core.c
-> > +++ b/kernel/events/core.c
-> > @@ -13520,7 +13520,10 @@ static void perf_cgroup_attach(struct cgroup_taskset *tset)
-> >  	struct cgroup_subsys_state *css;
-> >  
-> >  	cgroup_taskset_for_each(task, css, tset)
-> > -		task_function_call(task, __perf_cgroup_move, task);
-> > +		if (!task_function_call(task, __perf_cgroup_move, task)) {
-> > +			printk(KERN_INFO "perf: this process isn't running!\n");
-> > +			continue;
-> 
-> If this is a 'should never happen' condition, then this should really be 
-> WARN_ON_ONCE().
-> 
-> (If it can happen, then polluting the syslog is wrong.)
+> That's not always an improvement. See [1] for an example, among many other
+> patches to reduce use of __weak functions in the kernel.
 
-It can happen and is just fine. If this task_function_call() fails, it
-means the context switch that made it fail ensured the new values have
-been picked up.
+More weak 'fun':
+
+  https://lkml.kernel.org/r/20220419203807.655552918@infradead.org
