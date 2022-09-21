@@ -2,27 +2,27 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F1E53ECAAD8
-	for <linux-perf-users@archiver.kernel.org>; Wed, 21 Sep 2022 12:55:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B7E5DC32771
+	for <linux-perf-users@archiver.kernel.org>; Wed, 21 Sep 2022 12:55:17 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229688AbiIUMzP (ORCPT
+        id S229852AbiIUMzP (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
         Wed, 21 Sep 2022 08:55:15 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38244 "EHLO
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38192 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229718AbiIUMzN (ORCPT
+        with ESMTP id S229873AbiIUMzN (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
         Wed, 21 Sep 2022 08:55:13 -0400
 Received: from szxga01-in.huawei.com (szxga01-in.huawei.com [45.249.212.187])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6AC86BAC;
-        Wed, 21 Sep 2022 05:55:11 -0700 (PDT)
-Received: from dggpemm500020.china.huawei.com (unknown [172.30.72.55])
-        by szxga01-in.huawei.com (SkyGuard) with ESMTP id 4MXdZG2Yl7zlW4Q;
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 242E93137B;
+        Wed, 21 Sep 2022 05:55:12 -0700 (PDT)
+Received: from dggpemm500024.china.huawei.com (unknown [172.30.72.56])
+        by szxga01-in.huawei.com (SkyGuard) with ESMTP id 4MXdZG6W7pzlVwv;
         Wed, 21 Sep 2022 20:51:02 +0800 (CST)
 Received: from dggpemm500013.china.huawei.com (7.185.36.172) by
- dggpemm500020.china.huawei.com (7.185.36.49) with Microsoft SMTP Server
+ dggpemm500024.china.huawei.com (7.185.36.203) with Microsoft SMTP Server
  (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2375.31; Wed, 21 Sep 2022 20:55:09 +0800
+ 15.1.2375.31; Wed, 21 Sep 2022 20:55:10 +0800
 Received: from ubuntu1804.huawei.com (10.67.175.36) by
  dggpemm500013.china.huawei.com (7.185.36.172) with Microsoft SMTP Server
  (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
@@ -39,9 +39,9 @@ CC:     <paul.walmsley@sifive.com>, <palmer@dabbelt.com>,
         <mhiramat@kernel.org>, <rostedt@goodmis.org>,
         <keescook@chromium.org>, <catalin.marinas@arm.com>,
         <chenzhongjin@huawei.com>
-Subject: [PATCH for-next v2 1/4] riscv: stacktrace: Replace walk_stackframe with arch_stack_walk
-Date:   Wed, 21 Sep 2022 20:51:24 +0800
-Message-ID: <20220921125128.33913-2-chenzhongjin@huawei.com>
+Subject: [PATCH for-next v2 4/4] riscv: stacktrace: Implement stacktrace for irq
+Date:   Wed, 21 Sep 2022 20:51:27 +0800
+Message-ID: <20220921125128.33913-5-chenzhongjin@huawei.com>
 X-Mailer: git-send-email 2.17.1
 In-Reply-To: <20220921125128.33913-1-chenzhongjin@huawei.com>
 References: <20220921125128.33913-1-chenzhongjin@huawei.com>
@@ -55,131 +55,130 @@ Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-walk_stackframe can be all replaced by arch_stack_walk.
+After adding encoded fp onto stack to record pt_regs, now the
+unwinder have ability to unwind frame through irq.
 
-Since walk_stackframe is only called by arch_stack_walk and their only
-difference is the argument sequence.
+There is two steps to unwind irq frame and the interrupted frame:
+
+1. When there is an encoded fp on stack, we can get the pt_regs
+and unwind frame by (regs->epc) and (regs->s0).
+
+2. To unwind the interrupted frame, there is two possibilities,
+we can determine the situation by checking whether the value in
+frame->ra position is a fp value.
+
+If there is a fp in ra position:
+We are inside a leaf frame and there is only fp on ra position.
+Get fp from ra position and get next pc from pt_regs.
+Else:
+Just get fp and next pc from stack frame.
+
+Stacktrace before this patch:
+
+ Call Trace:
+  ...
+  [<ffffffff800aa692>] __flush_smp_call_function_queue+0xde/0x1fa
+  [<ffffffff800ab404>] generic_smp_call_function_single_interrupt+0x22/0x2a
+  [<ffffffff800077b2>] handle_IPI+0xaa/0x108
+  [<ffffffff803f827e>] riscv_intc_irq+0x56/0x6e
+  [<ffffffff808d94b6>] generic_handle_arch_irq+0x4c/0x76
+  [<ffffffff80003ad0>] ret_from_exception+0x0/0xc
+
+Stacktrace after this patch:
+
+ Call Trace:
+  ...
+  [<ffffffff800aa6da>] __flush_smp_call_function_queue+0xde/0x1fa
+  [<ffffffff800ab44c>] generic_smp_call_function_single_interrupt+0x22/0x2a
+  [<ffffffff800077fa>] handle_IPI+0xaa/0x108
+  [<ffffffff803f82c6>] riscv_intc_irq+0x56/0x6e
+  [<ffffffff808d94fe>] generic_handle_arch_irq+0x4c/0x76
+  [<ffffffff80003ad0>] ret_from_exception+0x0/0xc
++ [<ffffffff80003d52>] arch_cpu_idle+0x22/0x28
++ [<ffffffff808e23a8>] default_idle_call+0x44/0xee
++ [<ffffffff80056ece>] do_idle+0x116/0x126
++ [<ffffffff8005706e>] cpu_startup_entry+0x36/0x38
++ [<ffffffff808d99ae>] kernel_init+0x0/0x15a
++ [<ffffffff80a007a0>] arch_post_acpi_subsys_init+0x0/0x38
++ [<ffffffff80a0100c>] start_kernel+0x7c4/0x7f2
 
 Signed-off-by: Chen Zhongjin <chenzhongjin@huawei.com>
 ---
- arch/riscv/include/asm/stacktrace.h |  2 --
- arch/riscv/kernel/perf_callchain.c  |  2 +-
- arch/riscv/kernel/stacktrace.c      | 29 +++++++++++++----------------
- 3 files changed, 14 insertions(+), 19 deletions(-)
+ arch/riscv/kernel/stacktrace.c | 45 ++++++++++++++++++++++++++++------
+ 1 file changed, 38 insertions(+), 7 deletions(-)
 
-diff --git a/arch/riscv/include/asm/stacktrace.h b/arch/riscv/include/asm/stacktrace.h
-index 3450c1912afd..b6cd3eddfd38 100644
---- a/arch/riscv/include/asm/stacktrace.h
-+++ b/arch/riscv/include/asm/stacktrace.h
-@@ -11,8 +11,6 @@ struct stackframe {
- 	unsigned long ra;
- };
- 
--extern void notrace walk_stackframe(struct task_struct *task, struct pt_regs *regs,
--				    bool (*fn)(void *, unsigned long), void *arg);
- extern void dump_backtrace(struct pt_regs *regs, struct task_struct *task,
- 			   const char *loglvl);
- 
-diff --git a/arch/riscv/kernel/perf_callchain.c b/arch/riscv/kernel/perf_callchain.c
-index 3348a61de7d9..c023e0b1eb81 100644
---- a/arch/riscv/kernel/perf_callchain.c
-+++ b/arch/riscv/kernel/perf_callchain.c
-@@ -74,5 +74,5 @@ static bool fill_callchain(void *entry, unsigned long pc)
- void perf_callchain_kernel(struct perf_callchain_entry_ctx *entry,
- 			   struct pt_regs *regs)
- {
--	walk_stackframe(NULL, regs, fill_callchain, entry);
-+	arch_stack_walk(fill_callchain, entry, NULL, regs);
- }
 diff --git a/arch/riscv/kernel/stacktrace.c b/arch/riscv/kernel/stacktrace.c
-index 08d11a53f39e..b51e32d50a0e 100644
+index e84e21868a3e..976dc298ab3b 100644
 --- a/arch/riscv/kernel/stacktrace.c
 +++ b/arch/riscv/kernel/stacktrace.c
-@@ -16,8 +16,9 @@
+@@ -16,29 +16,60 @@
  
  #ifdef CONFIG_FRAME_POINTER
  
--void notrace walk_stackframe(struct task_struct *task, struct pt_regs *regs,
--			     bool (*fn)(void *, unsigned long), void *arg)
-+noinline notrace void arch_stack_walk(stack_trace_consume_fn consume_entry,
-+		  void *cookie, struct task_struct *task,
-+		  struct pt_regs *regs)
++static struct pt_regs *decode_frame_pointer(unsigned long fp)
++{
++	if (!(fp & 0x1))
++		return NULL;
++
++	return (struct pt_regs *)(fp & ~0x1);
++}
++
+ static int notrace unwind_next(struct unwind_state *state)
  {
- 	unsigned long fp, sp, pc;
- 	int level = 0;
-@@ -29,7 +30,7 @@ void notrace walk_stackframe(struct task_struct *task, struct pt_regs *regs,
- 	} else if (task == NULL || task == current) {
- 		fp = (unsigned long)__builtin_frame_address(0);
- 		sp = current_stack_pointer;
--		pc = (unsigned long)walk_stackframe;
-+		pc = (unsigned long)arch_stack_walk;
+ 	unsigned long low, high, fp;
+ 	struct stackframe *frame;
++	struct pt_regs *regs;
+ 
+-	fp = state->fp;
++	regs = decode_frame_pointer(state->fp);
+ 
+ 	/* Validate frame pointer */
+-	low = state->sp + sizeof(struct stackframe);
++	if (regs) {
++		if user_mode(regs)
++			return -1;
++
++		fp = (unsigned long)regs;
++		low = state->sp;
++	} else {
++		fp = state->fp;
++		low = state->sp + sizeof(struct stackframe);
++	}
+ 	high = ALIGN(low, THREAD_SIZE);
+ 
+ 	if (fp < low || fp > high || fp & 0x7)
+ 		return -EINVAL;
+ 
+-	/* Unwind stack frame */
+ 	frame = (struct stackframe *)fp - 1;
+ 	state->sp = fp;
+ 
+-	if (state->regs && state->regs->epc == state->pc &&
+-		fp & 0x7) {
+-		state->fp = frame->ra;
+-		state->pc = state->regs->ra;
++	if (regs) {
++	/* Unwind from irq to interrupted function */
++		state->fp = regs->s0;
++		state->pc = regs->epc;
++		state->regs = regs;
++	} else if (state->regs && state->regs->epc == state->pc) {
++	/* Unwind from interrupted function to caller*/
++		if (frame->ra < low || frame->ra > high) {
++		/* normal function */
++			state->fp = frame->fp;
++			state->pc = frame->ra;
++		} else {
++		/* leaf function */
++			state->fp = frame->ra;
++			state->pc = state->regs->ra;
++		}
++		state->regs = NULL;
  	} else {
- 		/* task blocked in __switch_to */
- 		fp = task->thread.s[0];
-@@ -41,7 +42,8 @@ void notrace walk_stackframe(struct task_struct *task, struct pt_regs *regs,
- 		unsigned long low, high;
- 		struct stackframe *frame;
- 
--		if (unlikely(!__kernel_text_address(pc) || (level++ >= 1 && !fn(arg, pc))))
-+		if (unlikely(!__kernel_text_address(pc) ||
-+		   (level++ >= 1 && !consume_entry(cookie, pc))))
- 			break;
- 
- 		/* Validate frame pointer */
-@@ -66,8 +68,9 @@ void notrace walk_stackframe(struct task_struct *task, struct pt_regs *regs,
- 
- #else /* !CONFIG_FRAME_POINTER */
- 
--void notrace walk_stackframe(struct task_struct *task,
--	struct pt_regs *regs, bool (*fn)(void *, unsigned long), void *arg)
-+noinline notrace void arch_stack_walk(stack_trace_consume_fn consume_entry,
-+		  void *cookie, struct task_struct *task,
-+		  struct pt_regs *regs)
- {
- 	unsigned long sp, pc;
- 	unsigned long *ksp;
-@@ -77,7 +80,7 @@ void notrace walk_stackframe(struct task_struct *task,
- 		pc = instruction_pointer(regs);
- 	} else if (task == NULL || task == current) {
- 		sp = current_stack_pointer;
--		pc = (unsigned long)walk_stackframe;
-+		pc = (unsigned long)arch_stack_walk;
- 	} else {
- 		/* task blocked in __switch_to */
- 		sp = task->thread.sp;
-@@ -89,7 +92,7 @@ void notrace walk_stackframe(struct task_struct *task,
- 
- 	ksp = (unsigned long *)sp;
- 	while (!kstack_end(ksp)) {
--		if (__kernel_text_address(pc) && unlikely(!fn(arg, pc)))
-+		if (__kernel_text_address(pc) && unlikely(!consume_entry(cookie, pc)))
- 			break;
- 		pc = (*ksp++) - 0x4;
- 	}
-@@ -108,7 +111,7 @@ static bool print_trace_address(void *arg, unsigned long pc)
- noinline void dump_backtrace(struct pt_regs *regs, struct task_struct *task,
- 		    const char *loglvl)
- {
--	walk_stackframe(task, regs, print_trace_address, (void *)loglvl);
-+	arch_stack_walk(print_trace_address, (void *)loglvl, task, regs);
- }
- 
- void show_stack(struct task_struct *task, unsigned long *sp, const char *loglvl)
-@@ -133,13 +136,7 @@ unsigned long __get_wchan(struct task_struct *task)
- 
- 	if (!try_get_task_stack(task))
- 		return 0;
--	walk_stackframe(task, NULL, save_wchan, &pc);
-+	arch_stack_walk(save_wchan, &pc, task, NULL);
- 	put_task_stack(task);
- 	return pc;
- }
--
--noinline void arch_stack_walk(stack_trace_consume_fn consume_entry, void *cookie,
--		     struct task_struct *task, struct pt_regs *regs)
--{
--	walk_stackframe(task, regs, consume_entry, cookie);
--}
++	/* Unwind from normal stack frame */
+ 		state->fp = frame->fp;
+ 		state->pc = ftrace_graph_ret_addr(current, NULL, frame->ra,
+ 							(unsigned long *)fp - 1);
 -- 
 2.17.1
 
