@@ -2,170 +2,201 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5AC62C6FA8B
-	for <linux-perf-users@archiver.kernel.org>; Wed, 21 Sep 2022 16:50:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 544B8ECAAD8
+	for <linux-perf-users@archiver.kernel.org>; Wed, 21 Sep 2022 17:09:05 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231781AbiIUQul (ORCPT
+        id S230468AbiIURJD (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Wed, 21 Sep 2022 12:50:41 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51000 "EHLO
+        Wed, 21 Sep 2022 13:09:03 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60280 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231130AbiIUQuR (ORCPT
+        with ESMTP id S230369AbiIURJA (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Wed, 21 Sep 2022 12:50:17 -0400
-Received: from mga14.intel.com (mga14.intel.com [192.55.52.115])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 355755301C;
-        Wed, 21 Sep 2022 09:45:38 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1663778738; x=1695314738;
-  h=from:to:cc:subject:date:message-id:in-reply-to:
-   references:mime-version:content-transfer-encoding;
-  bh=Cp1pNg+16opBPY1j2Ba8kIc+eTwZIbA4gQJJdqATjn0=;
-  b=YducHbOjYHA/w9+s+pFGMNEiT9h/1SKuqy7H0VhF1z7tpILKknYo3r5h
-   0ZjNyKtV9C2OleJnQr+pJ+ywKC55KMkHWbOEyrQX+klO6ZSmOgDkWDwUv
-   Y6bHfjDtc8pxVhLgnL0uYGxFRpxjY+RdfjT0PZ1QRPwg07wOG7SORcLEa
-   B43LXQN8DjXuEXo2BP/EygmqhQI2NUmpJk9Th14CtJcgSwvitDCHf9GSc
-   P9pn6WJ0dfvReH13iHK6UFHR2Dxw0mweuMD+zmLe5hb4e73R3XLzpghmt
-   v5qzRdG+xozhXhx0C88ZjkHF0AN8ARYttPA+XjuHwIcN+7qq+4C/Dhqh5
-   A==;
-X-IronPort-AV: E=McAfee;i="6500,9779,10477"; a="300044986"
-X-IronPort-AV: E=Sophos;i="5.93,333,1654585200"; 
-   d="scan'208";a="300044986"
-Received: from fmsmga005.fm.intel.com ([10.253.24.32])
-  by fmsmga103.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 21 Sep 2022 09:45:37 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.93,333,1654585200"; 
-   d="scan'208";a="948227970"
-Received: from lxy-dell.sh.intel.com ([10.239.48.38])
-  by fmsmga005.fm.intel.com with ESMTP; 21 Sep 2022 09:45:33 -0700
-From:   Xiaoyao Li <xiaoyao.li@intel.com>
-To:     Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Jiri Olsa <jolsa@kernel.org>,
-        Namhyung Kim <namhyung@kernel.org>,
-        Sean Christopherson <seanjc@google.com>,
-        Paolo Bonzini <pbonzini@redhat.com>, wei.w.wang@intel.com,
-        kan.liang@linux.intel.com
-Cc:     xiaoyao.li@intel.com, linux-perf-users@vger.kernel.org,
-        linux-kernel@vger.kernel.org, kvm@vger.kernel.org
-Subject: [RFC PATCH v2 3/3] KVM: VMX: Stop/resume host PT before/after VMX transition when PT_MODE_HOST_GUEST
-Date:   Thu, 22 Sep 2022 00:45:21 +0800
-Message-Id: <20220921164521.2858932-4-xiaoyao.li@intel.com>
-X-Mailer: git-send-email 2.27.0
-In-Reply-To: <20220921164521.2858932-1-xiaoyao.li@intel.com>
-References: <20220921164521.2858932-1-xiaoyao.li@intel.com>
+        Wed, 21 Sep 2022 13:09:00 -0400
+Received: from mx0a-001b2d01.pphosted.com (mx0a-001b2d01.pphosted.com [148.163.156.1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1FECD95ADB
+        for <linux-perf-users@vger.kernel.org>; Wed, 21 Sep 2022 10:08:59 -0700 (PDT)
+Received: from pps.filterd (m0098410.ppops.net [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (8.17.1.5/8.17.1.5) with ESMTP id 28LGRgst025692;
+        Wed, 21 Sep 2022 17:08:49 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=from : to : cc : subject
+ : date : message-id : mime-version : content-type :
+ content-transfer-encoding; s=pp1;
+ bh=AMCejasndF/RRn3K44dKJz4fxASMQaaBGTH5TqwHxbY=;
+ b=O2eHz4wuDDuQEJoV8zOc3u7oywS+WomiHxrYN+5Qk28A/TYX/uuG9eLzU11mNIXmbnEl
+ JW5rEWbpHwDpEOq4MqfVV8aFMFMhLa6l+KjA1vipKo2z9DilhxyPAy0nCiTp+24yXaVo
+ k4ZfLegJg33q5zfus9/pU2NBWvRVkMn5UNjyK0Mdwd/2HOcX1OzQTni6oT+nvINLFkPI
+ 4lca8OGm3TDv/4WQw+AvC3m9EjRC9if7CqqTDX8eRGCaP5Ce9pUQ9WeOH2/F+U2S8w84
+ VZwGpquShJRLV1QoxFUKeMvRI9gJ5ga+NB9uBjqviYO0caaPXT2inffZ+ewMi4/gRBTE SQ== 
+Received: from ppma04ams.nl.ibm.com (63.31.33a9.ip4.static.sl-reverse.com [169.51.49.99])
+        by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 3jr2dfjs1k-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Wed, 21 Sep 2022 17:08:49 +0000
+Received: from pps.filterd (ppma04ams.nl.ibm.com [127.0.0.1])
+        by ppma04ams.nl.ibm.com (8.16.1.2/8.16.1.2) with SMTP id 28LH5EaX027275;
+        Wed, 21 Sep 2022 17:08:47 GMT
+Received: from b06cxnps4074.portsmouth.uk.ibm.com (d06relay11.portsmouth.uk.ibm.com [9.149.109.196])
+        by ppma04ams.nl.ibm.com with ESMTP id 3jn5v8nhru-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Wed, 21 Sep 2022 17:08:46 +0000
+Received: from d06av23.portsmouth.uk.ibm.com (d06av23.portsmouth.uk.ibm.com [9.149.105.59])
+        by b06cxnps4074.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 28LH8h8F46268784
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Wed, 21 Sep 2022 17:08:43 GMT
+Received: from d06av23.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id B159FA4051;
+        Wed, 21 Sep 2022 17:08:43 +0000 (GMT)
+Received: from d06av23.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 79C87A4040;
+        Wed, 21 Sep 2022 17:08:41 +0000 (GMT)
+Received: from localhost.localdomain (unknown [9.43.4.79])
+        by d06av23.portsmouth.uk.ibm.com (Postfix) with ESMTP;
+        Wed, 21 Sep 2022 17:08:41 +0000 (GMT)
+From:   Athira Rajeev <atrajeev@linux.vnet.ibm.com>
+To:     acme@kernel.org, jolsa@kernel.org, mpe@ellerman.id.au
+Cc:     linux-perf-users@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
+        maddy@linux.vnet.ibm.com, rnsastry@linux.ibm.com,
+        kjain@linux.ibm.com, disgoel@linux.vnet.ibm.com
+Subject: [PATCH 1/2] tools/perf/tests: Fix string substitutions in build id test
+Date:   Wed, 21 Sep 2022 22:38:38 +0530
+Message-Id: <20220921170839.21927-1-atrajeev@linux.vnet.ibm.com>
+X-Mailer: git-send-email 2.35.1
 MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
+X-TM-AS-GCONF: 00
+X-Proofpoint-ORIG-GUID: xEsWktrbS4PzU1xSapvRKTcewwqk74qG
+X-Proofpoint-GUID: xEsWktrbS4PzU1xSapvRKTcewwqk74qG
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.205,Aquarius:18.0.895,Hydra:6.0.528,FMLib:17.11.122.1
+ definitions=2022-09-21_09,2022-09-20_02,2022-06-22_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 suspectscore=0 clxscore=1015
+ spamscore=0 impostorscore=0 mlxscore=0 bulkscore=0 phishscore=0
+ mlxlogscore=999 malwarescore=0 lowpriorityscore=0 adultscore=0
+ priorityscore=1501 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2209130000 definitions=main-2209210116
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-Current implementation in pt_guest_enter() has two issues when pt mode
-is PT_MODE_HOST_GUEST.
+The perf test named “build id cache operations” skips with below
+error on some distros:
 
-1. It relies on VM_ENTRY_LOAD_IA32_RTIT_CTL to disable host's Intel PT
-   for the case that host enables PT while guest not.
+<<>>
+ 78: build id cache operations                                       :
+test child forked, pid 111101
+WARNING: wine not found. PE binaries will not be run.
+test binaries: /tmp/perf.ex.SHA1.PKz /tmp/perf.ex.MD5.Gt3 ./tests/shell/../pe-file.exe
+DEBUGINFOD_URLS=
+Adding 4abd406f041feb4f10ecde3fc30fd0639e1a91cb /tmp/perf.ex.SHA1.PKz: Ok
+build id: 4abd406f041feb4f10ecde3fc30fd0639e1a91cb
+./tests/shell/buildid.sh: 69: ./tests/shell/buildid.sh: Bad substitution
+test child finished with -2
+build id cache operations: Skip
+<<>>
 
-   However, it causes VM entry failure due to violating the requirement
-   stated in SDM "VM-Execution Control Fields"
+The test script "tests/shell/buildid.sh" uses some of the
+string substitution ways which are supported in bash, but not in
+"sh" or other shells. Above error on line number 69 that reports
+"Bad substitution" is:
 
-     If the logical processor is operating with Intel PT enabled (if
-     IA32_RTIT_CTL.TraceEn = 1) at the time of VM entry, the "load
-     IA32_RTIT_CTL" VM-entry control must be 0.
+<<>>
+link=${build_id_dir}/.build-id/${id:0:2}/${id:2}
+<<>>
 
-2. In the case both host and guest enable Intel PT, it disables host's
-   Intel PT by manually clearing MSR_IA32_RTIT_CTL for the purpose to
-   context switch host and guest's PT configurations.
+Here the way of getting first two characters from id ie,
+${id:0:2} and similarly expressions like ${id:2} is not
+recognised in "sh". So the line errors and instead of
+hitting failure, the test gets skipped as shown in logs.
+So the syntax issue causes test not to be executed in
+such cases. Similarly usage : "${@: -1}" [ to pick last
+argument passed to a function] in “test_record” doesn’t
+work in all distros.
 
-   However, PT PMI can be delivered later and before VM entry. In the PT
-   PMI handler, it will a) update the host PT MSRs which leads to what KVM
-   stores in vmx->pt_desc.host becomes stale, and b) re-enable Intel PT
-   which leads to VM entry failure as #1.
+Fix this by using alternative way with "cut" command
+to pick "n" characters from the string. Also fix the usage
+of “${@: -1}” to work in all cases.
 
-To fix the above two issues, 1) grab and store host PT perf event and
-disable/enable host PT before vm-enter/ after vm-exit. 2) drop host
-pt_ctx and the logic to save/restore host PT MSRs since host PT driver
-doesn't rely on the previous value of PT MSR, i.e., the re-enabling of PT
-event after VM-exit re-initializes all the PT MSRs that it cares.
+Another usage in “test_record” is:
+<<>>
+${perf} record --buildid-all -o ${data} $@ &> ${log}
+<<>>
 
-Signed-off-by: Xiaoyao Li <xiaoyao.li@intel.com>
+This causes the perf record to start in background and
+Results in the data file not being created by the time
+"check" function is invoked. Below log shows perf record
+result getting displayed after the call to "check" function.
+
+<<>>
+running: perf record /tmp/perf.ex.SHA1.EAU
+build id: 4abd406f041feb4f10ecde3fc30fd0639e1a91cb
+link: /tmp/perf.debug.mLT/.build-id/4a/bd406f041feb4f10ecde3fc30fd0639e1a91cb
+failed: link /tmp/perf.debug.mLT/.build-id/4a/bd406f041feb4f10ecde3fc30fd0639e1a91cb does not exist
+test child finished with -1
+build id cache operations: FAILED!
+root@machine:~/athira/linux/tools/perf# Couldn't synthesize bpf events.
+[ perf record: Woken up 1 times to write data ]
+[ perf record: Captured and wrote 0.010 MB /tmp/perf.data.bFF ]
+<<>>
+
+Fix this by redirecting output instead of using “&” which
+starts the command in background.
+
+Signed-off-by: Athira Rajeev <atrajeev@linux.vnet.ibm.com>
 ---
- arch/x86/kvm/vmx/vmx.c | 31 +++++++++++++------------------
- arch/x86/kvm/vmx/vmx.h |  2 +-
- 2 files changed, 14 insertions(+), 19 deletions(-)
+ tools/perf/tests/shell/buildid.sh | 16 +++++++++-------
+ 1 file changed, 9 insertions(+), 7 deletions(-)
 
-diff --git a/arch/x86/kvm/vmx/vmx.c b/arch/x86/kvm/vmx/vmx.c
-index c9b49a09e6b5..df1a16264bb6 100644
---- a/arch/x86/kvm/vmx/vmx.c
-+++ b/arch/x86/kvm/vmx/vmx.c
-@@ -1124,37 +1124,32 @@ static inline void pt_save_msr(struct pt_ctx *ctx, u32 addr_range)
+diff --git a/tools/perf/tests/shell/buildid.sh b/tools/perf/tests/shell/buildid.sh
+index f05670d1e39e..3512c4423d48 100755
+--- a/tools/perf/tests/shell/buildid.sh
++++ b/tools/perf/tests/shell/buildid.sh
+@@ -66,7 +66,7 @@ check()
+ 	esac
+ 	echo "build id: ${id}"
  
- static void pt_guest_enter(struct vcpu_vmx *vmx)
+-	link=${build_id_dir}/.build-id/${id:0:2}/${id:2}
++	link=${build_id_dir}/.build-id/$(echo ${id}|cut -c 1-2)/$(echo ${id}|cut -c 3-)
+ 	echo "link: ${link}"
+ 
+ 	if [ ! -h $link ]; then
+@@ -74,7 +74,7 @@ check()
+ 		exit 1
+ 	fi
+ 
+-	file=${build_id_dir}/.build-id/${id:0:2}/`readlink ${link}`/elf
++	file=${build_id_dir}/.build-id/$(echo ${id}|cut -c 1-2)/`readlink ${link}`/elf
+ 	echo "file: ${file}"
+ 
+ 	if [ ! -x $file ]; then
+@@ -117,20 +117,22 @@ test_record()
  {
-+	struct perf_event *event;
-+
- 	if (vmx_pt_mode_is_system())
- 		return;
+ 	data=$(mktemp /tmp/perf.data.XXX)
+ 	build_id_dir=$(mktemp -d /tmp/perf.debug.XXX)
+-	log=$(mktemp /tmp/perf.log.XXX)
++	log_out=$(mktemp /tmp/perf.log.out.XXX)
++	log_err=$(mktemp /tmp/perf.log.err.XXX)
+ 	perf="perf --buildid-dir ${build_id_dir}"
++	eval last=\${$#}
  
--	/*
--	 * GUEST_IA32_RTIT_CTL is already set in the VMCS.
--	 * Save host state before VM entry.
--	 */
--	rdmsrl(MSR_IA32_RTIT_CTL, vmx->pt_desc.host.ctl);
--	if (vmx->pt_desc.guest.ctl & RTIT_CTL_TRACEEN) {
--		wrmsrl(MSR_IA32_RTIT_CTL, 0);
--		pt_save_msr(&vmx->pt_desc.host, vmx->pt_desc.num_address_ranges);
-+	event = pt_get_curr_event();
-+	if (event)
-+		perf_event_disable_local(event);
-+	vmx->pt_desc.host_event = event;
-+
-+	if (vmx->pt_desc.guest.ctl & RTIT_CTL_TRACEEN)
- 		pt_load_msr(&vmx->pt_desc.guest, vmx->pt_desc.num_address_ranges);
--	}
+ 	echo "running: perf record $@"
+-	${perf} record --buildid-all -o ${data} $@ &> ${log}
++	${perf} record --buildid-all -o ${data} $@ 1>${log_out} 2>${log_err}
+ 	if [ $? -ne 0 ]; then
+ 		echo "failed: record $@"
+-		echo "see log: ${log}"
++		echo "see log: ${log_err}"
+ 		exit 1
+ 	fi
+ 
+-	check ${@: -1}
++	check $last
+ 
+-	rm -f ${log}
++	rm -f ${log_out} ${log_err}
+ 	rm -rf ${build_id_dir}
+ 	rm -rf ${data}
  }
- 
- static void pt_guest_exit(struct vcpu_vmx *vmx)
- {
-+	struct perf_event *event = vmx->pt_desc.host_event;
-+
- 	if (vmx_pt_mode_is_system())
- 		return;
- 
--	if (vmx->pt_desc.guest.ctl & RTIT_CTL_TRACEEN) {
-+	if (vmx->pt_desc.guest.ctl & RTIT_CTL_TRACEEN)
- 		pt_save_msr(&vmx->pt_desc.guest, vmx->pt_desc.num_address_ranges);
--		pt_load_msr(&vmx->pt_desc.host, vmx->pt_desc.num_address_ranges);
--	}
- 
--	/*
--	 * KVM requires VM_EXIT_CLEAR_IA32_RTIT_CTL to expose PT to the guest,
--	 * i.e. RTIT_CTL is always cleared on VM-Exit.  Restore it if necessary.
--	 */
--	if (vmx->pt_desc.host.ctl)
--		wrmsrl(MSR_IA32_RTIT_CTL, vmx->pt_desc.host.ctl);
-+	if (event)
-+		perf_event_enable_local(event);
- }
- 
- void vmx_set_host_fs_gs(struct vmcs_host_state *host, u16 fs_sel, u16 gs_sel,
-diff --git a/arch/x86/kvm/vmx/vmx.h b/arch/x86/kvm/vmx/vmx.h
-index 24d58c2ffaa3..4c20bdabc85b 100644
---- a/arch/x86/kvm/vmx/vmx.h
-+++ b/arch/x86/kvm/vmx/vmx.h
-@@ -66,7 +66,7 @@ struct pt_desc {
- 	u64 ctl_bitmask;
- 	u32 num_address_ranges;
- 	u32 caps[PT_CPUID_REGS_NUM * PT_CPUID_LEAVES];
--	struct pt_ctx host;
-+	struct perf_event *host_event;
- 	struct pt_ctx guest;
- };
- 
 -- 
-2.27.0
+2.17.1
 
