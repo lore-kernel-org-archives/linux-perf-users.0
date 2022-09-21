@@ -2,149 +2,204 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6DEA7ECAAD8
-	for <linux-perf-users@archiver.kernel.org>; Wed, 21 Sep 2022 06:48:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 671B8C32771
+	for <linux-perf-users@archiver.kernel.org>; Wed, 21 Sep 2022 07:26:18 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230034AbiIUGst (ORCPT
+        id S229906AbiIUH0Q (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Wed, 21 Sep 2022 02:48:49 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49118 "EHLO
+        Wed, 21 Sep 2022 03:26:16 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44372 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229566AbiIUGss (ORCPT
+        with ESMTP id S230141AbiIUH0O (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Wed, 21 Sep 2022 02:48:48 -0400
-Received: from mail-pj1-x102e.google.com (mail-pj1-x102e.google.com [IPv6:2607:f8b0:4864:20::102e])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C7D7780F62;
-        Tue, 20 Sep 2022 23:48:47 -0700 (PDT)
-Received: by mail-pj1-x102e.google.com with SMTP id q3so5445040pjg.3;
-        Tue, 20 Sep 2022 23:48:47 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20210112;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date;
-        bh=xurnjg6bo3Owb0E+vv7NZukh9QWZAaSruqg+66dadlY=;
-        b=pKj7d6eQ8vGfmarpTQk/mOmGqK97CL1G3DQ5G1gqqLmmreBImdCWoaC0FFEXoAQMf7
-         yANnTJgiTXKE1rSl/0b/mEkomFsdrg9L4eWTDDmXlo56hN3r75T84fA9okWrXMZshjL+
-         peCH0sXazbPml9XnuiqgAj2jRz5FA9ZJ1TKx+3aX4TFlhlQhLvJWLnGpn+xEFwNd8MgL
-         eROy97HwNxHcTvy8wfwxWJyhkCKBFzivpulX+BkpKj3BQaaYBiCaRtp93LnEZg7NxqVj
-         pRHop+cJh/BQfPncmxEhfbJs94qpI7ZADhWA7H6neCNYrm5szYnACZXPxEM1rSCmT8/y
-         OSRA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date;
-        bh=xurnjg6bo3Owb0E+vv7NZukh9QWZAaSruqg+66dadlY=;
-        b=XOan4XHJs0wiXZj4ZHaTmPU8zGRPfKnpO/VYvdxwCr4pUART7nHKYz1xlMJTFHairL
-         9uiRWsM96qxmxER9filE4CVMUiupYqHbmnKA8IYRedCGBs5zxfxEF+wUruvsvOKJmDIU
-         SC5ulPEiCZwfW8BNXjU/X284yAKqTIOKEqgzSRsnZbhuSON73ES1LfF4DivY3/9NbDBp
-         4UkjUMBITfTQdNgBf3A/nvBUvUqMw3JF3OW0A3h5yxoU+t8fBHc0PrYlEsnvF7dUO9kZ
-         pg15S7IWmTW89g1fsjlnXB4zacf2X8K8tvkPbHdbcBQV+DbqIOxqqLLVa1xvAMfJBBeb
-         IU1A==
-X-Gm-Message-State: ACrzQf2ly76cnFCwEinZxO1kGbWYp0V5TP75epfZhX0YRBNSWSTLItPK
-        03Bf8Zhro6BcP4llquYDkp0=
-X-Google-Smtp-Source: AMsMyM7mVdKvFAF5LQMcscRjuFHOXhziJthXNKphDNdpbJqDhMsIVZyYp0B+p/Avfq2LesmEkn83uQ==
-X-Received: by 2002:a17:902:c245:b0:178:3912:f1fe with SMTP id 5-20020a170902c24500b001783912f1femr3384019plg.13.1663742927300;
-        Tue, 20 Sep 2022 23:48:47 -0700 (PDT)
-Received: from localhost.localdomain ([103.7.29.32])
-        by smtp.gmail.com with ESMTPSA id b15-20020a170902d50f00b00174c235e1fdsm1086625plg.199.2022.09.20.23.48.44
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 20 Sep 2022 23:48:46 -0700 (PDT)
-From:   Like Xu <like.xu.linux@gmail.com>
-X-Google-Original-From: Like Xu <likexu@tencent.com>
-To:     Sean Christopherson <seanjc@google.com>,
-        Paolo Bonzini <pbonzini@redhat.com>
-Cc:     Kan Liang <kan.liang@linux.intel.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Jim Mattson <jmattson@google.com>,
-        linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org,
-        kvm@vger.kernel.org
-Subject: [PATCH] KVM: x86/pmu: Add PEBS support for Intel Sapphire Rapids
-Date:   Wed, 21 Sep 2022 14:48:27 +0800
-Message-Id: <20220921064827.936-1-likexu@tencent.com>
-X-Mailer: git-send-email 2.37.3
+        Wed, 21 Sep 2022 03:26:14 -0400
+Received: from mga04.intel.com (mga04.intel.com [192.55.52.120])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9342A7C1A2;
+        Wed, 21 Sep 2022 00:26:13 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1663745173; x=1695281173;
+  h=message-id:date:mime-version:subject:to:cc:references:
+   from:in-reply-to:content-transfer-encoding;
+  bh=GgKRo7bC06qZmgI29LEaJGGzAT9XtCpARkVsGU9jkiw=;
+  b=Vd1twmNFXLyWmgOKwjaCJXA3LWeJSQfT14PdWFQVdxSmMhhON129HLEn
+   m6t4hyg5UE3UoVzqrIaAHyB3SZdsXeJsPihOZsVxUjFYP7QPuwqHiU7SE
+   r0jou/GDkZwoludbCFnNG9E/4wLbE5voxqaE/4IHgqpZqB9hyC+ZiXNus
+   1WMFfgUm0bL2tqk36Hji3hjldsWCQt+HxD/Y44Q37kembpDtjkTyv2+iW
+   L1yPvy4Tj/seEUuHmjtMwgmCPiMZ/yWeMSGyj0P5nt1jGZKP1Bx373Q8q
+   +egJ3ZfZmxg6Yse7PNJ7GjEEm2EOQ9TYkSUJtJRIZDiEgBjbuge7XFtGh
+   w==;
+X-IronPort-AV: E=McAfee;i="6500,9779,10476"; a="298645362"
+X-IronPort-AV: E=Sophos;i="5.93,332,1654585200"; 
+   d="scan'208";a="298645362"
+Received: from orsmga008.jf.intel.com ([10.7.209.65])
+  by fmsmga104.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 21 Sep 2022 00:26:13 -0700
+X-IronPort-AV: E=Sophos;i="5.93,332,1654585200"; 
+   d="scan'208";a="649939433"
+Received: from ahunter6-mobl1.ger.corp.intel.com (HELO [10.0.2.15]) ([10.252.33.27])
+  by orsmga008-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 21 Sep 2022 00:26:10 -0700
+Message-ID: <c288baa5-abb1-c34c-713c-b9d11873d34a@intel.com>
+Date:   Wed, 21 Sep 2022 10:26:05 +0300
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
+ Firefox/91.0 Thunderbird/91.11.0
+Subject: Re: [PATCH 3/4] perf record: Save DSO build-ID for synthesizing
+Content-Language: en-US
+To:     Namhyung Kim <namhyung@kernel.org>
+Cc:     Arnaldo Carvalho de Melo <acme@kernel.org>,
+        Jiri Olsa <jolsa@kernel.org>, Ingo Molnar <mingo@kernel.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Ian Rogers <irogers@google.com>,
+        linux-perf-users <linux-perf-users@vger.kernel.org>
+References: <20220916175902.1155177-1-namhyung@kernel.org>
+ <20220916175902.1155177-4-namhyung@kernel.org>
+ <571fb9aa-98e7-b42a-aa81-01658e131f11@intel.com>
+ <CAM9d7ch4Rb6GxGc2NrHFVz=S5__XdCNCRy2=5Fj=XCYn2b6d3A@mail.gmail.com>
+From:   Adrian Hunter <adrian.hunter@intel.com>
+Organization: Intel Finland Oy, Registered Address: PL 281, 00181 Helsinki,
+ Business Identity Code: 0357606 - 4, Domiciled in Helsinki
+In-Reply-To: <CAM9d7ch4Rb6GxGc2NrHFVz=S5__XdCNCRy2=5Fj=XCYn2b6d3A@mail.gmail.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-From: Like Xu <likexu@tencent.com>
+On 20/09/22 21:30, Namhyung Kim wrote:
+> On Tue, Sep 20, 2022 at 7:00 AM Adrian Hunter <adrian.hunter@intel.com> wrote:
+>>
+>> On 16/09/22 20:59, Namhyung Kim wrote:
+>>> When synthesizing MMAP2 with build-id, it'd read the same file repeatedly as
+>>> it has no idea if it's done already.  Maintain a dsos to check that and skip
+>>> the file access if possible.
+>>>
+>>> Signed-off-by: Namhyung Kim <namhyung@kernel.org>
+>>> ---
+>>>  tools/perf/util/synthetic-events.c | 49 +++++++++++++++++++++++++-----
+>>>  1 file changed, 42 insertions(+), 7 deletions(-)
+>>>
+>>> diff --git a/tools/perf/util/synthetic-events.c b/tools/perf/util/synthetic-events.c
+>>> index 9d4f5dacd154..e6978b2dee8f 100644
+>>> --- a/tools/perf/util/synthetic-events.c
+>>> +++ b/tools/perf/util/synthetic-events.c
+>>> @@ -4,6 +4,7 @@
+>>>  #include "util/data.h"
+>>>  #include "util/debug.h"
+>>>  #include "util/dso.h"
+>>> +#include "util/dsos.h"
+>>>  #include "util/event.h"
+>>>  #include "util/evlist.h"
+>>>  #include "util/machine.h"
+>>> @@ -47,12 +48,25 @@
+>>>
+>>>  unsigned int proc_map_timeout = DEFAULT_PROC_MAP_PARSE_TIMEOUT;
+>>>
+>>> +static bool synth_init_done;
+>>> +static struct dsos synth_dsos;
+>>> +
+>>>  void perf_event__synthesize_start(void)
+>>>  {
+>>> +     if (synth_init_done)
+>>> +             return;
+>>> +
+>>> +     dsos__init(&synth_dsos);
+>>> +
+>>> +     synth_init_done = true;
+>>>  }
+>>>
+>>>  void perf_event__synthesize_stop(void)
+>>>  {
+>>> +     if (!synth_init_done)
+>>> +             return;
+>>> +
+>>> +     dsos__exit(&synth_dsos);
+>>>  }
+>>>
+>>>  int perf_tool__process_synth_event(struct perf_tool *tool,
+>>> @@ -374,26 +388,47 @@ static bool read_proc_maps_line(struct io *io, __u64 *start, __u64 *end,
+>>>  static void perf_record_mmap2__read_build_id(struct perf_record_mmap2 *event,
+>>>                                            bool is_kernel)
+>>>  {
+>>> -     struct build_id bid;
+>>> +     struct build_id _bid, *bid = &_bid;
+>>> +     struct dso *dso = NULL;
+>>> +     struct dso_id id;
+>>>       int rc;
+>>>
+>>> -     if (is_kernel)
+>>> -             rc = sysfs__read_build_id("/sys/kernel/notes", &bid);
+>>> -     else
+>>> -             rc = filename__read_build_id(event->filename, &bid) > 0 ? 0 : -1;
+>>> +     if (is_kernel) {
+>>> +             rc = sysfs__read_build_id("/sys/kernel/notes", bid);
+>>> +             goto out;
+>>> +     }
+>>> +
+>>> +     id.maj = event->maj;
+>>> +     id.min = event->min;
+>>> +     id.ino = event->ino;
+>>> +     id.ino_generation = event->ino_generation;
+>>>
+>>
+>> There might be some paths missing perf_event__synthesize_start()
+>> e.g. perf trace
+>> So it would probably be safer to use lazy initialization for
+>> synth_dsos.
+> 
+> I thought about that too, but it'd need a cleanup routine at the end
+> anyway.  So I ended up having a pair of start/stop routines.
+> 
+>>
+>> Also, callers of perf_record_mmap2__read_build_id() have a struct
+>> machine so I wonder about putting synth_dsos in struct machine ?
+>> Or even just using machine->dsos ?
+> 
+> My intention was to use minimal info from struct dso - name, id and
+> build-id.  But as it already uses dsos/dso routines, it's not much
+> different from using the existing machine->dsos.
+> 
+> So yeah, I think it's good to reuse the existing one as it'd benefit
+> the build-id processing at the end.  Will change.
+> 
+> Thanks,
+> Namhyung
+> 
+> 
+>>
+>>> +     dso = dsos__findnew_id(&synth_dsos, event->filename, &id);
+>>> +     if (dso && dso->has_build_id) {
+>>> +             bid = &dso->bid;
+>>> +             rc = 0;
+>>> +             goto out;
+>>> +     }
 
-Virtualization support for SPR PEBS has officially available in the
-Intel SDM (June 2022) and has been validated on late stepping machines:
+Also I guess the dsos optimization could be a separate patch ?
 
-Compared to Ice Lake Server, the PDIR counter available (Fixed 0) on SPR
-is unchanged, but the capability is enhanced to Instruction-Accurate PDIR
-(PDIR++), where PEBS is taken on the next instruction after the one that
-caused the overflow. Also, it introduces a new Precise Distribution (PDist)
-facility that eliminates the skid when a precise event is programmed
-on general programmable counter 0.
-
-For guest usage, KVM will raise attr.precise_ip to 3 in both cases
-mentioned above, requesting the correct hardware counter (PRIR++
-or PDist) from the perf sub-system on the host as usual.
-
-Cc: Kan Liang <kan.liang@linux.intel.com>
-Cc: Peter Zijlstra <peterz@infradead.org>
-Signed-off-by: Like Xu <likexu@tencent.com>
----
- arch/x86/events/intel/core.c |  1 +
- arch/x86/kvm/pmu.c           | 17 ++++++++++++++---
- 2 files changed, 15 insertions(+), 3 deletions(-)
-
-diff --git a/arch/x86/events/intel/core.c b/arch/x86/events/intel/core.c
-index 2db93498ff71..804540ba4599 100644
---- a/arch/x86/events/intel/core.c
-+++ b/arch/x86/events/intel/core.c
-@@ -6288,6 +6288,7 @@ __init int intel_pmu_init(void)
- 		x86_pmu.pebs_constraints = intel_spr_pebs_event_constraints;
- 		x86_pmu.extra_regs = intel_spr_extra_regs;
- 		x86_pmu.limit_period = spr_limit_period;
-+		x86_pmu.pebs_ept = 1;
- 		x86_pmu.pebs_aliases = NULL;
- 		x86_pmu.pebs_prec_dist = true;
- 		x86_pmu.pebs_block = true;
-diff --git a/arch/x86/kvm/pmu.c b/arch/x86/kvm/pmu.c
-index 02f9e4f245bd..81e9d7c2332d 100644
---- a/arch/x86/kvm/pmu.c
-+++ b/arch/x86/kvm/pmu.c
-@@ -28,9 +28,18 @@
- struct x86_pmu_capability __read_mostly kvm_pmu_cap;
- EXPORT_SYMBOL_GPL(kvm_pmu_cap);
- 
--static const struct x86_cpu_id vmx_icl_pebs_cpu[] = {
-+/* Precise Distribution of Instructions Retired (PDIR) */
-+static const struct x86_cpu_id vmx_pebs_pdir_cpu[] = {
- 	X86_MATCH_INTEL_FAM6_MODEL(ICELAKE_D, NULL),
- 	X86_MATCH_INTEL_FAM6_MODEL(ICELAKE_X, NULL),
-+	/* Instruction-Accurate PDIR (PDIR++) */
-+	X86_MATCH_INTEL_FAM6_MODEL(SAPPHIRERAPIDS_X, NULL),
-+	{}
-+};
-+
-+/* Precise Distribution (PDist) */
-+static const struct x86_cpu_id vmx_pebs_pdist_cpu[] = {
-+	X86_MATCH_INTEL_FAM6_MODEL(SAPPHIRERAPIDS_X, NULL),
- 	{}
- };
- 
-@@ -181,12 +190,14 @@ static void pmc_reprogram_counter(struct kvm_pmc *pmc, u32 type,
- 		 * the accuracy of the PEBS profiling result, because the "event IP"
- 		 * in the PEBS record is calibrated on the guest side.
- 		 *
--		 * On Icelake everything is fine. Other hardware (GLC+, TNT+) that
-+		 * On Icelake everything is fine. Other hardware (TNT+) that
- 		 * could possibly care here is unsupported and needs changes.
- 		 */
- 		attr.precise_ip = 1;
--		if (x86_match_cpu(vmx_icl_pebs_cpu) && pmc->idx == 32)
-+		if ((pmc->idx == 32 && x86_match_cpu(vmx_pebs_pdir_cpu)) ||
-+		    (pmc->idx == 0 && x86_match_cpu(vmx_pebs_pdist_cpu))) {
- 			attr.precise_ip = 3;
-+		}
- 	}
- 
- 	event = perf_event_create_kernel_counter(&attr, -1, current,
--- 
-2.37.3
+>>> +
+>>> +     rc = filename__read_build_id(event->filename, bid) > 0 ? 0 : -1;
+>>> +
+>>> +out:
+>>>       if (rc == 0) {
+>>> -             memcpy(event->build_id, bid.data, sizeof(bid.data));
+>>> -             event->build_id_size = (u8) bid.size;
+>>> +             memcpy(event->build_id, bid->data, sizeof(bid->data));
+>>> +             event->build_id_size = (u8) bid->size;
+>>>               event->header.misc |= PERF_RECORD_MISC_MMAP_BUILD_ID;
+>>>               event->__reserved_1 = 0;
+>>>               event->__reserved_2 = 0;
+>>> +
+>>> +             if (dso && !dso->has_build_id)
+>>> +                     dso__set_build_id(dso, bid);
+>>>       } else {
+>>>               if (event->filename[0] == '/') {
+>>>                       pr_debug2("Failed to read build ID for %s\n",
+>>>                                 event->filename);
+>>>               }
+>>>       }
+>>> +     dso__put(dso);
+>>>  }
+>>>
+>>>  int perf_event__synthesize_mmap_events(struct perf_tool *tool,
+>>
 
