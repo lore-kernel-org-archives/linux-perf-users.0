@@ -2,151 +2,110 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 46D47C32771
-	for <linux-perf-users@archiver.kernel.org>; Wed, 21 Sep 2022 12:55:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9BF93ECAAD8
+	for <linux-perf-users@archiver.kernel.org>; Wed, 21 Sep 2022 13:49:18 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229895AbiIUMzS (ORCPT
+        id S229950AbiIUNtP (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Wed, 21 Sep 2022 08:55:18 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38244 "EHLO
+        Wed, 21 Sep 2022 09:49:15 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40618 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229910AbiIUMzQ (ORCPT
+        with ESMTP id S229775AbiIUNtO (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Wed, 21 Sep 2022 08:55:16 -0400
-Received: from szxga08-in.huawei.com (szxga08-in.huawei.com [45.249.212.255])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E476E4A104;
-        Wed, 21 Sep 2022 05:55:13 -0700 (PDT)
-Received: from dggpemm500021.china.huawei.com (unknown [172.30.72.55])
-        by szxga08-in.huawei.com (SkyGuard) with ESMTP id 4MXdZK2CM9z14RgH;
-        Wed, 21 Sep 2022 20:51:05 +0800 (CST)
-Received: from dggpemm500013.china.huawei.com (7.185.36.172) by
- dggpemm500021.china.huawei.com (7.185.36.109) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2375.31; Wed, 21 Sep 2022 20:55:09 +0800
-Received: from ubuntu1804.huawei.com (10.67.175.36) by
- dggpemm500013.china.huawei.com (7.185.36.172) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2375.31; Wed, 21 Sep 2022 20:55:09 +0800
-From:   Chen Zhongjin <chenzhongjin@huawei.com>
-To:     <linux-kernel@vger.kernel.org>, <linux-riscv@lists.infradead.org>,
-        <linux-perf-users@vger.kernel.org>
-CC:     <paul.walmsley@sifive.com>, <palmer@dabbelt.com>,
-        <aou@eecs.berkeley.edu>, <peterz@infradead.org>,
-        <mingo@redhat.com>, <acme@kernel.org>, <mark.rutland@arm.com>,
-        <alexander.shishkin@linux.intel.com>, <namhyung@kernel.org>,
-        <jolsa@kernel.org>, <guoren@kernel.org>, <frederic@kernel.org>,
-        <vincent.chen@sifive.com>, <ardb@kernel.org>,
-        <mhiramat@kernel.org>, <rostedt@goodmis.org>,
-        <keescook@chromium.org>, <catalin.marinas@arm.com>,
-        <chenzhongjin@huawei.com>
-Subject: [PATCH for-next v2 0/4] riscv: Improvments for stacktrace
-Date:   Wed, 21 Sep 2022 20:51:23 +0800
-Message-ID: <20220921125128.33913-1-chenzhongjin@huawei.com>
-X-Mailer: git-send-email 2.17.1
+        Wed, 21 Sep 2022 09:49:14 -0400
+Received: from ams.source.kernel.org (ams.source.kernel.org [145.40.68.75])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0592572696;
+        Wed, 21 Sep 2022 06:49:14 -0700 (PDT)
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by ams.source.kernel.org (Postfix) with ESMTPS id 9D177B82370;
+        Wed, 21 Sep 2022 13:49:12 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 3C744C433D6;
+        Wed, 21 Sep 2022 13:49:11 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1663768151;
+        bh=7CdrmSk3ix6XsmoJN2/gSLhPpcd8E1qqS0s4+WhE+kM=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=Jotdytc7f/1m3zYiQOk8bcz8FjQFfp2MuUe/TmuURUsjlD23vZpZ9nZjiBJpndVMe
+         ZsWX5CyrJ7CDPDloWLp3U4AXhUmJBjW50QCqhsrYjGUy4c9uAof9LcCUwH8qDy7+ti
+         j8FEa2bfoe9EbEXtPqBymBFYyViUMBBdGnlSGrMRotUAa4E34CHCc3u+RUT6ZzUjRe
+         JlTJuKnP/phC/DrCAestDzE7oLokxmKF6nP/jCn8yVFlAdfMs3hywkE7jZclWe3mo9
+         9Y80PMvNzvDN08UylBSaMr3C88Bp2k/khYifok/7XvMvKhIG7hYd/wsB7t2BcPiEe8
+         0Qt0ZhgF4UeHw==
+Received: by quaco.ghostprotocols.net (Postfix, from userid 1000)
+        id C059C40856; Wed, 21 Sep 2022 14:49:08 +0100 (IST)
+Date:   Wed, 21 Sep 2022 14:49:08 +0100
+From:   Arnaldo Carvalho de Melo <acme@kernel.org>
+To:     Namhyung Kim <namhyung@kernel.org>
+Cc:     Jiri Olsa <jolsa@kernel.org>, Ingo Molnar <mingo@kernel.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Ian Rogers <irogers@google.com>,
+        Adrian Hunter <adrian.hunter@intel.com>,
+        linux-perf-users@vger.kernel.org
+Subject: Re: [PATCH v2 1/2] perf tools: Honor namespace when synthesizing
+ build-id
+Message-ID: <YysWVB724LBSFhII@kernel.org>
+References: <20220920222822.2171056-1-namhyung@kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain
-X-Originating-IP: [10.67.175.36]
-X-ClientProxiedBy: dggems704-chm.china.huawei.com (10.3.19.181) To
- dggpemm500013.china.huawei.com (7.185.36.172)
-X-CFilter-Loop: Reflected
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20220920222822.2171056-1-namhyung@kernel.org>
+X-Url:  http://acmel.wordpress.com
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-Currently, the stacktrace with FRAME_POINTER on riscv has some problem:
+Em Tue, Sep 20, 2022 at 03:28:21PM -0700, Namhyung Kim escreveu:
+> It needs to go into a namespace before reading a file.
+> 
+> Fixes: 4183a8d70a28 ("perf tools: Allow synthesizing the build id for kernel/modules/tasks in PERF_RECORD_MMAP2")
+> Signed-off-by: Namhyung Kim <namhyung@kernel.org>
 
-1. stacktrace will stop at irq so it can't get the stack frames before
-irq entry.
-2. stacktrace can't unwind all the real stack frames when there is
-k{ret}probes or ftrace.
+Thanks, applied to perf/urgent.
 
-These are mainly becase when there is a pt_regs on stack, we can't unwind
-the stack frame as normal function.
+- Arnaldo
 
-Some architectures (e.g. arm64) create a extra stackframe inside pt_regs.
-However this doesn't work for riscv because the ra is not ensured to be
-pushed to stack. As explained in:
-commit f766f77a74f5("riscv/stacktrace: Fix stack output without ra on the stack top")
-
-So, I choosed the method of x86 that, if there is a pt_regs on stack,
-we encoded the frame pointer and save it. When unwinding stack frame,
-we can get pt_regs and registers required for unwinding stacks.
-
-In addition, the patch set contains some refactoring of stacktrace.c to
-keep the stacktrace code on riscv consistent with other architectures.
-
-Stacktrace before for kretprobes:
-
-  Call Trace:
-  ...
-  [<ffffffff800d5d48>] __kretprobe_trampoline_handler+0xc2/0x13e
-  [<ffffffff808b766c>] trampoline_probe_handler+0x30/0x46
-  [<ffffffff800070de>] __kretprobe_trampoline+0x52/0x92
-  [<ffffffff0163809c>] kprobe_init+0x9c/0x1000 [kprobe_unwind]
-  [<ffffffff800027c8>] do_one_initcall+0x4c/0x1f2
-  ...
-
-Stacktrace after:
-
-  Call Trace:
-  ...
-  [<ffffffff800d5d48>] __kretprobe_trampoline_handler+0xc2/0x13e
-  [<ffffffff808b766c>] trampoline_probe_handler+0x30/0x46
-  [<ffffffff800070de>] __kretprobe_trampoline+0x52/0x92
-+ [<ffffffff01633076>] the_caller+0x2c/0x38 [kprobe_unwind]
-  [<ffffffff0163809c>] kprobe_init+0x9c/0x1000 [kprobe_unwind]
-  [<ffffffff800027c8>] do_one_initcall+0x4c/0x1f2
-  ...
-
-Stacktrace before for ftrace:
-
-  Call Trace:
-  ...
-  [<ffffffff80006df0>] kprobe_ftrace_handler+0x13e/0x188
-  [<ffffffff80008e7e>] ftrace_regs_call+0x8/0x10
-  [<ffffffff80002540>] do_one_initcall+0x4c/0x1f2
-  [<ffffffff8008a4e6>] do_init_module+0x56/0x210
-  ...
-
-  Stacktrace after:
-
-  Call Trace:
-  ...
-  [<ffffffff016150e0>] handler_pre+0x30/0x4a [kprobe_unwind]
-  [<ffffffff800bce96>] aggr_pre_handler+0x60/0x94
-  [<ffffffff80006df0>] kprobe_ftrace_handler+0x13e/0x188
-  [<ffffffff80008e82>] ftrace_regs_call+0x8/0x10
-+ [<ffffffff01615000>] traced_func+0x0/0x1e [kprobe_unwind]
-  [<ffffffff80002540>] do_one_initcall+0x4c/0x1f2
-  [<ffffffff8008a4ea>] do_init_module+0x56/0x210
-  ...
-
-Noticed that the caller of ftrace and probed func of kretprobe
-cannot be unwind because they are inside function pro/epilogue.
-
----
-v1 -> v2:
-- Merge three patches which add ENCODE_FRAME_POINTER together
-- Update commit message
-- Delete the KRETPORBES stuff added in unwind_state, we don't need them
-to recover the kretporbes ret_addr because we can get it in pt_regs
----
-Chen Zhongjin (4):
-  riscv: stacktrace: Replace walk_stackframe with arch_stack_walk
-  riscv: stacktrace: Introduce unwind functions
-  riscv: stacktrace: Save pt_regs in ENCODE_FRAME_POINTER
-  riscv: stacktrace: Implement stacktrace for irq
-
- arch/riscv/include/asm/frame.h                |  45 ++++++
- arch/riscv/include/asm/stacktrace.h           |   9 +-
- arch/riscv/kernel/entry.S                     |   3 +
- arch/riscv/kernel/mcount-dyn.S                |   7 +
- arch/riscv/kernel/perf_callchain.c            |   2 +-
- arch/riscv/kernel/probes/kprobes_trampoline.S |   7 +
- arch/riscv/kernel/stacktrace.c                | 150 ++++++++++++------
- 7 files changed, 174 insertions(+), 49 deletions(-)
- create mode 100644 arch/riscv/include/asm/frame.h
+> ---
+>  tools/perf/util/synthetic-events.c | 17 ++++++++++++++---
+>  1 file changed, 14 insertions(+), 3 deletions(-)
+> 
+> diff --git a/tools/perf/util/synthetic-events.c b/tools/perf/util/synthetic-events.c
+> index 0ff57ca24577..289ea17ac5f7 100644
+> --- a/tools/perf/util/synthetic-events.c
+> +++ b/tools/perf/util/synthetic-events.c
+> @@ -367,13 +367,24 @@ static void perf_record_mmap2__read_build_id(struct perf_record_mmap2 *event,
+>  					     bool is_kernel)
+>  {
+>  	struct build_id bid;
+> +	struct nsinfo *nsi;
+> +	struct nscookie nc;
+>  	int rc;
+>  
+> -	if (is_kernel)
+> +	if (is_kernel) {
+>  		rc = sysfs__read_build_id("/sys/kernel/notes", &bid);
+> -	else
+> -		rc = filename__read_build_id(event->filename, &bid) > 0 ? 0 : -1;
+> +		goto out;
+> +	}
+> +
+> +	nsi = nsinfo__new(event->pid);
+> +	nsinfo__mountns_enter(nsi, &nc);
+>  
+> +	rc = filename__read_build_id(event->filename, &bid) > 0 ? 0 : -1;
+> +
+> +	nsinfo__mountns_exit(&nc);
+> +	nsinfo__put(nsi);
+> +
+> +out:
+>  	if (rc == 0) {
+>  		memcpy(event->build_id, bid.data, sizeof(bid.data));
+>  		event->build_id_size = (u8) bid.size;
+> -- 
+> 2.37.3.968.ga6b4b080e4-goog
 
 -- 
-2.17.1
 
+- Arnaldo
