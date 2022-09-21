@@ -2,126 +2,180 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 48E22C32771
-	for <linux-perf-users@archiver.kernel.org>; Wed, 21 Sep 2022 09:53:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F04BDECAAD8
+	for <linux-perf-users@archiver.kernel.org>; Wed, 21 Sep 2022 10:43:52 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231348AbiIUJx2 (ORCPT
+        id S229741AbiIUKnv (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Wed, 21 Sep 2022 05:53:28 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59272 "EHLO
+        Wed, 21 Sep 2022 06:43:51 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51682 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231741AbiIUJxB (ORCPT
+        with ESMTP id S229542AbiIUKns (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Wed, 21 Sep 2022 05:53:01 -0400
-Received: from zju.edu.cn (mail.zju.edu.cn [61.164.42.155])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTP id E4C9B2196;
-        Wed, 21 Sep 2022 02:50:51 -0700 (PDT)
-Received: by ajax-webmail-mail-app3 (Coremail) ; Wed, 21 Sep 2022 17:50:18
- +0800 (GMT+08:00)
-X-Originating-IP: [10.162.98.155]
-Date:   Wed, 21 Sep 2022 17:50:18 +0800 (GMT+08:00)
-X-CM-HeaderCharset: UTF-8
-From:   duoming@zju.edu.cn
-To:     "Ingo Molnar" <mingo@kernel.org>
-Cc:     peterz@infradead.org, linux-perf-users@vger.kernel.org,
-        linux-kernel@vger.kernel.org, mingo@redhat.com, acme@kernel.org,
-        mark.rutland@arm.com, alexander.shishkin@linux.intel.com,
-        jolsa@kernel.org, namhyung@kernel.org, tglx@linutronix.de,
-        bp@alien8.de, dave.hansen@linux.intel.com, x86@kernel.org,
-        hpa@zytor.com
-Subject: Re: [PATCH V2] perf/x86/rapl: fix deadlock in rapl_pmu_event_stop
-X-Priority: 3
-X-Mailer: Coremail Webmail Server Version XT5.0.13 build 20210104(ab8c30b6)
- Copyright (c) 2002-2022 www.mailtech.cn zju.edu.cn
-In-Reply-To: <YyrC4OyP2BtY8tNl@gmail.com>
-References: <20220920014447.71946-1-duoming@zju.edu.cn>
- <YyrC4OyP2BtY8tNl@gmail.com>
-Content-Transfer-Encoding: base64
-Content-Type: text/plain; charset=UTF-8
+        Wed, 21 Sep 2022 06:43:48 -0400
+Received: from mga14.intel.com (mga14.intel.com [192.55.52.115])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A93D8915E0;
+        Wed, 21 Sep 2022 03:43:47 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1663757027; x=1695293027;
+  h=message-id:date:mime-version:subject:from:to:cc:
+   references:in-reply-to:content-transfer-encoding;
+  bh=6dl3gtcacoQl6ANvxmfNKeoatSMTHZtouqyF21KWxHQ=;
+  b=FBVN7oxaKvBOXSdz5HTtBCsLBPRW8PRGyOeAih5sAbUZXr+e7srWw4hR
+   i5XwGX8Q103DQZaN/n2ucSgXwLlP1J8EdcotCCWejuTcMTqxGGhCXD/rv
+   pvnkUnchn1pkdHryPpPZeqacJ1v366SJJsZP5uWkeoRE8cj92O3qkwlEa
+   q7ZXn3Cuq6DHPYYnEMZ+oUpg79HxTvjC6aN/PaEUeoDQ3co+R1mkMiSIl
+   SoRZiLTU4at83q1/gLSQORRQzXl+EiheTEllfm5S+YrbQWZO4pzKDkWME
+   vaEdTtx9vrG94cf/qX0h/nVCp9tRYP3CBtD0rCZ8MP/ILpcnLfnYuc4xR
+   Q==;
+X-IronPort-AV: E=McAfee;i="6500,9779,10476"; a="299953065"
+X-IronPort-AV: E=Sophos;i="5.93,333,1654585200"; 
+   d="scan'208";a="299953065"
+Received: from fmsmga003.fm.intel.com ([10.253.24.29])
+  by fmsmga103.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 21 Sep 2022 03:43:47 -0700
+X-IronPort-AV: E=Sophos;i="5.93,333,1654585200"; 
+   d="scan'208";a="708395857"
+Received: from ahunter6-mobl1.ger.corp.intel.com (HELO [10.0.2.15]) ([10.252.33.27])
+  by fmsmga003-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 21 Sep 2022 03:43:45 -0700
+Message-ID: <7e0b9116-7e1f-fc4c-5528-ce5a3e565fa3@intel.com>
+Date:   Wed, 21 Sep 2022 13:11:53 +0300
 MIME-Version: 1.0
-Message-ID: <187941a5.e3508.1835f748feb.Coremail.duoming@zju.edu.cn>
-X-Coremail-Locale: zh_CN
-X-CM-TRANSID: cC_KCgC3vQxa3ipj56bbBg--.33667W
-X-CM-SenderInfo: qssqjiasttq6lmxovvfxof0/1tbiAgQAAVZdtbkYVQAAsN
-X-Coremail-Antispam: 1Ur529EdanIXcx71UUUUU7IcSsGvfJ3iIAIbVAYjsxI4VWxJw
-        CS07vEb4IE77IF4wCS07vE1I0E4x80FVAKz4kxMIAIbVAFxVCaYxvI4VCIwcAKzIAtYxBI
-        daVFxhVjvjDU=
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
+ Firefox/91.0 Thunderbird/91.11.0
+Subject: Re: [PATCH 3/4] perf record: Save DSO build-ID for synthesizing
+Content-Language: en-US
+From:   Adrian Hunter <adrian.hunter@intel.com>
+To:     Namhyung Kim <namhyung@kernel.org>
+Cc:     Arnaldo Carvalho de Melo <acme@kernel.org>,
+        Jiri Olsa <jolsa@kernel.org>, Ingo Molnar <mingo@kernel.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Ian Rogers <irogers@google.com>,
+        linux-perf-users <linux-perf-users@vger.kernel.org>
+References: <20220916175902.1155177-1-namhyung@kernel.org>
+ <20220916175902.1155177-4-namhyung@kernel.org>
+ <571fb9aa-98e7-b42a-aa81-01658e131f11@intel.com>
+ <CAM9d7ch4Rb6GxGc2NrHFVz=S5__XdCNCRy2=5Fj=XCYn2b6d3A@mail.gmail.com>
+ <c288baa5-abb1-c34c-713c-b9d11873d34a@intel.com>
+Organization: Intel Finland Oy, Registered Address: PL 281, 00181 Helsinki,
+ Business Identity Code: 0357606 - 4, Domiciled in Helsinki
+In-Reply-To: <c288baa5-abb1-c34c-713c-b9d11873d34a@intel.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-SGVsbG8sCgpPbiBXZWQsIDIxIFNlcCAyMDIyIDA5OjUzOjA0ICswMjAwIEluZ28gTW9sbmFyIHdy
-b3RlOgoKPiAqIER1b21pbmcgWmhvdSA8ZHVvbWluZ0B6anUuZWR1LmNuPiB3cm90ZToKPiAKPiA+
-IFRoZXJlIGlzIGEgZGVhZGxvY2sgaW4gcmFwbF9wbXVfZXZlbnRfc3RvcCgpLCB0aGUgcHJvY2Vz
-cyBpcwo+ID4gc2hvd24gYmVsb3c6Cj4gPiAKPiA+ICAgICAodGhyZWFkIDEpICAgICAgICAgICAg
-ICAgICB8ICAgICAgICAodGhyZWFkIDIpCj4gPiByYXBsX3BtdV9ldmVudF9zdG9wKCkgICAgICAg
-ICAgfCByYXBsX2hydGltZXJfaGFuZGxlKCkKPiA+ICAuLi4gICAgICAgICAgICAgICAgICAgICAg
-ICAgICB8ICBpZiAoIXBtdS0+bl9hY3RpdmUpCj4gPiAgcmF3X3NwaW5fbG9ja19pcnFzYXZlKCkg
-Ly8oMSkgfCAgLi4uCj4gPiAgIC4uLiAgICAgICAgICAgICAgICAgICAgICAgICAgfAo+ID4gICBo
-cnRpbWVyX2NhbmNlbCgpICAgICAgICAgICAgIHwgIHJhd19zcGluX2xvY2tfaXJxc2F2ZSgpIC8v
-KDIpCj4gPiAgIChibG9jayBmb3JldmVyKQo+ID4gCj4gPiBXZSBob2xkIHBtdS0+bG9jayBpbiBw
-b3NpdGlvbiAoMSkgYW5kIHVzZSBocnRpbWVyX2NhbmNlbCgpIHRvIHdhaXQKPiA+IHJhcGxfaHJ0
-aW1lcl9oYW5kbGUoKSB0byBzdG9wLCBidXQgcmFwbF9ocnRpbWVyX2hhbmRsZSgpIGFsc28gbmVl
-ZAo+ID4gcG11LT5sb2NrIGluIHBvc2l0aW9uICgyKS4gQXMgYSByZXN1bHQsIHRoZSByYXBsX3Bt
-dV9ldmVudF9zdG9wKCkKPiA+IHdpbGwgYmUgYmxvY2tlZCBmb3JldmVyLgo+ID4gCj4gPiBUaGlz
-IHBhdGNoIGV4dHJhY3RzIGhydGltZXJfY2FuY2VsKCkgZnJvbSB0aGUgcHJvdGVjdGlvbiBvZgo+
-ID4gcmF3X3NwaW5fbG9ja19pcnFzYXZlKCkuIEFzIGEgcmVzdWx0LCB0aGUgcmFwbF9ocnRpbWVy
-X2hhbmRsZSgpCj4gPiBjb3VsZCBvYnRhaW4gdGhlIHBtdS0+bG9jay4KPiA+IAo+ID4gRml4ZXM6
-IDY1NjYxZjk2ZDNiMyAoInBlcmYveDg2OiBBZGQgUkFQTCBocnRpbWVyIHN1cHBvcnQiKQo+ID4g
-U2lnbmVkLW9mZi1ieTogRHVvbWluZyBaaG91IDxkdW9taW5nQHpqdS5lZHUuY24+Cj4gPiAtLS0K
-PiA+IENoYW5nZXMgaW4gdjI6Cj4gPiAgIC0gTW92ZSBocnRpbWVyX2NhbmNlbCgpIHRvIHRoZSBl
-bmQgb2YgcmFwbF9wbXVfZXZlbnRfc3RvcCgpIGZ1bmN0aW9uLgo+ID4gCj4gPiAgYXJjaC94ODYv
-ZXZlbnRzL3JhcGwuYyB8IDcgKysrKystLQo+ID4gIDEgZmlsZSBjaGFuZ2VkLCA1IGluc2VydGlv
-bnMoKyksIDIgZGVsZXRpb25zKC0pCj4gPiAKPiA+IGRpZmYgLS1naXQgYS9hcmNoL3g4Ni9ldmVu
-dHMvcmFwbC5jIGIvYXJjaC94ODYvZXZlbnRzL3JhcGwuYwo+ID4gaW5kZXggNzdlM2E0N2FmNWEu
-LjdjMTEwMDkyYzgzIDEwMDY0NAo+ID4gLS0tIGEvYXJjaC94ODYvZXZlbnRzL3JhcGwuYwo+ID4g
-KysrIGIvYXJjaC94ODYvZXZlbnRzL3JhcGwuYwo+ID4gQEAgLTI4MSw4ICsyODEsNiBAQCBzdGF0
-aWMgdm9pZCByYXBsX3BtdV9ldmVudF9zdG9wKHN0cnVjdCBwZXJmX2V2ZW50ICpldmVudCwgaW50
-IG1vZGUpCj4gPiAgCWlmICghKGh3Yy0+c3RhdGUgJiBQRVJGX0hFU19TVE9QUEVEKSkgewo+ID4g
-IAkJV0FSTl9PTl9PTkNFKHBtdS0+bl9hY3RpdmUgPD0gMCk7Cj4gPiAgCQlwbXUtPm5fYWN0aXZl
-LS07Cj4gPiAtCQlpZiAocG11LT5uX2FjdGl2ZSA9PSAwKQo+ID4gLQkJCWhydGltZXJfY2FuY2Vs
-KCZwbXUtPmhydGltZXIpOwo+ID4gIAo+ID4gIAkJbGlzdF9kZWwoJmV2ZW50LT5hY3RpdmVfZW50
-cnkpOwo+ID4gIAo+ID4gQEAgLTMwMCw2ICsyOTgsMTEgQEAgc3RhdGljIHZvaWQgcmFwbF9wbXVf
-ZXZlbnRfc3RvcChzdHJ1Y3QgcGVyZl9ldmVudCAqZXZlbnQsIGludCBtb2RlKQo+ID4gIAkJaHdj
-LT5zdGF0ZSB8PSBQRVJGX0hFU19VUFRPREFURTsKPiA+ICAJfQo+ID4gIAo+ID4gKwlpZiAoIXBt
-dS0+bl9hY3RpdmUpIHsKPiA+ICsJCXJhd19zcGluX3VubG9ja19pcnFyZXN0b3JlKCZwbXUtPmxv
-Y2ssIGZsYWdzKTsKPiA+ICsJCWhydGltZXJfY2FuY2VsKCZwbXUtPmhydGltZXIpOwo+ID4gKwkJ
-cmV0dXJuOwo+ID4gKwl9Cj4gCj4gTG9va3MgcmFjeSBub3c6IEFGQUlDUyBub3cgaXQncyBwb3Nz
-aWJsZSBmb3IgcmFwbF9ocnRpbWVyX2hhbmRsZSgpIHRvIAo+IGV4ZWN1dGUgYXQgYW4gYXJiaXRy
-YXJ5IG1vbWVudCBhZnRlciBwbXUtPmxvY2sgaXMgZHJvcHBlZCAtIHdoaWNoIGNvdWxkIGJlIAo+
-IHVzZS1hZnRlci1mcmVlIGFmdGVyIGNsZWFudXBfcmFwbF9wbXVzKCkgZXhlY3V0ZXMgYW5kIHRo
-ZSBQTVUgaXMgZnJlZWQsIAo+IHJpZ2h0Pwo+IAo+IFRoZXJlJ3MgYWxzbyB0aGUgcXVhbGl0eS1v
-Zi1pbXBsZW1lbnRhdGlvbiBpc3N1ZSBvZiB0aGUgaHJ0aW1lciBleGVjdXRpbmcgCj4gaW4gYSBk
-ZWxheWVkIGZhc2hpb24gZm9yIHRoZSAqbmV4dCogZXZlbnQgdGhhdCBtYXkgaGF2ZSBiZWVuIGFk
-ZGVkLCBsZWFkaW5nIAo+IHRvIHBvc3NpYmx5IHVuZXhwZWN0ZWQgcmVzdWx0cy4KClRoYW5rIHlv
-dXIgZm9yIHlvdXIgc3VnZ2VzdGlvbnMhIEluIG9yZGVyIHRvIHNvbHZlIHRoZSBhYm92ZSBwcm9i
-bGVtcywKSSBjb21lIHVwIHdpdGggdGhlIGZvbGxvd2luZyBzb2x1dGlvbi4KCmRpZmYgLS1naXQg
-YS9hcmNoL3g4Ni9ldmVudHMvcmFwbC5jIGIvYXJjaC94ODYvZXZlbnRzL3JhcGwuYwppbmRleCA3
-N2UzYTQ3YWY1YS4uYTUyNmEwOGVlNmUgMTAwNjQ0Ci0tLSBhL2FyY2gveDg2L2V2ZW50cy9yYXBs
-LmMKKysrIGIvYXJjaC94ODYvZXZlbnRzL3JhcGwuYwpAQCAtMjE5LDExICsyMTksMTMgQEAgc3Rh
-dGljIGVudW0gaHJ0aW1lcl9yZXN0YXJ0IHJhcGxfaHJ0aW1lcl9oYW5kbGUoc3RydWN0IGhydGlt
-ZXIgKmhydGltZXIpCiAgICAgICAgc3RydWN0IHBlcmZfZXZlbnQgKmV2ZW50OwogICAgICAgIHVu
-c2lnbmVkIGxvbmcgZmxhZ3M7CgotICAgICAgIGlmICghcG11LT5uX2FjdGl2ZSkKLSAgICAgICAg
-ICAgICAgIHJldHVybiBIUlRJTUVSX05PUkVTVEFSVDsKLQogICAgICAgIHJhd19zcGluX2xvY2tf
-aXJxc2F2ZSgmcG11LT5sb2NrLCBmbGFncyk7CgorICAgICAgIGlmICghcG11LT5uX2FjdGl2ZSkg
-eworICAgICAgICAgICAgICAgcmF3X3NwaW5fdW5sb2NrX2lycXJlc3RvcmUoJnBtdS0+bG9jaywg
-ZmxhZ3MpOworICAgICAgICAgICAgICAgcmV0dXJuIEhSVElNRVJfTk9SRVNUQVJUOworICAgICAg
-IH0KKwogICAgICAgIGxpc3RfZm9yX2VhY2hfZW50cnkoZXZlbnQsICZwbXUtPmFjdGl2ZV9saXN0
-LCBhY3RpdmVfZW50cnkpCiAgICAgICAgICAgICAgICByYXBsX2V2ZW50X3VwZGF0ZShldmVudCk7
-CgpAQCAtMjgyLDcgKzI4NCw3IEBAIHN0YXRpYyB2b2lkIHJhcGxfcG11X2V2ZW50X3N0b3Aoc3Ry
-dWN0IHBlcmZfZXZlbnQgKmV2ZW50LCBpbnQgbW9kZSkKICAgICAgICAgICAgICAgIFdBUk5fT05f
-T05DRShwbXUtPm5fYWN0aXZlIDw9IDApOwogICAgICAgICAgICAgICAgcG11LT5uX2FjdGl2ZS0t
-OwogICAgICAgICAgICAgICAgaWYgKHBtdS0+bl9hY3RpdmUgPT0gMCkKLSAgICAgICAgICAgICAg
-ICAgICAgICAgaHJ0aW1lcl9jYW5jZWwoJnBtdS0+aHJ0aW1lcik7CisgICAgICAgICAgICAgICAg
-ICAgICAgIGhydGltZXJfdHJ5X3RvX2NhbmNlbCgmcG11LT5ocnRpbWVyKTsKCiAgICAgICAgICAg
-ICAgICBsaXN0X2RlbCgmZXZlbnQtPmFjdGl2ZV9lbnRyeSk7CgpGaXJzdGx5LCB0aGUgZGVhZGxv
-Y2sgY291bGQgYmUgbWl0aWdhdGVkLiBCZWNhdXNlIGlmIHRoZSB0aW1lciBjYWxsYmFjayBmdW5j
-dGlvbgppcyBydW5uaW5nLCB0aGUgaHJ0aW1lcl90cnlfdG9fY2FuY2VsKCkgd2lsbCBkaXJlY3Rs
-eSByZXR1cm4uIAoKU2Vjb25kbHksIHRoZSByYWNlIGNvdWxkIGJlIGF2b2lkZWQuIEJlY2F1c2Ug
-d2UgdXNlIHBtdS0+bG9jayB0byBzeW5jaHJvbml6ZSBhbmQKbW92ZSB0aGUgY2hlY2sgImlmICgh
-cG11LT5uX2FjdGl2ZSkiIGludG8gdGhlIHByb3RlY3Rpb24gc2NvcGUgb2YgcG11LT5sb2NrLgpJ
-ZiB0aGUgcmFwbF9wbXVfZXZlbnRfc3RvcCgpIGhhcyBmaW5pc2hlZCwgdGhlICJwbXUtPm5fYWN0
-aXZlIiBlcXVhbHMgdG8gMCBhbmQKdGhlIHJhcGxfaHJ0aW1lcl9oYW5kbGUoKSB3aWxsIHJldHVy
-biAiSFJUSU1FUl9OT1JFU1RBUlQiLgoKVGhpcmRseSwgdGhpcyBzb2x1dGlvbiB3aWxsIG5vdCBj
-YXVzZSBxdWFsaXR5LW9mLWltcGxlbWVudGF0aW9uIGlzc3VlIG9mIHRoZSBocnRpbWVyLgoKQmVz
-dCByZWdhcmRzLApEdW9taW5nIFpob3UK
+On 21/09/22 10:26, Adrian Hunter wrote:
+> On 20/09/22 21:30, Namhyung Kim wrote:
+>> On Tue, Sep 20, 2022 at 7:00 AM Adrian Hunter <adrian.hunter@intel.com> wrote:
+>>>
+>>> On 16/09/22 20:59, Namhyung Kim wrote:
+>>>> When synthesizing MMAP2 with build-id, it'd read the same file repeatedly as
+>>>> it has no idea if it's done already.  Maintain a dsos to check that and skip
+>>>> the file access if possible.
+>>>>
+>>>> Signed-off-by: Namhyung Kim <namhyung@kernel.org>
+>>>> ---
+>>>>  tools/perf/util/synthetic-events.c | 49 +++++++++++++++++++++++++-----
+>>>>  1 file changed, 42 insertions(+), 7 deletions(-)
+>>>>
+>>>> diff --git a/tools/perf/util/synthetic-events.c b/tools/perf/util/synthetic-events.c
+>>>> index 9d4f5dacd154..e6978b2dee8f 100644
+>>>> --- a/tools/perf/util/synthetic-events.c
+>>>> +++ b/tools/perf/util/synthetic-events.c
+>>>> @@ -4,6 +4,7 @@
+>>>>  #include "util/data.h"
+>>>>  #include "util/debug.h"
+>>>>  #include "util/dso.h"
+>>>> +#include "util/dsos.h"
+>>>>  #include "util/event.h"
+>>>>  #include "util/evlist.h"
+>>>>  #include "util/machine.h"
+>>>> @@ -47,12 +48,25 @@
+>>>>
+>>>>  unsigned int proc_map_timeout = DEFAULT_PROC_MAP_PARSE_TIMEOUT;
+>>>>
+>>>> +static bool synth_init_done;
+>>>> +static struct dsos synth_dsos;
+>>>> +
+>>>>  void perf_event__synthesize_start(void)
+>>>>  {
+>>>> +     if (synth_init_done)
+>>>> +             return;
+>>>> +
+>>>> +     dsos__init(&synth_dsos);
+>>>> +
+>>>> +     synth_init_done = true;
+>>>>  }
+>>>>
+>>>>  void perf_event__synthesize_stop(void)
+>>>>  {
+>>>> +     if (!synth_init_done)
+>>>> +             return;
+>>>> +
+>>>> +     dsos__exit(&synth_dsos);
+>>>>  }
+>>>>
+>>>>  int perf_tool__process_synth_event(struct perf_tool *tool,
+>>>> @@ -374,26 +388,47 @@ static bool read_proc_maps_line(struct io *io, __u64 *start, __u64 *end,
+>>>>  static void perf_record_mmap2__read_build_id(struct perf_record_mmap2 *event,
+>>>>                                            bool is_kernel)
+>>>>  {
+>>>> -     struct build_id bid;
+>>>> +     struct build_id _bid, *bid = &_bid;
+>>>> +     struct dso *dso = NULL;
+>>>> +     struct dso_id id;
+>>>>       int rc;
+>>>>
+>>>> -     if (is_kernel)
+>>>> -             rc = sysfs__read_build_id("/sys/kernel/notes", &bid);
+>>>> -     else
+>>>> -             rc = filename__read_build_id(event->filename, &bid) > 0 ? 0 : -1;
+>>>> +     if (is_kernel) {
+>>>> +             rc = sysfs__read_build_id("/sys/kernel/notes", bid);
+>>>> +             goto out;
+>>>> +     }
+>>>> +
+>>>> +     id.maj = event->maj;
+>>>> +     id.min = event->min;
+>>>> +     id.ino = event->ino;
+>>>> +     id.ino_generation = event->ino_generation;
+>>>>
+>>>
+>>> There might be some paths missing perf_event__synthesize_start()
+>>> e.g. perf trace
+>>> So it would probably be safer to use lazy initialization for
+>>> synth_dsos.
+>>
+>> I thought about that too, but it'd need a cleanup routine at the end
+>> anyway.  So I ended up having a pair of start/stop routines.
+>>
+>>>
+>>> Also, callers of perf_record_mmap2__read_build_id() have a struct
+>>> machine so I wonder about putting synth_dsos in struct machine ?
+>>> Or even just using machine->dsos ?
+>>
+>> My intention was to use minimal info from struct dso - name, id and
+>> build-id.  But as it already uses dsos/dso routines, it's not much
+>> different from using the existing machine->dsos.
+>>
+>> So yeah, I think it's good to reuse the existing one as it'd benefit
+>> the build-id processing at the end.  Will change.
+>>
+>> Thanks,
+>> Namhyung
+>>
+>>
+>>>
+>>>> +     dso = dsos__findnew_id(&synth_dsos, event->filename, &id);
+>>>> +     if (dso && dso->has_build_id) {
+>>>> +             bid = &dso->bid;
+>>>> +             rc = 0;
+>>>> +             goto out;
+>>>> +     }
+> 
+> Also I guess the dsos optimization could be a separate patch ?
+
+Disregard that - I thought there were other changes too.
