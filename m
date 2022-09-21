@@ -2,120 +2,135 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 488E1C6FA8E
-	for <linux-perf-users@archiver.kernel.org>; Wed, 21 Sep 2022 12:14:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8EE95C32771
+	for <linux-perf-users@archiver.kernel.org>; Wed, 21 Sep 2022 12:33:55 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229610AbiIUMOC (ORCPT
+        id S229960AbiIUMdw (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Wed, 21 Sep 2022 08:14:02 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35182 "EHLO
+        Wed, 21 Sep 2022 08:33:52 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34244 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229544AbiIUMOB (ORCPT
+        with ESMTP id S230087AbiIUMdt (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Wed, 21 Sep 2022 08:14:01 -0400
-Received: from zju.edu.cn (spam.zju.edu.cn [61.164.42.155])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTP id C8DFF95AD3;
-        Wed, 21 Sep 2022 05:13:59 -0700 (PDT)
-Received: from ubuntu.localdomain (unknown [10.162.98.155])
-        by mail-app3 (Coremail) with SMTP id cC_KCgB3Xajs_ypjJ5XdBg--.55807S2;
-        Wed, 21 Sep 2022 20:13:39 +0800 (CST)
-From:   Duoming Zhou <duoming@zju.edu.cn>
-To:     peterz@infradead.org, linux-perf-users@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Cc:     mingo@redhat.com, acme@kernel.org, mark.rutland@arm.com,
-        alexander.shishkin@linux.intel.com, jolsa@kernel.org,
-        namhyung@kernel.org, tglx@linutronix.de, bp@alien8.de,
-        dave.hansen@linux.intel.com, x86@kernel.org, hpa@zytor.com,
-        Duoming Zhou <duoming@zju.edu.cn>
-Subject: [PATCH V3] perf/x86/rapl: fix deadlock in rapl_pmu_event_stop
-Date:   Wed, 21 Sep 2022 20:13:32 +0800
-Message-Id: <20220921121332.24363-1-duoming@zju.edu.cn>
-X-Mailer: git-send-email 2.17.1
-X-CM-TRANSID: cC_KCgB3Xajs_ypjJ5XdBg--.55807S2
-X-Coremail-Antispam: 1UD129KBjvJXoW7ZF47XryxCr4rWFW5WFyfWFg_yoW8tF4Upr
-        WxAryaqr1jv3ZFqay8t3WkXrW3Zan7GanxJw4fGw1rA3ZxWan5ta1xGayF9FW3AF93X3sa
-        yw10qrWrAFZrZ37anT9S1TB71UUUUUUqnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
-        9KBjDU0xBIdaVrnRJUUUvl1xkIjI8I6I8E6xAIw20EY4v20xvaj40_Wr0E3s1l1IIY67AE
-        w4v_Jr0_Jr4l8cAvFVAK0II2c7xJM28CjxkF64kEwVA0rcxSw2x7M28EF7xvwVC0I7IYx2
-        IY67AKxVWDJVCq3wA2z4x0Y4vE2Ix0cI8IcVCY1x0267AKxVW8Jr0_Cr1UM28EF7xvwVC2
-        z280aVAFwI0_GcCE3s1l84ACjcxK6I8E87Iv6xkF7I0E14v26rxl6s0DM2AIxVAIcxkEcV
-        Aq07x20xvEncxIr21l5I8CrVACY4xI64kE6c02F40Ex7xfMcIj6xIIjxv20xvE14v26r1j
-        6r18McIj6I8E87Iv67AKxVWUJVW8JwAm72CE4IkC6x0Yz7v_Jr0_Gr1lF7xvr2IYc2Ij64
-        vIr41lF7I21c0EjII2zVCS5cI20VAGYxC7M4IIrI8v6xkF7I0E8cxan2IY04v7MxAIw28I
-        cxkI7VAKI48JMxAIw28IcVCjz48v1sIEY20_GFWkJr1UJwCFx2IqxVCFs4IE7xkEbVWUJV
-        W8JwC20s026c02F40E14v26r1j6r18MI8I3I0E7480Y4vE14v26r106r1rMI8E67AF67kF
-        1VAFwI0_Jw0_GFylIxkGc2Ij64vIr41lIxAIcVC0I7IYx2IY67AKxVWUJVWUCwCI42IY6x
-        IIjxv20xvEc7CjxVAFwI0_Gr0_Cr1lIxAIcVCF04k26cxKx2IYs7xG6r1j6r1xMIIF0xvE
-        x4A2jsIE14v26r1j6r4UMIIF0xvEx4A2jsIEc7CjxVAFwI0_Gr0_Gr1UYxBIdaVFxhVjvj
-        DU0xZFpf9x0JUdHUDUUUUU=
-X-CM-SenderInfo: qssqjiasttq6lmxovvfxof0/1tbiAg4AAVZdtbktIAAEsD
+        Wed, 21 Sep 2022 08:33:49 -0400
+Received: from szxga08-in.huawei.com (szxga08-in.huawei.com [45.249.212.255])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2945295E4F;
+        Wed, 21 Sep 2022 05:33:48 -0700 (PDT)
+Received: from dggpemm500021.china.huawei.com (unknown [172.30.72.54])
+        by szxga08-in.huawei.com (SkyGuard) with ESMTP id 4MXd5b1YqHz14Qhw;
+        Wed, 21 Sep 2022 20:29:39 +0800 (CST)
+Received: from dggpemm500013.china.huawei.com (7.185.36.172) by
+ dggpemm500021.china.huawei.com (7.185.36.109) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2375.31; Wed, 21 Sep 2022 20:33:46 +0800
+Received: from [10.67.108.67] (10.67.108.67) by dggpemm500013.china.huawei.com
+ (7.185.36.172) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2375.31; Wed, 21 Sep
+ 2022 20:33:45 +0800
+Message-ID: <7618e500-5368-f271-44f0-81fb43527389@huawei.com>
+Date:   Wed, 21 Sep 2022 20:33:45 +0800
+MIME-Version: 1.0
+User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:102.0) Gecko/20100101
+ Thunderbird/102.0
+Subject: Re: [PATCH -next 0/7] riscv: Improvments for stacktrace
+Content-Language: en-US
+To:     Guo Ren <guoren@kernel.org>
+CC:     <linux-kernel@vger.kernel.org>, <linux-riscv@lists.infradead.org>,
+        <linux-perf-users@vger.kernel.org>, <paul.walmsley@sifive.com>,
+        <palmer@dabbelt.com>, <aou@eecs.berkeley.edu>,
+        <peterz@infradead.org>, <mingo@redhat.com>, <acme@kernel.org>,
+        <mark.rutland@arm.com>, <alexander.shishkin@linux.intel.com>,
+        <namhyung@kernel.org>, <jolsa@kernel.org>, <frederic@kernel.org>,
+        <vincent.chen@sifive.com>, <ardb@kernel.org>,
+        <mhiramat@kernel.org>, <rostedt@goodmis.org>,
+        <keescook@chromium.org>, <catalin.marinas@arm.com>
+References: <20220920151202.180057-1-chenzhongjin@huawei.com>
+ <CAJF2gTRUh6RiMypEm=b=iJruXDWXoqXpXwn1YaUChgyJ0v2gxw@mail.gmail.com>
+From:   Chen Zhongjin <chenzhongjin@huawei.com>
+In-Reply-To: <CAJF2gTRUh6RiMypEm=b=iJruXDWXoqXpXwn1YaUChgyJ0v2gxw@mail.gmail.com>
+Content-Type: text/plain; charset="UTF-8"; format=flowed
+Content-Transfer-Encoding: 7bit
+X-Originating-IP: [10.67.108.67]
+X-ClientProxiedBy: dggems706-chm.china.huawei.com (10.3.19.183) To
+ dggpemm500013.china.huawei.com (7.185.36.172)
+X-CFilter-Loop: Reflected
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-There is a deadlock in rapl_pmu_event_stop(), the process is
-shown below:
+Hi,
 
-    (thread 1)                 |        (thread 2)
-rapl_pmu_event_stop()          | rapl_hrtimer_handle()
- ...                           |  if (!pmu->n_active)
- raw_spin_lock_irqsave() //(1) |  ...
-  ...                          |
-  hrtimer_cancel()             |  raw_spin_lock_irqsave() //(2)
-  (block forever)
+On 2022/9/21 10:30, Guo Ren wrote:
+> Some modifications are related to the patch series [1] [2], please take a look.
+>
+> [1] https://lore.kernel.org/linux-riscv/20220918155246.1203293-1-guoren@kernel.org/
+> [2] https://lore.kernel.org/linux-riscv/20220916103817.9490-1-guoren@kernel.org/
 
-We hold pmu->lock in position (1) and use hrtimer_cancel() to wait
-rapl_hrtimer_handle() to stop, but rapl_hrtimer_handle() also need
-pmu->lock in position (2). As a result, the rapl_pmu_event_stop()
-will be blocked forever.
+I have tested my patch on your branches.
 
-This patch uses hrtimer_try_to_cancel() to replace hrtimer_cancel()
-and moves the check "if (!pmu->n_active)" into the protection scope
-of pmu->lock. If the timer callback function is running, the
-hrtimer_try_to_cancel() will directly return. After the
-rapl_pmu_event_stop() has finished, the "pmu->n_active" equals to 0
-and the rapl_hrtimer_handle() will return "HRTIMER_NORESTART".
+For the ftrace one it works properly and passed FTRACE_STARTUP_TEST.
 
-Fixes: 65661f96d3b3 ("perf/x86: Add RAPL hrtimer support")
-Signed-off-by: Duoming Zhou <duoming@zju.edu.cn>
----
-Changes in V3:
-  - Use hrtimer_try_to_cancel() to replace hrtimer_cancel().
-  - Use pmu->lock to protect the check "if (!pmu->n_active)".
+For the entry one I proposed some advice in another reply, with that my 
+patch also works well.
 
- arch/x86/events/rapl.c | 10 ++++++----
- 1 file changed, 6 insertions(+), 4 deletions(-)
 
-diff --git a/arch/x86/events/rapl.c b/arch/x86/events/rapl.c
-index 77e3a47af5a..a526a08ee6e 100644
---- a/arch/x86/events/rapl.c
-+++ b/arch/x86/events/rapl.c
-@@ -219,11 +219,13 @@ static enum hrtimer_restart rapl_hrtimer_handle(struct hrtimer *hrtimer)
- 	struct perf_event *event;
- 	unsigned long flags;
- 
--	if (!pmu->n_active)
--		return HRTIMER_NORESTART;
--
- 	raw_spin_lock_irqsave(&pmu->lock, flags);
- 
-+	if (!pmu->n_active) {
-+		raw_spin_unlock_irqrestore(&pmu->lock, flags);
-+		return HRTIMER_NORESTART;
-+	}
-+
- 	list_for_each_entry(event, &pmu->active_list, active_entry)
- 		rapl_event_update(event);
- 
-@@ -282,7 +284,7 @@ static void rapl_pmu_event_stop(struct perf_event *event, int mode)
- 		WARN_ON_ONCE(pmu->n_active <= 0);
- 		pmu->n_active--;
- 		if (pmu->n_active == 0)
--			hrtimer_cancel(&pmu->hrtimer);
-+			hrtimer_try_to_cancel(&pmu->hrtimer);
- 
- 		list_del(&event->active_entry);
- 
--- 
-2.17.1
+I'll post v2 patch which is totally dependent to yours. And after your 
+patch applied, the stacktrace
 
+may need to be updated again, for example, print the type of current 
+unwinding stack.
+
+
+Best,
+
+Chen
+
+> On Tue, Sep 20, 2022 at 11:15 PM Chen Zhongjin <chenzhongjin@huawei.com> wrote:
+>> Currently, the stacktrace with FRAME_POINTER on riscv has some problem:
+>>
+>> 1. stacktrace will stop at irq so it can't get the stack frames before
+>> irq entry.
+>> 2. stacktrace can't unwind all the real stack frames when there is
+>> k{ret}probes or ftrace.
+>>
+>> These are mainly becase when there is a pt_regs on stack, we can't unwind
+>> the stack frame as normal function.
+>>
+>> Some architectures (e.g. arm64) create a extra stackframe inside pt_regs.
+>> However this doesn't work for riscv because the ra is not ensured to be
+>> pushed to stack. As explained in:
+>> commit f766f77a74f5("riscv/stacktrace: Fix stack output without ra on the stack top")
+>>
+>> So, I choosed the method of x86 that, if there is a pt_regs on stack,
+>> we encoded the frame pointer and save it. When unwinding stack frame,
+>> we can get pt_regs and registers required for unwinding stacks.
+>>
+>> In addition, the patch set contains some refactoring of stacktrace.c to
+>> keep the stacktrace code on riscv consistent with other architectures.
+>>
+>> Chen Zhongjin (7):
+>>    riscv: stacktrace: Replace walk_stackframe with arch_stack_walk
+>>    riscv: stacktrace: Introduce unwind functions
+>>    riscv: stacktrace: Save pt_regs in encoded fp on irq entry
+>>    riscv: syscall: Don't clobber s0 when syscall
+>>    riscv: stacktrace: Implement stacktrace for irq
+>>    riscv: stacktrace: Fix unwinding on ftrace_regs_call
+>>    riscv: stacktrace: Fix unwinding on __kretporbe_trampoline
+>>
+>>   arch/riscv/include/asm/frame.h                |  45 +++++
+>>   arch/riscv/include/asm/stacktrace.h           |  13 +-
+>>   arch/riscv/kernel/entry.S                     |  23 +--
+>>   arch/riscv/kernel/mcount-dyn.S                |   8 +
+>>   arch/riscv/kernel/perf_callchain.c            |   2 +-
+>>   arch/riscv/kernel/probes/kprobes_trampoline.S |   8 +
+>>   arch/riscv/kernel/stacktrace.c                | 155 ++++++++++++------
+>>   7 files changed, 195 insertions(+), 59 deletions(-)
+>>   create mode 100644 arch/riscv/include/asm/frame.h
+>>
+>> --
+>> 2.17.1
+>>
+>
+> --
+> Best Regards
+>   Guo Ren
