@@ -2,25 +2,25 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 54919C6FA8E
-	for <linux-perf-users@archiver.kernel.org>; Wed, 21 Sep 2022 12:55:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 46D47C32771
+	for <linux-perf-users@archiver.kernel.org>; Wed, 21 Sep 2022 12:55:20 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229911AbiIUMzR (ORCPT
+        id S229895AbiIUMzS (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Wed, 21 Sep 2022 08:55:17 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38168 "EHLO
+        Wed, 21 Sep 2022 08:55:18 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38244 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229877AbiIUMzN (ORCPT
+        with ESMTP id S229910AbiIUMzQ (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Wed, 21 Sep 2022 08:55:13 -0400
+        Wed, 21 Sep 2022 08:55:16 -0400
 Received: from szxga08-in.huawei.com (szxga08-in.huawei.com [45.249.212.255])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BB75843617;
-        Wed, 21 Sep 2022 05:55:11 -0700 (PDT)
-Received: from dggpemm500022.china.huawei.com (unknown [172.30.72.55])
-        by szxga08-in.huawei.com (SkyGuard) with ESMTP id 4MXdZG6qlmz14Rfn;
-        Wed, 21 Sep 2022 20:51:02 +0800 (CST)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E476E4A104;
+        Wed, 21 Sep 2022 05:55:13 -0700 (PDT)
+Received: from dggpemm500021.china.huawei.com (unknown [172.30.72.55])
+        by szxga08-in.huawei.com (SkyGuard) with ESMTP id 4MXdZK2CM9z14RgH;
+        Wed, 21 Sep 2022 20:51:05 +0800 (CST)
 Received: from dggpemm500013.china.huawei.com (7.185.36.172) by
- dggpemm500022.china.huawei.com (7.185.36.162) with Microsoft SMTP Server
+ dggpemm500021.china.huawei.com (7.185.36.109) with Microsoft SMTP Server
  (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
  15.1.2375.31; Wed, 21 Sep 2022 20:55:09 +0800
 Received: from ubuntu1804.huawei.com (10.67.175.36) by
@@ -39,12 +39,10 @@ CC:     <paul.walmsley@sifive.com>, <palmer@dabbelt.com>,
         <mhiramat@kernel.org>, <rostedt@goodmis.org>,
         <keescook@chromium.org>, <catalin.marinas@arm.com>,
         <chenzhongjin@huawei.com>
-Subject: [PATCH for-next v2 2/4] riscv: stacktrace: Introduce unwind functions
-Date:   Wed, 21 Sep 2022 20:51:25 +0800
-Message-ID: <20220921125128.33913-3-chenzhongjin@huawei.com>
+Subject: [PATCH for-next v2 0/4] riscv: Improvments for stacktrace
+Date:   Wed, 21 Sep 2022 20:51:23 +0800
+Message-ID: <20220921125128.33913-1-chenzhongjin@huawei.com>
 X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20220921125128.33913-1-chenzhongjin@huawei.com>
-References: <20220921125128.33913-1-chenzhongjin@huawei.com>
 MIME-Version: 1.0
 Content-Type: text/plain
 X-Originating-IP: [10.67.175.36]
@@ -55,165 +53,100 @@ Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-Now all riscv unwinding code is inside arch_stack_walk. It's
-not same as other architectures.
+Currently, the stacktrace with FRAME_POINTER on riscv has some problem:
 
-Make some refactoring, to move unwinding code into unwind() and
-unwind_next() functions, which walks through all stack frames
-or single frame.
+1. stacktrace will stop at irq so it can't get the stack frames before
+irq entry.
+2. stacktrace can't unwind all the real stack frames when there is
+k{ret}probes or ftrace.
 
-This patch only moves code but doesn't make any logical change.
+These are mainly becase when there is a pt_regs on stack, we can't unwind
+the stack frame as normal function.
 
-Signed-off-by: Chen Zhongjin <chenzhongjin@huawei.com>
+Some architectures (e.g. arm64) create a extra stackframe inside pt_regs.
+However this doesn't work for riscv because the ra is not ensured to be
+pushed to stack. As explained in:
+commit f766f77a74f5("riscv/stacktrace: Fix stack output without ra on the stack top")
+
+So, I choosed the method of x86 that, if there is a pt_regs on stack,
+we encoded the frame pointer and save it. When unwinding stack frame,
+we can get pt_regs and registers required for unwinding stacks.
+
+In addition, the patch set contains some refactoring of stacktrace.c to
+keep the stacktrace code on riscv consistent with other architectures.
+
+Stacktrace before for kretprobes:
+
+  Call Trace:
+  ...
+  [<ffffffff800d5d48>] __kretprobe_trampoline_handler+0xc2/0x13e
+  [<ffffffff808b766c>] trampoline_probe_handler+0x30/0x46
+  [<ffffffff800070de>] __kretprobe_trampoline+0x52/0x92
+  [<ffffffff0163809c>] kprobe_init+0x9c/0x1000 [kprobe_unwind]
+  [<ffffffff800027c8>] do_one_initcall+0x4c/0x1f2
+  ...
+
+Stacktrace after:
+
+  Call Trace:
+  ...
+  [<ffffffff800d5d48>] __kretprobe_trampoline_handler+0xc2/0x13e
+  [<ffffffff808b766c>] trampoline_probe_handler+0x30/0x46
+  [<ffffffff800070de>] __kretprobe_trampoline+0x52/0x92
++ [<ffffffff01633076>] the_caller+0x2c/0x38 [kprobe_unwind]
+  [<ffffffff0163809c>] kprobe_init+0x9c/0x1000 [kprobe_unwind]
+  [<ffffffff800027c8>] do_one_initcall+0x4c/0x1f2
+  ...
+
+Stacktrace before for ftrace:
+
+  Call Trace:
+  ...
+  [<ffffffff80006df0>] kprobe_ftrace_handler+0x13e/0x188
+  [<ffffffff80008e7e>] ftrace_regs_call+0x8/0x10
+  [<ffffffff80002540>] do_one_initcall+0x4c/0x1f2
+  [<ffffffff8008a4e6>] do_init_module+0x56/0x210
+  ...
+
+  Stacktrace after:
+
+  Call Trace:
+  ...
+  [<ffffffff016150e0>] handler_pre+0x30/0x4a [kprobe_unwind]
+  [<ffffffff800bce96>] aggr_pre_handler+0x60/0x94
+  [<ffffffff80006df0>] kprobe_ftrace_handler+0x13e/0x188
+  [<ffffffff80008e82>] ftrace_regs_call+0x8/0x10
++ [<ffffffff01615000>] traced_func+0x0/0x1e [kprobe_unwind]
+  [<ffffffff80002540>] do_one_initcall+0x4c/0x1f2
+  [<ffffffff8008a4ea>] do_init_module+0x56/0x210
+  ...
+
+Noticed that the caller of ftrace and probed func of kretprobe
+cannot be unwind because they are inside function pro/epilogue.
+
 ---
- arch/riscv/include/asm/stacktrace.h |   7 ++
- arch/riscv/kernel/stacktrace.c      | 104 ++++++++++++++++++----------
- 2 files changed, 74 insertions(+), 37 deletions(-)
+v1 -> v2:
+- Merge three patches which add ENCODE_FRAME_POINTER together
+- Update commit message
+- Delete the KRETPORBES stuff added in unwind_state, we don't need them
+to recover the kretporbes ret_addr because we can get it in pt_regs
+---
+Chen Zhongjin (4):
+  riscv: stacktrace: Replace walk_stackframe with arch_stack_walk
+  riscv: stacktrace: Introduce unwind functions
+  riscv: stacktrace: Save pt_regs in ENCODE_FRAME_POINTER
+  riscv: stacktrace: Implement stacktrace for irq
 
-diff --git a/arch/riscv/include/asm/stacktrace.h b/arch/riscv/include/asm/stacktrace.h
-index b6cd3eddfd38..a39e4ef1dbd5 100644
---- a/arch/riscv/include/asm/stacktrace.h
-+++ b/arch/riscv/include/asm/stacktrace.h
-@@ -11,6 +11,13 @@ struct stackframe {
- 	unsigned long ra;
- };
- 
-+struct unwind_state {
-+	unsigned long fp;
-+	unsigned long sp;
-+	unsigned long pc;
-+	struct pt_regs *regs;
-+};
-+
- extern void dump_backtrace(struct pt_regs *regs, struct task_struct *task,
- 			   const char *loglvl);
- 
-diff --git a/arch/riscv/kernel/stacktrace.c b/arch/riscv/kernel/stacktrace.c
-index b51e32d50a0e..e84e21868a3e 100644
---- a/arch/riscv/kernel/stacktrace.c
-+++ b/arch/riscv/kernel/stacktrace.c
-@@ -16,54 +16,84 @@
- 
- #ifdef CONFIG_FRAME_POINTER
- 
--noinline notrace void arch_stack_walk(stack_trace_consume_fn consume_entry,
--		  void *cookie, struct task_struct *task,
--		  struct pt_regs *regs)
-+static int notrace unwind_next(struct unwind_state *state)
- {
--	unsigned long fp, sp, pc;
--	int level = 0;
-+	unsigned long low, high, fp;
-+	struct stackframe *frame;
- 
--	if (regs) {
--		fp = frame_pointer(regs);
--		sp = user_stack_pointer(regs);
--		pc = instruction_pointer(regs);
--	} else if (task == NULL || task == current) {
--		fp = (unsigned long)__builtin_frame_address(0);
--		sp = current_stack_pointer;
--		pc = (unsigned long)arch_stack_walk;
-+	fp = state->fp;
-+
-+	/* Validate frame pointer */
-+	low = state->sp + sizeof(struct stackframe);
-+	high = ALIGN(low, THREAD_SIZE);
-+
-+	if (fp < low || fp > high || fp & 0x7)
-+		return -EINVAL;
-+
-+	/* Unwind stack frame */
-+	frame = (struct stackframe *)fp - 1;
-+	state->sp = fp;
-+
-+	if (state->regs && state->regs->epc == state->pc &&
-+		fp & 0x7) {
-+		state->fp = frame->ra;
-+		state->pc = state->regs->ra;
- 	} else {
--		/* task blocked in __switch_to */
--		fp = task->thread.s[0];
--		sp = task->thread.sp;
--		pc = task->thread.ra;
-+		state->fp = frame->fp;
-+		state->pc = ftrace_graph_ret_addr(current, NULL, frame->ra,
-+							(unsigned long *)fp - 1);
- 	}
- 
--	for (;;) {
--		unsigned long low, high;
--		struct stackframe *frame;
-+	return 0;
-+}
- 
--		if (unlikely(!__kernel_text_address(pc) ||
--		   (level++ >= 1 && !consume_entry(cookie, pc))))
-+static void notrace unwind(struct unwind_state *state,
-+				stack_trace_consume_fn consume_entry, void *cookie)
-+{
-+	while (1) {
-+		int ret;
-+
-+		if (!__kernel_text_address(state->pc))
-+			break;
-+
-+		if (!consume_entry(cookie, state->pc))
- 			break;
- 
--		/* Validate frame pointer */
--		low = sp + sizeof(struct stackframe);
--		high = ALIGN(sp, THREAD_SIZE);
--		if (unlikely(fp < low || fp > high || fp & 0x7))
-+		ret = unwind_next(state);
-+		if (ret < 0)
- 			break;
--		/* Unwind stack frame */
--		frame = (struct stackframe *)fp - 1;
--		sp = fp;
--		if (regs && (regs->epc == pc) && (frame->fp & 0x7)) {
--			fp = frame->ra;
--			pc = regs->ra;
--		} else {
--			fp = frame->fp;
--			pc = ftrace_graph_ret_addr(current, NULL, frame->ra,
--						   (unsigned long *)(fp - 8));
--		}
-+	}
-+}
-+
-+noinline notrace void arch_stack_walk(stack_trace_consume_fn consume_entry,
-+		  void *cookie, struct task_struct *task,
-+		  struct pt_regs *regs)
-+{
-+	struct unwind_state state;
-+
-+	if (task == NULL)
-+		task = current;
- 
-+	if (regs) {
-+		state.fp = frame_pointer(regs);
-+		state.sp = user_stack_pointer(regs);
-+		state.pc = instruction_pointer(regs);
-+		state.regs = regs;
-+	} else if (task == current) {
-+		state.fp = (unsigned long)__builtin_frame_address(0);
-+		state.sp = current_stack_pointer;
-+		state.pc = (unsigned long)arch_stack_walk;
-+
-+		/* skip frame of arch_stack_walk */
-+		unwind_next(&state);
-+	} else {
-+		/* task blocked in __switch_to */
-+		state.fp = task->thread.s[0];
-+		state.sp = task->thread.sp;
-+		state.pc = task->thread.ra;
- 	}
-+
-+	unwind(&state, consume_entry, cookie);
- }
- 
- #else /* !CONFIG_FRAME_POINTER */
+ arch/riscv/include/asm/frame.h                |  45 ++++++
+ arch/riscv/include/asm/stacktrace.h           |   9 +-
+ arch/riscv/kernel/entry.S                     |   3 +
+ arch/riscv/kernel/mcount-dyn.S                |   7 +
+ arch/riscv/kernel/perf_callchain.c            |   2 +-
+ arch/riscv/kernel/probes/kprobes_trampoline.S |   7 +
+ arch/riscv/kernel/stacktrace.c                | 150 ++++++++++++------
+ 7 files changed, 174 insertions(+), 49 deletions(-)
+ create mode 100644 arch/riscv/include/asm/frame.h
+
 -- 
 2.17.1
 
