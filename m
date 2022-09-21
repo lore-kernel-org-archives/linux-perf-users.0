@@ -2,124 +2,126 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E613FECAAD8
-	for <linux-perf-users@archiver.kernel.org>; Wed, 21 Sep 2022 09:38:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 48E22C32771
+	for <linux-perf-users@archiver.kernel.org>; Wed, 21 Sep 2022 09:53:30 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229622AbiIUJi4 (ORCPT
+        id S231348AbiIUJx2 (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Wed, 21 Sep 2022 05:38:56 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37584 "EHLO
+        Wed, 21 Sep 2022 05:53:28 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59272 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229521AbiIUJiz (ORCPT
+        with ESMTP id S231741AbiIUJxB (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Wed, 21 Sep 2022 05:38:55 -0400
-Received: from mail-pg1-x52c.google.com (mail-pg1-x52c.google.com [IPv6:2607:f8b0:4864:20::52c])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 34174915C8;
-        Wed, 21 Sep 2022 02:38:55 -0700 (PDT)
-Received: by mail-pg1-x52c.google.com with SMTP id f193so5409573pgc.0;
-        Wed, 21 Sep 2022 02:38:55 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20210112;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date;
-        bh=KFVO8fVW480r7sdNg7zIhF6BeTKJDflqx7N33XmrmLw=;
-        b=B0O+peQ9GPse538cFMImXkVVEgzI2N7S9OOXM4GtJtRUoLvGHJiILpx7V0yLqj5aGo
-         TLH9++W5VKpgGvOPslIbS1a1TwqhF9K1w5wtZqnj2hpqCgxCaJ3Q2o9sstIfci3wP94f
-         gUWrK44ALw4vwC5HpHi3ehM2WQsv4RaxGM9pRQ5TrLq1Pq+y8v9FgMJZvRb6fP0e63mA
-         Dkr83m0zm8lGC/ES04KGH0K7UpG3T5a419tJnBrE5a+Q05psm8eCGXBGrOJp6H6GS3zC
-         DeGD99OQeMjQLHPp+hmp2MsBBkEyvC+rfSzgei9sHp+9kwqBLffiL0TPhH/Ql7nthi7n
-         m5Cg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date;
-        bh=KFVO8fVW480r7sdNg7zIhF6BeTKJDflqx7N33XmrmLw=;
-        b=vMsdpLh7XcRIqnfdth/cLU5v4Pan4prm9hrOTAtmXirtc0HN/9MXHl8c3iXQKN/RA7
-         vWhUh9lcGPWZb9EeCS+NZKo3pEq3i0dMpZqefr7hxFVA0eZsDceS0DdFpZKiTInvIneY
-         n111ZOp0d5O23dM2OXcQcZYFXE5aScUf8Z8J9Yr5b5gKV0SsS+MbYPoJuj70MiEFD7jG
-         GV7na9rEbHFBLB02tFgwZQbodLp8gMWuYIgT9J6a1RpvSPyWhNoZE57PH2dhzcUsgQl/
-         EnpT85Lix4hjNvJ2dCB3j6MfskAM6RRbabZJzPTlxG2LCmfN8GAEeZMCnRJ86aAqaVu6
-         o+Fg==
-X-Gm-Message-State: ACrzQf1b327t+LOkvEVe/TlZvZ4TPqmFhqUBJDtEJvmyKAroQS5MTGlu
-        vQGeXO0c5G6fG244SI2ZWXE=
-X-Google-Smtp-Source: AMsMyM41zgqidZsHKEdDqXihhnAlvXs3uPB1yM86uJY+Yx5+rcaq6pf9HawGCWNswtCxNp2KBfKnJA==
-X-Received: by 2002:a63:7843:0:b0:42b:4e77:a508 with SMTP id t64-20020a637843000000b0042b4e77a508mr23518088pgc.449.1663753134634;
-        Wed, 21 Sep 2022 02:38:54 -0700 (PDT)
-Received: from localhost.localdomain ([193.203.214.57])
-        by smtp.gmail.com with ESMTPSA id i2-20020a17090332c200b00176ea6ce0efsm1522926plr.109.2022.09.21.02.38.51
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 21 Sep 2022 02:38:54 -0700 (PDT)
-From:   cgel.zte@gmail.com
-X-Google-Original-From: ye.xingchen@zte.com.cn
-To:     acme@kernel.org
-Cc:     mingo@redhat.com, mark.rutland@arm.com,
-        alexander.shishkin@linux.intel.com, jolsa@kernel.org,
-        namhyung@kernel.org, adrian.hunter@intel.com, irogers@google.com,
-        james.clark@arm.com, alexandre.truong@arm.com,
-        blakejones@google.com, linux-perf-users@vger.kernel.org,
-        linux-kernel@vger.kernel.org, ye xingchen <ye.xingchen@zte.com.cn>,
-        Zeal Robot <zealci@zte.com.cn>
-Subject: [PATCH linux-next] perf machine: use strscpy() is more robust and safer
-Date:   Wed, 21 Sep 2022 09:38:48 +0000
-Message-Id: <20220921093848.230966-1-ye.xingchen@zte.com.cn>
-X-Mailer: git-send-email 2.25.1
+        Wed, 21 Sep 2022 05:53:01 -0400
+Received: from zju.edu.cn (mail.zju.edu.cn [61.164.42.155])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTP id E4C9B2196;
+        Wed, 21 Sep 2022 02:50:51 -0700 (PDT)
+Received: by ajax-webmail-mail-app3 (Coremail) ; Wed, 21 Sep 2022 17:50:18
+ +0800 (GMT+08:00)
+X-Originating-IP: [10.162.98.155]
+Date:   Wed, 21 Sep 2022 17:50:18 +0800 (GMT+08:00)
+X-CM-HeaderCharset: UTF-8
+From:   duoming@zju.edu.cn
+To:     "Ingo Molnar" <mingo@kernel.org>
+Cc:     peterz@infradead.org, linux-perf-users@vger.kernel.org,
+        linux-kernel@vger.kernel.org, mingo@redhat.com, acme@kernel.org,
+        mark.rutland@arm.com, alexander.shishkin@linux.intel.com,
+        jolsa@kernel.org, namhyung@kernel.org, tglx@linutronix.de,
+        bp@alien8.de, dave.hansen@linux.intel.com, x86@kernel.org,
+        hpa@zytor.com
+Subject: Re: [PATCH V2] perf/x86/rapl: fix deadlock in rapl_pmu_event_stop
+X-Priority: 3
+X-Mailer: Coremail Webmail Server Version XT5.0.13 build 20210104(ab8c30b6)
+ Copyright (c) 2002-2022 www.mailtech.cn zju.edu.cn
+In-Reply-To: <YyrC4OyP2BtY8tNl@gmail.com>
+References: <20220920014447.71946-1-duoming@zju.edu.cn>
+ <YyrC4OyP2BtY8tNl@gmail.com>
+Content-Transfer-Encoding: base64
+Content-Type: text/plain; charset=UTF-8
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Message-ID: <187941a5.e3508.1835f748feb.Coremail.duoming@zju.edu.cn>
+X-Coremail-Locale: zh_CN
+X-CM-TRANSID: cC_KCgC3vQxa3ipj56bbBg--.33667W
+X-CM-SenderInfo: qssqjiasttq6lmxovvfxof0/1tbiAgQAAVZdtbkYVQAAsN
+X-Coremail-Antispam: 1Ur529EdanIXcx71UUUUU7IcSsGvfJ3iIAIbVAYjsxI4VWxJw
+        CS07vEb4IE77IF4wCS07vE1I0E4x80FVAKz4kxMIAIbVAFxVCaYxvI4VCIwcAKzIAtYxBI
+        daVFxhVjvjDU=
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-From: ye xingchen <ye.xingchen@zte.com.cn>
-
-The implementation of strscpy() is more robust and safer.
-
-That's now the recommended way to copy NUL terminated strings.
-
-Reported-by: Zeal Robot <zealci@zte.com.cn>
-Signed-off-by: ye xingchen <ye.xingchen@zte.com.cn>
----
- tools/perf/util/machine.c | 8 ++++----
- 1 file changed, 4 insertions(+), 4 deletions(-)
-
-diff --git a/tools/perf/util/machine.c b/tools/perf/util/machine.c
-index 2a16cae28407..5d0f817cef63 100644
---- a/tools/perf/util/machine.c
-+++ b/tools/perf/util/machine.c
-@@ -1198,7 +1198,7 @@ int machine__create_extra_kernel_map(struct machine *machine,
- 
- 	kmap = map__kmap(map);
- 
--	strlcpy(kmap->name, xm->name, KMAP_NAME_LEN);
-+	strscpy(kmap->name, xm->name, KMAP_NAME_LEN);
- 
- 	maps__insert(machine__kernel_maps(machine), map);
- 
-@@ -1287,7 +1287,7 @@ int machine__map_x86_64_entry_trampolines(struct machine *machine,
- 			.pgoff = pgoff,
- 		};
- 
--		strlcpy(xm.name, ENTRY_TRAMPOLINE_NAME, KMAP_NAME_LEN);
-+		strscpy(xm.name, ENTRY_TRAMPOLINE_NAME, KMAP_NAME_LEN);
- 
- 		if (machine__create_extra_kernel_map(machine, kernel, &xm) < 0)
- 			return -1;
-@@ -1892,7 +1892,7 @@ int machine__process_mmap2_event(struct machine *machine,
- 			.pgoff = event->mmap2.pgoff,
- 		};
- 
--		strlcpy(xm.name, event->mmap2.filename, KMAP_NAME_LEN);
-+		strscpy(xm.name, event->mmap2.filename, KMAP_NAME_LEN);
- 		ret = machine__process_kernel_mmap_event(machine, &xm, bid);
- 		if (ret < 0)
- 			goto out_problem;
-@@ -1949,7 +1949,7 @@ int machine__process_mmap_event(struct machine *machine, union perf_event *event
- 			.pgoff = event->mmap.pgoff,
- 		};
- 
--		strlcpy(xm.name, event->mmap.filename, KMAP_NAME_LEN);
-+		strscpy(xm.name, event->mmap.filename, KMAP_NAME_LEN);
- 		ret = machine__process_kernel_mmap_event(machine, &xm, NULL);
- 		if (ret < 0)
- 			goto out_problem;
--- 
-2.25.1
+SGVsbG8sCgpPbiBXZWQsIDIxIFNlcCAyMDIyIDA5OjUzOjA0ICswMjAwIEluZ28gTW9sbmFyIHdy
+b3RlOgoKPiAqIER1b21pbmcgWmhvdSA8ZHVvbWluZ0B6anUuZWR1LmNuPiB3cm90ZToKPiAKPiA+
+IFRoZXJlIGlzIGEgZGVhZGxvY2sgaW4gcmFwbF9wbXVfZXZlbnRfc3RvcCgpLCB0aGUgcHJvY2Vz
+cyBpcwo+ID4gc2hvd24gYmVsb3c6Cj4gPiAKPiA+ICAgICAodGhyZWFkIDEpICAgICAgICAgICAg
+ICAgICB8ICAgICAgICAodGhyZWFkIDIpCj4gPiByYXBsX3BtdV9ldmVudF9zdG9wKCkgICAgICAg
+ICAgfCByYXBsX2hydGltZXJfaGFuZGxlKCkKPiA+ICAuLi4gICAgICAgICAgICAgICAgICAgICAg
+ICAgICB8ICBpZiAoIXBtdS0+bl9hY3RpdmUpCj4gPiAgcmF3X3NwaW5fbG9ja19pcnFzYXZlKCkg
+Ly8oMSkgfCAgLi4uCj4gPiAgIC4uLiAgICAgICAgICAgICAgICAgICAgICAgICAgfAo+ID4gICBo
+cnRpbWVyX2NhbmNlbCgpICAgICAgICAgICAgIHwgIHJhd19zcGluX2xvY2tfaXJxc2F2ZSgpIC8v
+KDIpCj4gPiAgIChibG9jayBmb3JldmVyKQo+ID4gCj4gPiBXZSBob2xkIHBtdS0+bG9jayBpbiBw
+b3NpdGlvbiAoMSkgYW5kIHVzZSBocnRpbWVyX2NhbmNlbCgpIHRvIHdhaXQKPiA+IHJhcGxfaHJ0
+aW1lcl9oYW5kbGUoKSB0byBzdG9wLCBidXQgcmFwbF9ocnRpbWVyX2hhbmRsZSgpIGFsc28gbmVl
+ZAo+ID4gcG11LT5sb2NrIGluIHBvc2l0aW9uICgyKS4gQXMgYSByZXN1bHQsIHRoZSByYXBsX3Bt
+dV9ldmVudF9zdG9wKCkKPiA+IHdpbGwgYmUgYmxvY2tlZCBmb3JldmVyLgo+ID4gCj4gPiBUaGlz
+IHBhdGNoIGV4dHJhY3RzIGhydGltZXJfY2FuY2VsKCkgZnJvbSB0aGUgcHJvdGVjdGlvbiBvZgo+
+ID4gcmF3X3NwaW5fbG9ja19pcnFzYXZlKCkuIEFzIGEgcmVzdWx0LCB0aGUgcmFwbF9ocnRpbWVy
+X2hhbmRsZSgpCj4gPiBjb3VsZCBvYnRhaW4gdGhlIHBtdS0+bG9jay4KPiA+IAo+ID4gRml4ZXM6
+IDY1NjYxZjk2ZDNiMyAoInBlcmYveDg2OiBBZGQgUkFQTCBocnRpbWVyIHN1cHBvcnQiKQo+ID4g
+U2lnbmVkLW9mZi1ieTogRHVvbWluZyBaaG91IDxkdW9taW5nQHpqdS5lZHUuY24+Cj4gPiAtLS0K
+PiA+IENoYW5nZXMgaW4gdjI6Cj4gPiAgIC0gTW92ZSBocnRpbWVyX2NhbmNlbCgpIHRvIHRoZSBl
+bmQgb2YgcmFwbF9wbXVfZXZlbnRfc3RvcCgpIGZ1bmN0aW9uLgo+ID4gCj4gPiAgYXJjaC94ODYv
+ZXZlbnRzL3JhcGwuYyB8IDcgKysrKystLQo+ID4gIDEgZmlsZSBjaGFuZ2VkLCA1IGluc2VydGlv
+bnMoKyksIDIgZGVsZXRpb25zKC0pCj4gPiAKPiA+IGRpZmYgLS1naXQgYS9hcmNoL3g4Ni9ldmVu
+dHMvcmFwbC5jIGIvYXJjaC94ODYvZXZlbnRzL3JhcGwuYwo+ID4gaW5kZXggNzdlM2E0N2FmNWEu
+LjdjMTEwMDkyYzgzIDEwMDY0NAo+ID4gLS0tIGEvYXJjaC94ODYvZXZlbnRzL3JhcGwuYwo+ID4g
+KysrIGIvYXJjaC94ODYvZXZlbnRzL3JhcGwuYwo+ID4gQEAgLTI4MSw4ICsyODEsNiBAQCBzdGF0
+aWMgdm9pZCByYXBsX3BtdV9ldmVudF9zdG9wKHN0cnVjdCBwZXJmX2V2ZW50ICpldmVudCwgaW50
+IG1vZGUpCj4gPiAgCWlmICghKGh3Yy0+c3RhdGUgJiBQRVJGX0hFU19TVE9QUEVEKSkgewo+ID4g
+IAkJV0FSTl9PTl9PTkNFKHBtdS0+bl9hY3RpdmUgPD0gMCk7Cj4gPiAgCQlwbXUtPm5fYWN0aXZl
+LS07Cj4gPiAtCQlpZiAocG11LT5uX2FjdGl2ZSA9PSAwKQo+ID4gLQkJCWhydGltZXJfY2FuY2Vs
+KCZwbXUtPmhydGltZXIpOwo+ID4gIAo+ID4gIAkJbGlzdF9kZWwoJmV2ZW50LT5hY3RpdmVfZW50
+cnkpOwo+ID4gIAo+ID4gQEAgLTMwMCw2ICsyOTgsMTEgQEAgc3RhdGljIHZvaWQgcmFwbF9wbXVf
+ZXZlbnRfc3RvcChzdHJ1Y3QgcGVyZl9ldmVudCAqZXZlbnQsIGludCBtb2RlKQo+ID4gIAkJaHdj
+LT5zdGF0ZSB8PSBQRVJGX0hFU19VUFRPREFURTsKPiA+ICAJfQo+ID4gIAo+ID4gKwlpZiAoIXBt
+dS0+bl9hY3RpdmUpIHsKPiA+ICsJCXJhd19zcGluX3VubG9ja19pcnFyZXN0b3JlKCZwbXUtPmxv
+Y2ssIGZsYWdzKTsKPiA+ICsJCWhydGltZXJfY2FuY2VsKCZwbXUtPmhydGltZXIpOwo+ID4gKwkJ
+cmV0dXJuOwo+ID4gKwl9Cj4gCj4gTG9va3MgcmFjeSBub3c6IEFGQUlDUyBub3cgaXQncyBwb3Nz
+aWJsZSBmb3IgcmFwbF9ocnRpbWVyX2hhbmRsZSgpIHRvIAo+IGV4ZWN1dGUgYXQgYW4gYXJiaXRy
+YXJ5IG1vbWVudCBhZnRlciBwbXUtPmxvY2sgaXMgZHJvcHBlZCAtIHdoaWNoIGNvdWxkIGJlIAo+
+IHVzZS1hZnRlci1mcmVlIGFmdGVyIGNsZWFudXBfcmFwbF9wbXVzKCkgZXhlY3V0ZXMgYW5kIHRo
+ZSBQTVUgaXMgZnJlZWQsIAo+IHJpZ2h0Pwo+IAo+IFRoZXJlJ3MgYWxzbyB0aGUgcXVhbGl0eS1v
+Zi1pbXBsZW1lbnRhdGlvbiBpc3N1ZSBvZiB0aGUgaHJ0aW1lciBleGVjdXRpbmcgCj4gaW4gYSBk
+ZWxheWVkIGZhc2hpb24gZm9yIHRoZSAqbmV4dCogZXZlbnQgdGhhdCBtYXkgaGF2ZSBiZWVuIGFk
+ZGVkLCBsZWFkaW5nIAo+IHRvIHBvc3NpYmx5IHVuZXhwZWN0ZWQgcmVzdWx0cy4KClRoYW5rIHlv
+dXIgZm9yIHlvdXIgc3VnZ2VzdGlvbnMhIEluIG9yZGVyIHRvIHNvbHZlIHRoZSBhYm92ZSBwcm9i
+bGVtcywKSSBjb21lIHVwIHdpdGggdGhlIGZvbGxvd2luZyBzb2x1dGlvbi4KCmRpZmYgLS1naXQg
+YS9hcmNoL3g4Ni9ldmVudHMvcmFwbC5jIGIvYXJjaC94ODYvZXZlbnRzL3JhcGwuYwppbmRleCA3
+N2UzYTQ3YWY1YS4uYTUyNmEwOGVlNmUgMTAwNjQ0Ci0tLSBhL2FyY2gveDg2L2V2ZW50cy9yYXBs
+LmMKKysrIGIvYXJjaC94ODYvZXZlbnRzL3JhcGwuYwpAQCAtMjE5LDExICsyMTksMTMgQEAgc3Rh
+dGljIGVudW0gaHJ0aW1lcl9yZXN0YXJ0IHJhcGxfaHJ0aW1lcl9oYW5kbGUoc3RydWN0IGhydGlt
+ZXIgKmhydGltZXIpCiAgICAgICAgc3RydWN0IHBlcmZfZXZlbnQgKmV2ZW50OwogICAgICAgIHVu
+c2lnbmVkIGxvbmcgZmxhZ3M7CgotICAgICAgIGlmICghcG11LT5uX2FjdGl2ZSkKLSAgICAgICAg
+ICAgICAgIHJldHVybiBIUlRJTUVSX05PUkVTVEFSVDsKLQogICAgICAgIHJhd19zcGluX2xvY2tf
+aXJxc2F2ZSgmcG11LT5sb2NrLCBmbGFncyk7CgorICAgICAgIGlmICghcG11LT5uX2FjdGl2ZSkg
+eworICAgICAgICAgICAgICAgcmF3X3NwaW5fdW5sb2NrX2lycXJlc3RvcmUoJnBtdS0+bG9jaywg
+ZmxhZ3MpOworICAgICAgICAgICAgICAgcmV0dXJuIEhSVElNRVJfTk9SRVNUQVJUOworICAgICAg
+IH0KKwogICAgICAgIGxpc3RfZm9yX2VhY2hfZW50cnkoZXZlbnQsICZwbXUtPmFjdGl2ZV9saXN0
+LCBhY3RpdmVfZW50cnkpCiAgICAgICAgICAgICAgICByYXBsX2V2ZW50X3VwZGF0ZShldmVudCk7
+CgpAQCAtMjgyLDcgKzI4NCw3IEBAIHN0YXRpYyB2b2lkIHJhcGxfcG11X2V2ZW50X3N0b3Aoc3Ry
+dWN0IHBlcmZfZXZlbnQgKmV2ZW50LCBpbnQgbW9kZSkKICAgICAgICAgICAgICAgIFdBUk5fT05f
+T05DRShwbXUtPm5fYWN0aXZlIDw9IDApOwogICAgICAgICAgICAgICAgcG11LT5uX2FjdGl2ZS0t
+OwogICAgICAgICAgICAgICAgaWYgKHBtdS0+bl9hY3RpdmUgPT0gMCkKLSAgICAgICAgICAgICAg
+ICAgICAgICAgaHJ0aW1lcl9jYW5jZWwoJnBtdS0+aHJ0aW1lcik7CisgICAgICAgICAgICAgICAg
+ICAgICAgIGhydGltZXJfdHJ5X3RvX2NhbmNlbCgmcG11LT5ocnRpbWVyKTsKCiAgICAgICAgICAg
+ICAgICBsaXN0X2RlbCgmZXZlbnQtPmFjdGl2ZV9lbnRyeSk7CgpGaXJzdGx5LCB0aGUgZGVhZGxv
+Y2sgY291bGQgYmUgbWl0aWdhdGVkLiBCZWNhdXNlIGlmIHRoZSB0aW1lciBjYWxsYmFjayBmdW5j
+dGlvbgppcyBydW5uaW5nLCB0aGUgaHJ0aW1lcl90cnlfdG9fY2FuY2VsKCkgd2lsbCBkaXJlY3Rs
+eSByZXR1cm4uIAoKU2Vjb25kbHksIHRoZSByYWNlIGNvdWxkIGJlIGF2b2lkZWQuIEJlY2F1c2Ug
+d2UgdXNlIHBtdS0+bG9jayB0byBzeW5jaHJvbml6ZSBhbmQKbW92ZSB0aGUgY2hlY2sgImlmICgh
+cG11LT5uX2FjdGl2ZSkiIGludG8gdGhlIHByb3RlY3Rpb24gc2NvcGUgb2YgcG11LT5sb2NrLgpJ
+ZiB0aGUgcmFwbF9wbXVfZXZlbnRfc3RvcCgpIGhhcyBmaW5pc2hlZCwgdGhlICJwbXUtPm5fYWN0
+aXZlIiBlcXVhbHMgdG8gMCBhbmQKdGhlIHJhcGxfaHJ0aW1lcl9oYW5kbGUoKSB3aWxsIHJldHVy
+biAiSFJUSU1FUl9OT1JFU1RBUlQiLgoKVGhpcmRseSwgdGhpcyBzb2x1dGlvbiB3aWxsIG5vdCBj
+YXVzZSBxdWFsaXR5LW9mLWltcGxlbWVudGF0aW9uIGlzc3VlIG9mIHRoZSBocnRpbWVyLgoKQmVz
+dCByZWdhcmRzLApEdW9taW5nIFpob3UK
