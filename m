@@ -2,163 +2,167 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4BA62C32771
-	for <linux-perf-users@archiver.kernel.org>; Wed, 21 Sep 2022 13:50:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E3E9BECAAD8
+	for <linux-perf-users@archiver.kernel.org>; Wed, 21 Sep 2022 14:02:58 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229673AbiIUNu2 (ORCPT
+        id S229745AbiIUOC6 (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Wed, 21 Sep 2022 09:50:28 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43636 "EHLO
+        Wed, 21 Sep 2022 10:02:58 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33694 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229669AbiIUNu2 (ORCPT
+        with ESMTP id S229571AbiIUOCz (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Wed, 21 Sep 2022 09:50:28 -0400
-Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C46F96C752;
-        Wed, 21 Sep 2022 06:50:26 -0700 (PDT)
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id 60B9B62FCB;
-        Wed, 21 Sep 2022 13:50:26 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 99485C433D6;
-        Wed, 21 Sep 2022 13:50:25 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1663768225;
-        bh=zTh4qQT1s9+G0FBfnYWuyD5Y3A+QJXtizOEpvE1gENU=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=AvohrLx6BYTeRsjxL3bq+W2OjquKXZQG0y8KazUxM1pUOtCfvd2RoK+bxPJSdxOEL
-         nDm1ktJ4HA6Jatle8dxhuCAs4ivD4DDd+aO3LMRGCWDUJqH73HbUxIlXmrIh6JNpc3
-         rV50Bptpft/CbVrnqJVyXPXC8wxwEMVTG+7ILonnkF7aaQ0mQKC449aaAD9pUmafOL
-         SHfa5Pdn9YqnDq6xKdHJJ9jQxBL8mU6nyQJTnbEiMXyGGu3tXFDWcVLFh2OHozfxFs
-         dHFX0po+fbArP/npNzWlx3n+VQPUiAxwqUMOjLSxW2DVoXenK0frhUmqjSVQQ9S/+S
-         K3zUR6ywZUlEw==
-Received: by quaco.ghostprotocols.net (Postfix, from userid 1000)
-        id 08E1340856; Wed, 21 Sep 2022 14:50:23 +0100 (IST)
-Date:   Wed, 21 Sep 2022 14:50:23 +0100
-From:   Arnaldo Carvalho de Melo <acme@kernel.org>
-To:     Namhyung Kim <namhyung@kernel.org>
-Cc:     Jiri Olsa <jolsa@kernel.org>, Ingo Molnar <mingo@kernel.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Ian Rogers <irogers@google.com>,
-        Adrian Hunter <adrian.hunter@intel.com>,
-        linux-perf-users@vger.kernel.org
-Subject: Re: [PATCH v2 2/2] perf record: Save DSO build-ID for synthesizing
-Message-ID: <YysWn/W3+dXlZnYG@kernel.org>
-References: <20220920222822.2171056-1-namhyung@kernel.org>
- <20220920222822.2171056-2-namhyung@kernel.org>
+        Wed, 21 Sep 2022 10:02:55 -0400
+Received: from foss.arm.com (foss.arm.com [217.140.110.172])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTP id B44328E4F0;
+        Wed, 21 Sep 2022 07:02:54 -0700 (PDT)
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id B6F88139F;
+        Wed, 21 Sep 2022 07:03:00 -0700 (PDT)
+Received: from FVFF77S0Q05N (unknown [172.31.20.19])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id DAADC3F73B;
+        Wed, 21 Sep 2022 07:02:50 -0700 (PDT)
+Date:   Wed, 21 Sep 2022 15:02:39 +0100
+From:   Mark Rutland <mark.rutland@arm.com>
+To:     Chen Zhongjin <chenzhongjin@huawei.com>
+Cc:     linux-kernel@vger.kernel.org, linux-riscv@lists.infradead.org,
+        linux-perf-users@vger.kernel.org, paul.walmsley@sifive.com,
+        palmer@dabbelt.com, aou@eecs.berkeley.edu, peterz@infradead.org,
+        mingo@redhat.com, acme@kernel.org,
+        alexander.shishkin@linux.intel.com, namhyung@kernel.org,
+        jolsa@kernel.org, guoren@kernel.org, frederic@kernel.org,
+        vincent.chen@sifive.com, ardb@kernel.org, mhiramat@kernel.org,
+        rostedt@goodmis.org, keescook@chromium.org, catalin.marinas@arm.com
+Subject: Re: [PATCH for-next v2 0/4] riscv: Improvments for stacktrace
+Message-ID: <YysZf2Y37QMBDt8n@FVFF77S0Q05N>
+References: <20220921125128.33913-1-chenzhongjin@huawei.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20220920222822.2171056-2-namhyung@kernel.org>
-X-Url:  http://acmel.wordpress.com
+In-Reply-To: <20220921125128.33913-1-chenzhongjin@huawei.com>
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-Em Tue, Sep 20, 2022 at 03:28:22PM -0700, Namhyung Kim escreveu:
-> When synthesizing MMAP2 with build-id, it'd read the same file repeatedly as
-> it has no idea if it's done already.  Maintain a dsos to check that and skip
-> the file access if possible.
+On Wed, Sep 21, 2022 at 08:51:23PM +0800, Chen Zhongjin wrote:
+> Currently, the stacktrace with FRAME_POINTER on riscv has some problem:
 > 
-> Signed-off-by: Namhyung Kim <namhyung@kernel.org>
+> 1. stacktrace will stop at irq so it can't get the stack frames before
+> irq entry.
+> 2. stacktrace can't unwind all the real stack frames when there is
+> k{ret}probes or ftrace.
+> 
+> These are mainly becase when there is a pt_regs on stack, we can't unwind
+> the stack frame as normal function.
+> 
+> Some architectures (e.g. arm64) create a extra stackframe inside pt_regs.
+> However this doesn't work for riscv because the ra is not ensured to be
+> pushed to stack. As explained in:
+> commit f766f77a74f5("riscv/stacktrace: Fix stack output without ra on the stack top")
+
+FWIW, this is also a latent problem on arm64, since we don't know whether the
+LR is live at an exception boundary (and we currently always ignore it).
+
+My plan to fix that on arm64 is to push an empty frame record to the stack upon
+an exception, and use that to find the pt_regs, from which we can get the PC
+and LR (and then we can report the later as unreliable). That should be roughly
+equivalent to what you do in this series (where use use the LSB to identify
+that the pointer is actually a pt_regs).
+
+One important thing to note is that when crossing an exception boundary you
+won't know whether RA is live, and so you might try to consume an address twice
+(if it has also been pushed to the stack). That could be problematic for
+unwinding ftrace or kretprobes. On arm64 we had to implement
+HAVE_FUNCTION_GRAPH_RET_ADDR_PTR so that we could reliably unwind ftrace. See
+commit:
+
+  c6d3cd32fd0064af ("arm64: ftrace: use HAVE_FUNCTION_GRAPH_RET_ADDR_PTR")
+
+... and we haven't yet come up with something similar for kretprobes (though I
+suspect we'll need to).
+
+Thanks,
+Mark.
+
+> So, I choosed the method of x86 that, if there is a pt_regs on stack,
+> we encoded the frame pointer and save it. When unwinding stack frame,
+> we can get pt_regs and registers required for unwinding stacks.
+> 
+> In addition, the patch set contains some refactoring of stacktrace.c to
+> keep the stacktrace code on riscv consistent with other architectures.
+> 
+> Stacktrace before for kretprobes:
+> 
+>   Call Trace:
+>   ...
+>   [<ffffffff800d5d48>] __kretprobe_trampoline_handler+0xc2/0x13e
+>   [<ffffffff808b766c>] trampoline_probe_handler+0x30/0x46
+>   [<ffffffff800070de>] __kretprobe_trampoline+0x52/0x92
+>   [<ffffffff0163809c>] kprobe_init+0x9c/0x1000 [kprobe_unwind]
+>   [<ffffffff800027c8>] do_one_initcall+0x4c/0x1f2
+>   ...
+> 
+> Stacktrace after:
+> 
+>   Call Trace:
+>   ...
+>   [<ffffffff800d5d48>] __kretprobe_trampoline_handler+0xc2/0x13e
+>   [<ffffffff808b766c>] trampoline_probe_handler+0x30/0x46
+>   [<ffffffff800070de>] __kretprobe_trampoline+0x52/0x92
+> + [<ffffffff01633076>] the_caller+0x2c/0x38 [kprobe_unwind]
+>   [<ffffffff0163809c>] kprobe_init+0x9c/0x1000 [kprobe_unwind]
+>   [<ffffffff800027c8>] do_one_initcall+0x4c/0x1f2
+>   ...
+> 
+> Stacktrace before for ftrace:
+> 
+>   Call Trace:
+>   ...
+>   [<ffffffff80006df0>] kprobe_ftrace_handler+0x13e/0x188
+>   [<ffffffff80008e7e>] ftrace_regs_call+0x8/0x10
+>   [<ffffffff80002540>] do_one_initcall+0x4c/0x1f2
+>   [<ffffffff8008a4e6>] do_init_module+0x56/0x210
+>   ...
+> 
+>   Stacktrace after:
+> 
+>   Call Trace:
+>   ...
+>   [<ffffffff016150e0>] handler_pre+0x30/0x4a [kprobe_unwind]
+>   [<ffffffff800bce96>] aggr_pre_handler+0x60/0x94
+>   [<ffffffff80006df0>] kprobe_ftrace_handler+0x13e/0x188
+>   [<ffffffff80008e82>] ftrace_regs_call+0x8/0x10
+> + [<ffffffff01615000>] traced_func+0x0/0x1e [kprobe_unwind]
+>   [<ffffffff80002540>] do_one_initcall+0x4c/0x1f2
+>   [<ffffffff8008a4ea>] do_init_module+0x56/0x210
+>   ...
+> 
+> Noticed that the caller of ftrace and probed func of kretprobe
+> cannot be unwind because they are inside function pro/epilogue.
+> 
 > ---
-> v2 change)
->  * Remove perf_event__synthesize_{start,stop} and use machine->dsos  (Adrian)
-
-Will wait till I merge perf/urgent into perf/core so that this applies.
-
-- Arnaldo
- 
->  tools/perf/util/synthetic-events.c | 25 ++++++++++++++++++++++---
->  1 file changed, 22 insertions(+), 3 deletions(-)
+> v1 -> v2:
+> - Merge three patches which add ENCODE_FRAME_POINTER together
+> - Update commit message
+> - Delete the KRETPORBES stuff added in unwind_state, we don't need them
+> to recover the kretporbes ret_addr because we can get it in pt_regs
+> ---
+> Chen Zhongjin (4):
+>   riscv: stacktrace: Replace walk_stackframe with arch_stack_walk
+>   riscv: stacktrace: Introduce unwind functions
+>   riscv: stacktrace: Save pt_regs in ENCODE_FRAME_POINTER
+>   riscv: stacktrace: Implement stacktrace for irq
 > 
-> diff --git a/tools/perf/util/synthetic-events.c b/tools/perf/util/synthetic-events.c
-> index 289ea17ac5f7..cccd293b5312 100644
-> --- a/tools/perf/util/synthetic-events.c
-> +++ b/tools/perf/util/synthetic-events.c
-> @@ -364,11 +364,14 @@ static bool read_proc_maps_line(struct io *io, __u64 *start, __u64 *end,
->  }
->  
->  static void perf_record_mmap2__read_build_id(struct perf_record_mmap2 *event,
-> +					     struct machine *machine,
->  					     bool is_kernel)
->  {
->  	struct build_id bid;
->  	struct nsinfo *nsi;
->  	struct nscookie nc;
-> +	struct dso *dso = NULL;
-> +	struct dso_id id;
->  	int rc;
->  
->  	if (is_kernel) {
-> @@ -376,6 +379,18 @@ static void perf_record_mmap2__read_build_id(struct perf_record_mmap2 *event,
->  		goto out;
->  	}
->  
-> +	id.maj = event->maj;
-> +	id.min = event->min;
-> +	id.ino = event->ino;
-> +	id.ino_generation = event->ino_generation;
-> +
-> +	dso = dsos__findnew_id(&machine->dsos, event->filename, &id);
-> +	if (dso && dso->has_build_id) {
-> +		bid = dso->bid;
-> +		rc = 0;
-> +		goto out;
-> +	}
-> +
->  	nsi = nsinfo__new(event->pid);
->  	nsinfo__mountns_enter(nsi, &nc);
->  
-> @@ -391,12 +406,16 @@ static void perf_record_mmap2__read_build_id(struct perf_record_mmap2 *event,
->  		event->header.misc |= PERF_RECORD_MISC_MMAP_BUILD_ID;
->  		event->__reserved_1 = 0;
->  		event->__reserved_2 = 0;
-> +
-> +		if (dso && !dso->has_build_id)
-> +			dso__set_build_id(dso, &bid);
->  	} else {
->  		if (event->filename[0] == '/') {
->  			pr_debug2("Failed to read build ID for %s\n",
->  				  event->filename);
->  		}
->  	}
-> +	dso__put(dso);
->  }
->  
->  int perf_event__synthesize_mmap_events(struct perf_tool *tool,
-> @@ -507,7 +526,7 @@ int perf_event__synthesize_mmap_events(struct perf_tool *tool,
->  		event->mmap2.tid = pid;
->  
->  		if (symbol_conf.buildid_mmap2)
-> -			perf_record_mmap2__read_build_id(&event->mmap2, false);
-> +			perf_record_mmap2__read_build_id(&event->mmap2, machine, false);
->  
->  		if (perf_tool__process_synth_event(tool, event, machine, process) != 0) {
->  			rc = -1;
-> @@ -690,7 +709,7 @@ int perf_event__synthesize_modules(struct perf_tool *tool, perf_event__handler_t
->  			memcpy(event->mmap2.filename, pos->dso->long_name,
->  			       pos->dso->long_name_len + 1);
->  
-> -			perf_record_mmap2__read_build_id(&event->mmap2, false);
-> +			perf_record_mmap2__read_build_id(&event->mmap2, machine, false);
->  		} else {
->  			size = PERF_ALIGN(pos->dso->long_name_len + 1, sizeof(u64));
->  			event->mmap.header.type = PERF_RECORD_MMAP;
-> @@ -1126,7 +1145,7 @@ static int __perf_event__synthesize_kernel_mmap(struct perf_tool *tool,
->  		event->mmap2.len   = map->end - event->mmap.start;
->  		event->mmap2.pid   = machine->pid;
->  
-> -		perf_record_mmap2__read_build_id(&event->mmap2, true);
-> +		perf_record_mmap2__read_build_id(&event->mmap2, machine, true);
->  	} else {
->  		size = snprintf(event->mmap.filename, sizeof(event->mmap.filename),
->  				"%s%s", machine->mmap_name, kmap->ref_reloc_sym->name) + 1;
+>  arch/riscv/include/asm/frame.h                |  45 ++++++
+>  arch/riscv/include/asm/stacktrace.h           |   9 +-
+>  arch/riscv/kernel/entry.S                     |   3 +
+>  arch/riscv/kernel/mcount-dyn.S                |   7 +
+>  arch/riscv/kernel/perf_callchain.c            |   2 +-
+>  arch/riscv/kernel/probes/kprobes_trampoline.S |   7 +
+>  arch/riscv/kernel/stacktrace.c                | 150 ++++++++++++------
+>  7 files changed, 174 insertions(+), 49 deletions(-)
+>  create mode 100644 arch/riscv/include/asm/frame.h
+> 
 > -- 
-> 2.37.3.968.ga6b4b080e4-goog
-
--- 
-
-- Arnaldo
+> 2.17.1
+> 
