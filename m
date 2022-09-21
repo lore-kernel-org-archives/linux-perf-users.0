@@ -2,53 +2,53 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5E475ECAAD8
-	for <linux-perf-users@archiver.kernel.org>; Wed, 21 Sep 2022 09:34:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CDF10ECAAD8
+	for <linux-perf-users@archiver.kernel.org>; Wed, 21 Sep 2022 09:36:10 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230416AbiIUJef (ORCPT
+        id S229852AbiIUJgJ (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Wed, 21 Sep 2022 05:34:35 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58796 "EHLO
+        Wed, 21 Sep 2022 05:36:09 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34796 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229969AbiIUJee (ORCPT
+        with ESMTP id S229555AbiIUJgI (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Wed, 21 Sep 2022 05:34:34 -0400
-Received: from mail-pj1-x102a.google.com (mail-pj1-x102a.google.com [IPv6:2607:f8b0:4864:20::102a])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0983AD9E;
-        Wed, 21 Sep 2022 02:34:32 -0700 (PDT)
-Received: by mail-pj1-x102a.google.com with SMTP id q3so5824522pjg.3;
-        Wed, 21 Sep 2022 02:34:32 -0700 (PDT)
+        Wed, 21 Sep 2022 05:36:08 -0400
+Received: from mail-pf1-x434.google.com (mail-pf1-x434.google.com [IPv6:2607:f8b0:4864:20::434])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 14F4E8F966;
+        Wed, 21 Sep 2022 02:36:06 -0700 (PDT)
+Received: by mail-pf1-x434.google.com with SMTP id 9so5312954pfz.12;
+        Wed, 21 Sep 2022 02:36:06 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20210112;
         h=content-transfer-encoding:mime-version:message-id:date:subject:cc
          :to:from:from:to:cc:subject:date;
-        bh=k49E7LJbSiVZNjNmcdoBwgiJRae2/LsEELVD7CSs6d0=;
-        b=CmF7p64TL4djtFyI7TU+R/j7TjJ9Z+mREOlgBJkqiSLeP9PEWV4aj5gEsqHJwDR9Qa
-         OEvsl+K5nxJKHr5oUL7dT3x7rbqHUi5iDmX07TT+Y67e/Taaly7OkPIXoSt/RNE/N/RM
-         aq89zYZa8Bt322mk5uPftcywPORmileacfoL4zKsRdWG/bDmMAdzO169gjOAOznMzaBc
-         LAUrKunGhyUZ8Kr7dzKLUEoTbHue1bS7ogTb8DeitPdWLXd1Lw3nkpIrkadkRDxLyUM1
-         zGf4JH9Qf//fRXyZB4lONCl3pxw4egnV+9nG5weiEEKA2H9eg1j8brAlSr1bBvixFP97
-         bW6A==
+        bh=EY7f1vye1qs5rWXV1baAbSmWO5OxmPowtv9FR9+ng6A=;
+        b=He6eVgwxCpvM7FQUloccwnQCjSmNWQO5WVzHyHQ1TdXo7p5QPBqdmNjTcbS+9Kc+eN
+         7tuXkc5/B9THod1wvklYIgD5Ubq99gLiKyNlWZ6UT6DtPjHHpTae3PIQbdHnzIFgaGUf
+         IPr/aAMHNiM/F8N7iGFKvXNCLdOVJt1eLXUqIsgy5MYzuWa/k79YG7SF8Z11rlRTKC41
+         06EoD6MoaOnaDr2CS4HnRyMLvn5d2uvF5Eb/Fw6kHCq8f4e1/7a6rEksLJ2/mCfyYyF0
+         8dySI1AMW8az5Ssqpx8vHKdXOieTt74scGpsllToIadpaIqxCZ2D13dfLKlfXKhbhFXn
+         xw4w==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
         h=content-transfer-encoding:mime-version:message-id:date:subject:cc
          :to:from:x-gm-message-state:from:to:cc:subject:date;
-        bh=k49E7LJbSiVZNjNmcdoBwgiJRae2/LsEELVD7CSs6d0=;
-        b=fvqIh5jM3dFdMy37rdowNL1GKzMdFM/hUXhqmeLtNlGWCJOlju65Qn4leBXjALc5We
-         FFQvuopkSGWZAumRNXe0U5pNYCINcOEc1Kr/J/K7cjzpHKAcXkri/4Yr0IdTWOV3S6E1
-         F8KugY64YExrevrwMcX8Gqr0eFrqPf/fvT+09Zt6bmRQ+aN1iUYNSnvsYLJI5QsOq3H0
-         mEXj4Mbt0rSWaMV2M6o/H+1dKu86Qxvy50t3dJg6xGvD+lCpXovokOCRq2ueua14v4fW
-         eMXzozHaPhYhU+NMCDnbJTEOKtQYj1W4q73j1vHYBGS7js61ZZZNkiB+I38JMlrzhj08
-         3vPQ==
-X-Gm-Message-State: ACrzQf2TIxmGNiwMtQ+tGaaY+YeXkKwcgu6T9u0Q4GjsUUUZEf4M+rQm
-        b6nh3fpGr6US89PUB+Ky20U=
-X-Google-Smtp-Source: AMsMyM6hnvUGWyd2NbU9gXkthouxGbjR+e4oNp+w2YxPZaZRLNM1G9c/878YJ9yi8NHQnUzNeJwKdw==
-X-Received: by 2002:a17:90b:1bc7:b0:200:7f05:3c2 with SMTP id oa7-20020a17090b1bc700b002007f0503c2mr8512188pjb.95.1663752871642;
-        Wed, 21 Sep 2022 02:34:31 -0700 (PDT)
+        bh=EY7f1vye1qs5rWXV1baAbSmWO5OxmPowtv9FR9+ng6A=;
+        b=QWK+VsrJibKopdkIcdrk2b58DndfBH8R/OI4JX6dw5TUIvnGhaatveY5GL3sjutvIU
+         R1EHk80bgLmEGR1AVAFd/yCzkzoueYRn+q19Z1FVA9AlfnkhCjzcbvF6VuGIzXY2lcjE
+         sPT2TUnjMJ5llUM4XEWmPlpDHmdDVxl38eEUVS9f4cnc3vfSglE1Za1g7ugBGde42JeP
+         F6DSJahYXjjs/Vt3mGcMOxAdo5jTTz+VELyt/ZzPuUBY9Hz55Ix+5ccktUgE46Qii4oh
+         WcJK1tz9F3fSn3FLZsu7KosFyqlGe2JIRGW1+isfjkoP/18q5yuA7EZOPnG3/GCZ1nsi
+         TChQ==
+X-Gm-Message-State: ACrzQf3fEUMnR0yegK3uj3VCFMZ1YU06fBTKuhlKyUaPDR1kGBKsQw+w
+        36ycXP28Ml2G+AB4jL4KRzE=
+X-Google-Smtp-Source: AMsMyM5B7rUk20yozOmMtYjdlwFX6VJiuf/VXkruaO2wVY4NOoEniG8ap3MLWcIdJcRoPsBJjVUTEQ==
+X-Received: by 2002:a63:da13:0:b0:438:e3cb:7a8c with SMTP id c19-20020a63da13000000b00438e3cb7a8cmr24169179pgh.31.1663752966383;
+        Wed, 21 Sep 2022 02:36:06 -0700 (PDT)
 Received: from localhost.localdomain ([193.203.214.57])
-        by smtp.gmail.com with ESMTPSA id na18-20020a17090b4c1200b001fde265ff4bsm1480330pjb.4.2022.09.21.02.34.29
+        by smtp.gmail.com with ESMTPSA id z188-20020a6265c5000000b0053e7293be0bsm1625372pfb.121.2022.09.21.02.36.04
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 21 Sep 2022 02:34:31 -0700 (PDT)
+        Wed, 21 Sep 2022 02:36:06 -0700 (PDT)
 From:   cgel.zte@gmail.com
 X-Google-Original-From: ye.xingchen@zte.com.cn
 To:     acme@kernel.org
@@ -57,9 +57,9 @@ Cc:     mingo@redhat.com, mark.rutland@arm.com,
         namhyung@kernel.org, linux-perf-users@vger.kernel.org,
         linux-kernel@vger.kernel.org, ye xingchen <ye.xingchen@zte.com.cn>,
         Zeal Robot <zealci@zte.com.cn>
-Subject: [PATCH linux-next] perf daemon: use strscpy() is more robust and safer
-Date:   Wed, 21 Sep 2022 09:34:27 +0000
-Message-Id: <20220921093427.230690-1-ye.xingchen@zte.com.cn>
+Subject: [PATCH linux-next] tools x86 machine: use strscpy() is more robust and safer
+Date:   Wed, 21 Sep 2022 09:36:01 +0000
+Message-Id: <20220921093601.230800-1-ye.xingchen@zte.com.cn>
 X-Mailer: git-send-email 2.25.1
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
@@ -76,30 +76,21 @@ That's now the recommended way to copy NUL terminated strings.
 Reported-by: Zeal Robot <zealci@zte.com.cn>
 Signed-off-by: ye xingchen <ye.xingchen@zte.com.cn>
 ---
- tools/perf/builtin-daemon.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+ tools/perf/arch/x86/util/machine.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/tools/perf/builtin-daemon.c b/tools/perf/builtin-daemon.c
-index 6cb3f6cc36d0..1e927c4dcc81 100644
---- a/tools/perf/builtin-daemon.c
-+++ b/tools/perf/builtin-daemon.c
-@@ -606,7 +606,7 @@ static int setup_server_socket(struct daemon *daemon)
- 	memset(&addr, 0, sizeof(addr));
- 	addr.sun_family = AF_UNIX;
+diff --git a/tools/perf/arch/x86/util/machine.c b/tools/perf/arch/x86/util/machine.c
+index 31679c35d493..1ff0be147205 100644
+--- a/tools/perf/arch/x86/util/machine.c
++++ b/tools/perf/arch/x86/util/machine.c
+@@ -40,7 +40,7 @@ static int add_extra_kernel_map(struct extra_kernel_map_info *mi, u64 start,
+ 	mi->maps[mi->cnt].start = start;
+ 	mi->maps[mi->cnt].end   = end;
+ 	mi->maps[mi->cnt].pgoff = pgoff;
+-	strlcpy(mi->maps[mi->cnt].name, name, KMAP_NAME_LEN);
++	strscpy(mi->maps[mi->cnt].name, name, KMAP_NAME_LEN);
  
--	strlcpy(addr.sun_path, path, sizeof(addr.sun_path) - 1);
-+	strscpy(addr.sun_path, path, sizeof(addr.sun_path) - 1);
- 	unlink(path);
+ 	mi->cnt += 1;
  
- 	if (bind(fd, (struct sockaddr *)&addr, sizeof(addr)) == -1) {
-@@ -877,7 +877,7 @@ static int setup_client_socket(struct daemon *daemon)
- 
- 	memset(&addr, 0, sizeof(addr));
- 	addr.sun_family = AF_UNIX;
--	strlcpy(addr.sun_path, path, sizeof(addr.sun_path) - 1);
-+	strscpy(addr.sun_path, path, sizeof(addr.sun_path) - 1);
- 
- 	if (connect(fd, (struct sockaddr *) &addr, sizeof(addr)) == -1) {
- 		perror("failed: connect");
 -- 
 2.25.1
