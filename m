@@ -2,53 +2,54 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E065EC54EE9
-	for <linux-perf-users@archiver.kernel.org>; Wed, 21 Sep 2022 01:44:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 87872C6FA82
+	for <linux-perf-users@archiver.kernel.org>; Wed, 21 Sep 2022 02:14:18 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231435AbiIUBoM (ORCPT
+        id S229811AbiIUCOR (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Tue, 20 Sep 2022 21:44:12 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34286 "EHLO
+        Tue, 20 Sep 2022 22:14:17 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34866 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231433AbiIUBoL (ORCPT
+        with ESMTP id S229736AbiIUCOQ (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Tue, 20 Sep 2022 21:44:11 -0400
-Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 62D2871995;
-        Tue, 20 Sep 2022 18:44:10 -0700 (PDT)
+        Tue, 20 Sep 2022 22:14:16 -0400
+Received: from ams.source.kernel.org (ams.source.kernel.org [IPv6:2604:1380:4601:e00::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9ACA57C1F7;
+        Tue, 20 Sep 2022 19:14:15 -0700 (PDT)
 Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id EB6E762EEC;
-        Wed, 21 Sep 2022 01:44:09 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 5C5ECC43145;
-        Wed, 21 Sep 2022 01:44:09 +0000 (UTC)
+        by ams.source.kernel.org (Postfix) with ESMTPS id 312DBB82D5D;
+        Wed, 21 Sep 2022 02:14:14 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id E7E0EC4347C;
+        Wed, 21 Sep 2022 02:14:12 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1663724649;
-        bh=a4MbeyDQ0cNKqjKPlY+9BYkCDy+gVjRncnZlwoiA8Uw=;
+        s=k20201202; t=1663726452;
+        bh=qI7h/5oDIg8KfeFQUixqYzNKwl6VFPqXAJjhtSbuMi4=;
         h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=hPk4rLVaP1dvrnGGN/a3RnxHQUejYh7dooTCeIz3MG+8l6cv95S745Ks1PSoi1XQ8
-         yK2g3x5E8WhOABaPVmbC5CBUbMy5Licj5ljtzI8TXD+WjBNDoEsi06z9Cl64hKASA+
-         GhwivC1JRJ6oMxXDhqO8zH7Fsd6MoqhR3rehU0p1SV9XwUlvPgkgaExXDhej62QIP3
-         2+E2/uiHmQdNuFJXrVvZY2rKwdCAMVfEiBCI3oQ6Jyy6VRWy047sTsnUjpSlQxqQrY
-         9SEK6QZ93QxMf/r94qFOSMTduwpSxEbH0RnLrHFfIJcZoni/daMyKbwDUW3n08WXGI
-         V8SwTrPjmdbdw==
-Received: by mail-oa1-f44.google.com with SMTP id 586e51a60fabf-11e9a7135easo6992207fac.6;
-        Tue, 20 Sep 2022 18:44:09 -0700 (PDT)
-X-Gm-Message-State: ACrzQf3+55zMsIvZtkW5AZaouuZT22iyO+XHkFBe4DK5/Oet8F0XuvDN
-        8dUhrodw2gEN/Z6N9gao5bp4tN8zuqgQAY1NMc8=
-X-Google-Smtp-Source: AMsMyM4d2nVe6tz0uQHzZD860Q0dajKQ1oPLYnVeebGVKCry3Aiz7sHwFGiJCCURnxU4pnGh56XEMrDZA8kfi2pRxTg=
-X-Received: by 2002:a05:6870:5803:b0:12c:c3e0:99dc with SMTP id
- r3-20020a056870580300b0012cc3e099dcmr3618516oap.19.1663724648463; Tue, 20 Sep
- 2022 18:44:08 -0700 (PDT)
+        b=RCWADFT0FYCuKHjJOaL1bTscBnD+CJHvzrIflu0vrtjEq+XDtYR6luTG0RrfCVKXT
+         zqeADrU7M0ulVNWynrS3swEBDzod6A3vsWB4CrJfg0Yox8J4b1C3NutSRePRbwANnN
+         g3/V50iOphmleNsFLtDPf1Wnz0+4If40uRG6f/wzF82kKJukOAt68ALyK+hGChw3rF
+         56lNNI5bO4Q2sLr/kEiK6544PdAuv/w8HqNCWTBJrxAPzBsNJiSSix3RnsOMvnMtIc
+         EANrNFVKE2XpYalKJhOjDHJ/zOoi31UhRRLYG3rJwcByuo1lQPx2LEipklt0eOk1QH
+         2nwhGmzlhyoOQ==
+Received: by mail-oa1-f53.google.com with SMTP id 586e51a60fabf-1279948d93dso7049706fac.10;
+        Tue, 20 Sep 2022 19:14:12 -0700 (PDT)
+X-Gm-Message-State: ACrzQf1q9Ilm8M/wzPJIc1m69o7Pb/qncoFtK4iM3MiN/j9JcUQe4VT0
+        36CQ+53vRoM26yhPLvMraOmAPKAbpax/rdBkDu8=
+X-Google-Smtp-Source: AMsMyM6IwqZwyLI7janQ1zDjXRLjdc4ym5Cy+EMmk9dbqWgfBFb8S6xJgFzOVD03EiTmLaz3UFMA/qSfiCqmy97Kl/E=
+X-Received: by 2002:a05:6870:a78e:b0:12b:542b:e5b2 with SMTP id
+ x14-20020a056870a78e00b0012b542be5b2mr3833650oao.112.1663726451988; Tue, 20
+ Sep 2022 19:14:11 -0700 (PDT)
 MIME-Version: 1.0
-References: <20220920151202.180057-1-chenzhongjin@huawei.com> <20220920151202.180057-7-chenzhongjin@huawei.com>
-In-Reply-To: <20220920151202.180057-7-chenzhongjin@huawei.com>
+References: <20220920151202.180057-1-chenzhongjin@huawei.com> <20220920151202.180057-4-chenzhongjin@huawei.com>
+In-Reply-To: <20220920151202.180057-4-chenzhongjin@huawei.com>
 From:   Guo Ren <guoren@kernel.org>
-Date:   Wed, 21 Sep 2022 09:43:54 +0800
-X-Gmail-Original-Message-ID: <CAJF2gTSQAzqLcJSp4B=8vPTb10+TieZXDJPAigCBgm5iVYpdTg@mail.gmail.com>
-Message-ID: <CAJF2gTSQAzqLcJSp4B=8vPTb10+TieZXDJPAigCBgm5iVYpdTg@mail.gmail.com>
-Subject: Re: [PATCH -next 6/7] riscv: stacktrace: Fix unwinding on ftrace_regs_call
+Date:   Wed, 21 Sep 2022 10:13:57 +0800
+X-Gmail-Original-Message-ID: <CAJF2gTS1=xSrsaABLzbRwq2V=Wj3_SyHtooXosfY7L9zAwf=NA@mail.gmail.com>
+Message-ID: <CAJF2gTS1=xSrsaABLzbRwq2V=Wj3_SyHtooXosfY7L9zAwf=NA@mail.gmail.com>
+Subject: Re: [PATCH -next 3/7] riscv: stacktrace: Save pt_regs in encoded fp
+ on irq entry
 To:     Chen Zhongjin <chenzhongjin@huawei.com>
 Cc:     linux-kernel@vger.kernel.org, linux-riscv@lists.infradead.org,
         linux-perf-users@vger.kernel.org, paul.walmsley@sifive.com,
@@ -64,88 +65,133 @@ Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
+Reviewed-by: Guo Ren <guoren@kernel.org>
+
+ENCODE fp with BIT[0] is okay.
+
 On Tue, Sep 20, 2022 at 11:15 PM Chen Zhongjin <chenzhongjin@huawei.com> wrote:
 >
-> When unwinding on ftrace_regs_call, the traced function will be skipped
-> because ftrace_regs_caller doesn't save the fp and ra.
+> To support stack unwinding at irq entry, the position of pt_regs saved
+> on stack is nessesary. Because for some functions, compiler only push
+> s0/fp on stack without ra.
 >
-> Save the encoded fp so that we can get the pt_regs so that we can unwind
-> from ftrace_regs_call to the traced function.
+> As the situation described in
+> commit f766f77a74f5("riscv/stacktrace: Fix stack output without ra on the stack top")
 >
-> Also the pt_regs->status should be set as kernel mode.
+> When irq happens there, the the function frame looks like:
 >
-> Stacktrace before this patch:
+> prev function   |       ...       |
+>                 |                 |
+> normal function +-----------------+
+>                 | ra to prev      |
+>                 | s0 of prev      |
+>                 |       ...       |<-+
+> leaf function   +-----------------+  |
+>                 | s0 of normal    |  |
+>                 | empty slot      |  |
+> irq pt_regs     +-----------------+  |
+>                 | epc (ra to leaf)|  |
+>                 | ra  (ra to norm)|  |
+>                 | ...             |  |
+>                 | s0 of leaf      |--+
+>                 | ...             |
+>                 +-----------------+
 >
->  Call Trace:
->   ...
->   [<ffffffff0161a0e0>] handler_pre+0x30/0x4a [kprobe_unwind]
->   [<ffffffff800bce92>] aggr_pre_handler+0x60/0x94
->   [<ffffffff80006df0>] kprobe_ftrace_handler+0x13e/0x188
->   [<ffffffff80008e7e>] ftrace_regs_call+0x8/0x10
->   [<ffffffff80002540>] do_one_initcall+0x4c/0x1f2
->   [<ffffffff8008a4e6>] do_init_module+0x56/0x210
->  ...
+> If the position of register in pt_regs is {epc, s0}, we can easily
+> unwind from irq frame to leaf function, as normal functions do.
 >
-> Stacktrace after this patch:
+> However when unwinding from unwinding from leaf to normal, beacause
+> (ra to norm) is saved in pt_regs, but not stackframe of leaf, we
+> have to get pt_regs for that.
 >
->  Call Trace:
->   ...
->   [<ffffffff016150e0>] handler_pre+0x30/0x4a [kprobe_unwind]
->   [<ffffffff800bce96>] aggr_pre_handler+0x60/0x94
->   [<ffffffff80006df0>] kprobe_ftrace_handler+0x13e/0x188
->   [<ffffffff80008e82>] ftrace_regs_call+0x8/0x10
-> + [<ffffffff01615000>] empty_call+0x0/0x1e [kprobe_unwind]
->   [<ffffffff80002540>] do_one_initcall+0x4c/0x1f2
->   [<ffffffff8008a4ea>] do_init_module+0x56/0x210
->   ...
+> To get pt_regs position on stack, we can save the encoded *pt_regs
+> in s0, as x86 architecture did. Then we can get s0, epc and ra
+> easily.
 >
 > Signed-off-by: Chen Zhongjin <chenzhongjin@huawei.com>
 > ---
->  arch/riscv/kernel/mcount-dyn.S | 8 ++++++++
->  1 file changed, 8 insertions(+)
+>  arch/riscv/include/asm/frame.h | 45 ++++++++++++++++++++++++++++++++++
+>  arch/riscv/kernel/entry.S      |  3 +++
+>  2 files changed, 48 insertions(+)
+>  create mode 100644 arch/riscv/include/asm/frame.h
 >
-> diff --git a/arch/riscv/kernel/mcount-dyn.S b/arch/riscv/kernel/mcount-dyn.S
-> index d171eca623b6..56a4014c392f 100644
-> --- a/arch/riscv/kernel/mcount-dyn.S
-> +++ b/arch/riscv/kernel/mcount-dyn.S
-> @@ -10,6 +10,8 @@
->  #include <asm/asm-offsets.h>
->  #include <asm-generic/export.h>
->  #include <asm/ftrace.h>
-> +#include <asm/frame.h>
-> +#include <asm/csr.h>
->
->         .text
->
-> @@ -97,6 +99,11 @@
->         REG_S x29, PT_T4(sp)
->         REG_S x30, PT_T5(sp)
->         REG_S x31, PT_T6(sp)
+> diff --git a/arch/riscv/include/asm/frame.h b/arch/riscv/include/asm/frame.h
+> new file mode 100644
+> index 000000000000..2a1f45cf3a4e
+> --- /dev/null
+> +++ b/arch/riscv/include/asm/frame.h
+> @@ -0,0 +1,45 @@
+> +/* SPDX-License-Identifier: GPL-2.0 */
+> +#ifndef _ASM_RISCV_FRAME_H
+> +#define _ASM_RISCV_FRAME_H
+> +
+> +#include <asm/asm.h>
 > +
 > +#ifdef CONFIG_FRAME_POINTER
-> +       li s0, SR_PP
-> +       REG_S s0, PT_STATUS(sp)
-Change another register.
-
-> +#endif
->         .endm
+> +
+> +#ifdef __ASSEMBLY__
+> +
+> +/*
+> + * This is a sneaky trick to help the unwinder find pt_regs on the stack.  The
+> + * frame pointer is replaced with an encoded pointer to pt_regs.  The encoding
+> + * is just setting the LSB, which makes it an invalid stack address and is also
+> + * a signal to the unwinder that it's a pt_regs pointer in disguise.
+> + *
+> + * This macro must be used when sp point to pt_regs
+> + */
+> +.macro ENCODE_FRAME_POINTER
+> +       add s0, sp, 0x1
+> +.endm
+> +
+> +#else /* !__ASSEMBLY__ */
+> +
+> +#define ENCODE_FRAME_POINTER                   \
+> +       "add s0, sp, 0x1\n\t"
+> +
+> +#endif /* __ASSEMBLY__ */
+> +
+> +#else /* !CONFIG_FRAME_POINTER */
+> +
+> +#ifdef __ASSEMBLY__
+> +
+> +.macro ENCODE_FRAME_POINTER ptregs_offset=0
+> +.endm
+> +
+> +#else /* !__ASSEMBLY */
+> +
+> +#define ENCODE_FRAME_POINTER
+> +
+> +#endif /* !__ASSEMBLY */
+> +
+> +#endif /* CONFIG_FRAME_POINTER */
+> +
+> +#endif /* _ASM_RISCV_FRAME_H */
+> diff --git a/arch/riscv/kernel/entry.S b/arch/riscv/kernel/entry.S
+> index b9eda3fcbd6d..ecb15c7430b4 100644
+> --- a/arch/riscv/kernel/entry.S
+> +++ b/arch/riscv/kernel/entry.S
+> @@ -13,6 +13,7 @@
+>  #include <asm/thread_info.h>
+>  #include <asm/asm-offsets.h>
+>  #include <asm/errata_list.h>
+> +#include <asm/frame.h>
 >
->         .macro RESTORE_ALL
-> @@ -172,6 +179,7 @@ ENDPROC(ftrace_caller)
->  #ifdef CONFIG_DYNAMIC_FTRACE_WITH_REGS
->  ENTRY(ftrace_regs_caller)
->         SAVE_ALL
+>  #if !IS_ENABLED(CONFIG_PREEMPTION)
+>  .set resume_kernel, restore_all
+> @@ -95,6 +96,8 @@ _save_context:
+>         REG_S s4, PT_CAUSE(sp)
+>         REG_S s5, PT_TP(sp)
+>
 > +       ENCODE_FRAME_POINTER
-Maybe the patch should merge with others, so separated make it hard to review.
-
->
->         addi    a0, ra, -FENTRY_RA_OFFSET
->         la      a1, function_trace_op
+> +
+>         /*
+>          * Set the scratch register to 0, so that if a recursive exception
+>          * occurs, the exception vector knows it came from the kernel
 > --
 > 2.17.1
 >
 
 
---
+-- 
 Best Regards
  Guo Ren
