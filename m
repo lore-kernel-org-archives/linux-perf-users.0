@@ -2,180 +2,120 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F04BDECAAD8
-	for <linux-perf-users@archiver.kernel.org>; Wed, 21 Sep 2022 10:43:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 488E1C6FA8E
+	for <linux-perf-users@archiver.kernel.org>; Wed, 21 Sep 2022 12:14:03 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229741AbiIUKnv (ORCPT
+        id S229610AbiIUMOC (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Wed, 21 Sep 2022 06:43:51 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51682 "EHLO
+        Wed, 21 Sep 2022 08:14:02 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35182 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229542AbiIUKns (ORCPT
+        with ESMTP id S229544AbiIUMOB (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Wed, 21 Sep 2022 06:43:48 -0400
-Received: from mga14.intel.com (mga14.intel.com [192.55.52.115])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A93D8915E0;
-        Wed, 21 Sep 2022 03:43:47 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1663757027; x=1695293027;
-  h=message-id:date:mime-version:subject:from:to:cc:
-   references:in-reply-to:content-transfer-encoding;
-  bh=6dl3gtcacoQl6ANvxmfNKeoatSMTHZtouqyF21KWxHQ=;
-  b=FBVN7oxaKvBOXSdz5HTtBCsLBPRW8PRGyOeAih5sAbUZXr+e7srWw4hR
-   i5XwGX8Q103DQZaN/n2ucSgXwLlP1J8EdcotCCWejuTcMTqxGGhCXD/rv
-   pvnkUnchn1pkdHryPpPZeqacJ1v366SJJsZP5uWkeoRE8cj92O3qkwlEa
-   q7ZXn3Cuq6DHPYYnEMZ+oUpg79HxTvjC6aN/PaEUeoDQ3co+R1mkMiSIl
-   SoRZiLTU4at83q1/gLSQORRQzXl+EiheTEllfm5S+YrbQWZO4pzKDkWME
-   vaEdTtx9vrG94cf/qX0h/nVCp9tRYP3CBtD0rCZ8MP/ILpcnLfnYuc4xR
-   Q==;
-X-IronPort-AV: E=McAfee;i="6500,9779,10476"; a="299953065"
-X-IronPort-AV: E=Sophos;i="5.93,333,1654585200"; 
-   d="scan'208";a="299953065"
-Received: from fmsmga003.fm.intel.com ([10.253.24.29])
-  by fmsmga103.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 21 Sep 2022 03:43:47 -0700
-X-IronPort-AV: E=Sophos;i="5.93,333,1654585200"; 
-   d="scan'208";a="708395857"
-Received: from ahunter6-mobl1.ger.corp.intel.com (HELO [10.0.2.15]) ([10.252.33.27])
-  by fmsmga003-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 21 Sep 2022 03:43:45 -0700
-Message-ID: <7e0b9116-7e1f-fc4c-5528-ce5a3e565fa3@intel.com>
-Date:   Wed, 21 Sep 2022 13:11:53 +0300
-MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
- Firefox/91.0 Thunderbird/91.11.0
-Subject: Re: [PATCH 3/4] perf record: Save DSO build-ID for synthesizing
-Content-Language: en-US
-From:   Adrian Hunter <adrian.hunter@intel.com>
-To:     Namhyung Kim <namhyung@kernel.org>
-Cc:     Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Jiri Olsa <jolsa@kernel.org>, Ingo Molnar <mingo@kernel.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Ian Rogers <irogers@google.com>,
-        linux-perf-users <linux-perf-users@vger.kernel.org>
-References: <20220916175902.1155177-1-namhyung@kernel.org>
- <20220916175902.1155177-4-namhyung@kernel.org>
- <571fb9aa-98e7-b42a-aa81-01658e131f11@intel.com>
- <CAM9d7ch4Rb6GxGc2NrHFVz=S5__XdCNCRy2=5Fj=XCYn2b6d3A@mail.gmail.com>
- <c288baa5-abb1-c34c-713c-b9d11873d34a@intel.com>
-Organization: Intel Finland Oy, Registered Address: PL 281, 00181 Helsinki,
- Business Identity Code: 0357606 - 4, Domiciled in Helsinki
-In-Reply-To: <c288baa5-abb1-c34c-713c-b9d11873d34a@intel.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+        Wed, 21 Sep 2022 08:14:01 -0400
+Received: from zju.edu.cn (spam.zju.edu.cn [61.164.42.155])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTP id C8DFF95AD3;
+        Wed, 21 Sep 2022 05:13:59 -0700 (PDT)
+Received: from ubuntu.localdomain (unknown [10.162.98.155])
+        by mail-app3 (Coremail) with SMTP id cC_KCgB3Xajs_ypjJ5XdBg--.55807S2;
+        Wed, 21 Sep 2022 20:13:39 +0800 (CST)
+From:   Duoming Zhou <duoming@zju.edu.cn>
+To:     peterz@infradead.org, linux-perf-users@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Cc:     mingo@redhat.com, acme@kernel.org, mark.rutland@arm.com,
+        alexander.shishkin@linux.intel.com, jolsa@kernel.org,
+        namhyung@kernel.org, tglx@linutronix.de, bp@alien8.de,
+        dave.hansen@linux.intel.com, x86@kernel.org, hpa@zytor.com,
+        Duoming Zhou <duoming@zju.edu.cn>
+Subject: [PATCH V3] perf/x86/rapl: fix deadlock in rapl_pmu_event_stop
+Date:   Wed, 21 Sep 2022 20:13:32 +0800
+Message-Id: <20220921121332.24363-1-duoming@zju.edu.cn>
+X-Mailer: git-send-email 2.17.1
+X-CM-TRANSID: cC_KCgB3Xajs_ypjJ5XdBg--.55807S2
+X-Coremail-Antispam: 1UD129KBjvJXoW7ZF47XryxCr4rWFW5WFyfWFg_yoW8tF4Upr
+        WxAryaqr1jv3ZFqay8t3WkXrW3Zan7GanxJw4fGw1rA3ZxWan5ta1xGayF9FW3AF93X3sa
+        yw10qrWrAFZrZ37anT9S1TB71UUUUUUqnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
+        9KBjDU0xBIdaVrnRJUUUvl1xkIjI8I6I8E6xAIw20EY4v20xvaj40_Wr0E3s1l1IIY67AE
+        w4v_Jr0_Jr4l8cAvFVAK0II2c7xJM28CjxkF64kEwVA0rcxSw2x7M28EF7xvwVC0I7IYx2
+        IY67AKxVWDJVCq3wA2z4x0Y4vE2Ix0cI8IcVCY1x0267AKxVW8Jr0_Cr1UM28EF7xvwVC2
+        z280aVAFwI0_GcCE3s1l84ACjcxK6I8E87Iv6xkF7I0E14v26rxl6s0DM2AIxVAIcxkEcV
+        Aq07x20xvEncxIr21l5I8CrVACY4xI64kE6c02F40Ex7xfMcIj6xIIjxv20xvE14v26r1j
+        6r18McIj6I8E87Iv67AKxVWUJVW8JwAm72CE4IkC6x0Yz7v_Jr0_Gr1lF7xvr2IYc2Ij64
+        vIr41lF7I21c0EjII2zVCS5cI20VAGYxC7M4IIrI8v6xkF7I0E8cxan2IY04v7MxAIw28I
+        cxkI7VAKI48JMxAIw28IcVCjz48v1sIEY20_GFWkJr1UJwCFx2IqxVCFs4IE7xkEbVWUJV
+        W8JwC20s026c02F40E14v26r1j6r18MI8I3I0E7480Y4vE14v26r106r1rMI8E67AF67kF
+        1VAFwI0_Jw0_GFylIxkGc2Ij64vIr41lIxAIcVC0I7IYx2IY67AKxVWUJVWUCwCI42IY6x
+        IIjxv20xvEc7CjxVAFwI0_Gr0_Cr1lIxAIcVCF04k26cxKx2IYs7xG6r1j6r1xMIIF0xvE
+        x4A2jsIE14v26r1j6r4UMIIF0xvEx4A2jsIEc7CjxVAFwI0_Gr0_Gr1UYxBIdaVFxhVjvj
+        DU0xZFpf9x0JUdHUDUUUUU=
+X-CM-SenderInfo: qssqjiasttq6lmxovvfxof0/1tbiAg4AAVZdtbktIAAEsD
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-On 21/09/22 10:26, Adrian Hunter wrote:
-> On 20/09/22 21:30, Namhyung Kim wrote:
->> On Tue, Sep 20, 2022 at 7:00 AM Adrian Hunter <adrian.hunter@intel.com> wrote:
->>>
->>> On 16/09/22 20:59, Namhyung Kim wrote:
->>>> When synthesizing MMAP2 with build-id, it'd read the same file repeatedly as
->>>> it has no idea if it's done already.  Maintain a dsos to check that and skip
->>>> the file access if possible.
->>>>
->>>> Signed-off-by: Namhyung Kim <namhyung@kernel.org>
->>>> ---
->>>>  tools/perf/util/synthetic-events.c | 49 +++++++++++++++++++++++++-----
->>>>  1 file changed, 42 insertions(+), 7 deletions(-)
->>>>
->>>> diff --git a/tools/perf/util/synthetic-events.c b/tools/perf/util/synthetic-events.c
->>>> index 9d4f5dacd154..e6978b2dee8f 100644
->>>> --- a/tools/perf/util/synthetic-events.c
->>>> +++ b/tools/perf/util/synthetic-events.c
->>>> @@ -4,6 +4,7 @@
->>>>  #include "util/data.h"
->>>>  #include "util/debug.h"
->>>>  #include "util/dso.h"
->>>> +#include "util/dsos.h"
->>>>  #include "util/event.h"
->>>>  #include "util/evlist.h"
->>>>  #include "util/machine.h"
->>>> @@ -47,12 +48,25 @@
->>>>
->>>>  unsigned int proc_map_timeout = DEFAULT_PROC_MAP_PARSE_TIMEOUT;
->>>>
->>>> +static bool synth_init_done;
->>>> +static struct dsos synth_dsos;
->>>> +
->>>>  void perf_event__synthesize_start(void)
->>>>  {
->>>> +     if (synth_init_done)
->>>> +             return;
->>>> +
->>>> +     dsos__init(&synth_dsos);
->>>> +
->>>> +     synth_init_done = true;
->>>>  }
->>>>
->>>>  void perf_event__synthesize_stop(void)
->>>>  {
->>>> +     if (!synth_init_done)
->>>> +             return;
->>>> +
->>>> +     dsos__exit(&synth_dsos);
->>>>  }
->>>>
->>>>  int perf_tool__process_synth_event(struct perf_tool *tool,
->>>> @@ -374,26 +388,47 @@ static bool read_proc_maps_line(struct io *io, __u64 *start, __u64 *end,
->>>>  static void perf_record_mmap2__read_build_id(struct perf_record_mmap2 *event,
->>>>                                            bool is_kernel)
->>>>  {
->>>> -     struct build_id bid;
->>>> +     struct build_id _bid, *bid = &_bid;
->>>> +     struct dso *dso = NULL;
->>>> +     struct dso_id id;
->>>>       int rc;
->>>>
->>>> -     if (is_kernel)
->>>> -             rc = sysfs__read_build_id("/sys/kernel/notes", &bid);
->>>> -     else
->>>> -             rc = filename__read_build_id(event->filename, &bid) > 0 ? 0 : -1;
->>>> +     if (is_kernel) {
->>>> +             rc = sysfs__read_build_id("/sys/kernel/notes", bid);
->>>> +             goto out;
->>>> +     }
->>>> +
->>>> +     id.maj = event->maj;
->>>> +     id.min = event->min;
->>>> +     id.ino = event->ino;
->>>> +     id.ino_generation = event->ino_generation;
->>>>
->>>
->>> There might be some paths missing perf_event__synthesize_start()
->>> e.g. perf trace
->>> So it would probably be safer to use lazy initialization for
->>> synth_dsos.
->>
->> I thought about that too, but it'd need a cleanup routine at the end
->> anyway.  So I ended up having a pair of start/stop routines.
->>
->>>
->>> Also, callers of perf_record_mmap2__read_build_id() have a struct
->>> machine so I wonder about putting synth_dsos in struct machine ?
->>> Or even just using machine->dsos ?
->>
->> My intention was to use minimal info from struct dso - name, id and
->> build-id.  But as it already uses dsos/dso routines, it's not much
->> different from using the existing machine->dsos.
->>
->> So yeah, I think it's good to reuse the existing one as it'd benefit
->> the build-id processing at the end.  Will change.
->>
->> Thanks,
->> Namhyung
->>
->>
->>>
->>>> +     dso = dsos__findnew_id(&synth_dsos, event->filename, &id);
->>>> +     if (dso && dso->has_build_id) {
->>>> +             bid = &dso->bid;
->>>> +             rc = 0;
->>>> +             goto out;
->>>> +     }
-> 
-> Also I guess the dsos optimization could be a separate patch ?
+There is a deadlock in rapl_pmu_event_stop(), the process is
+shown below:
 
-Disregard that - I thought there were other changes too.
+    (thread 1)                 |        (thread 2)
+rapl_pmu_event_stop()          | rapl_hrtimer_handle()
+ ...                           |  if (!pmu->n_active)
+ raw_spin_lock_irqsave() //(1) |  ...
+  ...                          |
+  hrtimer_cancel()             |  raw_spin_lock_irqsave() //(2)
+  (block forever)
+
+We hold pmu->lock in position (1) and use hrtimer_cancel() to wait
+rapl_hrtimer_handle() to stop, but rapl_hrtimer_handle() also need
+pmu->lock in position (2). As a result, the rapl_pmu_event_stop()
+will be blocked forever.
+
+This patch uses hrtimer_try_to_cancel() to replace hrtimer_cancel()
+and moves the check "if (!pmu->n_active)" into the protection scope
+of pmu->lock. If the timer callback function is running, the
+hrtimer_try_to_cancel() will directly return. After the
+rapl_pmu_event_stop() has finished, the "pmu->n_active" equals to 0
+and the rapl_hrtimer_handle() will return "HRTIMER_NORESTART".
+
+Fixes: 65661f96d3b3 ("perf/x86: Add RAPL hrtimer support")
+Signed-off-by: Duoming Zhou <duoming@zju.edu.cn>
+---
+Changes in V3:
+  - Use hrtimer_try_to_cancel() to replace hrtimer_cancel().
+  - Use pmu->lock to protect the check "if (!pmu->n_active)".
+
+ arch/x86/events/rapl.c | 10 ++++++----
+ 1 file changed, 6 insertions(+), 4 deletions(-)
+
+diff --git a/arch/x86/events/rapl.c b/arch/x86/events/rapl.c
+index 77e3a47af5a..a526a08ee6e 100644
+--- a/arch/x86/events/rapl.c
++++ b/arch/x86/events/rapl.c
+@@ -219,11 +219,13 @@ static enum hrtimer_restart rapl_hrtimer_handle(struct hrtimer *hrtimer)
+ 	struct perf_event *event;
+ 	unsigned long flags;
+ 
+-	if (!pmu->n_active)
+-		return HRTIMER_NORESTART;
+-
+ 	raw_spin_lock_irqsave(&pmu->lock, flags);
+ 
++	if (!pmu->n_active) {
++		raw_spin_unlock_irqrestore(&pmu->lock, flags);
++		return HRTIMER_NORESTART;
++	}
++
+ 	list_for_each_entry(event, &pmu->active_list, active_entry)
+ 		rapl_event_update(event);
+ 
+@@ -282,7 +284,7 @@ static void rapl_pmu_event_stop(struct perf_event *event, int mode)
+ 		WARN_ON_ONCE(pmu->n_active <= 0);
+ 		pmu->n_active--;
+ 		if (pmu->n_active == 0)
+-			hrtimer_cancel(&pmu->hrtimer);
++			hrtimer_try_to_cancel(&pmu->hrtimer);
+ 
+ 		list_del(&event->active_entry);
+ 
+-- 
+2.17.1
+
