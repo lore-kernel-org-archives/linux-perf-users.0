@@ -2,106 +2,141 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 166D8C6FA93
-	for <linux-perf-users@archiver.kernel.org>; Wed, 21 Sep 2022 21:52:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9A86BECAAD8
+	for <linux-perf-users@archiver.kernel.org>; Wed, 21 Sep 2022 22:26:14 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231150AbiIUVwS (ORCPT
+        id S230182AbiIUW0N (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Wed, 21 Sep 2022 17:52:18 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58764 "EHLO
+        Wed, 21 Sep 2022 18:26:13 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41022 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230484AbiIUVwA (ORCPT
+        with ESMTP id S229641AbiIUW0N (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Wed, 21 Sep 2022 17:52:00 -0400
-Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTP id 91597A7203;
-        Wed, 21 Sep 2022 14:51:48 -0700 (PDT)
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id DE5D51684;
-        Wed, 21 Sep 2022 14:51:53 -0700 (PDT)
-Received: from e126311.manchester.arm.com (unknown [10.57.76.246])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 6F35F3F73B;
-        Wed, 21 Sep 2022 14:51:19 -0700 (PDT)
-Date:   Wed, 21 Sep 2022 22:51:10 +0100
-From:   Kajetan Puchalski <kajetan.puchalski@arm.com>
-To:     Peter Zijlstra <peterz@infradead.org>
-Cc:     richard.henderson@linaro.org, ink@jurassic.park.msu.ru,
-        mattst88@gmail.com, vgupta@kernel.org, linux@armlinux.org.uk,
-        ulli.kroll@googlemail.com, linus.walleij@linaro.org,
-        shawnguo@kernel.org, Sascha Hauer <s.hauer@pengutronix.de>,
-        kernel@pengutronix.de, festevam@gmail.com, linux-imx@nxp.com,
-        tony@atomide.com, khilman@kernel.org, catalin.marinas@arm.com,
-        will@kernel.org, guoren@kernel.org, bcain@quicinc.com,
-        chenhuacai@kernel.org, kernel@xen0n.name, geert@linux-m68k.org,
-        sammy@sammy.net, monstr@monstr.eu, tsbogend@alpha.franken.de,
-        dinguyen@kernel.org, jonas@southpole.se,
-        stefan.kristiansson@saunalahti.fi, shorne@gmail.com,
-        James.Bottomley@HansenPartnership.com, deller@gmx.de,
-        mpe@ellerman.id.au, npiggin@gmail.com, christophe.leroy@csgroup.eu,
-        paul.walmsley@sifive.com, palmer@dabbelt.com,
-        aou@eecs.berkeley.edu, hca@linux.ibm.com, gor@linux.ibm.com,
-        agordeev@linux.ibm.com, borntraeger@linux.ibm.com,
-        svens@linux.ibm.com, ysato@users.sourceforge.jp, dalias@libc.org,
-        davem@davemloft.net, richard@nod.at,
-        anton.ivanov@cambridgegreys.com, johannes@sipsolutions.net,
-        tglx@linutronix.de, mingo@redhat.com, bp@alien8.de,
-        dave.hansen@linux.intel.com, x86@kernel.org, hpa@zytor.com,
-        acme@kernel.org, mark.rutland@arm.com,
-        alexander.shishkin@linux.intel.com, jolsa@kernel.org,
-        namhyung@kernel.org, jgross@suse.com, srivatsa@csail.mit.edu,
-        amakhalov@vmware.com, pv-drivers@vmware.com,
-        boris.ostrovsky@oracle.com, chris@zankel.net, jcmvbkbc@gmail.com,
-        rafael@kernel.org, lenb@kernel.org, pavel@ucw.cz,
-        gregkh@linuxfoundation.org, mturquette@baylibre.com,
-        sboyd@kernel.org, daniel.lezcano@linaro.org, lpieralisi@kernel.org,
-        sudeep.holla@arm.com, agross@kernel.org,
-        bjorn.andersson@linaro.org, konrad.dybcio@somainline.org,
-        anup@brainfault.org, thierry.reding@gmail.com,
-        jonathanh@nvidia.com, jacob.jun.pan@linux.intel.com,
-        atishp@atishpatra.org, Arnd Bergmann <arnd@arndb.de>,
-        yury.norov@gmail.com, andriy.shevchenko@linux.intel.com,
-        linux@rasmusvillemoes.dk, dennis@kernel.org, tj@kernel.org,
-        cl@linux.com, rostedt@goodmis.org, pmladek@suse.com,
-        senozhatsky@chromium.org, john.ogness@linutronix.de,
-        juri.lelli@redhat.com, vincent.guittot@linaro.org,
-        dietmar.eggemann@arm.com, bsegall@google.com, mgorman@suse.de,
-        bristot@redhat.com, vschneid@redhat.com, fweisbec@gmail.com,
-        ryabinin.a.a@gmail.com, glider@google.com, andreyknvl@gmail.com,
-        dvyukov@google.com, vincenzo.frascino@arm.com,
-        Andrew Morton <akpm@linux-foundation.org>, jpoimboe@kernel.org,
-        linux-alpha@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-snps-arc@lists.infradead.org, linux-omap@vger.kernel.org,
-        linux-csky@vger.kernel.org, linux-hexagon@vger.kernel.org,
-        linux-ia64@vger.kernel.org, loongarch@lists.linux.dev,
-        linux-m68k@lists.linux-m68k.org, linux-mips@vger.kernel.org,
-        openrisc@lists.librecores.org, linux-parisc@vger.kernel.org,
-        linuxppc-dev@lists.ozlabs.org, linux-riscv@lists.infradead.org,
-        linux-s390@vger.kernel.org, linux-sh@vger.kernel.org,
-        sparclinux@vger.kernel.org, linux-um@lists.infradead.org,
+        Wed, 21 Sep 2022 18:26:13 -0400
+Received: from sin.source.kernel.org (sin.source.kernel.org [IPv6:2604:1380:40e1:4800::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2B557A8307;
+        Wed, 21 Sep 2022 15:26:12 -0700 (PDT)
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by sin.source.kernel.org (Postfix) with ESMTPS id 964C0CE1FA1;
+        Wed, 21 Sep 2022 22:26:10 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id BADBBC433C1;
+        Wed, 21 Sep 2022 22:26:05 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1663799168;
+        bh=eCz+7ykAr0o97vQ4d0dHFt5bI+cqs4JXKrGw8rTT0kY=;
+        h=From:To:Cc:Subject:Date:From;
+        b=SMY9Vp2hEevfHx7SItZiK0H97UQYuU6XDNkgha1jrNcrWVKHKhf6ZynvQ69JHD3mM
+         nmG5QkaXYWamQ7eiRzbbEoRgyMoZ5ozbvvEPZ6BPGvW7l7eZccpxwOCVM1Uyv6XtEr
+         L9hQnP5eEY4cJSvBllpUR8TL0KnGIIaa6UodDyBh0Uh7ReNb3RrAP7m4FWvKp8uw9k
+         bKVArTGw4dcwKw/GzR+7Zr7zVI39J1m7Pe4tMdpV3g/3f2iZN9CD3XDRjonbxmAyKU
+         bfccHxr2kppd3FnPjzmkQLl74yJWfBA9PySVzz45HEroLzbwNDyzT1t0JrC5JWO/CB
+         E+hjuMHGP5CeQ==
+From:   Arnaldo Carvalho de Melo <acme@kernel.org>
+To:     Linus Torvalds <torvalds@linux-foundation.org>
+Cc:     Ingo Molnar <mingo@kernel.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Jiri Olsa <jolsa@kernel.org>,
+        Namhyung Kim <namhyung@kernel.org>,
+        Clark Williams <williams@redhat.com>,
+        Kate Carcia <kcarcia@redhat.com>, linux-kernel@vger.kernel.org,
         linux-perf-users@vger.kernel.org,
-        virtualization@lists.linux-foundation.org,
-        linux-xtensa@linux-xtensa.org, linux-acpi@vger.kernel.org,
-        linux-pm@vger.kernel.org, linux-clk@vger.kernel.org,
-        linux-arm-msm@vger.kernel.org, linux-tegra@vger.kernel.org,
-        linux-arch@vger.kernel.org, kasan-dev@googlegroups.com
-Subject: Re: [PATCH v2 07/44] cpuidle,psci: Push RCU-idle into driver
-Message-ID: <YyuHTgRh7t6vYjHw@e126311.manchester.arm.com>
-References: <20220919095939.761690562@infradead.org>
- <20220919101520.802976773@infradead.org>
+        Arnaldo Carvalho de Melo <acme@kernel.org>,
+        Adrian Hunter <adrian.hunter@intel.com>,
+        Alexei Starovoitov <ast@kernel.org>,
+        Daniel Dao <dqminh@cloudflare.com>,
+        Leo Yan <leo.yan@linaro.org>, Lieven Hey <lieven.hey@kdab.com>,
+        Arnaldo Carvalho de Melo <acme@redhat.com>
+Subject: [GIT PULL] perf tools changes for v6.0: 4th batch
+Date:   Wed, 21 Sep 2022 23:26:00 +0100
+Message-Id: <20220921222600.29851-1-acme@kernel.org>
+X-Mailer: git-send-email 2.37.3
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20220919101520.802976773@infradead.org>
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-On Mon, Sep 19, 2022 at 11:59:46AM +0200, Peter Zijlstra wrote:
-> Doing RCU-idle outside the driver, only to then temporarily enable it
-> again, at least twice, before going idle is daft.
-> 
-> Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
+Hi Linus,
 
-Tried it on Pixel 6 running psci_idle, looks good with no apparent issues.
+	Please consider pulling,
 
-Tested-by: Kajetan Puchalski <kajetan.puchalski@arm.com>
+Best regards,
+
+- Arnaldo
+
+The following changes since commit 60891ec99e141b74544d11e897a245ef06263052:
+
+  Merge tag 'for-6.0-rc6-tag' of git://git.kernel.org/pub/scm/linux/kernel/git/kdave/linux (2022-09-20 10:23:24 -0700)
+
+are available in the Git repository at:
+
+  git://git.kernel.org/pub/scm/linux/kernel/git/acme/linux.git tags/perf-tools-fixes-for-v6.0-2022-09-21
+
+for you to fetch changes up to 999e4eaa4b3691acf85d094836260ec4b66c74fd:
+
+  perf tools: Honor namespace when synthesizing build-ids (2022-09-21 16:08:00 -0300)
+
+----------------------------------------------------------------
+perf tools fixes for v6.0: 4th batch
+
+- Fix polling of system-wide events related to mixing per-cpu and per-thread
+  events.
+
+- Do not check if /proc/modules is unchanged when copying /proc/kcore,
+  that doesn't get in the way of post processing analysis.
+
+- Include program header in ELF files generated for JIT files, so that they can
+  be opened by tools using elfutils libraries.
+
+- Enter namespaces when synthesizing build-ids.
+
+- Fix some bugs related to a recent cpu_map overhaul where we should be
+  using an index and not the cpu number.
+
+- Fix BPF program ELF section name, using the naming expected by libbpf when
+  using BPF counters in 'perf stat'.
+
+- Add a new test for perf stat cgroup BPF counter.
+
+- Adjust check on 'perf test wp' for older kernels, where the
+  PERF_EVENT_IOC_MODIFY_ATTRIBUTES ioctl isn't supported.
+
+- Sync x86 cpufeatures with the kernel sources, no changes in tooling.
+
+Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
+
+----------------------------------------------------------------
+Adrian Hunter (3):
+      perf record: Fix cpu mask bit setting for mixed mmaps
+      libperf evlist: Fix polling of system-wide events
+      perf kcore_copy: Do not check /proc/modules is unchanged
+
+Arnaldo Carvalho de Melo (1):
+      tools headers cpufeatures: Sync with the kernel sources
+
+Lieven Hey (1):
+      perf jit: Include program header in ELF files
+
+Namhyung Kim (6):
+      perf stat: Fix BPF program section name
+      perf stat: Fix cpu map index in bperf cgroup code
+      perf stat: Use evsel->core.cpus to iterate cpus in BPF cgroup counters
+      perf test: Add a new test for perf stat cgroup BPF counter
+      perf test: Skip wp modify test on old kernels
+      perf tools: Honor namespace when synthesizing build-ids
+
+ tools/arch/x86/include/asm/cpufeatures.h         |  5 +-
+ tools/lib/perf/evlist.c                          |  5 +-
+ tools/perf/builtin-record.c                      |  2 +
+ tools/perf/tests/shell/stat_bpf_counters_cgrp.sh | 83 ++++++++++++++++++++++++
+ tools/perf/tests/wp.c                            | 10 ++-
+ tools/perf/util/bpf_counter_cgroup.c             | 10 +--
+ tools/perf/util/bpf_skel/bperf_cgroup.bpf.c      |  2 +-
+ tools/perf/util/genelf.c                         | 14 ++++
+ tools/perf/util/genelf.h                         |  4 ++
+ tools/perf/util/symbol-elf.c                     |  7 +-
+ tools/perf/util/synthetic-events.c               | 17 ++++-
+ 11 files changed, 139 insertions(+), 20 deletions(-)
+ create mode 100755 tools/perf/tests/shell/stat_bpf_counters_cgrp.sh
