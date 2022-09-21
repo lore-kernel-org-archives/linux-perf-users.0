@@ -2,170 +2,138 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 13B39C6FA82
-	for <linux-perf-users@archiver.kernel.org>; Tue, 20 Sep 2022 22:28:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2E616C54EE9
+	for <linux-perf-users@archiver.kernel.org>; Wed, 21 Sep 2022 01:31:08 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230489AbiITW23 (ORCPT
+        id S229926AbiIUBbG (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Tue, 20 Sep 2022 18:28:29 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38518 "EHLO
+        Tue, 20 Sep 2022 21:31:06 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51118 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230216AbiITW22 (ORCPT
+        with ESMTP id S229845AbiIUBbF (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Tue, 20 Sep 2022 18:28:28 -0400
-Received: from mail-pl1-x634.google.com (mail-pl1-x634.google.com [IPv6:2607:f8b0:4864:20::634])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 82ABA5AC61;
-        Tue, 20 Sep 2022 15:28:27 -0700 (PDT)
-Received: by mail-pl1-x634.google.com with SMTP id p18so3818090plr.8;
-        Tue, 20 Sep 2022 15:28:27 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20210112;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:sender:from:to:cc:subject:date;
-        bh=b0TwgF3e0WmdwRlV5PKHLE+xmbYkh0/m4EttPyhr+E0=;
-        b=HlV0+lH1QZgu796UDU4yLSyJ7iocKW/S8GpT8Sc7Hs2XlbBfchHAhUg3Fm132U+CWP
-         o/ySjOm31HhLyhyDa1BpX7qs3Q8SicFwM362/EHf1HsHJYfK/I8P/ALt6bZupCXtK3Ga
-         gExBwkIqXQsQSM/GYoPtuuX3EdAOunMmXnsAY+4cQrgkas08L4ioY2kOTiFnM+U1cEf0
-         GTHQuZallARZIHy/htRYxt+28KfMTclOLO4hyOHbJTZfEFGxwHGY1FKsKH0yQ9I1Wpj6
-         G9biBzhY8a0wIc+ugVvgtjV6gNdal78i+mWPUSrETTPNVNbfnNM4ygpw4ResVwq4zgK/
-         bYeg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:sender:x-gm-message-state:from
-         :to:cc:subject:date;
-        bh=b0TwgF3e0WmdwRlV5PKHLE+xmbYkh0/m4EttPyhr+E0=;
-        b=R4gyLe9cXKlQAA6pR3jOgfXT90iX3yikW/g9yzSm6Rd7hwuZl4nLS8fOJIRU6Bo3Sa
-         xTFntB1+k6NjhWx8uWVZhVOrl7TptpfYjKSVA++A4WJ0egN9U0T/Rj482c5IC+f4DVai
-         l/AE96xICyGku4k04rHILuAMfefOBAFE3PvZry9YOb/6Qx3hdZXHb3BCvS5bpY0uA0Dj
-         Ubsu4fOqVDHw+cCVdySCARdb8n0FslXtphJo2tfr8kvAigFWnP+tUTHsmzFcehk9jQ4m
-         7oKszbfkPeKCXCJJ204KkXOELfT9gpyceOVevked0VGTTEIGP7Y4UOKGUWZLj5prwUGt
-         QJWg==
-X-Gm-Message-State: ACrzQf3Y4yHk1h6dUxRjOosGvb1L+mHQbpIJ0+8v70PCbhpMxsKCK5ha
-        lv9FD6WoU1PczASVE69lHLE=
-X-Google-Smtp-Source: AMsMyM5mFC+q9FD4rTBHntYv6fD1RBkL6p3RhT1hCJCet3QaVOsFjBwL+b3IiOPowyWqFcdAHMtzTA==
-X-Received: by 2002:a17:90b:180d:b0:202:7cf6:9f9b with SMTP id lw13-20020a17090b180d00b002027cf69f9bmr6254518pjb.160.1663712906910;
-        Tue, 20 Sep 2022 15:28:26 -0700 (PDT)
-Received: from youngsil.svl.corp.google.com ([2620:15c:2d4:203:7c7c:fcc0:e49a:4079])
-        by smtp.gmail.com with ESMTPSA id c6-20020a170903234600b0017680faa1a8sm413083plh.112.2022.09.20.15.28.25
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 20 Sep 2022 15:28:26 -0700 (PDT)
-Sender: Namhyung Kim <namhyung@gmail.com>
-From:   Namhyung Kim <namhyung@kernel.org>
-To:     Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Jiri Olsa <jolsa@kernel.org>
-Cc:     Ingo Molnar <mingo@kernel.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Ian Rogers <irogers@google.com>,
-        Adrian Hunter <adrian.hunter@intel.com>,
-        linux-perf-users@vger.kernel.org
-Subject: [PATCH v2 2/2] perf record: Save DSO build-ID for synthesizing
-Date:   Tue, 20 Sep 2022 15:28:22 -0700
-Message-Id: <20220920222822.2171056-2-namhyung@kernel.org>
-X-Mailer: git-send-email 2.37.3.968.ga6b4b080e4-goog
-In-Reply-To: <20220920222822.2171056-1-namhyung@kernel.org>
-References: <20220920222822.2171056-1-namhyung@kernel.org>
+        Tue, 20 Sep 2022 21:31:05 -0400
+Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1185C61D50;
+        Tue, 20 Sep 2022 18:31:03 -0700 (PDT)
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by dfw.source.kernel.org (Postfix) with ESMTPS id A22F762EF7;
+        Wed, 21 Sep 2022 01:31:02 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id EF888C43142;
+        Wed, 21 Sep 2022 01:31:01 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1663723862;
+        bh=AaMF3Lx8O+Q/o+XRTddc8AE/gxx/VpCCpwfiOhyRXIc=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=T10zN9TgDWRzwNKs6FevPidFV06xeq7p0bUAQJni0ifUrB8vUhS6MTdBHNoclXnG+
+         G9rjUqpoERoi/DJ2MCx5mUiKX0t970zl4q9/RnZ0A4kSZc3N2UO4AMwPZbecHJ/YrV
+         mEVL/yZbQqPEwDc8Zz42Kh4N+m6Dgp3FTQAkMy/Cv2M3xxhBtdu67U/jk+AQWi7U++
+         vUPqHUu9wKyEbT07pm2Z8EBaf/9HNugHrOW/SXAOQ8BGVW2lWOjI0QkAMv+YPAxVCn
+         gXhHxV42mXasDAnvNXx5ZhoVi/CvQt+1xmB1kEJ/71wn+He9Mk0ZeoWgK/gCtAxFbP
+         XFRDHCLVGLCiw==
+Received: by mail-oi1-f170.google.com with SMTP id d64so3160920oia.9;
+        Tue, 20 Sep 2022 18:31:01 -0700 (PDT)
+X-Gm-Message-State: ACrzQf3ESEMDdAq9tSQewBpNMvxKIAEog7phwujVptIEIMG4fHD5NQ54
+        K7QzE+8z1K9SSkMqXFLcErlpAbW+4sFQJMzUJcE=
+X-Google-Smtp-Source: AMsMyM6BZP9fw/VOE/mLMznHGL1+UHO0GnlrsPd4CDoYWfDhSlt430cnnqjnNSmcyHmtZU4RnBHUkNkUgyj1gA3IjQE=
+X-Received: by 2002:a05:6808:151f:b0:350:1b5e:2380 with SMTP id
+ u31-20020a056808151f00b003501b5e2380mr2937565oiw.112.1663723860952; Tue, 20
+ Sep 2022 18:31:00 -0700 (PDT)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+References: <20220920151202.180057-1-chenzhongjin@huawei.com> <20220920151202.180057-5-chenzhongjin@huawei.com>
+In-Reply-To: <20220920151202.180057-5-chenzhongjin@huawei.com>
+From:   Guo Ren <guoren@kernel.org>
+Date:   Wed, 21 Sep 2022 09:30:46 +0800
+X-Gmail-Original-Message-ID: <CAJF2gTQ8QjUiRhQiM67SET=bCpppG2opcN3_ch7GEqdAkBnBUA@mail.gmail.com>
+Message-ID: <CAJF2gTQ8QjUiRhQiM67SET=bCpppG2opcN3_ch7GEqdAkBnBUA@mail.gmail.com>
+Subject: Re: [PATCH -next 4/7] riscv: syscall: Don't clobber s0 when syscall
+To:     Chen Zhongjin <chenzhongjin@huawei.com>
+Cc:     linux-kernel@vger.kernel.org, linux-riscv@lists.infradead.org,
+        linux-perf-users@vger.kernel.org, paul.walmsley@sifive.com,
+        palmer@dabbelt.com, aou@eecs.berkeley.edu, peterz@infradead.org,
+        mingo@redhat.com, acme@kernel.org, mark.rutland@arm.com,
+        alexander.shishkin@linux.intel.com, namhyung@kernel.org,
+        jolsa@kernel.org, nsaenzju@redhat.com, frederic@kernel.org,
+        changbin.du@intel.com, vincent.chen@sifive.com, ardb@kernel.org,
+        mhiramat@kernel.org, rostedt@goodmis.org, keescook@chromium.org,
+        catalin.marinas@arm.com
+Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-When synthesizing MMAP2 with build-id, it'd read the same file repeatedly as
-it has no idea if it's done already.  Maintain a dsos to check that and skip
-the file access if possible.
+On Tue, Sep 20, 2022 at 11:15 PM Chen Zhongjin <chenzhongjin@huawei.com> wrote:
+>
+> syscall uses s0 to load address of sys_call_table.
+>
+> Since now we uses s0 to save pt_regs for unwinding, clobber
+> s0 can make unwinder treat s0 as pt_regs address. Use s1 for
+> this job.
+This patch does not make sense. Why couldn't we use s1 for pt_regs?
 
-Signed-off-by: Namhyung Kim <namhyung@kernel.org>
----
-v2 change)
- * Remove perf_event__synthesize_{start,stop} and use machine->dsos  (Adrian)
+No need to modify the entry.S here.
 
- tools/perf/util/synthetic-events.c | 25 ++++++++++++++++++++++---
- 1 file changed, 22 insertions(+), 3 deletions(-)
+>
+> Signed-off-by: Chen Zhongjin <chenzhongjin@huawei.com>
+> ---
+>  arch/riscv/kernel/entry.S | 20 ++++++++++----------
+>  1 file changed, 10 insertions(+), 10 deletions(-)
+>
+> diff --git a/arch/riscv/kernel/entry.S b/arch/riscv/kernel/entry.S
+> index ecb15c7430b4..a3b14a649782 100644
+> --- a/arch/riscv/kernel/entry.S
+> +++ b/arch/riscv/kernel/entry.S
+> @@ -205,33 +205,33 @@ handle_syscall:
+>  check_syscall_nr:
+>         /* Check to make sure we don't jump to a bogus syscall number. */
+>         li t0, __NR_syscalls
+> -       la s0, sys_ni_syscall
+> +       la s1, sys_ni_syscall
+>         /*
+>          * Syscall number held in a7.
+>          * If syscall number is above allowed value, redirect to ni_syscall.
+>          */
+>         bgeu a7, t0, 3f
+>  #ifdef CONFIG_COMPAT
+> -       REG_L s0, PT_STATUS(sp)
+> -       srli s0, s0, SR_UXL_SHIFT
+> -       andi s0, s0, (SR_UXL >> SR_UXL_SHIFT)
+> +       REG_L s1, PT_STATUS(sp)
+> +       srli s1, s1, SR_UXL_SHIFT
+> +       andi s1, s1, (SR_UXL >> SR_UXL_SHIFT)
+>         li t0, (SR_UXL_32 >> SR_UXL_SHIFT)
+> -       sub t0, s0, t0
+> +       sub t0, s1, t0
+>         bnez t0, 1f
+>
+>         /* Call compat_syscall */
+> -       la s0, compat_sys_call_table
+> +       la s1, compat_sys_call_table
+>         j 2f
+>  1:
+>  #endif
+>         /* Call syscall */
+> -       la s0, sys_call_table
+> +       la s1, sys_call_table
+>  2:
+>         slli t0, a7, RISCV_LGPTR
+> -       add s0, s0, t0
+> -       REG_L s0, 0(s0)
+> +       add s1, s1, t0
+> +       REG_L s1, 0(s1)
+>  3:
+> -       jalr s0
+> +       jalr s1
+>
+>  ret_from_syscall:
+>         /* Set user a0 to kernel a0 */
+> --
+> 2.17.1
+>
 
-diff --git a/tools/perf/util/synthetic-events.c b/tools/perf/util/synthetic-events.c
-index 289ea17ac5f7..cccd293b5312 100644
---- a/tools/perf/util/synthetic-events.c
-+++ b/tools/perf/util/synthetic-events.c
-@@ -364,11 +364,14 @@ static bool read_proc_maps_line(struct io *io, __u64 *start, __u64 *end,
- }
- 
- static void perf_record_mmap2__read_build_id(struct perf_record_mmap2 *event,
-+					     struct machine *machine,
- 					     bool is_kernel)
- {
- 	struct build_id bid;
- 	struct nsinfo *nsi;
- 	struct nscookie nc;
-+	struct dso *dso = NULL;
-+	struct dso_id id;
- 	int rc;
- 
- 	if (is_kernel) {
-@@ -376,6 +379,18 @@ static void perf_record_mmap2__read_build_id(struct perf_record_mmap2 *event,
- 		goto out;
- 	}
- 
-+	id.maj = event->maj;
-+	id.min = event->min;
-+	id.ino = event->ino;
-+	id.ino_generation = event->ino_generation;
-+
-+	dso = dsos__findnew_id(&machine->dsos, event->filename, &id);
-+	if (dso && dso->has_build_id) {
-+		bid = dso->bid;
-+		rc = 0;
-+		goto out;
-+	}
-+
- 	nsi = nsinfo__new(event->pid);
- 	nsinfo__mountns_enter(nsi, &nc);
- 
-@@ -391,12 +406,16 @@ static void perf_record_mmap2__read_build_id(struct perf_record_mmap2 *event,
- 		event->header.misc |= PERF_RECORD_MISC_MMAP_BUILD_ID;
- 		event->__reserved_1 = 0;
- 		event->__reserved_2 = 0;
-+
-+		if (dso && !dso->has_build_id)
-+			dso__set_build_id(dso, &bid);
- 	} else {
- 		if (event->filename[0] == '/') {
- 			pr_debug2("Failed to read build ID for %s\n",
- 				  event->filename);
- 		}
- 	}
-+	dso__put(dso);
- }
- 
- int perf_event__synthesize_mmap_events(struct perf_tool *tool,
-@@ -507,7 +526,7 @@ int perf_event__synthesize_mmap_events(struct perf_tool *tool,
- 		event->mmap2.tid = pid;
- 
- 		if (symbol_conf.buildid_mmap2)
--			perf_record_mmap2__read_build_id(&event->mmap2, false);
-+			perf_record_mmap2__read_build_id(&event->mmap2, machine, false);
- 
- 		if (perf_tool__process_synth_event(tool, event, machine, process) != 0) {
- 			rc = -1;
-@@ -690,7 +709,7 @@ int perf_event__synthesize_modules(struct perf_tool *tool, perf_event__handler_t
- 			memcpy(event->mmap2.filename, pos->dso->long_name,
- 			       pos->dso->long_name_len + 1);
- 
--			perf_record_mmap2__read_build_id(&event->mmap2, false);
-+			perf_record_mmap2__read_build_id(&event->mmap2, machine, false);
- 		} else {
- 			size = PERF_ALIGN(pos->dso->long_name_len + 1, sizeof(u64));
- 			event->mmap.header.type = PERF_RECORD_MMAP;
-@@ -1126,7 +1145,7 @@ static int __perf_event__synthesize_kernel_mmap(struct perf_tool *tool,
- 		event->mmap2.len   = map->end - event->mmap.start;
- 		event->mmap2.pid   = machine->pid;
- 
--		perf_record_mmap2__read_build_id(&event->mmap2, true);
-+		perf_record_mmap2__read_build_id(&event->mmap2, machine, true);
- 	} else {
- 		size = snprintf(event->mmap.filename, sizeof(event->mmap.filename),
- 				"%s%s", machine->mmap_name, kmap->ref_reloc_sym->name) + 1;
+
 -- 
-2.37.3.968.ga6b4b080e4-goog
-
+Best Regards
+ Guo Ren
