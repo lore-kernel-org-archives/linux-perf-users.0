@@ -2,218 +2,115 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CBFD4C54EE9
-	for <linux-perf-users@archiver.kernel.org>; Thu, 22 Sep 2022 19:15:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 129F7ECAAD8
+	for <linux-perf-users@archiver.kernel.org>; Thu, 22 Sep 2022 19:19:08 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232299AbiIVTPo (ORCPT
+        id S231777AbiIVTTG (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Thu, 22 Sep 2022 15:15:44 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59954 "EHLO
+        Thu, 22 Sep 2022 15:19:06 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33632 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231256AbiIVTPo (ORCPT
+        with ESMTP id S229578AbiIVTTG (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Thu, 22 Sep 2022 15:15:44 -0400
+        Thu, 22 Sep 2022 15:19:06 -0400
 Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 42779ECCF3
-        for <linux-perf-users@vger.kernel.org>; Thu, 22 Sep 2022 12:15:43 -0700 (PDT)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 84133106A29;
+        Thu, 22 Sep 2022 12:19:05 -0700 (PDT)
 Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id D78F16379F
-        for <linux-perf-users@vger.kernel.org>; Thu, 22 Sep 2022 19:15:42 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id E11CDC433D6;
-        Thu, 22 Sep 2022 19:15:41 +0000 (UTC)
+        by dfw.source.kernel.org (Postfix) with ESMTPS id 1DE9160ED1;
+        Thu, 22 Sep 2022 19:19:05 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 589B6C433D6;
+        Thu, 22 Sep 2022 19:19:04 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1663874142;
-        bh=JgJGQpDDZsyxeVgT7WB9JRy9J8IQDarTU3rm4wlJv1s=;
+        s=k20201202; t=1663874344;
+        bh=fH/ftMSCMde/tGgysJ6GXrjfJcRK3hwxp51NNNMYSFQ=;
         h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=pVVKccNBXS/kaetzvZDmd0Kte1GFJLmH+q/HhuhnZESnsxZQQsWaMK3yTrTcfSMHD
-         Tq37iI23hvluPNtIvOznlZ2NEBRzaIceTNSqsXZmiY5ejhvvhAI1xB/Rj08qE9HKv8
-         n3lbdd6xvcktTuTP6+ZW1OXYCiFD20pK6wT+ZzdVL0H9cBLF2/gUydkG80AhQ6ReJj
-         BaqE3fwCnD8UuCMVzrcwpE6XnAAtgY0u2vfFXzmGdpqUEoIfvLEeQ+fFcFHA1I1lrD
-         wXuOc4J6B2d4iMyScK5rsSRDggOWxsv486WVWuepHfM9nqoI3l0CMCGeZNX3cji/9i
-         MwZicfhW6A1iw==
+        b=HpInakzF/YtLR0GbsbO3sqUR/uaQGEOaH+QUKjCFD90cCiAoPClfFis7jvQ6Iq9V9
+         woDePn4JOZoLS9INmwPdG7h13IZNDGzJb8Kb5ZqSrn7ZpoyI7zw4XYk2gaPAr4iq9f
+         aWwP2c/elk1FeYiiKcsKG/QHmkknN3Cle7cpBrrCGNWEoP55aQAfFtIBFRlHHdSys5
+         9ORBGvqGGh560Grx4MyYKxPBsS7mj/mOjDhO27d0AljgDH0mdXHQwr9V49JaUV36Dh
+         B6Gc2Bn2b+1kgE0Iqfte0cikEZ6TdtwzePpimxEORHsHxmnPJ/U2vlICBeAkxP4Rvx
+         ecUjR6FvTZH1Q==
 Received: by quaco.ghostprotocols.net (Postfix, from userid 1000)
-        id 78C7F403B0; Thu, 22 Sep 2022 20:15:39 +0100 (IST)
-Date:   Thu, 22 Sep 2022 20:15:39 +0100
+        id 2EBA2403B0; Thu, 22 Sep 2022 20:19:02 +0100 (IST)
+Date:   Thu, 22 Sep 2022 20:19:02 +0100
 From:   Arnaldo Carvalho de Melo <acme@kernel.org>
-To:     Athira Rajeev <atrajeev@linux.vnet.ibm.com>
-Cc:     Jiri Olsa <jolsa@kernel.org>, mpe@ellerman.id.au,
-        linux-perf-users@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
-        maddy@linux.vnet.ibm.com, rnsastry@linux.ibm.com,
-        kjain@linux.ibm.com, disgoel@linux.vnet.ibm.com,
-        Ian Rogers <irogers@google.com>,
-        Adrian Hunter <adrian.hunter@intel.com>
-Subject: Re: [PATCH 1/2] tools/perf/tests: Fix string substitutions in build
- id test
-Message-ID: <Yyy0W6CnPk7BkkCU@kernel.org>
-References: <20220921170839.21927-1-atrajeev@linux.vnet.ibm.com>
+To:     cgel.zte@gmail.com
+Cc:     mingo@redhat.com, mark.rutland@arm.com,
+        alexander.shishkin@linux.intel.com, jolsa@kernel.org,
+        namhyung@kernel.org, irogers@google.com, songliubraving@fb.com,
+        adrian.hunter@intel.com, davemarchevsky@fb.com, wcohen@redhat.com,
+        andres@anarazel.de, linux-perf-users@vger.kernel.org,
+        linux-kernel@vger.kernel.org, ye xingchen <ye.xingchen@zte.com.cn>,
+        Zeal Robot <zealci@zte.com.cn>
+Subject: Re: [PATCH linux-next] perf annotate: use strscpy() is more robust
+ and safer
+Message-ID: <Yyy1JgWCuQTMKFkY@kernel.org>
+References: <20220922012431.232372-1-ye.xingchen@zte.com.cn>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <20220921170839.21927-1-atrajeev@linux.vnet.ibm.com>
+In-Reply-To: <20220922012431.232372-1-ye.xingchen@zte.com.cn>
 X-Url:  http://acmel.wordpress.com
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-Em Wed, Sep 21, 2022 at 10:38:38PM +0530, Athira Rajeev escreveu:
-> The perf test named “build id cache operations” skips with below
-> error on some distros:
+Em Thu, Sep 22, 2022 at 01:24:31AM +0000, cgel.zte@gmail.com escreveu:
+> From: ye xingchen <ye.xingchen@zte.com.cn>
+> 
+> The implementation of strscpy() is more robust and safer.
 
-I wonder if we shouldn't instead state that bash is needed?
+Where is strscpy() defined?
 
-⬢[acme@toolbox perf-urgent]$ head -1 tools/perf/tests/shell/*.sh | grep ^#
-#!/bin/sh
-#!/bin/bash
-#!/bin/sh
-#!/bin/sh
-#!/bin/sh
-#!/bin/sh
-#!/bin/sh
-#!/bin/sh
-#!/bin/sh
-#!/bin/sh
-#!/bin/bash
-#!/bin/sh
-#!/bin/sh
-#!/bin/sh
-#!/bin/bash
-#!/bin/sh
-#!/bin/bash
-#!/bin/sh
-#!/bin/sh
-#!/bin/sh
-#!/bin/sh
-#!/bin/sh
-#!/bin/sh
-#!/bin/sh
-#!/bin/sh
-#!/bin/sh
-⬢[acme@toolbox perf-urgent]$
+I see it defined in the kernel:
 
-Opinions?
+⬢[acme@toolbox perf]$ grep -w strscpy include/linux/string.h
+ssize_t strscpy(char *, const char *, size_t);
+/* Wraps calls to strscpy()/memset(), no arch specific code required */
+⬢[acme@toolbox perf]$
+
+But not in tools/
+
+Have you actually build with these patches?
 
 - Arnaldo
  
-> <<>>
->  78: build id cache operations                                       :
-> test child forked, pid 111101
-> WARNING: wine not found. PE binaries will not be run.
-> test binaries: /tmp/perf.ex.SHA1.PKz /tmp/perf.ex.MD5.Gt3 ./tests/shell/../pe-file.exe
-> DEBUGINFOD_URLS=
-> Adding 4abd406f041feb4f10ecde3fc30fd0639e1a91cb /tmp/perf.ex.SHA1.PKz: Ok
-> build id: 4abd406f041feb4f10ecde3fc30fd0639e1a91cb
-> ./tests/shell/buildid.sh: 69: ./tests/shell/buildid.sh: Bad substitution
-> test child finished with -2
-> build id cache operations: Skip
-> <<>>
+> That's now the recommended way to copy NUL terminated strings.
 > 
-> The test script "tests/shell/buildid.sh" uses some of the
-> string substitution ways which are supported in bash, but not in
-> "sh" or other shells. Above error on line number 69 that reports
-> "Bad substitution" is:
-> 
-> <<>>
-> link=${build_id_dir}/.build-id/${id:0:2}/${id:2}
-> <<>>
-> 
-> Here the way of getting first two characters from id ie,
-> ${id:0:2} and similarly expressions like ${id:2} is not
-> recognised in "sh". So the line errors and instead of
-> hitting failure, the test gets skipped as shown in logs.
-> So the syntax issue causes test not to be executed in
-> such cases. Similarly usage : "${@: -1}" [ to pick last
-> argument passed to a function] in “test_record” doesn’t
-> work in all distros.
-> 
-> Fix this by using alternative way with "cut" command
-> to pick "n" characters from the string. Also fix the usage
-> of “${@: -1}” to work in all cases.
-> 
-> Another usage in “test_record” is:
-> <<>>
-> ${perf} record --buildid-all -o ${data} $@ &> ${log}
-> <<>>
-> 
-> This causes the perf record to start in background and
-> Results in the data file not being created by the time
-> "check" function is invoked. Below log shows perf record
-> result getting displayed after the call to "check" function.
-> 
-> <<>>
-> running: perf record /tmp/perf.ex.SHA1.EAU
-> build id: 4abd406f041feb4f10ecde3fc30fd0639e1a91cb
-> link: /tmp/perf.debug.mLT/.build-id/4a/bd406f041feb4f10ecde3fc30fd0639e1a91cb
-> failed: link /tmp/perf.debug.mLT/.build-id/4a/bd406f041feb4f10ecde3fc30fd0639e1a91cb does not exist
-> test child finished with -1
-> build id cache operations: FAILED!
-> root@machine:~/athira/linux/tools/perf# Couldn't synthesize bpf events.
-> [ perf record: Woken up 1 times to write data ]
-> [ perf record: Captured and wrote 0.010 MB /tmp/perf.data.bFF ]
-> <<>>
-> 
-> Fix this by redirecting output instead of using “&” which
-> starts the command in background.
-> 
-> Signed-off-by: Athira Rajeev <atrajeev@linux.vnet.ibm.com>
+> Reported-by: Zeal Robot <zealci@zte.com.cn>
+> Signed-off-by: ye xingchen <ye.xingchen@zte.com.cn>
 > ---
->  tools/perf/tests/shell/buildid.sh | 16 +++++++++-------
->  1 file changed, 9 insertions(+), 7 deletions(-)
+>  tools/perf/util/annotate.c | 4 ++--
+>  1 file changed, 2 insertions(+), 2 deletions(-)
 > 
-> diff --git a/tools/perf/tests/shell/buildid.sh b/tools/perf/tests/shell/buildid.sh
-> index f05670d1e39e..3512c4423d48 100755
-> --- a/tools/perf/tests/shell/buildid.sh
-> +++ b/tools/perf/tests/shell/buildid.sh
-> @@ -66,7 +66,7 @@ check()
->  	esac
->  	echo "build id: ${id}"
->  
-> -	link=${build_id_dir}/.build-id/${id:0:2}/${id:2}
-> +	link=${build_id_dir}/.build-id/$(echo ${id}|cut -c 1-2)/$(echo ${id}|cut -c 3-)
->  	echo "link: ${link}"
->  
->  	if [ ! -h $link ]; then
-> @@ -74,7 +74,7 @@ check()
->  		exit 1
->  	fi
->  
-> -	file=${build_id_dir}/.build-id/${id:0:2}/`readlink ${link}`/elf
-> +	file=${build_id_dir}/.build-id/$(echo ${id}|cut -c 1-2)/`readlink ${link}`/elf
->  	echo "file: ${file}"
->  
->  	if [ ! -x $file ]; then
-> @@ -117,20 +117,22 @@ test_record()
->  {
->  	data=$(mktemp /tmp/perf.data.XXX)
->  	build_id_dir=$(mktemp -d /tmp/perf.debug.XXX)
-> -	log=$(mktemp /tmp/perf.log.XXX)
-> +	log_out=$(mktemp /tmp/perf.log.out.XXX)
-> +	log_err=$(mktemp /tmp/perf.log.err.XXX)
->  	perf="perf --buildid-dir ${build_id_dir}"
-> +	eval last=\${$#}
->  
->  	echo "running: perf record $@"
-> -	${perf} record --buildid-all -o ${data} $@ &> ${log}
-> +	${perf} record --buildid-all -o ${data} $@ 1>${log_out} 2>${log_err}
->  	if [ $? -ne 0 ]; then
->  		echo "failed: record $@"
-> -		echo "see log: ${log}"
-> +		echo "see log: ${log_err}"
->  		exit 1
->  	fi
->  
-> -	check ${@: -1}
-> +	check $last
->  
-> -	rm -f ${log}
-> +	rm -f ${log_out} ${log_err}
->  	rm -rf ${build_id_dir}
->  	rm -rf ${data}
->  }
+> diff --git a/tools/perf/util/annotate.c b/tools/perf/util/annotate.c
+> index 5bc63c9e0324..e2b038b14ff6 100644
+> --- a/tools/perf/util/annotate.c
+> +++ b/tools/perf/util/annotate.c
+> @@ -1702,7 +1702,7 @@ static int dso__disassemble_filename(struct dso *dso, char *filename, size_t fil
+>  			char *new_name = filename_with_chroot(dso->nsinfo->pid,
+>  							      filename);
+>  			if (new_name) {
+> -				strlcpy(filename, new_name, filename_size);
+> +				strscpy(filename, new_name, filename_size);
+>  				free(new_name);
+>  			}
+>  		}
+> @@ -2002,7 +2002,7 @@ static int symbol__disassemble(struct symbol *sym, struct annotate_args *args)
+>  		kce.len = sym->end - sym->start;
+>  		if (!kcore_extract__create(&kce)) {
+>  			delete_extract = true;
+> -			strlcpy(symfs_filename, kce.extract_filename,
+> +			strscpy(symfs_filename, kce.extract_filename,
+>  				sizeof(symfs_filename));
+>  		}
+>  	} else if (dso__needs_decompress(dso)) {
 > -- 
-> 2.17.1
+> 2.25.1
 
 -- 
 
