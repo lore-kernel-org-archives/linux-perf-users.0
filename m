@@ -2,123 +2,160 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6C61AECAAD8
-	for <linux-perf-users@archiver.kernel.org>; Thu, 22 Sep 2022 05:19:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A483AC6FA82
+	for <linux-perf-users@archiver.kernel.org>; Thu, 22 Sep 2022 06:44:23 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229667AbiIVFTx (ORCPT
+        id S229644AbiIVGoW (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Thu, 22 Sep 2022 01:19:53 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35236 "EHLO
+        Thu, 22 Sep 2022 02:44:22 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53038 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229788AbiIVFTv (ORCPT
+        with ESMTP id S229603AbiIVGoU (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Thu, 22 Sep 2022 01:19:51 -0400
-Received: from mail-pj1-x1030.google.com (mail-pj1-x1030.google.com [IPv6:2607:f8b0:4864:20::1030])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 05C81474DF;
-        Wed, 21 Sep 2022 22:19:51 -0700 (PDT)
-Received: by mail-pj1-x1030.google.com with SMTP id o99-20020a17090a0a6c00b002039c4fce53so1054293pjo.2;
-        Wed, 21 Sep 2022 22:19:51 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20210112;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date;
-        bh=GMkU1fcxIyUL21eoHYe2jKHkE16Hr771WCkqjLcwYtQ=;
-        b=a/O4rKKT7Kv3eslRbh+88BtpBD0P8l4ruNM3RRxvb6HZGewie2O3XXjTpv6THavl8t
-         q0ro46K08595GLN2FI/Ecc+9Kkp5eFswR5hsKMiDIfHD+kaiEP/biv8JF33TRPJsFHnB
-         SF3eIyTpAb3YGoCx+t5QSwGVa/0un+b12HG/sRV2C+Te/DiaunPMC2MbaoHXR1XqoKWY
-         IXHgN0aIGoJC1CDwDGe8SoGcn0ymBAhwQeyiecI9NMzxDUCXAbvJWmV5GlbokXfabJjf
-         y75/5rENdR2VVDHRtE/N1BpfgBXGh4Wdg6j/NPmAKMweRMcnLPoc+1vDJA4zBv8exuHs
-         Gwng==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date;
-        bh=GMkU1fcxIyUL21eoHYe2jKHkE16Hr771WCkqjLcwYtQ=;
-        b=kFe0wCdAl+OtMkNmMZzUbbYWttUe38me5wn6FnJBI1/ujH1LfNl1mM417fZcun/Ulj
-         G7ac6ON+Xclm3yl4SbuQZ819ZkYHEEicZtPn7/5FiOynjBS/XgWvPWxf+McXjjpWsQZF
-         JzCD6k5t4o9tGd6ZB726ZTQACFhtC20qeMZYq6Mg5mdGUqAZSPclp6JnIUS7N8PLW34x
-         2nXJIHljo3mdQ3S3jqJB2yUQJVstyMnd8CIz/zzLGaw8SU6ACOlS5svwmK/zJUSo/wtz
-         cPYiG0iUP2AsXKw6P5VPWOL0a7aXspotHx1LEKjUCcvwJaG1F5at4obFe+fffwDI7Bx4
-         2otw==
-X-Gm-Message-State: ACrzQf3Un6/+XxEQSwEWWjc5LgRmHWDEUF1nF84M8UjiMvzgCMtXSTMB
-        P9+Pp8nMy9X8CBwMviy3eYAD4UfA0mS3fQ==
-X-Google-Smtp-Source: AMsMyM574gPz7vjNosZQoXrztx9lPl1MgEp7iRPI9JGASkpN+LI/pxLffmg8+/92XqFPR6iFooH7Pw==
-X-Received: by 2002:a17:90a:4502:b0:202:7a55:558f with SMTP id u2-20020a17090a450200b002027a55558fmr13175584pjg.108.1663823990416;
-        Wed, 21 Sep 2022 22:19:50 -0700 (PDT)
-Received: from localhost.localdomain ([103.7.29.32])
-        by smtp.gmail.com with ESMTPSA id b7-20020a170903228700b001780a528540sm3045067plh.93.2022.09.21.22.19.47
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 21 Sep 2022 22:19:49 -0700 (PDT)
-From:   Like Xu <like.xu.linux@gmail.com>
-X-Google-Original-From: Like Xu <likexu@tencent.com>
-To:     Sean Christopherson <seanjc@google.com>,
-        Paolo Bonzini <pbonzini@redhat.com>
-Cc:     Peter Zijlstra <peterz@infradead.org>,
-        Jim Mattson <jmattson@google.com>,
-        linux-kernel@vger.kernel.org, kvm@vger.kernel.org,
-        linux-perf-users@vger.kernel.org,
-        Kan Liang <kan.liang@linux.intel.com>
-Subject: [PATCH v2 1/2] perf/x86/intel: Expose EPT-friendly PEBS for SPR and future models
-Date:   Thu, 22 Sep 2022 13:19:28 +0800
-Message-Id: <20220922051929.89484-1-likexu@tencent.com>
-X-Mailer: git-send-email 2.37.3
+        Thu, 22 Sep 2022 02:44:20 -0400
+Received: from mga11.intel.com (mga11.intel.com [192.55.52.93])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B835EB6D4F;
+        Wed, 21 Sep 2022 23:44:19 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1663829059; x=1695365059;
+  h=message-id:date:mime-version:subject:to:cc:references:
+   from:in-reply-to:content-transfer-encoding;
+  bh=YI6R/Fbd3ccV4vt0qaxDC0nMu1Hi71Zek1sN+E5/XWg=;
+  b=Jpr3y+b/J/7JDm9gvWnD+3omSAkWFE18a+wM3pO+D0H4Vl7UmWYfm6K8
+   sRkCk7dJ3uxt5N8v4dtyS3pf5Di7JJTu9zHE4j2PUdK8iNOYWY7NbXBnn
+   L0MbgfJAFT5x/YLQ2paQwkibKSRuwnM3WNZw5ABOPkKu3E7xWO9NPTzgb
+   M576bFjeXT5gVNrx+e5ZllPkB9B/59CVnPHdSnJjGBafWXNkisXNQh1EY
+   68h8jV0yA6aGxPGfgxAemKaG0DqWDDuzI8hC17U5bVmlP6ToqAFsaFIvN
+   imtOz0N1DU0kRgJcI8QNX4ggA03i/kB76r0ZUqjjIcbM3wehr4xwK51d4
+   w==;
+X-IronPort-AV: E=McAfee;i="6500,9779,10477"; a="297815098"
+X-IronPort-AV: E=Sophos;i="5.93,335,1654585200"; 
+   d="scan'208";a="297815098"
+Received: from orsmga002.jf.intel.com ([10.7.209.21])
+  by fmsmga102.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 21 Sep 2022 23:44:19 -0700
+X-IronPort-AV: E=Sophos;i="5.93,335,1654585200"; 
+   d="scan'208";a="619674962"
+Received: from xingzhen-mobl.ccr.corp.intel.com (HELO [10.238.4.231]) ([10.238.4.231])
+  by orsmga002-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 21 Sep 2022 23:44:11 -0700
+Message-ID: <f43d235b-2d74-c95b-c0c1-613239032c2d@linux.intel.com>
+Date:   Thu, 22 Sep 2022 14:44:09 +0800
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:102.0) Gecko/20100101
+ Thunderbird/102.3.0
+Subject: Re: [PATCH 1/2] perf print-events: Fix "perf list" can not display
+ the PMU prefix for some hybrid cache events
+Content-Language: en-US
+To:     Ian Rogers <irogers@google.com>
+Cc:     acme@kernel.org, peterz@infradead.org, mingo@redhat.com,
+        alexander.shishkin@intel.com, jolsa@kernel.org,
+        namhyung@kernel.org, linux-kernel@vger.kernel.org,
+        linux-perf-users@vger.kernel.org, ak@linux.intel.com,
+        kan.liang@linux.intel.com
+References: <20220922014904.3665674-1-zhengjun.xing@linux.intel.com>
+ <CAP-5=fUecPUJ-Z5WwbjVgA6b6r3-MmmfpjE+iw_pAK_K+rhxMA@mail.gmail.com>
+From:   Xing Zhengjun <zhengjun.xing@linux.intel.com>
+In-Reply-To: <CAP-5=fUecPUJ-Z5WwbjVgA6b6r3-MmmfpjE+iw_pAK_K+rhxMA@mail.gmail.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-From: Like Xu <likexu@tencent.com>
 
-According to Intel SDM, the EPT-friendly PEBS is supported by all the
-platforms after ICX, ADL and the future platforms with PEBS format 5.
 
-Currently the only in-kernel user of this capability is KVM, which has
-very limited support for hybrid core pmu, so ADL and its successors do
-not currently expose this capability. When both hybrid core and PEBS
-format 5 are present, KVM will decide on its own merits.
+On 9/22/2022 11:12 AM, Ian Rogers wrote:
+> On Wed, Sep 21, 2022 at 6:47 PM <zhengjun.xing@linux.intel.com> wrote:
+>>
+>> From: Zhengjun Xing <zhengjun.xing@linux.intel.com>
+>>
+>> Some hybrid hardware cache events are only available on one CPU PMU. For
+>> example, 'L1-dcache-load-misses' is only available on cpu_core. We have
+>> supported in the perf list clearly reporting this info, the function works
+>> fine before but recently the argument "config" in API is_event_supported()
+>> is changed from "u64" to "unsigned int" which caused a regression, the
+>> "perf list" then can not display the PMU prefix for some hybrid cache
+>> events. For the hybrid systems, the PMU type ID is stored at config[63:32],
+>> define config to "unsigned int" will miss the PMU type ID information, then
+>> the regression happened, the config should be defined as "u64".
+>>
+>> Before:
+>>   # ./perf list |grep "Hardware cache event"
+>>    L1-dcache-load-misses                              [Hardware cache event]
+>>    L1-dcache-loads                                    [Hardware cache event]
+>>    L1-dcache-stores                                   [Hardware cache event]
+>>    L1-icache-load-misses                              [Hardware cache event]
+>>    L1-icache-loads                                    [Hardware cache event]
+>>    LLC-load-misses                                    [Hardware cache event]
+>>    LLC-loads                                          [Hardware cache event]
+>>    LLC-store-misses                                   [Hardware cache event]
+>>    LLC-stores                                         [Hardware cache event]
+>>    branch-load-misses                                 [Hardware cache event]
+>>    branch-loads                                       [Hardware cache event]
+>>    dTLB-load-misses                                   [Hardware cache event]
+>>    dTLB-loads                                         [Hardware cache event]
+>>    dTLB-store-misses                                  [Hardware cache event]
+>>    dTLB-stores                                        [Hardware cache event]
+>>    iTLB-load-misses                                   [Hardware cache event]
+>>    node-load-misses                                   [Hardware cache event]
+>>    node-loads                                         [Hardware cache event]
+>>
+>> After:
+>>   # ./perf list |grep "Hardware cache event"
+>>    L1-dcache-loads                                    [Hardware cache event]
+>>    L1-dcache-stores                                   [Hardware cache event]
+>>    L1-icache-load-misses                              [Hardware cache event]
+>>    LLC-load-misses                                    [Hardware cache event]
+>>    LLC-loads                                          [Hardware cache event]
+>>    LLC-store-misses                                   [Hardware cache event]
+>>    LLC-stores                                         [Hardware cache event]
+>>    branch-load-misses                                 [Hardware cache event]
+>>    branch-loads                                       [Hardware cache event]
+>>    cpu_atom/L1-icache-loads/                          [Hardware cache event]
+>>    cpu_core/L1-dcache-load-misses/                    [Hardware cache event]
+>>    cpu_core/node-load-misses/                         [Hardware cache event]
+>>    cpu_core/node-loads/                               [Hardware cache event]
+>>    dTLB-load-misses                                   [Hardware cache event]
+>>    dTLB-loads                                         [Hardware cache event]
+>>    dTLB-store-misses                                  [Hardware cache event]
+>>    dTLB-stores                                        [Hardware cache event]
+>>    iTLB-load-misses                                   [Hardware cache event]
+>>
+>> Fixes: 9b7c7728f4e4 ("perf parse-events: Break out tracepoint and printing")
+>> Signed-off-by: Zhengjun Xing <zhengjun.xing@linux.intel.com>
+>> Reviewed-by: Kan Liang <kan.liang@linux.intel.com>
+> 
+> Acked-by: Ian Rogers <irogers@google.com>
+> 
+> Sorry for this breakage, I suspect that a long review on the
+> refactoring CL meant that I missed the intervening fix. Can we add a
+> test on this? It would need to be hybrid specific and skip otherwise.
 
-Cc: Peter Zijlstra <peterz@infradead.org>
-Cc: linux-perf-users@vger.kernel.org
-Suggested-by: Kan Liang <kan.liang@linux.intel.com>
-Signed-off-by: Like Xu <likexu@tencent.com>
----
-V1 -> V2 Changelog:
-- the perf part should be a separate patch; (Kan)
-- apply PEBS format 5 to avoid patching every future model; (Kan)
+Thanks. I will add a test case for hybrid-specific later.
+> 
+> Thanks,
+> Ian
+> 
+>> ---
+>>   tools/perf/util/print-events.c | 2 +-
+>>   1 file changed, 1 insertion(+), 1 deletion(-)
+>>
+>> diff --git a/tools/perf/util/print-events.c b/tools/perf/util/print-events.c
+>> index ba1ab5134685..04050d4f6db8 100644
+>> --- a/tools/perf/util/print-events.c
+>> +++ b/tools/perf/util/print-events.c
+>> @@ -239,7 +239,7 @@ void print_sdt_events(const char *subsys_glob, const char *event_glob,
+>>          strlist__delete(sdtlist);
+>>   }
+>>
+>> -static bool is_event_supported(u8 type, unsigned int config)
+>> +static bool is_event_supported(u8 type, u64 config)
+>>   {
+>>          bool ret = true;
+>>          int open_return;
+>> --
+>> 2.25.1
+>>
 
- arch/x86/events/intel/core.c | 1 +
- arch/x86/events/intel/ds.c   | 4 +++-
- 2 files changed, 4 insertions(+), 1 deletion(-)
-
-diff --git a/arch/x86/events/intel/core.c b/arch/x86/events/intel/core.c
-index 2db93498ff71..804540ba4599 100644
---- a/arch/x86/events/intel/core.c
-+++ b/arch/x86/events/intel/core.c
-@@ -6288,6 +6288,7 @@ __init int intel_pmu_init(void)
- 		x86_pmu.pebs_constraints = intel_spr_pebs_event_constraints;
- 		x86_pmu.extra_regs = intel_spr_extra_regs;
- 		x86_pmu.limit_period = spr_limit_period;
-+		x86_pmu.pebs_ept = 1;
- 		x86_pmu.pebs_aliases = NULL;
- 		x86_pmu.pebs_prec_dist = true;
- 		x86_pmu.pebs_block = true;
-diff --git a/arch/x86/events/intel/ds.c b/arch/x86/events/intel/ds.c
-index ba60427caa6d..4e937f685cdc 100644
---- a/arch/x86/events/intel/ds.c
-+++ b/arch/x86/events/intel/ds.c
-@@ -2253,8 +2253,10 @@ void __init intel_ds_init(void)
- 			x86_pmu.large_pebs_flags |= PERF_SAMPLE_TIME;
- 			break;
- 
--		case 4:
- 		case 5:
-+			x86_pmu.pebs_ept = 1;
-+			fallthrough;
-+		case 4:
- 			x86_pmu.drain_pebs = intel_pmu_drain_pebs_icl;
- 			x86_pmu.pebs_record_size = sizeof(struct pebs_basic);
- 			if (x86_pmu.intel_cap.pebs_baseline) {
 -- 
-2.37.3
-
+Zhengjun Xing
