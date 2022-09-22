@@ -2,152 +2,85 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B4C67C54EE9
-	for <linux-perf-users@archiver.kernel.org>; Thu, 22 Sep 2022 20:53:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 307FBC54EE9
+	for <linux-perf-users@archiver.kernel.org>; Thu, 22 Sep 2022 20:57:20 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229551AbiIVUxI (ORCPT
+        id S230227AbiIVU5S (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Thu, 22 Sep 2022 16:53:08 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59814 "EHLO
+        Thu, 22 Sep 2022 16:57:18 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37222 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229871AbiIVUxF (ORCPT
+        with ESMTP id S229606AbiIVU5Q (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Thu, 22 Sep 2022 16:53:05 -0400
-Received: from mail-pg1-x531.google.com (mail-pg1-x531.google.com [IPv6:2607:f8b0:4864:20::531])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D65F710E5D4;
-        Thu, 22 Sep 2022 13:53:04 -0700 (PDT)
-Received: by mail-pg1-x531.google.com with SMTP id e67so4230944pgc.12;
-        Thu, 22 Sep 2022 13:53:04 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20210112;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:sender:from:to:cc:subject:date;
-        bh=OEiYqQ5XMiZEsacnAM3U6vllLLEEWGSHG5V5hJfSBLU=;
-        b=Dm/XGtOHUuh9qDFLOe7p4DdAUZO7iM314X5cc4JpfK9kYIOYoM1b4UF7mBai7qihfs
-         N/Z2XL5t6WdMEdNl3ABr5A23WTkr9hJkIReoHglVx/hUMs7KXd6KQF/5vte33u5h+LER
-         PVgMc0Bpch4I05li8IE1FJuH04tEyK5zdLRl2Rlyb5Xcljo6tPP8OrPLlwW7IIJ2hO1S
-         h75uS1/IFW2pRnHwfOYSygVKjoljOg0N7yzlqKiWKE3ohvLQLcA2MTD1A1KuWdINWWYn
-         WBcxh6XyRTkPgXC3EWozvnlwZxB/KTcH2zhThrw8HzgIISzrYfrzz8b8tyvT4jPPkB+7
-         yzUg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:sender:x-gm-message-state:from:to:cc:subject:date;
-        bh=OEiYqQ5XMiZEsacnAM3U6vllLLEEWGSHG5V5hJfSBLU=;
-        b=q4CsjS24y+400Z9uNcWddaqsW9nXdluYg+hrOsaHGL1mM04t4EBsyPZO9hdS+vyGbj
-         z01NcG/XvmK/xp40GIIBNsGT6RnPgEYQzk2JwTGyCjNgYgQqdiXI4qRSgjHIKHTZSgXI
-         ZcUjzKUdmPcokDFEc5Ba5dAIaY9KvPvEAmzbBg9RoixVMEQSTrRsmCeK16rVOhnHXMaj
-         LJxCsM3doN2X2Qs82sl0A8oXfRCljD4xcSyXt41yA6gFZz58QbYux5NvRBW3kAz0GEWU
-         38xNtFGXSl5MkFialjpy0OiTsvHQm6HsjFNEXO1BMZIz1iJNbqwcvc3+ivqBtMPQlpNm
-         VEgw==
-X-Gm-Message-State: ACrzQf00YzGuuGoD/cPY5tdVq4s+vaDMxu+CbDmT6qR1Ajp/G/ZnjXPv
-        MYvoYvVzw0oaZFxoCSgdMao=
-X-Google-Smtp-Source: AMsMyM6ayFSD3xpD5oqX2Zh/XuTEcTs+sreA32ohXSExSoLYAy9gzsn+WpsB/hhUxCGNXhHlhoFDog==
-X-Received: by 2002:a63:6905:0:b0:43c:d4:eef4 with SMTP id e5-20020a636905000000b0043c00d4eef4mr4513265pgc.126.1663879984312;
-        Thu, 22 Sep 2022 13:53:04 -0700 (PDT)
-Received: from balhae.corp.google.com ([2620:0:1000:1610:206:3611:6db0:fc8f])
-        by smtp.gmail.com with ESMTPSA id y7-20020a623207000000b0053f9466b1b2sm4889916pfy.35.2022.09.22.13.53.02
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 22 Sep 2022 13:53:03 -0700 (PDT)
-Sender: Namhyung Kim <namhyung@gmail.com>
-From:   Namhyung Kim <namhyung@kernel.org>
-To:     Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Jiri Olsa <jolsa@kernel.org>
-Cc:     Ingo Molnar <mingo@kernel.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Ian Rogers <irogers@google.com>,
-        Adrian Hunter <adrian.hunter@intel.com>,
-        linux-perf-users@vger.kernel.org, Song Liu <songliubraving@fb.com>,
-        Hao Luo <haoluo@google.com>, bpf@vger.kernel.org
-Subject: [PATCH v3] perf tools: Get a perf cgroup more portably in BPF
-Date:   Thu, 22 Sep 2022 13:53:02 -0700
-Message-Id: <20220922205302.749274-1-namhyung@kernel.org>
-X-Mailer: git-send-email 2.37.3.998.g577e59143f-goog
+        Thu, 22 Sep 2022 16:57:16 -0400
+Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 79D812C67A;
+        Thu, 22 Sep 2022 13:57:15 -0700 (PDT)
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by dfw.source.kernel.org (Postfix) with ESMTPS id DA255610A1;
+        Thu, 22 Sep 2022 20:57:14 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id E6EF7C433D6;
+        Thu, 22 Sep 2022 20:57:11 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1663880234;
+        bh=JB3NDJEV/v85Ow5DEPOCDDWd8yYDXhteqm8hggXtLjw=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=ip9U3VRghsga/8UYTkwEoAVDxTnoiqrGLKjXLviuuQdWr6amJkSJ3Dy4pPlTtyK4n
+         G0ST06gN3wXWlp4tweScZbxgAbWC1168z0cTLPlBTowYMNTgmgXGs4vkBIB+4OYPJD
+         LCaztbwWkdv6V770fSPwsVAtgdBBMRkF6JhJcWhbiaGmvepzKWfMelp5oxSJtTsNhk
+         poXdiRO/rmwFc3mWJjTXqMzwooKo5N1dwqInrPPHnpABu2t3s9vl1VWeXcVdNpcPlh
+         And0lwmev0+nvtK5HJamjSRsMzlyuI4TAvnM0TPnO25VGgJBKcpLDmgsafbGa7yvlj
+         33a75XLO85+0w==
+Date:   Thu, 22 Sep 2022 21:57:08 +0100
+From:   Will Deacon <will@kernel.org>
+To:     James Clark <james.clark@arm.com>
+Cc:     linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        linux-perf-users@vger.kernel.org, broonie@kernel.org,
+        acme@kernel.org, leo.yan@linaro.org, john.garry@huawei.com,
+        catalin.marinas@arm.com, Jonathan Corbet <corbet@lwn.net>,
+        Mark Rutland <mark.rutland@arm.com>, linux-doc@vger.kernel.org
+Subject: Re: [PATCH v3 0/2] perf: arm64: Kernel support for Dwarf unwinding
+ through SVE functions
+Message-ID: <20220922205707.GB12945@willie-the-truck>
+References: <20220901132658.1024635-1-james.clark@arm.com>
+ <20220922140406.GG12095@willie-the-truck>
+ <d6eaa797-380b-e8ae-f928-54843dd596f2@arm.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <d6eaa797-380b-e8ae-f928-54843dd596f2@arm.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-The perf_event_cgrp_id can be different on other configurations.
-To be more portable as CO-RE, it needs to get the cgroup subsys id
-using the bpf_core_enum_value() helper.
+On Thu, Sep 22, 2022 at 03:31:20PM +0100, James Clark wrote:
+> 
+> 
+> On 22/09/2022 15:04, Will Deacon wrote:
+> > On Thu, Sep 01, 2022 at 02:26:56PM +0100, James Clark wrote:
+> >> I'm resubmitting this with a few of the changes suggested by Will on V2.
+> >>
+> >> I haven't made any changes regarding the open questions about the
+> >> discoverability or saving the new reg and passing to output_sample()
+> >> because I think it's best to be consistent with the implementations on
+> >> other platforms first. I have explained in more detail on v2 [1].
+> >>
+> >> [1]: https://lore.kernel.org/lkml/5fcf1a6f-c8fb-c296-992e-18aae8874095@arm.com/
+> > 
+> > Fair enough, I can't argue against being consistent.
+> > 
+> > Given that this exposes subtle new user ABI, do we have any coverage in
+> > the selftests? If not, please could you add something?
+> > 
+> 
+> Thanks, I will do that. I assume you mean the self tests in
+> tools/perf/tests and not some non Perf tests?
 
-Suggested-by: Ian Rogers <irogers@google.com>
-Signed-off-by: Namhyung Kim <namhyung@kernel.org>
----
-v3 changes)
- * check compiler features for enum value
+I hadn't thought much about it, so wherever is best. It would just be nice
+to have something we can run to make sure that this continues to work as
+intended.
 
-v2 changes)
- * fix off_cpu.bpf.c too
- * get perf_subsys_id only once
-
- tools/perf/util/bpf_skel/bperf_cgroup.bpf.c | 11 ++++++++++-
- tools/perf/util/bpf_skel/off_cpu.bpf.c      | 12 ++++++++----
- 2 files changed, 18 insertions(+), 5 deletions(-)
-
-diff --git a/tools/perf/util/bpf_skel/bperf_cgroup.bpf.c b/tools/perf/util/bpf_skel/bperf_cgroup.bpf.c
-index 292c430768b5..8e7520e273db 100644
---- a/tools/perf/util/bpf_skel/bperf_cgroup.bpf.c
-+++ b/tools/perf/util/bpf_skel/bperf_cgroup.bpf.c
-@@ -48,6 +48,7 @@ const volatile __u32 num_cpus = 1;
- 
- int enabled = 0;
- int use_cgroup_v2 = 0;
-+int perf_subsys_id = -1;
- 
- static inline int get_cgroup_v1_idx(__u32 *cgrps, int size)
- {
-@@ -58,7 +59,15 @@ static inline int get_cgroup_v1_idx(__u32 *cgrps, int size)
- 	int level;
- 	int cnt;
- 
--	cgrp = BPF_CORE_READ(p, cgroups, subsys[perf_event_cgrp_id], cgroup);
-+	if (perf_subsys_id == -1) {
-+#if __has_builtin(__builtin_preserve_enum_value)
-+		perf_subsys_id = bpf_core_enum_value(enum cgroup_subsys_id,
-+						     perf_event_cgrp_id);
-+#else
-+		perf_subsys_id = perf_event_cgrp_id;
-+#endif
-+	}
-+	cgrp = BPF_CORE_READ(p, cgroups, subsys[perf_subsys_id], cgroup);
- 	level = BPF_CORE_READ(cgrp, level);
- 
- 	for (cnt = 0; i < MAX_LEVELS; i++) {
-diff --git a/tools/perf/util/bpf_skel/off_cpu.bpf.c b/tools/perf/util/bpf_skel/off_cpu.bpf.c
-index c4ba2bcf179f..e917ef7b8875 100644
---- a/tools/perf/util/bpf_skel/off_cpu.bpf.c
-+++ b/tools/perf/util/bpf_skel/off_cpu.bpf.c
-@@ -94,6 +94,8 @@ const volatile bool has_prev_state = false;
- const volatile bool needs_cgroup = false;
- const volatile bool uses_cgroup_v1 = false;
- 
-+int perf_subsys_id = -1;
-+
- /*
-  * Old kernel used to call it task_struct->state and now it's '__state'.
-  * Use BPF CO-RE "ignored suffix rule" to deal with it like below:
-@@ -119,11 +121,13 @@ static inline __u64 get_cgroup_id(struct task_struct *t)
- {
- 	struct cgroup *cgrp;
- 
--	if (uses_cgroup_v1)
--		cgrp = BPF_CORE_READ(t, cgroups, subsys[perf_event_cgrp_id], cgroup);
--	else
--		cgrp = BPF_CORE_READ(t, cgroups, dfl_cgrp);
-+	if (!uses_cgroup_v1)
-+		return BPF_CORE_READ(t, cgroups, dfl_cgrp, kn, id);
-+
-+	if (perf_subsys_id == -1)
-+		perf_subsys_id = bpf_core_enum_value(enum cgroup_subsys_id, perf_event_cgrp_id);
- 
-+	cgrp = BPF_CORE_READ(t, cgroups, subsys[perf_subsys_id], cgroup);
- 	return BPF_CORE_READ(cgrp, kn, id);
- }
- 
--- 
-2.37.3.998.g577e59143f-goog
-
+Will
