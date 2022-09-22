@@ -2,77 +2,64 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2DD2EC6FA86
-	for <linux-perf-users@archiver.kernel.org>; Thu, 22 Sep 2022 13:35:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F2E88C6FA86
+	for <linux-perf-users@archiver.kernel.org>; Thu, 22 Sep 2022 13:40:35 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231768AbiIVNfd (ORCPT
+        id S229767AbiIVNkf (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Thu, 22 Sep 2022 09:35:33 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35660 "EHLO
+        Thu, 22 Sep 2022 09:40:35 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46216 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231655AbiIVNfV (ORCPT
+        with ESMTP id S230058AbiIVNk0 (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Thu, 22 Sep 2022 09:35:21 -0400
-Received: from desiato.infradead.org (desiato.infradead.org [IPv6:2001:8b0:10b:1:d65d:64ff:fe57:4e05])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 75C978E990;
-        Thu, 22 Sep 2022 06:35:12 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=desiato.20200630; h=In-Reply-To:Content-Type:MIME-Version:
-        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description;
-        bh=B6ccnQNtEUaB0ueDsfRYZRXgSdTI2hBeAmgJaqGNlrQ=; b=nbCgwfzCZBiVCd73mEtHLIpBeb
-        hZyapg4sqOKKXxyqKoi5FVmZaMOKf3wvGxyPxmEnctVhhZT4M4W2lEbY+gNk0wU3CPO5ag3cIjmb1
-        wcvsD0s3tfCFBUguB9gGQtjT8OtUYkgO6gQ/s+hBtu2Twq93guH4b2RCicPYPJI2TNUH0Fj6RCssu
-        xU+Kg2Sm0ir2dBEdFNamBlmCYBj/3KhsoYsinOCTZr5YPpPzoU/wmCovXPRlGKKSEtbNrdWCd5aT6
-        jHnDyGnGmAwbMFjACndCBwk6kW2fUGCEYuYxxZeCw7j/jEAH+ywoRREVSBNJi46DccIG/UUIqx4GV
-        NIUVvjfQ==;
-Received: from j130084.upc-j.chello.nl ([24.132.130.84] helo=noisy.programming.kicks-ass.net)
-        by desiato.infradead.org with esmtpsa (Exim 4.94.2 #2 (Red Hat Linux))
-        id 1obMLs-00Ey8h-Ms; Thu, 22 Sep 2022 13:34:53 +0000
-Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange X25519 server-signature RSA-PSS (4096 bits))
-        (Client did not present a certificate)
-        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id C7D79300023;
-        Thu, 22 Sep 2022 15:34:51 +0200 (CEST)
-Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
-        id 9A0832BBA39BD; Thu, 22 Sep 2022 15:34:51 +0200 (CEST)
-Date:   Thu, 22 Sep 2022 15:34:51 +0200
-From:   Peter Zijlstra <peterz@infradead.org>
-To:     "Wang, Wei W" <wei.w.wang@intel.com>
-Cc:     "Liang, Kan" <kan.liang@linux.intel.com>,
-        "Li, Xiaoyao" <xiaoyao.li@intel.com>,
-        Ingo Molnar <mingo@redhat.com>,
-        Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Jiri Olsa <jolsa@kernel.org>,
-        Namhyung Kim <namhyung@kernel.org>,
-        "Christopherson,, Sean" <seanjc@google.com>,
-        Paolo Bonzini <pbonzini@redhat.com>,
-        "linux-perf-users@vger.kernel.org" <linux-perf-users@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "kvm@vger.kernel.org" <kvm@vger.kernel.org>
-Subject: Re: [RFC PATCH v2 2/3] perf/x86/intel/pt: Introduce and export
- pt_get_curr_event()
-Message-ID: <Yyxke/IO+AP4EWwT@hirez.programming.kicks-ass.net>
-References: <20220921164521.2858932-1-xiaoyao.li@intel.com>
- <20220921164521.2858932-3-xiaoyao.li@intel.com>
- <175b518c-d202-644e-a3a7-67e877852548@linux.intel.com>
- <DS0PR11MB6373C84139621DC447D3F466DC4E9@DS0PR11MB6373.namprd11.prod.outlook.com>
+        Thu, 22 Sep 2022 09:40:26 -0400
+Received: from szxga03-in.huawei.com (szxga03-in.huawei.com [45.249.212.189])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id AE1D05D124
+        for <linux-perf-users@vger.kernel.org>; Thu, 22 Sep 2022 06:40:24 -0700 (PDT)
+Received: from dggemv704-chm.china.huawei.com (unknown [172.30.72.54])
+        by szxga03-in.huawei.com (SkyGuard) with ESMTP id 4MYGZD18zXzHpxG;
+        Thu, 22 Sep 2022 21:38:12 +0800 (CST)
+Received: from kwepemm600008.china.huawei.com (7.193.23.88) by
+ dggemv704-chm.china.huawei.com (10.3.19.47) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2375.31; Thu, 22 Sep 2022 21:40:22 +0800
+Received: from huawei.com (10.175.100.227) by kwepemm600008.china.huawei.com
+ (7.193.23.88) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2375.31; Thu, 22 Sep
+ 2022 21:40:21 +0800
+From:   Shang XiaoJing <shangxiaojing@huawei.com>
+To:     <peterz@infradead.org>, <mingo@redhat.com>, <acme@kernel.org>,
+        <mark.rutland@arm.com>, <alexander.shishkin@linux.intel.com>,
+        <jolsa@kernel.org>, <namhyung@kernel.org>,
+        <linux-perf-users@vger.kernel.org>
+CC:     <shangxiaojing@huawei.com>
+Subject: [PATCH 0/4] perf: Some clean up
+Date:   Thu, 22 Sep 2022 22:14:34 +0800
+Message-ID: <20220922141438.22487-1-shangxiaojing@huawei.com>
+X-Mailer: git-send-email 2.17.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <DS0PR11MB6373C84139621DC447D3F466DC4E9@DS0PR11MB6373.namprd11.prod.outlook.com>
+Content-Type: text/plain
+X-Originating-IP: [10.175.100.227]
+X-ClientProxiedBy: dggems704-chm.china.huawei.com (10.3.19.181) To
+ kwepemm600008.china.huawei.com (7.193.23.88)
+X-CFilter-Loop: Reflected
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-On Thu, Sep 22, 2022 at 12:58:49PM +0000, Wang, Wei W wrote:
+Some clean ups in tools/perf.
 
-> Add a function to expose the current running PT event to users. One usage is in KVM,
-> it needs to get and disable the running host PT event before VMEnter to the guest and
-> resumes the event after VMexit to host.
+Shang XiaoJing (4):
+  perf genelf: Fix error code in jit_write_elf()
+  perf stat: Merge cases in process_evlist
+  perf top: Fix error code in cmd_top()
+  perf stat: Clean redundant if in process_evlist
 
-You cannot just kill a host event like that. If there is a host event,
-the guest looses out.
+ tools/perf/builtin-stat.c | 5 -----
+ tools/perf/builtin-top.c  | 3 +++
+ tools/perf/util/genelf.c  | 1 +
+ 3 files changed, 4 insertions(+), 5 deletions(-)
+
+-- 
+2.17.1
+
