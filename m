@@ -2,97 +2,235 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D8D4CC6FA82
-	for <linux-perf-users@archiver.kernel.org>; Thu, 22 Sep 2022 08:08:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B04A5C6FA8B
+	for <linux-perf-users@archiver.kernel.org>; Thu, 22 Sep 2022 08:22:30 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229973AbiIVIIA (ORCPT
+        id S229631AbiIVIW2 (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Thu, 22 Sep 2022 04:08:00 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46628 "EHLO
+        Thu, 22 Sep 2022 04:22:28 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39932 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229814AbiIVIH7 (ORCPT
+        with ESMTP id S229518AbiIVIW1 (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Thu, 22 Sep 2022 04:07:59 -0400
-Received: from mail-pf1-x42c.google.com (mail-pf1-x42c.google.com [IPv6:2607:f8b0:4864:20::42c])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0518BB40D9;
-        Thu, 22 Sep 2022 01:07:59 -0700 (PDT)
-Received: by mail-pf1-x42c.google.com with SMTP id a29so8535954pfk.5;
-        Thu, 22 Sep 2022 01:07:59 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20210112;
-        h=content-transfer-encoding:in-reply-to:from:references:cc:to
-         :content-language:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date;
-        bh=w6ltT1uP5vP/CBS8d2EROS3KCkX2BMDsjshfNpVyQag=;
-        b=pxZeD6HvRIQy8BwCK3k7EJX9w9Djy0iY80wmFoDn+r+0Wy4bUEsEubPYqM86VtHULP
-         vQsVbXhy92+KbBJpykLUQZwRlKvrhKzFQSOTA/q4JQhs9QsSvG3DF6QuQih5QE2YzSGz
-         MiCqkEIkqTNnoMPaTMPNPx8o+14epjGcm1UsnyCw9kzFUuAXcz7sm1XROGQxM2mWnbIT
-         Xt6B4JgxOL4OV3I352fjLZHRRxo5WksoEVYD+0Q6I+Ak7eONSewOGuR8eF3X3LdkbcEE
-         tcrnbobESb3oxdXciYQXx80CJA4xBgf21RLrZKtYPwTnp96XTBOi8vCYmWAeqCENnB4j
-         lT0Q==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=content-transfer-encoding:in-reply-to:from:references:cc:to
-         :content-language:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date;
-        bh=w6ltT1uP5vP/CBS8d2EROS3KCkX2BMDsjshfNpVyQag=;
-        b=svtyeLWB40pBfdFJA2eFFUSJmwGyEdvjO5oWYBidMkk9Rfgrg95nX5VhjeQ5l8Q3JA
-         R6iEdfeBV70qLjbFogMV33dGD1WrSuAhWBU+WObrmaXANNZiNng5LqkfJMoc8mEYbWHr
-         cfvDo0jxrBYMfp/yQV+Ci9CNL40KOEaeMkFUOEooZjzKe324MjYJuwYsyQMsiHIWC9Rp
-         yHdykK+KGJQ0WSkKdtIAXjJPRdQCCvuLU6DAjq7PmExyMjk8E8li6zSbg/JJfPXmwFDF
-         cXTVCgcqWeOMsPKXGY+y/mL5RoSSy+l00wxSQSCHIN4fDhEuAl7UJh0bSYVJ0ZSuJyAg
-         exLA==
-X-Gm-Message-State: ACrzQf1nZSyBzNQdKjqm2lN9M5xSy5jXpFVFcsh6UwnL+f+RzC7GcQj9
-        db00T9+xxXBVOxcTTyTmWK8=
-X-Google-Smtp-Source: AMsMyM7aHLhs9Uh7J/KHuj0dhOcvsXQKmn5lU/B9KcNRqyBGRcqB5wF7tVrBZ2ioxqhzN2BZbatyaA==
-X-Received: by 2002:a63:fd0c:0:b0:42b:93a2:af0b with SMTP id d12-20020a63fd0c000000b0042b93a2af0bmr1988098pgh.315.1663834078445;
-        Thu, 22 Sep 2022 01:07:58 -0700 (PDT)
-Received: from [192.168.255.10] ([103.7.29.32])
-        by smtp.gmail.com with ESMTPSA id v16-20020a63f210000000b0042a713dd68csm3154256pgh.53.2022.09.22.01.07.54
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 22 Sep 2022 01:07:57 -0700 (PDT)
-Message-ID: <ad2572d0-06b5-7250-31f2-a5efa1048cc0@gmail.com>
-Date:   Thu, 22 Sep 2022 16:07:45 +0800
+        Thu, 22 Sep 2022 04:22:27 -0400
+Received: from szxga03-in.huawei.com (szxga03-in.huawei.com [45.249.212.189])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DEBBC9FDA;
+        Thu, 22 Sep 2022 01:22:25 -0700 (PDT)
+Received: from dggpemm500023.china.huawei.com (unknown [172.30.72.55])
+        by szxga03-in.huawei.com (SkyGuard) with ESMTP id 4MY7WK2DnDzHnyV;
+        Thu, 22 Sep 2022 16:20:13 +0800 (CST)
+Received: from dggpemm500013.china.huawei.com (7.185.36.172) by
+ dggpemm500023.china.huawei.com (7.185.36.83) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2375.31; Thu, 22 Sep 2022 16:22:23 +0800
+Received: from [10.67.108.67] (10.67.108.67) by dggpemm500013.china.huawei.com
+ (7.185.36.172) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2375.31; Thu, 22 Sep
+ 2022 16:22:23 +0800
+Message-ID: <7834a259-4bd7-a955-acaa-21c36c7c22c2@huawei.com>
+Date:   Thu, 22 Sep 2022 16:22:23 +0800
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.15; rv:91.0)
- Gecko/20100101 Thunderbird/91.13.1
-Subject: Re: [PATCH RFC 1/1] perf stat: do not fatal if the leader is errored
+User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:102.0) Gecko/20100101
+ Thunderbird/102.0
+Subject: Re: [PATCH for-next v2 0/4] riscv: Improvments for stacktrace
 Content-Language: en-US
-To:     Dongli Zhang <dongli.zhang@oracle.com>
-Cc:     linux-kernel@vger.kernel.org, peterz@infradead.org,
-        mingo@redhat.com, acme@kernel.org, mark.rutland@arm.com,
-        alexander.shishkin@linux.intel.com, jolsa@kernel.org,
-        namhyung@kernel.org, joe.jin@oracle.com,
-        linux-perf-users@vger.kernel.org, kvm list <kvm@vger.kernel.org>,
-        Kan Liang <kan.liang@linux.intel.com>
-References: <20220922071017.17398-1-dongli.zhang@oracle.com>
-From:   Like Xu <like.xu.linux@gmail.com>
-In-Reply-To: <20220922071017.17398-1-dongli.zhang@oracle.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+To:     Mark Rutland <mark.rutland@arm.com>
+CC:     <linux-kernel@vger.kernel.org>, <linux-riscv@lists.infradead.org>,
+        <linux-perf-users@vger.kernel.org>, <paul.walmsley@sifive.com>,
+        <palmer@dabbelt.com>, <aou@eecs.berkeley.edu>,
+        <peterz@infradead.org>, <mingo@redhat.com>, <acme@kernel.org>,
+        <alexander.shishkin@linux.intel.com>, <namhyung@kernel.org>,
+        <jolsa@kernel.org>, <guoren@kernel.org>, <frederic@kernel.org>,
+        <vincent.chen@sifive.com>, <ardb@kernel.org>,
+        <mhiramat@kernel.org>, <rostedt@goodmis.org>,
+        <keescook@chromium.org>, <catalin.marinas@arm.com>,
+        Josh Poimboeuf <jpoimboe@kernel.org>
+References: <20220921125128.33913-1-chenzhongjin@huawei.com>
+ <YysZf2Y37QMBDt8n@FVFF77S0Q05N>
+From:   Chen Zhongjin <chenzhongjin@huawei.com>
+In-Reply-To: <YysZf2Y37QMBDt8n@FVFF77S0Q05N>
+Content-Type: text/plain; charset="UTF-8"; format=flowed
+Content-Transfer-Encoding: 8bit
+X-Originating-IP: [10.67.108.67]
+X-ClientProxiedBy: dggems705-chm.china.huawei.com (10.3.19.182) To
+ dggpemm500013.china.huawei.com (7.185.36.172)
+X-CFilter-Loop: Reflected
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-On 22/9/2022 3:10 pm, Dongli Zhang wrote:
-> There are three options to fix the issue.
-> 
-> 1. Do not expose /sys/bus/event_source/devices/cpu/events/slots to
-> userspace so that pmu_have_event(pmu->name, "slots") returns false.
+Hi,
 
-IMO, the guest PMU driver should be fixed
-since it misrepresents emulated hardware capabilities in terms of slots.
+On 2022/9/21 22:02, Mark Rutland wrote:
+> On Wed, Sep 21, 2022 at 08:51:23PM +0800, Chen Zhongjin wrote:
+>> Currently, the stacktrace with FRAME_POINTER on riscv has some problem:
+>>
+>> 1. stacktrace will stop at irq so it can't get the stack frames before
+>> irq entry.
+>> 2. stacktrace can't unwind all the real stack frames when there is
+>> k{ret}probes or ftrace.
+>>
+>> These are mainly becase when there is a pt_regs on stack, we can't unwind
+>> the stack frame as normal function.
+>>
+>> Some architectures (e.g. arm64) create a extra stackframe inside pt_regs.
+>> However this doesn't work for riscv because the ra is not ensured to be
+>> pushed to stack. As explained in:
+>> commit f766f77a74f5("riscv/stacktrace: Fix stack output without ra on the stack top")
+> FWIW, this is also a latent problem on arm64, since we don't know whether the
+> LR is live at an exception boundary (and we currently always ignore it).
 
-> 
-> 2. Run cpuid at perf userspace and avoid using 'slots' if it is not
-> supported in cpuid.
-> 
-> 3. Do not fatal perf if the leader is failed. Do not create events for an
-> evsel if its leader is already failed.
+In fact this is still a problem for riscv, I didn't unwind the caller of 
+ftrace or probed func
 
-We may also need this since it's easier and more agile to update the perf tool
-than the kernel code or KVM emulated capabilities.
+of kretprobe because they are inside function pro/epilogue.
 
-> 
-> This RFC patch is with the 3rd option. Would you mind suggesting which
-> option is better?
+The problem on riscv is a little more complex, for leaf function, ra 
+will always not be pushed
+
+to stack and fp will be pushed to ra slot. This patch solved this problem.
+
+> My plan to fix that on arm64 is to push an empty frame record to the stack upon
+> an exception, and use that to find the pt_regs, from which we can get the PC
+> and LR (and then we can report the later as unreliable). That should be roughly
+> equivalent to what you do in this series (where use use the LSB to identify
+> that the pointer is actually a pt_regs).
+
+IIRC, this solution looks like:
+
+=====
+
+Func1     { lr, fp } or { nothing }
+
+irq entry { pt_regs & empty stackframe[2] }
+
+handler   { lr, fp }
+
+======
+
+handler->fp points to stackframe, and when we find stackframe is empty, 
+we know we are inside
+
+an pt_regs and can find registers by offset.
+
+I think it's available, there no other scenario will cause the frame 
+list contains zero (unless stack is clobbered).
+
+And it seems only fp slot should be zero, lr will be clobbered after 
+function call, we cannot use lr inside pt_regs.
+
+> One important thing to note is that when crossing an exception boundary you
+> won't know whether RA is live, and so you might try to consume an address twice
+> (if it has also been pushed to the stack). That could be problematic for
+> unwinding ftrace or kretprobes. On arm64 we had to implement
+> HAVE_FUNCTION_GRAPH_RET_ADDR_PTR so that we could reliably unwind ftrace. See
+> commit:
+>
+>    c6d3cd32fd0064af ("arm64: ftrace: use HAVE_FUNCTION_GRAPH_RET_ADDR_PTR")
+>
+> ... and we haven't yet come up with something similar for kretprobes (though I
+> suspect we'll need to).
+
+Can we test the sp and fp inside pt_regs? Because luckily arm64 saves 
+lr, fp and moves sp together.
+
+Before sp is moved we will have fp == sp from last frame 'mov x29, sp'. 
+So if they are same, we uses the lr in pt_regs,
+
+conversely we use lr on stack.
+
+That's what I planned to use for orc unwinder (or we need to track lr as 
+sp/fp). Seems it also works for this
+
+solution. Haven't thought it in detail through.
+
+
+Best,
+
+Chen
+
+> Thanks,
+> Mark.
+>
+>> So, I choosed the method of x86 that, if there is a pt_regs on stack,
+>> we encoded the frame pointer and save it. When unwinding stack frame,
+>> we can get pt_regs and registers required for unwinding stacks.
+>>
+>> In addition, the patch set contains some refactoring of stacktrace.c to
+>> keep the stacktrace code on riscv consistent with other architectures.
+>>
+>> Stacktrace before for kretprobes:
+>>
+>>    Call Trace:
+>>    ...
+>>    [<ffffffff800d5d48>] __kretprobe_trampoline_handler+0xc2/0x13e
+>>    [<ffffffff808b766c>] trampoline_probe_handler+0x30/0x46
+>>    [<ffffffff800070de>] __kretprobe_trampoline+0x52/0x92
+>>    [<ffffffff0163809c>] kprobe_init+0x9c/0x1000 [kprobe_unwind]
+>>    [<ffffffff800027c8>] do_one_initcall+0x4c/0x1f2
+>>    ...
+>>
+>> Stacktrace after:
+>>
+>>    Call Trace:
+>>    ...
+>>    [<ffffffff800d5d48>] __kretprobe_trampoline_handler+0xc2/0x13e
+>>    [<ffffffff808b766c>] trampoline_probe_handler+0x30/0x46
+>>    [<ffffffff800070de>] __kretprobe_trampoline+0x52/0x92
+>> + [<ffffffff01633076>] the_caller+0x2c/0x38 [kprobe_unwind]
+>>    [<ffffffff0163809c>] kprobe_init+0x9c/0x1000 [kprobe_unwind]
+>>    [<ffffffff800027c8>] do_one_initcall+0x4c/0x1f2
+>>    ...
+>>
+>> Stacktrace before for ftrace:
+>>
+>>    Call Trace:
+>>    ...
+>>    [<ffffffff80006df0>] kprobe_ftrace_handler+0x13e/0x188
+>>    [<ffffffff80008e7e>] ftrace_regs_call+0x8/0x10
+>>    [<ffffffff80002540>] do_one_initcall+0x4c/0x1f2
+>>    [<ffffffff8008a4e6>] do_init_module+0x56/0x210
+>>    ...
+>>
+>>    Stacktrace after:
+>>
+>>    Call Trace:
+>>    ...
+>>    [<ffffffff016150e0>] handler_pre+0x30/0x4a [kprobe_unwind]
+>>    [<ffffffff800bce96>] aggr_pre_handler+0x60/0x94
+>>    [<ffffffff80006df0>] kprobe_ftrace_handler+0x13e/0x188
+>>    [<ffffffff80008e82>] ftrace_regs_call+0x8/0x10
+>> + [<ffffffff01615000>] traced_func+0x0/0x1e [kprobe_unwind]
+>>    [<ffffffff80002540>] do_one_initcall+0x4c/0x1f2
+>>    [<ffffffff8008a4ea>] do_init_module+0x56/0x210
+>>    ...
+>>
+>> Noticed that the caller of ftrace and probed func of kretprobe
+>> cannot be unwind because they are inside function pro/epilogue.
+>>
+>> ---
+>> v1 -> v2:
+>> - Merge three patches which add ENCODE_FRAME_POINTER together
+>> - Update commit message
+>> - Delete the KRETPORBES stuff added in unwind_state, we don't need them
+>> to recover the kretporbes ret_addr because we can get it in pt_regs
+>> ---
+>> Chen Zhongjin (4):
+>>    riscv: stacktrace: Replace walk_stackframe with arch_stack_walk
+>>    riscv: stacktrace: Introduce unwind functions
+>>    riscv: stacktrace: Save pt_regs in ENCODE_FRAME_POINTER
+>>    riscv: stacktrace: Implement stacktrace for irq
+>>
+>>   arch/riscv/include/asm/frame.h                |  45 ++++++
+>>   arch/riscv/include/asm/stacktrace.h           |   9 +-
+>>   arch/riscv/kernel/entry.S                     |   3 +
+>>   arch/riscv/kernel/mcount-dyn.S                |   7 +
+>>   arch/riscv/kernel/perf_callchain.c            |   2 +-
+>>   arch/riscv/kernel/probes/kprobes_trampoline.S |   7 +
+>>   arch/riscv/kernel/stacktrace.c                | 150 ++++++++++++------
+>>   7 files changed, 174 insertions(+), 49 deletions(-)
+>>   create mode 100644 arch/riscv/include/asm/frame.h
+>>
+>> -- 
+>> 2.17.1
+>>
