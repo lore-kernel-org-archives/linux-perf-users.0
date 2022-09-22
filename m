@@ -2,115 +2,139 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 129F7ECAAD8
-	for <linux-perf-users@archiver.kernel.org>; Thu, 22 Sep 2022 19:19:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 49705ECAAD8
+	for <linux-perf-users@archiver.kernel.org>; Thu, 22 Sep 2022 19:23:15 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231777AbiIVTTG (ORCPT
+        id S230211AbiIVTXN (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Thu, 22 Sep 2022 15:19:06 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33632 "EHLO
+        Thu, 22 Sep 2022 15:23:13 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39962 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229578AbiIVTTG (ORCPT
+        with ESMTP id S229598AbiIVTXM (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Thu, 22 Sep 2022 15:19:06 -0400
-Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 84133106A29;
-        Thu, 22 Sep 2022 12:19:05 -0700 (PDT)
+        Thu, 22 Sep 2022 15:23:12 -0400
+Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 894F2286D6;
+        Thu, 22 Sep 2022 12:23:11 -0700 (PDT)
 Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id 1DE9160ED1;
-        Thu, 22 Sep 2022 19:19:05 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 589B6C433D6;
-        Thu, 22 Sep 2022 19:19:04 +0000 (UTC)
+        by dfw.source.kernel.org (Postfix) with ESMTPS id 1EE9C61175;
+        Thu, 22 Sep 2022 19:23:11 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 52694C433D7;
+        Thu, 22 Sep 2022 19:23:10 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1663874344;
-        bh=fH/ftMSCMde/tGgysJ6GXrjfJcRK3hwxp51NNNMYSFQ=;
+        s=k20201202; t=1663874590;
+        bh=2DZjj8mS7EZ9M/LXHnntgYzTasGSbm7dQDwq3kbKrRU=;
         h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=HpInakzF/YtLR0GbsbO3sqUR/uaQGEOaH+QUKjCFD90cCiAoPClfFis7jvQ6Iq9V9
-         woDePn4JOZoLS9INmwPdG7h13IZNDGzJb8Kb5ZqSrn7ZpoyI7zw4XYk2gaPAr4iq9f
-         aWwP2c/elk1FeYiiKcsKG/QHmkknN3Cle7cpBrrCGNWEoP55aQAfFtIBFRlHHdSys5
-         9ORBGvqGGh560Grx4MyYKxPBsS7mj/mOjDhO27d0AljgDH0mdXHQwr9V49JaUV36Dh
-         B6Gc2Bn2b+1kgE0Iqfte0cikEZ6TdtwzePpimxEORHsHxmnPJ/U2vlICBeAkxP4Rvx
-         ecUjR6FvTZH1Q==
+        b=r4c2Z+6Trx3SV1wFpJqn4BFOBW6BC8w7thIgfQWX74LAcI+V+O0N/WRFFUtd+Ihvi
+         iLZ1wEggUF41RDsoday1TMULHLMRXkXw9122nsBxKAtPkt1RQLOzEWmmn8BRasg1CR
+         E0NPWAYW29BrVPmUsJtdRzUG9B+8EtGqvT4xUet+SYLv+z/kONZ4iBxQQlbJbGDCWD
+         Ws9HurS6Saaf/MjkBzf7ndLtNbfylsFF3wRgcLTWUrDoWhrZzhz9u2K4C4QOpIWak2
+         YM7WsbMA0GjeUfgiIoUO0ZSSA58qUTDN/xok/YmcH1MQhk2VLMN9/S/CAzxX/Hk93v
+         vLTOG1egpTOtA==
 Received: by quaco.ghostprotocols.net (Postfix, from userid 1000)
-        id 2EBA2403B0; Thu, 22 Sep 2022 20:19:02 +0100 (IST)
-Date:   Thu, 22 Sep 2022 20:19:02 +0100
+        id 0B3A6403B0; Thu, 22 Sep 2022 20:23:08 +0100 (IST)
+Date:   Thu, 22 Sep 2022 20:23:08 +0100
 From:   Arnaldo Carvalho de Melo <acme@kernel.org>
-To:     cgel.zte@gmail.com
-Cc:     mingo@redhat.com, mark.rutland@arm.com,
-        alexander.shishkin@linux.intel.com, jolsa@kernel.org,
-        namhyung@kernel.org, irogers@google.com, songliubraving@fb.com,
-        adrian.hunter@intel.com, davemarchevsky@fb.com, wcohen@redhat.com,
-        andres@anarazel.de, linux-perf-users@vger.kernel.org,
-        linux-kernel@vger.kernel.org, ye xingchen <ye.xingchen@zte.com.cn>,
-        Zeal Robot <zealci@zte.com.cn>
-Subject: Re: [PATCH linux-next] perf annotate: use strscpy() is more robust
- and safer
-Message-ID: <Yyy1JgWCuQTMKFkY@kernel.org>
-References: <20220922012431.232372-1-ye.xingchen@zte.com.cn>
+To:     Namhyung Kim <namhyung@kernel.org>
+Cc:     Jiri Olsa <jolsa@kernel.org>, Ingo Molnar <mingo@kernel.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Ian Rogers <irogers@google.com>,
+        Adrian Hunter <adrian.hunter@intel.com>,
+        linux-perf-users@vger.kernel.org, Song Liu <songliubraving@fb.com>,
+        bpf@vger.kernel.org
+Subject: Re: [PATCH v2] perf tools: Get a perf cgroup more portably in BPF
+Message-ID: <Yyy2HAxVRy6TuTHQ@kernel.org>
+References: <20220922044023.718774-1-namhyung@kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20220922012431.232372-1-ye.xingchen@zte.com.cn>
+In-Reply-To: <20220922044023.718774-1-namhyung@kernel.org>
 X-Url:  http://acmel.wordpress.com
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-Em Thu, Sep 22, 2022 at 01:24:31AM +0000, cgel.zte@gmail.com escreveu:
-> From: ye xingchen <ye.xingchen@zte.com.cn>
+Em Wed, Sep 21, 2022 at 09:40:23PM -0700, Namhyung Kim escreveu:
+> The perf_event_cgrp_id can be different on other configurations.
+> To be more portable as CO-RE, it needs to get the cgroup subsys id
+> using the bpf_core_enum_value() helper.
 > 
-> The implementation of strscpy() is more robust and safer.
+> Suggested-by: Ian Rogers <irogers@google.com>
+> Signed-off-by: Namhyung Kim <namhyung@kernel.org>
 
-Where is strscpy() defined?
-
-I see it defined in the kernel:
-
-⬢[acme@toolbox perf]$ grep -w strscpy include/linux/string.h
-ssize_t strscpy(char *, const char *, size_t);
-/* Wraps calls to strscpy()/memset(), no arch specific code required */
-⬢[acme@toolbox perf]$
-
-But not in tools/
-
-Have you actually build with these patches?
+Applying, Ian, can I have your Reviewed-by?
 
 - Arnaldo
- 
-> That's now the recommended way to copy NUL terminated strings.
-> 
-> Reported-by: Zeal Robot <zealci@zte.com.cn>
-> Signed-off-by: ye xingchen <ye.xingchen@zte.com.cn>
+
 > ---
->  tools/perf/util/annotate.c | 4 ++--
->  1 file changed, 2 insertions(+), 2 deletions(-)
+> v2 changes)
+>  * fix off_cpu.bpf.c too
+>  * get perf_subsys_id only once
 > 
-> diff --git a/tools/perf/util/annotate.c b/tools/perf/util/annotate.c
-> index 5bc63c9e0324..e2b038b14ff6 100644
-> --- a/tools/perf/util/annotate.c
-> +++ b/tools/perf/util/annotate.c
-> @@ -1702,7 +1702,7 @@ static int dso__disassemble_filename(struct dso *dso, char *filename, size_t fil
->  			char *new_name = filename_with_chroot(dso->nsinfo->pid,
->  							      filename);
->  			if (new_name) {
-> -				strlcpy(filename, new_name, filename_size);
-> +				strscpy(filename, new_name, filename_size);
->  				free(new_name);
->  			}
->  		}
-> @@ -2002,7 +2002,7 @@ static int symbol__disassemble(struct symbol *sym, struct annotate_args *args)
->  		kce.len = sym->end - sym->start;
->  		if (!kcore_extract__create(&kce)) {
->  			delete_extract = true;
-> -			strlcpy(symfs_filename, kce.extract_filename,
-> +			strscpy(symfs_filename, kce.extract_filename,
->  				sizeof(symfs_filename));
->  		}
->  	} else if (dso__needs_decompress(dso)) {
+>  tools/perf/util/bpf_skel/bperf_cgroup.bpf.c |  6 +++++-
+>  tools/perf/util/bpf_skel/off_cpu.bpf.c      | 12 ++++++++----
+>  2 files changed, 13 insertions(+), 5 deletions(-)
+> 
+> diff --git a/tools/perf/util/bpf_skel/bperf_cgroup.bpf.c b/tools/perf/util/bpf_skel/bperf_cgroup.bpf.c
+> index 292c430768b5..9223e4b87fe9 100644
+> --- a/tools/perf/util/bpf_skel/bperf_cgroup.bpf.c
+> +++ b/tools/perf/util/bpf_skel/bperf_cgroup.bpf.c
+> @@ -48,6 +48,7 @@ const volatile __u32 num_cpus = 1;
+>  
+>  int enabled = 0;
+>  int use_cgroup_v2 = 0;
+> +int perf_subsys_id = -1;
+>  
+>  static inline int get_cgroup_v1_idx(__u32 *cgrps, int size)
+>  {
+> @@ -58,7 +59,10 @@ static inline int get_cgroup_v1_idx(__u32 *cgrps, int size)
+>  	int level;
+>  	int cnt;
+>  
+> -	cgrp = BPF_CORE_READ(p, cgroups, subsys[perf_event_cgrp_id], cgroup);
+> +	if (perf_subsys_id == -1)
+> +		perf_subsys_id = bpf_core_enum_value(enum cgroup_subsys_id, perf_event_cgrp_id);
+> +
+> +	cgrp = BPF_CORE_READ(p, cgroups, subsys[perf_subsys_id], cgroup);
+>  	level = BPF_CORE_READ(cgrp, level);
+>  
+>  	for (cnt = 0; i < MAX_LEVELS; i++) {
+> diff --git a/tools/perf/util/bpf_skel/off_cpu.bpf.c b/tools/perf/util/bpf_skel/off_cpu.bpf.c
+> index c4ba2bcf179f..e917ef7b8875 100644
+> --- a/tools/perf/util/bpf_skel/off_cpu.bpf.c
+> +++ b/tools/perf/util/bpf_skel/off_cpu.bpf.c
+> @@ -94,6 +94,8 @@ const volatile bool has_prev_state = false;
+>  const volatile bool needs_cgroup = false;
+>  const volatile bool uses_cgroup_v1 = false;
+>  
+> +int perf_subsys_id = -1;
+> +
+>  /*
+>   * Old kernel used to call it task_struct->state and now it's '__state'.
+>   * Use BPF CO-RE "ignored suffix rule" to deal with it like below:
+> @@ -119,11 +121,13 @@ static inline __u64 get_cgroup_id(struct task_struct *t)
+>  {
+>  	struct cgroup *cgrp;
+>  
+> -	if (uses_cgroup_v1)
+> -		cgrp = BPF_CORE_READ(t, cgroups, subsys[perf_event_cgrp_id], cgroup);
+> -	else
+> -		cgrp = BPF_CORE_READ(t, cgroups, dfl_cgrp);
+> +	if (!uses_cgroup_v1)
+> +		return BPF_CORE_READ(t, cgroups, dfl_cgrp, kn, id);
+> +
+> +	if (perf_subsys_id == -1)
+> +		perf_subsys_id = bpf_core_enum_value(enum cgroup_subsys_id, perf_event_cgrp_id);
+>  
+> +	cgrp = BPF_CORE_READ(t, cgroups, subsys[perf_subsys_id], cgroup);
+>  	return BPF_CORE_READ(cgrp, kn, id);
+>  }
+>  
 > -- 
-> 2.25.1
+> 2.37.3.968.ga6b4b080e4-goog
 
 -- 
 
