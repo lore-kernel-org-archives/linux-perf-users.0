@@ -2,139 +2,94 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 49705ECAAD8
-	for <linux-perf-users@archiver.kernel.org>; Thu, 22 Sep 2022 19:23:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1BC5FECAAD8
+	for <linux-perf-users@archiver.kernel.org>; Thu, 22 Sep 2022 19:27:13 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230211AbiIVTXN (ORCPT
+        id S229905AbiIVT1M (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Thu, 22 Sep 2022 15:23:13 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39962 "EHLO
+        Thu, 22 Sep 2022 15:27:12 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45004 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229598AbiIVTXM (ORCPT
+        with ESMTP id S229841AbiIVT1L (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Thu, 22 Sep 2022 15:23:12 -0400
+        Thu, 22 Sep 2022 15:27:11 -0400
 Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 894F2286D6;
-        Thu, 22 Sep 2022 12:23:11 -0700 (PDT)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D1651106F74
+        for <linux-perf-users@vger.kernel.org>; Thu, 22 Sep 2022 12:27:10 -0700 (PDT)
 Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id 1EE9C61175;
-        Thu, 22 Sep 2022 19:23:11 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 52694C433D7;
-        Thu, 22 Sep 2022 19:23:10 +0000 (UTC)
+        by dfw.source.kernel.org (Postfix) with ESMTPS id 6D092637A3
+        for <linux-perf-users@vger.kernel.org>; Thu, 22 Sep 2022 19:27:10 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 9C0FDC433D7;
+        Thu, 22 Sep 2022 19:27:09 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1663874590;
-        bh=2DZjj8mS7EZ9M/LXHnntgYzTasGSbm7dQDwq3kbKrRU=;
+        s=k20201202; t=1663874829;
+        bh=Xi3lMX6hVlnMb1P059agb8lPU+GfJW9du0Lzj0aIb+E=;
         h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=r4c2Z+6Trx3SV1wFpJqn4BFOBW6BC8w7thIgfQWX74LAcI+V+O0N/WRFFUtd+Ihvi
-         iLZ1wEggUF41RDsoday1TMULHLMRXkXw9122nsBxKAtPkt1RQLOzEWmmn8BRasg1CR
-         E0NPWAYW29BrVPmUsJtdRzUG9B+8EtGqvT4xUet+SYLv+z/kONZ4iBxQQlbJbGDCWD
-         Ws9HurS6Saaf/MjkBzf7ndLtNbfylsFF3wRgcLTWUrDoWhrZzhz9u2K4C4QOpIWak2
-         YM7WsbMA0GjeUfgiIoUO0ZSSA58qUTDN/xok/YmcH1MQhk2VLMN9/S/CAzxX/Hk93v
-         vLTOG1egpTOtA==
+        b=Ynwzzjos6aq5xPfrbdsqTGiwmhfDTkvbffwXxWlDzGdLwtfsyFOWYzBAw56lrxRWv
+         He4zJL1ve2scpwHE3REWCjTmQeSY0QniVFhSPolMijyL9AMRssLBH0Yd4ESgaBXxEq
+         4N1ZoCXsJrspOi91zecDWWcoPHBzS1KugtB1t4TFgGhz3x2jo8zCQtZ/Yjb7tlh5Uk
+         S00tvNR/XChIHrneFbp6HiYMSic5JJO/GiJ7l/4tNynPzMd1m0Wc5b6KXnyCwHdA3a
+         KYrqwnNTXGjj2FNDOnBV43Rkam802NYbf+InF0/z2wn4xSEWMWML836lossyyzs4Fr
+         o5ihejQx7lZqQ==
 Received: by quaco.ghostprotocols.net (Postfix, from userid 1000)
-        id 0B3A6403B0; Thu, 22 Sep 2022 20:23:08 +0100 (IST)
-Date:   Thu, 22 Sep 2022 20:23:08 +0100
+        id 1A5F1403B0; Thu, 22 Sep 2022 20:27:07 +0100 (IST)
+Date:   Thu, 22 Sep 2022 20:27:07 +0100
 From:   Arnaldo Carvalho de Melo <acme@kernel.org>
-To:     Namhyung Kim <namhyung@kernel.org>
-Cc:     Jiri Olsa <jolsa@kernel.org>, Ingo Molnar <mingo@kernel.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Ian Rogers <irogers@google.com>,
-        Adrian Hunter <adrian.hunter@intel.com>,
-        linux-perf-users@vger.kernel.org, Song Liu <songliubraving@fb.com>,
-        bpf@vger.kernel.org
-Subject: Re: [PATCH v2] perf tools: Get a perf cgroup more portably in BPF
-Message-ID: <Yyy2HAxVRy6TuTHQ@kernel.org>
-References: <20220922044023.718774-1-namhyung@kernel.org>
+To:     Shang XiaoJing <shangxiaojing@huawei.com>
+Cc:     Stefano Sanfilippo <ssanfilippo@chromium.org>,
+        peterz@infradead.org, mingo@redhat.com, mark.rutland@arm.com,
+        alexander.shishkin@linux.intel.com, jolsa@kernel.org,
+        namhyung@kernel.org, linux-perf-users@vger.kernel.org
+Subject: Re: [PATCH 1/4] perf genelf: Fix error code in jit_write_elf()
+Message-ID: <Yyy3Cx1ervgKd1OV@kernel.org>
+References: <20220922141438.22487-1-shangxiaojing@huawei.com>
+ <20220922141438.22487-2-shangxiaojing@huawei.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20220922044023.718774-1-namhyung@kernel.org>
+In-Reply-To: <20220922141438.22487-2-shangxiaojing@huawei.com>
 X-Url:  http://acmel.wordpress.com
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-Em Wed, Sep 21, 2022 at 09:40:23PM -0700, Namhyung Kim escreveu:
-> The perf_event_cgrp_id can be different on other configurations.
-> To be more portable as CO-RE, it needs to get the cgroup subsys id
-> using the bpf_core_enum_value() helper.
-> 
-> Suggested-by: Ian Rogers <irogers@google.com>
-> Signed-off-by: Namhyung Kim <namhyung@kernel.org>
+Em Thu, Sep 22, 2022 at 10:14:35PM +0800, Shang XiaoJing escreveu:
+> The error code is set to -1 at the beginning of jit_write_elf(), but it is
+> assigned by jit_add_eh_frame_info() in the middle, hence the following
+> error can only return the error code of jit_add_eh_frame_info(). Reset
+> the error code to the default value after being assigned by
+> jit_add_eh_frame_info().
 
-Applying, Ian, can I have your Reviewed-by?
+You forgot to add:
+
+Cc: Stefano Sanfilippo <ssanfilippo@chromium.org>
+Fixes: 086f9f3d7897d808 ("perf jit: Generate .eh_frame/.eh_frame_hdr in DSO")
+
+Applied.
 
 - Arnaldo
-
+ 
+> Signed-off-by: Shang XiaoJing <shangxiaojing@huawei.com>
 > ---
-> v2 changes)
->  * fix off_cpu.bpf.c too
->  * get perf_subsys_id only once
+>  tools/perf/util/genelf.c | 1 +
+>  1 file changed, 1 insertion(+)
 > 
->  tools/perf/util/bpf_skel/bperf_cgroup.bpf.c |  6 +++++-
->  tools/perf/util/bpf_skel/off_cpu.bpf.c      | 12 ++++++++----
->  2 files changed, 13 insertions(+), 5 deletions(-)
-> 
-> diff --git a/tools/perf/util/bpf_skel/bperf_cgroup.bpf.c b/tools/perf/util/bpf_skel/bperf_cgroup.bpf.c
-> index 292c430768b5..9223e4b87fe9 100644
-> --- a/tools/perf/util/bpf_skel/bperf_cgroup.bpf.c
-> +++ b/tools/perf/util/bpf_skel/bperf_cgroup.bpf.c
-> @@ -48,6 +48,7 @@ const volatile __u32 num_cpus = 1;
+> diff --git a/tools/perf/util/genelf.c b/tools/perf/util/genelf.c
+> index ed28a0dbcb7f..2e45b204494a 100644
+> --- a/tools/perf/util/genelf.c
+> +++ b/tools/perf/util/genelf.c
+> @@ -331,6 +331,7 @@ jit_write_elf(int fd, uint64_t load_addr, const char *sym,
+>  					       eh_frame_base_offset);
+>  		if (retval)
+>  			goto error;
+> +		retval = -1;
+>  	}
 >  
->  int enabled = 0;
->  int use_cgroup_v2 = 0;
-> +int perf_subsys_id = -1;
->  
->  static inline int get_cgroup_v1_idx(__u32 *cgrps, int size)
->  {
-> @@ -58,7 +59,10 @@ static inline int get_cgroup_v1_idx(__u32 *cgrps, int size)
->  	int level;
->  	int cnt;
->  
-> -	cgrp = BPF_CORE_READ(p, cgroups, subsys[perf_event_cgrp_id], cgroup);
-> +	if (perf_subsys_id == -1)
-> +		perf_subsys_id = bpf_core_enum_value(enum cgroup_subsys_id, perf_event_cgrp_id);
-> +
-> +	cgrp = BPF_CORE_READ(p, cgroups, subsys[perf_subsys_id], cgroup);
->  	level = BPF_CORE_READ(cgrp, level);
->  
->  	for (cnt = 0; i < MAX_LEVELS; i++) {
-> diff --git a/tools/perf/util/bpf_skel/off_cpu.bpf.c b/tools/perf/util/bpf_skel/off_cpu.bpf.c
-> index c4ba2bcf179f..e917ef7b8875 100644
-> --- a/tools/perf/util/bpf_skel/off_cpu.bpf.c
-> +++ b/tools/perf/util/bpf_skel/off_cpu.bpf.c
-> @@ -94,6 +94,8 @@ const volatile bool has_prev_state = false;
->  const volatile bool needs_cgroup = false;
->  const volatile bool uses_cgroup_v1 = false;
->  
-> +int perf_subsys_id = -1;
-> +
->  /*
->   * Old kernel used to call it task_struct->state and now it's '__state'.
->   * Use BPF CO-RE "ignored suffix rule" to deal with it like below:
-> @@ -119,11 +121,13 @@ static inline __u64 get_cgroup_id(struct task_struct *t)
->  {
->  	struct cgroup *cgrp;
->  
-> -	if (uses_cgroup_v1)
-> -		cgrp = BPF_CORE_READ(t, cgroups, subsys[perf_event_cgrp_id], cgroup);
-> -	else
-> -		cgrp = BPF_CORE_READ(t, cgroups, dfl_cgrp);
-> +	if (!uses_cgroup_v1)
-> +		return BPF_CORE_READ(t, cgroups, dfl_cgrp, kn, id);
-> +
-> +	if (perf_subsys_id == -1)
-> +		perf_subsys_id = bpf_core_enum_value(enum cgroup_subsys_id, perf_event_cgrp_id);
->  
-> +	cgrp = BPF_CORE_READ(t, cgroups, subsys[perf_subsys_id], cgroup);
->  	return BPF_CORE_READ(cgrp, kn, id);
->  }
->  
+>  	/*
 > -- 
-> 2.37.3.968.ga6b4b080e4-goog
+> 2.17.1
 
 -- 
 
