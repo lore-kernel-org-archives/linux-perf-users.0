@@ -2,87 +2,72 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A0A6AC6FA82
-	for <linux-perf-users@archiver.kernel.org>; Thu, 22 Sep 2022 14:09:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1D3D3C6FA82
+	for <linux-perf-users@archiver.kernel.org>; Thu, 22 Sep 2022 14:31:27 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229959AbiIVOJ4 (ORCPT
+        id S231398AbiIVObZ (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Thu, 22 Sep 2022 10:09:56 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45056 "EHLO
+        Thu, 22 Sep 2022 10:31:25 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52596 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229448AbiIVOJz (ORCPT
+        with ESMTP id S231371AbiIVObY (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Thu, 22 Sep 2022 10:09:55 -0400
-Received: from desiato.infradead.org (desiato.infradead.org [IPv6:2001:8b0:10b:1:d65d:64ff:fe57:4e05])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4F3B329803;
-        Thu, 22 Sep 2022 07:09:50 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=desiato.20200630; h=In-Reply-To:Content-Type:MIME-Version:
-        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description;
-        bh=zNhQCtxWvF8Q4IPC7y5tVcrAmAIZN451YsFdgUZWDIc=; b=A7i7iCjsZIyacHXjYkAX/Is2WG
-        nYl2smRxQ+vg/w0NtHXTN7nsAwptTVQa/DD1mchpHaecIYUzSLH5c/MsTtcQWrBeUYySiIEOyiZOB
-        RgOmu9kVpSOQ0sZJtg96+sm7Oo+XBI1e12tZ5ZCEi6BKQBaLUGeP5jmyJnLBkd2wHmqFUSKs77Vsg
-        REVJNeT6iicS4GQtsyq8D+KNONDTXnpD7I7/K1STaqFNTyaqpwGMK0+Y7NINryPQW47137XE38kV5
-        kvdSiP5bVt2kJW0S684xSdn5XRTV6ST7vbr2njJUPR2SQ6hqZ9NEVqCi3LpTYppAPNk9ZDpHRQdAn
-        i8eeZB0A==;
-Received: from j130084.upc-j.chello.nl ([24.132.130.84] helo=noisy.programming.kicks-ass.net)
-        by desiato.infradead.org with esmtpsa (Exim 4.94.2 #2 (Red Hat Linux))
-        id 1obMtR-00EyUS-GE; Thu, 22 Sep 2022 14:09:33 +0000
-Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-        (Client did not present a certificate)
-        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id 85E89300169;
-        Thu, 22 Sep 2022 16:09:32 +0200 (CEST)
-Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
-        id 61E3B2BBF7EBF; Thu, 22 Sep 2022 16:09:32 +0200 (CEST)
-Date:   Thu, 22 Sep 2022 16:09:32 +0200
-From:   Peter Zijlstra <peterz@infradead.org>
-To:     "Wang, Wei W" <wei.w.wang@intel.com>
-Cc:     "Liang, Kan" <kan.liang@linux.intel.com>,
-        "Li, Xiaoyao" <xiaoyao.li@intel.com>,
-        Ingo Molnar <mingo@redhat.com>,
-        Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Jiri Olsa <jolsa@kernel.org>,
-        Namhyung Kim <namhyung@kernel.org>,
-        "Christopherson,, Sean" <seanjc@google.com>,
-        Paolo Bonzini <pbonzini@redhat.com>,
-        "linux-perf-users@vger.kernel.org" <linux-perf-users@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "kvm@vger.kernel.org" <kvm@vger.kernel.org>
-Subject: Re: [RFC PATCH v2 2/3] perf/x86/intel/pt: Introduce and export
- pt_get_curr_event()
-Message-ID: <YyxsnAFYMLn2U9BT@hirez.programming.kicks-ass.net>
-References: <20220921164521.2858932-1-xiaoyao.li@intel.com>
- <20220921164521.2858932-3-xiaoyao.li@intel.com>
- <175b518c-d202-644e-a3a7-67e877852548@linux.intel.com>
- <DS0PR11MB6373C84139621DC447D3F466DC4E9@DS0PR11MB6373.namprd11.prod.outlook.com>
- <Yyxke/IO+AP4EWwT@hirez.programming.kicks-ass.net>
- <DS0PR11MB637346E9F224C5330CDEF3BFDC4E9@DS0PR11MB6373.namprd11.prod.outlook.com>
+        Thu, 22 Sep 2022 10:31:24 -0400
+Received: from foss.arm.com (foss.arm.com [217.140.110.172])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTP id 3AA10B5A40;
+        Thu, 22 Sep 2022 07:31:24 -0700 (PDT)
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 8BF7B1595;
+        Thu, 22 Sep 2022 07:31:30 -0700 (PDT)
+Received: from [10.57.1.91] (unknown [10.57.1.91])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 469B83F73B;
+        Thu, 22 Sep 2022 07:31:22 -0700 (PDT)
+Message-ID: <d6eaa797-380b-e8ae-f928-54843dd596f2@arm.com>
+Date:   Thu, 22 Sep 2022 15:31:20 +0100
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <DS0PR11MB637346E9F224C5330CDEF3BFDC4E9@DS0PR11MB6373.namprd11.prod.outlook.com>
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
+ Thunderbird/91.11.0
+Subject: Re: [PATCH v3 0/2] perf: arm64: Kernel support for Dwarf unwinding
+ through SVE functions
+Content-Language: en-US
+To:     Will Deacon <will@kernel.org>
+Cc:     linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        linux-perf-users@vger.kernel.org, broonie@kernel.org,
+        acme@kernel.org, leo.yan@linaro.org, john.garry@huawei.com,
+        catalin.marinas@arm.com, Jonathan Corbet <corbet@lwn.net>,
+        Mark Rutland <mark.rutland@arm.com>, linux-doc@vger.kernel.org
+References: <20220901132658.1024635-1-james.clark@arm.com>
+ <20220922140406.GG12095@willie-the-truck>
+From:   James Clark <james.clark@arm.com>
+In-Reply-To: <20220922140406.GG12095@willie-the-truck>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-On Thu, Sep 22, 2022 at 01:59:53PM +0000, Wang, Wei W wrote:
-> On Thursday, September 22, 2022 9:35 PM, Peter Zijlstra
-> > On Thu, Sep 22, 2022 at 12:58:49PM +0000, Wang, Wei W wrote:
-> > 
-> > > Add a function to expose the current running PT event to users. One
-> > > usage is in KVM, it needs to get and disable the running host PT event
-> > > before VMEnter to the guest and resumes the event after VMexit to host.
-> > 
-> > You cannot just kill a host event like that. If there is a host event, the guest
-> > looses out.
-> 
-> OK. The intention was to pause the event (that only profiles host info) when switching to guest,
-> and resume when switching back to host.
 
-If the even doesn't profile guest context, then yes. If it does profile
-guest context, you can't.
+
+On 22/09/2022 15:04, Will Deacon wrote:
+> On Thu, Sep 01, 2022 at 02:26:56PM +0100, James Clark wrote:
+>> I'm resubmitting this with a few of the changes suggested by Will on V2.
+>>
+>> I haven't made any changes regarding the open questions about the
+>> discoverability or saving the new reg and passing to output_sample()
+>> because I think it's best to be consistent with the implementations on
+>> other platforms first. I have explained in more detail on v2 [1].
+>>
+>> [1]: https://lore.kernel.org/lkml/5fcf1a6f-c8fb-c296-992e-18aae8874095@arm.com/
+> 
+> Fair enough, I can't argue against being consistent.
+> 
+> Given that this exposes subtle new user ABI, do we have any coverage in
+> the selftests? If not, please could you add something?
+> 
+
+Thanks, I will do that. I assume you mean the self tests in
+tools/perf/tests and not some non Perf tests?
+
+> Thanks,
+> 
+> Will
