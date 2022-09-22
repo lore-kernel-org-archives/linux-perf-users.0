@@ -2,58 +2,58 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4276FC32771
-	for <linux-perf-users@archiver.kernel.org>; Thu, 22 Sep 2022 03:18:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 71C6EC6FA86
+	for <linux-perf-users@archiver.kernel.org>; Thu, 22 Sep 2022 03:22:07 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230097AbiIVDSd (ORCPT
+        id S229449AbiIVDWE (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Wed, 21 Sep 2022 23:18:33 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59554 "EHLO
+        Wed, 21 Sep 2022 23:22:04 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:32896 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231297AbiIVDSB (ORCPT
+        with ESMTP id S230148AbiIVDVh (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Wed, 21 Sep 2022 23:18:01 -0400
-Received: from mail-wm1-x333.google.com (mail-wm1-x333.google.com [IPv6:2a00:1450:4864:20::333])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 059DFB07F6
-        for <linux-perf-users@vger.kernel.org>; Wed, 21 Sep 2022 20:12:53 -0700 (PDT)
-Received: by mail-wm1-x333.google.com with SMTP id e18so5891100wmq.3
-        for <linux-perf-users@vger.kernel.org>; Wed, 21 Sep 2022 20:12:53 -0700 (PDT)
+        Wed, 21 Sep 2022 23:21:37 -0400
+Received: from mail-wm1-x329.google.com (mail-wm1-x329.google.com [IPv6:2a00:1450:4864:20::329])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 20F6A82D3C
+        for <linux-perf-users@vger.kernel.org>; Wed, 21 Sep 2022 20:16:57 -0700 (PDT)
+Received: by mail-wm1-x329.google.com with SMTP id e10-20020a05600c4e4a00b003b4eff4ab2cso450188wmq.4
+        for <linux-perf-users@vger.kernel.org>; Wed, 21 Sep 2022 20:16:57 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=google.com; s=20210112;
         h=cc:to:subject:message-id:date:from:in-reply-to:references
          :mime-version:from:to:cc:subject:date;
-        bh=Wd9ftuEwHwKbDkxBGNbylsY5yCJ2iRQCnP9zwsuCZ2o=;
-        b=ho7NgWD6lzDtWBRZynC6jNXepKfnr4YDUc2Vy9tfDSm9siA8edqz+K/5LRwPk0Ld3y
-         GIIxG6xZ5NHfqE+X0Ts3vTCAja/8jU5FRKBRUhmQXfnIi38SF5wx3qfMdtXm6pDBWeGk
-         Fj6cWcJB56pEPdNOoZJNK+CXlbiB1m/x0m8Vgs3Idj6dF9Xh2aFqIvwemkD0WxRPw/ku
-         ED9AX3x/RoMZoFbUhGDUkjuS+QUDJhIw7DLDWayxwz1/6FOQzSVjEl8WfHyp8sRN9gND
-         1bvSR0fvCs78hWrm+MRs/gT5Fx5P/C+IK2Tfru2f89vXZFDJbfNpVx+y2e/k66XXCXrM
-         vSaw==
+        bh=Gf5cFucll322oSi7IN8E0A7c01vWLE1t6RgRR/X3lFE=;
+        b=cyu+sMCeNI7IjveApYqHRSi0+KsjKAyddUETNdMX3OV9uWjvZqlJpDJFb5zDuwNK5w
+         4dgb8R0b6VP6+7pebIAi9nN7aeLPWD87KmtWg4jjzRlFVDQ4F+8HuSSlzpukzqfPmkuG
+         Xk1MSiayz+Tv8A+85tsaxhwdOajLA9cJqlaNXCmZpQOPdZYMZ6DQi/spS/HQFWvOZooz
+         GPatH31/kX0oZRlT8ZL/HSYfl/shQ/O/d7jA4wflde6Tj3hj6+UIr7j8aELJZOmp+bV9
+         7hGdd3kOQ+aVfSwfr7XyyQn2ydCG3f7fITlFC87Bpg1fTastJE/AoiOW4W+97NgJMi9E
+         P5sw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
         h=cc:to:subject:message-id:date:from:in-reply-to:references
          :mime-version:x-gm-message-state:from:to:cc:subject:date;
-        bh=Wd9ftuEwHwKbDkxBGNbylsY5yCJ2iRQCnP9zwsuCZ2o=;
-        b=6u908X54bCL+4fzyN8VgspUW4fAtMJGdQu0lSumD5MbXMS51abIkR0ELMGv0fU6HsD
-         T0gABv5zOVda4PdOAr1znSZ+uPPZOm7HA/y/PJdtgs5B3yAhNv+019tFXaaeBtvisZ4s
-         pWWqs7mjPUSQeb5tAEDz4O/AO+T5yJSRJUR6ilXV93MKHlIAGnYSwhE/VmoyBlCYIRcs
-         EnLPg/yesU6l4dPgwH+T1IzOKtFU4bX6ZSIw2GbdTH4JoDnXY6yKnaY0V7G23B1eKlti
-         KfVEqdQulW/hBWfUBZBr/FBQ+/Q3fA7yJfNqDdPKdjKX68eFhkNtUVSROpoYExQwE2J0
-         xZRw==
-X-Gm-Message-State: ACrzQf0iO6CKv3RUjSzxiJv9z5teg5SNtwSMU0pHmbGjrBIB0Mitz8Lj
-        ss1sjDSyhO4SeDZi9K6u1cOqVNKFxW6rcBmW1qQr7A==
-X-Google-Smtp-Source: AMsMyM5t3vz/zrrCjjUxW+dnrpnqbYfj/aN9ERUd+QxRtCvGtx2SmkY/F223oIAmZppSgJrYDSFCwDhJv/vwfrJYMp0=
-X-Received: by 2002:a7b:c048:0:b0:3b4:fb26:f0f3 with SMTP id
- u8-20020a7bc048000000b003b4fb26f0f3mr3650986wmc.115.1663816371685; Wed, 21
- Sep 2022 20:12:51 -0700 (PDT)
+        bh=Gf5cFucll322oSi7IN8E0A7c01vWLE1t6RgRR/X3lFE=;
+        b=cPo6th9IEfGcYv3dwe6U8dTJrbvLP4IzlPgxDmm8grxP0CdDnbPL0Lz4dQxVYArAOq
+         J7beyC6kba3KEDLXk+RqrUzH+WW3ABGEKjySGuSVlkz6IxwN0jrl748AN+aFUqmL5VDJ
+         didN5kI2jHXpzAyYo9zQAWgNjTpx9xPoKSBqZ2QyId/0Iw1EmTcTAr5n4uWFCmEq5yKG
+         pnfkrm11TdxBkSE1UZcRcg+YLDW0Tqh6F0nToZmg4PgvPnWiB2hEMMKDSoaDQ3mC4/jN
+         OBLbVAyCuI02fuJUhCuewpnPzzdy5vuP30ZK217drASPUxp+AcxG+sX3WgHe62u0JBT1
+         e0aA==
+X-Gm-Message-State: ACrzQf2g2iq3dfFaI8ZPBLjbBpgGiyw11Aysom0RsNZpCxy4vnvORzoT
+        fuqRgKMc7vCdW/Ck7Rbu7Wo2cesq7ouvoPh3MrwlMg==
+X-Google-Smtp-Source: AMsMyM6OlMz7hQCdkutKhUaeJa90Iz6S8q4WliavmRN7d/qpKXh1bRqMWegNouk+R3boTk29zX8XU+AZWrgM6gwvXIA=
+X-Received: by 2002:a05:600c:2181:b0:3b4:74e4:16f8 with SMTP id
+ e1-20020a05600c218100b003b474e416f8mr712403wme.174.1663816615424; Wed, 21 Sep
+ 2022 20:16:55 -0700 (PDT)
 MIME-Version: 1.0
-References: <20220922014904.3665674-1-zhengjun.xing@linux.intel.com>
-In-Reply-To: <20220922014904.3665674-1-zhengjun.xing@linux.intel.com>
+References: <20220922014904.3665674-1-zhengjun.xing@linux.intel.com> <20220922014904.3665674-2-zhengjun.xing@linux.intel.com>
+In-Reply-To: <20220922014904.3665674-2-zhengjun.xing@linux.intel.com>
 From:   Ian Rogers <irogers@google.com>
-Date:   Wed, 21 Sep 2022 20:12:38 -0700
-Message-ID: <CAP-5=fUecPUJ-Z5WwbjVgA6b6r3-MmmfpjE+iw_pAK_K+rhxMA@mail.gmail.com>
-Subject: Re: [PATCH 1/2] perf print-events: Fix "perf list" can not display
- the PMU prefix for some hybrid cache events
+Date:   Wed, 21 Sep 2022 20:16:42 -0700
+Message-ID: <CAP-5=fWhPAcbbws3H=VC7F3qnXv4hkbMd3rjk4_HtsBAQHPTTg@mail.gmail.com>
+Subject: Re: [PATCH 2/2] perf parse-events: Remove "not supported" hybrid
+ cache events
 To:     zhengjun.xing@linux.intel.com
 Cc:     acme@kernel.org, peterz@infradead.org, mingo@redhat.com,
         alexander.shishkin@intel.com, jolsa@kernel.org,
@@ -69,88 +69,127 @@ On Wed, Sep 21, 2022 at 6:47 PM <zhengjun.xing@linux.intel.com> wrote:
 >
 > From: Zhengjun Xing <zhengjun.xing@linux.intel.com>
 >
-> Some hybrid hardware cache events are only available on one CPU PMU. For
-> example, 'L1-dcache-load-misses' is only available on cpu_core. We have
-> supported in the perf list clearly reporting this info, the function works
-> fine before but recently the argument "config" in API is_event_supported()
-> is changed from "u64" to "unsigned int" which caused a regression, the
-> "perf list" then can not display the PMU prefix for some hybrid cache
-> events. For the hybrid systems, the PMU type ID is stored at config[63:32],
-> define config to "unsigned int" will miss the PMU type ID information, then
-> the regression happened, the config should be defined as "u64".
+> By default, we create two hybrid cache events, one is for cpu_core, and
+> another is for cpu_atom. But Some hybrid hardware cache events are only
+> available on one CPU PMU. For example, the 'L1-dcache-load-misses' is only
+> available on cpu_core, while the 'L1-icache-loads' is only available on
+> cpu_atom. We need to remove "not supported" hybrid cache events. By
+> extending is_event_supported() to global API and using it to check if the
+> hybrid cache events are supported before being created, we can remove the
+> "not supported" hybrid cache events.
 >
 > Before:
->  # ./perf list |grep "Hardware cache event"
->   L1-dcache-load-misses                              [Hardware cache event]
->   L1-dcache-loads                                    [Hardware cache event]
->   L1-dcache-stores                                   [Hardware cache event]
->   L1-icache-load-misses                              [Hardware cache event]
->   L1-icache-loads                                    [Hardware cache event]
->   LLC-load-misses                                    [Hardware cache event]
->   LLC-loads                                          [Hardware cache event]
->   LLC-store-misses                                   [Hardware cache event]
->   LLC-stores                                         [Hardware cache event]
->   branch-load-misses                                 [Hardware cache event]
->   branch-loads                                       [Hardware cache event]
->   dTLB-load-misses                                   [Hardware cache event]
->   dTLB-loads                                         [Hardware cache event]
->   dTLB-store-misses                                  [Hardware cache event]
->   dTLB-stores                                        [Hardware cache event]
->   iTLB-load-misses                                   [Hardware cache event]
->   node-load-misses                                   [Hardware cache event]
->   node-loads                                         [Hardware cache event]
+>
+>  # ./perf stat -e L1-dcache-load-misses,L1-icache-loads -a sleep 1
+>
+>  Performance counter stats for 'system wide':
+>
+>             52,570      cpu_core/L1-dcache-load-misses/
+>    <not supported>      cpu_atom/L1-dcache-load-misses/
+>    <not supported>      cpu_core/L1-icache-loads/
+>          1,471,817      cpu_atom/L1-icache-loads/
+>
+>        1.004915229 seconds time elapsed
 >
 > After:
->  # ./perf list |grep "Hardware cache event"
->   L1-dcache-loads                                    [Hardware cache event]
->   L1-dcache-stores                                   [Hardware cache event]
->   L1-icache-load-misses                              [Hardware cache event]
->   LLC-load-misses                                    [Hardware cache event]
->   LLC-loads                                          [Hardware cache event]
->   LLC-store-misses                                   [Hardware cache event]
->   LLC-stores                                         [Hardware cache event]
->   branch-load-misses                                 [Hardware cache event]
->   branch-loads                                       [Hardware cache event]
->   cpu_atom/L1-icache-loads/                          [Hardware cache event]
->   cpu_core/L1-dcache-load-misses/                    [Hardware cache event]
->   cpu_core/node-load-misses/                         [Hardware cache event]
->   cpu_core/node-loads/                               [Hardware cache event]
->   dTLB-load-misses                                   [Hardware cache event]
->   dTLB-loads                                         [Hardware cache event]
->   dTLB-store-misses                                  [Hardware cache event]
->   dTLB-stores                                        [Hardware cache event]
->   iTLB-load-misses                                   [Hardware cache event]
 >
-> Fixes: 9b7c7728f4e4 ("perf parse-events: Break out tracepoint and printing")
+>  # ./perf stat -e L1-dcache-load-misses,L1-icache-loads -a sleep 1
+>
+>  Performance counter stats for 'system wide':
+>
+>             54,510      cpu_core/L1-dcache-load-misses/
+>          1,441,286      cpu_atom/L1-icache-loads/
+>
+>        1.005114281 seconds time elapsed
+>
+> Fixes: 30def61f64ba ("perf parse-events: Create two hybrid cache events")
 > Signed-off-by: Zhengjun Xing <zhengjun.xing@linux.intel.com>
 > Reviewed-by: Kan Liang <kan.liang@linux.intel.com>
-
-Acked-by: Ian Rogers <irogers@google.com>
-
-Sorry for this breakage, I suspect that a long review on the
-refactoring CL meant that I missed the intervening fix. Can we add a
-test on this? It would need to be hybrid specific and skip otherwise.
-
-Thanks,
-Ian
-
 > ---
->  tools/perf/util/print-events.c | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
+>  tools/perf/util/parse-events-hybrid.c | 8 +++++++-
+>  tools/perf/util/print-events.c        | 2 +-
+>  tools/perf/util/print-events.h        | 3 ++-
+>  3 files changed, 10 insertions(+), 3 deletions(-)
 >
+> diff --git a/tools/perf/util/parse-events-hybrid.c b/tools/perf/util/parse-events-hybrid.c
+> index 284f8eabd3b9..cf2e1c2e968f 100644
+> --- a/tools/perf/util/parse-events-hybrid.c
+> +++ b/tools/perf/util/parse-events-hybrid.c
+> @@ -14,6 +14,7 @@
+>  #include "pmu.h"
+>  #include "pmu-hybrid.h"
+>  #include "perf.h"
+> +#include "print-events.h"
+>
+>  static void config_hybrid_attr(struct perf_event_attr *attr,
+>                                int type, int pmu_type)
+> @@ -48,13 +49,18 @@ static int create_event_hybrid(__u32 config_type, int *idx,
+>         __u64 config = attr->config;
+>
+>         config_hybrid_attr(attr, config_type, pmu->type);
+> +
+> +       if (attr->type == PERF_TYPE_HW_CACHE
+> +           && !is_event_supported(attr->type, attr->config))
+> +               goto out;
+
+A comment to explain this would be useful.
+
+> +
+>         evsel = parse_events__add_event_hybrid(list, idx, attr, name, metric_id,
+>                                                pmu, config_terms);
+>         if (evsel)
+>                 evsel->pmu_name = strdup(pmu->name);
+>         else
+>                 return -ENOMEM;
+
+For consistency should this use the "goto" pattern now? You can also
+handle the ENOMEM case for strdup.
+
+> -
+> +out:
+>         attr->type = type;
+>         attr->config = config;
+>         return 0;
 > diff --git a/tools/perf/util/print-events.c b/tools/perf/util/print-events.c
-> index ba1ab5134685..04050d4f6db8 100644
+> index 04050d4f6db8..fa5cc94cfcfe 100644
 > --- a/tools/perf/util/print-events.c
 > +++ b/tools/perf/util/print-events.c
 > @@ -239,7 +239,7 @@ void print_sdt_events(const char *subsys_glob, const char *event_glob,
 >         strlist__delete(sdtlist);
 >  }
 >
-> -static bool is_event_supported(u8 type, unsigned int config)
-> +static bool is_event_supported(u8 type, u64 config)
+> -static bool is_event_supported(u8 type, u64 config)
+> +bool is_event_supported(u8 type, u64 config)
+
+This makes me tempted to say this function should be in parse-events.c.
+
+Thanks,
+Ian
+
 >  {
 >         bool ret = true;
 >         int open_return;
+> diff --git a/tools/perf/util/print-events.h b/tools/perf/util/print-events.h
+> index 1da9910d83a6..ad2902fd0507 100644
+> --- a/tools/perf/util/print-events.h
+> +++ b/tools/perf/util/print-events.h
+> @@ -1,14 +1,15 @@
+>  /* SPDX-License-Identifier: GPL-2.0 */
+>  #ifndef __PERF_PRINT_EVENTS_H
+>  #define __PERF_PRINT_EVENTS_H
+> -
+>  #include <stdbool.h>
+> +#include <linux/types.h>
+>
+>  struct event_symbol;
+>
+>  void print_events(const char *event_glob, bool name_only, bool quiet_flag,
+>                   bool long_desc, bool details_flag, bool deprecated,
+>                   const char *pmu_name);
+> +bool is_event_supported(u8 type, u64 config);
+>  int print_hwcache_events(const char *event_glob, bool name_only);
+>  void print_sdt_events(const char *subsys_glob, const char *event_glob,
+>                       bool name_only);
 > --
 > 2.25.1
 >
