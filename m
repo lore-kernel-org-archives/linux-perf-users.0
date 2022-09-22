@@ -2,144 +2,132 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DA614ECAAD8
-	for <linux-perf-users@archiver.kernel.org>; Thu, 22 Sep 2022 04:40:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F1FCBECAAD8
+	for <linux-perf-users@archiver.kernel.org>; Thu, 22 Sep 2022 05:14:41 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229624AbiIVEk2 (ORCPT
+        id S230165AbiIVFOk (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Thu, 22 Sep 2022 00:40:28 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59066 "EHLO
+        Thu, 22 Sep 2022 01:14:40 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57780 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229512AbiIVEk0 (ORCPT
+        with ESMTP id S230166AbiIVFOi (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Thu, 22 Sep 2022 00:40:26 -0400
-Received: from mail-pl1-x631.google.com (mail-pl1-x631.google.com [IPv6:2607:f8b0:4864:20::631])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 39250883C9;
-        Wed, 21 Sep 2022 21:40:26 -0700 (PDT)
-Received: by mail-pl1-x631.google.com with SMTP id x1so7685551plv.5;
-        Wed, 21 Sep 2022 21:40:26 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20210112;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:sender:from:to:cc:subject:date;
-        bh=2zbl9tgj4NFm7PKmvB7l9G8vYBtZS9R+8WUfma5ExAI=;
-        b=DDA0pYsyC5qYwF9YM2ZWl5MdN+7D9C/mok35NucRg7vcjW92j/ateO/hg/Ppsqrj4f
-         tTkGNqUHzu1ME/j+1KW+UX/Mq8Wfi1exK1r7ovbZ2Wp3dr3UC+CWC5eXxhU3XVaywvoF
-         x0KWWUbHhesCBSKWMhkEd/y0yawVrvdmLUDZt5NolHjsYMGxwhk2tKU5A/TyMpVciHoG
-         P69EJSCzCpzsDpVuXEQPZ6xsWRyI7XsbWABMB8i6DujvwmUurdhFxTfMnYfe45rwd4gq
-         trEAtYlOWNigxdbiC0/+zlvXJTvCqsJgWER8cVIiIX2NIB4/Rk7OEoGY7FK/J9mIwUV+
-         eMQA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:sender:x-gm-message-state:from:to:cc:subject:date;
-        bh=2zbl9tgj4NFm7PKmvB7l9G8vYBtZS9R+8WUfma5ExAI=;
-        b=xxS7ed/DHV6vyNq9mU36Mghna211Tc2sSrjiVDSj09+dSCUS0bfBbhio+NWFgweB7O
-         GG7pHGp6ejEEXX/a5uMLbtcPQV91kMpvoD7Oj5RpQEeRIl9owenHLLapqnP+1+008Hzo
-         NGanE0qGBC0Vb3slOfK77vi4+6iUAPZgEKym023w3zDKk554vcaFHVC7ETcunXkrcpIN
-         MvwKLSXIAPyDUnshKdhwRTbigteZvC7Kogb/T6NI+y8NMtTqsu2X5nOJb4g02ISPVkxP
-         sDdnyvWJ7c/VJxkXm+NFgKiTL2T0lY4I0E1UdrKAlQ4TvPqGXMKi9pZ+ct73ZZd2c6N5
-         Oo0A==
-X-Gm-Message-State: ACrzQf0v3L7bytixqpwryq8u6piNPXhD/deVUPNz7EnZf28p2tw3RqUS
-        WlTiA5k1ETMsq+M+VoqCzyXSfmn0S4w=
-X-Google-Smtp-Source: AMsMyM6wrlwxHyHurrkjoPuow6mGwsc8PMAfGjNdtWn7WGiVInHdHgDaBVr6v3pesSu6JSe+8by7Dg==
-X-Received: by 2002:a17:902:7887:b0:178:5e8a:e84e with SMTP id q7-20020a170902788700b001785e8ae84emr1600930pll.64.1663821625529;
-        Wed, 21 Sep 2022 21:40:25 -0700 (PDT)
-Received: from balhae.hsd1.ca.comcast.net ([2601:647:6780:1040:796c:caf8:4dcf:320d])
-        by smtp.gmail.com with ESMTPSA id 207-20020a6215d8000000b00537a6b81bb7sm3183996pfv.148.2022.09.21.21.40.24
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 21 Sep 2022 21:40:25 -0700 (PDT)
-Sender: Namhyung Kim <namhyung@gmail.com>
-From:   Namhyung Kim <namhyung@kernel.org>
-To:     Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Jiri Olsa <jolsa@kernel.org>
-Cc:     Ingo Molnar <mingo@kernel.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Ian Rogers <irogers@google.com>,
-        Adrian Hunter <adrian.hunter@intel.com>,
-        linux-perf-users@vger.kernel.org, Song Liu <songliubraving@fb.com>,
-        bpf@vger.kernel.org
-Subject: [PATCH v2] perf tools: Get a perf cgroup more portably in BPF
-Date:   Wed, 21 Sep 2022 21:40:23 -0700
-Message-Id: <20220922044023.718774-1-namhyung@kernel.org>
-X-Mailer: git-send-email 2.37.3.968.ga6b4b080e4-goog
+        Thu, 22 Sep 2022 01:14:38 -0400
+Received: from mga14.intel.com (mga14.intel.com [192.55.52.115])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B4D0A219C;
+        Wed, 21 Sep 2022 22:14:31 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1663823671; x=1695359671;
+  h=message-id:date:mime-version:subject:to:cc:references:
+   from:in-reply-to:content-transfer-encoding;
+  bh=zC6PcP2Pk3U5wJWfNPK4xATjAh3qkoLjBspqX0UOKOg=;
+  b=WE6IHJ0r6Bx1LdJctbVsu0tLW14r3xi8UZiASv33TNx925fpXGmxm9zS
+   oedzmPI4Rk6rncveHh3g0Z7Yqxy5rl28XE979Q0sNdBB9pqLV4ALjKPzV
+   b2tdqTOE5BkX86//kAD3Wf0wXa0GgeBDtIwpWZnc4XyungE3lIoixhlDO
+   W+4JBTYP45UKNuS80Y/VUI6N0DN9wtlVXowXjWMyOqgHpwefXAqxY7Ack
+   kMC6k5JF8xwnCosYwbehNSt8REfiIWM5Ee7qF7KpHYC1Xu73zd5BFk28G
+   fb0IAI0ZZCA1WQiYw3LR7J49UgoVoKdOi+48D52RumADcMIP1NKasTmXA
+   Q==;
+X-IronPort-AV: E=McAfee;i="6500,9779,10477"; a="300184561"
+X-IronPort-AV: E=Sophos;i="5.93,335,1654585200"; 
+   d="scan'208";a="300184561"
+Received: from fmsmga007.fm.intel.com ([10.253.24.52])
+  by fmsmga103.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 21 Sep 2022 22:14:20 -0700
+X-IronPort-AV: E=Sophos;i="5.93,335,1654585200"; 
+   d="scan'208";a="621954846"
+Received: from xiaoyaol-hp-g830.ccr.corp.intel.com (HELO [10.255.28.71]) ([10.255.28.71])
+  by fmsmga007-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 21 Sep 2022 22:14:17 -0700
+Message-ID: <fe1f67be-86ba-3cd3-6396-ddd52a021f1e@intel.com>
+Date:   Thu, 22 Sep 2022 13:14:13 +0800
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:102.0) Gecko/20100101
+ Firefox/102.0 Thunderbird/102.2.2
+Subject: Re: [RFC PATCH v2 2/3] perf/x86/intel/pt: Introduce and export
+ pt_get_curr_event()
+Content-Language: en-US
+To:     Peter Zijlstra <peterz@infradead.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        Arnaldo Carvalho de Melo <acme@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Jiri Olsa <jolsa@kernel.org>,
+        Namhyung Kim <namhyung@kernel.org>,
+        Sean Christopherson <seanjc@google.com>,
+        Paolo Bonzini <pbonzini@redhat.com>, wei.w.wang@intel.com,
+        kan.liang@linux.intel.com
+Cc:     linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org,
+        kvm@vger.kernel.org
+References: <20220921164521.2858932-1-xiaoyao.li@intel.com>
+ <20220921164521.2858932-3-xiaoyao.li@intel.com>
+From:   Xiaoyao Li <xiaoyao.li@intel.com>
+In-Reply-To: <20220921164521.2858932-3-xiaoyao.li@intel.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-The perf_event_cgrp_id can be different on other configurations.
-To be more portable as CO-RE, it needs to get the cgroup subsys id
-using the bpf_core_enum_value() helper.
+On 9/22/2022 12:45 AM, Xiaoyao Li wrote:
+> KVM supports PT_MODE_HOST_GUEST mode for Intel PT where host and guest
+> have separate Intel PT configurations and they work independently.
+> 
+> Currently, in this mode, when both host and guest enable PT, KVM manually
+> clears MSR_IA32_RTIT_CTL.TRACEEN to disable host PT so that it can
+> context switch the other PT MSRs. However, PT PMI can be delivered after
+> this point and before the VM-entry. As a result, the re-enabling of PT
+> leads to VM-entry failure of guest.
+> 
+> To solve the problem, introduce and export pt_get_curr_event() for KVM
+> to get current pt event. Along with perf_event_{dis, en}able_local(),
+> With them, KVM can avoid PT re-enabling in PT PMI handler.
+> 
+> Signed-off-by: Xiaoyao Li <xiaoyao.li@intel.com>
+> ---
+>   arch/x86/events/intel/pt.c        | 8 ++++++++
+>   arch/x86/include/asm/perf_event.h | 2 ++
+>   2 files changed, 10 insertions(+)
+> 
+> diff --git a/arch/x86/events/intel/pt.c b/arch/x86/events/intel/pt.c
+> index 82ef87e9a897..62bfc45c11c9 100644
+> --- a/arch/x86/events/intel/pt.c
+> +++ b/arch/x86/events/intel/pt.c
+> @@ -1624,6 +1624,14 @@ static void pt_event_stop(struct perf_event *event, int mode)
+>   	}
+>   }
+>   
+> +struct perf_event *pt_get_curr_event(void)
+> +{
+> +	struct pt *pt = this_cpu_ptr(&pt_ctx);
+> +
+> +	return pt->handle.event;
+> +}
+> +EXPORT_SYMBOL_GPL(pt_get_curr_event);
+> +
+>   static long pt_event_snapshot_aux(struct perf_event *event,
+>   				  struct perf_output_handle *handle,
+>   				  unsigned long size)
+> diff --git a/arch/x86/include/asm/perf_event.h b/arch/x86/include/asm/perf_event.h
+> index f6fc8dd51ef4..7c3533392cf5 100644
+> --- a/arch/x86/include/asm/perf_event.h
+> +++ b/arch/x86/include/asm/perf_event.h
+> @@ -553,11 +553,13 @@ static inline int x86_perf_get_lbr(struct x86_pmu_lbr *lbr)
+>   
+>   #ifdef CONFIG_CPU_SUP_INTEL
+>    extern void intel_pt_handle_vmx(int on);
+> + extern struct perf_event *pt_get_curr_event(void);
+>   #else
+>   static inline void intel_pt_handle_vmx(int on)
+>   {
+>   
+>   }
+> +struct perf_event *pt_get_curr_event(void) { return NULL; }
 
-Suggested-by: Ian Rogers <irogers@google.com>
-Signed-off-by: Namhyung Kim <namhyung@kernel.org>
----
-v2 changes)
- * fix off_cpu.bpf.c too
- * get perf_subsys_id only once
+My fault, this needs to be
 
- tools/perf/util/bpf_skel/bperf_cgroup.bpf.c |  6 +++++-
- tools/perf/util/bpf_skel/off_cpu.bpf.c      | 12 ++++++++----
- 2 files changed, 13 insertions(+), 5 deletions(-)
+   static inline ...
 
-diff --git a/tools/perf/util/bpf_skel/bperf_cgroup.bpf.c b/tools/perf/util/bpf_skel/bperf_cgroup.bpf.c
-index 292c430768b5..9223e4b87fe9 100644
---- a/tools/perf/util/bpf_skel/bperf_cgroup.bpf.c
-+++ b/tools/perf/util/bpf_skel/bperf_cgroup.bpf.c
-@@ -48,6 +48,7 @@ const volatile __u32 num_cpus = 1;
- 
- int enabled = 0;
- int use_cgroup_v2 = 0;
-+int perf_subsys_id = -1;
- 
- static inline int get_cgroup_v1_idx(__u32 *cgrps, int size)
- {
-@@ -58,7 +59,10 @@ static inline int get_cgroup_v1_idx(__u32 *cgrps, int size)
- 	int level;
- 	int cnt;
- 
--	cgrp = BPF_CORE_READ(p, cgroups, subsys[perf_event_cgrp_id], cgroup);
-+	if (perf_subsys_id == -1)
-+		perf_subsys_id = bpf_core_enum_value(enum cgroup_subsys_id, perf_event_cgrp_id);
-+
-+	cgrp = BPF_CORE_READ(p, cgroups, subsys[perf_subsys_id], cgroup);
- 	level = BPF_CORE_READ(cgrp, level);
- 
- 	for (cnt = 0; i < MAX_LEVELS; i++) {
-diff --git a/tools/perf/util/bpf_skel/off_cpu.bpf.c b/tools/perf/util/bpf_skel/off_cpu.bpf.c
-index c4ba2bcf179f..e917ef7b8875 100644
---- a/tools/perf/util/bpf_skel/off_cpu.bpf.c
-+++ b/tools/perf/util/bpf_skel/off_cpu.bpf.c
-@@ -94,6 +94,8 @@ const volatile bool has_prev_state = false;
- const volatile bool needs_cgroup = false;
- const volatile bool uses_cgroup_v1 = false;
- 
-+int perf_subsys_id = -1;
-+
- /*
-  * Old kernel used to call it task_struct->state and now it's '__state'.
-  * Use BPF CO-RE "ignored suffix rule" to deal with it like below:
-@@ -119,11 +121,13 @@ static inline __u64 get_cgroup_id(struct task_struct *t)
- {
- 	struct cgroup *cgrp;
- 
--	if (uses_cgroup_v1)
--		cgrp = BPF_CORE_READ(t, cgroups, subsys[perf_event_cgrp_id], cgroup);
--	else
--		cgrp = BPF_CORE_READ(t, cgroups, dfl_cgrp);
-+	if (!uses_cgroup_v1)
-+		return BPF_CORE_READ(t, cgroups, dfl_cgrp, kn, id);
-+
-+	if (perf_subsys_id == -1)
-+		perf_subsys_id = bpf_core_enum_value(enum cgroup_subsys_id, perf_event_cgrp_id);
- 
-+	cgrp = BPF_CORE_READ(t, cgroups, subsys[perf_subsys_id], cgroup);
- 	return BPF_CORE_READ(cgrp, kn, id);
- }
- 
--- 
-2.37.3.968.ga6b4b080e4-goog
+>   #endif
+>   
+>   #if defined(CONFIG_PERF_EVENTS) && defined(CONFIG_CPU_SUP_AMD)
 
