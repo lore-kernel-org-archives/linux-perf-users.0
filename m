@@ -2,252 +2,169 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 57810C54EE9
-	for <linux-perf-users@archiver.kernel.org>; Thu, 22 Sep 2022 23:44:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4479CC54EE9
+	for <linux-perf-users@archiver.kernel.org>; Thu, 22 Sep 2022 23:55:20 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229611AbiIVXoa (ORCPT
+        id S229552AbiIVXzS (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Thu, 22 Sep 2022 19:44:30 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46094 "EHLO
+        Thu, 22 Sep 2022 19:55:18 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56574 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229543AbiIVXo3 (ORCPT
+        with ESMTP id S229731AbiIVXzR (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Thu, 22 Sep 2022 19:44:29 -0400
-Received: from mail-wr1-x42f.google.com (mail-wr1-x42f.google.com [IPv6:2a00:1450:4864:20::42f])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id AA14BF3F8C
-        for <linux-perf-users@vger.kernel.org>; Thu, 22 Sep 2022 16:44:27 -0700 (PDT)
-Received: by mail-wr1-x42f.google.com with SMTP id cc5so17899893wrb.6
-        for <linux-perf-users@vger.kernel.org>; Thu, 22 Sep 2022 16:44:27 -0700 (PDT)
+        Thu, 22 Sep 2022 19:55:17 -0400
+Received: from mail-wr1-x431.google.com (mail-wr1-x431.google.com [IPv6:2a00:1450:4864:20::431])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1935CABD46
+        for <linux-perf-users@vger.kernel.org>; Thu, 22 Sep 2022 16:55:16 -0700 (PDT)
+Received: by mail-wr1-x431.google.com with SMTP id s14so15923397wro.0
+        for <linux-perf-users@vger.kernel.org>; Thu, 22 Sep 2022 16:55:16 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=google.com; s=20210112;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date;
-        bh=ggfQdZjdAa827c+Q4ONwD92LhyjF+5a7nbXBS1iOpTY=;
-        b=UoEi3MQn1jWoFQNi3yggMKvZSsegg+k/b5oSYr33gLv/xFYjj/t2xVeqaVXeGHrDdI
-         8Y1EpUmdZtf84zjg8pimx/RdJs4t6qJQGioUXmsp5/rrzqra2Gg51/ercWI1cTfKgMqK
-         3oEbcI7BrUzRUFo1h/mWTC5WacY3a+WyNMvwegu8CS2VoVgkiwci5JHJ9UPb171lti7/
-         6D3ZxQm7tUd+gdPO+6pG91nUyVvyOMLsC4nQ4pTASdKHh61m5NbA41ey5Ulv+pfEBuio
-         DTcOel87mocnGxW6Lr9PU/AoGmttIA8bCaoKybDAzwOTRq/pQtcEvonlfyF3VmKRLMNo
-         e6eA==
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:from:to:cc:subject:date;
+        bh=pEWu0cZtC5bQpAC76TrU39sQH99ByOhozrqgLO6bDiY=;
+        b=VbDDokghUbDy1JsHhqfa5yfdgJSLZ3Zmy3hLc51e8fTubphxO+9Kx5uT6HpTyl07XU
+         mvn/zOgEdbQiQE46fEE3ttFLIJmdlsVwErTFarnQwHzO98VEgaTaM901wB/JzYkndOpJ
+         xtT/rLZIpPXY3j/re8io1Od+IgjlvCkpjnN/dleCybU1IpQ52MjVAtgnBvGB/nuRTa6n
+         A8GDTTnWnWUO7eIFSDkWkYNjLhe+HXfcOuTeHMHrTvRYB4wvORri4cjFF5rvEeRI32ET
+         0XshsKczKYPZY2prXjhbOpJSDkagtNXdQ3BP740Tr1Iui75SwL2L8AyQFHz5vESZHBaW
+         MNEg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date;
-        bh=ggfQdZjdAa827c+Q4ONwD92LhyjF+5a7nbXBS1iOpTY=;
-        b=aEoYHVXRo0QeraYlXinAcFT5pHeK3Pin/LtuG8f2yj7VdgPpD7pc+w7cAYo3MHikGY
-         xcHgX3afqyI6LDHYbSwvqxzfOrLldai/UR+ii/77Kd2mJ0vv0gIr5vXpug6t6CjidXiy
-         2za16sbkTC9PwlzOfTO/rEFkJ5ZCT+D9XJ81eXL4CFPtd68b06it6aUZozGnLPJwQofq
-         EXQpttw64UfuVNHrOWu5Uo2ygUlsMwAnPLOmGycR8NjtcQCI9KW+FPSl4YdOWLogYDjn
-         CIk2bgTT5eIifCy8Kn+zP/eKINDU/X/Qe3G0Sf4/trHV9ZtRpS1OLw/nS5jLwb0oZFGM
-         45Ag==
-X-Gm-Message-State: ACrzQf1XuXh3sCOqvAEpDP4h7KFqC3dMm7IHYIvm7gHUhDtuwmeDNqci
-        Wxo8lGvmEkWF03qb1JE1IbwU1VSU+h8lVrRWsR4R6A==
-X-Google-Smtp-Source: AMsMyM6u/WuV0WiMixUedkRzYEe96mN+MeHLvNablSRwk/fwFB2OjE5y3sinLKe2odHdb8bGijJ50rWnK5BJOLHuSjM=
-X-Received: by 2002:adf:dd8f:0:b0:22a:84ab:4be3 with SMTP id
- x15-20020adfdd8f000000b0022a84ab4be3mr3444502wrl.40.1663890265884; Thu, 22
- Sep 2022 16:44:25 -0700 (PDT)
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:x-gm-message-state:from:to:cc:subject:date;
+        bh=pEWu0cZtC5bQpAC76TrU39sQH99ByOhozrqgLO6bDiY=;
+        b=odAq8TYzhIJ1FWkGONOKlAY06LrNprK3arzAHEPxpxXatpifbl22z9vysjPnPE939m
+         97vJCzOSVb3ILd5Hyj5GGYLsJzCs97cSmd0ONUk1NQD2oSvZNt+pKOeVAfRfSbJSim8o
+         QqTaZ4o3bMczjsJrn92jbCiLfu9+pFKqZ4HE/Pcr0bqEWl4pmjKQcv46LHRk6EfoQ2b0
+         CgWBOIFvq5zk0A6mDlWVl8h4nnbTlCjQxsHvnocqcoGVW00G+y5Cb7kEPKRS5fVfHrkw
+         QJv7R4QXVN16vciYQewFQqlDyzBNTEu6BxkqHuqQfPM+sPB5zFO5pq867LJ7PwTuzmhE
+         oCYA==
+X-Gm-Message-State: ACrzQf0RMXc6PYGk1M+L9D6r/f9AfFdqlv6bex/1lpUh/AnD+/HELkdZ
+        PzZlFd4TIqrDreVmIN8sJUaSKcvS4NApNM/X7mMPhA==
+X-Google-Smtp-Source: AMsMyM5Qi2LT6ix2nu/U4IhNet2x4RTrWqRtFFV77MrwTaOEvv3GkW+VUYr+2y0IZOBSSUdcGRhIJcxQVyOgcFdbwc4=
+X-Received: by 2002:adf:e4ca:0:b0:228:d8b7:48a7 with SMTP id
+ v10-20020adfe4ca000000b00228d8b748a7mr3377917wrm.300.1663890914444; Thu, 22
+ Sep 2022 16:55:14 -0700 (PDT)
 MIME-Version: 1.0
-References: <20220921170839.21927-1-atrajeev@linux.vnet.ibm.com> <Yyy0W6CnPk7BkkCU@kernel.org>
-In-Reply-To: <Yyy0W6CnPk7BkkCU@kernel.org>
+References: <20220922205302.749274-1-namhyung@kernel.org>
+In-Reply-To: <20220922205302.749274-1-namhyung@kernel.org>
 From:   Ian Rogers <irogers@google.com>
-Date:   Thu, 22 Sep 2022 16:44:13 -0700
-Message-ID: <CAP-5=fUnmVXds0eR3x3u17VQHZJ_7Q5+yhpXhq1-542d6g1ezA@mail.gmail.com>
-Subject: Re: [PATCH 1/2] tools/perf/tests: Fix string substitutions in build
- id test
-To:     Arnaldo Carvalho de Melo <acme@kernel.org>
-Cc:     Athira Rajeev <atrajeev@linux.vnet.ibm.com>,
-        Jiri Olsa <jolsa@kernel.org>, mpe@ellerman.id.au,
-        linux-perf-users@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
-        maddy@linux.vnet.ibm.com, rnsastry@linux.ibm.com,
-        kjain@linux.ibm.com, disgoel@linux.vnet.ibm.com,
-        Adrian Hunter <adrian.hunter@intel.com>
+Date:   Thu, 22 Sep 2022 16:55:02 -0700
+Message-ID: <CAP-5=fXAS+QpkncLqLeS=MOeqOyrFy3Gev=F8vet4r6xjmCJ4g@mail.gmail.com>
+Subject: Re: [PATCH v3] perf tools: Get a perf cgroup more portably in BPF
+To:     Namhyung Kim <namhyung@kernel.org>
+Cc:     Arnaldo Carvalho de Melo <acme@kernel.org>,
+        Jiri Olsa <jolsa@kernel.org>, Ingo Molnar <mingo@kernel.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Adrian Hunter <adrian.hunter@intel.com>,
+        linux-perf-users@vger.kernel.org, Song Liu <songliubraving@fb.com>,
+        Hao Luo <haoluo@google.com>, bpf@vger.kernel.org
 Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-On Thu, Sep 22, 2022 at 12:15 PM Arnaldo Carvalho de Melo
-<acme@kernel.org> wrote:
+On Thu, Sep 22, 2022 at 1:53 PM Namhyung Kim <namhyung@kernel.org> wrote:
 >
-> Em Wed, Sep 21, 2022 at 10:38:38PM +0530, Athira Rajeev escreveu:
-> > The perf test named =E2=80=9Cbuild id cache operations=E2=80=9D skips w=
-ith below
-> > error on some distros:
+> The perf_event_cgrp_id can be different on other configurations.
+> To be more portable as CO-RE, it needs to get the cgroup subsys id
+> using the bpf_core_enum_value() helper.
 >
-> I wonder if we shouldn't instead state that bash is needed?
+> Suggested-by: Ian Rogers <irogers@google.com>
+> Signed-off-by: Namhyung Kim <namhyung@kernel.org>
+> ---
+> v3 changes)
+>  * check compiler features for enum value
 >
-> =E2=AC=A2[acme@toolbox perf-urgent]$ head -1 tools/perf/tests/shell/*.sh =
-| grep ^#
-> #!/bin/sh
-> #!/bin/bash
-> #!/bin/sh
-> #!/bin/sh
-> #!/bin/sh
-> #!/bin/sh
-> #!/bin/sh
-> #!/bin/sh
-> #!/bin/sh
-> #!/bin/sh
-> #!/bin/bash
-> #!/bin/sh
-> #!/bin/sh
-> #!/bin/sh
-> #!/bin/bash
-> #!/bin/sh
-> #!/bin/bash
-> #!/bin/sh
-> #!/bin/sh
-> #!/bin/sh
-> #!/bin/sh
-> #!/bin/sh
-> #!/bin/sh
-> #!/bin/sh
-> #!/bin/sh
-> #!/bin/sh
-> =E2=AC=A2[acme@toolbox perf-urgent]$
+> v2 changes)
+>  * fix off_cpu.bpf.c too
+>  * get perf_subsys_id only once
 >
-> Opinions?
+>  tools/perf/util/bpf_skel/bperf_cgroup.bpf.c | 11 ++++++++++-
+>  tools/perf/util/bpf_skel/off_cpu.bpf.c      | 12 ++++++++----
+>  2 files changed, 18 insertions(+), 5 deletions(-)
+>
+> diff --git a/tools/perf/util/bpf_skel/bperf_cgroup.bpf.c b/tools/perf/util/bpf_skel/bperf_cgroup.bpf.c
+> index 292c430768b5..8e7520e273db 100644
+> --- a/tools/perf/util/bpf_skel/bperf_cgroup.bpf.c
+> +++ b/tools/perf/util/bpf_skel/bperf_cgroup.bpf.c
+> @@ -48,6 +48,7 @@ const volatile __u32 num_cpus = 1;
+>
+>  int enabled = 0;
+>  int use_cgroup_v2 = 0;
+> +int perf_subsys_id = -1;
+>
+>  static inline int get_cgroup_v1_idx(__u32 *cgrps, int size)
+>  {
+> @@ -58,7 +59,15 @@ static inline int get_cgroup_v1_idx(__u32 *cgrps, int size)
+>         int level;
+>         int cnt;
+>
+> -       cgrp = BPF_CORE_READ(p, cgroups, subsys[perf_event_cgrp_id], cgroup);
+> +       if (perf_subsys_id == -1) {
+> +#if __has_builtin(__builtin_preserve_enum_value)
+> +               perf_subsys_id = bpf_core_enum_value(enum cgroup_subsys_id,
+> +                                                    perf_event_cgrp_id);
+> +#else
+> +               perf_subsys_id = perf_event_cgrp_id;
+> +#endif
+> +       }
+> +       cgrp = BPF_CORE_READ(p, cgroups, subsys[perf_subsys_id], cgroup);
+>         level = BPF_CORE_READ(cgrp, level);
+>
+>         for (cnt = 0; i < MAX_LEVELS; i++) {
+> diff --git a/tools/perf/util/bpf_skel/off_cpu.bpf.c b/tools/perf/util/bpf_skel/off_cpu.bpf.c
+> index c4ba2bcf179f..e917ef7b8875 100644
+> --- a/tools/perf/util/bpf_skel/off_cpu.bpf.c
+> +++ b/tools/perf/util/bpf_skel/off_cpu.bpf.c
+> @@ -94,6 +94,8 @@ const volatile bool has_prev_state = false;
+>  const volatile bool needs_cgroup = false;
+>  const volatile bool uses_cgroup_v1 = false;
+>
+> +int perf_subsys_id = -1;
+> +
+>  /*
+>   * Old kernel used to call it task_struct->state and now it's '__state'.
+>   * Use BPF CO-RE "ignored suffix rule" to deal with it like below:
+> @@ -119,11 +121,13 @@ static inline __u64 get_cgroup_id(struct task_struct *t)
+>  {
+>         struct cgroup *cgrp;
+>
+> -       if (uses_cgroup_v1)
+> -               cgrp = BPF_CORE_READ(t, cgroups, subsys[perf_event_cgrp_id], cgroup);
+> -       else
+> -               cgrp = BPF_CORE_READ(t, cgroups, dfl_cgrp);
+> +       if (!uses_cgroup_v1)
+> +               return BPF_CORE_READ(t, cgroups, dfl_cgrp, kn, id);
+> +
+> +       if (perf_subsys_id == -1)
+> +               perf_subsys_id = bpf_core_enum_value(enum cgroup_subsys_id, perf_event_cgrp_id);
 
-+1 to bash. Perhaps python longer term?  The XML test output generated
-by things like kunit is possible to generate from either bash or
-python, but in my experience the python stuff feels better built.
+Should the "#if __has_builtin(__builtin_preserve_enum_value)" test also be here?
+
+It feels a shame that bpf_core_enum_value isn't defined something like:
+
+#if __has_builtin(__builtin_preserve_enum_value)
+#define bpf_core_enum_value(enum_type, enum_value) \
+__builtin_preserve_enum_value(*(typeof(enum_type) *)enum_value,
+BPF_ENUMVAL_VALUE)
+#else
+#define bpf_core_enum_value(enum_type, enum_value) enum_value
+#endif
+
+for backward clang compatibility, but I could see why an error would
+be preferable.
 
 Thanks,
 Ian
 
-> - Arnaldo
 >
-> > <<>>
-> >  78: build id cache operations                                       :
-> > test child forked, pid 111101
-> > WARNING: wine not found. PE binaries will not be run.
-> > test binaries: /tmp/perf.ex.SHA1.PKz /tmp/perf.ex.MD5.Gt3 ./tests/shell=
-/../pe-file.exe
-> > DEBUGINFOD_URLS=3D
-> > Adding 4abd406f041feb4f10ecde3fc30fd0639e1a91cb /tmp/perf.ex.SHA1.PKz: =
-Ok
-> > build id: 4abd406f041feb4f10ecde3fc30fd0639e1a91cb
-> > ./tests/shell/buildid.sh: 69: ./tests/shell/buildid.sh: Bad substitutio=
-n
-> > test child finished with -2
-> > build id cache operations: Skip
-> > <<>>
-> >
-> > The test script "tests/shell/buildid.sh" uses some of the
-> > string substitution ways which are supported in bash, but not in
-> > "sh" or other shells. Above error on line number 69 that reports
-> > "Bad substitution" is:
-> >
-> > <<>>
-> > link=3D${build_id_dir}/.build-id/${id:0:2}/${id:2}
-> > <<>>
-> >
-> > Here the way of getting first two characters from id ie,
-> > ${id:0:2} and similarly expressions like ${id:2} is not
-> > recognised in "sh". So the line errors and instead of
-> > hitting failure, the test gets skipped as shown in logs.
-> > So the syntax issue causes test not to be executed in
-> > such cases. Similarly usage : "${@: -1}" [ to pick last
-> > argument passed to a function] in =E2=80=9Ctest_record=E2=80=9D doesn=
-=E2=80=99t
-> > work in all distros.
-> >
-> > Fix this by using alternative way with "cut" command
-> > to pick "n" characters from the string. Also fix the usage
-> > of =E2=80=9C${@: -1}=E2=80=9D to work in all cases.
-> >
-> > Another usage in =E2=80=9Ctest_record=E2=80=9D is:
-> > <<>>
-> > ${perf} record --buildid-all -o ${data} $@ &> ${log}
-> > <<>>
-> >
-> > This causes the perf record to start in background and
-> > Results in the data file not being created by the time
-> > "check" function is invoked. Below log shows perf record
-> > result getting displayed after the call to "check" function.
-> >
-> > <<>>
-> > running: perf record /tmp/perf.ex.SHA1.EAU
-> > build id: 4abd406f041feb4f10ecde3fc30fd0639e1a91cb
-> > link: /tmp/perf.debug.mLT/.build-id/4a/bd406f041feb4f10ecde3fc30fd0639e=
-1a91cb
-> > failed: link /tmp/perf.debug.mLT/.build-id/4a/bd406f041feb4f10ecde3fc30=
-fd0639e1a91cb does not exist
-> > test child finished with -1
-> > build id cache operations: FAILED!
-> > root@machine:~/athira/linux/tools/perf# Couldn't synthesize bpf events.
-> > [ perf record: Woken up 1 times to write data ]
-> > [ perf record: Captured and wrote 0.010 MB /tmp/perf.data.bFF ]
-> > <<>>
-> >
-> > Fix this by redirecting output instead of using =E2=80=9C&=E2=80=9D whi=
-ch
-> > starts the command in background.
-> >
-> > Signed-off-by: Athira Rajeev <atrajeev@linux.vnet.ibm.com>
-> > ---
-> >  tools/perf/tests/shell/buildid.sh | 16 +++++++++-------
-> >  1 file changed, 9 insertions(+), 7 deletions(-)
-> >
-> > diff --git a/tools/perf/tests/shell/buildid.sh b/tools/perf/tests/shell=
-/buildid.sh
-> > index f05670d1e39e..3512c4423d48 100755
-> > --- a/tools/perf/tests/shell/buildid.sh
-> > +++ b/tools/perf/tests/shell/buildid.sh
-> > @@ -66,7 +66,7 @@ check()
-> >       esac
-> >       echo "build id: ${id}"
-> >
-> > -     link=3D${build_id_dir}/.build-id/${id:0:2}/${id:2}
-> > +     link=3D${build_id_dir}/.build-id/$(echo ${id}|cut -c 1-2)/$(echo =
-${id}|cut -c 3-)
-> >       echo "link: ${link}"
-> >
-> >       if [ ! -h $link ]; then
-> > @@ -74,7 +74,7 @@ check()
-> >               exit 1
-> >       fi
-> >
-> > -     file=3D${build_id_dir}/.build-id/${id:0:2}/`readlink ${link}`/elf
-> > +     file=3D${build_id_dir}/.build-id/$(echo ${id}|cut -c 1-2)/`readli=
-nk ${link}`/elf
-> >       echo "file: ${file}"
-> >
-> >       if [ ! -x $file ]; then
-> > @@ -117,20 +117,22 @@ test_record()
-> >  {
-> >       data=3D$(mktemp /tmp/perf.data.XXX)
-> >       build_id_dir=3D$(mktemp -d /tmp/perf.debug.XXX)
-> > -     log=3D$(mktemp /tmp/perf.log.XXX)
-> > +     log_out=3D$(mktemp /tmp/perf.log.out.XXX)
-> > +     log_err=3D$(mktemp /tmp/perf.log.err.XXX)
-> >       perf=3D"perf --buildid-dir ${build_id_dir}"
-> > +     eval last=3D\${$#}
-> >
-> >       echo "running: perf record $@"
-> > -     ${perf} record --buildid-all -o ${data} $@ &> ${log}
-> > +     ${perf} record --buildid-all -o ${data} $@ 1>${log_out} 2>${log_e=
-rr}
-> >       if [ $? -ne 0 ]; then
-> >               echo "failed: record $@"
-> > -             echo "see log: ${log}"
-> > +             echo "see log: ${log_err}"
-> >               exit 1
-> >       fi
-> >
-> > -     check ${@: -1}
-> > +     check $last
-> >
-> > -     rm -f ${log}
-> > +     rm -f ${log_out} ${log_err}
-> >       rm -rf ${build_id_dir}
-> >       rm -rf ${data}
-> >  }
-> > --
-> > 2.17.1
+> +       cgrp = BPF_CORE_READ(t, cgroups, subsys[perf_subsys_id], cgroup);
+>         return BPF_CORE_READ(cgrp, kn, id);
+>  }
 >
 > --
+> 2.37.3.998.g577e59143f-goog
 >
-> - Arnaldo
