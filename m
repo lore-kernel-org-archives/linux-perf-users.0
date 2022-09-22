@@ -2,204 +2,97 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C7477C6FA82
-	for <linux-perf-users@archiver.kernel.org>; Thu, 22 Sep 2022 08:04:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D8D4CC6FA82
+	for <linux-perf-users@archiver.kernel.org>; Thu, 22 Sep 2022 08:08:01 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229492AbiIVIEJ (ORCPT
+        id S229973AbiIVIIA (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Thu, 22 Sep 2022 04:04:09 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38544 "EHLO
+        Thu, 22 Sep 2022 04:08:00 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46628 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229646AbiIVIEI (ORCPT
+        with ESMTP id S229814AbiIVIH7 (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Thu, 22 Sep 2022 04:04:08 -0400
-Received: from mga01.intel.com (mga01.intel.com [192.55.52.88])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3B82D20368;
-        Thu, 22 Sep 2022 01:04:06 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1663833846; x=1695369846;
-  h=message-id:date:mime-version:subject:to:cc:references:
-   from:in-reply-to:content-transfer-encoding;
-  bh=swqLIFUJLee+tTUNcuKbWi4nltLV2M9jqpih8qTBSjc=;
-  b=L6cS3v8xQ9C3OuvniTgIIx9mpZhQr/suDJSMKSrRVZD6XtfdWI7S+NbM
-   HNhri8Gg6heid9Zr08WbElQtWIQVVvTYyAPMfwUnMMrArErxR93bsZ5ew
-   2ko9ivVKffybdi2cPe35MzexcFVR4olr0DUKW4UrKglAWSPeUERBakPF0
-   MjbiQoLJcVisy1RzjIndnadOgkd2PPOJtvszKAFVgyjOYkl15eIef6ljx
-   j1BxweC6Mnjxs0UXXyb+4hXa3pMPufElattyFT30daNlWA7m/tqPO3Vsc
-   KPkVNNI0wiw8JWXeo2CS9Uoq/MivDmtsrmBa0g20OVaERYwPMl/A3GNiF
-   w==;
-X-IronPort-AV: E=McAfee;i="6500,9779,10477"; a="326551134"
-X-IronPort-AV: E=Sophos;i="5.93,335,1654585200"; 
-   d="scan'208";a="326551134"
-Received: from fmsmga007.fm.intel.com ([10.253.24.52])
-  by fmsmga101.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 22 Sep 2022 01:04:05 -0700
-X-IronPort-AV: E=Sophos;i="5.93,335,1654585200"; 
-   d="scan'208";a="622002962"
-Received: from xingzhen-mobl.ccr.corp.intel.com (HELO [10.238.4.231]) ([10.238.4.231])
-  by fmsmga007-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 22 Sep 2022 01:04:03 -0700
-Message-ID: <7837075e-54cf-3e59-f60f-eb62fca4a3c5@linux.intel.com>
-Date:   Thu, 22 Sep 2022 16:04:01 +0800
+        Thu, 22 Sep 2022 04:07:59 -0400
+Received: from mail-pf1-x42c.google.com (mail-pf1-x42c.google.com [IPv6:2607:f8b0:4864:20::42c])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0518BB40D9;
+        Thu, 22 Sep 2022 01:07:59 -0700 (PDT)
+Received: by mail-pf1-x42c.google.com with SMTP id a29so8535954pfk.5;
+        Thu, 22 Sep 2022 01:07:59 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20210112;
+        h=content-transfer-encoding:in-reply-to:from:references:cc:to
+         :content-language:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date;
+        bh=w6ltT1uP5vP/CBS8d2EROS3KCkX2BMDsjshfNpVyQag=;
+        b=pxZeD6HvRIQy8BwCK3k7EJX9w9Djy0iY80wmFoDn+r+0Wy4bUEsEubPYqM86VtHULP
+         vQsVbXhy92+KbBJpykLUQZwRlKvrhKzFQSOTA/q4JQhs9QsSvG3DF6QuQih5QE2YzSGz
+         MiCqkEIkqTNnoMPaTMPNPx8o+14epjGcm1UsnyCw9kzFUuAXcz7sm1XROGQxM2mWnbIT
+         Xt6B4JgxOL4OV3I352fjLZHRRxo5WksoEVYD+0Q6I+Ak7eONSewOGuR8eF3X3LdkbcEE
+         tcrnbobESb3oxdXciYQXx80CJA4xBgf21RLrZKtYPwTnp96XTBOi8vCYmWAeqCENnB4j
+         lT0Q==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=content-transfer-encoding:in-reply-to:from:references:cc:to
+         :content-language:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date;
+        bh=w6ltT1uP5vP/CBS8d2EROS3KCkX2BMDsjshfNpVyQag=;
+        b=svtyeLWB40pBfdFJA2eFFUSJmwGyEdvjO5oWYBidMkk9Rfgrg95nX5VhjeQ5l8Q3JA
+         R6iEdfeBV70qLjbFogMV33dGD1WrSuAhWBU+WObrmaXANNZiNng5LqkfJMoc8mEYbWHr
+         cfvDo0jxrBYMfp/yQV+Ci9CNL40KOEaeMkFUOEooZjzKe324MjYJuwYsyQMsiHIWC9Rp
+         yHdykK+KGJQ0WSkKdtIAXjJPRdQCCvuLU6DAjq7PmExyMjk8E8li6zSbg/JJfPXmwFDF
+         cXTVCgcqWeOMsPKXGY+y/mL5RoSSy+l00wxSQSCHIN4fDhEuAl7UJh0bSYVJ0ZSuJyAg
+         exLA==
+X-Gm-Message-State: ACrzQf1nZSyBzNQdKjqm2lN9M5xSy5jXpFVFcsh6UwnL+f+RzC7GcQj9
+        db00T9+xxXBVOxcTTyTmWK8=
+X-Google-Smtp-Source: AMsMyM7aHLhs9Uh7J/KHuj0dhOcvsXQKmn5lU/B9KcNRqyBGRcqB5wF7tVrBZ2ioxqhzN2BZbatyaA==
+X-Received: by 2002:a63:fd0c:0:b0:42b:93a2:af0b with SMTP id d12-20020a63fd0c000000b0042b93a2af0bmr1988098pgh.315.1663834078445;
+        Thu, 22 Sep 2022 01:07:58 -0700 (PDT)
+Received: from [192.168.255.10] ([103.7.29.32])
+        by smtp.gmail.com with ESMTPSA id v16-20020a63f210000000b0042a713dd68csm3154256pgh.53.2022.09.22.01.07.54
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 22 Sep 2022 01:07:57 -0700 (PDT)
+Message-ID: <ad2572d0-06b5-7250-31f2-a5efa1048cc0@gmail.com>
+Date:   Thu, 22 Sep 2022 16:07:45 +0800
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:102.0) Gecko/20100101
- Thunderbird/102.3.0
-Subject: Re: [PATCH 2/2] perf parse-events: Remove "not supported" hybrid
- cache events
+User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.15; rv:91.0)
+ Gecko/20100101 Thunderbird/91.13.1
+Subject: Re: [PATCH RFC 1/1] perf stat: do not fatal if the leader is errored
 Content-Language: en-US
-To:     Ian Rogers <irogers@google.com>
-Cc:     acme@kernel.org, peterz@infradead.org, mingo@redhat.com,
-        alexander.shishkin@intel.com, jolsa@kernel.org,
-        namhyung@kernel.org, linux-kernel@vger.kernel.org,
-        linux-perf-users@vger.kernel.org, ak@linux.intel.com,
-        kan.liang@linux.intel.com
-References: <20220922014904.3665674-1-zhengjun.xing@linux.intel.com>
- <20220922014904.3665674-2-zhengjun.xing@linux.intel.com>
- <CAP-5=fWhPAcbbws3H=VC7F3qnXv4hkbMd3rjk4_HtsBAQHPTTg@mail.gmail.com>
-From:   Xing Zhengjun <zhengjun.xing@linux.intel.com>
-In-Reply-To: <CAP-5=fWhPAcbbws3H=VC7F3qnXv4hkbMd3rjk4_HtsBAQHPTTg@mail.gmail.com>
+To:     Dongli Zhang <dongli.zhang@oracle.com>
+Cc:     linux-kernel@vger.kernel.org, peterz@infradead.org,
+        mingo@redhat.com, acme@kernel.org, mark.rutland@arm.com,
+        alexander.shishkin@linux.intel.com, jolsa@kernel.org,
+        namhyung@kernel.org, joe.jin@oracle.com,
+        linux-perf-users@vger.kernel.org, kvm list <kvm@vger.kernel.org>,
+        Kan Liang <kan.liang@linux.intel.com>
+References: <20220922071017.17398-1-dongli.zhang@oracle.com>
+From:   Like Xu <like.xu.linux@gmail.com>
+In-Reply-To: <20220922071017.17398-1-dongli.zhang@oracle.com>
 Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 7bit
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
+On 22/9/2022 3:10 pm, Dongli Zhang wrote:
+> There are three options to fix the issue.
+> 
+> 1. Do not expose /sys/bus/event_source/devices/cpu/events/slots to
+> userspace so that pmu_have_event(pmu->name, "slots") returns false.
 
+IMO, the guest PMU driver should be fixed
+since it misrepresents emulated hardware capabilities in terms of slots.
 
-On 9/22/2022 11:16 AM, Ian Rogers wrote:
-> On Wed, Sep 21, 2022 at 6:47 PM <zhengjun.xing@linux.intel.com> wrote:
->>
->> From: Zhengjun Xing <zhengjun.xing@linux.intel.com>
->>
->> By default, we create two hybrid cache events, one is for cpu_core, and
->> another is for cpu_atom. But Some hybrid hardware cache events are only
->> available on one CPU PMU. For example, the 'L1-dcache-load-misses' is only
->> available on cpu_core, while the 'L1-icache-loads' is only available on
->> cpu_atom. We need to remove "not supported" hybrid cache events. By
->> extending is_event_supported() to global API and using it to check if the
->> hybrid cache events are supported before being created, we can remove the
->> "not supported" hybrid cache events.
->>
->> Before:
->>
->>   # ./perf stat -e L1-dcache-load-misses,L1-icache-loads -a sleep 1
->>
->>   Performance counter stats for 'system wide':
->>
->>              52,570      cpu_core/L1-dcache-load-misses/
->>     <not supported>      cpu_atom/L1-dcache-load-misses/
->>     <not supported>      cpu_core/L1-icache-loads/
->>           1,471,817      cpu_atom/L1-icache-loads/
->>
->>         1.004915229 seconds time elapsed
->>
->> After:
->>
->>   # ./perf stat -e L1-dcache-load-misses,L1-icache-loads -a sleep 1
->>
->>   Performance counter stats for 'system wide':
->>
->>              54,510      cpu_core/L1-dcache-load-misses/
->>           1,441,286      cpu_atom/L1-icache-loads/
->>
->>         1.005114281 seconds time elapsed
->>
->> Fixes: 30def61f64ba ("perf parse-events: Create two hybrid cache events")
->> Signed-off-by: Zhengjun Xing <zhengjun.xing@linux.intel.com>
->> Reviewed-by: Kan Liang <kan.liang@linux.intel.com>
->> ---
->>   tools/perf/util/parse-events-hybrid.c | 8 +++++++-
->>   tools/perf/util/print-events.c        | 2 +-
->>   tools/perf/util/print-events.h        | 3 ++-
->>   3 files changed, 10 insertions(+), 3 deletions(-)
->>
->> diff --git a/tools/perf/util/parse-events-hybrid.c b/tools/perf/util/parse-events-hybrid.c
->> index 284f8eabd3b9..cf2e1c2e968f 100644
->> --- a/tools/perf/util/parse-events-hybrid.c
->> +++ b/tools/perf/util/parse-events-hybrid.c
->> @@ -14,6 +14,7 @@
->>   #include "pmu.h"
->>   #include "pmu-hybrid.h"
->>   #include "perf.h"
->> +#include "print-events.h"
->>
->>   static void config_hybrid_attr(struct perf_event_attr *attr,
->>                                 int type, int pmu_type)
->> @@ -48,13 +49,18 @@ static int create_event_hybrid(__u32 config_type, int *idx,
->>          __u64 config = attr->config;
->>
->>          config_hybrid_attr(attr, config_type, pmu->type);
->> +
->> +       if (attr->type == PERF_TYPE_HW_CACHE
->> +           && !is_event_supported(attr->type, attr->config))
->> +               goto out;
 > 
-> A comment to explain this would be useful.
+> 2. Run cpuid at perf userspace and avoid using 'slots' if it is not
+> supported in cpuid.
+> 
+> 3. Do not fatal perf if the leader is failed. Do not create events for an
+> evsel if its leader is already failed.
 
-Thanks, I will add a comment in the next version.
-> 
->> +
->>          evsel = parse_events__add_event_hybrid(list, idx, attr, name, metric_id,
->>                                                 pmu, config_terms);
->>          if (evsel)
->>                  evsel->pmu_name = strdup(pmu->name);
->>          else
->>                  return -ENOMEM;
-> 
-> For consistency should this use the "goto" pattern now? You can also
-> handle the ENOMEM case for strdup.
-> 
-  Yes, I will add a strdup check in the next version.
->> -
->> +out:
->>          attr->type = type;
->>          attr->config = config;
->>          return 0;
->> diff --git a/tools/perf/util/print-events.c b/tools/perf/util/print-events.c
->> index 04050d4f6db8..fa5cc94cfcfe 100644
->> --- a/tools/perf/util/print-events.c
->> +++ b/tools/perf/util/print-events.c
->> @@ -239,7 +239,7 @@ void print_sdt_events(const char *subsys_glob, const char *event_glob,
->>          strlist__delete(sdtlist);
->>   }
->>
->> -static bool is_event_supported(u8 type, u64 config)
->> +bool is_event_supported(u8 type, u64 config)
-> 
-> This makes me tempted to say this function should be in parse-events.c.
-> 
-"is_event_supported" move to parse-events.c should be better, I will do 
-it in the next version.
+We may also need this since it's easier and more agile to update the perf tool
+than the kernel code or KVM emulated capabilities.
 
-> Thanks,
-> Ian
 > 
->>   {
->>          bool ret = true;
->>          int open_return;
->> diff --git a/tools/perf/util/print-events.h b/tools/perf/util/print-events.h
->> index 1da9910d83a6..ad2902fd0507 100644
->> --- a/tools/perf/util/print-events.h
->> +++ b/tools/perf/util/print-events.h
->> @@ -1,14 +1,15 @@
->>   /* SPDX-License-Identifier: GPL-2.0 */
->>   #ifndef __PERF_PRINT_EVENTS_H
->>   #define __PERF_PRINT_EVENTS_H
->> -
->>   #include <stdbool.h>
->> +#include <linux/types.h>
->>
->>   struct event_symbol;
->>
->>   void print_events(const char *event_glob, bool name_only, bool quiet_flag,
->>                    bool long_desc, bool details_flag, bool deprecated,
->>                    const char *pmu_name);
->> +bool is_event_supported(u8 type, u64 config);
->>   int print_hwcache_events(const char *event_glob, bool name_only);
->>   void print_sdt_events(const char *subsys_glob, const char *event_glob,
->>                        bool name_only);
->> --
->> 2.25.1
->>
-
--- 
-Zhengjun Xing
+> This RFC patch is with the 3rd option. Would you mind suggesting which
+> option is better?
