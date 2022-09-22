@@ -2,112 +2,86 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 73C78C54EE9
-	for <linux-perf-users@archiver.kernel.org>; Thu, 22 Sep 2022 19:33:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 34D32ECAAD8
+	for <linux-perf-users@archiver.kernel.org>; Thu, 22 Sep 2022 19:36:16 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229705AbiIVTdV (ORCPT
+        id S231873AbiIVTgP (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Thu, 22 Sep 2022 15:33:21 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51544 "EHLO
+        Thu, 22 Sep 2022 15:36:15 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55804 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229847AbiIVTdU (ORCPT
+        with ESMTP id S231881AbiIVTgO (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Thu, 22 Sep 2022 15:33:20 -0400
-Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 375B91080A3
-        for <linux-perf-users@vger.kernel.org>; Thu, 22 Sep 2022 12:33:20 -0700 (PDT)
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id C6C05637A7
-        for <linux-perf-users@vger.kernel.org>; Thu, 22 Sep 2022 19:33:19 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 0BB7EC433D6;
-        Thu, 22 Sep 2022 19:33:19 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1663875199;
-        bh=RUWBdVncb1cyXyMHf3znjeKqcqkci69Wa5DgRjVOzTQ=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=Jzzm0xlJtKvQ/LV7UwSJyks9E1kEW8/5YuBgF2q2e6f1txrPZQriRHXsfEuDj0t5w
-         ro9hEMCg9p3uFCcaZGvurKihmz7S7JlI2pUpqKXO3/83NV5tOtClHxzU6o2b1pdLoK
-         Qr7w0CPC3tE+XHMyNK5QqUhi4q6dok69a6vd2kyryddB88LCvvaXu4DY9epFce6GHz
-         0Eko+28IuzwYBa8jbuMqrA0hH5193IN9Ybqx+b2u1HrcEIJ1KKqMCSndnG+TYtFrxP
-         m344bY+hSSs5JDVbCg9tSqWiEBK8K9OzxVzhKzuBM4JSg4wDIJybYxQQlEJyeCKvEP
-         gPVJypp1+uAgw==
-Received: by quaco.ghostprotocols.net (Postfix, from userid 1000)
-        id E1016403B0; Thu, 22 Sep 2022 20:33:16 +0100 (IST)
-Date:   Thu, 22 Sep 2022 20:33:16 +0100
-From:   Arnaldo Carvalho de Melo <acme@kernel.org>
-To:     Shang XiaoJing <shangxiaojing@huawei.com>
-Cc:     peterz@infradead.org, mingo@redhat.com, mark.rutland@arm.com,
-        alexander.shishkin@linux.intel.com, jolsa@kernel.org,
-        namhyung@kernel.org, linux-perf-users@vger.kernel.org
-Subject: Re: [PATCH 2/4] perf stat: Merge cases in process_evlist
-Message-ID: <Yyy4fJNyxxXVzHyv@kernel.org>
-References: <20220922141438.22487-1-shangxiaojing@huawei.com>
- <20220922141438.22487-3-shangxiaojing@huawei.com>
+        Thu, 22 Sep 2022 15:36:14 -0400
+Received: from mail-yb1-xb32.google.com (mail-yb1-xb32.google.com [IPv6:2607:f8b0:4864:20::b32])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 67F5810B206
+        for <linux-perf-users@vger.kernel.org>; Thu, 22 Sep 2022 12:36:10 -0700 (PDT)
+Received: by mail-yb1-xb32.google.com with SMTP id e81so14220271ybb.13
+        for <linux-perf-users@vger.kernel.org>; Thu, 22 Sep 2022 12:36:10 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20210112;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:from:to:cc:subject:date;
+        bh=B+gga6ltJtUAel3yll8VCzI2wh4t47DgPA/bbeueEV4=;
+        b=LGw6RoWIJhTtjzyWPFyoOKWj2PALb/UK9cMieG1EswUK8uncGsTKcX9GOT90bFqJCY
+         zxjAEudl4ROGfcjGQySHHEM4eM3g5Rdayzz+sbVQRpHc+v4SEspoyjoGm3dUPlhjJ2i/
+         l+RZN9qaEGfJLJNwZwDvDLDBT8y3FrqJP40VTeBaVNBEARp6hksHQ3Ff4oxXTt7PS16o
+         zXeM0mf/BuhhK9PO25w6zjlb2zxTmppYIQ42mjn9ddbgHz9v6upXky0rjTFzDBck3iYy
+         g/W6wREdY/00bB45gfdGxdAnaRsyZNQd3r/+lk9aeTuHTw9dqm0p8fPDdBEGZwqXnSsn
+         Bdsg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:x-gm-message-state:from:to:cc:subject:date;
+        bh=B+gga6ltJtUAel3yll8VCzI2wh4t47DgPA/bbeueEV4=;
+        b=YR8v26ywxb81Nejaks0WkZ329Rau5sNjfKtkX2zZZNEtMGhSui/ATISXcIuUwVyGUf
+         I2mMZ/7daYg1I972o80HdvvxgLxzU8fZL6jUQW+PmB+asH4ZCkeNPkOABGujVm/9rDnc
+         BRj7MKHQtogmIDIWaa7dHjGJ0k2W/SuZR5LrRW1jt0rzJtoHgnCIz1Lj0vmLWCcwd4p5
+         haXzoy/DffR/kaHMV/C6QFBPb3TIG677++210hViBGB5Mh0ToUvcvXRlT6yLBmR5PGXg
+         pl0pl+6LqXNNo9++ntBh6YMrP806sp/GZQPNOj3NB3kj5G+hXa30ATcM+IUgg+XZCYVm
+         B9Og==
+X-Gm-Message-State: ACrzQf3lk4n6fuYEqhd+7/KYAb/tIZr4yEScEPuOn3yok3SpawfQcehk
+        IXN2fDsOTrB3hqI8yhrxtG7pfGRdzY5lOBQrt4l5qA==
+X-Google-Smtp-Source: AMsMyM5B26rqF5aDDU+4uPkZq44P4q/L62syhM0LGixbAJaHbFp8dTKOynRG64pCiD4+nr40BnT8apLy+md/oSRK3Xk=
+X-Received: by 2002:a25:8b10:0:b0:6b0:58a:f8f5 with SMTP id
+ i16-20020a258b10000000b006b0058af8f5mr5294000ybl.524.1663875369520; Thu, 22
+ Sep 2022 12:36:09 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20220922141438.22487-3-shangxiaojing@huawei.com>
-X-Url:  http://acmel.wordpress.com
+References: <20220922044023.718774-1-namhyung@kernel.org>
+In-Reply-To: <20220922044023.718774-1-namhyung@kernel.org>
+From:   Hao Luo <haoluo@google.com>
+Date:   Thu, 22 Sep 2022 12:35:58 -0700
+Message-ID: <CA+khW7gQPqoBSi5bSQXFdnkVyjMpu4A=vzFXRLvWDjZww0brEA@mail.gmail.com>
+Subject: Re: [PATCH v2] perf tools: Get a perf cgroup more portably in BPF
+To:     Namhyung Kim <namhyung@kernel.org>
+Cc:     Arnaldo Carvalho de Melo <acme@kernel.org>,
+        Jiri Olsa <jolsa@kernel.org>, Ingo Molnar <mingo@kernel.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Ian Rogers <irogers@google.com>,
+        Adrian Hunter <adrian.hunter@intel.com>,
+        linux-perf-users@vger.kernel.org, Song Liu <songliubraving@fb.com>,
+        bpf@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-Em Thu, Sep 22, 2022 at 10:14:36PM +0800, Shang XiaoJing escreveu:
-> As two cases in process_evlist has same behavior, merge these cases.
+On Wed, Sep 21, 2022 at 9:40 PM Namhyung Kim <namhyung@kernel.org> wrote:
+>
+> The perf_event_cgrp_id can be different on other configurations.
+> To be more portable as CO-RE, it needs to get the cgroup subsys id
+> using the bpf_core_enum_value() helper.
+>
 
-Applied.
+I remember using bpf_core_enum_value requires a compiler built-in. So
+the build will fail on old compiler such as clang-11. See [1]. Maybe
+we should surround it with #if
+__has_builtin(__builtin_preserve_enum_value) to be sure.
 
-Added the patch below, see:
+[1]  https://www.spinics.net/lists/bpf/msg30859.html
 
-include/linux/compiler_attributes.h and
-tools/include/linux/compiler-gcc.h.
-
-- Arnaldo
-
-Commiter notes:
-
-Added __fallthrough, the kernel has "fallthrough", we need to make
-tools/ use it.
-
----
-
-diff --git a/tools/perf/builtin-stat.c b/tools/perf/builtin-stat.c
-index e10595f649bcb2b4..7b8e901bce101b63 100644
---- a/tools/perf/builtin-stat.c
-+++ b/tools/perf/builtin-stat.c
-@@ -662,6 +662,7 @@ static void process_evlist(struct evlist *evlist, unsigned int interval)
- 	if (evlist__ctlfd_process(evlist, &cmd) > 0) {
- 		switch (cmd) {
- 		case EVLIST_CTL_CMD_ENABLE:
-+			__fallthrough;
- 		case EVLIST_CTL_CMD_DISABLE:
- 			if (interval)
- 				process_interval();
- 
-> Signed-off-by: Shang XiaoJing <shangxiaojing@huawei.com>
+> Suggested-by: Ian Rogers <irogers@google.com>
+> Signed-off-by: Namhyung Kim <namhyung@kernel.org>
 > ---
->  tools/perf/builtin-stat.c | 3 ---
->  1 file changed, 3 deletions(-)
-> 
-> diff --git a/tools/perf/builtin-stat.c b/tools/perf/builtin-stat.c
-> index e05fe72c1d87..e10595f649bc 100644
-> --- a/tools/perf/builtin-stat.c
-> +++ b/tools/perf/builtin-stat.c
-> @@ -662,9 +662,6 @@ static void process_evlist(struct evlist *evlist, unsigned int interval)
->  	if (evlist__ctlfd_process(evlist, &cmd) > 0) {
->  		switch (cmd) {
->  		case EVLIST_CTL_CMD_ENABLE:
-> -			if (interval)
-> -				process_interval();
-> -			break;
->  		case EVLIST_CTL_CMD_DISABLE:
->  			if (interval)
->  				process_interval();
-> -- 
-> 2.17.1
-
--- 
-
-- Arnaldo
+[...]
