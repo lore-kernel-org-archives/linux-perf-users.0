@@ -2,169 +2,140 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4479CC54EE9
-	for <linux-perf-users@archiver.kernel.org>; Thu, 22 Sep 2022 23:55:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B97D3C6FA8B
+	for <linux-perf-users@archiver.kernel.org>; Fri, 23 Sep 2022 02:58:51 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229552AbiIVXzS (ORCPT
+        id S229876AbiIWC6u (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Thu, 22 Sep 2022 19:55:18 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56574 "EHLO
+        Thu, 22 Sep 2022 22:58:50 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43138 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229731AbiIVXzR (ORCPT
+        with ESMTP id S231976AbiIWC6r (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Thu, 22 Sep 2022 19:55:17 -0400
-Received: from mail-wr1-x431.google.com (mail-wr1-x431.google.com [IPv6:2a00:1450:4864:20::431])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1935CABD46
-        for <linux-perf-users@vger.kernel.org>; Thu, 22 Sep 2022 16:55:16 -0700 (PDT)
-Received: by mail-wr1-x431.google.com with SMTP id s14so15923397wro.0
-        for <linux-perf-users@vger.kernel.org>; Thu, 22 Sep 2022 16:55:16 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20210112;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:from:to:cc:subject:date;
-        bh=pEWu0cZtC5bQpAC76TrU39sQH99ByOhozrqgLO6bDiY=;
-        b=VbDDokghUbDy1JsHhqfa5yfdgJSLZ3Zmy3hLc51e8fTubphxO+9Kx5uT6HpTyl07XU
-         mvn/zOgEdbQiQE46fEE3ttFLIJmdlsVwErTFarnQwHzO98VEgaTaM901wB/JzYkndOpJ
-         xtT/rLZIpPXY3j/re8io1Od+IgjlvCkpjnN/dleCybU1IpQ52MjVAtgnBvGB/nuRTa6n
-         A8GDTTnWnWUO7eIFSDkWkYNjLhe+HXfcOuTeHMHrTvRYB4wvORri4cjFF5rvEeRI32ET
-         0XshsKczKYPZY2prXjhbOpJSDkagtNXdQ3BP740Tr1Iui75SwL2L8AyQFHz5vESZHBaW
-         MNEg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date;
-        bh=pEWu0cZtC5bQpAC76TrU39sQH99ByOhozrqgLO6bDiY=;
-        b=odAq8TYzhIJ1FWkGONOKlAY06LrNprK3arzAHEPxpxXatpifbl22z9vysjPnPE939m
-         97vJCzOSVb3ILd5Hyj5GGYLsJzCs97cSmd0ONUk1NQD2oSvZNt+pKOeVAfRfSbJSim8o
-         QqTaZ4o3bMczjsJrn92jbCiLfu9+pFKqZ4HE/Pcr0bqEWl4pmjKQcv46LHRk6EfoQ2b0
-         CgWBOIFvq5zk0A6mDlWVl8h4nnbTlCjQxsHvnocqcoGVW00G+y5Cb7kEPKRS5fVfHrkw
-         QJv7R4QXVN16vciYQewFQqlDyzBNTEu6BxkqHuqQfPM+sPB5zFO5pq867LJ7PwTuzmhE
-         oCYA==
-X-Gm-Message-State: ACrzQf0RMXc6PYGk1M+L9D6r/f9AfFdqlv6bex/1lpUh/AnD+/HELkdZ
-        PzZlFd4TIqrDreVmIN8sJUaSKcvS4NApNM/X7mMPhA==
-X-Google-Smtp-Source: AMsMyM5Qi2LT6ix2nu/U4IhNet2x4RTrWqRtFFV77MrwTaOEvv3GkW+VUYr+2y0IZOBSSUdcGRhIJcxQVyOgcFdbwc4=
-X-Received: by 2002:adf:e4ca:0:b0:228:d8b7:48a7 with SMTP id
- v10-20020adfe4ca000000b00228d8b748a7mr3377917wrm.300.1663890914444; Thu, 22
- Sep 2022 16:55:14 -0700 (PDT)
+        Thu, 22 Sep 2022 22:58:47 -0400
+Received: from mga11.intel.com (mga11.intel.com [192.55.52.93])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E437211ADDC;
+        Thu, 22 Sep 2022 19:58:46 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1663901926; x=1695437926;
+  h=from:to:cc:subject:date:message-id:mime-version:
+   content-transfer-encoding;
+  bh=BaeN9IU6iKvNyY87T+Z0N60aCCF64/bhkIpX8BUMOm0=;
+  b=NlQQ9UzBcdUk4sgkVLZ3tQ2AqcNaybOdINvxG3HFFOALd3EYnbYklYAS
+   5QByB4BB279L8khJxeQq4f7Y5n0agKsDQEPZb7rr8TcEL7aRD1pEw2VM2
+   4c93hIPubu3T8h8UkekaFPrXlXPvSjrpkOfRT2FjBrCKBaAsjHKQY9ZZd
+   WW5XPTnMIJDcNYbtHLdauGPXiY4BZhII05t46OQzuhI3KNIr5vS04Q0ol
+   bQK1ThszyqdGgO5rS9YL5iITT/JZuU8MTAF6UU5lV/UezXN8kYcNSeGkX
+   sHktDGsygk9UfIx4ES2AEGkp5Tyi8wIL0AEpUnRs5xRohw4oW5LjhKxH5
+   w==;
+X-IronPort-AV: E=McAfee;i="6500,9779,10478"; a="298093714"
+X-IronPort-AV: E=Sophos;i="5.93,337,1654585200"; 
+   d="scan'208";a="298093714"
+Received: from orsmga007.jf.intel.com ([10.7.209.58])
+  by fmsmga102.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 22 Sep 2022 19:58:39 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.93,337,1654585200"; 
+   d="scan'208";a="615464328"
+Received: from zxingrtx.sh.intel.com ([10.239.159.110])
+  by orsmga007.jf.intel.com with ESMTP; 22 Sep 2022 19:58:35 -0700
+From:   zhengjun.xing@linux.intel.com
+To:     acme@kernel.org, peterz@infradead.org, mingo@redhat.com,
+        alexander.shishkin@intel.com, jolsa@kernel.org, namhyung@kernel.org
+Cc:     linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org,
+        irogers@google.com, ak@linux.intel.com, kan.liang@linux.intel.com,
+        zhengjun.xing@linux.intel.com, Yi Ammy <ammy.yi@intel.com>
+Subject: [PATCH v2 1/2] perf print-events: Fix "perf list" can not display the PMU prefix for some hybrid cache events
+Date:   Fri, 23 Sep 2022 11:00:12 +0800
+Message-Id: <20220923030013.3726410-1-zhengjun.xing@linux.intel.com>
+X-Mailer: git-send-email 2.25.1
 MIME-Version: 1.0
-References: <20220922205302.749274-1-namhyung@kernel.org>
-In-Reply-To: <20220922205302.749274-1-namhyung@kernel.org>
-From:   Ian Rogers <irogers@google.com>
-Date:   Thu, 22 Sep 2022 16:55:02 -0700
-Message-ID: <CAP-5=fXAS+QpkncLqLeS=MOeqOyrFy3Gev=F8vet4r6xjmCJ4g@mail.gmail.com>
-Subject: Re: [PATCH v3] perf tools: Get a perf cgroup more portably in BPF
-To:     Namhyung Kim <namhyung@kernel.org>
-Cc:     Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Jiri Olsa <jolsa@kernel.org>, Ingo Molnar <mingo@kernel.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Adrian Hunter <adrian.hunter@intel.com>,
-        linux-perf-users@vger.kernel.org, Song Liu <songliubraving@fb.com>,
-        Hao Luo <haoluo@google.com>, bpf@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-On Thu, Sep 22, 2022 at 1:53 PM Namhyung Kim <namhyung@kernel.org> wrote:
->
-> The perf_event_cgrp_id can be different on other configurations.
-> To be more portable as CO-RE, it needs to get the cgroup subsys id
-> using the bpf_core_enum_value() helper.
->
-> Suggested-by: Ian Rogers <irogers@google.com>
-> Signed-off-by: Namhyung Kim <namhyung@kernel.org>
-> ---
-> v3 changes)
->  * check compiler features for enum value
->
-> v2 changes)
->  * fix off_cpu.bpf.c too
->  * get perf_subsys_id only once
->
->  tools/perf/util/bpf_skel/bperf_cgroup.bpf.c | 11 ++++++++++-
->  tools/perf/util/bpf_skel/off_cpu.bpf.c      | 12 ++++++++----
->  2 files changed, 18 insertions(+), 5 deletions(-)
->
-> diff --git a/tools/perf/util/bpf_skel/bperf_cgroup.bpf.c b/tools/perf/util/bpf_skel/bperf_cgroup.bpf.c
-> index 292c430768b5..8e7520e273db 100644
-> --- a/tools/perf/util/bpf_skel/bperf_cgroup.bpf.c
-> +++ b/tools/perf/util/bpf_skel/bperf_cgroup.bpf.c
-> @@ -48,6 +48,7 @@ const volatile __u32 num_cpus = 1;
->
->  int enabled = 0;
->  int use_cgroup_v2 = 0;
-> +int perf_subsys_id = -1;
->
->  static inline int get_cgroup_v1_idx(__u32 *cgrps, int size)
->  {
-> @@ -58,7 +59,15 @@ static inline int get_cgroup_v1_idx(__u32 *cgrps, int size)
->         int level;
->         int cnt;
->
-> -       cgrp = BPF_CORE_READ(p, cgroups, subsys[perf_event_cgrp_id], cgroup);
-> +       if (perf_subsys_id == -1) {
-> +#if __has_builtin(__builtin_preserve_enum_value)
-> +               perf_subsys_id = bpf_core_enum_value(enum cgroup_subsys_id,
-> +                                                    perf_event_cgrp_id);
-> +#else
-> +               perf_subsys_id = perf_event_cgrp_id;
-> +#endif
-> +       }
-> +       cgrp = BPF_CORE_READ(p, cgroups, subsys[perf_subsys_id], cgroup);
->         level = BPF_CORE_READ(cgrp, level);
->
->         for (cnt = 0; i < MAX_LEVELS; i++) {
-> diff --git a/tools/perf/util/bpf_skel/off_cpu.bpf.c b/tools/perf/util/bpf_skel/off_cpu.bpf.c
-> index c4ba2bcf179f..e917ef7b8875 100644
-> --- a/tools/perf/util/bpf_skel/off_cpu.bpf.c
-> +++ b/tools/perf/util/bpf_skel/off_cpu.bpf.c
-> @@ -94,6 +94,8 @@ const volatile bool has_prev_state = false;
->  const volatile bool needs_cgroup = false;
->  const volatile bool uses_cgroup_v1 = false;
->
-> +int perf_subsys_id = -1;
-> +
->  /*
->   * Old kernel used to call it task_struct->state and now it's '__state'.
->   * Use BPF CO-RE "ignored suffix rule" to deal with it like below:
-> @@ -119,11 +121,13 @@ static inline __u64 get_cgroup_id(struct task_struct *t)
->  {
->         struct cgroup *cgrp;
->
-> -       if (uses_cgroup_v1)
-> -               cgrp = BPF_CORE_READ(t, cgroups, subsys[perf_event_cgrp_id], cgroup);
-> -       else
-> -               cgrp = BPF_CORE_READ(t, cgroups, dfl_cgrp);
-> +       if (!uses_cgroup_v1)
-> +               return BPF_CORE_READ(t, cgroups, dfl_cgrp, kn, id);
-> +
-> +       if (perf_subsys_id == -1)
-> +               perf_subsys_id = bpf_core_enum_value(enum cgroup_subsys_id, perf_event_cgrp_id);
+From: Zhengjun Xing <zhengjun.xing@linux.intel.com>
 
-Should the "#if __has_builtin(__builtin_preserve_enum_value)" test also be here?
+Some hybrid hardware cache events are only available on one CPU PMU. For
+example, 'L1-dcache-load-misses' is only available on cpu_core. We have
+supported in the perf list clearly reporting this info, the function works
+fine before but recently the argument "config" in API is_event_supported()
+is changed from "u64" to "unsigned int" which caused a regression, the
+"perf list" then can not display the PMU prefix for some hybrid cache
+events. For the hybrid systems, the PMU type ID is stored at config[63:32],
+define config to "unsigned int" will miss the PMU type ID information, then
+the regression happened, the config should be defined as "u64".
 
-It feels a shame that bpf_core_enum_value isn't defined something like:
+Before:
+ # ./perf list |grep "Hardware cache event"
+  L1-dcache-load-misses                              [Hardware cache event]
+  L1-dcache-loads                                    [Hardware cache event]
+  L1-dcache-stores                                   [Hardware cache event]
+  L1-icache-load-misses                              [Hardware cache event]
+  L1-icache-loads                                    [Hardware cache event]
+  LLC-load-misses                                    [Hardware cache event]
+  LLC-loads                                          [Hardware cache event]
+  LLC-store-misses                                   [Hardware cache event]
+  LLC-stores                                         [Hardware cache event]
+  branch-load-misses                                 [Hardware cache event]
+  branch-loads                                       [Hardware cache event]
+  dTLB-load-misses                                   [Hardware cache event]
+  dTLB-loads                                         [Hardware cache event]
+  dTLB-store-misses                                  [Hardware cache event]
+  dTLB-stores                                        [Hardware cache event]
+  iTLB-load-misses                                   [Hardware cache event]
+  node-load-misses                                   [Hardware cache event]
+  node-loads                                         [Hardware cache event]
 
-#if __has_builtin(__builtin_preserve_enum_value)
-#define bpf_core_enum_value(enum_type, enum_value) \
-__builtin_preserve_enum_value(*(typeof(enum_type) *)enum_value,
-BPF_ENUMVAL_VALUE)
-#else
-#define bpf_core_enum_value(enum_type, enum_value) enum_value
-#endif
+After:
+ # ./perf list |grep "Hardware cache event"
+  L1-dcache-loads                                    [Hardware cache event]
+  L1-dcache-stores                                   [Hardware cache event]
+  L1-icache-load-misses                              [Hardware cache event]
+  LLC-load-misses                                    [Hardware cache event]
+  LLC-loads                                          [Hardware cache event]
+  LLC-store-misses                                   [Hardware cache event]
+  LLC-stores                                         [Hardware cache event]
+  branch-load-misses                                 [Hardware cache event]
+  branch-loads                                       [Hardware cache event]
+  cpu_atom/L1-icache-loads/                          [Hardware cache event]
+  cpu_core/L1-dcache-load-misses/                    [Hardware cache event]
+  cpu_core/node-load-misses/                         [Hardware cache event]
+  cpu_core/node-loads/                               [Hardware cache event]
+  dTLB-load-misses                                   [Hardware cache event]
+  dTLB-loads                                         [Hardware cache event]
+  dTLB-store-misses                                  [Hardware cache event]
+  dTLB-stores                                        [Hardware cache event]
+  iTLB-load-misses                                   [Hardware cache event]
 
-for backward clang compatibility, but I could see why an error would
-be preferable.
+Fixes: 9b7c7728f4e4 ("perf parse-events: Break out tracepoint and printing")
+Signed-off-by: Zhengjun Xing <zhengjun.xing@linux.intel.com>
+Reviewed-by: Kan Liang <kan.liang@linux.intel.com>
+Acked-by: Ian Rogers <irogers@google.com>
+Reported-by: Yi Ammy <ammy.yi@intel.com>
+---
+Change log:
+  v2:
+    * Adds Acked-by from Ian Rogers <irogers@google.com>
+    * Adds Reported-by from Yi Ammy <ammy.yi@intel.com>
 
-Thanks,
-Ian
+ tools/perf/util/print-events.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
->
-> +       cgrp = BPF_CORE_READ(t, cgroups, subsys[perf_subsys_id], cgroup);
->         return BPF_CORE_READ(cgrp, kn, id);
->  }
->
-> --
-> 2.37.3.998.g577e59143f-goog
->
+diff --git a/tools/perf/util/print-events.c b/tools/perf/util/print-events.c
+index ba1ab5134685..04050d4f6db8 100644
+--- a/tools/perf/util/print-events.c
++++ b/tools/perf/util/print-events.c
+@@ -239,7 +239,7 @@ void print_sdt_events(const char *subsys_glob, const char *event_glob,
+ 	strlist__delete(sdtlist);
+ }
+ 
+-static bool is_event_supported(u8 type, unsigned int config)
++static bool is_event_supported(u8 type, u64 config)
+ {
+ 	bool ret = true;
+ 	int open_return;
+-- 
+2.25.1
+
