@@ -2,40 +2,40 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4EB87C6FA91
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E4764C6FA82
 	for <linux-perf-users@archiver.kernel.org>; Fri, 23 Sep 2022 08:11:34 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231201AbiIWILc (ORCPT
+        id S231206AbiIWILd (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Fri, 23 Sep 2022 04:11:32 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38682 "EHLO
+        Fri, 23 Sep 2022 04:11:33 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38692 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231202AbiIWILa (ORCPT
+        with ESMTP id S231199AbiIWILc (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Fri, 23 Sep 2022 04:11:30 -0400
+        Fri, 23 Sep 2022 04:11:32 -0400
 Received: from szxga01-in.huawei.com (szxga01-in.huawei.com [45.249.212.187])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 79B3D12C1C3
-        for <linux-perf-users@vger.kernel.org>; Fri, 23 Sep 2022 01:11:29 -0700 (PDT)
-Received: from dggemv704-chm.china.huawei.com (unknown [172.30.72.53])
-        by szxga01-in.huawei.com (SkyGuard) with ESMTP id 4MYlCS712WzpVV4;
-        Fri, 23 Sep 2022 16:08:36 +0800 (CST)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id EFD2C110B25
+        for <linux-perf-users@vger.kernel.org>; Fri, 23 Sep 2022 01:11:30 -0700 (PDT)
+Received: from dggemv711-chm.china.huawei.com (unknown [172.30.72.56])
+        by szxga01-in.huawei.com (SkyGuard) with ESMTP id 4MYlCV3zDgzpTp5;
+        Fri, 23 Sep 2022 16:08:38 +0800 (CST)
 Received: from kwepemm600008.china.huawei.com (7.193.23.88) by
- dggemv704-chm.china.huawei.com (10.3.19.47) with Microsoft SMTP Server
+ dggemv711-chm.china.huawei.com (10.1.198.66) with Microsoft SMTP Server
  (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2375.31; Fri, 23 Sep 2022 16:11:27 +0800
+ 15.1.2375.31; Fri, 23 Sep 2022 16:11:29 +0800
 Received: from huawei.com (10.175.100.227) by kwepemm600008.china.huawei.com
  (7.193.23.88) with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2375.31; Fri, 23 Sep
- 2022 16:11:26 +0800
+ 2022 16:11:28 +0800
 From:   Shang XiaoJing <shangxiaojing@huawei.com>
 To:     <peterz@infradead.org>, <mingo@redhat.com>, <acme@kernel.org>,
         <mark.rutland@arm.com>, <alexander.shishkin@linux.intel.com>,
         <jolsa@kernel.org>, <namhyung@kernel.org>,
         <linux-perf-users@vger.kernel.org>
 CC:     <yao.jin@linux.intel.com>, <shangxiaojing@huawei.com>
-Subject: [PATCH v2 2/6] perf block-range: Add block_range__insert_left/right helper
-Date:   Fri, 23 Sep 2022 16:45:36 +0800
-Message-ID: <20220923084540.25849-3-shangxiaojing@huawei.com>
+Subject: [PATCH v2 4/6] perf stat: Add print_cache_common helper
+Date:   Fri, 23 Sep 2022 16:45:38 +0800
+Message-ID: <20220923084540.25849-5-shangxiaojing@huawei.com>
 X-Mailer: git-send-email 2.17.1
 In-Reply-To: <20220923084540.25849-1-shangxiaojing@huawei.com>
 References: <20220923084540.25849-1-shangxiaojing@huawei.com>
@@ -49,100 +49,153 @@ Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-Wrap repeated and correlated code in helper function
-block_range__insert_left and block_range__insert_right, which are used
-for inserting the new block_range into rb_tree.
+Wrap repeated code in helper function print_cache_common, which is used
+to print cache event.
 
 Signed-off-by: Shang XiaoJing <shangxiaojing@huawei.com>
 ---
-changes in v2:
-- adjust subject.
----
- tools/perf/util/block-range.c | 36 ++++++++++++++++++++---------------
- 1 file changed, 21 insertions(+), 15 deletions(-)
+ tools/perf/util/stat-shadow.c | 80 +++++++++++------------------------
+ 1 file changed, 25 insertions(+), 55 deletions(-)
 
-diff --git a/tools/perf/util/block-range.c b/tools/perf/util/block-range.c
-index 1be432657501..11c6f33524f0 100644
---- a/tools/perf/util/block-range.c
-+++ b/tools/perf/util/block-range.c
-@@ -71,6 +71,22 @@ static inline void rb_link_right_of_node(struct rb_node *right, struct rb_node *
- 	rb_link_node(right, node, p);
+diff --git a/tools/perf/util/stat-shadow.c b/tools/perf/util/stat-shadow.c
+index 9e1eddeff21b..8f41e47a6bb5 100644
+--- a/tools/perf/util/stat-shadow.c
++++ b/tools/perf/util/stat-shadow.c
+@@ -533,23 +533,34 @@ static void print_stalled_cycles_backend(struct perf_stat_config *config,
+ 	out->print_metric(config, out->ctx, color, "%7.2f%%", "backend cycles idle", ratio);
  }
  
-+static inline void block_range__insert_left(struct block_range *insert,
-+					     struct block_range *parent)
-+{
-+	rb_link_left_of_node(&insert->node, &parent->node);
-+	rb_insert_color(&insert->node, &block_ranges.root);
-+	block_range__debug();
+-static void print_branch_misses(struct perf_stat_config *config,
++static void print_cache_common(struct perf_stat_config *config,
+ 				int cpu_map_idx, double avg,
+ 				struct perf_stat_output_ctx *out,
+ 				struct runtime_stat *st,
+-				struct runtime_stat_data *rsd)
++				struct runtime_stat_data *rsd,
++				enum stat_type type, const char *desc)
+ {
+ 	double total, ratio = 0.0;
+ 	const char *color;
+ 
+-	total = runtime_stat_avg(st, STAT_BRANCHES, cpu_map_idx, rsd);
++	total = runtime_stat_avg(st, type, cpu_map_idx, rsd);
+ 
+ 	if (total)
+ 		ratio = avg / total * 100.0;
+ 
+ 	color = get_ratio_color(GRC_CACHE_MISSES, ratio);
+ 
+-	out->print_metric(config, out->ctx, color, "%7.2f%%", "of all branches", ratio);
++	out->print_metric(config, out->ctx, color, "%7.2f%%", desc, ratio);
 +}
 +
-+static inline void block_range__insert_right(struct block_range *insert,
-+					      struct block_range *parent)
++static void print_branch_misses(struct perf_stat_config *config,
++				int cpu_map_idx, double avg,
++				struct perf_stat_output_ctx *out,
++				struct runtime_stat *st,
++				struct runtime_stat_data *rsd)
 +{
-+	rb_link_right_of_node(&insert->node, &parent->node);
-+	rb_insert_color(&insert->node, &block_ranges.root);
-+	block_range__debug();
-+}
-+
- /**
-  * block_range__create
-  * @start: branch target starting this basic block
-@@ -128,9 +144,7 @@ struct block_range_iter block_range__create(u64 start, u64 end)
- 				.is_branch	= 0,
- 			};
++	print_cache_common(config, cpu_map_idx, avg, out, st, rsd,
++			   STAT_BRANCHES, "of all branches");
+ }
  
--			rb_link_left_of_node(&head->node, &next->node);
--			rb_insert_color(&head->node, &block_ranges.root);
--			block_range__debug();
-+			block_range__insert_left(head, next);
+ static void print_l1_dcache_misses(struct perf_stat_config *config,
+@@ -558,17 +569,8 @@ static void print_l1_dcache_misses(struct perf_stat_config *config,
+ 				   struct runtime_stat *st,
+ 				   struct runtime_stat_data *rsd)
+ {
+-	double total, ratio = 0.0;
+-	const char *color;
+-
+-	total = runtime_stat_avg(st, STAT_L1_DCACHE, cpu_map_idx, rsd);
+-
+-	if (total)
+-		ratio = avg / total * 100.0;
+-
+-	color = get_ratio_color(GRC_CACHE_MISSES, ratio);
+-
+-	out->print_metric(config, out->ctx, color, "%7.2f%%", "of all L1-dcache accesses", ratio);
++	print_cache_common(config, cpu_map_idx, avg, out, st, rsd,
++			   STAT_L1_DCACHE, "of all L1-dcache accesses");
+ }
  
- 			iter.start = head;
- 			goto do_tail;
-@@ -182,9 +196,7 @@ struct block_range_iter block_range__create(u64 start, u64 end)
- 		entry->is_target	= 1;
- 		entry->entry		= 0;
+ static void print_l1_icache_misses(struct perf_stat_config *config,
+@@ -577,16 +579,8 @@ static void print_l1_icache_misses(struct perf_stat_config *config,
+ 				   struct runtime_stat *st,
+ 				   struct runtime_stat_data *rsd)
+ {
+-	double total, ratio = 0.0;
+-	const char *color;
+-
+-	total = runtime_stat_avg(st, STAT_L1_ICACHE, cpu_map_idx, rsd);
+-
+-	if (total)
+-		ratio = avg / total * 100.0;
+-
+-	color = get_ratio_color(GRC_CACHE_MISSES, ratio);
+-	out->print_metric(config, out->ctx, color, "%7.2f%%", "of all L1-icache accesses", ratio);
++	print_cache_common(config, cpu_map_idx, avg, out, st, rsd,
++			   STAT_L1_ICACHE, "of all L1-icache accesses");
+ }
  
--		rb_link_left_of_node(&head->node, &entry->node);
--		rb_insert_color(&head->node, &block_ranges.root);
--		block_range__debug();
-+		block_range__insert_left(head, entry);
+ static void print_dtlb_cache_misses(struct perf_stat_config *config,
+@@ -595,16 +589,8 @@ static void print_dtlb_cache_misses(struct perf_stat_config *config,
+ 				    struct runtime_stat *st,
+ 				    struct runtime_stat_data *rsd)
+ {
+-	double total, ratio = 0.0;
+-	const char *color;
+-
+-	total = runtime_stat_avg(st, STAT_DTLB_CACHE, cpu_map_idx, rsd);
+-
+-	if (total)
+-		ratio = avg / total * 100.0;
+-
+-	color = get_ratio_color(GRC_CACHE_MISSES, ratio);
+-	out->print_metric(config, out->ctx, color, "%7.2f%%", "of all dTLB cache accesses", ratio);
++	print_cache_common(config, cpu_map_idx, avg, out, st, rsd,
++			   STAT_DTLB_CACHE, "of all dTLB cache accesses");
+ }
  
- 	} else if (entry->start == start)
- 		entry->is_target = 1;
-@@ -222,9 +234,7 @@ struct block_range_iter block_range__create(u64 start, u64 end)
- 			entry->taken		= 0;
- 			entry->pred		= 0;
+ static void print_itlb_cache_misses(struct perf_stat_config *config,
+@@ -613,16 +599,8 @@ static void print_itlb_cache_misses(struct perf_stat_config *config,
+ 				    struct runtime_stat *st,
+ 				    struct runtime_stat_data *rsd)
+ {
+-	double total, ratio = 0.0;
+-	const char *color;
+-
+-	total = runtime_stat_avg(st, STAT_ITLB_CACHE, cpu_map_idx, rsd);
+-
+-	if (total)
+-		ratio = avg / total * 100.0;
+-
+-	color = get_ratio_color(GRC_CACHE_MISSES, ratio);
+-	out->print_metric(config, out->ctx, color, "%7.2f%%", "of all iTLB cache accesses", ratio);
++	print_cache_common(config, cpu_map_idx, avg, out, st, rsd,
++			   STAT_ITLB_CACHE, "of all iTLB cache accesses");
+ }
  
--			rb_link_right_of_node(&tail->node, &entry->node);
--			rb_insert_color(&tail->node, &block_ranges.root);
--			block_range__debug();
-+			block_range__insert_right(tail, entry);
+ static void print_ll_cache_misses(struct perf_stat_config *config,
+@@ -631,16 +609,8 @@ static void print_ll_cache_misses(struct perf_stat_config *config,
+ 				  struct runtime_stat *st,
+ 				  struct runtime_stat_data *rsd)
+ {
+-	double total, ratio = 0.0;
+-	const char *color;
+-
+-	total = runtime_stat_avg(st, STAT_LL_CACHE, cpu_map_idx, rsd);
+-
+-	if (total)
+-		ratio = avg / total * 100.0;
+-
+-	color = get_ratio_color(GRC_CACHE_MISSES, ratio);
+-	out->print_metric(config, out->ctx, color, "%7.2f%%", "of all LL-cache accesses", ratio);
++	print_cache_common(config, cpu_map_idx, avg, out, st, rsd,
++			   STAT_LL_CACHE, "of all LL-cache accesses");
+ }
  
- 			iter.end = entry;
- 			goto done;
-@@ -260,9 +270,7 @@ struct block_range_iter block_range__create(u64 start, u64 end)
- 				.is_branch	= 1,
- 			};
- 
--			rb_link_right_of_node(&tail->node, &entry->node);
--			rb_insert_color(&tail->node, &block_ranges.root);
--			block_range__debug();
-+			block_range__insert_right(tail, entry);
- 
- 			iter.end = tail;
- 			goto done;
-@@ -283,9 +291,7 @@ struct block_range_iter block_range__create(u64 start, u64 end)
- 				.is_branch	= 0,
- 			};
- 
--			rb_link_left_of_node(&hole->node, &next->node);
--			rb_insert_color(&hole->node, &block_ranges.root);
--			block_range__debug();
-+			block_range__insert_left(hole, next);
- 		}
- 
- 		entry = next;
+ /*
 -- 
 2.17.1
 
