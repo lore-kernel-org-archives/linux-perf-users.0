@@ -2,206 +2,119 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 69594C07E9D
-	for <linux-perf-users@archiver.kernel.org>; Fri, 23 Sep 2022 20:44:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A3DDEC04A95
+	for <linux-perf-users@archiver.kernel.org>; Fri, 23 Sep 2022 23:20:56 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229517AbiIWUoj (ORCPT
+        id S232881AbiIWXUy (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Fri, 23 Sep 2022 16:44:39 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45508 "EHLO
+        Fri, 23 Sep 2022 19:20:54 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38712 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S233272AbiIWUnN (ORCPT
+        with ESMTP id S232742AbiIWXUs (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Fri, 23 Sep 2022 16:43:13 -0400
-Received: from mx0a-00082601.pphosted.com (mx0b-00082601.pphosted.com [67.231.153.30])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 08C82160E67
-        for <linux-perf-users@vger.kernel.org>; Fri, 23 Sep 2022 13:37:39 -0700 (PDT)
-Received: from pps.filterd (m0089730.ppops.net [127.0.0.1])
-        by m0089730.ppops.net (8.17.1.5/8.17.1.5) with ESMTP id 28NIG9Qr028236
-        for <linux-perf-users@vger.kernel.org>; Fri, 23 Sep 2022 13:37:16 -0700
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=fb.com; h=from : to : cc : subject
- : date : message-id : mime-version : content-transfer-encoding :
- content-type; s=facebook; bh=uMW05ntqhTxnqydbjTlEBEZMb68OIqoNaDlQ3mavUhM=;
- b=PjvXvgInDOcO0zsYqAlpPNRgpxm75fc4q3PSV8XFhZR7cEr0BJWsL1nthv/Tgi9QLzJW
- jTwJ4dZo4J406ivdTkl012y0CFyogyKVNCLsgizDB6LM9wRn9wbA5zMUKhALn4n2PgBY
- 46G/U30j5sJW7+y9+DReAYOBGi+DXuewj7Y= 
-Received: from maileast.thefacebook.com ([163.114.130.16])
-        by m0089730.ppops.net (PPS) with ESMTPS id 3jshcss9wg-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT)
-        for <linux-perf-users@vger.kernel.org>; Fri, 23 Sep 2022 13:37:15 -0700
-Received: from twshared22593.02.prn5.facebook.com (2620:10d:c0a8:1b::d) by
- mail.thefacebook.com (2620:10d:c0a8:83::5) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2375.31; Fri, 23 Sep 2022 13:37:14 -0700
-Received: by devvm8797.prn0.facebook.com (Postfix, from userid 2982)
-        id 94901B2B7691; Fri, 23 Sep 2022 13:37:02 -0700 (PDT)
-From:   Tomislav Novak <tnovak@fb.com>
-To:     Alexei Starovoitov <ast@kernel.org>, Will Deacon <will@kernel.org>,
-        Catalin Marinas <catalin.marinas@arm.com>
-CC:     <bpf@vger.kernel.org>, <linux-perf-users@vger.kernel.org>,
-        <linux-arm-kernel@lists.infradead.org>,
-        <linux-kernel@vger.kernel.org>, Tomislav Novak <tnovak@fb.com>,
-        Samuel Gosselin <sgosselin@fb.com>
-Subject: [PATCH] hw_breakpoint: fix single-stepping when using bpf_overflow_handler
-Date:   Fri, 23 Sep 2022 13:36:45 -0700
-Message-ID: <20220923203644.2731604-1-tnovak@fb.com>
-X-Mailer: git-send-email 2.30.2
+        Fri, 23 Sep 2022 19:20:48 -0400
+Received: from mail-wr1-x435.google.com (mail-wr1-x435.google.com [IPv6:2a00:1450:4864:20::435])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7DB7B10B23F
+        for <linux-perf-users@vger.kernel.org>; Fri, 23 Sep 2022 16:20:47 -0700 (PDT)
+Received: by mail-wr1-x435.google.com with SMTP id c11so2055553wrp.11
+        for <linux-perf-users@vger.kernel.org>; Fri, 23 Sep 2022 16:20:47 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20210112;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:from:to:cc:subject:date;
+        bh=HVq49c8Bz/d6Qe5JwhLqq2RMMl1nsvDssCJbwBMkwcs=;
+        b=Cz7Qsoc9gVTOuAYUVB9jrLnxFG/zjR/xFnG9Pzvlyp4bV2vgNNRVUqk7ulF/w4v4s+
+         gZ6KGix0/2dEvm68NLrsceLD9AsQfpjtTQ3s4N6JklT7p6HNsSd8CySpx0ncx0U6IReq
+         ix1xjmGjyn1tGzm3+nRRkCcAAs2/eK6Oovzr1Tg2SMU4FOS89uQ57DkwjLizfLajGXQf
+         MoGG2giz3V4F21YJFEH/NNMcgmgc9J4HhZua89xJO91hWrCOQs1TkCPqk+a3QklxAGEC
+         ogcuPMnhnR4naM4/XneuBCjTN7HQfvgQeJsowh9EmFN5Kj/SgZUWGwzk8lxCMO2pTdcL
+         nXqw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:x-gm-message-state:from:to:cc:subject:date;
+        bh=HVq49c8Bz/d6Qe5JwhLqq2RMMl1nsvDssCJbwBMkwcs=;
+        b=GT7Du2/jlAYuGO1TeFnLlztTJlPpuQWLgYNj4LpOAey4uMeuxIv32xPDt9dbDMNoZF
+         Yx5o6U1lOQHgX0Hf7375VQERxPEL8vkRyvEetSSbEUmxueD+0klWBAoGMvOUPteOzVJ8
+         6uCZZZHieHt3dJxEm5HXCykZfOV7Zs72qpsTVKVAi60V1/f7sdShj4Q0OvrIFV/SIv6S
+         SAgMjBTAhGkZoDVg5//K2zppCzuytONdqOX6WUuFFOEA3XjLKlfgHmjHMr8tc/fdapAO
+         RSl12v3Kx+lYRT0W3oIOxBTvfumKVCh03mq5nkjBefYFVyAwB4FeIbJGSTfyZ6CAFN5E
+         qciQ==
+X-Gm-Message-State: ACrzQf2WsgviJWV1QtmLc9rQLKGRsBXPlujZ5MAn66D8+MNQrRFanZgS
+        BXIyWw+uxR8RrUoxsPfyHQHu44eQ3U9rTOQLJoE3ow==
+X-Google-Smtp-Source: AMsMyM7VS92WtGY2ztj9QRObW3zg+6/faUZ+WC04qvHcF6My7Bx1jTAzwsmhUcJnsPza5ugvrUFTQ8vC7ykM2hEXdyQ=
+X-Received: by 2002:adf:bc13:0:b0:228:6d28:d2cb with SMTP id
+ s19-20020adfbc13000000b002286d28d2cbmr6565920wrg.375.1663975245850; Fri, 23
+ Sep 2022 16:20:45 -0700 (PDT)
 MIME-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
-X-FB-Internal: Safe
-Content-Type: text/plain
-X-Proofpoint-ORIG-GUID: 6r-dXlOGD5hjlUHizqj3cw6OQN2uGm_I
-X-Proofpoint-GUID: 6r-dXlOGD5hjlUHizqj3cw6OQN2uGm_I
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.205,Aquarius:18.0.895,Hydra:6.0.528,FMLib:17.11.122.1
- definitions=2022-09-23_08,2022-09-22_02,2022-06-22_01
+References: <20220923173142.805896-1-namhyung@kernel.org> <20220923173142.805896-2-namhyung@kernel.org>
+In-Reply-To: <20220923173142.805896-2-namhyung@kernel.org>
+From:   Ian Rogers <irogers@google.com>
+Date:   Fri, 23 Sep 2022 16:20:33 -0700
+Message-ID: <CAP-5=fUhCL1GFeS-YVYG=cQ-q891BHCkkpcEKbY3+u8ukPZbcg@mail.gmail.com>
+Subject: Re: [PATCH 1/4] perf record: Fix a segfault in record__read_lost_samples()
+To:     Namhyung Kim <namhyung@kernel.org>
+Cc:     Arnaldo Carvalho de Melo <acme@kernel.org>,
+        Jiri Olsa <jolsa@kernel.org>, Ingo Molnar <mingo@kernel.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Adrian Hunter <adrian.hunter@intel.com>,
+        linux-perf-users@vger.kernel.org,
+        Stephane Eranian <eranian@google.com>
+Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-On ARM platforms is_default_overflow_handler() is used to determine if
-hw_breakpoint code should single-step over the watchpoint trigger or
-let the custom handler deal with it.
+On Fri, Sep 23, 2022 at 10:32 AM Namhyung Kim <namhyung@kernel.org> wrote:
+>
+> When it fails to open events record__open() returns without setting the
+> session->evlist.  Then it gets a segfault in the function trying to read
+> lost sample counts.  You can easily reproduce it as a normal user like:
+>
+>   $ perf record -p 1 true
+>   ...
+>   perf: Segmentation fault
+>   ...
+>
+> Skip the function if it has no evlist.  And add more protection for evsels
+> which are not properly initialized.
+>
+> Signed-off-by: Namhyung Kim <namhyung@kernel.org>
 
-Attaching a BPF program to a watchpoint replaces the handler with
-bpf_overflow_handler, which isn't recognized as a default handler so we
-never step over the instruction triggering the data abort exception (the
-watchpoint keeps firing):
+Acked-by: Ian Rogers <irogers@google.com>
 
-  # bpftrace -e 'watchpoint:0x10000000:4:w { printf("hit\n"); }' ./wp_tes=
-t
-  Attaching 1 probe...
-  hit
-  hit
-  hit
-  [...]
+Thanks,
+Ian
 
-(wp_test performs a single 4-byte store to address 0x10000000)
-
-This patch replaces the check with uses_default_overflow_handler(), which
-accounts for the bpf_overflow_handler() case by also testing if the handl=
-er
-invokes one of the perf_event_output functions via orig_default_handler.
-
-Signed-off-by: Tomislav Novak <tnovak@fb.com>
-Tested-by: Samuel Gosselin <sgosselin@fb.com> # arm64
----
- arch/arm/kernel/hw_breakpoint.c   |  8 ++++----
- arch/arm64/kernel/hw_breakpoint.c |  4 ++--
- include/linux/perf_event.h        | 22 +++++++++++++++++++---
- 3 files changed, 25 insertions(+), 9 deletions(-)
-
-diff --git a/arch/arm/kernel/hw_breakpoint.c b/arch/arm/kernel/hw_breakpo=
-int.c
-index 054e9199f30d..dc0fb7a81371 100644
---- a/arch/arm/kernel/hw_breakpoint.c
-+++ b/arch/arm/kernel/hw_breakpoint.c
-@@ -626,7 +626,7 @@ int hw_breakpoint_arch_parse(struct perf_event *bp,
- 	hw->address &=3D ~alignment_mask;
- 	hw->ctrl.len <<=3D offset;
-=20
--	if (is_default_overflow_handler(bp)) {
-+	if (uses_default_overflow_handler(bp)) {
- 		/*
- 		 * Mismatch breakpoints are required for single-stepping
- 		 * breakpoints.
-@@ -798,7 +798,7 @@ static void watchpoint_handler(unsigned long addr, un=
-signed int fsr,
- 		 * Otherwise, insert a temporary mismatch breakpoint so that
- 		 * we can single-step over the watchpoint trigger.
- 		 */
--		if (!is_default_overflow_handler(wp))
-+		if (!uses_default_overflow_handler(wp))
- 			continue;
- step:
- 		enable_single_step(wp, instruction_pointer(regs));
-@@ -811,7 +811,7 @@ static void watchpoint_handler(unsigned long addr, un=
-signed int fsr,
- 		info->trigger =3D addr;
- 		pr_debug("watchpoint fired: address =3D 0x%x\n", info->trigger);
- 		perf_bp_event(wp, regs);
--		if (is_default_overflow_handler(wp))
-+		if (uses_default_overflow_handler(wp))
- 			enable_single_step(wp, instruction_pointer(regs));
- 	}
-=20
-@@ -886,7 +886,7 @@ static void breakpoint_handler(unsigned long unknown,=
- struct pt_regs *regs)
- 			info->trigger =3D addr;
- 			pr_debug("breakpoint fired: address =3D 0x%x\n", addr);
- 			perf_bp_event(bp, regs);
--			if (is_default_overflow_handler(bp))
-+			if (uses_default_overflow_handler(bp))
- 				enable_single_step(bp, addr);
- 			goto unlock;
- 		}
-diff --git a/arch/arm64/kernel/hw_breakpoint.c b/arch/arm64/kernel/hw_bre=
-akpoint.c
-index b29a311bb055..9659a9555c63 100644
---- a/arch/arm64/kernel/hw_breakpoint.c
-+++ b/arch/arm64/kernel/hw_breakpoint.c
-@@ -654,7 +654,7 @@ static int breakpoint_handler(unsigned long unused, u=
-nsigned long esr,
- 		perf_bp_event(bp, regs);
-=20
- 		/* Do we need to handle the stepping? */
--		if (is_default_overflow_handler(bp))
-+		if (uses_default_overflow_handler(bp))
- 			step =3D 1;
- unlock:
- 		rcu_read_unlock();
-@@ -733,7 +733,7 @@ static u64 get_distance_from_watchpoint(unsigned long=
- addr, u64 val,
- static int watchpoint_report(struct perf_event *wp, unsigned long addr,
- 			     struct pt_regs *regs)
- {
--	int step =3D is_default_overflow_handler(wp);
-+	int step =3D uses_default_overflow_handler(wp);
- 	struct arch_hw_breakpoint *info =3D counter_arch_bp(wp);
-=20
- 	info->trigger =3D addr;
-diff --git a/include/linux/perf_event.h b/include/linux/perf_event.h
-index ee8b9ecdc03b..f174b77437f5 100644
---- a/include/linux/perf_event.h
-+++ b/include/linux/perf_event.h
-@@ -1105,15 +1105,31 @@ extern int perf_event_output(struct perf_event *e=
-vent,
- 			     struct pt_regs *regs);
-=20
- static inline bool
--is_default_overflow_handler(struct perf_event *event)
-+__is_default_overflow_handler(perf_overflow_handler_t overflow_handler)
- {
--	if (likely(event->overflow_handler =3D=3D perf_event_output_forward))
-+	if (likely(overflow_handler =3D=3D perf_event_output_forward))
- 		return true;
--	if (unlikely(event->overflow_handler =3D=3D perf_event_output_backward)=
-)
-+	if (unlikely(overflow_handler =3D=3D perf_event_output_backward))
- 		return true;
- 	return false;
- }
-=20
-+#define is_default_overflow_handler(event) \
-+	__is_default_overflow_handler((event)->overflow_handler)
-+
-+#ifdef CONFIG_BPF_SYSCALL
-+static inline bool uses_default_overflow_handler(struct perf_event *even=
-t)
-+{
-+	if (likely(is_default_overflow_handler(event)))
-+		return true;
-+
-+	return __is_default_overflow_handler(event->orig_overflow_handler);
-+}
-+#else
-+#define uses_default_overflow_handler(event) \
-+	is_default_overflow_handler(event)
-+#endif
-+
- extern void
- perf_event_header__init_id(struct perf_event_header *header,
- 			   struct perf_sample_data *data,
---=20
-2.30.2
-
+> ---
+>  tools/perf/builtin-record.c | 6 ++++++
+>  1 file changed, 6 insertions(+)
+>
+> diff --git a/tools/perf/builtin-record.c b/tools/perf/builtin-record.c
+> index 741e763436ca..f4f1619199e5 100644
+> --- a/tools/perf/builtin-record.c
+> +++ b/tools/perf/builtin-record.c
+> @@ -1888,6 +1888,10 @@ static void record__read_lost_samples(struct record *rec)
+>         struct perf_record_lost_samples *lost;
+>         struct evsel *evsel;
+>
+> +       /* there was an error during record__open */
+> +       if (session->evlist == NULL)
+> +               return;
+> +
+>         lost = zalloc(PERF_SAMPLE_MAX_SIZE);
+>         if (lost == NULL) {
+>                 pr_debug("Memory allocation failed\n");
+> @@ -1899,6 +1903,8 @@ static void record__read_lost_samples(struct record *rec)
+>         evlist__for_each_entry(session->evlist, evsel) {
+>                 struct xyarray *xy = evsel->core.sample_id;
+>
+> +               if (xy == NULL || evsel->core.fd == NULL)
+> +                       continue;
+>                 if (xyarray__max_x(evsel->core.fd) != xyarray__max_x(xy) ||
+>                     xyarray__max_y(evsel->core.fd) != xyarray__max_y(xy)) {
+>                         pr_debug("Unmatched FD vs. sample ID: skip reading LOST count\n");
+> --
+> 2.37.3.998.g577e59143f-goog
+>
