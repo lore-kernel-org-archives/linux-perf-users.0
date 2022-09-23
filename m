@@ -2,159 +2,167 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C97DAC6FA82
-	for <linux-perf-users@archiver.kernel.org>; Fri, 23 Sep 2022 13:34:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8B17EECAAD8
+	for <linux-perf-users@archiver.kernel.org>; Fri, 23 Sep 2022 16:45:39 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230369AbiIWNeR (ORCPT
+        id S230106AbiIWQpi (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Fri, 23 Sep 2022 09:34:17 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43024 "EHLO
+        Fri, 23 Sep 2022 12:45:38 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40190 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229726AbiIWNeP (ORCPT
+        with ESMTP id S231566AbiIWQpg (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Fri, 23 Sep 2022 09:34:15 -0400
-Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTP id E99EE131F54;
-        Fri, 23 Sep 2022 06:34:13 -0700 (PDT)
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id DFD3A1042;
-        Fri, 23 Sep 2022 06:34:19 -0700 (PDT)
-Received: from FVFF77S0Q05N (unknown [10.57.80.223])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 2712F3F73B;
-        Fri, 23 Sep 2022 06:34:10 -0700 (PDT)
-Date:   Fri, 23 Sep 2022 14:34:07 +0100
-From:   Mark Rutland <mark.rutland@arm.com>
-To:     Chen Zhongjin <chenzhongjin@huawei.com>
-Cc:     linux-kernel@vger.kernel.org, linux-riscv@lists.infradead.org,
-        linux-perf-users@vger.kernel.org, paul.walmsley@sifive.com,
-        palmer@dabbelt.com, aou@eecs.berkeley.edu, peterz@infradead.org,
-        mingo@redhat.com, acme@kernel.org,
-        alexander.shishkin@linux.intel.com, namhyung@kernel.org,
-        jolsa@kernel.org, guoren@kernel.org, frederic@kernel.org,
-        vincent.chen@sifive.com, ardb@kernel.org, mhiramat@kernel.org,
-        rostedt@goodmis.org, keescook@chromium.org,
-        catalin.marinas@arm.com, Josh Poimboeuf <jpoimboe@kernel.org>
-Subject: Re: [PATCH for-next v2 0/4] riscv: Improvments for stacktrace
-Message-ID: <Yy21z0NgBgJXF1Km@FVFF77S0Q05N>
-References: <20220921125128.33913-1-chenzhongjin@huawei.com>
- <YysZf2Y37QMBDt8n@FVFF77S0Q05N>
- <7834a259-4bd7-a955-acaa-21c36c7c22c2@huawei.com>
+        Fri, 23 Sep 2022 12:45:36 -0400
+Received: from mail-wm1-x330.google.com (mail-wm1-x330.google.com [IPv6:2a00:1450:4864:20::330])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4D9FE12204C
+        for <linux-perf-users@vger.kernel.org>; Fri, 23 Sep 2022 09:45:33 -0700 (PDT)
+Received: by mail-wm1-x330.google.com with SMTP id k3-20020a05600c1c8300b003b4fa1a85f8so315222wms.3
+        for <linux-perf-users@vger.kernel.org>; Fri, 23 Sep 2022 09:45:33 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20210112;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:from:to:cc:subject:date;
+        bh=mOJBFjRRTQOLMhXeuWiEa3iVJxoMFGP8tXYc65hDHv4=;
+        b=KI6qxW+rqSa88pnT9BHcMzTYQ/EPlGQMkmepwufMnKjb8Grb092QhNVKTREgMoHF0E
+         P7Ik7btej3gGALjuaMQWArzO95vir14IXvpdNcv1xz8skHm2QXjJrQNKPGPEWoIGEAKd
+         xy7+wjI1etv80s9EENeAbcPEV/r9aWfJ9LXdCmxp3gI1/aNq0NR5jQfGbA40Yc26l/Ku
+         dNwDh2vY5boD9JqtqAuH708KBq+GBDWbXt147hWRI1kF9ARpcvk7DuCH3LPbjfrheF1l
+         dOOFPypylFxe1f0fKBO+Vo9jtrzArO5bEC911Q7HsvzaIPIOm6vEdVQvKg1jbnQpWCl0
+         CuLg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:x-gm-message-state:from:to:cc:subject:date;
+        bh=mOJBFjRRTQOLMhXeuWiEa3iVJxoMFGP8tXYc65hDHv4=;
+        b=SFRc4D7l64EO/GDSIq9TK9a6fexY57L6hrRioqvB8kQ7W32OEv8qfL5yGDbUVPQHYC
+         90F35pnttk5sli5ZBbJni2u1HTZ9bDFvE9cK3PPW+VnNLArSIveOxIQs0mAHMiKMq1wg
+         zAI49r6IgijW11ROLD9p1NE0bnpCnNCLI8fY7ZIYM3b8sjWE4mGiNQRVjWhIoPDK00N1
+         cRAnqEuF3xaqxJ9Dz80Uj98x4IdxmWP9mmmOafpCfr1eA4gSIRGIi/V0gbLF16WI7HWu
+         qdgMe1YmiJ5V5biwofljKi8+NYUvALqg/iH9yXI+f4571cXb/cUKjABLpl+lhFx96fv6
+         RqBg==
+X-Gm-Message-State: ACrzQf22QxRoOn1LP8TpFL9dguJbbVL1WqA4CUhJOKW/QC/1IB+cGd8e
+        uXQ1nmlV9Zb2licX3sxgM8HN6Dp2pX49pXG/z02e0g==
+X-Google-Smtp-Source: AMsMyM5/YN20pETls7iMs8r2+NepnIOp044ol2iYCi6uj3oVv5XELolt3qWypHDMCWdVyZbTE4EhOYkJjAxzgEc8d5Q=
+X-Received: by 2002:a05:600c:2181:b0:3b4:74e4:16f8 with SMTP id
+ e1-20020a05600c218100b003b474e416f8mr6312587wme.174.1663951531528; Fri, 23
+ Sep 2022 09:45:31 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <7834a259-4bd7-a955-acaa-21c36c7c22c2@huawei.com>
+References: <20220923063205.772936-1-namhyung@kernel.org>
+In-Reply-To: <20220923063205.772936-1-namhyung@kernel.org>
+From:   Ian Rogers <irogers@google.com>
+Date:   Fri, 23 Sep 2022 09:45:19 -0700
+Message-ID: <CAP-5=fWwNwtocMR3s1Su2k2vZAwL4yhX19UGZ4i0dMXFDFFBJA@mail.gmail.com>
+Subject: Re: [PATCH v4] perf tools: Get a perf cgroup more portably in BPF
+To:     Namhyung Kim <namhyung@kernel.org>
+Cc:     Arnaldo Carvalho de Melo <acme@kernel.org>,
+        Jiri Olsa <jolsa@kernel.org>, Ingo Molnar <mingo@kernel.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Adrian Hunter <adrian.hunter@intel.com>,
+        linux-perf-users@vger.kernel.org, Song Liu <songliubraving@fb.com>,
+        Hao Luo <haoluo@google.com>, bpf@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-On Thu, Sep 22, 2022 at 04:22:23PM +0800, Chen Zhongjin wrote:
-> Hi,
-> 
-> On 2022/9/21 22:02, Mark Rutland wrote:
-> > On Wed, Sep 21, 2022 at 08:51:23PM +0800, Chen Zhongjin wrote:
-> > > Currently, the stacktrace with FRAME_POINTER on riscv has some problem:
-> > > 
-> > > 1. stacktrace will stop at irq so it can't get the stack frames before
-> > > irq entry.
-> > > 2. stacktrace can't unwind all the real stack frames when there is
-> > > k{ret}probes or ftrace.
-> > > 
-> > > These are mainly becase when there is a pt_regs on stack, we can't unwind
-> > > the stack frame as normal function.
-> > > 
-> > > Some architectures (e.g. arm64) create a extra stackframe inside pt_regs.
-> > > However this doesn't work for riscv because the ra is not ensured to be
-> > > pushed to stack. As explained in:
-> > > commit f766f77a74f5("riscv/stacktrace: Fix stack output without ra on the stack top")
-> > FWIW, this is also a latent problem on arm64, since we don't know whether the
-> > LR is live at an exception boundary (and we currently always ignore it).
-> 
-> In fact this is still a problem for riscv, I didn't unwind the caller of
-> ftrace or probed func
-> 
-> of kretprobe because they are inside function pro/epilogue.
-> 
-> The problem on riscv is a little more complex, for leaf function, ra will
-> always not be pushed to stack and fp will be pushed to ra slot. This patch
-> solved this problem.
+On Thu, Sep 22, 2022 at 11:32 PM Namhyung Kim <namhyung@kernel.org> wrote:
+>
+> The perf_event_cgrp_id can be different on other configurations.
+> To be more portable as CO-RE, it needs to get the cgroup subsys id
+> using the bpf_core_enum_value() helper.
+>
+> Suggested-by: Ian Rogers <irogers@google.com>
+> Signed-off-by: Namhyung Kim <namhyung@kernel.org>
 
-That's the same on arm64, our `LR` is equivalent to your `RA`.
+Reviewed-by: Ian Rogers <irogers@google.com>
 
-I have a series at:
-
-  https://git.kernel.org/pub/scm/linux/kernel/git/mark/linux.git/log/?h=arm64/stacktrace/metadata
-
-... which explciitly indicates pt_regs::pc and pt_regs::lr in the stack trace
-output (and for RELIABLE_STACKTRACE we'd mark the LR entries as unreliable).
-
-> > My plan to fix that on arm64 is to push an empty frame record to the stack upon
-> > an exception, and use that to find the pt_regs, from which we can get the PC
-> > and LR (and then we can report the later as unreliable). That should be roughly
-> > equivalent to what you do in this series (where use use the LSB to identify
-> > that the pointer is actually a pt_regs).
-> 
-> IIRC, this solution looks like:
-> 
-> =====
-> 
-> Func1     { lr, fp } or { nothing }
-> 
-> irq entry { pt_regs & empty stackframe[2] }
-> 
-> handler   { lr, fp }
-> 
-> ======
-> 
-> handler->fp points to stackframe, and when we find stackframe is empty, we
-> know we are inside
-> 
-> an pt_regs and can find registers by offset.
-> 
-> I think it's available, there no other scenario will cause the frame list
-> contains zero (unless stack is clobbered).
-
-That's basically what I do in my series; see:
-
-  https://git.kernel.org/pub/scm/linux/kernel/git/mark/linux.git/commit/?h=arm64/stacktrace/metadata&id=7394a825bc4f8243b28261517999793acb6f11cd
-
-... but I haven't posted that to the list yet as I *also* want to add code to
-check that we were at an exception boundary when we saw this (based on the
-prior PC/LR being in the entry text, using some metadata I have yet to add).
-
-> And it seems only fp slot should be zero, lr will be clobbered after
-> function call, we cannot use lr inside pt_regs.
-
-I'm not sure what you mean here.
-
-I agree that the LR in the pt_regs isn't *reliable*, and won't *always* be
-valid, but it will sometimes be valid.
-
-> > One important thing to note is that when crossing an exception boundary you
-> > won't know whether RA is live, and so you might try to consume an address twice
-> > (if it has also been pushed to the stack). That could be problematic for
-> > unwinding ftrace or kretprobes. On arm64 we had to implement
-> > HAVE_FUNCTION_GRAPH_RET_ADDR_PTR so that we could reliably unwind ftrace. See
-> > commit:
-> > 
-> >    c6d3cd32fd0064af ("arm64: ftrace: use HAVE_FUNCTION_GRAPH_RET_ADDR_PTR")
-> > 
-> > ... and we haven't yet come up with something similar for kretprobes (though I
-> > suspect we'll need to).
-> 
-> Can we test the sp and fp inside pt_regs? Because luckily arm64 saves lr, fp
-> and moves sp together.
-> 
-> Before sp is moved we will have fp == sp from last frame 'mov x29, sp'. So
-> if they are same, we uses the lr in pt_regs, conversely we use lr on stack.
-
-The frame record (which FP points to) can live anywhere in a stack frame, so
-comparing aginst SP doesn't tell us anything. Regardless of whether FP == SP,
-the LTR might be valid or invalid.
-
-There is no way of knowing if LR is live without information from the compiler
-that we don't have today (though from LPC 2022, it seems like CTF *might* be
-sufficient -- that's on my list of things to look at).
+Would be good to get this into perf/urgent, does it need Fixes tags for that?
 
 Thanks,
-Mark.
+Ian
+
+> ---
+> v4 changes)
+>  * add a missing check in the off_cpu
+>
+> v3 changes)
+>  * check compiler features for enum value
+>
+> v2 changes)
+>  * fix off_cpu.bpf.c too
+>  * get perf_subsys_id only once
+>
+>  tools/perf/util/bpf_skel/bperf_cgroup.bpf.c | 11 ++++++++++-
+>  tools/perf/util/bpf_skel/off_cpu.bpf.c      | 18 ++++++++++++++----
+>  2 files changed, 24 insertions(+), 5 deletions(-)
+>
+> diff --git a/tools/perf/util/bpf_skel/bperf_cgroup.bpf.c b/tools/perf/util/bpf_skel/bperf_cgroup.bpf.c
+> index 292c430768b5..8e7520e273db 100644
+> --- a/tools/perf/util/bpf_skel/bperf_cgroup.bpf.c
+> +++ b/tools/perf/util/bpf_skel/bperf_cgroup.bpf.c
+> @@ -48,6 +48,7 @@ const volatile __u32 num_cpus = 1;
+>
+>  int enabled = 0;
+>  int use_cgroup_v2 = 0;
+> +int perf_subsys_id = -1;
+>
+>  static inline int get_cgroup_v1_idx(__u32 *cgrps, int size)
+>  {
+> @@ -58,7 +59,15 @@ static inline int get_cgroup_v1_idx(__u32 *cgrps, int size)
+>         int level;
+>         int cnt;
+>
+> -       cgrp = BPF_CORE_READ(p, cgroups, subsys[perf_event_cgrp_id], cgroup);
+> +       if (perf_subsys_id == -1) {
+> +#if __has_builtin(__builtin_preserve_enum_value)
+> +               perf_subsys_id = bpf_core_enum_value(enum cgroup_subsys_id,
+> +                                                    perf_event_cgrp_id);
+> +#else
+> +               perf_subsys_id = perf_event_cgrp_id;
+> +#endif
+> +       }
+> +       cgrp = BPF_CORE_READ(p, cgroups, subsys[perf_subsys_id], cgroup);
+>         level = BPF_CORE_READ(cgrp, level);
+>
+>         for (cnt = 0; i < MAX_LEVELS; i++) {
+> diff --git a/tools/perf/util/bpf_skel/off_cpu.bpf.c b/tools/perf/util/bpf_skel/off_cpu.bpf.c
+> index c4ba2bcf179f..38e3b287dbb2 100644
+> --- a/tools/perf/util/bpf_skel/off_cpu.bpf.c
+> +++ b/tools/perf/util/bpf_skel/off_cpu.bpf.c
+> @@ -94,6 +94,8 @@ const volatile bool has_prev_state = false;
+>  const volatile bool needs_cgroup = false;
+>  const volatile bool uses_cgroup_v1 = false;
+>
+> +int perf_subsys_id = -1;
+> +
+>  /*
+>   * Old kernel used to call it task_struct->state and now it's '__state'.
+>   * Use BPF CO-RE "ignored suffix rule" to deal with it like below:
+> @@ -119,11 +121,19 @@ static inline __u64 get_cgroup_id(struct task_struct *t)
+>  {
+>         struct cgroup *cgrp;
+>
+> -       if (uses_cgroup_v1)
+> -               cgrp = BPF_CORE_READ(t, cgroups, subsys[perf_event_cgrp_id], cgroup);
+> -       else
+> -               cgrp = BPF_CORE_READ(t, cgroups, dfl_cgrp);
+> +       if (!uses_cgroup_v1)
+> +               return BPF_CORE_READ(t, cgroups, dfl_cgrp, kn, id);
+> +
+> +       if (perf_subsys_id == -1) {
+> +#if __has_builtin(__builtin_preserve_enum_value)
+> +               perf_subsys_id = bpf_core_enum_value(enum cgroup_subsys_id,
+> +                                                    perf_event_cgrp_id);
+> +#else
+> +               perf_subsys_id = perf_event_cgrp_id;
+> +#endif
+> +       }
+>
+> +       cgrp = BPF_CORE_READ(t, cgroups, subsys[perf_subsys_id], cgroup);
+>         return BPF_CORE_READ(cgrp, kn, id);
+>  }
+>
+> --
+> 2.37.3.998.g577e59143f-goog
+>
