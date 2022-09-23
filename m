@@ -2,40 +2,40 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 99213ECAAD8
-	for <linux-perf-users@archiver.kernel.org>; Fri, 23 Sep 2022 08:11:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id ADF87C6FA90
+	for <linux-perf-users@archiver.kernel.org>; Fri, 23 Sep 2022 08:11:36 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231199AbiIWILe (ORCPT
+        id S231209AbiIWILf (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Fri, 23 Sep 2022 04:11:34 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38698 "EHLO
+        Fri, 23 Sep 2022 04:11:35 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38710 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231209AbiIWILd (ORCPT
+        with ESMTP id S231213AbiIWILe (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Fri, 23 Sep 2022 04:11:33 -0400
-Received: from szxga08-in.huawei.com (szxga08-in.huawei.com [45.249.212.255])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E653C12C1C0
-        for <linux-perf-users@vger.kernel.org>; Fri, 23 Sep 2022 01:11:31 -0700 (PDT)
-Received: from dggemv704-chm.china.huawei.com (unknown [172.30.72.54])
-        by szxga08-in.huawei.com (SkyGuard) with ESMTP id 4MYlB0732Tz1P6rn;
-        Fri, 23 Sep 2022 16:07:20 +0800 (CST)
+        Fri, 23 Sep 2022 04:11:34 -0400
+Received: from szxga01-in.huawei.com (szxga01-in.huawei.com [45.249.212.187])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DAC3412C1C2
+        for <linux-perf-users@vger.kernel.org>; Fri, 23 Sep 2022 01:11:32 -0700 (PDT)
+Received: from dggemv703-chm.china.huawei.com (unknown [172.30.72.54])
+        by szxga01-in.huawei.com (SkyGuard) with ESMTP id 4MYlB12YT3zlWqL;
+        Fri, 23 Sep 2022 16:07:21 +0800 (CST)
 Received: from kwepemm600008.china.huawei.com (7.193.23.88) by
- dggemv704-chm.china.huawei.com (10.3.19.47) with Microsoft SMTP Server
+ dggemv703-chm.china.huawei.com (10.3.19.46) with Microsoft SMTP Server
  (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2375.31; Fri, 23 Sep 2022 16:11:30 +0800
+ 15.1.2375.31; Fri, 23 Sep 2022 16:11:31 +0800
 Received: from huawei.com (10.175.100.227) by kwepemm600008.china.huawei.com
  (7.193.23.88) with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2375.31; Fri, 23 Sep
- 2022 16:11:29 +0800
+ 2022 16:11:30 +0800
 From:   Shang XiaoJing <shangxiaojing@huawei.com>
 To:     <peterz@infradead.org>, <mingo@redhat.com>, <acme@kernel.org>,
         <mark.rutland@arm.com>, <alexander.shishkin@linux.intel.com>,
         <jolsa@kernel.org>, <namhyung@kernel.org>,
         <linux-perf-users@vger.kernel.org>
 CC:     <yao.jin@linux.intel.com>, <shangxiaojing@huawei.com>
-Subject: [PATCH v2 5/6] perf genelf: Add create_section_and_get_data helper
-Date:   Fri, 23 Sep 2022 16:45:39 +0800
-Message-ID: <20220923084540.25849-6-shangxiaojing@huawei.com>
+Subject: [PATCH v2 6/6] perf script: Add perf_sample__fprintf_dsoname helper
+Date:   Fri, 23 Sep 2022 16:45:40 +0800
+Message-ID: <20220923084540.25849-7-shangxiaojing@huawei.com>
 X-Mailer: git-send-email 2.17.1
 In-Reply-To: <20220923084540.25849-1-shangxiaojing@huawei.com>
 References: <20220923084540.25849-1-shangxiaojing@huawei.com>
@@ -49,184 +49,134 @@ Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-Wrap repeated code in helper function create_section_and_get_data, which
-create section and new data by using Elf.
+Wrap repeated code in helper function perf_sample__fprintf_dsoname(),
+which prints the dsoname and parentheses to the file, then return the
+printed size.
 
 Signed-off-by: Shang XiaoJing <shangxiaojing@huawei.com>
 ---
- tools/perf/util/genelf.c | 96 +++++++++++-----------------------------
- 1 file changed, 25 insertions(+), 71 deletions(-)
+changes in v2:
+- new patch since v1
+---
+ tools/perf/builtin-script.c | 65 +++++++++++++++----------------------
+ 1 file changed, 26 insertions(+), 39 deletions(-)
 
-diff --git a/tools/perf/util/genelf.c b/tools/perf/util/genelf.c
-index ed28a0dbcb7f..3ee048ca5a40 100644
---- a/tools/perf/util/genelf.c
-+++ b/tools/perf/util/genelf.c
-@@ -157,17 +157,8 @@ gen_build_id(struct buildid_note *note, unsigned long load_addr, const void *cod
- #endif
+diff --git a/tools/perf/builtin-script.c b/tools/perf/builtin-script.c
+index 886f53cfa257..9487c10135ec 100644
+--- a/tools/perf/builtin-script.c
++++ b/tools/perf/builtin-script.c
+@@ -885,6 +885,19 @@ static int print_bstack_flags(FILE *fp, struct branch_entry *br)
+ 		       get_branch_type(br));
+ }
  
- static int
--jit_add_eh_frame_info(Elf *e, void* unwinding, uint64_t unwinding_header_size,
--		      uint64_t unwinding_size, uint64_t base_offset)
-+create_section_and_get_data(Elf *e, Elf_Scn *scn, Elf_Data *d)
- {
--	Elf_Data *d;
--	Elf_Scn *scn;
--	Elf_Shdr *shdr;
--	uint64_t unwinding_table_size = unwinding_size - unwinding_header_size;
--
--	/*
--	 * setup eh_frame section
--	 */
- 	scn = elf_newscn(e);
- 	if (!scn) {
- 		warnx("cannot create section");
-@@ -179,6 +170,23 @@ jit_add_eh_frame_info(Elf *e, void* unwinding, uint64_t unwinding_header_size,
- 		warnx("cannot get new data");
- 		return -1;
- 	}
-+	return 0;
++static int perf_sample__fprintf_dsoname(struct perf_event_attr *attr,
++					 struct map *map, FILE *fp)
++{
++	int printed = 0;
++
++	if (PRINT_FIELD(DSO)) {
++		printed += fprintf(fp, "(");
++		printed += map__fprintf_dsoname(map, fp);
++		printed += fprintf(fp, ")");
++	}
++	return printed;
 +}
 +
-+static int
-+jit_add_eh_frame_info(Elf *e, void* unwinding, uint64_t unwinding_header_size,
-+		      uint64_t unwinding_size, uint64_t base_offset)
-+{
-+	Elf_Data *d = NULL;
-+	Elf_Scn *scn = NULL;
-+	Elf_Shdr *shdr;
-+	uint64_t unwinding_table_size = unwinding_size - unwinding_header_size;
-+
-+	/*
-+	 * setup eh_frame section
-+	 */
-+	if (create_section_and_get_data(e, scn, d))
-+		return -1;
+ static int perf_sample__fprintf_brstack(struct perf_sample *sample,
+ 					struct thread *thread,
+ 					struct perf_event_attr *attr, FILE *fp)
+@@ -910,18 +923,10 @@ static int perf_sample__fprintf_brstack(struct perf_sample *sample,
+ 		}
  
- 	d->d_align = 8;
- 	d->d_off = 0LL;
-@@ -202,17 +210,8 @@ jit_add_eh_frame_info(Elf *e, void* unwinding, uint64_t unwinding_header_size,
- 	/*
- 	 * setup eh_frame_hdr section
- 	 */
--	scn = elf_newscn(e);
--	if (!scn) {
--		warnx("cannot create section");
-+	if (create_section_and_get_data(e, scn, d))
- 		return -1;
--	}
--
--	d = elf_newdata(scn);
--	if (!d) {
--		warnx("cannot get new data");
--		return -1;
--	}
+ 		printed += fprintf(fp, " 0x%"PRIx64, from);
+-		if (PRINT_FIELD(DSO)) {
+-			printed += fprintf(fp, "(");
+-			printed += map__fprintf_dsoname(alf.map, fp);
+-			printed += fprintf(fp, ")");
+-		}
++		printed += perf_sample__fprintf_dsoname(attr, alf.map, fp);
  
- 	d->d_align = 4;
- 	d->d_off = 0LL;
-@@ -250,7 +249,7 @@ jit_write_elf(int fd, uint64_t load_addr, const char *sym,
- 	      void *unwinding, uint64_t unwinding_header_size, uint64_t unwinding_size)
- {
- 	Elf *e;
--	Elf_Data *d;
-+	Elf_Data *d = NULL;
- 	Elf_Scn *scn;
- 	Elf_Ehdr *ehdr;
- 	Elf_Shdr *shdr;
-@@ -290,17 +289,8 @@ jit_write_elf(int fd, uint64_t load_addr, const char *sym,
- 	/*
- 	 * setup text section
- 	 */
--	scn = elf_newscn(e);
--	if (!scn) {
--		warnx("cannot create section");
-+	if (create_section_and_get_data(e, scn, d))
- 		goto error;
--	}
--
--	d = elf_newdata(scn);
--	if (!d) {
--		warnx("cannot get new data");
--		goto error;
--	}
+ 		printed += fprintf(fp, "/0x%"PRIx64, to);
+-		if (PRINT_FIELD(DSO)) {
+-			printed += fprintf(fp, "(");
+-			printed += map__fprintf_dsoname(alt.map, fp);
+-			printed += fprintf(fp, ")");
+-		}
++		printed += perf_sample__fprintf_dsoname(attr, alt.map, fp);
  
- 	d->d_align = 16;
- 	d->d_off = 0LL;
-@@ -336,17 +326,8 @@ jit_write_elf(int fd, uint64_t load_addr, const char *sym,
- 	/*
- 	 * setup section headers string table
- 	 */
--	scn = elf_newscn(e);
--	if (!scn) {
--		warnx("cannot create section");
-+	if (create_section_and_get_data(e, scn, d))
- 		goto error;
--	}
--
--	d = elf_newdata(scn);
--	if (!d) {
--		warnx("cannot get new data");
--		goto error;
--	}
- 
- 	d->d_align = 1;
- 	d->d_off = 0LL;
-@@ -372,17 +353,8 @@ jit_write_elf(int fd, uint64_t load_addr, const char *sym,
- 	symtab[1].st_size  = csize;
- 	symtab[1].st_value = GEN_ELF_TEXT_OFFSET;
- 
--	scn = elf_newscn(e);
--	if (!scn) {
--		warnx("cannot create section");
--		goto error;
--	}
--
--	d = elf_newdata(scn);
--	if (!d) {
--		warnx("cannot get new data");
-+	if (create_section_and_get_data(e, scn, d))
- 		goto error;
--	}
- 
- 	d->d_align = 8;
- 	d->d_off = 0LL;
-@@ -415,17 +387,8 @@ jit_write_elf(int fd, uint64_t load_addr, const char *sym,
+ 		printed += print_bstack_flags(fp, entries + i);
  	}
- 	strcpy(strsym + 1, sym);
+@@ -953,18 +958,10 @@ static int perf_sample__fprintf_brstacksym(struct perf_sample *sample,
+ 		thread__find_symbol_fb(thread, sample->cpumode, to, &alt);
  
--	scn = elf_newscn(e);
--	if (!scn) {
--		warnx("cannot create section");
--		goto error;
--	}
--
--	d = elf_newdata(scn);
--	if (!d) {
--		warnx("cannot get new data");
-+	if (create_section_and_get_data(e, scn, d))
- 		goto error;
--	}
+ 		printed += symbol__fprintf_symname_offs(alf.sym, &alf, fp);
+-		if (PRINT_FIELD(DSO)) {
+-			printed += fprintf(fp, "(");
+-			printed += map__fprintf_dsoname(alf.map, fp);
+-			printed += fprintf(fp, ")");
+-		}
++		printed += perf_sample__fprintf_dsoname(attr, alf.map, fp);
+ 		printed += fprintf(fp, "%c", '/');
+ 		printed += symbol__fprintf_symname_offs(alt.sym, &alt, fp);
+-		if (PRINT_FIELD(DSO)) {
+-			printed += fprintf(fp, "(");
+-			printed += map__fprintf_dsoname(alt.map, fp);
+-			printed += fprintf(fp, ")");
+-		}
++		printed += perf_sample__fprintf_dsoname(attr, alt.map, fp);
+ 		printed += print_bstack_flags(fp, entries + i);
+ 	}
  
- 	d->d_align = 1;
- 	d->d_off = 0LL;
-@@ -448,17 +411,8 @@ jit_write_elf(int fd, uint64_t load_addr, const char *sym,
- 	/*
- 	 * setup build-id section
- 	 */
--	scn = elf_newscn(e);
--	if (!scn) {
--		warnx("cannot create section");
--		goto error;
--	}
--
--	d = elf_newdata(scn);
--	if (!d) {
--		warnx("cannot get new data");
-+	if (create_section_and_get_data(e, scn, d))
- 		goto error;
--	}
+@@ -1000,17 +997,9 @@ static int perf_sample__fprintf_brstackoff(struct perf_sample *sample,
+ 			to = map__map_ip(alt.map, to);
  
- 	/*
- 	 * build-id generation
+ 		printed += fprintf(fp, " 0x%"PRIx64, from);
+-		if (PRINT_FIELD(DSO)) {
+-			printed += fprintf(fp, "(");
+-			printed += map__fprintf_dsoname(alf.map, fp);
+-			printed += fprintf(fp, ")");
+-		}
++		printed += perf_sample__fprintf_dsoname(attr, alf.map, fp);
+ 		printed += fprintf(fp, "/0x%"PRIx64, to);
+-		if (PRINT_FIELD(DSO)) {
+-			printed += fprintf(fp, "(");
+-			printed += map__fprintf_dsoname(alt.map, fp);
+-			printed += fprintf(fp, ")");
+-		}
++		printed += perf_sample__fprintf_dsoname(attr, alt.map, fp);
+ 		printed += print_bstack_flags(fp, entries + i);
+ 	}
+ 
+@@ -1372,11 +1361,9 @@ static int perf_sample__fprintf_addr(struct perf_sample *sample,
+ 			printed += symbol__fprintf_symname(al.sym, fp);
+ 	}
+ 
+-	if (PRINT_FIELD(DSO)) {
+-		printed += fprintf(fp, " (");
+-		printed += map__fprintf_dsoname(al.map, fp);
+-		printed += fprintf(fp, ")");
+-	}
++	if (PRINT_FIELD(DSO))
++		printed += fprintf(fp, " ");
++	printed += perf_sample__fprintf_dsoname(attr, al.map, fp);
+ out:
+ 	return printed;
+ }
+@@ -1435,10 +1422,10 @@ static int perf_sample__fprintf_callindent(struct perf_sample *sample,
+ 
+ 	name = resolve_branch_sym(sample, evsel, thread, al, addr_al, &ip);
+ 
+-	if (PRINT_FIELD(DSO) && !(PRINT_FIELD(IP) || PRINT_FIELD(ADDR))) {
+-		dlen += fprintf(fp, "(");
+-		dlen += map__fprintf_dsoname(al->map, fp);
+-		dlen += fprintf(fp, ")\t");
++	if (!(PRINT_FIELD(IP) || PRINT_FIELD(ADDR))) {
++		dlen += perf_sample__fprintf_dsoname(attr, al->map, fp);
++		if (PRINT_FIELD(DSO))
++			dlen += fprintf(fp, "\t");
+ 	}
+ 
+ 	if (name)
 -- 
 2.17.1
 
