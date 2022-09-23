@@ -2,180 +2,206 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 84AF6C6FA82
-	for <linux-perf-users@archiver.kernel.org>; Fri, 23 Sep 2022 17:32:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 69594C07E9D
+	for <linux-perf-users@archiver.kernel.org>; Fri, 23 Sep 2022 20:44:40 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231593AbiIWRcQ (ORCPT
+        id S229517AbiIWUoj (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Fri, 23 Sep 2022 13:32:16 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46222 "EHLO
+        Fri, 23 Sep 2022 16:44:39 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45508 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231641AbiIWRcJ (ORCPT
+        with ESMTP id S233272AbiIWUnN (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Fri, 23 Sep 2022 13:32:09 -0400
-Received: from mail-pj1-x1034.google.com (mail-pj1-x1034.google.com [IPv6:2607:f8b0:4864:20::1034])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C7E03151B02;
-        Fri, 23 Sep 2022 10:32:08 -0700 (PDT)
-Received: by mail-pj1-x1034.google.com with SMTP id fv3so726023pjb.0;
-        Fri, 23 Sep 2022 10:32:08 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20210112;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:sender:from:to:cc:subject:date;
-        bh=fR6Qn5t8q/W233LEaMYnwEm/k8WcsQCSexxbn0Oka8g=;
-        b=CBp3fp1kj89uIt+Kqdc9A2OKnsqePyce9wUyH93zYf9WEs21ei/znvqFqg/AM/DqeS
-         o6BQSjeAMdsxbti0rz0cKYWsJlVbpA+UVfAnlPhfZezna92pQ3apVB25JIZDNAK8x03T
-         mCPqTFuy0hFPA3l0Qz2eS2N8pbBI12MkTMjLEoAonm/0mxHkAegX0D7028il0S8PLTxT
-         O5vtZpVAdrpGWzmeWLlR2Ens+V4Fbyh/ZjCmtQ49v98G3IeJ4gF7mpdZwH/8MKDDdaB7
-         m5WZLbS0zc/+pUBj1eK+7PYtadRiTQZIa56csi3UpiU+yKjkBhtR0I+Qvy2T16U+d5HD
-         xc9Q==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:sender:x-gm-message-state:from
-         :to:cc:subject:date;
-        bh=fR6Qn5t8q/W233LEaMYnwEm/k8WcsQCSexxbn0Oka8g=;
-        b=VhvVC3E/WZ6SeBJflgYjYCwgnjgMO4eOdKbh1Fo2fTHk4GJjjurQHyn+sx5CNLIYlP
-         98rTfwJTUrZ6NehxeyjXRupAqiMqa9iz7c7ZQnvyOm76WBs2FvWXeShO+wxA2HdblKYm
-         bF69XvMLda3Qa2I+wCjyT18fFXs/dZIh4/XjfJmh4CXUEMYgtCYnNVdZ+mqrY1jvrF1P
-         4DWFgpqKGkuuRA5xo4xS/agHmyLW0yQfI+LECqcty0++WyeWTYSaUg6O/4+uMGwf6+0m
-         8fdhk0SvfahyTcIyTbRnrbzEnS7qavYegLmIMx5cDP+OyKg+pG6v6I4F0rAAC11+AzoG
-         VXZQ==
-X-Gm-Message-State: ACrzQf2JHPw90HHiYUOB13d8/TDovV+qVMdLfExHKXWLmVFdSpI/UVlV
-        Iwx2F/NAZdLEWrB0gmQjTPOoUSVWHzo=
-X-Google-Smtp-Source: AMsMyM5W9ZCou1732xAM0X728nc1lfnuXCIc/eOytGvUD9OCkOSKM/pMFmnPKFc7nCggcfSDqb0VAA==
-X-Received: by 2002:a17:90b:3c90:b0:203:bf90:f78b with SMTP id pv16-20020a17090b3c9000b00203bf90f78bmr17636597pjb.138.1663954328271;
-        Fri, 23 Sep 2022 10:32:08 -0700 (PDT)
-Received: from balhae.hsd1.ca.comcast.net ([2601:647:6780:1040:c716:a857:50ee:f56e])
-        by smtp.gmail.com with ESMTPSA id 9-20020a621409000000b0053e6eae9668sm6719499pfu.2.2022.09.23.10.32.07
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 23 Sep 2022 10:32:07 -0700 (PDT)
-Sender: Namhyung Kim <namhyung@gmail.com>
-From:   Namhyung Kim <namhyung@kernel.org>
-To:     Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Jiri Olsa <jolsa@kernel.org>
-Cc:     Ingo Molnar <mingo@kernel.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Ian Rogers <irogers@google.com>,
-        Adrian Hunter <adrian.hunter@intel.com>,
-        linux-perf-users@vger.kernel.org,
-        Stephane Eranian <eranian@google.com>
-Subject: [PATCH 4/4] perf annotate: Toggle full address <-> offset display
-Date:   Fri, 23 Sep 2022 10:31:42 -0700
-Message-Id: <20220923173142.805896-5-namhyung@kernel.org>
-X-Mailer: git-send-email 2.37.3.998.g577e59143f-goog
-In-Reply-To: <20220923173142.805896-1-namhyung@kernel.org>
-References: <20220923173142.805896-1-namhyung@kernel.org>
+        Fri, 23 Sep 2022 16:43:13 -0400
+Received: from mx0a-00082601.pphosted.com (mx0b-00082601.pphosted.com [67.231.153.30])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 08C82160E67
+        for <linux-perf-users@vger.kernel.org>; Fri, 23 Sep 2022 13:37:39 -0700 (PDT)
+Received: from pps.filterd (m0089730.ppops.net [127.0.0.1])
+        by m0089730.ppops.net (8.17.1.5/8.17.1.5) with ESMTP id 28NIG9Qr028236
+        for <linux-perf-users@vger.kernel.org>; Fri, 23 Sep 2022 13:37:16 -0700
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=fb.com; h=from : to : cc : subject
+ : date : message-id : mime-version : content-transfer-encoding :
+ content-type; s=facebook; bh=uMW05ntqhTxnqydbjTlEBEZMb68OIqoNaDlQ3mavUhM=;
+ b=PjvXvgInDOcO0zsYqAlpPNRgpxm75fc4q3PSV8XFhZR7cEr0BJWsL1nthv/Tgi9QLzJW
+ jTwJ4dZo4J406ivdTkl012y0CFyogyKVNCLsgizDB6LM9wRn9wbA5zMUKhALn4n2PgBY
+ 46G/U30j5sJW7+y9+DReAYOBGi+DXuewj7Y= 
+Received: from maileast.thefacebook.com ([163.114.130.16])
+        by m0089730.ppops.net (PPS) with ESMTPS id 3jshcss9wg-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT)
+        for <linux-perf-users@vger.kernel.org>; Fri, 23 Sep 2022 13:37:15 -0700
+Received: from twshared22593.02.prn5.facebook.com (2620:10d:c0a8:1b::d) by
+ mail.thefacebook.com (2620:10d:c0a8:83::5) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2375.31; Fri, 23 Sep 2022 13:37:14 -0700
+Received: by devvm8797.prn0.facebook.com (Postfix, from userid 2982)
+        id 94901B2B7691; Fri, 23 Sep 2022 13:37:02 -0700 (PDT)
+From:   Tomislav Novak <tnovak@fb.com>
+To:     Alexei Starovoitov <ast@kernel.org>, Will Deacon <will@kernel.org>,
+        Catalin Marinas <catalin.marinas@arm.com>
+CC:     <bpf@vger.kernel.org>, <linux-perf-users@vger.kernel.org>,
+        <linux-arm-kernel@lists.infradead.org>,
+        <linux-kernel@vger.kernel.org>, Tomislav Novak <tnovak@fb.com>,
+        Samuel Gosselin <sgosselin@fb.com>
+Subject: [PATCH] hw_breakpoint: fix single-stepping when using bpf_overflow_handler
+Date:   Fri, 23 Sep 2022 13:36:45 -0700
+Message-ID: <20220923203644.2731604-1-tnovak@fb.com>
+X-Mailer: git-send-email 2.30.2
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Transfer-Encoding: quoted-printable
+X-FB-Internal: Safe
+Content-Type: text/plain
+X-Proofpoint-ORIG-GUID: 6r-dXlOGD5hjlUHizqj3cw6OQN2uGm_I
+X-Proofpoint-GUID: 6r-dXlOGD5hjlUHizqj3cw6OQN2uGm_I
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.205,Aquarius:18.0.895,Hydra:6.0.528,FMLib:17.11.122.1
+ definitions=2022-09-23_08,2022-09-22_02,2022-06-22_01
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-Handle 'f' key to toggle the display offset and full address.  Obviously
-it only works when users set to see disassembler output ('o' key).  It'd
-be useful when users want to see the full virtual address in the TUI
-annotate browser.
+On ARM platforms is_default_overflow_handler() is used to determine if
+hw_breakpoint code should single-step over the watchpoint trigger or
+let the custom handler deal with it.
 
-Cc: Stephane Eranian <eranian@google.com>
-Signed-off-by: Namhyung Kim <namhyung@kernel.org>
+Attaching a BPF program to a watchpoint replaces the handler with
+bpf_overflow_handler, which isn't recognized as a default handler so we
+never step over the instruction triggering the data abort exception (the
+watchpoint keeps firing):
+
+  # bpftrace -e 'watchpoint:0x10000000:4:w { printf("hit\n"); }' ./wp_tes=
+t
+  Attaching 1 probe...
+  hit
+  hit
+  hit
+  [...]
+
+(wp_test performs a single 4-byte store to address 0x10000000)
+
+This patch replaces the check with uses_default_overflow_handler(), which
+accounts for the bpf_overflow_handler() case by also testing if the handl=
+er
+invokes one of the perf_event_output functions via orig_default_handler.
+
+Signed-off-by: Tomislav Novak <tnovak@fb.com>
+Tested-by: Samuel Gosselin <sgosselin@fb.com> # arm64
 ---
- tools/perf/ui/browsers/annotate.c |  6 +++++-
- tools/perf/util/annotate.c        | 19 ++++++++++++++++++-
- tools/perf/util/annotate.h        |  4 +++-
- 3 files changed, 26 insertions(+), 3 deletions(-)
+ arch/arm/kernel/hw_breakpoint.c   |  8 ++++----
+ arch/arm64/kernel/hw_breakpoint.c |  4 ++--
+ include/linux/perf_event.h        | 22 +++++++++++++++++++---
+ 3 files changed, 25 insertions(+), 9 deletions(-)
 
-diff --git a/tools/perf/ui/browsers/annotate.c b/tools/perf/ui/browsers/annotate.c
-index 9bc1076374ff..725662e21b23 100644
---- a/tools/perf/ui/browsers/annotate.c
-+++ b/tools/perf/ui/browsers/annotate.c
-@@ -805,7 +805,8 @@ static int annotate_browser__run(struct annotate_browser *browser,
- 		"r             Run available scripts\n"
- 		"p             Toggle percent type [local/global]\n"
- 		"b             Toggle percent base [period/hits]\n"
--		"?             Search string backwards\n");
-+		"?             Search string backwards\n"
-+		"f             Toggle showing offsets to full address\n");
+diff --git a/arch/arm/kernel/hw_breakpoint.c b/arch/arm/kernel/hw_breakpo=
+int.c
+index 054e9199f30d..dc0fb7a81371 100644
+--- a/arch/arm/kernel/hw_breakpoint.c
++++ b/arch/arm/kernel/hw_breakpoint.c
+@@ -626,7 +626,7 @@ int hw_breakpoint_arch_parse(struct perf_event *bp,
+ 	hw->address &=3D ~alignment_mask;
+ 	hw->ctrl.len <<=3D offset;
+=20
+-	if (is_default_overflow_handler(bp)) {
++	if (uses_default_overflow_handler(bp)) {
+ 		/*
+ 		 * Mismatch breakpoints are required for single-stepping
+ 		 * breakpoints.
+@@ -798,7 +798,7 @@ static void watchpoint_handler(unsigned long addr, un=
+signed int fsr,
+ 		 * Otherwise, insert a temporary mismatch breakpoint so that
+ 		 * we can single-step over the watchpoint trigger.
+ 		 */
+-		if (!is_default_overflow_handler(wp))
++		if (!uses_default_overflow_handler(wp))
  			continue;
- 		case 'r':
- 			script_browse(NULL, NULL);
-@@ -912,6 +913,9 @@ static int annotate_browser__run(struct annotate_browser *browser,
- 			hists__scnprintf_title(hists, title, sizeof(title));
- 			annotate_browser__show(&browser->b, title, help);
- 			continue;
-+		case 'f':
-+			annotation__toggle_full_addr(notes, ms);
-+			continue;
- 		case K_LEFT:
- 		case K_ESC:
- 		case 'q':
-diff --git a/tools/perf/util/annotate.c b/tools/perf/util/annotate.c
-index 5bc63c9e0324..db475e44f42f 100644
---- a/tools/perf/util/annotate.c
-+++ b/tools/perf/util/annotate.c
-@@ -2239,7 +2239,10 @@ int symbol__annotate(struct map_symbol *ms, struct evsel *evsel,
+ step:
+ 		enable_single_step(wp, instruction_pointer(regs));
+@@ -811,7 +811,7 @@ static void watchpoint_handler(unsigned long addr, un=
+signed int fsr,
+ 		info->trigger =3D addr;
+ 		pr_debug("watchpoint fired: address =3D 0x%x\n", info->trigger);
+ 		perf_bp_event(wp, regs);
+-		if (is_default_overflow_handler(wp))
++		if (uses_default_overflow_handler(wp))
+ 			enable_single_step(wp, instruction_pointer(regs));
  	}
- 
- 	args.ms = *ms;
--	notes->start = map__rip_2objdump(ms->map, sym->start);
-+	if (notes->options && notes->options->full_addr)
-+		notes->start = map__objdump_2mem(ms->map, ms->sym->start);
-+	else
-+		notes->start = map__rip_2objdump(ms->map, ms->sym->start);
- 
- 	return symbol__disassemble(sym, &args);
- }
-@@ -2762,6 +2765,8 @@ void annotation__update_column_widths(struct annotation *notes)
+=20
+@@ -886,7 +886,7 @@ static void breakpoint_handler(unsigned long unknown,=
+ struct pt_regs *regs)
+ 			info->trigger =3D addr;
+ 			pr_debug("breakpoint fired: address =3D 0x%x\n", addr);
+ 			perf_bp_event(bp, regs);
+-			if (is_default_overflow_handler(bp))
++			if (uses_default_overflow_handler(bp))
+ 				enable_single_step(bp, addr);
+ 			goto unlock;
+ 		}
+diff --git a/arch/arm64/kernel/hw_breakpoint.c b/arch/arm64/kernel/hw_bre=
+akpoint.c
+index b29a311bb055..9659a9555c63 100644
+--- a/arch/arm64/kernel/hw_breakpoint.c
++++ b/arch/arm64/kernel/hw_breakpoint.c
+@@ -654,7 +654,7 @@ static int breakpoint_handler(unsigned long unused, u=
+nsigned long esr,
+ 		perf_bp_event(bp, regs);
+=20
+ 		/* Do we need to handle the stepping? */
+-		if (is_default_overflow_handler(bp))
++		if (uses_default_overflow_handler(bp))
+ 			step =3D 1;
+ unlock:
+ 		rcu_read_unlock();
+@@ -733,7 +733,7 @@ static u64 get_distance_from_watchpoint(unsigned long=
+ addr, u64 val,
+ static int watchpoint_report(struct perf_event *wp, unsigned long addr,
+ 			     struct pt_regs *regs)
  {
- 	if (notes->options->use_offset)
- 		notes->widths.target = notes->widths.min_addr;
-+	else if (notes->options->full_addr)
-+		notes->widths.target = BITS_PER_LONG / 4;
- 	else
- 		notes->widths.target = notes->widths.max_addr;
- 
-@@ -2771,6 +2776,18 @@ void annotation__update_column_widths(struct annotation *notes)
- 		notes->widths.addr += notes->widths.jumps + 1;
+-	int step =3D is_default_overflow_handler(wp);
++	int step =3D uses_default_overflow_handler(wp);
+ 	struct arch_hw_breakpoint *info =3D counter_arch_bp(wp);
+=20
+ 	info->trigger =3D addr;
+diff --git a/include/linux/perf_event.h b/include/linux/perf_event.h
+index ee8b9ecdc03b..f174b77437f5 100644
+--- a/include/linux/perf_event.h
++++ b/include/linux/perf_event.h
+@@ -1105,15 +1105,31 @@ extern int perf_event_output(struct perf_event *e=
+vent,
+ 			     struct pt_regs *regs);
+=20
+ static inline bool
+-is_default_overflow_handler(struct perf_event *event)
++__is_default_overflow_handler(perf_overflow_handler_t overflow_handler)
+ {
+-	if (likely(event->overflow_handler =3D=3D perf_event_output_forward))
++	if (likely(overflow_handler =3D=3D perf_event_output_forward))
+ 		return true;
+-	if (unlikely(event->overflow_handler =3D=3D perf_event_output_backward)=
+)
++	if (unlikely(overflow_handler =3D=3D perf_event_output_backward))
+ 		return true;
+ 	return false;
  }
- 
-+void annotation__toggle_full_addr(struct annotation *notes, struct map_symbol *ms)
+=20
++#define is_default_overflow_handler(event) \
++	__is_default_overflow_handler((event)->overflow_handler)
++
++#ifdef CONFIG_BPF_SYSCALL
++static inline bool uses_default_overflow_handler(struct perf_event *even=
+t)
 +{
-+	notes->options->full_addr = !notes->options->full_addr;
++	if (likely(is_default_overflow_handler(event)))
++		return true;
 +
-+	if (notes->options->full_addr)
-+		notes->start = map__objdump_2mem(ms->map, ms->sym->start);
-+	else
-+		notes->start = map__rip_2objdump(ms->map, ms->sym->start);
-+
-+	annotation__update_column_widths(notes);
++	return __is_default_overflow_handler(event->orig_overflow_handler);
 +}
++#else
++#define uses_default_overflow_handler(event) \
++	is_default_overflow_handler(event)
++#endif
 +
- static void annotation__calc_lines(struct annotation *notes, struct map *map,
- 				   struct rb_root *root,
- 				   struct annotation_options *opts)
-diff --git a/tools/perf/util/annotate.h b/tools/perf/util/annotate.h
-index 3cbd883e4d7a..8934072c39e6 100644
---- a/tools/perf/util/annotate.h
-+++ b/tools/perf/util/annotate.h
-@@ -88,7 +88,8 @@ struct annotation_options {
- 	     show_nr_jumps,
- 	     show_minmax_cycle,
- 	     show_asm_raw,
--	     annotate_src;
-+	     annotate_src,
-+	     full_addr;
- 	u8   offset_level;
- 	int  min_pcnt;
- 	int  max_lines;
-@@ -325,6 +326,7 @@ void annotation__compute_ipc(struct annotation *notes, size_t size);
- void annotation__mark_jump_targets(struct annotation *notes, struct symbol *sym);
- void annotation__update_column_widths(struct annotation *notes);
- void annotation__init_column_widths(struct annotation *notes, struct symbol *sym);
-+void annotation__toggle_full_addr(struct annotation *notes, struct map_symbol *ms);
- 
- static inline struct sym_hist *annotated_source__histogram(struct annotated_source *src, int idx)
- {
--- 
-2.37.3.998.g577e59143f-goog
+ extern void
+ perf_event_header__init_id(struct perf_event_header *header,
+ 			   struct perf_sample_data *data,
+--=20
+2.30.2
 
