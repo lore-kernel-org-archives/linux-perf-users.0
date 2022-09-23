@@ -2,94 +2,159 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E8176ECAAD8
-	for <linux-perf-users@archiver.kernel.org>; Fri, 23 Sep 2022 13:27:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C97DAC6FA82
+	for <linux-perf-users@archiver.kernel.org>; Fri, 23 Sep 2022 13:34:18 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229520AbiIWN1p (ORCPT
+        id S230369AbiIWNeR (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Fri, 23 Sep 2022 09:27:45 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60258 "EHLO
+        Fri, 23 Sep 2022 09:34:17 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43024 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229724AbiIWN1j (ORCPT
+        with ESMTP id S229726AbiIWNeP (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Fri, 23 Sep 2022 09:27:39 -0400
-Received: from szxga03-in.huawei.com (szxga03-in.huawei.com [45.249.212.189])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A3E2027B0F
-        for <linux-perf-users@vger.kernel.org>; Fri, 23 Sep 2022 06:27:38 -0700 (PDT)
-Received: from dggemv703-chm.china.huawei.com (unknown [172.30.72.57])
-        by szxga03-in.huawei.com (SkyGuard) with ESMTP id 4MYtF11jdjzHqS6;
-        Fri, 23 Sep 2022 21:25:25 +0800 (CST)
-Received: from kwepemm600008.china.huawei.com (7.193.23.88) by
- dggemv703-chm.china.huawei.com (10.3.19.46) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2375.31; Fri, 23 Sep 2022 21:27:36 +0800
-Received: from huawei.com (10.175.100.227) by kwepemm600008.china.huawei.com
- (7.193.23.88) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2375.31; Fri, 23 Sep
- 2022 21:27:35 +0800
-From:   Shang XiaoJing <shangxiaojing@huawei.com>
-To:     <peterz@infradead.org>, <mingo@redhat.com>, <acme@kernel.org>,
-        <mark.rutland@arm.com>, <alexander.shishkin@linux.intel.com>,
-        <jolsa@kernel.org>, <namhyung@kernel.org>,
-        <linux-perf-users@vger.kernel.org>
-CC:     <alexey.v.bayduraev@linux.intel.com>, <yao.jin@linux.intel.com>,
-        <dsahern@gmail.com>, <alexander.antonov@linux.intel.com>,
-        <shangxiaojing@huawei.com>
-Subject: [PATCH v2 7/7] perf trace: Fix error return code in trace__replay() and cmd_trace()
-Date:   Fri, 23 Sep 2022 22:01:43 +0800
-Message-ID: <20220923140143.21552-8-shangxiaojing@huawei.com>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20220923140143.21552-1-shangxiaojing@huawei.com>
-References: <20220923140143.21552-1-shangxiaojing@huawei.com>
+        Fri, 23 Sep 2022 09:34:15 -0400
+Received: from foss.arm.com (foss.arm.com [217.140.110.172])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTP id E99EE131F54;
+        Fri, 23 Sep 2022 06:34:13 -0700 (PDT)
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id DFD3A1042;
+        Fri, 23 Sep 2022 06:34:19 -0700 (PDT)
+Received: from FVFF77S0Q05N (unknown [10.57.80.223])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 2712F3F73B;
+        Fri, 23 Sep 2022 06:34:10 -0700 (PDT)
+Date:   Fri, 23 Sep 2022 14:34:07 +0100
+From:   Mark Rutland <mark.rutland@arm.com>
+To:     Chen Zhongjin <chenzhongjin@huawei.com>
+Cc:     linux-kernel@vger.kernel.org, linux-riscv@lists.infradead.org,
+        linux-perf-users@vger.kernel.org, paul.walmsley@sifive.com,
+        palmer@dabbelt.com, aou@eecs.berkeley.edu, peterz@infradead.org,
+        mingo@redhat.com, acme@kernel.org,
+        alexander.shishkin@linux.intel.com, namhyung@kernel.org,
+        jolsa@kernel.org, guoren@kernel.org, frederic@kernel.org,
+        vincent.chen@sifive.com, ardb@kernel.org, mhiramat@kernel.org,
+        rostedt@goodmis.org, keescook@chromium.org,
+        catalin.marinas@arm.com, Josh Poimboeuf <jpoimboe@kernel.org>
+Subject: Re: [PATCH for-next v2 0/4] riscv: Improvments for stacktrace
+Message-ID: <Yy21z0NgBgJXF1Km@FVFF77S0Q05N>
+References: <20220921125128.33913-1-chenzhongjin@huawei.com>
+ <YysZf2Y37QMBDt8n@FVFF77S0Q05N>
+ <7834a259-4bd7-a955-acaa-21c36c7c22c2@huawei.com>
 MIME-Version: 1.0
-Content-Type: text/plain
-X-Originating-IP: [10.175.100.227]
-X-ClientProxiedBy: dggems705-chm.china.huawei.com (10.3.19.182) To
- kwepemm600008.china.huawei.com (7.193.23.88)
-X-CFilter-Loop: Reflected
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <7834a259-4bd7-a955-acaa-21c36c7c22c2@huawei.com>
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-Reset the error return code in trace__replay() to -1 to ensure the
-following checks can return correct error code when they failed.
+On Thu, Sep 22, 2022 at 04:22:23PM +0800, Chen Zhongjin wrote:
+> Hi,
+> 
+> On 2022/9/21 22:02, Mark Rutland wrote:
+> > On Wed, Sep 21, 2022 at 08:51:23PM +0800, Chen Zhongjin wrote:
+> > > Currently, the stacktrace with FRAME_POINTER on riscv has some problem:
+> > > 
+> > > 1. stacktrace will stop at irq so it can't get the stack frames before
+> > > irq entry.
+> > > 2. stacktrace can't unwind all the real stack frames when there is
+> > > k{ret}probes or ftrace.
+> > > 
+> > > These are mainly becase when there is a pt_regs on stack, we can't unwind
+> > > the stack frame as normal function.
+> > > 
+> > > Some architectures (e.g. arm64) create a extra stackframe inside pt_regs.
+> > > However this doesn't work for riscv because the ra is not ensured to be
+> > > pushed to stack. As explained in:
+> > > commit f766f77a74f5("riscv/stacktrace: Fix stack output without ra on the stack top")
+> > FWIW, this is also a latent problem on arm64, since we don't know whether the
+> > LR is live at an exception boundary (and we currently always ignore it).
+> 
+> In fact this is still a problem for riscv, I didn't unwind the caller of
+> ftrace or probed func
+> 
+> of kretprobe because they are inside function pro/epilogue.
+> 
+> The problem on riscv is a little more complex, for leaf function, ra will
+> always not be pushed to stack and fp will be pushed to ra slot. This patch
+> solved this problem.
 
-Use PTR_ERR(evsel) as the error code in cmd_trace for more accurate.
+That's the same on arm64, our `LR` is equivalent to your `RA`.
 
-Signed-off-by: Shang XiaoJing <shangxiaojing@huawei.com>
----
-changes in v2:
-- adjust commit msg.
----
- tools/perf/builtin-trace.c | 5 +++++
- 1 file changed, 5 insertions(+)
+I have a series at:
 
-diff --git a/tools/perf/builtin-trace.c b/tools/perf/builtin-trace.c
-index 3ecc31375f90..57a6ba158bf1 100644
---- a/tools/perf/builtin-trace.c
-+++ b/tools/perf/builtin-trace.c
-@@ -4277,6 +4277,8 @@ static int trace__replay(struct trace *trace)
- 	if (err)
- 		goto out;
- 
-+	err = -1;
-+
- 	evsel = evlist__find_tracepoint_by_name(session->evlist, "raw_syscalls:sys_enter");
- 	trace->syscalls.events.sys_enter = evsel;
- 	/* older kernels have syscalls tp versus raw_syscalls */
-@@ -4972,9 +4974,12 @@ int cmd_trace(int argc, const char **argv)
- 	if (IS_ERR(evsel)) {
- 		bpf__strerror_setup_output_event(trace.evlist, PTR_ERR(evsel), bf, sizeof(bf));
- 		pr_err("ERROR: Setup trace syscalls enter failed: %s\n", bf);
-+		err = PTR_ERR(evsel);
- 		goto out;
- 	}
- 
-+	err = -1;
-+
- 	if (evsel) {
- 		trace.syscalls.events.augmented = evsel;
- 
--- 
-2.17.1
+  https://git.kernel.org/pub/scm/linux/kernel/git/mark/linux.git/log/?h=arm64/stacktrace/metadata
 
+... which explciitly indicates pt_regs::pc and pt_regs::lr in the stack trace
+output (and for RELIABLE_STACKTRACE we'd mark the LR entries as unreliable).
+
+> > My plan to fix that on arm64 is to push an empty frame record to the stack upon
+> > an exception, and use that to find the pt_regs, from which we can get the PC
+> > and LR (and then we can report the later as unreliable). That should be roughly
+> > equivalent to what you do in this series (where use use the LSB to identify
+> > that the pointer is actually a pt_regs).
+> 
+> IIRC, this solution looks like:
+> 
+> =====
+> 
+> Func1     { lr, fp } or { nothing }
+> 
+> irq entry { pt_regs & empty stackframe[2] }
+> 
+> handler   { lr, fp }
+> 
+> ======
+> 
+> handler->fp points to stackframe, and when we find stackframe is empty, we
+> know we are inside
+> 
+> an pt_regs and can find registers by offset.
+> 
+> I think it's available, there no other scenario will cause the frame list
+> contains zero (unless stack is clobbered).
+
+That's basically what I do in my series; see:
+
+  https://git.kernel.org/pub/scm/linux/kernel/git/mark/linux.git/commit/?h=arm64/stacktrace/metadata&id=7394a825bc4f8243b28261517999793acb6f11cd
+
+... but I haven't posted that to the list yet as I *also* want to add code to
+check that we were at an exception boundary when we saw this (based on the
+prior PC/LR being in the entry text, using some metadata I have yet to add).
+
+> And it seems only fp slot should be zero, lr will be clobbered after
+> function call, we cannot use lr inside pt_regs.
+
+I'm not sure what you mean here.
+
+I agree that the LR in the pt_regs isn't *reliable*, and won't *always* be
+valid, but it will sometimes be valid.
+
+> > One important thing to note is that when crossing an exception boundary you
+> > won't know whether RA is live, and so you might try to consume an address twice
+> > (if it has also been pushed to the stack). That could be problematic for
+> > unwinding ftrace or kretprobes. On arm64 we had to implement
+> > HAVE_FUNCTION_GRAPH_RET_ADDR_PTR so that we could reliably unwind ftrace. See
+> > commit:
+> > 
+> >    c6d3cd32fd0064af ("arm64: ftrace: use HAVE_FUNCTION_GRAPH_RET_ADDR_PTR")
+> > 
+> > ... and we haven't yet come up with something similar for kretprobes (though I
+> > suspect we'll need to).
+> 
+> Can we test the sp and fp inside pt_regs? Because luckily arm64 saves lr, fp
+> and moves sp together.
+> 
+> Before sp is moved we will have fp == sp from last frame 'mov x29, sp'. So
+> if they are same, we uses the lr in pt_regs, conversely we use lr on stack.
+
+The frame record (which FP points to) can live anywhere in a stack frame, so
+comparing aginst SP doesn't tell us anything. Regardless of whether FP == SP,
+the LTR might be valid or invalid.
+
+There is no way of knowing if LR is live without information from the compiler
+that we don't have today (though from LPC 2022, it seems like CTF *might* be
+sufficient -- that's on my list of things to look at).
+
+Thanks,
+Mark.
