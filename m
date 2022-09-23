@@ -2,161 +2,73 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0E36DECAAD8
-	for <linux-perf-users@archiver.kernel.org>; Fri, 23 Sep 2022 06:32:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4FC7FECAAD8
+	for <linux-perf-users@archiver.kernel.org>; Fri, 23 Sep 2022 08:11:32 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229725AbiIWGcP (ORCPT
+        id S229954AbiIWILa (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Fri, 23 Sep 2022 02:32:15 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60348 "EHLO
+        Fri, 23 Sep 2022 04:11:30 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38674 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229448AbiIWGcN (ORCPT
+        with ESMTP id S231197AbiIWILa (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Fri, 23 Sep 2022 02:32:13 -0400
-Received: from mail-pg1-x531.google.com (mail-pg1-x531.google.com [IPv6:2607:f8b0:4864:20::531])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C2E95286DA;
-        Thu, 22 Sep 2022 23:32:08 -0700 (PDT)
-Received: by mail-pg1-x531.google.com with SMTP id c7so11353254pgt.11;
-        Thu, 22 Sep 2022 23:32:08 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20210112;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:sender:from:to:cc:subject:date;
-        bh=WxUdEGsTik62n83zEbnQyADA3Q8HNpRJ7Vr3hU7nFw0=;
-        b=PB8Yxyqu1cIZcHpdPwqeaHjRmkAABHhkwP3yW/+hbyJjzahc7UuNkwT1sbRtAPt6Lg
-         +KUyviXuQmaOchCHZ0JLrMBF25g0GBT7QBa+RDp7K53VkJp4u81WBg2UMU/fneJZ3RRl
-         qcD5RSQzO2tM1hgrgrY6lpEk702AUh5xwBkyvFdf9fMQ2qPf4sC90m6Tm0Els7MvJ8vP
-         5qgeuWezWuK4kEvcqMp3zyKdvxzAvX+KxtGQjWNQ3pdyPtgwcP8TuTkT5CwZm82fBqfQ
-         /1eOPveorjOZG/kQ+PD2b3LC0N9EtbzxfKd9XI7zOx0qj7AmyzTxEsZp63WedPHS0ev9
-         lcyA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:sender:x-gm-message-state:from:to:cc:subject:date;
-        bh=WxUdEGsTik62n83zEbnQyADA3Q8HNpRJ7Vr3hU7nFw0=;
-        b=oIViQA02km2Dk4vsWQAZsFPEwEr00RbPEBtabvqjHNuox90/79ZM4rEX8OymLZhD+f
-         KIXrCxhGj/bcEcuvkMHvIcdMHbSNGFduHxO7a2qKO5KmyChgsB7qg7VTmiMs67Vq2Hoj
-         E8pw7cNa2SqSICSFxaUbugJPgK4UN3aOUKJy5hUXyQULXRhUx8IIulj4rrZCdMUHz4X3
-         ZaMyV51jLkEP73D3Yus5d+SESBVfRYgFlS+LZZTW+tJVtNhB5jqfg2eB2DuISCTKOqJn
-         f6ZqheJZ2O0O77z3lbi77lYXR7OkvO2cZTaEXTdS78C+hx+CTde4BW2vOHuwj0e5041v
-         Cibg==
-X-Gm-Message-State: ACrzQf3LBvT8Hf3ONu6vU/krx1h9ekaz2/cPVqf5RgRQTjQ+R1vl5Ap0
-        opckDbvmFd7QSnr+3ovZuME=
-X-Google-Smtp-Source: AMsMyM6hUweZRrI93R9swAaBczAnHNHAfr1wi+miQizHQWMHV5ieI1kRO1XhGpOptNaz6D4vD8lOlw==
-X-Received: by 2002:a63:fd0c:0:b0:42b:93a2:af0b with SMTP id d12-20020a63fd0c000000b0042b93a2af0bmr6340661pgh.315.1663914727687;
-        Thu, 22 Sep 2022 23:32:07 -0700 (PDT)
-Received: from balhae.hsd1.ca.comcast.net ([2601:647:6780:1040:5e8b:4a9e:477b:b254])
-        by smtp.gmail.com with ESMTPSA id y23-20020aa78f37000000b0053e61633057sm5535477pfr.132.2022.09.22.23.32.06
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 22 Sep 2022 23:32:07 -0700 (PDT)
-Sender: Namhyung Kim <namhyung@gmail.com>
-From:   Namhyung Kim <namhyung@kernel.org>
-To:     Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Jiri Olsa <jolsa@kernel.org>
-Cc:     Ingo Molnar <mingo@kernel.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Ian Rogers <irogers@google.com>,
-        Adrian Hunter <adrian.hunter@intel.com>,
-        linux-perf-users@vger.kernel.org, Song Liu <songliubraving@fb.com>,
-        Hao Luo <haoluo@google.com>, bpf@vger.kernel.org
-Subject: [PATCH v4] perf tools: Get a perf cgroup more portably in BPF
-Date:   Thu, 22 Sep 2022 23:32:05 -0700
-Message-Id: <20220923063205.772936-1-namhyung@kernel.org>
-X-Mailer: git-send-email 2.37.3.998.g577e59143f-goog
+        Fri, 23 Sep 2022 04:11:30 -0400
+Received: from szxga02-in.huawei.com (szxga02-in.huawei.com [45.249.212.188])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E0A29110B25
+        for <linux-perf-users@vger.kernel.org>; Fri, 23 Sep 2022 01:11:27 -0700 (PDT)
+Received: from dggemv703-chm.china.huawei.com (unknown [172.30.72.56])
+        by szxga02-in.huawei.com (SkyGuard) with ESMTP id 4MYl9G5J7tzMpPk;
+        Fri, 23 Sep 2022 16:06:42 +0800 (CST)
+Received: from kwepemm600008.china.huawei.com (7.193.23.88) by
+ dggemv703-chm.china.huawei.com (10.3.19.46) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2375.31; Fri, 23 Sep 2022 16:11:26 +0800
+Received: from huawei.com (10.175.100.227) by kwepemm600008.china.huawei.com
+ (7.193.23.88) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2375.31; Fri, 23 Sep
+ 2022 16:11:25 +0800
+From:   Shang XiaoJing <shangxiaojing@huawei.com>
+To:     <peterz@infradead.org>, <mingo@redhat.com>, <acme@kernel.org>,
+        <mark.rutland@arm.com>, <alexander.shishkin@linux.intel.com>,
+        <jolsa@kernel.org>, <namhyung@kernel.org>,
+        <linux-perf-users@vger.kernel.org>
+CC:     <yao.jin@linux.intel.com>, <shangxiaojing@huawei.com>
+Subject: [PATCH v2 0/6] perf: Clean up by adding helpers and Merging
+Date:   Fri, 23 Sep 2022 16:45:34 +0800
+Message-ID: <20220923084540.25849-1-shangxiaojing@huawei.com>
+X-Mailer: git-send-email 2.17.1
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-Originating-IP: [10.175.100.227]
+X-ClientProxiedBy: dggems702-chm.china.huawei.com (10.3.19.179) To
+ kwepemm600008.china.huawei.com (7.193.23.88)
+X-CFilter-Loop: Reflected
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-The perf_event_cgrp_id can be different on other configurations.
-To be more portable as CO-RE, it needs to get the cgroup subsys id
-using the bpf_core_enum_value() helper.
+Some Clean up in tools/perf.
 
-Suggested-by: Ian Rogers <irogers@google.com>
-Signed-off-by: Namhyung Kim <namhyung@kernel.org>
----
-v4 changes)
- * add a missing check in the off_cpu
+changes in v2:
+- adjust the subject or commit msg of some patches
+- add the patch 6 "perf script: Add perf_sample__fprintf_dsoname helper"
 
-v3 changes)
- * check compiler features for enum value
+Shang XiaoJing (6):
+  perf block-info: Merge branches in __block_info__cmp
+  perf block-range: Add block_range__insert_left/right helper
+  perf dso: Merge cases in dso__read_binary_type_filename
+  perf stat: Add print_cache_common helper
+  perf genelf: Add create_section_and_get_data helper
+  perf script: Add perf_sample__fprintf_dsoname helper
 
-v2 changes)
- * fix off_cpu.bpf.c too
- * get perf_subsys_id only once
+ tools/perf/builtin-script.c   | 64 +++++++++--------------
+ tools/perf/util/block-info.c  |  4 +-
+ tools/perf/util/block-range.c | 36 +++++++------
+ tools/perf/util/dso.c         |  7 +--
+ tools/perf/util/genelf.c      | 96 +++++++++--------------------------
+ tools/perf/util/stat-shadow.c | 80 +++++++++--------------------
+ 6 files changed, 99 insertions(+), 188 deletions(-)
 
- tools/perf/util/bpf_skel/bperf_cgroup.bpf.c | 11 ++++++++++-
- tools/perf/util/bpf_skel/off_cpu.bpf.c      | 18 ++++++++++++++----
- 2 files changed, 24 insertions(+), 5 deletions(-)
-
-diff --git a/tools/perf/util/bpf_skel/bperf_cgroup.bpf.c b/tools/perf/util/bpf_skel/bperf_cgroup.bpf.c
-index 292c430768b5..8e7520e273db 100644
---- a/tools/perf/util/bpf_skel/bperf_cgroup.bpf.c
-+++ b/tools/perf/util/bpf_skel/bperf_cgroup.bpf.c
-@@ -48,6 +48,7 @@ const volatile __u32 num_cpus = 1;
- 
- int enabled = 0;
- int use_cgroup_v2 = 0;
-+int perf_subsys_id = -1;
- 
- static inline int get_cgroup_v1_idx(__u32 *cgrps, int size)
- {
-@@ -58,7 +59,15 @@ static inline int get_cgroup_v1_idx(__u32 *cgrps, int size)
- 	int level;
- 	int cnt;
- 
--	cgrp = BPF_CORE_READ(p, cgroups, subsys[perf_event_cgrp_id], cgroup);
-+	if (perf_subsys_id == -1) {
-+#if __has_builtin(__builtin_preserve_enum_value)
-+		perf_subsys_id = bpf_core_enum_value(enum cgroup_subsys_id,
-+						     perf_event_cgrp_id);
-+#else
-+		perf_subsys_id = perf_event_cgrp_id;
-+#endif
-+	}
-+	cgrp = BPF_CORE_READ(p, cgroups, subsys[perf_subsys_id], cgroup);
- 	level = BPF_CORE_READ(cgrp, level);
- 
- 	for (cnt = 0; i < MAX_LEVELS; i++) {
-diff --git a/tools/perf/util/bpf_skel/off_cpu.bpf.c b/tools/perf/util/bpf_skel/off_cpu.bpf.c
-index c4ba2bcf179f..38e3b287dbb2 100644
---- a/tools/perf/util/bpf_skel/off_cpu.bpf.c
-+++ b/tools/perf/util/bpf_skel/off_cpu.bpf.c
-@@ -94,6 +94,8 @@ const volatile bool has_prev_state = false;
- const volatile bool needs_cgroup = false;
- const volatile bool uses_cgroup_v1 = false;
- 
-+int perf_subsys_id = -1;
-+
- /*
-  * Old kernel used to call it task_struct->state and now it's '__state'.
-  * Use BPF CO-RE "ignored suffix rule" to deal with it like below:
-@@ -119,11 +121,19 @@ static inline __u64 get_cgroup_id(struct task_struct *t)
- {
- 	struct cgroup *cgrp;
- 
--	if (uses_cgroup_v1)
--		cgrp = BPF_CORE_READ(t, cgroups, subsys[perf_event_cgrp_id], cgroup);
--	else
--		cgrp = BPF_CORE_READ(t, cgroups, dfl_cgrp);
-+	if (!uses_cgroup_v1)
-+		return BPF_CORE_READ(t, cgroups, dfl_cgrp, kn, id);
-+
-+	if (perf_subsys_id == -1) {
-+#if __has_builtin(__builtin_preserve_enum_value)
-+		perf_subsys_id = bpf_core_enum_value(enum cgroup_subsys_id,
-+						     perf_event_cgrp_id);
-+#else
-+		perf_subsys_id = perf_event_cgrp_id;
-+#endif
-+	}
- 
-+	cgrp = BPF_CORE_READ(t, cgroups, subsys[perf_subsys_id], cgroup);
- 	return BPF_CORE_READ(cgrp, kn, id);
- }
- 
 -- 
-2.37.3.998.g577e59143f-goog
+2.17.1
 
