@@ -2,46 +2,51 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6BC5DECAAD8
-	for <linux-perf-users@archiver.kernel.org>; Fri, 23 Sep 2022 09:32:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C1918ECAAD8
+	for <linux-perf-users@archiver.kernel.org>; Fri, 23 Sep 2022 10:35:11 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230006AbiIWJcs (ORCPT
+        id S231316AbiIWKfK (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Fri, 23 Sep 2022 05:32:48 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41000 "EHLO
+        Fri, 23 Sep 2022 06:35:10 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34848 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231869AbiIWJcW (ORCPT
+        with ESMTP id S231556AbiIWKfI (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Fri, 23 Sep 2022 05:32:22 -0400
+        Fri, 23 Sep 2022 06:35:08 -0400
 Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTP id 07B7C15A0F;
-        Fri, 23 Sep 2022 02:32:18 -0700 (PDT)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTP id B4F3D5AC61;
+        Fri, 23 Sep 2022 03:35:03 -0700 (PDT)
 Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 11EFE13D5;
-        Fri, 23 Sep 2022 02:32:25 -0700 (PDT)
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 9281413D5;
+        Fri, 23 Sep 2022 03:35:09 -0700 (PDT)
 Received: from [10.57.2.155] (unknown [10.57.2.155])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id A42BB3F73B;
-        Fri, 23 Sep 2022 02:32:16 -0700 (PDT)
-Message-ID: <1dabe308-21f7-aa2e-ee8f-48807878f91b@arm.com>
-Date:   Fri, 23 Sep 2022 10:32:15 +0100
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 9ED743F73D;
+        Fri, 23 Sep 2022 03:35:00 -0700 (PDT)
+Message-ID: <6f2e16b5-7fec-3d54-21ef-dd42acfab553@arm.com>
+Date:   Fri, 23 Sep 2022 11:34:59 +0100
 MIME-Version: 1.0
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
  Thunderbird/91.11.0
-Subject: Re: [PATCH v3 0/2] perf: arm64: Kernel support for Dwarf unwinding
+Subject: Re: [PATCH v3 0/5] perf: arm64: Tools support for Dwarf unwinding
  through SVE functions
 Content-Language: en-US
-To:     Will Deacon <will@kernel.org>
-Cc:     catalin.marinas@arm.com, kernel-team@android.com,
-        linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org,
-        acme@kernel.org, john.garry@huawei.com,
-        Jonathan Corbet <corbet@lwn.net>, leo.yan@linaro.org,
-        broonie@kernel.org, linux-doc@vger.kernel.org,
+To:     Arnaldo Carvalho de Melo <acme@kernel.org>
+Cc:     linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org,
+        broonie@kernel.org, german.gomez@arm.com, leo.yan@linaro.org,
+        mathieu.poirier@linaro.org, john.garry@huawei.com,
+        Will Deacon <will@kernel.org>,
+        Mike Leach <mike.leach@linaro.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Ingo Molnar <mingo@redhat.com>,
         Mark Rutland <mark.rutland@arm.com>,
-        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>
-References: <20220901132658.1024635-1-james.clark@arm.com>
- <166385556279.1475166.2989569100449667346.b4-ty@kernel.org>
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Jiri Olsa <jolsa@kernel.org>,
+        Namhyung Kim <namhyung@kernel.org>,
+        linux-arm-kernel@lists.infradead.org
+References: <20220525154114.718321-1-james.clark@arm.com>
+ <Yo+bdSMUOkd1N4HE@kernel.org>
 From:   James Clark <james.clark@arm.com>
-In-Reply-To: <166385556279.1475166.2989569100449667346.b4-ty@kernel.org>
+In-Reply-To: <Yo+bdSMUOkd1N4HE@kernel.org>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 Precedence: bulk
@@ -50,24 +55,61 @@ X-Mailing-List: linux-perf-users@vger.kernel.org
 
 
 
-On 22/09/2022 21:33, Will Deacon wrote:
-> On Thu, 1 Sep 2022 14:26:56 +0100, James Clark wrote:
->> I'm resubmitting this with a few of the changes suggested by Will on V2.
+On 26/05/2022 16:23, Arnaldo Carvalho de Melo wrote:
+> Em Wed, May 25, 2022 at 04:41:09PM +0100, James Clark escreveu:
+>> Changes since v2:
+>>   * Add commit to fix header include path to use Perf's copy
+>>   * Apply Leo's review tags
 >>
->> I haven't made any changes regarding the open questions about the
->> discoverability or saving the new reg and passing to output_sample()
->> because I think it's best to be consistent with the implementations on
->> other platforms first. I have explained in more detail on v2 [1].
+>> When SVE registers are pushed onto the stack the VG register is required to
+>> unwind because the stack offsets would vary by the SVE register width at the
+>> time when the sample was taken.
 >>
->> [...]
+>> The patches ("[PATCH v2 0/2] perf: arm64: Kernel support for Dwarf unwinding
+>> through SVE functions") add support for sampling the VG register to the kernel
+>> and the docs. This is the patchset to add support to userspace perf.
+>>
+>> A small change is also required to libunwind or libdw depending on which
+>> unwinder is used, and these will be published later. Without these changes Perf
+>> continues to work with both libraries, although the VG register is still not
+>> used for unwinding. 
 > 
-> Applied to will (for-next/perf), thanks!
+> Thanks, applied.
 > 
-> [1/2] perf: arm64: Add SVE vector granule register to user regs
->       https://git.kernel.org/will/c/cbb0c02caf4b
-> [2/2] arm64/sve: Add Perf extensions documentation
->       https://git.kernel.org/will/c/1f2906d1e10a
-> 
-> Cheers,
+> - Arnaldo
 
-Thanks Will. Sorry about the build, I will fix my config for next time.
+Hi Arnaldo,
+
+Will has applied the kernel side here:
+https://git.kernel.org/pub/scm/linux/kernel/git/arm64/linux.git/commit/?h=for-next/perf&id=cbb0c02caf4bd98b9e0cd6d7420734b8e9a35703
+
+There was a small change in the formatting in perf_regs.h, but the
+values are all the same. So in theory it's fine to leave Perf's copy
+until the next update, although it is a bit weird.
+
+Thanks
+James
+
+> 
+>  
+>> Thanks
+>> James
+>>
+>> James Clark (5):
+>>   perf tools: arm64: Use perf's copy of kernel headers
+>>   perf tools: arm64: Copy perf_regs.h from the kernel
+>>   perf tools: Use dynamic register set for Dwarf unwind
+>>   perf tools: arm64: Decouple Libunwind register names from Perf
+>>   perf tools: arm64: Add support for VG register
+>>
+>>  tools/arch/arm64/include/uapi/asm/perf_regs.h |  7 +-
+>>  tools/perf/arch/arm64/util/perf_regs.c        | 34 +++++++++
+>>  tools/perf/arch/arm64/util/unwind-libunwind.c | 73 +------------------
+>>  tools/perf/util/evsel.c                       |  2 +-
+>>  tools/perf/util/libunwind/arm64.c             |  2 +-
+>>  tools/perf/util/perf_regs.c                   |  2 +
+>>  6 files changed, 46 insertions(+), 74 deletions(-)
+>>
+>> -- 
+>> 2.28.0
+> 
