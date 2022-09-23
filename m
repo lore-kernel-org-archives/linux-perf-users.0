@@ -2,299 +2,101 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2A42FC6FA82
-	for <linux-perf-users@archiver.kernel.org>; Fri, 23 Sep 2022 16:55:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 76941C04A95
+	for <linux-perf-users@archiver.kernel.org>; Fri, 23 Sep 2022 17:32:06 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231574AbiIWQzg (ORCPT
+        id S231517AbiIWRcF (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Fri, 23 Sep 2022 12:55:36 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52126 "EHLO
+        Fri, 23 Sep 2022 13:32:05 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46094 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232494AbiIWQzc (ORCPT
+        with ESMTP id S231474AbiIWRcE (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Fri, 23 Sep 2022 12:55:32 -0400
-Received: from mail-wr1-x432.google.com (mail-wr1-x432.google.com [IPv6:2a00:1450:4864:20::432])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 50357FA0CE
-        for <linux-perf-users@vger.kernel.org>; Fri, 23 Sep 2022 09:55:30 -0700 (PDT)
-Received: by mail-wr1-x432.google.com with SMTP id z6so934667wrq.1
-        for <linux-perf-users@vger.kernel.org>; Fri, 23 Sep 2022 09:55:30 -0700 (PDT)
+        Fri, 23 Sep 2022 13:32:04 -0400
+Received: from mail-pg1-x535.google.com (mail-pg1-x535.google.com [IPv6:2607:f8b0:4864:20::535])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 90AA012BD98;
+        Fri, 23 Sep 2022 10:32:03 -0700 (PDT)
+Received: by mail-pg1-x535.google.com with SMTP id 78so825838pgb.13;
+        Fri, 23 Sep 2022 10:32:03 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20210112;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:from:to:cc:subject:date;
-        bh=5ZhohO0uO7yhIsnSHmpKo2RQXCqV/trHIAjiv5+jV/8=;
-        b=jEq2IrzBatVlOHWJSmBXkgRY986qWGs2+Xrkn3rGxEaUl7X+UwL5M7NdkCtyanXbL/
-         lJR9Q1PlmscZhadny7A5mU75+M1E+cthnKaTi7k5fdKRt954ej7v8qBISl72QVzssjAo
-         HE5AKSO8ZS6UMdAISe3Vg9rscvHQE5dPSxo0ibw824BuOHigz4ifj0rx4V5qWUW3EH4F
-         StJ0vQPSf37QF+81GWRJ+lrI441tCxrvGP7B/43Ndx/CCuEldpGjExaZrIPj/vqNOsc9
-         HusTPoCalqosZz4Ihq2V90FSuLZ6clmbQHWu8Ce0wDGqOE7mUwHWa+xOcseNUQt0gaVK
-         5NuA==
+        d=gmail.com; s=20210112;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:sender:from:to:cc:subject:date;
+        bh=JCv6sv00YaO4tU61lqZx/ARNo7oEKPFV016dlURUeFc=;
+        b=OdN3pbQpOZktYmS2WG5YnbAEMZ+Bq1ZGT50wjJhl7V1Nb2ALsjFJW2xHgUWspChrEy
+         uTTknjZNvhsfUKAi1+b0JYNLjuNH8B5sk645HZtEXikdHZQhnIBucAuKfS36vPRsR/g/
+         UC/KFaQmtzjhd6e0AQpCphmwcaP+DaurqEU4jgOSlhRc4tiW2IMqt8Zdx/rxypjvVkK2
+         Crdvge3dM5kERkGVL1F+dqp/YiMHSs2FQtvaF34wtsWJplhaZVmPhrwJxATY8NHhb9Fw
+         dkJJK+h3tXtP762bCAI/NSzNsQ/3VrTPwXujPXa/5dJW9zxkjlHkbmHNOjllZWnGUSP8
+         W0yw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date;
-        bh=5ZhohO0uO7yhIsnSHmpKo2RQXCqV/trHIAjiv5+jV/8=;
-        b=Xf8gdNtNpuM75KW0PlUGkYrFvs/vVt2UgbijcGJkKfgUyjPpcyCX1pS2u4yfqB8EqP
-         BMr/oLEfxa08mnXhP0fTXpmhH9xRjwidf0zNK+jq67XduLJ9NOeP19DYS7lau/3FZEoh
-         2mKC917gxALyzI1fZNIN/RkJv3sFlGM/6P3kc0yOFWoyCW8g6kVC2vsTkt0H9V+JhlCT
-         aWTyDVAPRT5aZkPUjRjOd0jWpFx3xoV8DTLBWof6zh8U+BGYxaPPHG/uBB4i3oq3YUm6
-         8t7262Wgc/Mwyl8TxKB3JfTQwrWAuJ3oXF7vOhvRY/NwcAKgGX9d5nZSNQp+6bjQKrnh
-         O62A==
-X-Gm-Message-State: ACrzQf2DK/WK8E2gAoiKLccfvTGr6fGjM93aPqA2hCfNqfOc4PA1dpDE
-        LWWNtpAK139rirjbNziOV39d/pCBzsmDM1WS+5V00A==
-X-Google-Smtp-Source: AMsMyM66XPOCs/iLVcgSrcMInXFVlj015Arp38WZx0TGp2+986cigtkhJh3lQY5LIncC4Av9h5FJuLpR19pd3a4KPbg=
-X-Received: by 2002:adf:e4ca:0:b0:228:d8b7:48a7 with SMTP id
- v10-20020adfe4ca000000b00228d8b748a7mr5692589wrm.300.1663952128554; Fri, 23
- Sep 2022 09:55:28 -0700 (PDT)
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:sender:x-gm-message-state:from:to:cc:subject:date;
+        bh=JCv6sv00YaO4tU61lqZx/ARNo7oEKPFV016dlURUeFc=;
+        b=K/pkr//ZcosbSyZiJ3aMSDLVkp6ZrLR4vQXy2aGTMhKUMUlsIRqQNWYsTeKfYxuvh/
+         h91DeEzw0o5MtU9VZfCQkJUuyJ9tL7C6P0o4eQitfftkZG1pnBLi8NI5QQzoDuR17CA0
+         yLRQ/754MMaQH6IjMqto0zlLmjR1kS12eWQqkeTdH0/DxKYge5jnM2l90EQ4Ey4QB46x
+         k8NJcAZ6n14GbpxTPJUSXWNC79ywrDPjN1uAh6sYzO1MvfjJwB2oRjaApn2SRfK8J1iH
+         XIFkxlKmJz4JZ2hyNRWKxt5GeejaG9jaXJvY6vrL4z1SbETdlVWOu+SH2HKy0PA4fjwJ
+         WWJA==
+X-Gm-Message-State: ACrzQf1xx1Pkf5yl8kGeRd2Q04xSO6Z+JW+p0jS9II6uiozN/75ZCtHu
+        nXWyLjm04U5icCPSbAYibbw01sWJxOI=
+X-Google-Smtp-Source: AMsMyM5W/Nnz+Ei6eaOF7Zd7e9mvoKj+Rge261fAN0/i8Plgv3bz9R+bB+3VUn2IJEMdw3NoXrflrg==
+X-Received: by 2002:a05:6a00:1248:b0:548:2e34:65e1 with SMTP id u8-20020a056a00124800b005482e3465e1mr10484417pfi.82.1663954322999;
+        Fri, 23 Sep 2022 10:32:02 -0700 (PDT)
+Received: from balhae.hsd1.ca.comcast.net ([2601:647:6780:1040:c716:a857:50ee:f56e])
+        by smtp.gmail.com with ESMTPSA id 9-20020a621409000000b0053e6eae9668sm6719499pfu.2.2022.09.23.10.32.01
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 23 Sep 2022 10:32:02 -0700 (PDT)
+Sender: Namhyung Kim <namhyung@gmail.com>
+From:   Namhyung Kim <namhyung@kernel.org>
+To:     Arnaldo Carvalho de Melo <acme@kernel.org>,
+        Jiri Olsa <jolsa@kernel.org>
+Cc:     Ingo Molnar <mingo@kernel.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Ian Rogers <irogers@google.com>,
+        Adrian Hunter <adrian.hunter@intel.com>,
+        linux-perf-users@vger.kernel.org,
+        Stephane Eranian <eranian@google.com>
+Subject: [PATCH 0/4] perf tools: Assorted random fixes and updates
+Date:   Fri, 23 Sep 2022 10:31:38 -0700
+Message-Id: <20220923173142.805896-1-namhyung@kernel.org>
+X-Mailer: git-send-email 2.37.3.998.g577e59143f-goog
 MIME-Version: 1.0
-References: <20220923030013.3726410-1-zhengjun.xing@linux.intel.com> <20220923030013.3726410-2-zhengjun.xing@linux.intel.com>
-In-Reply-To: <20220923030013.3726410-2-zhengjun.xing@linux.intel.com>
-From:   Ian Rogers <irogers@google.com>
-Date:   Fri, 23 Sep 2022 09:55:16 -0700
-Message-ID: <CAP-5=fX1VY0EqmfBJ_kVJDPy3__GDVxCOOBD5r0=ifAvJjHBPQ@mail.gmail.com>
-Subject: Re: [PATCH v2 2/2] perf parse-events: Remove "not supported" hybrid
- cache events
-To:     zhengjun.xing@linux.intel.com
-Cc:     acme@kernel.org, peterz@infradead.org, mingo@redhat.com,
-        alexander.shishkin@intel.com, jolsa@kernel.org,
-        namhyung@kernel.org, linux-kernel@vger.kernel.org,
-        linux-perf-users@vger.kernel.org, ak@linux.intel.com,
-        kan.liang@linux.intel.com, Yi Ammy <ammy.yi@intel.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-On Thu, Sep 22, 2022 at 7:58 PM <zhengjun.xing@linux.intel.com> wrote:
->
-> From: Zhengjun Xing <zhengjun.xing@linux.intel.com>
->
-> By default, we create two hybrid cache events, one is for cpu_core, and
-> another is for cpu_atom. But Some hybrid hardware cache events are only
-> available on one CPU PMU. For example, the 'L1-dcache-load-misses' is only
-> available on cpu_core, while the 'L1-icache-loads' is only available on
-> cpu_atom. We need to remove "not supported" hybrid cache events. By
-> extending is_event_supported() to global API and using it to check if the
-> hybrid cache events are supported before being created, we can remove the
-> "not supported" hybrid cache events.
->
-> Before:
->
->  # ./perf stat -e L1-dcache-load-misses,L1-icache-loads -a sleep 1
->
->  Performance counter stats for 'system wide':
->
->             52,570      cpu_core/L1-dcache-load-misses/
->    <not supported>      cpu_atom/L1-dcache-load-misses/
->    <not supported>      cpu_core/L1-icache-loads/
->          1,471,817      cpu_atom/L1-icache-loads/
->
->        1.004915229 seconds time elapsed
->
-> After:
->
->  # ./perf stat -e L1-dcache-load-misses,L1-icache-loads -a sleep 1
->
->  Performance counter stats for 'system wide':
->
->             54,510      cpu_core/L1-dcache-load-misses/
->          1,441,286      cpu_atom/L1-icache-loads/
->
->        1.005114281 seconds time elapsed
->
-> Fixes: 30def61f64ba ("perf parse-events: Create two hybrid cache events")
-> Signed-off-by: Zhengjun Xing <zhengjun.xing@linux.intel.com>
-> Reviewed-by: Kan Liang <kan.liang@linux.intel.com>
-> Reported-by: Yi Ammy <ammy.yi@intel.com>
+Hello,
 
-Acked-by: Ian Rogers <irogers@google.com>
+This is collection of random fixes and updates.
+And I'm resending them as they seem to be lost in the list.
 
 Thanks,
-Ian
+Namhyung
 
-> ---
-> Change log:
->   v2:
->     * Adds a comment for removing "not supported" hybrid cache events.
->     * Remove goto and add a strdup check
->     * "is_event_supported" move to parse-events.c per Ian's suggestion.
->     * Adds Reported-by from Yi Ammy <ammy.yi@intel.com>
->
->  tools/perf/util/parse-events-hybrid.c | 21 ++++++++++++---
->  tools/perf/util/parse-events.c        | 39 +++++++++++++++++++++++++++
->  tools/perf/util/parse-events.h        |  1 +
->  tools/perf/util/print-events.c        | 39 ---------------------------
->  4 files changed, 57 insertions(+), 43 deletions(-)
->
-> diff --git a/tools/perf/util/parse-events-hybrid.c b/tools/perf/util/parse-events-hybrid.c
-> index 284f8eabd3b9..7c9f9150bad5 100644
-> --- a/tools/perf/util/parse-events-hybrid.c
-> +++ b/tools/perf/util/parse-events-hybrid.c
-> @@ -33,7 +33,8 @@ static void config_hybrid_attr(struct perf_event_attr *attr,
->          * If the PMU type ID is 0, the PERF_TYPE_RAW will be applied.
->          */
->         attr->type = type;
-> -       attr->config = attr->config | ((__u64)pmu_type << PERF_PMU_TYPE_SHIFT);
-> +       attr->config = (attr->config & PERF_HW_EVENT_MASK) |
-> +                       ((__u64)pmu_type << PERF_PMU_TYPE_SHIFT);
->  }
->
->  static int create_event_hybrid(__u32 config_type, int *idx,
-> @@ -48,13 +49,25 @@ static int create_event_hybrid(__u32 config_type, int *idx,
->         __u64 config = attr->config;
->
->         config_hybrid_attr(attr, config_type, pmu->type);
-> +
-> +       /*
-> +        * Some hybrid hardware cache events are only available on one CPU
-> +        * PMU. For example, the 'L1-dcache-load-misses' is only available
-> +        * on cpu_core, while the 'L1-icache-loads' is only available on
-> +        * cpu_atom. We need to remove "not supported" hybrid cache events.
-> +        */
-> +       if (attr->type == PERF_TYPE_HW_CACHE
-> +           && !is_event_supported(attr->type, attr->config))
-> +               return 0;
-> +
->         evsel = parse_events__add_event_hybrid(list, idx, attr, name, metric_id,
->                                                pmu, config_terms);
-> -       if (evsel)
-> +       if (evsel) {
->                 evsel->pmu_name = strdup(pmu->name);
-> -       else
-> +               if (!evsel->pmu_name)
-> +                       return -ENOMEM;
-> +       } else
->                 return -ENOMEM;
-> -
->         attr->type = type;
->         attr->config = config;
->         return 0;
-> diff --git a/tools/perf/util/parse-events.c b/tools/perf/util/parse-events.c
-> index f05e15acd33f..f3b2c2a87456 100644
-> --- a/tools/perf/util/parse-events.c
-> +++ b/tools/perf/util/parse-events.c
-> @@ -28,6 +28,7 @@
->  #include "util/parse-events-hybrid.h"
->  #include "util/pmu-hybrid.h"
->  #include "tracepoint.h"
-> +#include "thread_map.h"
->
->  #define MAX_NAME_LEN 100
->
-> @@ -157,6 +158,44 @@ struct event_symbol event_symbols_sw[PERF_COUNT_SW_MAX] = {
->  #define PERF_EVENT_TYPE(config)                __PERF_EVENT_FIELD(config, TYPE)
->  #define PERF_EVENT_ID(config)          __PERF_EVENT_FIELD(config, EVENT)
->
-> +bool is_event_supported(u8 type, u64 config)
-> +{
-> +       bool ret = true;
-> +       int open_return;
-> +       struct evsel *evsel;
-> +       struct perf_event_attr attr = {
-> +               .type = type,
-> +               .config = config,
-> +               .disabled = 1,
-> +       };
-> +       struct perf_thread_map *tmap = thread_map__new_by_tid(0);
-> +
-> +       if (tmap == NULL)
-> +               return false;
-> +
-> +       evsel = evsel__new(&attr);
-> +       if (evsel) {
-> +               open_return = evsel__open(evsel, NULL, tmap);
-> +               ret = open_return >= 0;
-> +
-> +               if (open_return == -EACCES) {
-> +                       /*
-> +                        * This happens if the paranoid value
-> +                        * /proc/sys/kernel/perf_event_paranoid is set to 2
-> +                        * Re-run with exclude_kernel set; we don't do that
-> +                        * by default as some ARM machines do not support it.
-> +                        *
-> +                        */
-> +                       evsel->core.attr.exclude_kernel = 1;
-> +                       ret = evsel__open(evsel, NULL, tmap) >= 0;
-> +               }
-> +               evsel__delete(evsel);
-> +       }
-> +
-> +       perf_thread_map__put(tmap);
-> +       return ret;
-> +}
-> +
->  const char *event_type(int type)
->  {
->         switch (type) {
-> diff --git a/tools/perf/util/parse-events.h b/tools/perf/util/parse-events.h
-> index 7e6a601d9cd0..07df7bb7b042 100644
-> --- a/tools/perf/util/parse-events.h
-> +++ b/tools/perf/util/parse-events.h
-> @@ -19,6 +19,7 @@ struct option;
->  struct perf_pmu;
->
->  bool have_tracepoints(struct list_head *evlist);
-> +bool is_event_supported(u8 type, u64 config);
->
->  const char *event_type(int type);
->
-> diff --git a/tools/perf/util/print-events.c b/tools/perf/util/print-events.c
-> index 04050d4f6db8..c4d5d87fae2f 100644
-> --- a/tools/perf/util/print-events.c
-> +++ b/tools/perf/util/print-events.c
-> @@ -22,7 +22,6 @@
->  #include "probe-file.h"
->  #include "string2.h"
->  #include "strlist.h"
-> -#include "thread_map.h"
->  #include "tracepoint.h"
->  #include "pfm.h"
->  #include "pmu-hybrid.h"
-> @@ -239,44 +238,6 @@ void print_sdt_events(const char *subsys_glob, const char *event_glob,
->         strlist__delete(sdtlist);
->  }
->
-> -static bool is_event_supported(u8 type, u64 config)
-> -{
-> -       bool ret = true;
-> -       int open_return;
-> -       struct evsel *evsel;
-> -       struct perf_event_attr attr = {
-> -               .type = type,
-> -               .config = config,
-> -               .disabled = 1,
-> -       };
-> -       struct perf_thread_map *tmap = thread_map__new_by_tid(0);
-> -
-> -       if (tmap == NULL)
-> -               return false;
-> -
-> -       evsel = evsel__new(&attr);
-> -       if (evsel) {
-> -               open_return = evsel__open(evsel, NULL, tmap);
-> -               ret = open_return >= 0;
-> -
-> -               if (open_return == -EACCES) {
-> -                       /*
-> -                        * This happens if the paranoid value
-> -                        * /proc/sys/kernel/perf_event_paranoid is set to 2
-> -                        * Re-run with exclude_kernel set; we don't do that
-> -                        * by default as some ARM machines do not support it.
-> -                        *
-> -                        */
-> -                       evsel->core.attr.exclude_kernel = 1;
-> -                       ret = evsel__open(evsel, NULL, tmap) >= 0;
-> -               }
-> -               evsel__delete(evsel);
-> -       }
-> -
-> -       perf_thread_map__put(tmap);
-> -       return ret;
-> -}
-> -
->  int print_hwcache_events(const char *event_glob, bool name_only)
->  {
->         unsigned int type, op, i, evt_i = 0, evt_num = 0, npmus = 0;
-> --
-> 2.25.1
->
+
+Namhyung Kim (4):
+  perf record: Fix a segfault in record__read_lost_samples()
+  perf inject: Clarify build-id options a little bit
+  perf tools: Add 'addr' sort key
+  perf annotate: Toggle full address <-> offset display
+
+ tools/perf/Documentation/perf-inject.txt |  6 ++--
+ tools/perf/Documentation/perf-report.txt |  3 +-
+ tools/perf/builtin-record.c              |  6 ++++
+ tools/perf/ui/browsers/annotate.c        |  6 +++-
+ tools/perf/util/annotate.c               | 19 +++++++++++-
+ tools/perf/util/annotate.h               |  4 ++-
+ tools/perf/util/hist.c                   |  1 +
+ tools/perf/util/hist.h                   |  1 +
+ tools/perf/util/sort.c                   | 38 ++++++++++++++++++++++++
+ tools/perf/util/sort.h                   |  1 +
+ 10 files changed, 79 insertions(+), 6 deletions(-)
+
+-- 
+2.37.3.998.g577e59143f-goog
+
