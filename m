@@ -2,171 +2,191 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 92DD8C6FA82
-	for <linux-perf-users@archiver.kernel.org>; Fri, 23 Sep 2022 06:13:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 40289ECAAD8
+	for <linux-perf-users@archiver.kernel.org>; Fri, 23 Sep 2022 06:24:51 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229631AbiIWGNm (ORCPT
+        id S229819AbiIWGYt (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Fri, 23 Sep 2022 02:13:42 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51678 "EHLO
+        Fri, 23 Sep 2022 02:24:49 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43046 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229436AbiIWGNl (ORCPT
+        with ESMTP id S229570AbiIWGYr (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Fri, 23 Sep 2022 02:13:41 -0400
-Received: from mail-oa1-f43.google.com (mail-oa1-f43.google.com [209.85.160.43])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 75AEB1191A2;
-        Thu, 22 Sep 2022 23:13:39 -0700 (PDT)
-Received: by mail-oa1-f43.google.com with SMTP id 586e51a60fabf-1279948d93dso16973530fac.10;
-        Thu, 22 Sep 2022 23:13:39 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date;
-        bh=Rji+pfwL3rQYH9KftarRBcRHruKKw+WaXEF8zxspQUo=;
-        b=t9hB2AnQpXAyZIGpLahKAScyiXXShtXmkUtWe1KFKoAbJ/V3oiNiWPq5jN8PuE32O1
-         w01w+vzxcpe2XX4b/1m3jiD907/1ynFP70uFq/QV99kMMteYBaggZRECLjjkCU9zghi7
-         VuWWs8T2hC6prOuPiIqo9BmlVQL/pOXua6TFYFXqfurHI+ChFHg4QBLJb8HG3uTO2iLd
-         ON1DymnZoAgQEE0SXOmEyC15skeg5lLhj1pdLnPuMT5lAhiDTmD5TGxOStqiDwGgZMyc
-         DAMqZUXMNc3h/uNx+vbe+wU4DlvoWeXhGeYshRxLZJDFFXlLvaQ6GLIYTB87jDOZXwvo
-         twrw==
-X-Gm-Message-State: ACrzQf2CuiYrXNrHtXLl7MYGf4yoEmtyYLYWjdZdIs5KZVSlWtyTObm8
-        VAKRIHlxg7W1ZLhkMrCWBUETErWlrjPOABfDPQzh7POr
-X-Google-Smtp-Source: AMsMyM7/a5MYAYQQxnQQ6yfKc2MsuXYZzmH6H18gLRP1gNB02M4mT1N94UMS114mCiy8+RmdDKU6GSHPtlKMSUyR4E0=
-X-Received: by 2002:a05:6870:524b:b0:12c:cfd2:81c0 with SMTP id
- o11-20020a056870524b00b0012ccfd281c0mr4049188oai.209.1663913618712; Thu, 22
- Sep 2022 23:13:38 -0700 (PDT)
+        Fri, 23 Sep 2022 02:24:47 -0400
+Received: from mga17.intel.com (mga17.intel.com [192.55.52.151])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 232A82E691
+        for <linux-perf-users@vger.kernel.org>; Thu, 22 Sep 2022 23:24:46 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1663914286; x=1695450286;
+  h=message-id:date:mime-version:subject:to:cc:references:
+   from:in-reply-to:content-transfer-encoding;
+  bh=lUrHTRbLjHyO625/uRuGloyeUzUC3gHCDg6hl2k92Ww=;
+  b=M00xi2uDqgSDHMkDto2NR3J8dzCqlWwYMEj2IMA8kVdrb5GY4nwZ1gya
+   5kch0BT5pqBGCK/BFyCloVwma4gE2VIzHxjTN2HKdZ/L2CETDIYlgJkar
+   Gsc2zg4enh0gUsJU55toBU/ofOiMZcDfZ6m5wuDFSUe7OaerByPE5p89g
+   pzZRbdIQnvT5eVisA7UrSi9tAOUIl8X27+ghwl6xg0WIujOquBvGYNgU6
+   0ZqBf/ZpbtwSpo21gqec7gGt64IkILt++TI3mO3pdgDzn4xyJw6DSwmaG
+   hNPMHMBG1LC78IuH9xIOgx2RmB8AWEzvKt/cVG5CMrj/mphgwCiA7Mr1I
+   Q==;
+X-IronPort-AV: E=McAfee;i="6500,9779,10478"; a="280889869"
+X-IronPort-AV: E=Sophos;i="5.93,337,1654585200"; 
+   d="scan'208";a="280889869"
+Received: from fmsmga008.fm.intel.com ([10.253.24.58])
+  by fmsmga107.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 22 Sep 2022 23:24:45 -0700
+X-IronPort-AV: E=Sophos;i="5.93,337,1654585200"; 
+   d="scan'208";a="682546459"
+Received: from ahunter6-mobl1.ger.corp.intel.com (HELO [10.0.2.15]) ([10.252.60.208])
+  by fmsmga008-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 22 Sep 2022 23:24:42 -0700
+Message-ID: <444a5a64-7bc6-d5fd-2880-611c5cbca587@intel.com>
+Date:   Fri, 23 Sep 2022 09:24:38 +0300
 MIME-Version: 1.0
-References: <20220922205302.749274-1-namhyung@kernel.org> <CAP-5=fXAS+QpkncLqLeS=MOeqOyrFy3Gev=F8vet4r6xjmCJ4g@mail.gmail.com>
-In-Reply-To: <CAP-5=fXAS+QpkncLqLeS=MOeqOyrFy3Gev=F8vet4r6xjmCJ4g@mail.gmail.com>
-From:   Namhyung Kim <namhyung@kernel.org>
-Date:   Thu, 22 Sep 2022 23:13:27 -0700
-Message-ID: <CAM9d7cj_LOi+1aKfw7iFLyyWUiNeH2FXr8RMYumTSBzz2tDnwg@mail.gmail.com>
-Subject: Re: [PATCH v3] perf tools: Get a perf cgroup more portably in BPF
-To:     Ian Rogers <irogers@google.com>
-Cc:     Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Jiri Olsa <jolsa@kernel.org>, Ingo Molnar <mingo@kernel.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Adrian Hunter <adrian.hunter@intel.com>,
-        linux-perf-users <linux-perf-users@vger.kernel.org>,
-        Song Liu <songliubraving@fb.com>, Hao Luo <haoluo@google.com>,
-        bpf <bpf@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
+ Firefox/91.0 Thunderbird/91.11.0
+Subject: Re: [PATCH 1/2] tools/perf/tests: Fix string substitutions in build
+ id test
+Content-Language: en-US
+To:     Arnaldo Carvalho de Melo <acme@kernel.org>,
+        Athira Rajeev <atrajeev@linux.vnet.ibm.com>
+Cc:     Jiri Olsa <jolsa@kernel.org>, mpe@ellerman.id.au,
+        linux-perf-users@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
+        maddy@linux.vnet.ibm.com, rnsastry@linux.ibm.com,
+        kjain@linux.ibm.com, disgoel@linux.vnet.ibm.com,
+        Ian Rogers <irogers@google.com>
+References: <20220921170839.21927-1-atrajeev@linux.vnet.ibm.com>
+ <Yyy0W6CnPk7BkkCU@kernel.org>
+From:   Adrian Hunter <adrian.hunter@intel.com>
+Organization: Intel Finland Oy, Registered Address: PL 281, 00181 Helsinki,
+ Business Identity Code: 0357606 - 4, Domiciled in Helsinki
+In-Reply-To: <Yyy0W6CnPk7BkkCU@kernel.org>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-On Thu, Sep 22, 2022 at 4:55 PM Ian Rogers <irogers@google.com> wrote:
->
-> On Thu, Sep 22, 2022 at 1:53 PM Namhyung Kim <namhyung@kernel.org> wrote:
-> >
-> > The perf_event_cgrp_id can be different on other configurations.
-> > To be more portable as CO-RE, it needs to get the cgroup subsys id
-> > using the bpf_core_enum_value() helper.
-> >
-> > Suggested-by: Ian Rogers <irogers@google.com>
-> > Signed-off-by: Namhyung Kim <namhyung@kernel.org>
-> > ---
-> > v3 changes)
-> >  * check compiler features for enum value
-> >
-> > v2 changes)
-> >  * fix off_cpu.bpf.c too
-> >  * get perf_subsys_id only once
-> >
-> >  tools/perf/util/bpf_skel/bperf_cgroup.bpf.c | 11 ++++++++++-
-> >  tools/perf/util/bpf_skel/off_cpu.bpf.c      | 12 ++++++++----
-> >  2 files changed, 18 insertions(+), 5 deletions(-)
-> >
-> > diff --git a/tools/perf/util/bpf_skel/bperf_cgroup.bpf.c b/tools/perf/util/bpf_skel/bperf_cgroup.bpf.c
-> > index 292c430768b5..8e7520e273db 100644
-> > --- a/tools/perf/util/bpf_skel/bperf_cgroup.bpf.c
-> > +++ b/tools/perf/util/bpf_skel/bperf_cgroup.bpf.c
-> > @@ -48,6 +48,7 @@ const volatile __u32 num_cpus = 1;
-> >
-> >  int enabled = 0;
-> >  int use_cgroup_v2 = 0;
-> > +int perf_subsys_id = -1;
-> >
-> >  static inline int get_cgroup_v1_idx(__u32 *cgrps, int size)
-> >  {
-> > @@ -58,7 +59,15 @@ static inline int get_cgroup_v1_idx(__u32 *cgrps, int size)
-> >         int level;
-> >         int cnt;
-> >
-> > -       cgrp = BPF_CORE_READ(p, cgroups, subsys[perf_event_cgrp_id], cgroup);
-> > +       if (perf_subsys_id == -1) {
-> > +#if __has_builtin(__builtin_preserve_enum_value)
-> > +               perf_subsys_id = bpf_core_enum_value(enum cgroup_subsys_id,
-> > +                                                    perf_event_cgrp_id);
-> > +#else
-> > +               perf_subsys_id = perf_event_cgrp_id;
-> > +#endif
-> > +       }
-> > +       cgrp = BPF_CORE_READ(p, cgroups, subsys[perf_subsys_id], cgroup);
-> >         level = BPF_CORE_READ(cgrp, level);
-> >
-> >         for (cnt = 0; i < MAX_LEVELS; i++) {
-> > diff --git a/tools/perf/util/bpf_skel/off_cpu.bpf.c b/tools/perf/util/bpf_skel/off_cpu.bpf.c
-> > index c4ba2bcf179f..e917ef7b8875 100644
-> > --- a/tools/perf/util/bpf_skel/off_cpu.bpf.c
-> > +++ b/tools/perf/util/bpf_skel/off_cpu.bpf.c
-> > @@ -94,6 +94,8 @@ const volatile bool has_prev_state = false;
-> >  const volatile bool needs_cgroup = false;
-> >  const volatile bool uses_cgroup_v1 = false;
-> >
-> > +int perf_subsys_id = -1;
-> > +
-> >  /*
-> >   * Old kernel used to call it task_struct->state and now it's '__state'.
-> >   * Use BPF CO-RE "ignored suffix rule" to deal with it like below:
-> > @@ -119,11 +121,13 @@ static inline __u64 get_cgroup_id(struct task_struct *t)
-> >  {
-> >         struct cgroup *cgrp;
-> >
-> > -       if (uses_cgroup_v1)
-> > -               cgrp = BPF_CORE_READ(t, cgroups, subsys[perf_event_cgrp_id], cgroup);
-> > -       else
-> > -               cgrp = BPF_CORE_READ(t, cgroups, dfl_cgrp);
-> > +       if (!uses_cgroup_v1)
-> > +               return BPF_CORE_READ(t, cgroups, dfl_cgrp, kn, id);
-> > +
-> > +       if (perf_subsys_id == -1)
-> > +               perf_subsys_id = bpf_core_enum_value(enum cgroup_subsys_id, perf_event_cgrp_id);
->
-> Should the "#if __has_builtin(__builtin_preserve_enum_value)" test also be here?
+On 22/09/22 22:15, Arnaldo Carvalho de Melo wrote:
+> Em Wed, Sep 21, 2022 at 10:38:38PM +0530, Athira Rajeev escreveu:
+>> The perf test named “build id cache operations” skips with below
+>> error on some distros:
+> 
+> I wonder if we shouldn't instead state that bash is needed?
+> 
+> ⬢[acme@toolbox perf-urgent]$ head -1 tools/perf/tests/shell/*.sh | grep ^#
+> #!/bin/sh
+> #!/bin/bash
+> #!/bin/sh
+> #!/bin/sh
+> #!/bin/sh
+> #!/bin/sh
+> #!/bin/sh
+> #!/bin/sh
+> #!/bin/sh
+> #!/bin/sh
+> #!/bin/bash
+> #!/bin/sh
+> #!/bin/sh
+> #!/bin/sh
+> #!/bin/bash
+> #!/bin/sh
+> #!/bin/bash
+> #!/bin/sh
+> #!/bin/sh
+> #!/bin/sh
+> #!/bin/sh
+> #!/bin/sh
+> #!/bin/sh
+> #!/bin/sh
+> #!/bin/sh
+> #!/bin/sh
+> ⬢[acme@toolbox perf-urgent]$
+> 
+> Opinions?
+> 
 
-Ouch!  Will send v4.
+Please don't change tools/perf/tests/shell/test_intel_pt.sh
 
->
-> It feels a shame that bpf_core_enum_value isn't defined something like:
->
-> #if __has_builtin(__builtin_preserve_enum_value)
-> #define bpf_core_enum_value(enum_type, enum_value) \
-> __builtin_preserve_enum_value(*(typeof(enum_type) *)enum_value,
-> BPF_ENUMVAL_VALUE)
-> #else
-> #define bpf_core_enum_value(enum_type, enum_value) enum_value
-> #endif
+I started using shellcheck on that with the "perf test: 
+test_intel_pt.sh: Add per-thread test" patch set that I sent.
 
-Yeah, that would be much easier to use.
+FYI, if you use shellcheck on buildid.sh, it shows up issues even
+after changing to bash:
 
-Thanks,
-Namhyung
+*** Before ***
+
+$ shellcheck -S warning tools/perf/tests/shell/buildid.sh 
+
+In tools/perf/tests/shell/buildid.sh line 69:
+        link=${build_id_dir}/.build-id/${id:0:2}/${id:2}
+                                       ^-------^ SC2039: In POSIX sh, string indexing is undefined.
+                                                 ^-----^ SC2039: In POSIX sh, string indexing is undefined.
 
 
->
-> for backward clang compatibility, but I could see why an error would
-> be preferable.
->
-> Thanks,
-> Ian
->
-> >
-> > +       cgrp = BPF_CORE_READ(t, cgroups, subsys[perf_subsys_id], cgroup);
-> >         return BPF_CORE_READ(cgrp, kn, id);
-> >  }
-> >
-> > --
-> > 2.37.3.998.g577e59143f-goog
-> >
+In tools/perf/tests/shell/buildid.sh line 77:
+        file=${build_id_dir}/.build-id/${id:0:2}/`readlink ${link}`/elf
+                                       ^-------^ SC2039: In POSIX sh, string indexing is undefined.
+
+
+In tools/perf/tests/shell/buildid.sh line 123:
+        echo "running: perf record $@"
+                                   ^-- SC2145: Argument mixes string and array. Use * or separate argument.
+
+
+In tools/perf/tests/shell/buildid.sh line 124:
+        ${perf} record --buildid-all -o ${data} $@ &> ${log}
+                                                ^-- SC2068: Double quote array expansions to avoid re-splitting elements.
+                                                   ^-------^ SC2039: In POSIX sh, &> is undefined.
+
+
+In tools/perf/tests/shell/buildid.sh line 126:
+                echo "failed: record $@"
+                                     ^-- SC2145: Argument mixes string and array. Use * or separate argument.
+
+
+In tools/perf/tests/shell/buildid.sh line 131:
+        check ${@: -1}
+              ^------^ SC2068: Double quote array expansions to avoid re-splitting elements.
+              ^------^ SC2039: In POSIX sh, string indexing is undefined.
+
+
+In tools/perf/tests/shell/buildid.sh line 158:
+exit ${err}
+     ^----^ SC2154: err is referenced but not assigned.
+
+For more information:
+  https://www.shellcheck.net/wiki/SC2068 -- Double quote array expansions to ...
+  https://www.shellcheck.net/wiki/SC2145 -- Argument mixes string and array. ...
+  https://www.shellcheck.net/wiki/SC2039 -- In POSIX sh, &> is undefined.
+
+*** After ***
+
+$ shellcheck -S warning tools/perf/tests/shell/buildid.sh 
+
+In tools/perf/tests/shell/buildid.sh line 123:
+        echo "running: perf record $@"
+                                   ^-- SC2145: Argument mixes string and array. Use * or separate argument.
+
+
+In tools/perf/tests/shell/buildid.sh line 124:
+        ${perf} record --buildid-all -o ${data} $@ &> ${log}
+                                                ^-- SC2068: Double quote array expansions to avoid re-splitting elements.
+
+
+In tools/perf/tests/shell/buildid.sh line 126:
+                echo "failed: record $@"
+                                     ^-- SC2145: Argument mixes string and array. Use * or separate argument.
+
+
+In tools/perf/tests/shell/buildid.sh line 131:
+        check ${@: -1}
+              ^------^ SC2068: Double quote array expansions to avoid re-splitting elements.
+
+
+In tools/perf/tests/shell/buildid.sh line 158:
+exit ${err}
+     ^----^ SC2154: err is referenced but not assigned.
+
+For more information:
+  https://www.shellcheck.net/wiki/SC2068 -- Double quote array expansions to ...
+  https://www.shellcheck.net/wiki/SC2145 -- Argument mixes string and array. ...
+  https://www.shellcheck.net/wiki/SC2154 -- err is referenced but not assigned.
