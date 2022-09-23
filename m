@@ -2,167 +2,299 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8B17EECAAD8
-	for <linux-perf-users@archiver.kernel.org>; Fri, 23 Sep 2022 16:45:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2A42FC6FA82
+	for <linux-perf-users@archiver.kernel.org>; Fri, 23 Sep 2022 16:55:38 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230106AbiIWQpi (ORCPT
+        id S231574AbiIWQzg (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Fri, 23 Sep 2022 12:45:38 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40190 "EHLO
+        Fri, 23 Sep 2022 12:55:36 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52126 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231566AbiIWQpg (ORCPT
+        with ESMTP id S232494AbiIWQzc (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Fri, 23 Sep 2022 12:45:36 -0400
-Received: from mail-wm1-x330.google.com (mail-wm1-x330.google.com [IPv6:2a00:1450:4864:20::330])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4D9FE12204C
-        for <linux-perf-users@vger.kernel.org>; Fri, 23 Sep 2022 09:45:33 -0700 (PDT)
-Received: by mail-wm1-x330.google.com with SMTP id k3-20020a05600c1c8300b003b4fa1a85f8so315222wms.3
-        for <linux-perf-users@vger.kernel.org>; Fri, 23 Sep 2022 09:45:33 -0700 (PDT)
+        Fri, 23 Sep 2022 12:55:32 -0400
+Received: from mail-wr1-x432.google.com (mail-wr1-x432.google.com [IPv6:2a00:1450:4864:20::432])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 50357FA0CE
+        for <linux-perf-users@vger.kernel.org>; Fri, 23 Sep 2022 09:55:30 -0700 (PDT)
+Received: by mail-wr1-x432.google.com with SMTP id z6so934667wrq.1
+        for <linux-perf-users@vger.kernel.org>; Fri, 23 Sep 2022 09:55:30 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=google.com; s=20210112;
         h=cc:to:subject:message-id:date:from:in-reply-to:references
          :mime-version:from:to:cc:subject:date;
-        bh=mOJBFjRRTQOLMhXeuWiEa3iVJxoMFGP8tXYc65hDHv4=;
-        b=KI6qxW+rqSa88pnT9BHcMzTYQ/EPlGQMkmepwufMnKjb8Grb092QhNVKTREgMoHF0E
-         P7Ik7btej3gGALjuaMQWArzO95vir14IXvpdNcv1xz8skHm2QXjJrQNKPGPEWoIGEAKd
-         xy7+wjI1etv80s9EENeAbcPEV/r9aWfJ9LXdCmxp3gI1/aNq0NR5jQfGbA40Yc26l/Ku
-         dNwDh2vY5boD9JqtqAuH708KBq+GBDWbXt147hWRI1kF9ARpcvk7DuCH3LPbjfrheF1l
-         dOOFPypylFxe1f0fKBO+Vo9jtrzArO5bEC911Q7HsvzaIPIOm6vEdVQvKg1jbnQpWCl0
-         CuLg==
+        bh=5ZhohO0uO7yhIsnSHmpKo2RQXCqV/trHIAjiv5+jV/8=;
+        b=jEq2IrzBatVlOHWJSmBXkgRY986qWGs2+Xrkn3rGxEaUl7X+UwL5M7NdkCtyanXbL/
+         lJR9Q1PlmscZhadny7A5mU75+M1E+cthnKaTi7k5fdKRt954ej7v8qBISl72QVzssjAo
+         HE5AKSO8ZS6UMdAISe3Vg9rscvHQE5dPSxo0ibw824BuOHigz4ifj0rx4V5qWUW3EH4F
+         StJ0vQPSf37QF+81GWRJ+lrI441tCxrvGP7B/43Ndx/CCuEldpGjExaZrIPj/vqNOsc9
+         HusTPoCalqosZz4Ihq2V90FSuLZ6clmbQHWu8Ce0wDGqOE7mUwHWa+xOcseNUQt0gaVK
+         5NuA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
         h=cc:to:subject:message-id:date:from:in-reply-to:references
          :mime-version:x-gm-message-state:from:to:cc:subject:date;
-        bh=mOJBFjRRTQOLMhXeuWiEa3iVJxoMFGP8tXYc65hDHv4=;
-        b=SFRc4D7l64EO/GDSIq9TK9a6fexY57L6hrRioqvB8kQ7W32OEv8qfL5yGDbUVPQHYC
-         90F35pnttk5sli5ZBbJni2u1HTZ9bDFvE9cK3PPW+VnNLArSIveOxIQs0mAHMiKMq1wg
-         zAI49r6IgijW11ROLD9p1NE0bnpCnNCLI8fY7ZIYM3b8sjWE4mGiNQRVjWhIoPDK00N1
-         cRAnqEuF3xaqxJ9Dz80Uj98x4IdxmWP9mmmOafpCfr1eA4gSIRGIi/V0gbLF16WI7HWu
-         qdgMe1YmiJ5V5biwofljKi8+NYUvALqg/iH9yXI+f4571cXb/cUKjABLpl+lhFx96fv6
-         RqBg==
-X-Gm-Message-State: ACrzQf22QxRoOn1LP8TpFL9dguJbbVL1WqA4CUhJOKW/QC/1IB+cGd8e
-        uXQ1nmlV9Zb2licX3sxgM8HN6Dp2pX49pXG/z02e0g==
-X-Google-Smtp-Source: AMsMyM5/YN20pETls7iMs8r2+NepnIOp044ol2iYCi6uj3oVv5XELolt3qWypHDMCWdVyZbTE4EhOYkJjAxzgEc8d5Q=
-X-Received: by 2002:a05:600c:2181:b0:3b4:74e4:16f8 with SMTP id
- e1-20020a05600c218100b003b474e416f8mr6312587wme.174.1663951531528; Fri, 23
- Sep 2022 09:45:31 -0700 (PDT)
+        bh=5ZhohO0uO7yhIsnSHmpKo2RQXCqV/trHIAjiv5+jV/8=;
+        b=Xf8gdNtNpuM75KW0PlUGkYrFvs/vVt2UgbijcGJkKfgUyjPpcyCX1pS2u4yfqB8EqP
+         BMr/oLEfxa08mnXhP0fTXpmhH9xRjwidf0zNK+jq67XduLJ9NOeP19DYS7lau/3FZEoh
+         2mKC917gxALyzI1fZNIN/RkJv3sFlGM/6P3kc0yOFWoyCW8g6kVC2vsTkt0H9V+JhlCT
+         aWTyDVAPRT5aZkPUjRjOd0jWpFx3xoV8DTLBWof6zh8U+BGYxaPPHG/uBB4i3oq3YUm6
+         8t7262Wgc/Mwyl8TxKB3JfTQwrWAuJ3oXF7vOhvRY/NwcAKgGX9d5nZSNQp+6bjQKrnh
+         O62A==
+X-Gm-Message-State: ACrzQf2DK/WK8E2gAoiKLccfvTGr6fGjM93aPqA2hCfNqfOc4PA1dpDE
+        LWWNtpAK139rirjbNziOV39d/pCBzsmDM1WS+5V00A==
+X-Google-Smtp-Source: AMsMyM66XPOCs/iLVcgSrcMInXFVlj015Arp38WZx0TGp2+986cigtkhJh3lQY5LIncC4Av9h5FJuLpR19pd3a4KPbg=
+X-Received: by 2002:adf:e4ca:0:b0:228:d8b7:48a7 with SMTP id
+ v10-20020adfe4ca000000b00228d8b748a7mr5692589wrm.300.1663952128554; Fri, 23
+ Sep 2022 09:55:28 -0700 (PDT)
 MIME-Version: 1.0
-References: <20220923063205.772936-1-namhyung@kernel.org>
-In-Reply-To: <20220923063205.772936-1-namhyung@kernel.org>
+References: <20220923030013.3726410-1-zhengjun.xing@linux.intel.com> <20220923030013.3726410-2-zhengjun.xing@linux.intel.com>
+In-Reply-To: <20220923030013.3726410-2-zhengjun.xing@linux.intel.com>
 From:   Ian Rogers <irogers@google.com>
-Date:   Fri, 23 Sep 2022 09:45:19 -0700
-Message-ID: <CAP-5=fWwNwtocMR3s1Su2k2vZAwL4yhX19UGZ4i0dMXFDFFBJA@mail.gmail.com>
-Subject: Re: [PATCH v4] perf tools: Get a perf cgroup more portably in BPF
-To:     Namhyung Kim <namhyung@kernel.org>
-Cc:     Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Jiri Olsa <jolsa@kernel.org>, Ingo Molnar <mingo@kernel.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Adrian Hunter <adrian.hunter@intel.com>,
-        linux-perf-users@vger.kernel.org, Song Liu <songliubraving@fb.com>,
-        Hao Luo <haoluo@google.com>, bpf@vger.kernel.org
+Date:   Fri, 23 Sep 2022 09:55:16 -0700
+Message-ID: <CAP-5=fX1VY0EqmfBJ_kVJDPy3__GDVxCOOBD5r0=ifAvJjHBPQ@mail.gmail.com>
+Subject: Re: [PATCH v2 2/2] perf parse-events: Remove "not supported" hybrid
+ cache events
+To:     zhengjun.xing@linux.intel.com
+Cc:     acme@kernel.org, peterz@infradead.org, mingo@redhat.com,
+        alexander.shishkin@intel.com, jolsa@kernel.org,
+        namhyung@kernel.org, linux-kernel@vger.kernel.org,
+        linux-perf-users@vger.kernel.org, ak@linux.intel.com,
+        kan.liang@linux.intel.com, Yi Ammy <ammy.yi@intel.com>
 Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-On Thu, Sep 22, 2022 at 11:32 PM Namhyung Kim <namhyung@kernel.org> wrote:
+On Thu, Sep 22, 2022 at 7:58 PM <zhengjun.xing@linux.intel.com> wrote:
 >
-> The perf_event_cgrp_id can be different on other configurations.
-> To be more portable as CO-RE, it needs to get the cgroup subsys id
-> using the bpf_core_enum_value() helper.
+> From: Zhengjun Xing <zhengjun.xing@linux.intel.com>
 >
-> Suggested-by: Ian Rogers <irogers@google.com>
-> Signed-off-by: Namhyung Kim <namhyung@kernel.org>
+> By default, we create two hybrid cache events, one is for cpu_core, and
+> another is for cpu_atom. But Some hybrid hardware cache events are only
+> available on one CPU PMU. For example, the 'L1-dcache-load-misses' is only
+> available on cpu_core, while the 'L1-icache-loads' is only available on
+> cpu_atom. We need to remove "not supported" hybrid cache events. By
+> extending is_event_supported() to global API and using it to check if the
+> hybrid cache events are supported before being created, we can remove the
+> "not supported" hybrid cache events.
+>
+> Before:
+>
+>  # ./perf stat -e L1-dcache-load-misses,L1-icache-loads -a sleep 1
+>
+>  Performance counter stats for 'system wide':
+>
+>             52,570      cpu_core/L1-dcache-load-misses/
+>    <not supported>      cpu_atom/L1-dcache-load-misses/
+>    <not supported>      cpu_core/L1-icache-loads/
+>          1,471,817      cpu_atom/L1-icache-loads/
+>
+>        1.004915229 seconds time elapsed
+>
+> After:
+>
+>  # ./perf stat -e L1-dcache-load-misses,L1-icache-loads -a sleep 1
+>
+>  Performance counter stats for 'system wide':
+>
+>             54,510      cpu_core/L1-dcache-load-misses/
+>          1,441,286      cpu_atom/L1-icache-loads/
+>
+>        1.005114281 seconds time elapsed
+>
+> Fixes: 30def61f64ba ("perf parse-events: Create two hybrid cache events")
+> Signed-off-by: Zhengjun Xing <zhengjun.xing@linux.intel.com>
+> Reviewed-by: Kan Liang <kan.liang@linux.intel.com>
+> Reported-by: Yi Ammy <ammy.yi@intel.com>
 
-Reviewed-by: Ian Rogers <irogers@google.com>
-
-Would be good to get this into perf/urgent, does it need Fixes tags for that?
+Acked-by: Ian Rogers <irogers@google.com>
 
 Thanks,
 Ian
 
 > ---
-> v4 changes)
->  * add a missing check in the off_cpu
+> Change log:
+>   v2:
+>     * Adds a comment for removing "not supported" hybrid cache events.
+>     * Remove goto and add a strdup check
+>     * "is_event_supported" move to parse-events.c per Ian's suggestion.
+>     * Adds Reported-by from Yi Ammy <ammy.yi@intel.com>
 >
-> v3 changes)
->  * check compiler features for enum value
+>  tools/perf/util/parse-events-hybrid.c | 21 ++++++++++++---
+>  tools/perf/util/parse-events.c        | 39 +++++++++++++++++++++++++++
+>  tools/perf/util/parse-events.h        |  1 +
+>  tools/perf/util/print-events.c        | 39 ---------------------------
+>  4 files changed, 57 insertions(+), 43 deletions(-)
 >
-> v2 changes)
->  * fix off_cpu.bpf.c too
->  * get perf_subsys_id only once
->
->  tools/perf/util/bpf_skel/bperf_cgroup.bpf.c | 11 ++++++++++-
->  tools/perf/util/bpf_skel/off_cpu.bpf.c      | 18 ++++++++++++++----
->  2 files changed, 24 insertions(+), 5 deletions(-)
->
-> diff --git a/tools/perf/util/bpf_skel/bperf_cgroup.bpf.c b/tools/perf/util/bpf_skel/bperf_cgroup.bpf.c
-> index 292c430768b5..8e7520e273db 100644
-> --- a/tools/perf/util/bpf_skel/bperf_cgroup.bpf.c
-> +++ b/tools/perf/util/bpf_skel/bperf_cgroup.bpf.c
-> @@ -48,6 +48,7 @@ const volatile __u32 num_cpus = 1;
->
->  int enabled = 0;
->  int use_cgroup_v2 = 0;
-> +int perf_subsys_id = -1;
->
->  static inline int get_cgroup_v1_idx(__u32 *cgrps, int size)
->  {
-> @@ -58,7 +59,15 @@ static inline int get_cgroup_v1_idx(__u32 *cgrps, int size)
->         int level;
->         int cnt;
->
-> -       cgrp = BPF_CORE_READ(p, cgroups, subsys[perf_event_cgrp_id], cgroup);
-> +       if (perf_subsys_id == -1) {
-> +#if __has_builtin(__builtin_preserve_enum_value)
-> +               perf_subsys_id = bpf_core_enum_value(enum cgroup_subsys_id,
-> +                                                    perf_event_cgrp_id);
-> +#else
-> +               perf_subsys_id = perf_event_cgrp_id;
-> +#endif
-> +       }
-> +       cgrp = BPF_CORE_READ(p, cgroups, subsys[perf_subsys_id], cgroup);
->         level = BPF_CORE_READ(cgrp, level);
->
->         for (cnt = 0; i < MAX_LEVELS; i++) {
-> diff --git a/tools/perf/util/bpf_skel/off_cpu.bpf.c b/tools/perf/util/bpf_skel/off_cpu.bpf.c
-> index c4ba2bcf179f..38e3b287dbb2 100644
-> --- a/tools/perf/util/bpf_skel/off_cpu.bpf.c
-> +++ b/tools/perf/util/bpf_skel/off_cpu.bpf.c
-> @@ -94,6 +94,8 @@ const volatile bool has_prev_state = false;
->  const volatile bool needs_cgroup = false;
->  const volatile bool uses_cgroup_v1 = false;
->
-> +int perf_subsys_id = -1;
-> +
->  /*
->   * Old kernel used to call it task_struct->state and now it's '__state'.
->   * Use BPF CO-RE "ignored suffix rule" to deal with it like below:
-> @@ -119,11 +121,19 @@ static inline __u64 get_cgroup_id(struct task_struct *t)
->  {
->         struct cgroup *cgrp;
->
-> -       if (uses_cgroup_v1)
-> -               cgrp = BPF_CORE_READ(t, cgroups, subsys[perf_event_cgrp_id], cgroup);
-> -       else
-> -               cgrp = BPF_CORE_READ(t, cgroups, dfl_cgrp);
-> +       if (!uses_cgroup_v1)
-> +               return BPF_CORE_READ(t, cgroups, dfl_cgrp, kn, id);
-> +
-> +       if (perf_subsys_id == -1) {
-> +#if __has_builtin(__builtin_preserve_enum_value)
-> +               perf_subsys_id = bpf_core_enum_value(enum cgroup_subsys_id,
-> +                                                    perf_event_cgrp_id);
-> +#else
-> +               perf_subsys_id = perf_event_cgrp_id;
-> +#endif
-> +       }
->
-> +       cgrp = BPF_CORE_READ(t, cgroups, subsys[perf_subsys_id], cgroup);
->         return BPF_CORE_READ(cgrp, kn, id);
+> diff --git a/tools/perf/util/parse-events-hybrid.c b/tools/perf/util/parse-events-hybrid.c
+> index 284f8eabd3b9..7c9f9150bad5 100644
+> --- a/tools/perf/util/parse-events-hybrid.c
+> +++ b/tools/perf/util/parse-events-hybrid.c
+> @@ -33,7 +33,8 @@ static void config_hybrid_attr(struct perf_event_attr *attr,
+>          * If the PMU type ID is 0, the PERF_TYPE_RAW will be applied.
+>          */
+>         attr->type = type;
+> -       attr->config = attr->config | ((__u64)pmu_type << PERF_PMU_TYPE_SHIFT);
+> +       attr->config = (attr->config & PERF_HW_EVENT_MASK) |
+> +                       ((__u64)pmu_type << PERF_PMU_TYPE_SHIFT);
 >  }
 >
+>  static int create_event_hybrid(__u32 config_type, int *idx,
+> @@ -48,13 +49,25 @@ static int create_event_hybrid(__u32 config_type, int *idx,
+>         __u64 config = attr->config;
+>
+>         config_hybrid_attr(attr, config_type, pmu->type);
+> +
+> +       /*
+> +        * Some hybrid hardware cache events are only available on one CPU
+> +        * PMU. For example, the 'L1-dcache-load-misses' is only available
+> +        * on cpu_core, while the 'L1-icache-loads' is only available on
+> +        * cpu_atom. We need to remove "not supported" hybrid cache events.
+> +        */
+> +       if (attr->type == PERF_TYPE_HW_CACHE
+> +           && !is_event_supported(attr->type, attr->config))
+> +               return 0;
+> +
+>         evsel = parse_events__add_event_hybrid(list, idx, attr, name, metric_id,
+>                                                pmu, config_terms);
+> -       if (evsel)
+> +       if (evsel) {
+>                 evsel->pmu_name = strdup(pmu->name);
+> -       else
+> +               if (!evsel->pmu_name)
+> +                       return -ENOMEM;
+> +       } else
+>                 return -ENOMEM;
+> -
+>         attr->type = type;
+>         attr->config = config;
+>         return 0;
+> diff --git a/tools/perf/util/parse-events.c b/tools/perf/util/parse-events.c
+> index f05e15acd33f..f3b2c2a87456 100644
+> --- a/tools/perf/util/parse-events.c
+> +++ b/tools/perf/util/parse-events.c
+> @@ -28,6 +28,7 @@
+>  #include "util/parse-events-hybrid.h"
+>  #include "util/pmu-hybrid.h"
+>  #include "tracepoint.h"
+> +#include "thread_map.h"
+>
+>  #define MAX_NAME_LEN 100
+>
+> @@ -157,6 +158,44 @@ struct event_symbol event_symbols_sw[PERF_COUNT_SW_MAX] = {
+>  #define PERF_EVENT_TYPE(config)                __PERF_EVENT_FIELD(config, TYPE)
+>  #define PERF_EVENT_ID(config)          __PERF_EVENT_FIELD(config, EVENT)
+>
+> +bool is_event_supported(u8 type, u64 config)
+> +{
+> +       bool ret = true;
+> +       int open_return;
+> +       struct evsel *evsel;
+> +       struct perf_event_attr attr = {
+> +               .type = type,
+> +               .config = config,
+> +               .disabled = 1,
+> +       };
+> +       struct perf_thread_map *tmap = thread_map__new_by_tid(0);
+> +
+> +       if (tmap == NULL)
+> +               return false;
+> +
+> +       evsel = evsel__new(&attr);
+> +       if (evsel) {
+> +               open_return = evsel__open(evsel, NULL, tmap);
+> +               ret = open_return >= 0;
+> +
+> +               if (open_return == -EACCES) {
+> +                       /*
+> +                        * This happens if the paranoid value
+> +                        * /proc/sys/kernel/perf_event_paranoid is set to 2
+> +                        * Re-run with exclude_kernel set; we don't do that
+> +                        * by default as some ARM machines do not support it.
+> +                        *
+> +                        */
+> +                       evsel->core.attr.exclude_kernel = 1;
+> +                       ret = evsel__open(evsel, NULL, tmap) >= 0;
+> +               }
+> +               evsel__delete(evsel);
+> +       }
+> +
+> +       perf_thread_map__put(tmap);
+> +       return ret;
+> +}
+> +
+>  const char *event_type(int type)
+>  {
+>         switch (type) {
+> diff --git a/tools/perf/util/parse-events.h b/tools/perf/util/parse-events.h
+> index 7e6a601d9cd0..07df7bb7b042 100644
+> --- a/tools/perf/util/parse-events.h
+> +++ b/tools/perf/util/parse-events.h
+> @@ -19,6 +19,7 @@ struct option;
+>  struct perf_pmu;
+>
+>  bool have_tracepoints(struct list_head *evlist);
+> +bool is_event_supported(u8 type, u64 config);
+>
+>  const char *event_type(int type);
+>
+> diff --git a/tools/perf/util/print-events.c b/tools/perf/util/print-events.c
+> index 04050d4f6db8..c4d5d87fae2f 100644
+> --- a/tools/perf/util/print-events.c
+> +++ b/tools/perf/util/print-events.c
+> @@ -22,7 +22,6 @@
+>  #include "probe-file.h"
+>  #include "string2.h"
+>  #include "strlist.h"
+> -#include "thread_map.h"
+>  #include "tracepoint.h"
+>  #include "pfm.h"
+>  #include "pmu-hybrid.h"
+> @@ -239,44 +238,6 @@ void print_sdt_events(const char *subsys_glob, const char *event_glob,
+>         strlist__delete(sdtlist);
+>  }
+>
+> -static bool is_event_supported(u8 type, u64 config)
+> -{
+> -       bool ret = true;
+> -       int open_return;
+> -       struct evsel *evsel;
+> -       struct perf_event_attr attr = {
+> -               .type = type,
+> -               .config = config,
+> -               .disabled = 1,
+> -       };
+> -       struct perf_thread_map *tmap = thread_map__new_by_tid(0);
+> -
+> -       if (tmap == NULL)
+> -               return false;
+> -
+> -       evsel = evsel__new(&attr);
+> -       if (evsel) {
+> -               open_return = evsel__open(evsel, NULL, tmap);
+> -               ret = open_return >= 0;
+> -
+> -               if (open_return == -EACCES) {
+> -                       /*
+> -                        * This happens if the paranoid value
+> -                        * /proc/sys/kernel/perf_event_paranoid is set to 2
+> -                        * Re-run with exclude_kernel set; we don't do that
+> -                        * by default as some ARM machines do not support it.
+> -                        *
+> -                        */
+> -                       evsel->core.attr.exclude_kernel = 1;
+> -                       ret = evsel__open(evsel, NULL, tmap) >= 0;
+> -               }
+> -               evsel__delete(evsel);
+> -       }
+> -
+> -       perf_thread_map__put(tmap);
+> -       return ret;
+> -}
+> -
+>  int print_hwcache_events(const char *event_glob, bool name_only)
+>  {
+>         unsigned int type, op, i, evt_i = 0, evt_num = 0, npmus = 0;
 > --
-> 2.37.3.998.g577e59143f-goog
+> 2.25.1
 >
