@@ -2,40 +2,35 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7F442C6FA82
-	for <linux-perf-users@archiver.kernel.org>; Fri, 23 Sep 2022 12:36:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 18780C6FA82
+	for <linux-perf-users@archiver.kernel.org>; Fri, 23 Sep 2022 12:43:29 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230237AbiIWMgp (ORCPT
+        id S231364AbiIWMn1 (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Fri, 23 Sep 2022 08:36:45 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50000 "EHLO
+        Fri, 23 Sep 2022 08:43:27 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56480 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230110AbiIWMgo (ORCPT
+        with ESMTP id S231221AbiIWMn0 (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Fri, 23 Sep 2022 08:36:44 -0400
-Received: from ams.source.kernel.org (ams.source.kernel.org [IPv6:2604:1380:4601:e00::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0A3B912870D;
-        Fri, 23 Sep 2022 05:36:44 -0700 (PDT)
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by ams.source.kernel.org (Postfix) with ESMTPS id BDB6DB8077F;
-        Fri, 23 Sep 2022 12:36:42 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 18DEBC433C1;
-        Fri, 23 Sep 2022 12:36:38 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1663936601;
-        bh=bCdNiChCRRBG0p1xeGOmzIh0cwkTWCkcGq3D+ihsJ0Q=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=KUQa2JUkuN25zy1VO0Om8XqE4IzNMl5t2jtsJ6D9ynHvauBTDNAVOtsvPNr/0OEUf
-         J98LjbWcQ+wEKpHr8bssIktB0DWo8Fs4BU6WNbsHaKs7sC3IAaZzosAbEplzbKM/i8
-         XSEXqWB4+Z8MMrXiw0/ub1Ey9a1pi4+/mH92yqB5fPuJccjLObbtEiTj2IvKV/Gv0E
-         f8VuHpYWCt/X9qPBUA+0QVH1q42R0d9IcYmP0aRacwIjXZRLu+ny1q2CjsJE4SzSiW
-         9f5EC37h60EpQlvZHVPZXnOf1bG6hsz3YJonWxpGAslng48yB1ybfvkceaDQ4X47aS
-         ISUGHaR1XygGg==
-Date:   Fri, 23 Sep 2022 13:36:35 +0100
-From:   Will Deacon <will@kernel.org>
-To:     James Clark <james.clark@arm.com>
+        Fri, 23 Sep 2022 08:43:26 -0400
+Received: from foss.arm.com (foss.arm.com [217.140.110.172])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTP id 58F38132D76;
+        Fri, 23 Sep 2022 05:43:24 -0700 (PDT)
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id AA5C5139F;
+        Fri, 23 Sep 2022 05:43:30 -0700 (PDT)
+Received: from [10.57.2.155] (unknown [10.57.2.155])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 4905F3F73B;
+        Fri, 23 Sep 2022 05:43:22 -0700 (PDT)
+Message-ID: <c8f9d6d2-4397-3bbd-da97-865cca56d73a@arm.com>
+Date:   Fri, 23 Sep 2022 13:43:20 +0100
+MIME-Version: 1.0
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
+ Thunderbird/91.11.0
+Subject: Re: [PATCH v3 0/2] perf: arm64: Kernel support for Dwarf unwinding
+ through SVE functions
+Content-Language: en-US
+To:     Will Deacon <will@kernel.org>
 Cc:     catalin.marinas@arm.com, kernel-team@android.com,
         linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org,
         acme@kernel.org, john.garry@huawei.com,
@@ -43,47 +38,52 @@ Cc:     catalin.marinas@arm.com, kernel-team@android.com,
         broonie@kernel.org, linux-doc@vger.kernel.org,
         Mark Rutland <mark.rutland@arm.com>,
         linux-arm-kernel <linux-arm-kernel@lists.infradead.org>
-Subject: Re: [PATCH v3 0/2] perf: arm64: Kernel support for Dwarf unwinding
- through SVE functions
-Message-ID: <20220923123633.GC13942@willie-the-truck>
 References: <20220901132658.1024635-1-james.clark@arm.com>
  <166385556279.1475166.2989569100449667346.b4-ty@kernel.org>
  <1dabe308-21f7-aa2e-ee8f-48807878f91b@arm.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <1dabe308-21f7-aa2e-ee8f-48807878f91b@arm.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+ <20220923123633.GC13942@willie-the-truck>
+From:   James Clark <james.clark@arm.com>
+In-Reply-To: <20220923123633.GC13942@willie-the-truck>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-On Fri, Sep 23, 2022 at 10:32:15AM +0100, James Clark wrote:
-> 
-> 
-> On 22/09/2022 21:33, Will Deacon wrote:
-> > On Thu, 1 Sep 2022 14:26:56 +0100, James Clark wrote:
-> >> I'm resubmitting this with a few of the changes suggested by Will on V2.
-> >>
-> >> I haven't made any changes regarding the open questions about the
-> >> discoverability or saving the new reg and passing to output_sample()
-> >> because I think it's best to be consistent with the implementations on
-> >> other platforms first. I have explained in more detail on v2 [1].
-> >>
-> >> [...]
-> > 
-> > Applied to will (for-next/perf), thanks!
-> > 
-> > [1/2] perf: arm64: Add SVE vector granule register to user regs
-> >       https://git.kernel.org/will/c/cbb0c02caf4b
-> > [2/2] arm64/sve: Add Perf extensions documentation
-> >       https://git.kernel.org/will/c/1f2906d1e10a
-> > 
-> > Cheers,
-> 
-> Thanks Will. Sorry about the build, I will fix my config for next time.
 
-No problem. For some reason, I was unable to repro the failure locally.
-Maybe it's a GCC thing?
 
-Will
+On 23/09/2022 13:36, Will Deacon wrote:
+> On Fri, Sep 23, 2022 at 10:32:15AM +0100, James Clark wrote:
+>>
+>>
+>> On 22/09/2022 21:33, Will Deacon wrote:
+>>> On Thu, 1 Sep 2022 14:26:56 +0100, James Clark wrote:
+>>>> I'm resubmitting this with a few of the changes suggested by Will on V2.
+>>>>
+>>>> I haven't made any changes regarding the open questions about the
+>>>> discoverability or saving the new reg and passing to output_sample()
+>>>> because I think it's best to be consistent with the implementations on
+>>>> other platforms first. I have explained in more detail on v2 [1].
+>>>>
+>>>> [...]
+>>>
+>>> Applied to will (for-next/perf), thanks!
+>>>
+>>> [1/2] perf: arm64: Add SVE vector granule register to user regs
+>>>       https://git.kernel.org/will/c/cbb0c02caf4b
+>>> [2/2] arm64/sve: Add Perf extensions documentation
+>>>       https://git.kernel.org/will/c/1f2906d1e10a
+>>>
+>>> Cheers,
+>>
+>> Thanks Will. Sorry about the build, I will fix my config for next time.
+> 
+> No problem. For some reason, I was unable to repro the failure locally.
+> Maybe it's a GCC thing?
+
+For me I needed CONFIG_HEADERS_INSTALL and CONFIG_UAPI_HEADER_TEST to
+reproduce it. I was already using gcc, so not sure if it's depends on
+that or not.
+
+> 
+> Will
