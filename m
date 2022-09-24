@@ -2,84 +2,198 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 55ED2C07E9D
-	for <linux-perf-users@archiver.kernel.org>; Sat, 24 Sep 2022 05:45:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7C8FAC32771
+	for <linux-perf-users@archiver.kernel.org>; Sat, 24 Sep 2022 08:15:12 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233370AbiIXFpH (ORCPT
+        id S233324AbiIXIPK (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Sat, 24 Sep 2022 01:45:07 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39506 "EHLO
+        Sat, 24 Sep 2022 04:15:10 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44864 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S233399AbiIXFo7 (ORCPT
+        with ESMTP id S233903AbiIXINR (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Sat, 24 Sep 2022 01:44:59 -0400
-Received: from mga04.intel.com (mga04.intel.com [192.55.52.120])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B501F3BC79;
-        Fri, 23 Sep 2022 22:44:45 -0700 (PDT)
+        Sat, 24 Sep 2022 04:13:17 -0400
+Received: from mga05.intel.com (mga05.intel.com [192.55.52.43])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B1A70C8404;
+        Sat, 24 Sep 2022 01:10:16 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1663998285; x=1695534285;
-  h=from:to:cc:subject:date:message-id:in-reply-to:
-   references;
-  bh=aktu51+28FaoJRxOu94f10+s9e/A7ngnX7byejD6d3s=;
-  b=RG9cFJmIH+/DoOYn3J7gULp7D3lf29qWNkJgxSm8Op91MCsxmwGEWgaP
-   feSYJRDGJpWPPdqGyP8bM5g+U7FWJagvKt/5+d0Iqupq/nJZXBzW1welX
-   kXwytf6+QBPSOfn+h4bHEiC0wG1KwHMi8i1HCwJ38hI9IontS/W7tmDz4
-   PJUP4xVRR2bQ3QGjh202Md0YUjrHQ/JHNyxIuQY2wC9M7c4ycES61P0lK
-   l/5eqqD/hN/6LPpe3n4vOZOUnlnRcTMSNfPKRhSwm95ictJWgQK3GMzG8
-   zViBOIIHuzaGNSquQDxR1FoYQ9wYg3Y5v8FC3NmKNG5U5wZMvTJ0d4NL9
+  t=1664007016; x=1695543016;
+  h=message-id:date:mime-version:subject:to:cc:references:
+   from:in-reply-to:content-transfer-encoding;
+  bh=Qk4rgPKpb4exKsQvAcw1Mt2JweFp8OmbtQi1fVR2RqM=;
+  b=Qde4DbtdY0Jx4Ho/AFgcTqOFQlPJderFJEr3y8z7cDNV4PfdD4V3DTWR
+   n1sf5nevp29XvtZWKxQTbOGiamCITg5BclxcKchaXoh1prxXbs55iFv8j
+   ePc8noGF3LWO63VWFWZbbzjRzIM2KfDEF+pPX3RBJ9DuckM985EtRPCZI
+   fnvWrYECKmD5dn/ocM3Wscek/GhEcTPDmPndK4Wqp9rQnHSrygBR6Oqd8
+   W9qICa3zR4RoEIK+GbvkVA64sSEif5uKx6J+tnFrAeJF2sgUWNztmgYz0
+   1M67+/6jWMWc/jjw0PlTRYFflEmCpSPawVH75KWjpdouEPyIwCTmwwj4f
    g==;
-X-IronPort-AV: E=McAfee;i="6500,9779,10479"; a="299470293"
+X-IronPort-AV: E=McAfee;i="6500,9779,10479"; a="387046756"
 X-IronPort-AV: E=Sophos;i="5.93,341,1654585200"; 
-   d="scan'208";a="299470293"
-Received: from orsmga008.jf.intel.com ([10.7.209.65])
-  by fmsmga104.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 23 Sep 2022 22:44:45 -0700
-X-ExtLoop1: 1
+   d="scan'208";a="387046756"
+Received: from orsmga003.jf.intel.com ([10.7.209.27])
+  by fmsmga105.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 24 Sep 2022 01:10:06 -0700
 X-IronPort-AV: E=Sophos;i="5.93,341,1654585200"; 
-   d="scan'208";a="651207779"
-Received: from power-sh.sh.intel.com ([10.239.183.122])
-  by orsmga008.jf.intel.com with ESMTP; 23 Sep 2022 22:44:42 -0700
-From:   Zhang Rui <rui.zhang@intel.com>
-To:     peterz@infradead.org, rjw@rjwysocki.net, len.brown@intel.com
-Cc:     mingo@redhat.com, linux-pm@vger.kernel.org, x86@kernel.org,
-        linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org,
-        ak@linux.intel.com, kan.liang@linux.intel.com,
-        artem.bityutskiy@linux.intel.com
-Subject: [PATCH 3/3] tools/power turbostat: Use standard Energy Unit for SPR Dram RAPL domain
-Date:   Sat, 24 Sep 2022 13:47:38 +0800
-Message-Id: <20220924054738.12076-4-rui.zhang@intel.com>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20220924054738.12076-1-rui.zhang@intel.com>
-References: <20220924054738.12076-1-rui.zhang@intel.com>
+   d="scan'208";a="571645162"
+Received: from ahunter6-mobl1.ger.corp.intel.com (HELO [10.0.2.15]) ([10.252.58.78])
+  by orsmga003-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 24 Sep 2022 01:10:03 -0700
+Message-ID: <7c89e623-c90f-181b-d22a-e1349ddb3340@intel.com>
+Date:   Sat, 24 Sep 2022 11:09:58 +0300
+MIME-Version: 1.0
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
+ Firefox/91.0 Thunderbird/91.11.0
+Subject: Re: [PATCH 3/3] perf test: Add kernel lock contention test
+Content-Language: en-US
+To:     Namhyung Kim <namhyung@kernel.org>,
+        Arnaldo Carvalho de Melo <acme@kernel.org>,
+        Jiri Olsa <jolsa@kernel.org>
+Cc:     Ingo Molnar <mingo@kernel.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Ian Rogers <irogers@google.com>,
+        linux-perf-users@vger.kernel.org
+References: <20220924004221.841024-1-namhyung@kernel.org>
+ <20220924004221.841024-3-namhyung@kernel.org>
+From:   Adrian Hunter <adrian.hunter@intel.com>
+Organization: Intel Finland Oy, Registered Address: PL 281, 00181 Helsinki,
+ Business Identity Code: 0357606 - 4, Domiciled in Helsinki
+In-Reply-To: <20220924004221.841024-3-namhyung@kernel.org>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-Intel Xeon servers used to use a fixed energy resolution (15.3uj) for
-Dram RAPL domain. But on SPR, Dram RAPL domain follows the standard
-energy resolution as described in MSR_RAPL_POWER_UNIT.
+On 24/09/22 03:42, Namhyung Kim wrote:
+> Add a new shell test to check if both normal perf lock record +
+> contention and BPF (with -b) option are working.  Use perf bench
+> sched messaging as a workload since it'd create some contention for
+> sending and receiving messages.
+> 
+> Signed-off-by: Namhyung Kim <namhyung@kernel.org>
 
-Remove the SPR rapl_dram_energy_units quirk.
+There are a few things below that don't need to be fixed but
+are perhaps things to be aware of.
 
-Fixes: e7af1ed3fa47 ("tools/power turbostat: Support additional CPU model numbers")
-Signed-off-by: Zhang Rui <rui.zhang@intel.com>
-Tested-by: Wang Wendy <wendy.wang@intel.com>
----
- tools/power/x86/turbostat/turbostat.c | 1 -
- 1 file changed, 1 deletion(-)
+Nevertheless:
 
-diff --git a/tools/power/x86/turbostat/turbostat.c b/tools/power/x86/turbostat/turbostat.c
-index 597cc2dbc456..e3e357df2a51 100644
---- a/tools/power/x86/turbostat/turbostat.c
-+++ b/tools/power/x86/turbostat/turbostat.c
-@@ -4560,7 +4560,6 @@ static double rapl_dram_energy_units_probe(int model, double rapl_energy_units)
- 	case INTEL_FAM6_SKYLAKE_X:	/* SKX */
- 	case INTEL_FAM6_XEON_PHI_KNL:	/* KNL */
- 	case INTEL_FAM6_ICELAKE_X:	/* ICX */
--	case INTEL_FAM6_SAPPHIRERAPIDS_X:	/* SPR */
- 		return (rapl_dram_energy_units = 15.3 / 1000000);
- 	default:
- 		return (rapl_energy_units);
--- 
-2.25.1
+Acked-by: Adrian Hunter <adrian.hunter@intel.com>
+
+
+> ---
+>  tools/perf/tests/shell/lock_contention.sh | 73 +++++++++++++++++++++++
+>  1 file changed, 73 insertions(+)
+>  create mode 100755 tools/perf/tests/shell/lock_contention.sh
+> 
+> diff --git a/tools/perf/tests/shell/lock_contention.sh b/tools/perf/tests/shell/lock_contention.sh
+> new file mode 100755
+> index 000000000000..04bf604e3c6f
+> --- /dev/null
+> +++ b/tools/perf/tests/shell/lock_contention.sh
+> @@ -0,0 +1,73 @@
+> +#!/bin/sh
+> +# kernel lock contention analysis test
+> +# SPDX-License-Identifier: GPL-2.0
+
+All the shell tests are like this, but checkpatch says:
+
+WARNING: Missing or malformed SPDX-License-Identifier tag in line 2
+#24: FILE: tools/perf/tests/shell/lock_contention.sh:2:
++# kernel lock contention analysis test
+
+WARNING: Misplaced SPDX-License-Identifier tag - use line 2 instead
+#25: FILE: tools/perf/tests/shell/lock_contention.sh:3:
++# SPDX-License-Identifier: GPL-2.0
+
+> +
+> +set -e
+> +
+> +err=0
+> +perfdata=$(mktemp /tmp/__perf_test.perf.data.XXXXX)
+> +result=$(mktemp /tmp/__perf_test.result.XXXXX)
+> +
+> +cleanup() {
+> +	rm -f ${perfdata}
+> +	rm -f ${result}
+> +	trap - exit term int
+> +}
+> +
+> +trap_cleanup() {
+> +	cleanup
+
+With "set -e", a command failure will end up here with err=0
+
+> +	exit ${err}
+> +}
+> +trap trap_cleanup exit term int
+
+shellcheck -S warning tools/perf/tests/shell/lock_contention.sh
+
+In tools/perf/tests/shell/lock_contention.sh line 14:
+        trap - exit term int
+               ^--^ SC2039: In POSIX sh, using lower/mixed case for signal names is undefined.
+                    ^--^ SC2039: In POSIX sh, using lower/mixed case for signal names is undefined.
+                         ^-^ SC2039: In POSIX sh, using lower/mixed case for signal names is undefined.
+
+
+In tools/perf/tests/shell/lock_contention.sh line 21:
+trap trap_cleanup exit term int
+                  ^--^ SC2039: In POSIX sh, using lower/mixed case for signal names is undefined.
+                       ^--^ SC2039: In POSIX sh, using lower/mixed case for signal names is undefined.
+                            ^-^ SC2039: In POSIX sh, using lower/mixed case for signal names is undefined.
+
+
+> +
+> +check() {
+> +	if [ `id -u` != 0 ]; then
+> +		echo "[Skip] No root permission"
+> +		err=2
+> +		exit
+> +	fi
+> +
+> +	if ! perf list | grep -q lock:contention_begin; then
+> +		echo "[Skip] No lock contention tracepoints"
+> +		err=2
+> +		exit
+> +	fi
+> +}
+> +
+> +test_record()
+> +{
+> +	echo "Testing perf lock record and perf lock contention"
+> +	perf lock record -o ${perfdata} -- perf bench sched messaging > /dev/null 2>&1
+> +	# the output goes to the stderr and we expect only 1 output (-E 1)
+> +	perf lock contention -i ${perfdata} -E 1 -q 2> ${result}
+> +	if [ $(cat "${result}" | wc -l) != "1" ]; then
+> +		echo "[Fail] Recorded result count is not 1:" $(cat "${result}" | wc -l)
+> +		err=1
+> +		exit
+> +	fi
+> +}
+> +
+> +test_bpf()
+> +{
+> +	echo "Testing perf lock contention --use-bpf"
+> +
+> +	if ! perf lock con -b true > /dev/null 2>&1 ; then
+> +		echo "[Skip] No BPF support"
+> +		exit
+> +	fi
+> +
+> +	# the perf lock contention output goes to the stderr
+> +	perf lock con -a -b -E 1 -q -- perf bench sched messaging > /dev/null 2> ${result}
+> +	if [ $(cat "${result}" | wc -l) != "1" ]; then
+> +		echo "[Fail] BPF result count is not 1:" $(cat "${result}" | wc -l)
+> +		err=1
+> +		exit
+> +	fi
+> +}
+> +
+> +check
+> +
+> +test_record
+> +test_bpf
+> +
+> +exit ${err}
 
