@@ -2,198 +2,143 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7C8FAC32771
-	for <linux-perf-users@archiver.kernel.org>; Sat, 24 Sep 2022 08:15:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E7A88C32771
+	for <linux-perf-users@archiver.kernel.org>; Sat, 24 Sep 2022 11:33:59 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233324AbiIXIPK (ORCPT
+        id S232556AbiIXLd7 (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Sat, 24 Sep 2022 04:15:10 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44864 "EHLO
+        Sat, 24 Sep 2022 07:33:59 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54844 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S233903AbiIXINR (ORCPT
+        with ESMTP id S229915AbiIXLd6 (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Sat, 24 Sep 2022 04:13:17 -0400
-Received: from mga05.intel.com (mga05.intel.com [192.55.52.43])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B1A70C8404;
-        Sat, 24 Sep 2022 01:10:16 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1664007016; x=1695543016;
-  h=message-id:date:mime-version:subject:to:cc:references:
-   from:in-reply-to:content-transfer-encoding;
-  bh=Qk4rgPKpb4exKsQvAcw1Mt2JweFp8OmbtQi1fVR2RqM=;
-  b=Qde4DbtdY0Jx4Ho/AFgcTqOFQlPJderFJEr3y8z7cDNV4PfdD4V3DTWR
-   n1sf5nevp29XvtZWKxQTbOGiamCITg5BclxcKchaXoh1prxXbs55iFv8j
-   ePc8noGF3LWO63VWFWZbbzjRzIM2KfDEF+pPX3RBJ9DuckM985EtRPCZI
-   fnvWrYECKmD5dn/ocM3Wscek/GhEcTPDmPndK4Wqp9rQnHSrygBR6Oqd8
-   W9qICa3zR4RoEIK+GbvkVA64sSEif5uKx6J+tnFrAeJF2sgUWNztmgYz0
-   1M67+/6jWMWc/jjw0PlTRYFflEmCpSPawVH75KWjpdouEPyIwCTmwwj4f
-   g==;
-X-IronPort-AV: E=McAfee;i="6500,9779,10479"; a="387046756"
-X-IronPort-AV: E=Sophos;i="5.93,341,1654585200"; 
-   d="scan'208";a="387046756"
-Received: from orsmga003.jf.intel.com ([10.7.209.27])
-  by fmsmga105.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 24 Sep 2022 01:10:06 -0700
-X-IronPort-AV: E=Sophos;i="5.93,341,1654585200"; 
-   d="scan'208";a="571645162"
-Received: from ahunter6-mobl1.ger.corp.intel.com (HELO [10.0.2.15]) ([10.252.58.78])
-  by orsmga003-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 24 Sep 2022 01:10:03 -0700
-Message-ID: <7c89e623-c90f-181b-d22a-e1349ddb3340@intel.com>
-Date:   Sat, 24 Sep 2022 11:09:58 +0300
+        Sat, 24 Sep 2022 07:33:58 -0400
+Received: from mail-pl1-x62b.google.com (mail-pl1-x62b.google.com [IPv6:2607:f8b0:4864:20::62b])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5F63FB484
+        for <linux-perf-users@vger.kernel.org>; Sat, 24 Sep 2022 04:33:57 -0700 (PDT)
+Received: by mail-pl1-x62b.google.com with SMTP id l10so2304465plb.10
+        for <linux-perf-users@vger.kernel.org>; Sat, 24 Sep 2022 04:33:57 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date;
+        bh=0DmqEWVeIfx21hMNe6tukUIZuj/O+XKYgF8Y5KtyMa4=;
+        b=JPyGb0q6RLf+jbIkzwyIgs5Ss1fu4pPv6esvZIq9Qu3L5VGrPOsDFsm4MTiRI+IB6m
+         MVxh7FWmdZ576ow4jtG6BBUs+2SHlJwZZShfA1ylPVqV3O3yE5wNaBiYkAck1gwfIl5n
+         lKsCzJ/8jkuwM1CYsiRuJDFXvH+7V2Lpw/sMfm9UG7QC4CvaTBp7jYYTm2MAfluQJ5ky
+         J3qUkt+bJPrtJSb7Z9rMYj5XHry9cxTBmhxKC0hlCDl/NnwiWAwFBzBGgKfUsYajGQ5c
+         vMBKoLLHQ5vYy097/9hgUtki9gvQ/3asTjkNbkl2lw3sOgwOEvcg/y/ZBuAuP66gnbOz
+         59EQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date;
+        bh=0DmqEWVeIfx21hMNe6tukUIZuj/O+XKYgF8Y5KtyMa4=;
+        b=OWLyqiPp39g6oS4K0L57UC1okocxScr+vqwpFrq1JRBGsXkuodXpwjbo8QUxbPBV67
+         6P+MPLqo8Yz8CYGBnrOtUkR9o5S58TQtECh06yo1TSBn0r2FYYYs9++vdPhnxrsTozDJ
+         23y4A93+2RIomeVK/zVREXbCDknWp6YZTkvo2zUpCt5aMcgSMkj3VNkAV7puyp2mhMg9
+         cSmBBO5b7oqtz8phC85+Z6BoyNQX4vMNJSSO9bZtRAv1b9hgOD/7jyhc6xvyoSbbF7jT
+         5YqSgRg2v8yAjkVDQO72H5Dqbv1J2bg6HkmjIi2UZ5uzKDf4d2OjJ9XCUAc9L40E1Xso
+         Uyzg==
+X-Gm-Message-State: ACrzQf3vbq+Ly9HnqFZ06a5PJ1bGU0DfYhYmggHtadRGP9YVIjZ2BjJR
+        +d7G/RF0RN3LAV9v1Wn+BP8hOg==
+X-Google-Smtp-Source: AMsMyM7lZ/jA2HDaObnwd/XVY+VvWfjkRDpLlk7c4s+b8a2DrNg6bDCiWP0CZ6QPossorwONi1+w7A==
+X-Received: by 2002:a17:90b:1642:b0:203:1630:c54d with SMTP id il2-20020a17090b164200b002031630c54dmr25673580pjb.122.1664019236793;
+        Sat, 24 Sep 2022 04:33:56 -0700 (PDT)
+Received: from leoy-huanghe.lan (ec2-13-52-75-203.us-west-1.compute.amazonaws.com. [13.52.75.203])
+        by smtp.gmail.com with ESMTPSA id i3-20020a170902c94300b00176acd80f69sm7654540pla.102.2022.09.24.04.33.52
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sat, 24 Sep 2022 04:33:56 -0700 (PDT)
+From:   Leo Yan <leo.yan@linaro.org>
+To:     Arnaldo Carvalho de Melo <acme@kernel.org>,
+        Namhyung Kim <namhyung@kernel.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Jiri Olsa <jolsa@kernel.org>,
+        Adrian Hunter <adrian.hunter@intel.com>,
+        linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
+Cc:     Leo Yan <leo.yan@linaro.org>
+Subject: [PATCH] perf record: Fix segmentation fault in record__read_lost_samples()
+Date:   Sat, 24 Sep 2022 19:33:46 +0800
+Message-Id: <20220924113346.1110909-1-leo.yan@linaro.org>
+X-Mailer: git-send-email 2.34.1
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
- Firefox/91.0 Thunderbird/91.11.0
-Subject: Re: [PATCH 3/3] perf test: Add kernel lock contention test
-Content-Language: en-US
-To:     Namhyung Kim <namhyung@kernel.org>,
-        Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Jiri Olsa <jolsa@kernel.org>
-Cc:     Ingo Molnar <mingo@kernel.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Ian Rogers <irogers@google.com>,
-        linux-perf-users@vger.kernel.org
-References: <20220924004221.841024-1-namhyung@kernel.org>
- <20220924004221.841024-3-namhyung@kernel.org>
-From:   Adrian Hunter <adrian.hunter@intel.com>
-Organization: Intel Finland Oy, Registered Address: PL 281, 00181 Helsinki,
- Business Identity Code: 0357606 - 4, Domiciled in Helsinki
-In-Reply-To: <20220924004221.841024-3-namhyung@kernel.org>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-On 24/09/22 03:42, Namhyung Kim wrote:
-> Add a new shell test to check if both normal perf lock record +
-> contention and BPF (with -b) option are working.  Use perf bench
-> sched messaging as a workload since it'd create some contention for
-> sending and receiving messages.
-> 
-> Signed-off-by: Namhyung Kim <namhyung@kernel.org>
+Commit a49aa8a54e86 ("perf record: Read and inject LOST_SAMPLES events")
+causes segmentation fault when run the "perf mem record" command in
+unprivileged mode, the output log is:
 
-There are a few things below that don't need to be fixed but
-are perhaps things to be aware of.
+  $ ./perf mem record --all-user -o perf_test.data -- ./test_program
+  Error:
+  Access to performance monitoring and observability operations is limited.
+  Consider adjusting /proc/sys/kernel/perf_event_paranoid setting to open
+  access to performance monitoring and observability operations for processes
+  without CAP_PERFMON, CAP_SYS_PTRACE or CAP_SYS_ADMIN Linux capability.
+  More information can be found at 'Perf events and tool security' document:
+  https://www.kernel.org/doc/html/latest/admin-guide/perf-security.html
+  perf_event_paranoid setting is 4:
+    -1: Allow use of (almost) all events by all users
+        Ignore mlock limit after perf_event_mlock_kb without CAP_IPC_LOCK
+  >= 0: Disallow raw and ftrace function tracepoint access
+  >= 1: Disallow CPU event access
+  >= 2: Disallow kernel profiling
+  To make the adjusted perf_event_paranoid setting permanent preserve it
+  in /etc/sysctl.conf (e.g. kernel.perf_event_paranoid = <setting>)
+  perf: Segmentation fault
+  Obtained 16 stack frames.
+  ./perf(dump_stack+0x31) [0x55b7aa1e8070]
+  ./perf(sighandler_dump_stack+0x36) [0x55b7aa1e815e]
+  ./perf(+0xc9120) [0x55b7aa0a9120]
+  /lib/x86_64-linux-gnu/libc.so.6(+0x4251f) [0x7fd03ef8151f]
+  ./perf(+0xccaca) [0x55b7aa0acaca]
+  ./perf(+0xcf4ab) [0x55b7aa0af4ab]
+  ./perf(cmd_record+0xd50) [0x55b7aa0b28df]
+  ./perf(+0x112f77) [0x55b7aa0f2f77]
+  ./perf(cmd_mem+0x53b) [0x55b7aa0f406c]
+  ./perf(+0x19979c) [0x55b7aa17979c]
+  ./perf(+0x199a37) [0x55b7aa179a37]
+  ./perf(+0x199b95) [0x55b7aa179b95]
+  ./perf(main+0x2c7) [0x55b7aa179fbd]
+  /lib/x86_64-linux-gnu/libc.so.6(+0x29d8f) [0x7fd03ef68d8f]
+  /lib/x86_64-linux-gnu/libc.so.6(__libc_start_main+0x7f) [0x7fd03ef68e3f]
+  ./perf(_start+0x24) [0x55b7aa089974]
+  Segmentation fault (core dumped)
 
-Nevertheless:
+In the unprivileged mode perf fails to open PMU event, the function
+record__open() returns error and "session->evlist" is NULL; this leads
+to segmentation fault when iterates "session->evlist" in the function
+record__read_lost_samples().
 
-Acked-by: Adrian Hunter <adrian.hunter@intel.com>
+This patch checks "session->evlist" in record__read_lost_samples(), if
+"session->evlist" is NULL then the function directly bails out to avoid
+segmentation fault.
 
+Fixes: a49aa8a54e86 ("perf record: Read and inject LOST_SAMPLES events")
+Signed-off-by: Leo Yan <leo.yan@linaro.org>
+---
+ tools/perf/builtin-record.c | 4 ++++
+ 1 file changed, 4 insertions(+)
 
-> ---
->  tools/perf/tests/shell/lock_contention.sh | 73 +++++++++++++++++++++++
->  1 file changed, 73 insertions(+)
->  create mode 100755 tools/perf/tests/shell/lock_contention.sh
-> 
-> diff --git a/tools/perf/tests/shell/lock_contention.sh b/tools/perf/tests/shell/lock_contention.sh
-> new file mode 100755
-> index 000000000000..04bf604e3c6f
-> --- /dev/null
-> +++ b/tools/perf/tests/shell/lock_contention.sh
-> @@ -0,0 +1,73 @@
-> +#!/bin/sh
-> +# kernel lock contention analysis test
-> +# SPDX-License-Identifier: GPL-2.0
-
-All the shell tests are like this, but checkpatch says:
-
-WARNING: Missing or malformed SPDX-License-Identifier tag in line 2
-#24: FILE: tools/perf/tests/shell/lock_contention.sh:2:
-+# kernel lock contention analysis test
-
-WARNING: Misplaced SPDX-License-Identifier tag - use line 2 instead
-#25: FILE: tools/perf/tests/shell/lock_contention.sh:3:
-+# SPDX-License-Identifier: GPL-2.0
-
-> +
-> +set -e
-> +
-> +err=0
-> +perfdata=$(mktemp /tmp/__perf_test.perf.data.XXXXX)
-> +result=$(mktemp /tmp/__perf_test.result.XXXXX)
-> +
-> +cleanup() {
-> +	rm -f ${perfdata}
-> +	rm -f ${result}
-> +	trap - exit term int
-> +}
-> +
-> +trap_cleanup() {
-> +	cleanup
-
-With "set -e", a command failure will end up here with err=0
-
-> +	exit ${err}
-> +}
-> +trap trap_cleanup exit term int
-
-shellcheck -S warning tools/perf/tests/shell/lock_contention.sh
-
-In tools/perf/tests/shell/lock_contention.sh line 14:
-        trap - exit term int
-               ^--^ SC2039: In POSIX sh, using lower/mixed case for signal names is undefined.
-                    ^--^ SC2039: In POSIX sh, using lower/mixed case for signal names is undefined.
-                         ^-^ SC2039: In POSIX sh, using lower/mixed case for signal names is undefined.
-
-
-In tools/perf/tests/shell/lock_contention.sh line 21:
-trap trap_cleanup exit term int
-                  ^--^ SC2039: In POSIX sh, using lower/mixed case for signal names is undefined.
-                       ^--^ SC2039: In POSIX sh, using lower/mixed case for signal names is undefined.
-                            ^-^ SC2039: In POSIX sh, using lower/mixed case for signal names is undefined.
-
-
-> +
-> +check() {
-> +	if [ `id -u` != 0 ]; then
-> +		echo "[Skip] No root permission"
-> +		err=2
-> +		exit
-> +	fi
-> +
-> +	if ! perf list | grep -q lock:contention_begin; then
-> +		echo "[Skip] No lock contention tracepoints"
-> +		err=2
-> +		exit
-> +	fi
-> +}
-> +
-> +test_record()
-> +{
-> +	echo "Testing perf lock record and perf lock contention"
-> +	perf lock record -o ${perfdata} -- perf bench sched messaging > /dev/null 2>&1
-> +	# the output goes to the stderr and we expect only 1 output (-E 1)
-> +	perf lock contention -i ${perfdata} -E 1 -q 2> ${result}
-> +	if [ $(cat "${result}" | wc -l) != "1" ]; then
-> +		echo "[Fail] Recorded result count is not 1:" $(cat "${result}" | wc -l)
-> +		err=1
-> +		exit
-> +	fi
-> +}
-> +
-> +test_bpf()
-> +{
-> +	echo "Testing perf lock contention --use-bpf"
-> +
-> +	if ! perf lock con -b true > /dev/null 2>&1 ; then
-> +		echo "[Skip] No BPF support"
-> +		exit
-> +	fi
-> +
-> +	# the perf lock contention output goes to the stderr
-> +	perf lock con -a -b -E 1 -q -- perf bench sched messaging > /dev/null 2> ${result}
-> +	if [ $(cat "${result}" | wc -l) != "1" ]; then
-> +		echo "[Fail] BPF result count is not 1:" $(cat "${result}" | wc -l)
-> +		err=1
-> +		exit
-> +	fi
-> +}
-> +
-> +check
-> +
-> +test_record
-> +test_bpf
-> +
-> +exit ${err}
+diff --git a/tools/perf/builtin-record.c b/tools/perf/builtin-record.c
+index 02e38f50a138..012b46dd4999 100644
+--- a/tools/perf/builtin-record.c
++++ b/tools/perf/builtin-record.c
+@@ -1888,6 +1888,10 @@ static void record__read_lost_samples(struct record *rec)
+ 	struct perf_record_lost_samples *lost;
+ 	struct evsel *evsel;
+ 
++	/* No any event is opened, directly bail out */
++	if (!session->evlist)
++		return;
++
+ 	lost = zalloc(PERF_SAMPLE_MAX_SIZE);
+ 	if (lost == NULL) {
+ 		pr_debug("Memory allocation failed\n");
+-- 
+2.34.1
 
