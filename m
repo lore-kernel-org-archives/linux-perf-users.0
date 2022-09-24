@@ -2,80 +2,144 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A3EB1C07E9D
-	for <linux-perf-users@archiver.kernel.org>; Sat, 24 Sep 2022 16:50:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E800BC07E9D
+	for <linux-perf-users@archiver.kernel.org>; Sat, 24 Sep 2022 16:52:24 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233782AbiIXQuT (ORCPT
+        id S233833AbiIXQwX (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Sat, 24 Sep 2022 12:50:19 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54938 "EHLO
+        Sat, 24 Sep 2022 12:52:23 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57012 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229674AbiIXQuS (ORCPT
+        with ESMTP id S232388AbiIXQwW (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Sat, 24 Sep 2022 12:50:18 -0400
-Received: from mail-oa1-f49.google.com (mail-oa1-f49.google.com [209.85.160.49])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 68DB82CE0F;
-        Sat, 24 Sep 2022 09:50:16 -0700 (PDT)
-Received: by mail-oa1-f49.google.com with SMTP id 586e51a60fabf-11eab59db71so4125530fac.11;
-        Sat, 24 Sep 2022 09:50:16 -0700 (PDT)
+        Sat, 24 Sep 2022 12:52:22 -0400
+Received: from mail-ot1-f51.google.com (mail-ot1-f51.google.com [209.85.210.51])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BF78354CB5;
+        Sat, 24 Sep 2022 09:52:21 -0700 (PDT)
+Received: by mail-ot1-f51.google.com with SMTP id x23-20020a056830409700b00655c6dace73so1880966ott.11;
+        Sat, 24 Sep 2022 09:52:21 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
         h=cc:to:subject:message-id:date:from:in-reply-to:references
          :mime-version:x-gm-message-state:from:to:cc:subject:date;
-        bh=cx1vUNHT+5IRDwqfYkN5MeQ6W29Z+utD9fw1z+nI1u8=;
-        b=ulFR17KqcNE/Y7NP5BQSM8WQn4zcNTEY+EagT3x47jsJGUCw6MuCmzD7jdKa32rSBD
-         QbQt+jkPGw5yVXXhIJSODAaAKy+GramPCRufzLNUAdA/IGoY4vffchKAh1/9/+ceSA0i
-         uETWR1AwzY8NF9rJW3LcZ+AzZvAMotT1+25jGXXMbeT7XTyu+kXEu+b8bksM/xZJb4wk
-         vdC7J0BWM6OI0WufnzbagFxIbTA+p2oCGgomnB1uLEMR3X7I0f8hNPSdNm/kyQLtBop+
-         Y0O/UEhS2BdfiqULvVUwTh6WgKPidAPUvfuUCA/9zDXOdIAtwriiOmc6F+grx8r7fKc9
-         x+dQ==
-X-Gm-Message-State: ACrzQf2ZGbbQ4K2TL0Eb/Z+IH5mCyDwEe14/DMFj5F7rYm64XbKLGHga
-        tCKk54Yu80k3pxfFnDsGFknhmMvdxw+4tKBYz+I=
-X-Google-Smtp-Source: AMsMyM7PvkY8CBrRg2ZS9etiXqDnby3hPjzd/kDK15h9/F6YAaBLZ7oFmIfc6TxF21rFbKZr3Rs6akiJZnuCl/zF2Ag=
-X-Received: by 2002:a05:6870:524b:b0:12c:cfd2:81c0 with SMTP id
- o11-20020a056870524b00b0012ccfd281c0mr8003537oai.209.1664038215521; Sat, 24
- Sep 2022 09:50:15 -0700 (PDT)
+        bh=yGczEyCEAGIiiOB46Oi9TMj+KAutVQm4+8nTiOuxYCQ=;
+        b=s1UArA4Bs0cUuOofzd9TQDv4TSZhLn5s27MvqH9y9lKIdwgKgZGGyeF58tLSIZvtex
+         YHHkFjypBgkRM7UC9RplZYOqG1r4yVMRPga7s00YCmEBVh6YypEMmBeRDAmFq1LacK39
+         //x1QepWG1yAK801y/uFIrFejDyvhSDC0r8JwAoKR6qYBsMhcqbHfGVtfwRciNQZwHL/
+         fR6qWGkJGwHLJQj2Spx1XZr9cJ0Qz9Cx2vZkv0uGYPr+DcvKjuP6eBlra9SYLvV4djri
+         /dX5aBGIciz6ucxnt8N9yBX94h6LUMntQTJMeq53mFhRae+MUMeo+qZTlKJeXNBC6joA
+         5HaQ==
+X-Gm-Message-State: ACrzQf3oZWccjsk+ofZgZ6tlc7naZPgGrLlPUK5mR1HGYAoS3VqnJCcc
+        5QOwTKchDxJ5+nvnl0t/z0uJb07BD08BiZT2sqU=
+X-Google-Smtp-Source: AMsMyM6pyCa4tOFSYuJ4HuyzwfPl0Yc11k1GhGNM3g/iOpJScn01F919Rt4gj1UiCGZMaSVW/1DemLKIJTGYkxAc/YI=
+X-Received: by 2002:a05:6830:1351:b0:65b:e0a8:d0e8 with SMTP id
+ r17-20020a056830135100b0065be0a8d0e8mr6472601otq.190.1664038341034; Sat, 24
+ Sep 2022 09:52:21 -0700 (PDT)
 MIME-Version: 1.0
-References: <20220924004221.841024-1-namhyung@kernel.org> <20220924004221.841024-3-namhyung@kernel.org>
- <7c89e623-c90f-181b-d22a-e1349ddb3340@intel.com>
-In-Reply-To: <7c89e623-c90f-181b-d22a-e1349ddb3340@intel.com>
+References: <20220924113346.1110909-1-leo.yan@linaro.org>
+In-Reply-To: <20220924113346.1110909-1-leo.yan@linaro.org>
 From:   Namhyung Kim <namhyung@kernel.org>
-Date:   Sat, 24 Sep 2022 09:50:04 -0700
-Message-ID: <CAM9d7ciURCEeJGPDRtSN9U1JD7dtYWB_Mthf4m=Svw314ZtSvw@mail.gmail.com>
-Subject: Re: [PATCH 3/3] perf test: Add kernel lock contention test
-To:     Adrian Hunter <adrian.hunter@intel.com>
+Date:   Sat, 24 Sep 2022 09:52:09 -0700
+Message-ID: <CAM9d7ci2RJOTz08eGRgLMVpS0TmwN=q=UNA_Z3wbSHCC2pMygQ@mail.gmail.com>
+Subject: Re: [PATCH] perf record: Fix segmentation fault in record__read_lost_samples()
+To:     Leo Yan <leo.yan@linaro.org>
 Cc:     Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Jiri Olsa <jolsa@kernel.org>, Ingo Molnar <mingo@kernel.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Ian Rogers <irogers@google.com>,
-        linux-perf-users <linux-perf-users@vger.kernel.org>
+        Ingo Molnar <mingo@redhat.com>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Jiri Olsa <jolsa@kernel.org>,
+        Adrian Hunter <adrian.hunter@intel.com>,
+        linux-perf-users <linux-perf-users@vger.kernel.org>,
+        linux-kernel <linux-kernel@vger.kernel.org>
 Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-On Sat, Sep 24, 2022 at 1:10 AM Adrian Hunter <adrian.hunter@intel.com> wrote:
->
-> On 24/09/22 03:42, Namhyung Kim wrote:
-> > Add a new shell test to check if both normal perf lock record +
-> > contention and BPF (with -b) option are working.  Use perf bench
-> > sched messaging as a workload since it'd create some contention for
-> > sending and receiving messages.
-> >
-> > Signed-off-by: Namhyung Kim <namhyung@kernel.org>
->
-> There are a few things below that don't need to be fixed but
-> are perhaps things to be aware of.
->
-> Nevertheless:
->
-> Acked-by: Adrian Hunter <adrian.hunter@intel.com>
+Hi Leo,
 
-Thanks Adrian, I'll install and run shellcheck next time.
+On Sat, Sep 24, 2022 at 4:34 AM Leo Yan <leo.yan@linaro.org> wrote:
+>
+> Commit a49aa8a54e86 ("perf record: Read and inject LOST_SAMPLES events")
+> causes segmentation fault when run the "perf mem record" command in
+> unprivileged mode, the output log is:
+>
+>   $ ./perf mem record --all-user -o perf_test.data -- ./test_program
+>   Error:
+>   Access to performance monitoring and observability operations is limited.
+>   Consider adjusting /proc/sys/kernel/perf_event_paranoid setting to open
+>   access to performance monitoring and observability operations for processes
+>   without CAP_PERFMON, CAP_SYS_PTRACE or CAP_SYS_ADMIN Linux capability.
+>   More information can be found at 'Perf events and tool security' document:
+>   https://www.kernel.org/doc/html/latest/admin-guide/perf-security.html
+>   perf_event_paranoid setting is 4:
+>     -1: Allow use of (almost) all events by all users
+>         Ignore mlock limit after perf_event_mlock_kb without CAP_IPC_LOCK
+>   >= 0: Disallow raw and ftrace function tracepoint access
+>   >= 1: Disallow CPU event access
+>   >= 2: Disallow kernel profiling
+>   To make the adjusted perf_event_paranoid setting permanent preserve it
+>   in /etc/sysctl.conf (e.g. kernel.perf_event_paranoid = <setting>)
+>   perf: Segmentation fault
+>   Obtained 16 stack frames.
+>   ./perf(dump_stack+0x31) [0x55b7aa1e8070]
+>   ./perf(sighandler_dump_stack+0x36) [0x55b7aa1e815e]
+>   ./perf(+0xc9120) [0x55b7aa0a9120]
+>   /lib/x86_64-linux-gnu/libc.so.6(+0x4251f) [0x7fd03ef8151f]
+>   ./perf(+0xccaca) [0x55b7aa0acaca]
+>   ./perf(+0xcf4ab) [0x55b7aa0af4ab]
+>   ./perf(cmd_record+0xd50) [0x55b7aa0b28df]
+>   ./perf(+0x112f77) [0x55b7aa0f2f77]
+>   ./perf(cmd_mem+0x53b) [0x55b7aa0f406c]
+>   ./perf(+0x19979c) [0x55b7aa17979c]
+>   ./perf(+0x199a37) [0x55b7aa179a37]
+>   ./perf(+0x199b95) [0x55b7aa179b95]
+>   ./perf(main+0x2c7) [0x55b7aa179fbd]
+>   /lib/x86_64-linux-gnu/libc.so.6(+0x29d8f) [0x7fd03ef68d8f]
+>   /lib/x86_64-linux-gnu/libc.so.6(__libc_start_main+0x7f) [0x7fd03ef68e3f]
+>   ./perf(_start+0x24) [0x55b7aa089974]
+>   Segmentation fault (core dumped)
+>
+> In the unprivileged mode perf fails to open PMU event, the function
+> record__open() returns error and "session->evlist" is NULL; this leads
+> to segmentation fault when iterates "session->evlist" in the function
+> record__read_lost_samples().
+>
+> This patch checks "session->evlist" in record__read_lost_samples(), if
+> "session->evlist" is NULL then the function directly bails out to avoid
+> segmentation fault.
+>
+> Fixes: a49aa8a54e86 ("perf record: Read and inject LOST_SAMPLES events")
+> Signed-off-by: Leo Yan <leo.yan@linaro.org>
 
-Arnaldo, please let me know if you want me to resend it
-with the suggested changes.
+Thanks for the fix and sorry for the inconvenience.
+Actually I sent the same fix a few weeks ago.
+
+https://lore.kernel.org/r/20220909235024.278281-1-namhyung@kernel.org
 
 Thanks,
 Namhyung
+
+
+> ---
+>  tools/perf/builtin-record.c | 4 ++++
+>  1 file changed, 4 insertions(+)
+>
+> diff --git a/tools/perf/builtin-record.c b/tools/perf/builtin-record.c
+> index 02e38f50a138..012b46dd4999 100644
+> --- a/tools/perf/builtin-record.c
+> +++ b/tools/perf/builtin-record.c
+> @@ -1888,6 +1888,10 @@ static void record__read_lost_samples(struct record *rec)
+>         struct perf_record_lost_samples *lost;
+>         struct evsel *evsel;
+>
+> +       /* No any event is opened, directly bail out */
+> +       if (!session->evlist)
+> +               return;
+> +
+>         lost = zalloc(PERF_SAMPLE_MAX_SIZE);
+>         if (lost == NULL) {
+>                 pr_debug("Memory allocation failed\n");
+> --
+> 2.34.1
+>
