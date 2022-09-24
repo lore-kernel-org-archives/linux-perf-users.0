@@ -2,166 +2,214 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E0FF7C6FA86
-	for <linux-perf-users@archiver.kernel.org>; Sat, 24 Sep 2022 00:42:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B3F87C04A95
+	for <linux-perf-users@archiver.kernel.org>; Sat, 24 Sep 2022 02:49:37 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232556AbiIXAm3 (ORCPT
+        id S233172AbiIXCtf (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Fri, 23 Sep 2022 20:42:29 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49646 "EHLO
+        Fri, 23 Sep 2022 22:49:35 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57532 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232397AbiIXAm2 (ORCPT
+        with ESMTP id S229600AbiIXCte (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Fri, 23 Sep 2022 20:42:28 -0400
-Received: from mail-pl1-x635.google.com (mail-pl1-x635.google.com [IPv6:2607:f8b0:4864:20::635])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id AF83D115BCC;
-        Fri, 23 Sep 2022 17:42:27 -0700 (PDT)
-Received: by mail-pl1-x635.google.com with SMTP id jm5so1526736plb.13;
-        Fri, 23 Sep 2022 17:42:27 -0700 (PDT)
+        Fri, 23 Sep 2022 22:49:34 -0400
+Received: from mail-wm1-x32b.google.com (mail-wm1-x32b.google.com [IPv6:2a00:1450:4864:20::32b])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6F578205
+        for <linux-perf-users@vger.kernel.org>; Fri, 23 Sep 2022 19:49:29 -0700 (PDT)
+Received: by mail-wm1-x32b.google.com with SMTP id u16-20020a05600c211000b003b5152ebf09so1774611wml.5
+        for <linux-perf-users@vger.kernel.org>; Fri, 23 Sep 2022 19:49:29 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20210112;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:sender:from:to:cc:subject:date;
-        bh=nsTuKY7W4PY53LlO1HXB0XbCZ8PJy5sf3lmL8N0J30g=;
-        b=nhVl3BIrKBOJYJuLzSM7AeliCsGuqV3cZiOyh3Ggtm6jHMriiA+42Klv4Gi+vhDZIX
-         KWvuhYpH3/na5nk3p9htonaM+diUKqA5NloBD8gYPsaGjMkf8WDRnmpm6vfO9gDABbz2
-         cCdSqtOZFpoH+luUsCSbLU/Z8WCObuIawhYQOqugpGTWvBJSJdldbvcv9KBP6hoFQoVn
-         Clo8fxC+GAjmq9GNVnAGPmAS1BLC0/idKLul5T5LwjoWvIz4slduKcTAF9q7L6qIumo3
-         yg5VIksiLxQl65i4sfOnXeLcjSRtPgrk+ilRbCpYBnKn96xR4ly4Xcrpp9yd2SUWIjh6
-         6PvA==
+        d=google.com; s=20210112;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:from:to:cc:subject:date;
+        bh=44PHLAFFr/xjmdOFKAz7bT66nwC87SvDUnUenHVK6zs=;
+        b=b3l1JF04D5cK9FCSUV5yWpe4jXQiO38hhNC3eUjZlPtHMRXMMWyrh0z3ni5wqx6fH6
+         jN7ITFhgb2CBFxFmv5ihybT0ZJT83vXIdn7g4V0AY1K67jqon0uIR3pJBhCKpLMFB8ln
+         OIIcWg4OowwRGBMAVua8wBEX1bwMKgOhvyI8KA+Dyyzn7UnL8JiewJ8FFN6WhdjHQhU/
+         npspuKctZsjZs2EynN2+8cUTJkLu42Wlq5zEoiCewf5bZEJPUoQSHMOMz/rjs79UjU+2
+         noyVgLcfRVmPOojS83iKKW6rG8x8PiwzhaXRcIOzKlstWUJeDFXBIojAJrl1boqhJpKe
+         qaNA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:sender:x-gm-message-state:from
-         :to:cc:subject:date;
-        bh=nsTuKY7W4PY53LlO1HXB0XbCZ8PJy5sf3lmL8N0J30g=;
-        b=bvLn2G+sQENzxOUqx7/hxGELEZ9+4hnffHgcz0zypuNQtm29xdWdSw2DCWGETCoRvv
-         QIb+8oskPbf+xBfoEufniY4fq1sPpNBR7miwSoghaujYosrxPn38823xYA4F9ugIEgSX
-         Qs4qbdnLuQ9+8qMuT1Ua421q0JQj66fTvgiUHgUgvBLRiE48mygHAvJCdLAqg410wb7y
-         anAGHimQuWPNzipDZQUJMYnNvSKGwwF/LkWmDuJFWDlKDo9LH9aW+04RMmAWKc7VlE33
-         6ujSDB7jELAqcB9Tg3dnyc1uohda+EHdghHEJN1qT4o5vWtX0hXqteqqTGZB1l6L2znG
-         ImiQ==
-X-Gm-Message-State: ACrzQf2w1NuLvK3RONqtHf3Osd/R74zm6VG0cV/d4WbT5xWrp5t0348Z
-        4O+8qJ8hYEZlK6MBCKkULEI=
-X-Google-Smtp-Source: AMsMyM5hKURUKXXsenYOl0Idh82XT7fllNvMpBg42nbj1F9Tg/UwQf7y9b+h0mHgRtt8tVStcvsxDg==
-X-Received: by 2002:a17:902:e808:b0:178:1520:b255 with SMTP id u8-20020a170902e80800b001781520b255mr10963314plg.54.1663980147164;
-        Fri, 23 Sep 2022 17:42:27 -0700 (PDT)
-Received: from balhae.hsd1.ca.comcast.net ([2601:647:6780:1040:9987:f0b9:ad5:1fe7])
-        by smtp.gmail.com with ESMTPSA id j6-20020a170902da8600b00176acc23a73sm6639516plx.281.2022.09.23.17.42.25
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 23 Sep 2022 17:42:26 -0700 (PDT)
-Sender: Namhyung Kim <namhyung@gmail.com>
-From:   Namhyung Kim <namhyung@kernel.org>
-To:     Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Jiri Olsa <jolsa@kernel.org>
-Cc:     Ingo Molnar <mingo@kernel.org>,
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:x-gm-message-state:from:to:cc:subject:date;
+        bh=44PHLAFFr/xjmdOFKAz7bT66nwC87SvDUnUenHVK6zs=;
+        b=t6l1tKpvxlE2ZczXs0rOt3qkbAwtT43xQrgx31F9q+E0p73xdai7TBerjX11MRSlta
+         tPcYi+6s6aSSrOivH3Dlu2qp00Qc8hpGybH4zDTw7KhDbJJ3vRXuBYj82Rm/JYWYSLNu
+         0CBXvpbVIzo3bbKSe9aabQ5z3s0lLU2/CR8xnf5Lz+a+hhCw7qCTLPnK6HfvbsQ58LaP
+         JBD6ebGV//NcaUIrdV4Te9NJlmQvws5p9GquO60XUuZQaLZdKZng7hbF4a61S17PqN4h
+         Fxd84HaMOCeBk6H3JhqBnGSCluOSURlQSvlO4bhIgJkJ0/2UYoM5bBVP/ZEmMpHxvkzO
+         7iAA==
+X-Gm-Message-State: ACrzQf1VGvezgB140kYE//AI0NqRNLZzmJNHElMSaNG1eIkWyBNZjzeE
+        zOsLK1eg+TbFdy64LEHEqj6iuwnKfHHvo3BkqtiAnQ==
+X-Google-Smtp-Source: AMsMyM4C+4WatuahEwxP306EwjKhsVg7m9cZ3qPR2p8oC8RBnzW5zW9Cr+BjevJj2xWJdNkOURUNKoyiOSeQU6QMT8k=
+X-Received: by 2002:a7b:ca54:0:b0:3b4:fb06:9b1 with SMTP id
+ m20-20020a7bca54000000b003b4fb0609b1mr7642630wml.67.1663987767740; Fri, 23
+ Sep 2022 19:49:27 -0700 (PDT)
+MIME-Version: 1.0
+References: <20220924004221.841024-1-namhyung@kernel.org>
+In-Reply-To: <20220924004221.841024-1-namhyung@kernel.org>
+From:   Ian Rogers <irogers@google.com>
+Date:   Fri, 23 Sep 2022 19:49:14 -0700
+Message-ID: <CAP-5=fUb9muc-5ncaOvWjciXydOhiS7S+5y_L8QR=A-PDU2jCw@mail.gmail.com>
+Subject: Re: [PATCH 1/3] perf lock: Add -E/--entries option
+To:     Namhyung Kim <namhyung@kernel.org>
+Cc:     Arnaldo Carvalho de Melo <acme@kernel.org>,
+        Jiri Olsa <jolsa@kernel.org>, Ingo Molnar <mingo@kernel.org>,
         Peter Zijlstra <peterz@infradead.org>,
         LKML <linux-kernel@vger.kernel.org>,
-        Ian Rogers <irogers@google.com>,
         Adrian Hunter <adrian.hunter@intel.com>,
         linux-perf-users@vger.kernel.org
-Subject: [PATCH 3/3] perf test: Add kernel lock contention test
-Date:   Fri, 23 Sep 2022 17:42:21 -0700
-Message-Id: <20220924004221.841024-3-namhyung@kernel.org>
-X-Mailer: git-send-email 2.37.3.998.g577e59143f-goog
-In-Reply-To: <20220924004221.841024-1-namhyung@kernel.org>
-References: <20220924004221.841024-1-namhyung@kernel.org>
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-Add a new shell test to check if both normal perf lock record +
-contention and BPF (with -b) option are working.  Use perf bench
-sched messaging as a workload since it'd create some contention for
-sending and receiving messages.
+On Fri, Sep 23, 2022 at 5:42 PM Namhyung Kim <namhyung@kernel.org> wrote:
+>
+> Like perf top, the -E option can limit number of entries to print.
+> It can be useful when users want to see top N contended locks only.
+>
+> Signed-off-by: Namhyung Kim <namhyung@kernel.org>
 
-Signed-off-by: Namhyung Kim <namhyung@kernel.org>
----
- tools/perf/tests/shell/lock_contention.sh | 73 +++++++++++++++++++++++
- 1 file changed, 73 insertions(+)
- create mode 100755 tools/perf/tests/shell/lock_contention.sh
+Acked-by: Ian Rogers <irogers@google.com>
 
-diff --git a/tools/perf/tests/shell/lock_contention.sh b/tools/perf/tests/shell/lock_contention.sh
-new file mode 100755
-index 000000000000..04bf604e3c6f
---- /dev/null
-+++ b/tools/perf/tests/shell/lock_contention.sh
-@@ -0,0 +1,73 @@
-+#!/bin/sh
-+# kernel lock contention analysis test
-+# SPDX-License-Identifier: GPL-2.0
-+
-+set -e
-+
-+err=0
-+perfdata=$(mktemp /tmp/__perf_test.perf.data.XXXXX)
-+result=$(mktemp /tmp/__perf_test.result.XXXXX)
-+
-+cleanup() {
-+	rm -f ${perfdata}
-+	rm -f ${result}
-+	trap - exit term int
-+}
-+
-+trap_cleanup() {
-+	cleanup
-+	exit ${err}
-+}
-+trap trap_cleanup exit term int
-+
-+check() {
-+	if [ `id -u` != 0 ]; then
-+		echo "[Skip] No root permission"
-+		err=2
-+		exit
-+	fi
-+
-+	if ! perf list | grep -q lock:contention_begin; then
-+		echo "[Skip] No lock contention tracepoints"
-+		err=2
-+		exit
-+	fi
-+}
-+
-+test_record()
-+{
-+	echo "Testing perf lock record and perf lock contention"
-+	perf lock record -o ${perfdata} -- perf bench sched messaging > /dev/null 2>&1
-+	# the output goes to the stderr and we expect only 1 output (-E 1)
-+	perf lock contention -i ${perfdata} -E 1 -q 2> ${result}
-+	if [ $(cat "${result}" | wc -l) != "1" ]; then
-+		echo "[Fail] Recorded result count is not 1:" $(cat "${result}" | wc -l)
-+		err=1
-+		exit
-+	fi
-+}
-+
-+test_bpf()
-+{
-+	echo "Testing perf lock contention --use-bpf"
-+
-+	if ! perf lock con -b true > /dev/null 2>&1 ; then
-+		echo "[Skip] No BPF support"
-+		exit
-+	fi
-+
-+	# the perf lock contention output goes to the stderr
-+	perf lock con -a -b -E 1 -q -- perf bench sched messaging > /dev/null 2> ${result}
-+	if [ $(cat "${result}" | wc -l) != "1" ]; then
-+		echo "[Fail] BPF result count is not 1:" $(cat "${result}" | wc -l)
-+		err=1
-+		exit
-+	fi
-+}
-+
-+check
-+
-+test_record
-+test_bpf
-+
-+exit ${err}
--- 
-2.37.3.998.g577e59143f-goog
+Thanks,
+Ian
 
+> ---
+>  tools/perf/Documentation/perf-lock.txt | 10 ++++++++++
+>  tools/perf/builtin-lock.c              | 20 +++++++++++++++-----
+>  2 files changed, 25 insertions(+), 5 deletions(-)
+>
+> diff --git a/tools/perf/Documentation/perf-lock.txt b/tools/perf/Documentation/perf-lock.txt
+> index 5f2dc634258e..b23e76200ac2 100644
+> --- a/tools/perf/Documentation/perf-lock.txt
+> +++ b/tools/perf/Documentation/perf-lock.txt
+> @@ -94,6 +94,11 @@ REPORT OPTIONS
+>           EventManager_De       1845          1             636
+>           futex-default-S       1609          0               0
+>
+> +-E::
+> +--entries=<value>::
+> +       Display this many entries.
+> +
+> +
+>  INFO OPTIONS
+>  ------------
+>
+> @@ -105,6 +110,7 @@ INFO OPTIONS
+>  --map::
+>         dump map of lock instances (address:name table)
+>
+> +
+>  CONTENTION OPTIONS
+>  --------------
+>
+> @@ -154,6 +160,10 @@ CONTENTION OPTIONS
+>  --stack-skip
+>         Number of stack depth to skip when finding a lock caller (default: 3).
+>
+> +-E::
+> +--entries=<value>::
+> +       Display this many entries.
+> +
+>
+>  SEE ALSO
+>  --------
+> diff --git a/tools/perf/builtin-lock.c b/tools/perf/builtin-lock.c
+> index 25d75fa09b90..1c0d52384d9e 100644
+> --- a/tools/perf/builtin-lock.c
+> +++ b/tools/perf/builtin-lock.c
+> @@ -58,6 +58,7 @@ static bool use_bpf;
+>  static unsigned long bpf_map_entries = 10240;
+>  static int max_stack_depth = CONTENTION_STACK_DEPTH;
+>  static int stack_skip = CONTENTION_STACK_SKIP;
+> +static int print_nr_entries = INT_MAX / 2;
+>
+>  static enum {
+>         LOCK_AGGR_ADDR,
+> @@ -1266,14 +1267,14 @@ static void print_result(void)
+>         struct lock_stat *st;
+>         struct lock_key *key;
+>         char cut_name[20];
+> -       int bad, total;
+> +       int bad, total, printed;
+>
+>         pr_info("%20s ", "Name");
+>         list_for_each_entry(key, &lock_keys, list)
+>                 pr_info("%*s ", key->len, key->header);
+>         pr_info("\n\n");
+>
+> -       bad = total = 0;
+> +       bad = total = printed = 0;
+>         while ((st = pop_from_result())) {
+>                 total++;
+>                 if (st->broken)
+> @@ -1311,6 +1312,9 @@ static void print_result(void)
+>                         pr_info(" ");
+>                 }
+>                 pr_info("\n");
+> +
+> +               if (++printed >= print_nr_entries)
+> +                       break;
+>         }
+>
+>         print_bad_events(bad, total);
+> @@ -1476,7 +1480,7 @@ static void print_contention_result(struct lock_contention *con)
+>  {
+>         struct lock_stat *st;
+>         struct lock_key *key;
+> -       int bad, total;
+> +       int bad, total, printed;
+>
+>         list_for_each_entry(key, &lock_keys, list)
+>                 pr_info("%*s ", key->len, key->header);
+> @@ -1486,7 +1490,7 @@ static void print_contention_result(struct lock_contention *con)
+>         else
+>                 pr_info("  %10s   %s\n\n", "type", "caller");
+>
+> -       bad = total = 0;
+> +       bad = total = printed = 0;
+>         if (use_bpf)
+>                 bad = bad_hist[BROKEN_CONTENDED];
+>
+> @@ -1507,7 +1511,7 @@ static void print_contention_result(struct lock_contention *con)
+>                         /* st->addr contains tid of thread */
+>                         t = perf_session__findnew(session, pid);
+>                         pr_info("  %10d   %s\n", pid, thread__comm_str(t));
+> -                       continue;
+> +                       goto next;
+>                 }
+>
+>                 pr_info("  %10s   %s\n", get_type_str(st), st->name);
+> @@ -1527,6 +1531,10 @@ static void print_contention_result(struct lock_contention *con)
+>                                 pr_info("\t\t\t%#lx  %s\n", (unsigned long)ip, buf);
+>                         }
+>                 }
+> +
+> +next:
+> +               if (++printed >= print_nr_entries)
+> +                       break;
+>         }
+>
+>         print_bad_events(bad, total);
+> @@ -1878,6 +1886,7 @@ int cmd_lock(int argc, const char **argv)
+>                     "combine locks in the same class"),
+>         OPT_BOOLEAN('t', "threads", &show_thread_stats,
+>                     "show per-thread lock stats"),
+> +       OPT_INTEGER('E', "entries", &print_nr_entries, "display this many functions"),
+>         OPT_PARENT(lock_options)
+>         };
+>
+> @@ -1905,6 +1914,7 @@ int cmd_lock(int argc, const char **argv)
+>         OPT_INTEGER(0, "stack-skip", &stack_skip,
+>                     "Set the number of stack depth to skip when finding a lock caller, "
+>                     "Default: " __stringify(CONTENTION_STACK_SKIP)),
+> +       OPT_INTEGER('E', "entries", &print_nr_entries, "display this many functions"),
+>         OPT_PARENT(lock_options)
+>         };
+>
+> --
+> 2.37.3.998.g577e59143f-goog
+>
