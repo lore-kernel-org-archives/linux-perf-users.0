@@ -2,92 +2,156 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DE89EC07E9D
-	for <linux-perf-users@archiver.kernel.org>; Mon, 26 Sep 2022 13:02:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BEAD5C6FA83
+	for <linux-perf-users@archiver.kernel.org>; Mon, 26 Sep 2022 14:39:07 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233811AbiIZNCk (ORCPT
+        id S234945AbiIZOjF (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Mon, 26 Sep 2022 09:02:40 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48146 "EHLO
+        Mon, 26 Sep 2022 10:39:05 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36954 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S233095AbiIZNCT (ORCPT
+        with ESMTP id S235124AbiIZOii (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Mon, 26 Sep 2022 09:02:19 -0400
-Received: from frasgout.his.huawei.com (frasgout.his.huawei.com [185.176.79.56])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7C17E1759A;
-        Mon, 26 Sep 2022 04:34:39 -0700 (PDT)
-Received: from fraeml701-chm.china.huawei.com (unknown [172.18.147.226])
-        by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4Mbgbc5PCdz688y7;
-        Mon, 26 Sep 2022 19:32:44 +0800 (CST)
-Received: from lhrpeml500003.china.huawei.com (7.191.162.67) by
- fraeml701-chm.china.huawei.com (10.206.15.50) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id
- 15.1.2375.31; Mon, 26 Sep 2022 13:33:55 +0200
-Received: from [10.48.156.245] (10.48.156.245) by
- lhrpeml500003.china.huawei.com (7.191.162.67) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2375.31; Mon, 26 Sep 2022 12:33:54 +0100
-Message-ID: <2f4335ff-133c-18e0-5c14-3fd29bf6503a@huawei.com>
-Date:   Mon, 26 Sep 2022 12:33:56 +0100
+        Mon, 26 Sep 2022 10:38:38 -0400
+Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D4D2EF40;
+        Mon, 26 Sep 2022 05:59:32 -0700 (PDT)
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by dfw.source.kernel.org (Postfix) with ESMTPS id 70DD060CF1;
+        Mon, 26 Sep 2022 12:59:32 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id A6B02C433D7;
+        Mon, 26 Sep 2022 12:59:31 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1664197171;
+        bh=0u/qbW2hLR7DVa/4gbQr3gEGIsyeCeSemlVqVEFdBLE=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=gZ/sPMcgE2WDB7LY/xOkBVGsCB6PyKRNsMrimkz8ueHOncYThSIQPBZ6LpKwZog6h
+         3fUR3O3yYvQsbohPEDDprtotHbdzaNyIF2VH4TXYRUa8YCAFV9C8NMmO4O1uBM9gRq
+         zS5AFiX2Ly5BJbX2Hw8LfpB7Lp7M35YbWAcuf2dCfrX6WoYcD7KAnruyPpoadvZu7H
+         dNwcJW6Z9fXHCasmjLddQ5Vi3+qSOF0mvvNUhoGJHFq34uG/EplJLuKIflKt43/xXG
+         JrP4AQ5kgeWDB486p36qpfqinZrJeRi/+kdH6UINUcNEYZmuZjGyd1Lzowm0A02iMz
+         Kd5OCxU8KbKKA==
+Received: by quaco.ghostprotocols.net (Postfix, from userid 1000)
+        id 4C46A403B0; Mon, 26 Sep 2022 13:59:29 +0100 (IST)
+Date:   Mon, 26 Sep 2022 13:59:29 +0100
+From:   Arnaldo Carvalho de Melo <acme@kernel.org>
+To:     Namhyung Kim <namhyung@kernel.org>
+Cc:     Leo Yan <leo.yan@linaro.org>, Ingo Molnar <mingo@redhat.com>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Jiri Olsa <jolsa@kernel.org>,
+        Adrian Hunter <adrian.hunter@intel.com>,
+        linux-perf-users <linux-perf-users@vger.kernel.org>,
+        linux-kernel <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH] perf record: Fix segmentation fault in
+ record__read_lost_samples()
+Message-ID: <YzGiMdIRRE8ibCiD@kernel.org>
+References: <20220924113346.1110909-1-leo.yan@linaro.org>
+ <CAM9d7ci2RJOTz08eGRgLMVpS0TmwN=q=UNA_Z3wbSHCC2pMygQ@mail.gmail.com>
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:91.0) Gecko/20100101
- Thunderbird/91.6.1
-Subject: Re: [PATCH v13 1/3] perf tool: arm: Refactor event list iteration in
- auxtrace_record__init()
-To:     Yicong Yang <yangyicong@huawei.com>,
-        "acme@kernel.org" <acme@kernel.org>,
-        "peterz@infradead.org" <peterz@infradead.org>,
-        "alexander.shishkin@linux.intel.com" 
-        <alexander.shishkin@linux.intel.com>,
-        "leo.yan@linaro.org" <leo.yan@linaro.org>,
-        "james.clark@arm.com" <james.clark@arm.com>,
-        "will@kernel.org" <will@kernel.org>,
-        "mathieu.poirier@linaro.org" <mathieu.poirier@linaro.org>,
-        "mark.rutland@arm.com" <mark.rutland@arm.com>,
-        "suzuki.poulose@arm.com" <suzuki.poulose@arm.com>,
-        Jonathan Cameron <jonathan.cameron@huawei.com>,
-        "mike.leach@linaro.org" <mike.leach@linaro.org>
-CC:     "gregkh@linuxfoundation.org" <gregkh@linuxfoundation.org>,
-        "helgaas@kernel.org" <helgaas@kernel.org>,
-        "lorenzo.pieralisi@arm.com" <lorenzo.pieralisi@arm.com>,
-        Shameerali Kolothum Thodi 
-        <shameerali.kolothum.thodi@huawei.com>,
-        "mingo@redhat.com" <mingo@redhat.com>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "linux-arm-kernel@lists.infradead.org" 
-        <linux-arm-kernel@lists.infradead.org>,
-        "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
-        "linux-perf-users@vger.kernel.org" <linux-perf-users@vger.kernel.org>,
-        "Zengtao (B)" <prime.zeng@hisilicon.com>,
-        Zhangshaokun <zhangshaokun@hisilicon.com>,
-        Linuxarm <linuxarm@huawei.com>,
-        "liuqi6124@gmail.com" <liuqi6124@gmail.com>
-References: <20220919090045.6778-1-yangyicong@huawei.com>
- <20220919090045.6778-2-yangyicong@huawei.com>
-From:   John Garry <john.garry@huawei.com>
-In-Reply-To: <20220919090045.6778-2-yangyicong@huawei.com>
-Content-Type: text/plain; charset="UTF-8"; format=flowed
-Content-Transfer-Encoding: 7bit
-X-Originating-IP: [10.48.156.245]
-X-ClientProxiedBy: lhrpeml100001.china.huawei.com (7.191.160.183) To
- lhrpeml500003.china.huawei.com (7.191.162.67)
-X-CFilter-Loop: Reflected
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CAM9d7ci2RJOTz08eGRgLMVpS0TmwN=q=UNA_Z3wbSHCC2pMygQ@mail.gmail.com>
+X-Url:  http://acmel.wordpress.com
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-On 19/09/2022 10:00, Yicong Yang wrote:
-> From: Qi Liu<liuqi115@huawei.com>
+Em Sat, Sep 24, 2022 at 09:52:09AM -0700, Namhyung Kim escreveu:
+> Hi Leo,
 > 
-> Add find_pmu_for_event() and use to simplify logic in
-> auxtrace_record_init(). find_pmu_for_event() will be
-> reused in subsequent patches.
+> On Sat, Sep 24, 2022 at 4:34 AM Leo Yan <leo.yan@linaro.org> wrote:
+> >
+> > Commit a49aa8a54e86 ("perf record: Read and inject LOST_SAMPLES events")
+> > causes segmentation fault when run the "perf mem record" command in
+> > unprivileged mode, the output log is:
+> >
+> >   $ ./perf mem record --all-user -o perf_test.data -- ./test_program
+> >   Error:
+> >   Access to performance monitoring and observability operations is limited.
+> >   Consider adjusting /proc/sys/kernel/perf_event_paranoid setting to open
+> >   access to performance monitoring and observability operations for processes
+> >   without CAP_PERFMON, CAP_SYS_PTRACE or CAP_SYS_ADMIN Linux capability.
+> >   More information can be found at 'Perf events and tool security' document:
+> >   https://www.kernel.org/doc/html/latest/admin-guide/perf-security.html
+> >   perf_event_paranoid setting is 4:
+> >     -1: Allow use of (almost) all events by all users
+> >         Ignore mlock limit after perf_event_mlock_kb without CAP_IPC_LOCK
+> >   >= 0: Disallow raw and ftrace function tracepoint access
+> >   >= 1: Disallow CPU event access
+> >   >= 2: Disallow kernel profiling
+> >   To make the adjusted perf_event_paranoid setting permanent preserve it
+> >   in /etc/sysctl.conf (e.g. kernel.perf_event_paranoid = <setting>)
+> >   perf: Segmentation fault
+> >   Obtained 16 stack frames.
+> >   ./perf(dump_stack+0x31) [0x55b7aa1e8070]
+> >   ./perf(sighandler_dump_stack+0x36) [0x55b7aa1e815e]
+> >   ./perf(+0xc9120) [0x55b7aa0a9120]
+> >   /lib/x86_64-linux-gnu/libc.so.6(+0x4251f) [0x7fd03ef8151f]
+> >   ./perf(+0xccaca) [0x55b7aa0acaca]
+> >   ./perf(+0xcf4ab) [0x55b7aa0af4ab]
+> >   ./perf(cmd_record+0xd50) [0x55b7aa0b28df]
+> >   ./perf(+0x112f77) [0x55b7aa0f2f77]
+> >   ./perf(cmd_mem+0x53b) [0x55b7aa0f406c]
+> >   ./perf(+0x19979c) [0x55b7aa17979c]
+> >   ./perf(+0x199a37) [0x55b7aa179a37]
+> >   ./perf(+0x199b95) [0x55b7aa179b95]
+> >   ./perf(main+0x2c7) [0x55b7aa179fbd]
+> >   /lib/x86_64-linux-gnu/libc.so.6(+0x29d8f) [0x7fd03ef68d8f]
+> >   /lib/x86_64-linux-gnu/libc.so.6(__libc_start_main+0x7f) [0x7fd03ef68e3f]
+> >   ./perf(_start+0x24) [0x55b7aa089974]
+> >   Segmentation fault (core dumped)
+> >
+> > In the unprivileged mode perf fails to open PMU event, the function
+> > record__open() returns error and "session->evlist" is NULL; this leads
+> > to segmentation fault when iterates "session->evlist" in the function
+> > record__read_lost_samples().
+> >
+> > This patch checks "session->evlist" in record__read_lost_samples(), if
+> > "session->evlist" is NULL then the function directly bails out to avoid
+> > segmentation fault.
+> >
+> > Fixes: a49aa8a54e86 ("perf record: Read and inject LOST_SAMPLES events")
+> > Signed-off-by: Leo Yan <leo.yan@linaro.org>
 > 
-> Reviewed-by: Leo Yan<leo.yan@linaro.org>
-> Reviewed-by: Jonathan Cameron<Jonathan.Cameron@huawei.com>
-> Signed-off-by: Qi Liu<liuqi115@huawei.com>
-> Signed-off-by: Yicong Yang<yangyicong@hisilicon.com>
-> ---
+> Thanks for the fix and sorry for the inconvenience.
+> Actually I sent the same fix a few weeks ago.
+> 
+> https://lore.kernel.org/r/20220909235024.278281-1-namhyung@kernel.org
 
+collecting it now, and adding that Fixes from Leo's patch, ok?
 
-Reviewed-by: John Garry <john.garry@huawei.com>
+- Arnaldo
+ 
+> Thanks,
+> Namhyung
+> 
+> 
+> > ---
+> >  tools/perf/builtin-record.c | 4 ++++
+> >  1 file changed, 4 insertions(+)
+> >
+> > diff --git a/tools/perf/builtin-record.c b/tools/perf/builtin-record.c
+> > index 02e38f50a138..012b46dd4999 100644
+> > --- a/tools/perf/builtin-record.c
+> > +++ b/tools/perf/builtin-record.c
+> > @@ -1888,6 +1888,10 @@ static void record__read_lost_samples(struct record *rec)
+> >         struct perf_record_lost_samples *lost;
+> >         struct evsel *evsel;
+> >
+> > +       /* No any event is opened, directly bail out */
+> > +       if (!session->evlist)
+> > +               return;
+> > +
+> >         lost = zalloc(PERF_SAMPLE_MAX_SIZE);
+> >         if (lost == NULL) {
+> >                 pr_debug("Memory allocation failed\n");
+> > --
+> > 2.34.1
+> >
+
+-- 
+
+- Arnaldo
