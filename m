@@ -2,97 +2,98 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 516D5C6FA90
-	for <linux-perf-users@archiver.kernel.org>; Mon, 26 Sep 2022 16:06:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C01C2C32771
+	for <linux-perf-users@archiver.kernel.org>; Mon, 26 Sep 2022 16:07:24 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S235612AbiIZQGM (ORCPT
+        id S235948AbiIZQHW (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Mon, 26 Sep 2022 12:06:12 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50226 "EHLO
+        Mon, 26 Sep 2022 12:07:22 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50200 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S234775AbiIZQFp (ORCPT
+        with ESMTP id S233680AbiIZQGv (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Mon, 26 Sep 2022 12:05:45 -0400
-Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTP id 2927DC8407;
-        Mon, 26 Sep 2022 07:53:25 -0700 (PDT)
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 137C41042;
-        Mon, 26 Sep 2022 07:53:30 -0700 (PDT)
-Received: from e121896.arm.com (unknown [10.57.0.51])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPA id CC1C43F66F;
-        Mon, 26 Sep 2022 07:53:21 -0700 (PDT)
-From:   James Clark <james.clark@arm.com>
-To:     acme@kernel.org
-Cc:     linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org,
-        James Clark <james.clark@arm.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@redhat.com>,
+        Mon, 26 Sep 2022 12:06:51 -0400
+Received: from mail-pj1-x1031.google.com (mail-pj1-x1031.google.com [IPv6:2607:f8b0:4864:20::1031])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3FA122ED4F
+        for <linux-perf-users@vger.kernel.org>; Mon, 26 Sep 2022 07:54:53 -0700 (PDT)
+Received: by mail-pj1-x1031.google.com with SMTP id o99-20020a17090a0a6c00b002039c4fce53so12696596pjo.2
+        for <linux-perf-users@vger.kernel.org>; Mon, 26 Sep 2022 07:54:53 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date;
+        bh=kKFISMF8y3UineE1SH2S8n91CZBFI7ucs7QvcNIP1eo=;
+        b=ub/tjcofVKs8dZhq8NKKsRXUHATcafd3A6sc+Xf4tb5skXyA7ZN4Id9uToPQpx546/
+         k7snccIY4Ghvz1ZfHfUHoRFZOfK+yGVyalHcrJc65DY3M/feAN6SJcp0NUieezE0Z/QQ
+         f99fZwZPcyxsySurBO1kutJvaSTVzf7mkhQXKvQAHfF92o0C0ur9rGd7eWHNHrCrNVcV
+         eDlooqsVPv990JymmDDW7ZGVcnQTMjwEzLSdFdYHugHLDjxsKuD+5ZpC+q4ZiZ0mlYBy
+         TWIorBs27Gy7ECdqa7Nto7RTuY+nlhouyTwoCjjhrGSXNTDUv3+xyrETr6OiBP6rJ8KS
+         4+uA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date;
+        bh=kKFISMF8y3UineE1SH2S8n91CZBFI7ucs7QvcNIP1eo=;
+        b=jK+ePLJsR7KLvxqiJ1sROWXwui6kUHzO0GGVsPX7NcQ7+sTAfYz9ftGZCkDq0l8d0K
+         V9HWwRtG0mgKktxDmm+s4LJUXJvn6SIyr6qZFI+X1+VqYSQKPBFXSe2nHu+y9MHXmjmv
+         xYt/MeGh7R5MH0LXn4Cc9JaHGPyqR5mVMHawQ1lHQIU6QMhs5X1oGUxXTckXM/NeJLwo
+         CKbOfc5hugS9Y3Hfw7x23KjJIM+eqcLBVnPY5DEcy5W0YDiKusz1SXcrP1/X3czLcpTm
+         I2hxxRT9kIxIuv9U1r3eKeyUuHgr2ATDreVkN/M/lB7gPA9rLMeT63aJBhOy6VrWVGQe
+         NpDA==
+X-Gm-Message-State: ACrzQf3B6jN5/Nb9iTqUJ2sd2AgpYcHRU7a85KAVddJ4KElgv0aCvNXb
+        sNxjvxphr2/oGQ+3+45PJrLmFg==
+X-Google-Smtp-Source: AMsMyM6ipv9MuqOqf/u98HYXMaP1pTXWs7eWPOXMmYQPczfjPw+3vk7F6iQPuzMNWBgDKUi/WpGhVA==
+X-Received: by 2002:a17:90b:388c:b0:202:a29d:6e6f with SMTP id mu12-20020a17090b388c00b00202a29d6e6fmr25587905pjb.231.1664204091215;
+        Mon, 26 Sep 2022 07:54:51 -0700 (PDT)
+Received: from leoy-huanghe.lan ([137.184.34.254])
+        by smtp.gmail.com with ESMTPSA id z15-20020a170903018f00b00172e19c2fa9sm11413162plg.9.2022.09.26.07.54.47
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 26 Sep 2022 07:54:50 -0700 (PDT)
+Date:   Mon, 26 Sep 2022 22:54:43 +0800
+From:   Leo Yan <leo.yan@linaro.org>
+To:     Arnaldo Carvalho de Melo <acme@kernel.org>
+Cc:     Namhyung Kim <namhyung@kernel.org>, Ingo Molnar <mingo@redhat.com>,
         Mark Rutland <mark.rutland@arm.com>,
         Alexander Shishkin <alexander.shishkin@linux.intel.com>,
         Jiri Olsa <jolsa@kernel.org>,
-        Namhyung Kim <namhyung@kernel.org>
-Subject: [PATCH] perf tests: Fix SafeConfigParser deprecation warning
-Date:   Mon, 26 Sep 2022 15:53:14 +0100
-Message-Id: <20220926145314.226590-1-james.clark@arm.com>
-X-Mailer: git-send-email 2.28.0
+        Adrian Hunter <adrian.hunter@intel.com>,
+        linux-perf-users <linux-perf-users@vger.kernel.org>,
+        linux-kernel <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH] perf record: Fix segmentation fault in
+ record__read_lost_samples()
+Message-ID: <YzG9Mz8t6aNn1ZwX@leoy-huanghe.lan>
+References: <20220924113346.1110909-1-leo.yan@linaro.org>
+ <CAM9d7ci2RJOTz08eGRgLMVpS0TmwN=q=UNA_Z3wbSHCC2pMygQ@mail.gmail.com>
+ <YzGiMdIRRE8ibCiD@kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <YzGiMdIRRE8ibCiD@kernel.org>
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-The following command:
+On Mon, Sep 26, 2022 at 01:59:29PM +0100, Arnaldo Carvalho de Melo wrote:
 
-  perf test attr -vvv
+[...]
 
-Results in this deprecation warning:
+> > > Fixes: a49aa8a54e86 ("perf record: Read and inject LOST_SAMPLES events")
+> > > Signed-off-by: Leo Yan <leo.yan@linaro.org>
+> > 
+> > Thanks for the fix and sorry for the inconvenience.
+> > Actually I sent the same fix a few weeks ago.
+> > 
+> > https://lore.kernel.org/r/20220909235024.278281-1-namhyung@kernel.org
+> 
+> collecting it now, and adding that Fixes from Leo's patch, ok?
 
-  ./tests/attr.py:142: DeprecationWarning: The SafeConfigParser class
-  has been renamed to ConfigParser in Python 3.2. This alias will be
-  removed in future versions. Use ConfigParser directly instead.
+Yeah, I think it's good to add Fixes tag.  Just remind, actually
+Namhyung has mentioned Fixed tag in above link:
 
-The last Python 3.2 release was in 2013 and Rhel-6 has Python 3.3 so I
-think it's safe to make the replacement now.
+"I didn't add a Fixes tag as it's not sent to Linus yet. But in case you want it.
 
-Tested with Python 3.8
+  Fixes: a49aa8a54e86 ("perf record: Read and inject LOST_SAMPLES events")
+"
 
-Signed-off-by: James Clark <james.clark@arm.com>
----
- tools/perf/tests/attr.py | 6 +++---
- 1 file changed, 3 insertions(+), 3 deletions(-)
-
-diff --git a/tools/perf/tests/attr.py b/tools/perf/tests/attr.py
-index cb39ac46bc73..6d9b5312e6c2 100644
---- a/tools/perf/tests/attr.py
-+++ b/tools/perf/tests/attr.py
-@@ -139,7 +139,7 @@ class Event(dict):
- #   - expected values assignments
- class Test(object):
-     def __init__(self, path, options):
--        parser = configparser.SafeConfigParser()
-+        parser = configparser.ConfigParser()
-         parser.read(path)
- 
-         log.warning("running '%s'" % path)
-@@ -198,7 +198,7 @@ class Test(object):
-         return True
- 
-     def load_events(self, path, events):
--        parser_event = configparser.SafeConfigParser()
-+        parser_event = configparser.ConfigParser()
-         parser_event.read(path)
- 
-         # The event record section header contains 'event' word,
-@@ -212,7 +212,7 @@ class Test(object):
-             # Read parent event if there's any
-             if (':' in section):
-                 base = section[section.index(':') + 1:]
--                parser_base = configparser.SafeConfigParser()
-+                parser_base = configparser.ConfigParser()
-                 parser_base.read(self.test_dir + '/' + base)
-                 base_items = parser_base.items('event')
- 
--- 
-2.28.0
-
+Thanks,
+Leo
