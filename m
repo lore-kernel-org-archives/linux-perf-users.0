@@ -2,113 +2,94 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6B6E8C07E9D
-	for <linux-perf-users@archiver.kernel.org>; Mon, 26 Sep 2022 18:46:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6C90AC6FA8E
+	for <linux-perf-users@archiver.kernel.org>; Mon, 26 Sep 2022 19:16:49 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229711AbiIZSqJ (ORCPT
+        id S229832AbiIZTQs (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Mon, 26 Sep 2022 14:46:09 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36872 "EHLO
+        Mon, 26 Sep 2022 15:16:48 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58660 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229963AbiIZSqA (ORCPT
+        with ESMTP id S229571AbiIZTQq (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Mon, 26 Sep 2022 14:46:00 -0400
-Received: from mail-wm1-x332.google.com (mail-wm1-x332.google.com [IPv6:2a00:1450:4864:20::332])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 72593B6D;
-        Mon, 26 Sep 2022 11:45:57 -0700 (PDT)
-Received: by mail-wm1-x332.google.com with SMTP id n35-20020a05600c502300b003b4924c6868so8493133wmr.1;
-        Mon, 26 Sep 2022 11:45:57 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20210112;
-        h=content-disposition:mime-version:message-id:subject:cc:to:from:date
-         :from:to:cc:subject:date;
-        bh=KbE8+k0DQbQiN6rvJmf+M4QiM27Iyd9apl5Sske1Zzw=;
-        b=lEcglelMVfI2ds6r+pDA9x4BrelWnkKw82KQaIX1ppGx7vEVQmiIlZrrmC7NxTlcZD
-         Gq7WI4BxLyydc11i7GBzwbYddKffR9aNMnmaKvVHkxwJYi/y1uEsuG0x+SdS7tGjEF8E
-         tZoNaN+xbDeWOnSE/d7wvOWYff5pq9Kix6T9Toquh6u7PaIZXvoHhKK4F1qB7NdZTC+Y
-         OPgAnLs9jMLkUkg4VwstbCHVyPjxX7OqYNujR1Ulp9NhSsxEbHIJpheFTNnKp7t6SosN
-         EdaOM8FZvlFGs2uf5iEyFfc6mo/4nIyP/CcEYBmOwKjhGL8EdLE5gJGNpqynDoRAx/ct
-         oHhQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=content-disposition:mime-version:message-id:subject:cc:to:from:date
-         :x-gm-message-state:from:to:cc:subject:date;
-        bh=KbE8+k0DQbQiN6rvJmf+M4QiM27Iyd9apl5Sske1Zzw=;
-        b=qJV2r3garlnGtKJjkJtUfAQT7mbBxjISLLUaTQ+EVtja88vVHQakc8LzYlC4mn0Yw5
-         qgjoHsUPY+YXGBR9C+mD0r87JaNIfyWQW/9LuVcfaoXCgXrt43dionHpq1N1Sj8BY3t+
-         6rHta2IObNexx1TJO+biqcBNo12bisr+YmhDMASt+WaToWstAyqLExV/jkpqtlsqrQ4O
-         qHOJpRBH14xMPKmKJ+i05V/qvEUdfwY54GMu3+YexWzwl/hspvhMOcEgimS3W2UZpQyW
-         QcX76Dfc39P5v53xYbUlDQME3faIFaOmjVH+MjjJMzU91KPjTL13JLvX9FnDBHUbHH9m
-         2rJw==
-X-Gm-Message-State: ACrzQf28eL5yNB2yiRGeCDnb+mj56y1HgabD3rjyrOShsNQatLlIuFMW
-        A1LBD5dKuc2d0AKZbDjJHk0VXriHnDd/
-X-Google-Smtp-Source: AMsMyM5tpVrKELCli736w1Un7LQjURTIyih0DtUhl0KVk+6QQ6tDeOcWn2gbBaTL5/k5CsaCE744TQ==
-X-Received: by 2002:a05:600c:4f82:b0:3b4:9f2f:430b with SMTP id n2-20020a05600c4f8200b003b49f2f430bmr103344wmq.16.1664217955598;
-        Mon, 26 Sep 2022 11:45:55 -0700 (PDT)
-Received: from fedora (88-106-97-87.dynamic.dsl.as9105.com. [88.106.97.87])
-        by smtp.gmail.com with ESMTPSA id fc15-20020a05600c524f00b003a5537bb2besm12607843wmb.25.2022.09.26.11.45.54
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 26 Sep 2022 11:45:55 -0700 (PDT)
-Date:   Mon, 26 Sep 2022 19:45:53 +0100
-From:   Jules Irenge <jbi.octave@gmail.com>
-To:     mark.rutland@arm.com
-Cc:     alexander.shishkin@linux.intel.com, tglx@linutronix.de,
-        bp@alien8.de, dave.hansen@linux.intel.com, x86@kernel.org,
-        hpa@zytor.com, linux-perf-users@vger.kernel.org,
-        linux-kernel@vger.kernel.org, elana.copperman@mobileye.com
-Subject: [PATCH 4/7] x86: events: Convert snprintf() to scnprintf()
-Message-ID: <YzHzYWiq64y4DU7p@fedora>
+        Mon, 26 Sep 2022 15:16:46 -0400
+Received: from ams.source.kernel.org (ams.source.kernel.org [IPv6:2604:1380:4601:e00::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BEB2A9A6BE;
+        Mon, 26 Sep 2022 12:16:45 -0700 (PDT)
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by ams.source.kernel.org (Postfix) with ESMTPS id 2F139B80D91;
+        Mon, 26 Sep 2022 19:16:44 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id AC39DC433D7;
+        Mon, 26 Sep 2022 19:16:42 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1664219802;
+        bh=i8EKvkC0Tr2VPkNQzzRCboiKkQ7L74SHdGwxYZgB0zE=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=jb9lcMcyJ+upkvHXzMW8Akjnqe6cZtfhnDBXsdwLD5EMINm+uU5ljyye4rPM0Wp0i
+         e3SCYAwkuYur/jOcGct7P6IukXaCJBeJ5CDE26ozWImL97fCfLn9k6H0E8Y7m3R9Ik
+         bWS+JdilMfDtTRjhJvdBltLrrkX9rBHPaF3U+EzKqAJj5H+8WtBW0EPpgGlvSYESRR
+         bRbIyPSftQ19Pjk/koyJc8E6OkxQk6L4gM6c6mmMVjGviJiKQgx1jqTMIfWHJlrsxL
+         0SgL6Xki0M/yOqJhcIM60aFHOB8xdyM7DUPjkwAUYn/zQixmLrjRo1BMHAW0MXYk2p
+         Xt1lvhD1xdVCQ==
+Received: by quaco.ghostprotocols.net (Postfix, from userid 1000)
+        id 008A5403B0; Mon, 26 Sep 2022 20:16:39 +0100 (IST)
+Date:   Mon, 26 Sep 2022 20:16:39 +0100
+From:   Arnaldo Carvalho de Melo <acme@kernel.org>
+To:     Leo Yan <leo.yan@linaro.org>
+Cc:     Namhyung Kim <namhyung@kernel.org>, Ingo Molnar <mingo@redhat.com>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Jiri Olsa <jolsa@kernel.org>,
+        Adrian Hunter <adrian.hunter@intel.com>,
+        linux-perf-users <linux-perf-users@vger.kernel.org>,
+        linux-kernel <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH] perf record: Fix segmentation fault in
+ record__read_lost_samples()
+Message-ID: <YzH6lxeZ2KYfK6lx@kernel.org>
+References: <20220924113346.1110909-1-leo.yan@linaro.org>
+ <CAM9d7ci2RJOTz08eGRgLMVpS0TmwN=q=UNA_Z3wbSHCC2pMygQ@mail.gmail.com>
+ <YzGiMdIRRE8ibCiD@kernel.org>
+ <YzG9Mz8t6aNn1ZwX@leoy-huanghe.lan>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
+In-Reply-To: <YzG9Mz8t6aNn1ZwX@leoy-huanghe.lan>
+X-Url:  http://acmel.wordpress.com
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-Coccinnelle reports a warning
-Warning: Use scnprintf or sprintf
-Adding to that, there has been a slow migration from snprintf to scnprintf.
-This LWN article explains the rationale for this change
-https: //lwn.net/Articles/69419/
-Ie. snprintf() returns what *would* be the resulting length,
-while scnprintf() returns the actual length.
+Em Mon, Sep 26, 2022 at 10:54:43PM +0800, Leo Yan escreveu:
+> On Mon, Sep 26, 2022 at 01:59:29PM +0100, Arnaldo Carvalho de Melo wrote:
+> 
+> [...]
+> 
+> > > > Fixes: a49aa8a54e86 ("perf record: Read and inject LOST_SAMPLES events")
+> > > > Signed-off-by: Leo Yan <leo.yan@linaro.org>
+> > > 
+> > > Thanks for the fix and sorry for the inconvenience.
+> > > Actually I sent the same fix a few weeks ago.
+> > > 
+> > > https://lore.kernel.org/r/20220909235024.278281-1-namhyung@kernel.org
+> > 
+> > collecting it now, and adding that Fixes from Leo's patch, ok?
+> 
+> Yeah, I think it's good to add Fixes tag.  Just remind, actually
+> Namhyung has mentioned Fixed tag in above link:
+> 
+> "I didn't add a Fixes tag as it's not sent to Linus yet. But in case you want it.
+> 
+>   Fixes: a49aa8a54e86 ("perf record: Read and inject LOST_SAMPLES events")
+> "
 
-Signed-off-by: Jules Irenge <jbi.octave@gmail.com>
----
- arch/x86/events/core.c | 6 +++---
- 1 file changed, 3 insertions(+), 3 deletions(-)
+I'll add it.
 
-diff --git a/arch/x86/events/core.c b/arch/x86/events/core.c
-index f969410d0c90..71695d21ffd1 100644
---- a/arch/x86/events/core.c
-+++ b/arch/x86/events/core.c
-@@ -1905,7 +1905,7 @@ ssize_t events_hybrid_sysfs_show(struct device *dev,
- 		if (x86_pmu.hybrid_pmu[i].cpu_type & pmu->cpu_type) {
- 			next_str = strchr(str, ';');
- 			if (next_str)
--				return snprintf(page, next_str - str + 1, "%s", str);
-+				return scnprintf(page, next_str - str + 1, "%s", str);
- 			else
- 				return sprintf(page, "%s", str);
- 		}
-@@ -2566,7 +2566,7 @@ static ssize_t get_attr_rdpmc(struct device *cdev,
- 			      struct device_attribute *attr,
- 			      char *buf)
- {
--	return snprintf(buf, 40, "%d\n", x86_pmu.attr_rdpmc);
-+	return scnprintf(buf, 40, "%d\n", x86_pmu.attr_rdpmc);
- }
- 
- static ssize_t set_attr_rdpmc(struct device *cdev,
-@@ -2624,7 +2624,7 @@ static ssize_t max_precise_show(struct device *cdev,
- 				  struct device_attribute *attr,
- 				  char *buf)
- {
--	return snprintf(buf, PAGE_SIZE, "%d\n", x86_pmu_max_precise());
-+	return scnprintf(buf, PAGE_SIZE, "%d\n", x86_pmu_max_precise());
- }
- 
- static DEVICE_ATTR_RO(max_precise);
--- 
-2.37.3
+Sometimes I think about combining fixes with patches in my tree that
+didn't made it into Linus tree yet, so that we avoid having problems
+with 'git bisect', but I also try not to rebase acme/perf/core.
 
+Perhaps in the future 'git bisect' will look at Fixes: tags :-)
+
+- Arnaldo
