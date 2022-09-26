@@ -2,27 +2,27 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C61E7C6FA82
-	for <linux-perf-users@archiver.kernel.org>; Mon, 26 Sep 2022 03:18:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DEE92C04A95
+	for <linux-perf-users@archiver.kernel.org>; Mon, 26 Sep 2022 03:18:46 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233079AbiIZDSn (ORCPT
+        id S229881AbiIZDSn (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
         Sun, 25 Sep 2022 23:18:43 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60810 "EHLO
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60818 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S233029AbiIZDSe (ORCPT
+        with ESMTP id S233097AbiIZDSf (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Sun, 25 Sep 2022 23:18:34 -0400
+        Sun, 25 Sep 2022 23:18:35 -0400
 Received: from szxga02-in.huawei.com (szxga02-in.huawei.com [45.249.212.188])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6113526573;
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B0C2826AE6;
         Sun, 25 Sep 2022 20:18:32 -0700 (PDT)
-Received: from dggpemm500023.china.huawei.com (unknown [172.30.72.56])
-        by szxga02-in.huawei.com (SkyGuard) with ESMTP id 4MbSXg6ZmJzWgrs;
-        Mon, 26 Sep 2022 11:14:27 +0800 (CST)
+Received: from dggpemm500021.china.huawei.com (unknown [172.30.72.53])
+        by szxga02-in.huawei.com (SkyGuard) with ESMTP id 4MbSWs3X1BzHtnk;
+        Mon, 26 Sep 2022 11:13:45 +0800 (CST)
 Received: from dggpemm500013.china.huawei.com (7.185.36.172) by
- dggpemm500023.china.huawei.com (7.185.36.83) with Microsoft SMTP Server
+ dggpemm500021.china.huawei.com (7.185.36.109) with Microsoft SMTP Server
  (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2375.31; Mon, 26 Sep 2022 11:18:30 +0800
+ 15.1.2375.31; Mon, 26 Sep 2022 11:18:31 +0800
 Received: from ubuntu1804.huawei.com (10.67.175.36) by
  dggpemm500013.china.huawei.com (7.185.36.172) with Microsoft SMTP Server
  (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
@@ -35,9 +35,9 @@ CC:     <peterz@infradead.org>, <mingo@redhat.com>, <acme@kernel.org>,
         <john.garry@huawei.com>, <adrian.hunter@intel.com>,
         <ak@linux.intel.com>, <florian.fischer@muhq.space>,
         <chenzhongjin@huawei.com>
-Subject: [PATCH -next 1/5] perf: Fix show_arg_names not working for tp arg names
-Date:   Mon, 26 Sep 2022 11:14:36 +0800
-Message-ID: <20220926031440.28275-2-chenzhongjin@huawei.com>
+Subject: [PATCH -next 4/5] perf: Remove unused macros __PERF_EVENT_FIELD
+Date:   Mon, 26 Sep 2022 11:14:39 +0800
+Message-ID: <20220926031440.28275-5-chenzhongjin@huawei.com>
 X-Mailer: git-send-email 2.17.1
 In-Reply-To: <20220926031440.28275-1-chenzhongjin@huawei.com>
 References: <20220926031440.28275-1-chenzhongjin@huawei.com>
@@ -51,60 +51,45 @@ Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-trace__fprintf_tp_fields() will always print arg names because when
-implemented it is forced to print arg_names with:
-(1 || trace->show_arg_names)
+Unused macros reported by [-Wunused-macros].
 
-So the printing looks like:
+This macros were introduced as __PERF_COUNTER_FIELD and used for
+reading the bit in config.
 
-> cat ~/.perfconfig
-    [trace]
-        show_arg_names = no
+'cdd6c482c9ff ("perf: Do the big rename: Performance Counters -> Performance Events")'
+Changes it to __PERF_EVENT_FIELD but at this commit there is already
+nowhere else using these macros, also no macros called
+PERF_EVENT_##name##_MASK/SHIFT.
 
-> perf trace -e syscalls:*mmap sleep 1
-    0.000 sleep/1119 syscalls:sys_enter_mmap(NULL, 8192, READ|WRITE, PRIVATE|ANONYMOUS)
-    0.179 sleep/1119 syscalls:sys_exit_mmap(__syscall_nr: 9, ret: 140535426170880)
-    ...
+Now we are not reading type or id from config. These macros are
+useless and incomplete.
 
-Although the comment said that perhaps we need a show_tp_arg_names.
-I don't think it's necessary to control them separately because
-it's not so clean that part of the log shows arg names but other not.
-Also when we are tracing functions it's rare to especially distinguish
-syscalls and tp trace.
+So removing them for code cleaning.
 
-Only use one option to control arg names printing is more resonable
-and simple. So remove the force condition and commit.
-
-After fix:
-
-> perf trace -e syscalls:*mmap sleep 1
-    0.000 sleep/1121 syscalls:sys_enter_mmap(NULL, 8192, READ|WRITE, PRIVATE|ANONYMOUS)
-    0.163 sleep/1121 syscalls:sys_exit_mmap(9, 140454467661824)
-    ...
-
-Fixes: f11b2803bb88 ("perf trace: Allow choosing how to augment the tracepoint arguments")
 Signed-off-by: Chen Zhongjin <chenzhongjin@huawei.com>
 ---
- tools/perf/builtin-trace.c | 6 +-----
- 1 file changed, 1 insertion(+), 5 deletions(-)
+ tools/perf/util/parse-events.c | 8 --------
+ 1 file changed, 8 deletions(-)
 
-diff --git a/tools/perf/builtin-trace.c b/tools/perf/builtin-trace.c
-index 0bd9d01c0df9..c7bb7a8222a6 100644
---- a/tools/perf/builtin-trace.c
-+++ b/tools/perf/builtin-trace.c
-@@ -2762,11 +2762,7 @@ static size_t trace__fprintf_tp_fields(struct trace *trace, struct evsel *evsel,
+diff --git a/tools/perf/util/parse-events.c b/tools/perf/util/parse-events.c
+index f05e15acd33f..3ed914882b96 100644
+--- a/tools/perf/util/parse-events.c
++++ b/tools/perf/util/parse-events.c
+@@ -149,14 +149,6 @@ struct event_symbol event_symbols_sw[PERF_COUNT_SW_MAX] = {
+ 	},
+ };
  
- 		printed += scnprintf(bf + printed, size - printed, "%s", printed ? ", " : "");
- 
--		/*
--		 * XXX Perhaps we should have a show_tp_arg_names,
--		 * leaving show_arg_names just for syscalls?
--		 */
--		if (1 || trace->show_arg_names)
-+		if (trace->show_arg_names)
- 			printed += scnprintf(bf + printed, size - printed, "%s: ", field->name);
- 
- 		printed += syscall_arg_fmt__scnprintf_val(arg, bf + printed, size - printed, &syscall_arg, val);
+-#define __PERF_EVENT_FIELD(config, name) \
+-	((config & PERF_EVENT_##name##_MASK) >> PERF_EVENT_##name##_SHIFT)
+-
+-#define PERF_EVENT_RAW(config)		__PERF_EVENT_FIELD(config, RAW)
+-#define PERF_EVENT_CONFIG(config)	__PERF_EVENT_FIELD(config, CONFIG)
+-#define PERF_EVENT_TYPE(config)		__PERF_EVENT_FIELD(config, TYPE)
+-#define PERF_EVENT_ID(config)		__PERF_EVENT_FIELD(config, EVENT)
+-
+ const char *event_type(int type)
+ {
+ 	switch (type) {
 -- 
 2.17.1
 
