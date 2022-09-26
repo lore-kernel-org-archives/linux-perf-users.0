@@ -2,168 +2,128 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 23A95C32771
-	for <linux-perf-users@archiver.kernel.org>; Mon, 26 Sep 2022 14:48:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 56CFAC32771
+	for <linux-perf-users@archiver.kernel.org>; Mon, 26 Sep 2022 14:48:14 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S235252AbiIZOsI (ORCPT
+        id S235303AbiIZOsM (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Mon, 26 Sep 2022 10:48:08 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58786 "EHLO
+        Mon, 26 Sep 2022 10:48:12 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50472 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S234550AbiIZOrp (ORCPT
+        with ESMTP id S234674AbiIZOrs (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Mon, 26 Sep 2022 10:47:45 -0400
-Received: from ams.source.kernel.org (ams.source.kernel.org [IPv6:2604:1380:4601:e00::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BDEB512D31;
-        Mon, 26 Sep 2022 06:12:04 -0700 (PDT)
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+        Mon, 26 Sep 2022 10:47:48 -0400
+Received: from mail.skyhub.de (mail.skyhub.de [IPv6:2a01:4f8:190:11c2::b:1457])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C05F6B1D4;
+        Mon, 26 Sep 2022 06:12:42 -0700 (PDT)
+Received: from zn.tnic (p200300ea9733e74d329c23fffea6a903.dip0.t-ipconnect.de [IPv6:2003:ea:9733:e74d:329c:23ff:fea6:a903])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by ams.source.kernel.org (Postfix) with ESMTPS id 6E5EBB80977;
-        Mon, 26 Sep 2022 13:12:03 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id F3400C433D6;
-        Mon, 26 Sep 2022 13:12:01 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1664197922;
-        bh=Jsje8LjAcUn+Fmbb7fCNpBAb/YI9LGJswkzqxoQMl4A=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=VGyu5g8xH5ILFC+gRf2+/fNl3+m0ImwvdmIfbWuS+62nn0tUNiUXE2d0NasMR+4VX
-         usHFI/uhJBSRHx5uTpbd3ZdFBo9AIf39fWd8mLu+OjGvk0gKxQf9cR3EKouI8Wy/vJ
-         f+Y54rcFMG1v7fVZ20Pf9RMrpKFTY2uDRphE41jQ+yYJYxxmFy2k8p45Q/+XRyUQAh
-         myL1NGXaHH6nn1GG1lh2bHft1uRO0HF83/pZq+IFk7mJCdAxTV0gimZyxWCF8LbA5Q
-         +sdaQeBJpIoG2HrFoUFwbfjwK3blSdmbHGISpENdAPEFVzkphtVqVhhsVxCP0AKDVK
-         ZJk3xdDsMtMDw==
-Received: by quaco.ghostprotocols.net (Postfix, from userid 1000)
-        id B9389403B0; Mon, 26 Sep 2022 14:11:59 +0100 (IST)
-Date:   Mon, 26 Sep 2022 14:11:59 +0100
-From:   Arnaldo Carvalho de Melo <acme@kernel.org>
-To:     Ian Rogers <irogers@google.com>
-Cc:     Namhyung Kim <namhyung@kernel.org>, Jiri Olsa <jolsa@kernel.org>,
-        Ingo Molnar <mingo@kernel.org>,
+        by mail.skyhub.de (SuperMail on ZX Spectrum 128k) with ESMTPSA id ED5171EC051E;
+        Mon, 26 Sep 2022 15:12:35 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alien8.de; s=dkim;
+        t=1664197956;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:in-reply-to:in-reply-to:  references:references;
+        bh=WoAsNIjxtOydRj3E9e8AKmT+MPVf0jUVuDQQzfJocNg=;
+        b=YlkrwAcwyMQjQRO0wTBEUyoDvIIogt7PwJBqH9c6yVxgqYlhBY5xt3oHREab1EXAgd1+Jt
+        ajd5Z6pFsRNvdhCy0jlBQv3Pytt9U52OucBWsQsAJGfx18Xvd1FQyx1QD2bygaB9ytBcb2
+        ccjY1VjlLyZmDeDfFXjwOze/QNV1TC0=
+Date:   Mon, 26 Sep 2022 15:12:32 +0200
+From:   Borislav Petkov <bp@alien8.de>
+To:     Maxim Levitsky <mlevitsk@redhat.com>
+Cc:     linux-kernel@vger.kernel.org, kvm@vger.kernel.org,
+        Pawan Gupta <pawan.kumar.gupta@linux.intel.com>,
+        Ingo Molnar <mingo@redhat.com>,
+        Josh Poimboeuf <jpoimboe@kernel.org>,
+        Namhyung Kim <namhyung@kernel.org>,
+        Tony Luck <tony.luck@intel.com>,
+        Paolo Bonzini <pbonzini@redhat.com>,
+        "H. Peter Anvin" <hpa@zytor.com>,
+        Arnaldo Carvalho de Melo <acme@kernel.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Tim Chen <tim.c.chen@linux.intel.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        Dave Hansen <dave.hansen@linux.intel.com>,
+        "Chang S. Bae" <chang.seok.bae@intel.com>,
+        Jane Malalane <jane.malalane@citrix.com>,
+        Kees Cook <keescook@chromium.org>,
+        Kan Liang <kan.liang@linux.intel.com>,
         Peter Zijlstra <peterz@infradead.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Adrian Hunter <adrian.hunter@intel.com>,
-        linux-perf-users@vger.kernel.org, Song Liu <songliubraving@fb.com>,
-        Hao Luo <haoluo@google.com>, bpf@vger.kernel.org
-Subject: Re: [PATCH v4] perf tools: Get a perf cgroup more portably in BPF
-Message-ID: <YzGlH51Idwet/NE9@kernel.org>
-References: <20220923063205.772936-1-namhyung@kernel.org>
- <CAP-5=fWwNwtocMR3s1Su2k2vZAwL4yhX19UGZ4i0dMXFDFFBJA@mail.gmail.com>
+        "maintainer:X86 ARCHITECTURE (32-BIT AND 64-BIT)" <x86@kernel.org>,
+        Herbert Xu <herbert@gondor.apana.org.au>,
+        Jiri Olsa <jolsa@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        linux-perf-users@vger.kernel.org,
+        "open list:CRYPTO API" <linux-crypto@vger.kernel.org>
+Subject: Re: [PATCH v2 1/5] perf/x86/intel/lbr: use setup_clear_cpu_cap
+ instead of clear_cpu_cap
+Message-ID: <YzGlQBkCSJxY+8Jf@zn.tnic>
+References: <20220718141123.136106-1-mlevitsk@redhat.com>
+ <20220718141123.136106-2-mlevitsk@redhat.com>
+ <Yyh9RDbaRqUR1XSW@zn.tnic>
+ <c105971a72dfe6d46ad75fb7e71f79ba716e081c.camel@redhat.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <CAP-5=fWwNwtocMR3s1Su2k2vZAwL4yhX19UGZ4i0dMXFDFFBJA@mail.gmail.com>
-X-Url:  http://acmel.wordpress.com
+In-Reply-To: <c105971a72dfe6d46ad75fb7e71f79ba716e081c.camel@redhat.com>
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-Em Fri, Sep 23, 2022 at 09:45:19AM -0700, Ian Rogers escreveu:
-> On Thu, Sep 22, 2022 at 11:32 PM Namhyung Kim <namhyung@kernel.org> wrote:
-> >
-> > The perf_event_cgrp_id can be different on other configurations.
-> > To be more portable as CO-RE, it needs to get the cgroup subsys id
-> > using the bpf_core_enum_value() helper.
-> >
-> > Suggested-by: Ian Rogers <irogers@google.com>
-> > Signed-off-by: Namhyung Kim <namhyung@kernel.org>
-> 
-> Reviewed-by: Ian Rogers <irogers@google.com>
-> 
-> Would be good to get this into perf/urgent, does it need Fixes tags for that?
+On Tue, Sep 20, 2022 at 11:20:47AM +0300, Maxim Levitsky wrote:
+> If I understand that correctly, the difference between clear_cpu_cap and setup_clear_cpu_cap
+> is that setup_clear_cpu_cap should be called early when only the boot cpu is running and it 
+>
+> 1. works on 'boot_cpu_data' which represents the boot cpu.
+> 2. sets a bit in 'cpu_caps_cleared' which are later applied to all CPUs, including these that are hotplugged.
 
-I got it into the perf/urgent branch.
+Yes.
 
-- Arnaldo
- 
-> Thanks,
-> Ian
-> 
-> > ---
-> > v4 changes)
-> >  * add a missing check in the off_cpu
-> >
-> > v3 changes)
-> >  * check compiler features for enum value
-> >
-> > v2 changes)
-> >  * fix off_cpu.bpf.c too
-> >  * get perf_subsys_id only once
-> >
-> >  tools/perf/util/bpf_skel/bperf_cgroup.bpf.c | 11 ++++++++++-
-> >  tools/perf/util/bpf_skel/off_cpu.bpf.c      | 18 ++++++++++++++----
-> >  2 files changed, 24 insertions(+), 5 deletions(-)
-> >
-> > diff --git a/tools/perf/util/bpf_skel/bperf_cgroup.bpf.c b/tools/perf/util/bpf_skel/bperf_cgroup.bpf.c
-> > index 292c430768b5..8e7520e273db 100644
-> > --- a/tools/perf/util/bpf_skel/bperf_cgroup.bpf.c
-> > +++ b/tools/perf/util/bpf_skel/bperf_cgroup.bpf.c
-> > @@ -48,6 +48,7 @@ const volatile __u32 num_cpus = 1;
-> >
-> >  int enabled = 0;
-> >  int use_cgroup_v2 = 0;
-> > +int perf_subsys_id = -1;
-> >
-> >  static inline int get_cgroup_v1_idx(__u32 *cgrps, int size)
-> >  {
-> > @@ -58,7 +59,15 @@ static inline int get_cgroup_v1_idx(__u32 *cgrps, int size)
-> >         int level;
-> >         int cnt;
-> >
-> > -       cgrp = BPF_CORE_READ(p, cgroups, subsys[perf_event_cgrp_id], cgroup);
-> > +       if (perf_subsys_id == -1) {
-> > +#if __has_builtin(__builtin_preserve_enum_value)
-> > +               perf_subsys_id = bpf_core_enum_value(enum cgroup_subsys_id,
-> > +                                                    perf_event_cgrp_id);
-> > +#else
-> > +               perf_subsys_id = perf_event_cgrp_id;
-> > +#endif
-> > +       }
-> > +       cgrp = BPF_CORE_READ(p, cgroups, subsys[perf_subsys_id], cgroup);
-> >         level = BPF_CORE_READ(cgrp, level);
-> >
-> >         for (cnt = 0; i < MAX_LEVELS; i++) {
-> > diff --git a/tools/perf/util/bpf_skel/off_cpu.bpf.c b/tools/perf/util/bpf_skel/off_cpu.bpf.c
-> > index c4ba2bcf179f..38e3b287dbb2 100644
-> > --- a/tools/perf/util/bpf_skel/off_cpu.bpf.c
-> > +++ b/tools/perf/util/bpf_skel/off_cpu.bpf.c
-> > @@ -94,6 +94,8 @@ const volatile bool has_prev_state = false;
-> >  const volatile bool needs_cgroup = false;
-> >  const volatile bool uses_cgroup_v1 = false;
-> >
-> > +int perf_subsys_id = -1;
-> > +
-> >  /*
-> >   * Old kernel used to call it task_struct->state and now it's '__state'.
-> >   * Use BPF CO-RE "ignored suffix rule" to deal with it like below:
-> > @@ -119,11 +121,19 @@ static inline __u64 get_cgroup_id(struct task_struct *t)
-> >  {
-> >         struct cgroup *cgrp;
-> >
-> > -       if (uses_cgroup_v1)
-> > -               cgrp = BPF_CORE_READ(t, cgroups, subsys[perf_event_cgrp_id], cgroup);
-> > -       else
-> > -               cgrp = BPF_CORE_READ(t, cgroups, dfl_cgrp);
-> > +       if (!uses_cgroup_v1)
-> > +               return BPF_CORE_READ(t, cgroups, dfl_cgrp, kn, id);
-> > +
-> > +       if (perf_subsys_id == -1) {
-> > +#if __has_builtin(__builtin_preserve_enum_value)
-> > +               perf_subsys_id = bpf_core_enum_value(enum cgroup_subsys_id,
-> > +                                                    perf_event_cgrp_id);
-> > +#else
-> > +               perf_subsys_id = perf_event_cgrp_id;
-> > +#endif
-> > +       }
-> >
-> > +       cgrp = BPF_CORE_READ(t, cgroups, subsys[perf_subsys_id], cgroup);
-> >         return BPF_CORE_READ(cgrp, kn, id);
-> >  }
-> >
-> > --
-> > 2.37.3.998.g577e59143f-goog
-> >
+> On the other hand the clear_cpu_cap just affects the given 'struct cpuinfo_x86'.
+
+Yes.
+
+> Call of 'clear_cpu_cap(&boot_cpu_data, X86_FEATURE_ARCH_LBR)' is weird since it still affects 'boot_cpu_data'
+> but doesn't affect 'cpu_caps_cleared'
+
+Yes.
+
+> I assumed that this was a mistake and the intention was to disable the feature on all CPUs.
+
+peterz says yes.
+
+> I need this patch because in the next patch, I change the clear_cpu_cap such as it detects being
+> called on boot_cpu_data and in this case also clears bits in 'cpu_caps_cleared', thus
+> while this patch does introduce a functional change, the next patch doesn't since this is the only
+> place where clear_cpu_cap is called explicitly on 'boot_cpu_data'
+
+This is not needed - this patch doing setup_clear_cpu_cap() should suffice.
+
+But, there must be something you're fixing with this. Which is it? Some
+weird virt config?
+
+> I do now notice that initcalls are run after smp is initialized, which
+> means that this code doesn't really disable the CPUID feature on all
+> CPUs at all.
+
+Well, not exactly. There's do_pre_smp_calls() which is where the
+early_initcall() thing is run.
+
+So setup_clear_cpu_cap() will make sure that the feature bit is cleared
+when the APs come online.
+
+Do you have a virt configuration where you can test this case where the
+feature flag is clear on all CPUs when it fails?
+
+I.e., "arch_lbr" will disappear in /proc/cpuinfo completely.
+
+Thx.
 
 -- 
+Regards/Gruss,
+    Boris.
 
-- Arnaldo
+https://people.kernel.org/tglx/notes-about-netiquette
