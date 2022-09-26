@@ -2,276 +2,111 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8C12BC32771
-	for <linux-perf-users@archiver.kernel.org>; Mon, 26 Sep 2022 06:53:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9BE14C32771
+	for <linux-perf-users@archiver.kernel.org>; Mon, 26 Sep 2022 08:07:34 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233799AbiIZGxn (ORCPT
+        id S233672AbiIZIHd (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Mon, 26 Sep 2022 02:53:43 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42974 "EHLO
+        Mon, 26 Sep 2022 04:07:33 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57718 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S233001AbiIZGxi (ORCPT
+        with ESMTP id S233626AbiIZIHH (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Mon, 26 Sep 2022 02:53:38 -0400
-Received: from szxga02-in.huawei.com (szxga02-in.huawei.com [45.249.212.188])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D19FA2035E;
-        Sun, 25 Sep 2022 23:53:36 -0700 (PDT)
-Received: from canpemm500009.china.huawei.com (unknown [172.30.72.54])
-        by szxga02-in.huawei.com (SkyGuard) with ESMTP id 4MbYJ11tp0zHtp4;
-        Mon, 26 Sep 2022 14:48:49 +0800 (CST)
-Received: from [10.67.102.169] (10.67.102.169) by
- canpemm500009.china.huawei.com (7.192.105.203) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2375.31; Mon, 26 Sep 2022 14:53:34 +0800
-CC:     <yangyicong@hisilicon.com>, <gregkh@linuxfoundation.org>,
-        <mathieu.poirier@linaro.org>, <will@kernel.org>,
-        <james.clark@arm.com>, <leo.yan@linaro.org>,
-        <alexander.shishkin@linux.intel.com>, <peterz@infradead.org>,
-        <helgaas@kernel.org>, <lorenzo.pieralisi@arm.com>,
-        <shameerali.kolothum.thodi@huawei.com>, <mark.rutland@arm.com>,
-        <suzuki.poulose@arm.com>, <mingo@redhat.com>,
-        <linux-kernel@vger.kernel.org>,
-        <linux-arm-kernel@lists.infradead.org>,
-        <linux-pci@vger.kernel.org>, <linux-perf-users@vger.kernel.org>,
-        <prime.zeng@huawei.com>, <zhangshaokun@hisilicon.com>,
-        <linuxarm@huawei.com>, <liuqi6124@gmail.com>, <acme@kernel.org>,
-        <jonathan.cameron@huawei.com>, <mike.leach@linaro.org>
-Subject: Re: [PATCH v13 2/3] perf tool: Add support for HiSilicon PCIe Tune
- and Trace device driver
-To:     John Garry <john.garry@huawei.com>
-References: <20220919090045.6778-1-yangyicong@huawei.com>
- <20220919090045.6778-3-yangyicong@huawei.com>
- <db2a81dc-18be-6e15-c241-a1a91747d063@huawei.com>
-From:   Yicong Yang <yangyicong@huawei.com>
-Message-ID: <77226dcb-d158-a4f7-8afb-ac89c07bed97@huawei.com>
-Date:   Mon, 26 Sep 2022 14:53:34 +0800
-User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:78.0) Gecko/20100101
- Thunderbird/78.5.1
+        Mon, 26 Sep 2022 04:07:07 -0400
+Received: from mail-wm1-f52.google.com (mail-wm1-f52.google.com [209.85.128.52])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 88E6521E3E;
+        Mon, 26 Sep 2022 01:05:33 -0700 (PDT)
+Received: by mail-wm1-f52.google.com with SMTP id k3-20020a05600c1c8300b003b4fa1a85f8so3247169wms.3;
+        Mon, 26 Sep 2022 01:05:33 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=content-transfer-encoding:in-reply-to:from:references:cc:to
+         :content-language:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date;
+        bh=P1Mpxj6IEYIvMHzYEzmI74M/4VNUKksFgyVJ3+3UxaQ=;
+        b=x81WeQhLmTufP0ol7OLwAq4Jc2Yy6OtffD30Lq5KEpu9fZNixPrOI3LOa69+L5gbn7
+         +Gfqgq7pXyUMYBE06Qg8dlyiwFFWbmXIEVkS2U+mBeJwWUA0iYUKiEqfusaqfXmu0zmn
+         tYHd+H3Fem5vrAEznHb/ct3iuif6O1UEzKf8kIFEHsU/UNafAxoYW+eDMPOmsP/IsfDS
+         Fgt4QK5KX9uzRpo7nvOZTk09PYNG4++qHs6oYg2OJ3VI2GNTjBxM30cs2qLz0MxPx5JD
+         snSy/xI93ESWpGedoIRvIDEeIPXQ33+2cf2vWhqoNwGjthfBJgePQxoDJKo1YXRRQG2J
+         s3Fw==
+X-Gm-Message-State: ACrzQf0iZAA8HnqsDyq/z8ckPvHlPVWbJuoTsVcplX/h873X5S0wQvTI
+        ZpO0cM4ZlHAWRcc80ghDtVdYQ8f5POE=
+X-Google-Smtp-Source: AMsMyM6dyW2X+h6o8RJFgmLvjLUL6aI8WuE6TJ6Bxrs8xm4ambjtA3pUODmWiWUyAj1V7cU0ty49MA==
+X-Received: by 2002:a05:600c:3483:b0:3b4:99f4:1191 with SMTP id a3-20020a05600c348300b003b499f41191mr13715762wmq.147.1664179532186;
+        Mon, 26 Sep 2022 01:05:32 -0700 (PDT)
+Received: from [192.168.1.49] (185-219-167-24-static.vivo.cz. [185.219.167.24])
+        by smtp.gmail.com with ESMTPSA id l18-20020a05600c27d200b003b4868eb6bbsm12212696wmb.23.2022.09.26.01.05.30
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Mon, 26 Sep 2022 01:05:31 -0700 (PDT)
+Message-ID: <a87d481e-adb7-b4e3-518b-2c4276d906e7@kernel.org>
+Date:   Mon, 26 Sep 2022 10:05:29 +0200
 MIME-Version: 1.0
-In-Reply-To: <db2a81dc-18be-6e15-c241-a1a91747d063@huawei.com>
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 8bit
-X-Originating-IP: [10.67.102.169]
-X-ClientProxiedBy: dggems702-chm.china.huawei.com (10.3.19.179) To
- canpemm500009.china.huawei.com (7.192.105.203)
-X-CFilter-Loop: Reflected
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
+ Thunderbird/102.3.0
+Subject: Re: [PATCH v2 3/3] perf lock: Print the number of lost entries for
+ BPF
+Content-Language: en-US
+To:     Namhyung Kim <namhyung@kernel.org>,
+        Arnaldo Carvalho de Melo <acme@kernel.org>,
+        Jiri Olsa <jolsa@kernel.org>
+Cc:     Ingo Molnar <mingo@kernel.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Ian Rogers <irogers@google.com>,
+        linux-perf-users@vger.kernel.org, Will Deacon <will@kernel.org>,
+        Waiman Long <longman@redhat.com>,
+        Boqun Feng <boqun.feng@gmail.com>,
+        Davidlohr Bueso <dave@stgolabs.net>,
+        Song Liu <songliubraving@fb.com>,
+        Blake Jones <blakejones@google.com>
+References: <20220802191004.347740-1-namhyung@kernel.org>
+ <20220802191004.347740-3-namhyung@kernel.org>
+From:   Jiri Slaby <jirislaby@kernel.org>
+In-Reply-To: <20220802191004.347740-3-namhyung@kernel.org>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-On 2022/9/23 18:49, John Garry wrote:
-> On 19/09/2022 10:00, Yicong Yang wrote:
->> From: Qi Liu <liuqi115@huawei.com>
->>
->> HiSilicon PCIe tune and trace device (PTT) could dynamically tune
->> the PCIe link's events, and trace the TLP headers).
->>
->> This patch add support for PTT device in perf tool, so users could
->> use 'perf record' to get TLP headers trace data.
->>
->> Reviewed-by: Leo Yan <leo.yan@linaro.org>
->> Signed-off-by: Qi Liu <liuqi115@huawei.com>
->> Signed-off-by: Yicong Yang <yangyicong@hisilicon.com>
-> 
-> I'm not overly fimilar with the auxtrace code, but this patch looks ok apart from comments, so acked-by seems more appropiate than reviewed-by:
-> 
-> Acked-by: John Garry <john.garry@huawei.com>
+Hi,
 
-Thanks! May I have the ack for the other 2 patches as well?
+On 02. 08. 22, 21:10, Namhyung Kim wrote:
+> Like the normal perf lock contention output, it'd print the number of
+> lost entries for BPF if exists or -v option is passed.  Currently it
+> uses BROKEN_CONTENDED stat for the lost count (due to full stack maps).
+...
+> --- a/tools/perf/util/bpf_skel/lock_contention.bpf.c
+> +++ b/tools/perf/util/bpf_skel/lock_contention.bpf.c
+...
+> @@ -73,6 +73,9 @@ int enabled;
+>   int has_cpu;
+>   int has_task;
+>   
+> +/* error stat */
+> +unsigned long lost;
 
-Some replies below.
+I don't know how all this is generated into lock_contention.skel.h. But 
+I believe this patch breaks perf build on 32bit:
+> [  375s] In file included from util/bpf_lock_contention.c:13:
+> [  375s] util/bpf_skel/lock_contention.skel.h: In function 'lock_contention_bpf__assert':
+> [  375s] util/bpf_skel/lock_contention.skel.h:537:9: error: static assertion failed: "unexpected size of \'lost\'"
+> [  375s]   537 |         _Static_assert(sizeof(s->bss->lost) == 8, "unexpected size of 'lost'");
+> [  375s]       |         ^~~~~~~~~~~~~~
 
-> 
->> ---
->>   tools/perf/arch/arm/util/auxtrace.c   |  63 +++++++++
->>   tools/perf/arch/arm/util/pmu.c        |   3 +
->>   tools/perf/arch/arm64/util/Build      |   2 +-
->>   tools/perf/arch/arm64/util/hisi-ptt.c | 188 ++++++++++++++++++++++++++
->>   tools/perf/util/auxtrace.c            |   1 +
->>   tools/perf/util/auxtrace.h            |   1 +
->>   tools/perf/util/hisi-ptt.h            |  16 +++
->>   7 files changed, 273 insertions(+), 1 deletion(-)
->>   create mode 100644 tools/perf/arch/arm64/util/hisi-ptt.c
->>   create mode 100644 tools/perf/util/hisi-ptt.h
->>
->> diff --git a/tools/perf/arch/arm/util/auxtrace.c b/tools/perf/arch/arm/util/auxtrace.c
->> index 384c7cfda0fd..129ed72391a4 100644
->> --- a/tools/perf/arch/arm/util/auxtrace.c
->> +++ b/tools/perf/arch/arm/util/auxtrace.c
->> @@ -4,9 +4,11 @@
->>    * Author: Mathieu Poirier <mathieu.poirier@linaro.org>
->>    */
->>   +#include <dirent.h>
->>   #include <stdbool.h>
->>   #include <linux/coresight-pmu.h>
->>   #include <linux/zalloc.h>
->> +#include <api/fs/fs.h>
->>     #include "../../../util/auxtrace.h"
->>   #include "../../../util/debug.h"
->> @@ -14,6 +16,7 @@
->>   #include "../../../util/pmu.h"
->>   #include "cs-etm.h"
->>   #include "arm-spe.h"
->> +#include "hisi-ptt.h"
->>     static struct perf_pmu **find_all_arm_spe_pmus(int *nr_spes, int *err)
->>   {
->> @@ -50,6 +53,52 @@ static struct perf_pmu **find_all_arm_spe_pmus(int *nr_spes, int *err)
->>       return arm_spe_pmus;
->>   }
->>   +static struct perf_pmu **find_all_hisi_ptt_pmus(int *nr_ptts, int *err)
->> +{
->> +    const char *sysfs = sysfs__mountpoint();
->> +    struct perf_pmu **hisi_ptt_pmus = NULL;
->> +    struct dirent *dent;
->> +    char path[PATH_MAX];
->> +    DIR *dir = NULL;
->> +    int idx = 0;
->> +
->> +    snprintf(path, PATH_MAX, "%s" EVENT_SOURCE_DEVICE_PATH, sysfs);
->> +    dir = opendir(path);
->> +    if (!dir) {
->> +        pr_err("can't read directory '%s'\n", EVENT_SOURCE_DEVICE_PATH);
->> +        *err = -EINVAL;
->> +        goto out;
-> 
-> Do you really need to call closedir() in this scenario?
-> 
+Should the above (and below too) be __u64?
 
-It's unnecessary here. will return NULL directly.
+> --- a/tools/perf/util/lock-contention.h
+> +++ b/tools/perf/util/lock-contention.h
+> @@ -113,6 +113,7 @@ struct lock_contention {
+>   	struct machine *machine;
+>   	struct hlist_head *result;
+>   	unsigned long map_nr_entries;
+> +	unsigned long lost;
 
->> +    }
->> +
->> +    while ((dent = readdir(dir))) {
->> +        if (strstr(dent->d_name, HISI_PTT_PMU_NAME))
->> +            (*nr_ptts)++;
->> +    }
->> +
->> +    if (!(*nr_ptts))
->> +        goto out;
->> +
->> +    hisi_ptt_pmus = zalloc(sizeof(struct perf_pmu *) * (*nr_ptts));
->> +    if (!hisi_ptt_pmus) {
->> +        pr_err("hisi_ptt alloc failed\n");
->> +        *err = -ENOMEM;
->> +        goto out;
->> +    }
->> +
->> +    rewinddir(dir);
->> +    while ((dent = readdir(dir))) {
->> +        if (strstr(dent->d_name, HISI_PTT_PMU_NAME) && idx < (*nr_ptts)) {
-> 
-> idx < *nr_ptts
-> 
-> is ok
-> 
+thanks,
+-- 
+js
+suse labs
 
-ok.
-
->> +            hisi_ptt_pmus[idx] = perf_pmu__find(dent->d_name);
->> +            if (hisi_ptt_pmus[idx])
->> +                idx++;
->> +        }
->> +    }
->> +
->> +out:
->> +    closedir(dir);
->> +    return hisi_ptt_pmus;
->> +}
->> +
-
-[...]
-
->> +
->> +#define KiB(x) ((x) * 1024)
->> +#define MiB(x) ((x) * 1024 * 1024)
-> 
-> surely we have defines for these available elsewhere
-> 
-
-Yes but we looks like have no public definition for these:
-
-yangyicong@ubuntu:~/mainline_linux/linux$ egrep -rwn "#define KiB|#define MiB" tools/perf/
-tools/perf/arch/arm64/util/hisi-ptt.c:27:#define KiB(x) ((x) * 1024)
-tools/perf/arch/arm64/util/hisi-ptt.c:28:#define MiB(x) ((x) * 1024 * 1024)
-tools/perf/arch/arm64/util/arm-spe.c:28:#define KiB(x) ((x) * 1024)
-tools/perf/arch/arm64/util/arm-spe.c:29:#define MiB(x) ((x) * 1024 * 1024)
-tools/perf/arch/x86/util/intel-bts.c:28:#define KiB(x) ((x) * 1024)
-tools/perf/arch/x86/util/intel-bts.c:29:#define MiB(x) ((x) * 1024 * 1024)
-tools/perf/arch/x86/util/intel-pt.c:35:#define KiB(x) ((x) * 1024)
-tools/perf/arch/x86/util/intel-pt.c:36:#define MiB(x) ((x) * 1024 * 1024)
-tools/perf/util/cs-etm.h:188:#define KiB(x) ((x) * 1024)
-tools/perf/util/cs-etm.h:189:#define MiB(x) ((x) * 1024 * 1024)
-
-We can centralize this definition after this series.
-
->> +
->> +struct hisi_ptt_recording {
->> +    struct auxtrace_record    itr;
->> +    struct perf_pmu *hisi_ptt_pmu;
->> +    struct evlist *evlist;
->> +};
->> +
-
-[...]
-
->> diff --git a/tools/perf/util/auxtrace.c b/tools/perf/util/auxtrace.c
->> index 6edab8a16de6..c30611d9ee99 100644
->> --- a/tools/perf/util/auxtrace.c
->> +++ b/tools/perf/util/auxtrace.c
->> @@ -1319,6 +1319,7 @@ int perf_event__process_auxtrace_info(struct perf_session *session,
->>       case PERF_AUXTRACE_S390_CPUMSF:
->>           err = s390_cpumsf_process_auxtrace_info(event, session);
->>           break;
->> +    case PERF_AUXTRACE_HISI_PTT:
->>       case PERF_AUXTRACE_UNKNOWN:
->>       default:
->>           return -EINVAL;
->> diff --git a/tools/perf/util/auxtrace.h b/tools/perf/util/auxtrace.h
->> index 6a4fbfd34c6b..3a122fc01ccd 100644
->> --- a/tools/perf/util/auxtrace.h
->> +++ b/tools/perf/util/auxtrace.h
->> @@ -48,6 +48,7 @@ enum auxtrace_type {
->>       PERF_AUXTRACE_CS_ETM,
->>       PERF_AUXTRACE_ARM_SPE,
->>       PERF_AUXTRACE_S390_CPUMSF,
->> +    PERF_AUXTRACE_HISI_PTT,
->>   };
->>     enum itrace_period_type {
->> diff --git a/tools/perf/util/hisi-ptt.h b/tools/perf/util/hisi-ptt.h
-> 
-> I'm still not a fan of having a header file which is only included by 1x .c file, which this seems to be
-> 
-
-The stuff in hisi-ptt.h is shared across several source files:
-
-yangyicong@ubuntu:~/mainline_linux/linux$ egrep -rn "hisi-ptt.h" tools/perf/
-tools/perf/arch/arm64/util/hisi-ptt.c:21:#include "../../../util/hisi-ptt.h"
-tools/perf/arch/arm/util/auxtrace.c:19:#include "hisi-ptt.h"
-tools/perf/arch/arm/util/pmu.c:13:#include "hisi-ptt.h"
-
-Thanks,
-Yicong
-
->> new file mode 100644
->> index 000000000000..82283c81b4c1
->> --- /dev/null
->> +++ b/tools/perf/util/hisi-ptt.h
->> @@ -0,0 +1,16 @@
->> +/* SPDX-License-Identifier: GPL-2.0 */
->> +/*
->> + * HiSilicon PCIe Trace and Tuning (PTT) support
->> + * Copyright (c) 2022 HiSilicon Technologies Co., Ltd.
->> + */
->> +
->> +#ifndef INCLUDE__PERF_HISI_PTT_H__
->> +#define INCLUDE__PERF_HISI_PTT_H__
->> +
->> +#define HISI_PTT_PMU_NAME        "hisi_ptt"
->> +#define HISI_PTT_AUXTRACE_PRIV_SIZE    sizeof(u64)
->> +
->> +struct auxtrace_record *hisi_ptt_recording_init(int *err,
->> +                        struct perf_pmu *hisi_ptt_pmu);
->> +
->> +#endif
-> 
-> .
