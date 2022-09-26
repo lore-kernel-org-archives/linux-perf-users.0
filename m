@@ -2,104 +2,127 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B6C98C07E9D
-	for <linux-perf-users@archiver.kernel.org>; Mon, 26 Sep 2022 19:24:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 688CFC32771
+	for <linux-perf-users@archiver.kernel.org>; Mon, 26 Sep 2022 19:29:24 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229532AbiIZTY4 (ORCPT
+        id S229697AbiIZT3X (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Mon, 26 Sep 2022 15:24:56 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40358 "EHLO
+        Mon, 26 Sep 2022 15:29:23 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44642 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229509AbiIZTY4 (ORCPT
+        with ESMTP id S229515AbiIZT3U (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Mon, 26 Sep 2022 15:24:56 -0400
-Received: from ams.source.kernel.org (ams.source.kernel.org [145.40.68.75])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4D2DF3A16D;
-        Mon, 26 Sep 2022 12:24:55 -0700 (PDT)
+        Mon, 26 Sep 2022 15:29:20 -0400
+Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E5C4C98CAF
+        for <linux-perf-users@vger.kernel.org>; Mon, 26 Sep 2022 12:29:19 -0700 (PDT)
 Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by ams.source.kernel.org (Postfix) with ESMTPS id ECF56B80C75;
-        Mon, 26 Sep 2022 19:24:53 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 74FB0C433D6;
-        Mon, 26 Sep 2022 19:24:52 +0000 (UTC)
+        by dfw.source.kernel.org (Postfix) with ESMTPS id 447F06123E
+        for <linux-perf-users@vger.kernel.org>; Mon, 26 Sep 2022 19:29:19 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 77985C433D6;
+        Mon, 26 Sep 2022 19:29:18 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1664220292;
-        bh=KGe/GdLiOyJuVfNEKfybS6bLyBJmzPyi8wQtB65+SAE=;
+        s=k20201202; t=1664220558;
+        bh=dd4PJJug6S0lh3IVCKUeujY4WoRu7gTAlwK1QGArvfw=;
         h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=mvyKo7rv5awsxlVfri8Z8FJxHXZTJWE1eTX9SY4sJG8o0zVQMMwMHlHvAHFWL/KYc
-         esHUzpqs0BHh6YzWVPqXc1zul4RsGSd91wPPoOqiHm0FnLG+H+bbOHV83hykoIN1V5
-         7C5GaX7vZ2s3cZWTWlXk86jKrjoPUHWiECibhI8Qw/WEsJk64M6CqlTLHm3YoOXTov
-         CoYnnu/ihI2/QM4kBTPAVIeApAWVXN6+rjkyhH63b0cA/SQvyZueNm2lPBzkcrTw1P
-         +tZ3PFMzQfbPIqSDF97s7E9mrBRFBhnxskaODSqZeeQ/j0oDGAWkc/99O41c0pMwrx
-         iwYpgkvg14Wjg==
+        b=DyJL9EqHEJa1IOL8XS7x+/G/haaho4oc3H/3vrn1H4kZuAkeKgowf02GePVilfoDc
+         Sv2EWtKWfiZfnawULSrsCRK1nc/h34HuK/eLW+WfIflFOtYliPTWrI4SRYsZsU3fGV
+         js7S3Cx/Yaq/WqdzR7EZXv7EEwhD9epczfat6bq/i/r0Y7gE/Gh3wMidrCob8htJ/x
+         /07JW2l8NGcZK+NE+RZNSgjPozi8piIirVCC1WOOkr42kX6ImdwYgWOCYvPt9uIil1
+         JflR77OnGaUF4AjtLfD68p1iEK6wXTzTWgBogb6pNxl++QRH/eKV42vC8QKqM3HgkC
+         GJJ7LB+U27lfg==
 Received: by quaco.ghostprotocols.net (Postfix, from userid 1000)
-        id 2329C403B0; Mon, 26 Sep 2022 20:24:50 +0100 (IST)
-Date:   Mon, 26 Sep 2022 20:24:50 +0100
+        id B7CFD403B0; Mon, 26 Sep 2022 20:29:15 +0100 (IST)
+Date:   Mon, 26 Sep 2022 20:29:15 +0100
 From:   Arnaldo Carvalho de Melo <acme@kernel.org>
-To:     Namhyung Kim <namhyung@kernel.org>
-Cc:     Jiri Olsa <jolsa@kernel.org>, Ingo Molnar <mingo@kernel.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Ian Rogers <irogers@google.com>,
-        Adrian Hunter <adrian.hunter@intel.com>,
-        linux-perf-users@vger.kernel.org,
-        Kan Liang <kan.liang@linux.intel.com>,
-        Leo Yan <leo.yan@linaro.org>
-Subject: Re: [PATCH 0/5] perf tools: Clean up cpu map handling for a
- system-wide evsel (v1)
-Message-ID: <YzH8gkVo3wNwGZbu@kernel.org>
-References: <20220924165737.956428-1-namhyung@kernel.org>
+To:     kajoljain <kjain@linux.ibm.com>
+Cc:     Athira Rajeev <atrajeev@linux.vnet.ibm.com>, jolsa@kernel.org,
+        mpe@ellerman.id.au, maddy@linux.vnet.ibm.com,
+        rnsastry@linux.ibm.com, linux-perf-users@vger.kernel.org,
+        disgoel@linux.vnet.ibm.com, linuxppc-dev@lists.ozlabs.org
+Subject: Re: [PATCH V2] tools/perf/tests: Fix perf probe error log check in
+ skip_if_no_debuginfo
+Message-ID: <YzH9i4XQI1Ec9T/W@kernel.org>
+References: <20220916104904.99798-1-atrajeev@linux.vnet.ibm.com>
+ <be87927f-f2c9-4475-6298-9ffe0a0195de@linux.ibm.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20220924165737.956428-1-namhyung@kernel.org>
+In-Reply-To: <be87927f-f2c9-4475-6298-9ffe0a0195de@linux.ibm.com>
 X-Url:  http://acmel.wordpress.com
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-Em Sat, Sep 24, 2022 at 09:57:32AM -0700, Namhyung Kim escreveu:
-> Hello,
+Em Fri, Sep 16, 2022 at 06:35:41PM +0530, kajoljain escreveu:
 > 
-> The system-wide evsel has a cpu map for all (online) cpus regardless
-> of user requested cpus.  But the cpu map handling code has some
-> special case for it and I think we can cleanup the code by making sure
-> that such a evsel has a proper cpu/thread maps from the beginning.
-> This patches should not cause any change in the behavior.
 > 
-> You can get the code from 'perf/cpumap-update-v1' branch in
+> On 9/16/22 16:19, Athira Rajeev wrote:
+> > The perf probe related tests like probe_vfs_getname.sh which
+> > is in "tools/perf/tests/shell" directory have dependency on
+> > debuginfo information in the kernel. Currently debuginfo
+> > check is handled by skip_if_no_debuginfo function in the
+> > file "lib/probe_vfs_getname.sh". skip_if_no_debuginfo function
+> > looks for this specific error log from perf probe to skip
+> > the testcase:
+> > 
+> > <<>>
+> > Failed to find the path for the kernel|Debuginfo-analysis is
+> > not supported
+> > <>>
+> > 
+> > But in some case, like this one in powerpc, while running this
+> > test, observed error logs is:
+> > 
+> > <<>>
+> > The /lib/modules/<version>/build/vmlinux file has no debug information.
+> > Rebuild with CONFIG_DEBUG_INFO=y, or install an appropriate debuginfo
+> > package.
+> >   Error: Failed to add events.
+> > <<>>
+> > 
+> > Update the skip_if_no_debuginfo function to include the above
+> > error, to skip the test in these scenarios too.
 > 
->   git://git.kernel.org/pub/scm/linux/kernel/git/namhyung/linux-perf.git
->   
-> Thanks,
-> Namhyung
+> Patch looks good to me.
+> 
+> Reviewed-By: Kajol Jain <kjain@linux.ibm.com>
 
-Looks sane, applied locally for testing.
+Thanks, applied.
 
 - Arnaldo
+
  
+> Thanks,
+> Kajol Jain
 > 
-> Namhyung Kim (5):
->   libperf: Populate system-wide evsel maps
->   libperf: Propagate maps only if necessary
->   perf tools: Get rid of evlist__add_on_all_cpus()
->   perf tools: Add evlist__add_sched_switch()
->   perf tools: Remove special handling of system-wide evsel
-> 
->  tools/lib/perf/evlist.c             | 23 ++++++++-------
->  tools/lib/perf/evsel.c              |  3 --
->  tools/perf/arch/x86/util/intel-pt.c | 15 ++++------
->  tools/perf/builtin-script.c         |  3 --
->  tools/perf/tests/switch-tracking.c  | 15 ++++------
->  tools/perf/util/evlist.c            | 46 ++++++++++++-----------------
->  tools/perf/util/evlist.h            |  1 +
->  tools/perf/util/evsel.c             | 12 ++------
->  tools/perf/util/stat.c              |  3 --
->  9 files changed, 44 insertions(+), 77 deletions(-)
-> 
-> -- 
-> 2.37.3.998.g577e59143f-goog
+> > 
+> > Reported-by: Disha Goel <disgoel@linux.vnet.ibm.com>
+> > Signed-off-by: Athira Rajeev <atrajeev@linux.vnet.ibm.com>
+> > ---
+> > changelog:
+> >  v1 -> v2:
+> >  Corrected formatting of spaces in error log.
+> >  With spaces in v1 of the patch, the egrep search was
+> >  considering spaces also.
+> > 
+> >  tools/perf/tests/shell/lib/probe_vfs_getname.sh | 2 +-
+> >  1 file changed, 1 insertion(+), 1 deletion(-)
+> > 
+> > diff --git a/tools/perf/tests/shell/lib/probe_vfs_getname.sh b/tools/perf/tests/shell/lib/probe_vfs_getname.sh
+> > index 5b17d916c555..b616d42bd19d 100644
+> > --- a/tools/perf/tests/shell/lib/probe_vfs_getname.sh
+> > +++ b/tools/perf/tests/shell/lib/probe_vfs_getname.sh
+> > @@ -19,6 +19,6 @@ add_probe_vfs_getname() {
+> >  }
+> >  
+> >  skip_if_no_debuginfo() {
+> > -	add_probe_vfs_getname -v 2>&1 | egrep -q "^(Failed to find the path for the kernel|Debuginfo-analysis is not supported)" && return 2
+> > +	add_probe_vfs_getname -v 2>&1 | egrep -q "^(Failed to find the path for the kernel|Debuginfo-analysis is not supported)|(file has no debug information)" && return 2
+> >  	return 1
+> >  }
 
 -- 
 
