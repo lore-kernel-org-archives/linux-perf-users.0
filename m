@@ -2,127 +2,200 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 688CFC32771
-	for <linux-perf-users@archiver.kernel.org>; Mon, 26 Sep 2022 19:29:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AFD5EC07E9D
+	for <linux-perf-users@archiver.kernel.org>; Mon, 26 Sep 2022 19:35:28 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229697AbiIZT3X (ORCPT
+        id S229529AbiIZTf0 (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Mon, 26 Sep 2022 15:29:23 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44642 "EHLO
+        Mon, 26 Sep 2022 15:35:26 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55098 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229515AbiIZT3U (ORCPT
+        with ESMTP id S229483AbiIZTfZ (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Mon, 26 Sep 2022 15:29:20 -0400
-Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E5C4C98CAF
-        for <linux-perf-users@vger.kernel.org>; Mon, 26 Sep 2022 12:29:19 -0700 (PDT)
+        Mon, 26 Sep 2022 15:35:25 -0400
+Received: from ams.source.kernel.org (ams.source.kernel.org [145.40.68.75])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A70BCBF61;
+        Mon, 26 Sep 2022 12:35:23 -0700 (PDT)
 Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id 447F06123E
-        for <linux-perf-users@vger.kernel.org>; Mon, 26 Sep 2022 19:29:19 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 77985C433D6;
-        Mon, 26 Sep 2022 19:29:18 +0000 (UTC)
+        by ams.source.kernel.org (Postfix) with ESMTPS id 476EBB80DBD;
+        Mon, 26 Sep 2022 19:35:22 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id A5DE0C433D6;
+        Mon, 26 Sep 2022 19:35:20 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1664220558;
-        bh=dd4PJJug6S0lh3IVCKUeujY4WoRu7gTAlwK1QGArvfw=;
+        s=k20201202; t=1664220921;
+        bh=kmvK4go0XJzZ18Ymod6JWCTpr1sik+c3jYluVYAXTWM=;
         h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=DyJL9EqHEJa1IOL8XS7x+/G/haaho4oc3H/3vrn1H4kZuAkeKgowf02GePVilfoDc
-         Sv2EWtKWfiZfnawULSrsCRK1nc/h34HuK/eLW+WfIflFOtYliPTWrI4SRYsZsU3fGV
-         js7S3Cx/Yaq/WqdzR7EZXv7EEwhD9epczfat6bq/i/r0Y7gE/Gh3wMidrCob8htJ/x
-         /07JW2l8NGcZK+NE+RZNSgjPozi8piIirVCC1WOOkr42kX6ImdwYgWOCYvPt9uIil1
-         JflR77OnGaUF4AjtLfD68p1iEK6wXTzTWgBogb6pNxl++QRH/eKV42vC8QKqM3HgkC
-         GJJ7LB+U27lfg==
+        b=CXcp9ulwxNaQZbTbeDNyX0TYWi8r6Ayi7jSlHb2fy6jNtrIt5Ov/5q28fJtJeXzqv
+         LVQngelgj8XxUNboBNo5kvKqvnww6ISGs6TWo9MdWDapH2FuwImwVC9sgQ2PtypRF2
+         nnVjmSrLfYadCaQv1CVgAhLLowETjcq1m1kLIHnrysbxmpoaKE2pLzbfC3jAtnJsd/
+         Pkn2Rd0U6TOhqcG/tgn15wofjpcFl5is94bH4lzI6i5lUMQY9k4z8g9bJp0no15XFE
+         TwZE02KYELKtaLccPOS8pFpobdAJyJ/eAzR9fNRn+azpxPdD/VpRpvZi3kK7BdPXK/
+         47MHNxLh0z0Xw==
 Received: by quaco.ghostprotocols.net (Postfix, from userid 1000)
-        id B7CFD403B0; Mon, 26 Sep 2022 20:29:15 +0100 (IST)
-Date:   Mon, 26 Sep 2022 20:29:15 +0100
+        id 5CA17403B0; Mon, 26 Sep 2022 20:35:18 +0100 (IST)
+Date:   Mon, 26 Sep 2022 20:35:18 +0100
 From:   Arnaldo Carvalho de Melo <acme@kernel.org>
-To:     kajoljain <kjain@linux.ibm.com>
-Cc:     Athira Rajeev <atrajeev@linux.vnet.ibm.com>, jolsa@kernel.org,
-        mpe@ellerman.id.au, maddy@linux.vnet.ibm.com,
-        rnsastry@linux.ibm.com, linux-perf-users@vger.kernel.org,
-        disgoel@linux.vnet.ibm.com, linuxppc-dev@lists.ozlabs.org
-Subject: Re: [PATCH V2] tools/perf/tests: Fix perf probe error log check in
- skip_if_no_debuginfo
-Message-ID: <YzH9i4XQI1Ec9T/W@kernel.org>
-References: <20220916104904.99798-1-atrajeev@linux.vnet.ibm.com>
- <be87927f-f2c9-4475-6298-9ffe0a0195de@linux.ibm.com>
+To:     Adrian Hunter <adrian.hunter@intel.com>
+Cc:     Namhyung Kim <namhyung@kernel.org>, Jiri Olsa <jolsa@redhat.com>,
+        Ian Rogers <irogers@google.com>,
+        linux-kernel <linux-kernel@vger.kernel.org>,
+        linux-perf-users <linux-perf-users@vger.kernel.org>
+Subject: Re: [PATCH 00/11] perf test: test_intel_pt.sh: Add per-thread test
+Message-ID: <YzH+9mzUUXYWpSO3@kernel.org>
+References: <20220912083412.7058-1-adrian.hunter@intel.com>
+ <CAM9d7ciRCnpNjOfoEbO27pNk28ddjg1vVdgrZtvWQ-mbD7jg0w@mail.gmail.com>
+ <02c1e116-28e3-fe6f-5197-fae2f79c64bb@intel.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <be87927f-f2c9-4475-6298-9ffe0a0195de@linux.ibm.com>
+In-Reply-To: <02c1e116-28e3-fe6f-5197-fae2f79c64bb@intel.com>
 X-Url:  http://acmel.wordpress.com
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-Em Fri, Sep 16, 2022 at 06:35:41PM +0530, kajoljain escreveu:
-> 
-> 
-> On 9/16/22 16:19, Athira Rajeev wrote:
-> > The perf probe related tests like probe_vfs_getname.sh which
-> > is in "tools/perf/tests/shell" directory have dependency on
-> > debuginfo information in the kernel. Currently debuginfo
-> > check is handled by skip_if_no_debuginfo function in the
-> > file "lib/probe_vfs_getname.sh". skip_if_no_debuginfo function
-> > looks for this specific error log from perf probe to skip
-> > the testcase:
+Em Wed, Sep 14, 2022 at 11:25:07AM +0300, Adrian Hunter escreveu:
+> On 13/09/22 20:41, Namhyung Kim wrote:
+> > On Mon, Sep 12, 2022 at 1:34 AM Adrian Hunter <adrian.hunter@intel.com> wrote:
+> >>
+> >> Hi
+> >>
+> >> Here is a new per-thread test for the test_intel_pt.sh test script.
+> >>
+> >> The first 9 patches are tidy-ups for the script, mostly based on results
+> >> from the shellcheck utility.
+> >>
+> >> The 10th patch adds debug prints that the script will capture to help
+> >> verify correct operation.
+> >>
+> >> The final patch actually adds the new test.
+> >>
+> >>
+> >> Adrian Hunter (11):
+> >>       perf test: test_intel_pt.sh: Add cleanup function
+> >>       perf test: test_intel_pt.sh: Use a temp directory
+> >>       perf test: test_intel_pt.sh: Fix redirection
+> >>       perf test: test_intel_pt.sh: Stop using expr
+> >>       perf test: test_intel_pt.sh: Stop using backticks
+> >>       perf test: test_intel_pt.sh: Use grep -c instead of grep plus wc -l
+> >>       perf test: test_intel_pt.sh: Use quotes around variable expansion
+> >>       perf test: test_intel_pt.sh: Fix return checking
+> >>       perf test: test_intel_pt.sh: Add more output in preparation for more tests
+> >>       perf tools: Add debug messages and comments for testing
+> >>       perf test: test_intel_pt.sh: Add per-thread test
 > > 
-> > <<>>
-> > Failed to find the path for the kernel|Debuginfo-analysis is
-> > not supported
-> > <>>
-> > 
-> > But in some case, like this one in powerpc, while running this
-> > test, observed error logs is:
-> > 
-> > <<>>
-> > The /lib/modules/<version>/build/vmlinux file has no debug information.
-> > Rebuild with CONFIG_DEBUG_INFO=y, or install an appropriate debuginfo
-> > package.
-> >   Error: Failed to add events.
-> > <<>>
-> > 
-> > Update the skip_if_no_debuginfo function to include the above
-> > error, to skip the test in these scenarios too.
+> > I don't think I understood all the black magic in patch 11. :)
 > 
-> Patch looks good to me.
-> 
-> Reviewed-By: Kajol Jain <kjain@linux.ibm.com>
+> It is not that bad :-)
 
-Thanks, applied.
+:-)
+
+Thanks, applied the series.
 
 - Arnaldo
-
  
-> Thanks,
-> Kajol Jain
+> Consider the output from the test:
 > 
+> 
+> 	$ perf test -v " intel pt"
+> 	Couldn't bump rlimit(MEMLOCK), failures may take place when creating BPF maps, etc
+> 	102: Miscellaneous Intel PT testing                                  :
+> 	--- start ---
+> 	test child forked, pid 155646
+> <SNIP>
+> 	--- Test per-thread recording ---
+> 	Workload PIDs are 155669 and 155670
+> 	perf PID is 155681
+> 	Waiting for "perf record has started" message
+> 	OK
+> 	pid 155669 cpu -1 fd 5 : sys_perf_event_open: pid 155669  cpu -1 group_fd -1  flags 0x8 = 5
+> 
+> awk has matched the debug message and determined the values for pid, cpu and fd
+> 
+> 	pid 155673 cpu -1 fd 6 : sys_perf_event_open: pid 155673  cpu -1 group_fd -1  flags 0x8 = 6
+> 	pid 155670 cpu -1 fd 7 : sys_perf_event_open: pid 155670  cpu -1 group_fd -1  flags 0x8 = 7
+> 	pid 155672 cpu -1 fd 8 : sys_perf_event_open: pid 155672  cpu -1 group_fd -1  flags 0x8 = 8
+> 	pid 155669 cpu -1 fd 9 : sys_perf_event_open: pid 155669  cpu -1 group_fd -1  flags 0x8 = 9
+> 	pid 155673 cpu -1 fd 10 : sys_perf_event_open: pid 155673  cpu -1 group_fd -1  flags 0x8 = 10
+> 	pid 155670 cpu -1 fd 11 : sys_perf_event_open: pid 155670  cpu -1 group_fd -1  flags 0x8 = 11
+> 	pid 155672 cpu -1 fd 12 : sys_perf_event_open: pid 155672  cpu -1 group_fd -1  flags 0x8 = 12
+> 	fd 5 : idx 0: mmapping fd 5
+> 	
+> awk has matched the debug message and determined the values for fd
+> 	
+> 	fd 9 fd_to 5 : idx 0: set output fd 9 -> 5
+> 	
+> awk has matched the debug message and determined the values for fd and fd_to
+> 
+> 	fd 6 : idx 1: mmapping fd 6
+> 	fd 10 fd_to 6 : idx 1: set output fd 10 -> 6
+> 	fd 7 : idx 2: mmapping fd 7
+> 	fd 11 fd_to 7 : idx 2: set output fd 11 -> 7
+> 	fd 8 : idx 3: mmapping fd 8
+> 	fd 12 fd_to 8 : idx 3: set output fd 12 -> 8
+> 	Checking 8 fds
+> 
+> Now awk is checking:
+> - every fd is mmapped or set-output
+> - there is 1 mmap per unique pid
+> - there is 1 mmap per unique cpu
+> - there are the right number of different pids
+> i.e.
+> 	END {
+> 		print "Checking " length(fd_array) " fds"
+> 		for (fd in fd_array) {
+> 			if (fd in mmap_array) {
+> 				pid = pid_array[fd]
+> 				if (pid != -1) {
+> 					if (pid in pids) {
+> 						print "More than 1 mmap for PID " pid
+> 						exit 1
+> 					}
+> 					pids[pid] = 1
+> 				}
+> 				cpu = cpu_array[fd]
+> 				if (cpu != -1) {
+> 					if (cpu in cpus) {
+> 						print "More than 1 mmap for CPU " cpu
+> 						exit 1
+> 					}
+> 					cpus[cpu] = 1
+> 				}
+> 			} else if (!(fd in set_output_array)) {
+> 				print "No mmap for fd " fd
+> 				exit 1
+> 			}
+> 		}
+> 		n = length(pids)
+> 		if (n != thread_cnt) {
+> 			print "Expected " thread_cnt " per-thread mmaps - found " n
+> 			exit 1
+> 		}
+> 	}
+> 
+> > At least we can move some helper functions to the lib and
+> > reuse them in other tests.  I'll test that later..
 > > 
-> > Reported-by: Disha Goel <disgoel@linux.vnet.ibm.com>
-> > Signed-off-by: Athira Rajeev <atrajeev@linux.vnet.ibm.com>
-> > ---
-> > changelog:
-> >  v1 -> v2:
-> >  Corrected formatting of spaces in error log.
-> >  With spaces in v1 of the patch, the egrep search was
-> >  considering spaces also.
+> > So for patch 01-10,
 > > 
-> >  tools/perf/tests/shell/lib/probe_vfs_getname.sh | 2 +-
-> >  1 file changed, 1 insertion(+), 1 deletion(-)
+> > Acked-by: Namhyung Kim <namhyung@kernel.org>
 > > 
-> > diff --git a/tools/perf/tests/shell/lib/probe_vfs_getname.sh b/tools/perf/tests/shell/lib/probe_vfs_getname.sh
-> > index 5b17d916c555..b616d42bd19d 100644
-> > --- a/tools/perf/tests/shell/lib/probe_vfs_getname.sh
-> > +++ b/tools/perf/tests/shell/lib/probe_vfs_getname.sh
-> > @@ -19,6 +19,6 @@ add_probe_vfs_getname() {
-> >  }
-> >  
-> >  skip_if_no_debuginfo() {
-> > -	add_probe_vfs_getname -v 2>&1 | egrep -q "^(Failed to find the path for the kernel|Debuginfo-analysis is not supported)" && return 2
-> > +	add_probe_vfs_getname -v 2>&1 | egrep -q "^(Failed to find the path for the kernel|Debuginfo-analysis is not supported)|(file has no debug information)" && return 2
-> >  	return 1
-> >  }
+> > Thanks,
+> > Namhyung
+> > 
+> > 
+> >>
+> >>  tools/lib/perf/evlist.c                 |   2 +
+> >>  tools/perf/builtin-record.c             |   8 +
+> >>  tools/perf/tests/shell/test_intel_pt.sh | 307 ++++++++++++++++++++++++++++++--
+> >>  tools/perf/util/evsel.c                 |   2 +
+> >>  4 files changed, 304 insertions(+), 15 deletions(-)
+> >>
+> >>
+> >> Regards
+> >> Adrian
 
 -- 
 
