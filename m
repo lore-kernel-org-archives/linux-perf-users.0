@@ -2,302 +2,109 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 15F69C32771
-	for <linux-perf-users@archiver.kernel.org>; Mon, 26 Sep 2022 14:52:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2B463C32771
+	for <linux-perf-users@archiver.kernel.org>; Mon, 26 Sep 2022 15:02:30 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S234413AbiIZOwS (ORCPT
+        id S235119AbiIZPC1 (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Mon, 26 Sep 2022 10:52:18 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58750 "EHLO
+        Mon, 26 Sep 2022 11:02:27 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60394 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S234427AbiIZOvm (ORCPT
+        with ESMTP id S235156AbiIZPCF (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Mon, 26 Sep 2022 10:51:42 -0400
-Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D17B4638A;
-        Mon, 26 Sep 2022 06:17:33 -0700 (PDT)
+        Mon, 26 Sep 2022 11:02:05 -0400
+Received: from ams.source.kernel.org (ams.source.kernel.org [IPv6:2604:1380:4601:e00::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1957F1F9F6;
+        Mon, 26 Sep 2022 06:32:43 -0700 (PDT)
 Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id 6D3A960DCC;
-        Mon, 26 Sep 2022 13:17:33 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 7F4CCC433D7;
-        Mon, 26 Sep 2022 13:17:32 +0000 (UTC)
+        by ams.source.kernel.org (Postfix) with ESMTPS id C6584B80957;
+        Mon, 26 Sep 2022 13:32:34 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 768C1C43141;
+        Mon, 26 Sep 2022 13:32:33 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1664198252;
-        bh=KE0hr079Pu9ardUE9mNDBDb3/8sGoVsVRLWDM9p2HXA=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=XRiBtLXeT/cKTlV1Hn+qeCp+Wk0MbjdITVKS7P9vqkcXs5F5NLXxj/xpQGS6tU391
-         WjwO8POpt10OOev71cLrpObUi9MupVNS4j7fBpCe3xoJgCS3je/G0ARC9TZMAIX9wL
-         7i17FlFoUQr2+oGk12HGUpAniPJn/Wu7T7RwkAxl4+cSM64rQJZB89ucHaVtH/YbDj
-         yZLCczS7Nptby6FYJhuQKXHQo54H0TufNQPmwLVDkw8hHJvagebYHQoz2cf8Y5AQaA
-         mIGwOM9gqxrQGAXNbcaeYe4SZJuGAYuT/KObQjlQTBItHsldqiVCHybkNqly1M4qHU
-         ihS7mmvl9Oc6w==
-Received: by quaco.ghostprotocols.net (Postfix, from userid 1000)
-        id 5DC12403B0; Mon, 26 Sep 2022 14:17:30 +0100 (IST)
-Date:   Mon, 26 Sep 2022 14:17:30 +0100
-From:   Arnaldo Carvalho de Melo <acme@kernel.org>
-To:     Ian Rogers <irogers@google.com>
-Cc:     zhengjun.xing@linux.intel.com, peterz@infradead.org,
-        mingo@redhat.com, alexander.shishkin@intel.com, jolsa@kernel.org,
-        namhyung@kernel.org, linux-kernel@vger.kernel.org,
-        linux-perf-users@vger.kernel.org, ak@linux.intel.com,
-        kan.liang@linux.intel.com, Yi Ammy <ammy.yi@intel.com>
-Subject: Re: [PATCH v2 2/2] perf parse-events: Remove "not supported" hybrid
- cache events
-Message-ID: <YzGmapYkYcpQvV/n@kernel.org>
-References: <20220923030013.3726410-1-zhengjun.xing@linux.intel.com>
- <20220923030013.3726410-2-zhengjun.xing@linux.intel.com>
- <CAP-5=fX1VY0EqmfBJ_kVJDPy3__GDVxCOOBD5r0=ifAvJjHBPQ@mail.gmail.com>
+        s=k20201202; t=1664199153;
+        bh=Jz6DP2qDtaOk9/0nqGYgsv7iJeTNNd7VbI6rvUbEtZU=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=lmOkzmHbKb9NEFThf0uOdlwhhBO09Qyl+I8FarP8XjneRjoyj/Eeu22JUbATYCiGX
+         6mk+lGWvrhOzpC1F6neTHGMKa45AP9sYAE6ZNZ2B0NVAAOoEHAXTaUUF9/njqjRY5q
+         9DyXye5A4UmKCa7j7QTCspFCIPDJPESuj2iRkgEPYi2/rENGRMtU6OvZG43pW57f38
+         Fvc7m97QaTggBEfCcYwyhe/Jil9oCbEbD2pOqEAZqFKEo85PIpDwjI1nWggWYyOhfI
+         pSWVeO/UKKzhaMbloT6Dynino0Hz7rZvoJ7OlaJ2bV6x3zydopg2Fsvd+5rlFYf8n4
+         gbNr4/zpW6H/Q==
+Received: by mail-vs1-f41.google.com with SMTP id m66so6490782vsm.12;
+        Mon, 26 Sep 2022 06:32:33 -0700 (PDT)
+X-Gm-Message-State: ACrzQf3dmaT8ECuUUojM9/g6WVdpXGdVPsr1+56DmKg9VOEAt94KW4g+
+        tNK0zf+oWsWG1KijtzpKfNZqKR1nY4yAfQcikQ==
+X-Google-Smtp-Source: AMsMyM4Zvo0h8Ur9ZYTvHGfcu0ge0lmxpjVtcKbAKW2ZKc4lKvrKvKTJjbemijDS8KVBrI9e5ZAp8VxbYvO5fKDQFY8=
+X-Received: by 2002:a67:3c7:0:b0:39b:45c2:6875 with SMTP id
+ 190-20020a6703c7000000b0039b45c26875mr7717610vsd.6.1664199152365; Mon, 26 Sep
+ 2022 06:32:32 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CAP-5=fX1VY0EqmfBJ_kVJDPy3__GDVxCOOBD5r0=ifAvJjHBPQ@mail.gmail.com>
-X-Url:  http://acmel.wordpress.com
+References: <20220914-arm-perf-tool-spe1-2-v2-v3-0-8189fc04dcc6@kernel.org>
+ <20220914-arm-perf-tool-spe1-2-v2-v3-1-8189fc04dcc6@kernel.org> <CAM9d7ciNwe1HaYXjau6hv8yUmnZvvQU0=bNdf=EA589frkjptg@mail.gmail.com>
+In-Reply-To: <CAM9d7ciNwe1HaYXjau6hv8yUmnZvvQU0=bNdf=EA589frkjptg@mail.gmail.com>
+From:   Rob Herring <robh@kernel.org>
+Date:   Mon, 26 Sep 2022 08:32:21 -0500
+X-Gmail-Original-Message-ID: <CAL_JsqJ8nhmx4U8efE2_FuVkacMYxHys4OZXv9PmdTXjZP1x4A@mail.gmail.com>
+Message-ID: <CAL_JsqJ8nhmx4U8efE2_FuVkacMYxHys4OZXv9PmdTXjZP1x4A@mail.gmail.com>
+Subject: Re: [PATCH v3 1/3] perf: Skip and warn on unknown format 'configN' attrs
+To:     Namhyung Kim <namhyung@kernel.org>
+Cc:     Peter Zijlstra <peterz@infradead.org>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Arnaldo Carvalho de Melo <acme@kernel.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Jiri Olsa <jolsa@kernel.org>, Leo Yan <leo.yan@linaro.org>,
+        linux-perf-users <linux-perf-users@vger.kernel.org>,
+        James Clark <james.clark@arm.com>,
+        linux-kernel <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-Em Fri, Sep 23, 2022 at 09:55:16AM -0700, Ian Rogers escreveu:
-> On Thu, Sep 22, 2022 at 7:58 PM <zhengjun.xing@linux.intel.com> wrote:
+On Fri, Sep 16, 2022 at 1:12 PM Namhyung Kim <namhyung@kernel.org> wrote:
+>
+> On Wed, Sep 14, 2022 at 1:09 PM Rob Herring <robh@kernel.org> wrote:
 > >
-> > From: Zhengjun Xing <zhengjun.xing@linux.intel.com>
+> > If the kernel exposes a new perf_event_attr field in a format attr, perf
+> > will return an error stating the specified PMU can't be found. For
+> > example, a format attr with 'config3:0-63' causes an error as config3 is
+> > unknown to perf. This causes a compatibility issue between a newer
+> > kernel with older perf tool.
 > >
-> > By default, we create two hybrid cache events, one is for cpu_core, and
-> > another is for cpu_atom. But Some hybrid hardware cache events are only
-> > available on one CPU PMU. For example, the 'L1-dcache-load-misses' is only
-> > available on cpu_core, while the 'L1-icache-loads' is only available on
-> > cpu_atom. We need to remove "not supported" hybrid cache events. By
-> > extending is_event_supported() to global API and using it to check if the
-> > hybrid cache events are supported before being created, we can remove the
-> > "not supported" hybrid cache events.
+> > Before this change with a kernel adding 'config3' I get:
 > >
-> > Before:
+> > $ perf record -e arm_spe// -- true
+> > event syntax error: 'arm_spe//'
+> >                      \___ Cannot find PMU `arm_spe'. Missing kernel support?
+> > Run 'perf list' for a list of valid events
 > >
-> >  # ./perf stat -e L1-dcache-load-misses,L1-icache-loads -a sleep 1
+> >  Usage: perf record [<options>] [<command>]
+> >     or: perf record [<options>] -- <command> [<options>]
 > >
-> >  Performance counter stats for 'system wide':
+> >     -e, --event <event>   event selector. use 'perf list' to list
+> > available events
 > >
-> >             52,570      cpu_core/L1-dcache-load-misses/
-> >    <not supported>      cpu_atom/L1-dcache-load-misses/
-> >    <not supported>      cpu_core/L1-icache-loads/
-> >          1,471,817      cpu_atom/L1-icache-loads/
+> > After this change, I get:
 > >
-> >        1.004915229 seconds time elapsed
+> > $ perf record -e arm_spe// -- true
+> > WARNING: 'arm_spe_0' format 'inv_event_filter' requires 'perf_event_attr::config3' which is not supported by this version of perf!
+> > [ perf record: Woken up 2 times to write data ]
+> > [ perf record: Captured and wrote 0.091 MB perf.data ]
 > >
-> > After:
-> >
-> >  # ./perf stat -e L1-dcache-load-misses,L1-icache-loads -a sleep 1
-> >
-> >  Performance counter stats for 'system wide':
-> >
-> >             54,510      cpu_core/L1-dcache-load-misses/
-> >          1,441,286      cpu_atom/L1-icache-loads/
-> >
-> >        1.005114281 seconds time elapsed
-> >
-> > Fixes: 30def61f64ba ("perf parse-events: Create two hybrid cache events")
-> > Signed-off-by: Zhengjun Xing <zhengjun.xing@linux.intel.com>
-> > Reviewed-by: Kan Liang <kan.liang@linux.intel.com>
-> > Reported-by: Yi Ammy <ammy.yi@intel.com>
-> 
-> Acked-by: Ian Rogers <irogers@google.com>
+> > To support unknown configN formats, rework the YACC implementation to
+> > pass any config[0-9]+ format to perf_pmu__new_format() to handle with a
+> > warning.
+>
+> It only handles configN formats but it might add a completely different
+> name later, right?
 
-Thanks, applied.
+Right. An unknown configN is a warning. An unknown name is still an
+error as before. Given that sysfs format attrs are for mapping fields
+which could be anything to "generic" perf_event_attr fields, how would
+we ever have anything other than configN?
 
-- Arnaldo
-
- 
-> Thanks,
-> Ian
-> 
-> > ---
-> > Change log:
-> >   v2:
-> >     * Adds a comment for removing "not supported" hybrid cache events.
-> >     * Remove goto and add a strdup check
-> >     * "is_event_supported" move to parse-events.c per Ian's suggestion.
-> >     * Adds Reported-by from Yi Ammy <ammy.yi@intel.com>
-> >
-> >  tools/perf/util/parse-events-hybrid.c | 21 ++++++++++++---
-> >  tools/perf/util/parse-events.c        | 39 +++++++++++++++++++++++++++
-> >  tools/perf/util/parse-events.h        |  1 +
-> >  tools/perf/util/print-events.c        | 39 ---------------------------
-> >  4 files changed, 57 insertions(+), 43 deletions(-)
-> >
-> > diff --git a/tools/perf/util/parse-events-hybrid.c b/tools/perf/util/parse-events-hybrid.c
-> > index 284f8eabd3b9..7c9f9150bad5 100644
-> > --- a/tools/perf/util/parse-events-hybrid.c
-> > +++ b/tools/perf/util/parse-events-hybrid.c
-> > @@ -33,7 +33,8 @@ static void config_hybrid_attr(struct perf_event_attr *attr,
-> >          * If the PMU type ID is 0, the PERF_TYPE_RAW will be applied.
-> >          */
-> >         attr->type = type;
-> > -       attr->config = attr->config | ((__u64)pmu_type << PERF_PMU_TYPE_SHIFT);
-> > +       attr->config = (attr->config & PERF_HW_EVENT_MASK) |
-> > +                       ((__u64)pmu_type << PERF_PMU_TYPE_SHIFT);
-> >  }
-> >
-> >  static int create_event_hybrid(__u32 config_type, int *idx,
-> > @@ -48,13 +49,25 @@ static int create_event_hybrid(__u32 config_type, int *idx,
-> >         __u64 config = attr->config;
-> >
-> >         config_hybrid_attr(attr, config_type, pmu->type);
-> > +
-> > +       /*
-> > +        * Some hybrid hardware cache events are only available on one CPU
-> > +        * PMU. For example, the 'L1-dcache-load-misses' is only available
-> > +        * on cpu_core, while the 'L1-icache-loads' is only available on
-> > +        * cpu_atom. We need to remove "not supported" hybrid cache events.
-> > +        */
-> > +       if (attr->type == PERF_TYPE_HW_CACHE
-> > +           && !is_event_supported(attr->type, attr->config))
-> > +               return 0;
-> > +
-> >         evsel = parse_events__add_event_hybrid(list, idx, attr, name, metric_id,
-> >                                                pmu, config_terms);
-> > -       if (evsel)
-> > +       if (evsel) {
-> >                 evsel->pmu_name = strdup(pmu->name);
-> > -       else
-> > +               if (!evsel->pmu_name)
-> > +                       return -ENOMEM;
-> > +       } else
-> >                 return -ENOMEM;
-> > -
-> >         attr->type = type;
-> >         attr->config = config;
-> >         return 0;
-> > diff --git a/tools/perf/util/parse-events.c b/tools/perf/util/parse-events.c
-> > index f05e15acd33f..f3b2c2a87456 100644
-> > --- a/tools/perf/util/parse-events.c
-> > +++ b/tools/perf/util/parse-events.c
-> > @@ -28,6 +28,7 @@
-> >  #include "util/parse-events-hybrid.h"
-> >  #include "util/pmu-hybrid.h"
-> >  #include "tracepoint.h"
-> > +#include "thread_map.h"
-> >
-> >  #define MAX_NAME_LEN 100
-> >
-> > @@ -157,6 +158,44 @@ struct event_symbol event_symbols_sw[PERF_COUNT_SW_MAX] = {
-> >  #define PERF_EVENT_TYPE(config)                __PERF_EVENT_FIELD(config, TYPE)
-> >  #define PERF_EVENT_ID(config)          __PERF_EVENT_FIELD(config, EVENT)
-> >
-> > +bool is_event_supported(u8 type, u64 config)
-> > +{
-> > +       bool ret = true;
-> > +       int open_return;
-> > +       struct evsel *evsel;
-> > +       struct perf_event_attr attr = {
-> > +               .type = type,
-> > +               .config = config,
-> > +               .disabled = 1,
-> > +       };
-> > +       struct perf_thread_map *tmap = thread_map__new_by_tid(0);
-> > +
-> > +       if (tmap == NULL)
-> > +               return false;
-> > +
-> > +       evsel = evsel__new(&attr);
-> > +       if (evsel) {
-> > +               open_return = evsel__open(evsel, NULL, tmap);
-> > +               ret = open_return >= 0;
-> > +
-> > +               if (open_return == -EACCES) {
-> > +                       /*
-> > +                        * This happens if the paranoid value
-> > +                        * /proc/sys/kernel/perf_event_paranoid is set to 2
-> > +                        * Re-run with exclude_kernel set; we don't do that
-> > +                        * by default as some ARM machines do not support it.
-> > +                        *
-> > +                        */
-> > +                       evsel->core.attr.exclude_kernel = 1;
-> > +                       ret = evsel__open(evsel, NULL, tmap) >= 0;
-> > +               }
-> > +               evsel__delete(evsel);
-> > +       }
-> > +
-> > +       perf_thread_map__put(tmap);
-> > +       return ret;
-> > +}
-> > +
-> >  const char *event_type(int type)
-> >  {
-> >         switch (type) {
-> > diff --git a/tools/perf/util/parse-events.h b/tools/perf/util/parse-events.h
-> > index 7e6a601d9cd0..07df7bb7b042 100644
-> > --- a/tools/perf/util/parse-events.h
-> > +++ b/tools/perf/util/parse-events.h
-> > @@ -19,6 +19,7 @@ struct option;
-> >  struct perf_pmu;
-> >
-> >  bool have_tracepoints(struct list_head *evlist);
-> > +bool is_event_supported(u8 type, u64 config);
-> >
-> >  const char *event_type(int type);
-> >
-> > diff --git a/tools/perf/util/print-events.c b/tools/perf/util/print-events.c
-> > index 04050d4f6db8..c4d5d87fae2f 100644
-> > --- a/tools/perf/util/print-events.c
-> > +++ b/tools/perf/util/print-events.c
-> > @@ -22,7 +22,6 @@
-> >  #include "probe-file.h"
-> >  #include "string2.h"
-> >  #include "strlist.h"
-> > -#include "thread_map.h"
-> >  #include "tracepoint.h"
-> >  #include "pfm.h"
-> >  #include "pmu-hybrid.h"
-> > @@ -239,44 +238,6 @@ void print_sdt_events(const char *subsys_glob, const char *event_glob,
-> >         strlist__delete(sdtlist);
-> >  }
-> >
-> > -static bool is_event_supported(u8 type, u64 config)
-> > -{
-> > -       bool ret = true;
-> > -       int open_return;
-> > -       struct evsel *evsel;
-> > -       struct perf_event_attr attr = {
-> > -               .type = type,
-> > -               .config = config,
-> > -               .disabled = 1,
-> > -       };
-> > -       struct perf_thread_map *tmap = thread_map__new_by_tid(0);
-> > -
-> > -       if (tmap == NULL)
-> > -               return false;
-> > -
-> > -       evsel = evsel__new(&attr);
-> > -       if (evsel) {
-> > -               open_return = evsel__open(evsel, NULL, tmap);
-> > -               ret = open_return >= 0;
-> > -
-> > -               if (open_return == -EACCES) {
-> > -                       /*
-> > -                        * This happens if the paranoid value
-> > -                        * /proc/sys/kernel/perf_event_paranoid is set to 2
-> > -                        * Re-run with exclude_kernel set; we don't do that
-> > -                        * by default as some ARM machines do not support it.
-> > -                        *
-> > -                        */
-> > -                       evsel->core.attr.exclude_kernel = 1;
-> > -                       ret = evsel__open(evsel, NULL, tmap) >= 0;
-> > -               }
-> > -               evsel__delete(evsel);
-> > -       }
-> > -
-> > -       perf_thread_map__put(tmap);
-> > -       return ret;
-> > -}
-> > -
-> >  int print_hwcache_events(const char *event_glob, bool name_only)
-> >  {
-> >         unsigned int type, op, i, evt_i = 0, evt_num = 0, npmus = 0;
-> > --
-> > 2.25.1
-> >
-
--- 
-
-- Arnaldo
+Rob
