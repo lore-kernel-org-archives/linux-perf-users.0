@@ -2,205 +2,98 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A68ABC6FA93
-	for <linux-perf-users@archiver.kernel.org>; Mon, 26 Sep 2022 19:46:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 67820C6FA82
+	for <linux-perf-users@archiver.kernel.org>; Mon, 26 Sep 2022 19:47:58 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229994AbiIZTp7 (ORCPT
+        id S229761AbiIZTrz (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Mon, 26 Sep 2022 15:45:59 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42090 "EHLO
+        Mon, 26 Sep 2022 15:47:55 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46854 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230004AbiIZTp4 (ORCPT
+        with ESMTP id S229538AbiIZTrl (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Mon, 26 Sep 2022 15:45:56 -0400
+        Mon, 26 Sep 2022 15:47:41 -0400
 Received: from ams.source.kernel.org (ams.source.kernel.org [145.40.68.75])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 887311EC49;
-        Mon, 26 Sep 2022 12:45:53 -0700 (PDT)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id AE7206549;
+        Mon, 26 Sep 2022 12:47:40 -0700 (PDT)
 Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by ams.source.kernel.org (Postfix) with ESMTPS id 0FAFFB80DFA;
-        Mon, 26 Sep 2022 19:45:52 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 78CA4C433D7;
-        Mon, 26 Sep 2022 19:45:50 +0000 (UTC)
+        by ams.source.kernel.org (Postfix) with ESMTPS id 60BBFB80E6A;
+        Mon, 26 Sep 2022 19:47:39 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id D9769C433D7;
+        Mon, 26 Sep 2022 19:47:37 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1664221550;
-        bh=MNeBI45oFNpk0bJm4bTOEibWr854TsU8hMwcCFMgC1M=;
+        s=k20201202; t=1664221658;
+        bh=aW9LY92YyVBwTPWwFam4+2hBgLQpNDO2B9fLi+qXris=;
         h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=SRkCt+/DiuV5u8aJnb4Lo/H8IqidTDwYQchwL+tSHijnMdpY4jmYpLxQCdpkQVT5l
-         DJZCG/7KbMsNVRteV6Egr3eVanJvSJxOeFxnVzBY62MnzeS0cj7hGeiWX8vUISlmnR
-         /6NeaswEvOy+SME52iPEyTgQPy9qUuopJYJwY9QzzWKBC1ZpSkORx63YvTlUZKi4TZ
-         vYFvCq7KhnQD/FTdjx+g7H4HxXl4OPfVORgW2UVf8DM/GGeZA/RRQn3oCLnELOxduC
-         lDDrhtMifJRVkjwBY6QlVSxa8lQKsMLX3mcWQzM1yiPwmJcwrOr/ktjvy3j1WVHp2D
-         EsXLBn7JJuyFw==
+        b=pE67kRRPBiUELv6RNLYj1s3zroV83bpBRk5v5EOrG+VwiJnvt7k0x6XCqbI6gXVwi
+         S5xcjaaNshoQalIutfByhjWGpBIgOAvb0Qdmx4dOgm+V90onSreOtiBNxXqV1gdV+/
+         e33oebaDoMXovuM7xWVBXrZVIUzWUXYERBvSgy0VACGQ8jZa0Nf8De6FLmL783nJQ0
+         dJiy79afpvZ7in1aO+rs8lGUDMNV1pGrpL9el4nHJJzPQnEvP68RUbs0xt4soFnhED
+         BqkgaCXzhi4Evcy4KdagSxPTr2kJDl5cxqEmjwmpeaC30lBaRtIGBGJ5bB+4w1G0My
+         c7Gq03o8nRd2g==
 Received: by quaco.ghostprotocols.net (Postfix, from userid 1000)
-        id 0CA74403B0; Mon, 26 Sep 2022 20:45:48 +0100 (IST)
-Date:   Mon, 26 Sep 2022 20:45:48 +0100
+        id 88710403B0; Mon, 26 Sep 2022 20:47:35 +0100 (IST)
+Date:   Mon, 26 Sep 2022 20:47:35 +0100
 From:   Arnaldo Carvalho de Melo <acme@kernel.org>
-To:     Namhyung Kim <namhyung@kernel.org>
-Cc:     Jiri Olsa <jolsa@kernel.org>, Ingo Molnar <mingo@kernel.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Ian Rogers <irogers@google.com>,
-        Adrian Hunter <adrian.hunter@intel.com>,
-        linux-perf-users@vger.kernel.org
-Subject: Re: [PATCH 1/3] perf lock: Add -E/--entries option
-Message-ID: <YzIBbErRhxzk5ppd@kernel.org>
-References: <20220924004221.841024-1-namhyung@kernel.org>
+To:     Chen Zhongjin <chenzhongjin@huawei.com>
+Cc:     linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org,
+        peterz@infradead.org, mingo@redhat.com, mark.rutland@arm.com,
+        alexander.shishkin@linux.intel.com, jolsa@kernel.org,
+        namhyung@kernel.org, irogers@google.com, john.garry@huawei.com,
+        adrian.hunter@intel.com, ak@linux.intel.com,
+        florian.fischer@muhq.space
+Subject: Re: [PATCH -next 5/5] perf: Remove unused macro K
+Message-ID: <YzIB17zCYhhRJFPY@kernel.org>
+References: <20220926031440.28275-1-chenzhongjin@huawei.com>
+ <20220926031440.28275-6-chenzhongjin@huawei.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20220924004221.841024-1-namhyung@kernel.org>
+In-Reply-To: <20220926031440.28275-6-chenzhongjin@huawei.com>
 X-Url:  http://acmel.wordpress.com
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-Em Fri, Sep 23, 2022 at 05:42:19PM -0700, Namhyung Kim escreveu:
-> Like perf top, the -E option can limit number of entries to print.
-> It can be useful when users want to see top N contended locks only.
+Em Mon, Sep 26, 2022 at 11:14:40AM +0800, Chen Zhongjin escreveu:
+> Unused macro reported by [-Wunused-macros].
+> 
+> This macro is introduced to calculate the 'unit' size, in:
+> 'd2fb8b4151a9 ("perf tools: Add new perf_atoll() function to parse string representing size in bytes")'
+> 
+> '8ba7f6c2faad ("saner perf_atoll()")'
+> This commit has simplified the perf_atoll() function and remove the
+> 'unit' variable. This macro is not deleted, but nowhere else is using it.
+> 
+> A single letter macro is confusing and easy to be misused.
+> So remove it for code cleaning.
 
 Thanks, applied.
 
 - Arnaldo
 
  
-> Signed-off-by: Namhyung Kim <namhyung@kernel.org>
+> Signed-off-by: Chen Zhongjin <chenzhongjin@huawei.com>
 > ---
->  tools/perf/Documentation/perf-lock.txt | 10 ++++++++++
->  tools/perf/builtin-lock.c              | 20 +++++++++++++++-----
->  2 files changed, 25 insertions(+), 5 deletions(-)
+>  tools/perf/util/string.c | 1 -
+>  1 file changed, 1 deletion(-)
 > 
-> diff --git a/tools/perf/Documentation/perf-lock.txt b/tools/perf/Documentation/perf-lock.txt
-> index 5f2dc634258e..b23e76200ac2 100644
-> --- a/tools/perf/Documentation/perf-lock.txt
-> +++ b/tools/perf/Documentation/perf-lock.txt
-> @@ -94,6 +94,11 @@ REPORT OPTIONS
->           EventManager_De       1845          1             636
->           futex-default-S       1609          0               0
+> diff --git a/tools/perf/util/string.c b/tools/perf/util/string.c
+> index f6d90cdd9225..4f12a96f33cc 100644
+> --- a/tools/perf/util/string.c
+> +++ b/tools/perf/util/string.c
+> @@ -15,7 +15,6 @@ const char *dots =
+>  	"....................................................................."
+>  	".....................................................................";
 >  
-> +-E::
-> +--entries=<value>::
-> +	Display this many entries.
-> +
-> +
->  INFO OPTIONS
->  ------------
->  
-> @@ -105,6 +110,7 @@ INFO OPTIONS
->  --map::
->  	dump map of lock instances (address:name table)
->  
-> +
->  CONTENTION OPTIONS
->  --------------
->  
-> @@ -154,6 +160,10 @@ CONTENTION OPTIONS
->  --stack-skip
->  	Number of stack depth to skip when finding a lock caller (default: 3).
->  
-> +-E::
-> +--entries=<value>::
-> +	Display this many entries.
-> +
->  
->  SEE ALSO
->  --------
-> diff --git a/tools/perf/builtin-lock.c b/tools/perf/builtin-lock.c
-> index 25d75fa09b90..1c0d52384d9e 100644
-> --- a/tools/perf/builtin-lock.c
-> +++ b/tools/perf/builtin-lock.c
-> @@ -58,6 +58,7 @@ static bool use_bpf;
->  static unsigned long bpf_map_entries = 10240;
->  static int max_stack_depth = CONTENTION_STACK_DEPTH;
->  static int stack_skip = CONTENTION_STACK_SKIP;
-> +static int print_nr_entries = INT_MAX / 2;
->  
->  static enum {
->  	LOCK_AGGR_ADDR,
-> @@ -1266,14 +1267,14 @@ static void print_result(void)
->  	struct lock_stat *st;
->  	struct lock_key *key;
->  	char cut_name[20];
-> -	int bad, total;
-> +	int bad, total, printed;
->  
->  	pr_info("%20s ", "Name");
->  	list_for_each_entry(key, &lock_keys, list)
->  		pr_info("%*s ", key->len, key->header);
->  	pr_info("\n\n");
->  
-> -	bad = total = 0;
-> +	bad = total = printed = 0;
->  	while ((st = pop_from_result())) {
->  		total++;
->  		if (st->broken)
-> @@ -1311,6 +1312,9 @@ static void print_result(void)
->  			pr_info(" ");
->  		}
->  		pr_info("\n");
-> +
-> +		if (++printed >= print_nr_entries)
-> +			break;
->  	}
->  
->  	print_bad_events(bad, total);
-> @@ -1476,7 +1480,7 @@ static void print_contention_result(struct lock_contention *con)
->  {
->  	struct lock_stat *st;
->  	struct lock_key *key;
-> -	int bad, total;
-> +	int bad, total, printed;
->  
->  	list_for_each_entry(key, &lock_keys, list)
->  		pr_info("%*s ", key->len, key->header);
-> @@ -1486,7 +1490,7 @@ static void print_contention_result(struct lock_contention *con)
->  	else
->  		pr_info("  %10s   %s\n\n", "type", "caller");
->  
-> -	bad = total = 0;
-> +	bad = total = printed = 0;
->  	if (use_bpf)
->  		bad = bad_hist[BROKEN_CONTENDED];
->  
-> @@ -1507,7 +1511,7 @@ static void print_contention_result(struct lock_contention *con)
->  			/* st->addr contains tid of thread */
->  			t = perf_session__findnew(session, pid);
->  			pr_info("  %10d   %s\n", pid, thread__comm_str(t));
-> -			continue;
-> +			goto next;
->  		}
->  
->  		pr_info("  %10s   %s\n", get_type_str(st), st->name);
-> @@ -1527,6 +1531,10 @@ static void print_contention_result(struct lock_contention *con)
->  				pr_info("\t\t\t%#lx  %s\n", (unsigned long)ip, buf);
->  			}
->  		}
-> +
-> +next:
-> +		if (++printed >= print_nr_entries)
-> +			break;
->  	}
->  
->  	print_bad_events(bad, total);
-> @@ -1878,6 +1886,7 @@ int cmd_lock(int argc, const char **argv)
->  		    "combine locks in the same class"),
->  	OPT_BOOLEAN('t', "threads", &show_thread_stats,
->  		    "show per-thread lock stats"),
-> +	OPT_INTEGER('E', "entries", &print_nr_entries, "display this many functions"),
->  	OPT_PARENT(lock_options)
->  	};
->  
-> @@ -1905,6 +1914,7 @@ int cmd_lock(int argc, const char **argv)
->  	OPT_INTEGER(0, "stack-skip", &stack_skip,
->  		    "Set the number of stack depth to skip when finding a lock caller, "
->  		    "Default: " __stringify(CONTENTION_STACK_SKIP)),
-> +	OPT_INTEGER('E', "entries", &print_nr_entries, "display this many functions"),
->  	OPT_PARENT(lock_options)
->  	};
->  
+> -#define K 1024LL
+>  /*
+>   * perf_atoll()
+>   * Parse (\d+)(b|B|kb|KB|mb|MB|gb|GB|tb|TB) (e.g. "256MB")
 > -- 
-> 2.37.3.998.g577e59143f-goog
+> 2.17.1
 
 -- 
 
