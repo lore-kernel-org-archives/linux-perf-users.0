@@ -2,96 +2,167 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BABEAC32771
-	for <linux-perf-users@archiver.kernel.org>; Mon, 26 Sep 2022 14:46:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 23A95C32771
+	for <linux-perf-users@archiver.kernel.org>; Mon, 26 Sep 2022 14:48:10 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S234855AbiIZOqi (ORCPT
+        id S235252AbiIZOsI (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Mon, 26 Sep 2022 10:46:38 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46040 "EHLO
+        Mon, 26 Sep 2022 10:48:08 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58786 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S234900AbiIZOqP (ORCPT
+        with ESMTP id S234550AbiIZOrp (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Mon, 26 Sep 2022 10:46:15 -0400
-Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 48E5615704;
-        Mon, 26 Sep 2022 06:09:52 -0700 (PDT)
+        Mon, 26 Sep 2022 10:47:45 -0400
+Received: from ams.source.kernel.org (ams.source.kernel.org [IPv6:2604:1380:4601:e00::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BDEB512D31;
+        Mon, 26 Sep 2022 06:12:04 -0700 (PDT)
 Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id 3364A60DBB;
-        Mon, 26 Sep 2022 13:09:52 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 66F77C433C1;
-        Mon, 26 Sep 2022 13:09:51 +0000 (UTC)
+        by ams.source.kernel.org (Postfix) with ESMTPS id 6E5EBB80977;
+        Mon, 26 Sep 2022 13:12:03 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id F3400C433D6;
+        Mon, 26 Sep 2022 13:12:01 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1664197791;
-        bh=fUkQsM05ndYllEVHPF4gn/Cm7t6E7FR+wFCGj541yaM=;
+        s=k20201202; t=1664197922;
+        bh=Jsje8LjAcUn+Fmbb7fCNpBAb/YI9LGJswkzqxoQMl4A=;
         h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=RBc1XjpWEq865feN6CsA5BAvN5mE064a7G63tCvqSJIL+1qnvWQSSTcRWrkqvhgFO
-         Sahb3ZdyaAXTgCXaq5YUvQ7QTlwieeK+15W896zM27QMRy7jxQdC+Bwc5KX0Hbejtv
-         CwKRzykmhIza2P+7sHNvpjRpICa7nVpTmjZda2SyDa1cnstyTg+m14Zy3UCwRSr5bA
-         qTYTceL6RBhnxYyRXpbl7C0kC0GkqkSJb939WRQ7jC82V/3dQw/G8rwfzswtYEi/kB
-         SUiIgfdf1/AmrXeJ3NQDXRayriWHaZTwG77zu8OiwluNRa+IsZy9IpSbMlKHnH56oq
-         GPNbCqFIxnYhg==
+        b=VGyu5g8xH5ILFC+gRf2+/fNl3+m0ImwvdmIfbWuS+62nn0tUNiUXE2d0NasMR+4VX
+         usHFI/uhJBSRHx5uTpbd3ZdFBo9AIf39fWd8mLu+OjGvk0gKxQf9cR3EKouI8Wy/vJ
+         f+Y54rcFMG1v7fVZ20Pf9RMrpKFTY2uDRphE41jQ+yYJYxxmFy2k8p45Q/+XRyUQAh
+         myL1NGXaHH6nn1GG1lh2bHft1uRO0HF83/pZq+IFk7mJCdAxTV0gimZyxWCF8LbA5Q
+         +sdaQeBJpIoG2HrFoUFwbfjwK3blSdmbHGISpENdAPEFVzkphtVqVhhsVxCP0AKDVK
+         ZJk3xdDsMtMDw==
 Received: by quaco.ghostprotocols.net (Postfix, from userid 1000)
-        id 65A1F403B0; Mon, 26 Sep 2022 14:09:49 +0100 (IST)
-Date:   Mon, 26 Sep 2022 14:09:49 +0100
+        id B9389403B0; Mon, 26 Sep 2022 14:11:59 +0100 (IST)
+Date:   Mon, 26 Sep 2022 14:11:59 +0100
 From:   Arnaldo Carvalho de Melo <acme@kernel.org>
-To:     Namhyung Kim <namhyung@kernel.org>
-Cc:     Jiri Olsa <jolsa@kernel.org>, Ingo Molnar <mingo@kernel.org>,
+To:     Ian Rogers <irogers@google.com>
+Cc:     Namhyung Kim <namhyung@kernel.org>, Jiri Olsa <jolsa@kernel.org>,
+        Ingo Molnar <mingo@kernel.org>,
         Peter Zijlstra <peterz@infradead.org>,
         LKML <linux-kernel@vger.kernel.org>,
-        Ian Rogers <irogers@google.com>,
         Adrian Hunter <adrian.hunter@intel.com>,
-        linux-perf-users@vger.kernel.org,
-        Stephane Eranian <eranian@google.com>
-Subject: Re: [PATCH 0/4] perf tools: Assorted random fixes and updates
-Message-ID: <YzGknQlI15jk4Mzq@kernel.org>
-References: <20220923173142.805896-1-namhyung@kernel.org>
+        linux-perf-users@vger.kernel.org, Song Liu <songliubraving@fb.com>,
+        Hao Luo <haoluo@google.com>, bpf@vger.kernel.org
+Subject: Re: [PATCH v4] perf tools: Get a perf cgroup more portably in BPF
+Message-ID: <YzGlH51Idwet/NE9@kernel.org>
+References: <20220923063205.772936-1-namhyung@kernel.org>
+ <CAP-5=fWwNwtocMR3s1Su2k2vZAwL4yhX19UGZ4i0dMXFDFFBJA@mail.gmail.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20220923173142.805896-1-namhyung@kernel.org>
+In-Reply-To: <CAP-5=fWwNwtocMR3s1Su2k2vZAwL4yhX19UGZ4i0dMXFDFFBJA@mail.gmail.com>
 X-Url:  http://acmel.wordpress.com
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-Em Fri, Sep 23, 2022 at 10:31:38AM -0700, Namhyung Kim escreveu:
-> Hello,
+Em Fri, Sep 23, 2022 at 09:45:19AM -0700, Ian Rogers escreveu:
+> On Thu, Sep 22, 2022 at 11:32 PM Namhyung Kim <namhyung@kernel.org> wrote:
+> >
+> > The perf_event_cgrp_id can be different on other configurations.
+> > To be more portable as CO-RE, it needs to get the cgroup subsys id
+> > using the bpf_core_enum_value() helper.
+> >
+> > Suggested-by: Ian Rogers <irogers@google.com>
+> > Signed-off-by: Namhyung Kim <namhyung@kernel.org>
 > 
-> This is collection of random fixes and updates.
-> And I'm resending them as they seem to be lost in the list.
+> Reviewed-by: Ian Rogers <irogers@google.com>
+> 
+> Would be good to get this into perf/urgent, does it need Fixes tags for that?
 
-Thanks, applied.
+I got it into the perf/urgent branch.
 
 - Arnaldo
-
  
 > Thanks,
-> Namhyung
+> Ian
 > 
-> 
-> Namhyung Kim (4):
->   perf record: Fix a segfault in record__read_lost_samples()
->   perf inject: Clarify build-id options a little bit
->   perf tools: Add 'addr' sort key
->   perf annotate: Toggle full address <-> offset display
-> 
->  tools/perf/Documentation/perf-inject.txt |  6 ++--
->  tools/perf/Documentation/perf-report.txt |  3 +-
->  tools/perf/builtin-record.c              |  6 ++++
->  tools/perf/ui/browsers/annotate.c        |  6 +++-
->  tools/perf/util/annotate.c               | 19 +++++++++++-
->  tools/perf/util/annotate.h               |  4 ++-
->  tools/perf/util/hist.c                   |  1 +
->  tools/perf/util/hist.h                   |  1 +
->  tools/perf/util/sort.c                   | 38 ++++++++++++++++++++++++
->  tools/perf/util/sort.h                   |  1 +
->  10 files changed, 79 insertions(+), 6 deletions(-)
-> 
-> -- 
-> 2.37.3.998.g577e59143f-goog
+> > ---
+> > v4 changes)
+> >  * add a missing check in the off_cpu
+> >
+> > v3 changes)
+> >  * check compiler features for enum value
+> >
+> > v2 changes)
+> >  * fix off_cpu.bpf.c too
+> >  * get perf_subsys_id only once
+> >
+> >  tools/perf/util/bpf_skel/bperf_cgroup.bpf.c | 11 ++++++++++-
+> >  tools/perf/util/bpf_skel/off_cpu.bpf.c      | 18 ++++++++++++++----
+> >  2 files changed, 24 insertions(+), 5 deletions(-)
+> >
+> > diff --git a/tools/perf/util/bpf_skel/bperf_cgroup.bpf.c b/tools/perf/util/bpf_skel/bperf_cgroup.bpf.c
+> > index 292c430768b5..8e7520e273db 100644
+> > --- a/tools/perf/util/bpf_skel/bperf_cgroup.bpf.c
+> > +++ b/tools/perf/util/bpf_skel/bperf_cgroup.bpf.c
+> > @@ -48,6 +48,7 @@ const volatile __u32 num_cpus = 1;
+> >
+> >  int enabled = 0;
+> >  int use_cgroup_v2 = 0;
+> > +int perf_subsys_id = -1;
+> >
+> >  static inline int get_cgroup_v1_idx(__u32 *cgrps, int size)
+> >  {
+> > @@ -58,7 +59,15 @@ static inline int get_cgroup_v1_idx(__u32 *cgrps, int size)
+> >         int level;
+> >         int cnt;
+> >
+> > -       cgrp = BPF_CORE_READ(p, cgroups, subsys[perf_event_cgrp_id], cgroup);
+> > +       if (perf_subsys_id == -1) {
+> > +#if __has_builtin(__builtin_preserve_enum_value)
+> > +               perf_subsys_id = bpf_core_enum_value(enum cgroup_subsys_id,
+> > +                                                    perf_event_cgrp_id);
+> > +#else
+> > +               perf_subsys_id = perf_event_cgrp_id;
+> > +#endif
+> > +       }
+> > +       cgrp = BPF_CORE_READ(p, cgroups, subsys[perf_subsys_id], cgroup);
+> >         level = BPF_CORE_READ(cgrp, level);
+> >
+> >         for (cnt = 0; i < MAX_LEVELS; i++) {
+> > diff --git a/tools/perf/util/bpf_skel/off_cpu.bpf.c b/tools/perf/util/bpf_skel/off_cpu.bpf.c
+> > index c4ba2bcf179f..38e3b287dbb2 100644
+> > --- a/tools/perf/util/bpf_skel/off_cpu.bpf.c
+> > +++ b/tools/perf/util/bpf_skel/off_cpu.bpf.c
+> > @@ -94,6 +94,8 @@ const volatile bool has_prev_state = false;
+> >  const volatile bool needs_cgroup = false;
+> >  const volatile bool uses_cgroup_v1 = false;
+> >
+> > +int perf_subsys_id = -1;
+> > +
+> >  /*
+> >   * Old kernel used to call it task_struct->state and now it's '__state'.
+> >   * Use BPF CO-RE "ignored suffix rule" to deal with it like below:
+> > @@ -119,11 +121,19 @@ static inline __u64 get_cgroup_id(struct task_struct *t)
+> >  {
+> >         struct cgroup *cgrp;
+> >
+> > -       if (uses_cgroup_v1)
+> > -               cgrp = BPF_CORE_READ(t, cgroups, subsys[perf_event_cgrp_id], cgroup);
+> > -       else
+> > -               cgrp = BPF_CORE_READ(t, cgroups, dfl_cgrp);
+> > +       if (!uses_cgroup_v1)
+> > +               return BPF_CORE_READ(t, cgroups, dfl_cgrp, kn, id);
+> > +
+> > +       if (perf_subsys_id == -1) {
+> > +#if __has_builtin(__builtin_preserve_enum_value)
+> > +               perf_subsys_id = bpf_core_enum_value(enum cgroup_subsys_id,
+> > +                                                    perf_event_cgrp_id);
+> > +#else
+> > +               perf_subsys_id = perf_event_cgrp_id;
+> > +#endif
+> > +       }
+> >
+> > +       cgrp = BPF_CORE_READ(t, cgroups, subsys[perf_subsys_id], cgroup);
+> >         return BPF_CORE_READ(cgrp, kn, id);
+> >  }
+> >
+> > --
+> > 2.37.3.998.g577e59143f-goog
+> >
 
 -- 
 
