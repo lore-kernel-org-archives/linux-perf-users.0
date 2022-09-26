@@ -2,101 +2,108 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6215DC6FA8E
-	for <linux-perf-users@archiver.kernel.org>; Mon, 26 Sep 2022 19:56:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DDD78C07E9D
+	for <linux-perf-users@archiver.kernel.org>; Mon, 26 Sep 2022 20:08:06 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229962AbiIZT4n (ORCPT
+        id S230284AbiIZUIF (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Mon, 26 Sep 2022 15:56:43 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44902 "EHLO
+        Mon, 26 Sep 2022 16:08:05 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36662 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230257AbiIZT4l (ORCPT
+        with ESMTP id S230269AbiIZUIE (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Mon, 26 Sep 2022 15:56:41 -0400
-Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 444226F266;
-        Mon, 26 Sep 2022 12:56:40 -0700 (PDT)
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id B94E561155;
-        Mon, 26 Sep 2022 19:56:39 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 05777C433D6;
-        Mon, 26 Sep 2022 19:56:39 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1664222199;
-        bh=cVsd6K5MNCDnfJEvYpDydiEXtgAumOf06eArAUYgvmk=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=pRmVat7JHOHqdX6cyq9py1+0JwpNtxb6XCfA1cZE/mVKxyVmufTvV0ih6Yh/GFdLs
-         GgTm3MNonvH4BhdJ2KquZ/uOol199FOR4llDTxHMIbS6ALzHGgKmPm6esoK9uTxvx1
-         CvsyAIhzWN9uKcM09UnATa4aVihRNGatwV9QGtPc/ImTSwvTG/1z0g1KQPNsakBc88
-         pqMKdWvpZ0Rn9B9nU2uIRzPd/Oxsfvf5jh01fKlA90yhHPnBD1M7eN11smBKuAhPuo
-         O3jxjMWrfUcBKzenPsCGPI0YGJETElGxaCXUt6hUugODcQa262jhL4YlHet+aVECto
-         Svaj1s/+1A0BA==
-Received: by quaco.ghostprotocols.net (Postfix, from userid 1000)
-        id 72780403B0; Mon, 26 Sep 2022 20:56:36 +0100 (IST)
-Date:   Mon, 26 Sep 2022 20:56:36 +0100
-From:   Arnaldo Carvalho de Melo <acme@kernel.org>
-To:     Leo Yan <leo.yan@linaro.org>
-Cc:     Jiri Olsa <jolsa@kernel.org>, Namhyung Kim <namhyung@kernel.org>,
-        Ian Rogers <irogers@google.com>,
+        Mon, 26 Sep 2022 16:08:04 -0400
+Received: from mail-pl1-x630.google.com (mail-pl1-x630.google.com [IPv6:2607:f8b0:4864:20::630])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BB7B763F02;
+        Mon, 26 Sep 2022 13:08:00 -0700 (PDT)
+Received: by mail-pl1-x630.google.com with SMTP id d24so7236309pls.4;
+        Mon, 26 Sep 2022 13:08:00 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20210112;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:sender:from:to:cc:subject:date;
+        bh=xcLNKADRqeZX1gPJ62SQBYBy+AG2Qgoe/TxJimAn0lM=;
+        b=YbT2CUGn0c6XGd/eeoifQgCub7e/5eiCESX9snX7y4O4OkBVvhWR8KemYQCG3qYryf
+         T8mICpADND8cLkH2j6D/IPlYEIZQ78p5ZRzAcpfOgr2O+du5rDGwTYBkSoRa1a+KTdzb
+         9jeH7cx6KZSmURpCUf9EDaTBN3Ffhx9K4WTM1fzvtvDStS6JGV/QynWUfcOlR/gX+TPN
+         fCUlLv8CTl6gNvQOqf6w5jc5Axy5jTn5E5my6EvwQLxIpNtgnIGPLxE+FNXxjrjgjVfz
+         bCJtd/nfKcxwecxzKjiP9VVrnWcp32tPoHdsROQmLobjIhSgIOSSRn8XD5qbIzjGozTk
+         znSw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:sender:x-gm-message-state:from:to:cc:subject:date;
+        bh=xcLNKADRqeZX1gPJ62SQBYBy+AG2Qgoe/TxJimAn0lM=;
+        b=VN3/hvsugvg0TIq6mFEt9YjAFIU7AGuxM/nrLBXfPHk7v4Urx1T/F0Fuqdspd/upgA
+         0NSYTeS556yLS0Uc/Uh1X88O1hoiRX2YER+ARwXgfOrxwqHVS0PX1YAwXzFq0CNjAoku
+         5OHneGWCrmSeZSlTAKafPgsanG2dzgtxR551U/usC3YeUXYGjdm8GplOqm/v3g7NlVp2
+         Z1QJP+KBKxRyRp5wCbSMDpANjF4fKLyMGWP0BFkMGZlVBaKZLykf9SRPq+hZjKhWcf1T
+         Rh+TtrEgDCAPQ8y/nQaUHOmdPkLykXtVoqkjeD7xIz0QrXchwAxk12xEOEfE2ZbvdTS+
+         9zvA==
+X-Gm-Message-State: ACrzQf0ylrpOY2xjDEUCleGbcEYFKqDe86KHsYd+npu0HaOOGguZQFUu
+        r6YJdl6LAmFfJ+ph7cHYjaI=
+X-Google-Smtp-Source: AMsMyM4od1sr6bHJV2kBrH8AMW4zdbU1jbZR5G0MgF+E4yd/oz8IkA6ch9dHkrnsqydYqTwaJzssrA==
+X-Received: by 2002:a17:903:4ca:b0:179:d21f:f04b with SMTP id jm10-20020a17090304ca00b00179d21ff04bmr11322301plb.7.1664222880165;
+        Mon, 26 Sep 2022 13:08:00 -0700 (PDT)
+Received: from balhae.corp.google.com ([2620:15c:2c1:200:2d32:19ce:817e:166])
+        by smtp.gmail.com with ESMTPSA id s21-20020aa78bd5000000b00540c24ba181sm12510148pfd.120.2022.09.26.13.07.58
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 26 Sep 2022 13:07:59 -0700 (PDT)
+Sender: Namhyung Kim <namhyung@gmail.com>
+From:   Namhyung Kim <namhyung@kernel.org>
+To:     Arnaldo Carvalho de Melo <acme@kernel.org>,
+        Jiri Olsa <jolsa@kernel.org>
+Cc:     Ingo Molnar <mingo@kernel.org>,
         Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org
-Subject: Re: [PATCH v3 0/2] perf test: Add test for java symbol
-Message-ID: <YzID9Hrt5BOKiX1T@kernel.org>
-References: <20220925025835.70364-1-leo.yan@linaro.org>
+        LKML <linux-kernel@vger.kernel.org>,
+        Ian Rogers <irogers@google.com>,
+        Adrian Hunter <adrian.hunter@intel.com>,
+        linux-perf-users@vger.kernel.org, Andi Kleen <ak@linux.intel.com>,
+        Kan Liang <kan.liang@linux.intel.com>,
+        Leo Yan <leo.yan@linaro.org>,
+        Zhengjun Xing <zhengjun.xing@linux.intel.com>
+Subject: [PATCHSET 0/6] perf stat: Small random cleanups (v1)
+Date:   Mon, 26 Sep 2022 13:07:51 -0700
+Message-Id: <20220926200757.1161448-1-namhyung@kernel.org>
+X-Mailer: git-send-email 2.37.3.998.g577e59143f-goog
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20220925025835.70364-1-leo.yan@linaro.org>
-X-Url:  http://acmel.wordpress.com
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-Em Sun, Sep 25, 2022 at 10:58:33AM +0800, Leo Yan escreveu:
-> This patch set is to add a test for java symbol.
-> 
-> To allow a shell script to know the installed lib path, we need to
-> export the environment variable "PREFIX" in the C code.  We use the
-> first patch for this purpose.  The second patch introduces the java
-> symbol testing.
-> 
-> The test has been verified on x86_64 machine with perf/core branch with
-> the latest commit 62e64c9d2fd1 ("perf test: Add basic core_wide
-> expression test").
+Hello,
+
+I'm working on perf stat and I found some items to clean up.  This time
+I removed runtime stats for per-thread aggregation mode which we can simply
+use thread map index to compare the shadow stat values in the rt_stat.
+
+The code is available at 'perf/stat-cleanup-v1' branch in
+
+  git://git.kernel.org/pub/scm/linux/kernel/git/namhyung/linux-perf.git
 
 
-Thanks, applied locally.
+Thanks,
+Namhyung
 
-- Arnaldo
+
+Namhyung Kim (6):
+  perf stat: Convert perf_stat_evsel.res_stats array
+  perf stat: Don't call perf_stat_evsel_id_init() repeatedly
+  perf stat: Rename saved_value->cpu_map_idx
+  perf stat: Use thread map index for shadow stat
+  perf stat: Kill unused per-thread runtime stats
+  perf stat: Don't compare runtime stat for shadow stats
+
+ tools/perf/builtin-stat.c      |  54 ------
+ tools/perf/util/stat-display.c |  22 ++-
+ tools/perf/util/stat-shadow.c  | 320 ++++++++++++++++-----------------
+ tools/perf/util/stat.c         |  20 +--
+ tools/perf/util/stat.h         |   4 +-
+ 5 files changed, 171 insertions(+), 249 deletions(-)
 
 
-> Changes from v2:
-> - Skipped test if jshell is not existed (Namhyung);
-> - Fixed a typo for s/if/elif/ (Namhyung).
-> 
-> Changes from v1:
-> - Added Ian's suggested tag;
-> - Added the search folder for the system lib libperf-jvmti.so;
-> - Skip the test if fail to find jvmti lib.
-> 
-> 
-> Leo Yan (2):
->   perf subcmd: Set environment variable "PREFIX"
->   perf test: Introduce script for java symbol testing
-> 
->  tools/lib/subcmd/exec-cmd.c                |  3 +
->  tools/perf/tests/shell/test_java_symbol.sh | 75 ++++++++++++++++++++++
->  2 files changed, 78 insertions(+)
->  create mode 100755 tools/perf/tests/shell/test_java_symbol.sh
-> 
-> -- 
-> 2.34.1
-
+base-commit: 62e64c9d2fd12839c02f1b3e8b873e7cb34e8720
 -- 
+2.37.3.998.g577e59143f-goog
 
-- Arnaldo
