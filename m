@@ -2,121 +2,100 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E836EC07E9D
-	for <linux-perf-users@archiver.kernel.org>; Mon, 26 Sep 2022 19:54:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6215DC6FA8E
+	for <linux-perf-users@archiver.kernel.org>; Mon, 26 Sep 2022 19:56:45 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229718AbiIZTy3 (ORCPT
+        id S229962AbiIZT4n (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Mon, 26 Sep 2022 15:54:29 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36918 "EHLO
+        Mon, 26 Sep 2022 15:56:43 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44902 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230141AbiIZTy2 (ORCPT
+        with ESMTP id S230257AbiIZT4l (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Mon, 26 Sep 2022 15:54:28 -0400
+        Mon, 26 Sep 2022 15:56:41 -0400
 Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 74135A1D65;
-        Mon, 26 Sep 2022 12:54:27 -0700 (PDT)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 444226F266;
+        Mon, 26 Sep 2022 12:56:40 -0700 (PDT)
 Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id 119F36129B;
-        Mon, 26 Sep 2022 19:54:27 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 4F5ACC433D6;
-        Mon, 26 Sep 2022 19:54:26 +0000 (UTC)
+        by dfw.source.kernel.org (Postfix) with ESMTPS id B94E561155;
+        Mon, 26 Sep 2022 19:56:39 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 05777C433D6;
+        Mon, 26 Sep 2022 19:56:39 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1664222066;
-        bh=aFyuIBcggUWX+3c2+KDfoqRBYSJIPGbhdoSm0CVYV40=;
+        s=k20201202; t=1664222199;
+        bh=cVsd6K5MNCDnfJEvYpDydiEXtgAumOf06eArAUYgvmk=;
         h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=ab1MosxuDhcl8mRAlqIcX3C3zEXfs+IP2xmG4i8GBjUk1G/eOd9iZ+wh7leFVIK54
-         UHFx8EiGLn1W6MFgbua6Zrf2sK9jBomIU59YTUUwHhYYj9ZBNxL+tYx64/ZVrPEOOm
-         fuTjjNNi6yVSjvFy8jDWHIRmCuVkf9rCFYzstSsTGEGcrxyikrKVQU8N1A7bdopavk
-         93KFe37gs93/Un12C4yfFtE+j2/nre7FA/FG6719UiHL4uE4QBIyvchRmC9GPCUFtM
-         sLTJxh7ul971v7nm08awHuQmFHqnm8WuiyfB3zXacEwz8ZG9lCIIdba8FFcBe/RQ2M
-         IQguKjgofFoew==
+        b=pRmVat7JHOHqdX6cyq9py1+0JwpNtxb6XCfA1cZE/mVKxyVmufTvV0ih6Yh/GFdLs
+         GgTm3MNonvH4BhdJ2KquZ/uOol199FOR4llDTxHMIbS6ALzHGgKmPm6esoK9uTxvx1
+         CvsyAIhzWN9uKcM09UnATa4aVihRNGatwV9QGtPc/ImTSwvTG/1z0g1KQPNsakBc88
+         pqMKdWvpZ0Rn9B9nU2uIRzPd/Oxsfvf5jh01fKlA90yhHPnBD1M7eN11smBKuAhPuo
+         O3jxjMWrfUcBKzenPsCGPI0YGJETElGxaCXUt6hUugODcQa262jhL4YlHet+aVECto
+         Svaj1s/+1A0BA==
 Received: by quaco.ghostprotocols.net (Postfix, from userid 1000)
-        id 286C4403B0; Mon, 26 Sep 2022 20:54:24 +0100 (IST)
-Date:   Mon, 26 Sep 2022 20:54:24 +0100
+        id 72780403B0; Mon, 26 Sep 2022 20:56:36 +0100 (IST)
+Date:   Mon, 26 Sep 2022 20:56:36 +0100
 From:   Arnaldo Carvalho de Melo <acme@kernel.org>
-To:     Chen Zhongjin <chenzhongjin@huawei.com>
-Cc:     linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org,
-        peterz@infradead.org, mingo@redhat.com, mark.rutland@arm.com,
-        alexander.shishkin@linux.intel.com, jolsa@kernel.org,
-        namhyung@kernel.org, irogers@google.com, john.garry@huawei.com,
-        adrian.hunter@intel.com, ak@linux.intel.com,
-        florian.fischer@muhq.space
-Subject: Re: [PATCH -next 3/5] perf: Remove duplicate errbuf
-Message-ID: <YzIDcPVXLabTeZ11@kernel.org>
-References: <20220926031440.28275-1-chenzhongjin@huawei.com>
- <20220926031440.28275-4-chenzhongjin@huawei.com>
+To:     Leo Yan <leo.yan@linaro.org>
+Cc:     Jiri Olsa <jolsa@kernel.org>, Namhyung Kim <namhyung@kernel.org>,
+        Ian Rogers <irogers@google.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org
+Subject: Re: [PATCH v3 0/2] perf test: Add test for java symbol
+Message-ID: <YzID9Hrt5BOKiX1T@kernel.org>
+References: <20220925025835.70364-1-leo.yan@linaro.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20220926031440.28275-4-chenzhongjin@huawei.com>
+In-Reply-To: <20220925025835.70364-1-leo.yan@linaro.org>
 X-Url:  http://acmel.wordpress.com
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-Em Mon, Sep 26, 2022 at 11:14:38AM +0800, Chen Zhongjin escreveu:
-> char errbuf[BUFSIZ] is defined twice in trace__run.
+Em Sun, Sep 25, 2022 at 10:58:33AM +0800, Leo Yan escreveu:
+> This patch set is to add a test for java symbol.
 > 
-> However out_error_open is not cross to other out_error path, they can
-> share one errbuf together.
+> To allow a shell script to know the installed lib path, we need to
+> export the environment variable "PREFIX" in the C code.  We use the
+> first patch for this purpose.  The second patch introduces the java
+> symbol testing.
 > 
-> Define the errbuf[BUFSIZ] at the beginning of function, and remove the
-> redefinations of them for code cleaning.
+> The test has been verified on x86_64 machine with perf/core branch with
+> the latest commit 62e64c9d2fd1 ("perf test: Add basic core_wide
+> expression test").
 
-Have you looked at the end result in the generated code? Just out of
-curiosity.
+
+Thanks, applied locally.
 
 - Arnaldo
- 
-> Signed-off-by: Chen Zhongjin <chenzhongjin@huawei.com>
-> ---
->  tools/perf/builtin-trace.c | 7 ++-----
->  1 file changed, 2 insertions(+), 5 deletions(-)
+
+
+> Changes from v2:
+> - Skipped test if jshell is not existed (Namhyung);
+> - Fixed a typo for s/if/elif/ (Namhyung).
 > 
-> diff --git a/tools/perf/builtin-trace.c b/tools/perf/builtin-trace.c
-> index 7ecd76428440..5660c0ee3507 100644
-> --- a/tools/perf/builtin-trace.c
-> +++ b/tools/perf/builtin-trace.c
-> @@ -3937,6 +3937,7 @@ static int trace__run(struct trace *trace, int argc, const char **argv)
->  	unsigned long before;
->  	const bool forks = argc > 0;
->  	bool draining = false;
-> +	char errbuf[BUFSIZ];
->  
->  	trace->live = true;
->  
-> @@ -4027,8 +4028,6 @@ static int trace__run(struct trace *trace, int argc, const char **argv)
->  
->  	err = bpf__apply_obj_config();
->  	if (err) {
-> -		char errbuf[BUFSIZ];
-> -
->  		bpf__strerror_apply_obj_config(err, errbuf, sizeof(errbuf));
->  		pr_err("ERROR: Apply config to BPF failed: %s\n",
->  			 errbuf);
-> @@ -4185,8 +4184,6 @@ static int trace__run(struct trace *trace, int argc, const char **argv)
->  	trace->evlist = NULL;
->  	trace->live = false;
->  	return err;
-> -{
-> -	char errbuf[BUFSIZ];
->  
->  out_error_sched_stat_runtime:
->  	tracing_path__strerror_open_tp(errno, errbuf, sizeof(errbuf), "sched", "sched_stat_runtime");
-> @@ -4213,7 +4210,7 @@ static int trace__run(struct trace *trace, int argc, const char **argv)
->  		evsel->filter, evsel__name(evsel), errno,
->  		str_error_r(errno, errbuf, sizeof(errbuf)));
->  	goto out_delete_evlist;
-> -}
-> +
->  out_error_mem:
->  	fprintf(trace->output, "Not enough memory to run!\n");
->  	goto out_delete_evlist;
+> Changes from v1:
+> - Added Ian's suggested tag;
+> - Added the search folder for the system lib libperf-jvmti.so;
+> - Skip the test if fail to find jvmti lib.
+> 
+> 
+> Leo Yan (2):
+>   perf subcmd: Set environment variable "PREFIX"
+>   perf test: Introduce script for java symbol testing
+> 
+>  tools/lib/subcmd/exec-cmd.c                |  3 +
+>  tools/perf/tests/shell/test_java_symbol.sh | 75 ++++++++++++++++++++++
+>  2 files changed, 78 insertions(+)
+>  create mode 100755 tools/perf/tests/shell/test_java_symbol.sh
+> 
 > -- 
-> 2.17.1
+> 2.34.1
 
 -- 
 
