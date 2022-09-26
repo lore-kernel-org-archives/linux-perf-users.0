@@ -2,70 +2,157 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 456D2C07E9D
-	for <linux-perf-users@archiver.kernel.org>; Mon, 26 Sep 2022 14:43:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 39D5CC32771
+	for <linux-perf-users@archiver.kernel.org>; Mon, 26 Sep 2022 14:44:28 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S235545AbiIZOn5 (ORCPT
+        id S235255AbiIZOo1 (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Mon, 26 Sep 2022 10:43:57 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45094 "EHLO
+        Mon, 26 Sep 2022 10:44:27 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42964 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S234674AbiIZOnI (ORCPT
+        with ESMTP id S235529AbiIZOn4 (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Mon, 26 Sep 2022 10:43:08 -0400
-Received: from out30-56.freemail.mail.aliyun.com (out30-56.freemail.mail.aliyun.com [115.124.30.56])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 765AA6E2EA;
-        Mon, 26 Sep 2022 06:05:29 -0700 (PDT)
-X-Alimail-AntiSpam: AC=PASS;BC=-1|-1;BR=01201311R171e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=ay29a033018046059;MF=renyu.zj@linux.alibaba.com;NM=1;PH=DS;RN=21;SR=0;TI=SMTPD_---0VQo1ZLP_1664197498;
-Received: from j66e01291.sqa.eu95.tbsite.net(mailfrom:renyu.zj@linux.alibaba.com fp:SMTPD_---0VQo1ZLP_1664197498)
-          by smtp.aliyun-inc.com;
-          Mon, 26 Sep 2022 21:05:24 +0800
-From:   Jing Zhang <renyu.zj@linux.alibaba.com>
-To:     linux-arm-kernel@lists.infradead.org,
-        linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
-Cc:     john.garry@huawei.com, will@kernel.org, james.clark@arm.com,
-        mike.leach@linaro.org, leo.yan@linaro.org, peterz@infradead.org,
-        mingo@redhat.com, acme@kernel.org, mark.rutland@arm.com,
-        alexander.shishkin@linux.intel.com, jolsa@kernel.org,
-        namhyung@kernel.org, german.gomez@arm.com, timothy.hayes@arm.com,
-        alisaidi@amazon.com, xueshuai@linux.alibaba.com,
-        zhuo.song@linux.alibaba.com, renyu.zj@linux.alibaba.com
-Subject: [PATCH] perf arm-spe: augment the data source type with neoverse_spe list
-Date:   Mon, 26 Sep 2022 21:03:16 +0800
-Message-Id: <1664197396-42672-1-git-send-email-renyu.zj@linux.alibaba.com>
-X-Mailer: git-send-email 1.8.3.1
+        Mon, 26 Sep 2022 10:43:56 -0400
+Received: from ams.source.kernel.org (ams.source.kernel.org [IPv6:2604:1380:4601:e00::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 48A0085590;
+        Mon, 26 Sep 2022 06:06:51 -0700 (PDT)
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by ams.source.kernel.org (Postfix) with ESMTPS id F2DB0B80977;
+        Mon, 26 Sep 2022 13:06:49 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 7E66DC433D6;
+        Mon, 26 Sep 2022 13:06:48 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1664197608;
+        bh=k6Ja2GHJ3y49BN5GulLQB08Ww/f3AOj5+iE3g4xLt6M=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=j0gCsKmd0OoOAfm0LzMBfFtfO7rCrBzd/02H6/GGGw7CPSCK204PRd8TbD4qjcoSG
+         qv6Kh1kzdD1tITgfodu5eVmE9h6Ap9cHY3ZlCFC1xoRo8ivxqD9T1O0pu0HTDuSh18
+         kF0C0R2Zzc9O9PrKI9lZI0z97xGTaubbW1ZtoKSScc6OleYZaBQUfFNKSW9ltKBFfA
+         2Sx9Wkq+ADSXZPpPgQpGvmuh8Q1duhacW4KkNdk6rAGuhnoMtvp3Zy3iweSt8yMc40
+         3Iz1rhLvpZ5UM6PvO8YLx+Drz+P1rcGFRXQO1oLc6E11N2P96zQicfPWsgEZjt5Aqo
+         tFdUFr9CsQV9Q==
+Received: by quaco.ghostprotocols.net (Postfix, from userid 1000)
+        id 8D5C2403B0; Mon, 26 Sep 2022 14:06:46 +0100 (IST)
+Date:   Mon, 26 Sep 2022 14:06:46 +0100
+From:   Arnaldo Carvalho de Melo <acme@kernel.org>
+To:     Namhyung Kim <namhyung@kernel.org>
+Cc:     Jiri Olsa <jolsa@kernel.org>, Ingo Molnar <mingo@kernel.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Ian Rogers <irogers@google.com>,
+        Adrian Hunter <adrian.hunter@intel.com>,
+        linux-perf-users@vger.kernel.org, Song Liu <songliubraving@fb.com>,
+        Hao Luo <haoluo@google.com>, bpf@vger.kernel.org
+Subject: Re: [PATCH v4] perf tools: Get a perf cgroup more portably in BPF
+Message-ID: <YzGj5tVqATdzxhod@kernel.org>
+References: <20220923063205.772936-1-namhyung@kernel.org>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20220923063205.772936-1-namhyung@kernel.org>
+X-Url:  http://acmel.wordpress.com
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-When synthesizing event with SPE data source, commit 4e6430cbb1a9("perf
-arm-spe: Use SPE data source for neoverse cores") augment the type with
-source information by MIDR. However, is_midr_in_range only compares the
-first entry in neoverse_spe.
+Em Thu, Sep 22, 2022 at 11:32:05PM -0700, Namhyung Kim escreveu:
+> The perf_event_cgrp_id can be different on other configurations.
+> To be more portable as CO-RE, it needs to get the cgroup subsys id
+> using the bpf_core_enum_value() helper.
+> 
+> Suggested-by: Ian Rogers <irogers@google.com>
+> Signed-off-by: Namhyung Kim <namhyung@kernel.org>
+> ---
+> v4 changes)
+>  * add a missing check in the off_cpu
 
-Change is_midr_in_range to is_midr_in_range_list to traverse the
-neoverse_spe array so that all neoverse cores synthesize event with data
-source packet.
+Thanks, applied.
 
-Fixes: 4e6430cbb1a9("perf arm-spe: Use SPE data source for neoverse cores")
-Signed-off-by: Jing Zhang <renyu.zj@linux.alibaba.com>
----
- tools/perf/util/arm-spe.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+- Arnaldo
 
-diff --git a/tools/perf/util/arm-spe.c b/tools/perf/util/arm-spe.c
-index 22dcfe0..906476a 100644
---- a/tools/perf/util/arm-spe.c
-+++ b/tools/perf/util/arm-spe.c
-@@ -498,7 +498,7 @@ static void arm_spe__synth_data_source_generic(const struct arm_spe_record *reco
- static u64 arm_spe__synth_data_source(const struct arm_spe_record *record, u64 midr)
- {
- 	union perf_mem_data_src	data_src = { 0 };
--	bool is_neoverse = is_midr_in_range(midr, neoverse_spe);
-+	bool is_neoverse = is_midr_in_range_list(midr, neoverse_spe);
  
- 	if (record->op == ARM_SPE_LD)
- 		data_src.mem_op = PERF_MEM_OP_LOAD;
--- 
-1.8.3.1
+> v3 changes)
+>  * check compiler features for enum value
+> 
+> v2 changes)
+>  * fix off_cpu.bpf.c too
+>  * get perf_subsys_id only once
+> 
+>  tools/perf/util/bpf_skel/bperf_cgroup.bpf.c | 11 ++++++++++-
+>  tools/perf/util/bpf_skel/off_cpu.bpf.c      | 18 ++++++++++++++----
+>  2 files changed, 24 insertions(+), 5 deletions(-)
+> 
+> diff --git a/tools/perf/util/bpf_skel/bperf_cgroup.bpf.c b/tools/perf/util/bpf_skel/bperf_cgroup.bpf.c
+> index 292c430768b5..8e7520e273db 100644
+> --- a/tools/perf/util/bpf_skel/bperf_cgroup.bpf.c
+> +++ b/tools/perf/util/bpf_skel/bperf_cgroup.bpf.c
+> @@ -48,6 +48,7 @@ const volatile __u32 num_cpus = 1;
+>  
+>  int enabled = 0;
+>  int use_cgroup_v2 = 0;
+> +int perf_subsys_id = -1;
+>  
+>  static inline int get_cgroup_v1_idx(__u32 *cgrps, int size)
+>  {
+> @@ -58,7 +59,15 @@ static inline int get_cgroup_v1_idx(__u32 *cgrps, int size)
+>  	int level;
+>  	int cnt;
+>  
+> -	cgrp = BPF_CORE_READ(p, cgroups, subsys[perf_event_cgrp_id], cgroup);
+> +	if (perf_subsys_id == -1) {
+> +#if __has_builtin(__builtin_preserve_enum_value)
+> +		perf_subsys_id = bpf_core_enum_value(enum cgroup_subsys_id,
+> +						     perf_event_cgrp_id);
+> +#else
+> +		perf_subsys_id = perf_event_cgrp_id;
+> +#endif
+> +	}
+> +	cgrp = BPF_CORE_READ(p, cgroups, subsys[perf_subsys_id], cgroup);
+>  	level = BPF_CORE_READ(cgrp, level);
+>  
+>  	for (cnt = 0; i < MAX_LEVELS; i++) {
+> diff --git a/tools/perf/util/bpf_skel/off_cpu.bpf.c b/tools/perf/util/bpf_skel/off_cpu.bpf.c
+> index c4ba2bcf179f..38e3b287dbb2 100644
+> --- a/tools/perf/util/bpf_skel/off_cpu.bpf.c
+> +++ b/tools/perf/util/bpf_skel/off_cpu.bpf.c
+> @@ -94,6 +94,8 @@ const volatile bool has_prev_state = false;
+>  const volatile bool needs_cgroup = false;
+>  const volatile bool uses_cgroup_v1 = false;
+>  
+> +int perf_subsys_id = -1;
+> +
+>  /*
+>   * Old kernel used to call it task_struct->state and now it's '__state'.
+>   * Use BPF CO-RE "ignored suffix rule" to deal with it like below:
+> @@ -119,11 +121,19 @@ static inline __u64 get_cgroup_id(struct task_struct *t)
+>  {
+>  	struct cgroup *cgrp;
+>  
+> -	if (uses_cgroup_v1)
+> -		cgrp = BPF_CORE_READ(t, cgroups, subsys[perf_event_cgrp_id], cgroup);
+> -	else
+> -		cgrp = BPF_CORE_READ(t, cgroups, dfl_cgrp);
+> +	if (!uses_cgroup_v1)
+> +		return BPF_CORE_READ(t, cgroups, dfl_cgrp, kn, id);
+> +
+> +	if (perf_subsys_id == -1) {
+> +#if __has_builtin(__builtin_preserve_enum_value)
+> +		perf_subsys_id = bpf_core_enum_value(enum cgroup_subsys_id,
+> +						     perf_event_cgrp_id);
+> +#else
+> +		perf_subsys_id = perf_event_cgrp_id;
+> +#endif
+> +	}
+>  
+> +	cgrp = BPF_CORE_READ(t, cgroups, subsys[perf_subsys_id], cgroup);
+>  	return BPF_CORE_READ(cgrp, kn, id);
+>  }
+>  
+> -- 
+> 2.37.3.998.g577e59143f-goog
 
+-- 
+
+- Arnaldo
