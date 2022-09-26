@@ -2,105 +2,111 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 81D53C32771
-	for <linux-perf-users@archiver.kernel.org>; Mon, 26 Sep 2022 17:11:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 567AFC6FA8E
+	for <linux-perf-users@archiver.kernel.org>; Mon, 26 Sep 2022 17:51:37 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229696AbiIZRLi (ORCPT
+        id S231278AbiIZRvf (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Mon, 26 Sep 2022 13:11:38 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47872 "EHLO
+        Mon, 26 Sep 2022 13:51:35 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53586 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229825AbiIZRLL (ORCPT
+        with ESMTP id S231233AbiIZRvP (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Mon, 26 Sep 2022 13:11:11 -0400
-Received: from mail-oa1-f42.google.com (mail-oa1-f42.google.com [209.85.160.42])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D05CF422FC;
-        Mon, 26 Sep 2022 09:20:09 -0700 (PDT)
-Received: by mail-oa1-f42.google.com with SMTP id 586e51a60fabf-1279948d93dso9862666fac.10;
-        Mon, 26 Sep 2022 09:20:09 -0700 (PDT)
+        Mon, 26 Sep 2022 13:51:15 -0400
+Received: from mail-oa1-x31.google.com (mail-oa1-x31.google.com [IPv6:2001:4860:4864:20::31])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 243C8753BF
+        for <linux-perf-users@vger.kernel.org>; Mon, 26 Sep 2022 10:24:16 -0700 (PDT)
+Received: by mail-oa1-x31.google.com with SMTP id 586e51a60fabf-1278a61bd57so10117849fac.7
+        for <linux-perf-users@vger.kernel.org>; Mon, 26 Sep 2022 10:24:16 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20210112;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:from:to:cc:subject:date;
+        bh=gUHzJrpgIX7MrAmevww+QKfw4oN3wJovrSvxBA4zTB8=;
+        b=awzqwHGLXPv/1Hs3HJoBYiHnRA4FCKRY7v9kQNJINjnIMGTR8DgMHNaYAJJr4qCWM8
+         yOkrLZTYwGp6gN1ZbdJV784UFV0kqHXnF2afnQLoB3E/vaLaZDo4ps4ev1ZYdn88iT6y
+         D+8JlZai+E/MJwCErRTjR4aWsTLwQ+xvdrBqRYpC+gEStwDD61sFPqp71jnOEjbe6hIY
+         +TKmrxN3B6RtaoTeJa5FU6/1Ib1mV2gAw44RlkJnpgQsy3V2+lA+V33NCaZ5CYTJooYZ
+         mhF7InVOzqsQ6NLas8hMU3VncMq9+rdXP7XHz9r/HKkfNXlHblTao3rVw7T783+XHv04
+         Dmrg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
         h=cc:to:subject:message-id:date:from:in-reply-to:references
          :mime-version:x-gm-message-state:from:to:cc:subject:date;
-        bh=Kv0hAbAuMDhiwxda9Nahgcb504NbJJsHBppTCWLGHHk=;
-        b=SpoOKxBMaiTuhWXtVbUqEjpWyrv7n+qAaH/V+5IVnZgVAWLgE2IWmZ+ZHBfz6fXxhf
-         WzsbVFUZRbRGwEIEOo7ep+zdDzDLQJ3cHLfI7s9Uqoaxey8wDYcFyz18+YI1kPeghl5i
-         FXE1Gp6uoo2b9C1sqITlN67QObndrIVo47E5TyA6nCDI+wiL9MIr66zKVDVt46Iqx54e
-         FMOAmcOfz2kmk6hgmi3FDbY1A9apNxxL4gwKj4h70Wcyp9tOoj+qPo1IKntxlgueqlst
-         DgW6kBZPO6LifE/pihwrxw/eGmiYX7o0WCoM867m7EkKfpb3KG8WQjO4bFqOUpZ2diWA
-         2MZA==
-X-Gm-Message-State: ACrzQf0HaEGcVcylP2MzTVRlYH8se2yrhKUQzz5xgc/NxUgLVuvW+Twp
-        nRGXf2BwdAVj+JYX8J1FzWpA+QOAvu/Olwk2gJY=
-X-Google-Smtp-Source: AMsMyM5Q/npal10pqlSTDATxeYfQgb/WeFnBXBfvmtNLmcHtmNAEuhq2WyMJ8EtkN3Iz6dih+p2IBRyznVjd5MCjK9c=
-X-Received: by 2002:a05:6870:524b:b0:12c:cfd2:81c0 with SMTP id
- o11-20020a056870524b00b0012ccfd281c0mr12345018oai.209.1664209208682; Mon, 26
- Sep 2022 09:20:08 -0700 (PDT)
+        bh=gUHzJrpgIX7MrAmevww+QKfw4oN3wJovrSvxBA4zTB8=;
+        b=tOU88bWtsePG/k8zsfo8p3W48uDFcrwPhz2/VueWSIfCTxQCuvpYxFZjSv0y8dCWlJ
+         c6SM5H8me3wD3FWK2rz0dsAtJd6QlP0szfRWv8Iczvw2bfK9Jdst+ZWVt3nN9zl7bcTx
+         8TfCiuPUhnxfMGt0pAG4QKK0d6BP8q4rkvX4WGvG5bB+nGVBd9oD7X6v+/xNoDuPsAtp
+         WDWW7HEm6IKGtxK6VvNaPt9Sv79T7AYiWm+8zzG4AWB8774N74nTdH8kCiKuDkpO8Z7g
+         Y+C12oV96x6NVx3y4DAKVHPIr1ZBEoOrs29ljSjLqGOmljZtvrGqxbnlI8+u/r4M3XJS
+         rE7w==
+X-Gm-Message-State: ACrzQf3giesJT0rx3txIE/YkddgUt1gJGRtlmfBOtd8hA7U6HnVnvVWo
+        QaspviFsXJwv1Jk3+wr0RBVrYtJ6vgZ4w2KQkUxzPw==
+X-Google-Smtp-Source: AMsMyM7jgpNZsPksAb/fx5EgKsCdFrfD0cCQTEp2cbcSx+42Oj0N/AqurTAG01ed7OQKsIzHiP132QTyZionY9hi7UE=
+X-Received: by 2002:a05:6870:580c:b0:12a:f136:a8f5 with SMTP id
+ r12-20020a056870580c00b0012af136a8f5mr18512469oap.269.1664213055267; Mon, 26
+ Sep 2022 10:24:15 -0700 (PDT)
 MIME-Version: 1.0
-References: <20220903000210.1112014-1-namhyung@kernel.org> <CANpmjNMPh5QjdxXtrCc5FApjgzV=81CNNiwbeg_rE3NxN_WCZw@mail.gmail.com>
- <c4f7e14b-a229-6b23-b28d-880b8369e6d8@arm.com>
-In-Reply-To: <c4f7e14b-a229-6b23-b28d-880b8369e6d8@arm.com>
-From:   Namhyung Kim <namhyung@kernel.org>
-Date:   Mon, 26 Sep 2022 09:19:59 -0700
-Message-ID: <CAM9d7ch36RGYJJEg2dnrauQnVX_f9MiE0RB99EU4ynNL-8CUVA@mail.gmail.com>
-Subject: Re: [PATCH] perf test: Skip sigtrap test on old kernels
-To:     James Clark <james.clark@arm.com>
-Cc:     Marco Elver <elver@google.com>,
-        Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Jiri Olsa <jolsa@kernel.org>, Ingo Molnar <mingo@kernel.org>,
+References: <20220921164521.2858932-1-xiaoyao.li@intel.com>
+ <20220921164521.2858932-3-xiaoyao.li@intel.com> <175b518c-d202-644e-a3a7-67e877852548@linux.intel.com>
+ <DS0PR11MB6373C84139621DC447D3F466DC4E9@DS0PR11MB6373.namprd11.prod.outlook.com>
+ <Yyxke/IO+AP4EWwT@hirez.programming.kicks-ass.net> <DS0PR11MB637346E9F224C5330CDEF3BFDC4E9@DS0PR11MB6373.namprd11.prod.outlook.com>
+ <YyxsnAFYMLn2U9BT@hirez.programming.kicks-ass.net> <DS0PR11MB63730A85E00683AB7F6F3E26DC4E9@DS0PR11MB6373.namprd11.prod.outlook.com>
+ <62d4bec1-a0c3-3b01-61bb-f284eede6378@linux.intel.com>
+In-Reply-To: <62d4bec1-a0c3-3b01-61bb-f284eede6378@linux.intel.com>
+From:   Jim Mattson <jmattson@google.com>
+Date:   Mon, 26 Sep 2022 10:24:03 -0700
+Message-ID: <CALMp9eTG7EbRv_fnQpDMQ3YUjYANgu=6QwVj_ACgHnK-Mhk39Q@mail.gmail.com>
+Subject: Re: [RFC PATCH v2 2/3] perf/x86/intel/pt: Introduce and export pt_get_curr_event()
+To:     "Liang, Kan" <kan.liang@linux.intel.com>
+Cc:     "Wang, Wei W" <wei.w.wang@intel.com>,
         Peter Zijlstra <peterz@infradead.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Ian Rogers <irogers@google.com>,
-        linux-perf-users <linux-perf-users@vger.kernel.org>
+        "Li, Xiaoyao" <xiaoyao.li@intel.com>,
+        Ingo Molnar <mingo@redhat.com>,
+        Arnaldo Carvalho de Melo <acme@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Jiri Olsa <jolsa@kernel.org>,
+        Namhyung Kim <namhyung@kernel.org>,
+        "Christopherson,, Sean" <seanjc@google.com>,
+        Paolo Bonzini <pbonzini@redhat.com>,
+        "linux-perf-users@vger.kernel.org" <linux-perf-users@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "kvm@vger.kernel.org" <kvm@vger.kernel.org>
 Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-Hello,
-
-On Mon, Sep 26, 2022 at 8:06 AM James Clark <james.clark@arm.com> wrote:
+On Mon, Sep 26, 2022 at 9:55 AM Liang, Kan <kan.liang@linux.intel.com> wrote:
 >
 >
 >
-> On 03/09/2022 07:52, Marco Elver wrote:
-> > On Sat, 3 Sept 2022 at 02:02, Namhyung Kim <namhyung@kernel.org> wrote:
+> On 2022-09-22 10:42 a.m., Wang, Wei W wrote:
+> > On Thursday, September 22, 2022 10:10 PM, Peter Zijlstra wrote:
+> >> On Thu, Sep 22, 2022 at 01:59:53PM +0000, Wang, Wei W wrote:
+> >>> On Thursday, September 22, 2022 9:35 PM, Peter Zijlstra
+> >>>> On Thu, Sep 22, 2022 at 12:58:49PM +0000, Wang, Wei W wrote:
+> >>>>
+> >>>>> Add a function to expose the current running PT event to users.
+> >>>>> One usage is in KVM, it needs to get and disable the running host
+> >>>>> PT event before VMEnter to the guest and resumes the event after
+> >> VMexit to host.
+> >>>>
+> >>>> You cannot just kill a host event like that. If there is a host
+> >>>> event, the guest looses out.
+> >>>
+> >>> OK. The intention was to pause the event (that only profiles host
+> >>> info) when switching to guest, and resume when switching back to host.
 > >>
-> >> If it runs on an old kernel, perf_event_open would fail because of the
-> >> new fields sigtrap and sig_data.  Just skip the test if it failed.
-> >>
-> >> Cc: Marco Elver <elver@google.com>
-> >> Signed-off-by: Namhyung Kim <namhyung@kernel.org>
-> >> ---
-> >>  tools/perf/tests/sigtrap.c | 1 +
-> >>  1 file changed, 1 insertion(+)
-> >>
-> >> diff --git a/tools/perf/tests/sigtrap.c b/tools/perf/tests/sigtrap.c
-> >> index e32ece90e164..7057566e6ae4 100644
-> >> --- a/tools/perf/tests/sigtrap.c
-> >> +++ b/tools/perf/tests/sigtrap.c
-> >> @@ -140,6 +140,7 @@ static int test__sigtrap(struct test_suite *test __maybe_unused, int subtest __m
-> >>         fd = sys_perf_event_open(&attr, 0, -1, -1, perf_event_open_cloexec_flag());
-> >>         if (fd < 0) {
-> >>                 pr_debug("FAILED sys_perf_event_open(): %s\n", str_error_r(errno, sbuf, sizeof(sbuf)));
-> >> +               ret = TEST_SKIP;
+> >> If the even doesn't profile guest context, then yes. If it does profile guest
+> >> context, you can't.
 > >
-> > Wouldn't we be interested if perf_event_open() fails because it could
-> > actually be a bug? By skipping we'll be more likely to miss the fact
-> > there's a real problem.
-> >
-> > That's my naive thinking at least - what do other perf tests usually
-> > do in this case?
+> > Seems better to add this one:
 >
-> I missed this discussion but I just submitted a patch with a similar
-> issue [1]. To me, it doesn't make sense to have the tests pass on older
-> kernels if this lowers the value of the tests by accepting possibly
-> invalid values. If you want to test older kernels then just use older
-> tests, but maybe there is some use case that I'm not aware of.
+> If the guest host mode is enabled, I think the PT driver should not
+> allow the perf tool to create a host event with !exclude_guest.
 
-Thanks for your opinion.  But my test environment is running the tests
-on random machines which may run some old kernel.  I agree that it
-should not skip the real problems but I think we can find a good way
-to detect old, unsupported kernels reliably like using BTF.
-
-Thanks,
-Namhyung
+While I agree that guest events should generally have priority over
+host events, this is not consistent with the way "normal" PMU events
+are handled.
