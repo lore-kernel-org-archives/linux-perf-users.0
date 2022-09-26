@@ -2,113 +2,114 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B3F3DC32771
-	for <linux-perf-users@archiver.kernel.org>; Mon, 26 Sep 2022 20:33:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3082DC07E9D
+	for <linux-perf-users@archiver.kernel.org>; Mon, 26 Sep 2022 21:42:40 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229461AbiIZUdH (ORCPT
+        id S229515AbiIZVmj (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Mon, 26 Sep 2022 16:33:07 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59476 "EHLO
+        Mon, 26 Sep 2022 17:42:39 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50288 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229621AbiIZUdH (ORCPT
+        with ESMTP id S229748AbiIZVmh (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Mon, 26 Sep 2022 16:33:07 -0400
-Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id F1F28A4B81
-        for <linux-perf-users@vger.kernel.org>; Mon, 26 Sep 2022 13:33:00 -0700 (PDT)
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id 8A6A361323
-        for <linux-perf-users@vger.kernel.org>; Mon, 26 Sep 2022 20:32:59 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id CA92BC433D6;
-        Mon, 26 Sep 2022 20:32:58 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1664224379;
-        bh=8UAIStDNONzpPjqOgzzt8D+DVeeNKYymebJCDJEd9gQ=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=ueIdLpp+LGmO31WvmtBhvdq7IL1dn/9N8gctBIi/8YQeqhFIGdxDRc3EXMBKj4Fqt
-         23HmUdXNeHQ6TVSSU2Pa2sNNcZRmGVvYY2i3ocZEgycPYAqTuxbLV18NbdSNKCMyc+
-         jixIxzqRP0xOPksIZDaVzeDN2aASCGLuPVE4Fd6pbmqgQM5nIlTCn6pocZktR45ahY
-         n4FFAk4Zq7Pea3DkgrJBIkX+Sa2Tp35XQZUVhoEMEo1K8z9I2/zkvyubjdDMdSeaSK
-         9CdlzkI389qEfFXiMSnqxVkT2NViHpG415nfog4CQvEYkmIWgvkGa7moIqs5hLt2W7
-         up+vkFZJNmb7w==
-Received: by quaco.ghostprotocols.net (Postfix, from userid 1000)
-        id BFCE9403B0; Mon, 26 Sep 2022 21:32:55 +0100 (IST)
-Date:   Mon, 26 Sep 2022 21:32:55 +0100
-From:   Arnaldo Carvalho de Melo <acme@kernel.org>
-To:     Ian Rogers <irogers@google.com>
-Cc:     Shang XiaoJing <shangxiaojing@huawei.com>, peterz@infradead.org,
-        mingo@redhat.com, mark.rutland@arm.com,
-        alexander.shishkin@linux.intel.com, jolsa@kernel.org,
-        namhyung@kernel.org, linux-perf-users@vger.kernel.org
-Subject: Re: [PATCH 4/4] perf stat: Clean redundant if in process_evlist
-Message-ID: <YzIMd85lShkA9e1s@kernel.org>
-References: <20220922141438.22487-1-shangxiaojing@huawei.com>
- <20220922141438.22487-5-shangxiaojing@huawei.com>
- <Yyy9jX5vlnUaDa/G@kernel.org>
- <CAP-5=fXPnXVgw_XvqnPpnV4kq_HntQOSdbBVmy7ajjZhJeRi2g@mail.gmail.com>
+        Mon, 26 Sep 2022 17:42:37 -0400
+Received: from mail-oa1-f47.google.com (mail-oa1-f47.google.com [209.85.160.47])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 937B9A50EA;
+        Mon, 26 Sep 2022 14:42:33 -0700 (PDT)
+Received: by mail-oa1-f47.google.com with SMTP id 586e51a60fabf-127ba06d03fso11022765fac.3;
+        Mon, 26 Sep 2022 14:42:33 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:x-gm-message-state:from:to:cc:subject:date;
+        bh=+KcZVOe6xtv1ry2Jgrm4LTKRDPbLt0jHuqQFNWmEBt0=;
+        b=iPST+DeNKA+biF0faph2OUmSCQhOTkqZrj+J/ezhHPq3T2DvNRncPkNfqsyUYQmVnN
+         BAm//KcmS45hTnORdgrji5ww24H3PNXkUziC636Axjy/Txb6igSP2MM58ymculMOgO/D
+         J2lhpZtSbIKRvTePdf0HkvA5aUfxLf5+Uju1Bgdr7f0qMCLZuZ2F+v9WdG1LwKJy+1yL
+         yrXA0noqUeLVKaaVoisMTdo8AfikPtidwC7idoyCjnraPvhrWrSsI5CwNGmRQJYNv0I1
+         UP0Psz/sI1bi9sQtuwQf1u6Y9SqBTSUHMOn6f498T0EAN/xos9vvlx/yHGuRUjHxAHfw
+         AeKw==
+X-Gm-Message-State: ACrzQf0LiUzRqgiQBb4ppA6V+/eUD4W3/NZpoRRry20e6TAPMPQadCNn
+        pHzpO0cxwOcRwFjLmBPBK6nIVxVVp3o4r1Dta6g=
+X-Google-Smtp-Source: AMsMyM480rPSaDt+OwSc6bVf0V7feDQiu8lz9RpVlS5umfCI5eq2YY/utCUB9zit7AGzbw0an9bcbF+jRPTqsViz9g0=
+X-Received: by 2002:a05:6870:a70f:b0:127:666a:658 with SMTP id
+ g15-20020a056870a70f00b00127666a0658mr433946oam.218.1664228552381; Mon, 26
+ Sep 2022 14:42:32 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CAP-5=fXPnXVgw_XvqnPpnV4kq_HntQOSdbBVmy7ajjZhJeRi2g@mail.gmail.com>
-X-Url:  http://acmel.wordpress.com
+References: <20220802191004.347740-1-namhyung@kernel.org> <20220802191004.347740-3-namhyung@kernel.org>
+ <a87d481e-adb7-b4e3-518b-2c4276d906e7@kernel.org>
+In-Reply-To: <a87d481e-adb7-b4e3-518b-2c4276d906e7@kernel.org>
+From:   Namhyung Kim <namhyung@kernel.org>
+Date:   Mon, 26 Sep 2022 14:42:21 -0700
+Message-ID: <CAM9d7ci27w7bqiZnAQYCZVtaPE8_f0Hbk_McqJB=F-F_4WPmQw@mail.gmail.com>
+Subject: Re: [PATCH v2 3/3] perf lock: Print the number of lost entries for BPF
+To:     Jiri Slaby <jirislaby@kernel.org>
+Cc:     Arnaldo Carvalho de Melo <acme@kernel.org>,
+        Jiri Olsa <jolsa@kernel.org>, Ingo Molnar <mingo@kernel.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Ian Rogers <irogers@google.com>,
+        linux-perf-users <linux-perf-users@vger.kernel.org>,
+        Will Deacon <will@kernel.org>,
+        Waiman Long <longman@redhat.com>,
+        Boqun Feng <boqun.feng@gmail.com>,
+        Davidlohr Bueso <dave@stgolabs.net>,
+        Song Liu <songliubraving@fb.com>,
+        Blake Jones <blakejones@google.com>
+Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-Em Thu, Sep 22, 2022 at 03:50:40PM -0700, Ian Rogers escreveu:
-> On Thu, Sep 22, 2022 at 12:55 PM Arnaldo Carvalho de Melo
-> <acme@kernel.org> wrote:
-> >
-> > Em Thu, Sep 22, 2022 at 10:14:38PM +0800, Shang XiaoJing escreveu:
-> > > Since the first if statment is covered by the following one, clean up
-> > > the first if statment.
-> > >
-> > > Signed-off-by: Shang XiaoJing <shangxiaojing@huawei.com>
-> 
-> Acked-by: Ian Rogers <irogers@google.com>
+Hello,
 
-Thanks, applied.
+On Mon, Sep 26, 2022 at 1:05 AM Jiri Slaby <jirislaby@kernel.org> wrote:
+>
+> Hi,
+>
+> On 02. 08. 22, 21:10, Namhyung Kim wrote:
+> > Like the normal perf lock contention output, it'd print the number of
+> > lost entries for BPF if exists or -v option is passed.  Currently it
+> > uses BROKEN_CONTENDED stat for the lost count (due to full stack maps).
+> ...
+> > --- a/tools/perf/util/bpf_skel/lock_contention.bpf.c
+> > +++ b/tools/perf/util/bpf_skel/lock_contention.bpf.c
+> ...
+> > @@ -73,6 +73,9 @@ int enabled;
+> >   int has_cpu;
+> >   int has_task;
+> >
+> > +/* error stat */
+> > +unsigned long lost;
+>
+> I don't know how all this is generated into lock_contention.skel.h. But
+> I believe this patch breaks perf build on 32bit:
+> > [  375s] In file included from util/bpf_lock_contention.c:13:
+> > [  375s] util/bpf_skel/lock_contention.skel.h: In function 'lock_contention_bpf__assert':
+> > [  375s] util/bpf_skel/lock_contention.skel.h:537:9: error: static assertion failed: "unexpected size of \'lost\'"
+> > [  375s]   537 |         _Static_assert(sizeof(s->bss->lost) == 8, "unexpected size of 'lost'");
+> > [  375s]       |         ^~~~~~~~~~~~~~
+>
+> Should the above (and below too) be __u64?
 
-- Arnaldo
+Oops, it seems BPF ABI uses 8-byte long even on 32-bit systems.
+Sorry for the inconvenience.  Will change.
 
- 
-> Thanks,
-> Ian
-> 
-> > > ---
-> > >  tools/perf/builtin-stat.c | 2 --
-> > >  1 file changed, 2 deletions(-)
-> > >
-> > > diff --git a/tools/perf/builtin-stat.c b/tools/perf/builtin-stat.c
-> > > index e10595f649bc..ccea5d1e053a 100644
-> > > --- a/tools/perf/builtin-stat.c
-> > > +++ b/tools/perf/builtin-stat.c
-> > > @@ -899,8 +899,6 @@ static int __run_perf_stat(int argc, const char **argv, int run_idx)
-> > >               evlist__for_each_cpu(evlist_cpu_itr, evsel_list, affinity) {
-> > >                       counter = evlist_cpu_itr.evsel;
-> > >
-> > > -                     if (!counter->reset_group && !counter->errored)
-> > > -                             continue;
-> > >                       if (!counter->reset_group)
-> > >                               continue;
-> >
-> > Ian, can you please take a look at this one? You added this in:
-> >
-> > commit 472832d2c000b9611feaea66fe521055c3dbf17a
-> > Author: Ian Rogers <irogers@google.com>
-> > Date:   Tue Jan 4 22:13:37 2022 -0800
-> >
-> >     perf evlist: Refactor evlist__for_each_cpu()
-> >
-> > >  try_again_reset:
-> > > --
-> > > 2.17.1
-> >
-> >
-> > - Arnaldo
+Thanks,
+Namhyung
 
--- 
 
-- Arnaldo
+>
+> > --- a/tools/perf/util/lock-contention.h
+> > +++ b/tools/perf/util/lock-contention.h
+> > @@ -113,6 +113,7 @@ struct lock_contention {
+> >       struct machine *machine;
+> >       struct hlist_head *result;
+> >       unsigned long map_nr_entries;
+> > +     unsigned long lost;
+>
+> thanks,
+> --
+> js
+> suse labs
+>
