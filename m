@@ -2,111 +2,92 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9BE14C32771
-	for <linux-perf-users@archiver.kernel.org>; Mon, 26 Sep 2022 08:07:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DE89EC07E9D
+	for <linux-perf-users@archiver.kernel.org>; Mon, 26 Sep 2022 13:02:41 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233672AbiIZIHd (ORCPT
+        id S233811AbiIZNCk (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Mon, 26 Sep 2022 04:07:33 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57718 "EHLO
+        Mon, 26 Sep 2022 09:02:40 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48146 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S233626AbiIZIHH (ORCPT
+        with ESMTP id S233095AbiIZNCT (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Mon, 26 Sep 2022 04:07:07 -0400
-Received: from mail-wm1-f52.google.com (mail-wm1-f52.google.com [209.85.128.52])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 88E6521E3E;
-        Mon, 26 Sep 2022 01:05:33 -0700 (PDT)
-Received: by mail-wm1-f52.google.com with SMTP id k3-20020a05600c1c8300b003b4fa1a85f8so3247169wms.3;
-        Mon, 26 Sep 2022 01:05:33 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=content-transfer-encoding:in-reply-to:from:references:cc:to
-         :content-language:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date;
-        bh=P1Mpxj6IEYIvMHzYEzmI74M/4VNUKksFgyVJ3+3UxaQ=;
-        b=x81WeQhLmTufP0ol7OLwAq4Jc2Yy6OtffD30Lq5KEpu9fZNixPrOI3LOa69+L5gbn7
-         +Gfqgq7pXyUMYBE06Qg8dlyiwFFWbmXIEVkS2U+mBeJwWUA0iYUKiEqfusaqfXmu0zmn
-         tYHd+H3Fem5vrAEznHb/ct3iuif6O1UEzKf8kIFEHsU/UNafAxoYW+eDMPOmsP/IsfDS
-         Fgt4QK5KX9uzRpo7nvOZTk09PYNG4++qHs6oYg2OJ3VI2GNTjBxM30cs2qLz0MxPx5JD
-         snSy/xI93ESWpGedoIRvIDEeIPXQ33+2cf2vWhqoNwGjthfBJgePQxoDJKo1YXRRQG2J
-         s3Fw==
-X-Gm-Message-State: ACrzQf0iZAA8HnqsDyq/z8ckPvHlPVWbJuoTsVcplX/h873X5S0wQvTI
-        ZpO0cM4ZlHAWRcc80ghDtVdYQ8f5POE=
-X-Google-Smtp-Source: AMsMyM6dyW2X+h6o8RJFgmLvjLUL6aI8WuE6TJ6Bxrs8xm4ambjtA3pUODmWiWUyAj1V7cU0ty49MA==
-X-Received: by 2002:a05:600c:3483:b0:3b4:99f4:1191 with SMTP id a3-20020a05600c348300b003b499f41191mr13715762wmq.147.1664179532186;
-        Mon, 26 Sep 2022 01:05:32 -0700 (PDT)
-Received: from [192.168.1.49] (185-219-167-24-static.vivo.cz. [185.219.167.24])
-        by smtp.gmail.com with ESMTPSA id l18-20020a05600c27d200b003b4868eb6bbsm12212696wmb.23.2022.09.26.01.05.30
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 26 Sep 2022 01:05:31 -0700 (PDT)
-Message-ID: <a87d481e-adb7-b4e3-518b-2c4276d906e7@kernel.org>
-Date:   Mon, 26 Sep 2022 10:05:29 +0200
+        Mon, 26 Sep 2022 09:02:19 -0400
+Received: from frasgout.his.huawei.com (frasgout.his.huawei.com [185.176.79.56])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7C17E1759A;
+        Mon, 26 Sep 2022 04:34:39 -0700 (PDT)
+Received: from fraeml701-chm.china.huawei.com (unknown [172.18.147.226])
+        by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4Mbgbc5PCdz688y7;
+        Mon, 26 Sep 2022 19:32:44 +0800 (CST)
+Received: from lhrpeml500003.china.huawei.com (7.191.162.67) by
+ fraeml701-chm.china.huawei.com (10.206.15.50) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id
+ 15.1.2375.31; Mon, 26 Sep 2022 13:33:55 +0200
+Received: from [10.48.156.245] (10.48.156.245) by
+ lhrpeml500003.china.huawei.com (7.191.162.67) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2375.31; Mon, 26 Sep 2022 12:33:54 +0100
+Message-ID: <2f4335ff-133c-18e0-5c14-3fd29bf6503a@huawei.com>
+Date:   Mon, 26 Sep 2022 12:33:56 +0100
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
- Thunderbird/102.3.0
-Subject: Re: [PATCH v2 3/3] perf lock: Print the number of lost entries for
- BPF
-Content-Language: en-US
-To:     Namhyung Kim <namhyung@kernel.org>,
-        Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Jiri Olsa <jolsa@kernel.org>
-Cc:     Ingo Molnar <mingo@kernel.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Ian Rogers <irogers@google.com>,
-        linux-perf-users@vger.kernel.org, Will Deacon <will@kernel.org>,
-        Waiman Long <longman@redhat.com>,
-        Boqun Feng <boqun.feng@gmail.com>,
-        Davidlohr Bueso <dave@stgolabs.net>,
-        Song Liu <songliubraving@fb.com>,
-        Blake Jones <blakejones@google.com>
-References: <20220802191004.347740-1-namhyung@kernel.org>
- <20220802191004.347740-3-namhyung@kernel.org>
-From:   Jiri Slaby <jirislaby@kernel.org>
-In-Reply-To: <20220802191004.347740-3-namhyung@kernel.org>
-Content-Type: text/plain; charset=UTF-8; format=flowed
+User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:91.0) Gecko/20100101
+ Thunderbird/91.6.1
+Subject: Re: [PATCH v13 1/3] perf tool: arm: Refactor event list iteration in
+ auxtrace_record__init()
+To:     Yicong Yang <yangyicong@huawei.com>,
+        "acme@kernel.org" <acme@kernel.org>,
+        "peterz@infradead.org" <peterz@infradead.org>,
+        "alexander.shishkin@linux.intel.com" 
+        <alexander.shishkin@linux.intel.com>,
+        "leo.yan@linaro.org" <leo.yan@linaro.org>,
+        "james.clark@arm.com" <james.clark@arm.com>,
+        "will@kernel.org" <will@kernel.org>,
+        "mathieu.poirier@linaro.org" <mathieu.poirier@linaro.org>,
+        "mark.rutland@arm.com" <mark.rutland@arm.com>,
+        "suzuki.poulose@arm.com" <suzuki.poulose@arm.com>,
+        Jonathan Cameron <jonathan.cameron@huawei.com>,
+        "mike.leach@linaro.org" <mike.leach@linaro.org>
+CC:     "gregkh@linuxfoundation.org" <gregkh@linuxfoundation.org>,
+        "helgaas@kernel.org" <helgaas@kernel.org>,
+        "lorenzo.pieralisi@arm.com" <lorenzo.pieralisi@arm.com>,
+        Shameerali Kolothum Thodi 
+        <shameerali.kolothum.thodi@huawei.com>,
+        "mingo@redhat.com" <mingo@redhat.com>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "linux-arm-kernel@lists.infradead.org" 
+        <linux-arm-kernel@lists.infradead.org>,
+        "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
+        "linux-perf-users@vger.kernel.org" <linux-perf-users@vger.kernel.org>,
+        "Zengtao (B)" <prime.zeng@hisilicon.com>,
+        Zhangshaokun <zhangshaokun@hisilicon.com>,
+        Linuxarm <linuxarm@huawei.com>,
+        "liuqi6124@gmail.com" <liuqi6124@gmail.com>
+References: <20220919090045.6778-1-yangyicong@huawei.com>
+ <20220919090045.6778-2-yangyicong@huawei.com>
+From:   John Garry <john.garry@huawei.com>
+In-Reply-To: <20220919090045.6778-2-yangyicong@huawei.com>
+Content-Type: text/plain; charset="UTF-8"; format=flowed
 Content-Transfer-Encoding: 7bit
+X-Originating-IP: [10.48.156.245]
+X-ClientProxiedBy: lhrpeml100001.china.huawei.com (7.191.160.183) To
+ lhrpeml500003.china.huawei.com (7.191.162.67)
+X-CFilter-Loop: Reflected
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-Hi,
+On 19/09/2022 10:00, Yicong Yang wrote:
+> From: Qi Liu<liuqi115@huawei.com>
+> 
+> Add find_pmu_for_event() and use to simplify logic in
+> auxtrace_record_init(). find_pmu_for_event() will be
+> reused in subsequent patches.
+> 
+> Reviewed-by: Leo Yan<leo.yan@linaro.org>
+> Reviewed-by: Jonathan Cameron<Jonathan.Cameron@huawei.com>
+> Signed-off-by: Qi Liu<liuqi115@huawei.com>
+> Signed-off-by: Yicong Yang<yangyicong@hisilicon.com>
+> ---
 
-On 02. 08. 22, 21:10, Namhyung Kim wrote:
-> Like the normal perf lock contention output, it'd print the number of
-> lost entries for BPF if exists or -v option is passed.  Currently it
-> uses BROKEN_CONTENDED stat for the lost count (due to full stack maps).
-...
-> --- a/tools/perf/util/bpf_skel/lock_contention.bpf.c
-> +++ b/tools/perf/util/bpf_skel/lock_contention.bpf.c
-...
-> @@ -73,6 +73,9 @@ int enabled;
->   int has_cpu;
->   int has_task;
->   
-> +/* error stat */
-> +unsigned long lost;
 
-I don't know how all this is generated into lock_contention.skel.h. But 
-I believe this patch breaks perf build on 32bit:
-> [  375s] In file included from util/bpf_lock_contention.c:13:
-> [  375s] util/bpf_skel/lock_contention.skel.h: In function 'lock_contention_bpf__assert':
-> [  375s] util/bpf_skel/lock_contention.skel.h:537:9: error: static assertion failed: "unexpected size of \'lost\'"
-> [  375s]   537 |         _Static_assert(sizeof(s->bss->lost) == 8, "unexpected size of 'lost'");
-> [  375s]       |         ^~~~~~~~~~~~~~
-
-Should the above (and below too) be __u64?
-
-> --- a/tools/perf/util/lock-contention.h
-> +++ b/tools/perf/util/lock-contention.h
-> @@ -113,6 +113,7 @@ struct lock_contention {
->   	struct machine *machine;
->   	struct hlist_head *result;
->   	unsigned long map_nr_entries;
-> +	unsigned long lost;
-
-thanks,
--- 
-js
-suse labs
-
+Reviewed-by: John Garry <john.garry@huawei.com>
