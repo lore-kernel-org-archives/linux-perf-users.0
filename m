@@ -2,40 +2,40 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0EB8DC32771
-	for <linux-perf-users@archiver.kernel.org>; Mon, 26 Sep 2022 19:52:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E836EC07E9D
+	for <linux-perf-users@archiver.kernel.org>; Mon, 26 Sep 2022 19:54:29 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230100AbiIZTwO (ORCPT
+        id S229718AbiIZTy3 (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Mon, 26 Sep 2022 15:52:14 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33284 "EHLO
+        Mon, 26 Sep 2022 15:54:29 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36918 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230250AbiIZTwC (ORCPT
+        with ESMTP id S230141AbiIZTy2 (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Mon, 26 Sep 2022 15:52:02 -0400
+        Mon, 26 Sep 2022 15:54:28 -0400
 Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 069A61F9EE;
-        Mon, 26 Sep 2022 12:52:01 -0700 (PDT)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 74135A1D65;
+        Mon, 26 Sep 2022 12:54:27 -0700 (PDT)
 Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id 0D0186129B;
-        Mon, 26 Sep 2022 19:52:00 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 4E4B4C433D6;
-        Mon, 26 Sep 2022 19:51:59 +0000 (UTC)
+        by dfw.source.kernel.org (Postfix) with ESMTPS id 119F36129B;
+        Mon, 26 Sep 2022 19:54:27 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 4F5ACC433D6;
+        Mon, 26 Sep 2022 19:54:26 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1664221919;
-        bh=bgsgz2grzEE537Qs/RlpiyBgkh/XZEjx6j5sbTdljEA=;
+        s=k20201202; t=1664222066;
+        bh=aFyuIBcggUWX+3c2+KDfoqRBYSJIPGbhdoSm0CVYV40=;
         h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=GfathvNGTX/eVb4grOp75I+Zxhe7wdYp/8VWxsVc+vqao/jfHLRispl/UbNN1A1Za
-         VftObsznsr0CoBnfgOSZrOY8tSu3zUdN7OCptiWY48D16fG6UXloJp5SHHpOxQ1tMH
-         d2ZATmJEdSk87zwSfXUHxQHRdEx0hOOWOl0BEkMpdSt3NeRHIA+q1SMbj7aAjsS9kt
-         3eU11ioUwSxNjTgyJwMAuwsPrGlsarQ44Jh6DDgli7bnL5trhKLn2B70/XsjXaxJ29
-         aQbDQwZgFwsBMP2w8qRiADXB2+MkFAPs/WkKUlBitK2K0gWo9yyCIie0D2RN9nCg+6
-         qW++12Pqm5G6g==
+        b=ab1MosxuDhcl8mRAlqIcX3C3zEXfs+IP2xmG4i8GBjUk1G/eOd9iZ+wh7leFVIK54
+         UHFx8EiGLn1W6MFgbua6Zrf2sK9jBomIU59YTUUwHhYYj9ZBNxL+tYx64/ZVrPEOOm
+         fuTjjNNi6yVSjvFy8jDWHIRmCuVkf9rCFYzstSsTGEGcrxyikrKVQU8N1A7bdopavk
+         93KFe37gs93/Un12C4yfFtE+j2/nre7FA/FG6719UiHL4uE4QBIyvchRmC9GPCUFtM
+         sLTJxh7ul971v7nm08awHuQmFHqnm8WuiyfB3zXacEwz8ZG9lCIIdba8FFcBe/RQ2M
+         IQguKjgofFoew==
 Received: by quaco.ghostprotocols.net (Postfix, from userid 1000)
-        id A9D1B403B0; Mon, 26 Sep 2022 20:51:56 +0100 (IST)
-Date:   Mon, 26 Sep 2022 20:51:56 +0100
+        id 286C4403B0; Mon, 26 Sep 2022 20:54:24 +0100 (IST)
+Date:   Mon, 26 Sep 2022 20:54:24 +0100
 From:   Arnaldo Carvalho de Melo <acme@kernel.org>
 To:     Chen Zhongjin <chenzhongjin@huawei.com>
 Cc:     linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org,
@@ -44,58 +44,77 @@ Cc:     linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org,
         namhyung@kernel.org, irogers@google.com, john.garry@huawei.com,
         adrian.hunter@intel.com, ak@linux.intel.com,
         florian.fischer@muhq.space
-Subject: Re: [PATCH -next 2/5] perf: Fix incorrectly parsed flags in filter
-Message-ID: <YzIC3EpZaDNQlFOe@kernel.org>
+Subject: Re: [PATCH -next 3/5] perf: Remove duplicate errbuf
+Message-ID: <YzIDcPVXLabTeZ11@kernel.org>
 References: <20220926031440.28275-1-chenzhongjin@huawei.com>
- <20220926031440.28275-3-chenzhongjin@huawei.com>
+ <20220926031440.28275-4-chenzhongjin@huawei.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20220926031440.28275-3-chenzhongjin@huawei.com>
+In-Reply-To: <20220926031440.28275-4-chenzhongjin@huawei.com>
 X-Url:  http://acmel.wordpress.com
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-Em Mon, Sep 26, 2022 at 11:14:37AM +0800, Chen Zhongjin escreveu:
-> When parsing flags in filter, the strtoul function uses wrong parsing
-> condition (tok[1] = 'x'), which can make the flags be corrupted and
-> treat all numbers start with 0 as hex.
+Em Mon, Sep 26, 2022 at 11:14:38AM +0800, Chen Zhongjin escreveu:
+> char errbuf[BUFSIZ] is defined twice in trace__run.
 > 
-> In fact strtoul() will auto test hex format when base == 0 (See
-> _parse_integer_fixup_radix). So there is no need to test this again.
+> However out_error_open is not cross to other out_error path, they can
+> share one errbuf together.
 > 
-> Remove the unnessesary is_hexa test.
+> Define the errbuf[BUFSIZ] at the beginning of function, and remove the
+> redefinations of them for code cleaning.
 
-Thanks, applied.
+Have you looked at the end result in the generated code? Just out of
+curiosity.
 
 - Arnaldo
-
  
-> Fixes: 154c978d484c ("libbeauty: Introduce strarray__strtoul_flags()")
 > Signed-off-by: Chen Zhongjin <chenzhongjin@huawei.com>
 > ---
 >  tools/perf/builtin-trace.c | 7 ++-----
 >  1 file changed, 2 insertions(+), 5 deletions(-)
 > 
 > diff --git a/tools/perf/builtin-trace.c b/tools/perf/builtin-trace.c
-> index c7bb7a8222a6..7ecd76428440 100644
+> index 7ecd76428440..5660c0ee3507 100644
 > --- a/tools/perf/builtin-trace.c
 > +++ b/tools/perf/builtin-trace.c
-> @@ -615,11 +615,8 @@ bool strarray__strtoul_flags(struct strarray *sa, char *bf, size_t size, u64 *re
->  		if (isalpha(*tok) || *tok == '_') {
->  			if (!strarray__strtoul(sa, tok, toklen, &val))
->  				return false;
-> -		} else {
-> -			bool is_hexa = tok[0] == 0 && (tok[1] = 'x' || tok[1] == 'X');
+> @@ -3937,6 +3937,7 @@ static int trace__run(struct trace *trace, int argc, const char **argv)
+>  	unsigned long before;
+>  	const bool forks = argc > 0;
+>  	bool draining = false;
+> +	char errbuf[BUFSIZ];
+>  
+>  	trace->live = true;
+>  
+> @@ -4027,8 +4028,6 @@ static int trace__run(struct trace *trace, int argc, const char **argv)
+>  
+>  	err = bpf__apply_obj_config();
+>  	if (err) {
+> -		char errbuf[BUFSIZ];
 > -
-> -			val = strtoul(tok, NULL, is_hexa ? 16 : 0);
-> -		}
-> +		} else
-> +			val = strtoul(tok, NULL, 0);
+>  		bpf__strerror_apply_obj_config(err, errbuf, sizeof(errbuf));
+>  		pr_err("ERROR: Apply config to BPF failed: %s\n",
+>  			 errbuf);
+> @@ -4185,8 +4184,6 @@ static int trace__run(struct trace *trace, int argc, const char **argv)
+>  	trace->evlist = NULL;
+>  	trace->live = false;
+>  	return err;
+> -{
+> -	char errbuf[BUFSIZ];
 >  
->  		*ret |= (1 << (val - 1));
->  
+>  out_error_sched_stat_runtime:
+>  	tracing_path__strerror_open_tp(errno, errbuf, sizeof(errbuf), "sched", "sched_stat_runtime");
+> @@ -4213,7 +4210,7 @@ static int trace__run(struct trace *trace, int argc, const char **argv)
+>  		evsel->filter, evsel__name(evsel), errno,
+>  		str_error_r(errno, errbuf, sizeof(errbuf)));
+>  	goto out_delete_evlist;
+> -}
+> +
+>  out_error_mem:
+>  	fprintf(trace->output, "Not enough memory to run!\n");
+>  	goto out_delete_evlist;
 > -- 
 > 2.17.1
 
