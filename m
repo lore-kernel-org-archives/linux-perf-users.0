@@ -2,94 +2,105 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6C90AC6FA8E
-	for <linux-perf-users@archiver.kernel.org>; Mon, 26 Sep 2022 19:16:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B6C98C07E9D
+	for <linux-perf-users@archiver.kernel.org>; Mon, 26 Sep 2022 19:24:57 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229832AbiIZTQs (ORCPT
+        id S229532AbiIZTY4 (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Mon, 26 Sep 2022 15:16:48 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58660 "EHLO
+        Mon, 26 Sep 2022 15:24:56 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40358 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229571AbiIZTQq (ORCPT
+        with ESMTP id S229509AbiIZTY4 (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Mon, 26 Sep 2022 15:16:46 -0400
-Received: from ams.source.kernel.org (ams.source.kernel.org [IPv6:2604:1380:4601:e00::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BEB2A9A6BE;
-        Mon, 26 Sep 2022 12:16:45 -0700 (PDT)
+        Mon, 26 Sep 2022 15:24:56 -0400
+Received: from ams.source.kernel.org (ams.source.kernel.org [145.40.68.75])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4D2DF3A16D;
+        Mon, 26 Sep 2022 12:24:55 -0700 (PDT)
 Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by ams.source.kernel.org (Postfix) with ESMTPS id 2F139B80D91;
-        Mon, 26 Sep 2022 19:16:44 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id AC39DC433D7;
-        Mon, 26 Sep 2022 19:16:42 +0000 (UTC)
+        by ams.source.kernel.org (Postfix) with ESMTPS id ECF56B80C75;
+        Mon, 26 Sep 2022 19:24:53 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 74FB0C433D6;
+        Mon, 26 Sep 2022 19:24:52 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1664219802;
-        bh=i8EKvkC0Tr2VPkNQzzRCboiKkQ7L74SHdGwxYZgB0zE=;
+        s=k20201202; t=1664220292;
+        bh=KGe/GdLiOyJuVfNEKfybS6bLyBJmzPyi8wQtB65+SAE=;
         h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=jb9lcMcyJ+upkvHXzMW8Akjnqe6cZtfhnDBXsdwLD5EMINm+uU5ljyye4rPM0Wp0i
-         e3SCYAwkuYur/jOcGct7P6IukXaCJBeJ5CDE26ozWImL97fCfLn9k6H0E8Y7m3R9Ik
-         bWS+JdilMfDtTRjhJvdBltLrrkX9rBHPaF3U+EzKqAJj5H+8WtBW0EPpgGlvSYESRR
-         bRbIyPSftQ19Pjk/koyJc8E6OkxQk6L4gM6c6mmMVjGviJiKQgx1jqTMIfWHJlrsxL
-         0SgL6Xki0M/yOqJhcIM60aFHOB8xdyM7DUPjkwAUYn/zQixmLrjRo1BMHAW0MXYk2p
-         Xt1lvhD1xdVCQ==
+        b=mvyKo7rv5awsxlVfri8Z8FJxHXZTJWE1eTX9SY4sJG8o0zVQMMwMHlHvAHFWL/KYc
+         esHUzpqs0BHh6YzWVPqXc1zul4RsGSd91wPPoOqiHm0FnLG+H+bbOHV83hykoIN1V5
+         7C5GaX7vZ2s3cZWTWlXk86jKrjoPUHWiECibhI8Qw/WEsJk64M6CqlTLHm3YoOXTov
+         CoYnnu/ihI2/QM4kBTPAVIeApAWVXN6+rjkyhH63b0cA/SQvyZueNm2lPBzkcrTw1P
+         +tZ3PFMzQfbPIqSDF97s7E9mrBRFBhnxskaODSqZeeQ/j0oDGAWkc/99O41c0pMwrx
+         iwYpgkvg14Wjg==
 Received: by quaco.ghostprotocols.net (Postfix, from userid 1000)
-        id 008A5403B0; Mon, 26 Sep 2022 20:16:39 +0100 (IST)
-Date:   Mon, 26 Sep 2022 20:16:39 +0100
+        id 2329C403B0; Mon, 26 Sep 2022 20:24:50 +0100 (IST)
+Date:   Mon, 26 Sep 2022 20:24:50 +0100
 From:   Arnaldo Carvalho de Melo <acme@kernel.org>
-To:     Leo Yan <leo.yan@linaro.org>
-Cc:     Namhyung Kim <namhyung@kernel.org>, Ingo Molnar <mingo@redhat.com>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Jiri Olsa <jolsa@kernel.org>,
+To:     Namhyung Kim <namhyung@kernel.org>
+Cc:     Jiri Olsa <jolsa@kernel.org>, Ingo Molnar <mingo@kernel.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Ian Rogers <irogers@google.com>,
         Adrian Hunter <adrian.hunter@intel.com>,
-        linux-perf-users <linux-perf-users@vger.kernel.org>,
-        linux-kernel <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH] perf record: Fix segmentation fault in
- record__read_lost_samples()
-Message-ID: <YzH6lxeZ2KYfK6lx@kernel.org>
-References: <20220924113346.1110909-1-leo.yan@linaro.org>
- <CAM9d7ci2RJOTz08eGRgLMVpS0TmwN=q=UNA_Z3wbSHCC2pMygQ@mail.gmail.com>
- <YzGiMdIRRE8ibCiD@kernel.org>
- <YzG9Mz8t6aNn1ZwX@leoy-huanghe.lan>
+        linux-perf-users@vger.kernel.org,
+        Kan Liang <kan.liang@linux.intel.com>,
+        Leo Yan <leo.yan@linaro.org>
+Subject: Re: [PATCH 0/5] perf tools: Clean up cpu map handling for a
+ system-wide evsel (v1)
+Message-ID: <YzH8gkVo3wNwGZbu@kernel.org>
+References: <20220924165737.956428-1-namhyung@kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <YzG9Mz8t6aNn1ZwX@leoy-huanghe.lan>
+In-Reply-To: <20220924165737.956428-1-namhyung@kernel.org>
 X-Url:  http://acmel.wordpress.com
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-Em Mon, Sep 26, 2022 at 10:54:43PM +0800, Leo Yan escreveu:
-> On Mon, Sep 26, 2022 at 01:59:29PM +0100, Arnaldo Carvalho de Melo wrote:
+Em Sat, Sep 24, 2022 at 09:57:32AM -0700, Namhyung Kim escreveu:
+> Hello,
 > 
-> [...]
+> The system-wide evsel has a cpu map for all (online) cpus regardless
+> of user requested cpus.  But the cpu map handling code has some
+> special case for it and I think we can cleanup the code by making sure
+> that such a evsel has a proper cpu/thread maps from the beginning.
+> This patches should not cause any change in the behavior.
 > 
-> > > > Fixes: a49aa8a54e86 ("perf record: Read and inject LOST_SAMPLES events")
-> > > > Signed-off-by: Leo Yan <leo.yan@linaro.org>
-> > > 
-> > > Thanks for the fix and sorry for the inconvenience.
-> > > Actually I sent the same fix a few weeks ago.
-> > > 
-> > > https://lore.kernel.org/r/20220909235024.278281-1-namhyung@kernel.org
-> > 
-> > collecting it now, and adding that Fixes from Leo's patch, ok?
+> You can get the code from 'perf/cpumap-update-v1' branch in
 > 
-> Yeah, I think it's good to add Fixes tag.  Just remind, actually
-> Namhyung has mentioned Fixed tag in above link:
-> 
-> "I didn't add a Fixes tag as it's not sent to Linus yet. But in case you want it.
-> 
->   Fixes: a49aa8a54e86 ("perf record: Read and inject LOST_SAMPLES events")
-> "
+>   git://git.kernel.org/pub/scm/linux/kernel/git/namhyung/linux-perf.git
+>   
+> Thanks,
+> Namhyung
 
-I'll add it.
+Looks sane, applied locally for testing.
 
-Sometimes I think about combining fixes with patches in my tree that
-didn't made it into Linus tree yet, so that we avoid having problems
-with 'git bisect', but I also try not to rebase acme/perf/core.
+- Arnaldo
+ 
+> 
+> Namhyung Kim (5):
+>   libperf: Populate system-wide evsel maps
+>   libperf: Propagate maps only if necessary
+>   perf tools: Get rid of evlist__add_on_all_cpus()
+>   perf tools: Add evlist__add_sched_switch()
+>   perf tools: Remove special handling of system-wide evsel
+> 
+>  tools/lib/perf/evlist.c             | 23 ++++++++-------
+>  tools/lib/perf/evsel.c              |  3 --
+>  tools/perf/arch/x86/util/intel-pt.c | 15 ++++------
+>  tools/perf/builtin-script.c         |  3 --
+>  tools/perf/tests/switch-tracking.c  | 15 ++++------
+>  tools/perf/util/evlist.c            | 46 ++++++++++++-----------------
+>  tools/perf/util/evlist.h            |  1 +
+>  tools/perf/util/evsel.c             | 12 ++------
+>  tools/perf/util/stat.c              |  3 --
+>  9 files changed, 44 insertions(+), 77 deletions(-)
+> 
+> -- 
+> 2.37.3.998.g577e59143f-goog
 
-Perhaps in the future 'git bisect' will look at Fixes: tags :-)
+-- 
 
 - Arnaldo
