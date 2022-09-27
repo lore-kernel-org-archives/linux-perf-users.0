@@ -2,121 +2,308 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7AA75C07E9D
-	for <linux-perf-users@archiver.kernel.org>; Tue, 27 Sep 2022 08:48:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 64DBDC07E9D
+	for <linux-perf-users@archiver.kernel.org>; Tue, 27 Sep 2022 12:13:41 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231589AbiI0Isi (ORCPT
+        id S231448AbiI0MNk (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Tue, 27 Sep 2022 04:48:38 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49516 "EHLO
+        Tue, 27 Sep 2022 08:13:40 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54492 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230472AbiI0Is3 (ORCPT
+        with ESMTP id S232234AbiI0MNh (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Tue, 27 Sep 2022 04:48:29 -0400
-Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTP id 28D378049B;
-        Tue, 27 Sep 2022 01:48:28 -0700 (PDT)
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 41EC81042;
-        Tue, 27 Sep 2022 01:48:34 -0700 (PDT)
-Received: from [10.32.36.24] (e121896.Emea.Arm.com [10.32.36.24])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id A26E63F66F;
-        Tue, 27 Sep 2022 01:48:25 -0700 (PDT)
-Message-ID: <849703ed-ef66-f622-a5b0-10107fbe7c10@arm.com>
-Date:   Tue, 27 Sep 2022 09:48:23 +0100
-MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
- Thunderbird/91.11.0
-Subject: Re: [PATCH] perf test: Skip sigtrap test on old kernels
-Content-Language: en-US
-To:     Namhyung Kim <namhyung@kernel.org>
-Cc:     Marco Elver <elver@google.com>,
+        Tue, 27 Sep 2022 08:13:37 -0400
+Received: from mail-wm1-x34a.google.com (mail-wm1-x34a.google.com [IPv6:2a00:1450:4864:20::34a])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3A59BADCDB
+        for <linux-perf-users@vger.kernel.org>; Tue, 27 Sep 2022 05:13:33 -0700 (PDT)
+Received: by mail-wm1-x34a.google.com with SMTP id 7-20020a05600c020700b003b4ce6e6b12so2705149wmi.0
+        for <linux-perf-users@vger.kernel.org>; Tue, 27 Sep 2022 05:13:33 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20210112;
+        h=cc:to:from:subject:message-id:mime-version:date:from:to:cc:subject
+         :date;
+        bh=O1OHV9/ebX3PFCvVx/+I7boFWMH1Mc6xsGvoR42Opk4=;
+        b=Js35UYBGTAeXuwE8muqAzkJM8QCiHIXXURyfDfD/vkaXuGuXPSUDlmVOITttFdf2+E
+         2PLSOXWhBqFiuDAM8PlkSzPsdI3Nw2FAWDcldDUP13IXhVeiIJgNeIhVN4h8teDIUYt/
+         vjUpBCXlbNh+7AN3gZzSXdY65KWsmW9A/zszdk17gqdL4c1TBzLTNoxh83o/gvO3tQ6L
+         2FNHNNrvf47LfkFaAQW+WdqMxRmzvd7CGy65Pxaep8E3FLQ18yQ9Iz+XxhRrLo3fDIQG
+         OqXZIuytSmr1QYizY6Tslphht4sADNc823panaDrz9G9IsacxwQiFyUCp2nh/mVACG5m
+         E0Pw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=cc:to:from:subject:message-id:mime-version:date:x-gm-message-state
+         :from:to:cc:subject:date;
+        bh=O1OHV9/ebX3PFCvVx/+I7boFWMH1Mc6xsGvoR42Opk4=;
+        b=roFjpw60dDQr22NTaFlz7zdpE30diNgFVtObmHZMpNAj7or/xmd8mqFpGU/WZPA29p
+         ByPjWRi3u3MBEUneldxmfS7QBrf1chVZj8cHRYD7DzsCxNATKSSRmDnTTvcBG6Vfcxpf
+         pCOy4B+jy96VyiZLPGWU0N2ykKK6OE5gAaABmxLmL9BCY3lmD8mgGvwysXMokMzkgBy2
+         JmuxEk9Q6i7Jnv5CHEAEyXBrWHaydTcol6dVcoIXkBhUQWoraCuzAgYelctUTlajrWSx
+         0O5eVULl1eSd5DGn5tvxERbgfQLCOhc9W2p2mLv93EYUCjJLVlpjGHR9p9QLaZLQfqX8
+         qV/Q==
+X-Gm-Message-State: ACrzQf1AvfxDbLEo8JTK5mPoIaVGuVq9t3Cp4xtb753ok4KT/Qt5FHrB
+        uiejwpgPIr5kDQULADLraWH6I+queA==
+X-Google-Smtp-Source: AMsMyM4R5CYl3uhh4T40rm7q9oLfuLcZB+9ODGmYTnViNguYNk3SI4NV4VFqKvCex8lHPJl4pSElth/2HA==
+X-Received: from elver.muc.corp.google.com ([2a00:79e0:9c:201:693c:15a1:a531:bb4e])
+ (user=elver job=sendgmr) by 2002:a5d:6d07:0:b0:22a:3f21:3b56 with SMTP id
+ e7-20020a5d6d07000000b0022a3f213b56mr16261810wrq.679.1664280811693; Tue, 27
+ Sep 2022 05:13:31 -0700 (PDT)
+Date:   Tue, 27 Sep 2022 14:13:22 +0200
+Mime-Version: 1.0
+X-Mailer: git-send-email 2.37.3.998.g577e59143f-goog
+Message-ID: <20220927121322.1236730-1-elver@google.com>
+Subject: [PATCH] perf: Fix missing SIGTRAPs due to pending_disable abuse
+From:   Marco Elver <elver@google.com>
+To:     elver@google.com, Peter Zijlstra <peterz@infradead.org>
+Cc:     Ingo Molnar <mingo@redhat.com>,
         Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Jiri Olsa <jolsa@kernel.org>, Ingo Molnar <mingo@kernel.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Ian Rogers <irogers@google.com>,
-        linux-perf-users <linux-perf-users@vger.kernel.org>
-References: <20220903000210.1112014-1-namhyung@kernel.org>
- <CANpmjNMPh5QjdxXtrCc5FApjgzV=81CNNiwbeg_rE3NxN_WCZw@mail.gmail.com>
- <c4f7e14b-a229-6b23-b28d-880b8369e6d8@arm.com>
- <CAM9d7ch36RGYJJEg2dnrauQnVX_f9MiE0RB99EU4ynNL-8CUVA@mail.gmail.com>
-From:   James Clark <james.clark@arm.com>
-In-Reply-To: <CAM9d7ch36RGYJJEg2dnrauQnVX_f9MiE0RB99EU4ynNL-8CUVA@mail.gmail.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+        Mark Rutland <mark.rutland@arm.com>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Jiri Olsa <jolsa@kernel.org>,
+        Namhyung Kim <namhyung@kernel.org>,
+        linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org,
+        kasan-dev@googlegroups.com, Dmitry Vyukov <dvyukov@google.com>
+Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
+Due to the implementation of how SIGTRAP are delivered if
+perf_event_attr::sigtrap is set, we've noticed 3 issues:
 
+	1. Missing SIGTRAP due to a race with event_sched_out() (more
+	   details below).
 
-On 26/09/2022 17:19, Namhyung Kim wrote:
-> Hello,
-> 
-> On Mon, Sep 26, 2022 at 8:06 AM James Clark <james.clark@arm.com> wrote:
->>
->>
->>
->> On 03/09/2022 07:52, Marco Elver wrote:
->>> On Sat, 3 Sept 2022 at 02:02, Namhyung Kim <namhyung@kernel.org> wrote:
->>>>
->>>> If it runs on an old kernel, perf_event_open would fail because of the
->>>> new fields sigtrap and sig_data.  Just skip the test if it failed.
->>>>
->>>> Cc: Marco Elver <elver@google.com>
->>>> Signed-off-by: Namhyung Kim <namhyung@kernel.org>
->>>> ---
->>>>  tools/perf/tests/sigtrap.c | 1 +
->>>>  1 file changed, 1 insertion(+)
->>>>
->>>> diff --git a/tools/perf/tests/sigtrap.c b/tools/perf/tests/sigtrap.c
->>>> index e32ece90e164..7057566e6ae4 100644
->>>> --- a/tools/perf/tests/sigtrap.c
->>>> +++ b/tools/perf/tests/sigtrap.c
->>>> @@ -140,6 +140,7 @@ static int test__sigtrap(struct test_suite *test __maybe_unused, int subtest __m
->>>>         fd = sys_perf_event_open(&attr, 0, -1, -1, perf_event_open_cloexec_flag());
->>>>         if (fd < 0) {
->>>>                 pr_debug("FAILED sys_perf_event_open(): %s\n", str_error_r(errno, sbuf, sizeof(sbuf)));
->>>> +               ret = TEST_SKIP;
->>>
->>> Wouldn't we be interested if perf_event_open() fails because it could
->>> actually be a bug? By skipping we'll be more likely to miss the fact
->>> there's a real problem.
->>>
->>> That's my naive thinking at least - what do other perf tests usually
->>> do in this case?
->>
->> I missed this discussion but I just submitted a patch with a similar
->> issue [1]. To me, it doesn't make sense to have the tests pass on older
->> kernels if this lowers the value of the tests by accepting possibly
->> invalid values. If you want to test older kernels then just use older
->> tests, but maybe there is some use case that I'm not aware of.
-> 
-> Thanks for your opinion.  But my test environment is running the tests
-> on random machines which may run some old kernel.  I agree that it
-> should not skip the real problems but I think we can find a good way
-> to detect old, unsupported kernels reliably like using BTF.
+	2. Hardware PMU events being disabled due to returning 1 from
+	   perf_event_overflow(). The only way to re-enable the event is
+	   for user space to first "properly" disable the event and then
+	   re-enable it.
 
-I'm currently adding a test for the new VG user register [1]. I'd like
-to test that it's available when the system has SVE but not when it
-hasn't so that the ABI is locked down. But that test will also depend on
-the kernel version, because it will never be available on older ones.
+	3. The inability to automatically disable an event after a
+	   specified number of overflows via PERF_EVENT_IOC_REFRESH.
 
-So for new tests should we always add two versions of the test, one for
-newer and one for older kernels? That seems like that has not been done
-so far in the tests. I'd still question the value of running the new
-tests on old kernels because they are mainly to validate that new code
-doesn't cause regressions. It's a lot of work to keep them backwards
-compatible for the case of running them on old kernels when old tests
-can be used instead.
+The worst of the 3 issues is problem (1), which occurs when a
+pending_disable is "consumed" by a racing event_sched_out(), observed as
+follows:
 
-If I am do add a version check would just looking at the uname be
-enough? Or how would the BTF version of that look?
+		CPU0			| 	CPU1
+	--------------------------------+---------------------------
+	__perf_event_overflow()		|
+	 perf_event_disable_inatomic()	|
+	  pending_disable = CPU0	| ...
+	  				| _perf_event_enable()
+					|  event_function_call()
+					|   task_function_call()
+					|    /* sends IPI to CPU0 */
+	<IPI>				| ...
+	 __perf_event_enable()		+---------------------------
+	  ctx_resched()
+	   task_ctx_sched_out()
+	    ctx_sched_out()
+	     group_sched_out()
+	      event_sched_out()
+	       pending_disable = -1
+	</IPI>
+	<IRQ-work>
+	 perf_pending_event()
+	  perf_pending_event_disable()
+	   /* Fails to send SIGTRAP because no pending_disable! */
+	</IRQ-work>
 
-[1]:
-https://git.kernel.org/pub/scm/linux/kernel/git/arm64/linux.git/commit/?h=for-next/perf&id=cbb0c02caf4bd98b9e0cd6d7420734b8e9a35703
+In the above case, not only is that particular SIGTRAP missed, but also
+all future SIGTRAPs because 'event_limit' is not reset back to 1.
 
-> 
-> Thanks,
-> Namhyung
+To fix, rework pending delivery of SIGTRAP via IRQ-work by introduction
+of a separate 'pending_sigtrap', no longer using 'event_limit' and
+'pending_disable' for its delivery.
+
+During testing, this also revealed several more possible races between
+reschedules and pending IRQ work; see code comments for details.
+
+Doing so makes it possible to use 'event_limit' normally (thereby
+enabling use of PERF_EVENT_IOC_REFRESH), perf_event_overflow() no longer
+returns 1 on SIGTRAP causing disabling of hardware PMUs, and finally the
+race is no longer possible due to event_sched_out() not consuming
+'pending_disable'.
+
+Fixes: 97ba62b27867 ("perf: Add support for SIGTRAP on perf events")
+Reported-by: Dmitry Vyukov <dvyukov@google.com>
+Debugged-by: Dmitry Vyukov <dvyukov@google.com>
+Signed-off-by: Marco Elver <elver@google.com>
+---
+ include/linux/perf_event.h |  2 +
+ kernel/events/core.c       | 85 ++++++++++++++++++++++++++++++++------
+ 2 files changed, 75 insertions(+), 12 deletions(-)
+
+diff --git a/include/linux/perf_event.h b/include/linux/perf_event.h
+index 907b0e3f1318..dff3430844a2 100644
+--- a/include/linux/perf_event.h
++++ b/include/linux/perf_event.h
+@@ -740,8 +740,10 @@ struct perf_event {
+ 	int				pending_wakeup;
+ 	int				pending_kill;
+ 	int				pending_disable;
++	int				pending_sigtrap;
+ 	unsigned long			pending_addr;	/* SIGTRAP */
+ 	struct irq_work			pending;
++	struct irq_work			pending_resched;
+ 
+ 	atomic_t			event_limit;
+ 
+diff --git a/kernel/events/core.c b/kernel/events/core.c
+index 75f5705b6892..df90777262bf 100644
+--- a/kernel/events/core.c
++++ b/kernel/events/core.c
+@@ -2527,6 +2527,14 @@ event_sched_in(struct perf_event *event,
+ 	if (event->attr.exclusive)
+ 		cpuctx->exclusive = 1;
+ 
++	if (event->pending_sigtrap) {
++		/*
++		 * The task and event might have been moved to another CPU:
++		 * queue another IRQ work. See perf_pending_event_sigtrap().
++		 */
++		WARN_ON_ONCE(!irq_work_queue(&event->pending_resched));
++	}
++
+ out:
+ 	perf_pmu_enable(event->pmu);
+ 
+@@ -4938,6 +4946,7 @@ static void perf_addr_filters_splice(struct perf_event *event,
+ static void _free_event(struct perf_event *event)
+ {
+ 	irq_work_sync(&event->pending);
++	irq_work_sync(&event->pending_resched);
+ 
+ 	unaccount_event(event);
+ 
+@@ -6446,6 +6455,37 @@ static void perf_sigtrap(struct perf_event *event)
+ 		      event->attr.type, event->attr.sig_data);
+ }
+ 
++static void perf_pending_event_sigtrap(struct perf_event *event)
++{
++	if (!event->pending_sigtrap)
++		return;
++
++	/*
++	 * If we're racing with disabling of the event, consume pending_sigtrap
++	 * and don't send the SIGTRAP. This avoids potentially delaying a signal
++	 * indefinitely (oncpu mismatch) until the event is enabled again, which
++	 * could happen after already returning to user space; in that case the
++	 * signal would erroneously become asynchronous.
++	 */
++	if (event->state == PERF_EVENT_STATE_OFF) {
++		event->pending_sigtrap = 0;
++		return;
++	}
++
++	/*
++	 * Only process this pending SIGTRAP if this IRQ work is running on the
++	 * right CPU: the scheduler is able to run before the IRQ work, which
++	 * moved the task to another CPU. In event_sched_in() another IRQ work
++	 * is scheduled, so that the signal is not lost; given the kernel has
++	 * not yet returned to user space, the signal remains synchronous.
++	 */
++	if (READ_ONCE(event->oncpu) != smp_processor_id())
++		return;
++
++	event->pending_sigtrap = 0;
++	perf_sigtrap(event);
++}
++
+ static void perf_pending_event_disable(struct perf_event *event)
+ {
+ 	int cpu = READ_ONCE(event->pending_disable);
+@@ -6455,13 +6495,6 @@ static void perf_pending_event_disable(struct perf_event *event)
+ 
+ 	if (cpu == smp_processor_id()) {
+ 		WRITE_ONCE(event->pending_disable, -1);
+-
+-		if (event->attr.sigtrap) {
+-			perf_sigtrap(event);
+-			atomic_set_release(&event->event_limit, 1); /* rearm event */
+-			return;
+-		}
+-
+ 		perf_event_disable_local(event);
+ 		return;
+ 	}
+@@ -6500,6 +6533,7 @@ static void perf_pending_event(struct irq_work *entry)
+ 	 * and we won't recurse 'further'.
+ 	 */
+ 
++	perf_pending_event_sigtrap(event);
+ 	perf_pending_event_disable(event);
+ 
+ 	if (event->pending_wakeup) {
+@@ -6511,6 +6545,26 @@ static void perf_pending_event(struct irq_work *entry)
+ 		perf_swevent_put_recursion_context(rctx);
+ }
+ 
++/*
++ * If handling of a pending action must occur before returning to user space,
++ * and it is possible to reschedule an event (to another CPU) with pending
++ * actions, where the moved-from CPU may not yet have run event->pending (and
++ * irq_work_queue() would fail on reuse), we'll use a separate IRQ work that
++ * runs perf_pending_event_resched().
++ */
++static void perf_pending_event_resched(struct irq_work *entry)
++{
++	struct perf_event *event = container_of(entry, struct perf_event, pending_resched);
++	int rctx;
++
++	rctx = perf_swevent_get_recursion_context();
++
++	perf_pending_event_sigtrap(event);
++
++	if (rctx >= 0)
++		perf_swevent_put_recursion_context(rctx);
++}
++
+ #ifdef CONFIG_GUEST_PERF_EVENTS
+ struct perf_guest_info_callbacks __rcu *perf_guest_cbs;
+ 
+@@ -9209,11 +9263,20 @@ static int __perf_event_overflow(struct perf_event *event,
+ 	if (events && atomic_dec_and_test(&event->event_limit)) {
+ 		ret = 1;
+ 		event->pending_kill = POLL_HUP;
+-		event->pending_addr = data->addr;
+-
+ 		perf_event_disable_inatomic(event);
+ 	}
+ 
++	if (event->attr.sigtrap) {
++		/*
++		 * Should not be able to return to user space without processing
++		 * pending_sigtrap (kernel events can overflow multiple times).
++		 */
++		WARN_ON_ONCE(event->pending_sigtrap && event->attr.exclude_kernel);
++		event->pending_sigtrap = 1;
++		event->pending_addr = data->addr;
++		irq_work_queue(&event->pending);
++	}
++
+ 	READ_ONCE(event->overflow_handler)(event, data, regs);
+ 
+ 	if (*perf_event_fasync(event) && event->pending_kill) {
+@@ -11536,6 +11599,7 @@ perf_event_alloc(struct perf_event_attr *attr, int cpu,
+ 	init_waitqueue_head(&event->waitq);
+ 	event->pending_disable = -1;
+ 	init_irq_work(&event->pending, perf_pending_event);
++	init_irq_work(&event->pending_resched, perf_pending_event_resched);
+ 
+ 	mutex_init(&event->mmap_mutex);
+ 	raw_spin_lock_init(&event->addr_filters.lock);
+@@ -11557,9 +11621,6 @@ perf_event_alloc(struct perf_event_attr *attr, int cpu,
+ 	if (parent_event)
+ 		event->event_caps = parent_event->event_caps;
+ 
+-	if (event->attr.sigtrap)
+-		atomic_set(&event->event_limit, 1);
+-
+ 	if (task) {
+ 		event->attach_state = PERF_ATTACH_TASK;
+ 		/*
+-- 
+2.37.3.998.g577e59143f-goog
+
