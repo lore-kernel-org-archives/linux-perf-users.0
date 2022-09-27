@@ -2,112 +2,130 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 10B16C07E9D
-	for <linux-perf-users@archiver.kernel.org>; Mon, 26 Sep 2022 21:56:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BA56BC07E9D
+	for <linux-perf-users@archiver.kernel.org>; Tue, 27 Sep 2022 01:20:44 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230257AbiIZV4p (ORCPT
+        id S229512AbiI0BUo (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Mon, 26 Sep 2022 17:56:45 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45132 "EHLO
+        Mon, 26 Sep 2022 21:20:44 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48744 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230145AbiIZV4o (ORCPT
+        with ESMTP id S229484AbiI0BUn (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Mon, 26 Sep 2022 17:56:44 -0400
-Received: from mail-pl1-x635.google.com (mail-pl1-x635.google.com [IPv6:2607:f8b0:4864:20::635])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9A91DA404F;
-        Mon, 26 Sep 2022 14:56:43 -0700 (PDT)
-Received: by mail-pl1-x635.google.com with SMTP id iw17so7493805plb.0;
-        Mon, 26 Sep 2022 14:56:43 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20210112;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:sender:from:to:cc:subject:date;
-        bh=572GorYLE019d559dVMv9AVnraHVnR09HbuFH0FA7is=;
-        b=lW2k7mj+KeJMygxuAHZ79TwuyVmHgVvXmK+7e1orn6Accoqgbku1I+UNcBH4LmKrw+
-         bFPYtmBdlUZYz1hI/ETOnLrutCSiHtyFxwna6zen0Dk0fmd9WLTnS+6XEbxMe40Dhr9g
-         AjD7C2dX60Zq1zoOo6vwDxQKgGalnx2+sgNSqVm8jA/1g5oUu2X8wMwuMrgYOrW196W7
-         PQkyboZyP0vFKG/fYeW7Fuk4gj26WtY4e6c0X8zoaOUK4k5hxNwL4AQsH5QUyI9M0rR5
-         uDeInSLPfyW3P3r9FTNoCYYw+6pZkXU5t4ofmQwHKZNmTUE4rp4sS83Xd8bSRpkBZKZ4
-         Nxrw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:sender:x-gm-message-state:from:to:cc:subject:date;
-        bh=572GorYLE019d559dVMv9AVnraHVnR09HbuFH0FA7is=;
-        b=It3rKGWP8YInsvuk/O3aUEE1hZVVJsTPyyEGZzUrHS0TkAwQM/PIRRl44l8b5k+Xj2
-         8blrX48WmFApKew+7V5c8aYNhY8JcaJ8cEr0noo9QgNUkXRaDH7CDy53uIjIg6DqjNia
-         k/cimVu/X77x7euQS7mCQ4IZEhZmMtQ9bXcMmbQKmd1eQYj37c1x6rRQxCans9FzPR9V
-         HHXmCjRz//xvhhjMcy9sdiG/vxMesKr/DnnM9e+pZMKtTRuNEzO1dTN2iip/MfmDjNx6
-         nmtNeuHE4P9iu58rt7p6w23ps+23gBAM4pRvcJpEuQPs2w2ABMYK/d+pZXSFrHxUUI5t
-         2gHA==
-X-Gm-Message-State: ACrzQf2E/540zygzaQCeL49Iv25xFW+BDFLfA/TDhIGHkERX++Wj9a3z
-        JpcLnbEYUkRjwILXRYTCKXk=
-X-Google-Smtp-Source: AMsMyM5s8VcK1RLfXgmT7ORxvt7KP7GLXEXP1iHQiNIRR3L1gda1KOAav5WDXtxOLV74CBuhcuf2Pw==
-X-Received: by 2002:a17:903:4ca:b0:179:d21f:f04b with SMTP id jm10-20020a17090304ca00b00179d21ff04bmr11665598plb.7.1664229403022;
-        Mon, 26 Sep 2022 14:56:43 -0700 (PDT)
-Received: from youngsil.svl.corp.google.com ([2620:15c:2d4:203:b4b9:6ef0:dfba:3f70])
-        by smtp.gmail.com with ESMTPSA id s21-20020aa78bd5000000b00540c24ba181sm12601509pfd.120.2022.09.26.14.56.41
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 26 Sep 2022 14:56:42 -0700 (PDT)
-Sender: Namhyung Kim <namhyung@gmail.com>
-From:   Namhyung Kim <namhyung@kernel.org>
-To:     Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Jiri Olsa <jolsa@kernel.org>
-Cc:     Ingo Molnar <mingo@kernel.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Ian Rogers <irogers@google.com>,
-        Adrian Hunter <adrian.hunter@intel.com>,
-        linux-perf-users@vger.kernel.org, Song Liu <songliubraving@fb.com>,
-        Jiri Slaby <jirislaby@kernel.org>
-Subject: [PATCH] perf lock contention: Fix a build error on 32-bit
-Date:   Mon, 26 Sep 2022 14:56:38 -0700
-Message-Id: <20220926215638.3931222-1-namhyung@kernel.org>
-X-Mailer: git-send-email 2.38.0.rc1.362.ged0d419d3c-goog
+        Mon, 26 Sep 2022 21:20:43 -0400
+Received: from szxga02-in.huawei.com (szxga02-in.huawei.com [45.249.212.188])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 460FBA02F8;
+        Mon, 26 Sep 2022 18:20:41 -0700 (PDT)
+Received: from dggpemm500020.china.huawei.com (unknown [172.30.72.54])
+        by szxga02-in.huawei.com (SkyGuard) with ESMTP id 4Mc1tC47SXzWgvc;
+        Tue, 27 Sep 2022 09:16:35 +0800 (CST)
+Received: from dggpemm500013.china.huawei.com (7.185.36.172) by
+ dggpemm500020.china.huawei.com (7.185.36.49) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2375.31; Tue, 27 Sep 2022 09:20:39 +0800
+Received: from [10.67.108.67] (10.67.108.67) by dggpemm500013.china.huawei.com
+ (7.185.36.172) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2375.31; Tue, 27 Sep
+ 2022 09:20:39 +0800
+Message-ID: <eb4db7a7-d84e-7228-d564-4a31fe255331@huawei.com>
+Date:   Tue, 27 Sep 2022 09:20:36 +0800
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:102.0) Gecko/20100101
+ Thunderbird/102.0
+Subject: Re: [PATCH -next 3/5] perf: Remove duplicate errbuf
+To:     Arnaldo Carvalho de Melo <acme@kernel.org>
+CC:     <linux-kernel@vger.kernel.org>, <linux-perf-users@vger.kernel.org>,
+        <peterz@infradead.org>, <mingo@redhat.com>, <mark.rutland@arm.com>,
+        <alexander.shishkin@linux.intel.com>, <jolsa@kernel.org>,
+        <namhyung@kernel.org>, <irogers@google.com>,
+        <john.garry@huawei.com>, <adrian.hunter@intel.com>,
+        <ak@linux.intel.com>, <florian.fischer@muhq.space>
+References: <20220926031440.28275-1-chenzhongjin@huawei.com>
+ <20220926031440.28275-4-chenzhongjin@huawei.com>
+ <YzIDcPVXLabTeZ11@kernel.org>
+Content-Language: en-US
+From:   Chen Zhongjin <chenzhongjin@huawei.com>
+In-Reply-To: <YzIDcPVXLabTeZ11@kernel.org>
+Content-Type: text/plain; charset="UTF-8"; format=flowed
+Content-Transfer-Encoding: 7bit
+X-Originating-IP: [10.67.108.67]
+X-ClientProxiedBy: dggems701-chm.china.huawei.com (10.3.19.178) To
+ dggpemm500013.china.huawei.com (7.185.36.172)
+X-CFilter-Loop: Reflected
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-It was reported that it failed to build the BPF lock contention skeleton
-on 32 bit arch due to the size of long.  The lost count is used only for
-reporting errors due to lack of stackmap space through bad_hist which type
-is 'int'.  Let's use int type then.
+Hi,
 
-Reported-by: Jiri Slaby <jirislaby@kernel.org>
-Signed-off-by: Namhyung Kim <namhyung@kernel.org>
----
- tools/perf/util/bpf_skel/lock_contention.bpf.c | 2 +-
- tools/perf/util/lock-contention.h              | 2 +-
- 2 files changed, 2 insertions(+), 2 deletions(-)
+On 2022/9/27 3:54, Arnaldo Carvalho de Melo wrote:
+> Em Mon, Sep 26, 2022 at 11:14:38AM +0800, Chen Zhongjin escreveu:
+>> char errbuf[BUFSIZ] is defined twice in trace__run.
+>>
+>> However out_error_open is not cross to other out_error path, they can
+>> share one errbuf together.
+>>
+>> Define the errbuf[BUFSIZ] at the beginning of function, and remove the
+>> redefinations of them for code cleaning.
+> Have you looked at the end result in the generated code? Just out of
+> curiosity.
 
-diff --git a/tools/perf/util/bpf_skel/lock_contention.bpf.c b/tools/perf/util/bpf_skel/lock_contention.bpf.c
-index e107d71f0f1a..1bb8628e7c9f 100644
---- a/tools/perf/util/bpf_skel/lock_contention.bpf.c
-+++ b/tools/perf/util/bpf_skel/lock_contention.bpf.c
-@@ -75,7 +75,7 @@ int has_task;
- int stack_skip;
- 
- /* error stat */
--unsigned long lost;
-+int lost;
- 
- static inline int can_record(void)
- {
-diff --git a/tools/perf/util/lock-contention.h b/tools/perf/util/lock-contention.h
-index 67db311fc9df..b8cb8830b7bc 100644
---- a/tools/perf/util/lock-contention.h
-+++ b/tools/perf/util/lock-contention.h
-@@ -114,7 +114,7 @@ struct lock_contention {
- 	struct machine *machine;
- 	struct hlist_head *result;
- 	unsigned long map_nr_entries;
--	unsigned long lost;
-+	int lost;
- 	int max_stack;
- 	int stack_skip;
- };
--- 
-2.38.0.rc1.362.ged0d419d3c-goog
+Good question. Because it is an auto reported warning of clang I didn't 
+try it.
 
+Just tried and found no different for 'objdump -d perf' on two version.
+
+
+Best,
+
+Chen
+
+>
+> - Arnaldo
+>   
+>> Signed-off-by: Chen Zhongjin <chenzhongjin@huawei.com>
+>> ---
+>>   tools/perf/builtin-trace.c | 7 ++-----
+>>   1 file changed, 2 insertions(+), 5 deletions(-)
+>>
+>> diff --git a/tools/perf/builtin-trace.c b/tools/perf/builtin-trace.c
+>> index 7ecd76428440..5660c0ee3507 100644
+>> --- a/tools/perf/builtin-trace.c
+>> +++ b/tools/perf/builtin-trace.c
+>> @@ -3937,6 +3937,7 @@ static int trace__run(struct trace *trace, int argc, const char **argv)
+>>   	unsigned long before;
+>>   	const bool forks = argc > 0;
+>>   	bool draining = false;
+>> +	char errbuf[BUFSIZ];
+>>   
+>>   	trace->live = true;
+>>   
+>> @@ -4027,8 +4028,6 @@ static int trace__run(struct trace *trace, int argc, const char **argv)
+>>   
+>>   	err = bpf__apply_obj_config();
+>>   	if (err) {
+>> -		char errbuf[BUFSIZ];
+>> -
+>>   		bpf__strerror_apply_obj_config(err, errbuf, sizeof(errbuf));
+>>   		pr_err("ERROR: Apply config to BPF failed: %s\n",
+>>   			 errbuf);
+>> @@ -4185,8 +4184,6 @@ static int trace__run(struct trace *trace, int argc, const char **argv)
+>>   	trace->evlist = NULL;
+>>   	trace->live = false;
+>>   	return err;
+>> -{
+>> -	char errbuf[BUFSIZ];
+>>   
+>>   out_error_sched_stat_runtime:
+>>   	tracing_path__strerror_open_tp(errno, errbuf, sizeof(errbuf), "sched", "sched_stat_runtime");
+>> @@ -4213,7 +4210,7 @@ static int trace__run(struct trace *trace, int argc, const char **argv)
+>>   		evsel->filter, evsel__name(evsel), errno,
+>>   		str_error_r(errno, errbuf, sizeof(errbuf)));
+>>   	goto out_delete_evlist;
+>> -}
+>> +
+>>   out_error_mem:
+>>   	fprintf(trace->output, "Not enough memory to run!\n");
+>>   	goto out_delete_evlist;
+>> -- 
+>> 2.17.1
