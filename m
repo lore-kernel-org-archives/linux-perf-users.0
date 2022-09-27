@@ -2,111 +2,193 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 02A87C54EE9
-	for <linux-perf-users@archiver.kernel.org>; Tue, 27 Sep 2022 12:26:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 20D03C6FA82
+	for <linux-perf-users@archiver.kernel.org>; Tue, 27 Sep 2022 12:31:20 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231861AbiI0M0x (ORCPT
+        id S230337AbiI0MbS (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Tue, 27 Sep 2022 08:26:53 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34002 "EHLO
+        Tue, 27 Sep 2022 08:31:18 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40940 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231896AbiI0MZ5 (ORCPT
+        with ESMTP id S230404AbiI0MbI (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Tue, 27 Sep 2022 08:25:57 -0400
-Received: from frasgout13.his.huawei.com (frasgout13.his.huawei.com [14.137.139.46])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 99E6E5D0E1;
-        Tue, 27 Sep 2022 05:25:40 -0700 (PDT)
-Received: from mail02.huawei.com (unknown [172.18.147.227])
-        by frasgout13.his.huawei.com (SkyGuard) with ESMTP id 4McJbN3hPnz9xHdt;
-        Tue, 27 Sep 2022 20:19:44 +0800 (CST)
-Received: from roberto-ThinkStation-P620 (unknown [10.204.63.22])
-        by APP1 (Coremail) with SMTP id LxC2BwCnnpKo6zJjXcR8AA--.32036S2;
-        Tue, 27 Sep 2022 13:25:20 +0100 (CET)
-Message-ID: <55ad7ac680a8300a7f1f6e28f16d98f34223468a.camel@huaweicloud.com>
-Subject: Re: [PATCH 3/3] tools/build: Display logical OR of a feature flavors
-From:   Roberto Sassu <roberto.sassu@huaweicloud.com>
-To:     Arnaldo Carvalho de Melo <acme@kernel.org>
-Cc:     peterz@infradead.org, mingo@redhat.com,
-        Jiri Olsa <olsajiri@gmail.com>, mark.rutland@arm.com,
-        alexander.shishkin@linux.intel.com, namhyung@kernel.org,
-        quentin@isovalent.com, linux-perf-users@vger.kernel.org,
-        bpf@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Roberto Sassu <roberto.sassu@huawei.com>
-Date:   Tue, 27 Sep 2022 14:25:09 +0200
-In-Reply-To: <YzLq5uar4dZlT1s6@kernel.org>
-References: <20220818120957.319995-1-roberto.sassu@huaweicloud.com>
-         <20220818120957.319995-3-roberto.sassu@huaweicloud.com>
-         <YwNhabqHEq3PfNM8@krava>
-         <64352c51c5dcbab389201a16733f3157a1ea591e.camel@huaweicloud.com>
-         <75986095d7ada2b24784ef356abc6ce17307575d.camel@huaweicloud.com>
-         <YzLq5uar4dZlT1s6@kernel.org>
-Content-Type: text/plain; charset="UTF-8"
-User-Agent: Evolution 3.36.5-0ubuntu1 
+        Tue, 27 Sep 2022 08:31:08 -0400
+Received: from mail-ed1-x534.google.com (mail-ed1-x534.google.com [IPv6:2a00:1450:4864:20::534])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9CC0767C8E
+        for <linux-perf-users@vger.kernel.org>; Tue, 27 Sep 2022 05:31:05 -0700 (PDT)
+Received: by mail-ed1-x534.google.com with SMTP id m3so12947920eda.12
+        for <linux-perf-users@vger.kernel.org>; Tue, 27 Sep 2022 05:31:05 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20210112;
+        h=user-agent:in-reply-to:content-disposition:mime-version:references
+         :message-id:subject:cc:to:from:date:from:to:cc:subject:date;
+        bh=5ft9ZKgcoilbmvfkfl9ZpGjG19NwykRqtF901VdwZnw=;
+        b=T/uniFHOpdz+MiTIdGzU7xL/KqvWrhxvv6LOrqyYzE/V7YkPjC1tefHPEYi87X3vXG
+         ejFTM6X0X+8IIEWtGE0TdhYAVanv73/AOA77w3yEmRySAX0UjIu9XWLo0gZ+wQp0oEuO
+         wAXAOd+/0SQHNa4t5Wv8hUtMNGfTdFMRwqEe4AbjI8klWLwDsd73OMe1Zfw9TxsxIcJW
+         ezzbQG9JxlG5wUwBEsGvP70VWhfdcYGCKXhLiDpA6ei6B+HgT/NjoT0BUBE1LqSGreHY
+         blCcFP61bMoyMidM2zfzfI8UusVuQj/Eq7LxLaOLYuMZt7q3NbKpLtbRmAlKPLtqiGjY
+         cGfQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=user-agent:in-reply-to:content-disposition:mime-version:references
+         :message-id:subject:cc:to:from:date:x-gm-message-state:from:to:cc
+         :subject:date;
+        bh=5ft9ZKgcoilbmvfkfl9ZpGjG19NwykRqtF901VdwZnw=;
+        b=AxDoMqrJcWAcV2sK3ChHuGaXthz8NcJwIgsIE5kOSWggqZRgrQ1B4wXbyQ/Tu4rjeQ
+         HzWKP1rkh8WY8X4cwKFthMborzif+SlExqvV7B1+WLyuDcsFb72DxsI5qJbsSR/jTpgJ
+         qNTUC/8PlNzT03xw8rZ7E22Vfd/EVMzwhvSOiwhEg9NDKp0g87RLnnID1q4vvAu9H83J
+         HMqFMZ8Zc+3y0AIG28GR73rLLK+OA/Dkzs7Cog8lJChYKQBAI7Uemobo335lg5BPubqI
+         kUceIufBKieHdTFhp8j3qx82L2jGuKM9Fo9blcdNNjQaCD73Wvn6B3qGaT/3xA50+bhA
+         j5Hw==
+X-Gm-Message-State: ACrzQf21x5vKrD7rAj+dG9/FeJSz9TXTsjw7t0AB942KzJoXXO6CxK1c
+        K6nb1HpNcNBAUrstlKaDp88Cmw==
+X-Google-Smtp-Source: AMsMyM5Kvn5Mp4saf5XRcJwtEk9gtMJzbU0i/p8I+1gytRzlCaf/eo/w/fMDo9Cgkdcl9ZFyVGF2KQ==
+X-Received: by 2002:a05:6402:1554:b0:457:375e:7289 with SMTP id p20-20020a056402155400b00457375e7289mr11645505edx.171.1664281863992;
+        Tue, 27 Sep 2022 05:31:03 -0700 (PDT)
+Received: from elver.google.com ([2a00:79e0:9c:201:693c:15a1:a531:bb4e])
+        by smtp.gmail.com with ESMTPSA id bc25-20020a056402205900b0044ef2ac2650sm1141168edb.90.2022.09.27.05.31.02
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 27 Sep 2022 05:31:03 -0700 (PDT)
+Date:   Tue, 27 Sep 2022 14:30:56 +0200
+From:   Marco Elver <elver@google.com>
+To:     Peter Zijlstra <peterz@infradead.org>
+Cc:     Ingo Molnar <mingo@redhat.com>,
+        Arnaldo Carvalho de Melo <acme@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Jiri Olsa <jolsa@kernel.org>,
+        Namhyung Kim <namhyung@kernel.org>,
+        linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org,
+        kasan-dev@googlegroups.com, Dmitry Vyukov <dvyukov@google.com>
+Subject: Re: [PATCH] perf: Fix missing SIGTRAPs due to pending_disable abuse
+Message-ID: <YzLtAG2bfRJ/vFRu@elver.google.com>
+References: <20220927121322.1236730-1-elver@google.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-CM-TRANSID: LxC2BwCnnpKo6zJjXcR8AA--.32036S2
-X-Coremail-Antispam: 1UD129KBjvJXoWxJr4xGFy5WFy3Kw15WryxuFg_yoW8GF47p3
-        yrJayftr4DXr1rAa1qyw15Zrs0krZrta1DX3yrW347Z3ZF9rnakF1Ikay8uF9rG34rur12
-        vrW8Xa47ZryUC3DanT9S1TB71UUUUUUqnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
-        9KBjDU0xBIdaVrnRJUUUkjb4IE77IF4wAFF20E14v26r4j6ryUM7CY07I20VC2zVCF04k2
-        6cxKx2IYs7xG6rWj6s0DM7CIcVAFz4kK6r1j6r18M28lY4IEw2IIxxk0rwA2F7IY1VAKz4
-        vEj48ve4kI8wA2z4x0Y4vE2Ix0cI8IcVAFwI0_Jr0_JF4l84ACjcxK6xIIjxv20xvEc7Cj
-        xVAFwI0_Gr0_Cr1l84ACjcxK6I8E87Iv67AKxVW8JVWxJwA2z4x0Y4vEx4A2jsIEc7CjxV
-        AFwI0_Gr0_Gr1UM2AIxVAIcxkEcVAq07x20xvEncxIr21l5I8CrVACY4xI64kE6c02F40E
-        x7xfMcIj6xIIjxv20xvE14v26r1j6r18McIj6I8E87Iv67AKxVWUJVW8JwAm72CE4IkC6x
-        0Yz7v_Jr0_Gr1lF7xvr2IY64vIr41lFIxGxcIEc7CjxVA2Y2ka0xkIwI1l42xK82IYc2Ij
-        64vIr41l4I8I3I0E4IkC6x0Yz7v_Jr0_Gr1lx2IqxVAqx4xG67AKxVWUJVWUGwC20s026x
-        8GjcxK67AKxVWUGVWUWwC2zVAF1VAY17CE14v26r1q6r43MIIYrxkI7VAKI48JMIIF0xvE
-        2Ix0cI8IcVAFwI0_Jr0_JF4lIxAIcVC0I7IYx2IY6xkF7I0E14v26r4j6F4UMIIF0xvE42
-        xK8VAvwI8IcIk0rVWrZr1j6s0DMIIF0xvEx4A2jsIE14v26r1j6r4UMIIF0xvEx4A2jsIE
-        c7CjxVAFwI0_Gr0_Gr1UYxBIdaVFxhVjvjDU0xZFpf9x07UWE__UUUUU=
-X-CM-SenderInfo: purev21wro2thvvxqx5xdzvxpfor3voofrz/1tbiAQAIBF1jj4OAUAACst
-X-CFilter-Loop: Reflected
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20220927121322.1236730-1-elver@google.com>
+User-Agent: Mutt/2.2.7 (2022-08-07)
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-On Tue, 2022-09-27 at 13:21 +0100, Arnaldo Carvalho de Melo wrote:
-> Em Tue, Sep 27, 2022 at 09:14:34AM +0200, Roberto Sassu escreveu:
-> > On Mon, 2022-08-22 at 13:24 +0200, Roberto Sassu wrote:
-> > > On Mon, 2022-08-22 at 12:58 +0200, Jiri Olsa wrote:
-> > > > On Thu, Aug 18, 2022 at 02:09:57PM +0200, 
-> > > 
-> > > [...]
-> > > 
-> > > > > In verbose mode, of if no group is defined for a feature,
-> > > > > show
-> > > > > the
-> > > > > feature
-> > > > > detection result as before.
-> > > 
-> > > Thanks Jiri.
-> > > 
-> > > 'or' instead of 'of', if the patch can be edited.
-> > 
-> > Hi Arnaldo
-> > 
-> > will you take these patches?
+On Tue, Sep 27, 2022 at 02:13PM +0200, Marco Elver wrote:
+> Due to the implementation of how SIGTRAP are delivered if
+> perf_event_attr::sigtrap is set, we've noticed 3 issues:
 > 
-> The tools/build one I have in my perf/core branch, for v6.1.
+> 	1. Missing SIGTRAP due to a race with event_sched_out() (more
+> 	   details below).
 > 
-> ⬢[acme@toolbox perf]$ git log --oneline --author 
-> roberto.sassu@huawei.com tools/{build,perf,lib}
-> 924b0da1154fa814 tools build: Display logical OR of a feature flavors
-> 1903f4ac2f3a6d33 tools build: Increment room for feature name in
-> feature detection output
-> 48ab65e0fec644b4 tools build: Fix feature detection output due to
-> eval expansion
-> 5b245985a6de5ac1 tools build: Switch to new openssl API for test-
-> libcrypto
-> dd6775f986144a9e perf build: Remove FEATURE_CHECK_LDFLAGS-
-> disassembler-{four-args,init-styled} setting
-> 629b98e2b1c6efcf tools, build: Retry detection of bfd-related
-> features
-> ⬢[acme@toolbox perf]$
+> 	2. Hardware PMU events being disabled due to returning 1 from
+> 	   perf_event_overflow(). The only way to re-enable the event is
+> 	   for user space to first "properly" disable the event and then
+> 	   re-enable it.
+> 
+> 	3. The inability to automatically disable an event after a
+> 	   specified number of overflows via PERF_EVENT_IOC_REFRESH.
+> 
+> The worst of the 3 issues is problem (1), which occurs when a
+> pending_disable is "consumed" by a racing event_sched_out(), observed as
+> follows:
+> 
+> 		CPU0			| 	CPU1
+> 	--------------------------------+---------------------------
+> 	__perf_event_overflow()		|
+> 	 perf_event_disable_inatomic()	|
+> 	  pending_disable = CPU0	| ...
+> 	  				| _perf_event_enable()
+> 					|  event_function_call()
+> 					|   task_function_call()
+> 					|    /* sends IPI to CPU0 */
+> 	<IPI>				| ...
+> 	 __perf_event_enable()		+---------------------------
+> 	  ctx_resched()
+> 	   task_ctx_sched_out()
+> 	    ctx_sched_out()
+> 	     group_sched_out()
+> 	      event_sched_out()
+> 	       pending_disable = -1
+> 	</IPI>
+> 	<IRQ-work>
+> 	 perf_pending_event()
+> 	  perf_pending_event_disable()
+> 	   /* Fails to send SIGTRAP because no pending_disable! */
+> 	</IRQ-work>
+> 
+> In the above case, not only is that particular SIGTRAP missed, but also
+> all future SIGTRAPs because 'event_limit' is not reset back to 1.
+> 
+> To fix, rework pending delivery of SIGTRAP via IRQ-work by introduction
+> of a separate 'pending_sigtrap', no longer using 'event_limit' and
+> 'pending_disable' for its delivery.
+> 
+> During testing, this also revealed several more possible races between
+> reschedules and pending IRQ work; see code comments for details.
+> 
+> Doing so makes it possible to use 'event_limit' normally (thereby
+> enabling use of PERF_EVENT_IOC_REFRESH), perf_event_overflow() no longer
+> returns 1 on SIGTRAP causing disabling of hardware PMUs, and finally the
+> race is no longer possible due to event_sched_out() not consuming
+> 'pending_disable'.
+> 
+> Fixes: 97ba62b27867 ("perf: Add support for SIGTRAP on perf events")
+> Reported-by: Dmitry Vyukov <dvyukov@google.com>
+> Debugged-by: Dmitry Vyukov <dvyukov@google.com>
+> Signed-off-by: Marco Elver <elver@google.com>
+> ---
+>  include/linux/perf_event.h |  2 +
+>  kernel/events/core.c       | 85 ++++++++++++++++++++++++++++++++------
+>  2 files changed, 75 insertions(+), 12 deletions(-)
+> 
+> diff --git a/include/linux/perf_event.h b/include/linux/perf_event.h
+> index 907b0e3f1318..dff3430844a2 100644
+> --- a/include/linux/perf_event.h
+> +++ b/include/linux/perf_event.h
+> @@ -740,8 +740,10 @@ struct perf_event {
+>  	int				pending_wakeup;
+>  	int				pending_kill;
+>  	int				pending_disable;
+> +	int				pending_sigtrap;
+>  	unsigned long			pending_addr;	/* SIGTRAP */
+>  	struct irq_work			pending;
+> +	struct irq_work			pending_resched;
+>  
+>  	atomic_t			event_limit;
+>  
+> diff --git a/kernel/events/core.c b/kernel/events/core.c
+> index 75f5705b6892..df90777262bf 100644
+> --- a/kernel/events/core.c
+> +++ b/kernel/events/core.c
+> @@ -2527,6 +2527,14 @@ event_sched_in(struct perf_event *event,
+>  	if (event->attr.exclusive)
+>  		cpuctx->exclusive = 1;
+>  
+> +	if (event->pending_sigtrap) {
+> +		/*
+> +		 * The task and event might have been moved to another CPU:
+> +		 * queue another IRQ work. See perf_pending_event_sigtrap().
+> +		 */
+> +		WARN_ON_ONCE(!irq_work_queue(&event->pending_resched));
 
-Oh, thanks. I had a quick look today at the web interface. I didn't see
-them.
+One question we had is if it's possible for an event to be scheduled in,
+immediately scheduled out, and then scheduled in on a 3rd CPU. I.e. we'd
+still be in trouble if we can do this:
 
-Roberto
+	CPU0
+	sched-out
+		CPU1
+		sched-in
+		sched-out
+			CPU2
+			sched-in
 
+without any IRQ work ever running. Some naive solutions so the
+pending_resched IRQ work isn't needed, like trying to send a signal
+right here (or in event_sched_out()), don't work because we've seen
+syzkaller produce programs where there's a pending event and then the
+scheduler moves the task; because we're in the scheduler we can deadlock
+if we try to send the signal here.
+
+Thanks,
+-- Marco
