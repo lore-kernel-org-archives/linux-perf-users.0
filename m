@@ -2,93 +2,121 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 039C4C6FA82
-	for <linux-perf-users@archiver.kernel.org>; Tue, 27 Sep 2022 17:28:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2D6B8C54EE9
+	for <linux-perf-users@archiver.kernel.org>; Tue, 27 Sep 2022 18:21:47 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232476AbiI0R2d (ORCPT
+        id S229550AbiI0SVP (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Tue, 27 Sep 2022 13:28:33 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56512 "EHLO
+        Tue, 27 Sep 2022 14:21:15 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39532 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232507AbiI0R2d (ORCPT
+        with ESMTP id S231751AbiI0SVL (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Tue, 27 Sep 2022 13:28:33 -0400
-Received: from mail-oa1-f41.google.com (mail-oa1-f41.google.com [209.85.160.41])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6D59E1D2615;
-        Tue, 27 Sep 2022 10:28:29 -0700 (PDT)
-Received: by mail-oa1-f41.google.com with SMTP id 586e51a60fabf-12803ac8113so14176345fac.8;
-        Tue, 27 Sep 2022 10:28:29 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date;
-        bh=A4Hgdsgb0R0NQiBo/wcOatV1qpXWwyQV6akvHd7chNk=;
-        b=5dIk6SNv6sD3xw4uoILP2VCnIFZNWCbTy2/xDaRv6cLBkn7xpID7+g9lpj+hYzGtod
-         b87PtZlUQrrUZh6tMCNwMt2FVPcZ6tO10WmlXUxIiFY9qFWYsfB0yeayr7thq3ebreLW
-         eHD0K+X+VXLfjFiyxcdK2ZuW+JWYLfKFNjn2sYLWdy5sgibDNPA15Xj/zKEonTgTmzJL
-         9rHk3YmJxwuqRStSQgRIdvfFHHtPEw+I1X6Xtg9f/ssSUrc2URTcbsPtp+KUxZsj4Wvn
-         sjBFHmWtpLwsmiVSrQ+G0FB35dd1yzGalonJndiKGBQLrSm2r33cXfC/W4vRXe7f+xGY
-         tWPw==
-X-Gm-Message-State: ACrzQf2pD1yVj8aLDOT/oTslsEVUZzxf+mK4jPMEPBNJ6rx8usQT4nFC
-        2oPLgYzNe0ZxpJd+IYBoBUA6ACDuZmIV8K1wYIU=
-X-Google-Smtp-Source: AMsMyM6r/HSLwYcRSAmNP2HJo8uW4AMK/Jo6YTb/Lt64GJJW24vG65SQbRiIVsgzICBGsNyVzuCXUBH7GJCmSSltvkY=
-X-Received: by 2002:a05:6870:a70f:b0:127:666a:658 with SMTP id
- g15-20020a056870a70f00b00127666a0658mr2897216oam.218.1664299708381; Tue, 27
- Sep 2022 10:28:28 -0700 (PDT)
+        Tue, 27 Sep 2022 14:21:11 -0400
+Received: from desiato.infradead.org (desiato.infradead.org [IPv6:2001:8b0:10b:1:d65d:64ff:fe57:4e05])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7FF75F684F;
+        Tue, 27 Sep 2022 11:21:08 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=desiato.20200630; h=In-Reply-To:Content-Type:MIME-Version:
+        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description;
+        bh=BmhIzH6QeLzG1HzDb0h4B8ArGPxAu7f6HvFWMpAiIac=; b=ZrYQtozPPf0rsIDRg3RVwcr0ll
+        71eRqqMoYlCUX3xiT00XyXMR/rc9PCVjADH/53Eul3iAVuVaoofSYBI+3YfEbf0eghtGn6c4hQaQY
+        wQvg4/NfRKvh89e98a+syxNTOVqNL8fbywTrsGGO8b1cyGz9lpAyRnahYJ6IWgvvfGoz8+YkH7mIH
+        x7MNei1nhUhDXMKmnpZc8w6zDFw5IUL7xsse6Qp8Xp02DtVQ7c0hB5GemEzpHUi8KTgzAJXL/1qCO
+        9tKCDH4nDAbaSitW3B05Me7Q3/9rrJlZ//mlohbOtwdj62ZOyxD5JnbMB3JUgHtyY5+ydqU/QsFPy
+        bFJ/aLjA==;
+Received: from j130084.upc-j.chello.nl ([24.132.130.84] helo=noisy.programming.kicks-ass.net)
+        by desiato.infradead.org with esmtpsa (Exim 4.94.2 #2 (Red Hat Linux))
+        id 1odFCR-00GMHf-3C; Tue, 27 Sep 2022 18:20:55 +0000
+Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+        (Client did not present a certificate)
+        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id DE8B530007E;
+        Tue, 27 Sep 2022 20:20:53 +0200 (CEST)
+Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
+        id 951302BE05B2C; Tue, 27 Sep 2022 20:20:53 +0200 (CEST)
+Date:   Tue, 27 Sep 2022 20:20:53 +0200
+From:   Peter Zijlstra <peterz@infradead.org>
+To:     Marco Elver <elver@google.com>
+Cc:     Ingo Molnar <mingo@redhat.com>,
+        Arnaldo Carvalho de Melo <acme@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Jiri Olsa <jolsa@kernel.org>,
+        Namhyung Kim <namhyung@kernel.org>,
+        linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org,
+        kasan-dev@googlegroups.com, Dmitry Vyukov <dvyukov@google.com>
+Subject: Re: [PATCH] perf: Fix missing SIGTRAPs due to pending_disable abuse
+Message-ID: <YzM/BUsBnX18NoOG@hirez.programming.kicks-ass.net>
+References: <20220927121322.1236730-1-elver@google.com>
 MIME-Version: 1.0
-References: <20220924165737.956428-1-namhyung@kernel.org> <20220924165737.956428-3-namhyung@kernel.org>
- <d901f8c8-0dda-8f34-f963-09cf56d4924e@intel.com>
-In-Reply-To: <d901f8c8-0dda-8f34-f963-09cf56d4924e@intel.com>
-From:   Namhyung Kim <namhyung@kernel.org>
-Date:   Tue, 27 Sep 2022 10:28:17 -0700
-Message-ID: <CAM9d7ciGFqSRO=J6FZmz=enML7eCyvRMQB+bm=nZ07GmozJwbw@mail.gmail.com>
-Subject: Re: [PATCH 2/5] libperf: Propagate maps only if necessary
-To:     Adrian Hunter <adrian.hunter@intel.com>
-Cc:     Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Jiri Olsa <jolsa@kernel.org>, Ingo Molnar <mingo@kernel.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Ian Rogers <irogers@google.com>,
-        linux-perf-users <linux-perf-users@vger.kernel.org>,
-        Kan Liang <kan.liang@linux.intel.com>,
-        Leo Yan <leo.yan@linaro.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20220927121322.1236730-1-elver@google.com>
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-Hi Adrian,
+On Tue, Sep 27, 2022 at 02:13:22PM +0200, Marco Elver wrote:
+> Due to the implementation of how SIGTRAP are delivered if
+> perf_event_attr::sigtrap is set, we've noticed 3 issues:
+> 
+> 	1. Missing SIGTRAP due to a race with event_sched_out() (more
+> 	   details below).
+> 
+> 	2. Hardware PMU events being disabled due to returning 1 from
+> 	   perf_event_overflow(). The only way to re-enable the event is
+> 	   for user space to first "properly" disable the event and then
+> 	   re-enable it.
+> 
+> 	3. The inability to automatically disable an event after a
+> 	   specified number of overflows via PERF_EVENT_IOC_REFRESH.
+> 
+> The worst of the 3 issues is problem (1), which occurs when a
+> pending_disable is "consumed" by a racing event_sched_out(), observed as
+> follows:
+> 
+> 		CPU0			| 	CPU1
+> 	--------------------------------+---------------------------
+> 	__perf_event_overflow()		|
+> 	 perf_event_disable_inatomic()	|
+> 	  pending_disable = CPU0	| ...
+> 	  				| _perf_event_enable()
+> 					|  event_function_call()
+> 					|   task_function_call()
+> 					|    /* sends IPI to CPU0 */
+> 	<IPI>				| ...
+> 	 __perf_event_enable()		+---------------------------
+> 	  ctx_resched()
+> 	   task_ctx_sched_out()
+> 	    ctx_sched_out()
+> 	     group_sched_out()
+> 	      event_sched_out()
+> 	       pending_disable = -1
+> 	</IPI>
+> 	<IRQ-work>
+> 	 perf_pending_event()
+> 	  perf_pending_event_disable()
+> 	   /* Fails to send SIGTRAP because no pending_disable! */
+> 	</IRQ-work>
+> 
+> In the above case, not only is that particular SIGTRAP missed, but also
+> all future SIGTRAPs because 'event_limit' is not reset back to 1.
+> 
+> To fix, rework pending delivery of SIGTRAP via IRQ-work by introduction
+> of a separate 'pending_sigtrap', no longer using 'event_limit' and
+> 'pending_disable' for its delivery.
+> 
+> During testing, this also revealed several more possible races between
+> reschedules and pending IRQ work; see code comments for details.
 
-On Tue, Sep 27, 2022 at 12:06 AM Adrian Hunter <adrian.hunter@intel.com> wrote:
->
-> On 24/09/22 19:57, Namhyung Kim wrote:
-> > The current code propagate evsel's cpu map settings to evlist when it's
-> > added to an evlist.  But the evlist->all_cpus and each evsel's cpus will
-> > be updated in perf_evlist__set_maps() later.  No need to do it before
-> > evlist's cpus are set actually.
-> >
-> > Actually we discarded this intermediate all_cpus maps at the beginning
-> > of perf_evlist__set_maps().  Let's not do this.  It's only needed when
-> > an evsel is added after the evlist cpu maps are set.
->
-> That might not be true.  Consider evlist__fix_hybrid_cpus() which fiddles
-> with evsel->core.cpus and evsel->core.own_cpus after the evsel has been
-> added to the evlist.  It can also remove an evsel from the evlist.
+Perhaps use task_work_add() for this case? That runs on the
+return-to-user path, so then it doesn't matter how many reschedules
+happen in between.
 
-Thanks for your review.  I think it's fine to change evsel cpus or to remove
-an evsel from evlist before calling evlist__create_maps().  The function
-will take care of setting evlist's all_cpus from the evsels in the evlist.
-So previous changes in evsel/cpus wouldn't be any special.
+The only concern is that task_work_add() uses kasan_record_aux_stack()
+which obviously isn't NMI clean, so that would need to get removed or
+made conditional.
 
-After this point, adding a new evsel needs to update evlist all cpus by
-propagating cpu maps.  So I think hybrid cpus should be fine.
-Did I miss something?
-
->
-> There might be other cases like that, but that was just one that stuck
-> out.
-
-Thanks for sharing your concern.  Please let me know if you could
-come up with another.
-
-Namhyung
