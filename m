@@ -2,96 +2,90 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 94259C54EE9
-	for <linux-perf-users@archiver.kernel.org>; Tue, 27 Sep 2022 12:22:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B8D06C07E9D
+	for <linux-perf-users@archiver.kernel.org>; Tue, 27 Sep 2022 12:24:32 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231788AbiI0MWl (ORCPT
+        id S230446AbiI0MYb (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Tue, 27 Sep 2022 08:22:41 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37748 "EHLO
+        Tue, 27 Sep 2022 08:24:31 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54000 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232320AbiI0MWQ (ORCPT
+        with ESMTP id S231986AbiI0MYU (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Tue, 27 Sep 2022 08:22:16 -0400
+        Tue, 27 Sep 2022 08:24:20 -0400
 Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C77E7E62E5;
-        Tue, 27 Sep 2022 05:22:01 -0700 (PDT)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 402BE122045
+        for <linux-perf-users@vger.kernel.org>; Tue, 27 Sep 2022 05:24:16 -0700 (PDT)
 Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id 3F62260EF1;
-        Tue, 27 Sep 2022 12:22:01 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 776C0C433C1;
-        Tue, 27 Sep 2022 12:22:00 +0000 (UTC)
+        by dfw.source.kernel.org (Postfix) with ESMTPS id A77E6618AC
+        for <linux-perf-users@vger.kernel.org>; Tue, 27 Sep 2022 12:24:15 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id E66DDC433D6;
+        Tue, 27 Sep 2022 12:24:14 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1664281320;
-        bh=Md92oNwZ1hiITnrlHo0gSdJQdkrFWI4DogYSf+Wdako=;
+        s=k20201202; t=1664281455;
+        bh=5Vn3chzpOUWhGEzWYyITfoS9FZDoVFqFKN1VO4PsJ4I=;
         h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=YlQhtCcqTr3l7h9vi9ocIduv2pQzyo023UyA5cS/f3JgoRnYTHVNHBPVEtTnrCx+b
-         yrcWGgACJAy74FaMODlAL7n2/1qrwz6sEUHieQrUxKAmIvYFhQZ0eWE6foJsnsbbO2
-         r7UDjpkK3ks+TI5qbO2IUCdejkTaCcMldRiOrl+eNDdPuZBTeHoyTTUW03yQ/S1q32
-         bOSpHEGKygLVfiRFlNvAiojSfUO9kleTLy6g53PzVcmvysi5OhokWflbjIFS0c0zVt
-         SRSMeyTjUpRfWajGCF37CPKOaY4Yvw/KMGhZiWLDlgslF6H5WvkL0oNBHlqSOqAWDd
-         Kic23/HSk/vbA==
+        b=vKiZSJKjnBWRzmp2FyIe9m29zBAfvUGzwK6RwMGYMDFzJF4RbxkzQ+M+SAXiGSSrR
+         k2K99NKHLn42K6y1WzjYaMY4SabtNM/0/TM03hU2vVICDQjYhp3aMG3b5FQKEFvksz
+         jQmGJDXMS5ak4wxezWDjcSztRnJ9O7GATrwaGEQW4AU8cs4l/HDnAWKOp7n3rApMdO
+         /Tdd+6bcEWGatghKUo0qjPnFRttMWRKf5ptXho4Lv3AJGxREgGng5B1tBJjexdm2xO
+         6DcSrCYCdkcfoZxdOS1EgQnkL+j4WXCl2V/ciUeEqaxOb3XkeoLow9VbcvPtZ/Ojvi
+         3Nvb+2OYAAwXw==
 Received: by quaco.ghostprotocols.net (Postfix, from userid 1000)
-        id 3EB26403B0; Tue, 27 Sep 2022 13:21:58 +0100 (IST)
-Date:   Tue, 27 Sep 2022 13:21:58 +0100
+        id 8BA5D403B0; Tue, 27 Sep 2022 13:24:12 +0100 (IST)
+Date:   Tue, 27 Sep 2022 13:24:12 +0100
 From:   Arnaldo Carvalho de Melo <acme@kernel.org>
-To:     Roberto Sassu <roberto.sassu@huaweicloud.com>
-Cc:     peterz@infradead.org, mingo@redhat.com,
-        Jiri Olsa <olsajiri@gmail.com>, mark.rutland@arm.com,
-        alexander.shishkin@linux.intel.com, namhyung@kernel.org,
-        quentin@isovalent.com, linux-perf-users@vger.kernel.org,
-        bpf@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Roberto Sassu <roberto.sassu@huawei.com>
-Subject: Re: [PATCH 3/3] tools/build: Display logical OR of a feature flavors
-Message-ID: <YzLq5uar4dZlT1s6@kernel.org>
-References: <20220818120957.319995-1-roberto.sassu@huaweicloud.com>
- <20220818120957.319995-3-roberto.sassu@huaweicloud.com>
- <YwNhabqHEq3PfNM8@krava>
- <64352c51c5dcbab389201a16733f3157a1ea591e.camel@huaweicloud.com>
- <75986095d7ada2b24784ef356abc6ce17307575d.camel@huaweicloud.com>
+To:     Yuan Can <yuancan@huawei.com>, Simon Que <sque@chromium.org>
+Cc:     peterz@infradead.org, mingo@redhat.com, mark.rutland@arm.com,
+        alexander.shishkin@linux.intel.com, jolsa@kernel.org,
+        namhyung@kernel.org, linux-perf-users@vger.kernel.org
+Subject: Re: [PATCH 1/5] perf machine: Remove unused struct process_args
+Message-ID: <YzLrbMeBn2+gJDep@kernel.org>
+References: <20220927013931.110475-1-yuancan@huawei.com>
+ <20220927013931.110475-2-yuancan@huawei.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <75986095d7ada2b24784ef356abc6ce17307575d.camel@huaweicloud.com>
+In-Reply-To: <20220927013931.110475-2-yuancan@huawei.com>
 X-Url:  http://acmel.wordpress.com
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-Em Tue, Sep 27, 2022 at 09:14:34AM +0200, Roberto Sassu escreveu:
-> On Mon, 2022-08-22 at 13:24 +0200, Roberto Sassu wrote:
-> > On Mon, 2022-08-22 at 12:58 +0200, Jiri Olsa wrote:
-> > > On Thu, Aug 18, 2022 at 02:09:57PM +0200, 
-> > 
-> > [...]
-> > 
-> > > > In verbose mode, of if no group is defined for a feature, show
-> > > > the
-> > > > feature
-> > > > detection result as before.
-> > 
-> > Thanks Jiri.
-> > 
-> > 'or' instead of 'of', if the patch can be edited.
+Em Tue, Sep 27, 2022 at 01:39:27AM +0000, Yuan Can escreveu:
+> After commit a93f0e551af9("perf symbols: Get kernel start address by symbol
+> name"), no one uses struct process_args any more, so remove it.
+ 
+
+Thanks, applied.
+
+- Arnaldo
+
+> Signed-off-by: Yuan Can <yuancan@huawei.com>
+> ---
+>  tools/perf/util/machine.c | 4 ----
+>  1 file changed, 4 deletions(-)
 > 
-> Hi Arnaldo
-> 
-> will you take these patches?
+> diff --git a/tools/perf/util/machine.c b/tools/perf/util/machine.c
+> index 2a16cae28407..76316e459c3d 100644
+> --- a/tools/perf/util/machine.c
+> +++ b/tools/perf/util/machine.c
+> @@ -1128,10 +1128,6 @@ static struct dso *machine__get_kernel(struct machine *machine)
+>  	return kernel;
+>  }
+>  
+> -struct process_args {
+> -	u64 start;
+> -};
+> -
+>  void machine__get_kallsyms_filename(struct machine *machine, char *buf,
+>  				    size_t bufsz)
+>  {
+> -- 
+> 2.17.1
 
-The tools/build one I have in my perf/core branch, for v6.1.
-
-⬢[acme@toolbox perf]$ git log --oneline --author roberto.sassu@huawei.com tools/{build,perf,lib}
-924b0da1154fa814 tools build: Display logical OR of a feature flavors
-1903f4ac2f3a6d33 tools build: Increment room for feature name in feature detection output
-48ab65e0fec644b4 tools build: Fix feature detection output due to eval expansion
-5b245985a6de5ac1 tools build: Switch to new openssl API for test-libcrypto
-dd6775f986144a9e perf build: Remove FEATURE_CHECK_LDFLAGS-disassembler-{four-args,init-styled} setting
-629b98e2b1c6efcf tools, build: Retry detection of bfd-related features
-⬢[acme@toolbox perf]$
-
-Quentin, may I pick the ones that touch bpftool?
+-- 
 
 - Arnaldo
