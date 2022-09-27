@@ -2,124 +2,160 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EDF77C6FA83
-	for <linux-perf-users@archiver.kernel.org>; Tue, 27 Sep 2022 16:54:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CE128C07E9D
+	for <linux-perf-users@archiver.kernel.org>; Tue, 27 Sep 2022 17:20:53 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233000AbiI0Qyn (ORCPT
+        id S231218AbiI0RUw (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Tue, 27 Sep 2022 12:54:43 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53098 "EHLO
+        Tue, 27 Sep 2022 13:20:52 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43202 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S233065AbiI0QyV (ORCPT
+        with ESMTP id S229507AbiI0RUv (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Tue, 27 Sep 2022 12:54:21 -0400
-Received: from mga09.intel.com (mga09.intel.com [134.134.136.24])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7153F1B86BD;
-        Tue, 27 Sep 2022 09:52:57 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1664297577; x=1695833577;
-  h=message-id:date:mime-version:to:cc:references:from:
-   subject:in-reply-to:content-transfer-encoding;
-  bh=5EohTMYLQrkXaT2jLZUdyETCAEaqtVx4zyPwhafHKa0=;
-  b=a5mJxHmR3wr6zzQiTcRVdKWaQYwc1zofj8QrK2TgnQrbrpQZ6AysN+Rm
-   CaqVIme/3FFE7S1wkFDNWfUjLe/YbwJXk1ZyyUjd8MwlC0iAvecyY63/Z
-   yoXEHCaMIrVn41/wD58laQSuUQVdXceZYUDFKi6JPM2h4cIqJTHsrv93M
-   Q1Q9c3Bo98ORZOi4VJgZHwe78bJhikAFJwOJG6j2sy7e8JALytsFlT7E/
-   vTJspsR37zLAo65FQz1es0bf2cjEAazyMwiOImCwCDMNqFBtRZZvTpgeW
-   xAL16DZB735i2UFJ5hK4d89CuqvOxaF7DIL19dRjJwj4i8C7ECN9jV64i
-   A==;
-X-IronPort-AV: E=McAfee;i="6500,9779,10483"; a="302278841"
-X-IronPort-AV: E=Sophos;i="5.93,349,1654585200"; 
-   d="scan'208";a="302278841"
-Received: from orsmga003.jf.intel.com ([10.7.209.27])
-  by orsmga102.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 27 Sep 2022 09:52:40 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6500,9779,10483"; a="572713090"
-X-IronPort-AV: E=Sophos;i="5.93,349,1654585200"; 
-   d="scan'208";a="572713090"
-Received: from linux.intel.com ([10.54.29.200])
-  by orsmga003.jf.intel.com with ESMTP; 27 Sep 2022 09:52:40 -0700
-Received: from [10.252.215.51] (kliang2-mobl1.ccr.corp.intel.com [10.252.215.51])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by linux.intel.com (Postfix) with ESMTPS id AE3615808F0;
-        Tue, 27 Sep 2022 09:52:38 -0700 (PDT)
-Message-ID: <83db7a22-3cf8-9f5c-5530-894c663ee1fb@linux.intel.com>
-Date:   Tue, 27 Sep 2022 12:52:37 -0400
-MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:102.0) Gecko/20100101
- Thunderbird/102.3.0
-Content-Language: en-US
-To:     "Wang, Wei W" <wei.w.wang@intel.com>,
-        Jim Mattson <jmattson@google.com>
-Cc:     Peter Zijlstra <peterz@infradead.org>,
-        "Li, Xiaoyao" <xiaoyao.li@intel.com>,
-        Ingo Molnar <mingo@redhat.com>,
+        Tue, 27 Sep 2022 13:20:51 -0400
+Received: from mail-ed1-x54a.google.com (mail-ed1-x54a.google.com [IPv6:2a00:1450:4864:20::54a])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 75B31EEE9D
+        for <linux-perf-users@vger.kernel.org>; Tue, 27 Sep 2022 10:20:49 -0700 (PDT)
+Received: by mail-ed1-x54a.google.com with SMTP id b16-20020a056402279000b0044f1102e6e2so8474678ede.20
+        for <linux-perf-users@vger.kernel.org>; Tue, 27 Sep 2022 10:20:49 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20210112;
+        h=cc:to:from:subject:message-id:mime-version:date:from:to:cc:subject
+         :date;
+        bh=xrimbA31oh12GrLjVo2B/hMpsltLczwvj4VfTLXOv0M=;
+        b=OMULmYEIDkxRB7ENeb/uPGSUQ/EgKtqJfimZkvES7SP7Ltpiyr6iMf2rYJ/dQhl9he
+         coiTT+OW7F8lFzNCnGgdwu5UwagfywnIiEyVoRcGQWlgoiTWZ4vO1fO049HmAt3CZrDy
+         2DJsHAEhaWJXPTKd85/2FpQtiXDEOB1fRgMLGpV7NiSw0acPbNGYRZnzuQbb7X1sPj56
+         rRsrbWFHxStB08zMuxe95EAr3Ym7aZ9iE4Y5l6UKgqKfWp1hXqGHVVJKHZB5mzhosmoP
+         t2TbThc4MsAN5J73pZjoiCIbEFQRn867vj92luYVJYzkyuaMR/+gKSFWJfgmr0ZQK/7l
+         PhHA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=cc:to:from:subject:message-id:mime-version:date:x-gm-message-state
+         :from:to:cc:subject:date;
+        bh=xrimbA31oh12GrLjVo2B/hMpsltLczwvj4VfTLXOv0M=;
+        b=AZ4bTU68xlO6gYNr+tvNSep67sjovzY2ljfSEUzQmUwiIWvCjBu93wJaakpqAsGq5J
+         6q0mkj054UZfYM4X94lsN6VEcxlLQQ4c5CTlKWjWtIr4muznLJR/AoBHw2MDVWWPBBOc
+         RXly3tcgZU+wGWUUQz+i+zsexmffojLQ/hlfbJbsrkRz4VhwN40DF3t62ukcsIB8LZpz
+         DJYQ/4Td8mwMqiZdWCwUr3qXP5bqHgnSZ2WPfI+J1RezLX4SdC/laWPHLtLduNMD1TZa
+         /BNZr3xtQygti3MxyeeSayUNLvoKLLaCk8ldC8CRCujl3GMYcxZZnlTWMINsuRHLfU82
+         Cdiw==
+X-Gm-Message-State: ACrzQf3/yjmmlPOWmea6mj3DcbWGSBAA7cwTgIA0iyQy9C9tKmU7rvSD
+        +kNjV3mp+A7A7TLv8euKdxz7TOTkYw==
+X-Google-Smtp-Source: AMsMyM6uYt0ZRUQWY1DWH18dz7dRb1NqJyLGAtrCnkwcNrvtTOz8ZQ4UdY9DmOFNcbdL/E3JVVvd5Zzptg==
+X-Received: from elver.muc.corp.google.com ([2a00:79e0:9c:201:693c:15a1:a531:bb4e])
+ (user=elver job=sendgmr) by 2002:a05:6402:d5a:b0:457:b705:3280 with SMTP id
+ ec26-20020a0564020d5a00b00457b7053280mr3560695edb.201.1664299247897; Tue, 27
+ Sep 2022 10:20:47 -0700 (PDT)
+Date:   Tue, 27 Sep 2022 19:20:25 +0200
+Mime-Version: 1.0
+X-Mailer: git-send-email 2.37.3.998.g577e59143f-goog
+Message-ID: <20220927172025.1636995-1-elver@google.com>
+Subject: [PATCH -tip] perf, hw_breakpoint: Fix use-after-free if
+ perf_event_open() fails
+From:   Marco Elver <elver@google.com>
+To:     elver@google.com, Peter Zijlstra <peterz@infradead.org>
+Cc:     Ingo Molnar <mingo@redhat.com>,
         Arnaldo Carvalho de Melo <acme@kernel.org>,
         Mark Rutland <mark.rutland@arm.com>,
         Alexander Shishkin <alexander.shishkin@linux.intel.com>,
         Jiri Olsa <jolsa@kernel.org>,
         Namhyung Kim <namhyung@kernel.org>,
-        "Christopherson,, Sean" <seanjc@google.com>,
-        Paolo Bonzini <pbonzini@redhat.com>,
-        "linux-perf-users@vger.kernel.org" <linux-perf-users@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "kvm@vger.kernel.org" <kvm@vger.kernel.org>
-References: <20220921164521.2858932-1-xiaoyao.li@intel.com>
- <20220921164521.2858932-3-xiaoyao.li@intel.com>
- <175b518c-d202-644e-a3a7-67e877852548@linux.intel.com>
- <DS0PR11MB6373C84139621DC447D3F466DC4E9@DS0PR11MB6373.namprd11.prod.outlook.com>
- <Yyxke/IO+AP4EWwT@hirez.programming.kicks-ass.net>
- <DS0PR11MB637346E9F224C5330CDEF3BFDC4E9@DS0PR11MB6373.namprd11.prod.outlook.com>
- <YyxsnAFYMLn2U9BT@hirez.programming.kicks-ass.net>
- <DS0PR11MB63730A85E00683AB7F6F3E26DC4E9@DS0PR11MB6373.namprd11.prod.outlook.com>
- <62d4bec1-a0c3-3b01-61bb-f284eede6378@linux.intel.com>
- <CALMp9eTG7EbRv_fnQpDMQ3YUjYANgu=6QwVj_ACgHnK-Mhk39Q@mail.gmail.com>
- <e1327377-8e82-56a2-25e5-2ba91f2eec42@linux.intel.com>
- <DS0PR11MB63730CE4DAE000E338F092A0DC559@DS0PR11MB6373.namprd11.prod.outlook.com>
-From:   "Liang, Kan" <kan.liang@linux.intel.com>
-Subject: Re: [RFC PATCH v2 2/3] perf/x86/intel/pt: Introduce and export
- pt_get_curr_event()
-In-Reply-To: <DS0PR11MB63730CE4DAE000E338F092A0DC559@DS0PR11MB6373.namprd11.prod.outlook.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+        linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Dmitry Vyukov <dvyukov@google.com>, kasan-dev@googlegroups.com,
+        syzkaller <syzkaller@googlegroups.com>
+Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
+Local testing revealed that we can trigger a use-after-free during
+rhashtable lookup as follows:
 
+ | BUG: KASAN: use-after-free in memcmp lib/string.c:757
+ | Read of size 8 at addr ffff888107544dc0 by task perf-rhltable-n/1293
+ |
+ | CPU: 0 PID: 1293 Comm: perf-rhltable-n Not tainted 6.0.0-rc3-00014-g85260862789c #46
+ | Hardware name: QEMU Standard PC (i440FX + PIIX, 1996), BIOS 1.16.0-debian-1.16.0-4 04/01/2014
+ | Call Trace:
+ |  <TASK>
+ |  memcmp			lib/string.c:757
+ |  rhashtable_compare		include/linux/rhashtable.h:577 [inline]
+ |  __rhashtable_lookup		include/linux/rhashtable.h:602 [inline]
+ |  rhltable_lookup		include/linux/rhashtable.h:688 [inline]
+ |  task_bp_pinned		kernel/events/hw_breakpoint.c:324
+ |  toggle_bp_slot		kernel/events/hw_breakpoint.c:462
+ |  __release_bp_slot		kernel/events/hw_breakpoint.c:631 [inline]
+ |  release_bp_slot		kernel/events/hw_breakpoint.c:639
+ |  register_perf_hw_breakpoint	kernel/events/hw_breakpoint.c:742
+ |  hw_breakpoint_event_init	kernel/events/hw_breakpoint.c:976
+ |  perf_try_init_event		kernel/events/core.c:11261
+ |  perf_init_event		kernel/events/core.c:11325 [inline]
+ |  perf_event_alloc		kernel/events/core.c:11619
+ |  __do_sys_perf_event_open	kernel/events/core.c:12157
+ |  do_syscall_x64 		arch/x86/entry/common.c:50 [inline]
+ |  do_syscall_64		arch/x86/entry/common.c:80
+ |  entry_SYSCALL_64_after_hwframe
+ |  </TASK>
+ |
+ | Allocated by task 1292:
+ |  perf_event_alloc		kernel/events/core.c:11505
+ |  __do_sys_perf_event_open	kernel/events/core.c:12157
+ |  do_syscall_x64		arch/x86/entry/common.c:50 [inline]
+ |  do_syscall_64		arch/x86/entry/common.c:80
+ |  entry_SYSCALL_64_after_hwframe
+ |
+ | Freed by task 1292:
+ |  perf_event_alloc		kernel/events/core.c:11716
+ |  __do_sys_perf_event_open	kernel/events/core.c:12157
+ |  do_syscall_x64		arch/x86/entry/common.c:50 [inline]
+ |  do_syscall_64		arch/x86/entry/common.c:80
+ |  entry_SYSCALL_64_after_hwframe
+ |
+ | The buggy address belongs to the object at ffff888107544c00
+ |  which belongs to the cache perf_event of size 1352
+ | The buggy address is located 448 bytes inside of
+ |  1352-byte region [ffff888107544c00, ffff888107545148)
 
-On 2022-09-27 10:27 a.m., Wang, Wei W wrote:
-> On Tuesday, September 27, 2022 2:09 AM, Liang, Kan wrote:
->> From my understanding of the host-guest mode, the host PT event never
->> traces the guest no matter whether the guest enables PT. So when VM-entry,
->> there is only a guest PT event or no event. If so, I think the perf tool should
->> warn the user if they try to create a host event with !exclude_guest, since the
->> host event never traces a guest.
-> 
-> Probably not from the perf side. It's actually an issue of the KVM's pt_mode:
-> How can KVM prevent host from profiling the guest when in host-guest mode?
+This happens because the first perf_event_open() managed to reserve a HW
+breakpoint slot, however, later fails for other reasons and returns. The
+second perf_event_open() runs concurrently, and during rhltable_lookup()
+looks up an entry which is being freed: since rhltable_lookup() may run
+concurrently (under the RCU read lock) with rhltable_remove(), we may
+end up with a stale entry, for which memory may also have already been
+freed when being accessed.
 
-I don't think it's KVM's job to prevent host from profiling the guest.
-However, the current KVM implementation implicitly disables the guest
-profiling from the host. If I understand correct, this patch series just
-change it to an explicit way (Just for kernel. Perf tool still doesn't
-know about it.). There is no substantial change.
+To fix, only free the failed perf_event after an RCU grace period. This
+allows subsystems that store references to an event to always access it
+concurrently under the RCU read lock, even if initialization will fail.
 
-I think it should be PT driver who decide which event should be
-scheduled. So the first step is to let the PT driver understand the
-host-guest mode. Then if a perf user in the host tries to profile with
-!exclude_guest with the host-guest mode, the pt driver can deny the
-request. The perf tool than throw a warning, e.g., "The VMM is running
-with host-guest mode. Perf cannot profile guest. Please remove the guest
-profiling setting or switch to the host-only mode.".
+Given failure is unlikely and a slow-path, turning the immediate free
+into a call_rcu()-wrapped free does not affect performance elsewhere.
 
-> Just a warning from the perf side wouldn't be enough. I think that's a wrong
-> assumption from KVM side. I had a plan to fix this one. Exposing the host event
-> can tell KVM if the host is profiling the guest or not (i.e. host-guest is allowed).
+Fixes: 0370dc314df3 ("perf/hw_breakpoint: Optimize list of per-task breakpoints")
+Reported-by: syzkaller <syzkaller@googlegroups.com>
+Signed-off-by: Marco Elver <elver@google.com>
+---
+ kernel/events/core.c | 4 +---
+ 1 file changed, 1 insertion(+), 3 deletions(-)
 
-I don't think KVM should know such information.
+diff --git a/kernel/events/core.c b/kernel/events/core.c
+index df90777262bf..007a87c1599c 100644
+--- a/kernel/events/core.c
++++ b/kernel/events/core.c
+@@ -11776,11 +11776,9 @@ perf_event_alloc(struct perf_event_attr *attr, int cpu,
+ 		event->destroy(event);
+ 	module_put(pmu->module);
+ err_ns:
+-	if (event->ns)
+-		put_pid_ns(event->ns);
+ 	if (event->hw.target)
+ 		put_task_struct(event->hw.target);
+-	kmem_cache_free(perf_event_cache, event);
++	call_rcu(&event->rcu_head, free_event_rcu);
+ 
+ 	return ERR_PTR(err);
+ }
+-- 
+2.37.3.998.g577e59143f-goog
 
-Thanks,
-Kan
