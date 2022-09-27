@@ -2,49 +2,49 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 06182C07E9D
-	for <linux-perf-users@archiver.kernel.org>; Tue, 27 Sep 2022 06:56:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BC3E5C6FA83
+	for <linux-perf-users@archiver.kernel.org>; Tue, 27 Sep 2022 07:06:54 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229603AbiI0G4Q (ORCPT
+        id S229563AbiI0HGx (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Tue, 27 Sep 2022 02:56:16 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42040 "EHLO
+        Tue, 27 Sep 2022 03:06:53 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56636 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229977AbiI0G4P (ORCPT
+        with ESMTP id S229548AbiI0HGw (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Tue, 27 Sep 2022 02:56:15 -0400
-Received: from mga06.intel.com (mga06b.intel.com [134.134.136.31])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5FA478E0C0;
-        Mon, 26 Sep 2022 23:56:14 -0700 (PDT)
+        Tue, 27 Sep 2022 03:06:52 -0400
+Received: from mga17.intel.com (mga17.intel.com [192.55.52.151])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id EC8DC26113;
+        Tue, 27 Sep 2022 00:06:49 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1664261774; x=1695797774;
+  t=1664262409; x=1695798409;
   h=message-id:date:mime-version:subject:to:cc:references:
    from:in-reply-to:content-transfer-encoding;
-  bh=AH5cjA0jQ5jKl5Q4FlnwNzJnVwRRVmrZofqtl8jsi9Y=;
-  b=C2/MP8HstnYt1Afkx2Hb9ItS0lSD0ImUclSgeDP8HCj8JaaYANs6j7v4
-   e9bzY6hzfGwetKYopjY+VfZdhPE0MwyJts/2Wz2uXuGBfOH8GUh6fHIkI
-   b6yN6Xjokob7iOZX9XvfI/6qpBd1HIC2n7wP5cJmIzfrla/TdQ2mvkdAN
-   NER5FtxWTNr7vIJhwB84zWuiQJPSA9oe8Tnsl0c7Euyxh/q5CfJgx5P14
-   tnRKinQfXAXOghhvm3VamDX+T+osTFIYiVwVr7sPlMO+zLE1V9ov0KGEc
-   AuIlaUhFOqZ4TTL9n4mLiYJpycacZ4+i8gLakprWYvS6V/83ESBrvUNiD
-   A==;
-X-IronPort-AV: E=McAfee;i="6500,9779,10482"; a="363078127"
+  bh=aU7ZmPFpMvOZO9aZbJWV7cyRwyIHAiDg2p8jcvSemII=;
+  b=ghRZ7I9PJpxcOW/6Yke9hUQ4KVOeiwQXcuxdxlqVQRi/7s2VWqZaS8l1
+   DFq2+rJpY404PzCDsKJPnKAmVoB3E6Jak/Cb4zpz2M7qtGZ+fGLyn3ZoQ
+   3pXCJzNXX/SQoYHuXJGjSkhEi6HWBEXv+RnB0g/8CjD3EdFgwfayLC0PL
+   IyfUO2bOfoFa8SFRgRfWW+a8D3M5CoGCJmnNFCuGbNde/zek9M9/daPJt
+   fyGx+yl+lC0jEtyTnvyXM7CiZOdUOTPIzSt98bWlEiVTAmwCsBgP+YOUH
+   feQrd/YELkR8cLX2632dWkdc5aNNFqpXp9MeWYfFv5MoGIp5NA5MIL7du
+   w==;
+X-IronPort-AV: E=McAfee;i="6500,9779,10482"; a="281611891"
 X-IronPort-AV: E=Sophos;i="5.93,348,1654585200"; 
-   d="scan'208";a="363078127"
-Received: from orsmga006.jf.intel.com ([10.7.209.51])
-  by orsmga104.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 26 Sep 2022 23:56:14 -0700
-X-IronPort-AV: E=McAfee;i="6500,9779,10482"; a="599072685"
+   d="scan'208";a="281611891"
+Received: from fmsmga007.fm.intel.com ([10.253.24.52])
+  by fmsmga107.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 27 Sep 2022 00:06:49 -0700
+X-IronPort-AV: E=McAfee;i="6500,9779,10482"; a="623654582"
 X-IronPort-AV: E=Sophos;i="5.93,348,1654585200"; 
-   d="scan'208";a="599072685"
+   d="scan'208";a="623654582"
 Received: from ahunter6-mobl1.ger.corp.intel.com (HELO [10.0.2.15]) ([10.252.35.200])
-  by orsmga006-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 26 Sep 2022 23:56:10 -0700
-Message-ID: <e9f85e23-3544-5bbd-4579-cd994a12b3a2@intel.com>
-Date:   Tue, 27 Sep 2022 09:56:06 +0300
+  by fmsmga007-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 27 Sep 2022 00:06:47 -0700
+Message-ID: <d901f8c8-0dda-8f34-f963-09cf56d4924e@intel.com>
+Date:   Tue, 27 Sep 2022 10:06:42 +0300
 MIME-Version: 1.0
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
  Firefox/91.0 Thunderbird/91.11.0
-Subject: Re: [PATCH 1/5] libperf: Populate system-wide evsel maps
+Subject: Re: [PATCH 2/5] libperf: Propagate maps only if necessary
 Content-Language: en-US
 To:     Namhyung Kim <namhyung@kernel.org>,
         Arnaldo Carvalho de Melo <acme@kernel.org>,
@@ -57,11 +57,11 @@ Cc:     Ingo Molnar <mingo@kernel.org>,
         Kan Liang <kan.liang@linux.intel.com>,
         Leo Yan <leo.yan@linaro.org>
 References: <20220924165737.956428-1-namhyung@kernel.org>
- <20220924165737.956428-2-namhyung@kernel.org>
+ <20220924165737.956428-3-namhyung@kernel.org>
 From:   Adrian Hunter <adrian.hunter@intel.com>
 Organization: Intel Finland Oy, Registered Address: PL 281, 00181 Helsinki,
  Business Identity Code: 0357606 - 4, Domiciled in Helsinki
-In-Reply-To: <20220924165737.956428-2-namhyung@kernel.org>
+In-Reply-To: <20220924165737.956428-3-namhyung@kernel.org>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 Precedence: bulk
@@ -69,50 +69,52 @@ List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
 On 24/09/22 19:57, Namhyung Kim wrote:
-> Setting proper cpu and thread maps for system wide evsels regardless of
-> user requested cpu in __perf_evlist__propagate_maps().  Those evsels
-> need to be active on all cpus always.  Do it in the libperf so that we
-> can guarantee it has proper maps.
+> The current code propagate evsel's cpu map settings to evlist when it's
+> added to an evlist.  But the evlist->all_cpus and each evsel's cpus will
+> be updated in perf_evlist__set_maps() later.  No need to do it before
+> evlist's cpus are set actually.
+> 
+> Actually we discarded this intermediate all_cpus maps at the beginning
+> of perf_evlist__set_maps().  Let's not do this.  It's only needed when
+> an evsel is added after the evlist cpu maps are set.
+
+That might not be true.  Consider evlist__fix_hybrid_cpus() which fiddles
+with evsel->core.cpus and evsel->core.own_cpus after the evsel has been
+added to the evlist.  It can also remove an evsel from the evlist.
+
+There might be other cases like that, but that was just one that stuck
+out.
+
 > 
 > Signed-off-by: Namhyung Kim <namhyung@kernel.org>
-
-Reviewed-by: Adrian Hunter <adrian.hunter@intel.com>
-
 > ---
->  tools/lib/perf/evlist.c | 15 +++++++++------
->  1 file changed, 9 insertions(+), 6 deletions(-)
+>  tools/lib/perf/evlist.c | 8 +++-----
+>  1 file changed, 3 insertions(+), 5 deletions(-)
 > 
 > diff --git a/tools/lib/perf/evlist.c b/tools/lib/perf/evlist.c
-> index 6b1bafe267a4..187129652ab6 100644
+> index 187129652ab6..cc070c3a134d 100644
 > --- a/tools/lib/perf/evlist.c
 > +++ b/tools/lib/perf/evlist.c
-> @@ -40,11 +40,11 @@ static void __perf_evlist__propagate_maps(struct perf_evlist *evlist,
->  	 * We already have cpus for evsel (via PMU sysfs) so
->  	 * keep it, if there's no target cpu list defined.
->  	 */
-> -	if (!evsel->own_cpus ||
-> -	    (!evsel->system_wide && evlist->has_user_cpus) ||
-> -	    (!evsel->system_wide &&
-> -	     !evsel->requires_cpu &&
-> -	     perf_cpu_map__empty(evlist->user_requested_cpus))) {
-> +	if (evsel->system_wide) {
-> +		perf_cpu_map__put(evsel->cpus);
-> +		evsel->cpus = perf_cpu_map__new(NULL);
-> +	} else if (!evsel->own_cpus || evlist->has_user_cpus ||
-> +		   (!evsel->requires_cpu && perf_cpu_map__empty(evlist->user_requested_cpus))) {
->  		perf_cpu_map__put(evsel->cpus);
->  		evsel->cpus = perf_cpu_map__get(evlist->user_requested_cpus);
->  	} else if (evsel->cpus != evsel->own_cpus) {
-> @@ -52,7 +52,10 @@ static void __perf_evlist__propagate_maps(struct perf_evlist *evlist,
->  		evsel->cpus = perf_cpu_map__get(evsel->own_cpus);
->  	}
+> @@ -67,10 +67,6 @@ static void perf_evlist__propagate_maps(struct perf_evlist *evlist)
+>  {
+>  	struct perf_evsel *evsel;
 >  
-> -	if (!evsel->system_wide) {
-> +	if (evsel->system_wide) {
-> +		perf_thread_map__put(evsel->threads);
-> +		evsel->threads = perf_thread_map__new_dummy();
-> +	} else {
->  		perf_thread_map__put(evsel->threads);
->  		evsel->threads = perf_thread_map__get(evlist->threads);
->  	}
+> -	/* Recomputing all_cpus, so start with a blank slate. */
+> -	perf_cpu_map__put(evlist->all_cpus);
+> -	evlist->all_cpus = NULL;
+> -
+>  	perf_evlist__for_each_evsel(evlist, evsel)
+>  		__perf_evlist__propagate_maps(evlist, evsel);
+>  }
+> @@ -81,7 +77,9 @@ void perf_evlist__add(struct perf_evlist *evlist,
+>  	evsel->idx = evlist->nr_entries;
+>  	list_add_tail(&evsel->node, &evlist->entries);
+>  	evlist->nr_entries += 1;
+> -	__perf_evlist__propagate_maps(evlist, evsel);
+> +
+> +	if (evlist->all_cpus)
+> +		__perf_evlist__propagate_maps(evlist, evsel);
+>  }
+>  
+>  void perf_evlist__remove(struct perf_evlist *evlist,
 
