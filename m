@@ -2,117 +2,136 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 17F03C6FA83
-	for <linux-perf-users@archiver.kernel.org>; Tue, 27 Sep 2022 14:57:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 374DAC6FA82
+	for <linux-perf-users@archiver.kernel.org>; Tue, 27 Sep 2022 15:45:24 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230465AbiI0O5M (ORCPT
+        id S232778AbiI0PpW (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Tue, 27 Sep 2022 10:57:12 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48524 "EHLO
+        Tue, 27 Sep 2022 11:45:22 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44204 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231221AbiI0O4q (ORCPT
+        with ESMTP id S232505AbiI0Po5 (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Tue, 27 Sep 2022 10:56:46 -0400
-Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E1691F49;
-        Tue, 27 Sep 2022 07:56:12 -0700 (PDT)
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id 7C7FF619FF;
-        Tue, 27 Sep 2022 14:56:12 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 66E8DC433D6;
-        Tue, 27 Sep 2022 14:56:11 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linuxfoundation.org;
-        s=korg; t=1664290571;
-        bh=Qk0G/WZDcN4dxcPpiCPen6zY2HKM55TAGgtnQZvZuMs=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=kesYukV+JBTN/u2lya1V3baZinP/iQcxgujh4O9bleZt7H6tANJtmTPV2ZZ6B7+l3
-         1QuECVkV8T2qteCdXOmLDkjN5nI7CGOYGV+sAjF6Lw4o/4I9We97/5GGQiCHaMN1xf
-         0wfkAzvUAX4sXPJ5KC2hknKlp9wq1EKj32/Rn5FI=
-Date:   Tue, 27 Sep 2022 16:56:09 +0200
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     Miguel Ojeda <ojeda@kernel.org>
-Cc:     Linus Torvalds <torvalds@linux-foundation.org>,
-        rust-for-linux@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-fsdevel@vger.kernel.org, patches@lists.linux.dev,
-        Jarkko Sakkinen <jarkko@kernel.org>,
-        Kees Cook <keescook@chromium.org>,
-        Petr Mladek <pmladek@suse.com>,
-        Alex Gaynor <alex.gaynor@gmail.com>,
-        Wedson Almeida Filho <wedsonaf@google.com>,
-        Gary Guo <gary@garyguo.net>, Boqun Feng <boqun.feng@gmail.com>,
-        Josh Poimboeuf <jpoimboe@kernel.org>,
-        Jiri Kosina <jikos@kernel.org>,
-        Miroslav Benes <mbenes@suse.cz>,
-        Joe Lawrence <joe.lawrence@redhat.com>,
+        Tue, 27 Sep 2022 11:44:57 -0400
+Received: from foss.arm.com (foss.arm.com [217.140.110.172])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTP id C22043FA0D;
+        Tue, 27 Sep 2022 08:41:24 -0700 (PDT)
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 971501EDB;
+        Tue, 27 Sep 2022 08:41:30 -0700 (PDT)
+Received: from e121896.Emea.Arm.com (e121896.Emea.Arm.com [10.32.36.24])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPA id 222693F73B;
+        Tue, 27 Sep 2022 08:41:20 -0700 (PDT)
+From:   James Clark <james.clark@arm.com>
+To:     acme@kernel.org, namhyung@kernel.org
+Cc:     linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org,
+        will@kernel.org, James Clark <james.clark@arm.com>,
         Peter Zijlstra <peterz@infradead.org>,
         Ingo Molnar <mingo@redhat.com>,
-        Arnaldo Carvalho de Melo <acme@kernel.org>,
         Mark Rutland <mark.rutland@arm.com>,
         Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Jiri Olsa <jolsa@kernel.org>,
-        Namhyung Kim <namhyung@kernel.org>,
-        live-patching@vger.kernel.org, linux-perf-users@vger.kernel.org
-Subject: Re: [PATCH v10 05/27] kallsyms: increase maximum kernel symbol
- length to 512
-Message-ID: <YzMPCfjEu6c5bbCv@kroah.com>
-References: <20220927131518.30000-1-ojeda@kernel.org>
- <20220927131518.30000-6-ojeda@kernel.org>
+        Jiri Olsa <jolsa@kernel.org>, bpf@vger.kernel.org
+Subject: [RFC PATCH 2/4] perf test: Add mechanism for skipping attr tests on auxiliary vector values
+Date:   Tue, 27 Sep 2022 16:41:02 +0100
+Message-Id: <20220927154104.869029-3-james.clark@arm.com>
+X-Mailer: git-send-email 2.28.0
+In-Reply-To: <20220927154104.869029-1-james.clark@arm.com>
+References: <20220927154104.869029-1-james.clark@arm.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20220927131518.30000-6-ojeda@kernel.org>
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-On Tue, Sep 27, 2022 at 03:14:36PM +0200, Miguel Ojeda wrote:
-> Rust symbols can become quite long due to namespacing introduced
-> by modules, types, traits, generics, etc. For instance,
-> the following code:
-> 
->     pub mod my_module {
->         pub struct MyType;
->         pub struct MyGenericType<T>(T);
-> 
->         pub trait MyTrait {
->             fn my_method() -> u32;
->         }
-> 
->         impl MyTrait for MyGenericType<MyType> {
->             fn my_method() -> u32 {
->                 42
->             }
->         }
->     }
-> 
-> generates a symbol of length 96 when using the upcoming v0 mangling scheme:
-> 
->     _RNvXNtCshGpAVYOtgW1_7example9my_moduleINtB2_13MyGenericTypeNtB2_6MyTypeENtB2_7MyTrait9my_method
-> 
-> At the moment, Rust symbols may reach up to 300 in length.
-> Setting 512 as the maximum seems like a reasonable choice to
-> keep some headroom.
-> 
-> Reviewed-by: Kees Cook <keescook@chromium.org>
-> Reviewed-by: Petr Mladek <pmladek@suse.com>
-> Co-developed-by: Alex Gaynor <alex.gaynor@gmail.com>
-> Signed-off-by: Alex Gaynor <alex.gaynor@gmail.com>
-> Co-developed-by: Wedson Almeida Filho <wedsonaf@google.com>
-> Signed-off-by: Wedson Almeida Filho <wedsonaf@google.com>
-> Co-developed-by: Gary Guo <gary@garyguo.net>
-> Signed-off-by: Gary Guo <gary@garyguo.net>
-> Co-developed-by: Boqun Feng <boqun.feng@gmail.com>
-> Signed-off-by: Boqun Feng <boqun.feng@gmail.com>
-> Signed-off-by: Miguel Ojeda <ojeda@kernel.org>
-> ---
->  include/linux/kallsyms.h            | 2 +-
->  kernel/livepatch/core.c             | 4 ++--
->  scripts/kallsyms.c                  | 4 ++--
->  tools/include/linux/kallsyms.h      | 2 +-
->  tools/lib/perf/include/perf/event.h | 2 +-
->  tools/lib/symbol/kallsyms.h         | 2 +-
->  6 files changed, 8 insertions(+), 8 deletions(-)
+This can be used to skip tests or provide different test values on
+different platforms. For example to run a test only where Arm SVE is
+present add this to the config section:
 
-Reviewed-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+  auxv    = auxv["AT_HWCAP"] & 0x200000 == 0x200000
+
+The value is a freeform Python expression that is evaled in the context
+of a map called "auxv" that contains the decoded auxiliary vector.
+
+Signed-off-by: James Clark <james.clark@arm.com>
+---
+ tools/perf/tests/attr.py | 33 +++++++++++++++++++++++++++++++--
+ 1 file changed, 31 insertions(+), 2 deletions(-)
+
+diff --git a/tools/perf/tests/attr.py b/tools/perf/tests/attr.py
+index 7e053fa5d6ae..2d6124801da0 100644
+--- a/tools/perf/tests/attr.py
++++ b/tools/perf/tests/attr.py
+@@ -8,7 +8,9 @@ import glob
+ import optparse
+ import tempfile
+ import logging
++import re
+ import shutil
++import subprocess
+ 
+ try:
+     import configparser
+@@ -134,6 +136,8 @@ class Event(dict):
+ #     'arch'    - architecture specific test (optional)
+ #                 comma separated list, ! at the beginning
+ #                 negates it.
++#     'auxv'    - Truthy statement that is evaled in the scope of the auxv map. When false,
++#                 the test is skipped. For example 'auxv["AT_HWCAP"] == 10'. (optional)
+ #
+ # [eventX:base]
+ #   - one or multiple instances in file
+@@ -164,6 +168,7 @@ class Test(object):
+         except:
+             self.arch  = ''
+ 
++        self.auxv = parser.get('config', 'auxv', fallback=None)
+         self.expect   = {}
+         self.result   = {}
+         log.debug("  loading expected events");
+@@ -175,7 +180,28 @@ class Test(object):
+         else:
+             return True
+ 
+-    def skip_test(self, myarch):
++    def skip_test_auxv(self):
++        def new_auxv(a, pattern):
++            items = list(filter(None, pattern.split(a)))
++            # AT_HWCAP is hex but doesn't have a prefix, so special case it
++            if items[0] == "AT_HWCAP":
++                value = int(items[-1], 16)
++            else:
++                try:
++                    value = int(items[-1], 0)
++                except:
++                    value = items[-1]
++            return (items[0], value)
++
++        if not self.auxv:
++            return False
++        auxv = subprocess.check_output("LD_SHOW_AUXV=1 sleep 0", shell=True) \
++               .decode(sys.stdout.encoding)
++        pattern = re.compile(r"[: ]+")
++        auxv = dict([new_auxv(a, pattern) for a in auxv.splitlines()])
++        return not eval(self.auxv)
++
++    def skip_test_arch(self, myarch):
+         # If architecture not set always run test
+         if self.arch == '':
+             # log.warning("test for arch %s is ok" % myarch)
+@@ -225,9 +251,12 @@ class Test(object):
+     def run_cmd(self, tempdir):
+         junk1, junk2, junk3, junk4, myarch = (os.uname())
+ 
+-        if self.skip_test(myarch):
++        if self.skip_test_arch(myarch):
+             raise Notest(self, myarch)
+ 
++        if self.skip_test_auxv():
++            raise Notest(self, "auxv skip")
++
+         cmd = "PERF_TEST_ATTR=%s %s %s -o %s/perf.data %s" % (tempdir,
+               self.perf, self.command, tempdir, self.args)
+         ret = os.WEXITSTATUS(os.system(cmd))
+-- 
+2.28.0
+
