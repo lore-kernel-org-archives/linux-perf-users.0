@@ -2,193 +2,82 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 20D03C6FA82
-	for <linux-perf-users@archiver.kernel.org>; Tue, 27 Sep 2022 12:31:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BEA16C07E9D
+	for <linux-perf-users@archiver.kernel.org>; Tue, 27 Sep 2022 12:36:16 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230337AbiI0MbS (ORCPT
+        id S230236AbiI0MgQ (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Tue, 27 Sep 2022 08:31:18 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40940 "EHLO
+        Tue, 27 Sep 2022 08:36:16 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59826 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230404AbiI0MbI (ORCPT
+        with ESMTP id S232261AbiI0MgN (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Tue, 27 Sep 2022 08:31:08 -0400
-Received: from mail-ed1-x534.google.com (mail-ed1-x534.google.com [IPv6:2a00:1450:4864:20::534])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9CC0767C8E
-        for <linux-perf-users@vger.kernel.org>; Tue, 27 Sep 2022 05:31:05 -0700 (PDT)
-Received: by mail-ed1-x534.google.com with SMTP id m3so12947920eda.12
-        for <linux-perf-users@vger.kernel.org>; Tue, 27 Sep 2022 05:31:05 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20210112;
-        h=user-agent:in-reply-to:content-disposition:mime-version:references
-         :message-id:subject:cc:to:from:date:from:to:cc:subject:date;
-        bh=5ft9ZKgcoilbmvfkfl9ZpGjG19NwykRqtF901VdwZnw=;
-        b=T/uniFHOpdz+MiTIdGzU7xL/KqvWrhxvv6LOrqyYzE/V7YkPjC1tefHPEYi87X3vXG
-         ejFTM6X0X+8IIEWtGE0TdhYAVanv73/AOA77w3yEmRySAX0UjIu9XWLo0gZ+wQp0oEuO
-         wAXAOd+/0SQHNa4t5Wv8hUtMNGfTdFMRwqEe4AbjI8klWLwDsd73OMe1Zfw9TxsxIcJW
-         ezzbQG9JxlG5wUwBEsGvP70VWhfdcYGCKXhLiDpA6ei6B+HgT/NjoT0BUBE1LqSGreHY
-         blCcFP61bMoyMidM2zfzfI8UusVuQj/Eq7LxLaOLYuMZt7q3NbKpLtbRmAlKPLtqiGjY
-         cGfQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=user-agent:in-reply-to:content-disposition:mime-version:references
-         :message-id:subject:cc:to:from:date:x-gm-message-state:from:to:cc
-         :subject:date;
-        bh=5ft9ZKgcoilbmvfkfl9ZpGjG19NwykRqtF901VdwZnw=;
-        b=AxDoMqrJcWAcV2sK3ChHuGaXthz8NcJwIgsIE5kOSWggqZRgrQ1B4wXbyQ/Tu4rjeQ
-         HzWKP1rkh8WY8X4cwKFthMborzif+SlExqvV7B1+WLyuDcsFb72DxsI5qJbsSR/jTpgJ
-         qNTUC/8PlNzT03xw8rZ7E22Vfd/EVMzwhvSOiwhEg9NDKp0g87RLnnID1q4vvAu9H83J
-         HMqFMZ8Zc+3y0AIG28GR73rLLK+OA/Dkzs7Cog8lJChYKQBAI7Uemobo335lg5BPubqI
-         kUceIufBKieHdTFhp8j3qx82L2jGuKM9Fo9blcdNNjQaCD73Wvn6B3qGaT/3xA50+bhA
-         j5Hw==
-X-Gm-Message-State: ACrzQf21x5vKrD7rAj+dG9/FeJSz9TXTsjw7t0AB942KzJoXXO6CxK1c
-        K6nb1HpNcNBAUrstlKaDp88Cmw==
-X-Google-Smtp-Source: AMsMyM5Kvn5Mp4saf5XRcJwtEk9gtMJzbU0i/p8I+1gytRzlCaf/eo/w/fMDo9Cgkdcl9ZFyVGF2KQ==
-X-Received: by 2002:a05:6402:1554:b0:457:375e:7289 with SMTP id p20-20020a056402155400b00457375e7289mr11645505edx.171.1664281863992;
-        Tue, 27 Sep 2022 05:31:03 -0700 (PDT)
-Received: from elver.google.com ([2a00:79e0:9c:201:693c:15a1:a531:bb4e])
-        by smtp.gmail.com with ESMTPSA id bc25-20020a056402205900b0044ef2ac2650sm1141168edb.90.2022.09.27.05.31.02
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 27 Sep 2022 05:31:03 -0700 (PDT)
-Date:   Tue, 27 Sep 2022 14:30:56 +0200
-From:   Marco Elver <elver@google.com>
-To:     Peter Zijlstra <peterz@infradead.org>
-Cc:     Ingo Molnar <mingo@redhat.com>,
-        Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Jiri Olsa <jolsa@kernel.org>,
-        Namhyung Kim <namhyung@kernel.org>,
-        linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org,
-        kasan-dev@googlegroups.com, Dmitry Vyukov <dvyukov@google.com>
-Subject: Re: [PATCH] perf: Fix missing SIGTRAPs due to pending_disable abuse
-Message-ID: <YzLtAG2bfRJ/vFRu@elver.google.com>
-References: <20220927121322.1236730-1-elver@google.com>
+        Tue, 27 Sep 2022 08:36:13 -0400
+Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 27FA6147CD7
+        for <linux-perf-users@vger.kernel.org>; Tue, 27 Sep 2022 05:36:07 -0700 (PDT)
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by dfw.source.kernel.org (Postfix) with ESMTPS id B74C761932
+        for <linux-perf-users@vger.kernel.org>; Tue, 27 Sep 2022 12:36:06 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id E97D0C433D6;
+        Tue, 27 Sep 2022 12:36:05 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1664282166;
+        bh=DX6vGsLYeJghLuQxmqN+cD4MEoymtJJBw0BGuAz+Gq4=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=YmLqYAPmci4Gh6JTGRFspm9yrxPdQ8Y9TrdNCp5KBiYpGKZfWS0ZRTTBHz/SM6FON
+         ZgSLHB7quRZMKzBZUybdWBr8z4fzZduM7hWE8Zs2iiUffFpHGLBSUyL9B+cml1Lhz+
+         eZdYH+kUyucoXpkFJdRBiUMQ+ur52rm+jP3H3DBDv6Eidp7O38zMfD9sFsF3vLZhCq
+         gvBy+PBo/fi8OxYnwWL1Dw5Tcm7Ongd7O1GLCQqvwisw0ZiWUdOunpwRELTWxVX+gy
+         QRKU0vXsU0VmrM5GAHwPAQr6n9hMeC+ZehPcSBEHrFaXB48x0Bx0gd72ijTHtNBQSz
+         AT51PwC1SaT4Q==
+Received: by quaco.ghostprotocols.net (Postfix, from userid 1000)
+        id 44C61403B0; Tue, 27 Sep 2022 13:36:03 +0100 (IST)
+Date:   Tue, 27 Sep 2022 13:36:03 +0100
+From:   Arnaldo Carvalho de Melo <acme@kernel.org>
+To:     Yuan Can <yuancan@huawei.com>
+Cc:     peterz@infradead.org, mingo@redhat.com, mark.rutland@arm.com,
+        alexander.shishkin@linux.intel.com, jolsa@kernel.org,
+        namhyung@kernel.org, linux-perf-users@vger.kernel.org
+Subject: Re: [PATCH 0/5] perf: Remove unused struct
+Message-ID: <YzLuMxMccZ1vn9sm@kernel.org>
+References: <20220927013931.110475-1-yuancan@huawei.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20220927121322.1236730-1-elver@google.com>
-User-Agent: Mutt/2.2.7 (2022-08-07)
+In-Reply-To: <20220927013931.110475-1-yuancan@huawei.com>
+X-Url:  http://acmel.wordpress.com
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-On Tue, Sep 27, 2022 at 02:13PM +0200, Marco Elver wrote:
-> Due to the implementation of how SIGTRAP are delivered if
-> perf_event_attr::sigtrap is set, we've noticed 3 issues:
-> 
-> 	1. Missing SIGTRAP due to a race with event_sched_out() (more
-> 	   details below).
-> 
-> 	2. Hardware PMU events being disabled due to returning 1 from
-> 	   perf_event_overflow(). The only way to re-enable the event is
-> 	   for user space to first "properly" disable the event and then
-> 	   re-enable it.
-> 
-> 	3. The inability to automatically disable an event after a
-> 	   specified number of overflows via PERF_EVENT_IOC_REFRESH.
-> 
-> The worst of the 3 issues is problem (1), which occurs when a
-> pending_disable is "consumed" by a racing event_sched_out(), observed as
-> follows:
-> 
-> 		CPU0			| 	CPU1
-> 	--------------------------------+---------------------------
-> 	__perf_event_overflow()		|
-> 	 perf_event_disable_inatomic()	|
-> 	  pending_disable = CPU0	| ...
-> 	  				| _perf_event_enable()
-> 					|  event_function_call()
-> 					|   task_function_call()
-> 					|    /* sends IPI to CPU0 */
-> 	<IPI>				| ...
-> 	 __perf_event_enable()		+---------------------------
-> 	  ctx_resched()
-> 	   task_ctx_sched_out()
-> 	    ctx_sched_out()
-> 	     group_sched_out()
-> 	      event_sched_out()
-> 	       pending_disable = -1
-> 	</IPI>
-> 	<IRQ-work>
-> 	 perf_pending_event()
-> 	  perf_pending_event_disable()
-> 	   /* Fails to send SIGTRAP because no pending_disable! */
-> 	</IRQ-work>
-> 
-> In the above case, not only is that particular SIGTRAP missed, but also
-> all future SIGTRAPs because 'event_limit' is not reset back to 1.
-> 
-> To fix, rework pending delivery of SIGTRAP via IRQ-work by introduction
-> of a separate 'pending_sigtrap', no longer using 'event_limit' and
-> 'pending_disable' for its delivery.
-> 
-> During testing, this also revealed several more possible races between
-> reschedules and pending IRQ work; see code comments for details.
-> 
-> Doing so makes it possible to use 'event_limit' normally (thereby
-> enabling use of PERF_EVENT_IOC_REFRESH), perf_event_overflow() no longer
-> returns 1 on SIGTRAP causing disabling of hardware PMUs, and finally the
-> race is no longer possible due to event_sched_out() not consuming
-> 'pending_disable'.
-> 
-> Fixes: 97ba62b27867 ("perf: Add support for SIGTRAP on perf events")
-> Reported-by: Dmitry Vyukov <dvyukov@google.com>
-> Debugged-by: Dmitry Vyukov <dvyukov@google.com>
-> Signed-off-by: Marco Elver <elver@google.com>
-> ---
->  include/linux/perf_event.h |  2 +
->  kernel/events/core.c       | 85 ++++++++++++++++++++++++++++++++------
->  2 files changed, 75 insertions(+), 12 deletions(-)
-> 
-> diff --git a/include/linux/perf_event.h b/include/linux/perf_event.h
-> index 907b0e3f1318..dff3430844a2 100644
-> --- a/include/linux/perf_event.h
-> +++ b/include/linux/perf_event.h
-> @@ -740,8 +740,10 @@ struct perf_event {
->  	int				pending_wakeup;
->  	int				pending_kill;
->  	int				pending_disable;
-> +	int				pending_sigtrap;
->  	unsigned long			pending_addr;	/* SIGTRAP */
->  	struct irq_work			pending;
-> +	struct irq_work			pending_resched;
->  
->  	atomic_t			event_limit;
->  
-> diff --git a/kernel/events/core.c b/kernel/events/core.c
-> index 75f5705b6892..df90777262bf 100644
-> --- a/kernel/events/core.c
-> +++ b/kernel/events/core.c
-> @@ -2527,6 +2527,14 @@ event_sched_in(struct perf_event *event,
->  	if (event->attr.exclusive)
->  		cpuctx->exclusive = 1;
->  
-> +	if (event->pending_sigtrap) {
-> +		/*
-> +		 * The task and event might have been moved to another CPU:
-> +		 * queue another IRQ work. See perf_pending_event_sigtrap().
-> +		 */
-> +		WARN_ON_ONCE(!irq_work_queue(&event->pending_resched));
+Em Tue, Sep 27, 2022 at 01:39:26AM +0000, Yuan Can escreveu:
+> This series contains five cleanup patches, remove unused struct.
 
-One question we had is if it's possible for an event to be scheduled in,
-immediately scheduled out, and then scheduled in on a 3rd CPU. I.e. we'd
-still be in trouble if we can do this:
+Thanks, applied.
 
-	CPU0
-	sched-out
-		CPU1
-		sched-in
-		sched-out
-			CPU2
-			sched-in
+- Arnaldo
 
-without any IRQ work ever running. Some naive solutions so the
-pending_resched IRQ work isn't needed, like trying to send a signal
-right here (or in event_sched_out()), don't work because we've seen
-syzkaller produce programs where there's a pending event and then the
-scheduler moves the task; because we're in the scheduler we can deadlock
-if we try to send the signal here.
+ 
+> Yuan Can (5):
+>   perf machine: Remove unused struct process_args
+>   perf annotate: Remove unused struct disasm_line_samples
+>   perf metric: Remove unused struct metric_ref_node
+>   perf jit: Remove unused struct debug_line_info
+>   perf lock: Remove unused struct lock_contention_key
+> 
+>  tools/perf/ui/browsers/annotate.c     |  5 -----
+>  tools/perf/util/bpf_lock_contention.c |  5 -----
+>  tools/perf/util/jitdump.c             |  7 -------
+>  tools/perf/util/machine.c             |  4 ----
+>  tools/perf/util/metricgroup.c         | 11 -----------
+>  5 files changed, 32 deletions(-)
+> 
+> -- 
+> 2.17.1
 
-Thanks,
--- Marco
+-- 
+
+- Arnaldo
