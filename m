@@ -2,168 +2,87 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5568EC6FA83
-	for <linux-perf-users@archiver.kernel.org>; Tue, 27 Sep 2022 07:09:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 892D9C6FA86
+	for <linux-perf-users@archiver.kernel.org>; Tue, 27 Sep 2022 07:15:14 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229660AbiI0HJg (ORCPT
+        id S230088AbiI0HPM (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Tue, 27 Sep 2022 03:09:36 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60878 "EHLO
+        Tue, 27 Sep 2022 03:15:12 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47982 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229617AbiI0HJg (ORCPT
+        with ESMTP id S229493AbiI0HPI (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Tue, 27 Sep 2022 03:09:36 -0400
-Received: from mga04.intel.com (mga04.intel.com [192.55.52.120])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A021C5595;
-        Tue, 27 Sep 2022 00:09:33 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1664262573; x=1695798573;
-  h=message-id:date:mime-version:subject:to:cc:references:
-   from:in-reply-to:content-transfer-encoding;
-  bh=hfOuLUmJESa9TndPikP9Oj/5VtYTzryYL4S2klro3to=;
-  b=LjM5rqVv8lFEMPedf0jC9Xa+PVE8JERuUfTMYLFO/LqucPXyFjg64evL
-   Dl063Wl305O2FbAkkNfcsGDReY7cC2VJKR9OLImYb+KCSDsBXeqloRTuT
-   K/Seb53mv4d1fLGjdW0wncwBqbd2LyOYOgWEu2tx2HpFvuHnDuwOhQ/HK
-   T4ZjJJczPdKlaxua5ZtwtASCQCLQJC9+qSAFyNY7pJY6oKP8Naw0ticp6
-   emO9XOrZvKvuTxPVusFRXkiKUDuar+cz06V1Pay4BX29DcEUqaim8oDDx
-   nDpOnx15oAwToJNTl/3lUbQdFRkDsVj3PXqN6c3Y7tnOZOTDNcct4yUbS
-   w==;
-X-IronPort-AV: E=McAfee;i="6500,9779,10482"; a="299961400"
-X-IronPort-AV: E=Sophos;i="5.93,348,1654585200"; 
-   d="scan'208";a="299961400"
-Received: from fmsmga006.fm.intel.com ([10.253.24.20])
-  by fmsmga104.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 27 Sep 2022 00:09:33 -0700
-X-IronPort-AV: E=McAfee;i="6500,9779,10482"; a="866463287"
-X-IronPort-AV: E=Sophos;i="5.93,348,1654585200"; 
-   d="scan'208";a="866463287"
-Received: from ahunter6-mobl1.ger.corp.intel.com (HELO [10.0.2.15]) ([10.252.35.200])
-  by fmsmga006-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 27 Sep 2022 00:09:30 -0700
-Message-ID: <2260a908-47c0-705c-3d87-099b7d6fa9fd@intel.com>
-Date:   Tue, 27 Sep 2022 10:09:26 +0300
+        Tue, 27 Sep 2022 03:15:08 -0400
+Received: from frasgout11.his.huawei.com (frasgout11.his.huawei.com [14.137.139.23])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 90F766C11E;
+        Tue, 27 Sep 2022 00:15:05 -0700 (PDT)
+Received: from mail02.huawei.com (unknown [172.18.147.228])
+        by frasgout11.his.huawei.com (SkyGuard) with ESMTP id 4Mc9hz4sjmz9xqd9;
+        Tue, 27 Sep 2022 15:09:07 +0800 (CST)
+Received: from roberto-ThinkStation-P620 (unknown [10.204.63.22])
+        by APP1 (Coremail) with SMTP id LxC2BwBXT5PdojJjCNt7AA--.18934S2;
+        Tue, 27 Sep 2022 08:14:45 +0100 (CET)
+Message-ID: <75986095d7ada2b24784ef356abc6ce17307575d.camel@huaweicloud.com>
+Subject: Re: [PATCH 3/3] tools/build: Display logical OR of a feature flavors
+From:   Roberto Sassu <roberto.sassu@huaweicloud.com>
+To:     acme@kernel.org
+Cc:     peterz@infradead.org, mingo@redhat.com,
+        Jiri Olsa <olsajiri@gmail.com>, mark.rutland@arm.com,
+        alexander.shishkin@linux.intel.com, namhyung@kernel.org,
+        quentin@isovalent.com, linux-perf-users@vger.kernel.org,
+        bpf@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Roberto Sassu <roberto.sassu@huawei.com>
+Date:   Tue, 27 Sep 2022 09:14:34 +0200
+In-Reply-To: <64352c51c5dcbab389201a16733f3157a1ea591e.camel@huaweicloud.com>
+References: <20220818120957.319995-1-roberto.sassu@huaweicloud.com>
+         <20220818120957.319995-3-roberto.sassu@huaweicloud.com>
+         <YwNhabqHEq3PfNM8@krava>
+         <64352c51c5dcbab389201a16733f3157a1ea591e.camel@huaweicloud.com>
+Content-Type: text/plain; charset="UTF-8"
+User-Agent: Evolution 3.36.5-0ubuntu1 
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
- Firefox/91.0 Thunderbird/91.11.0
-Subject: Re: [PATCH 5/5] perf tools: Remove special handling of system-wide
- evsel
-Content-Language: en-US
-To:     Namhyung Kim <namhyung@kernel.org>,
-        Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Jiri Olsa <jolsa@kernel.org>
-Cc:     Ingo Molnar <mingo@kernel.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Ian Rogers <irogers@google.com>,
-        linux-perf-users@vger.kernel.org,
-        Kan Liang <kan.liang@linux.intel.com>,
-        Leo Yan <leo.yan@linaro.org>
-References: <20220924165737.956428-1-namhyung@kernel.org>
- <20220924165737.956428-6-namhyung@kernel.org>
-From:   Adrian Hunter <adrian.hunter@intel.com>
-Organization: Intel Finland Oy, Registered Address: PL 281, 00181 Helsinki,
- Business Identity Code: 0357606 - 4, Domiciled in Helsinki
-In-Reply-To: <20220924165737.956428-6-namhyung@kernel.org>
-Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
+X-CM-TRANSID: LxC2BwBXT5PdojJjCNt7AA--.18934S2
+X-Coremail-Antispam: 1UD129KBjDUn29KB7ZKAUJUUUUU529EdanIXcx71UUUUU7v73
+        VFW2AGmfu7bjvjm3AaLaJ3UjIYCTnIWjp_UUUYU7kC6x804xWl14x267AKxVW8JVW5JwAF
+        c2x0x2IEx4CE42xK8VAvwI8IcIk0rVWrJVCq3wAFIxvE14AKwVWUJVWUGwA2ocxC64kIII
+        0Yj41l84x0c7CEw4AK67xGY2AK021l84ACjcxK6xIIjxv20xvE14v26r1j6r1xM28EF7xv
+        wVC0I7IYx2IY6xkF7I0E14v26r4j6F4UM28EF7xvwVC2z280aVAFwI0_Jr0_Gr1l84ACjc
+        xK6I8E87Iv6xkF7I0E14v26r4j6r4UJwAS0I0E0xvYzxvE52x082IY62kv0487Mc02F40E
+        FcxC0VAKzVAqx4xG6I80ewAv7VC0I7IYx2IY67AKxVWUJVWUGwAv7VC2z280aVAFwI0_Jr
+        0_Gr1lOx8S6xCaFVCjc4AY6r1j6r4UM4x0Y48IcVAKI48JM4IIrI8v6xkF7I0E8cxan2IY
+        04v7MxAIw28IcxkI7VAKI48JMxC20s026xCaFVCjc4AY6r1j6r4UMI8I3I0E5I8CrVAFwI
+        0_Jr0_Jr4lx2IqxVCjr7xvwVAFwI0_JrI_JrWlx4CE17CEb7AF67AKxVWUtVW8ZwCIc40Y
+        0x0EwIxGrwCI42IY6xIIjxv20xvE14v26r1j6r1xMIIF0xvE2Ix0cI8IcVCY1x0267AKxV
+        W8JVWxJwCI42IY6xAIw20EY4v20xvaj40_WFyUJVCq3wCI42IY6I8E87Iv67AKxVWUJVW8
+        JwCI42IY6I8E87Iv6xkF7I0E14v26r4j6r4UJbIYCTnIWIevJa73UjIFyTuYvjxUrR6zUU
+        UUU
+X-CM-SenderInfo: purev21wro2thvvxqx5xdzvxpfor3voofrz/1tbiAgAIBF1jj398ggAAs+
+X-CFilter-Loop: Reflected
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-On 24/09/22 19:57, Namhyung Kim wrote:
-> For system-wide evsels, the thread map should be dummy - i.e. it has a
-> single entry of -1.  But the code guarantees such a thread map, so no
-> need to handle it specially.
+On Mon, 2022-08-22 at 13:24 +0200, Roberto Sassu wrote:
+> On Mon, 2022-08-22 at 12:58 +0200, Jiri Olsa wrote:
+> > On Thu, Aug 18, 2022 at 02:09:57PM +0200, 
 > 
-> No functional change intended.
+> [...]
 > 
-> Signed-off-by: Namhyung Kim <namhyung@kernel.org>
+> > > In verbose mode, of if no group is defined for a feature, show
+> > > the
+> > > feature
+> > > detection result as before.
+> 
+> Thanks Jiri.
+> 
+> 'or' instead of 'of', if the patch can be edited.
 
-Reviewed-by: Adrian Hunter <adrian.hunter@intel.com>
+Hi Arnaldo
 
-> ---
->  tools/lib/perf/evsel.c      |  3 ---
->  tools/perf/builtin-script.c |  3 ---
->  tools/perf/util/evsel.c     | 12 ++----------
->  tools/perf/util/stat.c      |  3 ---
->  4 files changed, 2 insertions(+), 19 deletions(-)
-> 
-> diff --git a/tools/lib/perf/evsel.c b/tools/lib/perf/evsel.c
-> index 8ce5bbd09666..8b51b008a81f 100644
-> --- a/tools/lib/perf/evsel.c
-> +++ b/tools/lib/perf/evsel.c
-> @@ -515,9 +515,6 @@ int perf_evsel__alloc_id(struct perf_evsel *evsel, int ncpus, int nthreads)
->  	if (ncpus == 0 || nthreads == 0)
->  		return 0;
->  
-> -	if (evsel->system_wide)
-> -		nthreads = 1;
-> -
->  	evsel->sample_id = xyarray__new(ncpus, nthreads, sizeof(struct perf_sample_id));
->  	if (evsel->sample_id == NULL)
->  		return -ENOMEM;
-> diff --git a/tools/perf/builtin-script.c b/tools/perf/builtin-script.c
-> index 886f53cfa257..7fa467ed91dc 100644
-> --- a/tools/perf/builtin-script.c
-> +++ b/tools/perf/builtin-script.c
-> @@ -2243,9 +2243,6 @@ static void __process_stat(struct evsel *counter, u64 tstamp)
->  	struct perf_cpu cpu;
->  	static int header_printed;
->  
-> -	if (counter->core.system_wide)
-> -		nthreads = 1;
-> -
->  	if (!header_printed) {
->  		printf("%3s %8s %15s %15s %15s %15s %s\n",
->  		       "CPU", "THREAD", "VAL", "ENA", "RUN", "TIME", "EVENT");
-> diff --git a/tools/perf/util/evsel.c b/tools/perf/util/evsel.c
-> index 5776bfa70f11..e319bb17d10d 100644
-> --- a/tools/perf/util/evsel.c
-> +++ b/tools/perf/util/evsel.c
-> @@ -1813,7 +1813,7 @@ static struct perf_thread_map *empty_thread_map;
->  static int __evsel__prepare_open(struct evsel *evsel, struct perf_cpu_map *cpus,
->  		struct perf_thread_map *threads)
->  {
-> -	int nthreads;
-> +	int nthreads = perf_thread_map__nr(threads);
->  
->  	if ((perf_missing_features.write_backward && evsel->core.attr.write_backward) ||
->  	    (perf_missing_features.aux_output     && evsel->core.attr.aux_output))
-> @@ -1839,11 +1839,6 @@ static int __evsel__prepare_open(struct evsel *evsel, struct perf_cpu_map *cpus,
->  		threads = empty_thread_map;
->  	}
->  
-> -	if (evsel->core.system_wide)
-> -		nthreads = 1;
-> -	else
-> -		nthreads = threads->nr;
-> -
->  	if (evsel->core.fd == NULL &&
->  	    perf_evsel__alloc_fd(&evsel->core, perf_cpu_map__nr(cpus), nthreads) < 0)
->  		return -ENOMEM;
-> @@ -2061,10 +2056,7 @@ static int evsel__open_cpu(struct evsel *evsel, struct perf_cpu_map *cpus,
->  	if (threads == NULL)
->  		threads = empty_thread_map;
->  
-> -	if (evsel->core.system_wide)
-> -		nthreads = 1;
-> -	else
-> -		nthreads = threads->nr;
-> +	nthreads = perf_thread_map__nr(threads);
->  
->  	if (evsel->cgrp)
->  		pid = evsel->cgrp->fd;
-> diff --git a/tools/perf/util/stat.c b/tools/perf/util/stat.c
-> index ce5e9e372fc4..cef943377ad7 100644
-> --- a/tools/perf/util/stat.c
-> +++ b/tools/perf/util/stat.c
-> @@ -420,9 +420,6 @@ static int process_counter_maps(struct perf_stat_config *config,
->  	int ncpus = evsel__nr_cpus(counter);
->  	int idx, thread;
->  
-> -	if (counter->core.system_wide)
-> -		nthreads = 1;
-> -
->  	for (thread = 0; thread < nthreads; thread++) {
->  		for (idx = 0; idx < ncpus; idx++) {
->  			if (process_counter_values(config, counter, idx, thread,
+will you take these patches?
+
+Thanks
+
+Roberto
 
