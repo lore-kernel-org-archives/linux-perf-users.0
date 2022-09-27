@@ -2,140 +2,337 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D831FC54EE9
-	for <linux-perf-users@archiver.kernel.org>; Tue, 27 Sep 2022 19:53:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1309AC54EE9
+	for <linux-perf-users@archiver.kernel.org>; Tue, 27 Sep 2022 21:45:23 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231993AbiI0TxE (ORCPT
+        id S230203AbiI0VpW (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Tue, 27 Sep 2022 15:53:04 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39350 "EHLO
+        Tue, 27 Sep 2022 17:45:22 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59146 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229572AbiI0TxD (ORCPT
+        with ESMTP id S230514AbiI0VpV (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Tue, 27 Sep 2022 15:53:03 -0400
-Received: from out1-smtp.messagingengine.com (out1-smtp.messagingengine.com [66.111.4.25])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0560C96FD0;
-        Tue, 27 Sep 2022 12:53:01 -0700 (PDT)
-Received: from compute2.internal (compute2.nyi.internal [10.202.2.46])
-        by mailout.nyi.internal (Postfix) with ESMTP id C6A235C00E8;
-        Tue, 27 Sep 2022 15:52:58 -0400 (EDT)
-Received: from mailfrontend1 ([10.202.2.162])
-  by compute2.internal (MEProxy); Tue, 27 Sep 2022 15:52:58 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=wfchandler.org;
-         h=cc:cc:content-transfer-encoding:date:date:from:from
-        :in-reply-to:message-id:mime-version:reply-to:sender:subject
-        :subject:to:to; s=fm2; t=1664308378; x=1664394778; bh=7t7ZSB2d97
-        FUKxKcAQJgF8klof7GgnZ1fb9Gj6c5RzQ=; b=cRSBxxSOyLaVoMUJH54v5PDP8Y
-        uyJEhEWa4HdUTpYrVrkWqnhITZX0fQiG6K3I+dmPW1NHLLsCldGUtVUcKAj06+0v
-        m3mrKr0ECfTVhXNWigzKIrZamj4iyPLQkuQ4HK3dx1BQ3Z22B/t41jgX2D0B5Y0G
-        F4F6I24ehXW4U/SeqV82bQj3oEc4jPWFQxG4PlM0cHlJpKxvHMpRD+qLXoPFAW4B
-        /pVx+b8U/UAznJF04fonbGRQpGv6zcNxLO33whuvpXiKR/c3IHo8UWQqx0OKKKVK
-        BZR2v5PE7751lpBcmTR0Rj6pV+S00qz62kt2ab+PgGsYZTdiEDN8AqRdPX6g==
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-        messagingengine.com; h=cc:cc:content-transfer-encoding:date:date
-        :feedback-id:feedback-id:from:from:in-reply-to:message-id
-        :mime-version:reply-to:sender:subject:subject:to:to:x-me-proxy
-        :x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=fm2; t=
-        1664308378; x=1664394778; bh=7t7ZSB2d97FUKxKcAQJgF8klof7GgnZ1fb9
-        Gj6c5RzQ=; b=BfE43Jsu8CUJz65dHl9oE7WNYUJ7ePxlBH19BHYfXyLkIK5CeYm
-        mBed2EYiMjRX7NBiX5f/L2IApuSHXn1s6CXhDgG6Q3HfRaHf1y0q+wOJBq9QIkwO
-        M7lxcOTmqCGlgY8LOkBdnbjuVbdYtZvXSteJ8ram30qpHVYsF/LXUOxFJp3rCG6P
-        qiVAN0ZF0nPEgaSPWO0/E9kb7wyExpfNIFy5rVrFM81tkMQHTuBxz2foyTDFxHaT
-        kI/KITD19PcwerXCr/mxKv7Hj6PG7GWa6DuO47SF9QJiTiEI5xaO2QJ3yTlI460F
-        Ul9mWoekBUcu7KbiVoWJigB2aGGchZ2McPQ==
-X-ME-Sender: <xms:mlQzY1aZqUKgF6HnEMAcoi8H23RU2vI207Y7lbHSCcAxE1W0SuWEKw>
-    <xme:mlQzY8apN_ktvGYHBbIxc8lkKsgtdn4rP5-6__s7kKPU6gAh9BAFf5l64tnRymimy
-    smOHwl8VZ3PuRQy1HQ>
-X-ME-Received: <xmr:mlQzY3-FI02zyKnCMXPWDn7vkfzhXSQrb0lkRTJnTmzvlMQtK0mFG4B6swYRX45VB_yJ5a0>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgedvfedrfeegiedguddukecutefuodetggdotefrod
-    ftvfcurfhrohhfihhlvgemucfhrghsthforghilhdpqfgfvfdpuffrtefokffrpgfnqfgh
-    necuuegrihhlohhuthemuceftddtnecunecujfgurhephffvvefufffkofgggfestdekre
-    dtredttdenucfhrhhomhephghilhhlucevhhgrnhgulhgvrhcuoeiffhgtseiffhgthhgr
-    nhgulhgvrhdrohhrgheqnecuggftrfgrthhtvghrnhephfegffevtdeuueeugedvledvfe
-    eikeefueetteekffdthfekfeeggffgheelleehnecuffhomhgrihhnpehkvghrnhgvlhdr
-    ohhrghdpfhgvughorhgrphhrohhjvggtthdrohhrghenucevlhhushhtvghrufhiiigvpe
-    dtnecurfgrrhgrmhepmhgrihhlfhhrohhmpeiffhgtseiffhgthhgrnhgulhgvrhdrohhr
-    gh
-X-ME-Proxy: <xmx:mlQzYzpdBzrqmkWrgL71hBie0yHdZCqDi2t0sDlMIIsIWh1lM_mbKw>
-    <xmx:mlQzYwqSoMxxg7QiMzNJhl9O2RD9ao-Dcc46vPC5-Lveuzr-K5XuAA>
-    <xmx:mlQzY5TGsTFxp2xOgV5PMJW5wDOK-adF98KpkmgJn7PdG2QfZ8GXZQ>
-    <xmx:mlQzY31A9uXv7LPxprs8rjgODL536pnNLusdUd8YQltNWr-0zDl-kw>
-Feedback-ID: ica594744:Fastmail
-Received: by mail.messagingengine.com (Postfix) with ESMTPA; Tue,
- 27 Sep 2022 15:52:57 -0400 (EDT)
-From:   Will Chandler <wfc@wfchandler.org>
-To:     peterz@infradead.org, mingo@redhat.com, acme@kernel.org,
-        mark.rutland@arm.com, alexander.shishkin@linux.intel.com,
-        jolsa@kernel.org, namhyung@kernel.org,
-        linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
-Cc:     john.garry@huawei.com, wfc@wfchandler.org
-Subject: [PATCH] perf tools: Fix empty version number when building outside of a git repo
-Date:   Tue, 27 Sep 2022 15:52:28 -0400
-Message-Id: <20220927195228.47304-1-wfc@wfchandler.org>
-X-Mailer: git-send-email 2.37.3
+        Tue, 27 Sep 2022 17:45:21 -0400
+Received: from mail-ej1-x62a.google.com (mail-ej1-x62a.google.com [IPv6:2a00:1450:4864:20::62a])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9575C5FAD1
+        for <linux-perf-users@vger.kernel.org>; Tue, 27 Sep 2022 14:45:18 -0700 (PDT)
+Received: by mail-ej1-x62a.google.com with SMTP id hy2so23392749ejc.8
+        for <linux-perf-users@vger.kernel.org>; Tue, 27 Sep 2022 14:45:18 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20210112;
+        h=user-agent:in-reply-to:content-disposition:mime-version:references
+         :message-id:subject:cc:to:from:date:from:to:cc:subject:date;
+        bh=OE70BMzWV5KkigIfgdUJ3KWiPY5Ag5voOlsKOHSQbIc=;
+        b=QS5Fct4Oc/1CNXeKITZAVQY51SFQvlrrX2n3T7CKhkQ2M3+6EInGDZrHWo1e8ZXSLv
+         jpbmx031U63feeaZn3r1b0HY09dgn1IsWDCIH3argyKHxobu5ASEuwBkYhAx36ui/dEq
+         ts/S6dcqCfP8KTfpuhK3jNk11QZJY70qPAlU4KLL35xactmbVgpd8azi+kdKfgTsuk/4
+         bPLQEx2cyuzaXF/SNspzvlkoFSosIht2k8+k9bUiSLodcvzWN4Qd/0h8MThQ4QqbrLaY
+         bt/eHMLwWkYbENKTMUj5LaCx7LCa+HtRKjTFBS4S3pZ5KSfKdU3+PuFLdVMwQGZDwJnc
+         W2Vw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=user-agent:in-reply-to:content-disposition:mime-version:references
+         :message-id:subject:cc:to:from:date:x-gm-message-state:from:to:cc
+         :subject:date;
+        bh=OE70BMzWV5KkigIfgdUJ3KWiPY5Ag5voOlsKOHSQbIc=;
+        b=0AB+9WdetCDwty+kWZkBzgSPswCnJdeNZ6TcQHgW/6wEzLR7zaYxszcxaeOtPkAVVl
+         wcy+RFr274WLXvP2bgUqSepo2KwN6JmxSnLmavjizRyK/B9+68M7TBgUCihSyHdQoSTU
+         ytIbiRy6nnQZEXdGAJlSo1nURSPQPHHwDikDebGayF9CxZ09CGVkXvjgdoOFstRebrE8
+         SqaqpVLItQfSnN5SnWpCN3yEdGa7imGRrkkcKrlltkvTjNDf5QEVHFXd870DCydRcSox
+         Wo4HGWEshdWbNmbEpQVwSra1vc/qUV0F/whscE5M3WMKatNao0XMtnHUoGsqKQerXFKG
+         hglQ==
+X-Gm-Message-State: ACrzQf3IvJr9z66f8dbPP7eaHC1QXwzqlYgv1qTcKMSyRDPLeMgDW4SW
+        mIoX+AsnW4v8y1HPtbToKn8q8w==
+X-Google-Smtp-Source: AMsMyM5wifDtgnSI24VSW2N0xQH47iV/m4NVjRR075WnxDkiDC9QnFBhzY9d1kBubCNqDlIayzzORg==
+X-Received: by 2002:a17:906:4ac1:b0:780:3448:ff06 with SMTP id u1-20020a1709064ac100b007803448ff06mr24753758ejt.403.1664315116881;
+        Tue, 27 Sep 2022 14:45:16 -0700 (PDT)
+Received: from elver.google.com ([2a00:79e0:9c:201:dbbc:9ea2:a5f7:571e])
+        by smtp.gmail.com with ESMTPSA id h1-20020a056402094100b00457e20cb2e4sm232518edz.48.2022.09.27.14.45.15
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 27 Sep 2022 14:45:16 -0700 (PDT)
+Date:   Tue, 27 Sep 2022 23:45:09 +0200
+From:   Marco Elver <elver@google.com>
+To:     Peter Zijlstra <peterz@infradead.org>
+Cc:     Ingo Molnar <mingo@redhat.com>,
+        Arnaldo Carvalho de Melo <acme@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Jiri Olsa <jolsa@kernel.org>,
+        Namhyung Kim <namhyung@kernel.org>,
+        linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org,
+        kasan-dev@googlegroups.com, Dmitry Vyukov <dvyukov@google.com>
+Subject: Re: [PATCH] perf: Fix missing SIGTRAPs due to pending_disable abuse
+Message-ID: <YzNu5bgASbuVi0S3@elver.google.com>
+References: <20220927121322.1236730-1-elver@google.com>
+ <YzM/BUsBnX18NoOG@hirez.programming.kicks-ass.net>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <YzM/BUsBnX18NoOG@hirez.programming.kicks-ass.net>
+User-Agent: Mutt/2.2.7 (2022-08-07)
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-When perf is built in a full source tree that is not a git repository,
-e.g. from a kernel source tarball, `perf version` will print empty tag
-and commit strings:
+On Tue, Sep 27, 2022 at 08:20PM +0200, Peter Zijlstra wrote:
+> On Tue, Sep 27, 2022 at 02:13:22PM +0200, Marco Elver wrote:
+> > Due to the implementation of how SIGTRAP are delivered if
+> > perf_event_attr::sigtrap is set, we've noticed 3 issues:
+> > 
+> > 	1. Missing SIGTRAP due to a race with event_sched_out() (more
+> > 	   details below).
+> > 
+> > 	2. Hardware PMU events being disabled due to returning 1 from
+> > 	   perf_event_overflow(). The only way to re-enable the event is
+> > 	   for user space to first "properly" disable the event and then
+> > 	   re-enable it.
+> > 
+> > 	3. The inability to automatically disable an event after a
+> > 	   specified number of overflows via PERF_EVENT_IOC_REFRESH.
+> > 
+> > The worst of the 3 issues is problem (1), which occurs when a
+> > pending_disable is "consumed" by a racing event_sched_out(), observed as
+> > follows:
+> > 
+> > 		CPU0			| 	CPU1
+> > 	--------------------------------+---------------------------
+> > 	__perf_event_overflow()		|
+> > 	 perf_event_disable_inatomic()	|
+> > 	  pending_disable = CPU0	| ...
+> > 	  				| _perf_event_enable()
+> > 					|  event_function_call()
+> > 					|   task_function_call()
+> > 					|    /* sends IPI to CPU0 */
+> > 	<IPI>				| ...
+> > 	 __perf_event_enable()		+---------------------------
+> > 	  ctx_resched()
+> > 	   task_ctx_sched_out()
+> > 	    ctx_sched_out()
+> > 	     group_sched_out()
+> > 	      event_sched_out()
+> > 	       pending_disable = -1
+> > 	</IPI>
+> > 	<IRQ-work>
+> > 	 perf_pending_event()
+> > 	  perf_pending_event_disable()
+> > 	   /* Fails to send SIGTRAP because no pending_disable! */
+> > 	</IRQ-work>
+> > 
+> > In the above case, not only is that particular SIGTRAP missed, but also
+> > all future SIGTRAPs because 'event_limit' is not reset back to 1.
+> > 
+> > To fix, rework pending delivery of SIGTRAP via IRQ-work by introduction
+> > of a separate 'pending_sigtrap', no longer using 'event_limit' and
+> > 'pending_disable' for its delivery.
+> > 
+> > During testing, this also revealed several more possible races between
+> > reschedules and pending IRQ work; see code comments for details.
+> 
+> Perhaps use task_work_add() for this case? That runs on the
+> return-to-user path, so then it doesn't matter how many reschedules
+> happen in between.
 
-  $ perf version
-  perf version
+Hmm, I tried the below (on top of this patch), but then all the tests
+fail (including tools/testing/selftests/perf_events/sigtrap_threads.c)
+because of lots of missing SIGTRAP. (The missing SIGTRAP happen with or
+without the kernel/entry/ change.)
 
-Currently the tag version is only generated from the root Makefile when
-building in a git repository. If PERF-VERSION-FILE has not been
-generated and the source tree is not in a git repository, then
-PERF-VERSION-GEN will return an empty version.
+So something is wrong with task_work, and the irq_work solution thus far
+is more robust (ran many hours of tests and fuzzing without failure).
 
-The problem can be reproduced with the following steps:
+Thoughts?
 
-  $ wget https://git.kernel.org/torvalds/t/linux-6.0-rc7.tar.gz
-  $ tar -xf linux-6.0-rc7.tar.gz && cd linux-6.0-rc7
-  $ make -C tools/perf
-  $ tools/perf/perf -v
-  perf version
+------ >8 ------
 
-Builds from tarballs generated with `make perf-tar-src-pkg` are not
-impacted by this issue as PERF-VERSION-FILE is included in the archive.
-
-The perf RPM provided by Fedora for 5.18+ is experiencing this problem.
-Package build logs[0] show that the build is attempting to fall back on
-PERF-VERSION-FILE, but it is not present.
-
-To resolve this, always use the tag from the root Makefile if available.
-
-[0] https://kojipkgs.fedoraproject.org/packages/kernel-tools/5.19.4/200.fc36/data/logs/x86_64/build.log
-
-Fixes: 7572733b8499 ("perf tools: Fix version kernel tag, 2022-02-21")
-Signed-off-by: Will Chandler <wfc@wfchandler.org>
----
- tools/perf/util/PERF-VERSION-GEN | 7 +++++--
- 1 file changed, 5 insertions(+), 2 deletions(-)
-
-diff --git a/tools/perf/util/PERF-VERSION-GEN b/tools/perf/util/PERF-VERSION-GEN
-index 0ee5af529238..43b8a8ea6f53 100755
---- a/tools/perf/util/PERF-VERSION-GEN
-+++ b/tools/perf/util/PERF-VERSION-GEN
-@@ -15,10 +15,13 @@ LF='
- #
- CID=
- TAG=
--if test -d ../../.git -o -f ../../.git
-+if test -r ../../Makefile
- then
- 	TAG=$(MAKEFLAGS= make -sC ../.. kernelversion)
--	CID=$(git log -1 --abbrev=12 --pretty=format:"%h" 2>/dev/null) && CID="-g$CID"
-+	if test -d ../../.git -o -f ../../.git
-+	then
-+	    CID=$(git log -1 --abbrev=12 --pretty=format:"%h" 2>/dev/null) && CID="-g$CID"
-+	fi
- else
- 	TAG=$(cut -d' ' -f3 ../../PERF-VERSION-FILE | sed -e 's/\"//g')
- fi
--- 
-2.37.3
-
+diff --git a/include/linux/perf_event.h b/include/linux/perf_event.h
+index dff3430844a2..928fb9e2b655 100644
+--- a/include/linux/perf_event.h
++++ b/include/linux/perf_event.h
+@@ -743,7 +743,7 @@ struct perf_event {
+ 	int				pending_sigtrap;
+ 	unsigned long			pending_addr;	/* SIGTRAP */
+ 	struct irq_work			pending;
+-	struct irq_work			pending_resched;
++	struct callback_head		pending_twork;
+ 
+ 	atomic_t			event_limit;
+ 
+diff --git a/kernel/entry/common.c b/kernel/entry/common.c
+index 063068a9ea9b..7cacaefc97fe 100644
+--- a/kernel/entry/common.c
++++ b/kernel/entry/common.c
+@@ -162,12 +162,12 @@ static unsigned long exit_to_user_mode_loop(struct pt_regs *regs,
+ 		if (ti_work & _TIF_PATCH_PENDING)
+ 			klp_update_patch_state(current);
+ 
+-		if (ti_work & (_TIF_SIGPENDING | _TIF_NOTIFY_SIGNAL))
+-			arch_do_signal_or_restart(regs);
+-
+ 		if (ti_work & _TIF_NOTIFY_RESUME)
+ 			resume_user_mode_work(regs);
+ 
++		if (ti_work & (_TIF_SIGPENDING | _TIF_NOTIFY_SIGNAL))
++			arch_do_signal_or_restart(regs);
++
+ 		/* Architecture specific TIF work */
+ 		arch_exit_to_user_mode_work(regs, ti_work);
+ 
+diff --git a/kernel/events/core.c b/kernel/events/core.c
+index 007a87c1599c..7f93dd91d572 100644
+--- a/kernel/events/core.c
++++ b/kernel/events/core.c
+@@ -17,6 +17,7 @@
+ #include <linux/poll.h>
+ #include <linux/slab.h>
+ #include <linux/hash.h>
++#include <linux/task_work.h>
+ #include <linux/tick.h>
+ #include <linux/sysfs.h>
+ #include <linux/dcache.h>
+@@ -2527,14 +2528,6 @@ event_sched_in(struct perf_event *event,
+ 	if (event->attr.exclusive)
+ 		cpuctx->exclusive = 1;
+ 
+-	if (event->pending_sigtrap) {
+-		/*
+-		 * The task and event might have been moved to another CPU:
+-		 * queue another IRQ work. See perf_pending_event_sigtrap().
+-		 */
+-		WARN_ON_ONCE(!irq_work_queue(&event->pending_resched));
+-	}
+-
+ out:
+ 	perf_pmu_enable(event->pmu);
+ 
+@@ -4942,11 +4935,13 @@ static bool exclusive_event_installable(struct perf_event *event,
+ 
+ static void perf_addr_filters_splice(struct perf_event *event,
+ 				       struct list_head *head);
++static void perf_pending_event_task_work(struct callback_head *work);
+ 
+ static void _free_event(struct perf_event *event)
+ {
+ 	irq_work_sync(&event->pending);
+-	irq_work_sync(&event->pending_resched);
++	if (event->hw.target)
++		task_work_cancel(event->hw.target, perf_pending_event_task_work);
+ 
+ 	unaccount_event(event);
+ 
+@@ -6438,15 +6433,7 @@ void perf_event_wakeup(struct perf_event *event)
+ static void perf_sigtrap(struct perf_event *event)
+ {
+ 	/*
+-	 * We'd expect this to only occur if the irq_work is delayed and either
+-	 * ctx->task or current has changed in the meantime. This can be the
+-	 * case on architectures that do not implement arch_irq_work_raise().
+-	 */
+-	if (WARN_ON_ONCE(event->ctx->task != current))
+-		return;
+-
+-	/*
+-	 * perf_pending_event() can race with the task exiting.
++	 * Can be called while the task is exiting.
+ 	 */
+ 	if (current->flags & PF_EXITING)
+ 		return;
+@@ -6455,35 +6442,22 @@ static void perf_sigtrap(struct perf_event *event)
+ 		      event->attr.type, event->attr.sig_data);
+ }
+ 
+-static void perf_pending_event_sigtrap(struct perf_event *event)
++static void perf_pending_event_task_work(struct callback_head *work)
+ {
+-	if (!event->pending_sigtrap)
+-		return;
++	struct perf_event *event = container_of(work, struct perf_event, pending_twork);
++	int rctx;
+ 
+-	/*
+-	 * If we're racing with disabling of the event, consume pending_sigtrap
+-	 * and don't send the SIGTRAP. This avoids potentially delaying a signal
+-	 * indefinitely (oncpu mismatch) until the event is enabled again, which
+-	 * could happen after already returning to user space; in that case the
+-	 * signal would erroneously become asynchronous.
+-	 */
+-	if (event->state == PERF_EVENT_STATE_OFF) {
++	preempt_disable_notrace();
++	rctx = perf_swevent_get_recursion_context();
++
++	if (event->pending_sigtrap) {
+ 		event->pending_sigtrap = 0;
+-		return;
++		perf_sigtrap(event);
+ 	}
+ 
+-	/*
+-	 * Only process this pending SIGTRAP if this IRQ work is running on the
+-	 * right CPU: the scheduler is able to run before the IRQ work, which
+-	 * moved the task to another CPU. In event_sched_in() another IRQ work
+-	 * is scheduled, so that the signal is not lost; given the kernel has
+-	 * not yet returned to user space, the signal remains synchronous.
+-	 */
+-	if (READ_ONCE(event->oncpu) != smp_processor_id())
+-		return;
+-
+-	event->pending_sigtrap = 0;
+-	perf_sigtrap(event);
++	if (rctx >= 0)
++		perf_swevent_put_recursion_context(rctx);
++	preempt_enable_notrace();
+ }
+ 
+ static void perf_pending_event_disable(struct perf_event *event)
+@@ -6533,7 +6507,6 @@ static void perf_pending_event(struct irq_work *entry)
+ 	 * and we won't recurse 'further'.
+ 	 */
+ 
+-	perf_pending_event_sigtrap(event);
+ 	perf_pending_event_disable(event);
+ 
+ 	if (event->pending_wakeup) {
+@@ -6545,26 +6518,6 @@ static void perf_pending_event(struct irq_work *entry)
+ 		perf_swevent_put_recursion_context(rctx);
+ }
+ 
+-/*
+- * If handling of a pending action must occur before returning to user space,
+- * and it is possible to reschedule an event (to another CPU) with pending
+- * actions, where the moved-from CPU may not yet have run event->pending (and
+- * irq_work_queue() would fail on reuse), we'll use a separate IRQ work that
+- * runs perf_pending_event_resched().
+- */
+-static void perf_pending_event_resched(struct irq_work *entry)
+-{
+-	struct perf_event *event = container_of(entry, struct perf_event, pending_resched);
+-	int rctx;
+-
+-	rctx = perf_swevent_get_recursion_context();
+-
+-	perf_pending_event_sigtrap(event);
+-
+-	if (rctx >= 0)
+-		perf_swevent_put_recursion_context(rctx);
+-}
+-
+ #ifdef CONFIG_GUEST_PERF_EVENTS
+ struct perf_guest_info_callbacks __rcu *perf_guest_cbs;
+ 
+@@ -9274,7 +9227,7 @@ static int __perf_event_overflow(struct perf_event *event,
+ 		WARN_ON_ONCE(event->pending_sigtrap && event->attr.exclude_kernel);
+ 		event->pending_sigtrap = 1;
+ 		event->pending_addr = data->addr;
+-		irq_work_queue(&event->pending);
++		task_work_add(current, &event->pending_twork, TWA_RESUME);
+ 	}
+ 
+ 	READ_ONCE(event->overflow_handler)(event, data, regs);
+@@ -11599,7 +11552,7 @@ perf_event_alloc(struct perf_event_attr *attr, int cpu,
+ 	init_waitqueue_head(&event->waitq);
+ 	event->pending_disable = -1;
+ 	init_irq_work(&event->pending, perf_pending_event);
+-	init_irq_work(&event->pending_resched, perf_pending_event_resched);
++	init_task_work(&event->pending_twork, perf_pending_event_task_work);
+ 
+ 	mutex_init(&event->mmap_mutex);
+ 	raw_spin_lock_init(&event->addr_filters.lock);
