@@ -2,26 +2,26 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 222D8C54EE9
-	for <linux-perf-users@archiver.kernel.org>; Tue, 27 Sep 2022 15:45:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 49A46C54EE9
+	for <linux-perf-users@archiver.kernel.org>; Tue, 27 Sep 2022 15:45:45 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232840AbiI0PpZ (ORCPT
+        id S232700AbiI0Ppo (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Tue, 27 Sep 2022 11:45:25 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50634 "EHLO
+        Tue, 27 Sep 2022 11:45:44 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45070 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232576AbiI0PpA (ORCPT
+        with ESMTP id S229572AbiI0PpK (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Tue, 27 Sep 2022 11:45:00 -0400
+        Tue, 27 Sep 2022 11:45:10 -0400
 Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTP id 3502F1577E6;
-        Tue, 27 Sep 2022 08:41:20 -0700 (PDT)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTP id 87A611B85C3;
+        Tue, 27 Sep 2022 08:41:28 -0700 (PDT)
 Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 45CEB1063;
-        Tue, 27 Sep 2022 08:41:23 -0700 (PDT)
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 20F9E1F02;
+        Tue, 27 Sep 2022 08:41:34 -0700 (PDT)
 Received: from e121896.Emea.Arm.com (e121896.Emea.Arm.com [10.32.36.24])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPA id BB2823F73B;
-        Tue, 27 Sep 2022 08:41:13 -0700 (PDT)
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPA id B0BE53F73B;
+        Tue, 27 Sep 2022 08:41:24 -0700 (PDT)
 From:   James Clark <james.clark@arm.com>
 To:     acme@kernel.org, namhyung@kernel.org
 Cc:     linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org,
@@ -31,49 +31,108 @@ Cc:     linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org,
         Mark Rutland <mark.rutland@arm.com>,
         Alexander Shishkin <alexander.shishkin@linux.intel.com>,
         Jiri Olsa <jolsa@kernel.org>, bpf@vger.kernel.org
-Subject: [RFC PATCH 0/4] Add VG register attr test with kernel version and feature detection
-Date:   Tue, 27 Sep 2022 16:41:00 +0100
-Message-Id: <20220927154104.869029-1-james.clark@arm.com>
+Subject: [RFC PATCH 3/4] perf test: Add mechanism for skipping attr tests on kernel versions
+Date:   Tue, 27 Sep 2022 16:41:03 +0100
+Message-Id: <20220927154104.869029-4-james.clark@arm.com>
 X-Mailer: git-send-email 2.28.0
+In-Reply-To: <20220927154104.869029-1-james.clark@arm.com>
+References: <20220927154104.869029-1-james.clark@arm.com>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-This is the kind of test that I would like to add for VG, with the
-necessary additions to the attr test framework for kernel version
-detection so that it always passes even when run on old kernels.
+The first two version numbers are used since that is where the ABI
+changes happen, so seems to be the most useful for now.
 
-This approach isn't very scalable, for example the change to fix the
-tests for PERF_FORMAT_LOST [1] affects many tests so they would all have
-to be duplicated. Of course there is still the option to weaken those
-tests and make them accept any value.
+'Until' is exclusive and 'since' is inclusive so that the same version
+number can be used to mark a point where the change comes into effect.
 
-It also doesn't apply to any of the shell script tests which would need
-to re-implement something similar to this.
+This allows keeping the tests in a state where new tests will also pass
+on older kernels if the existence of a new feature isn't explicitly
+broadcast by the kernel. For example extended user regs are currently
+discovered by trial and error calls to perf_event_open.
 
-I'm interested to see if people think this is useful, at least it is for
-this one test.
+Signed-off-by: James Clark <james.clark@arm.com>
+---
+ tools/perf/tests/attr.py | 28 +++++++++++++++++++++++++++-
+ 1 file changed, 27 insertions(+), 1 deletion(-)
 
-[1]: https://lore.kernel.org/linux-perf-users/20220926144948.223641-1-james.clark@arm.com/T/#t
-
-James Clark (4):
-  perf test: Add ability to test exit code for attr tests
-  perf test: Add mechanism for skipping attr tests on auxiliary vector
-    values
-  perf test: Add mechanism for skipping attr tests on kernel versions
-  perf test arm64: Add attr tests for new VG register
-
- tools/perf/tests/attr.py                      | 71 +++++++++++++++++--
- .../attr/test-record-user-regs-no-sve-aarch64 |  9 +++
- .../test-record-user-regs-old-sve-aarch64     | 10 +++
- .../attr/test-record-user-regs-sve-aarch64    | 14 ++++
- 4 files changed, 99 insertions(+), 5 deletions(-)
- create mode 100644 tools/perf/tests/attr/test-record-user-regs-no-sve-aarch64
- create mode 100644 tools/perf/tests/attr/test-record-user-regs-old-sve-aarch64
- create mode 100644 tools/perf/tests/attr/test-record-user-regs-sve-aarch64
-
+diff --git a/tools/perf/tests/attr.py b/tools/perf/tests/attr.py
+index 2d6124801da0..e890c261ad26 100644
+--- a/tools/perf/tests/attr.py
++++ b/tools/perf/tests/attr.py
+@@ -6,6 +6,7 @@ import os
+ import sys
+ import glob
+ import optparse
++import platform
+ import tempfile
+ import logging
+ import re
+@@ -125,6 +126,11 @@ class Event(dict):
+             if not data_equal(self[t], other[t]):
+                 log.warning("expected %s=%s, got %s" % (t, self[t], other[t]))
+ 
++def parse_version(version):
++    if not version:
++        return None
++    return [int(v) for v in version.split(".")[0:2]]
++
+ # Test file description needs to have following sections:
+ # [config]
+ #   - just single instance in file
+@@ -138,7 +144,9 @@ class Event(dict):
+ #                 negates it.
+ #     'auxv'    - Truthy statement that is evaled in the scope of the auxv map. When false,
+ #                 the test is skipped. For example 'auxv["AT_HWCAP"] == 10'. (optional)
+-#
++#     'kernel_since' - Inclusive kernel version from which the test will start running. Only the
++#                      first two values are supported, for example "6.1" (optional)
++#     'kernel_until' - Exclusive kernel version from which the test will stop running. (optional)
+ # [eventX:base]
+ #   - one or multiple instances in file
+ #   - expected values assignments
+@@ -169,6 +177,8 @@ class Test(object):
+             self.arch  = ''
+ 
+         self.auxv = parser.get('config', 'auxv', fallback=None)
++        self.kernel_since = parse_version(parser.get('config', 'kernel_since', fallback=None))
++        self.kernel_until = parse_version(parser.get('config', 'kernel_until', fallback=None))
+         self.expect   = {}
+         self.result   = {}
+         log.debug("  loading expected events");
+@@ -180,6 +190,16 @@ class Test(object):
+         else:
+             return True
+ 
++    def skip_test_kernel_since(self):
++        if not self.kernel_since:
++            return False
++        return not self.kernel_since <= parse_version(platform.release())
++
++    def skip_test_kernel_until(self):
++        if not self.kernel_until:
++            return False
++        return not parse_version(platform.release()) < self.kernel_until
++
+     def skip_test_auxv(self):
+         def new_auxv(a, pattern):
+             items = list(filter(None, pattern.split(a)))
+@@ -257,6 +277,12 @@ class Test(object):
+         if self.skip_test_auxv():
+             raise Notest(self, "auxv skip")
+ 
++        if self.skip_test_kernel_since():
++            raise Notest(self, "old kernel skip")
++
++        if self.skip_test_kernel_until():
++            raise Notest(self, "new kernel skip")
++
+         cmd = "PERF_TEST_ATTR=%s %s %s -o %s/perf.data %s" % (tempdir,
+               self.perf, self.command, tempdir, self.args)
+         ret = os.WEXITSTATUS(os.system(cmd))
 -- 
 2.28.0
 
