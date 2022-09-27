@@ -2,121 +2,140 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2D6B8C54EE9
-	for <linux-perf-users@archiver.kernel.org>; Tue, 27 Sep 2022 18:21:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D831FC54EE9
+	for <linux-perf-users@archiver.kernel.org>; Tue, 27 Sep 2022 19:53:05 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229550AbiI0SVP (ORCPT
+        id S231993AbiI0TxE (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Tue, 27 Sep 2022 14:21:15 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39532 "EHLO
+        Tue, 27 Sep 2022 15:53:04 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39350 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231751AbiI0SVL (ORCPT
+        with ESMTP id S229572AbiI0TxD (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Tue, 27 Sep 2022 14:21:11 -0400
-Received: from desiato.infradead.org (desiato.infradead.org [IPv6:2001:8b0:10b:1:d65d:64ff:fe57:4e05])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7FF75F684F;
-        Tue, 27 Sep 2022 11:21:08 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=desiato.20200630; h=In-Reply-To:Content-Type:MIME-Version:
-        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description;
-        bh=BmhIzH6QeLzG1HzDb0h4B8ArGPxAu7f6HvFWMpAiIac=; b=ZrYQtozPPf0rsIDRg3RVwcr0ll
-        71eRqqMoYlCUX3xiT00XyXMR/rc9PCVjADH/53Eul3iAVuVaoofSYBI+3YfEbf0eghtGn6c4hQaQY
-        wQvg4/NfRKvh89e98a+syxNTOVqNL8fbywTrsGGO8b1cyGz9lpAyRnahYJ6IWgvvfGoz8+YkH7mIH
-        x7MNei1nhUhDXMKmnpZc8w6zDFw5IUL7xsse6Qp8Xp02DtVQ7c0hB5GemEzpHUi8KTgzAJXL/1qCO
-        9tKCDH4nDAbaSitW3B05Me7Q3/9rrJlZ//mlohbOtwdj62ZOyxD5JnbMB3JUgHtyY5+ydqU/QsFPy
-        bFJ/aLjA==;
-Received: from j130084.upc-j.chello.nl ([24.132.130.84] helo=noisy.programming.kicks-ass.net)
-        by desiato.infradead.org with esmtpsa (Exim 4.94.2 #2 (Red Hat Linux))
-        id 1odFCR-00GMHf-3C; Tue, 27 Sep 2022 18:20:55 +0000
-Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-        (Client did not present a certificate)
-        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id DE8B530007E;
-        Tue, 27 Sep 2022 20:20:53 +0200 (CEST)
-Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
-        id 951302BE05B2C; Tue, 27 Sep 2022 20:20:53 +0200 (CEST)
-Date:   Tue, 27 Sep 2022 20:20:53 +0200
-From:   Peter Zijlstra <peterz@infradead.org>
-To:     Marco Elver <elver@google.com>
-Cc:     Ingo Molnar <mingo@redhat.com>,
-        Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Jiri Olsa <jolsa@kernel.org>,
-        Namhyung Kim <namhyung@kernel.org>,
-        linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org,
-        kasan-dev@googlegroups.com, Dmitry Vyukov <dvyukov@google.com>
-Subject: Re: [PATCH] perf: Fix missing SIGTRAPs due to pending_disable abuse
-Message-ID: <YzM/BUsBnX18NoOG@hirez.programming.kicks-ass.net>
-References: <20220927121322.1236730-1-elver@google.com>
+        Tue, 27 Sep 2022 15:53:03 -0400
+Received: from out1-smtp.messagingengine.com (out1-smtp.messagingengine.com [66.111.4.25])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0560C96FD0;
+        Tue, 27 Sep 2022 12:53:01 -0700 (PDT)
+Received: from compute2.internal (compute2.nyi.internal [10.202.2.46])
+        by mailout.nyi.internal (Postfix) with ESMTP id C6A235C00E8;
+        Tue, 27 Sep 2022 15:52:58 -0400 (EDT)
+Received: from mailfrontend1 ([10.202.2.162])
+  by compute2.internal (MEProxy); Tue, 27 Sep 2022 15:52:58 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=wfchandler.org;
+         h=cc:cc:content-transfer-encoding:date:date:from:from
+        :in-reply-to:message-id:mime-version:reply-to:sender:subject
+        :subject:to:to; s=fm2; t=1664308378; x=1664394778; bh=7t7ZSB2d97
+        FUKxKcAQJgF8klof7GgnZ1fb9Gj6c5RzQ=; b=cRSBxxSOyLaVoMUJH54v5PDP8Y
+        uyJEhEWa4HdUTpYrVrkWqnhITZX0fQiG6K3I+dmPW1NHLLsCldGUtVUcKAj06+0v
+        m3mrKr0ECfTVhXNWigzKIrZamj4iyPLQkuQ4HK3dx1BQ3Z22B/t41jgX2D0B5Y0G
+        F4F6I24ehXW4U/SeqV82bQj3oEc4jPWFQxG4PlM0cHlJpKxvHMpRD+qLXoPFAW4B
+        /pVx+b8U/UAznJF04fonbGRQpGv6zcNxLO33whuvpXiKR/c3IHo8UWQqx0OKKKVK
+        BZR2v5PE7751lpBcmTR0Rj6pV+S00qz62kt2ab+PgGsYZTdiEDN8AqRdPX6g==
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+        messagingengine.com; h=cc:cc:content-transfer-encoding:date:date
+        :feedback-id:feedback-id:from:from:in-reply-to:message-id
+        :mime-version:reply-to:sender:subject:subject:to:to:x-me-proxy
+        :x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=fm2; t=
+        1664308378; x=1664394778; bh=7t7ZSB2d97FUKxKcAQJgF8klof7GgnZ1fb9
+        Gj6c5RzQ=; b=BfE43Jsu8CUJz65dHl9oE7WNYUJ7ePxlBH19BHYfXyLkIK5CeYm
+        mBed2EYiMjRX7NBiX5f/L2IApuSHXn1s6CXhDgG6Q3HfRaHf1y0q+wOJBq9QIkwO
+        M7lxcOTmqCGlgY8LOkBdnbjuVbdYtZvXSteJ8ram30qpHVYsF/LXUOxFJp3rCG6P
+        qiVAN0ZF0nPEgaSPWO0/E9kb7wyExpfNIFy5rVrFM81tkMQHTuBxz2foyTDFxHaT
+        kI/KITD19PcwerXCr/mxKv7Hj6PG7GWa6DuO47SF9QJiTiEI5xaO2QJ3yTlI460F
+        Ul9mWoekBUcu7KbiVoWJigB2aGGchZ2McPQ==
+X-ME-Sender: <xms:mlQzY1aZqUKgF6HnEMAcoi8H23RU2vI207Y7lbHSCcAxE1W0SuWEKw>
+    <xme:mlQzY8apN_ktvGYHBbIxc8lkKsgtdn4rP5-6__s7kKPU6gAh9BAFf5l64tnRymimy
+    smOHwl8VZ3PuRQy1HQ>
+X-ME-Received: <xmr:mlQzY3-FI02zyKnCMXPWDn7vkfzhXSQrb0lkRTJnTmzvlMQtK0mFG4B6swYRX45VB_yJ5a0>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgedvfedrfeegiedguddukecutefuodetggdotefrod
+    ftvfcurfhrohhfihhlvgemucfhrghsthforghilhdpqfgfvfdpuffrtefokffrpgfnqfgh
+    necuuegrihhlohhuthemuceftddtnecunecujfgurhephffvvefufffkofgggfestdekre
+    dtredttdenucfhrhhomhephghilhhlucevhhgrnhgulhgvrhcuoeiffhgtseiffhgthhgr
+    nhgulhgvrhdrohhrgheqnecuggftrfgrthhtvghrnhephfegffevtdeuueeugedvledvfe
+    eikeefueetteekffdthfekfeeggffgheelleehnecuffhomhgrihhnpehkvghrnhgvlhdr
+    ohhrghdpfhgvughorhgrphhrohhjvggtthdrohhrghenucevlhhushhtvghrufhiiigvpe
+    dtnecurfgrrhgrmhepmhgrihhlfhhrohhmpeiffhgtseiffhgthhgrnhgulhgvrhdrohhr
+    gh
+X-ME-Proxy: <xmx:mlQzYzpdBzrqmkWrgL71hBie0yHdZCqDi2t0sDlMIIsIWh1lM_mbKw>
+    <xmx:mlQzYwqSoMxxg7QiMzNJhl9O2RD9ao-Dcc46vPC5-Lveuzr-K5XuAA>
+    <xmx:mlQzY5TGsTFxp2xOgV5PMJW5wDOK-adF98KpkmgJn7PdG2QfZ8GXZQ>
+    <xmx:mlQzY31A9uXv7LPxprs8rjgODL536pnNLusdUd8YQltNWr-0zDl-kw>
+Feedback-ID: ica594744:Fastmail
+Received: by mail.messagingengine.com (Postfix) with ESMTPA; Tue,
+ 27 Sep 2022 15:52:57 -0400 (EDT)
+From:   Will Chandler <wfc@wfchandler.org>
+To:     peterz@infradead.org, mingo@redhat.com, acme@kernel.org,
+        mark.rutland@arm.com, alexander.shishkin@linux.intel.com,
+        jolsa@kernel.org, namhyung@kernel.org,
+        linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
+Cc:     john.garry@huawei.com, wfc@wfchandler.org
+Subject: [PATCH] perf tools: Fix empty version number when building outside of a git repo
+Date:   Tue, 27 Sep 2022 15:52:28 -0400
+Message-Id: <20220927195228.47304-1-wfc@wfchandler.org>
+X-Mailer: git-send-email 2.37.3
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20220927121322.1236730-1-elver@google.com>
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-On Tue, Sep 27, 2022 at 02:13:22PM +0200, Marco Elver wrote:
-> Due to the implementation of how SIGTRAP are delivered if
-> perf_event_attr::sigtrap is set, we've noticed 3 issues:
-> 
-> 	1. Missing SIGTRAP due to a race with event_sched_out() (more
-> 	   details below).
-> 
-> 	2. Hardware PMU events being disabled due to returning 1 from
-> 	   perf_event_overflow(). The only way to re-enable the event is
-> 	   for user space to first "properly" disable the event and then
-> 	   re-enable it.
-> 
-> 	3. The inability to automatically disable an event after a
-> 	   specified number of overflows via PERF_EVENT_IOC_REFRESH.
-> 
-> The worst of the 3 issues is problem (1), which occurs when a
-> pending_disable is "consumed" by a racing event_sched_out(), observed as
-> follows:
-> 
-> 		CPU0			| 	CPU1
-> 	--------------------------------+---------------------------
-> 	__perf_event_overflow()		|
-> 	 perf_event_disable_inatomic()	|
-> 	  pending_disable = CPU0	| ...
-> 	  				| _perf_event_enable()
-> 					|  event_function_call()
-> 					|   task_function_call()
-> 					|    /* sends IPI to CPU0 */
-> 	<IPI>				| ...
-> 	 __perf_event_enable()		+---------------------------
-> 	  ctx_resched()
-> 	   task_ctx_sched_out()
-> 	    ctx_sched_out()
-> 	     group_sched_out()
-> 	      event_sched_out()
-> 	       pending_disable = -1
-> 	</IPI>
-> 	<IRQ-work>
-> 	 perf_pending_event()
-> 	  perf_pending_event_disable()
-> 	   /* Fails to send SIGTRAP because no pending_disable! */
-> 	</IRQ-work>
-> 
-> In the above case, not only is that particular SIGTRAP missed, but also
-> all future SIGTRAPs because 'event_limit' is not reset back to 1.
-> 
-> To fix, rework pending delivery of SIGTRAP via IRQ-work by introduction
-> of a separate 'pending_sigtrap', no longer using 'event_limit' and
-> 'pending_disable' for its delivery.
-> 
-> During testing, this also revealed several more possible races between
-> reschedules and pending IRQ work; see code comments for details.
+When perf is built in a full source tree that is not a git repository,
+e.g. from a kernel source tarball, `perf version` will print empty tag
+and commit strings:
 
-Perhaps use task_work_add() for this case? That runs on the
-return-to-user path, so then it doesn't matter how many reschedules
-happen in between.
+  $ perf version
+  perf version
 
-The only concern is that task_work_add() uses kasan_record_aux_stack()
-which obviously isn't NMI clean, so that would need to get removed or
-made conditional.
+Currently the tag version is only generated from the root Makefile when
+building in a git repository. If PERF-VERSION-FILE has not been
+generated and the source tree is not in a git repository, then
+PERF-VERSION-GEN will return an empty version.
+
+The problem can be reproduced with the following steps:
+
+  $ wget https://git.kernel.org/torvalds/t/linux-6.0-rc7.tar.gz
+  $ tar -xf linux-6.0-rc7.tar.gz && cd linux-6.0-rc7
+  $ make -C tools/perf
+  $ tools/perf/perf -v
+  perf version
+
+Builds from tarballs generated with `make perf-tar-src-pkg` are not
+impacted by this issue as PERF-VERSION-FILE is included in the archive.
+
+The perf RPM provided by Fedora for 5.18+ is experiencing this problem.
+Package build logs[0] show that the build is attempting to fall back on
+PERF-VERSION-FILE, but it is not present.
+
+To resolve this, always use the tag from the root Makefile if available.
+
+[0] https://kojipkgs.fedoraproject.org/packages/kernel-tools/5.19.4/200.fc36/data/logs/x86_64/build.log
+
+Fixes: 7572733b8499 ("perf tools: Fix version kernel tag, 2022-02-21")
+Signed-off-by: Will Chandler <wfc@wfchandler.org>
+---
+ tools/perf/util/PERF-VERSION-GEN | 7 +++++--
+ 1 file changed, 5 insertions(+), 2 deletions(-)
+
+diff --git a/tools/perf/util/PERF-VERSION-GEN b/tools/perf/util/PERF-VERSION-GEN
+index 0ee5af529238..43b8a8ea6f53 100755
+--- a/tools/perf/util/PERF-VERSION-GEN
++++ b/tools/perf/util/PERF-VERSION-GEN
+@@ -15,10 +15,13 @@ LF='
+ #
+ CID=
+ TAG=
+-if test -d ../../.git -o -f ../../.git
++if test -r ../../Makefile
+ then
+ 	TAG=$(MAKEFLAGS= make -sC ../.. kernelversion)
+-	CID=$(git log -1 --abbrev=12 --pretty=format:"%h" 2>/dev/null) && CID="-g$CID"
++	if test -d ../../.git -o -f ../../.git
++	then
++	    CID=$(git log -1 --abbrev=12 --pretty=format:"%h" 2>/dev/null) && CID="-g$CID"
++	fi
+ else
+ 	TAG=$(cut -d' ' -f3 ../../PERF-VERSION-FILE | sed -e 's/\"//g')
+ fi
+-- 
+2.37.3
 
