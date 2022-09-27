@@ -2,49 +2,50 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9BD6EC54EE9
-	for <linux-perf-users@archiver.kernel.org>; Tue, 27 Sep 2022 07:07:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5568EC6FA83
+	for <linux-perf-users@archiver.kernel.org>; Tue, 27 Sep 2022 07:09:38 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230022AbiI0HH4 (ORCPT
+        id S229660AbiI0HJg (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Tue, 27 Sep 2022 03:07:56 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58420 "EHLO
+        Tue, 27 Sep 2022 03:09:36 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60878 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229641AbiI0HH4 (ORCPT
+        with ESMTP id S229617AbiI0HJg (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Tue, 27 Sep 2022 03:07:56 -0400
-Received: from mga03.intel.com (mga03.intel.com [134.134.136.65])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1FD3DA4B9C;
-        Tue, 27 Sep 2022 00:07:55 -0700 (PDT)
+        Tue, 27 Sep 2022 03:09:36 -0400
+Received: from mga04.intel.com (mga04.intel.com [192.55.52.120])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A021C5595;
+        Tue, 27 Sep 2022 00:09:33 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1664262475; x=1695798475;
+  t=1664262573; x=1695798573;
   h=message-id:date:mime-version:subject:to:cc:references:
    from:in-reply-to:content-transfer-encoding;
-  bh=Xsti2hypkMw1LA950JoOfgFLDko16IbEca7VEJd2gy4=;
-  b=lfRU2ANJXjQ3EopvBSl3VGYh44G3p6MUEoZae53xqicGksP9v53Dykfz
-   BSXI86ssv3Hpx0goYKk7cqMODsJ3bQ/lLFM5R56xLYB8Fh17dkfxRwkwu
-   1LACfOj38H/h7zCiVTyP5ZKm3wonOEiBdW6hgaa4Y0jccXVpbCUFIO0tG
-   K1C/XsLDAtv/L5ZGIqYEWF7+0pXgLOXKEFM+sI2g1e7gTBYzJYwSp7SXt
-   HzonqunCxsM590GMXerOJTH05FqfNert+8AiH3ClY1Xfbel5grKnAQg/c
-   8ESenpjRqzbuPAz9ZFlhx73kAcdJkLOieQg8/qkvnbazN8RGiqRqs8Xd/
-   Q==;
-X-IronPort-AV: E=McAfee;i="6500,9779,10482"; a="302722253"
+  bh=hfOuLUmJESa9TndPikP9Oj/5VtYTzryYL4S2klro3to=;
+  b=LjM5rqVv8lFEMPedf0jC9Xa+PVE8JERuUfTMYLFO/LqucPXyFjg64evL
+   Dl063Wl305O2FbAkkNfcsGDReY7cC2VJKR9OLImYb+KCSDsBXeqloRTuT
+   K/Seb53mv4d1fLGjdW0wncwBqbd2LyOYOgWEu2tx2HpFvuHnDuwOhQ/HK
+   T4ZjJJczPdKlaxua5ZtwtASCQCLQJC9+qSAFyNY7pJY6oKP8Naw0ticp6
+   emO9XOrZvKvuTxPVusFRXkiKUDuar+cz06V1Pay4BX29DcEUqaim8oDDx
+   nDpOnx15oAwToJNTl/3lUbQdFRkDsVj3PXqN6c3Y7tnOZOTDNcct4yUbS
+   w==;
+X-IronPort-AV: E=McAfee;i="6500,9779,10482"; a="299961400"
 X-IronPort-AV: E=Sophos;i="5.93,348,1654585200"; 
-   d="scan'208";a="302722253"
-Received: from fmsmga007.fm.intel.com ([10.253.24.52])
-  by orsmga103.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 27 Sep 2022 00:07:54 -0700
-X-IronPort-AV: E=McAfee;i="6500,9779,10482"; a="623654901"
+   d="scan'208";a="299961400"
+Received: from fmsmga006.fm.intel.com ([10.253.24.20])
+  by fmsmga104.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 27 Sep 2022 00:09:33 -0700
+X-IronPort-AV: E=McAfee;i="6500,9779,10482"; a="866463287"
 X-IronPort-AV: E=Sophos;i="5.93,348,1654585200"; 
-   d="scan'208";a="623654901"
+   d="scan'208";a="866463287"
 Received: from ahunter6-mobl1.ger.corp.intel.com (HELO [10.0.2.15]) ([10.252.35.200])
-  by fmsmga007-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 27 Sep 2022 00:07:50 -0700
-Message-ID: <0db456af-afec-4e0d-0f59-5a0f6f5b3781@intel.com>
-Date:   Tue, 27 Sep 2022 10:07:46 +0300
+  by fmsmga006-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 27 Sep 2022 00:09:30 -0700
+Message-ID: <2260a908-47c0-705c-3d87-099b7d6fa9fd@intel.com>
+Date:   Tue, 27 Sep 2022 10:09:26 +0300
 MIME-Version: 1.0
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
  Firefox/91.0 Thunderbird/91.11.0
-Subject: Re: [PATCH 4/5] perf tools: Add evlist__add_sched_switch()
+Subject: Re: [PATCH 5/5] perf tools: Remove special handling of system-wide
+ evsel
 Content-Language: en-US
 To:     Namhyung Kim <namhyung@kernel.org>,
         Arnaldo Carvalho de Melo <acme@kernel.org>,
@@ -57,11 +58,11 @@ Cc:     Ingo Molnar <mingo@kernel.org>,
         Kan Liang <kan.liang@linux.intel.com>,
         Leo Yan <leo.yan@linaro.org>
 References: <20220924165737.956428-1-namhyung@kernel.org>
- <20220924165737.956428-5-namhyung@kernel.org>
+ <20220924165737.956428-6-namhyung@kernel.org>
 From:   Adrian Hunter <adrian.hunter@intel.com>
 Organization: Intel Finland Oy, Registered Address: PL 281, 00181 Helsinki,
  Business Identity Code: 0357606 - 4, Domiciled in Helsinki
-In-Reply-To: <20220924165737.956428-5-namhyung@kernel.org>
+In-Reply-To: <20220924165737.956428-6-namhyung@kernel.org>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 Precedence: bulk
@@ -69,132 +70,100 @@ List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
 On 24/09/22 19:57, Namhyung Kim wrote:
-> Add a help to create a system-wide sched_switch event.  One merit is
-> that it sets the system-wide bit before adding it to evlist so that
-> the libperf can handle the cpu and thread maps correctly.
+> For system-wide evsels, the thread map should be dummy - i.e. it has a
+> single entry of -1.  But the code guarantees such a thread map, so no
+> need to handle it specially.
+> 
+> No functional change intended.
 > 
 > Signed-off-by: Namhyung Kim <namhyung@kernel.org>
 
 Reviewed-by: Adrian Hunter <adrian.hunter@intel.com>
 
 > ---
->  tools/perf/arch/x86/util/intel-pt.c | 15 +++++----------
->  tools/perf/tests/switch-tracking.c  | 15 +++++----------
->  tools/perf/util/evlist.c            | 17 +++++++++++++++++
->  tools/perf/util/evlist.h            |  1 +
->  4 files changed, 28 insertions(+), 20 deletions(-)
+>  tools/lib/perf/evsel.c      |  3 ---
+>  tools/perf/builtin-script.c |  3 ---
+>  tools/perf/util/evsel.c     | 12 ++----------
+>  tools/perf/util/stat.c      |  3 ---
+>  4 files changed, 2 insertions(+), 19 deletions(-)
 > 
-> diff --git a/tools/perf/arch/x86/util/intel-pt.c b/tools/perf/arch/x86/util/intel-pt.c
-> index 13933020a79e..793b35f2221a 100644
-> --- a/tools/perf/arch/x86/util/intel-pt.c
-> +++ b/tools/perf/arch/x86/util/intel-pt.c
-> @@ -11,6 +11,7 @@
->  #include <linux/bitops.h>
->  #include <linux/log2.h>
->  #include <linux/zalloc.h>
-> +#include <linux/err.h>
->  #include <cpuid.h>
+> diff --git a/tools/lib/perf/evsel.c b/tools/lib/perf/evsel.c
+> index 8ce5bbd09666..8b51b008a81f 100644
+> --- a/tools/lib/perf/evsel.c
+> +++ b/tools/lib/perf/evsel.c
+> @@ -515,9 +515,6 @@ int perf_evsel__alloc_id(struct perf_evsel *evsel, int ncpus, int nthreads)
+>  	if (ncpus == 0 || nthreads == 0)
+>  		return 0;
 >  
->  #include "../../../util/session.h"
-> @@ -426,20 +427,14 @@ static int intel_pt_track_switches(struct evlist *evlist)
->  	if (!evlist__can_select_event(evlist, sched_switch))
->  		return -EPERM;
->  
-> -	err = parse_event(evlist, sched_switch);
-> -	if (err) {
-> -		pr_debug2("%s: failed to parse %s, error %d\n",
-> +	evsel = evlist__add_sched_switch(evlist, true);
-> +	if (IS_ERR(evsel)) {
-> +		err = PTR_ERR(evsel);
-> +		pr_debug2("%s: failed to create %s, error = %d\n",
->  			  __func__, sched_switch, err);
->  		return err;
->  	}
->  
-> -	evsel = evlist__last(evlist);
+> -	if (evsel->system_wide)
+> -		nthreads = 1;
 > -
-> -	evsel__set_sample_bit(evsel, CPU);
-> -	evsel__set_sample_bit(evsel, TIME);
+>  	evsel->sample_id = xyarray__new(ncpus, nthreads, sizeof(struct perf_sample_id));
+>  	if (evsel->sample_id == NULL)
+>  		return -ENOMEM;
+> diff --git a/tools/perf/builtin-script.c b/tools/perf/builtin-script.c
+> index 886f53cfa257..7fa467ed91dc 100644
+> --- a/tools/perf/builtin-script.c
+> +++ b/tools/perf/builtin-script.c
+> @@ -2243,9 +2243,6 @@ static void __process_stat(struct evsel *counter, u64 tstamp)
+>  	struct perf_cpu cpu;
+>  	static int header_printed;
+>  
+> -	if (counter->core.system_wide)
+> -		nthreads = 1;
 > -
-> -	evsel->core.system_wide = true;
-> -	evsel->no_aux_samples = true;
->  	evsel->immediate = true;
->  
->  	return 0;
-> diff --git a/tools/perf/tests/switch-tracking.c b/tools/perf/tests/switch-tracking.c
-> index 2d46af9ef935..87f565c7f650 100644
-> --- a/tools/perf/tests/switch-tracking.c
-> +++ b/tools/perf/tests/switch-tracking.c
-> @@ -6,6 +6,7 @@
->  #include <time.h>
->  #include <stdlib.h>
->  #include <linux/zalloc.h>
-> +#include <linux/err.h>
->  #include <perf/cpumap.h>
->  #include <perf/evlist.h>
->  #include <perf/mmap.h>
-> @@ -398,19 +399,13 @@ static int test__switch_tracking(struct test_suite *test __maybe_unused, int sub
->  		goto out;
->  	}
->  
-> -	err = parse_event(evlist, sched_switch);
-> -	if (err) {
-> -		pr_debug("Failed to parse event %s\n", sched_switch);
-> +	switch_evsel = evlist__add_sched_switch(evlist, true);
-> +	if (IS_ERR(switch_evsel)) {
-> +		err = PTR_ERR(switch_evsel);
-> +		pr_debug("Failed to create event %s\n", sched_switch);
->  		goto out_err;
->  	}
->  
-> -	switch_evsel = evlist__last(evlist);
-> -
-> -	evsel__set_sample_bit(switch_evsel, CPU);
-> -	evsel__set_sample_bit(switch_evsel, TIME);
-> -
-> -	switch_evsel->core.system_wide = true;
-> -	switch_evsel->no_aux_samples = true;
->  	switch_evsel->immediate = true;
->  
->  	/* Test moving an event to the front */
-> diff --git a/tools/perf/util/evlist.c b/tools/perf/util/evlist.c
-> index dcf57b271ff1..6612b00949e7 100644
-> --- a/tools/perf/util/evlist.c
-> +++ b/tools/perf/util/evlist.c
-> @@ -288,6 +288,23 @@ struct evsel *evlist__add_aux_dummy(struct evlist *evlist, bool system_wide)
->  	return evsel;
->  }
->  
-> +struct evsel *evlist__add_sched_switch(struct evlist *evlist, bool system_wide)
-> +{
-> +	struct evsel *evsel = evsel__newtp_idx("sched", "sched_switch", 0);
-> +
-> +	if (IS_ERR(evsel))
-> +		return evsel;
-> +
-> +	evsel__set_sample_bit(evsel, CPU);
-> +	evsel__set_sample_bit(evsel, TIME);
-> +
-> +	evsel->core.system_wide = system_wide;
-> +	evsel->no_aux_samples = true;
-> +
-> +	evlist__add(evlist, evsel);
-> +	return evsel;
-> +};
-> +
->  int evlist__add_attrs(struct evlist *evlist, struct perf_event_attr *attrs, size_t nr_attrs)
+>  	if (!header_printed) {
+>  		printf("%3s %8s %15s %15s %15s %15s %s\n",
+>  		       "CPU", "THREAD", "VAL", "ENA", "RUN", "TIME", "EVENT");
+> diff --git a/tools/perf/util/evsel.c b/tools/perf/util/evsel.c
+> index 5776bfa70f11..e319bb17d10d 100644
+> --- a/tools/perf/util/evsel.c
+> +++ b/tools/perf/util/evsel.c
+> @@ -1813,7 +1813,7 @@ static struct perf_thread_map *empty_thread_map;
+>  static int __evsel__prepare_open(struct evsel *evsel, struct perf_cpu_map *cpus,
+>  		struct perf_thread_map *threads)
 >  {
->  	struct evsel *evsel, *n;
-> diff --git a/tools/perf/util/evlist.h b/tools/perf/util/evlist.h
-> index 9d967fe3953a..16734c6756b3 100644
-> --- a/tools/perf/util/evlist.h
-> +++ b/tools/perf/util/evlist.h
-> @@ -127,6 +127,7 @@ static inline struct evsel *evlist__add_dummy_on_all_cpus(struct evlist *evlist)
->  {
->  	return evlist__add_aux_dummy(evlist, true);
->  }
-> +struct evsel *evlist__add_sched_switch(struct evlist *evlist, bool system_wide);
+> -	int nthreads;
+> +	int nthreads = perf_thread_map__nr(threads);
 >  
->  int evlist__add_sb_event(struct evlist *evlist, struct perf_event_attr *attr,
->  			 evsel__sb_cb_t cb, void *data);
+>  	if ((perf_missing_features.write_backward && evsel->core.attr.write_backward) ||
+>  	    (perf_missing_features.aux_output     && evsel->core.attr.aux_output))
+> @@ -1839,11 +1839,6 @@ static int __evsel__prepare_open(struct evsel *evsel, struct perf_cpu_map *cpus,
+>  		threads = empty_thread_map;
+>  	}
+>  
+> -	if (evsel->core.system_wide)
+> -		nthreads = 1;
+> -	else
+> -		nthreads = threads->nr;
+> -
+>  	if (evsel->core.fd == NULL &&
+>  	    perf_evsel__alloc_fd(&evsel->core, perf_cpu_map__nr(cpus), nthreads) < 0)
+>  		return -ENOMEM;
+> @@ -2061,10 +2056,7 @@ static int evsel__open_cpu(struct evsel *evsel, struct perf_cpu_map *cpus,
+>  	if (threads == NULL)
+>  		threads = empty_thread_map;
+>  
+> -	if (evsel->core.system_wide)
+> -		nthreads = 1;
+> -	else
+> -		nthreads = threads->nr;
+> +	nthreads = perf_thread_map__nr(threads);
+>  
+>  	if (evsel->cgrp)
+>  		pid = evsel->cgrp->fd;
+> diff --git a/tools/perf/util/stat.c b/tools/perf/util/stat.c
+> index ce5e9e372fc4..cef943377ad7 100644
+> --- a/tools/perf/util/stat.c
+> +++ b/tools/perf/util/stat.c
+> @@ -420,9 +420,6 @@ static int process_counter_maps(struct perf_stat_config *config,
+>  	int ncpus = evsel__nr_cpus(counter);
+>  	int idx, thread;
+>  
+> -	if (counter->core.system_wide)
+> -		nthreads = 1;
+> -
+>  	for (thread = 0; thread < nthreads; thread++) {
+>  		for (idx = 0; idx < ncpus; idx++) {
+>  			if (process_counter_values(config, counter, idx, thread,
 
