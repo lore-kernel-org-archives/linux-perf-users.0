@@ -2,566 +2,121 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 21738C6FA96
-	for <linux-perf-users@archiver.kernel.org>; Tue, 27 Sep 2022 08:17:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7AA75C07E9D
+	for <linux-perf-users@archiver.kernel.org>; Tue, 27 Sep 2022 08:48:39 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229571AbiI0IRe (ORCPT
+        id S231589AbiI0Isi (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Tue, 27 Sep 2022 04:17:34 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56788 "EHLO
+        Tue, 27 Sep 2022 04:48:38 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49516 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230251AbiI0IRJ (ORCPT
+        with ESMTP id S230472AbiI0Is3 (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Tue, 27 Sep 2022 04:17:09 -0400
-Received: from szxga01-in.huawei.com (szxga01-in.huawei.com [45.249.212.187])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8A4DA6585;
-        Tue, 27 Sep 2022 01:16:31 -0700 (PDT)
-Received: from canpemm500009.china.huawei.com (unknown [172.30.72.57])
-        by szxga01-in.huawei.com (SkyGuard) with ESMTP id 4McC7L4QGQzpTdZ;
-        Tue, 27 Sep 2022 16:13:34 +0800 (CST)
-Received: from localhost.localdomain (10.67.164.66) by
- canpemm500009.china.huawei.com (7.192.105.203) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2375.31; Tue, 27 Sep 2022 16:16:29 +0800
-From:   Yicong Yang <yangyicong@huawei.com>
-To:     <acme@kernel.org>, <peterz@infradead.org>,
-        <alexander.shishkin@linux.intel.com>, <leo.yan@linaro.org>,
-        <james.clark@arm.com>, <will@kernel.org>,
-        <mathieu.poirier@linaro.org>, <mark.rutland@arm.com>,
-        <suzuki.poulose@arm.com>, <jonathan.cameron@huawei.com>,
-        <john.garry@huawei.com>, <mike.leach@linaro.org>
-CC:     <gregkh@linuxfoundation.org>, <helgaas@kernel.org>,
-        <lorenzo.pieralisi@arm.com>,
-        <shameerali.kolothum.thodi@huawei.com>, <mingo@redhat.com>,
-        <linux-kernel@vger.kernel.org>,
-        <linux-arm-kernel@lists.infradead.org>,
-        <linux-pci@vger.kernel.org>, <linux-perf-users@vger.kernel.org>,
-        <prime.zeng@huawei.com>, <zhangshaokun@hisilicon.com>,
-        <linuxarm@huawei.com>, <yangyicong@hisilicon.com>,
-        <liuqi6124@gmail.com>
-Subject: [PATCH v14 3/3] perf tool: Add support for parsing HiSilicon PCIe Trace packet
-Date:   Tue, 27 Sep 2022 16:14:00 +0800
-Message-ID: <20220927081400.14364-4-yangyicong@huawei.com>
-X-Mailer: git-send-email 2.31.0
-In-Reply-To: <20220927081400.14364-1-yangyicong@huawei.com>
-References: <20220927081400.14364-1-yangyicong@huawei.com>
+        Tue, 27 Sep 2022 04:48:29 -0400
+Received: from foss.arm.com (foss.arm.com [217.140.110.172])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTP id 28D378049B;
+        Tue, 27 Sep 2022 01:48:28 -0700 (PDT)
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 41EC81042;
+        Tue, 27 Sep 2022 01:48:34 -0700 (PDT)
+Received: from [10.32.36.24] (e121896.Emea.Arm.com [10.32.36.24])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id A26E63F66F;
+        Tue, 27 Sep 2022 01:48:25 -0700 (PDT)
+Message-ID: <849703ed-ef66-f622-a5b0-10107fbe7c10@arm.com>
+Date:   Tue, 27 Sep 2022 09:48:23 +0100
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7BIT
-Content-Type:   text/plain; charset=US-ASCII
-X-Originating-IP: [10.67.164.66]
-X-ClientProxiedBy: dggems704-chm.china.huawei.com (10.3.19.181) To
- canpemm500009.china.huawei.com (7.192.105.203)
-X-CFilter-Loop: Reflected
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
+ Thunderbird/91.11.0
+Subject: Re: [PATCH] perf test: Skip sigtrap test on old kernels
+Content-Language: en-US
+To:     Namhyung Kim <namhyung@kernel.org>
+Cc:     Marco Elver <elver@google.com>,
+        Arnaldo Carvalho de Melo <acme@kernel.org>,
+        Jiri Olsa <jolsa@kernel.org>, Ingo Molnar <mingo@kernel.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Ian Rogers <irogers@google.com>,
+        linux-perf-users <linux-perf-users@vger.kernel.org>
+References: <20220903000210.1112014-1-namhyung@kernel.org>
+ <CANpmjNMPh5QjdxXtrCc5FApjgzV=81CNNiwbeg_rE3NxN_WCZw@mail.gmail.com>
+ <c4f7e14b-a229-6b23-b28d-880b8369e6d8@arm.com>
+ <CAM9d7ch36RGYJJEg2dnrauQnVX_f9MiE0RB99EU4ynNL-8CUVA@mail.gmail.com>
+From:   James Clark <james.clark@arm.com>
+In-Reply-To: <CAM9d7ch36RGYJJEg2dnrauQnVX_f9MiE0RB99EU4ynNL-8CUVA@mail.gmail.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-From: Qi Liu <liuqi115@huawei.com>
 
-Add support for using 'perf report --dump-raw-trace' to parse PTT packet.
 
-Example usage:
+On 26/09/2022 17:19, Namhyung Kim wrote:
+> Hello,
+> 
+> On Mon, Sep 26, 2022 at 8:06 AM James Clark <james.clark@arm.com> wrote:
+>>
+>>
+>>
+>> On 03/09/2022 07:52, Marco Elver wrote:
+>>> On Sat, 3 Sept 2022 at 02:02, Namhyung Kim <namhyung@kernel.org> wrote:
+>>>>
+>>>> If it runs on an old kernel, perf_event_open would fail because of the
+>>>> new fields sigtrap and sig_data.  Just skip the test if it failed.
+>>>>
+>>>> Cc: Marco Elver <elver@google.com>
+>>>> Signed-off-by: Namhyung Kim <namhyung@kernel.org>
+>>>> ---
+>>>>  tools/perf/tests/sigtrap.c | 1 +
+>>>>  1 file changed, 1 insertion(+)
+>>>>
+>>>> diff --git a/tools/perf/tests/sigtrap.c b/tools/perf/tests/sigtrap.c
+>>>> index e32ece90e164..7057566e6ae4 100644
+>>>> --- a/tools/perf/tests/sigtrap.c
+>>>> +++ b/tools/perf/tests/sigtrap.c
+>>>> @@ -140,6 +140,7 @@ static int test__sigtrap(struct test_suite *test __maybe_unused, int subtest __m
+>>>>         fd = sys_perf_event_open(&attr, 0, -1, -1, perf_event_open_cloexec_flag());
+>>>>         if (fd < 0) {
+>>>>                 pr_debug("FAILED sys_perf_event_open(): %s\n", str_error_r(errno, sbuf, sizeof(sbuf)));
+>>>> +               ret = TEST_SKIP;
+>>>
+>>> Wouldn't we be interested if perf_event_open() fails because it could
+>>> actually be a bug? By skipping we'll be more likely to miss the fact
+>>> there's a real problem.
+>>>
+>>> That's my naive thinking at least - what do other perf tests usually
+>>> do in this case?
+>>
+>> I missed this discussion but I just submitted a patch with a similar
+>> issue [1]. To me, it doesn't make sense to have the tests pass on older
+>> kernels if this lowers the value of the tests by accepting possibly
+>> invalid values. If you want to test older kernels then just use older
+>> tests, but maybe there is some use case that I'm not aware of.
+> 
+> Thanks for your opinion.  But my test environment is running the tests
+> on random machines which may run some old kernel.  I agree that it
+> should not skip the real problems but I think we can find a good way
+> to detect old, unsupported kernels reliably like using BTF.
 
-Output will contain raw PTT data and its textual representation, such
-as (8DW format):
+I'm currently adding a test for the new VG user register [1]. I'd like
+to test that it's available when the system has SVE but not when it
+hasn't so that the ABI is locked down. But that test will also depend on
+the kernel version, because it will never be available on older ones.
 
-0 0 0x5810 [0x30]: PERF_RECORD_AUXTRACE size: 0x400000  offset: 0
-ref: 0xa5d50c725  idx: 0  tid: -1  cpu: 0
-.
-. ... HISI PTT data: size 4194304 bytes
-.  00000000: 00 00 00 00                                 Prefix
-.  00000004: 08 20 00 60                                 Header DW0
-.  00000008: ff 02 00 01                                 Header DW1
-.  0000000c: 20 08 00 00                                 Header DW2
-.  00000010: 10 e7 44 ab                                 Header DW3
-.  00000014: 2a a8 1e 01                                 Time
-.  00000020: 00 00 00 00                                 Prefix
-.  00000024: 01 00 00 60                                 Header DW0
-.  00000028: 0f 1e 00 01                                 Header DW1
-.  0000002c: 04 00 00 00                                 Header DW2
-.  00000030: 40 00 81 02                                 Header DW3
-.  00000034: ee 02 00 00                                 Time
-....
+So for new tests should we always add two versions of the test, one for
+newer and one for older kernels? That seems like that has not been done
+so far in the tests. I'd still question the value of running the new
+tests on old kernels because they are mainly to validate that new code
+doesn't cause regressions. It's a lot of work to keep them backwards
+compatible for the case of running them on old kernels when old tests
+can be used instead.
 
-This patch only add basic parsing support according to the definition
-of the PTT packet described in Documentation/trace/hisi-ptt.rst. And
-the fields of each packet can be further decoded following the PCIe
-Spec's definition of TLP packet.
+If I am do add a version check would just looking at the uname be
+enough? Or how would the BTF version of that look?
 
-Signed-off-by: Qi Liu <liuqi115@huawei.com>
-Signed-off-by: Yicong Yang <yangyicong@hisilicon.com>
----
- tools/perf/util/Build                         |   2 +
- tools/perf/util/auxtrace.c                    |   3 +
- tools/perf/util/hisi-ptt-decoder/Build        |   1 +
- .../hisi-ptt-decoder/hisi-ptt-pkt-decoder.c   | 164 +++++++++++++++
- .../hisi-ptt-decoder/hisi-ptt-pkt-decoder.h   |  31 +++
- tools/perf/util/hisi-ptt.c                    | 192 ++++++++++++++++++
- tools/perf/util/hisi-ptt.h                    |   3 +
- 7 files changed, 396 insertions(+)
- create mode 100644 tools/perf/util/hisi-ptt-decoder/Build
- create mode 100644 tools/perf/util/hisi-ptt-decoder/hisi-ptt-pkt-decoder.c
- create mode 100644 tools/perf/util/hisi-ptt-decoder/hisi-ptt-pkt-decoder.h
- create mode 100644 tools/perf/util/hisi-ptt.c
+[1]:
+https://git.kernel.org/pub/scm/linux/kernel/git/arm64/linux.git/commit/?h=for-next/perf&id=cbb0c02caf4bd98b9e0cd6d7420734b8e9a35703
 
-diff --git a/tools/perf/util/Build b/tools/perf/util/Build
-index 9dfae1bda9cc..9bad8568071d 100644
---- a/tools/perf/util/Build
-+++ b/tools/perf/util/Build
-@@ -118,6 +118,8 @@ perf-$(CONFIG_AUXTRACE) += intel-pt.o
- perf-$(CONFIG_AUXTRACE) += intel-bts.o
- perf-$(CONFIG_AUXTRACE) += arm-spe.o
- perf-$(CONFIG_AUXTRACE) += arm-spe-decoder/
-+perf-$(CONFIG_AUXTRACE) += hisi-ptt.o
-+perf-$(CONFIG_AUXTRACE) += hisi-ptt-decoder/
- perf-$(CONFIG_AUXTRACE) += s390-cpumsf.o
- 
- ifdef CONFIG_LIBOPENCSD
-diff --git a/tools/perf/util/auxtrace.c b/tools/perf/util/auxtrace.c
-index c30611d9ee99..e799c7314d39 100644
---- a/tools/perf/util/auxtrace.c
-+++ b/tools/perf/util/auxtrace.c
-@@ -51,6 +51,7 @@
- #include "intel-pt.h"
- #include "intel-bts.h"
- #include "arm-spe.h"
-+#include "hisi-ptt.h"
- #include "s390-cpumsf.h"
- #include "util/mmap.h"
- 
-@@ -1320,6 +1321,8 @@ int perf_event__process_auxtrace_info(struct perf_session *session,
- 		err = s390_cpumsf_process_auxtrace_info(event, session);
- 		break;
- 	case PERF_AUXTRACE_HISI_PTT:
-+		err = hisi_ptt_process_auxtrace_info(event, session);
-+		break;
- 	case PERF_AUXTRACE_UNKNOWN:
- 	default:
- 		return -EINVAL;
-diff --git a/tools/perf/util/hisi-ptt-decoder/Build b/tools/perf/util/hisi-ptt-decoder/Build
-new file mode 100644
-index 000000000000..db3db8b75033
---- /dev/null
-+++ b/tools/perf/util/hisi-ptt-decoder/Build
-@@ -0,0 +1 @@
-+perf-$(CONFIG_AUXTRACE) += hisi-ptt-pkt-decoder.o
-diff --git a/tools/perf/util/hisi-ptt-decoder/hisi-ptt-pkt-decoder.c b/tools/perf/util/hisi-ptt-decoder/hisi-ptt-pkt-decoder.c
-new file mode 100644
-index 000000000000..a17c423a526d
---- /dev/null
-+++ b/tools/perf/util/hisi-ptt-decoder/hisi-ptt-pkt-decoder.c
-@@ -0,0 +1,164 @@
-+// SPDX-License-Identifier: GPL-2.0
-+/*
-+ * HiSilicon PCIe Trace and Tuning (PTT) support
-+ * Copyright (c) 2022 HiSilicon Technologies Co., Ltd.
-+ */
-+
-+#include <stdlib.h>
-+#include <stdio.h>
-+#include <string.h>
-+#include <endian.h>
-+#include <byteswap.h>
-+#include <linux/bitops.h>
-+#include <stdarg.h>
-+
-+#include "../color.h"
-+#include "hisi-ptt-pkt-decoder.h"
-+
-+/*
-+ * For 8DW format, the bit[31:11] of DW0 is always 0x1fffff, which can be
-+ * used to distinguish the data format.
-+ * 8DW format is like:
-+ *   bits [                 31:11                 ][       10:0       ]
-+ *        |---------------------------------------|-------------------|
-+ *    DW0 [                0x1fffff               ][ Reserved (0x7ff) ]
-+ *    DW1 [                       Prefix                              ]
-+ *    DW2 [                     Header DW0                            ]
-+ *    DW3 [                     Header DW1                            ]
-+ *    DW4 [                     Header DW2                            ]
-+ *    DW5 [                     Header DW3                            ]
-+ *    DW6 [                   Reserved (0x0)                          ]
-+ *    DW7 [                        Time                               ]
-+ *
-+ * 4DW format is like:
-+ *   bits [31:30] [ 29:25 ][24][23][22][21][    20:11   ][    10:0    ]
-+ *        |-----|---------|---|---|---|---|-------------|-------------|
-+ *    DW0 [ Fmt ][  Type  ][T9][T8][TH][SO][   Length   ][    Time    ]
-+ *    DW1 [                     Header DW1                            ]
-+ *    DW2 [                     Header DW2                            ]
-+ *    DW3 [                     Header DW3                            ]
-+ */
-+
-+enum hisi_ptt_8dw_pkt_field_type {
-+	HISI_PTT_8DW_CHK_AND_RSV0,
-+	HISI_PTT_8DW_PREFIX,
-+	HISI_PTT_8DW_HEAD0,
-+	HISI_PTT_8DW_HEAD1,
-+	HISI_PTT_8DW_HEAD2,
-+	HISI_PTT_8DW_HEAD3,
-+	HISI_PTT_8DW_RSV1,
-+	HISI_PTT_8DW_TIME,
-+	HISI_PTT_8DW_TYPE_MAX
-+};
-+
-+enum hisi_ptt_4dw_pkt_field_type {
-+	HISI_PTT_4DW_HEAD1,
-+	HISI_PTT_4DW_HEAD2,
-+	HISI_PTT_4DW_HEAD3,
-+	HISI_PTT_4DW_TYPE_MAX
-+};
-+
-+static const char * const hisi_ptt_8dw_pkt_field_name[] = {
-+	[HISI_PTT_8DW_PREFIX]	= "Prefix",
-+	[HISI_PTT_8DW_HEAD0]	= "Header DW0",
-+	[HISI_PTT_8DW_HEAD1]	= "Header DW1",
-+	[HISI_PTT_8DW_HEAD2]	= "Header DW2",
-+	[HISI_PTT_8DW_HEAD3]	= "Header DW3",
-+	[HISI_PTT_8DW_TIME]	= "Time"
-+};
-+
-+static const char * const hisi_ptt_4dw_pkt_field_name[] = {
-+	[HISI_PTT_4DW_HEAD1]	= "Header DW1",
-+	[HISI_PTT_4DW_HEAD2]	= "Header DW2",
-+	[HISI_PTT_4DW_HEAD3]	= "Header DW3",
-+};
-+
-+union hisi_ptt_4dw {
-+	struct {
-+		uint32_t format : 2;
-+		uint32_t type : 5;
-+		uint32_t t9 : 1;
-+		uint32_t t8 : 1;
-+		uint32_t th : 1;
-+		uint32_t so : 1;
-+		uint32_t len : 10;
-+		uint32_t time : 11;
-+	};
-+	uint32_t value;
-+};
-+
-+static void hisi_ptt_print_pkt(const unsigned char *buf, int pos, const char *desc)
-+{
-+	const char *color = PERF_COLOR_BLUE;
-+	int i;
-+
-+	printf(".");
-+	color_fprintf(stdout, color, "  %08x: ", pos);
-+	for (i = 0; i < HISI_PTT_FIELD_LENTH; i++)
-+		color_fprintf(stdout, color, "%02x ", buf[pos + i]);
-+	for (i = 0; i < HISI_PTT_MAX_SPACE_LEN; i++)
-+		color_fprintf(stdout, color, "   ");
-+	color_fprintf(stdout, color, "  %s\n", desc);
-+}
-+
-+static int hisi_ptt_8dw_kpt_desc(const unsigned char *buf, int pos)
-+{
-+	int i;
-+
-+	for (i = 0; i < HISI_PTT_8DW_TYPE_MAX; i++) {
-+		/* Do not show 8DW check field and reserved fields */
-+		if (i == HISI_PTT_8DW_CHK_AND_RSV0 || i == HISI_PTT_8DW_RSV1) {
-+			pos += HISI_PTT_FIELD_LENTH;
-+			continue;
-+		}
-+
-+		hisi_ptt_print_pkt(buf, pos, hisi_ptt_8dw_pkt_field_name[i]);
-+		pos += HISI_PTT_FIELD_LENTH;
-+	}
-+
-+	return hisi_ptt_pkt_size[HISI_PTT_8DW_PKT];
-+}
-+
-+static void hisi_ptt_4dw_print_dw0(const unsigned char *buf, int pos)
-+{
-+	const char *color = PERF_COLOR_BLUE;
-+	union hisi_ptt_4dw dw0;
-+	int i;
-+
-+	dw0.value = *(uint32_t *)(buf + pos);
-+	printf(".");
-+	color_fprintf(stdout, color, "  %08x: ", pos);
-+	for (i = 0; i < HISI_PTT_FIELD_LENTH; i++)
-+		color_fprintf(stdout, color, "%02x ", buf[pos + i]);
-+	for (i = 0; i < HISI_PTT_MAX_SPACE_LEN; i++)
-+		color_fprintf(stdout, color, "   ");
-+
-+	color_fprintf(stdout, color,
-+		      "  %s %x %s %x %s %x %s %x %s %x %s %x %s %x %s %x\n",
-+		      "Format", dw0.format, "Type", dw0.type, "T9", dw0.t9,
-+		      "T8", dw0.t8, "TH", dw0.th, "SO", dw0.so, "Length",
-+		      dw0.len, "Time", dw0.time);
-+}
-+
-+static int hisi_ptt_4dw_kpt_desc(const unsigned char *buf, int pos)
-+{
-+	int i;
-+
-+	hisi_ptt_4dw_print_dw0(buf, pos);
-+	pos += HISI_PTT_FIELD_LENTH;
-+
-+	for (i = 0; i < HISI_PTT_4DW_TYPE_MAX; i++) {
-+		hisi_ptt_print_pkt(buf, pos, hisi_ptt_4dw_pkt_field_name[i]);
-+		pos += HISI_PTT_FIELD_LENTH;
-+	}
-+
-+	return hisi_ptt_pkt_size[HISI_PTT_4DW_PKT];
-+}
-+
-+int hisi_ptt_pkt_desc(const unsigned char *buf, int pos, enum hisi_ptt_pkt_type type)
-+{
-+	if (type == HISI_PTT_8DW_PKT)
-+		return hisi_ptt_8dw_kpt_desc(buf, pos);
-+
-+	return hisi_ptt_4dw_kpt_desc(buf, pos);
-+}
-diff --git a/tools/perf/util/hisi-ptt-decoder/hisi-ptt-pkt-decoder.h b/tools/perf/util/hisi-ptt-decoder/hisi-ptt-pkt-decoder.h
-new file mode 100644
-index 000000000000..e78f1b5bc836
---- /dev/null
-+++ b/tools/perf/util/hisi-ptt-decoder/hisi-ptt-pkt-decoder.h
-@@ -0,0 +1,31 @@
-+/* SPDX-License-Identifier: GPL-2.0 */
-+/*
-+ * HiSilicon PCIe Trace and Tuning (PTT) support
-+ * Copyright (c) 2022 HiSilicon Technologies Co., Ltd.
-+ */
-+
-+#ifndef INCLUDE__HISI_PTT_PKT_DECODER_H__
-+#define INCLUDE__HISI_PTT_PKT_DECODER_H__
-+
-+#include <stddef.h>
-+#include <stdint.h>
-+
-+#define HISI_PTT_8DW_CHECK_MASK		GENMASK(31, 11)
-+#define HISI_PTT_IS_8DW_PKT		GENMASK(31, 11)
-+#define HISI_PTT_MAX_SPACE_LEN		10
-+#define HISI_PTT_FIELD_LENTH		4
-+
-+enum hisi_ptt_pkt_type {
-+	HISI_PTT_4DW_PKT,
-+	HISI_PTT_8DW_PKT,
-+	HISI_PTT_PKT_MAX
-+};
-+
-+static int hisi_ptt_pkt_size[] = {
-+	[HISI_PTT_4DW_PKT]	= 16,
-+	[HISI_PTT_8DW_PKT]	= 32,
-+};
-+
-+int hisi_ptt_pkt_desc(const unsigned char *buf, int pos, enum hisi_ptt_pkt_type type);
-+
-+#endif
-diff --git a/tools/perf/util/hisi-ptt.c b/tools/perf/util/hisi-ptt.c
-new file mode 100644
-index 000000000000..45b614bb73bf
---- /dev/null
-+++ b/tools/perf/util/hisi-ptt.c
-@@ -0,0 +1,192 @@
-+// SPDX-License-Identifier: GPL-2.0
-+/*
-+ * HiSilicon PCIe Trace and Tuning (PTT) support
-+ * Copyright (c) 2022 HiSilicon Technologies Co., Ltd.
-+ */
-+
-+#include <byteswap.h>
-+#include <endian.h>
-+#include <errno.h>
-+#include <inttypes.h>
-+#include <linux/bitops.h>
-+#include <linux/kernel.h>
-+#include <linux/log2.h>
-+#include <linux/types.h>
-+#include <linux/zalloc.h>
-+#include <stdlib.h>
-+#include <unistd.h>
-+
-+#include "auxtrace.h"
-+#include "color.h"
-+#include "debug.h"
-+#include "evsel.h"
-+#include "hisi-ptt.h"
-+#include "hisi-ptt-decoder/hisi-ptt-pkt-decoder.h"
-+#include "machine.h"
-+#include "session.h"
-+#include "tool.h"
-+#include <internal/lib.h>
-+
-+struct hisi_ptt {
-+	struct auxtrace auxtrace;
-+	u32 auxtrace_type;
-+	struct perf_session *session;
-+	struct machine *machine;
-+	u32 pmu_type;
-+};
-+
-+struct hisi_ptt_queue {
-+	struct hisi_ptt *ptt;
-+	struct auxtrace_buffer *buffer;
-+};
-+
-+static enum hisi_ptt_pkt_type hisi_ptt_check_packet_type(unsigned char *buf)
-+{
-+	uint32_t head = *(uint32_t *)buf;
-+
-+	if ((HISI_PTT_8DW_CHECK_MASK & head) == HISI_PTT_IS_8DW_PKT)
-+		return HISI_PTT_8DW_PKT;
-+
-+	return HISI_PTT_4DW_PKT;
-+}
-+
-+static void hisi_ptt_dump(struct hisi_ptt *ptt __maybe_unused,
-+			  unsigned char *buf, size_t len)
-+{
-+	const char *color = PERF_COLOR_BLUE;
-+	enum hisi_ptt_pkt_type type;
-+	size_t pos = 0;
-+	int pkt_len;
-+
-+	type = hisi_ptt_check_packet_type(buf);
-+	len = round_down(len, hisi_ptt_pkt_size[type]);
-+	color_fprintf(stdout, color, ". ... HISI PTT data: size %zu bytes\n",
-+		      len);
-+
-+	while (len > 0) {
-+		pkt_len = hisi_ptt_pkt_desc(buf, pos, type);
-+		if (!pkt_len)
-+			color_fprintf(stdout, color, " Bad packet!\n");
-+
-+		pos += pkt_len;
-+		len -= pkt_len;
-+	}
-+}
-+
-+static void hisi_ptt_dump_event(struct hisi_ptt *ptt, unsigned char *buf,
-+				size_t len)
-+{
-+	printf(".\n");
-+
-+	hisi_ptt_dump(ptt, buf, len);
-+}
-+
-+static int hisi_ptt_process_event(struct perf_session *session __maybe_unused,
-+				  union perf_event *event __maybe_unused,
-+				  struct perf_sample *sample __maybe_unused,
-+				  struct perf_tool *tool __maybe_unused)
-+{
-+	return 0;
-+}
-+
-+static int hisi_ptt_process_auxtrace_event(struct perf_session *session,
-+					   union perf_event *event,
-+					   struct perf_tool *tool __maybe_unused)
-+{
-+	struct hisi_ptt *ptt = container_of(session->auxtrace, struct hisi_ptt,
-+					    auxtrace);
-+	int fd = perf_data__fd(session->data);
-+	int size = event->auxtrace.size;
-+	void *data = malloc(size);
-+	off_t data_offset;
-+	int err;
-+
-+	if (!data)
-+		return -errno;
-+
-+	if (perf_data__is_pipe(session->data)) {
-+		data_offset = 0;
-+	} else {
-+		data_offset = lseek(fd, 0, SEEK_CUR);
-+		if (data_offset == -1)
-+			return -errno;
-+	}
-+
-+	err = readn(fd, data, size);
-+	if (err != (ssize_t)size) {
-+		free(data);
-+		return -errno;
-+	}
-+
-+	if (dump_trace)
-+		hisi_ptt_dump_event(ptt, data, size);
-+
-+	return 0;
-+}
-+
-+static int hisi_ptt_flush(struct perf_session *session __maybe_unused,
-+			  struct perf_tool *tool __maybe_unused)
-+{
-+	return 0;
-+}
-+
-+static void hisi_ptt_free_events(struct perf_session *session __maybe_unused)
-+{
-+}
-+
-+static void hisi_ptt_free(struct perf_session *session)
-+{
-+	struct hisi_ptt *ptt = container_of(session->auxtrace, struct hisi_ptt,
-+					    auxtrace);
-+
-+	session->auxtrace = NULL;
-+	free(ptt);
-+}
-+
-+static bool hisi_ptt_evsel_is_auxtrace(struct perf_session *session,
-+				       struct evsel *evsel)
-+{
-+	struct hisi_ptt *ptt = container_of(session->auxtrace, struct hisi_ptt, auxtrace);
-+
-+	return evsel->core.attr.type == ptt->pmu_type;
-+}
-+
-+static void hisi_ptt_print_info(__u64 type)
-+{
-+	if (!dump_trace)
-+		return;
-+
-+	fprintf(stdout, "  PMU Type           %" PRId64 "\n", (s64) type);
-+}
-+
-+int hisi_ptt_process_auxtrace_info(union perf_event *event,
-+				   struct perf_session *session)
-+{
-+	struct perf_record_auxtrace_info *auxtrace_info = &event->auxtrace_info;
-+	struct hisi_ptt *ptt;
-+
-+	if (auxtrace_info->header.size < HISI_PTT_AUXTRACE_PRIV_SIZE +
-+				sizeof(struct perf_record_auxtrace_info))
-+		return -EINVAL;
-+
-+	ptt = zalloc(sizeof(*ptt));
-+	if (!ptt)
-+		return -ENOMEM;
-+
-+	ptt->session = session;
-+	ptt->machine = &session->machines.host; /* No kvm support */
-+	ptt->auxtrace_type = auxtrace_info->type;
-+	ptt->pmu_type = auxtrace_info->priv[0];
-+
-+	ptt->auxtrace.process_event = hisi_ptt_process_event;
-+	ptt->auxtrace.process_auxtrace_event = hisi_ptt_process_auxtrace_event;
-+	ptt->auxtrace.flush_events = hisi_ptt_flush;
-+	ptt->auxtrace.free_events = hisi_ptt_free_events;
-+	ptt->auxtrace.free = hisi_ptt_free;
-+	ptt->auxtrace.evsel_is_auxtrace = hisi_ptt_evsel_is_auxtrace;
-+	session->auxtrace = &ptt->auxtrace;
-+
-+	hisi_ptt_print_info(auxtrace_info->priv[0]);
-+
-+	return 0;
-+}
-diff --git a/tools/perf/util/hisi-ptt.h b/tools/perf/util/hisi-ptt.h
-index 82283c81b4c1..2db9b4056214 100644
---- a/tools/perf/util/hisi-ptt.h
-+++ b/tools/perf/util/hisi-ptt.h
-@@ -13,4 +13,7 @@
- struct auxtrace_record *hisi_ptt_recording_init(int *err,
- 						struct perf_pmu *hisi_ptt_pmu);
- 
-+int hisi_ptt_process_auxtrace_info(union perf_event *event,
-+				   struct perf_session *session);
-+
- #endif
--- 
-2.24.0
-
+> 
+> Thanks,
+> Namhyung
