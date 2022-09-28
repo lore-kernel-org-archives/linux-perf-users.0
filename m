@@ -2,129 +2,145 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5FFBAC32771
-	for <linux-perf-users@archiver.kernel.org>; Wed, 28 Sep 2022 17:26:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 94C42C04A95
+	for <linux-perf-users@archiver.kernel.org>; Wed, 28 Sep 2022 22:37:07 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233216AbiI1R0N (ORCPT
+        id S234677AbiI1WhF (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Wed, 28 Sep 2022 13:26:13 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39938 "EHLO
+        Wed, 28 Sep 2022 18:37:05 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33556 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231167AbiI1R0L (ORCPT
+        with ESMTP id S234428AbiI1Wgn (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Wed, 28 Sep 2022 13:26:11 -0400
-Received: from out4-smtp.messagingengine.com (out4-smtp.messagingengine.com [66.111.4.28])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2036D4CA3D;
-        Wed, 28 Sep 2022 10:26:08 -0700 (PDT)
-Received: from compute1.internal (compute1.nyi.internal [10.202.2.41])
-        by mailout.nyi.internal (Postfix) with ESMTP id 85EC75C0111;
-        Wed, 28 Sep 2022 13:26:06 -0400 (EDT)
-Received: from mailfrontend2 ([10.202.2.163])
-  by compute1.internal (MEProxy); Wed, 28 Sep 2022 13:26:06 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=wfchandler.org;
-         h=cc:cc:content-transfer-encoding:content-type:date:date:from
-        :from:in-reply-to:in-reply-to:message-id:mime-version:references
-        :reply-to:sender:subject:subject:to:to; s=fm2; t=1664385966; x=
-        1664472366; bh=hvRRc96g0zU7fiaw/+EoB+ReNWXMWxl5JTUje5UVqUM=; b=V
-        +e/g/Xqis9DbqJa+q9GPQ0hACCGpTJSamjJt/ncuP8sLNaEp/l4zByDKVdgzHQaa
-        bDzWkw7a8rHIuGLz7xXapEu6h3mSPk7eI2jwObOepWZIfPAv+/G/737rrFIcIUWv
-        bVltq3fIERJV1enl81wtVm70JVm69Gs/Q5HpssIVm7CMTKw8XnvQcD7qnIA1FYe/
-        O8wJaD6DyU71/DcffKQiq1qQQ1cxK19jxqYIMfkI390fzmc0CP29qg45c/XXPefb
-        AtNX0+qcIHsVlmQpKTedPRdOQ1OCq24fuixfVxK5Ortgv1vtqgT3FW4J54bYyjet
-        34/HkZYMqI8be9L3f+HSg==
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-        messagingengine.com; h=cc:cc:content-transfer-encoding
-        :content-type:date:date:feedback-id:feedback-id:from:from
-        :in-reply-to:in-reply-to:message-id:mime-version:references
-        :reply-to:sender:subject:subject:to:to:x-me-proxy:x-me-proxy
-        :x-me-sender:x-me-sender:x-sasl-enc; s=fm2; t=1664385966; x=
-        1664472366; bh=hvRRc96g0zU7fiaw/+EoB+ReNWXMWxl5JTUje5UVqUM=; b=M
-        m+nzeSwerikrof9f0nRHh+K7406eTAB2Lf3feeWgBUmJ2BvA2LUf03OOF4Wy+LC9
-        buXRAf+CPxf8WeGiXmAv6P0jJgsRLTqImLvrGZrwE0r2XP2jX9boEUHGZ3ySBros
-        SEWerqxq+D969d7mYThcdtSXyJd9Ja9Fiyhfeg9gy7ZPV/mHlbThitW9LGO5ut1W
-        QRJ15YbxkufIuX/qh9/9Qw1hko6EQh+MXQhSp1zyzAQHiXhb2b4j6+N4MBkZWBex
-        X9TjL6vZwmydqX/I/IaAX+06eD901Rztn04miGNXwwGmB1mDLjulkiVkv8cF7yzU
-        Bqa0YPwkXwe4W1vvxdJtQ==
-X-ME-Sender: <xms:roM0Y8vp_lnu1Uj8ITcOFoUT1VuRRyvtpKD9OcArxLWBfYM6CFMp6w>
-    <xme:roM0Y5cJsDABs7kinvL4Apa3-9dqQV7wmHrXsb_3hHOOJU56_Twt-jpdiROWmSDBK
-    z35w6hKaIzbpqeXB04>
-X-ME-Received: <xmr:roM0Y3wXJqTjFqvuKHNFT8Z8oPQPCkbVDrOF1TPXxXOHPF2CDzww6k7HUKCyTRuI1dM>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgedvfedrfeegkedgudduhecutefuodetggdotefrod
-    ftvfcurfhrohhfihhlvgemucfhrghsthforghilhdpqfgfvfdpuffrtefokffrpgfnqfgh
-    necuuegrihhlohhuthemuceftddtnecusecvtfgvtghiphhivghnthhsucdlqddutddtmd
-    enucfjughrpefhvfevufffoffkjghfgggtgfesthhqmhdtredttdenucfhrhhomhephghi
-    lhhlucevhhgrnhgulhgvrhcuoeiffhgtseiffhgthhgrnhgulhgvrhdrohhrgheqnecugg
-    ftrfgrthhtvghrnhephfduteelieelleeuueegfeevffetleeiffetledtgfffgeeigfel
-    tdettddugeetnecuvehluhhsthgvrhfuihiivgeptdenucfrrghrrghmpehmrghilhhfrh
-    homhepfihftgesfihftghhrghnughlvghrrdhorhhg
-X-ME-Proxy: <xmx:roM0Y_PThJADrpVo96omRa_wqvxdi2-bCRJrdmLnj5ikOABhAjccww>
-    <xmx:roM0Y89UQjlcJQrnXbheskfoBjUqz54hBzE6Cu45EhmYULimFwJshQ>
-    <xmx:roM0Y3WyKiszAUga0lldA2MjT2zKPJe85BG7OI3dY7SHsc4bg8OAMw>
-    <xmx:roM0YwTXuVVmgJ6H5m_BKUqOPRV2slPmWf4wiTNLkopbC9JwsVJ9BQ>
-Feedback-ID: ica594744:Fastmail
-Received: by mail.messagingengine.com (Postfix) with ESMTPA; Wed,
- 28 Sep 2022 13:26:05 -0400 (EDT)
-From:   Will Chandler <wfc@wfchandler.org>
-To:     John Garry <john.garry@huawei.com>
-Cc:     peterz@infradead.org, mingo@redhat.com, acme@kernel.org,
-        mark.rutland@arm.com, alexander.shishkin@linux.intel.com,
-        jolsa@kernel.org, namhyung@kernel.org,
-        linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] perf tools: Fix empty version number when building outside of a git repo
-Date:   Wed, 28 Sep 2022 13:26:04 -0400
-X-Mailer: MailMate (1.14r5852)
-Message-ID: <87A1F5B6-3F60-4988-8BA6-A993E5789C80@wfchandler.org>
-In-Reply-To: <c5181877-2998-b952-abe6-26d733ae2aeb@huawei.com>
-References: <20220927195228.47304-1-wfc@wfchandler.org>
- <c5181877-2998-b952-abe6-26d733ae2aeb@huawei.com>
+        Wed, 28 Sep 2022 18:36:43 -0400
+Received: from ams.source.kernel.org (ams.source.kernel.org [145.40.68.75])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 63F235FF64;
+        Wed, 28 Sep 2022 15:36:09 -0700 (PDT)
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by ams.source.kernel.org (Postfix) with ESMTPS id DEA4FB82146;
+        Wed, 28 Sep 2022 22:36:06 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 50F51C433C1;
+        Wed, 28 Sep 2022 22:36:04 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1664404565;
+        bh=3ZkYJjVGuAToHzBzl/eiZQGP9nl9Lz8aoqrcQ6zQ2uM=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=qtKvpq/MUwe5t3E4qnfpcWmZ+pcS4X4n2SsF/DqlSmrRrDWMnk/FLftXgyTKLbd3m
+         vf5onz4ySjHSRPWg90lJAptiotaelTd1i/CYikPGvR6S3fjnLg44rhwRDmZhL8vWft
+         8fgBaB/JZ0fJBXAIQAphj/RKrXXvh8tAme/Te94gYrUrSm+2/10sIdAi1sGA/GoFb+
+         w+E0XnEn4LevLs1JvLEaqDFEflvwhWNXQTRpQn++dtp5R3F4x8n3l6DyEkl79MWEOr
+         fcM/sZ3XXaO2EUoP/Kkt8FDn9nNMAUDD7J0uENSVy0/jAtD0M4sYt0aC3VwCNTKLHB
+         y8OuB2Bu+VdNw==
+Date:   Wed, 28 Sep 2022 15:36:02 -0700
+From:   Nathan Chancellor <nathan@kernel.org>
+To:     Florian Fainelli <f.fainelli@gmail.com>
+Cc:     linux-kernel@vger.kernel.org,
+        Matt Redfearn <matt.redfearn@mips.com>,
+        Petr =?utf-8?B?VmFuxJtr?= <arkamar@atlas.cz>,
+        Nick Desaulniers <ndesaulniers@google.com>,
+        Tom Rix <trix@redhat.com>, Justin Stitt <jstitt007@gmail.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Denys Vlasenko <dvlasenk@redhat.com>,
+        Ingo Molnar <mingo@kernel.org>,
+        "open list:CLANG/LLVM BUILD SUPPORT" <llvm@lists.linux.dev>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        Arnaldo Carvalho de Melo <acme@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Jiri Olsa <jolsa@kernel.org>,
+        Namhyung Kim <namhyung@kernel.org>,
+        "open list:PERFORMANCE EVENTS SUBSYSTEM" 
+        <linux-perf-users@vger.kernel.org>, mmayer@broadcom.com,
+        Khem Raj <raj.khem@gmail.com>,
+        Philippe Ombredanne <pombredanne@nexb.com>,
+        Kate Stewart <kstewart@linuxfoundation.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Thomas Gleixner <tglx@linutronix.de>
+Subject: Re: [PATCH] include/uapi/linux/swab: Fix potentially missing
+ __always_inline
+Message-ID: <YzTMUpd6HbHmZu8f@dev-arch.thelio-3990X>
+References: <20220927215256.528619-1-f.fainelli@gmail.com>
 MIME-Version: 1.0
-Content-Type: text/plain
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20220927215256.528619-1-f.fainelli@gmail.com>
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-On 28 Sep 2022, at 5:21, John Garry wrote:
+Hi Florian,
 
-> This looks ok. But did you consider going back to same flow as pre-7572=
-733b8499 to avoid a Makefile check, like:
->
-> ---8<----
->
-> CID=3D
-> TAG=3D
-> if test -d ../../.git -o -f ../../.git
-> then
-> TAG=3D$(MAKEFLAGS=3D make -sC ../.. kernelversion)
-> CID=3D$(git log -1 --abbrev=3D12 --pretty=3Dformat:"%h" 2>/dev/null) &&=
- CID=3D"-g$CID"
-> elif test -f ../../PERF-VERSION-FILE
-> then
-> TAG=3D$(cut -d' ' -f3 ../../PERF-VERSION-FILE | sed -e 's/\"//g')
-> fi
-> if test -z "$TAG"
-> then
-> TAG=3D$(MAKEFLAGS=3D make -sC ../.. kernelversion)
-> fi
->
-> --->8---
->
-> The evaluation for $TAG is not really needed in the first leg since the=
- fallback does the same thing, but just added for clarity.
+On Tue, Sep 27, 2022 at 02:52:56PM -0700, Florian Fainelli wrote:
+> From: Matt Redfearn <matt.redfearn@mips.com>
+> 
+> Commit bc27fb68aaad ("include/uapi/linux/byteorder, swab: force inlining
+> of some byteswap operations") added __always_inline to swab functions
+> and commit 283d75737837 ("uapi/linux/stddef.h: Provide __always_inline to
+> userspace headers") added a definition of __always_inline for use in
+> exported headers when the kernel's compiler.h is not available.
+> 
+> However, since swab.h does not include stddef.h, if the header soup does
+> not indirectly include it, the definition of __always_inline is missing,
+> resulting in a compilation failure, which was observed compiling the
+> perf tool using exported headers containing this commit:
+> 
+> In file included from /usr/include/linux/byteorder/little_endian.h:12:0,
+>                  from /usr/include/asm/byteorder.h:14,
+>                  from tools/include/uapi/linux/perf_event.h:20,
+>                  from perf.h:8,
+>                  from builtin-bench.c:18:
+> /usr/include/linux/swab.h:160:8: error: unknown type name `__always_inline'
+>  static __always_inline __u16 __swab16p(const __u16 *p)
+> 
+> Fix this by replacing the inclusion of linux/compiler.h with
+> linux/stddef.h to ensure that we pick up that definition if required,
+> without relying on it's indirect inclusion. compiler.h is then included
+> indirectly, via stddef.h.
+> 
+> Fixes: 283d75737837 ("uapi/linux/stddef.h: Provide __always_inline to userspace headers")
+> Signed-off-by: Matt Redfearn <matt.redfearn@mips.com>
+> Reviewed-by: Petr Vaněk <arkamar@atlas.cz>
+> Signed-off-by: Florian Fainelli <f.fainelli@gmail.com>
 
-I think that would be fine as well. I don't have a strong opinion on whic=
-h one
-is easier to follow.
+I took this through my kernel build matrix and did not see any new
+issues.
 
-Looking at this more closely, there is a slight difference between the tw=
-o
-approaches. In the problem scenario my patch will always use `make kernel=
-version`,
-while pre-7572733b8499 starts with PERF-VERSION-FILE if available, fallin=
-g
-back to the Makefile.
+Tested-by: Nathan Chancellor <nathan@kernel.org>
 
-With the old approach PERF-VERSION-FILE could be used to manually
-override the version, but this is inconsistent with how the version is
-generated when building in a git repo. Is this relevant?
+Cheers,
+Nathan
 
+> ---
+> Apologies for the insanely long CC list. I encountered this problem
+> again while attempting to build perf with a LLVM 13 toolchain using
+> musl-libc. Not sure why it did not get picked up last time?
+> 
+> Khem did submit an alternative patch a few years ago, too which also did
+> not get picked up:
+> 
+> https://lore.kernel.org/lkml/20180913005654.39976-1-raj.khem@gmail.com/
+> 
+>  include/uapi/linux/swab.h | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+> 
+> diff --git a/include/uapi/linux/swab.h b/include/uapi/linux/swab.h
+> index 0723a9cce747..01717181339e 100644
+> --- a/include/uapi/linux/swab.h
+> +++ b/include/uapi/linux/swab.h
+> @@ -3,7 +3,7 @@
+>  #define _UAPI_LINUX_SWAB_H
+>  
+>  #include <linux/types.h>
+> -#include <linux/compiler.h>
+> +#include <linux/stddef.h>
+>  #include <asm/bitsperlong.h>
+>  #include <asm/swab.h>
+>  
+> -- 
+> 2.25.1
+> 
+> 
