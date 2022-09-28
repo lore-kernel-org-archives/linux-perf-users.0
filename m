@@ -2,32 +2,32 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 352DBC32771
-	for <linux-perf-users@archiver.kernel.org>; Wed, 28 Sep 2022 14:49:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B969CC32771
+	for <linux-perf-users@archiver.kernel.org>; Wed, 28 Sep 2022 14:52:03 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S234495AbiI1Oto (ORCPT
+        id S231919AbiI1OwB (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Wed, 28 Sep 2022 10:49:44 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40126 "EHLO
+        Wed, 28 Sep 2022 10:52:01 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43224 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S234474AbiI1Oti (ORCPT
+        with ESMTP id S234562AbiI1Ovm (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Wed, 28 Sep 2022 10:49:38 -0400
+        Wed, 28 Sep 2022 10:51:42 -0400
 Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTP id 9DCFDDBA;
-        Wed, 28 Sep 2022 07:49:32 -0700 (PDT)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTP id 90223B2CE7;
+        Wed, 28 Sep 2022 07:51:29 -0700 (PDT)
 Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 69DD823A;
-        Wed, 28 Sep 2022 07:49:38 -0700 (PDT)
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 3129D23A;
+        Wed, 28 Sep 2022 07:51:35 -0700 (PDT)
 Received: from [10.57.0.129] (unknown [10.57.0.129])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id EB8703F73D;
-        Wed, 28 Sep 2022 07:49:29 -0700 (PDT)
-Message-ID: <470e79ec-201b-6081-d31c-f5a9dee7a9ae@arm.com>
-Date:   Wed, 28 Sep 2022 15:49:28 +0100
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 9B0AD3F73D;
+        Wed, 28 Sep 2022 07:51:26 -0700 (PDT)
+Message-ID: <8c857c8e-7378-5a3d-66a9-7372902ed0a5@arm.com>
+Date:   Wed, 28 Sep 2022 15:51:25 +0100
 MIME-Version: 1.0
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
  Thunderbird/91.11.0
-Subject: Re: [PATCH 4/6] perf stat: Use thread map index for shadow stat
+Subject: Re: [PATCH 5/6] perf stat: Kill unused per-thread runtime stats
 Content-Language: en-US
 To:     Namhyung Kim <namhyung@kernel.org>
 Cc:     Ingo Molnar <mingo@kernel.org>,
@@ -42,9 +42,9 @@ Cc:     Ingo Molnar <mingo@kernel.org>,
         Arnaldo Carvalho de Melo <acme@kernel.org>,
         Jiri Olsa <jolsa@kernel.org>
 References: <20220926200757.1161448-1-namhyung@kernel.org>
- <20220926200757.1161448-5-namhyung@kernel.org>
+ <20220926200757.1161448-6-namhyung@kernel.org>
 From:   James Clark <james.clark@arm.com>
-In-Reply-To: <20220926200757.1161448-5-namhyung@kernel.org>
+In-Reply-To: <20220926200757.1161448-6-namhyung@kernel.org>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 Precedence: bulk
@@ -54,96 +54,129 @@ X-Mailing-List: linux-perf-users@vger.kernel.org
 
 
 On 26/09/2022 21:07, Namhyung Kim wrote:
-> When AGGR_THREAD is active, it aggregates the values for each thread.
-> Previously it used cpu map index which is invalid for AGGR_THREAD so
-> it had to use separate runtime stats with index 0.
-> 
-> But it can just use the rt_stat with thread_map_index.  Rename the
-> first_shadow_map_idx() and make it return the thread index.
+> Now it's using the global rt_stat, no need to use per-thread stats.  Let
+> get rid of them.
 > 
 > Signed-off-by: Namhyung Kim <namhyung@kernel.org>
 > ---
->  tools/perf/util/stat-display.c | 20 +++++++++-----------
->  tools/perf/util/stat.c         |  8 ++------
->  2 files changed, 11 insertions(+), 17 deletions(-)
+>  tools/perf/builtin-stat.c | 54 ---------------------------------------
+>  tools/perf/util/stat.h    |  2 --
+>  2 files changed, 56 deletions(-)
 
 Reviewed-by: James Clark <james.clark@arm.com>
 > 
-> diff --git a/tools/perf/util/stat-display.c b/tools/perf/util/stat-display.c
-> index 234491f43c36..570e2c04d47d 100644
-> --- a/tools/perf/util/stat-display.c
-> +++ b/tools/perf/util/stat-display.c
-> @@ -442,7 +442,7 @@ static void print_metric_header(struct perf_stat_config *config,
->  		fprintf(os->fh, "%*s ", config->metric_only_len, unit);
+> diff --git a/tools/perf/builtin-stat.c b/tools/perf/builtin-stat.c
+> index e05fe72c1d87..b86ebb25a799 100644
+> --- a/tools/perf/builtin-stat.c
+> +++ b/tools/perf/builtin-stat.c
+> @@ -292,13 +292,8 @@ static inline void diff_timespec(struct timespec *r, struct timespec *a,
+>  
+>  static void perf_stat__reset_stats(void)
+>  {
+> -	int i;
+> -
+>  	evlist__reset_stats(evsel_list);
+>  	perf_stat__reset_shadow_stats();
+> -
+> -	for (i = 0; i < stat_config.stats_num; i++)
+> -		perf_stat__reset_shadow_per_stat(&stat_config.stats[i]);
 >  }
 >  
-> -static int first_shadow_cpu_map_idx(struct perf_stat_config *config,
-> +static int first_shadow_map_idx(struct perf_stat_config *config,
->  				struct evsel *evsel, const struct aggr_cpu_id *id)
+>  static int process_synthesized_event(struct perf_tool *tool __maybe_unused,
+> @@ -489,46 +484,6 @@ static void read_counters(struct timespec *rs)
+>  	}
+>  }
+>  
+> -static int runtime_stat_new(struct perf_stat_config *config, int nthreads)
+> -{
+> -	int i;
+> -
+> -	config->stats = calloc(nthreads, sizeof(struct runtime_stat));
+> -	if (!config->stats)
+> -		return -1;
+> -
+> -	config->stats_num = nthreads;
+> -
+> -	for (i = 0; i < nthreads; i++)
+> -		runtime_stat__init(&config->stats[i]);
+> -
+> -	return 0;
+> -}
+> -
+> -static void runtime_stat_delete(struct perf_stat_config *config)
+> -{
+> -	int i;
+> -
+> -	if (!config->stats)
+> -		return;
+> -
+> -	for (i = 0; i < config->stats_num; i++)
+> -		runtime_stat__exit(&config->stats[i]);
+> -
+> -	zfree(&config->stats);
+> -}
+> -
+> -static void runtime_stat_reset(struct perf_stat_config *config)
+> -{
+> -	int i;
+> -
+> -	if (!config->stats)
+> -		return;
+> -
+> -	for (i = 0; i < config->stats_num; i++)
+> -		perf_stat__reset_shadow_per_stat(&config->stats[i]);
+> -}
+> -
+>  static void process_interval(void)
 >  {
->  	struct perf_cpu_map *cpus = evsel__cpus(evsel);
-> @@ -452,6 +452,9 @@ static int first_shadow_cpu_map_idx(struct perf_stat_config *config,
->  	if (config->aggr_mode == AGGR_NONE)
->  		return perf_cpu_map__idx(cpus, id->cpu);
+>  	struct timespec ts, rs;
+> @@ -537,7 +492,6 @@ static void process_interval(void)
+>  	diff_timespec(&rs, &ts, &ref_time);
 >  
-> +	if (config->aggr_mode == AGGR_THREAD)
-> +		return id->thread;
-> +
->  	if (!config->aggr_get_id)
->  		return 0;
+>  	perf_stat__reset_shadow_per_stat(&rt_stat);
+> -	runtime_stat_reset(&stat_config);
+>  	read_counters(&rs);
 >  
-> @@ -646,7 +649,7 @@ static void printout(struct perf_stat_config *config, struct aggr_cpu_id id, int
+>  	if (STAT_RECORD) {
+> @@ -1018,7 +972,6 @@ static int __run_perf_stat(int argc, const char **argv, int run_idx)
+>  
+>  		evlist__copy_prev_raw_counts(evsel_list);
+>  		evlist__reset_prev_raw_counts(evsel_list);
+> -		runtime_stat_reset(&stat_config);
+>  		perf_stat__reset_shadow_per_stat(&rt_stat);
+>  	} else {
+>  		update_stats(&walltime_nsecs_stats, t1 - t0);
+> @@ -2514,12 +2467,6 @@ int cmd_stat(int argc, const char **argv)
+>  	 */
+>  	if (stat_config.aggr_mode == AGGR_THREAD) {
+>  		thread_map__read_comms(evsel_list->core.threads);
+> -		if (target.system_wide) {
+> -			if (runtime_stat_new(&stat_config,
+> -				perf_thread_map__nr(evsel_list->core.threads))) {
+> -				goto out;
+> -			}
+> -		}
 >  	}
 >  
->  	perf_stat__print_shadow_stats(config, counter, uval,
-> -				first_shadow_cpu_map_idx(config, counter, &id),
-> +				first_shadow_map_idx(config, counter, &id),
->  				&out, &config->metric_events, st);
->  	if (!config->csv_output && !config->metric_only && !config->json_output) {
->  		print_noise(config, counter, noise);
-> @@ -676,7 +679,7 @@ static void aggr_update_shadow(struct perf_stat_config *config,
->  				val += perf_counts(counter->counts, idx, 0)->val;
->  			}
->  			perf_stat__update_shadow_stats(counter, val,
-> -					first_shadow_cpu_map_idx(config, counter, &id),
-> +					first_shadow_map_idx(config, counter, &id),
->  					&rt_stat);
->  		}
->  	}
-> @@ -979,14 +982,9 @@ static void print_aggr_thread(struct perf_stat_config *config,
->  			fprintf(output, "%s", prefix);
+>  	if (stat_config.aggr_mode == AGGR_NODE)
+> @@ -2660,7 +2607,6 @@ int cmd_stat(int argc, const char **argv)
+>  	evlist__delete(evsel_list);
 >  
->  		id = buf[thread].id;
-> -		if (config->stats)
-> -			printout(config, id, 0, buf[thread].counter, buf[thread].uval,
-> -				 prefix, buf[thread].run, buf[thread].ena, 1.0,
-> -				 &config->stats[id.thread]);
-> -		else
-> -			printout(config, id, 0, buf[thread].counter, buf[thread].uval,
-> -				 prefix, buf[thread].run, buf[thread].ena, 1.0,
-> -				 &rt_stat);
-> +		printout(config, id, 0, buf[thread].counter, buf[thread].uval,
-> +			 prefix, buf[thread].run, buf[thread].ena, 1.0,
-> +			 &rt_stat);
->  		fputc('\n', output);
->  	}
+>  	metricgroup__rblist_exit(&stat_config.metric_events);
+> -	runtime_stat_delete(&stat_config);
+>  	evlist__close_control(stat_config.ctl_fd, stat_config.ctl_fd_ack, &stat_config.ctl_fd_close);
 >  
-> diff --git a/tools/perf/util/stat.c b/tools/perf/util/stat.c
-> index e1d3152ce664..21137c9d5259 100644
-> --- a/tools/perf/util/stat.c
-> +++ b/tools/perf/util/stat.c
-> @@ -389,12 +389,8 @@ process_counter_values(struct perf_stat_config *config, struct evsel *evsel,
->  		}
->  
->  		if (config->aggr_mode == AGGR_THREAD) {
-> -			if (config->stats)
-> -				perf_stat__update_shadow_stats(evsel,
-> -					count->val, 0, &config->stats[thread]);
-> -			else
-> -				perf_stat__update_shadow_stats(evsel,
-> -					count->val, 0, &rt_stat);
-> +			perf_stat__update_shadow_stats(evsel, count->val,
-> +						       thread, &rt_stat);
->  		}
->  		break;
->  	case AGGR_GLOBAL:
+>  	return status;
+> diff --git a/tools/perf/util/stat.h b/tools/perf/util/stat.h
+> index 3eba38a1a149..43cb3f13d4d6 100644
+> --- a/tools/perf/util/stat.h
+> +++ b/tools/perf/util/stat.h
+> @@ -153,8 +153,6 @@ struct perf_stat_config {
+>  	int			 run_count;
+>  	int			 print_free_counters_hint;
+>  	int			 print_mixed_hw_group_error;
+> -	struct runtime_stat	*stats;
+> -	int			 stats_num;
+>  	const char		*csv_sep;
+>  	struct stats		*walltime_nsecs_stats;
+>  	struct rusage		 ru_data;
