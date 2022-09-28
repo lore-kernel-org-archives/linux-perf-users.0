@@ -2,56 +2,58 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AC9F7C04A95
-	for <linux-perf-users@archiver.kernel.org>; Wed, 28 Sep 2022 07:22:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C694AC6FA82
+	for <linux-perf-users@archiver.kernel.org>; Wed, 28 Sep 2022 07:22:29 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233499AbiI1HW0 (ORCPT
+        id S233502AbiI1HW2 (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Wed, 28 Sep 2022 03:22:26 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50528 "EHLO
+        Wed, 28 Sep 2022 03:22:28 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50560 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S233497AbiI1HWM (ORCPT
+        with ESMTP id S233467AbiI1HWO (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Wed, 28 Sep 2022 03:22:12 -0400
+        Wed, 28 Sep 2022 03:22:14 -0400
 Received: from mail-yb1-xb4a.google.com (mail-yb1-xb4a.google.com [IPv6:2607:f8b0:4864:20::b4a])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A216DD4AB9
-        for <linux-perf-users@vger.kernel.org>; Wed, 28 Sep 2022 00:22:09 -0700 (PDT)
-Received: by mail-yb1-xb4a.google.com with SMTP id m131-20020a252689000000b006b2bf1dd88cso10694676ybm.19
-        for <linux-perf-users@vger.kernel.org>; Wed, 28 Sep 2022 00:22:09 -0700 (PDT)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 831AAD4DC1
+        for <linux-perf-users@vger.kernel.org>; Wed, 28 Sep 2022 00:22:12 -0700 (PDT)
+Received: by mail-yb1-xb4a.google.com with SMTP id t6-20020a25b706000000b006b38040b6f7so10589787ybj.6
+        for <linux-perf-users@vger.kernel.org>; Wed, 28 Sep 2022 00:22:12 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=google.com; s=20210112;
-        h=cc:to:from:subject:mime-version:message-id:date:from:to:cc:subject
-         :date;
-        bh=0AguHWUqCM3gW3iXUKABpI6T6cvY8qPG4vl+F0YOUJk=;
-        b=ACycKxPl5RxTPVOjOf3fgMkLiXaXBE+FzRdLcjmw1b/8wADvw8CPEnD2nkMo2/PT5U
-         pJZwIyKXobrBLp+ZbpHGv501tJR+e1SQHPnaYNXc7E4O55288UMCtivWt1MeW+uhfJ1e
-         duAycnkus3z51GhUyPzBVLLZXfnN0okVl1H7emzRbUwU+PXYV4bQFkmGD2kTkKl8EUop
-         mgmmQeY/VpCBe8k5mtA6VnXofEl7QhkJjubDNXTiYsAChWrLANsUGF0ydkdwJMLXVaHQ
-         +aKA5u5drU5nI+Nki39vOfQM11/sIM8UZWmV7MCa9aevgnZoQcAyR6xJuLne5OZygGMJ
-         /PLw==
+        h=cc:to:from:subject:references:mime-version:message-id:in-reply-to
+         :date:from:to:cc:subject:date;
+        bh=81iZD/KjBhpoeGQ+S/uNTxM+rkrd0csqvOOXWQp9mO4=;
+        b=K3aj25mQeCEr67uzUal1vZWSNL6qtA3SQhrPK8U5dF7hwoHRLqnvYRv6mkJz7sptW9
+         wYP53BLVqDd5BDYrkADheENe4FDfqyL6Em4XbZ6Jn47U2LekEALv8y73woLiDkf2S5Cn
+         H/3TrP4uYNREs6b70Y4XRVrt0O8ld3nOK7QbSI7p3w90Q/vOVEwAUBa7/sPtMXqrfypj
+         fcT1vRKaMJunHNFEaClbrljCxMKvZE9qhV4pELO6sazMfNTKkdTdzX3uZ8UQ6yglfcLk
+         hBoM2nM5t9gezq8RLq2OkuZK9vXZ3CeCuEDUHunkmL+j1nm+mjZIA+KN5m7hKFAM7Jwj
+         hiDg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=cc:to:from:subject:mime-version:message-id:date:x-gm-message-state
-         :from:to:cc:subject:date;
-        bh=0AguHWUqCM3gW3iXUKABpI6T6cvY8qPG4vl+F0YOUJk=;
-        b=4GuaDEz/r+De7AM22/l5fD28wjuagQ6WaoQBydEud6i40aZbgHp2rTEsgtJkekMYCI
-         vk3Lv84QenCU1de+dl2slmpaDvMygh+hlbtg1b7+qH3uKi6uMYF/9BF9/zhgXQtwCyIW
-         /BryyRGHqqt+rC1rXWf5ZTxfasm/jva63b7Ngt3jumPQEfHqOBENwd6+AmK41RY3I7Lw
-         QtxJCcFHd6YZGfpNhYhHIuI0metRimsY0r9/CghdWg17XFzjE5qNoymjC+ilgXLMdG59
-         A0ywrVmROZNdk+DOd8+G3xmysNlFEAlAPik3PMaasSB6qke+tncoRL9pvBihkx3hX99R
-         fvUw==
-X-Gm-Message-State: ACrzQf2FvumVooIVCGYV8Wl5QjBPaV0ScmSXtFA06L4PpMHKFQhQp0n/
-        +dMa6nFwudwQoyH5iPvqkv8U63j0ONnu
-X-Google-Smtp-Source: AMsMyM40GrNVYExtcDIsey17wAZVlpgtol9KDHZviKRwgr4mepnk90erEMBqYZDAQxUdoPHRdzCUTd8CkbRl
+        h=cc:to:from:subject:references:mime-version:message-id:in-reply-to
+         :date:x-gm-message-state:from:to:cc:subject:date;
+        bh=81iZD/KjBhpoeGQ+S/uNTxM+rkrd0csqvOOXWQp9mO4=;
+        b=v59Dz6WcJxWysGeVFPRk5NroQS6ephYLK00ONPy5kpqDnoD9X50/awJzkz+WTFeFLn
+         AekbySCGIzeMn7mwP6KP89SGzmCtlq1rYP4isjS+fl7zZsfpxNOpcyJaUFoFNlUOxb9d
+         1CI2oHicKD64esXUiSM7aUWhR4CB1ienu7jeolb/j7O7AHIly3pfcHNBgWCY4Y6ST9ZN
+         eoAm9HAQFg5a7SRWeMeLC3zrXaaclK6e5RtNNhPvF1HwS79av4x/BzYgYN0iBr0tASCb
+         KN0jyKdBTiD8VQ6zuaqXTYMUpNBTeJndGFqr7h71YE+hubMbg/ZfRLGBvk4bcok59xbC
+         E8lQ==
+X-Gm-Message-State: ACrzQf22XveBf679r/R+qlBDolu7uk3PO4pRW3O57QpoEFrJy7qFQe8X
+        aUUuoVm9Q8bTrVGfV9kqIo8D1xb8eaX9
+X-Google-Smtp-Source: AMsMyM4pWVB4K24YlTjfeGCB3I8vBwx5hoxpcRGrFbJzi+ituvNUwmpKc0ywXnoo/vg6CS0JLNeJ9vPHFilX
 X-Received: from irogers.svl.corp.google.com ([2620:15c:2d4:203:7099:1ccb:612a:5ad6])
- (user=irogers job=sendgmr) by 2002:a81:186:0:b0:34c:d27f:b9b0 with SMTP id
- 128-20020a810186000000b0034cd27fb9b0mr29670112ywb.481.1664349728864; Wed, 28
- Sep 2022 00:22:08 -0700 (PDT)
-Date:   Wed, 28 Sep 2022 00:21:42 -0700
-Message-Id: <20220928072204.1613330-1-irogers@google.com>
+ (user=irogers job=sendgmr) by 2002:a81:8606:0:b0:349:17ad:6998 with SMTP id
+ w6-20020a818606000000b0034917ad6998mr29184875ywf.409.1664349731475; Wed, 28
+ Sep 2022 00:22:11 -0700 (PDT)
+Date:   Wed, 28 Sep 2022 00:21:43 -0700
+In-Reply-To: <20220928072204.1613330-1-irogers@google.com>
+Message-Id: <20220928072204.1613330-2-irogers@google.com>
 Mime-Version: 1.0
+References: <20220928072204.1613330-1-irogers@google.com>
 X-Mailer: git-send-email 2.37.3.998.g577e59143f-goog
-Subject: [PATCH v1 00/22] Improvements to Intel perf metrics
+Subject: [PATCH v1 01/22] perf expr: Allow a double if expression
 From:   Ian Rogers <irogers@google.com>
 To:     Zhengjun Xing <zhengjun.xing@linux.intel.com>,
         Kan Liang <kan.liang@linux.intel.com>,
@@ -79,116 +81,47 @@ Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-For consistency with:
-https://github.com/intel/perfmon-metrics
-rename of topdown TMA metrics from Frontend_Bound to tma_frontend_bound.
+Some TMA metrics have double if expressions like:
+( CPU_CLK_UNHALTED.THREAD / 2 ) * ( 1 + CPU_CLK_UNHALTED.ONE_THREAD_ACTIVE / CPU_CLK_UNHALTED.REF_XCLK ) ) if #core_wide < 1 else ( CPU_CLK_UNHALTED.THREAD_ANY / 2 ) if #SMT_on else CPU_CLK_UNHALTED.THREAD
+This currently fails to parse as the left hand side if expression needs
+to be in parentheses. By allowing the if expression to have a right hand
+side that is an if expression we can parse the expression above, with
+left to right evaluation order that matches languages like Python.
 
-Remove _SMT suffix metrics are dropped as the #SMT_On and #EBS_Mode
-are correctly expanded in the single main metric. Fix perf expr to
-allow a double if to be correctly processed.
+Signed-off-by: Ian Rogers <irogers@google.com>
+---
+ tools/perf/tests/expr.c | 4 ++++
+ tools/perf/util/expr.y  | 2 +-
+ 2 files changed, 5 insertions(+), 1 deletion(-)
 
-Add all 6 levels of TMA metrics. Child metrics are placed in a group
-named after their parent allowing children of a metric to be
-easily measured using the metric name with a _group suffix.
-
-Don't drop TMA metrics if they contain topdown events.
-
-The ## and ##? operators are correctly expanded.
-
-The locate-with column is added to the long description describing a
-sampling event.
-
-Metrics are written in terms of other metrics to reduce the expression
-size and increase readability.
-
-Following this the pmu-events/arch/x86 directories match those created
-by the script at:
-https://github.com/intel/event-converter-for-linux-perf/blob/master/download_and_gen.py
-with updates at:
-https://github.com/captain5050/event-converter-for-linux-perf
-
-Ian Rogers (22):
-  perf expr: Allow a double if expression
-  perf expr: Remove jevents case workaround
-  perf metrics: Don't scale counts going into metrics
-  perf vendor events: Update Intel skylakex
-  perf vendor events: Update Intel alderlake
-  perf vendor events: Update Intel broadwell
-  perf vendor events: Update Intel broadwellx
-  perf vendor events: Update Intel cascadelakex
-  perf vendor events: Update elkhartlake cpuids
-  perf vendor events: Update Intel haswell
-  perf vendor events: Update Intel haswellx
-  perf vendor events: Update Intel icelake
-  perf vendor events: Update Intel icelakex
-  perf vendor events: Update Intel ivybridge
-  perf vendor events: Update Intel ivytown
-  perf vendor events: Update Intel jaketown
-  perf vendor events: Update Intel sandybridge
-  perf vendor events: Update Intel sapphirerapids
-  perf vendor events: Update silvermont cpuids
-  perf vendor events: Update Intel skylake
-  perf vendor events: Update Intel tigerlake
-  perf vendor events: Update Intel broadwellde
-
- .../arch/x86/alderlake/adl-metrics.json       | 1215 ++++++++++++++++-
- .../pmu-events/arch/x86/alderlake/cache.json  |  129 +-
- .../arch/x86/alderlake/frontend.json          |   12 +
- .../pmu-events/arch/x86/alderlake/memory.json |   22 +
- .../pmu-events/arch/x86/alderlake/other.json  |   22 +
- .../arch/x86/alderlake/pipeline.json          |   14 +-
- .../arch/x86/broadwell/bdw-metrics.json       |  603 ++++++--
- .../arch/x86/broadwellde/bdwde-metrics.json   |  639 +++++++--
- .../arch/x86/broadwellx/bdx-metrics.json      |  644 +++++++--
- .../arch/x86/broadwellx/uncore-cache.json     |   10 +-
- .../x86/broadwellx/uncore-interconnect.json   |   18 +-
- .../arch/x86/broadwellx/uncore-memory.json    |   18 +-
- .../arch/x86/cascadelakex/clx-metrics.json    |  893 ++++++++----
- .../arch/x86/cascadelakex/uncore-memory.json  |   18 +-
- .../arch/x86/cascadelakex/uncore-other.json   |   10 +-
- .../pmu-events/arch/x86/haswell/cache.json    |    4 +-
- .../pmu-events/arch/x86/haswell/frontend.json |   12 +-
- .../arch/x86/haswell/hsw-metrics.json         |  502 +++++--
- .../pmu-events/arch/x86/haswellx/cache.json   |    2 +-
- .../arch/x86/haswellx/frontend.json           |   12 +-
- .../arch/x86/haswellx/hsx-metrics.json        |  707 +++++++---
- .../x86/haswellx/uncore-interconnect.json     |   18 +-
- .../arch/x86/haswellx/uncore-memory.json      |   18 +-
- .../pmu-events/arch/x86/icelake/cache.json    |    6 +-
- .../arch/x86/icelake/icl-metrics.json         |  725 +++++++++-
- .../pmu-events/arch/x86/icelake/pipeline.json |    2 +-
- .../pmu-events/arch/x86/icelakex/cache.json   |    6 +-
- .../arch/x86/icelakex/icx-metrics.json        |  794 ++++++++++-
- .../arch/x86/icelakex/pipeline.json           |    2 +-
- .../arch/x86/icelakex/uncore-other.json       |    2 +-
- .../arch/x86/ivybridge/ivb-metrics.json       |  525 +++++--
- .../pmu-events/arch/x86/ivytown/cache.json    |    4 +-
- .../arch/x86/ivytown/floating-point.json      |    2 +-
- .../pmu-events/arch/x86/ivytown/frontend.json |   18 +-
- .../arch/x86/ivytown/ivt-metrics.json         |  558 ++++++--
- .../arch/x86/ivytown/uncore-cache.json        |   58 +-
- .../arch/x86/ivytown/uncore-interconnect.json |   84 +-
- .../arch/x86/ivytown/uncore-memory.json       |    2 +-
- .../arch/x86/ivytown/uncore-other.json        |    6 +-
- .../arch/x86/ivytown/uncore-power.json        |    8 +-
- .../arch/x86/jaketown/jkt-metrics.json        |  291 ++--
- tools/perf/pmu-events/arch/x86/mapfile.csv    |   18 +-
- .../arch/x86/sandybridge/snb-metrics.json     |  279 +++-
- .../arch/x86/sapphirerapids/cache.json        |    4 +-
- .../arch/x86/sapphirerapids/frontend.json     |   11 +
- .../arch/x86/sapphirerapids/pipeline.json     |    4 +-
- .../arch/x86/sapphirerapids/spr-metrics.json  |  858 +++++++++++-
- .../arch/x86/skylake/skl-metrics.json         |  774 ++++++++---
- .../arch/x86/skylakex/skx-metrics.json        |  859 +++++++++---
- .../arch/x86/skylakex/uncore-memory.json      |   18 +-
- .../arch/x86/skylakex/uncore-other.json       |   19 +-
- .../arch/x86/tigerlake/tgl-metrics.json       |  727 +++++++++-
- tools/perf/tests/expr.c                       |    4 +
- tools/perf/util/expr.c                        |   11 +-
- tools/perf/util/expr.y                        |    2 +-
- tools/perf/util/stat-shadow.c                 |    9 +-
- 56 files changed, 10103 insertions(+), 2129 deletions(-)
-
+diff --git a/tools/perf/tests/expr.c b/tools/perf/tests/expr.c
+index 8bd719766814..6512f5e22045 100644
+--- a/tools/perf/tests/expr.c
++++ b/tools/perf/tests/expr.c
+@@ -95,6 +95,10 @@ static int test__expr(struct test_suite *t __maybe_unused, int subtest __maybe_u
+ 	ret |= test(ctx, "min(1,2) + 1", 2);
+ 	ret |= test(ctx, "max(1,2) + 1", 3);
+ 	ret |= test(ctx, "1+1 if 3*4 else 0", 2);
++	ret |= test(ctx, "100 if 1 else 200 if 1 else 300", 100);
++	ret |= test(ctx, "100 if 0 else 200 if 1 else 300", 200);
++	ret |= test(ctx, "100 if 1 else 200 if 0 else 300", 100);
++	ret |= test(ctx, "100 if 0 else 200 if 0 else 300", 300);
+ 	ret |= test(ctx, "1.1 + 2.1", 3.2);
+ 	ret |= test(ctx, ".1 + 2.", 2.1);
+ 	ret |= test(ctx, "d_ratio(1, 2)", 0.5);
+diff --git a/tools/perf/util/expr.y b/tools/perf/util/expr.y
+index a30b825adb7b..635e562350c5 100644
+--- a/tools/perf/util/expr.y
++++ b/tools/perf/util/expr.y
+@@ -156,7 +156,7 @@ start: if_expr
+ }
+ ;
+ 
+-if_expr: expr IF expr ELSE expr
++if_expr: expr IF expr ELSE if_expr
+ {
+ 	if (fpclassify($3.val) == FP_ZERO) {
+ 		/*
 -- 
 2.37.3.998.g577e59143f-goog
 
