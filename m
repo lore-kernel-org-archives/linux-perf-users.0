@@ -2,59 +2,59 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 72CF9C04A95
-	for <linux-perf-users@archiver.kernel.org>; Wed, 28 Sep 2022 07:23:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 14018C32771
+	for <linux-perf-users@archiver.kernel.org>; Wed, 28 Sep 2022 07:23:40 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233521AbiI1HXO (ORCPT
+        id S233475AbiI1HXi (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Wed, 28 Sep 2022 03:23:14 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50456 "EHLO
+        Wed, 28 Sep 2022 03:23:38 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50958 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S233506AbiI1HW3 (ORCPT
+        with ESMTP id S232681AbiI1HWc (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Wed, 28 Sep 2022 03:22:29 -0400
-Received: from mail-yb1-xb49.google.com (mail-yb1-xb49.google.com [IPv6:2607:f8b0:4864:20::b49])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 58CACD4DD3
-        for <linux-perf-users@vger.kernel.org>; Wed, 28 Sep 2022 00:22:25 -0700 (PDT)
-Received: by mail-yb1-xb49.google.com with SMTP id k11-20020a5b038b000000b006bbf786c30aso5431536ybp.8
-        for <linux-perf-users@vger.kernel.org>; Wed, 28 Sep 2022 00:22:25 -0700 (PDT)
+        Wed, 28 Sep 2022 03:22:32 -0400
+Received: from mail-yb1-xb4a.google.com (mail-yb1-xb4a.google.com [IPv6:2607:f8b0:4864:20::b4a])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 15D65D4DF4
+        for <linux-perf-users@vger.kernel.org>; Wed, 28 Sep 2022 00:22:28 -0700 (PDT)
+Received: by mail-yb1-xb4a.google.com with SMTP id g6-20020a056902134600b006bbad6c9b78so496133ybu.0
+        for <linux-perf-users@vger.kernel.org>; Wed, 28 Sep 2022 00:22:28 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=google.com; s=20210112;
         h=content-transfer-encoding:cc:to:from:subject:references
          :mime-version:message-id:in-reply-to:date:from:to:cc:subject:date;
-        bh=qJFJ5k647ibK6bwZvQX5+D3nMFwqszkLixO/kAYLiY0=;
-        b=Gfp/5F2yV3XaRTOcKnNfQ2clncgd/rFRB2i+xNjXVUzXgKMVUC9ZvzLyk/OB6U4xJg
-         groZB0U2REgZr51lXq1WLwBOtI96dxJyxGorv6i0FDhG+0AH9vwJRdlqzbwapV4blOg+
-         By605DL2g0vzS6pRiBFE4iH65k5PpRwXja1nbTVx6zDTGt53tyEJTFhmca3krKhyIzz3
-         CynUH7/VLJrmShJRiPm2bkEpd4KH6J5OgDC/3cDQXF7aaEvJjBRWG7+exIS8zKCz/8QQ
-         +nnWcfJNkMyslaBOnAFEZ/fEdBZRrNWBXrFWSpvgRPJj45Iv4Z310ERfzOZLwr/uY+Bf
-         UP1Q==
+        bh=B3XTQZe4Zki7CLa6/3L/rQXXLS98bL51uxZi8Ypszsg=;
+        b=q2oSJ6DH0P1JCcv0BM5L14wztxl0kiubI+clIr6C02skFdyTyb/pVPLxUWD6LmovOq
+         tPcmDlo3Ejjbops63b9qd11DIwwHfYtsFm75Y9LijkG2ecwAOmzb3DHLG6Wk9xpPfrjU
+         EnfwecUsrdeD4H+JA141u9W0YMAyecI2Onxv+Q3f5pXcQzQgdQFT1E4buHmOmI4jYgRB
+         QRMhwv1RZNIuJDuw5z3a1Bo+wl9zXW2mxkMdfTpTI+rOh/XIHNtuLRnvvYdpbaTjAKxa
+         aDEza2Tmr6m4jpnM9UEkSE98L920YQPJUN08SE95iWBPBG0ezWSz68495C1IQM8N2ogv
+         yKxA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
         h=content-transfer-encoding:cc:to:from:subject:references
          :mime-version:message-id:in-reply-to:date:x-gm-message-state:from:to
          :cc:subject:date;
-        bh=qJFJ5k647ibK6bwZvQX5+D3nMFwqszkLixO/kAYLiY0=;
-        b=5/L7TrF19/laY0CWOIGet7O12PxuK2yZy9oRrzqSL2lH3axfFKtZf8M7732iUNv+hb
-         TkntbAo1opy1I1eM9ro57s9MKL58V5Yu6VL5itugbNrWeYhDWRXX5faED0dtsxh2C4Ux
-         yU4OdtNecWOy5opC+lga1JbK5OsYdBlrXE6cR++C7yfvTuAhhEn85Qq+jKY7+KjcfN67
-         SVgvZ3QZjXo21X5qfckUfbEa5s0raEqj7WymfNUb1ApW5OynDJeHEf+o7GvbK/J5CFaN
-         fKy6KJ+bFYM8Gi6adO2fdoKkEQIMts0/NdsQNWC7+CUaX9S1dhN+1DIdUTyh/LA77gJm
-         0wJQ==
-X-Gm-Message-State: ACrzQf3hSLx3wAM/fiw75CMDiD5jrA+HlGhwHEJbBMlsXgIVhi/DTiQJ
-        iL1buXqgHyTcKVgCEngTuD8A1trOoWae
-X-Google-Smtp-Source: AMsMyM4OotH7BuIcZeJbp/yi55qZ7w3k2mCWRlGd80cGP5niYjIuwHG5q1yI+MZwLgHXjq4i7OZwloaDbiN4
+        bh=B3XTQZe4Zki7CLa6/3L/rQXXLS98bL51uxZi8Ypszsg=;
+        b=O3xiXNdTc9e14WVP59slPLWrY8A6LcmUBVsQn7zz2+pu0lk/suTzvw1kx9r40Q67rg
+         QOIPwrd+FtPng/zcAdE0uk4CLr5Eh195MD9ypAKyG6n6Xfst2dCVqxyzzx27IXGorgY2
+         BQoe2Iad4IfzNdWcOgGVJQeF7wLzXNk4lZoBoqyp/9flRP/79v5wjgE6z9pfJW/NawEC
+         OPE/1fydQERFiIhqO4WvMvt6/9TwlM2LX9SWkL+B6Hwin/nEiSmck2G+e9Lpghrfvcae
+         vNXdH9fgITsJlNBkmHy4u6otAjk/OTY8HP5BSspbDn6719UOm5KersJv/mkeiQiUQv9V
+         uzRg==
+X-Gm-Message-State: ACrzQf3O8aypAu3lZ+AcVY5mnx9bvzaa2PaQoaU5KB9pj4uPC9jMBCYZ
+        w/SwIHpmf9wtvsjtT38VkMaTk413pGl0
+X-Google-Smtp-Source: AMsMyM6Mm7jlomF5Z//HH8pEOQZTL2ffXtBUneg63+sExz5OBiMlSwuI2IHGWt/U3PtAj+i/gGESE5pim8cR
 X-Received: from irogers.svl.corp.google.com ([2620:15c:2d4:203:7099:1ccb:612a:5ad6])
- (user=irogers job=sendgmr) by 2002:a0d:e60e:0:b0:351:d887:d651 with SMTP id
- p14-20020a0de60e000000b00351d887d651mr6849865ywe.43.1664349744571; Wed, 28
- Sep 2022 00:22:24 -0700 (PDT)
-Date:   Wed, 28 Sep 2022 00:21:48 -0700
+ (user=irogers job=sendgmr) by 2002:a5b:a44:0:b0:6b0:13b:c93b with SMTP id
+ z4-20020a5b0a44000000b006b0013bc93bmr31155225ybq.398.1664349747328; Wed, 28
+ Sep 2022 00:22:27 -0700 (PDT)
+Date:   Wed, 28 Sep 2022 00:21:49 -0700
 In-Reply-To: <20220928072204.1613330-1-irogers@google.com>
-Message-Id: <20220928072204.1613330-7-irogers@google.com>
+Message-Id: <20220928072204.1613330-8-irogers@google.com>
 Mime-Version: 1.0
 References: <20220928072204.1613330-1-irogers@google.com>
 X-Mailer: git-send-email 2.37.3.998.g577e59143f-goog
-Subject: [PATCH v1 06/22] perf vendor events: Update Intel broadwell
+Subject: [PATCH v1 07/22] perf vendor events: Update Intel broadwellx
 From:   Ian Rogers <irogers@google.com>
 To:     Zhengjun Xing <zhengjun.xing@linux.intel.com>,
         Kan Liang <kan.liang@linux.intel.com>,
@@ -83,7 +83,7 @@ Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-Events remain at v26, and the metrics are based on TMA 4.4 full.
+Events remain at v19, and the metrics are based on TMA 4.4 full.
 
 Use script at:
 https://github.com/intel/event-converter-for-linux-perf/blob/master/downloa=
@@ -92,6 +92,7 @@ with updates at:
 https://github.com/captain5050/event-converter-for-linux-perf
 
 Updates include:
+ - Uncore event updates by Zhengjun Xing <zhengjun.xing@linux.intel.com>.
  - Rename of topdown TMA metrics from Frontend_Bound to tma_frontend_bound.
  - _SMT suffix metrics are dropped as the #SMT_On and #EBS_Mode are
    correctly expanded in the single main metric.
@@ -113,15 +114,18 @@ Tested with 'perf test':
 
 Signed-off-by: Ian Rogers <irogers@google.com>
 ---
- .../arch/x86/broadwell/bdw-metrics.json       | 603 ++++++++++++++----
- 1 file changed, 492 insertions(+), 111 deletions(-)
+ .../arch/x86/broadwellx/bdx-metrics.json      | 644 ++++++++++++++----
+ .../arch/x86/broadwellx/uncore-cache.json     |  10 +-
+ .../x86/broadwellx/uncore-interconnect.json   |  18 +-
+ .../arch/x86/broadwellx/uncore-memory.json    |  18 +-
+ 4 files changed, 543 insertions(+), 147 deletions(-)
 
-diff --git a/tools/perf/pmu-events/arch/x86/broadwell/bdw-metrics.json b/to=
-ols/perf/pmu-events/arch/x86/broadwell/bdw-metrics.json
-index d65afe3d0b06..2544dc088e20 100644
---- a/tools/perf/pmu-events/arch/x86/broadwell/bdw-metrics.json
-+++ b/tools/perf/pmu-events/arch/x86/broadwell/bdw-metrics.json
-@@ -1,64 +1,482 @@
+diff --git a/tools/perf/pmu-events/arch/x86/broadwellx/bdx-metrics.json b/t=
+ools/perf/pmu-events/arch/x86/broadwellx/bdx-metrics.json
+index a3a15ee52841..3b5e36dd72e2 100644
+--- a/tools/perf/pmu-events/arch/x86/broadwellx/bdx-metrics.json
++++ b/tools/perf/pmu-events/arch/x86/broadwellx/bdx-metrics.json
+@@ -1,64 +1,503 @@
  [
      {
          "BriefDescription": "This category represents fraction of slots wh=
@@ -608,11 +612,15 @@ ses",
 + mem_load_uops_retired.hit_lfb / ((MEM_LOAD_UOPS_RETIRED.L2_HIT + MEM_LOAD=
 _UOPS_RETIRED.L3_HIT + MEM_LOAD_UOPS_L3_HIT_RETIRED.XSNP_HIT + MEM_LOAD_UOP=
 S_L3_HIT_RETIRED.XSNP_HITM + MEM_LOAD_UOPS_L3_HIT_RETIRED.XSNP_MISS) + MEM_=
-LOAD_UOPS_RETIRED.L3_MISS))) + 43 * (MEM_LOAD_UOPS_L3_HIT_RETIRED.XSNP_MISS=
- * (1 + mem_load_uops_retired.hit_lfb / ((MEM_LOAD_UOPS_RETIRED.L2_HIT + ME=
-M_LOAD_UOPS_RETIRED.L3_HIT + MEM_LOAD_UOPS_L3_HIT_RETIRED.XSNP_HIT + MEM_LO=
-AD_UOPS_L3_HIT_RETIRED.XSNP_HITM + MEM_LOAD_UOPS_L3_HIT_RETIRED.XSNP_MISS) =
-+ MEM_LOAD_UOPS_RETIRED.L3_MISS)))) / CLKS",
+LOAD_UOPS_L3_MISS_RETIRED.LOCAL_DRAM + MEM_LOAD_UOPS_L3_MISS_RETIRED.REMOTE=
+_DRAM + MEM_LOAD_UOPS_L3_MISS_RETIRED.REMOTE_HITM + MEM_LOAD_UOPS_L3_MISS_R=
+ETIRED.REMOTE_FWD))) + 43 * (MEM_LOAD_UOPS_L3_HIT_RETIRED.XSNP_MISS * (1 + =
+mem_load_uops_retired.hit_lfb / ((MEM_LOAD_UOPS_RETIRED.L2_HIT + MEM_LOAD_U=
+OPS_RETIRED.L3_HIT + MEM_LOAD_UOPS_L3_HIT_RETIRED.XSNP_HIT + MEM_LOAD_UOPS_=
+L3_HIT_RETIRED.XSNP_HITM + MEM_LOAD_UOPS_L3_HIT_RETIRED.XSNP_MISS) + MEM_LO=
+AD_UOPS_L3_MISS_RETIRED.LOCAL_DRAM + MEM_LOAD_UOPS_L3_MISS_RETIRED.REMOTE_D=
+RAM + MEM_LOAD_UOPS_L3_MISS_RETIRED.REMOTE_HITM + MEM_LOAD_UOPS_L3_MISS_RET=
+IRED.REMOTE_FWD)))) / CLKS",
 +        "MetricGroup": "DataSharing;Offcore;Snoop;TopdownL4;tma_l3_bound_g=
 roup",
 +        "MetricName": "tma_contested_accesses",
@@ -632,7 +640,9 @@ cesses",
 mem_load_uops_retired.hit_lfb / ((MEM_LOAD_UOPS_RETIRED.L2_HIT + MEM_LOAD_U=
 OPS_RETIRED.L3_HIT + MEM_LOAD_UOPS_L3_HIT_RETIRED.XSNP_HIT + MEM_LOAD_UOPS_=
 L3_HIT_RETIRED.XSNP_HITM + MEM_LOAD_UOPS_L3_HIT_RETIRED.XSNP_MISS) + MEM_LO=
-AD_UOPS_RETIRED.L3_MISS))) / CLKS",
+AD_UOPS_L3_MISS_RETIRED.LOCAL_DRAM + MEM_LOAD_UOPS_L3_MISS_RETIRED.REMOTE_D=
+RAM + MEM_LOAD_UOPS_L3_MISS_RETIRED.REMOTE_HITM + MEM_LOAD_UOPS_L3_MISS_RET=
+IRED.REMOTE_FWD))) / CLKS",
 +        "MetricGroup": "Offcore;Snoop;TopdownL4;tma_l3_bound_group",
 +        "MetricName": "tma_data_sharing",
 +        "PublicDescription": "This metric estimates fraction of cycles whi=
@@ -646,11 +656,13 @@ AD_L3_HIT_RETIRED.XSNP_HIT_PS"
 +        "BriefDescription": "This metric represents fraction of cycles wit=
 h demand load accesses that hit the L3 cache under unloaded scenarios (poss=
 ibly L3 latency limited)",
-+        "MetricExpr": "29 * (MEM_LOAD_UOPS_RETIRED.L3_HIT * (1 + mem_load_=
++        "MetricExpr": "41 * (MEM_LOAD_UOPS_RETIRED.L3_HIT * (1 + mem_load_=
 uops_retired.hit_lfb / ((MEM_LOAD_UOPS_RETIRED.L2_HIT + MEM_LOAD_UOPS_RETIR=
 ED.L3_HIT + MEM_LOAD_UOPS_L3_HIT_RETIRED.XSNP_HIT + MEM_LOAD_UOPS_L3_HIT_RE=
-TIRED.XSNP_HITM + MEM_LOAD_UOPS_L3_HIT_RETIRED.XSNP_MISS) + MEM_LOAD_UOPS_R=
-ETIRED.L3_MISS))) / CLKS",
+TIRED.XSNP_HITM + MEM_LOAD_UOPS_L3_HIT_RETIRED.XSNP_MISS) + MEM_LOAD_UOPS_L=
+3_MISS_RETIRED.LOCAL_DRAM + MEM_LOAD_UOPS_L3_MISS_RETIRED.REMOTE_DRAM + MEM=
+_LOAD_UOPS_L3_MISS_RETIRED.REMOTE_HITM + MEM_LOAD_UOPS_L3_MISS_RETIRED.REMO=
+TE_FWD))) / CLKS",
 +        "MetricGroup": "MemoryLat;TopdownL4;tma_l3_bound_group",
 +        "MetricName": "tma_l3_hit_latency",
 +        "PublicDescription": "This metric represents fraction of cycles wi=
@@ -718,6 +730,66 @@ M).  This metric does not aggregate requests from other Logical Processors/=
 Physical Cores/sockets (see Uncore counters for that)."
 +    },
 +    {
++        "BriefDescription": "This metric estimates fraction of cycles whil=
+e the memory subsystem was handling loads from local memory",
++        "MetricExpr": "200 * (MEM_LOAD_UOPS_L3_MISS_RETIRED.LOCAL_DRAM * (=
+1 + mem_load_uops_retired.hit_lfb / ((MEM_LOAD_UOPS_RETIRED.L2_HIT + MEM_LO=
+AD_UOPS_RETIRED.L3_HIT + MEM_LOAD_UOPS_L3_HIT_RETIRED.XSNP_HIT + MEM_LOAD_U=
+OPS_L3_HIT_RETIRED.XSNP_HITM + MEM_LOAD_UOPS_L3_HIT_RETIRED.XSNP_MISS) + ME=
+M_LOAD_UOPS_L3_MISS_RETIRED.LOCAL_DRAM + MEM_LOAD_UOPS_L3_MISS_RETIRED.REMO=
+TE_DRAM + MEM_LOAD_UOPS_L3_MISS_RETIRED.REMOTE_HITM + MEM_LOAD_UOPS_L3_MISS=
+_RETIRED.REMOTE_FWD))) / CLKS",
++        "MetricGroup": "Server;TopdownL5;tma_mem_latency_group",
++        "MetricName": "tma_local_dram",
++        "PublicDescription": "This metric estimates fraction of cycles whi=
+le the memory subsystem was handling loads from local memory. Caching will =
+improve the latency and increase performance. Sample with: MEM_LOAD_UOPS_L3=
+_MISS_RETIRED.LOCAL_DRAM_PS"
++    },
++    {
++        "BriefDescription": "This metric estimates fraction of cycles whil=
+e the memory subsystem was handling loads from remote memory",
++        "MetricExpr": "310 * (MEM_LOAD_UOPS_L3_MISS_RETIRED.REMOTE_DRAM * =
+(1 + mem_load_uops_retired.hit_lfb / ((MEM_LOAD_UOPS_RETIRED.L2_HIT + MEM_L=
+OAD_UOPS_RETIRED.L3_HIT + MEM_LOAD_UOPS_L3_HIT_RETIRED.XSNP_HIT + MEM_LOAD_=
+UOPS_L3_HIT_RETIRED.XSNP_HITM + MEM_LOAD_UOPS_L3_HIT_RETIRED.XSNP_MISS) + M=
+EM_LOAD_UOPS_L3_MISS_RETIRED.LOCAL_DRAM + MEM_LOAD_UOPS_L3_MISS_RETIRED.REM=
+OTE_DRAM + MEM_LOAD_UOPS_L3_MISS_RETIRED.REMOTE_HITM + MEM_LOAD_UOPS_L3_MIS=
+S_RETIRED.REMOTE_FWD))) / CLKS",
++        "MetricGroup": "Server;Snoop;TopdownL5;tma_mem_latency_group",
++        "MetricName": "tma_remote_dram",
++        "PublicDescription": "This metric estimates fraction of cycles whi=
+le the memory subsystem was handling loads from remote memory. This is caus=
+ed often due to non-optimal NUMA allocations. #link to NUMA article Sample =
+with: MEM_LOAD_UOPS_L3_MISS_RETIRED.REMOTE_DRAM_PS"
++    },
++    {
++        "BriefDescription": "This metric estimates fraction of cycles whil=
+e the memory subsystem was handling loads from remote cache in other socket=
+s including synchronizations issues",
++        "MetricExpr": "(200 * (MEM_LOAD_UOPS_L3_MISS_RETIRED.REMOTE_HITM *=
+ (1 + mem_load_uops_retired.hit_lfb / ((MEM_LOAD_UOPS_RETIRED.L2_HIT + MEM_=
+LOAD_UOPS_RETIRED.L3_HIT + MEM_LOAD_UOPS_L3_HIT_RETIRED.XSNP_HIT + MEM_LOAD=
+_UOPS_L3_HIT_RETIRED.XSNP_HITM + MEM_LOAD_UOPS_L3_HIT_RETIRED.XSNP_MISS) + =
+MEM_LOAD_UOPS_L3_MISS_RETIRED.LOCAL_DRAM + MEM_LOAD_UOPS_L3_MISS_RETIRED.RE=
+MOTE_DRAM + MEM_LOAD_UOPS_L3_MISS_RETIRED.REMOTE_HITM + MEM_LOAD_UOPS_L3_MI=
+SS_RETIRED.REMOTE_FWD))) + 180 * (MEM_LOAD_UOPS_L3_MISS_RETIRED.REMOTE_FWD =
+* (1 + mem_load_uops_retired.hit_lfb / ((MEM_LOAD_UOPS_RETIRED.L2_HIT + MEM=
+_LOAD_UOPS_RETIRED.L3_HIT + MEM_LOAD_UOPS_L3_HIT_RETIRED.XSNP_HIT + MEM_LOA=
+D_UOPS_L3_HIT_RETIRED.XSNP_HITM + MEM_LOAD_UOPS_L3_HIT_RETIRED.XSNP_MISS) +=
+ MEM_LOAD_UOPS_L3_MISS_RETIRED.LOCAL_DRAM + MEM_LOAD_UOPS_L3_MISS_RETIRED.R=
+EMOTE_DRAM + MEM_LOAD_UOPS_L3_MISS_RETIRED.REMOTE_HITM + MEM_LOAD_UOPS_L3_M=
+ISS_RETIRED.REMOTE_FWD)))) / CLKS",
++        "MetricGroup": "Offcore;Server;Snoop;TopdownL5;tma_mem_latency_gro=
+up",
++        "MetricName": "tma_remote_cache",
++        "PublicDescription": "This metric estimates fraction of cycles whi=
+le the memory subsystem was handling loads from remote cache in other socke=
+ts including synchronizations issues. This is caused often due to non-optim=
+al NUMA allocations. #link to NUMA article Sample with: MEM_LOAD_UOPS_L3_MI=
+SS_RETIRED.REMOTE_HITM_PS;MEM_LOAD_UOPS_L3_MISS_RETIRED.REMOTE_FWD_PS"
++    },
++    {
 +        "BriefDescription": "This metric estimates how often CPU was stall=
 ed  due to RFO store memory accesses; RFO store issue a read-for-ownership =
 request before the write",
@@ -751,8 +823,8 @@ es - see FB_Full)"
 +    {
 +        "BriefDescription": "This metric roughly estimates how often CPU w=
 as handling synchronizations due to False Sharing",
-+        "MetricExpr": "60 * OFFCORE_RESPONSE.DEMAND_RFO.L3_HIT.SNOOP_HITM =
-/ CLKS",
++        "MetricExpr": "(200 * OFFCORE_RESPONSE.DEMAND_RFO.LLC_MISS.REMOTE_=
+HITM + 60 * OFFCORE_RESPONSE.DEMAND_RFO.LLC_HIT.HITM_OTHER_CORE) / CLKS",
 +        "MetricGroup": "DataSharing;Offcore;Snoop;TopdownL4;tma_store_boun=
 d_group",
 +        "MetricName": "tma_false_sharing",
@@ -1026,26 +1098,8 @@ c) ratio of 1 or less should be expected for decently optimized software ru=
 nning on Intel Core/Xeon products. While this often indicates efficient X86=
  instructions were executed; high value does not necessarily mean better pe=
 rformance cannot be achieved. Sample with: INST_RETIRED.PREC_DIST"
-     },
-     {
--        "BriefDescription": "This category represents fraction of slots ut=
-ilized by useful work i.e. issued uops that eventually get retired. SMT ver=
-sion; use when SMT is enabled and measuring per logical CPU.",
--        "MetricExpr": "UOPS_RETIRED.RETIRE_SLOTS / (4 * ( ( CPU_CLK_UNHALT=
-ED.THREAD / 2 ) * ( 1 + CPU_CLK_UNHALTED.ONE_THREAD_ACTIVE / CPU_CLK_UNHALT=
-ED.REF_XCLK ) ))",
--        "MetricGroup": "TopdownL1_SMT",
--        "MetricName": "Retiring_SMT",
--        "PublicDescription": "This category represents fraction of slots u=
-tilized by useful work i.e. issued uops that eventually get retired. Ideall=
-y; all pipeline slots would be attributed to the Retiring category.  Retiri=
-ng of 100% would indicate the maximum Pipeline_Width throughput was achieve=
-d.  Maximizing Retiring typically increases the Instructions-per-cycle (see=
- IPC metric). Note that a high Retiring value does not necessary mean there=
- is no room for more performance.  For example; Heavy-operations or Microco=
-de Assists are categorized under Retiring. They often indicate suboptimal p=
-erformance and can often be optimized or avoided. SMT version; use when SMT=
- is enabled and measuring per logical CPU."
++    },
++    {
 +        "BriefDescription": "This metric represents overall arithmetic flo=
 ating-point (FP) operations fraction the CPU has executed (retired)",
 +        "MetricExpr": "tma_x87_use + tma_fp_scalar + tma_fp_vector",
@@ -1078,8 +1132,26 @@ T_RETIRED.SCALAR_DOUBLE) / UOPS_RETIRED.RETIRE_SLOTS",
 +        "PublicDescription": "This metric approximates arithmetic floating=
 -point (FP) scalar uops fraction the CPU has retired. May overcount due to =
 FMA double counting."
-+    },
-+    {
+     },
+     {
+-        "BriefDescription": "This category represents fraction of slots ut=
+ilized by useful work i.e. issued uops that eventually get retired. SMT ver=
+sion; use when SMT is enabled and measuring per logical CPU.",
+-        "MetricExpr": "UOPS_RETIRED.RETIRE_SLOTS / (4 * ( ( CPU_CLK_UNHALT=
+ED.THREAD / 2 ) * ( 1 + CPU_CLK_UNHALTED.ONE_THREAD_ACTIVE / CPU_CLK_UNHALT=
+ED.REF_XCLK ) ))",
+-        "MetricGroup": "TopdownL1_SMT",
+-        "MetricName": "Retiring_SMT",
+-        "PublicDescription": "This category represents fraction of slots u=
+tilized by useful work i.e. issued uops that eventually get retired. Ideall=
+y; all pipeline slots would be attributed to the Retiring category.  Retiri=
+ng of 100% would indicate the maximum Pipeline_Width throughput was achieve=
+d.  Maximizing Retiring typically increases the Instructions-per-cycle (see=
+ IPC metric). Note that a high Retiring value does not necessary mean there=
+ is no room for more performance.  For example; Heavy-operations or Microco=
+de Assists are categorized under Retiring. They often indicate suboptimal p=
+erformance and can often be optimized or avoided. SMT version; use when SMT=
+ is enabled and measuring per logical CPU."
 +        "BriefDescription": "This metric approximates arithmetic floating-=
 point (FP) vector uops fraction the CPU has retired aggregated across all v=
 ector widths",
@@ -1181,19 +1253,7 @@ ot imply sub-optimal use of machine resources."
          "MetricGroup": "Ret;Summary",
          "MetricName": "IPC"
      },
-@@ -76,8 +494,8 @@
-     },
-     {
-         "BriefDescription": "Cycles Per Instruction (per Logical Processor=
-)",
--        "MetricExpr": "1 / (INST_RETIRED.ANY / CPU_CLK_UNHALTED.THREAD)",
--        "MetricGroup": "Pipeline;Mem",
-+        "MetricExpr": "1 / IPC",
-+        "MetricGroup": "Mem;Pipeline",
-         "MetricName": "CPI"
-     },
-     {
-@@ -88,16 +506,10 @@
+@@ -82,16 +521,10 @@
      },
      {
          "BriefDescription": "Total issue-pipeline slots (per-Physical Core=
@@ -1215,7 +1275,7 @@ LK_UNHALTED.ONE_THREAD_ACTIVE / CPU_CLK_UNHALTED.REF_XCLK ) )",
      {
          "BriefDescription": "The ratio of Executed- by Issued-Uops",
          "MetricExpr": "UOPS_EXECUTED.THREAD / UOPS_ISSUED.ANY",
-@@ -107,51 +519,32 @@
+@@ -101,51 +534,32 @@
      },
      {
          "BriefDescription": "Instructions Per Cycle across hyper-threads (=
@@ -1321,7 +1381,7 @@ TED.ONE_THREAD_ACTIVE / CPU_CLK_UNHALTED.REF_XCLK)) if #core_wide < 1 else =
          "MetricGroup": "SMT",
          "MetricName": "CORE_CLKS"
      },
-@@ -193,13 +586,13 @@
+@@ -187,13 +601,13 @@
      },
      {
          "BriefDescription": "Instructions per Floating Point (FP) Operatio=
@@ -1355,7 +1415,7 @@ TIRED.256B_PACKED_DOUBLE + FP_ARITH_INST_RETIRED.256B_PACKED_SINGLE))",
          "PublicDescription": "Instructions per FP Arithmetic instruction (=
 lower number means higher occurrence rate). May undercount due to FMA doubl=
 e counting. Approximated prior to BDW."
-@@ -220,22 +613,22 @@
+@@ -214,22 +628,22 @@
      },
      {
          "BriefDescription": "Instructions per FP Arithmetic AVX/SSE 128-bi=
@@ -1394,7 +1454,7 @@ ith: INST_RETIRED.PREC_DIST",
          "MetricName": "Instructions"
      },
      {
-@@ -252,7 +645,7 @@
+@@ -246,7 +660,7 @@
      },
      {
          "BriefDescription": "Fraction of Uops delivered by the DSB (aka De=
@@ -1406,7 +1466,7 @@ _UOPS + IDQ.MS_UOPS))",
          "MetricGroup": "DSB;Fed;FetchBW",
          "MetricName": "DSB_Coverage"
      },
-@@ -264,83 +657,71 @@
+@@ -258,83 +672,71 @@
      },
      {
          "BriefDescription": "Branch Misprediction Cost: Fraction of TMA sl=
@@ -1536,27 +1596,25 @@ NY",
          "BriefDescription": "Utilization of the core's Page Walker(s) serv=
 ing STLB misses triggered by instruction/Load/Store accesses",
          "MetricConstraint": "NO_NMI_WATCHDOG",
--        "MetricExpr": "( cpu@ITLB_MISSES.WALK_DURATION\\,cmask\\=3D1@ + cp=
-u@DTLB_LOAD_MISSES.WALK_DURATION\\,cmask\\=3D1@ + cpu@DTLB_STORE_MISSES.WAL=
-K_DURATION\\,cmask\\=3D1@ + 7 * ( DTLB_STORE_MISSES.WALK_COMPLETED + DTLB_L=
-OAD_MISSES.WALK_COMPLETED + ITLB_MISSES.WALK_COMPLETED ) ) / CPU_CLK_UNHALT=
-ED.THREAD",
-+        "MetricExpr": "(cpu@ITLB_MISSES.WALK_DURATION\\,cmask\\=3D1@ + cpu=
-@DTLB_LOAD_MISSES.WALK_DURATION\\,cmask\\=3D1@ + cpu@DTLB_STORE_MISSES.WALK=
-_DURATION\\,cmask\\=3D1@ + 7 * (DTLB_STORE_MISSES.WALK_COMPLETED + DTLB_LOA=
-D_MISSES.WALK_COMPLETED + ITLB_MISSES.WALK_COMPLETED)) / CORE_CLKS",
+-        "MetricExpr": "( ITLB_MISSES.WALK_DURATION + DTLB_LOAD_MISSES.WALK=
+_DURATION + DTLB_STORE_MISSES.WALK_DURATION + 7 * ( DTLB_STORE_MISSES.WALK_=
+COMPLETED + DTLB_LOAD_MISSES.WALK_COMPLETED + ITLB_MISSES.WALK_COMPLETED ) =
+) / ( 2 * CPU_CLK_UNHALTED.THREAD )",
++        "MetricExpr": "(ITLB_MISSES.WALK_DURATION + DTLB_LOAD_MISSES.WALK_=
+DURATION + DTLB_STORE_MISSES.WALK_DURATION + 7 * (DTLB_STORE_MISSES.WALK_CO=
+MPLETED + DTLB_LOAD_MISSES.WALK_COMPLETED + ITLB_MISSES.WALK_COMPLETED)) / =
+(2 * CORE_CLKS)",
          "MetricGroup": "Mem;MemoryTLB",
          "MetricName": "Page_Walks_Utilization"
      },
 -    {
 -        "BriefDescription": "Utilization of the core's Page Walker(s) serv=
 ing STLB misses triggered by instruction/Load/Store accesses",
--        "MetricExpr": "( cpu@ITLB_MISSES.WALK_DURATION\\,cmask\\=3D1@ + cp=
-u@DTLB_LOAD_MISSES.WALK_DURATION\\,cmask\\=3D1@ + cpu@DTLB_STORE_MISSES.WAL=
-K_DURATION\\,cmask\\=3D1@ + 7 * ( DTLB_STORE_MISSES.WALK_COMPLETED + DTLB_L=
-OAD_MISSES.WALK_COMPLETED + ITLB_MISSES.WALK_COMPLETED ) ) / ( ( CPU_CLK_UN=
-HALTED.THREAD / 2 ) * ( 1 + CPU_CLK_UNHALTED.ONE_THREAD_ACTIVE / CPU_CLK_UN=
-HALTED.REF_XCLK ) )",
+-        "MetricExpr": "( ITLB_MISSES.WALK_DURATION + DTLB_LOAD_MISSES.WALK=
+_DURATION + DTLB_STORE_MISSES.WALK_DURATION + 7 * ( DTLB_STORE_MISSES.WALK_=
+COMPLETED + DTLB_LOAD_MISSES.WALK_COMPLETED + ITLB_MISSES.WALK_COMPLETED ) =
+) / ( 2 * ( ( CPU_CLK_UNHALTED.THREAD / 2 ) * ( 1 + CPU_CLK_UNHALTED.ONE_TH=
+READ_ACTIVE / CPU_CLK_UNHALTED.REF_XCLK ) ) )",
 -        "MetricGroup": "Mem;MemoryTLB_SMT",
 -        "MetricName": "Page_Walks_Utilization_SMT"
 -    },
@@ -1564,7 +1622,7 @@ HALTED.REF_XCLK ) )",
          "BriefDescription": "Average per-core data fill bandwidth to the L=
 1 data cache [GB / sec]",
          "MetricExpr": "64 * L1D.REPLACEMENT / 1000000000 / duration_time",
-@@ -361,19 +742,19 @@
+@@ -355,19 +757,19 @@
      },
      {
          "BriefDescription": "Average per-thread data fill bandwidth to the=
@@ -1593,7 +1651,7 @@ n_time)",
          "MetricGroup": "Mem;MemoryBW",
          "MetricName": "L3_Cache_Fill_BW_1T"
      },
-@@ -391,26 +772,26 @@
+@@ -385,26 +787,26 @@
      },
      {
          "BriefDescription": "Measured Average Frequency for unhalted proce=
@@ -1643,18 +1701,279 @@ NHALTED.REF_XCLK_ANY / 2) if #SMT_on else 0",
          "MetricGroup": "SMT",
          "MetricName": "SMT_2T_Utilization"
      },
-@@ -428,7 +809,7 @@
+@@ -422,13 +824,13 @@
      },
      {
          "BriefDescription": "Average external Memory Bandwidth Use for rea=
 ds and writes [GB / sec]",
--        "MetricExpr": "64 * ( arb@event\\=3D0x81\\,umask\\=3D0x1@ + arb@ev=
-ent\\=3D0x84\\,umask\\=3D0x1@ ) / 1000000 / duration_time / 1000",
-+        "MetricExpr": "64 * (arb@event\\=3D0x81\\,umask\\=3D0x1@ + arb@eve=
-nt\\=3D0x84\\,umask\\=3D0x1@) / 1000000 / duration_time / 1000",
+-        "MetricExpr": "( 64 * ( uncore_imc@cas_count_read@ + uncore_imc@ca=
+s_count_write@ ) / 1000000000 ) / duration_time",
++        "MetricExpr": "(64 * (uncore_imc@cas_count_read@ + uncore_imc@cas_=
+count_write@) / 1000000000) / duration_time",
          "MetricGroup": "HPC;Mem;MemoryBW;SoC",
          "MetricName": "DRAM_BW_Use"
      },
+     {
+         "BriefDescription": "Average latency of data read request to exter=
+nal memory (in nanoseconds). Accounts for demand loads and L1/L2 prefetches=
+",
+-        "MetricExpr": "1000000000 * ( cbox@event\\=3D0x36\\,umask\\=3D0x3\=
+\,filter_opc\\=3D0x182@ / cbox@event\\=3D0x35\\,umask\\=3D0x3\\,filter_opc\=
+\=3D0x182@ ) / ( cbox_0@event\\=3D0x0@ / duration_time )",
++        "MetricExpr": "1000000000 * (cbox@event\\=3D0x36\\,umask\\=3D0x3\\=
+,filter_opc\\=3D0x182@ / cbox@event\\=3D0x35\\,umask\\=3D0x3\\,filter_opc\\=
+=3D0x182@) / (Socket_CLKS / duration_time)",
+         "MetricGroup": "Mem;MemoryLat;SoC",
+         "MetricName": "MEM_Read_Latency"
+     },
+@@ -444,12 +846,6 @@
+         "MetricGroup": "SoC",
+         "MetricName": "Socket_CLKS"
+     },
+-    {
+-        "BriefDescription": "Uncore frequency per die [GHZ]",
+-        "MetricExpr": "cbox_0@event\\=3D0x0@ / #num_dies / duration_time /=
+ 1000000000",
+-        "MetricGroup": "SoC",
+-        "MetricName": "UNCORE_FREQ"
+-    },
+     {
+         "BriefDescription": "Instructions per Far Branch ( Far Branches ap=
+ply upon transition from application to operating system, handling interrup=
+ts, exceptions) [lower number means higher occurrence rate]",
+         "MetricExpr": "INST_RETIRED.ANY / BR_INST_RETIRED.FAR_BRANCH:u",
+@@ -498,9 +894,15 @@
+         "MetricGroup": "Power",
+         "MetricName": "C7_Pkg_Residency"
+     },
++    {
++        "BriefDescription": "Uncore frequency per die [GHZ]",
++        "MetricExpr": "Socket_CLKS / #num_dies / duration_time / 100000000=
+0",
++        "MetricGroup": "SoC",
++        "MetricName": "UNCORE_FREQ"
++    },
+     {
+         "BriefDescription": "CPU operating frequency (in GHz)",
+-        "MetricExpr": "( CPU_CLK_UNHALTED.THREAD / CPU_CLK_UNHALTED.REF_TS=
+C * #SYSTEM_TSC_FREQ ) / 1000000000",
++        "MetricExpr": "(( CPU_CLK_UNHALTED.THREAD / CPU_CLK_UNHALTED.REF_T=
+SC * #SYSTEM_TSC_FREQ ) / 1000000000) / duration_time",
+         "MetricGroup": "",
+         "MetricName": "cpu_operating_frequency",
+         "ScaleUnit": "1GHz"
+@@ -591,21 +993,21 @@
+     },
+     {
+         "BriefDescription": "Average latency of a last level cache (LLC) d=
+emand and prefetch data read miss (read memory access) in nano seconds",
+-        "MetricExpr": "( 1000000000 * ( cbox@UNC_C_TOR_OCCUPANCY.MISS_OPCO=
+DE\\,filter_opc\\=3D0x182@ / cbox@UNC_C_TOR_INSERTS.MISS_OPCODE\\,filter_op=
+c\\=3D0x182@ ) / ( UNC_C_CLOCKTICKS / ( source_count(UNC_C_CLOCKTICKS) * #n=
+um_packages ) ) ) * duration_time",
++        "MetricExpr": "( 1000000000 * ( cbox@UNC_C_TOR_OCCUPANCY.MISS_OPCO=
+DE\\,filter_opc\\=3D0x182@ / cbox@UNC_C_TOR_INSERTS.MISS_OPCODE\\,filter_op=
+c\\=3D0x182@ ) / ( UNC_C_CLOCKTICKS / ( #num_cores / #num_packages * #num_p=
+ackages ) ) ) * duration_time",
+         "MetricGroup": "",
+         "MetricName": "llc_data_read_demand_plus_prefetch_miss_latency",
+         "ScaleUnit": "1ns"
+     },
+     {
+         "BriefDescription": "Average latency of a last level cache (LLC) d=
+emand and prefetch data read miss (read memory access) addressed to local m=
+emory in nano seconds",
+-        "MetricExpr": "( 1000000000 * ( cbox@UNC_C_TOR_OCCUPANCY.MISS_LOCA=
+L_OPCODE\\,filter_opc\\=3D0x182@ / cbox@UNC_C_TOR_INSERTS.MISS_OPCODE\\,fil=
+ter_opc\\=3D0x182@ ) / ( UNC_C_CLOCKTICKS / ( source_count(UNC_C_CLOCKTICKS=
+) * #num_packages ) ) ) * duration_time",
++        "MetricExpr": "( 1000000000 * ( cbox@UNC_C_TOR_OCCUPANCY.MISS_LOCA=
+L_OPCODE\\,filter_opc\\=3D0x182@ / cbox@UNC_C_TOR_INSERTS.MISS_OPCODE\\,fil=
+ter_opc\\=3D0x182@ ) / ( UNC_C_CLOCKTICKS / ( #num_cores / #num_packages * =
+#num_packages ) ) ) * duration_time",
+         "MetricGroup": "",
+         "MetricName": "llc_data_read_demand_plus_prefetch_miss_latency_for=
+_local_requests",
+         "ScaleUnit": "1ns"
+     },
+     {
+         "BriefDescription": "Average latency of a last level cache (LLC) d=
+emand and prefetch data read miss (read memory access) addressed to remote =
+memory in nano seconds",
+-        "MetricExpr": "( 1000000000 * ( cbox@UNC_C_TOR_OCCUPANCY.MISS_REMO=
+TE_OPCODE\\,filter_opc\\=3D0x182@ / cbox@UNC_C_TOR_INSERTS.MISS_OPCODE\\,fi=
+lter_opc\\=3D0x182@ ) / ( UNC_C_CLOCKTICKS / ( source_count(UNC_C_CLOCKTICK=
+S) * #num_packages ) ) ) * duration_time",
++        "MetricExpr": "( 1000000000 * ( cbox@UNC_C_TOR_OCCUPANCY.MISS_REMO=
+TE_OPCODE\\,filter_opc\\=3D0x182@ / cbox@UNC_C_TOR_INSERTS.MISS_OPCODE\\,fi=
+lter_opc\\=3D0x182@ ) / ( UNC_C_CLOCKTICKS / ( #num_cores / #num_packages *=
+ #num_packages ) ) ) * duration_time",
+         "MetricGroup": "",
+         "MetricName": "llc_data_read_demand_plus_prefetch_miss_latency_for=
+_remote_requests",
+         "ScaleUnit": "1ns"
+@@ -654,7 +1056,7 @@
+     },
+     {
+         "BriefDescription": "Uncore operating frequency in GHz",
+-        "MetricExpr": "UNC_C_CLOCKTICKS / ( source_count(UNC_C_CLOCKTICKS)=
+ * #num_packages ) / 1000000000",
++        "MetricExpr": "( UNC_C_CLOCKTICKS / ( #num_cores / #num_packages *=
+ #num_packages ) / 1000000000) / duration_time",
+         "MetricGroup": "",
+         "MetricName": "uncore_frequency",
+         "ScaleUnit": "1GHz"
+diff --git a/tools/perf/pmu-events/arch/x86/broadwellx/uncore-cache.json b/=
+tools/perf/pmu-events/arch/x86/broadwellx/uncore-cache.json
+index abee6f773c1f..449fa723d0aa 100644
+--- a/tools/perf/pmu-events/arch/x86/broadwellx/uncore-cache.json
++++ b/tools/perf/pmu-events/arch/x86/broadwellx/uncore-cache.json
+@@ -947,21 +947,19 @@
+         "Unit": "CBO"
+     },
+     {
+-        "BriefDescription": "LLC misses - demand and prefetch data reads -=
+ excludes LLC prefetches. Derived from unc_c_tor_inserts.miss_opcode",
++        "BriefDescription": "TOR Inserts; Miss Opcode Match",
+         "Counter": "0,1,2,3",
+         "EventCode": "0x35",
+-        "EventName": "LLC_MISSES.DATA_READ",
+-        "Filter": "filter_opc=3D0x182",
++        "EventName": "UNC_C_TOR_INSERTS.MISS_OPCODE",
+         "PerPkg": "1",
+-        "ScaleUnit": "64Bytes",
+         "UMask": "0x3",
+         "Unit": "CBO"
+     },
+     {
+-        "BriefDescription": "LLC misses - demand and prefetch data reads -=
+ excludes LLC prefetches",
++        "BriefDescription": "LLC misses - demand and prefetch data reads -=
+ excludes LLC prefetches. Derived from unc_c_tor_inserts.miss_opcode",
+         "Counter": "0,1,2,3",
+         "EventCode": "0x35",
+-        "EventName": "UNC_C_TOR_INSERTS.MISS_OPCODE",
++        "EventName": "LLC_MISSES.DATA_READ",
+         "Filter": "filter_opc=3D0x182",
+         "PerPkg": "1",
+         "ScaleUnit": "64Bytes",
+diff --git a/tools/perf/pmu-events/arch/x86/broadwellx/uncore-interconnect.=
+json b/tools/perf/pmu-events/arch/x86/broadwellx/uncore-interconnect.json
+index 071ce45620d2..cb1916f52607 100644
+--- a/tools/perf/pmu-events/arch/x86/broadwellx/uncore-interconnect.json
++++ b/tools/perf/pmu-events/arch/x86/broadwellx/uncore-interconnect.json
+@@ -685,36 +685,34 @@
+         "Unit": "QPI LL"
+     },
+     {
+-        "BriefDescription": "Number of data flits transmitted . Derived fr=
+om unc_q_txl_flits_g0.data",
++        "BriefDescription": "Flits Transferred - Group 0; Data Tx Flits",
+         "Counter": "0,1,2,3",
+-        "EventName": "QPI_DATA_BANDWIDTH_TX",
++        "EventName": "UNC_Q_TxL_FLITS_G0.DATA",
+         "PerPkg": "1",
+-        "ScaleUnit": "8Bytes",
+         "UMask": "0x2",
+         "Unit": "QPI LL"
+     },
+     {
+-        "BriefDescription": "Number of data flits transmitted ",
++        "BriefDescription": "Number of data flits transmitted . Derived fr=
+om unc_q_txl_flits_g0.data",
+         "Counter": "0,1,2,3",
+-        "EventName": "UNC_Q_TxL_FLITS_G0.DATA",
++        "EventName": "QPI_DATA_BANDWIDTH_TX",
+         "PerPkg": "1",
+         "ScaleUnit": "8Bytes",
+         "UMask": "0x2",
+         "Unit": "QPI LL"
+     },
+     {
+-        "BriefDescription": "Number of non data (control) flits transmitte=
+d . Derived from unc_q_txl_flits_g0.non_data",
++        "BriefDescription": "Flits Transferred - Group 0; Non-Data protoco=
+l Tx Flits",
+         "Counter": "0,1,2,3",
+-        "EventName": "QPI_CTL_BANDWIDTH_TX",
++        "EventName": "UNC_Q_TxL_FLITS_G0.NON_DATA",
+         "PerPkg": "1",
+-        "ScaleUnit": "8Bytes",
+         "UMask": "0x4",
+         "Unit": "QPI LL"
+     },
+     {
+-        "BriefDescription": "Number of non data (control) flits transmitte=
+d ",
++        "BriefDescription": "Number of non data (control) flits transmitte=
+d . Derived from unc_q_txl_flits_g0.non_data",
+         "Counter": "0,1,2,3",
+-        "EventName": "UNC_Q_TxL_FLITS_G0.NON_DATA",
++        "EventName": "QPI_CTL_BANDWIDTH_TX",
+         "PerPkg": "1",
+         "ScaleUnit": "8Bytes",
+         "UMask": "0x4",
+diff --git a/tools/perf/pmu-events/arch/x86/broadwellx/uncore-memory.json b=
+/tools/perf/pmu-events/arch/x86/broadwellx/uncore-memory.json
+index 302e956a82ed..05fab7d2723e 100644
+--- a/tools/perf/pmu-events/arch/x86/broadwellx/uncore-memory.json
++++ b/tools/perf/pmu-events/arch/x86/broadwellx/uncore-memory.json
+@@ -72,20 +72,19 @@
+         "Unit": "iMC"
+     },
+     {
+-        "BriefDescription": "read requests to memory controller. Derived f=
+rom unc_m_cas_count.rd",
++        "BriefDescription": "DRAM RD_CAS and WR_CAS Commands.; All DRAM Re=
+ads (RD_CAS + Underfills)",
+         "Counter": "0,1,2,3",
+         "EventCode": "0x4",
+-        "EventName": "LLC_MISSES.MEM_READ",
++        "EventName": "UNC_M_CAS_COUNT.RD",
+         "PerPkg": "1",
+-        "ScaleUnit": "64Bytes",
+         "UMask": "0x3",
+         "Unit": "iMC"
+     },
+     {
+-        "BriefDescription": "read requests to memory controller",
++        "BriefDescription": "read requests to memory controller. Derived f=
+rom unc_m_cas_count.rd",
+         "Counter": "0,1,2,3",
+         "EventCode": "0x4",
+-        "EventName": "UNC_M_CAS_COUNT.RD",
++        "EventName": "LLC_MISSES.MEM_READ",
+         "PerPkg": "1",
+         "ScaleUnit": "64Bytes",
+         "UMask": "0x3",
+@@ -110,20 +109,19 @@
+         "Unit": "iMC"
+     },
+     {
+-        "BriefDescription": "write requests to memory controller. Derived =
+from unc_m_cas_count.wr",
++        "BriefDescription": "DRAM RD_CAS and WR_CAS Commands.; All DRAM WR=
+_CAS (both Modes)",
+         "Counter": "0,1,2,3",
+         "EventCode": "0x4",
+-        "EventName": "LLC_MISSES.MEM_WRITE",
++        "EventName": "UNC_M_CAS_COUNT.WR",
+         "PerPkg": "1",
+-        "ScaleUnit": "64Bytes",
+         "UMask": "0xC",
+         "Unit": "iMC"
+     },
+     {
+-        "BriefDescription": "write requests to memory controller",
++        "BriefDescription": "write requests to memory controller. Derived =
+from unc_m_cas_count.wr",
+         "Counter": "0,1,2,3",
+         "EventCode": "0x4",
+-        "EventName": "UNC_M_CAS_COUNT.WR",
++        "EventName": "LLC_MISSES.MEM_WRITE",
+         "PerPkg": "1",
+         "ScaleUnit": "64Bytes",
+         "UMask": "0xC",
 --=20
 2.37.3.998.g577e59143f-goog
 
