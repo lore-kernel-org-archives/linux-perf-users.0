@@ -2,275 +2,130 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5BD06C32771
-	for <linux-perf-users@archiver.kernel.org>; Wed, 28 Sep 2022 10:07:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 13D0EC04A95
+	for <linux-perf-users@archiver.kernel.org>; Wed, 28 Sep 2022 10:34:03 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232989AbiI1KG7 (ORCPT
+        id S233298AbiI1KeC (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Wed, 28 Sep 2022 06:06:59 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39800 "EHLO
+        Wed, 28 Sep 2022 06:34:02 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45866 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S233555AbiI1KGn (ORCPT
+        with ESMTP id S230514AbiI1KeB (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Wed, 28 Sep 2022 06:06:43 -0400
-Received: from mail-ej1-x62b.google.com (mail-ej1-x62b.google.com [IPv6:2a00:1450:4864:20::62b])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9B85ED1EB6
-        for <linux-perf-users@vger.kernel.org>; Wed, 28 Sep 2022 03:06:41 -0700 (PDT)
-Received: by mail-ej1-x62b.google.com with SMTP id bj12so26006584ejb.13
-        for <linux-perf-users@vger.kernel.org>; Wed, 28 Sep 2022 03:06:41 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20210112;
-        h=user-agent:in-reply-to:content-disposition:mime-version:references
-         :message-id:subject:cc:to:from:date:from:to:cc:subject:date;
-        bh=reAAZ1Fg31aMt0fosaFa3oLFeytHbOA9bmQ9dv1ASJM=;
-        b=anMJtLd7baGV7pqxR2ivslFu/p+34G1sbWS/ma62GmAJVHES1xfvvwSUibofPaXLQ7
-         tr3roUiw25Hvt/1hPem5DGeUfDoWxUb0pTGY1jlhxTo1k+PahM8a9D2ednqwqrFyW1ff
-         A7fEd64ATCyS5Bt+uSXOgxEsJQYJjqrJe9rsVERDM3y5GQIedyJrKEciTJ6h+iW32LcT
-         5g15NaM4sU4ccfBEgEnRzjWZaJ811YH55oJKdo14faFp/yxja6yKtsfG2ZKDzmu1LPxo
-         mQNEQhlG58PS7xrJoSfJG2GSBJo0SirHXQxbsEBDPfPfb87DlzjVimWokgI0O2FJ8FTI
-         kMPA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=user-agent:in-reply-to:content-disposition:mime-version:references
-         :message-id:subject:cc:to:from:date:x-gm-message-state:from:to:cc
-         :subject:date;
-        bh=reAAZ1Fg31aMt0fosaFa3oLFeytHbOA9bmQ9dv1ASJM=;
-        b=5yq6V/eaocM0MRO/sQSojjbgpO2PgBX5yjhYrwFuAN2EcVmsKmH/9wimttZbfDqznO
-         68KHRwjfjBSsRW7ZNIYb1TXf4o1VS/aACCYw9WRyYBlokabCF0AhVokcSRfFurjT2May
-         YFuU0vh/53a/RYc39mlJl0sWGAm+9lgEz3kX0Egs34BwRB6uJRHFbvwStwsgiG0W3TIb
-         PhtXtWAx7j0KxPrvzqbBmvdRN7K1kDeWWnTAfo9HyIUVQap2IKk1Qte2QlozybausAI7
-         a8apZ7GOo03Y7xguBd03XarvZGF3j/IQ/dkI9Zqu1hAX5wk20BYIHrmHsBvnbiRkzrfw
-         HhYg==
-X-Gm-Message-State: ACrzQf0z5EvXyv6RiaOja+zLz5jqfS/r7+fJ1/s2rluuv64KqbGr1BZX
-        /msT+lAgvvFf5FM0D0cKWwex5Q==
-X-Google-Smtp-Source: AMsMyM6qXjesMdMMa/oU4flTPFJ+011FIxmnGkwoTdqgP1N+bM9GccBbiwQ6cE6SL4pCJEVVwj2Dpw==
-X-Received: by 2002:a17:907:7245:b0:782:331b:60f4 with SMTP id ds5-20020a170907724500b00782331b60f4mr27443656ejc.594.1664359599590;
-        Wed, 28 Sep 2022 03:06:39 -0700 (PDT)
-Received: from elver.google.com ([2a00:79e0:9c:201:dbbc:9ea2:a5f7:571e])
-        by smtp.gmail.com with ESMTPSA id q1-20020a50cc81000000b00457618d3409sm3055135edi.68.2022.09.28.03.06.38
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 28 Sep 2022 03:06:38 -0700 (PDT)
-Date:   Wed, 28 Sep 2022 12:06:33 +0200
-From:   Marco Elver <elver@google.com>
-To:     Peter Zijlstra <peterz@infradead.org>
-Cc:     Ingo Molnar <mingo@redhat.com>,
-        Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Jiri Olsa <jolsa@kernel.org>,
-        Namhyung Kim <namhyung@kernel.org>,
-        linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org,
-        kasan-dev@googlegroups.com, Dmitry Vyukov <dvyukov@google.com>
-Subject: Re: [PATCH] perf: Fix missing SIGTRAPs due to pending_disable abuse
-Message-ID: <YzQcqe9p9C5ZbjZ1@elver.google.com>
-References: <20220927121322.1236730-1-elver@google.com>
- <YzM/BUsBnX18NoOG@hirez.programming.kicks-ass.net>
- <YzNu5bgASbuVi0S3@elver.google.com>
+        Wed, 28 Sep 2022 06:34:01 -0400
+Received: from foss.arm.com (foss.arm.com [217.140.110.172])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTP id 498277B2B1;
+        Wed, 28 Sep 2022 03:34:00 -0700 (PDT)
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id B516D20E3;
+        Wed, 28 Sep 2022 03:34:06 -0700 (PDT)
+Received: from [10.57.0.129] (unknown [10.57.0.129])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 4268C3F792;
+        Wed, 28 Sep 2022 03:33:58 -0700 (PDT)
+Message-ID: <55e74adc-0001-f08e-de10-913f36469da8@arm.com>
+Date:   Wed, 28 Sep 2022 11:33:56 +0100
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <YzNu5bgASbuVi0S3@elver.google.com>
-User-Agent: Mutt/2.2.7 (2022-08-07)
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
+ Thunderbird/91.11.0
+Subject: Re: [PATCH 1/6] perf stat: Convert perf_stat_evsel.res_stats array
+Content-Language: en-US
+To:     Namhyung Kim <namhyung@kernel.org>
+Cc:     Ingo Molnar <mingo@kernel.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Ian Rogers <irogers@google.com>,
+        Adrian Hunter <adrian.hunter@intel.com>,
+        linux-perf-users@vger.kernel.org, Andi Kleen <ak@linux.intel.com>,
+        Kan Liang <kan.liang@linux.intel.com>,
+        Leo Yan <leo.yan@linaro.org>,
+        Zhengjun Xing <zhengjun.xing@linux.intel.com>,
+        Arnaldo Carvalho de Melo <acme@kernel.org>,
+        Jiri Olsa <jolsa@kernel.org>
+References: <20220926200757.1161448-1-namhyung@kernel.org>
+ <20220926200757.1161448-2-namhyung@kernel.org>
+From:   James Clark <james.clark@arm.com>
+In-Reply-To: <20220926200757.1161448-2-namhyung@kernel.org>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-On Tue, Sep 27, 2022 at 11:45PM +0200, Marco Elver wrote:
-> On Tue, Sep 27, 2022 at 08:20PM +0200, Peter Zijlstra wrote:
-> > On Tue, Sep 27, 2022 at 02:13:22PM +0200, Marco Elver wrote:
-> > > Due to the implementation of how SIGTRAP are delivered if
-> > > perf_event_attr::sigtrap is set, we've noticed 3 issues:
-> > > 
-> > > 	1. Missing SIGTRAP due to a race with event_sched_out() (more
-> > > 	   details below).
-> > > 
-> > > 	2. Hardware PMU events being disabled due to returning 1 from
-> > > 	   perf_event_overflow(). The only way to re-enable the event is
-> > > 	   for user space to first "properly" disable the event and then
-> > > 	   re-enable it.
-> > > 
-> > > 	3. The inability to automatically disable an event after a
-> > > 	   specified number of overflows via PERF_EVENT_IOC_REFRESH.
-> > > 
-> > > The worst of the 3 issues is problem (1), which occurs when a
-> > > pending_disable is "consumed" by a racing event_sched_out(), observed as
-> > > follows:
-> > > 
-> > > 		CPU0			| 	CPU1
-> > > 	--------------------------------+---------------------------
-> > > 	__perf_event_overflow()		|
-> > > 	 perf_event_disable_inatomic()	|
-> > > 	  pending_disable = CPU0	| ...
-> > > 	  				| _perf_event_enable()
-> > > 					|  event_function_call()
-> > > 					|   task_function_call()
-> > > 					|    /* sends IPI to CPU0 */
-> > > 	<IPI>				| ...
-> > > 	 __perf_event_enable()		+---------------------------
-> > > 	  ctx_resched()
-> > > 	   task_ctx_sched_out()
-> > > 	    ctx_sched_out()
-> > > 	     group_sched_out()
-> > > 	      event_sched_out()
-> > > 	       pending_disable = -1
-> > > 	</IPI>
-> > > 	<IRQ-work>
-> > > 	 perf_pending_event()
-> > > 	  perf_pending_event_disable()
-> > > 	   /* Fails to send SIGTRAP because no pending_disable! */
-> > > 	</IRQ-work>
-> > > 
-> > > In the above case, not only is that particular SIGTRAP missed, but also
-> > > all future SIGTRAPs because 'event_limit' is not reset back to 1.
-> > > 
-> > > To fix, rework pending delivery of SIGTRAP via IRQ-work by introduction
-> > > of a separate 'pending_sigtrap', no longer using 'event_limit' and
-> > > 'pending_disable' for its delivery.
-> > > 
-> > > During testing, this also revealed several more possible races between
-> > > reschedules and pending IRQ work; see code comments for details.
-> > 
-> > Perhaps use task_work_add() for this case? That runs on the
-> > return-to-user path, so then it doesn't matter how many reschedules
-> > happen in between.
+
+
+On 26/09/2022 21:07, Namhyung Kim wrote:
+> It uses only one member, no need to have it as an array.
 > 
-> Hmm, I tried the below (on top of this patch), but then all the tests
-> fail (including tools/testing/selftests/perf_events/sigtrap_threads.c)
-> because of lots of missing SIGTRAP. (The missing SIGTRAP happen with or
-> without the kernel/entry/ change.)
+> Signed-off-by: Namhyung Kim <namhyung@kernel.org>
+> ---
+>  tools/perf/util/stat-display.c |  2 +-
+>  tools/perf/util/stat.c         | 10 +++-------
+>  tools/perf/util/stat.h         |  2 +-
+>  3 files changed, 5 insertions(+), 9 deletions(-)
 > 
-> So something is wrong with task_work, and the irq_work solution thus far
-> is more robust (ran many hours of tests and fuzzing without failure).
 
-My second idea about introducing something like irq_work_raw_sync().
-Maybe it's not that crazy if it is actually safe. I expect this case
-where we need the irq_work_raw_sync() to be very very rare.
+Reviewed-by: James Clark <james.clark@arm.com>
 
------- >8 ------
-
-diff --git a/include/linux/irq_work.h b/include/linux/irq_work.h
-index 8cd11a223260..490adecbb4be 100644
---- a/include/linux/irq_work.h
-+++ b/include/linux/irq_work.h
-@@ -59,6 +59,7 @@ bool irq_work_queue_on(struct irq_work *work, int cpu);
- 
- void irq_work_tick(void);
- void irq_work_sync(struct irq_work *work);
-+bool irq_work_raw_sync(struct irq_work *work);
- 
- #ifdef CONFIG_IRQ_WORK
- #include <asm/irq_work.h>
-diff --git a/include/linux/perf_event.h b/include/linux/perf_event.h
-index dff3430844a2..c119fa7b70d6 100644
---- a/include/linux/perf_event.h
-+++ b/include/linux/perf_event.h
-@@ -743,7 +743,6 @@ struct perf_event {
- 	int				pending_sigtrap;
- 	unsigned long			pending_addr;	/* SIGTRAP */
- 	struct irq_work			pending;
--	struct irq_work			pending_resched;
- 
- 	atomic_t			event_limit;
- 
-diff --git a/kernel/events/core.c b/kernel/events/core.c
-index 007a87c1599c..6ba02a1b5c5d 100644
---- a/kernel/events/core.c
-+++ b/kernel/events/core.c
-@@ -2532,7 +2532,8 @@ event_sched_in(struct perf_event *event,
- 		 * The task and event might have been moved to another CPU:
- 		 * queue another IRQ work. See perf_pending_event_sigtrap().
- 		 */
--		WARN_ON_ONCE(!irq_work_queue(&event->pending_resched));
-+		irq_work_raw_sync(&event->pending); /* Syncs if pending on other CPU. */
-+		irq_work_queue(&event->pending);
- 	}
- 
- out:
-@@ -4946,7 +4947,6 @@ static void perf_addr_filters_splice(struct perf_event *event,
- static void _free_event(struct perf_event *event)
- {
- 	irq_work_sync(&event->pending);
--	irq_work_sync(&event->pending_resched);
- 
- 	unaccount_event(event);
- 
-@@ -6545,26 +6545,6 @@ static void perf_pending_event(struct irq_work *entry)
- 		perf_swevent_put_recursion_context(rctx);
- }
- 
--/*
-- * If handling of a pending action must occur before returning to user space,
-- * and it is possible to reschedule an event (to another CPU) with pending
-- * actions, where the moved-from CPU may not yet have run event->pending (and
-- * irq_work_queue() would fail on reuse), we'll use a separate IRQ work that
-- * runs perf_pending_event_resched().
-- */
--static void perf_pending_event_resched(struct irq_work *entry)
--{
--	struct perf_event *event = container_of(entry, struct perf_event, pending_resched);
--	int rctx;
--
--	rctx = perf_swevent_get_recursion_context();
--
--	perf_pending_event_sigtrap(event);
--
--	if (rctx >= 0)
--		perf_swevent_put_recursion_context(rctx);
--}
--
- #ifdef CONFIG_GUEST_PERF_EVENTS
- struct perf_guest_info_callbacks __rcu *perf_guest_cbs;
- 
-@@ -11599,7 +11579,6 @@ perf_event_alloc(struct perf_event_attr *attr, int cpu,
- 	init_waitqueue_head(&event->waitq);
- 	event->pending_disable = -1;
- 	init_irq_work(&event->pending, perf_pending_event);
--	init_irq_work(&event->pending_resched, perf_pending_event_resched);
- 
- 	mutex_init(&event->mmap_mutex);
- 	raw_spin_lock_init(&event->addr_filters.lock);
-diff --git a/kernel/irq_work.c b/kernel/irq_work.c
-index 7afa40fe5cc4..2d21be0c0f3e 100644
---- a/kernel/irq_work.c
-+++ b/kernel/irq_work.c
-@@ -290,6 +290,40 @@ void irq_work_sync(struct irq_work *work)
- }
- EXPORT_SYMBOL_GPL(irq_work_sync);
- 
-+/*
-+ * Synchronize against the irq_work @work, ensuring the entry is not currently
-+ * in use after returning true. If it returns false, it was not possible to
-+ * synchronize against the irq_work. Requires that interrupts are already
-+ * disabled (prefer irq_work_sync() in all other cases).
-+ */
-+bool irq_work_raw_sync(struct irq_work *work)
-+{
-+	struct irq_work *entry;
-+	struct llist_head *list;
-+
-+	lockdep_assert_irqs_disabled();
-+
-+	if (!irq_work_is_busy(work))
-+		return true;
-+
-+	list = this_cpu_ptr(&raised_list);
-+	llist_for_each_entry(entry, list->first, node.llist) {
-+		if (entry == work)
-+			return false;
-+	}
-+	list = this_cpu_ptr(&lazy_list);
-+	llist_for_each_entry(entry, list->first, node.llist) {
-+		if (entry == work)
-+			return false;
-+	}
-+
-+	while (irq_work_is_busy(work))
-+		cpu_relax();
-+
-+	return true;
-+}
-+EXPORT_SYMBOL_GPL(irq_work_raw_sync);
-+
- static void run_irq_workd(unsigned int cpu)
- {
- 	irq_work_run_list(this_cpu_ptr(&lazy_list));
+> diff --git a/tools/perf/util/stat-display.c b/tools/perf/util/stat-display.c
+> index b82844cb0ce7..234491f43c36 100644
+> --- a/tools/perf/util/stat-display.c
+> +++ b/tools/perf/util/stat-display.c
+> @@ -67,7 +67,7 @@ static void print_noise(struct perf_stat_config *config,
+>  		return;
+>  
+>  	ps = evsel->stats;
+> -	print_noise_pct(config, stddev_stats(&ps->res_stats[0]), avg);
+> +	print_noise_pct(config, stddev_stats(&ps->res_stats), avg);
+>  }
+>  
+>  static void print_cgroup(struct perf_stat_config *config, struct evsel *evsel)
+> diff --git a/tools/perf/util/stat.c b/tools/perf/util/stat.c
+> index ce5e9e372fc4..6bcd3dc32a71 100644
+> --- a/tools/perf/util/stat.c
+> +++ b/tools/perf/util/stat.c
+> @@ -132,12 +132,9 @@ static void perf_stat_evsel_id_init(struct evsel *evsel)
+>  
+>  static void evsel__reset_stat_priv(struct evsel *evsel)
+>  {
+> -	int i;
+>  	struct perf_stat_evsel *ps = evsel->stats;
+>  
+> -	for (i = 0; i < 3; i++)
+> -		init_stats(&ps->res_stats[i]);
+> -
+> +	init_stats(&ps->res_stats);
+>  	perf_stat_evsel_id_init(evsel);
+>  }
+>  
+> @@ -440,7 +437,7 @@ int perf_stat_process_counter(struct perf_stat_config *config,
+>  	struct perf_counts_values *aggr = &counter->counts->aggr;
+>  	struct perf_stat_evsel *ps = counter->stats;
+>  	u64 *count = counter->counts->aggr.values;
+> -	int i, ret;
+> +	int ret;
+>  
+>  	aggr->val = aggr->ena = aggr->run = 0;
+>  
+> @@ -458,8 +455,7 @@ int perf_stat_process_counter(struct perf_stat_config *config,
+>  		evsel__compute_deltas(counter, -1, -1, aggr);
+>  	perf_counts_values__scale(aggr, config->scale, &counter->counts->scaled);
+>  
+> -	for (i = 0; i < 3; i++)
+> -		update_stats(&ps->res_stats[i], count[i]);
+> +	update_stats(&ps->res_stats, *count);
+>  
+>  	if (verbose > 0) {
+>  		fprintf(config->output, "%s: %" PRIu64 " %" PRIu64 " %" PRIu64 "\n",
+> diff --git a/tools/perf/util/stat.h b/tools/perf/util/stat.h
+> index 72713b344b79..3eba38a1a149 100644
+> --- a/tools/perf/util/stat.h
+> +++ b/tools/perf/util/stat.h
+> @@ -43,7 +43,7 @@ enum perf_stat_evsel_id {
+>  };
+>  
+>  struct perf_stat_evsel {
+> -	struct stats		 res_stats[3];
+> +	struct stats		 res_stats;
+>  	enum perf_stat_evsel_id	 id;
+>  	u64			*group_data;
+>  };
