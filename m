@@ -2,234 +2,148 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 35E24C54EE9
-	for <linux-perf-users@archiver.kernel.org>; Wed, 28 Sep 2022 14:34:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 352DBC32771
+	for <linux-perf-users@archiver.kernel.org>; Wed, 28 Sep 2022 14:49:46 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233848AbiI1OeI (ORCPT
+        id S234495AbiI1Oto (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Wed, 28 Sep 2022 10:34:08 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59862 "EHLO
+        Wed, 28 Sep 2022 10:49:44 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40126 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S233506AbiI1OeG (ORCPT
+        with ESMTP id S234474AbiI1Oti (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Wed, 28 Sep 2022 10:34:06 -0400
-Received: from mx0a-001b2d01.pphosted.com (mx0a-001b2d01.pphosted.com [148.163.156.1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7DC4CACA30
-        for <linux-perf-users@vger.kernel.org>; Wed, 28 Sep 2022 07:34:05 -0700 (PDT)
-Received: from pps.filterd (m0098410.ppops.net [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (8.17.1.5/8.17.1.5) with ESMTP id 28SELEWZ032622;
-        Wed, 28 Sep 2022 14:33:21 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=content-type :
- mime-version : subject : from : in-reply-to : date : cc :
- content-transfer-encoding : message-id : references : to; s=pp1;
- bh=GN56reUPbWbC6yaYNBo3OGMdXXx8P7+DUdvfrq3KzfA=;
- b=O7SjoSg2kBS47Z7lvhuzmZNWXXEJDPAGQupRTeJSRCyvzRvffiVGTuRCwzCC27pH9j10
- 1JS1RmuykfO99SI0+cNVqBEsoWdCWqgHL1IuzVAOMavZSF1+nt5D15sQhTEdYO4T2S2B
- 7lBYfpfqdVTj0o9OkgW2neQfOwBm8jy4xH96vbSD1MvoaktqjRdkUCDaxSk6nJB4TKAf
- pzrO04PPk5ZV6lvEGsXiItGShc5t0eXo1aaUtnZySj+oOUGvjQQRzf0wwjceZ8xMM/Wt
- IL07X1YeXI0V9EO45nOzjbhF030fwgV4bqxqOPf5Z0Jdredzwt4AVAMe8cqoyZBPZSJp kA== 
-Received: from pps.reinject (localhost [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 3jvmtr6mnf-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Wed, 28 Sep 2022 14:33:20 +0000
-Received: from m0098410.ppops.net (m0098410.ppops.net [127.0.0.1])
-        by pps.reinject (8.17.1.5/8.17.1.5) with ESMTP id 28SELvan003417;
-        Wed, 28 Sep 2022 14:33:20 GMT
-Received: from ppma03fra.de.ibm.com (6b.4a.5195.ip4.static.sl-reverse.com [149.81.74.107])
-        by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 3jvmtr6mkj-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Wed, 28 Sep 2022 14:33:20 +0000
-Received: from pps.filterd (ppma03fra.de.ibm.com [127.0.0.1])
-        by ppma03fra.de.ibm.com (8.16.1.2/8.16.1.2) with SMTP id 28SE6lYH011452;
-        Wed, 28 Sep 2022 14:33:17 GMT
-Received: from b06cxnps4074.portsmouth.uk.ibm.com (d06relay11.portsmouth.uk.ibm.com [9.149.109.196])
-        by ppma03fra.de.ibm.com with ESMTP id 3jssh940wy-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Wed, 28 Sep 2022 14:33:17 +0000
-Received: from d06av23.portsmouth.uk.ibm.com (d06av23.portsmouth.uk.ibm.com [9.149.105.59])
-        by b06cxnps4074.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 28SEXE8B40894916
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Wed, 28 Sep 2022 14:33:14 GMT
-Received: from d06av23.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 0EDFEA4051;
-        Wed, 28 Sep 2022 14:33:14 +0000 (GMT)
-Received: from d06av23.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 9C797A4040;
-        Wed, 28 Sep 2022 14:33:11 +0000 (GMT)
-Received: from smtpclient.apple (unknown [9.43.45.125])
-        by d06av23.portsmouth.uk.ibm.com (Postfix) with ESMTPS;
-        Wed, 28 Sep 2022 14:33:11 +0000 (GMT)
-Content-Type: text/plain;
-        charset=us-ascii
-Mime-Version: 1.0 (Mac OS X Mail 16.0 \(3696.120.41.1.1\))
-Subject: Re: [PATCH] tools/perf: Fix aggr_printout to display cpu field
- irrespective of core value
-From:   Athira Rajeev <atrajeev@linux.vnet.ibm.com>
-In-Reply-To: <2353467d-c83d-f6ee-0972-1e94bc9f4f5d@linux.ibm.com>
-Date:   Wed, 28 Sep 2022 20:03:09 +0530
-Cc:     maddy@linux.vnet.ibm.com,
-        Nageswara Sastry <rnsastry@linux.ibm.com>,
-        Kajol Jain <kjain@linux.ibm.com>,
-        linux-perf-users@vger.kernel.org,
-        Disha Goel <disgoel@linux.vnet.ibm.com>,
-        linuxppc-dev@lists.ozlabs.org
-Content-Transfer-Encoding: quoted-printable
-Message-Id: <B48A46B1-D247-409A-893C-F41EE44E214B@linux.vnet.ibm.com>
-References: <20220913115717.36191-1-atrajeev@linux.vnet.ibm.com>
- <2353467d-c83d-f6ee-0972-1e94bc9f4f5d@linux.ibm.com>
-To:     Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Jiri Olsa <jolsa@kernel.org>,
-        Michael Ellerman <mpe@ellerman.id.au>,
+        Wed, 28 Sep 2022 10:49:38 -0400
+Received: from foss.arm.com (foss.arm.com [217.140.110.172])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTP id 9DCFDDBA;
+        Wed, 28 Sep 2022 07:49:32 -0700 (PDT)
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 69DD823A;
+        Wed, 28 Sep 2022 07:49:38 -0700 (PDT)
+Received: from [10.57.0.129] (unknown [10.57.0.129])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id EB8703F73D;
+        Wed, 28 Sep 2022 07:49:29 -0700 (PDT)
+Message-ID: <470e79ec-201b-6081-d31c-f5a9dee7a9ae@arm.com>
+Date:   Wed, 28 Sep 2022 15:49:28 +0100
+MIME-Version: 1.0
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
+ Thunderbird/91.11.0
+Subject: Re: [PATCH 4/6] perf stat: Use thread map index for shadow stat
+Content-Language: en-US
+To:     Namhyung Kim <namhyung@kernel.org>
+Cc:     Ingo Molnar <mingo@kernel.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        LKML <linux-kernel@vger.kernel.org>,
         Ian Rogers <irogers@google.com>,
-        Adrian Hunter <adrian.hunter@intel.com>
-X-Mailer: Apple Mail (2.3696.120.41.1.1)
-X-TM-AS-GCONF: 00
-X-Proofpoint-GUID: mbRuD9OP74abrPh9q22Ts4StwhufxKSX
-X-Proofpoint-ORIG-GUID: ZE3Hhcjq4pWRYPLbuVcv_zzAFxKDzkDZ
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.205,Aquarius:18.0.895,Hydra:6.0.528,FMLib:17.11.122.1
- definitions=2022-09-28_06,2022-09-28_01,2022-06-22_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 spamscore=0 mlxlogscore=999
- phishscore=0 clxscore=1015 priorityscore=1501 mlxscore=0 adultscore=0
- bulkscore=0 lowpriorityscore=0 impostorscore=0 suspectscore=0
- malwarescore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2209130000 definitions=main-2209280086
+        Adrian Hunter <adrian.hunter@intel.com>,
+        linux-perf-users@vger.kernel.org, Andi Kleen <ak@linux.intel.com>,
+        Kan Liang <kan.liang@linux.intel.com>,
+        Leo Yan <leo.yan@linaro.org>,
+        Zhengjun Xing <zhengjun.xing@linux.intel.com>,
+        Arnaldo Carvalho de Melo <acme@kernel.org>,
+        Jiri Olsa <jolsa@kernel.org>
+References: <20220926200757.1161448-1-namhyung@kernel.org>
+ <20220926200757.1161448-5-namhyung@kernel.org>
+From:   James Clark <james.clark@arm.com>
+In-Reply-To: <20220926200757.1161448-5-namhyung@kernel.org>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
 
 
-> On 16-Sep-2022, at 5:01 PM, Disha Goel <disgoel@linux.ibm.com> wrote:
->=20
-> This Message Is =46rom an External Sender
-> This message came from outside your organization.
->=20
->=20
-> On 9/13/22 5:27 PM, Athira Rajeev wrote:
->> perf stat includes option to specify aggr_mode to display
->> per-socket, per-core, per-die, per-node counter details.
->> Also there is option -A ( AGGR_NONE, -no-aggr ), where the
->> counter values are displayed for each cpu along with "CPU"
->> value in one field of the output.
->>=20
->> Each of the aggregate mode uses the information fetched
->> from "/sys/devices/system/cpu/cpuX/topology" like core_id,
->> physical_package_id. Utility functions in "cpumap.c" fetches
->> this information and populates the socket id, core id, cpu etc.
->> If the platform does not expose the topology information,
->> these values will be set to -1. Example, in case of powerpc,
->> details like physical_package_id is restricted to be exposed
->> in pSeries platform. So id.socket, id.core, id.cpu all will
->> be set as -1.
->>=20
->> In case of displaying socket or die value, there is no check
->> done in the "aggr_printout" function to see if it points to
->> valid socket id or die. But for displaying "cpu" value, there
->> is a check for "if (id.core > -1)". In case of powerpc pSeries
->> where detail like physical_package_id is restricted to be
->> exposed, id.core will be set to -1. Hence the column or field
->> itself for CPU won't be displayed in the output.
->>=20
->> Result for per-socket:
->>=20
->> <<>>
->> perf stat -e branches --per-socket -a true
->>=20
->>  Performance counter stats for 'system wide':
->>=20
->> S-1      32            416,851      branches
->> <<>>
->>=20
->> Here S has -1 in above result. But with -A option which also
->> expects CPU in one column in the result, below is observed.
->>=20
->> <<>>
->>  /bin/perf stat -e instructions -A -a true
->>=20
->>  Performance counter stats for 'system wide':
->>=20
->>             47,146      instructions
->>             45,226      instructions
->>             43,354      instructions
->>             45,184      instructions
->> <<>>
->>=20
->> If the cpu id value is pointing to -1 also, it makes sense
->> to display the column in the output to replicate the behaviour
->> or to be in precedence with other aggr options(like per-socket,
->> per-core). Remove the check "id.core" so that CPU field gets
->> displayed in the output.
->>=20
->> After the fix:
->>=20
->> <<>>
->> perf stat -e instructions -A -a true
->>=20
->>  Performance counter stats for 'system wide':
->>=20
->> CPU-1                  64,034      instructions
->> CPU-1                  68,941      instructions
->> CPU-1                  59,418      instructions
->> CPU-1                  70,478      instructions
->> CPU-1                  65,201      instructions
->> CPU-1                  63,704      instructions
->> <<>>
->>=20
->> This is caught while running "perf test" for
->> "stat+json_output.sh" and "stat+csv_output.sh".
->>=20
->> Reported-by: Disha Goel=20
->> <disgoel@linux.vnet.ibm.com>
->>=20
->> Signed-off-by: Athira Rajeev=20
->> <atrajeev@linux.vnet.ibm.com>
-> Tested-by: Disha Goel <disgoel@linux.vnet.ibm.com>
+On 26/09/2022 21:07, Namhyung Kim wrote:
+> When AGGR_THREAD is active, it aggregates the values for each thread.
+> Previously it used cpu map index which is invalid for AGGR_THREAD so
+> it had to use separate runtime stats with index 0.
+> 
+> But it can just use the rt_stat with thread_map_index.  Rename the
+> first_shadow_map_idx() and make it return the thread index.
+> 
+> Signed-off-by: Namhyung Kim <namhyung@kernel.org>
+> ---
+>  tools/perf/util/stat-display.c | 20 +++++++++-----------
+>  tools/perf/util/stat.c         |  8 ++------
+>  2 files changed, 11 insertions(+), 17 deletions(-)
 
-Hi,
-
-Looking for review comments for this change.
-
-Thanks
-Athira
->> ---
->>  tools/perf/util/stat-display.c | 6 ++----
->>  1 file changed, 2 insertions(+), 4 deletions(-)
->>=20
->> diff --git a/tools/perf/util/stat-display.c =
-b/tools/perf/util/stat-display.c
->> index b82844cb0ce7..1b751a730271 100644
->> --- a/tools/perf/util/stat-display.c
->> +++ b/tools/perf/util/stat-display.c
->> @@ -168,10 +168,9 @@ static void aggr_printout(struct =
-perf_stat_config *config,
->>  					id.socket,
->>  					id.die,
->>  					id.core);
->> -			} else if (id.core > -1) {
->> +			} else
->>  				fprintf(config->output, "\"cpu\" : =
-\"%d\", ",
->>  					id.cpu.cpu);
->> -			}
->>  		} else {
->>  			if (evsel->percore && =
-!config->percore_show_thread) {
->>  				fprintf(config->output, =
-"S%d-D%d-C%*d%s",
->> @@ -179,11 +178,10 @@ static void aggr_printout(struct =
-perf_stat_config *config,
->>  					id.die,
->>  					config->csv_output ? 0 : -3,
->>  					id.core, config->csv_sep);
->> -			} else if (id.core > -1) {
->> +			} else
->>  				fprintf(config->output, "CPU%*d%s",
->>  					config->csv_output ? 0 : -7,
->>  					id.cpu.cpu, config->csv_sep);
->> -			}
->>  		}
->>  		break;
->>  	case AGGR_THREAD:
->>=20
-
+Reviewed-by: James Clark <james.clark@arm.com>
+> 
+> diff --git a/tools/perf/util/stat-display.c b/tools/perf/util/stat-display.c
+> index 234491f43c36..570e2c04d47d 100644
+> --- a/tools/perf/util/stat-display.c
+> +++ b/tools/perf/util/stat-display.c
+> @@ -442,7 +442,7 @@ static void print_metric_header(struct perf_stat_config *config,
+>  		fprintf(os->fh, "%*s ", config->metric_only_len, unit);
+>  }
+>  
+> -static int first_shadow_cpu_map_idx(struct perf_stat_config *config,
+> +static int first_shadow_map_idx(struct perf_stat_config *config,
+>  				struct evsel *evsel, const struct aggr_cpu_id *id)
+>  {
+>  	struct perf_cpu_map *cpus = evsel__cpus(evsel);
+> @@ -452,6 +452,9 @@ static int first_shadow_cpu_map_idx(struct perf_stat_config *config,
+>  	if (config->aggr_mode == AGGR_NONE)
+>  		return perf_cpu_map__idx(cpus, id->cpu);
+>  
+> +	if (config->aggr_mode == AGGR_THREAD)
+> +		return id->thread;
+> +
+>  	if (!config->aggr_get_id)
+>  		return 0;
+>  
+> @@ -646,7 +649,7 @@ static void printout(struct perf_stat_config *config, struct aggr_cpu_id id, int
+>  	}
+>  
+>  	perf_stat__print_shadow_stats(config, counter, uval,
+> -				first_shadow_cpu_map_idx(config, counter, &id),
+> +				first_shadow_map_idx(config, counter, &id),
+>  				&out, &config->metric_events, st);
+>  	if (!config->csv_output && !config->metric_only && !config->json_output) {
+>  		print_noise(config, counter, noise);
+> @@ -676,7 +679,7 @@ static void aggr_update_shadow(struct perf_stat_config *config,
+>  				val += perf_counts(counter->counts, idx, 0)->val;
+>  			}
+>  			perf_stat__update_shadow_stats(counter, val,
+> -					first_shadow_cpu_map_idx(config, counter, &id),
+> +					first_shadow_map_idx(config, counter, &id),
+>  					&rt_stat);
+>  		}
+>  	}
+> @@ -979,14 +982,9 @@ static void print_aggr_thread(struct perf_stat_config *config,
+>  			fprintf(output, "%s", prefix);
+>  
+>  		id = buf[thread].id;
+> -		if (config->stats)
+> -			printout(config, id, 0, buf[thread].counter, buf[thread].uval,
+> -				 prefix, buf[thread].run, buf[thread].ena, 1.0,
+> -				 &config->stats[id.thread]);
+> -		else
+> -			printout(config, id, 0, buf[thread].counter, buf[thread].uval,
+> -				 prefix, buf[thread].run, buf[thread].ena, 1.0,
+> -				 &rt_stat);
+> +		printout(config, id, 0, buf[thread].counter, buf[thread].uval,
+> +			 prefix, buf[thread].run, buf[thread].ena, 1.0,
+> +			 &rt_stat);
+>  		fputc('\n', output);
+>  	}
+>  
+> diff --git a/tools/perf/util/stat.c b/tools/perf/util/stat.c
+> index e1d3152ce664..21137c9d5259 100644
+> --- a/tools/perf/util/stat.c
+> +++ b/tools/perf/util/stat.c
+> @@ -389,12 +389,8 @@ process_counter_values(struct perf_stat_config *config, struct evsel *evsel,
+>  		}
+>  
+>  		if (config->aggr_mode == AGGR_THREAD) {
+> -			if (config->stats)
+> -				perf_stat__update_shadow_stats(evsel,
+> -					count->val, 0, &config->stats[thread]);
+> -			else
+> -				perf_stat__update_shadow_stats(evsel,
+> -					count->val, 0, &rt_stat);
+> +			perf_stat__update_shadow_stats(evsel, count->val,
+> +						       thread, &rt_stat);
+>  		}
+>  		break;
+>  	case AGGR_GLOBAL:
