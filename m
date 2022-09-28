@@ -2,45 +2,45 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5A2E3C04A95
-	for <linux-perf-users@archiver.kernel.org>; Wed, 28 Sep 2022 11:01:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EFAEFC04A95
+	for <linux-perf-users@archiver.kernel.org>; Wed, 28 Sep 2022 11:02:40 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S234109AbiI1LBg (ORCPT
+        id S233874AbiI1LCi (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Wed, 28 Sep 2022 07:01:36 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54484 "EHLO
+        Wed, 28 Sep 2022 07:02:38 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52752 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S234020AbiI1LA4 (ORCPT
+        with ESMTP id S233904AbiI1LBI (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Wed, 28 Sep 2022 07:00:56 -0400
-Received: from NAM12-DM6-obe.outbound.protection.outlook.com (mail-dm6nam12on2068.outbound.protection.outlook.com [40.107.243.68])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6CDEB89CC5;
-        Wed, 28 Sep 2022 04:00:22 -0700 (PDT)
+        Wed, 28 Sep 2022 07:01:08 -0400
+Received: from NAM02-DM3-obe.outbound.protection.outlook.com (mail-dm3nam02on2081.outbound.protection.outlook.com [40.107.95.81])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 85E9AF2F;
+        Wed, 28 Sep 2022 04:00:55 -0700 (PDT)
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=nVz15rl4nUIk42Xr1z3SConHVSrRCe3HDe+IaGIkzbZHbLjHnnq76ZJ4aZ5kQqXs4MtsA69GhUquJ9j0SAbuqg35ZoZrIORRA+Tv+IlKmPkTS9A95XkCqHv01YpwubruqFIz2ezco1/snlcwM8mFxTnMxrJvmbfHH+TD+VfJDMNueRfxNPBNMC1hl3/n9K6G5z3SDB+fWT7GUPFU21bV/EM5z59LZV0+5njz+UUTrAXiTiDwhhTSegf+9T82D67A47YeAuYp+QkOoDCcvVapwQqCZfQKqvk8muajxkSiIlt6TlDUHDDV0tj1wQYOWi0jmKH0aL2xrVWIY+4Kmj2ylg==
+ b=cCbVow0FWR8Nx4pU/bnMht8olmGE8qkA1WdPvOXavU/1ggl3hfphi71ttrg6j4R/WXgvESPTy9pv9w0bQc7JTgMJxQjyfqRfIwKFYt4rxR+W/K29X0zGIdjY5fnHoBYB6NLx/QrCbVovyOgbRZ4b8pnQv/vTxaUKZMfnm6D5arzRd66BnplY0Z/qrnuAaJaTy1qtU+aL2jVJrSLcjijc3JMbElonKaEJDGSPe5eYer3/84nzkSy468uPDEBYj5xsg0sjn2+mSH4LwXoME4UxJ3raZBnpujJXV6/aiVFVOzECmSuWurI+ssoOABd19Ar78QJf+Tt1KqKWXzxxsEMoTw==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector9901;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=S27i9A63gf/BufC6W9H/4oZO7iJ7Laexe619Qc8h4nQ=;
- b=VMl0KO5dY0eon+Ei2O7bobk1ZG2psSGTvQk4u3YXGE2dVm+W/czbGe/LZqJP3/tEqFe/nzJZDU9MpsHIvtHc9Ozo/82HJ3FkJ3GHRPtHUQbqW2s5YFsVfVi3ZvqT0vptLKE/z6gbGSOsoDj78ltYH3pt4GHX9+ShF+eg590V3cfYbl58JTxrcbxN+3g282AzKH0D/Smy7S1LOijcXmNXeFmvEZr+66XMnqmlhbJYwVkrY9PnDGQAUEYcR8VK2A7FvXDVWSfMS0GynTfa/uR6Syr3f8GHVmwOwKbVK/EApark86DvmlJzDHo7U0VnKzztqYUbP1I4KGgirzIORON1Ww==
+ bh=ym4tP4OTWM1et2CoqxxHLdozNIqkG3Dhs/54p+MIUAA=;
+ b=OkwPlCzahOJcJVhxS1azmw2xr3A/UFhE6f+hyCfidkpDJXA1fGAFFxjWAOczzZ9xHmtee+ZfPmVgQeeBuV8Lm8+hXn1I/gpMaSe4Prp3jdLA2zEouhaE65Iq76/Dy4nriEYyIpqVqN3AzgqlK5IiGTNzLCNxkyK6HY6GwPmGx7EILudWHWcA/wjiPe7WBeFcCDcxbLeliWuF0KRF2OGhD+SQvqzM7jc7cmbaS7urA8I3TjOQzz4AWiSTtM5q5Gfeujoge0PRGl8mZ18nKcFWxC8gvpjFfFefrJBMXFcsJwZaPnGQ+B0OjRJYZxtHkC9kQJ5uJ4rRvPld1BGP24wBxw==
 ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
  165.204.84.17) smtp.rcpttodomain=vger.kernel.org smtp.mailfrom=amd.com;
  dmarc=pass (p=quarantine sp=quarantine pct=100) action=none
  header.from=amd.com; dkim=none (message not signed); arc=none
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=S27i9A63gf/BufC6W9H/4oZO7iJ7Laexe619Qc8h4nQ=;
- b=GxvqUhi/DE3IbVOSWHdV6vYS5iQnWX2ciJ078Eozu039y65qvmk3wJeGEzs2sM+qsXQks/hwAoRvRR/SWZcrrCdltjtArdvdRHLpwWrVb5K3WDcMJ+wfhw+xXwZatKi/muJyLOmoibjl/LHMwlsKAENAaQTsX3g7PvNi8R7KtbM=
-Received: from DM6PR11CA0069.namprd11.prod.outlook.com (2603:10b6:5:14c::46)
- by SJ0PR12MB5405.namprd12.prod.outlook.com (2603:10b6:a03:3af::11) with
+ bh=ym4tP4OTWM1et2CoqxxHLdozNIqkG3Dhs/54p+MIUAA=;
+ b=YAOMaI06ubTHaQIhfIVyL3M8U5lb41HCVe4yeYr8MO5L1zTJR8dKU61kbXIP9s2+Hrz9MlxlcS6a51kUn/gnJilYw5ejDpPvI5RjlwwgWJhKYv/NYtQxgjWH5hwNVRi59SgxjCoPA+CKI4P+p37z8xm0AjhVkauNdevYW4UKdCE=
+Received: from DM6PR13CA0059.namprd13.prod.outlook.com (2603:10b6:5:134::36)
+ by BL1PR12MB5157.namprd12.prod.outlook.com (2603:10b6:208:308::15) with
  Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.5676.17; Wed, 28 Sep
- 2022 11:00:20 +0000
-Received: from DM6NAM11FT062.eop-nam11.prod.protection.outlook.com
- (2603:10b6:5:14c:cafe::35) by DM6PR11CA0069.outlook.office365.com
- (2603:10b6:5:14c::46) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.5654.29 via Frontend
- Transport; Wed, 28 Sep 2022 11:00:20 +0000
+ 2022 11:00:53 +0000
+Received: from DM6NAM11FT022.eop-nam11.prod.protection.outlook.com
+ (2603:10b6:5:134:cafe::9c) by DM6PR13CA0059.outlook.office365.com
+ (2603:10b6:5:134::36) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.5676.14 via Frontend
+ Transport; Wed, 28 Sep 2022 11:00:53 +0000
 X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 165.204.84.17)
  smtp.mailfrom=amd.com; dkim=none (message not signed)
  header.d=none;dmarc=pass action=none header.from=amd.com;
@@ -48,13 +48,13 @@ Received-SPF: Pass (protection.outlook.com: domain of amd.com designates
  165.204.84.17 as permitted sender) receiver=protection.outlook.com;
  client-ip=165.204.84.17; helo=SATLEXMB04.amd.com; pr=C
 Received: from SATLEXMB04.amd.com (165.204.84.17) by
- DM6NAM11FT062.mail.protection.outlook.com (10.13.173.40) with Microsoft SMTP
+ DM6NAM11FT022.mail.protection.outlook.com (10.13.172.210) with Microsoft SMTP
  Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.20.5676.17 via Frontend Transport; Wed, 28 Sep 2022 11:00:20 +0000
+ 15.20.5676.17 via Frontend Transport; Wed, 28 Sep 2022 11:00:53 +0000
 Received: from sindhu.amdval.net (10.180.168.240) by SATLEXMB04.amd.com
  (10.181.40.145) with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2375.28; Wed, 28 Sep
- 2022 06:00:13 -0500
+ 2022 06:00:47 -0500
 From:   Sandipan Das <sandipan.das@amd.com>
 To:     <linux-kernel@vger.kernel.org>, <linux-perf-users@vger.kernel.org>,
         <x86@kernel.org>
@@ -66,9 +66,9 @@ CC:     <peterz@infradead.org>, <bp@alien8.de>, <acme@kernel.org>,
         <eranian@google.com>, <ananth.narayan@amd.com>,
         <ravi.bangoria@amd.com>, <santosh.shukla@amd.com>,
         <sandipan.das@amd.com>
-Subject: [PATCH v2 1/3] tools headers uapi: Sync perf_event.h with kernel sources
-Date:   Wed, 28 Sep 2022 16:29:38 +0530
-Message-ID: <a3fe725bba24e7c0028a9fd768163cc63e8064c4.1664356751.git.sandipan.das@amd.com>
+Subject: [PATCH v2 2/3] perf script: Show branch speculation info
+Date:   Wed, 28 Sep 2022 16:29:39 +0530
+Message-ID: <e6abd45ef59027fddec53ac818df430acfccc936.1664356751.git.sandipan.das@amd.com>
 X-Mailer: git-send-email 2.34.1
 In-Reply-To: <cover.1664356751.git.sandipan.das@amd.com>
 References: <cover.1664356751.git.sandipan.das@amd.com>
@@ -80,77 +80,168 @@ X-ClientProxiedBy: SATLEXMB03.amd.com (10.181.40.144) To SATLEXMB04.amd.com
  (10.181.40.145)
 X-EOPAttributedMessage: 0
 X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: DM6NAM11FT062:EE_|SJ0PR12MB5405:EE_
-X-MS-Office365-Filtering-Correlation-Id: 272246eb-d1a9-4225-6ef2-08daa140a271
+X-MS-TrafficTypeDiagnostic: DM6NAM11FT022:EE_|BL1PR12MB5157:EE_
+X-MS-Office365-Filtering-Correlation-Id: fd97fa07-8c3c-435c-7ec6-08daa140b64e
 X-MS-Exchange-SenderADCheck: 1
 X-MS-Exchange-AntiSpam-Relay: 0
 X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: 2x04QRIIE8wAbEGPL8BwhIcapbg0bP1xiEcNZuo7clq+leWbbw6LgobteEC+tj9dk01usjoBZgFPTUPMOO8VrJYdk56mueIPiWuPBubYFtry7/FaBa+kkO/QwGJmGPx5Iz9TB76WR2V8+VkdCSM+MPIQk4BEwfY992GQ07TsGPr5VVeRCxHpN5vWGEKg7Ef/D1xMd+sS4gfiaJfXV+V+qPFqnolbf84vxzrIEdHXdgPztj8YRs2Kt6QjYZP6uuTLADMiSBMVkyb8HaPKzHx5HuqIuCPHnC1xT1bd2sqlMnM0Pf0Hm0XcECOptx2jdRLAA2CbRHexW03Oh8lYO174f0iFNcvONNuWtqyLzk707UJRg7cb199TOY7douhSF/tS04UjctuRHP+9dXqvh6adFCK3x1Pc7nzzEsuiUknOPf6/kmFPDDwOxeBzGcW2a3GBEAUA8KbGIOR81L8nN0N/cdETqaBUzsIvvFGeznxXTBFF8G21bSYm/7Ki1Ogszzl0MZMIE/zqTEwgU6vL9Ao4iEKWWBx9IizktNry9NVl7VrYG5IFEyPJk8l6aYW1TkkfFzATKfAle8yY3DJ4ZZc8U8Z6bnX5PE3C6kGpg02tMzUF99lJS7omaiqcTY/mGSihBIe4/NgybtKAtktZptl6qIAdgwWT1diq87chZzecyq9qo9sbcvbY8ASWFgqOTVy9i19z3+8+IK1oIccQkCdhddgTdDBbIX9SfyJcO2675UmnjBQ5cFR8QIQx2t2kq4P1SFdEtF91ObZ6PHCv2I2xZbUaRMrLobkw1rVqzIYwsXlVrPvsj6Wh89G6KitH7oxF
-X-Forefront-Antispam-Report: CIP:165.204.84.17;CTRY:US;LANG:en;SCL:1;SRV:;IPV:CAL;SFV:NSPM;H:SATLEXMB04.amd.com;PTR:InfoDomainNonexistent;CAT:NONE;SFS:(13230022)(4636009)(136003)(376002)(396003)(346002)(39860400002)(451199015)(40470700004)(46966006)(36840700001)(83380400001)(2616005)(426003)(47076005)(186003)(336012)(16526019)(81166007)(356005)(82740400003)(36860700001)(5660300002)(7416002)(26005)(2906002)(44832011)(41300700001)(8936002)(82310400005)(40460700003)(478600001)(6666004)(40480700001)(4326008)(8676002)(70206006)(316002)(70586007)(54906003)(110136005)(36756003)(86362001)(36900700001);DIR:OUT;SFP:1101;
+X-Microsoft-Antispam-Message-Info: LzndABBawJgX341RYX2OVLYD8lHz1uaGkl7u3KVyOuX8k9Y7l5Ip/pCxc/uN5OSVs5THWvcifRnic80Dune3OOtvL5WYx/uT2McZuGkNnoYVtV95gsS584Ze+yWwjNj/FUUvZVBUPNqomTvg961l1Sreq99g06l3QfKyhknDB3Z+q5tLW+RN1NUgdLdRoQVB+oauGyViF1uI3HX7XxkDxpkmQ3ZZG3/hoLm2CFtMzAxLqQH3FEbpvxZ0POtVQH7p+dVwowlhl94marM/dENAe0b0YRAqVU/aTjRC43isj+eJDmTjfZmletDGWHFgpKxqjvhVx72Nbi9YfIt1ePOv1av0JOjCbjsni3eRHRrzc0sjoA+rnIBV/VEjyQIUnSObNUXwoncp95ZHI9gzx0ew6uoEUt44/0sQywVDCrmTs1QojdlfG5BpGqcyjcSJtS6RilClbknRB0g2tBV57FLEDat8Je9KBYueNXtotzaD/+muaip2ZzgZ5l7hThFripu/FLjqtq4RedkRsuLRhKrtbqmTuf1e9TmSLkUtMt+3lL4wqjiE732nBsYRldVq7qQjonqcjBijYupb8bBFYLjsvYl4dnhJZ9uDJbcm27vHcNo6TFiqzdPWS+WJmWZ+X+gfxaFxVIWVKTByQmDjklUyogEmWHx8nbIQve0UCE0BQYsVYdFLivDbCHn1ElP5FnZWP0c19/GSa8Ee9xoHXosAPZQEdCHtMcqmvopxYTz1X7gDjcqQJ6MYxNvs2i/KPBwfmDZDOfNTlHfvFD8xfZ3jNcy3PfPrktVqqi2rBrq+8zA8Uf/mu5hfflINLlxP2fyR
+X-Forefront-Antispam-Report: CIP:165.204.84.17;CTRY:US;LANG:en;SCL:1;SRV:;IPV:CAL;SFV:NSPM;H:SATLEXMB04.amd.com;PTR:InfoDomainNonexistent;CAT:NONE;SFS:(13230022)(4636009)(136003)(376002)(346002)(39860400002)(396003)(451199015)(36840700001)(46966006)(40470700004)(47076005)(356005)(82310400005)(426003)(2616005)(81166007)(478600001)(316002)(70586007)(70206006)(336012)(16526019)(8676002)(4326008)(40460700003)(44832011)(2906002)(36756003)(36860700001)(110136005)(41300700001)(82740400003)(6666004)(8936002)(7416002)(5660300002)(83380400001)(186003)(26005)(86362001)(54906003)(40480700001)(36900700001);DIR:OUT;SFP:1101;
 X-OriginatorOrg: amd.com
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 28 Sep 2022 11:00:20.0574
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 28 Sep 2022 11:00:53.2891
  (UTC)
-X-MS-Exchange-CrossTenant-Network-Message-Id: 272246eb-d1a9-4225-6ef2-08daa140a271
+X-MS-Exchange-CrossTenant-Network-Message-Id: fd97fa07-8c3c-435c-7ec6-08daa140b64e
 X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
 X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=3dd8961f-e488-4e60-8e11-a82d994e183d;Ip=[165.204.84.17];Helo=[SATLEXMB04.amd.com]
-X-MS-Exchange-CrossTenant-AuthSource: DM6NAM11FT062.eop-nam11.prod.protection.outlook.com
+X-MS-Exchange-CrossTenant-AuthSource: DM6NAM11FT022.eop-nam11.prod.protection.outlook.com
 X-MS-Exchange-CrossTenant-AuthAs: Anonymous
 X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: SJ0PR12MB5405
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: BL1PR12MB5157
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-Sync perf_event.h with the kernel sources by adding the new "spec" bitfield
-to branch entries.
+Show the branch speculation info if provided by the branch recording
+hardware feature. This can be useful for optimizing code further.
+
+The speculation info is appended to the end of the list of fields so any
+existing tools that use "/" as a delimiter for access fields via an index
+remain unaffected. Also show "-" instead of "N/A" when speculation info
+is unavailable because "/" is used as the field separator.
+
+E.g.
+
+  $ perf record -j any,u,save_type ./test_branch
+  $ perf script --fields brstacksym
+
+Before:
+
+  [...]
+  check_match+0x60/strcmp+0x0/P/-/-/0/CALL
+  do_lookup_x+0x3c5/check_match+0x0/P/-/-/0/CALL
+  [...]
+
+After:
+
+  [...]
+  check_match+0x60/strcmp+0x0/P/-/-/0/CALL/NON_SPEC_CORRECT_PATH
+  do_lookup_x+0x3c5/check_match+0x0/P/-/-/0/CALL/NON_SPEC_CORRECT_PATH
+  [...]
 
 Signed-off-by: Sandipan Das <sandipan.das@amd.com>
 ---
- tools/include/uapi/linux/perf_event.h | 15 ++++++++++++++-
- 1 file changed, 14 insertions(+), 1 deletion(-)
+ tools/perf/builtin-script.c |  5 +++--
+ tools/perf/util/branch.c    | 15 +++++++++++++++
+ tools/perf/util/branch.h    |  5 ++++-
+ tools/perf/util/evsel.c     | 15 ++++++++++++---
+ 4 files changed, 34 insertions(+), 6 deletions(-)
 
-diff --git a/tools/include/uapi/linux/perf_event.h b/tools/include/uapi/linux/perf_event.h
-index 49cb2355efc0..9e1ae54b48a2 100644
---- a/tools/include/uapi/linux/perf_event.h
-+++ b/tools/include/uapi/linux/perf_event.h
-@@ -263,6 +263,17 @@ enum {
- 	PERF_BR_MAX,
- };
+diff --git a/tools/perf/builtin-script.c b/tools/perf/builtin-script.c
+index 886f53cfa257..5b337f47a4be 100644
+--- a/tools/perf/builtin-script.c
++++ b/tools/perf/builtin-script.c
+@@ -877,12 +877,13 @@ mispred_str(struct branch_entry *br)
  
-+/*
-+ * Common branch speculation outcome classification
-+ */
-+enum {
-+	PERF_BR_SPEC_NA			= 0,	/* Not available */
-+	PERF_BR_SPEC_WRONG_PATH		= 1,	/* Speculative but on wrong path */
-+	PERF_BR_NON_SPEC_CORRECT_PATH	= 2,	/* Non-speculative but on correct path */
-+	PERF_BR_SPEC_CORRECT_PATH	= 3,	/* Speculative and on correct path */
-+	PERF_BR_SPEC_MAX,
-+};
+ static int print_bstack_flags(FILE *fp, struct branch_entry *br)
+ {
+-	return fprintf(fp, "/%c/%c/%c/%d/%s ",
++	return fprintf(fp, "/%c/%c/%c/%d/%s/%s ",
+ 		       mispred_str(br),
+ 		       br->flags.in_tx ? 'X' : '-',
+ 		       br->flags.abort ? 'A' : '-',
+ 		       br->flags.cycles,
+-		       get_branch_type(br));
++		       get_branch_type(br),
++		       br->flags.spec ? branch_spec_desc(br->flags.spec) : "-");
+ }
+ 
+ static int perf_sample__fprintf_brstack(struct perf_sample *sample,
+diff --git a/tools/perf/util/branch.c b/tools/perf/util/branch.c
+index 6d38238481d3..378f16a24751 100644
+--- a/tools/perf/util/branch.c
++++ b/tools/perf/util/branch.c
+@@ -212,3 +212,18 @@ int branch_type_str(struct branch_type_stat *st, char *bf, int size)
+ 
+ 	return printed;
+ }
 +
- enum {
- 	PERF_BR_NEW_FAULT_ALGN		= 0,    /* Alignment fault */
- 	PERF_BR_NEW_FAULT_DATA		= 1,    /* Data fault */
-@@ -1395,6 +1406,7 @@ union perf_mem_data_src {
-  *     abort: aborting a hardware transaction
-  *    cycles: cycles from last branch (or 0 if not supported)
-  *      type: branch type
-+ *      spec: branch speculation info (or 0 if not supported)
-  */
- struct perf_branch_entry {
- 	__u64	from;
-@@ -1405,9 +1417,10 @@ struct perf_branch_entry {
- 		abort:1,    /* transaction abort */
- 		cycles:16,  /* cycle count to last branch */
- 		type:4,     /* branch type */
-+		spec:2,     /* branch speculation info */
- 		new_type:4, /* additional branch type */
- 		priv:3,     /* privilege level */
--		reserved:33;
-+		reserved:31;
++const char *branch_spec_desc(int spec)
++{
++	const char *branch_spec_outcomes[PERF_BR_SPEC_MAX] = {
++		"N/A",
++		"SPEC_WRONG_PATH",
++		"NON_SPEC_CORRECT_PATH",
++		"SPEC_CORRECT_PATH",
++	};
++
++	if (spec >= 0 && spec < PERF_BR_SPEC_MAX)
++		return branch_spec_outcomes[spec];
++
++	return NULL;
++}
+diff --git a/tools/perf/util/branch.h b/tools/perf/util/branch.h
+index f838b23db180..264817c96560 100644
+--- a/tools/perf/util/branch.h
++++ b/tools/perf/util/branch.h
+@@ -24,9 +24,10 @@ struct branch_flags {
+ 			u64 abort:1;
+ 			u64 cycles:16;
+ 			u64 type:4;
++			u64 spec:2;
+ 			u64 new_type:4;
+ 			u64 priv:3;
+-			u64 reserved:33;
++			u64 reserved:31;
+ 		};
+ 	};
  };
+@@ -90,4 +91,6 @@ const char *get_branch_type(struct branch_entry *e);
+ void branch_type_stat_display(FILE *fp, struct branch_type_stat *st);
+ int branch_type_str(struct branch_type_stat *st, char *bf, int bfsize);
  
- union perf_sample_weight {
++const char *branch_spec_desc(int spec);
++
+ #endif /* _PERF_BRANCH_H */
+diff --git a/tools/perf/util/evsel.c b/tools/perf/util/evsel.c
+index 5776bfa70f11..0266e885acb6 100644
+--- a/tools/perf/util/evsel.c
++++ b/tools/perf/util/evsel.c
+@@ -2326,7 +2326,10 @@ u64 evsel__bitfield_swap_branch_flags(u64 value)
+ 	 * 		abort:1		//transaction abort
+ 	 * 		cycles:16	//cycle count to last branch
+ 	 * 		type:4		//branch type
+-	 * 		reserved:40
++	 * 		spec:2		//branch speculation info
++	 * 		new_type:4	//additional branch type
++	 * 		priv:3		//privilege level
++	 * 		reserved:31
+ 	 * 	}
+ 	 * }
+ 	 *
+@@ -2345,7 +2348,10 @@ u64 evsel__bitfield_swap_branch_flags(u64 value)
+ 		new_val |= bitfield_swap(value, 3, 1);
+ 		new_val |= bitfield_swap(value, 4, 16);
+ 		new_val |= bitfield_swap(value, 20, 4);
+-		new_val |= bitfield_swap(value, 24, 40);
++		new_val |= bitfield_swap(value, 24, 2);
++		new_val |= bitfield_swap(value, 26, 4);
++		new_val |= bitfield_swap(value, 30, 3);
++		new_val |= bitfield_swap(value, 33, 31);
+ 	} else {
+ 		new_val = bitfield_swap(value, 63, 1);
+ 		new_val |= bitfield_swap(value, 62, 1);
+@@ -2353,7 +2359,10 @@ u64 evsel__bitfield_swap_branch_flags(u64 value)
+ 		new_val |= bitfield_swap(value, 60, 1);
+ 		new_val |= bitfield_swap(value, 44, 16);
+ 		new_val |= bitfield_swap(value, 40, 4);
+-		new_val |= bitfield_swap(value, 0, 40);
++		new_val |= bitfield_swap(value, 38, 2);
++		new_val |= bitfield_swap(value, 34, 4);
++		new_val |= bitfield_swap(value, 31, 3);
++		new_val |= bitfield_swap(value, 0, 31);
+ 	}
+ 
+ 	return new_val;
 -- 
 2.34.1
 
