@@ -2,83 +2,180 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 46E40C32771
-	for <linux-perf-users@archiver.kernel.org>; Wed, 28 Sep 2022 15:35:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 516BFC04A95
+	for <linux-perf-users@archiver.kernel.org>; Wed, 28 Sep 2022 15:35:33 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S234355AbiI1Pf0 (ORCPT
+        id S230015AbiI1Pfb (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Wed, 28 Sep 2022 11:35:26 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54440 "EHLO
+        Wed, 28 Sep 2022 11:35:31 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50594 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S234725AbiI1Pe5 (ORCPT
+        with ESMTP id S233277AbiI1PfJ (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Wed, 28 Sep 2022 11:34:57 -0400
-Received: from mail-il1-x135.google.com (mail-il1-x135.google.com [IPv6:2607:f8b0:4864:20::135])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 536186173D;
-        Wed, 28 Sep 2022 08:34:51 -0700 (PDT)
-Received: by mail-il1-x135.google.com with SMTP id p10so411476iln.4;
-        Wed, 28 Sep 2022 08:34:50 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20210112;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:from:to:cc:subject:date;
-        bh=7YMjbZ8J9tKgbU3lbB83+uhwQsHK55CjtoPPW43rcIs=;
-        b=nNT6rlWUMZ0SnuEJDO14/3j3UbMTHEOYduj5E8ktaj4JO5Au5p8UggQZHYBM9s9GmC
-         GPGoE10f0NsbRaD8tGugG3Lmnv8e6efNy4SAUsYAbFSGgKbXZJyRtmVuHhdsxWMtqSD6
-         vFSZofQPWLVPySDWnU8vboBghzU4R82yvZwVX+nt+bSgQu9XrHFq1XEg0frnQPHw24Qs
-         6FqPWpmk+NR10+DJu4YQN2hMVRaZ8hreQw/xR/1stVJHdElbahdC1o6/9sFtOYcZ3HFm
-         ifyZxxNjnmLwvBXNDiqWHI8yYwuyMoklS7kVWGY+9QXmwsiKmJ1LncnkVZBxYd/l892C
-         B+yA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date;
-        bh=7YMjbZ8J9tKgbU3lbB83+uhwQsHK55CjtoPPW43rcIs=;
-        b=3Z6RzOgmGaTIkGMHvLSO0ktNHpp/qTVs5MssMbAB1bAgqOQ5iWfQu/bXSXeDNqCw2p
-         eIuLgqiz6EbgM4U+X0DoV+qdOWX+f6QLxPGwbu+69hhhMkxL2SH9WEn3W64LlPhfFfAC
-         IMB9bobyB7NliHzfhDMAWNbaG2j2kBk4t7fXbkzj/Tp+qUOuRGF97Xw+15pIjaFP+reg
-         j2S9eN8a8w68wJaBWSDahsOPyfPCSm1SNIZj8xJLT4fgqyx+B4pgp5gy4WxeVa7hj3CC
-         g2rwQkeiy+6kpIbFpsRmiFQfmVhP83eND0nlNGb2vSUuM7sX24VzRl1+fiPAqa7Pye7P
-         ZiSQ==
-X-Gm-Message-State: ACrzQf3wPZ04zxaGdMv/qXq9PR3zQH1aRb4Cw/XgIkh2UwQIANmJVKSZ
-        /kRB8iy+7lYFQxlf3allFQsVFv+nzf2u4OwXvZfh817CSjA=
-X-Google-Smtp-Source: AMsMyM5GmHEAKGvxhjbyKefQqMoHqYHsCmV0gzis+S9H+0AZni9Jyq1QNEECB5Z8RI13e4VdJP112o1DTRnVZBgEd6U=
-X-Received: by 2002:a92:c569:0:b0:2f5:927d:b61a with SMTP id
- b9-20020a92c569000000b002f5927db61amr15812068ilj.151.1664379290391; Wed, 28
- Sep 2022 08:34:50 -0700 (PDT)
+        Wed, 28 Sep 2022 11:35:09 -0400
+Received: from foss.arm.com (foss.arm.com [217.140.110.172])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTP id DD3582674
+        for <linux-perf-users@vger.kernel.org>; Wed, 28 Sep 2022 08:35:07 -0700 (PDT)
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id B71861063;
+        Wed, 28 Sep 2022 08:35:13 -0700 (PDT)
+Received: from [10.57.0.129] (unknown [10.57.0.129])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 76DE13F73D;
+        Wed, 28 Sep 2022 08:35:05 -0700 (PDT)
+Message-ID: <4792ef3a-8790-a0d4-50f2-4917874d81d6@arm.com>
+Date:   Wed, 28 Sep 2022 16:35:04 +0100
 MIME-Version: 1.0
-References: <20220927131518.30000-1-ojeda@kernel.org> <YzRjEc9zQbHeWPFL@liuwe-devbox-debian-v2>
-In-Reply-To: <YzRjEc9zQbHeWPFL@liuwe-devbox-debian-v2>
-From:   Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>
-Date:   Wed, 28 Sep 2022 17:34:39 +0200
-Message-ID: <CANiq72kq4RR4suFjGUZeg6ua8X=KU5aBPKPgjRH29hOVmDiNLQ@mail.gmail.com>
-Subject: Re: [PATCH v10 00/27] Rust support
-To:     Wei Liu <wei.liu@kernel.org>
-Cc:     Miguel Ojeda <ojeda@kernel.org>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        rust-for-linux@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-fsdevel@vger.kernel.org, patches@lists.linux.dev,
-        Jarkko Sakkinen <jarkko@kernel.org>, linux-doc@vger.kernel.org,
-        linux-kbuild@vger.kernel.org, linux-perf-users@vger.kernel.org,
-        live-patching@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
+ Thunderbird/91.11.0
+Subject: Re: [PATCH] tools/perf: Fix aggr_printout to display cpu field
+ irrespective of core value
+Content-Language: en-US
+To:     Athira Rajeev <atrajeev@linux.vnet.ibm.com>,
+        Ian Rogers <irogers@google.com>
+Cc:     linux-perf-users@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
+        maddy@linux.vnet.ibm.com, rnsastry@linux.ibm.com,
+        kjain@linux.ibm.com, disgoel@linux.vnet.ibm.com, acme@kernel.org,
+        jolsa@kernel.org, mpe@ellerman.id.au
+References: <20220913115717.36191-1-atrajeev@linux.vnet.ibm.com>
+From:   James Clark <james.clark@arm.com>
+In-Reply-To: <20220913115717.36191-1-atrajeev@linux.vnet.ibm.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-On Wed, Sep 28, 2022 at 5:07 PM Wei Liu <wei.liu@kernel.org> wrote:
->
-> I cannot find this patch in my inbox. That's probably filtered out by
-> the mailing list since it is too big.
 
-The patch reached lore in case you want to double-check:
 
-    https://lore.kernel.org/lkml/20220927131518.30000-8-ojeda@kernel.org/
+On 13/09/2022 12:57, Athira Rajeev wrote:
+> perf stat includes option to specify aggr_mode to display
+> per-socket, per-core, per-die, per-node counter details.
+> Also there is option -A ( AGGR_NONE, -no-aggr ), where the
+> counter values are displayed for each cpu along with "CPU"
+> value in one field of the output.
+> 
+> Each of the aggregate mode uses the information fetched
+> from "/sys/devices/system/cpu/cpuX/topology" like core_id,
 
-I am Cc'ing patches@lists.linux.dev as suggested by Konstantin to
-reduce the chance of problems, though I wouldn't expect to have issues
-now since it is fairly smaller than v8 where we hit the issue.
+I thought that this wouldn't apply to the cpu field because cpu is
+basically interchangeable as an index in cpumap, rather than anything
+being read from the topology file.
 
-Cheers,
-Miguel
+> physical_package_id. Utility functions in "cpumap.c" fetches
+> this information and populates the socket id, core id, cpu etc.
+> If the platform does not expose the topology information,
+> these values will be set to -1. Example, in case of powerpc,
+> details like physical_package_id is restricted to be exposed
+> in pSeries platform. So id.socket, id.core, id.cpu all will
+> be set as -1.
+> 
+> In case of displaying socket or die value, there is no check
+> done in the "aggr_printout" function to see if it points to
+> valid socket id or die. But for displaying "cpu" value, there
+> is a check for "if (id.core > -1)". In case of powerpc pSeries
+> where detail like physical_package_id is restricted to be
+> exposed, id.core will be set to -1. Hence the column or field
+> itself for CPU won't be displayed in the output.
+> 
+> Result for per-socket:
+> 
+> <<>>
+> perf stat -e branches --per-socket -a true
+> 
+>  Performance counter stats for 'system wide':
+> 
+> S-1      32            416,851      branches
+> <<>>
+> 
+> Here S has -1 in above result. But with -A option which also
+> expects CPU in one column in the result, below is observed.
+> 
+> <<>>
+>  /bin/perf stat -e instructions -A -a true
+> 
+>  Performance counter stats for 'system wide':
+> 
+>             47,146      instructions
+>             45,226      instructions
+>             43,354      instructions
+>             45,184      instructions
+> <<>>
+> 
+> If the cpu id value is pointing to -1 also, it makes sense
+> to display the column in the output to replicate the behaviour
+> or to be in precedence with other aggr options(like per-socket,
+> per-core). Remove the check "id.core" so that CPU field gets
+> displayed in the output.
+
+Why would you want to print -1 out? Seems like the if statement was a
+good one to me, otherwise the output looks a bit broken to users. Are
+the other aggregation modes even working if -1 is set for socket and
+die? Maybe we need to not print -1 in those cases or exit earlier with a
+failure.
+
+The -1 value has a specific internal meaning which is "to not
+aggregate". It doesn't mean "not set".
+
+> 
+> After the fix:
+> 
+> <<>>
+> perf stat -e instructions -A -a true
+> 
+>  Performance counter stats for 'system wide':
+> 
+> CPU-1                  64,034      instructions
+> CPU-1                  68,941      instructions
+> CPU-1                  59,418      instructions
+> CPU-1                  70,478      instructions
+> CPU-1                  65,201      instructions
+> CPU-1                  63,704      instructions
+> <<>>
+> 
+> This is caught while running "perf test" for
+> "stat+json_output.sh" and "stat+csv_output.sh".
+
+Is it possible to fix the issue by making the tests cope with the lack
+of the CPU id?
+
+> 
+> Reported-by: Disha Goel <disgoel@linux.vnet.ibm.com>
+> Signed-off-by: Athira Rajeev <atrajeev@linux.vnet.ibm.com>
+> ---
+>  tools/perf/util/stat-display.c | 6 ++----
+>  1 file changed, 2 insertions(+), 4 deletions(-)
+> 
+> diff --git a/tools/perf/util/stat-display.c b/tools/perf/util/stat-display.c
+> index b82844cb0ce7..1b751a730271 100644
+> --- a/tools/perf/util/stat-display.c
+> +++ b/tools/perf/util/stat-display.c
+> @@ -168,10 +168,9 @@ static void aggr_printout(struct perf_stat_config *config,
+>  					id.socket,
+>  					id.die,
+>  					id.core);
+> -			} else if (id.core > -1) {
+> +			} else
+
+This should have been "id.cpu.cpu > -1". Looks like it was changed by
+some kind of bad merge or rebase in df936cadfb because there is no
+obvious justification for the change to .core in that commit.
+
+>  				fprintf(config->output, "\"cpu\" : \"%d\", ",
+>  					id.cpu.cpu);
+> -			}
+>  		} else {
+>  			if (evsel->percore && !config->percore_show_thread) {
+>  				fprintf(config->output, "S%d-D%d-C%*d%s",
+> @@ -179,11 +178,10 @@ static void aggr_printout(struct perf_stat_config *config,
+>  					id.die,
+>  					config->csv_output ? 0 : -3,
+>  					id.core, config->csv_sep);
+> -			} else if (id.core > -1) {
+> +			} else
+>  				fprintf(config->output, "CPU%*d%s",
+>  					config->csv_output ? 0 : -7,
+>  					id.cpu.cpu, config->csv_sep);
+> -			}
+>  		}
+>  		break;
+>  	case AGGR_THREAD:
