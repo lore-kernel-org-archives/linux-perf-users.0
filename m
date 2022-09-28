@@ -2,32 +2,33 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 13D0EC04A95
-	for <linux-perf-users@archiver.kernel.org>; Wed, 28 Sep 2022 10:34:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D17D3C32771
+	for <linux-perf-users@archiver.kernel.org>; Wed, 28 Sep 2022 10:41:29 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233298AbiI1KeC (ORCPT
+        id S233620AbiI1Kl2 (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Wed, 28 Sep 2022 06:34:02 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45866 "EHLO
+        Wed, 28 Sep 2022 06:41:28 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40146 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230514AbiI1KeB (ORCPT
+        with ESMTP id S233488AbiI1Kl2 (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Wed, 28 Sep 2022 06:34:01 -0400
+        Wed, 28 Sep 2022 06:41:28 -0400
 Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTP id 498277B2B1;
-        Wed, 28 Sep 2022 03:34:00 -0700 (PDT)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTP id DB4FE7E33C;
+        Wed, 28 Sep 2022 03:41:25 -0700 (PDT)
 Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id B516D20E3;
-        Wed, 28 Sep 2022 03:34:06 -0700 (PDT)
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 51C66143D;
+        Wed, 28 Sep 2022 03:41:32 -0700 (PDT)
 Received: from [10.57.0.129] (unknown [10.57.0.129])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 4268C3F792;
-        Wed, 28 Sep 2022 03:33:58 -0700 (PDT)
-Message-ID: <55e74adc-0001-f08e-de10-913f36469da8@arm.com>
-Date:   Wed, 28 Sep 2022 11:33:56 +0100
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id DC6A13F792;
+        Wed, 28 Sep 2022 03:41:23 -0700 (PDT)
+Message-ID: <a2a5e3ab-18ca-d61a-73bb-d60b9c2c8929@arm.com>
+Date:   Wed, 28 Sep 2022 11:41:22 +0100
 MIME-Version: 1.0
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
  Thunderbird/91.11.0
-Subject: Re: [PATCH 1/6] perf stat: Convert perf_stat_evsel.res_stats array
+Subject: Re: [PATCH 2/6] perf stat: Don't call perf_stat_evsel_id_init()
+ repeatedly
 Content-Language: en-US
 To:     Namhyung Kim <namhyung@kernel.org>
 Cc:     Ingo Molnar <mingo@kernel.org>,
@@ -42,9 +43,9 @@ Cc:     Ingo Molnar <mingo@kernel.org>,
         Arnaldo Carvalho de Melo <acme@kernel.org>,
         Jiri Olsa <jolsa@kernel.org>
 References: <20220926200757.1161448-1-namhyung@kernel.org>
- <20220926200757.1161448-2-namhyung@kernel.org>
+ <20220926200757.1161448-3-namhyung@kernel.org>
 From:   James Clark <james.clark@arm.com>
-In-Reply-To: <20220926200757.1161448-2-namhyung@kernel.org>
+In-Reply-To: <20220926200757.1161448-3-namhyung@kernel.org>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 Precedence: bulk
@@ -54,78 +55,34 @@ X-Mailing-List: linux-perf-users@vger.kernel.org
 
 
 On 26/09/2022 21:07, Namhyung Kim wrote:
-> It uses only one member, no need to have it as an array.
+> The evsel__reset_stat_priv() is called more than once if user gave -r
+> option for multiple run.  But it doesn't need to re-initialize the id.
 > 
 > Signed-off-by: Namhyung Kim <namhyung@kernel.org>
 > ---
->  tools/perf/util/stat-display.c |  2 +-
->  tools/perf/util/stat.c         | 10 +++-------
->  tools/perf/util/stat.h         |  2 +-
->  3 files changed, 5 insertions(+), 9 deletions(-)
+>  tools/perf/util/stat.c | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
 > 
 
 Reviewed-by: James Clark <james.clark@arm.com>
 
-> diff --git a/tools/perf/util/stat-display.c b/tools/perf/util/stat-display.c
-> index b82844cb0ce7..234491f43c36 100644
-> --- a/tools/perf/util/stat-display.c
-> +++ b/tools/perf/util/stat-display.c
-> @@ -67,7 +67,7 @@ static void print_noise(struct perf_stat_config *config,
->  		return;
->  
->  	ps = evsel->stats;
-> -	print_noise_pct(config, stddev_stats(&ps->res_stats[0]), avg);
-> +	print_noise_pct(config, stddev_stats(&ps->res_stats), avg);
->  }
->  
->  static void print_cgroup(struct perf_stat_config *config, struct evsel *evsel)
 > diff --git a/tools/perf/util/stat.c b/tools/perf/util/stat.c
-> index ce5e9e372fc4..6bcd3dc32a71 100644
+> index 6bcd3dc32a71..e1d3152ce664 100644
 > --- a/tools/perf/util/stat.c
 > +++ b/tools/perf/util/stat.c
-> @@ -132,12 +132,9 @@ static void perf_stat_evsel_id_init(struct evsel *evsel)
->  
->  static void evsel__reset_stat_priv(struct evsel *evsel)
->  {
-> -	int i;
+> @@ -135,7 +135,6 @@ static void evsel__reset_stat_priv(struct evsel *evsel)
 >  	struct perf_stat_evsel *ps = evsel->stats;
 >  
-> -	for (i = 0; i < 3; i++)
-> -		init_stats(&ps->res_stats[i]);
-> -
-> +	init_stats(&ps->res_stats);
->  	perf_stat_evsel_id_init(evsel);
+>  	init_stats(&ps->res_stats);
+> -	perf_stat_evsel_id_init(evsel);
 >  }
 >  
-> @@ -440,7 +437,7 @@ int perf_stat_process_counter(struct perf_stat_config *config,
->  	struct perf_counts_values *aggr = &counter->counts->aggr;
->  	struct perf_stat_evsel *ps = counter->stats;
->  	u64 *count = counter->counts->aggr.values;
-> -	int i, ret;
-> +	int ret;
->  
->  	aggr->val = aggr->ena = aggr->run = 0;
->  
-> @@ -458,8 +455,7 @@ int perf_stat_process_counter(struct perf_stat_config *config,
->  		evsel__compute_deltas(counter, -1, -1, aggr);
->  	perf_counts_values__scale(aggr, config->scale, &counter->counts->scaled);
->  
-> -	for (i = 0; i < 3; i++)
-> -		update_stats(&ps->res_stats[i], count[i]);
-> +	update_stats(&ps->res_stats, *count);
->  
->  	if (verbose > 0) {
->  		fprintf(config->output, "%s: %" PRIu64 " %" PRIu64 " %" PRIu64 "\n",
-> diff --git a/tools/perf/util/stat.h b/tools/perf/util/stat.h
-> index 72713b344b79..3eba38a1a149 100644
-> --- a/tools/perf/util/stat.h
-> +++ b/tools/perf/util/stat.h
-> @@ -43,7 +43,7 @@ enum perf_stat_evsel_id {
->  };
->  
->  struct perf_stat_evsel {
-> -	struct stats		 res_stats[3];
-> +	struct stats		 res_stats;
->  	enum perf_stat_evsel_id	 id;
->  	u64			*group_data;
->  };
+>  static int evsel__alloc_stat_priv(struct evsel *evsel)
+> @@ -143,6 +142,7 @@ static int evsel__alloc_stat_priv(struct evsel *evsel)
+>  	evsel->stats = zalloc(sizeof(struct perf_stat_evsel));
+>  	if (evsel->stats == NULL)
+>  		return -ENOMEM;
+> +	perf_stat_evsel_id_init(evsel);
+>  	evsel__reset_stat_priv(evsel);
+>  	return 0;
+>  }
