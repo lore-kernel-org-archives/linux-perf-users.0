@@ -2,401 +2,251 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A24A0C32771
-	for <linux-perf-users@archiver.kernel.org>; Wed, 28 Sep 2022 14:56:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1B681C04A95
+	for <linux-perf-users@archiver.kernel.org>; Wed, 28 Sep 2022 15:06:22 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229951AbiI1Oz7 (ORCPT
+        id S233713AbiI1PGU (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Wed, 28 Sep 2022 10:55:59 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59834 "EHLO
+        Wed, 28 Sep 2022 11:06:20 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55650 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S233227AbiI1Oz5 (ORCPT
+        with ESMTP id S233287AbiI1PGT (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Wed, 28 Sep 2022 10:55:57 -0400
-Received: from mail-ej1-x629.google.com (mail-ej1-x629.google.com [IPv6:2a00:1450:4864:20::629])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0718C5D133
-        for <linux-perf-users@vger.kernel.org>; Wed, 28 Sep 2022 07:55:56 -0700 (PDT)
-Received: by mail-ej1-x629.google.com with SMTP id lh5so27697936ejb.10
-        for <linux-perf-users@vger.kernel.org>; Wed, 28 Sep 2022 07:55:55 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20210112;
-        h=user-agent:in-reply-to:content-disposition:mime-version:references
-         :message-id:subject:cc:to:from:date:from:to:cc:subject:date;
-        bh=jD41RBwsQAO8F9W6wPajIDr+uexC/n3UBb3DBn/vWVE=;
-        b=bHTJmWYvcRRdH0i/juwduIH+xTiu9sOZPJauSbF3vLNtZDQ9uCaGEkbU8430f4UqbB
-         0Xg7t8ftYcLNU4Vy7gbgoxn5qOyo5StVeTKBVINSMiAwYDZHJ3/faRwRRU2SsqBk9rhQ
-         apO5SQE79H200Q3Us0+XMkuQMjoWuRyQ6k4ySLe4dLjh3pXDwc5ppq470sLFBYAM+NND
-         8MbVl30YEivl6xubcwenZQ95ZZzI5/oNquvIHBUqKbaCyXXLg6nkKrrbbmsbO97qJ8XX
-         Vp0g93imNhsUBGyP1KFunUxlNYFBWtpgLJRKCNG4ZgM1xtcaTrdRaiZBhkp34aWSNEr/
-         SSWQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=user-agent:in-reply-to:content-disposition:mime-version:references
-         :message-id:subject:cc:to:from:date:x-gm-message-state:from:to:cc
-         :subject:date;
-        bh=jD41RBwsQAO8F9W6wPajIDr+uexC/n3UBb3DBn/vWVE=;
-        b=rhrIyszPJyrIOtgPy5EX/Lwq1K/J9KI52TKwB7U447LUiPFL1WLAsKmWwKHHSq8fx1
-         TWV0fvzwD1rGA9p0hI7UlmVaBzcJW7a9DxxnaEo3J1WAAX7t+ib0tNS+Pa/dC6g2Hy4l
-         aqVHYCdsmRuDbmoZlXVKr5VoqZvHJwkJXVxXponHU/hBSsHMoa0lcj7Tbia2ufX2uCQJ
-         pG00HIZnmn0iTtD5CPXrYZGYbHJM2Q3Aq1wh9EbFEY5A15wY0G5y4YknI2K9lir6qINn
-         E5PScY9mPudPncsFWy0SBBx1+RPQUh/254Z6MTWI5XnMz2zsNfZaTlmKGV8nlqHkUtap
-         XR+A==
-X-Gm-Message-State: ACrzQf1mBuGff4v3D/oF+iVat9lj9pQ/v/lBeMhjw2L38vRpOmP65OMB
-        leZnya3Ssm7LsWZicci5lgOOJw==
-X-Google-Smtp-Source: AMsMyM4dc2ncpWtwN/VZTFZcFysrAI3y/1gSVH4Ea47ve1DqpmcoVMvziFOO4z0n45Tn1fVqfq9EoA==
-X-Received: by 2002:a17:906:9749:b0:782:287f:d217 with SMTP id o9-20020a170906974900b00782287fd217mr27395588ejy.259.1664376954293;
-        Wed, 28 Sep 2022 07:55:54 -0700 (PDT)
-Received: from elver.google.com ([2a00:79e0:9c:201:dbbc:9ea2:a5f7:571e])
-        by smtp.gmail.com with ESMTPSA id 18-20020a170906219200b0073de0506745sm2489691eju.197.2022.09.28.07.55.53
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 28 Sep 2022 07:55:53 -0700 (PDT)
-Date:   Wed, 28 Sep 2022 16:55:46 +0200
-From:   Marco Elver <elver@google.com>
-To:     Peter Zijlstra <peterz@infradead.org>
-Cc:     Ingo Molnar <mingo@redhat.com>,
+        Wed, 28 Sep 2022 11:06:19 -0400
+Received: from mga04.intel.com (mga04.intel.com [192.55.52.120])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8449358539;
+        Wed, 28 Sep 2022 08:06:17 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1664377577; x=1695913577;
+  h=message-id:date:mime-version:to:cc:references:from:
+   subject:in-reply-to:content-transfer-encoding;
+  bh=j38pTaECqTrdhtUjE4df4qFKAnc8TI12hP/8mH2VCb0=;
+  b=W+5pnHRum6cbUIMJe3WSTe/tRn2Dj1C2ismqfAjcS2VAGMGL5C59JwWo
+   i0UqUmn295hS+0G+mQRtsFzqN33yx4q1Kyw0ge12xW0O/Z+8Iq0ADZGR8
+   SsuwcQnlXLn22ynvTGCFfo0C33RdHgg3hCoD+jqP3IaxS8CfveBmxb52R
+   Rbh3eBEa0dJfP8ChZ0qtCzAokGrvL2vfd0rPqNAEigG3hQt2WAAjGEWig
+   tDqRueJoDpsh2YyDb375aDwiS3jqu6/n/LJA3gH/Od0DCAKTj8A3Sadgw
+   JVmj7m2QU8rzx3R4qKVSxoItOqgJohDXBF7Fa4DIGrcfFlzMaDzKY2yvt
+   w==;
+X-IronPort-AV: E=McAfee;i="6500,9779,10484"; a="300343318"
+X-IronPort-AV: E=Sophos;i="5.93,352,1654585200"; 
+   d="scan'208";a="300343318"
+Received: from fmsmga006.fm.intel.com ([10.253.24.20])
+  by fmsmga104.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 28 Sep 2022 08:05:48 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=McAfee;i="6500,9779,10484"; a="867003861"
+X-IronPort-AV: E=Sophos;i="5.93,352,1654585200"; 
+   d="scan'208";a="867003861"
+Received: from linux.intel.com ([10.54.29.200])
+  by fmsmga006.fm.intel.com with ESMTP; 28 Sep 2022 08:05:47 -0700
+Received: from [10.252.215.103] (kliang2-mobl1.ccr.corp.intel.com [10.252.215.103])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by linux.intel.com (Postfix) with ESMTPS id F0404580B55;
+        Wed, 28 Sep 2022 08:05:44 -0700 (PDT)
+Message-ID: <3119fb80-d8aa-167a-5a6a-27a90abd3f04@linux.intel.com>
+Date:   Wed, 28 Sep 2022 11:05:43 -0400
+MIME-Version: 1.0
+User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:102.0) Gecko/20100101
+ Thunderbird/102.3.0
+Content-Language: en-US
+To:     Ian Rogers <irogers@google.com>
+Cc:     Zhengjun Xing <zhengjun.xing@linux.intel.com>,
+        Andi Kleen <ak@linux.intel.com>, perry.taylor@intel.com,
+        caleb.biggers@intel.com, kshipra.bopardikar@intel.com,
+        samantha.alt@intel.com, ahmad.yasin@intel.com,
+        Peter Zijlstra <peterz@infradead.org>,
+        Ingo Molnar <mingo@redhat.com>,
         Arnaldo Carvalho de Melo <acme@kernel.org>,
         Mark Rutland <mark.rutland@arm.com>,
         Alexander Shishkin <alexander.shishkin@linux.intel.com>,
         Jiri Olsa <jolsa@kernel.org>,
         Namhyung Kim <namhyung@kernel.org>,
+        John Garry <john.garry@huawei.com>,
+        James Clark <james.clark@arm.com>,
+        Kajol Jain <kjain@linux.ibm.com>,
+        Thomas Richter <tmricht@linux.ibm.com>,
+        Miaoqian Lin <linmq006@gmail.com>,
+        Florian Fischer <florian.fischer@muhq.space>,
         linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org,
-        kasan-dev@googlegroups.com, Dmitry Vyukov <dvyukov@google.com>
-Subject: Re: [PATCH] perf: Fix missing SIGTRAPs due to pending_disable abuse
-Message-ID: <YzRgcnMXWuUZ4rlt@elver.google.com>
-References: <20220927121322.1236730-1-elver@google.com>
- <YzM/BUsBnX18NoOG@hirez.programming.kicks-ass.net>
- <YzNu5bgASbuVi0S3@elver.google.com>
- <YzQcqe9p9C5ZbjZ1@elver.google.com>
-MIME-Version: 1.0
-Content-Type: multipart/mixed; boundary="bwaiqnhq9mMzxU4e"
-Content-Disposition: inline
-In-Reply-To: <YzQcqe9p9C5ZbjZ1@elver.google.com>
-User-Agent: Mutt/2.2.7 (2022-08-07)
+        Stephane Eranian <eranian@google.com>
+References: <20220928072204.1613330-1-irogers@google.com>
+ <6312dee3-aa37-b244-df0e-a5cd75ddee71@linux.intel.com>
+ <CAP-5=fUUohS8LYJOQo7gxViKzp0EJ5Enz797tpWE3dhyq11ODg@mail.gmail.com>
+From:   "Liang, Kan" <kan.liang@linux.intel.com>
+Subject: Re: [PATCH v1 00/22] Improvements to Intel perf metrics
+In-Reply-To: <CAP-5=fUUohS8LYJOQo7gxViKzp0EJ5Enz797tpWE3dhyq11ODg@mail.gmail.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
 
---bwaiqnhq9mMzxU4e
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
 
-On Wed, Sep 28, 2022 at 12:06PM +0200, Marco Elver wrote:
+On 2022-09-28 10:04 a.m., Ian Rogers wrote:
+> On Wed, Sep 28, 2022 at 5:56 AM Liang, Kan <kan.liang@linux.intel.com> wrote:
+>>
+>>
+>>
+>> On 2022-09-28 3:21 a.m., Ian Rogers wrote:
+>>> For consistency with:
+>>> https://github.com/intel/perfmon-metrics
+>>> rename of topdown TMA metrics from Frontend_Bound to tma_frontend_bound.
+>>>
+>>
+>> If so, all the scripts with the old name must be broken on the existing
+>> platforms. Can we keep both old name and new name for the existing
+>> platforms?
+>>
+>> For the event naming, if we want to rename an event. We still keep the
+>> old name and mark it as deprecated in the existing platforms to maintain
+>> compatibility.
+>>
+>> Can we do the similar thing for metrics?
+>> For the existing platforms, just add all the metrics from the
+>> perfmon-metrics and don't change the existing metrics unless they have
+>> errors.
+>>
+>> Thanks,
+>> Kan
+> 
+> Thanks Kan,
+> 
+> Do we have examples of scripts that will be impacted by this? My
+> thoughts are that such scripts are likely using TopdownL1 as a metric
+> group, the metrics within that group vary and names may change over
+> time. For example, on hybrid there is Backend_Bound_Aux. Given the
+> existing state, such compatibility is only required for level 1
+> metrics on CNL CPX CLX KBLR/CFL/CML SKX SKL/KBL BDX BDW HSX HSW IVT
+> IVB JKT/SNB-EP SNB. Injecting either a metric group or an aliasing
+> metric is messy and when can we stop carrying the patch? There hasn't
+> been discussion of doing this in the context of:
+> https://github.com/intel/perfmon-metrics
+> I'd suggest that this is a good time for script writers to change how
+> they use particular metrics and derive the information instead from
+> groups like TopdownL1. 
 
-> My second idea about introducing something like irq_work_raw_sync().
-> Maybe it's not that crazy if it is actually safe. I expect this case
-> where we need the irq_work_raw_sync() to be very very rare.
+So the rename only impacts the Topdown metrics, right?
+We still keep the old group name, TopdownL1.
 
-The previous irq_work_raw_sync() forgot about irq_work_queue_on(). Alas,
-I might still be missing something obvious, because "it's never that
-easy". ;-)
-
-And for completeness, the full perf patch of what it would look like
-together with irq_work_raw_sync() (consider it v1.5). It's already
-survived some shorter stress tests and fuzzing.
+If so, I agree. It only makes sense when collect in a Top-down group,
+not specific metrics.
 
 Thanks,
--- Marco
+Kan
 
---bwaiqnhq9mMzxU4e
-Content-Type: text/x-diff; charset=us-ascii
-Content-Disposition: attachment;
-	filename="0001-irq_work-Introduce-irq_work_raw_sync.patch"
-
-From 5fcc38d87b2cd8c05c5306c0140ccc076c5bf963 Mon Sep 17 00:00:00 2001
-From: Marco Elver <elver@google.com>
-Date: Wed, 28 Sep 2022 16:33:27 +0200
-Subject: [PATCH 1/2] irq_work: Introduce irq_work_raw_sync()
-
-Introduce a non-sleeping spinning variant of irq_work_sync(), called
-irq_work_raw_sync(). Its usage is limited to contexts where interrupts
-are disabled, and unlike irq_work_sync(), may fail if the work is
-pending in the current CPU.
-
-Signed-off-by: Marco Elver <elver@google.com>
----
-v2:
-* New patch.
----
- include/linux/irq_work.h |  1 +
- kernel/irq_work.c        | 41 ++++++++++++++++++++++++++++++++++++++++
- 2 files changed, 42 insertions(+)
-
-diff --git a/include/linux/irq_work.h b/include/linux/irq_work.h
-index 8cd11a223260..490adecbb4be 100644
---- a/include/linux/irq_work.h
-+++ b/include/linux/irq_work.h
-@@ -59,6 +59,7 @@ bool irq_work_queue_on(struct irq_work *work, int cpu);
- 
- void irq_work_tick(void);
- void irq_work_sync(struct irq_work *work);
-+bool irq_work_raw_sync(struct irq_work *work);
- 
- #ifdef CONFIG_IRQ_WORK
- #include <asm/irq_work.h>
-diff --git a/kernel/irq_work.c b/kernel/irq_work.c
-index 7afa40fe5cc4..b251b3437db1 100644
---- a/kernel/irq_work.c
-+++ b/kernel/irq_work.c
-@@ -290,6 +290,47 @@ void irq_work_sync(struct irq_work *work)
- }
- EXPORT_SYMBOL_GPL(irq_work_sync);
- 
-+/*
-+ * Synchronize against the irq_work @work, ensuring the entry is not currently
-+ * in use after returning true; returns false if it's impossible to synchronize
-+ * due to being queued on the current CPU. Requires that interrupts are already
-+ * disabled (prefer irq_work_sync() in all other cases).
-+ */
-+bool irq_work_raw_sync(struct irq_work *work)
-+{
-+	struct llist_node *head;
-+	struct irq_work *entry;
-+
-+	/*
-+	 * Interrupts should be disabled, so that we can be sure the current
-+	 * CPU's work queues aren't concurrently run, cleared, and potentially
-+	 * some of its entries becoming invalid in the below iterations.
-+	 */
-+	lockdep_assert_irqs_disabled();
-+
-+	while (irq_work_is_busy(work)) {
-+		/*
-+		 * It is only safe to wait if the work is not on this CPU's work
-+		 * queues. Also beware of concurrent irq_work_queue_on(), so we
-+		 * need to keep re-checking this CPU's queues in this busy loop.
-+		 */
-+		head = READ_ONCE(this_cpu_ptr(&raised_list)->first);
-+		llist_for_each_entry(entry, head, node.llist) {
-+			if (entry == work)
-+				return false;
-+		}
-+		head = READ_ONCE(this_cpu_ptr(&lazy_list)->first);
-+		llist_for_each_entry(entry, head, node.llist) {
-+			if (entry == work)
-+				return false;
-+		}
-+		cpu_relax();
-+	}
-+
-+	return true;
-+}
-+EXPORT_SYMBOL_GPL(irq_work_raw_sync);
-+
- static void run_irq_workd(unsigned int cpu)
- {
- 	irq_work_run_list(this_cpu_ptr(&lazy_list));
--- 
-2.37.3.998.g577e59143f-goog
-
-
---bwaiqnhq9mMzxU4e
-Content-Type: text/x-diff; charset=us-ascii
-Content-Disposition: attachment;
-	filename="0002-perf-Fix-missing-SIGTRAPs-due-to-pending_disable-abu.patch"
-
-From 4467a6520c8f59065220a651167c4cd8da7a6e9b Mon Sep 17 00:00:00 2001
-From: Marco Elver <elver@google.com>
-Date: Fri, 23 Sep 2022 16:43:19 +0200
-Subject: [PATCH 2/2] perf: Fix missing SIGTRAPs due to pending_disable abuse
-
-Due to the implementation of how SIGTRAP are delivered if
-perf_event_attr::sigtrap is set, we've noticed 3 issues:
-
-	1. Missing SIGTRAP due to a race with event_sched_out() (more
-	   details below).
-
-	2. Hardware PMU events being disabled due to returning 1 from
-	   perf_event_overflow(). The only way to re-enable the event is
-	   for user space to first "properly" disable the event and then
-	   re-enable it.
-
-	3. The inability to automatically disable an event after a
-	   specified number of overflows via PERF_EVENT_IOC_REFRESH.
-
-The worst of the 3 issues is problem (1), which occurs when a
-pending_disable is "consumed" by a racing event_sched_out(), observed as
-follows:
-
-		CPU0			| 	CPU1
-	--------------------------------+---------------------------
-	__perf_event_overflow()		|
-	 perf_event_disable_inatomic()	|
-	  pending_disable = CPU0	| ...
-	  				| _perf_event_enable()
-					|  event_function_call()
-					|   task_function_call()
-					|    /* sends IPI to CPU0 */
-	<IPI>				| ...
-	 __perf_event_enable()		+---------------------------
-	  ctx_resched()
-	   task_ctx_sched_out()
-	    ctx_sched_out()
-	     group_sched_out()
-	      event_sched_out()
-	       pending_disable = -1
-	</IPI>
-	<IRQ-work>
-	 perf_pending_event()
-	  perf_pending_event_disable()
-	   /* Fails to send SIGTRAP because no pending_disable! */
-	</IRQ-work>
-
-In the above case, not only is that particular SIGTRAP missed, but also
-all future SIGTRAPs because 'event_limit' is not reset back to 1.
-
-To fix, rework pending delivery of SIGTRAP via IRQ-work by introduction
-of a separate 'pending_sigtrap', no longer using 'event_limit' and
-'pending_disable' for its delivery.
-
-During testing, this also revealed several more possible races between
-reschedules and pending IRQ work; see code comments for details.
-
-Doing so makes it possible to use 'event_limit' normally (thereby
-enabling use of PERF_EVENT_IOC_REFRESH), perf_event_overflow() no longer
-returns 1 on SIGTRAP causing disabling of hardware PMUs, and finally the
-race is no longer possible due to event_sched_out() not consuming
-'pending_disable'.
-
-Fixes: 97ba62b27867 ("perf: Add support for SIGTRAP on perf events")
-Reported-by: Dmitry Vyukov <dvyukov@google.com>
-Debugged-by: Dmitry Vyukov <dvyukov@google.com>
-Signed-off-by: Marco Elver <elver@google.com>
----
-v2:
-* Use irq_work_raw_sync().
----
- include/linux/perf_event.h |  1 +
- kernel/events/core.c       | 64 +++++++++++++++++++++++++++++++-------
- 2 files changed, 53 insertions(+), 12 deletions(-)
-
-diff --git a/include/linux/perf_event.h b/include/linux/perf_event.h
-index 907b0e3f1318..c119fa7b70d6 100644
---- a/include/linux/perf_event.h
-+++ b/include/linux/perf_event.h
-@@ -740,6 +740,7 @@ struct perf_event {
- 	int				pending_wakeup;
- 	int				pending_kill;
- 	int				pending_disable;
-+	int				pending_sigtrap;
- 	unsigned long			pending_addr;	/* SIGTRAP */
- 	struct irq_work			pending;
- 
-diff --git a/kernel/events/core.c b/kernel/events/core.c
-index c37ba0909078..6ba02a1b5c5d 100644
---- a/kernel/events/core.c
-+++ b/kernel/events/core.c
-@@ -2527,6 +2527,15 @@ event_sched_in(struct perf_event *event,
- 	if (event->attr.exclusive)
- 		cpuctx->exclusive = 1;
- 
-+	if (event->pending_sigtrap) {
-+		/*
-+		 * The task and event might have been moved to another CPU:
-+		 * queue another IRQ work. See perf_pending_event_sigtrap().
-+		 */
-+		irq_work_raw_sync(&event->pending); /* Syncs if pending on other CPU. */
-+		irq_work_queue(&event->pending);
-+	}
-+
- out:
- 	perf_pmu_enable(event->pmu);
- 
-@@ -6446,6 +6455,37 @@ static void perf_sigtrap(struct perf_event *event)
- 		      event->attr.type, event->attr.sig_data);
- }
- 
-+static void perf_pending_event_sigtrap(struct perf_event *event)
-+{
-+	if (!event->pending_sigtrap)
-+		return;
-+
-+	/*
-+	 * If we're racing with disabling of the event, consume pending_sigtrap
-+	 * and don't send the SIGTRAP. This avoids potentially delaying a signal
-+	 * indefinitely (oncpu mismatch) until the event is enabled again, which
-+	 * could happen after already returning to user space; in that case the
-+	 * signal would erroneously become asynchronous.
-+	 */
-+	if (event->state == PERF_EVENT_STATE_OFF) {
-+		event->pending_sigtrap = 0;
-+		return;
-+	}
-+
-+	/*
-+	 * Only process this pending SIGTRAP if this IRQ work is running on the
-+	 * right CPU: the scheduler is able to run before the IRQ work, which
-+	 * moved the task to another CPU. In event_sched_in() another IRQ work
-+	 * is scheduled, so that the signal is not lost; given the kernel has
-+	 * not yet returned to user space, the signal remains synchronous.
-+	 */
-+	if (READ_ONCE(event->oncpu) != smp_processor_id())
-+		return;
-+
-+	event->pending_sigtrap = 0;
-+	perf_sigtrap(event);
-+}
-+
- static void perf_pending_event_disable(struct perf_event *event)
- {
- 	int cpu = READ_ONCE(event->pending_disable);
-@@ -6455,13 +6495,6 @@ static void perf_pending_event_disable(struct perf_event *event)
- 
- 	if (cpu == smp_processor_id()) {
- 		WRITE_ONCE(event->pending_disable, -1);
--
--		if (event->attr.sigtrap) {
--			perf_sigtrap(event);
--			atomic_set_release(&event->event_limit, 1); /* rearm event */
--			return;
--		}
--
- 		perf_event_disable_local(event);
- 		return;
- 	}
-@@ -6500,6 +6533,7 @@ static void perf_pending_event(struct irq_work *entry)
- 	 * and we won't recurse 'further'.
- 	 */
- 
-+	perf_pending_event_sigtrap(event);
- 	perf_pending_event_disable(event);
- 
- 	if (event->pending_wakeup) {
-@@ -9209,11 +9243,20 @@ static int __perf_event_overflow(struct perf_event *event,
- 	if (events && atomic_dec_and_test(&event->event_limit)) {
- 		ret = 1;
- 		event->pending_kill = POLL_HUP;
--		event->pending_addr = data->addr;
--
- 		perf_event_disable_inatomic(event);
- 	}
- 
-+	if (event->attr.sigtrap) {
-+		/*
-+		 * Should not be able to return to user space without processing
-+		 * pending_sigtrap (kernel events can overflow multiple times).
-+		 */
-+		WARN_ON_ONCE(event->pending_sigtrap && event->attr.exclude_kernel);
-+		event->pending_sigtrap = 1;
-+		event->pending_addr = data->addr;
-+		irq_work_queue(&event->pending);
-+	}
-+
- 	READ_ONCE(event->overflow_handler)(event, data, regs);
- 
- 	if (*perf_event_fasync(event) && event->pending_kill) {
-@@ -11557,9 +11600,6 @@ perf_event_alloc(struct perf_event_attr *attr, int cpu,
- 	if (parent_event)
- 		event->event_caps = parent_event->event_caps;
- 
--	if (event->attr.sigtrap)
--		atomic_set(&event->event_limit, 1);
--
- 	if (task) {
- 		event->attach_state = PERF_ATTACH_TASK;
- 		/*
--- 
-2.37.3.998.g577e59143f-goog
-
-
---bwaiqnhq9mMzxU4e--
+> This will also make them robust to changes in
+> the TMA metrics CSV files, another win.
+> 
+> Thanks,
+> Ian
+> 
+> 
+>>> Remove _SMT suffix metrics are dropped as the #SMT_On and #EBS_Mode
+>>> are correctly expanded in the single main metric. Fix perf expr to
+>>> allow a double if to be correctly processed.
+>>>
+>>> Add all 6 levels of TMA metrics. Child metrics are placed in a group
+>>> named after their parent allowing children of a metric to be
+>>> easily measured using the metric name with a _group suffix.
+>>>
+>>> Don't drop TMA metrics if they contain topdown events.
+>>>
+>>> The ## and ##? operators are correctly expanded.
+>>>
+>>> The locate-with column is added to the long description describing a
+>>> sampling event.
+>>>
+>>> Metrics are written in terms of other metrics to reduce the expression
+>>> size and increase readability.
+>>>
+>>> Following this the pmu-events/arch/x86 directories match those created
+>>> by the script at:
+>>> https://github.com/intel/event-converter-for-linux-perf/blob/master/download_and_gen.py
+>>> with updates at:
+>>> https://github.com/captain5050/event-converter-for-linux-perf
+>>>
+>>> Ian Rogers (22):
+>>>   perf expr: Allow a double if expression
+>>>   perf expr: Remove jevents case workaround
+>>>   perf metrics: Don't scale counts going into metrics
+>>>   perf vendor events: Update Intel skylakex
+>>>   perf vendor events: Update Intel alderlake
+>>>   perf vendor events: Update Intel broadwell
+>>>   perf vendor events: Update Intel broadwellx
+>>>   perf vendor events: Update Intel cascadelakex
+>>>   perf vendor events: Update elkhartlake cpuids
+>>>   perf vendor events: Update Intel haswell
+>>>   perf vendor events: Update Intel haswellx
+>>>   perf vendor events: Update Intel icelake
+>>>   perf vendor events: Update Intel icelakex
+>>>   perf vendor events: Update Intel ivybridge
+>>>   perf vendor events: Update Intel ivytown
+>>>   perf vendor events: Update Intel jaketown
+>>>   perf vendor events: Update Intel sandybridge
+>>>   perf vendor events: Update Intel sapphirerapids
+>>>   perf vendor events: Update silvermont cpuids
+>>>   perf vendor events: Update Intel skylake
+>>>   perf vendor events: Update Intel tigerlake
+>>>   perf vendor events: Update Intel broadwellde
+>>>
+>>>  .../arch/x86/alderlake/adl-metrics.json       | 1215 ++++++++++++++++-
+>>>  .../pmu-events/arch/x86/alderlake/cache.json  |  129 +-
+>>>  .../arch/x86/alderlake/frontend.json          |   12 +
+>>>  .../pmu-events/arch/x86/alderlake/memory.json |   22 +
+>>>  .../pmu-events/arch/x86/alderlake/other.json  |   22 +
+>>>  .../arch/x86/alderlake/pipeline.json          |   14 +-
+>>>  .../arch/x86/broadwell/bdw-metrics.json       |  603 ++++++--
+>>>  .../arch/x86/broadwellde/bdwde-metrics.json   |  639 +++++++--
+>>>  .../arch/x86/broadwellx/bdx-metrics.json      |  644 +++++++--
+>>>  .../arch/x86/broadwellx/uncore-cache.json     |   10 +-
+>>>  .../x86/broadwellx/uncore-interconnect.json   |   18 +-
+>>>  .../arch/x86/broadwellx/uncore-memory.json    |   18 +-
+>>>  .../arch/x86/cascadelakex/clx-metrics.json    |  893 ++++++++----
+>>>  .../arch/x86/cascadelakex/uncore-memory.json  |   18 +-
+>>>  .../arch/x86/cascadelakex/uncore-other.json   |   10 +-
+>>>  .../pmu-events/arch/x86/haswell/cache.json    |    4 +-
+>>>  .../pmu-events/arch/x86/haswell/frontend.json |   12 +-
+>>>  .../arch/x86/haswell/hsw-metrics.json         |  502 +++++--
+>>>  .../pmu-events/arch/x86/haswellx/cache.json   |    2 +-
+>>>  .../arch/x86/haswellx/frontend.json           |   12 +-
+>>>  .../arch/x86/haswellx/hsx-metrics.json        |  707 +++++++---
+>>>  .../x86/haswellx/uncore-interconnect.json     |   18 +-
+>>>  .../arch/x86/haswellx/uncore-memory.json      |   18 +-
+>>>  .../pmu-events/arch/x86/icelake/cache.json    |    6 +-
+>>>  .../arch/x86/icelake/icl-metrics.json         |  725 +++++++++-
+>>>  .../pmu-events/arch/x86/icelake/pipeline.json |    2 +-
+>>>  .../pmu-events/arch/x86/icelakex/cache.json   |    6 +-
+>>>  .../arch/x86/icelakex/icx-metrics.json        |  794 ++++++++++-
+>>>  .../arch/x86/icelakex/pipeline.json           |    2 +-
+>>>  .../arch/x86/icelakex/uncore-other.json       |    2 +-
+>>>  .../arch/x86/ivybridge/ivb-metrics.json       |  525 +++++--
+>>>  .../pmu-events/arch/x86/ivytown/cache.json    |    4 +-
+>>>  .../arch/x86/ivytown/floating-point.json      |    2 +-
+>>>  .../pmu-events/arch/x86/ivytown/frontend.json |   18 +-
+>>>  .../arch/x86/ivytown/ivt-metrics.json         |  558 ++++++--
+>>>  .../arch/x86/ivytown/uncore-cache.json        |   58 +-
+>>>  .../arch/x86/ivytown/uncore-interconnect.json |   84 +-
+>>>  .../arch/x86/ivytown/uncore-memory.json       |    2 +-
+>>>  .../arch/x86/ivytown/uncore-other.json        |    6 +-
+>>>  .../arch/x86/ivytown/uncore-power.json        |    8 +-
+>>>  .../arch/x86/jaketown/jkt-metrics.json        |  291 ++--
+>>>  tools/perf/pmu-events/arch/x86/mapfile.csv    |   18 +-
+>>>  .../arch/x86/sandybridge/snb-metrics.json     |  279 +++-
+>>>  .../arch/x86/sapphirerapids/cache.json        |    4 +-
+>>>  .../arch/x86/sapphirerapids/frontend.json     |   11 +
+>>>  .../arch/x86/sapphirerapids/pipeline.json     |    4 +-
+>>>  .../arch/x86/sapphirerapids/spr-metrics.json  |  858 +++++++++++-
+>>>  .../arch/x86/skylake/skl-metrics.json         |  774 ++++++++---
+>>>  .../arch/x86/skylakex/skx-metrics.json        |  859 +++++++++---
+>>>  .../arch/x86/skylakex/uncore-memory.json      |   18 +-
+>>>  .../arch/x86/skylakex/uncore-other.json       |   19 +-
+>>>  .../arch/x86/tigerlake/tgl-metrics.json       |  727 +++++++++-
+>>>  tools/perf/tests/expr.c                       |    4 +
+>>>  tools/perf/util/expr.c                        |   11 +-
+>>>  tools/perf/util/expr.y                        |    2 +-
+>>>  tools/perf/util/stat-shadow.c                 |    9 +-
+>>>  56 files changed, 10103 insertions(+), 2129 deletions(-)
+>>>
