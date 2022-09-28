@@ -2,86 +2,108 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7BD86C04A95
-	for <linux-perf-users@archiver.kernel.org>; Wed, 28 Sep 2022 14:15:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 83DA7C04A95
+	for <linux-perf-users@archiver.kernel.org>; Wed, 28 Sep 2022 14:18:38 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S234289AbiI1OPz (ORCPT
+        id S234314AbiI1OS2 (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Wed, 28 Sep 2022 10:15:55 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50136 "EHLO
+        Wed, 28 Sep 2022 10:18:28 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55514 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S234284AbiI1OPw (ORCPT
+        with ESMTP id S234312AbiI1OS2 (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Wed, 28 Sep 2022 10:15:52 -0400
+        Wed, 28 Sep 2022 10:18:28 -0400
 Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 298B761D49;
-        Wed, 28 Sep 2022 07:15:51 -0700 (PDT)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 782BCA7218;
+        Wed, 28 Sep 2022 07:18:27 -0700 (PDT)
 Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id 4B01F61E8B;
-        Wed, 28 Sep 2022 14:15:50 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 79BBBC433C1;
-        Wed, 28 Sep 2022 14:15:49 +0000 (UTC)
+        by dfw.source.kernel.org (Postfix) with ESMTPS id F045061ECA;
+        Wed, 28 Sep 2022 14:18:26 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 2E6ACC433D6;
+        Wed, 28 Sep 2022 14:18:26 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1664374549;
-        bh=YsY1EoJjrDNVODvXIzdua83IpA1RXF/C9m3dQgOk1sQ=;
+        s=k20201202; t=1664374706;
+        bh=TP3Ua0r0FLuzah2dlr3q3fJFeiDzMpJFw5XL4LjfhIA=;
         h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=ePlHjXAujImYF4ax69tV+zJhVFVToqdFhFCNpz1e7/Hz2spQhdq95OD/AasietrU2
-         yBb9P7kQpQdC5q6pl9DG3PxPZIWD2vsjdSls7ajGJ/n63TyXA+w3gCLQlC6Zr43QB4
-         u8TRLe6dN1IIqxtRyaE5Cmt2QctzZeakT0HG2QkDgKQMSihR0FmPJ7Z8TjNf7jbiUy
-         1jmn3nX23h5rneYjSx5BXHwW7YIT3WcH/vOkvdow3WwcOr/Aw2g0DgQas85+BgddTU
-         RziX3qHiYnzHrK0LlJp9ljSWe4aQh3wyGgp09opVFse47fI/qWG6umYxryVpAcCA4l
-         7Jz44c1Ogn/OA==
+        b=bY/bgfIqNNhYNjqb82a2sJ3MDNu3RB1RJIV9b2VcCyLs26aFvsNBr0x1Z7R59SkGA
+         FZ3R7tvFOqMRqsKkGYli1prGTj+dRcFlahK+M0LdlEq3757qDQZ2MnkkORiH+crtl1
+         wfhrD1pLv8xmZHadQxjRb8niL9LraE/ZXHGC92Bf2rdMcrJEZ6JyF2fNPmyqOMzCIU
+         f0ImGF1nS3qj5Hgd5qzjTUGJ+48EOxgXgz5Mqk08wb2gpecuwhfAJLkxpvkuGFqNkK
+         VoNZG8X3VG81agjEhovtT0wt9kDWhwUS6U39b3FFIG6gpL4oejPmLA0CjPlFRILL1m
+         W32G5HN9SlQCQ==
 Received: by quaco.ghostprotocols.net (Postfix, from userid 1000)
-        id 17365405F0; Wed, 28 Sep 2022 11:15:47 -0300 (-03)
-Date:   Wed, 28 Sep 2022 11:15:47 -0300
+        id 977E5405F0; Wed, 28 Sep 2022 11:18:23 -0300 (-03)
+Date:   Wed, 28 Sep 2022 11:18:23 -0300
 From:   Arnaldo Carvalho de Melo <acme@kernel.org>
-To:     Tiezhu Yang <yangtiezhu@loongson.cn>
-Cc:     Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Jiri Olsa <jolsa@kernel.org>,
-        Namhyung Kim <namhyung@kernel.org>,
-        linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 0/3] perf: Add more syscalls to benchmark
-Message-ID: <YzRXE2JTKrDzHUYL@kernel.org>
-References: <1662433577-23266-1-git-send-email-yangtiezhu@loongson.cn>
- <8eed7586-0f47-a576-195f-0180826a67f3@loongson.cn>
+To:     Namhyung Kim <namhyung@kernel.org>
+Cc:     Jiri Olsa <jolsa@kernel.org>, Ingo Molnar <mingo@kernel.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Ian Rogers <irogers@google.com>,
+        Adrian Hunter <adrian.hunter@intel.com>,
+        linux-perf-users@vger.kernel.org, Song Liu <songliubraving@fb.com>,
+        Jiri Slaby <jirislaby@kernel.org>
+Subject: Re: [PATCH] perf lock contention: Fix a build error on 32-bit
+Message-ID: <YzRXrzrta0BrcDQ6@kernel.org>
+References: <20220926215638.3931222-1-namhyung@kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <8eed7586-0f47-a576-195f-0180826a67f3@loongson.cn>
+In-Reply-To: <20220926215638.3931222-1-namhyung@kernel.org>
 X-Url:  http://acmel.wordpress.com
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-Em Wed, Sep 28, 2022 at 09:06:03AM +0800, Tiezhu Yang escreveu:
-> 
-> 
-> On 09/06/2022 11:06 AM, Tiezhu Yang wrote:
-> > Tiezhu Yang (3):
-> >   perf bench syscall: Introduce bench_syscall_common()
-> >   perf bench syscall: Add close syscall benchmark
-> >   perf bench syscall: Add execve syscall benchmark
-> > 
-> >  tools/perf/bench/bench.h   |  2 ++
-> >  tools/perf/bench/syscall.c | 76 +++++++++++++++++++++++++++++++++++++++++++---
-> >  tools/perf/builtin-bench.c |  2 ++
-> >  3 files changed, 76 insertions(+), 4 deletions(-)
-> > 
-> 
-> Hi all,
-> 
-> Any more comments? Do you think this patch series [1] is useful?
-> If yes, I will send v2 to fix the build error about undeclared
-> __NR_getppid reported by kernel test robot.
-> 
-> [1] https://lore.kernel.org/lkml/1662433577-23266-1-git-send-email-yangtiezhu@loongson.cn/
+Em Mon, Sep 26, 2022 at 02:56:38PM -0700, Namhyung Kim escreveu:
+> It was reported that it failed to build the BPF lock contention skeleton
+> on 32 bit arch due to the size of long.  The lost count is used only for
+> reporting errors due to lack of stackmap space through bad_hist which type
+> is 'int'.  Let's use int type then.
 
+Thanks, applied.
 
-Please send the v2.
+- Arnaldo
+
+ 
+> Reported-by: Jiri Slaby <jirislaby@kernel.org>
+> Signed-off-by: Namhyung Kim <namhyung@kernel.org>
+> ---
+>  tools/perf/util/bpf_skel/lock_contention.bpf.c | 2 +-
+>  tools/perf/util/lock-contention.h              | 2 +-
+>  2 files changed, 2 insertions(+), 2 deletions(-)
+> 
+> diff --git a/tools/perf/util/bpf_skel/lock_contention.bpf.c b/tools/perf/util/bpf_skel/lock_contention.bpf.c
+> index e107d71f0f1a..1bb8628e7c9f 100644
+> --- a/tools/perf/util/bpf_skel/lock_contention.bpf.c
+> +++ b/tools/perf/util/bpf_skel/lock_contention.bpf.c
+> @@ -75,7 +75,7 @@ int has_task;
+>  int stack_skip;
+>  
+>  /* error stat */
+> -unsigned long lost;
+> +int lost;
+>  
+>  static inline int can_record(void)
+>  {
+> diff --git a/tools/perf/util/lock-contention.h b/tools/perf/util/lock-contention.h
+> index 67db311fc9df..b8cb8830b7bc 100644
+> --- a/tools/perf/util/lock-contention.h
+> +++ b/tools/perf/util/lock-contention.h
+> @@ -114,7 +114,7 @@ struct lock_contention {
+>  	struct machine *machine;
+>  	struct hlist_head *result;
+>  	unsigned long map_nr_entries;
+> -	unsigned long lost;
+> +	int lost;
+>  	int max_stack;
+>  	int stack_skip;
+>  };
+> -- 
+> 2.38.0.rc1.362.ged0d419d3c-goog
+
+-- 
 
 - Arnaldo
