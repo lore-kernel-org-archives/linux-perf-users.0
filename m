@@ -2,87 +2,174 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D17D3C32771
-	for <linux-perf-users@archiver.kernel.org>; Wed, 28 Sep 2022 10:41:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8279AC04A95
+	for <linux-perf-users@archiver.kernel.org>; Wed, 28 Sep 2022 10:52:32 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233620AbiI1Kl2 (ORCPT
+        id S233263AbiI1Kwb (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Wed, 28 Sep 2022 06:41:28 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40146 "EHLO
+        Wed, 28 Sep 2022 06:52:31 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55032 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S233488AbiI1Kl2 (ORCPT
+        with ESMTP id S233817AbiI1KvZ (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Wed, 28 Sep 2022 06:41:28 -0400
-Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTP id DB4FE7E33C;
-        Wed, 28 Sep 2022 03:41:25 -0700 (PDT)
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 51C66143D;
-        Wed, 28 Sep 2022 03:41:32 -0700 (PDT)
-Received: from [10.57.0.129] (unknown [10.57.0.129])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id DC6A13F792;
-        Wed, 28 Sep 2022 03:41:23 -0700 (PDT)
-Message-ID: <a2a5e3ab-18ca-d61a-73bb-d60b9c2c8929@arm.com>
-Date:   Wed, 28 Sep 2022 11:41:22 +0100
-MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
- Thunderbird/91.11.0
-Subject: Re: [PATCH 2/6] perf stat: Don't call perf_stat_evsel_id_init()
- repeatedly
-Content-Language: en-US
-To:     Namhyung Kim <namhyung@kernel.org>
-Cc:     Ingo Molnar <mingo@kernel.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Ian Rogers <irogers@google.com>,
-        Adrian Hunter <adrian.hunter@intel.com>,
-        linux-perf-users@vger.kernel.org, Andi Kleen <ak@linux.intel.com>,
-        Kan Liang <kan.liang@linux.intel.com>,
-        Leo Yan <leo.yan@linaro.org>,
-        Zhengjun Xing <zhengjun.xing@linux.intel.com>,
+        Wed, 28 Sep 2022 06:51:25 -0400
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0482258B44
+        for <linux-perf-users@vger.kernel.org>; Wed, 28 Sep 2022 03:49:53 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1664362192;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=9fnqAJOUuiKB1piVG0nPPMmSdhv/P6AfGQwVpRP8lf4=;
+        b=MGNekso34/Om2AW4YoHYMZ/q2RrXalyg6EZZwINOP64GZPSYq05CJWGqb6wfReprwQKPNy
+        b1pHBWDd1RmYB4tisr1X1FUZSm0xePM62HP3q3rCX4okifBvhbOycZDduiaCbHUolSkXeF
+        6V1ooeaEBQoqhNjQFmg7cGJufDRWVQQ=
+Received: from mimecast-mx02.redhat.com (mx3-rdu2.redhat.com
+ [66.187.233.73]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ us-mta-278-Hwfy8EvFNii5fy5-D932eQ-1; Wed, 28 Sep 2022 06:49:49 -0400
+X-MC-Unique: Hwfy8EvFNii5fy5-D932eQ-1
+Received: from smtp.corp.redhat.com (int-mx04.intmail.prod.int.rdu2.redhat.com [10.11.54.4])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx02.redhat.com (Postfix) with ESMTPS id 009CD3C0F220;
+        Wed, 28 Sep 2022 10:49:43 +0000 (UTC)
+Received: from starship (unknown [10.40.193.233])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id D19652027061;
+        Wed, 28 Sep 2022 10:49:35 +0000 (UTC)
+Message-ID: <c1168e8bd9077a2cc9ef61ee06db7a4e8c0f1600.camel@redhat.com>
+Subject: Re: [PATCH v2 1/5] perf/x86/intel/lbr: use setup_clear_cpu_cap
+ instead of clear_cpu_cap
+From:   Maxim Levitsky <mlevitsk@redhat.com>
+To:     Borislav Petkov <bp@alien8.de>
+Cc:     linux-kernel@vger.kernel.org, kvm@vger.kernel.org,
+        Pawan Gupta <pawan.kumar.gupta@linux.intel.com>,
+        Ingo Molnar <mingo@redhat.com>,
+        Josh Poimboeuf <jpoimboe@kernel.org>,
+        Namhyung Kim <namhyung@kernel.org>,
+        Tony Luck <tony.luck@intel.com>,
+        Paolo Bonzini <pbonzini@redhat.com>,
+        "H. Peter Anvin" <hpa@zytor.com>,
         Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Jiri Olsa <jolsa@kernel.org>
-References: <20220926200757.1161448-1-namhyung@kernel.org>
- <20220926200757.1161448-3-namhyung@kernel.org>
-From:   James Clark <james.clark@arm.com>
-In-Reply-To: <20220926200757.1161448-3-namhyung@kernel.org>
-Content-Type: text/plain; charset=UTF-8
+        Thomas Gleixner <tglx@linutronix.de>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Tim Chen <tim.c.chen@linux.intel.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        Dave Hansen <dave.hansen@linux.intel.com>,
+        "Chang S. Bae" <chang.seok.bae@intel.com>,
+        Jane Malalane <jane.malalane@citrix.com>,
+        Kees Cook <keescook@chromium.org>,
+        Kan Liang <kan.liang@linux.intel.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        "maintainer:X86 ARCHITECTURE (32-BIT AND 64-BIT)" <x86@kernel.org>,
+        Herbert Xu <herbert@gondor.apana.org.au>,
+        Jiri Olsa <jolsa@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        linux-perf-users@vger.kernel.org,
+        "open list:CRYPTO API" <linux-crypto@vger.kernel.org>
+Date:   Wed, 28 Sep 2022 13:49:34 +0300
+In-Reply-To: <YzGlQBkCSJxY+8Jf@zn.tnic>
+References: <20220718141123.136106-1-mlevitsk@redhat.com>
+         <20220718141123.136106-2-mlevitsk@redhat.com> <Yyh9RDbaRqUR1XSW@zn.tnic>
+         <c105971a72dfe6d46ad75fb7e71f79ba716e081c.camel@redhat.com>
+         <YzGlQBkCSJxY+8Jf@zn.tnic>
+Content-Type: text/plain; charset="UTF-8"
+User-Agent: Evolution 3.36.5 (3.36.5-2.fc32) 
+MIME-Version: 1.0
 Content-Transfer-Encoding: 7bit
+X-Scanned-By: MIMEDefang 3.1 on 10.11.54.4
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-
-
-On 26/09/2022 21:07, Namhyung Kim wrote:
-> The evsel__reset_stat_priv() is called more than once if user gave -r
-> option for multiple run.  But it doesn't need to re-initialize the id.
+On Mon, 2022-09-26 at 15:12 +0200, Borislav Petkov wrote:
+> On Tue, Sep 20, 2022 at 11:20:47AM +0300, Maxim Levitsky wrote:
+> > If I understand that correctly, the difference between clear_cpu_cap and setup_clear_cpu_cap
+> > is that setup_clear_cpu_cap should be called early when only the boot cpu is running and it 
+> > 
+> > 1. works on 'boot_cpu_data' which represents the boot cpu.
+> > 2. sets a bit in 'cpu_caps_cleared' which are later applied to all CPUs, including these that are hotplugged.
 > 
-> Signed-off-by: Namhyung Kim <namhyung@kernel.org>
-> ---
->  tools/perf/util/stat.c | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
+> Yes.
+> 
+> > On the other hand the clear_cpu_cap just affects the given 'struct cpuinfo_x86'.
+> 
+> Yes.
+> 
+> > Call of 'clear_cpu_cap(&boot_cpu_data, X86_FEATURE_ARCH_LBR)' is weird since it still affects 'boot_cpu_data'
+> > but doesn't affect 'cpu_caps_cleared'
+> 
+> Yes.
+> 
+> > I assumed that this was a mistake and the intention was to disable the feature on all CPUs.
+> 
+> peterz says yes.
+> 
+> > I need this patch because in the next patch, I change the clear_cpu_cap such as it detects being
+> > called on boot_cpu_data and in this case also clears bits in 'cpu_caps_cleared', thus
+> > while this patch does introduce a functional change, the next patch doesn't since this is the only
+> > place where clear_cpu_cap is called explicitly on 'boot_cpu_data'
+> 
+> This is not needed - this patch doing setup_clear_cpu_cap() should suffice.
+> 
+> But, there must be something you're fixing with this. Which is it? Some
+> weird virt config?
+
+Patches 1-3 don't fix anything - these are just refactoring to make the code simplier.
+
+This particular patch is done to enable the refactoring in the next patch by removing an
+(hopefully broken) outlier.
+
+
+Patch 4 is small fix in the sense that it allows the warning from the current cpuid filtering code
+to be seen (it is supressed in early code, but then it doesn't usually happen again, so no warning
+is printed at all)
+
+Patch 5 is the main fix - it  makes the kernel to be tolerant to a broken CPUID config 
+(coming hopefully from hypervisor),
+where you have a feature (AVX2 in my case) but not a feature on which this feature depends (AVX).
+
+
+> 
+> > I do now notice that initcalls are run after smp is initialized, which
+> > means that this code doesn't really disable the CPUID feature on all
+> > CPUs at all.
+> 
+> Well, not exactly. There's do_pre_smp_calls() which is where the
+> early_initcall() thing is run.
+
+
+Aha! I was reading the 'do_initcalls()' code and thought that it
+goes over all initcalls.
+
+note that it turns out that this function is called 'do_pre_smp_initcalls()'.
+
+> 
+> So setup_clear_cpu_cap() will make sure that the feature bit is cleared
+> when the APs come online.
+> 
+> Do you have a virt configuration where you can test this case where the
+> feature flag is clear on all CPUs when it fails?
+
+This needs the arch lbrs which aren't yet supported by KVM (there are patches
+on the mailing list), plus I need a hardware which supportes them, of which
+I don't know even if intel released any yet.
+
+I can hack the code/KVM though to simulate enough of it to see if this failback
+happens.
+
+Besides that, anything else I should do to to see that patch series merged?
+
+Thanks,
+Best regards,
+	Maxim Levitsky
+
+> 
+> I.e., "arch_lbr" will disappear in /proc/cpuinfo completely.
+> 
+> Thx.
 > 
 
-Reviewed-by: James Clark <james.clark@arm.com>
 
-> diff --git a/tools/perf/util/stat.c b/tools/perf/util/stat.c
-> index 6bcd3dc32a71..e1d3152ce664 100644
-> --- a/tools/perf/util/stat.c
-> +++ b/tools/perf/util/stat.c
-> @@ -135,7 +135,6 @@ static void evsel__reset_stat_priv(struct evsel *evsel)
->  	struct perf_stat_evsel *ps = evsel->stats;
->  
->  	init_stats(&ps->res_stats);
-> -	perf_stat_evsel_id_init(evsel);
->  }
->  
->  static int evsel__alloc_stat_priv(struct evsel *evsel)
-> @@ -143,6 +142,7 @@ static int evsel__alloc_stat_priv(struct evsel *evsel)
->  	evsel->stats = zalloc(sizeof(struct perf_stat_evsel));
->  	if (evsel->stats == NULL)
->  		return -ENOMEM;
-> +	perf_stat_evsel_id_init(evsel);
->  	evsel__reset_stat_priv(evsel);
->  	return 0;
->  }
