@@ -2,145 +2,87 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6D402C54EE9
-	for <linux-perf-users@archiver.kernel.org>; Tue, 27 Sep 2022 21:53:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8A1C2C54EE9
+	for <linux-perf-users@archiver.kernel.org>; Wed, 28 Sep 2022 01:07:36 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231200AbiI0VxJ (ORCPT
+        id S229736AbiI1BHf (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Tue, 27 Sep 2022 17:53:09 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49368 "EHLO
+        Tue, 27 Sep 2022 21:07:35 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43626 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230307AbiI0VxI (ORCPT
+        with ESMTP id S229818AbiI1BHe (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Tue, 27 Sep 2022 17:53:08 -0400
-Received: from mail-qv1-xf32.google.com (mail-qv1-xf32.google.com [IPv6:2607:f8b0:4864:20::f32])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5FC6B5A2F8;
-        Tue, 27 Sep 2022 14:53:05 -0700 (PDT)
-Received: by mail-qv1-xf32.google.com with SMTP id r14so179638qvn.3;
-        Tue, 27 Sep 2022 14:53:05 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20210112;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date;
-        bh=CNKYzF9I2YeaRkrIIwLDheAxIzD3Zi4Vv2DTzJLGgC4=;
-        b=UjXxJ7hqnfs5LWBwU6bEJtVaB6IMJjv2C3Q7CnqHdQXyrQl91wIAs04byCTvAd+PiY
-         uUCX/3R9PAik6ZuNV5EHt2vSksJxuobZ8whkTsRm41xNHkuQ1pebDWpgFKhM9aglzjU1
-         mudTkiAe55dfLrOh1LKV+efzBONM3bB1XrTbFPNKFZUg4L90qEMOgGnHFoU1YMsIOmA5
-         7H0WIM2WCgiGmsLpjZ6MD8BRxRjo55WcCIWUGLUnL/rRWplt1IW3+AgsUoMjI+GO3r48
-         p3uKPepGDNsYbyZLKUD1/Fwh4sN6VBaLiGfppeKM+dH/PYyA4Mxjpi6VcYG43fi1CZIT
-         Tk0g==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date;
-        bh=CNKYzF9I2YeaRkrIIwLDheAxIzD3Zi4Vv2DTzJLGgC4=;
-        b=lrM+pfOCmnKneep6AhG6BOntGNWZUsftFvRp0/aXldb4JybGirsfk6jSj6nWcfcQBI
-         r6BE8wShG7LF0xhTz3bJ1p9hZyBfH5ExzOTMOFNVggMttfMMFIVcGDNKlnyQll403yTm
-         87lT77VASJD9QSWt0EvDzGwoTUOxX4uR+ujxRtULBWm23EYN4JKU4ibY2FmiDle/S1Tm
-         OB80145M66RgOpZmgz999KFG5InNH3bIMk3D+qZb7kWN0+ITsYu8fReXPMGwtFdCnAOI
-         Gx2Dae6PDbbVo8ehmEiT6daEHob+yOph/RATZxuD7pVhrMn+9TTC2E/El45C3PmxdvH0
-         dNSQ==
-X-Gm-Message-State: ACrzQf2bwsfUihTfoJb1zFWjVf0RjH+jsrT5DVE0sZcGmlslp+oyUfWa
-        TH+72ElYjtSQ0aOXimygpdHRwhjum0M=
-X-Google-Smtp-Source: AMsMyM5MEUij1YHZqqzw2bIbbCwcB7/8XJEbwR5NpAgy3+ac7Sq6BIOhXVkUQypecRCPWdd/9sUSjg==
-X-Received: by 2002:a05:6214:29e3:b0:4ad:5de4:accd with SMTP id jv3-20020a05621429e300b004ad5de4accdmr23214994qvb.60.1664315584032;
-        Tue, 27 Sep 2022 14:53:04 -0700 (PDT)
-Received: from fainelli-desktop.igp.broadcom.net ([192.19.223.252])
-        by smtp.gmail.com with ESMTPSA id k13-20020a05620a414d00b006ce1bfbd603sm1850805qko.124.2022.09.27.14.53.00
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 27 Sep 2022 14:53:03 -0700 (PDT)
-From:   Florian Fainelli <f.fainelli@gmail.com>
-To:     linux-kernel@vger.kernel.org
-Cc:     Matt Redfearn <matt.redfearn@mips.com>,
-        =?UTF-8?q?Petr=20Van=C4=9Bk?= <arkamar@atlas.cz>,
-        Florian Fainelli <f.fainelli@gmail.com>,
-        Nathan Chancellor <nathan@kernel.org>,
-        Nick Desaulniers <ndesaulniers@google.com>,
-        Tom Rix <trix@redhat.com>, Justin Stitt <jstitt007@gmail.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Denys Vlasenko <dvlasenk@redhat.com>,
-        Ingo Molnar <mingo@kernel.org>,
-        llvm@lists.linux.dev (open list:CLANG/LLVM BUILD SUPPORT),
-        Peter Zijlstra <peterz@infradead.org>,
+        Tue, 27 Sep 2022 21:07:34 -0400
+Received: from loongson.cn (mail.loongson.cn [114.242.206.163])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTP id 73A3D491D9;
+        Tue, 27 Sep 2022 18:07:28 -0700 (PDT)
+Received: from [10.130.0.135] (unknown [113.200.148.30])
+        by localhost.localdomain (Coremail) with SMTP id AQAAf8Cx9OEAnjNj5wMjAA--.64134S3;
+        Wed, 28 Sep 2022 09:06:09 +0800 (CST)
+Subject: Re: [PATCH 0/3] perf: Add more syscalls to benchmark
+To:     Peter Zijlstra <peterz@infradead.org>,
         Ingo Molnar <mingo@redhat.com>,
         Arnaldo Carvalho de Melo <acme@kernel.org>,
         Mark Rutland <mark.rutland@arm.com>,
         Alexander Shishkin <alexander.shishkin@linux.intel.com>,
         Jiri Olsa <jolsa@kernel.org>,
-        Namhyung Kim <namhyung@kernel.org>,
-        linux-perf-users@vger.kernel.org (open list:PERFORMANCE EVENTS
-        SUBSYSTEM), mmayer@broadcom.com, Khem Raj <raj.khem@gmail.com>,
-        Philippe Ombredanne <pombredanne@nexb.com>,
-        Kate Stewart <kstewart@linuxfoundation.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Thomas Gleixner <tglx@linutronix.de>
-Subject: [PATCH] include/uapi/linux/swab: Fix potentially missing __always_inline
-Date:   Tue, 27 Sep 2022 14:52:56 -0700
-Message-Id: <20220927215256.528619-1-f.fainelli@gmail.com>
-X-Mailer: git-send-email 2.25.1
+        Namhyung Kim <namhyung@kernel.org>
+References: <1662433577-23266-1-git-send-email-yangtiezhu@loongson.cn>
+Cc:     linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
+From:   Tiezhu Yang <yangtiezhu@loongson.cn>
+Message-ID: <8eed7586-0f47-a576-195f-0180826a67f3@loongson.cn>
+Date:   Wed, 28 Sep 2022 09:06:03 +0800
+User-Agent: Mozilla/5.0 (X11; Linux mips64; rv:45.0) Gecko/20100101
+ Thunderbird/45.4.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+In-Reply-To: <1662433577-23266-1-git-send-email-yangtiezhu@loongson.cn>
+Content-Type: text/plain; charset=windows-1252; format=flowed
+Content-Transfer-Encoding: 7bit
+X-CM-TRANSID: AQAAf8Cx9OEAnjNj5wMjAA--.64134S3
+X-Coremail-Antispam: 1UD129KBjvdXoWrKrWUXrW5ur1Dtw13urWfKrg_yoW3GFg_Aa
+        1IkrWDtrWxAFnayFy7Cwn8ZFyUtFW5J3ykAF97G347Gw4UXr98JFn09rn5A3WrGF4kXrZx
+        Ga1UZr1rArWUKjkaLaAFLSUrUUUUUb8apTn2vfkv8UJUUUU8Yxn0WfASr-VFAUDa7-sFnT
+        9fnUUIcSsGvfJTRUUUbIkYjsxI4VWxJwAYFVCjjxCrM7AC8VAFwI0_Gr0_Xr1l1xkIjI8I
+        6I8E6xAIw20EY4v20xvaj40_Wr0E3s1l1IIY67AEw4v_Jr0_Jr4l8cAvFVAK0II2c7xJM2
+        8CjxkF64kEwVA0rcxSw2x7M28EF7xvwVC0I7IYx2IY67AKxVW8JVW5JwA2z4x0Y4vE2Ix0
+        cI8IcVCY1x0267AKxVWxJVW8Jr1l84ACjcxK6I8E87Iv67AKxVW8Jr0_Cr1UM28EF7xvwV
+        C2z280aVCY1x0267AKxVW8Jr0_Cr1UM2AIxVAIcxkEcVAq07x20xvEncxIr21l5I8CrVAC
+        Y4xI64kE6c02F40Ex7xfMcIj6xIIjxv20xvE14v26r106r15McIj6I8E87Iv67AKxVWUJV
+        W8JwAm72CE4IkC6x0Yz7v_Jr0_Gr1lF7xvr2IY64vIr41lc7I2V7IY0VAS07AlzVAYIcxG
+        8wCY02Avz4vE14v_KwCF04k20xvY0x0EwIxGrwCFx2IqxVCFs4IE7xkEbVWUJVW8JwC20s
+        026c02F40E14v26r1j6r18MI8I3I0E7480Y4vE14v26r106r1rMI8E67AF67kF1VAFwI0_
+        Jw0_GFylIxkGc2Ij64vIr41lIxAIcVC0I7IYx2IY67AKxVWUJVWUCwCI42IY6xIIjxv20x
+        vEc7CjxVAFwI0_Jr0_Gr1lIxAIcVCF04k26cxKx2IYs7xG6r1j6r1xMIIF0xvEx4A2jsIE
+        14v26r1j6r4UMIIF0xvEx4A2jsIEc7CjxVAFwI0_Gr0_Gr1UYxBIdaVFxhVjvjDU0xZFpf
+        9x07UEsjbUUUUU=
+X-CM-SenderInfo: p1dqw3xlh2x3gn0dqz5rrqw2lrqou0/
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-From: Matt Redfearn <matt.redfearn@mips.com>
 
-Commit bc27fb68aaad ("include/uapi/linux/byteorder, swab: force inlining
-of some byteswap operations") added __always_inline to swab functions
-and commit 283d75737837 ("uapi/linux/stddef.h: Provide __always_inline to
-userspace headers") added a definition of __always_inline for use in
-exported headers when the kernel's compiler.h is not available.
 
-However, since swab.h does not include stddef.h, if the header soup does
-not indirectly include it, the definition of __always_inline is missing,
-resulting in a compilation failure, which was observed compiling the
-perf tool using exported headers containing this commit:
+On 09/06/2022 11:06 AM, Tiezhu Yang wrote:
+> Tiezhu Yang (3):
+>   perf bench syscall: Introduce bench_syscall_common()
+>   perf bench syscall: Add close syscall benchmark
+>   perf bench syscall: Add execve syscall benchmark
+>
+>  tools/perf/bench/bench.h   |  2 ++
+>  tools/perf/bench/syscall.c | 76 +++++++++++++++++++++++++++++++++++++++++++---
+>  tools/perf/builtin-bench.c |  2 ++
+>  3 files changed, 76 insertions(+), 4 deletions(-)
+>
 
-In file included from /usr/include/linux/byteorder/little_endian.h:12:0,
-                 from /usr/include/asm/byteorder.h:14,
-                 from tools/include/uapi/linux/perf_event.h:20,
-                 from perf.h:8,
-                 from builtin-bench.c:18:
-/usr/include/linux/swab.h:160:8: error: unknown type name `__always_inline'
- static __always_inline __u16 __swab16p(const __u16 *p)
+Hi all,
 
-Fix this by replacing the inclusion of linux/compiler.h with
-linux/stddef.h to ensure that we pick up that definition if required,
-without relying on it's indirect inclusion. compiler.h is then included
-indirectly, via stddef.h.
+Any more comments? Do you think this patch series [1] is useful?
+If yes, I will send v2 to fix the build error about undeclared
+__NR_getppid reported by kernel test robot.
 
-Fixes: 283d75737837 ("uapi/linux/stddef.h: Provide __always_inline to userspace headers")
-Signed-off-by: Matt Redfearn <matt.redfearn@mips.com>
-Reviewed-by: Petr Vaněk <arkamar@atlas.cz>
-Signed-off-by: Florian Fainelli <f.fainelli@gmail.com>
----
-Apologies for the insanely long CC list. I encountered this problem
-again while attempting to build perf with a LLVM 13 toolchain using
-musl-libc. Not sure why it did not get picked up last time?
+[1] 
+https://lore.kernel.org/lkml/1662433577-23266-1-git-send-email-yangtiezhu@loongson.cn/
 
-Khem did submit an alternative patch a few years ago, too which also did
-not get picked up:
-
-https://lore.kernel.org/lkml/20180913005654.39976-1-raj.khem@gmail.com/
-
- include/uapi/linux/swab.h | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
-
-diff --git a/include/uapi/linux/swab.h b/include/uapi/linux/swab.h
-index 0723a9cce747..01717181339e 100644
---- a/include/uapi/linux/swab.h
-+++ b/include/uapi/linux/swab.h
-@@ -3,7 +3,7 @@
- #define _UAPI_LINUX_SWAB_H
- 
- #include <linux/types.h>
--#include <linux/compiler.h>
-+#include <linux/stddef.h>
- #include <asm/bitsperlong.h>
- #include <asm/swab.h>
- 
--- 
-2.25.1
+Thanks,
+Tiezhu
 
