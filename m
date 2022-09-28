@@ -2,256 +2,193 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 88FDCC32771
-	for <linux-perf-users@archiver.kernel.org>; Wed, 28 Sep 2022 04:54:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AC9F7C04A95
+	for <linux-perf-users@archiver.kernel.org>; Wed, 28 Sep 2022 07:22:27 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229846AbiI1Eyu (ORCPT
+        id S233499AbiI1HW0 (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Wed, 28 Sep 2022 00:54:50 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39172 "EHLO
+        Wed, 28 Sep 2022 03:22:26 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50528 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231167AbiI1Eyp (ORCPT
+        with ESMTP id S233497AbiI1HWM (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Wed, 28 Sep 2022 00:54:45 -0400
-Received: from mx0a-001b2d01.pphosted.com (mx0a-001b2d01.pphosted.com [148.163.156.1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id EBFB613E2B
-        for <linux-perf-users@vger.kernel.org>; Tue, 27 Sep 2022 21:54:40 -0700 (PDT)
-Received: from pps.filterd (m0187473.ppops.net [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (8.17.1.5/8.17.1.5) with ESMTP id 28S3ctVQ024933;
-        Wed, 28 Sep 2022 04:54:27 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=content-type : subject :
- from : in-reply-to : date : cc : message-id : references : to :
- content-transfer-encoding : mime-version; s=pp1;
- bh=PCbQj6+tcuKvNWcSAZW6ZxHryRN6dZQuHQTmPmhwj+E=;
- b=l80t6p12iTOp6XQ0ve1IAxS5K9J0Q+gPkLRRBUY5KOzBWDWXz3nZpHX3TYL/qYliwlRR
- LUcGyFH4w5W2lxG6kOikM5FqBRcG0k+XHTWQw9N6xbCIpvLQ0/M5seXseFu7j2VnvmkL
- jEM+dxIRkfEQn2rbgqLv89NgizKxcnIu3gDTG7mXvkzAVCWpl9Qk3mHA7W3OkOMh7g/S
- 2Go0xT+pxrV0tsUml33cQ7dBKnXlTuNZwr0lEAwAO0JwLzgPQiw4YKOaSI2PgzH3XAxn
- 5NQ8PUywiBcNWM8Ysc1RruWA/IABVJcRdrmlHE2eH433wyomiYKDuoyViXqJZmyF0kNf PQ== 
-Received: from pps.reinject (localhost [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 3jve7k9s38-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Wed, 28 Sep 2022 04:54:27 +0000
-Received: from m0187473.ppops.net (m0187473.ppops.net [127.0.0.1])
-        by pps.reinject (8.17.1.5/8.17.1.5) with ESMTP id 28S4rTAd027651;
-        Wed, 28 Sep 2022 04:54:26 GMT
-Received: from ppma03ams.nl.ibm.com (62.31.33a9.ip4.static.sl-reverse.com [169.51.49.98])
-        by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 3jve7k9s2q-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Wed, 28 Sep 2022 04:54:26 +0000
-Received: from pps.filterd (ppma03ams.nl.ibm.com [127.0.0.1])
-        by ppma03ams.nl.ibm.com (8.16.1.2/8.16.1.2) with SMTP id 28S4pfDR004746;
-        Wed, 28 Sep 2022 04:54:24 GMT
-Received: from b06avi18878370.portsmouth.uk.ibm.com (b06avi18878370.portsmouth.uk.ibm.com [9.149.26.194])
-        by ppma03ams.nl.ibm.com with ESMTP id 3jssh9cpcp-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Wed, 28 Sep 2022 04:54:24 +0000
-Received: from d06av24.portsmouth.uk.ibm.com (mk.ibm.com [9.149.105.60])
-        by b06avi18878370.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 28S4snMV51249446
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Wed, 28 Sep 2022 04:54:49 GMT
-Received: from d06av24.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 11FC642042;
-        Wed, 28 Sep 2022 04:54:21 +0000 (GMT)
-Received: from d06av24.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id D024A42045;
-        Wed, 28 Sep 2022 04:54:18 +0000 (GMT)
-Received: from smtpclient.apple (unknown [9.43.45.125])
-        by d06av24.portsmouth.uk.ibm.com (Postfix) with ESMTPS;
-        Wed, 28 Sep 2022 04:54:18 +0000 (GMT)
-Content-Type: text/plain;
-        charset=utf-8
-Subject: Re: [PATCH 1/2] tools/perf/tests: Fix string substitutions in build
- id test
-From:   Athira Rajeev <atrajeev@linux.vnet.ibm.com>
-In-Reply-To: <444a5a64-7bc6-d5fd-2880-611c5cbca587@intel.com>
-Date:   Wed, 28 Sep 2022 10:24:16 +0530
-Cc:     Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Ian Rogers <irogers@google.com>, maddy@linux.vnet.ibm.com,
-        Nageswara Sastry <rnsastry@linux.ibm.com>,
-        linux-perf-users@vger.kernel.org, Jiri Olsa <jolsa@kernel.org>,
+        Wed, 28 Sep 2022 03:22:12 -0400
+Received: from mail-yb1-xb4a.google.com (mail-yb1-xb4a.google.com [IPv6:2607:f8b0:4864:20::b4a])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A216DD4AB9
+        for <linux-perf-users@vger.kernel.org>; Wed, 28 Sep 2022 00:22:09 -0700 (PDT)
+Received: by mail-yb1-xb4a.google.com with SMTP id m131-20020a252689000000b006b2bf1dd88cso10694676ybm.19
+        for <linux-perf-users@vger.kernel.org>; Wed, 28 Sep 2022 00:22:09 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20210112;
+        h=cc:to:from:subject:mime-version:message-id:date:from:to:cc:subject
+         :date;
+        bh=0AguHWUqCM3gW3iXUKABpI6T6cvY8qPG4vl+F0YOUJk=;
+        b=ACycKxPl5RxTPVOjOf3fgMkLiXaXBE+FzRdLcjmw1b/8wADvw8CPEnD2nkMo2/PT5U
+         pJZwIyKXobrBLp+ZbpHGv501tJR+e1SQHPnaYNXc7E4O55288UMCtivWt1MeW+uhfJ1e
+         duAycnkus3z51GhUyPzBVLLZXfnN0okVl1H7emzRbUwU+PXYV4bQFkmGD2kTkKl8EUop
+         mgmmQeY/VpCBe8k5mtA6VnXofEl7QhkJjubDNXTiYsAChWrLANsUGF0ydkdwJMLXVaHQ
+         +aKA5u5drU5nI+Nki39vOfQM11/sIM8UZWmV7MCa9aevgnZoQcAyR6xJuLne5OZygGMJ
+         /PLw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=cc:to:from:subject:mime-version:message-id:date:x-gm-message-state
+         :from:to:cc:subject:date;
+        bh=0AguHWUqCM3gW3iXUKABpI6T6cvY8qPG4vl+F0YOUJk=;
+        b=4GuaDEz/r+De7AM22/l5fD28wjuagQ6WaoQBydEud6i40aZbgHp2rTEsgtJkekMYCI
+         vk3Lv84QenCU1de+dl2slmpaDvMygh+hlbtg1b7+qH3uKi6uMYF/9BF9/zhgXQtwCyIW
+         /BryyRGHqqt+rC1rXWf5ZTxfasm/jva63b7Ngt3jumPQEfHqOBENwd6+AmK41RY3I7Lw
+         QtxJCcFHd6YZGfpNhYhHIuI0metRimsY0r9/CghdWg17XFzjE5qNoymjC+ilgXLMdG59
+         A0ywrVmROZNdk+DOd8+G3xmysNlFEAlAPik3PMaasSB6qke+tncoRL9pvBihkx3hX99R
+         fvUw==
+X-Gm-Message-State: ACrzQf2FvumVooIVCGYV8Wl5QjBPaV0ScmSXtFA06L4PpMHKFQhQp0n/
+        +dMa6nFwudwQoyH5iPvqkv8U63j0ONnu
+X-Google-Smtp-Source: AMsMyM40GrNVYExtcDIsey17wAZVlpgtol9KDHZviKRwgr4mepnk90erEMBqYZDAQxUdoPHRdzCUTd8CkbRl
+X-Received: from irogers.svl.corp.google.com ([2620:15c:2d4:203:7099:1ccb:612a:5ad6])
+ (user=irogers job=sendgmr) by 2002:a81:186:0:b0:34c:d27f:b9b0 with SMTP id
+ 128-20020a810186000000b0034cd27fb9b0mr29670112ywb.481.1664349728864; Wed, 28
+ Sep 2022 00:22:08 -0700 (PDT)
+Date:   Wed, 28 Sep 2022 00:21:42 -0700
+Message-Id: <20220928072204.1613330-1-irogers@google.com>
+Mime-Version: 1.0
+X-Mailer: git-send-email 2.37.3.998.g577e59143f-goog
+Subject: [PATCH v1 00/22] Improvements to Intel perf metrics
+From:   Ian Rogers <irogers@google.com>
+To:     Zhengjun Xing <zhengjun.xing@linux.intel.com>,
+        Kan Liang <kan.liang@linux.intel.com>,
+        Andi Kleen <ak@linux.intel.com>, perry.taylor@intel.com,
+        caleb.biggers@intel.com, kshipra.bopardikar@intel.com,
+        samantha.alt@intel.com, ahmad.yasin@intel.com,
+        Peter Zijlstra <peterz@infradead.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        Arnaldo Carvalho de Melo <acme@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Jiri Olsa <jolsa@kernel.org>,
+        Namhyung Kim <namhyung@kernel.org>,
+        John Garry <john.garry@huawei.com>,
+        James Clark <james.clark@arm.com>,
         Kajol Jain <kjain@linux.ibm.com>,
-        Disha Goel <disgoel@linux.vnet.ibm.com>,
-        linuxppc-dev@lists.ozlabs.org
-Message-Id: <3EE5CFF3-51BC-444E-8FEF-2AC219E809F6@linux.vnet.ibm.com>
-References: <20220921170839.21927-1-atrajeev@linux.vnet.ibm.com>
- <Yyy0W6CnPk7BkkCU@kernel.org>
- <444a5a64-7bc6-d5fd-2880-611c5cbca587@intel.com>
-To:     Adrian Hunter <adrian.hunter@intel.com>
-X-Mailer: Apple Mail (2.3696.120.41.1.1)
-X-TM-AS-GCONF: 00
-X-Proofpoint-GUID: -eLxdw0y6N_DS5UpJ6bK21FXFfP9Gijk
-X-Proofpoint-ORIG-GUID: h69sNzZsfovU63EH41QCjJLO3v77F_ed
-Content-Transfer-Encoding: quoted-printable
-X-Proofpoint-UnRewURL: 0 URL was un-rewritten
-MIME-Version: 1.0
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.205,Aquarius:18.0.895,Hydra:6.0.528,FMLib:17.11.122.1
- definitions=2022-09-28_02,2022-09-27_01,2022-06-22_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
- malwarescore=0 impostorscore=0 lowpriorityscore=0 spamscore=0 bulkscore=0
- clxscore=1015 mlxlogscore=999 adultscore=0 mlxscore=0 phishscore=0
- suspectscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2209130000 definitions=main-2209280027
+        Thomas Richter <tmricht@linux.ibm.com>,
+        Miaoqian Lin <linmq006@gmail.com>,
+        Florian Fischer <florian.fischer@muhq.space>,
+        linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
+Cc:     Stephane Eranian <eranian@google.com>,
+        Ian Rogers <irogers@google.com>
+Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-Hi All,
+For consistency with:
+https://github.com/intel/perfmon-metrics
+rename of topdown TMA metrics from Frontend_Bound to tma_frontend_bound.
 
-Looking for what direction we can take here.
-Do we want to change all tests in tools/perf/tests/shell except test_intel_=
-pt.sh to use "bash" or go with
-the approach in the patch ? Please share your comments
+Remove _SMT suffix metrics are dropped as the #SMT_On and #EBS_Mode
+are correctly expanded in the single main metric. Fix perf expr to
+allow a double if to be correctly processed.
 
-Thanks
-Athira
+Add all 6 levels of TMA metrics. Child metrics are placed in a group
+named after their parent allowing children of a metric to be
+easily measured using the metric name with a _group suffix.
 
-> On 23-Sep-2022, at 11:54 AM, Adrian Hunter <adrian.hunter@intel.com> wrot=
-e:
->=20
-> On 22/09/22 22:15, Arnaldo Carvalho de Melo wrote:
->> Em Wed, Sep 21, 2022 at 10:38:38PM +0530, Athira Rajeev escreveu:
->>> The perf test named =E2=80=9Cbuild id cache operations=E2=80=9D skips w=
-ith below
->>> error on some distros:
->>=20
->> I wonder if we shouldn't instead state that bash is needed?
->>=20
->> =E2=AC=A2[acme@toolbox perf-urgent]$ head -1 tools/perf/tests/shell/*.sh=
- | grep ^#
->> #!/bin/sh
->> #!/bin/bash
->> #!/bin/sh
->> #!/bin/sh
->> #!/bin/sh
->> #!/bin/sh
->> #!/bin/sh
->> #!/bin/sh
->> #!/bin/sh
->> #!/bin/sh
->> #!/bin/bash
->> #!/bin/sh
->> #!/bin/sh
->> #!/bin/sh
->> #!/bin/bash
->> #!/bin/sh
->> #!/bin/bash
->> #!/bin/sh
->> #!/bin/sh
->> #!/bin/sh
->> #!/bin/sh
->> #!/bin/sh
->> #!/bin/sh
->> #!/bin/sh
->> #!/bin/sh
->> #!/bin/sh
->> =E2=AC=A2[acme@toolbox perf-urgent]$
->>=20
->> Opinions?
->>=20
->=20
-> Please don't change tools/perf/tests/shell/test_intel_pt.sh
->=20
-> I started using shellcheck on that with the "perf test:=20
-> test_intel_pt.sh: Add per-thread test" patch set that I sent.
->=20
-> FYI, if you use shellcheck on buildid.sh, it shows up issues even
-> after changing to bash:
->=20
-> *** Before ***
->=20
-> $ shellcheck -S warning tools/perf/tests/shell/buildid.sh=20
->=20
-> In tools/perf/tests/shell/buildid.sh line 69:
->        link=3D${build_id_dir}/.build-id/${id:0:2}/${id:2}
->                                       ^-------^ SC2039: In POSIX sh, stri=
-ng indexing is undefined.
->                                                 ^-----^ SC2039: In POSIX =
-sh, string indexing is undefined.
->=20
->=20
-> In tools/perf/tests/shell/buildid.sh line 77:
->        file=3D${build_id_dir}/.build-id/${id:0:2}/`readlink ${link}`/elf
->                                       ^-------^ SC2039: In POSIX sh, stri=
-ng indexing is undefined.
->=20
->=20
-> In tools/perf/tests/shell/buildid.sh line 123:
->        echo "running: perf record $@"
->                                   ^-- SC2145: Argument mixes string and a=
-rray. Use * or separate argument.
->=20
->=20
-> In tools/perf/tests/shell/buildid.sh line 124:
->        ${perf} record --buildid-all -o ${data} $@ &> ${log}
->                                                ^-- SC2068: Double quote a=
-rray expansions to avoid re-splitting elements.
->                                                   ^-------^ SC2039: In PO=
-SIX sh, &> is undefined.
->=20
->=20
-> In tools/perf/tests/shell/buildid.sh line 126:
->                echo "failed: record $@"
->                                     ^-- SC2145: Argument mixes string and=
- array. Use * or separate argument.
->=20
->=20
-> In tools/perf/tests/shell/buildid.sh line 131:
->        check ${@: -1}
->              ^------^ SC2068: Double quote array expansions to avoid re-s=
-plitting elements.
->              ^------^ SC2039: In POSIX sh, string indexing is undefined.
->=20
->=20
-> In tools/perf/tests/shell/buildid.sh line 158:
-> exit ${err}
->     ^----^ SC2154: err is referenced but not assigned.
->=20
-> For more information:
->  https://www.shellcheck.net/wiki/SC2068 -- Double quote array expansions =
-to ...
->  https://www.shellcheck.net/wiki/SC2145 -- Argument mixes string and arra=
-y. ...
->  https://www.shellcheck.net/wiki/SC2039 -- In POSIX sh, &> is undefined.
->=20
-> *** After ***
->=20
-> $ shellcheck -S warning tools/perf/tests/shell/buildid.sh=20
->=20
-> In tools/perf/tests/shell/buildid.sh line 123:
->        echo "running: perf record $@"
->                                   ^-- SC2145: Argument mixes string and a=
-rray. Use * or separate argument.
->=20
->=20
-> In tools/perf/tests/shell/buildid.sh line 124:
->        ${perf} record --buildid-all -o ${data} $@ &> ${log}
->                                                ^-- SC2068: Double quote a=
-rray expansions to avoid re-splitting elements.
->=20
->=20
-> In tools/perf/tests/shell/buildid.sh line 126:
->                echo "failed: record $@"
->                                     ^-- SC2145: Argument mixes string and=
- array. Use * or separate argument.
->=20
->=20
-> In tools/perf/tests/shell/buildid.sh line 131:
->        check ${@: -1}
->              ^------^ SC2068: Double quote array expansions to avoid re-s=
-plitting elements.
->=20
->=20
-> In tools/perf/tests/shell/buildid.sh line 158:
-> exit ${err}
->     ^----^ SC2154: err is referenced but not assigned.
->=20
-> For more information:
->  https://www.shellcheck.net/wiki/SC2068 -- Double quote array expansions =
-to ...
->  https://www.shellcheck.net/wiki/SC2145 -- Argument mixes string and arra=
-y. ...
->  https://www.shellcheck.net/wiki/SC2154 -- err is referenced but not assi=
-gned.
+Don't drop TMA metrics if they contain topdown events.
+
+The ## and ##? operators are correctly expanded.
+
+The locate-with column is added to the long description describing a
+sampling event.
+
+Metrics are written in terms of other metrics to reduce the expression
+size and increase readability.
+
+Following this the pmu-events/arch/x86 directories match those created
+by the script at:
+https://github.com/intel/event-converter-for-linux-perf/blob/master/download_and_gen.py
+with updates at:
+https://github.com/captain5050/event-converter-for-linux-perf
+
+Ian Rogers (22):
+  perf expr: Allow a double if expression
+  perf expr: Remove jevents case workaround
+  perf metrics: Don't scale counts going into metrics
+  perf vendor events: Update Intel skylakex
+  perf vendor events: Update Intel alderlake
+  perf vendor events: Update Intel broadwell
+  perf vendor events: Update Intel broadwellx
+  perf vendor events: Update Intel cascadelakex
+  perf vendor events: Update elkhartlake cpuids
+  perf vendor events: Update Intel haswell
+  perf vendor events: Update Intel haswellx
+  perf vendor events: Update Intel icelake
+  perf vendor events: Update Intel icelakex
+  perf vendor events: Update Intel ivybridge
+  perf vendor events: Update Intel ivytown
+  perf vendor events: Update Intel jaketown
+  perf vendor events: Update Intel sandybridge
+  perf vendor events: Update Intel sapphirerapids
+  perf vendor events: Update silvermont cpuids
+  perf vendor events: Update Intel skylake
+  perf vendor events: Update Intel tigerlake
+  perf vendor events: Update Intel broadwellde
+
+ .../arch/x86/alderlake/adl-metrics.json       | 1215 ++++++++++++++++-
+ .../pmu-events/arch/x86/alderlake/cache.json  |  129 +-
+ .../arch/x86/alderlake/frontend.json          |   12 +
+ .../pmu-events/arch/x86/alderlake/memory.json |   22 +
+ .../pmu-events/arch/x86/alderlake/other.json  |   22 +
+ .../arch/x86/alderlake/pipeline.json          |   14 +-
+ .../arch/x86/broadwell/bdw-metrics.json       |  603 ++++++--
+ .../arch/x86/broadwellde/bdwde-metrics.json   |  639 +++++++--
+ .../arch/x86/broadwellx/bdx-metrics.json      |  644 +++++++--
+ .../arch/x86/broadwellx/uncore-cache.json     |   10 +-
+ .../x86/broadwellx/uncore-interconnect.json   |   18 +-
+ .../arch/x86/broadwellx/uncore-memory.json    |   18 +-
+ .../arch/x86/cascadelakex/clx-metrics.json    |  893 ++++++++----
+ .../arch/x86/cascadelakex/uncore-memory.json  |   18 +-
+ .../arch/x86/cascadelakex/uncore-other.json   |   10 +-
+ .../pmu-events/arch/x86/haswell/cache.json    |    4 +-
+ .../pmu-events/arch/x86/haswell/frontend.json |   12 +-
+ .../arch/x86/haswell/hsw-metrics.json         |  502 +++++--
+ .../pmu-events/arch/x86/haswellx/cache.json   |    2 +-
+ .../arch/x86/haswellx/frontend.json           |   12 +-
+ .../arch/x86/haswellx/hsx-metrics.json        |  707 +++++++---
+ .../x86/haswellx/uncore-interconnect.json     |   18 +-
+ .../arch/x86/haswellx/uncore-memory.json      |   18 +-
+ .../pmu-events/arch/x86/icelake/cache.json    |    6 +-
+ .../arch/x86/icelake/icl-metrics.json         |  725 +++++++++-
+ .../pmu-events/arch/x86/icelake/pipeline.json |    2 +-
+ .../pmu-events/arch/x86/icelakex/cache.json   |    6 +-
+ .../arch/x86/icelakex/icx-metrics.json        |  794 ++++++++++-
+ .../arch/x86/icelakex/pipeline.json           |    2 +-
+ .../arch/x86/icelakex/uncore-other.json       |    2 +-
+ .../arch/x86/ivybridge/ivb-metrics.json       |  525 +++++--
+ .../pmu-events/arch/x86/ivytown/cache.json    |    4 +-
+ .../arch/x86/ivytown/floating-point.json      |    2 +-
+ .../pmu-events/arch/x86/ivytown/frontend.json |   18 +-
+ .../arch/x86/ivytown/ivt-metrics.json         |  558 ++++++--
+ .../arch/x86/ivytown/uncore-cache.json        |   58 +-
+ .../arch/x86/ivytown/uncore-interconnect.json |   84 +-
+ .../arch/x86/ivytown/uncore-memory.json       |    2 +-
+ .../arch/x86/ivytown/uncore-other.json        |    6 +-
+ .../arch/x86/ivytown/uncore-power.json        |    8 +-
+ .../arch/x86/jaketown/jkt-metrics.json        |  291 ++--
+ tools/perf/pmu-events/arch/x86/mapfile.csv    |   18 +-
+ .../arch/x86/sandybridge/snb-metrics.json     |  279 +++-
+ .../arch/x86/sapphirerapids/cache.json        |    4 +-
+ .../arch/x86/sapphirerapids/frontend.json     |   11 +
+ .../arch/x86/sapphirerapids/pipeline.json     |    4 +-
+ .../arch/x86/sapphirerapids/spr-metrics.json  |  858 +++++++++++-
+ .../arch/x86/skylake/skl-metrics.json         |  774 ++++++++---
+ .../arch/x86/skylakex/skx-metrics.json        |  859 +++++++++---
+ .../arch/x86/skylakex/uncore-memory.json      |   18 +-
+ .../arch/x86/skylakex/uncore-other.json       |   19 +-
+ .../arch/x86/tigerlake/tgl-metrics.json       |  727 +++++++++-
+ tools/perf/tests/expr.c                       |    4 +
+ tools/perf/util/expr.c                        |   11 +-
+ tools/perf/util/expr.y                        |    2 +-
+ tools/perf/util/stat-shadow.c                 |    9 +-
+ 56 files changed, 10103 insertions(+), 2129 deletions(-)
+
+-- 
+2.37.3.998.g577e59143f-goog
 
