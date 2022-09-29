@@ -2,47 +2,42 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1C7D1C433FE
-	for <linux-perf-users@archiver.kernel.org>; Thu, 29 Sep 2022 18:22:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A1FFFC433FE
+	for <linux-perf-users@archiver.kernel.org>; Thu, 29 Sep 2022 18:38:05 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233904AbiI2SW5 (ORCPT
+        id S232269AbiI2SiE (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Thu, 29 Sep 2022 14:22:57 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43990 "EHLO
+        Thu, 29 Sep 2022 14:38:04 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40754 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232380AbiI2SWx (ORCPT
+        with ESMTP id S230418AbiI2SiD (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Thu, 29 Sep 2022 14:22:53 -0400
-Received: from mail-oa1-f44.google.com (mail-oa1-f44.google.com [209.85.160.44])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3D24B13F2A3;
-        Thu, 29 Sep 2022 11:22:53 -0700 (PDT)
-Received: by mail-oa1-f44.google.com with SMTP id 586e51a60fabf-131ea99262dso501063fac.9;
-        Thu, 29 Sep 2022 11:22:53 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date;
-        bh=E06RJjVJwDfsRCMJJzAUnTq8HdXAS/JGLEHu5WJqKFE=;
-        b=yXjb9jFr1o/d6yulUSLfjPfpVKPg8trlSbxg2GduH6UdgfdgWzXkoz9MLgsvbk/Z/f
-         fgCwd1UgN4WspcoBtkFneKTyYiBcUVLT0jT6cIf6wBhOpbv0LOr6tiblWbO3ubBvtpGB
-         35crnaUIHjpbBbOtRq52HcFjDC0hrMAqRjOpzmAlyzZWdWEUSZAjK87J+24hSIGgDtxQ
-         0yYA5gaHHfi/Z2HEkdNCbPDUMIvWmPqjwWT1WF1nmpOfRV3lQHaXfwMIsHOxo1iKK6J5
-         JYCbnsO3ofwsRYayGZYnlN0ese4xnyhhLH/TxTd8hf+LcD2J7csUFv9EBnM6MnvRiIk/
-         W4qg==
-X-Gm-Message-State: ACrzQf1H4jkcYOJYru8LjgGJa5eEUbBj0081289ZlXu2x2dnCl/TbSt5
-        RLiInPmXE4IqmvcD3wHnoNJz/o4J1hgKatmMkyk=
-X-Google-Smtp-Source: AMsMyM4+KvMwRAMqNfEGLoZVtQg8gfar61sl6HksSa62MA+8HQ7KxZRllxzLOoOlllo71Z7Ygfjn5xMFasVa9dWt3oE=
-X-Received: by 2002:a05:6870:a70f:b0:127:666a:658 with SMTP id
- g15-20020a056870a70f00b00127666a0658mr2667179oam.218.1664475772506; Thu, 29
- Sep 2022 11:22:52 -0700 (PDT)
-MIME-Version: 1.0
-References: <20220929140514.226807-1-jolsa@kernel.org> <YzXdjNNh+jbYDnYz@kernel.org>
-In-Reply-To: <YzXdjNNh+jbYDnYz@kernel.org>
-From:   Namhyung Kim <namhyung@kernel.org>
-Date:   Thu, 29 Sep 2022 11:22:41 -0700
-Message-ID: <CAM9d7cia_Hsqsj=J4rSM68TQADMAt=at5SWRMYTGv4FJxNGpTg@mail.gmail.com>
-Subject: Re: [PATCH 1/2] perf tools: Fix bison object compilation with clang 15
-To:     Arnaldo Carvalho de Melo <acme@kernel.org>
+        Thu, 29 Sep 2022 14:38:03 -0400
+Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5009612112A;
+        Thu, 29 Sep 2022 11:38:02 -0700 (PDT)
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by dfw.source.kernel.org (Postfix) with ESMTPS id DD42E6215B;
+        Thu, 29 Sep 2022 18:38:01 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 150AEC433D6;
+        Thu, 29 Sep 2022 18:38:01 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1664476681;
+        bh=+cp10QalntLANvJDrlD/o8CXEGGdD/OGJ35ESRtZxMM=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=qe7nWhINkdTjc5ImGliaFl4sr8POetibPZpNU9Gu1n0DB5OsRIpYeKVd8MdjW9pwg
+         Orl8iTpQj0E3+Kxkw3NTRkPZlTT4vNk0jObi7N75JzeKbs6/ZDnqXw/N0qup4zL1Wm
+         6r/MlyfDUT3JMIip9Ew9VCsJBCe7fBLpE7aq+HOkLAK8Ifag3ab0u3bbfNst9ccXy3
+         iHKzQ5vLYlFzqdkrD4wC9W0+ftEQg3PsocIjfphcVq+f/yRz7m+T/1U73cpxvAOAW0
+         ihMfSQLNgDhDU70KIR4OBqT2XK+aHzdx8y0rhYd3UG3pLdqiB/zGDtNOlT72DOIjj0
+         SmDN5yIFYWhQA==
+Received: by quaco.ghostprotocols.net (Postfix, from userid 1000)
+        id A977B405F0; Thu, 29 Sep 2022 15:37:58 -0300 (-03)
+Date:   Thu, 29 Sep 2022 15:37:58 -0300
+From:   Arnaldo Carvalho de Melo <acme@kernel.org>
+To:     Namhyung Kim <namhyung@kernel.org>
 Cc:     Jiri Olsa <jolsa@kernel.org>, lkml <linux-kernel@vger.kernel.org>,
         Peter Zijlstra <a.p.zijlstra@chello.nl>,
         Ingo Molnar <mingo@kernel.org>,
@@ -50,45 +45,75 @@ Cc:     Jiri Olsa <jolsa@kernel.org>, lkml <linux-kernel@vger.kernel.org>,
         Alexander Shishkin <alexander.shishkin@linux.intel.com>,
         Ian Rogers <irogers@google.com>,
         linux-perf-users <linux-perf-users@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Subject: Re: [PATCH 1/2] perf tools: Fix bison object compilation with clang
+ 15
+Message-ID: <YzXmBrvLY23z4zB4@kernel.org>
+References: <20220929140514.226807-1-jolsa@kernel.org>
+ <YzXdjNNh+jbYDnYz@kernel.org>
+ <CAM9d7cia_Hsqsj=J4rSM68TQADMAt=at5SWRMYTGv4FJxNGpTg@mail.gmail.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CAM9d7cia_Hsqsj=J4rSM68TQADMAt=at5SWRMYTGv4FJxNGpTg@mail.gmail.com>
+X-Url:  http://acmel.wordpress.com
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-On Thu, Sep 29, 2022 at 11:01 AM Arnaldo Carvalho de Melo
-<acme@kernel.org> wrote:
->
-> Em Thu, Sep 29, 2022 at 04:05:13PM +0200, Jiri Olsa escreveu:
-> > Arnaldo reported compilation fail with clang 15:
+Em Thu, Sep 29, 2022 at 11:22:41AM -0700, Namhyung Kim escreveu:
+> On Thu, Sep 29, 2022 at 11:01 AM Arnaldo Carvalho de Melo
+> <acme@kernel.org> wrote:
 > >
-> >     CC      util/parse-events-bison.o
-> >   util/parse-events-bison.c:1401:9: error: variable 'parse_events_nerrs'
-> >   set but not used [-Werror,-Wunused-but-set-variable]
-> >       int yynerrs = 0;
-> >         ^
-> >   util/parse-events-bison.c:72:25: note: expanded from macro 'yynerrs'
-> >   #define yynerrs         parse_events_nerrs
-> >                         ^
-> >   1 error generated.
+> > Em Thu, Sep 29, 2022 at 04:05:13PM +0200, Jiri Olsa escreveu:
+> > > Arnaldo reported compilation fail with clang 15:
+> > >
+> > >     CC      util/parse-events-bison.o
+> > >   util/parse-events-bison.c:1401:9: error: variable 'parse_events_nerrs'
+> > >   set but not used [-Werror,-Wunused-but-set-variable]
+> > >       int yynerrs = 0;
+> > >         ^
+> > >   util/parse-events-bison.c:72:25: note: expanded from macro 'yynerrs'
+> > >   #define yynerrs         parse_events_nerrs
+> > >                         ^
+> > >   1 error generated.
+> > >
+> > > Disabling -Wunused-but-set-variable check for bison object compilation.
 > >
-> > Disabling -Wunused-but-set-variable check for bison object compilation.
->
-> So we have to disable something else:
->
->   37    44.92 fedora:32                     : FAIL clang version 10.0.1 (Fedora 10.0.1-3.fc32)
->     error: unknown warning option '-Wno-unused-but-set-variable'; did you mean '-Wno-unused-const-variable'? [-Werror,-Wunknown-warning-option]
->     make[3]: *** [/git/perf-6.0.0-rc7/tools/build/Makefile.build:139: util] Error 2
->   38    61.77 fedora:33                     : FAIL clang version 11.0.0 (Fedora 11.0.0-3.fc33)
->     error: unknown warning option '-Wno-unused-but-set-variable'; did you mean '-Wno-unused-const-variable'? [-Werror,-Wunknown-warning-option]
->     make[3]: *** [/git/perf-6.0.0-rc7/tools/build/Makefile.build:139: util] Error 2
->   39    66.59 fedora:34                     : FAIL clang version 12.0.1 (Fedora 12.0.1-1.fc34)
->     error: unknown warning option '-Wno-unused-but-set-variable'; did you mean '-Wno-unused-const-variable'? [-Werror,-Wunknown-warning-option]
->     make[3]: *** [/git/perf-6.0.0-rc7/tools/build/Makefile.build:139: util] Error 2
->
->
-> I'll try yours + -Wno-unknown-warning-option
+> > So we have to disable something else:
+> >
+> >   37    44.92 fedora:32                     : FAIL clang version 10.0.1 (Fedora 10.0.1-3.fc32)
+> >     error: unknown warning option '-Wno-unused-but-set-variable'; did you mean '-Wno-unused-const-variable'? [-Werror,-Wunknown-warning-option]
+> >     make[3]: *** [/git/perf-6.0.0-rc7/tools/build/Makefile.build:139: util] Error 2
+> >   38    61.77 fedora:33                     : FAIL clang version 11.0.0 (Fedora 11.0.0-3.fc33)
+> >     error: unknown warning option '-Wno-unused-but-set-variable'; did you mean '-Wno-unused-const-variable'? [-Werror,-Wunknown-warning-option]
+> >     make[3]: *** [/git/perf-6.0.0-rc7/tools/build/Makefile.build:139: util] Error 2
+> >   39    66.59 fedora:34                     : FAIL clang version 12.0.1 (Fedora 12.0.1-1.fc34)
+> >     error: unknown warning option '-Wno-unused-but-set-variable'; did you mean '-Wno-unused-const-variable'? [-Werror,-Wunknown-warning-option]
+> >     make[3]: *** [/git/perf-6.0.0-rc7/tools/build/Makefile.build:139: util] Error 2
+> >
+> >
+> > I'll try yours + -Wno-unknown-warning-option
+> 
+> Is `-Wno-unknown-warning-option` known to older versions? ;-)
 
-Is `-Wno-unknown-warning-option` known to older versions? ;-)
+Excellent question! ;-)
 
-Thanks,
-Namhyung
+And one we should learn something from, so that we
+can prep tools/perf/ (and other projects we contribute to) for the
+future:
+
+So far, so good:
+
+[perfbuilder@five ~]$ echo `grep FAIL dm.log/summary | cut -c15- | cut -d: -f1,2`
+alpine:3.12 alpine:3.13 alpine:3.14 alpine:3.15 alt:p10 amazonlinux:devel debian:11 fedora:32 fedora:33 fedora:34 fedora:37 fedora:38 fedora:rawhide ubuntu:21.04
+[perfbuilder@five ~]$ export BUILD_TARBALL=http://192.168.86.14/perf/perf-6.0.0-rc7.tar.xz
+[perfbuilder@five ~]$ time dm debian:experimental alpine:3.12 alpine:3.13 alpine:3.14 alpine:3.15 alt:p10 amazonlinux:devel debian:11 fedora:32 fedora:33 fedora:34 fedora:37 fedora:38 fedora:rawhide ubuntu:21.04
+   1   140.66 debian:experimental           : Ok   gcc (Debian 12.2.0-3) 12.2.0 , Debian clang version 14.0.6-2
+   2   132.82 alpine:3.12                   : Ok   gcc (Alpine 9.3.0) 9.3.0 , Alpine clang version 10.0.0 (https://gitlab.alpinelinux.org/alpine/aports.git 7445adce501f8473efdb93b17b5eaf2f1445ed4c)
+   3   140.40 alpine:3.13                   : Ok   gcc (Alpine 10.2.1_pre1) 10.2.1 20201203 , Alpine clang version 10.0.1
+   4   143.75 alpine:3.14                   : Ok   gcc (Alpine 10.3.1_git20210424) 10.3.1 20210424 , Alpine clang version 11.1.0
+   5   147.77 alpine:3.15                   : Ok   gcc (Alpine 10.3.1_git20211027) 10.3.1 20211027 , Alpine clang version 12.0.1
+   6    98.79 alt:p10                       : Ok   x86_64-alt-linux-gcc (GCC) 10.3.1 20210703 (ALT Sisyphus 10.3.1-alt2) , clang version 11.0.1
+   7: amazonlinux:devel
+
+- Arnaldo
