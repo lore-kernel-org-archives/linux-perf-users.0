@@ -2,87 +2,139 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3BF2CC433F5
-	for <linux-perf-users@archiver.kernel.org>; Thu, 29 Sep 2022 19:16:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 37CC3C433FE
+	for <linux-perf-users@archiver.kernel.org>; Thu, 29 Sep 2022 19:25:06 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229743AbiI2TQs (ORCPT
+        id S229692AbiI2TZF (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Thu, 29 Sep 2022 15:16:48 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40166 "EHLO
+        Thu, 29 Sep 2022 15:25:05 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57006 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229825AbiI2TQp (ORCPT
+        with ESMTP id S229708AbiI2TZC (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Thu, 29 Sep 2022 15:16:45 -0400
-Received: from ams.source.kernel.org (ams.source.kernel.org [145.40.68.75])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3AECE122A6D;
-        Thu, 29 Sep 2022 12:16:45 -0700 (PDT)
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by ams.source.kernel.org (Postfix) with ESMTPS id 969F8B80D8B;
-        Thu, 29 Sep 2022 19:16:43 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 2CD12C433C1;
-        Thu, 29 Sep 2022 19:16:42 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1664479002;
-        bh=TgE4K+FCSMRUmYJBn2OIluZDUtSZDaR0t/TiYWeD3rI=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=orqzq82gTXk7cblh8HB4CZFXmOgaya65abJb3fsWXpxQ3dZByke20rdF6oD2ir99C
-         3Jvx+ietuX3K7BVySQtP6SQAbgCybpD2oPwopatFgh2mX9W6y1y6O+iXT4cQjoTT5k
-         psy6pUf68A/G5fluhNKiZYQWGJLU2dnpxwqflbYdYUrPFyimV6vsXSguqTiPwS4Nzh
-         /LcvRhTcq+YMsgiSwTdIM2J2idYMVrmYT9zpkto7ZDKwD0DIGBWVa9RC56cg8szDs+
-         5Byk1cB0uOl+t9JXTyEM51KqNRkLBo30e9Alo0YWU4/zrm6Od2/L0VW21BktaQQYV3
-         rmDHPjqr29Leg==
-Received: by quaco.ghostprotocols.net (Postfix, from userid 1000)
-        id 9F0594062C; Thu, 29 Sep 2022 16:16:39 -0300 (-03)
-Date:   Thu, 29 Sep 2022 16:16:39 -0300
-From:   Arnaldo Carvalho de Melo <acme@kernel.org>
-To:     Will Chandler <wfc@wfchandler.org>
-Cc:     John Garry <john.garry@huawei.com>, peterz@infradead.org,
-        mingo@redhat.com, mark.rutland@arm.com,
-        alexander.shishkin@linux.intel.com, jolsa@kernel.org,
-        namhyung@kernel.org, linux-perf-users@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] perf tools: Fix empty version number when building
- outside of a git repo
-Message-ID: <YzXvF1eIzJvAfe3U@kernel.org>
-References: <20220927195228.47304-1-wfc@wfchandler.org>
- <c5181877-2998-b952-abe6-26d733ae2aeb@huawei.com>
- <87A1F5B6-3F60-4988-8BA6-A993E5789C80@wfchandler.org>
- <2a4a15a4-55cd-f98b-4b14-474f24e2c308@huawei.com>
- <B89DF3DD-B07E-427F-8D4B-1F8251345A4C@wfchandler.org>
+        Thu, 29 Sep 2022 15:25:02 -0400
+Received: from mail-wr1-x42e.google.com (mail-wr1-x42e.google.com [IPv6:2a00:1450:4864:20::42e])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0F5D54F69D;
+        Thu, 29 Sep 2022 12:25:01 -0700 (PDT)
+Received: by mail-wr1-x42e.google.com with SMTP id f11so966401wrm.6;
+        Thu, 29 Sep 2022 12:25:00 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20210112;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:date:from:from:to:cc:subject:date;
+        bh=ii4b+vX/LA1G0UWoyF/9mZxmvXgIagI0VUsrAspvbXM=;
+        b=lbku42ms1JQIitvP2/FFYQI/0Acg3ErOKtCobNRNWutkYtBnoYxWwII/T31V2aBN8p
+         TTYGDYDXzSsqENgK3tAkBWOesEtYyXKk8WKJCsvSfxDU0mv+Lx02Yvb4dAQtYINwkF3h
+         yX9Dmsv45FyOFZcAgPq6mgPqIzVUHJ58QR9wSXBtZqZDGSgwviJ+otTX4pj1hHUb347V
+         z2ZFKdPzddJNaqPdTp1UeNUemeAZRavXpOOmggDYOeIfrYE6ZFnqLvxXW4lJLxBVGtPp
+         lCFTtR+fcJkKRQwN2rUYKY5FaNDcdRN8BvhBCxrW4M4/TxPcnrE3z9TRYir4U0KISFQw
+         avdA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:date:from:x-gm-message-state:from:to:cc:subject:date;
+        bh=ii4b+vX/LA1G0UWoyF/9mZxmvXgIagI0VUsrAspvbXM=;
+        b=nymyM4BzhBFyKCOLaq6Cqk1SG0MBolwWh3poA5MOrB4wgoWKMF0zWlY2Br8txkzmNH
+         noaXPkxJFOxjKaOZAmJDvPdJVMXW5fxgicVqo4SOpkElUUAfQEy09kgKrTcxCQC610h+
+         yfvhw8Oldqz3a1xi297fI1EGPUK/4Y6ZkuUskTa9GLo1iJ0dvtkLuZfwf4s43/tT8MOn
+         48YjgqSKq2n8vFjkcQGYCkziM8WGpO76wYtgTTRQU1j6FrK7mxzC0JBuBcxMHFOQRE62
+         m4V6HN/qqR713eCeH9F6XC/8Bmwt8vNVoqCuS+vYJYzTJljPKDmGRCcrrOxMat51zyOm
+         cdSQ==
+X-Gm-Message-State: ACrzQf3H+P6v7r1s1lZ7NQ64LL17e1KWoQjPTVe26nejyuarv2UF+vuI
+        QDaROsIvxqVUaskExbQ2QCI=
+X-Google-Smtp-Source: AMsMyM5DKkJXj+0pKMdnawd/jM7F80jNCjqlfBAspUrirHVR0iDBvTsH+wKMPxXIWEPl2WevuXw37Q==
+X-Received: by 2002:adf:f342:0:b0:22c:c3ea:c6da with SMTP id e2-20020adff342000000b0022cc3eac6damr3558019wrp.567.1664479499458;
+        Thu, 29 Sep 2022 12:24:59 -0700 (PDT)
+Received: from krava ([193.85.244.190])
+        by smtp.gmail.com with ESMTPSA id p17-20020a05600c431100b003b571601e4fsm267536wme.16.2022.09.29.12.24.58
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 29 Sep 2022 12:24:59 -0700 (PDT)
+From:   Jiri Olsa <olsajiri@gmail.com>
+X-Google-Original-From: Jiri Olsa <jolsa@kernel.org>
+Date:   Thu, 29 Sep 2022 21:24:56 +0200
+To:     Arnaldo Carvalho de Melo <acme@kernel.org>
+Cc:     lkml <linux-kernel@vger.kernel.org>,
+        Peter Zijlstra <a.p.zijlstra@chello.nl>,
+        Ingo Molnar <mingo@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Namhyung Kim <namhyung@kernel.org>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Ian Rogers <irogers@google.com>,
+        linux-perf-users@vger.kernel.org
+Subject: Re: [PATCH 1/2] perf tools: Fix bison object compilation with clang
+ 15
+Message-ID: <YzXxCFgPs7s59Cjf@krava>
+References: <20220929140514.226807-1-jolsa@kernel.org>
+ <YzXdjNNh+jbYDnYz@kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <B89DF3DD-B07E-427F-8D4B-1F8251345A4C@wfchandler.org>
-X-Url:  http://acmel.wordpress.com
+In-Reply-To: <YzXdjNNh+jbYDnYz@kernel.org>
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-Em Thu, Sep 29, 2022 at 03:06:06PM -0400, Will Chandler escreveu:
-> On 29 Sep 2022, at 6:09, John Garry wrote:
+On Thu, Sep 29, 2022 at 03:01:48PM -0300, Arnaldo Carvalho de Melo wrote:
+> Em Thu, Sep 29, 2022 at 04:05:13PM +0200, Jiri Olsa escreveu:
+> > Arnaldo reported compilation fail with clang 15:
+> > 
+> >     CC      util/parse-events-bison.o
+> >   util/parse-events-bison.c:1401:9: error: variable 'parse_events_nerrs'
+> >   set but not used [-Werror,-Wunused-but-set-variable]
+> >       int yynerrs = 0;
+> >         ^
+> >   util/parse-events-bison.c:72:25: note: expanded from macro 'yynerrs'
+> >   #define yynerrs         parse_events_nerrs
+> >                         ^
+> >   1 error generated.
+> > 
+> > Disabling -Wunused-but-set-variable check for bison object compilation.
 > 
-> > Hmmm... maybe someone would want to customise PERF-VERSION-FILE for their own distro. Not sure. But then fiddling with PERF-VERSION-FILE might break the parsing so...I guess not.
+> So we have to disable something else:
 > 
-> Yeah, seems like a bad idea. Doing a quick search, Void Linux does seem to be
-> trying to set a custom version string in their build script[0], but I don't
-> think passing PERF_VERSION as an argument to make has worked since 2013 with
-> 3cecaa200227 ("perf tools: Do not include PERF-VERSION-FILE to Makefile, 2013-01-16").
+>   37    44.92 fedora:32                     : FAIL clang version 10.0.1 (Fedora 10.0.1-3.fc32)
+>     error: unknown warning option '-Wno-unused-but-set-variable'; did you mean '-Wno-unused-const-variable'? [-Werror,-Wunknown-warning-option]
+>     make[3]: *** [/git/perf-6.0.0-rc7/tools/build/Makefile.build:139: util] Error 2
+>   38    61.77 fedora:33                     : FAIL clang version 11.0.0 (Fedora 11.0.0-3.fc33)
+>     error: unknown warning option '-Wno-unused-but-set-variable'; did you mean '-Wno-unused-const-variable'? [-Werror,-Wunknown-warning-option]
+>     make[3]: *** [/git/perf-6.0.0-rc7/tools/build/Makefile.build:139: util] Error 2
+>   39    66.59 fedora:34                     : FAIL clang version 12.0.1 (Fedora 12.0.1-1.fc34)
+>     error: unknown warning option '-Wno-unused-but-set-variable'; did you mean '-Wno-unused-const-variable'? [-Werror,-Wunknown-warning-option]
+>     make[3]: *** [/git/perf-6.0.0-rc7/tools/build/Makefile.build:139: util] Error 2
 > 
-> [0] https://github.com/void-linux/void-packages/blob/fdb3515c33f2bb997392ea6992e6bbb82c4376c5/srcpkgs/linux-tools/template#L56
 > 
-> > BTW, is there any other method of building the perf code not considered? So far I know:
-> > a. in git tree
-> > b. perf-tar-src-pkg
-> > c. tarball
-> 
-> Those are all that come to mind for me as well.
-> 
-> Let me know if you'd like me to re-roll the patch using the pre-7572733b8499
-> approach.
+> I'll try yours + -Wno-unknown-warning-option
 
-Discussion is going well, proceed, reach a conclusion and from what I'm
-seeing, I'll just have to apply it 8-)
+ugh, of course... thanks ;-)
 
-- Arnaldo
+jirka
+
+> 
+> ;-)
+> 
+> - Arnaldo
+>  
+> > Signed-off-by: Jiri Olsa <jolsa@kernel.org>
+> > ---
+> >  tools/perf/util/Build | 2 +-
+> >  1 file changed, 1 insertion(+), 1 deletion(-)
+> > 
+> > diff --git a/tools/perf/util/Build b/tools/perf/util/Build
+> > index 8fd6dc8de521..d559c80559e3 100644
+> > --- a/tools/perf/util/Build
+> > +++ b/tools/perf/util/Build
+> > @@ -270,7 +270,7 @@ CFLAGS_expr-flex.o          += $(flex_flags)
+> >  bison_flags := -DYYENABLE_NLS=0
+> >  BISON_GE_35 := $(shell expr $(shell $(BISON) --version | grep bison | sed -e 's/.\+ \([0-9]\+\).\([0-9]\+\)/\1\2/g') \>\= 35)
+> >  ifeq ($(BISON_GE_35),1)
+> > -  bison_flags += -Wno-unused-parameter -Wno-nested-externs -Wno-implicit-function-declaration -Wno-switch-enum
+> > +  bison_flags += -Wno-unused-parameter -Wno-nested-externs -Wno-implicit-function-declaration -Wno-switch-enum -Wno-unused-but-set-variable
+> >  else
+> >    bison_flags += -w
+> >  endif
+> > -- 
+> > 2.37.3
+> 
+> -- 
+> 
+> - Arnaldo
