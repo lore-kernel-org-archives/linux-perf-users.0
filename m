@@ -2,121 +2,137 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A4754C32771
-	for <linux-perf-users@archiver.kernel.org>; Thu, 29 Sep 2022 02:11:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EC87EC32771
+	for <linux-perf-users@archiver.kernel.org>; Thu, 29 Sep 2022 02:23:54 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S234625AbiI2CLb (ORCPT
+        id S232494AbiI2CXy (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Wed, 28 Sep 2022 22:11:31 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49122 "EHLO
+        Wed, 28 Sep 2022 22:23:54 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49878 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S234202AbiI2CLa (ORCPT
+        with ESMTP id S232380AbiI2CXx (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Wed, 28 Sep 2022 22:11:30 -0400
-Received: from mail-wm1-x331.google.com (mail-wm1-x331.google.com [IPv6:2a00:1450:4864:20::331])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BDC72105D6F
-        for <linux-perf-users@vger.kernel.org>; Wed, 28 Sep 2022 19:11:28 -0700 (PDT)
-Received: by mail-wm1-x331.google.com with SMTP id u16-20020a05600c211000b003b5152ebf09so2365586wml.5
-        for <linux-perf-users@vger.kernel.org>; Wed, 28 Sep 2022 19:11:28 -0700 (PDT)
+        Wed, 28 Sep 2022 22:23:53 -0400
+Received: from mail-wm1-x330.google.com (mail-wm1-x330.google.com [IPv6:2a00:1450:4864:20::330])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1EC44123DAB
+        for <linux-perf-users@vger.kernel.org>; Wed, 28 Sep 2022 19:23:52 -0700 (PDT)
+Received: by mail-wm1-x330.google.com with SMTP id fn7-20020a05600c688700b003b4fb113b86so38101wmb.0
+        for <linux-perf-users@vger.kernel.org>; Wed, 28 Sep 2022 19:23:52 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=google.com; s=20210112;
         h=cc:to:subject:message-id:date:from:in-reply-to:references
          :mime-version:from:to:cc:subject:date;
-        bh=TwooFJxjhRgJG+cOSV3PRCJCp4RIeUqc3CtUNz+Wumk=;
-        b=spuLDBc8RRYI6yfGXXyY1PEyX8lSRB2teAxRuop2uJtO1oW8LBT+i/2UhFM8pOd6H2
-         LIWIrsuUXHkHWavX8aY3GUFAO/CAQT5qAWQ/9yLxnTaX61qMxpkFNQu7AArCg76J09KQ
-         Y1A9/Mse3fMgmWxV41i0BUbYUCLuhhWyX/1HISvZ2LQ20c0s9uix34ijzH9TG+ro6iJV
-         AD2ZGZC45uJ3KCu1/PQXwNkujCwfEeq7MEFuu7Pcm17EKV6cmr5gRYP3BemR0eT6WFQ4
-         SxEfpsbZgkYSrE0/ZMeazezp05fC8KPWJvKgE2sLNm2xSm2Ljm0eg4Kr8OQG/AkiCdiX
-         2Ecg==
+        bh=885bZoAF9cATz3vxtOjRWDKiMOgQWtWGS/sIyDsnGvc=;
+        b=j5blAkgzNbivA6YVD15PkyBQU0hoYVrqId7OzizI0uth5eAYft6AsJiHya90NxrNiN
+         Ea3EnkUZJmr6iLkBBGK3NHfXWapei/cwLSfCOTd2Dak6NmlEPu3tYgLuqhhv1t9vHXCb
+         NqlcLGknKQ+17inzmKVOEaAPQvDjz6/G/gCDZ/InxqHT4vHb4cs5hSzNrpAZ+2zJVXmQ
+         3PGzWAXGuOy8dLDsPwwqSakykRIpbRNDAVyqJS8ObwKoq500CsjONv53rM6ILvRC6bdF
+         rGCr52NFeSTphWjXB4+seKyq4ZXy91Gra5n+RmWCUqYm2lOMbr/d618Bbau0OI3NxsoZ
+         4AdQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
         h=cc:to:subject:message-id:date:from:in-reply-to:references
          :mime-version:x-gm-message-state:from:to:cc:subject:date;
-        bh=TwooFJxjhRgJG+cOSV3PRCJCp4RIeUqc3CtUNz+Wumk=;
-        b=F6sMM4/RfZcRO9gAc21iiiG1zlmtXw88lTIwQmJwjhtKQOFwx6sSGJeWVgZbPGhtx0
-         neU3HaDRQcsiLLoHot9lHYCjO5RDoAGsaBVTP9Q+Q3NqXc/JmxnO2rl90tObX8FAA3dG
-         CdoU1OjcQuR/IKqPDAlj+9DrAed5ZmyTB/8zqxPun3iOLD3qqmf+4+wYi+q036FyvSYt
-         3hAhpxyVTz+rOlEDHjvvqt0CdonIr44PfEadXflMBbTPwotWFIcVaUnNap9vggg8rdhQ
-         NWvNWLbTElmrB5/XMjOBWdOKG9l3iHGaMi6e+oE1L11sFVVVwnndRwQ48IuhcOyU1Vpp
-         K9Jg==
-X-Gm-Message-State: ACrzQf0ytNDH98rLjHpK3VKfIqHVTLuXImFLSK8mhJf3mxZoaHNJog7A
-        +YzE5nIqDZXOqqNQ1+ic2BJhhFjt6ZifwqLM9kshcg==
-X-Google-Smtp-Source: AMsMyM5USHjqcex3UgGFABXMyH/XTRe2NtqMCvmsWB/a7GJGkUUxhuIUhfMj0gFiEEGEgcZVSwmhXa7flf9f0GYpsX0=
-X-Received: by 2002:a05:600c:4e94:b0:3b4:b416:46c3 with SMTP id
- f20-20020a05600c4e9400b003b4b41646c3mr527727wmq.149.1664417487060; Wed, 28
- Sep 2022 19:11:27 -0700 (PDT)
+        bh=885bZoAF9cATz3vxtOjRWDKiMOgQWtWGS/sIyDsnGvc=;
+        b=FyTr0P7E5U9VE+zgVb5sfy5mVqfM+mpmTHxHAJvcYDTfWBNUvuX72DPfXCz/QjeUhh
+         QYeBGh7LNFJ1Yv6QTJsRd6wjiyw4YaTFPHAgczPB2TVVhQOXoEJVCdrOKikBvjly4RD6
+         8QrYhYuGcJIUJhFxi8TNEf0ODYMc7X9jb+Hu5vZtEeHN75c4Sve2VLL4RB75/nEKyGzz
+         OdnwmAbryE4P9AH5VU3Dh9QTsAHnIMe5oK8iPiVsebBkRDwwrAK2p/Fi4Zb9K+jrwkWk
+         rQ5E7o2QBU7NbjdUkVhhp46QifV6xASXTKNQIiRn/NgHEHVtLO/9ldX7zQlVC564Bz7o
+         sN3Q==
+X-Gm-Message-State: ACrzQf2IazBDI9PY9i2vS3izoPjVWY6sGOeMpqqVdrERIAdLIrVszujM
+        oO7mx7tdGG0YSdIcl935BVJ3TjB8KTC+e8F9K7MiHQ==
+X-Google-Smtp-Source: AMsMyM4EW3WEL/8g7SzWKMrlQzFsAoKaRVucZZV7DfGGh8BFJ5SKG/B3CTiIV24PnStGZFrapbXl5A5jPXKfM0jO3tk=
+X-Received: by 2002:a05:600c:2181:b0:3b4:74e4:16f8 with SMTP id
+ e1-20020a05600c218100b003b474e416f8mr516955wme.174.1664418230461; Wed, 28 Sep
+ 2022 19:23:50 -0700 (PDT)
 MIME-Version: 1.0
-References: <20220927051513.3768717-1-zhengjun.xing@linux.intel.com> <YzRaAxFrg56uph+W@kernel.org>
-In-Reply-To: <YzRaAxFrg56uph+W@kernel.org>
+References: <20220928072204.1613330-1-irogers@google.com> <20220928072204.1613330-6-irogers@google.com>
+ <44f59d7c-ced7-2d74-edbc-f354047339fe@linux.intel.com> <YzRVOD4u2SI0K29Y@kernel.org>
+In-Reply-To: <YzRVOD4u2SI0K29Y@kernel.org>
 From:   Ian Rogers <irogers@google.com>
-Date:   Wed, 28 Sep 2022 19:11:15 -0700
-Message-ID: <CAP-5=fVgsMzx6F=rgy9kyfWS=Gj3hvtLTJmTzf6+O954x4oY_g@mail.gmail.com>
-Subject: Re: [PATCH] perf test: Fix test case 87 ("perf record tests") for
- hybrid systems
+Date:   Wed, 28 Sep 2022 19:23:37 -0700
+Message-ID: <CAP-5=fUogKZx6JP_vg+6ti+BnbEcX+3Wnzi077s4VgxEKLpQeQ@mail.gmail.com>
+Subject: Re: [PATCH v1 05/22] perf vendor events: Update Intel alderlake
 To:     Arnaldo Carvalho de Melo <acme@kernel.org>
-Cc:     zhengjun.xing@linux.intel.com, peterz@infradead.org,
-        mingo@redhat.com, alexander.shishkin@intel.com, jolsa@kernel.org,
-        namhyung@kernel.org, linux-kernel@vger.kernel.org,
-        linux-perf-users@vger.kernel.org, ak@linux.intel.com,
-        kan.liang@linux.intel.com
+Cc:     Xing Zhengjun <zhengjun.xing@linux.intel.com>,
+        Kan Liang <kan.liang@linux.intel.com>,
+        Andi Kleen <ak@linux.intel.com>, perry.taylor@intel.com,
+        caleb.biggers@intel.com, kshipra.bopardikar@intel.com,
+        samantha.alt@intel.com, ahmad.yasin@intel.com,
+        Peter Zijlstra <peterz@infradead.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Jiri Olsa <jolsa@kernel.org>,
+        Namhyung Kim <namhyung@kernel.org>,
+        John Garry <john.garry@huawei.com>,
+        James Clark <james.clark@arm.com>,
+        Kajol Jain <kjain@linux.ibm.com>,
+        Thomas Richter <tmricht@linux.ibm.com>,
+        Miaoqian Lin <linmq006@gmail.com>,
+        Florian Fischer <florian.fischer@muhq.space>,
+        linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Stephane Eranian <eranian@google.com>
 Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-On Wed, Sep 28, 2022 at 7:28 AM Arnaldo Carvalho de Melo
+On Wed, Sep 28, 2022 at 7:08 AM Arnaldo Carvalho de Melo
 <acme@kernel.org> wrote:
 >
-> Em Tue, Sep 27, 2022 at 01:15:13PM +0800, zhengjun.xing@linux.intel.com escreveu:
-> > From: Zhengjun Xing <zhengjun.xing@linux.intel.com>
+> Em Wed, Sep 28, 2022 at 04:22:53PM +0800, Xing Zhengjun escreveu:
+> > On 9/28/2022 3:21 PM, Ian Rogers wrote:
+> > > diff --git a/tools/perf/pmu-events/arch/x86/mapfile.csv b/tools/perf/pmu-events/arch/x86/mapfile.csv
+> > > index 7f2d777fd97f..594c6e96f0ce 100644
+> > > --- a/tools/perf/pmu-events/arch/x86/mapfile.csv
+> > > +++ b/tools/perf/pmu-events/arch/x86/mapfile.csv
+> > > @@ -1,5 +1,5 @@
+> > >   Family-model,Version,Filename,EventType
+> > > -GenuineIntel-6-9[7A],v1.13,alderlake,core
+> > > +GenuineIntel-6-(97|9A|B7|BA|BF),v1.15,alderlake,core
 > >
-> > The test case 87 ("perf record tests") failed on hybrid systems,the event
-> > "cpu/br_inst_retired.near_call/p" is only for non-hybrid system. Correct
-> > the test event to support both non-hybrid and hybrid systems.
-> >
-> > Before:
-> >  # ./perf test 87
-> >  87: perf record tests                                   : FAILED!
-> >
-> > After:
-> >  # ./perf test 87
-> >  87: perf record tests                                   : Ok
+> > The commit description should mention this change "Add more CPUID support
+> > for ADL"
 >
-> Looks sane, applied.
->
-> Ian, consider providing your Acked-by,
+> I added this note, with that can I have your Reviewed-by or Acked-by?
 >
 > - Arnaldo
 
-Acked-by: Ian Rogers <irogers@google.com>
+I think I should send a v2. I can add this then. Other things for v2 are:
+- this week there will likely be an update to [1] which is implicitly
+integrated here.
+- the topdown metrics are all percentages but are currently values
+zero to 1. It is straightforward to add a ScaleUnit of 100% to them
+all.
+- eyeballing topdown event metrics like:
+
+    {
+       "BriefDescription": "This category represents fraction of slots
+utilized by useful work i.e. issued uops that eventually get retired",
+       "MetricExpr": "topdown\\-retiring / (topdown\\-fe\\-bound +
+topdown\\-bad\\-spec + topdown\\-retiring + topdown\\-be\\-bound)",
+       "MetricGroup": "TopdownL1;tma_L1_group",
+       "MetricName": "tma_retiring",
+...
+it looks like the group will fail due to the missing slots event. This
+can be fixed with:
+       "MetricExpr": "topdown\\-retiring / (topdown\\-fe\\-bound +
+topdown\\-bad\\-spec + topdown\\-retiring + topdown\\-be\\-bound) + 0
+* TOPDOWN.SLOTS",
 
 Thanks,
 Ian
 
->
-> > Fixes: 24f378e66021 ("perf test: Add basic perf record tests")
-> > Signed-off-by: Zhengjun Xing <zhengjun.xing@linux.intel.com>
-> > Reviewed-by: Kan Liang <kan.liang@linux.intel.com>
-> > ---
-> >  tools/perf/tests/shell/record.sh | 2 +-
-> >  1 file changed, 1 insertion(+), 1 deletion(-)
+[1] https://github.com/intel/perfmon-metrics
+
+> > >   GenuineIntel-6-(1C|26|27|35|36),v4,bonnell,core
+> > >   GenuineIntel-6-(3D|47),v26,broadwell,core
+> > >   GenuineIntel-6-56,v23,broadwellde,core
 > >
-> > diff --git a/tools/perf/tests/shell/record.sh b/tools/perf/tests/shell/record.sh
-> > index 00c7285ce1ac..301f95427159 100755
-> > --- a/tools/perf/tests/shell/record.sh
-> > +++ b/tools/perf/tests/shell/record.sh
-> > @@ -61,7 +61,7 @@ test_register_capture() {
-> >      echo "Register capture test [Skipped missing registers]"
-> >      return
-> >    fi
-> > -  if ! perf record -o - --intr-regs=di,r8,dx,cx -e cpu/br_inst_retired.near_call/p \
-> > +  if ! perf record -o - --intr-regs=di,r8,dx,cx -e br_inst_retired.near_call:p \
-> >      -c 1000 --per-thread true 2> /dev/null \
-> >      | perf script -F ip,sym,iregs -i - 2> /dev/null \
-> >      | egrep -q "DI:"
 > > --
-> > 2.25.1
+> > Zhengjun Xing
 >
 > --
 >
