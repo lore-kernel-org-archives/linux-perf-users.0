@@ -2,101 +2,195 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 712D3C04A95
-	for <linux-perf-users@archiver.kernel.org>; Thu, 29 Sep 2022 08:00:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E4593C6FA86
+	for <linux-perf-users@archiver.kernel.org>; Thu, 29 Sep 2022 08:13:02 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S235511AbiI2IA1 (ORCPT
+        id S234934AbiI2INB (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Thu, 29 Sep 2022 04:00:27 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39554 "EHLO
+        Thu, 29 Sep 2022 04:13:01 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47846 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S235185AbiI2H7z (ORCPT
+        with ESMTP id S234998AbiI2INA (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Thu, 29 Sep 2022 03:59:55 -0400
-Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTP id 4A4F99FD5;
-        Thu, 29 Sep 2022 00:59:35 -0700 (PDT)
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 2372622FA;
-        Thu, 29 Sep 2022 00:59:41 -0700 (PDT)
-Received: from a077893.blr.arm.com (unknown [10.162.42.7])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPA id D6EEE3F73D;
-        Thu, 29 Sep 2022 00:59:31 -0700 (PDT)
-From:   Anshuman Khandual <anshuman.khandual@arm.com>
-To:     linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, peterz@infradead.org,
-        acme@kernel.org, mark.rutland@arm.com, will@kernel.org,
-        catalin.marinas@arm.com
-Cc:     Anshuman Khandual <anshuman.khandual@arm.com>
-Subject: [PATCH V3 7/7] arm64/perf: Enable branch stack sampling
-Date:   Thu, 29 Sep 2022 13:28:57 +0530
-Message-Id: <20220929075857.158358-8-anshuman.khandual@arm.com>
-X-Mailer: git-send-email 2.25.1
-In-Reply-To: <20220929075857.158358-1-anshuman.khandual@arm.com>
-References: <20220929075857.158358-1-anshuman.khandual@arm.com>
+        Thu, 29 Sep 2022 04:13:00 -0400
+Received: from mga11.intel.com (mga11.intel.com [192.55.52.93])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DA59413BCC1;
+        Thu, 29 Sep 2022 01:12:58 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1664439178; x=1695975178;
+  h=message-id:date:mime-version:subject:to:cc:references:
+   from:in-reply-to:content-transfer-encoding;
+  bh=IQ7z/I+zLeVa5Aa6mLZ8ZxCc1tq6PQJIg4/ITcyKHNc=;
+  b=EiRV/+ei1DIliOEr1P5AbqFsdQpPMQNZUOPgGKHXGBwgKz9MWsaNI++T
+   TeQvSMg9RbRWAl5kQwpNorx7YftO301b/SUHYsLldUh5y82zI5msAIniq
+   RDYe4bpg4Idmr2vB8gKi6X8hiomWo7e3tpVMSJQqHUjVBmIwFqIMCcS75
+   3XRBUbT+HG8lhQeAwtoP1jPMj7IJ1JfCfBeUaUhmgFz9yvtzW1ilYENXm
+   H8/9c7mc+xB0k/yeQ2hCbHTSso2buA2Iu7uddoGOjCMDQg2V2kloeVS+W
+   a+e0klaL6QybS7oHi3eWfra5G9oTdRObuhg9SDqHUbfV0m+s0t/Wi3uSo
+   A==;
+X-IronPort-AV: E=McAfee;i="6500,9779,10484"; a="299428164"
+X-IronPort-AV: E=Sophos;i="5.93,354,1654585200"; 
+   d="scan'208";a="299428164"
+Received: from fmsmga002.fm.intel.com ([10.253.24.26])
+  by fmsmga102.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 29 Sep 2022 01:12:58 -0700
+X-IronPort-AV: E=McAfee;i="6500,9779,10484"; a="726296616"
+X-IronPort-AV: E=Sophos;i="5.93,354,1654585200"; 
+   d="scan'208";a="726296616"
+Received: from xingzhen-mobl.ccr.corp.intel.com (HELO [10.238.4.231]) ([10.238.4.231])
+  by fmsmga002-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 29 Sep 2022 01:12:53 -0700
+Message-ID: <dd33559e-5d55-9866-136f-554466c0c44f@linux.intel.com>
+Date:   Thu, 29 Sep 2022 16:12:51 +0800
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:102.0) Gecko/20100101
+ Thunderbird/102.3.0
+Subject: Re: [PATCH v1 05/22] perf vendor events: Update Intel alderlake
+To:     Ian Rogers <irogers@google.com>,
+        Arnaldo Carvalho de Melo <acme@kernel.org>
+Cc:     Kan Liang <kan.liang@linux.intel.com>,
+        Andi Kleen <ak@linux.intel.com>, perry.taylor@intel.com,
+        caleb.biggers@intel.com, kshipra.bopardikar@intel.com,
+        samantha.alt@intel.com, ahmad.yasin@intel.com,
+        Peter Zijlstra <peterz@infradead.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Jiri Olsa <jolsa@kernel.org>,
+        Namhyung Kim <namhyung@kernel.org>,
+        John Garry <john.garry@huawei.com>,
+        James Clark <james.clark@arm.com>,
+        Kajol Jain <kjain@linux.ibm.com>,
+        Thomas Richter <tmricht@linux.ibm.com>,
+        Miaoqian Lin <linmq006@gmail.com>,
+        Florian Fischer <florian.fischer@muhq.space>,
+        linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Stephane Eranian <eranian@google.com>
+References: <20220928072204.1613330-1-irogers@google.com>
+ <20220928072204.1613330-6-irogers@google.com>
+ <44f59d7c-ced7-2d74-edbc-f354047339fe@linux.intel.com>
+ <YzRVOD4u2SI0K29Y@kernel.org>
+ <CAP-5=fUogKZx6JP_vg+6ti+BnbEcX+3Wnzi077s4VgxEKLpQeQ@mail.gmail.com>
+Content-Language: en-US
+From:   Xing Zhengjun <zhengjun.xing@linux.intel.com>
+In-Reply-To: <CAP-5=fUogKZx6JP_vg+6ti+BnbEcX+3Wnzi077s4VgxEKLpQeQ@mail.gmail.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-Now that all the required pieces are already in place, just enable the perf
-branch stack sampling support on arm64 platform, by removing the gate which
-blocks it in armpmu_event_init().
 
-Cc: Mark Rutland <mark.rutland@arm.com>
-Cc: Will Deacon <will@kernel.org>
-Cc: Catalin Marinas <catalin.marinas@arm.com>
-Cc: linux-kernel@vger.kernel.org
-Cc: linux-arm-kernel@lists.infradead.org
-Signed-off-by: Anshuman Khandual <anshuman.khandual@arm.com>
----
- drivers/perf/arm_pmu.c | 32 +++++++++++++++++++++++++++++---
- 1 file changed, 29 insertions(+), 3 deletions(-)
 
-diff --git a/drivers/perf/arm_pmu.c b/drivers/perf/arm_pmu.c
-index 93b36933124f..2a9b988b53c2 100644
---- a/drivers/perf/arm_pmu.c
-+++ b/drivers/perf/arm_pmu.c
-@@ -537,9 +537,35 @@ static int armpmu_event_init(struct perf_event *event)
- 		!cpumask_test_cpu(event->cpu, &armpmu->supported_cpus))
- 		return -ENOENT;
- 
--	/* does not support taken branch sampling */
--	if (has_branch_stack(event))
--		return -EOPNOTSUPP;
-+	if (has_branch_stack(event)) {
-+		/*
-+		 * BRBE support is absent. Select CONFIG_ARM_BRBE_PMU
-+		 * in the config, before branch stack sampling events
-+		 * can be requested.
-+		 */
-+		if (!IS_ENABLED(CONFIG_ARM_BRBE_PMU)) {
-+			pr_warn_once("BRBE is disabled, select CONFIG_ARM_BRBE_PMU\n");
-+			return -EOPNOTSUPP;
-+		}
-+
-+		if (event->attr.branch_sample_type & PERF_SAMPLE_BRANCH_KERNEL) {
-+			if (!perfmon_capable()) {
-+				pr_warn_once("does not have permission for kernel branch filter\n");
-+				return -EPERM;
-+			}
-+		}
-+
-+		/*
-+		 * Branch stack sampling event can not be supported in
-+		 * case either the required driver itself is absent or
-+		 * BRBE buffer, is not supported. Besides checking for
-+		 * the callback prevents a crash in case it's absent.
-+		 */
-+		if (!armpmu->brbe_supported || !armpmu->brbe_supported(event)) {
-+			pr_warn_once("BRBE is not supported\n");
-+			return -EOPNOTSUPP;
-+		}
-+	}
- 
- 	if (armpmu->map_event(event) == -ENOENT)
- 		return -ENOENT;
+On 9/29/2022 10:23 AM, Ian Rogers wrote:
+> On Wed, Sep 28, 2022 at 7:08 AM Arnaldo Carvalho de Melo
+> <acme@kernel.org> wrote:
+>>
+>> Em Wed, Sep 28, 2022 at 04:22:53PM +0800, Xing Zhengjun escreveu:
+>>> On 9/28/2022 3:21 PM, Ian Rogers wrote:
+>>>> diff --git a/tools/perf/pmu-events/arch/x86/mapfile.csv b/tools/perf/pmu-events/arch/x86/mapfile.csv
+>>>> index 7f2d777fd97f..594c6e96f0ce 100644
+>>>> --- a/tools/perf/pmu-events/arch/x86/mapfile.csv
+>>>> +++ b/tools/perf/pmu-events/arch/x86/mapfile.csv
+>>>> @@ -1,5 +1,5 @@
+>>>>    Family-model,Version,Filename,EventType
+>>>> -GenuineIntel-6-9[7A],v1.13,alderlake,core
+>>>> +GenuineIntel-6-(97|9A|B7|BA|BF),v1.15,alderlake,core
+>>>
+>>> The commit description should mention this change "Add more CPUID support
+>>> for ADL"
+>>
+>> I added this note, with that can I have your Reviewed-by or Acked-by?
+>>
+>> - Arnaldo
+> 
+> I think I should send a v2. I can add this then. Other things for v2 are:
+> - this week there will likely be an update to [1] which is implicitly
+> integrated here.
+> - the topdown metrics are all percentages but are currently values
+> zero to 1. It is straightforward to add a ScaleUnit of 100% to them
+> all.
+> - eyeballing topdown event metrics like:
+> 
+>      {
+>         "BriefDescription": "This category represents fraction of slots
+> utilized by useful work i.e. issued uops that eventually get retired",
+>         "MetricExpr": "topdown\\-retiring / (topdown\\-fe\\-bound +
+> topdown\\-bad\\-spec + topdown\\-retiring + topdown\\-be\\-bound)",
+>         "MetricGroup": "TopdownL1;tma_L1_group",
+>         "MetricName": "tma_retiring",
+> ...
+> it looks like the group will fail due to the missing slots event. This
+> can be fixed with:
+>         "MetricExpr": "topdown\\-retiring / (topdown\\-fe\\-bound +
+> topdown\\-bad\\-spec + topdown\\-retiring + topdown\\-be\\-bound) + 0
+> * TOPDOWN.SLOTS",
+> 
+> Thanks,
+> Ian
+
+I just test all the events for SPR/ADL, no error find.
+But there are a lots of metrics fail due to slots missed.
+
+|0929_005708.420|ERROR| common.sh:123:do_cmd() - perf stat -M 
+"tma_branch_mispredicts" -a sleep 0.1 failed. Return code is 255|
+|0929_005709.221|ERROR| common.sh:123:do_cmd() - perf stat -M 
+"tma_backend_bound" -a sleep 0.1 failed. Return code is 255|
+|0929_005709.544|ERROR| common.sh:123:do_cmd() - perf stat -M 
+"tma_memory_bound" -a sleep 0.1 failed. Return code is 255|
+|0929_005723.757|ERROR| common.sh:123:do_cmd() - perf stat -M 
+"tma_core_bound" -a sleep 0.1 failed. Return code is 255|
+|0929_005724.531|ERROR| common.sh:123:do_cmd() - perf stat -M 
+"tma_ports_utilization" -a sleep 0.1 failed. Return code is 255|
+|0929_005731.541|ERROR| common.sh:123:do_cmd() - perf stat -M 
+"tma_retiring" -a sleep 0.1 failed. Return code is 255|
+|0929_005731.860|ERROR| common.sh:123:do_cmd() - perf stat -M 
+"tma_light_operations" -a sleep 0.1 failed. Return code is 255|
+|0929_005732.811|ERROR| common.sh:123:do_cmd() - perf stat -M 
+"tma_x87_use" -a sleep 0.1 failed. Return code is 255|
+|0929_005741.026|ERROR| common.sh:123:do_cmd() - perf stat -M 
+"tma_heavy_operations" -a sleep 0.1 failed. Return code is 255|
+|0929_005746.165|ERROR| common.sh:123:do_cmd() - perf stat -M 
+"Memory_Latency" -a sleep 0.1 failed. Return code is 255|
+
+# perf stat -v  -M "tma_branch_mispredicts" -a sleep 1
+Using CPUID GenuineIntel-6-8F-3
+metric expr topdown\-br\-mispredict / (topdown\-fe\-bound + 
+topdown\-bad\-spec + topdown\-retiring + topdown\-be\-bound) for 
+tma_branch_mispredicts
+found event topdown-retiring
+found event topdown-fe-bound
+found event topdown-be-bound
+found event topdown-br-mispredict
+found event topdown-bad-spec
+Parsing metric events 
+'{topdown-retiring/metric-id=topdown!1retiring/,topdown-fe-bound/metric-id=topdown!1fe!1bound/,topdown-be-bound/metric-id=topdown!1be!1bound/,topdown-br-mispredict/metric-id=topdown!1br!1mispredict/,topdown-bad-spec/metric-id=topdown!1bad!1spec/}:W'
+topdown-retiring -> cpu/event=0,umask=0x80/
+topdown-fe-bound -> cpu/event=0,umask=0x82/
+topdown-be-bound -> cpu/event=0,umask=0x83/
+topdown-br-mispredict -> cpu/event=0,umask=0x85/
+topdown-bad-spec -> cpu/event=0,umask=0x81/
+Control descriptor is not initialized
+Warning:
+topdown-retiring event is not supported by the kernel.
+Error:
+The sys_perf_event_open() syscall returned with 22 (Invalid argument) 
+for event (topdown-retiring).
+/bin/dmesg | grep -i perf may provide additional information.
+
+
+> 
+> [1] https://github.com/intel/perfmon-metrics
+> 
+>>>>    GenuineIntel-6-(1C|26|27|35|36),v4,bonnell,core
+>>>>    GenuineIntel-6-(3D|47),v26,broadwell,core
+>>>>    GenuineIntel-6-56,v23,broadwellde,core
+>>>
+>>> --
+>>> Zhengjun Xing
+>>
+>> --
+>>
+>> - Arnaldo
+
 -- 
-2.25.1
-
+Zhengjun Xing
