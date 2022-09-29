@@ -2,111 +2,117 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C7FFCC433F5
-	for <linux-perf-users@archiver.kernel.org>; Thu, 29 Sep 2022 18:54:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 87A3EC433F5
+	for <linux-perf-users@archiver.kernel.org>; Thu, 29 Sep 2022 19:06:17 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229780AbiI2Sy2 (ORCPT
+        id S230142AbiI2TGQ (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Thu, 29 Sep 2022 14:54:28 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48374 "EHLO
+        Thu, 29 Sep 2022 15:06:16 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47008 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229658AbiI2Sy1 (ORCPT
+        with ESMTP id S230191AbiI2TGM (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Thu, 29 Sep 2022 14:54:27 -0400
-Received: from mail-oi1-f176.google.com (mail-oi1-f176.google.com [209.85.167.176])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 989E71449DB;
-        Thu, 29 Sep 2022 11:54:26 -0700 (PDT)
-Received: by mail-oi1-f176.google.com with SMTP id o64so2502737oib.12;
-        Thu, 29 Sep 2022 11:54:26 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date;
-        bh=u/LkYHvYR+btps55yDhNvqai2AlFnIqwkDLQGyvkZiA=;
-        b=AfJZK4b1xSewAt0LhAIiWgbqxzQjkPUHV26A7sEprPbceGLdKN9euewPkxLjINbcmK
-         x+JXuD1u+sD0jrQskrTGH0Gn1TJzv7pYyzdjwtDrYD9MhLouitHhw5Bqsftyx1Ra6954
-         6jDs2mCvf2h5wAugVipioDsCB6EzGEVujPoO2gCBm0cEYj825NgQgdZlpmVRqmQfiGf9
-         nawCi1YjtrPj2pbwhePTlAuoZNGQnKJ6noSyM5Cc729Nf9W80KM4H5GPGtfuSv+9aAym
-         How3peOn10d/TwsFGTian3NoPPmPCTIH7EzGORxidOg7gAYbVFOq5YEoYjTXGVjpFU//
-         QnUg==
-X-Gm-Message-State: ACrzQf0u0JPoS//BA1EITY85oDRnFETlS8Lbp6HtJbEIGb9S1LNJKz3B
-        E2aetq8hjeq+SKms0dT6l6hdWch9HeXvv0V7TOI=
-X-Google-Smtp-Source: AMsMyM6erVnoONuNBkVi0YaF3+arwnhUw2NtLkwVkJQzfYCn/k3LhVGeCu1QBDwIlsKqQ8y2j9XEOPMrFFR8qp7zWhk=
-X-Received: by 2002:a05:6808:181e:b0:350:e92a:9ab1 with SMTP id
- bh30-20020a056808181e00b00350e92a9ab1mr2195276oib.209.1664477665895; Thu, 29
- Sep 2022 11:54:25 -0700 (PDT)
+        Thu, 29 Sep 2022 15:06:12 -0400
+Received: from out1-smtp.messagingengine.com (out1-smtp.messagingengine.com [66.111.4.25])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C4EE54DB19;
+        Thu, 29 Sep 2022 12:06:11 -0700 (PDT)
+Received: from compute2.internal (compute2.nyi.internal [10.202.2.46])
+        by mailout.nyi.internal (Postfix) with ESMTP id CE9625C00DC;
+        Thu, 29 Sep 2022 15:06:08 -0400 (EDT)
+Received: from mailfrontend2 ([10.202.2.163])
+  by compute2.internal (MEProxy); Thu, 29 Sep 2022 15:06:08 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=wfchandler.org;
+         h=cc:cc:content-transfer-encoding:content-type:date:date:from
+        :from:in-reply-to:in-reply-to:message-id:mime-version:references
+        :reply-to:sender:subject:subject:to:to; s=fm2; t=1664478368; x=
+        1664564768; bh=5iKGShl7bHTQjRCpR3Rp6BaSwCatu+rb0Y5UgnU1eOI=; b=b
+        jrvUMZDt1YwJthfV0Qdg1pP8nZ4FmTK4O2Kgie1W59wAZQUOwbnInXX6+yDOV4Wi
+        320UZAirBa3MqnVZ2aE6Cb02FuoVzav5HWwTjLISFdgS40eKjTjc3Sh8n+0BgaNN
+        oHTucHpyqZd8tjiYo79F+uUZiMXZM1xLELwLc1VstcU03zdUNydkMNd768X7F/F9
+        ZbBcSnVnb4zgeJFM5lbLDu56wCzeZjirQZlTa4fFfMwk1CCGPU9lOfinGWV6/ftZ
+        fj0EpExYXPSN23eF+hvGiQEJulQX4h4ARbKPntyxJ3/Syz8vrRb4rygpv6M1OimM
+        Nlmjowi7XwG0uUKgu0hqw==
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+        messagingengine.com; h=cc:cc:content-transfer-encoding
+        :content-type:date:date:feedback-id:feedback-id:from:from
+        :in-reply-to:in-reply-to:message-id:mime-version:references
+        :reply-to:sender:subject:subject:to:to:x-me-proxy:x-me-proxy
+        :x-me-sender:x-me-sender:x-sasl-enc; s=fm2; t=1664478368; x=
+        1664564768; bh=5iKGShl7bHTQjRCpR3Rp6BaSwCatu+rb0Y5UgnU1eOI=; b=g
+        CE1erlxOgz9e/8NSesIGMjsGGtZKUSnx1P+eMftneMNUoN1Qy/4wFNdxptmx1A2e
+        3eCegl44ve78g7uqOtsr8qyd7VnuNPK521x6Ns1cgNZp9AKfqqNyx1/UBoQVZ3xT
+        pnXXMAYzzyjflS/hw5GQWjAstMl/fSLYe2hTsrOkUXYgd7BRoavZ1WAWHkIrfpfV
+        yLB2gU/No/AjG68I2RHg8wTaLevQmiiCeWWBbCf6SsyoZGzby+I32TjQfP2boxJY
+        azykm7zKS2k0ivVqTvT5bKXvZT946ygpBd0jSAgvQgBrEps5m2NXcmxNMYakSaTo
+        KkR+Ee9CKCs17F5HlxNcw==
+X-ME-Sender: <xms:oOw1Y-_M43lu3v59LAVn-Wvuma4teIASMQM-RlC3gmF2FQXplHtGZA>
+    <xme:oOw1Y-sXZwaKiCo5umh65GeMXM9Z0iejVscfWSmo1Res8gOETRc7A3TKr066i7Doj
+    LrJ8SyhvsJGBsaW2-E>
+X-ME-Received: <xmr:oOw1Y0CpZic9AF2PCVMafAs6lODMC7cEJESnp3ZGAQ-pGvpIdOUOqReLBY3ksrtT8GA>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgedvfedrfeehtddgudefhecutefuodetggdotefrod
+    ftvfcurfhrohhfihhlvgemucfhrghsthforghilhdpqfgfvfdpuffrtefokffrpgfnqfgh
+    necuuegrihhlohhuthemuceftddtnecusecvtfgvtghiphhivghnthhsucdlqddutddtmd
+    enucfjughrpefhvfevufffoffkjghfgggtgfesthhqmhdtredttdenucfhrhhomhephghi
+    lhhlucevhhgrnhgulhgvrhcuoeiffhgtseiffhgthhgrnhgulhgvrhdrohhrgheqnecugg
+    ftrfgrthhtvghrnhepgfeuvdduudfftdfgkedtffehkeeuhefhtdehtdfgkefhveehkeej
+    geeuhfeugffhnecuffhomhgrihhnpehgihhthhhusgdrtghomhenucevlhhushhtvghruf
+    hiiigvpedtnecurfgrrhgrmhepmhgrihhlfhhrohhmpeiffhgtseiffhgthhgrnhgulhgv
+    rhdrohhrgh
+X-ME-Proxy: <xmx:oOw1Y2f8qM7kPlpQN_wIgtP96-ECrohv5jFIjEyCoFTYeamATejhvQ>
+    <xmx:oOw1YzPG7w0Ly2ZZ-n3OYR6jlX42W6cy7WBstYjwcGM4I81e5_HUEQ>
+    <xmx:oOw1YwnSE81F-dSFv7RneP7Yh9y8_aS5hCcw9MW8IK9QSg5244LXdQ>
+    <xmx:oOw1Y8hhEreVNdy2h1gPCDVLahul77WLeWU42taDNO9CbOK97Am6xA>
+Feedback-ID: ica594744:Fastmail
+Received: by mail.messagingengine.com (Postfix) with ESMTPA; Thu,
+ 29 Sep 2022 15:06:07 -0400 (EDT)
+From:   Will Chandler <wfc@wfchandler.org>
+To:     John Garry <john.garry@huawei.com>
+Cc:     peterz@infradead.org, mingo@redhat.com, acme@kernel.org,
+        mark.rutland@arm.com, alexander.shishkin@linux.intel.com,
+        jolsa@kernel.org, namhyung@kernel.org,
+        linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] perf tools: Fix empty version number when building outside of a git repo
+Date:   Thu, 29 Sep 2022 15:06:06 -0400
+X-Mailer: MailMate (1.14r5852)
+Message-ID: <B89DF3DD-B07E-427F-8D4B-1F8251345A4C@wfchandler.org>
+In-Reply-To: <2a4a15a4-55cd-f98b-4b14-474f24e2c308@huawei.com>
+References: <20220927195228.47304-1-wfc@wfchandler.org>
+ <c5181877-2998-b952-abe6-26d733ae2aeb@huawei.com>
+ <87A1F5B6-3F60-4988-8BA6-A993E5789C80@wfchandler.org>
+ <2a4a15a4-55cd-f98b-4b14-474f24e2c308@huawei.com>
 MIME-Version: 1.0
-References: <20220914-arm-perf-tool-spe1-2-v2-v3-0-8189fc04dcc6@kernel.org>
- <20220914-arm-perf-tool-spe1-2-v2-v3-1-8189fc04dcc6@kernel.org>
- <CAM9d7ciNwe1HaYXjau6hv8yUmnZvvQU0=bNdf=EA589frkjptg@mail.gmail.com> <CAL_JsqJ8nhmx4U8efE2_FuVkacMYxHys4OZXv9PmdTXjZP1x4A@mail.gmail.com>
-In-Reply-To: <CAL_JsqJ8nhmx4U8efE2_FuVkacMYxHys4OZXv9PmdTXjZP1x4A@mail.gmail.com>
-From:   Namhyung Kim <namhyung@kernel.org>
-Date:   Thu, 29 Sep 2022 11:54:14 -0700
-Message-ID: <CAM9d7cjC0bB53mwjp7upcHQOYW_tejSCC0xw3nDjHygbUmuivw@mail.gmail.com>
-Subject: Re: [PATCH v3 1/3] perf: Skip and warn on unknown format 'configN' attrs
-To:     Rob Herring <robh@kernel.org>
-Cc:     Peter Zijlstra <peterz@infradead.org>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Jiri Olsa <jolsa@kernel.org>, Leo Yan <leo.yan@linaro.org>,
-        linux-perf-users <linux-perf-users@vger.kernel.org>,
-        James Clark <james.clark@arm.com>,
-        linux-kernel <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain
+Content-Transfer-Encoding: quoted-printable
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-On Mon, Sep 26, 2022 at 6:32 AM Rob Herring <robh@kernel.org> wrote:
->
-> On Fri, Sep 16, 2022 at 1:12 PM Namhyung Kim <namhyung@kernel.org> wrote:
-> >
-> > On Wed, Sep 14, 2022 at 1:09 PM Rob Herring <robh@kernel.org> wrote:
-> > >
-> > > If the kernel exposes a new perf_event_attr field in a format attr, perf
-> > > will return an error stating the specified PMU can't be found. For
-> > > example, a format attr with 'config3:0-63' causes an error as config3 is
-> > > unknown to perf. This causes a compatibility issue between a newer
-> > > kernel with older perf tool.
-> > >
-> > > Before this change with a kernel adding 'config3' I get:
-> > >
-> > > $ perf record -e arm_spe// -- true
-> > > event syntax error: 'arm_spe//'
-> > >                      \___ Cannot find PMU `arm_spe'. Missing kernel support?
-> > > Run 'perf list' for a list of valid events
-> > >
-> > >  Usage: perf record [<options>] [<command>]
-> > >     or: perf record [<options>] -- <command> [<options>]
-> > >
-> > >     -e, --event <event>   event selector. use 'perf list' to list
-> > > available events
-> > >
-> > > After this change, I get:
-> > >
-> > > $ perf record -e arm_spe// -- true
-> > > WARNING: 'arm_spe_0' format 'inv_event_filter' requires 'perf_event_attr::config3' which is not supported by this version of perf!
-> > > [ perf record: Woken up 2 times to write data ]
-> > > [ perf record: Captured and wrote 0.091 MB perf.data ]
-> > >
-> > > To support unknown configN formats, rework the YACC implementation to
-> > > pass any config[0-9]+ format to perf_pmu__new_format() to handle with a
-> > > warning.
-> >
-> > It only handles configN formats but it might add a completely different
-> > name later, right?
->
-> Right. An unknown configN is a warning. An unknown name is still an
-> error as before. Given that sysfs format attrs are for mapping fields
-> which could be anything to "generic" perf_event_attr fields, how would
-> we ever have anything other than configN?
+On 29 Sep 2022, at 6:09, John Garry wrote:
 
-I'm not sure I'm following.  It could be anything other than configN.
+> Hmmm... maybe someone would want to customise PERF-VERSION-FILE for the=
+ir own distro. Not sure. But then fiddling with PERF-VERSION-FILE might b=
+reak the parsing so...I guess not.
 
-But I don't object to this particular change as it's needed for current
-work.  Later, we can fix the issue if another name comes in.
+Yeah, seems like a bad idea. Doing a quick search, Void Linux does seem t=
+o be
+trying to set a custom version string in their build script[0], but I don=
+'t
+think passing PERF_VERSION as an argument to make has worked since 2013 w=
+ith
+3cecaa200227 ("perf tools: Do not include PERF-VERSION-FILE to Makefile, =
+2013-01-16").
 
-Thanks,
-Namhyung
+[0] https://github.com/void-linux/void-packages/blob/fdb3515c33f2bb997392=
+ea6992e6bbb82c4376c5/srcpkgs/linux-tools/template#L56
+
+> BTW, is there any other method of building the perf code not considered=
+? So far I know:
+> a. in git tree
+> b. perf-tar-src-pkg
+> c. tarball
+
+Those are all that come to mind for me as well.
+
+Let me know if you'd like me to re-roll the patch using the pre-7572733b8=
+499
+approach.
