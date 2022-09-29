@@ -2,118 +2,111 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A1FFFC433FE
-	for <linux-perf-users@archiver.kernel.org>; Thu, 29 Sep 2022 18:38:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C7FFCC433F5
+	for <linux-perf-users@archiver.kernel.org>; Thu, 29 Sep 2022 18:54:29 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232269AbiI2SiE (ORCPT
+        id S229780AbiI2Sy2 (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Thu, 29 Sep 2022 14:38:04 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40754 "EHLO
+        Thu, 29 Sep 2022 14:54:28 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48374 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230418AbiI2SiD (ORCPT
+        with ESMTP id S229658AbiI2Sy1 (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Thu, 29 Sep 2022 14:38:03 -0400
-Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5009612112A;
-        Thu, 29 Sep 2022 11:38:02 -0700 (PDT)
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id DD42E6215B;
-        Thu, 29 Sep 2022 18:38:01 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 150AEC433D6;
-        Thu, 29 Sep 2022 18:38:01 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1664476681;
-        bh=+cp10QalntLANvJDrlD/o8CXEGGdD/OGJ35ESRtZxMM=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=qe7nWhINkdTjc5ImGliaFl4sr8POetibPZpNU9Gu1n0DB5OsRIpYeKVd8MdjW9pwg
-         Orl8iTpQj0E3+Kxkw3NTRkPZlTT4vNk0jObi7N75JzeKbs6/ZDnqXw/N0qup4zL1Wm
-         6r/MlyfDUT3JMIip9Ew9VCsJBCe7fBLpE7aq+HOkLAK8Ifag3ab0u3bbfNst9ccXy3
-         iHKzQ5vLYlFzqdkrD4wC9W0+ftEQg3PsocIjfphcVq+f/yRz7m+T/1U73cpxvAOAW0
-         ihMfSQLNgDhDU70KIR4OBqT2XK+aHzdx8y0rhYd3UG3pLdqiB/zGDtNOlT72DOIjj0
-         SmDN5yIFYWhQA==
-Received: by quaco.ghostprotocols.net (Postfix, from userid 1000)
-        id A977B405F0; Thu, 29 Sep 2022 15:37:58 -0300 (-03)
-Date:   Thu, 29 Sep 2022 15:37:58 -0300
-From:   Arnaldo Carvalho de Melo <acme@kernel.org>
-To:     Namhyung Kim <namhyung@kernel.org>
-Cc:     Jiri Olsa <jolsa@kernel.org>, lkml <linux-kernel@vger.kernel.org>,
-        Peter Zijlstra <a.p.zijlstra@chello.nl>,
-        Ingo Molnar <mingo@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Ian Rogers <irogers@google.com>,
-        linux-perf-users <linux-perf-users@vger.kernel.org>
-Subject: Re: [PATCH 1/2] perf tools: Fix bison object compilation with clang
- 15
-Message-ID: <YzXmBrvLY23z4zB4@kernel.org>
-References: <20220929140514.226807-1-jolsa@kernel.org>
- <YzXdjNNh+jbYDnYz@kernel.org>
- <CAM9d7cia_Hsqsj=J4rSM68TQADMAt=at5SWRMYTGv4FJxNGpTg@mail.gmail.com>
+        Thu, 29 Sep 2022 14:54:27 -0400
+Received: from mail-oi1-f176.google.com (mail-oi1-f176.google.com [209.85.167.176])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 989E71449DB;
+        Thu, 29 Sep 2022 11:54:26 -0700 (PDT)
+Received: by mail-oi1-f176.google.com with SMTP id o64so2502737oib.12;
+        Thu, 29 Sep 2022 11:54:26 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:x-gm-message-state:from:to:cc:subject:date;
+        bh=u/LkYHvYR+btps55yDhNvqai2AlFnIqwkDLQGyvkZiA=;
+        b=AfJZK4b1xSewAt0LhAIiWgbqxzQjkPUHV26A7sEprPbceGLdKN9euewPkxLjINbcmK
+         x+JXuD1u+sD0jrQskrTGH0Gn1TJzv7pYyzdjwtDrYD9MhLouitHhw5Bqsftyx1Ra6954
+         6jDs2mCvf2h5wAugVipioDsCB6EzGEVujPoO2gCBm0cEYj825NgQgdZlpmVRqmQfiGf9
+         nawCi1YjtrPj2pbwhePTlAuoZNGQnKJ6noSyM5Cc729Nf9W80KM4H5GPGtfuSv+9aAym
+         How3peOn10d/TwsFGTian3NoPPmPCTIH7EzGORxidOg7gAYbVFOq5YEoYjTXGVjpFU//
+         QnUg==
+X-Gm-Message-State: ACrzQf0u0JPoS//BA1EITY85oDRnFETlS8Lbp6HtJbEIGb9S1LNJKz3B
+        E2aetq8hjeq+SKms0dT6l6hdWch9HeXvv0V7TOI=
+X-Google-Smtp-Source: AMsMyM6erVnoONuNBkVi0YaF3+arwnhUw2NtLkwVkJQzfYCn/k3LhVGeCu1QBDwIlsKqQ8y2j9XEOPMrFFR8qp7zWhk=
+X-Received: by 2002:a05:6808:181e:b0:350:e92a:9ab1 with SMTP id
+ bh30-20020a056808181e00b00350e92a9ab1mr2195276oib.209.1664477665895; Thu, 29
+ Sep 2022 11:54:25 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CAM9d7cia_Hsqsj=J4rSM68TQADMAt=at5SWRMYTGv4FJxNGpTg@mail.gmail.com>
-X-Url:  http://acmel.wordpress.com
+References: <20220914-arm-perf-tool-spe1-2-v2-v3-0-8189fc04dcc6@kernel.org>
+ <20220914-arm-perf-tool-spe1-2-v2-v3-1-8189fc04dcc6@kernel.org>
+ <CAM9d7ciNwe1HaYXjau6hv8yUmnZvvQU0=bNdf=EA589frkjptg@mail.gmail.com> <CAL_JsqJ8nhmx4U8efE2_FuVkacMYxHys4OZXv9PmdTXjZP1x4A@mail.gmail.com>
+In-Reply-To: <CAL_JsqJ8nhmx4U8efE2_FuVkacMYxHys4OZXv9PmdTXjZP1x4A@mail.gmail.com>
+From:   Namhyung Kim <namhyung@kernel.org>
+Date:   Thu, 29 Sep 2022 11:54:14 -0700
+Message-ID: <CAM9d7cjC0bB53mwjp7upcHQOYW_tejSCC0xw3nDjHygbUmuivw@mail.gmail.com>
+Subject: Re: [PATCH v3 1/3] perf: Skip and warn on unknown format 'configN' attrs
+To:     Rob Herring <robh@kernel.org>
+Cc:     Peter Zijlstra <peterz@infradead.org>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Arnaldo Carvalho de Melo <acme@kernel.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Jiri Olsa <jolsa@kernel.org>, Leo Yan <leo.yan@linaro.org>,
+        linux-perf-users <linux-perf-users@vger.kernel.org>,
+        James Clark <james.clark@arm.com>,
+        linux-kernel <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-Em Thu, Sep 29, 2022 at 11:22:41AM -0700, Namhyung Kim escreveu:
-> On Thu, Sep 29, 2022 at 11:01 AM Arnaldo Carvalho de Melo
-> <acme@kernel.org> wrote:
+On Mon, Sep 26, 2022 at 6:32 AM Rob Herring <robh@kernel.org> wrote:
+>
+> On Fri, Sep 16, 2022 at 1:12 PM Namhyung Kim <namhyung@kernel.org> wrote:
 > >
-> > Em Thu, Sep 29, 2022 at 04:05:13PM +0200, Jiri Olsa escreveu:
-> > > Arnaldo reported compilation fail with clang 15:
+> > On Wed, Sep 14, 2022 at 1:09 PM Rob Herring <robh@kernel.org> wrote:
 > > >
-> > >     CC      util/parse-events-bison.o
-> > >   util/parse-events-bison.c:1401:9: error: variable 'parse_events_nerrs'
-> > >   set but not used [-Werror,-Wunused-but-set-variable]
-> > >       int yynerrs = 0;
-> > >         ^
-> > >   util/parse-events-bison.c:72:25: note: expanded from macro 'yynerrs'
-> > >   #define yynerrs         parse_events_nerrs
-> > >                         ^
-> > >   1 error generated.
+> > > If the kernel exposes a new perf_event_attr field in a format attr, perf
+> > > will return an error stating the specified PMU can't be found. For
+> > > example, a format attr with 'config3:0-63' causes an error as config3 is
+> > > unknown to perf. This causes a compatibility issue between a newer
+> > > kernel with older perf tool.
 > > >
-> > > Disabling -Wunused-but-set-variable check for bison object compilation.
+> > > Before this change with a kernel adding 'config3' I get:
+> > >
+> > > $ perf record -e arm_spe// -- true
+> > > event syntax error: 'arm_spe//'
+> > >                      \___ Cannot find PMU `arm_spe'. Missing kernel support?
+> > > Run 'perf list' for a list of valid events
+> > >
+> > >  Usage: perf record [<options>] [<command>]
+> > >     or: perf record [<options>] -- <command> [<options>]
+> > >
+> > >     -e, --event <event>   event selector. use 'perf list' to list
+> > > available events
+> > >
+> > > After this change, I get:
+> > >
+> > > $ perf record -e arm_spe// -- true
+> > > WARNING: 'arm_spe_0' format 'inv_event_filter' requires 'perf_event_attr::config3' which is not supported by this version of perf!
+> > > [ perf record: Woken up 2 times to write data ]
+> > > [ perf record: Captured and wrote 0.091 MB perf.data ]
+> > >
+> > > To support unknown configN formats, rework the YACC implementation to
+> > > pass any config[0-9]+ format to perf_pmu__new_format() to handle with a
+> > > warning.
 > >
-> > So we have to disable something else:
-> >
-> >   37    44.92 fedora:32                     : FAIL clang version 10.0.1 (Fedora 10.0.1-3.fc32)
-> >     error: unknown warning option '-Wno-unused-but-set-variable'; did you mean '-Wno-unused-const-variable'? [-Werror,-Wunknown-warning-option]
-> >     make[3]: *** [/git/perf-6.0.0-rc7/tools/build/Makefile.build:139: util] Error 2
-> >   38    61.77 fedora:33                     : FAIL clang version 11.0.0 (Fedora 11.0.0-3.fc33)
-> >     error: unknown warning option '-Wno-unused-but-set-variable'; did you mean '-Wno-unused-const-variable'? [-Werror,-Wunknown-warning-option]
-> >     make[3]: *** [/git/perf-6.0.0-rc7/tools/build/Makefile.build:139: util] Error 2
-> >   39    66.59 fedora:34                     : FAIL clang version 12.0.1 (Fedora 12.0.1-1.fc34)
-> >     error: unknown warning option '-Wno-unused-but-set-variable'; did you mean '-Wno-unused-const-variable'? [-Werror,-Wunknown-warning-option]
-> >     make[3]: *** [/git/perf-6.0.0-rc7/tools/build/Makefile.build:139: util] Error 2
-> >
-> >
-> > I'll try yours + -Wno-unknown-warning-option
-> 
-> Is `-Wno-unknown-warning-option` known to older versions? ;-)
+> > It only handles configN formats but it might add a completely different
+> > name later, right?
+>
+> Right. An unknown configN is a warning. An unknown name is still an
+> error as before. Given that sysfs format attrs are for mapping fields
+> which could be anything to "generic" perf_event_attr fields, how would
+> we ever have anything other than configN?
 
-Excellent question! ;-)
+I'm not sure I'm following.  It could be anything other than configN.
 
-And one we should learn something from, so that we
-can prep tools/perf/ (and other projects we contribute to) for the
-future:
+But I don't object to this particular change as it's needed for current
+work.  Later, we can fix the issue if another name comes in.
 
-So far, so good:
-
-[perfbuilder@five ~]$ echo `grep FAIL dm.log/summary | cut -c15- | cut -d: -f1,2`
-alpine:3.12 alpine:3.13 alpine:3.14 alpine:3.15 alt:p10 amazonlinux:devel debian:11 fedora:32 fedora:33 fedora:34 fedora:37 fedora:38 fedora:rawhide ubuntu:21.04
-[perfbuilder@five ~]$ export BUILD_TARBALL=http://192.168.86.14/perf/perf-6.0.0-rc7.tar.xz
-[perfbuilder@five ~]$ time dm debian:experimental alpine:3.12 alpine:3.13 alpine:3.14 alpine:3.15 alt:p10 amazonlinux:devel debian:11 fedora:32 fedora:33 fedora:34 fedora:37 fedora:38 fedora:rawhide ubuntu:21.04
-   1   140.66 debian:experimental           : Ok   gcc (Debian 12.2.0-3) 12.2.0 , Debian clang version 14.0.6-2
-   2   132.82 alpine:3.12                   : Ok   gcc (Alpine 9.3.0) 9.3.0 , Alpine clang version 10.0.0 (https://gitlab.alpinelinux.org/alpine/aports.git 7445adce501f8473efdb93b17b5eaf2f1445ed4c)
-   3   140.40 alpine:3.13                   : Ok   gcc (Alpine 10.2.1_pre1) 10.2.1 20201203 , Alpine clang version 10.0.1
-   4   143.75 alpine:3.14                   : Ok   gcc (Alpine 10.3.1_git20210424) 10.3.1 20210424 , Alpine clang version 11.1.0
-   5   147.77 alpine:3.15                   : Ok   gcc (Alpine 10.3.1_git20211027) 10.3.1 20211027 , Alpine clang version 12.0.1
-   6    98.79 alt:p10                       : Ok   x86_64-alt-linux-gcc (GCC) 10.3.1 20210703 (ALT Sisyphus 10.3.1-alt2) , clang version 11.0.1
-   7: amazonlinux:devel
-
-- Arnaldo
+Thanks,
+Namhyung
