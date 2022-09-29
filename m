@@ -2,138 +2,106 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EC87EC32771
-	for <linux-perf-users@archiver.kernel.org>; Thu, 29 Sep 2022 02:23:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7EADDC04A95
+	for <linux-perf-users@archiver.kernel.org>; Thu, 29 Sep 2022 04:55:40 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232494AbiI2CXy (ORCPT
+        id S234536AbiI2Ezi (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Wed, 28 Sep 2022 22:23:54 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49878 "EHLO
+        Thu, 29 Sep 2022 00:55:38 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57544 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232380AbiI2CXx (ORCPT
+        with ESMTP id S232380AbiI2Ezg (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Wed, 28 Sep 2022 22:23:53 -0400
-Received: from mail-wm1-x330.google.com (mail-wm1-x330.google.com [IPv6:2a00:1450:4864:20::330])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1EC44123DAB
-        for <linux-perf-users@vger.kernel.org>; Wed, 28 Sep 2022 19:23:52 -0700 (PDT)
-Received: by mail-wm1-x330.google.com with SMTP id fn7-20020a05600c688700b003b4fb113b86so38101wmb.0
-        for <linux-perf-users@vger.kernel.org>; Wed, 28 Sep 2022 19:23:52 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20210112;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:from:to:cc:subject:date;
-        bh=885bZoAF9cATz3vxtOjRWDKiMOgQWtWGS/sIyDsnGvc=;
-        b=j5blAkgzNbivA6YVD15PkyBQU0hoYVrqId7OzizI0uth5eAYft6AsJiHya90NxrNiN
-         Ea3EnkUZJmr6iLkBBGK3NHfXWapei/cwLSfCOTd2Dak6NmlEPu3tYgLuqhhv1t9vHXCb
-         NqlcLGknKQ+17inzmKVOEaAPQvDjz6/G/gCDZ/InxqHT4vHb4cs5hSzNrpAZ+2zJVXmQ
-         3PGzWAXGuOy8dLDsPwwqSakykRIpbRNDAVyqJS8ObwKoq500CsjONv53rM6ILvRC6bdF
-         rGCr52NFeSTphWjXB4+seKyq4ZXy91Gra5n+RmWCUqYm2lOMbr/d618Bbau0OI3NxsoZ
-         4AdQ==
+        Thu, 29 Sep 2022 00:55:36 -0400
+Received: from mail-ot1-f54.google.com (mail-ot1-f54.google.com [209.85.210.54])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2300B24BD1;
+        Wed, 28 Sep 2022 21:55:35 -0700 (PDT)
+Received: by mail-ot1-f54.google.com with SMTP id r13-20020a056830418d00b0065601df69c0so254482otu.7;
+        Wed, 28 Sep 2022 21:55:35 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
         h=cc:to:subject:message-id:date:from:in-reply-to:references
          :mime-version:x-gm-message-state:from:to:cc:subject:date;
-        bh=885bZoAF9cATz3vxtOjRWDKiMOgQWtWGS/sIyDsnGvc=;
-        b=FyTr0P7E5U9VE+zgVb5sfy5mVqfM+mpmTHxHAJvcYDTfWBNUvuX72DPfXCz/QjeUhh
-         QYeBGh7LNFJ1Yv6QTJsRd6wjiyw4YaTFPHAgczPB2TVVhQOXoEJVCdrOKikBvjly4RD6
-         8QrYhYuGcJIUJhFxi8TNEf0ODYMc7X9jb+Hu5vZtEeHN75c4Sve2VLL4RB75/nEKyGzz
-         OdnwmAbryE4P9AH5VU3Dh9QTsAHnIMe5oK8iPiVsebBkRDwwrAK2p/Fi4Zb9K+jrwkWk
-         rQ5E7o2QBU7NbjdUkVhhp46QifV6xASXTKNQIiRn/NgHEHVtLO/9ldX7zQlVC564Bz7o
-         sN3Q==
-X-Gm-Message-State: ACrzQf2IazBDI9PY9i2vS3izoPjVWY6sGOeMpqqVdrERIAdLIrVszujM
-        oO7mx7tdGG0YSdIcl935BVJ3TjB8KTC+e8F9K7MiHQ==
-X-Google-Smtp-Source: AMsMyM4EW3WEL/8g7SzWKMrlQzFsAoKaRVucZZV7DfGGh8BFJ5SKG/B3CTiIV24PnStGZFrapbXl5A5jPXKfM0jO3tk=
-X-Received: by 2002:a05:600c:2181:b0:3b4:74e4:16f8 with SMTP id
- e1-20020a05600c218100b003b474e416f8mr516955wme.174.1664418230461; Wed, 28 Sep
- 2022 19:23:50 -0700 (PDT)
+        bh=XdauQRO5GX4CqGC4TQcrFEXL4gGAbOqG1RaD+qZHf0E=;
+        b=fN/J5lE1+hk5XP+/ieD1GHVI8vaYbQmjhflbNQr2rJhJBrA0/OaL1knecaogSZ4YVf
+         VtfL9J+ffDFqEHcmWoxNAGEdUzBUYeTXmIypBp4B/WpGAAsLZXfqgpP2yLyKAtrXAHrA
+         249vV1C1vmKQvvGE6LjnxPjl5P8qjP+1cnHZLXi6DOyn9+m4WFDsbIgZxp1pfGvT1C1m
+         AFXXDCbsLRQouuBzVEpdsr1ziTZM7hPHR3f9/U2TouSC87OgGSz+dvNuqpyLAtg3Cikc
+         IP8mi7PDnTZzVnSrRrIPkjNf24BYAecL0jQqymZHJMsva3/WujIRbCByslNc+vdslF//
+         nJ9A==
+X-Gm-Message-State: ACrzQf2ULLv4brVjX1mPUbNQbcHILSpI6LmXL+dSLu31N9lTH9Sm9a1f
+        QNq+nXItVpLuK/H5usGfs6nqEQgc1saQEe/vgMZqI6KA
+X-Google-Smtp-Source: AMsMyM4aghJf9Evfil/A7SRRZy/OF9IZUpCbTc9r2nXxdyu1jEO4/KrOjeS0b3o0BmSPU0J4JM5gjXUeanHZH3CJOh0=
+X-Received: by 2002:a05:6830:1351:b0:65b:e0a8:d0e8 with SMTP id
+ r17-20020a056830135100b0065be0a8d0e8mr592380otq.190.1664427334403; Wed, 28
+ Sep 2022 21:55:34 -0700 (PDT)
 MIME-Version: 1.0
-References: <20220928072204.1613330-1-irogers@google.com> <20220928072204.1613330-6-irogers@google.com>
- <44f59d7c-ced7-2d74-edbc-f354047339fe@linux.intel.com> <YzRVOD4u2SI0K29Y@kernel.org>
-In-Reply-To: <YzRVOD4u2SI0K29Y@kernel.org>
-From:   Ian Rogers <irogers@google.com>
-Date:   Wed, 28 Sep 2022 19:23:37 -0700
-Message-ID: <CAP-5=fUogKZx6JP_vg+6ti+BnbEcX+3Wnzi077s4VgxEKLpQeQ@mail.gmail.com>
-Subject: Re: [PATCH v1 05/22] perf vendor events: Update Intel alderlake
-To:     Arnaldo Carvalho de Melo <acme@kernel.org>
-Cc:     Xing Zhengjun <zhengjun.xing@linux.intel.com>,
-        Kan Liang <kan.liang@linux.intel.com>,
-        Andi Kleen <ak@linux.intel.com>, perry.taylor@intel.com,
-        caleb.biggers@intel.com, kshipra.bopardikar@intel.com,
-        samantha.alt@intel.com, ahmad.yasin@intel.com,
+References: <20220926200757.1161448-1-namhyung@kernel.org> <20220926200757.1161448-5-namhyung@kernel.org>
+ <CAP-5=fVY2QP6f=8CvZqERCZzH+sB6A-_wK-edukrz4eeGUz5zg@mail.gmail.com>
+In-Reply-To: <CAP-5=fVY2QP6f=8CvZqERCZzH+sB6A-_wK-edukrz4eeGUz5zg@mail.gmail.com>
+From:   Namhyung Kim <namhyung@kernel.org>
+Date:   Wed, 28 Sep 2022 21:55:23 -0700
+Message-ID: <CAM9d7cjorFczG4_v7+dxZ=W-ZngVAiVNzuCLpmLkeO-_rGNmGg@mail.gmail.com>
+Subject: Re: [PATCH 4/6] perf stat: Use thread map index for shadow stat
+To:     Ian Rogers <irogers@google.com>
+Cc:     Arnaldo Carvalho de Melo <acme@kernel.org>,
+        Jiri Olsa <jolsa@kernel.org>, Ingo Molnar <mingo@kernel.org>,
         Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Jiri Olsa <jolsa@kernel.org>,
-        Namhyung Kim <namhyung@kernel.org>,
-        John Garry <john.garry@huawei.com>,
-        James Clark <james.clark@arm.com>,
-        Kajol Jain <kjain@linux.ibm.com>,
-        Thomas Richter <tmricht@linux.ibm.com>,
-        Miaoqian Lin <linmq006@gmail.com>,
-        Florian Fischer <florian.fischer@muhq.space>,
-        linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Stephane Eranian <eranian@google.com>
+        LKML <linux-kernel@vger.kernel.org>,
+        Adrian Hunter <adrian.hunter@intel.com>,
+        linux-perf-users <linux-perf-users@vger.kernel.org>,
+        Andi Kleen <ak@linux.intel.com>,
+        Kan Liang <kan.liang@linux.intel.com>,
+        Leo Yan <leo.yan@linaro.org>,
+        Zhengjun Xing <zhengjun.xing@linux.intel.com>
 Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-On Wed, Sep 28, 2022 at 7:08 AM Arnaldo Carvalho de Melo
-<acme@kernel.org> wrote:
+Hi Ian,
+
+On Wed, Sep 28, 2022 at 7:10 PM Ian Rogers <irogers@google.com> wrote:
 >
-> Em Wed, Sep 28, 2022 at 04:22:53PM +0800, Xing Zhengjun escreveu:
-> > On 9/28/2022 3:21 PM, Ian Rogers wrote:
-> > > diff --git a/tools/perf/pmu-events/arch/x86/mapfile.csv b/tools/perf/pmu-events/arch/x86/mapfile.csv
-> > > index 7f2d777fd97f..594c6e96f0ce 100644
-> > > --- a/tools/perf/pmu-events/arch/x86/mapfile.csv
-> > > +++ b/tools/perf/pmu-events/arch/x86/mapfile.csv
-> > > @@ -1,5 +1,5 @@
-> > >   Family-model,Version,Filename,EventType
-> > > -GenuineIntel-6-9[7A],v1.13,alderlake,core
-> > > +GenuineIntel-6-(97|9A|B7|BA|BF),v1.15,alderlake,core
+> On Mon, Sep 26, 2022 at 1:08 PM Namhyung Kim <namhyung@kernel.org> wrote:
 > >
-> > The commit description should mention this change "Add more CPUID support
-> > for ADL"
+> > When AGGR_THREAD is active, it aggregates the values for each thread.
+> > Previously it used cpu map index which is invalid for AGGR_THREAD so
+> > it had to use separate runtime stats with index 0.
+> >
+> > But it can just use the rt_stat with thread_map_index.  Rename the
+> > first_shadow_map_idx() and make it return the thread index.
+> >
+> > Signed-off-by: Namhyung Kim <namhyung@kernel.org>
+> > ---
+> >  tools/perf/util/stat-display.c | 20 +++++++++-----------
+> >  tools/perf/util/stat.c         |  8 ++------
+> >  2 files changed, 11 insertions(+), 17 deletions(-)
+> >
+> > diff --git a/tools/perf/util/stat-display.c b/tools/perf/util/stat-display.c
+> > index 234491f43c36..570e2c04d47d 100644
+> > --- a/tools/perf/util/stat-display.c
+> > +++ b/tools/perf/util/stat-display.c
+> > @@ -442,7 +442,7 @@ static void print_metric_header(struct perf_stat_config *config,
+> >                 fprintf(os->fh, "%*s ", config->metric_only_len, unit);
+> >  }
+> >
+> > -static int first_shadow_cpu_map_idx(struct perf_stat_config *config,
+> > +static int first_shadow_map_idx(struct perf_stat_config *config,
+> >                                 struct evsel *evsel, const struct aggr_cpu_id *id)
+> >  {
+> >         struct perf_cpu_map *cpus = evsel__cpus(evsel);
+> > @@ -452,6 +452,9 @@ static int first_shadow_cpu_map_idx(struct perf_stat_config *config,
+> >         if (config->aggr_mode == AGGR_NONE)
+> >                 return perf_cpu_map__idx(cpus, id->cpu);
+> >
+> > +       if (config->aggr_mode == AGGR_THREAD)
+> > +               return id->thread;
 >
-> I added this note, with that can I have your Reviewed-by or Acked-by?
->
-> - Arnaldo
+> The function's name implies returning an index but that isn't clear
+> here. Can we change the aggr_cpu_id's thread to be called thread_idx?
 
-I think I should send a v2. I can add this then. Other things for v2 are:
-- this week there will likely be an update to [1] which is implicitly
-integrated here.
-- the topdown metrics are all percentages but are currently values
-zero to 1. It is straightforward to add a ScaleUnit of 100% to them
-all.
-- eyeballing topdown event metrics like:
-
-    {
-       "BriefDescription": "This category represents fraction of slots
-utilized by useful work i.e. issued uops that eventually get retired",
-       "MetricExpr": "topdown\\-retiring / (topdown\\-fe\\-bound +
-topdown\\-bad\\-spec + topdown\\-retiring + topdown\\-be\\-bound)",
-       "MetricGroup": "TopdownL1;tma_L1_group",
-       "MetricName": "tma_retiring",
-...
-it looks like the group will fail due to the missing slots event. This
-can be fixed with:
-       "MetricExpr": "topdown\\-retiring / (topdown\\-fe\\-bound +
-topdown\\-bad\\-spec + topdown\\-retiring + topdown\\-be\\-bound) + 0
-* TOPDOWN.SLOTS",
+Right, I'll do that in a separate commit.
 
 Thanks,
-Ian
-
-[1] https://github.com/intel/perfmon-metrics
-
-> > >   GenuineIntel-6-(1C|26|27|35|36),v4,bonnell,core
-> > >   GenuineIntel-6-(3D|47),v26,broadwell,core
-> > >   GenuineIntel-6-56,v23,broadwellde,core
-> >
-> > --
-> > Zhengjun Xing
->
-> --
->
-> - Arnaldo
+Namhyung
