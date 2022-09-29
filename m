@@ -2,278 +2,140 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E9FC5C433F5
-	for <linux-perf-users@archiver.kernel.org>; Thu, 29 Sep 2022 12:56:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DFF54C433FE
+	for <linux-perf-users@archiver.kernel.org>; Thu, 29 Sep 2022 13:01:02 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S235400AbiI2M45 (ORCPT
+        id S234687AbiI2NBB (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Thu, 29 Sep 2022 08:56:57 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48510 "EHLO
+        Thu, 29 Sep 2022 09:01:01 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57224 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S234861AbiI2M45 (ORCPT
+        with ESMTP id S235017AbiI2NA7 (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Thu, 29 Sep 2022 08:56:57 -0400
-Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTP id 878EC1684C2
-        for <linux-perf-users@vger.kernel.org>; Thu, 29 Sep 2022 05:56:55 -0700 (PDT)
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id DBC2B1A32;
-        Thu, 29 Sep 2022 05:57:01 -0700 (PDT)
-Received: from [10.57.2.33] (unknown [10.57.2.33])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 1222C3F792;
-        Thu, 29 Sep 2022 05:56:52 -0700 (PDT)
-Message-ID: <6627ae9a-91e3-0923-1234-54e0fc3f4916@arm.com>
-Date:   Thu, 29 Sep 2022 13:56:51 +0100
-MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
- Thunderbird/91.11.0
-Subject: Re: [PATCH] tools/perf: Fix aggr_printout to display cpu field
- irrespective of core value
-Content-Language: en-US
-To:     Athira Rajeev <atrajeev@linux.vnet.ibm.com>
-Cc:     Ian Rogers <irogers@google.com>, maddy@linux.vnet.ibm.com,
-        Nageswara Sastry <rnsastry@linux.ibm.com>,
+        Thu, 29 Sep 2022 09:00:59 -0400
+Received: from sin.source.kernel.org (sin.source.kernel.org [145.40.73.55])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A1FC8113B5C;
+        Thu, 29 Sep 2022 06:00:58 -0700 (PDT)
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by sin.source.kernel.org (Postfix) with ESMTPS id 0988CCE2196;
+        Thu, 29 Sep 2022 13:00:57 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 23482C433C1;
+        Thu, 29 Sep 2022 13:00:55 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1664456455;
+        bh=yr5blIIs2XTqNNxMMpUECAM9ef10derN0Mf4+B4C+vc=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=olgC40TKfr2+PtgEIojVSmiVRFHvAJq6h66DeBikgN6HRGllhGUO9vQO3QDNK7xX8
+         3wXUCOLtUHf4sVv6wRzEPNJweh/QqSQB3794htNSTtCV7B98YYHv3cys5oOwFMn2zr
+         82pAbuyPjHa8IUheOuJrms0Patd4MwIzUSyw5cfBWC2EAFExXLX3jVYg+st4hCcNDc
+         fKuGWPhM+nzCFNbxDxVY1VdFP1dQrHlo3zUH49FaTBoyU4epKDTbHI/MWubUXWZ+Mt
+         QW23c82k6Hwuplm7QO2PJUUs3KeB922CctZXa2s5542enunGmo9NyQKIENV4OPGOsS
+         o7x6qGPDt3wsg==
+Received: by quaco.ghostprotocols.net (Postfix, from userid 1000)
+        id 292FD405F0; Thu, 29 Sep 2022 10:00:52 -0300 (-03)
+Date:   Thu, 29 Sep 2022 10:00:52 -0300
+From:   Arnaldo Carvalho de Melo <acme@kernel.org>
+To:     Ian Rogers <irogers@google.com>
+Cc:     Xing Zhengjun <zhengjun.xing@linux.intel.com>,
+        Kan Liang <kan.liang@linux.intel.com>,
+        Andi Kleen <ak@linux.intel.com>, perry.taylor@intel.com,
+        caleb.biggers@intel.com, kshipra.bopardikar@intel.com,
+        samantha.alt@intel.com, ahmad.yasin@intel.com,
+        Peter Zijlstra <peterz@infradead.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Jiri Olsa <jolsa@kernel.org>,
+        Namhyung Kim <namhyung@kernel.org>,
+        John Garry <john.garry@huawei.com>,
+        James Clark <james.clark@arm.com>,
         Kajol Jain <kjain@linux.ibm.com>,
-        Arnaldo Carvalho de Melo <acme@kernel.org>,
-        linux-perf-users@vger.kernel.org, Jiri Olsa <jolsa@kernel.org>,
-        Disha Goel <disgoel@linux.vnet.ibm.com>,
-        linuxppc-dev@lists.ozlabs.org
-References: <20220913115717.36191-1-atrajeev@linux.vnet.ibm.com>
- <4792ef3a-8790-a0d4-50f2-4917874d81d6@arm.com>
- <82D5587E-593A-43A7-92D7-7E095E2BE9A9@linux.vnet.ibm.com>
-From:   James Clark <james.clark@arm.com>
-In-Reply-To: <82D5587E-593A-43A7-92D7-7E095E2BE9A9@linux.vnet.ibm.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+        Thomas Richter <tmricht@linux.ibm.com>,
+        Miaoqian Lin <linmq006@gmail.com>,
+        Florian Fischer <florian.fischer@muhq.space>,
+        linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Stephane Eranian <eranian@google.com>
+Subject: Re: [PATCH v1 05/22] perf vendor events: Update Intel alderlake
+Message-ID: <YzWXBGyjs39cD7Cd@kernel.org>
+References: <20220928072204.1613330-1-irogers@google.com>
+ <20220928072204.1613330-6-irogers@google.com>
+ <44f59d7c-ced7-2d74-edbc-f354047339fe@linux.intel.com>
+ <YzRVOD4u2SI0K29Y@kernel.org>
+ <CAP-5=fUogKZx6JP_vg+6ti+BnbEcX+3Wnzi077s4VgxEKLpQeQ@mail.gmail.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CAP-5=fUogKZx6JP_vg+6ti+BnbEcX+3Wnzi077s4VgxEKLpQeQ@mail.gmail.com>
+X-Url:  http://acmel.wordpress.com
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
+Em Wed, Sep 28, 2022 at 07:23:37PM -0700, Ian Rogers escreveu:
+> On Wed, Sep 28, 2022 at 7:08 AM Arnaldo Carvalho de Melo
+> <acme@kernel.org> wrote:
+> >
+> > Em Wed, Sep 28, 2022 at 04:22:53PM +0800, Xing Zhengjun escreveu:
+> > > On 9/28/2022 3:21 PM, Ian Rogers wrote:
+> > > > diff --git a/tools/perf/pmu-events/arch/x86/mapfile.csv b/tools/perf/pmu-events/arch/x86/mapfile.csv
+> > > > index 7f2d777fd97f..594c6e96f0ce 100644
+> > > > --- a/tools/perf/pmu-events/arch/x86/mapfile.csv
+> > > > +++ b/tools/perf/pmu-events/arch/x86/mapfile.csv
+> > > > @@ -1,5 +1,5 @@
+> > > >   Family-model,Version,Filename,EventType
+> > > > -GenuineIntel-6-9[7A],v1.13,alderlake,core
+> > > > +GenuineIntel-6-(97|9A|B7|BA|BF),v1.15,alderlake,core
+> > >
+> > > The commit description should mention this change "Add more CPUID support
+> > > for ADL"
+> >
+> > I added this note, with that can I have your Reviewed-by or Acked-by?
+> >
+> > - Arnaldo
+> 
+> I think I should send a v2. I can add this then. Other things for v2 are:
 
+Ok, I'll drop v1 from my local, testing branch.
 
-On 29/09/2022 09:49, Athira Rajeev wrote:
+> - this week there will likely be an update to [1] which is implicitly
+> integrated here.
+> - the topdown metrics are all percentages but are currently values
+> zero to 1. It is straightforward to add a ScaleUnit of 100% to them
+> all.
+> - eyeballing topdown event metrics like:
 > 
+>     {
+>        "BriefDescription": "This category represents fraction of slots
+> utilized by useful work i.e. issued uops that eventually get retired",
+>        "MetricExpr": "topdown\\-retiring / (topdown\\-fe\\-bound +
+> topdown\\-bad\\-spec + topdown\\-retiring + topdown\\-be\\-bound)",
+>        "MetricGroup": "TopdownL1;tma_L1_group",
+>        "MetricName": "tma_retiring",
+> ...
+> it looks like the group will fail due to the missing slots event. This
+> can be fixed with:
+>        "MetricExpr": "topdown\\-retiring / (topdown\\-fe\\-bound +
+> topdown\\-bad\\-spec + topdown\\-retiring + topdown\\-be\\-bound) + 0
+> * TOPDOWN.SLOTS",
 > 
->> On 28-Sep-2022, at 9:05 PM, James Clark <james.clark@arm.com> wrote:
->>
->>
->>
+> Thanks,
+> Ian
 > 
-> Hi James,
+> [1] https://github.com/intel/perfmon-metrics
 > 
-> Thanks for looking at the patch and sharing review comments.
-> 
->> On 13/09/2022 12:57, Athira Rajeev wrote:
->>> perf stat includes option to specify aggr_mode to display
->>> per-socket, per-core, per-die, per-node counter details.
->>> Also there is option -A ( AGGR_NONE, -no-aggr ), where the
->>> counter values are displayed for each cpu along with "CPU"
->>> value in one field of the output.
->>>
->>> Each of the aggregate mode uses the information fetched
->>> from "/sys/devices/system/cpu/cpuX/topology" like core_id,
->>
->> I thought that this wouldn't apply to the cpu field because cpu is
->> basically interchangeable as an index in cpumap, rather than anything
->> being read from the topology file.
-> 
-> The cpu value is filled in this function:
-> 
-> Function : aggr_cpu_id__cpu
-> Code: util/cpumap.c
-> 
->>
->>> physical_package_id. Utility functions in "cpumap.c" fetches
->>> this information and populates the socket id, core id, cpu etc.
->>> If the platform does not expose the topology information,
->>> these values will be set to -1. Example, in case of powerpc,
->>> details like physical_package_id is restricted to be exposed
->>> in pSeries platform. So id.socket, id.core, id.cpu all will
->>> be set as -1.
->>>
->>> In case of displaying socket or die value, there is no check
->>> done in the "aggr_printout" function to see if it points to
->>> valid socket id or die. But for displaying "cpu" value, there
->>> is a check for "if (id.core > -1)". In case of powerpc pSeries
->>> where detail like physical_package_id is restricted to be
->>> exposed, id.core will be set to -1. Hence the column or field
->>> itself for CPU won't be displayed in the output.
->>>
->>> Result for per-socket:
->>>
->>> <<>>
->>> perf stat -e branches --per-socket -a true
->>>
->>> Performance counter stats for 'system wide':
->>>
->>> S-1      32            416,851      branches
->>> <<>>
->>>
->>> Here S has -1 in above result. But with -A option which also
->>> expects CPU in one column in the result, below is observed.
->>>
->>> <<>>
->>> /bin/perf stat -e instructions -A -a true
->>>
->>> Performance counter stats for 'system wide':
->>>
->>>            47,146      instructions
->>>            45,226      instructions
->>>            43,354      instructions
->>>            45,184      instructions
->>> <<>>
->>>
->>> If the cpu id value is pointing to -1 also, it makes sense
->>> to display the column in the output to replicate the behaviour
->>> or to be in precedence with other aggr options(like per-socket,
->>> per-core). Remove the check "id.core" so that CPU field gets
->>> displayed in the output.
->>
->> Why would you want to print -1 out? Seems like the if statement was a
->> good one to me, otherwise the output looks a bit broken to users. Are
->> the other aggregation modes even working if -1 is set for socket and
->> die? Maybe we need to not print -1 in those cases or exit earlier with a
->> failure.
->>
->> The -1 value has a specific internal meaning which is "to not
->> aggregate". It doesn't mean "not set".
-> 
-> Currently, this check is done only for printing cpu value.
-> For socket/die/core values, this check is not done. Pasting an
-> example snippet from a powerpc system ( specifically from pseries platform where
-> the value is set to -1 )
-> 
-> ./perf stat --per-core -a -C 1 true
-> 
->  Performance counter stats for 'system wide':
-> 
-> S-1-D-1-C-1          1               1.06 msec cpu-clock                        #    1.018 CPUs utilized          
-> S-1-D-1-C-1          1                  2      context-switches                 #    1.879 K/sec                  
-> S-1-D-1-C-1          1                  0      cpu-migrations                   #    0.000 /sec                   
-> 
-> Here though the value is -1, we are displaying it. Where as in case of cpu, the first column will be
-> empty since we do a check before printing. 
-> 
-> Example:
-> 
-> ./perf stat --per-core -A -C 1 true
-> 
->  Performance counter stats for 'CPU(s) 1':
-> 
->               0.88 msec cpu-clock                        #    1.022 CPUs utilized          
->                  2      context-switches                                                   
->                  0      cpu-migrations                                                     
-> 
-> 
-> No sure, whether there are scripts out there, which consume the current format and
-> not displaying -1 may break it. That is why we tried with change to remove check for cpu, similar to
-> other modes like socket, die, core etc.
+> > > >   GenuineIntel-6-(1C|26|27|35|36),v4,bonnell,core
+> > > >   GenuineIntel-6-(3D|47),v26,broadwell,core
+> > > >   GenuineIntel-6-56,v23,broadwellde,core
+> > >
+> > > --
+> > > Zhengjun Xing
+> >
+> > --
+> >
+> > - Arnaldo
 
-I wouldn't worry about that because there are json and CSV modes which
-are machine readable, and -1 is already not always displayed. If
-anything this change here is also likely to break parsing by adding -1
-where it wasn't before.
+-- 
 
-> 
-> Also perf code ie “aggr_cpu_id__empty” in util/cpumap.c initialises the
-> values to -1 . I was checking to see where we are mapping -1 to “to not aggregate”.
-> What I could find is AGGR_NONE ( which is for no-aggr ) has value as zero.
-> 
-> Reference: defined in util/stat.h
-> 
-> enum aggr_mode {
->         AGGR_NONE,
-> 
-
-That enum is never written to any of the cpumap members, that defines
-the mode of how to fill the cpu map instead. 0 is a valid value, for
-example "CPU 0". -1 is used as a special case and shouldn't be displayed
-IMO.
-
-Did you see my comment in the code below about the bad merge? Could that
-not be related to your issue?
-
-Or the one about fixing it in the test instead? Or failing early if the
-topology can't be read?
-
-I'm still not convinced that any of the modes where -1 is printed are
-even working properly so it might be best to fix that rather than just
-the printout.
-
-> James, can you point me to reference for that meaning if I have missed anything.
-
-It's here:
-
-  /** Identify where counts are aggregated, -1 implies not to aggregate. */
-  struct aggr_cpu_id {
-
-> 
-> Thanks
-> Athira
-> 
->>
->>>
->>> After the fix:
->>>
->>> <<>>
->>> perf stat -e instructions -A -a true
->>>
->>> Performance counter stats for 'system wide':
->>>
->>> CPU-1                  64,034      instructions
->>> CPU-1                  68,941      instructions
->>> CPU-1                  59,418      instructions
->>> CPU-1                  70,478      instructions
->>> CPU-1                  65,201      instructions
->>> CPU-1                  63,704      instructions
->>> <<>>
->>>
->>> This is caught while running "perf test" for
->>> "stat+json_output.sh" and "stat+csv_output.sh".
->>
->> Is it possible to fix the issue by making the tests cope with the lack
->> of the CPU id?
->>
->>>
->>> Reported-by: Disha Goel <disgoel@linux.vnet.ibm.com>
->>> Signed-off-by: Athira Rajeev <atrajeev@linux.vnet.ibm.com>
->>> ---
->>> tools/perf/util/stat-display.c | 6 ++----
->>> 1 file changed, 2 insertions(+), 4 deletions(-)
->>>
->>> diff --git a/tools/perf/util/stat-display.c b/tools/perf/util/stat-display.c
->>> index b82844cb0ce7..1b751a730271 100644
->>> --- a/tools/perf/util/stat-display.c
->>> +++ b/tools/perf/util/stat-display.c
->>> @@ -168,10 +168,9 @@ static void aggr_printout(struct perf_stat_config *config,
->>> 					id.socket,
->>> 					id.die,
->>> 					id.core);
->>> -			} else if (id.core > -1) {
->>> +			} else
->>
->> This should have been "id.cpu.cpu > -1". Looks like it was changed by
->> some kind of bad merge or rebase in df936cadfb because there is no
->> obvious justification for the change to .core in that commit.
-> 
->>
->>> 				fprintf(config->output, "\"cpu\" : \"%d\", ",
->>> 					id.cpu.cpu);
->>> -			}
->>> 		} else {
->>> 			if (evsel->percore && !config->percore_show_thread) {
->>> 				fprintf(config->output, "S%d-D%d-C%*d%s",
->>> @@ -179,11 +178,10 @@ static void aggr_printout(struct perf_stat_config *config,
->>> 					id.die,
->>> 					config->csv_output ? 0 : -3,
->>> 					id.core, config->csv_sep);
->>> -			} else if (id.core > -1) {
->>> +			} else
->>> 				fprintf(config->output, "CPU%*d%s",
->>> 					config->csv_output ? 0 : -7,
->>> 					id.cpu.cpu, config->csv_sep);
->>> -			}
->>> 		}
->>> 		break;
->>> 	case AGGR_THREAD:
-> 
+- Arnaldo
