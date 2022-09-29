@@ -2,40 +2,40 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3AA1EC433FE
-	for <linux-perf-users@archiver.kernel.org>; Thu, 29 Sep 2022 18:02:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 92792C4332F
+	for <linux-perf-users@archiver.kernel.org>; Thu, 29 Sep 2022 18:10:54 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231340AbiI2SCA (ORCPT
+        id S229853AbiI2SKx (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Thu, 29 Sep 2022 14:02:00 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42620 "EHLO
+        Thu, 29 Sep 2022 14:10:53 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40656 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S234999AbiI2SB4 (ORCPT
+        with ESMTP id S230001AbiI2SKv (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Thu, 29 Sep 2022 14:01:56 -0400
+        Thu, 29 Sep 2022 14:10:51 -0400
 Received: from ams.source.kernel.org (ams.source.kernel.org [IPv6:2604:1380:4601:e00::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 451F9F8C33;
-        Thu, 29 Sep 2022 11:01:54 -0700 (PDT)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 26EA01E722;
+        Thu, 29 Sep 2022 11:10:49 -0700 (PDT)
 Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by ams.source.kernel.org (Postfix) with ESMTPS id D378CB82644;
-        Thu, 29 Sep 2022 18:01:52 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 6624EC433D6;
-        Thu, 29 Sep 2022 18:01:51 +0000 (UTC)
+        by ams.source.kernel.org (Postfix) with ESMTPS id 93BDCB8261E;
+        Thu, 29 Sep 2022 18:10:47 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 2E27BC433D7;
+        Thu, 29 Sep 2022 18:10:46 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1664474511;
-        bh=sdtrTb4RtLjSduzWuAdVTUs/H25+pxGgOlmAJHkDoM4=;
+        s=k20201202; t=1664475046;
+        bh=INnFfH3tdYB+C/hvfEcDVOEwuh24J/V1mfziQPv7gmQ=;
         h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=TAy7kJ082HwZTvUn/N28V0K1ldD9o9liP9UxcMjw9D7YQS/I4tBCowKl8vQlOwtsv
-         Zg6afldKKP3wOkPbSRZq1qcqeoNwEniZ0GMuUDsAcNQSQLJze5edvmD65G/rgHnpE0
-         hmgSooelnjBraArLGFEya8Z4CMQxinfLdpcgk5x1k6UQNlJOl2iMYJD9u7FXsLo1yZ
-         V5XqlaQtOcRarcXudvqBKhrdM+3+qvxAnpXlAkr+BhakPTUmhuLNB6kYcUUN5wKT7F
-         V3mjmeKjN1SbydT2Y6vjlDfBJdouodp9SEDFmBhJUV1ZSpUC51epB7l6w/2d5F1HbH
-         toBmurd261QRw==
+        b=dBsVyqZaDB3Bfnj6UVmY3az7nwUl7HGiYY6p2cn+2nP1AqjmoVyVaFaBmL8iWYb2r
+         xu4hSgAb8U4o2YlmjrMNldu6rOlewySzcck0Y2NNuBMs/JugBmVeGDoRu7hDjzhp1O
+         OqFYhXgeMXc0FoUg5+HbT9cqndWlDzWhGcLoIJp6znGvYZ7xcstRvW/qnIDa73n0Pw
+         8ZnF+QofqcUSJK0jiu7WwF8qqWet+eSII6ajCTgnEGv0TfIeDezmXO10u7USWg1lmz
+         clvfsRmja6YqhMkaGzx3a5gZBDrR+MVNGNVBLHrlq3+fSazW5wnVEQH5oaldfieTSO
+         XZiyYOoxLO8xA==
 Received: by quaco.ghostprotocols.net (Postfix, from userid 1000)
-        id D1459405F0; Thu, 29 Sep 2022 15:01:48 -0300 (-03)
-Date:   Thu, 29 Sep 2022 15:01:48 -0300
+        id E04EA405F0; Thu, 29 Sep 2022 15:10:43 -0300 (-03)
+Date:   Thu, 29 Sep 2022 15:10:43 -0300
 From:   Arnaldo Carvalho de Melo <acme@kernel.org>
 To:     Jiri Olsa <jolsa@kernel.org>
 Cc:     lkml <linux-kernel@vger.kernel.org>,
@@ -46,71 +46,50 @@ Cc:     lkml <linux-kernel@vger.kernel.org>,
         Alexander Shishkin <alexander.shishkin@linux.intel.com>,
         Ian Rogers <irogers@google.com>,
         linux-perf-users@vger.kernel.org
-Subject: Re: [PATCH 1/2] perf tools: Fix bison object compilation with clang
- 15
-Message-ID: <YzXdjNNh+jbYDnYz@kernel.org>
+Subject: Re: [PATCH 2/2] perf tools: Remove unused variable in
+ tests/test-basic.c
+Message-ID: <YzXfozrpDu0cm2am@kernel.org>
 References: <20220929140514.226807-1-jolsa@kernel.org>
+ <20220929140514.226807-2-jolsa@kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20220929140514.226807-1-jolsa@kernel.org>
+In-Reply-To: <20220929140514.226807-2-jolsa@kernel.org>
 X-Url:  http://acmel.wordpress.com
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-Em Thu, Sep 29, 2022 at 04:05:13PM +0200, Jiri Olsa escreveu:
-> Arnaldo reported compilation fail with clang 15:
-> 
->     CC      util/parse-events-bison.o
->   util/parse-events-bison.c:1401:9: error: variable 'parse_events_nerrs'
->   set but not used [-Werror,-Wunused-but-set-variable]
->       int yynerrs = 0;
->         ^
->   util/parse-events-bison.c:72:25: note: expanded from macro 'yynerrs'
->   #define yynerrs         parse_events_nerrs
->                         ^
->   1 error generated.
-> 
-> Disabling -Wunused-but-set-variable check for bison object compilation.
-
-So we have to disable something else:
-
-  37    44.92 fedora:32                     : FAIL clang version 10.0.1 (Fedora 10.0.1-3.fc32)
-    error: unknown warning option '-Wno-unused-but-set-variable'; did you mean '-Wno-unused-const-variable'? [-Werror,-Wunknown-warning-option]
-    make[3]: *** [/git/perf-6.0.0-rc7/tools/build/Makefile.build:139: util] Error 2
-  38    61.77 fedora:33                     : FAIL clang version 11.0.0 (Fedora 11.0.0-3.fc33)
-    error: unknown warning option '-Wno-unused-but-set-variable'; did you mean '-Wno-unused-const-variable'? [-Werror,-Wunknown-warning-option]
-    make[3]: *** [/git/perf-6.0.0-rc7/tools/build/Makefile.build:139: util] Error 2
-  39    66.59 fedora:34                     : FAIL clang version 12.0.1 (Fedora 12.0.1-1.fc34)
-    error: unknown warning option '-Wno-unused-but-set-variable'; did you mean '-Wno-unused-const-variable'? [-Werror,-Wunknown-warning-option]
-    make[3]: *** [/git/perf-6.0.0-rc7/tools/build/Makefile.build:139: util] Error 2
+Em Thu, Sep 29, 2022 at 04:05:14PM +0200, Jiri Olsa escreveu:
+> The clang 15 build reveal several unused-but-set variables,
+> removing the 'foo' variable in tests/mmap-basic.o object.
 
 
-I'll try yours + -Wno-unknown-warning-option
 
-;-)
+Thanks, applied.
 
 - Arnaldo
+
  
 > Signed-off-by: Jiri Olsa <jolsa@kernel.org>
 > ---
->  tools/perf/util/Build | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
+>  tools/perf/tests/mmap-basic.c | 3 +--
+>  1 file changed, 1 insertion(+), 2 deletions(-)
 > 
-> diff --git a/tools/perf/util/Build b/tools/perf/util/Build
-> index 8fd6dc8de521..d559c80559e3 100644
-> --- a/tools/perf/util/Build
-> +++ b/tools/perf/util/Build
-> @@ -270,7 +270,7 @@ CFLAGS_expr-flex.o          += $(flex_flags)
->  bison_flags := -DYYENABLE_NLS=0
->  BISON_GE_35 := $(shell expr $(shell $(BISON) --version | grep bison | sed -e 's/.\+ \([0-9]\+\).\([0-9]\+\)/\1\2/g') \>\= 35)
->  ifeq ($(BISON_GE_35),1)
-> -  bison_flags += -Wno-unused-parameter -Wno-nested-externs -Wno-implicit-function-declaration -Wno-switch-enum
-> +  bison_flags += -Wno-unused-parameter -Wno-nested-externs -Wno-implicit-function-declaration -Wno-switch-enum -Wno-unused-but-set-variable
->  else
->    bison_flags += -w
->  endif
+> diff --git a/tools/perf/tests/mmap-basic.c b/tools/perf/tests/mmap-basic.c
+> index 21b5e68179d7..8322fc2295fa 100644
+> --- a/tools/perf/tests/mmap-basic.c
+> +++ b/tools/perf/tests/mmap-basic.c
+> @@ -112,8 +112,7 @@ static int test__basic_mmap(struct test_suite *test __maybe_unused, int subtest
+>  
+>  	for (i = 0; i < nsyscalls; ++i)
+>  		for (j = 0; j < expected_nr_events[i]; ++j) {
+> -			int foo = syscalls[i]();
+> -			++foo;
+> +			syscalls[i]();
+>  		}
+>  
+>  	md = &evlist->mmap[0];
 > -- 
 > 2.37.3
 
