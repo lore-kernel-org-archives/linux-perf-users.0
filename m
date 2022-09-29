@@ -2,110 +2,77 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 57593C433F5
-	for <linux-perf-users@archiver.kernel.org>; Thu, 29 Sep 2022 21:00:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1CE41C433FE
+	for <linux-perf-users@archiver.kernel.org>; Thu, 29 Sep 2022 21:54:27 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229699AbiI2VAq (ORCPT
+        id S229571AbiI2VyZ (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Thu, 29 Sep 2022 17:00:46 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55918 "EHLO
+        Thu, 29 Sep 2022 17:54:25 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44258 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229606AbiI2VAo (ORCPT
+        with ESMTP id S229470AbiI2VyY (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Thu, 29 Sep 2022 17:00:44 -0400
-Received: from mail-qv1-xf2d.google.com (mail-qv1-xf2d.google.com [IPv6:2607:f8b0:4864:20::f2d])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6C440B656E;
-        Thu, 29 Sep 2022 14:00:42 -0700 (PDT)
-Received: by mail-qv1-xf2d.google.com with SMTP id r14so1679256qvn.3;
-        Thu, 29 Sep 2022 14:00:42 -0700 (PDT)
+        Thu, 29 Sep 2022 17:54:24 -0400
+Received: from mail-pg1-x52d.google.com (mail-pg1-x52d.google.com [IPv6:2607:f8b0:4864:20::52d])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1740512756E
+        for <linux-perf-users@vger.kernel.org>; Thu, 29 Sep 2022 14:54:24 -0700 (PDT)
+Received: by mail-pg1-x52d.google.com with SMTP id q9so2577103pgq.8
+        for <linux-perf-users@vger.kernel.org>; Thu, 29 Sep 2022 14:54:24 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20210112;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date;
-        bh=uiZ0nDSBuPQeGax2QW8uIowyQEtsCVx+PfyYzMy0ISY=;
-        b=EreWa1r6XpdL6bowUpMjkw6DfsOUGP6iltR2y+/PKBCjCHkk2zneenpwIHJO5wWlHP
-         uIJ+Db7wpEZvV3Dy943JAQDdeVNfuYMb807k//3SpBCSAez6kNsLeS4HndXqLv4f0qYc
-         Bz08pZZHlnsaQ95ebaWGlq0uY2k3lw0PONyqp53vDJ09j7CNIUL5VKJFCliGyX5eatNH
-         ROWOmZAznpWqOeDyHARVuZA0REPyG/FaSwZtsqcATrM4vWlk0KMcttLESowu1PWFC1Xc
-         oNQnbJOKQhsUe+FoS+g0TR6ghfyuwjc6DA3QNX6fonaHPKbwAAmU/qIhzv9KMYSTBNnO
-         lWlw==
+        d=google.com; s=20210112;
+        h=cc:to:subject:message-id:date:from:mime-version:from:to:cc:subject
+         :date;
+        bh=6VJEdRuAnZMaurhn8E94wnhY51Zn54NeRR0vh4+82g4=;
+        b=ePFQ1ierwJ6FjgiOitss43F5wTpMNy0TAkSzHek74RdHj6eqPGO4UBZKuHMk/rYbF3
+         eUfD6Au98n2XITK2l2lVA0OWSVlvhV96Z2+xxN20+R2n6hYsTIVDgHAvyNWB/L7IHSuM
+         kUpD4SMRXgWXaTWG7+evVhM9MHh9OhBu/dVWTT+y8XhBEmdNDl732Q8db8BJvWsuPZEC
+         8ALwV2/EmpsxuFx2HvgFmDA19Gc82c1UrI1nk1kWGBZeAQw0ska85t1Dlm2sFFB9fCO9
+         a7d2/snZ5eLHt6GY1v6TliLdieYY7oDtXyFUnZx817HMlqXwJ4khVZFU1plnP+I2wk6G
+         gDKA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date;
-        bh=uiZ0nDSBuPQeGax2QW8uIowyQEtsCVx+PfyYzMy0ISY=;
-        b=4IQzequyis6Hzp/nMObH+joNknJf2Ry2qgUxLOjyCgQfx6oglVaEdoU78g5FDixBul
-         xg2+R9iIQTHCqCVlWjNYrJmnr0CGycXSYgwmWw0iPPLYcuooAymi//Xu5QzrtECoHl0z
-         YYWcrspmuY+y92K+3nv8PIhQwj8HJvGfGZhnMQ4TQMRasEBqo3vRyELM6Cguulu2KABE
-         riQTrz9lSFIWMuiW+3nbj3ERBFNWCU3Tshsqkw2Pj3ezcGSCmW4DaeidllS1G/62c7Fw
-         6qIfo3ADi7Ds/HFes7ea3o2kpMOvd1HlVL+d5isebtKdKK3WeYnjeefDKsWrKUvJZTDV
-         NIMQ==
-X-Gm-Message-State: ACrzQf0v1YbtXq8GRgXsio7cWZMlQYpHdkkDVP3DUwu+SWnkEL0pvCOq
-        hp0J3oSat4y6pG7eFXmRrr0=
-X-Google-Smtp-Source: AMsMyM6nyxQDEZJp6exJKamOA5+s7k1arGd1CWwyd9PKVu935KcCRfSpU+aKIRmeM5eO4JskphEKhw==
-X-Received: by 2002:ad4:4eac:0:b0:4af:8718:3b55 with SMTP id ed12-20020ad44eac000000b004af87183b55mr4168794qvb.72.1664485241585;
-        Thu, 29 Sep 2022 14:00:41 -0700 (PDT)
-Received: from localhost.localdomain ([177.222.37.214])
-        by smtp.googlemail.com with ESMTPSA id z2-20020ac875c2000000b0035cf2995ad8sm190362qtq.51.2022.09.29.14.00.39
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 29 Sep 2022 14:00:41 -0700 (PDT)
-From:   Henry Castro <hcvcastro@gmail.com>
-To:     namhyung@kernel.org
-Cc:     Henry Castro <hcvcastro@gmail.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Jiri Olsa <jolsa@kernel.org>, linux-perf-users@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: [PATCH] perf: fix the probe finder location (.dwo files)
-Date:   Thu, 29 Sep 2022 16:59:57 -0400
-Message-Id: <20220929205958.22225-1-hcvcastro@gmail.com>
-X-Mailer: git-send-email 2.20.1
+        h=cc:to:subject:message-id:date:from:mime-version:x-gm-message-state
+         :from:to:cc:subject:date;
+        bh=6VJEdRuAnZMaurhn8E94wnhY51Zn54NeRR0vh4+82g4=;
+        b=6RxKpnKdJsQybpVeraAtGfYdyV6yob40JsuBw4M8C45gZLDRHFXt2BbN66UG1vxgBC
+         VqFAX25NZsT/hN7iwUn7OvQ5pZNwJ1NzdJxtuwUn/DHS7JOyhAACA2PJkSTwzY8NZFZz
+         xec9KZqaPiA5uvmW1DN9mvv9nC+brVHWav8URLxte2GmjmLGfjUQbcDSYSWUlD9NQnOP
+         I6X5OmfflR7jy2ZlKXO9odFyp3Vr7V/1BV4qLbufX5Bj/7V1wK9k4AQ+BfF1FFVYJsSp
+         ZtFkcyXaSDBrvlJs3wBPXnjA8XORiBUPoNB3HiL2lnQIHfy7Xp498QtfKF/NG1hbYjam
+         bw8g==
+X-Gm-Message-State: ACrzQf0hlEWq7nccv9/DjqPmZdd9OazRNo0zodd16jQ24TjV406SZOD/
+        jWm1uIqHFRb6iB+UcfIbyK9auRku2HwmFPnYkMgy2X8qhfj55A==
+X-Google-Smtp-Source: AMsMyM7d3VBgob6HSDmPHbGU2dcKlX1Q8PGJV2P3+Mgcp8+nkpRfJ3bDWggGJpr4BxBIEgCgoOlO/yKFN/IzIaMKyqU=
+X-Received: by 2002:a05:6a00:1743:b0:548:8629:ceab with SMTP id
+ j3-20020a056a00174300b005488629ceabmr5297404pfc.23.1664488463053; Thu, 29 Sep
+ 2022 14:54:23 -0700 (PDT)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+From:   Nick Desaulniers <ndesaulniers@google.com>
+Date:   Thu, 29 Sep 2022 14:54:11 -0700
+Message-ID: <CAKwvOdnrHErOK+w878izVauHUKaX3eD-HXgigq2Ogm3iSj-fHA@mail.gmail.com>
+Subject: Invalid event (cycles:pp) in per-thread mode, enable system wide with '-a'.
+To:     linux-perf-users@vger.kernel.org
+Cc:     LKML <linux-kernel@vger.kernel.org>,
+        Ian Rogers <irogers@google.com>
+Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-If the file object is compiled using -gsplit-dwarf,
-the probe finder location will fail.
+So I recently moved from a dual-xeon box to a zen 2 based threadripper
+workstation.
 
-Signed-off-by: Henry Castro <hcvcastro@gmail.com>
----
- tools/perf/util/probe-finder.c | 11 ++++++++++-
- 1 file changed, 10 insertions(+), 1 deletion(-)
+My usual incantation for measuring profiles for compile time isn't working:
 
-diff --git a/tools/perf/util/probe-finder.c b/tools/perf/util/probe-finder.c
-index 50d861a80f57..6d7c5461251d 100644
---- a/tools/perf/util/probe-finder.c
-+++ b/tools/perf/util/probe-finder.c
-@@ -1161,7 +1161,8 @@ static int debuginfo__find_probe_location(struct debuginfo *dbg,
- 	struct perf_probe_point *pp = &pf->pev->point;
- 	Dwarf_Off off, noff;
- 	size_t cuhl;
--	Dwarf_Die *diep;
-+	Dwarf_Die *diep, cudie, subdie;
-+	uint8_t unit_type;
- 	int ret = 0;
- 
- 	off = 0;
-@@ -1200,6 +1201,14 @@ static int debuginfo__find_probe_location(struct debuginfo *dbg,
- 			continue;
- 		}
- 
-+		/* Check separate debug information file. */
-+		if (dwarf_cu_info(pf->cu_die.cu, NULL, &unit_type, &cudie,
-+				  &subdie, NULL, NULL, NULL))
-+			continue;
-+
-+		if (unit_type == DW_UT_skeleton)
-+			pf->cu_die = subdie;
-+
- 		/* Check if target file is included. */
- 		if (pp->file)
- 			pf->fname = cu_find_realpath(&pf->cu_die, pp->file);
+$ perf record -e cycles:pp --freq=128 --call-graph lbr -- make LLVM=1 -j$(nproc)
+Error:
+Invalid event (cycles:pp) in per-thread mode, enable system wide with '-a'.
+
+I've already set /proc/sys/kernel/perf_event_paranoid and
+/proc/sys/kernel/kptr_restrict to 0.
+
+I remember hearing rumblings about issues with zen 2, LBR, vs zen 3.
+Is this a known issue, or am I holding it wrong?
 -- 
-2.20.1
-
+Thanks,
+~Nick Desaulniers
