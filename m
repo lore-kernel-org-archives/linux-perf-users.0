@@ -2,106 +2,126 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7EADDC04A95
-	for <linux-perf-users@archiver.kernel.org>; Thu, 29 Sep 2022 04:55:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A484AC07E9D
+	for <linux-perf-users@archiver.kernel.org>; Thu, 29 Sep 2022 05:09:42 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S234536AbiI2Ezi (ORCPT
+        id S232827AbiI2FJl (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Thu, 29 Sep 2022 00:55:38 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57544 "EHLO
+        Thu, 29 Sep 2022 01:09:41 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56454 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232380AbiI2Ezg (ORCPT
+        with ESMTP id S232120AbiI2FJk (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Thu, 29 Sep 2022 00:55:36 -0400
-Received: from mail-ot1-f54.google.com (mail-ot1-f54.google.com [209.85.210.54])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2300B24BD1;
-        Wed, 28 Sep 2022 21:55:35 -0700 (PDT)
-Received: by mail-ot1-f54.google.com with SMTP id r13-20020a056830418d00b0065601df69c0so254482otu.7;
-        Wed, 28 Sep 2022 21:55:35 -0700 (PDT)
+        Thu, 29 Sep 2022 01:09:40 -0400
+Received: from mail-ot1-f50.google.com (mail-ot1-f50.google.com [209.85.210.50])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7E2C0101B;
+        Wed, 28 Sep 2022 22:09:34 -0700 (PDT)
+Received: by mail-ot1-f50.google.com with SMTP id cy15-20020a056830698f00b0065c530585afso275616otb.2;
+        Wed, 28 Sep 2022 22:09:34 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
         h=cc:to:subject:message-id:date:from:in-reply-to:references
          :mime-version:x-gm-message-state:from:to:cc:subject:date;
-        bh=XdauQRO5GX4CqGC4TQcrFEXL4gGAbOqG1RaD+qZHf0E=;
-        b=fN/J5lE1+hk5XP+/ieD1GHVI8vaYbQmjhflbNQr2rJhJBrA0/OaL1knecaogSZ4YVf
-         VtfL9J+ffDFqEHcmWoxNAGEdUzBUYeTXmIypBp4B/WpGAAsLZXfqgpP2yLyKAtrXAHrA
-         249vV1C1vmKQvvGE6LjnxPjl5P8qjP+1cnHZLXi6DOyn9+m4WFDsbIgZxp1pfGvT1C1m
-         AFXXDCbsLRQouuBzVEpdsr1ziTZM7hPHR3f9/U2TouSC87OgGSz+dvNuqpyLAtg3Cikc
-         IP8mi7PDnTZzVnSrRrIPkjNf24BYAecL0jQqymZHJMsva3/WujIRbCByslNc+vdslF//
-         nJ9A==
-X-Gm-Message-State: ACrzQf2ULLv4brVjX1mPUbNQbcHILSpI6LmXL+dSLu31N9lTH9Sm9a1f
-        QNq+nXItVpLuK/H5usGfs6nqEQgc1saQEe/vgMZqI6KA
-X-Google-Smtp-Source: AMsMyM4aghJf9Evfil/A7SRRZy/OF9IZUpCbTc9r2nXxdyu1jEO4/KrOjeS0b3o0BmSPU0J4JM5gjXUeanHZH3CJOh0=
+        bh=IydL5kbnqeXOevEVuS9ouWA+i4vymY53i4zI/bO3x9M=;
+        b=Q1XgaQB0b3+QsXJP4HbRf2OzKNWobak2y5ffXja08fG3K8EjVrUlYIqZaDpAvJwh0l
+         GkQ1I26BM2SuFaqOk/rldCJOJvcnmjF5zeVlY6qU6CXnaAcZI67UwcfmfrQE5s3AhPvg
+         mlgXdmxQH16JFbRqyzIPP4cwPG0qDF8BRf6DkmsVbHmEBM2yRCB59IM3pdnPrRHNHXok
+         5o3dKaoL5aFKMxs1xlzfLyePoCPbBq285zqGXgGps2SvNtLrO4u3huCTOKKq9ftR9tKX
+         3io/mK5qFfjOhrYXqz/ykx+TGyE09wPjhBDuFzoSqPvvFAi3XhYqtvHmEhWAL+q/N6YO
+         2tpw==
+X-Gm-Message-State: ACrzQf1KqTB42b11tU9vlD3EjSFS7MM90nFwBiB9W0oLsG6b8URCq/AH
+        n4fyCgTyzhfARxpmOixYsU8ndHDBpz2VLlO5mYo=
+X-Google-Smtp-Source: AMsMyM4hETyVV8KenOkqGDFFx4cZyAqRlRlhCjBEim/esahHSI2CxXS4UkYc5bxpLvYgsiqH+iyo3dVwlPQv/iUYS3g=
 X-Received: by 2002:a05:6830:1351:b0:65b:e0a8:d0e8 with SMTP id
- r17-20020a056830135100b0065be0a8d0e8mr592380otq.190.1664427334403; Wed, 28
- Sep 2022 21:55:34 -0700 (PDT)
+ r17-20020a056830135100b0065be0a8d0e8mr611900otq.190.1664428173757; Wed, 28
+ Sep 2022 22:09:33 -0700 (PDT)
 MIME-Version: 1.0
-References: <20220926200757.1161448-1-namhyung@kernel.org> <20220926200757.1161448-5-namhyung@kernel.org>
- <CAP-5=fVY2QP6f=8CvZqERCZzH+sB6A-_wK-edukrz4eeGUz5zg@mail.gmail.com>
-In-Reply-To: <CAP-5=fVY2QP6f=8CvZqERCZzH+sB6A-_wK-edukrz4eeGUz5zg@mail.gmail.com>
+References: <20220924165737.956428-1-namhyung@kernel.org> <20220924165737.956428-3-namhyung@kernel.org>
+ <d901f8c8-0dda-8f34-f963-09cf56d4924e@intel.com> <CAM9d7ciGFqSRO=J6FZmz=enML7eCyvRMQB+bm=nZ07GmozJwbw@mail.gmail.com>
+ <ae609590-7d85-ee4b-3525-8eaa46ed240c@intel.com> <CAM9d7ciaOMOuJay5MzOYtg5paK_YmQskX1yqg=Oni1EzipPMwA@mail.gmail.com>
+ <CAP-5=fX-as0WNCXMyzOwY=ek0gR9yNXbonXHAu1hsd5wOuX-Vg@mail.gmail.com>
+In-Reply-To: <CAP-5=fX-as0WNCXMyzOwY=ek0gR9yNXbonXHAu1hsd5wOuX-Vg@mail.gmail.com>
 From:   Namhyung Kim <namhyung@kernel.org>
-Date:   Wed, 28 Sep 2022 21:55:23 -0700
-Message-ID: <CAM9d7cjorFczG4_v7+dxZ=W-ZngVAiVNzuCLpmLkeO-_rGNmGg@mail.gmail.com>
-Subject: Re: [PATCH 4/6] perf stat: Use thread map index for shadow stat
+Date:   Wed, 28 Sep 2022 22:09:22 -0700
+Message-ID: <CAM9d7ciDvCOsFE68NG6jRb02DdDEOmRf_h7XizdDLGBz0RX95Q@mail.gmail.com>
+Subject: Re: [PATCH 2/5] libperf: Propagate maps only if necessary
 To:     Ian Rogers <irogers@google.com>
-Cc:     Arnaldo Carvalho de Melo <acme@kernel.org>,
+Cc:     Adrian Hunter <adrian.hunter@intel.com>,
+        Arnaldo Carvalho de Melo <acme@kernel.org>,
         Jiri Olsa <jolsa@kernel.org>, Ingo Molnar <mingo@kernel.org>,
         Peter Zijlstra <peterz@infradead.org>,
         LKML <linux-kernel@vger.kernel.org>,
-        Adrian Hunter <adrian.hunter@intel.com>,
         linux-perf-users <linux-perf-users@vger.kernel.org>,
-        Andi Kleen <ak@linux.intel.com>,
         Kan Liang <kan.liang@linux.intel.com>,
-        Leo Yan <leo.yan@linaro.org>,
-        Zhengjun Xing <zhengjun.xing@linux.intel.com>
+        Leo Yan <leo.yan@linaro.org>
 Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-Hi Ian,
-
-On Wed, Sep 28, 2022 at 7:10 PM Ian Rogers <irogers@google.com> wrote:
+On Wed, Sep 28, 2022 at 7:08 PM Ian Rogers <irogers@google.com> wrote:
 >
-> On Mon, Sep 26, 2022 at 1:08 PM Namhyung Kim <namhyung@kernel.org> wrote:
+> On Wed, Sep 28, 2022 at 4:46 PM Namhyung Kim <namhyung@kernel.org> wrote:
 > >
-> > When AGGR_THREAD is active, it aggregates the values for each thread.
-> > Previously it used cpu map index which is invalid for AGGR_THREAD so
-> > it had to use separate runtime stats with index 0.
+> > On Wed, Sep 28, 2022 at 12:54 AM Adrian Hunter <adrian.hunter@intel.com> wrote:
+> > >
+> > > On 27/09/22 20:28, Namhyung Kim wrote:
+> > > > Hi Adrian,
+> > > >
+> > > > On Tue, Sep 27, 2022 at 12:06 AM Adrian Hunter <adrian.hunter@intel.com> wrote:
+> > > >>
+> > > >> On 24/09/22 19:57, Namhyung Kim wrote:
+> > > >>> The current code propagate evsel's cpu map settings to evlist when it's
+> > > >>> added to an evlist.  But the evlist->all_cpus and each evsel's cpus will
+> > > >>> be updated in perf_evlist__set_maps() later.  No need to do it before
+> > > >>> evlist's cpus are set actually.
+> > > >>>
+> > > >>> Actually we discarded this intermediate all_cpus maps at the beginning
+> > > >>> of perf_evlist__set_maps().  Let's not do this.  It's only needed when
+> > > >>> an evsel is added after the evlist cpu maps are set.
+> > > >>
+> > > >> That might not be true.  Consider evlist__fix_hybrid_cpus() which fiddles
+> > > >> with evsel->core.cpus and evsel->core.own_cpus after the evsel has been
+> > > >> added to the evlist.  It can also remove an evsel from the evlist.
+> > > >
+> > > > Thanks for your review.  I think it's fine to change evsel cpus or to remove
+> > > > an evsel from evlist before calling evlist__create_maps().  The function
+> > > > will take care of setting evlist's all_cpus from the evsels in the evlist.
+> > > > So previous changes in evsel/cpus wouldn't be any special.
+> > > >
+> > > > After this point, adding a new evsel needs to update evlist all cpus by
+> > > > propagating cpu maps.  So I think hybrid cpus should be fine.
+> > > > Did I miss something?
+> > >
+> > > I wondered how it might play out if evlist__fix_hybrid_cpus() reduced the
+> > > cpus from the target->cpu_list (using perf record -C) , since after this
+> > > patch all_cpus always starts with the target->cpu_list instead of an empty
+> > > list.  But then, in the hybrid case, it puts a dummy event that uses the
+> > > target cpu list anyway, so the result is the same.
+> > >
+> > > I don't know if there are any cases where all_cpus would actually need to
+> > > exclude some of the cpus from target->cpu_list.
 > >
-> > But it can just use the rt_stat with thread_map_index.  Rename the
-> > first_shadow_map_idx() and make it return the thread index.
+> > I'm not aware of other cases to reduce cpu list.  I think it'd be fine
+> > if it has a cpu in the evlist->all_cpus even if it's not used.  The evsel
+> > should have a correct list anyway and we mostly use the evsel cpus
+> > to do the real work.
 > >
-> > Signed-off-by: Namhyung Kim <namhyung@kernel.org>
-> > ---
-> >  tools/perf/util/stat-display.c | 20 +++++++++-----------
-> >  tools/perf/util/stat.c         |  8 ++------
-> >  2 files changed, 11 insertions(+), 17 deletions(-)
-> >
-> > diff --git a/tools/perf/util/stat-display.c b/tools/perf/util/stat-display.c
-> > index 234491f43c36..570e2c04d47d 100644
-> > --- a/tools/perf/util/stat-display.c
-> > +++ b/tools/perf/util/stat-display.c
-> > @@ -442,7 +442,7 @@ static void print_metric_header(struct perf_stat_config *config,
-> >                 fprintf(os->fh, "%*s ", config->metric_only_len, unit);
-> >  }
-> >
-> > -static int first_shadow_cpu_map_idx(struct perf_stat_config *config,
-> > +static int first_shadow_map_idx(struct perf_stat_config *config,
-> >                                 struct evsel *evsel, const struct aggr_cpu_id *id)
-> >  {
-> >         struct perf_cpu_map *cpus = evsel__cpus(evsel);
-> > @@ -452,6 +452,9 @@ static int first_shadow_cpu_map_idx(struct perf_stat_config *config,
-> >         if (config->aggr_mode == AGGR_NONE)
-> >                 return perf_cpu_map__idx(cpus, id->cpu);
-> >
-> > +       if (config->aggr_mode == AGGR_THREAD)
-> > +               return id->thread;
+> > Thanks,
+> > Namhyung
 >
-> The function's name implies returning an index but that isn't clear
-> here. Can we change the aggr_cpu_id's thread to be called thread_idx?
+> The affinity changes made it so that we use all_cpus probably more
+> often than the evsel CPU maps for real work. The reason being we want
+> to avoid IPIs so we do all the work on 1 CPU and then move to the next
+> CPU in evlist all_cpus. evsel CPU maps are used to make sure the
+> indices are kept accurate - for example, if an uncore event is
+> measured with a CPU event:
+> https://git.kernel.org/pub/scm/linux/kernel/git/acme/linux.git/tree/tools/perf/util/evlist.h?h=perf/core#n366
+> https://git.kernel.org/pub/scm/linux/kernel/git/acme/linux.git/tree/tools/perf/util/evlist.c?h=perf/core#n404
 
-Right, I'll do that in a separate commit.
+Right, I meant it'd check the evsel cpus eventually even if it iterates
+on the evlist all_cpus.  The evlist_cpu_iterator__next() will skip a
+CPU if it's not in the evsel cpus.
 
 Thanks,
 Namhyung
