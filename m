@@ -2,207 +2,136 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 29A2CC433F5
-	for <linux-perf-users@archiver.kernel.org>; Thu, 29 Sep 2022 20:43:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 46022C433F5
+	for <linux-perf-users@archiver.kernel.org>; Thu, 29 Sep 2022 20:55:20 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229498AbiI2UnC (ORCPT
+        id S229792AbiI2UzT (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Thu, 29 Sep 2022 16:43:02 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56140 "EHLO
+        Thu, 29 Sep 2022 16:55:19 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47008 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229506AbiI2UnA (ORCPT
+        with ESMTP id S229782AbiI2UzN (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Thu, 29 Sep 2022 16:43:00 -0400
-Received: from mail-oo1-f42.google.com (mail-oo1-f42.google.com [209.85.161.42])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C5BD613A95B;
-        Thu, 29 Sep 2022 13:42:57 -0700 (PDT)
-Received: by mail-oo1-f42.google.com with SMTP id c17-20020a4aa4d1000000b0047653e7c5f3so918771oom.1;
-        Thu, 29 Sep 2022 13:42:57 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date;
-        bh=O9Elc+fXrtU70giAIr9cfbUQSWuZTEh4YaT4EgA+lHg=;
-        b=PKQuZuCAv7urBpR/+1eD0bw2YfSNdc7ogKeopvqUv7ZCpGwEddH3dTKOobtDPGWbcY
-         BFZe+RGS3ZInM24+MN2+GrjrilxhgIYK+y3+Vi9EnR6jvf6FaMqN0YQJpUEE/4WyiSrP
-         10zG9yKnKQxuJdz4KVrVYcfFE2DHlb++g49Pr/PVu8IMOt5YlHV4xQy3yBLtaSFpAtIi
-         G+8s0fpExq8atYowAQ2h00cNgvOvCQhTD6pMawrnNP9CAWPf6JgtLyipDqkPREnWQ+Ae
-         6sg8vOmPIjzY5uQbz0WAhv3CochNoGLGbzkapJEBtGHOV5ldKsIR5AqmBWCTnmgL/pBv
-         ZPPQ==
-X-Gm-Message-State: ACrzQf3TKflmKYX7KOqv7prmTmE4qtMXTUT6AJFw17BI4HfMIAJ+HqTj
-        8qNEpM8MRkBQauEIGwPGhOzPflRPLLr4Yiyn6/k=
-X-Google-Smtp-Source: AMsMyM7TM1twdhiU6jtKNC9Xrh01km1IDfJDmSXCcHMplLzhiIiQOt+JsPFC3LbCv7qbaJw4c0mkv3zdbkoxk/7AxxM=
-X-Received: by 2002:a05:6830:1351:b0:65b:e0a8:d0e8 with SMTP id
- r17-20020a056830135100b0065be0a8d0e8mr2243633otq.190.1664484176583; Thu, 29
- Sep 2022 13:42:56 -0700 (PDT)
+        Thu, 29 Sep 2022 16:55:13 -0400
+Received: from ams.source.kernel.org (ams.source.kernel.org [IPv6:2604:1380:4601:e00::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B7DF07331D;
+        Thu, 29 Sep 2022 13:55:11 -0700 (PDT)
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by ams.source.kernel.org (Postfix) with ESMTPS id 36BB7B824C2;
+        Thu, 29 Sep 2022 20:55:10 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id B0407C43140;
+        Thu, 29 Sep 2022 20:55:08 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1664484908;
+        bh=AFe0hdqgLts246RkPFDdqRIlABvfeWn4Ci75CxT266k=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=OfMJsSKACxROwXt/SQlCZImZVMzC3HqF1Y+F38wc2IAb0KyiU21QbCq1e09KBNVk7
+         5iPkoUhK/B7I6nGTwHL1RlaxNCOi/PpwiUWiKFGTIvk1p+XBwZRFdM1WyPzGuO/lng
+         UnnrJk7F+EDgU4xQmn2M0EouH8hAIYGTGw9kf9MhqF70mvsOdSpilH7CXPC3lQ0YbZ
+         MAeHpGVdQFjEj/86C49/Dw52REXZVIRPufamfGMZ5ZuZJYHtOx2rjrRXaE7kv+qmvR
+         V8tviFXxus3H9F10Zz5Re3NTakfanpPt5OCraLNxlSuEcxlLYIubaHFJmHSBcOJzYA
+         nn9F5x7LHhQJw==
+Received: by mail-vs1-f45.google.com with SMTP id j7so2851620vsr.13;
+        Thu, 29 Sep 2022 13:55:08 -0700 (PDT)
+X-Gm-Message-State: ACrzQf0aUfnQK6cxgFslLHvS0v8MDiVqOY8ozxuS2qavYHYHqs7DzUTE
+        KclkhE5KuRrM9UpP3QGGmhvfElZenE4+q9uT5Q==
+X-Google-Smtp-Source: AMsMyM4aHUlkg1wFlpekd/GWHMxpkdkeKqf0n7vN0Lwoc+vFuU3AX7A7pM86KUlHvIM7n2l20tjz7NjSyb93yekEqFI=
+X-Received: by 2002:a67:c088:0:b0:39b:1bb3:bdd1 with SMTP id
+ x8-20020a67c088000000b0039b1bb3bdd1mr2522903vsi.85.1664484907534; Thu, 29 Sep
+ 2022 13:55:07 -0700 (PDT)
 MIME-Version: 1.0
-References: <20220924165737.956428-1-namhyung@kernel.org> <20220924165737.956428-3-namhyung@kernel.org>
- <d901f8c8-0dda-8f34-f963-09cf56d4924e@intel.com> <CAM9d7ciGFqSRO=J6FZmz=enML7eCyvRMQB+bm=nZ07GmozJwbw@mail.gmail.com>
- <ae609590-7d85-ee4b-3525-8eaa46ed240c@intel.com> <CAM9d7ciaOMOuJay5MzOYtg5paK_YmQskX1yqg=Oni1EzipPMwA@mail.gmail.com>
- <CAP-5=fX-as0WNCXMyzOwY=ek0gR9yNXbonXHAu1hsd5wOuX-Vg@mail.gmail.com>
- <CAM9d7ciDvCOsFE68NG6jRb02DdDEOmRf_h7XizdDLGBz0RX95Q@mail.gmail.com> <63905e96-55d5-1aa2-5dbe-167b9aecad8c@intel.com>
-In-Reply-To: <63905e96-55d5-1aa2-5dbe-167b9aecad8c@intel.com>
-From:   Namhyung Kim <namhyung@kernel.org>
-Date:   Thu, 29 Sep 2022 13:42:45 -0700
-Message-ID: <CAM9d7ciXESTPXZobir4KirSnh1NXHwENc4WpZTudgawUZOL71Q@mail.gmail.com>
-Subject: Re: [PATCH 2/5] libperf: Propagate maps only if necessary
-To:     Adrian Hunter <adrian.hunter@intel.com>
-Cc:     Ian Rogers <irogers@google.com>,
+References: <20220914-arm-perf-tool-spe1-2-v2-v3-0-8189fc04dcc6@kernel.org>
+ <20220914-arm-perf-tool-spe1-2-v2-v3-1-8189fc04dcc6@kernel.org>
+ <CAM9d7ciNwe1HaYXjau6hv8yUmnZvvQU0=bNdf=EA589frkjptg@mail.gmail.com>
+ <CAL_JsqJ8nhmx4U8efE2_FuVkacMYxHys4OZXv9PmdTXjZP1x4A@mail.gmail.com> <CAM9d7cjC0bB53mwjp7upcHQOYW_tejSCC0xw3nDjHygbUmuivw@mail.gmail.com>
+In-Reply-To: <CAM9d7cjC0bB53mwjp7upcHQOYW_tejSCC0xw3nDjHygbUmuivw@mail.gmail.com>
+From:   Rob Herring <robh@kernel.org>
+Date:   Thu, 29 Sep 2022 15:54:56 -0500
+X-Gmail-Original-Message-ID: <CAL_JsqKqJRiLuhss8nwRfKchf3sopfTF49Xh1xq=s6JXAqFHmg@mail.gmail.com>
+Message-ID: <CAL_JsqKqJRiLuhss8nwRfKchf3sopfTF49Xh1xq=s6JXAqFHmg@mail.gmail.com>
+Subject: Re: [PATCH v3 1/3] perf: Skip and warn on unknown format 'configN' attrs
+To:     Namhyung Kim <namhyung@kernel.org>
+Cc:     Peter Zijlstra <peterz@infradead.org>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
         Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Jiri Olsa <jolsa@kernel.org>, Ingo Molnar <mingo@kernel.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        LKML <linux-kernel@vger.kernel.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Jiri Olsa <jolsa@kernel.org>, Leo Yan <leo.yan@linaro.org>,
         linux-perf-users <linux-perf-users@vger.kernel.org>,
-        Kan Liang <kan.liang@linux.intel.com>,
-        Leo Yan <leo.yan@linaro.org>
+        James Clark <james.clark@arm.com>,
+        linux-kernel <linux-kernel@vger.kernel.org>
 Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-On Wed, Sep 28, 2022 at 10:19 PM Adrian Hunter <adrian.hunter@intel.com> wrote:
+On Thu, Sep 29, 2022 at 1:54 PM Namhyung Kim <namhyung@kernel.org> wrote:
 >
-> On 29/09/22 08:09, Namhyung Kim wrote:
-> > On Wed, Sep 28, 2022 at 7:08 PM Ian Rogers <irogers@google.com> wrote:
-> >>
-> >> On Wed, Sep 28, 2022 at 4:46 PM Namhyung Kim <namhyung@kernel.org> wrote:
-> >>>
-> >>> On Wed, Sep 28, 2022 at 12:54 AM Adrian Hunter <adrian.hunter@intel.com> wrote:
-> >>>>
-> >>>> On 27/09/22 20:28, Namhyung Kim wrote:
-> >>>>> Hi Adrian,
-> >>>>>
-> >>>>> On Tue, Sep 27, 2022 at 12:06 AM Adrian Hunter <adrian.hunter@intel.com> wrote:
-> >>>>>>
-> >>>>>> On 24/09/22 19:57, Namhyung Kim wrote:
-> >>>>>>> The current code propagate evsel's cpu map settings to evlist when it's
-> >>>>>>> added to an evlist.  But the evlist->all_cpus and each evsel's cpus will
-> >>>>>>> be updated in perf_evlist__set_maps() later.  No need to do it before
-> >>>>>>> evlist's cpus are set actually.
-> >>>>>>>
-> >>>>>>> Actually we discarded this intermediate all_cpus maps at the beginning
-> >>>>>>> of perf_evlist__set_maps().  Let's not do this.  It's only needed when
-> >>>>>>> an evsel is added after the evlist cpu maps are set.
-> >>>>>>
-> >>>>>> That might not be true.  Consider evlist__fix_hybrid_cpus() which fiddles
-> >>>>>> with evsel->core.cpus and evsel->core.own_cpus after the evsel has been
-> >>>>>> added to the evlist.  It can also remove an evsel from the evlist.
-> >>>>>
-> >>>>> Thanks for your review.  I think it's fine to change evsel cpus or to remove
-> >>>>> an evsel from evlist before calling evlist__create_maps().  The function
-> >>>>> will take care of setting evlist's all_cpus from the evsels in the evlist.
-> >>>>> So previous changes in evsel/cpus wouldn't be any special.
-> >>>>>
-> >>>>> After this point, adding a new evsel needs to update evlist all cpus by
-> >>>>> propagating cpu maps.  So I think hybrid cpus should be fine.
-> >>>>> Did I miss something?
-> >>>>
-> >>>> I wondered how it might play out if evlist__fix_hybrid_cpus() reduced the
-> >>>> cpus from the target->cpu_list (using perf record -C) , since after this
-> >>>> patch all_cpus always starts with the target->cpu_list instead of an empty
-> >>>> list.  But then, in the hybrid case, it puts a dummy event that uses the
-> >>>> target cpu list anyway, so the result is the same.
-> >>>>
-> >>>> I don't know if there are any cases where all_cpus would actually need to
-> >>>> exclude some of the cpus from target->cpu_list.
-> >>>
-> >>> I'm not aware of other cases to reduce cpu list.  I think it'd be fine
-> >>> if it has a cpu in the evlist->all_cpus even if it's not used.  The evsel
-> >>> should have a correct list anyway and we mostly use the evsel cpus
-> >>> to do the real work.
-> >>>
-> >>> Thanks,
-> >>> Namhyung
-> >>
-> >> The affinity changes made it so that we use all_cpus probably more
-> >> often than the evsel CPU maps for real work. The reason being we want
-> >> to avoid IPIs so we do all the work on 1 CPU and then move to the next
-> >> CPU in evlist all_cpus. evsel CPU maps are used to make sure the
-> >> indices are kept accurate - for example, if an uncore event is
-> >> measured with a CPU event:
-> >> https://git.kernel.org/pub/scm/linux/kernel/git/acme/linux.git/tree/tools/perf/util/evlist.h?h=perf/core#n366
-> >> https://git.kernel.org/pub/scm/linux/kernel/git/acme/linux.git/tree/tools/perf/util/evlist.c?h=perf/core#n404
+> On Mon, Sep 26, 2022 at 6:32 AM Rob Herring <robh@kernel.org> wrote:
 > >
-> > Right, I meant it'd check the evsel cpus eventually even if it iterates
-> > on the evlist all_cpus.  The evlist_cpu_iterator__next() will skip a
-> > CPU if it's not in the evsel cpus.
+> > On Fri, Sep 16, 2022 at 1:12 PM Namhyung Kim <namhyung@kernel.org> wrote:
+> > >
+> > > On Wed, Sep 14, 2022 at 1:09 PM Rob Herring <robh@kernel.org> wrote:
+> > > >
+> > > > If the kernel exposes a new perf_event_attr field in a format attr, perf
+> > > > will return an error stating the specified PMU can't be found. For
+> > > > example, a format attr with 'config3:0-63' causes an error as config3 is
+> > > > unknown to perf. This causes a compatibility issue between a newer
+> > > > kernel with older perf tool.
+> > > >
+> > > > Before this change with a kernel adding 'config3' I get:
+> > > >
+> > > > $ perf record -e arm_spe// -- true
+> > > > event syntax error: 'arm_spe//'
+> > > >                      \___ Cannot find PMU `arm_spe'. Missing kernel support?
+> > > > Run 'perf list' for a list of valid events
+> > > >
+> > > >  Usage: perf record [<options>] [<command>]
+> > > >     or: perf record [<options>] -- <command> [<options>]
+> > > >
+> > > >     -e, --event <event>   event selector. use 'perf list' to list
+> > > > available events
+> > > >
+> > > > After this change, I get:
+> > > >
+> > > > $ perf record -e arm_spe// -- true
+> > > > WARNING: 'arm_spe_0' format 'inv_event_filter' requires 'perf_event_attr::config3' which is not supported by this version of perf!
+> > > > [ perf record: Woken up 2 times to write data ]
+> > > > [ perf record: Captured and wrote 0.091 MB perf.data ]
+> > > >
+> > > > To support unknown configN formats, rework the YACC implementation to
+> > > > pass any config[0-9]+ format to perf_pmu__new_format() to handle with a
+> > > > warning.
+> > >
+> > > It only handles configN formats but it might add a completely different
+> > > name later, right?
 > >
-> > Thanks,
-> > Namhyung
+> > Right. An unknown configN is a warning. An unknown name is still an
+> > error as before. Given that sysfs format attrs are for mapping fields
+> > which could be anything to "generic" perf_event_attr fields, how would
+> > we ever have anything other than configN?
 >
-> Perhaps an alternative is to be explicit about deferring map
-> propagation e.g.
+> I'm not sure I'm following.  It could be anything other than configN.
 
-Thanks for your patch.  Yeah, we can use this.
+It's possible, yes, but likely or necessary? Probably not.
 
-But I still think it'd be better doing it unconditionally
-since any propagation before perf_evlist__set_maps
-will be discarded anyway.  With this change, other
-than perf record will collect all cpus before _set_maps
-and then discard it.  It seems like a waste, no?
+Let me try again. perf_event_attr:configX fields are pmu specific and
+sysfs format files provide the mapping of their specific usage to
+configX bits. If we add something to perf_event_attr that's not PMU
+specific, but common for perf, then it's going to have a specific name
+and no format entry. Right? If we add yet another PMU specific field,
+why would we ever have a name other than 'config'? Anything different
+has little benefit since format files provide the specific meaning and
+it's up to the PMU driver to handle them.
 
-Or else, we can have allow_map_propagation initialized
-to false and set it to true in perf_evlist__set_maps().
+Maybe someone comes up with something, but that seems a lot less
+likely than another configN.
 
-Thanks,
-Namhyung
+> But I don't object to this particular change as it's needed for current
+> work.  Later, we can fix the issue if another name comes in.
 
+Is that an Acked/Reviewed-by?
 
->
-> diff --git a/tools/lib/perf/evlist.c b/tools/lib/perf/evlist.c
-> index 19eaea99aa4f..5ce19e62397d 100644
-> --- a/tools/lib/perf/evlist.c
-> +++ b/tools/lib/perf/evlist.c
-> @@ -70,6 +70,7 @@ static void perf_evlist__propagate_maps(struct perf_evlist *evlist)
->         /* Recomputing all_cpus, so start with a blank slate. */
->         perf_cpu_map__put(evlist->all_cpus);
->         evlist->all_cpus = NULL;
-> +       evlist->defer_map_propagation = false;
->
->         perf_evlist__for_each_evsel(evlist, evsel)
->                 __perf_evlist__propagate_maps(evlist, evsel);
-> @@ -81,7 +82,8 @@ void perf_evlist__add(struct perf_evlist *evlist,
->         evsel->idx = evlist->nr_entries;
->         list_add_tail(&evsel->node, &evlist->entries);
->         evlist->nr_entries += 1;
-> -       __perf_evlist__propagate_maps(evlist, evsel);
-> +       if (!evlist->defer_map_propagation)
-> +               __perf_evlist__propagate_maps(evlist, evsel);
->  }
->
->  void perf_evlist__remove(struct perf_evlist *evlist,
-> @@ -177,9 +179,6 @@ void perf_evlist__set_maps(struct perf_evlist *evlist,
->                 evlist->threads = perf_thread_map__get(threads);
->         }
->
-> -       if (!evlist->all_cpus && cpus)
-> -               evlist->all_cpus = perf_cpu_map__get(cpus);
-> -
->         perf_evlist__propagate_maps(evlist);
->  }
->
-> diff --git a/tools/lib/perf/include/internal/evlist.h b/tools/lib/perf/include/internal/evlist.h
-> index 6f89aec3e608..dbe0b763f597 100644
-> --- a/tools/lib/perf/include/internal/evlist.h
-> +++ b/tools/lib/perf/include/internal/evlist.h
-> @@ -19,6 +19,7 @@ struct perf_evlist {
->         int                      nr_entries;
->         int                      nr_groups;
->         bool                     has_user_cpus;
-> +       bool                     defer_map_propagation;
->         /**
->          * The cpus passed from the command line or all online CPUs by
->          * default.
-> diff --git a/tools/perf/builtin-record.c b/tools/perf/builtin-record.c
-> index 52d254b1530c..1c2523d66a14 100644
-> --- a/tools/perf/builtin-record.c
-> +++ b/tools/perf/builtin-record.c
-> @@ -3975,6 +3975,7 @@ int cmd_record(int argc, const char **argv)
->         rec->evlist = evlist__new();
->         if (rec->evlist == NULL)
->                 return -ENOMEM;
-> +       rec->evlist->core.defer_map_propagation = true;
->
->         err = perf_config(perf_record_config, rec);
->         if (err)
->
+Rob
