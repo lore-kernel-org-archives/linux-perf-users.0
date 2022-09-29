@@ -2,105 +2,164 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0757CC433FE
-	for <linux-perf-users@archiver.kernel.org>; Thu, 29 Sep 2022 10:09:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6EB6FC433F5
+	for <linux-perf-users@archiver.kernel.org>; Thu, 29 Sep 2022 11:29:51 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S235307AbiI2KJP (ORCPT
+        id S232298AbiI2L3t (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Thu, 29 Sep 2022 06:09:15 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50918 "EHLO
+        Thu, 29 Sep 2022 07:29:49 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40584 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S235327AbiI2KJN (ORCPT
+        with ESMTP id S234289AbiI2L3s (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Thu, 29 Sep 2022 06:09:13 -0400
-Received: from frasgout.his.huawei.com (frasgout.his.huawei.com [185.176.79.56])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 77088148A30;
-        Thu, 29 Sep 2022 03:09:12 -0700 (PDT)
-Received: from fraeml705-chm.china.huawei.com (unknown [172.18.147.206])
-        by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4MdTZL54HBz6H76J;
-        Thu, 29 Sep 2022 18:07:54 +0800 (CST)
-Received: from lhrpeml500003.china.huawei.com (7.191.162.67) by
- fraeml705-chm.china.huawei.com (10.206.15.54) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id
- 15.1.2375.31; Thu, 29 Sep 2022 12:09:09 +0200
-Received: from [10.126.170.84] (10.126.170.84) by
- lhrpeml500003.china.huawei.com (7.191.162.67) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2375.31; Thu, 29 Sep 2022 11:09:09 +0100
-Message-ID: <2a4a15a4-55cd-f98b-4b14-474f24e2c308@huawei.com>
-Date:   Thu, 29 Sep 2022 11:09:12 +0100
+        Thu, 29 Sep 2022 07:29:48 -0400
+Received: from ams.source.kernel.org (ams.source.kernel.org [IPv6:2604:1380:4601:e00::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 58C221F9DA;
+        Thu, 29 Sep 2022 04:29:46 -0700 (PDT)
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by ams.source.kernel.org (Postfix) with ESMTPS id 634C9B8246E;
+        Thu, 29 Sep 2022 11:29:45 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id D8B0FC433C1;
+        Thu, 29 Sep 2022 11:29:41 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1664450984;
+        bh=l123fFiBTIIG4boLDnbP/+WIQ9sZsWaaiSayKBcLVOU=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=nBS3qMl5DfZttE6IC6rRN5KGZ8vZ+D5sS1bFYD4+5l/bmW/OUaI6+y255j/KAtizm
+         /3juX6wMkr6lljUrivGbGHyzd7h+DrSuYwclOfGbYxmxj6os/44ZBOKosBVMgKGnJe
+         SyJ1S7Lv9uFsUugR2xyIhXU0cv6SOuHJBLWWwNMdrgeS2wAVtwUYlghGrUdLb3XUkO
+         +gI0eOY8/MhgmEC9sGl5IxQEPo/aV4E31suHK/zxqZJglhSSyIG6yvaynPkdpCauPj
+         6melQBWdqOEUVtPr/2vVwszdGvEsmd/FtnfQM/OXNuHIIkbtXrMfL/Ltj8Y3nR2FQZ
+         x5JSEIJKkMoPw==
+Date:   Thu, 29 Sep 2022 12:29:38 +0100
+From:   Mark Brown <broonie@kernel.org>
+To:     Anshuman Khandual <anshuman.khandual@arm.com>
+Cc:     linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, peterz@infradead.org,
+        acme@kernel.org, mark.rutland@arm.com, will@kernel.org,
+        catalin.marinas@arm.com, Marc Zyngier <maz@kernel.org>
+Subject: Re: [PATCH V3 1/7] arm64/perf: Add BRBE registers and fields
+Message-ID: <YzWBokiO1KSZNtcl@sirena.org.uk>
+References: <20220929075857.158358-1-anshuman.khandual@arm.com>
+ <20220929075857.158358-2-anshuman.khandual@arm.com>
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:91.0) Gecko/20100101
- Thunderbird/91.6.1
-Subject: Re: [PATCH] perf tools: Fix empty version number when building
- outside of a git repo
-To:     Will Chandler <wfc@wfchandler.org>
-CC:     <peterz@infradead.org>, <mingo@redhat.com>, <acme@kernel.org>,
-        <mark.rutland@arm.com>, <alexander.shishkin@linux.intel.com>,
-        <jolsa@kernel.org>, <namhyung@kernel.org>,
-        <linux-perf-users@vger.kernel.org>, <linux-kernel@vger.kernel.org>
-References: <20220927195228.47304-1-wfc@wfchandler.org>
- <c5181877-2998-b952-abe6-26d733ae2aeb@huawei.com>
- <87A1F5B6-3F60-4988-8BA6-A993E5789C80@wfchandler.org>
-From:   John Garry <john.garry@huawei.com>
-In-Reply-To: <87A1F5B6-3F60-4988-8BA6-A993E5789C80@wfchandler.org>
-Content-Type: text/plain; charset="UTF-8"; format=flowed
-Content-Transfer-Encoding: 7bit
-X-Originating-IP: [10.126.170.84]
-X-ClientProxiedBy: lhrpeml100003.china.huawei.com (7.191.160.210) To
- lhrpeml500003.china.huawei.com (7.191.162.67)
-X-CFilter-Loop: Reflected
+Content-Type: multipart/signed; micalg=pgp-sha512;
+        protocol="application/pgp-signature"; boundary="+2mhFxwV4YkUyQZR"
+Content-Disposition: inline
+In-Reply-To: <20220929075857.158358-2-anshuman.khandual@arm.com>
+X-Cookie: Last week's pet, this week's special.
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-On 28/09/2022 18:26, Will Chandler wrote:
-> On 28 Sep 2022, at 5:21, John Garry wrote:
-> 
->> This looks ok. But did you consider going back to same flow as pre-7572733b8499 to avoid a Makefile check, like:
->>
->> ---8<----
->>
->> CID=
->> TAG=
->> if test -d ../../.git -o -f ../../.git
->> then
->> TAG=$(MAKEFLAGS= make -sC ../.. kernelversion)
->> CID=$(git log -1 --abbrev=12 --pretty=format:"%h" 2>/dev/null) && CID="-g$CID"
->> elif test -f ../../PERF-VERSION-FILE
->> then
->> TAG=$(cut -d' ' -f3 ../../PERF-VERSION-FILE | sed -e 's/\"//g')
->> fi
->> if test -z "$TAG"
->> then
->> TAG=$(MAKEFLAGS= make -sC ../.. kernelversion)
->> fi
->>
->> --->8---
->>
->> The evaluation for $TAG is not really needed in the first leg since the fallback does the same thing, but just added for clarity.
-> 
-> I think that would be fine as well. I don't have a strong opinion on which one
-> is easier to follow.
-> 
-> Looking at this more closely, there is a slight difference between the two
-> approaches. In the problem scenario my patch will always use `make kernelversion`,
-> while pre-7572733b8499 starts with PERF-VERSION-FILE if available, falling
-> back to the Makefile.
-> 
-> With the old approach PERF-VERSION-FILE could be used to manually
-> override the version, but this is inconsistent with how the version is
-> generated when building in a git repo. Is this relevant?
 
-Hmmm... maybe someone would want to customise PERF-VERSION-FILE for 
-their own distro. Not sure. But then fiddling with PERF-VERSION-FILE 
-might break the parsing so...I guess not.
+--+2mhFxwV4YkUyQZR
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-BTW, is there any other method of building the perf code not considered? 
-So far I know:
-a. in git tree
-b. perf-tar-src-pkg
-c. tarball
+On Thu, Sep 29, 2022 at 01:28:51PM +0530, Anshuman Khandual wrote:
 
-Thanks,
-John
+Thanks for doing this work - I did spot a few small issues though.
+
+>  /* id_aa64dfr0 */
+> +#define ID_AA64DFR0_BRBE_SHIFT		52
+>  #define ID_AA64DFR0_MTPMU_SHIFT		48
+>  #define ID_AA64DFR0_TRBE_SHIFT		44
+>  #define ID_AA64DFR0_TRACE_FILT_SHIFT	40
+> @@ -848,6 +952,9 @@
+>  #define ID_AA64DFR0_PMSVER_8_2		0x1
+>  #define ID_AA64DFR0_PMSVER_8_3		0x2
+> =20
+> +#define ID_AA64DFR0_BRBE		0x1
+> +#define ID_AA64DFR0_BRBE_V1P1		0x2
+> +
+>  #define ID_DFR0_PERFMON_SHIFT		24
+> =20
+>  #define ID_DFR0_PERFMON_8_0		0x3
+
+This is already done in -next as a result of ID_AA64DFR0_EL1 being
+converted, the enumberation define comes out as
+ID_AA64DFR0_EL1_BRBE_BRBE_V1P1.
+
+> +# This is just a dummy register declaration to get all common field mask=
+s and
+> +# shifts for accessing given BRBINF contents.
+> +Sysreg	BRBINF_EL1	2	1	8	0	0
+> +Res0	63:47
+> +Field	46	CCU
+> +Field	45:32	CC
+> +Res0	31:18
+> +Field	17	LASTFAILED
+> +Field	16	TX
+
+According to DDI0487I.a bit 16 is called T not TX.
+
+> +Res0	15:14
+> +Enum	13:8		TYPE
+
+It's probably worth noting in the comment the issue with Enums here
+that's meaning you're not using a SysregFields - I'm not sure what
+people will think of this but providing a definition using the ID for
+the 0th register does seem expedient.
+
+> +Enum	7:6	EL
+> +	0b00	EL0
+> +	0b01	EL1
+> +	0b10	EL2
+> +EndEnum
+
+According to DDI0487I.a 0b11 has the value EL3 (when FEAT_BRBEv1p1).
+
+> +Sysreg	BRBCR_EL1	2	1	9	0	0
+> +Res0	63:24
+> +Field	23 	EXCEPTION
+> +Field	22 	ERTN
+> +Res0	21:9
+> +Field	8 	FZP
+> +Field	7	ZERO
+
+According to DDI0487I.a bit 7 is Res0.
+
+> +Field	2	ZERO1
+
+According to DDI0487I.a bit 2 is Res0.
+
+> +Sysreg	BRBFCR_EL1	2	1	9	0	1
+
+> +Field	16	ENL
+
+Accoding to DDI0487I.a this is EnI (ie, an L not an I).
+
+> +Sysreg	BRBINFINJ_EL1	2	1	9	1	0
+
+> +Field	16	TX
+
+According to DDI0487I.a this is T not TX.
+
+> +Enum	7:6	EL
+> +	0b00	EL0
+> +	0b01	EL1
+> +	0b10	EL2
+> +EndEnum
+
+According to DDI0487I.a 0b11 has the value EL3 (when FEAT_BRBEv1p1).
+
+--+2mhFxwV4YkUyQZR
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAmM1gaEACgkQJNaLcl1U
+h9AzPQf/dKcgs3a4B6Rec99BaeLxdCQFO3kmp8lU70mA29eD1BiGJGeLYm3D1Xzw
++624rLJnWzTq9pWuVSrjwHCWFqy5VvgznRFGBj8gDw0HrWfVlg3kEJKcnidZob2q
+vX9m4OywI+r2UgwYDzwqDPysfQF98uBTRnaYvJkPGrWVQv+wfkVikvue8J11nx7J
+POxF0yrVxS+AiwXhJqnS093X5EItOpcf13/f51bToSOaAuTETn2fpO04QfB/+S5y
+w3bapIibWTUVr17fEgLpQiRL6k20Jy9iS2/jnzkW2JzmdpKDANVAiDD4UqeYIDa9
+TTP8FGWTPKgLsn88f91bWIc8S3aSZQ==
+=KmN6
+-----END PGP SIGNATURE-----
+
+--+2mhFxwV4YkUyQZR--
