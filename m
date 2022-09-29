@@ -2,97 +2,93 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 92792C4332F
-	for <linux-perf-users@archiver.kernel.org>; Thu, 29 Sep 2022 18:10:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1C7D1C433FE
+	for <linux-perf-users@archiver.kernel.org>; Thu, 29 Sep 2022 18:22:58 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229853AbiI2SKx (ORCPT
+        id S233904AbiI2SW5 (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Thu, 29 Sep 2022 14:10:53 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40656 "EHLO
+        Thu, 29 Sep 2022 14:22:57 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43990 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230001AbiI2SKv (ORCPT
+        with ESMTP id S232380AbiI2SWx (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Thu, 29 Sep 2022 14:10:51 -0400
-Received: from ams.source.kernel.org (ams.source.kernel.org [IPv6:2604:1380:4601:e00::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 26EA01E722;
-        Thu, 29 Sep 2022 11:10:49 -0700 (PDT)
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by ams.source.kernel.org (Postfix) with ESMTPS id 93BDCB8261E;
-        Thu, 29 Sep 2022 18:10:47 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 2E27BC433D7;
-        Thu, 29 Sep 2022 18:10:46 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1664475046;
-        bh=INnFfH3tdYB+C/hvfEcDVOEwuh24J/V1mfziQPv7gmQ=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=dBsVyqZaDB3Bfnj6UVmY3az7nwUl7HGiYY6p2cn+2nP1AqjmoVyVaFaBmL8iWYb2r
-         xu4hSgAb8U4o2YlmjrMNldu6rOlewySzcck0Y2NNuBMs/JugBmVeGDoRu7hDjzhp1O
-         OqFYhXgeMXc0FoUg5+HbT9cqndWlDzWhGcLoIJp6znGvYZ7xcstRvW/qnIDa73n0Pw
-         8ZnF+QofqcUSJK0jiu7WwF8qqWet+eSII6ajCTgnEGv0TfIeDezmXO10u7USWg1lmz
-         clvfsRmja6YqhMkaGzx3a5gZBDrR+MVNGNVBLHrlq3+fSazW5wnVEQH5oaldfieTSO
-         XZiyYOoxLO8xA==
-Received: by quaco.ghostprotocols.net (Postfix, from userid 1000)
-        id E04EA405F0; Thu, 29 Sep 2022 15:10:43 -0300 (-03)
-Date:   Thu, 29 Sep 2022 15:10:43 -0300
-From:   Arnaldo Carvalho de Melo <acme@kernel.org>
-To:     Jiri Olsa <jolsa@kernel.org>
-Cc:     lkml <linux-kernel@vger.kernel.org>,
+        Thu, 29 Sep 2022 14:22:53 -0400
+Received: from mail-oa1-f44.google.com (mail-oa1-f44.google.com [209.85.160.44])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3D24B13F2A3;
+        Thu, 29 Sep 2022 11:22:53 -0700 (PDT)
+Received: by mail-oa1-f44.google.com with SMTP id 586e51a60fabf-131ea99262dso501063fac.9;
+        Thu, 29 Sep 2022 11:22:53 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:x-gm-message-state:from:to:cc:subject:date;
+        bh=E06RJjVJwDfsRCMJJzAUnTq8HdXAS/JGLEHu5WJqKFE=;
+        b=yXjb9jFr1o/d6yulUSLfjPfpVKPg8trlSbxg2GduH6UdgfdgWzXkoz9MLgsvbk/Z/f
+         fgCwd1UgN4WspcoBtkFneKTyYiBcUVLT0jT6cIf6wBhOpbv0LOr6tiblWbO3ubBvtpGB
+         35crnaUIHjpbBbOtRq52HcFjDC0hrMAqRjOpzmAlyzZWdWEUSZAjK87J+24hSIGgDtxQ
+         0yYA5gaHHfi/Z2HEkdNCbPDUMIvWmPqjwWT1WF1nmpOfRV3lQHaXfwMIsHOxo1iKK6J5
+         JYCbnsO3ofwsRYayGZYnlN0ese4xnyhhLH/TxTd8hf+LcD2J7csUFv9EBnM6MnvRiIk/
+         W4qg==
+X-Gm-Message-State: ACrzQf1H4jkcYOJYru8LjgGJa5eEUbBj0081289ZlXu2x2dnCl/TbSt5
+        RLiInPmXE4IqmvcD3wHnoNJz/o4J1hgKatmMkyk=
+X-Google-Smtp-Source: AMsMyM4+KvMwRAMqNfEGLoZVtQg8gfar61sl6HksSa62MA+8HQ7KxZRllxzLOoOlllo71Z7Ygfjn5xMFasVa9dWt3oE=
+X-Received: by 2002:a05:6870:a70f:b0:127:666a:658 with SMTP id
+ g15-20020a056870a70f00b00127666a0658mr2667179oam.218.1664475772506; Thu, 29
+ Sep 2022 11:22:52 -0700 (PDT)
+MIME-Version: 1.0
+References: <20220929140514.226807-1-jolsa@kernel.org> <YzXdjNNh+jbYDnYz@kernel.org>
+In-Reply-To: <YzXdjNNh+jbYDnYz@kernel.org>
+From:   Namhyung Kim <namhyung@kernel.org>
+Date:   Thu, 29 Sep 2022 11:22:41 -0700
+Message-ID: <CAM9d7cia_Hsqsj=J4rSM68TQADMAt=at5SWRMYTGv4FJxNGpTg@mail.gmail.com>
+Subject: Re: [PATCH 1/2] perf tools: Fix bison object compilation with clang 15
+To:     Arnaldo Carvalho de Melo <acme@kernel.org>
+Cc:     Jiri Olsa <jolsa@kernel.org>, lkml <linux-kernel@vger.kernel.org>,
         Peter Zijlstra <a.p.zijlstra@chello.nl>,
         Ingo Molnar <mingo@kernel.org>,
         Mark Rutland <mark.rutland@arm.com>,
-        Namhyung Kim <namhyung@kernel.org>,
         Alexander Shishkin <alexander.shishkin@linux.intel.com>,
         Ian Rogers <irogers@google.com>,
-        linux-perf-users@vger.kernel.org
-Subject: Re: [PATCH 2/2] perf tools: Remove unused variable in
- tests/test-basic.c
-Message-ID: <YzXfozrpDu0cm2am@kernel.org>
-References: <20220929140514.226807-1-jolsa@kernel.org>
- <20220929140514.226807-2-jolsa@kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20220929140514.226807-2-jolsa@kernel.org>
-X-Url:  http://acmel.wordpress.com
+        linux-perf-users <linux-perf-users@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-Em Thu, Sep 29, 2022 at 04:05:14PM +0200, Jiri Olsa escreveu:
-> The clang 15 build reveal several unused-but-set variables,
-> removing the 'foo' variable in tests/mmap-basic.o object.
+On Thu, Sep 29, 2022 at 11:01 AM Arnaldo Carvalho de Melo
+<acme@kernel.org> wrote:
+>
+> Em Thu, Sep 29, 2022 at 04:05:13PM +0200, Jiri Olsa escreveu:
+> > Arnaldo reported compilation fail with clang 15:
+> >
+> >     CC      util/parse-events-bison.o
+> >   util/parse-events-bison.c:1401:9: error: variable 'parse_events_nerrs'
+> >   set but not used [-Werror,-Wunused-but-set-variable]
+> >       int yynerrs = 0;
+> >         ^
+> >   util/parse-events-bison.c:72:25: note: expanded from macro 'yynerrs'
+> >   #define yynerrs         parse_events_nerrs
+> >                         ^
+> >   1 error generated.
+> >
+> > Disabling -Wunused-but-set-variable check for bison object compilation.
+>
+> So we have to disable something else:
+>
+>   37    44.92 fedora:32                     : FAIL clang version 10.0.1 (Fedora 10.0.1-3.fc32)
+>     error: unknown warning option '-Wno-unused-but-set-variable'; did you mean '-Wno-unused-const-variable'? [-Werror,-Wunknown-warning-option]
+>     make[3]: *** [/git/perf-6.0.0-rc7/tools/build/Makefile.build:139: util] Error 2
+>   38    61.77 fedora:33                     : FAIL clang version 11.0.0 (Fedora 11.0.0-3.fc33)
+>     error: unknown warning option '-Wno-unused-but-set-variable'; did you mean '-Wno-unused-const-variable'? [-Werror,-Wunknown-warning-option]
+>     make[3]: *** [/git/perf-6.0.0-rc7/tools/build/Makefile.build:139: util] Error 2
+>   39    66.59 fedora:34                     : FAIL clang version 12.0.1 (Fedora 12.0.1-1.fc34)
+>     error: unknown warning option '-Wno-unused-but-set-variable'; did you mean '-Wno-unused-const-variable'? [-Werror,-Wunknown-warning-option]
+>     make[3]: *** [/git/perf-6.0.0-rc7/tools/build/Makefile.build:139: util] Error 2
+>
+>
+> I'll try yours + -Wno-unknown-warning-option
 
+Is `-Wno-unknown-warning-option` known to older versions? ;-)
 
-
-Thanks, applied.
-
-- Arnaldo
-
- 
-> Signed-off-by: Jiri Olsa <jolsa@kernel.org>
-> ---
->  tools/perf/tests/mmap-basic.c | 3 +--
->  1 file changed, 1 insertion(+), 2 deletions(-)
-> 
-> diff --git a/tools/perf/tests/mmap-basic.c b/tools/perf/tests/mmap-basic.c
-> index 21b5e68179d7..8322fc2295fa 100644
-> --- a/tools/perf/tests/mmap-basic.c
-> +++ b/tools/perf/tests/mmap-basic.c
-> @@ -112,8 +112,7 @@ static int test__basic_mmap(struct test_suite *test __maybe_unused, int subtest
->  
->  	for (i = 0; i < nsyscalls; ++i)
->  		for (j = 0; j < expected_nr_events[i]; ++j) {
-> -			int foo = syscalls[i]();
-> -			++foo;
-> +			syscalls[i]();
->  		}
->  
->  	md = &evlist->mmap[0];
-> -- 
-> 2.37.3
-
--- 
-
-- Arnaldo
+Thanks,
+Namhyung
