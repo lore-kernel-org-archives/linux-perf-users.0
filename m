@@ -2,134 +2,120 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 03E01C433FE
-	for <linux-perf-users@archiver.kernel.org>; Fri, 30 Sep 2022 17:03:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E167FC433F5
+	for <linux-perf-users@archiver.kernel.org>; Fri, 30 Sep 2022 17:19:14 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231248AbiI3RDF (ORCPT
+        id S231561AbiI3RTN (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Fri, 30 Sep 2022 13:03:05 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39788 "EHLO
+        Fri, 30 Sep 2022 13:19:13 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45926 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231146AbiI3RDE (ORCPT
+        with ESMTP id S231465AbiI3RTN (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Fri, 30 Sep 2022 13:03:04 -0400
-Received: from mail-wr1-x429.google.com (mail-wr1-x429.google.com [IPv6:2a00:1450:4864:20::429])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D8E051D8F0B;
-        Fri, 30 Sep 2022 10:03:03 -0700 (PDT)
-Received: by mail-wr1-x429.google.com with SMTP id h7so7738072wru.10;
-        Fri, 30 Sep 2022 10:03:03 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20210112;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:date:from:from:to:cc:subject:date;
-        bh=FGZtzTXHVj5GfR1XpxsY3MGOgIN3YvwraJoWKqDkN6w=;
-        b=g52B5KzPHziA5nUM+tRfF0rytQKolgCNXltXE6EZH2WFqgy2RFwSgSHa9w0IxQAi/z
-         fJBZ12LeRKaZOLff7o91S/e03rk6jP+8ERWUmOkUPltKaL3oQ5juwMxQpdVEnevImGwj
-         gOgeJ67mYqEZplucxrpr1mJkGjZDE1bCM3nQoBl9kDa6f76Moeox/aAKVTa1SWrNCJM8
-         udCytD3p3rS+Gm3hHw/6vJ7QBvphrp6oMdg869RZfq1RlupL1KCEMmMpZiVRk30f3GIP
-         dku3Mjsdft0WjLEUmpszSv0DWhj+EJH8a+EMXXVrkHTpq28UqE+cLLBv8NuNgnXHOMwE
-         pFIg==
+        Fri, 30 Sep 2022 13:19:13 -0400
+Received: from mail-oa1-f44.google.com (mail-oa1-f44.google.com [209.85.160.44])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DC26C1C2F91;
+        Fri, 30 Sep 2022 10:19:11 -0700 (PDT)
+Received: by mail-oa1-f44.google.com with SMTP id 586e51a60fabf-131b7bb5077so6212463fac.2;
+        Fri, 30 Sep 2022 10:19:11 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:date:from:x-gm-message-state:from:to:cc:subject:date;
-        bh=FGZtzTXHVj5GfR1XpxsY3MGOgIN3YvwraJoWKqDkN6w=;
-        b=cji6bK2TThjKn4f82FyH+0YGTuqw9efRE3YgZcUlommoT1RT7srTxBY8BNvMNDvVnr
-         DpmGRlhWMZx3k513ESW3VO3wmYUu92ONKbuPQwT7bv6IpkBIJTM5olWLCaHsEfE7Jdmr
-         TzbN5zt4x8ycmxbIqfRO1YHzY59DJWBQgbUkIJ/TKWsELlvlzic9rSTeakKEabyaXy6M
-         YP1j1Ew1shbHCSP6H/06FVtWGdmm8N75jK1Mzv/0SGEg9if2My2QLXY/kLUCy5SJVB55
-         0SJYuZf+D2j4G61O+6YYtuMH8jlokX8zwXIYJwgCZ1QbgSpvjUs1nSz/Vj+MFuEqNyXE
-         NCXw==
-X-Gm-Message-State: ACrzQf2H/Lh6cHiVFJaY3I9KC1QNha51d1hztvZK67EdBY5MhXhNtk5y
-        V2X44irnz+ao/l8YYGQjmu8=
-X-Google-Smtp-Source: AMsMyM5ecdyZtxaTQSXWmyDTDjON7GR/VvSXWfXqmGb9YXGv1URUT8IB89myJCIX84YvCHwNV5ZFjg==
-X-Received: by 2002:a5d:6c62:0:b0:22a:2f59:cb7d with SMTP id r2-20020a5d6c62000000b0022a2f59cb7dmr6460278wrz.405.1664557382237;
-        Fri, 30 Sep 2022 10:03:02 -0700 (PDT)
-Received: from krava ([193.85.244.190])
-        by smtp.gmail.com with ESMTPSA id fc9-20020a05600c524900b003b31c560a0csm2777336wmb.12.2022.09.30.10.03.00
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 30 Sep 2022 10:03:01 -0700 (PDT)
-From:   Jiri Olsa <olsajiri@gmail.com>
-X-Google-Original-From: Jiri Olsa <jolsa@kernel.org>
-Date:   Fri, 30 Sep 2022 19:02:58 +0200
-To:     Ravi Bangoria <ravi.bangoria@amd.com>
-Cc:     peterz@infradead.org, acme@kernel.org, namhyung@kernel.org,
-        eranian@google.com, irogers@google.com, jmario@redhat.com,
-        leo.yan@linaro.org, alisaidi@amazon.com, ak@linux.intel.com,
-        kan.liang@linux.intel.com, dave.hansen@linux.intel.com,
-        hpa@zytor.com, mingo@redhat.com, mark.rutland@arm.com,
-        alexander.shishkin@linux.intel.com, tglx@linutronix.de,
-        bp@alien8.de, x86@kernel.org, linux-perf-users@vger.kernel.org,
-        linux-kernel@vger.kernel.org, sandipan.das@amd.com,
-        ananth.narayan@amd.com, kim.phillips@amd.com,
-        santosh.shukla@amd.com
-Subject: Re: [PATCH v3 06/15] perf/x86/amd: Support PERF_SAMPLE_PHY_ADDR
-Message-ID: <YzchQmEyzB+uQ7hu@krava>
-References: <20220928095805.596-1-ravi.bangoria@amd.com>
- <20220928095805.596-7-ravi.bangoria@amd.com>
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:x-gm-message-state:from:to:cc:subject:date;
+        bh=R+WiXLP47nyLieKcyaFDm7uI3zYvk9uOSTGnPEnMU9U=;
+        b=TOPSVhNwt7EZ7u4qF0rKbaqUCqneaifZuenOBH/8RJzHFHXaLw9z8dy2THkWfneHCl
+         S1vklorS9FFiumS6Fm0vnsWISQSNQ/4zgIuhsPTWbSMxOWcg1V8qmk4kmhAh9r6HGKWI
+         PolzDTK3D0PS6RDyptPw13pY4LVJWj9RCutmCUZBrDbuDDm6vnJKS0lbeH4VDenVnUJT
+         t7sidgE1vdNDSEL5iOug9EMpo4NJxK2ouZ7kJaYjts2lSfpAHzAwoQ5Ztcs6dsOuN1vc
+         2495lt8WgtshIrZ0whhbOWbRF4kuc/QI+9x9UHNVq+8Bq8YIeI4Dj/EhkjaSA8CmEzbi
+         jE3Q==
+X-Gm-Message-State: ACrzQf2ODkcD+uHdkmH90xBuCq93hOiMPD2cRonEeDi3PrCyUyZvj2hY
+        535beUINOqcHhq9JUvCpIIoMLrgmJKrFhVWcSRQ=
+X-Google-Smtp-Source: AMsMyM6t30+xps3ZdXVQugxAvrSCNYpaEL3BJ696XpL3I7uM/JBXV2Q0bz1rpPPlbSbJYelHKPFdYPVFWY9OmTz5OvA=
+X-Received: by 2002:a05:6870:a70f:b0:127:666a:658 with SMTP id
+ g15-20020a056870a70f00b00127666a0658mr5377853oam.218.1664558351169; Fri, 30
+ Sep 2022 10:19:11 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20220928095805.596-7-ravi.bangoria@amd.com>
+References: <20220929205958.22225-1-hcvcastro@gmail.com>
+In-Reply-To: <20220929205958.22225-1-hcvcastro@gmail.com>
+From:   Namhyung Kim <namhyung@kernel.org>
+Date:   Fri, 30 Sep 2022 10:19:00 -0700
+Message-ID: <CAM9d7ciaMJuG-LgOGoT-u2qwXp8Tk=Zb3ZJPCzA1oQN9hk5ENA@mail.gmail.com>
+Subject: Re: [PATCH] perf: fix the probe finder location (.dwo files)
+To:     Henry Castro <hcvcastro@gmail.com>
+Cc:     Peter Zijlstra <peterz@infradead.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        Arnaldo Carvalho de Melo <acme@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Jiri Olsa <jolsa@kernel.org>,
+        linux-perf-users <linux-perf-users@vger.kernel.org>,
+        linux-kernel <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-hi,
-there's typo in the subject 'PHYS' ;-)
+Hello,
 
-jirka
-
-On Wed, Sep 28, 2022 at 03:27:56PM +0530, Ravi Bangoria wrote:
-> IBS_DC_PHYSADDR provides the physical data address for the tagged load/
-> store operation. Populate perf sample physical address using it.
-> 
-> Signed-off-by: Ravi Bangoria <ravi.bangoria@amd.com>
+On Thu, Sep 29, 2022 at 2:00 PM Henry Castro <hcvcastro@gmail.com> wrote:
+>
+> If the file object is compiled using -gsplit-dwarf,
+> the probe finder location will fail.
+>
+> Signed-off-by: Henry Castro <hcvcastro@gmail.com>
 > ---
->  arch/x86/events/amd/ibs.c | 8 +++++++-
->  kernel/events/core.c      | 3 ++-
->  2 files changed, 9 insertions(+), 2 deletions(-)
-> 
-> diff --git a/arch/x86/events/amd/ibs.c b/arch/x86/events/amd/ibs.c
-> index 0ad49105c154..3271735f0070 100644
-> --- a/arch/x86/events/amd/ibs.c
-> +++ b/arch/x86/events/amd/ibs.c
-> @@ -989,6 +989,11 @@ static void perf_ibs_parse_ld_st_data(__u64 sample_type,
->  		data->addr = ibs_data->regs[ibs_op_msr_idx(MSR_AMD64_IBSDCLINAD)];
->  		data->sample_flags |= PERF_SAMPLE_ADDR;
->  	}
+>  tools/perf/util/probe-finder.c | 11 ++++++++++-
+>  1 file changed, 10 insertions(+), 1 deletion(-)
+>
+> diff --git a/tools/perf/util/probe-finder.c b/tools/perf/util/probe-finder.c
+> index 50d861a80f57..6d7c5461251d 100644
+> --- a/tools/perf/util/probe-finder.c
+> +++ b/tools/perf/util/probe-finder.c
+> @@ -1161,7 +1161,8 @@ static int debuginfo__find_probe_location(struct debuginfo *dbg,
+>         struct perf_probe_point *pp = &pf->pev->point;
+>         Dwarf_Off off, noff;
+>         size_t cuhl;
+> -       Dwarf_Die *diep;
+> +       Dwarf_Die *diep, cudie, subdie;
+> +       uint8_t unit_type;
+>         int ret = 0;
+>
+>         off = 0;
+> @@ -1200,6 +1201,14 @@ static int debuginfo__find_probe_location(struct debuginfo *dbg,
+>                         continue;
+>                 }
+>
+> +               /* Check separate debug information file. */
+> +               if (dwarf_cu_info(pf->cu_die.cu, NULL, &unit_type, &cudie,
+> +                                 &subdie, NULL, NULL, NULL))
+
+It seems dwarf_cu_info was introduced in elfutils 0.171 which
+was released in June 2018.  I hope all the test setups have
+more recent versions.
+
+
+> +                       continue;
 > +
-> +	if (sample_type & PERF_SAMPLE_PHYS_ADDR && op_data3.dc_phy_addr_valid) {
-> +		data->phys_addr = ibs_data->regs[ibs_op_msr_idx(MSR_AMD64_IBSDCPHYSAD)];
-> +		data->sample_flags |= PERF_SAMPLE_PHYS_ADDR;
-> +	}
->  }
->  
->  static int perf_ibs_get_offset_max(struct perf_ibs *perf_ibs, u64 sample_type,
-> @@ -998,7 +1003,8 @@ static int perf_ibs_get_offset_max(struct perf_ibs *perf_ibs, u64 sample_type,
->  	    (perf_ibs == &perf_ibs_op &&
->  	     (sample_type & PERF_SAMPLE_DATA_SRC ||
->  	      sample_type & PERF_SAMPLE_WEIGHT_TYPE ||
-> -	      sample_type & PERF_SAMPLE_ADDR)))
-> +	      sample_type & PERF_SAMPLE_ADDR ||
-> +	      sample_type & PERF_SAMPLE_PHYS_ADDR)))
->  		return perf_ibs->offset_max;
->  	else if (check_rip)
->  		return 3;
-> diff --git a/kernel/events/core.c b/kernel/events/core.c
-> index e1ffdb861b53..49bc3b5e6c8a 100644
-> --- a/kernel/events/core.c
-> +++ b/kernel/events/core.c
-> @@ -7435,7 +7435,8 @@ void perf_prepare_sample(struct perf_event_header *header,
->  		header->size += size;
->  	}
->  
-> -	if (sample_type & PERF_SAMPLE_PHYS_ADDR)
-> +	if (sample_type & PERF_SAMPLE_PHYS_ADDR &&
-> +	    filtered_sample_type & PERF_SAMPLE_PHYS_ADDR)
->  		data->phys_addr = perf_virt_to_phys(data->addr);
->  
->  #ifdef CONFIG_CGROUP_PERF
-> -- 
-> 2.31.1
-> 
+> +               if (unit_type == DW_UT_skeleton)
+> +                       pf->cu_die = subdie;
+
+Is this DWARF5 thing?  Will it handle the previous version well?
+IOW wouldn't dwarf_cu_info() return fail?
+
+Anyway I think it'd be safer to do
+
+    if (dwarf_cu_info() == 0 && unit_type == skeleton)
+        pf->cu_die = subdie;
+
+Thanks,
+Namhyung
+
+
+> +
+>                 /* Check if target file is included. */
+>                 if (pp->file)
+>                         pf->fname = cu_find_realpath(&pf->cu_die, pp->file);
+> --
+> 2.20.1
+>
