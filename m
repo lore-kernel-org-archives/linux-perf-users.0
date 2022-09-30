@@ -2,120 +2,115 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E167FC433F5
-	for <linux-perf-users@archiver.kernel.org>; Fri, 30 Sep 2022 17:19:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3DF39C433FE
+	for <linux-perf-users@archiver.kernel.org>; Fri, 30 Sep 2022 17:27:31 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231561AbiI3RTN (ORCPT
+        id S232089AbiI3R13 (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Fri, 30 Sep 2022 13:19:13 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45926 "EHLO
+        Fri, 30 Sep 2022 13:27:29 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40106 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231465AbiI3RTN (ORCPT
+        with ESMTP id S232054AbiI3R11 (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Fri, 30 Sep 2022 13:19:13 -0400
-Received: from mail-oa1-f44.google.com (mail-oa1-f44.google.com [209.85.160.44])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DC26C1C2F91;
-        Fri, 30 Sep 2022 10:19:11 -0700 (PDT)
-Received: by mail-oa1-f44.google.com with SMTP id 586e51a60fabf-131b7bb5077so6212463fac.2;
-        Fri, 30 Sep 2022 10:19:11 -0700 (PDT)
+        Fri, 30 Sep 2022 13:27:27 -0400
+Received: from mail-pf1-x431.google.com (mail-pf1-x431.google.com [IPv6:2607:f8b0:4864:20::431])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3458D1162F2;
+        Fri, 30 Sep 2022 10:27:18 -0700 (PDT)
+Received: by mail-pf1-x431.google.com with SMTP id b75so4814393pfb.7;
+        Fri, 30 Sep 2022 10:27:18 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20210112;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:sender:from:to:cc:subject:date;
+        bh=uVtcCM8X47G6H6MM/dJAUW1ggO6ijtQ9TTyWaSWbBS8=;
+        b=AtFihyt63SdOSQvjcYww0MuR1fPRAY8/ruyCNxo7e3gnroS98SFZsyqL6VwnjGO3lt
+         Hehq6UCqMnpr3nNUiUpPV1g3HtA6E5abRE3zXjspxD2mk3A/axLKoyL2JoF0S6dAYdMu
+         6N95/9XzDwRIRV9PqiYRto4T7PRZEq14f/gAqlobufFClV7cjl/jWK51sB92RJ7Jr2rh
+         lkP0Kw+dEDpZvcaYCxbMTi+SLUTejVXDg3qDvy3/hMyAg79wxGQxOTPSGiJLrZdCPwef
+         K4I34gEoFvvAQ2z/Cv1BIPAqmCMVTjudwGGYEEwitPgWDtrKPdROAl+jPoW1tc07EHu0
+         J2Lw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date;
-        bh=R+WiXLP47nyLieKcyaFDm7uI3zYvk9uOSTGnPEnMU9U=;
-        b=TOPSVhNwt7EZ7u4qF0rKbaqUCqneaifZuenOBH/8RJzHFHXaLw9z8dy2THkWfneHCl
-         S1vklorS9FFiumS6Fm0vnsWISQSNQ/4zgIuhsPTWbSMxOWcg1V8qmk4kmhAh9r6HGKWI
-         PolzDTK3D0PS6RDyptPw13pY4LVJWj9RCutmCUZBrDbuDDm6vnJKS0lbeH4VDenVnUJT
-         t7sidgE1vdNDSEL5iOug9EMpo4NJxK2ouZ7kJaYjts2lSfpAHzAwoQ5Ztcs6dsOuN1vc
-         2495lt8WgtshIrZ0whhbOWbRF4kuc/QI+9x9UHNVq+8Bq8YIeI4Dj/EhkjaSA8CmEzbi
-         jE3Q==
-X-Gm-Message-State: ACrzQf2ODkcD+uHdkmH90xBuCq93hOiMPD2cRonEeDi3PrCyUyZvj2hY
-        535beUINOqcHhq9JUvCpIIoMLrgmJKrFhVWcSRQ=
-X-Google-Smtp-Source: AMsMyM6t30+xps3ZdXVQugxAvrSCNYpaEL3BJ696XpL3I7uM/JBXV2Q0bz1rpPPlbSbJYelHKPFdYPVFWY9OmTz5OvA=
-X-Received: by 2002:a05:6870:a70f:b0:127:666a:658 with SMTP id
- g15-20020a056870a70f00b00127666a0658mr5377853oam.218.1664558351169; Fri, 30
- Sep 2022 10:19:11 -0700 (PDT)
-MIME-Version: 1.0
-References: <20220929205958.22225-1-hcvcastro@gmail.com>
-In-Reply-To: <20220929205958.22225-1-hcvcastro@gmail.com>
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:sender:x-gm-message-state:from:to:cc:subject:date;
+        bh=uVtcCM8X47G6H6MM/dJAUW1ggO6ijtQ9TTyWaSWbBS8=;
+        b=gCzzKFcV/4wlHo9GqR3ApHo8Ez5xz8kinWdGLYs3832aQVgylFJLlPZI4svGsZg8Xb
+         oDZYRLKVfzzVJALZHPmHdancnR1Az/UTygGliToq5YA7oeCR3yYP/gyRcuRHfUnfmL3K
+         k5dKyQm5nJ6lQSLEx7feiCxNN8vgsvcS/beRh0SIGo8xBrabg5Wky/ch+tE+kxeZ79ma
+         IG0v3nCPVy547UmE/6u7tCW1jpeC02LcXcvj4AgivTOGxqa1cjQd8UoZJWWVw7Zz3VN0
+         rwRznpX8+efl2zDRq7s68soZbZd3ucdxj3oSYQ8Um5y6of3GjDd+k7olqtP89eb7UmZ/
+         jOcA==
+X-Gm-Message-State: ACrzQf1F4uKp5wIUGJ5Ye8fBhenl9Llt4xi4se9Pwh/Au/FyYscqq12+
+        FQN/k1VrRCrPwYC2D/2OygU=
+X-Google-Smtp-Source: AMsMyM51yiS2VdUteYWEn+eP89GvXH2tnw9qlPoo/qqGWZU8uoXJmgNAyfrHMO7JLMakP3GI+FPOPA==
+X-Received: by 2002:a05:6a00:180d:b0:540:ec09:293 with SMTP id y13-20020a056a00180d00b00540ec090293mr10382594pfa.3.1664558837514;
+        Fri, 30 Sep 2022 10:27:17 -0700 (PDT)
+Received: from youngsil.svl.corp.google.com ([2620:15c:2d4:203:4075:4245:762c:e746])
+        by smtp.gmail.com with ESMTPSA id e10-20020a170902b78a00b00168dadc7354sm2154762pls.78.2022.09.30.10.27.16
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 30 Sep 2022 10:27:16 -0700 (PDT)
+Sender: Namhyung Kim <namhyung@gmail.com>
 From:   Namhyung Kim <namhyung@kernel.org>
-Date:   Fri, 30 Sep 2022 10:19:00 -0700
-Message-ID: <CAM9d7ciaMJuG-LgOGoT-u2qwXp8Tk=Zb3ZJPCzA1oQN9hk5ENA@mail.gmail.com>
-Subject: Re: [PATCH] perf: fix the probe finder location (.dwo files)
-To:     Henry Castro <hcvcastro@gmail.com>
-Cc:     Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Jiri Olsa <jolsa@kernel.org>,
-        linux-perf-users <linux-perf-users@vger.kernel.org>,
-        linux-kernel <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+To:     Arnaldo Carvalho de Melo <acme@kernel.org>,
+        Jiri Olsa <jolsa@kernel.org>
+Cc:     Ingo Molnar <mingo@kernel.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Ian Rogers <irogers@google.com>,
+        Adrian Hunter <adrian.hunter@intel.com>,
+        linux-perf-users@vger.kernel.org,
+        Kan Liang <kan.liang@linux.intel.com>,
+        Leo Yan <leo.yan@linaro.org>
+Subject: [PATCH 0/5] perf tools: Clean up cpu map handling for system-wide evsel (v2)
+Date:   Fri, 30 Sep 2022 10:27:09 -0700
+Message-Id: <20220930172714.711616-1-namhyung@kernel.org>
+X-Mailer: git-send-email 2.38.0.rc1.362.ged0d419d3c-goog
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
 Hello,
 
-On Thu, Sep 29, 2022 at 2:00 PM Henry Castro <hcvcastro@gmail.com> wrote:
->
-> If the file object is compiled using -gsplit-dwarf,
-> the probe finder location will fail.
->
-> Signed-off-by: Henry Castro <hcvcastro@gmail.com>
-> ---
->  tools/perf/util/probe-finder.c | 11 ++++++++++-
->  1 file changed, 10 insertions(+), 1 deletion(-)
->
-> diff --git a/tools/perf/util/probe-finder.c b/tools/perf/util/probe-finder.c
-> index 50d861a80f57..6d7c5461251d 100644
-> --- a/tools/perf/util/probe-finder.c
-> +++ b/tools/perf/util/probe-finder.c
-> @@ -1161,7 +1161,8 @@ static int debuginfo__find_probe_location(struct debuginfo *dbg,
->         struct perf_probe_point *pp = &pf->pev->point;
->         Dwarf_Off off, noff;
->         size_t cuhl;
-> -       Dwarf_Die *diep;
-> +       Dwarf_Die *diep, cudie, subdie;
-> +       uint8_t unit_type;
->         int ret = 0;
->
->         off = 0;
-> @@ -1200,6 +1201,14 @@ static int debuginfo__find_probe_location(struct debuginfo *dbg,
->                         continue;
->                 }
->
-> +               /* Check separate debug information file. */
-> +               if (dwarf_cu_info(pf->cu_die.cu, NULL, &unit_type, &cudie,
-> +                                 &subdie, NULL, NULL, NULL))
+The system-wide evsel has a cpu map for all (online) cpus regardless
+of user requested cpus.  But the cpu map handling code has some
+special case for it and I think we can cleanup the code by making sure
+that such a evsel has a proper cpu/thread maps from the beginning.
+This patches should not cause any change in the behavior.
 
-It seems dwarf_cu_info was introduced in elfutils 0.171 which
-was released in June 2018.  I hope all the test setups have
-more recent versions.
+Changes from v1:
+ * use evlist->core.needs_map_propagation field
+ * add Reviewed-by from Adrian
 
+You can get the code from 'perf/cpumap-update-v2' branch in
 
-> +                       continue;
-> +
-> +               if (unit_type == DW_UT_skeleton)
-> +                       pf->cu_die = subdie;
-
-Is this DWARF5 thing?  Will it handle the previous version well?
-IOW wouldn't dwarf_cu_info() return fail?
-
-Anyway I think it'd be safer to do
-
-    if (dwarf_cu_info() == 0 && unit_type == skeleton)
-        pf->cu_die = subdie;
+  git://git.kernel.org/pub/scm/linux/kernel/git/namhyung/linux-perf.git
 
 Thanks,
 Namhyung
 
+Namhyung Kim (5):
+  libperf: Populate system-wide evsel maps
+  libperf: Propagate maps only if necessary
+  perf tools: Get rid of evlist__add_on_all_cpus()
+  perf tools: Add evlist__add_sched_switch()
+  perf tools: Remove special handling of system-wide evsel
 
-> +
->                 /* Check if target file is included. */
->                 if (pp->file)
->                         pf->fname = cu_find_realpath(&pf->cu_die, pp->file);
-> --
-> 2.20.1
->
+ tools/lib/perf/evlist.c                  | 23 ++++++------
+ tools/lib/perf/evsel.c                   |  3 --
+ tools/lib/perf/include/internal/evlist.h |  1 +
+ tools/perf/arch/x86/util/intel-pt.c      | 15 +++-----
+ tools/perf/builtin-script.c              |  3 --
+ tools/perf/tests/switch-tracking.c       | 15 +++-----
+ tools/perf/util/evlist.c                 | 46 ++++++++++--------------
+ tools/perf/util/evlist.h                 |  1 +
+ tools/perf/util/evsel.c                  | 12 ++-----
+ tools/perf/util/stat.c                   |  3 --
+ 10 files changed, 46 insertions(+), 76 deletions(-)
+
+
+base-commit: 62e64c9d2fd12839c02f1b3e8b873e7cb34e8720
+-- 
+2.38.0.rc1.362.ged0d419d3c-goog
+
