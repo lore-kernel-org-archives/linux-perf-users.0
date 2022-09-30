@@ -2,138 +2,195 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0529EC433FE
-	for <linux-perf-users@archiver.kernel.org>; Fri, 30 Sep 2022 03:42:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 64787C433FE
+	for <linux-perf-users@archiver.kernel.org>; Fri, 30 Sep 2022 04:07:15 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229713AbiI3Dmc (ORCPT
+        id S230145AbiI3EHO (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Thu, 29 Sep 2022 23:42:32 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60178 "EHLO
+        Fri, 30 Sep 2022 00:07:14 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51368 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229696AbiI3Dma (ORCPT
+        with ESMTP id S229892AbiI3EHN (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Thu, 29 Sep 2022 23:42:30 -0400
-Received: from mail-oa1-f45.google.com (mail-oa1-f45.google.com [209.85.160.45])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E54C31C7728;
-        Thu, 29 Sep 2022 20:42:29 -0700 (PDT)
-Received: by mail-oa1-f45.google.com with SMTP id 586e51a60fabf-1280590722dso4117986fac.1;
-        Thu, 29 Sep 2022 20:42:29 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date;
-        bh=CmdwtcBzPlTMPdSBht12UDlPPX1lSgFvXWnPqCp6gNw=;
-        b=3vSrB6+D2vaF0TaUjy3CdZVVF3lA7iL7f4wXIU1nWgwabMcoOXW2b+w10MmcVsN0wH
-         Gm/A8eJ7zXNbsVdK7ApBvQX0iaeQg7a0yRiCZ2JHseUU6JJkZNLBnjJg+rbWYCgHdVKA
-         UdVvEY0MLgvlCPV+y6J54w6D2p1h3SCbU+AJICaICdrVwxFKJsCilS8YCVXK46qsZKtf
-         KSYSpO3f2hXQqXQjlSu27CFdZZLHhbHJmKkE+xReFOnCBSYbV2n5ftNccYQZdbahQe2r
-         LfECZKegnX4TDHA1xB9JRgd5pDBmDyZDTAG6JuWGAa5P6jTHjOP/PsHp0YlU9PXKjkUO
-         9alA==
-X-Gm-Message-State: ACrzQf0YeIuuKg3oZO7Mg4KYSuEAOpRKET6CQd+mHuYPtjd4ZtPe/0yw
-        Hk2b3/aVe4H0vievXpZqD6yQBz4/Qr01Hb2/xNA=
-X-Google-Smtp-Source: AMsMyM54FCbn4vRbkhREI7Gb1vZrk7w8b+tIty0dQahH+B4mYO5OlhOgAWUsWxiBirWXzdXUvj+hBOXl33oawExzsvk=
-X-Received: by 2002:a05:6870:a70f:b0:127:666a:658 with SMTP id
- g15-20020a056870a70f00b00127666a0658mr3808183oam.218.1664509349235; Thu, 29
- Sep 2022 20:42:29 -0700 (PDT)
+        Fri, 30 Sep 2022 00:07:13 -0400
+Received: from foss.arm.com (foss.arm.com [217.140.110.172])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTP id 929E81005D9;
+        Thu, 29 Sep 2022 21:07:11 -0700 (PDT)
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id D5DA615A1;
+        Thu, 29 Sep 2022 21:07:17 -0700 (PDT)
+Received: from [10.162.41.10] (unknown [10.162.41.10])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id D51FB3F73D;
+        Thu, 29 Sep 2022 21:07:07 -0700 (PDT)
+Message-ID: <8751bc38-9020-ba5f-d2d6-dd7486e1709a@arm.com>
+Date:   Fri, 30 Sep 2022 09:37:04 +0530
 MIME-Version: 1.0
-References: <20220914-arm-perf-tool-spe1-2-v2-v3-0-8189fc04dcc6@kernel.org>
- <20220914-arm-perf-tool-spe1-2-v2-v3-1-8189fc04dcc6@kernel.org>
- <CAM9d7ciNwe1HaYXjau6hv8yUmnZvvQU0=bNdf=EA589frkjptg@mail.gmail.com>
- <CAL_JsqJ8nhmx4U8efE2_FuVkacMYxHys4OZXv9PmdTXjZP1x4A@mail.gmail.com>
- <CAM9d7cjC0bB53mwjp7upcHQOYW_tejSCC0xw3nDjHygbUmuivw@mail.gmail.com> <CAL_JsqKqJRiLuhss8nwRfKchf3sopfTF49Xh1xq=s6JXAqFHmg@mail.gmail.com>
-In-Reply-To: <CAL_JsqKqJRiLuhss8nwRfKchf3sopfTF49Xh1xq=s6JXAqFHmg@mail.gmail.com>
-From:   Namhyung Kim <namhyung@kernel.org>
-Date:   Thu, 29 Sep 2022 20:42:20 -0700
-Message-ID: <CAM9d7chddd0HjWck086LSV6VsBBDHtvOsh03_JK-yij8cormVQ@mail.gmail.com>
-Subject: Re: [PATCH v3 1/3] perf: Skip and warn on unknown format 'configN' attrs
-To:     Rob Herring <robh@kernel.org>
-Cc:     Peter Zijlstra <peterz@infradead.org>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Jiri Olsa <jolsa@kernel.org>, Leo Yan <leo.yan@linaro.org>,
-        linux-perf-users <linux-perf-users@vger.kernel.org>,
-        James Clark <james.clark@arm.com>,
-        linux-kernel <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
+ Thunderbird/91.11.0
+Subject: Re: [PATCH V3 1/7] arm64/perf: Add BRBE registers and fields
+Content-Language: en-US
+To:     Mark Brown <broonie@kernel.org>
+Cc:     linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, peterz@infradead.org,
+        acme@kernel.org, mark.rutland@arm.com, will@kernel.org,
+        catalin.marinas@arm.com, Marc Zyngier <maz@kernel.org>
+References: <20220929075857.158358-1-anshuman.khandual@arm.com>
+ <20220929075857.158358-2-anshuman.khandual@arm.com>
+ <YzWBokiO1KSZNtcl@sirena.org.uk>
+From:   Anshuman Khandual <anshuman.khandual@arm.com>
+In-Reply-To: <YzWBokiO1KSZNtcl@sirena.org.uk>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-On Thu, Sep 29, 2022 at 1:55 PM Rob Herring <robh@kernel.org> wrote:
->
-> On Thu, Sep 29, 2022 at 1:54 PM Namhyung Kim <namhyung@kernel.org> wrote:
-> >
-> > On Mon, Sep 26, 2022 at 6:32 AM Rob Herring <robh@kernel.org> wrote:
-> > >
-> > > On Fri, Sep 16, 2022 at 1:12 PM Namhyung Kim <namhyung@kernel.org> wrote:
-> > > >
-> > > > On Wed, Sep 14, 2022 at 1:09 PM Rob Herring <robh@kernel.org> wrote:
-> > > > >
-> > > > > If the kernel exposes a new perf_event_attr field in a format attr, perf
-> > > > > will return an error stating the specified PMU can't be found. For
-> > > > > example, a format attr with 'config3:0-63' causes an error as config3 is
-> > > > > unknown to perf. This causes a compatibility issue between a newer
-> > > > > kernel with older perf tool.
-> > > > >
-> > > > > Before this change with a kernel adding 'config3' I get:
-> > > > >
-> > > > > $ perf record -e arm_spe// -- true
-> > > > > event syntax error: 'arm_spe//'
-> > > > >                      \___ Cannot find PMU `arm_spe'. Missing kernel support?
-> > > > > Run 'perf list' for a list of valid events
-> > > > >
-> > > > >  Usage: perf record [<options>] [<command>]
-> > > > >     or: perf record [<options>] -- <command> [<options>]
-> > > > >
-> > > > >     -e, --event <event>   event selector. use 'perf list' to list
-> > > > > available events
-> > > > >
-> > > > > After this change, I get:
-> > > > >
-> > > > > $ perf record -e arm_spe// -- true
-> > > > > WARNING: 'arm_spe_0' format 'inv_event_filter' requires 'perf_event_attr::config3' which is not supported by this version of perf!
-> > > > > [ perf record: Woken up 2 times to write data ]
-> > > > > [ perf record: Captured and wrote 0.091 MB perf.data ]
-> > > > >
-> > > > > To support unknown configN formats, rework the YACC implementation to
-> > > > > pass any config[0-9]+ format to perf_pmu__new_format() to handle with a
-> > > > > warning.
-> > > >
-> > > > It only handles configN formats but it might add a completely different
-> > > > name later, right?
-> > >
-> > > Right. An unknown configN is a warning. An unknown name is still an
-> > > error as before. Given that sysfs format attrs are for mapping fields
-> > > which could be anything to "generic" perf_event_attr fields, how would
-> > > we ever have anything other than configN?
-> >
-> > I'm not sure I'm following.  It could be anything other than configN.
->
-> It's possible, yes, but likely or necessary? Probably not.
->
-> Let me try again. perf_event_attr:configX fields are pmu specific and
-> sysfs format files provide the mapping of their specific usage to
-> configX bits. If we add something to perf_event_attr that's not PMU
-> specific, but common for perf, then it's going to have a specific name
-> and no format entry. Right? If we add yet another PMU specific field,
-> why would we ever have a name other than 'config'? Anything different
-> has little benefit since format files provide the specific meaning and
-> it's up to the PMU driver to handle them.
->
-> Maybe someone comes up with something, but that seems a lot less
-> likely than another configN.
 
-Fair enough.
 
->
-> > But I don't object to this particular change as it's needed for current
-> > work.  Later, we can fix the issue if another name comes in.
->
-> Is that an Acked/Reviewed-by?
+On 9/29/22 16:59, Mark Brown wrote:
+> On Thu, Sep 29, 2022 at 01:28:51PM +0530, Anshuman Khandual wrote:
+> 
+> Thanks for doing this work - I did spot a few small issues though.
+> 
+>>  /* id_aa64dfr0 */
+>> +#define ID_AA64DFR0_BRBE_SHIFT		52
+>>  #define ID_AA64DFR0_MTPMU_SHIFT		48
+>>  #define ID_AA64DFR0_TRBE_SHIFT		44
+>>  #define ID_AA64DFR0_TRACE_FILT_SHIFT	40
+>> @@ -848,6 +952,9 @@
+>>  #define ID_AA64DFR0_PMSVER_8_2		0x1
+>>  #define ID_AA64DFR0_PMSVER_8_3		0x2
+>>  
+>> +#define ID_AA64DFR0_BRBE		0x1
+>> +#define ID_AA64DFR0_BRBE_V1P1		0x2
+>> +
+>>  #define ID_DFR0_PERFMON_SHIFT		24
+>>  
+>>  #define ID_DFR0_PERFMON_8_0		0x3
+> 
+> This is already done in -next as a result of ID_AA64DFR0_EL1 being
+> converted, the enumberation define comes out as
+> ID_AA64DFR0_EL1_BRBE_BRBE_V1P1.
 
-Reviewed-by: Namhyung Kim <namhyung@kernel.org>
+Right. I will rebase the series on upcoming 6.1-rc1 which should have all the
+current -next patches including ID_AA64DFR0_EL1 migration into tools/sysreg.
+This should just fall in place.
 
-Thanks,
-Namhyung
+> 
+>> +# This is just a dummy register declaration to get all common field masks and
+>> +# shifts for accessing given BRBINF contents.
+>> +Sysreg	BRBINF_EL1	2	1	8	0	0
+>> +Res0	63:47
+>> +Field	46	CCU
+>> +Field	45:32	CC
+>> +Res0	31:18
+>> +Field	17	LASTFAILED
+>> +Field	16	TX
+> 
+> According to DDI0487I.a bit 16 is called T not TX.
+
+I understand :) The intention here was to keep the field name associated with
+"transaction" some how. But I guess, it would be more important to keep it as
+is matching the ARM ARM than something for readability purpose. Will change it
+as 'T'.
+
+> 
+>> +Res0	15:14
+>> +Enum	13:8		TYPE
+> 
+> It's probably worth noting in the comment the issue with Enums here
+> that's meaning you're not using a SysregFields - I'm not sure what
+
+Sure, will add a comment describing the problem of using enum elements inside
+SysregFields definition.
+
+> people will think of this but providing a definition using the ID for
+> the 0th register does seem expedient.
+
+I understand your concern but this turned out to be a better option
+
+- Original sysreg.h based definitions had all field masks on the right end
+
+	- When reading (reg >> field_shift) & field_mask
+	- When writing (val & field_mask) << field_shift
+
+- tools/sysreg format creates in-place field masks
+
+	- When reading (reg & field_mask) >> field_shift
+	- When writing (val << field_shift) & field_mask
+
+- After moving some BRBE registers into tools/sysreg, the driver code had
+  to be changed to accommodate these new write/read methods
+
+- To avoid mix up in the BRBE driver, all BRBINF register fields need to be
+  converted into in place masks, either in sysreg.h itself or moving into
+  tools/sysreg
+
+Moving BRBE fields into tools/sysreg via a dummy BRBINF_EL1 register seems
+to achieve that objective. These common fields can be used to work on any
+BRBINF<N>_EL1 register value. But I might just keep them in sysreg.h, if
+the proposed solution is not preferable or seems expedient.
+
+Later when enum support comes up in SysregFields and tools/sysreg supports
+formula based crm/op2 expansion entire BRBINF, BRBSRC, BRBTGT register set
+can be moved into tools/sysreg.
+
+> 
+>> +Enum	7:6	EL
+>> +	0b00	EL0
+>> +	0b01	EL1
+>> +	0b10	EL2
+>> +EndEnum
+> 
+> According to DDI0487I.a 0b11 has the value EL3 (when FEAT_BRBEv1p1).
+
+Sure, will add it.
+
+> 
+>> +Sysreg	BRBCR_EL1	2	1	9	0	0
+>> +Res0	63:24
+>> +Field	23 	EXCEPTION
+>> +Field	22 	ERTN
+>> +Res0	21:9
+>> +Field	8 	FZP
+>> +Field	7	ZERO
+> 
+> According to DDI0487I.a bit 7 is Res0.
+
+Sure, will change.
+
+> 
+>> +Field	2	ZERO1
+> 
+> According to DDI0487I.a bit 2 is Res0.
+
+Sure, will change.
+
+> 
+>> +Sysreg	BRBFCR_EL1	2	1	9	0	1
+> 
+>> +Field	16	ENL
+> 
+> Accoding to DDI0487I.a this is EnI (ie, an L not an I).
+
+ENL != Enl ? Do we need to match the case as well ?
+
+> 
+>> +Sysreg	BRBINFINJ_EL1	2	1	9	1	0
+> 
+>> +Field	16	TX
+> 
+> According to DDI0487I.a this is T not TX.
+
+As mentioned, will change it as 'T'.
+
+> 
+>> +Enum	7:6	EL
+>> +	0b00	EL0
+>> +	0b01	EL1
+>> +	0b10	EL2
+>> +EndEnum
+> 
+> According to DDI0487I.a 0b11 has the value EL3 (when FEAT_BRBEv1p1).
+
+Sure, will add.
