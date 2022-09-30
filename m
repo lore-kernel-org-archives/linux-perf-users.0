@@ -2,83 +2,149 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6E13BC433F5
-	for <linux-perf-users@archiver.kernel.org>; Thu, 29 Sep 2022 22:47:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C70ADC433F5
+	for <linux-perf-users@archiver.kernel.org>; Fri, 30 Sep 2022 00:33:27 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229548AbiI2Wrx (ORCPT
+        id S229734AbiI3Ad0 (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Thu, 29 Sep 2022 18:47:53 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54880 "EHLO
+        Thu, 29 Sep 2022 20:33:26 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51070 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229519AbiI2Wrw (ORCPT
+        with ESMTP id S229479AbiI3AdZ (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Thu, 29 Sep 2022 18:47:52 -0400
-X-Greylist: delayed 2233 seconds by postgrey-1.37 at lindbergh.monkeyblade.net; Thu, 29 Sep 2022 15:47:51 PDT
-Received: from premium237-5.web-hosting.com (premium237-5.web-hosting.com [66.29.146.205])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CCD3E6DF89
-        for <linux-perf-users@vger.kernel.org>; Thu, 29 Sep 2022 15:47:51 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=sladewatkins.net; s=default; h=To:References:Message-Id:
-        Content-Transfer-Encoding:Cc:Date:In-Reply-To:From:Subject:Mime-Version:
-        Content-Type:Sender:Reply-To:Content-ID:Content-Description:Resent-Date:
-        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
-        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-        bh=O8wd9Rhvsdfifxl56tOVzOiJomq/dOcqSGReCcIFTyA=; b=jBwNcUo7/JFv8/jOTX4KGW+89t
-        HpZuoVzpI5Qyi3EV7TrtFh/3Nmspc3/OmRKO/Ndkc1alZy7JO3kMEC5LMBRwyuQ++70gdFnhkXQc/
-        qT/NFq/RUF7M/ZIgNf/fHJiiCh27sN/Qn8vXdsOCcqIEHEt3w/kDWjE+TX9H+joHz0q6DGqgkbL6O
-        J56xR1q2ZWXwIkETWjqEri5riyY6wwUkInN3ZNuMa2SyfckyE7wq+oK3rAafZ9ZpjPs3UQh3PLrUV
-        bMUp3BTd6jRfA18EeRqm5VCcyIWrhVpGPTgiATDXCFJyXue8i8jBiA41iYqZ2FIkT5mWrruqnrUn7
-        puAvYWOA==;
-Received: from pool-108-4-135-94.albyny.fios.verizon.net ([108.4.135.94]:58756 helo=smtpclient.apple)
-        by premium237.web-hosting.com with esmtpsa  (TLS1.2) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
-        (Exim 4.95)
-        (envelope-from <srw@sladewatkins.net>)
-        id 1oe1jp-006RFZ-Ll;
-        Thu, 29 Sep 2022 18:10:37 -0400
-Content-Type: text/plain;
-        charset=utf-8
-Mime-Version: 1.0 (Mac OS X Mail 16.0 \(3696.120.41.1.1\))
-Subject: Re: Invalid event (cycles:pp) in per-thread mode, enable system wide
- with '-a'.
-From:   Slade Watkins <srw@sladewatkins.net>
-In-Reply-To: <CAKwvOdnrHErOK+w878izVauHUKaX3eD-HXgigq2Ogm3iSj-fHA@mail.gmail.com>
-Date:   Thu, 29 Sep 2022 18:10:35 -0400
-Cc:     linux-perf-users@vger.kernel.org,
-        LKML <linux-kernel@vger.kernel.org>,
-        Ian Rogers <irogers@google.com>
-Content-Transfer-Encoding: quoted-printable
-Message-Id: <76CB17D0-5A66-4D49-A389-8F40EC830DC0@sladewatkins.net>
-References: <CAKwvOdnrHErOK+w878izVauHUKaX3eD-HXgigq2Ogm3iSj-fHA@mail.gmail.com>
-To:     Nick Desaulniers <ndesaulniers@google.com>
-X-Mailer: Apple Mail (2.3696.120.41.1.1)
-X-AntiAbuse: This header was added to track abuse, please include it with any abuse report
-X-AntiAbuse: Primary Hostname - premium237.web-hosting.com
-X-AntiAbuse: Original Domain - vger.kernel.org
-X-AntiAbuse: Originator/Caller UID/GID - [47 12] / [47 12]
-X-AntiAbuse: Sender Address Domain - sladewatkins.net
-X-Get-Message-Sender-Via: premium237.web-hosting.com: authenticated_id: srw@sladewatkins.net
-X-Authenticated-Sender: premium237.web-hosting.com: srw@sladewatkins.net
-X-Source: 
-X-Source-Args: 
-X-Source-Dir: 
-X-From-Rewrite: unmodified, already matched
+        Thu, 29 Sep 2022 20:33:25 -0400
+Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9C5B120192B;
+        Thu, 29 Sep 2022 17:33:24 -0700 (PDT)
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by dfw.source.kernel.org (Postfix) with ESMTPS id 247E4621F8;
+        Fri, 30 Sep 2022 00:33:24 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 2FF31C433D6;
+        Fri, 30 Sep 2022 00:33:20 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1664498003;
+        bh=iitw3YbJcnCMdYxmQPC7U8sUkD91rj3PQj2IgF+NBus=;
+        h=From:To:Cc:Subject:Date:From;
+        b=aSoIeCy1lBcsZdsv/rukl5UlwTNIi24MndK51Y3kSwu/Hesn6S5isnSuHfMVDioCS
+         3ameJt/LFGQyoq/jJ+H+hVtjoQJSvN0US0Hj+ExuNY3PHFwInXWAk4ImtzKgfFTXn0
+         UnVkwFDC8z8S4EPnlfhPgWE3GoOFASX/ex9tYA2RpXv7C9IDDn42DwxPzYeSAUAI81
+         4Dk5rGx4ON2xGVCa1xTURzFXzpsNgq8ofzS9xbHHtKg9cEa3v8MhBs9WT1j+drIQT/
+         iIM0aofUK6DfzBa8St56GzPeIgMTyY9XGg3TXOb26uln/U6Mb1C6TTqW+fzm2PWtDl
+         Hy/rmjBiKE6RQ==
+From:   Arnaldo Carvalho de Melo <acme@kernel.org>
+To:     Linus Torvalds <torvalds@linux-foundation.org>
+Cc:     Ingo Molnar <mingo@kernel.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Jiri Olsa <jolsa@kernel.org>,
+        Namhyung Kim <namhyung@kernel.org>,
+        Clark Williams <williams@redhat.com>,
+        Kate Carcia <kcarcia@redhat.com>, linux-kernel@vger.kernel.org,
+        linux-perf-users@vger.kernel.org,
+        Arnaldo Carvalho de Melo <acme@kernel.org>,
+        Athira Jajeev <atrajeev@linux.vnet.ibm.com>,
+        Disha Goel <disgoel@linux.vnet.ibm.com>,
+        Ian Rogers <irogers@google.com>,
+        Jing Zhang <renyu.zj@linux.alibaba.com>,
+        Xing Zhengjun <zhengjun.xing@linux.intel.com>,
+        Yi Ammy <ammy.yi@intel.com>,
+        Arnaldo Carvalho de Melo <acme@redhat.com>
+Subject: [GIT PULL] perf tools changes for v6.0: 5th batch
+Date:   Thu, 29 Sep 2022 21:33:16 -0300
+Message-Id: <20220930003316.62853-1-acme@kernel.org>
+X-Mailer: git-send-email 2.37.3
+MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-Hey Nick,
+Hi Linus,
 
-> On Sep 29, 2022, at 5:54 PM, Nick Desaulniers =
-<ndesaulniers@google.com> wrote:
->=20
-> I remember hearing rumblings about issues with zen 2, LBR, vs zen 3.
-> Is this a known issue, or am I holding it wrong?
+	Please consider pulling,
 
-Hm=E2=80=A6 I also remember this. I have a Zen 2 based system that I can =
-do testing on, so I will do so when I=E2=80=99m able.
+Best regards,
 
-If I discover something of note, I=E2=80=99ll get back to you.
+- Arnaldo
 
-Cheers,
--srw
+The following changes since commit f76349cf41451c5c42a99f18a9163377e4b364ff:
 
+  Linux 6.0-rc7 (2022-09-25 14:01:02 -0700)
+
+are available in the Git repository at:
+
+  git://git.kernel.org/pub/scm/linux/kernel/git/acme/linux.git tags/perf-tools-fixes-for-v6.0-2022-09-29
+
+for you to fetch changes up to 8e8bf60a675473a034ecfcb7a842b98868ed74a3:
+
+  perf build: Fixup disabling of -Wdeprecated-declarations for the python scripting engine (2022-09-29 16:03:35 -0300)
+
+----------------------------------------------------------------
+perf tools fixes for v6.0: 5th batch
+
+- Fail the 'perf test record' entry on error, fixing a regression where just
+  setup stuff like allocating memory and not the actual things being tested failed.
+
+- Fixup disabling of -Wdeprecated-declarations for the python scripting engine, the
+  previous attempt had a brown paper bag thinko.
+
+- Fix branch stack sampling test to include sanity check for branch filter on PowerPC.
+
+- Update is_ignored_symbol function to match the kernel ignored list, fixing running
+  the 'perf test' entry that compares resolving symbols from kallsyms to resolving from
+  vmlinux.
+
+- Augment the data source type with ARM's neoverse_spe list, the previous code
+  was limited in its search resolving the data source.
+
+- Fix some clang 5 variable set but unused cases.
+
+- Get a perf cgroup more portably in BPF as the __builtin_preserve_enum_value builtin is
+  not available in older versions of clang. In those cases we can forgo BPF's CO-RE (Compile
+  Once, Run Everywhere).
+
+- More Fixes for Intel's hybrid CPU model.
+
+Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
+
+----------------------------------------------------------------
+Arnaldo Carvalho de Melo (2):
+      perf tests record: Fail the test if the 'errs' counter is not zero
+      perf build: Fixup disabling of -Wdeprecated-declarations for the python scripting engine
+
+Athira Rajeev (2):
+      perf tests powerpc: Fix branch stack sampling test to include sanity check for branch filter
+      perf tests vmlinux-kallsyms: Update is_ignored_symbol function to match the kernel ignored list
+
+Jing Zhang (1):
+      perf arm-spe: augment the data source type with neoverse_spe list
+
+Jiri Olsa (2):
+      perf parse-events: Ignore clang 15 warning about variable set but unused in bison produced code
+      perf tests mmap-basic: Remove unused variable to address clang 15 warning
+
+Namhyung Kim (1):
+      perf tools: Get a perf cgroup more portably in BPF
+
+Zhengjun Xing (3):
+      perf print-events: Fix "perf list" can not display the PMU prefix for some hybrid cache events
+      perf parse-events: Remove "not supported" hybrid cache events
+      perf test: Fix test case 87 ("perf record tests") for hybrid systems
+
+ tools/perf/tests/mmap-basic.c               |  3 +--
+ tools/perf/tests/perf-record.c              |  2 +-
+ tools/perf/tests/shell/record.sh            |  2 +-
+ tools/perf/tests/shell/test_brstack.sh      |  3 ++-
+ tools/perf/tests/vmlinux-kallsyms.c         |  5 ++--
+ tools/perf/util/Build                       |  2 +-
+ tools/perf/util/arm-spe.c                   |  2 +-
+ tools/perf/util/bpf_skel/bperf_cgroup.bpf.c | 11 +++++++-
+ tools/perf/util/bpf_skel/off_cpu.bpf.c      | 18 ++++++++++---
+ tools/perf/util/parse-events-hybrid.c       | 21 +++++++++++++---
+ tools/perf/util/parse-events.c              | 39 +++++++++++++++++++++++++++++
+ tools/perf/util/parse-events.h              |  1 +
+ tools/perf/util/print-events.c              | 39 -----------------------------
+ tools/perf/util/scripting-engines/Build     |  2 +-
+ 14 files changed, 92 insertions(+), 58 deletions(-)
