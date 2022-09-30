@@ -2,195 +2,163 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 34E74C433FE
-	for <linux-perf-users@archiver.kernel.org>; Fri, 30 Sep 2022 12:09:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 35B40C4332F
+	for <linux-perf-users@archiver.kernel.org>; Fri, 30 Sep 2022 12:50:21 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230198AbiI3MJ6 (ORCPT
+        id S231467AbiI3MuU (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Fri, 30 Sep 2022 08:09:58 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47740 "EHLO
+        Fri, 30 Sep 2022 08:50:20 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36270 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230095AbiI3MJ5 (ORCPT
+        with ESMTP id S231376AbiI3Mty (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Fri, 30 Sep 2022 08:09:57 -0400
-Received: from mail-pf1-x42c.google.com (mail-pf1-x42c.google.com [IPv6:2607:f8b0:4864:20::42c])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id F01B61CB23
-        for <linux-perf-users@vger.kernel.org>; Fri, 30 Sep 2022 05:09:54 -0700 (PDT)
-Received: by mail-pf1-x42c.google.com with SMTP id d10so4069249pfh.6
-        for <linux-perf-users@vger.kernel.org>; Fri, 30 Sep 2022 05:09:54 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date;
-        bh=CHaTp7QZSQUooBvNoSi37fDgk69eBnJkDBwcq2YT4xM=;
-        b=LBpRzE/3WITuM8U0CAQdLOWVDXGiGPynlAcW2eBOzSOcxA07uOuMHnrxhYkCUag3Kc
-         x8yMO7SIYCXO7CegIJuspkNr8hZP5m8C7AfgTDATfyf+PDbDL5Li7C0bjjErcrFoN9xo
-         BXST5eVr20dPXB5Pl+8NdFD/arAjcWUbDVTRCukNl3AKXNEuu0dxBDhXSwd8YXV15Xf2
-         WlX6WSuAz5tUjcoCdigAZ1OpMFOO6cZQYquVtgbmnZ9knPLcEmgtxGKgVK21q95CSnvk
-         f0pk7T658ppZmxhgho2V319j/pDF8XhXKer9j4jL8Cz7OuCzKkndwTznfKIntxcS59W6
-         H1oA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date;
-        bh=CHaTp7QZSQUooBvNoSi37fDgk69eBnJkDBwcq2YT4xM=;
-        b=jFdaKXdHJJq8qVVAkAQlIfO4gKRLKVITeMM0j66cHYZ8/VmCTyPhrY23BvTEjAtxv/
-         AEls7RB6Vrzbr4p+XCf+xtUCptN2JMoQr71XXdmsWjCCt5QWvUYJcT+1xHZYta+m26wG
-         a3OfgWFIHPDlBfY520QoqcxovB2F1aIexHlt/vdnDHSXQVBxo6p9iXzS5ZFz4Jso12da
-         YpJASSXZ5vrgO0G0AYkwT9dM8uUw9eQWY8buVu2TPctPK5gPVMBSFQ5yLslng5lT4TgH
-         LtfgXrEiqURirgv2DKtDvxP7TaG/BRXSljGaJGYfxARo3d6H+1VFlAz/uRj4gq7RKwPp
-         C4vg==
-X-Gm-Message-State: ACrzQf0myUi1aHPr5ewMetw4IXKEN3ntikaRbnS6KT3y2F4BoJ8J2Q/m
-        w21kH+sGAV08L9LbCFT70RkKvg==
-X-Google-Smtp-Source: AMsMyM5hsNRg222QC8iTzK6zIyjAR5enxeWBLBa1jips+12sgjDVWAdDcURZSFKE4Knt1VzWKdXPVw==
-X-Received: by 2002:a05:6a00:1353:b0:541:5258:4e43 with SMTP id k19-20020a056a00135300b0054152584e43mr8519377pfu.6.1664539793931;
-        Fri, 30 Sep 2022 05:09:53 -0700 (PDT)
-Received: from leoy-yangtze.lan (211-75-219-199.hinet-ip.hinet.net. [211.75.219.199])
-        by smtp.gmail.com with ESMTPSA id i7-20020a170902c94700b001745662d568sm1763159pla.278.2022.09.30.05.09.50
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 30 Sep 2022 05:09:53 -0700 (PDT)
-From:   Leo Yan <leo.yan@linaro.org>
-To:     Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Jiri Olsa <jolsa@kernel.org>,
-        Namhyung Kim <namhyung@kernel.org>,
-        Ravi Bangoria <ravi.bangoria@amd.com>,
-        linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org
-Cc:     Leo Yan <leo.yan@linaro.org>
-Subject: [PATCH v4] perf test: Introduce script for data symbol testing
-Date:   Fri, 30 Sep 2022 20:09:39 +0800
-Message-Id: <20220930120939.353315-1-leo.yan@linaro.org>
-X-Mailer: git-send-email 2.34.1
+        Fri, 30 Sep 2022 08:49:54 -0400
+Received: from mga18.intel.com (mga18.intel.com [134.134.136.126])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9DA27E8B;
+        Fri, 30 Sep 2022 05:49:34 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1664542174; x=1696078174;
+  h=message-id:date:mime-version:subject:to:cc:references:
+   from:in-reply-to:content-transfer-encoding;
+  bh=/aK6BQ/hPmqczfQ274kpmEkepXFpjJXqXRUUoKpI7QE=;
+  b=EbquELD1+GTJ6JA1s2xDad3jiNPxYTJgCKCFQX0X1wbm6vneHRe4zST6
+   EVnE/N2bLk9ecgD9HB35dZp3HK1cncej5OOKOQcGAiaijZOXDEBM2USWI
+   c07TP6eS2/pageUxeuk+YcT0YZXVuKgENHUTeITkBzB1d8W3JXW6q8Cjl
+   J9j8XGSANHpxKqTKKvtnmE+fYQS0BpHitJLvv8ACK4wIqQVhNhabCHIQT
+   2xba1LzfpENwsckApwoXaXAkNub4oBwAyC1MXHZ0G9y5dwlBu0yQJKpSB
+   sTY4HR2DEFoJVaRsfBzgUP/b68savJqZSdc9N3rGNyuIkBK9rM2oIygco
+   Q==;
+X-IronPort-AV: E=McAfee;i="6500,9779,10485"; a="285317510"
+X-IronPort-AV: E=Sophos;i="5.93,358,1654585200"; 
+   d="scan'208";a="285317510"
+Received: from orsmga003.jf.intel.com ([10.7.209.27])
+  by orsmga106.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 30 Sep 2022 05:49:34 -0700
+X-IronPort-AV: E=McAfee;i="6500,9779,10485"; a="573853117"
+X-IronPort-AV: E=Sophos;i="5.93,358,1654585200"; 
+   d="scan'208";a="573853117"
+Received: from ahunter6-mobl1.ger.corp.intel.com (HELO [10.0.2.15]) ([10.252.61.46])
+  by orsmga003-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 30 Sep 2022 05:49:30 -0700
+Message-ID: <37452f10-365d-f496-3cb2-b80481f5f079@intel.com>
+Date:   Fri, 30 Sep 2022 15:49:25 +0300
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
+ Firefox/91.0 Thunderbird/91.11.0
+Subject: Re: [PATCH 2/5] libperf: Propagate maps only if necessary
+Content-Language: en-US
+To:     Namhyung Kim <namhyung@kernel.org>
+Cc:     Ian Rogers <irogers@google.com>,
+        Arnaldo Carvalho de Melo <acme@kernel.org>,
+        Jiri Olsa <jolsa@kernel.org>, Ingo Molnar <mingo@kernel.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        linux-perf-users <linux-perf-users@vger.kernel.org>,
+        Kan Liang <kan.liang@linux.intel.com>,
+        Leo Yan <leo.yan@linaro.org>
+References: <20220924165737.956428-1-namhyung@kernel.org>
+ <20220924165737.956428-3-namhyung@kernel.org>
+ <d901f8c8-0dda-8f34-f963-09cf56d4924e@intel.com>
+ <CAM9d7ciGFqSRO=J6FZmz=enML7eCyvRMQB+bm=nZ07GmozJwbw@mail.gmail.com>
+ <ae609590-7d85-ee4b-3525-8eaa46ed240c@intel.com>
+ <CAM9d7ciaOMOuJay5MzOYtg5paK_YmQskX1yqg=Oni1EzipPMwA@mail.gmail.com>
+ <CAP-5=fX-as0WNCXMyzOwY=ek0gR9yNXbonXHAu1hsd5wOuX-Vg@mail.gmail.com>
+ <CAM9d7ciDvCOsFE68NG6jRb02DdDEOmRf_h7XizdDLGBz0RX95Q@mail.gmail.com>
+ <63905e96-55d5-1aa2-5dbe-167b9aecad8c@intel.com>
+ <CAM9d7ciXESTPXZobir4KirSnh1NXHwENc4WpZTudgawUZOL71Q@mail.gmail.com>
+From:   Adrian Hunter <adrian.hunter@intel.com>
+Organization: Intel Finland Oy, Registered Address: PL 281, 00181 Helsinki,
+ Business Identity Code: 0357606 - 4, Domiciled in Helsinki
+In-Reply-To: <CAM9d7ciXESTPXZobir4KirSnh1NXHwENc4WpZTudgawUZOL71Q@mail.gmail.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-This commit introduces a shell script for data symbol testing.
+On 29/09/22 23:42, Namhyung Kim wrote:
+> On Wed, Sep 28, 2022 at 10:19 PM Adrian Hunter <adrian.hunter@intel.com> wrote:
+>>
+>> On 29/09/22 08:09, Namhyung Kim wrote:
+>>> On Wed, Sep 28, 2022 at 7:08 PM Ian Rogers <irogers@google.com> wrote:
+>>>>
+>>>> On Wed, Sep 28, 2022 at 4:46 PM Namhyung Kim <namhyung@kernel.org> wrote:
+>>>>>
+>>>>> On Wed, Sep 28, 2022 at 12:54 AM Adrian Hunter <adrian.hunter@intel.com> wrote:
+>>>>>>
+>>>>>> On 27/09/22 20:28, Namhyung Kim wrote:
+>>>>>>> Hi Adrian,
+>>>>>>>
+>>>>>>> On Tue, Sep 27, 2022 at 12:06 AM Adrian Hunter <adrian.hunter@intel.com> wrote:
+>>>>>>>>
+>>>>>>>> On 24/09/22 19:57, Namhyung Kim wrote:
+>>>>>>>>> The current code propagate evsel's cpu map settings to evlist when it's
+>>>>>>>>> added to an evlist.  But the evlist->all_cpus and each evsel's cpus will
+>>>>>>>>> be updated in perf_evlist__set_maps() later.  No need to do it before
+>>>>>>>>> evlist's cpus are set actually.
+>>>>>>>>>
+>>>>>>>>> Actually we discarded this intermediate all_cpus maps at the beginning
+>>>>>>>>> of perf_evlist__set_maps().  Let's not do this.  It's only needed when
+>>>>>>>>> an evsel is added after the evlist cpu maps are set.
+>>>>>>>>
+>>>>>>>> That might not be true.  Consider evlist__fix_hybrid_cpus() which fiddles
+>>>>>>>> with evsel->core.cpus and evsel->core.own_cpus after the evsel has been
+>>>>>>>> added to the evlist.  It can also remove an evsel from the evlist.
+>>>>>>>
+>>>>>>> Thanks for your review.  I think it's fine to change evsel cpus or to remove
+>>>>>>> an evsel from evlist before calling evlist__create_maps().  The function
+>>>>>>> will take care of setting evlist's all_cpus from the evsels in the evlist.
+>>>>>>> So previous changes in evsel/cpus wouldn't be any special.
+>>>>>>>
+>>>>>>> After this point, adding a new evsel needs to update evlist all cpus by
+>>>>>>> propagating cpu maps.  So I think hybrid cpus should be fine.
+>>>>>>> Did I miss something?
+>>>>>>
+>>>>>> I wondered how it might play out if evlist__fix_hybrid_cpus() reduced the
+>>>>>> cpus from the target->cpu_list (using perf record -C) , since after this
+>>>>>> patch all_cpus always starts with the target->cpu_list instead of an empty
+>>>>>> list.  But then, in the hybrid case, it puts a dummy event that uses the
+>>>>>> target cpu list anyway, so the result is the same.
+>>>>>>
+>>>>>> I don't know if there are any cases where all_cpus would actually need to
+>>>>>> exclude some of the cpus from target->cpu_list.
+>>>>>
+>>>>> I'm not aware of other cases to reduce cpu list.  I think it'd be fine
+>>>>> if it has a cpu in the evlist->all_cpus even if it's not used.  The evsel
+>>>>> should have a correct list anyway and we mostly use the evsel cpus
+>>>>> to do the real work.
+>>>>>
+>>>>> Thanks,
+>>>>> Namhyung
+>>>>
+>>>> The affinity changes made it so that we use all_cpus probably more
+>>>> often than the evsel CPU maps for real work. The reason being we want
+>>>> to avoid IPIs so we do all the work on 1 CPU and then move to the next
+>>>> CPU in evlist all_cpus. evsel CPU maps are used to make sure the
+>>>> indices are kept accurate - for example, if an uncore event is
+>>>> measured with a CPU event:
+>>>> https://git.kernel.org/pub/scm/linux/kernel/git/acme/linux.git/tree/tools/perf/util/evlist.h?h=perf/core#n366
+>>>> https://git.kernel.org/pub/scm/linux/kernel/git/acme/linux.git/tree/tools/perf/util/evlist.c?h=perf/core#n404
+>>>
+>>> Right, I meant it'd check the evsel cpus eventually even if it iterates
+>>> on the evlist all_cpus.  The evlist_cpu_iterator__next() will skip a
+>>> CPU if it's not in the evsel cpus.
+>>>
+>>> Thanks,
+>>> Namhyung
+>>
+>> Perhaps an alternative is to be explicit about deferring map
+>> propagation e.g.
+> 
+> Thanks for your patch.  Yeah, we can use this.
+> 
+> But I still think it'd be better doing it unconditionally
+> since any propagation before perf_evlist__set_maps
+> will be discarded anyway.  With this change, other
+> than perf record will collect all cpus before _set_maps
+> and then discard it.  It seems like a waste, no?
+> 
+> Or else, we can have allow_map_propagation initialized
+> to false and set it to true in perf_evlist__set_maps().
+> 
 
-The testing is designed a data structure with 64-byte alignment, it has
-two fields "data1" and "data2", and other fields are reserved.
-
-Using "perf mem" command, we can record and report memory samples for a
-self-contained workload with 1 second duration.  If have no any memory
-sample for the data structure "buf1", it reports failure;  and by
-checking the offset in structure "buf1", if any memory accessing is not
-for "data1" and "data2" fields, it means wrong data symbol parsing and
-returns failure.
-
-Signed-off-by: Leo Yan <leo.yan@linaro.org>
----
-
-Channges from v3:
-- Add specific testing chunk for AMD CPUs (Ravi).
-
- tools/perf/tests/shell/test_data_symbol.sh | 93 ++++++++++++++++++++++
- 1 file changed, 93 insertions(+)
- create mode 100755 tools/perf/tests/shell/test_data_symbol.sh
-
-diff --git a/tools/perf/tests/shell/test_data_symbol.sh b/tools/perf/tests/shell/test_data_symbol.sh
-new file mode 100755
-index 000000000000..43ab1e37407c
---- /dev/null
-+++ b/tools/perf/tests/shell/test_data_symbol.sh
-@@ -0,0 +1,93 @@
-+#!/bin/bash
-+# Test data symbol
-+
-+# SPDX-License-Identifier: GPL-2.0
-+# Leo Yan <leo.yan@linaro.org>, 2022
-+
-+skip_if_no_mem_event() {
-+	perf mem record -e list 2>&1 | egrep -q 'available' && return 0
-+	return 2
-+}
-+
-+skip_if_no_mem_event || exit 2
-+
-+# skip if there's no compiler
-+if ! [ -x "$(command -v cc)" ]; then
-+	echo "skip: no compiler, install gcc"
-+	exit 2
-+fi
-+
-+TEST_PROGRAM=$(mktemp /tmp/__perf_test.program.XXXXX)
-+PERF_DATA=$(mktemp /tmp/__perf_test.perf.data.XXXXX)
-+
-+check_result() {
-+	# The memory report format is as below:
-+	#    99.92%  ...  [.] buf1+0x38
-+	result=$(perf mem report -i ${PERF_DATA} -s symbol_daddr -q 2>&1 |
-+		 awk '/buf1/ { print $4 }')
-+
-+	# Testing is failed if has no any sample for "buf1"
-+	[ -z "$result" ] && return 1
-+
-+	while IFS= read -r line; do
-+		# The "data1" and "data2" fields in structure "buf1" have
-+		# offset "0x0" and "0x38", returns failure if detect any
-+		# other offset value.
-+		if [ "$line" != "buf1+0x0" ] && [ "$line" != "buf1+0x38" ]; then
-+			return 1
-+		fi
-+	done <<< "$result"
-+
-+	return 0
-+}
-+
-+cleanup_files()
-+{
-+	echo "Cleaning up files..."
-+	rm -f ${PERF_DATA}
-+	rm -f ${TEST_PROGRAM}
-+}
-+
-+trap cleanup_files exit term int
-+
-+# compile test program
-+echo "Compiling test program..."
-+cat << EOF | cc -o ${TEST_PROGRAM} -x c -
-+typedef struct _buf {
-+	char data1;
-+	char reserved[55];
-+	char data2;
-+} buf __attribute__((aligned(64)));
-+
-+static buf buf1;
-+
-+int main(void) {
-+	for (;;) {
-+		buf1.data1++;
-+		buf1.data2 += buf1.data1;
-+	}
-+	return 0;
-+}
-+EOF
-+
-+echo "Recording workload..."
-+
-+# perf mem/c2c internally uses IBS PMU on AMD CPU which doesn't support
-+# user/kernel filtering and per-process monitoring, spin program on
-+# specific CPU and test in per-CPU mode.
-+is_amd=$(egrep -c 'vendor_id.*AuthenticAMD' /proc/cpuinfo)
-+if (($is_amd >= 1)); then
-+	perf mem record -o ${PERF_DATA} -- -C 0 -- taskset -c 0 $TEST_PROGRAM &
-+else
-+	perf mem record --all-user -o ${PERF_DATA} -- $TEST_PROGRAM &
-+fi
-+
-+PERFPID=$!
-+
-+sleep 1
-+
-+kill $PERFPID
-+wait $PERFPID
-+
-+check_result
-+exit $?
--- 
-2.34.1
-
+That sounds fine.
