@@ -2,195 +2,106 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 64787C433FE
-	for <linux-perf-users@archiver.kernel.org>; Fri, 30 Sep 2022 04:07:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 048A5C433F5
+	for <linux-perf-users@archiver.kernel.org>; Fri, 30 Sep 2022 04:26:49 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230145AbiI3EHO (ORCPT
+        id S229783AbiI3E0r (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Fri, 30 Sep 2022 00:07:14 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51368 "EHLO
+        Fri, 30 Sep 2022 00:26:47 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59986 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229892AbiI3EHN (ORCPT
+        with ESMTP id S229741AbiI3E0p (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Fri, 30 Sep 2022 00:07:13 -0400
-Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTP id 929E81005D9;
-        Thu, 29 Sep 2022 21:07:11 -0700 (PDT)
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id D5DA615A1;
-        Thu, 29 Sep 2022 21:07:17 -0700 (PDT)
-Received: from [10.162.41.10] (unknown [10.162.41.10])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id D51FB3F73D;
-        Thu, 29 Sep 2022 21:07:07 -0700 (PDT)
-Message-ID: <8751bc38-9020-ba5f-d2d6-dd7486e1709a@arm.com>
-Date:   Fri, 30 Sep 2022 09:37:04 +0530
+        Fri, 30 Sep 2022 00:26:45 -0400
+Received: from mail-oa1-x36.google.com (mail-oa1-x36.google.com [IPv6:2001:4860:4864:20::36])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id AAAB43BC52;
+        Thu, 29 Sep 2022 21:26:43 -0700 (PDT)
+Received: by mail-oa1-x36.google.com with SMTP id 586e51a60fabf-131de9fddbaso3111697fac.5;
+        Thu, 29 Sep 2022 21:26:43 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20210112;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date;
+        bh=+XewqCSuPIyUjSwEXa/rZlF6iD2dRJaDHfpm+NaJsFs=;
+        b=UQmWV2cB0HSmOmRV1RteCFaujrPm/Xv81oTVyRT90b7iMuHAsLvHhcOOkaR6r1HqJu
+         Oh56ZJD0+rcr69stBO8K6vOud4EVg8P/fVq4xm6HmNU/ofpeRPRxkeb5FPM5dEHrL+aw
+         0bWjWRmO93vgDqPK85lUZkgc0VuK8F9J6SZXsvN6B7B2H+0i2kuwV6Nj+74updyJ7wef
+         eEyZd9MdR8dCbnatIrPCJawNxwetb7aOObQoaHITnhElbl2AMmX2INqHoZjAgoPeJdgX
+         HJyT48RksrlrF2KIl72r/ngttCo6ek6ZjMHkc8io+IzwoBr0oEmyuc9rhlcw2ZljvDZu
+         RXTA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date;
+        bh=+XewqCSuPIyUjSwEXa/rZlF6iD2dRJaDHfpm+NaJsFs=;
+        b=PN/f/QoIQXVGtlBUqYDJOn+GJ9mYUoS6MkilEjIJAn1C1At1q1Sd3bro3jredLRRaR
+         dD7npZfmUXxA9pFUX4DQ+pKVcQtN8Hv12EPtIU+FS8uZQFUVl8fRkfs30zydEPQpBax9
+         Z/YaazxBw8xiV46lC/RJLNUY6kEwtV0SAgo/Yn7Fzug3Tt/zozKL4JhNc9DFqYSqTEHP
+         uF/rRoFf/R2r3fi8XxIU/L65g4Afe59Yirx3Sq0a2w9mXcc4f8QtDc52sDCWFDxVs6zI
+         QpWJyXKEs0eY+4kozXNoa9MI/0hJ6yydMFFmzRZbJWOHKfGNtMEL8FVuR1yoa6PAouwt
+         YOoQ==
+X-Gm-Message-State: ACrzQf3MyiXaWSWGRffNgI1HU7uXO48nT16je0bJLsjcACOtoQR71g9y
+        qZyQ5XewqDAABSf/LaFx4ocDHEeyDc/S3Ede1ds=
+X-Google-Smtp-Source: AMsMyM7oTe6QJlQAPqe1+H5Aqg1qjXQKaLZYGX4J7zEiNdbupzm1DkORack4Xj4RAgMEajFmqr83UtM3819J6KH26X8=
+X-Received: by 2002:a05:6870:a70f:b0:127:666a:658 with SMTP id
+ g15-20020a056870a70f00b00127666a0658mr3875011oam.218.1664512002888; Thu, 29
+ Sep 2022 21:26:42 -0700 (PDT)
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
- Thunderbird/91.11.0
-Subject: Re: [PATCH V3 1/7] arm64/perf: Add BRBE registers and fields
-Content-Language: en-US
-To:     Mark Brown <broonie@kernel.org>
-Cc:     linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, peterz@infradead.org,
-        acme@kernel.org, mark.rutland@arm.com, will@kernel.org,
-        catalin.marinas@arm.com, Marc Zyngier <maz@kernel.org>
-References: <20220929075857.158358-1-anshuman.khandual@arm.com>
- <20220929075857.158358-2-anshuman.khandual@arm.com>
- <YzWBokiO1KSZNtcl@sirena.org.uk>
-From:   Anshuman Khandual <anshuman.khandual@arm.com>
-In-Reply-To: <YzWBokiO1KSZNtcl@sirena.org.uk>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+References: <CAKwvOdnrHErOK+w878izVauHUKaX3eD-HXgigq2Ogm3iSj-fHA@mail.gmail.com>
+ <76CB17D0-5A66-4D49-A389-8F40EC830DC0@sladewatkins.net> <CAP-5=fXVgwMO_CpS-EHN6PFhLB-J5Ft7qHz7oQd-WOMnTj72Cw@mail.gmail.com>
+In-Reply-To: <CAP-5=fXVgwMO_CpS-EHN6PFhLB-J5Ft7qHz7oQd-WOMnTj72Cw@mail.gmail.com>
+From:   Namhyung Kim <namhyung@gmail.com>
+Date:   Thu, 29 Sep 2022 21:26:31 -0700
+Message-ID: <CAM9d7chvZjZ4YVc6j3w7OkdHteyJ0GUZboieu9G7jAWBevoZqA@mail.gmail.com>
+Subject: Re: Invalid event (cycles:pp) in per-thread mode, enable system wide
+ with '-a'.
+To:     Ian Rogers <irogers@google.com>
+Cc:     Slade Watkins <srw@sladewatkins.net>,
+        Ravi Bangoria <ravi.bangoria@amd.com>,
+        Nick Desaulniers <ndesaulniers@google.com>,
+        linux-perf-users <linux-perf-users@vger.kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
+Hello,
 
+On Thu, Sep 29, 2022 at 8:49 PM Ian Rogers <irogers@google.com> wrote:
+>
+> On Thu, Sep 29, 2022 at 3:10 PM Slade Watkins <srw@sladewatkins.net> wrot=
+e:
+> >
+> > Hey Nick,
+> >
+> > > On Sep 29, 2022, at 5:54 PM, Nick Desaulniers <ndesaulniers@google.co=
+m> wrote:
+> > >
+> > > I remember hearing rumblings about issues with zen 2, LBR, vs zen 3.
+> > > Is this a known issue, or am I holding it wrong?
+> >
+> > Hm=E2=80=A6 I also remember this. I have a Zen 2 based system that I ca=
+n do testing on, so I will do so when I=E2=80=99m able.
+> >
+> > If I discover something of note, I=E2=80=99ll get back to you.
+> >
+> > Cheers,
+> > -srw
+> >
+>
+> LBR isn't yet supported for Zen but is coming:
+> https://lore.kernel.org/lkml/166155216401.401.5809694678609694438.tip-bot=
+2@tip-bot2/
+> I'd recommend frame-pointers.
+>
+> +Ravi who may be able to say if there are any issues with the precise
+> sampling on AMD.
 
-On 9/29/22 16:59, Mark Brown wrote:
-> On Thu, Sep 29, 2022 at 01:28:51PM +0530, Anshuman Khandual wrote:
-> 
-> Thanks for doing this work - I did spot a few small issues though.
-> 
->>  /* id_aa64dfr0 */
->> +#define ID_AA64DFR0_BRBE_SHIFT		52
->>  #define ID_AA64DFR0_MTPMU_SHIFT		48
->>  #define ID_AA64DFR0_TRBE_SHIFT		44
->>  #define ID_AA64DFR0_TRACE_FILT_SHIFT	40
->> @@ -848,6 +952,9 @@
->>  #define ID_AA64DFR0_PMSVER_8_2		0x1
->>  #define ID_AA64DFR0_PMSVER_8_3		0x2
->>  
->> +#define ID_AA64DFR0_BRBE		0x1
->> +#define ID_AA64DFR0_BRBE_V1P1		0x2
->> +
->>  #define ID_DFR0_PERFMON_SHIFT		24
->>  
->>  #define ID_DFR0_PERFMON_8_0		0x3
-> 
-> This is already done in -next as a result of ID_AA64DFR0_EL1 being
-> converted, the enumberation define comes out as
-> ID_AA64DFR0_EL1_BRBE_BRBE_V1P1.
+Afaik cvcles:pp will use IBS but it doesn't support per-task profiling
+since it has no task context.  Ravi is working on it..
 
-Right. I will rebase the series on upcoming 6.1-rc1 which should have all the
-current -next patches including ID_AA64DFR0_EL1 migration into tools/sysreg.
-This should just fall in place.
-
-> 
->> +# This is just a dummy register declaration to get all common field masks and
->> +# shifts for accessing given BRBINF contents.
->> +Sysreg	BRBINF_EL1	2	1	8	0	0
->> +Res0	63:47
->> +Field	46	CCU
->> +Field	45:32	CC
->> +Res0	31:18
->> +Field	17	LASTFAILED
->> +Field	16	TX
-> 
-> According to DDI0487I.a bit 16 is called T not TX.
-
-I understand :) The intention here was to keep the field name associated with
-"transaction" some how. But I guess, it would be more important to keep it as
-is matching the ARM ARM than something for readability purpose. Will change it
-as 'T'.
-
-> 
->> +Res0	15:14
->> +Enum	13:8		TYPE
-> 
-> It's probably worth noting in the comment the issue with Enums here
-> that's meaning you're not using a SysregFields - I'm not sure what
-
-Sure, will add a comment describing the problem of using enum elements inside
-SysregFields definition.
-
-> people will think of this but providing a definition using the ID for
-> the 0th register does seem expedient.
-
-I understand your concern but this turned out to be a better option
-
-- Original sysreg.h based definitions had all field masks on the right end
-
-	- When reading (reg >> field_shift) & field_mask
-	- When writing (val & field_mask) << field_shift
-
-- tools/sysreg format creates in-place field masks
-
-	- When reading (reg & field_mask) >> field_shift
-	- When writing (val << field_shift) & field_mask
-
-- After moving some BRBE registers into tools/sysreg, the driver code had
-  to be changed to accommodate these new write/read methods
-
-- To avoid mix up in the BRBE driver, all BRBINF register fields need to be
-  converted into in place masks, either in sysreg.h itself or moving into
-  tools/sysreg
-
-Moving BRBE fields into tools/sysreg via a dummy BRBINF_EL1 register seems
-to achieve that objective. These common fields can be used to work on any
-BRBINF<N>_EL1 register value. But I might just keep them in sysreg.h, if
-the proposed solution is not preferable or seems expedient.
-
-Later when enum support comes up in SysregFields and tools/sysreg supports
-formula based crm/op2 expansion entire BRBINF, BRBSRC, BRBTGT register set
-can be moved into tools/sysreg.
-
-> 
->> +Enum	7:6	EL
->> +	0b00	EL0
->> +	0b01	EL1
->> +	0b10	EL2
->> +EndEnum
-> 
-> According to DDI0487I.a 0b11 has the value EL3 (when FEAT_BRBEv1p1).
-
-Sure, will add it.
-
-> 
->> +Sysreg	BRBCR_EL1	2	1	9	0	0
->> +Res0	63:24
->> +Field	23 	EXCEPTION
->> +Field	22 	ERTN
->> +Res0	21:9
->> +Field	8 	FZP
->> +Field	7	ZERO
-> 
-> According to DDI0487I.a bit 7 is Res0.
-
-Sure, will change.
-
-> 
->> +Field	2	ZERO1
-> 
-> According to DDI0487I.a bit 2 is Res0.
-
-Sure, will change.
-
-> 
->> +Sysreg	BRBFCR_EL1	2	1	9	0	1
-> 
->> +Field	16	ENL
-> 
-> Accoding to DDI0487I.a this is EnI (ie, an L not an I).
-
-ENL != Enl ? Do we need to match the case as well ?
-
-> 
->> +Sysreg	BRBINFINJ_EL1	2	1	9	1	0
-> 
->> +Field	16	TX
-> 
-> According to DDI0487I.a this is T not TX.
-
-As mentioned, will change it as 'T'.
-
-> 
->> +Enum	7:6	EL
->> +	0b00	EL0
->> +	0b01	EL1
->> +	0b10	EL2
->> +EndEnum
-> 
-> According to DDI0487I.a 0b11 has the value EL3 (when FEAT_BRBEv1p1).
-
-Sure, will add.
+Thanks,
+Namhyung
