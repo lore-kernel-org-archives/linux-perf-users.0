@@ -2,59 +2,43 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B5A80C4332F
-	for <linux-perf-users@archiver.kernel.org>; Fri, 30 Sep 2022 17:28:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 91C0AC433FE
+	for <linux-perf-users@archiver.kernel.org>; Fri, 30 Sep 2022 19:39:24 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232381AbiI3R2O (ORCPT
+        id S231266AbiI3TjX (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Fri, 30 Sep 2022 13:28:14 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40114 "EHLO
+        Fri, 30 Sep 2022 15:39:23 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44900 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232277AbiI3R1n (ORCPT
+        with ESMTP id S231575AbiI3TjW (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Fri, 30 Sep 2022 13:27:43 -0400
-Received: from mail-pl1-x629.google.com (mail-pl1-x629.google.com [IPv6:2607:f8b0:4864:20::629])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5F69811FD24;
-        Fri, 30 Sep 2022 10:27:36 -0700 (PDT)
-Received: by mail-pl1-x629.google.com with SMTP id b21so4542387plz.7;
-        Fri, 30 Sep 2022 10:27:36 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20210112;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:sender:from:to:cc:subject:date;
-        bh=sYSCzo/dCEHy9uom4/Q42uUwbH0+TjIpRi+wDvZ9v+M=;
-        b=A6oyjBK3ujGB4Vjkw0+7c6QXkkKsYwASuReGkcRIxnx/bukbBl6OVSZ1GFOvYJmR/q
-         11jx0FFxDlO1eKDdaBkWlfJDDDJM8yey0o9WnBGyuhOo/+C6Uar/pA+2q4mEMt0Y/CQi
-         VFp8M3YCYVPGq4ie4F5aGLUNUB/enFDBqdZL9vG/5fyvHdgurCZucNvNxb+gUiHV4Nzf
-         w7zN/N7DOXY+OAfIc7huXnZ5v8sAXuMKdLF+NVQKJftjpsbinPJgRlhuJj6LgP0u/KNf
-         irAtY9/i2rX7WJ/q/SEYsbm/7ibFRkv+epEYKLDaTiYrmtKTaV7i1keCSRlKfhq7msjm
-         ZlVg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:sender:x-gm-message-state:from
-         :to:cc:subject:date;
-        bh=sYSCzo/dCEHy9uom4/Q42uUwbH0+TjIpRi+wDvZ9v+M=;
-        b=PQ4hBSs7xjUD98o0iqm7XAczG1M6HVFx/GZmAFyWlPv0kamX4UflAFDkSRFtNoOscX
-         WXdgsrbKNXZIHnnmKUVdSbe9Chm7aoSD6UZnHgyuoLIEIYDfosAQ39uTsQ1PStqDIoej
-         2ewiizFwCyk9tfCj0VFW4IyMylZmr8UmUmuHXTj92nhfwnqWtgLP8rOalBu3KKwD8E4e
-         mi35UvYbwyuC62rqVKTgqqxWqOfSmn/KlON4kL81DGixxSwSyYOZb58F0RVud32dZzfG
-         SC4JKaQndzmdbLp4+xd3y/a4F7mVM3T/jXoh47E21tD0HLVKbknMD+Ooe6lCimeQhWMX
-         VZ2Q==
-X-Gm-Message-State: ACrzQf0v21HR8zm0pdqEiyEMGTsZeQHr+CtaCXN4zGJunnYMJ/x+GD2q
-        p9yRxEudzN3Sr78/kfqujIk=
-X-Google-Smtp-Source: AMsMyM6RUSc/dZNQniCXQYK/8cTEtNmC4JENUAgxWQEUj1kF8z0vILQ5f5f4iHdQ1ZsvVPyTPjlTkA==
-X-Received: by 2002:a17:90b:1c07:b0:202:ff6e:6015 with SMTP id oc7-20020a17090b1c0700b00202ff6e6015mr10994970pjb.210.1664558855318;
-        Fri, 30 Sep 2022 10:27:35 -0700 (PDT)
-Received: from youngsil.svl.corp.google.com ([2620:15c:2d4:203:4075:4245:762c:e746])
-        by smtp.gmail.com with ESMTPSA id e10-20020a170902b78a00b00168dadc7354sm2154762pls.78.2022.09.30.10.27.34
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 30 Sep 2022 10:27:34 -0700 (PDT)
-Sender: Namhyung Kim <namhyung@gmail.com>
-From:   Namhyung Kim <namhyung@kernel.org>
-To:     Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Jiri Olsa <jolsa@kernel.org>
-Cc:     Ingo Molnar <mingo@kernel.org>,
+        Fri, 30 Sep 2022 15:39:22 -0400
+Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9C8B0166F3E;
+        Fri, 30 Sep 2022 12:39:15 -0700 (PDT)
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by dfw.source.kernel.org (Postfix) with ESMTPS id C4DC1624A3;
+        Fri, 30 Sep 2022 19:39:14 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 0976CC433C1;
+        Fri, 30 Sep 2022 19:39:14 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1664566754;
+        bh=Fgx0odHsttSVunY7BVuF+r/nkvjLJG+HV6qs7cmohgU=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=Uhs0ereM/NblJqaBDw0the/mDnyUEQ9gAMWWEcfg3MKFV5/WSRVJafjkWKagvGgqf
+         1qpKsqUF4Vh8/4KFROVG82P/feOfb0+cOskoMrwcw9As+VG77MrtGLid7qTBZo2DPP
+         wTTAO5MjvDcV6+m8wGPhfA6vDvNh+UndYMtp4qOTab1MXLc9CePAGXvms+H7inAeNJ
+         L1JK9EX0ktVVZDSRrusVsBAKm/VBcc53pKraKkPPf27v2eluJx/3Zr9anjYenRZfyo
+         tyLBTbhkJJVxakqG1xTe4iAkEUbh1NTAA5UMpdSF8hxFWEsm/ZlFU3SeXm2VQ4xMOj
+         YTe4PgJSNwWNQ==
+Received: by quaco.ghostprotocols.net (Postfix, from userid 1000)
+        id 542624062C; Fri, 30 Sep 2022 16:39:10 -0300 (-03)
+Date:   Fri, 30 Sep 2022 16:39:10 -0300
+From:   Arnaldo Carvalho de Melo <acme@kernel.org>
+To:     Namhyung Kim <namhyung@kernel.org>
+Cc:     Jiri Olsa <jolsa@kernel.org>, Ingo Molnar <mingo@kernel.org>,
         Peter Zijlstra <peterz@infradead.org>,
         LKML <linux-kernel@vger.kernel.org>,
         Ian Rogers <irogers@google.com>,
@@ -62,112 +46,70 @@ Cc:     Ingo Molnar <mingo@kernel.org>,
         linux-perf-users@vger.kernel.org,
         Kan Liang <kan.liang@linux.intel.com>,
         Leo Yan <leo.yan@linaro.org>
-Subject: [PATCH 5/5] perf tools: Remove special handling of system-wide evsel
-Date:   Fri, 30 Sep 2022 10:27:14 -0700
-Message-Id: <20220930172714.711616-6-namhyung@kernel.org>
-X-Mailer: git-send-email 2.38.0.rc1.362.ged0d419d3c-goog
-In-Reply-To: <20220930172714.711616-1-namhyung@kernel.org>
+Subject: Re: [PATCH 0/5] perf tools: Clean up cpu map handling for
+ system-wide evsel (v2)
+Message-ID: <YzdF3qfSmQM2Wu+7@kernel.org>
 References: <20220930172714.711616-1-namhyung@kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20220930172714.711616-1-namhyung@kernel.org>
+X-Url:  http://acmel.wordpress.com
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-For system-wide evsels, the thread map should be dummy - i.e. it has a
-single entry of -1.  But the code guarantees such a thread map, so no
-need to handle it specially.
+Em Fri, Sep 30, 2022 at 10:27:09AM -0700, Namhyung Kim escreveu:
+> Hello,
+> 
+> The system-wide evsel has a cpu map for all (online) cpus regardless
+> of user requested cpus.  But the cpu map handling code has some
+> special case for it and I think we can cleanup the code by making sure
+> that such a evsel has a proper cpu/thread maps from the beginning.
+> This patches should not cause any change in the behavior.
+> 
+> Changes from v1:
+>  * use evlist->core.needs_map_propagation field
+>  * add Reviewed-by from Adrian
 
-No functional change intended.
+Thanks, replaced v1 with this.
 
-Reviewed-by: Adrian Hunter <adrian.hunter@intel.com>
-Signed-off-by: Namhyung Kim <namhyung@kernel.org>
----
- tools/lib/perf/evsel.c      |  3 ---
- tools/perf/builtin-script.c |  3 ---
- tools/perf/util/evsel.c     | 12 ++----------
- tools/perf/util/stat.c      |  3 ---
- 4 files changed, 2 insertions(+), 19 deletions(-)
+Adrian, please check if I can add the Reviewed-by to the ones without
+it.
 
-diff --git a/tools/lib/perf/evsel.c b/tools/lib/perf/evsel.c
-index 8ce5bbd09666..8b51b008a81f 100644
---- a/tools/lib/perf/evsel.c
-+++ b/tools/lib/perf/evsel.c
-@@ -515,9 +515,6 @@ int perf_evsel__alloc_id(struct perf_evsel *evsel, int ncpus, int nthreads)
- 	if (ncpus == 0 || nthreads == 0)
- 		return 0;
+- Arnaldo
  
--	if (evsel->system_wide)
--		nthreads = 1;
--
- 	evsel->sample_id = xyarray__new(ncpus, nthreads, sizeof(struct perf_sample_id));
- 	if (evsel->sample_id == NULL)
- 		return -ENOMEM;
-diff --git a/tools/perf/builtin-script.c b/tools/perf/builtin-script.c
-index 886f53cfa257..7fa467ed91dc 100644
---- a/tools/perf/builtin-script.c
-+++ b/tools/perf/builtin-script.c
-@@ -2243,9 +2243,6 @@ static void __process_stat(struct evsel *counter, u64 tstamp)
- 	struct perf_cpu cpu;
- 	static int header_printed;
- 
--	if (counter->core.system_wide)
--		nthreads = 1;
--
- 	if (!header_printed) {
- 		printf("%3s %8s %15s %15s %15s %15s %s\n",
- 		       "CPU", "THREAD", "VAL", "ENA", "RUN", "TIME", "EVENT");
-diff --git a/tools/perf/util/evsel.c b/tools/perf/util/evsel.c
-index 5776bfa70f11..e319bb17d10d 100644
---- a/tools/perf/util/evsel.c
-+++ b/tools/perf/util/evsel.c
-@@ -1813,7 +1813,7 @@ static struct perf_thread_map *empty_thread_map;
- static int __evsel__prepare_open(struct evsel *evsel, struct perf_cpu_map *cpus,
- 		struct perf_thread_map *threads)
- {
--	int nthreads;
-+	int nthreads = perf_thread_map__nr(threads);
- 
- 	if ((perf_missing_features.write_backward && evsel->core.attr.write_backward) ||
- 	    (perf_missing_features.aux_output     && evsel->core.attr.aux_output))
-@@ -1839,11 +1839,6 @@ static int __evsel__prepare_open(struct evsel *evsel, struct perf_cpu_map *cpus,
- 		threads = empty_thread_map;
- 	}
- 
--	if (evsel->core.system_wide)
--		nthreads = 1;
--	else
--		nthreads = threads->nr;
--
- 	if (evsel->core.fd == NULL &&
- 	    perf_evsel__alloc_fd(&evsel->core, perf_cpu_map__nr(cpus), nthreads) < 0)
- 		return -ENOMEM;
-@@ -2061,10 +2056,7 @@ static int evsel__open_cpu(struct evsel *evsel, struct perf_cpu_map *cpus,
- 	if (threads == NULL)
- 		threads = empty_thread_map;
- 
--	if (evsel->core.system_wide)
--		nthreads = 1;
--	else
--		nthreads = threads->nr;
-+	nthreads = perf_thread_map__nr(threads);
- 
- 	if (evsel->cgrp)
- 		pid = evsel->cgrp->fd;
-diff --git a/tools/perf/util/stat.c b/tools/perf/util/stat.c
-index ce5e9e372fc4..cef943377ad7 100644
---- a/tools/perf/util/stat.c
-+++ b/tools/perf/util/stat.c
-@@ -420,9 +420,6 @@ static int process_counter_maps(struct perf_stat_config *config,
- 	int ncpus = evsel__nr_cpus(counter);
- 	int idx, thread;
- 
--	if (counter->core.system_wide)
--		nthreads = 1;
--
- 	for (thread = 0; thread < nthreads; thread++) {
- 		for (idx = 0; idx < ncpus; idx++) {
- 			if (process_counter_values(config, counter, idx, thread,
+> You can get the code from 'perf/cpumap-update-v2' branch in
+> 
+>   git://git.kernel.org/pub/scm/linux/kernel/git/namhyung/linux-perf.git
+> 
+> Thanks,
+> Namhyung
+> 
+> Namhyung Kim (5):
+>   libperf: Populate system-wide evsel maps
+>   libperf: Propagate maps only if necessary
+>   perf tools: Get rid of evlist__add_on_all_cpus()
+>   perf tools: Add evlist__add_sched_switch()
+>   perf tools: Remove special handling of system-wide evsel
+> 
+>  tools/lib/perf/evlist.c                  | 23 ++++++------
+>  tools/lib/perf/evsel.c                   |  3 --
+>  tools/lib/perf/include/internal/evlist.h |  1 +
+>  tools/perf/arch/x86/util/intel-pt.c      | 15 +++-----
+>  tools/perf/builtin-script.c              |  3 --
+>  tools/perf/tests/switch-tracking.c       | 15 +++-----
+>  tools/perf/util/evlist.c                 | 46 ++++++++++--------------
+>  tools/perf/util/evlist.h                 |  1 +
+>  tools/perf/util/evsel.c                  | 12 ++-----
+>  tools/perf/util/stat.c                   |  3 --
+>  10 files changed, 46 insertions(+), 76 deletions(-)
+> 
+> 
+> base-commit: 62e64c9d2fd12839c02f1b3e8b873e7cb34e8720
+> -- 
+> 2.38.0.rc1.362.ged0d419d3c-goog
+
 -- 
-2.38.0.rc1.362.ged0d419d3c-goog
 
+- Arnaldo
