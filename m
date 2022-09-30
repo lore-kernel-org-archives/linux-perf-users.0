@@ -2,108 +2,140 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 45837C433F5
-	for <linux-perf-users@archiver.kernel.org>; Fri, 30 Sep 2022 11:43:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 28381C433F5
+	for <linux-perf-users@archiver.kernel.org>; Fri, 30 Sep 2022 11:45:21 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231477AbiI3Lnw (ORCPT
+        id S230240AbiI3LpT (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Fri, 30 Sep 2022 07:43:52 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53096 "EHLO
+        Fri, 30 Sep 2022 07:45:19 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47270 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231491AbiI3Lnc (ORCPT
+        with ESMTP id S231439AbiI3Lon (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Fri, 30 Sep 2022 07:43:32 -0400
-Received: from mail-pl1-x631.google.com (mail-pl1-x631.google.com [IPv6:2607:f8b0:4864:20::631])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5082A10F729
-        for <linux-perf-users@vger.kernel.org>; Fri, 30 Sep 2022 04:36:46 -0700 (PDT)
-Received: by mail-pl1-x631.google.com with SMTP id b21so3742362plz.7
-        for <linux-perf-users@vger.kernel.org>; Fri, 30 Sep 2022 04:36:46 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date;
-        bh=VNyQp0QgLbiSR4UrkzGerU2xpnU4M2EzOYEYOEcYs8s=;
-        b=OtJvqi03XP36gQpvxkIx//yPUbAaiN0yMbshB6jRXuNdkXyWri8UbdDtq4VC9LKaYS
-         RVcS50+Lxh9L13rcjGup3srP1FpTcoHUH1PJa4bEhe+RFZ0HRj385delRxzbx829yCF7
-         mfZmpNBXodwWiAPDYfmXsT8FqEaHsxAJxGCOS8iujOfFW30pqcUCTCiBW8hTuLXrq0EO
-         8AtJzioCp9Eea/JZA51P/Xf3nqfFupMoTB4QguYZWsmOAOmYKS9N3I1w6Uy+Olog7pbE
-         Ma7E72tXsZ929LHELk0nijPwlQv7b5gzjR/EWObVUA8BYcpCy9KvIEuxoGABnH/lHBvh
-         Glvg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date;
-        bh=VNyQp0QgLbiSR4UrkzGerU2xpnU4M2EzOYEYOEcYs8s=;
-        b=hnCe1EGJiq3b9RWg8fwBiTOSG0x+xC7J84B0MgWW7wuufPF0wEiUzPy1BpzOrNkL9W
-         ehW2AqCj4mfTGcmkwjugCDDUl+7qDi27t3+n/yY7xiBiEO5SrUovtB2GNm6SvKDGvofd
-         JbKUATlT/TYplW0Z88/wVjYVtcWJcJ6qvYEzI/24UkCC4mTVrSHNm+W8VIiGyUshCRzr
-         lOiiwXftD9xXuAt+I98Q8MNXcmmrxHFXKuWWI3Ulne5L0N+TkoL9Y7f+9XfNHxCH6dkJ
-         wXX12QAJw1tvgwEYYHbd43VeJIQTquowiDXfGr3oY+Rx14aP75mEhAtRFJqsTWJI9XYL
-         by6g==
-X-Gm-Message-State: ACrzQf3wdQ7uWesMYYBIo9CHdmvut6aNrKu4eoVTdiQPFU9XQSxYYJ1D
-        eeQ1tACLsPtYvS+Wv/VqqR6Fig==
-X-Google-Smtp-Source: AMsMyM57sNHno17WAE2VqaljlStNaPLvuo9uNlR7U9CPycd6/ZYj2QGUoTAcsaQPGXeCFelwfFUtoQ==
-X-Received: by 2002:a17:90b:4b84:b0:202:ec40:8643 with SMTP id lr4-20020a17090b4b8400b00202ec408643mr21660500pjb.86.1664537805616;
-        Fri, 30 Sep 2022 04:36:45 -0700 (PDT)
-Received: from leoy-yangtze.lan (211-75-219-199.hinet-ip.hinet.net. [211.75.219.199])
-        by smtp.gmail.com with ESMTPSA id i2-20020a17090332c200b00176c89243fcsm1691369plr.179.2022.09.30.04.36.42
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 30 Sep 2022 04:36:45 -0700 (PDT)
-Date:   Fri, 30 Sep 2022 19:36:39 +0800
-From:   Leo Yan <leo.yan@linaro.org>
-To:     Ravi Bangoria <ravi.bangoria@amd.com>
-Cc:     Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Namhyung Kim <namhyung@kernel.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Jiri Olsa <jolsa@kernel.org>, linux-kernel@vger.kernel.org,
-        linux-perf-users@vger.kernel.org, Ian Rogers <irogers@google.com>
-Subject: Re: [PATCH v3] perf test: Introduce script for data symbol testing
-Message-ID: <YzbTu/Dk/W+Ieycb@leoy-yangtze.lan>
-References: <20220924133408.1125903-1-leo.yan@linaro.org>
- <f54b8720-2282-f4fe-fcb4-881562118eb5@amd.com>
+        Fri, 30 Sep 2022 07:44:43 -0400
+Received: from mx0a-001b2d01.pphosted.com (mx0a-001b2d01.pphosted.com [148.163.156.1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id EB5B746622;
+        Fri, 30 Sep 2022 04:39:58 -0700 (PDT)
+Received: from pps.filterd (m0098410.ppops.net [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (8.17.1.5/8.17.1.5) with ESMTP id 28UBaJEB022039;
+        Fri, 30 Sep 2022 11:39:01 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=message-id : date :
+ mime-version : subject : to : cc : references : from : in-reply-to :
+ content-type : content-transfer-encoding; s=pp1;
+ bh=fy7BmPRWBoBvtpDaEgCutX6c90Lw54tYYYhiSde15yU=;
+ b=EV439FPD1ZZ2Vv0oXLROf59IFRhEud40ViBKdMf64F8NTrADvBVPLXTuzAFaCXCD4hJY
+ uSju3MbcFlCev4g8/bvaI64pJ/bbIAvcLOzMJoh5RvBwDnHfzOlfG+p0TsTOYrnGBxLd
+ 4q6M65HHUPNo4EO59ihn1zOndcv49NR27pMOaLCwdSJ1/hgQ/5CUys2t48PjUWT2PlKn
+ VlqOnqVW8PhlmQqIDZtfW6wYg0zUGc4pzrDteeme7M+UuTxwfuIeiKbbcryIAOjExocc
+ 0M5yKpc9ySRUCP4wpe7rF26v2iXIvEVj1pbRCeyS7SUnMTJ0doRLAhZklOijzOHYuljj IA== 
+Received: from pps.reinject (localhost [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 3jwyc78stv-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Fri, 30 Sep 2022 11:39:01 +0000
+Received: from m0098410.ppops.net (m0098410.ppops.net [127.0.0.1])
+        by pps.reinject (8.17.1.5/8.17.1.5) with ESMTP id 28UBagrf026344;
+        Fri, 30 Sep 2022 11:38:58 GMT
+Received: from ppma06ams.nl.ibm.com (66.31.33a9.ip4.static.sl-reverse.com [169.51.49.102])
+        by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 3jwyc78shg-4
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Fri, 30 Sep 2022 11:38:58 +0000
+Received: from pps.filterd (ppma06ams.nl.ibm.com [127.0.0.1])
+        by ppma06ams.nl.ibm.com (8.16.1.2/8.16.1.2) with SMTP id 28UAZlNl001272;
+        Fri, 30 Sep 2022 10:48:30 GMT
+Received: from b06cxnps4074.portsmouth.uk.ibm.com (d06relay11.portsmouth.uk.ibm.com [9.149.109.196])
+        by ppma06ams.nl.ibm.com with ESMTP id 3jss5j806n-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Fri, 30 Sep 2022 10:48:30 +0000
+Received: from d06av22.portsmouth.uk.ibm.com (d06av22.portsmouth.uk.ibm.com [9.149.105.58])
+        by b06cxnps4074.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 28UAmShx65601946
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Fri, 30 Sep 2022 10:48:28 GMT
+Received: from d06av22.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 214754C044;
+        Fri, 30 Sep 2022 10:48:28 +0000 (GMT)
+Received: from d06av22.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id A2E744C040;
+        Fri, 30 Sep 2022 10:48:21 +0000 (GMT)
+Received: from [9.43.99.23] (unknown [9.43.99.23])
+        by d06av22.portsmouth.uk.ibm.com (Postfix) with ESMTP;
+        Fri, 30 Sep 2022 10:48:21 +0000 (GMT)
+Message-ID: <bf4ec1cb-49a4-f5cd-8fd0-c70b287180c0@linux.ibm.com>
+Date:   Fri, 30 Sep 2022 16:18:15 +0530
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <f54b8720-2282-f4fe-fcb4-881562118eb5@amd.com>
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
+ Thunderbird/91.11.0
+Subject: Re: [PATCH v3 01/15] perf/mem: Introduce
+ PERF_MEM_LVLNUM_{EXTN_MEM|IO}
+Content-Language: en-US
+To:     Ravi Bangoria <ravi.bangoria@amd.com>, peterz@infradead.org,
+        acme@kernel.org
+Cc:     jolsa@kernel.org, namhyung@kernel.org, eranian@google.com,
+        irogers@google.com, jmario@redhat.com, leo.yan@linaro.org,
+        alisaidi@amazon.com, ak@linux.intel.com, kan.liang@linux.intel.com,
+        dave.hansen@linux.intel.com, hpa@zytor.com, mingo@redhat.com,
+        mark.rutland@arm.com, alexander.shishkin@linux.intel.com,
+        tglx@linutronix.de, bp@alien8.de, x86@kernel.org,
+        linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org,
+        sandipan.das@amd.com, ananth.narayan@amd.com, kim.phillips@amd.com,
+        santosh.shukla@amd.com
+References: <20220928095805.596-1-ravi.bangoria@amd.com>
+ <20220928095805.596-2-ravi.bangoria@amd.com>
+From:   kajoljain <kjain@linux.ibm.com>
+In-Reply-To: <20220928095805.596-2-ravi.bangoria@amd.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
+X-TM-AS-GCONF: 00
+X-Proofpoint-GUID: pee7jtCLux7StWR11fcyOkmE5TJzH3PI
+X-Proofpoint-ORIG-GUID: -B38wWBJndklsAYL4I03oLa-fj8vMFbs
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.205,Aquarius:18.0.895,Hydra:6.0.528,FMLib:17.11.122.1
+ definitions=2022-09-30_04,2022-09-29_03,2022-06-22_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
+ impostorscore=0 suspectscore=0 malwarescore=0 spamscore=0
+ lowpriorityscore=0 bulkscore=0 mlxlogscore=825 mlxscore=0 adultscore=0
+ clxscore=1011 phishscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2209130000 definitions=main-2209300073
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
+
+
+On 9/28/22 15:27, Ravi Bangoria wrote:
+> PERF_MEM_LVLNUM_EXTN_MEM which can be used to indicate accesses to
+> extension memory like CXL etc. PERF_MEM_LVL_IO can be used for IO
+> accesses but it can not distinguish between local and remote IO.
+> Introduce new field PERF_MEM_LVLNUM_IO which can be clubbed with
+> PERF_MEM_REMOTE_REMOTE to indicate Remote IO accesses.
+> 
+> Signed-off-by: Ravi Bangoria <ravi.bangoria@amd.com>
+> ---
+>  include/uapi/linux/perf_event.h | 4 +++-
+>  1 file changed, 3 insertions(+), 1 deletion(-)
+> 
+> diff --git a/include/uapi/linux/perf_event.h b/include/uapi/linux/perf_event.h
+> index e639c74cf5fb..4ae3c249f675 100644
+> --- a/include/uapi/linux/perf_event.h
+> +++ b/include/uapi/linux/perf_event.h
+> @@ -1336,7 +1336,9 @@ union perf_mem_data_src {
+>  #define PERF_MEM_LVLNUM_L2	0x02 /* L2 */
+>  #define PERF_MEM_LVLNUM_L3	0x03 /* L3 */
+>  #define PERF_MEM_LVLNUM_L4	0x04 /* L4 */
+> -/* 5-0xa available */
+> +/* 5-0x8 available */
+> +#define PERF_MEM_LVLNUM_EXTN_MEM 0x09 /* Extension memory */
+
 Hi Ravi,
-
-On Fri, Sep 30, 2022 at 12:27:22PM +0530, Ravi Bangoria wrote:
-> Hi Leo,
-> 
-> On 24-Sep-22 7:04 PM, Leo Yan wrote:
-> > This commit introduces a shell script for data symbol testing.
-> > 
-> > The testing is designed a data structure with 64-byte alignment, it has
-> > two fields "data1" and "data2", and other fields are reserved.
-> > 
-> > Using "perf mem" command, we can record and report memory samples for a
-> > self-contained workload with 1 second duration.  If have no any memory
-> > sample for the data structure "buf1", it reports failure;  and by
-> > checking the offset in structure "buf1", if any memory accessing is not
-> > for "data1" and "data2" fields, it means wrong data symbol parsing and
-> > returns failure.
-> 
-> I'm working on adding support for perf mem/c2c on AMD:
-> https://lore.kernel.org/lkml/20220928095805.596-1-ravi.bangoria%40amd.com
-> 
-> And this test fails on AMD because perf mem/c2c internally use IBS pmu
-> which does not support user/kernel filtering and per-process monitoring.
-> Would it be possible for you to add below (ugly) hunk to this patch:
-
-Sure, the change is fine for me, I will update patch and send out a new
-version.
-
-@Arnaldo, I saw you have merged this patch into the branch:
-https://git.kernel.org/pub/scm/linux/kernel/git/acme/linux.git/log/?h=tmp.perf/core
-
-Could you pick up the new coming patch?  Please expect it would be soon.
+    Here we are adding entry explicitly for accesses to Extension memory
+like CXL. In future if we want to extend it for cache or other accesses
+, we again need to add new entries.
+Can we rather add single entry say PERF_MEM_LVLNUM_EXTN and further can
+use reserved bits to specify memory/cache?
 
 Thanks,
-Leo
+Kajol Jain
+
+> +#define PERF_MEM_LVLNUM_IO	0x0a /* I/O */
+>  #define PERF_MEM_LVLNUM_ANY_CACHE 0x0b /* Any cache */
+>  #define PERF_MEM_LVLNUM_LFB	0x0c /* LFB */
+>  #define PERF_MEM_LVLNUM_RAM	0x0d /* RAM */
