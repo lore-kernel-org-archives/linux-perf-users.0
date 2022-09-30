@@ -2,114 +2,117 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 91C0AC433FE
-	for <linux-perf-users@archiver.kernel.org>; Fri, 30 Sep 2022 19:39:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 378C0C433F5
+	for <linux-perf-users@archiver.kernel.org>; Fri, 30 Sep 2022 20:21:18 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231266AbiI3TjX (ORCPT
+        id S232474AbiI3UVQ (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Fri, 30 Sep 2022 15:39:23 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44900 "EHLO
+        Fri, 30 Sep 2022 16:21:16 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54330 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231575AbiI3TjW (ORCPT
+        with ESMTP id S230008AbiI3UVP (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Fri, 30 Sep 2022 15:39:22 -0400
-Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9C8B0166F3E;
-        Fri, 30 Sep 2022 12:39:15 -0700 (PDT)
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id C4DC1624A3;
-        Fri, 30 Sep 2022 19:39:14 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 0976CC433C1;
-        Fri, 30 Sep 2022 19:39:14 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1664566754;
-        bh=Fgx0odHsttSVunY7BVuF+r/nkvjLJG+HV6qs7cmohgU=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=Uhs0ereM/NblJqaBDw0the/mDnyUEQ9gAMWWEcfg3MKFV5/WSRVJafjkWKagvGgqf
-         1qpKsqUF4Vh8/4KFROVG82P/feOfb0+cOskoMrwcw9As+VG77MrtGLid7qTBZo2DPP
-         wTTAO5MjvDcV6+m8wGPhfA6vDvNh+UndYMtp4qOTab1MXLc9CePAGXvms+H7inAeNJ
-         L1JK9EX0ktVVZDSRrusVsBAKm/VBcc53pKraKkPPf27v2eluJx/3Zr9anjYenRZfyo
-         tyLBTbhkJJVxakqG1xTe4iAkEUbh1NTAA5UMpdSF8hxFWEsm/ZlFU3SeXm2VQ4xMOj
-         YTe4PgJSNwWNQ==
-Received: by quaco.ghostprotocols.net (Postfix, from userid 1000)
-        id 542624062C; Fri, 30 Sep 2022 16:39:10 -0300 (-03)
-Date:   Fri, 30 Sep 2022 16:39:10 -0300
-From:   Arnaldo Carvalho de Melo <acme@kernel.org>
-To:     Namhyung Kim <namhyung@kernel.org>
-Cc:     Jiri Olsa <jolsa@kernel.org>, Ingo Molnar <mingo@kernel.org>,
+        Fri, 30 Sep 2022 16:21:15 -0400
+Received: from mail-pl1-x62b.google.com (mail-pl1-x62b.google.com [IPv6:2607:f8b0:4864:20::62b])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 78E3015D84A;
+        Fri, 30 Sep 2022 13:21:14 -0700 (PDT)
+Received: by mail-pl1-x62b.google.com with SMTP id w20so4862772ply.12;
+        Fri, 30 Sep 2022 13:21:14 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20210112;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:sender:from:to:cc:subject:date;
+        bh=DLzJdO10GSNCN5GIcELkwOMKfupcD8SqYGKC0DBtR7A=;
+        b=bt/tNKSWMLXJATUiOE0ln9KGyEdTR/w3Uli3g+4nGlSbQE8wxvB/L/DTRcd1SqJevW
+         wCMqaFb6WubgRPdIHEaYQUwoUmxkOc/2P68AjAYv+XC6wPk5CCNEIZU5mpFsUUPGIuO8
+         /y6y83UAwZT96SJrGwJbMF1TRq4tlCmPJSJnoItpkGTI8WWKq3Yqwx2g+geE53HVGj5J
+         hp3Rz1NdLjSQJfKpbbx+qf95WTfAFvFJSIiLtElLYzlcDRJJniqqjpdhhBgnDlV7YFrC
+         pGHGnUoIdduyKPfOTW9Rb11IBl5FPTyEt3u424YfakH0g9rGhJvk/Kml246sQs+YDHQ1
+         r6Tg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:sender:x-gm-message-state:from:to:cc:subject:date;
+        bh=DLzJdO10GSNCN5GIcELkwOMKfupcD8SqYGKC0DBtR7A=;
+        b=M2NEf5SvKb/HwuwQLc7orYtPkEtR5XTouO7ZWX6iqRtudiQp5LqOG8EvmkWQOnNEAl
+         pVKGfc4iSy7lH19C4I+CTZAQlKaJzZEEgsJPXD0RbHHJV0hfkinI8dpjRGGe1E6cjrAg
+         d6lu48Cwzj4v0K2X/xeSaDaGLn2ZRu9vf/7/jI3Qg+DbPT0TiJiKwp3Sm81IS8RjR+RF
+         567Zr6sa1ChQS7FjkqknCppRaCxlEpomMHI9BoPYVCqyVy1HiJOzO7N908K2GghaHMix
+         WZsjSru7f6BiCeRJhJvP1eVhiiTIjTqbhhd9pLwIi/jmn4hcJc+nbUx/AQ1nfZv4VdJ9
+         Pp7g==
+X-Gm-Message-State: ACrzQf0qAHLYHtm9LKbsJcI3VvZ2ieIk6oDi5jaeHMEyegbzmTwZdHKI
+        m1DSAjIO6Pmpdv3wMwMNOwY=
+X-Google-Smtp-Source: AMsMyM7ddcW184Xn4/AAOB1PeluvK0u8WzqtNN73mgPWlwUnLob79t4sBh1eMvx8wQZsE4TjlWl7ig==
+X-Received: by 2002:a17:902:dac7:b0:179:ee21:22a8 with SMTP id q7-20020a170902dac700b00179ee2122a8mr10416543plx.70.1664569273910;
+        Fri, 30 Sep 2022 13:21:13 -0700 (PDT)
+Received: from youngsil.svl.corp.google.com ([2620:15c:2d4:203:4075:4245:762c:e746])
+        by smtp.gmail.com with ESMTPSA id s10-20020a63e80a000000b0042fe1914e26sm2105540pgh.37.2022.09.30.13.21.12
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 30 Sep 2022 13:21:13 -0700 (PDT)
+Sender: Namhyung Kim <namhyung@gmail.com>
+From:   Namhyung Kim <namhyung@kernel.org>
+To:     Arnaldo Carvalho de Melo <acme@kernel.org>,
+        Jiri Olsa <jolsa@kernel.org>
+Cc:     Ingo Molnar <mingo@kernel.org>,
         Peter Zijlstra <peterz@infradead.org>,
         LKML <linux-kernel@vger.kernel.org>,
         Ian Rogers <irogers@google.com>,
         Adrian Hunter <adrian.hunter@intel.com>,
-        linux-perf-users@vger.kernel.org,
+        linux-perf-users@vger.kernel.org, Andi Kleen <ak@linux.intel.com>,
         Kan Liang <kan.liang@linux.intel.com>,
-        Leo Yan <leo.yan@linaro.org>
-Subject: Re: [PATCH 0/5] perf tools: Clean up cpu map handling for
- system-wide evsel (v2)
-Message-ID: <YzdF3qfSmQM2Wu+7@kernel.org>
-References: <20220930172714.711616-1-namhyung@kernel.org>
+        Leo Yan <leo.yan@linaro.org>,
+        Zhengjun Xing <zhengjun.xing@linux.intel.com>,
+        James Clark <james.clark@arm.com>
+Subject: [PATCHSET 0/7] perf stat: Small random cleanups (v2)
+Date:   Fri, 30 Sep 2022 13:21:03 -0700
+Message-Id: <20220930202110.845199-1-namhyung@kernel.org>
+X-Mailer: git-send-email 2.38.0.rc1.362.ged0d419d3c-goog
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20220930172714.711616-1-namhyung@kernel.org>
-X-Url:  http://acmel.wordpress.com
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-Em Fri, Sep 30, 2022 at 10:27:09AM -0700, Namhyung Kim escreveu:
-> Hello,
-> 
-> The system-wide evsel has a cpu map for all (online) cpus regardless
-> of user requested cpus.  But the cpu map handling code has some
-> special case for it and I think we can cleanup the code by making sure
-> that such a evsel has a proper cpu/thread maps from the beginning.
-> This patches should not cause any change in the behavior.
-> 
-> Changes from v1:
->  * use evlist->core.needs_map_propagation field
->  * add Reviewed-by from Adrian
+Hello,
 
-Thanks, replaced v1 with this.
+I'm working on perf stat and I found some items to clean up.  This time
+I removed runtime stats for per-thread aggregation mode which we can simply
+use thread map index to compare the shadow stat values in the rt_stat.
 
-Adrian, please check if I can add the Reviewed-by to the ones without
-it.
+Changes from v1)
+ * renaming missing parts in headers  (James)
+ * add a comment for map_idx  (Ian)
+ * add Reviewed-by from James
 
-- Arnaldo
- 
-> You can get the code from 'perf/cpumap-update-v2' branch in
-> 
->   git://git.kernel.org/pub/scm/linux/kernel/git/namhyung/linux-perf.git
-> 
-> Thanks,
-> Namhyung
-> 
-> Namhyung Kim (5):
->   libperf: Populate system-wide evsel maps
->   libperf: Propagate maps only if necessary
->   perf tools: Get rid of evlist__add_on_all_cpus()
->   perf tools: Add evlist__add_sched_switch()
->   perf tools: Remove special handling of system-wide evsel
-> 
->  tools/lib/perf/evlist.c                  | 23 ++++++------
->  tools/lib/perf/evsel.c                   |  3 --
->  tools/lib/perf/include/internal/evlist.h |  1 +
->  tools/perf/arch/x86/util/intel-pt.c      | 15 +++-----
->  tools/perf/builtin-script.c              |  3 --
->  tools/perf/tests/switch-tracking.c       | 15 +++-----
->  tools/perf/util/evlist.c                 | 46 ++++++++++--------------
->  tools/perf/util/evlist.h                 |  1 +
->  tools/perf/util/evsel.c                  | 12 ++-----
->  tools/perf/util/stat.c                   |  3 --
->  10 files changed, 46 insertions(+), 76 deletions(-)
-> 
-> 
-> base-commit: 62e64c9d2fd12839c02f1b3e8b873e7cb34e8720
-> -- 
-> 2.38.0.rc1.362.ged0d419d3c-goog
+The code is available at 'perf/stat-cleanup-v2' branch in
 
+  git://git.kernel.org/pub/scm/linux/kernel/git/namhyung/linux-perf.git
+
+Thanks,
+Namhyung
+
+
+Namhyung Kim (7):
+  perf stat: Convert perf_stat_evsel.res_stats array
+  perf stat: Don't call perf_stat_evsel_id_init() repeatedly
+  perf stat: Rename saved_value->cpu_map_idx
+  perf stat: Use thread map index for shadow stat
+  perf stat: Kill unused per-thread runtime stats
+  perf stat: Don't compare runtime stat for shadow stats
+  perf stat: Rename to aggr_cpu_id.thread_idx
+
+ tools/perf/builtin-stat.c      |  54 ------
+ tools/perf/tests/topology.c    |  10 +-
+ tools/perf/util/cpumap.c       |   8 +-
+ tools/perf/util/cpumap.h       |   2 +-
+ tools/perf/util/stat-display.c |  32 ++--
+ tools/perf/util/stat-shadow.c  | 320 ++++++++++++++++-----------------
+ tools/perf/util/stat.c         |  20 +--
+ tools/perf/util/stat.h         |  10 +-
+ 8 files changed, 189 insertions(+), 267 deletions(-)
+
+
+base-commit: 62e64c9d2fd12839c02f1b3e8b873e7cb34e8720
 -- 
+2.38.0.rc1.362.ged0d419d3c-goog
 
-- Arnaldo
