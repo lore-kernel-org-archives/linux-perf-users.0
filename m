@@ -2,114 +2,99 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6857AC433FE
-	for <linux-perf-users@archiver.kernel.org>; Fri, 30 Sep 2022 22:00:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id ADCAFC433FE
+	for <linux-perf-users@archiver.kernel.org>; Fri, 30 Sep 2022 22:11:24 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231843AbiI3WAz (ORCPT
+        id S232420AbiI3WLX (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Fri, 30 Sep 2022 18:00:55 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39146 "EHLO
+        Fri, 30 Sep 2022 18:11:23 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39242 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232001AbiI3WAx (ORCPT
+        with ESMTP id S232631AbiI3WLQ (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Fri, 30 Sep 2022 18:00:53 -0400
-Received: from mail-vk1-xa34.google.com (mail-vk1-xa34.google.com [IPv6:2607:f8b0:4864:20::a34])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id F117DDAF32;
-        Fri, 30 Sep 2022 15:00:48 -0700 (PDT)
-Received: by mail-vk1-xa34.google.com with SMTP id bi53so2940657vkb.12;
-        Fri, 30 Sep 2022 15:00:48 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20210112;
-        h=content-transfer-encoding:mime-version:message-id:references
-         :in-reply-to:user-agent:subject:cc:to:from:date:from:to:cc:subject
-         :date;
-        bh=msbEtVn2XnPhkP1nh+HeVtH130znwtC+tV5GCPNIfiI=;
-        b=JuT8PZMwI+cog5yqJIKmEDK9vgvcMw+jb0WaZ0auwmYV/Db1Q1AMNAynltuC4tEicO
-         u36dDJel+DVg0RurCLUchPWR//yz8gbuwz+r+L8jEOITkv8Fb1z6jfv5M4kkJt/uZUPk
-         ZYpqe4htpjO2DrZmiMsx/UBuGbwGsyFYI1amBup610De9zatozGqH//KKfY9oQuBn3Rc
-         gDvIL/5o9wzsJI0WAAXFNYJvhzh3cYkHYyM2iPgbus6is+qB4ZJxFSANYNeJzHm+b8AH
-         2WQWCCZiA1MqQ8UX+8zisnskeMFlB9QzlJaH7FpteCTh7WsnhikVECX8Z4AGvqR0NmLX
-         5THg==
+        Fri, 30 Sep 2022 18:11:16 -0400
+Received: from mail-oa1-f51.google.com (mail-oa1-f51.google.com [209.85.160.51])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8694712084B;
+        Fri, 30 Sep 2022 15:11:14 -0700 (PDT)
+Received: by mail-oa1-f51.google.com with SMTP id 586e51a60fabf-127dca21a7dso6941971fac.12;
+        Fri, 30 Sep 2022 15:11:14 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=content-transfer-encoding:mime-version:message-id:references
-         :in-reply-to:user-agent:subject:cc:to:from:date:x-gm-message-state
-         :from:to:cc:subject:date;
-        bh=msbEtVn2XnPhkP1nh+HeVtH130znwtC+tV5GCPNIfiI=;
-        b=MeqGP8fjibZuABcmm21QCCFVXmtAIkH2P4j+sOPVsorW2EaEj7VyLAy4+DKisCP5tG
-         pTrjOqoGKTRpyUpeG6Qg5HqM/PdagrxTJRWeKei4VC7Fsj54sriSAP+xr2mDMzDnpglS
-         WbG25TGPfKXOzAD9yEYzuRRuXCV3Ck3fa+q2OLtCkE0eQebrd/6+j9Y9WqcKGm3p/NML
-         7aF7yDqvvYiEzfWWKoPGvuE4Ir2P84e1ESQb8dGov+5f5wMGoPFuPjOR0BscfEcwdgg3
-         pS5Z8fyYmuE2xVCTmmksi0oIXnhdaLs5UqZuilIhaHuPrrhOEj/i92Sq4YRJUCT6xOMz
-         8sZg==
-X-Gm-Message-State: ACrzQf3p2jt1eCNk6joEB4B8gDwCcUxLENSAZa6JY+am3XOeYnsBZV9R
-        +9rH1A3kcXNCbu66rrvq6pY=
-X-Google-Smtp-Source: AMsMyM7loK4eWzDlO0FFnLUyJFQzzAvwCTAsjrHehbUFEzKKjmOtCwdsNwy9SvsBiYUSkFCnaISfaw==
-X-Received: by 2002:a05:6122:a10:b0:3a2:a64e:358b with SMTP id 16-20020a0561220a1000b003a2a64e358bmr5497846vkn.21.1664575248022;
-        Fri, 30 Sep 2022 15:00:48 -0700 (PDT)
-Received: from [127.0.0.1] ([187.68.192.86])
-        by smtp.gmail.com with ESMTPSA id m12-20020a0561020ecc00b00397c028db51sm2154035vst.21.2022.09.30.15.00.46
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Fri, 30 Sep 2022 15:00:47 -0700 (PDT)
-Date:   Fri, 30 Sep 2022 19:00:42 -0300
-From:   Arnaldo Carvalho de Melo <arnaldo.melo@gmail.com>
-To:     Namhyung Kim <namhyung@kernel.org>, Jiri Olsa <olsajiri@gmail.com>
-CC:     Tejun Heo <tj@kernel.org>, Zefan Li <lizefan.x@bytedance.com>,
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:x-gm-message-state:from:to:cc:subject:date;
+        bh=XScEm+DuYC8Hlch7wHtQ1OIZ+cTh7jVexKgDloeMcLg=;
+        b=yuNno+LYadq20Pk5744APf6fbk2XZ9RAlmPHZyUE0Qc+5mYcRO8VM514K9zlA8aG88
+         QhMqRE04F+7JLF4fPbUUvedtZ6cgYDIcV8l+RoE4qZB6gG4zLvMfMUQJtmAEUE2dvOLM
+         7bGSVYr8mETMgRfU1g9c7OHWE1xMikcEDHfE+ahkGNCpOgDW0GuH9oieY1zczPO985tN
+         suGNZgv9IZf/r3dylZMG4fll8MhQ0suDgY4OiNBwhUkFNbsLOLpNjRbDijHg2LyJUP1F
+         W5laPP4ymjkdVEbpY1zRPaSdLXbbq8Lo4pjFQ84DwvV3A/8/DjlHkFVpEGwChSaTl/fs
+         dEdA==
+X-Gm-Message-State: ACrzQf1F/FJ1/Kv9CaOf68WwhKuqaMrvrKWEDIdinB19gIn49WY9csrf
+        WWdJLMfAIKFvwbzxVQ25Dsl3MuxbQ4qx5ibrX7dOtb4UpyA=
+X-Google-Smtp-Source: AMsMyM4m1myiTvDwOzrvck//Wg05/NC3MMi+a1KNaAU13c6BxicLH27qNXmeVrDg4jVPM5wJUVs3p+ubk/boXSl7Kdk=
+X-Received: by 2002:a05:6870:a70f:b0:127:666a:658 with SMTP id
+ g15-20020a056870a70f00b00127666a0658mr156984oam.218.1664575873758; Fri, 30
+ Sep 2022 15:11:13 -0700 (PDT)
+MIME-Version: 1.0
+References: <CAM9d7cjQ20a01YoZi=o-_7HT6TzR0TZgtpscKNvRrMq2yqV1Og@mail.gmail.com>
+ <20220922041435.709119-1-namhyung@kernel.org> <YzdjHenrJpooKMjv@krava>
+ <CAM9d7cjKaZvWQUwGwoTLNzAgHS7ndL_V_5+O+WqMUvuHJ7cWNg@mail.gmail.com> <88915C51-33CD-49A4-A9E0-F5F5ECDEA0C7@gmail.com>
+In-Reply-To: <88915C51-33CD-49A4-A9E0-F5F5ECDEA0C7@gmail.com>
+From:   Namhyung Kim <namhyung@kernel.org>
+Date:   Fri, 30 Sep 2022 15:11:02 -0700
+Message-ID: <CAM9d7ci4mvc1rsMyRbwH-i2=8XVsEAvkk5JXLMHmbV4nkbBYhQ@mail.gmail.com>
+Subject: Re: [PATCH] perf stat: Support old kernels for bperf cgroup counting
+To:     Arnaldo Carvalho de Melo <arnaldo.melo@gmail.com>
+Cc:     Jiri Olsa <olsajiri@gmail.com>, Tejun Heo <tj@kernel.org>,
+        Zefan Li <lizefan.x@bytedance.com>,
         Johannes Weiner <hannes@cmpxchg.org>,
         cgroups <cgroups@vger.kernel.org>,
         Arnaldo Carvalho de Melo <acme@kernel.org>,
         LKML <linux-kernel@vger.kernel.org>,
         linux-perf-users <linux-perf-users@vger.kernel.org>,
         Song Liu <songliubraving@fb.com>, bpf <bpf@vger.kernel.org>
-Subject: Re: [PATCH] perf stat: Support old kernels for bperf cgroup counting
-User-Agent: K-9 Mail for Android
-In-Reply-To: <CAM9d7cjKaZvWQUwGwoTLNzAgHS7ndL_V_5+O+WqMUvuHJ7cWNg@mail.gmail.com>
-References: <CAM9d7cjQ20a01YoZi=o-_7HT6TzR0TZgtpscKNvRrMq2yqV1Og@mail.gmail.com> <20220922041435.709119-1-namhyung@kernel.org> <YzdjHenrJpooKMjv@krava> <CAM9d7cjKaZvWQUwGwoTLNzAgHS7ndL_V_5+O+WqMUvuHJ7cWNg@mail.gmail.com>
-Message-ID: <88915C51-33CD-49A4-A9E0-F5F5ECDEA0C7@gmail.com>
-MIME-Version: 1.0
-Content-Type: text/plain;
- charset=utf-8
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-
-
-On September 30, 2022 6:56:40 PM GMT-03:00, Namhyung Kim <namhyung@kernel=
-=2Eorg> wrote:
->Hi Jiri,
+On Fri, Sep 30, 2022 at 3:00 PM Arnaldo Carvalho de Melo
+<arnaldo.melo@gmail.com> wrote:
 >
->On Fri, Sep 30, 2022 at 2:44 PM Jiri Olsa <olsajiri@gmail=2Ecom> wrote:
->>
->> On Wed, Sep 21, 2022 at 09:14:35PM -0700, Namhyung Kim wrote:
->> > The recent change in the cgroup will break the backward compatiblity =
-in
->> > the BPF program=2E  It should support both old and new kernels using =
-BPF
->> > CO-RE technique=2E
->> >
->> > Like the task_struct->__state handling in the offcpu analysis, we can
->> > check the field name in the cgroup struct=2E
->> >
->> > Signed-off-by: Namhyung Kim <namhyung@kernel=2Eorg>
->> > ---
->> > Arnaldo, I think this should go through the cgroup tree since it depe=
-nds
->> > on the earlier change there=2E  I don't think it'd conflict with othe=
-r
->> > perf changes but please let me know if you see any trouble, thanks!
->>
->> could you please paste the cgroup tree link?
 >
->Do you mean this?
 >
->  https://git=2Ekernel=2Eorg/pub/scm/linux/kernel/git/tj/cgroup=2Egit
+> On September 30, 2022 6:56:40 PM GMT-03:00, Namhyung Kim <namhyung@kernel.org> wrote:
+> >Hi Jiri,
+> >
+> >On Fri, Sep 30, 2022 at 2:44 PM Jiri Olsa <olsajiri@gmail.com> wrote:
+> >>
+> >> On Wed, Sep 21, 2022 at 09:14:35PM -0700, Namhyung Kim wrote:
+> >> > The recent change in the cgroup will break the backward compatiblity in
+> >> > the BPF program.  It should support both old and new kernels using BPF
+> >> > CO-RE technique.
+> >> >
+> >> > Like the task_struct->__state handling in the offcpu analysis, we can
+> >> > check the field name in the cgroup struct.
+> >> >
+> >> > Signed-off-by: Namhyung Kim <namhyung@kernel.org>
+> >> > ---
+> >> > Arnaldo, I think this should go through the cgroup tree since it depends
+> >> > on the earlier change there.  I don't think it'd conflict with other
+> >> > perf changes but please let me know if you see any trouble, thanks!
+> >>
+> >> could you please paste the cgroup tree link?
+> >
+> >Do you mean this?
+> >
+> >  https://git.kernel.org/pub/scm/linux/kernel/git/tj/cgroup.git
+> >
 >
+>
+> Which branch and cset in that tree does you perf skel depends on?
 
+I believe it's for-6.1 and the cset is in
 
-Which branch and cset in that tree does you perf skel depends on?
+  https://git.kernel.org/pub/scm/linux/kernel/git/tj/cgroup.git/commit/?h=for-6.1&id=7f203bc89eb66d6afde7eae91347fc0352090cc3
 
-- Arnaldo=20
->Thanks,=2E
->Namhyung
+Thanks,
+Namhyung
