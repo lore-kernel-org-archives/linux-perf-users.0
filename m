@@ -2,58 +2,58 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 93CC1C433F5
-	for <linux-perf-users@archiver.kernel.org>; Sat,  1 Oct 2022 06:06:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A819CC433FE
+	for <linux-perf-users@archiver.kernel.org>; Sat,  1 Oct 2022 06:06:59 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229550AbiJAGG5 (ORCPT
+        id S229436AbiJAGG6 (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Sat, 1 Oct 2022 02:06:57 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50648 "EHLO
+        Sat, 1 Oct 2022 02:06:58 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50864 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229529AbiJAGGu (ORCPT
+        with ESMTP id S229445AbiJAGG4 (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Sat, 1 Oct 2022 02:06:50 -0400
-Received: from mail-yb1-xb4a.google.com (mail-yb1-xb4a.google.com [IPv6:2607:f8b0:4864:20::b4a])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0280F12C1F5
-        for <linux-perf-users@vger.kernel.org>; Fri, 30 Sep 2022 23:06:48 -0700 (PDT)
-Received: by mail-yb1-xb4a.google.com with SMTP id k11-20020a5b038b000000b006bbf786c30aso5606263ybp.8
-        for <linux-perf-users@vger.kernel.org>; Fri, 30 Sep 2022 23:06:48 -0700 (PDT)
+        Sat, 1 Oct 2022 02:06:56 -0400
+Received: from mail-yw1-x1149.google.com (mail-yw1-x1149.google.com [IPv6:2607:f8b0:4864:20::1149])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D0D91130F13
+        for <linux-perf-users@vger.kernel.org>; Fri, 30 Sep 2022 23:06:50 -0700 (PDT)
+Received: by mail-yw1-x1149.google.com with SMTP id 00721157ae682-3521c1a01b5so61331057b3.23
+        for <linux-perf-users@vger.kernel.org>; Fri, 30 Sep 2022 23:06:50 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=google.com; s=20210112;
         h=cc:to:from:subject:references:mime-version:message-id:in-reply-to
          :date:from:to:cc:subject:date;
-        bh=Qii+hgPKPKNgROLcY0ySesmuzhBUXysFitkb8xtJsts=;
-        b=kZ8O2caPqw53jlKugZLlR+Ha0l+KrjBKX2Sa8I9wM+nnPRsYQSeH/Df7IoCdGrUcIl
-         rgQE7UAmyPVC2VMDQbPmth6owH/L5RF4o4O4zoOlzdUPIHGd/AEYT5QOJuhcrdfoNKFf
-         3aYLJb/6WHhWrQxdKEISRWilw09+C2yno3n9j1hymm5MEHmhcpqOc+0n/xe39xkg+RKN
-         hn7YL2DdCVRiSnW2pEUdwZu47kzBDmzv6T2SY9gW5u3YeddJcf2u6cBpFXgEjsI0/k+l
-         ply3jBRpOAiZ9MMRH5MF4kXo77kZ0R03iw0vlyeECWlLSoaBjPXIyFewjLqo0RA3PbOQ
-         gGow==
+        bh=HP8sEZI7Emeer8Gpo0u0RqVNXzqW3axisWvdt479D+w=;
+        b=Zo86w1JcZP0SwLmLGNZbnAfu15T7mKvR8zvQGA12p2mpV8zMZlYOthL30w2p7LZ1Ln
+         8fxbzYboFouTztwetukz42wpV7hzW0Jg6p/QexYaRBvg95zi1oST81k30zEX7YuSqTyc
+         eSilxCudAE8hDEk8MTVLrxT9KKD8x/v8Q+sQH/Yxe3APtq1Nq15RC9cDAgVAbCY7HP2E
+         Acj+ZfWTB1EUhhLm497H4xp/53VA/L+jHNCzCzxn/j2ZJj5aIX1IWB6KJvSZXP3KWHci
+         YJNuvXrl9vPYaakLHNPYNSkUN+5anpC5qirEs9fLLSaHTyBTFd4T6/2FxhVylR+ZKJuz
+         qakQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
         h=cc:to:from:subject:references:mime-version:message-id:in-reply-to
          :date:x-gm-message-state:from:to:cc:subject:date;
-        bh=Qii+hgPKPKNgROLcY0ySesmuzhBUXysFitkb8xtJsts=;
-        b=wAQmmMAOCue521SuQwtGVcWH7LTJsGkYrEfl0SKU3W7tPVbLANnSrN1lZClM9ISSi8
-         zZIy4LYUe1ber5tTz6K1TkRfRvx0CQWWQNailtte092jBUnfQEtpoouRckYWgyjYiM7J
-         GpSrX2/6D+2i+j4ERmGBHYcP3vfeTxNW6Ilswict8hcOdXFAiyrBoaIKjhlTQgtT/oHK
-         ISP+V1EquVvkm8tH18rFhYNVUH88fWafgicEEdxzSme1nn3Wlqr8vQXAiTDCEjLM4Nt9
-         o9Mfp9OoLr1bNwWLkam3pD7gUCcCYuEODrGUZ2okti2pr/hvy1c3bAPBPw1HlqJFa0fR
-         /kgg==
-X-Gm-Message-State: ACrzQf3cn3N5z+1Vr0G0czmkKXzvP/wpcbCMXuF+pNBT96FY/8zhAHY4
-        SaDUzCy2mO66cjt8e0bfmn5km25ZAPgA
-X-Google-Smtp-Source: AMsMyM6CSUg0wKtyN/RjOi6+y/dw3yyuWC79SAMLGo1wP4u6qYogIbOdCOf+9bT2czdlpoe/KIHHWrXQKFX4
+        bh=HP8sEZI7Emeer8Gpo0u0RqVNXzqW3axisWvdt479D+w=;
+        b=Z4UrzlVMkDhn/LbAX0X3Qvzyr5eZQ7KBd54H6GzJjryqqYTyE0acvJIKED9zS9e2xO
+         jk0xZqbV06ZWMNbOH+KIMUskHH3/i92RfZHDT9Lm53/IZwMx3ndqa2r+NfYdIHQuaPHm
+         quK0zWtH98XPHX6I9XXdwRhqXbedpCJ+q4uPsyOW6vtSKUumRkz2OlOuYiVrRRQgjKse
+         0PDdUem9jdyjG12WUboZeZ6YntUxsRBGAHFVtCqJ00vVFQYbNhGuGY6p0G4DBdHHULOM
+         BGhN/hutR7u4qWWqouIv29RJS1a5c5IoHSxw0jZSuVEUQY1+KB6Ydfiwmi7anKqeh72c
+         RrFA==
+X-Gm-Message-State: ACrzQf25KRxl7REQqoRiA7NqNeOuU5uh++C1ypws/zT428jG5Y/XpYT0
+        W6EnVyimZkb1dMKqN5gwxg8vrL92FykS
+X-Google-Smtp-Source: AMsMyM4GM2AzwBt4Mm2uplMShAXDEOgSI9+FipCwaQwrAVwq/yKgi0tGjWFWWd9Q2eklTv7s5Wd8EtSwp+7E
 X-Received: from irogers.svl.corp.google.com ([2620:15c:2d4:203:de60:c6ac:8491:ce1e])
- (user=irogers job=sendgmr) by 2002:a81:160e:0:b0:356:e96c:d5ab with SMTP id
- 14-20020a81160e000000b00356e96cd5abmr3725765yww.506.1664604407953; Fri, 30
- Sep 2022 23:06:47 -0700 (PDT)
-Date:   Fri, 30 Sep 2022 23:06:16 -0700
+ (user=irogers job=sendgmr) by 2002:a81:498f:0:b0:355:bb57:f988 with SMTP id
+ w137-20020a81498f000000b00355bb57f988mr8437612ywa.298.1664604410478; Fri, 30
+ Sep 2022 23:06:50 -0700 (PDT)
+Date:   Fri, 30 Sep 2022 23:06:17 -0700
 In-Reply-To: <20221001060636.2661983-1-irogers@google.com>
-Message-Id: <20221001060636.2661983-3-irogers@google.com>
+Message-Id: <20221001060636.2661983-4-irogers@google.com>
 Mime-Version: 1.0
 References: <20221001060636.2661983-1-irogers@google.com>
 X-Mailer: git-send-email 2.38.0.rc1.362.ged0d419d3c-goog
-Subject: [PATCH v2 02/22] perf expr: Remove jevents case workaround
+Subject: [PATCH v2 03/22] perf metrics: Don't scale counts going into metrics
 From:   Ian Rogers <irogers@google.com>
 To:     Zhengjun Xing <zhengjun.xing@linux.intel.com>,
         Kan Liang <kan.liang@linux.intel.com>,
@@ -81,43 +81,37 @@ Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-jevents.py no longer lowercases metrics and altering the case can cause
-hashmap lookups to fail, so remove.
+Counts are scaled prior to going into saved_value, reverse the scaling
+so that metrics don't double scale values.
 
 Signed-off-by: Ian Rogers <irogers@google.com>
 ---
- tools/perf/util/expr.c | 11 +----------
- 1 file changed, 1 insertion(+), 10 deletions(-)
+ tools/perf/util/stat-shadow.c | 9 +++++++--
+ 1 file changed, 7 insertions(+), 2 deletions(-)
 
-diff --git a/tools/perf/util/expr.c b/tools/perf/util/expr.c
-index c6827900f8d3..aaacf514dc09 100644
---- a/tools/perf/util/expr.c
-+++ b/tools/perf/util/expr.c
-@@ -182,7 +182,7 @@ int expr__add_ref(struct expr_parse_ctx *ctx, struct metric_ref *ref)
- {
- 	struct expr_id_data *data_ptr = NULL, *old_data = NULL;
- 	char *old_key = NULL;
--	char *name, *p;
-+	char *name;
- 	int ret;
+diff --git a/tools/perf/util/stat-shadow.c b/tools/perf/util/stat-shadow.c
+index 9e1eddeff21b..b5cedd37588f 100644
+--- a/tools/perf/util/stat-shadow.c
++++ b/tools/perf/util/stat-shadow.c
+@@ -865,11 +865,16 @@ static int prepare_metric(struct evsel **metric_events,
+ 			if (!v)
+ 				break;
+ 			stats = &v->stats;
+-			scale = 1.0;
++			/*
++			 * If an event was scaled during stat gathering, reverse
++			 * the scale before computing the metric.
++			 */
++			scale = 1.0 / metric_events[i]->scale;
++
+ 			source_count = evsel__source_count(metric_events[i]);
  
- 	data_ptr = zalloc(sizeof(*data_ptr));
-@@ -195,15 +195,6 @@ int expr__add_ref(struct expr_parse_ctx *ctx, struct metric_ref *ref)
- 		return -ENOMEM;
- 	}
- 
--	/*
--	 * The jevents tool converts all metric expressions
--	 * to lowercase, including metric references, hence
--	 * we need to add lowercase name for metric, so it's
--	 * properly found.
--	 */
--	for (p = name; *p; p++)
--		*p = tolower(*p);
--
- 	/*
- 	 * Intentionally passing just const char pointers,
- 	 * originally from 'struct pmu_event' object.
+ 			if (v->metric_other)
+-				metric_total = v->metric_total;
++				metric_total = v->metric_total * scale;
+ 		}
+ 		n = strdup(evsel__metric_id(metric_events[i]));
+ 		if (!n)
 -- 
 2.38.0.rc1.362.ged0d419d3c-goog
 
