@@ -2,83 +2,129 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id ACE3EC433FE
-	for <linux-perf-users@archiver.kernel.org>; Fri, 30 Sep 2022 23:05:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DBF3FC433FE
+	for <linux-perf-users@archiver.kernel.org>; Sat,  1 Oct 2022 02:31:40 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232161AbiI3XF2 (ORCPT
+        id S232408AbiJACbj (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Fri, 30 Sep 2022 19:05:28 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36830 "EHLO
+        Fri, 30 Sep 2022 22:31:39 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60950 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232442AbiI3XFX (ORCPT
+        with ESMTP id S232302AbiJACba (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Fri, 30 Sep 2022 19:05:23 -0400
-Received: from ams.source.kernel.org (ams.source.kernel.org [145.40.68.75])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8A69138A3E;
-        Fri, 30 Sep 2022 16:05:20 -0700 (PDT)
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by ams.source.kernel.org (Postfix) with ESMTPS id 83D06B82AB8;
-        Fri, 30 Sep 2022 23:05:18 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPS id 2668BC433C1;
-        Fri, 30 Sep 2022 23:05:17 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1664579117;
-        bh=KKnpDwy0z0NMAinMrUZI7nWLSvBCwLJfTmdtIYZcP18=;
-        h=Subject:From:In-Reply-To:References:Date:To:Cc:From;
-        b=BfVUmZcxzgDgf2jsqDaxAtVJEdGnNDJHlAMAEMbhfDVvUDS8tPLslTjECsmFyELAk
-         YW8bzWh9oMcmWLyCeksfYzHOskdo2XmcEkcgrrb3Uj6TeVURD6dk1RYvQTDYBHOjCA
-         GaawbQpnNNgrYVehBORspA6/CHTYpyKrtDBKCiArspoQfYM6ETZaleCj/GU9dLxI3o
-         9kfKNTYj5N+dIjWITclDr2M8taKhIbAxc8IIHGvKAAW7LjZ9gecJ3xaVkm/HRPdsba
-         q+nyl9Pvf8RhLvt8tCPaC+kQ9XOeDtzFwS3FuXLqsul9391hjmw5wLE5Ix697UzpA/
-         j6o2paNhktXhw==
-Received: from aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (localhost.localdomain [127.0.0.1])
-        by aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (Postfix) with ESMTP id 0DBDAE49FA5;
-        Fri, 30 Sep 2022 23:05:17 +0000 (UTC)
-Subject: Re: [GIT PULL] perf tools changes for v6.0: 5th batch
-From:   pr-tracker-bot@kernel.org
-In-Reply-To: <20220930003316.62853-1-acme@kernel.org>
-References: <20220930003316.62853-1-acme@kernel.org>
-X-PR-Tracked-List-Id: <linux-perf-users.vger.kernel.org>
-X-PR-Tracked-Message-Id: <20220930003316.62853-1-acme@kernel.org>
-X-PR-Tracked-Remote: git://git.kernel.org/pub/scm/linux/kernel/git/acme/linux.git tags/perf-tools-fixes-for-v6.0-2022-09-29
-X-PR-Tracked-Commit-Id: 8e8bf60a675473a034ecfcb7a842b98868ed74a3
-X-PR-Merge-Tree: torvalds/linux.git
-X-PR-Merge-Refname: refs/heads/master
-X-PR-Merge-Commit-Id: c816f2e9813d218b36343c67b443c77c539ea294
-Message-Id: <166457911701.27763.15288640570510111212.pr-tracker-bot@kernel.org>
-Date:   Fri, 30 Sep 2022 23:05:17 +0000
-To:     Arnaldo Carvalho de Melo <acme@kernel.org>
-Cc:     Linus Torvalds <torvalds@linux-foundation.org>,
-        Ingo Molnar <mingo@kernel.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Jiri Olsa <jolsa@kernel.org>,
-        Namhyung Kim <namhyung@kernel.org>,
-        Clark Williams <williams@redhat.com>,
-        Kate Carcia <kcarcia@redhat.com>, linux-kernel@vger.kernel.org,
-        linux-perf-users@vger.kernel.org,
+        Fri, 30 Sep 2022 22:31:30 -0400
+Received: from mail-oa1-f50.google.com (mail-oa1-f50.google.com [209.85.160.50])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 21826125D96;
+        Fri, 30 Sep 2022 19:31:29 -0700 (PDT)
+Received: by mail-oa1-f50.google.com with SMTP id 586e51a60fabf-127dca21a7dso7399296fac.12;
+        Fri, 30 Sep 2022 19:31:29 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:x-gm-message-state:from:to:cc:subject:date;
+        bh=TsSNtaxjzzrx0UGRlq15EZuhaugUhUgclS9Wef+tMjA=;
+        b=kaUDziaMuKIsPXEo1NARHh6a8YfZ7PCTfT9/4dAjqpR1bf7i+xcJ+KXsWgHIhBDvkI
+         JyQ+EdlsDdcxuF9aOGcUepMhWYcm9C1g3lnYzHHVa5b7EYKeLATDa0zLEuPUNEU9P3YO
+         Nt8O77O95l+WMszY3azrrXe69g8wnGfeWyLTGRbcrMAQ5JPL/mMHnSsGRd32WHYpbg+c
+         C4GykgbpKh5wT/NxS/elCsl2I4DS8lErGfc2QUF26gOP0OVEA3e76U98pSbE4zzxkzp8
+         S7/oa9rLAl0zV6WcfCd+tEn1sr33bh/6g9m4Kpc44ghgOeHlaiP7hrx2LB3amS4AfAzJ
+         PzCw==
+X-Gm-Message-State: ACrzQf1tvtUwA/re8/D1Axjh/vL0NekT2nqHFRDTVHZ9ZsQvlH2rNIZQ
+        9XUME8csjIwd9HY4eiO4szaPyCJjLpRStqInWT8=
+X-Google-Smtp-Source: AMsMyM7Yi1zPsDiXRfU1bZZHzwmu8SBCTd/6ZNM+dwKzBgmouEYVAxUpY+L4PS/jzdxYlVAY+5ffaUbRPOpty+fg9hQ=
+X-Received: by 2002:a05:6871:14f:b0:131:a644:7c58 with SMTP id
+ z15-20020a056871014f00b00131a6447c58mr469446oab.209.1664591488387; Fri, 30
+ Sep 2022 19:31:28 -0700 (PDT)
+MIME-Version: 1.0
+References: <CAM9d7cjQ20a01YoZi=o-_7HT6TzR0TZgtpscKNvRrMq2yqV1Og@mail.gmail.com>
+ <20220922041435.709119-1-namhyung@kernel.org> <CAEf4BzZhHYYOmNhLdrpsXSDE5kaXvgSN00X-8aAySDwAKX0RCw@mail.gmail.com>
+In-Reply-To: <CAEf4BzZhHYYOmNhLdrpsXSDE5kaXvgSN00X-8aAySDwAKX0RCw@mail.gmail.com>
+From:   Namhyung Kim <namhyung@kernel.org>
+Date:   Fri, 30 Sep 2022 19:31:17 -0700
+Message-ID: <CAM9d7ch8RUgf8V1hi=ccgV84XSfujuWtUKKgre8eQdGmtdiFLA@mail.gmail.com>
+Subject: Re: [PATCH] perf stat: Support old kernels for bperf cgroup counting
+To:     Andrii Nakryiko <andrii.nakryiko@gmail.com>
+Cc:     Tejun Heo <tj@kernel.org>, Zefan Li <lizefan.x@bytedance.com>,
+        Johannes Weiner <hannes@cmpxchg.org>,
+        cgroups <cgroups@vger.kernel.org>,
         Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Athira Jajeev <atrajeev@linux.vnet.ibm.com>,
-        Disha Goel <disgoel@linux.vnet.ibm.com>,
-        Ian Rogers <irogers@google.com>,
-        Jing Zhang <renyu.zj@linux.alibaba.com>,
-        Xing Zhengjun <zhengjun.xing@linux.intel.com>,
-        Yi Ammy <ammy.yi@intel.com>,
-        Arnaldo Carvalho de Melo <acme@redhat.com>
+        Jiri Olsa <jolsa@kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        linux-perf-users <linux-perf-users@vger.kernel.org>,
+        Song Liu <songliubraving@fb.com>, bpf <bpf@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-The pull request you sent on Thu, 29 Sep 2022 21:33:16 -0300:
+Hello,
 
-> git://git.kernel.org/pub/scm/linux/kernel/git/acme/linux.git tags/perf-tools-fixes-for-v6.0-2022-09-29
+On Fri, Sep 30, 2022 at 3:48 PM Andrii Nakryiko
+<andrii.nakryiko@gmail.com> wrote:
+>
+> On Wed, Sep 21, 2022 at 9:21 PM Namhyung Kim <namhyung@kernel.org> wrote:
+> >
+> > The recent change in the cgroup will break the backward compatiblity in
+> > the BPF program.  It should support both old and new kernels using BPF
+> > CO-RE technique.
+> >
+> > Like the task_struct->__state handling in the offcpu analysis, we can
+> > check the field name in the cgroup struct.
+> >
+> > Signed-off-by: Namhyung Kim <namhyung@kernel.org>
+> > ---
+> > Arnaldo, I think this should go through the cgroup tree since it depends
+> > on the earlier change there.  I don't think it'd conflict with other
+> > perf changes but please let me know if you see any trouble, thanks!
+> >
+> >  tools/perf/util/bpf_skel/bperf_cgroup.bpf.c | 29 ++++++++++++++++++++-
+> >  1 file changed, 28 insertions(+), 1 deletion(-)
+> >
+> > diff --git a/tools/perf/util/bpf_skel/bperf_cgroup.bpf.c b/tools/perf/util/bpf_skel/bperf_cgroup.bpf.c
+> > index 488bd398f01d..4fe61043de04 100644
+> > --- a/tools/perf/util/bpf_skel/bperf_cgroup.bpf.c
+> > +++ b/tools/perf/util/bpf_skel/bperf_cgroup.bpf.c
+> > @@ -43,12 +43,39 @@ struct {
+> >         __uint(value_size, sizeof(struct bpf_perf_event_value));
+> >  } cgrp_readings SEC(".maps");
+> >
+> > +/* new kernel cgroup definition */
+> > +struct cgroup___new {
+> > +       int level;
+> > +       struct cgroup *ancestors[];
+> > +} __attribute__((preserve_access_index));
+> > +
+> > +/* old kernel cgroup definition */
+> > +struct cgroup___old {
+> > +       int level;
+> > +       u64 ancestor_ids[];
+> > +} __attribute__((preserve_access_index));
+> > +
+> >  const volatile __u32 num_events = 1;
+> >  const volatile __u32 num_cpus = 1;
+> >
+> >  int enabled = 0;
+> >  int use_cgroup_v2 = 0;
+> >
+> > +static inline __u64 get_cgroup_v1_ancestor_id(struct cgroup *cgrp, int level)
+> > +{
+> > +       /* recast pointer to capture new type for compiler */
+> > +       struct cgroup___new *cgrp_new = (void *)cgrp;
+> > +
+> > +       if (bpf_core_field_exists(cgrp_new->ancestors)) {
+> > +               return BPF_CORE_READ(cgrp_new, ancestors[level], kn, id);
+>
+> have you checked generated BPF code for this ancestors[level] access?
+> I'd expect CO-RE relocation for finding ancestors offset and then just
+> normal + level * 8 arithmetic, but would be nice to confirm. Apart
+> from this, looks good to me:
+>
+> Acked-by: Andrii Nakryiko <andrii@kernel.org>
 
-has been merged into torvalds/linux.git:
-https://git.kernel.org/torvalds/c/c816f2e9813d218b36343c67b443c77c539ea294
+Thanks for your review!
 
-Thank you!
+How can I check the generated code?  Do you have something works with
+skeletons or do I have to save the BPF object somehow during the build?
 
--- 
-Deet-doot-dot, I am a bot.
-https://korg.docs.kernel.org/prtracker.html
+Thanks,
+Namhyung
