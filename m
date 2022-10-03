@@ -2,67 +2,70 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7A938C433F5
-	for <linux-perf-users@archiver.kernel.org>; Mon,  3 Oct 2022 18:10:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 30203C433FE
+	for <linux-perf-users@archiver.kernel.org>; Mon,  3 Oct 2022 18:17:20 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229702AbiJCSKy (ORCPT
+        id S229967AbiJCSRS (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Mon, 3 Oct 2022 14:10:54 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55036 "EHLO
+        Mon, 3 Oct 2022 14:17:18 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38556 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229549AbiJCSKu (ORCPT
+        with ESMTP id S229906AbiJCSRJ (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Mon, 3 Oct 2022 14:10:50 -0400
-Received: from mail-qk1-x734.google.com (mail-qk1-x734.google.com [IPv6:2607:f8b0:4864:20::734])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0B84E25E84;
-        Mon,  3 Oct 2022 11:10:49 -0700 (PDT)
-Received: by mail-qk1-x734.google.com with SMTP id i17so7021698qkk.12;
-        Mon, 03 Oct 2022 11:10:49 -0700 (PDT)
+        Mon, 3 Oct 2022 14:17:09 -0400
+Received: from mail-qt1-x833.google.com (mail-qt1-x833.google.com [IPv6:2607:f8b0:4864:20::833])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3AE343FEE5;
+        Mon,  3 Oct 2022 11:17:08 -0700 (PDT)
+Received: by mail-qt1-x833.google.com with SMTP id y2so6833484qtv.5;
+        Mon, 03 Oct 2022 11:17:08 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20210112;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:from:to:cc:subject:date;
         bh=6GSBpywsjKwPYr9hvx5GHTfSyCn4GlAqxJaWR8Wo4kE=;
-        b=a9WJRwXeC7awSc02b11mfesATFj5xtBd6llcvg3qJLnJrC33eS148byjd/TsHGqMbH
-         zS53uh3nvUyH50Rq6CWhV8MzjwXJc5zktsmcGKxI7ITIZfxMfj0360rwtLoTdFTJjiY6
-         B6WmIUqtrs4fCCxGAb4ESyFDDvCGM6Csozf5eNXTZOFPRqTb7KTGNxZSvc2+/iEDeYEO
-         BQKXinOk4GcyDq5bbYDEsYX1x695p3xCAgjVR+9JpFbcplJXqEH/bEnsBT1RlEVHqT4X
-         z2KuJlCkzsOOl5XZqwrmcqhnBSXO2R5PbKa3ooNO86a8CCd8L+/t4z+cFP+qlA33UAGG
-         8Fqg==
+        b=JtsL+Dx2PwQ4GX+EXm7wwyPP9y3dsNdyX+7nmSLX0Cq3G90w4rRJxpltmEa7rXfjY+
+         OG2G8tLT0KaWnHBuJJ0ZoLBnyxjGA8YsgB4mJ3P0JEEdZz4vjzubMImn7cH6XxJAQDrP
+         Byhg2serWd9IAnUHYDgWWR4P6SxsVi/5fclUPNvBxaMwSGiD1BxXDGvquNvcdSLtqZ+D
+         bpcOJdi8C0cg20hy7dZWHUEghtfmBmQLpO+eG/1ghM84O/vZuI5sQ0PVErqlVV39C7R+
+         qQMajXJrdbBAnkYcXwpMk5fiRB/NZs239qFJ8TxE1DZpDkK6jEBkNz110mFy4OFhXAj+
+         zcdQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
+         :subject:date;
         bh=6GSBpywsjKwPYr9hvx5GHTfSyCn4GlAqxJaWR8Wo4kE=;
-        b=0KuY2jkn0y1mhTWUZzf3COZi+XWjuqxeahQGBYfi/EQy0ZgSdk5LV/d78KQOMjhuXu
-         cnL13YjzaRxRHj4juCfAYQM5AUPA/pdnj4BTuIVYFV2PIpFlrL0im7Y5BbbLTuaABGW/
-         FJbSbR8klETfgxdBD90tGvCoSKCNdk8qWAaz/xFWFG20PfGtaS3NFuGm5IIPTq/TUyHf
-         IaTlZQWTriapSxfnjD3j2Fa8IHX3vfjMhkgYtLgfGlfwSzRTcROPO6Q9IfbzU9KkU1b4
-         WLQCQtTLXKkNgkqjQTHEZYHRDG4ngtZL8l0Ek7rlrl4cHwCSgbSFl6LbnMWnRCrZD/YL
-         rDbw==
-X-Gm-Message-State: ACrzQf0FfYa1Tyh3O4xkh2KZ0mSWWblwpjM5XxRXiRO+PV89H4NEbMo/
-        pNBzywacrJjD/u1robl7K2Q=
-X-Google-Smtp-Source: AMsMyM4FnfmYgVQg5JBBX7kgw8rHsxg7t3Isw4ZnZJ7BBhcMSkSJsIcdL5SBLEcNi5RZsi4y78IDOA==
-X-Received: by 2002:a05:620a:4304:b0:6d4:56aa:430e with SMTP id u4-20020a05620a430400b006d456aa430emr7118326qko.483.1664820648173;
-        Mon, 03 Oct 2022 11:10:48 -0700 (PDT)
+        b=v3b+TJZbXHTa+XuAjFjaza2PjHKnCBt3FlYGZDe1enwBt4bhLfJsPNkEKUGsruiSNP
+         4qiBqilCen8HsdH27Mz/KBDrjapufE+3bssAkgBK/6E0t61+Y4eH4gm/xg264HMr2LUb
+         I2uh7yg53013+puOJCG30K+ZHsDTzBp5z956/kQuGgG4p9ziii+Dlp9frg1G79UKqOgX
+         kasx+gTclUV+nutah4sJFG5OInJ6eNnJlx2m/V+xZt0Q+ziQCfWfsjrYEcTh/u5IBekC
+         m9yv8Y6/a+eslfwXzAeQRKSxmgJRchfcbWh1XxLsW0sdzMrvmseqjhUXXRZHElrEe5lA
+         /WPg==
+X-Gm-Message-State: ACrzQf3jCv0Ky/XIUsGhJCjWjFtfNHoI90cezui1g2XH/LaUN1QsAxar
+        BlCNB6NwJAobGC5p906X/jifWMiJbVQUSg==
+X-Google-Smtp-Source: AMsMyM4BKoUjUPYb0Jf1H5r7RchuXC609kJb0q+UHascuGJ+E6dNUcVxyxxPp+1CfrIKyYwhhRfH/Q==
+X-Received: by 2002:ac8:7f4c:0:b0:35c:ceb3:4409 with SMTP id g12-20020ac87f4c000000b0035cceb34409mr16687207qtk.138.1664821027245;
+        Mon, 03 Oct 2022 11:17:07 -0700 (PDT)
 Received: from localhost.localdomain ([177.222.37.214])
-        by smtp.googlemail.com with ESMTPSA id bs43-20020a05620a472b00b006b5df4d2c81sm12176226qkb.94.2022.10.03.11.10.45
+        by smtp.googlemail.com with ESMTPSA id k6-20020ac86046000000b0035ba3cae6basm9992329qtm.34.2022.10.03.11.17.04
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 03 Oct 2022 11:10:47 -0700 (PDT)
+        Mon, 03 Oct 2022 11:17:07 -0700 (PDT)
 From:   Henry Castro <hcvcastro@gmail.com>
-To:     hcvcastro@gmail.com
-Cc:     Peter Zijlstra <peterz@infradead.org>,
+To:     namhyung@kernel.org
+Cc:     Henry Castro <hcvcastro@gmail.com>,
+        Peter Zijlstra <peterz@infradead.org>,
         Ingo Molnar <mingo@redhat.com>,
         Arnaldo Carvalho de Melo <acme@kernel.org>,
         Mark Rutland <mark.rutland@arm.com>,
         Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Jiri Olsa <jolsa@kernel.org>,
-        Namhyung Kim <namhyung@kernel.org>,
-        linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
+        Jiri Olsa <jolsa@kernel.org>, linux-perf-users@vger.kernel.org,
+        linux-kernel@vger.kernel.org
 Subject: [PATCH v2] perf: fix the probe finder location (.dwo files)
-Date:   Mon,  3 Oct 2022 14:10:39 -0400
-Message-Id: <20221003181040.4822-1-hcvcastro@gmail.com>
+Date:   Mon,  3 Oct 2022 14:16:56 -0400
+Message-Id: <20221003181657.4890-1-hcvcastro@gmail.com>
 X-Mailer: git-send-email 2.20.1
+In-Reply-To: <CAM9d7ciaMJuG-LgOGoT-u2qwXp8Tk=Zb3ZJPCzA1oQN9hk5ENA@mail.gmail.com>
+References: <CAM9d7ciaMJuG-LgOGoT-u2qwXp8Tk=Zb3ZJPCzA1oQN9hk5ENA@mail.gmail.com>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 Precedence: bulk
