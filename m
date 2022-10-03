@@ -2,109 +2,118 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CC056C433FE
-	for <linux-perf-users@archiver.kernel.org>; Mon,  3 Oct 2022 19:39:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2B902C433FE
+	for <linux-perf-users@archiver.kernel.org>; Mon,  3 Oct 2022 20:46:54 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229489AbiJCTjT (ORCPT
+        id S229525AbiJCUqw (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Mon, 3 Oct 2022 15:39:19 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53236 "EHLO
+        Mon, 3 Oct 2022 16:46:52 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48730 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229594AbiJCTjQ (ORCPT
+        with ESMTP id S229509AbiJCUqv (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Mon, 3 Oct 2022 15:39:16 -0400
-Received: from mail-pl1-x62a.google.com (mail-pl1-x62a.google.com [IPv6:2607:f8b0:4864:20::62a])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B993E48E92
-        for <linux-perf-users@vger.kernel.org>; Mon,  3 Oct 2022 12:39:13 -0700 (PDT)
-Received: by mail-pl1-x62a.google.com with SMTP id f23so10574614plr.6
-        for <linux-perf-users@vger.kernel.org>; Mon, 03 Oct 2022 12:39:13 -0700 (PDT)
+        Mon, 3 Oct 2022 16:46:51 -0400
+Received: from mail-pg1-x531.google.com (mail-pg1-x531.google.com [IPv6:2607:f8b0:4864:20::531])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9393F11A34;
+        Mon,  3 Oct 2022 13:46:50 -0700 (PDT)
+Received: by mail-pg1-x531.google.com with SMTP id q9so10646295pgq.8;
+        Mon, 03 Oct 2022 13:46:50 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20210112;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date;
-        bh=Fv0au4SRa/nCh2VkMnBPtiJ2PuLgaWQajBtBq7ab4Eo=;
-        b=EgK/+EkbR4PIDpnn/sLiY9L/MhrTMPX+WC418JDHmCbffMGNR27L8VI33U1d69yB0R
-         RgPwObQKp/YorfNN7hNcWZ1kLd9vPYhoWABlm0OITASCl8ycA0Q7byK24u3bp9Sm1u8M
-         y8B3zI8CJsBFW2Vrr5Liiv8KhNXac0Mq2pLA5biFpV5+3Sq+jIt6a1EPJEUyU4SAhAH7
-         pRpj7QRVqUUWvLLXrJ5bNdPXJsCCHxpoIbU9Ukp/PkqVSH53/6uqJ+ZWGYU9LH4R0a1L
-         Y8vNaP+9fgesjHnS5CnuKwh5JKdjeh2ysJG5no+YPNCYPfZmpyjppblSm9KsDqfGA1SY
-         KohA==
+        d=gmail.com; s=20210112;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:sender:from:to:cc:subject:date;
+        bh=KnBq49sbYCenPU4wAQl0NnG23Om40FiMnbxa/nf7FuQ=;
+        b=GSJ2tOPoval6gE2aSglDSum0SLSna1M8pnpnZLIW2zvrIgjAQLDY29xEZvWTuJxGHl
+         y2IFnigDvxA4V0UZjOvz+U5nUXs9RnjNoWFrqMhXZQEOzzM03zfE6/BbYlr9BBlnMq0h
+         IQP/Nt2fnRPVd8BMcZwz6JMAal28AfxK0TTha5pyvgkA1VZQYJvNpBnciD/578yjW19B
+         +XjaCBXfCPNcny97IBIAgJCtLBmrasK21CFl85uaX3KwjaE7GJ/QWUZ/dWdyG0e132oi
+         JXeaqzzVSex8hOFemoSxyxXet1atP9R8LMNEfzHK0MlAVv1xcgGh5JQK+W01JCb1IarU
+         5dlA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date;
-        bh=Fv0au4SRa/nCh2VkMnBPtiJ2PuLgaWQajBtBq7ab4Eo=;
-        b=5pxkRokFn4CHlQuscqNi2+7b2SLoX1ZQd5ianh2rWJTYKj+O4lbJkQsbMmGh526sII
-         2r4dDe12EfuVayw8pRwiJJUJFUuJ4JRNLFPdzLSLvqh8aBKwpMQzUTuNcpN9JcvpOgLL
-         OKegd1M3yHeESZ4cYeZ9ovYNXr83V0cLHZjocSmygCKT+4Q9Kxtube2I6GqqfCKYuOEI
-         pGzwc2tYsjzoCmzm/P3WmLZU6wwcv2tniCfGwsbuOAvqrYzfYWDimZ6FflYs4A9RJSFe
-         yKaSIQxoDDwl54Gv3IPn//Pd1eVdq35rLO2nHnkbG2kIieeh7jbEVJZGobyxHercMa+5
-         XusA==
-X-Gm-Message-State: ACrzQf3BywwPuzle7pRw04ikfJ7ZnV/o/1CLVEMe5gMad8KiXqiN6c6H
-        u1yVy1/jEoKhsU22Dn9vpBq/MA==
-X-Google-Smtp-Source: AMsMyM6wgYrDTvbt1RuBc3Z21KtUHbV72tlR/MkX9QczEYOwuo+2ablmxGJm9ML78WEj4RM4EKjzzw==
-X-Received: by 2002:a17:902:9b91:b0:17e:5aba:5fb9 with SMTP id y17-20020a1709029b9100b0017e5aba5fb9mr10508972plp.27.1664825953190;
-        Mon, 03 Oct 2022 12:39:13 -0700 (PDT)
-Received: from google.com (7.104.168.34.bc.googleusercontent.com. [34.168.104.7])
-        by smtp.gmail.com with ESMTPSA id m14-20020a170902f64e00b00178b6ccc8a0sm7567665plg.51.2022.10.03.12.39.12
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:sender:x-gm-message-state:from:to:cc:subject:date;
+        bh=KnBq49sbYCenPU4wAQl0NnG23Om40FiMnbxa/nf7FuQ=;
+        b=HLR7k0POTCNEUe8ddXvMTm/hi/IGGVm8py1o3sJDK+bdoQdoVsFSkbX4y3i0PKWJPq
+         iC7nZrff6mLslE2sGREj8SJPXuIF3xzhdcKcJDFiVd5RLRKspVyiOjFl+kfjpSvnDE6V
+         Y6F5oWCoTVLKVNT2mmDZZOJYmfPMW5D6O/dbY9Ou9aKfWE9kEzu7Ld+ZisiloIj3Q5CU
+         SXtQ57XJcLoniDQmKOcDF/nr728OjDLE1QiLqZ8zQeghMikaiyXfMfOcCKSWq0nHN2Qk
+         ++oa/yIb6P1OERoYSoxZY4O3g4ENboXFtLh85+fZmeeW5FvnB4zmQn6AClvawLpYBEmO
+         jWKw==
+X-Gm-Message-State: ACrzQf2JoZQGGmI81L0w25oAK0tnXxKlHdf595oHplhgWZ27rcX6UAYL
+        am29hBcqmEABydOZUw5PRto=
+X-Google-Smtp-Source: AMsMyM52r+ze4VzdpnSAcI7r+HJzg3MswxqCMrJyeTxja8RPMeuxGM5NdH/BPQU567RtREF4RJn3WQ==
+X-Received: by 2002:a05:6a00:1748:b0:55a:ddbe:85d7 with SMTP id j8-20020a056a00174800b0055addbe85d7mr24849037pfc.68.1664830010032;
+        Mon, 03 Oct 2022 13:46:50 -0700 (PDT)
+Received: from youngsil.svl.corp.google.com ([2620:15c:2d4:203:63c9:72b6:3eb9:490a])
+        by smtp.gmail.com with ESMTPSA id n12-20020a17090ac68c00b0020a821e97fbsm3522931pjt.13.2022.10.03.13.46.49
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 03 Oct 2022 12:39:12 -0700 (PDT)
-Date:   Mon, 3 Oct 2022 19:39:09 +0000
-From:   Sean Christopherson <seanjc@google.com>
-To:     Like Xu <like.xu.linux@gmail.com>
-Cc:     Peter Zijlstra <peterz@infradead.org>,
-        Kan Liang <kan.liang@linux.intel.com>,
+        Mon, 03 Oct 2022 13:46:49 -0700 (PDT)
+Sender: Namhyung Kim <namhyung@gmail.com>
+From:   Namhyung Kim <namhyung@kernel.org>
+To:     Arnaldo Carvalho de Melo <acme@kernel.org>,
+        Jiri Olsa <jolsa@kernel.org>
+Cc:     Ingo Molnar <mingo@kernel.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Ian Rogers <irogers@google.com>,
         Adrian Hunter <adrian.hunter@intel.com>,
-        Andi Kleen <ak@linux.intel.com>,
-        Jim Mattson <jmattson@google.com>,
-        Paolo Bonzini <pbonzini@redhat.com>,
-        linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org,
-        x86@kernel.org, kvm@vger.kernel.org
-Subject: Re: [PATCH RFC 1/3] KVM + perf: Rename *_intel_pt_intr() for generic
- usage
-Message-ID: <Yzs6XTxOp7wxgmJO@google.com>
-References: <20220926142938.89608-1-likexu@tencent.com>
- <20220926142938.89608-2-likexu@tencent.com>
+        linux-perf-users@vger.kernel.org,
+        Kan Liang <kan.liang@linux.intel.com>,
+        Leo Yan <leo.yan@linaro.org>
+Subject: [PATCH 0/5] perf tools: Clean up cpu map handling for system-wide evsel (v3)
+Date:   Mon,  3 Oct 2022 13:46:42 -0700
+Message-Id: <20221003204647.1481128-1-namhyung@kernel.org>
+X-Mailer: git-send-email 2.38.0.rc1.362.ged0d419d3c-goog
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20220926142938.89608-2-likexu@tencent.com>
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-On Mon, Sep 26, 2022, Like Xu wrote:
-> From: Like Xu <likexu@tencent.com>
-> 
-> The perf_guest_info_callbacks is common to KVM, while intel_pt is not,
-> not even common to x86. In the VMX context, it makes sense to hook
-> up the intel_pt specific hook, and given the uniqueness of this usage,
-> calling the  generic callback in the explicit location of the perf context
-> is not functionally broken.
+Hello,
 
-But it's extremely misleading.  If I were a developer writing the perf hooks for
-a different architecture, I would expect perf_handle_guest_intr() to be called on
-_every_ perf interrupt that occurred in the guest.
+The system-wide evsel has a cpu map for all (online) cpus regardless
+of user requested cpus.  But the cpu map handling code has some
+special case for it and I think we can cleanup the code by making sure
+that such a evsel has a proper cpu/thread maps from the beginning.
+This patches should not cause any change in the behavior.
 
-Genericizing the hook also complicates wiring up the hook and consuming the interrupt
-type.  E.g. patch 3 is buggy; it wires up the VMX handler if and only if PT is in
-PT_MODE_HOST_GUEST, and then takes a dependency on that buggy behavior by not
-checking if Intel PT is supported in the now-generic vmx_handle_guest_intr().
+Changes from v2:
+ * build evlist->core.all_cpus from the beginning  (Adrian)
 
-This also doesn't really clean up the API from a non-x86 perspective, it just doesn't
-make it any worse, i.e. other architectures are still exposed to an x86-specific hook.
+Changes from v1:
+ * use evlist->core.needs_map_propagation field
+ * add Reviewed-by from Adrian
 
-Unless we anticipate ARM or RISC-V (which IIRC is gaining PMU support "soon") needing
-to hook into "special" perf interrupts, it might be better to figure out a way to make
-the hooks themselves more extensible for per-arch behavior.  E.g similar to
-kvm_vcpu and kvm_vcpu_arch, add an embedded arch (or vice versa) struct in
-perf_guest_info_callbacks plus a perf-internal arch hook to update static calls,
-and use that to wire up handle_intel_pt_int for x86.  It'll require more work up
-front, but in theory it will require less maintenance in the long run.
+You can get the code from 'perf/cpumap-update-v3' branch in
 
-> Rename a bunch of intel_pt_intr() functions to the generic guest_intr().
-> No functional change intended.
+  git://git.kernel.org/pub/scm/linux/kernel/git/namhyung/linux-perf.git
 
-This changelog never says _why_.  Looking forward, the reason for the rename is
-to piggyback the hook for BTS.
+Thanks,
+Namhyung
+
+Namhyung Kim (5):
+  libperf: Populate system-wide evsel maps
+  libperf: Propagate maps only if necessary
+  perf tools: Get rid of evlist__add_on_all_cpus()
+  perf tools: Add evlist__add_sched_switch()
+  perf tools: Remove special handling of system-wide evsel
+
+ tools/lib/perf/evlist.c                  | 26 +++++++-------
+ tools/lib/perf/evsel.c                   |  3 --
+ tools/lib/perf/include/internal/evlist.h |  1 +
+ tools/perf/arch/x86/util/intel-pt.c      | 15 +++-----
+ tools/perf/builtin-script.c              |  3 --
+ tools/perf/tests/switch-tracking.c       | 15 +++-----
+ tools/perf/util/evlist.c                 | 46 ++++++++++--------------
+ tools/perf/util/evlist.h                 |  1 +
+ tools/perf/util/evsel.c                  | 12 ++-----
+ tools/perf/util/stat.c                   |  3 --
+ 10 files changed, 46 insertions(+), 79 deletions(-)
+
+
+base-commit: 62e64c9d2fd12839c02f1b3e8b873e7cb34e8720
+-- 
+2.38.0.rc1.362.ged0d419d3c-goog
 
