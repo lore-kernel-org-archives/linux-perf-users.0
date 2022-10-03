@@ -2,105 +2,119 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 45580C4332F
-	for <linux-perf-users@archiver.kernel.org>; Mon,  3 Oct 2022 17:22:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7A938C433F5
+	for <linux-perf-users@archiver.kernel.org>; Mon,  3 Oct 2022 18:10:55 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229509AbiJCRWQ (ORCPT
+        id S229702AbiJCSKy (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Mon, 3 Oct 2022 13:22:16 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57010 "EHLO
+        Mon, 3 Oct 2022 14:10:54 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55036 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229551AbiJCRWH (ORCPT
+        with ESMTP id S229549AbiJCSKu (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Mon, 3 Oct 2022 13:22:07 -0400
-Received: from mail-pf1-x431.google.com (mail-pf1-x431.google.com [IPv6:2607:f8b0:4864:20::431])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 10F8C233A1
-        for <linux-perf-users@vger.kernel.org>; Mon,  3 Oct 2022 10:22:05 -0700 (PDT)
-Received: by mail-pf1-x431.google.com with SMTP id v186so10767317pfv.11
-        for <linux-perf-users@vger.kernel.org>; Mon, 03 Oct 2022 10:22:05 -0700 (PDT)
+        Mon, 3 Oct 2022 14:10:50 -0400
+Received: from mail-qk1-x734.google.com (mail-qk1-x734.google.com [IPv6:2607:f8b0:4864:20::734])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0B84E25E84;
+        Mon,  3 Oct 2022 11:10:49 -0700 (PDT)
+Received: by mail-qk1-x734.google.com with SMTP id i17so7021698qkk.12;
+        Mon, 03 Oct 2022 11:10:49 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20210112;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date;
-        bh=za0njCA3sgp6egI3b9JB+Szkqh+A7J7QZOy2kShgEeA=;
-        b=sNNenaH/MXaQOPTG8DBJHdqgw2hHtH2WkOS8N+yo4znXwGDQq7r41FUs9DgJQs/PvH
-         oL8Gc1ClUh2JglnngdCAwTZkayX24rFy0/aOYgi/qmMJk0za8I7OrZz8QfKZCbHS2obq
-         tsl/pVr+cIxMQKClb/lIJLETg3owXP8EKLABdhIJ28b68QYz5T4QrKoPB1PKuLmwBw1P
-         5S6Xt0joFXE/OgHFz+aKk/JEv331clZZiumJzq0W6GooV6rDpP5Xe/st+POzII7edNYy
-         OkD0CNzm6jpmYmMagh0gOubOtROcWjwbKxotqPKYBVG7pOa/Gq6WVJMsYY/wS6CC8wTN
-         dvSQ==
+        d=gmail.com; s=20210112;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date;
+        bh=6GSBpywsjKwPYr9hvx5GHTfSyCn4GlAqxJaWR8Wo4kE=;
+        b=a9WJRwXeC7awSc02b11mfesATFj5xtBd6llcvg3qJLnJrC33eS148byjd/TsHGqMbH
+         zS53uh3nvUyH50Rq6CWhV8MzjwXJc5zktsmcGKxI7ITIZfxMfj0360rwtLoTdFTJjiY6
+         B6WmIUqtrs4fCCxGAb4ESyFDDvCGM6Csozf5eNXTZOFPRqTb7KTGNxZSvc2+/iEDeYEO
+         BQKXinOk4GcyDq5bbYDEsYX1x695p3xCAgjVR+9JpFbcplJXqEH/bEnsBT1RlEVHqT4X
+         z2KuJlCkzsOOl5XZqwrmcqhnBSXO2R5PbKa3ooNO86a8CCd8L+/t4z+cFP+qlA33UAGG
+         8Fqg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date;
-        bh=za0njCA3sgp6egI3b9JB+Szkqh+A7J7QZOy2kShgEeA=;
-        b=DLm4YTeItlP50XsQaXYW++oRM2zTaLQ/u1yKx/JYQjitZA6SIoQEDowmMdrKiZfvil
-         pQ2XC2lYI0ipY7hYLML8WXz8hjsikWWKBmgW7p7OHRm+fvyWm4fAkqIctlbE/grNBIdS
-         OMnghZy/t33/kfxSTLhQvWN0aZxykmudoNUMDmgdtNq1EergmexmZZh66CZZxw+sgtII
-         EfhvV1AFzHoG8cc3XgSSl1zL4Y9nzWszR0/8yxDK+IcSY5uP1K9AHxG9aV68VLHHUMnM
-         O0UNTpnoO61ojG3LbM5ZyghE2VjTbyMeW1qy0rB60HuQVRXW2naYHA9chBDMNGaFK8JT
-         lblQ==
-X-Gm-Message-State: ACrzQf1DPC/xjyks5IDiqYKGjvLyhPrgMhZWVr6blxXaAY8VpJfgqCYA
-        7SkbVIyfmLuLpNPnE9CfShAPvg==
-X-Google-Smtp-Source: AMsMyM6tMAq4APo86wDWg3IUzInkOiZmGfRnFMuo72kvveYFRzigFK1scDJeeSPH5/J824n1OwAnxA==
-X-Received: by 2002:a65:560a:0:b0:447:f485:caef with SMTP id l10-20020a65560a000000b00447f485caefmr9933150pgs.161.1664817724395;
-        Mon, 03 Oct 2022 10:22:04 -0700 (PDT)
-Received: from google.com (7.104.168.34.bc.googleusercontent.com. [34.168.104.7])
-        by smtp.gmail.com with ESMTPSA id x21-20020a17090300d500b00176c431e7e2sm7410104plc.13.2022.10.03.10.22.03
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date;
+        bh=6GSBpywsjKwPYr9hvx5GHTfSyCn4GlAqxJaWR8Wo4kE=;
+        b=0KuY2jkn0y1mhTWUZzf3COZi+XWjuqxeahQGBYfi/EQy0ZgSdk5LV/d78KQOMjhuXu
+         cnL13YjzaRxRHj4juCfAYQM5AUPA/pdnj4BTuIVYFV2PIpFlrL0im7Y5BbbLTuaABGW/
+         FJbSbR8klETfgxdBD90tGvCoSKCNdk8qWAaz/xFWFG20PfGtaS3NFuGm5IIPTq/TUyHf
+         IaTlZQWTriapSxfnjD3j2Fa8IHX3vfjMhkgYtLgfGlfwSzRTcROPO6Q9IfbzU9KkU1b4
+         WLQCQtTLXKkNgkqjQTHEZYHRDG4ngtZL8l0Ek7rlrl4cHwCSgbSFl6LbnMWnRCrZD/YL
+         rDbw==
+X-Gm-Message-State: ACrzQf0FfYa1Tyh3O4xkh2KZ0mSWWblwpjM5XxRXiRO+PV89H4NEbMo/
+        pNBzywacrJjD/u1robl7K2Q=
+X-Google-Smtp-Source: AMsMyM4FnfmYgVQg5JBBX7kgw8rHsxg7t3Isw4ZnZJ7BBhcMSkSJsIcdL5SBLEcNi5RZsi4y78IDOA==
+X-Received: by 2002:a05:620a:4304:b0:6d4:56aa:430e with SMTP id u4-20020a05620a430400b006d456aa430emr7118326qko.483.1664820648173;
+        Mon, 03 Oct 2022 11:10:48 -0700 (PDT)
+Received: from localhost.localdomain ([177.222.37.214])
+        by smtp.googlemail.com with ESMTPSA id bs43-20020a05620a472b00b006b5df4d2c81sm12176226qkb.94.2022.10.03.11.10.45
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 03 Oct 2022 10:22:04 -0700 (PDT)
-Date:   Mon, 3 Oct 2022 17:22:00 +0000
-From:   Sean Christopherson <seanjc@google.com>
-To:     Peter Zijlstra <peterz@infradead.org>
-Cc:     Ingo Molnar <mingo@redhat.com>,
+        Mon, 03 Oct 2022 11:10:47 -0700 (PDT)
+From:   Henry Castro <hcvcastro@gmail.com>
+To:     hcvcastro@gmail.com
+Cc:     Peter Zijlstra <peterz@infradead.org>,
+        Ingo Molnar <mingo@redhat.com>,
         Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Paolo Bonzini <pbonzini@redhat.com>,
         Mark Rutland <mark.rutland@arm.com>,
         Alexander Shishkin <alexander.shishkin@linux.intel.com>,
         Jiri Olsa <jolsa@kernel.org>,
         Namhyung Kim <namhyung@kernel.org>,
-        linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org,
-        kvm@vger.kernel.org, Like Xu <like.xu.linux@gmail.com>
-Subject: Re: [PATCH v4 0/5]  KVM: x86: Intel LBR related perf cleanups
-Message-ID: <YzsaOMculnYH1d5l@google.com>
-References: <20220901173258.925729-1-seanjc@google.com>
- <Yxnx8InRcF94zi0n@hirez.programming.kicks-ass.net>
- <YyUezO4WQSArXPI+@google.com>
+        linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: [PATCH v2] perf: fix the probe finder location (.dwo files)
+Date:   Mon,  3 Oct 2022 14:10:39 -0400
+Message-Id: <20221003181040.4822-1-hcvcastro@gmail.com>
+X-Mailer: git-send-email 2.20.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <YyUezO4WQSArXPI+@google.com>
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-On Sat, Sep 17, 2022, Sean Christopherson wrote:
-> On Thu, Sep 08, 2022, Peter Zijlstra wrote:
-> > On Thu, Sep 01, 2022 at 05:32:53PM +0000, Sean Christopherson wrote:
-> > 
-> > > Sean Christopherson (5):
-> > >   perf/x86/core: Remove unnecessary stubs provided for KVM-only helpers
-> > >   perf/x86/core: Drop the unnecessary return value from
-> > >     x86_perf_get_lbr()
-> > >   KVM: VMX: Move vmx_get_perf_capabilities() definition to vmx.c
-> > >   KVM: VMX: Fold vmx_supported_debugctl() into vcpu_supported_debugctl()
-> > >   KVM: VMX: Advertise PMU LBRs if and only if perf supports LBRs
-> > 
-> > These look good to me; how do you want this routed, if through the KVM
-> > tree:
-> > 
-> > Acked-by: Peter Zijlstra (Intel) <peterz@infradead.org>
-> 
-> Thanks!  If you don't anticipate conflicts in the perf headers, I'll take 'em
-> through KVM, patch 01 introduced a new warning that I need to resolve (hopefully
-> it doesn't throw a wrench into things).
+If the file object is compiled using -gsplit-dwarf,
+the probe finder location will fail.
 
-Rats, patch 01 is flat out wrong.  The stubs for Intel and AMD are necessary
-because KVM_{AMD,INTEL} don't strictly require CPU_SUP_{AMD/INTEL}.  KVM_AMD
-doesn't have any CPU_SUP_* requirement (which probably should be fixed), and
-KVM_INTEL effectively require INTEL || CENTAUR || ZHAOXIN.
+Signed-off-by: Henry Castro <hcvcastro@gmail.com>
+---
 
-x86_perf_get_lbr() can still be cleaned up to fix KVM's benign bug of not checking
-the result by zeroing the structure when LBRs are unsupported.
+> Anyway I think it'd be safer to do
+>
+>    if (dwarf_cu_info() == 0 && unit_type == skeleton)
+>        pf->cu_die = subdie;
 
-v5 incoming...
+Thank you, I have modifed the patch :)
+
+
+ tools/perf/util/probe-finder.c | 11 ++++++++++-
+ 1 file changed, 10 insertions(+), 1 deletion(-)
+
+diff --git a/tools/perf/util/probe-finder.c b/tools/perf/util/probe-finder.c
+index 50d861a80f57..b27039f5f04b 100644
+--- a/tools/perf/util/probe-finder.c
++++ b/tools/perf/util/probe-finder.c
+@@ -1161,7 +1161,8 @@ static int debuginfo__find_probe_location(struct debuginfo *dbg,
+ 	struct perf_probe_point *pp = &pf->pev->point;
+ 	Dwarf_Off off, noff;
+ 	size_t cuhl;
+-	Dwarf_Die *diep;
++	Dwarf_Die *diep, cudie, subdie;
++	uint8_t unit_type;
+ 	int ret = 0;
+
+ 	off = 0;
+@@ -1200,6 +1201,14 @@ static int debuginfo__find_probe_location(struct debuginfo *dbg,
+ 			continue;
+ 		}
+
++#if _ELFUTILS_VERSION >= 171
++		/* Check separate debug information file. */
++		if (dwarf_cu_info(pf->cu_die.cu, NULL, &unit_type,
++				  &cudie, &subdie, NULL, NULL, NULL) == 0
++		    && unit_type == DW_UT_skeleton)
++			pf->cu_die = subdie;
++#endif
++
+ 		/* Check if target file is included. */
+ 		if (pp->file)
+ 			pf->fname = cu_find_realpath(&pf->cu_die, pp->file);
+--
+2.20.1
+
