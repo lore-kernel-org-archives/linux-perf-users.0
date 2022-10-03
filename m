@@ -2,122 +2,527 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 30203C433FE
-	for <linux-perf-users@archiver.kernel.org>; Mon,  3 Oct 2022 18:17:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 84485C433FE
+	for <linux-perf-users@archiver.kernel.org>; Mon,  3 Oct 2022 18:52:07 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229967AbiJCSRS (ORCPT
+        id S229576AbiJCSwF (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Mon, 3 Oct 2022 14:17:18 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38556 "EHLO
+        Mon, 3 Oct 2022 14:52:05 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38054 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229906AbiJCSRJ (ORCPT
+        with ESMTP id S229586AbiJCSwE (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Mon, 3 Oct 2022 14:17:09 -0400
-Received: from mail-qt1-x833.google.com (mail-qt1-x833.google.com [IPv6:2607:f8b0:4864:20::833])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3AE343FEE5;
-        Mon,  3 Oct 2022 11:17:08 -0700 (PDT)
-Received: by mail-qt1-x833.google.com with SMTP id y2so6833484qtv.5;
-        Mon, 03 Oct 2022 11:17:08 -0700 (PDT)
+        Mon, 3 Oct 2022 14:52:04 -0400
+Received: from mail-wm1-x32b.google.com (mail-wm1-x32b.google.com [IPv6:2a00:1450:4864:20::32b])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 47ED2205EA
+        for <linux-perf-users@vger.kernel.org>; Mon,  3 Oct 2022 11:52:01 -0700 (PDT)
+Received: by mail-wm1-x32b.google.com with SMTP id v128-20020a1cac86000000b003b7a6ad5ccdso3363448wme.3
+        for <linux-perf-users@vger.kernel.org>; Mon, 03 Oct 2022 11:52:01 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20210112;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date;
-        bh=6GSBpywsjKwPYr9hvx5GHTfSyCn4GlAqxJaWR8Wo4kE=;
-        b=JtsL+Dx2PwQ4GX+EXm7wwyPP9y3dsNdyX+7nmSLX0Cq3G90w4rRJxpltmEa7rXfjY+
-         OG2G8tLT0KaWnHBuJJ0ZoLBnyxjGA8YsgB4mJ3P0JEEdZz4vjzubMImn7cH6XxJAQDrP
-         Byhg2serWd9IAnUHYDgWWR4P6SxsVi/5fclUPNvBxaMwSGiD1BxXDGvquNvcdSLtqZ+D
-         bpcOJdi8C0cg20hy7dZWHUEghtfmBmQLpO+eG/1ghM84O/vZuI5sQ0PVErqlVV39C7R+
-         qQMajXJrdbBAnkYcXwpMk5fiRB/NZs239qFJ8TxE1DZpDkK6jEBkNz110mFy4OFhXAj+
-         zcdQ==
+        d=google.com; s=20210112;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date;
+        bh=edqCkVEL8i4Uz1rA32xtHlJE25wxZYoYykCtsNa8A6g=;
+        b=JR/pPXskbhn46ixixGFmyCbqBUDK3mDCTkvpFOhDSdLyO/XyzSsi/hU+FBlkxit4Ui
+         NXt+Ky/aMIY5bPK8aDQ1IhPwc9+HhnDaED829lD7zMhEUMSejfdpl15WhA4OTSu/Tram
+         fkNz0dQU47zROUddwS6x30PvFnw2aIimXccu9cjng/oDHZFNhMNwvM6jPF57zdaNDoYb
+         TzJmQt/8M+4vRaQUpudqQPz3tubf+/O+N7F7JMic7k9iOYJypI25fZ2n6s4Uj6zwdk/T
+         Sz7oc5DKCe3r1++UGBK52SdaoI1vVOPo62Fe0vHPC3+rDFWaq9Y4wfWmH6e2qG7O6LFg
+         3kPA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
          :subject:date;
-        bh=6GSBpywsjKwPYr9hvx5GHTfSyCn4GlAqxJaWR8Wo4kE=;
-        b=v3b+TJZbXHTa+XuAjFjaza2PjHKnCBt3FlYGZDe1enwBt4bhLfJsPNkEKUGsruiSNP
-         4qiBqilCen8HsdH27Mz/KBDrjapufE+3bssAkgBK/6E0t61+Y4eH4gm/xg264HMr2LUb
-         I2uh7yg53013+puOJCG30K+ZHsDTzBp5z956/kQuGgG4p9ziii+Dlp9frg1G79UKqOgX
-         kasx+gTclUV+nutah4sJFG5OInJ6eNnJlx2m/V+xZt0Q+ziQCfWfsjrYEcTh/u5IBekC
-         m9yv8Y6/a+eslfwXzAeQRKSxmgJRchfcbWh1XxLsW0sdzMrvmseqjhUXXRZHElrEe5lA
-         /WPg==
-X-Gm-Message-State: ACrzQf3jCv0Ky/XIUsGhJCjWjFtfNHoI90cezui1g2XH/LaUN1QsAxar
-        BlCNB6NwJAobGC5p906X/jifWMiJbVQUSg==
-X-Google-Smtp-Source: AMsMyM4BKoUjUPYb0Jf1H5r7RchuXC609kJb0q+UHascuGJ+E6dNUcVxyxxPp+1CfrIKyYwhhRfH/Q==
-X-Received: by 2002:ac8:7f4c:0:b0:35c:ceb3:4409 with SMTP id g12-20020ac87f4c000000b0035cceb34409mr16687207qtk.138.1664821027245;
-        Mon, 03 Oct 2022 11:17:07 -0700 (PDT)
-Received: from localhost.localdomain ([177.222.37.214])
-        by smtp.googlemail.com with ESMTPSA id k6-20020ac86046000000b0035ba3cae6basm9992329qtm.34.2022.10.03.11.17.04
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 03 Oct 2022 11:17:07 -0700 (PDT)
-From:   Henry Castro <hcvcastro@gmail.com>
-To:     namhyung@kernel.org
-Cc:     Henry Castro <hcvcastro@gmail.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Jiri Olsa <jolsa@kernel.org>, linux-perf-users@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: [PATCH v2] perf: fix the probe finder location (.dwo files)
-Date:   Mon,  3 Oct 2022 14:16:56 -0400
-Message-Id: <20221003181657.4890-1-hcvcastro@gmail.com>
-X-Mailer: git-send-email 2.20.1
-In-Reply-To: <CAM9d7ciaMJuG-LgOGoT-u2qwXp8Tk=Zb3ZJPCzA1oQN9hk5ENA@mail.gmail.com>
-References: <CAM9d7ciaMJuG-LgOGoT-u2qwXp8Tk=Zb3ZJPCzA1oQN9hk5ENA@mail.gmail.com>
+        bh=edqCkVEL8i4Uz1rA32xtHlJE25wxZYoYykCtsNa8A6g=;
+        b=aIAB0LDaXC4IwLAuSVNZ3pSijLGVyadP88kJgfMGllr5I2QhX1Q+tyvDSfWhxr4vfG
+         rE35ntCVcBI/+CuobE7itU48lDAERTGNa9XFYYOAz12H9nwbWZODItuV/h4h722/1C2n
+         qfo7cMejg3kjSzo1tDnA1VSGQ6IBgB4+qiuUCH7pW1r8KaVFT0K8i+cr6+uHL18pzj4S
+         SaB8lAmT102HfwYht9w6xgdy5aQDuDxiDl3+xosEFhNpMGLiruWignlH4L2sc6ng9lHG
+         834y2E0f91SHU0j4tQgrNyPrID0xfR2Q8NLbWjJ09isnhRovfDO+ScoaBKrcx/duI494
+         L6FA==
+X-Gm-Message-State: ACrzQf2y3SZ18eFaw1BYqrQOZr9J8M7+WLZWjwehdkPtNJdI73KZ/7Zp
+        l7MUovWQPPwIrILnh9BKrctxKJQWuK5pNoDig4VP4gB2mUaRKA==
+X-Google-Smtp-Source: AMsMyM6UKx5zp/od6I8uCZIBBdLtI/w+LcEZzsAJ76Y4HRwWnzFOmGGeJwEwpF2RYRDZvC20v0gcRdAyd4fMnj1aZ90=
+X-Received: by 2002:a05:600c:19ce:b0:3b4:c709:4307 with SMTP id
+ u14-20020a05600c19ce00b003b4c7094307mr7681389wmq.182.1664823119734; Mon, 03
+ Oct 2022 11:51:59 -0700 (PDT)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+References: <20220913115717.36191-1-atrajeev@linux.vnet.ibm.com>
+ <4792ef3a-8790-a0d4-50f2-4917874d81d6@arm.com> <82D5587E-593A-43A7-92D7-7E095E2BE9A9@linux.vnet.ibm.com>
+ <6627ae9a-91e3-0923-1234-54e0fc3f4916@arm.com> <CAP-5=fVBzLfhfwPjxE_9DNeesPaPxf3k0b5T5S6THzB1H85mrA@mail.gmail.com>
+ <993a1391ee931e859d972c460644d171@imap.linux.ibm.com>
+In-Reply-To: <993a1391ee931e859d972c460644d171@imap.linux.ibm.com>
+From:   Ian Rogers <irogers@google.com>
+Date:   Mon, 3 Oct 2022 11:51:47 -0700
+Message-ID: <CAP-5=fWJ0YBxdCarpNSfbzoAZ9uTAtgj4CdR7sQU8748Y-+DVA@mail.gmail.com>
+Subject: Re: [PATCH] tools/perf: Fix aggr_printout to display cpu field
+ irrespective of core value
+To:     atrajeev <atrajeev@imap.linux.ibm.com>
+Cc:     james.clark@arm.com, Athira Rajeev <atrajeev@linux.vnet.ibm.com>,
+        maddy@linux.vnet.ibm.com,
+        Nageswara Sastry <rnsastry@linux.ibm.com>,
+        Kajol Jain <kjain@linux.ibm.com>,
+        Arnaldo Carvalho de Melo <acme@kernel.org>,
+        linux-perf-users@vger.kernel.org, Jiri Olsa <jolsa@kernel.org>,
+        Disha Goel <disgoel@linux.vnet.ibm.com>,
+        linuxppc-dev@lists.ozlabs.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-If the file object is compiled using -gsplit-dwarf,
-the probe finder location will fail.
-
-Signed-off-by: Henry Castro <hcvcastro@gmail.com>
----
-
-> Anyway I think it'd be safer to do
+On Mon, Oct 3, 2022 at 7:03 AM atrajeev <atrajeev@imap.linux.ibm.com> wrote=
+:
 >
->    if (dwarf_cu_info() == 0 && unit_type == skeleton)
->        pf->cu_die = subdie;
+> On 2022-10-02 05:17, Ian Rogers wrote:
+> > On Thu, Sep 29, 2022 at 5:56 AM James Clark <james.clark@arm.com>
+> > wrote:
+> >>
+> >>
+> >>
+> >> On 29/09/2022 09:49, Athira Rajeev wrote:
+> >> >
+> >> >
+> >> >> On 28-Sep-2022, at 9:05 PM, James Clark <james.clark@arm.com> wrote=
+:
+> >> >>
+> >> >>
+> >> >>
+> >> >
+> >> > Hi James,
+> >> >
+> >> > Thanks for looking at the patch and sharing review comments.
+> >> >
+> >> >> On 13/09/2022 12:57, Athira Rajeev wrote:
+> >> >>> perf stat includes option to specify aggr_mode to display
+> >> >>> per-socket, per-core, per-die, per-node counter details.
+> >> >>> Also there is option -A ( AGGR_NONE, -no-aggr ), where the
+> >> >>> counter values are displayed for each cpu along with "CPU"
+> >> >>> value in one field of the output.
+> >> >>>
+> >> >>> Each of the aggregate mode uses the information fetched
+> >> >>> from "/sys/devices/system/cpu/cpuX/topology" like core_id,
+> >> >>
+> >> >> I thought that this wouldn't apply to the cpu field because cpu is
+> >> >> basically interchangeable as an index in cpumap, rather than anythi=
+ng
+> >> >> being read from the topology file.
+> >> >
+> >> > The cpu value is filled in this function:
+> >> >
+> >> > Function : aggr_cpu_id__cpu
+> >> > Code: util/cpumap.c
+> >> >
+> >> >>
+> >> >>> physical_package_id. Utility functions in "cpumap.c" fetches
+> >> >>> this information and populates the socket id, core id, cpu etc.
+> >> >>> If the platform does not expose the topology information,
+> >> >>> these values will be set to -1. Example, in case of powerpc,
+> >> >>> details like physical_package_id is restricted to be exposed
+> >> >>> in pSeries platform. So id.socket, id.core, id.cpu all will
+> >> >>> be set as -1.
+> >> >>>
+> >> >>> In case of displaying socket or die value, there is no check
+> >> >>> done in the "aggr_printout" function to see if it points to
+> >> >>> valid socket id or die. But for displaying "cpu" value, there
+> >> >>> is a check for "if (id.core > -1)". In case of powerpc pSeries
+> >> >>> where detail like physical_package_id is restricted to be
+> >> >>> exposed, id.core will be set to -1. Hence the column or field
+> >> >>> itself for CPU won't be displayed in the output.
+> >> >>>
+> >> >>> Result for per-socket:
+> >> >>>
+> >> >>> <<>>
+> >> >>> perf stat -e branches --per-socket -a true
+> >> >>>
+> >> >>> Performance counter stats for 'system wide':
+> >> >>>
+> >> >>> S-1      32            416,851      branches
+> >> >>> <<>>
+> >> >>>
+> >> >>> Here S has -1 in above result. But with -A option which also
+> >> >>> expects CPU in one column in the result, below is observed.
+> >> >>>
+> >> >>> <<>>
+> >> >>> /bin/perf stat -e instructions -A -a true
+> >> >>>
+> >> >>> Performance counter stats for 'system wide':
+> >> >>>
+> >> >>>            47,146      instructions
+> >> >>>            45,226      instructions
+> >> >>>            43,354      instructions
+> >> >>>            45,184      instructions
+> >> >>> <<>>
+> >> >>>
+> >> >>> If the cpu id value is pointing to -1 also, it makes sense
+> >> >>> to display the column in the output to replicate the behaviour
+> >> >>> or to be in precedence with other aggr options(like per-socket,
+> >> >>> per-core). Remove the check "id.core" so that CPU field gets
+> >> >>> displayed in the output.
+> >> >>
+> >> >> Why would you want to print -1 out? Seems like the if statement was=
+ a
+> >> >> good one to me, otherwise the output looks a bit broken to users. A=
+re
+> >> >> the other aggregation modes even working if -1 is set for socket an=
+d
+> >> >> die? Maybe we need to not print -1 in those cases or exit earlier w=
+ith a
+> >> >> failure.
+> >> >>
+> >> >> The -1 value has a specific internal meaning which is "to not
+> >> >> aggregate". It doesn't mean "not set".
+> >> >
+> >> > Currently, this check is done only for printing cpu value.
+> >> > For socket/die/core values, this check is not done. Pasting an
+> >> > example snippet from a powerpc system ( specifically from pseries pl=
+atform where
+> >> > the value is set to -1 )
+> >> >
+> >> > ./perf stat --per-core -a -C 1 true
+> >> >
+> >> >  Performance counter stats for 'system wide':
+> >> >
+> >> > S-1-D-1-C-1          1               1.06 msec cpu-clock            =
+            #    1.018 CPUs utilized
+> >> > S-1-D-1-C-1          1                  2      context-switches     =
+            #    1.879 K/sec
+> >> > S-1-D-1-C-1          1                  0      cpu-migrations       =
+            #    0.000 /sec
+> >> >
+> >> > Here though the value is -1, we are displaying it. Where as in case =
+of cpu, the first column will be
+> >> > empty since we do a check before printing.
+> >> >
+> >> > Example:
+> >> >
+> >> > ./perf stat --per-core -A -C 1 true
+> >> >
+> >> >  Performance counter stats for 'CPU(s) 1':
+> >> >
+> >> >               0.88 msec cpu-clock                        #    1.022 =
+CPUs utilized
+> >> >                  2      context-switches
+> >> >                  0      cpu-migrations
+> >> >
+> >> >
+> >> > No sure, whether there are scripts out there, which consume the curr=
+ent format and
+> >> > not displaying -1 may break it. That is why we tried with change to =
+remove check for cpu, similar to
+> >> > other modes like socket, die, core etc.
+> >>
+> >> I wouldn't worry about that because there are json and CSV modes which
+> >> are machine readable, and -1 is already not always displayed. If
+> >> anything this change here is also likely to break parsing by adding -1
+> >> where it wasn't before.
+> >>
+> >> >
+> >> > Also perf code ie =E2=80=9Caggr_cpu_id__empty=E2=80=9D in util/cpuma=
+p.c initialises the
+> >> > values to -1 . I was checking to see where we are mapping -1 to =E2=
+=80=9Cto not aggregate=E2=80=9D.
+> >> > What I could find is AGGR_NONE ( which is for no-aggr ) has value as=
+ zero.
+> >> >
+> >> > Reference: defined in util/stat.h
+> >> >
+> >> > enum aggr_mode {
+> >> >         AGGR_NONE,
+> >> >
+> >>
+> >> That enum is never written to any of the cpumap members, that defines
+> >> the mode of how to fill the cpu map instead. 0 is a valid value, for
+> >> example "CPU 0". -1 is used as a special case and shouldn't be
+> >> displayed
+> >> IMO.
+> >>
+> >> Did you see my comment in the code below about the bad merge? Could
+> >> that
+> >> not be related to your issue?
+> >
+> > I'm suspicious of this too. In Claire's patch:
+> >
+> >         case AGGR_NONE:
+> > -               if (evsel->percore && !config->percore_show_thread) {
+> > -                       fprintf(config->output, "S%d-D%d-C%*d%s",
+> > -                               id.socket,
+> > -                               id.die,
+> > -                               config->csv_output ? 0 : -3,
+> > -                               id.core, config->csv_sep);
+> > -               } else if (id.cpu.cpu > -1) {
+> > -                       fprintf(config->output, "CPU%*d%s",
+> > -                               config->csv_output ? 0 : -7,
+> > -                               id.cpu.cpu, config->csv_sep);
+> > +               if (config->json_output) {
+> > +                       if (evsel->percore &&
+> > !config->percore_show_thread) {
+> > +                               fprintf(config->output, "\"core\" :
+> > \"S%d-D%d-C%d\"",
+> > +                                       id.socket,
+> > +                                       id.die,
+> > +                                       id.core);
+> > +                       } else if (id.core > -1) {
+> > +                               fprintf(config->output, "\"cpu\" :
+> > \"%d\", ",
+> > +                                       id.cpu.cpu);
+> > +                       }
+> > +               } else {
+> > +                       if (evsel->percore &&
+> > !config->percore_show_thread) {
+> > +                               fprintf(config->output,
+> > "S%d-D%d-C%*d%s",
+> > +                                       id.socket,
+> > +                                       id.die,
+> > +                                       config->csv_output ? 0 : -3,
+> > +                                       id.core, config->csv_sep);
+> > +                       } else if (id.core > -1) {
+> > +                               fprintf(config->output, "CPU%*d%s",
+> > +                                       config->csv_output ? 0 : -7,
+> > +                                       id.cpu.cpu, config->csv_sep);
+> > +                       }
+> >                }
+> >                break;
+> >
+> > The old code was using "id.cpu.cpu > -1" while the new code is
+> > "id.core > -1". The value printed is id.cpu.cpu and so testing id.core
+> > makes less sense to me. Going back to the original patch:
+> >
+> > https://lore.kernel.org/lkml/20210811224317.1811618-1-cjense@google.com=
+/
+> >   case AGGR_NONE:
+> > - if (evsel->percore && !config->percore_show_thread) {
+> > - fprintf(config->output, "S%d-D%d-C%*d%s",
+> > - id.socket,
+> > - id.die,
+> > - config->csv_output ? 0 : -3,
+> > - id.core, config->csv_sep);
+> > + if (config->json_output) {
+> > + if (evsel->percore && !config->percore_show_thread) {
+> > + fprintf(config->output, "\"core\" : \"S%d-D%d-C%d\"",
+> > + id.socket,
+> > + id.die,
+> > + id.core);
+> > + } else if (id.core > -1) {
+> > + fprintf(config->output, "\"cpu\" : \"%d\", ",
+> > + evsel__cpus(evsel)->map[id.core]);
+> > + }
+> > + } else {
+> > + if (evsel->percore && !config->percore_show_thread) {
+> > + fprintf(config->output, "S%d-D%d-C%*d%s",
+> > + id.socket,
+> > + id.die,
+> > + config->csv_output ? 0 : -3,
+> > + id.core, config->csv_sep);
+> >   } else if (id.core > -1) {
+> >   fprintf(config->output, "CPU%*d%s",
+> >   config->csv_output ? 0 : -7,
+> >   evsel__cpus(evsel)->map[id.core],
+> >   config->csv_sep);
+> > - }
+> > + }
+> > + }
+> > +
+> >   break;
+> >
+> > So testing the id.core isn't a bad index makes sense. However, we
+> > changed from core to CPU here:
+> > https://lore.kernel.org/all/20220105061351.120843-26-irogers@google.com=
+/
+> > and that was because of:
+> > https://lore.kernel.org/r/20220105061351.120843-25-irogers@google.com
+> >
+> > So I think the code needs to test CPU and not core. Whether that is
+> > addressing the Power test failures is another matter, as James said we
+> > may need a fix in the tests for that.
+> >
+>
+> Hi Ian, James
+>
+> Thanks for the reviews and suggestions.
+>
+> After checking through the original commits for id.core vs cpu check,
+> sharing patch below to test CPU and not core.
+>
+>  From 4dd98d953940deb2f85176cb6b4ecbfd18dbdbf9 Mon Sep 17 00:00:00 2001
+>  From: Athira Rajeev <atrajeev@linux.vnet.ibm.com>
+> Date: Mon, 3 Oct 2022 15:47:27 +0530
+> Subject: [PATCH] tools/perf: Fix cpu check to use id.cpu.cpu in
+> aggr_printout
+>
+> perf stat has options to aggregate the counts in different
+> modes like per socket, per core etc. The function "aggr_printout"
+> in util/stat-display.c which is used to print the aggregates,
+> has a check for cpu in case of AGGR_NONE. This check was
+> originally using condition : "if (id.cpu.cpu > -1)". But
+> this got changed after commit df936cadfb58 ("perf stat: Add
+> JSON output option"), which added option to output json format
+> for different aggregation modes. After this commit, the
+> check in "aggr_printout" is using "if (id.core > -1)".
+>
+> The old code was using "id.cpu.cpu > -1" while the new code
+> is using "id.core > -1". But since the value printed is
+> id.cpu.cpu, fix this check to use cpu and not core.
+>
+> Signed-off-by: Athira Rajeev <atrajeev@linux.vnet.ibm.com>
+> Suggested-by: James Clark <james.clark@arm.com>
+> Suggested-by: Ian Rogers <irogers@google.com>
 
-Thank you, I have modifed the patch :)
+The change below works on my dual socket SkylakeX:
+..
+85: perf stat CSV output linter                                     :
+Ok
+86: perf stat csv summary test                                      : Ok
+87: perf stat JSON output linter                                    : Ok
+..
+I don't see anything else out of the ordinary.
 
+Thanks,
+Ian
 
- tools/perf/util/probe-finder.c | 11 ++++++++++-
- 1 file changed, 10 insertions(+), 1 deletion(-)
-
-diff --git a/tools/perf/util/probe-finder.c b/tools/perf/util/probe-finder.c
-index 50d861a80f57..b27039f5f04b 100644
---- a/tools/perf/util/probe-finder.c
-+++ b/tools/perf/util/probe-finder.c
-@@ -1161,7 +1161,8 @@ static int debuginfo__find_probe_location(struct debuginfo *dbg,
- 	struct perf_probe_point *pp = &pf->pev->point;
- 	Dwarf_Off off, noff;
- 	size_t cuhl;
--	Dwarf_Die *diep;
-+	Dwarf_Die *diep, cudie, subdie;
-+	uint8_t unit_type;
- 	int ret = 0;
-
- 	off = 0;
-@@ -1200,6 +1201,14 @@ static int debuginfo__find_probe_location(struct debuginfo *dbg,
- 			continue;
- 		}
-
-+#if _ELFUTILS_VERSION >= 171
-+		/* Check separate debug information file. */
-+		if (dwarf_cu_info(pf->cu_die.cu, NULL, &unit_type,
-+				  &cudie, &subdie, NULL, NULL, NULL) == 0
-+		    && unit_type == DW_UT_skeleton)
-+			pf->cu_die = subdie;
-+#endif
-+
- 		/* Check if target file is included. */
- 		if (pp->file)
- 			pf->fname = cu_find_realpath(&pf->cu_die, pp->file);
---
-2.20.1
-
+> ---
+>   tools/perf/util/stat-display.c | 4 ++--
+>   1 file changed, 2 insertions(+), 2 deletions(-)
+>
+> diff --git a/tools/perf/util/stat-display.c
+> b/tools/perf/util/stat-display.c
+> index b82844cb0ce7..cf28020798ec 100644
+> --- a/tools/perf/util/stat-display.c
+> +++ b/tools/perf/util/stat-display.c
+> @@ -168,7 +168,7 @@ static void aggr_printout(struct perf_stat_config
+> *config,
+>                                         id.socket,
+>                                         id.die,
+>                                         id.core);
+> -                       } else if (id.core > -1) {
+> +                       } else if (id.cpu.cpu > -1) {
+>                                 fprintf(config->output, "\"cpu\" : \"%d\"=
+, ",
+>                                         id.cpu.cpu);
+>                         }
+> @@ -179,7 +179,7 @@ static void aggr_printout(struct perf_stat_config
+> *config,
+>                                         id.die,
+>                                         config->csv_output ? 0 : -3,
+>                                         id.core, config->csv_sep);
+> -                       } else if (id.core > -1) {
+> +                       } else if (id.cpu.cpu > -1) {
+>                                 fprintf(config->output, "CPU%*d%s",
+>                                         config->csv_output ? 0 : -7,
+>                                         id.cpu.cpu, config->csv_sep);
+> --
+> 2.31.1
+>
+> Can you suggest or help to test this patch change.
+>
+> To address the test failure, as James suggested, I will handle fix in
+> testcases and post them
+> as a separate patch. Plan is to add a sanity check in the tests to see
+> if the "physical_packagge_id" ( ie socket id ) in topology points to -1
+> and if so skip the test. Also in parallel, checking to see how we can
+> handle the aggregation modes to work incase of "-1" value for socket or
+> die
+>
+> Thanks
+> Athira
+>
+> > Thanks,
+> > Ian
+> >
+> >> Or the one about fixing it in the test instead? Or failing early if
+> >> the
+> >> topology can't be read?
+> >>
+> >> I'm still not convinced that any of the modes where -1 is printed are
+> >> even working properly so it might be best to fix that rather than just
+> >> the printout.
+> >>
+> >> > James, can you point me to reference for that meaning if I have miss=
+ed anything.
+> >>
+> >> It's here:
+> >>
+> >>   /** Identify where counts are aggregated, -1 implies not to
+> >> aggregate. */
+> >>   struct aggr_cpu_id {
+> >>
+> >> >
+> >> > Thanks
+> >> > Athira
+> >> >
+> >> >>
+> >> >>>
+> >> >>> After the fix:
+> >> >>>
+> >> >>> <<>>
+> >> >>> perf stat -e instructions -A -a true
+> >> >>>
+> >> >>> Performance counter stats for 'system wide':
+> >> >>>
+> >> >>> CPU-1                  64,034      instructions
+> >> >>> CPU-1                  68,941      instructions
+> >> >>> CPU-1                  59,418      instructions
+> >> >>> CPU-1                  70,478      instructions
+> >> >>> CPU-1                  65,201      instructions
+> >> >>> CPU-1                  63,704      instructions
+> >> >>> <<>>
+> >> >>>
+> >> >>> This is caught while running "perf test" for
+> >> >>> "stat+json_output.sh" and "stat+csv_output.sh".
+> >> >>
+> >> >> Is it possible to fix the issue by making the tests cope with the l=
+ack
+> >> >> of the CPU id?
+> >> >>
+> >> >>>
+> >> >>> Reported-by: Disha Goel <disgoel@linux.vnet.ibm.com>
+> >> >>> Signed-off-by: Athira Rajeev <atrajeev@linux.vnet.ibm.com>
+> >> >>> ---
+> >> >>> tools/perf/util/stat-display.c | 6 ++----
+> >> >>> 1 file changed, 2 insertions(+), 4 deletions(-)
+> >> >>>
+> >> >>> diff --git a/tools/perf/util/stat-display.c b/tools/perf/util/stat=
+-display.c
+> >> >>> index b82844cb0ce7..1b751a730271 100644
+> >> >>> --- a/tools/perf/util/stat-display.c
+> >> >>> +++ b/tools/perf/util/stat-display.c
+> >> >>> @@ -168,10 +168,9 @@ static void aggr_printout(struct perf_stat_co=
+nfig *config,
+> >> >>>                                     id.socket,
+> >> >>>                                     id.die,
+> >> >>>                                     id.core);
+> >> >>> -                   } else if (id.core > -1) {
+> >> >>> +                   } else
+> >> >>
+> >> >> This should have been "id.cpu.cpu > -1". Looks like it was changed =
+by
+> >> >> some kind of bad merge or rebase in df936cadfb because there is no
+> >> >> obvious justification for the change to .core in that commit.
+> >> >
+> >> >>
+> >> >>>                             fprintf(config->output, "\"cpu\" : \"%=
+d\", ",
+> >> >>>                                     id.cpu.cpu);
+> >> >>> -                   }
+> >> >>>             } else {
+> >> >>>                     if (evsel->percore && !config->percore_show_th=
+read) {
+> >> >>>                             fprintf(config->output, "S%d-D%d-C%*d%=
+s",
+> >> >>> @@ -179,11 +178,10 @@ static void aggr_printout(struct perf_stat_c=
+onfig *config,
+> >> >>>                                     id.die,
+> >> >>>                                     config->csv_output ? 0 : -3,
+> >> >>>                                     id.core, config->csv_sep);
+> >> >>> -                   } else if (id.core > -1) {
+> >> >>> +                   } else
+> >> >>>                             fprintf(config->output, "CPU%*d%s",
+> >> >>>                                     config->csv_output ? 0 : -7,
+> >> >>>                                     id.cpu.cpu, config->csv_sep);
+> >> >>> -                   }
+> >> >>>             }
+> >> >>>             break;
+> >> >>>     case AGGR_THREAD:
+> >> >
