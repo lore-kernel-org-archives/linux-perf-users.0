@@ -2,83 +2,79 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DAA58C433F5
-	for <linux-perf-users@archiver.kernel.org>; Tue,  4 Oct 2022 18:09:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 39682C433F5
+	for <linux-perf-users@archiver.kernel.org>; Tue,  4 Oct 2022 18:14:41 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229928AbiJDSJw (ORCPT
+        id S229994AbiJDSOf (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Tue, 4 Oct 2022 14:09:52 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60512 "EHLO
+        Tue, 4 Oct 2022 14:14:35 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38174 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229810AbiJDSJu (ORCPT
+        with ESMTP id S229723AbiJDSOc (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Tue, 4 Oct 2022 14:09:50 -0400
-Received: from ams.source.kernel.org (ams.source.kernel.org [145.40.68.75])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 496A4A455;
-        Tue,  4 Oct 2022 11:09:48 -0700 (PDT)
+        Tue, 4 Oct 2022 14:14:32 -0400
+Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7022367CB6
+        for <linux-perf-users@vger.kernel.org>; Tue,  4 Oct 2022 11:14:31 -0700 (PDT)
 Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by ams.source.kernel.org (Postfix) with ESMTPS id F1152B81BA7;
-        Tue,  4 Oct 2022 18:09:46 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 7E634C433D6;
-        Tue,  4 Oct 2022 18:09:45 +0000 (UTC)
+        by dfw.source.kernel.org (Postfix) with ESMTPS id EF87B614F4
+        for <linux-perf-users@vger.kernel.org>; Tue,  4 Oct 2022 18:14:30 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 32603C433D6;
+        Tue,  4 Oct 2022 18:14:30 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1664906985;
-        bh=Yx/3eZ2i50Vpps7YV4UOTEWJF3t7wFpdjQlcdhRn7hA=;
+        s=k20201202; t=1664907270;
+        bh=jclFgCrFUBn52qvUWEPs5SL9Ek1Ns+2EbUXKGu56P5s=;
         h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=Dm07/f9sNzo+kG4pchLWGw5vvCBmc/IsxdIMQwo5x5rG3SWGY+pzac5ksbV/LgWvi
-         CTgrh61lPpAFdTg21t5rW9Wun35A5z1Tkve48VIhNhSAGrEOKO4JrBPzjfcG7gBsbv
-         wXOfjWufS91S6Mbw7DjFhilnV0fky4HLz4oJpvfhMcN/RBXIaB0/U/yrmWXhgPPxns
-         Z7pIclPwEBNi6UkFVAuf/NEq7Tt4h2Z+AXXcNv1YepcNgHF8E/HFOlf659Fjorvogr
-         ewI5S5Gc38IZZscju2ZtMU58KriJHof5gSxhG00tBXayvBH6EoJTplWJdxb1m5Jt/G
-         bsaalwgs6nY+w==
+        b=jH3DB9eLjbBMsr8xuoLQUMS4XpT9bSi47/jFb/UHoeBrHxHkcLIFJj4qaGZRS0bmm
+         mudXMvdEp0MbWERQNjHPsxAIIp5esA4gbONuN/VzVGuJfN1HP6QrvGeaV9gM3dfgGJ
+         UE13UfjPIjIQrWUJ7CQGuDEDkZ4kZ1HVO8laxikUb0aD4sO/KfDK/2Qc5UZxWW+hN7
+         krchhsplTYUBSJotrVEM9cvVfclB8oD6lLbWsFyMQSuPJSw4Mxckg0eR+fymJ/L4qG
+         T9rX5q5rMvOvw/F9s+x2ZcUMBrmyfPYFZ7vqwO9XNzXZ6sHCnV+meeSNQ90gBnM7as
+         1RKBf3vl1QCCw==
 Received: by quaco.ghostprotocols.net (Postfix, from userid 1000)
-        id D99194062C; Tue,  4 Oct 2022 15:09:42 -0300 (-03)
-Date:   Tue, 4 Oct 2022 15:09:42 -0300
+        id F16114062C; Tue,  4 Oct 2022 15:14:27 -0300 (-03)
+Date:   Tue, 4 Oct 2022 15:14:27 -0300
 From:   Arnaldo Carvalho de Melo <acme@kernel.org>
 To:     Ian Rogers <irogers@google.com>
-Cc:     Andi Kleen <ak@linux.intel.com>,
-        Zhengjun Xing <zhengjun.xing@linux.intel.com>,
-        Kan Liang <kan.liang@linux.intel.com>, perry.taylor@intel.com,
-        caleb.biggers@intel.com, kshipra.bopardikar@intel.com,
-        samantha.alt@intel.com, ahmad.yasin@intel.com,
+Cc:     Athira Rajeev <atrajeev@linux.vnet.ibm.com>,
+        James Clark <james.clark@arm.com>,
+        atrajeev <atrajeev@imap.linux.ibm.com>, maddy@linux.vnet.ibm.com,
+        Nageswara Sastry <rnsastry@linux.ibm.com>,
+        Kajol Jain <kjain@linux.ibm.com>,
+        linux-perf-users <linux-perf-users@vger.kernel.org>,
         Jiri Olsa <jolsa@kernel.org>,
-        Namhyung Kim <namhyung@kernel.org>,
-        linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Stephane Eranian <eranian@google.com>
-Subject: Re: [PATCH v3 00/23] Improvements to Intel perf metrics
-Message-ID: <Yzx25psp6o4XDaVs@kernel.org>
-References: <20221004021612.325521-1-irogers@google.com>
- <CAP-5=fXk6sLhZsEs72G4pOuZNzDJLc2Vkkvf+Jv=LXQDHPy8-w@mail.gmail.com>
- <677c6ec7-2e01-635b-dbfb-fbb9280e5b7c@linux.intel.com>
- <CAP-5=fUFuw-WYj7xVm3WrnggN2NW7pJkznUQ-j3U4fwMB5PdnA@mail.gmail.com>
+        Disha Goel <disgoel@linux.vnet.ibm.com>,
+        linuxppc-dev@lists.ozlabs.org
+Subject: Re: [PATCH] tools/perf: Fix aggr_printout to display cpu field
+ irrespective of core value
+Message-ID: <Yzx4A+2I4yWTlbEn@kernel.org>
+References: <20220913115717.36191-1-atrajeev@linux.vnet.ibm.com>
+ <4792ef3a-8790-a0d4-50f2-4917874d81d6@arm.com>
+ <82D5587E-593A-43A7-92D7-7E095E2BE9A9@linux.vnet.ibm.com>
+ <6627ae9a-91e3-0923-1234-54e0fc3f4916@arm.com>
+ <CAP-5=fVBzLfhfwPjxE_9DNeesPaPxf3k0b5T5S6THzB1H85mrA@mail.gmail.com>
+ <993a1391ee931e859d972c460644d171@imap.linux.ibm.com>
+ <CAP-5=fWJ0YBxdCarpNSfbzoAZ9uTAtgj4CdR7sQU8748Y-+DVA@mail.gmail.com>
+ <6A5D0603-CF66-43B4-A13F-0308CF01967A@linux.vnet.ibm.com>
+ <CAP-5=fU=bwv-e_53QagWsKvW8wjibOjfGvnivWFFVba5A55boA@mail.gmail.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <CAP-5=fUFuw-WYj7xVm3WrnggN2NW7pJkznUQ-j3U4fwMB5PdnA@mail.gmail.com>
+In-Reply-To: <CAP-5=fU=bwv-e_53QagWsKvW8wjibOjfGvnivWFFVba5A55boA@mail.gmail.com>
 X-Url:  http://acmel.wordpress.com
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-Em Tue, Oct 04, 2022 at 10:55:56AM -0700, Ian Rogers escreveu:
-> On Tue, Oct 4, 2022 at 10:29 AM Andi Kleen <ak@linux.intel.com> wrote:
-> > Then if I follow the wiki example here I would expect I need to do
-
-> > $ ./perf stat -M tma_backend_bound_group ~/pmu/pmu-tools/workloads/BC1s
-
-> > Cannot find metric or group `tma_backend_bound_group'
-
-> > but tma_retiring_group doesn't exist. So it seems the methodology isn't
-> > fully consistent everywhere? Perhaps the wiki needs to document the
-> > supported CPUs and also what part of the hierarchy is supported.
+Em Tue, Oct 04, 2022 at 07:49:21AM -0700, Ian Rogers escreveu:
+> On Tue, Oct 4, 2022, 12:06 AM Athira Rajeev <atrajeev@linux.vnet.ibm.com>
+> > Thanks for helping with testing. Can I add your Tested-by for the patch ?
  
-> So I think you've not got Arnaldo's branch with the changes applied.
-> Unfortunately the instructions around '_group' are only going to apply
-> to Linux 6.1.
-
-I just pushed perf/core with Ian's v3 series, please check with that
-one.
-
-- Arnaldo
+> Yep.
+ 
+> Tested-by: Ian Rogers <irogers@google.com>
+ 
+> Thanks,
+> Ian
