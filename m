@@ -2,140 +2,58 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B429DC433F5
-	for <linux-perf-users@archiver.kernel.org>; Tue,  4 Oct 2022 12:14:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 43E5CC4332F
+	for <linux-perf-users@archiver.kernel.org>; Tue,  4 Oct 2022 13:38:51 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229461AbiJDMOW (ORCPT
+        id S230045AbiJDNis (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Tue, 4 Oct 2022 08:14:22 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46586 "EHLO
+        Tue, 4 Oct 2022 09:38:48 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55402 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229495AbiJDMOV (ORCPT
+        with ESMTP id S229461AbiJDNir (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Tue, 4 Oct 2022 08:14:21 -0400
-Received: from sin.source.kernel.org (sin.source.kernel.org [145.40.73.55])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BF1C413DEA;
-        Tue,  4 Oct 2022 05:14:17 -0700 (PDT)
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        Tue, 4 Oct 2022 09:38:47 -0400
+Received: from gandalf.ozlabs.org (gandalf.ozlabs.org [150.107.74.76])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 816F94DB67
+        for <linux-perf-users@vger.kernel.org>; Tue,  4 Oct 2022 06:38:46 -0700 (PDT)
+Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
         (No client certificate requested)
-        by sin.source.kernel.org (Postfix) with ESMTPS id 00A6FCE106D;
-        Tue,  4 Oct 2022 12:14:15 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id D4226C433D6;
-        Tue,  4 Oct 2022 12:14:13 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1664885654;
-        bh=9aQvtsA0yunPbT9ACGKHCp6b9GmT4b2uDIySCi7YjI4=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=bVlUVmGLL5spd15E5ejr9S31TuphQWPCUOijTpJSPZcKvRwl/o4eg030uPsxPhxyz
-         sXLdGTMMu2BThRN/7OTOkzXQ1MRg1WxgD5k4Mn+ZyMOMIa7ETBrZWPajYSswI1HBJB
-         8fsPtJ9Z7Ck5b/KGNVhrTD11VDHloQbM6w9oP8J7CuiNkmQLIkIZAdBcWg24FTT+Fg
-         o0bNw+AwVwRo60gxmkni54FJ7EwdaFj99rLAr1s0SBDm0Ir4I92bLr6uL0Xy+ANOy6
-         6JDyJ4bQIp4Gmc4r5T1b7bcW5UAmgvGXFxUlq6hN+iJ0GdnNUeCAqYLa3XoslbUQTf
-         jRzzIFaNoeAzA==
-Received: by quaco.ghostprotocols.net (Postfix, from userid 1000)
-        id 589F24062C; Tue,  4 Oct 2022 09:14:11 -0300 (-03)
-Date:   Tue, 4 Oct 2022 09:14:11 -0300
-From:   Arnaldo Carvalho de Melo <acme@kernel.org>
-To:     Namhyung Kim <namhyung@kernel.org>
-Cc:     Jiri Olsa <jolsa@kernel.org>, Ingo Molnar <mingo@kernel.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Ian Rogers <irogers@google.com>,
-        Adrian Hunter <adrian.hunter@intel.com>,
-        linux-perf-users@vger.kernel.org,
-        Kan Liang <kan.liang@linux.intel.com>,
-        Leo Yan <leo.yan@linaro.org>
-Subject: Re: [PATCH 2/5] libperf: Propagate maps only if necessary
-Message-ID: <YzwjkwgfAyMZRHpN@kernel.org>
-References: <20221003204647.1481128-1-namhyung@kernel.org>
- <20221003204647.1481128-3-namhyung@kernel.org>
+        by mail.ozlabs.org (Postfix) with ESMTPSA id 4Mhf1J4Vbbz4xGs;
+        Wed,  5 Oct 2022 00:38:44 +1100 (AEDT)
+From:   Michael Ellerman <patch-notifications@ellerman.id.au>
+To:     jolsa@kernel.org, Athira Rajeev <atrajeev@linux.vnet.ibm.com>,
+        acme@kernel.org, mpe@ellerman.id.au
+Cc:     kjain@linux.ibm.com, linuxppc-dev@lists.ozlabs.org,
+        maddy@linux.vnet.ibm.com, disgoel@linux.vnet.ibm.com,
+        rnsastry@linux.ibm.com, linux-perf-users@vger.kernel.org
+In-Reply-To: <20220921145255.20972-1-atrajeev@linux.vnet.ibm.com>
+References: <20220921145255.20972-1-atrajeev@linux.vnet.ibm.com>
+Subject: Re: (subset) [PATCH V2 1/3] powerpc/perf: Fix branch_filter support for multiple filters in powerpc
+Message-Id: <166488994565.779920.440863414238574866.b4-ty@ellerman.id.au>
+Date:   Wed, 05 Oct 2022 00:25:45 +1100
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20221003204647.1481128-3-namhyung@kernel.org>
-X-Url:  http://acmel.wordpress.com
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-Em Mon, Oct 03, 2022 at 01:46:44PM -0700, Namhyung Kim escreveu:
-> The current code propagate evsel's cpu map settings to evlist when it's
-> added to an evlist.  But the evlist->all_cpus and each evsel's cpus will
-> be updated in perf_evlist__set_maps() later.  No need to do it before
-> evlist's cpus are set actually.
+On Wed, 21 Sep 2022 20:22:53 +0530, Athira Rajeev wrote:
+> For PERF_SAMPLE_BRANCH_STACK sample type, different branch_sample_type
+> ie branch filters are supported. The branch filters are requested via
+> event attribute "branch_sample_type". Multiple branch filters can be
+> passed in event attribute.
 > 
-> In fact it discards this intermediate all_cpus maps at the beginning
-> of perf_evlist__set_maps().  Let's not do this.  It's only needed when
-> an evsel is added after the evlist cpu/thread maps are set.
+> Example:
+> perf record -b -o- -B --branch-filter any,ind_call true
 > 
-> Signed-off-by: Namhyung Kim <namhyung@kernel.org>
-> ---
->  tools/lib/perf/evlist.c                  | 11 ++++-------
->  tools/lib/perf/include/internal/evlist.h |  1 +
->  2 files changed, 5 insertions(+), 7 deletions(-)
-> 
-> diff --git a/tools/lib/perf/evlist.c b/tools/lib/perf/evlist.c
-> index 187129652ab6..8ce92070086c 100644
-> --- a/tools/lib/perf/evlist.c
-> +++ b/tools/lib/perf/evlist.c
-> @@ -67,9 +67,7 @@ static void perf_evlist__propagate_maps(struct perf_evlist *evlist)
->  {
->  	struct perf_evsel *evsel;
->  
-> -	/* Recomputing all_cpus, so start with a blank slate. */
-> -	perf_cpu_map__put(evlist->all_cpus);
-> -	evlist->all_cpus = NULL;
-> +	evlist->needs_map_propagation = true;
->  
->  	perf_evlist__for_each_evsel(evlist, evsel)
->  		__perf_evlist__propagate_maps(evlist, evsel);
-> @@ -81,7 +79,9 @@ void perf_evlist__add(struct perf_evlist *evlist,
->  	evsel->idx = evlist->nr_entries;
->  	list_add_tail(&evsel->node, &evlist->entries);
->  	evlist->nr_entries += 1;
-> -	__perf_evlist__propagate_maps(evlist, evsel);
-> +
-> +	if (evlist->needs_map_propagation)
-> +		__perf_evlist__propagate_maps(evlist, evsel);
->  }
->  
->  void perf_evlist__remove(struct perf_evlist *evlist,
-> @@ -177,9 +177,6 @@ void perf_evlist__set_maps(struct perf_evlist *evlist,
->  		evlist->threads = perf_thread_map__get(threads);
->  	}
->  
-> -	if (!evlist->all_cpus && cpus)
-> -		evlist->all_cpus = perf_cpu_map__get(cpus);
-> -
->  	perf_evlist__propagate_maps(evlist);
+> [...]
 
-IIRC Adrian suggested this extra thing, but he provided the Reviewed-by
-for the previous patch, where this isn't present, Adrian, can you please
-confirm this and if this is the case provide your Reviewed-by for this
-new version?
+Patch 3 applied to powerpc/next.
 
-Thanks,
+[3/3] tools/testing/selftests/powerpc: Update the bhrb filter sampling test to test for multiple branch filters
+      https://git.kernel.org/powerpc/c/18213532de7156af689cb0511d2f95bcbe3c98a0
 
-- Arnaldo
-
->  }
->  
-> diff --git a/tools/lib/perf/include/internal/evlist.h b/tools/lib/perf/include/internal/evlist.h
-> index 6f89aec3e608..850f07070036 100644
-> --- a/tools/lib/perf/include/internal/evlist.h
-> +++ b/tools/lib/perf/include/internal/evlist.h
-> @@ -19,6 +19,7 @@ struct perf_evlist {
->  	int			 nr_entries;
->  	int			 nr_groups;
->  	bool			 has_user_cpus;
-> +	bool			 needs_map_propagation;
->  	/**
->  	 * The cpus passed from the command line or all online CPUs by
->  	 * default.
-> -- 
-> 2.38.0.rc1.362.ged0d419d3c-goog
-
--- 
-
-- Arnaldo
+cheers
