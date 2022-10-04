@@ -2,299 +2,213 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A5C49C433FE
-	for <linux-perf-users@archiver.kernel.org>; Tue,  4 Oct 2022 11:44:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BA017C433FE
+	for <linux-perf-users@archiver.kernel.org>; Tue,  4 Oct 2022 12:09:11 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229958AbiJDLo2 (ORCPT
+        id S229816AbiJDMJJ (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Tue, 4 Oct 2022 07:44:28 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51736 "EHLO
+        Tue, 4 Oct 2022 08:09:09 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38020 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229532AbiJDLoN (ORCPT
+        with ESMTP id S229916AbiJDMJH (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Tue, 4 Oct 2022 07:44:13 -0400
-Received: from mail-pf1-x432.google.com (mail-pf1-x432.google.com [IPv6:2607:f8b0:4864:20::432])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5E6F551407
-        for <linux-perf-users@vger.kernel.org>; Tue,  4 Oct 2022 04:44:09 -0700 (PDT)
-Received: by mail-pf1-x432.google.com with SMTP id d10so12903160pfh.6
-        for <linux-perf-users@vger.kernel.org>; Tue, 04 Oct 2022 04:44:09 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:from:to:cc:subject:date;
-        bh=6ZpUfgQM8l58jAA1FLv6FNtqasscnAngw/MWtVrklhs=;
-        b=Bo9x/OnIeuD4yOxUQBcKmabUSqnMZ0tD37iq/OHVxEJh7l092LYUiEcByhyeKoPqQH
-         6ccMpXG4qRKbkr941fgMrmTCvs7mBDKkmcyZ2TkZ97cu4Erpz6364n3eKpYtT/b1NuAZ
-         pi9UC5KrZS8fHRid7zPrK2EhUttI5OrNRFHSo8P3Mb2tkDzqPas8gU17A3WN+Bdf8SsZ
-         dU9egD++P5XQakRrLuSrsLxcUXmzHPNMQsJfA7zWkxd6pg+zQjqIPz81iRSpYAnZdaFW
-         4XHAdmJUPlV/gsJ01s3Xsj5gKwh9HnkRQU0HSv1IiMZAjlCNlnOhbi1ezx8q34YNlXVA
-         xsfw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date;
-        bh=6ZpUfgQM8l58jAA1FLv6FNtqasscnAngw/MWtVrklhs=;
-        b=uZwguib9Ixo6W1rFx4cC8ydCu2q0VAEu8MPQjUeijIe+KRgudarpxJwVSCNVC23PZm
-         KJ+ZAvj80MEBt2q7+5LGJcD2R5BojMFXQKxZHekkOzTpTXSA6924qrK+l/3si5UkEzjc
-         IXJ3yps+ZjMQ9xWLrdRU9u8G10jJ+GPoAA8OPoj6WrESbIIfmzplWAzRtba3zAHYHul2
-         l+AEMo6IzTnwCCZHub6cK+4swtUWFdQQI4UdjlosG3p5FN15Q9Cpt4EtbppUEu4kl47T
-         R2W7TcvciKLutlBEqCXeHN4W+HIZBIIjEXmeX0FRRTAg0nALkJXeXTnojy4WWffBEto/
-         HNgg==
-X-Gm-Message-State: ACrzQf1q4VoxvVcZTf7l3EKePMAoHcugu/f0fpBju5RXgO6PFESZXuSp
-        6SeqAITXIkbOoTIm/ZHUylssYBdhZMYDd3ZaeMjoRQ==
-X-Google-Smtp-Source: AMsMyM5om3ildrb6FXKsDICcjLQng8HApyTNXbRFn0vHa6n1wlhKJZOEgXsol3CWajbZfhZ3j9+WO0SV0tqOewvj3U8=
-X-Received: by 2002:a63:464d:0:b0:441:5968:cd0e with SMTP id
- v13-20020a63464d000000b004415968cd0emr19098981pgk.595.1664883848385; Tue, 04
- Oct 2022 04:44:08 -0700 (PDT)
+        Tue, 4 Oct 2022 08:09:07 -0400
+Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 25E8C58527;
+        Tue,  4 Oct 2022 05:09:05 -0700 (PDT)
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by dfw.source.kernel.org (Postfix) with ESMTPS id B6CE661419;
+        Tue,  4 Oct 2022 12:09:04 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id C71A5C433C1;
+        Tue,  4 Oct 2022 12:09:03 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1664885344;
+        bh=rQo5WdWHeAhyrZm9gKjpC2nAI4tbbWT6uT3p8FgRJBc=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=oYIu2Iy3FalILzw/mEs7z20CpZ41VLIHh3oAPnVbQCBNKQghkFbBdnA4z//TYTxFR
+         IAh4ldPm31eBPyV+xm09wGT7dEVdM+nUsJIIF0290YYDY9u9bVgl1eH4dJkjRbSSc6
+         WzOCKgvoliWtGMrrTqxS+92TVDMmmiX8Qbg+Zzg3MfiLIee6PDYoti7IqFL+4KwGKr
+         ogL1i7i8JmZUVLWRiC5gWgiXifhzkCjBddLuqQXBnDLVTwEOyg2AixVo/NAK2PC5WH
+         X7O6AEz5tjcKpwznqxmQfm0TMQAvXBXJvYeUKFn1lXP0j+hP9iSAO/itEkKHBLM220
+         aK7FZTAQctICA==
+Received: by quaco.ghostprotocols.net (Postfix, from userid 1000)
+        id 36DB34062C; Tue,  4 Oct 2022 09:09:01 -0300 (-03)
+Date:   Tue, 4 Oct 2022 09:09:01 -0300
+From:   Arnaldo Carvalho de Melo <acme@kernel.org>
+To:     Ian Rogers <irogers@google.com>
+Cc:     Zhengjun Xing <zhengjun.xing@linux.intel.com>,
+        Kan Liang <kan.liang@linux.intel.com>,
+        Andi Kleen <ak@linux.intel.com>, perry.taylor@intel.com,
+        caleb.biggers@intel.com, kshipra.bopardikar@intel.com,
+        samantha.alt@intel.com, ahmad.yasin@intel.com,
+        Peter Zijlstra <peterz@infradead.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Jiri Olsa <jolsa@kernel.org>,
+        Namhyung Kim <namhyung@kernel.org>,
+        John Garry <john.garry@huawei.com>,
+        James Clark <james.clark@arm.com>,
+        Kajol Jain <kjain@linux.ibm.com>,
+        Thomas Richter <tmricht@linux.ibm.com>,
+        Miaoqian Lin <linmq006@gmail.com>,
+        Florian Fischer <florian.fischer@muhq.space>,
+        linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Stephane Eranian <eranian@google.com>
+Subject: Re: [PATCH v3 00/23] Improvements to Intel perf metrics
+Message-ID: <YzwiXfWNbLM0et3A@kernel.org>
+References: <20221004021612.325521-1-irogers@google.com>
 MIME-Version: 1.0
-References: <20220919095939.761690562@infradead.org> <20220919101521.139727471@infradead.org>
- <CAPDyKFqTWd4W5Ofk76CtC4X43dxBTNHtmY9YzN355-vpviLsPw@mail.gmail.com>
-In-Reply-To: <CAPDyKFqTWd4W5Ofk76CtC4X43dxBTNHtmY9YzN355-vpviLsPw@mail.gmail.com>
-From:   Ulf Hansson <ulf.hansson@linaro.org>
-Date:   Tue, 4 Oct 2022 13:43:31 +0200
-Message-ID: <CAPDyKFqGSt2NFe8aY=6rkp4P-WH7DCO1fmWrcXk4_5XNEvv25w@mail.gmail.com>
-Subject: Re: [PATCH v2 12/44] cpuidle,dt: Push RCU-idle into driver
-To:     Peter Zijlstra <peterz@infradead.org>
-Cc:     juri.lelli@redhat.com, rafael@kernel.org, catalin.marinas@arm.com,
-        linus.walleij@linaro.org, bsegall@google.com, guoren@kernel.org,
-        pavel@ucw.cz, agordeev@linux.ibm.com, linux-arch@vger.kernel.org,
-        vincent.guittot@linaro.org, mpe@ellerman.id.au,
-        chenhuacai@kernel.org, christophe.leroy@csgroup.eu,
-        linux-acpi@vger.kernel.org, agross@kernel.org,
-        geert@linux-m68k.org, linux-imx@nxp.com, vgupta@kernel.org,
-        mattst88@gmail.com, mturquette@baylibre.com, sammy@sammy.net,
-        pmladek@suse.com, linux-pm@vger.kernel.org,
-        Sascha Hauer <s.hauer@pengutronix.de>,
-        linux-um@lists.infradead.org, npiggin@gmail.com,
-        tglx@linutronix.de, linux-omap@vger.kernel.org,
-        dietmar.eggemann@arm.com, andreyknvl@gmail.com,
-        gregkh@linuxfoundation.org, linux-kernel@vger.kernel.org,
-        linux-perf-users@vger.kernel.org, senozhatsky@chromium.org,
-        svens@linux.ibm.com, jolsa@kernel.org, tj@kernel.org,
-        Andrew Morton <akpm@linux-foundation.org>,
-        mark.rutland@arm.com, linux-ia64@vger.kernel.org,
-        dave.hansen@linux.intel.com,
-        virtualization@lists.linux-foundation.org,
-        James.Bottomley@hansenpartnership.com, jcmvbkbc@gmail.com,
-        thierry.reding@gmail.com, kernel@xen0n.name, cl@linux.com,
-        linux-s390@vger.kernel.org, vschneid@redhat.com,
-        john.ogness@linutronix.de, ysato@users.sourceforge.jp,
-        linux-sh@vger.kernel.org, festevam@gmail.com, deller@gmx.de,
-        daniel.lezcano@linaro.org, jonathanh@nvidia.com, dennis@kernel.org,
-        lenb@kernel.org, linux-xtensa@linux-xtensa.org,
-        kernel@pengutronix.de, gor@linux.ibm.com,
-        linux-arm-msm@vger.kernel.org, linux-alpha@vger.kernel.org,
-        linux-m68k@lists.linux-m68k.org, loongarch@lists.linux.dev,
-        shorne@gmail.com, chris@zankel.net, sboyd@kernel.org,
-        dinguyen@kernel.org, bristot@redhat.com,
-        alexander.shishkin@linux.intel.com, fweisbec@gmail.com,
-        lpieralisi@kernel.org, atishp@atishpatra.org,
-        linux@rasmusvillemoes.dk, kasan-dev@googlegroups.com,
-        will@kernel.org, boris.ostrovsky@oracle.com, khilman@kernel.org,
-        linux-csky@vger.kernel.org, pv-drivers@vmware.com,
-        linux-snps-arc@lists.infradead.org, mgorman@suse.de,
-        jacob.jun.pan@linux.intel.com, Arnd Bergmann <arnd@arndb.de>,
-        ulli.kroll@googlemail.com, linux-clk@vger.kernel.org,
-        rostedt@goodmis.org, ink@jurassic.park.msu.ru, bcain@quicinc.com,
-        tsbogend@alpha.franken.de, linux-parisc@vger.kernel.org,
-        ryabinin.a.a@gmail.com, sudeep.holla@arm.com, shawnguo@kernel.org,
-        davem@davemloft.net, dalias@libc.org, tony@atomide.com,
-        amakhalov@vmware.com, konrad.dybcio@somainline.org,
-        bjorn.andersson@linaro.org, glider@google.com, hpa@zytor.com,
-        sparclinux@vger.kernel.org, linux-hexagon@vger.kernel.org,
-        linux-riscv@lists.infradead.org, vincenzo.frascino@arm.com,
-        anton.ivanov@cambridgegreys.com, jonas@southpole.se,
-        yury.norov@gmail.com, richard@nod.at, x86@kernel.org,
-        linux@armlinux.org.uk, mingo@redhat.com, aou@eecs.berkeley.edu,
-        hca@linux.ibm.com, richard.henderson@linaro.org,
-        stefan.kristiansson@saunalahti.fi, openrisc@lists.librecores.org,
-        acme@kernel.org, paul.walmsley@sifive.com,
-        linux-tegra@vger.kernel.org, namhyung@kernel.org,
-        andriy.shevchenko@linux.intel.com, jpoimboe@kernel.org,
-        dvyukov@google.com, jgross@suse.com, monstr@monstr.eu,
-        linux-mips@vger.kernel.org, palmer@dabbelt.com,
-        anup@brainfault.org, bp@alien8.de, johannes@sipsolutions.net,
-        linuxppc-dev@lists.ozlabs.org
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20221004021612.325521-1-irogers@google.com>
+X-Url:  http://acmel.wordpress.com
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-On Tue, 4 Oct 2022 at 13:03, Ulf Hansson <ulf.hansson@linaro.org> wrote:
->
-> On Mon, 19 Sept 2022 at 12:18, Peter Zijlstra <peterz@infradead.org> wrote:
-> >
-> > Doing RCU-idle outside the driver, only to then temporarily enable it
-> > again before going idle is daft.
-> >
-> > Notably: this converts all dt_init_idle_driver() and
-> > __CPU_PM_CPU_IDLE_ENTER() users for they are inextrably intertwined.
-> >
-> > Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
->
-> Reviewed-by: Ulf Hansson <ulf.hansson@linaro.org>
+Em Mon, Oct 03, 2022 at 07:15:49PM -0700, Ian Rogers escreveu:
+> For consistency with:
+> https://github.com/intel/perfmon-metrics
+> rename of topdown TMA metrics from Frontend_Bound to tma_frontend_bound.
+> 
+> Remove _SMT suffix metrics are dropped as the #SMT_On and #EBS_Mode
+> are correctly expanded in the single main metric. Fix perf expr to
+> allow a double if to be correctly processed.
+> 
+> Add all 6 levels of TMA metrics. Child metrics are placed in a group
+> named after their parent allowing children of a metric to be
+> easily measured using the metric name with a _group suffix.
+> 
+> Don't drop TMA metrics if they contain topdown events.
+> 
+> The ## and ##? operators are correctly expanded.
+> 
+> The locate-with column is added to the long description describing a
+> sampling event.
+> 
+> Metrics are written in terms of other metrics to reduce the expression
+> size and increase readability.
+> 
+> Following this the pmu-events/arch/x86 directories match those created
+> by the script at:
+> https://github.com/intel/event-converter-for-linux-perf/blob/master/download_and_gen.py
+> with updates at:
+> https://github.com/captain5050/event-converter-for-linux-perf
+> 
+> 
+> v3. Fix a parse metrics test failure due to making metrics referring
+>     to other metrics case sensitive - make the cases in the test
+>     metric match.
 
-This was not (yet) my intention. Please have a look at the comments I
-provided below.
 
-Kind regards
-Uffe
 
->
-> > ---
-> >  arch/arm/mach-omap2/cpuidle34xx.c    |    4 ++--
-> >  drivers/acpi/processor_idle.c        |    2 ++
-> >  drivers/cpuidle/cpuidle-arm.c        |    1 +
-> >  drivers/cpuidle/cpuidle-big_little.c |    8 ++++++--
-> >  drivers/cpuidle/cpuidle-psci.c       |    1 +
-> >  drivers/cpuidle/cpuidle-qcom-spm.c   |    1 +
-> >  drivers/cpuidle/cpuidle-riscv-sbi.c  |    1 +
-> >  drivers/cpuidle/dt_idle_states.c     |    2 +-
-> >  include/linux/cpuidle.h              |    4 ++++
-> >  9 files changed, 19 insertions(+), 5 deletions(-)
-> >
-> > --- a/drivers/acpi/processor_idle.c
-> > +++ b/drivers/acpi/processor_idle.c
-> > @@ -1200,6 +1200,8 @@ static int acpi_processor_setup_lpi_stat
-> >                 state->target_residency = lpi->min_residency;
-> >                 if (lpi->arch_flags)
-> >                         state->flags |= CPUIDLE_FLAG_TIMER_STOP;
-> > +               if (lpi->entry_method == ACPI_CSTATE_FFH)
-> > +                       state->flags |= CPUIDLE_FLAG_RCU_IDLE;
->
-> I assume the state index here will never be 0?
->
-> If not, it may lead to that acpi_processor_ffh_lpi_enter() may trigger
-> CPU_PM_CPU_IDLE_ENTER_PARAM() to call ct_cpuidle_enter|exit() for an
-> idle-state that doesn't have the CPUIDLE_FLAG_RCU_IDLE bit set.
->
-> >                 state->enter = acpi_idle_lpi_enter;
-> >                 drv->safe_state_index = i;
-> >         }
-> > --- a/drivers/cpuidle/cpuidle-arm.c
-> > +++ b/drivers/cpuidle/cpuidle-arm.c
-> > @@ -53,6 +53,7 @@ static struct cpuidle_driver arm_idle_dr
-> >          * handler for idle state index 0.
-> >          */
-> >         .states[0] = {
-> > +               .flags                  = CPUIDLE_FLAG_RCU_IDLE,
->
-> Comparing arm64 and arm32 idle-states/idle-drivers, the $subject
-> series ends up setting the CPUIDLE_FLAG_RCU_IDLE for the ARM WFI idle
-> state (state zero), but only for the arm64 and psci cases (mostly
-> arm64). For arm32 we would need to update the ARM_CPUIDLE_WFI_STATE
-> too, as that is what most arm32 idle-drivers are using. My point is,
-> the code becomes a bit inconsistent.
->
-> Perhaps it's easier to avoid setting the CPUIDLE_FLAG_RCU_IDLE bit for
-> all of the ARM WFI idle states, for both arm64 and arm32?
->
-> >                 .enter                  = arm_enter_idle_state,
-> >                 .exit_latency           = 1,
-> >                 .target_residency       = 1,
-> > --- a/drivers/cpuidle/cpuidle-big_little.c
-> > +++ b/drivers/cpuidle/cpuidle-big_little.c
-> > @@ -64,7 +64,8 @@ static struct cpuidle_driver bl_idle_lit
-> >                 .enter                  = bl_enter_powerdown,
-> >                 .exit_latency           = 700,
-> >                 .target_residency       = 2500,
-> > -               .flags                  = CPUIDLE_FLAG_TIMER_STOP,
-> > +               .flags                  = CPUIDLE_FLAG_TIMER_STOP |
-> > +                                         CPUIDLE_FLAG_RCU_IDLE,
-> >                 .name                   = "C1",
-> >                 .desc                   = "ARM little-cluster power down",
-> >         },
-> > @@ -85,7 +86,8 @@ static struct cpuidle_driver bl_idle_big
-> >                 .enter                  = bl_enter_powerdown,
-> >                 .exit_latency           = 500,
-> >                 .target_residency       = 2000,
-> > -               .flags                  = CPUIDLE_FLAG_TIMER_STOP,
-> > +               .flags                  = CPUIDLE_FLAG_TIMER_STOP |
-> > +                                         CPUIDLE_FLAG_RCU_IDLE,
-> >                 .name                   = "C1",
-> >                 .desc                   = "ARM big-cluster power down",
-> >         },
-> > @@ -124,11 +126,13 @@ static int bl_enter_powerdown(struct cpu
-> >                                 struct cpuidle_driver *drv, int idx)
-> >  {
-> >         cpu_pm_enter();
-> > +       ct_idle_enter();
-> >
-> >         cpu_suspend(0, bl_powerdown_finisher);
-> >
-> >         /* signals the MCPM core that CPU is out of low power state */
-> >         mcpm_cpu_powered_up();
-> > +       ct_idle_exit();
-> >
-> >         cpu_pm_exit();
-> >
-> > --- a/drivers/cpuidle/cpuidle-psci.c
-> > +++ b/drivers/cpuidle/cpuidle-psci.c
-> > @@ -357,6 +357,7 @@ static int psci_idle_init_cpu(struct dev
-> >          * PSCI idle states relies on architectural WFI to be represented as
-> >          * state index 0.
-> >          */
-> > +       drv->states[0].flags = CPUIDLE_FLAG_RCU_IDLE;
-> >         drv->states[0].enter = psci_enter_idle_state;
-> >         drv->states[0].exit_latency = 1;
-> >         drv->states[0].target_residency = 1;
-> > --- a/drivers/cpuidle/cpuidle-qcom-spm.c
-> > +++ b/drivers/cpuidle/cpuidle-qcom-spm.c
-> > @@ -72,6 +72,7 @@ static struct cpuidle_driver qcom_spm_id
-> >         .owner = THIS_MODULE,
-> >         .states[0] = {
-> >                 .enter                  = spm_enter_idle_state,
-> > +               .flags                  = CPUIDLE_FLAG_RCU_IDLE,
-> >                 .exit_latency           = 1,
-> >                 .target_residency       = 1,
-> >                 .power_usage            = UINT_MAX,
-> > --- a/drivers/cpuidle/cpuidle-riscv-sbi.c
-> > +++ b/drivers/cpuidle/cpuidle-riscv-sbi.c
-> > @@ -332,6 +332,7 @@ static int sbi_cpuidle_init_cpu(struct d
-> >         drv->cpumask = (struct cpumask *)cpumask_of(cpu);
-> >
-> >         /* RISC-V architectural WFI to be represented as state index 0. */
-> > +       drv->states[0].flags = CPUIDLE_FLAG_RCU_IDLE;
-> >         drv->states[0].enter = sbi_cpuidle_enter_state;
-> >         drv->states[0].exit_latency = 1;
-> >         drv->states[0].target_residency = 1;
-> > --- a/drivers/cpuidle/dt_idle_states.c
-> > +++ b/drivers/cpuidle/dt_idle_states.c
-> > @@ -77,7 +77,7 @@ static int init_state_node(struct cpuidl
-> >         if (err)
-> >                 desc = state_node->name;
-> >
-> > -       idle_state->flags = 0;
-> > +       idle_state->flags = CPUIDLE_FLAG_RCU_IDLE;
-> >         if (of_property_read_bool(state_node, "local-timer-stop"))
-> >                 idle_state->flags |= CPUIDLE_FLAG_TIMER_STOP;
-> >         /*
-> > --- a/include/linux/cpuidle.h
-> > +++ b/include/linux/cpuidle.h
-> > @@ -282,14 +282,18 @@ extern s64 cpuidle_governor_latency_req(
-> >         int __ret = 0;                                                  \
-> >                                                                         \
-> >         if (!idx) {                                                     \
-> > +               ct_idle_enter();                                        \
->
-> According to my comment above, we should then drop these calls to
-> ct_idle_enter and ct_idle_exit() here. Right?
->
-> >                 cpu_do_idle();                                          \
-> > +               ct_idle_exit();                                         \
-> >                 return idx;                                             \
-> >         }                                                               \
-> >                                                                         \
-> >         if (!is_retention)                                              \
-> >                 __ret =  cpu_pm_enter();                                \
-> >         if (!__ret) {                                                   \
-> > +               ct_idle_enter();                                        \
-> >                 __ret = low_level_idle_enter(state);                    \
-> > +               ct_idle_exit();                                         \
-> >                 if (!is_retention)                                      \
-> >                         cpu_pm_exit();                                  \
-> >         }                                                               \
-> >
->
-> Kind regards
-> Uffe
+Thanks, applied.
+
+- Arnaldo
+
+
+> v2. Fixes commit message wrt missing mapfile.csv updates as noted by
+>     Zhengjun Xing <zhengjun.xing@linux.intel.com>. ScaleUnit is added
+>     for TMA metrics. Metrics with topdown events have have a missing
+>     slots event added if necessary. The latest metrics at:
+>     https://github.com/intel/perfmon-metrics are used, however, the
+>     event-converter-for-linux-perf scripts now prefer their own
+>     metrics in case of mismatched units when a metric is written in
+>     terms of another.  Additional testing was performed on broadwell,
+>     broadwellde, cascadelakex, haswellx, sapphirerapids and tigerlake
+>     CPUs.
+> 
+> Ian Rogers (23):
+>   perf expr: Allow a double if expression
+>   perf test: Adjust case of test metrics
+>   perf expr: Remove jevents case workaround
+>   perf metrics: Don't scale counts going into metrics
+>   perf vendor events: Update Intel skylakex
+>   perf vendor events: Update Intel alderlake
+>   perf vendor events: Update Intel broadwell
+>   perf vendor events: Update Intel broadwellx
+>   perf vendor events: Update Intel cascadelakex
+>   perf vendor events: Update elkhartlake cpuids
+>   perf vendor events: Update Intel haswell
+>   perf vendor events: Update Intel haswellx
+>   perf vendor events: Update Intel icelake
+>   perf vendor events: Update Intel icelakex
+>   perf vendor events: Update Intel ivybridge
+>   perf vendor events: Update Intel ivytown
+>   perf vendor events: Update Intel jaketown
+>   perf vendor events: Update Intel sandybridge
+>   perf vendor events: Update Intel sapphirerapids
+>   perf vendor events: Update silvermont cpuids
+>   perf vendor events: Update Intel skylake
+>   perf vendor events: Update Intel tigerlake
+>   perf vendor events: Update Intel broadwellde
+> 
+>  .../arch/test/test_soc/cpu/metrics.json       |    6 +-
+>  .../arch/x86/alderlake/adl-metrics.json       | 1353 ++++++++++++++++-
+>  .../pmu-events/arch/x86/alderlake/cache.json  |  129 +-
+>  .../arch/x86/alderlake/frontend.json          |   12 +
+>  .../pmu-events/arch/x86/alderlake/memory.json |   22 +
+>  .../pmu-events/arch/x86/alderlake/other.json  |   22 +
+>  .../arch/x86/alderlake/pipeline.json          |   14 +-
+>  .../arch/x86/broadwell/bdw-metrics.json       |  679 +++++++--
+>  .../arch/x86/broadwellde/bdwde-metrics.json   |  711 +++++++--
+>  .../arch/x86/broadwellx/bdx-metrics.json      |  965 +++++++-----
+>  .../arch/x86/broadwellx/uncore-cache.json     |   10 +-
+>  .../x86/broadwellx/uncore-interconnect.json   |   18 +-
+>  .../arch/x86/broadwellx/uncore-memory.json    |   18 +-
+>  .../arch/x86/cascadelakex/clx-metrics.json    | 1285 ++++++++++------
+>  .../arch/x86/cascadelakex/uncore-memory.json  |   18 +-
+>  .../arch/x86/cascadelakex/uncore-other.json   |   10 +-
+>  .../pmu-events/arch/x86/haswell/cache.json    |    4 +-
+>  .../pmu-events/arch/x86/haswell/frontend.json |   12 +-
+>  .../arch/x86/haswell/hsw-metrics.json         |  570 ++++++-
+>  .../pmu-events/arch/x86/haswellx/cache.json   |    2 +-
+>  .../arch/x86/haswellx/frontend.json           |   12 +-
+>  .../arch/x86/haswellx/hsx-metrics.json        |  919 +++++++----
+>  .../x86/haswellx/uncore-interconnect.json     |   18 +-
+>  .../arch/x86/haswellx/uncore-memory.json      |   18 +-
+>  .../pmu-events/arch/x86/icelake/cache.json    |    6 +-
+>  .../arch/x86/icelake/icl-metrics.json         |  808 +++++++++-
+>  .../pmu-events/arch/x86/icelake/pipeline.json |    2 +-
+>  .../pmu-events/arch/x86/icelakex/cache.json   |    6 +-
+>  .../arch/x86/icelakex/icx-metrics.json        | 1155 ++++++++++----
+>  .../arch/x86/icelakex/pipeline.json           |    2 +-
+>  .../arch/x86/icelakex/uncore-other.json       |    2 +-
+>  .../arch/x86/ivybridge/ivb-metrics.json       |  594 ++++++--
+>  .../pmu-events/arch/x86/ivytown/cache.json    |    4 +-
+>  .../arch/x86/ivytown/floating-point.json      |    2 +-
+>  .../pmu-events/arch/x86/ivytown/frontend.json |   18 +-
+>  .../arch/x86/ivytown/ivt-metrics.json         |  630 ++++++--
+>  .../arch/x86/ivytown/uncore-cache.json        |   58 +-
+>  .../arch/x86/ivytown/uncore-interconnect.json |   84 +-
+>  .../arch/x86/ivytown/uncore-memory.json       |    2 +-
+>  .../arch/x86/ivytown/uncore-other.json        |    6 +-
+>  .../arch/x86/ivytown/uncore-power.json        |    8 +-
+>  .../arch/x86/jaketown/jkt-metrics.json        |  327 +++-
+>  tools/perf/pmu-events/arch/x86/mapfile.csv    |   18 +-
+>  .../arch/x86/sandybridge/snb-metrics.json     |  315 +++-
+>  .../arch/x86/sapphirerapids/cache.json        |    4 +-
+>  .../arch/x86/sapphirerapids/frontend.json     |   11 +
+>  .../arch/x86/sapphirerapids/pipeline.json     |    4 +-
+>  .../arch/x86/sapphirerapids/spr-metrics.json  | 1249 ++++++++++-----
+>  .../arch/x86/skylake/skl-metrics.json         |  861 ++++++++---
+>  .../arch/x86/skylakex/skx-metrics.json        | 1262 +++++++++------
+>  .../arch/x86/skylakex/uncore-memory.json      |   18 +-
+>  .../arch/x86/skylakex/uncore-other.json       |   19 +-
+>  .../arch/x86/tigerlake/tgl-metrics.json       |  810 +++++++++-
+>  tools/perf/pmu-events/empty-pmu-events.c      |    6 +-
+>  tools/perf/tests/expr.c                       |    4 +
+>  tools/perf/util/expr.c                        |   11 +-
+>  tools/perf/util/expr.y                        |    2 +-
+>  tools/perf/util/stat-shadow.c                 |    9 +-
+>  58 files changed, 11514 insertions(+), 3630 deletions(-)
+> 
+> -- 
+> 2.38.0.rc1.362.ged0d419d3c-goog
+
+-- 
+
+- Arnaldo
