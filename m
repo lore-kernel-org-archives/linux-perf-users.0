@@ -2,90 +2,137 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F3857C433FE
-	for <linux-perf-users@archiver.kernel.org>; Tue,  4 Oct 2022 19:26:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DAAF2C433F5
+	for <linux-perf-users@archiver.kernel.org>; Tue,  4 Oct 2022 20:02:24 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229581AbiJDT0l (ORCPT
+        id S229861AbiJDUCX (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Tue, 4 Oct 2022 15:26:41 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46612 "EHLO
+        Tue, 4 Oct 2022 16:02:23 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34646 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229436AbiJDT0k (ORCPT
+        with ESMTP id S229895AbiJDUCS (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Tue, 4 Oct 2022 15:26:40 -0400
-Received: from mga12.intel.com (mga12.intel.com [192.55.52.136])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A47BD67C90
-        for <linux-perf-users@vger.kernel.org>; Tue,  4 Oct 2022 12:26:39 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1664911599; x=1696447599;
-  h=from:to:cc:subject:date:message-id:mime-version:
-   content-transfer-encoding;
-  bh=kUXhM6bWph//WGmBvYwwtURqo/BwSpOkw4u/l8hshPM=;
-  b=nmIne8Ww/+YFoOWQ4N6Q5NEilh71Kw/KUXvAXVc8tN+XkFgqT1W6Apzk
-   z6vXCwX9dro63ryl10H/W0/dLq5gWPv/bKhGhgCv3xgDVGESdyogoRI9y
-   8D4aa0fe2G/cqlfGBmrQHY6YnOAPVm/dQETYgecvItecEkwMk/Zz/YsxG
-   ehtbaoTWAKN6T3oudTUYwJxXv8MlvbGX2Caxhsb85CInHuKlooe6Na2v8
-   6Ro034ALLJ5AiX40ipchh6KOrwZvhHMRb88CRkpcfLbAxfFWyb03vEEKB
-   Hct1wkwFEidCLXYuozX1pOxfbew1oLsUd7pthTf+mWyuWimUlLKRlzNic
-   w==;
-X-IronPort-AV: E=McAfee;i="6500,9779,10490"; a="282718005"
-X-IronPort-AV: E=Sophos;i="5.95,158,1661842800"; 
-   d="scan'208";a="282718005"
-Received: from orsmga002.jf.intel.com ([10.7.209.21])
-  by fmsmga106.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 04 Oct 2022 12:26:39 -0700
-X-IronPort-AV: E=McAfee;i="6500,9779,10490"; a="624052921"
-X-IronPort-AV: E=Sophos;i="5.95,158,1661842800"; 
-   d="scan'208";a="624052921"
-Received: from tassilo.jf.intel.com ([10.54.74.11])
-  by orsmga002-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 04 Oct 2022 12:26:39 -0700
-From:   Andi Kleen <ak@linux.intel.com>
-To:     acme@kernel.org
-Cc:     jolsa@kernel.org, linux-perf-users@vger.kernel.org,
-        Andi Kleen <ak@linux.intel.com>
-Subject: [PATCH] perf list: Fix title message
-Date:   Tue,  4 Oct 2022 12:26:34 -0700
-Message-Id: <20221004192634.998984-1-ak@linux.intel.com>
-X-Mailer: git-send-email 2.37.2
+        Tue, 4 Oct 2022 16:02:18 -0400
+Received: from mail-pf1-x42f.google.com (mail-pf1-x42f.google.com [IPv6:2607:f8b0:4864:20::42f])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1252B6B17D;
+        Tue,  4 Oct 2022 13:02:15 -0700 (PDT)
+Received: by mail-pf1-x42f.google.com with SMTP id f140so8780643pfa.1;
+        Tue, 04 Oct 2022 13:02:15 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20210112;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:sender:from:to:cc:subject:date;
+        bh=2i0LEUdQcU0O58XSTK8jX7h6SIhzdD8FC2OFcWTsN74=;
+        b=CtRST3LRPzU3/ZMRyhLqTaVsPz+zcNtyEu4Ii6wqIqM9NlxZd0xwpQHJ/UkI+76/aw
+         07XrXSgQBb0K1X9VSQxvExVQprrgsWahn56oaSyN5y3PQCXl99I704a8rgj7eKJLXt2M
+         O5GTrYNtyyuXfKxpn1rhayx6Bk6jnLcNO4ddV+EFVL3PMv+QHcGUKS4lhV3+3YkQE7LA
+         mwqrHx7I7QRgIycNovGtaf/Gih6OAHBpgyIkoI7mxHQs0vX8D8YHRUMOpOcNLd9yQIss
+         fFV2jJykXp4SG86ij/g1lci6WSEKdlH+6WrZ+Cf8+imPZ18XTHciO6GsHnZ7RpE9pVzX
+         CNrA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:sender:x-gm-message-state:from:to:cc:subject:date;
+        bh=2i0LEUdQcU0O58XSTK8jX7h6SIhzdD8FC2OFcWTsN74=;
+        b=v4VhZf2V42KCBwj1OxD5YrsQ1zmH2XfNTrxt18PzsKzDDhvNCMog1K3XvALNJvmBiX
+         n17/3xiWSe+kKtCT+3kyzzxwsVFv/iUSj68zJDU7PwXsnEDVjzOXG0qtUf4XD4Tx4SQi
+         wRYd7q4NZYbZJrVc//gu1wmAAC8YXoLtafVajL3EMnheO0/HAGOptlZnhbUfQIfFNiFo
+         3nQelb5+AVs6ytkJHgzFDD4+stBFPZq+aGjBz/IaNBZpjIcTNjAG7Es/6WPdXKYpNOQg
+         ocpHM2i2KbLetDORQOv6hIjhfh6mzL4F/HveV0OFrpwmXaPBOjVDNGF7SAZMkjYi4Qsw
+         vD3Q==
+X-Gm-Message-State: ACrzQf1VwnM9YFnP1msw+HYxHDo5hdoL74Zp0zO0agRrQClxjUlq0CsS
+        llF1P6bo9a05jKGpBth8B80=
+X-Google-Smtp-Source: AMsMyM4rhLYHx0x4fdgfnOQiyvQVraRm0VJy9e16VZXBkozauNp5pKYPnKkBIP0JR6t/nswtCEkwhw==
+X-Received: by 2002:a62:2985:0:b0:544:77d4:f43b with SMTP id p127-20020a622985000000b0054477d4f43bmr29410347pfp.9.1664913734567;
+        Tue, 04 Oct 2022 13:02:14 -0700 (PDT)
+Received: from balhae.hsd1.ca.comcast.net ([2601:647:6780:1040:3db9:2804:1207:4f07])
+        by smtp.gmail.com with ESMTPSA id x187-20020a6231c4000000b00561e8bbfa3dsm974862pfx.98.2022.10.04.13.02.12
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 04 Oct 2022 13:02:14 -0700 (PDT)
+Sender: Namhyung Kim <namhyung@gmail.com>
+From:   Namhyung Kim <namhyung@kernel.org>
+To:     Arnaldo Carvalho de Melo <acme@kernel.org>,
+        Jiri Olsa <jolsa@kernel.org>
+Cc:     Ingo Molnar <mingo@kernel.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Ian Rogers <irogers@google.com>,
+        Adrian Hunter <adrian.hunter@intel.com>,
+        linux-perf-users@vger.kernel.org,
+        Kan Liang <kan.liang@linux.intel.com>,
+        Leo Yan <leo.yan@linaro.org>,
+        Ravi Bangoria <ravi.bangoria@amd.com>
+Subject: [PATCH] perf mem: Fix -C option behavior for perf mem record
+Date:   Tue,  4 Oct 2022 13:02:11 -0700
+Message-Id: <20221004200211.1444521-1-namhyung@kernel.org>
+X-Mailer: git-send-email 2.38.0.rc1.362.ged0d419d3c-goog
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-perf list metricgroups
+The -C/--cpu option was maily for report but it also affected record as
+it ate the option.  So users needed to use "--" after perf mem record to
+pass the info to the perf record properly.
 
-gives
+Check if this option is set for record, and pass it to the actual perf
+record.
 
-List of pre-defined events (to be used in -e):
+Before)
+  $ sudo perf --debug perf-event-open mem record -C 0 2>&1 | grep -a sys_perf_event_open
+  ...
+  sys_perf_event_open: pid -1  cpu 0  group_fd -1  flags 0x8 = 4
+  sys_perf_event_open: pid -1  cpu 1  group_fd -1  flags 0x8 = 5
+  sys_perf_event_open: pid -1  cpu 2  group_fd -1  flags 0x8 = 6
+  sys_perf_event_open: pid -1  cpu 3  group_fd -1  flags 0x8 = 7
+  sys_perf_event_open: pid -1  cpu 0  group_fd -1  flags 0x8 = 8
+  sys_perf_event_open: pid -1  cpu 1  group_fd -1  flags 0x8 = 9
+  sys_perf_event_open: pid -1  cpu 2  group_fd -1  flags 0x8 = 10
+  sys_perf_event_open: pid -1  cpu 3  group_fd -1  flags 0x8 = 11
+  ...
 
-Metric Groups:
+After)
+  $ sudo perf --debug perf-event-open mem record -C 0 2>&1 | grep -a sys_perf_event_open
+  ...
+  sys_perf_event_open: pid -1  cpu 0  group_fd -1  flags 0x8 = 4
+  sys_perf_event_open: pid -1  cpu 0  group_fd -1  flags 0x8 = 5
+  sys_perf_event_open: pid -1  cpu 0  group_fd -1  flags 0x8 = 6
+  sys_perf_event_open: pid -1  cpu 0  group_fd -1  flags 0x8 = 7
 
-Backend
-Bad
-BadSpec
-
-But that's incorrect of course because metric groups or metrics can only
-be specified with -M. So fix the message to say -e or -M
-
-Signed-off-by: Andi Kleen <ak@linux.intel.com>
+Cc: Leo Yan <leo.yan@linaro.org>
+Reported-by: Ravi Bangoria <ravi.bangoria@amd.com>
+Signed-off-by: Namhyung Kim <namhyung@kernel.org>
 ---
- tools/perf/builtin-list.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ tools/perf/builtin-mem.c | 8 ++++++++
+ 1 file changed, 8 insertions(+)
 
-diff --git a/tools/perf/builtin-list.c b/tools/perf/builtin-list.c
-index 744dd3520584..58e1ec1654ef 100644
---- a/tools/perf/builtin-list.c
-+++ b/tools/perf/builtin-list.c
-@@ -60,7 +60,7 @@ int cmd_list(int argc, const char **argv)
- 	setup_pager();
+diff --git a/tools/perf/builtin-mem.c b/tools/perf/builtin-mem.c
+index 9e435fd23503..02e7a5dbeb00 100644
+--- a/tools/perf/builtin-mem.c
++++ b/tools/perf/builtin-mem.c
+@@ -97,6 +97,9 @@ static int __cmd_record(int argc, const char **argv, struct perf_mem *mem)
+ 	else
+ 		rec_argc = argc + 9 * perf_pmu__hybrid_pmu_num();
  
- 	if (!raw_dump && pager_in_use())
--		printf("\nList of pre-defined events (to be used in -e):\n\n");
-+		printf("\nList of pre-defined events (to be used in -e or -M):\n\n");
++	if (mem->cpu_list)
++		rec_argc += 2;
++
+ 	rec_argv = calloc(rec_argc + 1, sizeof(char *));
+ 	if (!rec_argv)
+ 		return -1;
+@@ -158,6 +161,11 @@ static int __cmd_record(int argc, const char **argv, struct perf_mem *mem)
+ 	if (all_kernel)
+ 		rec_argv[i++] = "--all-kernel";
  
- 	if (hybrid_type) {
- 		pmu_name = perf_pmu__hybrid_type_to_pmu(hybrid_type);
++	if (mem->cpu_list) {
++		rec_argv[i++] = "-C";
++		rec_argv[i++] = mem->cpu_list;
++	}
++
+ 	for (j = 0; j < argc; j++, i++)
+ 		rec_argv[i] = argv[j];
+ 
 -- 
-2.37.2
+2.38.0.rc1.362.ged0d419d3c-goog
 
