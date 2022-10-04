@@ -2,153 +2,295 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 56CD8C433F5
-	for <linux-perf-users@archiver.kernel.org>; Tue,  4 Oct 2022 13:56:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 00DBBC433F5
+	for <linux-perf-users@archiver.kernel.org>; Tue,  4 Oct 2022 15:16:04 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229689AbiJDN4K (ORCPT
+        id S230015AbiJDPQD (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Tue, 4 Oct 2022 09:56:10 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59732 "EHLO
+        Tue, 4 Oct 2022 11:16:03 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43794 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229464AbiJDN4I (ORCPT
+        with ESMTP id S229981AbiJDPQB (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Tue, 4 Oct 2022 09:56:08 -0400
-Received: from mga09.intel.com (mga09.intel.com [134.134.136.24])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 587C35A8A1;
-        Tue,  4 Oct 2022 06:56:04 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1664891764; x=1696427764;
-  h=message-id:date:mime-version:subject:to:cc:references:
-   from:in-reply-to:content-transfer-encoding;
-  bh=OsFxBUDczropkYp8svRZ0B/r3bo5n3O17o0P0QSfJ0w=;
-  b=grPkoYkRJyEs+TXlNkhZGgMHYXJ7JnKfaOl+IOT3PwNpYlZxUDyxIICY
-   GFuciTYwpAkyeYO7dlQcIMQqQbtbT/KzWuCnv2DKaoXs2dwmSVCyVIAFT
-   srwrAcD05WzRk6a7xtqM87gPQH7Sg/873NqVjdZdlIh1L+QX0hh5qUBl4
-   JT0IMfr5Li2y4acmo5SSfTEncmw58TrZh75WEZOylMGQPxGCQ0QqqFRLC
-   3Ztu0M93bE3dph0PdHG1HJ4+46lpNJE+KlNMivCzMttPByG/m7ClojScQ
-   ZSflGP0FqYqc+UiTWgHqy2gZzpksk4af1Bd0B1+QUrD45EsPIp49j5oHK
-   w==;
-X-IronPort-AV: E=McAfee;i="6500,9779,10490"; a="303872862"
-X-IronPort-AV: E=Sophos;i="5.95,158,1661842800"; 
-   d="scan'208";a="303872862"
-Received: from orsmga007.jf.intel.com ([10.7.209.58])
-  by orsmga102.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 04 Oct 2022 06:56:03 -0700
-X-IronPort-AV: E=McAfee;i="6500,9779,10490"; a="619107704"
-X-IronPort-AV: E=Sophos;i="5.95,158,1661842800"; 
-   d="scan'208";a="619107704"
-Received: from ahunter6-mobl1.ger.corp.intel.com (HELO [10.0.2.15]) ([10.252.38.250])
-  by orsmga007-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 04 Oct 2022 06:55:58 -0700
-Message-ID: <6fe60739-d6fc-17d1-ddce-0be43bb5c234@intel.com>
-Date:   Tue, 4 Oct 2022 16:55:49 +0300
+        Tue, 4 Oct 2022 11:16:01 -0400
+Received: from mail-pl1-x631.google.com (mail-pl1-x631.google.com [IPv6:2607:f8b0:4864:20::631])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8DC5F5E318
+        for <linux-perf-users@vger.kernel.org>; Tue,  4 Oct 2022 08:15:57 -0700 (PDT)
+Received: by mail-pl1-x631.google.com with SMTP id x6so7657087pll.11
+        for <linux-perf-users@vger.kernel.org>; Tue, 04 Oct 2022 08:15:57 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:from:to:cc:subject:date;
+        bh=J2ppHC6gj92crGPpSrELKUpyhixWpF3W0/4C0ZdDtPI=;
+        b=UiXw6aHZigxzPRMUFzDILsNVsAdyFtr3B9KxKEI8m7E01CsajejevTYV7BdP2wsOm/
+         HvcPZBMM+TkW28eTt3F1DhxxBtezuv0XTDjtGYW8B2mbElhkTInGpM6vTu+4Ez1+Z4Zl
+         CSSAi6wcg4/gLFK0z0F/WRWRc047jLnY5XkW7fk/hHejtLeNbcKkU7CbDUwW9lkytUXr
+         cd/OQHjN7wB6eRDMRvJyzU3msr1RCb52XcEzMB0ZW808FTM1QI6i/jSUk70317I5p+kD
+         nFmZIjIA0zvgwBAFP/4LpKCKrT0ZRrqcJXuKYGFTLZWpkF7eqaysYMEZs2++diGTMeSz
+         qF/g==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:x-gm-message-state:from:to:cc:subject:date;
+        bh=J2ppHC6gj92crGPpSrELKUpyhixWpF3W0/4C0ZdDtPI=;
+        b=3g5MxI5QzMnpRThoA18gQmA9ekBK8c5Mzo0NpEJ3CizGripCwsa3aDNRJpEvQLDD6d
+         KwUiKfu28dXLpww+flEpEH8C6R5C8KO58T831sNU2oL0lDQ3cq09ZDFxr49Ho7x3xicL
+         WYPDEiUA9Bwh/ih+Iy146gGUd43OR/9N5AaQb4wXa8wMmwwV81KoWoMQpor71D0RjPV6
+         dX/WlYeFxvC+njnEZCnHMV13+lzI2ZNShyBi76mh7hDuExazLqgOY78vf2uhdW7eUtPY
+         /9ViouAGq8Q7kkYavHH+TZtOIgyQWO4/P3+jX4OD99+Yj+LxKm8G+hrDoSB+agJrrQb3
+         dS4w==
+X-Gm-Message-State: ACrzQf2oAXIZvjyOXf1e3/Uu0NXdBezziMkbc2jDEIVxIKEjPsE0z6mL
+        5snoBaBfMjRTAt0OJn6cZpMzADdm3hg0ZbofQTx5yA==
+X-Google-Smtp-Source: AMsMyM7n+Vc130we6EQHET/igQcvZPTbfdglKFSS5m9j3dBgMdP/YI1FG0U2Mdd0MJ/1Rl84IgnhjST9lkox2h0baYs=
+X-Received: by 2002:a17:90b:1b06:b0:202:cce0:2148 with SMTP id
+ nu6-20020a17090b1b0600b00202cce02148mr262733pjb.84.1664896556863; Tue, 04 Oct
+ 2022 08:15:56 -0700 (PDT)
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
- Firefox/91.0 Thunderbird/91.11.0
-Subject: Re: [PATCH 2/5] libperf: Propagate maps only if necessary
-Content-Language: en-US
-To:     Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Namhyung Kim <namhyung@kernel.org>
-Cc:     Jiri Olsa <jolsa@kernel.org>, Ingo Molnar <mingo@kernel.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Ian Rogers <irogers@google.com>,
-        linux-perf-users@vger.kernel.org,
-        Kan Liang <kan.liang@linux.intel.com>,
-        Leo Yan <leo.yan@linaro.org>
-References: <20221003204647.1481128-1-namhyung@kernel.org>
- <20221003204647.1481128-3-namhyung@kernel.org> <YzwjkwgfAyMZRHpN@kernel.org>
-From:   Adrian Hunter <adrian.hunter@intel.com>
-Organization: Intel Finland Oy, Registered Address: PL 281, 00181 Helsinki,
- Business Identity Code: 0357606 - 4, Domiciled in Helsinki
-In-Reply-To: <YzwjkwgfAyMZRHpN@kernel.org>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+References: <20220919095939.761690562@infradead.org>
+In-Reply-To: <20220919095939.761690562@infradead.org>
+From:   Ulf Hansson <ulf.hansson@linaro.org>
+Date:   Tue, 4 Oct 2022 17:15:20 +0200
+Message-ID: <CAPDyKFqwV27k5r8Pqo0bOqKQ2WKfcMdQoua665nA953U36+rXg@mail.gmail.com>
+Subject: Re: [PATCH v2 00/44] cpuidle,rcu: Clean up the mess
+To:     Peter Zijlstra <peterz@infradead.org>
+Cc:     juri.lelli@redhat.com, rafael@kernel.org, catalin.marinas@arm.com,
+        linus.walleij@linaro.org, bsegall@google.com, guoren@kernel.org,
+        pavel@ucw.cz, agordeev@linux.ibm.com, linux-arch@vger.kernel.org,
+        vincent.guittot@linaro.org, mpe@ellerman.id.au,
+        chenhuacai@kernel.org, christophe.leroy@csgroup.eu,
+        linux-acpi@vger.kernel.org, agross@kernel.org,
+        geert@linux-m68k.org, linux-imx@nxp.com, vgupta@kernel.org,
+        mattst88@gmail.com, mturquette@baylibre.com, sammy@sammy.net,
+        pmladek@suse.com, linux-pm@vger.kernel.org,
+        Sascha Hauer <s.hauer@pengutronix.de>,
+        linux-um@lists.infradead.org, npiggin@gmail.com,
+        tglx@linutronix.de, linux-omap@vger.kernel.org,
+        dietmar.eggemann@arm.com, andreyknvl@gmail.com,
+        gregkh@linuxfoundation.org, linux-kernel@vger.kernel.org,
+        linux-perf-users@vger.kernel.org, senozhatsky@chromium.org,
+        svens@linux.ibm.com, jolsa@kernel.org, tj@kernel.org,
+        Andrew Morton <akpm@linux-foundation.org>,
+        mark.rutland@arm.com, linux-ia64@vger.kernel.org,
+        dave.hansen@linux.intel.com,
+        virtualization@lists.linux-foundation.org,
+        James.Bottomley@hansenpartnership.com, jcmvbkbc@gmail.com,
+        thierry.reding@gmail.com, kernel@xen0n.name, cl@linux.com,
+        linux-s390@vger.kernel.org, vschneid@redhat.com,
+        john.ogness@linutronix.de, ysato@users.sourceforge.jp,
+        linux-sh@vger.kernel.org, festevam@gmail.com, deller@gmx.de,
+        daniel.lezcano@linaro.org, jonathanh@nvidia.com, dennis@kernel.org,
+        lenb@kernel.org, linux-xtensa@linux-xtensa.org,
+        kernel@pengutronix.de, gor@linux.ibm.com,
+        linux-arm-msm@vger.kernel.org, linux-alpha@vger.kernel.org,
+        linux-m68k@lists.linux-m68k.org, loongarch@lists.linux.dev,
+        shorne@gmail.com, chris@zankel.net, sboyd@kernel.org,
+        dinguyen@kernel.org, bristot@redhat.com,
+        alexander.shishkin@linux.intel.com, fweisbec@gmail.com,
+        lpieralisi@kernel.org, atishp@atishpatra.org,
+        linux@rasmusvillemoes.dk, kasan-dev@googlegroups.com,
+        will@kernel.org, boris.ostrovsky@oracle.com, khilman@kernel.org,
+        linux-csky@vger.kernel.org, pv-drivers@vmware.com,
+        linux-snps-arc@lists.infradead.org, mgorman@suse.de,
+        jacob.jun.pan@linux.intel.com, Arnd Bergmann <arnd@arndb.de>,
+        ulli.kroll@googlemail.com, linux-clk@vger.kernel.org,
+        rostedt@goodmis.org, ink@jurassic.park.msu.ru, bcain@quicinc.com,
+        tsbogend@alpha.franken.de, linux-parisc@vger.kernel.org,
+        ryabinin.a.a@gmail.com, sudeep.holla@arm.com, shawnguo@kernel.org,
+        davem@davemloft.net, dalias@libc.org, tony@atomide.com,
+        amakhalov@vmware.com, konrad.dybcio@somainline.org,
+        bjorn.andersson@linaro.org, glider@google.com, hpa@zytor.com,
+        sparclinux@vger.kernel.org, linux-hexagon@vger.kernel.org,
+        linux-riscv@lists.infradead.org, vincenzo.frascino@arm.com,
+        anton.ivanov@cambridgegreys.com, jonas@southpole.se,
+        yury.norov@gmail.com, richard@nod.at, x86@kernel.org,
+        linux@armlinux.org.uk, mingo@redhat.com, aou@eecs.berkeley.edu,
+        hca@linux.ibm.com, richard.henderson@linaro.org,
+        stefan.kristiansson@saunalahti.fi, openrisc@lists.librecores.org,
+        acme@kernel.org, paul.walmsley@sifive.com,
+        linux-tegra@vger.kernel.org, namhyung@kernel.org,
+        andriy.shevchenko@linux.intel.com, jpoimboe@kernel.org,
+        dvyukov@google.com, jgross@suse.com, monstr@monstr.eu,
+        linux-mips@vger.kernel.org, palmer@dabbelt.com,
+        anup@brainfault.org, bp@alien8.de, johannes@sipsolutions.net,
+        linuxppc-dev@lists.ozlabs.org
+Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-On 4/10/22 15:14, Arnaldo Carvalho de Melo wrote:
-> Em Mon, Oct 03, 2022 at 01:46:44PM -0700, Namhyung Kim escreveu:
->> The current code propagate evsel's cpu map settings to evlist when it's
->> added to an evlist.  But the evlist->all_cpus and each evsel's cpus will
->> be updated in perf_evlist__set_maps() later.  No need to do it before
->> evlist's cpus are set actually.
->>
->> In fact it discards this intermediate all_cpus maps at the beginning
->> of perf_evlist__set_maps().  Let's not do this.  It's only needed when
->> an evsel is added after the evlist cpu/thread maps are set.
->>
->> Signed-off-by: Namhyung Kim <namhyung@kernel.org>
->> ---
->>  tools/lib/perf/evlist.c                  | 11 ++++-------
->>  tools/lib/perf/include/internal/evlist.h |  1 +
->>  2 files changed, 5 insertions(+), 7 deletions(-)
->>
->> diff --git a/tools/lib/perf/evlist.c b/tools/lib/perf/evlist.c
->> index 187129652ab6..8ce92070086c 100644
->> --- a/tools/lib/perf/evlist.c
->> +++ b/tools/lib/perf/evlist.c
->> @@ -67,9 +67,7 @@ static void perf_evlist__propagate_maps(struct perf_evlist *evlist)
->>  {
->>  	struct perf_evsel *evsel;
->>  
->> -	/* Recomputing all_cpus, so start with a blank slate. */
->> -	perf_cpu_map__put(evlist->all_cpus);
->> -	evlist->all_cpus = NULL;
->> +	evlist->needs_map_propagation = true;
->>  
->>  	perf_evlist__for_each_evsel(evlist, evsel)
->>  		__perf_evlist__propagate_maps(evlist, evsel);
->> @@ -81,7 +79,9 @@ void perf_evlist__add(struct perf_evlist *evlist,
->>  	evsel->idx = evlist->nr_entries;
->>  	list_add_tail(&evsel->node, &evlist->entries);
->>  	evlist->nr_entries += 1;
->> -	__perf_evlist__propagate_maps(evlist, evsel);
->> +
->> +	if (evlist->needs_map_propagation)
->> +		__perf_evlist__propagate_maps(evlist, evsel);
->>  }
->>  
->>  void perf_evlist__remove(struct perf_evlist *evlist,
->> @@ -177,9 +177,6 @@ void perf_evlist__set_maps(struct perf_evlist *evlist,
->>  		evlist->threads = perf_thread_map__get(threads);
->>  	}
->>  
->> -	if (!evlist->all_cpus && cpus)
->> -		evlist->all_cpus = perf_cpu_map__get(cpus);
->> -
->>  	perf_evlist__propagate_maps(evlist);
-> 
-> IIRC Adrian suggested this extra thing, but he provided the Reviewed-by
-> for the previous patch, where this isn't present, Adrian, can you please
-> confirm this and if this is the case provide your Reviewed-by for this
-> new version?
+On Mon, 19 Sept 2022 at 12:18, Peter Zijlstra <peterz@infradead.org> wrote:
+>
+> Hi All!
+>
+> At long last, a respin of the cpuidle vs rcu cleanup patches.
+>
+> v1: https://lkml.kernel.org/r/20220608142723.103523089@infradead.org
+>
+> These here patches clean up the mess that is cpuidle vs rcuidle.
+>
+> At the end of the ride there's only on RCU_NONIDLE user left:
+>
+>   arch/arm64/kernel/suspend.c:            RCU_NONIDLE(__cpu_suspend_exit());
+>
+> and 'one' trace_*_rcuidle() user:
+>
+>   kernel/trace/trace_preemptirq.c:                        trace_irq_enable_rcuidle(CALLER_ADDR0, CALLER_ADDR1);
+>   kernel/trace/trace_preemptirq.c:                        trace_irq_disable_rcuidle(CALLER_ADDR0, CALLER_ADDR1);
+>   kernel/trace/trace_preemptirq.c:                        trace_irq_enable_rcuidle(CALLER_ADDR0, caller_addr);
+>   kernel/trace/trace_preemptirq.c:                        trace_irq_disable_rcuidle(CALLER_ADDR0, caller_addr);
+>   kernel/trace/trace_preemptirq.c:                trace_preempt_enable_rcuidle(a0, a1);
+>   kernel/trace/trace_preemptirq.c:                trace_preempt_disable_rcuidle(a0, a1);
+>
+> However this last is all in deprecated code that should be unused for GENERIC_ENTRY.
+>
+> I've touched a lot of code that I can't test and I might've broken something by
+> accident. In particular the whole ARM cpuidle stuff was quite involved.
+>
+> Please all; have a look where you haven't already.
+>
+>
+> New since v1:
+>
+>  - rebase on top of Frederic's rcu-context-tracking rename fest
+>  - more omap goodness as per the last discusion (thanks Tony!)
+>  - removed one more RCU_NONIDLE() from arm64/risc-v perf code
+>  - ubsan/kasan fixes
+>  - intel_idle module-param for testing
+>  - a bunch of extra __always_inline, because compilers are silly.
+>
+> ---
+>  arch/alpha/kernel/process.c               |  1 -
+>  arch/alpha/kernel/vmlinux.lds.S           |  1 -
+>  arch/arc/kernel/process.c                 |  3 ++
+>  arch/arc/kernel/vmlinux.lds.S             |  1 -
+>  arch/arm/include/asm/vmlinux.lds.h        |  1 -
+>  arch/arm/kernel/process.c                 |  1 -
+>  arch/arm/kernel/smp.c                     |  6 +--
+>  arch/arm/mach-gemini/board-dt.c           |  3 +-
+>  arch/arm/mach-imx/cpuidle-imx6q.c         |  4 +-
+>  arch/arm/mach-imx/cpuidle-imx6sx.c        |  5 ++-
+>  arch/arm/mach-omap2/common.h              |  6 ++-
+>  arch/arm/mach-omap2/cpuidle34xx.c         | 16 +++++++-
+>  arch/arm/mach-omap2/cpuidle44xx.c         | 29 +++++++-------
+>  arch/arm/mach-omap2/omap-mpuss-lowpower.c | 12 +++++-
+>  arch/arm/mach-omap2/pm.h                  |  2 +-
+>  arch/arm/mach-omap2/pm24xx.c              | 51 +-----------------------
+>  arch/arm/mach-omap2/pm34xx.c              | 14 +++++--
+>  arch/arm/mach-omap2/pm44xx.c              |  2 +-
+>  arch/arm/mach-omap2/powerdomain.c         | 10 ++---
+>  arch/arm64/kernel/idle.c                  |  1 -
+>  arch/arm64/kernel/smp.c                   |  4 +-
+>  arch/arm64/kernel/vmlinux.lds.S           |  1 -
+>  arch/csky/kernel/process.c                |  1 -
+>  arch/csky/kernel/smp.c                    |  2 +-
+>  arch/csky/kernel/vmlinux.lds.S            |  1 -
+>  arch/hexagon/kernel/process.c             |  1 -
+>  arch/hexagon/kernel/vmlinux.lds.S         |  1 -
+>  arch/ia64/kernel/process.c                |  1 +
+>  arch/ia64/kernel/vmlinux.lds.S            |  1 -
+>  arch/loongarch/kernel/idle.c              |  1 +
+>  arch/loongarch/kernel/vmlinux.lds.S       |  1 -
+>  arch/m68k/kernel/vmlinux-nommu.lds        |  1 -
+>  arch/m68k/kernel/vmlinux-std.lds          |  1 -
+>  arch/m68k/kernel/vmlinux-sun3.lds         |  1 -
+>  arch/microblaze/kernel/process.c          |  1 -
+>  arch/microblaze/kernel/vmlinux.lds.S      |  1 -
+>  arch/mips/kernel/idle.c                   |  8 ++--
+>  arch/mips/kernel/vmlinux.lds.S            |  1 -
+>  arch/nios2/kernel/process.c               |  1 -
+>  arch/nios2/kernel/vmlinux.lds.S           |  1 -
+>  arch/openrisc/kernel/process.c            |  1 +
+>  arch/openrisc/kernel/vmlinux.lds.S        |  1 -
+>  arch/parisc/kernel/process.c              |  2 -
+>  arch/parisc/kernel/vmlinux.lds.S          |  1 -
+>  arch/powerpc/kernel/idle.c                |  5 +--
+>  arch/powerpc/kernel/vmlinux.lds.S         |  1 -
+>  arch/riscv/kernel/process.c               |  1 -
+>  arch/riscv/kernel/vmlinux-xip.lds.S       |  1 -
+>  arch/riscv/kernel/vmlinux.lds.S           |  1 -
+>  arch/s390/kernel/idle.c                   |  1 -
+>  arch/s390/kernel/vmlinux.lds.S            |  1 -
+>  arch/sh/kernel/idle.c                     |  1 +
+>  arch/sh/kernel/vmlinux.lds.S              |  1 -
+>  arch/sparc/kernel/leon_pmc.c              |  4 ++
+>  arch/sparc/kernel/process_32.c            |  1 -
+>  arch/sparc/kernel/process_64.c            |  3 +-
+>  arch/sparc/kernel/vmlinux.lds.S           |  1 -
+>  arch/um/kernel/dyn.lds.S                  |  1 -
+>  arch/um/kernel/process.c                  |  1 -
+>  arch/um/kernel/uml.lds.S                  |  1 -
+>  arch/x86/boot/compressed/vmlinux.lds.S    |  1 +
+>  arch/x86/coco/tdx/tdcall.S                | 15 +------
+>  arch/x86/coco/tdx/tdx.c                   | 25 ++++--------
+>  arch/x86/events/amd/brs.c                 | 13 +++----
+>  arch/x86/include/asm/fpu/xcr.h            |  4 +-
+>  arch/x86/include/asm/irqflags.h           | 11 ++----
+>  arch/x86/include/asm/mwait.h              | 14 +++----
+>  arch/x86/include/asm/nospec-branch.h      |  2 +-
+>  arch/x86/include/asm/paravirt.h           |  6 ++-
+>  arch/x86/include/asm/perf_event.h         |  2 +-
+>  arch/x86/include/asm/shared/io.h          |  4 +-
+>  arch/x86/include/asm/shared/tdx.h         |  1 -
+>  arch/x86/include/asm/special_insns.h      |  8 ++--
+>  arch/x86/include/asm/xen/hypercall.h      |  2 +-
+>  arch/x86/kernel/cpu/bugs.c                |  2 +-
+>  arch/x86/kernel/fpu/core.c                |  4 +-
+>  arch/x86/kernel/paravirt.c                | 14 ++++++-
+>  arch/x86/kernel/process.c                 | 65 +++++++++++++++----------------
+>  arch/x86/kernel/vmlinux.lds.S             |  1 -
+>  arch/x86/lib/memcpy_64.S                  |  5 +--
+>  arch/x86/lib/memmove_64.S                 |  4 +-
+>  arch/x86/lib/memset_64.S                  |  4 +-
+>  arch/x86/xen/enlighten_pv.c               |  2 +-
+>  arch/x86/xen/irq.c                        |  2 +-
+>  arch/xtensa/kernel/process.c              |  1 +
+>  arch/xtensa/kernel/vmlinux.lds.S          |  1 -
+>  drivers/acpi/processor_idle.c             | 36 ++++++++++-------
+>  drivers/base/power/runtime.c              | 24 ++++++------
+>  drivers/clk/clk.c                         |  8 ++--
+>  drivers/cpuidle/cpuidle-arm.c             |  1 +
+>  drivers/cpuidle/cpuidle-big_little.c      |  8 +++-
+>  drivers/cpuidle/cpuidle-mvebu-v7.c        |  7 ++++
+>  drivers/cpuidle/cpuidle-psci.c            | 10 +++--
+>  drivers/cpuidle/cpuidle-qcom-spm.c        |  1 +
+>  drivers/cpuidle/cpuidle-riscv-sbi.c       | 10 +++--
+>  drivers/cpuidle/cpuidle-tegra.c           | 21 +++++++---
+>  drivers/cpuidle/cpuidle.c                 | 21 +++++-----
+>  drivers/cpuidle/dt_idle_states.c          |  2 +-
+>  drivers/cpuidle/poll_state.c              | 10 ++++-
+>  drivers/idle/intel_idle.c                 | 19 +++++----
+>  drivers/perf/arm_pmu.c                    | 11 +-----
+>  drivers/perf/riscv_pmu_sbi.c              |  8 +---
+>  include/asm-generic/vmlinux.lds.h         |  9 ++---
+>  include/linux/compiler_types.h            |  8 +++-
+>  include/linux/cpu.h                       |  3 --
+>  include/linux/cpuidle.h                   | 34 ++++++++++++++++
+>  include/linux/cpumask.h                   |  4 +-
+>  include/linux/percpu-defs.h               |  2 +-
+>  include/linux/sched/idle.h                | 40 ++++++++++++++-----
+>  include/linux/thread_info.h               | 18 ++++++++-
+>  include/linux/tracepoint.h                | 13 ++++++-
+>  kernel/cpu_pm.c                           |  9 -----
+>  kernel/printk/printk.c                    |  2 +-
+>  kernel/sched/idle.c                       | 47 +++++++---------------
+>  kernel/time/tick-broadcast-hrtimer.c      | 29 ++++++--------
+>  kernel/time/tick-broadcast.c              |  6 ++-
+>  kernel/trace/trace.c                      |  3 ++
+>  lib/ubsan.c                               |  5 ++-
+>  mm/kasan/kasan.h                          |  4 ++
+>  mm/kasan/shadow.c                         | 38 ++++++++++++++++++
+>  tools/objtool/check.c                     | 17 ++++++++
+>  121 files changed, 511 insertions(+), 420 deletions(-)
 
-Oops sorry, I meant this one:
+Thanks for cleaning up the situation!
 
-Reviewed-by: Adrian Hunter <adrian.hunter@intel.com>
+I have applied this on a plain v6.0 (only one patch had a minor
+conflict) and tested this on an ARM64 Dragonboard 410c, which uses
+cpuidle-psci and the cpuidle-psci-domain. I didn't observe any
+problems, so feel free to add:
 
+Tested-by: Ulf Hansson <ulf.hansson@linaro.org>
 
-> 
-> Thanks,
-> 
-> - Arnaldo
-> 
->>  }
->>  
->> diff --git a/tools/lib/perf/include/internal/evlist.h b/tools/lib/perf/include/internal/evlist.h
->> index 6f89aec3e608..850f07070036 100644
->> --- a/tools/lib/perf/include/internal/evlist.h
->> +++ b/tools/lib/perf/include/internal/evlist.h
->> @@ -19,6 +19,7 @@ struct perf_evlist {
->>  	int			 nr_entries;
->>  	int			 nr_groups;
->>  	bool			 has_user_cpus;
->> +	bool			 needs_map_propagation;
->>  	/**
->>  	 * The cpus passed from the command line or all online CPUs by
->>  	 * default.
->> -- 
->> 2.38.0.rc1.362.ged0d419d3c-goog
-> 
-
+Kind regards
+Uffe
