@@ -2,563 +2,292 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6CB03C433FE
-	for <linux-perf-users@archiver.kernel.org>; Tue,  4 Oct 2022 07:06:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9185AC43219
+	for <linux-perf-users@archiver.kernel.org>; Tue,  4 Oct 2022 11:04:47 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229610AbiJDHGw (ORCPT
+        id S229893AbiJDLEn (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Tue, 4 Oct 2022 03:06:52 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49102 "EHLO
+        Tue, 4 Oct 2022 07:04:43 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51666 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229532AbiJDHGv (ORCPT
+        with ESMTP id S229844AbiJDLEk (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Tue, 4 Oct 2022 03:06:51 -0400
-Received: from mx0a-001b2d01.pphosted.com (mx0b-001b2d01.pphosted.com [148.163.158.5])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 04F2141528
-        for <linux-perf-users@vger.kernel.org>; Tue,  4 Oct 2022 00:06:48 -0700 (PDT)
-Received: from pps.filterd (m0098420.ppops.net [127.0.0.1])
-        by mx0b-001b2d01.pphosted.com (8.17.1.5/8.17.1.5) with ESMTP id 2946DIc3007563;
-        Tue, 4 Oct 2022 07:06:38 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=content-type : subject :
- from : in-reply-to : date : cc : message-id : references : to :
- content-transfer-encoding : mime-version; s=pp1;
- bh=0CiTem17gfsKOFM1wXQrCPlweP5eblAohGnupNoTwq4=;
- b=db8TB7mcmxnqEjUDi8D2mw4QfmnYmTDoIHG9TDWGnc/0W57GSKdzPqi3kTjIBvLLPeeX
- v7dM1nYZmZG56L1e5x3BaOQsTtCmrzTtaI5llfiD24rMeOmAXnRI7ZC8JdqsL324ntwH
- q8makjne9TqLuNxz4blJGT+CAKzIcx08vFZknyOdyWUQ123paZ6N+0iZsh7pZmdatRQH
- RDn5ar2MxGSpfwW/M4xf8bFN2Es2fxkc2CgX+1OxNIQ0Cr5kOhNv5tiGBBG9aQ96EMAE
- wRIhLBVhsHRfcSVkJylAYmvfQf5x/npwgeH/l4in8E5zm4rr+7q9RaL1wBK87QPEQqnz Mg== 
-Received: from pps.reinject (localhost [127.0.0.1])
-        by mx0b-001b2d01.pphosted.com (PPS) with ESMTPS id 3k0fc99bb6-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Tue, 04 Oct 2022 07:06:38 +0000
-Received: from m0098420.ppops.net (m0098420.ppops.net [127.0.0.1])
-        by pps.reinject (8.17.1.5/8.17.1.5) with ESMTP id 2946kflK014669;
-        Tue, 4 Oct 2022 07:06:37 GMT
-Received: from ppma03ams.nl.ibm.com (62.31.33a9.ip4.static.sl-reverse.com [169.51.49.98])
-        by mx0b-001b2d01.pphosted.com (PPS) with ESMTPS id 3k0fc99ba9-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Tue, 04 Oct 2022 07:06:37 +0000
-Received: from pps.filterd (ppma03ams.nl.ibm.com [127.0.0.1])
-        by ppma03ams.nl.ibm.com (8.16.1.2/8.16.1.2) with SMTP id 294769Qr031094;
-        Tue, 4 Oct 2022 07:06:35 GMT
-Received: from b06avi18626390.portsmouth.uk.ibm.com (b06avi18626390.portsmouth.uk.ibm.com [9.149.26.192])
-        by ppma03ams.nl.ibm.com with ESMTP id 3jxd693qxy-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Tue, 04 Oct 2022 07:06:35 +0000
-Received: from d06av24.portsmouth.uk.ibm.com (mk.ibm.com [9.149.105.60])
-        by b06avi18626390.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 294724dl37552490
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Tue, 4 Oct 2022 07:02:04 GMT
-Received: from d06av24.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 36BCE42045;
-        Tue,  4 Oct 2022 07:06:32 +0000 (GMT)
-Received: from d06av24.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 6F9A842042;
-        Tue,  4 Oct 2022 07:06:29 +0000 (GMT)
-Received: from smtpclient.apple (unknown [9.43.104.20])
-        by d06av24.portsmouth.uk.ibm.com (Postfix) with ESMTPS;
-        Tue,  4 Oct 2022 07:06:29 +0000 (GMT)
-Content-Type: text/plain;
-        charset=utf-8
-Subject: Re: [PATCH] tools/perf: Fix aggr_printout to display cpu field
- irrespective of core value
-From:   Athira Rajeev <atrajeev@linux.vnet.ibm.com>
-In-Reply-To: <CAP-5=fWJ0YBxdCarpNSfbzoAZ9uTAtgj4CdR7sQU8748Y-+DVA@mail.gmail.com>
-Date:   Tue, 4 Oct 2022 12:36:27 +0530
-Cc:     atrajeev <atrajeev@imap.linux.ibm.com>, maddy@linux.vnet.ibm.com,
-        Nageswara Sastry <rnsastry@linux.ibm.com>,
-        Kajol Jain <kjain@linux.ibm.com>,
-        linux-perf-users@vger.kernel.org, Jiri Olsa <jolsa@kernel.org>,
-        Disha Goel <disgoel@linux.vnet.ibm.com>,
-        linuxppc-dev@lists.ozlabs.org
-Message-Id: <6A5D0603-CF66-43B4-A13F-0308CF01967A@linux.vnet.ibm.com>
-References: <20220913115717.36191-1-atrajeev@linux.vnet.ibm.com>
- <4792ef3a-8790-a0d4-50f2-4917874d81d6@arm.com>
- <82D5587E-593A-43A7-92D7-7E095E2BE9A9@linux.vnet.ibm.com>
- <6627ae9a-91e3-0923-1234-54e0fc3f4916@arm.com>
- <CAP-5=fVBzLfhfwPjxE_9DNeesPaPxf3k0b5T5S6THzB1H85mrA@mail.gmail.com>
- <993a1391ee931e859d972c460644d171@imap.linux.ibm.com>
- <CAP-5=fWJ0YBxdCarpNSfbzoAZ9uTAtgj4CdR7sQU8748Y-+DVA@mail.gmail.com>
-To:     Ian Rogers <irogers@google.com>,
-        Arnaldo Carvalho de Melo <acme@kernel.org>,
-        James Clark <james.clark@arm.com>
-X-Mailer: Apple Mail (2.3696.120.41.1.1)
-X-TM-AS-GCONF: 00
-X-Proofpoint-GUID: yVxAvirSTQmSXjs1dlYxTaHXB0AyszW_
-X-Proofpoint-ORIG-GUID: 9fjYzyc4ysjNhxfIbbFGXYh9JpXgBsX3
-Content-Transfer-Encoding: quoted-printable
-X-Proofpoint-UnRewURL: 0 URL was un-rewritten
+        Tue, 4 Oct 2022 07:04:40 -0400
+Received: from mail-pf1-x42e.google.com (mail-pf1-x42e.google.com [IPv6:2607:f8b0:4864:20::42e])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6FB39BC1
+        for <linux-perf-users@vger.kernel.org>; Tue,  4 Oct 2022 04:04:36 -0700 (PDT)
+Received: by mail-pf1-x42e.google.com with SMTP id i6so12858939pfb.2
+        for <linux-perf-users@vger.kernel.org>; Tue, 04 Oct 2022 04:04:36 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:from:to:cc:subject:date;
+        bh=+dGyZLAFgGMTjfv/XBtu0TYoOq7FF1Gy12H3Maj7VZQ=;
+        b=J/vrmB9Kw/kUjuLA94+GiSaAb/ysKsHCJMt0q/b5C4hTvjWvpD/4gYcz8wiDYH+wDu
+         VauelbAc6rvn6GfwX8AzvYum0016wmpfk7JfWsZRIuqW+7uz8x5trzhgQfsbK6Oez4C2
+         oI3/xkCQmxaR27+SGOcFsxA52mzB06l623Nv5Xai/ZW6o0aFNiEoJd0NtydxpISZgCqY
+         Huu19sneopcpPoTb7AatH5ql62Y6l79ODVmUp4xYd601QVsvCsOcL4Dye3nIrsebtAO/
+         TFi2QIhE77HgLndavZo56yiYGlFlIpX3fKxDC/yQxRz8ukXbuLPZ751WaoRstUHwOqJr
+         oOYQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:x-gm-message-state:from:to:cc:subject:date;
+        bh=+dGyZLAFgGMTjfv/XBtu0TYoOq7FF1Gy12H3Maj7VZQ=;
+        b=i8dbtBMTX1zdQiDtpu0vfEf8rJEyvHfjioaenQoIvahgzbDqIwFSsHkKrW9hY7Fd/C
+         5AbZMjCMXVNxsbJ4QFSO0e+VnsojqELJm+fyun88eeTJdzchAjFR00Ohr7Fk5EvtSN8G
+         A/4eQvFQNj/u3pi8xIHfcfb0UFP0GWmr/SQkpO43WES0a9kiMoLaAya0HieGbaIe7Vmf
+         6jqzUTkGj0VKBjal9AxWVMz+R7L91YsNU/HDkrVKxnkg8j4LWnlEhMU0U9TEWT2UG1AC
+         +COT+1K4tQWbRTcF04QFkg7SoSVS8satCQ9rvQXZ2mjsAunzmNo5eLbvcNQYJBUwB3tj
+         RifQ==
+X-Gm-Message-State: ACrzQf0wDIDyA9x0o0j2tIfKy7UISv3kJxXNPSYGMRaTFJ/BsotJLdx+
+        6g9zWEuH4tK9aDJ/v6is+u6c5gWhL/OoefexgQfJcQ==
+X-Google-Smtp-Source: AMsMyM47WQGEEYS8ORE4jd8BkC5HxomBqw3qkNOIDDeZpMqnq0xrIZB9jUW0aBX+JhUuuIkJBe/Q8EmYOwJGbohmCJY=
+X-Received: by 2002:a63:90c1:0:b0:450:75b5:29fe with SMTP id
+ a184-20020a6390c1000000b0045075b529femr6949580pge.541.1664881475536; Tue, 04
+ Oct 2022 04:04:35 -0700 (PDT)
 MIME-Version: 1.0
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.205,Aquarius:18.0.895,Hydra:6.0.528,FMLib:17.11.122.1
- definitions=2022-10-04_02,2022-09-29_03,2022-06-22_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 mlxscore=0 impostorscore=0
- lowpriorityscore=0 suspectscore=0 mlxlogscore=999 spamscore=0 phishscore=0
- priorityscore=1501 clxscore=1015 malwarescore=0 adultscore=0 bulkscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2209130000
- definitions=main-2210040045
+References: <20220919095939.761690562@infradead.org> <20220919101521.139727471@infradead.org>
+In-Reply-To: <20220919101521.139727471@infradead.org>
+From:   Ulf Hansson <ulf.hansson@linaro.org>
+Date:   Tue, 4 Oct 2022 13:03:57 +0200
+Message-ID: <CAPDyKFqTWd4W5Ofk76CtC4X43dxBTNHtmY9YzN355-vpviLsPw@mail.gmail.com>
+Subject: Re: [PATCH v2 12/44] cpuidle,dt: Push RCU-idle into driver
+To:     Peter Zijlstra <peterz@infradead.org>
+Cc:     juri.lelli@redhat.com, rafael@kernel.org, catalin.marinas@arm.com,
+        linus.walleij@linaro.org, bsegall@google.com, guoren@kernel.org,
+        pavel@ucw.cz, agordeev@linux.ibm.com, linux-arch@vger.kernel.org,
+        vincent.guittot@linaro.org, mpe@ellerman.id.au,
+        chenhuacai@kernel.org, christophe.leroy@csgroup.eu,
+        linux-acpi@vger.kernel.org, agross@kernel.org,
+        geert@linux-m68k.org, linux-imx@nxp.com, vgupta@kernel.org,
+        mattst88@gmail.com, mturquette@baylibre.com, sammy@sammy.net,
+        pmladek@suse.com, linux-pm@vger.kernel.org,
+        Sascha Hauer <s.hauer@pengutronix.de>,
+        linux-um@lists.infradead.org, npiggin@gmail.com,
+        tglx@linutronix.de, linux-omap@vger.kernel.org,
+        dietmar.eggemann@arm.com, andreyknvl@gmail.com,
+        gregkh@linuxfoundation.org, linux-kernel@vger.kernel.org,
+        linux-perf-users@vger.kernel.org, senozhatsky@chromium.org,
+        svens@linux.ibm.com, jolsa@kernel.org, tj@kernel.org,
+        Andrew Morton <akpm@linux-foundation.org>,
+        mark.rutland@arm.com, linux-ia64@vger.kernel.org,
+        dave.hansen@linux.intel.com,
+        virtualization@lists.linux-foundation.org,
+        James.Bottomley@hansenpartnership.com, jcmvbkbc@gmail.com,
+        thierry.reding@gmail.com, kernel@xen0n.name, cl@linux.com,
+        linux-s390@vger.kernel.org, vschneid@redhat.com,
+        john.ogness@linutronix.de, ysato@users.sourceforge.jp,
+        linux-sh@vger.kernel.org, festevam@gmail.com, deller@gmx.de,
+        daniel.lezcano@linaro.org, jonathanh@nvidia.com, dennis@kernel.org,
+        lenb@kernel.org, linux-xtensa@linux-xtensa.org,
+        kernel@pengutronix.de, gor@linux.ibm.com,
+        linux-arm-msm@vger.kernel.org, linux-alpha@vger.kernel.org,
+        linux-m68k@lists.linux-m68k.org, loongarch@lists.linux.dev,
+        shorne@gmail.com, chris@zankel.net, sboyd@kernel.org,
+        dinguyen@kernel.org, bristot@redhat.com,
+        alexander.shishkin@linux.intel.com, fweisbec@gmail.com,
+        lpieralisi@kernel.org, atishp@atishpatra.org,
+        linux@rasmusvillemoes.dk, kasan-dev@googlegroups.com,
+        will@kernel.org, boris.ostrovsky@oracle.com, khilman@kernel.org,
+        linux-csky@vger.kernel.org, pv-drivers@vmware.com,
+        linux-snps-arc@lists.infradead.org, mgorman@suse.de,
+        jacob.jun.pan@linux.intel.com, Arnd Bergmann <arnd@arndb.de>,
+        ulli.kroll@googlemail.com, linux-clk@vger.kernel.org,
+        rostedt@goodmis.org, ink@jurassic.park.msu.ru, bcain@quicinc.com,
+        tsbogend@alpha.franken.de, linux-parisc@vger.kernel.org,
+        ryabinin.a.a@gmail.com, sudeep.holla@arm.com, shawnguo@kernel.org,
+        davem@davemloft.net, dalias@libc.org, tony@atomide.com,
+        amakhalov@vmware.com, konrad.dybcio@somainline.org,
+        bjorn.andersson@linaro.org, glider@google.com, hpa@zytor.com,
+        sparclinux@vger.kernel.org, linux-hexagon@vger.kernel.org,
+        linux-riscv@lists.infradead.org, vincenzo.frascino@arm.com,
+        anton.ivanov@cambridgegreys.com, jonas@southpole.se,
+        yury.norov@gmail.com, richard@nod.at, x86@kernel.org,
+        linux@armlinux.org.uk, mingo@redhat.com, aou@eecs.berkeley.edu,
+        hca@linux.ibm.com, richard.henderson@linaro.org,
+        stefan.kristiansson@saunalahti.fi, openrisc@lists.librecores.org,
+        acme@kernel.org, paul.walmsley@sifive.com,
+        linux-tegra@vger.kernel.org, namhyung@kernel.org,
+        andriy.shevchenko@linux.intel.com, jpoimboe@kernel.org,
+        dvyukov@google.com, jgross@suse.com, monstr@monstr.eu,
+        linux-mips@vger.kernel.org, palmer@dabbelt.com,
+        anup@brainfault.org, bp@alien8.de, johannes@sipsolutions.net,
+        linuxppc-dev@lists.ozlabs.org
+Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
+On Mon, 19 Sept 2022 at 12:18, Peter Zijlstra <peterz@infradead.org> wrote:
+>
+> Doing RCU-idle outside the driver, only to then temporarily enable it
+> again before going idle is daft.
+>
+> Notably: this converts all dt_init_idle_driver() and
+> __CPU_PM_CPU_IDLE_ENTER() users for they are inextrably intertwined.
+>
+> Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
 
+Reviewed-by: Ulf Hansson <ulf.hansson@linaro.org>
 
-> On 04-Oct-2022, at 12:21 AM, Ian Rogers <irogers@google.com> wrote:
->=20
-> On Mon, Oct 3, 2022 at 7:03 AM atrajeev <atrajeev@imap.linux.ibm.com> wro=
-te:
->>=20
->> On 2022-10-02 05:17, Ian Rogers wrote:
->>> On Thu, Sep 29, 2022 at 5:56 AM James Clark <james.clark@arm.com>
->>> wrote:
->>>>=20
->>>>=20
->>>>=20
->>>> On 29/09/2022 09:49, Athira Rajeev wrote:
->>>>>=20
->>>>>=20
->>>>>> On 28-Sep-2022, at 9:05 PM, James Clark <james.clark@arm.com> wrote:
->>>>>>=20
->>>>>>=20
->>>>>>=20
->>>>>=20
->>>>> Hi James,
->>>>>=20
->>>>> Thanks for looking at the patch and sharing review comments.
->>>>>=20
->>>>>> On 13/09/2022 12:57, Athira Rajeev wrote:
->>>>>>> perf stat includes option to specify aggr_mode to display
->>>>>>> per-socket, per-core, per-die, per-node counter details.
->>>>>>> Also there is option -A ( AGGR_NONE, -no-aggr ), where the
->>>>>>> counter values are displayed for each cpu along with "CPU"
->>>>>>> value in one field of the output.
->>>>>>>=20
->>>>>>> Each of the aggregate mode uses the information fetched
->>>>>>> from "/sys/devices/system/cpu/cpuX/topology" like core_id,
->>>>>>=20
->>>>>> I thought that this wouldn't apply to the cpu field because cpu is
->>>>>> basically interchangeable as an index in cpumap, rather than anything
->>>>>> being read from the topology file.
->>>>>=20
->>>>> The cpu value is filled in this function:
->>>>>=20
->>>>> Function : aggr_cpu_id__cpu
->>>>> Code: util/cpumap.c
->>>>>=20
->>>>>>=20
->>>>>>> physical_package_id. Utility functions in "cpumap.c" fetches
->>>>>>> this information and populates the socket id, core id, cpu etc.
->>>>>>> If the platform does not expose the topology information,
->>>>>>> these values will be set to -1. Example, in case of powerpc,
->>>>>>> details like physical_package_id is restricted to be exposed
->>>>>>> in pSeries platform. So id.socket, id.core, id.cpu all will
->>>>>>> be set as -1.
->>>>>>>=20
->>>>>>> In case of displaying socket or die value, there is no check
->>>>>>> done in the "aggr_printout" function to see if it points to
->>>>>>> valid socket id or die. But for displaying "cpu" value, there
->>>>>>> is a check for "if (id.core > -1)". In case of powerpc pSeries
->>>>>>> where detail like physical_package_id is restricted to be
->>>>>>> exposed, id.core will be set to -1. Hence the column or field
->>>>>>> itself for CPU won't be displayed in the output.
->>>>>>>=20
->>>>>>> Result for per-socket:
->>>>>>>=20
->>>>>>> <<>>
->>>>>>> perf stat -e branches --per-socket -a true
->>>>>>>=20
->>>>>>> Performance counter stats for 'system wide':
->>>>>>>=20
->>>>>>> S-1      32            416,851      branches
->>>>>>> <<>>
->>>>>>>=20
->>>>>>> Here S has -1 in above result. But with -A option which also
->>>>>>> expects CPU in one column in the result, below is observed.
->>>>>>>=20
->>>>>>> <<>>
->>>>>>> /bin/perf stat -e instructions -A -a true
->>>>>>>=20
->>>>>>> Performance counter stats for 'system wide':
->>>>>>>=20
->>>>>>>           47,146      instructions
->>>>>>>           45,226      instructions
->>>>>>>           43,354      instructions
->>>>>>>           45,184      instructions
->>>>>>> <<>>
->>>>>>>=20
->>>>>>> If the cpu id value is pointing to -1 also, it makes sense
->>>>>>> to display the column in the output to replicate the behaviour
->>>>>>> or to be in precedence with other aggr options(like per-socket,
->>>>>>> per-core). Remove the check "id.core" so that CPU field gets
->>>>>>> displayed in the output.
->>>>>>=20
->>>>>> Why would you want to print -1 out? Seems like the if statement was a
->>>>>> good one to me, otherwise the output looks a bit broken to users. Are
->>>>>> the other aggregation modes even working if -1 is set for socket and
->>>>>> die? Maybe we need to not print -1 in those cases or exit earlier wi=
-th a
->>>>>> failure.
->>>>>>=20
->>>>>> The -1 value has a specific internal meaning which is "to not
->>>>>> aggregate". It doesn't mean "not set".
->>>>>=20
->>>>> Currently, this check is done only for printing cpu value.
->>>>> For socket/die/core values, this check is not done. Pasting an
->>>>> example snippet from a powerpc system ( specifically from pseries pla=
-tform where
->>>>> the value is set to -1 )
->>>>>=20
->>>>> ./perf stat --per-core -a -C 1 true
->>>>>=20
->>>>> Performance counter stats for 'system wide':
->>>>>=20
->>>>> S-1-D-1-C-1          1               1.06 msec cpu-clock             =
-           #    1.018 CPUs utilized
->>>>> S-1-D-1-C-1          1                  2      context-switches      =
-           #    1.879 K/sec
->>>>> S-1-D-1-C-1          1                  0      cpu-migrations        =
-           #    0.000 /sec
->>>>>=20
->>>>> Here though the value is -1, we are displaying it. Where as in case o=
-f cpu, the first column will be
->>>>> empty since we do a check before printing.
->>>>>=20
->>>>> Example:
->>>>>=20
->>>>> ./perf stat --per-core -A -C 1 true
->>>>>=20
->>>>> Performance counter stats for 'CPU(s) 1':
->>>>>=20
->>>>>              0.88 msec cpu-clock                        #    1.022 CP=
-Us utilized
->>>>>                 2      context-switches
->>>>>                 0      cpu-migrations
->>>>>=20
->>>>>=20
->>>>> No sure, whether there are scripts out there, which consume the curre=
-nt format and
->>>>> not displaying -1 may break it. That is why we tried with change to r=
-emove check for cpu, similar to
->>>>> other modes like socket, die, core etc.
->>>>=20
->>>> I wouldn't worry about that because there are json and CSV modes which
->>>> are machine readable, and -1 is already not always displayed. If
->>>> anything this change here is also likely to break parsing by adding -1
->>>> where it wasn't before.
->>>>=20
->>>>>=20
->>>>> Also perf code ie =E2=80=9Caggr_cpu_id__empty=E2=80=9D in util/cpumap=
-.c initialises the
->>>>> values to -1 . I was checking to see where we are mapping -1 to =E2=
-=80=9Cto not aggregate=E2=80=9D.
->>>>> What I could find is AGGR_NONE ( which is for no-aggr ) has value as =
-zero.
->>>>>=20
->>>>> Reference: defined in util/stat.h
->>>>>=20
->>>>> enum aggr_mode {
->>>>>        AGGR_NONE,
->>>>>=20
->>>>=20
->>>> That enum is never written to any of the cpumap members, that defines
->>>> the mode of how to fill the cpu map instead. 0 is a valid value, for
->>>> example "CPU 0". -1 is used as a special case and shouldn't be
->>>> displayed
->>>> IMO.
->>>>=20
->>>> Did you see my comment in the code below about the bad merge? Could
->>>> that
->>>> not be related to your issue?
->>>=20
->>> I'm suspicious of this too. In Claire's patch:
->>>=20
->>>        case AGGR_NONE:
->>> -               if (evsel->percore && !config->percore_show_thread) {
->>> -                       fprintf(config->output, "S%d-D%d-C%*d%s",
->>> -                               id.socket,
->>> -                               id.die,
->>> -                               config->csv_output ? 0 : -3,
->>> -                               id.core, config->csv_sep);
->>> -               } else if (id.cpu.cpu > -1) {
->>> -                       fprintf(config->output, "CPU%*d%s",
->>> -                               config->csv_output ? 0 : -7,
->>> -                               id.cpu.cpu, config->csv_sep);
->>> +               if (config->json_output) {
->>> +                       if (evsel->percore &&
->>> !config->percore_show_thread) {
->>> +                               fprintf(config->output, "\"core\" :
->>> \"S%d-D%d-C%d\"",
->>> +                                       id.socket,
->>> +                                       id.die,
->>> +                                       id.core);
->>> +                       } else if (id.core > -1) {
->>> +                               fprintf(config->output, "\"cpu\" :
->>> \"%d\", ",
->>> +                                       id.cpu.cpu);
->>> +                       }
->>> +               } else {
->>> +                       if (evsel->percore &&
->>> !config->percore_show_thread) {
->>> +                               fprintf(config->output,
->>> "S%d-D%d-C%*d%s",
->>> +                                       id.socket,
->>> +                                       id.die,
->>> +                                       config->csv_output ? 0 : -3,
->>> +                                       id.core, config->csv_sep);
->>> +                       } else if (id.core > -1) {
->>> +                               fprintf(config->output, "CPU%*d%s",
->>> +                                       config->csv_output ? 0 : -7,
->>> +                                       id.cpu.cpu, config->csv_sep);
->>> +                       }
->>>               }
->>>               break;
->>>=20
->>> The old code was using "id.cpu.cpu > -1" while the new code is
->>> "id.core > -1". The value printed is id.cpu.cpu and so testing id.core
->>> makes less sense to me. Going back to the original patch:
->>>=20
->>> https://lore.kernel.org/lkml/20210811224317.1811618-1-cjense@google.com/
->>>  case AGGR_NONE:
->>> - if (evsel->percore && !config->percore_show_thread) {
->>> - fprintf(config->output, "S%d-D%d-C%*d%s",
->>> - id.socket,
->>> - id.die,
->>> - config->csv_output ? 0 : -3,
->>> - id.core, config->csv_sep);
->>> + if (config->json_output) {
->>> + if (evsel->percore && !config->percore_show_thread) {
->>> + fprintf(config->output, "\"core\" : \"S%d-D%d-C%d\"",
->>> + id.socket,
->>> + id.die,
->>> + id.core);
->>> + } else if (id.core > -1) {
->>> + fprintf(config->output, "\"cpu\" : \"%d\", ",
->>> + evsel__cpus(evsel)->map[id.core]);
->>> + }
->>> + } else {
->>> + if (evsel->percore && !config->percore_show_thread) {
->>> + fprintf(config->output, "S%d-D%d-C%*d%s",
->>> + id.socket,
->>> + id.die,
->>> + config->csv_output ? 0 : -3,
->>> + id.core, config->csv_sep);
->>>  } else if (id.core > -1) {
->>>  fprintf(config->output, "CPU%*d%s",
->>>  config->csv_output ? 0 : -7,
->>>  evsel__cpus(evsel)->map[id.core],
->>>  config->csv_sep);
->>> - }
->>> + }
->>> + }
->>> +
->>>  break;
->>>=20
->>> So testing the id.core isn't a bad index makes sense. However, we
->>> changed from core to CPU here:
->>> https://lore.kernel.org/all/20220105061351.120843-26-irogers@google.com/
->>> and that was because of:
->>> https://lore.kernel.org/r/20220105061351.120843-25-irogers@google.com
->>>=20
->>> So I think the code needs to test CPU and not core. Whether that is
->>> addressing the Power test failures is another matter, as James said we
->>> may need a fix in the tests for that.
->>>=20
->>=20
->> Hi Ian, James
->>=20
->> Thanks for the reviews and suggestions.
->>=20
->> After checking through the original commits for id.core vs cpu check,
->> sharing patch below to test CPU and not core.
->>=20
->> From 4dd98d953940deb2f85176cb6b4ecbfd18dbdbf9 Mon Sep 17 00:00:00 2001
->> From: Athira Rajeev <atrajeev@linux.vnet.ibm.com>
->> Date: Mon, 3 Oct 2022 15:47:27 +0530
->> Subject: [PATCH] tools/perf: Fix cpu check to use id.cpu.cpu in
->> aggr_printout
->>=20
->> perf stat has options to aggregate the counts in different
->> modes like per socket, per core etc. The function "aggr_printout"
->> in util/stat-display.c which is used to print the aggregates,
->> has a check for cpu in case of AGGR_NONE. This check was
->> originally using condition : "if (id.cpu.cpu > -1)". But
->> this got changed after commit df936cadfb58 ("perf stat: Add
->> JSON output option"), which added option to output json format
->> for different aggregation modes. After this commit, the
->> check in "aggr_printout" is using "if (id.core > -1)".
->>=20
->> The old code was using "id.cpu.cpu > -1" while the new code
->> is using "id.core > -1". But since the value printed is
->> id.cpu.cpu, fix this check to use cpu and not core.
->>=20
->> Signed-off-by: Athira Rajeev <atrajeev@linux.vnet.ibm.com>
->> Suggested-by: James Clark <james.clark@arm.com>
->> Suggested-by: Ian Rogers <irogers@google.com>
->=20
-> The change below works on my dual socket SkylakeX:
-> ..
-> 85: perf stat CSV output linter                                     :
-> Ok
-> 86: perf stat csv summary test                                      : Ok
-> 87: perf stat JSON output linter                                    : Ok
-> ..
-> I don't see anything else out of the ordinary.
->=20
-> Thanks,
-> Ian
->=20
+Kind regards
+Uffe
 
-Hi Ian,
-Thanks for helping with testing. Can I add your Tested-by for the patch ?
+> ---
+>  arch/arm/mach-omap2/cpuidle34xx.c    |    4 ++--
+>  drivers/acpi/processor_idle.c        |    2 ++
+>  drivers/cpuidle/cpuidle-arm.c        |    1 +
+>  drivers/cpuidle/cpuidle-big_little.c |    8 ++++++--
+>  drivers/cpuidle/cpuidle-psci.c       |    1 +
+>  drivers/cpuidle/cpuidle-qcom-spm.c   |    1 +
+>  drivers/cpuidle/cpuidle-riscv-sbi.c  |    1 +
+>  drivers/cpuidle/dt_idle_states.c     |    2 +-
+>  include/linux/cpuidle.h              |    4 ++++
+>  9 files changed, 19 insertions(+), 5 deletions(-)
+>
+> --- a/drivers/acpi/processor_idle.c
+> +++ b/drivers/acpi/processor_idle.c
+> @@ -1200,6 +1200,8 @@ static int acpi_processor_setup_lpi_stat
+>                 state->target_residency = lpi->min_residency;
+>                 if (lpi->arch_flags)
+>                         state->flags |= CPUIDLE_FLAG_TIMER_STOP;
+> +               if (lpi->entry_method == ACPI_CSTATE_FFH)
+> +                       state->flags |= CPUIDLE_FLAG_RCU_IDLE;
 
-Arnaldo,
-Please suggest if I have to send as separate patch for the cpu check fix pa=
-tch pasted above:
- "tools/perf: Fix cpu check to use id.cpu.cpu in aggr_printout=E2=80=9D
+I assume the state index here will never be 0?
 
-Thanks
-Athira
->> ---
->>  tools/perf/util/stat-display.c | 4 ++--
->>  1 file changed, 2 insertions(+), 2 deletions(-)
->>=20
->> diff --git a/tools/perf/util/stat-display.c
->> b/tools/perf/util/stat-display.c
->> index b82844cb0ce7..cf28020798ec 100644
->> --- a/tools/perf/util/stat-display.c
->> +++ b/tools/perf/util/stat-display.c
->> @@ -168,7 +168,7 @@ static void aggr_printout(struct perf_stat_config
->> *config,
->>                                        id.socket,
->>                                        id.die,
->>                                        id.core);
->> -                       } else if (id.core > -1) {
->> +                       } else if (id.cpu.cpu > -1) {
->>                                fprintf(config->output, "\"cpu\" : \"%d\"=
-, ",
->>                                        id.cpu.cpu);
->>                        }
->> @@ -179,7 +179,7 @@ static void aggr_printout(struct perf_stat_config
->> *config,
->>                                        id.die,
->>                                        config->csv_output ? 0 : -3,
->>                                        id.core, config->csv_sep);
->> -                       } else if (id.core > -1) {
->> +                       } else if (id.cpu.cpu > -1) {
->>                                fprintf(config->output, "CPU%*d%s",
->>                                        config->csv_output ? 0 : -7,
->>                                        id.cpu.cpu, config->csv_sep);
->> --
->> 2.31.1
->>=20
->> Can you suggest or help to test this patch change.
->>=20
->> To address the test failure, as James suggested, I will handle fix in
->> testcases and post them
->> as a separate patch. Plan is to add a sanity check in the tests to see
->> if the "physical_packagge_id" ( ie socket id ) in topology points to -1
->> and if so skip the test. Also in parallel, checking to see how we can
->> handle the aggregation modes to work incase of "-1" value for socket or
->> die
->>=20
->> Thanks
->> Athira
->>=20
->>> Thanks,
->>> Ian
->>>=20
->>>> Or the one about fixing it in the test instead? Or failing early if
->>>> the
->>>> topology can't be read?
->>>>=20
->>>> I'm still not convinced that any of the modes where -1 is printed are
->>>> even working properly so it might be best to fix that rather than just
->>>> the printout.
->>>>=20
->>>>> James, can you point me to reference for that meaning if I have misse=
-d anything.
->>>>=20
->>>> It's here:
->>>>=20
->>>>  /** Identify where counts are aggregated, -1 implies not to
->>>> aggregate. */
->>>>  struct aggr_cpu_id {
->>>>=20
->>>>>=20
->>>>> Thanks
->>>>> Athira
->>>>>=20
->>>>>>=20
->>>>>>>=20
->>>>>>> After the fix:
->>>>>>>=20
->>>>>>> <<>>
->>>>>>> perf stat -e instructions -A -a true
->>>>>>>=20
->>>>>>> Performance counter stats for 'system wide':
->>>>>>>=20
->>>>>>> CPU-1                  64,034      instructions
->>>>>>> CPU-1                  68,941      instructions
->>>>>>> CPU-1                  59,418      instructions
->>>>>>> CPU-1                  70,478      instructions
->>>>>>> CPU-1                  65,201      instructions
->>>>>>> CPU-1                  63,704      instructions
->>>>>>> <<>>
->>>>>>>=20
->>>>>>> This is caught while running "perf test" for
->>>>>>> "stat+json_output.sh" and "stat+csv_output.sh".
->>>>>>=20
->>>>>> Is it possible to fix the issue by making the tests cope with the la=
-ck
->>>>>> of the CPU id?
->>>>>>=20
->>>>>>>=20
->>>>>>> Reported-by: Disha Goel <disgoel@linux.vnet.ibm.com>
->>>>>>> Signed-off-by: Athira Rajeev <atrajeev@linux.vnet.ibm.com>
->>>>>>> ---
->>>>>>> tools/perf/util/stat-display.c | 6 ++----
->>>>>>> 1 file changed, 2 insertions(+), 4 deletions(-)
->>>>>>>=20
->>>>>>> diff --git a/tools/perf/util/stat-display.c b/tools/perf/util/stat-=
-display.c
->>>>>>> index b82844cb0ce7..1b751a730271 100644
->>>>>>> --- a/tools/perf/util/stat-display.c
->>>>>>> +++ b/tools/perf/util/stat-display.c
->>>>>>> @@ -168,10 +168,9 @@ static void aggr_printout(struct perf_stat_con=
-fig *config,
->>>>>>>                                    id.socket,
->>>>>>>                                    id.die,
->>>>>>>                                    id.core);
->>>>>>> -                   } else if (id.core > -1) {
->>>>>>> +                   } else
->>>>>>=20
->>>>>> This should have been "id.cpu.cpu > -1". Looks like it was changed by
->>>>>> some kind of bad merge or rebase in df936cadfb because there is no
->>>>>> obvious justification for the change to .core in that commit.
->>>>>=20
->>>>>>=20
->>>>>>>                            fprintf(config->output, "\"cpu\" : \"%d\=
-", ",
->>>>>>>                                    id.cpu.cpu);
->>>>>>> -                   }
->>>>>>>            } else {
->>>>>>>                    if (evsel->percore && !config->percore_show_thre=
-ad) {
->>>>>>>                            fprintf(config->output, "S%d-D%d-C%*d%s",
->>>>>>> @@ -179,11 +178,10 @@ static void aggr_printout(struct perf_stat_co=
-nfig *config,
->>>>>>>                                    id.die,
->>>>>>>                                    config->csv_output ? 0 : -3,
->>>>>>>                                    id.core, config->csv_sep);
->>>>>>> -                   } else if (id.core > -1) {
->>>>>>> +                   } else
->>>>>>>                            fprintf(config->output, "CPU%*d%s",
->>>>>>>                                    config->csv_output ? 0 : -7,
->>>>>>>                                    id.cpu.cpu, config->csv_sep);
->>>>>>> -                   }
->>>>>>>            }
->>>>>>>            break;
->>>>>>>    case AGGR_THREAD:
->>>>>=20
+If not, it may lead to that acpi_processor_ffh_lpi_enter() may trigger
+CPU_PM_CPU_IDLE_ENTER_PARAM() to call ct_cpuidle_enter|exit() for an
+idle-state that doesn't have the CPUIDLE_FLAG_RCU_IDLE bit set.
 
+>                 state->enter = acpi_idle_lpi_enter;
+>                 drv->safe_state_index = i;
+>         }
+> --- a/drivers/cpuidle/cpuidle-arm.c
+> +++ b/drivers/cpuidle/cpuidle-arm.c
+> @@ -53,6 +53,7 @@ static struct cpuidle_driver arm_idle_dr
+>          * handler for idle state index 0.
+>          */
+>         .states[0] = {
+> +               .flags                  = CPUIDLE_FLAG_RCU_IDLE,
+
+Comparing arm64 and arm32 idle-states/idle-drivers, the $subject
+series ends up setting the CPUIDLE_FLAG_RCU_IDLE for the ARM WFI idle
+state (state zero), but only for the arm64 and psci cases (mostly
+arm64). For arm32 we would need to update the ARM_CPUIDLE_WFI_STATE
+too, as that is what most arm32 idle-drivers are using. My point is,
+the code becomes a bit inconsistent.
+
+Perhaps it's easier to avoid setting the CPUIDLE_FLAG_RCU_IDLE bit for
+all of the ARM WFI idle states, for both arm64 and arm32?
+
+>                 .enter                  = arm_enter_idle_state,
+>                 .exit_latency           = 1,
+>                 .target_residency       = 1,
+> --- a/drivers/cpuidle/cpuidle-big_little.c
+> +++ b/drivers/cpuidle/cpuidle-big_little.c
+> @@ -64,7 +64,8 @@ static struct cpuidle_driver bl_idle_lit
+>                 .enter                  = bl_enter_powerdown,
+>                 .exit_latency           = 700,
+>                 .target_residency       = 2500,
+> -               .flags                  = CPUIDLE_FLAG_TIMER_STOP,
+> +               .flags                  = CPUIDLE_FLAG_TIMER_STOP |
+> +                                         CPUIDLE_FLAG_RCU_IDLE,
+>                 .name                   = "C1",
+>                 .desc                   = "ARM little-cluster power down",
+>         },
+> @@ -85,7 +86,8 @@ static struct cpuidle_driver bl_idle_big
+>                 .enter                  = bl_enter_powerdown,
+>                 .exit_latency           = 500,
+>                 .target_residency       = 2000,
+> -               .flags                  = CPUIDLE_FLAG_TIMER_STOP,
+> +               .flags                  = CPUIDLE_FLAG_TIMER_STOP |
+> +                                         CPUIDLE_FLAG_RCU_IDLE,
+>                 .name                   = "C1",
+>                 .desc                   = "ARM big-cluster power down",
+>         },
+> @@ -124,11 +126,13 @@ static int bl_enter_powerdown(struct cpu
+>                                 struct cpuidle_driver *drv, int idx)
+>  {
+>         cpu_pm_enter();
+> +       ct_idle_enter();
+>
+>         cpu_suspend(0, bl_powerdown_finisher);
+>
+>         /* signals the MCPM core that CPU is out of low power state */
+>         mcpm_cpu_powered_up();
+> +       ct_idle_exit();
+>
+>         cpu_pm_exit();
+>
+> --- a/drivers/cpuidle/cpuidle-psci.c
+> +++ b/drivers/cpuidle/cpuidle-psci.c
+> @@ -357,6 +357,7 @@ static int psci_idle_init_cpu(struct dev
+>          * PSCI idle states relies on architectural WFI to be represented as
+>          * state index 0.
+>          */
+> +       drv->states[0].flags = CPUIDLE_FLAG_RCU_IDLE;
+>         drv->states[0].enter = psci_enter_idle_state;
+>         drv->states[0].exit_latency = 1;
+>         drv->states[0].target_residency = 1;
+> --- a/drivers/cpuidle/cpuidle-qcom-spm.c
+> +++ b/drivers/cpuidle/cpuidle-qcom-spm.c
+> @@ -72,6 +72,7 @@ static struct cpuidle_driver qcom_spm_id
+>         .owner = THIS_MODULE,
+>         .states[0] = {
+>                 .enter                  = spm_enter_idle_state,
+> +               .flags                  = CPUIDLE_FLAG_RCU_IDLE,
+>                 .exit_latency           = 1,
+>                 .target_residency       = 1,
+>                 .power_usage            = UINT_MAX,
+> --- a/drivers/cpuidle/cpuidle-riscv-sbi.c
+> +++ b/drivers/cpuidle/cpuidle-riscv-sbi.c
+> @@ -332,6 +332,7 @@ static int sbi_cpuidle_init_cpu(struct d
+>         drv->cpumask = (struct cpumask *)cpumask_of(cpu);
+>
+>         /* RISC-V architectural WFI to be represented as state index 0. */
+> +       drv->states[0].flags = CPUIDLE_FLAG_RCU_IDLE;
+>         drv->states[0].enter = sbi_cpuidle_enter_state;
+>         drv->states[0].exit_latency = 1;
+>         drv->states[0].target_residency = 1;
+> --- a/drivers/cpuidle/dt_idle_states.c
+> +++ b/drivers/cpuidle/dt_idle_states.c
+> @@ -77,7 +77,7 @@ static int init_state_node(struct cpuidl
+>         if (err)
+>                 desc = state_node->name;
+>
+> -       idle_state->flags = 0;
+> +       idle_state->flags = CPUIDLE_FLAG_RCU_IDLE;
+>         if (of_property_read_bool(state_node, "local-timer-stop"))
+>                 idle_state->flags |= CPUIDLE_FLAG_TIMER_STOP;
+>         /*
+> --- a/include/linux/cpuidle.h
+> +++ b/include/linux/cpuidle.h
+> @@ -282,14 +282,18 @@ extern s64 cpuidle_governor_latency_req(
+>         int __ret = 0;                                                  \
+>                                                                         \
+>         if (!idx) {                                                     \
+> +               ct_idle_enter();                                        \
+
+According to my comment above, we should then drop these calls to
+ct_idle_enter and ct_idle_exit() here. Right?
+
+>                 cpu_do_idle();                                          \
+> +               ct_idle_exit();                                         \
+>                 return idx;                                             \
+>         }                                                               \
+>                                                                         \
+>         if (!is_retention)                                              \
+>                 __ret =  cpu_pm_enter();                                \
+>         if (!__ret) {                                                   \
+> +               ct_idle_enter();                                        \
+>                 __ret = low_level_idle_enter(state);                    \
+> +               ct_idle_exit();                                         \
+>                 if (!is_retention)                                      \
+>                         cpu_pm_exit();                                  \
+>         }                                                               \
+>
+
+Kind regards
+Uffe
