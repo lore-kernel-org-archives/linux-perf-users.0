@@ -2,60 +2,59 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 52098C433FE
-	for <linux-perf-users@archiver.kernel.org>; Tue,  4 Oct 2022 01:34:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 34ED7C433FE
+	for <linux-perf-users@archiver.kernel.org>; Tue,  4 Oct 2022 02:16:22 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229534AbiJDBea (ORCPT
+        id S229590AbiJDCQV (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Mon, 3 Oct 2022 21:34:30 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53864 "EHLO
+        Mon, 3 Oct 2022 22:16:21 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42576 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229511AbiJDBe3 (ORCPT
+        with ESMTP id S229445AbiJDCQT (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Mon, 3 Oct 2022 21:34:29 -0400
-Received: from mail-wr1-x433.google.com (mail-wr1-x433.google.com [IPv6:2a00:1450:4864:20::433])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 335D224F2B
-        for <linux-perf-users@vger.kernel.org>; Mon,  3 Oct 2022 18:34:28 -0700 (PDT)
-Received: by mail-wr1-x433.google.com with SMTP id bk15so19099351wrb.13
-        for <linux-perf-users@vger.kernel.org>; Mon, 03 Oct 2022 18:34:28 -0700 (PDT)
+        Mon, 3 Oct 2022 22:16:19 -0400
+Received: from mail-yw1-x114a.google.com (mail-yw1-x114a.google.com [IPv6:2607:f8b0:4864:20::114a])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 898C7357F4
+        for <linux-perf-users@vger.kernel.org>; Mon,  3 Oct 2022 19:16:17 -0700 (PDT)
+Received: by mail-yw1-x114a.google.com with SMTP id 00721157ae682-348608c1cd3so128155017b3.10
+        for <linux-perf-users@vger.kernel.org>; Mon, 03 Oct 2022 19:16:17 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=google.com; s=20210112;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:from:to:cc:subject:date;
-        bh=Ba7+VCWbkSLdpJi3cP/QjqQGiLdpPdQDJwXzgD1/onY=;
-        b=LDHsaymAavJtj3LDueXJl2RdUB3co7vxf5coiblnwptFT1MJTUAJ/7NiGmIi0N62BQ
-         YXM/NoPBl/tGd/0nj1jh5V4Yr7ZqYFEYOcZacScdEz+MDbhaA4VLxe5Ppfq398+YRMQ7
-         ot4EjIMKcTsLYr8W/YrZ9LS3Z3FsnNb8JkadHtD6kDLMrD+141aE+a7iv+RYaM54cQmW
-         cdNgshd/R2VGEMmq6affMREJOr4+0dssk6YslPUpKf1wzymfBgKEUB8UB1RUkMUkQml7
-         8tIQM7MSnS3aNDAgBG9EJtmI+sONjqYMEvvO0237gIzIMi9/8WkfauuQC6PAnECixlIu
-         dYtA==
+        h=cc:to:from:subject:mime-version:message-id:date:from:to:cc:subject
+         :date;
+        bh=/oDSH3OdUMvg7xjQ26JyefXMtLcIaw7n6p5qDnQ+TRM=;
+        b=TcffAz6baSBi0YdKKwF9ywYZNIvdxwPYXps21HCsdtHNfn1M8k+fN1d2WW2fTfDReO
+         P28x8TCNNEZwo3HqYUfC6DOsgIyspIYQ0xNAHgbj0PICZG2KVPvCHgX3xpne5tLKsxLQ
+         D85FY/U2tYgQefdh9rT+uEPFs492bGmhFoEYonL0/L1QvZx/WMJTq7SiId4XzI5WQuz6
+         +F1+3TODcgiiTJQUFDDL4mmbGsyOngTSr89kMLkS38kvlJ3LEXOr54AydAAp41hov+YH
+         ZItXlhBq5fzsliGxRlVmyNM/MdoIuTeN0cyuMEL9w2sXnor/pzLuXi04FPYJ8CUWuEqG
+         a/3w==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date;
-        bh=Ba7+VCWbkSLdpJi3cP/QjqQGiLdpPdQDJwXzgD1/onY=;
-        b=qQz4Jk/+pSoYCeEy4pjWTKLQgDdKi9yXndroHGyxQUIKyP+toaRUkYojc823DLNpGS
-         t1n/ExmP4XiJpB3rps5WApCY1W7PbVf1wJGFXdWrrqcs8w6Gfmmf0wIC5iT8tAaJVEvC
-         tqAfjQCXqhgTNW5xZ9SgChqmkjSXsaa1/J2K/Zf30EUjwU15JLmo5eqiuPpgDYYvyP3a
-         XxggGItXM/4sgP2MrqGxwagTT5WwDnrTnsd0ZFB9V6ccqgSlgqrl+TK1lfZ22be+tYap
-         8oArDVwJRMiLNIf+m7//jj7d6blFZgM5QtMY2z23RZWLsE2e1XA9AnjR/iIbxlu67gfy
-         j+qQ==
-X-Gm-Message-State: ACrzQf0+cmMqo3ZfWSZ8wB5AQJRXrVkWfUbRC6VvVz6DES4gpeKS/tTq
-        UxaBhnvtTVH8WaSLdK6gyz+6qU62LqxkDhicuiDD7Q==
-X-Google-Smtp-Source: AMsMyM6krLGiwys9XeWRnQqFdw/0YjkEcWg5F182whJ0d8Wtva7lQmEXb9BgNObGQCN0qtEVegHxoyk1iR6ApX6Sc6M=
-X-Received: by 2002:a5d:68d0:0:b0:22c:dfba:3bd6 with SMTP id
- p16-20020a5d68d0000000b0022cdfba3bd6mr11297684wrw.300.1664847266592; Mon, 03
- Oct 2022 18:34:26 -0700 (PDT)
-MIME-Version: 1.0
-References: <20220928072204.1613330-1-irogers@google.com> <20220928072204.1613330-4-irogers@google.com>
- <e685d636-52cd-b34a-2d10-90c16b2e57cf@linux.intel.com>
-In-Reply-To: <e685d636-52cd-b34a-2d10-90c16b2e57cf@linux.intel.com>
+        h=cc:to:from:subject:mime-version:message-id:date:x-gm-message-state
+         :from:to:cc:subject:date;
+        bh=/oDSH3OdUMvg7xjQ26JyefXMtLcIaw7n6p5qDnQ+TRM=;
+        b=jqe1d6pl5Lf+Lc+FYIRvIhCVVu4sr1jQTGImFf7ESkDl4yyylQv92bW2X2VXJR9wbm
+         gmj7dhZ9tcSHZYLbSzMy+sxDjsEJBOM9e6unVQIY9TeM6jmYJR7zMacy9OXhJOauJiCJ
+         aviyxbs26TB+v3Cmeb4XOs/DlwrNfKDKsLWhRZ17PJ4qatVOABkPOT7aZFtvy78ymxTg
+         QDkdyWihN7Tvf8P7HtFd2PXFWe5i5/HjT7L8nRRXxwyZkM4eqjlA3y3hLMXWj8Pk2EWL
+         h3EOXpC4zaOaKfcvboCQQmfdF4Q+xNR+yuNl41VDNad9eJwtBoFYSc0ZtJLnNFHe3ySR
+         aqGg==
+X-Gm-Message-State: ACrzQf1/r/qzDisDLVQuwZTOsJrGSkJoAvB2S4KAZ+M9hcruu/uALWeL
+        aQtOAE/v0K6hiQuIwJQkIcg0hVzoFoXc
+X-Google-Smtp-Source: AMsMyM5wzLJqOnXFXtEkS8FRtDt4LXkptvSnhri12pbtDLvncr+7QPRHmD6zYLh6wTUHqUH0DkfZrzbvVXp6
+X-Received: from irogers.svl.corp.google.com ([2620:15c:2d4:203:a86d:8afd:70b1:9b0c])
+ (user=irogers job=sendgmr) by 2002:a25:c1c3:0:b0:6bc:a97e:66e3 with SMTP id
+ r186-20020a25c1c3000000b006bca97e66e3mr21989439ybf.22.1664849776587; Mon, 03
+ Oct 2022 19:16:16 -0700 (PDT)
+Date:   Mon,  3 Oct 2022 19:15:49 -0700
+Message-Id: <20221004021612.325521-1-irogers@google.com>
+Mime-Version: 1.0
+X-Mailer: git-send-email 2.38.0.rc1.362.ged0d419d3c-goog
+Subject: [PATCH v3 00/23] Improvements to Intel perf metrics
 From:   Ian Rogers <irogers@google.com>
-Date:   Mon, 3 Oct 2022 18:34:14 -0700
-Message-ID: <CAP-5=fXnzHBuNORVCznEi6yhoJXXD6bVaevw6qygsGf8BgmiWA@mail.gmail.com>
-Subject: Re: [PATCH v1 03/22] perf metrics: Don't scale counts going into metrics
-To:     Xing Zhengjun <zhengjun.xing@linux.intel.com>
-Cc:     Kan Liang <kan.liang@linux.intel.com>,
+To:     Zhengjun Xing <zhengjun.xing@linux.intel.com>,
+        Kan Liang <kan.liang@linux.intel.com>,
         Andi Kleen <ak@linux.intel.com>, perry.taylor@intel.com,
         caleb.biggers@intel.com, kshipra.bopardikar@intel.com,
         samantha.alt@intel.com, ahmad.yasin@intel.com,
@@ -72,81 +71,142 @@ Cc:     Kan Liang <kan.liang@linux.intel.com>,
         Thomas Richter <tmricht@linux.ibm.com>,
         Miaoqian Lin <linmq006@gmail.com>,
         Florian Fischer <florian.fischer@muhq.space>,
-        linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Stephane Eranian <eranian@google.com>
+        linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
+Cc:     Stephane Eranian <eranian@google.com>,
+        Ian Rogers <irogers@google.com>
 Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-On Thu, Sep 29, 2022 at 1:49 AM Xing Zhengjun
-<zhengjun.xing@linux.intel.com> wrote:
->
-> On 9/28/2022 3:21 PM, Ian Rogers wrote:
-> > Counts are scaled prior to going into saved_value, reverse the scaling
-> > so that metrics don't double scale values.
-> >
-> > Signed-off-by: Ian Rogers <irogers@google.com>
-> > ---
-> >   tools/perf/util/stat-shadow.c | 9 +++++++--
-> >   1 file changed, 7 insertions(+), 2 deletions(-)
-> >
-> > diff --git a/tools/perf/util/stat-shadow.c b/tools/perf/util/stat-shadow.c
-> > index 9e1eddeff21b..b5cedd37588f 100644
-> > --- a/tools/perf/util/stat-shadow.c
-> > +++ b/tools/perf/util/stat-shadow.c
-> > @@ -865,11 +865,16 @@ static int prepare_metric(struct evsel **metric_events,
-> >                       if (!v)
-> >                               break;
-> >                       stats = &v->stats;
-> > -                     scale = 1.0;
-> > +                     /*
-> > +                      * If an event was scaled during stat gathering, reverse
-> > +                      * the scale before computing the metric.
-> > +                      */
-> > +                     scale = 1.0 / metric_events[i]->scale;
-> > +
-> This look likes not work for kernel side events like
-> /sys/devices/uncore_imc_*/events/cas_count_read(write).
+For consistency with:
+https://github.com/intel/perfmon-metrics
+rename of topdown TMA metrics from Frontend_Bound to tma_frontend_bound.
 
-I've not been able to reproduce this. I've tried:
+Remove _SMT suffix metrics are dropped as the #SMT_On and #EBS_Mode
+are correctly expanded in the single main metric. Fix perf expr to
+allow a double if to be correctly processed.
 
-  {
-    "MetricName": "IanTest",
-    "MetricExpr": "uncore_imc@cas_count_read@ * 6.103515625e-5 +
-uncore_imc@cas_count_write@ * 6.103515625e-5"
-  }
+Add all 6 levels of TMA metrics. Child metrics are placed in a group
+named after their parent allowing children of a metric to be
+easily measured using the metric name with a _group suffix.
 
-where it scales the two counters and sums them. I see:
+Don't drop TMA metrics if they contain topdown events.
 
-$ perf stat -M IanTest -a sleep 1
+The ## and ##? operators are correctly expanded.
 
-Performance counter stats for 'system wide':
+The locate-with column is added to the long description describing a
+sampling event.
 
-           298.70 MiB  uncore_imc/cas_count_write/      #   721.00
-IanTest
-           429.64 MiB  uncore_imc/cas_count_read/
+Metrics are written in terms of other metrics to reduce the expression
+size and increase readability.
 
-      1.004877710 seconds time elapsed
+Following this the pmu-events/arch/x86 directories match those created
+by the script at:
+https://github.com/intel/event-converter-for-linux-perf/blob/master/download_and_gen.py
+with updates at:
+https://github.com/captain5050/event-converter-for-linux-perf
 
-So the metric's value nearly matches the sum. If the scaled values had
-been used the sum would have been something like 0.044454345703124995.
 
-From the code, this is the only place a metric's "ID" (event/counter)
-is associated with a value, so I would be confused if there were a
-code path where reversing the scaling wasn't happening.
+v3. Fix a parse metrics test failure due to making metrics referring
+    to other metrics case sensitive - make the cases in the test
+    metric match.
+v2. Fixes commit message wrt missing mapfile.csv updates as noted by
+    Zhengjun Xing <zhengjun.xing@linux.intel.com>. ScaleUnit is added
+    for TMA metrics. Metrics with topdown events have have a missing
+    slots event added if necessary. The latest metrics at:
+    https://github.com/intel/perfmon-metrics are used, however, the
+    event-converter-for-linux-perf scripts now prefer their own
+    metrics in case of mismatched units when a metric is written in
+    terms of another.  Additional testing was performed on broadwell,
+    broadwellde, cascadelakex, haswellx, sapphirerapids and tigerlake
+    CPUs.
 
-Thanks,
-Ian
+Ian Rogers (23):
+  perf expr: Allow a double if expression
+  perf test: Adjust case of test metrics
+  perf expr: Remove jevents case workaround
+  perf metrics: Don't scale counts going into metrics
+  perf vendor events: Update Intel skylakex
+  perf vendor events: Update Intel alderlake
+  perf vendor events: Update Intel broadwell
+  perf vendor events: Update Intel broadwellx
+  perf vendor events: Update Intel cascadelakex
+  perf vendor events: Update elkhartlake cpuids
+  perf vendor events: Update Intel haswell
+  perf vendor events: Update Intel haswellx
+  perf vendor events: Update Intel icelake
+  perf vendor events: Update Intel icelakex
+  perf vendor events: Update Intel ivybridge
+  perf vendor events: Update Intel ivytown
+  perf vendor events: Update Intel jaketown
+  perf vendor events: Update Intel sandybridge
+  perf vendor events: Update Intel sapphirerapids
+  perf vendor events: Update silvermont cpuids
+  perf vendor events: Update Intel skylake
+  perf vendor events: Update Intel tigerlake
+  perf vendor events: Update Intel broadwellde
 
-> >                       source_count = evsel__source_count(metric_events[i]);
-> >
-> >                       if (v->metric_other)
-> > -                             metric_total = v->metric_total;
-> > +                             metric_total = v->metric_total * scale;
-> >               }
-> >               n = strdup(evsel__metric_id(metric_events[i]));
-> >               if (!n)
->
-> --
-> Zhengjun Xing
+ .../arch/test/test_soc/cpu/metrics.json       |    6 +-
+ .../arch/x86/alderlake/adl-metrics.json       | 1353 ++++++++++++++++-
+ .../pmu-events/arch/x86/alderlake/cache.json  |  129 +-
+ .../arch/x86/alderlake/frontend.json          |   12 +
+ .../pmu-events/arch/x86/alderlake/memory.json |   22 +
+ .../pmu-events/arch/x86/alderlake/other.json  |   22 +
+ .../arch/x86/alderlake/pipeline.json          |   14 +-
+ .../arch/x86/broadwell/bdw-metrics.json       |  679 +++++++--
+ .../arch/x86/broadwellde/bdwde-metrics.json   |  711 +++++++--
+ .../arch/x86/broadwellx/bdx-metrics.json      |  965 +++++++-----
+ .../arch/x86/broadwellx/uncore-cache.json     |   10 +-
+ .../x86/broadwellx/uncore-interconnect.json   |   18 +-
+ .../arch/x86/broadwellx/uncore-memory.json    |   18 +-
+ .../arch/x86/cascadelakex/clx-metrics.json    | 1285 ++++++++++------
+ .../arch/x86/cascadelakex/uncore-memory.json  |   18 +-
+ .../arch/x86/cascadelakex/uncore-other.json   |   10 +-
+ .../pmu-events/arch/x86/haswell/cache.json    |    4 +-
+ .../pmu-events/arch/x86/haswell/frontend.json |   12 +-
+ .../arch/x86/haswell/hsw-metrics.json         |  570 ++++++-
+ .../pmu-events/arch/x86/haswellx/cache.json   |    2 +-
+ .../arch/x86/haswellx/frontend.json           |   12 +-
+ .../arch/x86/haswellx/hsx-metrics.json        |  919 +++++++----
+ .../x86/haswellx/uncore-interconnect.json     |   18 +-
+ .../arch/x86/haswellx/uncore-memory.json      |   18 +-
+ .../pmu-events/arch/x86/icelake/cache.json    |    6 +-
+ .../arch/x86/icelake/icl-metrics.json         |  808 +++++++++-
+ .../pmu-events/arch/x86/icelake/pipeline.json |    2 +-
+ .../pmu-events/arch/x86/icelakex/cache.json   |    6 +-
+ .../arch/x86/icelakex/icx-metrics.json        | 1155 ++++++++++----
+ .../arch/x86/icelakex/pipeline.json           |    2 +-
+ .../arch/x86/icelakex/uncore-other.json       |    2 +-
+ .../arch/x86/ivybridge/ivb-metrics.json       |  594 ++++++--
+ .../pmu-events/arch/x86/ivytown/cache.json    |    4 +-
+ .../arch/x86/ivytown/floating-point.json      |    2 +-
+ .../pmu-events/arch/x86/ivytown/frontend.json |   18 +-
+ .../arch/x86/ivytown/ivt-metrics.json         |  630 ++++++--
+ .../arch/x86/ivytown/uncore-cache.json        |   58 +-
+ .../arch/x86/ivytown/uncore-interconnect.json |   84 +-
+ .../arch/x86/ivytown/uncore-memory.json       |    2 +-
+ .../arch/x86/ivytown/uncore-other.json        |    6 +-
+ .../arch/x86/ivytown/uncore-power.json        |    8 +-
+ .../arch/x86/jaketown/jkt-metrics.json        |  327 +++-
+ tools/perf/pmu-events/arch/x86/mapfile.csv    |   18 +-
+ .../arch/x86/sandybridge/snb-metrics.json     |  315 +++-
+ .../arch/x86/sapphirerapids/cache.json        |    4 +-
+ .../arch/x86/sapphirerapids/frontend.json     |   11 +
+ .../arch/x86/sapphirerapids/pipeline.json     |    4 +-
+ .../arch/x86/sapphirerapids/spr-metrics.json  | 1249 ++++++++++-----
+ .../arch/x86/skylake/skl-metrics.json         |  861 ++++++++---
+ .../arch/x86/skylakex/skx-metrics.json        | 1262 +++++++++------
+ .../arch/x86/skylakex/uncore-memory.json      |   18 +-
+ .../arch/x86/skylakex/uncore-other.json       |   19 +-
+ .../arch/x86/tigerlake/tgl-metrics.json       |  810 +++++++++-
+ tools/perf/pmu-events/empty-pmu-events.c      |    6 +-
+ tools/perf/tests/expr.c                       |    4 +
+ tools/perf/util/expr.c                        |   11 +-
+ tools/perf/util/expr.y                        |    2 +-
+ tools/perf/util/stat-shadow.c                 |    9 +-
+ 58 files changed, 11514 insertions(+), 3630 deletions(-)
+
+-- 
+2.38.0.rc1.362.ged0d419d3c-goog
+
