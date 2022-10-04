@@ -2,112 +2,129 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5C057C433F5
-	for <linux-perf-users@archiver.kernel.org>; Tue,  4 Oct 2022 18:48:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7F566C433FE
+	for <linux-perf-users@archiver.kernel.org>; Tue,  4 Oct 2022 18:54:34 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229730AbiJDSso (ORCPT
+        id S229535AbiJDSyd (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Tue, 4 Oct 2022 14:48:44 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51228 "EHLO
+        Tue, 4 Oct 2022 14:54:33 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:32860 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229843AbiJDSsl (ORCPT
+        with ESMTP id S229518AbiJDSyc (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Tue, 4 Oct 2022 14:48:41 -0400
-Received: from ams.source.kernel.org (ams.source.kernel.org [IPv6:2604:1380:4601:e00::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3FC276A48A;
-        Tue,  4 Oct 2022 11:48:40 -0700 (PDT)
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by ams.source.kernel.org (Postfix) with ESMTPS id F1D47B81BB2;
-        Tue,  4 Oct 2022 18:48:38 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 75366C433C1;
-        Tue,  4 Oct 2022 18:48:37 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1664909317;
-        bh=z4OQphxZALQAbOjByiz5t3jF8Ed70usTd7TciSFoyTg=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=TAAKD9ONA0/x4mpGhOCrqSrIkXNgvjfM0TDwUKtDGzie6kvRUqca4xkTTDHjzs/IC
-         F2UvEO+q/1Ts8awHxXHoTiiWN9AMUF1hVI6ZS9YeuaLiK6qKc15BaVcBhxu7oauToP
-         bizS1vZhCGojniOZuPYtedrEl9YB5dRD1TquwoR6ZRVIMjNx/ncgTDXRoZbsp9eKgx
-         MjZzL5ew6n9igZ41uMqzPXZJaEXCW1hn3vIo/qKGPOq0XJ6YRe7BJiE2Cb0qf9Htmu
-         DPWy4LaxVWqxPfY7KcMIQICDX4FkQFPl5x0eQUHD2AcB56QE78BtpOm3ApHSXTmE7/
-         PqJywIAx4Z3PQ==
-Received: by quaco.ghostprotocols.net (Postfix, from userid 1000)
-        id 37E1F4062C; Tue,  4 Oct 2022 15:48:35 -0300 (-03)
-Date:   Tue, 4 Oct 2022 15:48:35 -0300
-From:   Arnaldo Carvalho de Melo <acme@kernel.org>
-To:     Namhyung Kim <namhyung@kernel.org>
-Cc:     Jiri Olsa <jolsa@kernel.org>, Ingo Molnar <mingo@kernel.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Ian Rogers <irogers@google.com>,
-        Adrian Hunter <adrian.hunter@intel.com>,
-        linux-perf-users@vger.kernel.org, Andi Kleen <ak@linux.intel.com>,
-        Kan Liang <kan.liang@linux.intel.com>,
-        Leo Yan <leo.yan@linaro.org>,
-        Zhengjun Xing <zhengjun.xing@linux.intel.com>,
-        James Clark <james.clark@arm.com>
-Subject: Re: [PATCHSET 0/7] perf stat: Small random cleanups (v2)
-Message-ID: <YzyAA/RaIGoxCbGI@kernel.org>
-References: <20220930202110.845199-1-namhyung@kernel.org>
+        Tue, 4 Oct 2022 14:54:32 -0400
+Received: from mail-oa1-f45.google.com (mail-oa1-f45.google.com [209.85.160.45])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id AFDA66171E;
+        Tue,  4 Oct 2022 11:54:31 -0700 (PDT)
+Received: by mail-oa1-f45.google.com with SMTP id 586e51a60fabf-12c8312131fso17523763fac.4;
+        Tue, 04 Oct 2022 11:54:31 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:x-gm-message-state:from:to:cc:subject:date;
+        bh=WfJuZ1MM9ixd59GolRTFlqGWI5xVHjnnKws4m3pXDM8=;
+        b=utMFa5s1KCp1FMcUFSua5OqZRBIwR6vBpftDbL7IDmM7+CDM6HX1csya4dGZK5NPvN
+         J1UhzK0+8RnwwlICsU+fv0MugekE6DyGH0/EA7CXZQASaqhi8S0BkbKImOeu+FCmfrbf
+         8g9FbtnW91LyU2jApTkcJ9NtNhzgpWxrVJgPtLeCUzJZaOSvDZQXF6yZ1/hayEHEzHAI
+         3MBUSRxIya+9x8P8lYrpoIxJrw+XtqT9unn9A28msZGrBIq1dNFlA4sX39qd9vy5s3dL
+         gl64jHNEDH5FJ10yOlcsGp8K+rfDECaWq/b9tmrcDqaeux4c82ykN3qewpfN0QvILpc2
+         D5dA==
+X-Gm-Message-State: ACrzQf2v79T1xuDlEv8oxKAGhl0IibCAntnQi8k6B41pLTtTjE3RAw/X
+        nJjeEPe8J8pyWmRH0LoIACrfrnI0GAAXuJ41IP8=
+X-Google-Smtp-Source: AMsMyM6qaozBxMUyRSWoDksYAePx6dhRasIIxYqTnv9UckhWhnpwLvwRNx8jYoTwukl9EM9CTp1wofXegnmgJFRtdQE=
+X-Received: by 2002:a05:6870:34c:b0:132:8ef2:b6b2 with SMTP id
+ n12-20020a056870034c00b001328ef2b6b2mr600631oaf.209.1664909670924; Tue, 04
+ Oct 2022 11:54:30 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20220930202110.845199-1-namhyung@kernel.org>
-X-Url:  http://acmel.wordpress.com
+References: <20221003181040.4822-1-hcvcastro@gmail.com>
+In-Reply-To: <20221003181040.4822-1-hcvcastro@gmail.com>
+From:   Namhyung Kim <namhyung@kernel.org>
+Date:   Tue, 4 Oct 2022 11:54:19 -0700
+Message-ID: <CAM9d7cgMjZPa9qwuzpG3usGJvKiAQCOvN8_W0RuakNqcZ2t8-g@mail.gmail.com>
+Subject: Re: [PATCH v2] perf: fix the probe finder location (.dwo files)
+To:     Henry Castro <hcvcastro@gmail.com>
+Cc:     Peter Zijlstra <peterz@infradead.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        Arnaldo Carvalho de Melo <acme@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Jiri Olsa <jolsa@kernel.org>,
+        linux-perf-users <linux-perf-users@vger.kernel.org>,
+        linux-kernel <linux-kernel@vger.kernel.org>,
+        Masami Hiramatsu <mhiramat@kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-Em Fri, Sep 30, 2022 at 01:21:03PM -0700, Namhyung Kim escreveu:
-> Hello,
-> 
-> I'm working on perf stat and I found some items to clean up.  This time
-> I removed runtime stats for per-thread aggregation mode which we can simply
-> use thread map index to compare the shadow stat values in the rt_stat.
-> 
-> Changes from v1)
->  * renaming missing parts in headers  (James)
->  * add a comment for map_idx  (Ian)
->  * add Reviewed-by from James
-> 
-> The code is available at 'perf/stat-cleanup-v2' branch in
-> 
->   git://git.kernel.org/pub/scm/linux/kernel/git/namhyung/linux-perf.git
+Cc + Masami
 
-Applied locally, testing.
+On Mon, Oct 3, 2022 at 11:10 AM Henry Castro <hcvcastro@gmail.com> wrote:
+>
+> If the file object is compiled using -gsplit-dwarf,
+> the probe finder location will fail.
+>
+> Signed-off-by: Henry Castro <hcvcastro@gmail.com>
+> ---
+>
+> > Anyway I think it'd be safer to do
+> >
+> >    if (dwarf_cu_info() == 0 && unit_type == skeleton)
+> >        pf->cu_die = subdie;
+>
+> Thank you, I have modifed the patch :)
+>
+>
+>  tools/perf/util/probe-finder.c | 11 ++++++++++-
+>  1 file changed, 10 insertions(+), 1 deletion(-)
+>
+> diff --git a/tools/perf/util/probe-finder.c b/tools/perf/util/probe-finder.c
+> index 50d861a80f57..b27039f5f04b 100644
+> --- a/tools/perf/util/probe-finder.c
+> +++ b/tools/perf/util/probe-finder.c
+> @@ -1161,7 +1161,8 @@ static int debuginfo__find_probe_location(struct debuginfo *dbg,
+>         struct perf_probe_point *pp = &pf->pev->point;
+>         Dwarf_Off off, noff;
+>         size_t cuhl;
+> -       Dwarf_Die *diep;
+> +       Dwarf_Die *diep, cudie, subdie;
+> +       uint8_t unit_type;
 
-- Arnaldo
- 
-> Thanks,
-> Namhyung
-> 
-> 
-> Namhyung Kim (7):
->   perf stat: Convert perf_stat_evsel.res_stats array
->   perf stat: Don't call perf_stat_evsel_id_init() repeatedly
->   perf stat: Rename saved_value->cpu_map_idx
->   perf stat: Use thread map index for shadow stat
->   perf stat: Kill unused per-thread runtime stats
->   perf stat: Don't compare runtime stat for shadow stats
->   perf stat: Rename to aggr_cpu_id.thread_idx
-> 
->  tools/perf/builtin-stat.c      |  54 ------
->  tools/perf/tests/topology.c    |  10 +-
->  tools/perf/util/cpumap.c       |   8 +-
->  tools/perf/util/cpumap.h       |   2 +-
->  tools/perf/util/stat-display.c |  32 ++--
->  tools/perf/util/stat-shadow.c  | 320 ++++++++++++++++-----------------
->  tools/perf/util/stat.c         |  20 +--
->  tools/perf/util/stat.h         |  10 +-
->  8 files changed, 189 insertions(+), 267 deletions(-)
-> 
-> 
-> base-commit: 62e64c9d2fd12839c02f1b3e8b873e7cb34e8720
-> -- 
-> 2.38.0.rc1.362.ged0d419d3c-goog
+They will be unused for earlier elfutils.
 
--- 
+>         int ret = 0;
+>
+>         off = 0;
+> @@ -1200,6 +1201,14 @@ static int debuginfo__find_probe_location(struct debuginfo *dbg,
+>                         continue;
+>                 }
+>
+> +#if _ELFUTILS_VERSION >= 171
 
-- Arnaldo
+Nit, I think we use _ELFUTILS_PREREQ(0, 171).
+
+> +               /* Check separate debug information file. */
+> +               if (dwarf_cu_info(pf->cu_die.cu, NULL, &unit_type,
+> +                                 &cudie, &subdie, NULL, NULL, NULL) == 0
+> +                   && unit_type == DW_UT_skeleton)
+> +                       pf->cu_die = subdie;
+> +#endif
+
+How about making it a separate function with 2 versions
+depending on the elfutils?  Then you can have the variables
+only if they are used.
+
+Something like get_source_from_debuginfod() in the same
+file.
+
+Thanks,
+Namhyung
+
+
+> +
+>                 /* Check if target file is included. */
+>                 if (pp->file)
+>                         pf->fname = cu_find_realpath(&pf->cu_die, pp->file);
+> --
+> 2.20.1
+>
