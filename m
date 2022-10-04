@@ -2,79 +2,111 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4342BC43219
-	for <linux-perf-users@archiver.kernel.org>; Tue,  4 Oct 2022 18:30:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AE6BFC433F5
+	for <linux-perf-users@archiver.kernel.org>; Tue,  4 Oct 2022 18:35:01 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229451AbiJDS0f (ORCPT
+        id S229638AbiJDSfA (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Tue, 4 Oct 2022 14:26:35 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56304 "EHLO
+        Tue, 4 Oct 2022 14:35:00 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36580 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229445AbiJDS0e (ORCPT
+        with ESMTP id S229609AbiJDSe7 (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Tue, 4 Oct 2022 14:26:34 -0400
-Received: from ams.source.kernel.org (ams.source.kernel.org [IPv6:2604:1380:4601:e00::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BC51C1D0F7;
-        Tue,  4 Oct 2022 11:26:33 -0700 (PDT)
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by ams.source.kernel.org (Postfix) with ESMTPS id 80470B81B5D;
-        Tue,  4 Oct 2022 18:26:32 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 18CE0C433D6;
-        Tue,  4 Oct 2022 18:26:31 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1664907991;
-        bh=waS3Fg+xLWzPvDGMWzQ2iD97+UXSRdhWK/dG1mh7HEU=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=KXeE/D9+IG7gCScWXs69obZGNgwqVCC6EVP03kH+g2WTFAog2+whuAMkvKs9Z7gWc
-         cuPbEj6cdERyC6LZ6kOFpgZUzrMoEubqLdZWj9zKVyvSz3dv4oz5xw8gSZGR90/aum
-         QMJrczNXH55wcFFDZy5eP9LaRs1VUdpazqGRX/L2BOhzGa7eg9+jDwUgSj7+4It7TY
-         4wa1WtzrxbCbj+VGdMOuv3tuGR2Fp7GAz6CHmvIJFoArwEQNis+5x35m/4rAkmR4Mf
-         VB21Rk80rPyKF9wuERptnDqshjLbOgHxWNahNSCzgNwFnMtmuYEiyyLEXJUs+DeSNV
-         1AALGEkXfVS7g==
-Received: by quaco.ghostprotocols.net (Postfix, from userid 1000)
-        id 99A2F4062C; Tue,  4 Oct 2022 15:26:28 -0300 (-03)
-Date:   Tue, 4 Oct 2022 15:26:28 -0300
-From:   Arnaldo Carvalho de Melo <acme@kernel.org>
-To:     Andi Kleen <ak@linux.intel.com>
-Cc:     Ian Rogers <irogers@google.com>,
-        Zhengjun Xing <zhengjun.xing@linux.intel.com>,
-        Kan Liang <kan.liang@linux.intel.com>, perry.taylor@intel.com,
-        caleb.biggers@intel.com, kshipra.bopardikar@intel.com,
-        samantha.alt@intel.com, ahmad.yasin@intel.com,
-        Jiri Olsa <jolsa@kernel.org>,
-        Namhyung Kim <namhyung@kernel.org>,
-        linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Stephane Eranian <eranian@google.com>
-Subject: Re: [PATCH v3 00/23] Improvements to Intel perf metrics
-Message-ID: <Yzx61MIusuHbS6FK@kernel.org>
-References: <20221004021612.325521-1-irogers@google.com>
- <CAP-5=fXk6sLhZsEs72G4pOuZNzDJLc2Vkkvf+Jv=LXQDHPy8-w@mail.gmail.com>
- <677c6ec7-2e01-635b-dbfb-fbb9280e5b7c@linux.intel.com>
- <CAP-5=fUFuw-WYj7xVm3WrnggN2NW7pJkznUQ-j3U4fwMB5PdnA@mail.gmail.com>
- <Yzx25psp6o4XDaVs@kernel.org>
- <5710d85a-e1ab-1533-cda7-185b9234c580@linux.intel.com>
+        Tue, 4 Oct 2022 14:34:59 -0400
+Received: from mail-oi1-f174.google.com (mail-oi1-f174.google.com [209.85.167.174])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C307C1A04D;
+        Tue,  4 Oct 2022 11:34:57 -0700 (PDT)
+Received: by mail-oi1-f174.google.com with SMTP id q10so15282835oib.5;
+        Tue, 04 Oct 2022 11:34:57 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:x-gm-message-state:from:to:cc:subject:date;
+        bh=zTLXNMpDg1+UniIzyXYCxtdL8YDiQl3tzokRAsSfSdQ=;
+        b=3Q0JsYsPPoL4VrDxda7k6M9I+cQm1M6MbuNTG7FeO/XhxbOataZkDRihI/AtPow1v6
+         w4uU07OwxXvMFeu6yvDmaTdMKQfgU4UkOFEmtetXB3m41neLLtnkAIyMvmgRcJ32GYyJ
+         yysgDPhWm/WwSwsNDF9aNPQDHNA+JgGJYMqI4h7TqGNwajcMtPQyst16FeOg96a7uL2u
+         Lr4nsf+tiNqddR0wto1ld9Cs289x7hn3dfZR+dspQPChwSX6Ax/HxhlXHHezklDKTjtu
+         uc6c2wF6oZSI6m1QlnDi6wntF7FSh0Qq/n+ZjWBm/D6MB2767nnVEVCYhR1wBF0BbpOd
+         ry4g==
+X-Gm-Message-State: ACrzQf2IUnSXpgvMxMSuK7Xcto5HQRkyad4N7BqbIKnJxi/5SKTcvXvz
+        GYuPen18+ZdljroNT61JWVByd2RNd3niaTGiPMOnECuh
+X-Google-Smtp-Source: AMsMyM7czo0WxlTA8xE9hipWddVrQd4oDO+hkG0qLef/uh0Ia0Th64faNzfeluogY0rdow83yR4/vdAXwCmzKfG9tSo=
+X-Received: by 2002:a05:6808:1a09:b0:350:107b:f89a with SMTP id
+ bk9-20020a0568081a0900b00350107bf89amr532277oib.218.1664908497053; Tue, 04
+ Oct 2022 11:34:57 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <5710d85a-e1ab-1533-cda7-185b9234c580@linux.intel.com>
-X-Url:  http://acmel.wordpress.com
+References: <20220930120939.353315-1-leo.yan@linaro.org> <CAM9d7cibbdOb04qhKkfyRmwtHvttb6-bOu_uAN6D8ke-EJUWZw@mail.gmail.com>
+ <c75ba6c3-938d-14a5-2fc8-3e846eeba23f@amd.com>
+In-Reply-To: <c75ba6c3-938d-14a5-2fc8-3e846eeba23f@amd.com>
+From:   Namhyung Kim <namhyung@kernel.org>
+Date:   Tue, 4 Oct 2022 11:34:45 -0700
+Message-ID: <CAM9d7cg7dLNyH=dYuie=HF=yfxH7dNaEe5vs+r0E_PJLYs1Msw@mail.gmail.com>
+Subject: Re: [PATCH v4] perf test: Introduce script for data symbol testing
+To:     Ravi Bangoria <ravi.bangoria@amd.com>
+Cc:     Leo Yan <leo.yan@linaro.org>,
+        Arnaldo Carvalho de Melo <acme@kernel.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Jiri Olsa <jolsa@kernel.org>,
+        linux-kernel <linux-kernel@vger.kernel.org>,
+        linux-perf-users <linux-perf-users@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-Em Tue, Oct 04, 2022 at 11:15:34AM -0700, Andi Kleen escreveu:
-> 
-> > > So I think you've not got Arnaldo's branch with the changes applied.
-> > > Unfortunately the instructions around '_group' are only going to apply
-> > > to Linux 6.1.
-> > I just pushed perf/core with Ian's v3 series, please check with that
-> > one.
-> 
-> 
-> Yes works with the latest branch thanks.
+On Fri, Sep 30, 2022 at 10:13 PM Ravi Bangoria <ravi.bangoria@amd.com> wrote:
+>
+> >> +# perf mem/c2c internally uses IBS PMU on AMD CPU which doesn't support
+> >> +# user/kernel filtering and per-process monitoring, spin program on
+> >> +# specific CPU and test in per-CPU mode.
+> >> +is_amd=$(egrep -c 'vendor_id.*AuthenticAMD' /proc/cpuinfo)
+> >> +if (($is_amd >= 1)); then
+> >> +       perf mem record -o ${PERF_DATA} -- -C 0 -- taskset -c 0 $TEST_PROGRAM &
+> >
+> > I'm curious why it has "--" before "-C 0"..
+>
+> IIRC, any command line options placed after -- will be carry forwarded
+> as is to perf record.
+>
+> perf mem record [options] does not support -C option. Which means -C 0
+> will be ignored if user run `perf mem record -C 0`. Ex:
+>
+>   $ sudo ./perf --debug perf-event-open mem record -C 0
+>   [...]
+>   sys_perf_event_open: pid -1  cpu 0  group_fd -1  flags 0 = 5
+>   sys_perf_event_open: pid -1  cpu 1  group_fd -1  flags 0 = 6
+>   sys_perf_event_open: pid -1  cpu 2  group_fd -1  flags 0 = 7
+>   sys_perf_event_open: pid -1  cpu 3  group_fd -1  flags 0 = 8
+>
+> OTOH, if I place -C 0 after -- then perf opens event only on cpu0:
+>
+>   $ sudo ./perf --debug perf-event-open mem record -- -C 0
+>   [...]
+>   sys_perf_event_open: pid -1  cpu 0  group_fd -1  flags 0 = 7
+>
+> Now, perf mem [options] supports -C options but I don't know why
+> it's not working for me:
 
-Thanks for checking,
+Thanks for checking this!
 
-- Arnaldo
+It seems -C works only for perf mem report and eats it for record.
+I think we need to fix the option handling.
+
+Thanks,
+Namhyung
+
+
+>
+>   $ sudo ./perf --debug perf-event-open mem -C 0 record
+>   [...]
+>   sys_perf_event_open: pid -1  cpu 0  group_fd -1  flags 0 = 5
+>   sys_perf_event_open: pid -1  cpu 1  group_fd -1  flags 0 = 6
+>   sys_perf_event_open: pid -1  cpu 2  group_fd -1  flags 0 = 7
+>   sys_perf_event_open: pid -1  cpu 3  group_fd -1  flags 0 = 8
+>
+> Thanks,
+> Ravi
