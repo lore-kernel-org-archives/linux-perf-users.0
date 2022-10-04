@@ -2,93 +2,161 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 79A0AC433FE
-	for <linux-perf-users@archiver.kernel.org>; Tue,  4 Oct 2022 17:22:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B65BDC433F5
+	for <linux-perf-users@archiver.kernel.org>; Tue,  4 Oct 2022 17:30:30 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229547AbiJDRWM (ORCPT
+        id S229451AbiJDRa3 (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Tue, 4 Oct 2022 13:22:12 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35718 "EHLO
+        Tue, 4 Oct 2022 13:30:29 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43154 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229611AbiJDRWL (ORCPT
+        with ESMTP id S229760AbiJDRaH (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Tue, 4 Oct 2022 13:22:11 -0400
-Received: from desiato.infradead.org (desiato.infradead.org [IPv6:2001:8b0:10b:1:d65d:64ff:fe57:4e05])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3537F25E4;
-        Tue,  4 Oct 2022 10:22:10 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=desiato.20200630; h=In-Reply-To:Content-Type:MIME-Version:
-        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description;
-        bh=bh6vzn8U2ZsRPHfJfbA7bhjBG4wiyjRnctJShcuE7JE=; b=JRMyjcoKG+yIJiGewfyyQAtrjO
-        +3HGkg6/t4G8yG1oqVaDcCpbW5UJyAcbjxl+3s0Jme4pbspT+Vn1xcYm97DBMXPqkiVR9Raca/wMy
-        JIJVmnq1SWOmevqTgoZPEQs7QDRhPbXwJsZwMoY9nouvE02fR8Xc8rMBIfQ3UF+6mjQBWlwAUkpov
-        hPhw94mut02zlHzjTflobIrVPfq86AXnXQ2bJ/twHRNixh3mgadiuZcrLTX9WUDDQWArcqLeGhOUQ
-        K14xm/hbXF5z0nXYxwJaP8V2teTXrUyQqzJA2ZCTi4Wsewll87G1FFVp1SQKzCYXi2a8nuWGw3XOV
-        nuTG1mDg==;
-Received: from j130084.upc-j.chello.nl ([24.132.130.84] helo=noisy.programming.kicks-ass.net)
-        by desiato.infradead.org with esmtpsa (Exim 4.94.2 #2 (Red Hat Linux))
-        id 1oflc3-000lRQ-4T; Tue, 04 Oct 2022 17:21:47 +0000
-Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange X25519 server-signature RSA-PSS (4096 bits))
-        (Client did not present a certificate)
-        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id 9E23C3002EC;
-        Tue,  4 Oct 2022 19:21:45 +0200 (CEST)
-Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
-        id 8264920C3AB5A; Tue,  4 Oct 2022 19:21:45 +0200 (CEST)
-Date:   Tue, 4 Oct 2022 19:21:45 +0200
-From:   Peter Zijlstra <peterz@infradead.org>
-To:     Marco Elver <elver@google.com>
-Cc:     Ingo Molnar <mingo@redhat.com>,
+        Tue, 4 Oct 2022 13:30:07 -0400
+Received: from mga12.intel.com (mga12.intel.com [192.55.52.136])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CE25C6610D;
+        Tue,  4 Oct 2022 10:29:20 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1664904560; x=1696440560;
+  h=message-id:date:mime-version:subject:to:cc:references:
+   from:in-reply-to:content-transfer-encoding;
+  bh=cZwt9C3hI0uiDJLCxjpvciMF76PTSjjppjN+6iEqy2s=;
+  b=h7A36NJ7gyiKhV6SZ1Jqy3SNT+cGIvBKuSKKcJMGvfoDvGFXN27FQwuE
+   xTxi0qtyVn+1gtuu1uhzGnpUNzN8Ii8HzqBf0qYC2LYElPcKIVjUY/jbi
+   SdCggJGM4J64MCTtN9ZGjkX4ODpKmgVMfujRoa8UqbmyS3C8Ethar/GGP
+   wA4cA79Wh0jz6LNHxU/vogM9Jb1j7to1lk5i3CUSwHtL17kKMeDUhEvWF
+   dgKYFrNLcdpb2ouJPn0zT71aNjl4TyUE8drL3itBOmLk8mems1Vl8on2t
+   MIPYebQjdKHq7xWiAhtNleYWJ9dlRwZh0Kr1612eyUPeOoO+8sAov1CKI
+   w==;
+X-IronPort-AV: E=McAfee;i="6500,9779,10490"; a="282685647"
+X-IronPort-AV: E=Sophos;i="5.95,158,1661842800"; 
+   d="scan'208";a="282685647"
+Received: from orsmga002.jf.intel.com ([10.7.209.21])
+  by fmsmga106.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 04 Oct 2022 10:28:53 -0700
+X-IronPort-AV: E=McAfee;i="6500,9779,10490"; a="624011508"
+X-IronPort-AV: E=Sophos;i="5.95,158,1661842800"; 
+   d="scan'208";a="624011508"
+Received: from akleen-mobl1.amr.corp.intel.com (HELO [10.241.236.94]) ([10.241.236.94])
+  by orsmga002-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 04 Oct 2022 10:28:53 -0700
+Message-ID: <677c6ec7-2e01-635b-dbfb-fbb9280e5b7c@linux.intel.com>
+Date:   Tue, 4 Oct 2022 10:28:45 -0700
+MIME-Version: 1.0
+User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:102.0) Gecko/20100101
+ Thunderbird/102.3.1
+Subject: Re: [PATCH v3 00/23] Improvements to Intel perf metrics
+Content-Language: en-US
+To:     Ian Rogers <irogers@google.com>,
+        Zhengjun Xing <zhengjun.xing@linux.intel.com>,
+        Kan Liang <kan.liang@linux.intel.com>, perry.taylor@intel.com,
+        caleb.biggers@intel.com, kshipra.bopardikar@intel.com,
+        samantha.alt@intel.com, ahmad.yasin@intel.com,
         Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
         Jiri Olsa <jolsa@kernel.org>,
         Namhyung Kim <namhyung@kernel.org>,
-        linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org,
-        kasan-dev@googlegroups.com, Dmitry Vyukov <dvyukov@google.com>
-Subject: Re: [PATCH] perf: Fix missing SIGTRAPs due to pending_disable abuse
-Message-ID: <YzxrqUFBNy/kR6PZ@hirez.programming.kicks-ass.net>
-References: <20220927121322.1236730-1-elver@google.com>
- <YzM/BUsBnX18NoOG@hirez.programming.kicks-ass.net>
- <YzNu5bgASbuVi0S3@elver.google.com>
- <YzQcqe9p9C5ZbjZ1@elver.google.com>
- <YzRgcnMXWuUZ4rlt@elver.google.com>
- <Yzxou9HB/1XjMXWI@hirez.programming.kicks-ass.net>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <Yzxou9HB/1XjMXWI@hirez.programming.kicks-ass.net>
+        linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
+Cc:     Stephane Eranian <eranian@google.com>
+References: <20221004021612.325521-1-irogers@google.com>
+ <CAP-5=fXk6sLhZsEs72G4pOuZNzDJLc2Vkkvf+Jv=LXQDHPy8-w@mail.gmail.com>
+From:   Andi Kleen <ak@linux.intel.com>
+In-Reply-To: <CAP-5=fXk6sLhZsEs72G4pOuZNzDJLc2Vkkvf+Jv=LXQDHPy8-w@mail.gmail.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-On Tue, Oct 04, 2022 at 07:09:15PM +0200, Peter Zijlstra wrote:
-> On Wed, Sep 28, 2022 at 04:55:46PM +0200, Marco Elver wrote:
-> > On Wed, Sep 28, 2022 at 12:06PM +0200, Marco Elver wrote:
-> > 
-> > > My second idea about introducing something like irq_work_raw_sync().
-> > > Maybe it's not that crazy if it is actually safe. I expect this case
-> > > where we need the irq_work_raw_sync() to be very very rare.
-> > 
-> > The previous irq_work_raw_sync() forgot about irq_work_queue_on(). Alas,
-> > I might still be missing something obvious, because "it's never that
-> > easy". ;-)
-> > 
-> > And for completeness, the full perf patch of what it would look like
-> > together with irq_work_raw_sync() (consider it v1.5). It's already
-> > survived some shorter stress tests and fuzzing.
-> 
-> So.... I don't like it. But I cooked up the below, which _almost_ works :-/
-> 
-> For some raisin it sometimes fails with 14999 out of 15000 events
-> delivered and I've not yet figured out where it goes sideways. I'm
-> currently thinking it's that sigtrap clear on OFF.
+[cutting down cc list]
 
-Oh Urgh, this is ofcourse the case where an IPI races with a migration
-and we loose the race with return to use. Effectively giving the signal
-skid vs the hardware event.
 
-Bah.. I really hate having one CPU wait for another... Let me see if I
-can find another way to close that hole.
+On 10/3/2022 8:43 PM, Ian Rogers wrote:
+> On Mon, Oct 3, 2022 at 7:16 PM Ian Rogers <irogers@google.com> wrote:
+>> For consistency with:
+>> https://github.com/intel/perfmon-metrics
+>> rename of topdown TMA metrics from Frontend_Bound to tma_frontend_bound.
+>>
+>> Remove _SMT suffix metrics are dropped as the #SMT_On and #EBS_Mode
+>> are correctly expanded in the single main metric. Fix perf expr to
+>> allow a double if to be correctly processed.
+>>
+>> Add all 6 levels of TMA metrics. Child metrics are placed in a group
+>> named after their parent allowing children of a metric to be
+>> easily measured using the metric name with a _group suffix.
+>>
+>> Don't drop TMA metrics if they contain topdown events.
+>>
+>> The ## and ##? operators are correctly expanded.
+>>
+>> The locate-with column is added to the long description describing a
+>> sampling event.
+>>
+>> Metrics are written in terms of other metrics to reduce the expression
+>> size and increase readability.
+>>
+>> Following this the pmu-events/arch/x86 directories match those created
+>> by the script at:
+>> https://github.com/intel/event-converter-for-linux-perf/blob/master/download_and_gen.py
+>> with updates at:
+>> https://github.com/captain5050/event-converter-for-linux-perf
+>>
+>>
+>> v3. Fix a parse metrics test failure due to making metrics referring
+>>      to other metrics case sensitive - make the cases in the test
+>>      metric match.
+>> v2. Fixes commit message wrt missing mapfile.csv updates as noted by
+>>      Zhengjun Xing <zhengjun.xing@linux.intel.com>. ScaleUnit is added
+>>      for TMA metrics. Metrics with topdown events have have a missing
+>>      slots event added if necessary. The latest metrics at:
+>>      https://github.com/intel/perfmon-metrics are used, however, the
+>>      event-converter-for-linux-perf scripts now prefer their own
+>>      metrics in case of mismatched units when a metric is written in
+>>      terms of another.  Additional testing was performed on broadwell,
+>>      broadwellde, cascadelakex, haswellx, sapphirerapids and tigerlake
+>>      CPUs.
+> I wrote up a little example of performing a top-down analysis for the
+> perf wiki here:
+> https://perf.wiki.kernel.org/index.php/Top-Down_Analysis
+
+
+I did some quick testing.
+
+On Skylake the output of L1 isn't scaled to percent:
+
+$ ./perf stat -M TopdownL1 ~/pmu/pmu-tools/workloads/BC1s
+
+  Performance counter stats for '/home/ak/pmu/pmu-tools/workloads/BC1s':
+
+        608,066,701      INT_MISC.RECOVERY_CYCLES         # 0.32 
+Bad_Speculation          (50.02%)
+      5,364,230,382      CPU_CLK_UNHALTED.THREAD          # 0.48 
+Retiring                 (50.02%)
+     10,194,062,626 UOPS_RETIRED.RETIRE_SLOTS (50.02%)
+     14,613,100,390 UOPS_ISSUED.ANY (50.02%)
+      2,928,793,077      IDQ_UOPS_NOT_DELIVERED.CORE      # 0.14 
+Frontend_Bound
+                                                   #     0.07 
+Backend_Bound            (50.02%)
+        604,850,703 INT_MISC.RECOVERY_CYCLES (50.02%)
+      5,357,291,185 CPU_CLK_UNHALTED.THREAD (50.02%)
+     14,618,285,580 UOPS_ISSUED.ANY (50.02%)
+
+Then if I follow the wiki example here I would expect I need to do
+
+$ ./perf stat -M tma_backend_bound_group ~/pmu/pmu-tools/workloads/BC1s
+
+Cannot find metric or group `tma_backend_bound_group'
+
+but tma_retiring_group doesn't exist. So it seems the methodology isn't 
+fully consistent everywhere? Perhaps the wiki needs to document the 
+supported CPUs and also what part of the hierarchy is supported.
+
+Another problem I noticed in the example is that the sample event didn't 
+specify PEBS, even though it probably should at least on Icelake+ where 
+every event can be used with less over with PEBS.
+
+Also with all these groups that need to be specified by hand some bash 
+completion support for groups would be really useful)
+
+-Andi
+
+
