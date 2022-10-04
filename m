@@ -2,172 +2,151 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 55AD9C433F5
-	for <linux-perf-users@archiver.kernel.org>; Mon,  3 Oct 2022 20:47:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 52098C433FE
+	for <linux-perf-users@archiver.kernel.org>; Tue,  4 Oct 2022 01:34:31 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229705AbiJCUq7 (ORCPT
+        id S229534AbiJDBea (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Mon, 3 Oct 2022 16:46:59 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48816 "EHLO
+        Mon, 3 Oct 2022 21:34:30 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53864 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229918AbiJCUq5 (ORCPT
+        with ESMTP id S229511AbiJDBe3 (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Mon, 3 Oct 2022 16:46:57 -0400
-Received: from mail-pf1-x42b.google.com (mail-pf1-x42b.google.com [IPv6:2607:f8b0:4864:20::42b])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0C2A74BD1B;
-        Mon,  3 Oct 2022 13:46:56 -0700 (PDT)
-Received: by mail-pf1-x42b.google.com with SMTP id i6so11218628pfb.2;
-        Mon, 03 Oct 2022 13:46:56 -0700 (PDT)
+        Mon, 3 Oct 2022 21:34:29 -0400
+Received: from mail-wr1-x433.google.com (mail-wr1-x433.google.com [IPv6:2a00:1450:4864:20::433])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 335D224F2B
+        for <linux-perf-users@vger.kernel.org>; Mon,  3 Oct 2022 18:34:28 -0700 (PDT)
+Received: by mail-wr1-x433.google.com with SMTP id bk15so19099351wrb.13
+        for <linux-perf-users@vger.kernel.org>; Mon, 03 Oct 2022 18:34:28 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20210112;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:sender:from:to:cc:subject:date;
-        bh=sYSCzo/dCEHy9uom4/Q42uUwbH0+TjIpRi+wDvZ9v+M=;
-        b=W87dTR2zMGnYn8a62JvOgLVc8kuk3ENNHrCODB12MPYnIB/EsH8oyvtXpLC7dI3dBK
-         MPQHbfMvNCzD7MyKrVWptbLT1j5J7SHI5S7hsozNOWCwGZzROmdzycOPE5S/caMOXbVz
-         kTF04hm12c1ainlHZnsQOuhx62Nz250YQ0Iu0d9aI1oOtNnQe9E3rdkYN+iRZeYrnbhm
-         4c6Llq/Hq/QtajSwhq2GWXNbnX27Jtzn6xlpvM6OZoypvg1sxQifiKY+jKS2AoLOxn4Q
-         05X/jqr9bprdgW4DA+VGl5lkBvhcvGlVuPRhcNGUDIpYY9ImTswmRJYfnLOjglQvERDQ
-         oLcQ==
+        d=google.com; s=20210112;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:from:to:cc:subject:date;
+        bh=Ba7+VCWbkSLdpJi3cP/QjqQGiLdpPdQDJwXzgD1/onY=;
+        b=LDHsaymAavJtj3LDueXJl2RdUB3co7vxf5coiblnwptFT1MJTUAJ/7NiGmIi0N62BQ
+         YXM/NoPBl/tGd/0nj1jh5V4Yr7ZqYFEYOcZacScdEz+MDbhaA4VLxe5Ppfq398+YRMQ7
+         ot4EjIMKcTsLYr8W/YrZ9LS3Z3FsnNb8JkadHtD6kDLMrD+141aE+a7iv+RYaM54cQmW
+         cdNgshd/R2VGEMmq6affMREJOr4+0dssk6YslPUpKf1wzymfBgKEUB8UB1RUkMUkQml7
+         8tIQM7MSnS3aNDAgBG9EJtmI+sONjqYMEvvO0237gIzIMi9/8WkfauuQC6PAnECixlIu
+         dYtA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:sender:x-gm-message-state:from
-         :to:cc:subject:date;
-        bh=sYSCzo/dCEHy9uom4/Q42uUwbH0+TjIpRi+wDvZ9v+M=;
-        b=doWudy8MR2mxr26Iv5BDWe6TSayvDzS0lZuhOw8y309kd1kpxkAQ4zsP0EKfhIikdV
-         /336wzmdLkGHrkb8Dm/QjZq5az4Saa18tehdio4/LpnK0IDn7fzTxyaJpaOdYKX5fIDs
-         10MsF4o6Q/LzoUaOOuUNtumHX5efwlO72jWfseRggI4U0llx4qozYt+qN9nzbkjuuQTp
-         Uy9zAgc2N5YIAl3waPRGJDYN/UYKfOCtPRdgSB9FrVQpovOkqkEpNWu9pOhJ7+jGo/Gt
-         TZ3NubdCS8MATMBNpNdsH0AWUu92NdzMddIlLFcTk09kZV3Rwqdh2I44m6E6aOz5BdPP
-         2Nhg==
-X-Gm-Message-State: ACrzQf3KBrH4iV3vxAWFI249UpbSHFGajk5dPNFq/Omm9yCdPyKW0Mpv
-        mcM8l+CvC8x3x+2w3JCRAGx83ZUyM0I=
-X-Google-Smtp-Source: AMsMyM4oVrfxLwaoSMPZII4r7MeQkstcfcCWCP9HvTXQsBXWzsJoABybz7hWPj7CQsYRHTfds4mKXA==
-X-Received: by 2002:a05:6a00:1249:b0:543:aa0a:9c0a with SMTP id u9-20020a056a00124900b00543aa0a9c0amr24629969pfi.2.1664830015488;
-        Mon, 03 Oct 2022 13:46:55 -0700 (PDT)
-Received: from youngsil.svl.corp.google.com ([2620:15c:2d4:203:63c9:72b6:3eb9:490a])
-        by smtp.gmail.com with ESMTPSA id n12-20020a17090ac68c00b0020a821e97fbsm3522931pjt.13.2022.10.03.13.46.54
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 03 Oct 2022 13:46:55 -0700 (PDT)
-Sender: Namhyung Kim <namhyung@gmail.com>
-From:   Namhyung Kim <namhyung@kernel.org>
-To:     Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Jiri Olsa <jolsa@kernel.org>
-Cc:     Ingo Molnar <mingo@kernel.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Ian Rogers <irogers@google.com>,
-        Adrian Hunter <adrian.hunter@intel.com>,
-        linux-perf-users@vger.kernel.org,
-        Kan Liang <kan.liang@linux.intel.com>,
-        Leo Yan <leo.yan@linaro.org>
-Subject: [PATCH 5/5] perf tools: Remove special handling of system-wide evsel
-Date:   Mon,  3 Oct 2022 13:46:47 -0700
-Message-Id: <20221003204647.1481128-6-namhyung@kernel.org>
-X-Mailer: git-send-email 2.38.0.rc1.362.ged0d419d3c-goog
-In-Reply-To: <20221003204647.1481128-1-namhyung@kernel.org>
-References: <20221003204647.1481128-1-namhyung@kernel.org>
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:x-gm-message-state:from:to:cc:subject:date;
+        bh=Ba7+VCWbkSLdpJi3cP/QjqQGiLdpPdQDJwXzgD1/onY=;
+        b=qQz4Jk/+pSoYCeEy4pjWTKLQgDdKi9yXndroHGyxQUIKyP+toaRUkYojc823DLNpGS
+         t1n/ExmP4XiJpB3rps5WApCY1W7PbVf1wJGFXdWrrqcs8w6Gfmmf0wIC5iT8tAaJVEvC
+         tqAfjQCXqhgTNW5xZ9SgChqmkjSXsaa1/J2K/Zf30EUjwU15JLmo5eqiuPpgDYYvyP3a
+         XxggGItXM/4sgP2MrqGxwagTT5WwDnrTnsd0ZFB9V6ccqgSlgqrl+TK1lfZ22be+tYap
+         8oArDVwJRMiLNIf+m7//jj7d6blFZgM5QtMY2z23RZWLsE2e1XA9AnjR/iIbxlu67gfy
+         j+qQ==
+X-Gm-Message-State: ACrzQf0+cmMqo3ZfWSZ8wB5AQJRXrVkWfUbRC6VvVz6DES4gpeKS/tTq
+        UxaBhnvtTVH8WaSLdK6gyz+6qU62LqxkDhicuiDD7Q==
+X-Google-Smtp-Source: AMsMyM6krLGiwys9XeWRnQqFdw/0YjkEcWg5F182whJ0d8Wtva7lQmEXb9BgNObGQCN0qtEVegHxoyk1iR6ApX6Sc6M=
+X-Received: by 2002:a5d:68d0:0:b0:22c:dfba:3bd6 with SMTP id
+ p16-20020a5d68d0000000b0022cdfba3bd6mr11297684wrw.300.1664847266592; Mon, 03
+ Oct 2022 18:34:26 -0700 (PDT)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+References: <20220928072204.1613330-1-irogers@google.com> <20220928072204.1613330-4-irogers@google.com>
+ <e685d636-52cd-b34a-2d10-90c16b2e57cf@linux.intel.com>
+In-Reply-To: <e685d636-52cd-b34a-2d10-90c16b2e57cf@linux.intel.com>
+From:   Ian Rogers <irogers@google.com>
+Date:   Mon, 3 Oct 2022 18:34:14 -0700
+Message-ID: <CAP-5=fXnzHBuNORVCznEi6yhoJXXD6bVaevw6qygsGf8BgmiWA@mail.gmail.com>
+Subject: Re: [PATCH v1 03/22] perf metrics: Don't scale counts going into metrics
+To:     Xing Zhengjun <zhengjun.xing@linux.intel.com>
+Cc:     Kan Liang <kan.liang@linux.intel.com>,
+        Andi Kleen <ak@linux.intel.com>, perry.taylor@intel.com,
+        caleb.biggers@intel.com, kshipra.bopardikar@intel.com,
+        samantha.alt@intel.com, ahmad.yasin@intel.com,
+        Peter Zijlstra <peterz@infradead.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        Arnaldo Carvalho de Melo <acme@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Jiri Olsa <jolsa@kernel.org>,
+        Namhyung Kim <namhyung@kernel.org>,
+        John Garry <john.garry@huawei.com>,
+        James Clark <james.clark@arm.com>,
+        Kajol Jain <kjain@linux.ibm.com>,
+        Thomas Richter <tmricht@linux.ibm.com>,
+        Miaoqian Lin <linmq006@gmail.com>,
+        Florian Fischer <florian.fischer@muhq.space>,
+        linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Stephane Eranian <eranian@google.com>
+Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-For system-wide evsels, the thread map should be dummy - i.e. it has a
-single entry of -1.  But the code guarantees such a thread map, so no
-need to handle it specially.
+On Thu, Sep 29, 2022 at 1:49 AM Xing Zhengjun
+<zhengjun.xing@linux.intel.com> wrote:
+>
+> On 9/28/2022 3:21 PM, Ian Rogers wrote:
+> > Counts are scaled prior to going into saved_value, reverse the scaling
+> > so that metrics don't double scale values.
+> >
+> > Signed-off-by: Ian Rogers <irogers@google.com>
+> > ---
+> >   tools/perf/util/stat-shadow.c | 9 +++++++--
+> >   1 file changed, 7 insertions(+), 2 deletions(-)
+> >
+> > diff --git a/tools/perf/util/stat-shadow.c b/tools/perf/util/stat-shadow.c
+> > index 9e1eddeff21b..b5cedd37588f 100644
+> > --- a/tools/perf/util/stat-shadow.c
+> > +++ b/tools/perf/util/stat-shadow.c
+> > @@ -865,11 +865,16 @@ static int prepare_metric(struct evsel **metric_events,
+> >                       if (!v)
+> >                               break;
+> >                       stats = &v->stats;
+> > -                     scale = 1.0;
+> > +                     /*
+> > +                      * If an event was scaled during stat gathering, reverse
+> > +                      * the scale before computing the metric.
+> > +                      */
+> > +                     scale = 1.0 / metric_events[i]->scale;
+> > +
+> This look likes not work for kernel side events like
+> /sys/devices/uncore_imc_*/events/cas_count_read(write).
 
-No functional change intended.
+I've not been able to reproduce this. I've tried:
 
-Reviewed-by: Adrian Hunter <adrian.hunter@intel.com>
-Signed-off-by: Namhyung Kim <namhyung@kernel.org>
----
- tools/lib/perf/evsel.c      |  3 ---
- tools/perf/builtin-script.c |  3 ---
- tools/perf/util/evsel.c     | 12 ++----------
- tools/perf/util/stat.c      |  3 ---
- 4 files changed, 2 insertions(+), 19 deletions(-)
+  {
+    "MetricName": "IanTest",
+    "MetricExpr": "uncore_imc@cas_count_read@ * 6.103515625e-5 +
+uncore_imc@cas_count_write@ * 6.103515625e-5"
+  }
 
-diff --git a/tools/lib/perf/evsel.c b/tools/lib/perf/evsel.c
-index 8ce5bbd09666..8b51b008a81f 100644
---- a/tools/lib/perf/evsel.c
-+++ b/tools/lib/perf/evsel.c
-@@ -515,9 +515,6 @@ int perf_evsel__alloc_id(struct perf_evsel *evsel, int ncpus, int nthreads)
- 	if (ncpus == 0 || nthreads == 0)
- 		return 0;
- 
--	if (evsel->system_wide)
--		nthreads = 1;
--
- 	evsel->sample_id = xyarray__new(ncpus, nthreads, sizeof(struct perf_sample_id));
- 	if (evsel->sample_id == NULL)
- 		return -ENOMEM;
-diff --git a/tools/perf/builtin-script.c b/tools/perf/builtin-script.c
-index 886f53cfa257..7fa467ed91dc 100644
---- a/tools/perf/builtin-script.c
-+++ b/tools/perf/builtin-script.c
-@@ -2243,9 +2243,6 @@ static void __process_stat(struct evsel *counter, u64 tstamp)
- 	struct perf_cpu cpu;
- 	static int header_printed;
- 
--	if (counter->core.system_wide)
--		nthreads = 1;
--
- 	if (!header_printed) {
- 		printf("%3s %8s %15s %15s %15s %15s %s\n",
- 		       "CPU", "THREAD", "VAL", "ENA", "RUN", "TIME", "EVENT");
-diff --git a/tools/perf/util/evsel.c b/tools/perf/util/evsel.c
-index 5776bfa70f11..e319bb17d10d 100644
---- a/tools/perf/util/evsel.c
-+++ b/tools/perf/util/evsel.c
-@@ -1813,7 +1813,7 @@ static struct perf_thread_map *empty_thread_map;
- static int __evsel__prepare_open(struct evsel *evsel, struct perf_cpu_map *cpus,
- 		struct perf_thread_map *threads)
- {
--	int nthreads;
-+	int nthreads = perf_thread_map__nr(threads);
- 
- 	if ((perf_missing_features.write_backward && evsel->core.attr.write_backward) ||
- 	    (perf_missing_features.aux_output     && evsel->core.attr.aux_output))
-@@ -1839,11 +1839,6 @@ static int __evsel__prepare_open(struct evsel *evsel, struct perf_cpu_map *cpus,
- 		threads = empty_thread_map;
- 	}
- 
--	if (evsel->core.system_wide)
--		nthreads = 1;
--	else
--		nthreads = threads->nr;
--
- 	if (evsel->core.fd == NULL &&
- 	    perf_evsel__alloc_fd(&evsel->core, perf_cpu_map__nr(cpus), nthreads) < 0)
- 		return -ENOMEM;
-@@ -2061,10 +2056,7 @@ static int evsel__open_cpu(struct evsel *evsel, struct perf_cpu_map *cpus,
- 	if (threads == NULL)
- 		threads = empty_thread_map;
- 
--	if (evsel->core.system_wide)
--		nthreads = 1;
--	else
--		nthreads = threads->nr;
-+	nthreads = perf_thread_map__nr(threads);
- 
- 	if (evsel->cgrp)
- 		pid = evsel->cgrp->fd;
-diff --git a/tools/perf/util/stat.c b/tools/perf/util/stat.c
-index ce5e9e372fc4..cef943377ad7 100644
---- a/tools/perf/util/stat.c
-+++ b/tools/perf/util/stat.c
-@@ -420,9 +420,6 @@ static int process_counter_maps(struct perf_stat_config *config,
- 	int ncpus = evsel__nr_cpus(counter);
- 	int idx, thread;
- 
--	if (counter->core.system_wide)
--		nthreads = 1;
--
- 	for (thread = 0; thread < nthreads; thread++) {
- 		for (idx = 0; idx < ncpus; idx++) {
- 			if (process_counter_values(config, counter, idx, thread,
--- 
-2.38.0.rc1.362.ged0d419d3c-goog
+where it scales the two counters and sums them. I see:
 
+$ perf stat -M IanTest -a sleep 1
+
+Performance counter stats for 'system wide':
+
+           298.70 MiB  uncore_imc/cas_count_write/      #   721.00
+IanTest
+           429.64 MiB  uncore_imc/cas_count_read/
+
+      1.004877710 seconds time elapsed
+
+So the metric's value nearly matches the sum. If the scaled values had
+been used the sum would have been something like 0.044454345703124995.
+
+From the code, this is the only place a metric's "ID" (event/counter)
+is associated with a value, so I would be confused if there were a
+code path where reversing the scaling wasn't happening.
+
+Thanks,
+Ian
+
+> >                       source_count = evsel__source_count(metric_events[i]);
+> >
+> >                       if (v->metric_other)
+> > -                             metric_total = v->metric_total;
+> > +                             metric_total = v->metric_total * scale;
+> >               }
+> >               n = strdup(evsel__metric_id(metric_events[i]));
+> >               if (!n)
+>
+> --
+> Zhengjun Xing
