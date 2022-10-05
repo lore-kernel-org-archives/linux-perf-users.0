@@ -2,106 +2,122 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 12E8FC433FE
-	for <linux-perf-users@archiver.kernel.org>; Wed,  5 Oct 2022 08:24:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id ABB52C433FE
+	for <linux-perf-users@archiver.kernel.org>; Wed,  5 Oct 2022 08:36:13 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229798AbiJEIYE (ORCPT
+        id S229737AbiJEIgL (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Wed, 5 Oct 2022 04:24:04 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49688 "EHLO
+        Wed, 5 Oct 2022 04:36:11 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39080 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229549AbiJEIYC (ORCPT
+        with ESMTP id S229462AbiJEIgK (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Wed, 5 Oct 2022 04:24:02 -0400
-Received: from casper.infradead.org (casper.infradead.org [IPv6:2001:8b0:10b:1236::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1A22E4055E;
-        Wed,  5 Oct 2022 01:24:01 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=casper.20170209; h=In-Reply-To:Content-Type:MIME-Version:
-        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description;
-        bh=EnWe5Z/LqqGP1/UejfDNmVCgj3ooQI9F6kvj8QuOzms=; b=kJMPjhN6skcw0f6p3ee8QvlAeZ
-        qSgfJKl8jg8OWEcu5ut/rcJcgYyBvVtVcBpjd/I06gFPaY7ZZKT2iOiCdIQMO1m+e+p5KZYyYBijV
-        o7jnrrKr1Hui2SXNLr+UwKUt0mR7un/g5JjQ1KWIu2B1ONnb+HVtfBrCFjSYpEcrPus90RGDVCWCS
-        EaV5p1RaNLwla28CtM8hCj8DL3H+gE6YcKFPKdyrhch/P6iriMjQdBR0CMX1vlaMjL9U/JK5HYpBu
-        xumcjIG5ufEY0zN38PF/SzIsXsX8C4q1aBrMl+8QTn+kaomXjV8AQiLMK6PnH5iPImPlwZT1Kej1/
-        TyOUT2PA==;
-Received: from j130084.upc-j.chello.nl ([24.132.130.84] helo=noisy.programming.kicks-ass.net)
-        by casper.infradead.org with esmtpsa (Exim 4.94.2 #2 (Red Hat Linux))
-        id 1ofzh4-000Ded-KV; Wed, 05 Oct 2022 08:23:54 +0000
-Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-        (Client did not present a certificate)
-        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id 3CF75300137;
-        Wed,  5 Oct 2022 10:23:50 +0200 (CEST)
-Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
-        id EB6552018BB82; Wed,  5 Oct 2022 10:23:49 +0200 (CEST)
-Date:   Wed, 5 Oct 2022 10:23:49 +0200
-From:   Peter Zijlstra <peterz@infradead.org>
-To:     Marco Elver <elver@google.com>
-Cc:     Ingo Molnar <mingo@redhat.com>,
-        Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Jiri Olsa <jolsa@kernel.org>,
-        Namhyung Kim <namhyung@kernel.org>,
-        linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org,
-        kasan-dev@googlegroups.com, Dmitry Vyukov <dvyukov@google.com>
-Subject: Re: [PATCH] perf: Fix missing SIGTRAPs due to pending_disable abuse
-Message-ID: <Yz0/FfW4kwSK/p9c@hirez.programming.kicks-ass.net>
-References: <20220927121322.1236730-1-elver@google.com>
- <YzM/BUsBnX18NoOG@hirez.programming.kicks-ass.net>
- <YzNu5bgASbuVi0S3@elver.google.com>
- <YzQcqe9p9C5ZbjZ1@elver.google.com>
- <YzRgcnMXWuUZ4rlt@elver.google.com>
- <Yzxou9HB/1XjMXWI@hirez.programming.kicks-ass.net>
- <CANpmjNPwiL279B5id5dPF821aXYdTUqsfDNAtB4q7jXX+41Qgg@mail.gmail.com>
- <Yz00IjTZjlsKlNvy@hirez.programming.kicks-ass.net>
+        Wed, 5 Oct 2022 04:36:10 -0400
+Received: from foss.arm.com (foss.arm.com [217.140.110.172])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTP id BF7D42126F
+        for <linux-perf-users@vger.kernel.org>; Wed,  5 Oct 2022 01:36:03 -0700 (PDT)
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 624FB113E;
+        Wed,  5 Oct 2022 01:36:10 -0700 (PDT)
+Received: from [192.168.99.12] (unknown [172.31.20.19])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id DF18A3F67D;
+        Wed,  5 Oct 2022 01:36:02 -0700 (PDT)
+Message-ID: <28ccecb4-46dc-41e8-5dce-efd847d11fc4@foss.arm.com>
+Date:   Wed, 5 Oct 2022 09:36:01 +0100
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <Yz00IjTZjlsKlNvy@hirez.programming.kicks-ass.net>
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
+ Thunderbird/102.2.0
+Subject: Re: [PATCH v9 00/13] perf: test: Add trace data quality tests for
+ CoreSight
+From:   Carsten Haitzler <carsten.haitzler@foss.arm.com>
+To:     coresight@lists.linaro.org
+Cc:     mathieu.poirier@linaro.org, mike.leach@linaro.org,
+        linux-perf-users@vger.kernel.org
+References: <20220909152803.2317006-1-carsten.haitzler@foss.arm.com>
+Content-Language: en-US
+Organization: Arm Ltd.
+In-Reply-To: <20220909152803.2317006-1-carsten.haitzler@foss.arm.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-On Wed, Oct 05, 2022 at 09:37:06AM +0200, Peter Zijlstra wrote:
-> On Tue, Oct 04, 2022 at 07:33:55PM +0200, Marco Elver wrote:
-> > It looks reasonable, but obviously needs to pass tests. :-)
-> 
-> Ikr :-)
-> 
-> > Also, see comment below (I think you're still turning signals
-> > asynchronous, which we shouldn't do).
-> 
-> Indeed so; I tried fixing that this morning, but so far that doesn't
-> seem to want to actually cure things :/ I'll need to stomp on this
-> harder.
-> 
-> Current hackery below. The main difference is that instead of trying to
-> restart the irq_work on sched_in, sched_out will now queue a task-work.
-> 
-> The event scheduling is done from 'regular' IRQ context and as such
-> there should be a return-to-userspace for the relevant task in the
-> immediate future (either directly or after scheduling).
-> 
-> Alas, something still isn't right...
+Ping? I didn't see an ACK or NAK?
 
-Oh, lol, *groan*... this fixes it:
-
-Now to find a sane way to inhibit this while a sig thing is pending :/
-
-diff --git a/kernel/events/core.c b/kernel/events/core.c
-index b981b879bcd8..92b6a2f6de1a 100644
---- a/kernel/events/core.c
-+++ b/kernel/events/core.c
-@@ -3426,7 +3434,7 @@ static void perf_event_context_sched_out(struct task_struct *task, int ctxn,
- 		 */
- 		raw_spin_lock(&ctx->lock);
- 		raw_spin_lock_nested(&next_ctx->lock, SINGLE_DEPTH_NESTING);
--		if (context_equiv(ctx, next_ctx)) {
-+		if (0 && context_equiv(ctx, next_ctx)) {
- 
- 			WRITE_ONCE(ctx->task, next);
- 			WRITE_ONCE(next_ctx->task, task);
+On 9/9/22 16:27, carsten.haitzler@foss.arm.com wrote:
+> From: Carsten Haitzler <carsten.haitzler@arm.com>
+> 
+> This series adds more test cases to perf test as well as new
+> infrastructure for testing coresight data quality to ensure the data
+> coming out of the kernel via perf actually contains useful information.
+> 
+> Signed-off-by: Carsten Haitzler <carsten.haitzler@arm.com>
+> 
+> 
+> Carsten Haitzler (13):
+>    perf test: Add CoreSight shell lib shared code for future tests
+>    perf test: Add build infra for perf test tools for CoreSight tests
+>    perf test: Add asm pureloop test tool
+>    perf test: Add asm pureloop test shell script
+>    perf test: Add git ignore for perf data generated by the CoreSight
+>      tests
+>    perf test: Add memcpy thread test tool
+>    perf test: Add memcpy thread test shell script
+>    perf test: Add thread loop test tool
+>    perf test: Add thread loop test shell scripts
+>    perf test: Add unroll thread test tool
+>    perf test: Add unroll thread test shell script
+>    perf test: Add git ignore for tmp and output files of CoreSight tests
+>    perf test: Add relevant documentation about CoreSight testing
+> 
+>   .../trace/coresight/coresight-perf.rst        | 158 ++++++++++++++++++
+>   MAINTAINERS                                   |   1 +
+>   tools/perf/.gitignore                         |   6 +-
+>   .../perf/Documentation/perf-arm-coresight.txt |   5 +
+>   tools/perf/Makefile.config                    |   2 +
+>   tools/perf/Makefile.perf                      |  15 +-
+>   tools/perf/tests/shell/coresight/Makefile     |  29 ++++
+>   .../tests/shell/coresight/Makefile.miniconfig |  14 ++
+>   .../tests/shell/coresight/asm_pure_loop.sh    |  18 ++
+>   .../shell/coresight/asm_pure_loop/.gitignore  |   1 +
+>   .../shell/coresight/asm_pure_loop/Makefile    |  34 ++++
+>   .../coresight/asm_pure_loop/asm_pure_loop.S   |  28 ++++
+>   .../shell/coresight/memcpy_thread/.gitignore  |   1 +
+>   .../shell/coresight/memcpy_thread/Makefile    |  33 ++++
+>   .../coresight/memcpy_thread/memcpy_thread.c   |  79 +++++++++
+>   .../shell/coresight/memcpy_thread_16k_10.sh   |  18 ++
+>   .../shell/coresight/thread_loop/.gitignore    |   1 +
+>   .../shell/coresight/thread_loop/Makefile      |  33 ++++
+>   .../shell/coresight/thread_loop/thread_loop.c |  86 ++++++++++
+>   .../coresight/thread_loop_check_tid_10.sh     |  19 +++
+>   .../coresight/thread_loop_check_tid_2.sh      |  19 +++
+>   .../coresight/unroll_loop_thread/.gitignore   |   1 +
+>   .../coresight/unroll_loop_thread/Makefile     |  33 ++++
+>   .../unroll_loop_thread/unroll_loop_thread.c   |  74 ++++++++
+>   .../shell/coresight/unroll_loop_thread_10.sh  |  18 ++
+>   tools/perf/tests/shell/lib/coresight.sh       | 132 +++++++++++++++
+>   26 files changed, 854 insertions(+), 4 deletions(-)
+>   create mode 100644 Documentation/trace/coresight/coresight-perf.rst
+>   create mode 100644 tools/perf/Documentation/perf-arm-coresight.txt
+>   create mode 100644 tools/perf/tests/shell/coresight/Makefile
+>   create mode 100644 tools/perf/tests/shell/coresight/Makefile.miniconfig
+>   create mode 100755 tools/perf/tests/shell/coresight/asm_pure_loop.sh
+>   create mode 100644 tools/perf/tests/shell/coresight/asm_pure_loop/.gitignore
+>   create mode 100644 tools/perf/tests/shell/coresight/asm_pure_loop/Makefile
+>   create mode 100644 tools/perf/tests/shell/coresight/asm_pure_loop/asm_pure_loop.S
+>   create mode 100644 tools/perf/tests/shell/coresight/memcpy_thread/.gitignore
+>   create mode 100644 tools/perf/tests/shell/coresight/memcpy_thread/Makefile
+>   create mode 100644 tools/perf/tests/shell/coresight/memcpy_thread/memcpy_thread.c
+>   create mode 100755 tools/perf/tests/shell/coresight/memcpy_thread_16k_10.sh
+>   create mode 100644 tools/perf/tests/shell/coresight/thread_loop/.gitignore
+>   create mode 100644 tools/perf/tests/shell/coresight/thread_loop/Makefile
+>   create mode 100644 tools/perf/tests/shell/coresight/thread_loop/thread_loop.c
+>   create mode 100755 tools/perf/tests/shell/coresight/thread_loop_check_tid_10.sh
+>   create mode 100755 tools/perf/tests/shell/coresight/thread_loop_check_tid_2.sh
+>   create mode 100644 tools/perf/tests/shell/coresight/unroll_loop_thread/.gitignore
+>   create mode 100644 tools/perf/tests/shell/coresight/unroll_loop_thread/Makefile
+>   create mode 100644 tools/perf/tests/shell/coresight/unroll_loop_thread/unroll_loop_thread.c
+>   create mode 100755 tools/perf/tests/shell/coresight/unroll_loop_thread_10.sh
+>   create mode 100644 tools/perf/tests/shell/lib/coresight.sh
+> 
