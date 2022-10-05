@@ -2,81 +2,144 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 103E0C433F5
-	for <linux-perf-users@archiver.kernel.org>; Wed,  5 Oct 2022 18:24:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E06EDC433F5
+	for <linux-perf-users@archiver.kernel.org>; Wed,  5 Oct 2022 18:35:52 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229797AbiJESYN (ORCPT
+        id S229661AbiJESfv (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Wed, 5 Oct 2022 14:24:13 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40682 "EHLO
+        Wed, 5 Oct 2022 14:35:51 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59692 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229735AbiJESYM (ORCPT
+        with ESMTP id S230064AbiJESfu (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Wed, 5 Oct 2022 14:24:12 -0400
+        Wed, 5 Oct 2022 14:35:50 -0400
 Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A68D01D0DB;
-        Wed,  5 Oct 2022 11:24:11 -0700 (PDT)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 81E207DF4F
+        for <linux-perf-users@vger.kernel.org>; Wed,  5 Oct 2022 11:35:47 -0700 (PDT)
 Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id 41532615F9;
-        Wed,  5 Oct 2022 18:24:11 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 7E1A1C433D6;
-        Wed,  5 Oct 2022 18:24:10 +0000 (UTC)
+        by dfw.source.kernel.org (Postfix) with ESMTPS id 05E4761792
+        for <linux-perf-users@vger.kernel.org>; Wed,  5 Oct 2022 18:35:47 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 17B1BC433C1;
+        Wed,  5 Oct 2022 18:35:46 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1664994250;
-        bh=JbdwwCgjNMpYuLISqpgFxX9LIJrUbzsmLwEthcqcwFg=;
+        s=k20201202; t=1664994946;
+        bh=oTOv3ob7nyHCGynCxQC4qM4NgrtDY59muJIqqgw6HO0=;
         h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=NH5nmJUxHQAsXbkpQeEHtE6L6MpAuBvgDsh7xriVeBGEC2pN6CVx7ug/PiimZnWQX
-         09SucxMUJ1d+izuNUAZvSWduKZZgcLGilrBotMQCY4FPx5L2QprQWMnfR1GhK2jakH
-         OvigDcmFHPYMH+oYSJAJC/mFWex9310O9D/Vl261vB4VENDG/u30kqhadveWIDiHFa
-         e/eEe9EDBzn77dGx4IGQ+/R3gt/8mNsKAYuh4CAJrh3ixEHXprkEqvje+Ot9EFeoEw
-         S3FPzgRzBCgStoyGdDzt63i5M0uEMIUS1ZmInzWNNum4nemmXB6LGEYeD0Yz6SiiPx
-         iidkvwRSeMVVw==
+        b=YiT1tfuELFkY4F2zmcD8p1VeqWArh3kSZ1jvb+G1DG4eSr7kR9Fp+PDrzT6ojrZQg
+         iDUl/RKyyr1un6tDOG6hQqaCIFuwx0IPXvOMA72ybdfQPdcmeBp+Af5F77v2gbZe8a
+         Oo6kAMwPczFZsWiAZsQ6Ua/frCh466w9do8vRfcJbd+Y0tFBJ1VOvS5n5vviKjqRBm
+         9mxJ+RzkZG9UabGHwUAjsUxH8uFhnUf8JPdgl39Rxk0ceT9rkhIgT2/WSq0+OvomnQ
+         z6kV3EVpHCf+HZR9qpl/BhQmSI1yylDiG1w4OGKHHB48+Lzol4rN9m/i62lYaKDR8c
+         UpHfjall0P0IA==
 Received: by quaco.ghostprotocols.net (Postfix, from userid 1000)
-        id 255114062C; Wed,  5 Oct 2022 15:24:08 -0300 (-03)
-Date:   Wed, 5 Oct 2022 15:24:08 -0300
+        id CFD704062C; Wed,  5 Oct 2022 15:35:43 -0300 (-03)
+Date:   Wed, 5 Oct 2022 15:35:43 -0300
 From:   Arnaldo Carvalho de Melo <acme@kernel.org>
-To:     Namhyung Kim <namhyung@kernel.org>
-Cc:     Jiri Olsa <jolsa@kernel.org>, Ingo Molnar <mingo@kernel.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Ian Rogers <irogers@google.com>,
-        Adrian Hunter <adrian.hunter@intel.com>,
-        linux-perf-users <linux-perf-users@vger.kernel.org>
-Subject: Re: [PATCH v2 2/2] perf record: Save DSO build-ID for synthesizing
-Message-ID: <Yz3LyPfSDPcohoXG@kernel.org>
-References: <20220920222822.2171056-1-namhyung@kernel.org>
- <20220920222822.2171056-2-namhyung@kernel.org>
- <YysWn/W3+dXlZnYG@kernel.org>
- <CAM9d7cjtrVsccWUOCAtz1LbHoYxx7uV4SCaBMLdME-pdZjmjfw@mail.gmail.com>
- <CAM9d7ch1GG2xjOpPwMf0q88CWtX2DdSiRXDJX6vevTk_1g+USw@mail.gmail.com>
+To:     Carsten Haitzler <carsten.haitzler@foss.arm.com>
+Cc:     coresight@lists.linaro.org, mathieu.poirier@linaro.org,
+        mike.leach@linaro.org, linux-perf-users@vger.kernel.org
+Subject: Re: [PATCH v9 00/13] perf: test: Add trace data quality tests for
+ CoreSight
+Message-ID: <Yz3Of4+rs1ZB3n8t@kernel.org>
+References: <20220909152803.2317006-1-carsten.haitzler@foss.arm.com>
+ <28ccecb4-46dc-41e8-5dce-efd847d11fc4@foss.arm.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <CAM9d7ch1GG2xjOpPwMf0q88CWtX2DdSiRXDJX6vevTk_1g+USw@mail.gmail.com>
+In-Reply-To: <28ccecb4-46dc-41e8-5dce-efd847d11fc4@foss.arm.com>
 X-Url:  http://acmel.wordpress.com
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-Em Wed, Oct 05, 2022 at 10:50:01AM -0700, Namhyung Kim escreveu:
-> On Wed, Sep 21, 2022 at 10:55 AM Namhyung Kim <namhyung@kernel.org> wrote:
-> > On Wed, Sep 21, 2022 at 6:50 AM Arnaldo Carvalho de Melo <acme@kernel.org> wrote:
-> > > Em Tue, Sep 20, 2022 at 03:28:22PM -0700, Namhyung Kim escreveu:
-> > > > When synthesizing MMAP2 with build-id, it'd read the same file repeatedly as
-> > > > it has no idea if it's done already.  Maintain a dsos to check that and skip
-> > > > the file access if possible.
-> > > >
-> > > > Signed-off-by: Namhyung Kim <namhyung@kernel.org>
-> > > > ---
-> > > > v2 change)
-> > > >  * Remove perf_event__synthesize_{start,stop} and use machine->dsos  (Adrian)
-> > >
-> > > Will wait till I merge perf/urgent into perf/core so that this applies.
-> 
-> I think it's doable now :)
+Em Wed, Oct 05, 2022 at 09:36:01AM +0100, Carsten Haitzler escreveu:
+> Ping? I didn't see an ACK or NAK?
 
-Sure, applied! :-)
+I need to get the board I got at Kernel Recipes running to check if I
+can test this patchkit with it, meanwhile, Leo, Mathieu, James, can
+someone from the ARM camp continue reviewing this kit?
+
+- Arnaldo
+ 
+> On 9/9/22 16:27, carsten.haitzler@foss.arm.com wrote:
+> > From: Carsten Haitzler <carsten.haitzler@arm.com>
+> > 
+> > This series adds more test cases to perf test as well as new
+> > infrastructure for testing coresight data quality to ensure the data
+> > coming out of the kernel via perf actually contains useful information.
+> > 
+> > Signed-off-by: Carsten Haitzler <carsten.haitzler@arm.com>
+> > 
+> > 
+> > Carsten Haitzler (13):
+> >    perf test: Add CoreSight shell lib shared code for future tests
+> >    perf test: Add build infra for perf test tools for CoreSight tests
+> >    perf test: Add asm pureloop test tool
+> >    perf test: Add asm pureloop test shell script
+> >    perf test: Add git ignore for perf data generated by the CoreSight
+> >      tests
+> >    perf test: Add memcpy thread test tool
+> >    perf test: Add memcpy thread test shell script
+> >    perf test: Add thread loop test tool
+> >    perf test: Add thread loop test shell scripts
+> >    perf test: Add unroll thread test tool
+> >    perf test: Add unroll thread test shell script
+> >    perf test: Add git ignore for tmp and output files of CoreSight tests
+> >    perf test: Add relevant documentation about CoreSight testing
+> > 
+> >   .../trace/coresight/coresight-perf.rst        | 158 ++++++++++++++++++
+> >   MAINTAINERS                                   |   1 +
+> >   tools/perf/.gitignore                         |   6 +-
+> >   .../perf/Documentation/perf-arm-coresight.txt |   5 +
+> >   tools/perf/Makefile.config                    |   2 +
+> >   tools/perf/Makefile.perf                      |  15 +-
+> >   tools/perf/tests/shell/coresight/Makefile     |  29 ++++
+> >   .../tests/shell/coresight/Makefile.miniconfig |  14 ++
+> >   .../tests/shell/coresight/asm_pure_loop.sh    |  18 ++
+> >   .../shell/coresight/asm_pure_loop/.gitignore  |   1 +
+> >   .../shell/coresight/asm_pure_loop/Makefile    |  34 ++++
+> >   .../coresight/asm_pure_loop/asm_pure_loop.S   |  28 ++++
+> >   .../shell/coresight/memcpy_thread/.gitignore  |   1 +
+> >   .../shell/coresight/memcpy_thread/Makefile    |  33 ++++
+> >   .../coresight/memcpy_thread/memcpy_thread.c   |  79 +++++++++
+> >   .../shell/coresight/memcpy_thread_16k_10.sh   |  18 ++
+> >   .../shell/coresight/thread_loop/.gitignore    |   1 +
+> >   .../shell/coresight/thread_loop/Makefile      |  33 ++++
+> >   .../shell/coresight/thread_loop/thread_loop.c |  86 ++++++++++
+> >   .../coresight/thread_loop_check_tid_10.sh     |  19 +++
+> >   .../coresight/thread_loop_check_tid_2.sh      |  19 +++
+> >   .../coresight/unroll_loop_thread/.gitignore   |   1 +
+> >   .../coresight/unroll_loop_thread/Makefile     |  33 ++++
+> >   .../unroll_loop_thread/unroll_loop_thread.c   |  74 ++++++++
+> >   .../shell/coresight/unroll_loop_thread_10.sh  |  18 ++
+> >   tools/perf/tests/shell/lib/coresight.sh       | 132 +++++++++++++++
+> >   26 files changed, 854 insertions(+), 4 deletions(-)
+> >   create mode 100644 Documentation/trace/coresight/coresight-perf.rst
+> >   create mode 100644 tools/perf/Documentation/perf-arm-coresight.txt
+> >   create mode 100644 tools/perf/tests/shell/coresight/Makefile
+> >   create mode 100644 tools/perf/tests/shell/coresight/Makefile.miniconfig
+> >   create mode 100755 tools/perf/tests/shell/coresight/asm_pure_loop.sh
+> >   create mode 100644 tools/perf/tests/shell/coresight/asm_pure_loop/.gitignore
+> >   create mode 100644 tools/perf/tests/shell/coresight/asm_pure_loop/Makefile
+> >   create mode 100644 tools/perf/tests/shell/coresight/asm_pure_loop/asm_pure_loop.S
+> >   create mode 100644 tools/perf/tests/shell/coresight/memcpy_thread/.gitignore
+> >   create mode 100644 tools/perf/tests/shell/coresight/memcpy_thread/Makefile
+> >   create mode 100644 tools/perf/tests/shell/coresight/memcpy_thread/memcpy_thread.c
+> >   create mode 100755 tools/perf/tests/shell/coresight/memcpy_thread_16k_10.sh
+> >   create mode 100644 tools/perf/tests/shell/coresight/thread_loop/.gitignore
+> >   create mode 100644 tools/perf/tests/shell/coresight/thread_loop/Makefile
+> >   create mode 100644 tools/perf/tests/shell/coresight/thread_loop/thread_loop.c
+> >   create mode 100755 tools/perf/tests/shell/coresight/thread_loop_check_tid_10.sh
+> >   create mode 100755 tools/perf/tests/shell/coresight/thread_loop_check_tid_2.sh
+> >   create mode 100644 tools/perf/tests/shell/coresight/unroll_loop_thread/.gitignore
+> >   create mode 100644 tools/perf/tests/shell/coresight/unroll_loop_thread/Makefile
+> >   create mode 100644 tools/perf/tests/shell/coresight/unroll_loop_thread/unroll_loop_thread.c
+> >   create mode 100755 tools/perf/tests/shell/coresight/unroll_loop_thread_10.sh
+> >   create mode 100644 tools/perf/tests/shell/lib/coresight.sh
+> > 
+
+-- 
 
 - Arnaldo
