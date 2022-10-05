@@ -2,215 +2,133 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3C770C433FE
-	for <linux-perf-users@archiver.kernel.org>; Wed,  5 Oct 2022 12:35:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0BA5FC433F5
+	for <linux-perf-users@archiver.kernel.org>; Wed,  5 Oct 2022 12:47:31 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229618AbiJEMfm (ORCPT
+        id S229929AbiJEMr2 (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Wed, 5 Oct 2022 08:35:42 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36962 "EHLO
+        Wed, 5 Oct 2022 08:47:28 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51018 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229532AbiJEMfk (ORCPT
+        with ESMTP id S229993AbiJEMr1 (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Wed, 5 Oct 2022 08:35:40 -0400
-Received: from ams.source.kernel.org (ams.source.kernel.org [145.40.68.75])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 330EB543C8
-        for <linux-perf-users@vger.kernel.org>; Wed,  5 Oct 2022 05:35:39 -0700 (PDT)
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by ams.source.kernel.org (Postfix) with ESMTPS id DC45CB81CA3
-        for <linux-perf-users@vger.kernel.org>; Wed,  5 Oct 2022 12:35:37 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 371E6C433D6;
-        Wed,  5 Oct 2022 12:35:36 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1664973336;
-        bh=n3uxAPagq6lhuYs2Q/ymQSQ+tG2YXiSgBL5FgiUtu/c=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=FqMsFoM5vTIhFqyhXgJtDfTuVICFjtgXn1XVyDRkSY7KoL3o94nvmH0Z/fzYHEHF8
-         /igRAE/G2C4O4BiQflN/wjuo4rlANzlDeKQiTqvkA92M4HveMEw7qxXtHDWz/QV4GM
-         7BxVBuelfhM1UX9cKRuScojDBFOkfPBsjbKO6+LnRtl/INRVt4F7H4LGqyoNqVTtqO
-         T2WF65EUaJESmVMth/er+W567aVjCJQvDbmg0XuztMI1OBVIa0K/ChmSFqhmx00CoK
-         z3ibMkSaSKvuAfs63/H+hZcU8wTb7jL3APAE8lUAEjeME4sYvB4co1Nxqe+7e3F4kb
-         GAWPwM4Hq66+A==
-Received: by quaco.ghostprotocols.net (Postfix, from userid 1000)
-        id AEF0E4062C; Wed,  5 Oct 2022 09:35:33 -0300 (-03)
-Date:   Wed, 5 Oct 2022 09:35:33 -0300
-From:   Arnaldo Carvalho de Melo <acme@kernel.org>
-To:     Athira Rajeev <atrajeev@linux.vnet.ibm.com>
-Cc:     Ian Rogers <irogers@google.com>, James Clark <james.clark@arm.com>,
-        atrajeev <atrajeev@imap.linux.ibm.com>, maddy@linux.vnet.ibm.com,
-        Nageswara Sastry <rnsastry@linux.ibm.com>,
-        Kajol Jain <kjain@linux.ibm.com>,
-        linux-perf-users <linux-perf-users@vger.kernel.org>,
-        Jiri Olsa <jolsa@kernel.org>,
-        Disha Goel <disgoel@linux.vnet.ibm.com>,
-        linuxppc-dev@lists.ozlabs.org
-Subject: Re: [PATCH] tools/perf: Fix aggr_printout to display cpu field
- irrespective of core value
-Message-ID: <Yz16FdcUF+Wn8xvA@kernel.org>
-References: <6627ae9a-91e3-0923-1234-54e0fc3f4916@arm.com>
- <CAP-5=fVBzLfhfwPjxE_9DNeesPaPxf3k0b5T5S6THzB1H85mrA@mail.gmail.com>
- <993a1391ee931e859d972c460644d171@imap.linux.ibm.com>
- <CAP-5=fWJ0YBxdCarpNSfbzoAZ9uTAtgj4CdR7sQU8748Y-+DVA@mail.gmail.com>
- <6A5D0603-CF66-43B4-A13F-0308CF01967A@linux.vnet.ibm.com>
- <CAP-5=fU=bwv-e_53QagWsKvW8wjibOjfGvnivWFFVba5A55boA@mail.gmail.com>
- <Yzx4A+2I4yWTlbEn@kernel.org>
- <Yzx4ET7QU2VpCcsx@kernel.org>
- <137635B2-F4E8-4C65-B797-5C6511E265A8@linux.vnet.ibm.com>
- <Yz14hG3EVJPph11m@kernel.org>
+        Wed, 5 Oct 2022 08:47:27 -0400
+Received: from mail-oa1-x2c.google.com (mail-oa1-x2c.google.com [IPv6:2001:4860:4864:20::2c])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B0FFB6AEAD;
+        Wed,  5 Oct 2022 05:47:24 -0700 (PDT)
+Received: by mail-oa1-x2c.google.com with SMTP id 586e51a60fabf-1326637be6eso10021715fac.13;
+        Wed, 05 Oct 2022 05:47:24 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20210112;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=QQwVjfadNqZW8ikL3wi9R3vG+Nc3CEgj6ovjb2hCVtU=;
+        b=fo16wAqq2hy/DhK2W/CRuW3tjyWARX5sJyYBlhNTKSRVo1KqiaBRXFnATX3rGwSdDO
+         BOuLqi6jWC16tS1ZJknhTbXvqVKaQ7UUnw8mv5GEXalDhde+rJBVPEhg0mjaPVT996Zm
+         XUMyOBQCr3WSugwOUOuhZoP/BPKLf2f25CHsQPKey9t3yNjuWcmpISJTGgOdvlmVB3Wd
+         OuKLIjzv/Ai2i8yNfGjDIha9YmyNoAUIEMzT4VPM6DdqgIUCpYLrfh4bnvGR65prqEUX
+         9pCVH2XlFWwHyPUhP/CLghtILOgdSZNVbTBezScpLST2ONb+dKMNnCdEo/GtGfbV0xji
+         HlGQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=QQwVjfadNqZW8ikL3wi9R3vG+Nc3CEgj6ovjb2hCVtU=;
+        b=50GawyQC+AS2dIxSkadEQOyl/rGWEXAWEEj7kv44DvdkWpW9dHtyvRrKzVjysVtSPJ
+         RiQUdfsQ+CmtrAQIn3Kbk/nvD0IRE9Fmb7HfGpazJzLuhfrb4P/EV/OBSZmvAJPP4vDs
+         Lkqm0JUpe0H/OGVwvVTC9W0dTxE0aY8S5FXjfVtQhHAHBRC9L/pPg8C6nzNdJPWUY8eE
+         nHf8wsBJ3x10yezJNgv0DZiNWzPSz/fmLDVW7Et2WpIY7X2c+eaoQNVPWh2nMQxUbRvX
+         2DW58CaY+7cVcaWlg/jDrjWmRkz7JVKtqK0/dVr7kgLNdzQAnEGJ23J1bdZzX6RKtNA1
+         Iu6g==
+X-Gm-Message-State: ACrzQf2jgXl1UULjPmKj9BOCZ+WZ1DEeohNEy9wUdfdq+ZEhOvaUgG3s
+        DNsXd/LX1HdkRSbUflmhQ7g=
+X-Google-Smtp-Source: AMsMyM6KFer6Ik+jAAU3lQ1mgaudElUCRCqCnxgx+YG6dwCfw/ha4tA5vfBQgEF5HrwwL1V4+4AjDA==
+X-Received: by 2002:a05:6870:c689:b0:132:f58f:60d7 with SMTP id cv9-20020a056870c68900b00132f58f60d7mr29517oab.166.1664974044079;
+        Wed, 05 Oct 2022 05:47:24 -0700 (PDT)
+Received: from localhost.localdomain ([177.222.37.214])
+        by smtp.googlemail.com with ESMTPSA id p189-20020acabfc6000000b00350f17527fesm4139824oif.28.2022.10.05.05.47.21
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 05 Oct 2022 05:47:23 -0700 (PDT)
+From:   Henry Castro <hcvcastro@gmail.com>
+To:     namhyung@kernel.org
+Cc:     Henry Castro <hcvcastro@gmail.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        Arnaldo Carvalho de Melo <acme@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Jiri Olsa <jolsa@kernel.org>, linux-perf-users@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: [PATCH v3] perf: fix the probe finder location (.dwo files)
+Date:   Wed,  5 Oct 2022 08:47:02 -0400
+Message-Id: <20221005124710.30296-1-hcvcastro@gmail.com>
+X-Mailer: git-send-email 2.20.1
+In-Reply-To: <CAM9d7cgMjZPa9qwuzpG3usGJvKiAQCOvN8_W0RuakNqcZ2t8-g@mail.gmail.com>
+References: <CAM9d7cgMjZPa9qwuzpG3usGJvKiAQCOvN8_W0RuakNqcZ2t8-g@mail.gmail.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <Yz14hG3EVJPph11m@kernel.org>
-X-Url:  http://acmel.wordpress.com
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-Em Wed, Oct 05, 2022 at 09:28:52AM -0300, Arnaldo Carvalho de Melo escreveu:
-> Em Wed, Oct 05, 2022 at 10:23:39AM +0530, Athira Rajeev escreveu:
-> > diff --git a/tools/perf/util/stat-display.c b/tools/perf/util/stat-display.c
-> > index b82844cb0ce7..cf28020798ec 100644
-> > --- a/tools/perf/util/stat-display.c
-> > +++ b/tools/perf/util/stat-display.c
-> > @@ -168,7 +168,7 @@ static void aggr_printout(struct perf_stat_config *config,
-> > 					id.socket,
-> > 					id.die,
-> > 					id.core);
-> > -			} else if (id.core > -1) {
-> > +			} else if (id.cpu.cpu > -1) {
-> > 				fprintf(config->output, "\"cpu\" : \"%d\", ",
-> > 					id.cpu.cpu);
-> > 			}
-> > @@ -179,7 +179,7 @@ static void aggr_printout(struct perf_stat_config *config,
-> > 					id.die,
-> > 					config->csv_output ? 0 : -3,
-> > 					id.core, config->csv_sep);
-> > -			} else if (id.core > -1) {
-> > +			} else if (id.cpu.cpu > -1) {
-> > 				fprintf(config->output, "CPU%*d%s",
-> > 					config->csv_output ? 0 : -7,
-> > 					id.cpu.cpu, config->csv_sep);
-> > -- 
-> > If it is confusing, shall I send it as a separate patch along with Tested-by from Ian ?
-> 
-> I'll have to do this by hand, tried pointing b4 to this message and it
-> picked the old one, also tried to save the message and apply by hand,
-> its mangled.
+If the file object is compiled using -gsplit-dwarf,
+the probe finder location will fail.
 
-This is what I have now, will force push later, please triple check :-)
-
-- Arnaldo
-
-From b7dd96f9211e4ddbd6fa080da8dec2eac98d3f2a Mon Sep 17 00:00:00 2001
-From: Athira Rajeev <atrajeev@linux.vnet.ibm.com>
-Date: Tue, 13 Sep 2022 17:27:17 +0530
-Subject: [PATCH 1/1] perf stat: Fix aggr_printout to display CPU field
- irrespective of core value
-
-perf stat includes option to specify aggr_mode to display per-socket,
-per-core, per-die, per-node counter details.  Also there is option -A (
-AGGR_NONE, -no-aggr ), where the counter values are displayed for each
-CPU along with "CPU" value in one field of the output.
-
-Each of the aggregate mode uses the information fetched from
-"/sys/devices/system/cpu/cpuX/topology" like core_id,
-physical_package_id. Utility functions in "cpumap.c" fetches this
-information and populates the socket id, core id, CPU etc.  If the
-platform does not expose the topology information, these values will be
-set to -1. Example, in case of powerpc, details like physical_package_id
-is restricted to be exposed in pSeries platform. So id.socket, id.core,
-id.cpu all will be set as -1.
-
-In case of displaying socket or die value, there is no check done in the
-"aggr_printout" function to see if it points to valid socket id or die.
-But for displaying "cpu" value, there is a check for "if (id.core >
--1)". In case of powerpc pSeries where detail like physical_package_id
-is restricted to be exposed, id.core will be set to -1. Hence the column
-or field itself for CPU won't be displayed in the output.
-
-Result for per-socket:
-
-  perf stat -e branches --per-socket -a true
-
-   Performance counter stats for 'system wide':
-
-  S-1      32            416,851      branches
-
-Here S has -1 in above result. But with -A option which also expects CPU
-in one column in the result, below is observed.
-
-  perf stat -e instructions -A -a true
-
-   Performance counter stats for 'system wide':
-
-            47,146      instructions
-            45,226      instructions
-            43,354      instructions
-            45,184      instructions
-
-If the CPU id value is pointing to -1 also, it makes sense to display
-the column in the output to replicate the behaviour or to be in
-precedence with other aggr options(like per-socket, per-core). Remove
-the check "id.core" so that CPU field gets displayed in the output.
-
-After the fix:
-
-  perf stat -e instructions -A -a true
-
-   Performance counter stats for 'system wide':
-
-  CPU-1                  64,034      instructions
-  CPU-1                  68,941      instructions
-  CPU-1                  59,418      instructions
-  CPU-1                  70,478      instructions
-  CPU-1                  65,201      instructions
-  CPU-1                  63,704      instructions
-
-This is caught while running "perf test" for "stat+json_output.sh" and
-"stat+csv_output.sh".
-
-Reported-by: Disha Goel <disgoel@linux.vnet.ibm.com>
-Suggested-by: Ian Rogers <irogers@google.com>
-Suggested-by: James Clark <james.clark@arm.com>
-Signed-off-by: Athira Jajeev <atrajeev@linux.vnet.ibm.com>
-Tested-by: Disha Goel <disgoel@linux.vnet.ibm.com>
-Tested-by: Ian Rogers <irogers@google.com>
-Cc: Jiri Olsa <jolsa@kernel.org>
-Cc: Kajol Jain <kjain@linux.ibm.com>
-Cc: Madhavan Srinivasan <maddy@linux.vnet.ibm.com>
-Cc: Michael Ellerman <mpe@ellerman.id.au>
-Cc: Nageswara R Sastry <rnsastry@linux.ibm.com>
-Cc: linuxppc-dev@lists.ozlabs.org
-Link: https://lore.kernel.org/r/20220913115717.36191-1-atrajeev@linux.vnet.ibm.com
-Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
+Signed-off-by: Henry Castro <hcvcastro@gmail.com>
 ---
- tools/perf/util/stat-display.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/tools/perf/util/stat-display.c b/tools/perf/util/stat-display.c
-index df26fb5eb072be9f..5c47ee9963a7c04c 100644
---- a/tools/perf/util/stat-display.c
-+++ b/tools/perf/util/stat-display.c
-@@ -168,7 +168,7 @@ static void aggr_printout(struct perf_stat_config *config,
- 					id.socket,
- 					id.die,
- 					id.core);
--			} else if (id.core > -1) {
-+			} else if (id.cpu.cpu > -1) {
- 				fprintf(config->output, "\"cpu\" : \"%d\", ",
- 					id.cpu.cpu);
- 			}
-@@ -179,7 +179,7 @@ static void aggr_printout(struct perf_stat_config *config,
- 					id.die,
- 					config->csv_output ? 0 : -3,
- 					id.core, config->csv_sep);
--			} else if (id.core > -1) {
-+			} else if (id.cpu.cpu > -1) {
- 				fprintf(config->output, "CPU%*d%s",
- 					config->csv_output ? 0 : -7,
- 					id.cpu.cpu, config->csv_sep);
--- 
-2.37.3
+> Nit, I think we use _ELFUTILS_PREREQ(0, 171).
+Thank you
+
+> How about making it a separate function with 2 versions
+> depending on the elfutils?  Then you can have the variables
+> only if they are used.
+
+> Something like get_source_from_debuginfod() in the same
+> file.
+
+Sounds good, but I prefer simplicity in the patch =),
+what do you think about
+{
+	Dwarf_Die cudie, subdie;
+	if (dwarf_cu_info() ..)
+	..
+}
+
+to resolve unused variable?
+}
+
+
+ tools/perf/util/probe-finder.c | 14 ++++++++++++++
+ 1 file changed, 14 insertions(+)
+
+diff --git a/tools/perf/util/probe-finder.c b/tools/perf/util/probe-finder.c
+index 50d861a80f57..5f6781e712db 100644
+--- a/tools/perf/util/probe-finder.c
++++ b/tools/perf/util/probe-finder.c
+@@ -1200,6 +1200,20 @@ static int debuginfo__find_probe_location(struct debuginfo *dbg,
+ 			continue;
+ 		}
+
++#if _ELFUTILS_PREREQ(0, 171)
++		{
++			uint8_t unit_type;
++			Dwarf_Die cudie, subdie;
++
++			/* Check separate debug information file. */
++			if (dwarf_cu_info(pf->cu_die.cu, NULL,
++					  &unit_type, &cudie,
++					  &subdie, NULL,
++					  NULL, NULL) == 0
++			    && unit_type == DW_UT_skeleton)
++				pf->cu_die = subdie;
++		}
++#endif
+ 		/* Check if target file is included. */
+ 		if (pp->file)
+ 			pf->fname = cu_find_realpath(&pf->cu_die, pp->file);
+--
+2.20.1
 
