@@ -2,144 +2,151 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E06EDC433F5
-	for <linux-perf-users@archiver.kernel.org>; Wed,  5 Oct 2022 18:35:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DB4CBC433F5
+	for <linux-perf-users@archiver.kernel.org>; Wed,  5 Oct 2022 21:56:09 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229661AbiJESfv (ORCPT
+        id S229575AbiJEV4I (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Wed, 5 Oct 2022 14:35:51 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59692 "EHLO
+        Wed, 5 Oct 2022 17:56:08 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43640 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230064AbiJESfu (ORCPT
+        with ESMTP id S229596AbiJEV4H (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Wed, 5 Oct 2022 14:35:50 -0400
-Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 81E207DF4F
-        for <linux-perf-users@vger.kernel.org>; Wed,  5 Oct 2022 11:35:47 -0700 (PDT)
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id 05E4761792
-        for <linux-perf-users@vger.kernel.org>; Wed,  5 Oct 2022 18:35:47 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 17B1BC433C1;
-        Wed,  5 Oct 2022 18:35:46 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1664994946;
-        bh=oTOv3ob7nyHCGynCxQC4qM4NgrtDY59muJIqqgw6HO0=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=YiT1tfuELFkY4F2zmcD8p1VeqWArh3kSZ1jvb+G1DG4eSr7kR9Fp+PDrzT6ojrZQg
-         iDUl/RKyyr1un6tDOG6hQqaCIFuwx0IPXvOMA72ybdfQPdcmeBp+Af5F77v2gbZe8a
-         Oo6kAMwPczFZsWiAZsQ6Ua/frCh466w9do8vRfcJbd+Y0tFBJ1VOvS5n5vviKjqRBm
-         9mxJ+RzkZG9UabGHwUAjsUxH8uFhnUf8JPdgl39Rxk0ceT9rkhIgT2/WSq0+OvomnQ
-         z6kV3EVpHCf+HZR9qpl/BhQmSI1yylDiG1w4OGKHHB48+Lzol4rN9m/i62lYaKDR8c
-         UpHfjall0P0IA==
-Received: by quaco.ghostprotocols.net (Postfix, from userid 1000)
-        id CFD704062C; Wed,  5 Oct 2022 15:35:43 -0300 (-03)
-Date:   Wed, 5 Oct 2022 15:35:43 -0300
-From:   Arnaldo Carvalho de Melo <acme@kernel.org>
-To:     Carsten Haitzler <carsten.haitzler@foss.arm.com>
-Cc:     coresight@lists.linaro.org, mathieu.poirier@linaro.org,
-        mike.leach@linaro.org, linux-perf-users@vger.kernel.org
-Subject: Re: [PATCH v9 00/13] perf: test: Add trace data quality tests for
- CoreSight
-Message-ID: <Yz3Of4+rs1ZB3n8t@kernel.org>
-References: <20220909152803.2317006-1-carsten.haitzler@foss.arm.com>
- <28ccecb4-46dc-41e8-5dce-efd847d11fc4@foss.arm.com>
+        Wed, 5 Oct 2022 17:56:07 -0400
+Received: from mail-pf1-x42b.google.com (mail-pf1-x42b.google.com [IPv6:2607:f8b0:4864:20::42b])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 814E47F09C
+        for <linux-perf-users@vger.kernel.org>; Wed,  5 Oct 2022 14:56:06 -0700 (PDT)
+Received: by mail-pf1-x42b.google.com with SMTP id g28so207420pfk.8
+        for <linux-perf-users@vger.kernel.org>; Wed, 05 Oct 2022 14:56:06 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20210112;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date;
+        bh=8Pm7ryG24AwEz26lUQ3ZeFC6zq7cw9NWM/gooLAfALU=;
+        b=AeGTAH1qBklqxpEo2vkcmEcRdYKPcxJMLw1EDD69Voxgucq1qWXkuWtpw0hbFOksBD
+         T2x3k5SN/zcyEoWATrm8D40aJyi6q8dQX7OZiAGgR0C09ypu0qh3/LufYyj8XS2QT6dS
+         kExPzR5TV/VT/yZy+yntCBO4FeNxGBpLoyX9H4AWXJM4fia6VUTK20B8CVFVNtgZ4jUx
+         Byc8ttTJFq4HTvTdNsdeAOqZ3tRaC8Md3meGvUL9dL7ICZUASUVgoW/vaZh9q3zriNdV
+         PytRMfPfXNBNQPkS5cz3jjk7OBBN1JRpG7UcALq+uTnGDrF91HEhorMi+aewRQujzdWc
+         40Ow==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date;
+        bh=8Pm7ryG24AwEz26lUQ3ZeFC6zq7cw9NWM/gooLAfALU=;
+        b=oaHKfhzTcqWKXW+0Jg0jIgWk17mrakQRGPqjqB1TGFBEsnlDmIl/6ANZgG/cUZYqpV
+         r7K9VGdU2xVgSylA27tvKY7sSZKAsxj4IJK3k+o/Hb5VeUpaOwynaTu4HA+v6XbbJ7ce
+         QQpQfzeTzKcJK6Vlm1OSSiy8est325oreIo/HVuFVtaOqpe0YlYUwGdYVu5lSpZU7bU0
+         +nXp6G3ha3Rv2Uc5SrFq3MC6YzVWk8w05ePwHvmDCJIh6QZxdBVu9Di6Bqax+uXRmFNl
+         qQXFIKAY6Qo8edsntkEAomH+sMPT/yt/PHkMmJFm6soxX/1scqbuPyL9ivL3A2uGtFRU
+         ZUEQ==
+X-Gm-Message-State: ACrzQf2R/OEQgkBQuLyB/7ZREZMmH49Bd4XU6if/eoSo31JuCJ4FnPUS
+        Hufze6Gh1Yp6MMCtt4yRuz6NnNeVAn4TY59xd+EYu+qUZjl1tg==
+X-Google-Smtp-Source: AMsMyM72KOFuFLd05ekvHqkC8iQgjYBslmgWI6FetqXQFawTd561WeWnr2R3S8hjrJtx04dmecSswFY8Hu90TDRE2aY=
+X-Received: by 2002:a62:1a97:0:b0:562:5587:12d6 with SMTP id
+ a145-20020a621a97000000b00562558712d6mr1824718pfa.37.1665006965827; Wed, 05
+ Oct 2022 14:56:05 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <28ccecb4-46dc-41e8-5dce-efd847d11fc4@foss.arm.com>
-X-Url:  http://acmel.wordpress.com
+References: <CAKwvOdnrHErOK+w878izVauHUKaX3eD-HXgigq2Ogm3iSj-fHA@mail.gmail.com>
+ <76CB17D0-5A66-4D49-A389-8F40EC830DC0@sladewatkins.net> <CAP-5=fXVgwMO_CpS-EHN6PFhLB-J5Ft7qHz7oQd-WOMnTj72Cw@mail.gmail.com>
+ <CAM9d7chvZjZ4YVc6j3w7OkdHteyJ0GUZboieu9G7jAWBevoZqA@mail.gmail.com> <e553c4f8-ed3d-0755-cc8a-b5ffe43b2c2f@amd.com>
+In-Reply-To: <e553c4f8-ed3d-0755-cc8a-b5ffe43b2c2f@amd.com>
+From:   Nick Desaulniers <ndesaulniers@google.com>
+Date:   Wed, 5 Oct 2022 14:55:54 -0700
+Message-ID: <CAKwvOdk6TTNhu_+FdONTXPo9Z8u5D4-5kf-rMN8oK4+6fMyc-w@mail.gmail.com>
+Subject: Re: Invalid event (cycles:pp) in per-thread mode, enable system wide
+ with '-a'.
+To:     Ravi Bangoria <ravi.bangoria@amd.com>
+Cc:     Slade Watkins <srw@sladewatkins.net>,
+        linux-perf-users <linux-perf-users@vger.kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Ian Rogers <irogers@google.com>,
+        Namhyung Kim <namhyung@gmail.com>,
+        Stephane Eranian <eranian@google.com>,
+        Kees Cook <keescook@chromium.org>, sandipan.das@amd.com,
+        Bill Wendling <morbo@google.com>,
+        clang-built-linux <llvm@lists.linux.dev>,
+        Yonghong Song <yhs@fb.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-Em Wed, Oct 05, 2022 at 09:36:01AM +0100, Carsten Haitzler escreveu:
-> Ping? I didn't see an ACK or NAK?
++ Stephane, Kees, Sandipan, Bill, ClangBuiltLinux mailing list, Yonghong
+https://www.spinics.net/lists/linux-perf-users/msg23103.html
+starts the thread, for context.
 
-I need to get the board I got at Kernel Recipes running to check if I
-can test this patchkit with it, meanwhile, Leo, Mathieu, James, can
-someone from the ARM camp continue reviewing this kit?
+On Thu, Sep 29, 2022 at 9:32 PM Ravi Bangoria <ravi.bangoria@amd.com> wrote=
+:
+>
+> On 30-Sep-22 9:56 AM, Namhyung Kim wrote:
+> > Hello,
+> >
+> > On Thu, Sep 29, 2022 at 8:49 PM Ian Rogers <irogers@google.com> wrote:
+> >>
+> >> On Thu, Sep 29, 2022 at 3:10 PM Slade Watkins <srw@sladewatkins.net> w=
+rote:
+> >>>
+> >>> Hey Nick,
+> >>>
+> >>>> On Sep 29, 2022, at 5:54 PM, Nick Desaulniers <ndesaulniers@google.c=
+om> wrote:
+> >>>>
+> >>>> I remember hearing rumblings about issues with zen 2, LBR, vs zen 3.
+> >>>> Is this a known issue, or am I holding it wrong?
+> >>>
+> >>> Hm=E2=80=A6 I also remember this. I have a Zen 2 based system that I =
+can do testing on, so I will do so when I=E2=80=99m able.
+> >>>
+> >>> If I discover something of note, I=E2=80=99ll get back to you.
+> >>>
+> >>> Cheers,
+> >>> -srw
+> >>>
+> >>
+> >> LBR isn't yet supported for Zen but is coming:
+> >> https://lore.kernel.org/lkml/166155216401.401.5809694678609694438.tip-=
+bot2@tip-bot2/
+> >> I'd recommend frame-pointers.
 
-- Arnaldo
- 
-> On 9/9/22 16:27, carsten.haitzler@foss.arm.com wrote:
-> > From: Carsten Haitzler <carsten.haitzler@arm.com>
-> > 
-> > This series adds more test cases to perf test as well as new
-> > infrastructure for testing coresight data quality to ensure the data
-> > coming out of the kernel via perf actually contains useful information.
-> > 
-> > Signed-off-by: Carsten Haitzler <carsten.haitzler@arm.com>
-> > 
-> > 
-> > Carsten Haitzler (13):
-> >    perf test: Add CoreSight shell lib shared code for future tests
-> >    perf test: Add build infra for perf test tools for CoreSight tests
-> >    perf test: Add asm pureloop test tool
-> >    perf test: Add asm pureloop test shell script
-> >    perf test: Add git ignore for perf data generated by the CoreSight
-> >      tests
-> >    perf test: Add memcpy thread test tool
-> >    perf test: Add memcpy thread test shell script
-> >    perf test: Add thread loop test tool
-> >    perf test: Add thread loop test shell scripts
-> >    perf test: Add unroll thread test tool
-> >    perf test: Add unroll thread test shell script
-> >    perf test: Add git ignore for tmp and output files of CoreSight tests
-> >    perf test: Add relevant documentation about CoreSight testing
-> > 
-> >   .../trace/coresight/coresight-perf.rst        | 158 ++++++++++++++++++
-> >   MAINTAINERS                                   |   1 +
-> >   tools/perf/.gitignore                         |   6 +-
-> >   .../perf/Documentation/perf-arm-coresight.txt |   5 +
-> >   tools/perf/Makefile.config                    |   2 +
-> >   tools/perf/Makefile.perf                      |  15 +-
-> >   tools/perf/tests/shell/coresight/Makefile     |  29 ++++
-> >   .../tests/shell/coresight/Makefile.miniconfig |  14 ++
-> >   .../tests/shell/coresight/asm_pure_loop.sh    |  18 ++
-> >   .../shell/coresight/asm_pure_loop/.gitignore  |   1 +
-> >   .../shell/coresight/asm_pure_loop/Makefile    |  34 ++++
-> >   .../coresight/asm_pure_loop/asm_pure_loop.S   |  28 ++++
-> >   .../shell/coresight/memcpy_thread/.gitignore  |   1 +
-> >   .../shell/coresight/memcpy_thread/Makefile    |  33 ++++
-> >   .../coresight/memcpy_thread/memcpy_thread.c   |  79 +++++++++
-> >   .../shell/coresight/memcpy_thread_16k_10.sh   |  18 ++
-> >   .../shell/coresight/thread_loop/.gitignore    |   1 +
-> >   .../shell/coresight/thread_loop/Makefile      |  33 ++++
-> >   .../shell/coresight/thread_loop/thread_loop.c |  86 ++++++++++
-> >   .../coresight/thread_loop_check_tid_10.sh     |  19 +++
-> >   .../coresight/thread_loop_check_tid_2.sh      |  19 +++
-> >   .../coresight/unroll_loop_thread/.gitignore   |   1 +
-> >   .../coresight/unroll_loop_thread/Makefile     |  33 ++++
-> >   .../unroll_loop_thread/unroll_loop_thread.c   |  74 ++++++++
-> >   .../shell/coresight/unroll_loop_thread_10.sh  |  18 ++
-> >   tools/perf/tests/shell/lib/coresight.sh       | 132 +++++++++++++++
-> >   26 files changed, 854 insertions(+), 4 deletions(-)
-> >   create mode 100644 Documentation/trace/coresight/coresight-perf.rst
-> >   create mode 100644 tools/perf/Documentation/perf-arm-coresight.txt
-> >   create mode 100644 tools/perf/tests/shell/coresight/Makefile
-> >   create mode 100644 tools/perf/tests/shell/coresight/Makefile.miniconfig
-> >   create mode 100755 tools/perf/tests/shell/coresight/asm_pure_loop.sh
-> >   create mode 100644 tools/perf/tests/shell/coresight/asm_pure_loop/.gitignore
-> >   create mode 100644 tools/perf/tests/shell/coresight/asm_pure_loop/Makefile
-> >   create mode 100644 tools/perf/tests/shell/coresight/asm_pure_loop/asm_pure_loop.S
-> >   create mode 100644 tools/perf/tests/shell/coresight/memcpy_thread/.gitignore
-> >   create mode 100644 tools/perf/tests/shell/coresight/memcpy_thread/Makefile
-> >   create mode 100644 tools/perf/tests/shell/coresight/memcpy_thread/memcpy_thread.c
-> >   create mode 100755 tools/perf/tests/shell/coresight/memcpy_thread_16k_10.sh
-> >   create mode 100644 tools/perf/tests/shell/coresight/thread_loop/.gitignore
-> >   create mode 100644 tools/perf/tests/shell/coresight/thread_loop/Makefile
-> >   create mode 100644 tools/perf/tests/shell/coresight/thread_loop/thread_loop.c
-> >   create mode 100755 tools/perf/tests/shell/coresight/thread_loop_check_tid_10.sh
-> >   create mode 100755 tools/perf/tests/shell/coresight/thread_loop_check_tid_2.sh
-> >   create mode 100644 tools/perf/tests/shell/coresight/unroll_loop_thread/.gitignore
-> >   create mode 100644 tools/perf/tests/shell/coresight/unroll_loop_thread/Makefile
-> >   create mode 100644 tools/perf/tests/shell/coresight/unroll_loop_thread/unroll_loop_thread.c
-> >   create mode 100755 tools/perf/tests/shell/coresight/unroll_loop_thread_10.sh
-> >   create mode 100644 tools/perf/tests/shell/lib/coresight.sh
-> > 
+Having to recompile is less than ideal for my workflow.  I have added a not=
+e to
+https://github.com/ClangBuiltLinux/profiling/tree/main/perf#errors
+Please let me know how I might improve the documentation.
 
--- 
+> >>
+> >> +Ravi who may be able to say if there are any issues with the precise
+> >> sampling on AMD.
+> >
+> > Afaik cvcles:pp will use IBS but it doesn't support per-task profiling
+> > since it has no task context.  Ravi is working on it..
+>
+> Right.
+> https://lore.kernel.org/lkml/20220829113347.295-1-ravi.bangoria@amd.com
 
-- Arnaldo
+Cool, thanks for working on this Ravi.
+
+I'm not sure yet whether I may replace the kernel on my corporate
+provided workstation, so I'm not sure yet I can help test that patch.
+
+Can you confirm that
+$ perf record -e cycles:pp --freq=3D128 --call-graph lbr -- <command to pro=
+file>
+
+works with just that patch applied? Or is there more work required?
+What is the status of that patch?
+
+For context, we had difficulty upstreaming support for instrumentation
+based profile guided optimizations in the Linux kernel.
+https://lore.kernel.org/lkml/CAHk-=3DwhqCT0BeqBQhW8D-YoLLgp_eFY=3D8Y=3D9ieR=
+EM5xx0ef08w@mail.gmail.com/
+We'd like to be able to use either instrumentation or sampling to
+optimize our builds.  The major barrier to sample based approaches are
+architecture / micro architecture issues with sample based profile
+data collection, and bitrot of data processing utilities.
+https://github.com/google/autofdo/issues/144
+--=20
+Thanks,
+~Nick Desaulniers
