@@ -2,40 +2,40 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 88A70C433F5
-	for <linux-perf-users@archiver.kernel.org>; Wed,  5 Oct 2022 12:24:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6E2A8C433F5
+	for <linux-perf-users@archiver.kernel.org>; Wed,  5 Oct 2022 12:29:00 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229545AbiJEMYw (ORCPT
+        id S229516AbiJEM27 (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Wed, 5 Oct 2022 08:24:52 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48962 "EHLO
+        Wed, 5 Oct 2022 08:28:59 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52742 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229695AbiJEMYv (ORCPT
+        with ESMTP id S229598AbiJEM26 (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Wed, 5 Oct 2022 08:24:51 -0400
-Received: from ams.source.kernel.org (ams.source.kernel.org [145.40.68.75])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D1ADBDF95
-        for <linux-perf-users@vger.kernel.org>; Wed,  5 Oct 2022 05:24:48 -0700 (PDT)
+        Wed, 5 Oct 2022 08:28:58 -0400
+Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6C8B8501B2
+        for <linux-perf-users@vger.kernel.org>; Wed,  5 Oct 2022 05:28:56 -0700 (PDT)
 Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by ams.source.kernel.org (Postfix) with ESMTPS id 66312B81DE6
-        for <linux-perf-users@vger.kernel.org>; Wed,  5 Oct 2022 12:24:47 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id E657DC433D6;
-        Wed,  5 Oct 2022 12:24:45 +0000 (UTC)
+        by dfw.source.kernel.org (Postfix) with ESMTPS id CB038615E1
+        for <linux-perf-users@vger.kernel.org>; Wed,  5 Oct 2022 12:28:55 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 0E873C433C1;
+        Wed,  5 Oct 2022 12:28:55 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1664972686;
-        bh=2ZLPtC3a9TOF1txjdBviVWxFAhvwAkz+M288orWgDt4=;
+        s=k20201202; t=1664972935;
+        bh=V4foEuNyuL3cGZZPwggpxRU27X/R3taU+9r39GiXZj0=;
         h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=Ln+86B/LjYMWcKZ8weC6GWmQC1NpW6ma37Y+0a+S2eLrtucOq+wCQbOrmI12y7ZOk
-         8+0B3yTkB9jBMkvdfty9RdviTwJZh92Vz2mxjTw4I09PvedEQnLaiyT5mXDRyjvtRQ
-         63qf82sxTJVi8lmMFTcqu9oUknJ7S4Ci0P2HoZ4fdW2xpz/Cw2h3f+Ui2YaGHgV9ZR
-         v7o42bkF+PPmcIAOH9ztFjwJL2YzYh17i6AuJqYm0F9v6ledC3EU/gWT3MEKy+H1lY
-         cMDYmEAIssoXCs6zNIz1kW0D2oHViPv6muyx4PB/cqTfowzZptoELsRNZOx3hcROs9
-         65JnM/03fTUQQ==
+        b=MD2/qiwC/vVRwFmJcUOH7X/wh9Qju8iZpV5sNltTcHhMYn2gM97kaXQAaRk9sODbZ
+         cEkZTxR+85dombcRx3Cyh3rk4uTL5WBYhygoKGa/Tvqy3UQ4ljLWRKtilVPKjYT8Ja
+         Lz7Ct3VSs0ch8slcbCPoLvcK5saPekYuCvWVYz/rgzlQNvfJtIAyG9e1/Sy28Gojdj
+         9VWE4orx5JjovHVVCV1BkzYAL2eTYkbHP60QWLOwmSyVepCwcVOO1ckPuuU+5eCnu5
+         aKlBYgPm9gUwRl/yTMAcXJhikd5PN5F4ftGAilRFpv6GfZliKsNc3ooQUklQivb46p
+         zCnNtnbrNZESw==
 Received: by quaco.ghostprotocols.net (Postfix, from userid 1000)
-        id A03254062C; Wed,  5 Oct 2022 09:24:43 -0300 (-03)
-Date:   Wed, 5 Oct 2022 09:24:43 -0300
+        id E3F354062C; Wed,  5 Oct 2022 09:28:52 -0300 (-03)
+Date:   Wed, 5 Oct 2022 09:28:52 -0300
 From:   Arnaldo Carvalho de Melo <acme@kernel.org>
 To:     Athira Rajeev <atrajeev@linux.vnet.ibm.com>
 Cc:     Ian Rogers <irogers@google.com>, James Clark <james.clark@arm.com>,
@@ -48,7 +48,7 @@ Cc:     Ian Rogers <irogers@google.com>, James Clark <james.clark@arm.com>,
         linuxppc-dev@lists.ozlabs.org
 Subject: Re: [PATCH] tools/perf: Fix aggr_printout to display cpu field
  irrespective of core value
-Message-ID: <Yz13i6RRPmOovlC1@kernel.org>
+Message-ID: <Yz14hG3EVJPph11m@kernel.org>
 References: <82D5587E-593A-43A7-92D7-7E095E2BE9A9@linux.vnet.ibm.com>
  <6627ae9a-91e3-0923-1234-54e0fc3f4916@arm.com>
  <CAP-5=fVBzLfhfwPjxE_9DNeesPaPxf3k0b5T5S6THzB1H85mrA@mail.gmail.com>
@@ -150,11 +150,18 @@ Em Wed, Oct 05, 2022 at 10:23:39AM +0530, Athira Rajeev escreveu:
 > 2.31.1
 > 
 > If it is confusing, shall I send it as a separate patch along with Tested-by from Ian ?
-> 
-> Please revert https://git.kernel.org/pub/scm/linux/kernel/git/acme/linux.git/commit/?h=tmp.perf/core&id=db83f447b323958cdc5fedcf2134effb2ec9a6fe
 
-I'll do it, but in these cases just go ahead and resubmit with a v N+1
-patchset, so that b4 can pick the newer version even if I point it to
-the previous version message-id.
+I'll have to do this by hand, tried pointing b4 to this message and it
+picked the old one, also tried to save the message and apply by hand,
+its mangled.
+
+- Arnaldo
+> 
+> Thanks
+> Athira
+> 
+> > 
+
+-- 
 
 - Arnaldo
