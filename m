@@ -2,158 +2,184 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4CAC3C433FE
-	for <linux-perf-users@archiver.kernel.org>; Wed,  5 Oct 2022 22:36:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EB4BCC433FE
+	for <linux-perf-users@archiver.kernel.org>; Wed,  5 Oct 2022 22:50:57 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229496AbiJEWgx (ORCPT
+        id S229446AbiJEWu5 (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Wed, 5 Oct 2022 18:36:53 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48240 "EHLO
+        Wed, 5 Oct 2022 18:50:57 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40102 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229575AbiJEWgw (ORCPT
+        with ESMTP id S229526AbiJEWu4 (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Wed, 5 Oct 2022 18:36:52 -0400
-Received: from mail-ej1-x630.google.com (mail-ej1-x630.google.com [IPv6:2a00:1450:4864:20::630])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 800036068D;
-        Wed,  5 Oct 2022 15:36:51 -0700 (PDT)
-Received: by mail-ej1-x630.google.com with SMTP id z23so686745ejw.12;
-        Wed, 05 Oct 2022 15:36:51 -0700 (PDT)
+        Wed, 5 Oct 2022 18:50:56 -0400
+Received: from mail-vs1-xe2a.google.com (mail-vs1-xe2a.google.com [IPv6:2607:f8b0:4864:20::e2a])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DCECA2BB0D
+        for <linux-perf-users@vger.kernel.org>; Wed,  5 Oct 2022 15:50:53 -0700 (PDT)
+Received: by mail-vs1-xe2a.google.com with SMTP id n186so369445vsc.9
+        for <linux-perf-users@vger.kernel.org>; Wed, 05 Oct 2022 15:50:53 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20210112;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:from:to:cc:subject:date:message-id:reply-to;
-        bh=5IDa4zO8fjCrFtrwiC0X35h30/CNk4qiLrUvMAkxVAs=;
-        b=bm30/cArbm6oXF4zz1/TtHAWlji0iXVLwmqbQ8S+eX+WoOj3CAuuIz6pZTPsG/T+x8
-         tQuWs0gvBC5SG/yfefFxVY2DB4LqAzzAd3/kN3emfJiPT5otMXw6F8Hnsig2FHnJaswi
-         xyU6sVIQ9t48MFF1pB5zpnyNuo7f/Wo9gQ06BgxfSzrZoPS2PIzQIvz5rH2Hj7CZltvw
-         EE1cHiLJW3Nx55kuMDHjzlm9+iSe749VmzE7X20P54yDycBMuaOEnnipVWFVMwzetjq3
-         AKlp0g8DBThkQM/uQSi27PJN7F3IdQi14TUpoO/hPCY/hN+X3QmV/7eRYIMax/s3LrUe
-         Xb2g==
+        d=google.com; s=20210112;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date;
+        bh=s8EMTXiUwrOa6YLnf1xSNISKDp/9rxbmpvrrsPdKN14=;
+        b=IWzxhs+IVgBICIpnd5W1YnUvyc2lcj3u9zrlwggNI3fvqZJzT/1ghyPDeFxYw4TyRZ
+         g2gF/gMVip5CwQptYdhNu21LbY+O/uccSjrwhaHtHAAZWqmwQ7YggGMPjJdzQFXHLQ1f
+         5QrH109nstuJoi1OC5rpDfTTARLtPCG02gY0a+v6YCde2RfwIQed6ynBA4C0DwsGFoiy
+         6H8pdIEczUnH9hSyufI+rukzsu05FF1fZdOYAJdbAatEiXCkAsfmYjJNJ6rHomrSU0DA
+         xCjtGAF/dnNkrYfz6u5LS0KXDSa7AaXQqdymQQHGhMDVXxSv3JS8IdihfznObVForWp6
+         dyAw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=5IDa4zO8fjCrFtrwiC0X35h30/CNk4qiLrUvMAkxVAs=;
-        b=qzuCWCR6ngV6dgCpqns9lefekJxeUGQIBdT9Gi/VYBo99BU26YgGP2yw4y0tSF28H/
-         qpEJpZTv2SibFDKOl2UuJkT6W0ZUd90EcfSIUWjq46tHRglxqxW0fUwtAtolQSZRaiTk
-         zS0MFDpHFcZSvAv8wMPz5voM5q/cA0nFe4Aox2IxiMuqozlhClX01b4tCaGUNxl6yQgD
-         Z7e0gYXFmE58NUkqJ+j4XG+kZtIg47i3wu9+U1BGL2I1d8qCBwZyf8FxVByjThQXBOBn
-         DqmCusMBI1i71HVZK2+PNoNhxK12rtN+g8yaAT2RLuJdEdzIgUE+Rq1cDh95CcR1mdcP
-         sQvg==
-X-Gm-Message-State: ACrzQf1cvl+XHXcTCRxZkkEOhI3oqo8yuWg5mqPOxnh20YK/cGvQGajU
-        n+FZahYFaCa3+Ju89UpEmdcec49QPY7ud9l0HDg=
-X-Google-Smtp-Source: AMsMyM6/ch5wARIR0pg7YHIz3pTGEEc2KZkCtkscs8/h76CNWrKne/Is4+U0XiChE9jAPq+RWQvCYZ3IQuYcLKFMbJI=
-X-Received: by 2002:a17:906:5a4c:b0:78c:c893:74e6 with SMTP id
- my12-20020a1709065a4c00b0078cc89374e6mr1475975ejc.545.1665009409931; Wed, 05
- Oct 2022 15:36:49 -0700 (PDT)
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date;
+        bh=s8EMTXiUwrOa6YLnf1xSNISKDp/9rxbmpvrrsPdKN14=;
+        b=o7XWprepjsWHQn5P5Pg6qT7jQYK+cCZhLjLHx4Y6gSUWssvVwSYnd74zZ7cDyxgMyy
+         JNuTYz7alm655VIaT1ey8Ca7EuIvCTCjzzcrEvnjJyOxx9zz9n3d3l4U2a68YcMdYHPI
+         fKkkMc0bXzXTNtGAf9Ig0rMVdDj+++MH8u7fn08xYf2uv/iWspLLRonpc8tSQPEegzWt
+         i6CSQpbkeTU9uJpWADV3tkEf8wPwsV9tK1Wi6AA0f6OO/1qi763dYlgDVqBXSCM/fnKj
+         JFNVVBXXVp/WzXTVsNPvO/d2dXJE1+aKduce5Fy/WdcakLIUOw7SThW8+ypnU0aip9Ax
+         rxmQ==
+X-Gm-Message-State: ACrzQf00+a/AQGLFGeFy3RLQGysz5tXbQMi+fj1AXm7IAmYWejbQ7bjZ
+        CGqFFegqnpxJ3JcqvvTblPxwlpFYNhUCPOVb57ABwg==
+X-Google-Smtp-Source: AMsMyM62970tjFWrttfs72GbVwmQjKGlrpxkSjfKFZNtquqVpdzda6ue0pj9O3MTdDDRalSIuZj+bMKhsyrVQ4a4HCs=
+X-Received: by 2002:a05:6102:358d:b0:3a6:cf61:6208 with SMTP id
+ h13-20020a056102358d00b003a6cf616208mr1119928vsu.12.1665010252862; Wed, 05
+ Oct 2022 15:50:52 -0700 (PDT)
 MIME-Version: 1.0
-References: <CAM9d7cjQ20a01YoZi=o-_7HT6TzR0TZgtpscKNvRrMq2yqV1Og@mail.gmail.com>
- <20220922041435.709119-1-namhyung@kernel.org> <CAEf4BzZhHYYOmNhLdrpsXSDE5kaXvgSN00X-8aAySDwAKX0RCw@mail.gmail.com>
- <CAM9d7ch8RUgf8V1hi=ccgV84XSfujuWtUKKgre8eQdGmtdiFLA@mail.gmail.com>
-In-Reply-To: <CAM9d7ch8RUgf8V1hi=ccgV84XSfujuWtUKKgre8eQdGmtdiFLA@mail.gmail.com>
-From:   Andrii Nakryiko <andrii.nakryiko@gmail.com>
-Date:   Wed, 5 Oct 2022 15:36:37 -0700
-Message-ID: <CAEf4Bza0dt6v8YLNvQbANH+O9E5naZZj1cc4H6j=KK9WQcym8w@mail.gmail.com>
-Subject: Re: [PATCH] perf stat: Support old kernels for bperf cgroup counting
-To:     Namhyung Kim <namhyung@kernel.org>
-Cc:     Tejun Heo <tj@kernel.org>, Zefan Li <lizefan.x@bytedance.com>,
-        Johannes Weiner <hannes@cmpxchg.org>,
-        cgroups <cgroups@vger.kernel.org>,
-        Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Jiri Olsa <jolsa@kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>,
+References: <CAKwvOdnrHErOK+w878izVauHUKaX3eD-HXgigq2Ogm3iSj-fHA@mail.gmail.com>
+ <76CB17D0-5A66-4D49-A389-8F40EC830DC0@sladewatkins.net> <CAP-5=fXVgwMO_CpS-EHN6PFhLB-J5Ft7qHz7oQd-WOMnTj72Cw@mail.gmail.com>
+ <CAM9d7chvZjZ4YVc6j3w7OkdHteyJ0GUZboieu9G7jAWBevoZqA@mail.gmail.com>
+ <e553c4f8-ed3d-0755-cc8a-b5ffe43b2c2f@amd.com> <CAKwvOdk6TTNhu_+FdONTXPo9Z8u5D4-5kf-rMN8oK4+6fMyc-w@mail.gmail.com>
+In-Reply-To: <CAKwvOdk6TTNhu_+FdONTXPo9Z8u5D4-5kf-rMN8oK4+6fMyc-w@mail.gmail.com>
+From:   Stephane Eranian <eranian@google.com>
+Date:   Wed, 5 Oct 2022 15:50:41 -0700
+Message-ID: <CABPqkBQVfQFJKCdHXEMGFcupzvy8zq14F52eLW5s9vr2Shmi6w@mail.gmail.com>
+Subject: Re: Invalid event (cycles:pp) in per-thread mode, enable system wide
+ with '-a'.
+To:     Nick Desaulniers <ndesaulniers@google.com>
+Cc:     Ravi Bangoria <ravi.bangoria@amd.com>,
+        Slade Watkins <srw@sladewatkins.net>,
         linux-perf-users <linux-perf-users@vger.kernel.org>,
-        Song Liu <songliubraving@fb.com>, bpf <bpf@vger.kernel.org>
+        LKML <linux-kernel@vger.kernel.org>,
+        Ian Rogers <irogers@google.com>,
+        Namhyung Kim <namhyung@gmail.com>,
+        Kees Cook <keescook@chromium.org>, sandipan.das@amd.com,
+        Bill Wendling <morbo@google.com>,
+        clang-built-linux <llvm@lists.linux.dev>,
+        Yonghong Song <yhs@fb.com>
 Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-On Fri, Sep 30, 2022 at 7:31 PM Namhyung Kim <namhyung@kernel.org> wrote:
+On Wed, Oct 5, 2022 at 2:56 PM Nick Desaulniers <ndesaulniers@google.com> w=
+rote:
 >
-> Hello,
+> + Stephane, Kees, Sandipan, Bill, ClangBuiltLinux mailing list, Yonghong
+> https://www.spinics.net/lists/linux-perf-users/msg23103.html
+> starts the thread, for context.
 >
-> On Fri, Sep 30, 2022 at 3:48 PM Andrii Nakryiko
-> <andrii.nakryiko@gmail.com> wrote:
+> On Thu, Sep 29, 2022 at 9:32 PM Ravi Bangoria <ravi.bangoria@amd.com> wro=
+te:
 > >
-> > On Wed, Sep 21, 2022 at 9:21 PM Namhyung Kim <namhyung@kernel.org> wrote:
+> > On 30-Sep-22 9:56 AM, Namhyung Kim wrote:
+> > > Hello,
 > > >
-> > > The recent change in the cgroup will break the backward compatiblity in
-> > > the BPF program.  It should support both old and new kernels using BPF
-> > > CO-RE technique.
+> > > On Thu, Sep 29, 2022 at 8:49 PM Ian Rogers <irogers@google.com> wrote=
+:
+> > >>
+> > >> On Thu, Sep 29, 2022 at 3:10 PM Slade Watkins <srw@sladewatkins.net>=
+ wrote:
+> > >>>
+> > >>> Hey Nick,
+> > >>>
+> > >>>> On Sep 29, 2022, at 5:54 PM, Nick Desaulniers <ndesaulniers@google=
+.com> wrote:
+> > >>>>
+> > >>>> I remember hearing rumblings about issues with zen 2, LBR, vs zen =
+3.
+> > >>>> Is this a known issue, or am I holding it wrong?
+> > >>>
+> > >>> Hm=E2=80=A6 I also remember this. I have a Zen 2 based system that =
+I can do testing on, so I will do so when I=E2=80=99m able.
+> > >>>
+> > >>> If I discover something of note, I=E2=80=99ll get back to you.
+> > >>>
+> > >>> Cheers,
+> > >>> -srw
+> > >>>
+> > >>
+> > >> LBR isn't yet supported for Zen but is coming:
+> > >> https://lore.kernel.org/lkml/166155216401.401.5809694678609694438.ti=
+p-bot2@tip-bot2/
+> > >> I'd recommend frame-pointers.
+>
+> Having to recompile is less than ideal for my workflow.  I have added a n=
+ote to
+> https://github.com/ClangBuiltLinux/profiling/tree/main/perf#errors
+> Please let me know how I might improve the documentation.
+>
+> > >>
+> > >> +Ravi who may be able to say if there are any issues with the precis=
+e
+> > >> sampling on AMD.
 > > >
-> > > Like the task_struct->__state handling in the offcpu analysis, we can
-> > > check the field name in the cgroup struct.
-> > >
-> > > Signed-off-by: Namhyung Kim <namhyung@kernel.org>
-> > > ---
-> > > Arnaldo, I think this should go through the cgroup tree since it depends
-> > > on the earlier change there.  I don't think it'd conflict with other
-> > > perf changes but please let me know if you see any trouble, thanks!
-> > >
-> > >  tools/perf/util/bpf_skel/bperf_cgroup.bpf.c | 29 ++++++++++++++++++++-
-> > >  1 file changed, 28 insertions(+), 1 deletion(-)
-> > >
-> > > diff --git a/tools/perf/util/bpf_skel/bperf_cgroup.bpf.c b/tools/perf/util/bpf_skel/bperf_cgroup.bpf.c
-> > > index 488bd398f01d..4fe61043de04 100644
-> > > --- a/tools/perf/util/bpf_skel/bperf_cgroup.bpf.c
-> > > +++ b/tools/perf/util/bpf_skel/bperf_cgroup.bpf.c
-> > > @@ -43,12 +43,39 @@ struct {
-> > >         __uint(value_size, sizeof(struct bpf_perf_event_value));
-> > >  } cgrp_readings SEC(".maps");
-> > >
-> > > +/* new kernel cgroup definition */
-> > > +struct cgroup___new {
-> > > +       int level;
-> > > +       struct cgroup *ancestors[];
-> > > +} __attribute__((preserve_access_index));
-> > > +
-> > > +/* old kernel cgroup definition */
-> > > +struct cgroup___old {
-> > > +       int level;
-> > > +       u64 ancestor_ids[];
-> > > +} __attribute__((preserve_access_index));
-> > > +
-> > >  const volatile __u32 num_events = 1;
-> > >  const volatile __u32 num_cpus = 1;
-> > >
-> > >  int enabled = 0;
-> > >  int use_cgroup_v2 = 0;
-> > >
-> > > +static inline __u64 get_cgroup_v1_ancestor_id(struct cgroup *cgrp, int level)
-> > > +{
-> > > +       /* recast pointer to capture new type for compiler */
-> > > +       struct cgroup___new *cgrp_new = (void *)cgrp;
-> > > +
-> > > +       if (bpf_core_field_exists(cgrp_new->ancestors)) {
-> > > +               return BPF_CORE_READ(cgrp_new, ancestors[level], kn, id);
+> > > Afaik cvcles:pp will use IBS but it doesn't support per-task profilin=
+g
+> > > since it has no task context.  Ravi is working on it..
 > >
-> > have you checked generated BPF code for this ancestors[level] access?
-> > I'd expect CO-RE relocation for finding ancestors offset and then just
-> > normal + level * 8 arithmetic, but would be nice to confirm. Apart
-> > from this, looks good to me:
-> >
-> > Acked-by: Andrii Nakryiko <andrii@kernel.org>
+> > Right.
+> > https://lore.kernel.org/lkml/20220829113347.295-1-ravi.bangoria@amd.com
 >
-> Thanks for your review!
+> Cool, thanks for working on this Ravi.
 >
-> How can I check the generated code?  Do you have something works with
-> skeletons or do I have to save the BPF object somehow during the build?
+> I'm not sure yet whether I may replace the kernel on my corporate
+> provided workstation, so I'm not sure yet I can help test that patch.
 >
+> Can you confirm that
+> $ perf record -e cycles:pp --freq=3D128 --call-graph lbr -- <command to p=
+rofile>
+>
+> works with just that patch applied? Or is there more work required?
+> What is the status of that patch?
+>
+> For context, we had difficulty upstreaming support for instrumentation
+> based profile guided optimizations in the Linux kernel.
+> https://lore.kernel.org/lkml/CAHk-=3DwhqCT0BeqBQhW8D-YoLLgp_eFY=3D8Y=3D9i=
+eREM5xx0ef08w@mail.gmail.com/
+> We'd like to be able to use either instrumentation or sampling to
+> optimize our builds.  The major barrier to sample based approaches are
+> architecture / micro architecture issues with sample based profile
+> data collection, and bitrot of data processing utilities.
+> https://github.com/google/autofdo/issues/144
 
-skeleton is generated from ELF BPF object file. You can do
-llvm-objdump -d <obj.bpf.o> to see instructions. Unfortunately you
-can't see BPF CO-RE relocations this way, you'd have to use something
-like my custom tool ([0]).
+On existing AMD Zen2, Zen3 the following cmdline:
+$ perf record -e cycles:pp --freq=3D128 --call-graph lbr -- <command to pro=
+file>
 
-But anyways, I checked locally similar code pattern and I think it's
-all good from BPF CO-RE perspective. I see appropriate relocations in
-all the necessary places. So this should work.
+does not work. I see two reasons:
 
-Acked-by: Andrii Nakryiko <andrii@kernel.org>
+1. cycles:pp is likely converted into IBS op in cycle mode.
+    Current kernels do not support IBS in per-thread mode.
+    This is purely a kernel limitation
 
-  [0] https://github.com/anakryiko/btfdump
+2. call-graph lbr is not supported on AMD because they do
+   not have LBR and therefore no LBR callstack mode
 
-> Thanks,
-> Namhyung
+The best way to get what you want here today on AMD Zen2 and Zen3:
+
+   $ perf record -e cycles --freq=3D128 -g -- <command to profile>
+
+On AMD Zen3, there is a precursor to LBR with Branch Sampling (BRS),
+and you can use it to sample taken branches but not for callstacks. I
+mention the cmdline here for reference:
+
+$ perf record -e cpu/branch-brs/ -c 1000037  -b  -- <command to profile>
+
+Note that AMD Zen3 BRS is enough to get the autoFDO usage of an
+LBR working as per the cmdline above.
+
+Hope this helps.
