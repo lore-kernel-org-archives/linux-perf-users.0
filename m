@@ -2,131 +2,102 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0D876C433F5
-	for <linux-perf-users@archiver.kernel.org>; Thu,  6 Oct 2022 00:04:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1E8F9C433F5
+	for <linux-perf-users@archiver.kernel.org>; Thu,  6 Oct 2022 05:45:16 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229902AbiJFAEe (ORCPT
+        id S229981AbiJFFpP (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Wed, 5 Oct 2022 20:04:34 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44762 "EHLO
+        Thu, 6 Oct 2022 01:45:15 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57748 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229755AbiJFAEB (ORCPT
+        with ESMTP id S229491AbiJFFpN (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Wed, 5 Oct 2022 20:04:01 -0400
-Received: from mail-pl1-x64a.google.com (mail-pl1-x64a.google.com [IPv6:2607:f8b0:4864:20::64a])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7055482624
-        for <linux-perf-users@vger.kernel.org>; Wed,  5 Oct 2022 17:03:31 -0700 (PDT)
-Received: by mail-pl1-x64a.google.com with SMTP id m10-20020a170902db0a00b001789bd49db9so97801plx.23
-        for <linux-perf-users@vger.kernel.org>; Wed, 05 Oct 2022 17:03:31 -0700 (PDT)
+        Thu, 6 Oct 2022 01:45:13 -0400
+Received: from mail-pg1-x52a.google.com (mail-pg1-x52a.google.com [IPv6:2607:f8b0:4864:20::52a])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 24DA932B80
+        for <linux-perf-users@vger.kernel.org>; Wed,  5 Oct 2022 22:45:13 -0700 (PDT)
+Received: by mail-pg1-x52a.google.com with SMTP id 129so954354pgc.5
+        for <linux-perf-users@vger.kernel.org>; Wed, 05 Oct 2022 22:45:13 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20210112;
-        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
-         :date:reply-to:from:to:cc:subject:date:message-id:reply-to;
-        bh=cEkG9GEBTiUE8th5TFZ42NZiqyxd5/5OjQ/JbzJymEQ=;
-        b=HZpuKtQwKzlujbVYW3M11GQu0M8KWSz0k/1l9wTjCp+9BEGr2WT/wWmHO+zcKJ4mkS
-         p6vnMq3+ZeY75KvwgsBZr/0R8nJTVeMbbU0rDuIYoHWnHllB83NE0YS/GXitghHa+995
-         nER/VuLKCZKssKvFOKrMqnVe+wSTNJ7fbX5i0IDdDmKYZlm1x04g5eBH5aD7nStplxL4
-         HMY6/ZNWZpqTopZXWJaqOl90rnZ05if94Lyrlbrcem5/sovXyehgVbIf8tDITvxTe3kT
-         1aoCB0ZiaC37HHPRiDWbSejAwDHs0/cDAeh+dJkACaBDLcqJGCta2y9GsYXKAvRIgl0o
-         U/Cw==
+        d=linaro.org; s=google;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date;
+        bh=zHiKWHLUiEejnPGH1G2wAyZsdKfADMIbnHWjWlmRMao=;
+        b=tl8RJsAPTOLZS/YMGLNBH1ch7H4kbv9Y1gZtT9Ull0r5CBiD6eUdSipUWpN81KZD4o
+         1B2B7DnDh1UkERW85Kpuwu94+gpahq9tgcUK4bAZ41sM2gdyAWdR2yJhde597K3T5ijb
+         YS57MhN2YnsOTLUhB3XmjywOZZt5msHmyPjDnzU59v1fugjfQsSY+YSnS8pav99+URgn
+         sYfh2wSV3xu5ZxiuZm1tXH5eiWYCU9Dp85BfZ53BPIeArxaaCU7CqPt/ZeEykdqZnLAj
+         E1tdx37CJ8wfwINyGwIOe5cu1NhW9vHO71MVVQqWE5tOQFJ4WS7XTmRL9xuMyzRc13Bk
+         Q9gg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
-         :date:reply-to:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=cEkG9GEBTiUE8th5TFZ42NZiqyxd5/5OjQ/JbzJymEQ=;
-        b=lazC4BhJbks8WoTI4QAmfMjx9i6yt2OArIsdSOHGcOQ7amnmArZpqzc0LTKsaam2qL
-         XYy069gI3eQJP2wyyl8XSeelHsEzB8+55Wocj/UW6Ed2zypbBPcTyuUYj/llrVMq1xz8
-         yWbJgvaj08uTrEh34VsbPebXCkq7XWlh5m9JPbC3XWhM9zhSB4lvQVs8CEJTc/p2tHLn
-         4XkM5FL7pWAofTyM04bdu8sxvA4eko/1Vzz5ylEPWX3O+Pa9+Vy+xtJ4sktz8d1s5P+o
-         shZUUJF2GvMiDOlxOBWSU5v197LqSV7kP9e4R+7mToaq6EZTanSwDEvocw1mir69L66/
-         gAww==
-X-Gm-Message-State: ACrzQf2o4YWm3y1HXPBaeLQibqQn+L3B4+D9uJIhKpbW+fUlaeclpZw9
-        JKOSvGmmpRxQr3ntlIgMxAJvyXzSX1Y=
-X-Google-Smtp-Source: AMsMyM4vYKF91WDVjIeLWeM1NERAi/CGUxBO8aM/E7dVqea8tHTIQPPArdz7NyDaAfOAviH4bem/pSr9+mU=
-X-Received: from zagreus.c.googlers.com ([fda3:e722:ac3:cc00:7f:e700:c0a8:5c37])
- (user=seanjc job=sendgmr) by 2002:a17:902:f791:b0:17c:c1dd:a3b5 with SMTP id
- q17-20020a170902f79100b0017cc1dda3b5mr1821332pln.141.1665014609775; Wed, 05
- Oct 2022 17:03:29 -0700 (PDT)
-Reply-To: Sean Christopherson <seanjc@google.com>
-Date:   Thu,  6 Oct 2022 00:03:13 +0000
-In-Reply-To: <20221006000314.73240-1-seanjc@google.com>
-Mime-Version: 1.0
-References: <20221006000314.73240-1-seanjc@google.com>
-X-Mailer: git-send-email 2.38.0.rc1.362.ged0d419d3c-goog
-Message-ID: <20221006000314.73240-8-seanjc@google.com>
-Subject: [PATCH v5 7/8] KVM: x86: Handle PERF_CAPABILITIES in common x86's kvm_get_msr_feature()
-From:   Sean Christopherson <seanjc@google.com>
-To:     Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Sean Christopherson <seanjc@google.com>,
-        Paolo Bonzini <pbonzini@redhat.com>
-Cc:     Mark Rutland <mark.rutland@arm.com>,
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date;
+        bh=zHiKWHLUiEejnPGH1G2wAyZsdKfADMIbnHWjWlmRMao=;
+        b=w6PjmLJRaR1KY1YsOQ8+DyPs/vcROJWjJ5zxOlYcvnHoQXn7j+VcDIgff4TH06Kszd
+         XY2Nb7xaqbANc+W4t9W7km7XUaRocnPdQ45osZ7A8Qud/8rn5NSrniEGFaKFA8Y+Adg+
+         pW4QUKBuFmc/t5/RdfbeCzaA/YU26ktbETJw3A97cZkgNq0b+5VrQgYd3kV5fnHa+hAO
+         vR3HiWHcYgGBdJe7n9XMWVIgE8l3EV/1Ifjh5qPFbI6DSsP/e2No5csgtQakgegEQMSL
+         rZUlM5OpNalPTbcHkp8owPgqSy2/4YnjI8URmD/I7gEobPkCy+uPjJcUAm4hqKAkiGkj
+         8UaQ==
+X-Gm-Message-State: ACrzQf3eQ5knxEc6kCstzeica/nIcnLCqBZQDD3rlNc4c9jxKNAqNmiN
+        NX0pg1uKFiwUV8/fa+skG90rGg==
+X-Google-Smtp-Source: AMsMyM5vd8OGf+eWFBFD9UvRzJr7NaLqmbEhXMZTxTI6ty50qCKgo7J7kWQc4x+BqzwP5m3G5NO1pQ==
+X-Received: by 2002:a05:6a00:cd6:b0:546:d03:3dd7 with SMTP id b22-20020a056a000cd600b005460d033dd7mr3034708pfv.19.1665035112497;
+        Wed, 05 Oct 2022 22:45:12 -0700 (PDT)
+Received: from leoy-yangtze.lan (45.78.17.119.16clouds.com. [45.78.17.119])
+        by smtp.gmail.com with ESMTPSA id a15-20020a170902710f00b0017f9021ddc6sm584474pll.289.2022.10.05.22.45.08
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 05 Oct 2022 22:45:11 -0700 (PDT)
+Date:   Thu, 6 Oct 2022 13:45:05 +0800
+From:   Leo Yan <leo.yan@linaro.org>
+To:     Rob Herring <robh@kernel.org>
+Cc:     Peter Zijlstra <peterz@infradead.org>,
         Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Arnaldo Carvalho de Melo <acme@kernel.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        Mark Rutland <mark.rutland@arm.com>,
         Jiri Olsa <jolsa@kernel.org>,
         Namhyung Kim <namhyung@kernel.org>,
-        linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org,
-        kvm@vger.kernel.org, Like Xu <like.xu.linux@gmail.com>
-Content-Type: text/plain; charset="UTF-8"
+        linux-perf-users@vger.kernel.org,
+        James Clark <james.clark@arm.com>, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v3 1/3] perf: Skip and warn on unknown format 'configN'
+ attrs
+Message-ID: <Yz5rYU/sWtJcRZ7B@leoy-yangtze.lan>
+References: <20220914-arm-perf-tool-spe1-2-v2-v3-0-8189fc04dcc6@kernel.org>
+ <20220914-arm-perf-tool-spe1-2-v2-v3-1-8189fc04dcc6@kernel.org>
+ <YzU/o3kxS/BYpJhn@leoy-yangtze.lan>
+ <CAL_Jsq+3pt_yr5LLFNR-DsXQycD-_gd5fum8QbfxUzHPR-zfJw@mail.gmail.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CAL_Jsq+3pt_yr5LLFNR-DsXQycD-_gd5fum8QbfxUzHPR-zfJw@mail.gmail.com>
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-Handle PERF_CAPABILITIES directly in kvm_get_msr_feature() now that the
-supported value is available in kvm_caps.
+On Tue, Oct 04, 2022 at 12:07:30PM -0500, Rob Herring wrote:
 
-No functional change intended.
+[...]
 
-Signed-off-by: Sean Christopherson <seanjc@google.com>
----
- arch/x86/kvm/svm/svm.c | 3 ---
- arch/x86/kvm/vmx/vmx.c | 3 ---
- arch/x86/kvm/x86.c     | 3 +++
- 3 files changed, 3 insertions(+), 6 deletions(-)
+> >     INIT_LIST_HEAD(&perf_pmu__fake.format);
+> 
+> I ended up fixing this in perf_pmu__warn_invalid_formats() instead as
+> the test dealing with internal stuct pmu details didn't seem right:
+> 
+> +       /* fake pmu doesn't have format list */
+> +       if (pmu == &perf_pmu__fake)
+> +               return;
+> +
 
-diff --git a/arch/x86/kvm/svm/svm.c b/arch/x86/kvm/svm/svm.c
-index 6b680b249975..0d8935e7a943 100644
---- a/arch/x86/kvm/svm/svm.c
-+++ b/arch/x86/kvm/svm/svm.c
-@@ -2714,9 +2714,6 @@ static int svm_get_msr_feature(struct kvm_msr_entry *msr)
- 		if (boot_cpu_has(X86_FEATURE_LFENCE_RDTSC))
- 			msr->data |= MSR_F10H_DECFG_LFENCE_SERIALIZE;
- 		break;
--	case MSR_IA32_PERF_CAPABILITIES:
--		msr->data = kvm_caps.supported_perf_cap;
--		return 0;
- 	default:
- 		return KVM_MSR_RET_INVALID;
- 	}
-diff --git a/arch/x86/kvm/vmx/vmx.c b/arch/x86/kvm/vmx/vmx.c
-index 850ff6e683d1..6ff832178e48 100644
---- a/arch/x86/kvm/vmx/vmx.c
-+++ b/arch/x86/kvm/vmx/vmx.c
-@@ -1849,9 +1849,6 @@ static int vmx_get_msr_feature(struct kvm_msr_entry *msr)
- 		if (!nested)
- 			return 1;
- 		return vmx_get_vmx_msr(&vmcs_config.nested, msr->index, &msr->data);
--	case MSR_IA32_PERF_CAPABILITIES:
--		msr->data = kvm_caps.supported_perf_cap;
--		return 0;
- 	default:
- 		return KVM_MSR_RET_INVALID;
- 	}
-diff --git a/arch/x86/kvm/x86.c b/arch/x86/kvm/x86.c
-index b6a973d53f93..9443ddb358e6 100644
---- a/arch/x86/kvm/x86.c
-+++ b/arch/x86/kvm/x86.c
-@@ -1653,6 +1653,9 @@ static int kvm_get_msr_feature(struct kvm_msr_entry *msr)
- 	case MSR_IA32_ARCH_CAPABILITIES:
- 		msr->data = kvm_get_arch_capabilities();
- 		break;
-+	case MSR_IA32_PERF_CAPABILITIES:
-+		msr->data = kvm_caps.supported_perf_cap;
-+		break;
- 	case MSR_IA32_UCODE_REV:
- 		rdmsrl_safe(msr->index, &msr->data);
- 		break;
--- 
-2.38.0.rc1.362.ged0d419d3c-goog
+Good point.  It would be even better to fix it in the first place
+rather than checking fake PMU in perf_pmu__warn_invalid_formats(),
+how about below fixing in util/pmu.c?
 
+-struct perf_pmu perf_pmu__fake;
++struct perf_pmu perf_pmu__fake = {
++       .format = LIST_HEAD_INIT(perf_pmu__fake.format),
++};
+
+Thanks,
+Leo
