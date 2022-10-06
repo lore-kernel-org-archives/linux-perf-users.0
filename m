@@ -2,192 +2,130 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9C764C32771
-	for <linux-perf-users@archiver.kernel.org>; Thu,  6 Oct 2022 17:43:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A5894C433F5
+	for <linux-perf-users@archiver.kernel.org>; Thu,  6 Oct 2022 18:44:08 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231631AbiJFRnL (ORCPT
+        id S231191AbiJFSoH (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Thu, 6 Oct 2022 13:43:11 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43820 "EHLO
+        Thu, 6 Oct 2022 14:44:07 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47058 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231600AbiJFRnG (ORCPT
+        with ESMTP id S231148AbiJFSoF (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Thu, 6 Oct 2022 13:43:06 -0400
-Received: from ams.source.kernel.org (ams.source.kernel.org [IPv6:2604:1380:4601:e00::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E0A76B40E8;
-        Thu,  6 Oct 2022 10:43:03 -0700 (PDT)
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by ams.source.kernel.org (Postfix) with ESMTPS id 92CCAB82126;
-        Thu,  6 Oct 2022 17:43:02 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id F0459C433C1;
-        Thu,  6 Oct 2022 17:43:00 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1665078181;
-        bh=8L4ETKVrJv6anS4RBzHd/U96VBFqskwrKbkT5eLy2Lg=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=LwpzeQQzjm9tuiUHEQXke23UfORLgjnFJs5mYsTMrDIfxJFnOcZqV/iyk6DGjwSJ5
-         cG+niFpHlrmX8g+T93ukA1wJAzBlJAPQu0YJ6rcRtu1t78gHvC4/dBifVpA+9zy5Ke
-         GhigiDZFhyOLEH41El9uQQE7dl+PEOmbyF3QsPwqMPghYS2wUZG64TF0SpYTILd3Mv
-         4/IzLrH4zlLacwnMtFqAf2Xa9Gvm/K+r7xEfcOGmeivxXGQtGBXGR07qc3YPXcHeyI
-         naFMeV1nfDMLfDfCy48/xYIYFCZl2HLSfrHTSpEFbcMg6aoJ82Sv3kPlwbCzocA0Op
-         6SCn53nbnlK2w==
-Received: by quaco.ghostprotocols.net (Postfix, from userid 1000)
-        id 7C9234062C; Thu,  6 Oct 2022 14:42:58 -0300 (-03)
-Date:   Thu, 6 Oct 2022 14:42:58 -0300
-From:   Arnaldo Carvalho de Melo <acme@kernel.org>
-To:     Leo Yan <leo.yan@linaro.org>
-Cc:     carsten.haitzler@foss.arm.com, Jiri Slaby <jirislaby@kernel.org>,
-        linux-kernel@vger.kernel.org, coresight@lists.linaro.org,
-        suzuki.poulose@arm.com, mathieu.poirier@linaro.org,
-        mike.leach@linaro.org, linux-perf-users@vger.kernel.org
-Subject: Re: [PATCH v9 02/13] perf test: Add build infra for perf test tools
- for CoreSight tests
-Message-ID: <Yz8TojIibofTn8Rp@kernel.org>
-References: <20220909152803.2317006-1-carsten.haitzler@foss.arm.com>
- <20220909152803.2317006-3-carsten.haitzler@foss.arm.com>
- <Yz67SHpIN5NggKEk@kernel.org>
- <Yz6/zlchVnNsVlzJ@kernel.org>
- <Yz7RAgMN6WGnD3OZ@leoy-yangtze.lan>
- <Yz7klV3h+JJ+ilAp@kernel.org>
- <Yz7vJ9Wy0zCTwp1t@leoy-yangtze.lan>
- <Yz8Ma75+RgGVYqBN@kernel.org>
+        Thu, 6 Oct 2022 14:44:05 -0400
+Received: from mail-wr1-x430.google.com (mail-wr1-x430.google.com [IPv6:2a00:1450:4864:20::430])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A787BA4B9A
+        for <linux-perf-users@vger.kernel.org>; Thu,  6 Oct 2022 11:44:04 -0700 (PDT)
+Received: by mail-wr1-x430.google.com with SMTP id u10so4042904wrq.2
+        for <linux-perf-users@vger.kernel.org>; Thu, 06 Oct 2022 11:44:04 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20210112;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:from:to:cc:subject:date:message-id:reply-to;
+        bh=U6U9qKSs+tlBnC+Tv5A8FqfXvXIIt7ASE6ecI1CauRs=;
+        b=ixDRCu9mpvel96Rv0lVJu3QCSQ0U2vdA2dTH4WfQpdRh5Fe979UT/QCDvGehJBhVov
+         CbBH6DkH5xFMnn0INj/c1df4mfOr4AUtDNtyzZffvAzAvfLa62bR3aDaQpyk5rUoNJ7T
+         pE7HsxAb1XkEo/6V1yyn8chyA47AVFkZM6YlZl/q8bGWeeZ+ma/CGatquBcr6bc40WHz
+         QDbgl6y1X+Ux3s0cQp0DNLjfAGAM6F7l2gp2dD4QH3zc+0x/FoInUKuUSt9Z3n6WpAe0
+         QP+PXLlLKbjMlu3gKGzYisgzh1XfDl2/zGV7U1HmlUwCt8D6VPHO/3gz5nW528bBsZgs
+         0P4w==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=U6U9qKSs+tlBnC+Tv5A8FqfXvXIIt7ASE6ecI1CauRs=;
+        b=2B+xKQYEZKaim9ecpBmvnFHUKOQpnvs98Fk2kJ4TOE/vH5oIWNS64ogs7QJXvIkEF8
+         EGP+WUivHSERsjpy+RUChvE7AsLqHk6/n7hWjPNsjOklJpVOCa3rIC4t+1XVeeIKdySE
+         BhGBIfFhEPIFSk5H/jWFgAoxViLZLi8SR8rZdeYbNtG5pMzZQnCe5dNNTLYuZst7ddIu
+         oNqkcsyi1VUlp1X5hpZmyHD93DQAn6uLh4ZmmO9g3duVIlkjxW1Afb48idhtOVAdP08C
+         mIqQw5K6wSSL1i1JWudkbH07FFT03dAqcmEZfLWaO8qZ1jWcsgcMusWSBLYcpNed5ue+
+         vE0g==
+X-Gm-Message-State: ACrzQf1gF9OlYzSp6Uo6vUshKLPZwjUQSo8pC7qV5WHK/tpEpSMzXWOM
+        gWkild+2wXbLkpFqjUuZHFSDVoIJkV9kKtF9ypNGrQ==
+X-Google-Smtp-Source: AMsMyM4gTDjHYDYnhhnXFHki1arVtgwnWw02kP8Q4er8GzGmVy5Br66rlCFu+A1Cq0RTi4XOp0rtDVBfUq2zw2ycab8=
+X-Received: by 2002:a5d:47a9:0:b0:22e:3beb:dc3a with SMTP id
+ 9-20020a5d47a9000000b0022e3bebdc3amr887092wrb.654.1665081843023; Thu, 06 Oct
+ 2022 11:44:03 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <Yz8Ma75+RgGVYqBN@kernel.org>
-X-Url:  http://acmel.wordpress.com
+References: <20221003204647.1481128-1-namhyung@kernel.org> <20221003204647.1481128-2-namhyung@kernel.org>
+In-Reply-To: <20221003204647.1481128-2-namhyung@kernel.org>
+From:   Ian Rogers <irogers@google.com>
+Date:   Thu, 6 Oct 2022 11:43:49 -0700
+Message-ID: <CAP-5=fU6yqFKS+dYZ9VcoPftEGh3+oebLsZSOgEaG-XdNFZ7pQ@mail.gmail.com>
+Subject: Re: [PATCH 1/5] libperf: Populate system-wide evsel maps
+To:     Namhyung Kim <namhyung@kernel.org>
+Cc:     Arnaldo Carvalho de Melo <acme@kernel.org>,
+        Jiri Olsa <jolsa@kernel.org>, Ingo Molnar <mingo@kernel.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Adrian Hunter <adrian.hunter@intel.com>,
+        linux-perf-users@vger.kernel.org,
+        Kan Liang <kan.liang@linux.intel.com>,
+        Leo Yan <leo.yan@linaro.org>
+Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-Em Thu, Oct 06, 2022 at 02:12:11PM -0300, Arnaldo Carvalho de Melo escreveu:
-> Em Thu, Oct 06, 2022 at 11:07:19PM +0800, Leo Yan escreveu:
-> > On Thu, Oct 06, 2022 at 11:22:13AM -0300, Arnaldo Carvalho de Melo wrote:
-> > 
-> > [...]
-> > 
-> > > > @@ -1006,7 +1014,10 @@ install-tests: all install-gtk
-> > > >                 $(INSTALL) tests/shell/*.sh '$(DESTDIR_SQ)$(perfexec_instdir_SQ)/tests/shell'; \
-> > > >                 $(INSTALL) -d -m 755 '$(DESTDIR_SQ)$(perfexec_instdir_SQ)/tests/shell/lib'; \
-> > > >                 $(INSTALL) tests/shell/lib/*.sh -m 644 '$(DESTDIR_SQ)$(perfexec_instdir_SQ)/tests/shell/lib'; \
-> > > > -               $(INSTALL) tests/shell/lib/*.py -m 644 '$(DESTDIR_SQ)$(perfexec_instdir_SQ)/tests/shell/lib'
-> > > > +               $(INSTALL) tests/shell/lib/*.py -m 644 '$(DESTDIR_SQ)$(perfexec_instdir_SQ)/tests/shell/lib'; \
-> > > > +               $(INSTALL) -d -m 755 '$(DESTDIR_SQ)$(perfexec_instdir_SQ)/tests/shell/coresight'; \
-> > > > +               $(INSTALL) tests/shell/coresight/*.sh '$(DESTDIR_SQ)$(perfexec_instdir_SQ)/tests/shell/coresight'
-> > > > +       $(Q)$(MAKE) -C tests/shell/coresight install-tests
-> > > > 
-> > > > It's deliberately to not add '-m 644' when install coresight test
-> > > > shell scripts under the folder tests/shell/coresight/ so that we can
-> > > > keep the executable permission for these scripts.  On the other flip,
-> > > > we set 644 mode for the scripts under tests/shell/lib/ so these
-> > > > scripts will not be executed directly by perf test framework.
-> > > > 
-> > > > @Carsten, if have chance could you confirm for above change?
-> > > 
-> > > If you need for some .sh, coresight test's to have x set while all of
-> > > the others don't have, and you have a good reason for that, ok, we just
-> > > add a comment.
-> > 
-> > Simply to say, all lib scripts are not needed for execute permission.
-> > Yes, it's good to add a comment for the installation steps.
-> > 
-> > > > >   DESCEND plugins
-> > > > >   GEN     /tmp/build/perf/python/perf.so
-> > > > >   INSTALL trace_plugins
-> > > > >   INSTALL binaries
-> > > > >   INSTALL tests
-> > > > > install: cannot stat 'tests/shell/coresight/*.sh': No such file or directory
-> > > > > make[2]: *** [Makefile.perf:1007: install-tests] Error 1
-> > > > > make[2]: *** Waiting for unfinished jobs....
-> > > > > 
-> > > > > I'll add it back when the first .sh gets added to tests/shell/coresight/
-> > > > 
-> > > > Sorry for introducing extra efforts for you and thanks!
-> > > 
-> > > This also has to go, I'll check and fix this loop that doesn't follow
-> > > the existing output style, happens with ´make install', etc too:
-> > > 
-> > > ⬢[acme@toolbox perf]$ make -C tools/perf clean
-> > > make: Entering directory '/var/home/acme/git/perf/tools/perf'
-> > >   CLEAN   x86
-> > >   CLEAN   libtraceevent
-> > >   CLEAN   libapi
-> > >   CLEAN   libbpf
-> > >   CLEAN   libsubcmd
-> > >   CLEAN   libperf
-> > >   CLEAN   fixdep
-> > >   CLEAN   feature-detect
-> > >   CLEAN   python
-> > >   CLEAN   bpf-skel
-> > > make -C asm_pure_loop clean >/dev/null        <-------------------
-> > > make -C memcpy_thread clean >/dev/null        <-------------------
-> > > make -C thread_loop clean >/dev/null          <-------------------
-> > > make -C unroll_loop_thread clean >/dev/null   <-------------------
-> > 
-> > Ouch, if we can update the file tests/shell/coresight/Makefile as below:
-> > 
-> > $(CLEANDIRS):
-> >         $(call QUIET_CLEAN, test-$(@:clean-%=%)) $(Q)$(MAKE) -C $(@:clean-%=%) clean >/dev/null
-> 
-> I had to do it, so far, at the time that the above line is first added
-> as:
-> 
-> diff --git a/tools/perf/Makefile.perf b/tools/perf/Makefile.perf
-> index a20b4adb5e3451f1..194e582e70c2c766 100644
-> --- a/tools/perf/Makefile.perf
-> +++ b/tools/perf/Makefile.perf
-> @@ -635,7 +635,8 @@ tests-coresight-targets: FORCE
->  	$(Q)$(MAKE) -C $(TESTS_CORESIGHT_DIR)
->  
->  tests-coresight-targets-clean:
-> -	$(Q)$(MAKE) -C $(TESTS_CORESIGHT_DIR) clean
-> +	$(call QUIET_CLEAN, coresight)
-> +	$(Q)$(MAKE) -C $(TESTS_CORESIGHT_DIR) O=$(OUTPUT) clean >/dev/null
->  
->  all: shell_compatibility_test $(ALL_PROGRAMS) $(LANG_BINDINGS) $(OTHER_PROGRAMS) tests-coresight-targets
->  
-> diff --git a/tools/perf/tests/shell/coresight/Makefile b/tools/perf/tests/shell/coresight/Makefile
-> index 3fee05cfcb0e73f6..6baab5cbaa9aa3b1 100644
-> --- a/tools/perf/tests/shell/coresight/Makefile
-> +++ b/tools/perf/tests/shell/coresight/Makefile
-> @@ -20,6 +20,6 @@ CLEANDIRS = $(SUBDIRS:%=clean-%)
->  
->  clean: $(CLEANDIRS)
->  $(CLEANDIRS):
-> -	$(Q)$(MAKE) -C $(@:clean-%=%) clean >/dev/null
-> +	$(call QUIET_CLEAN, test-$(@:clean-%=%)) $(Q)$(MAKE) -C $(@:clean-%=%) clean >/dev/null
->  
->  .PHONY: all clean $(SUBDIRS) $(CLEANDIRS) $(INSTALLDIRS)
+On Mon, Oct 3, 2022 at 1:46 PM Namhyung Kim <namhyung@kernel.org> wrote:
+>
+> Setting proper cpu and thread maps for system wide evsels regardless of
+> user requested cpu in __perf_evlist__propagate_maps().  Those evsels
+> need to be active on all cpus always.  Do it in the libperf so that we
+> can guarantee it has proper maps.
+>
+> Reviewed-by: Adrian Hunter <adrian.hunter@intel.com>
+> Signed-off-by: Namhyung Kim <namhyung@kernel.org>
+> ---
+>  tools/lib/perf/evlist.c | 15 +++++++++------
+>  1 file changed, 9 insertions(+), 6 deletions(-)
+>
+> diff --git a/tools/lib/perf/evlist.c b/tools/lib/perf/evlist.c
+> index 6b1bafe267a4..187129652ab6 100644
+> --- a/tools/lib/perf/evlist.c
+> +++ b/tools/lib/perf/evlist.c
+> @@ -40,11 +40,11 @@ static void __perf_evlist__propagate_maps(struct perf_evlist *evlist,
+>          * We already have cpus for evsel (via PMU sysfs) so
+>          * keep it, if there's no target cpu list defined.
+>          */
 
-And for the normal build and install, somehow that $(Q) is not being
-obeyed there, so I'm using straight @ for now so that we have a clean
-output, someone more knowledgeable in the Makefile voodoo can then fix
-it.
+This comment is for the 'else if' case and so is a little out of place
+before the system wide test.
 
-⬢[acme@toolbox perf]$ git log --oneline -1
-e1700b67a41092a5 (HEAD) perf test: Add build infra for perf test tools for ARM CoreSight tests
-⬢[acme@toolbox perf]$ git diff
-diff --git a/tools/perf/tests/shell/coresight/Makefile b/tools/perf/tests/shell/coresight/Makefile
-index 6baab5cbaa9aa3b1..6f3b3f07049c2d53 100644
---- a/tools/perf/tests/shell/coresight/Makefile
-+++ b/tools/perf/tests/shell/coresight/Makefile
-@@ -8,13 +8,13 @@ SUBDIRS =
+> -       if (!evsel->own_cpus ||
+> -           (!evsel->system_wide && evlist->has_user_cpus) ||
+> -           (!evsel->system_wide &&
+> -            !evsel->requires_cpu &&
+> -            perf_cpu_map__empty(evlist->user_requested_cpus))) {
+> +       if (evsel->system_wide) {
+> +               perf_cpu_map__put(evsel->cpus);
+> +               evsel->cpus = perf_cpu_map__new(NULL);
 
- all: $(SUBDIRS)
- $(SUBDIRS):
--       $(Q)$(MAKE) -C $@
-+       @$(MAKE) -C $@
+Looking at perf_cpu_map__new, will this mean that in system wide mode
+every event/evsel will now read /sys/devices/system/cpu/online here?
+We may want to cache the cpumap to avoid this.
 
- INSTALLDIRS = $(SUBDIRS:%=install-%)
+Thanks,
+Ian
 
- install-tests: $(INSTALLDIRS)
- $(INSTALLDIRS):
--       $(Q)$(MAKE) -C $(@:install-%=%) install-tests
-+       @$(MAKE) -C $(@:install-%=%) install-tests >/dev/null
-
- CLEANDIRS = $(SUBDIRS:%=clean-%)
-
-⬢[acme@toolbox perf]$
+> +       } else if (!evsel->own_cpus || evlist->has_user_cpus ||
+> +                  (!evsel->requires_cpu && perf_cpu_map__empty(evlist->user_requested_cpus))) {
+>                 perf_cpu_map__put(evsel->cpus);
+>                 evsel->cpus = perf_cpu_map__get(evlist->user_requested_cpus);
+>         } else if (evsel->cpus != evsel->own_cpus) {
+> @@ -52,7 +52,10 @@ static void __perf_evlist__propagate_maps(struct perf_evlist *evlist,
+>                 evsel->cpus = perf_cpu_map__get(evsel->own_cpus);
+>         }
+>
+> -       if (!evsel->system_wide) {
+> +       if (evsel->system_wide) {
+> +               perf_thread_map__put(evsel->threads);
+> +               evsel->threads = perf_thread_map__new_dummy();
+> +       } else {
+>                 perf_thread_map__put(evsel->threads);
+>                 evsel->threads = perf_thread_map__get(evlist->threads);
+>         }
+> --
+> 2.38.0.rc1.362.ged0d419d3c-goog
+>
