@@ -2,224 +2,211 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CC74CC433FE
-	for <linux-perf-users@archiver.kernel.org>; Thu,  6 Oct 2022 11:18:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E19FEC433F5
+	for <linux-perf-users@archiver.kernel.org>; Thu,  6 Oct 2022 11:26:12 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231627AbiJFLSv (ORCPT
+        id S231298AbiJFL0M (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Thu, 6 Oct 2022 07:18:51 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55480 "EHLO
+        Thu, 6 Oct 2022 07:26:12 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39508 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231596AbiJFLSp (ORCPT
+        with ESMTP id S231313AbiJFL0L (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Thu, 6 Oct 2022 07:18:45 -0400
-Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3E41088A19;
-        Thu,  6 Oct 2022 04:18:44 -0700 (PDT)
+        Thu, 6 Oct 2022 07:26:11 -0400
+Received: from sin.source.kernel.org (sin.source.kernel.org [IPv6:2604:1380:40e1:4800::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 312E17D1C0;
+        Thu,  6 Oct 2022 04:26:09 -0700 (PDT)
 Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id CEDE1618F4;
-        Thu,  6 Oct 2022 11:18:43 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 13154C433D7;
-        Thu,  6 Oct 2022 11:18:43 +0000 (UTC)
+        by sin.source.kernel.org (Postfix) with ESMTPS id 04BCCCE16A5;
+        Thu,  6 Oct 2022 11:26:05 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id AA20CC433C1;
+        Thu,  6 Oct 2022 11:26:02 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1665055123;
-        bh=NmgD4KwjgIP+G5CWV5Nr+UE8zmLMjwG+tcNbB1sVk/M=;
+        s=k20201202; t=1665055563;
+        bh=zc50yCglQ5v11FScYzVrQ541pEZf51f++rX2ZgsKapI=;
         h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=SVrVIG/l6vjZjObOaxmB4GdJ+0VdwUnMIHBos9TBagpaq2wAQaBCWs5oDETJyeWzN
-         O2cpwWRyJg4JwQED9QKPuuCS+h7AYigkPje7wKfHAuAluPXraJp2yV8TWBX1DtyF9b
-         wftjURf7cYOat5zeVekvHeS7uOFkh+Y8NL0KwYvRv3bmSId3fhhra+Qhs6AphbP73a
-         tf4ajN5WkXWimxdWHqoLoYeG98RzGGnnT3yDcl8F8Vxk/Ty+eG6E3qBIcEz+hMBi+4
-         t5q7x9+L+l/SatfPaoNCtxGbJPOWLvgHE4xtWBboSW5XAtuQgk8wGVu3EPAHOG2MuH
-         RqWGVuEC8zExw==
+        b=KcDBethSKqvFG/hBWKt0i1EqH3oZB5M6rwVc+jjkQDDBaV7RBTjE9qBZ+ye+JVNZ9
+         dPAKVe4hNtChyPnkzJ76s9C9UCevJifl2iHIoCZvKe6ieR3xkIPAd7WNfIYgpzcQNZ
+         /jBABis+7hhrXJukA2WN98YCPgpa+hoSTtEHs7TT3mUoI27FpmK/sz5dPLeVTEU2nB
+         ERz7pAe8RQQgV0rOu7UgdmYTEbP9YE6aosj8tr1XAH0poxg8z5tvD6/bHWhqfPhS+Z
+         uLbw2VT4WdQvoeZcpJ2XjUDVhNzzPnxqpmqpON0+Wv7Fv4cKwHx4MbL9Z4cfBUZ/Jc
+         gKRR8XHMwN+XA==
 Received: by quaco.ghostprotocols.net (Postfix, from userid 1000)
-        id 812644062C; Thu,  6 Oct 2022 08:18:40 -0300 (-03)
-Date:   Thu, 6 Oct 2022 08:18:40 -0300
+        id BCC2A4062C; Thu,  6 Oct 2022 08:26:00 -0300 (-03)
+Date:   Thu, 6 Oct 2022 08:26:00 -0300
 From:   Arnaldo Carvalho de Melo <acme@kernel.org>
-To:     Leo Yan <leo.yan@linaro.org>
-Cc:     Namhyung Kim <namhyung@kernel.org>,
-        Ravi Bangoria <ravi.bangoria@amd.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Jiri Olsa <jolsa@kernel.org>, linux-kernel@vger.kernel.org,
-        linux-perf-users@vger.kernel.org
-Subject: Re: [PATCH v5] perf test: Introduce script for data symbol testing
-Message-ID: <Yz65kF01XYLayp9E@kernel.org>
-References: <20221006101039.47870-1-leo.yan@linaro.org>
+To:     carsten.haitzler@foss.arm.com
+Cc:     Jiri Slaby <jirislaby@kernel.org>, linux-kernel@vger.kernel.org,
+        coresight@lists.linaro.org, suzuki.poulose@arm.com,
+        mathieu.poirier@linaro.org, mike.leach@linaro.org,
+        leo.yan@linaro.org, linux-perf-users@vger.kernel.org
+Subject: Re: [PATCH v9 02/13] perf test: Add build infra for perf test tools
+ for CoreSight tests
+Message-ID: <Yz67SHpIN5NggKEk@kernel.org>
+References: <20220909152803.2317006-1-carsten.haitzler@foss.arm.com>
+ <20220909152803.2317006-3-carsten.haitzler@foss.arm.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20221006101039.47870-1-leo.yan@linaro.org>
+In-Reply-To: <20220909152803.2317006-3-carsten.haitzler@foss.arm.com>
 X-Url:  http://acmel.wordpress.com
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-Em Thu, Oct 06, 2022 at 06:10:39PM +0800, Leo Yan escreveu:
-> This commit introduces a shell script for data symbol testing.
+Em Fri, Sep 09, 2022 at 04:27:52PM +0100, carsten.haitzler@foss.arm.com escreveu:
+> From: Carsten Haitzler <carsten.haitzler@arm.com>
 > 
-> The testing is designed a data structure with 64-byte alignment, it has
-> two fields "data1" and "data2", and other fields are reserved.
+> This adds the initial build infrastructure (makefiles maintainers
+> information) for adding follow-on tests for CoreSight.
 > 
-> Using "perf mem" command, we can record and report memory samples for a
-> self-contained workload with 1 second duration.  If have no any memory
-> sample for the data structure "buf1", it reports failure;  and by
-> checking the offset in structure "buf1", if any memory accessing is not
-> for "data1" and "data2" fields, it means wrong data symbol parsing and
-> returns failure.
-
-Replaced the one I had merged with v5 and added this:
-
-Committer testing:
-
-  [root@quaco ~]# grep -m1 "model name" /proc/cpuinfo
-  model name    : Intel(R) Core(TM) i7-8650U CPU @ 1.90GHz
-  [root@quaco ~]#
-  [root@quaco ~]# perf test -v "data symbol"
-  104: Test data symbol                                                :
-  --- start ---
-  test child forked, pid 192318
-  Compiling test program...
-  Recording workload...
-  [ perf record: Woken up 2 times to write data ]
-  [ perf record: Captured and wrote 0.389 MB /tmp/__perf_test.perf.data.LIuQl (5570 samples) ]
-  Cleaning up files...
-  test child finished with 0
-  ---- end ----
-  Test data symbol: Ok
-  [root@quaco ~]#
-
-Signed-off-by: Leo Yan <leo.yan@linaro.org>
-Tested-by: Arnaldo Carvalho de Melo <acme@redhat.com>
-
--------------
-
-The verbose mode could show the 'perf report' output, I think, but this
-can be done later, if agreed.
-
-Thanks, applied!
-
-- Arnaldo
- 
-> Signed-off-by: Leo Yan <leo.yan@linaro.org>
+> Signed-off-by: Carsten Haitzler <carsten.haitzler@arm.com>
 > ---
+>  MAINTAINERS                                   |  1 +
+>  tools/perf/Makefile.config                    |  2 ++
+>  tools/perf/Makefile.perf                      | 15 +++++++++--
+>  tools/perf/tests/shell/coresight/Makefile     | 25 +++++++++++++++++++
+>  .../tests/shell/coresight/Makefile.miniconfig | 14 +++++++++++
+>  5 files changed, 55 insertions(+), 2 deletions(-)
+>  create mode 100644 tools/perf/tests/shell/coresight/Makefile
+>  create mode 100644 tools/perf/tests/shell/coresight/Makefile.miniconfig
 > 
-> Changes from v4:
-> - Remove the redundant argument "--" before CPU list (Namhyung).
->   This patch is dependent on the fixing:
->   https://lore.kernel.org/lkml/20221004200211.1444521-1-namhyung@kernel.org/
-> 
-> Changes from v3:
-> - Add specific testing chunk for AMD CPUs (Ravi).
-> 
->  tools/perf/tests/shell/test_data_symbol.sh | 93 ++++++++++++++++++++++
->  1 file changed, 93 insertions(+)
->  create mode 100755 tools/perf/tests/shell/test_data_symbol.sh
-> 
-> diff --git a/tools/perf/tests/shell/test_data_symbol.sh b/tools/perf/tests/shell/test_data_symbol.sh
-> new file mode 100755
-> index 000000000000..cd6eb54d235d
+> diff --git a/MAINTAINERS b/MAINTAINERS
+> index 9d7f64dc0efe..c8ae5a6638b6 100644
+> --- a/MAINTAINERS
+> +++ b/MAINTAINERS
+> @@ -2029,6 +2029,7 @@ F:	drivers/hwtracing/coresight/*
+>  F:	include/dt-bindings/arm/coresight-cti-dt.h
+>  F:	include/linux/coresight*
+>  F:	samples/coresight/*
+> +F:	tools/perf/tests/shell/coresight/*
+>  F:	tools/perf/arch/arm/util/auxtrace.c
+>  F:	tools/perf/arch/arm/util/cs-etm.c
+>  F:	tools/perf/arch/arm/util/cs-etm.h
+> diff --git a/tools/perf/Makefile.config b/tools/perf/Makefile.config
+> index 0661a1cf9855..e3e28b3481f9 100644
+> --- a/tools/perf/Makefile.config
+> +++ b/tools/perf/Makefile.config
+> @@ -1291,6 +1291,8 @@ perf_examples_instdir_SQ = $(subst ','\'',$(perf_examples_instdir))
+>  STRACE_GROUPS_INSTDIR_SQ = $(subst ','\'',$(STRACE_GROUPS_INSTDIR))
+>  tip_instdir_SQ = $(subst ','\'',$(tip_instdir))
+>  
+> +export perfexec_instdir_SQ
+> +
+>  # If we install to $(HOME) we keep the traceevent default:
+>  # $(HOME)/.traceevent/plugins
+>  # Otherwise we install plugins into the global $(libdir).
+> diff --git a/tools/perf/Makefile.perf b/tools/perf/Makefile.perf
+> index e5921b347153..cef2a06c8f54 100644
+> --- a/tools/perf/Makefile.perf
+> +++ b/tools/perf/Makefile.perf
+> @@ -629,7 +629,15 @@ sync_file_range_tbls := $(srctree)/tools/perf/trace/beauty/sync_file_range.sh
+>  $(sync_file_range_arrays): $(linux_uapi_dir)/fs.h $(sync_file_range_tbls)
+>  	$(Q)$(SHELL) '$(sync_file_range_tbls)' $(linux_uapi_dir) > $@
+>  
+> -all: shell_compatibility_test $(ALL_PROGRAMS) $(LANG_BINDINGS) $(OTHER_PROGRAMS)
+> +TESTS_CORESIGHT_DIR := $(srctree)/tools/perf/tests/shell/coresight
+> +
+> +tests-coresight-targets: FORCE
+> +	$(Q)$(MAKE) -C $(TESTS_CORESIGHT_DIR)
+> +
+> +tests-coresight-targets-clean:
+> +	$(Q)$(MAKE) -C $(TESTS_CORESIGHT_DIR) clean
+> +
+> +all: shell_compatibility_test $(ALL_PROGRAMS) $(LANG_BINDINGS) $(OTHER_PROGRAMS) tests-coresight-targets
+>  
+>  # Create python binding output directory if not already present
+>  _dummy := $(shell [ -d '$(OUTPUT)python' ] || mkdir -p '$(OUTPUT)python')
+> @@ -1007,6 +1015,9 @@ install-tests: all install-gtk
+>  		$(INSTALL) -d -m 755 '$(DESTDIR_SQ)$(perfexec_instdir_SQ)/tests/shell/lib'; \
+>  		$(INSTALL) tests/shell/lib/*.sh '$(DESTDIR_SQ)$(perfexec_instdir_SQ)/tests/shell/lib'; \
+>  		$(INSTALL) tests/shell/lib/*.py '$(DESTDIR_SQ)$(perfexec_instdir_SQ)/tests/shell/lib'
+> +		$(INSTALL) -d -m 755 '$(DESTDIR_SQ)$(perfexec_instdir_SQ)/tests/shell/coresight'; \
+> +		$(INSTALL) tests/shell/coresight/*.sh '$(DESTDIR_SQ)$(perfexec_instdir_SQ)/tests/shell/coresight'
+> +	$(Q)$(MAKE) -C tests/shell/coresight install-tests
+
+Added a missing ;\ on the line installing the *.py and adjusted use -m
+644 for the .sh files to follow what was done in:
+
+  0a9eaf616f29ca32 ("perf tools: Don't install data files with x permissions")
+
+@@ -1006,7 +1014,10 @@ install-tests: all install-gtk
+                $(INSTALL) tests/shell/*.sh '$(DESTDIR_SQ)$(perfexec_instdir_SQ)/tests/shell'; \
+                $(INSTALL) -d -m 755 '$(DESTDIR_SQ)$(perfexec_instdir_SQ)/tests/shell/lib'; \
+                $(INSTALL) tests/shell/lib/*.sh -m 644 '$(DESTDIR_SQ)$(perfexec_instdir_SQ)/tests/shell/lib'; \
+-               $(INSTALL) tests/shell/lib/*.py -m 644 '$(DESTDIR_SQ)$(perfexec_instdir_SQ)/tests/shell/lib'
++               $(INSTALL) tests/shell/lib/*.py -m 644 '$(DESTDIR_SQ)$(perfexec_instdir_SQ)/tests/shell/lib'; \
++               $(INSTALL) -d -m 755 '$(DESTDIR_SQ)$(perfexec_instdir_SQ)/tests/shell/coresight'; \
++               $(INSTALL) tests/shell/coresight/*.sh -m 644 '$(DESTDIR_SQ)$(perfexec_instdir_SQ)/tests/shell/coresight'
++       $(Q)$(MAKE) -C tests/shell/coresight install-tests
+
+  
+>  install-bin: install-tools install-tests install-traceevent-plugins
+>  
+> @@ -1077,7 +1088,7 @@ endif # BUILD_BPF_SKEL
+>  bpf-skel-clean:
+>  	$(call QUIET_CLEAN, bpf-skel) $(RM) -r $(SKEL_TMP_OUT) $(SKELETONS)
+>  
+> -clean:: $(LIBTRACEEVENT)-clean $(LIBAPI)-clean $(LIBBPF)-clean $(LIBSUBCMD)-clean $(LIBPERF)-clean fixdep-clean python-clean bpf-skel-clean
+> +clean:: $(LIBTRACEEVENT)-clean $(LIBAPI)-clean $(LIBBPF)-clean $(LIBSUBCMD)-clean $(LIBPERF)-clean fixdep-clean python-clean bpf-skel-clean tests-coresight-targets-clean
+>  	$(call QUIET_CLEAN, core-objs)  $(RM) $(LIBPERF_A) $(OUTPUT)perf-archive $(OUTPUT)perf-iostat $(LANG_BINDINGS)
+>  	$(Q)find $(or $(OUTPUT),.) -name '*.o' -delete -o -name '\.*.cmd' -delete -o -name '\.*.d' -delete
+>  	$(Q)$(RM) $(OUTPUT).config-detected
+> diff --git a/tools/perf/tests/shell/coresight/Makefile b/tools/perf/tests/shell/coresight/Makefile
+> new file mode 100644
+> index 000000000000..3fee05cfcb0e
 > --- /dev/null
-> +++ b/tools/perf/tests/shell/test_data_symbol.sh
-> @@ -0,0 +1,93 @@
-> +#!/bin/bash
-> +# Test data symbol
+> +++ b/tools/perf/tests/shell/coresight/Makefile
+> @@ -0,0 +1,25 @@
+> +# SPDX-License-Identifier: GPL-2.0-only
+> +# Carsten Haitzler <carsten.haitzler@arm.com>, 2021
+> +include ../../../../../tools/scripts/Makefile.include
+> +include ../../../../../tools/scripts/Makefile.arch
+> +include ../../../../../tools/scripts/utilities.mak
 > +
-> +# SPDX-License-Identifier: GPL-2.0
-> +# Leo Yan <leo.yan@linaro.org>, 2022
+> +SUBDIRS =
 > +
-> +skip_if_no_mem_event() {
-> +	perf mem record -e list 2>&1 | egrep -q 'available' && return 0
-> +	return 2
-> +}
+> +all: $(SUBDIRS)
+> +$(SUBDIRS):
+> +	$(Q)$(MAKE) -C $@
 > +
-> +skip_if_no_mem_event || exit 2
+> +INSTALLDIRS = $(SUBDIRS:%=install-%)
 > +
-> +# skip if there's no compiler
-> +if ! [ -x "$(command -v cc)" ]; then
-> +	echo "skip: no compiler, install gcc"
-> +	exit 2
-> +fi
+> +install-tests: $(INSTALLDIRS)
+> +$(INSTALLDIRS):
+> +	$(Q)$(MAKE) -C $(@:install-%=%) install-tests
 > +
-> +TEST_PROGRAM=$(mktemp /tmp/__perf_test.program.XXXXX)
-> +PERF_DATA=$(mktemp /tmp/__perf_test.perf.data.XXXXX)
+> +CLEANDIRS = $(SUBDIRS:%=clean-%)
 > +
-> +check_result() {
-> +	# The memory report format is as below:
-> +	#    99.92%  ...  [.] buf1+0x38
-> +	result=$(perf mem report -i ${PERF_DATA} -s symbol_daddr -q 2>&1 |
-> +		 awk '/buf1/ { print $4 }')
+> +clean: $(CLEANDIRS)
+> +$(CLEANDIRS):
+> +	$(Q)$(MAKE) -C $(@:clean-%=%) clean >/dev/null
 > +
-> +	# Testing is failed if has no any sample for "buf1"
-> +	[ -z "$result" ] && return 1
+> +.PHONY: all clean $(SUBDIRS) $(CLEANDIRS) $(INSTALLDIRS)
+> diff --git a/tools/perf/tests/shell/coresight/Makefile.miniconfig b/tools/perf/tests/shell/coresight/Makefile.miniconfig
+> new file mode 100644
+> index 000000000000..5f72a9cb43f3
+> --- /dev/null
+> +++ b/tools/perf/tests/shell/coresight/Makefile.miniconfig
+> @@ -0,0 +1,14 @@
+> +# SPDX-License-Identifier: GPL-2.0-only
+> +# Carsten Haitzler <carsten.haitzler@arm.com>, 2021
 > +
-> +	while IFS= read -r line; do
-> +		# The "data1" and "data2" fields in structure "buf1" have
-> +		# offset "0x0" and "0x38", returns failure if detect any
-> +		# other offset value.
-> +		if [ "$line" != "buf1+0x0" ] && [ "$line" != "buf1+0x38" ]; then
-> +			return 1
-> +		fi
-> +	done <<< "$result"
+> +ifndef DESTDIR
+> +prefix ?= $(HOME)
+> +endif
 > +
-> +	return 0
-> +}
+> +DESTDIR_SQ = $(subst ','\'',$(DESTDIR))
+> +INSTALL = install
+> +INSTDIR_SUB = tests/shell/coresight
 > +
-> +cleanup_files()
-> +{
-> +	echo "Cleaning up files..."
-> +	rm -f ${PERF_DATA}
-> +	rm -f ${TEST_PROGRAM}
-> +}
-> +
-> +trap cleanup_files exit term int
-> +
-> +# compile test program
-> +echo "Compiling test program..."
-> +cat << EOF | cc -o ${TEST_PROGRAM} -x c -
-> +typedef struct _buf {
-> +	char data1;
-> +	char reserved[55];
-> +	char data2;
-> +} buf __attribute__((aligned(64)));
-> +
-> +static buf buf1;
-> +
-> +int main(void) {
-> +	for (;;) {
-> +		buf1.data1++;
-> +		buf1.data2 += buf1.data1;
-> +	}
-> +	return 0;
-> +}
-> +EOF
-> +
-> +echo "Recording workload..."
-> +
-> +# perf mem/c2c internally uses IBS PMU on AMD CPU which doesn't support
-> +# user/kernel filtering and per-process monitoring, spin program on
-> +# specific CPU and test in per-CPU mode.
-> +is_amd=$(egrep -c 'vendor_id.*AuthenticAMD' /proc/cpuinfo)
-> +if (($is_amd >= 1)); then
-> +	perf mem record -o ${PERF_DATA} -C 0 -- taskset -c 0 $TEST_PROGRAM &
-> +else
-> +	perf mem record --all-user -o ${PERF_DATA} -- $TEST_PROGRAM &
-> +fi
-> +
-> +PERFPID=$!
-> +
-> +sleep 1
-> +
-> +kill $PERFPID
-> +wait $PERFPID
-> +
-> +check_result
-> +exit $?
+> +include ../../../../../scripts/Makefile.include
+> +include ../../../../../scripts/Makefile.arch
+> +include ../../../../../scripts/utilities.mak
 > -- 
-> 2.34.1
+> 2.32.0
 
 -- 
 
