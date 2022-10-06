@@ -2,141 +2,61 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 620FAC433FE
-	for <linux-perf-users@archiver.kernel.org>; Thu,  6 Oct 2022 20:34:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9CC64C433FE
+	for <linux-perf-users@archiver.kernel.org>; Thu,  6 Oct 2022 20:43:25 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232176AbiJFUeD (ORCPT
+        id S229939AbiJFUnX (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Thu, 6 Oct 2022 16:34:03 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45790 "EHLO
+        Thu, 6 Oct 2022 16:43:23 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38620 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232153AbiJFUd6 (ORCPT
+        with ESMTP id S232002AbiJFUnV (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Thu, 6 Oct 2022 16:33:58 -0400
-Received: from mail-qk1-x72a.google.com (mail-qk1-x72a.google.com [IPv6:2607:f8b0:4864:20::72a])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 33E34C1D9A;
-        Thu,  6 Oct 2022 13:33:56 -0700 (PDT)
-Received: by mail-qk1-x72a.google.com with SMTP id o22so1396492qkl.8;
-        Thu, 06 Oct 2022 13:33:56 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20210112;
-        h=content-transfer-encoding:in-reply-to:from:references:cc:to
-         :content-language:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=JNBmgmbcEhRVb5/d/O8+b1/IfZcuQKrWWyPpGBHLay8=;
-        b=MHw3HdNkCpG1mwSCYrQqnL3L0IrPDqqPAD3ilpwGP90TMXi8pu0W5GlmDVedbtpfcK
-         1w/GL1Y3H0SkuA5usd7Xg9wGO/0L+otmqFDHSUU3qLcE7SAaNZSBS2aSpBCIdToIkrU1
-         wsJYWhugTQqfCjT+f4uwj0ZeetXJg90ORA+jnI03lh2xZA1UfMa+L5PycWsmNttuFRcc
-         AN8FUU5HBr+uWxxbyoW+MevYuOPjs8FDFj0QyzQJVL7mi/tY5nJPHPiI4PS2y+lK+7sC
-         zRUjczx4xMFaeTJxt37R4yeEkUUdFkybK+kaseljntR90ohTDbsNdQaH9jw5Ouv/w17y
-         b0Vg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=content-transfer-encoding:in-reply-to:from:references:cc:to
-         :content-language:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=JNBmgmbcEhRVb5/d/O8+b1/IfZcuQKrWWyPpGBHLay8=;
-        b=hP5HXP2zzc3KTP+Bj8CzfawCua3uf9uGXQRB7cuKfvvIEZx4hAYBgXcNqA2vUMRHj8
-         VCqBkBSIbwMrPvWBupYUmI8y+iZEqP/jWsce9cjqjRur2POOJxqPm2CE1sHd8IrKyJCF
-         su0ElqLJD0wLSCB6J79OEmPRr4Ka6y0VQv5mqsfbf03q+Ii3Dl6NbG154Kh+XzM93JmY
-         2VlYVZB6rUu0svBxKlmS1FaDIGtkeEUyD1wfrsVTJOx+deKGygzW2uDvsbiJL2/+/5ys
-         O6gX2N9aBa4FJ0BQDOf4pYwZWM21poFE4vsGYXtIUvqKZxcYP7DxwRod72tArXCYk1nZ
-         fC5g==
-X-Gm-Message-State: ACrzQf1dgGGV+7g731UmeeR2Xr5aoaiYnkaDTM7IKc2+IWyyEGqm6VaM
-        ISF69IEaW/EkanhpMVsNlTM=
-X-Google-Smtp-Source: AMsMyM6F4qYJwxq1tyY5ek8LBaSHy8ukK0aWx027FmAkx7naPxDDIEYwmkM+GNM1x9oufwbvzWcIAQ==
-X-Received: by 2002:ae9:e647:0:b0:6e6:62aa:b8d with SMTP id x7-20020ae9e647000000b006e662aa0b8dmr1536252qkl.669.1665088434395;
-        Thu, 06 Oct 2022 13:33:54 -0700 (PDT)
-Received: from [192.168.1.102] (ip72-194-116-95.oc.oc.cox.net. [72.194.116.95])
-        by smtp.gmail.com with ESMTPSA id j24-20020ac84418000000b0034456277e3asm411191qtn.89.2022.10.06.13.33.50
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 06 Oct 2022 13:33:53 -0700 (PDT)
-Message-ID: <ed9b8268-0128-0486-04a3-54f343afd38b@gmail.com>
-Date:   Thu, 6 Oct 2022 13:33:50 -0700
-MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:102.0) Gecko/20100101
- Thunderbird/102.3.1
-Subject: Re: [PATCH] include/uapi/linux/swab: Fix potentially missing
- __always_inline
-Content-Language: en-US
-To:     Nathan Chancellor <nathan@kernel.org>,
-        Arnd Bergmann <arnd@arndb.de>
-Cc:     linux-kernel@vger.kernel.org,
-        =?UTF-8?Q?Petr_Van=c4=9bk?= <arkamar@atlas.cz>,
-        Nick Desaulniers <ndesaulniers@google.com>,
-        Tom Rix <trix@redhat.com>, Justin Stitt <jstitt007@gmail.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Denys Vlasenko <dvlasenk@redhat.com>,
-        Ingo Molnar <mingo@kernel.org>,
-        "open list:CLANG/LLVM BUILD SUPPORT" <llvm@lists.linux.dev>,
+        Thu, 6 Oct 2022 16:43:21 -0400
+Received: from vmicros1.altlinux.org (vmicros1.altlinux.org [194.107.17.57])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTP id 92DB025E8D;
+        Thu,  6 Oct 2022 13:43:19 -0700 (PDT)
+Received: from mua.local.altlinux.org (mua.local.altlinux.org [192.168.1.14])
+        by vmicros1.altlinux.org (Postfix) with ESMTP id 0F7F072C97D;
+        Thu,  6 Oct 2022 23:43:18 +0300 (MSK)
+Received: by mua.local.altlinux.org (Postfix, from userid 508)
+        id E45DE7CF8EC; Thu,  6 Oct 2022 23:43:17 +0300 (MSK)
+Date:   Thu, 6 Oct 2022 23:43:17 +0300
+From:   "Dmitry V. Levin" <ldv@altlinux.org>
+To:     Vitaly Chikunov <vt@altlinux.org>, Jiri Olsa <jolsa@kernel.org>,
+        Arnaldo Carvalho de Melo <acme@redhat.com>,
+        Ian Rogers <irogers@google.com>
+Cc:     linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org,
         Peter Zijlstra <peterz@infradead.org>,
         Ingo Molnar <mingo@redhat.com>,
-        Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Jiri Olsa <jolsa@kernel.org>,
-        Namhyung Kim <namhyung@kernel.org>,
-        "open list:PERFORMANCE EVENTS SUBSYSTEM" 
-        <linux-perf-users@vger.kernel.org>, mmayer@broadcom.com,
-        Khem Raj <raj.khem@gmail.com>,
-        Philippe Ombredanne <pombredanne@nexb.com>,
-        Kate Stewart <kstewart@linuxfoundation.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Thomas Gleixner <tglx@linutronix.de>
-References: <20220927215256.528619-1-f.fainelli@gmail.com>
- <YzTMUpd6HbHmZu8f@dev-arch.thelio-3990X>
-From:   Florian Fainelli <f.fainelli@gmail.com>
-In-Reply-To: <YzTMUpd6HbHmZu8f@dev-arch.thelio-3990X>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
+        Arnaldo Carvalho de Melo <acme@kernel.org>
+Subject: Re: [PATCH] libperf: Remove reference to non-uapi header
+Message-ID: <20221006204317.GB11960@altlinux.org>
+References: <20221006162919.2231389-1-vt@altlinux.org>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20221006162919.2231389-1-vt@altlinux.org>
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-Hi Nathan,
+On Thu, Oct 06, 2022 at 07:29:19PM +0300, Vitaly Chikunov wrote:
+> Fix build with libperf:
+> 
+>   $ gcc ./tools/lib/perf/Documentation/examples/counting.c -lperf
+>   In file included from ./tools/lib/perf/Documentation/examples/counting.c:8:
+>   /usr/include/perf/event.h:9:10: fatal error: linux/compiler.h: No such file or directory
+>       9 | #include <linux/compiler.h>
+>         |          ^~~~~~~~~~~~~~~~~~
+>   compilation terminated.
+> 
+> Fixes: b2f10cd4e805 ("perf cpumap: Fix alignment for masks in event encoding")
+> Cc: Ian Rogers <irogers@google.com>
+> Signed-off-by: Vitaly Chikunov <vt@altlinux.org>
 
-On 9/28/2022 3:36 PM, Nathan Chancellor wrote:
-> Hi Florian,
-> 
-> On Tue, Sep 27, 2022 at 02:52:56PM -0700, Florian Fainelli wrote:
->> From: Matt Redfearn <matt.redfearn@mips.com>
->>
->> Commit bc27fb68aaad ("include/uapi/linux/byteorder, swab: force inlining
->> of some byteswap operations") added __always_inline to swab functions
->> and commit 283d75737837 ("uapi/linux/stddef.h: Provide __always_inline to
->> userspace headers") added a definition of __always_inline for use in
->> exported headers when the kernel's compiler.h is not available.
->>
->> However, since swab.h does not include stddef.h, if the header soup does
->> not indirectly include it, the definition of __always_inline is missing,
->> resulting in a compilation failure, which was observed compiling the
->> perf tool using exported headers containing this commit:
->>
->> In file included from /usr/include/linux/byteorder/little_endian.h:12:0,
->>                   from /usr/include/asm/byteorder.h:14,
->>                   from tools/include/uapi/linux/perf_event.h:20,
->>                   from perf.h:8,
->>                   from builtin-bench.c:18:
->> /usr/include/linux/swab.h:160:8: error: unknown type name `__always_inline'
->>   static __always_inline __u16 __swab16p(const __u16 *p)
->>
->> Fix this by replacing the inclusion of linux/compiler.h with
->> linux/stddef.h to ensure that we pick up that definition if required,
->> without relying on it's indirect inclusion. compiler.h is then included
->> indirectly, via stddef.h.
->>
->> Fixes: 283d75737837 ("uapi/linux/stddef.h: Provide __always_inline to userspace headers")
->> Signed-off-by: Matt Redfearn <matt.redfearn@mips.com>
->> Reviewed-by: Petr Vaněk <arkamar@atlas.cz>
->> Signed-off-by: Florian Fainelli <f.fainelli@gmail.com>
-> 
-> I took this through my kernel build matrix and did not see any new
-> issues.
-> 
-> Tested-by: Nathan Chancellor <nathan@kernel.org>
+Reviewed-by: Dmitry V. Levin <ldv@altlinux.org>
 
-Great thanks! Since this is really useful for kernel-headers in 
-toolchains, it would be great to get this picked up. Arnd is this 
-something that would go via your tree?
+
 -- 
-Florian
+ldv
