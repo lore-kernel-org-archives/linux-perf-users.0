@@ -2,130 +2,106 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0B5A5C433F5
-	for <linux-perf-users@archiver.kernel.org>; Thu,  6 Oct 2022 11:42:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 236C5C433F5
+	for <linux-perf-users@archiver.kernel.org>; Thu,  6 Oct 2022 11:45:28 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229636AbiJFLms (ORCPT
+        id S229538AbiJFLp1 (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Thu, 6 Oct 2022 07:42:48 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33404 "EHLO
+        Thu, 6 Oct 2022 07:45:27 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40968 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229611AbiJFLmr (ORCPT
+        with ESMTP id S229548AbiJFLp0 (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Thu, 6 Oct 2022 07:42:47 -0400
-Received: from mx0a-001b2d01.pphosted.com (mx0a-001b2d01.pphosted.com [148.163.156.1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4A3DF8321B;
-        Thu,  6 Oct 2022 04:42:46 -0700 (PDT)
-Received: from pps.filterd (m0098399.ppops.net [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (8.17.1.5/8.17.1.5) with ESMTP id 296Ae425011367;
-        Thu, 6 Oct 2022 11:42:36 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=from : to : cc : subject
- : date : message-id : content-transfer-encoding : mime-version; s=pp1;
- bh=bTRBm93w0F2WaBTEd/U8k3M7to/YHtOOTs0ZEXznUI4=;
- b=CQCw/wp1Hdd0xOxO9lcHPvYtjHfPs7+yNsmL+G+XCTWZWy6rmxdIhAZt9uhNfkr7gj5p
- AYm9UVN113Mf5YQpIQH/sV/ldFWFuEwPtVYceNuThlD1goHpPZnA37pZq/ONigPSmfdp
- 4fT3e77zI8XDJxalhAeSt2wcUhyRFpNDiNl3OP862VQnhk7YEZNAthbEgBVWkZaghE0l
- 9z8uLDc9LBomKpBHxd2Mn9RxBM2zazCPcaFW26MmWC4cq2JnNybH56ncrjPNOjF3ZnvH
- SjSYGnen83aEqamZFYDO2B1ltEY2/862lfBAxYjpp4dVN37z1Nl3+FZDO+edMLIYt6eU 3A== 
-Received: from ppma06fra.de.ibm.com (48.49.7a9f.ip4.static.sl-reverse.com [159.122.73.72])
-        by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 3k1vm4jvt1-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Thu, 06 Oct 2022 11:42:36 +0000
-Received: from pps.filterd (ppma06fra.de.ibm.com [127.0.0.1])
-        by ppma06fra.de.ibm.com (8.16.1.2/8.16.1.2) with SMTP id 296Bb1o1028812;
-        Thu, 6 Oct 2022 11:42:34 GMT
-Received: from b06cxnps4076.portsmouth.uk.ibm.com (d06relay13.portsmouth.uk.ibm.com [9.149.109.198])
-        by ppma06fra.de.ibm.com with ESMTP id 3jxcthw4f8-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Thu, 06 Oct 2022 11:42:34 +0000
-Received: from b06wcsmtp001.portsmouth.uk.ibm.com (b06wcsmtp001.portsmouth.uk.ibm.com [9.149.105.160])
-        by b06cxnps4076.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 296BgUpv1507978
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Thu, 6 Oct 2022 11:42:30 GMT
-Received: from b06wcsmtp001.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id A2A1DA405B;
-        Thu,  6 Oct 2022 11:42:30 +0000 (GMT)
-Received: from b06wcsmtp001.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 30661A4054;
-        Thu,  6 Oct 2022 11:42:28 +0000 (GMT)
-Received: from localhost.localdomain (unknown [9.43.29.124])
-        by b06wcsmtp001.portsmouth.uk.ibm.com (Postfix) with ESMTP;
-        Thu,  6 Oct 2022 11:42:27 +0000 (GMT)
-From:   Athira Rajeev <atrajeev@linux.vnet.ibm.com>
-To:     acme@kernel.org, jolsa@kernel.org, mpe@ellerman.id.au
-Cc:     linux-perf-users@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
-        linux-kernel@vger.kernel.org, maddy@linux.vnet.ibm.com,
-        rnsastry@linux.ibm.com, kjain@linux.ibm.com,
-        disgoel@linux.vnet.ibm.com
-Subject: [PATCH] tools/perf: Fix cpu check to use id.cpu.cpu in aggr_printout
-Date:   Thu,  6 Oct 2022 17:12:25 +0530
-Message-Id: <20221006114225.66303-1-atrajeev@linux.vnet.ibm.com>
-X-Mailer: git-send-email 2.35.1
-X-TM-AS-GCONF: 00
-X-Proofpoint-ORIG-GUID: lSogSH7B4kP3K5tI7OGmOZ4kMcZqpUBm
-X-Proofpoint-GUID: lSogSH7B4kP3K5tI7OGmOZ4kMcZqpUBm
-Content-Transfer-Encoding: 8bit
-X-Proofpoint-UnRewURL: 0 URL was un-rewritten
+        Thu, 6 Oct 2022 07:45:26 -0400
+Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 30CF12ED57;
+        Thu,  6 Oct 2022 04:45:22 -0700 (PDT)
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by dfw.source.kernel.org (Postfix) with ESMTPS id 523CD61913;
+        Thu,  6 Oct 2022 11:45:22 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 86430C433D6;
+        Thu,  6 Oct 2022 11:45:21 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1665056721;
+        bh=Q1eZazJ5RxfOSUkA0Gm/LTBZPqBKWabbaJQay1sX0gs=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=iuib0PxM7Ad/imn7FUYlsTSVAK0BmQQmFZbxEpQOA2pRhjmS/Z1KmP8p3DQqlSmT4
+         vWH3OdKtKsGmbCyB3y0q8gC0LjtGTYFVLF9Tt+BXX9mJwGAXbzyOsy0qsLTpGpTqzJ
+         CTz/tmR6rOuc9eyp0dpLZqYDaIZfcMSImQ2OgzZaZTljmCZPu6iz0uStfWhnz4Jf5s
+         ql8KNth1zbfAaIUv212fEZzGcGzbnqMkfVLQRSLovOrvjoQqA/FpwKs3RjEMSXpjjU
+         AH4iKfPcN3eV/5ir8QFLyZPvjNNud3Z79mr3Ti3Ge2Vs/+RC+uYlcNmW9DgRUFDpxj
+         TaSMiSmbkGnaQ==
+Received: by quaco.ghostprotocols.net (Postfix, from userid 1000)
+        id C244D4062C; Thu,  6 Oct 2022 08:45:18 -0300 (-03)
+Date:   Thu, 6 Oct 2022 08:45:18 -0300
+From:   Arnaldo Carvalho de Melo <acme@kernel.org>
+To:     carsten.haitzler@foss.arm.com
+Cc:     Jiri Slaby <jirislaby@kernel.org>, linux-kernel@vger.kernel.org,
+        coresight@lists.linaro.org, suzuki.poulose@arm.com,
+        mathieu.poirier@linaro.org, mike.leach@linaro.org,
+        leo.yan@linaro.org, linux-perf-users@vger.kernel.org
+Subject: Re: [PATCH v9 02/13] perf test: Add build infra for perf test tools
+ for CoreSight tests
+Message-ID: <Yz6/zlchVnNsVlzJ@kernel.org>
+References: <20220909152803.2317006-1-carsten.haitzler@foss.arm.com>
+ <20220909152803.2317006-3-carsten.haitzler@foss.arm.com>
+ <Yz67SHpIN5NggKEk@kernel.org>
 MIME-Version: 1.0
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.205,Aquarius:18.0.895,Hydra:6.0.528,FMLib:17.11.122.1
- definitions=2022-10-05_05,2022-10-06_02,2022-06-22_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 mlxscore=0 bulkscore=0
- spamscore=0 malwarescore=0 adultscore=0 lowpriorityscore=0 impostorscore=0
- clxscore=1011 phishscore=0 suspectscore=0 priorityscore=1501
- mlxlogscore=999 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2209130000 definitions=main-2210060069
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <Yz67SHpIN5NggKEk@kernel.org>
+X-Url:  http://acmel.wordpress.com
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-perf stat has options to aggregate the counts in different
-modes like per socket, per core etc. The function "aggr_printout"
-in util/stat-display.c which is used to print the aggregates,
-has a check for cpu in case of AGGR_NONE. This check was
-originally using condition : "if (id.cpu.cpu > -1)". But
-this got changed after commit df936cadfb58 ("perf stat: Add
-JSON output option"), which added option to output json format
-for different aggregation modes. After this commit, the
-check in "aggr_printout" is using "if (id.core > -1)".
+Em Thu, Oct 06, 2022 at 08:26:00AM -0300, Arnaldo Carvalho de Melo escreveu:
+> Em Fri, Sep 09, 2022 at 04:27:52PM +0100, carsten.haitzler@foss.arm.com escreveu:
+> > +all: shell_compatibility_test $(ALL_PROGRAMS) $(LANG_BINDINGS) $(OTHER_PROGRAMS) tests-coresight-targets
+> >  
+> >  # Create python binding output directory if not already present
+> >  _dummy := $(shell [ -d '$(OUTPUT)python' ] || mkdir -p '$(OUTPUT)python')
+> > @@ -1007,6 +1015,9 @@ install-tests: all install-gtk
+> >  		$(INSTALL) -d -m 755 '$(DESTDIR_SQ)$(perfexec_instdir_SQ)/tests/shell/lib'; \
+> >  		$(INSTALL) tests/shell/lib/*.sh '$(DESTDIR_SQ)$(perfexec_instdir_SQ)/tests/shell/lib'; \
+> >  		$(INSTALL) tests/shell/lib/*.py '$(DESTDIR_SQ)$(perfexec_instdir_SQ)/tests/shell/lib'
+> > +		$(INSTALL) -d -m 755 '$(DESTDIR_SQ)$(perfexec_instdir_SQ)/tests/shell/coresight'; \
+> > +		$(INSTALL) tests/shell/coresight/*.sh '$(DESTDIR_SQ)$(perfexec_instdir_SQ)/tests/shell/coresight'
+> > +	$(Q)$(MAKE) -C tests/shell/coresight install-tests
+> 
+> Added a missing ;\ on the line installing the *.py and adjusted use -m
+> 644 for the .sh files to follow what was done in:
+> 
+>   0a9eaf616f29ca32 ("perf tools: Don't install data files with x permissions")
+> 
+> @@ -1006,7 +1014,10 @@ install-tests: all install-gtk
+>                 $(INSTALL) tests/shell/*.sh '$(DESTDIR_SQ)$(perfexec_instdir_SQ)/tests/shell'; \
+>                 $(INSTALL) -d -m 755 '$(DESTDIR_SQ)$(perfexec_instdir_SQ)/tests/shell/lib'; \
+>                 $(INSTALL) tests/shell/lib/*.sh -m 644 '$(DESTDIR_SQ)$(perfexec_instdir_SQ)/tests/shell/lib'; \
+> -               $(INSTALL) tests/shell/lib/*.py -m 644 '$(DESTDIR_SQ)$(perfexec_instdir_SQ)/tests/shell/lib'
+> +               $(INSTALL) tests/shell/lib/*.py -m 644 '$(DESTDIR_SQ)$(perfexec_instdir_SQ)/tests/shell/lib'; \
+> +               $(INSTALL) -d -m 755 '$(DESTDIR_SQ)$(perfexec_instdir_SQ)/tests/shell/coresight'; \
+> +               $(INSTALL) tests/shell/coresight/*.sh -m 644 '$(DESTDIR_SQ)$(perfexec_instdir_SQ)/tests/shell/coresight'
+> +       $(Q)$(MAKE) -C tests/shell/coresight install-tests
+> 
 
-The old code was using "id.cpu.cpu > -1" while the new code
-is using "id.core > -1". But since the value printed is
-id.cpu.cpu, fix this check to use cpu and not core.
+Also had to remove:
 
-Suggested-by: James Clark <james.clark@arm.com>
-Suggested-by: Ian Rogers <irogers@google.com>
-Signed-off-by: Athira Rajeev <atrajeev@linux.vnet.ibm.com>
-Tested-by: Ian Rogers <irogers@google.com>
----
-Note: Details for discussion on this logic:
-https://www.spinics.net/lists/linux-perf-users/msg22473.html
+		$(INSTALL) tests/shell/coresight/*.sh -m 644 '$(DESTDIR_SQ)$(perfexec_instdir_SQ)/tests/shell/coresight'
 
- tools/perf/util/stat-display.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+from this patch, as it makes install fail at this point in the patchset:
 
-diff --git a/tools/perf/util/stat-display.c b/tools/perf/util/stat-display.c
-index b82844cb0ce7..cf28020798ec 100644
---- a/tools/perf/util/stat-display.c
-+++ b/tools/perf/util/stat-display.c
-@@ -168,7 +168,7 @@ static void aggr_printout(struct perf_stat_config *config,
- 					id.socket,
- 					id.die,
- 					id.core);
--			} else if (id.core > -1) {
-+			} else if (id.cpu.cpu > -1) {
- 				fprintf(config->output, "\"cpu\" : \"%d\", ",
- 					id.cpu.cpu);
- 			}
-@@ -179,7 +179,7 @@ static void aggr_printout(struct perf_stat_config *config,
- 					id.die,
- 					config->csv_output ? 0 : -3,
- 					id.core, config->csv_sep);
--			} else if (id.core > -1) {
-+			} else if (id.cpu.cpu > -1) {
- 				fprintf(config->output, "CPU%*d%s",
- 					config->csv_output ? 0 : -7,
- 					id.cpu.cpu, config->csv_sep);
--- 
-2.31.1
+  DESCEND plugins
+  GEN     /tmp/build/perf/python/perf.so
+  INSTALL trace_plugins
+  INSTALL binaries
+  INSTALL tests
+install: cannot stat 'tests/shell/coresight/*.sh': No such file or directory
+make[2]: *** [Makefile.perf:1007: install-tests] Error 1
+make[2]: *** Waiting for unfinished jobs....
 
+I'll add it back when the first .sh gets added to tests/shell/coresight/
+
+- Arnaldo
