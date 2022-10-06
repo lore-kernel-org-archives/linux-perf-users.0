@@ -2,180 +2,300 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 471B4C433FE
-	for <linux-perf-users@archiver.kernel.org>; Thu,  6 Oct 2022 13:55:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 31855C433F5
+	for <linux-perf-users@archiver.kernel.org>; Thu,  6 Oct 2022 14:00:13 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229936AbiJFNzF (ORCPT
+        id S230493AbiJFOAL (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Thu, 6 Oct 2022 09:55:05 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60092 "EHLO
+        Thu, 6 Oct 2022 10:00:11 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41780 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230202AbiJFNzE (ORCPT
+        with ESMTP id S231526AbiJFOAG (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Thu, 6 Oct 2022 09:55:04 -0400
-Received: from mail-pj1-x1032.google.com (mail-pj1-x1032.google.com [IPv6:2607:f8b0:4864:20::1032])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 92AA32A944
-        for <linux-perf-users@vger.kernel.org>; Thu,  6 Oct 2022 06:55:02 -0700 (PDT)
-Received: by mail-pj1-x1032.google.com with SMTP id q10-20020a17090a304a00b0020b1d5f6975so723815pjl.0
-        for <linux-perf-users@vger.kernel.org>; Thu, 06 Oct 2022 06:55:02 -0700 (PDT)
+        Thu, 6 Oct 2022 10:00:06 -0400
+Received: from mail-ed1-x531.google.com (mail-ed1-x531.google.com [IPv6:2a00:1450:4864:20::531])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 15F672873D
+        for <linux-perf-users@vger.kernel.org>; Thu,  6 Oct 2022 07:00:05 -0700 (PDT)
+Received: by mail-ed1-x531.google.com with SMTP id z3so1972401edc.10
+        for <linux-perf-users@vger.kernel.org>; Thu, 06 Oct 2022 07:00:05 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:from:to:cc:subject:date;
-        bh=GNscnZawRSDQzcarRuJ7ggWN/Upkivk6LJB9jm7BUAk=;
-        b=BESDIcpUHn+E7ivOxrUkidOviXvpwCq2MRue2gIuswNndgRPzvFaivL7Nd/p1iV567
-         GGf+EpEIp2KMxGEW8fruwQ5jFG4mI6Ft4KsjARUxSyClS/fQ5tpsSyS2jQu4twNEtGj4
-         f5cMJJjiuan4QmcrS0jyt8ImhHWj2q1DeED+5wyeDI/23l/hmv9mUQTkC99Afu8Jzw0j
-         No8dK2IvE+tfUf69ikOdnNMPU5mVzos+Jubf1afaQynbFwOMlGK8MAetpYMaC5CZpscb
-         ywjTc613OjeDjt07y9JvAz6R7QfECG5j8qGLy1E11EiT70KDdHpzQg4I7TZqAT1wO+4w
-         k34w==
+        d=google.com; s=20210112;
+        h=user-agent:in-reply-to:content-disposition:mime-version:references
+         :message-id:subject:cc:to:from:date:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=E3VUvRlbpuvf0sSI/tMS6r4LiVAE0zxyqHrBnHrDjVs=;
+        b=gqWZo0POJFIpXr6KC2pBuLd9vp3XUt7rv5cfK/YRtT8dWF7zknLkup9KyDu6I3ZO5C
+         NSxgqn/8zdG+o+eQp9iu2PS03+ULrVn5n2wYa/nzEHdc1d4fGTYghzmRDt/H069GSYac
+         7HUihpidwUaizW8onUuV2B+TdjUPeDd2Xr6f+UZ485VyIttUjGUehJbEV4n3FjzzEAf+
+         223OZ02LAPr/+yJ7/0bjwfCEz+jhJ2O6whEx0pks8Xu2pDD1Q0v/QejRVE4J7bN2RtAU
+         PxklD38eAETKbfvvkgXI/Zk7lNDWiwv1FGOp18brdxxRQf8ntv6ZDWopr/u1OUzmqgMR
+         ctKA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date;
-        bh=GNscnZawRSDQzcarRuJ7ggWN/Upkivk6LJB9jm7BUAk=;
-        b=ikAm00WHjUOjb0gDU0jmWDuAAjX7ej6/mrr6UcRRl5Fs8M3Sv3lx3XWpdCERTd7yPU
-         c6L+fSNYI7MxlS0sBXLnpVicjug/SSdr+ccggSvjo9d1GRSzNx4I10LGcAZrP6lzvavD
-         +5AqC8ehOm7vGJ/S1YGiL3CJir7tfgzBcEAAmfUXt1XGejKY1Ew8hu17R3mCsaXkR9Dd
-         INP8zO5YiJiTtz6eTJ2WeJ9wOcLhceCfXBRybsszFhMonta4RF/nIHZpHqpC8NJo3iDx
-         hHuYvMw4rxKFJbhMWnDGkgEwWpoDqOc4tZzxyBRdw+gkuFSNizxm1NmEi+MInnG4NzAZ
-         rhYQ==
-X-Gm-Message-State: ACrzQf3vRlDBxSzvt3vok+sJY2+N6ZxLmqfp/ZHI5e3YQpJa0wv+o4sd
-        Ou9a2LsFNxgKJ+sIQ5VIkK5LU7dn0zX2mAO0Y8LYyg==
-X-Google-Smtp-Source: AMsMyM7w4WLaVjg1vKq7SIEJAdDjx6f75uDM8/Fw5Cc0L0xz/tWLHg/d+3Q1BFthTdn8Fc8zlzyJHq4Chz0n4BUZ7zY=
-X-Received: by 2002:a17:902:6b04:b0:17a:15a:1229 with SMTP id
- o4-20020a1709026b0400b0017a015a1229mr4651252plk.24.1665064502039; Thu, 06 Oct
- 2022 06:55:02 -0700 (PDT)
+        h=user-agent:in-reply-to:content-disposition:mime-version:references
+         :message-id:subject:cc:to:from:date:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=E3VUvRlbpuvf0sSI/tMS6r4LiVAE0zxyqHrBnHrDjVs=;
+        b=fQMSRzDkg8kjVb848Tre25FkrQOek4VGXz6VXpYxvXA4HRv0iAAbF8GWsle2KGf9wA
+         KbG2jlaFg4kAVKuNXmFpmw0NCeKyV7tthgMuC+nU/uUxPfhnm/D1t/4We7OPkO5aRN72
+         +AnhwwI1eOO00bgPj5z7ld4hmiCjTyH23I/vr0abY4rjfyp1nE3foWxr78s/M4KJ0jmw
+         +iW5h0QKrT9gehUQeoAyDEhq5B6FlcZqcEFvUQuEXxcD0uzNOtjUe6RwGIKfeu5lt0V7
+         d5Q+L1/XGq2MrHYnKL5AewMvK/DxFb5gCa3A2ZqVQSUrPdt+mRbaE6mGRFOKP/ylMm/h
+         vuUA==
+X-Gm-Message-State: ACrzQf2Lms0m/dNQaGWUqcL/tQWr1pW2FwcUEEnmbwqn7GJAz7sxsO8U
+        hMyTmuheHDoS4Upyoze7EU0YEQ==
+X-Google-Smtp-Source: AMsMyM6U8geCMz0HfEPcxRTfzYl8glFCMpBQGQRDMLam2KLlSCcpSglOCh36sG+3x+wK4VMIOQoBhQ==
+X-Received: by 2002:a05:6402:156:b0:440:b458:93df with SMTP id s22-20020a056402015600b00440b45893dfmr4982111edu.337.1665064803139;
+        Thu, 06 Oct 2022 07:00:03 -0700 (PDT)
+Received: from elver.google.com ([2a00:79e0:9c:201:504b:a880:4e60:e32d])
+        by smtp.gmail.com with ESMTPSA id er6-20020a056402448600b004580b26e32esm5812366edb.81.2022.10.06.07.00.02
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 06 Oct 2022 07:00:02 -0700 (PDT)
+Date:   Thu, 6 Oct 2022 15:59:55 +0200
+From:   Marco Elver <elver@google.com>
+To:     Peter Zijlstra <peterz@infradead.org>
+Cc:     Ingo Molnar <mingo@redhat.com>,
+        Arnaldo Carvalho de Melo <acme@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Jiri Olsa <jolsa@kernel.org>,
+        Namhyung Kim <namhyung@kernel.org>,
+        linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org,
+        kasan-dev@googlegroups.com, Dmitry Vyukov <dvyukov@google.com>
+Subject: Re: [PATCH] perf: Fix missing SIGTRAPs
+Message-ID: <Yz7fWw8duIOezSW1@elver.google.com>
+References: <20220927121322.1236730-1-elver@google.com>
+ <Yz7ZLaT4jW3Y9EYS@hirez.programming.kicks-ass.net>
 MIME-Version: 1.0
-References: <20220809223401.24599-1-mike.leach@linaro.org> <20220809223401.24599-4-mike.leach@linaro.org>
- <65e70db9-9f85-7285-0602-f2d29887550a@arm.com>
-In-Reply-To: <65e70db9-9f85-7285-0602-f2d29887550a@arm.com>
-From:   Mike Leach <mike.leach@linaro.org>
-Date:   Thu, 6 Oct 2022 14:54:50 +0100
-Message-ID: <CAJ9a7Vgz+0xEQO-MvGUzbsr_LBh4pDep7JJtFoA+cAeiAERJFw@mail.gmail.com>
-Subject: Re: [PATCH v3 03/13] coresight: stm: Update STM driver to use Trace
- ID API
-To:     Suzuki K Poulose <suzuki.poulose@arm.com>
-Cc:     coresight@lists.linaro.org, linux-arm-kernel@lists.infradead.org,
-        linux-kernel@vger.kernel.org, mathieu.poirier@linaro.org,
-        peterz@infradead.org, mingo@redhat.com, acme@kernel.org,
-        linux-perf-users@vger.kernel.org, leo.yan@linaro.org,
-        quic_jinlmao@quicinc.com
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <Yz7ZLaT4jW3Y9EYS@hirez.programming.kicks-ass.net>
+User-Agent: Mutt/2.2.7 (2022-08-07)
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-Hi Suzuki,
+On Thu, Oct 06, 2022 at 03:33PM +0200, Peter Zijlstra wrote:
+> 
+> OK, so the below seems to pass the concurrent sigtrap_threads test for
+> me and doesn't have that horrible irq_work_sync hackery.
+> 
+> Does it work for you too?
 
-On Mon, 3 Oct 2022 at 10:04, Suzuki K Poulose <suzuki.poulose@arm.com> wrote:
->
-> On 09/08/2022 23:33, Mike Leach wrote:
-> > Updates the STM driver to use the trace ID allocation API.
-> > This uses the _system_id calls to allocate an ID on device poll,
-> > and release on device remove.
-> >
-> > The sysfs access to the STMTRACEIDR register has been changed from RW
-> > to RO. Having this value as writable is not appropriate for the new
-> > Trace ID scheme - and had potential to cause errors in the previous
-> > scheme if values clashed with other sources.
-> >
-> > Signed-off-by: Mike Leach <mike.leach@linaro.org>
-> > Reviewed-by: Suzuki K Poulose <suzuki.poulose@arm.com>
-> > ---
-> >   drivers/hwtracing/coresight/coresight-stm.c | 41 +++++++--------------
-> >   1 file changed, 14 insertions(+), 27 deletions(-)
-> >
-> > diff --git a/drivers/hwtracing/coresight/coresight-stm.c b/drivers/hwtracing/coresight/coresight-stm.c
-> > index bb14a3a8a921..9ef3e923a930 100644
-> > --- a/drivers/hwtracing/coresight/coresight-stm.c
-> > +++ b/drivers/hwtracing/coresight/coresight-stm.c
-> > @@ -31,6 +31,7 @@
-> >   #include <linux/stm.h>
-> >
-> >   #include "coresight-priv.h"
-> > +#include "coresight-trace-id.h"
-> >
-> >   #define STMDMASTARTR                        0xc04
-> >   #define STMDMASTOPR                 0xc08
-> > @@ -615,24 +616,7 @@ static ssize_t traceid_show(struct device *dev,
-> >       val = drvdata->traceid;
-> >       return sprintf(buf, "%#lx\n", val);
-> >   }
-> > -
-> > -static ssize_t traceid_store(struct device *dev,
-> > -                          struct device_attribute *attr,
-> > -                          const char *buf, size_t size)
-> > -{
-> > -     int ret;
-> > -     unsigned long val;
-> > -     struct stm_drvdata *drvdata = dev_get_drvdata(dev->parent);
-> > -
-> > -     ret = kstrtoul(buf, 16, &val);
-> > -     if (ret)
-> > -             return ret;
-> > -
-> > -     /* traceid field is 7bit wide on STM32 */
-> > -     drvdata->traceid = val & 0x7f;
-> > -     return size;
-> > -}
-> > -static DEVICE_ATTR_RW(traceid);
-> > +static DEVICE_ATTR_RO(traceid);
-> >
-> >   #define coresight_stm_reg(name, offset)     \
-> >       coresight_simple_reg32(struct stm_drvdata, name, offset)
-> > @@ -819,14 +803,6 @@ static void stm_init_default_data(struct stm_drvdata *drvdata)
-> >        */
-> >       drvdata->stmsper = ~0x0;
-> >
-> > -     /*
-> > -      * The trace ID value for *ETM* tracers start at CPU_ID * 2 + 0x10 and
-> > -      * anything equal to or higher than 0x70 is reserved.  Since 0x00 is
-> > -      * also reserved the STM trace ID needs to be higher than 0x00 and
-> > -      * lowner than 0x10.
-> > -      */
-> > -     drvdata->traceid = 0x1;
-> > -
-> >       /* Set invariant transaction timing on all channels */
-> >       bitmap_clear(drvdata->chs.guaranteed, 0, drvdata->numsp);
-> >   }
-> > @@ -854,7 +830,7 @@ static void stm_init_generic_data(struct stm_drvdata *drvdata,
-> >
-> >   static int stm_probe(struct amba_device *adev, const struct amba_id *id)
-> >   {
-> > -     int ret;
-> > +     int ret, trace_id;
-> >       void __iomem *base;
-> >       struct device *dev = &adev->dev;
-> >       struct coresight_platform_data *pdata = NULL;
-> > @@ -938,12 +914,22 @@ static int stm_probe(struct amba_device *adev, const struct amba_id *id)
-> >               goto stm_unregister;
-> >       }
-> >
-> > +     trace_id = coresight_trace_id_get_system_id();
-> > +     if (trace_id < 0) {
->
-> The above API returns "INVALID_ID" and not a negative error status.
-> I think it is better to fix the API to return:
->
->    ret < 0  - If there is any error
->             - Otherwise a positive integer
-> And the users should be kept unaware of which ID is valid or invalid.
->
+I'm getting this (courtesy of syzkaller):
 
-coresight_trace_id_get_system_id() returns the ID if one can be
-allocated or -EINVAL if not.
+ |  BUG: using smp_processor_id() in preemptible [00000000] code: syz-executor.8/22848
+ |  caller is perf_swevent_get_recursion_context+0x13/0x80
+ |  CPU: 0 PID: 22860 Comm: syz-executor.6 Not tainted 6.0.0-rc3-00017-g1472d7e42f41 #64
+ |  Hardware name: QEMU Standard PC (i440FX + PIIX, 1996), BIOS 1.16.0-debian-1.16.0-4 04/01/2014
+ |  Call Trace:
+ |   <TASK>
+ |   dump_stack_lvl+0x6a/0x86
+ |   check_preemption_disabled+0xdf/0xf0
+ |   perf_swevent_get_recursion_context+0x13/0x80
+ |   perf_pending_task+0xf/0x80
+ |   task_work_run+0x73/0xc0
+ |   do_exit+0x459/0xf20
+ |   do_group_exit+0x3f/0xe0
+ |   get_signal+0xe04/0xe60
+ |   arch_do_signal_or_restart+0x3f/0x780
+ |   exit_to_user_mode_prepare+0x135/0x1a0
+ |   irqentry_exit_to_user_mode+0x6/0x30
+ |   asm_sysvec_irq_work+0x16/0x20
 
-Not sure what you are looking at here.
+That one I could fix up with:
 
-Mike
+ | diff --git a/kernel/events/core.c b/kernel/events/core.c
+ | index 9319af6013f1..2f1d51b50be7 100644
+ | --- a/kernel/events/core.c
+ | +++ b/kernel/events/core.c
+ | @@ -6563,6 +6563,7 @@ static void perf_pending_task(struct callback_head *head)
+ |  	 * If we 'fail' here, that's OK, it means recursion is already disabled
+ |  	 * and we won't recurse 'further'.
+ |  	 */
+ | +	preempt_disable_notrace();
+ |  	rctx = perf_swevent_get_recursion_context();
+ |  
+ |  	if (event->pending_work) {
+ | @@ -6573,6 +6574,7 @@ static void perf_pending_task(struct callback_head *head)
+ |  
+ |  	if (rctx >= 0)
+ |  		perf_swevent_put_recursion_context(rctx);
+ | +	preempt_enable_notrace();
+ |  }
+ |  
+ |  #ifdef CONFIG_GUEST_PERF_EVENTS
+
+But following that, I get:
+
+ | ======================================================
+ | WARNING: possible circular locking dependency detected
+ | 6.0.0-rc3-00017-g1472d7e42f41-dirty #65 Not tainted
+ | ------------------------------------------------------
+ | syz-executor.11/13018 is trying to acquire lock:
+ | ffffffffbb754a18 ((console_sem).lock){-.-.}-{2:2}, at: down_trylock+0xa/0x30 kernel/locking/semaphore.c:139
+ | 
+ | but task is already holding lock:
+ | ffff8ea992e00e20 (&ctx->lock){-.-.}-{2:2}, at: perf_event_context_sched_out kernel/events/core.c:3499 [inline]
+ | ffff8ea992e00e20 (&ctx->lock){-.-.}-{2:2}, at: __perf_event_task_sched_out+0x29e/0xb50 kernel/events/core.c:3608
+ | 
+ | which lock already depends on the new lock.
+ | 
+ |  << snip ... lockdep unhappy we're trying to WARN >>
+ | 
+ | WARNING: CPU: 3 PID: 13018 at kernel/events/core.c:2288 event_sched_out+0x3f2/0x410 kernel/events/core.c:2288
+ | Modules linked in:
+ | CPU: 3 PID: 13018 Comm: syz-executor.11 Not tainted 6.0.0-rc3-00017-g1472d7e42f41-dirty #65
+ | Hardware name: QEMU Standard PC (i440FX + PIIX, 1996), BIOS 1.16.0-debian-1.16.0-4 04/01/2014
+ | RIP: 0010:event_sched_out+0x3f2/0x410 kernel/events/core.c:2288
+ | Code: ff ff e8 21 b2 f9 ff 65 8b 05 76 67 7f 46 85 c0 0f 84 0f ff ff ff e8 0d b2 f9 ff 90 0f 0b 90 e9 01 ff ff ff e8 ff b1 f9 ff 90 <0f> 0b 90 e9 3b fe ff ff e8 f1 b1 f9 ff 90 0f 0b 90 e9 01 ff ff ff
+ | RSP: 0018:ffffa69c8931f9a8 EFLAGS: 00010012
+ | RAX: 0000000040000000 RBX: ffff8ea99526f1c8 RCX: ffffffffb9824d01
+ | RDX: ffff8ea9934a0040 RSI: 0000000000000000 RDI: ffff8ea99526f1c8
+ | RBP: ffff8ea992e00e00 R08: 0000000000000000 R09: 0000000000000000
+ | R10: 00000000820822cd R11: 00000000d820822c R12: ffff8eacafcf2e50
+ | R13: ffff8eacafcf2e58 R14: ffffffffbb62e9a0 R15: ffff8ea992e00ef8
+ | FS:  00007fdcddbb6640(0000) GS:ffff8eacafcc0000(0000) knlGS:0000000000000000
+ | CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+ | CR2: 00007fdcddbb5fa8 CR3: 0000000112846004 CR4: 0000000000770ee0
+ | DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
+ | DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000600
+ | PKRU: 55555554
+ | Call Trace:
+ |  <TASK>
+ |  group_sched_out.part.0+0x5c/0xe0 kernel/events/core.c:2320
+ |  group_sched_out kernel/events/core.c:2315 [inline]
+ |  ctx_sched_out+0x35d/0x3c0 kernel/events/core.c:3288
+ |  task_ctx_sched_out+0x3d/0x60 kernel/events/core.c:2657
+ |  perf_event_context_sched_out kernel/events/core.c:3505 [inline]
+ |  __perf_event_task_sched_out+0x31b/0xb50 kernel/events/core.c:3608
+ |  perf_event_task_sched_out include/linux/perf_event.h:1266 [inline]
+ |  prepare_task_switch kernel/sched/core.c:4992 [inline]
+ |  context_switch kernel/sched/core.c:5134 [inline]
+ |  __schedule+0x4f8/0xb20 kernel/sched/core.c:6494
+ |  preempt_schedule_irq+0x39/0x70 kernel/sched/core.c:6806
+ |  irqentry_exit+0x32/0x90 kernel/entry/common.c:428
+ |  asm_sysvec_apic_timer_interrupt+0x16/0x20 arch/x86/include/asm/idtentry.h:649
+ | RIP: 0010:try_to_freeze include/linux/freezer.h:66 [inline]
+ | RIP: 0010:freezer_count include/linux/freezer.h:128 [inline]
+ | RIP: 0010:coredump_wait fs/coredump.c:407 [inline]
+ | RIP: 0010:do_coredump+0x1193/0x1b60 fs/coredump.c:563
+ | Code: d3 25 df ff 83 e3 08 0f 84 f0 03 00 00 e8 c5 25 df ff 48 f7 85 88 fe ff ff 00 01 00 00 0f 85 7e fc ff ff 31 db e9 83 fc ff ff <e8> a8 25 df ff e8 63 43 d3 ff e9 d2 f1 ff ff e8 99 25 df ff 48 85
+ | RSP: 0018:ffffa69c8931fc30 EFLAGS: 00000246
+ | RAX: 7fffffffffffffff RBX: ffff8ea9934a0040 RCX: 0000000000000000
+ | RDX: 0000000000000001 RSI: ffffffffbb4ab491 RDI: 00000000ffffffff
+ | RBP: ffffa69c8931fdc0 R08: 0000000000000001 R09: 0000000000000001
+ | R10: 00000000ffffffff R11: 00000000ffffffff R12: ffff8ea9934a0040
+ | R13: ffffffffbb792620 R14: 0000000000000108 R15: 0000000000000001
+ |  get_signal+0xe56/0xe60 kernel/signal.c:2843
+ |  arch_do_signal_or_restart+0x3f/0x780 arch/x86/kernel/signal.c:869
+ |  exit_to_user_mode_loop kernel/entry/common.c:166 [inline]
+ |  exit_to_user_mode_prepare+0x135/0x1a0 kernel/entry/common.c:201
+ |  __syscall_exit_to_user_mode_work kernel/entry/common.c:283 [inline]
+ |  syscall_exit_to_user_mode+0x1a/0x50 kernel/entry/common.c:294
+ |  do_syscall_64+0x48/0x90 arch/x86/entry/common.c:86
+ |  entry_SYSCALL_64_after_hwframe+0x64/0xce
+ | RIP: 0033:0x7fdcddc48549
+ | Code: ff ff c3 66 2e 0f 1f 84 00 00 00 00 00 0f 1f 40 00 48 89 f8 48 89 f7 48 89 d6 48 89 ca 4d 89 c2 4d 89 c8 4c 8b 4c 24 08 0f 05 <48> 3d 01 f0 ff ff 73 01 c3 48 c7 c1 b8 ff ff ff f7 d8 64 89 01 48
+ | RSP: 002b:00007fdcddbb60f8 EFLAGS: 00000246 ORIG_RAX: 00000000000000ca
+ | RAX: 0000000000000001 RBX: 00007fdcddd62f88 RCX: 00007fdcddc48549
+ | RDX: 00000000000f4240 RSI: 0000000000000081 RDI: 00007fdcddd62f8c
+ | RBP: 00007fdcddd62f80 R08: 000000000000001e R09: 0000000000000000
+ | R10: 0000000000000003 R11: 0000000000000246 R12: 00007fdcddd62f8c
+ | R13: 00007ffc4136118f R14: 0000000000000000 R15: 00007fdcddbb6640
+ |  </TASK>
+ | irq event stamp: 128
+ | hardirqs last  enabled at (127): [<ffffffffba9f7237>] irqentry_exit+0x37/0x90 kernel/entry/common.c:431
+ | hardirqs last disabled at (128): [<ffffffffba9faa5b>] __schedule+0x6cb/0xb20 kernel/sched/core.c:6393
+ | softirqs last  enabled at (106): [<ffffffffbae0034f>] softirq_handle_end kernel/softirq.c:414 [inline]
+ | softirqs last  enabled at (106): [<ffffffffbae0034f>] __do_softirq+0x34f/0x4d5 kernel/softirq.c:600
+ | softirqs last disabled at (99): [<ffffffffb9693821>] invoke_softirq kernel/softirq.c:445 [inline]
+ | softirqs last disabled at (99): [<ffffffffb9693821>] __irq_exit_rcu+0xb1/0x120 kernel/softirq.c:650
+ | ---[ end trace 0000000000000000 ]---
+ | BUG: kernel NULL pointer dereference, address: 0000000000000000
+ | #PF: supervisor instruction fetch in kernel mode
+ | #PF: error_code(0x0010) - not-present page
+ | PGD 8000000112e91067 P4D 8000000112e91067 PUD 114481067 PMD 0 
+ | Oops: 0010 [#1] PREEMPT SMP PTI
+ | CPU: 1 PID: 13018 Comm: syz-executor.11 Tainted: G        W          6.0.0-rc3-00017-g1472d7e42f41-dirty #65
+ | Hardware name: QEMU Standard PC (i440FX + PIIX, 1996), BIOS 1.16.0-debian-1.16.0-4 04/01/2014
+ | RIP: 0010:0x0
+ | Code: Unable to access opcode bytes at RIP 0xffffffffffffffd6.
+ | RSP: 0018:ffffa69c8931fd18 EFLAGS: 00010293
+ | RAX: 0000000000000000 RBX: 0000000000000000 RCX: ffffffffb96be917
+ | RDX: ffff8ea9934a0040 RSI: 0000000000000000 RDI: ffff8ea99526f620
+ | RBP: ffff8ea9934a0040 R08: 0000000000000000 R09: 0000000000000000
+ | R10: 0000000000000001 R11: ffffffffb9cb7eaf R12: ffff8ea9934a08f0
+ | R13: ffff8ea992fc9cf8 R14: ffff8ea98c65dec0 R15: ffff8ea9934a0828
+ | FS:  0000000000000000(0000) GS:ffff8eacafc40000(0000) knlGS:0000000000000000
+ | CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+ | CR2: ffffffffffffffd6 CR3: 000000011343a003 CR4: 0000000000770ee0
+ | DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
+ | DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000600
+ | PKRU: 55555554
+ | Call Trace:
+ |  <TASK>
+ |  task_work_run+0x73/0xc0 kernel/task_work.c:177
+ |  exit_task_work include/linux/task_work.h:38 [inline]
+ |  do_exit+0x459/0xf20 kernel/exit.c:795
+ |  do_group_exit+0x3f/0xe0 kernel/exit.c:925
+ |  get_signal+0xe04/0xe60 kernel/signal.c:2857
+ |  arch_do_signal_or_restart+0x3f/0x780 arch/x86/kernel/signal.c:869
+ |  exit_to_user_mode_loop kernel/entry/common.c:166 [inline]
+ |  exit_to_user_mode_prepare+0x135/0x1a0 kernel/entry/common.c:201
+ |  __syscall_exit_to_user_mode_work kernel/entry/common.c:283 [inline]
+ |  syscall_exit_to_user_mode+0x1a/0x50 kernel/entry/common.c:294
+ |  do_syscall_64+0x48/0x90 arch/x86/entry/common.c:86
+ |  entry_SYSCALL_64_after_hwframe+0x64/0xce
+ | RIP: 0033:0x7fdcddc48549
+ | Code: Unable to access opcode bytes at RIP 0x7fdcddc4851f.
+ | RSP: 002b:00007fdcddbb60f8 EFLAGS: 00000246 ORIG_RAX: 00000000000000ca
+ | RAX: 0000000000000001 RBX: 00007fdcddd62f88 RCX: 00007fdcddc48549
+ | RDX: 00000000000f4240 RSI: 0000000000000081 RDI: 00007fdcddd62f8c
+ | RBP: 00007fdcddd62f80 R08: 000000000000001e R09: 0000000000000000
+ | R10: 0000000000000003 R11: 0000000000000246 R12: 00007fdcddd62f8c
+ | R13: 00007ffc4136118f R14: 0000000000000000 R15: 00007fdcddbb6640
+ |  </TASK>
+ | Modules linked in:
+ | CR2: 0000000000000000
+ | ---[ end trace 0000000000000000 ]---
+ | RIP: 0010:0x0
+ | Code: Unable to access opcode bytes at RIP 0xffffffffffffffd6.
+ | RSP: 0018:ffffa69c8931fd18 EFLAGS: 00010293
+ | RAX: 0000000000000000 RBX: 0000000000000000 RCX: ffffffffb96be917
+ | RDX: ffff8ea9934a0040 RSI: 0000000000000000 RDI: ffff8ea99526f620
+ | RBP: ffff8ea9934a0040 R08: 0000000000000000 R09: 0000000000000000
+ | R10: 0000000000000001 R11: ffffffffb9cb7eaf R12: ffff8ea9934a08f0
+ | R13: ffff8ea992fc9cf8 R14: ffff8ea98c65dec0 R15: ffff8ea9934a0828
+ | FS:  0000000000000000(0000) GS:ffff8eacafc40000(0000) knlGS:0000000000000000
+ | CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+ | CR2: ffffffffffffffd6 CR3: 000000011343a003 CR4: 0000000000770ee0
+ | DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
+ | DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000600
+ | PKRU: 55555554
+ | ----------------
+ | Code disassembly (best guess):
+ |    0:	d3 25 df ff 83 e3    	shll   %cl,-0x1c7c0021(%rip)        # 0xe383ffe5
+ |    6:	08 0f                	or     %cl,(%rdi)
+ |    8:	84 f0                	test   %dh,%al
+ |    a:	03 00                	add    (%rax),%eax
+ |    c:	00 e8                	add    %ch,%al
+ |    e:	c5 25 df ff          	vpandn %ymm7,%ymm11,%ymm15
+ |   12:	48 f7 85 88 fe ff ff 	testq  $0x100,-0x178(%rbp)
+ |   19:	00 01 00 00
+ |   1d:	0f 85 7e fc ff ff    	jne    0xfffffca1
+ |   23:	31 db                	xor    %ebx,%ebx
+ |   25:	e9 83 fc ff ff       	jmp    0xfffffcad
+ | * 2a:	e8 a8 25 df ff       	call   0xffdf25d7 <-- trapping instruction
+ |   2f:	e8 63 43 d3 ff       	call   0xffd34397
+ |   34:	e9 d2 f1 ff ff       	jmp    0xfffff20b
+ |   39:	e8 99 25 df ff       	call   0xffdf25d7
+ |   3e:	48                   	rex.W
+ |   3f:	85                   	.byte 0x85
 
 
-> Suzuki
+So something isn't quite right yet. Unfortunately I don't have a good
+reproducer. :-/
 
-
-
--- 
-Mike Leach
-Principal Engineer, ARM Ltd.
-Manchester Design Centre. UK
+Thanks,
+-- Marco
