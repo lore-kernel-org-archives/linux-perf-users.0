@@ -2,160 +2,64 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 46F6AC433F5
-	for <linux-perf-users@archiver.kernel.org>; Thu,  6 Oct 2022 15:11:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D21FFC4332F
+	for <linux-perf-users@archiver.kernel.org>; Thu,  6 Oct 2022 15:16:29 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229454AbiJFPLO (ORCPT
+        id S229527AbiJFPQ1 (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Thu, 6 Oct 2022 11:11:14 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42374 "EHLO
+        Thu, 6 Oct 2022 11:16:27 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50922 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231582AbiJFPLM (ORCPT
+        with ESMTP id S230386AbiJFPQ0 (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Thu, 6 Oct 2022 11:11:12 -0400
-Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTP id 29891A59B7;
-        Thu,  6 Oct 2022 08:11:10 -0700 (PDT)
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 1C937D6E;
-        Thu,  6 Oct 2022 08:11:16 -0700 (PDT)
-Received: from [10.57.0.62] (unknown [10.57.0.62])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 6BF843F67D;
-        Thu,  6 Oct 2022 08:11:07 -0700 (PDT)
-Message-ID: <cce859cc-f25b-b4e8-70c5-917569aec050@arm.com>
-Date:   Thu, 6 Oct 2022 16:11:05 +0100
+        Thu, 6 Oct 2022 11:16:26 -0400
+Received: from vmicros1.altlinux.org (vmicros1.altlinux.org [194.107.17.57])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTP id 897A5A59A6
+        for <linux-perf-users@vger.kernel.org>; Thu,  6 Oct 2022 08:16:25 -0700 (PDT)
+Received: from imap.altlinux.org (imap.altlinux.org [194.107.17.38])
+        by vmicros1.altlinux.org (Postfix) with ESMTP id AD80572C97D;
+        Thu,  6 Oct 2022 18:16:24 +0300 (MSK)
+Received: from altlinux.org (sole.flsd.net [185.75.180.6])
+        by imap.altlinux.org (Postfix) with ESMTPSA id D63EF4A472A;
+        Thu,  6 Oct 2022 18:16:22 +0300 (MSK)
+Date:   Thu, 6 Oct 2022 18:16:22 +0300
+From:   Vitaly Chikunov <vt@altlinux.org>
+To:     linux-perf-users@vger.kernel.org,
+        Arnaldo Carvalho de Melo <acme@redhat.com>,
+        Ian Rogers <irogers@google.com>
+Cc:     "Dmitry V. Levin" <ldv@altlinux.org>
+Subject: Re: /usr/include/perf/event.h:9:10: fatal error: linux/compiler.h:
+ No such file or directory
+Message-ID: <20221006151622.i45co6lioxgheval@altlinux.org>
+References: <20221006142852.mhrgi3r4fvtkircw@altlinux.org>
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
- Thunderbird/91.11.0
-Subject: Re: [PATCH] perf test: Fix test_arm_coresight.sh failures on Juno
-Content-Language: en-US
-To:     Leo Yan <leo.yan@linaro.org>
-Cc:     coresight@lists.linaro.org, acme@kernel.org,
-        suzuki.poulose@arm.com, linux-perf-users@vger.kernel.org,
-        mathieu.poirier@linaro.org, mike.leach@linaro.org,
-        Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Jiri Olsa <jolsa@kernel.org>,
-        Namhyung Kim <namhyung@kernel.org>,
-        linux-kernel@vger.kernel.org
-References: <20221005140508.1537277-1-james.clark@arm.com>
- <Yz7qx+4BxNYOCgvL@leoy-yangtze.lan>
-From:   James Clark <james.clark@arm.com>
-In-Reply-To: <Yz7qx+4BxNYOCgvL@leoy-yangtze.lan>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=koi8-r
+Content-Disposition: inline
+In-Reply-To: <20221006142852.mhrgi3r4fvtkircw@altlinux.org>
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-
-
-On 06/10/2022 15:48, Leo Yan wrote:
-> Hi James,
+On Thu, Oct 06, 2022 at 05:28:53PM +0300, Vitaly Chikunov wrote:
+> I noticed that perf examples do not compile anymore with v6.0 (first on ALT,
+> but on Fedora is the same). Fedora example for convenience:
 > 
-> On Wed, Oct 05, 2022 at 03:05:08PM +0100, James Clark wrote:
->> This test commonly fails on Arm Juno because the instruction interval
->> is large enough to miss generating any samples for Perf in system-wide
->> mode.
->>
->> Fix this by lowering the interval until a comfortable number of Perf
->> instructions are generated. The test is still quick to run because only
->> a small amount of trace is gathered.
->>
->> Before:
->>
->>   sudo ./perf test coresight -vvv
->>   ...
->>   Recording trace with system wide mode
->>   Looking at perf.data file for dumping branch samples:
->>   Looking at perf.data file for reporting branch samples:
->>   Looking at perf.data file for instruction samples:
->>   CoreSight system wide testing: FAIL
->>   ...
->>
->> After:
->>
->>   sudo ./perf test coresight -vvv
->>   ...
->>   Recording trace with system wide mode
->>   Looking at perf.data file for dumping branch samples:
->>   Looking at perf.data file for reporting branch samples:
->>   Looking at perf.data file for instruction samples:
->>   CoreSight system wide testing: PASS
->>   ...
-> 
-> Since Arm Juno board has zero timestamp for CoreSight, I don't think
-> now arm_cs_etm.sh can really work on it.
-> 
-> If we want to pass the test on Juno board, we need to add option
-> "--itrace=Zi1000i" for "perf report" and "perf script"; but seems
-> to me "--itrace=Z..." is not a general case for testing ...
+>   # dnf install kernel libperf-devel gcc
+>   # cc /usr/share/doc/libperf/examples/counting.c -lperf
+>   In file included from /usr/share/doc/libperf/examples/counting.c:8:
+>   /usr/include/perf/event.h:9:10: fatal error: linux/compiler.h: No such file or directory
+>       9 | #include <linux/compiler.h>
+> 	|          ^~~~~~~~~~~~~~~~~~
+>   compilation terminated.
 
-Unfortunately I now think that adding the Z option didn't improve
-anything in Coresight decoding other than removing the warning. I've
-never seen the zero timestamp issue on Juno though. I thought that was
-on some Qualcomm device? I'm not getting the warning on this test anyway.
+This is introduced in b2f10cd4e805 ("perf cpumap: Fix alignment for
+masks in event encoding") just (it seems) for `__packed'.
+I am told that all uapi is using  __attribute__ ((__packed__)) for that.
 
-The problem is that timeless mode assumes per thread mode, and in per
-thread mode there is a separate buffer per thread, so the Coresight
-channel IDs are ignored. In systemwide mode the channel ID is important
-to know which CPU the trace came from. If this info is thrown away then
-not much works correctly.
-
-I plan to overhaul the whole decoder and remove all the assumptions
-about per-thread and timeless mode. It would be better if they were
-completely separate concepts.
+Thanks,
 
 > 
->> Signed-off-by: James Clark <james.clark@arm.com>
->> ---
->>  tools/perf/tests/shell/test_arm_coresight.sh | 2 +-
->>  1 file changed, 1 insertion(+), 1 deletion(-)
->>
->> diff --git a/tools/perf/tests/shell/test_arm_coresight.sh b/tools/perf/tests/shell/test_arm_coresight.sh
->> index e4cb4f1806ff..daad786cf48d 100755
->> --- a/tools/perf/tests/shell/test_arm_coresight.sh
->> +++ b/tools/perf/tests/shell/test_arm_coresight.sh
->> @@ -70,7 +70,7 @@ perf_report_instruction_samples() {
->>  	#   68.12%  touch    libc-2.27.so   [.] _dl_addr
->>  	#    5.80%  touch    libc-2.27.so   [.] getenv
->>  	#    4.35%  touch    ld-2.27.so     [.] _dl_fixup
->> -	perf report --itrace=i1000i --stdio -i ${perfdata} 2>&1 | \
->> +	perf report --itrace=i20i --stdio -i ${perfdata} 2>&1 | \
->>  		egrep " +[0-9]+\.[0-9]+% +$1" > /dev/null 2>&1
-> 
-> So here I am suspect that changing to "--itrace=i20i" can allow the test
-> to pass on Juno board.  Could you confirm for this?
-
-On Juno:
-
-  ./perf record -e cs_etm// -a -- ls
-
-With interval 20, 23 instruction samples are generated:
-
-  ./perf report --stdio --itrace=i20i | egrep " +[0-9]+\.[0-9]+% +perf "
-| wc -l
-
-  23
-
-With interval 1000, 0 are generated:
-
-  ./perf report --stdio --itrace=i1000i | egrep " +[0-9]+\.[0-9]+% +perf
-" | wc -l
-
-  Error:
-  The perf.data data has no samples!
-  0
-
-I think the issue is that ls is quite quick to run, so not much trace is
-generated for Perf. And it just depends on the scheduling which is
-slightly different on Juno. I don't think it's a bug. On N1SDP there are
-only 134 samples generated with i1000i, so it could probably end up with
-a random run generating 0 there too.
-
-
+> I don't see compiler.h installed anywhere by the `make headers_install`.
 > 
 > Thanks,
-> Leo
+> 
