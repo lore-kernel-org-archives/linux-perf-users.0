@@ -2,176 +2,136 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5AA9BC433FE
-	for <linux-perf-users@archiver.kernel.org>; Thu,  6 Oct 2022 14:38:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C793CC433FE
+	for <linux-perf-users@archiver.kernel.org>; Thu,  6 Oct 2022 14:49:44 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229658AbiJFOiA (ORCPT
+        id S229642AbiJFOtn (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Thu, 6 Oct 2022 10:38:00 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33292 "EHLO
+        Thu, 6 Oct 2022 10:49:43 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56386 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229755AbiJFOh7 (ORCPT
+        with ESMTP id S231542AbiJFOtU (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Thu, 6 Oct 2022 10:37:59 -0400
-Received: from mx0a-001b2d01.pphosted.com (mx0b-001b2d01.pphosted.com [148.163.158.5])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 86122A7A8A
-        for <linux-perf-users@vger.kernel.org>; Thu,  6 Oct 2022 07:37:57 -0700 (PDT)
-Received: from pps.filterd (m0098420.ppops.net [127.0.0.1])
-        by mx0b-001b2d01.pphosted.com (8.17.1.5/8.17.1.5) with ESMTP id 296EUQKK011927;
-        Thu, 6 Oct 2022 14:37:47 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=content-type : subject :
- from : in-reply-to : date : cc : message-id : references : to :
- content-transfer-encoding : mime-version; s=pp1;
- bh=9X8/74YpkaBXABy1eOaGKcz/s6roABjBgguu5B9+XEQ=;
- b=Azhj3cVZ9REp5yEFkKKTX/lK6/3VFUljplAte0Mgko1LmgTITqe+oyt2MCxIT+L7QLgr
- toNy4IerVEtCh7JEUblrKjWNy8vVR1BpEhfKNxZ3/ZJamHuG9T0LPQyBYuuoXiRW7KX/
- 7oDLaUJvMY/kwakv/PvUEmMvdMwRRx5OQ+MlQs7d7KK7T8/EXXgmBljfWarjm2iJfl8I
- mB75vW7pMqmJJEJRFuWgdwFsauE9B3Z85i9iAeLNMXtRaKoV5djTUHVvEcGpXl5kI2XH
- zSE7yQxHWmGF0gfEwaEvkzxysV2un2jUw50G4uyZMXVlJTavfowM6oW5+X5/Gne8Zifs cQ== 
-Received: from pps.reinject (localhost [127.0.0.1])
-        by mx0b-001b2d01.pphosted.com (PPS) with ESMTPS id 3k20uf07c1-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Thu, 06 Oct 2022 14:37:47 +0000
-Received: from m0098420.ppops.net (m0098420.ppops.net [127.0.0.1])
-        by pps.reinject (8.17.1.5/8.17.1.5) with ESMTP id 296EVkmR016783;
-        Thu, 6 Oct 2022 14:37:47 GMT
-Received: from ppma01fra.de.ibm.com (46.49.7a9f.ip4.static.sl-reverse.com [159.122.73.70])
-        by mx0b-001b2d01.pphosted.com (PPS) with ESMTPS id 3k20uf07b2-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Thu, 06 Oct 2022 14:37:46 +0000
-Received: from pps.filterd (ppma01fra.de.ibm.com [127.0.0.1])
-        by ppma01fra.de.ibm.com (8.16.1.2/8.16.1.2) with SMTP id 296EZkXH005516;
-        Thu, 6 Oct 2022 14:37:45 GMT
-Received: from b06cxnps3074.portsmouth.uk.ibm.com (d06relay09.portsmouth.uk.ibm.com [9.149.109.194])
-        by ppma01fra.de.ibm.com with ESMTP id 3jxd68waeh-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Thu, 06 Oct 2022 14:37:45 +0000
-Received: from d06av22.portsmouth.uk.ibm.com (d06av22.portsmouth.uk.ibm.com [9.149.105.58])
-        by b06cxnps3074.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 296EbfGl65274364
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Thu, 6 Oct 2022 14:37:41 GMT
-Received: from d06av22.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 99FAA4C044;
-        Thu,  6 Oct 2022 14:37:41 +0000 (GMT)
-Received: from d06av22.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 404DE4C040;
-        Thu,  6 Oct 2022 14:37:39 +0000 (GMT)
-Received: from smtpclient.apple (unknown [9.43.77.239])
-        by d06av22.portsmouth.uk.ibm.com (Postfix) with ESMTPS;
-        Thu,  6 Oct 2022 14:37:39 +0000 (GMT)
-Content-Type: text/plain;
-        charset=us-ascii
-Subject: Re: [PATCH] tools/perf: Fix aggr_printout to display cpu field
- irrespective of core value
-From:   Athira Rajeev <atrajeev@linux.vnet.ibm.com>
-In-Reply-To: <Yz7gIHyBhvR5UcaM@kernel.org>
-Date:   Thu, 6 Oct 2022 20:07:36 +0530
-Cc:     Ian Rogers <irogers@google.com>, maddy@linux.vnet.ibm.com,
-        Nageswara Sastry <rnsastry@linux.ibm.com>,
-        Kajol Jain <kjain@linux.ibm.com>,
-        linux-perf-users <linux-perf-users@vger.kernel.org>,
-        James Clark <james.clark@arm.com>,
+        Thu, 6 Oct 2022 10:49:20 -0400
+Received: from mail-pf1-x42f.google.com (mail-pf1-x42f.google.com [IPv6:2607:f8b0:4864:20::42f])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CCEA0B40E0
+        for <linux-perf-users@vger.kernel.org>; Thu,  6 Oct 2022 07:48:49 -0700 (PDT)
+Received: by mail-pf1-x42f.google.com with SMTP id h13so817267pfr.7
+        for <linux-perf-users@vger.kernel.org>; Thu, 06 Oct 2022 07:48:49 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date;
+        bh=tRKC/oAPBVTHlB7GQZJdKnIj+0+vIbganKIV495EK3s=;
+        b=EecofMjkbQ5VhheJ+QRBRj7krV9TCOeI6TkhjEl/zntgvx0LqJilN1EgmAjEfFQaHl
+         PKyDe+abphT1acrqGFlROjdmFeLCQ1g/Gm0HpqP56oBaMHLO4oWFef0CjR9jOKfr0w0J
+         17OMX6lNQm6WlpfevaSADbY3hZVMZuSmEKQFkIAfDsbLl0pzAXF7GwRAYSW/6OrhYXUq
+         mSQQzrB/d0RGDvtgILmnmHxb8cGp/vh2BU2+yN75BkE1hvRZEBcScpidzYhtH8qmM+Tq
+         PAUoD3M0BuRKe1YaudbTVC592kA60KIWcSUUp5xDUmC1/uilc6X3tnNNF80t3e6IT00b
+         LBHw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date;
+        bh=tRKC/oAPBVTHlB7GQZJdKnIj+0+vIbganKIV495EK3s=;
+        b=M5GcVqdv9Ki0mG9m9HQ+L5/IJFKfbZqYEwEIeRqikfAdxlYF0SP4qggQO5faTjqh9M
+         a1prbaZP/sbKKd4VO5LWHKFU/BKW2TzZlL3UoAexoJVDgilER9TzUvNgenjiGBjnJHY+
+         hlIsF94s9p98WVmYLb0e6hKpxe8CWP8aHaWDegSZgh5ghmv/R4KnZBIkP8L7YOOpe69o
+         5360+cTT14UriUwebXa3PAX7fR8lzYMJ6+axU/6SnTNRwFQjWli0IvHQokd05YJvNX7H
+         b7Z1Wrl65G1aEd/RqViNlddwOGuRGL3ntAy0q1+XjtGo5b+krQ5gXyrB//y30YLR7g8S
+         yuDA==
+X-Gm-Message-State: ACrzQf2zAF39zi8vX4trR5fm4p25rdkh6wRGVYOqm1qzVFCmFuoLfsut
+        Sj6WBz2oNLsBR53GP4gv1xXmMg==
+X-Google-Smtp-Source: AMsMyM6zsOpfmlT9czs+6yVwvcK4Okop9Ne5C/iAA0uOmk7ict4k8O8NiNsWp+UGciNkJjmySdJX3w==
+X-Received: by 2002:a63:1141:0:b0:454:ae43:14e7 with SMTP id 1-20020a631141000000b00454ae4314e7mr204004pgr.527.1665067729266;
+        Thu, 06 Oct 2022 07:48:49 -0700 (PDT)
+Received: from leoy-yangtze.lan (211-75-219-202.hinet-ip.hinet.net. [211.75.219.202])
+        by smtp.gmail.com with ESMTPSA id s18-20020a170902ea1200b0017d404403b7sm10609923plg.259.2022.10.06.07.48.44
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 06 Oct 2022 07:48:48 -0700 (PDT)
+Date:   Thu, 6 Oct 2022 22:48:39 +0800
+From:   Leo Yan <leo.yan@linaro.org>
+To:     James Clark <james.clark@arm.com>
+Cc:     coresight@lists.linaro.org, acme@kernel.org,
+        suzuki.poulose@arm.com, linux-perf-users@vger.kernel.org,
+        mathieu.poirier@linaro.org, mike.leach@linaro.org,
+        Peter Zijlstra <peterz@infradead.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
         Jiri Olsa <jolsa@kernel.org>,
-        atrajeev <atrajeev@imap.linux.ibm.com>,
-        Disha Goel <disgoel@linux.vnet.ibm.com>,
-        linuxppc-dev@lists.ozlabs.org
-Message-Id: <F6A73E40-46B2-4054-8AD1-C906A0F2CD31@linux.vnet.ibm.com>
-References: <993a1391ee931e859d972c460644d171@imap.linux.ibm.com>
- <CAP-5=fWJ0YBxdCarpNSfbzoAZ9uTAtgj4CdR7sQU8748Y-+DVA@mail.gmail.com>
- <6A5D0603-CF66-43B4-A13F-0308CF01967A@linux.vnet.ibm.com>
- <CAP-5=fU=bwv-e_53QagWsKvW8wjibOjfGvnivWFFVba5A55boA@mail.gmail.com>
- <Yzx4A+2I4yWTlbEn@kernel.org> <Yzx4ET7QU2VpCcsx@kernel.org>
- <137635B2-F4E8-4C65-B797-5C6511E265A8@linux.vnet.ibm.com>
- <Yz14hG3EVJPph11m@kernel.org> <Yz16FdcUF+Wn8xvA@kernel.org>
- <3D36EC01-B516-46CA-BC71-010617DB4A9D@linux.vnet.ibm.com>
- <Yz7gIHyBhvR5UcaM@kernel.org>
-To:     Arnaldo Carvalho de Melo <acme@kernel.org>
-X-Mailer: Apple Mail (2.3696.120.41.1.1)
-X-TM-AS-GCONF: 00
-X-Proofpoint-GUID: zJHtSjxVP7z3aZDxsjBNGqN6e6OfAZeS
-X-Proofpoint-ORIG-GUID: KIg7qIVGLDWW7H4n5MG-ElXtK_BjRgbn
-Content-Transfer-Encoding: quoted-printable
-X-Proofpoint-UnRewURL: 0 URL was un-rewritten
+        Namhyung Kim <namhyung@kernel.org>,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] perf test: Fix test_arm_coresight.sh failures on Juno
+Message-ID: <Yz7qx+4BxNYOCgvL@leoy-yangtze.lan>
+References: <20221005140508.1537277-1-james.clark@arm.com>
 MIME-Version: 1.0
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.205,Aquarius:18.0.895,Hydra:6.0.528,FMLib:17.11.122.1
- definitions=2022-10-06_02,2022-10-06_02,2022-06-22_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 mlxlogscore=999
- priorityscore=1501 bulkscore=0 mlxscore=0 impostorscore=0 adultscore=0
- clxscore=1015 suspectscore=0 lowpriorityscore=0 malwarescore=0 spamscore=0
- phishscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2209130000 definitions=main-2210060085
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20221005140508.1537277-1-james.clark@arm.com>
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
+Hi James,
 
+On Wed, Oct 05, 2022 at 03:05:08PM +0100, James Clark wrote:
+> This test commonly fails on Arm Juno because the instruction interval
+> is large enough to miss generating any samples for Perf in system-wide
+> mode.
+>
+> Fix this by lowering the interval until a comfortable number of Perf
+> instructions are generated. The test is still quick to run because only
+> a small amount of trace is gathered.
+> 
+> Before:
+> 
+>   sudo ./perf test coresight -vvv
+>   ...
+>   Recording trace with system wide mode
+>   Looking at perf.data file for dumping branch samples:
+>   Looking at perf.data file for reporting branch samples:
+>   Looking at perf.data file for instruction samples:
+>   CoreSight system wide testing: FAIL
+>   ...
+> 
+> After:
+> 
+>   sudo ./perf test coresight -vvv
+>   ...
+>   Recording trace with system wide mode
+>   Looking at perf.data file for dumping branch samples:
+>   Looking at perf.data file for reporting branch samples:
+>   Looking at perf.data file for instruction samples:
+>   CoreSight system wide testing: PASS
+>   ...
 
-> On 06-Oct-2022, at 7:33 PM, Arnaldo Carvalho de Melo <acme@kernel.org> wr=
-ote:
->=20
-> Em Thu, Oct 06, 2022 at 06:16:14PM +0530, Athira Rajeev escreveu:
->>=20
->>=20
->>> On 05-Oct-2022, at 6:05 PM, Arnaldo Carvalho de Melo <acme@kernel.org> =
-wrote:
->>>=20
->>> Em Wed, Oct 05, 2022 at 09:28:52AM -0300, Arnaldo Carvalho de Melo escr=
-eveu:
->>>> Em Wed, Oct 05, 2022 at 10:23:39AM +0530, Athira Rajeev escreveu:
->>>>> diff --git a/tools/perf/util/stat-display.c b/tools/perf/util/stat-di=
-splay.c
->>>>> index b82844cb0ce7..cf28020798ec 100644
->>>>> --- a/tools/perf/util/stat-display.c
->>>>> +++ b/tools/perf/util/stat-display.c
->>>>> @@ -168,7 +168,7 @@ static void aggr_printout(struct perf_stat_config=
- *config,
->>>>> 					id.socket,
->>>>> 					id.die,
->>>>> 					id.core);
->>>>> -			} else if (id.core > -1) {
->>>>> +			} else if (id.cpu.cpu > -1) {
->>>>> 				fprintf(config->output, "\"cpu\" : \"%d\", ",
->>>>> 					id.cpu.cpu);
->>>>> 			}
->>>>> @@ -179,7 +179,7 @@ static void aggr_printout(struct perf_stat_config=
- *config,
->>>>> 					id.die,
->>>>> 					config->csv_output ? 0 : -3,
->>>>> 					id.core, config->csv_sep);
->>>>> -			} else if (id.core > -1) {
->>>>> +			} else if (id.cpu.cpu > -1) {
->>>>> 				fprintf(config->output, "CPU%*d%s",
->>>>> 					config->csv_output ? 0 : -7,
->>>>> 					id.cpu.cpu, config->csv_sep);
->>>>> --=20
->>>>> If it is confusing, shall I send it as a separate patch along with Te=
-sted-by from Ian ?
->>>>=20
->>>> I'll have to do this by hand, tried pointing b4 to this message and it
->>>> picked the old one, also tried to save the message and apply by hand,
->>>> its mangled.
->>>=20
->>> This is what I have now, will force push later, please triple check :-)
->>=20
->>=20
->> Sorry for all the confusion Arnaldo. Hereafter, I will resubmit the patc=
-h to avoid this.
->> In below patch which you shared, code change is correct. But commit mess=
-age is different.
->> So to avoid further confusion, I went ahead and posted a separate patch =
-in the mailing list with:
->>=20
->> subject: [PATCH] tools/perf: Fix cpu check to use id.cpu.cpu in aggr_pri=
-ntout
->> Patch link: https://lore.kernel.org/lkml/20221006114225.66303-1-atrajeev=
-@linux.vnet.ibm.com/T/#u
->>=20
->> Please pick the separately send patch.
->=20
-> Ok, will do.
+Since Arm Juno board has zero timestamp for CoreSight, I don't think
+now arm_cs_etm.sh can really work on it.
 
-Thanks Arnaldo.
->=20
-> - Arnaldo
+If we want to pass the test on Juno board, we need to add option
+"--itrace=Zi1000i" for "perf report" and "perf script"; but seems
+to me "--itrace=Z..." is not a general case for testing ...
 
+> Signed-off-by: James Clark <james.clark@arm.com>
+> ---
+>  tools/perf/tests/shell/test_arm_coresight.sh | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+> 
+> diff --git a/tools/perf/tests/shell/test_arm_coresight.sh b/tools/perf/tests/shell/test_arm_coresight.sh
+> index e4cb4f1806ff..daad786cf48d 100755
+> --- a/tools/perf/tests/shell/test_arm_coresight.sh
+> +++ b/tools/perf/tests/shell/test_arm_coresight.sh
+> @@ -70,7 +70,7 @@ perf_report_instruction_samples() {
+>  	#   68.12%  touch    libc-2.27.so   [.] _dl_addr
+>  	#    5.80%  touch    libc-2.27.so   [.] getenv
+>  	#    4.35%  touch    ld-2.27.so     [.] _dl_fixup
+> -	perf report --itrace=i1000i --stdio -i ${perfdata} 2>&1 | \
+> +	perf report --itrace=i20i --stdio -i ${perfdata} 2>&1 | \
+>  		egrep " +[0-9]+\.[0-9]+% +$1" > /dev/null 2>&1
+
+So here I am suspect that changing to "--itrace=i20i" can allow the test
+to pass on Juno board.  Could you confirm for this?
+
+Thanks,
+Leo
