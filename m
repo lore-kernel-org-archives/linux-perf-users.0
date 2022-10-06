@@ -2,97 +2,192 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 74B6CC433FE
-	for <linux-perf-users@archiver.kernel.org>; Thu,  6 Oct 2022 17:20:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9C764C32771
+	for <linux-perf-users@archiver.kernel.org>; Thu,  6 Oct 2022 17:43:12 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229505AbiJFRUu (ORCPT
+        id S231631AbiJFRnL (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Thu, 6 Oct 2022 13:20:50 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36260 "EHLO
+        Thu, 6 Oct 2022 13:43:11 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43820 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229484AbiJFRUt (ORCPT
+        with ESMTP id S231600AbiJFRnG (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Thu, 6 Oct 2022 13:20:49 -0400
-Received: from mail-wr1-x42b.google.com (mail-wr1-x42b.google.com [IPv6:2a00:1450:4864:20::42b])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 97E93A59B5
-        for <linux-perf-users@vger.kernel.org>; Thu,  6 Oct 2022 10:20:48 -0700 (PDT)
-Received: by mail-wr1-x42b.google.com with SMTP id a3so3776927wrt.0
-        for <linux-perf-users@vger.kernel.org>; Thu, 06 Oct 2022 10:20:48 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20210112;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:from:to:cc:subject:date:message-id:reply-to;
-        bh=quJ379rlLFhvYXSYbfBlLsRVOJw+DdULfdKm4t4RrhM=;
-        b=Y48UDzYSbpViVWcpv9Y3FASlAPOXKCfwCB/xPIU2befslJSPuN/PekMVPXEnerq488
-         UnDCCQSQFCg67RONah71Sie5N77UpRjwq1hpQ6kN3dS7trkB70dgZAcKHTijQkhqJieT
-         2/K8Xz58TwbfAn0NS8pzDSqwPTAhb9IaSDtN3LpNF8FIRjAM6+Y7I8raeZWavzE6ipk3
-         qxgkI+xlq8HpZP1rxDYJgU10xwh7oXk9f94AcBF28MU8OU77v+0TAodCSNxlJMG7uwyE
-         Ac+HtLN3c+9F2ZHF6v0ALW/rjYe+2bomhh2LrlbSyIg940gMCHYG/v3qynzzRAa3FxFX
-         fy3g==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=quJ379rlLFhvYXSYbfBlLsRVOJw+DdULfdKm4t4RrhM=;
-        b=d8zPaQniMkzkradP2iLC26HqlMhFQ5gCCQRbOYmBZuHOYQQS4A8goFv170oHe+86UX
-         Gu3azaS63J+De3SOBo/5tkgSVQ78BOIi/05WszXkeRYl5Rj0a0pW/JadTUCaXFMkYPeF
-         B5Mt3CYHeW4On4Le5eokFtZfFd5UKiQWb4okGkKlZesnCj92cRsOFThlkqrLzOPRLGeV
-         PyiJSAwNbpzMNi2OiGNFIm0oaaDxMq6dg5xNk76Fmh8ZlWgXdwcCkn3rY6kTM0aQWy++
-         BmEPtmDgjonlh62o69DCYcw2Bicee9ttgtA7EM/0M319TzjdU1HkNk4f9KoBUPaWIpAm
-         WqqA==
-X-Gm-Message-State: ACrzQf15vPy8WnEIOllnIv8BP1qzl/sFQTjX6nsbtZuSJwkviRHd8oGp
-        OexemrmFuvIjX7AKd8RTOz6qAl/rrUQNwnoquigSVA==
-X-Google-Smtp-Source: AMsMyM5DAe4H1ptnOD29uHOP5p7xEbG9Z8HC0IRzDBackQ1DJp0a3726vZKC+PMwmRuCl/I/nb9+rsqxHNkJBJIIgTQ=
-X-Received: by 2002:a05:6000:168f:b0:22e:4c3:de09 with SMTP id
- y15-20020a056000168f00b0022e04c3de09mr704326wrd.40.1665076846971; Thu, 06 Oct
- 2022 10:20:46 -0700 (PDT)
+        Thu, 6 Oct 2022 13:43:06 -0400
+Received: from ams.source.kernel.org (ams.source.kernel.org [IPv6:2604:1380:4601:e00::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E0A76B40E8;
+        Thu,  6 Oct 2022 10:43:03 -0700 (PDT)
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by ams.source.kernel.org (Postfix) with ESMTPS id 92CCAB82126;
+        Thu,  6 Oct 2022 17:43:02 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id F0459C433C1;
+        Thu,  6 Oct 2022 17:43:00 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1665078181;
+        bh=8L4ETKVrJv6anS4RBzHd/U96VBFqskwrKbkT5eLy2Lg=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=LwpzeQQzjm9tuiUHEQXke23UfORLgjnFJs5mYsTMrDIfxJFnOcZqV/iyk6DGjwSJ5
+         cG+niFpHlrmX8g+T93ukA1wJAzBlJAPQu0YJ6rcRtu1t78gHvC4/dBifVpA+9zy5Ke
+         GhigiDZFhyOLEH41El9uQQE7dl+PEOmbyF3QsPwqMPghYS2wUZG64TF0SpYTILd3Mv
+         4/IzLrH4zlLacwnMtFqAf2Xa9Gvm/K+r7xEfcOGmeivxXGQtGBXGR07qc3YPXcHeyI
+         naFMeV1nfDMLfDfCy48/xYIYFCZl2HLSfrHTSpEFbcMg6aoJ82Sv3kPlwbCzocA0Op
+         6SCn53nbnlK2w==
+Received: by quaco.ghostprotocols.net (Postfix, from userid 1000)
+        id 7C9234062C; Thu,  6 Oct 2022 14:42:58 -0300 (-03)
+Date:   Thu, 6 Oct 2022 14:42:58 -0300
+From:   Arnaldo Carvalho de Melo <acme@kernel.org>
+To:     Leo Yan <leo.yan@linaro.org>
+Cc:     carsten.haitzler@foss.arm.com, Jiri Slaby <jirislaby@kernel.org>,
+        linux-kernel@vger.kernel.org, coresight@lists.linaro.org,
+        suzuki.poulose@arm.com, mathieu.poirier@linaro.org,
+        mike.leach@linaro.org, linux-perf-users@vger.kernel.org
+Subject: Re: [PATCH v9 02/13] perf test: Add build infra for perf test tools
+ for CoreSight tests
+Message-ID: <Yz8TojIibofTn8Rp@kernel.org>
+References: <20220909152803.2317006-1-carsten.haitzler@foss.arm.com>
+ <20220909152803.2317006-3-carsten.haitzler@foss.arm.com>
+ <Yz67SHpIN5NggKEk@kernel.org>
+ <Yz6/zlchVnNsVlzJ@kernel.org>
+ <Yz7RAgMN6WGnD3OZ@leoy-yangtze.lan>
+ <Yz7klV3h+JJ+ilAp@kernel.org>
+ <Yz7vJ9Wy0zCTwp1t@leoy-yangtze.lan>
+ <Yz8Ma75+RgGVYqBN@kernel.org>
 MIME-Version: 1.0
-References: <20221006142852.mhrgi3r4fvtkircw@altlinux.org> <20221006151622.i45co6lioxgheval@altlinux.org>
-In-Reply-To: <20221006151622.i45co6lioxgheval@altlinux.org>
-From:   Ian Rogers <irogers@google.com>
-Date:   Thu, 6 Oct 2022 10:20:34 -0700
-Message-ID: <CAP-5=fXqQpcVk+mzPpM9vC=RHTcZvm4Ng14dJ0Uax4kCQ5Qa7Q@mail.gmail.com>
-Subject: Re: /usr/include/perf/event.h:9:10: fatal error: linux/compiler.h: No
- such file or directory
-To:     Vitaly Chikunov <vt@altlinux.org>,
-        Arnaldo Carvalho de Melo <acme@redhat.com>
-Cc:     linux-perf-users@vger.kernel.org,
-        "Dmitry V. Levin" <ldv@altlinux.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <Yz8Ma75+RgGVYqBN@kernel.org>
+X-Url:  http://acmel.wordpress.com
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-On Thu, Oct 6, 2022 at 8:16 AM Vitaly Chikunov <vt@altlinux.org> wrote:
->
-> On Thu, Oct 06, 2022 at 05:28:53PM +0300, Vitaly Chikunov wrote:
-> > I noticed that perf examples do not compile anymore with v6.0 (first on ALT,
-> > but on Fedora is the same). Fedora example for convenience:
-> >
-> >   # dnf install kernel libperf-devel gcc
-> >   # cc /usr/share/doc/libperf/examples/counting.c -lperf
-> >   In file included from /usr/share/doc/libperf/examples/counting.c:8:
-> >   /usr/include/perf/event.h:9:10: fatal error: linux/compiler.h: No such file or directory
-> >       9 | #include <linux/compiler.h>
-> >       |          ^~~~~~~~~~~~~~~~~~
-> >   compilation terminated.
->
-> This is introduced in b2f10cd4e805 ("perf cpumap: Fix alignment for
-> masks in event encoding") just (it seems) for `__packed'.
-> I am told that all uapi is using  __attribute__ ((__packed__)) for that.
->
-> Thanks,
+Em Thu, Oct 06, 2022 at 02:12:11PM -0300, Arnaldo Carvalho de Melo escreveu:
+> Em Thu, Oct 06, 2022 at 11:07:19PM +0800, Leo Yan escreveu:
+> > On Thu, Oct 06, 2022 at 11:22:13AM -0300, Arnaldo Carvalho de Melo wrote:
+> > 
+> > [...]
+> > 
+> > > > @@ -1006,7 +1014,10 @@ install-tests: all install-gtk
+> > > >                 $(INSTALL) tests/shell/*.sh '$(DESTDIR_SQ)$(perfexec_instdir_SQ)/tests/shell'; \
+> > > >                 $(INSTALL) -d -m 755 '$(DESTDIR_SQ)$(perfexec_instdir_SQ)/tests/shell/lib'; \
+> > > >                 $(INSTALL) tests/shell/lib/*.sh -m 644 '$(DESTDIR_SQ)$(perfexec_instdir_SQ)/tests/shell/lib'; \
+> > > > -               $(INSTALL) tests/shell/lib/*.py -m 644 '$(DESTDIR_SQ)$(perfexec_instdir_SQ)/tests/shell/lib'
+> > > > +               $(INSTALL) tests/shell/lib/*.py -m 644 '$(DESTDIR_SQ)$(perfexec_instdir_SQ)/tests/shell/lib'; \
+> > > > +               $(INSTALL) -d -m 755 '$(DESTDIR_SQ)$(perfexec_instdir_SQ)/tests/shell/coresight'; \
+> > > > +               $(INSTALL) tests/shell/coresight/*.sh '$(DESTDIR_SQ)$(perfexec_instdir_SQ)/tests/shell/coresight'
+> > > > +       $(Q)$(MAKE) -C tests/shell/coresight install-tests
+> > > > 
+> > > > It's deliberately to not add '-m 644' when install coresight test
+> > > > shell scripts under the folder tests/shell/coresight/ so that we can
+> > > > keep the executable permission for these scripts.  On the other flip,
+> > > > we set 644 mode for the scripts under tests/shell/lib/ so these
+> > > > scripts will not be executed directly by perf test framework.
+> > > > 
+> > > > @Carsten, if have chance could you confirm for above change?
+> > > 
+> > > If you need for some .sh, coresight test's to have x set while all of
+> > > the others don't have, and you have a good reason for that, ok, we just
+> > > add a comment.
+> > 
+> > Simply to say, all lib scripts are not needed for execute permission.
+> > Yes, it's good to add a comment for the installation steps.
+> > 
+> > > > >   DESCEND plugins
+> > > > >   GEN     /tmp/build/perf/python/perf.so
+> > > > >   INSTALL trace_plugins
+> > > > >   INSTALL binaries
+> > > > >   INSTALL tests
+> > > > > install: cannot stat 'tests/shell/coresight/*.sh': No such file or directory
+> > > > > make[2]: *** [Makefile.perf:1007: install-tests] Error 1
+> > > > > make[2]: *** Waiting for unfinished jobs....
+> > > > > 
+> > > > > I'll add it back when the first .sh gets added to tests/shell/coresight/
+> > > > 
+> > > > Sorry for introducing extra efforts for you and thanks!
+> > > 
+> > > This also has to go, I'll check and fix this loop that doesn't follow
+> > > the existing output style, happens with ´make install', etc too:
+> > > 
+> > > ⬢[acme@toolbox perf]$ make -C tools/perf clean
+> > > make: Entering directory '/var/home/acme/git/perf/tools/perf'
+> > >   CLEAN   x86
+> > >   CLEAN   libtraceevent
+> > >   CLEAN   libapi
+> > >   CLEAN   libbpf
+> > >   CLEAN   libsubcmd
+> > >   CLEAN   libperf
+> > >   CLEAN   fixdep
+> > >   CLEAN   feature-detect
+> > >   CLEAN   python
+> > >   CLEAN   bpf-skel
+> > > make -C asm_pure_loop clean >/dev/null        <-------------------
+> > > make -C memcpy_thread clean >/dev/null        <-------------------
+> > > make -C thread_loop clean >/dev/null          <-------------------
+> > > make -C unroll_loop_thread clean >/dev/null   <-------------------
+> > 
+> > Ouch, if we can update the file tests/shell/coresight/Makefile as below:
+> > 
+> > $(CLEANDIRS):
+> >         $(call QUIET_CLEAN, test-$(@:clean-%=%)) $(Q)$(MAKE) -C $(@:clean-%=%) clean >/dev/null
+> 
+> I had to do it, so far, at the time that the above line is first added
+> as:
+> 
+> diff --git a/tools/perf/Makefile.perf b/tools/perf/Makefile.perf
+> index a20b4adb5e3451f1..194e582e70c2c766 100644
+> --- a/tools/perf/Makefile.perf
+> +++ b/tools/perf/Makefile.perf
+> @@ -635,7 +635,8 @@ tests-coresight-targets: FORCE
+>  	$(Q)$(MAKE) -C $(TESTS_CORESIGHT_DIR)
+>  
+>  tests-coresight-targets-clean:
+> -	$(Q)$(MAKE) -C $(TESTS_CORESIGHT_DIR) clean
+> +	$(call QUIET_CLEAN, coresight)
+> +	$(Q)$(MAKE) -C $(TESTS_CORESIGHT_DIR) O=$(OUTPUT) clean >/dev/null
+>  
+>  all: shell_compatibility_test $(ALL_PROGRAMS) $(LANG_BINDINGS) $(OTHER_PROGRAMS) tests-coresight-targets
+>  
+> diff --git a/tools/perf/tests/shell/coresight/Makefile b/tools/perf/tests/shell/coresight/Makefile
+> index 3fee05cfcb0e73f6..6baab5cbaa9aa3b1 100644
+> --- a/tools/perf/tests/shell/coresight/Makefile
+> +++ b/tools/perf/tests/shell/coresight/Makefile
+> @@ -20,6 +20,6 @@ CLEANDIRS = $(SUBDIRS:%=clean-%)
+>  
+>  clean: $(CLEANDIRS)
+>  $(CLEANDIRS):
+> -	$(Q)$(MAKE) -C $(@:clean-%=%) clean >/dev/null
+> +	$(call QUIET_CLEAN, test-$(@:clean-%=%)) $(Q)$(MAKE) -C $(@:clean-%=%) clean >/dev/null
+>  
+>  .PHONY: all clean $(SUBDIRS) $(CLEANDIRS) $(INSTALLDIRS)
 
-Thanks for reporting the issue and sorry for the breakage. I'm not a
-dependency/packaging expert. Arnaldo, what should be the next steps
-here?
+And for the normal build and install, somehow that $(Q) is not being
+obeyed there, so I'm using straight @ for now so that we have a clean
+output, someone more knowledgeable in the Makefile voodoo can then fix
+it.
 
-Thanks,
-Ian
+⬢[acme@toolbox perf]$ git log --oneline -1
+e1700b67a41092a5 (HEAD) perf test: Add build infra for perf test tools for ARM CoreSight tests
+⬢[acme@toolbox perf]$ git diff
+diff --git a/tools/perf/tests/shell/coresight/Makefile b/tools/perf/tests/shell/coresight/Makefile
+index 6baab5cbaa9aa3b1..6f3b3f07049c2d53 100644
+--- a/tools/perf/tests/shell/coresight/Makefile
++++ b/tools/perf/tests/shell/coresight/Makefile
+@@ -8,13 +8,13 @@ SUBDIRS =
 
-> >
-> > I don't see compiler.h installed anywhere by the `make headers_install`.
-> >
-> > Thanks,
-> >
+ all: $(SUBDIRS)
+ $(SUBDIRS):
+-       $(Q)$(MAKE) -C $@
++       @$(MAKE) -C $@
+
+ INSTALLDIRS = $(SUBDIRS:%=install-%)
+
+ install-tests: $(INSTALLDIRS)
+ $(INSTALLDIRS):
+-       $(Q)$(MAKE) -C $(@:install-%=%) install-tests
++       @$(MAKE) -C $(@:install-%=%) install-tests >/dev/null
+
+ CLEANDIRS = $(SUBDIRS:%=clean-%)
+
+⬢[acme@toolbox perf]$
