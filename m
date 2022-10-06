@@ -2,132 +2,196 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1C890C433F5
-	for <linux-perf-users@archiver.kernel.org>; Thu,  6 Oct 2022 15:46:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EAFD5C433F5
+	for <linux-perf-users@archiver.kernel.org>; Thu,  6 Oct 2022 15:52:16 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231389AbiJFPqz (ORCPT
+        id S231915AbiJFPwO (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Thu, 6 Oct 2022 11:46:55 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48112 "EHLO
+        Thu, 6 Oct 2022 11:52:14 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57556 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231825AbiJFPqd (ORCPT
+        with ESMTP id S230410AbiJFPwM (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Thu, 6 Oct 2022 11:46:33 -0400
-Received: from NAM02-BN1-obe.outbound.protection.outlook.com (mail-bn1nam07on2046.outbound.protection.outlook.com [40.107.212.46])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5C94C83F1E;
-        Thu,  6 Oct 2022 08:46:26 -0700 (PDT)
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=a7b3gogijzL4fneQyddF1KSQCjd4lqk0wRaUMXoyGPC02PKG+Dcu+DjWKkblT13aOFHs8sFB2zOhfoZNIw/LbDsm4blW4H2hgUwUDo1cr1mdENTJdywAuW/9ZhSuyRUtRFQjnZjaGJ21f1yuqvI3QO0jo0J3O2x30flLYNUgqH80xOpAt9vCHonNVgwFTyvrNOGJc9VO+Gv/blZVbbzj00hBnqZyHr10Po4qhqjZHC3hVy9Ee1XnS/sFhHEeppqqHPFI5nIGv5zn2lvJ7mf+Oxma5QeLREqTskFxVJzln4VsO8ZMS6KgeHi1IQ+mECB2I+3OE5loFb6+cE4+w5wbBA==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=C9cz1hNI5roAmy9Idx1qYpg3NU473PKqlOrFZsxihnA=;
- b=JZX33NBzcaeUKj7TF6/GSkF4taZ3803UQtsGTLfVEIjOWM9wW03JrfHxejHdStAn8unPK5CJlXPW60NSlgDMc4IJz7icOcVasb5j5/ZZcw28K6jtzw4perMtKmAJd7+rl2PaZiOB1yYS+DXLaRIdBZ++bGzQNS49oe0xnehQ07uPpyHFeE8ltfuRJqJtAovRi9wN+tJqmNtbfLDZ8aXo9ADV7Vh5avbK+9k/C1zOy/Hu/1bDhlUnil54i2hQFDd1Eh/+3JtNX/uNLIxxAX1IU/gdqZKsg9QiDZTqg7MP3RcFcrDIeEHAezinnYFSoJR6s2lqvNylHGxlmvS67wz+sQ==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
- 165.204.84.17) smtp.rcpttodomain=kernel.org smtp.mailfrom=amd.com; dmarc=pass
- (p=quarantine sp=quarantine pct=100) action=none header.from=amd.com;
- dkim=none (message not signed); arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=C9cz1hNI5roAmy9Idx1qYpg3NU473PKqlOrFZsxihnA=;
- b=gNM39L/5ONPI6QdO4CpGu8Du902DnuxqKahXpKiHJKtjO5ka6m1VWcnP2lg0aXNdAmcPRxgS8nglismMGj94xnXQJGP8PiyokXvCDKebfx9VxhEcDgiT3Fv9w8tjip9yDiYOwIvDfLTE83DQphTVWU5DTgkTtBlLOHNvD4UjkC0=
-Received: from MW4PR03CA0338.namprd03.prod.outlook.com (2603:10b6:303:dc::13)
- by DM4PR12MB6349.namprd12.prod.outlook.com (2603:10b6:8:a4::8) with Microsoft
- SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.5676.31; Thu, 6 Oct 2022 15:46:23 +0000
-Received: from CO1NAM11FT087.eop-nam11.prod.protection.outlook.com
- (2603:10b6:303:dc:cafe::36) by MW4PR03CA0338.outlook.office365.com
- (2603:10b6:303:dc::13) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.5676.26 via Frontend
- Transport; Thu, 6 Oct 2022 15:46:23 +0000
-X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 165.204.84.17)
- smtp.mailfrom=amd.com; dkim=none (message not signed)
- header.d=none;dmarc=pass action=none header.from=amd.com;
-Received-SPF: Pass (protection.outlook.com: domain of amd.com designates
- 165.204.84.17 as permitted sender) receiver=protection.outlook.com;
- client-ip=165.204.84.17; helo=SATLEXMB04.amd.com; pr=C
-Received: from SATLEXMB04.amd.com (165.204.84.17) by
- CO1NAM11FT087.mail.protection.outlook.com (10.13.174.68) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.20.5709.10 via Frontend Transport; Thu, 6 Oct 2022 15:46:23 +0000
-Received: from BLR-5CG113396H.amd.com (10.180.168.240) by SATLEXMB04.amd.com
- (10.181.40.145) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2375.28; Thu, 6 Oct
- 2022 10:45:54 -0500
-From:   Ravi Bangoria <ravi.bangoria@amd.com>
-To:     <acme@kernel.org>, <peterz@infradead.org>
-CC:     <ravi.bangoria@amd.com>, <jolsa@kernel.org>, <namhyung@kernel.org>,
-        <eranian@google.com>, <irogers@google.com>, <jmario@redhat.com>,
-        <leo.yan@linaro.org>, <alisaidi@amazon.com>, <ak@linux.intel.com>,
-        <kan.liang@linux.intel.com>, <dave.hansen@linux.intel.com>,
-        <hpa@zytor.com>, <mingo@redhat.com>, <mark.rutland@arm.com>,
-        <alexander.shishkin@linux.intel.com>, <tglx@linutronix.de>,
-        <bp@alien8.de>, <x86@kernel.org>,
-        <linux-perf-users@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        <sandipan.das@amd.com>, <ananth.narayan@amd.com>,
-        <kim.phillips@amd.com>, <santosh.shukla@amd.com>
-Subject: [PATCH v4 8/8] perf script: Add missing fields in usage hint
-Date:   Thu, 6 Oct 2022 21:09:46 +0530
-Message-ID: <20221006153946.7816-9-ravi.bangoria@amd.com>
-X-Mailer: git-send-email 2.25.1
-In-Reply-To: <20221006153946.7816-1-ravi.bangoria@amd.com>
-References: <20221006153946.7816-1-ravi.bangoria@amd.com>
+        Thu, 6 Oct 2022 11:52:12 -0400
+Received: from mx0a-001b2d01.pphosted.com (mx0a-001b2d01.pphosted.com [148.163.156.1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5EC99A99CC
+        for <linux-perf-users@vger.kernel.org>; Thu,  6 Oct 2022 08:52:10 -0700 (PDT)
+Received: from pps.filterd (m0187473.ppops.net [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (8.17.1.5/8.17.1.5) with ESMTP id 296EpsQ4038012;
+        Thu, 6 Oct 2022 15:51:59 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=from : to : cc : subject
+ : date : message-id : mime-version : content-transfer-encoding; s=pp1;
+ bh=dcAiFYs7MyhDB8BQtVMuboKY/u0KYW1D1vbfJbMcssg=;
+ b=B08F/iZIAgemW8CXUAl0omwKyGpade+Racq7qpX+Z05+sIl/PnSVM4etMuxBad0yJEzV
+ UDPfi3kCzV3SBzYrW4govkcCxJfzcWuiXU/hvmhznZURwB5zhVFNemcIIjCh0Vs/t636
+ +Nh+uh6XLZNgSMHIRKdY+hRGAeguyx+QJAqyqtZZw3OsIPmI47jfiB7wjjrd9Q+9NWQn
+ jh+fRxe7PuzEbHXAt3Lg8NgB4tIVBod+l8CsDQXMsBi7zEtz7oR2yq8ZWma50c0dflqq
+ PTUv8ZxuFWIGJhbAFR/eAm3+Fl0fVk1g2f7V6lUm/e6pJobp5bXboWFTa6Mw0AiNi8UH Ew== 
+Received: from ppma03ams.nl.ibm.com (62.31.33a9.ip4.static.sl-reverse.com [169.51.49.98])
+        by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 3k215g236q-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Thu, 06 Oct 2022 15:51:59 +0000
+Received: from pps.filterd (ppma03ams.nl.ibm.com [127.0.0.1])
+        by ppma03ams.nl.ibm.com (8.16.1.2/8.16.1.2) with SMTP id 296FoHAv005491;
+        Thu, 6 Oct 2022 15:51:57 GMT
+Received: from b06cxnps4074.portsmouth.uk.ibm.com (d06relay11.portsmouth.uk.ibm.com [9.149.109.196])
+        by ppma03ams.nl.ibm.com with ESMTP id 3jxd697bey-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Thu, 06 Oct 2022 15:51:56 +0000
+Received: from d06av24.portsmouth.uk.ibm.com (d06av24.portsmouth.uk.ibm.com [9.149.105.60])
+        by b06cxnps4074.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 296FproV57606432
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Thu, 6 Oct 2022 15:51:53 GMT
+Received: from d06av24.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id B571842041;
+        Thu,  6 Oct 2022 15:51:53 +0000 (GMT)
+Received: from d06av24.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 87FBD4203F;
+        Thu,  6 Oct 2022 15:51:51 +0000 (GMT)
+Received: from localhost.localdomain (unknown [9.43.108.68])
+        by d06av24.portsmouth.uk.ibm.com (Postfix) with ESMTP;
+        Thu,  6 Oct 2022 15:51:51 +0000 (GMT)
+From:   Athira Rajeev <atrajeev@linux.vnet.ibm.com>
+To:     acme@kernel.org, jolsa@kernel.org, mpe@ellerman.id.au
+Cc:     linux-perf-users@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
+        maddy@linux.vnet.ibm.com, rnsastry@linux.ibm.com,
+        kjain@linux.ibm.com, disgoel@linux.vnet.ibm.com
+Subject: [PATCH 1/2] tools/perf/tests/shell: Update stat+csv_output.sh to include sanity check for topology
+Date:   Thu,  6 Oct 2022 21:21:48 +0530
+Message-Id: <20221006155149.67205-1-atrajeev@linux.vnet.ibm.com>
+X-Mailer: git-send-email 2.35.1
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-Originating-IP: [10.180.168.240]
-X-ClientProxiedBy: SATLEXMB04.amd.com (10.181.40.145) To SATLEXMB04.amd.com
- (10.181.40.145)
-X-EOPAttributedMessage: 0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: CO1NAM11FT087:EE_|DM4PR12MB6349:EE_
-X-MS-Office365-Filtering-Correlation-Id: 7a4fc6cc-9301-4535-3650-08daa7b1ebd3
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: 2gK+NXpsRxvpIP3H9wBdnllcFVWqe2s0HF0FS2XsFZsSPUdQ3DzBEsyKCeYEFKzqmdDNB0BrSu9EWHKWkkI9ey9+YREc9rrpBCaJ/inQA2mWvtjH60Y75fcwMu/h0nCTIoLow6ZBQ3pyOFXmieI7cKQpD0oRhge/xzrwHNEbYCPc/XKi1o64LGFfJF9/lcZUy//26I7Orn4LEUzIUuke+wmzjwr/2nqLiKhT81qpdnzRojkSMXrHhCYHwmFcFGznSxpLdyM/DTzJh/caasmbeZJ9rqm2z9y1N4dO7RDa5Sw08PCVpyZIx3T2hIvLCn0A/H+AChCDuOfbo6hBKnUW8K8sHlHwMSC0rgTlEfT/jln2DLQsYBuAkIFQFw0p1S3ELHUQIrJDIn185PaUmIYYCA4rOFL8VT9xDR/Qf6YhO2oJRIVxUv7GjNC94K1qN1NVzEb31zPQ+eO+RRKz3NQWhRHP30eJEotDr9gtZd91uTn3pXfYS3iiR52LeStxeeylQGO4L1+lEoxqa4bh+tnZPrigmpNIrT95ovmMs5H84ZysKS/W66VUWdvqQ2BHIelIpAIYoK3IWEPP01OPaFOZE/q4SBbxiaJyXcSo05JFr2DUqB/KTZ+CtMj3Ces7uj9BqCZn6Xy5KXyakG+j2rnVOva18tEiOacJrh9wfkecW47EDjFrycnk2zJ38EDlo/szmIzmbd8NFHValNlyi6ySnT7DGy49qsa6R1Uw9V0OUaRSVqesNduyMGh/TzGjRnqsHDYzcMXuul+sJMc+Wu1cTMXt6EL7WnzdLf1Bpof9SSA=
-X-Forefront-Antispam-Report: CIP:165.204.84.17;CTRY:US;LANG:en;SCL:1;SRV:;IPV:CAL;SFV:NSPM;H:SATLEXMB04.amd.com;PTR:InfoDomainNonexistent;CAT:NONE;SFS:(13230022)(4636009)(346002)(39860400002)(396003)(136003)(376002)(451199015)(40470700004)(36840700001)(46966006)(336012)(47076005)(16526019)(70586007)(36756003)(426003)(6666004)(81166007)(2906002)(36860700001)(356005)(83380400001)(478600001)(70206006)(2616005)(7416002)(316002)(186003)(8676002)(44832011)(86362001)(4326008)(5660300002)(82740400003)(110136005)(40460700003)(1076003)(7696005)(54906003)(26005)(40480700001)(82310400005)(41300700001)(8936002)(36900700001);DIR:OUT;SFP:1101;
-X-OriginatorOrg: amd.com
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 06 Oct 2022 15:46:23.2165
- (UTC)
-X-MS-Exchange-CrossTenant-Network-Message-Id: 7a4fc6cc-9301-4535-3650-08daa7b1ebd3
-X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
-X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=3dd8961f-e488-4e60-8e11-a82d994e183d;Ip=[165.204.84.17];Helo=[SATLEXMB04.amd.com]
-X-MS-Exchange-CrossTenant-AuthSource: CO1NAM11FT087.eop-nam11.prod.protection.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Anonymous
-X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM4PR12MB6349
+X-TM-AS-GCONF: 00
+X-Proofpoint-ORIG-GUID: TstHKH0mseoemE62IhRunemBBeDi8gh2
+X-Proofpoint-GUID: TstHKH0mseoemE62IhRunemBBeDi8gh2
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.205,Aquarius:18.0.895,Hydra:6.0.528,FMLib:17.11.122.1
+ definitions=2022-10-06_04,2022-10-06_02,2022-06-22_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 impostorscore=0
+ malwarescore=0 spamscore=0 phishscore=0 lowpriorityscore=0 clxscore=1015
+ priorityscore=1501 mlxlogscore=999 mlxscore=0 bulkscore=0 suspectscore=0
+ adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2209130000 definitions=main-2210060089
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-Few fields are missing in the usage message printed when wrong
-field option is passed. Add them in the list.
+Testcase stat+csv_output.sh fails in powerpc:
 
-Signed-off-by: Ravi Bangoria <ravi.bangoria@amd.com>
-Acked-by: Jiri Olsa <jolsa@kernel.org>
+	84: perf stat CSV output linter: FAILED!
+
+The testcase "stat+csv_output.sh" verifies perf stat
+CSV output. The test covers aggregation modes like
+per-socket, per-core, per-die, -A (no_aggr mode) along
+with few other tests. It counts expected fields for
+various commands. For example say -A (i.e, AGGR_NONE
+mode), expects 7 fields in the output having "CPU" as
+first field. Same way, for per-socket, it expects the
+first field in result to point to socket id. The testcases
+compares the result with expected count.
+
+The values for socket, die, core and cpu are fetched
+from topology directory:
+/sys/devices/system/cpu/cpu*/topology.
+For example, socket value is fetched from
+"physical_package_id" file of topology directory.
+(cpu__get_topology_int() in util/cpumap.c)
+
+If a platform fails to fetch the topology information,
+values will be set to -1. For example, incase of pSeries
+platform of powerpc, value for  "physical_package_id" is
+restricted and not exposed. So, -1 will be assigned.
+
+Perf code has a checks for valid cpu id in "aggr_printout"
+(stat-display.c), which displays the fields. So, in cases
+where topology values not exposed, first field of the
+output displaying will be empty. This cause the testcase
+to fail, as it counts  number of fields in the output.
+
+Incase of -A (AGGR_NONE mode,), testcase expects 7 fields
+in the output, becos of -1 value obtained from topology
+files for some, only 6 fields are printed. Hence a testcase
+failure reported due to mismatch in number of fields in
+the output.
+
+Patch here adds a sanity check in the testcase for topology.
+Check will help to skip the test if -1 value found.
+
+Fixes: 7473ee56dbc9 ("perf test: Add checking for perf stat CSV output.")
+Reported-by: Disha Goel <disgoel@linux.vnet.ibm.com>
+Signed-off-by: Athira Rajeev <atrajeev@linux.vnet.ibm.com>
+Suggested-by: James Clark <james.clark@arm.com>
+Suggested-by: Ian Rogers <irogers@google.com>
 ---
- tools/perf/builtin-script.c | 7 ++++---
- 1 file changed, 4 insertions(+), 3 deletions(-)
+ tools/perf/tests/shell/stat+csv_output.sh | 43 ++++++++++++++++++++---
+ 1 file changed, 39 insertions(+), 4 deletions(-)
 
-diff --git a/tools/perf/builtin-script.c b/tools/perf/builtin-script.c
-index 7fa467ed91dc..7ca238277d83 100644
---- a/tools/perf/builtin-script.c
-+++ b/tools/perf/builtin-script.c
-@@ -3846,9 +3846,10 @@ int cmd_script(int argc, const char **argv)
- 		     "Valid types: hw,sw,trace,raw,synth. "
- 		     "Fields: comm,tid,pid,time,cpu,event,trace,ip,sym,dso,"
- 		     "addr,symoff,srcline,period,iregs,uregs,brstack,"
--		     "brstacksym,flags,bpf-output,brstackinsn,brstackinsnlen,brstackoff,"
--		     "callindent,insn,insnlen,synth,phys_addr,metric,misc,ipc,tod,"
--		     "data_page_size,code_page_size,ins_lat",
-+		     "brstacksym,flags,data_src,weight,bpf-output,brstackinsn,"
-+		     "brstackinsnlen,brstackoff,callindent,insn,insnlen,synth,"
-+		     "phys_addr,metric,misc,srccode,ipc,tod,data_page_size,"
-+		     "code_page_size,ins_lat",
- 		     parse_output_fields),
- 	OPT_BOOLEAN('a', "all-cpus", &system_wide,
- 		    "system-wide collection from all CPUs"),
+diff --git a/tools/perf/tests/shell/stat+csv_output.sh b/tools/perf/tests/shell/stat+csv_output.sh
+index eb5196f58190..b7f050aa6210 100755
+--- a/tools/perf/tests/shell/stat+csv_output.sh
++++ b/tools/perf/tests/shell/stat+csv_output.sh
+@@ -6,6 +6,8 @@
+ 
+ set -e
+ 
++skip_test=0
++
+ function commachecker()
+ {
+ 	local -i cnt=0
+@@ -156,14 +158,47 @@ check_per_socket()
+ 	echo "[Success]"
+ }
+ 
++# The perf stat options for per-socket, per-core, per-die
++# and -A ( no_aggr mode ) uses the info fetched from this
++# directory: "/sys/devices/system/cpu/cpu*/topology". For
++# example, socket value is fetched from "physical_package_id"
++# file in topology directory.
++# Reference: cpu__get_topology_int in util/cpumap.c
++# If the platform doesn't expose topology information, values
++# will be set to -1. For example, incase of pSeries platform
++# of powerpc, value for  "physical_package_id" is restricted
++# and set to -1. Check here validates the socket-id read from
++# topology file before proceeding further
++
++FILE_LOC="/sys/devices/system/cpu/cpu*/topology/"
++FILE_NAME="physical_package_id"
++
++check_for_topology()
++{
++	if ! ParanoidAndNotRoot 0
++	then
++		socket_file=`ls $FILE_LOC/$FILE_NAME | head -n 1`
++		[ -z $socket_file ] && return 0
++		socket_id=`cat $socket_file`
++		[ $socket_id == -1 ] && skip_test=1
++		return 0
++	fi
++}
++
++check_for_topology
+ check_no_args
+ check_system_wide
+-check_system_wide_no_aggr
+ check_interval
+ check_event
+-check_per_core
+ check_per_thread
+-check_per_die
+ check_per_node
+-check_per_socket
++if [ $skip_test -ne 1 ]
++then
++	check_system_wide_no_aggr
++	check_per_core
++	check_per_die
++	check_per_socket
++else
++	echo "[Skip] Skipping tests for system_wide_no_aggr, per_core, per_die and per_socket since socket id exposed via topology is invalid"
++fi
+ exit 0
 -- 
-2.37.3
+2.31.1
 
