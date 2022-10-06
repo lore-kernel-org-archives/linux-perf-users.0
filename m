@@ -2,192 +2,255 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B6FE2C433F5
-	for <linux-perf-users@archiver.kernel.org>; Thu,  6 Oct 2022 13:38:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0CE80C433F5
+	for <linux-perf-users@archiver.kernel.org>; Thu,  6 Oct 2022 13:47:37 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231630AbiJFNiE (ORCPT
+        id S230493AbiJFNre (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Thu, 6 Oct 2022 09:38:04 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57478 "EHLO
+        Thu, 6 Oct 2022 09:47:34 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45834 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231432AbiJFNiD (ORCPT
+        with ESMTP id S230124AbiJFNrd (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Thu, 6 Oct 2022 09:38:03 -0400
-Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTP id 2DFD3ABD48;
-        Thu,  6 Oct 2022 06:38:02 -0700 (PDT)
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 0C0D11692;
-        Thu,  6 Oct 2022 06:38:08 -0700 (PDT)
-Received: from [10.57.1.179] (unknown [10.57.1.179])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id B64FF3F67D;
-        Thu,  6 Oct 2022 06:37:59 -0700 (PDT)
-Message-ID: <02ce379c-c718-b72d-fc74-cd8c904265fb@arm.com>
-Date:   Thu, 6 Oct 2022 14:37:55 +0100
+        Thu, 6 Oct 2022 09:47:33 -0400
+Received: from mail-pj1-x1033.google.com (mail-pj1-x1033.google.com [IPv6:2607:f8b0:4864:20::1033])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 10EBB754B8
+        for <linux-perf-users@vger.kernel.org>; Thu,  6 Oct 2022 06:47:32 -0700 (PDT)
+Received: by mail-pj1-x1033.google.com with SMTP id 70so1784928pjo.4
+        for <linux-perf-users@vger.kernel.org>; Thu, 06 Oct 2022 06:47:32 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:from:to:cc:subject:date;
+        bh=0qrBCsffF+OzBtil4CiWgpjzAyR5Sm/F+e7aMlo+drk=;
+        b=bcYNj7otG27a4HRY7t4puzZK/eY+V2ARox3OEhymv6DGtAtqCKglefyozcmY78vev4
+         EJO4jIcQxPW3q95dWYR/7/6RcUrgHZyCF+FL6aR1ggPYUnJzqR9DSW2K/eY07l7lBTNu
+         fYLlAi504D9YVqaZvqRjP+sQzanWx6h2ns4dSbdIgYz0WbUEyI+sKM+bugHupvVHapDU
+         N3+TOsjHxSzMQIKOApA7r+PUjEvuD+M9hmKU0EASqHvGh8IrSXkfNB6pWqCoepFqIkYr
+         myGtjdCIopvzGh5nuX4nHsxCCPoEAbSkLWpdh0ri5oHHyuBocorKM6wu5K/Yd+9k68AM
+         YNDA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:x-gm-message-state:from:to:cc:subject:date;
+        bh=0qrBCsffF+OzBtil4CiWgpjzAyR5Sm/F+e7aMlo+drk=;
+        b=QdyssNs8fX/0qAdOvUtkbQ5V773vor1y8pUxsR4X/ck+2bs0HdkcqoVC/AK6753HXl
+         EZ53P6IHY6I33NHEFPoFmE3/HrHmVnejDcCOJ6uhcC1XMMiyr9AGlgZuuLdwuUELo6ey
+         cFsVmPK2VSjnMIP1OBvTE92nBxEzJXScrAKVdwqzhzirNUFu5aarM6ASQZ0Siok6doWe
+         99GUemEfvwVWux6T1K6UAQ3kGshOYhUrJm2oCF2mn3RksON4Hrnsux0s1SuEz8y/MVbn
+         2ikZKZ+a0AtnxR9rG2lVY10xXoIeAjizZzwSgkSzUlM8Kgjy9v5pXT7nqHevhA6nFXHd
+         E28Q==
+X-Gm-Message-State: ACrzQf2FKDLTzU3aU7cUNFSYiRa9eeZZOTP4Q6heEj28gpAGGArmI0UD
+        23XLntIZfTR5Ex7M+bEUOKAEjncpopvJvlg6/C7EJQ==
+X-Google-Smtp-Source: AMsMyM4HBAe/Xqk1952wcPOElQxiQ4SQ1Lc696OuiOFggPiV/ZXqPqSH0CIuc/QdK2o2sbnwONphEJ+1RzUU6KubM10=
+X-Received: by 2002:a17:902:dac4:b0:178:3037:680a with SMTP id
+ q4-20020a170902dac400b001783037680amr4938961plx.37.1665064051364; Thu, 06 Oct
+ 2022 06:47:31 -0700 (PDT)
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
- Thunderbird/91.11.0
-Subject: Re: [PATCH V3 4/7] driver/perf/arm_pmu_platform: Add support for BRBE
- attributes detection
-Content-Language: en-US
-To:     Anshuman Khandual <anshuman.khandual@arm.com>
-References: <20220929075857.158358-1-anshuman.khandual@arm.com>
- <20220929075857.158358-5-anshuman.khandual@arm.com>
-From:   James Clark <james.clark@arm.com>
-Cc:     linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, peterz@infradead.org,
-        acme@kernel.org, mark.rutland@arm.com, will@kernel.org,
-        catalin.marinas@arm.com
-In-Reply-To: <20220929075857.158358-5-anshuman.khandual@arm.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+References: <20220809223401.24599-1-mike.leach@linaro.org> <20220809223401.24599-5-mike.leach@linaro.org>
+ <01570ba2-81c9-e4b5-6669-0e4087a4bd1f@arm.com> <8f865045-aa95-46b6-a455-c3d9c6d26494@arm.com>
+In-Reply-To: <8f865045-aa95-46b6-a455-c3d9c6d26494@arm.com>
+From:   Mike Leach <mike.leach@linaro.org>
+Date:   Thu, 6 Oct 2022 14:47:19 +0100
+Message-ID: <CAJ9a7VhhmcbyrLZocqXHYXwWbbM_QAAd-zzLQ5_wOEzGAG2UoA@mail.gmail.com>
+Subject: Re: [PATCH v3 04/13] coresight: etm4x: Update ETM4 driver to use
+ Trace ID API
+To:     Suzuki K Poulose <suzuki.poulose@arm.com>
+Cc:     coresight@lists.linaro.org, linux-arm-kernel@lists.infradead.org,
+        linux-kernel@vger.kernel.org, mathieu.poirier@linaro.org,
+        peterz@infradead.org, mingo@redhat.com, acme@kernel.org,
+        linux-perf-users@vger.kernel.org, leo.yan@linaro.org,
+        quic_jinlmao@quicinc.com
+Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
+Hi Suzuki,
+
+On Mon, 3 Oct 2022 at 10:37, Suzuki K Poulose <suzuki.poulose@arm.com> wrote:
+>
+> On 03/10/2022 10:31, Suzuki K Poulose wrote:
+> > On 09/08/2022 23:33, Mike Leach wrote:
+> >> The trace ID API is now used to allocate trace IDs for ETM4.x / ETE
+> >> devices.
+> >>
+> >> For perf sessions, these will be allocated on enable, and released on
+> >> disable.
+> >>
+> >> For sysfs sessions, these will be allocated on enable, but only released
+> >> on reset. This allows the sysfs session to interrogate the Trace ID used
+> >> after the session is over - maintaining functional consistency with the
+> >> previous allocation scheme.
+> >>
+> >> The trace ID will also be allocated on read of the mgmt/trctraceid file.
+> >> This ensures that if perf or sysfs read this before enabling trace, the
+> >> value will be the one used for the trace session.
+> >>
+> >> Trace ID initialisation is removed from the _probe() function.
+> >>
+> >> Signed-off-by: Mike Leach <mike.leach@linaro.org>
+> >> ---
+> >>   .../coresight/coresight-etm4x-core.c          | 79 +++++++++++++++++--
+> >>   .../coresight/coresight-etm4x-sysfs.c         | 27 ++++++-
+> >>   drivers/hwtracing/coresight/coresight-etm4x.h |  3 +
+> >>   3 files changed, 100 insertions(+), 9 deletions(-)
+> >>
+> >> diff --git a/drivers/hwtracing/coresight/coresight-etm4x-core.c
+> >> b/drivers/hwtracing/coresight/coresight-etm4x-core.c
+> >> index cf249ecad5a5..b4fb28ce89fd 100644
+> >> --- a/drivers/hwtracing/coresight/coresight-etm4x-core.c
+> >> +++ b/drivers/hwtracing/coresight/coresight-etm4x-core.c
+> >> @@ -42,6 +42,7 @@
+> >>   #include "coresight-etm4x-cfg.h"
+> >>   #include "coresight-self-hosted-trace.h"
+> >>   #include "coresight-syscfg.h"
+> >> +#include "coresight-trace-id.h"
+> >>   static int boot_enable;
+> >>   module_param(boot_enable, int, 0444);
+> >> @@ -234,6 +235,50 @@ static int etm4_trace_id(struct coresight_device
+> >> *csdev)
+> >>       return drvdata->trcid;
+> >>   }
+> >> +int etm4_read_alloc_trace_id(struct etmv4_drvdata *drvdata)
+> >> +{
+> >> +    int trace_id;
+> >> +
+> >> +    /*
+> >> +     * This will allocate a trace ID to the cpu,
+> >> +     * or return the one currently allocated.
+> >> +     */
+> >> +    /* trace id function has its own lock */
+> >> +    trace_id = coresight_trace_id_get_cpu_id(drvdata->cpu);
+> >> +    if (IS_VALID_ID(trace_id))
+> >> +        drvdata->trcid = (u8)trace_id;
+> >> +    else
+> >> +        dev_err(&drvdata->csdev->dev,
+> >> +            "Failed to allocate trace ID for %s on CPU%d\n",
+> >> +            dev_name(&drvdata->csdev->dev), drvdata->cpu);
+> >> +    return trace_id;
+> >> +}
+> >> +
+> >> +static int etm4_set_current_trace_id(struct etmv4_drvdata *drvdata)
+> >> +{
+> >> +    int trace_id;
+> >> +
+> >> +    /*
+> >> +     * Set the currently allocated trace ID - perf allocates IDs
+> >> +     * as part of setup_aux for all CPUs it may use.
+> >> +     */
+> >> +    trace_id = coresight_trace_id_read_cpu_id(drvdata->cpu);
+> >> +    if (IS_VALID_ID(trace_id)) {
+> >> +        drvdata->trcid = (u8)trace_id;
+> >> +        return 0;
+> >> +    }
+> >> +
+> >> +    dev_err(&drvdata->csdev->dev, "Failed to set trace ID for %s on
+> >> CPU%d\n",
+> >> +        dev_name(&drvdata->csdev->dev), drvdata->cpu);
+> >> +
+> >> +    return -EINVAL;
+> >> +}
+> >
+> >
+> >> +
+> >> +void etm4_release_trace_id(struct etmv4_drvdata *drvdata)
+> >> +{
+> >> +    coresight_trace_id_put_cpu_id(drvdata->cpu);
+> >> +}
+> >> +
+> >>   struct etm4_enable_arg {
+> >>       struct etmv4_drvdata *drvdata;
+> >>       int rc;
+> >> @@ -729,6 +774,15 @@ static int etm4_enable_perf(struct
+> >> coresight_device *csdev,
+> >>       ret = etm4_parse_event_config(csdev, event);
+> >>       if (ret)
+> >>           goto out;
+> >> +
+> >> +    /*
+> >> +     * perf allocates cpu ids as part of setup - device needs to use
+> >> +     * the allocated ID.
+> >> +     */
+> >> +    ret = etm4_set_current_trace_id(drvdata);
+> >
+> > So, when do we allocate an id in perf mode ? As far as I can see, this
+> > should be the same as etm4_read_alloc_trace_id() ? Why are they any
+> > different ?
+> >
+
+Trace IDs are allocated in etm_setup_aux(), then released in free_event_data().
+This way the value are guaranteed to remain constant for the entire
+session,. We cannot release an ID when a given ETM stops tracing, as
+it may restart later for the same perf session.
+In between these two events perf takes its own locks - for whatever
+reason. If we use read_alloc trace id - which takes that allocation /
+release lock in the ID system then we see at lot of
+LOCKDEP issues at this point.
+
+Hence we do a safe unlocked read of the value - perf will never
+release the value till after the session is completed and the event is
+released.
+
+> >> +    if (ret < 0)
+> >> +        goto out;
+> >> +
+> >>       /* And enable it */
+> >>       ret = etm4_enable_hw(drvdata);
+> >> @@ -753,6 +807,11 @@ static int etm4_enable_sysfs(struct
+> >> coresight_device *csdev)
+> >>       spin_lock(&drvdata->spinlock);
+> >> +    /* sysfs needs to read and allocate a trace ID */
+> >> +    ret = etm4_read_alloc_trace_id(drvdata);
+> >> +    if (ret < 0)
+> >> +        goto unlock_sysfs_enable;
+> >> +
+> >>       /*
+> >>        * Executing etm4_enable_hw on the cpu whose ETM is being enabled
+> >>        * ensures that register writes occur when cpu is powered.
+> >> @@ -764,6 +823,11 @@ static int etm4_enable_sysfs(struct
+> >> coresight_device *csdev)
+> >>           ret = arg.rc;
+> >>       if (!ret)
+> >>           drvdata->sticky_enable = true;
+> >> +
+> >> +    if (ret)
+> >> +        etm4_release_trace_id(drvdata);
+> >> +
+> >> +unlock_sysfs_enable:
+> >>       spin_unlock(&drvdata->spinlock);
+> >>       if (!ret)
+> >> @@ -895,6 +959,8 @@ static int etm4_disable_perf(struct
+> >> coresight_device *csdev,
+> >>       /* TRCVICTLR::SSSTATUS, bit[9] */
+> >>       filters->ssstatus = (control & BIT(9));
+> >> +    /* The perf event will release trace ids when it is destroyed */
+> >> +
+> >
+> > At this patch level, there is no release of trace id ? Is that missed in
+> > this patch ? Or am I missing something ?
+>
+
+See above  - perf allocation is handled in coresight-etm-perf.c.
 
 
-On 29/09/2022 08:58, Anshuman Khandual wrote:
-> This adds arm pmu infrastrure to probe BRBE implementation's attributes via
-> driver exported callbacks later. The actual BRBE feature detection will be
-> added by the driver itself.
-> 
-> CPU specific BRBE entries, cycle count, format support gets detected during
-> PMU init. This information gets saved in per-cpu struct pmu_hw_events which
-> later helps in operating BRBE during a perf event context.
-> 
-> Cc: Will Deacon <will@kernel.org>
-> Cc: Mark Rutland <mark.rutland@arm.com>
-> Cc: linux-arm-kernel@lists.infradead.org
-> Cc: linux-kernel@vger.kernel.org
-> Signed-off-by: Anshuman Khandual <anshuman.khandual@arm.com>
-> ---
->  drivers/perf/arm_pmu_platform.c | 34 +++++++++++++++++++++++++++++++++
->  1 file changed, 34 insertions(+)
-> 
-> diff --git a/drivers/perf/arm_pmu_platform.c b/drivers/perf/arm_pmu_platform.c
-> index 933b96e243b8..acdc445081aa 100644
-> --- a/drivers/perf/arm_pmu_platform.c
-> +++ b/drivers/perf/arm_pmu_platform.c
-> @@ -172,6 +172,36 @@ static int armpmu_request_irqs(struct arm_pmu *armpmu)
->  	return err;
->  }
->  
-> +static void arm_brbe_probe_cpu(void *info)
-> +{
-> +	struct pmu_hw_events *hw_events;
-> +	struct arm_pmu *armpmu = info;
-> +
-> +	/*
-> +	 * Return from here, if BRBE driver has not been
-> +	 * implemented for this PMU. This helps prevent
-> +	 * kernel crash later when brbe_probe() will be
-> +	 * called on the PMU.
-> +	 */
-> +	if (!armpmu->brbe_probe)
-> +		return;
-> +
-> +	hw_events = per_cpu_ptr(armpmu->hw_events, smp_processor_id());
-> +	armpmu->brbe_probe(hw_events);
-> +}
-> +
-> +static int armpmu_request_brbe(struct arm_pmu *armpmu)
-> +{
-> +	int cpu, err = 0;
-> +
-> +	for_each_cpu(cpu, &armpmu->supported_cpus) {
-> +		err = smp_call_function_single(cpu, arm_brbe_probe_cpu, armpmu, 1);
+> I think the above change only comes in PATCH 7. May be that patch needs
+> to be rearranged in order ? Otherwise git-bisect can break running a
+> perf session on cs_etm, with missing traceid.
+>
 
-Hi Anshuman,
+This is probably true - we can move the perf allocation to before the
+ETM changes as the extended backward compatibility introduced this set
+should permit it.
 
-I have LOCKDEP on and the patchset applied to perf/core (82aad7ff7) on
-git://git.kernel.org/pub/scm/linux/kernel/git/peterz/queue.git and I get
-this:
 
-   armv8-pmu pmu: hw perfevents: no interrupt-affinity property, guessing.
-   brbe: implementation found on cpu 0
+> Suzuki
 
-   =============================
-   [ BUG: Invalid wait context ]
-   6.0.0-rc7 #38 Not tainted
-   -----------------------------
-   kworker/u8:0/9 is trying to lock:
-   ffff000800855898 (&port_lock_key){....}-{3:3}, at:
-pl011_console_write+0x148/0x240
-   other info that might help us debug this:
-   context-{2:2}
-   5 locks held by kworker/u8:0/9:
-    #0: ffff00080032a138 ((wq_completion)eval_map_wq){+.+.}-{0:0}, at:
-process_one_work+0x200/0x6b0
-    #1: ffff80000807bde0
-((work_completion)(&eval_map_work)){+.+.}-{0:0}, at:
-process_one_work+0x200/0x6b0
-    #2: ffff80000aa3db70 (trace_event_sem){+.+.}-{4:4}, at:
-trace_event_eval_update+0x28/0x420
-    #3: ffff80000a9afe58 (console_lock){+.+.}-{0:0}, at:
-vprintk_emit+0x130/0x380
-    #4: ffff80000a9aff78 (console_owner){-...}-{0:0}, at:
-console_emit_next_record.constprop.0+0x128/0x338
-   stack backtrace:
-   CPU: 0 PID: 9 Comm: kworker/u8:0 Not tainted 6.0.0-rc7 #38
-   Hardware name: Foundation-v8A (DT)
-   Workqueue: eval_map_wq eval_map_work_func
-   Call trace:
-    dump_backtrace+0x114/0x120
-    show_stack+0x20/0x58
-    dump_stack_lvl+0x9c/0xd8
-    dump_stack+0x18/0x34
-    __lock_acquire+0x17cc/0x1920
-    lock_acquire+0x138/0x3b8
-    _raw_spin_lock+0x58/0x70
-    pl011_console_write+0x148/0x240
-    console_emit_next_record.constprop.0+0x194/0x338
-    console_unlock+0x18c/0x208
-    vprintk_emit+0x24c/0x380
-    vprintk_default+0x40/0x50
-    vprintk+0xd4/0xf0
-    _printk+0x68/0x90
-    arm64_pmu_brbe_probe+0x10c/0x128
-    armv8pmu_brbe_probe+0x18/0x28
-    arm_brbe_probe_cpu+0x44/0x58
-    __flush_smp_call_function_queue+0x1d0/0x440
-    generic_smp_call_function_single_interrupt+0x20/0x78
-    ipi_handler+0x98/0x368
-    handle_percpu_devid_irq+0xc0/0x3a8
-    generic_handle_domain_irq+0x34/0x50
-    gic_handle_irq+0x58/0x138
-    call_on_irq_stack+0x2c/0x58
-    do_interrupt_handler+0x88/0x90
-    el1_interrupt+0x40/0x78
-    el1h_64_irq_handler+0x18/0x28
-    el1h_64_irq+0x64/0x68
-    trace_event_eval_update+0x114/0x420
-    eval_map_work_func+0x30/0x40
-    process_one_work+0x298/0x6b0
-    worker_thread+0x54/0x408
-    kthread+0x118/0x128
-    ret_from_fork+0x10/0x20
-   brbe: implementation found on cpu 1
-   brbe: implementation found on cpu 2
-   brbe: implementation found on cpu 3
+Thanks for the review
 
-> +		if (err)
-> +			return err;
-> +	}
-> +	return err;
-> +}
-> +
->  static void armpmu_free_irqs(struct arm_pmu *armpmu)
->  {
->  	int cpu;
-> @@ -229,6 +259,10 @@ int arm_pmu_device_probe(struct platform_device *pdev,
->  	if (ret)
->  		goto out_free_irqs;
->  
-> +	ret = armpmu_request_brbe(pmu);
-> +	if (ret)
-> +		goto out_free_irqs;
-> +
->  	ret = armpmu_register(pmu);
->  	if (ret) {
->  		dev_err(dev, "failed to register PMU devices!\n");
+Mike
+
+-- 
+Mike Leach
+Principal Engineer, ARM Ltd.
+Manchester Design Centre. UK
