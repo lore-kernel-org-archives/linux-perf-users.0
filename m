@@ -2,91 +2,191 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CE281C433FE
-	for <linux-perf-users@archiver.kernel.org>; Thu,  6 Oct 2022 16:29:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3C9D6C433FE
+	for <linux-perf-users@archiver.kernel.org>; Thu,  6 Oct 2022 17:12:40 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230482AbiJFQ3e (ORCPT
+        id S231733AbiJFRMi (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Thu, 6 Oct 2022 12:29:34 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37438 "EHLO
+        Thu, 6 Oct 2022 13:12:38 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49378 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230240AbiJFQ3c (ORCPT
+        with ESMTP id S231736AbiJFRMa (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Thu, 6 Oct 2022 12:29:32 -0400
-Received: from vmicros1.altlinux.org (vmicros1.altlinux.org [194.107.17.57])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTP id 13F9124084;
-        Thu,  6 Oct 2022 09:29:30 -0700 (PDT)
-Received: from imap.altlinux.org (imap.altlinux.org [194.107.17.38])
-        by vmicros1.altlinux.org (Postfix) with ESMTP id 2863172C97D;
-        Thu,  6 Oct 2022 19:29:30 +0300 (MSK)
-Received: from beacon.altlinux.org (unknown [193.43.10.9])
-        by imap.altlinux.org (Postfix) with ESMTPSA id 01DB34A4800;
-        Thu,  6 Oct 2022 19:29:30 +0300 (MSK)
-From:   Vitaly Chikunov <vt@altlinux.org>
-To:     Jiri Olsa <jolsa@kernel.org>,
-        Arnaldo Carvalho de Melo <acme@redhat.com>,
-        Ian Rogers <irogers@google.com>,
-        linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
-Cc:     ldv@altlinux.org, Vitaly Chikunov <vt@altlinux.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        Arnaldo Carvalho de Melo <acme@kernel.org>
-Subject: [PATCH] libperf: Remove reference to non-uapi header
-Date:   Thu,  6 Oct 2022 19:29:19 +0300
-Message-Id: <20221006162919.2231389-1-vt@altlinux.org>
-X-Mailer: git-send-email 2.33.4
+        Thu, 6 Oct 2022 13:12:30 -0400
+Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 559E1A99E6;
+        Thu,  6 Oct 2022 10:12:16 -0700 (PDT)
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by dfw.source.kernel.org (Postfix) with ESMTPS id 3F12761A28;
+        Thu,  6 Oct 2022 17:12:15 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 4A683C433D7;
+        Thu,  6 Oct 2022 17:12:14 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1665076334;
+        bh=Gn5zOWGaE6XQOhS5ErhjY6nBvkD9SK3m7/8nOkO5BF8=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=FgGwmfCan9BHqyjIsGwXzwuc+iXNGXDi9iTStPGyEByT9/wwxA8SpFhpUWj6CzIi7
+         j+mJhL+baZT+JzdVwYsB6y1wyI66dbsKK0MvVdhmyuhlXz612EtQkjbslubHm73su/
+         LZZgbPCBCQ8n1e9hBD00jFS45q6LcA6yE8wHK3cdyRfA3KXikMaiPghrjFi8EB7fNH
+         jKvEhel0ojmYWHK9XksNBaUwxAh2EvNHsLYkcA1NAufjnLxsq9KZDHn8fSxefHkXgy
+         5z8nUxURkuC7wZx6EtuzMT8EWKi3u9wvuqCSpm5he615r/kZuVsnH4w65cdllsvKG+
+         fN2YK8RM/UZKw==
+Received: by quaco.ghostprotocols.net (Postfix, from userid 1000)
+        id 72BB74062C; Thu,  6 Oct 2022 14:12:11 -0300 (-03)
+Date:   Thu, 6 Oct 2022 14:12:11 -0300
+From:   Arnaldo Carvalho de Melo <acme@kernel.org>
+To:     Leo Yan <leo.yan@linaro.org>
+Cc:     carsten.haitzler@foss.arm.com, Jiri Slaby <jirislaby@kernel.org>,
+        linux-kernel@vger.kernel.org, coresight@lists.linaro.org,
+        suzuki.poulose@arm.com, mathieu.poirier@linaro.org,
+        mike.leach@linaro.org, linux-perf-users@vger.kernel.org
+Subject: Re: [PATCH v9 02/13] perf test: Add build infra for perf test tools
+ for CoreSight tests
+Message-ID: <Yz8Ma75+RgGVYqBN@kernel.org>
+References: <20220909152803.2317006-1-carsten.haitzler@foss.arm.com>
+ <20220909152803.2317006-3-carsten.haitzler@foss.arm.com>
+ <Yz67SHpIN5NggKEk@kernel.org>
+ <Yz6/zlchVnNsVlzJ@kernel.org>
+ <Yz7RAgMN6WGnD3OZ@leoy-yangtze.lan>
+ <Yz7klV3h+JJ+ilAp@kernel.org>
+ <Yz7vJ9Wy0zCTwp1t@leoy-yangtze.lan>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
+In-Reply-To: <Yz7vJ9Wy0zCTwp1t@leoy-yangtze.lan>
+X-Url:  http://acmel.wordpress.com
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-Fix build with libperf:
+Em Thu, Oct 06, 2022 at 11:07:19PM +0800, Leo Yan escreveu:
+> On Thu, Oct 06, 2022 at 11:22:13AM -0300, Arnaldo Carvalho de Melo wrote:
+> 
+> [...]
+> 
+> > > @@ -1006,7 +1014,10 @@ install-tests: all install-gtk
+> > >                 $(INSTALL) tests/shell/*.sh '$(DESTDIR_SQ)$(perfexec_instdir_SQ)/tests/shell'; \
+> > >                 $(INSTALL) -d -m 755 '$(DESTDIR_SQ)$(perfexec_instdir_SQ)/tests/shell/lib'; \
+> > >                 $(INSTALL) tests/shell/lib/*.sh -m 644 '$(DESTDIR_SQ)$(perfexec_instdir_SQ)/tests/shell/lib'; \
+> > > -               $(INSTALL) tests/shell/lib/*.py -m 644 '$(DESTDIR_SQ)$(perfexec_instdir_SQ)/tests/shell/lib'
+> > > +               $(INSTALL) tests/shell/lib/*.py -m 644 '$(DESTDIR_SQ)$(perfexec_instdir_SQ)/tests/shell/lib'; \
+> > > +               $(INSTALL) -d -m 755 '$(DESTDIR_SQ)$(perfexec_instdir_SQ)/tests/shell/coresight'; \
+> > > +               $(INSTALL) tests/shell/coresight/*.sh '$(DESTDIR_SQ)$(perfexec_instdir_SQ)/tests/shell/coresight'
+> > > +       $(Q)$(MAKE) -C tests/shell/coresight install-tests
+> > > 
+> > > It's deliberately to not add '-m 644' when install coresight test
+> > > shell scripts under the folder tests/shell/coresight/ so that we can
+> > > keep the executable permission for these scripts.  On the other flip,
+> > > we set 644 mode for the scripts under tests/shell/lib/ so these
+> > > scripts will not be executed directly by perf test framework.
+> > > 
+> > > @Carsten, if have chance could you confirm for above change?
+> > 
+> > If you need for some .sh, coresight test's to have x set while all of
+> > the others don't have, and you have a good reason for that, ok, we just
+> > add a comment.
+> 
+> Simply to say, all lib scripts are not needed for execute permission.
+> Yes, it's good to add a comment for the installation steps.
+> 
+> > > >   DESCEND plugins
+> > > >   GEN     /tmp/build/perf/python/perf.so
+> > > >   INSTALL trace_plugins
+> > > >   INSTALL binaries
+> > > >   INSTALL tests
+> > > > install: cannot stat 'tests/shell/coresight/*.sh': No such file or directory
+> > > > make[2]: *** [Makefile.perf:1007: install-tests] Error 1
+> > > > make[2]: *** Waiting for unfinished jobs....
+> > > > 
+> > > > I'll add it back when the first .sh gets added to tests/shell/coresight/
+> > > 
+> > > Sorry for introducing extra efforts for you and thanks!
+> > 
+> > This also has to go, I'll check and fix this loop that doesn't follow
+> > the existing output style, happens with ´make install', etc too:
+> > 
+> > ⬢[acme@toolbox perf]$ make -C tools/perf clean
+> > make: Entering directory '/var/home/acme/git/perf/tools/perf'
+> >   CLEAN   x86
+> >   CLEAN   libtraceevent
+> >   CLEAN   libapi
+> >   CLEAN   libbpf
+> >   CLEAN   libsubcmd
+> >   CLEAN   libperf
+> >   CLEAN   fixdep
+> >   CLEAN   feature-detect
+> >   CLEAN   python
+> >   CLEAN   bpf-skel
+> > make -C asm_pure_loop clean >/dev/null        <-------------------
+> > make -C memcpy_thread clean >/dev/null        <-------------------
+> > make -C thread_loop clean >/dev/null          <-------------------
+> > make -C unroll_loop_thread clean >/dev/null   <-------------------
+> 
+> Ouch, if we can update the file tests/shell/coresight/Makefile as below:
+> 
+> $(CLEANDIRS):
+>         $(call QUIET_CLEAN, test-$(@:clean-%=%)) $(Q)$(MAKE) -C $(@:clean-%=%) clean >/dev/null
 
-  $ gcc ./tools/lib/perf/Documentation/examples/counting.c -lperf
-  In file included from ./tools/lib/perf/Documentation/examples/counting.c:8:
-  /usr/include/perf/event.h:9:10: fatal error: linux/compiler.h: No such file or directory
-      9 | #include <linux/compiler.h>
-        |          ^~~~~~~~~~~~~~~~~~
-  compilation terminated.
+I had to do it, so far, at the time that the above line is first added
+as:
 
-Fixes: b2f10cd4e805 ("perf cpumap: Fix alignment for masks in event encoding")
-Cc: Ian Rogers <irogers@google.com>
-Signed-off-by: Vitaly Chikunov <vt@altlinux.org>
----
- tools/lib/perf/include/perf/event.h | 5 ++---
- 1 file changed, 2 insertions(+), 3 deletions(-)
+diff --git a/tools/perf/Makefile.perf b/tools/perf/Makefile.perf
+index a20b4adb5e3451f1..194e582e70c2c766 100644
+--- a/tools/perf/Makefile.perf
++++ b/tools/perf/Makefile.perf
+@@ -635,7 +635,8 @@ tests-coresight-targets: FORCE
+ 	$(Q)$(MAKE) -C $(TESTS_CORESIGHT_DIR)
+ 
+ tests-coresight-targets-clean:
+-	$(Q)$(MAKE) -C $(TESTS_CORESIGHT_DIR) clean
++	$(call QUIET_CLEAN, coresight)
++	$(Q)$(MAKE) -C $(TESTS_CORESIGHT_DIR) O=$(OUTPUT) clean >/dev/null
+ 
+ all: shell_compatibility_test $(ALL_PROGRAMS) $(LANG_BINDINGS) $(OTHER_PROGRAMS) tests-coresight-targets
+ 
+diff --git a/tools/perf/tests/shell/coresight/Makefile b/tools/perf/tests/shell/coresight/Makefile
+index 3fee05cfcb0e73f6..6baab5cbaa9aa3b1 100644
+--- a/tools/perf/tests/shell/coresight/Makefile
++++ b/tools/perf/tests/shell/coresight/Makefile
+@@ -20,6 +20,6 @@ CLEANDIRS = $(SUBDIRS:%=clean-%)
+ 
+ clean: $(CLEANDIRS)
+ $(CLEANDIRS):
+-	$(Q)$(MAKE) -C $(@:clean-%=%) clean >/dev/null
++	$(call QUIET_CLEAN, test-$(@:clean-%=%)) $(Q)$(MAKE) -C $(@:clean-%=%) clean >/dev/null
+ 
+ .PHONY: all clean $(SUBDIRS) $(CLEANDIRS) $(INSTALLDIRS)
+ 
+> Then we can get output as:
+> 
+>   # make clean
+>   CLEAN   arm64
+>   CLEAN   libtraceevent
+>   CLEAN   libapi
+>   CLEAN   libbpf
+>   CLEAN   libsubcmd
+>   CLEAN   libperf
+>   CLEAN   fixdep
+>   CLEAN   feature-detect
+>   CLEAN   python
+>   CLEAN   bpf-skel
+>   CLEAN   test-asm_pure_loop
+>   CLEAN   test-memcpy_thread
+>   CLEAN   test-thread_loop
+>   CLEAN   test-unroll_loop_thread
+>   CLEAN   core-objs
+>   CLEAN   core-progs
+>   CLEAN   core-gen
+>   CLEAN   Documentation
+> 
+> Sorry for inconvenience.
+> 
+> Thanks,
+> Leo
 
-diff --git a/tools/lib/perf/include/perf/event.h b/tools/lib/perf/include/perf/event.h
-index 93bf93a59c99..4f6d658bf27c 100644
---- a/tools/lib/perf/include/perf/event.h
-+++ b/tools/lib/perf/include/perf/event.h
-@@ -6,7 +6,6 @@
- #include <linux/types.h>
- #include <linux/limits.h>
- #include <linux/bpf.h>
--#include <linux/compiler.h>
- #include <sys/types.h> /* pid_t */
- 
- #define event_contains(obj, mem) ((obj).header.size > offsetof(typeof(obj), mem))
-@@ -195,7 +194,7 @@ struct perf_record_mask_cpu_map64 {
- #pragma GCC diagnostic ignored "-Wpacked"
- #pragma GCC diagnostic ignored "-Wattributes"
- 
--struct __packed perf_record_cpu_map_data {
-+struct perf_record_cpu_map_data {
- 	__u16			 type;
- 	union {
- 		/* Used when type == PERF_CPU_MAP__CPUS. */
-@@ -205,7 +204,7 @@ struct __packed perf_record_cpu_map_data {
- 		/* Used when type == PERF_CPU_MAP__MASK and long_size == 8. */
- 		struct perf_record_mask_cpu_map64 mask64_data;
- 	};
--};
-+} __attribute__ ((__packed__));
- 
- #pragma GCC diagnostic pop
- 
 -- 
-2.33.4
 
+- Arnaldo
