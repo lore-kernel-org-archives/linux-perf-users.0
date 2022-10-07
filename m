@@ -2,99 +2,106 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EE051C433F5
-	for <linux-perf-users@archiver.kernel.org>; Fri,  7 Oct 2022 16:14:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1BAA1C433FE
+	for <linux-perf-users@archiver.kernel.org>; Fri,  7 Oct 2022 17:53:11 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229707AbiJGQOk (ORCPT
+        id S229482AbiJGRxJ (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Fri, 7 Oct 2022 12:14:40 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:32954 "EHLO
+        Fri, 7 Oct 2022 13:53:09 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42190 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229709AbiJGQOj (ORCPT
+        with ESMTP id S229547AbiJGRxI (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Fri, 7 Oct 2022 12:14:39 -0400
-Received: from mail-ej1-x62c.google.com (mail-ej1-x62c.google.com [IPv6:2a00:1450:4864:20::62c])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id AA6CFBA4
-        for <linux-perf-users@vger.kernel.org>; Fri,  7 Oct 2022 09:14:35 -0700 (PDT)
-Received: by mail-ej1-x62c.google.com with SMTP id 13so12393967ejn.3
-        for <linux-perf-users@vger.kernel.org>; Fri, 07 Oct 2022 09:14:35 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20210112;
-        h=user-agent:in-reply-to:content-disposition:mime-version:references
-         :message-id:subject:cc:to:from:date:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=gwCgcEFb6EqweOCGJwFjwMplx0cMo00I0pQaRZheEns=;
-        b=FLiXrIyCWCwIh4B7g6oOtQeS0K8OpzpCsj7kykdMijQaKSo6U6qLpZLv5183N831/Z
-         o97aNMbep3GAWS0wQMhtu2BI/UprI8Vo9qxwerSYZzjU+70Vg+E+zm2cGRFWfJnCT1MQ
-         5aZEVehO6KOzH2QLEs7DtmeWin72GDMaiqITZ/pYKvXswY5SDAFGcVvEW70xMD2HW0ES
-         HGR6yqzTiZ2lIUSeizd2EAi08tYXTfHsd8SNe5IuUnBjLOzW8aWDOvIlbLTTx96M3KSq
-         i8IH+LHnTANkheqM77lFKwPCgkuaD7wLDkZmrfuFw1oiGoNPcFNCd+r230YSNMSIYyP8
-         Astw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=user-agent:in-reply-to:content-disposition:mime-version:references
-         :message-id:subject:cc:to:from:date:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=gwCgcEFb6EqweOCGJwFjwMplx0cMo00I0pQaRZheEns=;
-        b=IspeT1dz3rKydvyUHArTlrUAYGbIc/0kgStSJ4N/p+uRZGlhwJ9IIsejLPv47oJ+FK
-         iXVMjYmOr23lT3Ff/QUs1WRolanPDfHB2pJ6ZGY0ami+kn1OXZPZ+eo1PGEWMdEIgcRN
-         wEotRX7AKiIKo255fHS+v0BjxayzUeqM/h4TsgNFuofNQyCAyz8UO7yeBuwLw0HT2shC
-         fabMKfdbQnijNhwDQs6aJuTTtA9H5rhJBmViuLXyjY8R7FoSHqt7QsKSsuVFaTDnKqcn
-         qqmx3tXJRjfgC+oD4Ea1RIsUPdwsiH0MlmzC0Bjj7iFtg48GyixLmv8P4bjPObp9vu38
-         bqLw==
-X-Gm-Message-State: ACrzQf3qs4TTi9Cqrx6FCRXOAtNNT4uEXuWRIJYk67GOM1xkPydt7M+W
-        nG74NlAnglX+kkq4a/ZuWGLFBQ==
-X-Google-Smtp-Source: AMsMyM4okfVRbMsO3Ymv4vwJs9wuatFTCbhTbraksBWWxhhaFX9/mcQHd/2T30xj00lGBinhZSBhTw==
-X-Received: by 2002:a17:906:da86:b0:77a:52b3:da48 with SMTP id xh6-20020a170906da8600b0077a52b3da48mr4502878ejb.373.1665159274119;
-        Fri, 07 Oct 2022 09:14:34 -0700 (PDT)
-Received: from elver.google.com ([2a00:79e0:9c:201:4e4:454c:b135:33f2])
-        by smtp.gmail.com with ESMTPSA id pk18-20020a170906d7b200b00741383c1c5bsm1379772ejb.196.2022.10.07.09.14.33
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 07 Oct 2022 09:14:33 -0700 (PDT)
-Date:   Fri, 7 Oct 2022 18:14:27 +0200
-From:   Marco Elver <elver@google.com>
-To:     Peter Zijlstra <peterz@infradead.org>
-Cc:     Ingo Molnar <mingo@redhat.com>,
-        Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Jiri Olsa <jolsa@kernel.org>,
-        Namhyung Kim <namhyung@kernel.org>,
-        linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org,
-        kasan-dev@googlegroups.com, Dmitry Vyukov <dvyukov@google.com>
-Subject: Re: [PATCH] perf: Fix missing SIGTRAPs
-Message-ID: <Y0BQYxewPB/6KWLz@elver.google.com>
-References: <20220927121322.1236730-1-elver@google.com>
- <Yz7ZLaT4jW3Y9EYS@hirez.programming.kicks-ass.net>
- <Yz7fWw8duIOezSW1@elver.google.com>
- <Yz78MMMJ74tBw0gu@hirez.programming.kicks-ass.net>
- <Yz/zXpF1yLshrJm/@elver.google.com>
- <Y0Ak/D05KhJeKaed@hirez.programming.kicks-ass.net>
- <Y0AwaxcJNOWhMKXP@elver.google.com>
+        Fri, 7 Oct 2022 13:53:08 -0400
+Received: from foss.arm.com (foss.arm.com [217.140.110.172])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTP id AB156102DE4;
+        Fri,  7 Oct 2022 10:53:07 -0700 (PDT)
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 8C1A7106F;
+        Fri,  7 Oct 2022 10:53:13 -0700 (PDT)
+Received: from [10.57.66.34] (unknown [10.57.66.34])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 6906B3F792;
+        Fri,  7 Oct 2022 10:53:05 -0700 (PDT)
+Message-ID: <55170f1f-99f7-6e25-55d3-5d7247737afc@arm.com>
+Date:   Fri, 7 Oct 2022 18:53:03 +0100
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <Y0AwaxcJNOWhMKXP@elver.google.com>
-User-Agent: Mutt/2.2.7 (2022-08-07)
+User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.15; rv:91.0)
+ Gecko/20100101 Thunderbird/91.13.1
+Subject: Re: [PATCH v3 03/13] coresight: stm: Update STM driver to use Trace
+ ID API
+To:     Mike Leach <mike.leach@linaro.org>
+Cc:     coresight@lists.linaro.org, linux-arm-kernel@lists.infradead.org,
+        linux-kernel@vger.kernel.org, mathieu.poirier@linaro.org,
+        peterz@infradead.org, mingo@redhat.com, acme@kernel.org,
+        linux-perf-users@vger.kernel.org, leo.yan@linaro.org,
+        quic_jinlmao@quicinc.com
+References: <20220809223401.24599-1-mike.leach@linaro.org>
+ <20220809223401.24599-4-mike.leach@linaro.org>
+ <65e70db9-9f85-7285-0602-f2d29887550a@arm.com>
+ <CAJ9a7Vgz+0xEQO-MvGUzbsr_LBh4pDep7JJtFoA+cAeiAERJFw@mail.gmail.com>
+From:   Suzuki K Poulose <suzuki.poulose@arm.com>
+In-Reply-To: <CAJ9a7Vgz+0xEQO-MvGUzbsr_LBh4pDep7JJtFoA+cAeiAERJFw@mail.gmail.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-On Fri, Oct 07, 2022 at 03:58PM +0200, Marco Elver wrote:
-> On Fri, Oct 07, 2022 at 03:09PM +0200, Peter Zijlstra wrote:
-> > On Fri, Oct 07, 2022 at 11:37:34AM +0200, Marco Elver wrote:
-> > 
-> > > That worked. In addition I had to disable the ctx->task != current check
-> > > if we're in task_work, because presumably the event might have already
-> > > been disabled/moved??
-> > 
-> > Uhmmm... uhhh... damn. (wall-time was significantly longer)
-> > 
-> > Does this help?
+On 06/10/2022 14:54, Mike Leach wrote:
+> Hi Suzuki,
 > 
-> No unfortunately - still see:
-> 
-> [   82.300827] ------------[ cut here ]------------
-> [   82.301680] WARNING: CPU: 0 PID: 976 at kernel/events/core.c:6466 perf_sigtrap+0x60/0x70
+> On Mon, 3 Oct 2022 at 10:04, Suzuki K Poulose <suzuki.poulose@arm.com> wrote:
+>>
+>> On 09/08/2022 23:33, Mike Leach wrote:
+>>> Updates the STM driver to use the trace ID allocation API.
+>>> This uses the _system_id calls to allocate an ID on device poll,
+>>> and release on device remove.
+>>>
+>>> The sysfs access to the STMTRACEIDR register has been changed from RW
+>>> to RO. Having this value as writable is not appropriate for the new
+>>> Trace ID scheme - and had potential to cause errors in the previous
+>>> scheme if values clashed with other sources.
+>>>
+>>> Signed-off-by: Mike Leach <mike.leach@linaro.org>
+>>> Reviewed-by: Suzuki K Poulose <suzuki.poulose@arm.com>
 
-Whenever the warning fires, I see that event->state is OFF.
+>>> @@ -854,7 +830,7 @@ static void stm_init_generic_data(struct stm_drvdata *drvdata,
+>>>
+>>>    static int stm_probe(struct amba_device *adev, const struct amba_id *id)
+>>>    {
+>>> -     int ret;
+>>> +     int ret, trace_id;
+>>>        void __iomem *base;
+>>>        struct device *dev = &adev->dev;
+>>>        struct coresight_platform_data *pdata = NULL;
+>>> @@ -938,12 +914,22 @@ static int stm_probe(struct amba_device *adev, const struct amba_id *id)
+>>>                goto stm_unregister;
+>>>        }
+>>>
+>>> +     trace_id = coresight_trace_id_get_system_id();
+>>> +     if (trace_id < 0) {
+>>
+>> The above API returns "INVALID_ID" and not a negative error status.
+>> I think it is better to fix the API to return:
+>>
+>>     ret < 0  - If there is any error
+>>              - Otherwise a positive integer
+>> And the users should be kept unaware of which ID is valid or invalid.
+>>
+> 
+> coresight_trace_id_get_system_id() returns the ID if one can be
+> allocated or -EINVAL if not.
+> 
+> Not sure what you are looking at here.
+
+Sorry, indeed I was mistaken there. It is the get_cpu_id() which
+returns the INVALID_ID on failure. Please could we make that
+consistent with this scheme ? i.e, < 0 on error.
+
+Also, please could we add a comment above the exported functions
+on their entry/exit criteria ? It is not clearly evident, unless
+we follow the code and figure out.
+
+Cheers
+Suzuki
+
