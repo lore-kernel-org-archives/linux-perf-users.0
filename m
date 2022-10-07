@@ -2,761 +2,768 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1B66AC4332F
-	for <linux-perf-users@archiver.kernel.org>; Fri,  7 Oct 2022 20:32:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2FD3EC433FE
+	for <linux-perf-users@archiver.kernel.org>; Fri,  7 Oct 2022 23:20:01 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229791AbiJGUcV (ORCPT
+        id S229730AbiJGXT7 (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Fri, 7 Oct 2022 16:32:21 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44614 "EHLO
+        Fri, 7 Oct 2022 19:19:59 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52148 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230127AbiJGUcU (ORCPT
+        with ESMTP id S229688AbiJGXT5 (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Fri, 7 Oct 2022 16:32:20 -0400
-Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 38356127BCE;
-        Fri,  7 Oct 2022 13:32:18 -0700 (PDT)
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id BD8F861B6C;
-        Fri,  7 Oct 2022 20:32:17 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 5E5BCC433C1;
-        Fri,  7 Oct 2022 20:32:12 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1665174737;
-        bh=8RKVYrERlzKbkub/ZvGeNYeJaii8w6dE8/2khz0Z8Zw=;
-        h=From:To:Cc:Subject:Date:From;
-        b=fYUiH1b886AJIhX5Dj1WVgom9JoEu/x5bDLHZo0/wAGdX+V1bKOFxpz03m3UXZlG8
-         56Kr0CsCKhzhz1v/0abreoYsfo50Jzpib4KkRV0SNX4uSba+RdjfmLcmkdM1wevXn6
-         XzI6cD3jxBOUFe3kYszOQ8/DwpNusSCAJxtpxL69XRRU/kQ8EbaH9+SZW7nuwRLV4t
-         pVBbOgmIvZWfmApm9oYbdA/apV5jWOwXaDr2tbb7yLH4DVCmYFWIXGTI44nkpyhB6/
-         q6VBNOv5Vvy7+se+/y3Q2KXlq08P54uO1SMbUitiUDrwWOO0JO1qF793o67QoHABCj
-         /h0X/Zj+oiOig==
-From:   Arnaldo Carvalho de Melo <acme@kernel.org>
-To:     Linus Torvalds <torvalds@linux-foundation.org>
-Cc:     Ingo Molnar <mingo@kernel.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
+        Fri, 7 Oct 2022 19:19:57 -0400
+Received: from mail-yw1-x1149.google.com (mail-yw1-x1149.google.com [IPv6:2607:f8b0:4864:20::1149])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4484110561
+        for <linux-perf-users@vger.kernel.org>; Fri,  7 Oct 2022 16:19:53 -0700 (PDT)
+Received: by mail-yw1-x1149.google.com with SMTP id 00721157ae682-35813c409cbso57865477b3.5
+        for <linux-perf-users@vger.kernel.org>; Fri, 07 Oct 2022 16:19:53 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20210112;
+        h=to:from:subject:mime-version:message-id:date:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=yTVUGcd5K3xDwAQq486SYITnu8K77nx5kyYPP7G9G9A=;
+        b=pRPVaHHI5F1mCKyxwfur/dyTTNlKBr1vSyWSiBQiDvLDqyDF/79JYUbDnPIe6G3NOB
+         inynR3CNcuKiiHESyGSP1PtNODjTeLZEdP+oiicL4fwyurYyF7CBnwtJNQ8EoNhP8OzZ
+         9YdKCqG8S0NIn/u1vTtd+WLRiVPvhuXbSMgqjOs0G42iSjbBz7VeEXn5zXo5YhFNQz39
+         geGOtbjia84wqJ34hXiuvhfkhdb44kKr56bEOxOHjzktmXI1ziuX/u7FYKl27NJlQuWH
+         lUXEvV+f3TIXOkxocMT4XJZqGC0bW7m/f87WQkArQQJhaRIdzAC8gI9OQbPBCubJKIre
+         A/9A==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=to:from:subject:mime-version:message-id:date:x-gm-message-state
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=yTVUGcd5K3xDwAQq486SYITnu8K77nx5kyYPP7G9G9A=;
+        b=ZgaJ/7yeVM+wXEnNd2M42OuZ7AquPUXFoiOcnFJe2YsRZBoSJ0R9+Boom5et9+Wbpa
+         Nt3xMrvmZeBJXFOvRFn1uj60McnJvdnBQ0tHJMfmjVZdkd7049ZLGCtvgh4DJWsO1uy0
+         9lpyik4+N0kMp5eT4Mz9WJjsCPf9C/eSuUCPAPiuN6B5ewgHqzHSD/3R6E9c5sLyHH6K
+         5Y4bpe5EBo4qHHlWwcxbET+QbcQtLKscTx3MHxctrisIQLslKfNPhJ6KhTcOUdT8TSds
+         Kkss19omGQy466LW2C8AEoRKpAg8Qf/AYgfAmNtUc5NVosc4O0MpSXQM9jLNSXQb/sqW
+         kbsA==
+X-Gm-Message-State: ACrzQf31IJXX+ut9xS/nSzjDQRqyr1vGiJ3kuBrHGJmz9R8KMAo5FPQo
+        civAtjWgkhWZIYIO6bvaEcwbdIHsELZy
+X-Google-Smtp-Source: AMsMyM515vNd1SDesP70+4dbMvYDD7dzMrtbP9wowVOGJWbahvcNn2MYu5xhve0ORnfx+VJAklGGCrXZs/FV
+X-Received: from irogers.svl.corp.google.com ([2620:15c:2d4:203:9b0c:e906:194f:244b])
+ (user=irogers job=sendgmr) by 2002:a05:6902:10c9:b0:6af:2099:f0c with SMTP id
+ w9-20020a05690210c900b006af20990f0cmr7330475ybu.317.1665184792442; Fri, 07
+ Oct 2022 16:19:52 -0700 (PDT)
+Date:   Fri,  7 Oct 2022 16:19:46 -0700
+Message-Id: <20221007231946.1711967-1-irogers@google.com>
+Mime-Version: 1.0
+X-Mailer: git-send-email 2.38.0.rc1.362.ged0d419d3c-goog
+Subject: [PATCH] perf jevents: Parse metrics during conversion
+From:   Ian Rogers <irogers@google.com>
+To:     Peter Zijlstra <peterz@infradead.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        Arnaldo Carvalho de Melo <acme@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
         Jiri Olsa <jolsa@kernel.org>,
         Namhyung Kim <namhyung@kernel.org>,
-        Clark Williams <williams@redhat.com>,
-        Kate Carcia <kcarcia@redhat.com>, linux-kernel@vger.kernel.org,
-        linux-perf-users@vger.kernel.org,
-        Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Adrian Hunter <adrian.hunter@intel.com>,
-        Anshuman Khandual <anshuman.khandual@arm.com>,
-        Athira Jajeev <atrajeev@linux.vnet.ibm.com>,
-        Chen Zhongjin <chenzhongjin@huawei.com>,
-        Disha Goel <disgoel@linux.vnet.ibm.com>,
-        Gaosheng Cui <cuigaosheng1@huawei.com>,
         Ian Rogers <irogers@google.com>,
-        Nick Forrington <nick.forrington@arm.com>,
-        Pavithra Gurushankar <gpavithrasha@gmail.com>,
-        Raul Silvera <rsilvera@google.com>,
-        Roberto Sassu <roberto.sassu@huawei.com>,
-        Shang XiaoJing <shangxiaojing@huawei.com>,
-        Xin Gao <gaoxin@cdjrlc.com>,
-        ye xingchen <ye.xingchen@zte.com.cn>,
-        Arnaldo Carvalho de Melo <acme@redhat.com>
-Subject: [GIT PULL] perf tools changes for v6.1: 1st batch
-Date:   Fri,  7 Oct 2022 17:31:53 -0300
-Message-Id: <20221007203153.228388-1-acme@kernel.org>
-X-Mailer: git-send-email 2.37.3
-MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+        John Garry <john.garry@huawei.com>,
+        Sumanth Korikkar <sumanthk@linux.ibm.com>,
+        Thomas Richter <tmricht@linux.ibm.com>,
+        linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-Hi Linus,
+Currently the 'MetricExpr' json value is passed from the json
+file to the pmu-events.c. This change introduces an expression
+tree that is parsed into. The parsing is done largely by using
+operator overloading and python's 'eval' function. Two advantages
+in doing this are:
+
+1) Broken metrics fail at compile time rather than relying on
+   `perf test` to detect. `perf test` remains relevant for checking
+   event encoding and actual metric use.
+
+2) The conversion to a string from the tree can minimize the
+   metric's string size, for example, preferring 1e6 over 1000000
+   and removing unnecessary whitespace. On x86 this reduces the
+   string size by 2,823bytes (0.06%).
+
+In future changes it would be possible to programmatically
+generate the json expressions (a single line of text and so a
+pain to write manually) for an architecture using the expression
+tree. This could avoid copy-pasting metrics for all architecture
+variants.
+
+Signed-off-by: Ian Rogers <irogers@google.com>
+---
+ tools/perf/pmu-events/Build          |   2 +-
+ tools/perf/pmu-events/jevents.py     |  11 +-
+ tools/perf/pmu-events/metric.py      | 459 +++++++++++++++++++++++++++
+ tools/perf/pmu-events/metric_test.py | 143 +++++++++
+ 4 files changed, 611 insertions(+), 4 deletions(-)
+ create mode 100644 tools/perf/pmu-events/metric.py
+ create mode 100644 tools/perf/pmu-events/metric_test.py
+
+diff --git a/tools/perf/pmu-events/Build b/tools/perf/pmu-events/Build
+index 04ef95174660..15b9e8fdbffa 100644
+--- a/tools/perf/pmu-events/Build
++++ b/tools/perf/pmu-events/Build
+@@ -21,7 +21,7 @@ $(OUTPUT)pmu-events/pmu-events.c: pmu-events/empty-pmu-events.c
+ 	$(call rule_mkdir)
+ 	$(Q)$(call echo-cmd,gen)cp $< $@
+ else
+-$(OUTPUT)pmu-events/pmu-events.c: $(JSON) $(JSON_TEST) $(JEVENTS_PY)
++$(OUTPUT)pmu-events/pmu-events.c: $(JSON) $(JSON_TEST) $(JEVENTS_PY) pmu-events/metric.py
+ 	$(call rule_mkdir)
+ 	$(Q)$(call echo-cmd,gen)$(PYTHON) $(JEVENTS_PY) $(JEVENTS_ARCH) pmu-events/arch $@
+ endif
+diff --git a/tools/perf/pmu-events/jevents.py b/tools/perf/pmu-events/jevents.py
+index 0daa3e007528..81bcbd15c962 100755
+--- a/tools/perf/pmu-events/jevents.py
++++ b/tools/perf/pmu-events/jevents.py
+@@ -4,6 +4,7 @@
+ import argparse
+ import csv
+ import json
++import metric
+ import os
+ import sys
+ from typing import (Callable, Dict, Optional, Sequence, Set, Tuple)
+@@ -268,9 +269,9 @@ class JsonEvent:
+     self.metric_name = jd.get('MetricName')
+     self.metric_group = jd.get('MetricGroup')
+     self.metric_constraint = jd.get('MetricConstraint')
+-    self.metric_expr = jd.get('MetricExpr')
+-    if self.metric_expr:
+-      self.metric_expr = self.metric_expr.replace('\\', '\\\\')
++    self.metric_expr = None
++    if 'MetricExpr' in jd:
++       self.metric_expr = metric.ParsePerfJson(jd.get('MetricExpr'))
+     arch_std = jd.get('ArchStdEvent')
+     if precise and self.desc and '(Precise Event)' not in self.desc:
+       extra_desc += ' (Must be precise)' if precise == '2' else (' (Precise '
+@@ -322,6 +323,10 @@ class JsonEvent:
+     s = ''
+     for attr in _json_event_attributes:
+       x = getattr(self, attr)
++      if x and attr == 'metric_expr':
++        # Convert parsed metric expressions into a string. Slashes
++        # must be doubled in the file.
++        x = x.ToPerfJson().replace('\\', '\\\\')
+       s += f'{x}\\000' if x else '\\000'
+     return s
+ 
+diff --git a/tools/perf/pmu-events/metric.py b/tools/perf/pmu-events/metric.py
+new file mode 100644
+index 000000000000..14e0752cb119
+--- /dev/null
++++ b/tools/perf/pmu-events/metric.py
+@@ -0,0 +1,459 @@
++# SPDX-License-Identifier: (LGPL-2.1 OR BSD-2-Clause)
++"""Parse or generate representations of perf metrics."""
++import ast
++import decimal
++import re
++import json
++from typing import (Optional, Set, TypeVar, Union)
++
++ExprVal = TypeVar('ExprVal', int, float, 'Expression')
++
++class Expression:
++  """Abstract base class of elements in a metric expression."""
++
++  def ToPerfJson(self) -> str:
++    """Returns a perf json file encoded representation."""
++    raise NotImplementedError()
++
++  def ToPython(self) -> str:
++    """Returns a python expr parseable representation."""
++    raise NotImplementedError()
++
++  def Simplify(self):
++    """Returns a simplified version of self."""
++    raise NotImplementedError()
++
++  def Equals(self, other) -> bool:
++    """Returns true when two expressions are the same."""
++    raise NotImplementedError()
++
++  def __str__(self) -> str:
++    return self.ToPerfJson()
++
++  def __or__(self, other: ExprVal) -> 'Operator':
++    return Operator('|', self, other)
++
++  def __ror__(self, other: ExprVal) -> 'Operator':
++    return Operator('|', other, self)
++
++  def __xor__(self, other: ExprVal) -> 'Operator':
++    return Operator('^', self, other)
++
++  def __and__(self, other: ExprVal) -> 'Operator':
++    return Operator('&', self, other)
++
++  def __lt__(self, other: ExprVal) -> 'Operator':
++    return Operator('<', self, other)
++
++  def __gt__(self, other: ExprVal) -> 'Operator':
++    return Operator('>', self, other)
++
++  def __add__(self, other: ExprVal) -> 'Operator':
++    return Operator('+', self, other)
++
++  def __radd__(self, other: ExprVal) -> 'Operator':
++    return Operator('+', other, self)
++
++  def __sub__(self, other: ExprVal) -> 'Operator':
++    return Operator('-', self, other)
++
++  def __rsub__(self, other: ExprVal) -> 'Operator':
++    return Operator('-', other, self)
++
++  def __mul__(self, other: ExprVal) -> 'Operator':
++    return Operator('*', self, other)
++
++  def __rmul__(self, other: ExprVal) -> 'Operator':
++    return Operator('*', other, self)
++
++  def __truediv__(self, other: ExprVal) -> 'Operator':
++    return Operator('/', self, other)
++
++  def __rtruediv__(self, other: ExprVal) -> 'Operator':
++    return Operator('/', other, self)
++
++  def __mod__(self, other: ExprVal) -> 'Operator':
++    return Operator('%', self, other)
++
++
++def _Constify(val: ExprVal) -> Expression:
++  """Used to ensure that the nodes in the expression tree are all Expression."""
++  if isinstance(val, bool):
++    return Constant(1 if val else 0)
++  if isinstance(val, int) or isinstance(val, float):
++    return Constant(val)
++  return val
++
++
++# Simple lookup for operator precedence, used to avoid unnecessary
++# brackets. Precedence matches that of python and the simple expression parser.
++_PRECEDENCE = {
++    '|': 0,
++    '^': 1,
++    '&': 2,
++    '<': 3,
++    '>': 3,
++    '+': 4,
++    '-': 4,
++    '*': 5,
++    '/': 5,
++    '%': 5,
++}
++
++
++class Operator(Expression):
++  """Represents a binary operator in the parse tree."""
++
++  def __init__(self, operator: str, lhs: ExprVal, rhs: ExprVal):
++    self.operator = operator
++    self.lhs = _Constify(lhs)
++    self.rhs = _Constify(rhs)
++
++  def Bracket(self,
++              other: Expression,
++              other_str: str,
++              rhs: bool = False) -> str:
++    """Returns whether to bracket ``other``
++
++    ``other`` is the lhs or rhs, ``other_str`` is ``other`` in the
++    appropriate string from. If ``other`` is an operator then a
++    bracket is necessary when this/self operator has higher
++    precedence. Consider: '(a + b) * c', ``other_str`` will be 'a +
++    b'. A bracket is necessary as without the bracket 'a + b * c' will
++    evaluate 'b * c' first. However, '(a * b) + c' doesn't need a
++    bracket as 'a * b' will always be evaluated first. For 'a / (b *
++    c)' (ie the same precedence level operations) then we add the
++    bracket to best match the original input, but not for '(a / b) *
++    c' where the bracket is unnecessary.
++    """
++    if isinstance(other, Operator):
++      if _PRECEDENCE.get(self.operator, -1) > _PRECEDENCE.get(
++          other.operator, -1):
++        return f'({other_str})'
++      if rhs and _PRECEDENCE.get(self.operator, -1) == _PRECEDENCE.get(
++          other.operator, -1):
++        return f'({other_str})'
++    return other_str
++
++  def ToPerfJson(self):
++    return f'{self.Bracket(self.lhs, self.lhs.ToPerfJson())} {self.operator} ' \
++      f'{self.Bracket(self.rhs, self.rhs.ToPerfJson(), True)}'
++
++  def ToPython(self):
++    return f'{self.Bracket(self.lhs, self.lhs.ToPython())} {self.operator} ' \
++      f'{self.Bracket(self.rhs, self.rhs.ToPython(), True)}'
++
++  def Simplify(self) -> Expression:
++    lhs = self.lhs.Simplify()
++    rhs = self.rhs.Simplify()
++    if isinstance(lhs, Constant) and isinstance(rhs, Constant):
++      return Constant(eval(lhs + self.operator + rhs))
++
++    if isinstance(self.lhs, Constant):
++      if (self.operator == '+' or self.operator == '|') and lhs.value == '0':
++        return rhs
++
++      if self.operator == '*' and lhs.value == '0':
++        return Constant(0)
++
++      if self.operator == '*' and lhs.value == '1':
++        return rhs
++
++    if isinstance(rhs, Constant):
++      if (self.operator == '+' or self.operator == '|') and rhs.value == '0':
++        return lhs
++
++      if self.operator == '*' and rhs.value == '0':
++        return Constant(0)
++
++      if self.operator == '*' and self.rhs.value == '1':
++        return lhs
++
++    return Operator(self.operator, lhs, rhs)
++
++  def Equals(self, other: Expression) -> bool:
++    if isinstance(other, Operator):
++      return self.operator == other.operator and self.lhs.Equals(
++          other.lhs) and self.rhs.Equals(other.rhs)
++    return False
++
++class Select(Expression):
++  """Represents a select ternary in the parse tree."""
++
++  def __init__(self, true_val: ExprVal, cond, false_val):
++    self.true_val = _Constify(true_val)
++    self.cond = _Constify(cond)
++    self.false_val = _Constify(false_val)
++
++  def ToPerfJson(self):
++    true_str = self.true_val.ToPerfJson()
++    cond_str = self.cond.ToPerfJson()
++    false_str = self.false_val.ToPerfJson()
++    return f'({true_str} if {cond_str} else {false_str})'
++
++  def ToPython(self):
++    return f'Select({self.true_val.ToPython()}, {self.cond.ToPython()}, ' \
++      f'{self.false_val.ToPython()})'
++
++  def Simplify(self) -> Expression:
++    cond = self.cond.Simplify()
++    true_val = self.true_val.Simplify()
++    false_val = self.false_val.Simplify()
++    if isinstance(cond, Constant):
++      return false_val if cond.value == '0' else true_val
++
++    if true_val.Equals(false_val):
++      return true_val
++
++    return Select(true_val, cond, false_val)
++
++  def Equals(self, other: Expression) -> bool:
++    if isinstance(other, Select):
++      return self.cond.Equals(other.cond) and self.false_val.Equals(
++          other.false_val) and self.true_val.Equals(other.true_val)
++    return False
++
++class Function(Expression):
++  """A function in an expression like min, max, d_ratio."""
++
++  def __init__(self, fn: str, lhs: ExprVal, rhs: Optional[ExprVal] = None):
++    self.fn = fn
++    self.lhs = _Constify(lhs)
++    self.rhs = _Constify(rhs)
++
++  def ToPerfJson(self):
++    if self.rhs:
++      return f'{self.fn}({self.lhs.ToPerfJson()}, {self.rhs.ToPerfJson()})'
++    else:
++      return f'{self.fn}({self.lhs.ToPerfJson()})'
++
++  def ToPython(self):
++    if self.rhs:
++      return f'{self.fn}({self.lhs.ToPython()}, {self.rhs.ToPython()})'
++    else:
++      return f'{self.fn}({self.lhs.ToPython()})'
++
++  def Simplify(self) -> Expression:
++    lhs = self.lhs.Simplify()
++    rhs = self.rhs.Simplify()
++    if isinstance(lhs, Constant) and isinstance(rhs, Constant):
++      if self.fn == 'd_ratio':
++        if rhs.value == '0':
++          return Constant(0)
++        Constant(eval(f'{lhs} / {rhs}'))
++      return Constant(eval(f'{self.fn}({lhs}, {rhs})'))
++
++    return Function(self.fn, lhs, rhs)
++
++  def Equals(self, other: Expression) -> bool:
++    if isinstance(other, Function):
++      return self.fn == other.fn and self.lhs.Equals(
++          other.lhs) and self.rhs.Equals(other.rhs)
++    return False
++
++
++class Event(Expression):
++  """An event in an expression."""
++
++  def __init__(self, name: str, legacy_name: str = ''):
++    self.name = name
++    self.legacy_name = legacy_name
++
++  def ToPerfJson(self):
++    result = re.sub('/', '@', self.name)
++    return result
++
++  def ToPython(self):
++    return f'Event(r"{self.name}")'
++
++  def Simplify(self) -> Expression:
++    return self
++
++  def Equals(self, other: Expression) -> bool:
++    return isinstance(other, Event) and self.name == other.name
++
++class Constant(Expression):
++  """A constant within the expression tree."""
++
++  def __init__(self, value: Union[float, str]):
++    ctx = decimal.Context()
++    ctx.prec = 20
++    dec = ctx.create_decimal(repr(value) if isinstance(value, float) else value)
++    self.value = dec.normalize().to_eng_string()
++    self.value = self.value.replace('+', '')
++    self.value = self.value.replace('E', 'e')
++
++  def ToPerfJson(self):
++    return self.value
++
++  def ToPython(self):
++    return f'Constant({self.value})'
++
++  def Simplify(self) -> Expression:
++    return self
++
++  def Equals(self, other: Expression) -> bool:
++    return isinstance(other, Constant) and self.value == other.value
++
++class Literal(Expression):
++  """A runtime literal within the expression tree."""
++
++  def __init__(self, value: str):
++    self.value = value
++
++  def ToPerfJson(self):
++    return self.value
++
++  def ToPython(self):
++    return f'Literal({self.value})'
++
++  def Simplify(self) -> Expression:
++    return self
++
++  def Equals(self, other: Expression) -> bool:
++    return isinstance(other, Literal) and self.value == other.value
++
++
++def min(lhs, rhs) -> Function:
++  return Function('min', lhs, rhs)
++
++
++def max(lhs, rhs) -> Function:
++  return Function('max', lhs, rhs)
++
++
++def d_ratio(lhs, rhs) -> Function:
++  return Function('d_ratio', lhs, rhs)
++
++
++def source_count(event: Event) -> Function:
++  return Function('source_count', event)
++
++class Metric:
++  """An individual metric that will specifiable on the perf command line."""
++  groups: Set[str]
++  expr: Expression
++  scale_unit: str
++  constraint: bool
++
++  def __init__(self,
++               name: str,
++               description: str,
++               expr: Expression,
++               scale_unit: str,
++               constraint: bool = False):
++    self.name = name
++    self.description = description
++    self.expr = expr.Simplify()
++    # Workraound valid_only_metric hiding certain metrics based on unit.
++    scale_unit = scale_unit.replace('/sec', ' per sec')
++    if scale_unit[0].isdigit():
++      self.scale_unit = scale_unit
++    else:
++      self.scale_unit = f'1{scale_unit}'
++    self.constraint = constraint
++    self.groups = set()
++
++  def __lt__(self, other):
++    """Sort order."""
++    return self.name < other.name
++
++  def AddToMetricGroup(self, group):
++    """Callback used when being added to a MetricGroup."""
++    self.groups.add(group.name)
++
++  def Flatten(self) -> set:
++    """Return a leaf metric."""
++    return set([self])
++
++  def ToPerfJson(self):
++    result = {
++        'MetricName': self.name,
++        'MetricGroup': ';'.join(sorted(self.groups)),
++        'BriefDescription': self.description,
++        'MetricExpr': self.expr.ToPerfJson(),
++        'ScaleUnit': self.scale_unit
++    }
++    if self.constraint:
++      result['MetricConstraint'] = 'NO_NMI_WATCHDOG'
++
++    return result
++
++
++class _MetricJsonEncoder(json.JSONEncoder):
++  """Special handling for Metric objects."""
++
++  def default(self, obj):
++    if isinstance(obj, Metric):
++      return obj.ToPerfJson()
++    return json.JSONEncoder.default(self, obj)
++
++
++class MetricGroup:
++  """A group of metrics.
++
++  Metric groups may be specificd on the perf command line, but within
++  the json they aren't encoded. Metrics may be in multiple groups
++  which can facilitate arrangements similar to trees.
++  """
++
++  def __init__(self, name: str, metric_list: list[Union[Metric,
++                                                        'MetricGroup']]):
++    self.name = name
++    self.metric_list = metric_list
++    for metric in metric_list:
++      metric.AddToMetricGroup(self)
++
++  def AddToMetricGroup(self, group):
++    """Callback used when a MetricGroup is added into another."""
++    for metric in self.metric_list:
++      metric.AddToMetricGroup(group)
++
++  def Flatten(self) -> set:
++    """Returns a set of all leaf metrics."""
++    result = set()
++    for x in self.metric_list:
++      result = result.union(x.Flatten())
++
++    return result
++
++  def ToPerfJson(self) -> str:
++    return json.dumps(sorted(self.Flatten()), indent=2, cls=_MetricJsonEncoder)
++
++  def __str__(self) -> str:
++    return self.ToPerfJson()
++
++
++class _RewriteIfExpToSelect(ast.NodeTransformer):
++
++  def visit_IfExp(self, node):
++    call = ast.Call(
++        func=ast.Name(id='Select', ctx=ast.Load()),
++        args=[node.body, node.test, node.orelse],
++        keywords=[])
++    ast.copy_location(call, node.test)
++    return call
++
++
++def ParsePerfJson(orig: str) -> Expression:
++  """A simple json metric expression decoder.
++
++  Converts a json encoded metric expression by way of python's ast and
++  eval routine. First tokens are mapped to Event calls, then
++  accidentally converted keywords or literals are mapped to their
++  appropriate calls. Python's ast is used to match if-else that can't
++  be handled via operator overloading. Finally the ast is evaluated.
++  """
++  py = orig.strip()
++  py = re.sub(r'([a-zA-Z][^-+/\* \\\(\),]*(?:\\.[^-+/\* \\\(\),]*)*)',
++              r'Event(r"\1")', py)
++  py = re.sub(r'#Event\(r"([^"]*)"\)', r'Literal("#\1")', py)
++  py = re.sub(r'([0-9]+)Event\(r"(e[0-9]+)"\)', r'\1\2', py)
++  keywords = ['if', 'else', 'min', 'max', 'd_ratio', 'source_count']
++  for kw in keywords:
++    py = re.sub(f'Event\(r"{kw}"\)', kw, py)
++
++  parsed = ast.parse(py, mode='eval')
++  _RewriteIfExpToSelect().visit(parsed)
++  parsed = ast.fix_missing_locations(parsed)
++  return _Constify(eval(compile(parsed, orig, 'eval')))
+diff --git a/tools/perf/pmu-events/metric_test.py b/tools/perf/pmu-events/metric_test.py
+new file mode 100644
+index 000000000000..3909ca773ca1
+--- /dev/null
++++ b/tools/perf/pmu-events/metric_test.py
+@@ -0,0 +1,143 @@
++# SPDX-License-Identifier: (LGPL-2.1 OR BSD-2-Clause)
++import unittest
++from metric import Constant, Event, ParsePerfJson
++
++
++class TestMetricExpressions(unittest.TestCase):
++
++  def test_Operators(self):
++    a = Event('a')
++    b = Event('b')
++    self.assertEqual((a | b).ToPerfJson(), 'a | b')
++    self.assertEqual((a ^ b).ToPerfJson(), 'a ^ b')
++    self.assertEqual((a & b).ToPerfJson(), 'a & b')
++    self.assertEqual((a < b).ToPerfJson(), 'a < b')
++    self.assertEqual((a > b).ToPerfJson(), 'a > b')
++    self.assertEqual((a + b).ToPerfJson(), 'a + b')
++    self.assertEqual((a - b).ToPerfJson(), 'a - b')
++    self.assertEqual((a * b).ToPerfJson(), 'a * b')
++    self.assertEqual((a / b).ToPerfJson(), 'a / b')
++    self.assertEqual((a % b).ToPerfJson(), 'a % b')
++
++  def test_Brackets(self):
++    a = Event('a')
++    b = Event('b')
++    c = Event('c')
++    self.assertEqual((a * b + c).ToPerfJson(), 'a * b + c')
++    self.assertEqual((a + b * c).ToPerfJson(), 'a + b * c')
++    self.assertEqual(((a + a) + a).ToPerfJson(), 'a + a + a')
++    self.assertEqual(((a + b) * c).ToPerfJson(), '(a + b) * c')
++    self.assertEqual((a + (b * c)).ToPerfJson(), 'a + b * c')
++    self.assertEqual(((a / b) * c).ToPerfJson(), 'a / b * c')
++    self.assertEqual((a / (b * c)).ToPerfJson(), 'a / (b * c)')
++
++  def test_ParsePerfJson(self):
++    # Based on an example of a real metric.
++    before = '(a + b + c + d) / (2 * e)'
++    after = before
++    self.assertEqual(ParsePerfJson(before).ToPerfJson(), after)
++
++    # Parsing should handle events with '-' in their name. Note, in
++    # the json file the '\' are doubled to '\\'.
++    before = r'topdown\-fe\-bound / topdown\-slots - 1'
++    after = before
++    self.assertEqual(ParsePerfJson(before).ToPerfJson(), after)
++
++    # Parsing should handle escaped modifiers. Note, in the json file
++    # the '\' are doubled to '\\'.
++    before = 'arb@event\=0x81\,umask\=0x1@ + arb@event\=0x84\,umask\=0x1@'
++    after = before
++    self.assertEqual(ParsePerfJson(before).ToPerfJson(), after)
++
++    # Parsing should handle exponents in numbers.
++    before = r'a + 1e12 + b'
++    after = before
++    self.assertEqual(ParsePerfJson(before).ToPerfJson(), after)
++
++  def test_IfElseTests(self):
++    # if-else needs rewriting to Select and back.
++    before = r'Event1 if #smt_on else Event2'
++    after = f'({before})'
++    self.assertEqual(ParsePerfJson(before).ToPerfJson(), after)
++
++    before = r'Event1 if 0 else Event2'
++    after = f'({before})'
++    self.assertEqual(ParsePerfJson(before).ToPerfJson(), after)
++
++    before = r'Event1 if 1 else Event2'
++    after = f'({before})'
++    self.assertEqual(ParsePerfJson(before).ToPerfJson(), after)
++
++    # Ensure the select is evaluate last.
++    before = r'Event1 + 1 if Event2 < 2 else Event3 + 3'
++    after = (r'Select(Event(r"Event1") + Constant(1), Event(r"Event2") < '
++             r'Constant(2), Event(r"Event3") + Constant(3))')
++    self.assertEqual(ParsePerfJson(before).ToPython(), after)
++
++    before = r'Event1 > 1 if Event2 < 2 else Event3 > 3'
++    after = (r'Select(Event(r"Event1") > Constant(1), Event(r"Event2") < '
++             r'Constant(2), Event(r"Event3") > Constant(3))')
++    self.assertEqual(ParsePerfJson(before).ToPython(), after)
++
++    before = r'min(a + b if c > 1 else c + d, e + f)'
++    after = r'min((a + b if c > 1 else c + d), e + f)'
++    self.assertEqual(ParsePerfJson(before).ToPerfJson(), after)
++
++  def test_ToPython(self):
++    # Based on an example of a real metric.
++    before = '(a + b + c + d) / (2 * e)'
++    py = ParsePerfJson(before).ToPython()
++    after = eval(py).ToPerfJson()
++    self.assertEqual(before, after)
++
++  def test_Simplify(self):
++    before = '1 + 2 + 3'
++    after = '6'
++    self.assertEqual(ParsePerfJson(before).Simplify().ToPerfJson(), after)
++
++    before = 'a + 0'
++    after = 'a'
++    self.assertEqual(ParsePerfJson(before).Simplify().ToPerfJson(), after)
++
++    before = '0 + a'
++    after = 'a'
++    self.assertEqual(ParsePerfJson(before).Simplify().ToPerfJson(), after)
++
++    before = 'a | 0'
++    after = 'a'
++    self.assertEqual(ParsePerfJson(before).Simplify().ToPerfJson(), after)
++
++    before = '0 | a'
++    after = 'a'
++    self.assertEqual(ParsePerfJson(before).Simplify().ToPerfJson(), after)
++
++    before = 'a * 0'
++    after = '0'
++    self.assertEqual(ParsePerfJson(before).Simplify().ToPerfJson(), after)
++
++    before = '0 * a'
++    after = '0'
++    self.assertEqual(ParsePerfJson(before).Simplify().ToPerfJson(), after)
++
++    before = 'a * 1'
++    after = 'a'
++    self.assertEqual(ParsePerfJson(before).Simplify().ToPerfJson(), after)
++
++    before = '1 * a'
++    after = 'a'
++    self.assertEqual(ParsePerfJson(before).Simplify().ToPerfJson(), after)
++
++    before = 'a if 0 else b'
++    after = 'b'
++    self.assertEqual(ParsePerfJson(before).Simplify().ToPerfJson(), after)
++
++    before = 'a if 1 else b'
++    after = 'a'
++    self.assertEqual(ParsePerfJson(before).Simplify().ToPerfJson(), after)
++
++    before = 'a if b else a'
++    after = 'a'
++    self.assertEqual(ParsePerfJson(before).Simplify().ToPerfJson(), after)
++
++if __name__ == '__main__':
++  unittest.main()
+-- 
+2.38.0.rc1.362.ged0d419d3c-goog
 
-	Please consider pulling,
-
-Best regards,
-
-- Arnaldo
-
-
-The following changes since commit 725737e7c21d2d25a4312c2aaa82a52bd03e3126:
-
-  Merge tag 'statx-dioalign-for-linus' of git://git.kernel.org/pub/scm/linux/kernel/git/ebiggers/linux (2022-10-03 20:33:41 -0700)
-
-are available in the Git repository at:
-
-  git://git.kernel.org/pub/scm/linux/kernel/git/acme/linux.git tags/perf-tools-for-v6.1-1-2022-10-07
-
-for you to fetch changes up to d79310700590b8b40d8c867012d6c899ea6fd505:
-
-  perf script: Add missing fields in usage hint (2022-10-06 16:32:20 -0300)
-
-----------------------------------------------------------------
-perf tools changes for v6.1: 1st batch
-
-- Add support for AMD on 'perf mem' and 'perf c2c', the kernel enablement
-  patches went via tip.
-
-  Example:
-
-  $ sudo perf mem record -- -c 10000
-  ^C[ perf record: Woken up 227 times to write data ]
-  [ perf record: Captured and wrote 58.760 MB perf.data (836978 samples) ]
-
-  $ sudo perf mem report -F mem,sample,snoop
-  Samples: 836K of event 'ibs_op//', Event count (approx.): 8418762
-  Memory access                  Samples  Snoop
-  N/A                             700620  N/A
-  L1 hit                          126675  N/A
-  L2 hit                             424  N/A
-  L3 hit                             664  HitM
-  L3 hit                              10  N/A
-  Local RAM hit                        2  N/A
-  Remote RAM (1 hop) hit            8558  N/A
-  Remote Cache (1 hop) hit             3  N/A
-  Remote Cache (1 hop) hit             2  HitM
-  Remote Cache (2 hops) hit           10  HitM
-  Remote Cache (2 hops) hit            6  N/A
-  Uncached hit                         4  N/A
-  $
-
-- "perf lock" improvements:
-
-  - Add -E/--entries option to limit the number of entries to display, say to ask for
-    just the top 5 contended locks.
-
-  - Add -q/--quiet option to suppress header and debug messages.
-
-  - Add a 'perf test' kernel lock contention entry to test 'perf lock'.
-
-- "perf lock contention" improvements:
-
-  - Ask BPF's bpf_get_stackid() to skip some callchain entries.
-
-    The ones closer to the tooling are bpf related and not that interesting, the
-    ones calling the locking function are the ones we're interested in, example
-    of a full, unskipped callstack:
-
-  - Allow changing the callstack depth and number of entries to skip.
-
-           1     10.74 us     10.74 us     10.74 us     spinlock   __bpf_trace_contention_begin+0xb
-                          0xffffffffc03b5c47  bpf_prog_bf07ae9e2cbd02c5_contention_begin+0x117
-                          0xffffffffc03b5c47  bpf_prog_bf07ae9e2cbd02c5_contention_begin+0x117
-                          0xffffffffbb8b8e75  bpf_trace_run2+0x35
-                          0xffffffffbb7eab9b  __bpf_trace_contention_begin+0xb
-                          0xffffffffbb7ebe75  queued_spin_lock_slowpath+0x1f5
-                          0xffffffffbc1c26ff  _raw_spin_lock+0x1f
-                          0xffffffffbb841015  tick_do_update_jiffies64+0x25
-                          0xffffffffbb8409ee  tick_irq_enter+0x9e
-
-  - Show full callstack in verbose mode (-v option), sometimes this is desirable
-    instead of showing just one callstack entry.
-
-- Allow multiple time ranges in 'perf record --delay' to help in reducing the
-  amount of data collected from hardware tracing (Intel PT, etc) when there is
-  a rough idea of periods of time where events of interest take time.
-
-- Add Intel PT to record only decoder debug messages when error happens.
-
-- Improve layout of Intel PT man page.
-
-- Add new branch types: alignment, data and inst faults and arch specific ones,
-  such as fiq, debug_halt, debug_exit, debug_inst and debug_data on arm64.
-
-  Kernel enablement went thru the tip tree.
-
-- Fix 'perf probe' error log check in 'perf test' when no debuginfo is
-  available.
-
-- Fix 'perf stat' aggregation mode logic, it should be looking at the CPU
-  not at the core number.
-
-- Fix flags parsing in 'perf trace' filters.
-
-- Introduce compact encoding of CPU range encoding on perf.data, to avoid
-  having a bitmap with all the CPUs.
-
-- Improvements to the 'perf stat' metrics, including adding "core_wide", and
-  computing "smt" from the CPU topology.
-
-- Add support to the new PERF_FORMAT_LOST perf_event_attr.read_format, that allows
-  tooling to ask for the precise number of lost samples for a given event.
-
-- Add 'addr' sort key to see just the address of sampled instructions:
-
-  $ perf record -o- true | perf report -i- -s addr
-  [ perf record: Woken up 1 times to write data ]
-  [ perf record: Captured and wrote 0.000 MB - ]
-  # Samples: 12  of event 'cycles:u'
-  # Event count (approx.): 252512
-  #
-  # Overhead  Address
-  # ........  ..................
-      42.96%  0x7f96f08443d7
-      29.55%  0x7f96f0859b50
-      14.76%  0x7f96f0852e02
-       8.30%  0x7f96f0855028
-       4.43%  0xffffffff8de01087
-
-  perf annotate: Toggle full address <-> offset display
-
-- Add 'f' hotkey to the 'perf annotate' TUI interface when in 'disassembler output'
-  mode ('o' hotkey) to toggle showing full virtual address or just the offset.
-
-- Cache DSO build-ids when synthesizing PERF_RECORD_MMAP records for pre-existing threads,
-  at the start of a 'perf record' session, speeding up that record startup phase.
-
-- Add a command line option to specify build ids in 'perf inject'.
-
-- Update JSON event files for the Intel alderlake, broadwell, broadwellde,
-  broadwellx, cascadelakex, haswell, haswellx, icelake, icelakex, ivybridge,
-  ivytown, jaketown, sandybridge, sapphirerapids, skylake, skylakex, and
-  tigerlake processors.
-
-- Update vendor JSON event files for the ARM Neoverse V1 and E1 platforms.
-
-- Add a 'perf test' entry for 'perf mem' where a struct has false sharing and
-  this gets detected in the 'perf mem' output, tested with Intel, AMD and ARM64
-  systems.
-
-- Add a 'perf test' entry to test the resolution of java symbols, where an
-  output like this is expected:
-
-     8.18%  jshell    jitted-50116-29.so    [.] Interpreter
-     0.75%  Thread-1  jitted-83602-1670.so  [.] jdk.internal.jimage.BasicImageReader.getString(int)
-
-- Add tests for the ARM64 CoreSight hardware tracing feature, with specially
-  crafted pureloop, memcpy, thread loop and unroll tread that then gets
-  traced and the output compared with expected output.
-
-  Documentation explaining it is also included.
-
-- Add per thread Intel PT 'perf test' entry to check that PERF_RECORD_TEXT_POKE events
-  are recorded per CPU, resulting in a mixture of per thread and per CPU events and mmaps,
-  verify that this gets all recorded correctly.
-
-- Introduce pthread mutex wrappers to allow for building with clang's
-  -Wthread-safety, i.e. using the "guarded_by" "pt_guarded_by" "lockable",
-  "exclusive_lock_function", "exclusive_trylock_function",
-  "exclusive_locks_required", and "no_thread_safety_analysis" compiler function
-  attributes.
-
-- Fix empty version number when building outside of a git repo.
-
-- Improve feature detection display when multiple versions of a feature are present, such
-  as for binutils libbfd, that has a mix of possible ways to detect according to the
-  Linux distribution.
-
-  Previously in some cases we had:
-
-  Auto-detecting system features
-  <SNIP>
-  ...                                  libbfd: [ on  ]
-  ...                          libbfd-liberty: [ on  ]
-  ...                        libbfd-liberty-z: [ on  ]
-  <SNIP>
-
-  Now for this case we show just the main feature:
-
-  Auto-detecting system features
-  <SNIP>
-  ...                                  libbfd: [ on  ]
-  <SNIP>
-
-- Remove some unused structs, variables, macros, function prototypes and
-  includes from various places.
-
-Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
-
-----------------------------------------------------------------
-Adrian Hunter (24):
-      perf record: Fix way of handling non-perf-event pollfds
-      perf record: Fix done_fd wakeup event
-      perf record: Change evlist->ctl_fd to use fdarray_flag__non_perf_event
-      perf evlist: Add evlist__{en/dis}able_non_dummy()
-      perf record: Allow multiple recording time ranges
-      perf tools: Add perf_config_scan()
-      perf auxtrace: Add itrace option flag d+e to log on error
-      perf intel-pt: Improve man page layout slightly
-      perf intel-pt: Improve object code read error message
-      perf intel-pt: Support itrace option flag d+e to log on error
-      perf intel-pt: Remove first line of log dumped on error
-      perf test: test_intel_pt.sh: Add cleanup function
-      perf test: test_intel_pt.sh: Use a temp directory
-      perf test: test_intel_pt.sh: Fix redirection
-      perf test: test_intel_pt.sh: Stop using expr
-      perf test: test_intel_pt.sh: Stop using backticks
-      perf test: test_intel_pt.sh: Use grep -c instead of grep plus wc -l
-      perf test: test_intel_pt.sh: Use quotes around variable expansion
-      perf test: test_intel_pt.sh: Fix return checking
-      perf test: test_intel_pt.sh: Add more output in preparation for more tests
-      perf tools: Add debug messages and comments for testing
-      perf test: test_intel_pt.sh: Add per-thread test
-      perf test: test_intel_pt.sh: Move helper functions for waiting
-      perf test: waiting.sh: Parameterize timeouts
-
-Anshuman Khandual (4):
-      perf branch: Add system error and not in transaction branch types
-      perf branch: Extend branch type classification
-      perf branch: Add branch privilege information request flag
-      perf branch: Add PERF_BR_NEW_ARCH_[N] map for BRBE on arm64 platform
-
-Athira Rajeev (2):
-      perf tests: Fix 'perf probe' error log check in skip_if_no_debuginfo
-      perf stat: Fix cpu check to use id.cpu.cpu in aggr_printout()
-
-Carsten Haitzler (13):
-      perf test: Add CoreSight shell lib shared code for future tests
-      perf test: Add build infra for perf test tools for ARM CoreSight tests
-      perf test: Add asm pureloop test tool
-      perf test: Add arm64 asm pureloop test shell script
-      perf test: Add git ignore for perf data generated by the ARM CoreSight tests
-      perf test coresight: Add memcpy thread test tool
-      perf test coresight: Add memcpy thread test shell script
-      perf test coresight: Add thread loop test tool
-      perf test coresight: Add thread loop test shell scripts
-      perf test coresight: Add unroll thread test tool
-      perf test coresight: Add unroll thread test shell script
-      perf test: Add git ignore for tmp and output files of ARM CoreSight tests
-      perf test coresight: Add relevant documentation about ARM64 CoreSight testing
-
-Chen Zhongjin (4):
-      perf string: Remove unused macro K()
-      perf trace: Fix show_arg_names not working for tp arg names
-      perf trace: Fix incorrectly parsed hexadecimal value for flags in filter
-      perf parse-events: Remove unused macros __PERF_EVENT_FIELD()
-
-Gaosheng Cui (2):
-      perf sort: Remove hist_entry__sort_list() and sort__first_dimension() leftover declarations
-      perf pmu: Remove perf_pmu_lex() needless declaration
-
-Ian Rogers (50):
-      perf hashmap: Tidy hashmap dependency
-      perf bench: Update use of pthread mutex/cond
-      perf tests: Avoid pthread.h inclusion
-      perf hist: Update use of pthread mutex
-      perf bpf: Remove unused pthread.h include
-      perf lock: Remove unused pthread.h include
-      perf record: Update use of pthread mutex
-      perf sched: Update use of pthread mutex
-      perf ui: Update use of pthread mutex
-      perf mmap: Remove unnecessary pthread.h include
-      perf dso: Update use of pthread mutex
-      perf annotate: Update use of pthread mutex
-      perf top: Update use of pthread mutex
-      perf dso: Hold lock when accessing nsinfo
-      perf mutex: Add thread safety annotations
-      perf sched: Fixes for thread safety analysis
-      perf top: Fixes for thread safety analysis
-      perf build: Enable -Wthread-safety with clang
-      perf smt: Tidy header guard add SPDX
-      perf events: Prefer union over variable length array
-      perf cpumap: Add range data encoding
-      perf expr: Move the scanner_ctx into the parse_ctx
-      perf smt: Compute SMT from topology
-      perf topology: Add core_wide
-      perf stat: Delay metric parsing
-      perf metrics: Wire up core_wide
-      perf test: Add basic core_wide expression test
-      perf expr: Allow a double if expression
-      perf test: Adjust case of test metrics
-      perf expr: Remove jevents case workaround
-      perf metrics: Don't scale counts going into metrics
-      perf vendor events: Update Intel skylakex
-      perf vendor events: Update Intel alderlake
-      perf vendor events: Update Intel broadwell
-      perf vendor events: Update Intel broadwellx
-      perf vendor events: Update Intel cascadelakex
-      perf vendor events: Update elkhartlake cpuids
-      perf vendor events: Update Intel haswell
-      perf vendor events: Update Intel haswellx
-      perf vendor events: Update Intel icelake
-      perf vendor events: Update Intel icelakex
-      perf vendor events: Update Intel ivybridge
-      perf vendor events: Update Intel ivytown
-      perf vendor events: Update Intel jaketown
-      perf vendor events: Update Intel sandybridge
-      perf vendor events: Update Intel sapphirerapids
-      perf vendor events: Update silvermont cpuids
-      perf vendor events: Update Intel skylake
-      perf vendor events: Update Intel tigerlake
-      perf vendor events: Update Intel broadwellde
-
-Leo Yan (3):
-      perf subcmd: Set environment variable "PREFIX"
-      perf test: Introduce script for java symbol testing
-      perf test: Introduce script for data symbol testing
-
-Namhyung Kim (32):
-      perf tools: Print LOST read format in the verbose mode
-      perf record: Set PERF_FORMAT_LOST by default
-      perf record: Read and inject LOST_SAMPLES events
-      perf hist: Add nr_lost_samples to hist_stats
-      perf report: Show per-event LOST SAMPLES stat
-      perf sched: Factor out destroy_tasks()
-      perf test: Skip sigtrap test on old kernels
-      perf lock contention: Factor out get_symbol_name_offset()
-      perf lock contention: Show full callstack with -v option
-      perf lock contention: Allow to change stack depth and skip
-      perf lock contention: Skip stack trace from BPF
-      perf record: Fix a segfault in record__read_lost_samples()
-      perf inject: Clarify build-id options a little bit
-      perf tools: Add 'addr' sort key
-      perf annotate: Toggle full address <-> offset display
-      perf lock: Add -E/--entries option
-      perf lock: Add -q/--quiet option to suppress header and debug messages
-      perf test: Add kernel lock contention test
-      perf lock contention: Fix a build error on 32-bit
-      libperf: Populate system-wide evsel maps
-      libperf: Propagate maps only if necessary
-      perf tools: Get rid of evlist__add_on_all_cpus()
-      perf tools: Add evlist__add_sched_switch()
-      perf tools: Remove special handling of system-wide evsel
-      perf stat: Convert perf_stat_evsel.res_stats array
-      perf stat: Don't call perf_stat_evsel_id_init() repeatedly
-      perf stat: Rename saved_value->cpu_map_idx
-      perf stat: Use thread map index for shadow stat
-      perf stat: Kill unused per-thread runtime stats
-      perf stat: Don't compare runtime stat for shadow stats
-      perf stat: Rename to aggr_cpu_id.thread_idx
-      perf record: Save DSO build-ID for synthesizing
-
-Nick Forrington (3):
-      perf vendor events: Add missing Neoverse V1 events
-      perf vendor events arm64: Move REMOTE_ACCESS to "memory" category
-      perf vendor events: Update events for Neoverse E1
-
-Pavithra Gurushankar (1):
-      perf mutex: Wrapped usage of mutex and cond
-
-Raul Silvera (1):
-      perf inject: Add a command line option to specify build ids.
-
-Ravi Bangoria (8):
-      tools headers UAPI: Sync include/uapi/linux/perf_event.h header with the kernel
-      perf amd ibs: Sync arch/x86/include/asm/amd-ibs.h header with the kernel
-      perf mem: Add support for printing PERF_MEM_LVLNUM_{CXL|IO}
-      perf mem/c2c: Set PERF_SAMPLE_WEIGHT for LOAD_STORE events
-      perf mem/c2c: Add load store event mappings for AMD
-      perf mem/c2c: Avoid printing empty lines for unsupported events
-      perf mem: Print "LFB/MAB" for PERF_MEM_LVLNUM_LFB
-      perf script: Add missing fields in usage hint
-
-Roberto Sassu (3):
-      tools build: Fix feature detection output due to eval expansion
-      tools build: Increment room for feature name in feature detection output
-      tools build: Display logical OR of a feature flavors
-
-Shang XiaoJing (10):
-      perf tools: Add same_cmd_with_prefix() helper
-      perf c2c: Add helpers to get counts of loads or stores
-      perf trace: Use zalloc() to save initialization of syscall_stats
-      perf lock: Add get_key_by_aggr_mode helper
-      perf timechart: Add create_pidcomm helper
-      perf timechart: Add p_state_end helper
-      perf genelf: Fix error code in jit_write_elf()
-      perf stat: Merge cases in process_evlist
-      perf top: Fix error code in cmd_top()
-      perf stat: Clean redundant if in process_evlist
-
-Will Chandler (1):
-      perf tools: Fix empty version number when building outside of a git repo
-
-Xin Gao (2):
-      perf parse-events: Use 'unsigned int' instead of plain 'unsigned'.
-      perf metrics: Use 'unsigned int' instead of just 'unsigned'.
-
-Yuan Can (5):
-      perf machine: Remove unused struct process_args
-      perf annotate: Remove unused struct disasm_line_samples
-      perf metric: Remove unused struct metric_ref_node
-      perf jit: Remove unused struct debug_line_info
-      perf lock: Remove unused struct lock_contention_key
-
-ye xingchen (1):
-      perf callchain: Remove unneeded 'result' variable
-
- Documentation/trace/coresight/coresight-perf.rst   |  158 +++
- MAINTAINERS                                        |    1 +
- tools/arch/x86/include/asm/amd-ibs.h               |   16 +
- tools/build/Makefile.feature                       |   50 +-
- tools/include/uapi/linux/perf_event.h              |   40 +-
- tools/lib/api/fd/array.h                           |    5 +-
- tools/lib/perf/evlist.c                            |   28 +-
- tools/lib/perf/evsel.c                             |    3 -
- tools/lib/perf/include/internal/evlist.h           |    1 +
- tools/lib/perf/include/perf/event.h                |   25 +-
- tools/lib/subcmd/exec-cmd.c                        |    3 +
- tools/perf/.gitignore                              |    6 +-
- tools/perf/Documentation/itrace.txt                |    1 +
- tools/perf/Documentation/perf-arm-coresight.txt    |    5 +
- tools/perf/Documentation/perf-c2c.txt              |   14 +-
- tools/perf/Documentation/perf-config.txt           |    7 +
- tools/perf/Documentation/perf-inject.txt           |   13 +-
- tools/perf/Documentation/perf-intel-pt.txt         |   13 +-
- tools/perf/Documentation/perf-lock.txt             |   20 +
- tools/perf/Documentation/perf-mem.txt              |    3 +-
- tools/perf/Documentation/perf-record.txt           |    8 +-
- tools/perf/Documentation/perf-report.txt           |    3 +-
- tools/perf/Makefile.config                         |   24 +-
- tools/perf/Makefile.perf                           |   18 +-
- tools/perf/arch/x86/util/intel-pt.c                |   15 +-
- tools/perf/arch/x86/util/mem-events.c              |   31 +-
- tools/perf/bench/epoll-ctl.c                       |   33 +-
- tools/perf/bench/epoll-wait.c                      |   33 +-
- tools/perf/bench/futex-hash.c                      |   33 +-
- tools/perf/bench/futex-lock-pi.c                   |   33 +-
- tools/perf/bench/futex-requeue.c                   |   33 +-
- tools/perf/bench/futex-wake-parallel.c             |   33 +-
- tools/perf/bench/futex-wake.c                      |   33 +-
- tools/perf/bench/numa.c                            |   93 +-
- tools/perf/builtin-c2c.c                           |   66 +-
- tools/perf/builtin-inject.c                        |   89 ++
- tools/perf/builtin-lock.c                          |  274 ++--
- tools/perf/builtin-mem.c                           |    1 +
- tools/perf/builtin-record.c                        |  208 ++-
- tools/perf/builtin-report.c                        |   17 +
- tools/perf/builtin-sched.c                         |  125 +-
- tools/perf/builtin-script.c                        |   12 +-
- tools/perf/builtin-stat.c                          |  126 +-
- tools/perf/builtin-timechart.c                     |   65 +-
- tools/perf/builtin-top.c                           |   48 +-
- tools/perf/builtin-trace.c                         |   18 +-
- tools/perf/perf.c                                  |   12 +-
- .../arm/{cortex-a65 => cortex-a65-e1}/branch.json  |    0
- .../arm/{cortex-a65 => cortex-a65-e1}/bus.json     |    0
- .../arm/{cortex-a65 => cortex-a65-e1}/cache.json   |    0
- .../arm/{cortex-a65 => cortex-a65-e1}/dpu.json     |    0
- .../{cortex-a65 => cortex-a65-e1}/exception.json   |    0
- .../arm/{cortex-a65 => cortex-a65-e1}/ifu.json     |    0
- .../{cortex-a65 => cortex-a65-e1}/instruction.json |    0
- .../arm/{cortex-a65 => cortex-a65-e1}/memory.json  |    0
- .../{cortex-a65 => cortex-a65-e1}/pipeline.json    |    0
- .../arch/arm64/arm/cortex-a76-n1/memory.json       |    3 +
- .../arch/arm64/arm/cortex-a76-n1/other.json        |    5 -
- .../arch/arm64/arm/neoverse-e1/branch.json         |   17 -
- .../pmu-events/arch/arm64/arm/neoverse-e1/bus.json |   17 -
- .../arch/arm64/arm/neoverse-e1/cache.json          |  107 --
- .../arch/arm64/arm/neoverse-e1/exception.json      |   14 -
- .../arch/arm64/arm/neoverse-e1/instruction.json    |   65 -
- .../arch/arm64/arm/neoverse-e1/memory.json         |   23 -
- .../arch/arm64/arm/neoverse-e1/pipeline.json       |    8 -
- .../pmu-events/arch/arm64/arm/neoverse-e1/spe.json |   14 -
- .../arch/arm64/arm/neoverse-n2/memory.json         |    3 +
- .../arch/arm64/arm/neoverse-n2/other.json          |    5 -
- .../arch/arm64/arm/neoverse-v1/instruction.json    |   30 +
- .../arch/arm64/arm/neoverse-v1/memory.json         |    3 +
- .../arch/arm64/arm/neoverse-v1/other.json          |    5 -
- tools/perf/pmu-events/arch/arm64/mapfile.csv       |    4 +-
- .../pmu-events/arch/test/test_soc/cpu/metrics.json |    6 +-
- .../pmu-events/arch/x86/alderlake/adl-metrics.json | 1353 +++++++++++++++++++-
- .../perf/pmu-events/arch/x86/alderlake/cache.json  |  129 +-
- .../pmu-events/arch/x86/alderlake/frontend.json    |   12 +
- .../perf/pmu-events/arch/x86/alderlake/memory.json |   22 +
- .../perf/pmu-events/arch/x86/alderlake/other.json  |   22 +
- .../pmu-events/arch/x86/alderlake/pipeline.json    |   14 +-
- .../pmu-events/arch/x86/broadwell/bdw-metrics.json |  679 ++++++++--
- .../arch/x86/broadwellde/bdwde-metrics.json        |  711 ++++++++--
- .../arch/x86/broadwellx/bdx-metrics.json           |  965 +++++++++-----
- .../arch/x86/broadwellx/uncore-cache.json          |   10 +-
- .../arch/x86/broadwellx/uncore-interconnect.json   |   18 +-
- .../arch/x86/broadwellx/uncore-memory.json         |   18 +-
- .../arch/x86/cascadelakex/clx-metrics.json         | 1285 +++++++++++--------
- .../arch/x86/cascadelakex/uncore-memory.json       |   18 +-
- .../arch/x86/cascadelakex/uncore-other.json        |   10 +-
- tools/perf/pmu-events/arch/x86/haswell/cache.json  |    4 +-
- .../perf/pmu-events/arch/x86/haswell/frontend.json |   12 +-
- .../pmu-events/arch/x86/haswell/hsw-metrics.json   |  570 +++++++--
- tools/perf/pmu-events/arch/x86/haswellx/cache.json |    2 +-
- .../pmu-events/arch/x86/haswellx/frontend.json     |   12 +-
- .../pmu-events/arch/x86/haswellx/hsx-metrics.json  |  919 ++++++++-----
- .../arch/x86/haswellx/uncore-interconnect.json     |   18 +-
- .../arch/x86/haswellx/uncore-memory.json           |   18 +-
- tools/perf/pmu-events/arch/x86/icelake/cache.json  |    6 +-
- .../pmu-events/arch/x86/icelake/icl-metrics.json   |  808 +++++++++++-
- .../perf/pmu-events/arch/x86/icelake/pipeline.json |    2 +-
- tools/perf/pmu-events/arch/x86/icelakex/cache.json |    6 +-
- .../pmu-events/arch/x86/icelakex/icx-metrics.json  | 1155 ++++++++++++-----
- .../pmu-events/arch/x86/icelakex/pipeline.json     |    2 +-
- .../pmu-events/arch/x86/icelakex/uncore-other.json |    2 +-
- .../pmu-events/arch/x86/ivybridge/ivb-metrics.json |  594 +++++++--
- tools/perf/pmu-events/arch/x86/ivytown/cache.json  |    4 +-
- .../arch/x86/ivytown/floating-point.json           |    2 +-
- .../perf/pmu-events/arch/x86/ivytown/frontend.json |   18 +-
- .../pmu-events/arch/x86/ivytown/ivt-metrics.json   |  630 +++++++--
- .../pmu-events/arch/x86/ivytown/uncore-cache.json  |   58 +-
- .../arch/x86/ivytown/uncore-interconnect.json      |   84 +-
- .../pmu-events/arch/x86/ivytown/uncore-memory.json |    2 +-
- .../pmu-events/arch/x86/ivytown/uncore-other.json  |    6 +-
- .../pmu-events/arch/x86/ivytown/uncore-power.json  |    8 +-
- .../pmu-events/arch/x86/jaketown/jkt-metrics.json  |  327 +++--
- tools/perf/pmu-events/arch/x86/mapfile.csv         |   18 +-
- .../arch/x86/sandybridge/snb-metrics.json          |  315 +++--
- .../pmu-events/arch/x86/sapphirerapids/cache.json  |    4 +-
- .../arch/x86/sapphirerapids/frontend.json          |   11 +
- .../arch/x86/sapphirerapids/pipeline.json          |    4 +-
- .../arch/x86/sapphirerapids/spr-metrics.json       | 1249 +++++++++++++-----
- .../pmu-events/arch/x86/skylake/skl-metrics.json   |  861 ++++++++++---
- .../pmu-events/arch/x86/skylakex/skx-metrics.json  | 1262 +++++++++++-------
- .../arch/x86/skylakex/uncore-memory.json           |   18 +-
- .../pmu-events/arch/x86/skylakex/uncore-other.json |   19 +-
- .../pmu-events/arch/x86/tigerlake/tgl-metrics.json |  810 +++++++++++-
- tools/perf/pmu-events/empty-pmu-events.c           |    6 +-
- tools/perf/tests/cpumap.c                          |   52 +-
- tools/perf/tests/event_update.c                    |   14 +-
- tools/perf/tests/expr.c                            |   41 +-
- tools/perf/tests/mmap-basic.c                      |    2 -
- tools/perf/tests/openat-syscall-all-cpus.c         |    2 +-
- tools/perf/tests/perf-record.c                     |    2 -
- tools/perf/tests/shell/coresight/Makefile          |   29 +
- .../perf/tests/shell/coresight/Makefile.miniconfig |   14 +
- tools/perf/tests/shell/coresight/asm_pure_loop.sh  |   18 +
- .../tests/shell/coresight/asm_pure_loop/.gitignore |    1 +
- .../tests/shell/coresight/asm_pure_loop/Makefile   |   34 +
- .../shell/coresight/asm_pure_loop/asm_pure_loop.S  |   28 +
- .../tests/shell/coresight/memcpy_thread/.gitignore |    1 +
- .../tests/shell/coresight/memcpy_thread/Makefile   |   33 +
- .../shell/coresight/memcpy_thread/memcpy_thread.c  |   79 ++
- .../tests/shell/coresight/memcpy_thread_16k_10.sh  |   18 +
- .../tests/shell/coresight/thread_loop/.gitignore   |    1 +
- .../tests/shell/coresight/thread_loop/Makefile     |   33 +
- .../shell/coresight/thread_loop/thread_loop.c      |   86 ++
- .../shell/coresight/thread_loop_check_tid_10.sh    |   19 +
- .../shell/coresight/thread_loop_check_tid_2.sh     |   19 +
- .../shell/coresight/unroll_loop_thread/.gitignore  |    1 +
- .../shell/coresight/unroll_loop_thread/Makefile    |   33 +
- .../unroll_loop_thread/unroll_loop_thread.c        |   74 ++
- .../tests/shell/coresight/unroll_loop_thread_10.sh |   18 +
- tools/perf/tests/shell/lib/coresight.sh            |  132 ++
- tools/perf/tests/shell/lib/probe_vfs_getname.sh    |    2 +-
- tools/perf/tests/shell/lib/waiting.sh              |   77 ++
- tools/perf/tests/shell/lock_contention.sh          |   73 ++
- tools/perf/tests/shell/test_data_symbol.sh         |   93 ++
- tools/perf/tests/shell/test_intel_pt.sh            |  247 +++-
- tools/perf/tests/shell/test_java_symbol.sh         |   75 ++
- tools/perf/tests/sigtrap.c                         |   65 +-
- tools/perf/tests/switch-tracking.c                 |   15 +-
- tools/perf/tests/topology.c                        |   10 +-
- tools/perf/ui/browser.c                            |   20 +-
- tools/perf/ui/browsers/annotate.c                  |   23 +-
- tools/perf/ui/setup.c                              |    5 +-
- tools/perf/ui/tui/helpline.c                       |    5 +-
- tools/perf/ui/tui/progress.c                       |    8 +-
- tools/perf/ui/tui/setup.c                          |    8 +-
- tools/perf/ui/tui/util.c                           |   18 +-
- tools/perf/ui/ui.h                                 |    4 +-
- tools/perf/util/Build                              |    1 +
- tools/perf/util/PERF-VERSION-GEN                   |   10 +-
- tools/perf/util/annotate.c                         |   34 +-
- tools/perf/util/annotate.h                         |    8 +-
- tools/perf/util/auxtrace.c                         |   13 +
- tools/perf/util/auxtrace.h                         |    3 +
- tools/perf/util/bpf-event.h                        |    1 -
- tools/perf/util/bpf-loader.c                       |    6 +-
- tools/perf/util/bpf_lock_contention.c              |   26 +-
- tools/perf/util/bpf_skel/lock_contention.bpf.c     |    5 +-
- tools/perf/util/branch.c                           |   70 +-
- tools/perf/util/branch.h                           |    7 +-
- tools/perf/util/build-id.c                         |   12 +-
- tools/perf/util/callchain.c                        |   12 +-
- tools/perf/util/config.c                           |   31 +
- tools/perf/util/config.h                           |    1 +
- tools/perf/util/cpumap.c                           |   39 +-
- tools/perf/util/cpumap.h                           |    2 +-
- tools/perf/util/cputopo.c                          |   61 +
- tools/perf/util/cputopo.h                          |    5 +
- tools/perf/util/dso.c                              |   19 +-
- tools/perf/util/dso.h                              |    4 +-
- tools/perf/util/events_stats.h                     |    1 +
- tools/perf/util/evlist.c                           |  316 ++++-
- tools/perf/util/evlist.h                           |   13 +-
- tools/perf/util/evsel.c                            |   30 +-
- tools/perf/util/evsel.h                            |    1 +
- tools/perf/util/expr.c                             |   40 +-
- tools/perf/util/expr.h                             |   25 +-
- tools/perf/util/expr.l                             |    6 +-
- tools/perf/util/expr.y                             |    2 +-
- tools/perf/util/genelf.c                           |    1 +
- tools/perf/util/header.c                           |   24 +-
- tools/perf/util/hist.c                             |   22 +-
- tools/perf/util/hist.h                             |    6 +-
- tools/perf/util/intel-pt-decoder/intel-pt-log.c    |  117 +-
- tools/perf/util/intel-pt-decoder/intel-pt-log.h    |    3 +-
- tools/perf/util/intel-pt.c                         |   23 +-
- tools/perf/util/jitdump.c                          |    7 -
- tools/perf/util/lock-contention.h                  |    5 +-
- tools/perf/util/machine.c                          |    4 -
- tools/perf/util/map.c                              |    3 +
- tools/perf/util/mem-events.c                       |   17 +-
- tools/perf/util/metricgroup.c                      |  145 ++-
- tools/perf/util/metricgroup.h                      |    4 +-
- tools/perf/util/mmap.h                             |    1 -
- tools/perf/util/mutex.c                            |  119 ++
- tools/perf/util/mutex.h                            |  108 ++
- tools/perf/util/parse-branch-options.c             |    1 +
- tools/perf/util/parse-events.c                     |    8 -
- tools/perf/util/perf_event_attr_fprintf.c          |    4 +-
- tools/perf/util/pmu.c                              |    2 +-
- tools/perf/util/pmu.y                              |    2 -
- tools/perf/util/probe-event.c                      |    3 +
- tools/perf/util/session.c                          |    7 +-
- tools/perf/util/smt.c                              |  110 +-
- tools/perf/util/smt.h                              |   19 +-
- tools/perf/util/sort.c                             |   38 +
- tools/perf/util/sort.h                             |    3 +-
- tools/perf/util/stat-display.c                     |   36 +-
- tools/perf/util/stat-shadow.c                      |  338 +++--
- tools/perf/util/stat.c                             |   29 +-
- tools/perf/util/stat.h                             |   12 +-
- tools/perf/util/string.c                           |    1 -
- tools/perf/util/symbol.c                           |    4 +-
- tools/perf/util/synthetic-events.c                 |  184 +--
- tools/perf/util/top.h                              |    5 +-
- 236 files changed, 15807 insertions(+), 5281 deletions(-)
- create mode 100644 Documentation/trace/coresight/coresight-perf.rst
- create mode 100644 tools/perf/Documentation/perf-arm-coresight.txt
- rename tools/perf/pmu-events/arch/arm64/arm/{cortex-a65 => cortex-a65-e1}/branch.json (100%)
- rename tools/perf/pmu-events/arch/arm64/arm/{cortex-a65 => cortex-a65-e1}/bus.json (100%)
- rename tools/perf/pmu-events/arch/arm64/arm/{cortex-a65 => cortex-a65-e1}/cache.json (100%)
- rename tools/perf/pmu-events/arch/arm64/arm/{cortex-a65 => cortex-a65-e1}/dpu.json (100%)
- rename tools/perf/pmu-events/arch/arm64/arm/{cortex-a65 => cortex-a65-e1}/exception.json (100%)
- rename tools/perf/pmu-events/arch/arm64/arm/{cortex-a65 => cortex-a65-e1}/ifu.json (100%)
- rename tools/perf/pmu-events/arch/arm64/arm/{cortex-a65 => cortex-a65-e1}/instruction.json (100%)
- rename tools/perf/pmu-events/arch/arm64/arm/{cortex-a65 => cortex-a65-e1}/memory.json (100%)
- rename tools/perf/pmu-events/arch/arm64/arm/{cortex-a65 => cortex-a65-e1}/pipeline.json (100%)
- delete mode 100644 tools/perf/pmu-events/arch/arm64/arm/cortex-a76-n1/other.json
- delete mode 100644 tools/perf/pmu-events/arch/arm64/arm/neoverse-e1/branch.json
- delete mode 100644 tools/perf/pmu-events/arch/arm64/arm/neoverse-e1/bus.json
- delete mode 100644 tools/perf/pmu-events/arch/arm64/arm/neoverse-e1/cache.json
- delete mode 100644 tools/perf/pmu-events/arch/arm64/arm/neoverse-e1/exception.json
- delete mode 100644 tools/perf/pmu-events/arch/arm64/arm/neoverse-e1/instruction.json
- delete mode 100644 tools/perf/pmu-events/arch/arm64/arm/neoverse-e1/memory.json
- delete mode 100644 tools/perf/pmu-events/arch/arm64/arm/neoverse-e1/pipeline.json
- delete mode 100644 tools/perf/pmu-events/arch/arm64/arm/neoverse-e1/spe.json
- delete mode 100644 tools/perf/pmu-events/arch/arm64/arm/neoverse-n2/other.json
- delete mode 100644 tools/perf/pmu-events/arch/arm64/arm/neoverse-v1/other.json
- create mode 100644 tools/perf/tests/shell/coresight/Makefile
- create mode 100644 tools/perf/tests/shell/coresight/Makefile.miniconfig
- create mode 100755 tools/perf/tests/shell/coresight/asm_pure_loop.sh
- create mode 100644 tools/perf/tests/shell/coresight/asm_pure_loop/.gitignore
- create mode 100644 tools/perf/tests/shell/coresight/asm_pure_loop/Makefile
- create mode 100644 tools/perf/tests/shell/coresight/asm_pure_loop/asm_pure_loop.S
- create mode 100644 tools/perf/tests/shell/coresight/memcpy_thread/.gitignore
- create mode 100644 tools/perf/tests/shell/coresight/memcpy_thread/Makefile
- create mode 100644 tools/perf/tests/shell/coresight/memcpy_thread/memcpy_thread.c
- create mode 100755 tools/perf/tests/shell/coresight/memcpy_thread_16k_10.sh
- create mode 100644 tools/perf/tests/shell/coresight/thread_loop/.gitignore
- create mode 100644 tools/perf/tests/shell/coresight/thread_loop/Makefile
- create mode 100644 tools/perf/tests/shell/coresight/thread_loop/thread_loop.c
- create mode 100755 tools/perf/tests/shell/coresight/thread_loop_check_tid_10.sh
- create mode 100755 tools/perf/tests/shell/coresight/thread_loop_check_tid_2.sh
- create mode 100644 tools/perf/tests/shell/coresight/unroll_loop_thread/.gitignore
- create mode 100644 tools/perf/tests/shell/coresight/unroll_loop_thread/Makefile
- create mode 100644 tools/perf/tests/shell/coresight/unroll_loop_thread/unroll_loop_thread.c
- create mode 100755 tools/perf/tests/shell/coresight/unroll_loop_thread_10.sh
- create mode 100644 tools/perf/tests/shell/lib/coresight.sh
- create mode 100644 tools/perf/tests/shell/lib/waiting.sh
- create mode 100755 tools/perf/tests/shell/lock_contention.sh
- create mode 100755 tools/perf/tests/shell/test_data_symbol.sh
- create mode 100755 tools/perf/tests/shell/test_java_symbol.sh
- create mode 100644 tools/perf/util/mutex.c
- create mode 100644 tools/perf/util/mutex.h
