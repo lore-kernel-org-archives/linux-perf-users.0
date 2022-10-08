@@ -2,73 +2,187 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 212CFC433FE
-	for <linux-perf-users@archiver.kernel.org>; Sat,  8 Oct 2022 03:53:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 93428C433F5
+	for <linux-perf-users@archiver.kernel.org>; Sat,  8 Oct 2022 08:41:39 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229445AbiJHDx0 (ORCPT
+        id S229737AbiJHIli (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Fri, 7 Oct 2022 23:53:26 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44030 "EHLO
+        Sat, 8 Oct 2022 04:41:38 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37878 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229379AbiJHDxZ (ORCPT
+        with ESMTP id S229703AbiJHIlh (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Fri, 7 Oct 2022 23:53:25 -0400
-Received: from matoro.tk (unknown [IPv6:2600:1700:4b10:9d80::2])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id F177D7E835
-        for <linux-perf-users@vger.kernel.org>; Fri,  7 Oct 2022 20:53:19 -0700 (PDT)
-DKIM-Signature: a=rsa-sha256; bh=RPvIHMnxNZqw0/E1mYOh34M7wrdUyzxHHFnZw597LG4=;
- c=relaxed/relaxed; d=matoro.tk;
- h=Subject:Subject:Sender:To:To:Cc:From:From:Date:Date:MIME-Version:MIME-Version:Content-Type:Content-Type:Content-Transfer-Encoding:Content-Transfer-Encoding:Reply-To:In-Reply-To:Message-Id:Message-Id:References:Autocrypt:Openpgp;
- i=@matoro.tk; s=20221003; t=1665201195; v=1; x=1665633195;
- b=c6sv2Sb3QwsHxeIMkeBxYN0dQFVsJXGlHGjKWcohFADCvsylxV7nBDWLDZ/lZEhqn4XLoWT/
- wZBqyBTK1Fimi0gYfe4odG/msDWJ+fTyH9kpz48F7CZpZqsS06MRS1+AK9kQ39/kboeEY3YX4wn
- /wEzy9whj2Wuh6omeUz1yADCvMLfIfN/9zr4rfR3LqgRr0oki+Up6jDMzAVJXOPZg8eaiVIcUjD
- p9vByilzdbvBUZYoUjZYkZw0EIrBqp0cMKkcHQugp4ttzix0SGDoqByBLBcyAK/O8JpffHHr1Sy
- PNRphjCXKqOyGtwBccmR7d4iDnquw1PcilCKimFbbZdMINmSBgAdZ14K4bpraZi4Tz+Lpx/6lz6
- JZlnWzkPFViSrZuIjEbRu/Fu45JNYdt6gtp8JV2ByrMEFgFzqCZpOEFnIYmpjnvIoE3YnHT9Ws6
- htcrZMoLmgF6Ixc+PQgZMwQmXtATG51nkP+yRgL+4mQU9yLqJ6U7b5yUy6OEZlKltsGgYZi0rER
- /Za08dUCpBYOkVhnMdU4kMyS/I9szLInYgO/u2Ik7ut/3EJuq+j6FJ3TuR2Iv/cBSVS6cwkSaGq
- 6g4ORe9Ur2IONN0z8g4N7VVGa+MWt08XQdZ1L5G5cPmf8DO49dR8JHf2uIiuU5XVORop65SwuLd
- FIKbRMAwG5Y=
-Received: by matoro.tk (envelope-sender
- <matoro_mailinglist_kernel@matoro.tk>) with ESMTPS id b0e6ba90; Fri, 07 Oct
- 2022 23:53:15 -0400
+        Sat, 8 Oct 2022 04:41:37 -0400
+Received: from mail-ed1-x532.google.com (mail-ed1-x532.google.com [IPv6:2a00:1450:4864:20::532])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 56881F72
+        for <linux-perf-users@vger.kernel.org>; Sat,  8 Oct 2022 01:41:36 -0700 (PDT)
+Received: by mail-ed1-x532.google.com with SMTP id z3so8824891edc.10
+        for <linux-perf-users@vger.kernel.org>; Sat, 08 Oct 2022 01:41:36 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20210112;
+        h=user-agent:in-reply-to:content-disposition:mime-version:references
+         :message-id:subject:cc:to:from:date:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=WxdcSrBOGO9MYgndz6qzjn61BZYNh2xTD3igd7MSm5c=;
+        b=nmR1Fi0PdzdMHZAyOKlzQqOUaEpdYIN8DD9ZEgkgrPLoFUPVTfpTAMOrdmKzL7MqBr
+         /KKuy2dI5684FfSWWA4M7FAR9pTEM7kYYF433eJSYqOW8lb8h9y9LblCGzNUbrw9ppOi
+         zCSNGlg1eZFhDFsKlrfvcIEeyILfI5ffIRPTPPsLR1HtC3ygkqrDyOUEttB7muWDmFCC
+         dbPlF1uTHhHS75TJswE6JHGncNCbsvT4csytWCE5ekP2BmeIN8hUnaf+tj1F+iUNmx7S
+         lghppvBIMQoKczZ4sT/fGAyB544J4u0R5R1CU3DEgmF6uIcMrGZ4yg9svwFNXvW9J0z2
+         V/+A==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=user-agent:in-reply-to:content-disposition:mime-version:references
+         :message-id:subject:cc:to:from:date:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=WxdcSrBOGO9MYgndz6qzjn61BZYNh2xTD3igd7MSm5c=;
+        b=2T0jzerx+J+cZ9ektq7jgyF2H1pkQqRu6VvjK8+Bt6YQJCM0W+BYlBo1qrQCssHk1X
+         Ge+JJMH3BRgZK6wKfMSJX8nzIojhCxh3/0WMRG+E7200daNnxYwXeCUAl06JDbEde4JO
+         7VM+G0uF+a4KaAjGm9Olja3UdN8Svpf1w8rnIkV2LSm4HTIHy3wrBWhP7GZqFpGBE1eR
+         UOhEBeFKwSjWP+F9geAQ9XIPTHjQz+fmMoOy+e0MZSUaQCCxmyhMQzQID1nEQbRoOg5f
+         YbyOAQBdlblznQHBXHusvjm7esNQpi8eR5gUj+C92U1xrO5Ch3it/llGWItxbUCBUhQK
+         gCEA==
+X-Gm-Message-State: ACrzQf0y/2UqqlQqAokkG4tx65Uro98YpQSebzscL7XBQrrRRerPYN2G
+        S73TOzzG6QU6FXyMsIj9jL2scQ==
+X-Google-Smtp-Source: AMsMyM7BA312x0VvaeqVc6OyWCdkvRRS95nVi0wubI3ieh9d+sm/H19oBxjutMnBaGx+lHDhHxzaQQ==
+X-Received: by 2002:a05:6402:1842:b0:458:e6f2:bd3d with SMTP id v2-20020a056402184200b00458e6f2bd3dmr7973061edy.169.1665218494605;
+        Sat, 08 Oct 2022 01:41:34 -0700 (PDT)
+Received: from elver.google.com ([2a00:79e0:9c:201:6029:e851:8078:4621])
+        by smtp.gmail.com with ESMTPSA id d6-20020a50f686000000b00459e3a3f3ddsm3081688edn.79.2022.10.08.01.41.33
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sat, 08 Oct 2022 01:41:33 -0700 (PDT)
+Date:   Sat, 8 Oct 2022 10:41:28 +0200
+From:   Marco Elver <elver@google.com>
+To:     Peter Zijlstra <peterz@infradead.org>
+Cc:     Ingo Molnar <mingo@redhat.com>,
+        Arnaldo Carvalho de Melo <acme@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Jiri Olsa <jolsa@kernel.org>,
+        Namhyung Kim <namhyung@kernel.org>,
+        linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org,
+        kasan-dev@googlegroups.com, Dmitry Vyukov <dvyukov@google.com>
+Subject: Re: [PATCH] perf: Fix missing SIGTRAPs
+Message-ID: <Y0E3uG7jOywn7vy3@elver.google.com>
+References: <20220927121322.1236730-1-elver@google.com>
+ <Yz7ZLaT4jW3Y9EYS@hirez.programming.kicks-ass.net>
+ <Yz7fWw8duIOezSW1@elver.google.com>
+ <Yz78MMMJ74tBw0gu@hirez.programming.kicks-ass.net>
+ <Yz/zXpF1yLshrJm/@elver.google.com>
+ <Y0Ak/D05KhJeKaed@hirez.programming.kicks-ass.net>
+ <Y0AwaxcJNOWhMKXP@elver.google.com>
+ <Y0BQYxewPB/6KWLz@elver.google.com>
 MIME-Version: 1.0
-Date:   Fri, 07 Oct 2022 23:53:15 -0400
-From:   matoro <matoro_mailinglist_kernel@matoro.tk>
-To:     linux-perf-users@vger.kernel.org
-Subject: Recent perf-tools does not compile on alpha
-Message-ID: <43a0c856c61f0bee69290b82c7bd8e7a@matoro.tk>
-X-Sender: matoro_mailinglist_kernel@matoro.tk
-Content-Type: text/plain; charset=UTF-8;
- format=flowed
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <Y0BQYxewPB/6KWLz@elver.google.com>
+User-Agent: Mutt/2.2.7 (2022-08-07)
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-Hi!  Recent versions of the perf tools (5.19) do not compile on alpha 
-with the following errors:
+On Fri, Oct 07, 2022 at 06:14PM +0200, Marco Elver wrote:
+> On Fri, Oct 07, 2022 at 03:58PM +0200, Marco Elver wrote:
+> > On Fri, Oct 07, 2022 at 03:09PM +0200, Peter Zijlstra wrote:
+> > > On Fri, Oct 07, 2022 at 11:37:34AM +0200, Marco Elver wrote:
+> > > 
+> > > > That worked. In addition I had to disable the ctx->task != current check
+> > > > if we're in task_work, because presumably the event might have already
+> > > > been disabled/moved??
+> > > 
+> > > Uhmmm... uhhh... damn. (wall-time was significantly longer)
+> > > 
+> > > Does this help?
+> > 
+> > No unfortunately - still see:
+> > 
+> > [   82.300827] ------------[ cut here ]------------
+> > [   82.301680] WARNING: CPU: 0 PID: 976 at kernel/events/core.c:6466 perf_sigtrap+0x60/0x70
+> 
+> Whenever the warning fires, I see that event->state is OFF.
 
-util/unwind-libdw.c: In function ‘memory_read’:
-util/unwind-libdw.c:161:62: error: ‘PERF_REG_SP’ undeclared (first use 
-in this function); did you mean ‘PERF_MEM_S’?
-   161 |         ret = perf_reg_value(&start, &ui->sample->user_regs, 
-PERF_REG_SP);
-       |                                                              
-^~~~~~~~~~~
-       |                                                              
-PERF_MEM_S
-util/unwind-libdw.c:161:62: note: each undeclared identifier is reported 
-only once for each function it appears in
-util/unwind-libdw.c: In function ‘unwind__get_entries’:
-util/unwind-libdw.c:255:53: error: ‘PERF_REG_IP’ undeclared (first use 
-in this function); did you mean ‘PERF_REGS_MAX’?
-   255 |         err = perf_reg_value(&ip, &data->user_regs, 
-PERF_REG_IP);
-       |                                                     ^~~~~~~~~~~
-       |                                                     
-PERF_REGS_MAX
+The below patch to the sigtrap_threads test can repro the issue (when
+run lots of them concurrently again). It also illustrates the original
+problem we're trying to solve, where the event never gets rearmed again
+and the test times out (doesn't happen with the almost-working fix).
 
-Wondering if anybody has some pointers about where these definitions 
-should be coming from on alpha?
+Thanks,
+-- Marco
+
+------ >8 ------
+
+From 98d225bda6d94dd793a1d0c77ae4b301c364166e Mon Sep 17 00:00:00 2001
+From: Marco Elver <elver@google.com>
+Date: Sat, 8 Oct 2022 10:26:58 +0200
+Subject: [PATCH] selftests/perf_events: Add a SIGTRAP stress test with
+ disables
+
+Add a SIGTRAP stress test that exercises repeatedly enabling/disabling
+an event while it concurrently keeps firing.
+
+Signed-off-by: Marco Elver <elver@google.com>
+---
+ .../selftests/perf_events/sigtrap_threads.c   | 35 +++++++++++++++++--
+ 1 file changed, 32 insertions(+), 3 deletions(-)
+
+diff --git a/tools/testing/selftests/perf_events/sigtrap_threads.c b/tools/testing/selftests/perf_events/sigtrap_threads.c
+index 6d849dc2bee0..d1d8483ac628 100644
+--- a/tools/testing/selftests/perf_events/sigtrap_threads.c
++++ b/tools/testing/selftests/perf_events/sigtrap_threads.c
+@@ -62,6 +62,8 @@ static struct perf_event_attr make_event_attr(bool enabled, volatile void *addr,
+ 		.remove_on_exec = 1, /* Required by sigtrap. */
+ 		.sigtrap	= 1, /* Request synchronous SIGTRAP on event. */
+ 		.sig_data	= TEST_SIG_DATA(addr, id),
++		.exclude_kernel = 1, /* To allow */
++		.exclude_hv     = 1, /* running as !root */
+ 	};
+ 	return attr;
+ }
+@@ -93,9 +95,13 @@ static void *test_thread(void *arg)
+ 
+ 	__atomic_fetch_add(&ctx.tids_want_signal, tid, __ATOMIC_RELAXED);
+ 	iter = ctx.iterate_on; /* read */
+-	for (i = 0; i < iter - 1; i++) {
+-		__atomic_fetch_add(&ctx.tids_want_signal, tid, __ATOMIC_RELAXED);
+-		ctx.iterate_on = iter; /* idempotent write */
++	if (iter >= 0) {
++		for (i = 0; i < iter - 1; i++) {
++			__atomic_fetch_add(&ctx.tids_want_signal, tid, __ATOMIC_RELAXED);
++			ctx.iterate_on = iter; /* idempotent write */
++		}
++	} else {
++		while (ctx.iterate_on);
+ 	}
+ 
+ 	return NULL;
+@@ -208,4 +214,27 @@ TEST_F(sigtrap_threads, signal_stress)
+ 	EXPECT_EQ(ctx.first_siginfo.si_perf_data, TEST_SIG_DATA(&ctx.iterate_on, 0));
+ }
+ 
++TEST_F(sigtrap_threads, signal_stress_with_disable)
++{
++	const int target_count = NUM_THREADS * 3000;
++	int i;
++
++	ctx.iterate_on = -1;
++
++	EXPECT_EQ(ioctl(self->fd, PERF_EVENT_IOC_ENABLE, 0), 0);
++	pthread_barrier_wait(&self->barrier);
++	while (__atomic_load_n(&ctx.signal_count, __ATOMIC_RELAXED) < target_count) {
++		EXPECT_EQ(ioctl(self->fd, PERF_EVENT_IOC_DISABLE, 0), 0);
++		EXPECT_EQ(ioctl(self->fd, PERF_EVENT_IOC_ENABLE, 0), 0);
++	}
++	ctx.iterate_on = 0;
++	for (i = 0; i < NUM_THREADS; i++)
++		ASSERT_EQ(pthread_join(self->threads[i], NULL), 0);
++	EXPECT_EQ(ioctl(self->fd, PERF_EVENT_IOC_DISABLE, 0), 0);
++
++	EXPECT_EQ(ctx.first_siginfo.si_addr, &ctx.iterate_on);
++	EXPECT_EQ(ctx.first_siginfo.si_perf_type, PERF_TYPE_BREAKPOINT);
++	EXPECT_EQ(ctx.first_siginfo.si_perf_data, TEST_SIG_DATA(&ctx.iterate_on, 0));
++}
++
+ TEST_HARNESS_MAIN
+-- 
+2.38.0.rc1.362.ged0d419d3c-goog
+
