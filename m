@@ -2,120 +2,168 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3D1F4C433FE
-	for <linux-perf-users@archiver.kernel.org>; Sat,  8 Oct 2022 14:08:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2969DC433F5
+	for <linux-perf-users@archiver.kernel.org>; Sun,  9 Oct 2022 03:09:49 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229770AbiJHOIa (ORCPT
+        id S229565AbiJIDJq (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Sat, 8 Oct 2022 10:08:30 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42686 "EHLO
+        Sat, 8 Oct 2022 23:09:46 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54458 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229656AbiJHOI3 (ORCPT
+        with ESMTP id S229463AbiJIDJn (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Sat, 8 Oct 2022 10:08:29 -0400
-Received: from casper.infradead.org (casper.infradead.org [IPv6:2001:8b0:10b:1236::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8747648E88;
-        Sat,  8 Oct 2022 07:08:28 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=casper.20170209; h=In-Reply-To:Content-Type:MIME-Version:
-        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description;
-        bh=wD6pqrT2g8oCJelnKZKJ0EZlxxhJxKsk3kEfOiAnIBA=; b=Tc+b8pBy+p0jfrJ4FvsAuhuCTH
-        Q0BbwH8M3eKR2MAcvigxuuPESqFY32yKT34AsAnaHJzczYwzmSLKfGKQuJfdKXI6BmFYo+b+bwKtD
-        0EP6jmilk89BUtUcAlAMEfI6WkAiHioABd91oEBIEdYh0PZXBxT+dDstrwHrcc8iyPO4huUihsH/5
-        5Vh3z1U/47oKVFw7eq9WR29raH2BoYOYcVamJrrgy+2Rg7EUndcHc5vnEN10YHjvNXI5T4UO3WYgw
-        FVGT2jqCLGW5WcD8tOZJmzAh7+mxtS9oRsunfTnU93YT0QCai4QhLd8cJyA4U5TkcRPCvtS5S8fEu
-        QGXFwYCw==;
-Received: from j130084.upc-j.chello.nl ([24.132.130.84] helo=noisy.programming.kicks-ass.net)
-        by casper.infradead.org with esmtpsa (Exim 4.94.2 #2 (Red Hat Linux))
-        id 1ohAV5-002jXU-Jy; Sat, 08 Oct 2022 14:08:24 +0000
-Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange X25519 server-signature RSA-PSS (4096 bits))
-        (Client did not present a certificate)
-        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id 2E6C630007E;
-        Sat,  8 Oct 2022 16:08:19 +0200 (CEST)
-Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
-        id DB4AC209DB0E9; Sat,  8 Oct 2022 16:08:18 +0200 (CEST)
-Date:   Sat, 8 Oct 2022 16:08:18 +0200
-From:   Peter Zijlstra <peterz@infradead.org>
-To:     Marco Elver <elver@google.com>
-Cc:     Ingo Molnar <mingo@redhat.com>,
-        Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Jiri Olsa <jolsa@kernel.org>,
-        Namhyung Kim <namhyung@kernel.org>,
-        linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org,
-        kasan-dev@googlegroups.com, Dmitry Vyukov <dvyukov@google.com>
-Subject: Re: [PATCH] perf: Fix missing SIGTRAPs
-Message-ID: <Y0GEUkLWDvU34h9f@hirez.programming.kicks-ass.net>
-References: <20220927121322.1236730-1-elver@google.com>
- <Yz7ZLaT4jW3Y9EYS@hirez.programming.kicks-ass.net>
- <Yz7fWw8duIOezSW1@elver.google.com>
- <Yz78MMMJ74tBw0gu@hirez.programming.kicks-ass.net>
- <Yz/zXpF1yLshrJm/@elver.google.com>
- <Y0Ak/D05KhJeKaed@hirez.programming.kicks-ass.net>
- <Y0AwaxcJNOWhMKXP@elver.google.com>
- <Y0GAXJkwK5nXeFfG@hirez.programming.kicks-ass.net>
+        Sat, 8 Oct 2022 23:09:43 -0400
+Received: from mga06.intel.com (mga06b.intel.com [134.134.136.31])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 256B9D93
+        for <linux-perf-users@vger.kernel.org>; Sat,  8 Oct 2022 20:09:40 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1665284981; x=1696820981;
+  h=message-id:date:mime-version:subject:to:references:from:
+   in-reply-to:content-transfer-encoding;
+  bh=yaH3l8m0ARoupoNvXpPuxUBNqNWC9pL4yWq/2O5kq3g=;
+  b=GEC3gn40yqNMNC0VBffTOr2cJpD9GlhZzQ8G/0N2yB6fGPBacT0VNjBT
+   cLIQR7+AjvEWllzWmp5pr/b/dFQNhKrUV/Ph4RVT28Al2gAUk87P22Jcm
+   ruigTyiga9C+0G9pfbG8RdIat7hriZu/8Kys7s/PLe+Jkv4gwBfQ18rbo
+   nuKzKFWdiZ7XCbXF6k0ePH6IMkloe+exObyD2p4g32HgeJsHeKlMuIrZ6
+   iO1NiqBb6wc4OKxc+7iu26I1N8XYAhOczwf160nkF0ooWAM+R29aRpR2b
+   jEXBI6oXD653Ntsn8YhGcGpEpwI7bLXxWKFIYQ+LKLpWro0kM4mAyFx2L
+   w==;
+X-IronPort-AV: E=McAfee;i="6500,9779,10494"; a="365967956"
+X-IronPort-AV: E=Sophos;i="5.95,170,1661842800"; 
+   d="scan'208";a="365967956"
+Received: from orsmga006.jf.intel.com ([10.7.209.51])
+  by orsmga104.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 08 Oct 2022 20:09:40 -0700
+X-IronPort-AV: E=McAfee;i="6500,9779,10494"; a="603328191"
+X-IronPort-AV: E=Sophos;i="5.95,170,1661842800"; 
+   d="scan'208";a="603328191"
+Received: from xingzhen-mobl.ccr.corp.intel.com (HELO [10.255.31.146]) ([10.255.31.146])
+  by orsmga006-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 08 Oct 2022 20:09:39 -0700
+Message-ID: <39655f8f-5526-e75f-a133-7696f3e718a5@linux.intel.com>
+Date:   Sun, 9 Oct 2022 11:09:37 +0800
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <Y0GAXJkwK5nXeFfG@hirez.programming.kicks-ass.net>
+User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:102.0) Gecko/20100101
+ Thunderbird/102.3.2
+Subject: Re: perf :: intel hybrid events (fwd)
+To:     Michael Petlan <mpetlan@redhat.com>,
+        linux-perf-users@vger.kernel.org
+References: <alpine.LRH.2.20.2204131302230.29735@Diego>
+Content-Language: en-US
+From:   Xing Zhengjun <zhengjun.xing@linux.intel.com>
+In-Reply-To: <alpine.LRH.2.20.2204131302230.29735@Diego>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-On Sat, Oct 08, 2022 at 03:51:24PM +0200, Peter Zijlstra wrote:
-> On Fri, Oct 07, 2022 at 03:58:03PM +0200, Marco Elver wrote:
-> > diff --git a/kernel/events/core.c b/kernel/events/core.c
-> > index 9319af6013f1..7de83c42d312 100644
-> > --- a/kernel/events/core.c
-> > +++ b/kernel/events/core.c
-> > @@ -2285,9 +2285,10 @@ event_sched_out(struct perf_event *event,
-> >  			 */
-> >  			local_dec(&event->ctx->nr_pending);
-> >  		} else {
-> > -			WARN_ON_ONCE(event->pending_work);
-> > -			event->pending_work = 1;
-> > -			task_work_add(current, &event->pending_task, TWA_RESUME);
-> > +			if (!event->pending_work) {
-> > +				event->pending_work = 1;
-> > +				task_work_add(current, &event->pending_task, TWA_RESUME);
-> > +			}
-> 			  else {
-> 				local_dec(&event->ctx->nr_pending);
-> 			}
-> >  		}
-> >  	}
-> 
-> That whole thing can be written much saner like:
-> 
-> 	if (event->pending_sigtrap) {
-> 		event->pending_sigtrap = 0;
-> 		if (state != PERF_EVENT_STATE_OFF &&
-> 		    !event->pending_work) {
-> 			event->pending_work = 1;
-> 			local_inc(&event->ctx->nr_pending);
-> 			task_work_add(current, &event->pending_task, TWA_RESUME);
-> 		}
-> 		local_dec(&event->ctx->nr_pending);
-> 	}
-> 
-> Except now we have two nr_pending ops -- I'm torn.
 
-I've settled for:
 
-+       if (event->pending_sigtrap) {
-+               bool dec = true;
-+
-+               event->pending_sigtrap = 0;
-+               if (state != PERF_EVENT_STATE_OFF &&
-+                   !event->pending_work) {
-+                       event->pending_work = 1;
-+                       dec = false;
-+                       task_work_add(current, &event->pending_task, TWA_RESUME);
-+               }
-+               if (dec)
-+                       local_dec(&event->ctx->nr_pending);
-+	}
+I tried the will-it-scale write1 workload,  mem-stores:p works OK on 
+ADL, it looks like the issue is related to the test workload.
+
+will-it-scale:  https://github.com/antonblanchard/will-it-scale.git
+
+# perf record -e mem-stores:p -- ./runtest.py write1
+tasks,processes,processes_idle,threads,threads_idle,linear
+0,0,100,0,100,0
+1,2346709,96.88,2257694,96.88,2346709
+^C[ perf record: Woken up 6 times to write data ]
+[ perf record: Captured and wrote 1.491 MB perf.data (31612 samples) ]
+
+
+On 4/13/2022 7:16 PM, Michael Petlan wrote:
+> Forwarding the questions to perf-users...
+> 
+> Also, I have found out that mem-stores:p event does not work on
+> Intel Alderlake:
+> 
+> # perf record -e mem-stores -- ./examples/dummy > /dev/null
+> [ perf record: Woken up 1 times to write data ]
+> [ perf record: Captured and wrote 0.024 MB perf.data (64 samples) ]
+> 
+> While with precise, it records nothing:
+> 
+> # perf record -e mem-stores:p -- ./examples/dummy > /dev/null
+> [ perf record: Woken up 1 times to write data ]
+> [ perf record: Captured and wrote 0.021 MB perf.data ]
+> 
+> This makes the perf-mem and perf-c2c commands less useful.
+> 
+> Again, is this how it is supposed to work or do I miss some fixes?
+> Or does upstream also miss some fixes?
+> 
+> Thanks.
+> Michael
+> 
+> ---------- Forwarded message ----------
+> Date: Tue, 12 Apr 2022 22:59:11
+> From: Michael Petlan <mpetlan@redhat.com>
+> To: yao.jin@linux.intel.com
+> Subject: perf :: intel hybrid events
+> 
+> Hello Jin Yao,
+> 
+> I have a few questions/ideas about hybrid events on Alderlake...
+> 
+> 
+> 1) L1-{d,i}cache-load{,-misse}s supported partially
+> 
+> Interestingly enough, perf offers the following events in the hwcache set:
+> 
+> L1-dcache-load-misses
+> L1-dcache-loads
+> L1-icache-load-misses
+> L1-icache-loads
+> 
+> Of course, each expands to its cpu_core and cpu_atom version, as following:
+> 
+> # perf stat -e L1-icache-load-misses
+> ^C
+>   Performance counter stats for 'system wide':
+>             146,566      cpu_core/L1-icache-load-misses/
+>             164,971      cpu_atom/L1-icache-load-misses/
+> 
+> On my Alderlake testing box with RHEL-9 I see the following support pattern:
+> 
+>                           |  cpu_core  |  cpu_atom  |
+> L1-dcache-load-misses    |     OK     |     N/A    |
+> L1-dcache-loads          |     OK     |     OK     |
+> L1-icache-load-misses    |     OK     |     OK     |
+> L1-icache-loads          |     N/A    |     OK     |
+> 
+> For dcache, loads are supported on both, while misses do not work on atom.
+> That can be, atom is simpler, thus I can expect it missing some events...
+> 
+> For icache, misses are supported on both, while loads do not work on core.
+> This looks weird, is that really the wanted behavior? Isn't there a bug in
+> the drivers/event specifications?
+> 
+> 
+> 2) You added --cputype switch to perf-stat via e69dc84282fb474cb87097c6c94
+> so one can restrict the expansion and keep only one cpu type used. Doesn't
+> perf-record need the same?
+> 
+> 
+> 3) While perf-stat defaults to "use whatever we can" approach when not every
+> event is supported, puts "<not supported>" into the results, perf-record
+> fails. This is bad for the cases like above, since it fails when one of the
+> events aren't supported. That might make sense if the unsupported event was
+> specified explicitly by the user, e.g. `perf record -e AA -e BB -- ./load`
+> and perf fails "sorry, I don't support event BB".
+> 
+> However, what if the user just wants L1-dcache-load-misses and encounters
+> perf-record failing just because the event is not supported on Atom?
+> 
+> Shouldn't this behavior be fixed by some --tolerant switch that would ignore
+> the problems and record what is going on on the Core at least?
+> 
+> 
+> What are your ideas?
+> Thanks...
+> 
+> Michael
+> 
+
+-- 
+Zhengjun Xing
