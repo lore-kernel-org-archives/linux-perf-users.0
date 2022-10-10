@@ -2,117 +2,139 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E6908C433F5
-	for <linux-perf-users@archiver.kernel.org>; Mon, 10 Oct 2022 13:55:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7DDD8C433F5
+	for <linux-perf-users@archiver.kernel.org>; Mon, 10 Oct 2022 14:06:04 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229759AbiJJNzX (ORCPT
+        id S229726AbiJJOGB (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Mon, 10 Oct 2022 09:55:23 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36050 "EHLO
+        Mon, 10 Oct 2022 10:06:01 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57006 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229646AbiJJNzV (ORCPT
+        with ESMTP id S229700AbiJJOGA (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Mon, 10 Oct 2022 09:55:21 -0400
-Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTP id 2ACCC5C956;
-        Mon, 10 Oct 2022 06:55:21 -0700 (PDT)
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 2BEBE12FC;
-        Mon, 10 Oct 2022 06:55:27 -0700 (PDT)
-Received: from [10.57.3.59] (unknown [10.57.3.59])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 855193F766;
-        Mon, 10 Oct 2022 06:55:19 -0700 (PDT)
-Message-ID: <0adcc3f7-bf60-516f-c8d7-4250d1f901cb@arm.com>
-Date:   Mon, 10 Oct 2022 14:55:18 +0100
+        Mon, 10 Oct 2022 10:06:00 -0400
+Received: from mail-wr1-x429.google.com (mail-wr1-x429.google.com [IPv6:2a00:1450:4864:20::429])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8AD1E6AE87;
+        Mon, 10 Oct 2022 07:05:59 -0700 (PDT)
+Received: by mail-wr1-x429.google.com with SMTP id f11so17233151wrm.6;
+        Mon, 10 Oct 2022 07:05:59 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20210112;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:date:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=WfbmCh4Xd7NmHwkQp27IHc6Fb0+tmSJSyPcW5XETK5Q=;
+        b=pDGlnjksJk7ui6SeN4AwbZpBz1s9v9uzLet0dSGEZHmpOFOEYeKtNxmIng2BLHbMYC
+         J9VqjpuMmkw5HMFmeuZBt1y1FXWmFmS/o/BZg1bat8Ce+HiInTrEAmwoex9JHgip8jJ+
+         iCM50d7iBdDeN8kDwWSwN6cNeJn1SOYrCkI2IMwRHpaGaCamLh0IZoRNRyhLeO4yUyF4
+         Dy4sZfobz2wprMEfOvXEIX143ya1cBhcw7lcN+8qAFLpNbX1nIj9V/TRKobHi/xbfvRD
+         y7eDYD+CsoWG30vGFenBCl+ShkPO2Zn+y0ugnx159lJPyi+E1U0BD5db3TiCv10BQ3ei
+         gViQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:date:from:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=WfbmCh4Xd7NmHwkQp27IHc6Fb0+tmSJSyPcW5XETK5Q=;
+        b=3ah9KlawwhfMh+DatMFeUo000XScRMlZKOaAH2rDjRhk4+ZQCbdIaLveF5xIYQK+gt
+         FlOFEPe3LSEWHRnc6gOdlPqAd7rZxn8kKtdV5vKv7qlrqbO+mm+7IJGiAzVi52GT+jJj
+         dztqatJiNtag6FagLXPzwDdbi/LvxgirBagDWI03B+8fyK2//XZyg+624r93RykUyf+4
+         o8S07k2cVM5PXqnXuT4g8AXeJ+Nbds+IZMH1rQW0J0rqja4oAfU9EX/YmyMva/SvtXho
+         9pp0ls9Q0cHXt6PQgh18QyV9HahooWhnUMRw9CBTdQKKrnnBFnkrZgi4D9zeHIPiIqGs
+         jumA==
+X-Gm-Message-State: ACrzQf3zoWTNbqZd1gzV94rzf0uB4dHRUpO9dQ1vlfMigHnBCfhHDfie
+        SSAL6+7QMGRG4waT7/nvlzA=
+X-Google-Smtp-Source: AMsMyM48BA7z/m402G3MA+kDVF1iO8QFE3FITWl4CvXSr+DdU5yTNVGDoRMn0mnH+XqrnL9DniQesQ==
+X-Received: by 2002:adf:ba01:0:b0:22e:7318:4e94 with SMTP id o1-20020adfba01000000b0022e73184e94mr12094202wrg.330.1665410757707;
+        Mon, 10 Oct 2022 07:05:57 -0700 (PDT)
+Received: from krava ([193.85.244.190])
+        by smtp.gmail.com with ESMTPSA id j11-20020a05600c190b00b003c4ecff4e25sm7004470wmq.9.2022.10.10.07.05.56
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 10 Oct 2022 07:05:56 -0700 (PDT)
+From:   Jiri Olsa <olsajiri@gmail.com>
+X-Google-Original-From: Jiri Olsa <jolsa@kernel.org>
+Date:   Mon, 10 Oct 2022 16:05:54 +0200
+To:     Dominique Martinet <asmadeus@codewreck.org>
+Cc:     Jiri Olsa <olsajiri@gmail.com>, Ian Rogers <irogers@google.com>,
+        Arnaldo Carvalho de Melo <acme@kernel.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Namhyung Kim <namhyung@kernel.org>,
+        linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] perf parse: Allow names to start with digits
+Message-ID: <Y0QmwjY0lJ+CNxvH@krava>
+References: <CAP-5=fXgNTW1eXRZhz-s_AfP+v1Oyx1zdksm-Q0B4YVPAgjKxw@mail.gmail.com>
+ <YsLOKEqzp0Syz/Rt@krava>
+ <Y0Ov7hSuWQJlYAdW@codewreck.org>
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
- Thunderbird/91.11.0
-Subject: Re: [PATCH V3 7/7] arm64/perf: Enable branch stack sampling
-Content-Language: en-US
-To:     Anshuman Khandual <anshuman.khandual@arm.com>
-References: <20220929075857.158358-1-anshuman.khandual@arm.com>
- <20220929075857.158358-8-anshuman.khandual@arm.com>
-From:   James Clark <james.clark@arm.com>
-Cc:     linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, peterz@infradead.org,
-        acme@kernel.org, mark.rutland@arm.com, will@kernel.org,
-        catalin.marinas@arm.com, Suzuki K Poulose <suzuki.poulose@arm.com>
-In-Reply-To: <20220929075857.158358-8-anshuman.khandual@arm.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <Y0Ov7hSuWQJlYAdW@codewreck.org>
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-
-
-On 29/09/2022 08:58, Anshuman Khandual wrote:
-> Now that all the required pieces are already in place, just enable the perf
-> branch stack sampling support on arm64 platform, by removing the gate which
-> blocks it in armpmu_event_init().
+On Mon, Oct 10, 2022 at 02:38:54PM +0900, Dominique Martinet wrote:
+> Hi Jiri, Ian,
 > 
-> Cc: Mark Rutland <mark.rutland@arm.com>
-> Cc: Will Deacon <will@kernel.org>
-> Cc: Catalin Marinas <catalin.marinas@arm.com>
-> Cc: linux-kernel@vger.kernel.org
-> Cc: linux-arm-kernel@lists.infradead.org
-> Signed-off-by: Anshuman Khandual <anshuman.khandual@arm.com>
-> ---
->  drivers/perf/arm_pmu.c | 32 +++++++++++++++++++++++++++++---
->  1 file changed, 29 insertions(+), 3 deletions(-)
+> Jiri Olsa wrote on Mon, Jul 04, 2022 at 01:25:28PM +0200:
+> > > If you're ok with that I can resend this as three patches: my original
+> > > patch, a patch with your diff and test_event() keeping current
+> > > behaviour, and a last patch adding that last flag and testing 9p without
+> > > format check.
+> > > 
+> > > (and if you don't think it's worth checking probe existence same thing
+> > > but even simpler)
+> > 
+> > I have that patch split into 2 separated changes,
+> > I'll try to send it later today
 > 
-> diff --git a/drivers/perf/arm_pmu.c b/drivers/perf/arm_pmu.c
-> index 93b36933124f..2a9b988b53c2 100644
-> --- a/drivers/perf/arm_pmu.c
-> +++ b/drivers/perf/arm_pmu.c
-> @@ -537,9 +537,35 @@ static int armpmu_event_init(struct perf_event *event)
->  		!cpumask_test_cpu(event->cpu, &armpmu->supported_cpus))
->  		return -ENOENT;
->  
-> -	/* does not support taken branch sampling */
-> -	if (has_branch_stack(event))
-> -		return -EOPNOTSUPP;
-> +	if (has_branch_stack(event)) {
-> +		/*
-> +		 * BRBE support is absent. Select CONFIG_ARM_BRBE_PMU
-> +		 * in the config, before branch stack sampling events
-> +		 * can be requested.
-> +		 */
-> +		if (!IS_ENABLED(CONFIG_ARM_BRBE_PMU)) {
-> +			pr_warn_once("BRBE is disabled, select CONFIG_ARM_BRBE_PMU\n");
-> +			return -EOPNOTSUPP;
-> +		}
-> +
-> +		if (event->attr.branch_sample_type & PERF_SAMPLE_BRANCH_KERNEL) {
-> +			if (!perfmon_capable()) {
+> It's been a while (I had totally forgotten), but I don't think I saw
+> this patch.
+> 
+> For reminder you've requested that I add some test for a tracepoint
+> starting with digits e.g. 9p:9p_client_res but there's nothing commonly
+> available to use there, so you added a way to only check without
+> checking if a backing tracepoint exist, but I see no trace of the update
+> you sent here:
+> https://lore.kernel.org/all/YsGduWiTvkM2/tHv@krava/
+> 
+> Should I take it, do the split you suggested and send it together with a
+> resend of my original patch and new test?
 
-I'm still getting different behaviour compared to x86 when using
-perf_event_paranoid because of this perfmon_capable() call here.
+ah, it fell through the cracks, sry.. if you could resend it,
+that'd be great
 
-> +				pr_warn_once("does not have permission for kernel branch filter\n");
+thanks,
+jirka
 
-Also I was under the impression that this should be more like a
-KERN_INFO loglevel rather than a KERN_WARNING. It's more like expected
-behavior rather than unexpected behavior and as far as I know anyone who
-sees something in dmesg might think something has gone wrong and try to
-follow it up. It is quite a useful message but I remember getting a
-review like this before and it made sense to me.
-
-> +				return -EPERM;
-> +			}
-> +		}
-> +
-> +		/*
-> +		 * Branch stack sampling event can not be supported in
-> +		 * case either the required driver itself is absent or
-> +		 * BRBE buffer, is not supported. Besides checking for
-> +		 * the callback prevents a crash in case it's absent.
-> +		 */
-> +		if (!armpmu->brbe_supported || !armpmu->brbe_supported(event)) {
-> +			pr_warn_once("BRBE is not supported\n");
-> +			return -EOPNOTSUPP;
-> +		}
-> +	}
->  
->  	if (armpmu->map_event(event) == -ENOENT)
->  		return -ENOENT;
+> 
+> 
+> Ian Rogers wrote on Mon, Jul 04, 2022 at 02:39:05PM -0700:
+> > > diff --git a/tools/perf/util/parse-events.l b/tools/perf/util/parse-events.l
+> > > index 5b6e4b5249cf..4133d6950d29 100644
+> > > --- a/tools/perf/util/parse-events.l
+> > > +++ b/tools/perf/util/parse-events.l
+> > > @@ -211,7 +211,7 @@ bpf_source  [^,{}]+\.c[a-zA-Z0-9._]*
+> > >  num_dec                [0-9]+
+> > >  num_hex                0x[a-fA-F0-9]+
+> > >  num_raw_hex    [a-fA-F0-9]+
+> > > -name           [a-zA-Z_*?\[\]][a-zA-Z0-9_*?.\[\]!]*
+> > > +name           [a-zA-Z0-9_*?\[\]][a-zA-Z0-9_*?.\[\]!]*
+> > 
+> > Perhaps this would be cleaner as:
+> > name           [a-zA-Z0-9_*?\[\]!]+
+> > except that would allow a name to start with an exclamation. Would
+> > that be an issue?
+> 
+> Sorry for the lack of reply -- I have no opinion on this as long as we
+> can use digits.
+> I can't imagine any probe starting with . or !, but that does not seem
+> to create any ambiguity with the rest of the grammar that I can see
+> either so I think it'd be fine, but I'm not comfortable deciding.
+> 
+> 
+> Thanks,
+> --
+> Dominique
