@@ -2,119 +2,137 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F316DC433F5
-	for <linux-perf-users@archiver.kernel.org>; Mon, 10 Oct 2022 20:52:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 098BFC433FE
+	for <linux-perf-users@archiver.kernel.org>; Mon, 10 Oct 2022 22:21:54 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229519AbiJJUwT (ORCPT
+        id S229487AbiJJWVv (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Mon, 10 Oct 2022 16:52:19 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33936 "EHLO
+        Mon, 10 Oct 2022 18:21:51 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55556 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229446AbiJJUwS (ORCPT
+        with ESMTP id S229660AbiJJWVt (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Mon, 10 Oct 2022 16:52:18 -0400
-Received: from mail-ej1-x633.google.com (mail-ej1-x633.google.com [IPv6:2a00:1450:4864:20::633])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 424AC659EE
-        for <linux-perf-users@vger.kernel.org>; Mon, 10 Oct 2022 13:52:17 -0700 (PDT)
-Received: by mail-ej1-x633.google.com with SMTP id r17so27304421eja.7
-        for <linux-perf-users@vger.kernel.org>; Mon, 10 Oct 2022 13:52:17 -0700 (PDT)
+        Mon, 10 Oct 2022 18:21:49 -0400
+Received: from mail-wr1-x434.google.com (mail-wr1-x434.google.com [IPv6:2a00:1450:4864:20::434])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B9B0D5C944
+        for <linux-perf-users@vger.kernel.org>; Mon, 10 Oct 2022 15:21:46 -0700 (PDT)
+Received: by mail-wr1-x434.google.com with SMTP id a3so18973599wrt.0
+        for <linux-perf-users@vger.kernel.org>; Mon, 10 Oct 2022 15:21:46 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=google.com; s=20210112;
-        h=user-agent:in-reply-to:content-disposition:mime-version:references
-         :message-id:subject:cc:to:from:date:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=zMCdZsgDT6lSEa4yNENSrXv8jGmGdcVyTlFDM83Wjjs=;
-        b=hs6aPu62O1qNKak5PIOSldtOcEGWNOcc7PkU3A+LLI7CTzFlKbtDKUd71kE7tr6/rj
-         JLHmezBCaCAvBubQyHUJbIvinRUZ7VdfXV1TfmppLNMgB9cMUo9hOhZEl5Bl8AutXQW0
-         YFEmlrrvGiCV8pvEDcJ9aRdFsU1DJLS3RPSDBCLNPv4aq9xiFgywt4K5ibVn/QcsEZn/
-         DBFFCN+ZIN6ovBkGfVC2C43+0YGrSe5t7wTWefBsutOtnprpz2i3tJkdYk0i+VFACLW3
-         yTkaFUw/69wrjLxsCf3gThFawfeu2o0XeKl3sfd62G4TrrOhZGAJcbJHsV7I3AFEgGr+
-         WL0g==
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:from:to:cc:subject:date:message-id:reply-to;
+        bh=G/wYzmbA6+gMDeR2BM5mvVlEp0/hUq2QWaok3j3uzqk=;
+        b=NXts5Mwo//pGvcNR8yXDV6cr3Q8Y0Kg5XXrNUow+3cVirTRLEhaKGnCx4bLqUb72mg
+         /tqfsH/Ap+COQfNccPRXM+mYeDpR0MPItEEcHCe897pTpXZFiCBlXEOZGIe4uO/QVqKp
+         t6trAW5Xn6GAgHp1Xlz3IPZMkezz9quORbEkoqN1SilRvRvNB+rk3/k5raU8VZ9qXwbU
+         Yc6spKIqZ20S2ceg3qPgSmB28TaShdPiMHKA8EXmC4o05IuXRE/d0lU+RyKPVLKfsDyW
+         zf9LeFtBdF7k2oHAUZ677KS+TSRdTApcTET6iYJe/0z2UfzsTAxOTVIw508Cj8y5OZGw
+         4LBQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=user-agent:in-reply-to:content-disposition:mime-version:references
-         :message-id:subject:cc:to:from:date:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=zMCdZsgDT6lSEa4yNENSrXv8jGmGdcVyTlFDM83Wjjs=;
-        b=Dq+eaTjRn/faOF1hnLh9Q57TjUkX6TVsJyv0gxil8FAjVJgCYDFDAtuxIOjw3w7JRT
-         YnbhYQ65HbFjC1z3DiF9/CMHpu6BIlD2386IpkrKnUZpAVvBqCunIPuv/lQus+ivILjU
-         dnIx2bkQey35e9h9I5fpb+aAJYA+RNPyUL8YhxYlJxjmfu+Y/JXDtlBECmb9cMY8ozpp
-         1URZqcMWaQs5KyFZrkMlgJ8KC4QBDirmCYwMlcbdPasrOzEMHYhRUtd/xTyoLTrS4paK
-         qlNmo5XJ0aE7M8RpuOBWj+H1aJa7ubF0qUJBRbcAvup3va/t6441unOWzuyqmAVpALFs
-         /yMg==
-X-Gm-Message-State: ACrzQf1DEK58eyf8gpRP72ImNaMf6Y9DbeaRu6KBkR0DEYCJhYMSFLVV
-        hcaxDoaTazGy+KEPsMIJPfO7/HVEiO/ZUg==
-X-Google-Smtp-Source: AMsMyM5au/LCSyZWt4fcGj1z/38PaFB+06Vn9Kvp1Q0WjpNp6tPuKtGY9KP/Nd/YLiJRBfRsLA5l8g==
-X-Received: by 2002:a17:907:75f8:b0:78d:9f95:bddf with SMTP id jz24-20020a17090775f800b0078d9f95bddfmr8880685ejc.588.1665435135679;
-        Mon, 10 Oct 2022 13:52:15 -0700 (PDT)
-Received: from elver.google.com ([2a00:79e0:9c:201:a8e9:58ad:3b85:de40])
-        by smtp.gmail.com with ESMTPSA id c18-20020aa7d612000000b0045720965c7asm7692314edr.11.2022.10.10.13.52.14
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 10 Oct 2022 13:52:15 -0700 (PDT)
-Date:   Mon, 10 Oct 2022 22:52:08 +0200
-From:   Marco Elver <elver@google.com>
-To:     Peter Zijlstra <peterz@infradead.org>
-Cc:     Ingo Molnar <mingo@redhat.com>,
-        Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Jiri Olsa <jolsa@kernel.org>,
-        Namhyung Kim <namhyung@kernel.org>,
-        linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org,
-        kasan-dev@googlegroups.com, Dmitry Vyukov <dvyukov@google.com>
-Subject: Re: [PATCH] perf: Fix missing SIGTRAPs
-Message-ID: <Y0SF+Gkdl4YSqFF4@elver.google.com>
-References: <20220927121322.1236730-1-elver@google.com>
- <Yz7ZLaT4jW3Y9EYS@hirez.programming.kicks-ass.net>
- <Yz7fWw8duIOezSW1@elver.google.com>
- <Yz78MMMJ74tBw0gu@hirez.programming.kicks-ass.net>
- <Yz/zXpF1yLshrJm/@elver.google.com>
- <Y0Ak/D05KhJeKaed@hirez.programming.kicks-ass.net>
- <Y0AwaxcJNOWhMKXP@elver.google.com>
- <Y0BQYxewPB/6KWLz@elver.google.com>
- <Y0E3uG7jOywn7vy3@elver.google.com>
- <Y0FwC1yo1pcyL9J/@hirez.programming.kicks-ass.net>
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=G/wYzmbA6+gMDeR2BM5mvVlEp0/hUq2QWaok3j3uzqk=;
+        b=Q++aXQXQzcXVN/8StmqCdyy8wFbC9pxG4BAl+ZT3Nvv4QmmksZrURRtsA0iuY8thPX
+         TT4zoDvyeRsW1wxylx5Tw6QhvEKn2P1V14EfjnKNivDqHoAaLIiI3Hs5vYYJz8oRqikx
+         ovIiyFAxJBJ+g8eTzNStVt+FebdVcqcXruFFJR1B28QqGVvSylX+fUbRRCpozWPfraX+
+         ANi9ljfJVYUi5EkXBMIRYyALgF0sOAKXD/Fvm+cFVR6VLax/jkErOn7WPH8y+HXgks55
+         CkoJj0r3IY1eUfsNRNDFG7+TMi3m1IBSmboCjRccO9n7Gqgs79VSfQMTgs8ZEHHGDlH6
+         SyXg==
+X-Gm-Message-State: ACrzQf3OF0tlh8weYUOjg+wC7wCG/zxf3H1qx01qmLsVMCRcg5YumJR6
+        LZttkNmWf0fJwK1uBPBDpcuRdAuKaLSBUMkTlreiQQ==
+X-Google-Smtp-Source: AMsMyM6tthXZkiaayDWZoyPDVFnmA59Wap4Ns4wRNSOWT1GksYHyp9KS8nnKaXpoQ67Ww7ORDhCTx84nshGQwlSVIxw=
+X-Received: by 2002:adf:fd50:0:b0:22e:5503:9c4c with SMTP id
+ h16-20020adffd50000000b0022e55039c4cmr12974711wrs.375.1665440505115; Mon, 10
+ Oct 2022 15:21:45 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <Y0FwC1yo1pcyL9J/@hirez.programming.kicks-ass.net>
-User-Agent: Mutt/2.2.7 (2022-08-07)
+References: <20221010053600.272854-1-namhyung@kernel.org> <20221010053600.272854-2-namhyung@kernel.org>
+In-Reply-To: <20221010053600.272854-2-namhyung@kernel.org>
+From:   Ian Rogers <irogers@google.com>
+Date:   Mon, 10 Oct 2022 15:21:33 -0700
+Message-ID: <CAP-5=fV58VRhh_kvQfrA7gYQXiVDqPwXgQdXHCQg64qAT_W7Rw@mail.gmail.com>
+Subject: Re: [PATCH 01/19] perf tools: Save evsel->pmu in parse_events()
+To:     Namhyung Kim <namhyung@kernel.org>
+Cc:     Arnaldo Carvalho de Melo <acme@kernel.org>,
+        Jiri Olsa <jolsa@kernel.org>, Ingo Molnar <mingo@kernel.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Adrian Hunter <adrian.hunter@intel.com>,
+        linux-perf-users@vger.kernel.org,
+        Kan Liang <kan.liang@linux.intel.com>,
+        Leo Yan <leo.yan@linaro.org>, Andi Kleen <ak@linux.intel.com>,
+        Athira Rajeev <atrajeev@linux.vnet.ibm.com>,
+        James Clark <james.clark@arm.com>,
+        Xing Zhengjun <zhengjun.xing@linux.intel.com>
+Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-On Sat, Oct 08, 2022 at 02:41PM +0200, Peter Zijlstra wrote:
-> On Sat, Oct 08, 2022 at 10:41:28AM +0200, Marco Elver wrote:
-> > The below patch to the sigtrap_threads test can repro the issue (when
-> > run lots of them concurrently again). It also illustrates the original
-> > problem we're trying to solve, where the event never gets rearmed again
-> > and the test times out (doesn't happen with the almost-working fix).
-> 
-> Excellent, that helps. Also, I'm an idiot ;-)
-> 
-> The below seems to fix it for me.
-> 
-> ---
-> --- a/kernel/events/core.c
-> +++ b/kernel/events/core.c
-> @@ -3441,7 +3448,8 @@ static void perf_event_context_sched_out
->  			perf_pmu_disable(pmu);
->  
->  			/* PMIs are disabled; ctx->nr_pending is stable. */
-> -			if (local_read(&ctx->nr_pending)) {
-> +			if (local_read(&ctx->nr_pending) ||
-> +			    local_read(&next_ctx->nr_pending)) {
->  				/*
->  				 * Must not swap out ctx when there's pending
->  				 * events that rely on the ctx->task relation.
+On Sun, Oct 9, 2022 at 10:36 PM Namhyung Kim <namhyung@kernel.org> wrote:
+>
+> Now evsel has a pmu pointer, let's save the info and use it like in
+> evsel__find_pmu().
+>
+> Signed-off-by: Namhyung Kim <namhyung@kernel.org>
 
-Yup, that fixes it.
-
-Can you send a v2 with all the fixups? Just to make sure I've tested the
-right thing.
-
-I'll also send the patch for the selftest addition once I gave it a good
-spin.
+Acked-by: Ian Rogers <irogers@google.com>
 
 Thanks,
--- Marco
+Ian
+
+> ---
+>  tools/perf/util/evsel.c        | 1 +
+>  tools/perf/util/parse-events.c | 1 +
+>  tools/perf/util/pmu.c          | 4 ++++
+>  3 files changed, 6 insertions(+)
+>
+> diff --git a/tools/perf/util/evsel.c b/tools/perf/util/evsel.c
+> index 76605fde3507..196f8e4859d7 100644
+> --- a/tools/perf/util/evsel.c
+> +++ b/tools/perf/util/evsel.c
+> @@ -467,6 +467,7 @@ struct evsel *evsel__clone(struct evsel *orig)
+>         evsel->collect_stat = orig->collect_stat;
+>         evsel->weak_group = orig->weak_group;
+>         evsel->use_config_name = orig->use_config_name;
+> +       evsel->pmu = orig->pmu;
+>
+>         if (evsel__copy_config_terms(evsel, orig) < 0)
+>                 goto out_err;
+> diff --git a/tools/perf/util/parse-events.c b/tools/perf/util/parse-events.c
+> index 437389dacf48..9e704841273d 100644
+> --- a/tools/perf/util/parse-events.c
+> +++ b/tools/perf/util/parse-events.c
+> @@ -263,6 +263,7 @@ __add_event(struct list_head *list, int *idx,
+>         evsel->core.own_cpus = perf_cpu_map__get(cpus);
+>         evsel->core.requires_cpu = pmu ? pmu->is_uncore : false;
+>         evsel->auto_merge_stats = auto_merge_stats;
+> +       evsel->pmu = pmu;
+>
+>         if (name)
+>                 evsel->name = strdup(name);
+> diff --git a/tools/perf/util/pmu.c b/tools/perf/util/pmu.c
+> index 74a2cafb4e8d..15bf5943083a 100644
+> --- a/tools/perf/util/pmu.c
+> +++ b/tools/perf/util/pmu.c
+> @@ -1048,11 +1048,15 @@ struct perf_pmu *evsel__find_pmu(struct evsel *evsel)
+>  {
+>         struct perf_pmu *pmu = NULL;
+>
+> +       if (evsel->pmu)
+> +               return evsel->pmu;
+> +
+>         while ((pmu = perf_pmu__scan(pmu)) != NULL) {
+>                 if (pmu->type == evsel->core.attr.type)
+>                         break;
+>         }
+>
+> +       evsel->pmu = pmu;
+>         return pmu;
+>  }
+>
+> --
+> 2.38.0.rc1.362.ged0d419d3c-goog
+>
