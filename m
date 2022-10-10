@@ -2,200 +2,120 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F2B7DC4332F
-	for <linux-perf-users@archiver.kernel.org>; Mon, 10 Oct 2022 05:37:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5029EC433FE
+	for <linux-perf-users@archiver.kernel.org>; Mon, 10 Oct 2022 05:40:45 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231542AbiJJFhk (ORCPT
+        id S231414AbiJJFkn (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Mon, 10 Oct 2022 01:37:40 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55528 "EHLO
+        Mon, 10 Oct 2022 01:40:43 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39750 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231532AbiJJFhC (ORCPT
+        with ESMTP id S231428AbiJJFk1 (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Mon, 10 Oct 2022 01:37:02 -0400
-Received: from mail-pl1-x62e.google.com (mail-pl1-x62e.google.com [IPv6:2607:f8b0:4864:20::62e])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DF52D52FCF;
-        Sun,  9 Oct 2022 22:36:32 -0700 (PDT)
-Received: by mail-pl1-x62e.google.com with SMTP id 10so9519297pli.0;
-        Sun, 09 Oct 2022 22:36:32 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20210112;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:sender:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=4ZRfNgpH8+QQskCftYrV3a1L7cFwkrDDjN2C/btv0xM=;
-        b=CrjTwzbv9QdU2O7HOgqcbEbr5SNOMwRCiDybfIdwVA3jgqwRcXmdSXWb0DQCBW/Sxe
-         eqTYvbHUsVnKe/L8fhHLAFZw8fwhA6S6JhuSNC27IHjtLrNqBeqJjd9u7p1+NOrQCBvT
-         IpxYeteOBkWsC5We+9IZnybLpUppKes+ly0ctN9jyknoDHFAOa+qpGlC8IWkeDk7X+V4
-         YTTjJPIYHr1ybPw6YmMCzIulCk10lu6ZO8MdbG7iMPRhhbA/uz0dGbTPkjMuxOd5dbTL
-         BoVHwynWGBk4fVfLqLUAZZpu2kNFdtHBppPd3i1djVKhJ6obWbGJnCvpPKEtZ/bh3MIw
-         q2FA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:sender:x-gm-message-state:from
-         :to:cc:subject:date:message-id:reply-to;
-        bh=4ZRfNgpH8+QQskCftYrV3a1L7cFwkrDDjN2C/btv0xM=;
-        b=dFxORnZ4XMGhflqFMSOrCD/ZHQvpeTpxSZL+dPquDpdXD2vZ5zetwuCe5hAt6iZGyI
-         q5njF7CMbWhKQtv0aaT3P4Jm2M8UF/V9RhuyF2pPjIXgu8ylybHEJa9SiqbYVkqutkcM
-         VQXxFeDjq4PqFizxXvPz/j5ndUwTKBYYAW7rVB1bfuAgLh3La3ZL53R8OprJxIgqBhGw
-         PahTiSAHeXA3Uiz/Go+OeFZEBe7UYahB5Nr3/7wgmK1oeYhJzenqHNah2SQ7NWTSUcv8
-         42oACwY/Wcs7sOVBE1sj1zAw8vIc8k4kWhjj0tJ6Kboi5YwWWtHGnPgNZs7JuOeepkl4
-         MiKA==
-X-Gm-Message-State: ACrzQf1WH9W28DFdKFKqGqCKmmp+ZtMhT58mQiJWbYXA73G39MzQBDSQ
-        szdn5Q5UB961I2EU766jpV0=
-X-Google-Smtp-Source: AMsMyM4tcmbSFEYk6C7wDIQIZtfrOgXnBkkUnsAPW/oelNBgiQNT6rPdzE+wyVgY/YothJXFb72nvw==
-X-Received: by 2002:a17:902:8bc3:b0:178:8563:8e42 with SMTP id r3-20020a1709028bc300b0017885638e42mr17096014plo.0.1665380191303;
-        Sun, 09 Oct 2022 22:36:31 -0700 (PDT)
-Received: from balhae.hsd1.ca.comcast.net ([2601:647:6780:1040:862f:cd0e:bf30:6d69])
-        by smtp.gmail.com with ESMTPSA id u13-20020a170902e80d00b0017f7e0f4a4esm5667594plg.35.2022.10.09.22.36.30
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 09 Oct 2022 22:36:30 -0700 (PDT)
-Sender: Namhyung Kim <namhyung@gmail.com>
-From:   Namhyung Kim <namhyung@kernel.org>
-To:     Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Jiri Olsa <jolsa@kernel.org>
-Cc:     Ingo Molnar <mingo@kernel.org>,
+        Mon, 10 Oct 2022 01:40:27 -0400
+Received: from nautica.notk.org (ipv6.notk.org [IPv6:2001:41d0:1:7a93::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 04CDF53027;
+        Sun,  9 Oct 2022 22:40:10 -0700 (PDT)
+Received: by nautica.notk.org (Postfix, from userid 108)
+        id 908F7C01F; Mon, 10 Oct 2022 07:39:16 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=codewreck.org; s=2;
+        t=1665380356; bh=H3f6zoTlgCXWKuinDdyMvbb46LHLZXiKju7XvZ3MtXk=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:From;
+        b=JmxoPmPPd0AtI0VH+O9x/OXkckFDch5vib6DTgzyPF9S1+rAJdotDTSG5rBrFRWgl
+         cmQ8/K66lgouW6U+cMbHNgbWywk8mGpw8rAyNKA2uTGgK5LBQYEMXEsoH57CqlR9nY
+         +fxdnDeRCQSjqykb9Ia5ctiHcpHB9hxhY36cWxjI+8D5I8zJyb2MTLyEa8hqV3f5/R
+         Y02nPIUa4ePobbZuDYW0oXeyCIYRYWBx4m21pI2rIBXw8+KOxKJvdEJ42J7YPvDlRA
+         lAvuS7L0augMrHT40GqKIM2PLVP2nnCAz0JzTtvpjlq851zCRdKv8vzrzSPF49ogRI
+         aVCUlIO8S+Y7A==
+Received: from odin.codewreck.org (localhost [127.0.0.1])
+        by nautica.notk.org (Postfix) with ESMTPS id 8E529C009;
+        Mon, 10 Oct 2022 07:39:12 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=codewreck.org; s=2;
+        t=1665380355; bh=H3f6zoTlgCXWKuinDdyMvbb46LHLZXiKju7XvZ3MtXk=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:From;
+        b=tF8Wsw/sswfvgYgTTwi6kZquMBcnz1mfpURreyJgkrU6yV7/dzvTvLK5vMFByvuI+
+         Hfgr4jpKPORH/XuofaikqIIYBVbelFwkjOaJGXA/2iE2lV9j5XjKF3bDU5BQgYhSJd
+         JD3dR4/dffMDmdP9bcmJiM5vTi4JH1G0O3+WkUz1ZkN7OhF2V73Z3JVPpt+1pdJrTo
+         Ij8HXR6Tv3pra6aQcZXeKgR2X3vFGeGPLYybNLnbvrdvNiEjOOODBir5mYZF8EPieW
+         SWcDApBaWL02RfwUeTKgyBuYqzY7azSqJCv3V2dD/VUN6NekPtrDwdxsoghK+flTsm
+         S+u1r95/JuvJw==
+Received: from localhost (odin.codewreck.org [local])
+        by odin.codewreck.org (OpenSMTPD) with ESMTPA id 0b55c371;
+        Mon, 10 Oct 2022 05:39:09 +0000 (UTC)
+Date:   Mon, 10 Oct 2022 14:38:54 +0900
+From:   Dominique Martinet <asmadeus@codewreck.org>
+To:     Jiri Olsa <olsajiri@gmail.com>, Ian Rogers <irogers@google.com>
+Cc:     Arnaldo Carvalho de Melo <acme@kernel.org>,
         Peter Zijlstra <peterz@infradead.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Ian Rogers <irogers@google.com>,
-        Adrian Hunter <adrian.hunter@intel.com>,
-        linux-perf-users@vger.kernel.org,
-        Kan Liang <kan.liang@linux.intel.com>,
-        Leo Yan <leo.yan@linaro.org>, Andi Kleen <ak@linux.intel.com>,
-        Athira Rajeev <atrajeev@linux.vnet.ibm.com>,
-        James Clark <james.clark@arm.com>,
-        Xing Zhengjun <zhengjun.xing@linux.intel.com>
-Subject: [PATCH 19/19] perf stat: Remove unused perf_counts.aggr field
-Date:   Sun,  9 Oct 2022 22:36:00 -0700
-Message-Id: <20221010053600.272854-20-namhyung@kernel.org>
-X-Mailer: git-send-email 2.38.0.rc1.362.ged0d419d3c-goog
-In-Reply-To: <20221010053600.272854-1-namhyung@kernel.org>
-References: <20221010053600.272854-1-namhyung@kernel.org>
+        Ingo Molnar <mingo@redhat.com>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Namhyung Kim <namhyung@kernel.org>,
+        linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Jiri Olsa <jolsa@kernel.org>
+Subject: Re: [PATCH] perf parse: Allow names to start with digits
+Message-ID: <Y0Ov7hSuWQJlYAdW@codewreck.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <CAP-5=fXgNTW1eXRZhz-s_AfP+v1Oyx1zdksm-Q0B4YVPAgjKxw@mail.gmail.com>
+ <YsLOKEqzp0Syz/Rt@krava>
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-The aggr field in the struct perf_counts is to keep the aggregated value
-in the AGGR_GLOBAL for the old code.  But it's not used anymore.
+Hi Jiri, Ian,
 
-Signed-off-by: Namhyung Kim <namhyung@kernel.org>
----
- tools/perf/util/counts.c |  1 -
- tools/perf/util/counts.h |  1 -
- tools/perf/util/stat.c   | 35 ++---------------------------------
- 3 files changed, 2 insertions(+), 35 deletions(-)
+Jiri Olsa wrote on Mon, Jul 04, 2022 at 01:25:28PM +0200:
+> > If you're ok with that I can resend this as three patches: my original
+> > patch, a patch with your diff and test_event() keeping current
+> > behaviour, and a last patch adding that last flag and testing 9p without
+> > format check.
+> > 
+> > (and if you don't think it's worth checking probe existence same thing
+> > but even simpler)
+> 
+> I have that patch split into 2 separated changes,
+> I'll try to send it later today
 
-diff --git a/tools/perf/util/counts.c b/tools/perf/util/counts.c
-index 7a447d918458..11cd85b278a6 100644
---- a/tools/perf/util/counts.c
-+++ b/tools/perf/util/counts.c
-@@ -48,7 +48,6 @@ void perf_counts__reset(struct perf_counts *counts)
- {
- 	xyarray__reset(counts->loaded);
- 	xyarray__reset(counts->values);
--	memset(&counts->aggr, 0, sizeof(struct perf_counts_values));
- }
- 
- void evsel__reset_counts(struct evsel *evsel)
-diff --git a/tools/perf/util/counts.h b/tools/perf/util/counts.h
-index 5de275194f2b..42760242e0df 100644
---- a/tools/perf/util/counts.h
-+++ b/tools/perf/util/counts.h
-@@ -11,7 +11,6 @@ struct evsel;
- 
- struct perf_counts {
- 	s8			  scaled;
--	struct perf_counts_values aggr;
- 	struct xyarray		  *values;
- 	struct xyarray		  *loaded;
- };
-diff --git a/tools/perf/util/stat.c b/tools/perf/util/stat.c
-index 1652586a4925..0dccfa273fa7 100644
---- a/tools/perf/util/stat.c
-+++ b/tools/perf/util/stat.c
-@@ -307,8 +307,6 @@ static void evsel__copy_prev_raw_counts(struct evsel *evsel)
- 				*perf_counts(evsel->prev_raw_counts, idx, thread);
- 		}
- 	}
--
--	evsel->counts->aggr = evsel->prev_raw_counts->aggr;
- }
- 
- void evlist__copy_prev_raw_counts(struct evlist *evlist)
-@@ -319,26 +317,6 @@ void evlist__copy_prev_raw_counts(struct evlist *evlist)
- 		evsel__copy_prev_raw_counts(evsel);
- }
- 
--void evlist__save_aggr_prev_raw_counts(struct evlist *evlist)
--{
--	struct evsel *evsel;
--
--	/*
--	 * To collect the overall statistics for interval mode,
--	 * we copy the counts from evsel->prev_raw_counts to
--	 * evsel->counts. The perf_stat_process_counter creates
--	 * aggr values from per cpu values, but the per cpu values
--	 * are 0 for AGGR_GLOBAL. So we use a trick that saves the
--	 * previous aggr value to the first member of perf_counts,
--	 * then aggr calculation in process_counter_values can work
--	 * correctly.
--	 */
--	evlist__for_each_entry(evlist, evsel) {
--		*perf_counts(evsel->prev_raw_counts, 0, 0) =
--			evsel->prev_raw_counts->aggr;
--	}
--}
--
- static size_t pkg_id_hash(const void *__key, void *ctx __maybe_unused)
- {
- 	uint64_t *key = (uint64_t *) __key;
-@@ -422,7 +400,6 @@ process_counter_values(struct perf_stat_config *config, struct evsel *evsel,
- 		       int cpu_map_idx, int thread,
- 		       struct perf_counts_values *count)
- {
--	struct perf_counts_values *aggr = &evsel->counts->aggr;
- 	struct perf_stat_evsel *ps = evsel->stats;
- 	static struct perf_counts_values zero;
- 	bool skip = false;
-@@ -491,12 +468,6 @@ process_counter_values(struct perf_stat_config *config, struct evsel *evsel,
- 		}
- 	}
- 
--	if (config->aggr_mode == AGGR_GLOBAL) {
--		aggr->val += count->val;
--		aggr->ena += count->ena;
--		aggr->run += count->run;
--	}
--
- 	return 0;
- }
- 
-@@ -521,13 +492,10 @@ static int process_counter_maps(struct perf_stat_config *config,
- int perf_stat_process_counter(struct perf_stat_config *config,
- 			      struct evsel *counter)
- {
--	struct perf_counts_values *aggr = &counter->counts->aggr;
- 	struct perf_stat_evsel *ps = counter->stats;
--	u64 *count = counter->counts->aggr.values;
-+	u64 *count;
- 	int ret;
- 
--	aggr->val = aggr->ena = aggr->run = 0;
--
- 	if (counter->per_pkg)
- 		evsel__zero_per_pkg(counter);
- 
-@@ -538,6 +506,7 @@ int perf_stat_process_counter(struct perf_stat_config *config,
- 	if (config->aggr_mode != AGGR_GLOBAL)
- 		return 0;
- 
-+	count = ps->aggr[0].counts.values;
- 	update_stats(&ps->res_stats, *count);
- 
- 	if (verbose > 0) {
--- 
-2.38.0.rc1.362.ged0d419d3c-goog
+It's been a while (I had totally forgotten), but I don't think I saw
+this patch.
 
+For reminder you've requested that I add some test for a tracepoint
+starting with digits e.g. 9p:9p_client_res but there's nothing commonly
+available to use there, so you added a way to only check without
+checking if a backing tracepoint exist, but I see no trace of the update
+you sent here:
+https://lore.kernel.org/all/YsGduWiTvkM2/tHv@krava/
+
+Should I take it, do the split you suggested and send it together with a
+resend of my original patch and new test?
+
+
+Ian Rogers wrote on Mon, Jul 04, 2022 at 02:39:05PM -0700:
+> > diff --git a/tools/perf/util/parse-events.l b/tools/perf/util/parse-events.l
+> > index 5b6e4b5249cf..4133d6950d29 100644
+> > --- a/tools/perf/util/parse-events.l
+> > +++ b/tools/perf/util/parse-events.l
+> > @@ -211,7 +211,7 @@ bpf_source  [^,{}]+\.c[a-zA-Z0-9._]*
+> >  num_dec                [0-9]+
+> >  num_hex                0x[a-fA-F0-9]+
+> >  num_raw_hex    [a-fA-F0-9]+
+> > -name           [a-zA-Z_*?\[\]][a-zA-Z0-9_*?.\[\]!]*
+> > +name           [a-zA-Z0-9_*?\[\]][a-zA-Z0-9_*?.\[\]!]*
+> 
+> Perhaps this would be cleaner as:
+> name           [a-zA-Z0-9_*?\[\]!]+
+> except that would allow a name to start with an exclamation. Would
+> that be an issue?
+
+Sorry for the lack of reply -- I have no opinion on this as long as we
+can use digits.
+I can't imagine any probe starting with . or !, but that does not seem
+to create any ambiguity with the rest of the grammar that I can see
+either so I think it'd be fine, but I'm not comfortable deciding.
+
+
+Thanks,
+--
+Dominique
