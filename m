@@ -2,139 +2,210 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7DDD8C433F5
-	for <linux-perf-users@archiver.kernel.org>; Mon, 10 Oct 2022 14:06:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C3BB1C433FE
+	for <linux-perf-users@archiver.kernel.org>; Mon, 10 Oct 2022 14:17:46 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229726AbiJJOGB (ORCPT
+        id S229507AbiJJORp (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Mon, 10 Oct 2022 10:06:01 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57006 "EHLO
+        Mon, 10 Oct 2022 10:17:45 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54444 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229700AbiJJOGA (ORCPT
+        with ESMTP id S229596AbiJJORo (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Mon, 10 Oct 2022 10:06:00 -0400
-Received: from mail-wr1-x429.google.com (mail-wr1-x429.google.com [IPv6:2a00:1450:4864:20::429])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8AD1E6AE87;
-        Mon, 10 Oct 2022 07:05:59 -0700 (PDT)
-Received: by mail-wr1-x429.google.com with SMTP id f11so17233151wrm.6;
-        Mon, 10 Oct 2022 07:05:59 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20210112;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:date:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=WfbmCh4Xd7NmHwkQp27IHc6Fb0+tmSJSyPcW5XETK5Q=;
-        b=pDGlnjksJk7ui6SeN4AwbZpBz1s9v9uzLet0dSGEZHmpOFOEYeKtNxmIng2BLHbMYC
-         J9VqjpuMmkw5HMFmeuZBt1y1FXWmFmS/o/BZg1bat8Ce+HiInTrEAmwoex9JHgip8jJ+
-         iCM50d7iBdDeN8kDwWSwN6cNeJn1SOYrCkI2IMwRHpaGaCamLh0IZoRNRyhLeO4yUyF4
-         Dy4sZfobz2wprMEfOvXEIX143ya1cBhcw7lcN+8qAFLpNbX1nIj9V/TRKobHi/xbfvRD
-         y7eDYD+CsoWG30vGFenBCl+ShkPO2Zn+y0ugnx159lJPyi+E1U0BD5db3TiCv10BQ3ei
-         gViQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:date:from:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=WfbmCh4Xd7NmHwkQp27IHc6Fb0+tmSJSyPcW5XETK5Q=;
-        b=3ah9KlawwhfMh+DatMFeUo000XScRMlZKOaAH2rDjRhk4+ZQCbdIaLveF5xIYQK+gt
-         FlOFEPe3LSEWHRnc6gOdlPqAd7rZxn8kKtdV5vKv7qlrqbO+mm+7IJGiAzVi52GT+jJj
-         dztqatJiNtag6FagLXPzwDdbi/LvxgirBagDWI03B+8fyK2//XZyg+624r93RykUyf+4
-         o8S07k2cVM5PXqnXuT4g8AXeJ+Nbds+IZMH1rQW0J0rqja4oAfU9EX/YmyMva/SvtXho
-         9pp0ls9Q0cHXt6PQgh18QyV9HahooWhnUMRw9CBTdQKKrnnBFnkrZgi4D9zeHIPiIqGs
-         jumA==
-X-Gm-Message-State: ACrzQf3zoWTNbqZd1gzV94rzf0uB4dHRUpO9dQ1vlfMigHnBCfhHDfie
-        SSAL6+7QMGRG4waT7/nvlzA=
-X-Google-Smtp-Source: AMsMyM48BA7z/m402G3MA+kDVF1iO8QFE3FITWl4CvXSr+DdU5yTNVGDoRMn0mnH+XqrnL9DniQesQ==
-X-Received: by 2002:adf:ba01:0:b0:22e:7318:4e94 with SMTP id o1-20020adfba01000000b0022e73184e94mr12094202wrg.330.1665410757707;
-        Mon, 10 Oct 2022 07:05:57 -0700 (PDT)
-Received: from krava ([193.85.244.190])
-        by smtp.gmail.com with ESMTPSA id j11-20020a05600c190b00b003c4ecff4e25sm7004470wmq.9.2022.10.10.07.05.56
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 10 Oct 2022 07:05:56 -0700 (PDT)
-From:   Jiri Olsa <olsajiri@gmail.com>
-X-Google-Original-From: Jiri Olsa <jolsa@kernel.org>
-Date:   Mon, 10 Oct 2022 16:05:54 +0200
-To:     Dominique Martinet <asmadeus@codewreck.org>
-Cc:     Jiri Olsa <olsajiri@gmail.com>, Ian Rogers <irogers@google.com>,
-        Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Namhyung Kim <namhyung@kernel.org>,
-        linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] perf parse: Allow names to start with digits
-Message-ID: <Y0QmwjY0lJ+CNxvH@krava>
-References: <CAP-5=fXgNTW1eXRZhz-s_AfP+v1Oyx1zdksm-Q0B4YVPAgjKxw@mail.gmail.com>
- <YsLOKEqzp0Syz/Rt@krava>
- <Y0Ov7hSuWQJlYAdW@codewreck.org>
+        Mon, 10 Oct 2022 10:17:44 -0400
+Received: from foss.arm.com (foss.arm.com [217.140.110.172])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTP id BD0F071980;
+        Mon, 10 Oct 2022 07:17:42 -0700 (PDT)
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 81F6E12FC;
+        Mon, 10 Oct 2022 07:17:48 -0700 (PDT)
+Received: from [10.57.3.59] (unknown [10.57.3.59])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 09B043F766;
+        Mon, 10 Oct 2022 07:17:40 -0700 (PDT)
+Message-ID: <bf70b7d6-0564-7ae3-6fe6-24483461839b@arm.com>
+Date:   Mon, 10 Oct 2022 15:17:39 +0100
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <Y0Ov7hSuWQJlYAdW@codewreck.org>
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
+ Thunderbird/91.11.0
+Subject: Re: [PATCH V3 4/7] driver/perf/arm_pmu_platform: Add support for BRBE
+ attributes detection
+Content-Language: en-US
+From:   James Clark <james.clark@arm.com>
+To:     Anshuman Khandual <anshuman.khandual@arm.com>
+Cc:     linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, peterz@infradead.org,
+        acme@kernel.org, mark.rutland@arm.com, will@kernel.org,
+        catalin.marinas@arm.com
+References: <20220929075857.158358-1-anshuman.khandual@arm.com>
+ <20220929075857.158358-5-anshuman.khandual@arm.com>
+ <02ce379c-c718-b72d-fc74-cd8c904265fb@arm.com>
+In-Reply-To: <02ce379c-c718-b72d-fc74-cd8c904265fb@arm.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-On Mon, Oct 10, 2022 at 02:38:54PM +0900, Dominique Martinet wrote:
-> Hi Jiri, Ian,
-> 
-> Jiri Olsa wrote on Mon, Jul 04, 2022 at 01:25:28PM +0200:
-> > > If you're ok with that I can resend this as three patches: my original
-> > > patch, a patch with your diff and test_event() keeping current
-> > > behaviour, and a last patch adding that last flag and testing 9p without
-> > > format check.
-> > > 
-> > > (and if you don't think it's worth checking probe existence same thing
-> > > but even simpler)
-> > 
-> > I have that patch split into 2 separated changes,
-> > I'll try to send it later today
-> 
-> It's been a while (I had totally forgotten), but I don't think I saw
-> this patch.
-> 
-> For reminder you've requested that I add some test for a tracepoint
-> starting with digits e.g. 9p:9p_client_res but there's nothing commonly
-> available to use there, so you added a way to only check without
-> checking if a backing tracepoint exist, but I see no trace of the update
-> you sent here:
-> https://lore.kernel.org/all/YsGduWiTvkM2/tHv@krava/
-> 
-> Should I take it, do the split you suggested and send it together with a
-> resend of my original patch and new test?
 
-ah, it fell through the cracks, sry.. if you could resend it,
-that'd be great
 
-thanks,
-jirka
+On 06/10/2022 14:37, James Clark wrote:
+> 
+> 
+> On 29/09/2022 08:58, Anshuman Khandual wrote:
+>> This adds arm pmu infrastrure to probe BRBE implementation's attributes via
+>> driver exported callbacks later. The actual BRBE feature detection will be
+>> added by the driver itself.
+>>
+>> CPU specific BRBE entries, cycle count, format support gets detected during
+>> PMU init. This information gets saved in per-cpu struct pmu_hw_events which
+>> later helps in operating BRBE during a perf event context.
+>>
+>> Cc: Will Deacon <will@kernel.org>
+>> Cc: Mark Rutland <mark.rutland@arm.com>
+>> Cc: linux-arm-kernel@lists.infradead.org
+>> Cc: linux-kernel@vger.kernel.org
+>> Signed-off-by: Anshuman Khandual <anshuman.khandual@arm.com>
+>> ---
+>>  drivers/perf/arm_pmu_platform.c | 34 +++++++++++++++++++++++++++++++++
+>>  1 file changed, 34 insertions(+)
+>>
+>> diff --git a/drivers/perf/arm_pmu_platform.c b/drivers/perf/arm_pmu_platform.c
+>> index 933b96e243b8..acdc445081aa 100644
+>> --- a/drivers/perf/arm_pmu_platform.c
+>> +++ b/drivers/perf/arm_pmu_platform.c
+>> @@ -172,6 +172,36 @@ static int armpmu_request_irqs(struct arm_pmu *armpmu)
+>>  	return err;
+>>  }
+>>  
+>> +static void arm_brbe_probe_cpu(void *info)
+>> +{
+>> +	struct pmu_hw_events *hw_events;
+>> +	struct arm_pmu *armpmu = info;
+>> +
+>> +	/*
+>> +	 * Return from here, if BRBE driver has not been
+>> +	 * implemented for this PMU. This helps prevent
+>> +	 * kernel crash later when brbe_probe() will be
+>> +	 * called on the PMU.
+>> +	 */
+>> +	if (!armpmu->brbe_probe)
+>> +		return;
+>> +
+>> +	hw_events = per_cpu_ptr(armpmu->hw_events, smp_processor_id());
+>> +	armpmu->brbe_probe(hw_events);
+>> +}
+>> +
+>> +static int armpmu_request_brbe(struct arm_pmu *armpmu)
+>> +{
+>> +	int cpu, err = 0;
+>> +
+>> +	for_each_cpu(cpu, &armpmu->supported_cpus) {
+>> +		err = smp_call_function_single(cpu, arm_brbe_probe_cpu, armpmu, 1);
+> 
+> Hi Anshuman,
+> 
+> I have LOCKDEP on and the patchset applied to perf/core (82aad7ff7) on
+> git://git.kernel.org/pub/scm/linux/kernel/git/peterz/queue.git and I get
 
+Can you confirm if this is currently the correct place to apply this to?
+I'm only getting 0 length branch stacks now. Seems like it could be
+something to do with the layout of perf samples because I know that was
+done in separate commits:
+
+  sudo ./perf record -j any_call -- ls
+  ./perf report -D | grep "branch stack"
+  ... branch stack: nr:0
+  ... branch stack: nr:0
+  ... branch stack: nr:0
+  ... branch stack: nr:0
+  ...
+
+> this:
 > 
+>    armv8-pmu pmu: hw perfevents: no interrupt-affinity property, guessing.
+>    brbe: implementation found on cpu 0
 > 
-> Ian Rogers wrote on Mon, Jul 04, 2022 at 02:39:05PM -0700:
-> > > diff --git a/tools/perf/util/parse-events.l b/tools/perf/util/parse-events.l
-> > > index 5b6e4b5249cf..4133d6950d29 100644
-> > > --- a/tools/perf/util/parse-events.l
-> > > +++ b/tools/perf/util/parse-events.l
-> > > @@ -211,7 +211,7 @@ bpf_source  [^,{}]+\.c[a-zA-Z0-9._]*
-> > >  num_dec                [0-9]+
-> > >  num_hex                0x[a-fA-F0-9]+
-> > >  num_raw_hex    [a-fA-F0-9]+
-> > > -name           [a-zA-Z_*?\[\]][a-zA-Z0-9_*?.\[\]!]*
-> > > +name           [a-zA-Z0-9_*?\[\]][a-zA-Z0-9_*?.\[\]!]*
-> > 
-> > Perhaps this would be cleaner as:
-> > name           [a-zA-Z0-9_*?\[\]!]+
-> > except that would allow a name to start with an exclamation. Would
-> > that be an issue?
+>    =============================
+>    [ BUG: Invalid wait context ]
+>    6.0.0-rc7 #38 Not tainted
+>    -----------------------------
+>    kworker/u8:0/9 is trying to lock:
+>    ffff000800855898 (&port_lock_key){....}-{3:3}, at:
+> pl011_console_write+0x148/0x240
+>    other info that might help us debug this:
+>    context-{2:2}
+>    5 locks held by kworker/u8:0/9:
+>     #0: ffff00080032a138 ((wq_completion)eval_map_wq){+.+.}-{0:0}, at:
+> process_one_work+0x200/0x6b0
+>     #1: ffff80000807bde0
+> ((work_completion)(&eval_map_work)){+.+.}-{0:0}, at:
+> process_one_work+0x200/0x6b0
+>     #2: ffff80000aa3db70 (trace_event_sem){+.+.}-{4:4}, at:
+> trace_event_eval_update+0x28/0x420
+>     #3: ffff80000a9afe58 (console_lock){+.+.}-{0:0}, at:
+> vprintk_emit+0x130/0x380
+>     #4: ffff80000a9aff78 (console_owner){-...}-{0:0}, at:
+> console_emit_next_record.constprop.0+0x128/0x338
+>    stack backtrace:
+>    CPU: 0 PID: 9 Comm: kworker/u8:0 Not tainted 6.0.0-rc7 #38
+>    Hardware name: Foundation-v8A (DT)
+>    Workqueue: eval_map_wq eval_map_work_func
+>    Call trace:
+>     dump_backtrace+0x114/0x120
+>     show_stack+0x20/0x58
+>     dump_stack_lvl+0x9c/0xd8
+>     dump_stack+0x18/0x34
+>     __lock_acquire+0x17cc/0x1920
+>     lock_acquire+0x138/0x3b8
+>     _raw_spin_lock+0x58/0x70
+>     pl011_console_write+0x148/0x240
+>     console_emit_next_record.constprop.0+0x194/0x338
+>     console_unlock+0x18c/0x208
+>     vprintk_emit+0x24c/0x380
+>     vprintk_default+0x40/0x50
+>     vprintk+0xd4/0xf0
+>     _printk+0x68/0x90
+>     arm64_pmu_brbe_probe+0x10c/0x128
+>     armv8pmu_brbe_probe+0x18/0x28
+>     arm_brbe_probe_cpu+0x44/0x58
+>     __flush_smp_call_function_queue+0x1d0/0x440
+>     generic_smp_call_function_single_interrupt+0x20/0x78
+>     ipi_handler+0x98/0x368
+>     handle_percpu_devid_irq+0xc0/0x3a8
+>     generic_handle_domain_irq+0x34/0x50
+>     gic_handle_irq+0x58/0x138
+>     call_on_irq_stack+0x2c/0x58
+>     do_interrupt_handler+0x88/0x90
+>     el1_interrupt+0x40/0x78
+>     el1h_64_irq_handler+0x18/0x28
+>     el1h_64_irq+0x64/0x68
+>     trace_event_eval_update+0x114/0x420
+>     eval_map_work_func+0x30/0x40
+>     process_one_work+0x298/0x6b0
+>     worker_thread+0x54/0x408
+>     kthread+0x118/0x128
+>     ret_from_fork+0x10/0x20
+>    brbe: implementation found on cpu 1
+>    brbe: implementation found on cpu 2
+>    brbe: implementation found on cpu 3
 > 
-> Sorry for the lack of reply -- I have no opinion on this as long as we
-> can use digits.
-> I can't imagine any probe starting with . or !, but that does not seem
-> to create any ambiguity with the rest of the grammar that I can see
-> either so I think it'd be fine, but I'm not comfortable deciding.
-> 
-> 
-> Thanks,
-> --
-> Dominique
+>> +		if (err)
+>> +			return err;
+>> +	}
+>> +	return err;
+>> +}
+>> +
+>>  static void armpmu_free_irqs(struct arm_pmu *armpmu)
+>>  {
+>>  	int cpu;
+>> @@ -229,6 +259,10 @@ int arm_pmu_device_probe(struct platform_device *pdev,
+>>  	if (ret)
+>>  		goto out_free_irqs;
+>>  
+>> +	ret = armpmu_request_brbe(pmu);
+>> +	if (ret)
+>> +		goto out_free_irqs;
+>> +
+>>  	ret = armpmu_register(pmu);
+>>  	if (ret) {
+>>  		dev_err(dev, "failed to register PMU devices!\n");
