@@ -2,158 +2,95 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 51684C433F5
-	for <linux-perf-users@archiver.kernel.org>; Mon, 10 Oct 2022 09:21:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 011BBC433F5
+	for <linux-perf-users@archiver.kernel.org>; Mon, 10 Oct 2022 10:15:01 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231208AbiJJJVc (ORCPT
+        id S230340AbiJJKPA (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Mon, 10 Oct 2022 05:21:32 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40832 "EHLO
+        Mon, 10 Oct 2022 06:15:00 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56430 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230523AbiJJJV1 (ORCPT
+        with ESMTP id S230121AbiJJKO6 (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Mon, 10 Oct 2022 05:21:27 -0400
-Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTP id 2D1F73A15C;
-        Mon, 10 Oct 2022 02:21:26 -0700 (PDT)
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id E610C1570;
-        Mon, 10 Oct 2022 02:21:31 -0700 (PDT)
-Received: from [10.57.3.59] (unknown [10.57.3.59])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id C6CD93F881;
-        Mon, 10 Oct 2022 02:21:23 -0700 (PDT)
-Message-ID: <7dcf8bc5-4182-cf73-59ec-86e113ab2c17@arm.com>
-Date:   Mon, 10 Oct 2022 10:21:22 +0100
+        Mon, 10 Oct 2022 06:14:58 -0400
+Received: from casper.infradead.org (casper.infradead.org [IPv6:2001:8b0:10b:1236::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B7A881401A;
+        Mon, 10 Oct 2022 03:14:55 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=casper.20170209; h=In-Reply-To:Content-Type:MIME-Version:
+        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description;
+        bh=HPidJK9k0wDj5SKTPSWA/1fb2xWJmy1rprDVNz5gd7I=; b=gZPg5tHvpsY0bShNV9wsEEgKzL
+        JRcE92EijJ+834KzNf4yHcapJ0hmZIzBsOs1iJJf2o8DPH+7tLJl7xpUpC4ILJ0EgFxvypPoxwPQS
+        Ui0s3kNXhjHb5xf3YtykfLjUFUuIE3oI2vRyAWAGkmtMp/rUR9JlTu5XKrCj5lcXrvl1T/FTb9kF4
+        XpNxRKqVTksqhCKqSRBJ2I7jQLs42ALK7yx950VZ6Bno7tlRTEb6tCQLnZ8V2850A4JBeYzGwdxmz
+        cB7sVWx5zACwknyQTBTKjYT01aJ58pvGMpg5bHg6113Xy0JDD9W6pchvv8I35x+bvrpMOAwIiJO9v
+        9GwnBM2w==;
+Received: from j130084.upc-j.chello.nl ([24.132.130.84] helo=noisy.programming.kicks-ass.net)
+        by casper.infradead.org with esmtpsa (Exim 4.94.2 #2 (Red Hat Linux))
+        id 1ohpnq-0048Q4-3g; Mon, 10 Oct 2022 10:14:30 +0000
+Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+        (Client did not present a certificate)
+        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id 8F80E300465;
+        Mon, 10 Oct 2022 12:14:24 +0200 (CEST)
+Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
+        id 5EB4F2022F86C; Mon, 10 Oct 2022 12:14:24 +0200 (CEST)
+Date:   Mon, 10 Oct 2022 12:14:24 +0200
+From:   Peter Zijlstra <peterz@infradead.org>
+To:     Ravi Bangoria <ravi.bangoria@amd.com>
+Cc:     acme@kernel.org, alexander.shishkin@linux.intel.com,
+        jolsa@redhat.com, namhyung@kernel.org, songliubraving@fb.com,
+        eranian@google.com, ak@linux.intel.com, mark.rutland@arm.com,
+        frederic@kernel.org, maddy@linux.ibm.com, irogers@google.com,
+        will@kernel.org, robh@kernel.org, mingo@redhat.com,
+        catalin.marinas@arm.com, linux-arm-kernel@lists.infradead.org,
+        linux-perf-users@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
+        linux-s390@vger.kernel.org, linux-kernel@vger.kernel.org,
+        sandipan.das@amd.com, ananth.narayan@amd.com, kim.phillips@amd.com,
+        santosh.shukla@amd.com
+Subject: Re: [PATCH] perf: Rewrite core context handling
+Message-ID: <Y0PwgBz6asJOHSan@hirez.programming.kicks-ass.net>
+References: <20220829113347.295-1-ravi.bangoria@amd.com>
+ <e1d933d1-4772-1357-9cf1-6e5b842508c8@amd.com>
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
- Thunderbird/91.11.0
-Subject: Re: [PATCH] perf test: Fix test_arm_coresight.sh failures on Juno
-Content-Language: en-US
-To:     Leo Yan <leo.yan@linaro.org>
-Cc:     coresight@lists.linaro.org, acme@kernel.org,
-        suzuki.poulose@arm.com, linux-perf-users@vger.kernel.org,
-        mathieu.poirier@linaro.org, mike.leach@linaro.org,
-        Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Jiri Olsa <jolsa@kernel.org>,
-        Namhyung Kim <namhyung@kernel.org>,
-        linux-kernel@vger.kernel.org
-References: <20221005140508.1537277-1-james.clark@arm.com>
- <Yz7qx+4BxNYOCgvL@leoy-yangtze.lan>
- <cce859cc-f25b-b4e8-70c5-917569aec050@arm.com>
- <Y0PMj4V4MBh4J/ao@leoy-yangtze.lan>
-From:   James Clark <james.clark@arm.com>
-In-Reply-To: <Y0PMj4V4MBh4J/ao@leoy-yangtze.lan>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <e1d933d1-4772-1357-9cf1-6e5b842508c8@amd.com>
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
+On Wed, Sep 07, 2022 at 04:58:49PM +0530, Ravi Bangoria wrote:
+> > -static void
+> > -ctx_flexible_sched_in(struct perf_event_context *ctx,
+> > -		      struct perf_cpu_context *cpuctx)
+> > +/* XXX .busy thingy from Peter's patch */
+> > +static void ctx_flexible_sched_in(struct perf_event_context *ctx, struct pmu *pmu)
+> 
+> This one turned out to be very easy. Given that, we iterate over each
+> pmu, we can just return error if we fail to schedule any flexible event.
+> (It wouldn't be straight forward like this if we needed to implement
+> pmu=NULL optimization.)
+> 
+> ---
+> diff --git a/kernel/events/core.c b/kernel/events/core.c
+> index e0232e0bb74e..923656af73fe 100644
+> --- a/kernel/events/core.c
+> +++ b/kernel/events/core.c
+> @@ -3751,6 +3751,7 @@ static int merge_sched_in(struct perf_event *event, void *data)
+>  			cpc = this_cpu_ptr(event->pmu_ctx->pmu->cpu_pmu_context);
+>  			perf_mux_hrtimer_restart(cpc);
+>  			group_update_userpage(event);
+> +			return -EBUSY;
+>  		}
+>  	}
+>  
 
+I'm afraid this breaks things; consider:
 
-On 10/10/2022 08:41, Leo Yan wrote:
-> On Thu, Oct 06, 2022 at 04:11:05PM +0100, James Clark wrote:
-> 
-> [...]
-> 
->>>> Before:
->>>>
->>>>   sudo ./perf test coresight -vvv
->>>>   ...
->>>>   Recording trace with system wide mode
->>>>   Looking at perf.data file for dumping branch samples:
->>>>   Looking at perf.data file for reporting branch samples:
->>>>   Looking at perf.data file for instruction samples:
->>>>   CoreSight system wide testing: FAIL
->>>>   ...
->>>>
->>>> After:
->>>>
->>>>   sudo ./perf test coresight -vvv
->>>>   ...
->>>>   Recording trace with system wide mode
->>>>   Looking at perf.data file for dumping branch samples:
->>>>   Looking at perf.data file for reporting branch samples:
->>>>   Looking at perf.data file for instruction samples:
->>>>   CoreSight system wide testing: PASS
->>>>   ...
->>>
->>> Since Arm Juno board has zero timestamp for CoreSight, I don't think
->>> now arm_cs_etm.sh can really work on it.
->>>
->>> If we want to pass the test on Juno board, we need to add option
->>> "--itrace=Zi1000i" for "perf report" and "perf script"; but seems
->>> to me "--itrace=Z..." is not a general case for testing ...
->>
->> Unfortunately I now think that adding the Z option didn't improve
->> anything in Coresight decoding other than removing the warning. I've
->> never seen the zero timestamp issue on Juno though. I thought that was
->> on some Qualcomm device? I'm not getting the warning on this test anyway.
-> 
-> No, on my Juno-r2 board I can observe the timestamp is always zero
-> from CoreSight trace data, this is why everytime I must use
-> "--itrace=Zi1000i" for reporting results.
+  f79256532682 ("perf/core: fix userpage->time_enabled of inactive events")
 
-Ah I have r0 which could explain it. But it's good to know that r2 has
-that issue. I still wouldn't expect you to have to use the option
-though, because it should only make the warning go away.
-
-> 
->> The problem is that timeless mode assumes per thread mode, and in per
->> thread mode there is a separate buffer per thread, so the Coresight
->> channel IDs are ignored. In systemwide mode the channel ID is important
->> to know which CPU the trace came from. If this info is thrown away then
->> not much works correctly.
->>
->> I plan to overhaul the whole decoder and remove all the assumptions
->> about per-thread and timeless mode. It would be better if they were
->> completely separate concepts.
-> 
-> Okay, good to know this.
-> 
-> [...]
-> 
->>> So here I am suspect that changing to "--itrace=i20i" can allow the test
->>> to pass on Juno board.  Could you confirm for this?
->>
->> On Juno:
->>
->>   ./perf record -e cs_etm// -a -- ls
->>
->> With interval 20, 23 instruction samples are generated:
->>
->>   ./perf report --stdio --itrace=i20i | egrep " +[0-9]+\.[0-9]+% +perf "
->> | wc -l
->>
->>   23
->>
->> With interval 1000, 0 are generated:
->>
->>   ./perf report --stdio --itrace=i1000i | egrep " +[0-9]+\.[0-9]+% +perf
->> " | wc -l
->>
->>   Error:
->>   The perf.data data has no samples!
->>   0
-> 
-> Thanks for confirmation.  It's a bit weird that your Juno board doesn't
-> produce all zeros for timestamp packets.
-> 
->> I think the issue is that ls is quite quick to run, so not much trace is
->> generated for Perf. And it just depends on the scheduling which is
->> slightly different on Juno. I don't think it's a bug. On N1SDP there are
->> only 134 samples generated with i1000i, so it could probably end up with
->> a random run generating 0 there too.
-> 
-> Agreed, changing to smaller interval makes sense for me.
-> 
-> Reviewed-by: Leo Yan <leo.yan@linaro.org>
-
-Thanks for the review Leo
-
-> 
-> Thanks,
-> Leo
+I totally hate this -- because it means we *HAVE* to iterate the
+inactive events, but alas.
