@@ -2,120 +2,111 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5029EC433FE
-	for <linux-perf-users@archiver.kernel.org>; Mon, 10 Oct 2022 05:40:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3C2BBC433FE
+	for <linux-perf-users@archiver.kernel.org>; Mon, 10 Oct 2022 07:02:40 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231414AbiJJFkn (ORCPT
+        id S229925AbiJJHCf (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Mon, 10 Oct 2022 01:40:43 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39750 "EHLO
+        Mon, 10 Oct 2022 03:02:35 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41938 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231428AbiJJFk1 (ORCPT
+        with ESMTP id S230187AbiJJHCf (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Mon, 10 Oct 2022 01:40:27 -0400
-Received: from nautica.notk.org (ipv6.notk.org [IPv6:2001:41d0:1:7a93::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 04CDF53027;
-        Sun,  9 Oct 2022 22:40:10 -0700 (PDT)
-Received: by nautica.notk.org (Postfix, from userid 108)
-        id 908F7C01F; Mon, 10 Oct 2022 07:39:16 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=codewreck.org; s=2;
-        t=1665380356; bh=H3f6zoTlgCXWKuinDdyMvbb46LHLZXiKju7XvZ3MtXk=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:From;
-        b=JmxoPmPPd0AtI0VH+O9x/OXkckFDch5vib6DTgzyPF9S1+rAJdotDTSG5rBrFRWgl
-         cmQ8/K66lgouW6U+cMbHNgbWywk8mGpw8rAyNKA2uTGgK5LBQYEMXEsoH57CqlR9nY
-         +fxdnDeRCQSjqykb9Ia5ctiHcpHB9hxhY36cWxjI+8D5I8zJyb2MTLyEa8hqV3f5/R
-         Y02nPIUa4ePobbZuDYW0oXeyCIYRYWBx4m21pI2rIBXw8+KOxKJvdEJ42J7YPvDlRA
-         lAvuS7L0augMrHT40GqKIM2PLVP2nnCAz0JzTtvpjlq851zCRdKv8vzrzSPF49ogRI
-         aVCUlIO8S+Y7A==
-Received: from odin.codewreck.org (localhost [127.0.0.1])
-        by nautica.notk.org (Postfix) with ESMTPS id 8E529C009;
-        Mon, 10 Oct 2022 07:39:12 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=codewreck.org; s=2;
-        t=1665380355; bh=H3f6zoTlgCXWKuinDdyMvbb46LHLZXiKju7XvZ3MtXk=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:From;
-        b=tF8Wsw/sswfvgYgTTwi6kZquMBcnz1mfpURreyJgkrU6yV7/dzvTvLK5vMFByvuI+
-         Hfgr4jpKPORH/XuofaikqIIYBVbelFwkjOaJGXA/2iE2lV9j5XjKF3bDU5BQgYhSJd
-         JD3dR4/dffMDmdP9bcmJiM5vTi4JH1G0O3+WkUz1ZkN7OhF2V73Z3JVPpt+1pdJrTo
-         Ij8HXR6Tv3pra6aQcZXeKgR2X3vFGeGPLYybNLnbvrdvNiEjOOODBir5mYZF8EPieW
-         SWcDApBaWL02RfwUeTKgyBuYqzY7azSqJCv3V2dD/VUN6NekPtrDwdxsoghK+flTsm
-         S+u1r95/JuvJw==
-Received: from localhost (odin.codewreck.org [local])
-        by odin.codewreck.org (OpenSMTPD) with ESMTPA id 0b55c371;
-        Mon, 10 Oct 2022 05:39:09 +0000 (UTC)
-Date:   Mon, 10 Oct 2022 14:38:54 +0900
-From:   Dominique Martinet <asmadeus@codewreck.org>
-To:     Jiri Olsa <olsajiri@gmail.com>, Ian Rogers <irogers@google.com>
-Cc:     Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Namhyung Kim <namhyung@kernel.org>,
-        linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Jiri Olsa <jolsa@kernel.org>
-Subject: Re: [PATCH] perf parse: Allow names to start with digits
-Message-ID: <Y0Ov7hSuWQJlYAdW@codewreck.org>
+        Mon, 10 Oct 2022 03:02:35 -0400
+Received: from foss.arm.com (foss.arm.com [217.140.110.172])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTP id EF5BF3B713;
+        Mon, 10 Oct 2022 00:02:31 -0700 (PDT)
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id B193F1480;
+        Mon, 10 Oct 2022 00:02:37 -0700 (PDT)
+Received: from [192.168.99.12] (unknown [172.31.20.19])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 2F0E03F766;
+        Mon, 10 Oct 2022 00:02:30 -0700 (PDT)
+Message-ID: <0b3afc5d-c4a1-8a50-45c3-20c706c3ecfd@foss.arm.com>
+Date:   Mon, 10 Oct 2022 08:02:29 +0100
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <CAP-5=fXgNTW1eXRZhz-s_AfP+v1Oyx1zdksm-Q0B4YVPAgjKxw@mail.gmail.com>
- <YsLOKEqzp0Syz/Rt@krava>
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
+ Thunderbird/102.2.0
+Subject: Re: [PATCH v9 02/13] perf test: Add build infra for perf test tools
+ for CoreSight tests
+To:     Arnaldo Carvalho de Melo <acme@kernel.org>
+Cc:     Leo Yan <leo.yan@linaro.org>, Jiri Slaby <jirislaby@kernel.org>,
+        linux-kernel@vger.kernel.org, coresight@lists.linaro.org,
+        suzuki.poulose@arm.com, mathieu.poirier@linaro.org,
+        mike.leach@linaro.org, linux-perf-users@vger.kernel.org
+References: <20220909152803.2317006-1-carsten.haitzler@foss.arm.com>
+ <20220909152803.2317006-3-carsten.haitzler@foss.arm.com>
+ <Yz67SHpIN5NggKEk@kernel.org> <Yz6/zlchVnNsVlzJ@kernel.org>
+ <Yz7RAgMN6WGnD3OZ@leoy-yangtze.lan>
+ <e9f980a7-fba8-4610-a058-b74e51d6ab24@foss.arm.com>
+ <Y0AfK7sVphNkQA4q@kernel.org>
+Content-Language: en-US
+From:   Carsten Haitzler <carsten.haitzler@foss.arm.com>
+Organization: Arm Ltd.
+In-Reply-To: <Y0AfK7sVphNkQA4q@kernel.org>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-Hi Jiri, Ian,
 
-Jiri Olsa wrote on Mon, Jul 04, 2022 at 01:25:28PM +0200:
-> > If you're ok with that I can resend this as three patches: my original
-> > patch, a patch with your diff and test_event() keeping current
-> > behaviour, and a last patch adding that last flag and testing 9p without
-> > format check.
-> > 
-> > (and if you don't think it's worth checking probe existence same thing
-> > but even simpler)
+
+On 10/7/22 13:44, Arnaldo Carvalho de Melo wrote:
+> Em Fri, Oct 07, 2022 at 12:34:51PM +0100, Carsten Haitzler escreveu:
+>> On 10/6/22 13:58, Leo Yan wrote:
+>>> On Thu, Oct 06, 2022 at 08:45:18AM -0300, Arnaldo Carvalho de Melo wrote:
+>>>> Em Thu, Oct 06, 2022 at 08:26:00AM -0300, Arnaldo Carvalho de Melo escreveu:
+>>>> Also had to remove:
 > 
-> I have that patch split into 2 separated changes,
-> I'll try to send it later today
-
-It's been a while (I had totally forgotten), but I don't think I saw
-this patch.
-
-For reminder you've requested that I add some test for a tracepoint
-starting with digits e.g. 9p:9p_client_res but there's nothing commonly
-available to use there, so you added a way to only check without
-checking if a backing tracepoint exist, but I see no trace of the update
-you sent here:
-https://lore.kernel.org/all/YsGduWiTvkM2/tHv@krava/
-
-Should I take it, do the split you suggested and send it together with a
-resend of my original patch and new test?
-
-
-Ian Rogers wrote on Mon, Jul 04, 2022 at 02:39:05PM -0700:
-> > diff --git a/tools/perf/util/parse-events.l b/tools/perf/util/parse-events.l
-> > index 5b6e4b5249cf..4133d6950d29 100644
-> > --- a/tools/perf/util/parse-events.l
-> > +++ b/tools/perf/util/parse-events.l
-> > @@ -211,7 +211,7 @@ bpf_source  [^,{}]+\.c[a-zA-Z0-9._]*
-> >  num_dec                [0-9]+
-> >  num_hex                0x[a-fA-F0-9]+
-> >  num_raw_hex    [a-fA-F0-9]+
-> > -name           [a-zA-Z_*?\[\]][a-zA-Z0-9_*?.\[\]!]*
-> > +name           [a-zA-Z0-9_*?\[\]][a-zA-Z0-9_*?.\[\]!]*
+>>>> 		$(INSTALL) tests/shell/coresight/*.sh -m 644 '$(DESTDIR_SQ)$(perfexec_instdir_SQ)/tests/shell/coresight'
 > 
-> Perhaps this would be cleaner as:
-> name           [a-zA-Z0-9_*?\[\]!]+
-> except that would allow a name to start with an exclamation. Would
-> that be an issue?
+>>>> from this patch, as it makes install fail at this point in the patchset:
+> 
+>>> Thanks a lot!
+> 
+>>> James and me had found the merging conflict and planned to send out
+>>> email for reminding it, the right change for above section would be:
+> 
+>>> @@ -1006,7 +1014,10 @@ install-tests: all install-gtk
+>>>                   $(INSTALL) tests/shell/*.sh '$(DESTDIR_SQ)$(perfexec_instdir_SQ)/tests/shell'; \
+>>>                   $(INSTALL) -d -m 755 '$(DESTDIR_SQ)$(perfexec_instdir_SQ)/tests/shell/lib'; \
+>>>                   $(INSTALL) tests/shell/lib/*.sh -m 644 '$(DESTDIR_SQ)$(perfexec_instdir_SQ)/tests/shell/lib'; \
+>>> -               $(INSTALL) tests/shell/lib/*.py -m 644 '$(DESTDIR_SQ)$(perfexec_instdir_SQ)/tests/shell/lib'
+>>> +               $(INSTALL) tests/shell/lib/*.py -m 644 '$(DESTDIR_SQ)$(perfexec_instdir_SQ)/tests/shell/lib'; \
+>>> +               $(INSTALL) -d -m 755 '$(DESTDIR_SQ)$(perfexec_instdir_SQ)/tests/shell/coresight'; \
+>>> +               $(INSTALL) tests/shell/coresight/*.sh '$(DESTDIR_SQ)$(perfexec_instdir_SQ)/tests/shell/coresight'
+>>> +       $(Q)$(MAKE) -C tests/shell/coresight install-tests
+> 
+>>> It's deliberately to not add '-m 644' when install coresight test
+>>> shell scripts under the folder tests/shell/coresight/ so that we can
+>>> keep the executable permission for these scripts.  On the other
+>>> flip, we set 644 mode for the scripts under tests/shell/lib/ so
+>>> these scripts will not be executed directly by perf test framework.
+> 
+>>> @Carsten, if have chance could you confirm for above change?
+> 
+>>>>     DESCEND plugins
+>>>>     GEN     /tmp/build/perf/python/perf.so
+>>>>     INSTALL trace_plugins
+>>>>     INSTALL binaries
+>>>>     INSTALL tests
+>>>> install: cannot stat 'tests/shell/coresight/*.sh': No such file or directory
+>>>> make[2]: *** [Makefile.perf:1007: install-tests] Error 1
+>>>> make[2]: *** Waiting for unfinished jobs....
+> 
+>>>> I'll add it back when the first .sh gets added to tests/shell/coresight/
+> 
+>>> Sorry for introducing extra efforts for you and thanks!
+>   
+>> oh sorry - indeed i didn't see this problem coming after fixing the
+>> conflicts. i've got an update of the patches that fix that. should i just
+>> send through the 2 updates patches as a v10 or the whole series?
+> 
+> No need, I did some fixes taking into account the comments on this
+> thread, we can go on and fix things from what I have now at
+> acme/perf/core, which I'll send to Linus today.
 
-Sorry for the lack of reply -- I have no opinion on this as long as we
-can use digits.
-I can't imagine any probe starting with . or !, but that does not seem
-to create any ambiguity with the rest of the grammar that I can see
-either so I think it'd be fine, but I'm not comfortable deciding.
+oh cool. i'll let patches sit for now - let me know if there's anything 
+you want/need from me.
 
-
-Thanks,
---
-Dominique
