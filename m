@@ -2,210 +2,73 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C3BB1C433FE
-	for <linux-perf-users@archiver.kernel.org>; Mon, 10 Oct 2022 14:17:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 36E8BC433F5
+	for <linux-perf-users@archiver.kernel.org>; Mon, 10 Oct 2022 14:54:27 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229507AbiJJORp (ORCPT
+        id S229634AbiJJOy0 (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Mon, 10 Oct 2022 10:17:45 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54444 "EHLO
+        Mon, 10 Oct 2022 10:54:26 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56756 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229596AbiJJORo (ORCPT
+        with ESMTP id S229591AbiJJOyZ (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Mon, 10 Oct 2022 10:17:44 -0400
+        Mon, 10 Oct 2022 10:54:25 -0400
 Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTP id BD0F071980;
-        Mon, 10 Oct 2022 07:17:42 -0700 (PDT)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTP id CAF5440E3D
+        for <linux-perf-users@vger.kernel.org>; Mon, 10 Oct 2022 07:54:24 -0700 (PDT)
 Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 81F6E12FC;
-        Mon, 10 Oct 2022 07:17:48 -0700 (PDT)
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id CC25CD6E;
+        Mon, 10 Oct 2022 07:54:30 -0700 (PDT)
 Received: from [10.57.3.59] (unknown [10.57.3.59])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 09B043F766;
-        Mon, 10 Oct 2022 07:17:40 -0700 (PDT)
-Message-ID: <bf70b7d6-0564-7ae3-6fe6-24483461839b@arm.com>
-Date:   Mon, 10 Oct 2022 15:17:39 +0100
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 34EB53F766;
+        Mon, 10 Oct 2022 07:54:24 -0700 (PDT)
+Message-ID: <96a77e3e-7a9a-a519-0646-eb1f424e4ec1@arm.com>
+Date:   Mon, 10 Oct 2022 15:54:23 +0100
 MIME-Version: 1.0
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
  Thunderbird/91.11.0
-Subject: Re: [PATCH V3 4/7] driver/perf/arm_pmu_platform: Add support for BRBE
- attributes detection
+Subject: Re: Recent perf-tools does not compile on alpha
 Content-Language: en-US
+To:     matoro <matoro_mailinglist_kernel@matoro.tk>,
+        linux-perf-users@vger.kernel.org
+References: <43a0c856c61f0bee69290b82c7bd8e7a@matoro.tk>
 From:   James Clark <james.clark@arm.com>
-To:     Anshuman Khandual <anshuman.khandual@arm.com>
-Cc:     linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, peterz@infradead.org,
-        acme@kernel.org, mark.rutland@arm.com, will@kernel.org,
-        catalin.marinas@arm.com
-References: <20220929075857.158358-1-anshuman.khandual@arm.com>
- <20220929075857.158358-5-anshuman.khandual@arm.com>
- <02ce379c-c718-b72d-fc74-cd8c904265fb@arm.com>
-In-Reply-To: <02ce379c-c718-b72d-fc74-cd8c904265fb@arm.com>
+In-Reply-To: <43a0c856c61f0bee69290b82c7bd8e7a@matoro.tk>
 Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
 
 
-On 06/10/2022 14:37, James Clark wrote:
+On 08/10/2022 04:53, matoro wrote:
+> Hi!  Recent versions of the perf tools (5.19) do not compile on alpha
+> with the following errors:
 > 
+> util/unwind-libdw.c: In function ‘memory_read’:
+> util/unwind-libdw.c:161:62: error: ‘PERF_REG_SP’ undeclared (first use
+> in this function); did you mean ‘PERF_MEM_S’?
+>   161 |         ret = perf_reg_value(&start, &ui->sample->user_regs,
+> PERF_REG_SP);
+>       |                                                             
+> ^~~~~~~~~~~
+>       |                                                             
+> PERF_MEM_S
+> util/unwind-libdw.c:161:62: note: each undeclared identifier is reported
+> only once for each function it appears in
+> util/unwind-libdw.c: In function ‘unwind__get_entries’:
+> util/unwind-libdw.c:255:53: error: ‘PERF_REG_IP’ undeclared (first use
+> in this function); did you mean ‘PERF_REGS_MAX’?
+>   255 |         err = perf_reg_value(&ip, &data->user_regs, PERF_REG_IP);
+>       |                                                     ^~~~~~~~~~~
+>       |                                                     PERF_REGS_MAX
 > 
-> On 29/09/2022 08:58, Anshuman Khandual wrote:
->> This adds arm pmu infrastrure to probe BRBE implementation's attributes via
->> driver exported callbacks later. The actual BRBE feature detection will be
->> added by the driver itself.
->>
->> CPU specific BRBE entries, cycle count, format support gets detected during
->> PMU init. This information gets saved in per-cpu struct pmu_hw_events which
->> later helps in operating BRBE during a perf event context.
->>
->> Cc: Will Deacon <will@kernel.org>
->> Cc: Mark Rutland <mark.rutland@arm.com>
->> Cc: linux-arm-kernel@lists.infradead.org
->> Cc: linux-kernel@vger.kernel.org
->> Signed-off-by: Anshuman Khandual <anshuman.khandual@arm.com>
->> ---
->>  drivers/perf/arm_pmu_platform.c | 34 +++++++++++++++++++++++++++++++++
->>  1 file changed, 34 insertions(+)
->>
->> diff --git a/drivers/perf/arm_pmu_platform.c b/drivers/perf/arm_pmu_platform.c
->> index 933b96e243b8..acdc445081aa 100644
->> --- a/drivers/perf/arm_pmu_platform.c
->> +++ b/drivers/perf/arm_pmu_platform.c
->> @@ -172,6 +172,36 @@ static int armpmu_request_irqs(struct arm_pmu *armpmu)
->>  	return err;
->>  }
->>  
->> +static void arm_brbe_probe_cpu(void *info)
->> +{
->> +	struct pmu_hw_events *hw_events;
->> +	struct arm_pmu *armpmu = info;
->> +
->> +	/*
->> +	 * Return from here, if BRBE driver has not been
->> +	 * implemented for this PMU. This helps prevent
->> +	 * kernel crash later when brbe_probe() will be
->> +	 * called on the PMU.
->> +	 */
->> +	if (!armpmu->brbe_probe)
->> +		return;
->> +
->> +	hw_events = per_cpu_ptr(armpmu->hw_events, smp_processor_id());
->> +	armpmu->brbe_probe(hw_events);
->> +}
->> +
->> +static int armpmu_request_brbe(struct arm_pmu *armpmu)
->> +{
->> +	int cpu, err = 0;
->> +
->> +	for_each_cpu(cpu, &armpmu->supported_cpus) {
->> +		err = smp_call_function_single(cpu, arm_brbe_probe_cpu, armpmu, 1);
-> 
-> Hi Anshuman,
-> 
-> I have LOCKDEP on and the patchset applied to perf/core (82aad7ff7) on
-> git://git.kernel.org/pub/scm/linux/kernel/git/peterz/queue.git and I get
+> Wondering if anybody has some pointers about where these definitions
+> should be coming from on alpha?
 
-Can you confirm if this is currently the correct place to apply this to?
-I'm only getting 0 length branch stacks now. Seems like it could be
-something to do with the layout of perf samples because I know that was
-done in separate commits:
+Is CONFIG_LIBDW_DWARF_UNWIND being set in the autodetection when it
+wasn't before? You can override it with NO_LIBDW_DWARF_UNWIND=1
 
-  sudo ./perf record -j any_call -- ls
-  ./perf report -D | grep "branch stack"
-  ... branch stack: nr:0
-  ... branch stack: nr:0
-  ... branch stack: nr:0
-  ... branch stack: nr:0
-  ...
-
-> this:
-> 
->    armv8-pmu pmu: hw perfevents: no interrupt-affinity property, guessing.
->    brbe: implementation found on cpu 0
-> 
->    =============================
->    [ BUG: Invalid wait context ]
->    6.0.0-rc7 #38 Not tainted
->    -----------------------------
->    kworker/u8:0/9 is trying to lock:
->    ffff000800855898 (&port_lock_key){....}-{3:3}, at:
-> pl011_console_write+0x148/0x240
->    other info that might help us debug this:
->    context-{2:2}
->    5 locks held by kworker/u8:0/9:
->     #0: ffff00080032a138 ((wq_completion)eval_map_wq){+.+.}-{0:0}, at:
-> process_one_work+0x200/0x6b0
->     #1: ffff80000807bde0
-> ((work_completion)(&eval_map_work)){+.+.}-{0:0}, at:
-> process_one_work+0x200/0x6b0
->     #2: ffff80000aa3db70 (trace_event_sem){+.+.}-{4:4}, at:
-> trace_event_eval_update+0x28/0x420
->     #3: ffff80000a9afe58 (console_lock){+.+.}-{0:0}, at:
-> vprintk_emit+0x130/0x380
->     #4: ffff80000a9aff78 (console_owner){-...}-{0:0}, at:
-> console_emit_next_record.constprop.0+0x128/0x338
->    stack backtrace:
->    CPU: 0 PID: 9 Comm: kworker/u8:0 Not tainted 6.0.0-rc7 #38
->    Hardware name: Foundation-v8A (DT)
->    Workqueue: eval_map_wq eval_map_work_func
->    Call trace:
->     dump_backtrace+0x114/0x120
->     show_stack+0x20/0x58
->     dump_stack_lvl+0x9c/0xd8
->     dump_stack+0x18/0x34
->     __lock_acquire+0x17cc/0x1920
->     lock_acquire+0x138/0x3b8
->     _raw_spin_lock+0x58/0x70
->     pl011_console_write+0x148/0x240
->     console_emit_next_record.constprop.0+0x194/0x338
->     console_unlock+0x18c/0x208
->     vprintk_emit+0x24c/0x380
->     vprintk_default+0x40/0x50
->     vprintk+0xd4/0xf0
->     _printk+0x68/0x90
->     arm64_pmu_brbe_probe+0x10c/0x128
->     armv8pmu_brbe_probe+0x18/0x28
->     arm_brbe_probe_cpu+0x44/0x58
->     __flush_smp_call_function_queue+0x1d0/0x440
->     generic_smp_call_function_single_interrupt+0x20/0x78
->     ipi_handler+0x98/0x368
->     handle_percpu_devid_irq+0xc0/0x3a8
->     generic_handle_domain_irq+0x34/0x50
->     gic_handle_irq+0x58/0x138
->     call_on_irq_stack+0x2c/0x58
->     do_interrupt_handler+0x88/0x90
->     el1_interrupt+0x40/0x78
->     el1h_64_irq_handler+0x18/0x28
->     el1h_64_irq+0x64/0x68
->     trace_event_eval_update+0x114/0x420
->     eval_map_work_func+0x30/0x40
->     process_one_work+0x298/0x6b0
->     worker_thread+0x54/0x408
->     kthread+0x118/0x128
->     ret_from_fork+0x10/0x20
->    brbe: implementation found on cpu 1
->    brbe: implementation found on cpu 2
->    brbe: implementation found on cpu 3
-> 
->> +		if (err)
->> +			return err;
->> +	}
->> +	return err;
->> +}
->> +
->>  static void armpmu_free_irqs(struct arm_pmu *armpmu)
->>  {
->>  	int cpu;
->> @@ -229,6 +259,10 @@ int arm_pmu_device_probe(struct platform_device *pdev,
->>  	if (ret)
->>  		goto out_free_irqs;
->>  
->> +	ret = armpmu_request_brbe(pmu);
->> +	if (ret)
->> +		goto out_free_irqs;
->> +
->>  	ret = armpmu_register(pmu);
->>  	if (ret) {
->>  		dev_err(dev, "failed to register PMU devices!\n");
+Other than that, you'd have to add
+linux/tools/perf/arch/alpha/include/perf_regs.h
