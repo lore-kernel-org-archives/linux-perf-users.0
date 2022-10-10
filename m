@@ -2,73 +2,110 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 36E8BC433F5
-	for <linux-perf-users@archiver.kernel.org>; Mon, 10 Oct 2022 14:54:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 00576C433F5
+	for <linux-perf-users@archiver.kernel.org>; Mon, 10 Oct 2022 15:48:43 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229634AbiJJOy0 (ORCPT
+        id S229863AbiJJPsl (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Mon, 10 Oct 2022 10:54:26 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56756 "EHLO
+        Mon, 10 Oct 2022 11:48:41 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45938 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229591AbiJJOyZ (ORCPT
+        with ESMTP id S229914AbiJJPsh (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Mon, 10 Oct 2022 10:54:25 -0400
+        Mon, 10 Oct 2022 11:48:37 -0400
 Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTP id CAF5440E3D
-        for <linux-perf-users@vger.kernel.org>; Mon, 10 Oct 2022 07:54:24 -0700 (PDT)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTP id 5D6B11A81B;
+        Mon, 10 Oct 2022 08:48:36 -0700 (PDT)
 Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id CC25CD6E;
-        Mon, 10 Oct 2022 07:54:30 -0700 (PDT)
-Received: from [10.57.3.59] (unknown [10.57.3.59])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 34EB53F766;
-        Mon, 10 Oct 2022 07:54:24 -0700 (PDT)
-Message-ID: <96a77e3e-7a9a-a519-0646-eb1f424e4ec1@arm.com>
-Date:   Mon, 10 Oct 2022 15:54:23 +0100
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 5E2BE12FC;
+        Mon, 10 Oct 2022 08:48:42 -0700 (PDT)
+Received: from [10.57.66.71] (unknown [10.57.66.71])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 7F0E53F67D;
+        Mon, 10 Oct 2022 08:48:34 -0700 (PDT)
+Message-ID: <6805165c-8aaf-086f-f5a6-181876cd7975@arm.com>
+Date:   Mon, 10 Oct 2022 16:48:32 +0100
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
- Thunderbird/91.11.0
-Subject: Re: Recent perf-tools does not compile on alpha
-Content-Language: en-US
-To:     matoro <matoro_mailinglist_kernel@matoro.tk>,
-        linux-perf-users@vger.kernel.org
-References: <43a0c856c61f0bee69290b82c7bd8e7a@matoro.tk>
-From:   James Clark <james.clark@arm.com>
-In-Reply-To: <43a0c856c61f0bee69290b82c7bd8e7a@matoro.tk>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.15; rv:102.0)
+ Gecko/20100101 Thunderbird/102.3.2
+Subject: Re: [PATCH V3 7/7] arm64/perf: Enable branch stack sampling
+To:     James Clark <james.clark@arm.com>,
+        Anshuman Khandual <anshuman.khandual@arm.com>
+Cc:     linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, peterz@infradead.org,
+        acme@kernel.org, mark.rutland@arm.com, will@kernel.org,
+        catalin.marinas@arm.com
+References: <20220929075857.158358-1-anshuman.khandual@arm.com>
+ <20220929075857.158358-8-anshuman.khandual@arm.com>
+ <0adcc3f7-bf60-516f-c8d7-4250d1f901cb@arm.com>
+From:   Suzuki K Poulose <suzuki.poulose@arm.com>
+In-Reply-To: <0adcc3f7-bf60-516f-c8d7-4250d1f901cb@arm.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-
-
-On 08/10/2022 04:53, matoro wrote:
-> Hi!  Recent versions of the perf tools (5.19) do not compile on alpha
-> with the following errors:
+On 10/10/2022 14:55, James Clark wrote:
 > 
-> util/unwind-libdw.c: In function ‘memory_read’:
-> util/unwind-libdw.c:161:62: error: ‘PERF_REG_SP’ undeclared (first use
-> in this function); did you mean ‘PERF_MEM_S’?
->   161 |         ret = perf_reg_value(&start, &ui->sample->user_regs,
-> PERF_REG_SP);
->       |                                                             
-> ^~~~~~~~~~~
->       |                                                             
-> PERF_MEM_S
-> util/unwind-libdw.c:161:62: note: each undeclared identifier is reported
-> only once for each function it appears in
-> util/unwind-libdw.c: In function ‘unwind__get_entries’:
-> util/unwind-libdw.c:255:53: error: ‘PERF_REG_IP’ undeclared (first use
-> in this function); did you mean ‘PERF_REGS_MAX’?
->   255 |         err = perf_reg_value(&ip, &data->user_regs, PERF_REG_IP);
->       |                                                     ^~~~~~~~~~~
->       |                                                     PERF_REGS_MAX
 > 
-> Wondering if anybody has some pointers about where these definitions
-> should be coming from on alpha?
+> On 29/09/2022 08:58, Anshuman Khandual wrote:
+>> Now that all the required pieces are already in place, just enable the perf
+>> branch stack sampling support on arm64 platform, by removing the gate which
+>> blocks it in armpmu_event_init().
+>>
+>> Cc: Mark Rutland <mark.rutland@arm.com>
+>> Cc: Will Deacon <will@kernel.org>
+>> Cc: Catalin Marinas <catalin.marinas@arm.com>
+>> Cc: linux-kernel@vger.kernel.org
+>> Cc: linux-arm-kernel@lists.infradead.org
+>> Signed-off-by: Anshuman Khandual <anshuman.khandual@arm.com>
+>> ---
+>>   drivers/perf/arm_pmu.c | 32 +++++++++++++++++++++++++++++---
+>>   1 file changed, 29 insertions(+), 3 deletions(-)
+>>
+>> diff --git a/drivers/perf/arm_pmu.c b/drivers/perf/arm_pmu.c
+>> index 93b36933124f..2a9b988b53c2 100644
+>> --- a/drivers/perf/arm_pmu.c
+>> +++ b/drivers/perf/arm_pmu.c
+>> @@ -537,9 +537,35 @@ static int armpmu_event_init(struct perf_event *event)
+>>   		!cpumask_test_cpu(event->cpu, &armpmu->supported_cpus))
+>>   		return -ENOENT;
+>>   
+>> -	/* does not support taken branch sampling */
+>> -	if (has_branch_stack(event))
+>> -		return -EOPNOTSUPP;
+>> +	if (has_branch_stack(event)) {
+>> +		/*
+>> +		 * BRBE support is absent. Select CONFIG_ARM_BRBE_PMU
+>> +		 * in the config, before branch stack sampling events
+>> +		 * can be requested.
+>> +		 */
+>> +		if (!IS_ENABLED(CONFIG_ARM_BRBE_PMU)) {
+>> +			pr_warn_once("BRBE is disabled, select CONFIG_ARM_BRBE_PMU\n");
+>> +			return -EOPNOTSUPP;
+>> +		}
+>> +
+>> +		if (event->attr.branch_sample_type & PERF_SAMPLE_BRANCH_KERNEL) {
+>> +			if (!perfmon_capable()) {
+> 
+> I'm still getting different behaviour compared to x86 when using
+> perf_event_paranoid because of this perfmon_capable() call here.
 
-Is CONFIG_LIBDW_DWARF_UNWIND being set in the autodetection when it
-wasn't before? You can override it with NO_LIBDW_DWARF_UNWIND=1
+Given the generic events framework already checks this for any
+privileged branch samples (i.e., for both KERNEL and HV), the
+individual drivers must not add additional restrictions.
 
-Other than that, you'd have to add
-linux/tools/perf/arch/alpha/include/perf_regs.h
+> 
+>> +				pr_warn_once("does not have permission for kernel branch filter\n");
+> 
+> Also I was under the impression that this should be more like a
+> KERN_INFO loglevel rather than a KERN_WARNING. It's more like expected
+> behavior rather than unexpected behavior and as far as I know anyone who
+> sees something in dmesg might think something has gone wrong and try to
+> follow it up. It is quite a useful message but I remember getting a
+> review like this before and it made sense to me.
+
++1
+
+Suzuki
+
