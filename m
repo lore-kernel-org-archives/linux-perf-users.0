@@ -2,58 +2,58 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C7987C433FE
-	for <linux-perf-users@archiver.kernel.org>; Mon, 10 Oct 2022 22:33:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C5869C433FE
+	for <linux-perf-users@archiver.kernel.org>; Mon, 10 Oct 2022 22:46:45 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229716AbiJJWdF (ORCPT
+        id S229530AbiJJWqo (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Mon, 10 Oct 2022 18:33:05 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44014 "EHLO
+        Mon, 10 Oct 2022 18:46:44 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36214 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229469AbiJJWdE (ORCPT
+        with ESMTP id S229945AbiJJWq1 (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Mon, 10 Oct 2022 18:33:04 -0400
-Received: from mail-wm1-x32e.google.com (mail-wm1-x32e.google.com [IPv6:2a00:1450:4864:20::32e])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BE9CA5F7C3
-        for <linux-perf-users@vger.kernel.org>; Mon, 10 Oct 2022 15:33:03 -0700 (PDT)
-Received: by mail-wm1-x32e.google.com with SMTP id r8-20020a1c4408000000b003c47d5fd475so4096756wma.3
-        for <linux-perf-users@vger.kernel.org>; Mon, 10 Oct 2022 15:33:03 -0700 (PDT)
+        Mon, 10 Oct 2022 18:46:27 -0400
+Received: from mail-wm1-x331.google.com (mail-wm1-x331.google.com [IPv6:2a00:1450:4864:20::331])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E096B140FA
+        for <linux-perf-users@vger.kernel.org>; Mon, 10 Oct 2022 15:46:25 -0700 (PDT)
+Received: by mail-wm1-x331.google.com with SMTP id r8-20020a1c4408000000b003c47d5fd475so4107960wma.3
+        for <linux-perf-users@vger.kernel.org>; Mon, 10 Oct 2022 15:46:25 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=google.com; s=20210112;
         h=cc:to:subject:message-id:date:from:in-reply-to:references
          :mime-version:from:to:cc:subject:date:message-id:reply-to;
-        bh=b84Mp8WPmv+V8VPNOsJnOQtQBtwAIaKOf1r81e26uMM=;
-        b=le0/qN6D/NvMLVGXOGx+db9ejU8GmDnAm7b1PdYDPDJGdBqHu1EWO4xndC/AH2bEPZ
-         igWJkSO6HgUHymQR7NKvbE8XXp7LDBysWgYZQFstX4bWRcgh8LFbTL/fXfQ8sIjDzgyx
-         ZaiT0v/1TxPDGZLNyq6c8G2r8aj8Um4TlP6ORRSsYCXdVRxBGiN0QIga2MFFzV70545p
-         1mUHwJijJYeoYMcbN0qBBC7s/k9lzcNJbQ04rKnSD7QgwVAy5X6Z2LEkBiyEhmz1k0SP
-         5K6LvOq/0rhhGrmuEr3lf3zr1wRVCI/LsO3h5Isvua/HRBo04rzeuM5tWAMpNa4jxG7Y
-         RLfQ==
+        bh=HIMCbajzveX/UO+hMXpItMPlpA1st1BwJ3aW/fV1JmE=;
+        b=lB/ABL4TnWEIjaty2U5G+YO/UEqYRcQPtZO6UMJC0Ihz8IkuiWSzajTP1wYtdKPkZl
+         /KPNKRxE6gcbg9vHr5zhL8cEdIXnFWs2lFaOmTPMGsRjGQB8R3JhK3VAmcK1ndCZNAp1
+         fyXxGoz3jrojTKcJxdR2AsareHQ3IrTJA8XTFObHVEoKQ12oWx5Kn+2pwmCzqQ4t2DTj
+         1pvEaLrfd2QgYVGi4dU2dXE8SFjmPgTkEhhwRyq90nSgV8eRTTYhIyFToOM+FQFvrkKv
+         BGj3EA3zrWbdZqlCL2fIGJqEiKrWP66kZfeks5FEImzOBETWmuNOSNRaNFP2+mia6TCv
+         tl5g==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
         h=cc:to:subject:message-id:date:from:in-reply-to:references
          :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
          :reply-to;
-        bh=b84Mp8WPmv+V8VPNOsJnOQtQBtwAIaKOf1r81e26uMM=;
-        b=l2jvpo6e2DLVlRkLJtNdl0utJifQ2Byt7PjWhfQx7Tz8Mi8S7ErQBxq3YP811P5zoa
-         fFVrotcP/7u3b9prvUqQLcjLm/BCt4tuFRPMcKAZxnTwfWOE5VG70cwTNb6hMtZ9otLV
-         /ohaKJlgKP1MkU1qfOeZ9Xjkr/UrucGzfrV7hgbJ/N4K/8YCmiaQbCNwKq4bwGKk1iGk
-         p7wygOiGX7P+kUzmmYACrWVxWpNp1/tWHcFAjRSD42njNOhuQ933wofiBCKPxSpBI87Y
-         ddbE9NFDA6wSuD1QN5iINt/dFYXpsfIFon8Vv0aKxgtvn5xCMN7nSTN+FivZUyGvH2oz
-         oJvg==
-X-Gm-Message-State: ACrzQf29OdHiteH5FtXiitNfcRMAqqkF4VIjvXyEN0q+13yC7B/3cu/u
-        iKmeVWhIJO51wdGbDoKxOQEAoTFlcwV1B5LafjGtQOFTdd93bg==
-X-Google-Smtp-Source: AMsMyM6twfkEC4RDL89F4fZ9Hv1Hy6451EfvtruUSif3ZBySTujPli59Rfxtlg7DMl79f7Vb0tuimQUh9kO3tRftkf4=
-X-Received: by 2002:a05:600c:88a:b0:3c5:c9e3:15cc with SMTP id
- l10-20020a05600c088a00b003c5c9e315ccmr6968017wmp.67.1665441182223; Mon, 10
- Oct 2022 15:33:02 -0700 (PDT)
+        bh=HIMCbajzveX/UO+hMXpItMPlpA1st1BwJ3aW/fV1JmE=;
+        b=y7vzxPuepFIm/ZJ5WtTcRFRBp9C79HDQQ7F7MgXUHrlgZqID2w80TF9hI456SwThhk
+         wjKJqdnWRn26+Gf5REgg4iy1s6t7uAT/5ZgUpw3DvUb/yFC8s5KIuTTN0BEXN4AGogDg
+         q4wQhqjDl2DNDsq4aI3E0Sj971J4nOY5bDYjh9C/F0LQXrvBJ0kxhScWDrIdCuEAoTXd
+         H2TmGE74Ab+aUvhYx0O+xw2FmTUNrEbTgvKvhdr3AoQDGioX6qdx0LQQ8zZlXWQdF4Nl
+         nZzW6FlKh0VuAfIeFIxUYs9KwgL7/uIjVmcHc3wNajlEmJj1r47YrqSO3lTbdgV19mb5
+         kdHg==
+X-Gm-Message-State: ACrzQf1SVmbpBMeRon0W5q6g77eZuQ6o60qRsAn9OSDq2x9j2JVJkNoV
+        hHvvaEhcC14rivWRcn/zlS9dX5LvL835NQAiCVx8BQ==
+X-Google-Smtp-Source: AMsMyM5QaCm/RKUFtyUMVPM2RWiJMRiagqcFPxkrMJKu8FyVbOQx9O6uCrNc6cn+0w629/yjOPX2B5EARE00HfL9K9E=
+X-Received: by 2002:a05:600c:4e94:b0:3b4:b416:46c3 with SMTP id
+ f20-20020a05600c4e9400b003b4b41646c3mr14550524wmq.149.1665441983731; Mon, 10
+ Oct 2022 15:46:23 -0700 (PDT)
 MIME-Version: 1.0
-References: <20221010053600.272854-1-namhyung@kernel.org> <20221010053600.272854-4-namhyung@kernel.org>
-In-Reply-To: <20221010053600.272854-4-namhyung@kernel.org>
+References: <20221010053600.272854-1-namhyung@kernel.org> <20221010053600.272854-5-namhyung@kernel.org>
+In-Reply-To: <20221010053600.272854-5-namhyung@kernel.org>
 From:   Ian Rogers <irogers@google.com>
-Date:   Mon, 10 Oct 2022 15:32:50 -0700
-Message-ID: <CAP-5=fW_z9z+46AKwh4GqM=2skXyLXkCMEOO4kxT0kShEp9k2Q@mail.gmail.com>
-Subject: Re: [PATCH 03/19] perf stat: Use evsel__is_hybrid() more
+Date:   Mon, 10 Oct 2022 15:46:10 -0700
+Message-ID: <CAP-5=fUTJUWYXEBxUKSTRqWLw3Ckuy+0nq0fpUQNgt3_BVEFdA@mail.gmail.com>
+Subject: Re: [PATCH 04/19] perf stat: Add aggr id for global mode
 To:     Namhyung Kim <namhyung@kernel.org>
 Cc:     Arnaldo Carvalho de Melo <acme@kernel.org>,
         Jiri Olsa <jolsa@kernel.org>, Ingo Molnar <mingo@kernel.org>,
@@ -73,67 +73,188 @@ X-Mailing-List: linux-perf-users@vger.kernel.org
 
 On Sun, Oct 9, 2022 at 10:36 PM Namhyung Kim <namhyung@kernel.org> wrote:
 >
-> In the stat-display code, it needs to check if the current evsel is
-> hybrid but it uses perf_pmu__has_hybrid() which can return true for
-> non-hybrid event too.  I think it's better to use evsel__is_hybrid().
+> To make the code simpler, I'd like to use the same aggregation code for
+> the global mode.  We can simply add an id function to return cpu 0 and
+> use print_aggr().
 >
-> Also remove a NULL check for the 'config' parameter in the
-> hybrid_merge() since it's called after config->no_merge check.
+> No functional change intended.
 >
 > Signed-off-by: Namhyung Kim <namhyung@kernel.org>
+> ---
+>  tools/perf/builtin-stat.c      | 39 ++++++++++++++++++++++++++++++++--
+>  tools/perf/util/cpumap.c       | 10 +++++++++
+>  tools/perf/util/cpumap.h       |  6 +++++-
+>  tools/perf/util/stat-display.c |  9 ++------
+>  4 files changed, 54 insertions(+), 10 deletions(-)
+>
+> diff --git a/tools/perf/builtin-stat.c b/tools/perf/builtin-stat.c
+> index 265b05157972..144bb3a657f2 100644
+> --- a/tools/perf/builtin-stat.c
+> +++ b/tools/perf/builtin-stat.c
+> @@ -1330,6 +1330,15 @@ static struct aggr_cpu_id perf_stat__get_node(struct perf_stat_config *config __
+>         return aggr_cpu_id__node(cpu, /*data=*/NULL);
+>  }
+>
+> +static struct aggr_cpu_id perf_stat__get_global(struct perf_stat_config *config __maybe_unused,
+> +                                               struct perf_cpu cpu __maybe_unused)
+> +{
+> +       struct aggr_cpu_id id = aggr_cpu_id__empty();
+> +
+> +       id.cpu = (struct perf_cpu){ .cpu = 0 };
+> +       return id;
+> +}
+> +
 
-Acked-by: Ian Rogers <irogers@google.com>
+See below, I think this should just return aggr_cpu_id__global or just
+call that directly.
+
+>  static struct aggr_cpu_id perf_stat__get_aggr(struct perf_stat_config *config,
+>                                               aggr_get_id_t get_id, struct perf_cpu cpu)
+>  {
+> @@ -1366,6 +1375,12 @@ static struct aggr_cpu_id perf_stat__get_node_cached(struct perf_stat_config *co
+>         return perf_stat__get_aggr(config, perf_stat__get_node, cpu);
+>  }
+>
+> +static struct aggr_cpu_id perf_stat__get_global_cached(struct perf_stat_config *config,
+> +                                                      struct perf_cpu cpu)
+> +{
+> +       return perf_stat__get_aggr(config, perf_stat__get_global, cpu);
+> +}
+> +
+>  static bool term_percore_set(void)
+>  {
+>         struct evsel *counter;
+> @@ -1395,6 +1410,7 @@ static aggr_cpu_id_get_t aggr_mode__get_aggr(enum aggr_mode aggr_mode)
+>
+>                 return NULL;
+>         case AGGR_GLOBAL:
+> +               return aggr_cpu_id__global;
+>         case AGGR_THREAD:
+>         case AGGR_UNSET:
+>         case AGGR_MAX:
+> @@ -1420,6 +1436,7 @@ static aggr_get_id_t aggr_mode__get_id(enum aggr_mode aggr_mode)
+>                 }
+>                 return NULL;
+>         case AGGR_GLOBAL:
+> +               return perf_stat__get_global_cached;
+>         case AGGR_THREAD:
+>         case AGGR_UNSET:
+>         case AGGR_MAX:
+> @@ -1535,6 +1552,16 @@ static struct aggr_cpu_id perf_env__get_node_aggr_by_cpu(struct perf_cpu cpu, vo
+>         return id;
+>  }
+>
+> +static struct aggr_cpu_id perf_env__get_global_aggr_by_cpu(struct perf_cpu cpu __maybe_unused,
+> +                                                          void *data __maybe_unused)
+> +{
+> +       struct aggr_cpu_id id = aggr_cpu_id__empty();
+> +
+> +       /* it always aggregates to the cpu 0 */
+> +       id.cpu = (struct perf_cpu){ .cpu = 0 };
+> +       return id;
+> +}
+> +
+>  static struct aggr_cpu_id perf_stat__get_socket_file(struct perf_stat_config *config __maybe_unused,
+>                                                      struct perf_cpu cpu)
+>  {
+> @@ -1558,6 +1585,12 @@ static struct aggr_cpu_id perf_stat__get_node_file(struct perf_stat_config *conf
+>         return perf_env__get_node_aggr_by_cpu(cpu, &perf_stat.session->header.env);
+>  }
+>
+> +static struct aggr_cpu_id perf_stat__get_global_file(struct perf_stat_config *config __maybe_unused,
+> +                                                    struct perf_cpu cpu)
+> +{
+> +       return perf_env__get_global_aggr_by_cpu(cpu, &perf_stat.session->header.env);
+> +}
+> +
+>  static aggr_cpu_id_get_t aggr_mode__get_aggr_file(enum aggr_mode aggr_mode)
+>  {
+>         switch (aggr_mode) {
+> @@ -1569,8 +1602,9 @@ static aggr_cpu_id_get_t aggr_mode__get_aggr_file(enum aggr_mode aggr_mode)
+>                 return perf_env__get_core_aggr_by_cpu;
+>         case AGGR_NODE:
+>                 return perf_env__get_node_aggr_by_cpu;
+> -       case AGGR_NONE:
+>         case AGGR_GLOBAL:
+> +               return perf_env__get_global_aggr_by_cpu;
+> +       case AGGR_NONE:
+>         case AGGR_THREAD:
+>         case AGGR_UNSET:
+>         case AGGR_MAX:
+> @@ -1590,8 +1624,9 @@ static aggr_get_id_t aggr_mode__get_id_file(enum aggr_mode aggr_mode)
+>                 return perf_stat__get_core_file;
+>         case AGGR_NODE:
+>                 return perf_stat__get_node_file;
+> -       case AGGR_NONE:
+>         case AGGR_GLOBAL:
+> +               return perf_stat__get_global_file;
+> +       case AGGR_NONE:
+>         case AGGR_THREAD:
+>         case AGGR_UNSET:
+>         case AGGR_MAX:
+> diff --git a/tools/perf/util/cpumap.c b/tools/perf/util/cpumap.c
+> index 8486ca3bec75..60209fe87456 100644
+> --- a/tools/perf/util/cpumap.c
+> +++ b/tools/perf/util/cpumap.c
+> @@ -354,6 +354,16 @@ struct aggr_cpu_id aggr_cpu_id__node(struct perf_cpu cpu, void *data __maybe_unu
+>         return id;
+>  }
+>
+> +struct aggr_cpu_id aggr_cpu_id__global(struct perf_cpu cpu, void *data __maybe_unused)
+
+Is this a duplicate of aggr_cpu_id perf_stat__get_global? Could we
+replace all uses of the former with this one?
 
 Thanks,
 Ian
 
-> ---
->  tools/perf/util/stat-display.c | 20 ++++----------------
->  1 file changed, 4 insertions(+), 16 deletions(-)
->
+> +{
+> +       struct aggr_cpu_id id = aggr_cpu_id__empty();
+> +
+> +       /* it always aggregates to the cpu 0 */
+> +       cpu.cpu = 0;
+> +       id.cpu = cpu;
+> +       return id;
+> +}
+> +
+>  /* setup simple routines to easily access node numbers given a cpu number */
+>  static int get_max_num(char *path, int *max)
+>  {
+> diff --git a/tools/perf/util/cpumap.h b/tools/perf/util/cpumap.h
+> index 4a6d029576ee..b2ff648bc417 100644
+> --- a/tools/perf/util/cpumap.h
+> +++ b/tools/perf/util/cpumap.h
+> @@ -133,5 +133,9 @@ struct aggr_cpu_id aggr_cpu_id__cpu(struct perf_cpu cpu, void *data);
+>   * cpu. The function signature is compatible with aggr_cpu_id_get_t.
+>   */
+>  struct aggr_cpu_id aggr_cpu_id__node(struct perf_cpu cpu, void *data);
+> -
+> +/**
+> + * aggr_cpu_id__global - Create an aggr_cpu_id for global aggregation.
+> + * The function signature is compatible with aggr_cpu_id_get_t.
+> + */
+> +struct aggr_cpu_id aggr_cpu_id__global(struct perf_cpu cpu, void *data);
+>  #endif /* __PERF_CPUMAP_H */
 > diff --git a/tools/perf/util/stat-display.c b/tools/perf/util/stat-display.c
-> index 5c47ee9963a7..4113aa86772f 100644
+> index 4113aa86772f..1d8e585df4ad 100644
 > --- a/tools/perf/util/stat-display.c
 > +++ b/tools/perf/util/stat-display.c
-> @@ -704,7 +704,7 @@ static void uniquify_event_name(struct evsel *counter)
->                         counter->name = new_name;
->                 }
->         } else {
-> -               if (perf_pmu__has_hybrid()) {
-> +               if (evsel__is_hybrid(counter)) {
->                         ret = asprintf(&new_name, "%s/%s/",
->                                        counter->pmu_name, counter->name);
->                 } else {
-> @@ -744,26 +744,14 @@ static void collect_all_aliases(struct perf_stat_config *config, struct evsel *c
->         }
->  }
->
-> -static bool is_uncore(struct evsel *evsel)
-> -{
-> -       struct perf_pmu *pmu = evsel__find_pmu(evsel);
-> -
-> -       return pmu && pmu->is_uncore;
-> -}
-> -
-> -static bool hybrid_uniquify(struct evsel *evsel)
-> -{
-> -       return perf_pmu__has_hybrid() && !is_uncore(evsel);
-> -}
-> -
->  static bool hybrid_merge(struct evsel *counter, struct perf_stat_config *config,
->                          bool check)
->  {
-> -       if (hybrid_uniquify(counter)) {
-> +       if (evsel__is_hybrid(counter)) {
->                 if (check)
-> -                       return config && config->hybrid_merge;
-> +                       return config->hybrid_merge;
->                 else
-> -                       return config && !config->hybrid_merge;
-> +                       return !config->hybrid_merge;
->         }
->
->         return false;
+> @@ -1477,13 +1477,8 @@ void evlist__print_counters(struct evlist *evlist, struct perf_stat_config *conf
+>                 if (config->iostat_run)
+>                         iostat_print_counters(evlist, config, ts, prefix = buf,
+>                                               print_counter_aggr);
+> -               else {
+> -                       evlist__for_each_entry(evlist, counter) {
+> -                               print_counter_aggr(config, counter, prefix);
+> -                       }
+> -                       if (metric_only)
+> -                               fputc('\n', config->output);
+> -               }
+> +               else
+> +                       print_aggr(config, evlist, prefix);
+>                 break;
+>         case AGGR_NONE:
+>                 if (metric_only)
 > --
 > 2.38.0.rc1.362.ged0d419d3c-goog
 >
