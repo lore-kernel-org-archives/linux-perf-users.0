@@ -2,58 +2,58 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 098BFC433FE
-	for <linux-perf-users@archiver.kernel.org>; Mon, 10 Oct 2022 22:21:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3EEEAC433FE
+	for <linux-perf-users@archiver.kernel.org>; Mon, 10 Oct 2022 22:31:58 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229487AbiJJWVv (ORCPT
+        id S229712AbiJJWb5 (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Mon, 10 Oct 2022 18:21:51 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55556 "EHLO
+        Mon, 10 Oct 2022 18:31:57 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43592 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229660AbiJJWVt (ORCPT
+        with ESMTP id S229653AbiJJWb4 (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Mon, 10 Oct 2022 18:21:49 -0400
-Received: from mail-wr1-x434.google.com (mail-wr1-x434.google.com [IPv6:2a00:1450:4864:20::434])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B9B0D5C944
-        for <linux-perf-users@vger.kernel.org>; Mon, 10 Oct 2022 15:21:46 -0700 (PDT)
-Received: by mail-wr1-x434.google.com with SMTP id a3so18973599wrt.0
-        for <linux-perf-users@vger.kernel.org>; Mon, 10 Oct 2022 15:21:46 -0700 (PDT)
+        Mon, 10 Oct 2022 18:31:56 -0400
+Received: from mail-wm1-x334.google.com (mail-wm1-x334.google.com [IPv6:2a00:1450:4864:20::334])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B33675F21D
+        for <linux-perf-users@vger.kernel.org>; Mon, 10 Oct 2022 15:31:54 -0700 (PDT)
+Received: by mail-wm1-x334.google.com with SMTP id 8-20020a1c0208000000b003c6c154d528so6247wmc.4
+        for <linux-perf-users@vger.kernel.org>; Mon, 10 Oct 2022 15:31:54 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=google.com; s=20210112;
         h=cc:to:subject:message-id:date:from:in-reply-to:references
          :mime-version:from:to:cc:subject:date:message-id:reply-to;
-        bh=G/wYzmbA6+gMDeR2BM5mvVlEp0/hUq2QWaok3j3uzqk=;
-        b=NXts5Mwo//pGvcNR8yXDV6cr3Q8Y0Kg5XXrNUow+3cVirTRLEhaKGnCx4bLqUb72mg
-         /tqfsH/Ap+COQfNccPRXM+mYeDpR0MPItEEcHCe897pTpXZFiCBlXEOZGIe4uO/QVqKp
-         t6trAW5Xn6GAgHp1Xlz3IPZMkezz9quORbEkoqN1SilRvRvNB+rk3/k5raU8VZ9qXwbU
-         Yc6spKIqZ20S2ceg3qPgSmB28TaShdPiMHKA8EXmC4o05IuXRE/d0lU+RyKPVLKfsDyW
-         zf9LeFtBdF7k2oHAUZ677KS+TSRdTApcTET6iYJe/0z2UfzsTAxOTVIw508Cj8y5OZGw
-         4LBQ==
+        bh=mMeBZI01pweMz96J1evuUNhHnC+bi0LzWmx+t9kc3Hk=;
+        b=XtpEBAu8lU9U+ozyrhckzQ0AXwy2uAzRHuNY1n1TjPmPqMxmohFndVXuMC3Tge+uwb
+         +lSrUfMLtSGCVkj50MXOy6jHNwnDbhZeHUvJHldkF3rsY+JUDP8NQ3S8wEJ+t3CyOcA6
+         Gwd2qL5QhxfuuDiLS/8Xjk0CjxV3qIFE5ghXksCYtML4ZAjhO1mhaT1T9nZ/4fEAaBzh
+         IiVgYNu7+D3x6v7qCOFKabHUowLvLapprP3ynB1wapvV3iPHZV+/DVgTSY9IKimsCQzb
+         s7EBv32s3ckg31T0oyt5ZyjBoBk0/L8d1vs+mWe1VjlAV3gNUACJ0yjReErUeao3PDmj
+         FjXw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
         h=cc:to:subject:message-id:date:from:in-reply-to:references
          :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
          :reply-to;
-        bh=G/wYzmbA6+gMDeR2BM5mvVlEp0/hUq2QWaok3j3uzqk=;
-        b=Q++aXQXQzcXVN/8StmqCdyy8wFbC9pxG4BAl+ZT3Nvv4QmmksZrURRtsA0iuY8thPX
-         TT4zoDvyeRsW1wxylx5Tw6QhvEKn2P1V14EfjnKNivDqHoAaLIiI3Hs5vYYJz8oRqikx
-         ovIiyFAxJBJ+g8eTzNStVt+FebdVcqcXruFFJR1B28QqGVvSylX+fUbRRCpozWPfraX+
-         ANi9ljfJVYUi5EkXBMIRYyALgF0sOAKXD/Fvm+cFVR6VLax/jkErOn7WPH8y+HXgks55
-         CkoJj0r3IY1eUfsNRNDFG7+TMi3m1IBSmboCjRccO9n7Gqgs79VSfQMTgs8ZEHHGDlH6
-         SyXg==
-X-Gm-Message-State: ACrzQf3OF0tlh8weYUOjg+wC7wCG/zxf3H1qx01qmLsVMCRcg5YumJR6
-        LZttkNmWf0fJwK1uBPBDpcuRdAuKaLSBUMkTlreiQQ==
-X-Google-Smtp-Source: AMsMyM6tthXZkiaayDWZoyPDVFnmA59Wap4Ns4wRNSOWT1GksYHyp9KS8nnKaXpoQ67Ww7ORDhCTx84nshGQwlSVIxw=
-X-Received: by 2002:adf:fd50:0:b0:22e:5503:9c4c with SMTP id
- h16-20020adffd50000000b0022e55039c4cmr12974711wrs.375.1665440505115; Mon, 10
- Oct 2022 15:21:45 -0700 (PDT)
+        bh=mMeBZI01pweMz96J1evuUNhHnC+bi0LzWmx+t9kc3Hk=;
+        b=wsM6xM/+y8XGeGZ2QmwVVWE41vX5zWgmzxdp9DFGz27b8MMj9OiotTVCONSm3dH8wN
+         wYWAb+1ZVYeHjASfKsCv9iAoOT8fe3morp5ajr6feBiv4EYxZGA6j/p2SsC4F/zxTDIP
+         gBUIOEIccrp6MR/I7RNRN1IU1QY/Ka8YT4bmqckIF5n9gBEFgdOeXfExGwfmpyvG9F5a
+         Ks9r9u7zaM+GbO5rAlaQ6ygin8++fmTjMtAn3xUvU2t3JXo4VuA+nDtVWWDGM5ZOoQf9
+         qXNOo1/uT0xAO8nGaIaDPmjtv8iqw2lBrHlJHaGrTnkLjFNDTD8i+ZCL+gRy7sruIgfM
+         G8FQ==
+X-Gm-Message-State: ACrzQf26LHooZm6UZUsE1V/Wq/kenDo5VwbQI2o2ZqWMPpipLuZBtNBX
+        KyKXZAigvlNFVZAfGgRJvpOaSPKnj0zAwDUAOhnv/g==
+X-Google-Smtp-Source: AMsMyM6rODoT7c+fw8yqXePJyMu5WIi76pJaB4N2EviiozU/6kVIaUNK3eQQzQtXSnfQVw1x1EHMQZtKhlb0+pGKjIU=
+X-Received: by 2002:a05:600c:4e94:b0:3b4:b416:46c3 with SMTP id
+ f20-20020a05600c4e9400b003b4b41646c3mr14523851wmq.149.1665441113175; Mon, 10
+ Oct 2022 15:31:53 -0700 (PDT)
 MIME-Version: 1.0
-References: <20221010053600.272854-1-namhyung@kernel.org> <20221010053600.272854-2-namhyung@kernel.org>
-In-Reply-To: <20221010053600.272854-2-namhyung@kernel.org>
+References: <20221010053600.272854-1-namhyung@kernel.org> <20221010053600.272854-3-namhyung@kernel.org>
+In-Reply-To: <20221010053600.272854-3-namhyung@kernel.org>
 From:   Ian Rogers <irogers@google.com>
-Date:   Mon, 10 Oct 2022 15:21:33 -0700
-Message-ID: <CAP-5=fV58VRhh_kvQfrA7gYQXiVDqPwXgQdXHCQg64qAT_W7Rw@mail.gmail.com>
-Subject: Re: [PATCH 01/19] perf tools: Save evsel->pmu in parse_events()
+Date:   Mon, 10 Oct 2022 15:31:41 -0700
+Message-ID: <CAP-5=fU+Rg+AsgqAFs1bbLHnVOMi2_0cUHdxnohfmAw6ezrz+A@mail.gmail.com>
+Subject: Re: [PATCH 02/19] perf tools: Use pmu info in evsel__is_hybrid()
 To:     Namhyung Kim <namhyung@kernel.org>
 Cc:     Arnaldo Carvalho de Melo <acme@kernel.org>,
         Jiri Olsa <jolsa@kernel.org>, Ingo Molnar <mingo@kernel.org>,
@@ -73,64 +73,41 @@ X-Mailing-List: linux-perf-users@vger.kernel.org
 
 On Sun, Oct 9, 2022 at 10:36 PM Namhyung Kim <namhyung@kernel.org> wrote:
 >
-> Now evsel has a pmu pointer, let's save the info and use it like in
-> evsel__find_pmu().
+> If evsel has pmu, it can use pmu->is_hybrid directly.
 >
 > Signed-off-by: Namhyung Kim <namhyung@kernel.org>
+> ---
+>  tools/perf/util/evsel.c | 3 +++
+>  1 file changed, 3 insertions(+)
+>
+> diff --git a/tools/perf/util/evsel.c b/tools/perf/util/evsel.c
+> index 196f8e4859d7..a6ea91c72659 100644
+> --- a/tools/perf/util/evsel.c
+> +++ b/tools/perf/util/evsel.c
+> @@ -3132,6 +3132,9 @@ void evsel__zero_per_pkg(struct evsel *evsel)
+>
+>  bool evsel__is_hybrid(struct evsel *evsel)
+>  {
+> +       if (evsel->pmu)
+> +               return evsel->pmu->is_hybrid;
+> +
+>         return evsel->pmu_name && perf_pmu__is_hybrid(evsel->pmu_name);
 
-Acked-by: Ian Rogers <irogers@google.com>
+Wow, there's so much duplicated state. Why do evsels have a pmu_name
+and a pmu? Why not just pmu->name? I feel always having a pmu would be
+cleanest here. That said what does evsel__is_hybrid even mean? Does it
+mean this event is on a PMU normally called cpu and called cpu_core
+and cpu_atom on hybrid systems? And of course there are no comments to
+explain what this little mystery could be. Anyway, that's not a fault
+of this change, and probably later changes will go someway toward
+cleaning this up. It was a shame the code wasn't cleaner in the first
+place.
+
+Acked-by: Ian Rogers
 
 Thanks,
 Ian
 
-> ---
->  tools/perf/util/evsel.c        | 1 +
->  tools/perf/util/parse-events.c | 1 +
->  tools/perf/util/pmu.c          | 4 ++++
->  3 files changed, 6 insertions(+)
->
-> diff --git a/tools/perf/util/evsel.c b/tools/perf/util/evsel.c
-> index 76605fde3507..196f8e4859d7 100644
-> --- a/tools/perf/util/evsel.c
-> +++ b/tools/perf/util/evsel.c
-> @@ -467,6 +467,7 @@ struct evsel *evsel__clone(struct evsel *orig)
->         evsel->collect_stat = orig->collect_stat;
->         evsel->weak_group = orig->weak_group;
->         evsel->use_config_name = orig->use_config_name;
-> +       evsel->pmu = orig->pmu;
->
->         if (evsel__copy_config_terms(evsel, orig) < 0)
->                 goto out_err;
-> diff --git a/tools/perf/util/parse-events.c b/tools/perf/util/parse-events.c
-> index 437389dacf48..9e704841273d 100644
-> --- a/tools/perf/util/parse-events.c
-> +++ b/tools/perf/util/parse-events.c
-> @@ -263,6 +263,7 @@ __add_event(struct list_head *list, int *idx,
->         evsel->core.own_cpus = perf_cpu_map__get(cpus);
->         evsel->core.requires_cpu = pmu ? pmu->is_uncore : false;
->         evsel->auto_merge_stats = auto_merge_stats;
-> +       evsel->pmu = pmu;
->
->         if (name)
->                 evsel->name = strdup(name);
-> diff --git a/tools/perf/util/pmu.c b/tools/perf/util/pmu.c
-> index 74a2cafb4e8d..15bf5943083a 100644
-> --- a/tools/perf/util/pmu.c
-> +++ b/tools/perf/util/pmu.c
-> @@ -1048,11 +1048,15 @@ struct perf_pmu *evsel__find_pmu(struct evsel *evsel)
->  {
->         struct perf_pmu *pmu = NULL;
->
-> +       if (evsel->pmu)
-> +               return evsel->pmu;
-> +
->         while ((pmu = perf_pmu__scan(pmu)) != NULL) {
->                 if (pmu->type == evsel->core.attr.type)
->                         break;
->         }
->
-> +       evsel->pmu = pmu;
->         return pmu;
 >  }
 >
 > --
