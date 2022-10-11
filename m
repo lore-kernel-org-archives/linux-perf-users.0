@@ -2,150 +2,179 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8C586C433F5
-	for <linux-perf-users@archiver.kernel.org>; Tue, 11 Oct 2022 08:04:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7F8C4C433FE
+	for <linux-perf-users@archiver.kernel.org>; Tue, 11 Oct 2022 09:16:02 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229486AbiJKIEd (ORCPT
+        id S229699AbiJKJQB (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Tue, 11 Oct 2022 04:04:33 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46594 "EHLO
+        Tue, 11 Oct 2022 05:16:01 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49498 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229436AbiJKIEb (ORCPT
+        with ESMTP id S229520AbiJKJP7 (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Tue, 11 Oct 2022 04:04:31 -0400
-Received: from EUR05-VI1-obe.outbound.protection.outlook.com (mail-vi1eur05on2081.outbound.protection.outlook.com [40.107.21.81])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 671AE7E82F
-        for <linux-perf-users@vger.kernel.org>; Tue, 11 Oct 2022 01:04:30 -0700 (PDT)
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=N5bXpwzJ0HKCnpZwYZMI2Hx/K0hM9iuOIMB/sSMgFVoj48MNs4oW5AIj5aNsD0DhclK0Nz2bsvYFRjfAiaLxeGOMAuewdtezsLqnGO0GcVOoaEELznT7oK+1zZT9EOCv0qFOAPZlN4oU6nWuJWa3K4Zx+JWc/wlAtz5JrOVeXKNOizS4pS7SpB8scDtBu1gAjnDtFeLy0ZcvPG1S7VjS1M/L/6YnMHa0AhZeQYwNOTL97HUvCeiZHSBFZEoG+/uI+Id6/7hAeVfDS952vEJZDlF40uiDOJV/YUE+5eLvKZCa+AhAGQJhJ3WlajBhPbObNZFHYj6aDdHTStWE21uKug==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=oy/G8Sn60pKDJ0VBYoNuE8Mn0ydhdeK/Np6spfdeJNo=;
- b=JKbNuV64ZQwCx3q4+qIuDIT7eQrk/KZC7tT1ozI9o+E5mnmTBqs6LWb1zEp52DroVxmeyaxCqKmVn5e9PZIDN4qA50LbxKZAq7O7LY4Oa5pbizLlUnExkhB1HgSruZyuW7H79ppGgLxkSIsaZBs5zp0SYsBL5haCFS2DR+wsgo1pFGVHjt/CS0pkAj22Oig7qOp7rjFdkkHhjA7/1JArDORnVT9BYjUUJpI9VC3GEIkkTlAyDOWeE+RK/hQ1ZtMccO+SVZCOWL8NszQTNCRS/+8EJwMhHFk7CvfAC/8qU+eTKOWA3Ql0VQNRfktcRQ7dXkPD+qKQyzIfq5eWj3gwIg==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=ericsson.com; dmarc=pass action=none header.from=ericsson.com;
- dkim=pass header.d=ericsson.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ericsson.com;
- s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=oy/G8Sn60pKDJ0VBYoNuE8Mn0ydhdeK/Np6spfdeJNo=;
- b=q3QDcVEieNdXfQuvagKSZiZpjiHL+LLKlAnUPf+RpXWBVXdL14iCM69HI39ygZWlIAuQrsK77UvsXRI84hALANwIhZpeDVZ4eQoEB8ML6KHTSGLd7haFqX6luIIjYLq6iwtnNttkkStYifYkPiHfEIJF7NG+CaLRz4nk/RYxNI8=
-Received: from AM8PR07MB7666.eurprd07.prod.outlook.com (2603:10a6:20b:240::23)
- by AS8PR07MB8965.eurprd07.prod.outlook.com (2603:10a6:20b:537::17) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.5709.14; Tue, 11 Oct
- 2022 08:04:28 +0000
-Received: from AM8PR07MB7666.eurprd07.prod.outlook.com
- ([fe80::be:55d5:df83:dbf4]) by AM8PR07MB7666.eurprd07.prod.outlook.com
- ([fe80::be:55d5:df83:dbf4%4]) with mapi id 15.20.5723.018; Tue, 11 Oct 2022
- 08:04:28 +0000
-From:   Emil Berg <emil.berg@ericsson.com>
-To:     "linux-perf-users@vger.kernel.org" <linux-perf-users@vger.kernel.org>
-Subject: RE: Possible overwriting of errno
-Thread-Topic: Possible overwriting of errno
-Thread-Index: AdiLeXbz2aV0mg2JQcK84/XQYx5qnxRzj0PA
-Date:   Tue, 11 Oct 2022 08:04:28 +0000
-Message-ID: <AM8PR07MB76668E6B298FC3FEBA223EC098239@AM8PR07MB7666.eurprd07.prod.outlook.com>
-References: <AM8PR07MB7666EEF15D803DAFB5A8284D98BB9@AM8PR07MB7666.eurprd07.prod.outlook.com>
-In-Reply-To: <AM8PR07MB7666EEF15D803DAFB5A8284D98BB9@AM8PR07MB7666.eurprd07.prod.outlook.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-authentication-results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=ericsson.com;
-x-ms-publictraffictype: Email
-x-ms-traffictypediagnostic: AM8PR07MB7666:EE_|AS8PR07MB8965:EE_
-x-ms-office365-filtering-correlation-id: bddcb31b-9ed8-404f-a409-08daab5f385a
-x-ms-exchange-senderadcheck: 1
-x-ms-exchange-antispam-relay: 0
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: EiI2ie8grD0pTJp50BOfif869sDR7bye+IFfcscYD1EVqxYPBTolecRZptzsCafs6fPxTgR+SrHMPvJ4vfHsECAHMDUMDkgsCk3FDe221xvCxyQcTufI3w+yESFm3SIIEnJh3nfn+Dr3M/Xz6TTcvDR69ntpN/kKNchKtF+iXcdX1xyurh5u57KKObClvGROMsYHkiFJeH0uWE+YxH6YCUW4bnSPW95S9tLX/3fx6IF2oIxraAY7JRh4CakETsSkcPsb/o0xL9olakmbGopbAZR+krOQm2nPpeDpwlINxqANHinR7G1pS+X5Hnrwi1zDD/skBdVhOZGn8XoMI91Kd5GF0PpjX9z+S0LENYRNEQL8Akho/JphR0FkvIs7ns99hwPsx51K7m3Tjd6iPoJg679pGG383fQO+IGFSGauMxv+piP8FHrtlUxqQbPsTtl4pDfU5dJ2QubRPW/Z0vJ1MYIG6KxwqTkyOlnYueWM/rD5/DfTwBnlrYTXZD+JaaaNeqvXhyTuwqztQmjIPyvS/QmrbDKzAXGmMFzaDUKmX+VHJ5rX9fojwUMc385N9GQR7edSVZY1Z0qwDgelgsQE9dszo0Jid1i+dJ1OF/u+4t6v/SKJsVe3U+0rK5T6CeCPxFjS12U8sofHtPJiAcvJ1MJ2kPl2yMWDALkIr0hf96EnKU6MctPgkl9zDbVY5SFRcBjITEv/95u6IdcaIKE99fCUpDaDnVjOkSVgG5Zp3xS1k1q6YJSfH5NF0p2qVeud
-x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:AM8PR07MB7666.eurprd07.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230022)(4636009)(136003)(366004)(396003)(346002)(376002)(39860400002)(451199015)(9686003)(26005)(55016003)(7696005)(6506007)(82960400001)(71200400001)(186003)(83380400001)(478600001)(38100700002)(122000001)(86362001)(33656002)(53546011)(3480700007)(38070700005)(64756008)(66446008)(66476007)(8676002)(6916009)(66556008)(2906002)(41300700001)(316002)(8936002)(76116006)(5660300002)(52536014)(44832011)(66946007);DIR:OUT;SFP:1101;
-x-ms-exchange-antispam-messagedata-chunkcount: 1
-x-ms-exchange-antispam-messagedata-0: =?us-ascii?Q?ZSIxFEGUtmWa8kv2yGzqDuoGtIMgybbAuw82Zv6Jh0OJxNfH4ut893EmlFIM?=
- =?us-ascii?Q?s4+7eYBJtiq0xzm+eF6xxaRfFoujFID+pQrE68mJ7MhU22lnIBIb23+2uyxT?=
- =?us-ascii?Q?ARiwgiARE6+oI9dcTCX9vxwQOJwKjG7EZAr4QRMtAGsllZvXg6qu4KugL+px?=
- =?us-ascii?Q?baLQ6G7D8W6tj6LK9/M7tM/va/0n8Ckk2HjVCYuPmDFKtJsj0cK6EhkVH82q?=
- =?us-ascii?Q?InWwf+SQRUZemTkwXSOontOP4o7UfBGr/sNLp19F7xK8eh9tT4zIPAUXBbst?=
- =?us-ascii?Q?JNp5LpYVQX2ZAhU0D2vbJ3+M472cwJg0+DCsXT5fBBE7F+b5VNCo1HQ+aVwa?=
- =?us-ascii?Q?AE1c7IKDPzu5ykkikAmW3nXASgqnkdEldHy52OnKryHLjjhyRqG3PTzoXw7+?=
- =?us-ascii?Q?JNoqQANRPaRaiSocbGr4GQk8sqaTi+FIPWY0utmKR3tOQhk1D4VZ/4SdLRoN?=
- =?us-ascii?Q?oP8IWoe6kLA+HQHoyh/Z+OSbsWG1MwG0omRcf4BQdJGER/HYNrKXZR9vjkbJ?=
- =?us-ascii?Q?1MYJVYHQ6XkDMb9Gys7xO9ABA3P7asjBGeYPB3aHOqwvFernpeFWbkrreGRo?=
- =?us-ascii?Q?hWiu8luGBJCgGIJdoip0WC4/XGWbAhdwQBrgAc/FmM+uu2xgbZC43XFk4i7d?=
- =?us-ascii?Q?R0XhHPw7ZTPmh/jnvo38ur0R0JJSJXYPjquttQ6fSOE/J/fAVVwVi0RtavVJ?=
- =?us-ascii?Q?DU9UOBiHhEoWAZD863xjgd7f0Nez4KOucY5ddsPK9Mye0+uk6AAEhJ6p8OS0?=
- =?us-ascii?Q?MtMOCxFQLflFdTDRZ8sq1IwaHqqDC7CVsq0CgsAjeujgAQtcrXjVph+U4JCr?=
- =?us-ascii?Q?dAvSvGpyHveeJxry50JDv4ObrcF2AZwm5ilyrmreSQMSLIbkG+sKGbYh8SnF?=
- =?us-ascii?Q?J3Dnn4nmtDeDQ20D5XtmhAE7FjEyhs3fcVZodX9nTCtHc/gH3qBV6OV2xK8d?=
- =?us-ascii?Q?ArVwC+vBbg5Q77vHed0XfcSOa89T5G7EfInzDMBJqJ282my1vEd3E/Py4a58?=
- =?us-ascii?Q?hm8gITQi2JjPt666skUZvRyGuA1ogHBnrEQHXGcz9VjtGMI+p7kSkeITiEEg?=
- =?us-ascii?Q?BWG/EDaBLnM9+zoYTm/y5vtmqXf3dEXwS3TQ8HpZuSeAqcwdS9VYL0eUYaZ2?=
- =?us-ascii?Q?DyQ0zf04pNMmUh+rdoGReoUhFg6iLpcZP/e23Mo1WvmIxe427guhzDtsJcUY?=
- =?us-ascii?Q?rBO1S9QEYWUsnGJqr5jfIK0fNad2cpyEb4oiZYqw4SAX7FZfUI9N2qpqcihy?=
- =?us-ascii?Q?vFfFegnpUbhXyLOnp0+2pRKVejRwLk0/huBLmSpbFy4RUPt/M+t7x4fS+HzR?=
- =?us-ascii?Q?cHg6UKPUJEubGbkZhMF1OAITEqC0huTBS9FRNqFKMgfdxxFCIy0jMxFLYG8s?=
- =?us-ascii?Q?/wmfeOH96zOTGuQNwNKyY1rbRoVryzjBfDAUGEz7bDnEsCiYur7zv9QNGX85?=
- =?us-ascii?Q?9K35rwqSiBbozIS7mSGUFE+ocTJCzcyhL2pr/hUEyNEEN3+IboEcDaNfPftn?=
- =?us-ascii?Q?JOGjS45saFhJd9bIPRQnc0Dh5ib97vBrAX1ABTccUaPLh42iKMty5Ihhsmxk?=
- =?us-ascii?Q?f/YxO1XeQ1DGvzSMmpMu2YFnK5EDddzIcldv9iXX?=
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: quoted-printable
+        Tue, 11 Oct 2022 05:15:59 -0400
+Received: from foss.arm.com (foss.arm.com [217.140.110.172])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTP id 4085B36429;
+        Tue, 11 Oct 2022 02:15:58 -0700 (PDT)
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id F0B3B1042;
+        Tue, 11 Oct 2022 02:16:03 -0700 (PDT)
+Received: from [10.163.35.30] (unknown [10.163.35.30])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id A80AE3F766;
+        Tue, 11 Oct 2022 02:15:54 -0700 (PDT)
+Message-ID: <0d1e6e0f-6ab5-b5cf-8b17-65ca22087691@arm.com>
+Date:   Tue, 11 Oct 2022 14:46:07 +0530
 MIME-Version: 1.0
-X-OriginatorOrg: ericsson.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-AuthSource: AM8PR07MB7666.eurprd07.prod.outlook.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: bddcb31b-9ed8-404f-a409-08daab5f385a
-X-MS-Exchange-CrossTenant-originalarrivaltime: 11 Oct 2022 08:04:28.2053
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 92e84ceb-fbfd-47ab-be52-080c6b87953f
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: Ak1d+nkpSaraHiq38AIb19Q4cweZ9nJ0j4EMPFxpGDPHBDBS6NoTgHHeNslieV+/mz9mfkbC+katqPBMtCAtNw==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: AS8PR07MB8965
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
+ Thunderbird/91.11.0
+Subject: Re: [PATCH V3 4/7] driver/perf/arm_pmu_platform: Add support for BRBE
+ attributes detection
+Content-Language: en-US
+To:     James Clark <james.clark@arm.com>
+Cc:     linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, peterz@infradead.org,
+        acme@kernel.org, mark.rutland@arm.com, will@kernel.org,
+        catalin.marinas@arm.com
+References: <20220929075857.158358-1-anshuman.khandual@arm.com>
+ <20220929075857.158358-5-anshuman.khandual@arm.com>
+ <02ce379c-c718-b72d-fc74-cd8c904265fb@arm.com>
+From:   Anshuman Khandual <anshuman.khandual@arm.com>
+In-Reply-To: <02ce379c-c718-b72d-fc74-cd8c904265fb@arm.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-Although it's been a while I still think this is a bug. Assuming any posix =
-function, e.g. close() in record__terminate_thread(), can modify errno, it =
-seems like this is an issue which may produce confusing error messages. Wil=
-l there be a fix for this?
 
-See below.
 
-> -----Original Message-----
-> From: Emil Berg
-> Sent: den 29 juni 2022 07:32
-> To: linux-perf-users@vger.kernel.org
-> Subject: Possible overwriting of errno
->=20
-> Hi!
->=20
-> I'm getting the error "Failed to start threads: File exists" from perf, p=
-robably
-> EEXIST.
->=20
-> I just want to discuss the changes to tools/perf/builtin-record.c made Fe=
-b 10
-> 2022 with:
-> perf record: Start threads in the beginning of trace streaming
-> SHA: 3217e9fecf118d5dcabdd68d91e0c6afcb4c3e1b
->=20
-> At line 2014 pthread_create() is run and on line 2017 strerror(errno) is
-> printed. Between line 2014 and 2017 record__terminate_thread() is run.
->=20
-> I just think record__terminate_thread() run in-between looks like it may
-> overwrite errno, thus messing up the error message. To be clear I think t=
-he
-> error message should come from failure of thread creation and not from
-> failure of thread termination. Can someone enlighten me here?
->=20
-> if (pthread_create(&handle, &attrs, record__thread, &thread_data[t])) {
->     for (tt =3D 1; tt < t; tt++)
->         record__terminate_thread(&thread_data[t]);
->     pr_err("Failed to start threads: %s\n", strerror(errno));
->=20
-> /Emil Berg
+On 10/6/22 19:07, James Clark wrote:
+> 
+> On 29/09/2022 08:58, Anshuman Khandual wrote:
+>> This adds arm pmu infrastrure to probe BRBE implementation's attributes via
+>> driver exported callbacks later. The actual BRBE feature detection will be
+>> added by the driver itself.
+>>
+>> CPU specific BRBE entries, cycle count, format support gets detected during
+>> PMU init. This information gets saved in per-cpu struct pmu_hw_events which
+>> later helps in operating BRBE during a perf event context.
+>>
+>> Cc: Will Deacon <will@kernel.org>
+>> Cc: Mark Rutland <mark.rutland@arm.com>
+>> Cc: linux-arm-kernel@lists.infradead.org
+>> Cc: linux-kernel@vger.kernel.org
+>> Signed-off-by: Anshuman Khandual <anshuman.khandual@arm.com>
+>> ---
+>>  drivers/perf/arm_pmu_platform.c | 34 +++++++++++++++++++++++++++++++++
+>>  1 file changed, 34 insertions(+)
+>>
+>> diff --git a/drivers/perf/arm_pmu_platform.c b/drivers/perf/arm_pmu_platform.c
+>> index 933b96e243b8..acdc445081aa 100644
+>> --- a/drivers/perf/arm_pmu_platform.c
+>> +++ b/drivers/perf/arm_pmu_platform.c
+>> @@ -172,6 +172,36 @@ static int armpmu_request_irqs(struct arm_pmu *armpmu)
+>>  	return err;
+>>  }
+>>  
+>> +static void arm_brbe_probe_cpu(void *info)
+>> +{
+>> +	struct pmu_hw_events *hw_events;
+>> +	struct arm_pmu *armpmu = info;
+>> +
+>> +	/*
+>> +	 * Return from here, if BRBE driver has not been
+>> +	 * implemented for this PMU. This helps prevent
+>> +	 * kernel crash later when brbe_probe() will be
+>> +	 * called on the PMU.
+>> +	 */
+>> +	if (!armpmu->brbe_probe)
+>> +		return;
+>> +
+>> +	hw_events = per_cpu_ptr(armpmu->hw_events, smp_processor_id());
+>> +	armpmu->brbe_probe(hw_events);
+>> +}
+>> +
+>> +static int armpmu_request_brbe(struct arm_pmu *armpmu)
+>> +{
+>> +	int cpu, err = 0;
+>> +
+>> +	for_each_cpu(cpu, &armpmu->supported_cpus) {
+>> +		err = smp_call_function_single(cpu, arm_brbe_probe_cpu, armpmu, 1);
+> Hi Anshuman,
+> 
+> I have LOCKDEP on and the patchset applied to perf/core (82aad7ff7) on
+> git://git.kernel.org/pub/scm/linux/kernel/git/peterz/queue.git and I get
+> this:
+> 
+>    armv8-pmu pmu: hw perfevents: no interrupt-affinity property, guessing.
+>    brbe: implementation found on cpu 0
+> 
+>    =============================
+>    [ BUG: Invalid wait context ]
+>    6.0.0-rc7 #38 Not tainted
+>    -----------------------------
+>    kworker/u8:0/9 is trying to lock:
+>    ffff000800855898 (&port_lock_key){....}-{3:3}, at:
+> pl011_console_write+0x148/0x240
+>    other info that might help us debug this:
+>    context-{2:2}
+>    5 locks held by kworker/u8:0/9:
+>     #0: ffff00080032a138 ((wq_completion)eval_map_wq){+.+.}-{0:0}, at:
+> process_one_work+0x200/0x6b0
+>     #1: ffff80000807bde0
+> ((work_completion)(&eval_map_work)){+.+.}-{0:0}, at:
+> process_one_work+0x200/0x6b0
+>     #2: ffff80000aa3db70 (trace_event_sem){+.+.}-{4:4}, at:
+> trace_event_eval_update+0x28/0x420
+>     #3: ffff80000a9afe58 (console_lock){+.+.}-{0:0}, at:
+> vprintk_emit+0x130/0x380
+>     #4: ffff80000a9aff78 (console_owner){-...}-{0:0}, at:
+> console_emit_next_record.constprop.0+0x128/0x338
+>    stack backtrace:
+>    CPU: 0 PID: 9 Comm: kworker/u8:0 Not tainted 6.0.0-rc7 #38
+>    Hardware name: Foundation-v8A (DT)
+>    Workqueue: eval_map_wq eval_map_work_func
+>    Call trace:
+>     dump_backtrace+0x114/0x120
+>     show_stack+0x20/0x58
+>     dump_stack_lvl+0x9c/0xd8
+>     dump_stack+0x18/0x34
+>     __lock_acquire+0x17cc/0x1920
+>     lock_acquire+0x138/0x3b8
+>     _raw_spin_lock+0x58/0x70
+>     pl011_console_write+0x148/0x240
+>     console_emit_next_record.constprop.0+0x194/0x338
+>     console_unlock+0x18c/0x208
+>     vprintk_emit+0x24c/0x380
+>     vprintk_default+0x40/0x50
+>     vprintk+0xd4/0xf0
+>     _printk+0x68/0x90
+>     arm64_pmu_brbe_probe+0x10c/0x128
+>     armv8pmu_brbe_probe+0x18/0x28
+>     arm_brbe_probe_cpu+0x44/0x58
+>     __flush_smp_call_function_queue+0x1d0/0x440
+>     generic_smp_call_function_single_interrupt+0x20/0x78
+>     ipi_handler+0x98/0x368
+>     handle_percpu_devid_irq+0xc0/0x3a8
+>     generic_handle_domain_irq+0x34/0x50
+>     gic_handle_irq+0x58/0x138
+>     call_on_irq_stack+0x2c/0x58
+>     do_interrupt_handler+0x88/0x90
+>     el1_interrupt+0x40/0x78
+>     el1h_64_irq_handler+0x18/0x28
+>     el1h_64_irq+0x64/0x68
+>     trace_event_eval_update+0x114/0x420
+>     eval_map_work_func+0x30/0x40
+>     process_one_work+0x298/0x6b0
+>     worker_thread+0x54/0x408
+>     kthread+0x118/0x128
+>     ret_from_fork+0x10/0x20
+>    brbe: implementation found on cpu 1
+>    brbe: implementation found on cpu 2
+>    brbe: implementation found on cpu 3
+
+
+The LOCKDEP warnings are because of pr_warn/pr_info in arm64_pmu_brbe_probe()
+which gets called from smp_call_function_single() context. I will drop these
+prints, instead probably capture them in struct pmu_hw_events and display in
+the caller itself.
