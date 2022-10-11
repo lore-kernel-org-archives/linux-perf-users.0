@@ -2,100 +2,133 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 36D16C433F5
-	for <linux-perf-users@archiver.kernel.org>; Tue, 11 Oct 2022 11:57:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 521E3C433FE
+	for <linux-perf-users@archiver.kernel.org>; Tue, 11 Oct 2022 12:47:25 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229451AbiJKL5V (ORCPT
+        id S229830AbiJKMrX (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Tue, 11 Oct 2022 07:57:21 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33390 "EHLO
+        Tue, 11 Oct 2022 08:47:23 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43570 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229475AbiJKL5U (ORCPT
+        with ESMTP id S229839AbiJKMrW (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Tue, 11 Oct 2022 07:57:20 -0400
-Received: from mga17.intel.com (mga17.intel.com [192.55.52.151])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 628A77F26F;
-        Tue, 11 Oct 2022 04:57:19 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1665489439; x=1697025439;
-  h=message-id:date:mime-version:subject:to:cc:references:
-   from:in-reply-to:content-transfer-encoding;
-  bh=XzJyJLhn3OWIM+SDzpoP33h7icTAUN97RR03Oxsgpeo=;
-  b=L+Np3Qi7RoB0r7xMZZ0OmhXBJ4m7wr0VBvEyUnReDUSsRauWLhus6I1v
-   TwGaOIvoH3wFeK67bVI2EKUlrOtd3Vy0mKDTV7PcXW4pzDiLJFAmTlZNb
-   0Rx5PdRITNcoQzwR4blkBF+/rwHteqDEE4/+fFCEjaWf7hqGkstYxDWKz
-   SkzbXFv7N35RDCGC6gWTwZ0851tgL2bS8gIiehWCdQn23vz/qIMzE0JI/
-   rY8WA7Jf47VcDTWQvTI93wJmRTRoWTMSGj+aatUfw8c9zYnLbKMfNcQNH
-   zg3dlQ/pDlwc4s5gOx29bUzh4zjlBbUygx0Xn0CsjUww9JwwXw5JXc0iV
-   w==;
-X-IronPort-AV: E=McAfee;i="6500,9779,10496"; a="284864448"
-X-IronPort-AV: E=Sophos;i="5.95,176,1661842800"; 
-   d="scan'208";a="284864448"
-Received: from orsmga004.jf.intel.com ([10.7.209.38])
-  by fmsmga107.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 11 Oct 2022 04:57:17 -0700
-X-IronPort-AV: E=McAfee;i="6500,9779,10496"; a="751708546"
-X-IronPort-AV: E=Sophos;i="5.95,176,1661842800"; 
-   d="scan'208";a="751708546"
-Received: from akleen-mobl1.amr.corp.intel.com (HELO [10.213.187.182]) ([10.213.187.182])
-  by orsmga004-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 11 Oct 2022 04:57:12 -0700
-Message-ID: <c65f10bd-e486-42d7-b221-dd763623775d@linux.intel.com>
-Date:   Tue, 11 Oct 2022 07:57:11 -0400
-MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:102.0) Gecko/20100101
- Thunderbird/102.3.2
-Subject: Re: [RFC/PATCHSET 00/19] perf stat: Cleanup counter aggregation (v1)
-Content-Language: en-US
-To:     Namhyung Kim <namhyung@kernel.org>
-Cc:     Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Jiri Olsa <jolsa@kernel.org>, Ingo Molnar <mingo@kernel.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Ian Rogers <irogers@google.com>,
-        Adrian Hunter <adrian.hunter@intel.com>,
-        linux-perf-users@vger.kernel.org,
-        Kan Liang <kan.liang@linux.intel.com>,
-        Leo Yan <leo.yan@linaro.org>,
-        Athira Rajeev <atrajeev@linux.vnet.ibm.com>,
-        James Clark <james.clark@arm.com>,
-        Xing Zhengjun <zhengjun.xing@linux.intel.com>
-References: <20221010053600.272854-1-namhyung@kernel.org>
- <ebc8e57e-1584-5f47-48d8-3bc38497799b@linux.intel.com>
- <CAM9d7chavgTHwFdU4m=GRx9kwSX1Pi8w58rgQc4nP_X-bpnbUQ@mail.gmail.com>
-From:   Andi Kleen <ak@linux.intel.com>
-In-Reply-To: <CAM9d7chavgTHwFdU4m=GRx9kwSX1Pi8w58rgQc4nP_X-bpnbUQ@mail.gmail.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+        Tue, 11 Oct 2022 08:47:22 -0400
+Received: from mail-yb1-xb49.google.com (mail-yb1-xb49.google.com [IPv6:2607:f8b0:4864:20::b49])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id F3CB9915E5
+        for <linux-perf-users@vger.kernel.org>; Tue, 11 Oct 2022 05:47:20 -0700 (PDT)
+Received: by mail-yb1-xb49.google.com with SMTP id e8-20020a5b0cc8000000b006bca0fa3ab6so13305743ybr.0
+        for <linux-perf-users@vger.kernel.org>; Tue, 11 Oct 2022 05:47:20 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20210112;
+        h=cc:to:from:subject:message-id:mime-version:date:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=JZgfsSGBJAIpwrM+kN5gILalFFiDKNqq+i+h/f0T+1w=;
+        b=Lhj7yGBgLSbssGDsd2KUsMVfq/iXui4imvLqgRv+9ymf7fd0W+VDlTKnh0f+tpRRXB
+         /Br17OtlaZyA2gyUxT98PtVyrIAuDpC/pXipYVvOV8y+f8H4vW+MajDUU3phx5GVqniT
+         HPzXIHjVgZ7zojUrVGN8Zida1RvUp9HXnw3R3Rm90a+ZGX1tkwsB9j+AqH0+BXbiF72l
+         HQEjtC130tULmZYTQtzesNR494kbdH2bqCeNOTyjf3JroTg4WaW38z8ocmG0723+8zRd
+         am3phKQ78ruIuH5HZIEE2opGxyuYN7Xbsf+A6j9hntbwWKvWdfuFZxjWS4penwRx6jCJ
+         mWEQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=cc:to:from:subject:message-id:mime-version:date:x-gm-message-state
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=JZgfsSGBJAIpwrM+kN5gILalFFiDKNqq+i+h/f0T+1w=;
+        b=H1R0NkyJRtOkL49Vbm/n2lvaQ9hNuug00U1T2K3bnpgn2AUJlVloFvT1M034H6NzNq
+         /kepf9mDazFvrmK8XNqp7qP1WsRtqvx/tSyxayUsLBHarxjlfPo8rpb5lkjFs5ahCKWd
+         bpmEt68QHmt3lNSfP3nZAdjnDSTAZjLT4MwYvwHmhL4RiWgKZo4/mnKAO8w5Aw9+uoYP
+         Mo2d4r2ENcpOzdbZY/hl0yt0nhek5TduL+YZKn5qyMpN1b4+1xlhAtoGY+oQPzukb8BK
+         5N1zQ1vTGZO7SMMDGrmPUCIDKqI/7rFy/2Y4rMCS2K4rP9EoqzJDIYCgP3YTcus0NFS2
+         3PNw==
+X-Gm-Message-State: ACrzQf1wxE9PigbkO9Nj+q29iD4ihh6llhtkcXDXiph7CUfLv/wGFqIy
+        zHeVWi8AcstABQdTnXewA5eGERLJ0Q==
+X-Google-Smtp-Source: AMsMyM7mLP7qxYhVaFvAfaOOBR4Ia7Pa0IN/qv4FwNg3SacUjhfZkgOXsyXoCAhZIp/qsLi2hi3T37gusQ==
+X-Received: from elver.muc.corp.google.com ([2a00:79e0:9c:201:3abd:8519:48e1:da82])
+ (user=elver job=sendgmr) by 2002:a25:6dc3:0:b0:6c0:7938:5b3f with SMTP id
+ i186-20020a256dc3000000b006c079385b3fmr13344582ybc.625.1665492440186; Tue, 11
+ Oct 2022 05:47:20 -0700 (PDT)
+Date:   Tue, 11 Oct 2022 14:45:35 +0200
+Mime-Version: 1.0
+X-Mailer: git-send-email 2.38.0.rc1.362.ged0d419d3c-goog
+Message-ID: <20221011124534.84907-1-elver@google.com>
+Subject: [PATCH] selftests/perf_events: Add a SIGTRAP stress test with disables
+From:   Marco Elver <elver@google.com>
+To:     elver@google.com, Peter Zijlstra <peterz@infradead.org>
+Cc:     Dmitry Vyukov <dvyukov@google.com>,
+        linux-kselftest@vger.kernel.org, linux-kernel@vger.kernel.org,
+        kasan-dev@googlegroups.com, linux-perf-users@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
+Add a SIGTRAP stress test that exercises repeatedly enabling/disabling
+an event while it concurrently keeps firing.
 
->> My main concern would be subtle regressions since there are so many
->> different combinations and way to travel through the code, and a lot of
->> things are not covered by unit tests. When I worked on the code it was
->> difficult to keep it all working. I assume you have some way to
->> enumerate them all and tested that the output is identical?
-> Right, that's my concern too.
->
-> I have tested many combinations manually and checked if they
-> produced similar results.
+Link: https://lore.kernel.org/all/Y0E3uG7jOywn7vy3@elver.google.com/
+Signed-off-by: Marco Elver <elver@google.com>
+---
+ .../selftests/perf_events/sigtrap_threads.c   | 35 +++++++++++++++++--
+ 1 file changed, 32 insertions(+), 3 deletions(-)
 
-I had a script to test many combinations, but had to check the output 
-manually
-
-
-> But the problem is that I cannot test
-> all hardwares and more importantly it's hard to check
-> programmatically if the output is the same or not.
-
-Can use "dummy" or some software event (e.g. a probe on some syscall) to 
-get stable numbers. I don't think we need to cover all hardware for the 
-output options, the different events should be similar, but need some 
-coverage for the different aggregation. Or we could add some more tool 
-events just for testing purposes, that would allow covering different 
-core scopes etc. and would easily allow generating known counts.
-
--Andi
-
+diff --git a/tools/testing/selftests/perf_events/sigtrap_threads.c b/tools/testing/selftests/perf_events/sigtrap_threads.c
+index 6d849dc2bee0..d1d8483ac628 100644
+--- a/tools/testing/selftests/perf_events/sigtrap_threads.c
++++ b/tools/testing/selftests/perf_events/sigtrap_threads.c
+@@ -62,6 +62,8 @@ static struct perf_event_attr make_event_attr(bool enabled, volatile void *addr,
+ 		.remove_on_exec = 1, /* Required by sigtrap. */
+ 		.sigtrap	= 1, /* Request synchronous SIGTRAP on event. */
+ 		.sig_data	= TEST_SIG_DATA(addr, id),
++		.exclude_kernel = 1, /* To allow */
++		.exclude_hv     = 1, /* running as !root */
+ 	};
+ 	return attr;
+ }
+@@ -93,9 +95,13 @@ static void *test_thread(void *arg)
+ 
+ 	__atomic_fetch_add(&ctx.tids_want_signal, tid, __ATOMIC_RELAXED);
+ 	iter = ctx.iterate_on; /* read */
+-	for (i = 0; i < iter - 1; i++) {
+-		__atomic_fetch_add(&ctx.tids_want_signal, tid, __ATOMIC_RELAXED);
+-		ctx.iterate_on = iter; /* idempotent write */
++	if (iter >= 0) {
++		for (i = 0; i < iter - 1; i++) {
++			__atomic_fetch_add(&ctx.tids_want_signal, tid, __ATOMIC_RELAXED);
++			ctx.iterate_on = iter; /* idempotent write */
++		}
++	} else {
++		while (ctx.iterate_on);
+ 	}
+ 
+ 	return NULL;
+@@ -208,4 +214,27 @@ TEST_F(sigtrap_threads, signal_stress)
+ 	EXPECT_EQ(ctx.first_siginfo.si_perf_data, TEST_SIG_DATA(&ctx.iterate_on, 0));
+ }
+ 
++TEST_F(sigtrap_threads, signal_stress_with_disable)
++{
++	const int target_count = NUM_THREADS * 3000;
++	int i;
++
++	ctx.iterate_on = -1;
++
++	EXPECT_EQ(ioctl(self->fd, PERF_EVENT_IOC_ENABLE, 0), 0);
++	pthread_barrier_wait(&self->barrier);
++	while (__atomic_load_n(&ctx.signal_count, __ATOMIC_RELAXED) < target_count) {
++		EXPECT_EQ(ioctl(self->fd, PERF_EVENT_IOC_DISABLE, 0), 0);
++		EXPECT_EQ(ioctl(self->fd, PERF_EVENT_IOC_ENABLE, 0), 0);
++	}
++	ctx.iterate_on = 0;
++	for (i = 0; i < NUM_THREADS; i++)
++		ASSERT_EQ(pthread_join(self->threads[i], NULL), 0);
++	EXPECT_EQ(ioctl(self->fd, PERF_EVENT_IOC_DISABLE, 0), 0);
++
++	EXPECT_EQ(ctx.first_siginfo.si_addr, &ctx.iterate_on);
++	EXPECT_EQ(ctx.first_siginfo.si_perf_type, PERF_TYPE_BREAKPOINT);
++	EXPECT_EQ(ctx.first_siginfo.si_perf_data, TEST_SIG_DATA(&ctx.iterate_on, 0));
++}
++
+ TEST_HARNESS_MAIN
+-- 
+2.38.0.rc1.362.ged0d419d3c-goog
 
