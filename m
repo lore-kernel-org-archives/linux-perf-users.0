@@ -2,128 +2,116 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 17F71C433F5
-	for <linux-perf-users@archiver.kernel.org>; Tue, 11 Oct 2022 06:14:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EAB75C433F5
+	for <linux-perf-users@archiver.kernel.org>; Tue, 11 Oct 2022 07:28:22 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229648AbiJKGOO (ORCPT
+        id S229624AbiJKH2V (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Tue, 11 Oct 2022 02:14:14 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33506 "EHLO
+        Tue, 11 Oct 2022 03:28:21 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33140 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229617AbiJKGOM (ORCPT
+        with ESMTP id S229975AbiJKH2U (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Tue, 11 Oct 2022 02:14:12 -0400
-Received: from mail-wr1-x435.google.com (mail-wr1-x435.google.com [IPv6:2a00:1450:4864:20::435])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 112E486F9B
-        for <linux-perf-users@vger.kernel.org>; Mon, 10 Oct 2022 23:14:11 -0700 (PDT)
-Received: by mail-wr1-x435.google.com with SMTP id n12so19927056wrp.10
-        for <linux-perf-users@vger.kernel.org>; Mon, 10 Oct 2022 23:14:10 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20210112;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:from:to:cc:subject:date:message-id:reply-to;
-        bh=Q0TA01kmXvUPheOdi7PWrUQ8bC3Ldfd2bpo9D/D22tM=;
-        b=iC8Eu0A8wEOIQzqpkvvzA5G1HbHcX08LWn+3fxHRuBbycUMKDEiGW+E61qErnMIYyR
-         yrx+HfbgY8Qqm1ugiweoYpOLnv1vhkB3G45aesBxxS+VDScoVfIYRpxvSHmP9Lu+w2sw
-         o/M6TU5EUPZ3Qq54Io7SK7SF86iIoBkGN1eZqFaYLEpCYE5z97wTLuAoNFv/r3L3C+3F
-         jlpiB4IWbaRUHvsLIkhkEqYXXFj2v8J8Gb0o9jlxk9diN7addgalt/LuF0qZCjWU4kiG
-         WRzIOw+XmYZY+ohLCb+t6S+DGABWLXy7FEWgR6YIY3uzKPdcEJ9Fb/tyeIED+gAxjTPM
-         lohw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=Q0TA01kmXvUPheOdi7PWrUQ8bC3Ldfd2bpo9D/D22tM=;
-        b=hufd9vvtIOKoJ1kDkSJmTYBLTx4lDtouCkevemwMacCoawqHfni8BJpZ8Z08D5Vrlg
-         AzH0kjyeVX+S/JQqwHNIlp385ApwlKaLLTnRfxTHkjbGKGfF/qMyKOzYPtiCmda5Y1Sy
-         LbPecNgYuVv8dvhPnbTps1p+1HGYYYXIutEypG+3rNeiqlSWw+ixCporQrRj0Be7SQ0R
-         GDA/c/6N3rGUAZKSvWvKggof8IXZOB2GGSA0cjOBt218mf5TT+hyPSqo2xRT7gzxQnke
-         0qZ54ElgwUZvHVeuKVnY+YS39RpjEkn9tGPsapHitlYHBhPZCQsNvuhBYK6W3SBQ7UtW
-         Il9Q==
-X-Gm-Message-State: ACrzQf1IdFm//qX9EY1cuBRtOVVGMzdxfQxvQhZvS1y3qAv2ahQ5IdK0
-        orT7oAa5ITI+/pMYGgIUtiveO87tIY7q/YPVfN3bUpw57zw=
-X-Google-Smtp-Source: AMsMyM4po/TUMzer633bzFCiLbaL2CzyI5TuuP7AvvnC2XdtbUaJ40NnyZRtYuz86VtweGhBBw25opHmCHt06h6M8O0=
-X-Received: by 2002:a05:6000:168f:b0:22e:4c3:de09 with SMTP id
- y15-20020a056000168f00b0022e04c3de09mr13585250wrd.40.1665468838995; Mon, 10
- Oct 2022 23:13:58 -0700 (PDT)
+        Tue, 11 Oct 2022 03:28:20 -0400
+Received: from mx0a-001b2d01.pphosted.com (mx0b-001b2d01.pphosted.com [148.163.158.5])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6094489963;
+        Tue, 11 Oct 2022 00:28:18 -0700 (PDT)
+Received: from pps.filterd (m0098419.ppops.net [127.0.0.1])
+        by mx0b-001b2d01.pphosted.com (8.17.1.5/8.17.1.5) with ESMTP id 29B6erAX032210;
+        Tue, 11 Oct 2022 07:28:04 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=from : to : cc : subject
+ : references : date : in-reply-to : message-id : mime-version :
+ content-type; s=pp1; bh=oe5FAcjBBXzAtIsFSubOrh8NpLiHSjLQp/VSNXK1PxU=;
+ b=ct6s3Z/IVA1838OQsF5i2yJb/w5LGKFZjRHmGKDSsFCvoEvPBJqt4NVgTCMSVUSPm+V5
+ ZH1k9Oikfab32hpedIH33mZqfPDk8t9q0oPU+ubAQtP32bYNxk/8idrxGs9UjWBZvemi
+ D9xP+xYJARvmphQWmakgfhQeZ2gw1/6ZMqe2hbh1W9x9GfS1Jvqs3e2LW9iVBb7h8DND
+ jOBCVMtQpO0KsyPKpjjoWgZPXNSEMi7o2X3COmwo8H58s2+cQDPAE4yW7nfLwXuQvk1S
+ eeuR3ZSnAGpWJkEJpxrrv7uicvWql+te1pfhrLzLdbjb14WXSx8SpYwgBUBsLqnjclkk Ag== 
+Received: from ppma06ams.nl.ibm.com (66.31.33a9.ip4.static.sl-reverse.com [169.51.49.102])
+        by mx0b-001b2d01.pphosted.com (PPS) with ESMTPS id 3k4wya14kv-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Tue, 11 Oct 2022 07:28:04 +0000
+Received: from pps.filterd (ppma06ams.nl.ibm.com [127.0.0.1])
+        by ppma06ams.nl.ibm.com (8.16.1.2/8.16.1.2) with SMTP id 29B7KsAr013459;
+        Tue, 11 Oct 2022 07:28:02 GMT
+Received: from b06cxnps4075.portsmouth.uk.ibm.com (d06relay12.portsmouth.uk.ibm.com [9.149.109.197])
+        by ppma06ams.nl.ibm.com with ESMTP id 3k30fjbw05-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Tue, 11 Oct 2022 07:28:02 +0000
+Received: from d06av21.portsmouth.uk.ibm.com (d06av21.portsmouth.uk.ibm.com [9.149.105.232])
+        by b06cxnps4075.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 29B7S0Pr33751692
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Tue, 11 Oct 2022 07:28:00 GMT
+Received: from d06av21.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 437225204E;
+        Tue, 11 Oct 2022 07:28:00 +0000 (GMT)
+Received: from tuxmaker.linux.ibm.com (unknown [9.152.85.9])
+        by d06av21.portsmouth.uk.ibm.com (Postfix) with ESMTPS id EB3DD52050;
+        Tue, 11 Oct 2022 07:27:59 +0000 (GMT)
+From:   Sven Schnelle <svens@linux.ibm.com>
+To:     carsten.haitzler@foss.arm.com
+Cc:     linux-kernel@vger.kernel.org, coresight@lists.linaro.org,
+        suzuki.poulose@arm.com, mathieu.poirier@linaro.org,
+        mike.leach@linaro.org, leo.yan@linaro.org,
+        linux-perf-users@vger.kernel.org, acme@kernel.org
+Subject: Re: [PATCH v9 13/13] perf test: Add relevant documentation about
+ CoreSight testing
+References: <20220909152803.2317006-1-carsten.haitzler@foss.arm.com>
+        <20220909152803.2317006-14-carsten.haitzler@foss.arm.com>
+Date:   Tue, 11 Oct 2022 09:27:59 +0200
+In-Reply-To: <20220909152803.2317006-14-carsten.haitzler@foss.arm.com>
+        (carsten haitzler's message of "Fri, 9 Sep 2022 16:28:03 +0100")
+Message-ID: <yt9dr0zex1j4.fsf@linux.ibm.com>
+User-Agent: Gnus/5.13 (Gnus v5.13) Emacs/28.0.50 (gnu/linux)
 MIME-Version: 1.0
-References: <20221010053600.272854-1-namhyung@kernel.org> <ebc8e57e-1584-5f47-48d8-3bc38497799b@linux.intel.com>
- <CAM9d7chavgTHwFdU4m=GRx9kwSX1Pi8w58rgQc4nP_X-bpnbUQ@mail.gmail.com>
-In-Reply-To: <CAM9d7chavgTHwFdU4m=GRx9kwSX1Pi8w58rgQc4nP_X-bpnbUQ@mail.gmail.com>
-From:   Ian Rogers <irogers@google.com>
-Date:   Mon, 10 Oct 2022 23:13:46 -0700
-Message-ID: <CAP-5=fUK8VXZAyjTVQ3e88F5AeYfEF5PP-=k=PoFONWpXE+XVA@mail.gmail.com>
-Subject: Re: [RFC/PATCHSET 00/19] perf stat: Cleanup counter aggregation (v1)
-To:     Namhyung Kim <namhyung@kernel.org>
-Cc:     Andi Kleen <ak@linux.intel.com>,
-        Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Jiri Olsa <jolsa@kernel.org>, Ingo Molnar <mingo@kernel.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Adrian Hunter <adrian.hunter@intel.com>,
-        linux-perf-users@vger.kernel.org,
-        Kan Liang <kan.liang@linux.intel.com>,
-        Leo Yan <leo.yan@linaro.org>,
-        Athira Rajeev <atrajeev@linux.vnet.ibm.com>,
-        James Clark <james.clark@arm.com>,
-        Xing Zhengjun <zhengjun.xing@linux.intel.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain
+X-TM-AS-GCONF: 00
+X-Proofpoint-GUID: kgAJlXA0J63wM6xiUMVB8xn0LK9HULjO
+X-Proofpoint-ORIG-GUID: kgAJlXA0J63wM6xiUMVB8xn0LK9HULjO
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.205,Aquarius:18.0.895,Hydra:6.0.528,FMLib:17.11.122.1
+ definitions=2022-10-11_03,2022-10-10_02,2022-06-22_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 lowpriorityscore=0
+ impostorscore=0 mlxscore=0 suspectscore=0 spamscore=0 adultscore=0
+ priorityscore=1501 mlxlogscore=999 malwarescore=0 bulkscore=0
+ clxscore=1011 phishscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2209130000 definitions=main-2210110039
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-On Mon, Oct 10, 2022 at 10:38 PM Namhyung Kim <namhyung@kernel.org> wrote:
->
-> Hi Andi,
->
-> On Mon, Oct 10, 2022 at 5:25 PM Andi Kleen <ak@linux.intel.com> wrote:
-> >
-> >
-> > On 10/10/2022 10:35 PM, Namhyung Kim wrote:
-> > > Hello,
-> > >
-> > > Current perf stat code is somewhat hard to follow since it handles
-> > > many combinations of PMUs/events for given display and aggregation
-> > > options.  This is my attempt to clean it up a little. ;-)
-> >
-> >
-> > My main concern would be subtle regressions since there are so many
-> > different combinations and way to travel through the code, and a lot of
-> > things are not covered by unit tests. When I worked on the code it was
-> > difficult to keep it all working. I assume you have some way to
-> > enumerate them all and tested that the output is identical?
->
-> Right, that's my concern too.
->
-> I have tested many combinations manually and checked if they
-> produced similar results.  But the problem is that I cannot test
-> all hardwares and more importantly it's hard to check
-> programmatically if the output is the same or not.  The numbers
-> vary on each run and sometimes it fluctuates a lot.  I don't have
-> good test workloads and the results work for every combination.
->
-> Any suggestions?
+Hi Carsten,
 
-I don't think there is anything clever we can do here. A few releases
-ago summary mode was enabled by default. For CSV output this meant a
-summary was printed at the bottom of perf stat and importantly the
-summary print out added a column on the left of all the other columns.
-This caused some tool issues for us. We now have a test that CSV
-output has a fixed number of columns. We added the CSV test because
-the json output code reformatted the display code and it would be easy
-to introduce a regression (in fact I did :-/ ). So my point is that
-stat output can change and break things and we've been doing this by
-accident for a while now. This isn't a reason to not merge this
-change.
+carsten.haitzler@foss.arm.com writes:
 
-I think the real fix here is for tools to stop using text or CSV
-output and switch to the json output, that way output isn't as brittle
-except to the keys we use. It isn't feasible for the perf tool to
-stand still in case there is a script somewhere, we'll just accumulate
-bugs and baggage. However, if someone has a script and they want to
-enforce an output, all they need to do is stick a test on it (the
-Beyonce principle except s/ring/test/).
+> From: Carsten Haitzler <carsten.haitzler@arm.com>
+>
+> Add/improve documentation helping people get started with CoreSight and
+> perf as well as describe the testing and how it works.
+>
+> Cc: linux-doc@vger.kernel.org
+> Signed-off-by: Carsten Haitzler <carsten.haitzler@arm.com>
+> ---
+>  .../trace/coresight/coresight-perf.rst        | 158 ++++++++++++++++++
+>  .../perf/Documentation/perf-arm-coresight.txt |   5 +
+>  2 files changed, 163 insertions(+)
+>  create mode 100644 Documentation/trace/coresight/coresight-perf.rst
+>  create mode 100644 tools/perf/Documentation/perf-arm-coresight.txt
+>
 
-Thanks,
-Ian
+Investigating a rpm build failure i see the following error with next-20221011:
+
+% cd tools/perf/Documentation
+% make O=/home/svens/linux-build/ man V=1
+rm -f /home/svens/linux-build/perf-arm-coresight.xml+ /home/svens/linux-build/perf-arm-coresight.xml && \
+asciidoc -b docbook -d manpage \
+        --unsafe -f asciidoc.conf -aperf_version= \
+        -aperf_date=2022-10-06 \
+        -o /home/svens/linux-build/perf-arm-coresight.xml+ perf-arm-coresight.txt && \
+mv /home/svens/linux-build/perf-arm-coresight.xml+ /home/svens/linux-build/perf-arm-coresight.xml
+asciidoc: FAILED: manpage document title is mandatory
+make: *** [Makefile:266: /home/svens/linux-build/perf-arm-coresight.xml] Error 1
+
+Can you please fix this?
+
+Thanks!
