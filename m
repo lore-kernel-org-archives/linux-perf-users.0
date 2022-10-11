@@ -2,145 +2,101 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8DE5AC433F5
-	for <linux-perf-users@archiver.kernel.org>; Tue, 11 Oct 2022 11:11:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C56B3C433F5
+	for <linux-perf-users@archiver.kernel.org>; Tue, 11 Oct 2022 11:30:10 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229803AbiJKLLH (ORCPT
+        id S229822AbiJKLaI (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Tue, 11 Oct 2022 07:11:07 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35334 "EHLO
+        Tue, 11 Oct 2022 07:30:08 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36968 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229501AbiJKLLG (ORCPT
+        with ESMTP id S229766AbiJKLaG (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Tue, 11 Oct 2022 07:11:06 -0400
-Received: from mail-pj1-x1032.google.com (mail-pj1-x1032.google.com [IPv6:2607:f8b0:4864:20::1032])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4A4798C02E
-        for <linux-perf-users@vger.kernel.org>; Tue, 11 Oct 2022 04:11:05 -0700 (PDT)
-Received: by mail-pj1-x1032.google.com with SMTP id g8-20020a17090a128800b0020c79f987ceso7880400pja.5
-        for <linux-perf-users@vger.kernel.org>; Tue, 11 Oct 2022 04:11:05 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:from:to:cc:subject:date:message-id:reply-to;
-        bh=xyNu7ihVwa1kCmrsin+0WcnVl1ur8OzhltqOfbUTT10=;
-        b=UZwIeeRg3uQhc+cpCzs6z0nQw2QZwvYVcjh3Tev6Nh1AaxET6iyPGP8LvCk7pGfNNO
-         CWqx4NbFYdHi9MUlsJRCQzG47fLY3YozQb9exZzE5yn8D1Wq2HZSCyRL7nHPBv1r52w1
-         KkCuYotEuqz/mv/klQcC8SUuxpd51/SjhC6Fi8XwDfmemRt+sDiQ48X+nnDTHoXRQw6f
-         P0rBoCWkOT9k5qjy6h8dKhHD7NI2milNdGmYpnTOSju/+qlLaE51yISSZJeZhs+xML1u
-         rjZWufVDRRbWpwRM/RxUzMPhDOkwdlkApaMv2pcm6VhtVpoyNBwiKy++7bIrIyWOvc8c
-         CLZg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=xyNu7ihVwa1kCmrsin+0WcnVl1ur8OzhltqOfbUTT10=;
-        b=Nc1xhWzhoKGR/wHbSQNe1iqkr6bEaMSmqXB1//pE+9OMsXl101NqfKhaylUaEBoWJ3
-         FU2gg6gGNgYQ5N4/AE5nnjHIq2s6lMXSdcyzbAGfYCaSxCqU2PTCKMX5vuZT+oUgdCba
-         /55HNoipFOpsiyfw88L7WFNVThWh5sdoTPq5IDrzn35XONiSKSTvqdEi3kP8+epxm9NB
-         gFwb/NZTaYE/uCg3BLB87jiKmL5HSh/fhzJjJJRNLIVj33QYtatk26PzswEJTGlaC3Ij
-         +IAfdR6GQ7ut1hCn4jz7xzERbnxsaSaGUM7NlgeTxqebvH7j+DdDaC+UseqOwKlG7Wrp
-         cagg==
-X-Gm-Message-State: ACrzQf3SQA3SclvTYnAz+PdZFZ841IfyQvpb7nQAv+QFUOQcCFUk4YMb
-        o6GVrd2GnIWLDFwc4us0PXploxIHgbbU2GN6e792vg==
-X-Google-Smtp-Source: AMsMyM7X9jF5KQTbREd1W8ZkKnNsDJAq+kh9AegZu7oAqTnFNWKJTzxtA4V3YI69PYMg7pEsV3hi+SDJhsdAHk7UZyc=
-X-Received: by 2002:a17:90b:4b4b:b0:20a:926f:3c2e with SMTP id
- mi11-20020a17090b4b4b00b0020a926f3c2emr25763482pjb.87.1665486664825; Tue, 11
- Oct 2022 04:11:04 -0700 (PDT)
+        Tue, 11 Oct 2022 07:30:06 -0400
+Received: from casper.infradead.org (casper.infradead.org [IPv6:2001:8b0:10b:1236::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B4DCB33877;
+        Tue, 11 Oct 2022 04:30:04 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=casper.20170209; h=In-Reply-To:Content-Type:MIME-Version:
+        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description;
+        bh=0RPB2UDDdxR9Nzxfl8rEmcnylTIR/tDD2ldWTb0Kmvs=; b=hziRi25xfV1WtaQCf+wZ+lUUHW
+        HCP8gOpLFD3xVbSNywDC0dzI9vamllBUAtUzbavKasldT7wmhJtBf/HBcE+cvwiMautCbRRvCknpA
+        LJ5olLBWSkSJaIqdyw1e3wEtHzzkbmVcGBytLgKUKiuFQSZ6zFEp8XrohwUgfx8WDNZG5VDqzaczJ
+        bO1n+ye2iJGY0mYVurlcly1f5rpOyZGp0N9F5sZS96kx3ZLBx+4H2D1SLnekULz22/MyDlTfNxkj9
+        RdU20AeHKx/+CREAHI02Py8DKasBTEjGrmtum7gcM2uFkyw6vqHY+c+BXCKcV8Hy0pnH42P/ISrAM
+        R99LFxAw==;
+Received: from j130084.upc-j.chello.nl ([24.132.130.84] helo=noisy.programming.kicks-ass.net)
+        by casper.infradead.org with esmtpsa (Exim 4.94.2 #2 (Red Hat Linux))
+        id 1oiDS9-004uvD-72; Tue, 11 Oct 2022 11:29:41 +0000
+Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+        (Client did not present a certificate)
+        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id D56913000E3;
+        Tue, 11 Oct 2022 13:29:35 +0200 (CEST)
+Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
+        id BAF812997FB9A; Tue, 11 Oct 2022 13:29:35 +0200 (CEST)
+Date:   Tue, 11 Oct 2022 13:29:35 +0200
+From:   Peter Zijlstra <peterz@infradead.org>
+To:     Ravi Bangoria <ravi.bangoria@amd.com>
+Cc:     acme@kernel.org, alexander.shishkin@linux.intel.com,
+        jolsa@redhat.com, namhyung@kernel.org, songliubraving@fb.com,
+        eranian@google.com, ak@linux.intel.com, mark.rutland@arm.com,
+        frederic@kernel.org, maddy@linux.ibm.com, irogers@google.com,
+        will@kernel.org, robh@kernel.org, mingo@redhat.com,
+        catalin.marinas@arm.com, ndesaulniers@google.com,
+        srw@sladewatkins.net, linux-arm-kernel@lists.infradead.org,
+        linux-perf-users@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
+        linux-s390@vger.kernel.org, linux-kernel@vger.kernel.org,
+        sandipan.das@amd.com, ananth.narayan@amd.com, kim.phillips@amd.com,
+        santosh.shukla@amd.com
+Subject: Re: [PATCH v2] perf: Rewrite core context handling
+Message-ID: <Y0VTn0qLWd925etP@hirez.programming.kicks-ass.net>
+References: <20221008062424.313-1-ravi.bangoria@amd.com>
 MIME-Version: 1.0
-References: <20220809223401.24599-1-mike.leach@linaro.org> <20220809223401.24599-4-mike.leach@linaro.org>
- <65e70db9-9f85-7285-0602-f2d29887550a@arm.com> <CAJ9a7Vgz+0xEQO-MvGUzbsr_LBh4pDep7JJtFoA+cAeiAERJFw@mail.gmail.com>
- <55170f1f-99f7-6e25-55d3-5d7247737afc@arm.com>
-In-Reply-To: <55170f1f-99f7-6e25-55d3-5d7247737afc@arm.com>
-From:   Mike Leach <mike.leach@linaro.org>
-Date:   Tue, 11 Oct 2022 12:10:53 +0100
-Message-ID: <CAJ9a7VgrJ3L6o9e0600G_JL6S_PXLsZcQDLPR_YGpSu4L=pOMg@mail.gmail.com>
-Subject: Re: [PATCH v3 03/13] coresight: stm: Update STM driver to use Trace
- ID API
-To:     Suzuki K Poulose <suzuki.poulose@arm.com>
-Cc:     coresight@lists.linaro.org, linux-arm-kernel@lists.infradead.org,
-        linux-kernel@vger.kernel.org, mathieu.poirier@linaro.org,
-        peterz@infradead.org, mingo@redhat.com, acme@kernel.org,
-        linux-perf-users@vger.kernel.org, leo.yan@linaro.org,
-        quic_jinlmao@quicinc.com
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20221008062424.313-1-ravi.bangoria@amd.com>
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-Hi suzuki,
+On Sat, Oct 08, 2022 at 11:54:24AM +0530, Ravi Bangoria wrote:
 
-On Fri, 7 Oct 2022 at 18:53, Suzuki K Poulose <suzuki.poulose@arm.com> wrote:
->
-> On 06/10/2022 14:54, Mike Leach wrote:
-> > Hi Suzuki,
-> >
-> > On Mon, 3 Oct 2022 at 10:04, Suzuki K Poulose <suzuki.poulose@arm.com> wrote:
-> >>
-> >> On 09/08/2022 23:33, Mike Leach wrote:
-> >>> Updates the STM driver to use the trace ID allocation API.
-> >>> This uses the _system_id calls to allocate an ID on device poll,
-> >>> and release on device remove.
-> >>>
-> >>> The sysfs access to the STMTRACEIDR register has been changed from RW
-> >>> to RO. Having this value as writable is not appropriate for the new
-> >>> Trace ID scheme - and had potential to cause errors in the previous
-> >>> scheme if values clashed with other sources.
-> >>>
-> >>> Signed-off-by: Mike Leach <mike.leach@linaro.org>
-> >>> Reviewed-by: Suzuki K Poulose <suzuki.poulose@arm.com>
->
-> >>> @@ -854,7 +830,7 @@ static void stm_init_generic_data(struct stm_drvdata *drvdata,
-> >>>
-> >>>    static int stm_probe(struct amba_device *adev, const struct amba_id *id)
-> >>>    {
-> >>> -     int ret;
-> >>> +     int ret, trace_id;
-> >>>        void __iomem *base;
-> >>>        struct device *dev = &adev->dev;
-> >>>        struct coresight_platform_data *pdata = NULL;
-> >>> @@ -938,12 +914,22 @@ static int stm_probe(struct amba_device *adev, const struct amba_id *id)
-> >>>                goto stm_unregister;
-> >>>        }
-> >>>
-> >>> +     trace_id = coresight_trace_id_get_system_id();
-> >>> +     if (trace_id < 0) {
-> >>
-> >> The above API returns "INVALID_ID" and not a negative error status.
-> >> I think it is better to fix the API to return:
-> >>
-> >>     ret < 0  - If there is any error
-> >>              - Otherwise a positive integer
-> >> And the users should be kept unaware of which ID is valid or invalid.
-> >>
-> >
-> > coresight_trace_id_get_system_id() returns the ID if one can be
-> > allocated or -EINVAL if not.
-> >
-> > Not sure what you are looking at here.
->
-> Sorry, indeed I was mistaken there. It is the get_cpu_id() which
-> returns the INVALID_ID on failure. Please could we make that
-> consistent with this scheme ? i.e, < 0 on error.
->
+> +static void perf_event_swap_task_ctx_data(struct perf_event_context *prev_ctx,
+> +					  struct perf_event_context *next_ctx)
+> +{
+> +	struct perf_event_pmu_context *prev_epc, *next_epc;
+> +
+> +	if (!prev_ctx->nr_task_data)
+> +		return;
+> +
+> +	prev_epc = list_first_entry(&prev_ctx->pmu_ctx_list,
+> +				    struct perf_event_pmu_context,
+> +				    pmu_ctx_entry);
+> +	next_epc = list_first_entry(&next_ctx->pmu_ctx_list,
+> +				    struct perf_event_pmu_context,
+> +				    pmu_ctx_entry);
+> +
+> +	while (&prev_epc->pmu_ctx_entry != &prev_ctx->pmu_ctx_list &&
+> +	       &next_epc->pmu_ctx_entry != &next_ctx->pmu_ctx_list) {
+> +
+> +		WARN_ON_ONCE(prev_epc->pmu != next_epc->pmu);
+> +
+> +		/*
+> +		 * PMU specific parts of task perf context can require
+> +		 * additional synchronization. As an example of such
+> +		 * synchronization see implementation details of Intel
+> +		 * LBR call stack data profiling;
+> +		 */
+> +		if (prev_epc->pmu->swap_task_ctx)
+> +			prev_epc->pmu->swap_task_ctx(prev_epc, next_epc);
+> +		else
+> +			swap(prev_epc->task_ctx_data, next_epc->task_ctx_data);
 
-That also returns -EINVAL, as both call the same underlying allocator.
+Did I forget to advance the iterators here?
 
-However happy to add on the comments for the exported functions
+> +	}
+> +}
 
-Regards
-
-Mike
-> Also, please could we add a comment above the exported functions
-> on their entry/exit criteria ? It is not clearly evident, unless
-> we follow the code and figure out.
->
-> Cheers
-> Suzuki
->
-
-
--- 
-Mike Leach
-Principal Engineer, ARM Ltd.
-Manchester Design Centre. UK
