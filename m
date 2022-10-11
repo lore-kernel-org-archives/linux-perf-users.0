@@ -2,492 +2,150 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B677FC433F5
-	for <linux-perf-users@archiver.kernel.org>; Tue, 11 Oct 2022 07:44:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8C586C433F5
+	for <linux-perf-users@archiver.kernel.org>; Tue, 11 Oct 2022 08:04:34 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229580AbiJKHol (ORCPT
+        id S229486AbiJKIEd (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Tue, 11 Oct 2022 03:44:41 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35862 "EHLO
+        Tue, 11 Oct 2022 04:04:33 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46594 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229519AbiJKHoj (ORCPT
+        with ESMTP id S229436AbiJKIEb (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Tue, 11 Oct 2022 03:44:39 -0400
-Received: from desiato.infradead.org (desiato.infradead.org [IPv6:2001:8b0:10b:1:d65d:64ff:fe57:4e05])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5C4E9CC3;
-        Tue, 11 Oct 2022 00:44:37 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=desiato.20200630; h=In-Reply-To:Content-Type:MIME-Version:
-        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description;
-        bh=K6zHlNPbIu5HIi4rKOHlKec/F8zGlMfONp48Fkqjs+A=; b=YLMoLzy0GReigW//KINi7kHsvS
-        g5yNc94nI+EnAgsfS58+gHItym2x/Qg7CBEFpuFWugTkhP4hKTcFLEaB3s8wxk8qqQNydSTcHbGkj
-        nL7xyYFSZKDqvq5Rt3CVvkjhhxECqREHzDLHDpvmqmTnOEllWZ/ViTW46Zv809UK8IJhLr3IbejGz
-        vvW/OjjX7LE2xMiUbWkXo+S6C4LkP1oxfzt2d17BlVHX55eLAZtwl757YSNkOC9SV1dLyjajhYaUu
-        aMhvWYofZNLJjglQdH76quds/h9bxvA4QyZV4XQgBL2PRd6kciPlno6wOs8VldwRSZquQHtnNxb26
-        YhBjJtAw==;
-Received: from j130084.upc-j.chello.nl ([24.132.130.84] helo=noisy.programming.kicks-ass.net)
-        by desiato.infradead.org with esmtpsa (Exim 4.94.2 #2 (Red Hat Linux))
-        id 1oi9w9-002WMW-PU; Tue, 11 Oct 2022 07:44:26 +0000
-Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-        (Client did not present a certificate)
-        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id 7D916300209;
-        Tue, 11 Oct 2022 09:44:24 +0200 (CEST)
-Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
-        id 52B8920D7E1AB; Tue, 11 Oct 2022 09:44:24 +0200 (CEST)
-Date:   Tue, 11 Oct 2022 09:44:24 +0200
-From:   Peter Zijlstra <peterz@infradead.org>
-To:     Marco Elver <elver@google.com>
-Cc:     Ingo Molnar <mingo@redhat.com>,
-        Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Jiri Olsa <jolsa@kernel.org>,
-        Namhyung Kim <namhyung@kernel.org>,
-        linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org,
-        kasan-dev@googlegroups.com, Dmitry Vyukov <dvyukov@google.com>
-Subject: [PATCH v2] perf: Fix missing SIGTRAPs
-Message-ID: <Y0Ue2L5CsaQwDrEs@hirez.programming.kicks-ass.net>
-References: <20220927121322.1236730-1-elver@google.com>
- <Yz7ZLaT4jW3Y9EYS@hirez.programming.kicks-ass.net>
+        Tue, 11 Oct 2022 04:04:31 -0400
+Received: from EUR05-VI1-obe.outbound.protection.outlook.com (mail-vi1eur05on2081.outbound.protection.outlook.com [40.107.21.81])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 671AE7E82F
+        for <linux-perf-users@vger.kernel.org>; Tue, 11 Oct 2022 01:04:30 -0700 (PDT)
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=N5bXpwzJ0HKCnpZwYZMI2Hx/K0hM9iuOIMB/sSMgFVoj48MNs4oW5AIj5aNsD0DhclK0Nz2bsvYFRjfAiaLxeGOMAuewdtezsLqnGO0GcVOoaEELznT7oK+1zZT9EOCv0qFOAPZlN4oU6nWuJWa3K4Zx+JWc/wlAtz5JrOVeXKNOizS4pS7SpB8scDtBu1gAjnDtFeLy0ZcvPG1S7VjS1M/L/6YnMHa0AhZeQYwNOTL97HUvCeiZHSBFZEoG+/uI+Id6/7hAeVfDS952vEJZDlF40uiDOJV/YUE+5eLvKZCa+AhAGQJhJ3WlajBhPbObNZFHYj6aDdHTStWE21uKug==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=oy/G8Sn60pKDJ0VBYoNuE8Mn0ydhdeK/Np6spfdeJNo=;
+ b=JKbNuV64ZQwCx3q4+qIuDIT7eQrk/KZC7tT1ozI9o+E5mnmTBqs6LWb1zEp52DroVxmeyaxCqKmVn5e9PZIDN4qA50LbxKZAq7O7LY4Oa5pbizLlUnExkhB1HgSruZyuW7H79ppGgLxkSIsaZBs5zp0SYsBL5haCFS2DR+wsgo1pFGVHjt/CS0pkAj22Oig7qOp7rjFdkkHhjA7/1JArDORnVT9BYjUUJpI9VC3GEIkkTlAyDOWeE+RK/hQ1ZtMccO+SVZCOWL8NszQTNCRS/+8EJwMhHFk7CvfAC/8qU+eTKOWA3Ql0VQNRfktcRQ7dXkPD+qKQyzIfq5eWj3gwIg==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=ericsson.com; dmarc=pass action=none header.from=ericsson.com;
+ dkim=pass header.d=ericsson.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ericsson.com;
+ s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=oy/G8Sn60pKDJ0VBYoNuE8Mn0ydhdeK/Np6spfdeJNo=;
+ b=q3QDcVEieNdXfQuvagKSZiZpjiHL+LLKlAnUPf+RpXWBVXdL14iCM69HI39ygZWlIAuQrsK77UvsXRI84hALANwIhZpeDVZ4eQoEB8ML6KHTSGLd7haFqX6luIIjYLq6iwtnNttkkStYifYkPiHfEIJF7NG+CaLRz4nk/RYxNI8=
+Received: from AM8PR07MB7666.eurprd07.prod.outlook.com (2603:10a6:20b:240::23)
+ by AS8PR07MB8965.eurprd07.prod.outlook.com (2603:10a6:20b:537::17) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.5709.14; Tue, 11 Oct
+ 2022 08:04:28 +0000
+Received: from AM8PR07MB7666.eurprd07.prod.outlook.com
+ ([fe80::be:55d5:df83:dbf4]) by AM8PR07MB7666.eurprd07.prod.outlook.com
+ ([fe80::be:55d5:df83:dbf4%4]) with mapi id 15.20.5723.018; Tue, 11 Oct 2022
+ 08:04:28 +0000
+From:   Emil Berg <emil.berg@ericsson.com>
+To:     "linux-perf-users@vger.kernel.org" <linux-perf-users@vger.kernel.org>
+Subject: RE: Possible overwriting of errno
+Thread-Topic: Possible overwriting of errno
+Thread-Index: AdiLeXbz2aV0mg2JQcK84/XQYx5qnxRzj0PA
+Date:   Tue, 11 Oct 2022 08:04:28 +0000
+Message-ID: <AM8PR07MB76668E6B298FC3FEBA223EC098239@AM8PR07MB7666.eurprd07.prod.outlook.com>
+References: <AM8PR07MB7666EEF15D803DAFB5A8284D98BB9@AM8PR07MB7666.eurprd07.prod.outlook.com>
+In-Reply-To: <AM8PR07MB7666EEF15D803DAFB5A8284D98BB9@AM8PR07MB7666.eurprd07.prod.outlook.com>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+authentication-results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=ericsson.com;
+x-ms-publictraffictype: Email
+x-ms-traffictypediagnostic: AM8PR07MB7666:EE_|AS8PR07MB8965:EE_
+x-ms-office365-filtering-correlation-id: bddcb31b-9ed8-404f-a409-08daab5f385a
+x-ms-exchange-senderadcheck: 1
+x-ms-exchange-antispam-relay: 0
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info: EiI2ie8grD0pTJp50BOfif869sDR7bye+IFfcscYD1EVqxYPBTolecRZptzsCafs6fPxTgR+SrHMPvJ4vfHsECAHMDUMDkgsCk3FDe221xvCxyQcTufI3w+yESFm3SIIEnJh3nfn+Dr3M/Xz6TTcvDR69ntpN/kKNchKtF+iXcdX1xyurh5u57KKObClvGROMsYHkiFJeH0uWE+YxH6YCUW4bnSPW95S9tLX/3fx6IF2oIxraAY7JRh4CakETsSkcPsb/o0xL9olakmbGopbAZR+krOQm2nPpeDpwlINxqANHinR7G1pS+X5Hnrwi1zDD/skBdVhOZGn8XoMI91Kd5GF0PpjX9z+S0LENYRNEQL8Akho/JphR0FkvIs7ns99hwPsx51K7m3Tjd6iPoJg679pGG383fQO+IGFSGauMxv+piP8FHrtlUxqQbPsTtl4pDfU5dJ2QubRPW/Z0vJ1MYIG6KxwqTkyOlnYueWM/rD5/DfTwBnlrYTXZD+JaaaNeqvXhyTuwqztQmjIPyvS/QmrbDKzAXGmMFzaDUKmX+VHJ5rX9fojwUMc385N9GQR7edSVZY1Z0qwDgelgsQE9dszo0Jid1i+dJ1OF/u+4t6v/SKJsVe3U+0rK5T6CeCPxFjS12U8sofHtPJiAcvJ1MJ2kPl2yMWDALkIr0hf96EnKU6MctPgkl9zDbVY5SFRcBjITEv/95u6IdcaIKE99fCUpDaDnVjOkSVgG5Zp3xS1k1q6YJSfH5NF0p2qVeud
+x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:AM8PR07MB7666.eurprd07.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230022)(4636009)(136003)(366004)(396003)(346002)(376002)(39860400002)(451199015)(9686003)(26005)(55016003)(7696005)(6506007)(82960400001)(71200400001)(186003)(83380400001)(478600001)(38100700002)(122000001)(86362001)(33656002)(53546011)(3480700007)(38070700005)(64756008)(66446008)(66476007)(8676002)(6916009)(66556008)(2906002)(41300700001)(316002)(8936002)(76116006)(5660300002)(52536014)(44832011)(66946007);DIR:OUT;SFP:1101;
+x-ms-exchange-antispam-messagedata-chunkcount: 1
+x-ms-exchange-antispam-messagedata-0: =?us-ascii?Q?ZSIxFEGUtmWa8kv2yGzqDuoGtIMgybbAuw82Zv6Jh0OJxNfH4ut893EmlFIM?=
+ =?us-ascii?Q?s4+7eYBJtiq0xzm+eF6xxaRfFoujFID+pQrE68mJ7MhU22lnIBIb23+2uyxT?=
+ =?us-ascii?Q?ARiwgiARE6+oI9dcTCX9vxwQOJwKjG7EZAr4QRMtAGsllZvXg6qu4KugL+px?=
+ =?us-ascii?Q?baLQ6G7D8W6tj6LK9/M7tM/va/0n8Ckk2HjVCYuPmDFKtJsj0cK6EhkVH82q?=
+ =?us-ascii?Q?InWwf+SQRUZemTkwXSOontOP4o7UfBGr/sNLp19F7xK8eh9tT4zIPAUXBbst?=
+ =?us-ascii?Q?JNp5LpYVQX2ZAhU0D2vbJ3+M472cwJg0+DCsXT5fBBE7F+b5VNCo1HQ+aVwa?=
+ =?us-ascii?Q?AE1c7IKDPzu5ykkikAmW3nXASgqnkdEldHy52OnKryHLjjhyRqG3PTzoXw7+?=
+ =?us-ascii?Q?JNoqQANRPaRaiSocbGr4GQk8sqaTi+FIPWY0utmKR3tOQhk1D4VZ/4SdLRoN?=
+ =?us-ascii?Q?oP8IWoe6kLA+HQHoyh/Z+OSbsWG1MwG0omRcf4BQdJGER/HYNrKXZR9vjkbJ?=
+ =?us-ascii?Q?1MYJVYHQ6XkDMb9Gys7xO9ABA3P7asjBGeYPB3aHOqwvFernpeFWbkrreGRo?=
+ =?us-ascii?Q?hWiu8luGBJCgGIJdoip0WC4/XGWbAhdwQBrgAc/FmM+uu2xgbZC43XFk4i7d?=
+ =?us-ascii?Q?R0XhHPw7ZTPmh/jnvo38ur0R0JJSJXYPjquttQ6fSOE/J/fAVVwVi0RtavVJ?=
+ =?us-ascii?Q?DU9UOBiHhEoWAZD863xjgd7f0Nez4KOucY5ddsPK9Mye0+uk6AAEhJ6p8OS0?=
+ =?us-ascii?Q?MtMOCxFQLflFdTDRZ8sq1IwaHqqDC7CVsq0CgsAjeujgAQtcrXjVph+U4JCr?=
+ =?us-ascii?Q?dAvSvGpyHveeJxry50JDv4ObrcF2AZwm5ilyrmreSQMSLIbkG+sKGbYh8SnF?=
+ =?us-ascii?Q?J3Dnn4nmtDeDQ20D5XtmhAE7FjEyhs3fcVZodX9nTCtHc/gH3qBV6OV2xK8d?=
+ =?us-ascii?Q?ArVwC+vBbg5Q77vHed0XfcSOa89T5G7EfInzDMBJqJ282my1vEd3E/Py4a58?=
+ =?us-ascii?Q?hm8gITQi2JjPt666skUZvRyGuA1ogHBnrEQHXGcz9VjtGMI+p7kSkeITiEEg?=
+ =?us-ascii?Q?BWG/EDaBLnM9+zoYTm/y5vtmqXf3dEXwS3TQ8HpZuSeAqcwdS9VYL0eUYaZ2?=
+ =?us-ascii?Q?DyQ0zf04pNMmUh+rdoGReoUhFg6iLpcZP/e23Mo1WvmIxe427guhzDtsJcUY?=
+ =?us-ascii?Q?rBO1S9QEYWUsnGJqr5jfIK0fNad2cpyEb4oiZYqw4SAX7FZfUI9N2qpqcihy?=
+ =?us-ascii?Q?vFfFegnpUbhXyLOnp0+2pRKVejRwLk0/huBLmSpbFy4RUPt/M+t7x4fS+HzR?=
+ =?us-ascii?Q?cHg6UKPUJEubGbkZhMF1OAITEqC0huTBS9FRNqFKMgfdxxFCIy0jMxFLYG8s?=
+ =?us-ascii?Q?/wmfeOH96zOTGuQNwNKyY1rbRoVryzjBfDAUGEz7bDnEsCiYur7zv9QNGX85?=
+ =?us-ascii?Q?9K35rwqSiBbozIS7mSGUFE+ocTJCzcyhL2pr/hUEyNEEN3+IboEcDaNfPftn?=
+ =?us-ascii?Q?JOGjS45saFhJd9bIPRQnc0Dh5ib97vBrAX1ABTccUaPLh42iKMty5Ihhsmxk?=
+ =?us-ascii?Q?f/YxO1XeQ1DGvzSMmpMu2YFnK5EDddzIcldv9iXX?=
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: quoted-printable
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <Yz7ZLaT4jW3Y9EYS@hirez.programming.kicks-ass.net>
+X-OriginatorOrg: ericsson.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-AuthSource: AM8PR07MB7666.eurprd07.prod.outlook.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: bddcb31b-9ed8-404f-a409-08daab5f385a
+X-MS-Exchange-CrossTenant-originalarrivaltime: 11 Oct 2022 08:04:28.2053
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 92e84ceb-fbfd-47ab-be52-080c6b87953f
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: Ak1d+nkpSaraHiq38AIb19Q4cweZ9nJ0j4EMPFxpGDPHBDBS6NoTgHHeNslieV+/mz9mfkbC+katqPBMtCAtNw==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: AS8PR07MB8965
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-Subject: perf: Fix missing SIGTRAPs
-From: Peter Zijlstra <peterz@infradead.org>
-Date: Thu Oct 6 15:00:39 CEST 2022
+Although it's been a while I still think this is a bug. Assuming any posix =
+function, e.g. close() in record__terminate_thread(), can modify errno, it =
+seems like this is an issue which may produce confusing error messages. Wil=
+l there be a fix for this?
 
-Marco reported:
+See below.
 
-Due to the implementation of how SIGTRAP are delivered if
-perf_event_attr::sigtrap is set, we've noticed 3 issues:
-
-  1. Missing SIGTRAP due to a race with event_sched_out() (more
-     details below).
-
-  2. Hardware PMU events being disabled due to returning 1 from
-     perf_event_overflow(). The only way to re-enable the event is
-     for user space to first "properly" disable the event and then
-     re-enable it.
-
-  3. The inability to automatically disable an event after a
-     specified number of overflows via PERF_EVENT_IOC_REFRESH.
-
-The worst of the 3 issues is problem (1), which occurs when a
-pending_disable is "consumed" by a racing event_sched_out(), observed
-as follows:
-
-		CPU0			|	CPU1
-	--------------------------------+---------------------------
-	__perf_event_overflow()		|
-	 perf_event_disable_inatomic()	|
-	  pending_disable = CPU0	| ...
-					| _perf_event_enable()
-					|  event_function_call()
-					|   task_function_call()
-					|    /* sends IPI to CPU0 */
-	<IPI>				| ...
-	 __perf_event_enable()		+---------------------------
-	  ctx_resched()
-	   task_ctx_sched_out()
-	    ctx_sched_out()
-	     group_sched_out()
-	      event_sched_out()
-	       pending_disable = -1
-	</IPI>
-	<IRQ-work>
-	 perf_pending_event()
-	  perf_pending_event_disable()
-	   /* Fails to send SIGTRAP because no pending_disable! */
-	</IRQ-work>
-
-In the above case, not only is that particular SIGTRAP missed, but also
-all future SIGTRAPs because 'event_limit' is not reset back to 1.
-
-To fix, rework pending delivery of SIGTRAP via IRQ-work by introduction
-of a separate 'pending_sigtrap', no longer using 'event_limit' and
-'pending_disable' for its delivery.
-
-Additionally; and different to Marco's proposed patch:
-
- - recognise that pending_disable effectively duplicates oncpu for
-   the case where it is set. As such, change the irq_work handler to
-   use ->oncpu to target the event and use pending_* as boolean toggles.
-
- - observe that SIGTRAP targets the ctx->task, so the context switch
-   optimization that carries contexts between tasks is invalid. If
-   the irq_work were delayed enough to hit after a context switch the
-   SIGTRAP would be delivered to the wrong task.
-
- - observe that if the event gets scheduled out
-   (rotation/migration/context-switch/...) the irq-work would be
-   insufficient to deliver the SIGTRAP when the event gets scheduled
-   back in (the irq-work might still be pending on the old CPU).
-
-   Therefore have event_sched_out() convert the pending sigtrap into a
-   task_work which will deliver the signal at return_to_user.
-
-Fixes: 97ba62b27867 ("perf: Add support for SIGTRAP on perf events")
-Reported-by: Marco Elver <elver@google.com>
-Debugged-by: Marco Elver <elver@google.com>
-Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
----
- include/linux/perf_event.h  |   19 ++++-
- kernel/events/core.c        |  151 ++++++++++++++++++++++++++++++++------------
- kernel/events/ring_buffer.c |    2 
- 3 files changed, 129 insertions(+), 43 deletions(-)
-
---- a/include/linux/perf_event.h
-+++ b/include/linux/perf_event.h
-@@ -736,11 +736,14 @@ struct perf_event {
- 	struct fasync_struct		*fasync;
- 
- 	/* delayed work for NMIs and such */
--	int				pending_wakeup;
--	int				pending_kill;
--	int				pending_disable;
-+	unsigned int			pending_wakeup;
-+	unsigned int			pending_kill;
-+	unsigned int			pending_disable;
-+	unsigned int			pending_sigtrap;
- 	unsigned long			pending_addr;	/* SIGTRAP */
--	struct irq_work			pending;
-+	struct irq_work			pending_irq;
-+	struct callback_head		pending_task;
-+	unsigned int			pending_work;
- 
- 	atomic_t			event_limit;
- 
-@@ -857,6 +860,14 @@ struct perf_event_context {
- #endif
- 	void				*task_ctx_data; /* pmu specific data */
- 	struct rcu_head			rcu_head;
-+
-+	/*
-+	 * Sum (event->pending_sigtrap + event->pending_work)
-+	 *
-+	 * The SIGTRAP is targeted at ctx->task, as such it won't do changing
-+	 * that until the signal is delivered.
-+	 */
-+	local_t				nr_pending;
- };
- 
- /*
---- a/kernel/events/core.c
-+++ b/kernel/events/core.c
-@@ -54,6 +54,7 @@
- #include <linux/highmem.h>
- #include <linux/pgtable.h>
- #include <linux/buildid.h>
-+#include <linux/task_work.h>
- 
- #include "internal.h"
- 
-@@ -2268,11 +2269,26 @@ event_sched_out(struct perf_event *event
- 	event->pmu->del(event, 0);
- 	event->oncpu = -1;
- 
--	if (READ_ONCE(event->pending_disable) >= 0) {
--		WRITE_ONCE(event->pending_disable, -1);
-+	if (event->pending_disable) {
-+		event->pending_disable = 0;
- 		perf_cgroup_event_disable(event, ctx);
- 		state = PERF_EVENT_STATE_OFF;
- 	}
-+
-+	if (event->pending_sigtrap) {
-+		bool dec = true;
-+
-+		event->pending_sigtrap = 0;
-+		if (state != PERF_EVENT_STATE_OFF &&
-+		    !event->pending_work) {
-+			event->pending_work = 1;
-+			dec = false;
-+			task_work_add(current, &event->pending_task, TWA_RESUME);
-+		}
-+		if (dec)
-+			local_dec(&event->ctx->nr_pending);
-+	}
-+
- 	perf_event_set_state(event, state);
- 
- 	if (!is_software_event(event))
-@@ -2424,7 +2440,7 @@ static void __perf_event_disable(struct
-  * hold the top-level event's child_mutex, so any descendant that
-  * goes to exit will block in perf_event_exit_event().
-  *
-- * When called from perf_pending_event it's OK because event->ctx
-+ * When called from perf_pending_irq it's OK because event->ctx
-  * is the current context on this CPU and preemption is disabled,
-  * hence we can't get into perf_event_task_sched_out for this context.
-  */
-@@ -2463,9 +2479,8 @@ EXPORT_SYMBOL_GPL(perf_event_disable);
- 
- void perf_event_disable_inatomic(struct perf_event *event)
- {
--	WRITE_ONCE(event->pending_disable, smp_processor_id());
--	/* can fail, see perf_pending_event_disable() */
--	irq_work_queue(&event->pending);
-+	event->pending_disable = 1;
-+	irq_work_queue(&event->pending_irq);
- }
- 
- #define MAX_INTERRUPTS (~0ULL)
-@@ -3420,11 +3435,23 @@ static void perf_event_context_sched_out
- 		raw_spin_lock_nested(&next_ctx->lock, SINGLE_DEPTH_NESTING);
- 		if (context_equiv(ctx, next_ctx)) {
- 
-+			perf_pmu_disable(pmu);
-+
-+			/* PMIs are disabled; ctx->nr_pending is stable. */
-+			if (local_read(&ctx->nr_pending) ||
-+			    local_read(&next_ctx->nr_pending)) {
-+				/*
-+				 * Must not swap out ctx when there's pending
-+				 * events that rely on the ctx->task relation.
-+				 */
-+				raw_spin_unlock(&next_ctx->lock);
-+				rcu_read_unlock();
-+				goto inside_switch;
-+			}
-+
- 			WRITE_ONCE(ctx->task, next);
- 			WRITE_ONCE(next_ctx->task, task);
- 
--			perf_pmu_disable(pmu);
--
- 			if (cpuctx->sched_cb_usage && pmu->sched_task)
- 				pmu->sched_task(ctx, false);
- 
-@@ -3465,6 +3492,7 @@ static void perf_event_context_sched_out
- 		raw_spin_lock(&ctx->lock);
- 		perf_pmu_disable(pmu);
- 
-+inside_switch:
- 		if (cpuctx->sched_cb_usage && pmu->sched_task)
- 			pmu->sched_task(ctx, false);
- 		task_ctx_sched_out(cpuctx, ctx, EVENT_ALL);
-@@ -4931,7 +4959,7 @@ static void perf_addr_filters_splice(str
- 
- static void _free_event(struct perf_event *event)
- {
--	irq_work_sync(&event->pending);
-+	irq_work_sync(&event->pending_irq);
- 
- 	unaccount_event(event);
- 
-@@ -6431,7 +6459,8 @@ static void perf_sigtrap(struct perf_eve
- 		return;
- 
- 	/*
--	 * perf_pending_event() can race with the task exiting.
-+	 * Both perf_pending_task() and perf_pending_irq() can race with the
-+	 * task exiting.
- 	 */
- 	if (current->flags & PF_EXITING)
- 		return;
-@@ -6440,23 +6469,33 @@ static void perf_sigtrap(struct perf_eve
- 		      event->attr.type, event->attr.sig_data);
- }
- 
--static void perf_pending_event_disable(struct perf_event *event)
-+/*
-+ * Deliver the pending work in-event-context or follow the context.
-+ */
-+static void __perf_pending_irq(struct perf_event *event)
- {
--	int cpu = READ_ONCE(event->pending_disable);
-+	int cpu = READ_ONCE(event->oncpu);
- 
-+	/*
-+	 * If the event isn't running; we done. event_sched_out() will have
-+	 * taken care of things.
-+	 */
- 	if (cpu < 0)
- 		return;
- 
-+	/*
-+	 * Yay, we hit home and are in the context of the event.
-+	 */
- 	if (cpu == smp_processor_id()) {
--		WRITE_ONCE(event->pending_disable, -1);
--
--		if (event->attr.sigtrap) {
-+		if (event->pending_sigtrap) {
-+			event->pending_sigtrap = 0;
- 			perf_sigtrap(event);
--			atomic_set_release(&event->event_limit, 1); /* rearm event */
--			return;
-+			local_dec(&event->ctx->nr_pending);
-+		}
-+		if (event->pending_disable) {
-+			event->pending_disable = 0;
-+			perf_event_disable_local(event);
- 		}
--
--		perf_event_disable_local(event);
- 		return;
- 	}
- 
-@@ -6476,35 +6515,62 @@ static void perf_pending_event_disable(s
- 	 *				  irq_work_queue(); // FAILS
- 	 *
- 	 *  irq_work_run()
--	 *    perf_pending_event()
-+	 *    perf_pending_irq()
- 	 *
- 	 * But the event runs on CPU-B and wants disabling there.
- 	 */
--	irq_work_queue_on(&event->pending, cpu);
-+	irq_work_queue_on(&event->pending_irq, cpu);
- }
- 
--static void perf_pending_event(struct irq_work *entry)
-+static void perf_pending_irq(struct irq_work *entry)
- {
--	struct perf_event *event = container_of(entry, struct perf_event, pending);
-+	struct perf_event *event = container_of(entry, struct perf_event, pending_irq);
- 	int rctx;
- 
--	rctx = perf_swevent_get_recursion_context();
- 	/*
- 	 * If we 'fail' here, that's OK, it means recursion is already disabled
- 	 * and we won't recurse 'further'.
- 	 */
-+	rctx = perf_swevent_get_recursion_context();
- 
--	perf_pending_event_disable(event);
--
-+	/*
-+	 * The wakeup isn't bound to the context of the event -- it can happen
-+	 * irrespective of where the event is.
-+	 */
- 	if (event->pending_wakeup) {
- 		event->pending_wakeup = 0;
- 		perf_event_wakeup(event);
- 	}
- 
-+	__perf_pending_irq(event);
-+
- 	if (rctx >= 0)
- 		perf_swevent_put_recursion_context(rctx);
- }
- 
-+static void perf_pending_task(struct callback_head *head)
-+{
-+	struct perf_event *event = container_of(head, struct perf_event, pending_task);
-+	int rctx;
-+
-+	/*
-+	 * If we 'fail' here, that's OK, it means recursion is already disabled
-+	 * and we won't recurse 'further'.
-+	 */
-+	preempt_disable_notrace();
-+	rctx = perf_swevent_get_recursion_context();
-+
-+	if (event->pending_work) {
-+		event->pending_work = 0;
-+		perf_sigtrap(event);
-+		local_dec(&event->ctx->nr_pending);
-+	}
-+
-+	if (rctx >= 0)
-+		perf_swevent_put_recursion_context(rctx);
-+	preempt_enable_notrace();
-+}
-+
- #ifdef CONFIG_GUEST_PERF_EVENTS
- struct perf_guest_info_callbacks __rcu *perf_guest_cbs;
- 
-@@ -9188,8 +9254,8 @@ int perf_event_account_interrupt(struct
-  */
- 
- static int __perf_event_overflow(struct perf_event *event,
--				   int throttle, struct perf_sample_data *data,
--				   struct pt_regs *regs)
-+				 int throttle, struct perf_sample_data *data,
-+				 struct pt_regs *regs)
- {
- 	int events = atomic_read(&event->event_limit);
- 	int ret = 0;
-@@ -9212,24 +9278,36 @@ static int __perf_event_overflow(struct
- 	if (events && atomic_dec_and_test(&event->event_limit)) {
- 		ret = 1;
- 		event->pending_kill = POLL_HUP;
--		event->pending_addr = data->addr;
--
- 		perf_event_disable_inatomic(event);
- 	}
- 
-+	if (event->attr.sigtrap) {
-+		/*
-+		 * Should not be able to return to user space without processing
-+		 * pending_sigtrap (kernel events can overflow multiple times).
-+		 */
-+		WARN_ON_ONCE(event->pending_sigtrap && event->attr.exclude_kernel);
-+		if (!event->pending_sigtrap) {
-+			event->pending_sigtrap = 1;
-+			local_inc(&event->ctx->nr_pending);
-+		}
-+		event->pending_addr = data->addr;
-+		irq_work_queue(&event->pending_irq);
-+	}
-+
- 	READ_ONCE(event->overflow_handler)(event, data, regs);
- 
- 	if (*perf_event_fasync(event) && event->pending_kill) {
- 		event->pending_wakeup = 1;
--		irq_work_queue(&event->pending);
-+		irq_work_queue(&event->pending_irq);
- 	}
- 
- 	return ret;
- }
- 
- int perf_event_overflow(struct perf_event *event,
--			  struct perf_sample_data *data,
--			  struct pt_regs *regs)
-+			struct perf_sample_data *data,
-+			struct pt_regs *regs)
- {
- 	return __perf_event_overflow(event, 1, data, regs);
- }
-@@ -11537,8 +11615,8 @@ perf_event_alloc(struct perf_event_attr
- 
- 
- 	init_waitqueue_head(&event->waitq);
--	event->pending_disable = -1;
--	init_irq_work(&event->pending, perf_pending_event);
-+	init_irq_work(&event->pending_irq, perf_pending_irq);
-+	init_task_work(&event->pending_task, perf_pending_task);
- 
- 	mutex_init(&event->mmap_mutex);
- 	raw_spin_lock_init(&event->addr_filters.lock);
-@@ -11560,9 +11638,6 @@ perf_event_alloc(struct perf_event_attr
- 	if (parent_event)
- 		event->event_caps = parent_event->event_caps;
- 
--	if (event->attr.sigtrap)
--		atomic_set(&event->event_limit, 1);
--
- 	if (task) {
- 		event->attach_state = PERF_ATTACH_TASK;
- 		/*
---- a/kernel/events/ring_buffer.c
-+++ b/kernel/events/ring_buffer.c
-@@ -22,7 +22,7 @@ static void perf_output_wakeup(struct pe
- 	atomic_set(&handle->rb->poll, EPOLLIN);
- 
- 	handle->event->pending_wakeup = 1;
--	irq_work_queue(&handle->event->pending);
-+	irq_work_queue(&handle->event->pending_irq);
- }
- 
- /*
+> -----Original Message-----
+> From: Emil Berg
+> Sent: den 29 juni 2022 07:32
+> To: linux-perf-users@vger.kernel.org
+> Subject: Possible overwriting of errno
+>=20
+> Hi!
+>=20
+> I'm getting the error "Failed to start threads: File exists" from perf, p=
+robably
+> EEXIST.
+>=20
+> I just want to discuss the changes to tools/perf/builtin-record.c made Fe=
+b 10
+> 2022 with:
+> perf record: Start threads in the beginning of trace streaming
+> SHA: 3217e9fecf118d5dcabdd68d91e0c6afcb4c3e1b
+>=20
+> At line 2014 pthread_create() is run and on line 2017 strerror(errno) is
+> printed. Between line 2014 and 2017 record__terminate_thread() is run.
+>=20
+> I just think record__terminate_thread() run in-between looks like it may
+> overwrite errno, thus messing up the error message. To be clear I think t=
+he
+> error message should come from failure of thread creation and not from
+> failure of thread termination. Can someone enlighten me here?
+>=20
+> if (pthread_create(&handle, &attrs, record__thread, &thread_data[t])) {
+>     for (tt =3D 1; tt < t; tt++)
+>         record__terminate_thread(&thread_data[t]);
+>     pr_err("Failed to start threads: %s\n", strerror(errno));
+>=20
+> /Emil Berg
