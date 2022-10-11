@@ -2,216 +2,149 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0D588C433FE
-	for <linux-perf-users@archiver.kernel.org>; Tue, 11 Oct 2022 17:48:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A360EC433FE
+	for <linux-perf-users@archiver.kernel.org>; Tue, 11 Oct 2022 21:32:26 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229508AbiJKRsh (ORCPT
+        id S229527AbiJKVcZ (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Tue, 11 Oct 2022 13:48:37 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49488 "EHLO
+        Tue, 11 Oct 2022 17:32:25 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58398 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229885AbiJKRsf (ORCPT
+        with ESMTP id S229451AbiJKVcY (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Tue, 11 Oct 2022 13:48:35 -0400
-Received: from mail-oa1-f41.google.com (mail-oa1-f41.google.com [209.85.160.41])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A54BC4BD38;
-        Tue, 11 Oct 2022 10:48:34 -0700 (PDT)
-Received: by mail-oa1-f41.google.com with SMTP id 586e51a60fabf-1322fa1cf6fso16786273fac.6;
-        Tue, 11 Oct 2022 10:48:34 -0700 (PDT)
+        Tue, 11 Oct 2022 17:32:24 -0400
+Received: from mail-pj1-x102f.google.com (mail-pj1-x102f.google.com [IPv6:2607:f8b0:4864:20::102f])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 75123925A7
+        for <linux-perf-users@vger.kernel.org>; Tue, 11 Oct 2022 14:32:23 -0700 (PDT)
+Received: by mail-pj1-x102f.google.com with SMTP id d7-20020a17090a2a4700b0020d268b1f02so185479pjg.1
+        for <linux-perf-users@vger.kernel.org>; Tue, 11 Oct 2022 14:32:23 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20210112;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:from:to:cc:subject:date:message-id:reply-to;
+        bh=ikGBgko34MK8Q4AzkK3JoVI5yFlG4OFIaLI3Bh2Pdvk=;
+        b=TBVibUTb+e+fqcJcnLpSEAgXBwg/5lAvgViQjDw5VSZnqEIJ4ZYFGy4Lx0WWSlruVY
+         yYzo8d5UsknaIBJ05dROYJNKw1IBdsNHfqJWTX6aTAEtpa7LdQlExy5dwrWW2IvCN++Z
+         wNfDaDvn7TdNqXf6R0909mywmpJJaswv6WKub/g4xXrPsVkVxQhimgJZwoMZsiFJYRIB
+         Dha6Hx7uzVLNRRM8Zk1iwJbchU2+cUjtjyDI66jRw8z4tJMBs8+Xi/zyW3X9nPVrI5Ij
+         hD61P6ACVj5QHawphHPWH1Kf73y6Zdz9FwntK8yUZDl9TiXYytbelmNFNSyQdnSdfbsT
+         u0lg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
         h=cc:to:subject:message-id:date:from:in-reply-to:references
          :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
          :reply-to;
-        bh=XFEDgKRLNBXIcQQzG3utcKdq1fAEvCe7vcubsOS0pX8=;
-        b=YeRbJuyKX79RudwGWkXmF9v5+N5e6njLqeM6LPkjH8f1GAZTQ+sVieYvFgaIKZWfQX
-         otTQBmV4YoIfIZBrVXVWmR45kI4yhZlLglyi+LbGdH8uns77RocP+D1SJ3PnJWHKPvZr
-         6ksx+8ZJ+a/IT0Aundc029cPjjJQdmzF/SB1mJTxzV6YQqqD/0vzwJkbVgw0KyTZybZk
-         UV40jbdxkW+myg8YS8VAgwQily4tUmL9+3XJi+p0rBl9rTjAfOHCCr7UpI88f8U5KJFP
-         ia2hZW3dqXvet83z9gC6oj6M7PxgXmJRVM0ZjuaFAnbQvpMI9yEoVErzAkhQBfMW1RVZ
-         7adA==
-X-Gm-Message-State: ACrzQf1E8zYXRTwkzXYqoKcdU4LGyaFKKt6/7wP71bfL961oPwYpQF7K
-        XKv47prgad3ua1D6vgSUlk+tbJzArRFpMKUCoRE=
-X-Google-Smtp-Source: AMsMyM66bgb9X76VWSKpfpzMqYCIBKG1unh2EwtVeopVQm7t7fTpcpWmVH3/lff8MkTOECp7z/au55vCQzqoKcWTBsQ=
-X-Received: by 2002:a05:6870:82ac:b0:133:34b:6f10 with SMTP id
- q44-20020a05687082ac00b00133034b6f10mr203116oae.218.1665510513845; Tue, 11
- Oct 2022 10:48:33 -0700 (PDT)
+        bh=ikGBgko34MK8Q4AzkK3JoVI5yFlG4OFIaLI3Bh2Pdvk=;
+        b=0xJGTACa4MOJ+BoE3aHFCYCoPdtU74KbPZGGjQuH5JGLCGk41JL3eN0Q+Rd9llfRy2
+         h7GtkTvzhmLdA+9ep59JWyL6+E9QQbFFBGMclnAPtxFseBroD52JbCxIFVk3+6/gQhdH
+         u2JKvhxNvCBP8v3GjzYpUkbyPN94rW5KUYx0taj970SxqCPhPBVlnk98AAwmWksjqD+y
+         MXGhhFiIA9msxoSj8dcxluOLjxe1snMniPLigCU8foNjV6DPKKxSolINykp3D+iT3UN1
+         jMK23rWbx2Kpq+9rTJib8pA6m+XnjBuwG+u3RXRnyIDz94ALwy27V2vW6tN+hmKOZFHg
+         C5Ww==
+X-Gm-Message-State: ACrzQf3ul37KaSFvUQ016WX/MpU2YsbtnKO+8zJrmXFRyTVy/GFm+iYm
+        Mi3aH0OSb4kUn0oAdno7Ohl7WRW9PqIlAmgGMY4z8A==
+X-Google-Smtp-Source: AMsMyM7vUNgsNdzlwAgOOqjbogivmsfmkpSHWwUyP76bR5WmeWGZF8Mjzaf+a+QNqMDUPosfKwLOOYdIJLja5h2QLMw=
+X-Received: by 2002:a17:902:b218:b0:184:710c:8c52 with SMTP id
+ t24-20020a170902b21800b00184710c8c52mr92201plr.95.1665523942762; Tue, 11 Oct
+ 2022 14:32:22 -0700 (PDT)
 MIME-Version: 1.0
-References: <20220926144948.223641-1-james.clark@arm.com> <20220926144948.223641-2-james.clark@arm.com>
- <d18181a2-ce9c-5d7f-17ca-43154fc6470f@arm.com>
-In-Reply-To: <d18181a2-ce9c-5d7f-17ca-43154fc6470f@arm.com>
-From:   Namhyung Kim <namhyung@kernel.org>
-Date:   Tue, 11 Oct 2022 10:48:22 -0700
-Message-ID: <CAM9d7ci3+gq6avXuhBsPH_v8PQDFJY=4JFOG9_BQ7xvEFazZTw@mail.gmail.com>
-Subject: Re: [PATCH 1/1] perf test: Fix attr tests for PERF_FORMAT_LOST
-To:     James Clark <james.clark@arm.com>
-Cc:     Arnaldo Carvalho de Melo <acme@kernel.org>,
-        linux-kernel <linux-kernel@vger.kernel.org>,
+References: <CAKwvOdnrHErOK+w878izVauHUKaX3eD-HXgigq2Ogm3iSj-fHA@mail.gmail.com>
+ <76CB17D0-5A66-4D49-A389-8F40EC830DC0@sladewatkins.net> <CAP-5=fXVgwMO_CpS-EHN6PFhLB-J5Ft7qHz7oQd-WOMnTj72Cw@mail.gmail.com>
+ <CAM9d7chvZjZ4YVc6j3w7OkdHteyJ0GUZboieu9G7jAWBevoZqA@mail.gmail.com>
+ <e553c4f8-ed3d-0755-cc8a-b5ffe43b2c2f@amd.com> <CAKwvOdk6TTNhu_+FdONTXPo9Z8u5D4-5kf-rMN8oK4+6fMyc-w@mail.gmail.com>
+ <CABPqkBQVfQFJKCdHXEMGFcupzvy8zq14F52eLW5s9vr2Shmi6w@mail.gmail.com> <85822c3c-2254-52cc-e6b1-9c89adb63771@amd.com>
+In-Reply-To: <85822c3c-2254-52cc-e6b1-9c89adb63771@amd.com>
+From:   Nick Desaulniers <ndesaulniers@google.com>
+Date:   Tue, 11 Oct 2022 14:32:11 -0700
+Message-ID: <CAKwvOdkfEexsE07XXGW3FF+nMt-pR8uv2EA7QzsPbEZsSQBO-Q@mail.gmail.com>
+Subject: Re: Invalid event (cycles:pp) in per-thread mode, enable system wide
+ with '-a'.
+To:     Ravi Bangoria <ravi.bangoria@amd.com>
+Cc:     Stephane Eranian <eranian@google.com>,
+        Slade Watkins <srw@sladewatkins.net>,
         linux-perf-users <linux-perf-users@vger.kernel.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Jiri Olsa <jolsa@kernel.org>,
-        Adrian Hunter <adrian.hunter@intel.com>
+        LKML <linux-kernel@vger.kernel.org>,
+        Ian Rogers <irogers@google.com>,
+        Namhyung Kim <namhyung@gmail.com>,
+        Kees Cook <keescook@chromium.org>, sandipan.das@amd.com,
+        Bill Wendling <morbo@google.com>,
+        clang-built-linux <llvm@lists.linux.dev>,
+        Yonghong Song <yhs@fb.com>,
+        Peter Zijlstra <peterz@infradead.org>
 Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-Hi James,
+On Thu, Oct 6, 2022 at 8:56 PM Ravi Bangoria <ravi.bangoria@amd.com> wrote:
+>
+> +cc: PeterZ
+>
+> >>>>> +Ravi who may be able to say if there are any issues with the precise
+> >>>>> sampling on AMD.
+> >>>>
+> >>>> Afaik cvcles:pp will use IBS but it doesn't support per-task profiling
+> >>>> since it has no task context.  Ravi is working on it..
+> >>>
+> >>> Right.
+> >>> https://lore.kernel.org/lkml/20220829113347.295-1-ravi.bangoria@amd.com
+> >>
+> >> Cool, thanks for working on this Ravi.
+> >>
+> >> I'm not sure yet whether I may replace the kernel on my corporate
+> >> provided workstation, so I'm not sure yet I can help test that patch.
+> >>
+> >> Can you confirm that
+> >> $ perf record -e cycles:pp --freq=128 --call-graph lbr -- <command to profile>
+> >>
+> >> works with just that patch applied? Or is there more work required?
+> >> What is the status of that patch?
+> >>
+> >> For context, we had difficulty upstreaming support for instrumentation
+> >> based profile guided optimizations in the Linux kernel.
+> >> https://lore.kernel.org/lkml/CAHk-=whqCT0BeqBQhW8D-YoLLgp_eFY=8Y=9ieREM5xx0ef08w@mail.gmail.com/
+> >> We'd like to be able to use either instrumentation or sampling to
+> >> optimize our builds.  The major barrier to sample based approaches are
+> >> architecture / micro architecture issues with sample based profile
+> >> data collection, and bitrot of data processing utilities.
+> >> https://github.com/google/autofdo/issues/144
+> >
+> > On existing AMD Zen2, Zen3 the following cmdline:
+> > $ perf record -e cycles:pp --freq=128 --call-graph lbr -- <command to profile>
+> >
+> > does not work. I see two reasons:
+> >
+> > 1. cycles:pp is likely converted into IBS op in cycle mode.
+> >     Current kernels do not support IBS in per-thread mode.
+> >     This is purely a kernel limitation
+>
+> Right, it's purely a kernel limitation. And below simple patch on top
+> of event-context rewrite patch[1] should be sufficient to make cycles:pp
+> working in per-process mode on AMD Zen.
+>
+> ---
+> diff --git a/arch/x86/events/amd/ibs.c b/arch/x86/events/amd/ibs.c
+> index c251bc44c088..de01b5d27e40 100644
+> --- a/arch/x86/events/amd/ibs.c
+> +++ b/arch/x86/events/amd/ibs.c
+> @@ -665,7 +665,7 @@ static struct perf_ibs perf_ibs_fetch = {
+>
+>  static struct perf_ibs perf_ibs_op = {
+>         .pmu = {
+> -               .task_ctx_nr    = perf_invalid_context,
+> +               .task_ctx_nr    = perf_hw_context,
+>
+>                 .event_init     = perf_ibs_init,
+>                 .add            = perf_ibs_add,
+> ---
+>
+> [1]: https://lore.kernel.org/lkml/20220829113347.295-1-ravi.bangoria@amd.com
 
-On Tue, Oct 11, 2022 at 6:00 AM James Clark <james.clark@arm.com> wrote:
->
->
->
-> On 26/09/2022 15:49, James Clark wrote:
-> > Since PERF_FORMAT_LOST was added, the default read format has that bit
-> > set, so add it to the tests. When running on an older kernel the tests
-> > will still fail because Perf will not set that bit.
-> >
-> > This fixes the following failure:
-> >
-> >   expected read_format=0|4, got 20
-> >   FAILED './tests/attr/test-record-C0' - match failure
-> >
-> > Fixes: 85b425f31c88 ("perf record: Set PERF_FORMAT_LOST by default")
-> > Signed-off-by: James Clark <james.clark@arm.com>
-> > ---
-> >  tools/perf/tests/attr/base-record                | 2 +-
-> >  tools/perf/tests/attr/system-wide-dummy          | 2 +-
-> >  tools/perf/tests/attr/test-record-group          | 4 ++--
-> >  tools/perf/tests/attr/test-record-group-sampling | 6 +++---
-> >  tools/perf/tests/attr/test-record-group1         | 4 ++--
-> >  tools/perf/tests/attr/test-record-group2         | 4 ++--
-> >  6 files changed, 11 insertions(+), 11 deletions(-)
-> >
-> > diff --git a/tools/perf/tests/attr/base-record b/tools/perf/tests/attr/base-record
-> > index 8c10955eff93..9758e22daf9c 100644
-> > --- a/tools/perf/tests/attr/base-record
-> > +++ b/tools/perf/tests/attr/base-record
-> > @@ -9,7 +9,7 @@ size=128
-> >  config=0
-> >  sample_period=*
-> >  sample_type=263
-> > -read_format=0|4
-> > +read_format=0|20
->
-> Hi Namhyung,
->
-> Did you manage to take a look at this review? Are you ok with it being
-> 0|20 or should I change it to 0|4|20?
+Hi Ravi,
+I didn't see the above diff in
+https://lore.kernel.org/lkml/20221008062424.313-1-ravi.bangoria@amd.com/
+Was there another distinct patch you were going to send for the above?
 
-I'm sorry I missed this.  It'd be nice if it can succeed on old kernels too.
-Please go with 0|4|20 and the like.
-
+-- 
 Thanks,
-Namhyung
-
-
->
-> >  disabled=1
-> >  inherit=1
-> >  pinned=0
-> > diff --git a/tools/perf/tests/attr/system-wide-dummy b/tools/perf/tests/attr/system-wide-dummy
-> > index 86a15dd359d9..0df8a997fe51 100644
-> > --- a/tools/perf/tests/attr/system-wide-dummy
-> > +++ b/tools/perf/tests/attr/system-wide-dummy
-> > @@ -11,7 +11,7 @@ size=128
-> >  config=9
-> >  sample_period=4000
-> >  sample_type=455
-> > -read_format=4
-> > +read_format=20
-> >  # Event will be enabled right away.
-> >  disabled=0
-> >  inherit=1
-> > diff --git a/tools/perf/tests/attr/test-record-group b/tools/perf/tests/attr/test-record-group
-> > index 14ee60fd3f41..09aa40af841c 100644
-> > --- a/tools/perf/tests/attr/test-record-group
-> > +++ b/tools/perf/tests/attr/test-record-group
-> > @@ -7,14 +7,14 @@ ret     = 1
-> >  fd=1
-> >  group_fd=-1
-> >  sample_type=327
-> > -read_format=4
-> > +read_format=20
-> >
-> >  [event-2:base-record]
-> >  fd=2
-> >  group_fd=1
-> >  config=1
-> >  sample_type=327
-> > -read_format=4
-> > +read_format=20
-> >  mmap=0
-> >  comm=0
-> >  task=0
-> > diff --git a/tools/perf/tests/attr/test-record-group-sampling b/tools/perf/tests/attr/test-record-group-sampling
-> > index 300b9f7e6d69..3ad68c3405c8 100644
-> > --- a/tools/perf/tests/attr/test-record-group-sampling
-> > +++ b/tools/perf/tests/attr/test-record-group-sampling
-> > @@ -7,7 +7,7 @@ ret     = 1
-> >  fd=1
-> >  group_fd=-1
-> >  sample_type=343
-> > -read_format=12
-> > +read_format=28
-> >  inherit=0
-> >
-> >  [event-2:base-record]
-> > @@ -21,8 +21,8 @@ config=3
-> >  # default | PERF_SAMPLE_READ
-> >  sample_type=343
-> >
-> > -# PERF_FORMAT_ID | PERF_FORMAT_GROUP
-> > -read_format=12
-> > +# PERF_FORMAT_ID | PERF_FORMAT_GROUP  | PERF_FORMAT_LOST
-> > +read_format=28
-> >  task=0
-> >  mmap=0
-> >  comm=0
-> > diff --git a/tools/perf/tests/attr/test-record-group1 b/tools/perf/tests/attr/test-record-group1
-> > index 3ffe246e0228..53e1ba38febc 100644
-> > --- a/tools/perf/tests/attr/test-record-group1
-> > +++ b/tools/perf/tests/attr/test-record-group1
-> > @@ -7,7 +7,7 @@ ret     = 1
-> >  fd=1
-> >  group_fd=-1
-> >  sample_type=327
-> > -read_format=4
-> > +read_format=20
-> >
-> >  [event-2:base-record]
-> >  fd=2
-> > @@ -15,7 +15,7 @@ group_fd=1
-> >  type=0
-> >  config=1
-> >  sample_type=327
-> > -read_format=4
-> > +read_format=20
-> >  mmap=0
-> >  comm=0
-> >  task=0
-> > diff --git a/tools/perf/tests/attr/test-record-group2 b/tools/perf/tests/attr/test-record-group2
-> > index 6b9f8d182ce1..ca21b5ce71aa 100644
-> > --- a/tools/perf/tests/attr/test-record-group2
-> > +++ b/tools/perf/tests/attr/test-record-group2
-> > @@ -9,7 +9,7 @@ group_fd=-1
-> >  config=0|1
-> >  sample_period=1234000
-> >  sample_type=87
-> > -read_format=12
-> > +read_format=28
-> >  inherit=0
-> >  freq=0
-> >
-> > @@ -19,7 +19,7 @@ group_fd=1
-> >  config=0|1
-> >  sample_period=6789000
-> >  sample_type=87
-> > -read_format=12
-> > +read_format=28
-> >  disabled=0
-> >  inherit=0
-> >  mmap=0
+~Nick Desaulniers
