@@ -2,94 +2,366 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 44436C433FE
-	for <linux-perf-users@archiver.kernel.org>; Tue, 11 Oct 2022 16:53:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 92278C4332F
+	for <linux-perf-users@archiver.kernel.org>; Tue, 11 Oct 2022 17:48:22 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229794AbiJKQxu (ORCPT
+        id S229691AbiJKRsU (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Tue, 11 Oct 2022 12:53:50 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37446 "EHLO
+        Tue, 11 Oct 2022 13:48:20 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49258 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229621AbiJKQxs (ORCPT
+        with ESMTP id S229452AbiJKRsT (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Tue, 11 Oct 2022 12:53:48 -0400
-Received: from mail-pl1-x632.google.com (mail-pl1-x632.google.com [IPv6:2607:f8b0:4864:20::632])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B4BDDA3F57;
-        Tue, 11 Oct 2022 09:53:45 -0700 (PDT)
-Received: by mail-pl1-x632.google.com with SMTP id f23so13764635plr.6;
-        Tue, 11 Oct 2022 09:53:45 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20210112;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:sender:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=wl7v0z/p2+wB3apqHXeEZNHFFTX3kIYffMColIWffT4=;
-        b=fe9y9dV32MzYVl0l8UVUS8Nj2Bn70r5r10DWr7jOsP0TeSUOxZa+q76FX1JAVBQx9A
-         hTfwFLFpIZoms5zYBD+LZIRt2hQyqBNFctK7hSdkYml+sHmni/CuBHZs2Ywuk3GXMtu+
-         4ZCQ1KznO3DwI1RWztd9HrO7W4wV2BYgGsd+ThrzhwHVy0wszz5wyd6u4T9MnSp5C3jt
-         p58v8Rj31jStYBgi+gZxnp0MpIGMPmfLa9JIgfSel3+e0V1veCoP2iG+7EBat2nCyT0c
-         nPadT3RqSqvFqGN5xlcgP9v19d0kVjfZTUxj3ME9IU6wKL14bhjgh8CIgtIPQsHY3HZe
-         xzEg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:sender:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=wl7v0z/p2+wB3apqHXeEZNHFFTX3kIYffMColIWffT4=;
-        b=vUCHG+LKjKdt4jkReck7bXyHaOUS00OMe2S+ILeB857H3HDXNwaEMMeiF5hWnMatb7
-         jV5BCxxG8pwhaohMDrOeP+tnLi2B1zI5mQbCDlZrv4KVqhVQt6aH3Y7ZI5ceH8J6YPDT
-         mKK2xh9F1dG76WqpMPEeCTKnJKw42ljk4I+FERpKQy5WeKpZt2AIgpr4X2A/+jS9EvW7
-         bjw7xSQC4+POIsPDpCMYfUoAjkyyRIEyE3kFf57w+gzyFloIZ/8kpAK5SaETIMmR8ywL
-         qNzUElfaNkRACqYRjg7aLqYcJzDLoLNUAOMi5oyFwGjrqX4Z5gB4XEVRzVP3+/HXMj5Z
-         wMNQ==
-X-Gm-Message-State: ACrzQf3o5+SpYgd29EaYeZJxtxJeqk6p2HVubNeOAduKFALIfJRRJ/5R
-        NqFaZZ1QXtnpRHAeWZxHAKMKbUirhE/lPw==
-X-Google-Smtp-Source: AMsMyM5PhzyKeKBO55Ip9T86YF+e5puzCfA8YOku5QqsvjDP9EYDNNHA2tU31d/Rxdk9HGN8kNEzkA==
-X-Received: by 2002:a17:90b:3ecc:b0:205:e177:fa2b with SMTP id rm12-20020a17090b3ecc00b00205e177fa2bmr63435pjb.124.1665507224983;
-        Tue, 11 Oct 2022 09:53:44 -0700 (PDT)
-Received: from localhost (2603-800c-1a02-1bae-a7fa-157f-969a-4cde.res6.spectrum.com. [2603:800c:1a02:1bae:a7fa:157f:969a:4cde])
-        by smtp.gmail.com with ESMTPSA id h9-20020a170902f54900b0017f8edd3d8asm4070082plf.177.2022.10.11.09.53.44
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 11 Oct 2022 09:53:44 -0700 (PDT)
-Sender: Tejun Heo <htejun@gmail.com>
-Date:   Tue, 11 Oct 2022 06:53:43 -1000
-From:   Tejun Heo <tj@kernel.org>
-To:     Namhyung Kim <namhyung@kernel.org>
-Cc:     Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Zefan Li <lizefan.x@bytedance.com>,
-        Johannes Weiner <hannes@cmpxchg.org>, cgroups@vger.kernel.org,
-        Jiri Olsa <jolsa@kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        linux-perf-users@vger.kernel.org, Song Liu <songliubraving@fb.com>,
-        bpf@vger.kernel.org, Andrii Nakryiko <andrii@kernel.org>
-Subject: Re: [PATCH v2] perf stat: Support old kernels for bperf cgroup
- counting
-Message-ID: <Y0Wfl88objrECjSo@slm.duckdns.org>
-References: <Y0Sx2KWX4gPlLytq@slm.duckdns.org>
- <20221011052808.282394-1-namhyung@kernel.org>
+        Tue, 11 Oct 2022 13:48:19 -0400
+Received: from desiato.infradead.org (desiato.infradead.org [IPv6:2001:8b0:10b:1:d65d:64ff:fe57:4e05])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 97A1F4B0D8;
+        Tue, 11 Oct 2022 10:48:17 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=desiato.20200630; h=In-Reply-To:Content-Type:MIME-Version:
+        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description;
+        bh=QbyueNdz5ktWQYiaJAogjVJuk6d8QvogUuT/OZRZF9s=; b=AdLJrb9YQoNNqypB1pE3YR8rtD
+        9iS0hNVGDPx3KjuabbQSU51og2f+tO/fzvGiuBqhItXPE8o/qgGJs6LxK8xI7VftAelUcsNqAYIiw
+        aJ3flIKx9pbK1Oj9nwWxzU9qrhDUvi3lNxAAQ0Z6RqJ1jt3jH4hZGcKxzCqbGK51s0EVqowKZB0eH
+        aTpJZHDK/66lByhl+c2doIpJSMlL/vNbichcV9oF5I6PyjmcmBYhnQJqgRXf9qyGWuZo0Ai7y5QJ2
+        5cewfu0+17fSYzqlfx8Rnf5k9n6qp0qgk8zTVhExZHjKy3TF0KhwXYT9rpQlwkQfeb3RXMHgUEcj/
+        wNZBm4uQ==;
+Received: from j130084.upc-j.chello.nl ([24.132.130.84] helo=noisy.programming.kicks-ass.net)
+        by desiato.infradead.org with esmtpsa (Exim 4.94.2 #2 (Red Hat Linux))
+        id 1oiJM6-002dEO-R7; Tue, 11 Oct 2022 17:47:51 +0000
+Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+        (Client did not present a certificate)
+        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id 0188E30015F;
+        Tue, 11 Oct 2022 19:47:48 +0200 (CEST)
+Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
+        id D94412B123E21; Tue, 11 Oct 2022 19:47:48 +0200 (CEST)
+Date:   Tue, 11 Oct 2022 19:47:48 +0200
+From:   Peter Zijlstra <peterz@infradead.org>
+To:     Ravi Bangoria <ravi.bangoria@amd.com>
+Cc:     acme@kernel.org, alexander.shishkin@linux.intel.com,
+        jolsa@redhat.com, namhyung@kernel.org, songliubraving@fb.com,
+        eranian@google.com, ak@linux.intel.com, mark.rutland@arm.com,
+        frederic@kernel.org, maddy@linux.ibm.com, irogers@google.com,
+        will@kernel.org, robh@kernel.org, mingo@redhat.com,
+        catalin.marinas@arm.com, ndesaulniers@google.com,
+        srw@sladewatkins.net, linux-arm-kernel@lists.infradead.org,
+        linux-perf-users@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
+        linux-s390@vger.kernel.org, linux-kernel@vger.kernel.org,
+        sandipan.das@amd.com, ananth.narayan@amd.com, kim.phillips@amd.com,
+        santosh.shukla@amd.com
+Subject: Re: [PATCH v2] perf: Rewrite core context handling
+Message-ID: <Y0WsRItHmfI5uaq3@hirez.programming.kicks-ass.net>
+References: <20221008062424.313-1-ravi.bangoria@amd.com>
+ <Y0VTn0qLWd925etP@hirez.programming.kicks-ass.net>
+ <ba47d079-6d97-0412-69a0-fa15999b5024@amd.com>
+ <Y0V3kOWInrvCvVtk@hirez.programming.kicks-ass.net>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20221011052808.282394-1-namhyung@kernel.org>
+In-Reply-To: <Y0V3kOWInrvCvVtk@hirez.programming.kicks-ass.net>
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-On Mon, Oct 10, 2022 at 10:28:08PM -0700, Namhyung Kim wrote:
-> The recent change in the cgroup will break the backward compatiblity in
-> the BPF program.  It should support both old and new kernels using BPF
-> CO-RE technique.
+On Tue, Oct 11, 2022 at 04:02:56PM +0200, Peter Zijlstra wrote:
+> On Tue, Oct 11, 2022 at 06:49:55PM +0530, Ravi Bangoria wrote:
+> > On 11-Oct-22 4:59 PM, Peter Zijlstra wrote:
+> > > On Sat, Oct 08, 2022 at 11:54:24AM +0530, Ravi Bangoria wrote:
+> > > 
+> > >> +static void perf_event_swap_task_ctx_data(struct perf_event_context *prev_ctx,
+> > >> +					  struct perf_event_context *next_ctx)
+> > >> +{
+> > >> +	struct perf_event_pmu_context *prev_epc, *next_epc;
+> > >> +
+> > >> +	if (!prev_ctx->nr_task_data)
+> > >> +		return;
+> > >> +
+> > >> +	prev_epc = list_first_entry(&prev_ctx->pmu_ctx_list,
+> > >> +				    struct perf_event_pmu_context,
+> > >> +				    pmu_ctx_entry);
+> > >> +	next_epc = list_first_entry(&next_ctx->pmu_ctx_list,
+> > >> +				    struct perf_event_pmu_context,
+> > >> +				    pmu_ctx_entry);
+> > >> +
+> > >> +	while (&prev_epc->pmu_ctx_entry != &prev_ctx->pmu_ctx_list &&
+> > >> +	       &next_epc->pmu_ctx_entry != &next_ctx->pmu_ctx_list) {
+> > >> +
+> > >> +		WARN_ON_ONCE(prev_epc->pmu != next_epc->pmu);
+> > >> +
+> > >> +		/*
+> > >> +		 * PMU specific parts of task perf context can require
+> > >> +		 * additional synchronization. As an example of such
+> > >> +		 * synchronization see implementation details of Intel
+> > >> +		 * LBR call stack data profiling;
+> > >> +		 */
+> > >> +		if (prev_epc->pmu->swap_task_ctx)
+> > >> +			prev_epc->pmu->swap_task_ctx(prev_epc, next_epc);
+> > >> +		else
+> > >> +			swap(prev_epc->task_ctx_data, next_epc->task_ctx_data);
+> > > 
+> > > Did I forget to advance the iterators here?
+> > 
+> > Yeah. Seems so. I overlooked it too.
 > 
-> Like the task_struct->__state handling in the offcpu analysis, we can
-> check the field name in the cgroup struct.
+> OK; so I'm not slowly going crazy staring at this code ;-) Let me go add
+> it now then. :-)
 > 
-> Acked-by: Jiri Olsa <jolsa@kernel.org>
-> Acked-by: Andrii Nakryiko <andrii@kernel.org>
-> Signed-off-by: Namhyung Kim <namhyung@kernel.org>
+> But first I gotta taxi the kids around for a bit, bbl.
 
-Applied to cgroup/for-6.1-fixes.
+OK, so I've been going over the perf_event_pmu_context life-time thing
+as well, there were a bunch of XXXs there and I'm not sure Im happy with
+things, but I'd also forgotten most of it.
 
-Thanks.
+Ideally epc works like it's a regular member of ctx -- locking wise that
+is, but I'm not sure we can make that stick -- see the ctx->mutex issues
+we have with put_ctx().
 
--- 
-tejun
+As such, I'm going to have to re-audit all the epc usage to see if
+pure ctx->lock is sufficient.
+
+I did do make epc RCU freed, because pretty much everything is and that
+was easy enough to make happen -- it means we don't need to worry about
+that.
+
+But I'm going cross-eyes from staring at this all day, so more tomorrow.
+The below is what I currently have.
+
+---
+--- a/include/linux/perf_event.h
++++ b/include/linux/perf_event.h
+@@ -833,13 +833,13 @@ struct perf_event {
+  *           `--------[1:n]---------'     `-[n:1]-> pmu <-[1:n]-'
+  *
+  *
+- * XXX destroy epc when empty
+- *   refcount, !rcu
++ * epc lifetime is refcount based and RCU freed (similar to perf_event_context).
++ * epc locking is as if it were a member of perf_event_context; specifically:
+  *
+- * XXX epc locking
++ *   modification, both: ctx->mutex && ctx->lock
++ *   reading, either: ctx->mutex || ctx->lock
+  *
+- *   event->pmu_ctx            ctx->mutex && inactive
+- *   ctx->pmu_ctx_list         ctx->mutex && ctx->lock
++ * XXX except this isn't true ... see put_pmu_ctx().
+  *
+  */
+ struct perf_event_pmu_context {
+@@ -857,6 +857,7 @@ struct perf_event_pmu_context {
+ 	unsigned int			nr_events;
+ 
+ 	atomic_t			refcount; /* event <-> epc */
++	struct rcu_head			rcu_head;
+ 
+ 	void				*task_ctx_data; /* pmu specific data */
+ 	/*
+--- a/kernel/events/core.c
++++ b/kernel/events/core.c
+@@ -1727,6 +1727,10 @@ perf_event_groups_next(struct perf_event
+ 	return NULL;
+ }
+ 
++#define perf_event_groups_for_cpu_pmu(event, groups, cpu, pmu)		\
++	for (event = perf_event_groups_first(groups, cpu, pmu, NULL);	\
++	     event; event = perf_event_groups_next(event, pmu))
++
+ /*
+  * Iterate through the whole groups tree.
+  */
+@@ -3366,6 +3370,14 @@ static void perf_event_sync_stat(struct
+ 	}
+ }
+ 
++#define list_for_each_entry_double(pos1, pos2, head1, head2, member)	\
++	for (pos1 = list_first_entry(head1, typeof(*pos1), member),	\
++	     pos2 = list_first_entry(head2, typeof(*pos2), member);	\
++	     !list_entry_is_head(pos1, head1, member) &&		\
++	     !list_entry_is_head(pos2, head2, member);			\
++	     pos1 = list_next_entry(pos1, member),			\
++	     pos2 = list_next_entry(pos2, member))
++
+ static void perf_event_swap_task_ctx_data(struct perf_event_context *prev_ctx,
+ 					  struct perf_event_context *next_ctx)
+ {
+@@ -3374,16 +3386,9 @@ static void perf_event_swap_task_ctx_dat
+ 	if (!prev_ctx->nr_task_data)
+ 		return;
+ 
+-	prev_epc = list_first_entry(&prev_ctx->pmu_ctx_list,
+-				    struct perf_event_pmu_context,
+-				    pmu_ctx_entry);
+-	next_epc = list_first_entry(&next_ctx->pmu_ctx_list,
+-				    struct perf_event_pmu_context,
+-				    pmu_ctx_entry);
+-
+-	while (&prev_epc->pmu_ctx_entry != &prev_ctx->pmu_ctx_list &&
+-	       &next_epc->pmu_ctx_entry != &next_ctx->pmu_ctx_list) {
+-
++	list_for_each_entry_double(prev_epc, next_epc,
++				   &prev_ctx->pmu_ctx_list, &next_ctx->pmu_ctx_list,
++				   pmu_ctx_entry) {
+ 		WARN_ON_ONCE(prev_epc->pmu != next_epc->pmu);
+ 
+ 		/*
+@@ -3706,7 +3711,6 @@ static noinline int visit_groups_merge(s
+ 		perf_assert_pmu_disabled((*evt)->pmu_ctx->pmu);
+ 	}
+ 
+-
+ 	min_heapify_all(&event_heap, &perf_min_heap);
+ 
+ 	while (event_heap.nr) {
+@@ -3845,7 +3849,6 @@ ctx_sched_in(struct perf_event_context *
+ 		/* start ctx time */
+ 		__update_context_time(ctx, false);
+ 		perf_cgroup_set_timestamp(cpuctx);
+-		// XXX ctx->task =? task
+ 		/*
+ 		 * CPU-release for the below ->is_active store,
+ 		 * see __load_acquire() in perf_event_time_now()
+@@ -4815,6 +4818,15 @@ find_get_pmu_context(struct pmu *pmu, st
+ 
+ 	__perf_init_event_pmu_context(new, pmu);
+ 
++	/*
++	 * XXX
++	 *
++	 * lockdep_assert_held(&ctx->mutex);
++	 *
++	 * can't because perf_event_init_task() doesn't actually hold the
++	 * child_ctx->mutex.
++	 */
++
+ 	raw_spin_lock_irq(&ctx->lock);
+ 	list_for_each_entry(epc, &ctx->pmu_ctx_list, pmu_ctx_entry) {
+ 		if (epc->pmu == pmu) {
+@@ -4849,6 +4861,14 @@ static void get_pmu_ctx(struct perf_even
+ 	WARN_ON_ONCE(!atomic_inc_not_zero(&epc->refcount));
+ }
+ 
++static void free_epc_rcu(struct rcu_head *head)
++{
++	struct perf_event_pmu_context *epc = container_of(head, typeof(*epc), rcu_head);
++
++	kfree(epc->task_ctx_data);
++	kfree(epc);
++}
++
+ static void put_pmu_ctx(struct perf_event_pmu_context *epc)
+ {
+ 	unsigned long flags;
+@@ -4859,7 +4879,14 @@ static void put_pmu_ctx(struct perf_even
+ 	if (epc->ctx) {
+ 		struct perf_event_context *ctx = epc->ctx;
+ 
+-		// XXX ctx->mutex
++		/*
++		 * XXX
++		 *
++		 * lockdep_assert_held(&ctx->mutex);
++		 *
++		 * can't because of the call-site in _free_event()/put_event()
++		 * which isn't always called under ctx->mutex.
++		 */
+ 
+ 		WARN_ON_ONCE(list_empty(&epc->pmu_ctx_entry));
+ 		raw_spin_lock_irqsave(&ctx->lock, flags);
+@@ -4874,17 +4901,15 @@ static void put_pmu_ctx(struct perf_even
+ 	if (epc->embedded)
+ 		return;
+ 
+-	kfree(epc->task_ctx_data);
+-	kfree(epc);
++	call_rcu(&epc->rcu_head, free_epc_rcu);
+ }
+ 
+ static void perf_event_free_filter(struct perf_event *event);
+ 
+ static void free_event_rcu(struct rcu_head *head)
+ {
+-	struct perf_event *event;
++	struct perf_event *event = container_of(head, typeof(*event), rcu_head);
+ 
+-	event = container_of(head, struct perf_event, rcu_head);
+ 	if (event->ns)
+ 		put_pid_ns(event->ns);
+ 	perf_event_free_filter(event);
+@@ -12643,13 +12668,6 @@ perf_event_create_kernel_counter(struct
+ 		goto err_alloc;
+ 	}
+ 
+-	pmu_ctx = find_get_pmu_context(pmu, ctx, event);
+-	if (IS_ERR(pmu_ctx)) {
+-		err = PTR_ERR(pmu_ctx);
+-		goto err_ctx;
+-	}
+-	event->pmu_ctx = pmu_ctx;
+-
+ 	WARN_ON_ONCE(ctx->parent_ctx);
+ 	mutex_lock(&ctx->mutex);
+ 	if (ctx->task == TASK_TOMBSTONE) {
+@@ -12657,6 +12675,13 @@ perf_event_create_kernel_counter(struct
+ 		goto err_unlock;
+ 	}
+ 
++	pmu_ctx = find_get_pmu_context(pmu, ctx, event);
++	if (IS_ERR(pmu_ctx)) {
++		err = PTR_ERR(pmu_ctx);
++		goto err_unlock;
++	}
++	event->pmu_ctx = pmu_ctx;
++
+ 	if (!task) {
+ 		/*
+ 		 * Check if the @cpu we're creating an event for is online.
+@@ -12668,13 +12693,13 @@ perf_event_create_kernel_counter(struct
+ 			container_of(ctx, struct perf_cpu_context, ctx);
+ 		if (!cpuctx->online) {
+ 			err = -ENODEV;
+-			goto err_unlock;
++			goto err_pmu_ctx;
+ 		}
+ 	}
+ 
+ 	if (!exclusive_event_installable(event, ctx)) {
+ 		err = -EBUSY;
+-		goto err_unlock;
++		goto err_pmu_ctx;
+ 	}
+ 
+ 	perf_install_in_context(ctx, event, event->cpu);
+@@ -12683,9 +12708,10 @@ perf_event_create_kernel_counter(struct
+ 
+ 	return event;
+ 
++err_pmu_ctx:
++	put_pmu_ctx(pmu_ctx);
+ err_unlock:
+ 	mutex_unlock(&ctx->mutex);
+-err_ctx:
+ 	perf_unpin_context(ctx);
+ 	put_ctx(ctx);
+ err_alloc:
+@@ -12702,9 +12728,7 @@ static void __perf_pmu_remove(struct per
+ {
+ 	struct perf_event *event, *sibling;
+ 
+-	for (event = perf_event_groups_first(groups, cpu, pmu, NULL);
+-	     event; event = perf_event_groups_next(event, pmu)) {
+-
++	perf_event_groups_for_cpu_pmu(event, groups, cpu, pmu) {
+ 		perf_remove_from_context(event, 0);
+ 		unaccount_event_cpu(event, cpu);
+ 		put_pmu_ctx(event->pmu_ctx);
+@@ -12998,7 +13022,7 @@ void perf_event_free_task(struct task_st
+ 	struct perf_event_context *ctx;
+ 	struct perf_event *event, *tmp;
+ 
+-	ctx = rcu_dereference(task->perf_event_ctxp);
++	ctx = rcu_access_pointer(task->perf_event_ctxp);
+ 	if (!ctx)
+ 		return;
+ 
