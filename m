@@ -2,165 +2,170 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 277A4C433FE
-	for <linux-perf-users@archiver.kernel.org>; Tue, 11 Oct 2022 13:07:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 11063C4321E
+	for <linux-perf-users@archiver.kernel.org>; Tue, 11 Oct 2022 13:21:54 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229912AbiJKNHH (ORCPT
+        id S229714AbiJKNVv (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Tue, 11 Oct 2022 09:07:07 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52644 "EHLO
+        Tue, 11 Oct 2022 09:21:51 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58428 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229546AbiJKNHG (ORCPT
+        with ESMTP id S229772AbiJKNVX (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Tue, 11 Oct 2022 09:07:06 -0400
-Received: from casper.infradead.org (casper.infradead.org [IPv6:2001:8b0:10b:1236::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 736B92CE30;
-        Tue, 11 Oct 2022 06:07:05 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=casper.20170209; h=In-Reply-To:Content-Type:MIME-Version:
-        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description;
-        bh=0kl7dlvjnuqfiBoL2flcqsA/Ux8iLqViAUlVpL1x4Uo=; b=PMDKwr0KWdXbhAaPTSlYSSmTYv
-        mIRgI5rrLsxLj0eUfhOvczUj0+VhBlzjcUYHbk6NdI7Al5eUjP/uSvg79Q5+Jsznybyc9383/SYUv
-        ng18nHoA7ujD0h4YtYCNt1xVNzQ1YDUS9R63z6eWL0Bk8+5/7y6qF+74JHtZldJWX9DI1RX5g8r2K
-        5102+Mwj1jyeFqD3UvqF0YSfOkiqTwR9tT49PIeLt9SBkkefqpoMKpbMUcKhC+ShVrGWwkIFtop/9
-        ga/OE6Nm+E1fje6qeCFeFSdhNNt5HzglmD1H5lIx/4tCaAByHdCUrQBOew4zb2b3DVO6+jVUzS7WH
-        mTLEO1kw==;
-Received: from j130084.upc-j.chello.nl ([24.132.130.84] helo=noisy.programming.kicks-ass.net)
-        by casper.infradead.org with esmtpsa (Exim 4.94.2 #2 (Red Hat Linux))
-        id 1oiEyI-004yPP-BO; Tue, 11 Oct 2022 13:06:59 +0000
-Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange X25519 server-signature RSA-PSS (4096 bits))
-        (Client did not present a certificate)
-        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id C2F7830004F;
-        Tue, 11 Oct 2022 15:06:52 +0200 (CEST)
-Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
-        id A693029A09944; Tue, 11 Oct 2022 15:06:52 +0200 (CEST)
-Date:   Tue, 11 Oct 2022 15:06:52 +0200
-From:   Peter Zijlstra <peterz@infradead.org>
-To:     Marco Elver <elver@google.com>
-Cc:     Ingo Molnar <mingo@redhat.com>,
-        Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Jiri Olsa <jolsa@kernel.org>,
-        Namhyung Kim <namhyung@kernel.org>,
-        linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org,
-        kasan-dev@googlegroups.com, Dmitry Vyukov <dvyukov@google.com>
-Subject: Re: [PATCH v2] perf: Fix missing SIGTRAPs
-Message-ID: <Y0VqbNDKIHUcC7Ha@hirez.programming.kicks-ass.net>
-References: <20220927121322.1236730-1-elver@google.com>
- <Yz7ZLaT4jW3Y9EYS@hirez.programming.kicks-ass.net>
- <Y0Ue2L5CsaQwDrEs@hirez.programming.kicks-ass.net>
- <Y0VofNVMBXPOJJr7@elver.google.com>
+        Tue, 11 Oct 2022 09:21:23 -0400
+Received: from NAM10-BN7-obe.outbound.protection.outlook.com (mail-bn7nam10on2071.outbound.protection.outlook.com [40.107.92.71])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6D6518A1FC;
+        Tue, 11 Oct 2022 06:20:17 -0700 (PDT)
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=IyIyC/uOAiiQbkW/N+mdeuaVRqHV03N/oaIAOXP5NKwzROLfSJcDC6z5LIpYPpzoJu7Up3F3erDNtlCduMf1i1AlHUVQ/sptvfJaBF5YPHUhjOv9OeQASnnCMO9feRX6Pu8Odq3NDP5mNBzfgraI+So8WxqiLvpFRiK/nHd9g2Kif4DQo0eNuPhw8v7o+B6mnxZcYTPcFSCYShjTeXZLoou1N7jw6CKKmmw+M0HVU9VvWqKojX5z9c8ABSy4d9RFQkmFpxglGJkpqHD02tr4ADnVBO2nz/5O85yaoSkbPjQA4RQnmY/+7G7ktjpuXaoI/R0YEhmTPRXlhHyIJJMKtA==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=6uDDdNQRtnMiVbMZUpFcACT7p0EQtw8QygLM3CiGSHU=;
+ b=BOZB9Q3P98a9jsACFoEBrhC8puJ/hsnraykiRuXlHGBKJsUQaJxoae1yUrSKSFTuy4FTJFCWjT44Qmc3VBwUv2pSPPdpt0wv6Qf4fQs1xgyMtzfSLBNimj/1Jaq1xbjcsNPYa2l2URAL7yUqL2ryQvQM4Z4P4ZCvM276I9gaVKA5ckgcHYpZ3w4L16cCEoH9AZ2nHPZJ3WH2bqYSJ8ThIvufyvOnMsV19DEOq6DlwCGZ5iI5h3ugauXWptZFPawzg1SYMs2XowfkSR+ZviMgY0JCUj4Qcw3Wd0xAp2LmbiPEJtEW1iEcUuPHDDaCoWtl3k2lKy+JaBx7D9KYTQ0SfQ==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=amd.com; dmarc=pass action=none header.from=amd.com; dkim=pass
+ header.d=amd.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=6uDDdNQRtnMiVbMZUpFcACT7p0EQtw8QygLM3CiGSHU=;
+ b=5u5ytv2wCKtiQryLNQqnMos9yuuWMlqhLiPs14NXXXzcSbSPf+gRrw5eoLfDWPKu178/+f4V8RwbXhz1xqvFDmobziWuu0a9ABvkrAxu9WN9OIcKRXmsO+p2W/C0HHNTIhOX/m7rZqxBe+tTAQRYMvPrnTCxuLdR1VV8rSwIsJ4=
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=amd.com;
+Received: from PH7PR12MB6588.namprd12.prod.outlook.com (2603:10b6:510:210::10)
+ by MW4PR12MB7381.namprd12.prod.outlook.com (2603:10b6:303:219::17) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.5709.21; Tue, 11 Oct
+ 2022 13:20:14 +0000
+Received: from PH7PR12MB6588.namprd12.prod.outlook.com
+ ([fe80::4a1c:7d22:b1b:1adc]) by PH7PR12MB6588.namprd12.prod.outlook.com
+ ([fe80::4a1c:7d22:b1b:1adc%6]) with mapi id 15.20.5676.032; Tue, 11 Oct 2022
+ 13:20:14 +0000
+Message-ID: <ba47d079-6d97-0412-69a0-fa15999b5024@amd.com>
+Date:   Tue, 11 Oct 2022 18:49:55 +0530
+User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:91.0) Gecko/20100101
+ Thunderbird/91.9.1
+Subject: Re: [PATCH v2] perf: Rewrite core context handling
+Content-Language: en-US
+To:     Peter Zijlstra <peterz@infradead.org>
+Cc:     acme@kernel.org, alexander.shishkin@linux.intel.com,
+        jolsa@redhat.com, namhyung@kernel.org, songliubraving@fb.com,
+        eranian@google.com, ak@linux.intel.com, mark.rutland@arm.com,
+        frederic@kernel.org, maddy@linux.ibm.com, irogers@google.com,
+        will@kernel.org, robh@kernel.org, mingo@redhat.com,
+        catalin.marinas@arm.com, ndesaulniers@google.com,
+        srw@sladewatkins.net, linux-arm-kernel@lists.infradead.org,
+        linux-perf-users@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
+        linux-s390@vger.kernel.org, linux-kernel@vger.kernel.org,
+        sandipan.das@amd.com, ananth.narayan@amd.com, kim.phillips@amd.com,
+        santosh.shukla@amd.com, Ravi Bangoria <ravi.bangoria@amd.com>
+References: <20221008062424.313-1-ravi.bangoria@amd.com>
+ <Y0VTn0qLWd925etP@hirez.programming.kicks-ass.net>
+From:   Ravi Bangoria <ravi.bangoria@amd.com>
+In-Reply-To: <Y0VTn0qLWd925etP@hirez.programming.kicks-ass.net>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: PN3PR01CA0122.INDPRD01.PROD.OUTLOOK.COM
+ (2603:1096:c01:96::8) To PH7PR12MB6588.namprd12.prod.outlook.com
+ (2603:10b6:510:210::10)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <Y0VofNVMBXPOJJr7@elver.google.com>
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: PH7PR12MB6588:EE_|MW4PR12MB7381:EE_
+X-MS-Office365-Filtering-Correlation-Id: 0644ac64-882f-4178-1562-08daab8b5530
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info: jdZcImlqCz211+QqByTyCGKEgiEv3uJqubagbVoOcBwcsJMtRFt4T9/qCieOtNvfPUiC8VE2LALhXDcjOBaOFxxrX//Snx/SpuyZhdQArK/MyBcfSF/j77hsctwlEez46JhGDMKvGf/ZTYcj6mpYUwCFOx1xJKoA5LLMSiqhObR4Ez16+RLynFTIDQ5ElfttW2TVmcay1nAil5CH+FLy1BQ2wbDS2q4e7MLCg/t9NzIXp/gziZPPSS2JCK9kS2Tk3/aO+G3NJsvC68ENmeGHhR00LnGBiSfW3u+IZNCeeaw0EcFXHTzzoa7HymGb+buGEU6PV9BrQAL+Vexf2Mrg0LkkkpwryII/Czc2uF9UeozPI/P7uL7/G+YBsUZDrZHaiiX0YFQa8k5w3mSkKoR8UodbpNdJ9CDABYw1lQRlBloBQ7kRe6c7BTTUf/oeB4ADgYMGGdwX6RfevNabOXrRnD0yPIjT4cbUsgfrDn9vRX+/GX/OcS/oSoPmPDaiGjza3xscgvUryu8gNWBwmXl55mPIgAghou4vH2XW3FJyakM5ncLtUQrxVh27Lxja08nenzMjOtplcGFJViUDivr8KKI/q8AfRNeP50Gg5uyi6qnck9BWHpZhXB5pg/lEc/u0jpOfPWMlogsZ4rdS4BqZTJzQA791HPMdfaV8eNG9LglRWANIrWe2uqUu8aJFhHUmNhQbkz3fkHJz9mcDmNfC08EnPtHYrheuV0fL4egCYahvOyGBK0Rgkd86VWp430OweVlnugi9tc/aK6leoZKbliX3FxUgf6rvf59JhaPNbe8=
+X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:PH7PR12MB6588.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230022)(4636009)(39860400002)(346002)(376002)(366004)(136003)(396003)(451199015)(31686004)(36756003)(6666004)(6506007)(26005)(6512007)(2616005)(186003)(53546011)(6486002)(478600001)(2906002)(44832011)(38100700002)(4326008)(41300700001)(31696002)(6916009)(86362001)(66946007)(66476007)(66556008)(7416002)(8676002)(8936002)(5660300002)(316002)(43740500002)(45980500001);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0: =?utf-8?B?QkRlTlFhRlFtQjlWcHB3MDlEZ0RSRFZ4dUFYVVNWU0pzLzgyZTJ0a0RVYXFu?=
+ =?utf-8?B?L3haUUlORlVlYllFYnRya0FpMXcxNUFLQzBheUVhV0Y1Y1lGLyt2TjZrKzBm?=
+ =?utf-8?B?MEJTcnNWMy91Z0twMWZnbnQ4bGJlbTFZV2FRbStaRGpLc1hPVm9JS0k0bGpW?=
+ =?utf-8?B?ZlNWd1orcUNhRFZJMXB2a25iWElsZHRnTmZ2Y0lENWFMbkpYWlBFRTA1UTV0?=
+ =?utf-8?B?QUdadjFmTm1HeTgzUE5sWDVZZW83RHpUT20xY2Z5Mk5La2VteEhZMEYyVGZj?=
+ =?utf-8?B?QVhFbTlybW5nRXQ1QXBpMzNqOTYvRm9kbEFiazNHVlppRlNLblZGbTl5RzA3?=
+ =?utf-8?B?T3BvdjhtbVhhbDIrL1RGVFVaOUZybVM0V3VrN1JKRHAzR2trT1VLaWFDczd1?=
+ =?utf-8?B?ZUlZcE0vZENHWm9LZUtMOHBydHQ3azdOZm9Td0R1WUNMMVJVcEs4SytqMzZB?=
+ =?utf-8?B?Mmx1T29IVUJ5RVpLTXA4bXN3aG80YlRrM0duYWRCeCt6U21saEh1MmdGcDFQ?=
+ =?utf-8?B?OHJZVmlWZ0cyNGpyaGdQUWE5ZmFJYk9iT2dxbDBjb1Q5Vmp4djdxeHBZUFpM?=
+ =?utf-8?B?bWVvdE9FK2NoZ0R4VlRNdDRMUDc2REhmc3RPR0pWWVVkSU1PQ2NISWJwZ28w?=
+ =?utf-8?B?ZUNhWUxidWpGQVBCRlM4Z1Ywb0ViQUFOU0tvcHNSYTZRVXBiT3htQjB1OGI5?=
+ =?utf-8?B?UFlYWUdldXBjdVVMNHpjSFVaOUQzcnFZSDlQUXZZUnhtNGtKdmdmWmYxUG5u?=
+ =?utf-8?B?VndHdHl4Q2RTS0M1VTJGdkdhQ1NvZ3lLWjMwTTFWM1FtWFlpWlhDZ1RBN2pH?=
+ =?utf-8?B?N0lJMDcxeWh2SGkreGtGQSt4emJZNzNYczZ1RWxJVUpaTzM1NUl0Wkc4STVE?=
+ =?utf-8?B?Ulc4ajlZRzdYL2tWVHV6RFYwR0tRRHpvamhZVnFqdzU5aloxWHhLSzVwODg5?=
+ =?utf-8?B?YjVUMDZ6Tkc3OWtZeG9GZVZLVjl3cVZ6dXRpU244d2FkVGZyMWJxVDB0RWpN?=
+ =?utf-8?B?d3loWndqU1ZlUFNlUy9CTnF3SmhqYzhxVUZEbHFhTDRWVVd2NHcvNGpiTnpY?=
+ =?utf-8?B?KzROa1ZWV2xnK0I3bzZSSzVWRmRycEUxbFFqSyt6L2dUQmdWMTFGQTAwSnZu?=
+ =?utf-8?B?U09BYWtLSVJxcHhWVnM5Sjd0aFQ0UjJqOFVueHRvUGdDMnp2eEoyK2FHQUtL?=
+ =?utf-8?B?Z0FzWTU2UEp1QStIb0kzNkhzUXZ6YjhWOTRiNnI0Njg1RTZiVlR5UnJ6cXpl?=
+ =?utf-8?B?VHJ1bDZNNkZjK3RxRGl3TzRVYXBsZE81UVJMYVh6QW9qWEdUbTJtajcreXJI?=
+ =?utf-8?B?bGFQMm5ZOXlSV2gzNXJmdlNJcGd0YnJUM0o0M2l0UG5uamtBMytpdWVSSkNo?=
+ =?utf-8?B?ZXJkZit4L3dSb2ZZYzdvSXM3b3BEVVRpWXlRbFBScGhVWEhOSFBydXd3OTdp?=
+ =?utf-8?B?TjdqMWR1OVRCY3c2S3JCMHF4ZlFjRHYvdXJzWEVRYkMwL0RYTFBQblhLczNv?=
+ =?utf-8?B?QXF0Y1QvZ3lydmsrMVdQKzJOZ3Z0VnhhMUg2enlVNzJXRnZsSG1oNmdVRjlx?=
+ =?utf-8?B?Q0U2TXRHdElHNzJPWHI0VXE2YzhYdVAwR091c01qR3pMc0YvKzVPTkU1cW1z?=
+ =?utf-8?B?TzJJSXFTZXkxeW1COUZPNjNrMHc4cS9sVGVjY000ay9McWd2eUVmWGU1Z0xt?=
+ =?utf-8?B?RGZCY2FMeU9QNlZFU3k3VXhSQlRETTc3QkpvdnhxY3Z2Y0RaZXdKalpkTWY3?=
+ =?utf-8?B?aVY0UzdYMkFvdlZQa0pXWkpZM21vcHR5eHFvODRTcUlRMDBQRU5rYk5JMDFY?=
+ =?utf-8?B?eWhuK2cxV0tUMnhKdWVHb1hKc21QOEFpRXRBQ3pjRmhlM1c0bnE2NWtUNk03?=
+ =?utf-8?B?VWxDWlhRMmk3RDcxWkFOQ3JIUVdKeUNhTW1TK1ZxUyswbU15cFQ1aFlZbjFI?=
+ =?utf-8?B?aGVMOGVBcDlSOStYeityTmlKMFk2SEQ4N2Qzc0NyM3doSlllbDc3QUdxVXVr?=
+ =?utf-8?B?T3NqQktmNFpiNEsrSDNwVmYxUVpobVR1Rk9CaGlzUkI4dTVhTkx1ZXE1blNt?=
+ =?utf-8?B?a0owTHhabDNNb2ZSWXBsL3RJTi81d3plOUFQcDladFRZZXY4K29PYTU3VUlK?=
+ =?utf-8?Q?Ya8tjN8RI7HBLbsMjTJB7vsBg?=
+X-OriginatorOrg: amd.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 0644ac64-882f-4178-1562-08daab8b5530
+X-MS-Exchange-CrossTenant-AuthSource: PH7PR12MB6588.namprd12.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 11 Oct 2022 13:20:14.7020
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: 633TzDeNA+t7Oo8jETcdVLvVZ3APB2kjakF0s3ssc1IGMgxziBLNTWsl9E+isqFoWH/FB8weL8TwUKpWXiZMRQ==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: MW4PR12MB7381
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-On Tue, Oct 11, 2022 at 02:58:36PM +0200, Marco Elver wrote:
-> On Tue, Oct 11, 2022 at 09:44AM +0200, Peter Zijlstra wrote:
-> > Subject: perf: Fix missing SIGTRAPs
-> > From: Peter Zijlstra <peterz@infradead.org>
-> > Date: Thu Oct 6 15:00:39 CEST 2022
-> > 
-> > Marco reported:
-> > 
-> > Due to the implementation of how SIGTRAP are delivered if
-> > perf_event_attr::sigtrap is set, we've noticed 3 issues:
-> > 
-> >   1. Missing SIGTRAP due to a race with event_sched_out() (more
-> >      details below).
-> > 
-> >   2. Hardware PMU events being disabled due to returning 1 from
-> >      perf_event_overflow(). The only way to re-enable the event is
-> >      for user space to first "properly" disable the event and then
-> >      re-enable it.
-> > 
-> >   3. The inability to automatically disable an event after a
-> >      specified number of overflows via PERF_EVENT_IOC_REFRESH.
-> > 
-> > The worst of the 3 issues is problem (1), which occurs when a
-> > pending_disable is "consumed" by a racing event_sched_out(), observed
-> > as follows:
-> > 
-> > 		CPU0			|	CPU1
-> > 	--------------------------------+---------------------------
-> > 	__perf_event_overflow()		|
-> > 	 perf_event_disable_inatomic()	|
-> > 	  pending_disable = CPU0	| ...
-> > 					| _perf_event_enable()
-> > 					|  event_function_call()
-> > 					|   task_function_call()
-> > 					|    /* sends IPI to CPU0 */
-> > 	<IPI>				| ...
-> > 	 __perf_event_enable()		+---------------------------
-> > 	  ctx_resched()
-> > 	   task_ctx_sched_out()
-> > 	    ctx_sched_out()
-> > 	     group_sched_out()
-> > 	      event_sched_out()
-> > 	       pending_disable = -1
-> > 	</IPI>
-> > 	<IRQ-work>
-> > 	 perf_pending_event()
-> > 	  perf_pending_event_disable()
-> > 	   /* Fails to send SIGTRAP because no pending_disable! */
-> > 	</IRQ-work>
-> > 
-> > In the above case, not only is that particular SIGTRAP missed, but also
-> > all future SIGTRAPs because 'event_limit' is not reset back to 1.
-> > 
-> > To fix, rework pending delivery of SIGTRAP via IRQ-work by introduction
-> > of a separate 'pending_sigtrap', no longer using 'event_limit' and
-> > 'pending_disable' for its delivery.
-> > 
-> > Additionally; and different to Marco's proposed patch:
-> > 
-> >  - recognise that pending_disable effectively duplicates oncpu for
-> >    the case where it is set. As such, change the irq_work handler to
-> >    use ->oncpu to target the event and use pending_* as boolean toggles.
-> > 
-> >  - observe that SIGTRAP targets the ctx->task, so the context switch
-> >    optimization that carries contexts between tasks is invalid. If
-> >    the irq_work were delayed enough to hit after a context switch the
-> >    SIGTRAP would be delivered to the wrong task.
-> > 
-> >  - observe that if the event gets scheduled out
-> >    (rotation/migration/context-switch/...) the irq-work would be
-> >    insufficient to deliver the SIGTRAP when the event gets scheduled
-> >    back in (the irq-work might still be pending on the old CPU).
-> > 
-> >    Therefore have event_sched_out() convert the pending sigtrap into a
-> >    task_work which will deliver the signal at return_to_user.
-> > 
-> > Fixes: 97ba62b27867 ("perf: Add support for SIGTRAP on perf events")
-> > Reported-by: Marco Elver <elver@google.com>
-> > Debugged-by: Marco Elver <elver@google.com>
+On 11-Oct-22 4:59 PM, Peter Zijlstra wrote:
+> On Sat, Oct 08, 2022 at 11:54:24AM +0530, Ravi Bangoria wrote:
 > 
-> Reviewed-by: Marco Elver <elver@google.com>
-> Tested-by: Marco Elver <elver@google.com>
+>> +static void perf_event_swap_task_ctx_data(struct perf_event_context *prev_ctx,
+>> +					  struct perf_event_context *next_ctx)
+>> +{
+>> +	struct perf_event_pmu_context *prev_epc, *next_epc;
+>> +
+>> +	if (!prev_ctx->nr_task_data)
+>> +		return;
+>> +
+>> +	prev_epc = list_first_entry(&prev_ctx->pmu_ctx_list,
+>> +				    struct perf_event_pmu_context,
+>> +				    pmu_ctx_entry);
+>> +	next_epc = list_first_entry(&next_ctx->pmu_ctx_list,
+>> +				    struct perf_event_pmu_context,
+>> +				    pmu_ctx_entry);
+>> +
+>> +	while (&prev_epc->pmu_ctx_entry != &prev_ctx->pmu_ctx_list &&
+>> +	       &next_epc->pmu_ctx_entry != &next_ctx->pmu_ctx_list) {
+>> +
+>> +		WARN_ON_ONCE(prev_epc->pmu != next_epc->pmu);
+>> +
+>> +		/*
+>> +		 * PMU specific parts of task perf context can require
+>> +		 * additional synchronization. As an example of such
+>> +		 * synchronization see implementation details of Intel
+>> +		 * LBR call stack data profiling;
+>> +		 */
+>> +		if (prev_epc->pmu->swap_task_ctx)
+>> +			prev_epc->pmu->swap_task_ctx(prev_epc, next_epc);
+>> +		else
+>> +			swap(prev_epc->task_ctx_data, next_epc->task_ctx_data);
 > 
-> .. fuzzing, and lots of concurrent sigtrap_threads with this patch:
-> 
-> 	https://lore.kernel.org/all/20221011124534.84907-1-elver@google.com/
-> 
-> > Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
-> 
-> My original patch also attributed Dmitry:
-> 
-> 	Reported-by: Dmitry Vyukov <dvyukov@google.com>
-> 	Debugged-by: Dmitry Vyukov <dvyukov@google.com>
-> 
-> ... we all melted our brains on this one. :-)
-> 
-> Would be good to get the fix into one of the upcoming 6.1-rc.
+> Did I forget to advance the iterators here?
 
-Updated and yes, I'm planning on queueing this in perf/urgent the moment
--rc1 happens.
+Yeah. Seems so. I overlooked it too.
 
-Thanks!
+Thanks,
+Ravi
