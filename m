@@ -2,149 +2,72 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4C2B8C433FE
-	for <linux-perf-users@archiver.kernel.org>; Wed, 12 Oct 2022 07:50:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B31C1C4332F
+	for <linux-perf-users@archiver.kernel.org>; Wed, 12 Oct 2022 08:23:14 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229496AbiJLHuZ (ORCPT
+        id S229436AbiJLIXN (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Wed, 12 Oct 2022 03:50:25 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59612 "EHLO
+        Wed, 12 Oct 2022 04:23:13 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38124 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229586AbiJLHuY (ORCPT
+        with ESMTP id S229459AbiJLIXM (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Wed, 12 Oct 2022 03:50:24 -0400
-Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTP id EC3924C037;
-        Wed, 12 Oct 2022 00:50:22 -0700 (PDT)
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id B7FBE15A1;
-        Wed, 12 Oct 2022 00:50:28 -0700 (PDT)
-Received: from [10.162.41.10] (unknown [10.162.41.10])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 9E86C3F67D;
-        Wed, 12 Oct 2022 00:50:19 -0700 (PDT)
-Message-ID: <31b72985-5c12-b421-0cec-3c6b027a7070@arm.com>
-Date:   Wed, 12 Oct 2022 13:20:16 +0530
+        Wed, 12 Oct 2022 04:23:12 -0400
+Received: from mga04.intel.com (mga04.intel.com [192.55.52.120])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9A11CFD07;
+        Wed, 12 Oct 2022 01:23:10 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1665562990; x=1697098990;
+  h=from:to:cc:subject:date:message-id:mime-version:
+   content-transfer-encoding;
+  bh=ODCeXk/FkSN3DcOV8Y4uSYo9quiLtI2deHqNWSIpJ9Q=;
+  b=ckCpDaoDDVMc6mVNjpmhkCcEviQZth0bWQwq1Orqbqk7A/uafEMHkHEi
+   le5u/wetEBMUjUBs7yXE/4egQuUr38cJ+xQ4TR7YcsQ1hBcl9kZKiUeHD
+   MA6SErUmK/uujDhvHN30Vn0RXCw1rmp1TkFXteJP/8vyjlaVw3UkiWQw7
+   jmleORmRzHh5qisRnmHcbNrlqsJH5AXTvBLBQd1ePAh75DzmwR7ieHs11
+   n6LyZUE4D8l8QPZnc7c5JH2XZ7fga6FjQjhCHfU3lT86Ir7ahrIK59qii
+   9ggu3dv1S9PF+QrexGocewX803cemLueL+utfqggzM8JQVk+BLUJbrbmh
+   Q==;
+X-IronPort-AV: E=McAfee;i="6500,9779,10497"; a="303472949"
+X-IronPort-AV: E=Sophos;i="5.95,178,1661842800"; 
+   d="scan'208";a="303472949"
+Received: from fmsmga005.fm.intel.com ([10.253.24.32])
+  by fmsmga104.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 12 Oct 2022 01:23:10 -0700
+X-IronPort-AV: E=McAfee;i="6500,9779,10497"; a="955665493"
+X-IronPort-AV: E=Sophos;i="5.95,178,1661842800"; 
+   d="scan'208";a="955665493"
+Received: from ahunter6-mobl1.ger.corp.intel.com (HELO ahunter-VirtualBox.home\044ger.corp.intel.com) ([10.252.42.132])
+  by fmsmga005-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 12 Oct 2022 01:23:08 -0700
+From:   Adrian Hunter <adrian.hunter@intel.com>
+To:     Arnaldo Carvalho de Melo <acme@kernel.org>
+Cc:     Jiri Olsa <jolsa@redhat.com>, Namhyung Kim <namhyung@kernel.org>,
+        Ian Rogers <irogers@google.com>, linux-kernel@vger.kernel.org,
+        linux-perf-users@vger.kernel.org
+Subject: [PATCH 0/2] perf intel-pt: Fix system_wide dummy event for hybrid
+Date:   Wed, 12 Oct 2022 11:22:57 +0300
+Message-Id: <20221012082259.22394-1-adrian.hunter@intel.com>
+X-Mailer: git-send-email 2.25.1
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
- Thunderbird/91.11.0
-Subject: Re: [PATCH V3 4/7] driver/perf/arm_pmu_platform: Add support for BRBE
- attributes detection
-Content-Language: en-US
-From:   Anshuman Khandual <anshuman.khandual@arm.com>
-To:     James Clark <james.clark@arm.com>
-Cc:     linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, peterz@infradead.org,
-        acme@kernel.org, mark.rutland@arm.com, will@kernel.org,
-        catalin.marinas@arm.com
-References: <20220929075857.158358-1-anshuman.khandual@arm.com>
- <20220929075857.158358-5-anshuman.khandual@arm.com>
- <02ce379c-c718-b72d-fc74-cd8c904265fb@arm.com>
- <bf70b7d6-0564-7ae3-6fe6-24483461839b@arm.com>
- <d82de618-9e97-3d5d-f4eb-7710e9094001@arm.com>
-In-Reply-To: <d82de618-9e97-3d5d-f4eb-7710e9094001@arm.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Organization: Intel Finland Oy, Registered Address: PL 281, 00181 Helsinki, Business Identity Code: 0357606 - 4, Domiciled in Helsinki
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
+Hi
+
+Here are a couple of minor Intel PT fixes.
 
 
-On 10/11/22 14:51, Anshuman Khandual wrote:
-> 
-> On 10/10/22 19:47, James Clark wrote:
->>
->> On 06/10/2022 14:37, James Clark wrote:
->>>
->>> On 29/09/2022 08:58, Anshuman Khandual wrote:
->>>> This adds arm pmu infrastrure to probe BRBE implementation's attributes via
->>>> driver exported callbacks later. The actual BRBE feature detection will be
->>>> added by the driver itself.
->>>>
->>>> CPU specific BRBE entries, cycle count, format support gets detected during
->>>> PMU init. This information gets saved in per-cpu struct pmu_hw_events which
->>>> later helps in operating BRBE during a perf event context.
->>>>
->>>> Cc: Will Deacon <will@kernel.org>
->>>> Cc: Mark Rutland <mark.rutland@arm.com>
->>>> Cc: linux-arm-kernel@lists.infradead.org
->>>> Cc: linux-kernel@vger.kernel.org
->>>> Signed-off-by: Anshuman Khandual <anshuman.khandual@arm.com>
->>>> ---
->>>>  drivers/perf/arm_pmu_platform.c | 34 +++++++++++++++++++++++++++++++++
->>>>  1 file changed, 34 insertions(+)
->>>>
->>>> diff --git a/drivers/perf/arm_pmu_platform.c b/drivers/perf/arm_pmu_platform.c
->>>> index 933b96e243b8..acdc445081aa 100644
->>>> --- a/drivers/perf/arm_pmu_platform.c
->>>> +++ b/drivers/perf/arm_pmu_platform.c
->>>> @@ -172,6 +172,36 @@ static int armpmu_request_irqs(struct arm_pmu *armpmu)
->>>>  	return err;
->>>>  }
->>>>  
->>>> +static void arm_brbe_probe_cpu(void *info)
->>>> +{
->>>> +	struct pmu_hw_events *hw_events;
->>>> +	struct arm_pmu *armpmu = info;
->>>> +
->>>> +	/*
->>>> +	 * Return from here, if BRBE driver has not been
->>>> +	 * implemented for this PMU. This helps prevent
->>>> +	 * kernel crash later when brbe_probe() will be
->>>> +	 * called on the PMU.
->>>> +	 */
->>>> +	if (!armpmu->brbe_probe)
->>>> +		return;
->>>> +
->>>> +	hw_events = per_cpu_ptr(armpmu->hw_events, smp_processor_id());
->>>> +	armpmu->brbe_probe(hw_events);
->>>> +}
->>>> +
->>>> +static int armpmu_request_brbe(struct arm_pmu *armpmu)
->>>> +{
->>>> +	int cpu, err = 0;
->>>> +
->>>> +	for_each_cpu(cpu, &armpmu->supported_cpus) {
->>>> +		err = smp_call_function_single(cpu, arm_brbe_probe_cpu, armpmu, 1);
->>> Hi Anshuman,
->>>
->>> I have LOCKDEP on and the patchset applied to perf/core (82aad7ff7) on
->>> git://git.kernel.org/pub/scm/linux/kernel/git/peterz/queue.git and I get
->> Can you confirm if this is currently the correct place to apply this to?
-> This series applied on v6.0-rc5 after the perf ABI changes, both in kernel
-> and in user space tools.
-> 
->> I'm only getting 0 length branch stacks now. Seems like it could be
->> something to do with the layout of perf samples because I know that was
->> done in separate commits:
-> Right, might be.
-> 
->>   sudo ./perf record -j any_call -- ls
->>   ./perf report -D | grep "branch stack"
->>   ... branch stack: nr:0
->>   ... branch stack: nr:0
->>   ... branch stack: nr:0
->>   ... branch stack: nr:0
-> I am planning to respin the series on 6.1-rc1 next week which should solve
-> these multiple moving parts problem
+Adrian Hunter (2):
+      perf intel-pt: Fix segfault in intel_pt_print_info() with uClibc
+      perf intel-pt: Fix system_wide dummy event for hybrid
 
-There are some recent changes which require PMU driver to set data.sample_flags
-indicating what kind of records are being filled in there. Here are the commits
+ tools/perf/arch/x86/util/intel-pt.c | 2 +-
+ tools/perf/util/intel-pt.c          | 9 +++++++--
+ 2 files changed, 8 insertions(+), 3 deletions(-)
 
-a9a931e2666878343 ("perf: Use sample_flags for branch stack")
-3aac580d5cc3001ca ("perf: Add sample_flags to indicate the PMU-filled sample data")
 
-Following fix solves the problem for BRBE driver.
-
-diff --git a/arch/arm64/kernel/perf_event.c b/arch/arm64/kernel/perf_event.c
-index 98e9a615d3cb..85a3aaefc0fb 100644
---- a/arch/arm64/kernel/perf_event.c
-+++ b/arch/arm64/kernel/perf_event.c
-@@ -877,6 +877,7 @@ static irqreturn_t armv8pmu_handle_irq(struct arm_pmu *cpu_pmu)
-                if (has_branch_stack(event)) {
-                        cpu_pmu->brbe_read(cpuc, event);
-                        data.br_stack = &cpuc->branches->brbe_stack;
-+                       data.sample_flags |= PERF_SAMPLE_BRANCH_STACK;
-                        cpu_pmu->brbe_reset(cpuc);
-                }
- 
+Regards
+Adrian
