@@ -2,48 +2,48 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 26F7AC433FE
-	for <linux-perf-users@archiver.kernel.org>; Wed, 12 Oct 2022 16:28:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8BAEFC4332F
+	for <linux-perf-users@archiver.kernel.org>; Wed, 12 Oct 2022 16:31:53 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230045AbiJLQ17 (ORCPT
+        id S229598AbiJLQbw (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Wed, 12 Oct 2022 12:27:59 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39752 "EHLO
+        Wed, 12 Oct 2022 12:31:52 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50554 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230050AbiJLQ14 (ORCPT
+        with ESMTP id S229686AbiJLQbw (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Wed, 12 Oct 2022 12:27:56 -0400
-Received: from mail-oi1-f169.google.com (mail-oi1-f169.google.com [209.85.167.169])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C1818F87E3;
-        Wed, 12 Oct 2022 09:27:52 -0700 (PDT)
-Received: by mail-oi1-f169.google.com with SMTP id m81so19665424oia.1;
-        Wed, 12 Oct 2022 09:27:52 -0700 (PDT)
+        Wed, 12 Oct 2022 12:31:52 -0400
+Received: from mail-oo1-f52.google.com (mail-oo1-f52.google.com [209.85.161.52])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8ADC6BE31;
+        Wed, 12 Oct 2022 09:31:51 -0700 (PDT)
+Received: by mail-oo1-f52.google.com with SMTP id u19-20020a4a9e93000000b004757198549cso12528850ook.0;
+        Wed, 12 Oct 2022 09:31:51 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
         h=cc:to:subject:message-id:date:from:in-reply-to:references
          :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
          :reply-to;
-        bh=wPvQ2ckwdWjATNmKyZjjKYE9ucjYa3sJIA9zZiUleEg=;
-        b=pWUID1xbLz3B4NNl7L7VFdouuCgM/xMYI3WDIZ0a5w4luHsB9/cSRnU82ukEAA0DMi
-         l/JR99YLVApRqstn3OizOIxRImpDyeEPGfkZQWAbQ5KxVyjJfE+h5hh/dgmkTWJc5otu
-         hvCiHV4RNsm6kNzGdDkKVY8tHsmUk39UTffoT/h3r3DefN9xGJfpT4ddo+Xep5U4NWej
-         iGQLeDlbJr0sdowp7oxO1XWYmTxze/JaMEh30OyaN5b4HlbSBIhdqL2stb7vllP2pOXf
-         zZG2YUvWdVC2b3QnuaukJkIGezJjpHfAqgDiA9WOxfDAQ5EgGMiGsVPL8RuR4Urrihf+
-         IyPQ==
-X-Gm-Message-State: ACrzQf2wsGQ9WerKc9x8gpOz2r6Tvi946rwKt9UGs1fPEQy/F/l49p1w
-        bAkz3BqAIv7cU6VSVRZ+SirBu8vxalX+y2Io/3E=
-X-Google-Smtp-Source: AMsMyM7pEIycrhkTjwr6rZ+sybz7kQP2Be7v7Z65rufYwsmxD0x5Cwn0PLe7KghKgt5ZIRAQ02Tdn0xOfdYiOYWdcPc=
-X-Received: by 2002:a05:6808:181e:b0:350:e92a:9ab1 with SMTP id
- bh30-20020a056808181e00b00350e92a9ab1mr2416429oib.209.1665592070740; Wed, 12
- Oct 2022 09:27:50 -0700 (PDT)
+        bh=B+sJcvXCW23zgMMTxvLx9gcuNc7Tz4vevgE0c+dxI1s=;
+        b=ERl/jxTT0VFg/ALsIA131G1eaIso0UGY5Oha9A0LqL+77dzc6KS1w1c0/Zow7Gwdsv
+         DhYCa7U/sR0faSrpup83UbVFO3sZ6jcgThYeBNUXBAF7m8mGmk7pLJHC6slh/osH38Bu
+         tNFRBtVLT1xh7j32X5XU7u97VK2CS6Gdx1dsIyJN2oi25+omuBoH1a3ziS6rFRnrHX5v
+         S7MP+Ltu5iR0ityxh864aG6DCOl8Glu/Jd3DQ8UsG8oJF/vk83+K/6ZcxUUFAANoKIC0
+         u/OzcjiP/Gyw6Y/jWIY2iaqqarRZU03/a+JdT6eOP2YEr4SAoFWB8heQ1zjz9/ZOvjbX
+         ECYQ==
+X-Gm-Message-State: ACrzQf2F4cBR9tcI0K5OdlZ2HpMFUoO8V1HZFWpmSgOd5CgyKJGYXD8q
+        83yeIxi1ISZ7rzg0/KJsMrDkkDPbHWaLQQT3q6I=
+X-Google-Smtp-Source: AMsMyM6yXX7lvJ8EDToeyHwMU7dFC00T56x5wr8m04AHWzThFtTOE0THwWXjM3hpP2HtWYwLItxswDchF1+yjOb4jPw=
+X-Received: by 2002:a9d:6848:0:b0:661:a608:cbc3 with SMTP id
+ c8-20020a9d6848000000b00661a608cbc3mr5702293oto.206.1665592310829; Wed, 12
+ Oct 2022 09:31:50 -0700 (PDT)
 MIME-Version: 1.0
-References: <20221010053600.272854-1-namhyung@kernel.org> <20221010053600.272854-6-namhyung@kernel.org>
- <Y0aZmHecB7Ahiuuh@krava>
-In-Reply-To: <Y0aZmHecB7Ahiuuh@krava>
+References: <20221010053600.272854-1-namhyung@kernel.org> <20221010053600.272854-5-namhyung@kernel.org>
+ <Y0adOTUulE/HnLU3@krava>
+In-Reply-To: <Y0adOTUulE/HnLU3@krava>
 From:   Namhyung Kim <namhyung@kernel.org>
-Date:   Wed, 12 Oct 2022 09:27:39 -0700
-Message-ID: <CAM9d7chx2Ec7NhBf=nSA2eJ-Wyn2+TWKjVx4BViR0KZf1H4LWw@mail.gmail.com>
-Subject: Re: [PATCH 05/19] perf stat: Add cpu aggr id for no aggregation mode
+Date:   Wed, 12 Oct 2022 09:31:39 -0700
+Message-ID: <CAM9d7ciypq2uOGcoCPoYktz2eLpApsG_vCVHZ5snZt_F87J9qQ@mail.gmail.com>
+Subject: Re: [PATCH 04/19] perf stat: Add aggr id for global mode
 To:     Jiri Olsa <olsajiri@gmail.com>
 Cc:     Arnaldo Carvalho de Melo <acme@kernel.org>,
         Ingo Molnar <mingo@kernel.org>,
@@ -62,60 +62,80 @@ Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-On Wed, Oct 12, 2022 at 3:40 AM Jiri Olsa <olsajiri@gmail.com> wrote:
+On Wed, Oct 12, 2022 at 3:56 AM Jiri Olsa <olsajiri@gmail.com> wrote:
 >
-> On Sun, Oct 09, 2022 at 10:35:46PM -0700, Namhyung Kim wrote:
-> > Likewise, add an aggr_id for cpu for none aggregation mode.  This is not
-> > used actually yet but later code will use to unify the aggregation code.
+> On Sun, Oct 09, 2022 at 10:35:45PM -0700, Namhyung Kim wrote:
+> > To make the code simpler, I'd like to use the same aggregation code for
+> > the global mode.  We can simply add an id function to return cpu 0 and
+> > use print_aggr().
 > >
 > > No functional change intended.
 > >
 > > Signed-off-by: Namhyung Kim <namhyung@kernel.org>
 > > ---
-> >  tools/perf/builtin-stat.c | 48 +++++++++++++++++++++++++++++++++++----
-> >  1 file changed, 43 insertions(+), 5 deletions(-)
+> >  tools/perf/builtin-stat.c      | 39 ++++++++++++++++++++++++++++++++--
+> >  tools/perf/util/cpumap.c       | 10 +++++++++
+> >  tools/perf/util/cpumap.h       |  6 +++++-
+> >  tools/perf/util/stat-display.c |  9 ++------
+> >  4 files changed, 54 insertions(+), 10 deletions(-)
 > >
-> > diff --git a/tools/perf/builtin-stat.c b/tools/perf/builtin-stat.c
-> > index 144bb3a657f2..b00ef20aef5b 100644
-> > --- a/tools/perf/builtin-stat.c
-> > +++ b/tools/perf/builtin-stat.c
-> > @@ -1339,6 +1339,12 @@ static struct aggr_cpu_id perf_stat__get_global(struct perf_stat_config *config
-> >       return id;
-> >  }
-> >
-> > +static struct aggr_cpu_id perf_stat__get_cpu(struct perf_stat_config *config __maybe_unused,
-> > +                                          struct perf_cpu cpu)
-> > +{
-> > +     return aggr_cpu_id__cpu(cpu, /*data=*/NULL);
-> > +}
-> > +
-> >  static struct aggr_cpu_id perf_stat__get_aggr(struct perf_stat_config *config,
-> >                                             aggr_get_id_t get_id, struct perf_cpu cpu)
-> >  {
-> > @@ -1381,6 +1387,12 @@ static struct aggr_cpu_id perf_stat__get_global_cached(struct perf_stat_config *
-> >       return perf_stat__get_aggr(config, perf_stat__get_global, cpu);
-> >  }
-> >
-> > +static struct aggr_cpu_id perf_stat__get_cpu_cached(struct perf_stat_config *config,
-> > +                                                 struct perf_cpu cpu)
-> > +{
-> > +     return perf_stat__get_aggr(config, perf_stat__get_cpu, cpu);
-> > +}
-> > +
-> >  static bool term_percore_set(void)
-> >  {
-> >       struct evsel *counter;
-> > @@ -1407,8 +1419,7 @@ static aggr_cpu_id_get_t aggr_mode__get_aggr(enum aggr_mode aggr_mode)
-> >       case AGGR_NONE:
-> >               if (term_percore_set())
-> >                       return aggr_cpu_id__core;
-> > -
-> > -             return NULL;
-> > +             return aggr_cpu_id__cpu;;
 >
-> nit, double ;; ;-)
+> SNIP
+>
+> > diff --git a/tools/perf/util/stat-display.c b/tools/perf/util/stat-display.c
+> > index 4113aa86772f..1d8e585df4ad 100644
+> > --- a/tools/perf/util/stat-display.c
+> > +++ b/tools/perf/util/stat-display.c
+> > @@ -1477,13 +1477,8 @@ void evlist__print_counters(struct evlist *evlist, struct perf_stat_config *conf
+> >               if (config->iostat_run)
+> >                       iostat_print_counters(evlist, config, ts, prefix = buf,
+> >                                             print_counter_aggr);
+> > -             else {
+> > -                     evlist__for_each_entry(evlist, counter) {
+> > -                             print_counter_aggr(config, counter, prefix);
+> > -                     }
+> > -                     if (metric_only)
+> > -                             fputc('\n', config->output);
+> > -             }
+> > +             else
+> > +                     print_aggr(config, evlist, prefix);
+>
+> this seems to break output for:
+>
+> before:
+>         # ./perf stat -M ipc -I 1000 --metric-only
+>         #           time                  IPC
+>              1.000674320                 0.61
+>              2.001700284                 0.66
+>              3.003677500                 0.67
+>              4.005583140                 0.64
+>
+> after:
+>         # ./perf stat -M ipc -I 1000 --metric-only
+>         #           time                  IPC
+>              1.001004048                 0.94
+>
+>              2.003120471                 0.69
+>
+>              3.005030405                 0.65
+>
+>              4.006788766                 0.64
+>
+>              5.008004052                 0.68
+>
+>
+> also should this hunk be in separate patch?
 
-Good eye :)  I'll remove it.
+Yeah, looks like so.  Probably slipped into during rebase.  Will check.
 
 Thanks,
 Namhyung
+
+
+>
+> >               break;
+> >       case AGGR_NONE:
+> >               if (metric_only)
+> > --
+> > 2.38.0.rc1.362.ged0d419d3c-goog
+> >
