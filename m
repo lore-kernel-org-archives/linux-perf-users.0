@@ -2,77 +2,76 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 128D0C4332F
-	for <linux-perf-users@archiver.kernel.org>; Wed, 12 Oct 2022 16:06:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 45E20C4332F
+	for <linux-perf-users@archiver.kernel.org>; Wed, 12 Oct 2022 16:20:41 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229548AbiJLQGx (ORCPT
+        id S229678AbiJLQUk (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Wed, 12 Oct 2022 12:06:53 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51502 "EHLO
+        Wed, 12 Oct 2022 12:20:40 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48562 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229627AbiJLQGv (ORCPT
+        with ESMTP id S229899AbiJLQUd (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Wed, 12 Oct 2022 12:06:51 -0400
-Received: from mail-oa1-f52.google.com (mail-oa1-f52.google.com [209.85.160.52])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2950D895EE;
-        Wed, 12 Oct 2022 09:06:50 -0700 (PDT)
-Received: by mail-oa1-f52.google.com with SMTP id 586e51a60fabf-1364357a691so13464056fac.7;
-        Wed, 12 Oct 2022 09:06:50 -0700 (PDT)
+        Wed, 12 Oct 2022 12:20:33 -0400
+Received: from mail-oi1-f172.google.com (mail-oi1-f172.google.com [209.85.167.172])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D281027FED;
+        Wed, 12 Oct 2022 09:20:32 -0700 (PDT)
+Received: by mail-oi1-f172.google.com with SMTP id u15so13698993oie.2;
+        Wed, 12 Oct 2022 09:20:32 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
         h=cc:to:subject:message-id:date:from:in-reply-to:references
          :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
          :reply-to;
-        bh=ukt7vGP6CsiYiD8LNPDRe24U+aWDDsk6nJCXZF6ming=;
-        b=dhVePhRzLkFbgYy/8Cn56wTqmpOCk9ULCSbzIcYNZPuwTV2gHyPl2Kfp/jHzxOfqSA
-         siu4oJbkpu3JkwNhvtn7Q0tGnfBBohqbjjSNyTaICuUyp+lVNZUeyvhLZ0d7iomc7e3u
-         IHez4gGmKMc1fGPn5b5gKchBcysdxGZgdNT5/nUlU1wRsXxoLoverwgT6w1MjfR8y+sx
-         dEOVOQFdTZmctZb2hVS5snkiciXnaIgJJUq3CIM7mWLveqC55gclr9e0bc1B7IbIKnH5
-         HZ+KYooVhawb/MhDoIqgrzoVy00dCDawMdtBJyzIxSodBxRg4Z/13UtbcmDT4a0zO0+V
-         dE5w==
-X-Gm-Message-State: ACrzQf1mJTE81Yk8AofBxLwz6SBOUSNhGj+RGRbj/rJ2s+O7fMjlloUc
-        KV/z21NDZoDrbKi6cDdOLzEsds/rZ5vH8YuPGHvxOvCzMhQ=
-X-Google-Smtp-Source: AMsMyM61djge6d8lMJXZNa7E55BAzX+NGb7o2YesC2pZscEK25B3HBT5xy24+E4kk+ZVjitjMUsWqO+mYGSgOkxQfMk=
+        bh=tAIs7AwhS/GOOfzZdFmQPH0C0QhvdyIwmaA0cNPLVEA=;
+        b=udPPao2DTT4urstb9istE7eGq5u0GpRDQ5jxFZvsKoJ06yWA/A/7nUKxXZmIvp9u7w
+         4LPFGcQB+1r52zOqG6szZ/zfB9POqjWH3wtk2nL5cXNOTwuvOb6FH55OZG8cwC7YJoXq
+         E6lKU5Mc4/p8G5cIDiAmoqFnaX4KNgYcnsK679nxg2DVHkBcvtGxqo9nfuptqGED3Plb
+         B4cgSm1NkKiBo8l5mHoV1h2JqxS6OGu5pwI9kfuglGvssiOzJGaML5IqXgvtPrO9m2sW
+         7Ch14QMFEtVdQwFfAMbVSznrtasylGGcacm5WBu8Hrc+TLOXwhOQk6HKPff/I+hYouq+
+         htvw==
+X-Gm-Message-State: ACrzQf29T+YoNtxcIs//aaibqbaPHRVeCavYjtZXSs8JaTQmHnUiM5Ll
+        NnKEaVE0HrWS7sfIgB+FyLYSJr7Cfxvk1ED0IMQE/KeM
+X-Google-Smtp-Source: AMsMyM6zcRK5WW66x5f3Qi5yVUogVRAUQtGeAnSwRuKvDsW1ndU5IBxvURGWsqOiTKi4c4hsFeqCWCx7336ysKMWVY0=
 X-Received: by 2002:a05:6870:82ac:b0:133:34b:6f10 with SMTP id
- q44-20020a05687082ac00b00133034b6f10mr2933403oae.218.1665590799120; Wed, 12
- Oct 2022 09:06:39 -0700 (PDT)
+ q44-20020a05687082ac00b00133034b6f10mr2977935oae.218.1665591621232; Wed, 12
+ Oct 2022 09:20:21 -0700 (PDT)
 MIME-Version: 1.0
-References: <20221012094633.21669-1-james.clark@arm.com> <20221012094633.21669-2-james.clark@arm.com>
-In-Reply-To: <20221012094633.21669-2-james.clark@arm.com>
+References: <20221012082259.22394-1-adrian.hunter@intel.com> <20221012082259.22394-2-adrian.hunter@intel.com>
+In-Reply-To: <20221012082259.22394-2-adrian.hunter@intel.com>
 From:   Namhyung Kim <namhyung@kernel.org>
-Date:   Wed, 12 Oct 2022 09:06:27 -0700
-Message-ID: <CAM9d7ci-o4fzBLaLB5pcKA2=GAUVFt8PJofnuy6RjG7bibJE-w@mail.gmail.com>
-Subject: Re: [PATCH v2 1/1] perf test: Fix attr tests for PERF_FORMAT_LOST
-To:     James Clark <james.clark@arm.com>
-Cc:     linux-perf-users <linux-perf-users@vger.kernel.org>,
-        Arnaldo Carvalho de Melo <acme@kernel.org>,
+Date:   Wed, 12 Oct 2022 09:20:10 -0700
+Message-ID: <CAM9d7ciW1wF7YGszv4KQ_KRUhCeBVynQsuRi2+NoRAYgy3xsRw@mail.gmail.com>
+Subject: Re: [PATCH 1/2] perf intel-pt: Fix segfault in intel_pt_print_info()
+ with uClibc
+To:     Adrian Hunter <adrian.hunter@intel.com>
+Cc:     Arnaldo Carvalho de Melo <acme@kernel.org>,
+        Jiri Olsa <jolsa@redhat.com>, Ian Rogers <irogers@google.com>,
         linux-kernel <linux-kernel@vger.kernel.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Jiri Olsa <jolsa@kernel.org>,
-        Adrian Hunter <adrian.hunter@intel.com>
+        linux-perf-users <linux-perf-users@vger.kernel.org>
 Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-Hello,
+Hi Adrian,
 
-On Wed, Oct 12, 2022 at 2:47 AM James Clark <james.clark@arm.com> wrote:
+On Wed, Oct 12, 2022 at 1:23 AM Adrian Hunter <adrian.hunter@intel.com> wrote:
 >
-> Since PERF_FORMAT_LOST was added, the default read format has that bit
-> set, so add it to the tests. Keep the old value as well so that the test
-> still passes on older kernels.
+> uClibc segfaulted because NULL was passed as the format to fprintf().
+
+Sounds like glibc has a NULL check in fprintf().
+
 >
-> This fixes the following failure:
+> That happened because one of the format strings was missing and
+> intel_pt_print_info() didn't check that before calling fprintf().
 >
->   expected read_format=0|4, got 20
->   FAILED './tests/attr/test-record-C0' - match failure
+> Add the missing format string, and check format is not NULL before calling
+> fprintf().
 >
-> Fixes: 85b425f31c88 ("perf record: Set PERF_FORMAT_LOST by default")
-> Signed-off-by: James Clark <james.clark@arm.com>
+> Fixes: 11fa7cb86b56 ("perf tools: Pass Intel PT information for decoding MTC and CYC")
+> Cc: stable@vger.kernel.org
+> Signed-off-by: Adrian Hunter <adrian.hunter@intel.com>
 
 Acked-by: Namhyung Kim <namhyung@kernel.org>
 
@@ -81,129 +80,36 @@ Namhyung
 
 
 > ---
->  tools/perf/tests/attr/base-record                | 2 +-
->  tools/perf/tests/attr/system-wide-dummy          | 2 +-
->  tools/perf/tests/attr/test-record-group          | 4 ++--
->  tools/perf/tests/attr/test-record-group-sampling | 6 +++---
->  tools/perf/tests/attr/test-record-group1         | 4 ++--
->  tools/perf/tests/attr/test-record-group2         | 4 ++--
->  6 files changed, 11 insertions(+), 11 deletions(-)
+>  tools/perf/util/intel-pt.c | 9 +++++++--
+>  1 file changed, 7 insertions(+), 2 deletions(-)
 >
-> diff --git a/tools/perf/tests/attr/base-record b/tools/perf/tests/attr/base-record
-> index 8c10955eff93..3ef07a12aa14 100644
-> --- a/tools/perf/tests/attr/base-record
-> +++ b/tools/perf/tests/attr/base-record
-> @@ -9,7 +9,7 @@ size=128
->  config=0
->  sample_period=*
->  sample_type=263
-> -read_format=0|4
-> +read_format=0|4|20
->  disabled=1
->  inherit=1
->  pinned=0
-> diff --git a/tools/perf/tests/attr/system-wide-dummy b/tools/perf/tests/attr/system-wide-dummy
-> index 86a15dd359d9..8fec06eda5f9 100644
-> --- a/tools/perf/tests/attr/system-wide-dummy
-> +++ b/tools/perf/tests/attr/system-wide-dummy
-> @@ -11,7 +11,7 @@ size=128
->  config=9
->  sample_period=4000
->  sample_type=455
-> -read_format=4
-> +read_format=4|20
->  # Event will be enabled right away.
->  disabled=0
->  inherit=1
-> diff --git a/tools/perf/tests/attr/test-record-group b/tools/perf/tests/attr/test-record-group
-> index 14ee60fd3f41..6c1cff8aae8b 100644
-> --- a/tools/perf/tests/attr/test-record-group
-> +++ b/tools/perf/tests/attr/test-record-group
-> @@ -7,14 +7,14 @@ ret     = 1
->  fd=1
->  group_fd=-1
->  sample_type=327
-> -read_format=4
-> +read_format=4|20
+> diff --git a/tools/perf/util/intel-pt.c b/tools/perf/util/intel-pt.c
+> index b34cb3dec1aa..e3548ddef254 100644
+> --- a/tools/perf/util/intel-pt.c
+> +++ b/tools/perf/util/intel-pt.c
+> @@ -4046,6 +4046,7 @@ static const char * const intel_pt_info_fmts[] = {
+>         [INTEL_PT_SNAPSHOT_MODE]        = "  Snapshot mode       %"PRId64"\n",
+>         [INTEL_PT_PER_CPU_MMAPS]        = "  Per-cpu maps        %"PRId64"\n",
+>         [INTEL_PT_MTC_BIT]              = "  MTC bit             %#"PRIx64"\n",
+> +       [INTEL_PT_MTC_FREQ_BITS]        = "  MTC freq bits       %#"PRIx64"\n",
+>         [INTEL_PT_TSC_CTC_N]            = "  TSC:CTC numerator   %"PRIu64"\n",
+>         [INTEL_PT_TSC_CTC_D]            = "  TSC:CTC denominator %"PRIu64"\n",
+>         [INTEL_PT_CYC_BIT]              = "  CYC bit             %#"PRIx64"\n",
+> @@ -4060,8 +4061,12 @@ static void intel_pt_print_info(__u64 *arr, int start, int finish)
+>         if (!dump_trace)
+>                 return;
 >
->  [event-2:base-record]
->  fd=2
->  group_fd=1
->  config=1
->  sample_type=327
-> -read_format=4
-> +read_format=4|20
->  mmap=0
->  comm=0
->  task=0
-> diff --git a/tools/perf/tests/attr/test-record-group-sampling b/tools/perf/tests/attr/test-record-group-sampling
-> index 300b9f7e6d69..97e7e64a38f0 100644
-> --- a/tools/perf/tests/attr/test-record-group-sampling
-> +++ b/tools/perf/tests/attr/test-record-group-sampling
-> @@ -7,7 +7,7 @@ ret     = 1
->  fd=1
->  group_fd=-1
->  sample_type=343
-> -read_format=12
-> +read_format=12|28
->  inherit=0
+> -       for (i = start; i <= finish; i++)
+> -               fprintf(stdout, intel_pt_info_fmts[i], arr[i]);
+> +       for (i = start; i <= finish; i++) {
+> +               const char *fmt = intel_pt_info_fmts[i];
+> +
+> +               if (fmt)
+> +                       fprintf(stdout, fmt, arr[i]);
+> +       }
+>  }
 >
->  [event-2:base-record]
-> @@ -21,8 +21,8 @@ config=3
->  # default | PERF_SAMPLE_READ
->  sample_type=343
->
-> -# PERF_FORMAT_ID | PERF_FORMAT_GROUP
-> -read_format=12
-> +# PERF_FORMAT_ID | PERF_FORMAT_GROUP  | PERF_FORMAT_LOST
-> +read_format=12|28
->  task=0
->  mmap=0
->  comm=0
-> diff --git a/tools/perf/tests/attr/test-record-group1 b/tools/perf/tests/attr/test-record-group1
-> index 3ffe246e0228..eeb1db392bc9 100644
-> --- a/tools/perf/tests/attr/test-record-group1
-> +++ b/tools/perf/tests/attr/test-record-group1
-> @@ -7,7 +7,7 @@ ret     = 1
->  fd=1
->  group_fd=-1
->  sample_type=327
-> -read_format=4
-> +read_format=4|20
->
->  [event-2:base-record]
->  fd=2
-> @@ -15,7 +15,7 @@ group_fd=1
->  type=0
->  config=1
->  sample_type=327
-> -read_format=4
-> +read_format=4|20
->  mmap=0
->  comm=0
->  task=0
-> diff --git a/tools/perf/tests/attr/test-record-group2 b/tools/perf/tests/attr/test-record-group2
-> index 6b9f8d182ce1..cebdaa8e64e4 100644
-> --- a/tools/perf/tests/attr/test-record-group2
-> +++ b/tools/perf/tests/attr/test-record-group2
-> @@ -9,7 +9,7 @@ group_fd=-1
->  config=0|1
->  sample_period=1234000
->  sample_type=87
-> -read_format=12
-> +read_format=12|28
->  inherit=0
->  freq=0
->
-> @@ -19,7 +19,7 @@ group_fd=1
->  config=0|1
->  sample_period=6789000
->  sample_type=87
-> -read_format=12
-> +read_format=12|28
->  disabled=0
->  inherit=0
->  mmap=0
+>  static void intel_pt_print_info_str(const char *name, const char *str)
 > --
-> 2.28.0
+> 2.25.1
 >
