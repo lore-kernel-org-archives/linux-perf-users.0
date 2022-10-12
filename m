@@ -2,450 +2,284 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7A551C433FE
-	for <linux-perf-users@archiver.kernel.org>; Wed, 12 Oct 2022 08:39:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 14356C433FE
+	for <linux-perf-users@archiver.kernel.org>; Wed, 12 Oct 2022 08:41:13 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229612AbiJLIjX (ORCPT
+        id S229517AbiJLIlK (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Wed, 12 Oct 2022 04:39:23 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38806 "EHLO
+        Wed, 12 Oct 2022 04:41:10 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45102 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229492AbiJLIjV (ORCPT
+        with ESMTP id S229451AbiJLIlK (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Wed, 12 Oct 2022 04:39:21 -0400
-Received: from NAM12-MW2-obe.outbound.protection.outlook.com (mail-mw2nam12on2061b.outbound.protection.outlook.com [IPv6:2a01:111:f400:fe5a::61b])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3EC26A9243;
-        Wed, 12 Oct 2022 01:39:20 -0700 (PDT)
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=MNGm3CnIIlIn5LEDFEHErOCZlZGmb4JJCIdoJloLm4HQIZOPNLPQDqw8heVh1NqoYo5Xx9Z0Gp8uTdUTIpypPcgZZ0nI3NkBc+7y0TVwAhR2Zz0qpeifIY+II47Ym5E6QY04pCM1bi5sAbgSl902jmUQuleH7EuIrYs3uGhq8LnrTzSWmHXwoIE4ZOJD5IOcm+1/VbjVjR7QNoiqx7loTU9EHcHyYB2fcJLEYaE+b1JkWIVbBzBCqc5lgTVJ+5P9U8Km+n2zh6l74F6tUgZYAYbxZgtPj/ak3DfHFSHQRAjNCEBWfomqC6dmrMPFEgQclf31VnNXz3CFo2ihs6KV4Q==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=qe1RCL6meOk4b8p9K/ABM+a2gAxB1xyyUr6drtmF24g=;
- b=AIuKsEFNL/HBOequ6v+7r2xx4JxRCErdI1AuWx8p9qo8ydJMJH9MHmYC84415jwHUaWSYpG/OS2gq6Ogv7CUw1nTQbvfSGA795ziIy0SSX1BTWoa8zUVEi8zsTiyB7/YOB2r0d1AW+OBxBM+QyOIbhj1kCNvsSBnnUYwC7thyqEMUfPHvTScaE5TtrgFvMvypgdnYMCeVIC2Ut15X+ilyVM4xQPhBubPvA5xM8BmeqGD3fIpuSsdYGwinyO4ex2e3amYb5lTO9zsTDh68LRhUvdL0fJivmpszbK4a9ELX1jaN7iILxC8wKkkICgtkwUmCc8RX+Ra34h/XkQzXz4IbQ==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=amd.com; dmarc=pass action=none header.from=amd.com; dkim=pass
- header.d=amd.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=qe1RCL6meOk4b8p9K/ABM+a2gAxB1xyyUr6drtmF24g=;
- b=tyR/Ah2MQp72rnv2cqH7BG0J4t2VPASgYHqs9hUEefbX/xcf2rEOoaNWfP5wNMV94gkbqYTDKnCYuUgy9YTHB9/D6kMqwyjSWTCfcHxZO0gNrNEOcx46hIir4vN5kg70HNJay9TBW5uB9hNGkN0rkyiA2wgZH0hdDZ5IWZWboEA=
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=amd.com;
-Received: from PH7PR12MB6588.namprd12.prod.outlook.com (2603:10b6:510:210::10)
- by MN0PR12MB6269.namprd12.prod.outlook.com (2603:10b6:208:3c3::14) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.5709.21; Wed, 12 Oct
- 2022 08:39:16 +0000
-Received: from PH7PR12MB6588.namprd12.prod.outlook.com
- ([fe80::6216:d15b:e4a3:58af]) by PH7PR12MB6588.namprd12.prod.outlook.com
- ([fe80::6216:d15b:e4a3:58af%3]) with mapi id 15.20.5709.021; Wed, 12 Oct 2022
- 08:39:16 +0000
-Message-ID: <174fb540-ec18-eeca-191d-c02e1f1005d2@amd.com>
-Date:   Wed, 12 Oct 2022 14:09:00 +0530
-User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:91.0) Gecko/20100101
- Thunderbird/91.9.1
-Subject: Re: [PATCH v2] perf: Rewrite core context handling
-Content-Language: en-US
-To:     Peter Zijlstra <peterz@infradead.org>
-Cc:     acme@kernel.org, alexander.shishkin@linux.intel.com,
-        jolsa@redhat.com, namhyung@kernel.org, songliubraving@fb.com,
-        eranian@google.com, ak@linux.intel.com, mark.rutland@arm.com,
-        frederic@kernel.org, maddy@linux.ibm.com, irogers@google.com,
-        will@kernel.org, robh@kernel.org, mingo@redhat.com,
-        catalin.marinas@arm.com, ndesaulniers@google.com,
-        srw@sladewatkins.net, linux-arm-kernel@lists.infradead.org,
-        linux-perf-users@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
-        linux-s390@vger.kernel.org, linux-kernel@vger.kernel.org,
-        sandipan.das@amd.com, ananth.narayan@amd.com, kim.phillips@amd.com,
-        santosh.shukla@amd.com, Ravi Bangoria <ravi.bangoria@amd.com>
-References: <20221008062424.313-1-ravi.bangoria@amd.com>
- <Y0VTn0qLWd925etP@hirez.programming.kicks-ass.net>
- <ba47d079-6d97-0412-69a0-fa15999b5024@amd.com>
- <Y0V3kOWInrvCvVtk@hirez.programming.kicks-ass.net>
- <Y0WsRItHmfI5uaq3@hirez.programming.kicks-ass.net>
-From:   Ravi Bangoria <ravi.bangoria@amd.com>
-In-Reply-To: <Y0WsRItHmfI5uaq3@hirez.programming.kicks-ass.net>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: PN2PR01CA0228.INDPRD01.PROD.OUTLOOK.COM
- (2603:1096:c01:eb::16) To PH7PR12MB6588.namprd12.prod.outlook.com
- (2603:10b6:510:210::10)
+        Wed, 12 Oct 2022 04:41:10 -0400
+Received: from mail-wr1-x433.google.com (mail-wr1-x433.google.com [IPv6:2a00:1450:4864:20::433])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A94E7B40ED;
+        Wed, 12 Oct 2022 01:41:06 -0700 (PDT)
+Received: by mail-wr1-x433.google.com with SMTP id j7so25181128wrr.3;
+        Wed, 12 Oct 2022 01:41:06 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20210112;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:date:from:from:to
+         :cc:subject:date:message-id:reply-to;
+        bh=P3SyMQAtY4XkiggBe5s7cBMrLKlW6KTBeHIRyD52N1E=;
+        b=J4YLawnWLBu3dTeMLagd3RBceRTfB7xDwCBHYyl6yz9pP+vLRa30gf8gpU+PS8xSQ5
+         X/iONYxYwNa+jeIHRXt5MWub+PCF6k3I+U1hwNALNTidlc2p0PLY4Y0L3Gf7Fwb+ziZ/
+         ylAFdaA8xkXny67V5gnOW5rXPylzubuKi/85aHfVGWFbhmuI76bY+HG/E6jWMc7OgUvv
+         8iP+hKmIh/U0TR84JR0l2TCPnsnFDFkGb07dtfzx77uN/JH9ZrDxY2NnjvsLyQFAnsmA
+         zDWRXZFlvBnn4TnUF4UXn3kKdtVypTevivXjwJwl+W4XCljA0VdJPEvDPS/1tAx3W7GP
+         fM3w==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:date:from
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=P3SyMQAtY4XkiggBe5s7cBMrLKlW6KTBeHIRyD52N1E=;
+        b=MUzxiock5bodqOlzBrvBS4jJKfdVscJzkUXvjjtTfPs4aBJf9060qWB2SQYCOPyHnw
+         GcFPHcoClCLbbwJ49xTliurU7WWY4ZMWQ9E3MTJzzN7lBonNEhAP3vnKHP7w6CM9v6+N
+         hOKVhOD+O++kfl9NtUSZ3SVLB8TLSe6KpZRw1ZksHQQ2cYvhsuCQu6s5A7gc+o8nxUN1
+         1orD6kQhw09wukPf6D3RqGRsy23BEUD+11d2ytW16aARP4XaZozf+9aT22+iRdDRRXdx
+         Irmg1u7PENwKvyhfm2KDhYh3ZSCqW9wLgbThDjJFRW8AGUX9GWSruumNAk/ZeFiR7tqn
+         IYaw==
+X-Gm-Message-State: ACrzQf2ghyy/79WIiDTBBdrbQNdiLXs/TMyoSSX0EVbHPYdOAn/q0npd
+        q8y+f+9cAO7k18eVtnqAuhw=
+X-Google-Smtp-Source: AMsMyM5RXDpqJNBcU23Om7JRXK4S8QwPcZCb4Pd3RHpwo0CSacWn8PHxNh8LYXOqRylAnzi5AGoeVg==
+X-Received: by 2002:a5d:6901:0:b0:22f:b097:7de6 with SMTP id t1-20020a5d6901000000b0022fb0977de6mr12776666wru.373.1665564064989;
+        Wed, 12 Oct 2022 01:41:04 -0700 (PDT)
+Received: from krava ([193.85.244.190])
+        by smtp.gmail.com with ESMTPSA id d17-20020a5d6dd1000000b0022cd6e852a2sm16094363wrz.45.2022.10.12.01.41.03
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 12 Oct 2022 01:41:04 -0700 (PDT)
+From:   Jiri Olsa <olsajiri@gmail.com>
+X-Google-Original-From: Jiri Olsa <jolsa@kernel.org>
+Date:   Wed, 12 Oct 2022 10:41:02 +0200
+To:     Namhyung Kim <namhyung@kernel.org>
+Cc:     Arnaldo Carvalho de Melo <acme@kernel.org>,
+        Ingo Molnar <mingo@kernel.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Ian Rogers <irogers@google.com>,
+        Adrian Hunter <adrian.hunter@intel.com>,
+        linux-perf-users@vger.kernel.org,
+        Kan Liang <kan.liang@linux.intel.com>,
+        Leo Yan <leo.yan@linaro.org>, Andi Kleen <ak@linux.intel.com>,
+        Athira Rajeev <atrajeev@linux.vnet.ibm.com>,
+        James Clark <james.clark@arm.com>,
+        Xing Zhengjun <zhengjun.xing@linux.intel.com>
+Subject: Re: [PATCH 19/19] perf stat: Remove unused perf_counts.aggr field
+Message-ID: <Y0Z9nsgz7A5nWRN2@krava>
+References: <20221010053600.272854-1-namhyung@kernel.org>
+ <20221010053600.272854-20-namhyung@kernel.org>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: PH7PR12MB6588:EE_|MN0PR12MB6269:EE_
-X-MS-Office365-Filtering-Correlation-Id: b59651a1-350f-4894-5d51-08daac2d3f55
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: xvgWZx37wCygyuqWhoiS9FfISdnjjV7Au+UxjPy4EvkK1qI1WBalvzs+tpi2j2+vW39xLQzstFx1KfEWkEu7u1LfYf0efmhboUCo1l3EgDrz5zkSK3JZyvEJm3KWlzH92mIQHq6/cMuGdPcryHxgbyrpb96gUr0/fh+6FNuatwotiMcZEwvPQXRb1gzXkPwWJ+couq6OxxyLK6H1dkvV2YMWkBCwDcGGR4szJwOUtqcml75pmvoC8EWMvoeOdndcDIFbIMCQSzSiyNo3CHeeousLA5tuX6NmedYiBFwlFDNmWmTuY0a5lAllUA9N+f+DSiCW2+aoEsaN8AioDRvmHpPNGo3tsrVMV53OTSTK+ThBuyShNZPucvgIPfgw2v8kQx7EEdmTErhUULGnNZhOxgBkeiPQnyFHUl+OaoTUaC6Nv76FC6s5aSh7Dn32+6qcMDouyklHkM//ROQkQCxW5na681r0gEX/DUWmgO4bEPYv4Z/TEs4MsW4H/de8WRcu85+mLJXKCuIN6lQihCrsUMmJ00nEF1/1JCHZ3OSEnqNEyju2ItPJ0JqTWrhi6obMXsz5OPtcZ+A8iTc6cF3ICR78OrewzPVV4rlq5CMBYEwpVrtdyUgmEyjwSnQoGpBYdGHEGKXpTVHy2c9YcysfPApj8LLaKxdyrQlIl0uHyqQP0xuW3xx8lym28zVJWNCjxZ+O347QZ3sLCEreb2MJr5TGIcFWCZwriJOiT1tJXQKqkbefZDx9xed16o5S28hXPeu3PnLEF/XNH4iUEB4T+Xn+XDlzz65ucSZnoJnTR+A6oeldLhelRkH0WT1XPaSz
-X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:PH7PR12MB6588.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230022)(4636009)(136003)(346002)(376002)(39860400002)(366004)(396003)(451199015)(26005)(86362001)(6486002)(6916009)(316002)(8676002)(36756003)(66476007)(8936002)(66556008)(44832011)(41300700001)(2906002)(4326008)(66946007)(83380400001)(2616005)(478600001)(5660300002)(7416002)(6666004)(186003)(53546011)(6506007)(66899015)(31696002)(38100700002)(6512007)(31686004)(21314003)(45980500001)(43740500002);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0: =?utf-8?B?VlJQQmdrZHhXa243ZEFvK20xbHZPNndvcEFnazJReWdRdHJxTU0rWHJvYzJu?=
- =?utf-8?B?UDJJSlBWK1ZiQ0lXdms3czhKSlNzRmVpcklVMlA4VFY1bXM4ZXV2RTVzYlp6?=
- =?utf-8?B?eXM4ZGNMQmV0TnI2dkZSZmZYYVdUd1FWYzk0KzBNUElEYmVoYysxZlltUUxB?=
- =?utf-8?B?cWl3L05SMmdCMXc3RVJBTDNCSEJxVHhoalY1NXNJdnFma0MvbkJxSkdxSGll?=
- =?utf-8?B?d3l5UlNZK3J3UmpHU0hzalljUGpjUjg4Zmx5ZWVtMnNqVkRPdGVSRnRnaTl4?=
- =?utf-8?B?U3F1R1R1UEVxZG9jbHc3cXB4TFpzdUR0QnFYOUk0OUxacE9FMzFiM2Mrd01y?=
- =?utf-8?B?QTBtaDJsZVg5OWY4emorbEpHS3IzelgxazNsS1FpalpsZU1OTTFXZllxYk5P?=
- =?utf-8?B?eTc5OEpQZkZQNzhlK1MyUWthWVBYc0hlSmV3aEZmSVlER2tYKzlNdVVtdEpF?=
- =?utf-8?B?RlJ2NnVzMFJLdEFQTStEZTF5YWtHeVlIQmxoM1psV0N3QUZmMVBmditINGRY?=
- =?utf-8?B?akhSQ3FpeUgyallXU2tRS3dXenNMNnhYQ0l3OWZjNnlvSjYwVWZ1WU9LcXN0?=
- =?utf-8?B?bit1MVJweVBPRGNNTDVBOGVIUVp1cjkyaXpZRUFaTGVyK05sNStEZm9COVpB?=
- =?utf-8?B?bXh1U1pIa3FvUkRWc2wxSU1GN1JYOHVzZGp2ZFNHRTFOaGRSSG9GYzlpRmdl?=
- =?utf-8?B?c1R0bWY0cTJFVUdUU21oY2Q1QkR5WEcwK2hIWEF2TFAxV2xWaGNqOXkvbVNN?=
- =?utf-8?B?TXNvNUZGbDBWaVdOTnJGSWN5YmRTWFlGVmxKeWh5R3dZY2JkSzZJNnllaGdM?=
- =?utf-8?B?c05PK2ZScWdCb1RMTERCbENCYlJjZ2FCOFRycG9YeExlMW5TTFI0SWkzd0J0?=
- =?utf-8?B?S05JeWZFa3d3QXZKOGp2dU9OSkF1TjRUUDdKc0RBaWo3RmI1MTZJNnJLVDJq?=
- =?utf-8?B?SDQybC95OFlnSm5DenVVVnVGWm5rQUZQTkZkZ2szZGg1M2l0YkZ3L2VNcEFD?=
- =?utf-8?B?T2tidW5CTmoweThSKzZldlBvMDMrV1N5bDAxL3Mycy9NYnlrNHJTZi8yYjR3?=
- =?utf-8?B?NXpMT1ZQbzN1bHlrUEhWb2FUUkNkaTZKdlArWjlTWTY0bnVHUVlSTTJqRG1Y?=
- =?utf-8?B?WkM5Rmg4L2RmOFk5ZzhaN2RhVm1CMVVWdW8yTnhuZVcrQ2lpaXVlSkU0NmtC?=
- =?utf-8?B?WGlIemt4ODJGQVUxbk1jN1gyYkJCeHAxb0tUdVQxaTZmL05CVGRSS1AvMENZ?=
- =?utf-8?B?SHV6Y3lWUDdXK29kWk5xY2VvMDhjMlRzdmdQYTBxY04rUXJpM2RsQjNCTm9j?=
- =?utf-8?B?MHRoT210N2dGaXBLbWpQMmZWZER5N2szU2xHempkcjNLRWZpOXFxMUsrcW5O?=
- =?utf-8?B?bkJiSC9sMjR0YlZPNVoxbCtVNFBOQ0QwMWpuVmE2b0txQVhnK3BWQ281WkNl?=
- =?utf-8?B?NVo1MW5HSmwrK09UaG9ucGVWeEttUUd6OEl1WVFYVWI4NEl2NmtkME95UjlJ?=
- =?utf-8?B?b1ZobUgxTDhaQnhCMmN6bGdtWnhQMzArdjhXRTBkOXhpWU9PeGJ2UW5qL1NP?=
- =?utf-8?B?LzNGUlVKMTFiQWFiQlFGdThmWHRUcjRVVEt3VzZqT05zVUczVnA3U000Zmt0?=
- =?utf-8?B?N2w4V0ZOU0dxM2YvNmplbldtSmpnYlNxOUh2aVZJWHhtcEtuZE5FbkFaSHox?=
- =?utf-8?B?OVhlcUZJYUNiWTZyZE9VRUZoVHZtdFIzQ2Z6R09EZnNTSTFYTW5wU09iUFVC?=
- =?utf-8?B?MUVJTzRxNHZCOU0rTERGOTVCeTR3ZkRUb3hUYmhlaVUwWUIyR2NxdHM4Wi9i?=
- =?utf-8?B?a3VtZk1sbmdtLytIS2hKYlBjQlBiVFlLRGd1SlUyK0t4bGRZRzF6MUxZZ0d1?=
- =?utf-8?B?UDYrRjVYQ0QwdysrMEpTc1hGNzNkRnpEN291V3dUeklyQUFTSVRLbnNEUUdJ?=
- =?utf-8?B?RzA0bkszUkhuelYwWmFqa3ExVENHV0czS1FMWlhleEtCTDRaV0FJdFFITkxt?=
- =?utf-8?B?bmZ6Qyt1b3hEdzdyZTdxNllnbDVtVW4rQXZtTDNwRHVtcTZFUmJIK1B0WFdy?=
- =?utf-8?B?WWpMNEZ4TksrWm1mQThORlBWUmRhRUdOUms4MldVa3NRNUZVYk5reEUxMWkw?=
- =?utf-8?Q?VdixamEttITdLOAXy/ChKGOYu?=
-X-OriginatorOrg: amd.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: b59651a1-350f-4894-5d51-08daac2d3f55
-X-MS-Exchange-CrossTenant-AuthSource: PH7PR12MB6588.namprd12.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 12 Oct 2022 08:39:16.7267
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: 0wVRYOwmVc9Ac+S2ibKpHvQ0QSty8Hi9WdanhUx6VtGxiiDSVEekCOLe5RiVHCvz3UcAnAwn7R043UVtDUkGwg==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: MN0PR12MB6269
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
+In-Reply-To: <20221010053600.272854-20-namhyung@kernel.org>
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-On 11-Oct-22 11:17 PM, Peter Zijlstra wrote:
-> On Tue, Oct 11, 2022 at 04:02:56PM +0200, Peter Zijlstra wrote:
->> On Tue, Oct 11, 2022 at 06:49:55PM +0530, Ravi Bangoria wrote:
->>> On 11-Oct-22 4:59 PM, Peter Zijlstra wrote:
->>>> On Sat, Oct 08, 2022 at 11:54:24AM +0530, Ravi Bangoria wrote:
->>>>
->>>>> +static void perf_event_swap_task_ctx_data(struct perf_event_context *prev_ctx,
->>>>> +					  struct perf_event_context *next_ctx)
->>>>> +{
->>>>> +	struct perf_event_pmu_context *prev_epc, *next_epc;
->>>>> +
->>>>> +	if (!prev_ctx->nr_task_data)
->>>>> +		return;
->>>>> +
->>>>> +	prev_epc = list_first_entry(&prev_ctx->pmu_ctx_list,
->>>>> +				    struct perf_event_pmu_context,
->>>>> +				    pmu_ctx_entry);
->>>>> +	next_epc = list_first_entry(&next_ctx->pmu_ctx_list,
->>>>> +				    struct perf_event_pmu_context,
->>>>> +				    pmu_ctx_entry);
->>>>> +
->>>>> +	while (&prev_epc->pmu_ctx_entry != &prev_ctx->pmu_ctx_list &&
->>>>> +	       &next_epc->pmu_ctx_entry != &next_ctx->pmu_ctx_list) {
->>>>> +
->>>>> +		WARN_ON_ONCE(prev_epc->pmu != next_epc->pmu);
->>>>> +
->>>>> +		/*
->>>>> +		 * PMU specific parts of task perf context can require
->>>>> +		 * additional synchronization. As an example of such
->>>>> +		 * synchronization see implementation details of Intel
->>>>> +		 * LBR call stack data profiling;
->>>>> +		 */
->>>>> +		if (prev_epc->pmu->swap_task_ctx)
->>>>> +			prev_epc->pmu->swap_task_ctx(prev_epc, next_epc);
->>>>> +		else
->>>>> +			swap(prev_epc->task_ctx_data, next_epc->task_ctx_data);
->>>>
->>>> Did I forget to advance the iterators here?
->>>
->>> Yeah. Seems so. I overlooked it too.
->>
->> OK; so I'm not slowly going crazy staring at this code ;-) Let me go add
->> it now then. :-)
->>
->> But first I gotta taxi the kids around for a bit, bbl.
-> 
-> OK, so I've been going over the perf_event_pmu_context life-time thing
-> as well, there were a bunch of XXXs there and I'm not sure Im happy with
-> things, but I'd also forgotten most of it.
-> 
-> Ideally epc works like it's a regular member of ctx -- locking wise that
-> is, but I'm not sure we can make that stick -- see the ctx->mutex issues
-> we have with put_ctx().
-> 
-> As such, I'm going to have to re-audit all the epc usage to see if
-> pure ctx->lock is sufficient.
-> 
-> I did do make epc RCU freed, because pretty much everything is and that
-> was easy enough to make happen -- it means we don't need to worry about
-> that.
-> 
-> But I'm going cross-eyes from staring at this all day, so more tomorrow.
-> The below is what I currently have.
-> 
+On Sun, Oct 09, 2022 at 10:36:00PM -0700, Namhyung Kim wrote:
+> The aggr field in the struct perf_counts is to keep the aggregated value
+> in the AGGR_GLOBAL for the old code.  But it's not used anymore.
+>=20
+> Signed-off-by: Namhyung Kim <namhyung@kernel.org>
 > ---
-> --- a/include/linux/perf_event.h
-> +++ b/include/linux/perf_event.h
-> @@ -833,13 +833,13 @@ struct perf_event {
->   *           `--------[1:n]---------'     `-[n:1]-> pmu <-[1:n]-'
->   *
->   *
-> - * XXX destroy epc when empty
-> - *   refcount, !rcu
-> + * epc lifetime is refcount based and RCU freed (similar to perf_event_context).
-> + * epc locking is as if it were a member of perf_event_context; specifically:
->   *
-> - * XXX epc locking
-> + *   modification, both: ctx->mutex && ctx->lock
-> + *   reading, either: ctx->mutex || ctx->lock
->   *
-> - *   event->pmu_ctx            ctx->mutex && inactive
-> - *   ctx->pmu_ctx_list         ctx->mutex && ctx->lock
-> + * XXX except this isn't true ... see put_pmu_ctx().
->   *
->   */
->  struct perf_event_pmu_context {
-> @@ -857,6 +857,7 @@ struct perf_event_pmu_context {
->  	unsigned int			nr_events;
->  
->  	atomic_t			refcount; /* event <-> epc */
-> +	struct rcu_head			rcu_head;
->  
->  	void				*task_ctx_data; /* pmu specific data */
->  	/*
-> --- a/kernel/events/core.c
-> +++ b/kernel/events/core.c
-> @@ -1727,6 +1727,10 @@ perf_event_groups_next(struct perf_event
->  	return NULL;
->  }
->  
-> +#define perf_event_groups_for_cpu_pmu(event, groups, cpu, pmu)		\
-> +	for (event = perf_event_groups_first(groups, cpu, pmu, NULL);	\
-> +	     event; event = perf_event_groups_next(event, pmu))
-> +
->  /*
->   * Iterate through the whole groups tree.
->   */
-> @@ -3366,6 +3370,14 @@ static void perf_event_sync_stat(struct
->  	}
->  }
->  
-> +#define list_for_each_entry_double(pos1, pos2, head1, head2, member)	\
-> +	for (pos1 = list_first_entry(head1, typeof(*pos1), member),	\
-> +	     pos2 = list_first_entry(head2, typeof(*pos2), member);	\
-> +	     !list_entry_is_head(pos1, head1, member) &&		\
-> +	     !list_entry_is_head(pos2, head2, member);			\
-> +	     pos1 = list_next_entry(pos1, member),			\
-> +	     pos2 = list_next_entry(pos2, member))
-> +
->  static void perf_event_swap_task_ctx_data(struct perf_event_context *prev_ctx,
->  					  struct perf_event_context *next_ctx)
+>  tools/perf/util/counts.c |  1 -
+>  tools/perf/util/counts.h |  1 -
+>  tools/perf/util/stat.c   | 35 ++---------------------------------
+>  3 files changed, 2 insertions(+), 35 deletions(-)
+>=20
+> diff --git a/tools/perf/util/counts.c b/tools/perf/util/counts.c
+> index 7a447d918458..11cd85b278a6 100644
+> --- a/tools/perf/util/counts.c
+> +++ b/tools/perf/util/counts.c
+> @@ -48,7 +48,6 @@ void perf_counts__reset(struct perf_counts *counts)
 >  {
-> @@ -3374,16 +3386,9 @@ static void perf_event_swap_task_ctx_dat
->  	if (!prev_ctx->nr_task_data)
->  		return;
->  
-> -	prev_epc = list_first_entry(&prev_ctx->pmu_ctx_list,
-> -				    struct perf_event_pmu_context,
-> -				    pmu_ctx_entry);
-> -	next_epc = list_first_entry(&next_ctx->pmu_ctx_list,
-> -				    struct perf_event_pmu_context,
-> -				    pmu_ctx_entry);
-> -
-> -	while (&prev_epc->pmu_ctx_entry != &prev_ctx->pmu_ctx_list &&
-> -	       &next_epc->pmu_ctx_entry != &next_ctx->pmu_ctx_list) {
-> -
-> +	list_for_each_entry_double(prev_epc, next_epc,
-> +				   &prev_ctx->pmu_ctx_list, &next_ctx->pmu_ctx_list,
-> +				   pmu_ctx_entry) {
-
-There are more places which can use list_for_each_entry_double().
-I'll fix those.
-
->  		WARN_ON_ONCE(prev_epc->pmu != next_epc->pmu);
->  
->  		/*
-> @@ -3706,7 +3711,6 @@ static noinline int visit_groups_merge(s
->  		perf_assert_pmu_disabled((*evt)->pmu_ctx->pmu);
->  	}
->  
-> -
->  	min_heapify_all(&event_heap, &perf_min_heap);
->  
->  	while (event_heap.nr) {
-> @@ -3845,7 +3849,6 @@ ctx_sched_in(struct perf_event_context *
->  		/* start ctx time */
->  		__update_context_time(ctx, false);
->  		perf_cgroup_set_timestamp(cpuctx);
-> -		// XXX ctx->task =? task
->  		/*
->  		 * CPU-release for the below ->is_active store,
->  		 * see __load_acquire() in perf_event_time_now()
-> @@ -4815,6 +4818,15 @@ find_get_pmu_context(struct pmu *pmu, st
->  
->  	__perf_init_event_pmu_context(new, pmu);
->  
-> +	/*
-> +	 * XXX
-> +	 *
-> +	 * lockdep_assert_held(&ctx->mutex);
-> +	 *
-> +	 * can't because perf_event_init_task() doesn't actually hold the
-> +	 * child_ctx->mutex.
-> +	 */
-> +
->  	raw_spin_lock_irq(&ctx->lock);
->  	list_for_each_entry(epc, &ctx->pmu_ctx_list, pmu_ctx_entry) {
->  		if (epc->pmu == pmu) {
-> @@ -4849,6 +4861,14 @@ static void get_pmu_ctx(struct perf_even
->  	WARN_ON_ONCE(!atomic_inc_not_zero(&epc->refcount));
+>  	xyarray__reset(counts->loaded);
+>  	xyarray__reset(counts->values);
+> -	memset(&counts->aggr, 0, sizeof(struct perf_counts_values));
 >  }
->  
-> +static void free_epc_rcu(struct rcu_head *head)
-> +{
-> +	struct perf_event_pmu_context *epc = container_of(head, typeof(*epc), rcu_head);
-> +
-> +	kfree(epc->task_ctx_data);
-> +	kfree(epc);
-> +}
-> +
->  static void put_pmu_ctx(struct perf_event_pmu_context *epc)
->  {
->  	unsigned long flags;
-> @@ -4859,7 +4879,14 @@ static void put_pmu_ctx(struct perf_even
->  	if (epc->ctx) {
->  		struct perf_event_context *ctx = epc->ctx;
->  
-> -		// XXX ctx->mutex
-> +		/*
-> +		 * XXX
-> +		 *
-> +		 * lockdep_assert_held(&ctx->mutex);
-> +		 *
-> +		 * can't because of the call-site in _free_event()/put_event()
-> +		 * which isn't always called under ctx->mutex.
-> +		 */
-
-Yes. I came across the same and could not figure out how to solve
-this. So Just kept XXX as is.
-
->  
->  		WARN_ON_ONCE(list_empty(&epc->pmu_ctx_entry));
->  		raw_spin_lock_irqsave(&ctx->lock, flags);
-> @@ -4874,17 +4901,15 @@ static void put_pmu_ctx(struct perf_even
->  	if (epc->embedded)
->  		return;
->  
-> -	kfree(epc->task_ctx_data);
-> -	kfree(epc);
-> +	call_rcu(&epc->rcu_head, free_epc_rcu);
->  }
->  
->  static void perf_event_free_filter(struct perf_event *event);
->  
->  static void free_event_rcu(struct rcu_head *head)
->  {
-> -	struct perf_event *event;
-> +	struct perf_event *event = container_of(head, typeof(*event), rcu_head);
->  
-> -	event = container_of(head, struct perf_event, rcu_head);
->  	if (event->ns)
->  		put_pid_ns(event->ns);
->  	perf_event_free_filter(event);
-> @@ -12643,13 +12668,6 @@ perf_event_create_kernel_counter(struct
->  		goto err_alloc;
->  	}
->  
-> -	pmu_ctx = find_get_pmu_context(pmu, ctx, event);
-> -	if (IS_ERR(pmu_ctx)) {
-> -		err = PTR_ERR(pmu_ctx);
-> -		goto err_ctx;
-> -	}
-> -	event->pmu_ctx = pmu_ctx;
-> -
->  	WARN_ON_ONCE(ctx->parent_ctx);
->  	mutex_lock(&ctx->mutex);
->  	if (ctx->task == TASK_TOMBSTONE) {
-> @@ -12657,6 +12675,13 @@ perf_event_create_kernel_counter(struct
->  		goto err_unlock;
->  	}
->  
-> +	pmu_ctx = find_get_pmu_context(pmu, ctx, event);
-> +	if (IS_ERR(pmu_ctx)) {
-> +		err = PTR_ERR(pmu_ctx);
-> +		goto err_unlock;
-> +	}
-> +	event->pmu_ctx = pmu_ctx;
-
-We should call find_get_pmu_context() with ctx->mutex held and thus
-above perf_event_create_kernel_counter() change. Is my understanding
-correct?
-
-> +
->  	if (!task) {
->  		/*
->  		 * Check if the @cpu we're creating an event for is online.
-> @@ -12668,13 +12693,13 @@ perf_event_create_kernel_counter(struct
->  			container_of(ctx, struct perf_cpu_context, ctx);
->  		if (!cpuctx->online) {
->  			err = -ENODEV;
-> -			goto err_unlock;
-> +			goto err_pmu_ctx;
+> =20
+>  void evsel__reset_counts(struct evsel *evsel)
+> diff --git a/tools/perf/util/counts.h b/tools/perf/util/counts.h
+> index 5de275194f2b..42760242e0df 100644
+> --- a/tools/perf/util/counts.h
+> +++ b/tools/perf/util/counts.h
+> @@ -11,7 +11,6 @@ struct evsel;
+> =20
+>  struct perf_counts {
+>  	s8			  scaled;
+> -	struct perf_counts_values aggr;
+>  	struct xyarray		  *values;
+>  	struct xyarray		  *loaded;
+>  };
+> diff --git a/tools/perf/util/stat.c b/tools/perf/util/stat.c
+> index 1652586a4925..0dccfa273fa7 100644
+> --- a/tools/perf/util/stat.c
+> +++ b/tools/perf/util/stat.c
+> @@ -307,8 +307,6 @@ static void evsel__copy_prev_raw_counts(struct evsel =
+*evsel)
+>  				*perf_counts(evsel->prev_raw_counts, idx, thread);
 >  		}
 >  	}
->  
->  	if (!exclusive_event_installable(event, ctx)) {
->  		err = -EBUSY;
-> -		goto err_unlock;
-> +		goto err_pmu_ctx;
->  	}
->  
->  	perf_install_in_context(ctx, event, event->cpu);
-> @@ -12683,9 +12708,10 @@ perf_event_create_kernel_counter(struct
->  
->  	return event;
->  
-> +err_pmu_ctx:
-> +	put_pmu_ctx(pmu_ctx);
->  err_unlock:
->  	mutex_unlock(&ctx->mutex);
-> -err_ctx:
->  	perf_unpin_context(ctx);
->  	put_ctx(ctx);
->  err_alloc:
-> @@ -12702,9 +12728,7 @@ static void __perf_pmu_remove(struct per
->  {
->  	struct perf_event *event, *sibling;
->  
-> -	for (event = perf_event_groups_first(groups, cpu, pmu, NULL);
-> -	     event; event = perf_event_groups_next(event, pmu)) {
 > -
-> +	perf_event_groups_for_cpu_pmu(event, groups, cpu, pmu) {
->  		perf_remove_from_context(event, 0);
->  		unaccount_event_cpu(event, cpu);
->  		put_pmu_ctx(event->pmu_ctx);
-> @@ -12998,7 +13022,7 @@ void perf_event_free_task(struct task_st
->  	struct perf_event_context *ctx;
->  	struct perf_event *event, *tmp;
->  
-> -	ctx = rcu_dereference(task->perf_event_ctxp);
-> +	ctx = rcu_access_pointer(task->perf_event_ctxp);
+> -	evsel->counts->aggr =3D evsel->prev_raw_counts->aggr;
+>  }
+> =20
+>  void evlist__copy_prev_raw_counts(struct evlist *evlist)
+> @@ -319,26 +317,6 @@ void evlist__copy_prev_raw_counts(struct evlist *evl=
+ist)
+>  		evsel__copy_prev_raw_counts(evsel);
+>  }
+> =20
+> -void evlist__save_aggr_prev_raw_counts(struct evlist *evlist)
+> -{
+> -	struct evsel *evsel;
+> -
+> -	/*
+> -	 * To collect the overall statistics for interval mode,
+> -	 * we copy the counts from evsel->prev_raw_counts to
+> -	 * evsel->counts. The perf_stat_process_counter creates
+> -	 * aggr values from per cpu values, but the per cpu values
+> -	 * are 0 for AGGR_GLOBAL. So we use a trick that saves the
+> -	 * previous aggr value to the first member of perf_counts,
+> -	 * then aggr calculation in process_counter_values can work
+> -	 * correctly.
+> -	 */
+> -	evlist__for_each_entry(evlist, evsel) {
+> -		*perf_counts(evsel->prev_raw_counts, 0, 0) =3D
+> -			evsel->prev_raw_counts->aggr;
+> -	}
+> -}
+> -
+>  static size_t pkg_id_hash(const void *__key, void *ctx __maybe_unused)
+>  {
+>  	uint64_t *key =3D (uint64_t *) __key;
+> @@ -422,7 +400,6 @@ process_counter_values(struct perf_stat_config *confi=
+g, struct evsel *evsel,
+>  		       int cpu_map_idx, int thread,
+>  		       struct perf_counts_values *count)
+>  {
+> -	struct perf_counts_values *aggr =3D &evsel->counts->aggr;
+>  	struct perf_stat_evsel *ps =3D evsel->stats;
+>  	static struct perf_counts_values zero;
+>  	bool skip =3D false;
+> @@ -491,12 +468,6 @@ process_counter_values(struct perf_stat_config *conf=
+ig, struct evsel *evsel,
+>  		}
+>  	}
+> =20
+> -	if (config->aggr_mode =3D=3D AGGR_GLOBAL) {
+> -		aggr->val +=3D count->val;
+> -		aggr->ena +=3D count->ena;
+> -		aggr->run +=3D count->run;
+> -	}
+> -
+>  	return 0;
+>  }
+> =20
+> @@ -521,13 +492,10 @@ static int process_counter_maps(struct perf_stat_co=
+nfig *config,
+>  int perf_stat_process_counter(struct perf_stat_config *config,
+>  			      struct evsel *counter)
+>  {
+> -	struct perf_counts_values *aggr =3D &counter->counts->aggr;
+>  	struct perf_stat_evsel *ps =3D counter->stats;
+> -	u64 *count =3D counter->counts->aggr.values;
+> +	u64 *count;
+>  	int ret;
+> =20
+> -	aggr->val =3D aggr->ena =3D aggr->run =3D 0;
+> -
+>  	if (counter->per_pkg)
+>  		evsel__zero_per_pkg(counter);
+> =20
+> @@ -538,6 +506,7 @@ int perf_stat_process_counter(struct perf_stat_config=
+ *config,
+>  	if (config->aggr_mode !=3D AGGR_GLOBAL)
+>  		return 0;
+> =20
+> +	count =3D ps->aggr[0].counts.values;
+>  	update_stats(&ps->res_stats, *count);
 
-We dereference ctx pointer but with mutex and lock held. And thus
-rcu_access_pointer() is sufficient. Is my understanding correct?
+hi,
+for some reason 'count' could be NULL, I'm getting crash in here:
 
-Thanks,
-Ravi
+	$ ./perf stat record -o krava.data true=20
+	...
+
+	$ gdb ./perf
+
+	(gdb) r stat report -i krava.data
+	Starting program: /home/jolsa/kernel/linux-perf/tools/perf/perf stat repor=
+t -i krava.data
+	[Thread debugging using libthread_db enabled]
+	Using host libthread_db library "/lib64/libthread_db.so.1".
+
+	Program received signal SIGSEGV, Segmentation fault.
+	0x00000000005ae90b in perf_stat_process_counter (config=3D0xe18d60 <stat_c=
+onfig>, counter=3D0xecfd00) at util/stat.c:510
+	510             update_stats(&ps->res_stats, *count);
+	Missing separate debuginfos, use: dnf debuginfo-install bzip2-libs-1.0.8-1=
+1.fc36.x86_64 cyrus-sasl-lib-2.1.27-18.fc36.x86_64 elfutils-debuginfod-clie=
+nt-0.187-4.fc36.x86_64 elfutils-libelf-0.187-4.fc36.x86_64 elfutils-libs-0.=
+187-4.fc36.x86_64 glibc-2.35-15.fc36.x86_64 glibc-2.35-17.fc36.x86_64 keyut=
+ils-libs-1.6.1-4.fc36.x86_64 krb5-libs-1.19.2-11.fc36.x86_64 libbrotli-1.0.=
+9-7.fc36.x86_64 libcap-2.48-4.fc36.x86_64 libcom_err-1.46.5-2.fc36.x86_64 l=
+ibcurl-7.82.0-8.fc36.x86_64 libevent-2.1.12-6.fc36.x86_64 libgcc-12.2.1-2.f=
+c36.x86_64 libidn2-2.3.3-1.fc36.x86_64 libnghttp2-1.46.0-2.fc36.x86_64 libp=
+sl-0.21.1-5.fc36.x86_64 libselinux-3.3-4.fc36.x86_64 libssh-0.9.6-4.fc36.x8=
+6_64 libunistring-1.0-1.fc36.x86_64 libunwind-1.6.2-2.fc36.x86_64 libxcrypt=
+-4.4.28-1.fc36.x86_64 libzstd-1.5.2-2.fc36.x86_64 numactl-libs-2.0.14-5.fc3=
+6.x86_64 openldap-2.6.3-1.fc36.x86_64 openssl-libs-3.0.5-1.fc36.x86_64 perl=
+-libs-5.34.1-486.fc36.x86_64 python3-libs-3.10.7-1.fc36.x86_64 slang-2.3.2-=
+11.fc36.x86_64 xz-libs-5.2.5-9.fc36.x86_64 zlib-1.2.11-33.fc36.x86_64
+	(gdb) bt
+	#0  0x00000000005ae90b in perf_stat_process_counter (config=3D0xe18d60 <st=
+at_config>, counter=3D0xecfd00) at util/stat.c:510
+	#1  0x000000000043b716 in process_counters () at builtin-stat.c:485
+	#2  0x000000000043f2bf in process_stat_round_event (session=3D0xec84f0, ev=
+ent=3D0x7ffff7ffaba8) at builtin-stat.c:2099
+	#3  0x000000000056c7b6 in perf_session__process_user_event (session=3D0xec=
+84f0, event=3D0x7ffff7ffaba8, file_offset=3D2984, file_path=3D0xecf220 "kra=
+va.data")
+	    at util/session.c:1714
+	#4  0x000000000056cea5 in perf_session__process_event (session=3D0xec84f0,=
+ event=3D0x7ffff7ffaba8, file_offset=3D2984, file_path=3D0xecf220 "krava.da=
+ta")
+	    at util/session.c:1857
+	#5  0x000000000056e4fa in process_simple (session=3D0xec84f0, event=3D0x7f=
+fff7ffaba8, file_offset=3D2984, file_path=3D0xecf220 "krava.data") at util/=
+session.c:2432
+	#6  0x000000000056e1b9 in reader__read_event (rd=3D0x7fffffffb6c0, session=
+=3D0xec84f0, prog=3D0x7fffffffb690) at util/session.c:2361
+	#7  0x000000000056e3ae in reader__process_events (rd=3D0x7fffffffb6c0, ses=
+sion=3D0xec84f0, prog=3D0x7fffffffb690) at util/session.c:2410
+	#8  0x000000000056e652 in __perf_session__process_events (session=3D0xec84=
+f0) at util/session.c:2457
+	#9  0x000000000056eff8 in perf_session__process_events (session=3D0xec84f0=
+) at util/session.c:2623
+	#10 0x000000000043fa53 in __cmd_report (argc=3D0, argv=3D0x7fffffffdf70) a=
+t builtin-stat.c:2265
+	#11 0x000000000043fd94 in cmd_stat (argc=3D3, argv=3D0x7fffffffdf70) at bu=
+iltin-stat.c:2346
+	#12 0x00000000004ef495 in run_builtin (p=3D0xe2f930 <commands+336>, argc=
+=3D4, argv=3D0x7fffffffdf70) at perf.c:322
+	#13 0x00000000004ef709 in handle_internal_command (argc=3D4, argv=3D0x7fff=
+ffffdf70) at perf.c:376
+	#14 0x00000000004ef858 in run_argv (argcp=3D0x7fffffffdd9c, argv=3D0x7ffff=
+fffdd90) at perf.c:420
+	#15 0x00000000004efc1f in main (argc=3D4, argv=3D0x7fffffffdf70) at perf.c=
+:550
+	(gdb) p count
+	$1 =3D (u64 *) 0x0
+
+jirka
+
+> =20
+>  	if (verbose > 0) {
+> --=20
+> 2.38.0.rc1.362.ged0d419d3c-goog
+>=20
