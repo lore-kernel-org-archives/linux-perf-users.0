@@ -2,149 +2,104 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D5FE4C4332F
-	for <linux-perf-users@archiver.kernel.org>; Wed, 12 Oct 2022 10:56:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9C470C433FE
+	for <linux-perf-users@archiver.kernel.org>; Wed, 12 Oct 2022 11:10:40 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229471AbiJLK4E (ORCPT
+        id S229492AbiJLLKj (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Wed, 12 Oct 2022 06:56:04 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54100 "EHLO
+        Wed, 12 Oct 2022 07:10:39 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47130 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229495AbiJLK4D (ORCPT
+        with ESMTP id S229541AbiJLLKi (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Wed, 12 Oct 2022 06:56:03 -0400
-Received: from mail-wm1-x335.google.com (mail-wm1-x335.google.com [IPv6:2a00:1450:4864:20::335])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 487EEBEAD3;
-        Wed, 12 Oct 2022 03:55:58 -0700 (PDT)
-Received: by mail-wm1-x335.google.com with SMTP id fn7-20020a05600c688700b003b4fb113b86so987319wmb.0;
-        Wed, 12 Oct 2022 03:55:58 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20210112;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:date:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=7tTCNA04jkTPpBzaEM9T0+Q3Qtd8fXX6m2NgpshmT3I=;
-        b=KGfas7HNyZY+6AtMzZFzNBzf0blxhZ2YFPh95rhttaO8DbJS5HzTlzkBFM7W++Bbp0
-         KmM1do3FnF2OniLsXLE9SI5LUCxMdIHTfJ3Hf4wztfysO4oa6+i4O0yiDJ3KxsBLDuwa
-         PMmxcWY3bYDy5VvwmGXdcCJwLmPAwvwcm5qaYW8PI7nJHf1v438kA/X2FZ5ZOOCeR/QQ
-         Ci6W3NN9r2Cxa6CfsOpkg0ontOmBaEWX+/ILSi5X3eYhu7ugRoMGw3E7ki1/odTT7n4/
-         fUqPb0XTjj0JeYqIuWelpjdpG1vZe32sRERlE1cBzpv8NwXhTuN1Z0ZQarxymneAsT7a
-         cbUA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:date:from:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=7tTCNA04jkTPpBzaEM9T0+Q3Qtd8fXX6m2NgpshmT3I=;
-        b=Sjo4jlJKQrA9utJ6n5otDolMTPXgMG49A3dip2bbCoQuTE2WL8jztga0IQAv+kF0Sw
-         v6kUERZnK7HiyPpnPVMU6UHSk74ge3FIyov3nyYFe8/1xTCZQJZMjBCzvxxMB/CYejl4
-         3Od4UeZ1BCIKNLUUtT8jE7d5pn3clxja5PXf9BoDRQWY5OvBNGeFHPJvRqCsQtjEwLvO
-         yCH91iBqQxGecaSWrcFDgbxPQ40CvmPoKXOf0m8ty8NHsSFFi5Pju8yZTDRhK7yc6BMs
-         nQ6N/zyujRKCdIOFBp4xoOm15c7Nkso5FN22k5EyemaDP8SmyTQjF1CA3xNeC2Ee5h7L
-         ZGJQ==
-X-Gm-Message-State: ACrzQf1wwgqAE6WiYwsSTzlQFiUZXmtIxBMCAgI1UYxyx6SwxxIIyRmF
-        gJUNAYz3Pge4vkUbheFJ+Qo=
-X-Google-Smtp-Source: AMsMyM4GDELPBEm5am+OmoyaGVAXakx029UGzjerQFNN+Tw1zg0RKTBj6QcM5SjnFSMC8Ew8IacLlw==
-X-Received: by 2002:a7b:ca53:0:b0:3b4:90c4:e07 with SMTP id m19-20020a7bca53000000b003b490c40e07mr2418950wml.150.1665572156188;
-        Wed, 12 Oct 2022 03:55:56 -0700 (PDT)
-Received: from krava ([193.85.244.190])
-        by smtp.gmail.com with ESMTPSA id o15-20020adfa10f000000b0022add371ed2sm13243894wro.55.2022.10.12.03.55.55
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 12 Oct 2022 03:55:55 -0700 (PDT)
-From:   Jiri Olsa <olsajiri@gmail.com>
-X-Google-Original-From: Jiri Olsa <jolsa@kernel.org>
-Date:   Wed, 12 Oct 2022 12:55:53 +0200
-To:     Namhyung Kim <namhyung@kernel.org>
-Cc:     Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Ingo Molnar <mingo@kernel.org>,
+        Wed, 12 Oct 2022 07:10:38 -0400
+Received: from foss.arm.com (foss.arm.com [217.140.110.172])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTP id 3FF6E92F4F;
+        Wed, 12 Oct 2022 04:10:35 -0700 (PDT)
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 48D85D6E;
+        Wed, 12 Oct 2022 04:10:41 -0700 (PDT)
+Received: from e121896.Emea.Arm.com (e121896.Emea.Arm.com [10.32.36.24])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPA id 2EA3C3F792;
+        Wed, 12 Oct 2022 04:10:31 -0700 (PDT)
+From:   James Clark <james.clark@arm.com>
+To:     linux-perf-users@vger.kernel.org, acme@kernel.org,
+        namhyung@kernel.org
+Cc:     linux-kernel@vger.kernel.org, James Clark <james.clark@arm.com>,
         Peter Zijlstra <peterz@infradead.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Ian Rogers <irogers@google.com>,
-        Adrian Hunter <adrian.hunter@intel.com>,
-        linux-perf-users@vger.kernel.org,
-        Kan Liang <kan.liang@linux.intel.com>,
-        Leo Yan <leo.yan@linaro.org>, Andi Kleen <ak@linux.intel.com>,
-        Athira Rajeev <atrajeev@linux.vnet.ibm.com>,
-        James Clark <james.clark@arm.com>,
-        Xing Zhengjun <zhengjun.xing@linux.intel.com>
-Subject: Re: [PATCH 04/19] perf stat: Add aggr id for global mode
-Message-ID: <Y0adOTUulE/HnLU3@krava>
-References: <20221010053600.272854-1-namhyung@kernel.org>
- <20221010053600.272854-5-namhyung@kernel.org>
+        Ingo Molnar <mingo@redhat.com>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Jiri Olsa <jolsa@kernel.org>, Ian Rogers <irogers@google.com>,
+        Adrian Hunter <adrian.hunter@intel.com>
+Subject: [PATCH] perf: Fix "Track with sched_switch" test by not printing warnings in quiet mode
+Date:   Wed, 12 Oct 2022 12:10:24 +0100
+Message-Id: <20221012111025.30609-1-james.clark@arm.com>
+X-Mailer: git-send-email 2.28.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20221010053600.272854-5-namhyung@kernel.org>
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-On Sun, Oct 09, 2022 at 10:35:45PM -0700, Namhyung Kim wrote:
-> To make the code simpler, I'd like to use the same aggregation code for
-> the global mode.  We can simply add an id function to return cpu 0 and
-> use print_aggr().
-> 
-> No functional change intended.
-> 
-> Signed-off-by: Namhyung Kim <namhyung@kernel.org>
-> ---
->  tools/perf/builtin-stat.c      | 39 ++++++++++++++++++++++++++++++++--
->  tools/perf/util/cpumap.c       | 10 +++++++++
->  tools/perf/util/cpumap.h       |  6 +++++-
->  tools/perf/util/stat-display.c |  9 ++------
->  4 files changed, 54 insertions(+), 10 deletions(-)
-> 
+Especially when CONFIG_LOCKDEP and other debug configs are enabled,
+Perf can print the following warning when running the "Track with
+sched_switch" test:
 
-SNIP
+  Warning:
+  Processed 1378918 events and lost 4 chunks!
 
-> diff --git a/tools/perf/util/stat-display.c b/tools/perf/util/stat-display.c
-> index 4113aa86772f..1d8e585df4ad 100644
-> --- a/tools/perf/util/stat-display.c
-> +++ b/tools/perf/util/stat-display.c
-> @@ -1477,13 +1477,8 @@ void evlist__print_counters(struct evlist *evlist, struct perf_stat_config *conf
->  		if (config->iostat_run)
->  			iostat_print_counters(evlist, config, ts, prefix = buf,
->  					      print_counter_aggr);
-> -		else {
-> -			evlist__for_each_entry(evlist, counter) {
-> -				print_counter_aggr(config, counter, prefix);
-> -			}
-> -			if (metric_only)
-> -				fputc('\n', config->output);
-> -		}
-> +		else
-> +			print_aggr(config, evlist, prefix);
+  Check IO/CPU overload!
 
-this seems to break output for:
+  Warning:
+  Processed 4593325 samples and lost 70.00%!
 
-before:
-	# ./perf stat -M ipc -I 1000 --metric-only
-	#           time                  IPC 
-	     1.000674320                 0.61 
-	     2.001700284                 0.66 
-	     3.003677500                 0.67 
-	     4.005583140                 0.64 
+The test already supplies -q to run in quiet mode, so extend quiet mode
+to perf_stdio__warning() and also ui__warning() for consistency.
 
-after:
-	# ./perf stat -M ipc -I 1000 --metric-only
-	#           time                  IPC 
-	     1.001004048                 0.94 
+This fixes the following failure due to the extra lines counted:
 
-	     2.003120471                 0.69 
+  perf test "lock cont" -vvv
 
-	     3.005030405                 0.65 
+  82: kernel lock contention analysis test                            :
+  --- start ---
+  test child forked, pid 3125
+  Testing perf lock record and perf lock contention
+  [Fail] Recorded result count is not 1: 9
+  test child finished with -1
+  ---- end ----
+  kernel lock contention analysis test: FAILED!
 
-	     4.006788766                 0.64 
+Fixes: ec685de25b67 ("perf test: Add kernel lock contention test")
+Cc: Namhyung Kim <namhyung@kernel.org>
+Signed-off-by: James Clark <james.clark@arm.com>
+---
+ tools/perf/ui/util.c | 5 +++++
+ 1 file changed, 5 insertions(+)
 
-	     5.008004052                 0.68 
+diff --git a/tools/perf/ui/util.c b/tools/perf/ui/util.c
+index 689b27c34246..1d38ddf01b60 100644
+--- a/tools/perf/ui/util.c
++++ b/tools/perf/ui/util.c
+@@ -15,6 +15,9 @@ static int perf_stdio__error(const char *format, va_list args)
+ 
+ static int perf_stdio__warning(const char *format, va_list args)
+ {
++	if (quiet)
++		return 0;
++
+ 	fprintf(stderr, "Warning:\n");
+ 	vfprintf(stderr, format, args);
+ 	return 0;
+@@ -45,6 +48,8 @@ int ui__warning(const char *format, ...)
+ {
+ 	int ret;
+ 	va_list args;
++	if (quiet)
++		return 0;
+ 
+ 	va_start(args, format);
+ 	ret = perf_eops->warning(format, args);
+-- 
+2.28.0
 
-
-also should this hunk be in separate patch?
-
-jirka
-
->  		break;
->  	case AGGR_NONE:
->  		if (metric_only)
-> -- 
-> 2.38.0.rc1.362.ged0d419d3c-goog
-> 
