@@ -2,48 +2,47 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 45E20C4332F
-	for <linux-perf-users@archiver.kernel.org>; Wed, 12 Oct 2022 16:20:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 894B3C43217
+	for <linux-perf-users@archiver.kernel.org>; Wed, 12 Oct 2022 16:25:29 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229678AbiJLQUk (ORCPT
+        id S229975AbiJLQZ2 (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Wed, 12 Oct 2022 12:20:40 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48562 "EHLO
+        Wed, 12 Oct 2022 12:25:28 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35122 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229899AbiJLQUd (ORCPT
+        with ESMTP id S229646AbiJLQZ1 (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Wed, 12 Oct 2022 12:20:33 -0400
-Received: from mail-oi1-f172.google.com (mail-oi1-f172.google.com [209.85.167.172])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D281027FED;
-        Wed, 12 Oct 2022 09:20:32 -0700 (PDT)
-Received: by mail-oi1-f172.google.com with SMTP id u15so13698993oie.2;
-        Wed, 12 Oct 2022 09:20:32 -0700 (PDT)
+        Wed, 12 Oct 2022 12:25:27 -0400
+Received: from mail-oa1-f41.google.com (mail-oa1-f41.google.com [209.85.160.41])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1DAA3B03EA;
+        Wed, 12 Oct 2022 09:25:26 -0700 (PDT)
+Received: by mail-oa1-f41.google.com with SMTP id 586e51a60fabf-1322d768ba7so20030914fac.5;
+        Wed, 12 Oct 2022 09:25:26 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
         h=cc:to:subject:message-id:date:from:in-reply-to:references
          :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
          :reply-to;
-        bh=tAIs7AwhS/GOOfzZdFmQPH0C0QhvdyIwmaA0cNPLVEA=;
-        b=udPPao2DTT4urstb9istE7eGq5u0GpRDQ5jxFZvsKoJ06yWA/A/7nUKxXZmIvp9u7w
-         4LPFGcQB+1r52zOqG6szZ/zfB9POqjWH3wtk2nL5cXNOTwuvOb6FH55OZG8cwC7YJoXq
-         E6lKU5Mc4/p8G5cIDiAmoqFnaX4KNgYcnsK679nxg2DVHkBcvtGxqo9nfuptqGED3Plb
-         B4cgSm1NkKiBo8l5mHoV1h2JqxS6OGu5pwI9kfuglGvssiOzJGaML5IqXgvtPrO9m2sW
-         7Ch14QMFEtVdQwFfAMbVSznrtasylGGcacm5WBu8Hrc+TLOXwhOQk6HKPff/I+hYouq+
-         htvw==
-X-Gm-Message-State: ACrzQf29T+YoNtxcIs//aaibqbaPHRVeCavYjtZXSs8JaTQmHnUiM5Ll
-        NnKEaVE0HrWS7sfIgB+FyLYSJr7Cfxvk1ED0IMQE/KeM
-X-Google-Smtp-Source: AMsMyM6zcRK5WW66x5f3Qi5yVUogVRAUQtGeAnSwRuKvDsW1ndU5IBxvURGWsqOiTKi4c4hsFeqCWCx7336ysKMWVY0=
+        bh=DBMigr3FS6M7Tme4HNYJL0mrMQ1H4UvqlHB2i2CRcmk=;
+        b=z45oWLWhA9B47uJULnBDigCcU59O3qf5X64ZkDlFHlL54b786e/esLNtWX8rnGCra6
+         dP/bTfhDhQYfnKb/LjPWRZ0QJ4ndG3pzUuX+9zUFldnmh+0tFu/Vl6orB0Ce9Prh2cez
+         pcpTbDFzoxHiUROoPMULOi/3HuCNsKlFdRxgrYILI5NagavMx/oUMwG0pTsKNO2hN0SI
+         +1rgiCkCCOrIHv7TJtTUg9Nymps+7XECzSBUA53s+WwPYtfK6ZtgBx00k3/Eua2Ll4B1
+         MEzCHBIc3/H+Orcw4mVwzjbs+hzNjknK/Leds6t2G6/oCuGWMqY+rp+48++BYFTaIFin
+         uY4w==
+X-Gm-Message-State: ACrzQf2KLS+L9B4/FC95atN2k25puo2+itCH3efnEzL3lWb1dlcFA2rr
+        M8aW5Gva1MeFXnO40FTrrmjuvV1Rz5qKAR7alj92fHQH
+X-Google-Smtp-Source: AMsMyM49Pk81tm16EjpfYhNOdd8zt9Qbo+S52VtLhkzMhG1o9eq36gFeYbByUD2HSK5GibVBzv3FwYyqz5jw3HcvLkU=
 X-Received: by 2002:a05:6870:82ac:b0:133:34b:6f10 with SMTP id
- q44-20020a05687082ac00b00133034b6f10mr2977935oae.218.1665591621232; Wed, 12
- Oct 2022 09:20:21 -0700 (PDT)
+ q44-20020a05687082ac00b00133034b6f10mr2991744oae.218.1665591925447; Wed, 12
+ Oct 2022 09:25:25 -0700 (PDT)
 MIME-Version: 1.0
-References: <20221012082259.22394-1-adrian.hunter@intel.com> <20221012082259.22394-2-adrian.hunter@intel.com>
-In-Reply-To: <20221012082259.22394-2-adrian.hunter@intel.com>
+References: <20221012082259.22394-1-adrian.hunter@intel.com> <20221012082259.22394-3-adrian.hunter@intel.com>
+In-Reply-To: <20221012082259.22394-3-adrian.hunter@intel.com>
 From:   Namhyung Kim <namhyung@kernel.org>
-Date:   Wed, 12 Oct 2022 09:20:10 -0700
-Message-ID: <CAM9d7ciW1wF7YGszv4KQ_KRUhCeBVynQsuRi2+NoRAYgy3xsRw@mail.gmail.com>
-Subject: Re: [PATCH 1/2] perf intel-pt: Fix segfault in intel_pt_print_info()
- with uClibc
+Date:   Wed, 12 Oct 2022 09:25:14 -0700
+Message-ID: <CAM9d7chCGw-iXUiD+Bj3azTdVdYz21KtBOhR5ZbLoVuFXE6nbA@mail.gmail.com>
+Subject: Re: [PATCH 2/2] perf intel-pt: Fix system_wide dummy event for hybrid
 To:     Adrian Hunter <adrian.hunter@intel.com>
 Cc:     Arnaldo Carvalho de Melo <acme@kernel.org>,
         Jiri Olsa <jolsa@redhat.com>, Ian Rogers <irogers@google.com>,
@@ -54,22 +53,13 @@ Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-Hi Adrian,
-
 On Wed, Oct 12, 2022 at 1:23 AM Adrian Hunter <adrian.hunter@intel.com> wrote:
 >
-> uClibc segfaulted because NULL was passed as the format to fprintf().
-
-Sounds like glibc has a NULL check in fprintf().
-
+> User space tasks can migrate between CPUs, so when tracing selected CPUs,
+> system-wide sideband is still needed, however evlist->core.has_user_cpus
+> is not set in the hybrid case, so check the target cpu_list instead.
 >
-> That happened because one of the format strings was missing and
-> intel_pt_print_info() didn't check that before calling fprintf().
->
-> Add the missing format string, and check format is not NULL before calling
-> fprintf().
->
-> Fixes: 11fa7cb86b56 ("perf tools: Pass Intel PT information for decoding MTC and CYC")
+> Fixes: 7d189cadbeeb ("perf intel-pt: Track sideband system-wide when needed")
 > Cc: stable@vger.kernel.org
 > Signed-off-by: Adrian Hunter <adrian.hunter@intel.com>
 
@@ -80,36 +70,22 @@ Namhyung
 
 
 > ---
->  tools/perf/util/intel-pt.c | 9 +++++++--
->  1 file changed, 7 insertions(+), 2 deletions(-)
+>  tools/perf/arch/x86/util/intel-pt.c | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
 >
-> diff --git a/tools/perf/util/intel-pt.c b/tools/perf/util/intel-pt.c
-> index b34cb3dec1aa..e3548ddef254 100644
-> --- a/tools/perf/util/intel-pt.c
-> +++ b/tools/perf/util/intel-pt.c
-> @@ -4046,6 +4046,7 @@ static const char * const intel_pt_info_fmts[] = {
->         [INTEL_PT_SNAPSHOT_MODE]        = "  Snapshot mode       %"PRId64"\n",
->         [INTEL_PT_PER_CPU_MMAPS]        = "  Per-cpu maps        %"PRId64"\n",
->         [INTEL_PT_MTC_BIT]              = "  MTC bit             %#"PRIx64"\n",
-> +       [INTEL_PT_MTC_FREQ_BITS]        = "  MTC freq bits       %#"PRIx64"\n",
->         [INTEL_PT_TSC_CTC_N]            = "  TSC:CTC numerator   %"PRIu64"\n",
->         [INTEL_PT_TSC_CTC_D]            = "  TSC:CTC denominator %"PRIu64"\n",
->         [INTEL_PT_CYC_BIT]              = "  CYC bit             %#"PRIx64"\n",
-> @@ -4060,8 +4061,12 @@ static void intel_pt_print_info(__u64 *arr, int start, int finish)
->         if (!dump_trace)
->                 return;
+> diff --git a/tools/perf/arch/x86/util/intel-pt.c b/tools/perf/arch/x86/util/intel-pt.c
+> index 793b35f2221a..af102f471e9f 100644
+> --- a/tools/perf/arch/x86/util/intel-pt.c
+> +++ b/tools/perf/arch/x86/util/intel-pt.c
+> @@ -866,7 +866,7 @@ static int intel_pt_recording_options(struct auxtrace_record *itr,
+>                  * User space tasks can migrate between CPUs, so when tracing
+>                  * selected CPUs, sideband for all CPUs is still needed.
+>                  */
+> -               need_system_wide_tracking = evlist->core.has_user_cpus &&
+> +               need_system_wide_tracking = opts->target.cpu_list &&
+>                                             !intel_pt_evsel->core.attr.exclude_user;
 >
-> -       for (i = start; i <= finish; i++)
-> -               fprintf(stdout, intel_pt_info_fmts[i], arr[i]);
-> +       for (i = start; i <= finish; i++) {
-> +               const char *fmt = intel_pt_info_fmts[i];
-> +
-> +               if (fmt)
-> +                       fprintf(stdout, fmt, arr[i]);
-> +       }
->  }
->
->  static void intel_pt_print_info_str(const char *name, const char *str)
+>                 tracking_evsel = evlist__add_aux_dummy(evlist, need_system_wide_tracking);
 > --
 > 2.25.1
 >
