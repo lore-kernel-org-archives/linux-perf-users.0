@@ -2,85 +2,130 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C11DBC4332F
-	for <linux-perf-users@archiver.kernel.org>; Thu, 13 Oct 2022 11:00:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C99EAC4332F
+	for <linux-perf-users@archiver.kernel.org>; Thu, 13 Oct 2022 12:11:07 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229581AbiJMLAU (ORCPT
+        id S229454AbiJMMLH (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Thu, 13 Oct 2022 07:00:20 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33512 "EHLO
+        Thu, 13 Oct 2022 08:11:07 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34292 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229547AbiJMLAS (ORCPT
+        with ESMTP id S229546AbiJMMLF (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Thu, 13 Oct 2022 07:00:18 -0400
-Received: from casper.infradead.org (casper.infradead.org [IPv6:2001:8b0:10b:1236::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BF67160C9D;
-        Thu, 13 Oct 2022 04:00:16 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=casper.20170209; h=In-Reply-To:Content-Type:MIME-Version:
-        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description;
-        bh=1kt3Nt1T71dSHeBMzhW3EUeOzPlxOUDZLoubcBCIwV8=; b=sGG1MCa6hZQMG59So6zoxk0b3y
-        MPNgF7h6vElznfKaZefWySoFCwCy9MeJvjGyqJKlUahKRcHH2zWU/HL5nmF49JHtKOoRdH5UPvHGr
-        V0fMjATm/E/JaTWiYG9IKXFxuWfy35cFuQS9WA/Fit2ixtVJFw1tkrzk0K0j+2I9P2S/+fE1fBJPy
-        zycy4+djRv7LW0h4qZjCl7e/IR2a2+QhB8GN1bCzdMohAsJxhtV7F5qmf1gfn0sPxJE4/AWk+v8QL
-        L/WNd0IEAK+Bblx2F1+phbZTCeBpt99TDmviSxSg587+4Y+g9HoMTT2IUu9Gx1kffFyCVRC26Fkhc
-        MdASJ0Bg==;
-Received: from j130084.upc-j.chello.nl ([24.132.130.84] helo=noisy.programming.kicks-ass.net)
-        by casper.infradead.org with esmtpsa (Exim 4.94.2 #2 (Red Hat Linux))
-        id 1oivwR-006ekn-JJ; Thu, 13 Oct 2022 10:59:55 +0000
-Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-        (Client did not present a certificate)
-        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id 0CC96300446;
-        Thu, 13 Oct 2022 12:59:50 +0200 (CEST)
-Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
-        id EB92B2BB8B0C7; Thu, 13 Oct 2022 12:59:49 +0200 (CEST)
-Date:   Thu, 13 Oct 2022 12:59:49 +0200
-From:   Peter Zijlstra <peterz@infradead.org>
-To:     Ravi Bangoria <ravi.bangoria@amd.com>
-Cc:     acme@kernel.org, alexander.shishkin@linux.intel.com,
-        jolsa@redhat.com, namhyung@kernel.org, songliubraving@fb.com,
-        eranian@google.com, ak@linux.intel.com, mark.rutland@arm.com,
-        frederic@kernel.org, maddy@linux.ibm.com, irogers@google.com,
-        will@kernel.org, robh@kernel.org, mingo@redhat.com,
-        catalin.marinas@arm.com, ndesaulniers@google.com,
-        srw@sladewatkins.net, linux-arm-kernel@lists.infradead.org,
-        linux-perf-users@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
-        linux-s390@vger.kernel.org, linux-kernel@vger.kernel.org,
-        sandipan.das@amd.com, ananth.narayan@amd.com, kim.phillips@amd.com,
-        santosh.shukla@amd.com
-Subject: Re: [PATCH v2] perf: Rewrite core context handling
-Message-ID: <Y0fvpQEEl/tK6mJ5@hirez.programming.kicks-ass.net>
-References: <20221008062424.313-1-ravi.bangoria@amd.com>
- <Y0VTn0qLWd925etP@hirez.programming.kicks-ass.net>
- <ba47d079-6d97-0412-69a0-fa15999b5024@amd.com>
- <Y0V3kOWInrvCvVtk@hirez.programming.kicks-ass.net>
- <Y0WsRItHmfI5uaq3@hirez.programming.kicks-ass.net>
- <174fb540-ec18-eeca-191d-c02e1f1005d2@amd.com>
- <Y0awHa8oS5yal5M9@hirez.programming.kicks-ass.net>
- <Y0cn1xazYpNmqhRo@hirez.programming.kicks-ass.net>
- <99caec5f-dcdf-70c6-8909-11552ce42a20@amd.com>
+        Thu, 13 Oct 2022 08:11:05 -0400
+Received: from frasgout.his.huawei.com (frasgout.his.huawei.com [185.176.79.56])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A1A13F53DC;
+        Thu, 13 Oct 2022 05:11:03 -0700 (PDT)
+Received: from fraeml710-chm.china.huawei.com (unknown [172.18.147.201])
+        by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4Mp7Zc2SH4z67LJ2;
+        Thu, 13 Oct 2022 20:08:08 +0800 (CST)
+Received: from lhrpeml500003.china.huawei.com (7.191.162.67) by
+ fraeml710-chm.china.huawei.com (10.206.15.59) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2375.31; Thu, 13 Oct 2022 14:11:01 +0200
+Received: from [10.126.172.19] (10.126.172.19) by
+ lhrpeml500003.china.huawei.com (7.191.162.67) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2375.31; Thu, 13 Oct 2022 13:11:00 +0100
+Message-ID: <715c8e4a-f3c3-6521-778e-8ba8c2bf659e@huawei.com>
+Date:   Thu, 13 Oct 2022 13:11:00 +0100
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <99caec5f-dcdf-70c6-8909-11552ce42a20@amd.com>
+User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:91.0) Gecko/20100101
+ Thunderbird/91.6.1
+Subject: Re: [PATCH v1] perf test: Parse events workaround for dash/minus
+To:     Ian Rogers <irogers@google.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        Arnaldo Carvalho de Melo <acme@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Jiri Olsa <jolsa@kernel.org>,
+        "Namhyung Kim" <namhyung@kernel.org>,
+        <linux-perf-users@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        Ravi Bangoria <ravi.bangoria@amd.com>,
+        Stephane Eranian <eranian@google.com>
+References: <20221013011205.3151391-1-irogers@google.com>
+From:   John Garry <john.garry@huawei.com>
+In-Reply-To: <20221013011205.3151391-1-irogers@google.com>
+Content-Type: text/plain; charset="UTF-8"; format=flowed
+Content-Transfer-Encoding: 7bit
+X-Originating-IP: [10.126.172.19]
+X-ClientProxiedBy: lhrpeml500006.china.huawei.com (7.191.161.198) To
+ lhrpeml500003.china.huawei.com (7.191.162.67)
+X-CFilter-Loop: Reflected
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-On Thu, Oct 13, 2022 at 03:37:23PM +0530, Ravi Bangoria wrote:
-
-> > -	refcount_t			refcount;
-> > +	refcount_t			refcount; /* event <-> ctx */
+On 13/10/2022 02:12, Ian Rogers wrote:
+> Skip an event configuration for event names with a dash/minus in them.
+> Events with a dash/minus in their name cause parsing issues as legacy
+> encoding of events would use a dash/minus as a separator. The parser
+> separates events with dashes into prefixes and suffixes and then
+> recombines them. Unfortunately if an event has part of its name that
+> matches a legacy token then the recombining fails. This is seen for
+> branch-brs where branch is a legacy token. branch-brs was introduced
+> to sysfs in:
+> https://lore.kernel.org/all/20220322221517.2510440-5-eranian@google.com/
+> The failure is shown below as well as the workaround to use a config
+> where the dash/minus isn't treated specially:
 > 
-> Ok. We need to remove all those // XXX get/put_ctx() from code
-> which we added to make refcount a pmu_ctx <-> ctx.
+> ```
+> $ perf stat -e branch-brs true
+> event syntax error: 'branch-brs'
+>                             \___ parser error
+> 
+> $ perf stat -e cpu/branch-brs/ true
+> 
+>   Performance counter stats for 'true':
+> 
+>              46,179      cpu/branch-brs/
+> ```
+> 
+> Signed-off-by: Ian Rogers <irogers@google.com>
+> ---
+>   tools/perf/tests/parse-events.c | 13 +++++++++++++
+>   1 file changed, 13 insertions(+)
+> 
+> diff --git a/tools/perf/tests/parse-events.c b/tools/perf/tests/parse-events.c
+> index 459afdb256a1..3440dd2616b0 100644
+> --- a/tools/perf/tests/parse-events.c
+> +++ b/tools/perf/tests/parse-events.c
+> @@ -2237,6 +2237,19 @@ static int test__pmu_events(struct test_suite *test __maybe_unused, int subtest
+>   			pr_debug("Test PMU event failed for '%s'", name);
+>   			ret = combine_test_results(ret, test_ret);
+>   		
 
-Them already gone :-) I've not yet fixed up the typoes, but current
-version should be here:
+Hi Ian,
 
-  https://git.kernel.org/pub/scm/linux/kernel/git/peterz/queue.git/log/?h=perf/core
+}
+> +		/*
+> +		 * Names containing '-' are recognized as prefixes and suffixes
+> +		 * due to '-' being a legacy PMU separator. This fails when the
+> +		 * prefix or suffix collides with an existing legacy token. For
+> +		 * example, branch-brs has a prefix (branch) that collides with
+> +		 * a PE_NAME_CACHE_TYPE token causing a parse error as a suffix
+> +		 * isn't expected after this.
 
-Thanks!
+OK, so you want to skip anything with '-'. Will we now miss out on 
+events which contain a '-' but don't clash with an existing legacy token?
+
+>  As event names in the config
+> +		 * slashes are allowed a '-' in the name we check this works
+> +		 * above.
+
+Sorry, I can't follow what you mean here. Do you mean that 
+"cpu/branch-brs/" works ok and we continue to test it?
+
+> +		 */
+> +		if (strchr(ent->d_name, '-'))
+> +			continue;
+
+Thanks,
+John
+
+> +
+>   		snprintf(name, sizeof(name), "%s:u,cpu/event=%s/u", ent->d_name, ent->d_name);
+>   		e.name  = name;
+>   		e.check = test__checkevent_pmu_events_mix;
+
