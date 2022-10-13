@@ -2,85 +2,120 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B9971C4332F
-	for <linux-perf-users@archiver.kernel.org>; Thu, 13 Oct 2022 16:57:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A59D8C4332F
+	for <linux-perf-users@archiver.kernel.org>; Thu, 13 Oct 2022 20:57:01 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229799AbiJMQ5x (ORCPT
+        id S229591AbiJMU5A (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Thu, 13 Oct 2022 12:57:53 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48418 "EHLO
+        Thu, 13 Oct 2022 16:57:00 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42824 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229809AbiJMQ5w (ORCPT
+        with ESMTP id S229557AbiJMU47 (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Thu, 13 Oct 2022 12:57:52 -0400
-Received: from mail-oa1-f41.google.com (mail-oa1-f41.google.com [209.85.160.41])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C94BF4D4E3;
-        Thu, 13 Oct 2022 09:57:50 -0700 (PDT)
-Received: by mail-oa1-f41.google.com with SMTP id 586e51a60fabf-1370acb6588so2970755fac.9;
-        Thu, 13 Oct 2022 09:57:50 -0700 (PDT)
+        Thu, 13 Oct 2022 16:56:59 -0400
+Received: from mail-pg1-x52d.google.com (mail-pg1-x52d.google.com [IPv6:2607:f8b0:4864:20::52d])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B0609183E1E;
+        Thu, 13 Oct 2022 13:56:58 -0700 (PDT)
+Received: by mail-pg1-x52d.google.com with SMTP id e129so2569284pgc.9;
+        Thu, 13 Oct 2022 13:56:58 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20210112;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:sender:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=GwIrM6PqNMNs+23zGPNZGFODdHKdYKYXNnXBaYGk6no=;
+        b=bZryOJi77Rv3rbKooYxAQa7v8FiSWMxEFBnfpNGhi/UpvldiklHZsUNGBGy9c/pFF9
+         YxstqFBtH3jK3rya1kMqfUK0qpav7vzmKmxep7Lw4SOBJJ00EUlPRMh6FVEzQjIW3CtT
+         SLiJb9Jz+STOPtU1r0PwvNr9OBUJ9ksD0g5hi0FAU+IgiNDd8bmW9VnXPjIMSsR7pqDX
+         BmEWCrNikS98SJGVR9tRy+3GdJhkMHcL2nb6cnnr1lN+0TwP/TimWpSeY473ZRNHiL5E
+         qTA7NteYyk3aWfg1q0gWW0Sucq4UhxV9Ocj3DYhGbGiczlxw7lNNOhlObZaEeMfZIAX/
+         ru0w==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=wp9gOD2D8Cn2++oAEo67TBNzJG0AuFo0QYkoCA4FJW0=;
-        b=ks8AQCp+maiExyHfoGNUdQVCQLJDYUWQgClqgr7n4rROJlLWfuZ1q+/DvlnOGUYHDo
-         lo0pqTOhoDhJDGcgDCFvYQNzpBetYQY2LNudSw9HfxLXslUhx+WNV0JX54prCbphTcoG
-         fWu1ZaJFlRvbpv9celKGUPApWCSTmV4wEDRyNI47wdIBz6MZQImb2ISY/eg3mRcMIHrh
-         7KX2Tg1Dqpp0XoyNUijeVpz+ey2jU5VqHNzMFp/vw+Di83iUDvfD1C1KYYxkzUfg8GK7
-         SuC8xtspH5Hdyv3gvc2HmRzqe4fiuRF/wkyOt8UKLWczy8qnrHmF5gUJ5HXc4hGoKlX3
-         trkQ==
-X-Gm-Message-State: ACrzQf2EaiKdIxkj01Wn+ZQ6972rLLHkTiy2K/XvAV3vUOxn5p3+sP2/
-        beLt2lb2v4of3rlfmSrE23D0mfPvTmcNdb3AFf4=
-X-Google-Smtp-Source: AMsMyM60dbAgh8DjIGH3/Ouhpt7QTFvoI/CT9wWyi8j5wpPrdSarlVjMRaDP9KxfUG0bTwiVROhR4BDG4myCpjJRNK4=
-X-Received: by 2002:a05:6870:4184:b0:136:5e73:b40e with SMTP id
- y4-20020a056870418400b001365e73b40emr334466oac.209.1665680269454; Thu, 13 Oct
- 2022 09:57:49 -0700 (PDT)
-MIME-Version: 1.0
-References: <20221012111025.30609-1-james.clark@arm.com> <62f485df-4f5e-64a2-1294-6e162de25556@arm.com>
- <CAM9d7cgNrZ6iwRQsGHWGLWCd7cJm+L6UOU9BiGGgTVPdJ0_GJQ@mail.gmail.com> <e0b47b51-87f0-42db-4a76-b240bf07cd41@arm.com>
-In-Reply-To: <e0b47b51-87f0-42db-4a76-b240bf07cd41@arm.com>
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:sender:x-gm-message-state:from
+         :to:cc:subject:date:message-id:reply-to;
+        bh=GwIrM6PqNMNs+23zGPNZGFODdHKdYKYXNnXBaYGk6no=;
+        b=mvzlOSVTce/MK5uraBI7gW6bSMdsWbPnwFlkCrufBbKjHVJ70KKDFDJNKLi+qGFXyH
+         uGUUZeP300AjWfsjz5X1tR4cCnlFQYTrcBo05C/h00DWrir2q2jTv6aarr6aR6W1x3JS
+         gyyx7IOfo05BDebEtQEqpXq4Z1EslkDU9/AjF1rlpQqT2RSzUVqfLIRr89ARF8DeT3p/
+         tq9romzbhoVV959b8AsPs0CFyq+lBnkMDswln+7VTiImfjYBOp2ZnZcP0DzRGShR7x18
+         ZfXBAs/W0rXNXenWlH/ka5rTWD0rW9WWukt7fdxM6NFqL+xhlHgTkAtUd/vl2NckTqvy
+         YaXQ==
+X-Gm-Message-State: ACrzQf3CWzktkM+X/Nrrn2iGmp6wudjbUmhdTsfJmMmXf/ruBZbHDv2E
+        oY9PkmqrkWCvWX2XxhfA0Q4=
+X-Google-Smtp-Source: AMsMyM7xAyN+uhI+6X8HJo1C0MhAUgcRa1vJ71mGmzp52Dr9HbBuY1qszhhQ1UFwMmLH4X2d7NUsWg==
+X-Received: by 2002:a63:a13:0:b0:440:a593:b79f with SMTP id 19-20020a630a13000000b00440a593b79fmr1478647pgk.557.1665694618187;
+        Thu, 13 Oct 2022 13:56:58 -0700 (PDT)
+Received: from balhae.hsd1.ca.comcast.net ([2601:647:6780:1040:b4de:68c7:333b:58ae])
+        by smtp.gmail.com with ESMTPSA id b26-20020aa7951a000000b005604c1a0fbcsm139964pfp.74.2022.10.13.13.56.56
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 13 Oct 2022 13:56:57 -0700 (PDT)
+Sender: Namhyung Kim <namhyung@gmail.com>
 From:   Namhyung Kim <namhyung@kernel.org>
-Date:   Thu, 13 Oct 2022 09:57:38 -0700
-Message-ID: <CAM9d7cg+tTw5vTOycqRciQx8He-WLG0TSdcWa0tyzeu49DmgxA@mail.gmail.com>
-Subject: Re: [PATCH] perf: Fix "Track with sched_switch" test by not printing
- warnings in quiet mode
-To:     James Clark <james.clark@arm.com>
-Cc:     linux-perf-users <linux-perf-users@vger.kernel.org>,
-        Arnaldo Carvalho de Melo <acme@kernel.org>,
-        linux-kernel <linux-kernel@vger.kernel.org>,
+To:     Arnaldo Carvalho de Melo <acme@kernel.org>,
+        Jiri Olsa <jolsa@kernel.org>
+Cc:     Ingo Molnar <mingo@kernel.org>,
         Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Jiri Olsa <jolsa@kernel.org>, Ian Rogers <irogers@google.com>,
-        Adrian Hunter <adrian.hunter@intel.com>
-Content-Type: text/plain; charset="UTF-8"
+        LKML <linux-kernel@vger.kernel.org>,
+        Ian Rogers <irogers@google.com>,
+        Adrian Hunter <adrian.hunter@intel.com>,
+        linux-perf-users@vger.kernel.org,
+        Kan Liang <kan.liang@linux.intel.com>,
+        Leo Yan <leo.yan@linaro.org>, Andi Kleen <ak@linux.intel.com>,
+        Athira Rajeev <atrajeev@linux.vnet.ibm.com>,
+        James Clark <james.clark@arm.com>,
+        Xing Zhengjun <zhengjun.xing@linux.intel.com>
+Subject: [PATCH] perf stat: Init aggr_map when reporting per-process stat
+Date:   Thu, 13 Oct 2022 13:56:55 -0700
+Message-Id: <20221013205655.401525-1-namhyung@kernel.org>
+X-Mailer: git-send-email 2.38.0.413.g74048e4d9e-goog
+In-Reply-To: <CAM9d7cjnAPhOPont3GHSwa9BhAsAFVvqAhFPsyAfQBR8ajrvag@mail.gmail.com>
+References: <CAM9d7cjnAPhOPont3GHSwa9BhAsAFVvqAhFPsyAfQBR8ajrvag@mail.gmail.com>
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-On Wed, Oct 12, 2022 at 10:12 AM James Clark <james.clark@arm.com> wrote:
->
->
->
-> On 12/10/2022 17:50, Namhyung Kim wrote:
-> > On Wed, Oct 12, 2022 at 4:13 AM James Clark <james.clark@arm.com> wrote:
-> >>> The test already supplies -q to run in quiet mode, so extend quiet mode
-> >>> to perf_stdio__warning() and also ui__warning() for consistency.
-> >
-> > I'm not sure if suppressing the warnings with -q is a good thing.
-> > Maybe we need to separate warning/debug messages from the output.
->
-> I don't see the issue with warnings being suppressed in quiet mode as
-> long as errors are still printed. In other cases warnings have already
-> been suppressed by quiet mode and this site is the odd one out.
->
-> What use case are you thinking of where someone explicitly adds -q but
-> wants to see non fatal warnings?
+I'll merge this into the problematic commit.
 
-I don't have any specific use case.  If it's already suppressed in other
-cases, I'm fine with it.
+Signed-off-by: Namhyung Kim <namhyung@kernel.org>
+---
+ tools/perf/builtin-stat.c | 12 +++++++-----
+ 1 file changed, 7 insertions(+), 5 deletions(-)
 
-Thanks,
-Namhyung
+diff --git a/tools/perf/builtin-stat.c b/tools/perf/builtin-stat.c
+index 4cb3ceeb7ba4..9d35a3338976 100644
+--- a/tools/perf/builtin-stat.c
++++ b/tools/perf/builtin-stat.c
+@@ -1355,7 +1355,11 @@ static struct aggr_cpu_id perf_stat__get_cpu(struct perf_stat_config *config __m
+ static struct aggr_cpu_id perf_stat__get_aggr(struct perf_stat_config *config,
+ 					      aggr_get_id_t get_id, struct perf_cpu cpu)
+ {
+-	struct aggr_cpu_id id = aggr_cpu_id__empty();
++	struct aggr_cpu_id id;
++
++	/* per-process mode - should use global aggr mode */
++	if (cpu.cpu == -1)
++		return get_id(config, cpu);
+ 
+ 	if (aggr_cpu_id__is_empty(&config->cpus_aggr_map->map[cpu.cpu]))
+ 		config->cpus_aggr_map->map[cpu.cpu] = get_id(config, cpu);
+@@ -2120,11 +2124,9 @@ int process_stat_config_event(struct perf_session *session,
+ 	if (perf_cpu_map__empty(st->cpus)) {
+ 		if (st->aggr_mode != AGGR_UNSET)
+ 			pr_warning("warning: processing task data, aggregation mode not set\n");
+-		return 0;
+-	}
+-
+-	if (st->aggr_mode != AGGR_UNSET)
++	} else if (st->aggr_mode != AGGR_UNSET) {
+ 		stat_config.aggr_mode = st->aggr_mode;
++	}
+ 
+ 	if (perf_stat.data.is_pipe)
+ 		perf_stat_init_aggr_mode();
+-- 
+2.38.0.413.g74048e4d9e-goog
+
