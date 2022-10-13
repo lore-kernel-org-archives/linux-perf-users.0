@@ -2,130 +2,111 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C99EAC4332F
-	for <linux-perf-users@archiver.kernel.org>; Thu, 13 Oct 2022 12:11:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F065BC433FE
+	for <linux-perf-users@archiver.kernel.org>; Thu, 13 Oct 2022 13:45:57 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229454AbiJMMLH (ORCPT
+        id S229751AbiJMNp4 (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Thu, 13 Oct 2022 08:11:07 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34292 "EHLO
+        Thu, 13 Oct 2022 09:45:56 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49178 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229546AbiJMMLF (ORCPT
+        with ESMTP id S229733AbiJMNpy (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Thu, 13 Oct 2022 08:11:05 -0400
-Received: from frasgout.his.huawei.com (frasgout.his.huawei.com [185.176.79.56])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A1A13F53DC;
-        Thu, 13 Oct 2022 05:11:03 -0700 (PDT)
-Received: from fraeml710-chm.china.huawei.com (unknown [172.18.147.201])
-        by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4Mp7Zc2SH4z67LJ2;
-        Thu, 13 Oct 2022 20:08:08 +0800 (CST)
-Received: from lhrpeml500003.china.huawei.com (7.191.162.67) by
- fraeml710-chm.china.huawei.com (10.206.15.59) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2375.31; Thu, 13 Oct 2022 14:11:01 +0200
-Received: from [10.126.172.19] (10.126.172.19) by
- lhrpeml500003.china.huawei.com (7.191.162.67) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2375.31; Thu, 13 Oct 2022 13:11:00 +0100
-Message-ID: <715c8e4a-f3c3-6521-778e-8ba8c2bf659e@huawei.com>
-Date:   Thu, 13 Oct 2022 13:11:00 +0100
+        Thu, 13 Oct 2022 09:45:54 -0400
+Received: from mx0a-001b2d01.pphosted.com (mx0a-001b2d01.pphosted.com [148.163.156.1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1DC53F037C;
+        Thu, 13 Oct 2022 06:45:52 -0700 (PDT)
+Received: from pps.filterd (m0187473.ppops.net [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (8.17.1.5/8.17.1.5) with ESMTP id 29DDQfJQ007609;
+        Thu, 13 Oct 2022 13:45:38 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=message-id : date :
+ mime-version : subject : to : cc : references : from : in-reply-to :
+ content-type : content-transfer-encoding; s=pp1;
+ bh=9df1l835pqYKy+lXFefaact9uEcWxkSfavAdNlkiPYU=;
+ b=Pdoruq1QEO/8uUCqmfX3l1WpPp1zw8ry5CKIgDjDvhSvRyIeuY6CzJ0QgDkrp/VPfRT8
+ mH/ocUzsIPh9p5BeItxJDW1FsIaZIXn4H+9s62M9d7813OkhCdu2x5L6k7Vmmg4i0uEi
+ KQITt+hcYwIkK3AE/q9gpcgRBuMqDX9k5fi9i4pps4q+n/VJKxJT/HYw68IJEZdYRTn4
+ bzFHfTaqQFrvMlTCrrEHS7BI6urCuJ+J7oJBXpwu+RbXthQcTsAXIQHcWYknMbX/Rp7E
+ gB3eaZ4SkaNoT91H0pCelrm9w0ZGFqBmPUhTQMiQBAbgDE5IXu+N15uLAdJYjK3PiA5E ow== 
+Received: from pps.reinject (localhost [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 3k6kjk8qxs-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Thu, 13 Oct 2022 13:45:38 +0000
+Received: from m0187473.ppops.net (m0187473.ppops.net [127.0.0.1])
+        by pps.reinject (8.17.1.5/8.17.1.5) with ESMTP id 29DDSmui017837;
+        Thu, 13 Oct 2022 13:45:37 GMT
+Received: from ppma05fra.de.ibm.com (6c.4a.5195.ip4.static.sl-reverse.com [149.81.74.108])
+        by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 3k6kjk8qwh-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Thu, 13 Oct 2022 13:45:37 +0000
+Received: from pps.filterd (ppma05fra.de.ibm.com [127.0.0.1])
+        by ppma05fra.de.ibm.com (8.16.1.2/8.16.1.2) with SMTP id 29DDZDwH023446;
+        Thu, 13 Oct 2022 13:45:34 GMT
+Received: from b06cxnps4076.portsmouth.uk.ibm.com (d06relay13.portsmouth.uk.ibm.com [9.149.109.198])
+        by ppma05fra.de.ibm.com with ESMTP id 3k30u9nsnq-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Thu, 13 Oct 2022 13:45:34 +0000
+Received: from b06wcsmtp001.portsmouth.uk.ibm.com (b06wcsmtp001.portsmouth.uk.ibm.com [9.149.105.160])
+        by b06cxnps4076.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 29DDjWno66978298
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Thu, 13 Oct 2022 13:45:32 GMT
+Received: from b06wcsmtp001.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 41425A405C;
+        Thu, 13 Oct 2022 13:45:32 +0000 (GMT)
+Received: from b06wcsmtp001.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 962A4A405F;
+        Thu, 13 Oct 2022 13:45:31 +0000 (GMT)
+Received: from [9.171.10.158] (unknown [9.171.10.158])
+        by b06wcsmtp001.portsmouth.uk.ibm.com (Postfix) with ESMTP;
+        Thu, 13 Oct 2022 13:45:31 +0000 (GMT)
+Message-ID: <f1f8c436-68ce-b4cb-1347-62fb0638e35e@linux.ibm.com>
+Date:   Thu, 13 Oct 2022 15:45:31 +0200
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:91.0) Gecko/20100101
- Thunderbird/91.6.1
-Subject: Re: [PATCH v1] perf test: Parse events workaround for dash/minus
-To:     Ian Rogers <irogers@google.com>,
-        Peter Zijlstra <peterz@infradead.org>,
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
+ Thunderbird/102.3.0
+Subject: arm coresight txt triggers build warning: (was [PATCH] perf test: Fix
+ test_arm_coresight.sh failures on Juno)
+To:     James Clark <james.clark@arm.com>, coresight@lists.linaro.org,
+        acme@kernel.org
+Cc:     suzuki.poulose@arm.com, linux-perf-users@vger.kernel.org,
+        mathieu.poirier@linaro.org, mike.leach@linaro.org,
+        leo.yan@linaro.org, Peter Zijlstra <peterz@infradead.org>,
         Ingo Molnar <mingo@redhat.com>,
-        Arnaldo Carvalho de Melo <acme@kernel.org>,
         Mark Rutland <mark.rutland@arm.com>,
         Alexander Shishkin <alexander.shishkin@linux.intel.com>,
         Jiri Olsa <jolsa@kernel.org>,
-        "Namhyung Kim" <namhyung@kernel.org>,
-        <linux-perf-users@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        Ravi Bangoria <ravi.bangoria@amd.com>,
-        Stephane Eranian <eranian@google.com>
-References: <20221013011205.3151391-1-irogers@google.com>
-From:   John Garry <john.garry@huawei.com>
-In-Reply-To: <20221013011205.3151391-1-irogers@google.com>
-Content-Type: text/plain; charset="UTF-8"; format=flowed
+        Namhyung Kim <namhyung@kernel.org>,
+        linux-kernel@vger.kernel.org
+References: <20221005140508.1537277-1-james.clark@arm.com>
+Content-Language: en-US
+From:   Christian Borntraeger <borntraeger@linux.ibm.com>
+In-Reply-To: <20221005140508.1537277-1-james.clark@arm.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 7bit
-X-Originating-IP: [10.126.172.19]
-X-ClientProxiedBy: lhrpeml500006.china.huawei.com (7.191.161.198) To
- lhrpeml500003.china.huawei.com (7.191.162.67)
-X-CFilter-Loop: Reflected
+X-TM-AS-GCONF: 00
+X-Proofpoint-ORIG-GUID: t41qLAN63QaOK2vpJyK_wcnMYBaxOR2k
+X-Proofpoint-GUID: BELpoLIXBxo6leKDxrtLSTu78vV0Nc7k
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.205,Aquarius:18.0.895,Hydra:6.0.545,FMLib:17.11.122.1
+ definitions=2022-10-13_08,2022-10-13_01,2022-06-22_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 phishscore=0
+ lowpriorityscore=0 clxscore=1011 mlxscore=0 adultscore=0
+ priorityscore=1501 suspectscore=0 spamscore=0 bulkscore=0 malwarescore=0
+ impostorscore=0 mlxlogscore=626 classifier=spam adjust=0 reason=mlx
+ scancount=1 engine=8.12.0-2209130000 definitions=main-2210130081
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-On 13/10/2022 02:12, Ian Rogers wrote:
-> Skip an event configuration for event names with a dash/minus in them.
-> Events with a dash/minus in their name cause parsing issues as legacy
-> encoding of events would use a dash/minus as a separator. The parser
-> separates events with dashes into prefixes and suffixes and then
-> recombines them. Unfortunately if an event has part of its name that
-> matches a legacy token then the recombining fails. This is seen for
-> branch-brs where branch is a legacy token. branch-brs was introduced
-> to sysfs in:
-> https://lore.kernel.org/all/20220322221517.2510440-5-eranian@google.com/
-> The failure is shown below as well as the workaround to use a config
-> where the dash/minus isn't treated specially:
-> 
-> ```
-> $ perf stat -e branch-brs true
-> event syntax error: 'branch-brs'
->                             \___ parser error
-> 
-> $ perf stat -e cpu/branch-brs/ true
-> 
->   Performance counter stats for 'true':
-> 
->              46,179      cpu/branch-brs/
-> ```
-> 
-> Signed-off-by: Ian Rogers <irogers@google.com>
-> ---
->   tools/perf/tests/parse-events.c | 13 +++++++++++++
->   1 file changed, 13 insertions(+)
-> 
-> diff --git a/tools/perf/tests/parse-events.c b/tools/perf/tests/parse-events.c
-> index 459afdb256a1..3440dd2616b0 100644
-> --- a/tools/perf/tests/parse-events.c
-> +++ b/tools/perf/tests/parse-events.c
-> @@ -2237,6 +2237,19 @@ static int test__pmu_events(struct test_suite *test __maybe_unused, int subtest
->   			pr_debug("Test PMU event failed for '%s'", name);
->   			ret = combine_test_results(ret, test_ret);
->   		
+Probably not related to this patch set, but tools/perf/Documentation/perf-arm-coresight.txt
 
-Hi Ian,
+results in
+cd tools/perf/Documentation/
+make man
+   ASCIIDOC perf-arm-coresight.xml
+asciidoc: ERROR: perf-arm-coresight.txt: line 2: malformed manpage title
+asciidoc: ERROR: perf-arm-coresight.txt: line 3: name section expected
+asciidoc: FAILED: perf-arm-coresight.txt: line 3: section title expected
 
-}
-> +		/*
-> +		 * Names containing '-' are recognized as prefixes and suffixes
-> +		 * due to '-' being a legacy PMU separator. This fails when the
-> +		 * prefix or suffix collides with an existing legacy token. For
-> +		 * example, branch-brs has a prefix (branch) that collides with
-> +		 * a PE_NAME_CACHE_TYPE token causing a parse error as a suffix
-> +		 * isn't expected after this.
-
-OK, so you want to skip anything with '-'. Will we now miss out on 
-events which contain a '-' but don't clash with an existing legacy token?
-
->  As event names in the config
-> +		 * slashes are allowed a '-' in the name we check this works
-> +		 * above.
-
-Sorry, I can't follow what you mean here. Do you mean that 
-"cpu/branch-brs/" works ok and we continue to test it?
-
-> +		 */
-> +		if (strchr(ent->d_name, '-'))
-> +			continue;
-
-Thanks,
-John
-
-> +
->   		snprintf(name, sizeof(name), "%s:u,cpu/event=%s/u", ent->d_name, ent->d_name);
->   		e.name  = name;
->   		e.check = test__checkevent_pmu_events_mix;
+in linux-next.
 
