@@ -2,77 +2,77 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9B854C433FE
-	for <linux-perf-users@archiver.kernel.org>; Thu, 13 Oct 2022 14:02:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 23A8FC4332F
+	for <linux-perf-users@archiver.kernel.org>; Thu, 13 Oct 2022 14:54:29 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229963AbiJMOCx (ORCPT
+        id S229548AbiJMOy1 (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Thu, 13 Oct 2022 10:02:53 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57320 "EHLO
+        Thu, 13 Oct 2022 10:54:27 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58140 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229983AbiJMOCw (ORCPT
+        with ESMTP id S229560AbiJMOy0 (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Thu, 13 Oct 2022 10:02:52 -0400
-Received: from casper.infradead.org (casper.infradead.org [IPv6:2001:8b0:10b:1236::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0631E2F667;
-        Thu, 13 Oct 2022 07:02:22 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=casper.20170209; h=In-Reply-To:Content-Type:MIME-Version:
-        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description;
-        bh=TSbLsygvt/UKK7OWwe4sbMWUF0YqxhXqCgezFd8rTMg=; b=VmAPCvkLV/pXm4OznNKxE0S3ZD
-        dtgrIDAn82q6JupwgzjuBCYYC5yrGTFQf/Cif1ZkjicREWOaUwi9yfxfU5cWU3Qi/l2vlHi/TygBl
-        RY5wtfjUo8q6Wz3MhcafuZlkGUSEe2IMlqwnIYgReAHO7qjNsKVIUUS9rAR1UHoZdJrLCaR1KrC29
-        cQeuwpQ+mW/WKvB+PSf4uePTluVOPWChizPi6ol4RbRiNjv+SQ2EGvXpEAQIAdxgsyI+wmNHzzLKH
-        HMrg8oxUDIkz4mlBv2C6cObXSH+XEcU4UzRbRciWQf+bbH8uBOyrETKF5fGf0JrSUvVf5jiQf7/95
-        +CtcEvLg==;
-Received: from j130084.upc-j.chello.nl ([24.132.130.84] helo=noisy.programming.kicks-ass.net)
-        by casper.infradead.org with esmtpsa (Exim 4.94.2 #2 (Red Hat Linux))
-        id 1oiykM-006l3l-Mj; Thu, 13 Oct 2022 13:59:39 +0000
-Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-        (Client did not present a certificate)
-        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id 365C73001CB;
-        Thu, 13 Oct 2022 15:59:32 +0200 (CEST)
-Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
-        id A42962024E158; Thu, 13 Oct 2022 15:59:32 +0200 (CEST)
-Date:   Thu, 13 Oct 2022 15:59:32 +0200
-From:   Peter Zijlstra <peterz@infradead.org>
-To:     Cody Yao-oc <CodyYao-oc@zhaoxin.com>
-Cc:     mingo@redhat.com, acme@kernel.org, mark.rutland@arm.com,
-        alexander.shishkin@linux.intel.com, jolsa@redhat.com,
-        namhyung@kernel.org, tglx@linutronix.de, bp@alien8.de,
-        hpa@zytor.com, x86@kernel.org, linux-perf-users@vger.kernel.org,
-        linux-kernel@vger.kernel.org, shyaololo@163.com
-Subject: Re: [PATCH] x86/perf: Fixed kernel panic during boot on Nano
- processor.
-Message-ID: <Y0gZxOA4XBDn1tXj@hirez.programming.kicks-ass.net>
-References: <20210607013109.7870-1-CodyYao-oc@zhaoxin.com>
+        Thu, 13 Oct 2022 10:54:26 -0400
+Received: from foss.arm.com (foss.arm.com [217.140.110.172])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTP id 63AE410537D;
+        Thu, 13 Oct 2022 07:54:25 -0700 (PDT)
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 2D4B613D5;
+        Thu, 13 Oct 2022 07:54:31 -0700 (PDT)
+Received: from [10.57.0.242] (unknown [10.57.0.242])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id A55983F67D;
+        Thu, 13 Oct 2022 07:54:22 -0700 (PDT)
+Message-ID: <da49035b-bc5c-d40e-a1dd-2f229cffbada@arm.com>
+Date:   Thu, 13 Oct 2022 15:54:21 +0100
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20210607013109.7870-1-CodyYao-oc@zhaoxin.com>
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
+ Thunderbird/102.2.2
+Subject: Re: arm coresight txt triggers build warning: (was [PATCH] perf test:
+ Fix test_arm_coresight.sh failures on Juno)
+To:     Christian Borntraeger <borntraeger@linux.ibm.com>,
+        Carsten Haitzler <carsten.haitzler@foss.arm.com>
+Cc:     suzuki.poulose@arm.com, linux-perf-users@vger.kernel.org,
+        mathieu.poirier@linaro.org, mike.leach@linaro.org,
+        leo.yan@linaro.org, Peter Zijlstra <peterz@infradead.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Jiri Olsa <jolsa@kernel.org>,
+        Namhyung Kim <namhyung@kernel.org>,
+        linux-kernel@vger.kernel.org, coresight@lists.linaro.org,
+        acme@kernel.org
+References: <20221005140508.1537277-1-james.clark@arm.com>
+ <f1f8c436-68ce-b4cb-1347-62fb0638e35e@linux.ibm.com>
+Content-Language: en-US
+From:   James Clark <james.clark@arm.com>
+In-Reply-To: <f1f8c436-68ce-b4cb-1347-62fb0638e35e@linux.ibm.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-On Mon, Jun 07, 2021 at 09:31:09AM +0800, Cody Yao-oc wrote:
-> From: CodyYao-oc <CodyYao-oc@zhaoxin.com>
-> 
-> Nano processor may not fully support rdpmc instruction, it works well
-> for reading general pmc counter, but will lead to GP(general protection)
-> when accessing fixed pmc counter. Futhermore, family/model information
-> is same between Nano processor and ZX-C processor, it leads to zhaoxin
-> pmu driver is wrongly loaded for Nano processor, which resulting boot
-> kernal fail.
-> 
-> To solve this problem, stepping information will be checked to distinguish
-> between Nano processor and ZX-C processor.
-> 
-> [https://bugzilla.kernel.org/show_bug.cgi?id=212389]
-> 
-> Reported-by: Arjan <8vvbbqzo567a@nospam.xutrox.com>
-> Signed-off-by: CodyYao-oc <CodyYao-oc@zhaoxin.com>
 
-I suppose I'll queue it up for perf/urgent post -rc1
+
+On 13/10/2022 14:45, Christian Borntraeger wrote:
+> Probably not related to this patch set, but
+> tools/perf/Documentation/perf-arm-coresight.txt
+> 
+> results in
+> cd tools/perf/Documentation/
+> make man
+>   ASCIIDOC perf-arm-coresight.xml
+> asciidoc: ERROR: perf-arm-coresight.txt: line 2: malformed manpage title
+> asciidoc: ERROR: perf-arm-coresight.txt: line 3: name section expected
+> asciidoc: FAILED: perf-arm-coresight.txt: line 3: section title expected
+> 
+> in linux-next.
+> 
+
+I think this is the same as what has been reported here:
+https://lore.kernel.org/linux-perf-users/20220909152803.2317006-1-carsten.haitzler@foss.arm.com/T/#mf1345f086db25c9fb40eb916b0aa42f1960d7eb2
+
+Carsten, are you able to take a look at this?
+
+Thanks
+James
