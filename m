@@ -2,55 +2,55 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 58530C43219
-	for <linux-perf-users@archiver.kernel.org>; Fri, 14 Oct 2022 06:17:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 395DEC4332F
+	for <linux-perf-users@archiver.kernel.org>; Fri, 14 Oct 2022 06:17:34 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229932AbiJNGRX (ORCPT
+        id S229943AbiJNGRb (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Fri, 14 Oct 2022 02:17:23 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58166 "EHLO
+        Fri, 14 Oct 2022 02:17:31 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59556 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229930AbiJNGQn (ORCPT
+        with ESMTP id S229876AbiJNGQo (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Fri, 14 Oct 2022 02:16:43 -0400
-Received: from mail-pj1-x102c.google.com (mail-pj1-x102c.google.com [IPv6:2607:f8b0:4864:20::102c])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 93DED17415;
-        Thu, 13 Oct 2022 23:16:18 -0700 (PDT)
-Received: by mail-pj1-x102c.google.com with SMTP id t12-20020a17090a3b4c00b0020b04251529so3890440pjf.5;
-        Thu, 13 Oct 2022 23:16:18 -0700 (PDT)
+        Fri, 14 Oct 2022 02:16:44 -0400
+Received: from mail-pf1-x42a.google.com (mail-pf1-x42a.google.com [IPv6:2607:f8b0:4864:20::42a])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 67B291905E7;
+        Thu, 13 Oct 2022 23:16:25 -0700 (PDT)
+Received: by mail-pf1-x42a.google.com with SMTP id 204so3997552pfx.10;
+        Thu, 13 Oct 2022 23:16:25 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20210112;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:sender:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=qUdiNdtmy8zezeJc09AIdo+G0m43f1JOi1LO86Cu4bw=;
-        b=AWLUkGA9ohhywgSiERCKEGD5fX0bBMA7Ie+PjnLZa6ISduMl4XH2odZ8/fu2letm3Q
-         Z0fZbRfh94hey4ASPoZFXaY3kVQ2GOopBjGF/eDIlgkE46BTUVx7xZYuzbKxTMi0zecb
-         6pj7idlKrIRrg3TGf/fd2FiVikQ92Pu6gguCKAAo1lO3yJ9pw5xq+iJkuv/aeXiNubGH
-         prYHwRbXzfflWapFPywjtVOmFHgZUugA7Z6DTemYOgHKuCqHEIeQ/mrLEcSp3fMSOGbR
-         j0uoYtBvqjyEbv8hCRudwiHI+bQrFXygTLyG6SXQ0+ACP1cdH/V1qXtzQvG699scM49r
-         sGgg==
+        bh=deC1Ch/LRE/b9oWyC7BPXVLD02u5pO6qtdU3irPGc8w=;
+        b=KHSL8W0nox/llcdMA89ep9ycYbcTlAQhpmmj5AhrLmIoNRE77aU1JGyXgDMUWxMiFz
+         1NsYYb5Y7WGy5+NrqV+xIezxghWtnpWS4HphitnlesYX5be5V/ySfGkzWoFN6XYdOV73
+         IgoYD9YKua+kRAHO3f9x2+mrkXBVAg/mxn2fyQOC6sDt6Og+PYcu78S6Kk0mW4kyHjq2
+         tsloPvFQsErWaGvERJXSbloRQNUnRI5JAYu0eoAX+Hz3C5JojFVdHpGKTfYsZby6reJp
+         pcO2e2eyYOFRYhOhjDFznW5zUHJJgKypr3KoSxGNkMU5DdGRdNv2MRvYoj7tU+V5PZ03
+         sNPg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:sender:x-gm-message-state:from
          :to:cc:subject:date:message-id:reply-to;
-        bh=qUdiNdtmy8zezeJc09AIdo+G0m43f1JOi1LO86Cu4bw=;
-        b=XRgYiN7CJ+pgVWfDubT44pBK8rulQWAxjlTLD1pzDVbWemQf5LHIjHt9U2q75+t4oV
-         t6Odaa0fos7bzgiJQII5onxiEaZdoonLFpyEa05XMquOUucKb2hdbq6MIr4jFCZLbtRf
-         r576lax6rpERjhyITKxB24PN4yUPtNZOJ8QZk2RhDdZvGEWUXCu0Uho2GFIjQKGQuvkd
-         P9HZlDjMAtsfRpkFlwmzvoHL6qKPnji2rgNV10oFr9XDrhlV49NR6knZVwA7wtroqu/D
-         Y0F1QW9vBGiduWNkPDKkQBZolfmhr31rI3LZDBjnhl+Ck9fDt3xYmgZjEInDDOofnNZo
-         NUVw==
-X-Gm-Message-State: ACrzQf14X8rTmMUkecMyqmCRvuh09jA1oMC+y1s8fkzBurK3bA5kk3HH
-        SeG9uIuB+dv6QyQX8sfwvn96TF+8Ss8=
-X-Google-Smtp-Source: AMsMyM4ptG2himLhYYhqOpEAyfq0eNISZA22UYD1RBvbRWzYQR4tpSTUSqBN8terppJ29v3VCDgubQ==
-X-Received: by 2002:a17:90b:4ac5:b0:20d:ae54:f08b with SMTP id mh5-20020a17090b4ac500b0020dae54f08bmr5709548pjb.174.1665728176900;
-        Thu, 13 Oct 2022 23:16:16 -0700 (PDT)
+        bh=deC1Ch/LRE/b9oWyC7BPXVLD02u5pO6qtdU3irPGc8w=;
+        b=qezwmBILhJYC5dHRUTWo/BSarKQgg5hBIJ91/4tfnSbpaxMxBzFRDY/P0GCLYCuyZC
+         FMJySs5adEk/969SnaqD0O/34tSekasIc29ZVPXStdkbQg8pq/rrBGeTCsi0cJuIw6uH
+         1KYAXpGRH0rd4PM/WlMZFhoKm85BCO777+rX43XTtkpIp9buoQmfJUr6kPielC2uqWOR
+         dWIVQLDcjaAYLmpUFdysWmQItC8Qt4fi++gRrvEaDQQEaawCNas1+ALYZtdr99te5Evt
+         HC4v4uDMTehuNS4Rc2fDUUhpmGSHka+CMqMdVAu+zU3pCuQrxl1QwBbG/ZBA7eMXNTwp
+         u08w==
+X-Gm-Message-State: ACrzQf2bD44m9jRt/2Y2Hqs7cgXuYtq9meY3vPEZ2uChSCNLwQyk15nw
+        QExwlY1+gnoO+3pSK/mxtEE=
+X-Google-Smtp-Source: AMsMyM7ggt8lQN+os/uPlnCfql+aV2zpDnbXALElqWLaPN0FfQ1skbGsyCX9JKD911P3H8bNFChyCw==
+X-Received: by 2002:a63:b5d:0:b0:45f:d7d0:5808 with SMTP id a29-20020a630b5d000000b0045fd7d05808mr3203471pgl.330.1665728183760;
+        Thu, 13 Oct 2022 23:16:23 -0700 (PDT)
 Received: from balhae.hsd1.ca.comcast.net ([2601:647:6780:1040:630:195c:38a7:a411])
-        by smtp.gmail.com with ESMTPSA id 94-20020a17090a09e700b0020af2411721sm721942pjo.34.2022.10.13.23.16.15
+        by smtp.gmail.com with ESMTPSA id 94-20020a17090a09e700b0020af2411721sm721942pjo.34.2022.10.13.23.16.22
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 13 Oct 2022 23:16:16 -0700 (PDT)
+        Thu, 13 Oct 2022 23:16:23 -0700 (PDT)
 Sender: Namhyung Kim <namhyung@gmail.com>
 From:   Namhyung Kim <namhyung@kernel.org>
 To:     Arnaldo Carvalho de Melo <acme@kernel.org>,
@@ -66,9 +66,9 @@ Cc:     Ingo Molnar <mingo@kernel.org>,
         Athira Rajeev <atrajeev@linux.vnet.ibm.com>,
         James Clark <james.clark@arm.com>,
         Xing Zhengjun <zhengjun.xing@linux.intel.com>
-Subject: [PATCH 15/19] perf stat: Add perf_stat_process_percore()
-Date:   Thu, 13 Oct 2022 23:15:46 -0700
-Message-Id: <20221014061550.463644-16-namhyung@kernel.org>
+Subject: [PATCH 19/19] perf stat: Remove unused perf_counts.aggr field
+Date:   Thu, 13 Oct 2022 23:15:50 -0700
+Message-Id: <20221014061550.463644-20-namhyung@kernel.org>
 X-Mailer: git-send-email 2.38.0.413.g74048e4d9e-goog
 In-Reply-To: <20221014061550.463644-1-namhyung@kernel.org>
 References: <20221014061550.463644-1-namhyung@kernel.org>
@@ -78,140 +78,125 @@ Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-The perf_stat_process_percore() is to aggregate counts for an event per-core
-even if the aggr_mode is AGGR_NONE.  This is enabled when user requested it
-on the command line.
+The aggr field in the struct perf_counts is to keep the aggregated value
+in the AGGR_GLOBAL for the old code.  But it's not used anymore.
 
-To handle that, it keeps the per-cpu counts at first.  And then it aggregates
-the counts that have the same core id in the aggr->counts and updates the
-values for each cpu back.
-
-Later, per-core events will skip one of the CPUs unless percore-show-thread
-option is given.  In that case, it can simply print all cpu stats with the
-updated (per-core) values.
-
+Acked-by: Ian Rogers <irogers@google.com>
 Signed-off-by: Namhyung Kim <namhyung@kernel.org>
 ---
- tools/perf/builtin-stat.c |  1 +
- tools/perf/util/stat.c    | 71 +++++++++++++++++++++++++++++++++++++++
- tools/perf/util/stat.h    |  3 ++
- 3 files changed, 75 insertions(+)
+ tools/perf/util/counts.c |  1 -
+ tools/perf/util/counts.h |  1 -
+ tools/perf/util/stat.c   | 35 ++---------------------------------
+ 3 files changed, 2 insertions(+), 35 deletions(-)
 
-diff --git a/tools/perf/builtin-stat.c b/tools/perf/builtin-stat.c
-index 371d6e896942..d6a006e41da0 100644
---- a/tools/perf/builtin-stat.c
-+++ b/tools/perf/builtin-stat.c
-@@ -488,6 +488,7 @@ static void process_counters(void)
- 	}
- 
- 	perf_stat_merge_counters(&stat_config, evsel_list);
-+	perf_stat_process_percore(&stat_config, evsel_list);
+diff --git a/tools/perf/util/counts.c b/tools/perf/util/counts.c
+index 7a447d918458..11cd85b278a6 100644
+--- a/tools/perf/util/counts.c
++++ b/tools/perf/util/counts.c
+@@ -48,7 +48,6 @@ void perf_counts__reset(struct perf_counts *counts)
+ {
+ 	xyarray__reset(counts->loaded);
+ 	xyarray__reset(counts->values);
+-	memset(&counts->aggr, 0, sizeof(struct perf_counts_values));
  }
  
- static void process_interval(void)
+ void evsel__reset_counts(struct evsel *evsel)
+diff --git a/tools/perf/util/counts.h b/tools/perf/util/counts.h
+index 5de275194f2b..42760242e0df 100644
+--- a/tools/perf/util/counts.h
++++ b/tools/perf/util/counts.h
+@@ -11,7 +11,6 @@ struct evsel;
+ 
+ struct perf_counts {
+ 	s8			  scaled;
+-	struct perf_counts_values aggr;
+ 	struct xyarray		  *values;
+ 	struct xyarray		  *loaded;
+ };
 diff --git a/tools/perf/util/stat.c b/tools/perf/util/stat.c
-index 877107f5a820..4ce457c94898 100644
+index 14c45f4cfdd3..6ab9c58beca7 100644
 --- a/tools/perf/util/stat.c
 +++ b/tools/perf/util/stat.c
-@@ -673,6 +673,77 @@ void perf_stat_merge_counters(struct perf_stat_config *config, struct evlist *ev
- 		evsel__merge_stats(evsel, config);
+@@ -308,8 +308,6 @@ static void evsel__copy_prev_raw_counts(struct evsel *evsel)
+ 				*perf_counts(evsel->prev_raw_counts, idx, thread);
+ 		}
+ 	}
+-
+-	evsel->counts->aggr = evsel->prev_raw_counts->aggr;
  }
  
-+static void evsel__update_percore_stats(struct evsel *evsel, struct aggr_cpu_id *core_id)
-+{
-+	struct perf_stat_evsel *ps = evsel->stats;
-+	struct perf_counts_values counts = { 0, };
-+	struct aggr_cpu_id id;
-+	struct perf_cpu cpu;
-+	int idx;
-+
-+	/* collect per-core counts */
-+	perf_cpu_map__for_each_cpu(cpu, idx, evsel->core.cpus) {
-+		struct perf_stat_aggr *aggr = &ps->aggr[idx];
-+
-+		id = aggr_cpu_id__core(cpu, NULL);
-+		if (!aggr_cpu_id__equal(core_id, &id))
-+			continue;
-+
-+		counts.val += aggr->counts.val;
-+		counts.ena += aggr->counts.ena;
-+		counts.run += aggr->counts.run;
-+	}
-+
-+	/* update aggregated per-core counts for each CPU */
-+	perf_cpu_map__for_each_cpu(cpu, idx, evsel->core.cpus) {
-+		struct perf_stat_aggr *aggr = &ps->aggr[idx];
-+
-+		id = aggr_cpu_id__core(cpu, NULL);
-+		if (!aggr_cpu_id__equal(core_id, &id))
-+			continue;
-+
-+		aggr->counts.val = counts.val;
-+		aggr->counts.ena = counts.ena;
-+		aggr->counts.run = counts.run;
-+
-+		aggr->used = true;
-+	}
-+}
-+
-+/* we have an aggr_map for cpu, but want to aggregate the counters per-core */
-+static void evsel__process_percore(struct evsel *evsel)
-+{
-+	struct perf_stat_evsel *ps = evsel->stats;
-+	struct aggr_cpu_id core_id;
-+	struct perf_cpu cpu;
-+	int idx;
-+
-+	if (!evsel->percore)
-+		return;
-+
-+	perf_cpu_map__for_each_cpu(cpu, idx, evsel->core.cpus) {
-+		struct perf_stat_aggr *aggr = &ps->aggr[idx];
-+
-+		if (aggr->used)
-+			continue;
-+
-+		core_id = aggr_cpu_id__core(cpu, NULL);
-+		evsel__update_percore_stats(evsel, &core_id);
-+	}
-+}
-+
-+/* process cpu stats on per-core events */
-+void perf_stat_process_percore(struct perf_stat_config *config, struct evlist *evlist)
-+{
-+	struct evsel *evsel;
-+
-+	if (config->aggr_mode != AGGR_NONE)
-+		return;
-+
-+	evlist__for_each_entry(evlist, evsel)
-+		evsel__process_percore(evsel);
-+}
-+
- int perf_event__process_stat_event(struct perf_session *session,
- 				   union perf_event *event)
+ void evlist__copy_prev_raw_counts(struct evlist *evlist)
+@@ -320,26 +318,6 @@ void evlist__copy_prev_raw_counts(struct evlist *evlist)
+ 		evsel__copy_prev_raw_counts(evsel);
+ }
+ 
+-void evlist__save_aggr_prev_raw_counts(struct evlist *evlist)
+-{
+-	struct evsel *evsel;
+-
+-	/*
+-	 * To collect the overall statistics for interval mode,
+-	 * we copy the counts from evsel->prev_raw_counts to
+-	 * evsel->counts. The perf_stat_process_counter creates
+-	 * aggr values from per cpu values, but the per cpu values
+-	 * are 0 for AGGR_GLOBAL. So we use a trick that saves the
+-	 * previous aggr value to the first member of perf_counts,
+-	 * then aggr calculation in process_counter_values can work
+-	 * correctly.
+-	 */
+-	evlist__for_each_entry(evlist, evsel) {
+-		*perf_counts(evsel->prev_raw_counts, 0, 0) =
+-			evsel->prev_raw_counts->aggr;
+-	}
+-}
+-
+ static size_t pkg_id_hash(const void *__key, void *ctx __maybe_unused)
  {
-diff --git a/tools/perf/util/stat.h b/tools/perf/util/stat.h
-index 728bbc823b0d..d23f8743e442 100644
---- a/tools/perf/util/stat.h
-+++ b/tools/perf/util/stat.h
-@@ -51,6 +51,8 @@ struct perf_stat_aggr {
- 	int				nr;
- 	/* whether any entry has failed to read/process event */
- 	bool				failed;
-+	/* to mark this data is processed already */
-+	bool				used;
- };
+ 	uint64_t *key = (uint64_t *) __key;
+@@ -423,7 +401,6 @@ process_counter_values(struct perf_stat_config *config, struct evsel *evsel,
+ 		       int cpu_map_idx, int thread,
+ 		       struct perf_counts_values *count)
+ {
+-	struct perf_counts_values *aggr = &evsel->counts->aggr;
+ 	struct perf_stat_evsel *ps = evsel->stats;
+ 	static struct perf_counts_values zero;
+ 	bool skip = false;
+@@ -493,12 +470,6 @@ process_counter_values(struct perf_stat_config *config, struct evsel *evsel,
+ 		}
+ 	}
  
- /* per-evsel event stats */
-@@ -281,6 +283,7 @@ void evlist__reset_aggr_stats(struct evlist *evlist);
+-	if (config->aggr_mode == AGGR_GLOBAL) {
+-		aggr->val += count->val;
+-		aggr->ena += count->ena;
+-		aggr->run += count->run;
+-	}
+-
+ 	return 0;
+ }
+ 
+@@ -523,13 +494,10 @@ static int process_counter_maps(struct perf_stat_config *config,
  int perf_stat_process_counter(struct perf_stat_config *config,
- 			      struct evsel *counter);
- void perf_stat_merge_counters(struct perf_stat_config *config, struct evlist *evlist);
-+void perf_stat_process_percore(struct perf_stat_config *config, struct evlist *evlist);
+ 			      struct evsel *counter)
+ {
+-	struct perf_counts_values *aggr = &counter->counts->aggr;
+ 	struct perf_stat_evsel *ps = counter->stats;
+-	u64 *count = counter->counts->aggr.values;
++	u64 *count;
+ 	int ret;
  
- struct perf_tool;
- union perf_event;
+-	aggr->val = aggr->ena = aggr->run = 0;
+-
+ 	if (counter->per_pkg)
+ 		evsel__zero_per_pkg(counter);
+ 
+@@ -540,6 +508,7 @@ int perf_stat_process_counter(struct perf_stat_config *config,
+ 	if (config->aggr_mode != AGGR_GLOBAL)
+ 		return 0;
+ 
++	count = ps->aggr[0].counts.values;
+ 	update_stats(&ps->res_stats, *count);
+ 
+ 	if (verbose > 0) {
 -- 
 2.38.0.413.g74048e4d9e-goog
 
