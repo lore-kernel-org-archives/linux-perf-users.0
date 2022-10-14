@@ -2,205 +2,260 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3A335C4332F
-	for <linux-perf-users@archiver.kernel.org>; Fri, 14 Oct 2022 06:56:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 36F90C433FE
+	for <linux-perf-users@archiver.kernel.org>; Fri, 14 Oct 2022 09:26:16 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229876AbiJNG4O (ORCPT
+        id S229598AbiJNJ0O (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Fri, 14 Oct 2022 02:56:14 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51762 "EHLO
+        Fri, 14 Oct 2022 05:26:14 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50034 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229609AbiJNG4N (ORCPT
+        with ESMTP id S229674AbiJNJ0M (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Fri, 14 Oct 2022 02:56:13 -0400
-Received: from mail-wm1-x332.google.com (mail-wm1-x332.google.com [IPv6:2a00:1450:4864:20::332])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id F0BAB18BE0A;
-        Thu, 13 Oct 2022 23:56:11 -0700 (PDT)
-Received: by mail-wm1-x332.google.com with SMTP id iv17so2524224wmb.4;
-        Thu, 13 Oct 2022 23:56:11 -0700 (PDT)
+        Fri, 14 Oct 2022 05:26:12 -0400
+Received: from mail-pg1-x536.google.com (mail-pg1-x536.google.com [IPv6:2607:f8b0:4864:20::536])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D5B60152C7D;
+        Fri, 14 Oct 2022 02:26:09 -0700 (PDT)
+Received: by mail-pg1-x536.google.com with SMTP id r18so3803996pgr.12;
+        Fri, 14 Oct 2022 02:26:09 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20210112;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:date:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=HflhXWzlYkKjXTpNTgAvezmfuY9pxXz8yiwpNBCy+f0=;
-        b=E7kyPvBGnrRHw6Xouwvm660Oao0nfX39QdF9AXjQKIq5ZVIYZ0upVw1HAyKriOhtkV
-         CYCl/bsbIBE5XD9Aykq+8f4SRqZbwSfkn7xgOdnXSs0y4CJOB7XmmT0d9qCQMpCn194Q
-         aMOpmgVINjSZ4xsywyrT/9Gk+vuI2NpALDw6dC3g6PnSBo6dVt+NHOeCm1FKcwK57ZS2
-         sZNQlBzPKtuwHsV143DjwQM+PIN984O1gRLpqeFFVYxS+KNwt2Mx6OD08FOPWKMS4j3a
-         gNQoMjSsb9zrOBz2qisZ8OPcgwB2jBquwe0qhZoiqCIBEUYtU97RLE27MT1fTsXMB9+T
-         BYIw==
+        h=content-transfer-encoding:in-reply-to:from:references:cc:to
+         :content-language:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=S1qvkdkHjEbNas9/ZZPIOjRrBJgMEZ8YW9tqgYLo2/A=;
+        b=HEPsv2LdvlKEFiy9GlLbJMP21D7B6Ag32ye/blp0kGggQyWUgEXd9TSHw5c66+ECAe
+         PiMKhToYIihgmbrCycA89SBQOSlHLOb9ep13DNQUjtyeALesqYNnThLAcaxiayeSmrky
+         rzfj/g2wU1qj406xK5QAzgJxG7IizSbXL5WghXxSqKKQiFlZbV0hHjqueyeelYCzcQle
+         WJdRetmMGC/u+spZpzPooV2bk/E2kXkAdf7/bgaPzdC2DnzE23iCtbowjrMlWLfmTHK2
+         n3CAzBrd8FA0aKKoD1ntjsYtaTouzAWJTYtMG9mXxOtqVlfsdegdX4CZtdikHvIyx1c1
+         jR5w==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:date:from:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=HflhXWzlYkKjXTpNTgAvezmfuY9pxXz8yiwpNBCy+f0=;
-        b=cu3TLkcp4K3pTRjWxF3IMtWyh3hFtysdPHGFfGiAq8T2i6DojXYbimo2Ue/U+ECkTf
-         CR6djDoeW6Pe6ZBbD92/hiZ59TXyxsepo1bwC7zzvriMF1utzSc+h3GjOft2yRd1JrnY
-         7/qkIAU3dx7ccE0S5JQ3Rw7Wjnt7Y40J5fJzJ9X73S4WZ2wgKd6GMENBjU3eFEQXcOS9
-         ko/jsaMy53vjkW9kjaCg7BYP6/zjAx64sdW3bullfCvgcfoLYPYx+kLj2XgQXFnSxcsB
-         tZXhLyNHQ2GK9gb5j/kVu7HjQcoWtzlbQUwuRPcHab7ONlOaFV8TTHBYMCHFu1pgKepa
-         yeSg==
-X-Gm-Message-State: ACrzQf3icNmFIs6SS3/jknnJRBSOZ0gcTFMejDYH5M3zgJCKpLpqhoFu
-        DoKMl8sAZIG9eJI1jIIEg8c=
-X-Google-Smtp-Source: AMsMyM5o9HiutMmIp5nLB9OKGUXTFl9EA1JoSxbo3y8CqJn+OzFi56X1Oaaa1b/SFGbsh9N7a/DvdA==
-X-Received: by 2002:a05:600c:4ec6:b0:3c6:c469:d295 with SMTP id g6-20020a05600c4ec600b003c6c469d295mr9129129wmq.117.1665730570424;
-        Thu, 13 Oct 2022 23:56:10 -0700 (PDT)
-Received: from krava ([193.85.244.190])
-        by smtp.gmail.com with ESMTPSA id g16-20020a05600c311000b003c6237e867esm1409033wmo.0.2022.10.13.23.56.09
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 13 Oct 2022 23:56:09 -0700 (PDT)
-From:   Jiri Olsa <olsajiri@gmail.com>
-X-Google-Original-From: Jiri Olsa <jolsa@kernel.org>
-Date:   Fri, 14 Oct 2022 08:56:07 +0200
-To:     Namhyung Kim <namhyung@kernel.org>,
-        Michael Petlan <mpetlan@redhat.com>
-Cc:     Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Ingo Molnar <mingo@kernel.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Ian Rogers <irogers@google.com>,
-        Adrian Hunter <adrian.hunter@intel.com>,
-        linux-perf-users@vger.kernel.org,
-        Kan Liang <kan.liang@linux.intel.com>,
-        Leo Yan <leo.yan@linaro.org>, Andi Kleen <ak@linux.intel.com>,
-        Athira Rajeev <atrajeev@linux.vnet.ibm.com>,
-        James Clark <james.clark@arm.com>,
-        Xing Zhengjun <zhengjun.xing@linux.intel.com>
-Subject: Re: [PATCHSET 00/19] perf stat: Cleanup counter aggregation (v2)
-Message-ID: <Y0kIB7hxlnlEYipZ@krava>
-References: <20221014061550.463644-1-namhyung@kernel.org>
+        h=content-transfer-encoding:in-reply-to:from:references:cc:to
+         :content-language:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=S1qvkdkHjEbNas9/ZZPIOjRrBJgMEZ8YW9tqgYLo2/A=;
+        b=LaVVRUWfzgbSaKCLgCz/nlF/ibox0l/PJeXOSO9LpGZF/XJ/uOBsqKVnslt5+7Mnrj
+         Euy8lpCnwZHMhJ/H6rKcT/xc+GzepV2PZLkULVHcK9t5CPHVALa7GbH8TM4fbWaTcWa+
+         6r8V+4M41WenSdTG9fXgKUE0pF0uKPIxxu+n+tAt2xBgXsaYVWnfKMwKzsfVULRRcon7
+         l47RXL85yjwmV6dt/6FiSj7MbqTMtdUc1kwQeVF1M2QBc+t4HVdwOnLW9gwlJABvZGf/
+         lz32SB7Dk2i99mtwjWxNJ0dLELPlgi5JB6uBMrhH0HmiT5DyHDBq23dzfLlhI40evc3a
+         Hz5g==
+X-Gm-Message-State: ACrzQf2ojFOWp7MjmyI0MBbmvOZYAaHMuhB6Hz/nbOb09fn0GTOvHfIx
+        KBp0WL7Xdnudxp8nplYePm8=
+X-Google-Smtp-Source: AMsMyM66mJhmEpsxy1o+YNlVL4Zy8EkA0z7zmNNBni/AoqbNzJGYPkx2pap4zHI4407nu2rTu530kw==
+X-Received: by 2002:aa7:8504:0:b0:563:1ae2:6dc0 with SMTP id v4-20020aa78504000000b005631ae26dc0mr4153396pfn.48.1665739568532;
+        Fri, 14 Oct 2022 02:26:08 -0700 (PDT)
+Received: from [192.168.255.10] ([103.7.29.32])
+        by smtp.gmail.com with ESMTPSA id s3-20020aa78bc3000000b0056323de479bsm1215487pfd.120.2022.10.14.02.26.04
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Fri, 14 Oct 2022 02:26:07 -0700 (PDT)
+Message-ID: <7e3be98e-d0c0-634b-fbb3-0096976a89bf@gmail.com>
+Date:   Fri, 14 Oct 2022 17:25:58 +0800
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20221014061550.463644-1-namhyung@kernel.org>
+User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.15; rv:102.0)
+ Gecko/20100101 Thunderbird/102.3.2
+Subject: Re: [PATCH v5 5/8] KVM: x86: Track supported PERF_CAPABILITIES in
+ kvm_caps
+Content-Language: en-US
+To:     Sean Christopherson <seanjc@google.com>
+Cc:     Mark Rutland <mark.rutland@arm.com>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Jiri Olsa <jolsa@kernel.org>,
+        Namhyung Kim <namhyung@kernel.org>,
+        linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org,
+        kvm@vger.kernel.org, Peter Zijlstra <peterz@infradead.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        Arnaldo Carvalho de Melo <acme@kernel.org>,
+        Paolo Bonzini <pbonzini@redhat.com>
+References: <20221006000314.73240-1-seanjc@google.com>
+ <20221006000314.73240-6-seanjc@google.com>
+From:   Like Xu <like.xu.linux@gmail.com>
+In-Reply-To: <20221006000314.73240-6-seanjc@google.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-On Thu, Oct 13, 2022 at 11:15:31PM -0700, Namhyung Kim wrote:
-> Hello,
+On 6/10/2022 8:03 am, Sean Christopherson wrote:
+> Track KVM's supported PERF_CAPABILITIES in kvm_caps instead of computing
+> the supported capabilities on the fly every time.  Using kvm_caps will
+> also allow for future cleanups as the kvm_caps values can be used
+> directly in common x86 code.
 > 
-> Current perf stat code is somewhat hard to follow since it handles
-> many combinations of PMUs/events for given display and aggregation
-> options.  This is my attempt to clean it up a little. ;-)
-> 
-> changes in v2)
->  * fix a segfault in perf stat report for per-process record  (Jiri)
->  * fix metric only display  (Jiri)
->  * add evsel__reset_aggr_stat  (ian)
->  * add more comments  (Ian)
->  * add Acked-by from Ian
-> 
-> My first concern is that aggregation and display routines are intermixed
-> and processed differently depends on the aggregation mode.  I'd like to
-> separate them apart and make the logic clearer.
-> 
-> To do that, I added struct perf_stat_aggr to save the aggregated counter
-> values and other info.  It'll be allocated and processed according to
-> the aggr_mode and display logic will use it.
-> 
-> I've tested the following combination.
-> 
->   $ cat test-matrix.sh
->   #!/bin/sh
-> 
->   set -e
-> 
->   yes > /dev/null &
->   TARGET=$!
-> 
->   ./perf stat true
->   ./perf stat -a true
->   ./perf stat -C0 true
->   ./perf stat -p $TARGET true
->   ./perf stat -t $TARGET true
-> 
->   ./perf stat -a -A true
->   ./perf stat -a --per-node true
->   ./perf stat -a --per-socket true
->   ./perf stat -a --per-die true
->   ./perf stat -a --per-core true
->   ./perf stat -a --per-thread true
-> 
->   ./perf stat -a -I 500 sleep 1
->   ./perf stat -a -I 500 --summary sleep 1
->   ./perf stat -a -I 500 --per-socket sleep 1
->   ./perf stat -a -I 500 --summary --per-socket sleep 1
-> 
->   ./perf stat -a --metric-only true
->   ./perf stat -a --metric-only --per-socket true
->   ./perf stat -a --metric-only -I 500 sleep 1
->   ./perf stat -a --metric-only -I 500 --per-socket sleep 1
-> 
->   ./perf stat record true && ./perf stat report
->   ./perf stat record -p $TARGET true && ./perf stat report
->   ./perf stat record -a true && ./perf stat report
->   ./perf stat record -a --per-core true && ./perf stat report
->   ./perf stat record -a --per-core --metric-only true && ./perf stat report
->   ./perf stat record -a -I 500 sleep 1 && ./perf stat report
->   ./perf stat record -a -I 500 --per-core sleep 1 && ./perf stat report
->   ./perf stat record -a -I 500 --per-core --metric-only sleep 1 && ./perf stat report
-> 
->   ./perf stat -a -A -e cpu/event=cpu-cycles,percore/ true
->   ./perf stat -a -A -e cpu/event=cpu-cycles,percore/ --percore-show-thread true
-> 
->   kill $TARGET
-> 
-> The code is available at 'perf/stat-aggr-v2' branch in
-> 
->   git://git.kernel.org/pub/scm/linux/kernel/git/namhyung/linux-perf.git
+> Signed-off-by: Sean Christopherson <seanjc@google.com>
 
-Michael,
-ay chance you could run your test suite on top of this change?
+A similar change was made to one of my git branches. Please move forward.
 
-thanks,
-jirka
+Acked-by: Like Xu <likexu@tencent.com>
 
+> ---
+>   arch/x86/kvm/svm/svm.c          |  2 ++
+>   arch/x86/kvm/vmx/capabilities.h | 25 ------------------------
+>   arch/x86/kvm/vmx/pmu_intel.c    |  2 +-
+>   arch/x86/kvm/vmx/vmx.c          | 34 +++++++++++++++++++++++++++++----
+>   arch/x86/kvm/x86.h              |  1 +
+>   5 files changed, 34 insertions(+), 30 deletions(-)
 > 
-> Thanks,
-> Namhyung
-> 
-> Namhyung Kim (19):
->   perf tools: Save evsel->pmu in parse_events()
->   perf tools: Use pmu info in evsel__is_hybrid()
->   perf stat: Use evsel__is_hybrid() more
->   perf stat: Add aggr id for global mode
->   perf stat: Add cpu aggr id for no aggregation mode
->   perf stat: Add 'needs_sort' argument to cpu_aggr_map__new()
->   perf stat: Add struct perf_stat_aggr to perf_stat_evsel
->   perf stat: Allocate evsel->stats->aggr properly
->   perf stat: Aggregate events using evsel->stats->aggr
->   perf stat: Aggregate per-thread stats using evsel->stats->aggr
->   perf stat: Allocate aggr counts for recorded data
->   perf stat: Reset aggr counts for each interval
->   perf stat: Split process_counters()
->   perf stat: Add perf_stat_merge_counters()
->   perf stat: Add perf_stat_process_percore()
->   perf stat: Add perf_stat_process_shadow_stats()
->   perf stat: Display event stats using aggr counts
->   perf stat: Display percore events properly
->   perf stat: Remove unused perf_counts.aggr field
-> 
->  tools/perf/builtin-script.c                   |   4 +-
->  tools/perf/builtin-stat.c                     | 186 +++++--
->  tools/perf/tests/parse-metric.c               |   2 +-
->  tools/perf/tests/pmu-events.c                 |   2 +-
->  tools/perf/util/counts.c                      |   1 -
->  tools/perf/util/counts.h                      |   1 -
->  tools/perf/util/cpumap.c                      |  16 +-
->  tools/perf/util/cpumap.h                      |   8 +-
->  tools/perf/util/evsel.c                       |  13 +-
->  tools/perf/util/parse-events.c                |   1 +
->  tools/perf/util/pmu.c                         |   4 +
->  .../scripting-engines/trace-event-python.c    |   6 -
->  tools/perf/util/stat-display.c                | 462 +++---------------
->  tools/perf/util/stat.c                        | 385 ++++++++++++---
->  tools/perf/util/stat.h                        |  40 +-
->  15 files changed, 602 insertions(+), 529 deletions(-)
-> 
-> 
-> base-commit: d79310700590b8b40d8c867012d6c899ea6fd505
-> -- 
-> 2.38.0.413.g74048e4d9e-goog
-> 
+> diff --git a/arch/x86/kvm/svm/svm.c b/arch/x86/kvm/svm/svm.c
+> index 58f0077d9357..6b680b249975 100644
+> --- a/arch/x86/kvm/svm/svm.c
+> +++ b/arch/x86/kvm/svm/svm.c
+> @@ -2715,6 +2715,7 @@ static int svm_get_msr_feature(struct kvm_msr_entry *msr)
+>   			msr->data |= MSR_F10H_DECFG_LFENCE_SERIALIZE;
+>   		break;
+>   	case MSR_IA32_PERF_CAPABILITIES:
+> +		msr->data = kvm_caps.supported_perf_cap;
+>   		return 0;
+>   	default:
+>   		return KVM_MSR_RET_INVALID;
+> @@ -4898,6 +4899,7 @@ static __init void svm_set_cpu_caps(void)
+>   {
+>   	kvm_set_cpu_caps();
+>   
+> +	kvm_caps.supported_perf_cap = 0;
+>   	kvm_caps.supported_xss = 0;
+>   
+>   	/* CPUID 0x80000001 and 0x8000000A (SVM features) */
+> diff --git a/arch/x86/kvm/vmx/capabilities.h b/arch/x86/kvm/vmx/capabilities.h
+> index 479124e49bbd..cd2ac9536c99 100644
+> --- a/arch/x86/kvm/vmx/capabilities.h
+> +++ b/arch/x86/kvm/vmx/capabilities.h
+> @@ -395,31 +395,6 @@ static inline bool vmx_pebs_supported(void)
+>   	return boot_cpu_has(X86_FEATURE_PEBS) && kvm_pmu_cap.pebs_ept;
+>   }
+>   
+> -static inline u64 vmx_get_perf_capabilities(void)
+> -{
+> -	u64 perf_cap = PMU_CAP_FW_WRITES;
+> -	struct x86_pmu_lbr lbr;
+> -	u64 host_perf_cap = 0;
+> -
+> -	if (!enable_pmu)
+> -		return 0;
+> -
+> -	if (boot_cpu_has(X86_FEATURE_PDCM))
+> -		rdmsrl(MSR_IA32_PERF_CAPABILITIES, host_perf_cap);
+> -
+> -	x86_perf_get_lbr(&lbr);
+> -	if (lbr.nr)
+> -		perf_cap |= host_perf_cap & PMU_CAP_LBR_FMT;
+> -
+> -	if (vmx_pebs_supported()) {
+> -		perf_cap |= host_perf_cap & PERF_CAP_PEBS_MASK;
+> -		if ((perf_cap & PERF_CAP_PEBS_FORMAT) < 4)
+> -			perf_cap &= ~PERF_CAP_PEBS_BASELINE;
+> -	}
+> -
+> -	return perf_cap;
+> -}
+> -
+>   static inline bool cpu_has_notify_vmexit(void)
+>   {
+>   	return vmcs_config.cpu_based_2nd_exec_ctrl &
+> diff --git a/arch/x86/kvm/vmx/pmu_intel.c b/arch/x86/kvm/vmx/pmu_intel.c
+> index 25b70a85bef5..24f4c22691f8 100644
+> --- a/arch/x86/kvm/vmx/pmu_intel.c
+> +++ b/arch/x86/kvm/vmx/pmu_intel.c
+> @@ -631,7 +631,7 @@ static void intel_pmu_init(struct kvm_vcpu *vcpu)
+>   		pmu->fixed_counters[i].current_config = 0;
+>   	}
+>   
+> -	vcpu->arch.perf_capabilities = vmx_get_perf_capabilities();
+> +	vcpu->arch.perf_capabilities = kvm_caps.supported_perf_cap;
+>   	lbr_desc->records.nr = 0;
+>   	lbr_desc->event = NULL;
+>   	lbr_desc->msr_passthrough = false;
+> diff --git a/arch/x86/kvm/vmx/vmx.c b/arch/x86/kvm/vmx/vmx.c
+> index e70ac91cd2fb..850ff6e683d1 100644
+> --- a/arch/x86/kvm/vmx/vmx.c
+> +++ b/arch/x86/kvm/vmx/vmx.c
+> @@ -1850,7 +1850,7 @@ static int vmx_get_msr_feature(struct kvm_msr_entry *msr)
+>   			return 1;
+>   		return vmx_get_vmx_msr(&vmcs_config.nested, msr->index, &msr->data);
+>   	case MSR_IA32_PERF_CAPABILITIES:
+> -		msr->data = vmx_get_perf_capabilities();
+> +		msr->data = kvm_caps.supported_perf_cap;
+>   		return 0;
+>   	default:
+>   		return KVM_MSR_RET_INVALID;
+> @@ -2029,7 +2029,7 @@ static u64 vmx_get_supported_debugctl(struct kvm_vcpu *vcpu, bool host_initiated
+>   	    (host_initiated || guest_cpuid_has(vcpu, X86_FEATURE_BUS_LOCK_DETECT)))
+>   		debugctl |= DEBUGCTLMSR_BUS_LOCK_DETECT;
+>   
+> -	if ((vmx_get_perf_capabilities() & PMU_CAP_LBR_FMT) &&
+> +	if ((kvm_caps.supported_perf_cap & PMU_CAP_LBR_FMT) &&
+>   	    (host_initiated || intel_pmu_lbr_is_enabled(vcpu)))
+>   		debugctl |= DEBUGCTLMSR_LBR | DEBUGCTLMSR_FREEZE_LBRS_ON_PMI;
+>   
+> @@ -2342,14 +2342,14 @@ static int vmx_set_msr(struct kvm_vcpu *vcpu, struct msr_data *msr_info)
+>   			return 1;
+>   		if (data & PMU_CAP_LBR_FMT) {
+>   			if ((data & PMU_CAP_LBR_FMT) !=
+> -			    (vmx_get_perf_capabilities() & PMU_CAP_LBR_FMT))
+> +			    (kvm_caps.supported_perf_cap & PMU_CAP_LBR_FMT))
+>   				return 1;
+>   			if (!cpuid_model_is_consistent(vcpu))
+>   				return 1;
+>   		}
+>   		if (data & PERF_CAP_PEBS_FORMAT) {
+>   			if ((data & PERF_CAP_PEBS_MASK) !=
+> -			    (vmx_get_perf_capabilities() & PERF_CAP_PEBS_MASK))
+> +			    (kvm_caps.supported_perf_cap & PERF_CAP_PEBS_MASK))
+>   				return 1;
+>   			if (!guest_cpuid_has(vcpu, X86_FEATURE_DS))
+>   				return 1;
+> @@ -7669,6 +7669,31 @@ static void vmx_vcpu_after_set_cpuid(struct kvm_vcpu *vcpu)
+>   	vmx_update_exception_bitmap(vcpu);
+>   }
+>   
+> +static u64 vmx_get_perf_capabilities(void)
+> +{
+> +	u64 perf_cap = PMU_CAP_FW_WRITES;
+> +	struct x86_pmu_lbr lbr;
+> +	u64 host_perf_cap = 0;
+> +
+> +	if (!enable_pmu)
+> +		return 0;
+> +
+> +	if (boot_cpu_has(X86_FEATURE_PDCM))
+> +		rdmsrl(MSR_IA32_PERF_CAPABILITIES, host_perf_cap);
+> +
+> +	x86_perf_get_lbr(&lbr);
+> +	if (lbr.nr)
+> +		perf_cap |= host_perf_cap & PMU_CAP_LBR_FMT;
+> +
+> +	if (vmx_pebs_supported()) {
+> +		perf_cap |= host_perf_cap & PERF_CAP_PEBS_MASK;
+> +		if ((perf_cap & PERF_CAP_PEBS_FORMAT) < 4)
+> +			perf_cap &= ~PERF_CAP_PEBS_BASELINE;
+> +	}
+> +
+> +	return perf_cap;
+> +}
+> +
+>   static __init void vmx_set_cpu_caps(void)
+>   {
+>   	kvm_set_cpu_caps();
+> @@ -7691,6 +7716,7 @@ static __init void vmx_set_cpu_caps(void)
+>   
+>   	if (!enable_pmu)
+>   		kvm_cpu_cap_clear(X86_FEATURE_PDCM);
+> +	kvm_caps.supported_perf_cap = vmx_get_perf_capabilities();
+>   
+>   	if (!enable_sgx) {
+>   		kvm_cpu_cap_clear(X86_FEATURE_SGX);
+> diff --git a/arch/x86/kvm/x86.h b/arch/x86/kvm/x86.h
+> index 829d3134c1eb..9de72586f406 100644
+> --- a/arch/x86/kvm/x86.h
+> +++ b/arch/x86/kvm/x86.h
+> @@ -27,6 +27,7 @@ struct kvm_caps {
+>   	u64 supported_mce_cap;
+>   	u64 supported_xcr0;
+>   	u64 supported_xss;
+> +	u64 supported_perf_cap;
+>   };
+>   
+>   void kvm_spurious_fault(void);
