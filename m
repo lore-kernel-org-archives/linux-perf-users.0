@@ -2,85 +2,74 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 21B3DC433FE
-	for <linux-perf-users@archiver.kernel.org>; Fri, 14 Oct 2022 20:07:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 43EF4C4332F
+	for <linux-perf-users@archiver.kernel.org>; Fri, 14 Oct 2022 20:09:22 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229436AbiJNUHh (ORCPT
+        id S230161AbiJNUJV (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Fri, 14 Oct 2022 16:07:37 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41780 "EHLO
+        Fri, 14 Oct 2022 16:09:21 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43182 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229602AbiJNUHg (ORCPT
+        with ESMTP id S229740AbiJNUJT (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Fri, 14 Oct 2022 16:07:36 -0400
-Received: from ams.source.kernel.org (ams.source.kernel.org [IPv6:2604:1380:4601:e00::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3C3C21D3470;
-        Fri, 14 Oct 2022 13:07:35 -0700 (PDT)
+        Fri, 14 Oct 2022 16:09:19 -0400
+Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 181541D81A4;
+        Fri, 14 Oct 2022 13:09:19 -0700 (PDT)
 Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by ams.source.kernel.org (Postfix) with ESMTPS id E53C3B818B2;
-        Fri, 14 Oct 2022 20:07:33 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 569E2C433C1;
-        Fri, 14 Oct 2022 20:07:32 +0000 (UTC)
+        by dfw.source.kernel.org (Postfix) with ESMTPS id A330361C21;
+        Fri, 14 Oct 2022 20:09:18 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id E4887C433D6;
+        Fri, 14 Oct 2022 20:09:17 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1665778052;
-        bh=YWmZRkT29yxHVpv3x4R49YLhg/fHwxCzqRo8/w2hFHM=;
+        s=k20201202; t=1665778158;
+        bh=ACIavGWuHHjo4qJ/zfSJg2qQbJjr1pDrG1EYEd+FsYY=;
         h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=Wj+3TmTwm3tds2TXcBr4EMBKGOSqIlgXM3gWNK9ZPRG9pnD7WGnENsVXgGRknBYYK
-         moWX+o3oVhVSIjmLofVXZX+AIRXxVl8CfpJwa0nkeIbQyIECHJLT+po6j+wfZTsFZ1
-         ckHQZTSM4mACujBz2dT+XrauiNCjJnNfATIeXpScNT3gAoOWPBPnqIyOu7PY8FiLil
-         5wbiQ0Xo2Uqcw6s3sSInNE1dyJ2goNAVSK4h7mKMaSpkC3lNQoUCE85TyCAwtXVa+O
-         emChraxcxWmyxTMg3BByzcnRhtx1JjKHC9uor8PsJYuKSH8k4kS6R0sNeJsJVxDCDE
-         hLH6i90ZV+6Lw==
+        b=JJUQLS80RP934Y58s/J7kwVFaLeyblbG2n6qc/cthLttwUb9RJKQ90eKYAsmxDzK/
+         JFMeORWy8l6LBeq+sEob1QOL268iwoK5/jU8OpkQyVYOuUOP6iAoom0lOt2NKH0xaU
+         LrB7xSz4Uv6k5TP0rwWplcn3CG9kWmW3ONULigZ4MS4ds//pv+kz5DcYfh60h7p7EC
+         D2ANLotcj+g0x5hZwW3sGq12MtG6ytJk3B16DDarm66ZWkTLQlEYQeisrEh/TI2sTX
+         Uv00EJklwEI0YpKN2y+YQxrsqs2IpAyZyq1FTscEmT5v5xXOgE471BsqL3419VIkh9
+         Q3HRKT5NfH7yw==
 Received: by quaco.ghostprotocols.net (Postfix, from userid 1000)
-        id 0CA6E4062C; Fri, 14 Oct 2022 17:07:30 -0300 (-03)
-Date:   Fri, 14 Oct 2022 17:07:30 -0300
+        id E30774062C; Fri, 14 Oct 2022 17:09:15 -0300 (-03)
+Date:   Fri, 14 Oct 2022 17:09:15 -0300
 From:   Arnaldo Carvalho de Melo <acme@kernel.org>
 To:     Namhyung Kim <namhyung@kernel.org>
-Cc:     James Clark <james.clark@arm.com>,
-        linux-perf-users <linux-perf-users@vger.kernel.org>,
+Cc:     Adrian Hunter <adrian.hunter@intel.com>,
+        Jiri Olsa <jolsa@redhat.com>, Ian Rogers <irogers@google.com>,
         linux-kernel <linux-kernel@vger.kernel.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Jiri Olsa <jolsa@kernel.org>,
-        Adrian Hunter <adrian.hunter@intel.com>
-Subject: Re: [PATCH v2 1/1] perf test: Fix attr tests for PERF_FORMAT_LOST
-Message-ID: <Y0nBgrTOipoot11y@kernel.org>
-References: <20221012094633.21669-1-james.clark@arm.com>
- <20221012094633.21669-2-james.clark@arm.com>
- <CAM9d7ci-o4fzBLaLB5pcKA2=GAUVFt8PJofnuy6RjG7bibJE-w@mail.gmail.com>
+        linux-perf-users <linux-perf-users@vger.kernel.org>
+Subject: Re: [PATCH 2/2] perf intel-pt: Fix system_wide dummy event for hybrid
+Message-ID: <Y0nB6wPETSXfUHYC@kernel.org>
+References: <20221012082259.22394-1-adrian.hunter@intel.com>
+ <20221012082259.22394-3-adrian.hunter@intel.com>
+ <CAM9d7chCGw-iXUiD+Bj3azTdVdYz21KtBOhR5ZbLoVuFXE6nbA@mail.gmail.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <CAM9d7ci-o4fzBLaLB5pcKA2=GAUVFt8PJofnuy6RjG7bibJE-w@mail.gmail.com>
+In-Reply-To: <CAM9d7chCGw-iXUiD+Bj3azTdVdYz21KtBOhR5ZbLoVuFXE6nbA@mail.gmail.com>
 X-Url:  http://acmel.wordpress.com
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-Em Wed, Oct 12, 2022 at 09:06:27AM -0700, Namhyung Kim escreveu:
-> Hello,
-> 
-> On Wed, Oct 12, 2022 at 2:47 AM James Clark <james.clark@arm.com> wrote:
+Em Wed, Oct 12, 2022 at 09:25:14AM -0700, Namhyung Kim escreveu:
+> On Wed, Oct 12, 2022 at 1:23 AM Adrian Hunter <adrian.hunter@intel.com> wrote:
 > >
-> > Since PERF_FORMAT_LOST was added, the default read format has that bit
-> > set, so add it to the tests. Keep the old value as well so that the test
-> > still passes on older kernels.
+> > User space tasks can migrate between CPUs, so when tracing selected CPUs,
+> > system-wide sideband is still needed, however evlist->core.has_user_cpus
+> > is not set in the hybrid case, so check the target cpu_list instead.
 > >
-> > This fixes the following failure:
-> >
-> >   expected read_format=0|4, got 20
-> >   FAILED './tests/attr/test-record-C0' - match failure
-> >
-> > Fixes: 85b425f31c88 ("perf record: Set PERF_FORMAT_LOST by default")
-> > Signed-off-by: James Clark <james.clark@arm.com>
+> > Fixes: 7d189cadbeeb ("perf intel-pt: Track sideband system-wide when needed")
+> > Cc: stable@vger.kernel.org
+> > Signed-off-by: Adrian Hunter <adrian.hunter@intel.com>
 > 
 > Acked-by: Namhyung Kim <namhyung@kernel.org>
 
-Thanks, applied.
+Thanks, applied both fixes.
 
 - Arnaldo
 
@@ -90,131 +79,24 @@ Thanks, applied.
 > 
 > 
 > > ---
-> >  tools/perf/tests/attr/base-record                | 2 +-
-> >  tools/perf/tests/attr/system-wide-dummy          | 2 +-
-> >  tools/perf/tests/attr/test-record-group          | 4 ++--
-> >  tools/perf/tests/attr/test-record-group-sampling | 6 +++---
-> >  tools/perf/tests/attr/test-record-group1         | 4 ++--
-> >  tools/perf/tests/attr/test-record-group2         | 4 ++--
-> >  6 files changed, 11 insertions(+), 11 deletions(-)
+> >  tools/perf/arch/x86/util/intel-pt.c | 2 +-
+> >  1 file changed, 1 insertion(+), 1 deletion(-)
 > >
-> > diff --git a/tools/perf/tests/attr/base-record b/tools/perf/tests/attr/base-record
-> > index 8c10955eff93..3ef07a12aa14 100644
-> > --- a/tools/perf/tests/attr/base-record
-> > +++ b/tools/perf/tests/attr/base-record
-> > @@ -9,7 +9,7 @@ size=128
-> >  config=0
-> >  sample_period=*
-> >  sample_type=263
-> > -read_format=0|4
-> > +read_format=0|4|20
-> >  disabled=1
-> >  inherit=1
-> >  pinned=0
-> > diff --git a/tools/perf/tests/attr/system-wide-dummy b/tools/perf/tests/attr/system-wide-dummy
-> > index 86a15dd359d9..8fec06eda5f9 100644
-> > --- a/tools/perf/tests/attr/system-wide-dummy
-> > +++ b/tools/perf/tests/attr/system-wide-dummy
-> > @@ -11,7 +11,7 @@ size=128
-> >  config=9
-> >  sample_period=4000
-> >  sample_type=455
-> > -read_format=4
-> > +read_format=4|20
-> >  # Event will be enabled right away.
-> >  disabled=0
-> >  inherit=1
-> > diff --git a/tools/perf/tests/attr/test-record-group b/tools/perf/tests/attr/test-record-group
-> > index 14ee60fd3f41..6c1cff8aae8b 100644
-> > --- a/tools/perf/tests/attr/test-record-group
-> > +++ b/tools/perf/tests/attr/test-record-group
-> > @@ -7,14 +7,14 @@ ret     = 1
-> >  fd=1
-> >  group_fd=-1
-> >  sample_type=327
-> > -read_format=4
-> > +read_format=4|20
+> > diff --git a/tools/perf/arch/x86/util/intel-pt.c b/tools/perf/arch/x86/util/intel-pt.c
+> > index 793b35f2221a..af102f471e9f 100644
+> > --- a/tools/perf/arch/x86/util/intel-pt.c
+> > +++ b/tools/perf/arch/x86/util/intel-pt.c
+> > @@ -866,7 +866,7 @@ static int intel_pt_recording_options(struct auxtrace_record *itr,
+> >                  * User space tasks can migrate between CPUs, so when tracing
+> >                  * selected CPUs, sideband for all CPUs is still needed.
+> >                  */
+> > -               need_system_wide_tracking = evlist->core.has_user_cpus &&
+> > +               need_system_wide_tracking = opts->target.cpu_list &&
+> >                                             !intel_pt_evsel->core.attr.exclude_user;
 > >
-> >  [event-2:base-record]
-> >  fd=2
-> >  group_fd=1
-> >  config=1
-> >  sample_type=327
-> > -read_format=4
-> > +read_format=4|20
-> >  mmap=0
-> >  comm=0
-> >  task=0
-> > diff --git a/tools/perf/tests/attr/test-record-group-sampling b/tools/perf/tests/attr/test-record-group-sampling
-> > index 300b9f7e6d69..97e7e64a38f0 100644
-> > --- a/tools/perf/tests/attr/test-record-group-sampling
-> > +++ b/tools/perf/tests/attr/test-record-group-sampling
-> > @@ -7,7 +7,7 @@ ret     = 1
-> >  fd=1
-> >  group_fd=-1
-> >  sample_type=343
-> > -read_format=12
-> > +read_format=12|28
-> >  inherit=0
-> >
-> >  [event-2:base-record]
-> > @@ -21,8 +21,8 @@ config=3
-> >  # default | PERF_SAMPLE_READ
-> >  sample_type=343
-> >
-> > -# PERF_FORMAT_ID | PERF_FORMAT_GROUP
-> > -read_format=12
-> > +# PERF_FORMAT_ID | PERF_FORMAT_GROUP  | PERF_FORMAT_LOST
-> > +read_format=12|28
-> >  task=0
-> >  mmap=0
-> >  comm=0
-> > diff --git a/tools/perf/tests/attr/test-record-group1 b/tools/perf/tests/attr/test-record-group1
-> > index 3ffe246e0228..eeb1db392bc9 100644
-> > --- a/tools/perf/tests/attr/test-record-group1
-> > +++ b/tools/perf/tests/attr/test-record-group1
-> > @@ -7,7 +7,7 @@ ret     = 1
-> >  fd=1
-> >  group_fd=-1
-> >  sample_type=327
-> > -read_format=4
-> > +read_format=4|20
-> >
-> >  [event-2:base-record]
-> >  fd=2
-> > @@ -15,7 +15,7 @@ group_fd=1
-> >  type=0
-> >  config=1
-> >  sample_type=327
-> > -read_format=4
-> > +read_format=4|20
-> >  mmap=0
-> >  comm=0
-> >  task=0
-> > diff --git a/tools/perf/tests/attr/test-record-group2 b/tools/perf/tests/attr/test-record-group2
-> > index 6b9f8d182ce1..cebdaa8e64e4 100644
-> > --- a/tools/perf/tests/attr/test-record-group2
-> > +++ b/tools/perf/tests/attr/test-record-group2
-> > @@ -9,7 +9,7 @@ group_fd=-1
-> >  config=0|1
-> >  sample_period=1234000
-> >  sample_type=87
-> > -read_format=12
-> > +read_format=12|28
-> >  inherit=0
-> >  freq=0
-> >
-> > @@ -19,7 +19,7 @@ group_fd=1
-> >  config=0|1
-> >  sample_period=6789000
-> >  sample_type=87
-> > -read_format=12
-> > +read_format=12|28
-> >  disabled=0
-> >  inherit=0
-> >  mmap=0
+> >                 tracking_evsel = evlist__add_aux_dummy(evlist, need_system_wide_tracking);
 > > --
-> > 2.28.0
+> > 2.25.1
 > >
 
 -- 
