@@ -2,166 +2,288 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 389C4C433FE
-	for <linux-perf-users@archiver.kernel.org>; Fri, 14 Oct 2022 17:11:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 74B12C433FE
+	for <linux-perf-users@archiver.kernel.org>; Fri, 14 Oct 2022 17:29:10 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231252AbiJNRLA (ORCPT
+        id S229436AbiJNR3I (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Fri, 14 Oct 2022 13:11:00 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44996 "EHLO
+        Fri, 14 Oct 2022 13:29:08 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35422 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231231AbiJNRKx (ORCPT
+        with ESMTP id S229459AbiJNR3H (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Fri, 14 Oct 2022 13:10:53 -0400
-Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 081FB1ACABA;
-        Fri, 14 Oct 2022 10:10:45 -0700 (PDT)
+        Fri, 14 Oct 2022 13:29:07 -0400
+Received: from ams.source.kernel.org (ams.source.kernel.org [145.40.68.75])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 710C91D066C;
+        Fri, 14 Oct 2022 10:29:04 -0700 (PDT)
 Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id 8949E61BD1;
-        Fri, 14 Oct 2022 17:10:44 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id C1669C433D6;
-        Fri, 14 Oct 2022 17:10:43 +0000 (UTC)
+        by ams.source.kernel.org (Postfix) with ESMTPS id DDF67B8237A;
+        Fri, 14 Oct 2022 17:29:02 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 3BF95C433D6;
+        Fri, 14 Oct 2022 17:29:01 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1665767443;
-        bh=h1ZcOrur4TJeGwPpm76nE+8Oc267yBVgjArLBmRvdEI=;
+        s=k20201202; t=1665768541;
+        bh=U0AKPha49Aec80L7VXJBXtUQdEMHKmSvHmeOqv3Xp3o=;
         h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=V2GSIz1DbBVxLG+rKYKYlDhGQOHkEfjNRC8vZtLNlPkFYqCHiZI+GaH14mtNHa+tM
-         CewaQ4ktqTh2kGctbw2eyV128CJH/RfGZ7FMcL5UbcP70/kqZa80jK6W+8gFMOVUAM
-         55h5/ngRkRkQ/HnX+rtVMZ5rqOSxEpLUsF/cThTa9KgjPQresGEDslFDkZlddIsUzS
-         sL7BQ5kco/pbTVmjF/pwoow0Q/OxLvkcOz2GxA0nE1H0oM8tM3YOv8OSmhh1rSNSNu
-         5jS44D7gsgtCTQ9GH8pD/9Fl6d39Y9xID2qUlXyj73WVAjfjB087bB7IkceXRTLibt
-         f4VjU0V4sDwUg==
+        b=mxOv5d5Sk/lNoSugprzx1IARt4Pddkv7CbyEhcIShZWrD+uQBD5HR3UrQLm6OK1Ew
+         9sNBvTDe93A2uhx1kqgGs+1kQtTuh4E9GOjiI8y66f2mk4IHoutt/3Fp1HyG+4FqOH
+         pVDg/ltUY7QnuSa+mR/2E+Ii+ypCgFmnT6JoTHuqUhSpFwSdlexI/Wi5AkZ/T+a1OM
+         xkZ2q+SDBhyLBtRGK5iJGFwJ04mVODnOpf5ifNyLG3RD3tbo92j2vGwOvMW38GPXeW
+         nCP91JYmZZFvtdgdTUwMAGwjKBptWZ9zVAmVe4pv486wkrF8qbSsMnOgduds8yYi4R
+         z0GSFw13te42A==
 Received: by quaco.ghostprotocols.net (Postfix, from userid 1000)
-        id EDB314062C; Fri, 14 Oct 2022 14:10:40 -0300 (-03)
-Date:   Fri, 14 Oct 2022 14:10:40 -0300
+        id E1DE74062C; Fri, 14 Oct 2022 14:28:58 -0300 (-03)
+Date:   Fri, 14 Oct 2022 14:28:58 -0300
 From:   Arnaldo Carvalho de Melo <acme@kernel.org>
-To:     Tejun Heo <tj@kernel.org>
-Cc:     Namhyung Kim <namhyung@kernel.org>,
-        Zefan Li <lizefan.x@bytedance.com>,
-        Johannes Weiner <hannes@cmpxchg.org>, cgroups@vger.kernel.org,
-        Jiri Olsa <jolsa@kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        linux-perf-users@vger.kernel.org, Song Liu <songliubraving@fb.com>,
-        bpf@vger.kernel.org, Andrii Nakryiko <andrii@kernel.org>
-Subject: Re: [PATCH v2] perf stat: Support old kernels for bperf cgroup
- counting
-Message-ID: <Y0mYEBVbJTwNIjSM@kernel.org>
-References: <Y0Sx2KWX4gPlLytq@slm.duckdns.org>
- <20221011052808.282394-1-namhyung@kernel.org>
- <Y0Wfl88objrECjSo@slm.duckdns.org>
- <Y0ljzN920sWalEHR@kernel.org>
- <Y0mRGJx4Mc7t7fGB@slm.duckdns.org>
+To:     Adrian Hunter <adrian.hunter@intel.com>
+Cc:     Jiri Olsa <jolsa@redhat.com>, Namhyung Kim <namhyung@kernel.org>,
+        Ian Rogers <irogers@google.com>, linux-kernel@vger.kernel.org,
+        linux-perf-users@vger.kernel.org
+Subject: Re: [PATCH 5/7] perf test: test_intel_pt.sh: Add jitdump test
+Message-ID: <Y0mcWpc4KaeXpU+z@kernel.org>
+References: <20221014170905.64069-1-adrian.hunter@intel.com>
+ <20221014170905.64069-6-adrian.hunter@intel.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <Y0mRGJx4Mc7t7fGB@slm.duckdns.org>
+In-Reply-To: <20221014170905.64069-6-adrian.hunter@intel.com>
 X-Url:  http://acmel.wordpress.com
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-Em Fri, Oct 14, 2022 at 06:40:56AM -1000, Tejun Heo escreveu:
-> On Fri, Oct 14, 2022 at 10:27:40AM -0300, Arnaldo Carvalho de Melo wrote:
-> > Hey, I noticed that the perf build is broken for the
-> > tools/perf/util/bpf_skel/bperf_cgroup.bpf.c skell, so I tried using b4
-> > on this Namhyung patch, it ended up getting a newer version, by Tejun,
-> > that mixes up kernel code and tooling, which, when I tried to apply
-> > upstream didn't work.
+Em Fri, Oct 14, 2022 at 08:09:03PM +0300, Adrian Hunter escreveu:
+> Add a test for decoding self-modifying code using a jitdump file.
+> 
+> The test creates a workload that uses self-modifying code and generates its
+> own jitdump file.  The result is processed with perf inject --jit and
+> checked for decoding errors.
+> 
+> Note the test will fail without patch "perf inject: Fix GEN_ELF_TEXT_OFFSET
+> for jit" applied.
+> 
+> Signed-off-by: Adrian Hunter <adrian.hunter@intel.com>
+> ---
+>  tools/perf/tests/shell/test_intel_pt.sh | 162 ++++++++++++++++++++++++
+>  1 file changed, 162 insertions(+)
+> 
+> diff --git a/tools/perf/tests/shell/test_intel_pt.sh b/tools/perf/tests/shell/test_intel_pt.sh
+> index 79dde57b561d..e0bf75981b9c 100755
+> --- a/tools/perf/tests/shell/test_intel_pt.sh
+> +++ b/tools/perf/tests/shell/test_intel_pt.sh
+> @@ -22,6 +22,7 @@ outfile="${temp_dir}/test-out.txt"
+>  errfile="${temp_dir}/test-err.txt"
+>  workload="${temp_dir}/workload"
+>  awkscript="${temp_dir}/awkscript"
+> +jitdump_workload="${temp_dir}/jitdump_workload"
+>  
+>  cleanup()
+>  {
+> @@ -50,6 +51,13 @@ perf_record_no_decode()
+>  	perf record -B -N --no-bpf-event "$@"
+>  }
+>  
+> +# perf record for testing should not need BPF events
+> +perf_record_no_bpf()
+> +{
+> +	# Options for no BPF events
+> +	perf record --no-bpf-event "$@"
+> +}
+> +
+>  have_workload=false
+>  cat << _end_of_file_ | /usr/bin/cc -o "${workload}" -xc - -pthread && have_workload=true
+>  #include <time.h>
+> @@ -269,6 +277,159 @@ test_per_thread()
+>  	return 0
+>  }
+>  
+> +test_jitdump()
+> +{
+> +	echo "--- Test tracing self-modifying code that uses jitdump ---"
+> +
+> +	script_path=$(realpath "$0")
+> +	script_dir=$(dirname "$script_path")
+> +	jitdump_incl_dir="${script_dir}/../../util"
+> +	jitdump_h="${jitdump_incl_dir}/jitdump.h"
 
-> > Please try not to mix up kernel and tools/ changes in the same patch to
-> > avoid these issues.
- 
-> I didn't write a newer version of this patch. What are you talking about?
+So this requires one to test this being on the kernel (perf) sources
+dir? I think we should add this header to some 'perf test' directory to
+remove this requirement, ok?
 
-So, I saw this message from you in reply to Namhyung's v2 patch:
+But this can be done on top, right now we just don't test jitdump:
 
---------------------------
+fd 20 : idx 11: mmapping fd 20
+Checking 16 fds
+OK
+--- Test tracing self-modifying code that uses jitdump ---
+SKIP: Include file jitdump.h not found
+--- Cleaning up ---
+--- Done ---
+test child finished with 0
+---- end ----
+Miscellaneous Intel PT testing: Ok
 
-Date: Tue, 11 Oct 2022 06:53:43 -1000
-From: Tejun Heo <tj@kernel.org>
-Subject: Re: [PATCH v2] perf stat: Support old kernels for bperf cgroup counting
-To: Namhyung Kim <namhyung@kernel.org>
-Cc: Arnaldo Carvalho de Melo <acme@kernel.org>, Zefan Li <lizefan.x@bytedance.com>, Johannes Weiner <hannes@cmpxchg.org>, cgroups@vger.kernel.org, Jiri Olsa <jolsa@kernel.org>, LKML <linux-kernel@vger.kernel.org>, linux-perf-users@vger.kernel.org, Song Liu
-        <songliubraving@fb.com>, bpf@vger.kernel.org, Andrii Nakryiko <andrii@kernel.org>
-Sender: Tejun Heo <htejun@gmail.com>
-Message-ID: <Y0Wfl88objrECjSo@slm.duckdns.org>
 
-On Mon, Oct 10, 2022 at 10:28:08PM -0700, Namhyung Kim wrote:
-> The recent change in the cgroup will break the backward compatiblity in
-> the BPF program.  It should support both old and new kernels using BPF
-> CO-RE technique.
+> +	if [ ! -e "${jitdump_h}" ] ; then
+> +		echo "SKIP: Include file jitdump.h not found"
+> +		return 2
+> +	fi
+> +
+> +	if [ -z "${have_jitdump_workload}" ] ; then
+> +		have_jitdump_workload=false
+> +		# Create a workload that uses self-modifying code and generates its own jitdump file
+> +		cat <<- "_end_of_file_" | /usr/bin/cc -o "${jitdump_workload}" -I "${jitdump_incl_dir}" -xc - -pthread && have_jitdump_workload=true
+> +		#define _GNU_SOURCE
+> +		#include <sys/mman.h>
+> +		#include <sys/types.h>
+> +		#include <stddef.h>
+> +		#include <stdio.h>
+> +		#include <stdint.h>
+> +		#include <unistd.h>
+> +		#include <string.h>
+> +
+> +		#include "jitdump.h"
+> +
+> +		#define CHK_BYTE 0x5a
+> +
+> +		static inline uint64_t rdtsc(void)
+> +		{
+> +			unsigned int low, high;
+> +
+> +			asm volatile("rdtsc" : "=a" (low), "=d" (high));
+> +
+> +			return low | ((uint64_t)high) << 32;
+> +		}
+> +
+> +		static FILE *open_jitdump(void)
+> +		{
+> +			struct jitheader header = {
+> +				.magic      = JITHEADER_MAGIC,
+> +				.version    = JITHEADER_VERSION,
+> +				.total_size = sizeof(header),
+> +				.pid        = getpid(),
+> +				.timestamp  = rdtsc(),
+> +				.flags      = JITDUMP_FLAGS_ARCH_TIMESTAMP,
+> +			};
+> +			char filename[256];
+> +			FILE *f;
+> +			void *m;
+> +
+> +			snprintf(filename, sizeof(filename), "jit-%d.dump", getpid());
+> +			f = fopen(filename, "w+");
+> +			if (!f)
+> +				goto err;
+> +			/* Create an MMAP event for the jitdump file. That is how perf tool finds it. */
+> +			m = mmap(0, 4096, PROT_READ | PROT_EXEC, MAP_PRIVATE, fileno(f), 0);
+> +			if (m == MAP_FAILED)
+> +				goto err_close;
+> +			munmap(m, 4096);
+> +			if (fwrite(&header,sizeof(header),1,f) != 1)
+> +				goto err_close;
+> +			return f;
+> +
+> +		err_close:
+> +			fclose(f);
+> +		err:
+> +			return NULL;
+> +		}
+> +
+> +		static int write_jitdump(FILE *f, void *addr, const uint8_t *dat, size_t sz, uint64_t *idx)
+> +		{
+> +			struct jr_code_load rec = {
+> +				.p.id          = JIT_CODE_LOAD,
+> +				.p.total_size  = sizeof(rec) + sz,
+> +				.p.timestamp   = rdtsc(),
+> +				.pid	       = getpid(),
+> +				.tid	       = gettid(),
+> +				.vma           = (unsigned long)addr,
+> +				.code_addr     = (unsigned long)addr,
+> +				.code_size     = sz,
+> +				.code_index    = ++*idx,
+> +			};
+> +
+> +			if (fwrite(&rec,sizeof(rec),1,f) != 1 ||
+> +			fwrite(dat, sz, 1, f) != 1)
+> +				return -1;
+> +			return 0;
+> +		}
+> +
+> +		static void close_jitdump(FILE *f)
+> +		{
+> +			fclose(f);
+> +		}
+> +
+> +		int main()
+> +		{
+> +			/* Get a memory page to store executable code */
+> +			void *addr = mmap(0, 4096, PROT_WRITE | PROT_EXEC, MAP_ANONYMOUS | MAP_PRIVATE, -1, 0);
+> +			/* Code to execute: mov CHK_BYTE, %eax ; ret */
+> +			uint8_t dat[] = {0xb8, CHK_BYTE, 0x00, 0x00, 0x00, 0xc3};
+> +			FILE *f = open_jitdump();
+> +			uint64_t idx = 0;
+> +			int ret = 1;
+> +
+> +			if (!f)
+> +				return 1;
+> +			/* Copy executable code to executable memory page */
+> +			memcpy(addr, dat, sizeof(dat));
+> +			/* Record it in the jitdump file */
+> +			if (write_jitdump(f, addr, dat, sizeof(dat), &idx))
+> +				goto out_close;
+> +			/* Call it */
+> +			ret = ((int (*)(void))addr)() - CHK_BYTE;
+> +		out_close:
+> +			close_jitdump(f);
+> +			return ret;
+> +		}
+> +		_end_of_file_
+> +	fi
+> +
+> +	if ! $have_jitdump_workload ; then
+> +		echo "SKIP: No jitdump workload"
+> +		return 2
+> +	fi
+> +
+> +	# Change to temp_dir so jitdump collateral files go there
+> +	cd "${temp_dir}"
+> +	perf_record_no_bpf -o "${tmpfile}" -e intel_pt//u "${jitdump_workload}"
+> +	perf inject -i "${tmpfile}" -o "${perfdatafile}" --jit
+> +	decode_br_cnt=$(perf script -i "${perfdatafile}" --itrace=b | wc -l)
+> +	# Note that overflow and lost errors are suppressed for the error count
+> +	decode_err_cnt=$(perf script -i "${perfdatafile}" --itrace=e-o-l | grep -ci error)
+> +	cd -
+> +	# Should be thousands of branches
+> +	if [ "${decode_br_cnt}" -lt 1000 ] ; then
+> +		echo "Decode failed, only ${decode_br_cnt} branches"
+> +		return 1
+> +	fi
+> +	# Should be no errors
+> +	if [ "${decode_err_cnt}" -ne 0 ] ; then
+> +		echo "Decode failed, ${decode_err_cnt} errors"
+> +		perf script -i "${perfdatafile}" --itrace=e-o-l
+> +		return 1
+> +	fi
+> +
+> +	echo OK
+> +	return 0
+> +}
+> +
+>  count_result()
+>  {
+>  	if [ "$1" -eq 2 ] ; then
+> @@ -286,6 +447,7 @@ ret=0
+>  test_system_wide_side_band		|| ret=$? ; count_result $ret ; ret=0
+>  test_per_thread "" ""			|| ret=$? ; count_result $ret ; ret=0
+>  test_per_thread "k" "(incl. kernel) "	|| ret=$? ; count_result $ret ; ret=0
+> +test_jitdump				|| ret=$? ; count_result $ret ; ret=0
+>  
+>  cleanup
+>  
+> -- 
+> 2.25.1
 
-> Like the task_struct->__state handling in the offcpu analysis, we can
-> check the field name in the cgroup struct.
-
-> Acked-by: Jiri Olsa <jolsa@kernel.org>
-> Acked-by: Andrii Nakryiko <andrii@kernel.org>
-> Signed-off-by: Namhyung Kim <namhyung@kernel.org>
-
-Applied to cgroup/for-6.1-fixes.
-
-Thanks.
-
---
-tejun
---------------------------
-
-So, I picked the message id, Y0Wfl88objrECjSo@slm.duckdns.org, and asked
-b4 to pick the patch:
-
-⬢[acme@toolbox perf]$ b4 am --help | grep -A1 -- -c,
-  -c, --check-newer-revisions
-                        Check if newer patch revisions exist
-⬢[acme@toolbox perf]$
-
-⬢[acme@toolbox perf]$ b4 am -ctsl --cc-trailers Y0Wfl88objrECjSo@slm.duckdns.org
-Grabbing thread from lore.kernel.org/all/Y0Wfl88objrECjSo%40slm.duckdns.org/t.mbox.gz
-Checking for newer revisions on https://lore.kernel.org/all/
-Analyzing 27 messages in the thread
-('Acked-by', 'Andrii Nakryiko <andrii@kernel.org>', None)
-Will use the latest revision: v3
-You can pick other revisions using the -vN flag
-Checking attestation on all messages, may take a moment...
----
-  ✓ [PATCH v3] cgroup: Replace cgroup->ancestor_ids[] with ->ancestors[]
-  ---
-  ✓ Signed: DKIM/gmail.com (From: tj@kernel.org)
----
-Total patches: 1
----
- Link: https://lore.kernel.org/r/YuRo2PLFH6wLgEkm@slm.duckdns.org
- Base: not specified
-       git am ./v3_20220729_tj_cgroup_replace_cgroup_ancestor_ids_with_ancestors.mbx
-⬢[acme@toolbox perf]$
-
-Which got me this:
-
-⬢[acme@toolbox perf]$ diffstat ./v3_20220729_tj_cgroup_replace_cgroup_ancestor_ids_with_ancestors.mbx
- include/linux/cgroup-defs.h                 |   16 ++++++++++------
- include/linux/cgroup.h                      |    8 +++-----
- kernel/cgroup/cgroup.c                      |    7 +++----
- net/netfilter/nft_socket.c                  |    9 +++++----
- tools/perf/util/bpf_skel/bperf_cgroup.bpf.c |    2 +-
- 5 files changed, 22 insertions(+), 20 deletions(-)
-⬢[acme@toolbox perf]$
-
-⬢[acme@toolbox perf]$ grep From: ./v3_20220729_tj_cgroup_replace_cgroup_ancestor_ids_with_ancestors.mbx
-From: Tejun Heo <tj@kernel.org>
-⬢[acme@toolbox perf]$
-
-That mixes kernel and tools bits and touches
-tools/perf/util/bpf_skel/bperf_cgroup.bpf.c, hence my request to add me
-to the CC list for patches touching tools/perf/.
-
-My assumption that it was a new patch was because b4 somehow got to
-v3_20220729_tj_cgroup_replace_cgroup_ancestor_ids_with_ancestors,
-which has v3 and touches the tools cgroup bpf skel.
-
-So it seems b4 is confused somehow.
-
-Hope this clarifies.
+-- 
 
 - Arnaldo
