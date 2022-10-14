@@ -2,104 +2,97 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 65F8DC4332F
-	for <linux-perf-users@archiver.kernel.org>; Fri, 14 Oct 2022 15:20:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BBA64C4332F
+	for <linux-perf-users@archiver.kernel.org>; Fri, 14 Oct 2022 15:23:31 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230145AbiJNPUZ (ORCPT
+        id S230261AbiJNPX3 (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Fri, 14 Oct 2022 11:20:25 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55824 "EHLO
+        Fri, 14 Oct 2022 11:23:29 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57706 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229957AbiJNPUQ (ORCPT
+        with ESMTP id S230171AbiJNPXN (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Fri, 14 Oct 2022 11:20:16 -0400
-Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2758E8E71C;
-        Fri, 14 Oct 2022 08:20:13 -0700 (PDT)
+        Fri, 14 Oct 2022 11:23:13 -0400
+Received: from ams.source.kernel.org (ams.source.kernel.org [IPv6:2604:1380:4601:e00::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 30906F70B3
+        for <linux-perf-users@vger.kernel.org>; Fri, 14 Oct 2022 08:23:00 -0700 (PDT)
 Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id 7F32F61B9D;
-        Fri, 14 Oct 2022 15:20:12 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id B2098C433B5;
-        Fri, 14 Oct 2022 15:20:11 +0000 (UTC)
+        by ams.source.kernel.org (Postfix) with ESMTPS id 65FF1B82362
+        for <linux-perf-users@vger.kernel.org>; Fri, 14 Oct 2022 15:22:16 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 0E7E6C433C1;
+        Fri, 14 Oct 2022 15:22:15 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1665760811;
-        bh=cMpCOyywjfdKFz+3C0fvxrDh4xfhWaSsnQ3CupGT+bU=;
+        s=k20201202; t=1665760935;
+        bh=I9x8qC882p0JFX9cKwzcy66ZvQdWvTCjRABKjKhxjMg=;
         h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=oBwG3zL2g6Wem5ygViETMOxoQ2hCL8DhLIp6b2UhyfbR+JhK4arKs02E8Pb++o7VS
-         9UYuUHtXX2CsCQ16l3HO+EyR4T8qrAquJ4JvQg0+WNje0J2kGvQW4tihsIgKreta44
-         XfIHMQ84XeJJ6a1WjAVJbG4HQRwuO1IZIAZb8h7tB8WPYyAh+UFXOgbrRdLwuMEq2L
-         D0kT9Ts8E8nuujVGG1a1d2qdYbyqJgd98zcqaGS/fAm3uMwdrRB2rhJikX/PBDtalH
-         w5QoViilZdKW95YBT/KlSz3WmumV7VsG2LqRHe6idznmsolZAH9Vrm3dOX5MMFqRLA
-         afZDwvTS5VnMQ==
+        b=QB73Xqe8d1fJTHv9mlRCQnJ4sc/kVYW23Ut72cYVfgIRvWia2c6aEAf9wJ+VJu+gL
+         aXAd7oRWvphfZUaNQmTu+1i/OPNa4Qj1Xon0xBHP56VgGT50XvIX0+0DuWJSEnHgbv
+         2wgNQLVqLio6ZFHX36X9JmXlWUBy4X1jH0Wd00OSOmZ8G8aZpEiGuwjkoR7gb6YkTh
+         Ri0iQRnzYY2i2Zpk5yJ+SzqG+mOTBPmmITwdpMNbW9+3zL9cD8Y7BtnN+mVVrKJYIF
+         OmUypxb/b8S/WKIsqmPNpbIJ19lLgUlocGHKc4mvdEj3VAsyKAZpL8GOffy5Ikn93k
+         lrMUAAAZlhjuA==
 Received: by quaco.ghostprotocols.net (Postfix, from userid 1000)
-        id 2E27F4062C; Fri, 14 Oct 2022 12:20:09 -0300 (-03)
-Date:   Fri, 14 Oct 2022 12:20:09 -0300
+        id CCD804062C; Fri, 14 Oct 2022 12:22:12 -0300 (-03)
+Date:   Fri, 14 Oct 2022 12:22:12 -0300
 From:   Arnaldo Carvalho de Melo <acme@kernel.org>
-To:     Leo Yan <leo.yan@linaro.org>
-Cc:     Namhyung Kim <namhyung@kernel.org>, Jiri Olsa <jolsa@kernel.org>,
-        Ingo Molnar <mingo@kernel.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Ian Rogers <irogers@google.com>,
-        Adrian Hunter <adrian.hunter@intel.com>,
-        linux-perf-users@vger.kernel.org,
-        Kan Liang <kan.liang@linux.intel.com>,
-        Ravi Bangoria <ravi.bangoria@amd.com>
-Subject: Re: [PATCH] perf mem: Fix -C option behavior for perf mem record
-Message-ID: <Y0l+KXH9tBnjoil4@kernel.org>
-References: <20221004200211.1444521-1-namhyung@kernel.org>
- <Yz5vUmZtQzYNRt73@leoy-yangtze.lan>
+To:     Andi Kleen <ak@linux.intel.com>
+Cc:     jolsa@kernel.org, linux-perf-users@vger.kernel.org
+Subject: Re: [PATCH] perf list: Fix title message
+Message-ID: <Y0l+pNuWrIZVt3ZI@kernel.org>
+References: <20221004192634.998984-1-ak@linux.intel.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <Yz5vUmZtQzYNRt73@leoy-yangtze.lan>
+In-Reply-To: <20221004192634.998984-1-ak@linux.intel.com>
 X-Url:  http://acmel.wordpress.com
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-Em Thu, Oct 06, 2022 at 02:01:54PM +0800, Leo Yan escreveu:
-> On Tue, Oct 04, 2022 at 01:02:11PM -0700, Namhyung Kim wrote:
-> > The -C/--cpu option was maily for report but it also affected record as
-> > it ate the option.  So users needed to use "--" after perf mem record to
-> > pass the info to the perf record properly.
-> > 
-> > Check if this option is set for record, and pass it to the actual perf
-> > record.
-> > 
-> > Before)
-> >   $ sudo perf --debug perf-event-open mem record -C 0 2>&1 | grep -a sys_perf_event_open
-> >   ...
-> >   sys_perf_event_open: pid -1  cpu 0  group_fd -1  flags 0x8 = 4
-> >   sys_perf_event_open: pid -1  cpu 1  group_fd -1  flags 0x8 = 5
-> >   sys_perf_event_open: pid -1  cpu 2  group_fd -1  flags 0x8 = 6
-> >   sys_perf_event_open: pid -1  cpu 3  group_fd -1  flags 0x8 = 7
-> >   sys_perf_event_open: pid -1  cpu 0  group_fd -1  flags 0x8 = 8
-> >   sys_perf_event_open: pid -1  cpu 1  group_fd -1  flags 0x8 = 9
-> >   sys_perf_event_open: pid -1  cpu 2  group_fd -1  flags 0x8 = 10
-> >   sys_perf_event_open: pid -1  cpu 3  group_fd -1  flags 0x8 = 11
-> >   ...
-> > 
-> > After)
-> >   $ sudo perf --debug perf-event-open mem record -C 0 2>&1 | grep -a sys_perf_event_open
-> >   ...
-> >   sys_perf_event_open: pid -1  cpu 0  group_fd -1  flags 0x8 = 4
-> >   sys_perf_event_open: pid -1  cpu 0  group_fd -1  flags 0x8 = 5
-> >   sys_perf_event_open: pid -1  cpu 0  group_fd -1  flags 0x8 = 6
-> >   sys_perf_event_open: pid -1  cpu 0  group_fd -1  flags 0x8 = 7
-> > 
-> > Cc: Leo Yan <leo.yan@linaro.org>
-> > Reported-by: Ravi Bangoria <ravi.bangoria@amd.com>
-> > Signed-off-by: Namhyung Kim <namhyung@kernel.org>
+Em Tue, Oct 04, 2022 at 12:26:34PM -0700, Andi Kleen escreveu:
+> perf list metricgroups
 > 
-> The change LGTM:
+> gives
 > 
-> Reviewed-by: Leo Yan <leo.yan@linaro.org>
-> Tested-by: Leo Yan <leo.yan@linaro.org>
+> List of pre-defined events (to be used in -e):
+> 
+> Metric Groups:
+> 
+> Backend
+> Bad
+> BadSpec
+> 
+> But that's incorrect of course because metric groups or metrics can only
+> be specified with -M. So fix the message to say -e or -M
 
 Thanks, applied.
 
 - Arnaldo
 
+ 
+> Signed-off-by: Andi Kleen <ak@linux.intel.com>
+> ---
+>  tools/perf/builtin-list.c | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+> 
+> diff --git a/tools/perf/builtin-list.c b/tools/perf/builtin-list.c
+> index 744dd3520584..58e1ec1654ef 100644
+> --- a/tools/perf/builtin-list.c
+> +++ b/tools/perf/builtin-list.c
+> @@ -60,7 +60,7 @@ int cmd_list(int argc, const char **argv)
+>  	setup_pager();
+>  
+>  	if (!raw_dump && pager_in_use())
+> -		printf("\nList of pre-defined events (to be used in -e):\n\n");
+> +		printf("\nList of pre-defined events (to be used in -e or -M):\n\n");
+>  
+>  	if (hybrid_type) {
+>  		pmu_name = perf_pmu__hybrid_type_to_pmu(hybrid_type);
+> -- 
+> 2.37.2
+
+-- 
+
+- Arnaldo
