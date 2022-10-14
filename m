@@ -2,108 +2,92 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 84F42C433FE
-	for <linux-perf-users@archiver.kernel.org>; Fri, 14 Oct 2022 15:25:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B9AF9C4332F
+	for <linux-perf-users@archiver.kernel.org>; Fri, 14 Oct 2022 16:41:02 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230289AbiJNPZy (ORCPT
+        id S229968AbiJNQlB (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Fri, 14 Oct 2022 11:25:54 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46346 "EHLO
+        Fri, 14 Oct 2022 12:41:01 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51456 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230370AbiJNPZn (ORCPT
+        with ESMTP id S230133AbiJNQlA (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Fri, 14 Oct 2022 11:25:43 -0400
-Received: from ams.source.kernel.org (ams.source.kernel.org [145.40.68.75])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C200E106E31;
-        Fri, 14 Oct 2022 08:25:41 -0700 (PDT)
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by ams.source.kernel.org (Postfix) with ESMTPS id 70CE6B82362;
-        Fri, 14 Oct 2022 15:25:40 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 19275C43470;
-        Fri, 14 Oct 2022 15:25:39 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1665761139;
-        bh=tBWSB2RMwgDRIDz5HzUwkKxuyw5LEsM3Fqlis7Mu+F8=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=jywwUZh+hu9uQluhvU1+df85/bcLTaRcqmjER+Eeuj78VK85Zd6lmRz1HDtzBVuMZ
-         fyLyOWh3J9Px/pHuQyfmPrGR+r3igzIGZKkMkZ770QzVYUuPcOYy7Pvaah0gk0t5U9
-         E0IRRChhJ+wmNRjj1swfbsF8iVorlJro4Jl8lfMZzIqGtRHMnzwg80oHNgHWqgFxlO
-         /e8TJq1szJvQile3A6ShaSI5iaXeAx/tTRyT/z2SkgRfGj7N1FXlrh3SvQAd7Ygpih
-         TUtgbqYqJ6GKgQ8g23K9jOHb9djur0ghxfddttBzcGv58Temp1oNMhlSukz6kK5kaZ
-         SLzHpPDfLmerQ==
-Received: by quaco.ghostprotocols.net (Postfix, from userid 1000)
-        id 42BB84062C; Fri, 14 Oct 2022 12:25:37 -0300 (-03)
-Date:   Fri, 14 Oct 2022 12:25:37 -0300
-From:   Arnaldo Carvalho de Melo <acme@kernel.org>
-To:     Rob Herring <robh@kernel.org>
-Cc:     Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Namhyung Kim <namhyung@kernel.org>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Jiri Olsa <jolsa@kernel.org>, linux-kernel@vger.kernel.org,
-        linux-perf-users@vger.kernel.org, Leo Yan <leo.yan@linaro.org>,
-        James Clark <james.clark@arm.com>
-Subject: Re: [PATCH v4 0/3] perf tool: 'config3' attribute support
-Message-ID: <Y0l/cc8MTNY8RQUl@kernel.org>
-References: <20220914-arm-perf-tool-spe1-2-v2-v4-0-83c098e6212e@kernel.org>
+        Fri, 14 Oct 2022 12:41:00 -0400
+Received: from mail-pl1-x632.google.com (mail-pl1-x632.google.com [IPv6:2607:f8b0:4864:20::632])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E8220164BC4;
+        Fri, 14 Oct 2022 09:40:59 -0700 (PDT)
+Received: by mail-pl1-x632.google.com with SMTP id z20so5219190plb.10;
+        Fri, 14 Oct 2022 09:40:59 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20210112;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:sender:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=bdQA2IQ/Zdiw0tfXrnTykfoypuZKZExhaq/VdDsyQcg=;
+        b=lCZxuDQ0UPruEZ3c6zkM+o+qq6D1nO1fap4bCgiQi6n4b6TbYBoDGep63xEa6p+6rW
+         pGtFf0jMeYoePHiirDy6OlVQFAYU6X/0q4u7KJkWUETFT8OVwV9kiiJQTbBK634iY4+o
+         gcChe/p66whQgzhN44BnnLULT/bBd5I9GdAZ2oFfNP6QTTMqCDG2p/5Rz1divNDUdNk8
+         ivCY6FR9gM7s7d2MOyIHRmcgTAyq5BzepvRQ/9ba6jdLX34SpmaflPJjZNYdYK/1I/E2
+         1tPi3+nEkB8mvEwQJzulQFruvebnBL8Oqt9v+jLs+DcxuHOD8ojUteRDXLXKF0w15HSc
+         5MNQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:sender:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=bdQA2IQ/Zdiw0tfXrnTykfoypuZKZExhaq/VdDsyQcg=;
+        b=GyGIHeV0QS4oR8SkFGtJM3tErVvAsbq0H4pqo0PkC11oBpcgKHKBKbgnXE9AceV+F/
+         uGgbfa/0Ns2TPSrEv4qeDlCdxuLO3rZP68hcvLtLQVBaL8aHhkFepLPOvd4I6d7T0CAb
+         653qG6VYBVbqbr0XGxOTCdSWg7AEVCPdk46sF5SERKxjQKQ82Uj+Wh2y3G/3HnmsdhA8
+         /4Z56QsNmh0iIWfMDgQi3H/e5pVz5jJHM/DcA9NOyPOzFgILqX8p0py9kQMNGdzhTSRU
+         DLkgxv9ptRr/E07RD1o3UdARBKOcUAamREh5X6qkmikZEUDmD9bLw9D5fPjWLw4lxNbJ
+         5xGQ==
+X-Gm-Message-State: ACrzQf34xfLd1mgVrnvgYqF5RLd1aK1syKsU7Ed2ytImqvAH0LCjVxFZ
+        ISBA4UCuBumWF2b8OrcYvZ8=
+X-Google-Smtp-Source: AMsMyM5hz9KlxdRbCJVb4RjTHgSMw6cypfg1KV1GzzYbBdOYpMMFZTtaGR/jfmjS2D3jGJFMtbSjxw==
+X-Received: by 2002:a17:90a:b00a:b0:203:87a3:9e70 with SMTP id x10-20020a17090ab00a00b0020387a39e70mr6578164pjq.218.1665765658559;
+        Fri, 14 Oct 2022 09:40:58 -0700 (PDT)
+Received: from localhost (2603-800c-1a02-1bae-a7fa-157f-969a-4cde.res6.spectrum.com. [2603:800c:1a02:1bae:a7fa:157f:969a:4cde])
+        by smtp.gmail.com with ESMTPSA id y187-20020a6264c4000000b0056328e4d466sm2001005pfb.146.2022.10.14.09.40.57
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 14 Oct 2022 09:40:58 -0700 (PDT)
+Sender: Tejun Heo <htejun@gmail.com>
+Date:   Fri, 14 Oct 2022 06:40:56 -1000
+From:   Tejun Heo <tj@kernel.org>
+To:     Arnaldo Carvalho de Melo <acme@kernel.org>
+Cc:     Namhyung Kim <namhyung@kernel.org>,
+        Zefan Li <lizefan.x@bytedance.com>,
+        Johannes Weiner <hannes@cmpxchg.org>, cgroups@vger.kernel.org,
+        Jiri Olsa <jolsa@kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        linux-perf-users@vger.kernel.org, Song Liu <songliubraving@fb.com>,
+        bpf@vger.kernel.org, Andrii Nakryiko <andrii@kernel.org>
+Subject: Re: [PATCH v2] perf stat: Support old kernels for bperf cgroup
+ counting
+Message-ID: <Y0mRGJx4Mc7t7fGB@slm.duckdns.org>
+References: <Y0Sx2KWX4gPlLytq@slm.duckdns.org>
+ <20221011052808.282394-1-namhyung@kernel.org>
+ <Y0Wfl88objrECjSo@slm.duckdns.org>
+ <Y0ljzN920sWalEHR@kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20220914-arm-perf-tool-spe1-2-v2-v4-0-83c098e6212e@kernel.org>
-X-Url:  http://acmel.wordpress.com
+In-Reply-To: <Y0ljzN920sWalEHR@kernel.org>
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-Em Tue, Oct 04, 2022 at 02:12:34PM -0500, Rob Herring escreveu:
-> This series is a fix to allow unknown 'configN' attrs and then extends 
-> perf tool to support a new config3 attr.
+On Fri, Oct 14, 2022 at 10:27:40AM -0300, Arnaldo Carvalho de Melo wrote:
+> Hey, I noticed that the perf build is broken for the
+> tools/perf/util/bpf_skel/bperf_cgroup.bpf.c skell, so I tried using b4
+> on this Namhyung patch, it ended up getting a newer version, by Tejun,
+> that mixes up kernel code and tooling, which, when I tried to apply
+> upstream didn't work.
 > 
-> The config3 support is RFC for context as the kernel side support[1] is 
-> not yet accepted. Patch 1 is intended for 6.1.
-> 
-> [1] https://lore.kernel.org/all/20220825-arm-spe-v8-7-v1-0-c75b8d92e692@kernel.org/
-> 
-> Signed-off-by: Rob Herring <robh@kernel.org>
-> ---
-> Changes in v4:
-> - Fix event parsing test segfault
-> - Add 'config3' in event parsing tests
-> - Link to v3: https://lore.kernel.org/r/20220914-arm-perf-tool-spe1-2-v2-v3-0-8189fc04dcc6@kernel.org
+> Please try not to mix up kernel and tools/ changes in the same patch to
+> avoid these issues.
 
-Thanks, applied.
-
-- Arnaldo
-
- 
-> ---
-> Rob Herring (3):
->       perf: Skip and warn on unknown format 'configN' attrs
->       perf tools: Sync perf_event_attr::config3 addition
->       perf: Add support for perf_event_attr::config3
-> 
->  include/uapi/linux/perf_event.h       |  3 +++
->  tools/include/uapi/linux/perf_event.h |  3 +++
->  tools/perf/tests/parse-events.c       | 13 ++++++++++++-
->  tools/perf/util/parse-events.c        |  9 +++++++++
->  tools/perf/util/parse-events.h        |  1 +
->  tools/perf/util/parse-events.l        |  1 +
->  tools/perf/util/pmu.c                 | 20 ++++++++++++++++++++
->  tools/perf/util/pmu.h                 |  3 +++
->  tools/perf/util/pmu.l                 |  2 --
->  tools/perf/util/pmu.y                 | 15 ++++-----------
->  10 files changed, 56 insertions(+), 14 deletions(-)
-> ---
-> base-commit: 1c23f9e627a7b412978b4e852793c5e3c3efc555
-> change-id: 20220914-arm-perf-tool-spe1-2-v2-cab789c5d598
-> 
-> Best regards,
-> -- 
-> Rob Herring <robh@kernel.org>
+I didn't write a newer version of this patch. What are you talking about?
 
 -- 
-
-- Arnaldo
+tejun
