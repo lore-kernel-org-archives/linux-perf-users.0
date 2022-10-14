@@ -2,147 +2,140 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E34A2C4332F
-	for <linux-perf-users@archiver.kernel.org>; Fri, 14 Oct 2022 18:10:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1B7EDC433FE
+	for <linux-perf-users@archiver.kernel.org>; Fri, 14 Oct 2022 18:17:05 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229511AbiJNSK2 (ORCPT
+        id S229617AbiJNSRE (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Fri, 14 Oct 2022 14:10:28 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44938 "EHLO
+        Fri, 14 Oct 2022 14:17:04 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36646 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229683AbiJNSK2 (ORCPT
+        with ESMTP id S229518AbiJNSRC (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Fri, 14 Oct 2022 14:10:28 -0400
-Received: from mail-oa1-f44.google.com (mail-oa1-f44.google.com [209.85.160.44])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C9C0F402FB;
-        Fri, 14 Oct 2022 11:10:26 -0700 (PDT)
-Received: by mail-oa1-f44.google.com with SMTP id 586e51a60fabf-1326637be6eso6723100fac.13;
-        Fri, 14 Oct 2022 11:10:26 -0700 (PDT)
+        Fri, 14 Oct 2022 14:17:02 -0400
+Received: from mail-pj1-x1033.google.com (mail-pj1-x1033.google.com [IPv6:2607:f8b0:4864:20::1033])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8FC862C64A;
+        Fri, 14 Oct 2022 11:16:59 -0700 (PDT)
+Received: by mail-pj1-x1033.google.com with SMTP id fw14so5631052pjb.3;
+        Fri, 14 Oct 2022 11:16:59 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20210112;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:sender:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=h8lu99TreD62VQY25U22MDIq+Ln7QdQfqyolDbpUShM=;
+        b=IxfH68BU48muWWR3n0/1IfsZ+6nK93/nbIFlczi0zRbxn9AaHXbhz5qE7G4anwchkF
+         SDg9elaLPNnhsfVtfjQDT42WNwLhfrAZdkFzgluT5J6SgIFgNtv86WCxX0aYoFrdztx4
+         pfx0KHHx6ExECUsq8gcdUpk/DcZGghigqtMimsB+AkL9VC23Al4WWeWFMsZKmfn30DVT
+         tp3r6bwXKVFLp8Qd7+8/VH0SSJsvw4oNdf1TQzGz93yaLI9Z7XZpQ8qH2nyMZAFOZTJc
+         AzDe4qcr6TOkV6s2ZrpRgi2owcdeUVhhVlffi2ePFCIdGENwsrbO3WnxHy5NPC93W5ba
+         uuXA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=rzfkpk16B1bdFYhVEMVjYdQPtrAb81fMcKTxh0OhDTk=;
-        b=aPxMTRfPfbAkL4g9pNzSSEsezg7ZobkfMYNeFwpSWsjdJwbZ++90U/BUPj1tQfU8EK
-         7Ts6QhB+YjODAleMlqtN16049YP4fHag7qDaRTCuAiI04TleV05GVuqk5PQ0ivo0IhVX
-         FhDkKPtciptmdzH64/RiPnju/3oI4DDGcgVle1K7dXPJ7eF/S5QWKa8QPcSGNZKg6QBQ
-         EsAwkTycOBVsnvXqio2yxow5WsPUI+QMXJr54nvKuOw8JgkhEOTyNj3IpsFjhUlYbDe3
-         hrjOtg78wW+7ZN4CyU0GEvcDVsj4PS4DQxSC6D2Yt/kw0NtzPM6a3IyeJStHi34k8RTy
-         biAg==
-X-Gm-Message-State: ACrzQf2pYDke90KmcbCrbQX0WpjYmKdYg40FfJq7tUduB6khhyRZ1ytR
-        pCD2aRQpJVMaAaiEEqmzOjfS05RTBl9ZupovpA4=
-X-Google-Smtp-Source: AMsMyM7eJfqYeu4vWre+h5nwEqQz2rgPPsbtBBe+VSosjSSvaP6iHmmSxFJ8EkclsLMMD9W4oxr55KZxma1fUWYX+eg=
-X-Received: by 2002:a05:6870:4184:b0:136:5e73:b40e with SMTP id
- y4-20020a056870418400b001365e73b40emr3347363oac.209.1665771025964; Fri, 14
- Oct 2022 11:10:25 -0700 (PDT)
-MIME-Version: 1.0
-References: <20221014061550.463644-1-namhyung@kernel.org> <Y0kIB7hxlnlEYipZ@krava>
-In-Reply-To: <Y0kIB7hxlnlEYipZ@krava>
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:sender:x-gm-message-state:from
+         :to:cc:subject:date:message-id:reply-to;
+        bh=h8lu99TreD62VQY25U22MDIq+Ln7QdQfqyolDbpUShM=;
+        b=mHnkI8VCgbK3G6CohI+jplp6Z2V8tEyZDr0yvz+ZIt33MijyJTg38b03wdxQX+83Hv
+         L0yehkH/AkGp8XsLDekZRnO/QdH2M/LHYowH/5nRb14DVZGwbihOqnbJg5Sw/5IW/Bud
+         ByWExjWfkiy1deypCAh0onkgbeSHcsmWE0kZ8PWUuXP24thxOgv/nS647vgUwovRFdQT
+         RBV6Kke5/MZrk3IQCvBpA5uuBjWiQkF1jLeWRe+b0+N6NgDeWyye3U0FO490AOBHEe5g
+         QWMyUFpNLVaalTddkbSMhwCd8TiJfzMllY/LgEFUrFYBPiyVB2qulXbIOh7myw19r/BI
+         rJBQ==
+X-Gm-Message-State: ACrzQf0kH+1mhwYec7PSNBdeHbhzDHBFO5MqLDwdTFA9kpO3Cz3cpm0f
+        4x241SS8LAl9HCYQt61+s3k=
+X-Google-Smtp-Source: AMsMyM6qR2AUN7z94MI32vIFmmxMs+HiEaT9GGJNmgyQyywpzMVUhpeGTd1qfmUK9CnAVVwQe8rjBA==
+X-Received: by 2002:a17:902:8309:b0:17a:695:b5bf with SMTP id bd9-20020a170902830900b0017a0695b5bfmr6138455plb.35.1665771419037;
+        Fri, 14 Oct 2022 11:16:59 -0700 (PDT)
+Received: from youngsil.svl.corp.google.com ([2620:15c:2d4:203:f2c0:9a9f:e007:3520])
+        by smtp.gmail.com with ESMTPSA id g18-20020aa79dd2000000b0056149203b60sm2058940pfq.46.2022.10.14.11.16.57
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 14 Oct 2022 11:16:58 -0700 (PDT)
+Sender: Namhyung Kim <namhyung@gmail.com>
 From:   Namhyung Kim <namhyung@kernel.org>
-Date:   Fri, 14 Oct 2022 11:10:14 -0700
-Message-ID: <CAM9d7ch_CV3mpno+6D23UGaXzL9zhmzmt513RzbWq8q_0DhU4A@mail.gmail.com>
-Subject: Re: [PATCHSET 00/19] perf stat: Cleanup counter aggregation (v2)
-To:     Jiri Olsa <olsajiri@gmail.com>
-Cc:     Michael Petlan <mpetlan@redhat.com>,
-        Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Ingo Molnar <mingo@kernel.org>,
+To:     Arnaldo Carvalho de Melo <acme@kernel.org>,
+        Jiri Olsa <jolsa@kernel.org>,
+        Namhyung Kim <namhyung@kernel.org>
+Cc:     Ingo Molnar <mingo@kernel.org>,
         Peter Zijlstra <peterz@infradead.org>,
         LKML <linux-kernel@vger.kernel.org>,
         Ian Rogers <irogers@google.com>,
         Adrian Hunter <adrian.hunter@intel.com>,
-        linux-perf-users <linux-perf-users@vger.kernel.org>,
+        linux-perf-users@vger.kernel.org,
         Kan Liang <kan.liang@linux.intel.com>,
         Leo Yan <leo.yan@linaro.org>, Andi Kleen <ak@linux.intel.com>,
         Athira Rajeev <atrajeev@linux.vnet.ibm.com>,
         James Clark <james.clark@arm.com>,
         Xing Zhengjun <zhengjun.xing@linux.intel.com>
-Content-Type: text/plain; charset="UTF-8"
+Subject: [PATCH 20/19] perf stat: Factor out evsel__count_has_error()
+Date:   Fri, 14 Oct 2022 11:16:55 -0700
+Message-Id: <20221014181655.771612-1-namhyung@kernel.org>
+X-Mailer: git-send-email 2.38.0.413.g74048e4d9e-goog
+In-Reply-To: <CAM9d7ch_CV3mpno+6D23UGaXzL9zhmzmt513RzbWq8q_0DhU4A@mail.gmail.com>
+References: <CAM9d7ch_CV3mpno+6D23UGaXzL9zhmzmt513RzbWq8q_0DhU4A@mail.gmail.com>
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-Hi Jiri and Michael,
+It's possible to have 0 enabled/running time for some per-task or per-cgroup
+events since it's not scheduled on any CPU.  Treating the whole event as
+failed would not work in this case.  Thinking again, the code only existed
+when any CPU-level aggregation is enabled (like per-socket, per-core, ...).
 
-On Thu, Oct 13, 2022 at 11:56 PM Jiri Olsa <olsajiri@gmail.com> wrote:
->
-> On Thu, Oct 13, 2022 at 11:15:31PM -0700, Namhyung Kim wrote:
-> > Hello,
-> >
-> > Current perf stat code is somewhat hard to follow since it handles
-> > many combinations of PMUs/events for given display and aggregation
-> > options.  This is my attempt to clean it up a little. ;-)
-> >
-> > changes in v2)
-> >  * fix a segfault in perf stat report for per-process record  (Jiri)
-> >  * fix metric only display  (Jiri)
-> >  * add evsel__reset_aggr_stat  (ian)
-> >  * add more comments  (Ian)
-> >  * add Acked-by from Ian
-> >
-> > My first concern is that aggregation and display routines are intermixed
-> > and processed differently depends on the aggregation mode.  I'd like to
-> > separate them apart and make the logic clearer.
-> >
-> > To do that, I added struct perf_stat_aggr to save the aggregated counter
-> > values and other info.  It'll be allocated and processed according to
-> > the aggr_mode and display logic will use it.
-> >
-> > I've tested the following combination.
-> >
-> >   $ cat test-matrix.sh
-> >   #!/bin/sh
-> >
-> >   set -e
-> >
-> >   yes > /dev/null &
-> >   TARGET=$!
-> >
-> >   ./perf stat true
-> >   ./perf stat -a true
-> >   ./perf stat -C0 true
-> >   ./perf stat -p $TARGET true
-> >   ./perf stat -t $TARGET true
-> >
-> >   ./perf stat -a -A true
-> >   ./perf stat -a --per-node true
-> >   ./perf stat -a --per-socket true
-> >   ./perf stat -a --per-die true
-> >   ./perf stat -a --per-core true
-> >   ./perf stat -a --per-thread true
-> >
-> >   ./perf stat -a -I 500 sleep 1
-> >   ./perf stat -a -I 500 --summary sleep 1
-> >   ./perf stat -a -I 500 --per-socket sleep 1
-> >   ./perf stat -a -I 500 --summary --per-socket sleep 1
-> >
-> >   ./perf stat -a --metric-only true
-> >   ./perf stat -a --metric-only --per-socket true
-> >   ./perf stat -a --metric-only -I 500 sleep 1
-> >   ./perf stat -a --metric-only -I 500 --per-socket sleep 1
-> >
-> >   ./perf stat record true && ./perf stat report
-> >   ./perf stat record -p $TARGET true && ./perf stat report
-> >   ./perf stat record -a true && ./perf stat report
-> >   ./perf stat record -a --per-core true && ./perf stat report
-> >   ./perf stat record -a --per-core --metric-only true && ./perf stat report
-> >   ./perf stat record -a -I 500 sleep 1 && ./perf stat report
-> >   ./perf stat record -a -I 500 --per-core sleep 1 && ./perf stat report
-> >   ./perf stat record -a -I 500 --per-core --metric-only sleep 1 && ./perf stat report
-> >
-> >   ./perf stat -a -A -e cpu/event=cpu-cycles,percore/ true
-> >   ./perf stat -a -A -e cpu/event=cpu-cycles,percore/ --percore-show-thread true
-> >
-> >   kill $TARGET
-> >
-> > The code is available at 'perf/stat-aggr-v2' branch in
-> >
-> >   git://git.kernel.org/pub/scm/linux/kernel/git/namhyung/linux-perf.git
->
-> Michael,
-> ay chance you could run your test suite on top of this change?
+To make it clearer, factor out the condition check into the new
+evsel__count_has_error() function and add some comments.
 
-I've noticed there's an issue with cgroups.  Will send a fix soon.
+Signed-off-by: Namhyung Kim <namhyung@kernel.org>
+---
+ tools/perf/util/stat.c | 25 +++++++++++++++++++++----
+ 1 file changed, 21 insertions(+), 4 deletions(-)
 
-Thanks,
-Namhyung
+diff --git a/tools/perf/util/stat.c b/tools/perf/util/stat.c
+index 6ab9c58beca7..9dfa8cac6bc4 100644
+--- a/tools/perf/util/stat.c
++++ b/tools/perf/util/stat.c
+@@ -396,6 +396,25 @@ static int check_per_pkg(struct evsel *counter, struct perf_counts_values *vals,
+ 	return ret;
+ }
+ 
++static bool evsel__count_has_error(struct evsel *evsel,
++				   struct perf_counts_values *count,
++				   struct perf_stat_config *config)
++{
++	/* the evsel was failed already */
++	if (evsel->err || evsel->counts->scaled == -1)
++		return true;
++
++	/* this is meaningful for CPU aggregation modes only */
++	if (config->aggr_mode == AGGR_GLOBAL)
++		return false;
++
++	/* it's considered ok when it actually ran */
++	if (count->ena != 0 && count->run != 0)
++		return false;
++
++	return true;
++}
++
+ static int
+ process_counter_values(struct perf_stat_config *config, struct evsel *evsel,
+ 		       int cpu_map_idx, int thread,
+@@ -450,11 +469,9 @@ process_counter_values(struct perf_stat_config *config, struct evsel *evsel,
+ 
+ 			/*
+ 			 * When any result is bad, make them all to give consistent output
+-			 * in interval mode.  But per-task counters can have 0 enabled time
+-			 * when some tasks are idle.
++			 * in interval mode.
+ 			 */
+-			if (((count->ena == 0 || count->run == 0) && cpu.cpu != -1) ||
+-			    evsel->counts->scaled == -1) {
++			if (evsel__count_has_error(evsel, count, config) && !ps_aggr->failed) {
+ 				ps_aggr->counts.val = 0;
+ 				ps_aggr->counts.ena = 0;
+ 				ps_aggr->counts.run = 0;
+-- 
+2.38.0.413.g74048e4d9e-goog
+
