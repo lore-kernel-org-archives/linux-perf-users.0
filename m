@@ -2,103 +2,64 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 43EF4C4332F
-	for <linux-perf-users@archiver.kernel.org>; Fri, 14 Oct 2022 20:09:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7DF06C4332F
+	for <linux-perf-users@archiver.kernel.org>; Fri, 14 Oct 2022 20:22:48 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230161AbiJNUJV (ORCPT
+        id S230139AbiJNUWr (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Fri, 14 Oct 2022 16:09:21 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43182 "EHLO
+        Fri, 14 Oct 2022 16:22:47 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55552 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229740AbiJNUJT (ORCPT
+        with ESMTP id S231354AbiJNUWp (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Fri, 14 Oct 2022 16:09:19 -0400
-Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 181541D81A4;
-        Fri, 14 Oct 2022 13:09:19 -0700 (PDT)
+        Fri, 14 Oct 2022 16:22:45 -0400
+Received: from ams.source.kernel.org (ams.source.kernel.org [145.40.68.75])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D49861D4418
+        for <linux-perf-users@vger.kernel.org>; Fri, 14 Oct 2022 13:22:44 -0700 (PDT)
 Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id A330361C21;
-        Fri, 14 Oct 2022 20:09:18 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id E4887C433D6;
-        Fri, 14 Oct 2022 20:09:17 +0000 (UTC)
+        by ams.source.kernel.org (Postfix) with ESMTPS id 84755B82415
+        for <linux-perf-users@vger.kernel.org>; Fri, 14 Oct 2022 20:22:43 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 1242EC433C1;
+        Fri, 14 Oct 2022 20:22:42 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1665778158;
-        bh=ACIavGWuHHjo4qJ/zfSJg2qQbJjr1pDrG1EYEd+FsYY=;
+        s=k20201202; t=1665778962;
+        bh=exqzR5njiqLWWiXNN2w3BDWQrOSrTJ7Jr0VCCka02Gs=;
         h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=JJUQLS80RP934Y58s/J7kwVFaLeyblbG2n6qc/cthLttwUb9RJKQ90eKYAsmxDzK/
-         JFMeORWy8l6LBeq+sEob1QOL268iwoK5/jU8OpkQyVYOuUOP6iAoom0lOt2NKH0xaU
-         LrB7xSz4Uv6k5TP0rwWplcn3CG9kWmW3ONULigZ4MS4ds//pv+kz5DcYfh60h7p7EC
-         D2ANLotcj+g0x5hZwW3sGq12MtG6ytJk3B16DDarm66ZWkTLQlEYQeisrEh/TI2sTX
-         Uv00EJklwEI0YpKN2y+YQxrsqs2IpAyZyq1FTscEmT5v5xXOgE471BsqL3419VIkh9
-         Q3HRKT5NfH7yw==
+        b=s2+KNT3kBYTq4evrXrKk8gZeXApAQvzfRCfOxN/NYYQgoAsLD4anOCjdbdsaoJkxW
+         IPywtFQZccJMBUUidSwEaWw5SS85scKH7QKosyyjtb2AbJQ61mNVnYaiE3/1j59Wqh
+         HFG0TiTEFa3aRUx5Q7fU0fWh4Rsw9+y5n56DGPT57jH8FE5rFwQDZ3w5cUbdaIE3Tu
+         ySOmogr/NHMZXG1Zj5HpEmdWZqGLB751VSkC2dWbXB8I1EaRfjuSL/9Bf7/pyCBevQ
+         gXsGgjetUPjcNjnCnDxi6BxZ5yiJp1tqqZp6YU24l1s2fFZloe7so9W5n4Jdhqw1Ym
+         B/qf7zyQX5Skg==
 Received: by quaco.ghostprotocols.net (Postfix, from userid 1000)
-        id E30774062C; Fri, 14 Oct 2022 17:09:15 -0300 (-03)
-Date:   Fri, 14 Oct 2022 17:09:15 -0300
+        id 8EA0C4062C; Fri, 14 Oct 2022 17:22:39 -0300 (-03)
+Date:   Fri, 14 Oct 2022 17:22:39 -0300
 From:   Arnaldo Carvalho de Melo <acme@kernel.org>
-To:     Namhyung Kim <namhyung@kernel.org>
-Cc:     Adrian Hunter <adrian.hunter@intel.com>,
-        Jiri Olsa <jolsa@redhat.com>, Ian Rogers <irogers@google.com>,
-        linux-kernel <linux-kernel@vger.kernel.org>,
-        linux-perf-users <linux-perf-users@vger.kernel.org>
-Subject: Re: [PATCH 2/2] perf intel-pt: Fix system_wide dummy event for hybrid
-Message-ID: <Y0nB6wPETSXfUHYC@kernel.org>
-References: <20221012082259.22394-1-adrian.hunter@intel.com>
- <20221012082259.22394-3-adrian.hunter@intel.com>
- <CAM9d7chCGw-iXUiD+Bj3azTdVdYz21KtBOhR5ZbLoVuFXE6nbA@mail.gmail.com>
+To:     Athira Rajeev <atrajeev@linux.vnet.ibm.com>
+Cc:     jolsa@kernel.org, mpe@ellerman.id.au,
+        linux-perf-users@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
+        maddy@linux.vnet.ibm.com, rnsastry@linux.ibm.com,
+        kjain@linux.ibm.com, disgoel@linux.vnet.ibm.com
+Subject: Re: [PATCH 1/2] tools/perf/tests/shell: Update stat+csv_output.sh to
+ include sanity check for topology
+Message-ID: <Y0nFD7lo6Gdm1bgd@kernel.org>
+References: <20221006155149.67205-1-atrajeev@linux.vnet.ibm.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <CAM9d7chCGw-iXUiD+Bj3azTdVdYz21KtBOhR5ZbLoVuFXE6nbA@mail.gmail.com>
+In-Reply-To: <20221006155149.67205-1-atrajeev@linux.vnet.ibm.com>
 X-Url:  http://acmel.wordpress.com
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-Em Wed, Oct 12, 2022 at 09:25:14AM -0700, Namhyung Kim escreveu:
-> On Wed, Oct 12, 2022 at 1:23 AM Adrian Hunter <adrian.hunter@intel.com> wrote:
-> >
-> > User space tasks can migrate between CPUs, so when tracing selected CPUs,
-> > system-wide sideband is still needed, however evlist->core.has_user_cpus
-> > is not set in the hybrid case, so check the target cpu_list instead.
-> >
-> > Fixes: 7d189cadbeeb ("perf intel-pt: Track sideband system-wide when needed")
-> > Cc: stable@vger.kernel.org
-> > Signed-off-by: Adrian Hunter <adrian.hunter@intel.com>
+Em Thu, Oct 06, 2022 at 09:21:48PM +0530, Athira Rajeev escreveu:
+> Testcase stat+csv_output.sh fails in powerpc:
 > 
-> Acked-by: Namhyung Kim <namhyung@kernel.org>
+> 	84: perf stat CSV output linter: FAILED!
 
-Thanks, applied both fixes.
-
-- Arnaldo
-
- 
-> Thanks,
-> Namhyung
-> 
-> 
-> > ---
-> >  tools/perf/arch/x86/util/intel-pt.c | 2 +-
-> >  1 file changed, 1 insertion(+), 1 deletion(-)
-> >
-> > diff --git a/tools/perf/arch/x86/util/intel-pt.c b/tools/perf/arch/x86/util/intel-pt.c
-> > index 793b35f2221a..af102f471e9f 100644
-> > --- a/tools/perf/arch/x86/util/intel-pt.c
-> > +++ b/tools/perf/arch/x86/util/intel-pt.c
-> > @@ -866,7 +866,7 @@ static int intel_pt_recording_options(struct auxtrace_record *itr,
-> >                  * User space tasks can migrate between CPUs, so when tracing
-> >                  * selected CPUs, sideband for all CPUs is still needed.
-> >                  */
-> > -               need_system_wide_tracking = evlist->core.has_user_cpus &&
-> > +               need_system_wide_tracking = opts->target.cpu_list &&
-> >                                             !intel_pt_evsel->core.attr.exclude_user;
-> >
-> >                 tracking_evsel = evlist__add_aux_dummy(evlist, need_system_wide_tracking);
-> > --
-> > 2.25.1
-> >
-
--- 
+Thanks, applied both patches.
 
 - Arnaldo
