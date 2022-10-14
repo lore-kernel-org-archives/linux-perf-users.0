@@ -2,61 +2,43 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1B7EDC433FE
-	for <linux-perf-users@archiver.kernel.org>; Fri, 14 Oct 2022 18:17:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BD604C4332F
+	for <linux-perf-users@archiver.kernel.org>; Fri, 14 Oct 2022 20:04:49 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229617AbiJNSRE (ORCPT
+        id S230084AbiJNUEr (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Fri, 14 Oct 2022 14:17:04 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36646 "EHLO
+        Fri, 14 Oct 2022 16:04:47 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34248 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229518AbiJNSRC (ORCPT
+        with ESMTP id S229997AbiJNUEq (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Fri, 14 Oct 2022 14:17:02 -0400
-Received: from mail-pj1-x1033.google.com (mail-pj1-x1033.google.com [IPv6:2607:f8b0:4864:20::1033])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8FC862C64A;
-        Fri, 14 Oct 2022 11:16:59 -0700 (PDT)
-Received: by mail-pj1-x1033.google.com with SMTP id fw14so5631052pjb.3;
-        Fri, 14 Oct 2022 11:16:59 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20210112;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:sender:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=h8lu99TreD62VQY25U22MDIq+Ln7QdQfqyolDbpUShM=;
-        b=IxfH68BU48muWWR3n0/1IfsZ+6nK93/nbIFlczi0zRbxn9AaHXbhz5qE7G4anwchkF
-         SDg9elaLPNnhsfVtfjQDT42WNwLhfrAZdkFzgluT5J6SgIFgNtv86WCxX0aYoFrdztx4
-         pfx0KHHx6ExECUsq8gcdUpk/DcZGghigqtMimsB+AkL9VC23Al4WWeWFMsZKmfn30DVT
-         tp3r6bwXKVFLp8Qd7+8/VH0SSJsvw4oNdf1TQzGz93yaLI9Z7XZpQ8qH2nyMZAFOZTJc
-         AzDe4qcr6TOkV6s2ZrpRgi2owcdeUVhhVlffi2ePFCIdGENwsrbO3WnxHy5NPC93W5ba
-         uuXA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:sender:x-gm-message-state:from
-         :to:cc:subject:date:message-id:reply-to;
-        bh=h8lu99TreD62VQY25U22MDIq+Ln7QdQfqyolDbpUShM=;
-        b=mHnkI8VCgbK3G6CohI+jplp6Z2V8tEyZDr0yvz+ZIt33MijyJTg38b03wdxQX+83Hv
-         L0yehkH/AkGp8XsLDekZRnO/QdH2M/LHYowH/5nRb14DVZGwbihOqnbJg5Sw/5IW/Bud
-         ByWExjWfkiy1deypCAh0onkgbeSHcsmWE0kZ8PWUuXP24thxOgv/nS647vgUwovRFdQT
-         RBV6Kke5/MZrk3IQCvBpA5uuBjWiQkF1jLeWRe+b0+N6NgDeWyye3U0FO490AOBHEe5g
-         QWMyUFpNLVaalTddkbSMhwCd8TiJfzMllY/LgEFUrFYBPiyVB2qulXbIOh7myw19r/BI
-         rJBQ==
-X-Gm-Message-State: ACrzQf0kH+1mhwYec7PSNBdeHbhzDHBFO5MqLDwdTFA9kpO3Cz3cpm0f
-        4x241SS8LAl9HCYQt61+s3k=
-X-Google-Smtp-Source: AMsMyM6qR2AUN7z94MI32vIFmmxMs+HiEaT9GGJNmgyQyywpzMVUhpeGTd1qfmUK9CnAVVwQe8rjBA==
-X-Received: by 2002:a17:902:8309:b0:17a:695:b5bf with SMTP id bd9-20020a170902830900b0017a0695b5bfmr6138455plb.35.1665771419037;
-        Fri, 14 Oct 2022 11:16:59 -0700 (PDT)
-Received: from youngsil.svl.corp.google.com ([2620:15c:2d4:203:f2c0:9a9f:e007:3520])
-        by smtp.gmail.com with ESMTPSA id g18-20020aa79dd2000000b0056149203b60sm2058940pfq.46.2022.10.14.11.16.57
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 14 Oct 2022 11:16:58 -0700 (PDT)
-Sender: Namhyung Kim <namhyung@gmail.com>
-From:   Namhyung Kim <namhyung@kernel.org>
-To:     Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Jiri Olsa <jolsa@kernel.org>,
-        Namhyung Kim <namhyung@kernel.org>
-Cc:     Ingo Molnar <mingo@kernel.org>,
+        Fri, 14 Oct 2022 16:04:46 -0400
+Received: from ams.source.kernel.org (ams.source.kernel.org [145.40.68.75])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6759810BF;
+        Fri, 14 Oct 2022 13:04:44 -0700 (PDT)
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by ams.source.kernel.org (Postfix) with ESMTPS id C22AFB8234D;
+        Fri, 14 Oct 2022 20:04:42 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 499A1C433C1;
+        Fri, 14 Oct 2022 20:04:41 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1665777881;
+        bh=WgK8GBODPu1il2l6bsz7fk4bsQA1FopzCrhUOulcM70=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=lfzljnxZzAC2jO/hx2kly2jM4aiqMiyneVW6H27F17PXKtYJh0BYrHkzWP11NIqEZ
+         y+fq6qBvKdrp0f3eIZIZ6idKv5U7D2plbHmI5ONgld1G2EAJ1WMfoxIYyQBDcOGqte
+         fHK6U58HSZW2DZsUEhroVUciKzqFj5ooKy+54tURxNGHmGIiRlBgaN3lVimzKhYZt2
+         qSHdC09YLieWGSermrs+fDekE3LZVyjRo1LaDn3N1nzFdytYk9Fx5DsIXd2vx6ARqJ
+         0SA9YOF+JqhevnXRhxXmAmUAtZexC6umSMDhnh+39SGXB6Lq1OsRSU0wiRPIGiCFg0
+         bqqFmaFsKpwCg==
+Received: by quaco.ghostprotocols.net (Postfix, from userid 1000)
+        id 9A31A4062C; Fri, 14 Oct 2022 17:04:38 -0300 (-03)
+Date:   Fri, 14 Oct 2022 17:04:38 -0300
+From:   Arnaldo Carvalho de Melo <acme@kernel.org>
+To:     Namhyung Kim <namhyung@kernel.org>
+Cc:     Jiri Olsa <jolsa@kernel.org>, Ingo Molnar <mingo@kernel.org>,
         Peter Zijlstra <peterz@infradead.org>,
         LKML <linux-kernel@vger.kernel.org>,
         Ian Rogers <irogers@google.com>,
@@ -67,75 +49,85 @@ Cc:     Ingo Molnar <mingo@kernel.org>,
         Athira Rajeev <atrajeev@linux.vnet.ibm.com>,
         James Clark <james.clark@arm.com>,
         Xing Zhengjun <zhengjun.xing@linux.intel.com>
-Subject: [PATCH 20/19] perf stat: Factor out evsel__count_has_error()
-Date:   Fri, 14 Oct 2022 11:16:55 -0700
-Message-Id: <20221014181655.771612-1-namhyung@kernel.org>
-X-Mailer: git-send-email 2.38.0.413.g74048e4d9e-goog
-In-Reply-To: <CAM9d7ch_CV3mpno+6D23UGaXzL9zhmzmt513RzbWq8q_0DhU4A@mail.gmail.com>
+Subject: Re: [PATCH 20/19] perf stat: Factor out evsel__count_has_error()
+Message-ID: <Y0nA1jdFU6XBlZRL@kernel.org>
 References: <CAM9d7ch_CV3mpno+6D23UGaXzL9zhmzmt513RzbWq8q_0DhU4A@mail.gmail.com>
+ <20221014181655.771612-1-namhyung@kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20221014181655.771612-1-namhyung@kernel.org>
+X-Url:  http://acmel.wordpress.com
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-It's possible to have 0 enabled/running time for some per-task or per-cgroup
-events since it's not scheduled on any CPU.  Treating the whole event as
-failed would not work in this case.  Thinking again, the code only existed
-when any CPU-level aggregation is enabled (like per-socket, per-core, ...).
+Em Fri, Oct 14, 2022 at 11:16:55AM -0700, Namhyung Kim escreveu:
+> It's possible to have 0 enabled/running time for some per-task or per-cgroup
+> events since it's not scheduled on any CPU.  Treating the whole event as
+> failed would not work in this case.  Thinking again, the code only existed
+> when any CPU-level aggregation is enabled (like per-socket, per-core, ...).
+> 
+> To make it clearer, factor out the condition check into the new
+> evsel__count_has_error() function and add some comments.
 
-To make it clearer, factor out the condition check into the new
-evsel__count_has_error() function and add some comments.
+So I should just add this one to the 19-long patchkit I already applied
+locally, ok.
 
-Signed-off-by: Namhyung Kim <namhyung@kernel.org>
----
- tools/perf/util/stat.c | 25 +++++++++++++++++++++----
- 1 file changed, 21 insertions(+), 4 deletions(-)
-
-diff --git a/tools/perf/util/stat.c b/tools/perf/util/stat.c
-index 6ab9c58beca7..9dfa8cac6bc4 100644
---- a/tools/perf/util/stat.c
-+++ b/tools/perf/util/stat.c
-@@ -396,6 +396,25 @@ static int check_per_pkg(struct evsel *counter, struct perf_counts_values *vals,
- 	return ret;
- }
+- Arnaldo
  
-+static bool evsel__count_has_error(struct evsel *evsel,
-+				   struct perf_counts_values *count,
-+				   struct perf_stat_config *config)
-+{
-+	/* the evsel was failed already */
-+	if (evsel->err || evsel->counts->scaled == -1)
-+		return true;
-+
-+	/* this is meaningful for CPU aggregation modes only */
-+	if (config->aggr_mode == AGGR_GLOBAL)
-+		return false;
-+
-+	/* it's considered ok when it actually ran */
-+	if (count->ena != 0 && count->run != 0)
-+		return false;
-+
-+	return true;
-+}
-+
- static int
- process_counter_values(struct perf_stat_config *config, struct evsel *evsel,
- 		       int cpu_map_idx, int thread,
-@@ -450,11 +469,9 @@ process_counter_values(struct perf_stat_config *config, struct evsel *evsel,
- 
- 			/*
- 			 * When any result is bad, make them all to give consistent output
--			 * in interval mode.  But per-task counters can have 0 enabled time
--			 * when some tasks are idle.
-+			 * in interval mode.
- 			 */
--			if (((count->ena == 0 || count->run == 0) && cpu.cpu != -1) ||
--			    evsel->counts->scaled == -1) {
-+			if (evsel__count_has_error(evsel, count, config) && !ps_aggr->failed) {
- 				ps_aggr->counts.val = 0;
- 				ps_aggr->counts.ena = 0;
- 				ps_aggr->counts.run = 0;
+> Signed-off-by: Namhyung Kim <namhyung@kernel.org>
+> ---
+>  tools/perf/util/stat.c | 25 +++++++++++++++++++++----
+>  1 file changed, 21 insertions(+), 4 deletions(-)
+> 
+> diff --git a/tools/perf/util/stat.c b/tools/perf/util/stat.c
+> index 6ab9c58beca7..9dfa8cac6bc4 100644
+> --- a/tools/perf/util/stat.c
+> +++ b/tools/perf/util/stat.c
+> @@ -396,6 +396,25 @@ static int check_per_pkg(struct evsel *counter, struct perf_counts_values *vals,
+>  	return ret;
+>  }
+>  
+> +static bool evsel__count_has_error(struct evsel *evsel,
+> +				   struct perf_counts_values *count,
+> +				   struct perf_stat_config *config)
+> +{
+> +	/* the evsel was failed already */
+> +	if (evsel->err || evsel->counts->scaled == -1)
+> +		return true;
+> +
+> +	/* this is meaningful for CPU aggregation modes only */
+> +	if (config->aggr_mode == AGGR_GLOBAL)
+> +		return false;
+> +
+> +	/* it's considered ok when it actually ran */
+> +	if (count->ena != 0 && count->run != 0)
+> +		return false;
+> +
+> +	return true;
+> +}
+> +
+>  static int
+>  process_counter_values(struct perf_stat_config *config, struct evsel *evsel,
+>  		       int cpu_map_idx, int thread,
+> @@ -450,11 +469,9 @@ process_counter_values(struct perf_stat_config *config, struct evsel *evsel,
+>  
+>  			/*
+>  			 * When any result is bad, make them all to give consistent output
+> -			 * in interval mode.  But per-task counters can have 0 enabled time
+> -			 * when some tasks are idle.
+> +			 * in interval mode.
+>  			 */
+> -			if (((count->ena == 0 || count->run == 0) && cpu.cpu != -1) ||
+> -			    evsel->counts->scaled == -1) {
+> +			if (evsel__count_has_error(evsel, count, config) && !ps_aggr->failed) {
+>  				ps_aggr->counts.val = 0;
+>  				ps_aggr->counts.ena = 0;
+>  				ps_aggr->counts.run = 0;
+> -- 
+> 2.38.0.413.g74048e4d9e-goog
+
 -- 
-2.38.0.413.g74048e4d9e-goog
 
+- Arnaldo
