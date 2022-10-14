@@ -2,100 +2,91 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2FA6DC4321E
-	for <linux-perf-users@archiver.kernel.org>; Fri, 14 Oct 2022 13:48:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4455BC433FE
+	for <linux-perf-users@archiver.kernel.org>; Fri, 14 Oct 2022 13:54:40 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229827AbiJNNsJ (ORCPT
+        id S230026AbiJNNyi (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Fri, 14 Oct 2022 09:48:09 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53790 "EHLO
+        Fri, 14 Oct 2022 09:54:38 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39084 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229768AbiJNNsI (ORCPT
+        with ESMTP id S230073AbiJNNyJ (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Fri, 14 Oct 2022 09:48:08 -0400
-Received: from ams.source.kernel.org (ams.source.kernel.org [IPv6:2604:1380:4601:e00::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 437EEEF595;
-        Fri, 14 Oct 2022 06:48:07 -0700 (PDT)
+        Fri, 14 Oct 2022 09:54:09 -0400
+Received: from ams.source.kernel.org (ams.source.kernel.org [145.40.68.75])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0A13C1C492B;
+        Fri, 14 Oct 2022 06:53:31 -0700 (PDT)
 Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by ams.source.kernel.org (Postfix) with ESMTPS id F2272B82344;
-        Fri, 14 Oct 2022 13:48:05 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 845B0C433C1;
-        Fri, 14 Oct 2022 13:48:04 +0000 (UTC)
+        by ams.source.kernel.org (Postfix) with ESMTPS id 7ADB9B82354;
+        Fri, 14 Oct 2022 13:53:18 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 146EFC43470;
+        Fri, 14 Oct 2022 13:53:17 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1665755284;
-        bh=YYPGXz+kZpqM731XLG6uYx/TCI9VSrSu6+9Z/EJkJGc=;
+        s=k20201202; t=1665755597;
+        bh=ART5k5Bn2tI53V+/SpuTXXx18eS07m2smakbgwYnQlk=;
         h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=McY7EfHPgxKnbYegMD3R8tvHdi0R+2GUFTbfwQiBFtLdF6Z9R3lnwsujTCUFuSFzP
-         p4YE02yBV8dBGtOJ8YQte+xElZkyrwv/rS/q658wLWUD2cD0btAJaIGgUsNbwQWHRu
-         q9wmJzpw1ab2M+PM7jufA/6lQ5V+LKBHIlVXTRdiJsPgbSltA33nPgbYYigEAPOSoC
-         kLvNO/UbSdnkoodYNTtrB4XaVA//Uti1nmVOQCXRq4RWxHgAphlbgBkW5+olBBuuSU
-         NOCZ4ivF85lyr0hJ+O/EPv1L8jCHK5qm3hIOK4UWOZNl45mKy0t8kcylqG5usT/3iJ
-         lSDi8dx7GpQBw==
+        b=YIUvCx4FkvGBFvOcP2XMMefMyBaqcXxSe6J5USOiu18D0QOOcmM70LRtltXFyUgJX
+         Ym4W8axBp9A3fwSlKaOgI8T83wP4IyeT8Dvs0wpRiu9AAO7RZ+no8OPEQ4JIazfVTE
+         hRE44zErYssghEDXUAmgqgILomM38QcCzfwf7Eebw1jUlm8KVEBkhr0QiSgeF0Yn8D
+         3A9UmNTArTsV+lJztHCYsd02l0q7lPEvYJO23ZSLrElnxcBPvypSctVMai8ORnA/QO
+         MozxLZBe4RWttz3/qDZD+XX63zKqA176kcSSPV3U/23Hf0wt+z5OJGPDVt3mbY2+iB
+         DNztVrT0dUdGw==
 Received: by quaco.ghostprotocols.net (Postfix, from userid 1000)
-        id 736694062C; Fri, 14 Oct 2022 10:48:02 -0300 (-03)
-Date:   Fri, 14 Oct 2022 10:48:02 -0300
+        id B5AEB4062C; Fri, 14 Oct 2022 10:53:14 -0300 (-03)
+Date:   Fri, 14 Oct 2022 10:53:14 -0300
 From:   Arnaldo Carvalho de Melo <acme@kernel.org>
-To:     Namhyung Kim <namhyung@kernel.org>
-Cc:     Jiri Olsa <jolsa@kernel.org>, Ingo Molnar <mingo@kernel.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Ian Rogers <irogers@google.com>,
-        Adrian Hunter <adrian.hunter@intel.com>,
-        linux-perf-users@vger.kernel.org,
-        John Garry <john.garry@huawei.com>,
-        Will Deacon <will@kernel.org>,
-        James Clark <james.clark@arm.com>,
-        Mike Leach <mike.leach@linaro.org>,
-        Leo Yan <leo.yan@linaro.org>,
-        linux-arm-kernel@lists.infradead.org,
-        Kevin Nomura <nomurak@google.com>
-Subject: Re: [PATCH] perf annotate: Add missing condition flags for arm64
-Message-ID: <Y0lokt9TTbWHLWmT@kernel.org>
-References: <20221006222232.266416-1-namhyung@kernel.org>
+To:     Ravi Bangoria <ravi.bangoria@amd.com>
+Cc:     "Liang, Kan" <kan.liang@linux.intel.com>, peterz@infradead.org,
+        jolsa@kernel.org, namhyung@kernel.org, eranian@google.com,
+        irogers@google.com, jmario@redhat.com, leo.yan@linaro.org,
+        alisaidi@amazon.com, ak@linux.intel.com,
+        dave.hansen@linux.intel.com, hpa@zytor.com, mingo@redhat.com,
+        mark.rutland@arm.com, alexander.shishkin@linux.intel.com,
+        tglx@linutronix.de, bp@alien8.de, x86@kernel.org,
+        linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org,
+        sandipan.das@amd.com, ananth.narayan@amd.com, kim.phillips@amd.com,
+        santosh.shukla@amd.com, kajoljain <kjain@linux.ibm.com>
+Subject: Re: [PATCH v3 01/15] perf/mem: Introduce
+ PERF_MEM_LVLNUM_{EXTN_MEM|IO}
+Message-ID: <Y0lpylA86mEnmefg@kernel.org>
+References: <20220928095805.596-1-ravi.bangoria@amd.com>
+ <20220928095805.596-2-ravi.bangoria@amd.com>
+ <bf4ec1cb-49a4-f5cd-8fd0-c70b287180c0@linux.ibm.com>
+ <a36ffee0-b0d5-5941-8d98-cc8e9b100a50@amd.com>
+ <88c920de-5af6-c7b0-d6a8-6c365491dd3e@linux.intel.com>
+ <f6268268-b4e9-9ed6-0453-65792644d953@amd.com>
+ <d428b526-a592-2ea5-dad8-d6eae72eb118@linux.intel.com>
+ <585535bf-47d0-178c-706a-3d71bfc31f68@amd.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20221006222232.266416-1-namhyung@kernel.org>
+In-Reply-To: <585535bf-47d0-178c-706a-3d71bfc31f68@amd.com>
 X-Url:  http://acmel.wordpress.com
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-Em Thu, Oct 06, 2022 at 03:22:32PM -0700, Namhyung Kim escreveu:
-> According to the document [1], it can also have 'hs', 'lo', 'vc', 'vs' as a
-> condition code.  Let's add them too.
-> 
-> [1] https://community.arm.com/arm-community-blogs/b/architectures-and-processors-blog/posts/condition-codes-1-condition-flags-and-codes
+Em Thu, Oct 06, 2022 at 05:08:55PM +0530, Ravi Bangoria escreveu:
+> On 03-Oct-22 6:45 PM, Liang, Kan wrote:
+> >> PERF_MEM_LVLNUM_EXTN_MEM was introduced to cover CXL devices but it's
+> >> bit ambiguous name and also not generic enough to cover cxl.cache and
+> >> cxl.io devices. Rename it to PERF_MEM_LVLNUM_CXL to be more specific.
 
-Thanks, applied.
+> > Looks good to me.
 
-- Arnaldo
+> > Reviewed-by: Kan Liang <kan.liang@linux.intel.com>
 
- 
-> Reported-by: Kevin Nomura <nomurak@google.com>
-> Signed-off-by: Namhyung Kim <namhyung@kernel.org>
-> ---
->  tools/perf/arch/arm64/annotate/instructions.c | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
-> 
-> diff --git a/tools/perf/arch/arm64/annotate/instructions.c b/tools/perf/arch/arm64/annotate/instructions.c
-> index 037e292ecd8e..4af0c3a0f86e 100644
-> --- a/tools/perf/arch/arm64/annotate/instructions.c
-> +++ b/tools/perf/arch/arm64/annotate/instructions.c
-> @@ -102,7 +102,7 @@ static int arm64__annotate_init(struct arch *arch, char *cpuid __maybe_unused)
->  	if (err)
->  		goto out_free_arm;
->  	/* b, b.cond, br, cbz/cbnz, tbz/tbnz */
-> -	err = regcomp(&arm->jump_insn, "^[ct]?br?\\.?(cc|cs|eq|ge|gt|hi|le|ls|lt|mi|ne|pl)?n?z?$",
-> +	err = regcomp(&arm->jump_insn, "^[ct]?br?\\.?(cc|cs|eq|ge|gt|hi|hs|le|lo|ls|lt|mi|ne|pl|vc|vs)?n?z?$",
->  		      REG_EXTENDED);
->  	if (err)
->  		goto out_free_call;
-> -- 
-> 2.38.0.rc1.362.ged0d419d3c-goog
+> Thanks Kan.
 
--- 
+> Peter, can you please include this patch along with the series?
+
+> Arnaldo, I'll respin tool side of patches with this change.
+
+Its already upstream, so please go on from there, ok?
+
+I'm now processing perf patches after getting lost in pahole land for a
+bit :-)
 
 - Arnaldo
