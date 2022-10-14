@@ -2,55 +2,55 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3B7F2C43219
-	for <linux-perf-users@archiver.kernel.org>; Fri, 14 Oct 2022 06:16:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 49A14C43217
+	for <linux-perf-users@archiver.kernel.org>; Fri, 14 Oct 2022 06:16:32 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229537AbiJNGQ3 (ORCPT
+        id S229577AbiJNGQb (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Fri, 14 Oct 2022 02:16:29 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58416 "EHLO
+        Fri, 14 Oct 2022 02:16:31 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58464 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229852AbiJNGQW (ORCPT
+        with ESMTP id S229804AbiJNGQI (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Fri, 14 Oct 2022 02:16:22 -0400
-Received: from mail-pf1-x42a.google.com (mail-pf1-x42a.google.com [IPv6:2607:f8b0:4864:20::42a])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 21C1C17434;
-        Thu, 13 Oct 2022 23:16:11 -0700 (PDT)
-Received: by mail-pf1-x42a.google.com with SMTP id i3so3998913pfk.9;
-        Thu, 13 Oct 2022 23:16:11 -0700 (PDT)
+        Fri, 14 Oct 2022 02:16:08 -0400
+Received: from mail-pf1-x42d.google.com (mail-pf1-x42d.google.com [IPv6:2607:f8b0:4864:20::42d])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4459017400;
+        Thu, 13 Oct 2022 23:16:04 -0700 (PDT)
+Received: by mail-pf1-x42d.google.com with SMTP id d10so4021200pfh.6;
+        Thu, 13 Oct 2022 23:16:04 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20210112;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:sender:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=1bVysEQHf7eswq/CEhQ6wbCV3Rg3qd7TUjqKNRIeNeE=;
-        b=GUH+jcz2YrnwSsaJtxMkbKTcBz74pdxJwwFX8CexctZBDJc5Hh9YB3avVH6EZd33Em
-         w2cBjLSRGRLgwGDCAO5RbiSEsmKFEvw+VsRir4V3rm8yJ+x+6349eTltQJG7XyENc2Gu
-         pCb5dQ9d1O7ZQq17D7t6oBIG50I0fYkf3Ne4ExVT6V3cYPRldrqr4n9npruaCGt3aSWa
-         8NFoZrCLppFPjVpcPZSxw2XO7OglEfZzYYS0GGupH5Lav15TtXBWO2aikd6koAidrxnr
-         t5crTOcNK9xYWh+2TsisSaf8golRNtwWfmQPJhb5spvb809lb2RLHhb4f/PdJdf7Do9K
-         WDhA==
+        bh=O82+8QMAp8RP+N1H707IzqXEjvaKP67GyMX407VeP1E=;
+        b=UjyPEgCV/P4txxO8/7n0vXdf68rbMK9RCtZgyHbQegC7UZ2kGXIdQQjenFFTVQO1Sf
+         8SEMep9jfVxs9De7toZJTP2IbShr6e9YhUK8MiPCv6NnYvqARaSn6INvjq/BSq35Z4xJ
+         3+5Mh8YGJP4N5oWVuwbHaWzHxaUcX1jVZfwGGErMj0/kJ5IGX8UEoo7xKT5Hrv81Ab8x
+         ARFSsZQCd4JwYFE/Zi/RoR0apsTWn+0JISeP5QVm7zT4AAgR0L+Fu0hxwZHJ5UUp2EJy
+         tSh9V/c5Dcq4YhlMYAEywr5WGe2L0SFksWsqGcPoi9tzzFtP8lJ2G6OvYKtHUe2STDlP
+         tCgQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:sender:x-gm-message-state:from
          :to:cc:subject:date:message-id:reply-to;
-        bh=1bVysEQHf7eswq/CEhQ6wbCV3Rg3qd7TUjqKNRIeNeE=;
-        b=RN75FvixC6Qxwx3/ukaQ/qHk0HWXG7g4J/Ev+rzy37F6FV5GtuRSEg+LryCqjtWkJ2
-         LJ3e0JtSGSdlwIpukRzAhQU5voarbVNfgf4tsuwR/hD9UNf6SrZuffEFRYTG4Y6iUNmn
-         S01MR1mDVEbTED+iQ4GYu6UDNV/yv9Jqp8ouBymc/xR9a+98pIIYsv/UF9joSaHPR1GH
-         Se+6b6kN4o/BwhaV0tNEA43HXiWuExFJZbvY1m9wixOTt2a7RoBzlP1qr4/zBVjrDabV
-         OBf/K4I8RSLHvWppPbZ+i/DIqHVrqXwvEbt03mIpz4I2Cn+RtG/U7BAXv+xlOXLfq6AO
-         s3IA==
-X-Gm-Message-State: ACrzQf2cYR5oi6sQLzRtqBW1H0IUZihTHpCjprGNHIRJT5nltXBN8Cc8
-        sjZ1Q7Frp52kxLJ+uoEE4X8=
-X-Google-Smtp-Source: AMsMyM77gWM2jS2vuCpjUZLZg0pA7po+ChrNGOqwYD8nCKV5xCflPpDezpxC20iCytVeaaLd1S+MLw==
-X-Received: by 2002:a63:534e:0:b0:44e:12bf:2df8 with SMTP id t14-20020a63534e000000b0044e12bf2df8mr3205202pgl.143.1665728170544;
-        Thu, 13 Oct 2022 23:16:10 -0700 (PDT)
+        bh=O82+8QMAp8RP+N1H707IzqXEjvaKP67GyMX407VeP1E=;
+        b=fhazD90KAX8yRVQVdSAaEseiROSuaaOLDxMtPM1ysYiITJ9atFeA6X2SWEUCxmHjC6
+         tQCyShoOe5HVw9mf69dlSEpZbvythQ90DD2gThAJsQCed8YpOHVs8uSUKY9A8ZDPZ1SH
+         T3viPYeiKOJaOPzv82Sw2fEmkGlujEsxSTY7uj0zSiXjS9ZF00H7KObecjT4dDHB7at2
+         w/y6VonLrkWoYGNNZ+K2eArXjdwmp5mpf0DTfagkH85BH3oxG73KMsikNmCQgxPPo3F2
+         CwGxIt6fBuVS/qOMoKjh8luOealwYBzW3bzRMdWy1UHCtl9kWOe9PMSAKXs/MsInUy9k
+         3KTg==
+X-Gm-Message-State: ACrzQf2IQ6ECfHT+eVuIDsjSmqvH/WfqCjzcid7QqzgbXnHZKwmA7xsC
+        Yogdlf8pWi6qESXcoqB3+tA=
+X-Google-Smtp-Source: AMsMyM7XbceeTZ+jKUwhfRwj0XHF4nLQm0SsYQiyF1srKkFEh3lg4khswlm1gpGEwZkUD771Dek1pA==
+X-Received: by 2002:a63:5415:0:b0:439:e932:e025 with SMTP id i21-20020a635415000000b00439e932e025mr3177531pgb.63.1665728163957;
+        Thu, 13 Oct 2022 23:16:03 -0700 (PDT)
 Received: from balhae.hsd1.ca.comcast.net ([2601:647:6780:1040:630:195c:38a7:a411])
-        by smtp.gmail.com with ESMTPSA id 94-20020a17090a09e700b0020af2411721sm721942pjo.34.2022.10.13.23.16.09
+        by smtp.gmail.com with ESMTPSA id 94-20020a17090a09e700b0020af2411721sm721942pjo.34.2022.10.13.23.16.02
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 13 Oct 2022 23:16:10 -0700 (PDT)
+        Thu, 13 Oct 2022 23:16:03 -0700 (PDT)
 Sender: Namhyung Kim <namhyung@gmail.com>
 From:   Namhyung Kim <namhyung@kernel.org>
 To:     Arnaldo Carvalho de Melo <acme@kernel.org>,
@@ -66,9 +66,9 @@ Cc:     Ingo Molnar <mingo@kernel.org>,
         Athira Rajeev <atrajeev@linux.vnet.ibm.com>,
         James Clark <james.clark@arm.com>,
         Xing Zhengjun <zhengjun.xing@linux.intel.com>
-Subject: [PATCH 11/19] perf stat: Allocate aggr counts for recorded data
-Date:   Thu, 13 Oct 2022 23:15:42 -0700
-Message-Id: <20221014061550.463644-12-namhyung@kernel.org>
+Subject: [PATCH 07/19] perf stat: Add struct perf_stat_aggr to perf_stat_evsel
+Date:   Thu, 13 Oct 2022 23:15:38 -0700
+Message-Id: <20221014061550.463644-8-namhyung@kernel.org>
 X-Mailer: git-send-email 2.38.0.413.g74048e4d9e-goog
 In-Reply-To: <20221014061550.463644-1-namhyung@kernel.org>
 References: <20221014061550.463644-1-namhyung@kernel.org>
@@ -78,137 +78,130 @@ Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-In the process_stat_config_event() it sets the aggr_mode that means the
-earlier evlist__alloc_stats() cannot allocate the aggr counts due to the
-missing aggr_mode.
+The perf_stat_aggr struct is to keep aggregated counter values and the
+states according to the aggregation mode.  The number of entries is
+depends on the mode and this is a preparation for the later use.
 
-Do it after setting the aggr_map using evlist__alloc_aggr_stats().
-
-Acked-by: Ian Rogers <irogers@google.com>
 Signed-off-by: Namhyung Kim <namhyung@kernel.org>
 ---
- tools/perf/builtin-stat.c | 20 +++++++++++++++-----
- tools/perf/util/stat.c    | 39 +++++++++++++++++++++++++++++++--------
- tools/perf/util/stat.h    |  2 ++
- 3 files changed, 48 insertions(+), 13 deletions(-)
+ tools/perf/util/stat.c | 34 +++++++++++++++++++++++++++-------
+ tools/perf/util/stat.h | 19 +++++++++++++++++++
+ 2 files changed, 46 insertions(+), 7 deletions(-)
 
-diff --git a/tools/perf/builtin-stat.c b/tools/perf/builtin-stat.c
-index 6777fef0d56c..2a6a5d0c5563 100644
---- a/tools/perf/builtin-stat.c
-+++ b/tools/perf/builtin-stat.c
-@@ -1342,7 +1342,11 @@ static struct aggr_cpu_id perf_stat__get_cpu(struct perf_stat_config *config __m
- static struct aggr_cpu_id perf_stat__get_aggr(struct perf_stat_config *config,
- 					      aggr_get_id_t get_id, struct perf_cpu cpu)
- {
--	struct aggr_cpu_id id = aggr_cpu_id__empty();
-+	struct aggr_cpu_id id;
-+
-+	/* per-process mode - should use global aggr mode */
-+	if (cpu.cpu == -1)
-+		return get_id(config, cpu);
- 
- 	if (aggr_cpu_id__is_empty(&config->cpus_aggr_map->map[cpu.cpu]))
- 		config->cpus_aggr_map->map[cpu.cpu] = get_id(config, cpu);
-@@ -2125,17 +2129,23 @@ int process_stat_config_event(struct perf_session *session,
- 	if (perf_cpu_map__empty(st->cpus)) {
- 		if (st->aggr_mode != AGGR_UNSET)
- 			pr_warning("warning: processing task data, aggregation mode not set\n");
--		return 0;
--	}
--
--	if (st->aggr_mode != AGGR_UNSET)
-+	} else if (st->aggr_mode != AGGR_UNSET) {
- 		stat_config.aggr_mode = st->aggr_mode;
-+	}
- 
- 	if (perf_stat.data.is_pipe)
- 		perf_stat_init_aggr_mode();
- 	else
- 		perf_stat_init_aggr_mode_file(st);
- 
-+	if (stat_config.aggr_map) {
-+		int nr_aggr = stat_config.aggr_map->nr;
-+
-+		if (evlist__alloc_aggr_stats(session->evlist, nr_aggr) < 0) {
-+			pr_err("cannot allocate aggr counts\n");
-+			return -1;
-+		}
-+	}
- 	return 0;
- }
- 
 diff --git a/tools/perf/util/stat.c b/tools/perf/util/stat.c
-index 3593af403188..d0e5c4c402aa 100644
+index 8ec8bb4a9912..c9d5aa295b54 100644
 --- a/tools/perf/util/stat.c
 +++ b/tools/perf/util/stat.c
-@@ -141,6 +141,31 @@ static void evsel__reset_stat_priv(struct evsel *evsel)
- 		memset(aggr, 0, sizeof(*aggr) * ps->nr_aggr);
+@@ -133,15 +133,33 @@ static void perf_stat_evsel_id_init(struct evsel *evsel)
+ static void evsel__reset_stat_priv(struct evsel *evsel)
+ {
+ 	struct perf_stat_evsel *ps = evsel->stats;
++	struct perf_stat_aggr *aggr = ps->aggr;
+ 
+ 	init_stats(&ps->res_stats);
++
++	if (aggr)
++		memset(aggr, 0, sizeof(*aggr) * ps->nr_aggr);
  }
  
-+static int evsel__alloc_aggr_stats(struct evsel *evsel, int nr_aggr)
-+{
-+	struct perf_stat_evsel *ps = evsel->stats;
+-static int evsel__alloc_stat_priv(struct evsel *evsel)
 +
-+	if (ps == NULL)
-+		return 0;
-+
-+	ps->nr_aggr = nr_aggr;
-+	ps->aggr = calloc(nr_aggr, sizeof(*ps->aggr));
-+	if (ps->aggr == NULL)
-+		return -ENOMEM;
-+
-+	return 0;
-+}
-+
-+int evlist__alloc_aggr_stats(struct evlist *evlist, int nr_aggr)
-+{
-+	struct evsel *evsel;
-+
-+	evlist__for_each_entry(evlist, evsel) {
-+		if (evsel__alloc_aggr_stats(evsel, nr_aggr) < 0)
-+			return -1;
-+	}
-+	return 0;
-+}
- 
- static int evsel__alloc_stat_priv(struct evsel *evsel, int nr_aggr)
++static int evsel__alloc_stat_priv(struct evsel *evsel, int nr_aggr)
  {
-@@ -150,16 +175,14 @@ static int evsel__alloc_stat_priv(struct evsel *evsel, int nr_aggr)
- 	if (ps == NULL)
- 		return -ENOMEM;
- 
--	if (nr_aggr) {
--		ps->nr_aggr = nr_aggr;
--		ps->aggr = calloc(nr_aggr, sizeof(*ps->aggr));
--		if (ps->aggr == NULL) {
--			free(ps);
--			return -ENOMEM;
--		}
-+	evsel->stats = ps;
+-	evsel->stats = zalloc(sizeof(struct perf_stat_evsel));
+-	if (evsel->stats == NULL)
++	struct perf_stat_evsel *ps;
 +
-+	if (nr_aggr && evsel__alloc_aggr_stats(evsel, nr_aggr) < 0) {
-+		evsel->stats = NULL;
-+		free(ps);
-+		return -ENOMEM;
- 	}
- 
--	evsel->stats = ps;
++	ps = zalloc(sizeof(*ps));
++	if (ps == NULL)
+ 		return -ENOMEM;
++
++	if (nr_aggr) {
++		ps->nr_aggr = nr_aggr;
++		ps->aggr = calloc(nr_aggr, sizeof(*ps->aggr));
++		if (ps->aggr == NULL) {
++			free(ps);
++			return -ENOMEM;
++		}
++	}
++
++	evsel->stats = ps;
  	perf_stat_evsel_id_init(evsel);
  	evsel__reset_stat_priv(evsel);
  	return 0;
+@@ -151,8 +169,10 @@ static void evsel__free_stat_priv(struct evsel *evsel)
+ {
+ 	struct perf_stat_evsel *ps = evsel->stats;
+ 
+-	if (ps)
++	if (ps) {
++		zfree(&ps->aggr);
+ 		zfree(&ps->group_data);
++	}
+ 	zfree(&evsel->stats);
+ }
+ 
+@@ -181,9 +201,9 @@ static void evsel__reset_prev_raw_counts(struct evsel *evsel)
+ 		perf_counts__reset(evsel->prev_raw_counts);
+ }
+ 
+-static int evsel__alloc_stats(struct evsel *evsel, bool alloc_raw)
++static int evsel__alloc_stats(struct evsel *evsel, int nr_aggr, bool alloc_raw)
+ {
+-	if (evsel__alloc_stat_priv(evsel) < 0 ||
++	if (evsel__alloc_stat_priv(evsel, nr_aggr) < 0 ||
+ 	    evsel__alloc_counts(evsel) < 0 ||
+ 	    (alloc_raw && evsel__alloc_prev_raw_counts(evsel) < 0))
+ 		return -ENOMEM;
+@@ -196,7 +216,7 @@ int evlist__alloc_stats(struct evlist *evlist, bool alloc_raw)
+ 	struct evsel *evsel;
+ 
+ 	evlist__for_each_entry(evlist, evsel) {
+-		if (evsel__alloc_stats(evsel, alloc_raw))
++		if (evsel__alloc_stats(evsel, 0, alloc_raw))
+ 			goto out_free;
+ 	}
+ 
 diff --git a/tools/perf/util/stat.h b/tools/perf/util/stat.h
-index 0980875b9be1..4c00f814bd79 100644
+index b0899c6e002f..42453513ffea 100644
 --- a/tools/perf/util/stat.h
 +++ b/tools/perf/util/stat.h
-@@ -275,6 +275,8 @@ void evlist__reset_prev_raw_counts(struct evlist *evlist);
- void evlist__copy_prev_raw_counts(struct evlist *evlist);
- void evlist__save_aggr_prev_raw_counts(struct evlist *evlist);
+@@ -8,6 +8,7 @@
+ #include <sys/resource.h>
+ #include "cpumap.h"
+ #include "rblist.h"
++#include "counts.h"
  
-+int evlist__alloc_aggr_stats(struct evlist *evlist, int nr_aggr);
+ struct perf_cpu_map;
+ struct perf_stat_config;
+@@ -42,9 +43,27 @@ enum perf_stat_evsel_id {
+ 	PERF_STAT_EVSEL_ID__MAX,
+ };
+ 
++/* hold aggregated event info */
++struct perf_stat_aggr {
++	/* aggregated values */
++	struct perf_counts_values	counts;
++	/* number of entries (CPUs) aggregated */
++	int				nr;
++	/* whether any entry has failed to read/process event */
++	bool				failed;
++};
 +
- int perf_stat_process_counter(struct perf_stat_config *config,
- 			      struct evsel *counter);
- struct perf_tool;
++/* per-evsel event stats */
+ struct perf_stat_evsel {
++	/* used for repeated runs */
+ 	struct stats		 res_stats;
++	/* evsel id for quick check */
+ 	enum perf_stat_evsel_id	 id;
++	/* number of allocated 'aggr' */
++	int			 nr_aggr;
++	/* aggregated event values */
++	struct perf_stat_aggr	*aggr;
++	/* used for group read */
+ 	u64			*group_data;
+ };
+ 
 -- 
 2.38.0.413.g74048e4d9e-goog
 
