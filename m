@@ -2,119 +2,200 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A952FC433FE
-	for <linux-perf-users@archiver.kernel.org>; Fri, 14 Oct 2022 22:05:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 09E3AC4332F
+	for <linux-perf-users@archiver.kernel.org>; Fri, 14 Oct 2022 22:19:06 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229613AbiJNWFx (ORCPT
+        id S229594AbiJNWTE (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Fri, 14 Oct 2022 18:05:53 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:32880 "EHLO
+        Fri, 14 Oct 2022 18:19:04 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42296 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229518AbiJNWFw (ORCPT
+        with ESMTP id S229886AbiJNWSb (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Fri, 14 Oct 2022 18:05:52 -0400
-Received: from ams.source.kernel.org (ams.source.kernel.org [IPv6:2604:1380:4601:e00::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C3842181D83;
-        Fri, 14 Oct 2022 15:05:50 -0700 (PDT)
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by ams.source.kernel.org (Postfix) with ESMTPS id 4F615B811D9;
-        Fri, 14 Oct 2022 22:05:48 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 0A6C2C433C1;
-        Fri, 14 Oct 2022 22:05:47 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1665785147;
-        bh=/RAr9VwoMAS8yb49Oyf2pts2P9qIXMc0E07MraouJFg=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=CYoyqKbVJHbG2w+wF8a3E/xLB2TqXTcefrnXQqZs2iLJ4P+3JwNPc4sXKjLafZ4e9
-         u7uWE1iJJ7aZkkMI1oZbnhEf2sc7IehP/gOobqC49EJvRro6EedVU/T1ejQZrYYvKZ
-         vmao7gxPAIT6ur7D4pTupuP4S1BBKqLvsI92mqSvfze8pdhJnKYZ45YV/JplFs8QFQ
-         /Ch0cZ+V+BD90rs/iT8np8Z1xRBNh6dt8DVMlioi3a0DR7BkcUSQG/+2j725Pf7X8E
-         LhPD7WgseGOy529Zea6taa3wQ94rw/3BX5a0DvrLBwWLL5cyzwYwpMxOBGXG/4N0D6
-         1ody04j5gp2mw==
-Received: by mail-vk1-f169.google.com with SMTP id g85so2897944vkf.10;
-        Fri, 14 Oct 2022 15:05:46 -0700 (PDT)
-X-Gm-Message-State: ACrzQf0ToHGorj3DSuoq3i82ParypXMeOrJJB5pKtXlBHsAoJfRDr2br
-        pKjltcAqDX9ZVqDXZ92TI1F6rbkegkntedtz4A==
-X-Google-Smtp-Source: AMsMyM5lf52NgWIdCO0huRu2gXpgPKejjKfHv1dEWNI+Eka0Tq2Yv4hxCnw2Jg0XeWkV/dDCmvcYrSqAZDvH0XgCZm8=
-X-Received: by 2002:a1f:60cd:0:b0:3ae:da42:89d0 with SMTP id
- u196-20020a1f60cd000000b003aeda4289d0mr3760991vkb.15.1665785146005; Fri, 14
- Oct 2022 15:05:46 -0700 (PDT)
+        Fri, 14 Oct 2022 18:18:31 -0400
+Received: from mail-oi1-f172.google.com (mail-oi1-f172.google.com [209.85.167.172])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 291801E0455;
+        Fri, 14 Oct 2022 15:18:23 -0700 (PDT)
+Received: by mail-oi1-f172.google.com with SMTP id w196so6481998oiw.8;
+        Fri, 14 Oct 2022 15:18:23 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=cv1UBJfQzFJqm9MKrYEI4Znkn0nH6Ew1AYP8Zj5KlyY=;
+        b=4+uoCLhQgJh8gn47FIutjI+KQW48uW2qWCREq8YS+gR6cRrUE0uhvfMLOlo3OJbC+N
+         eAWCxC0ly5TZ6qzA1VSiORHQvlzY9xCzW+N9Nd/FFaiZEYBPaaFBrYATJT7fz0/za+9+
+         L9btK5vEqX5+tWPkbb4QTW5iL/DAEMjAQOqsKzV9Q4SoWkUYYCVk6irwnBl5zPHpMDR4
+         /72An05tlmnNSMv/ohhuZU5Lj/jQEXFYieNRlodInHiTUAVcmlbIiJ57oS7owHL06vxK
+         5FO1f2yts7hYbbdlJFWgBF7gsmNKI3/IGSPJVyeQ9/09DCWspUZor7DWsVa5LeWEeM7A
+         A8zw==
+X-Gm-Message-State: ACrzQf0rC0gDl93dVqawOvZhah8mSWooxBySHcyODs9x4tC5EwsKj3uJ
+        qBegVCEyF5mao/33pJjktueQwCIVQJwQISaHH3s=
+X-Google-Smtp-Source: AMsMyM7RcSpNsrdTB3IMVoBjep6aChMvzNXIw7J/EQwCOamIINOB833PUrM8CKc1Dr591uE93IP4/i+8N7GjctPKlJA=
+X-Received: by 2002:a05:6808:181e:b0:350:e92a:9ab1 with SMTP id
+ bh30-20020a056808181e00b00350e92a9ab1mr14639oib.209.1665785817076; Fri, 14
+ Oct 2022 15:16:57 -0700 (PDT)
 MIME-Version: 1.0
-References: <20220914-arm-perf-tool-spe1-2-v2-v4-0-83c098e6212e@kernel.org>
- <20220914-arm-perf-tool-spe1-2-v2-v4-2-83c098e6212e@kernel.org> <Y0nZ3HQ6q9HzvEas@kernel.org>
-In-Reply-To: <Y0nZ3HQ6q9HzvEas@kernel.org>
-From:   Rob Herring <robh@kernel.org>
-Date:   Fri, 14 Oct 2022 17:05:36 -0500
-X-Gmail-Original-Message-ID: <CAL_Jsq+oGm47TjWzSENvck+i9AX7vzrd6zOYrEk3PQbtPHT78Q@mail.gmail.com>
-Message-ID: <CAL_Jsq+oGm47TjWzSENvck+i9AX7vzrd6zOYrEk3PQbtPHT78Q@mail.gmail.com>
-Subject: Re: [PATCH v4 2/3] perf tools: Sync perf_event_attr::config3 addition
-To:     Arnaldo Carvalho de Melo <acme@kernel.org>
-Cc:     Peter Zijlstra <peterz@infradead.org>,
+References: <20220922071017.17398-1-dongli.zhang@oracle.com>
+In-Reply-To: <20220922071017.17398-1-dongli.zhang@oracle.com>
+From:   Namhyung Kim <namhyung@kernel.org>
+Date:   Fri, 14 Oct 2022 15:16:45 -0700
+Message-ID: <CAM9d7cj8z+ryyzUHR+P1Dcpot2jjW+Qcc4CPQpfafTXN=LEU0Q@mail.gmail.com>
+Subject: Re: [PATCH RFC 1/1] perf stat: do not fatal if the leader is errored
+To:     Dongli Zhang <dongli.zhang@oracle.com>
+Cc:     linux-perf-users <linux-perf-users@vger.kernel.org>,
+        KVM <kvm@vger.kernel.org>,
+        linux-kernel <linux-kernel@vger.kernel.org>,
+        Peter Zijlstra <peterz@infradead.org>,
         Ingo Molnar <mingo@redhat.com>,
+        Arnaldo Carvalho de Melo <acme@kernel.org>,
         Mark Rutland <mark.rutland@arm.com>,
-        Namhyung Kim <namhyung@kernel.org>,
         Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Jiri Olsa <jolsa@kernel.org>, linux-kernel@vger.kernel.org,
-        linux-perf-users@vger.kernel.org, Leo Yan <leo.yan@linaro.org>,
-        James Clark <james.clark@arm.com>
+        Jiri Olsa <jolsa@kernel.org>, joe.jin@oracle.com,
+        Like Xu <likexu@tencent.com>
 Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-On Fri, Oct 14, 2022 at 4:51 PM Arnaldo Carvalho de Melo
-<acme@kernel.org> wrote:
+Hello,
+
+On Thu, Sep 22, 2022 at 12:10 AM Dongli Zhang <dongli.zhang@oracle.com> wrote:
 >
-> Em Tue, Oct 04, 2022 at 02:12:36PM -0500, Rob Herring escreveu:
-> > Arm SPEv1.2 adds another 64-bits of event filtering control. As the
-> > existing perf_event_attr::configN fields are all used up for SPE PMU, an
-> > additional field is needed. Add a new 'config3' field.
-> >
-> > Signed-off-by: Rob Herring <robh@kernel.org>
-> > ---
-> > This patch is dependent on the kernel side landing first.
-> > ---
-> >  include/uapi/linux/perf_event.h       | 3 +++
-> >  tools/include/uapi/linux/perf_event.h | 3 +++
-> >  2 files changed, 6 insertions(+)
-> >
-> > diff --git a/include/uapi/linux/perf_event.h b/include/uapi/linux/perf_event.h
-> > index 03b370062741..b53f9b958235 100644
-> > --- a/include/uapi/linux/perf_event.h
-> > +++ b/include/uapi/linux/perf_event.h
-> > @@ -333,6 +333,7 @@ enum perf_event_read_format {
-> >  #define PERF_ATTR_SIZE_VER5  112     /* add: aux_watermark */
-> >  #define PERF_ATTR_SIZE_VER6  120     /* add: aux_sample_size */
-> >  #define PERF_ATTR_SIZE_VER7  128     /* add: sig_data */
-> > +#define PERF_ATTR_SIZE_VER8  136     /* add: config3 */
-> >
-> >  /*
-> >   * Hardware event_id to monitor via a performance monitoring event:
-> > @@ -474,6 +475,8 @@ struct perf_event_attr {
-> >        * truncated accordingly on 32 bit architectures.
-> >        */
-> >       __u64   sig_data;
-> > +
-> > +     __u64   config3; /* extension of config2 */
-> >  };
-> >
-> >  /*
+> Add kvm@vger.kernel.org as this issue is in virtualization env.
 >
+> The topdown metrics events became default since
+> commit 42641d6f4d15 ("perf stat: Add Topdown metrics events as default
+> events"). The perf will use 'slots' if the
+> /sys/bus/event_source/devices/cpu/events/slots is available.
 >
-> I'm removing the above part, as this is for the kernel, not for tooling.
+> Unfortunately, the 'slots' may not be supported in the virualization
+> environment. The hypervisor may not expose the 'slots' counter to the VM
+> in cpuid. As a result, the kernel may disable topdown slots and metrics
+> events in intel_pmu_init() if slots event is not in CPUID. E.g., both
+> c->weight and c->idxmsk64 are set to 0.
+>
+> There will be below error on Icelake VM since 'slots' is the leader:
+>
+> $ perf stat
+> Error:
+> The sys_perf_event_open() syscall returned with 22 (Invalid argument) for event (slots).
+> /bin/dmesg | grep -i perf may provide additional information.
+>
+> This is because the stat_handle_error() returns COUNTER_FATAL when the
+> 'slots' is used as leader of events.
+>
+> There are three options to fix the issue.
+>
+> 1. Do not expose /sys/bus/event_source/devices/cpu/events/slots to
+> userspace so that pmu_have_event(pmu->name, "slots") returns false.
+>
+> 2. Run cpuid at perf userspace and avoid using 'slots' if it is not
+> supported in cpuid.
+>
+> 3. Do not fatal perf if the leader is failed. Do not create events for an
+> evsel if its leader is already failed.
+>
+> This RFC patch is with the 3rd option. Would you mind suggesting which
+> option is better?
 
-Oops, yes.
+Sorry for the late reply but I think option 1 is the way to go.
+
+The option 3 would be a transient workaround and it would affect
+other events too.  If it's really needed, I think option 2 is slightly better
+than option 3.  Or, we can add --force option to skip non-supported
+events explicitly.
+
+Thanks,
+Namhyung
 
 >
-> Was this part submitted upstream? I couldn't find, so far, where it was
-> submitted, can you please clarify?
-
-I have to respin it after rc1. I'm waiting on patch 1 to be accepted first.
-
-You should only take patch 1 (for 6.1/stable) as I've noted in the
-patches. I sent the whole thing because Leo asked to see the whole
-thing...
-
-Rob
+> Here is the output of patch.
+>
+> $ perf stat -v
+> Using CPUID GenuineIntel-6-6A-6
+> slots -> cpu/event=0,umask=0x4/
+> topdown-retiring -> cpu/event=0,umask=0x80/
+> topdown-bad-spec -> cpu/event=0,umask=0x81/
+> topdown-fe-bound -> cpu/event=0,umask=0x82/
+> topdown-be-bound -> cpu/event=0,umask=0x83/
+> Control descriptor is not initialized
+> Warning:
+> slots event is not supported by the kernel.
+> ^Ccpu-clock: 62021481051 62021480237 62021480237
+> context-switches: 437 62021478064 62021478064
+> cpu-migrations: 17 62021475294 62021475294
+> page-faults: 12 62021471925 62021471925
+> cycles: 15662273 62020909141 62020909141
+> instructions: 6580385 62008944246 62008944246
+> branches: 1446119 62008855550 62008855550
+> branch-misses: 30970 62008643255 62008643255
+> failed to read counter slots
+> failed to read counter topdown-retiring
+> failed to read counter topdown-bad-spec
+> failed to read counter topdown-fe-bound
+> failed to read counter topdown-be-bound
+>
+>  Performance counter stats for 'system wide':
+>
+>          62,021.48 msec cpu-clock                        #   16.006 CPUs utilized
+>                437      context-switches                 #    7.046 /sec
+>                 17      cpu-migrations                   #    0.274 /sec
+>                 12      page-faults                      #    0.193 /sec
+>         15,662,273      cycles                           #    0.000 GHz
+>          6,580,385      instructions                     #    0.42  insn per cycle
+>          1,446,119      branches                         #   23.316 K/sec
+>             30,970      branch-misses                    #    2.14% of all branches
+>    <not supported>      slots
+>    <not supported>      topdown-retiring
+>    <not supported>      topdown-bad-spec
+>    <not supported>      topdown-fe-bound
+>    <not supported>      topdown-be-bound
+>
+>        3.874991326 seconds time elapsed
+>
+> Thank you very much!
+>
+> Cc: Joe Jin <joe.jin@oracle.com>
+> Signed-off-by: Dongli Zhang <dongli.zhang@oracle.com>
+> ---
+>  tools/perf/builtin-stat.c | 8 +++++---
+>  1 file changed, 5 insertions(+), 3 deletions(-)
+>
+> diff --git a/tools/perf/builtin-stat.c b/tools/perf/builtin-stat.c
+> index 0b4a62e4ff67..1053cf0886c0 100644
+> --- a/tools/perf/builtin-stat.c
+> +++ b/tools/perf/builtin-stat.c
+> @@ -762,9 +762,7 @@ static enum counter_recovery stat_handle_error(struct evsel *counter)
+>                  */
+>                 counter->errored = true;
+>
+> -               if ((evsel__leader(counter) != counter) ||
+> -                   !(counter->core.leader->nr_members > 1))
+> -                       return COUNTER_SKIP;
+> +               return COUNTER_SKIP;
+>         } else if (evsel__fallback(counter, errno, msg, sizeof(msg))) {
+>                 if (verbose > 0)
+>                         ui__warning("%s\n", msg);
+> @@ -843,6 +841,8 @@ static int __run_perf_stat(int argc, const char **argv, int run_idx)
+>                 if (target.use_bpf)
+>                         break;
+>
+> +               if (evsel__leader(counter)->errored)
+> +                       continue;
+>                 if (counter->reset_group || counter->errored)
+>                         continue;
+>                 if (evsel__is_bpf(counter))
+> @@ -901,6 +901,8 @@ static int __run_perf_stat(int argc, const char **argv, int run_idx)
+>                 evlist__for_each_cpu(evlist_cpu_itr, evsel_list, affinity) {
+>                         counter = evlist_cpu_itr.evsel;
+>
+> +                       if (evsel__leader(counter)->errored)
+> +                               continue;
+>                         if (!counter->reset_group && !counter->errored)
+>                                 continue;
+>                         if (!counter->reset_group)
+> --
+> 2.17.1
+>
