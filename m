@@ -2,55 +2,55 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A59D8C4332F
-	for <linux-perf-users@archiver.kernel.org>; Thu, 13 Oct 2022 20:57:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E252BC433FE
+	for <linux-perf-users@archiver.kernel.org>; Fri, 14 Oct 2022 06:16:00 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229591AbiJMU5A (ORCPT
+        id S229633AbiJNGP7 (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Thu, 13 Oct 2022 16:57:00 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42824 "EHLO
+        Fri, 14 Oct 2022 02:15:59 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58110 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229557AbiJMU47 (ORCPT
+        with ESMTP id S229652AbiJNGP6 (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Thu, 13 Oct 2022 16:56:59 -0400
-Received: from mail-pg1-x52d.google.com (mail-pg1-x52d.google.com [IPv6:2607:f8b0:4864:20::52d])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B0609183E1E;
-        Thu, 13 Oct 2022 13:56:58 -0700 (PDT)
-Received: by mail-pg1-x52d.google.com with SMTP id e129so2569284pgc.9;
-        Thu, 13 Oct 2022 13:56:58 -0700 (PDT)
+        Fri, 14 Oct 2022 02:15:58 -0400
+Received: from mail-pg1-x52e.google.com (mail-pg1-x52e.google.com [IPv6:2607:f8b0:4864:20::52e])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A6231193EE0;
+        Thu, 13 Oct 2022 23:15:54 -0700 (PDT)
+Received: by mail-pg1-x52e.google.com with SMTP id b5so3489548pgb.6;
+        Thu, 13 Oct 2022 23:15:54 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20210112;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:sender:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=GwIrM6PqNMNs+23zGPNZGFODdHKdYKYXNnXBaYGk6no=;
-        b=bZryOJi77Rv3rbKooYxAQa7v8FiSWMxEFBnfpNGhi/UpvldiklHZsUNGBGy9c/pFF9
-         YxstqFBtH3jK3rya1kMqfUK0qpav7vzmKmxep7Lw4SOBJJ00EUlPRMh6FVEzQjIW3CtT
-         SLiJb9Jz+STOPtU1r0PwvNr9OBUJ9ksD0g5hi0FAU+IgiNDd8bmW9VnXPjIMSsR7pqDX
-         BmEWCrNikS98SJGVR9tRy+3GdJhkMHcL2nb6cnnr1lN+0TwP/TimWpSeY473ZRNHiL5E
-         qTA7NteYyk3aWfg1q0gWW0Sucq4UhxV9Ocj3DYhGbGiczlxw7lNNOhlObZaEeMfZIAX/
-         ru0w==
+        bh=rHWFfD5uXAIuo8SM1relQgBWw32fsgzMn6vLvoZArhU=;
+        b=RHJRhm6gb4zpIYhz4wfgoUEV5boxAePR7GAVqHy7ZqETvvPv6oYZ/KKIthRTUIC6r9
+         0atOmTyrK5jQwwlwMdXALJljCpmQj/AHZZVaFYNfcZ7f+hjYYqEsuUn/Qi7Wz5XACIK2
+         YGIB17pKZj2eY0DE6QSHFnYsg9ryHYmPLox1gzgmlVaeetHgqOvILkciANx2N1RBQ/Zp
+         4IlnvWVVG/mCFbPp33wxssQWkeByROFmbsZHe+COptJMXNZIxsAIAcHA7WluYbmd1OSm
+         dDQlY2lV0/Bxd4isnP87yxIgFvShoK9E2l0JAP5qrg3+uTu043FNtnI8tkfVikL9rPdF
+         LNxg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:sender:x-gm-message-state:from
          :to:cc:subject:date:message-id:reply-to;
-        bh=GwIrM6PqNMNs+23zGPNZGFODdHKdYKYXNnXBaYGk6no=;
-        b=mvzlOSVTce/MK5uraBI7gW6bSMdsWbPnwFlkCrufBbKjHVJ70KKDFDJNKLi+qGFXyH
-         uGUUZeP300AjWfsjz5X1tR4cCnlFQYTrcBo05C/h00DWrir2q2jTv6aarr6aR6W1x3JS
-         gyyx7IOfo05BDebEtQEqpXq4Z1EslkDU9/AjF1rlpQqT2RSzUVqfLIRr89ARF8DeT3p/
-         tq9romzbhoVV959b8AsPs0CFyq+lBnkMDswln+7VTiImfjYBOp2ZnZcP0DzRGShR7x18
-         ZfXBAs/W0rXNXenWlH/ka5rTWD0rW9WWukt7fdxM6NFqL+xhlHgTkAtUd/vl2NckTqvy
-         YaXQ==
-X-Gm-Message-State: ACrzQf3CWzktkM+X/Nrrn2iGmp6wudjbUmhdTsfJmMmXf/ruBZbHDv2E
-        oY9PkmqrkWCvWX2XxhfA0Q4=
-X-Google-Smtp-Source: AMsMyM7xAyN+uhI+6X8HJo1C0MhAUgcRa1vJ71mGmzp52Dr9HbBuY1qszhhQ1UFwMmLH4X2d7NUsWg==
-X-Received: by 2002:a63:a13:0:b0:440:a593:b79f with SMTP id 19-20020a630a13000000b00440a593b79fmr1478647pgk.557.1665694618187;
-        Thu, 13 Oct 2022 13:56:58 -0700 (PDT)
-Received: from balhae.hsd1.ca.comcast.net ([2601:647:6780:1040:b4de:68c7:333b:58ae])
-        by smtp.gmail.com with ESMTPSA id b26-20020aa7951a000000b005604c1a0fbcsm139964pfp.74.2022.10.13.13.56.56
+        bh=rHWFfD5uXAIuo8SM1relQgBWw32fsgzMn6vLvoZArhU=;
+        b=QCyHaXfq9K+AEbwOdx9/FE4Cm/TtK5zNENn/6Q1j/NrylS1FNRMmy96cbytBFryxJw
+         bcQ2UJPuViLS8Bfxr3nk5MVUYx2LICKJLgwOoYa6+XeJCPMlx+A8wiqDVc5+Mzj72VWi
+         /LHETfCYquaGKchoO7uJKgajsdxsKGBPAJc3CLSdH//YknfN3FS0317o5xiFeVGI64JL
+         rI5lQjy4WrwOCyQVsK3GalFqhILMtM8D9ik3EvdAYnJ/nm7+w8qUqrBiuq39OnEpYKxr
+         4h1PygbwDtaLSd/Myz7NegFo43CMPepl3zDnowJTbYzAiGGt5RnLheSUyI9TkbTiPxFZ
+         NcXQ==
+X-Gm-Message-State: ACrzQf2pTa9ufBdeYWm3CavogwQpS4MbFC1WEzZq976olJZZq3hfVNCa
+        GN172QuBoekdRvlyHylUqWs=
+X-Google-Smtp-Source: AMsMyM4L/HsJhg7gmaYlOhy3VMwDk4LpJB5I2BLASdOkZNMK1sKP/bhWAw3s9ACQ55je7kED64XOog==
+X-Received: by 2002:a05:6a02:10e:b0:43b:e57d:2bfa with SMTP id bg14-20020a056a02010e00b0043be57d2bfamr3143314pgb.263.1665728154111;
+        Thu, 13 Oct 2022 23:15:54 -0700 (PDT)
+Received: from balhae.hsd1.ca.comcast.net ([2601:647:6780:1040:630:195c:38a7:a411])
+        by smtp.gmail.com with ESMTPSA id 94-20020a17090a09e700b0020af2411721sm721942pjo.34.2022.10.13.23.15.52
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 13 Oct 2022 13:56:57 -0700 (PDT)
+        Thu, 13 Oct 2022 23:15:53 -0700 (PDT)
 Sender: Namhyung Kim <namhyung@gmail.com>
 From:   Namhyung Kim <namhyung@kernel.org>
 To:     Arnaldo Carvalho de Melo <acme@kernel.org>,
@@ -66,56 +66,73 @@ Cc:     Ingo Molnar <mingo@kernel.org>,
         Athira Rajeev <atrajeev@linux.vnet.ibm.com>,
         James Clark <james.clark@arm.com>,
         Xing Zhengjun <zhengjun.xing@linux.intel.com>
-Subject: [PATCH] perf stat: Init aggr_map when reporting per-process stat
-Date:   Thu, 13 Oct 2022 13:56:55 -0700
-Message-Id: <20221013205655.401525-1-namhyung@kernel.org>
+Subject: [PATCH 01/19] perf tools: Save evsel->pmu in parse_events()
+Date:   Thu, 13 Oct 2022 23:15:32 -0700
+Message-Id: <20221014061550.463644-2-namhyung@kernel.org>
 X-Mailer: git-send-email 2.38.0.413.g74048e4d9e-goog
-In-Reply-To: <CAM9d7cjnAPhOPont3GHSwa9BhAsAFVvqAhFPsyAfQBR8ajrvag@mail.gmail.com>
-References: <CAM9d7cjnAPhOPont3GHSwa9BhAsAFVvqAhFPsyAfQBR8ajrvag@mail.gmail.com>
+In-Reply-To: <20221014061550.463644-1-namhyung@kernel.org>
+References: <20221014061550.463644-1-namhyung@kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-I'll merge this into the problematic commit.
+Now evsel has a pmu pointer, let's save the info and use it like in
+evsel__find_pmu().
 
+Acked-by: Ian Rogers <irogers@google.com>
 Signed-off-by: Namhyung Kim <namhyung@kernel.org>
 ---
- tools/perf/builtin-stat.c | 12 +++++++-----
- 1 file changed, 7 insertions(+), 5 deletions(-)
+ tools/perf/util/evsel.c        | 1 +
+ tools/perf/util/parse-events.c | 1 +
+ tools/perf/util/pmu.c          | 4 ++++
+ 3 files changed, 6 insertions(+)
 
-diff --git a/tools/perf/builtin-stat.c b/tools/perf/builtin-stat.c
-index 4cb3ceeb7ba4..9d35a3338976 100644
---- a/tools/perf/builtin-stat.c
-+++ b/tools/perf/builtin-stat.c
-@@ -1355,7 +1355,11 @@ static struct aggr_cpu_id perf_stat__get_cpu(struct perf_stat_config *config __m
- static struct aggr_cpu_id perf_stat__get_aggr(struct perf_stat_config *config,
- 					      aggr_get_id_t get_id, struct perf_cpu cpu)
+diff --git a/tools/perf/util/evsel.c b/tools/perf/util/evsel.c
+index 76605fde3507..196f8e4859d7 100644
+--- a/tools/perf/util/evsel.c
++++ b/tools/perf/util/evsel.c
+@@ -467,6 +467,7 @@ struct evsel *evsel__clone(struct evsel *orig)
+ 	evsel->collect_stat = orig->collect_stat;
+ 	evsel->weak_group = orig->weak_group;
+ 	evsel->use_config_name = orig->use_config_name;
++	evsel->pmu = orig->pmu;
+ 
+ 	if (evsel__copy_config_terms(evsel, orig) < 0)
+ 		goto out_err;
+diff --git a/tools/perf/util/parse-events.c b/tools/perf/util/parse-events.c
+index 437389dacf48..9e704841273d 100644
+--- a/tools/perf/util/parse-events.c
++++ b/tools/perf/util/parse-events.c
+@@ -263,6 +263,7 @@ __add_event(struct list_head *list, int *idx,
+ 	evsel->core.own_cpus = perf_cpu_map__get(cpus);
+ 	evsel->core.requires_cpu = pmu ? pmu->is_uncore : false;
+ 	evsel->auto_merge_stats = auto_merge_stats;
++	evsel->pmu = pmu;
+ 
+ 	if (name)
+ 		evsel->name = strdup(name);
+diff --git a/tools/perf/util/pmu.c b/tools/perf/util/pmu.c
+index 74a2cafb4e8d..15bf5943083a 100644
+--- a/tools/perf/util/pmu.c
++++ b/tools/perf/util/pmu.c
+@@ -1048,11 +1048,15 @@ struct perf_pmu *evsel__find_pmu(struct evsel *evsel)
  {
--	struct aggr_cpu_id id = aggr_cpu_id__empty();
-+	struct aggr_cpu_id id;
+ 	struct perf_pmu *pmu = NULL;
+ 
++	if (evsel->pmu)
++		return evsel->pmu;
 +
-+	/* per-process mode - should use global aggr mode */
-+	if (cpu.cpu == -1)
-+		return get_id(config, cpu);
+ 	while ((pmu = perf_pmu__scan(pmu)) != NULL) {
+ 		if (pmu->type == evsel->core.attr.type)
+ 			break;
+ 	}
  
- 	if (aggr_cpu_id__is_empty(&config->cpus_aggr_map->map[cpu.cpu]))
- 		config->cpus_aggr_map->map[cpu.cpu] = get_id(config, cpu);
-@@ -2120,11 +2124,9 @@ int process_stat_config_event(struct perf_session *session,
- 	if (perf_cpu_map__empty(st->cpus)) {
- 		if (st->aggr_mode != AGGR_UNSET)
- 			pr_warning("warning: processing task data, aggregation mode not set\n");
--		return 0;
--	}
--
--	if (st->aggr_mode != AGGR_UNSET)
-+	} else if (st->aggr_mode != AGGR_UNSET) {
- 		stat_config.aggr_mode = st->aggr_mode;
-+	}
++	evsel->pmu = pmu;
+ 	return pmu;
+ }
  
- 	if (perf_stat.data.is_pipe)
- 		perf_stat_init_aggr_mode();
 -- 
 2.38.0.413.g74048e4d9e-goog
 
