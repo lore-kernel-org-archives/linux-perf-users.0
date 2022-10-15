@@ -2,136 +2,134 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 90102C4332F
-	for <linux-perf-users@archiver.kernel.org>; Sat, 15 Oct 2022 08:51:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B2E9BC433FE
+	for <linux-perf-users@archiver.kernel.org>; Sat, 15 Oct 2022 12:56:01 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229618AbiJOIv4 (ORCPT
+        id S229736AbiJOM4A (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Sat, 15 Oct 2022 04:51:56 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45736 "EHLO
+        Sat, 15 Oct 2022 08:56:00 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33128 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229583AbiJOIvu (ORCPT
+        with ESMTP id S229519AbiJOM4A (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Sat, 15 Oct 2022 04:51:50 -0400
-Received: from nautica.notk.org (nautica.notk.org [91.121.71.147])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D36E454651;
-        Sat, 15 Oct 2022 01:51:48 -0700 (PDT)
-Received: by nautica.notk.org (Postfix, from userid 108)
-        id A38AEC024; Sat, 15 Oct 2022 10:51:48 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=codewreck.org; s=2;
-        t=1665823908; bh=1euOEtvAzngNi5tOEtHvU2g07zt8twsjbJseQrxw3/w=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=2na0Z7O6DDAL/XJhG3/mZoVkgInovy0aoYr2M4VJJ3+lT+sL2d+2CPNrzt0Kdr41Y
-         b9A4YBiJ1XpfAxIzZXM7GddWeA1P0krGTy+M7mCAwUtdKFBSy3aXTtfinZwXI799FC
-         JARlCN0aUzf2nxIJMtEh4DtaEBf8FeC5SSRH7AdP49E4sdWG7hdqJ6gwzPYlH/Zc+D
-         fhgqqtI4BYs7d+/LrMx3gvDOzbl0nY5SvEoS+lBsWu1rW6cpMATAEBv7U//BBAn8Xi
-         09mH+TC3pzHC8vjFYXHYl2lwYwfQwSRbGrIhOqHUXg7fVyp8wbMmeV7j9+W64Y/7tI
-         G4EEg31SwFhZQ==
-Received: from odin.codewreck.org (localhost [127.0.0.1])
-        by nautica.notk.org (Postfix) with ESMTPS id BDBC5C020;
-        Sat, 15 Oct 2022 10:51:42 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=codewreck.org; s=2;
-        t=1665823907; bh=1euOEtvAzngNi5tOEtHvU2g07zt8twsjbJseQrxw3/w=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=bnq4vPZ/QmSAyLR+yquu4pQ8U/uTET7ndaoLMTwFIdzKRCSoxXv0ibIfppZ5g/6Lb
-         jNQFKZVkYvAGr+fAFrqN+dpN+fX8fWKZ7tFBsO3z6AR5SBGIpudVDJkozm8V+rcsEE
-         M1uohDVFjbjzqghnjECTMOmMxeNzG1N8dLoHjyuzlIVaupFdo9kSt9ABm7O6bxrZuN
-         QULIjhTrlut5vqHtFYt8v7VHrzSJUE45oEUAL369f3CySjQ+hi8mqT1osQpZtG/hpV
-         hcO3SEFtitYETkStLDAVo0p/eFWJksaEB8KnjrR4tFPivIr22wPRytYKHQRhy/oqUy
-         EvKSvjlRfO5gA==
-Received: from localhost (odin.codewreck.org [local])
-        by odin.codewreck.org (OpenSMTPD) with ESMTPA id cd04f15d;
-        Sat, 15 Oct 2022 08:51:38 +0000 (UTC)
-From:   Dominique Martinet <asmadeus@codewreck.org>
-To:     Jiri Olsa <jolsa@kernel.org>,
-        Arnaldo Carvalho de Melo <acme@kernel.org>
-Cc:     Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Namhyung Kim <namhyung@kernel.org>,
-        linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Dominique Martinet <asmadeus@codewreck.org>
-Subject: [PATCH v2 3/3] perf parse-events: Allow names to start with digits
-Date:   Sat, 15 Oct 2022 17:48:13 +0900
-Message-Id: <20221015084810.2114158-3-asmadeus@codewreck.org>
-X-Mailer: git-send-email 2.37.1
-In-Reply-To: <20221015084810.2114158-1-asmadeus@codewreck.org>
-References: <20221015084810.2114158-1-asmadeus@codewreck.org>
+        Sat, 15 Oct 2022 08:56:00 -0400
+Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D5A8E3F1D0;
+        Sat, 15 Oct 2022 05:55:58 -0700 (PDT)
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by dfw.source.kernel.org (Postfix) with ESMTPS id 59B9B60CF6;
+        Sat, 15 Oct 2022 12:55:58 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 8C386C433D6;
+        Sat, 15 Oct 2022 12:55:57 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1665838557;
+        bh=CA0sWBZQtjf7j93I0ZdrDhIFP5M5AEYv12MwTAWor3s=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=JOkhaqDCm+ouyx3PZ1JlkqZSACY6i1PbYgl7jc6D1EmrGS1zfydbL/vwRKywia8BH
+         W63710fuFlOi17aV/kuQ7U/6VMxCzKS12keCjh4LaC/gmj04nmgjHiiiHNmuDqsJnF
+         RTQdj3l6sPtzDSyBBE2gEiIzF9kcWMHXC9+YyIT+cb17eey19sR3GB2/YfTY31eqyy
+         1irM/TsG8u7QX3Tv9YCzoILiNBdvWRLPwfGgWPnuRi85I0i7q/VI+CYbw6tFcy1kgH
+         hP4ttU22Vmq2uCLjOdlfxgZrXC8Vs/BLf1X3BtrrP4L1WnVbCAAMmO1UW8ZC8U5w7T
+         eNkObM/bwK+cg==
+Received: by quaco.ghostprotocols.net (Postfix, from userid 1000)
+        id 2C4C3403B6; Sat, 15 Oct 2022 09:55:55 -0300 (-03)
+Date:   Sat, 15 Oct 2022 09:55:55 -0300
+From:   Arnaldo Carvalho de Melo <acme@kernel.org>
+To:     Namhyung Kim <namhyung@kernel.org>
+Cc:     Jiri Olsa <jolsa@kernel.org>, Ingo Molnar <mingo@kernel.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Ian Rogers <irogers@google.com>,
+        Adrian Hunter <adrian.hunter@intel.com>,
+        linux-perf-users@vger.kernel.org,
+        Kan Liang <kan.liang@linux.intel.com>,
+        Leo Yan <leo.yan@linaro.org>, Andi Kleen <ak@linux.intel.com>,
+        Athira Rajeev <atrajeev@linux.vnet.ibm.com>,
+        James Clark <james.clark@arm.com>,
+        Xing Zhengjun <zhengjun.xing@linux.intel.com>
+Subject: Re: [PATCH 01/19] perf tools: Save evsel->pmu in parse_events()
+Message-ID: <Y0qt2/bAncQQGvrj@kernel.org>
+References: <20221014061550.463644-1-namhyung@kernel.org>
+ <20221014061550.463644-2-namhyung@kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20221014061550.463644-2-namhyung@kernel.org>
+X-Url:  http://acmel.wordpress.com
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-Tracepoints can start with digits, although we don't have many of these:
+Em Thu, Oct 13, 2022 at 11:15:32PM -0700, Namhyung Kim escreveu:
+> Now evsel has a pmu pointer, let's save the info and use it like in
+> evsel__find_pmu().
 
-$ rg -g '*.h' '\bTRACE_EVENT\([0-9]'
-net/mac802154/trace.h
-53:TRACE_EVENT(802154_drv_return_int,
-...
+This one made 'perf test metricgroups' to fail, I removed it and that
+test passes. Can you please double check?
 
-net/ieee802154/trace.h
-66:TRACE_EVENT(802154_rdev_add_virtual_intf,
-...
+I have all the other patches in my local perf/core branch and I'm
+prepping up a pull req with those included to Linus, holler if you
+disagree.
 
-include/trace/events/9p.h
-124:TRACE_EVENT(9p_client_req,
-...
-
-Just allow names to start with digits too so e.g. perf probe -e '9p:*'
-works
-
-Signed-off-by: Dominique Martinet <asmadeus@codewreck.org>
----
-Changelog:
- v1 at https://lkml.kernel.org/r/20220612061508.1449636-1-asmadeus@codewreck.org
- v1->v2: add extra test now it doesn't break for everyone else :)
-
-Ian suggested simplifying the name regex to:  [a-zA-Z0-9_*?\[\]!]+
-but that:
-- breaks probe names with a dot; or if we add a dot allows them to start
-  with one
-- also allows probes to start with !
-
-I don't think that'd break anything if we allow .! as leading character
-but it doesn't really make much difference to me either so I kept the
-patch minimal: please say if you have an opinion.
-
-
- tools/perf/tests/parse-events.c | 5 +++++
- tools/perf/util/parse-events.l  | 2 +-
- 2 files changed, 6 insertions(+), 1 deletion(-)
-
-diff --git a/tools/perf/tests/parse-events.c b/tools/perf/tests/parse-events.c
-index a8b5a570aaf6..0dc1fbc80447 100644
---- a/tools/perf/tests/parse-events.c
-+++ b/tools/perf/tests/parse-events.c
-@@ -1941,6 +1941,11 @@ static const struct evlist_test test__events[] = {
- 		.check = test__exclusive_group,
- 		/* 7 */
- 	},
-+	{
-+		.name  = "9p:9p_client_req",
-+		.check = test__checkevent_tracepoint,
-+		/* 8 */
-+	},
- };
+- Arnaldo
  
- static const struct evlist_test test__events_pmu[] = {
-diff --git a/tools/perf/util/parse-events.l b/tools/perf/util/parse-events.l
-index 3a9ce96c8bce..360f3c5de4fd 100644
---- a/tools/perf/util/parse-events.l
-+++ b/tools/perf/util/parse-events.l
-@@ -211,7 +211,7 @@ bpf_source	[^,{}]+\.c[a-zA-Z0-9._]*
- num_dec		[0-9]+
- num_hex		0x[a-fA-F0-9]+
- num_raw_hex	[a-fA-F0-9]+
--name		[a-zA-Z_*?\[\]][a-zA-Z0-9_*?.\[\]!]*
-+name		[a-zA-Z0-9_*?\[\]][a-zA-Z0-9_*?.\[\]!]*
- name_tag	[\'][a-zA-Z_*?\[\]][a-zA-Z0-9_*?\-,\.\[\]:=]*[\']
- name_minus	[a-zA-Z_*?][a-zA-Z0-9\-_*?.:]*
- drv_cfg_term	[a-zA-Z0-9_\.]+(=[a-zA-Z0-9_*?\.:]+)?
--- 
-2.37.3
+> Acked-by: Ian Rogers <irogers@google.com>
+> Signed-off-by: Namhyung Kim <namhyung@kernel.org>
+> ---
+>  tools/perf/util/evsel.c        | 1 +
+>  tools/perf/util/parse-events.c | 1 +
+>  tools/perf/util/pmu.c          | 4 ++++
+>  3 files changed, 6 insertions(+)
+> 
+> diff --git a/tools/perf/util/evsel.c b/tools/perf/util/evsel.c
+> index 76605fde3507..196f8e4859d7 100644
+> --- a/tools/perf/util/evsel.c
+> +++ b/tools/perf/util/evsel.c
+> @@ -467,6 +467,7 @@ struct evsel *evsel__clone(struct evsel *orig)
+>  	evsel->collect_stat = orig->collect_stat;
+>  	evsel->weak_group = orig->weak_group;
+>  	evsel->use_config_name = orig->use_config_name;
+> +	evsel->pmu = orig->pmu;
+>  
+>  	if (evsel__copy_config_terms(evsel, orig) < 0)
+>  		goto out_err;
+> diff --git a/tools/perf/util/parse-events.c b/tools/perf/util/parse-events.c
+> index 437389dacf48..9e704841273d 100644
+> --- a/tools/perf/util/parse-events.c
+> +++ b/tools/perf/util/parse-events.c
+> @@ -263,6 +263,7 @@ __add_event(struct list_head *list, int *idx,
+>  	evsel->core.own_cpus = perf_cpu_map__get(cpus);
+>  	evsel->core.requires_cpu = pmu ? pmu->is_uncore : false;
+>  	evsel->auto_merge_stats = auto_merge_stats;
+> +	evsel->pmu = pmu;
+>  
+>  	if (name)
+>  		evsel->name = strdup(name);
+> diff --git a/tools/perf/util/pmu.c b/tools/perf/util/pmu.c
+> index 74a2cafb4e8d..15bf5943083a 100644
+> --- a/tools/perf/util/pmu.c
+> +++ b/tools/perf/util/pmu.c
+> @@ -1048,11 +1048,15 @@ struct perf_pmu *evsel__find_pmu(struct evsel *evsel)
+>  {
+>  	struct perf_pmu *pmu = NULL;
+>  
+> +	if (evsel->pmu)
+> +		return evsel->pmu;
+> +
+>  	while ((pmu = perf_pmu__scan(pmu)) != NULL) {
+>  		if (pmu->type == evsel->core.attr.type)
+>  			break;
+>  	}
+>  
+> +	evsel->pmu = pmu;
+>  	return pmu;
+>  }
+>  
+> -- 
+> 2.38.0.413.g74048e4d9e-goog
 
+-- 
+
+- Arnaldo
