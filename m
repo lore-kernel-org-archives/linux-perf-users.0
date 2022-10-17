@@ -2,101 +2,130 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 89186C4332F
-	for <linux-perf-users@archiver.kernel.org>; Mon, 17 Oct 2022 12:36:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 04D57C4332F
+	for <linux-perf-users@archiver.kernel.org>; Mon, 17 Oct 2022 12:38:01 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230056AbiJQMgd (ORCPT
+        id S229974AbiJQMh7 (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Mon, 17 Oct 2022 08:36:33 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55060 "EHLO
+        Mon, 17 Oct 2022 08:37:59 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56824 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230390AbiJQMg0 (ORCPT
+        with ESMTP id S229562AbiJQMh6 (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Mon, 17 Oct 2022 08:36:26 -0400
+        Mon, 17 Oct 2022 08:37:58 -0400
 Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D9B2C3C8D9
-        for <linux-perf-users@vger.kernel.org>; Mon, 17 Oct 2022 05:36:23 -0700 (PDT)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id F11471B793;
+        Mon, 17 Oct 2022 05:37:56 -0700 (PDT)
 Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id D1E8261128
-        for <linux-perf-users@vger.kernel.org>; Mon, 17 Oct 2022 12:36:22 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 16320C433C1;
-        Mon, 17 Oct 2022 12:36:22 +0000 (UTC)
+        by dfw.source.kernel.org (Postfix) with ESMTPS id 8B2E16112D;
+        Mon, 17 Oct 2022 12:37:56 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id C851DC433D6;
+        Mon, 17 Oct 2022 12:37:55 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1666010182;
-        bh=rYanYlvUUtBEd43N3beSv0PQVyXjNIlwLpxCQzc4LCY=;
+        s=k20201202; t=1666010276;
+        bh=Sl2cezNTsWHRgmfGwBUNjn5QvcqSB4MRPCTSkICdqoM=;
         h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=ovVr3tx5vgz+hOqEns+i8ciPwjp8dvSnUR8lZyW7KrIkB/wsM5HPeVxR+ndaKxZOw
-         NJYhhAxleHVLlW18rjTyATpDii20HsiYbIuaGuAZ5aeP63j8r/2kgbpgcnJGglPtOz
-         yIIHWiLMBmszahleYPdtA/xfJD1bOXsSUWLZubSOk+JxRCpRlWPQwFWJsVVR5tribl
-         +i9F+8hiL2IgVsnwkmXLfPTYAFxTLgH3BeP5Ul/kk+SD9f0eMjaaI2TLX8kuMkFOnk
-         ftCyf4V57fIraCfKy/nssQA4oyplc1wqlJ/bE2KCjipsXWM64xn2DoqT+FyRujKUf7
-         E8S0HOApyRL7g==
+        b=jPwFspAhyPaRssvY4ut7N09jQgcKFfTuYHlGp8de1xYuVPyko3wGvPEJvyLtUqMf7
+         LIf7fdpBG8Q9DFVEKqQsRLKiZpsYo3fN2NSrg6KqEtEfzNmT7u6le3nLanZRMcPUTQ
+         kQdkCQ2uub+iq+laV6DY358IJlNfHSEbXsDMbef9REhc8nIzvoVff+T5V5a4LxHfWj
+         BdX7v9YWTcktXO9Gx4PZSyyacNnnIck4eQTIIbNCNsCjugmcIEOLsTWPFMfgLV04rY
+         5pkiWrDGMZ4b2K7iRRsLwnZQ/XRRSFmZGYYc/QwS544JuPgUen2rZ19+4DxhiE8SVo
+         3Bu1hd+SHblHg==
 Received: by quaco.ghostprotocols.net (Postfix, from userid 1000)
-        id DF77C403B6; Mon, 17 Oct 2022 09:36:19 -0300 (-03)
-Date:   Mon, 17 Oct 2022 09:36:19 -0300
+        id 6B5C3403B6; Mon, 17 Oct 2022 09:37:53 -0300 (-03)
+Date:   Mon, 17 Oct 2022 09:37:53 -0300
 From:   Arnaldo Carvalho de Melo <acme@kernel.org>
-To:     Jiri Olsa <jolsa@kernel.org>, Andi Kleen <ak@linux.intel.com>
-Cc:     linux-perf-users@vger.kernel.org
-Subject: Re: [PATCH] perf lzma: Quieten lzma warning
-Message-ID: <Y01MQ631C5EwIFz5@kernel.org>
-References: <20221004190615.998656-1-ak@linux.intel.com>
+To:     Masami Hiramatsu <mhiramat@kernel.org>,
+        Namhyung Kim <namhyung@kernel.org>,
+        Henry Castro <hcvcastro@gmail.com>
+Cc:     Peter Zijlstra <peterz@infradead.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Jiri Olsa <jolsa@kernel.org>, linux-perf-users@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v3] perf: fix the probe finder location (.dwo files)
+Message-ID: <Y01Mof9qMpFToRWY@kernel.org>
+References: <CAM9d7cgMjZPa9qwuzpG3usGJvKiAQCOvN8_W0RuakNqcZ2t8-g@mail.gmail.com>
+ <20221005124710.30296-1-hcvcastro@gmail.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20221004190615.998656-1-ak@linux.intel.com>
+In-Reply-To: <20221005124710.30296-1-hcvcastro@gmail.com>
 X-Url:  http://acmel.wordpress.com
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-Em Tue, Oct 04, 2022 at 12:06:15PM -0700, Andi Kleen escreveu:
-> On my Fedora system which is missing some modules I always get a long flood
-> of
+Em Wed, Oct 05, 2022 at 08:47:02AM -0400, Henry Castro escreveu:
+> If the file object is compiled using -gsplit-dwarf,
+> the probe finder location will fail.
 > 
-> lzma: fopen failed on /usr/lib/modules/5.3.9-300.fc31.x86_64/kernel/sound/pci/hda/snd-hda-codec.ko.xz: 'No such file or directory'
-> lzma: fopen failed on /usr/lib/modules/5.16.7-200.fc35.x86_64/kernel/sound/pci/hda/snd-hda-intel.ko.xz: 'No such file or directory'
-> lzma: fopen failed on /usr/lib/modules/5.1.11-200.fc29.x86_64/kernel/drivers/vhost/vhost_net.ko.xz: 'No such file or directory'
+> Signed-off-by: Henry Castro <hcvcastro@gmail.com>
+> ---
 > 
-> for each use of "perf list".
-> 
-> Disable the message.
-> 
-> Also I'm not sure why it's looking at the modules of each kernel, not
-> just the running one, but that's a different problem.
+> > Nit, I think we use _ELFUTILS_PREREQ(0, 171).
+> Thank you
 
-Yeah, I see this from time to time, would be interesting to find the
-root cause for looking at te modules for each kernel :-\
+Masami, are you ok with this?
 
-I'll try to take a look if Jiri doesn't have any idea about this.
+Namyung, how about you?
+
+Thanks,
 
 - Arnaldo
  
-> Signed-off-by: Andi Kleen <ak@linux.intel.com>
-> ---
->  tools/perf/util/lzma.c | 5 +----
->  1 file changed, 1 insertion(+), 4 deletions(-)
+> > How about making it a separate function with 2 versions
+> > depending on the elfutils?  Then you can have the variables
+> > only if they are used.
 > 
-> diff --git a/tools/perf/util/lzma.c b/tools/perf/util/lzma.c
-> index 51424cdc3b68..ef0520c82245 100644
-> --- a/tools/perf/util/lzma.c
-> +++ b/tools/perf/util/lzma.c
-> @@ -44,11 +44,8 @@ int lzma_decompress_to_file(const char *input, int output_fd)
->  	FILE *infile;
->  
->  	infile = fopen(input, "rb");
-> -	if (!infile) {
-> -		pr_err("lzma: fopen failed on %s: '%s'\n",
-> -		       input, strerror(errno));
-> +	if (!infile)
->  		return -1;
-> -	}
->  
->  	ret = lzma_stream_decoder(&strm, UINT64_MAX, LZMA_CONCATENATED);
->  	if (ret != LZMA_OK) {
-> -- 
-> 2.37.2
+> > Something like get_source_from_debuginfod() in the same
+> > file.
+> 
+> Sounds good, but I prefer simplicity in the patch =),
+> what do you think about
+> {
+> 	Dwarf_Die cudie, subdie;
+> 	if (dwarf_cu_info() ..)
+> 	..
+> }
+> 
+> to resolve unused variable?
+> }
+> 
+> 
+>  tools/perf/util/probe-finder.c | 14 ++++++++++++++
+>  1 file changed, 14 insertions(+)
+> 
+> diff --git a/tools/perf/util/probe-finder.c b/tools/perf/util/probe-finder.c
+> index 50d861a80f57..5f6781e712db 100644
+> --- a/tools/perf/util/probe-finder.c
+> +++ b/tools/perf/util/probe-finder.c
+> @@ -1200,6 +1200,20 @@ static int debuginfo__find_probe_location(struct debuginfo *dbg,
+>  			continue;
+>  		}
+> 
+> +#if _ELFUTILS_PREREQ(0, 171)
+> +		{
+> +			uint8_t unit_type;
+> +			Dwarf_Die cudie, subdie;
+> +
+> +			/* Check separate debug information file. */
+> +			if (dwarf_cu_info(pf->cu_die.cu, NULL,
+> +					  &unit_type, &cudie,
+> +					  &subdie, NULL,
+> +					  NULL, NULL) == 0
+> +			    && unit_type == DW_UT_skeleton)
+> +				pf->cu_die = subdie;
+> +		}
+> +#endif
+>  		/* Check if target file is included. */
+>  		if (pp->file)
+>  			pf->fname = cu_find_realpath(&pf->cu_die, pp->file);
+> --
+> 2.20.1
 
 -- 
 
