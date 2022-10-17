@@ -2,164 +2,198 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7E2A9C4332F
-	for <linux-perf-users@archiver.kernel.org>; Mon, 17 Oct 2022 23:09:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 851CEC4332F
+	for <linux-perf-users@archiver.kernel.org>; Mon, 17 Oct 2022 23:31:34 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230055AbiJQXJo (ORCPT
+        id S229924AbiJQXbd (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Mon, 17 Oct 2022 19:09:44 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57036 "EHLO
+        Mon, 17 Oct 2022 19:31:33 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41132 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231459AbiJQXIp (ORCPT
+        with ESMTP id S229767AbiJQXbd (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Mon, 17 Oct 2022 19:08:45 -0400
-Received: from mail-wr1-x42c.google.com (mail-wr1-x42c.google.com [IPv6:2a00:1450:4864:20::42c])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B4226857C5
-        for <linux-perf-users@vger.kernel.org>; Mon, 17 Oct 2022 16:08:29 -0700 (PDT)
-Received: by mail-wr1-x42c.google.com with SMTP id j16so20851442wrh.5
-        for <linux-perf-users@vger.kernel.org>; Mon, 17 Oct 2022 16:08:29 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20210112;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:from:to:cc:subject:date:message-id:reply-to;
-        bh=9VkmZ6BS9mgBWXse91fXAkBFVaB7qaQEapO6tRFc+vo=;
-        b=aAdhRpoycwbSSESuWmb/ew3H5j+mWH9EEBjEybaWTql9Z1nMG2zZtb6EosotlPPnwy
-         PlystUKgv0G7vgTuHvqlWQsLXJdJZmBU8Fs1yN30fj8H0+KLcREq3l6Sxjez6C596M0R
-         /0/2YxMPbQ5/eTVBff+Jd4enMixPufgU+cIthoYgd32JmXjwIFBlAcP380v1DzNiBhzi
-         dxuqGRODgdEIuDPU2RWaXQCs/EmsoYuYyqb1cRdqzyevFNQwFwnV8S0Xm1iG1ddspNNy
-         pXyyWXXA1EQZnZlCePMsDvFzgzq2PWSHfsiWZlISRmdZ0WQ0nlDWH5MlzcwoLwlqjGgI
-         TT9A==
+        Mon, 17 Oct 2022 19:31:33 -0400
+Received: from mail-oi1-f175.google.com (mail-oi1-f175.google.com [209.85.167.175])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 747906C76E;
+        Mon, 17 Oct 2022 16:31:32 -0700 (PDT)
+Received: by mail-oi1-f175.google.com with SMTP id g10so13860683oif.10;
+        Mon, 17 Oct 2022 16:31:32 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
         h=cc:to:subject:message-id:date:from:in-reply-to:references
          :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
          :reply-to;
-        bh=9VkmZ6BS9mgBWXse91fXAkBFVaB7qaQEapO6tRFc+vo=;
-        b=WzDAP1QpTpXImWMPOv9wRCgZZZAlcLWr5w8780wS+NO6C6xBn52qMHCSHya92DnDMy
-         RpKUYhf2t/MekbSErHgcWNI5Pt5oqEx+hwiPbbKGE9HiAGWqTWV7l/VUBhOWC3/qe6dC
-         /M87sUW/LjGyVBfu27mpuLCWctWwKstOIF02mswIRnl3yDs2cVJHCP1WcYYnMFZ6iIkV
-         2qYyGuJFKaGD0Y6X2uFHglDLvWwQIvpc8q96ECxbpHoXPJ1HsCeS+APp8+WhfuWcSv2u
-         p9NsFXIC/RMy1pG53lixTs8n1KcsXRo7tLg1NCDDwcoDFdaHwTZ/YgSQsF04Ml2ryS+2
-         kvdQ==
-X-Gm-Message-State: ACrzQf1hcA6aRV5S+s/t5Yd7Jg8vZgXhBIqxa1/DfP0FGJ3A5AwETIt1
-        VB8yRw8UcakWYCv3VkgbPD1PEXaIC5huMg5wqI5s3Q==
-X-Google-Smtp-Source: AMsMyM5fyS7eL+2YgT1m5kmvnDs0h8B52OwfASz43WQoYLR1DZNj4BuUIAVgWkh+saIbuLLvZmst1c2M0ic8Q+l9gE8=
-X-Received: by 2002:a5d:47a9:0:b0:22e:3beb:dc3a with SMTP id
- 9-20020a5d47a9000000b0022e3bebdc3amr62278wrb.654.1666048036569; Mon, 17 Oct
- 2022 16:07:16 -0700 (PDT)
+        bh=ldK45A9U94Cav4RPnqVY/g2gV8Vr/3Z8GF4b6Jc84pI=;
+        b=XTDsWgB2E1qBg+ySAcE7RPVeR5ewswQz2y0dgCyMw3hp+2Th7hq14sxMVjfM4TPFvs
+         77VSZr/DiCay/3wv1V2HLAn66dcXK6kHM9VSxDgYCO6DRLV9I70M0rXrijBHF5cfteTx
+         5t3UqEXHIaTD6o9QdmZ086j4LbER1xkqqm1Nd6oIOrBzu87DC2Od+z/FB51em6OvQErv
+         0GvCZorxH/WX1gZK5BXqXOXZHJs7Kz4nhI9ghm+1xZcy0Ir8OIGzGLXrfZnUW633dMFv
+         9l36HwtOrNTnbQ0mR+pKqVWpB4iITVM8s0gufdy3S7YgZZkxJXx7fJDj08DlH2OOJZRj
+         V/sg==
+X-Gm-Message-State: ACrzQf0XSUYluAe8UGcOkIYj7JDaASIEs18P4//xpP/PpToVVfyjzT2v
+        2Vj5wZK3R9My85TnoDWQv8W9Zd5nObFhMoLlxEI=
+X-Google-Smtp-Source: AMsMyM5EDSIxae0eTOA1HYPoSeCYgyFo8hfkxLYcxCEg3AGo9pNf/ny92DGLNURuArWm3W2q0pyHi25uMInGaJpp9vI=
+X-Received: by 2002:a05:6808:181e:b0:350:e92a:9ab1 with SMTP id
+ bh30-20020a056808181e00b00350e92a9ab1mr81551oib.209.1666049491627; Mon, 17
+ Oct 2022 16:31:31 -0700 (PDT)
 MIME-Version: 1.0
-References: <20221013011205.3151391-1-irogers@google.com> <715c8e4a-f3c3-6521-778e-8ba8c2bf659e@huawei.com>
-In-Reply-To: <715c8e4a-f3c3-6521-778e-8ba8c2bf659e@huawei.com>
-From:   Ian Rogers <irogers@google.com>
-Date:   Mon, 17 Oct 2022 16:07:04 -0700
-Message-ID: <CAP-5=fVBSDPPFnBnLF775noQPyHnjbpu+hC=LiEJo5566oONrA@mail.gmail.com>
-Subject: Re: [PATCH v1] perf test: Parse events workaround for dash/minus
-To:     John Garry <john.garry@huawei.com>
-Cc:     Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Jiri Olsa <jolsa@kernel.org>,
-        Namhyung Kim <namhyung@kernel.org>,
-        linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Ravi Bangoria <ravi.bangoria@amd.com>,
-        Stephane Eranian <eranian@google.com>
+References: <20221014061550.463644-1-namhyung@kernel.org> <20221014061550.463644-20-namhyung@kernel.org>
+ <B51023CD-214D-4D85-8086-B7AA6B6701D8@linux.vnet.ibm.com>
+In-Reply-To: <B51023CD-214D-4D85-8086-B7AA6B6701D8@linux.vnet.ibm.com>
+From:   Namhyung Kim <namhyung@kernel.org>
+Date:   Mon, 17 Oct 2022 16:31:20 -0700
+Message-ID: <CAM9d7chfRg=bwHmjuuWJVHyRQctEwO3jzZNEX6sJeJBwAgGWUw@mail.gmail.com>
+Subject: Re: [PATCH 19/19] perf stat: Remove unused perf_counts.aggr field
+To:     Athira Rajeev <atrajeev@linux.vnet.ibm.com>
+Cc:     Arnaldo Carvalho de Melo <acme@kernel.org>,
+        Jiri Olsa <jolsa@kernel.org>, Ingo Molnar <mingo@kernel.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Ian Rogers <irogers@google.com>,
+        Adrian Hunter <adrian.hunter@intel.com>,
+        linux-perf-users@vger.kernel.org,
+        Kan Liang <kan.liang@linux.intel.com>,
+        Leo Yan <leo.yan@linaro.org>, Andi Kleen <ak@linux.intel.com>,
+        James Clark <james.clark@arm.com>,
+        Xing Zhengjun <zhengjun.xing@linux.intel.com>
 Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-On Thu, Oct 13, 2022 at 5:11 AM John Garry <john.garry@huawei.com> wrote:
+Hello,
+
+On Sun, Oct 16, 2022 at 6:33 AM Athira Rajeev
+<atrajeev@linux.vnet.ibm.com> wrote:
 >
-> On 13/10/2022 02:12, Ian Rogers wrote:
-> > Skip an event configuration for event names with a dash/minus in them.
-> > Events with a dash/minus in their name cause parsing issues as legacy
-> > encoding of events would use a dash/minus as a separator. The parser
-> > separates events with dashes into prefixes and suffixes and then
-> > recombines them. Unfortunately if an event has part of its name that
-> > matches a legacy token then the recombining fails. This is seen for
-> > branch-brs where branch is a legacy token. branch-brs was introduced
-> > to sysfs in:
-> > https://lore.kernel.org/all/20220322221517.2510440-5-eranian@google.com/
-> > The failure is shown below as well as the workaround to use a config
-> > where the dash/minus isn't treated specially:
+>
+>
+> > On 14-Oct-2022, at 11:45 AM, Namhyung Kim <namhyung@kernel.org> wrote:
 > >
-> > ```
-> > $ perf stat -e branch-brs true
-> > event syntax error: 'branch-brs'
-> >                             \___ parser error
+> > The aggr field in the struct perf_counts is to keep the aggregated value
+> > in the AGGR_GLOBAL for the old code.  But it's not used anymore.
 > >
-> > $ perf stat -e cpu/branch-brs/ true
-> >
-> >   Performance counter stats for 'true':
-> >
-> >              46,179      cpu/branch-brs/
-> > ```
-> >
-> > Signed-off-by: Ian Rogers <irogers@google.com>
+> > Acked-by: Ian Rogers <irogers@google.com>
+> > Signed-off-by: Namhyung Kim <namhyung@kernel.org>
 > > ---
-> >   tools/perf/tests/parse-events.c | 13 +++++++++++++
-> >   1 file changed, 13 insertions(+)
+> > tools/perf/util/counts.c |  1 -
+> > tools/perf/util/counts.h |  1 -
+> > tools/perf/util/stat.c   | 35 ++---------------------------------
+> > 3 files changed, 2 insertions(+), 35 deletions(-)
 > >
-> > diff --git a/tools/perf/tests/parse-events.c b/tools/perf/tests/parse-events.c
-> > index 459afdb256a1..3440dd2616b0 100644
-> > --- a/tools/perf/tests/parse-events.c
-> > +++ b/tools/perf/tests/parse-events.c
-> > @@ -2237,6 +2237,19 @@ static int test__pmu_events(struct test_suite *test __maybe_unused, int subtest
-> >                       pr_debug("Test PMU event failed for '%s'", name);
-> >                       ret = combine_test_results(ret, test_ret);
+> > diff --git a/tools/perf/util/counts.c b/tools/perf/util/counts.c
+> > index 7a447d918458..11cd85b278a6 100644
+> > --- a/tools/perf/util/counts.c
+> > +++ b/tools/perf/util/counts.c
+> > @@ -48,7 +48,6 @@ void perf_counts__reset(struct perf_counts *counts)
+> > {
+> >       xyarray__reset(counts->loaded);
+> >       xyarray__reset(counts->values);
+> > -     memset(&counts->aggr, 0, sizeof(struct perf_counts_values));
+> > }
 > >
+> > void evsel__reset_counts(struct evsel *evsel)
+> > diff --git a/tools/perf/util/counts.h b/tools/perf/util/counts.h
+> > index 5de275194f2b..42760242e0df 100644
+> > --- a/tools/perf/util/counts.h
+> > +++ b/tools/perf/util/counts.h
+> > @@ -11,7 +11,6 @@ struct evsel;
+> >
+> > struct perf_counts {
+> >       s8                        scaled;
+> > -     struct perf_counts_values aggr;
+> >       struct xyarray            *values;
+> >       struct xyarray            *loaded;
+> > };
+> > diff --git a/tools/perf/util/stat.c b/tools/perf/util/stat.c
+> > index 14c45f4cfdd3..6ab9c58beca7 100644
+> > --- a/tools/perf/util/stat.c
+> > +++ b/tools/perf/util/stat.c
+> > @@ -308,8 +308,6 @@ static void evsel__copy_prev_raw_counts(struct evsel *evsel)
+> >                               *perf_counts(evsel->prev_raw_counts, idx, thread);
+> >               }
+> >       }
+> > -
+> > -     evsel->counts->aggr = evsel->prev_raw_counts->aggr;
+> > }
+> >
+> > void evlist__copy_prev_raw_counts(struct evlist *evlist)
+> > @@ -320,26 +318,6 @@ void evlist__copy_prev_raw_counts(struct evlist *evlist)
+> >               evsel__copy_prev_raw_counts(evsel);
+> > }
+> >
+> > -void evlist__save_aggr_prev_raw_counts(struct evlist *evlist)
+> > -{
+> > -     struct evsel *evsel;
+> > -
+> > -     /*
+> > -      * To collect the overall statistics for interval mode,
+> > -      * we copy the counts from evsel->prev_raw_counts to
+> > -      * evsel->counts. The perf_stat_process_counter creates
+> > -      * aggr values from per cpu values, but the per cpu values
+> > -      * are 0 for AGGR_GLOBAL. So we use a trick that saves the
+> > -      * previous aggr value to the first member of perf_counts,
+> > -      * then aggr calculation in process_counter_values can work
+> > -      * correctly.
+> > -      */
+> > -     evlist__for_each_entry(evlist, evsel) {
+> > -             *perf_counts(evsel->prev_raw_counts, 0, 0) =
+> > -                     evsel->prev_raw_counts->aggr;
+> > -     }
+> > -}
+> > -
+> > static size_t pkg_id_hash(const void *__key, void *ctx __maybe_unused)
+> > {
+> >       uint64_t *key = (uint64_t *) __key;
+> > @@ -423,7 +401,6 @@ process_counter_values(struct perf_stat_config *config, struct evsel *evsel,
+> >                      int cpu_map_idx, int thread,
+> >                      struct perf_counts_values *count)
+> > {
+> > -     struct perf_counts_values *aggr = &evsel->counts->aggr;
+> >       struct perf_stat_evsel *ps = evsel->stats;
+> >       static struct perf_counts_values zero;
+> >       bool skip = false;
+> > @@ -493,12 +470,6 @@ process_counter_values(struct perf_stat_config *config, struct evsel *evsel,
+> >               }
+> >       }
+> >
+> > -     if (config->aggr_mode == AGGR_GLOBAL) {
+> > -             aggr->val += count->val;
+> > -             aggr->ena += count->ena;
+> > -             aggr->run += count->run;
+> > -     }
+> > -
+> >       return 0;
+> > }
+> >
+> > @@ -523,13 +494,10 @@ static int process_counter_maps(struct perf_stat_config *config,
+> > int perf_stat_process_counter(struct perf_stat_config *config,
+> >                             struct evsel *counter)
+> > {
+> > -     struct perf_counts_values *aggr = &counter->counts->aggr;
+> >       struct perf_stat_evsel *ps = counter->stats;
+> > -     u64 *count = counter->counts->aggr.values;
+> > +     u64 *count;
+> >       int ret;
+> >
+> > -     aggr->val = aggr->ena = aggr->run = 0;
+> > -
+> >       if (counter->per_pkg)
+> >               evsel__zero_per_pkg(counter);
+> >
+> > @@ -540,6 +508,7 @@ int perf_stat_process_counter(struct perf_stat_config *config,
+> >       if (config->aggr_mode != AGGR_GLOBAL)
+> >               return 0;
+> >
+> > +     count = ps->aggr[0].counts.values;
 >
-> Hi Ian,
+> Hi Namhyung,
 >
-> }
-> > +             /*
-> > +              * Names containing '-' are recognized as prefixes and suffixes
-> > +              * due to '-' being a legacy PMU separator. This fails when the
-> > +              * prefix or suffix collides with an existing legacy token. For
-> > +              * example, branch-brs has a prefix (branch) that collides with
-> > +              * a PE_NAME_CACHE_TYPE token causing a parse error as a suffix
-> > +              * isn't expected after this.
->
-> OK, so you want to skip anything with '-'. Will we now miss out on
-> events which contain a '-' but don't clash with an existing legacy token?
+> We are using ps->aggr[0] here always. Can you please clarify on why first index is used here always.
 
-Yes. The long term solution here is to ditch the current parse event
-code and its legacy support. An idea is to create a simplified parser
-as part of libperf2 (libperf but with a libbpf style license), use the
-new parser for metrics and events. In the events case, if the new
-parser fails then use the legacy parser and its weird handling of
-dashes.
-
-> >  As event names in the config
-> > +              * slashes are allowed a '-' in the name we check this works
-> > +              * above.
->
-> Sorry, I can't follow what you mean here. Do you mean that
-> "cpu/branch-brs/" works ok and we continue to test it?
-
-Yep, as shown in the commit message. The comment isn't great, it
-should be worded something like:
-
-If an event name is in the config slashes, such as cpu/branch-brs/,  a
-'-' in the name works as the dash doesn't separate the parts of the
-name. This continues to be tested above.
-
-> > +              * above.
+Sure, the AGGR_GLOBAL should have a single entry map because
+theaggr_cpu_id__global() always returns the same value.  So we
+can use the index 0 safely.  I'll add a comment.
 
 Thanks,
-Ian
-
-> > +              */
-> > +             if (strchr(ent->d_name, '-'))
-> > +                     continue;
->
-> Thanks,
-> John
->
-> > +
-> >               snprintf(name, sizeof(name), "%s:u,cpu/event=%s/u", ent->d_name, ent->d_name);
-> >               e.name  = name;
-> >               e.check = test__checkevent_pmu_events_mix;
->
+Namhyung
