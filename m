@@ -2,109 +2,110 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 459A3C433FE
-	for <linux-perf-users@archiver.kernel.org>; Mon, 17 Oct 2022 12:26:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 68B23C433FE
+	for <linux-perf-users@archiver.kernel.org>; Mon, 17 Oct 2022 12:33:40 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230015AbiJQM0J (ORCPT
+        id S229815AbiJQMdj (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Mon, 17 Oct 2022 08:26:09 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60730 "EHLO
+        Mon, 17 Oct 2022 08:33:39 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45204 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229597AbiJQM0J (ORCPT
+        with ESMTP id S229669AbiJQMdi (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Mon, 17 Oct 2022 08:26:09 -0400
-Received: from ams.source.kernel.org (ams.source.kernel.org [145.40.68.75])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D31AD3741A;
-        Mon, 17 Oct 2022 05:26:06 -0700 (PDT)
+        Mon, 17 Oct 2022 08:33:38 -0400
+Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 961151006;
+        Mon, 17 Oct 2022 05:33:37 -0700 (PDT)
 Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by ams.source.kernel.org (Postfix) with ESMTPS id 6D68DB811D8;
-        Mon, 17 Oct 2022 12:19:40 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 1AD64C433D6;
-        Mon, 17 Oct 2022 12:19:39 +0000 (UTC)
+        by dfw.source.kernel.org (Postfix) with ESMTPS id 3223761127;
+        Mon, 17 Oct 2022 12:33:37 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 5E426C433C1;
+        Mon, 17 Oct 2022 12:33:36 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1666009179;
-        bh=7Y2psqRV47IAZT44nV8wgEA04EZpUiApRke3T532fA0=;
+        s=k20201202; t=1666010016;
+        bh=xOhZ798gL/+y6nBCxEZb+QFOl8ru0dI5jW9R7qV3Dxg=;
         h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=pr/f3gZi2KJaoW12z9VOdzCG9EX+5EmJ+kPY469vVAlZxy+yBpEfB0mAVvQQbbde5
-         N3/oaixeEIzMV41RAkkeEAOY9UeyUdQByHBEaNKA0KbFtdQi610dVGIoyy8gNmHhLJ
-         rvgNeLSSQN8oysCCXNpWenGJP1miqDZ3Q599EnHIwEuhqSrxsswiytD92//n3tE4dS
-         QeFUtfTlg1k6n3rVCjjAIc7HiouZGklmzBREi/Kp6iX9qePTPHFA2QpWNOfWxfKim5
-         gXoaPKumaT1m0rBjzmZdDC/iVWQq8zVvdAjy80mG9tXbKOJHto+096uGL6o99JmI+e
-         mAuEUjMmeOjNA==
+        b=HTaoaLiDl+L3yaW63mFw6G4kb6wRzQUh1cverewP9Figc0sjRoss5x6ryrfn8IUaT
+         fiZ1HFrKsVSvxLp4DpPQxNB0ZLJX+L/tsFc3vR18PdHoTsm6oayMhZVgdc5txiXuRj
+         uRLL1O3OQIG2t/murvbZHiVjTf18hO2z0UMx0oREK5TjVRIwnb9cp1ErYukH3VGqqe
+         ZGoUW4J7aAXeZep/aOcR+tykQ41DY2jO5D7Yg+C9AAP2GO7QJryxmNrndA9x648pbT
+         AdK6Z0wNtSe9b1WgoZokbZQ6fSZUzCfsNRDGF7RyDmE0Y8oBAQyVag1XOWrm/bjpI9
+         ZJKo0Sr0afX8w==
 Received: by quaco.ghostprotocols.net (Postfix, from userid 1000)
-        id CA7C0403B6; Mon, 17 Oct 2022 09:19:36 -0300 (-03)
-Date:   Mon, 17 Oct 2022 09:19:36 -0300
+        id 4BA1F403B6; Mon, 17 Oct 2022 09:33:34 -0300 (-03)
+Date:   Mon, 17 Oct 2022 09:33:34 -0300
 From:   Arnaldo Carvalho de Melo <acme@kernel.org>
-To:     Leo Yan <leo.yan@linaro.org>
-Cc:     Adrian Hunter <adrian.hunter@intel.com>, suzuki.poulose@arm.com,
-        linux-perf-users@vger.kernel.org, mathieu.poirier@linaro.org,
-        mike.leach@linaro.org, Peter Zijlstra <peterz@infradead.org>,
+To:     James Clark <james.clark@arm.com>
+Cc:     Namhyung Kim <namhyung@kernel.org>,
+        linux-perf-users <linux-perf-users@vger.kernel.org>,
+        linux-kernel <linux-kernel@vger.kernel.org>,
+        Peter Zijlstra <peterz@infradead.org>,
         Ingo Molnar <mingo@redhat.com>,
         Mark Rutland <mark.rutland@arm.com>,
         Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Jiri Olsa <jolsa@kernel.org>,
-        Namhyung Kim <namhyung@kernel.org>,
-        linux-kernel@vger.kernel.org, coresight@lists.linaro.org,
-        Sven Schnelle <svens@linux.ibm.com>,
-        James Clark <james.clark@arm.com>,
-        Christian Borntraeger <borntraeger@linux.ibm.com>,
-        Carsten Haitzler <carsten.haitzler@foss.arm.com>
-Subject: Re: [PATCH] perf tools: Fix man page build wrt perf-arm-coresight.txt
-Message-ID: <Y01IWNUOYhfbLsg4@kernel.org>
-References: <a176a3e1-6ddc-bb63-e41c-15cda8c2d5d2@intel.com>
- <Y00nFxrcV7TVqmJO@leoy-yangtze.lan>
+        Jiri Olsa <jolsa@kernel.org>, Ian Rogers <irogers@google.com>,
+        Adrian Hunter <adrian.hunter@intel.com>
+Subject: Re: [PATCH] perf: Fix "Track with sched_switch" test by not printing
+ warnings in quiet mode
+Message-ID: <Y01Lnh5DqGUPuibf@kernel.org>
+References: <20221012111025.30609-1-james.clark@arm.com>
+ <62f485df-4f5e-64a2-1294-6e162de25556@arm.com>
+ <CAM9d7cgNrZ6iwRQsGHWGLWCd7cJm+L6UOU9BiGGgTVPdJ0_GJQ@mail.gmail.com>
+ <e0b47b51-87f0-42db-4a76-b240bf07cd41@arm.com>
+ <CAM9d7cg+tTw5vTOycqRciQx8He-WLG0TSdcWa0tyzeu49DmgxA@mail.gmail.com>
+ <912a4d0a-51b3-591b-8c8f-f078216d5b35@arm.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <Y00nFxrcV7TVqmJO@leoy-yangtze.lan>
+In-Reply-To: <912a4d0a-51b3-591b-8c8f-f078216d5b35@arm.com>
 X-Url:  http://acmel.wordpress.com
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-Em Mon, Oct 17, 2022 at 05:57:43PM +0800, Leo Yan escreveu:
-> On Mon, Oct 17, 2022 at 12:35:49PM +0300, Adrian Hunter wrote:
-> > perf build assumes documentation files starting with "perf-" are man
-> > pages but perf-arm-coresight.txt is not a man page:
+Em Fri, Oct 14, 2022 at 10:47:34AM +0100, James Clark escreveu:
+> On 13/10/2022 17:57, Namhyung Kim wrote:
+> > On Wed, Oct 12, 2022 at 10:12 AM James Clark <james.clark@arm.com> wrote:
+> >> On 12/10/2022 17:50, Namhyung Kim wrote:
+> >>> On Wed, Oct 12, 2022 at 4:13 AM James Clark <james.clark@arm.com> wrote:
+> >>>>> The test already supplies -q to run in quiet mode, so extend quiet mode
+> >>>>> to perf_stdio__warning() and also ui__warning() for consistency.
+> >>>
+> >>> I'm not sure if suppressing the warnings with -q is a good thing.
+> >>> Maybe we need to separate warning/debug messages from the output.
+> >>
+> >> I don't see the issue with warnings being suppressed in quiet mode as
+> >> long as errors are still printed. In other cases warnings have already
+> >> been suppressed by quiet mode and this site is the odd one out.
+> >>
+> >> What use case are you thinking of where someone explicitly adds -q but
+> >> wants to see non fatal warnings?
 > > 
-> > asciidoc: ERROR: perf-arm-coresight.txt: line 2: malformed manpage title
-> > asciidoc: ERROR: perf-arm-coresight.txt: line 3: name section expected
-> > asciidoc: FAILED: perf-arm-coresight.txt: line 3: section title expected
-> > make[3]: *** [Makefile:266: perf-arm-coresight.xml] Error 1
-> > make[3]: *** Waiting for unfinished jobs....
-> > make[2]: *** [Makefile.perf:895: man] Error 2
+> > I don't have any specific use case.  If it's already suppressed in other
+> > cases, I'm fine with it.
 > > 
-> > Fix by renaming it.
-> > 
-> > Reported-by: Sven Schnelle <svens@linux.ibm.com>
-> > Reported-by: Christian Borntraeger <borntraeger@linux.ibm.com>
-> > Fixes: dc2e0fb00bb2 ("perf test coresight: Add relevant documentation about ARM64 CoreSight testing")
-> > Signed-off-by: Adrian Hunter <adrian.hunter@intel.com>
 > 
-> Thanks for fixing, Adrian.  The change LGTM:
+> Actually I may have been mistaken. Seems like quiet is only used for
+> "extra info" type messages rather than warnings. Although the commit
+> message does say:
 > 
-> Reviewed-by: Leo Yan <leo.yan@linaro.org>
+>   The -q/--quiet option is to suppress any message. Sometimes users just
+>   want to see the numbers and it can be used for that case.
+> 
+> With 'any' that I would take to include warnings as well. I could move
+> warnings to stderr, but this has a much greater chance of breaking
+> anyone's workflows that might be looking for warnings on stdout than
+> removing warnings when -q is provided.
+> 
+> Also if warnings are moved to stderr and quiet isn't used, there would
+> be no way to suppress warnings in the TUI which might actually be a
+> useful feature.
+> 
+> So I'm still leaning towards the original change, if you are ok with
+> that even though it's not done elsewhere?
 
-Thanks, applied.
-
-- Arnaldo
-
- 
-> > ---
-> >  .../Documentation/{perf-arm-coresight.txt => arm-coresight.txt}   | 0
-> >  1 file changed, 0 insertions(+), 0 deletions(-)
-> >  rename tools/perf/Documentation/{perf-arm-coresight.txt => arm-coresight.txt} (100%)
-> > 
-> > diff --git a/tools/perf/Documentation/perf-arm-coresight.txt b/tools/perf/Documentation/arm-coresight.txt
-> > similarity index 100%
-> > rename from tools/perf/Documentation/perf-arm-coresight.txt
-> > rename to tools/perf/Documentation/arm-coresight.txt
-> > -- 
-> > 2.25.1
-> > 
-
--- 
+Namhyung? I tend to agree with James.
 
 - Arnaldo
