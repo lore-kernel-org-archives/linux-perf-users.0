@@ -2,208 +2,155 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 38F97C433FE
-	for <linux-perf-users@archiver.kernel.org>; Mon, 17 Oct 2022 15:40:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4A2A2C433FE
+	for <linux-perf-users@archiver.kernel.org>; Mon, 17 Oct 2022 18:24:20 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229817AbiJQPk3 (ORCPT
+        id S230250AbiJQSYT (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Mon, 17 Oct 2022 11:40:29 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50700 "EHLO
+        Mon, 17 Oct 2022 14:24:19 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55612 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229689AbiJQPk2 (ORCPT
+        with ESMTP id S229932AbiJQSYS (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Mon, 17 Oct 2022 11:40:28 -0400
-Received: from mx0b-001b2d01.pphosted.com (mx0b-001b2d01.pphosted.com [148.163.158.5])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3295863F30
-        for <linux-perf-users@vger.kernel.org>; Mon, 17 Oct 2022 08:40:27 -0700 (PDT)
-Received: from pps.filterd (m0098417.ppops.net [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (8.17.1.5/8.17.1.5) with ESMTP id 29HEe0gs031076;
-        Mon, 17 Oct 2022 15:40:09 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=message-id : date :
- mime-version : subject : to : cc : references : from : in-reply-to :
- content-type : content-transfer-encoding; s=pp1;
- bh=rnbdnwmmTYFN3ka7BUYRRTD3vlsSmXwUOO/6IsVJ5zE=;
- b=jRdsio5wDqRP4ttf33SBxSCMtL38ok3MtHfFR3MtsKG6WPftEm5U5D836pItH327kdtZ
- fz4mvDyGPmE9y0RJGCvotGAC2UwZXIxGf6sa/Wwec1Fa60QfgoYwtHjadsDtQyRcsCFL
- QCjWZ0T8iYh3b4n1XRlUDa7FkWSAfmIdFp/ZJy10lmubuBWdssjsSlhiQ+jho9Gwhg3/
- qVSisnOmNi0Ia6wDemAI3qAoL8oBCw4P0Sq6B7DuBV31qd3OYggF6qx9l4IHRb2uZTL4
- jTqPlF8r7NlQzLwtVk4Zfx2MNO1/z3Ler+rfQv4G+C1fqM5gsv6Yc9bg4uUD3/hoGH8L 9g== 
-Received: from ppma03ams.nl.ibm.com (62.31.33a9.ip4.static.sl-reverse.com [169.51.49.98])
-        by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 3k86vu6v34-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Mon, 17 Oct 2022 15:40:08 +0000
-Received: from pps.filterd (ppma03ams.nl.ibm.com [127.0.0.1])
-        by ppma03ams.nl.ibm.com (8.16.1.2/8.16.1.2) with SMTP id 29HFbFd2008004;
-        Mon, 17 Oct 2022 15:40:07 GMT
-Received: from b06cxnps3074.portsmouth.uk.ibm.com (d06relay09.portsmouth.uk.ibm.com [9.149.109.194])
-        by ppma03ams.nl.ibm.com with ESMTP id 3k7mg938xj-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Mon, 17 Oct 2022 15:40:06 +0000
-Received: from d06av24.portsmouth.uk.ibm.com (d06av24.portsmouth.uk.ibm.com [9.149.105.60])
-        by b06cxnps3074.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 29HFe2Do3867312
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Mon, 17 Oct 2022 15:40:02 GMT
-Received: from d06av24.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id A99E942041;
-        Mon, 17 Oct 2022 15:40:02 +0000 (GMT)
-Received: from d06av24.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 82B2E42047;
-        Mon, 17 Oct 2022 15:39:57 +0000 (GMT)
-Received: from [9.43.55.73] (unknown [9.43.55.73])
-        by d06av24.portsmouth.uk.ibm.com (Postfix) with ESMTP;
-        Mon, 17 Oct 2022 15:39:56 +0000 (GMT)
-Message-ID: <c92d40fa-4394-a755-62f2-abbd21296412@linux.ibm.com>
-Date:   Mon, 17 Oct 2022 21:09:55 +0530
+        Mon, 17 Oct 2022 14:24:18 -0400
+Received: from mail-ot1-x32b.google.com (mail-ot1-x32b.google.com [IPv6:2607:f8b0:4864:20::32b])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A8EF274CFF
+        for <linux-perf-users@vger.kernel.org>; Mon, 17 Oct 2022 11:24:14 -0700 (PDT)
+Received: by mail-ot1-x32b.google.com with SMTP id p24-20020a9d6958000000b00661c528849eso6279034oto.9
+        for <linux-perf-users@vger.kernel.org>; Mon, 17 Oct 2022 11:24:14 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20210112;
+        h=content-transfer-encoding:mime-version:message-id:references
+         :in-reply-to:user-agent:subject:cc:to:from:date:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=v6DiDy4ix9P/W+fn3JWxS25Z5RWuyOGB2yuXhhgoOSg=;
+        b=f53N0+uudGGj6Q4xJAdnHctnwtMrq0bJZgTxnDlLQBerLK6GdiL6Dt34Q8XB64KU3p
+         kQLAwHqmTqCoGRW6rX3yw2xt4ly+zr9KEKAQXY08DPrwTxbFo5AVj20fKpFhRQs5sp+e
+         gJW0u/01ZbCuXZu6QS6QklYdh/dVSRuEJcSEr9P8wZxDiEGj5VP0Gns24mrkMjha9ZbN
+         fxxFyXq3cgFEIyxt+n0FVO5yaM9DAqMtDAblCykYT7ecCPlVkuifzjYmaIh0ZJ71lloA
+         GOpWQGdP5khZA6dElhOCZodGRMZOe65pssPrGfuvfsH3SsqnmSAu+XaNmnEysLSF5V/M
+         fsaw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=content-transfer-encoding:mime-version:message-id:references
+         :in-reply-to:user-agent:subject:cc:to:from:date:x-gm-message-state
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=v6DiDy4ix9P/W+fn3JWxS25Z5RWuyOGB2yuXhhgoOSg=;
+        b=QU5OaiL0U5+jIHKNbYmskqkLudoEBNjr3qxULII0vVBdPTjPbvLPgwwrR0WXWQxdzO
+         a3P2CSCKJUlTDt+jmRr5WH8Bhy+ML9N+9CCPrTv33ClIK4n3iSFQCl2CrE4Fk4ChwyAU
+         ce/uzY2aQHKMYiQ+Adi4OVKCVFe4VFsXJbMvaLQqCmlqc7x3j6AQwxJBfNG601dGpeMh
+         gIUgScZT34GAdARZj1qrt8KthJJK/E0/bHDTTConkuEOT2XY59EOocBBbvIj09VtHNBb
+         tYpzgFAl0zbLAHTWyulhyz7JpINXQHbt5v8/3W9WcEMPKQYd3OfDWqrlfqWiqEOz5gW1
+         5qUQ==
+X-Gm-Message-State: ACrzQf3FOo647aIZSzk+lf+IOEOjPDygU1aAz0t/gTNQa8ky6ECHXUFS
+        RjPyjs5GBSstrM65rslIZr8Q+qje3xY=
+X-Google-Smtp-Source: AMsMyM638bPwazcLBdjgPtfsu8bK4Wvcpu+hylaj0qucgCq3LTzRFdb/reC4LzEPi6XI3mH14TWdKA==
+X-Received: by 2002:a9d:6405:0:b0:661:481:783b with SMTP id h5-20020a9d6405000000b006610481783bmr5671772otl.273.1666031053964;
+        Mon, 17 Oct 2022 11:24:13 -0700 (PDT)
+Received: from [127.0.0.1] ([187.19.238.93])
+        by smtp.gmail.com with ESMTPSA id g7-20020a9d6c47000000b00661a1d92aacsm5010627otq.33.2022.10.17.11.24.12
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Mon, 17 Oct 2022 11:24:13 -0700 (PDT)
+Date:   Mon, 17 Oct 2022 15:24:08 -0300
+From:   Arnaldo Carvalho de Melo <arnaldo.melo@gmail.com>
+To:     Jesus Maldonado <jesus.maldonado@oracle.com>,
+        Arnaldo Carvalho de Melo <acme@kernel.org>
+CC:     linux-perf-users@vger.kernel.org
+Subject: Re: [External] : Re: A couple of perf questions
+User-Agent: K-9 Mail for Android
+In-Reply-To: <588f3f31-3410-6371-4e7b-2141607f3af4@oracle.com>
+References: <a6b39321-3918-3191-cc70-4cfa3a756331@oracle.com> <Y0l9CzqROpJYQSER@kernel.org> <588f3f31-3410-6371-4e7b-2141607f3af4@oracle.com>
+Message-ID: <1292A666-B6A1-4243-A8DA-457C54D798F4@gmail.com>
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
- Thunderbird/102.3.2
-Subject: Re: [PATCH 1/2] tools/perf/tests/shell: Update stat+csv_output.sh to
- include sanity check for topology
-To:     Athira Rajeev <atrajeev@linux.vnet.ibm.com>, acme@kernel.org,
-        jolsa@kernel.org, mpe@ellerman.id.au
-Cc:     linux-perf-users@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
-        maddy@linux.vnet.ibm.com, rnsastry@linux.ibm.com,
-        kjain@linux.ibm.com, disgoel@linux.vnet.ibm.com
-References: <20221006155149.67205-1-atrajeev@linux.vnet.ibm.com>
-Content-Language: en-US
-From:   Disha Goel <disgoel@linux.ibm.com>
-In-Reply-To: <20221006155149.67205-1-atrajeev@linux.vnet.ibm.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
-X-TM-AS-GCONF: 00
-X-Proofpoint-ORIG-GUID: AbwBz5PjmFLnw_JMJmjKohr3zSPLA6pd
-X-Proofpoint-GUID: AbwBz5PjmFLnw_JMJmjKohr3zSPLA6pd
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.205,Aquarius:18.0.895,Hydra:6.0.545,FMLib:17.11.122.1
- definitions=2022-10-17_12,2022-10-17_02,2022-06-22_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 mlxscore=0 suspectscore=0
- bulkscore=0 priorityscore=1501 adultscore=0 malwarescore=0 clxscore=1011
- phishscore=0 lowpriorityscore=0 mlxlogscore=999 spamscore=0
- impostorscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2209130000 definitions=main-2210170084
+Content-Type: text/plain;
+ charset=utf-8
+Content-Transfer-Encoding: quoted-printable
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
 
-On 10/6/22 9:21 PM, Athira Rajeev wrote:
-> Testcase stat+csv_output.sh fails in powerpc:
->
-> 	84: perf stat CSV output linter: FAILED!
->
-> The testcase "stat+csv_output.sh" verifies perf stat
-> CSV output. The test covers aggregation modes like
-> per-socket, per-core, per-die, -A (no_aggr mode) along
-> with few other tests. It counts expected fields for
-> various commands. For example say -A (i.e, AGGR_NONE
-> mode), expects 7 fields in the output having "CPU" as
-> first field. Same way, for per-socket, it expects the
-> first field in result to point to socket id. The testcases
-> compares the result with expected count.
->
-> The values for socket, die, core and cpu are fetched
-> from topology directory:
-> /sys/devices/system/cpu/cpu*/topology.
-> For example, socket value is fetched from
-> "physical_package_id" file of topology directory.
-> (cpu__get_topology_int() in util/cpumap.c)
->
-> If a platform fails to fetch the topology information,
-> values will be set to -1. For example, incase of pSeries
-> platform of powerpc, value for  "physical_package_id" is
-> restricted and not exposed. So, -1 will be assigned.
->
-> Perf code has a checks for valid cpu id in "aggr_printout"
-> (stat-display.c), which displays the fields. So, in cases
-> where topology values not exposed, first field of the
-> output displaying will be empty. This cause the testcase
-> to fail, as it counts  number of fields in the output.
->
-> Incase of -A (AGGR_NONE mode,), testcase expects 7 fields
-> in the output, becos of -1 value obtained from topology
-> files for some, only 6 fields are printed. Hence a testcase
-> failure reported due to mismatch in number of fields in
-> the output.
->
-> Patch here adds a sanity check in the testcase for topology.
-> Check will help to skip the test if -1 value found.
->
-> Fixes: 7473ee56dbc9 ("perf test: Add checking for perf stat CSV output.")
-> Reported-by: Disha Goel <disgoel@linux.vnet.ibm.com>
-> Signed-off-by: Athira Rajeev <atrajeev@linux.vnet.ibm.com>
-> Suggested-by: James Clark <james.clark@arm.com>
-> Suggested-by: Ian Rogers <irogers@google.com>
 
-For the patchset,
+On October 17, 2022 2:18:55 PM GMT-03:00, Jesus Maldonado <jesus=2Emaldona=
+do@oracle=2Ecom> wrote:
+>Hi Arnaldo,
+>
+>Thanks for getting back=2E
+>
+>+ linux-perf-users@vger=2Ekernel=2Eorg (as suggested)
+>
+>For the first part, about perf record=2E My intention is to record both c=
+ommand and some list of pids=2E
+>e=2Eg=2E
+>/perf record -p <1234,5678> myExecutable/
+>
+>So, the final result should include pids 1234, 5678, *and* whatever is th=
+e pid for myExecutable once run=2E But what happens is that it can only inc=
+lude 1234 abd 5678=2E
+>
+>Is there an alias or option that can be used so --pid considers as well <=
+command>'s pid=2E
 
-Tested-by: Disha Goel <disgoel@linux.vnet.ibm.com>
 
-> ---
->   tools/perf/tests/shell/stat+csv_output.sh | 43 ++++++++++++++++++++---
->   1 file changed, 39 insertions(+), 4 deletions(-)
+That's not available right now but should be doable=2E
+
 >
-> diff --git a/tools/perf/tests/shell/stat+csv_output.sh b/tools/perf/tests/shell/stat+csv_output.sh
-> index eb5196f58190..b7f050aa6210 100755
-> --- a/tools/perf/tests/shell/stat+csv_output.sh
-> +++ b/tools/perf/tests/shell/stat+csv_output.sh
-> @@ -6,6 +6,8 @@
+>2)
 >
->   set -e
+>> You mean for AMD or Like some feature available on AMD systems, which
+>> one?
+>I meant on AMD CPUs=2E Something that is similar to Intel PT for AMD CPUs=
+=2E
+
+Take a look at this recent patch:
+
+https://lwn=2Enet/Articles/904482/
+
+- Arnaldo=20
 >
-> +skip_test=0
-> +
->   function commachecker()
->   {
->   	local -i cnt=0
-> @@ -156,14 +158,47 @@ check_per_socket()
->   	echo "[Success]"
->   }
+>Thanks
 >
-> +# The perf stat options for per-socket, per-core, per-die
-> +# and -A ( no_aggr mode ) uses the info fetched from this
-> +# directory: "/sys/devices/system/cpu/cpu*/topology". For
-> +# example, socket value is fetched from "physical_package_id"
-> +# file in topology directory.
-> +# Reference: cpu__get_topology_int in util/cpumap.c
-> +# If the platform doesn't expose topology information, values
-> +# will be set to -1. For example, incase of pSeries platform
-> +# of powerpc, value for  "physical_package_id" is restricted
-> +# and set to -1. Check here validates the socket-id read from
-> +# topology file before proceeding further
-> +
-> +FILE_LOC="/sys/devices/system/cpu/cpu*/topology/"
-> +FILE_NAME="physical_package_id"
-> +
-> +check_for_topology()
-> +{
-> +	if ! ParanoidAndNotRoot 0
-> +	then
-> +		socket_file=`ls $FILE_LOC/$FILE_NAME | head -n 1`
-> +		[ -z $socket_file ] && return 0
-> +		socket_id=`cat $socket_file`
-> +		[ $socket_id == -1 ] && skip_test=1
-> +		return 0
-> +	fi
-> +}
-> +
-> +check_for_topology
->   check_no_args
->   check_system_wide
-> -check_system_wide_no_aggr
->   check_interval
->   check_event
-> -check_per_core
->   check_per_thread
-> -check_per_die
->   check_per_node
-> -check_per_socket
-> +if [ $skip_test -ne 1 ]
-> +then
-> +	check_system_wide_no_aggr
-> +	check_per_core
-> +	check_per_die
-> +	check_per_socket
-> +else
-> +	echo "[Skip] Skipping tests for system_wide_no_aggr, per_core, per_die and per_socket since socket id exposed via topology is invalid"
-> +fi
->   exit 0
+>Jesus
+>On 10/14/22 8:15 AM, Arnaldo Carvalho de Melo wrote:
+>> Em Wed, Oct 12, 2022 at 11:25:48AM -0700, Jesus Maldonado escreveu:
+>>> Hi Arnaldo,
+>>>=20
+>>> Saw your awesome PR for perf tools changes in 6=2E1=2E and thought you=
+ are the
+>>> right person to ask these 2 questions=2E
+>> Please next time CClinux-perf-users@vger=2Ekernel=2Eorg, you may end up
+>> getting a better and/or faster response there :-)
+>>  =20
+>>> 1) Does perf record allow for recording of a new process + system proc=
+esses?
+>>> e=2Eg=2E A benchmark tool that runs for a few seconds but interacts wi=
+th some
+>>> other processes in the system=2E
+>>> Ideally something like "filter by process(cmd) name" + new process spe=
+cified
+>>> in command line=2E
+>>> I can think of some workarounds, but wanted to validate=2E
+>> perf record can record many things, and some of those things have
+>> different filter mechanisms, for instance, you can use --filter right
+>> after a tracepoint event to add a filter to that specific event, etc=2E
+>>=20
+>> Intel PT also has ways for setting up filters=2E
+>>=20
+>> See 'perf record --help' with the perf man pages installed, look for
+>> --filter=2E
+>>=20
+>> One other way would be to have multiple perf record sessions and then
+>> combine the results, but that would require some more work, perhaps a
+>> brute force with what is available would be to do a perf script on the
+>> multiple perf=2Edata files then concatenate them together and then do a
+>> sort by the timestamp=2E
+>>=20
+>> May be ok for some specific workloads and events, but not for others=2E
+>>  =20
+>>> 2) Do you know of something that allows for high resolution branch tra=
+cing
+>>> (say call, return) other than Intel PTs? Like for AMD?
+>> You mean for AMD or Like some feature available on AMD systems, which
+>> one?
+>>=20
+>> - Arnaldo
