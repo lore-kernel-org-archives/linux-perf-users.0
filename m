@@ -2,203 +2,208 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C3EADC433FE
-	for <linux-perf-users@archiver.kernel.org>; Mon, 17 Oct 2022 15:19:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 38F97C433FE
+	for <linux-perf-users@archiver.kernel.org>; Mon, 17 Oct 2022 15:40:30 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229870AbiJQPTe (ORCPT
+        id S229817AbiJQPk3 (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Mon, 17 Oct 2022 11:19:34 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59996 "EHLO
+        Mon, 17 Oct 2022 11:40:29 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50700 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229867AbiJQPTc (ORCPT
+        with ESMTP id S229689AbiJQPk2 (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Mon, 17 Oct 2022 11:19:32 -0400
-Received: from mga06.intel.com (mga06b.intel.com [134.134.136.31])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CB3A5B84E;
-        Mon, 17 Oct 2022 08:19:31 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1666019971; x=1697555971;
-  h=message-id:date:mime-version:subject:to:cc:references:
-   from:in-reply-to:content-transfer-encoding;
-  bh=TowhcXWGpMPyFZ+TMyvVPZ+actA6yupwG3JPGkNFFes=;
-  b=AYU2RrWzNFZO8LakzXAF7hgP4ZkSN+B50bW7PlQiqG8Uc3BrlFCKZuQC
-   jes8SEHAGHAp0jF2b/Dzz44cNlIYmLcEB8ZasHKM9uaS7lsXjos9YgOGn
-   vy2AbzeIO/WZIGHEWE7UspcrePLjZfa3PhmcOyfDgI0/Yr0iB3PvISwzl
-   6CaehAtzPYzRaMBGd28N8nzqO3iatyI10KlKeEe2k0Lo2hQSJVBMKTWCO
-   MC9O+tPx38/V6cRbRN9bN3LThABEHQk2tRWsF8kWq4HSq47XnAmOkTVG8
-   MRMGw55FkGamXaQ9mizq9Hhqgb17ZGgw84rCtRtM3lAuK/XWso/WYGYSW
-   A==;
-X-IronPort-AV: E=McAfee;i="6500,9779,10503"; a="367849301"
-X-IronPort-AV: E=Sophos;i="5.95,191,1661842800"; 
-   d="scan'208";a="367849301"
-Received: from orsmga007.jf.intel.com ([10.7.209.58])
-  by orsmga104.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 17 Oct 2022 08:19:20 -0700
-X-IronPort-AV: E=McAfee;i="6500,9779,10503"; a="623258372"
-X-IronPort-AV: E=Sophos;i="5.95,191,1661842800"; 
-   d="scan'208";a="623258372"
-Received: from ahunter6-mobl1.ger.corp.intel.com (HELO [10.0.2.15]) ([10.252.44.19])
-  by orsmga007-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 17 Oct 2022 08:19:04 -0700
-Message-ID: <e39f55e4-9a73-0c0a-0bf0-3ceb5359e310@intel.com>
-Date:   Mon, 17 Oct 2022 12:35:41 +0300
+        Mon, 17 Oct 2022 11:40:28 -0400
+Received: from mx0b-001b2d01.pphosted.com (mx0b-001b2d01.pphosted.com [148.163.158.5])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3295863F30
+        for <linux-perf-users@vger.kernel.org>; Mon, 17 Oct 2022 08:40:27 -0700 (PDT)
+Received: from pps.filterd (m0098417.ppops.net [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (8.17.1.5/8.17.1.5) with ESMTP id 29HEe0gs031076;
+        Mon, 17 Oct 2022 15:40:09 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=message-id : date :
+ mime-version : subject : to : cc : references : from : in-reply-to :
+ content-type : content-transfer-encoding; s=pp1;
+ bh=rnbdnwmmTYFN3ka7BUYRRTD3vlsSmXwUOO/6IsVJ5zE=;
+ b=jRdsio5wDqRP4ttf33SBxSCMtL38ok3MtHfFR3MtsKG6WPftEm5U5D836pItH327kdtZ
+ fz4mvDyGPmE9y0RJGCvotGAC2UwZXIxGf6sa/Wwec1Fa60QfgoYwtHjadsDtQyRcsCFL
+ QCjWZ0T8iYh3b4n1XRlUDa7FkWSAfmIdFp/ZJy10lmubuBWdssjsSlhiQ+jho9Gwhg3/
+ qVSisnOmNi0Ia6wDemAI3qAoL8oBCw4P0Sq6B7DuBV31qd3OYggF6qx9l4IHRb2uZTL4
+ jTqPlF8r7NlQzLwtVk4Zfx2MNO1/z3Ler+rfQv4G+C1fqM5gsv6Yc9bg4uUD3/hoGH8L 9g== 
+Received: from ppma03ams.nl.ibm.com (62.31.33a9.ip4.static.sl-reverse.com [169.51.49.98])
+        by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 3k86vu6v34-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Mon, 17 Oct 2022 15:40:08 +0000
+Received: from pps.filterd (ppma03ams.nl.ibm.com [127.0.0.1])
+        by ppma03ams.nl.ibm.com (8.16.1.2/8.16.1.2) with SMTP id 29HFbFd2008004;
+        Mon, 17 Oct 2022 15:40:07 GMT
+Received: from b06cxnps3074.portsmouth.uk.ibm.com (d06relay09.portsmouth.uk.ibm.com [9.149.109.194])
+        by ppma03ams.nl.ibm.com with ESMTP id 3k7mg938xj-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Mon, 17 Oct 2022 15:40:06 +0000
+Received: from d06av24.portsmouth.uk.ibm.com (d06av24.portsmouth.uk.ibm.com [9.149.105.60])
+        by b06cxnps3074.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 29HFe2Do3867312
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Mon, 17 Oct 2022 15:40:02 GMT
+Received: from d06av24.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id A99E942041;
+        Mon, 17 Oct 2022 15:40:02 +0000 (GMT)
+Received: from d06av24.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 82B2E42047;
+        Mon, 17 Oct 2022 15:39:57 +0000 (GMT)
+Received: from [9.43.55.73] (unknown [9.43.55.73])
+        by d06av24.portsmouth.uk.ibm.com (Postfix) with ESMTP;
+        Mon, 17 Oct 2022 15:39:56 +0000 (GMT)
+Message-ID: <c92d40fa-4394-a755-62f2-abbd21296412@linux.ibm.com>
+Date:   Mon, 17 Oct 2022 21:09:55 +0530
 MIME-Version: 1.0
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
- Firefox/102.0 Thunderbird/102.2.2
-Subject: Re: [PATCH 5/7] perf test: test_intel_pt.sh: Add jitdump test
-To:     Arnaldo Carvalho de Melo <acme@kernel.org>
-Cc:     Jiri Olsa <jolsa@redhat.com>, Namhyung Kim <namhyung@kernel.org>,
-        Ian Rogers <irogers@google.com>, linux-kernel@vger.kernel.org,
-        linux-perf-users@vger.kernel.org
-References: <20221014170905.64069-1-adrian.hunter@intel.com>
- <20221014170905.64069-6-adrian.hunter@intel.com>
- <Y0mcWpc4KaeXpU+z@kernel.org>
- <866b1317-d0cd-c730-8d32-e8885b1f45d7@intel.com>
- <Y01cJoaB9q9iarhJ@kernel.org>
+ Thunderbird/102.3.2
+Subject: Re: [PATCH 1/2] tools/perf/tests/shell: Update stat+csv_output.sh to
+ include sanity check for topology
+To:     Athira Rajeev <atrajeev@linux.vnet.ibm.com>, acme@kernel.org,
+        jolsa@kernel.org, mpe@ellerman.id.au
+Cc:     linux-perf-users@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
+        maddy@linux.vnet.ibm.com, rnsastry@linux.ibm.com,
+        kjain@linux.ibm.com, disgoel@linux.vnet.ibm.com
+References: <20221006155149.67205-1-atrajeev@linux.vnet.ibm.com>
 Content-Language: en-US
-From:   Adrian Hunter <adrian.hunter@intel.com>
-Organization: Intel Finland Oy, Registered Address: PL 281, 00181 Helsinki,
- Business Identity Code: 0357606 - 4, Domiciled in Helsinki
-In-Reply-To: <Y01cJoaB9q9iarhJ@kernel.org>
-Content-Type: text/plain; charset=UTF-8
+From:   Disha Goel <disgoel@linux.ibm.com>
+In-Reply-To: <20221006155149.67205-1-atrajeev@linux.vnet.ibm.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 7bit
+X-TM-AS-GCONF: 00
+X-Proofpoint-ORIG-GUID: AbwBz5PjmFLnw_JMJmjKohr3zSPLA6pd
+X-Proofpoint-GUID: AbwBz5PjmFLnw_JMJmjKohr3zSPLA6pd
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.205,Aquarius:18.0.895,Hydra:6.0.545,FMLib:17.11.122.1
+ definitions=2022-10-17_12,2022-10-17_02,2022-06-22_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 mlxscore=0 suspectscore=0
+ bulkscore=0 priorityscore=1501 adultscore=0 malwarescore=0 clxscore=1011
+ phishscore=0 lowpriorityscore=0 mlxlogscore=999 spamscore=0
+ impostorscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2209130000 definitions=main-2210170084
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-On 17/10/22 16:44, Arnaldo Carvalho de Melo wrote:
-> Em Mon, Oct 17, 2022 at 03:57:03PM +0300, Adrian Hunter escreveu:
->> On 14/10/22 20:28, Arnaldo Carvalho de Melo wrote:
->>> Em Fri, Oct 14, 2022 at 08:09:03PM +0300, Adrian Hunter escreveu:
->>>> Add a test for decoding self-modifying code using a jitdump file.
->>>>
->>>> The test creates a workload that uses self-modifying code and generates its
->>>> own jitdump file.  The result is processed with perf inject --jit and
->>>> checked for decoding errors.
->>>>
->>>> Note the test will fail without patch "perf inject: Fix GEN_ELF_TEXT_OFFSET
->>>> for jit" applied.
->>>>
->>>> Signed-off-by: Adrian Hunter <adrian.hunter@intel.com>
->>>> ---
->>>>  tools/perf/tests/shell/test_intel_pt.sh | 162 ++++++++++++++++++++++++
->>>>  1 file changed, 162 insertions(+)
->>>>
->>>> diff --git a/tools/perf/tests/shell/test_intel_pt.sh b/tools/perf/tests/shell/test_intel_pt.sh
->>>> index 79dde57b561d..e0bf75981b9c 100755
->>>> --- a/tools/perf/tests/shell/test_intel_pt.sh
->>>> +++ b/tools/perf/tests/shell/test_intel_pt.sh
->>>> @@ -22,6 +22,7 @@ outfile="${temp_dir}/test-out.txt"
->>>>  errfile="${temp_dir}/test-err.txt"
->>>>  workload="${temp_dir}/workload"
->>>>  awkscript="${temp_dir}/awkscript"
->>>> +jitdump_workload="${temp_dir}/jitdump_workload"
->>>>  
->>>>  cleanup()
->>>>  {
->>>> @@ -50,6 +51,13 @@ perf_record_no_decode()
->>>>  	perf record -B -N --no-bpf-event "$@"
->>>>  }
->>>>  
->>>> +# perf record for testing should not need BPF events
->>>> +perf_record_no_bpf()
->>>> +{
->>>> +	# Options for no BPF events
->>>> +	perf record --no-bpf-event "$@"
->>>> +}
->>>> +
->>>>  have_workload=false
->>>>  cat << _end_of_file_ | /usr/bin/cc -o "${workload}" -xc - -pthread && have_workload=true
->>>>  #include <time.h>
->>>> @@ -269,6 +277,159 @@ test_per_thread()
->>>>  	return 0
->>>>  }
->>>>  
->>>> +test_jitdump()
->>>> +{
->>>> +	echo "--- Test tracing self-modifying code that uses jitdump ---"
->>>> +
->>>> +	script_path=$(realpath "$0")
->>>> +	script_dir=$(dirname "$script_path")
->>>> +	jitdump_incl_dir="${script_dir}/../../util"
->>>> +	jitdump_h="${jitdump_incl_dir}/jitdump.h"
->>>
->>> So this requires one to test this being on the kernel (perf) sources
->>> dir? I think we should add this header to some 'perf test' directory to
->>> remove this requirement, ok?
->>>
->>
->> How about this:
-> 
-> Better, but see below
->  
->> From: Adrian Hunter <adrian.hunter@intel.com>
->> Date: Mon, 17 Oct 2022 15:14:25 +0300
->> Subject: [PATCH] perf test: test_intel_pt.sh: Install jitdump.h for use by
->>  tests
->>
->> test_intel_pt.sh builds a workload for testing jitdump and the workload
->> includes file jitdump.h.
->>
->> Currently, test_intel_pt.sh finds jitdump.h assuming the test is run in
->> the kernel source directory, and skips that test if it is not found.
->>
->> To improve that situation, amend the build to install the jitdump.h file
->> in the test shell directory, and look there first, falling back to the
->> original way if that is not found.
->>
->> Signed-off-by: Adrian Hunter <adrian.hunter@intel.com>
->> ---
->>  tools/perf/Makefile.perf                |  1 +
->>  tools/perf/tests/shell/test_intel_pt.sh | 12 +++++++++---
->>  2 files changed, 10 insertions(+), 3 deletions(-)
->>
->> diff --git a/tools/perf/Makefile.perf b/tools/perf/Makefile.perf
->> index a432e59afc42..c4ec66194465 100644
->> --- a/tools/perf/Makefile.perf
->> +++ b/tools/perf/Makefile.perf
->> @@ -1013,6 +1013,7 @@ install-tests: all install-gtk
->>  		$(INSTALL) tests/attr/* -m 644 '$(DESTDIR_SQ)$(perfexec_instdir_SQ)/tests/attr'; \
->>  		$(INSTALL) -d -m 755 '$(DESTDIR_SQ)$(perfexec_instdir_SQ)/tests/shell'; \
->>  		$(INSTALL) tests/shell/*.sh '$(DESTDIR_SQ)$(perfexec_instdir_SQ)/tests/shell'; \
->> +		$(INSTALL) util/jitdump.h -m 644 '$(DESTDIR_SQ)$(perfexec_instdir_SQ)/tests/shell'; \
->>  		$(INSTALL) -d -m 755 '$(DESTDIR_SQ)$(perfexec_instdir_SQ)/tests/shell/lib'; \
->>  		$(INSTALL) tests/shell/lib/*.sh -m 644 '$(DESTDIR_SQ)$(perfexec_instdir_SQ)/tests/shell/lib'; \
->>  		$(INSTALL) tests/shell/lib/*.py -m 644 '$(DESTDIR_SQ)$(perfexec_instdir_SQ)/tests/shell/lib'; \
->> diff --git a/tools/perf/tests/shell/test_intel_pt.sh b/tools/perf/tests/shell/test_intel_pt.sh
->> index 4c0aabbe33bd..3abf803f96b9 100755
->> --- a/tools/perf/tests/shell/test_intel_pt.sh
->> +++ b/tools/perf/tests/shell/test_intel_pt.sh
->> @@ -284,14 +284,20 @@ test_jitdump()
->>  
->>  	script_path=$(realpath "$0")
->>  	script_dir=$(dirname "$script_path")
->> -	jitdump_incl_dir="${script_dir}/../../util"
->> +	jitdump_incl_dir="${script_dir}"
->>  	jitdump_h="${jitdump_incl_dir}/jitdump.h"
->>  
->>  	if [ ! -e "${jitdump_h}" ] ; then
->> -		echo "SKIP: Include file jitdump.h not found"
->> -		return 2
->> +		jitdump_incl_dir="${script_dir}/../../util"
->> +		jitdump_h="${jitdump_incl_dir}/jitdump.h"
->> +		if [ ! -e "${jitdump_h}" ] ; then
->> +			echo "SKIP: Include file jitdump.h not found"
->> +			return 2
->> +		fi
->>  	fi
->>  
->> +	echo "Using include file: ${jitdump_h}"
-> 
-> Shouldn't this appear only with -v?
 
-Yes, but shell scripts do not process -v.  Instead all output is
-suppressed by perf test unless -v is used.  So it should be OK?
+On 10/6/22 9:21 PM, Athira Rajeev wrote:
+> Testcase stat+csv_output.sh fails in powerpc:
+>
+> 	84: perf stat CSV output linter: FAILED!
+>
+> The testcase "stat+csv_output.sh" verifies perf stat
+> CSV output. The test covers aggregation modes like
+> per-socket, per-core, per-die, -A (no_aggr mode) along
+> with few other tests. It counts expected fields for
+> various commands. For example say -A (i.e, AGGR_NONE
+> mode), expects 7 fields in the output having "CPU" as
+> first field. Same way, for per-socket, it expects the
+> first field in result to point to socket id. The testcases
+> compares the result with expected count.
+>
+> The values for socket, die, core and cpu are fetched
+> from topology directory:
+> /sys/devices/system/cpu/cpu*/topology.
+> For example, socket value is fetched from
+> "physical_package_id" file of topology directory.
+> (cpu__get_topology_int() in util/cpumap.c)
+>
+> If a platform fails to fetch the topology information,
+> values will be set to -1. For example, incase of pSeries
+> platform of powerpc, value for  "physical_package_id" is
+> restricted and not exposed. So, -1 will be assigned.
+>
+> Perf code has a checks for valid cpu id in "aggr_printout"
+> (stat-display.c), which displays the fields. So, in cases
+> where topology values not exposed, first field of the
+> output displaying will be empty. This cause the testcase
+> to fail, as it counts  number of fields in the output.
+>
+> Incase of -A (AGGR_NONE mode,), testcase expects 7 fields
+> in the output, becos of -1 value obtained from topology
+> files for some, only 6 fields are printed. Hence a testcase
+> failure reported due to mismatch in number of fields in
+> the output.
+>
+> Patch here adds a sanity check in the testcase for topology.
+> Check will help to skip the test if -1 value found.
+>
+> Fixes: 7473ee56dbc9 ("perf test: Add checking for perf stat CSV output.")
+> Reported-by: Disha Goel <disgoel@linux.vnet.ibm.com>
+> Signed-off-by: Athira Rajeev <atrajeev@linux.vnet.ibm.com>
+> Suggested-by: James Clark <james.clark@arm.com>
+> Suggested-by: Ian Rogers <irogers@google.com>
 
-> 
-> - Arnaldo
-> 
->> +
->>  	if [ -z "${have_jitdump_workload}" ] ; then
->>  		have_jitdump_workload=false
->>  		# Create a workload that uses self-modifying code and generates its own jitdump file
+For the patchset,
 
+Tested-by: Disha Goel <disgoel@linux.vnet.ibm.com>
+
+> ---
+>   tools/perf/tests/shell/stat+csv_output.sh | 43 ++++++++++++++++++++---
+>   1 file changed, 39 insertions(+), 4 deletions(-)
+>
+> diff --git a/tools/perf/tests/shell/stat+csv_output.sh b/tools/perf/tests/shell/stat+csv_output.sh
+> index eb5196f58190..b7f050aa6210 100755
+> --- a/tools/perf/tests/shell/stat+csv_output.sh
+> +++ b/tools/perf/tests/shell/stat+csv_output.sh
+> @@ -6,6 +6,8 @@
+>
+>   set -e
+>
+> +skip_test=0
+> +
+>   function commachecker()
+>   {
+>   	local -i cnt=0
+> @@ -156,14 +158,47 @@ check_per_socket()
+>   	echo "[Success]"
+>   }
+>
+> +# The perf stat options for per-socket, per-core, per-die
+> +# and -A ( no_aggr mode ) uses the info fetched from this
+> +# directory: "/sys/devices/system/cpu/cpu*/topology". For
+> +# example, socket value is fetched from "physical_package_id"
+> +# file in topology directory.
+> +# Reference: cpu__get_topology_int in util/cpumap.c
+> +# If the platform doesn't expose topology information, values
+> +# will be set to -1. For example, incase of pSeries platform
+> +# of powerpc, value for  "physical_package_id" is restricted
+> +# and set to -1. Check here validates the socket-id read from
+> +# topology file before proceeding further
+> +
+> +FILE_LOC="/sys/devices/system/cpu/cpu*/topology/"
+> +FILE_NAME="physical_package_id"
+> +
+> +check_for_topology()
+> +{
+> +	if ! ParanoidAndNotRoot 0
+> +	then
+> +		socket_file=`ls $FILE_LOC/$FILE_NAME | head -n 1`
+> +		[ -z $socket_file ] && return 0
+> +		socket_id=`cat $socket_file`
+> +		[ $socket_id == -1 ] && skip_test=1
+> +		return 0
+> +	fi
+> +}
+> +
+> +check_for_topology
+>   check_no_args
+>   check_system_wide
+> -check_system_wide_no_aggr
+>   check_interval
+>   check_event
+> -check_per_core
+>   check_per_thread
+> -check_per_die
+>   check_per_node
+> -check_per_socket
+> +if [ $skip_test -ne 1 ]
+> +then
+> +	check_system_wide_no_aggr
+> +	check_per_core
+> +	check_per_die
+> +	check_per_socket
+> +else
+> +	echo "[Skip] Skipping tests for system_wide_no_aggr, per_core, per_die and per_socket since socket id exposed via topology is invalid"
+> +fi
+>   exit 0
