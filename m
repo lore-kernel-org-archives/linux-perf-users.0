@@ -2,155 +2,164 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4A2A2C433FE
-	for <linux-perf-users@archiver.kernel.org>; Mon, 17 Oct 2022 18:24:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7E2A9C4332F
+	for <linux-perf-users@archiver.kernel.org>; Mon, 17 Oct 2022 23:09:46 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230250AbiJQSYT (ORCPT
+        id S230055AbiJQXJo (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Mon, 17 Oct 2022 14:24:19 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55612 "EHLO
+        Mon, 17 Oct 2022 19:09:44 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57036 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229932AbiJQSYS (ORCPT
+        with ESMTP id S231459AbiJQXIp (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Mon, 17 Oct 2022 14:24:18 -0400
-Received: from mail-ot1-x32b.google.com (mail-ot1-x32b.google.com [IPv6:2607:f8b0:4864:20::32b])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A8EF274CFF
-        for <linux-perf-users@vger.kernel.org>; Mon, 17 Oct 2022 11:24:14 -0700 (PDT)
-Received: by mail-ot1-x32b.google.com with SMTP id p24-20020a9d6958000000b00661c528849eso6279034oto.9
-        for <linux-perf-users@vger.kernel.org>; Mon, 17 Oct 2022 11:24:14 -0700 (PDT)
+        Mon, 17 Oct 2022 19:08:45 -0400
+Received: from mail-wr1-x42c.google.com (mail-wr1-x42c.google.com [IPv6:2a00:1450:4864:20::42c])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B4226857C5
+        for <linux-perf-users@vger.kernel.org>; Mon, 17 Oct 2022 16:08:29 -0700 (PDT)
+Received: by mail-wr1-x42c.google.com with SMTP id j16so20851442wrh.5
+        for <linux-perf-users@vger.kernel.org>; Mon, 17 Oct 2022 16:08:29 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20210112;
-        h=content-transfer-encoding:mime-version:message-id:references
-         :in-reply-to:user-agent:subject:cc:to:from:date:from:to:cc:subject
-         :date:message-id:reply-to;
-        bh=v6DiDy4ix9P/W+fn3JWxS25Z5RWuyOGB2yuXhhgoOSg=;
-        b=f53N0+uudGGj6Q4xJAdnHctnwtMrq0bJZgTxnDlLQBerLK6GdiL6Dt34Q8XB64KU3p
-         kQLAwHqmTqCoGRW6rX3yw2xt4ly+zr9KEKAQXY08DPrwTxbFo5AVj20fKpFhRQs5sp+e
-         gJW0u/01ZbCuXZu6QS6QklYdh/dVSRuEJcSEr9P8wZxDiEGj5VP0Gns24mrkMjha9ZbN
-         fxxFyXq3cgFEIyxt+n0FVO5yaM9DAqMtDAblCykYT7ecCPlVkuifzjYmaIh0ZJ71lloA
-         GOpWQGdP5khZA6dElhOCZodGRMZOe65pssPrGfuvfsH3SsqnmSAu+XaNmnEysLSF5V/M
-         fsaw==
+        d=google.com; s=20210112;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:from:to:cc:subject:date:message-id:reply-to;
+        bh=9VkmZ6BS9mgBWXse91fXAkBFVaB7qaQEapO6tRFc+vo=;
+        b=aAdhRpoycwbSSESuWmb/ew3H5j+mWH9EEBjEybaWTql9Z1nMG2zZtb6EosotlPPnwy
+         PlystUKgv0G7vgTuHvqlWQsLXJdJZmBU8Fs1yN30fj8H0+KLcREq3l6Sxjez6C596M0R
+         /0/2YxMPbQ5/eTVBff+Jd4enMixPufgU+cIthoYgd32JmXjwIFBlAcP380v1DzNiBhzi
+         dxuqGRODgdEIuDPU2RWaXQCs/EmsoYuYyqb1cRdqzyevFNQwFwnV8S0Xm1iG1ddspNNy
+         pXyyWXXA1EQZnZlCePMsDvFzgzq2PWSHfsiWZlISRmdZ0WQ0nlDWH5MlzcwoLwlqjGgI
+         TT9A==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=content-transfer-encoding:mime-version:message-id:references
-         :in-reply-to:user-agent:subject:cc:to:from:date:x-gm-message-state
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=v6DiDy4ix9P/W+fn3JWxS25Z5RWuyOGB2yuXhhgoOSg=;
-        b=QU5OaiL0U5+jIHKNbYmskqkLudoEBNjr3qxULII0vVBdPTjPbvLPgwwrR0WXWQxdzO
-         a3P2CSCKJUlTDt+jmRr5WH8Bhy+ML9N+9CCPrTv33ClIK4n3iSFQCl2CrE4Fk4ChwyAU
-         ce/uzY2aQHKMYiQ+Adi4OVKCVFe4VFsXJbMvaLQqCmlqc7x3j6AQwxJBfNG601dGpeMh
-         gIUgScZT34GAdARZj1qrt8KthJJK/E0/bHDTTConkuEOT2XY59EOocBBbvIj09VtHNBb
-         tYpzgFAl0zbLAHTWyulhyz7JpINXQHbt5v8/3W9WcEMPKQYd3OfDWqrlfqWiqEOz5gW1
-         5qUQ==
-X-Gm-Message-State: ACrzQf3FOo647aIZSzk+lf+IOEOjPDygU1aAz0t/gTNQa8ky6ECHXUFS
-        RjPyjs5GBSstrM65rslIZr8Q+qje3xY=
-X-Google-Smtp-Source: AMsMyM638bPwazcLBdjgPtfsu8bK4Wvcpu+hylaj0qucgCq3LTzRFdb/reC4LzEPi6XI3mH14TWdKA==
-X-Received: by 2002:a9d:6405:0:b0:661:481:783b with SMTP id h5-20020a9d6405000000b006610481783bmr5671772otl.273.1666031053964;
-        Mon, 17 Oct 2022 11:24:13 -0700 (PDT)
-Received: from [127.0.0.1] ([187.19.238.93])
-        by smtp.gmail.com with ESMTPSA id g7-20020a9d6c47000000b00661a1d92aacsm5010627otq.33.2022.10.17.11.24.12
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 17 Oct 2022 11:24:13 -0700 (PDT)
-Date:   Mon, 17 Oct 2022 15:24:08 -0300
-From:   Arnaldo Carvalho de Melo <arnaldo.melo@gmail.com>
-To:     Jesus Maldonado <jesus.maldonado@oracle.com>,
-        Arnaldo Carvalho de Melo <acme@kernel.org>
-CC:     linux-perf-users@vger.kernel.org
-Subject: Re: [External] : Re: A couple of perf questions
-User-Agent: K-9 Mail for Android
-In-Reply-To: <588f3f31-3410-6371-4e7b-2141607f3af4@oracle.com>
-References: <a6b39321-3918-3191-cc70-4cfa3a756331@oracle.com> <Y0l9CzqROpJYQSER@kernel.org> <588f3f31-3410-6371-4e7b-2141607f3af4@oracle.com>
-Message-ID: <1292A666-B6A1-4243-A8DA-457C54D798F4@gmail.com>
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=9VkmZ6BS9mgBWXse91fXAkBFVaB7qaQEapO6tRFc+vo=;
+        b=WzDAP1QpTpXImWMPOv9wRCgZZZAlcLWr5w8780wS+NO6C6xBn52qMHCSHya92DnDMy
+         RpKUYhf2t/MekbSErHgcWNI5Pt5oqEx+hwiPbbKGE9HiAGWqTWV7l/VUBhOWC3/qe6dC
+         /M87sUW/LjGyVBfu27mpuLCWctWwKstOIF02mswIRnl3yDs2cVJHCP1WcYYnMFZ6iIkV
+         2qYyGuJFKaGD0Y6X2uFHglDLvWwQIvpc8q96ECxbpHoXPJ1HsCeS+APp8+WhfuWcSv2u
+         p9NsFXIC/RMy1pG53lixTs8n1KcsXRo7tLg1NCDDwcoDFdaHwTZ/YgSQsF04Ml2ryS+2
+         kvdQ==
+X-Gm-Message-State: ACrzQf1hcA6aRV5S+s/t5Yd7Jg8vZgXhBIqxa1/DfP0FGJ3A5AwETIt1
+        VB8yRw8UcakWYCv3VkgbPD1PEXaIC5huMg5wqI5s3Q==
+X-Google-Smtp-Source: AMsMyM5fyS7eL+2YgT1m5kmvnDs0h8B52OwfASz43WQoYLR1DZNj4BuUIAVgWkh+saIbuLLvZmst1c2M0ic8Q+l9gE8=
+X-Received: by 2002:a5d:47a9:0:b0:22e:3beb:dc3a with SMTP id
+ 9-20020a5d47a9000000b0022e3bebdc3amr62278wrb.654.1666048036569; Mon, 17 Oct
+ 2022 16:07:16 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain;
- charset=utf-8
-Content-Transfer-Encoding: quoted-printable
+References: <20221013011205.3151391-1-irogers@google.com> <715c8e4a-f3c3-6521-778e-8ba8c2bf659e@huawei.com>
+In-Reply-To: <715c8e4a-f3c3-6521-778e-8ba8c2bf659e@huawei.com>
+From:   Ian Rogers <irogers@google.com>
+Date:   Mon, 17 Oct 2022 16:07:04 -0700
+Message-ID: <CAP-5=fVBSDPPFnBnLF775noQPyHnjbpu+hC=LiEJo5566oONrA@mail.gmail.com>
+Subject: Re: [PATCH v1] perf test: Parse events workaround for dash/minus
+To:     John Garry <john.garry@huawei.com>
+Cc:     Peter Zijlstra <peterz@infradead.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        Arnaldo Carvalho de Melo <acme@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Jiri Olsa <jolsa@kernel.org>,
+        Namhyung Kim <namhyung@kernel.org>,
+        linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Ravi Bangoria <ravi.bangoria@amd.com>,
+        Stephane Eranian <eranian@google.com>
+Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
+On Thu, Oct 13, 2022 at 5:11 AM John Garry <john.garry@huawei.com> wrote:
+>
+> On 13/10/2022 02:12, Ian Rogers wrote:
+> > Skip an event configuration for event names with a dash/minus in them.
+> > Events with a dash/minus in their name cause parsing issues as legacy
+> > encoding of events would use a dash/minus as a separator. The parser
+> > separates events with dashes into prefixes and suffixes and then
+> > recombines them. Unfortunately if an event has part of its name that
+> > matches a legacy token then the recombining fails. This is seen for
+> > branch-brs where branch is a legacy token. branch-brs was introduced
+> > to sysfs in:
+> > https://lore.kernel.org/all/20220322221517.2510440-5-eranian@google.com/
+> > The failure is shown below as well as the workaround to use a config
+> > where the dash/minus isn't treated specially:
+> >
+> > ```
+> > $ perf stat -e branch-brs true
+> > event syntax error: 'branch-brs'
+> >                             \___ parser error
+> >
+> > $ perf stat -e cpu/branch-brs/ true
+> >
+> >   Performance counter stats for 'true':
+> >
+> >              46,179      cpu/branch-brs/
+> > ```
+> >
+> > Signed-off-by: Ian Rogers <irogers@google.com>
+> > ---
+> >   tools/perf/tests/parse-events.c | 13 +++++++++++++
+> >   1 file changed, 13 insertions(+)
+> >
+> > diff --git a/tools/perf/tests/parse-events.c b/tools/perf/tests/parse-events.c
+> > index 459afdb256a1..3440dd2616b0 100644
+> > --- a/tools/perf/tests/parse-events.c
+> > +++ b/tools/perf/tests/parse-events.c
+> > @@ -2237,6 +2237,19 @@ static int test__pmu_events(struct test_suite *test __maybe_unused, int subtest
+> >                       pr_debug("Test PMU event failed for '%s'", name);
+> >                       ret = combine_test_results(ret, test_ret);
+> >
+>
+> Hi Ian,
+>
+> }
+> > +             /*
+> > +              * Names containing '-' are recognized as prefixes and suffixes
+> > +              * due to '-' being a legacy PMU separator. This fails when the
+> > +              * prefix or suffix collides with an existing legacy token. For
+> > +              * example, branch-brs has a prefix (branch) that collides with
+> > +              * a PE_NAME_CACHE_TYPE token causing a parse error as a suffix
+> > +              * isn't expected after this.
+>
+> OK, so you want to skip anything with '-'. Will we now miss out on
+> events which contain a '-' but don't clash with an existing legacy token?
 
+Yes. The long term solution here is to ditch the current parse event
+code and its legacy support. An idea is to create a simplified parser
+as part of libperf2 (libperf but with a libbpf style license), use the
+new parser for metrics and events. In the events case, if the new
+parser fails then use the legacy parser and its weird handling of
+dashes.
 
-On October 17, 2022 2:18:55 PM GMT-03:00, Jesus Maldonado <jesus=2Emaldona=
-do@oracle=2Ecom> wrote:
->Hi Arnaldo,
+> >  As event names in the config
+> > +              * slashes are allowed a '-' in the name we check this works
+> > +              * above.
 >
->Thanks for getting back=2E
->
->+ linux-perf-users@vger=2Ekernel=2Eorg (as suggested)
->
->For the first part, about perf record=2E My intention is to record both c=
-ommand and some list of pids=2E
->e=2Eg=2E
->/perf record -p <1234,5678> myExecutable/
->
->So, the final result should include pids 1234, 5678, *and* whatever is th=
-e pid for myExecutable once run=2E But what happens is that it can only inc=
-lude 1234 abd 5678=2E
->
->Is there an alias or option that can be used so --pid considers as well <=
-command>'s pid=2E
+> Sorry, I can't follow what you mean here. Do you mean that
+> "cpu/branch-brs/" works ok and we continue to test it?
 
+Yep, as shown in the commit message. The comment isn't great, it
+should be worded something like:
 
-That's not available right now but should be doable=2E
+If an event name is in the config slashes, such as cpu/branch-brs/,  a
+'-' in the name works as the dash doesn't separate the parts of the
+name. This continues to be tested above.
 
+> > +              * above.
+
+Thanks,
+Ian
+
+> > +              */
+> > +             if (strchr(ent->d_name, '-'))
+> > +                     continue;
 >
->2)
+> Thanks,
+> John
 >
->> You mean for AMD or Like some feature available on AMD systems, which
->> one?
->I meant on AMD CPUs=2E Something that is similar to Intel PT for AMD CPUs=
-=2E
-
-Take a look at this recent patch:
-
-https://lwn=2Enet/Articles/904482/
-
-- Arnaldo=20
+> > +
+> >               snprintf(name, sizeof(name), "%s:u,cpu/event=%s/u", ent->d_name, ent->d_name);
+> >               e.name  = name;
+> >               e.check = test__checkevent_pmu_events_mix;
 >
->Thanks
->
->Jesus
->On 10/14/22 8:15 AM, Arnaldo Carvalho de Melo wrote:
->> Em Wed, Oct 12, 2022 at 11:25:48AM -0700, Jesus Maldonado escreveu:
->>> Hi Arnaldo,
->>>=20
->>> Saw your awesome PR for perf tools changes in 6=2E1=2E and thought you=
- are the
->>> right person to ask these 2 questions=2E
->> Please next time CClinux-perf-users@vger=2Ekernel=2Eorg, you may end up
->> getting a better and/or faster response there :-)
->>  =20
->>> 1) Does perf record allow for recording of a new process + system proc=
-esses?
->>> e=2Eg=2E A benchmark tool that runs for a few seconds but interacts wi=
-th some
->>> other processes in the system=2E
->>> Ideally something like "filter by process(cmd) name" + new process spe=
-cified
->>> in command line=2E
->>> I can think of some workarounds, but wanted to validate=2E
->> perf record can record many things, and some of those things have
->> different filter mechanisms, for instance, you can use --filter right
->> after a tracepoint event to add a filter to that specific event, etc=2E
->>=20
->> Intel PT also has ways for setting up filters=2E
->>=20
->> See 'perf record --help' with the perf man pages installed, look for
->> --filter=2E
->>=20
->> One other way would be to have multiple perf record sessions and then
->> combine the results, but that would require some more work, perhaps a
->> brute force with what is available would be to do a perf script on the
->> multiple perf=2Edata files then concatenate them together and then do a
->> sort by the timestamp=2E
->>=20
->> May be ok for some specific workloads and events, but not for others=2E
->>  =20
->>> 2) Do you know of something that allows for high resolution branch tra=
-cing
->>> (say call, return) other than Intel PTs? Like for AMD?
->> You mean for AMD or Like some feature available on AMD systems, which
->> one?
->>=20
->> - Arnaldo
