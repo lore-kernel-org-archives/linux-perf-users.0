@@ -2,113 +2,118 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9B683C433FE
-	for <linux-perf-users@archiver.kernel.org>; Mon, 17 Oct 2022 23:38:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 317A9C4332F
+	for <linux-perf-users@archiver.kernel.org>; Mon, 17 Oct 2022 23:48:00 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230378AbiJQXiU (ORCPT
+        id S231150AbiJQXr6 (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Mon, 17 Oct 2022 19:38:20 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54080 "EHLO
+        Mon, 17 Oct 2022 19:47:58 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45122 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230280AbiJQXiT (ORCPT
+        with ESMTP id S230526AbiJQXrw (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Mon, 17 Oct 2022 19:38:19 -0400
-Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 008F8857D4;
-        Mon, 17 Oct 2022 16:38:14 -0700 (PDT)
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id 3E165612DC;
-        Mon, 17 Oct 2022 23:38:13 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id C676DC433C1;
-        Mon, 17 Oct 2022 23:38:11 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1666049892;
-        bh=MlBnouHryaZbiw/93+me4ojj1DJ4whBS7dUdANGIhOU=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Ds4uccgRrpkr/UI3TrihXNnk4oluADnAMxef1aeu0RK+x8oeBp7saNgL73nidKfWf
-         zeCaKLbvMIYeQbwbAwrmYivo+qu9bpoUsIY7aXJKvb7AXe70civYScJJpzml32/pGo
-         qe8QHicr9T9QvrqCDdLV6UHJ6uDc9dp2agf50WZwQEGRYgrvfkO5EmIRIlPZK8oDCm
-         1fBHB9UhRfEXwgoeZNbB1slzhVj8SnXb52hTdu53jNWrfHzML4lmriYTdr6WeCg2Pj
-         bViRTE8ys2wXmXa04ajb5EC423TsCWglNfszCVN6u89jqyx7gI97eU+0nP4z0HTMkD
-         tj/AJae0GwGtg==
-From:   SeongJae Park <sj@kernel.org>
-To:     James Clark <james.clark@arm.com>
-Cc:     sj@kernel.org, linux-perf-users@vger.kernel.org,
-        peterz@infradead.org, namhyung@kernel.org,
-        linux-kernel@vger.kernel.org, Ingo Molnar <mingo@redhat.com>,
-        Arnaldo Carvalho de Melo <acme@kernel.org>,
+        Mon, 17 Oct 2022 19:47:52 -0400
+Received: from mail-oa1-f50.google.com (mail-oa1-f50.google.com [209.85.160.50])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B397985AB6;
+        Mon, 17 Oct 2022 16:47:41 -0700 (PDT)
+Received: by mail-oa1-f50.google.com with SMTP id 586e51a60fabf-131dda37dddso15151926fac.0;
+        Mon, 17 Oct 2022 16:47:41 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=ei9+z+RKpmt1z7epHvqK2iTl22w3n8AvRxEPxMVR2Yw=;
+        b=gkAHLUwd1zj/a9koGTnCFWcjNF1qX6IWoWFbU79t5Riv7abDt2VBFACRhdGjoBV1uB
+         dVeImzN966FaP4j2IM0BQikcIb7pmpJbjzciVMNlc1+g7fdnz+0HpPHNpADF5Zrazq8L
+         tylAM+1G4Rc/RJT3KKIwnhV39Af7yVTgOvRTketo+rRTbeSQ0zSIw3r5Cc4wJdFmnZxO
+         hYlhT6bnDOBJgqDWXCHLxxhFdtvzPkA3VcAV0z+QRKDvowW5isK96euaoMKMjNmXPvDU
+         yphcdcyHRUNKkI4e8HCM/E8Z6W1tYwTtXWdP+XZpvf5RmMmPGDgD4MCH2Gxi+C4Bj42h
+         icmw==
+X-Gm-Message-State: ACrzQf1E/l/2cEir3Ha5B1lGgKOmKiqYhHb30ILmE+FYsN7pAn6Lnd5I
+        xsLjQeAjNarvqjbqvIykfyaL0b/V8qzigQzh0sk=
+X-Google-Smtp-Source: AMsMyM4h2YuUzMJW/arD5fSPZY2RZMX2Nu9JsFskScaAAMM8s3z7KMnqpHyz7mJdJ7JCqg/XzoqJxavwpzv6vbekQ+Y=
+X-Received: by 2002:a05:6870:4184:b0:136:5e73:b40e with SMTP id
+ y4-20020a056870418400b001365e73b40emr72714oac.209.1666050461024; Mon, 17 Oct
+ 2022 16:47:41 -0700 (PDT)
+MIME-Version: 1.0
+References: <20221012111025.30609-1-james.clark@arm.com> <62f485df-4f5e-64a2-1294-6e162de25556@arm.com>
+ <CAM9d7cgNrZ6iwRQsGHWGLWCd7cJm+L6UOU9BiGGgTVPdJ0_GJQ@mail.gmail.com>
+ <e0b47b51-87f0-42db-4a76-b240bf07cd41@arm.com> <CAM9d7cg+tTw5vTOycqRciQx8He-WLG0TSdcWa0tyzeu49DmgxA@mail.gmail.com>
+ <912a4d0a-51b3-591b-8c8f-f078216d5b35@arm.com> <Y01Lnh5DqGUPuibf@kernel.org>
+In-Reply-To: <Y01Lnh5DqGUPuibf@kernel.org>
+From:   Namhyung Kim <namhyung@kernel.org>
+Date:   Mon, 17 Oct 2022 16:47:29 -0700
+Message-ID: <CAM9d7ci0B03fKHydrXXPEnJOVbWA3tpirxec_A3VE3NsPU2rRw@mail.gmail.com>
+Subject: Re: [PATCH] perf: Fix "Track with sched_switch" test by not printing
+ warnings in quiet mode
+To:     Arnaldo Carvalho de Melo <acme@kernel.org>
+Cc:     James Clark <james.clark@arm.com>,
+        linux-perf-users <linux-perf-users@vger.kernel.org>,
+        linux-kernel <linux-kernel@vger.kernel.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Ingo Molnar <mingo@redhat.com>,
         Mark Rutland <mark.rutland@arm.com>,
         Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Jiri Olsa <jolsa@kernel.org>
-Subject: Re: [PATCH] perf: Fix missing raw data on tracepoint events
-Date:   Mon, 17 Oct 2022 23:38:09 +0000
-Message-Id: <20221017233809.1476-1-sj@kernel.org>
-X-Mailer: git-send-email 2.25.1
-In-Reply-To: <20221012143857.48198-1-james.clark@arm.com>
-References: 
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+        Jiri Olsa <jolsa@kernel.org>, Ian Rogers <irogers@google.com>,
+        Adrian Hunter <adrian.hunter@intel.com>
+Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-On Wed, 12 Oct 2022 15:38:57 +0100 James Clark <james.clark@arm.com> wrote:
+On Mon, Oct 17, 2022 at 5:33 AM Arnaldo Carvalho de Melo
+<acme@kernel.org> wrote:
+>
+> Em Fri, Oct 14, 2022 at 10:47:34AM +0100, James Clark escreveu:
+> > On 13/10/2022 17:57, Namhyung Kim wrote:
+> > > On Wed, Oct 12, 2022 at 10:12 AM James Clark <james.clark@arm.com> wrote:
+> > >> On 12/10/2022 17:50, Namhyung Kim wrote:
+> > >>> On Wed, Oct 12, 2022 at 4:13 AM James Clark <james.clark@arm.com> wrote:
+> > >>>>> The test already supplies -q to run in quiet mode, so extend quiet mode
+> > >>>>> to perf_stdio__warning() and also ui__warning() for consistency.
+> > >>>
+> > >>> I'm not sure if suppressing the warnings with -q is a good thing.
+> > >>> Maybe we need to separate warning/debug messages from the output.
+> > >>
+> > >> I don't see the issue with warnings being suppressed in quiet mode as
+> > >> long as errors are still printed. In other cases warnings have already
+> > >> been suppressed by quiet mode and this site is the odd one out.
+> > >>
+> > >> What use case are you thinking of where someone explicitly adds -q but
+> > >> wants to see non fatal warnings?
+> > >
+> > > I don't have any specific use case.  If it's already suppressed in other
+> > > cases, I'm fine with it.
+> > >
+> >
+> > Actually I may have been mistaken. Seems like quiet is only used for
+> > "extra info" type messages rather than warnings. Although the commit
+> > message does say:
+> >
+> >   The -q/--quiet option is to suppress any message. Sometimes users just
+> >   want to see the numbers and it can be used for that case.
+> >
+> > With 'any' that I would take to include warnings as well. I could move
+> > warnings to stderr, but this has a much greater chance of breaking
+> > anyone's workflows that might be looking for warnings on stdout than
+> > removing warnings when -q is provided.
+> >
+> > Also if warnings are moved to stderr and quiet isn't used, there would
+> > be no way to suppress warnings in the TUI which might actually be a
+> > useful feature.
+> >
+> > So I'm still leaning towards the original change, if you are ok with
+> > that even though it's not done elsewhere?
+>
+> Namhyung? I tend to agree with James.
 
-> Since commit 838d9bb62d13 ("perf: Use sample_flags for raw_data")
-> raw data is not being output on tracepoints due to the PERF_SAMPLE_RAW
-> field not being set. Fix this by setting it for tracepoint events.
+I think it's a matter of choice.  With this change, users won't see
+warnings with -q anymore.  This MIGHT affect some users as they
+can see low quality data silently due to missing data or something.
 
-I was also getting similar issue[1], and confirmed that this fixes it.  Thank
-you for the fix!  Also, thank you for pointing me to this patch, Namhyung!
-
-> 
-> This fixes the following test failure:
-> 
->   perf test "sched_switch" -vvv
-> 
->    35: Track with sched_switch
->   --- start ---
->   test child forked, pid 1828
->   ...
->   Using CPUID 0x00000000410fd400
->   sched_switch: cpu: 2 prev_tid -14687 next_tid 0
->   sched_switch: cpu: 2 prev_tid -14687 next_tid 0
->   Missing sched_switch events
->   4613 events recorded
->   test child finished with -1
->   ---- end ----
->   Track with sched_switch: FAILED!
-> 
-> Fixes: 838d9bb62d13 ("perf: Use sample_flags for raw_data")
-> Cc: Namhyung Kim <namhyung@kernel.org>
-> Cc: Peter Zijlstra (Intel) <peterz@infradead.org>
-> Signed-off-by: James Clark <james.clark@arm.com>
-
-Tested-by: SeongJae Park <sj@kernel.org>
-
-
-[1] https://lore.kernel.org/bpf/20221017192744.1403-1-sj@kernel.org/
+If you're ok with the behavior, I'm fine.  But then we need to update
+the document to clarify the behavior.
 
 Thanks,
-SJ
-
-> ---
->  kernel/events/core.c | 1 +
->  1 file changed, 1 insertion(+)
-> 
-> diff --git a/kernel/events/core.c b/kernel/events/core.c
-> index b981b879bcd8..824c23830272 100644
-> --- a/kernel/events/core.c
-> +++ b/kernel/events/core.c
-> @@ -9759,6 +9759,7 @@ void perf_tp_event(u16 event_type, u64 count, void *record, int entry_size,
->  
->  	perf_sample_data_init(&data, 0, 0);
->  	data.raw = &raw;
-> +	data.sample_flags |= PERF_SAMPLE_RAW;
->  
->  	perf_trace_buf_update(record, event_type);
->  
-> -- 
-> 2.28.0
+Namhyung
