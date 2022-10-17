@@ -2,204 +2,164 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A95A7C4332F
-	for <linux-perf-users@archiver.kernel.org>; Mon, 17 Oct 2022 06:42:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 99A7FC4332F
+	for <linux-perf-users@archiver.kernel.org>; Mon, 17 Oct 2022 09:34:55 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229508AbiJQGmv (ORCPT
+        id S230426AbiJQJex (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Mon, 17 Oct 2022 02:42:51 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35450 "EHLO
+        Mon, 17 Oct 2022 05:34:53 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49314 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229663AbiJQGmu (ORCPT
+        with ESMTP id S231241AbiJQJet (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Mon, 17 Oct 2022 02:42:50 -0400
-X-Greylist: delayed 702 seconds by postgrey-1.37 at lindbergh.monkeyblade.net; Sun, 16 Oct 2022 23:42:48 PDT
-Received: from forward103p.mail.yandex.net (forward103p.mail.yandex.net [77.88.28.106])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E721954CB6
-        for <linux-perf-users@vger.kernel.org>; Sun, 16 Oct 2022 23:42:48 -0700 (PDT)
-Received: from forward502p.mail.yandex.net (forward502p.mail.yandex.net [IPv6:2a02:6b8:0:1472:2741:0:8b7:121])
-        by forward103p.mail.yandex.net (Yandex) with ESMTP id 32AE45A3021;
-        Mon, 17 Oct 2022 09:19:57 +0300 (MSK)
-Received: from sas1-384d3eaa6677.qloud-c.yandex.net (sas1-384d3eaa6677.qloud-c.yandex.net [IPv6:2a02:6b8:c14:3a29:0:640:384d:3eaa])
-        by forward502p.mail.yandex.net (Yandex) with ESMTP id BC2B7B8139E;
-        Mon, 17 Oct 2022 09:19:52 +0300 (MSK)
-Received: by sas1-384d3eaa6677.qloud-c.yandex.net (smtp/Yandex) with ESMTPSA id l9nt5C04sF-JnjOhNs4;
-        Mon, 17 Oct 2022 09:19:51 +0300
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits))
-        (Client certificate not present)
-X-Yandex-Fwd: 1
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=maquefel.me; s=mail; t=1665987591;
-        bh=ZlVETtAdMTCrWUZ9/ku01uEirmMFNR/BEDj83BCtnQA=;
-        h=Cc:Message-ID:Subject:Date:References:To:From:In-Reply-To;
-        b=ABoFTlejDyTprn0uGW1gdDPaiV+QrUfa+XBioAwb5QRHIVsbyno9+AKrc7cdSxCtJ
-         Ua2lpFfkl+++N+7nfWu5AntK1DaK64LiVjtYCl7CRHd5NdsTHnwbtHkQWl6nzN5n2C
-         WyK5KflsRayUPFC8lQqQOeVTiJv5hIjBhyOkMtaY=
-Authentication-Results: sas1-384d3eaa6677.qloud-c.yandex.net; dkim=pass header.i=@maquefel.me
-Date:   Mon, 17 Oct 2022 09:19:48 +0300
-From:   Nikita Shubin <nikita.shubin@maquefel.me>
-To:     Arnaldo Carvalho de Melo <acme@kernel.org>
-Cc:     acme@redhat.com, linux@yadro.com, anup@brainfault.org,
-        n.shubin@yadro.com, aou@eecs.berkeley.edu,
-        alexander.shishkin@linux.intel.com, mingo@redhat.com,
-        jolsa@kernel.org, linux-kernel@vger.kernel.org,
-        linux-perf-users@vger.kernel.org, linux-riscv@lists.infradead.org,
-        mark.rutland@arm.com, namhyung@kernel.org,
-        Paul Walmsley <paul.walmsley@sifive.com>, peterz@infradead.org,
-        Palmer Dabbelt <palmer@dabbelt.com>
-Subject: Re: [PATCH v6 0/3] RISC-V: Create unique identification for SoC PMU
-Message-ID: <20221017091948.1961294e@redslave.neermore.group>
-In-Reply-To: <mhng-a8eaa55b-16b0-4b17-b202-881e75a65eaf@palmer-ri-x1c9>
-References: <20220815132251.25702-1-nikita.shubin@maquefel.me>
-        <mhng-a8eaa55b-16b0-4b17-b202-881e75a65eaf@palmer-ri-x1c9>
-X-Mailer: Claws Mail 3.17.7 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
-MIME-Version: 1.0
+        Mon, 17 Oct 2022 05:34:49 -0400
+Received: from NAM11-BN8-obe.outbound.protection.outlook.com (mail-bn8nam11on2041.outbound.protection.outlook.com [40.107.236.41])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C171013D1B;
+        Mon, 17 Oct 2022 02:34:40 -0700 (PDT)
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=TAgnlszN5bKhiZ8P6JU3QNFZQX5c0i0qOfnEnxgpw4YdAgErGwc970kqZYUNFQs7NAs64JQkFq5hu5xWO33FafGOmpl3ZlYNaqcgjDz6mmLKeky2o67YnXcnt6AhR69urAieIlCLHGxsfqn0kRNXpObm9h++ZCHZnz00p3dOSSGjaemrD8go6Xop0YTzhZ+dDj4zqXAD8aZ5gCvknwMHN82n8ILOINMCSt9gknk1EiswO9hB3V4cAhUaxe+26n1tafbmy+sh/QQRZBVawvrgXwFJsjXF0pghRm/3Y1zYW1nPAiPaIcyTMqBNybnxHoRrDkm9ttiB6q2V6C3VcXtbyA==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=O3slT9n4TJMosgL2QDibjz7yhbX19zkvAS5TjtlhnEA=;
+ b=DKNSGMrwxkuH/3Zw2tw3ZvyO+mFgIPUpdcY03gY0IdgjJHQqoA3wn6Jm635M4Ub5zWx8cS6cQDaOjyLYYbS5Nf58X6vxO02fH99zOAciq1pVTCktucpAYFkBv3ereaGfBs11F1/nMojcRDj/ClCQOAHBFfK+qeG6YM0vbuGVR48JcJtLd9QLsSo18yrGwzQMW7cQBDvvBBB0cWSlLWJsmkjIE/ojX4TNDfRDzXgiPED8GYKonQDB1l8xd5kjx5KXZpqxpP///LG6n+pCgFiD+7R5PMTzh01xdIj41VMJKTlWTclGhEAXcIy/vB3fixEIlonGGINtcGtT0mnHwH1CYw==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=amd.com; dmarc=pass action=none header.from=amd.com; dkim=pass
+ header.d=amd.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=O3slT9n4TJMosgL2QDibjz7yhbX19zkvAS5TjtlhnEA=;
+ b=lZk5wcN290tTLdsvyDRf6FJUs1l2D2kYGdhPfqVIQBN04aR8rEjBzqPd8N20gkYLGNIKUWfn99eiUsiZbnc5LUR/Fx9kcnyJHWG7Plc5u8oHs6teAtpTvr85YdnkM31S41toSVNIw6mRFAhLm/AQ3yPe6+EqQsMcsb9r+F8N4zs=
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=amd.com;
+Received: from PH7PR12MB6588.namprd12.prod.outlook.com (2603:10b6:510:210::10)
+ by SJ0PR12MB6904.namprd12.prod.outlook.com (2603:10b6:a03:483::5) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.5723.29; Mon, 17 Oct
+ 2022 09:33:58 +0000
+Received: from PH7PR12MB6588.namprd12.prod.outlook.com
+ ([fe80::fa1e:a29e:2f2c:43d1]) by PH7PR12MB6588.namprd12.prod.outlook.com
+ ([fe80::fa1e:a29e:2f2c:43d1%7]) with mapi id 15.20.5723.033; Mon, 17 Oct 2022
+ 09:33:58 +0000
+Message-ID: <3945912b-580b-d1bc-35f8-9debdffe9b15@amd.com>
+Date:   Mon, 17 Oct 2022 15:03:42 +0530
+User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:102.0) Gecko/20100101
+ Thunderbird/102.3.3
+Subject: Re: [PATCH v2] perf: Rewrite core context handling
+Content-Language: en-US
+To:     Peter Zijlstra <peterz@infradead.org>
+Cc:     acme@kernel.org, alexander.shishkin@linux.intel.com,
+        jolsa@redhat.com, namhyung@kernel.org, songliubraving@fb.com,
+        eranian@google.com, ak@linux.intel.com, mark.rutland@arm.com,
+        frederic@kernel.org, maddy@linux.ibm.com, irogers@google.com,
+        will@kernel.org, robh@kernel.org, mingo@redhat.com,
+        catalin.marinas@arm.com, ndesaulniers@google.com,
+        srw@sladewatkins.net, linux-arm-kernel@lists.infradead.org,
+        linux-perf-users@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
+        linux-s390@vger.kernel.org, linux-kernel@vger.kernel.org,
+        sandipan.das@amd.com, ananth.narayan@amd.com, kim.phillips@amd.com,
+        santosh.shukla@amd.com, Ravi Bangoria <ravi.bangoria@amd.com>
+References: <20221008062424.313-1-ravi.bangoria@amd.com>
+ <Y0VTn0qLWd925etP@hirez.programming.kicks-ass.net>
+ <ba47d079-6d97-0412-69a0-fa15999b5024@amd.com>
+ <Y0V3kOWInrvCvVtk@hirez.programming.kicks-ass.net>
+ <Y0WsRItHmfI5uaq3@hirez.programming.kicks-ass.net>
+ <174fb540-ec18-eeca-191d-c02e1f1005d2@amd.com>
+ <Y0awHa8oS5yal5M9@hirez.programming.kicks-ass.net>
+ <Y0cn1xazYpNmqhRo@hirez.programming.kicks-ass.net>
+ <99caec5f-dcdf-70c6-8909-11552ce42a20@amd.com>
+ <Y0fvpQEEl/tK6mJ5@hirez.programming.kicks-ass.net>
+ <0df72f8e-1c17-2140-c841-5a75fb43db14@amd.com>
+From:   Ravi Bangoria <ravi.bangoria@amd.com>
+In-Reply-To: <0df72f8e-1c17-2140-c841-5a75fb43db14@amd.com>
 Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: PN3PR01CA0101.INDPRD01.PROD.OUTLOOK.COM
+ (2603:1096:c01:9b::7) To PH7PR12MB6588.namprd12.prod.outlook.com
+ (2603:10b6:510:210::10)
+MIME-Version: 1.0
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: PH7PR12MB6588:EE_|SJ0PR12MB6904:EE_
+X-MS-Office365-Filtering-Correlation-Id: 9f5a9fa4-4d3a-4216-b185-08dab022b72f
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info: YOm+Rao2MjGPzP8u4zaBX8vVTD52mbVCe/P1xwsHzL5cyFxB6xiKJe9+kHNxKPG7RaHXmMom+Z2xsfbYZuoz6DEXYDTKWoYOjbydMrnWyyYSWVTmbMG+BPUzMPcXiQcv690/lh6/Hm7RFr8iAkTcMaHfaOjv+IcRPtDbgaw4tzY696RPSrX9b5KcUj4K40ysRxVdvRufnFomIziAIjJ+ouFw9+KUwwoVIBBennHOUBHSHDcprDD7WHDmArtlZYk9a+bFP7/tr0U8nwWJzjBdbgScjF0xzF8iIu7lhV98+L4W7vWC5umyPyLur66vyJTtu0XyxmO0FRSklW4S7pqiZLewbXAoXtcLC8tcNFA4SKyQOrQ+SFAxchKyfv2VaN+Y8X20WLlW7uR78ewHpESxKZ5+G5e4UjqFFHrVpMVhoLbzoOh+wXTMdDtRNepuekTaszrCEMe0A4VjTSHJDO38sPHTDvgQz8h4NKLYKTnvPhaaWekFZE/IqVzqDT2keHRstEOsoiuKU6biMSC9eNCvdpWZ8WVUDPeUTKBzrIkGp+HT8MQ3dXOqUpQGvsU6HaifdfwGD6iqlJcbuuJ0/QrutL/XKIYZq9EqgulC4vM9PFZ+Kwy1fOCvrr4aSUcWDvI78XdkmY+h06A6k7Zo0XH3XDvaYRwOQzV6N87q30Os5UHtMrS4QqTUPRR7NYER9W+hosvPd2ULw9NELfp7rF1ZCNSYwII129aq5HniZ/SBDdVeQKWKqE+xS5/+0zBlZ5jhXRZBUljGW7XIO2IUAjjw0iOjyG6JwWXhe3JrRiEHTibkX/h3nfP0M+Lgj7nvZDX5RthqMNKY1UGGnfLBJ1r4hbu9tBr5iJdjiOmLo3E2RGD40e/I4BS3hbh8eT2P7MVC
+X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:PH7PR12MB6588.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230022)(4636009)(376002)(39860400002)(396003)(366004)(346002)(136003)(451199015)(41300700001)(26005)(6666004)(6512007)(2616005)(186003)(478600001)(44832011)(4744005)(2906002)(6506007)(36756003)(7416002)(53546011)(5660300002)(8936002)(31696002)(86362001)(38100700002)(316002)(6916009)(966005)(6486002)(8676002)(4326008)(66476007)(66946007)(66556008)(31686004)(21314003)(43740500002)(45980500001);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0: =?utf-8?B?Y1ZDUUdlRGJ3L2F3a2kxMkhraG8yV2doV1VmcWlacy9ETGhLVnNnLzVUZ1N0?=
+ =?utf-8?B?d05mV2RSak91V1dndUU2R3pIM09SY29WUk1YMDkrc1pHZmxZSFA0Y1VJWmhJ?=
+ =?utf-8?B?YnBaOHBUZ214UXZxUHdJdVY4S2lZSUxRSnVLbU4vOHJQK3g0eGFEd2ZOelEw?=
+ =?utf-8?B?S0tNUERQZm84UHJFTEQyWU9zR3g1RjVnbFRQM055aksyQ0hNbXIxNDg4a3VR?=
+ =?utf-8?B?QTBxblUrc1kyTXNtb0xiVzBlZUZkVmhMdnI4M3dYMzRpZGF1WnZlZS9yK3pW?=
+ =?utf-8?B?Z2JHTTQwd1NTSXFybUwwQ295eXJ2WlI5ZVd4VUt5ZG53QTFhKzdyNEI2L1BR?=
+ =?utf-8?B?d2JWd0JKNzBObzFmODlSVXNxTVRpOUszOWhnM0VnRDFiK3h1ZERJaGJ6aE91?=
+ =?utf-8?B?Y1FqN01rZk9uV2NNR0YxbEhMTTFDRGg3eFVSMFd5SWZ2dGpuNnlIL254UnRL?=
+ =?utf-8?B?U2JQRzJ5ZTFjbDcrNHBBTEZPcDVaazdFOHNUVW5RTHQyd2tET3hBYUgxclF2?=
+ =?utf-8?B?RkI1dWZjQWR6VzlpeHJETnNjc2FaTGk1ejcvQ2RsRi9pOWhyeTFXZkxSa2h3?=
+ =?utf-8?B?MSt0U2FZWW55R3BSRDRSVEp5UVYzWlJDbGRFRzhoekNmVXFQQmlTbjJxUEVB?=
+ =?utf-8?B?czZCaCtHUmtQYi96VWhwd2l5NnEwcWcvMFZET3FFbitST2hWNUJtSkJqd2Q1?=
+ =?utf-8?B?dUVXbVpGbUlzSktDRTJZaUJjRkJ2NXlQTWdrWGJDdHBrZ05pRHJScGtRd2Fz?=
+ =?utf-8?B?THdnLzJ3UXNkMlBSYm5TVzMwcXUzOGphYXJBWkFEWTFzS2V4dXFGS0V4R0I0?=
+ =?utf-8?B?Mm1FTFBDOFNBSkVrWmZnRWZZdmhzeERFQjhMSWhzOXVyVGczU2svd2syWm03?=
+ =?utf-8?B?YWo3OGNndFN2K3dhZ2JuTCtaNXMyVHpySXBaZ2xwUXVKaUhSa2NVSnUybVd3?=
+ =?utf-8?B?MmRaZmpqeG9hNm9idEY3OGxkaU1mdXZFbHBMKzlNY1liVXlRN0Q3c0xkWFBk?=
+ =?utf-8?B?WG9FRmg3RVJDT0RvWWl4UGNicHdkQlI0Mlp1aWtPRGhGblpwL1daVjMwQnll?=
+ =?utf-8?B?OWhheHhKN2ZJK2hDdXd2M05mUlh1SzJjYXdwTnE4S3E2UGNSV0xxTTRxcDI4?=
+ =?utf-8?B?V2V1Y2M0WklUa0dIcU9wNExFenV2SDE3Sit2c1R2VXFOUzVuNEhjVm13bEs0?=
+ =?utf-8?B?d3hZMGRnQzhHWTlHQno4YkI3Q0lxTmxkUHArcksxaEV0QzQ1ZWxsKzJUa0Rx?=
+ =?utf-8?B?K2hGSmpJOHkrcjZjOXdLVFVBZUdIYlFkNFdWYWNpeHZzbjZ2ZzJaRVZLOEdx?=
+ =?utf-8?B?V0NJaTVmQjl5ZHhvQjE2cXV3V2VmdCtTTGRlekN2bVJMblpvSTl1NERIMk1W?=
+ =?utf-8?B?UlRjb2lYOWt2Q3QxYVVoV2V0K0F0eHJKR2VvWGVCTnZxV294VHl1QmZqWWpE?=
+ =?utf-8?B?VUFLcVkyR0RrVGVGd1laMGE4MUV6ZFMvM0VJejBOaUNKemUvcWhPVitHOTRi?=
+ =?utf-8?B?RDhjcUU3b2V3SzNDTDNkbU1DVzRoTkdKc1hReWk5ZVQ0dUxDMjUzK1ZqWEdT?=
+ =?utf-8?B?ZlVHT1ZhNjdjd090bWFHUTc5RGorTVNIczg4U2ZwTWMzblhHZlc0V2VLcWZz?=
+ =?utf-8?B?dmFYTStTdXJIM2ZmQVlDVmdjVUpMd1JENllNNkREeExTZU03cEF2c2Y0VWg1?=
+ =?utf-8?B?eFN2c2RIWSs2SHluNXFsTTdoVmszYWR1UlhSQXFISjRZNTZjTE9mRm1XOXk3?=
+ =?utf-8?B?dkVhUXUreU1tenl2WjJmSkZsSVdYSU1iRk5RMkxlSE9WWWJlbVl0OEY3L0Zh?=
+ =?utf-8?B?SWRuTnZLeHpJMTl1RkczZGZNbUd4eEFRdW5LdEwxODk5Z1FUVHhxNlQ4eEps?=
+ =?utf-8?B?Skt4R0plYm0rV3NKK2RJekcrUWt3UzZPdW5NcmVuQlpnUkNPVDI3RmFFS29r?=
+ =?utf-8?B?alFVMXhuRTJSdEJzZEFQaGoxcm1aM2ZmV05oM1Y2Z2FxWjhkSlFBc01WWXJo?=
+ =?utf-8?B?Ymk4eHh1UDdCNWtSM1YrNWZlUDRQWDBJR1E5cVFUYlBGb1o0REZFNm5qckFF?=
+ =?utf-8?B?VzhtODIvY0JiNGtBNk02L2lpUFBSd0hLSUQvVGZmbERGY1VtcjR6V2tkSGkv?=
+ =?utf-8?Q?q2T7RXnQBpey3i4JO/auocKMs?=
+X-OriginatorOrg: amd.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 9f5a9fa4-4d3a-4216-b185-08dab022b72f
+X-MS-Exchange-CrossTenant-AuthSource: PH7PR12MB6588.namprd12.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 17 Oct 2022 09:33:57.9778
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: nqrOadQ/ERuX0ziUPpBecZhIWcmUWB+xS7Z445zTnX/NnpM/JgQPlZkoxMlmh+XQXPCYT5i1/8WIjezTovvoFg==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: SJ0PR12MB6904
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-Hello Arnaldo!
+On 14-Oct-22 3:26 PM, Ravi Bangoria wrote:
+> On 13-Oct-22 4:29 PM, Peter Zijlstra wrote:
+>> On Thu, Oct 13, 2022 at 03:37:23PM +0530, Ravi Bangoria wrote:
+>>
+>>>> -	refcount_t			refcount;
+>>>> +	refcount_t			refcount; /* event <-> ctx */
+>>>
+>>> Ok. We need to remove all those // XXX get/put_ctx() from code
+>>> which we added to make refcount a pmu_ctx <-> ctx.
+>>
+>> Them already gone :-) I've not yet fixed up the typoes, but current
+>> version should be here:
+>>
+>>   https://git.kernel.org/pub/scm/linux/kernel/git/peterz/queue.git/log/?h=perf/core
+>>
+>> Thanks!
+> 
+> I've been running perf-fuzzer on Xeon machine since yesterday and I don't see any
+> issue. Will do the same on my AMD machine as well over the weekend.
 
-On Mon, 03 Oct 2022 19:54:40 -0700 (PDT)
-Palmer Dabbelt <palmer@dabbelt.com> wrote:
+Only one WARN_ON() hit. Otherwise all good.
+https://lore.kernel.org/lkml/8d91528b-e830-6ad0-8a92-621ce9f944ca@amd.com
 
-> On Mon, 15 Aug 2022 06:22:37 PDT (-0700), nikita.shubin@maquefel.me
-> wrote:
-> > From: Nikita Shubin <n.shubin@yadro.com>
-> >
-> > This series aims to provide matching vendor SoC with corresponded
-> > JSON bindings.
-> >
-> > The ID string is proposed to be in form of
-> > MVENDORID-MARCHID-MIMPID, for example for Sifive Unmatched the
-> > corresponding string will be:
-> >
-> > 0x489-0x8000000000000007-0x[[:xdigit:]]+,v1,sifive/u74,core
-> >
-> > Where MIMPID can vary as all impl supported the same number of
-> > events, this might not be true for all future SoC however.
-> >
-> > Also added SBI firmware events pretty names, as any firmware that
-> > supports SBI PMU should also support firmare events [1].
-> >
-> > Series depends on patch by Anup Patel, exposing mvendor, marchid
-> > and mimpid to "/proc/cpuinfo" [2].
-> >
-> > [1]
-> > https://github.com/riscv-non-isa/riscv-sbi-doc/blob/master/riscv-sbi.ad=
-oc
-> > [2] https://lkml.org/lkml/2022/7/27/23
-> >
-> > Link to previous version:
-> > https://patchwork.kernel.org/project/linux-riscv/list/?series=3D653649
-> >
-> > See original cover letter by Jo=C3=A3o M=C3=A1rio Domingos:
-> > https://patchwork.kernel.org/project/linux-riscv/cover/20211116154812.1=
-7008-1-joao.mario@tecnico.ulisboa.pt/
-> >
-> > Tested with the following OpenSBI device tree bindings:
-> >
-> > ```
-> > pmu {
-> >         compatible =3D "riscv,pmu";
-> >         riscv,event-to-mhpmcounters =3D
-> >                 <0x03 0x06 0x18
-> >                 0x10001 0x10002 0x18
-> >                 0x10009 0x10009 0x18
-> >                 0x10011 0x10011 0x18
-> >                 0x10019 0x10019 0x18
-> >                 0x10021 0x10021 0x18>;
-> >         riscv,event-to-mhpmevent =3D
-> >                 <0x03 0x00000000 0x1801
-> >                 0x04 0x00000000 0x0302
-> >                 0x05 0x00000000 0x4000
-> >                 0x06 0x00000000 0x6001
-> >                 0x10001 0x00000000 0x0202
-> >                 0x10002 0x00000000 0x0402
-> >                 0x10009 0x00000000 0x0102
-> >                 0x10011 0x00000000 0x2002
-> >                 0x10019 0x00000000 0x1002
-> >                 0x10021 0x00000000 0x0802>;
-> >         riscv,raw-event-to-mhpmcounters =3D
-> >                 <0x00000000 0x03ffff00 0x0 0x0 0x18
-> >                 0x00000000 0x0007ff01 0x0 0x1 0x18
-> >                 0x00000000 0x00003f02 0x0 0x2 0x18>;
-> > };
-> > ```
-> > ---
-> > v5->v6:
-> > Will Deacon:
-> > 	- dropped first patch from v5 series it has been merged
-> > into master Mayuresh Chitale:
-> > 	- fixed FW_SFENCE_VMA_SENT event code
-> >
-> > - added Tested-by tags
-> > ---
-> >
-> > Nikita Shubin (3):
-> >   perf arch events: riscv sbi firmware std event files
-> >   perf vendor events riscv: add Sifive U74 JSON file
-> >   RISC-V: Added Syntacore SCR7 PMU events
-> >
-> >  tools/perf/pmu-events/arch/riscv/mapfile.csv  |  18 +++
-> >  .../arch/riscv/riscv-sbi-firmware.json        | 134
-> > ++++++++++++++++++ .../arch/riscv/sifive/u74/firmware.json       |
-> > 68 +++++++++ .../arch/riscv/sifive/u74/instructions.json   |  92
-> > ++++++++++++ .../arch/riscv/sifive/u74/memory.json         |  32
-> > +++++ .../arch/riscv/sifive/u74/microarch.json      |  57 ++++++++
-> >  .../arch/riscv/syntacore/scr7/L1D_cache.json  | 102 +++++++++++++
-> >  .../arch/riscv/syntacore/scr7/L1I_cache.json  |  67 +++++++++
-> >  .../arch/riscv/syntacore/scr7/exceptions.json |  67 +++++++++
-> >  .../arch/riscv/syntacore/scr7/execution.json  |  97 +++++++++++++
-> >  .../arch/riscv/syntacore/scr7/firmware.json   |  68 +++++++++
-> >  .../arch/riscv/syntacore/scr7/general.json    |  47 ++++++
-> >  .../arch/riscv/syntacore/scr7/interrupts.json |  32 +++++
-> >  .../arch/riscv/syntacore/scr7/prediction.json |  52 +++++++
-> >  14 files changed, 933 insertions(+)
-> >  create mode 100644 tools/perf/pmu-events/arch/riscv/mapfile.csv
-> >  create mode 100644
-> > tools/perf/pmu-events/arch/riscv/riscv-sbi-firmware.json create
-> > mode 100644
-> > tools/perf/pmu-events/arch/riscv/sifive/u74/firmware.json create
-> > mode 100644
-> > tools/perf/pmu-events/arch/riscv/sifive/u74/instructions.json
-> > create mode 100644
-> > tools/perf/pmu-events/arch/riscv/sifive/u74/memory.json create mode
-> > 100644 tools/perf/pmu-events/arch/riscv/sifive/u74/microarch.json
-> > create mode 100644
-> > tools/perf/pmu-events/arch/riscv/syntacore/scr7/L1D_cache.json
-> > create mode 100644
-> > tools/perf/pmu-events/arch/riscv/syntacore/scr7/L1I_cache.json
-> > create mode 100644
-> > tools/perf/pmu-events/arch/riscv/syntacore/scr7/exceptions.json
-> > create mode 100644
-> > tools/perf/pmu-events/arch/riscv/syntacore/scr7/execution.json
-> > create mode 100644
-> > tools/perf/pmu-events/arch/riscv/syntacore/scr7/firmware.json
-> > create mode 100644
-> > tools/perf/pmu-events/arch/riscv/syntacore/scr7/general.json create
-> > mode 100644
-> > tools/perf/pmu-events/arch/riscv/syntacore/scr7/interrupts.json
-> > create mode 100644
-> > tools/perf/pmu-events/arch/riscv/syntacore/scr7/prediction.json =20
->=20
-> Acked-by: Palmer Dabbelt <palmer@rivosinc.com>
->=20
-> not sure if you're looking for this via the RISC-V tree, it looks
-> like usually these get merged via a perf tree?  That's OK with me,
-> but I'm also OK taking them through the RISC-V tree.  Note that
-> cpuinfo dependency seems to be triggering kasan failures, so we'll at
-> least need to sort that out.
-
-As i remember correctly you were willing to take these patches into 6.0
-=3D).
-
-Well they are acked by Palmer and [2] series, which my series depends
-on, also have been accepted.
-
-I can resend if it helps you.
-
-Yours,=20
-Nikita Shubin.
-
+Thanks,
+Ravi
