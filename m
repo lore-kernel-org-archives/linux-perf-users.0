@@ -2,131 +2,191 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 04D57C4332F
-	for <linux-perf-users@archiver.kernel.org>; Mon, 17 Oct 2022 12:38:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 78D1CC433FE
+	for <linux-perf-users@archiver.kernel.org>; Mon, 17 Oct 2022 12:57:13 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229974AbiJQMh7 (ORCPT
+        id S230041AbiJQM5M (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Mon, 17 Oct 2022 08:37:59 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56824 "EHLO
+        Mon, 17 Oct 2022 08:57:12 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45030 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229562AbiJQMh6 (ORCPT
+        with ESMTP id S230196AbiJQM5L (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Mon, 17 Oct 2022 08:37:58 -0400
-Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id F11471B793;
-        Mon, 17 Oct 2022 05:37:56 -0700 (PDT)
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id 8B2E16112D;
-        Mon, 17 Oct 2022 12:37:56 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id C851DC433D6;
-        Mon, 17 Oct 2022 12:37:55 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1666010276;
-        bh=Sl2cezNTsWHRgmfGwBUNjn5QvcqSB4MRPCTSkICdqoM=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=jPwFspAhyPaRssvY4ut7N09jQgcKFfTuYHlGp8de1xYuVPyko3wGvPEJvyLtUqMf7
-         LIf7fdpBG8Q9DFVEKqQsRLKiZpsYo3fN2NSrg6KqEtEfzNmT7u6le3nLanZRMcPUTQ
-         kQdkCQ2uub+iq+laV6DY358IJlNfHSEbXsDMbef9REhc8nIzvoVff+T5V5a4LxHfWj
-         BdX7v9YWTcktXO9Gx4PZSyyacNnnIck4eQTIIbNCNsCjugmcIEOLsTWPFMfgLV04rY
-         5pkiWrDGMZ4b2K7iRRsLwnZQ/XRRSFmZGYYc/QwS544JuPgUen2rZ19+4DxhiE8SVo
-         3Bu1hd+SHblHg==
-Received: by quaco.ghostprotocols.net (Postfix, from userid 1000)
-        id 6B5C3403B6; Mon, 17 Oct 2022 09:37:53 -0300 (-03)
-Date:   Mon, 17 Oct 2022 09:37:53 -0300
-From:   Arnaldo Carvalho de Melo <acme@kernel.org>
-To:     Masami Hiramatsu <mhiramat@kernel.org>,
-        Namhyung Kim <namhyung@kernel.org>,
-        Henry Castro <hcvcastro@gmail.com>
-Cc:     Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Jiri Olsa <jolsa@kernel.org>, linux-perf-users@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v3] perf: fix the probe finder location (.dwo files)
-Message-ID: <Y01Mof9qMpFToRWY@kernel.org>
-References: <CAM9d7cgMjZPa9qwuzpG3usGJvKiAQCOvN8_W0RuakNqcZ2t8-g@mail.gmail.com>
- <20221005124710.30296-1-hcvcastro@gmail.com>
+        Mon, 17 Oct 2022 08:57:11 -0400
+Received: from mga11.intel.com (mga11.intel.com [192.55.52.93])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 669515E31F;
+        Mon, 17 Oct 2022 05:57:10 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1666011430; x=1697547430;
+  h=message-id:date:mime-version:subject:to:cc:references:
+   from:in-reply-to:content-transfer-encoding;
+  bh=CAsm+JRYdkT6BEPXS744qkyuroCnDfGEdXUZ0TVxews=;
+  b=KIOCjXEk625vA+vUzqEOS1+q2X549DrlNw745LA/jnRB+GqM65TYbElP
+   oByjAqRTBefE832slDh6oxFRHw1PaPEQdvC5oUGT0kofEXJsr0atAXUFh
+   Wd/lYCwhOJt44JHJwPQA5GjfV6dU4pCIaCGY8VwfcrbpFzsUaSx+WNPcd
+   ur8cFAxsL3+MEXga0lH820irKnW5sNXLPkqWKtuSyr1wvlmlEa6XV45pV
+   fpmyHd4f1QoncW9ta1utqKZXVq2JrNm4IC/hPszrvFswGlIbAL5PurlBr
+   Hnpwda21RM8CsuUUNf06AQp72qFtcxaD6ERkGypeGVWowEgHxC2UGQVuX
+   A==;
+X-IronPort-AV: E=McAfee;i="6500,9779,10503"; a="303402996"
+X-IronPort-AV: E=Sophos;i="5.95,191,1661842800"; 
+   d="scan'208";a="303402996"
+Received: from fmsmga005.fm.intel.com ([10.253.24.32])
+  by fmsmga102.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 17 Oct 2022 05:57:09 -0700
+X-IronPort-AV: E=McAfee;i="6500,9779,10503"; a="957325706"
+X-IronPort-AV: E=Sophos;i="5.95,191,1661842800"; 
+   d="scan'208";a="957325706"
+Received: from ahunter6-mobl1.ger.corp.intel.com (HELO [10.0.2.15]) ([10.252.44.19])
+  by fmsmga005-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 17 Oct 2022 05:57:07 -0700
+Message-ID: <866b1317-d0cd-c730-8d32-e8885b1f45d7@intel.com>
+Date:   Mon, 17 Oct 2022 15:57:03 +0300
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20221005124710.30296-1-hcvcastro@gmail.com>
-X-Url:  http://acmel.wordpress.com
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
+ Firefox/102.0 Thunderbird/102.2.2
+Subject: Re: [PATCH 5/7] perf test: test_intel_pt.sh: Add jitdump test
+To:     Arnaldo Carvalho de Melo <acme@kernel.org>
+Cc:     Jiri Olsa <jolsa@redhat.com>, Namhyung Kim <namhyung@kernel.org>,
+        Ian Rogers <irogers@google.com>, linux-kernel@vger.kernel.org,
+        linux-perf-users@vger.kernel.org
+References: <20221014170905.64069-1-adrian.hunter@intel.com>
+ <20221014170905.64069-6-adrian.hunter@intel.com>
+ <Y0mcWpc4KaeXpU+z@kernel.org>
+Content-Language: en-US
+From:   Adrian Hunter <adrian.hunter@intel.com>
+Organization: Intel Finland Oy, Registered Address: PL 281, 00181 Helsinki,
+ Business Identity Code: 0357606 - 4, Domiciled in Helsinki
+In-Reply-To: <Y0mcWpc4KaeXpU+z@kernel.org>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-Em Wed, Oct 05, 2022 at 08:47:02AM -0400, Henry Castro escreveu:
-> If the file object is compiled using -gsplit-dwarf,
-> the probe finder location will fail.
+On 14/10/22 20:28, Arnaldo Carvalho de Melo wrote:
+> Em Fri, Oct 14, 2022 at 08:09:03PM +0300, Adrian Hunter escreveu:
+>> Add a test for decoding self-modifying code using a jitdump file.
+>>
+>> The test creates a workload that uses self-modifying code and generates its
+>> own jitdump file.  The result is processed with perf inject --jit and
+>> checked for decoding errors.
+>>
+>> Note the test will fail without patch "perf inject: Fix GEN_ELF_TEXT_OFFSET
+>> for jit" applied.
+>>
+>> Signed-off-by: Adrian Hunter <adrian.hunter@intel.com>
+>> ---
+>>  tools/perf/tests/shell/test_intel_pt.sh | 162 ++++++++++++++++++++++++
+>>  1 file changed, 162 insertions(+)
+>>
+>> diff --git a/tools/perf/tests/shell/test_intel_pt.sh b/tools/perf/tests/shell/test_intel_pt.sh
+>> index 79dde57b561d..e0bf75981b9c 100755
+>> --- a/tools/perf/tests/shell/test_intel_pt.sh
+>> +++ b/tools/perf/tests/shell/test_intel_pt.sh
+>> @@ -22,6 +22,7 @@ outfile="${temp_dir}/test-out.txt"
+>>  errfile="${temp_dir}/test-err.txt"
+>>  workload="${temp_dir}/workload"
+>>  awkscript="${temp_dir}/awkscript"
+>> +jitdump_workload="${temp_dir}/jitdump_workload"
+>>  
+>>  cleanup()
+>>  {
+>> @@ -50,6 +51,13 @@ perf_record_no_decode()
+>>  	perf record -B -N --no-bpf-event "$@"
+>>  }
+>>  
+>> +# perf record for testing should not need BPF events
+>> +perf_record_no_bpf()
+>> +{
+>> +	# Options for no BPF events
+>> +	perf record --no-bpf-event "$@"
+>> +}
+>> +
+>>  have_workload=false
+>>  cat << _end_of_file_ | /usr/bin/cc -o "${workload}" -xc - -pthread && have_workload=true
+>>  #include <time.h>
+>> @@ -269,6 +277,159 @@ test_per_thread()
+>>  	return 0
+>>  }
+>>  
+>> +test_jitdump()
+>> +{
+>> +	echo "--- Test tracing self-modifying code that uses jitdump ---"
+>> +
+>> +	script_path=$(realpath "$0")
+>> +	script_dir=$(dirname "$script_path")
+>> +	jitdump_incl_dir="${script_dir}/../../util"
+>> +	jitdump_h="${jitdump_incl_dir}/jitdump.h"
 > 
-> Signed-off-by: Henry Castro <hcvcastro@gmail.com>
-> ---
+> So this requires one to test this being on the kernel (perf) sources
+> dir? I think we should add this header to some 'perf test' directory to
+> remove this requirement, ok?
 > 
-> > Nit, I think we use _ELFUTILS_PREREQ(0, 171).
-> Thank you
 
-Masami, are you ok with this?
+How about this:
 
-Namyung, how about you?
+From: Adrian Hunter <adrian.hunter@intel.com>
+Date: Mon, 17 Oct 2022 15:14:25 +0300
+Subject: [PATCH] perf test: test_intel_pt.sh: Install jitdump.h for use by
+ tests
 
-Thanks,
+test_intel_pt.sh builds a workload for testing jitdump and the workload
+includes file jitdump.h.
 
-- Arnaldo
+Currently, test_intel_pt.sh finds jitdump.h assuming the test is run in
+the kernel source directory, and skips that test if it is not found.
+
+To improve that situation, amend the build to install the jitdump.h file
+in the test shell directory, and look there first, falling back to the
+original way if that is not found.
+
+Signed-off-by: Adrian Hunter <adrian.hunter@intel.com>
+---
+ tools/perf/Makefile.perf                |  1 +
+ tools/perf/tests/shell/test_intel_pt.sh | 12 +++++++++---
+ 2 files changed, 10 insertions(+), 3 deletions(-)
+
+diff --git a/tools/perf/Makefile.perf b/tools/perf/Makefile.perf
+index a432e59afc42..c4ec66194465 100644
+--- a/tools/perf/Makefile.perf
++++ b/tools/perf/Makefile.perf
+@@ -1013,6 +1013,7 @@ install-tests: all install-gtk
+ 		$(INSTALL) tests/attr/* -m 644 '$(DESTDIR_SQ)$(perfexec_instdir_SQ)/tests/attr'; \
+ 		$(INSTALL) -d -m 755 '$(DESTDIR_SQ)$(perfexec_instdir_SQ)/tests/shell'; \
+ 		$(INSTALL) tests/shell/*.sh '$(DESTDIR_SQ)$(perfexec_instdir_SQ)/tests/shell'; \
++		$(INSTALL) util/jitdump.h -m 644 '$(DESTDIR_SQ)$(perfexec_instdir_SQ)/tests/shell'; \
+ 		$(INSTALL) -d -m 755 '$(DESTDIR_SQ)$(perfexec_instdir_SQ)/tests/shell/lib'; \
+ 		$(INSTALL) tests/shell/lib/*.sh -m 644 '$(DESTDIR_SQ)$(perfexec_instdir_SQ)/tests/shell/lib'; \
+ 		$(INSTALL) tests/shell/lib/*.py -m 644 '$(DESTDIR_SQ)$(perfexec_instdir_SQ)/tests/shell/lib'; \
+diff --git a/tools/perf/tests/shell/test_intel_pt.sh b/tools/perf/tests/shell/test_intel_pt.sh
+index 4c0aabbe33bd..3abf803f96b9 100755
+--- a/tools/perf/tests/shell/test_intel_pt.sh
++++ b/tools/perf/tests/shell/test_intel_pt.sh
+@@ -284,14 +284,20 @@ test_jitdump()
  
-> > How about making it a separate function with 2 versions
-> > depending on the elfutils?  Then you can have the variables
-> > only if they are used.
-> 
-> > Something like get_source_from_debuginfod() in the same
-> > file.
-> 
-> Sounds good, but I prefer simplicity in the patch =),
-> what do you think about
-> {
-> 	Dwarf_Die cudie, subdie;
-> 	if (dwarf_cu_info() ..)
-> 	..
-> }
-> 
-> to resolve unused variable?
-> }
-> 
-> 
->  tools/perf/util/probe-finder.c | 14 ++++++++++++++
->  1 file changed, 14 insertions(+)
-> 
-> diff --git a/tools/perf/util/probe-finder.c b/tools/perf/util/probe-finder.c
-> index 50d861a80f57..5f6781e712db 100644
-> --- a/tools/perf/util/probe-finder.c
-> +++ b/tools/perf/util/probe-finder.c
-> @@ -1200,6 +1200,20 @@ static int debuginfo__find_probe_location(struct debuginfo *dbg,
->  			continue;
->  		}
-> 
-> +#if _ELFUTILS_PREREQ(0, 171)
-> +		{
-> +			uint8_t unit_type;
-> +			Dwarf_Die cudie, subdie;
-> +
-> +			/* Check separate debug information file. */
-> +			if (dwarf_cu_info(pf->cu_die.cu, NULL,
-> +					  &unit_type, &cudie,
-> +					  &subdie, NULL,
-> +					  NULL, NULL) == 0
-> +			    && unit_type == DW_UT_skeleton)
-> +				pf->cu_die = subdie;
-> +		}
-> +#endif
->  		/* Check if target file is included. */
->  		if (pp->file)
->  			pf->fname = cu_find_realpath(&pf->cu_die, pp->file);
-> --
-> 2.20.1
-
+ 	script_path=$(realpath "$0")
+ 	script_dir=$(dirname "$script_path")
+-	jitdump_incl_dir="${script_dir}/../../util"
++	jitdump_incl_dir="${script_dir}"
+ 	jitdump_h="${jitdump_incl_dir}/jitdump.h"
+ 
+ 	if [ ! -e "${jitdump_h}" ] ; then
+-		echo "SKIP: Include file jitdump.h not found"
+-		return 2
++		jitdump_incl_dir="${script_dir}/../../util"
++		jitdump_h="${jitdump_incl_dir}/jitdump.h"
++		if [ ! -e "${jitdump_h}" ] ; then
++			echo "SKIP: Include file jitdump.h not found"
++			return 2
++		fi
+ 	fi
+ 
++	echo "Using include file: ${jitdump_h}"
++
+ 	if [ -z "${have_jitdump_workload}" ] ; then
+ 		have_jitdump_workload=false
+ 		# Create a workload that uses self-modifying code and generates its own jitdump file
 -- 
+2.25.1
 
-- Arnaldo
+
