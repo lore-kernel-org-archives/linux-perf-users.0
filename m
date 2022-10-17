@@ -2,99 +2,204 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C65E8C4332F
-	for <linux-perf-users@archiver.kernel.org>; Mon, 17 Oct 2022 05:58:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A95A7C4332F
+	for <linux-perf-users@archiver.kernel.org>; Mon, 17 Oct 2022 06:42:52 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230187AbiJQF6y (ORCPT
+        id S229508AbiJQGmv (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Mon, 17 Oct 2022 01:58:54 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39080 "EHLO
+        Mon, 17 Oct 2022 02:42:51 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35450 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230196AbiJQF6b (ORCPT
+        with ESMTP id S229663AbiJQGmu (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Mon, 17 Oct 2022 01:58:31 -0400
-Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTP id AFCFB564F0;
-        Sun, 16 Oct 2022 22:58:25 -0700 (PDT)
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 11F2111FB;
-        Sun, 16 Oct 2022 22:58:31 -0700 (PDT)
-Received: from a077893.blr.arm.com (unknown [10.162.42.7])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPA id DACDB3F7D8;
-        Sun, 16 Oct 2022 22:58:19 -0700 (PDT)
-From:   Anshuman Khandual <anshuman.khandual@arm.com>
-To:     linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, peterz@infradead.org,
-        acme@kernel.org, mark.rutland@arm.com, will@kernel.org,
-        catalin.marinas@arm.com
-Cc:     Anshuman Khandual <anshuman.khandual@arm.com>,
-        Mark Brown <broonie@kernel.org>,
-        James Clark <james.clark@arm.com>,
-        Rob Herring <robh@kernel.org>, Marc Zyngier <maz@kernel.org>,
-        Suzuki Poulose <suzuki.poulose@arm.com>,
-        Ingo Molnar <mingo@redhat.com>
-Subject: [PATCH V4 7/7] arm64/perf: Enable branch stack sampling
-Date:   Mon, 17 Oct 2022 11:27:13 +0530
-Message-Id: <20221017055713.451092-8-anshuman.khandual@arm.com>
-X-Mailer: git-send-email 2.25.1
-In-Reply-To: <20221017055713.451092-1-anshuman.khandual@arm.com>
-References: <20221017055713.451092-1-anshuman.khandual@arm.com>
+        Mon, 17 Oct 2022 02:42:50 -0400
+X-Greylist: delayed 702 seconds by postgrey-1.37 at lindbergh.monkeyblade.net; Sun, 16 Oct 2022 23:42:48 PDT
+Received: from forward103p.mail.yandex.net (forward103p.mail.yandex.net [77.88.28.106])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E721954CB6
+        for <linux-perf-users@vger.kernel.org>; Sun, 16 Oct 2022 23:42:48 -0700 (PDT)
+Received: from forward502p.mail.yandex.net (forward502p.mail.yandex.net [IPv6:2a02:6b8:0:1472:2741:0:8b7:121])
+        by forward103p.mail.yandex.net (Yandex) with ESMTP id 32AE45A3021;
+        Mon, 17 Oct 2022 09:19:57 +0300 (MSK)
+Received: from sas1-384d3eaa6677.qloud-c.yandex.net (sas1-384d3eaa6677.qloud-c.yandex.net [IPv6:2a02:6b8:c14:3a29:0:640:384d:3eaa])
+        by forward502p.mail.yandex.net (Yandex) with ESMTP id BC2B7B8139E;
+        Mon, 17 Oct 2022 09:19:52 +0300 (MSK)
+Received: by sas1-384d3eaa6677.qloud-c.yandex.net (smtp/Yandex) with ESMTPSA id l9nt5C04sF-JnjOhNs4;
+        Mon, 17 Oct 2022 09:19:51 +0300
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits))
+        (Client certificate not present)
+X-Yandex-Fwd: 1
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=maquefel.me; s=mail; t=1665987591;
+        bh=ZlVETtAdMTCrWUZ9/ku01uEirmMFNR/BEDj83BCtnQA=;
+        h=Cc:Message-ID:Subject:Date:References:To:From:In-Reply-To;
+        b=ABoFTlejDyTprn0uGW1gdDPaiV+QrUfa+XBioAwb5QRHIVsbyno9+AKrc7cdSxCtJ
+         Ua2lpFfkl+++N+7nfWu5AntK1DaK64LiVjtYCl7CRHd5NdsTHnwbtHkQWl6nzN5n2C
+         WyK5KflsRayUPFC8lQqQOeVTiJv5hIjBhyOkMtaY=
+Authentication-Results: sas1-384d3eaa6677.qloud-c.yandex.net; dkim=pass header.i=@maquefel.me
+Date:   Mon, 17 Oct 2022 09:19:48 +0300
+From:   Nikita Shubin <nikita.shubin@maquefel.me>
+To:     Arnaldo Carvalho de Melo <acme@kernel.org>
+Cc:     acme@redhat.com, linux@yadro.com, anup@brainfault.org,
+        n.shubin@yadro.com, aou@eecs.berkeley.edu,
+        alexander.shishkin@linux.intel.com, mingo@redhat.com,
+        jolsa@kernel.org, linux-kernel@vger.kernel.org,
+        linux-perf-users@vger.kernel.org, linux-riscv@lists.infradead.org,
+        mark.rutland@arm.com, namhyung@kernel.org,
+        Paul Walmsley <paul.walmsley@sifive.com>, peterz@infradead.org,
+        Palmer Dabbelt <palmer@dabbelt.com>
+Subject: Re: [PATCH v6 0/3] RISC-V: Create unique identification for SoC PMU
+Message-ID: <20221017091948.1961294e@redslave.neermore.group>
+In-Reply-To: <mhng-a8eaa55b-16b0-4b17-b202-881e75a65eaf@palmer-ri-x1c9>
+References: <20220815132251.25702-1-nikita.shubin@maquefel.me>
+        <mhng-a8eaa55b-16b0-4b17-b202-881e75a65eaf@palmer-ri-x1c9>
+X-Mailer: Claws Mail 3.17.7 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: quoted-printable
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-Now that all the required pieces are already in place, just enable the perf
-branch stack sampling support on arm64 platform, by removing the gate which
-blocks it in armpmu_event_init().
+Hello Arnaldo!
 
-Cc: Mark Rutland <mark.rutland@arm.com>
-Cc: Will Deacon <will@kernel.org>
-Cc: Catalin Marinas <catalin.marinas@arm.com>
-Cc: linux-kernel@vger.kernel.org
-Cc: linux-arm-kernel@lists.infradead.org
-Signed-off-by: Anshuman Khandual <anshuman.khandual@arm.com>
----
- drivers/perf/arm_pmu.c | 25 ++++++++++++++++++++++---
- 1 file changed, 22 insertions(+), 3 deletions(-)
+On Mon, 03 Oct 2022 19:54:40 -0700 (PDT)
+Palmer Dabbelt <palmer@dabbelt.com> wrote:
 
-diff --git a/drivers/perf/arm_pmu.c b/drivers/perf/arm_pmu.c
-index 1a8dca4e513e..dc5e4f9aca22 100644
---- a/drivers/perf/arm_pmu.c
-+++ b/drivers/perf/arm_pmu.c
-@@ -537,9 +537,28 @@ static int armpmu_event_init(struct perf_event *event)
- 		!cpumask_test_cpu(event->cpu, &armpmu->supported_cpus))
- 		return -ENOENT;
- 
--	/* does not support taken branch sampling */
--	if (has_branch_stack(event))
--		return -EOPNOTSUPP;
-+	if (has_branch_stack(event)) {
-+		/*
-+		 * BRBE support is absent. Select CONFIG_ARM_BRBE_PMU
-+		 * in the config, before branch stack sampling events
-+		 * can be requested.
-+		 */
-+		if (!IS_ENABLED(CONFIG_ARM_BRBE_PMU)) {
-+			pr_info("BRBE is disabled, select CONFIG_ARM_BRBE_PMU\n");
-+			return -EOPNOTSUPP;
-+		}
-+
-+		/*
-+		 * Branch stack sampling event can not be supported in
-+		 * case either the required driver itself is absent or
-+		 * BRBE buffer, is not supported. Besides checking for
-+		 * the callback prevents a crash in case it's absent.
-+		 */
-+		if (!armpmu->brbe_supported || !armpmu->brbe_supported(event)) {
-+			pr_info("BRBE is not supported\n");
-+			return -EOPNOTSUPP;
-+		}
-+	}
- 
- 	if (armpmu->map_event(event) == -ENOENT)
- 		return -ENOENT;
--- 
-2.25.1
+> On Mon, 15 Aug 2022 06:22:37 PDT (-0700), nikita.shubin@maquefel.me
+> wrote:
+> > From: Nikita Shubin <n.shubin@yadro.com>
+> >
+> > This series aims to provide matching vendor SoC with corresponded
+> > JSON bindings.
+> >
+> > The ID string is proposed to be in form of
+> > MVENDORID-MARCHID-MIMPID, for example for Sifive Unmatched the
+> > corresponding string will be:
+> >
+> > 0x489-0x8000000000000007-0x[[:xdigit:]]+,v1,sifive/u74,core
+> >
+> > Where MIMPID can vary as all impl supported the same number of
+> > events, this might not be true for all future SoC however.
+> >
+> > Also added SBI firmware events pretty names, as any firmware that
+> > supports SBI PMU should also support firmare events [1].
+> >
+> > Series depends on patch by Anup Patel, exposing mvendor, marchid
+> > and mimpid to "/proc/cpuinfo" [2].
+> >
+> > [1]
+> > https://github.com/riscv-non-isa/riscv-sbi-doc/blob/master/riscv-sbi.ad=
+oc
+> > [2] https://lkml.org/lkml/2022/7/27/23
+> >
+> > Link to previous version:
+> > https://patchwork.kernel.org/project/linux-riscv/list/?series=3D653649
+> >
+> > See original cover letter by Jo=C3=A3o M=C3=A1rio Domingos:
+> > https://patchwork.kernel.org/project/linux-riscv/cover/20211116154812.1=
+7008-1-joao.mario@tecnico.ulisboa.pt/
+> >
+> > Tested with the following OpenSBI device tree bindings:
+> >
+> > ```
+> > pmu {
+> >         compatible =3D "riscv,pmu";
+> >         riscv,event-to-mhpmcounters =3D
+> >                 <0x03 0x06 0x18
+> >                 0x10001 0x10002 0x18
+> >                 0x10009 0x10009 0x18
+> >                 0x10011 0x10011 0x18
+> >                 0x10019 0x10019 0x18
+> >                 0x10021 0x10021 0x18>;
+> >         riscv,event-to-mhpmevent =3D
+> >                 <0x03 0x00000000 0x1801
+> >                 0x04 0x00000000 0x0302
+> >                 0x05 0x00000000 0x4000
+> >                 0x06 0x00000000 0x6001
+> >                 0x10001 0x00000000 0x0202
+> >                 0x10002 0x00000000 0x0402
+> >                 0x10009 0x00000000 0x0102
+> >                 0x10011 0x00000000 0x2002
+> >                 0x10019 0x00000000 0x1002
+> >                 0x10021 0x00000000 0x0802>;
+> >         riscv,raw-event-to-mhpmcounters =3D
+> >                 <0x00000000 0x03ffff00 0x0 0x0 0x18
+> >                 0x00000000 0x0007ff01 0x0 0x1 0x18
+> >                 0x00000000 0x00003f02 0x0 0x2 0x18>;
+> > };
+> > ```
+> > ---
+> > v5->v6:
+> > Will Deacon:
+> > 	- dropped first patch from v5 series it has been merged
+> > into master Mayuresh Chitale:
+> > 	- fixed FW_SFENCE_VMA_SENT event code
+> >
+> > - added Tested-by tags
+> > ---
+> >
+> > Nikita Shubin (3):
+> >   perf arch events: riscv sbi firmware std event files
+> >   perf vendor events riscv: add Sifive U74 JSON file
+> >   RISC-V: Added Syntacore SCR7 PMU events
+> >
+> >  tools/perf/pmu-events/arch/riscv/mapfile.csv  |  18 +++
+> >  .../arch/riscv/riscv-sbi-firmware.json        | 134
+> > ++++++++++++++++++ .../arch/riscv/sifive/u74/firmware.json       |
+> > 68 +++++++++ .../arch/riscv/sifive/u74/instructions.json   |  92
+> > ++++++++++++ .../arch/riscv/sifive/u74/memory.json         |  32
+> > +++++ .../arch/riscv/sifive/u74/microarch.json      |  57 ++++++++
+> >  .../arch/riscv/syntacore/scr7/L1D_cache.json  | 102 +++++++++++++
+> >  .../arch/riscv/syntacore/scr7/L1I_cache.json  |  67 +++++++++
+> >  .../arch/riscv/syntacore/scr7/exceptions.json |  67 +++++++++
+> >  .../arch/riscv/syntacore/scr7/execution.json  |  97 +++++++++++++
+> >  .../arch/riscv/syntacore/scr7/firmware.json   |  68 +++++++++
+> >  .../arch/riscv/syntacore/scr7/general.json    |  47 ++++++
+> >  .../arch/riscv/syntacore/scr7/interrupts.json |  32 +++++
+> >  .../arch/riscv/syntacore/scr7/prediction.json |  52 +++++++
+> >  14 files changed, 933 insertions(+)
+> >  create mode 100644 tools/perf/pmu-events/arch/riscv/mapfile.csv
+> >  create mode 100644
+> > tools/perf/pmu-events/arch/riscv/riscv-sbi-firmware.json create
+> > mode 100644
+> > tools/perf/pmu-events/arch/riscv/sifive/u74/firmware.json create
+> > mode 100644
+> > tools/perf/pmu-events/arch/riscv/sifive/u74/instructions.json
+> > create mode 100644
+> > tools/perf/pmu-events/arch/riscv/sifive/u74/memory.json create mode
+> > 100644 tools/perf/pmu-events/arch/riscv/sifive/u74/microarch.json
+> > create mode 100644
+> > tools/perf/pmu-events/arch/riscv/syntacore/scr7/L1D_cache.json
+> > create mode 100644
+> > tools/perf/pmu-events/arch/riscv/syntacore/scr7/L1I_cache.json
+> > create mode 100644
+> > tools/perf/pmu-events/arch/riscv/syntacore/scr7/exceptions.json
+> > create mode 100644
+> > tools/perf/pmu-events/arch/riscv/syntacore/scr7/execution.json
+> > create mode 100644
+> > tools/perf/pmu-events/arch/riscv/syntacore/scr7/firmware.json
+> > create mode 100644
+> > tools/perf/pmu-events/arch/riscv/syntacore/scr7/general.json create
+> > mode 100644
+> > tools/perf/pmu-events/arch/riscv/syntacore/scr7/interrupts.json
+> > create mode 100644
+> > tools/perf/pmu-events/arch/riscv/syntacore/scr7/prediction.json =20
+>=20
+> Acked-by: Palmer Dabbelt <palmer@rivosinc.com>
+>=20
+> not sure if you're looking for this via the RISC-V tree, it looks
+> like usually these get merged via a perf tree?  That's OK with me,
+> but I'm also OK taking them through the RISC-V tree.  Note that
+> cpuinfo dependency seems to be triggering kasan failures, so we'll at
+> least need to sort that out.
+
+As i remember correctly you were willing to take these patches into 6.0
+=3D).
+
+Well they are acked by Palmer and [2] series, which my series depends
+on, also have been accepted.
+
+I can resend if it helps you.
+
+Yours,=20
+Nikita Shubin.
 
