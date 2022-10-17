@@ -2,112 +2,92 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 923D1C433FE
-	for <linux-perf-users@archiver.kernel.org>; Mon, 17 Oct 2022 09:57:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6AE30C4332F
+	for <linux-perf-users@archiver.kernel.org>; Mon, 17 Oct 2022 12:25:09 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230040AbiJQJ5x (ORCPT
+        id S230060AbiJQMZH (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Mon, 17 Oct 2022 05:57:53 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34566 "EHLO
+        Mon, 17 Oct 2022 08:25:07 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57214 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230329AbiJQJ5w (ORCPT
+        with ESMTP id S229572AbiJQMZH (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Mon, 17 Oct 2022 05:57:52 -0400
-Received: from mail-pl1-x62c.google.com (mail-pl1-x62c.google.com [IPv6:2607:f8b0:4864:20::62c])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 396F650070
-        for <linux-perf-users@vger.kernel.org>; Mon, 17 Oct 2022 02:57:52 -0700 (PDT)
-Received: by mail-pl1-x62c.google.com with SMTP id z20so10277481plb.10
-        for <linux-perf-users@vger.kernel.org>; Mon, 17 Oct 2022 02:57:52 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=ONqZkMmZ1RpKkSjyeSmUqOZbaL3fytox8E3NE9aS+vI=;
-        b=Dh5HYh8Eg2672pS57xSCxoeD9g+WV0n9UUC8Pb2aEsEzs6VNArFAK0NfGETEfVjtrj
-         JxK7P/VgFEMtcI6MfUH68sy0r34mKz/qFREYvuFey+EPTIw+K3HA9xwRPcN1I6ee8A99
-         ou1Vx7Mr7cfXyZEV2nJ8CtdJag25aWYh+eDQYkjc0ECCRfXis3+vb1ot5nNQugJpt3V9
-         XTukHpwjQ+ljrpJroZ2gb2WrM8duKT9pdYSG84Zyl4pEdPKb9gV3Ztdo5pkVJUzyoJYa
-         HsnmQPpkhM4Dt4xmvi+GP/34/fSWQvTDCs1I0ptq5MdZKtjKlvkBvkI+iRGhIqa2TFWX
-         C7Lg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=ONqZkMmZ1RpKkSjyeSmUqOZbaL3fytox8E3NE9aS+vI=;
-        b=vKeqk90q482rMtYWAwSrCWwtXDQlKfNlh18OCb2+rg4+OPgrwO+kPRbz6RogliMaZ6
-         wdAI1+f1JI5prR2Sb4dK3h4DGKRRO9sOllP5tWLNyolpV0mbqxs6LVBDPB8VOpcI6k5b
-         bABoDBEokS1Tnttx1ByQMHwn1FA/ceGhiqhsoV5itlJhEsF6H8v4G1DTQWSG2dJmRHmX
-         mOZyH7/mcaIgVBhaxK1LQnLv47+3fQWVYsDzNUE/hntak0HV19Cf1vReViSxogIErNyk
-         casoeV2f/iPiIaYloct+QEWkyiyWoosH7BuMsmqzC7TkpR/xgY52ygEnJm2v0ah0/YAH
-         3kGQ==
-X-Gm-Message-State: ACrzQf14VLWqQEug/4+Ua6RX20NfgVxe6s2P97lLcsDeSjmkc3Lj0l0M
-        RZaczSr2yogGEn1utLhhrS7Isw==
-X-Google-Smtp-Source: AMsMyM4j9wyEPf5v9ECWaO6yORb0mmdYcQCja+PZVGyFZS1r6b8wdYSvOWkB3WxjgZtvgj9suycKXw==
-X-Received: by 2002:a17:902:ab89:b0:17a:67c:b9e9 with SMTP id f9-20020a170902ab8900b0017a067cb9e9mr11084858plr.55.1666000671541;
-        Mon, 17 Oct 2022 02:57:51 -0700 (PDT)
-Received: from leoy-yangtze.lan (45.78.17.194.16clouds.com. [45.78.17.194])
-        by smtp.gmail.com with ESMTPSA id h22-20020aa796d6000000b00561b455267fsm6705742pfq.27.2022.10.17.02.57.45
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 17 Oct 2022 02:57:50 -0700 (PDT)
-Date:   Mon, 17 Oct 2022 17:57:43 +0800
-From:   Leo Yan <leo.yan@linaro.org>
-To:     Adrian Hunter <adrian.hunter@intel.com>
-Cc:     Arnaldo Carvalho de Melo <acme@kernel.org>, suzuki.poulose@arm.com,
-        linux-perf-users@vger.kernel.org, mathieu.poirier@linaro.org,
-        mike.leach@linaro.org, Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Jiri Olsa <jolsa@kernel.org>,
-        Namhyung Kim <namhyung@kernel.org>,
-        linux-kernel@vger.kernel.org, coresight@lists.linaro.org,
-        Sven Schnelle <svens@linux.ibm.com>,
-        James Clark <james.clark@arm.com>,
-        Christian Borntraeger <borntraeger@linux.ibm.com>,
-        Carsten Haitzler <carsten.haitzler@foss.arm.com>
-Subject: Re: [PATCH] perf tools: Fix man page build wrt perf-arm-coresight.txt
-Message-ID: <Y00nFxrcV7TVqmJO@leoy-yangtze.lan>
-References: <a176a3e1-6ddc-bb63-e41c-15cda8c2d5d2@intel.com>
+        Mon, 17 Oct 2022 08:25:07 -0400
+Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 387741B9C5;
+        Mon, 17 Oct 2022 05:25:03 -0700 (PDT)
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by dfw.source.kernel.org (Postfix) with ESMTPS id BAA2060F36;
+        Mon, 17 Oct 2022 12:25:02 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 014BBC433D6;
+        Mon, 17 Oct 2022 12:25:02 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1666009502;
+        bh=05YlSAuu/0CUFb3449jUV4GD/RxFgbKpazT1tHrbRhs=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=NZlGA7C1E+QM/irWF2a2Ik/TqnMuPHTB90qrcMbSuxrXTBxfZLQ+rHzOQYUnr6y9k
+         VdmigLEwuhgTkuuspXKYbxuIwztbB8N9wYRbvtgfxzK1OQF6tdSz45FfIqmk8lBp3g
+         Gs2PRPtlHRbV96NcHWGVve/IngNxqJACBm5Q7Mo31FfPMDHex7atAhhtIIwk1d/+QZ
+         wGtZ6jAMk55byo/VQlN8v/efB1MFC9B/savoAHXXETxjpUcOocwtgwtMG8ypccJCrE
+         2xPxTXPly1QEzlqqI5eH7C2bExAmkaopv0a2bUOx5qmOnOCMxG/NHfGwo53HTxb3uO
+         1RHKYLaWso72w==
+Received: by quaco.ghostprotocols.net (Postfix, from userid 1000)
+        id 6C82B403B6; Mon, 17 Oct 2022 09:24:59 -0300 (-03)
+Date:   Mon, 17 Oct 2022 09:24:59 -0300
+From:   Arnaldo Carvalho de Melo <acme@kernel.org>
+To:     Nikita Shubin <nikita.shubin@maquefel.me>
+Cc:     acme@redhat.com, linux@yadro.com, anup@brainfault.org,
+        n.shubin@yadro.com, aou@eecs.berkeley.edu,
+        alexander.shishkin@linux.intel.com, mingo@redhat.com,
+        jolsa@kernel.org, linux-kernel@vger.kernel.org,
+        linux-perf-users@vger.kernel.org, linux-riscv@lists.infradead.org,
+        mark.rutland@arm.com, namhyung@kernel.org,
+        Paul Walmsley <paul.walmsley@sifive.com>, peterz@infradead.org,
+        Palmer Dabbelt <palmer@dabbelt.com>
+Subject: Re: [PATCH v6 0/3] RISC-V: Create unique identification for SoC PMU
+Message-ID: <Y01Jm6PHA1m7B1Vl@kernel.org>
+References: <20220815132251.25702-1-nikita.shubin@maquefel.me>
+ <mhng-a8eaa55b-16b0-4b17-b202-881e75a65eaf@palmer-ri-x1c9>
+ <20221017091948.1961294e@redslave.neermore.group>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <a176a3e1-6ddc-bb63-e41c-15cda8c2d5d2@intel.com>
+In-Reply-To: <20221017091948.1961294e@redslave.neermore.group>
+X-Url:  http://acmel.wordpress.com
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-On Mon, Oct 17, 2022 at 12:35:49PM +0300, Adrian Hunter wrote:
-> perf build assumes documentation files starting with "perf-" are man
-> pages but perf-arm-coresight.txt is not a man page:
-> 
-> asciidoc: ERROR: perf-arm-coresight.txt: line 2: malformed manpage title
-> asciidoc: ERROR: perf-arm-coresight.txt: line 3: name section expected
-> asciidoc: FAILED: perf-arm-coresight.txt: line 3: section title expected
-> make[3]: *** [Makefile:266: perf-arm-coresight.xml] Error 1
-> make[3]: *** Waiting for unfinished jobs....
-> make[2]: *** [Makefile.perf:895: man] Error 2
-> 
-> Fix by renaming it.
-> 
-> Reported-by: Sven Schnelle <svens@linux.ibm.com>
-> Reported-by: Christian Borntraeger <borntraeger@linux.ibm.com>
-> Fixes: dc2e0fb00bb2 ("perf test coresight: Add relevant documentation about ARM64 CoreSight testing")
-> Signed-off-by: Adrian Hunter <adrian.hunter@intel.com>
+Em Mon, Oct 17, 2022 at 09:19:48AM +0300, Nikita Shubin escreveu:
+> On Mon, 03 Oct 2022 19:54:40 -0700 (PDT)
+> Palmer Dabbelt <palmer@dabbelt.com> wrote:
+> > On Mon, 15 Aug 2022 06:22:37 PDT (-0700), nikita.shubin@maquefel.me wrote:
+> > > From: Nikita Shubin <n.shubin@yadro.com>
 
-Thanks for fixing, Adrian.  The change LGTM:
+> > > This series aims to provide matching vendor SoC with corresponded
+> > > JSON bindings.
+> > Acked-by: Palmer Dabbelt <palmer@rivosinc.com>
+ 
+> > not sure if you're looking for this via the RISC-V tree, it looks
+> > like usually these get merged via a perf tree?  That's OK with me,
+> > but I'm also OK taking them through the RISC-V tree.  Note that
+> > cpuinfo dependency seems to be triggering kasan failures, so we'll at
+> > least need to sort that out.
 
-Reviewed-by: Leo Yan <leo.yan@linaro.org>
+> As i remember correctly you were willing to take these patches into 6.0
+> =).
 
-> ---
->  .../Documentation/{perf-arm-coresight.txt => arm-coresight.txt}   | 0
->  1 file changed, 0 insertions(+), 0 deletions(-)
->  rename tools/perf/Documentation/{perf-arm-coresight.txt => arm-coresight.txt} (100%)
-> 
-> diff --git a/tools/perf/Documentation/perf-arm-coresight.txt b/tools/perf/Documentation/arm-coresight.txt
-> similarity index 100%
-> rename from tools/perf/Documentation/perf-arm-coresight.txt
-> rename to tools/perf/Documentation/arm-coresight.txt
-> -- 
-> 2.25.1
-> 
+> Well they are acked by Palmer and [2] series, which my series depends
+> on, also have been accepted.
+
+> I can resend if it helps you.
+
+I picked it from this Message-ID with b4, applied cleanly, but yesterday
+the merge window closed for v6.1, I applied it to my perf/core branch,
+for v6.2.
+
+Thanks,
+
+- Arnaldo
