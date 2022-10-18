@@ -2,31 +2,31 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CBE05C433FE
-	for <linux-perf-users@archiver.kernel.org>; Tue, 18 Oct 2022 12:47:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 05852C433FE
+	for <linux-perf-users@archiver.kernel.org>; Tue, 18 Oct 2022 12:47:22 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230159AbiJRMrN (ORCPT
+        id S230163AbiJRMrV (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Tue, 18 Oct 2022 08:47:13 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36752 "EHLO
+        Tue, 18 Oct 2022 08:47:21 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36878 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230122AbiJRMrM (ORCPT
+        with ESMTP id S230177AbiJRMrR (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Tue, 18 Oct 2022 08:47:12 -0400
-Received: from szxga03-in.huawei.com (szxga03-in.huawei.com [45.249.212.189])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id AEF93C45A3;
-        Tue, 18 Oct 2022 05:47:07 -0700 (PDT)
-Received: from dggemv711-chm.china.huawei.com (unknown [172.30.72.55])
-        by szxga03-in.huawei.com (SkyGuard) with ESMTP id 4MsD8B5qhhzJn2r;
-        Tue, 18 Oct 2022 20:44:26 +0800 (CST)
+        Tue, 18 Oct 2022 08:47:17 -0400
+Received: from szxga01-in.huawei.com (szxga01-in.huawei.com [45.249.212.187])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3ACA6BA923;
+        Tue, 18 Oct 2022 05:47:10 -0700 (PDT)
+Received: from dggemv703-chm.china.huawei.com (unknown [172.30.72.56])
+        by szxga01-in.huawei.com (SkyGuard) with ESMTP id 4MsD5r1dvKzmVCP;
+        Tue, 18 Oct 2022 20:42:24 +0800 (CST)
 Received: from kwepemm600010.china.huawei.com (7.193.23.86) by
- dggemv711-chm.china.huawei.com (10.1.198.66) with Microsoft SMTP Server
+ dggemv703-chm.china.huawei.com (10.3.19.46) with Microsoft SMTP Server
  (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2375.31; Tue, 18 Oct 2022 20:47:04 +0800
+ 15.1.2375.31; Tue, 18 Oct 2022 20:47:06 +0800
 Received: from ubuntu1804.huawei.com (10.67.174.174) by
  kwepemm600010.china.huawei.com (7.193.23.86) with Microsoft SMTP Server
  (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2375.31; Tue, 18 Oct 2022 20:47:03 +0800
+ 15.1.2375.31; Tue, 18 Oct 2022 20:47:05 +0800
 From:   Li Huafei <lihuafei1@huawei.com>
 To:     <linux@armlinux.org.uk>, <linus.walleij@linaro.org>
 CC:     <peterz@infradead.org>, <mingo@redhat.com>, <acme@kernel.org>,
@@ -39,10 +39,12 @@ CC:     <peterz@infradead.org>, <mingo@redhat.com>, <acme@kernel.org>,
         <rostedt@goodmis.org>, <linyujun809@huawei.com>,
         <linux-arm-kernel@lists.infradead.org>,
         <linux-kernel@vger.kernel.org>, <linux-perf-users@vger.kernel.org>
-Subject: [PATCH v4 0/2] ARM: Convert to ARCH_STACKWALK
-Date:   Tue, 18 Oct 2022 20:43:37 +0800
-Message-ID: <20221018124339.115793-1-lihuafei1@huawei.com>
+Subject: [PATCH v4 2/2] ARM: stacktrace: Convert stacktrace to generic ARCH_STACKWALK
+Date:   Tue, 18 Oct 2022 20:43:39 +0800
+Message-ID: <20221018124339.115793-3-lihuafei1@huawei.com>
 X-Mailer: git-send-email 2.17.1
+In-Reply-To: <20221018124339.115793-1-lihuafei1@huawei.com>
+References: <20221018124339.115793-1-lihuafei1@huawei.com>
 MIME-Version: 1.0
 Content-Type: text/plain
 X-Originating-IP: [10.67.174.174]
@@ -53,62 +55,181 @@ Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-This series mainly updates the ARM stack trace code to use the newer and
-simpler arch_stack_walk() interface.
+Historically architectures have had duplicated code in their stack trace
+implementations for filtering what gets traced. In order to avoid this
+duplication some generic code has been provided using a new interface
+arch_stack_walk(), enabled by selecting ARCH_STACKWALK in Kconfig, which
+factors all this out into the generic stack trace code. Convert ARM to
+use this common infrastructure.
 
-When Russell applied patch 1, the patch tracker complained of a minor
-conflict with Lei Zhen's patch (see [1]). Lei Zhen's patch has been
-merged into v6.1-rc1. Now rebase to v6.1-rc1 and resend this patch set.
+When initializing the stack frame of the current task, arm64 uses
+__builtin_frame_address(1) to initialize the frame pointer, skipping
+arch_stack_walk(), see the commit c607ab4f916d ("arm64: stacktrace:
+don't trace arch_stack_walk()"). Since __builtin_frame_address(1) does
+not work on ARM, unwind_frame() is used to unwind the stack one layer
+forward before calling walk_stackframe().
 
-Thanks!
+Signed-off-by: Li Huafei <lihuafei1@huawei.com>
+Reviewed-by: Linus Walleij <linus.walleij@linaro.org>
+---
+ arch/arm/Kconfig             |   1 +
+ arch/arm/kernel/stacktrace.c | 114 ++++++++++-------------------------
+ 2 files changed, 33 insertions(+), 82 deletions(-)
 
-[1] https://www.armlinux.org.uk/developer/patches/viewpatch.php?id=9235/1
-
-v4:
- - Rebase to v6.1-rc1.
- - Fix commit log for patch 2: 'arch _stack_walk()' -> 'arch_stack_walk()'.
- - Remove the two bugfix patches that have been merged in:
-    ARM: stacktrace: Skip frame pointer boundary check for call_with_stack()
-    ARM: stacktrace: Avoid duplicate saving of exception PC value
-
-v3 resend: https://lore.kernel.org/lkml/20220826074047.107357-1-lihuafei1@huawei.com/
- It's been a month since I sent the v3. Linus told me I needed to add the
- patch to Russell's patch tracker myself, rebase to v6.0-rc1 before that.
- Thanks Linus for the tip!
-
- Since commit af6f23b88e95 ("ARM/dma-mapping: use the generic versions of
- dma_to_phys/phys_to_dma by default") and commit ae626eb97376
- ("ARM/dma-mapping: use dma-direct unconditionally") modified
- arch/arm/Kconfig, there is a minor conflict with patch 4 when rebase.
-
-v3: https://lore.kernel.org/lkml/20220727040022.139387-1-lihuafei1@huawei.com/
- - According to the discussion with Linus and Russell in v1:
-   - Add a comment about "regs[1]" in patch 2, and remove the
-     unnecessary ternary operator in the initialization of
-     "frame->ex_frame".
-   - Remove the patch "ARM: stacktrace: Allow stack trace saving for
-     non-current tasks", and keep the check for not being able to
-     unwind non-current tasks (including tasks running on other CPUs)
-     when CONFIG_SMP=y in patch 4.
- - Rebase to linux-5.19-rc8.
-
-v2: https://lore.kernel.org/lkml/20220713110020.85511-1-lihuafei1@huawei.com/
- - As suggested by Mark, the commit logs for patch 4 and 5 were
-   refined for easy review.
-
-v1: https://lore.kernel.org/lkml/20220712021527.109921-1-lihuafei1@huawei.com/
-
-Li Huafei (2):
-  ARM: stacktrace: Make stack walk callback consistent with generic code
-  ARM: stacktrace: Convert stacktrace to generic ARCH_STACKWALK
-
- arch/arm/Kconfig                  |   1 +
- arch/arm/include/asm/stacktrace.h |   2 +-
- arch/arm/kernel/perf_callchain.c  |   9 +--
- arch/arm/kernel/return_address.c  |   8 +-
- arch/arm/kernel/stacktrace.c      | 119 +++++++++---------------------
- 5 files changed, 44 insertions(+), 95 deletions(-)
-
+diff --git a/arch/arm/Kconfig b/arch/arm/Kconfig
+index a08c9d092a33..16920f2215f2 100644
+--- a/arch/arm/Kconfig
++++ b/arch/arm/Kconfig
+@@ -17,6 +17,7 @@ config ARM
+ 	select ARCH_HAS_PTE_SPECIAL if ARM_LPAE
+ 	select ARCH_HAS_SETUP_DMA_OPS
+ 	select ARCH_HAS_SET_MEMORY
++	select ARCH_STACKWALK
+ 	select ARCH_HAS_STRICT_KERNEL_RWX if MMU && !XIP_KERNEL
+ 	select ARCH_HAS_STRICT_MODULE_RWX if MMU
+ 	select ARCH_HAS_SYNC_DMA_FOR_DEVICE
+diff --git a/arch/arm/kernel/stacktrace.c b/arch/arm/kernel/stacktrace.c
+index d05968bc7812..620aa82e3bdd 100644
+--- a/arch/arm/kernel/stacktrace.c
++++ b/arch/arm/kernel/stacktrace.c
+@@ -142,40 +142,32 @@ void notrace walk_stackframe(struct stackframe *frame,
+ EXPORT_SYMBOL(walk_stackframe);
+ 
+ #ifdef CONFIG_STACKTRACE
+-struct stack_trace_data {
+-	struct stack_trace *trace;
+-	unsigned int no_sched_functions;
+-	unsigned int skip;
+-};
+-
+-static bool save_trace(void *d, unsigned long addr)
++static void start_stack_trace(struct stackframe *frame, struct task_struct *task,
++			      unsigned long fp, unsigned long sp,
++			      unsigned long lr, unsigned long pc)
+ {
+-	struct stack_trace_data *data = d;
+-	struct stack_trace *trace = data->trace;
+-
+-	if (data->no_sched_functions && in_sched_functions(addr))
+-		return true;
+-	if (data->skip) {
+-		data->skip--;
+-		return true;
+-	}
+-
+-	trace->entries[trace->nr_entries++] = addr;
+-	return trace->nr_entries < trace->max_entries;
++	frame->fp = fp;
++	frame->sp = sp;
++	frame->lr = lr;
++	frame->pc = pc;
++#ifdef CONFIG_KRETPROBES
++	frame->kr_cur = NULL;
++	frame->tsk = task;
++#endif
++#ifdef CONFIG_UNWINDER_FRAME_POINTER
++	frame->ex_frame = in_entry_text(frame->pc);
++#endif
+ }
+ 
+-/* This must be noinline to so that our skip calculation works correctly */
+-static noinline void __save_stack_trace(struct task_struct *tsk,
+-	struct stack_trace *trace, unsigned int nosched)
++void arch_stack_walk(stack_trace_consume_fn consume_entry, void *cookie,
++		     struct task_struct *task, struct pt_regs *regs)
+ {
+-	struct stack_trace_data data;
+ 	struct stackframe frame;
+ 
+-	data.trace = trace;
+-	data.skip = trace->skip;
+-	data.no_sched_functions = nosched;
+-
+-	if (tsk != current) {
++	if (regs) {
++		start_stack_trace(&frame, NULL, regs->ARM_fp, regs->ARM_sp,
++				  regs->ARM_lr, regs->ARM_pc);
++	} else if (task != current) {
+ #ifdef CONFIG_SMP
+ 		/*
+ 		 * What guarantees do we have here that 'tsk' is not
+@@ -184,64 +176,22 @@ static noinline void __save_stack_trace(struct task_struct *tsk,
+ 		 */
+ 		return;
+ #else
+-		frame.fp = thread_saved_fp(tsk);
+-		frame.sp = thread_saved_sp(tsk);
+-		frame.lr = 0;		/* recovered from the stack */
+-		frame.pc = thread_saved_pc(tsk);
++		start_stack_trace(&frame, task, thread_saved_fp(task),
++				  thread_saved_sp(task), 0,
++				  thread_saved_pc(task));
+ #endif
+ 	} else {
+-		/* We don't want this function nor the caller */
+-		data.skip += 2;
+-		frame.fp = (unsigned long)__builtin_frame_address(0);
+-		frame.sp = current_stack_pointer;
+-		frame.lr = (unsigned long)__builtin_return_address(0);
+ here:
+-		frame.pc = (unsigned long)&&here;
++		start_stack_trace(&frame, task,
++				  (unsigned long)__builtin_frame_address(0),
++				  current_stack_pointer,
++				  (unsigned long)__builtin_return_address(0),
++				  (unsigned long)&&here);
++		/* skip this function */
++		if (unwind_frame(&frame))
++			return;
+ 	}
+-#ifdef CONFIG_KRETPROBES
+-	frame.kr_cur = NULL;
+-	frame.tsk = tsk;
+-#endif
+-#ifdef CONFIG_UNWINDER_FRAME_POINTER
+-	frame.ex_frame = false;
+-#endif
+ 
+-	walk_stackframe(&frame, save_trace, &data);
+-}
+-
+-void save_stack_trace_regs(struct pt_regs *regs, struct stack_trace *trace)
+-{
+-	struct stack_trace_data data;
+-	struct stackframe frame;
+-
+-	data.trace = trace;
+-	data.skip = trace->skip;
+-	data.no_sched_functions = 0;
+-
+-	frame.fp = regs->ARM_fp;
+-	frame.sp = regs->ARM_sp;
+-	frame.lr = regs->ARM_lr;
+-	frame.pc = regs->ARM_pc;
+-#ifdef CONFIG_KRETPROBES
+-	frame.kr_cur = NULL;
+-	frame.tsk = current;
+-#endif
+-#ifdef CONFIG_UNWINDER_FRAME_POINTER
+-	frame.ex_frame = in_entry_text(frame.pc);
+-#endif
+-
+-	walk_stackframe(&frame, save_trace, &data);
+-}
+-
+-void save_stack_trace_tsk(struct task_struct *tsk, struct stack_trace *trace)
+-{
+-	__save_stack_trace(tsk, trace, 1);
+-}
+-EXPORT_SYMBOL(save_stack_trace_tsk);
+-
+-void save_stack_trace(struct stack_trace *trace)
+-{
+-	__save_stack_trace(current, trace, 0);
++	walk_stackframe(&frame, consume_entry, cookie);
+ }
+-EXPORT_SYMBOL_GPL(save_stack_trace);
+ #endif
 -- 
 2.17.1
 
