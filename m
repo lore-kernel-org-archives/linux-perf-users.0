@@ -2,108 +2,154 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DF1B8C433FE
-	for <linux-perf-users@archiver.kernel.org>; Tue, 18 Oct 2022 13:56:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E5B2FC433FE
+	for <linux-perf-users@archiver.kernel.org>; Tue, 18 Oct 2022 18:31:14 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231205AbiJRN4g (ORCPT
+        id S230099AbiJRSbN (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Tue, 18 Oct 2022 09:56:36 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43548 "EHLO
+        Tue, 18 Oct 2022 14:31:13 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35934 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231235AbiJRN4e (ORCPT
+        with ESMTP id S229997AbiJRSbI (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Tue, 18 Oct 2022 09:56:34 -0400
-Received: from ams.source.kernel.org (ams.source.kernel.org [IPv6:2604:1380:4601:e00::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 481C3CF874;
-        Tue, 18 Oct 2022 06:56:33 -0700 (PDT)
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by ams.source.kernel.org (Postfix) with ESMTPS id E30ECB81F67;
-        Tue, 18 Oct 2022 13:56:31 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id BAE0CC433D6;
-        Tue, 18 Oct 2022 13:56:27 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1666101390;
-        bh=qJ6vThAIE44VrwsfcxpiUgz6ZVzbsL/WPJFVhMYDSlw=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=rx45QDPaSXJRF3zL7QHyHW33SWwq46lbIpEKwn6nTDAUPNQZLeiZDVidaRmpSzOfx
-         8ltj05lsXIF/1lfBJLtknkl6Ph11dGi2QR9s5k+n71W3I9HqVb5jQX/v6OEX5VQpJG
-         ByLs8gBcjQsUFWEnYHwjPRY+FtGKzjqmH0i6kP6IDt14E39MlohU6kIuCSydNaMTdL
-         Wu67/PqcFV4JjiKO3AMSY5/7VtTOFt3wkUL9NZpVJq4yNZEmhQxyrTiE2g+b52Dntf
-         koBythbCrMqOegKPPT5bW3trCbewh37572jmOg1VjVX/tXD3SMYqLJKcAXxcMulb3S
-         D0ebFN3mraDnw==
-Date:   Tue, 18 Oct 2022 14:56:24 +0100
-From:   Mark Brown <broonie@kernel.org>
-To:     Anshuman Khandual <anshuman.khandual@arm.com>
-Cc:     linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, peterz@infradead.org,
-        acme@kernel.org, mark.rutland@arm.com, will@kernel.org,
-        catalin.marinas@arm.com, James Clark <james.clark@arm.com>,
-        Rob Herring <robh@kernel.org>, Marc Zyngier <maz@kernel.org>,
-        Suzuki Poulose <suzuki.poulose@arm.com>,
-        Ingo Molnar <mingo@redhat.com>
-Subject: Re: [PATCH V4 1/7] arm64/perf: Add BRBE registers and fields
-Message-ID: <Y06wiI2hgsz5QPTh@sirena.org.uk>
-References: <20221017055713.451092-1-anshuman.khandual@arm.com>
- <20221017055713.451092-2-anshuman.khandual@arm.com>
-MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="GFneNsft22FHtzEa"
-Content-Disposition: inline
-In-Reply-To: <20221017055713.451092-2-anshuman.khandual@arm.com>
-X-Cookie: Lake Erie died for your sins.
+        Tue, 18 Oct 2022 14:31:08 -0400
+Received: from mx0a-001b2d01.pphosted.com (mx0b-001b2d01.pphosted.com [148.163.158.5])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 50D95691BB;
+        Tue, 18 Oct 2022 11:31:02 -0700 (PDT)
+Received: from pps.filterd (m0098419.ppops.net [127.0.0.1])
+        by mx0b-001b2d01.pphosted.com (8.17.1.5/8.17.1.5) with ESMTP id 29IIORNm028328;
+        Tue, 18 Oct 2022 18:30:46 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=content-type :
+ mime-version : subject : from : in-reply-to : date : cc :
+ content-transfer-encoding : message-id : references : to; s=pp1;
+ bh=0JtFDXn/7sexO9bf9hyr9d9GHOIRTbp5Go+DoUK5pEE=;
+ b=MZjiITIEonJQbVsX75zoD3EsbBWI17bXiUuj4VV/nfAIGa5m5EpFJphAhW1I+RqCl0Dr
+ 6I4VunqDX2oe2HzcrHc6Fr/nuiKS1To9K74GNc8mL076/638MTjJr2UjlUS65/nwgaaF
+ UxCAd/R3DWhmy86q853+hwWHSiM4I/VXZAGcLqPU2vEYFB4IrLzme+XWpjXuxFBw5rbZ
+ w7426Abh2lLepQKvhEVML3zKd176kdyTAeTXqSxdYazgrywbpji3iOBU8f9eVLbLhkef
+ d16XCn0L3n9Uc9rAHa0uJSX5n8LnYS9DeZk42rn5y4x4XhrlD+FXijNa4j5oEY5PKkIj ng== 
+Received: from pps.reinject (localhost [127.0.0.1])
+        by mx0b-001b2d01.pphosted.com (PPS) with ESMTPS id 3ka1d5g4gj-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Tue, 18 Oct 2022 18:30:46 +0000
+Received: from m0098419.ppops.net (m0098419.ppops.net [127.0.0.1])
+        by pps.reinject (8.17.1.5/8.17.1.5) with ESMTP id 29IIPCtm029732;
+        Tue, 18 Oct 2022 18:30:46 GMT
+Received: from ppma03ams.nl.ibm.com (62.31.33a9.ip4.static.sl-reverse.com [169.51.49.98])
+        by mx0b-001b2d01.pphosted.com (PPS) with ESMTPS id 3ka1d5g4fg-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Tue, 18 Oct 2022 18:30:45 +0000
+Received: from pps.filterd (ppma03ams.nl.ibm.com [127.0.0.1])
+        by ppma03ams.nl.ibm.com (8.16.1.2/8.16.1.2) with SMTP id 29IILA0p008905;
+        Tue, 18 Oct 2022 18:30:43 GMT
+Received: from b06cxnps4075.portsmouth.uk.ibm.com (d06relay12.portsmouth.uk.ibm.com [9.149.109.197])
+        by ppma03ams.nl.ibm.com with ESMTP id 3k7mg95que-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Tue, 18 Oct 2022 18:30:43 +0000
+Received: from b06wcsmtp001.portsmouth.uk.ibm.com (b06wcsmtp001.portsmouth.uk.ibm.com [9.149.105.160])
+        by b06cxnps4075.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 29IIUfr639911992
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Tue, 18 Oct 2022 18:30:41 GMT
+Received: from b06wcsmtp001.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 9D08EA4054;
+        Tue, 18 Oct 2022 18:30:41 +0000 (GMT)
+Received: from b06wcsmtp001.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 0D6E8A405B;
+        Tue, 18 Oct 2022 18:30:39 +0000 (GMT)
+Received: from smtpclient.apple (unknown [9.43.70.133])
+        by b06wcsmtp001.portsmouth.uk.ibm.com (Postfix) with ESMTPS;
+        Tue, 18 Oct 2022 18:30:38 +0000 (GMT)
+Content-Type: text/plain;
+        charset=utf-8
+Mime-Version: 1.0 (Mac OS X Mail 16.0 \(3696.120.41.1.1\))
+Subject: Re: [PATCH] perf: Fix missing raw data on tracepoint events
+From:   Athira Rajeev <atrajeev@linux.vnet.ibm.com>
+In-Reply-To: <20221012143857.48198-1-james.clark@arm.com>
+Date:   Wed, 19 Oct 2022 00:00:35 +0530
+Cc:     linux-perf-users@vger.kernel.org,
+        Peter Zijlstra <peterz@infradead.org>,
+        Namhyung Kim <namhyung@kernel.org>,
+        linux-kernel@vger.kernel.org, Ingo Molnar <mingo@redhat.com>,
+        Arnaldo Carvalho de Melo <acme@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Jiri Olsa <jolsa@kernel.org>
+Content-Transfer-Encoding: quoted-printable
+Message-Id: <D3C85EE7-3545-44C7-B11D-71C1935036C1@linux.vnet.ibm.com>
+References: <20221012143857.48198-1-james.clark@arm.com>
+To:     James Clark <james.clark@arm.com>
+X-Mailer: Apple Mail (2.3696.120.41.1.1)
+X-TM-AS-GCONF: 00
+X-Proofpoint-ORIG-GUID: T-DTN9SjUD6i_rqVs3VR1kl8jNGzjVr2
+X-Proofpoint-GUID: MhbvKZ9YZijq6BK2TXYADEyVY9IuAOqK
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.205,Aquarius:18.0.895,Hydra:6.0.545,FMLib:17.11.122.1
+ definitions=2022-10-18_07,2022-10-18_01,2022-06-22_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 malwarescore=0 suspectscore=0
+ clxscore=1011 priorityscore=1501 mlxlogscore=999 impostorscore=0
+ adultscore=0 spamscore=0 bulkscore=0 phishscore=0 mlxscore=0
+ lowpriorityscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2209130000 definitions=main-2210180099
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
 
---GFneNsft22FHtzEa
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
 
-On Mon, Oct 17, 2022 at 11:27:07AM +0530, Anshuman Khandual wrote:
+> On 12-Oct-2022, at 8:08 PM, James Clark <james.clark@arm.com> wrote:
+>=20
+> Since commit 838d9bb62d13 ("perf: Use sample_flags for raw_data")
+> raw data is not being output on tracepoints due to the PERF_SAMPLE_RAW
+> field not being set. Fix this by setting it for tracepoint events.
+>=20
+> This fixes the following test failure:
+>=20
+>  perf test "sched_switch" -vvv
+>=20
+>   35: Track with sched_switch
+>  --- start ---
+>  test child forked, pid 1828
+>  ...
+>  Using CPUID 0x00000000410fd400
+>  sched_switch: cpu: 2 prev_tid -14687 next_tid 0
+>  sched_switch: cpu: 2 prev_tid -14687 next_tid 0
+>  Missing sched_switch events
+>  4613 events recorded
+>  test child finished with -1
+>  ---- end ----
+>  Track with sched_switch: FAILED!
+>=20
+> Fixes: 838d9bb62d13 ("perf: Use sample_flags for raw_data")
+> Cc: Namhyung Kim <namhyung@kernel.org>
+> Cc: Peter Zijlstra (Intel) <peterz@infradead.org>
+> Signed-off-by: James Clark <james.clark@arm.com>
 
-I spotted one typo below but otherwise this looks good!
+Hi James,=20
 
-> +# This is just a dummy register declaration to get all common field masks and
-> +# shifts for accessing given BRBINF contents.
-> +Sysreg	BRBINF_EL1	2	1	8	0	0
+Thanks for the fix. I was getting similar issue with =E2=80=9Cperf =
+trace=E2=80=9D and it works with this fix.
 
-This seems reasonable to me, others may disagree.
+Tested-by: Athira Rajeev <atrajeev@linux.vnet.ibm.com>
 
-> +Sysreg	BRBCR_EL1	2	1	9	0	0
-> +Res0	63:24
-> +Field	23 	EXCEPTION
-> +Field	22 	ERTN
-> +Res0	21:9
-> +Field	8 	FZP
-> +Res0	7
-> +Enum	6:5	TS
-> +	0b1	VIRTUAL
 
-I'd have expected this to be written as 0b01.  Doesn't make any
-practical difference though.
+> ---
+> kernel/events/core.c | 1 +
+> 1 file changed, 1 insertion(+)
+>=20
+> diff --git a/kernel/events/core.c b/kernel/events/core.c
+> index b981b879bcd8..824c23830272 100644
+> --- a/kernel/events/core.c
+> +++ b/kernel/events/core.c
+> @@ -9759,6 +9759,7 @@ void perf_tp_event(u16 event_type, u64 count, =
+void *record, int entry_size,
+>=20
+> 	perf_sample_data_init(&data, 0, 0);
+> 	data.raw =3D &raw;
+> +	data.sample_flags |=3D PERF_SAMPLE_RAW;
+>=20
+> 	perf_trace_buf_update(record, event_type);
+>=20
+> --=20
+> 2.28.0
+>=20
 
-> +Sysreg	BRBFCR_EL1	2	1	9	0	1
-
-> +Field	16	EnL
-
-This is "EnI" in DDI0487I.a.
-
---GFneNsft22FHtzEa
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAmNOsIcACgkQJNaLcl1U
-h9B8mQf/YGziWfn/iGHXXqP1g1TRcgidWG2RKf40LqRQFjE9CFIZXE9CFKF/phii
-c6DnpdV6gRyWoQUN/0YyyYoVQqoOiZuLiec5/5izwOR/sz5KHAsiOmSBNouC2URX
-HXB7X+ISeV8yJnmHv6LSTEPo9Wli55CDlcFa7r6gknyC6jz7pYG+jEBw6EGzLSAW
-5S4ulolNpsNeWvzCXm9lqljVU8U9LYkKESspFoLMylIf+E5kY1T7Nl70g+ZM0wpo
-3Y2eJZmaGg+tnXp7jPz4x9iJEpnc3YPdhTgOWKWSTS56qwxAo8jplreQdfEHdVwB
-qXammSL9S07Ms9UB+Bo8nigp3ywwZw==
-=cqL5
------END PGP SIGNATURE-----
-
---GFneNsft22FHtzEa--
