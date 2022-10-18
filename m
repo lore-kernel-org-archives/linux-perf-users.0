@@ -2,31 +2,31 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 90B2FC43217
-	for <linux-perf-users@archiver.kernel.org>; Tue, 18 Oct 2022 12:14:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 04FCCC4332F
+	for <linux-perf-users@archiver.kernel.org>; Tue, 18 Oct 2022 12:15:21 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229612AbiJRMOs (ORCPT
+        id S229796AbiJRMPU (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Tue, 18 Oct 2022 08:14:48 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46822 "EHLO
+        Tue, 18 Oct 2022 08:15:20 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50692 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229525AbiJRMOr (ORCPT
+        with ESMTP id S229608AbiJRMPT (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Tue, 18 Oct 2022 08:14:47 -0400
+        Tue, 18 Oct 2022 08:15:19 -0400
 Received: from frasgout.his.huawei.com (frasgout.his.huawei.com [185.176.79.56])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 70D8920BD0;
-        Tue, 18 Oct 2022 05:14:46 -0700 (PDT)
-Received: from fraeml713-chm.china.huawei.com (unknown [172.18.147.226])
-        by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4MsCSl0r85z685b0;
-        Tue, 18 Oct 2022 20:13:43 +0800 (CST)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 64F907E83F;
+        Tue, 18 Oct 2022 05:15:16 -0700 (PDT)
+Received: from fraeml707-chm.china.huawei.com (unknown [172.18.147.226])
+        by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4MsCTK0sl8z6HJFk;
+        Tue, 18 Oct 2022 20:14:13 +0800 (CST)
 Received: from lhrpeml500005.china.huawei.com (7.191.163.240) by
- fraeml713-chm.china.huawei.com (10.206.15.32) with Microsoft SMTP Server
+ fraeml707-chm.china.huawei.com (10.206.15.35) with Microsoft SMTP Server
  (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2375.31; Tue, 18 Oct 2022 14:14:44 +0200
+ 15.1.2375.31; Tue, 18 Oct 2022 14:15:14 +0200
 Received: from SecurePC-101-06.china.huawei.com (10.122.247.231) by
  lhrpeml500005.china.huawei.com (7.191.163.240) with Microsoft SMTP Server
  (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2375.31; Tue, 18 Oct 2022 13:14:43 +0100
+ 15.1.2375.31; Tue, 18 Oct 2022 13:15:14 +0100
 From:   Jonathan Cameron <Jonathan.Cameron@huawei.com>
 To:     <linux-cxl@vger.kernel.org>, Dave Jiang <dave.jiang@intel.com>
 CC:     <linuxarm@huawei.com>, Dan Williams <dan.j.williams@intel.com>,
@@ -37,9 +37,9 @@ CC:     <linuxarm@huawei.com>, Dan Williams <dan.j.williams@intel.com>,
         <linux-perf-users@vger.kernel.org>, Will Deacon <will@kernel.org>,
         Mark Rutland <mark.rutland@arm.com>,
         Davidlohr Bueso <dave@stgolabs.net>
-Subject: [RFC PATCH v3 3/5] cxl/pci: Find and register CXL PMU devices
-Date:   Tue, 18 Oct 2022 13:13:16 +0100
-Message-ID: <20221018121318.22385-4-Jonathan.Cameron@huawei.com>
+Subject: [RFC PATCH v3 4/5] cxl: CXL Performance Monitoring Unit driver
+Date:   Tue, 18 Oct 2022 13:13:17 +0100
+Message-ID: <20221018121318.22385-5-Jonathan.Cameron@huawei.com>
 X-Mailer: git-send-email 2.37.2
 In-Reply-To: <20221018121318.22385-1-Jonathan.Cameron@huawei.com>
 References: <20221018121318.22385-1-Jonathan.Cameron@huawei.com>
@@ -54,468 +54,1018 @@ Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-CXL PMU devices can be found from entries in the Register
-Locator DVSEC.
+CXL rev 3.0 introduces a standard performance monitoring hardware
+block to CXL. Instances are discovered using CXL Register Locator DVSEC
+entries. Each CXL component may have multiple PMUs.
 
-In order to register the minimum number of IRQ vectors necessary
-to support all CPMUs found, separate the registration into two
-steps.  First find the devices, and query the IRQs used and then
-register the devices. Between these two steps, request the
-IRQ vectors necessary and enable bus master support.
+This initial driver supports on a subset of types of counter.
+It support counters that are either fixed or configurable, but requires
+that they support the ability to freeze and write value whilst frozen.
 
-Future IRQ users for CXL type 3 devices (e.g. DOEs) will need to
-follow a similar pattern the number of vectors necessary is known
-before any parts of the driver stack rely on their availability.
+Development done with QEMU model which will be posted shortly.
 
 Signed-off-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
+Reviewed-by: Dave Jiang <dave.jiang@intel.com>
 
+--
+RFC questions:
+- Creation of the devices.  Currently hung off the cxl_pci driver.
+  May want to rethink to avoid needing to replicate registration code
+  for other CXL components.
+- Needs more testing, but wanted to share early in case major refactoring
+  needed.
+- Where to put the driver. Previous discussions on similar drivers
+  led to them being under drivers/perf (hisi_pcie_pmu)
 ---
-Chances since v2:
- - 'use' Davidlohr's generic MSI/MSIX handling in the cxl/pci driver.
+ drivers/cxl/Kconfig  |  12 +
+ drivers/cxl/Makefile |   1 +
+ drivers/cxl/cpmu.c   | 945 +++++++++++++++++++++++++++++++++++++++++++
+ 3 files changed, 958 insertions(+)
 
-There are various ways that could have been done.  To keep the layering
-entirely intact I could have repeated the finding, register block
-identification twice. 1st time to get the max irq, then start again
-to find the devices.  That seemed rather excessive. So instead
-I just stashed the max irq number in a pass that was identifying
-all the necessary info about the CPMU devices we are going to register
-later.
-
-Other open questions
-1) Does hanging the CPMU off the PCI device make sense. These can
-   occur in Switch upstream ports as well.
-2) Naming.  It would be nice if the device naming indicated which
-   EP these were associated with, but that wouldn't be inline
-   with the rest of the CXL bus device naming.  What is best
-   option here?
----
- drivers/cxl/core/Makefile |  1 +
- drivers/cxl/core/core.h   |  3 ++
- drivers/cxl/core/cpmu.c   | 69 +++++++++++++++++++++++++++++++++++++++
- drivers/cxl/core/port.c   |  2 ++
- drivers/cxl/core/regs.c   | 29 ++++++++++++++++
- drivers/cxl/cpmu.h        | 54 ++++++++++++++++++++++++++++++
- drivers/cxl/cxl.h         | 15 +++++++++
- drivers/cxl/cxlmem.h      |  2 ++
- drivers/cxl/cxlpci.h      |  1 +
- drivers/cxl/pci.c         | 53 ++++++++++++++++++++++++++++--
- 10 files changed, 227 insertions(+), 2 deletions(-)
-
-diff --git a/drivers/cxl/core/Makefile b/drivers/cxl/core/Makefile
-index 79c7257f4107..1318e8a6830f 100644
---- a/drivers/cxl/core/Makefile
-+++ b/drivers/cxl/core/Makefile
-@@ -10,4 +10,5 @@ cxl_core-y += memdev.o
- cxl_core-y += mbox.o
- cxl_core-y += pci.o
- cxl_core-y += hdm.o
-+cxl_core-y += cpmu.o
- cxl_core-$(CONFIG_CXL_REGION) += region.o
-diff --git a/drivers/cxl/core/core.h b/drivers/cxl/core/core.h
-index 1d8f87be283f..d2b12cdfd61f 100644
---- a/drivers/cxl/core/core.h
-+++ b/drivers/cxl/core/core.h
-@@ -14,12 +14,14 @@ extern struct device_attribute dev_attr_create_pmem_region;
- extern struct device_attribute dev_attr_delete_region;
- extern struct device_attribute dev_attr_region;
- extern const struct device_type cxl_pmem_region_type;
-+extern const struct device_type cxl_cpmu_type;
- extern const struct device_type cxl_region_type;
- void cxl_decoder_kill_region(struct cxl_endpoint_decoder *cxled);
- #define CXL_REGION_ATTR(x) (&dev_attr_##x.attr)
- #define CXL_REGION_TYPE(x) (&cxl_region_type)
- #define SET_CXL_REGION_ATTR(x) (&dev_attr_##x.attr),
- #define CXL_PMEM_REGION_TYPE(x) (&cxl_pmem_region_type)
-+#define CXL_CPMU_TYPE(x) (&cxl_cpmu_region_type)
- int cxl_region_init(void);
- void cxl_region_exit(void);
- #else
-@@ -37,6 +39,7 @@ static inline void cxl_region_exit(void)
- #define CXL_REGION_TYPE(x) NULL
- #define SET_CXL_REGION_ATTR(x)
- #define CXL_PMEM_REGION_TYPE(x) NULL
-+#define CXL_CPMU_TYPE(x) NULL
- #endif
+diff --git a/drivers/cxl/Kconfig b/drivers/cxl/Kconfig
+index 768ced3d6fe8..d9e6775c05a5 100644
+--- a/drivers/cxl/Kconfig
++++ b/drivers/cxl/Kconfig
+@@ -111,4 +111,16 @@ config CXL_REGION
+ 	select MEMREGION
+ 	select GET_FREE_REGION
  
- struct cxl_send_command;
-diff --git a/drivers/cxl/core/cpmu.c b/drivers/cxl/core/cpmu.c
++config CXL_CPMU
++	tristate "CXL Performance Monitoring Unit"
++	default CXL_BUS
++	help
++	  Support performance monitoring as defined in CXL rev 3.0
++	  section 13.2: Performance Monitoring. CXL components may have
++	  one or more CXL Performance Monitoring Units (CPMUs).
++
++	  Say 'y/m' to enable a driver that will attach to performance
++	  monitoring units and provide standard perf based interfaces.
++
++	  If unsure say 'm'.
+ endif
+diff --git a/drivers/cxl/Makefile b/drivers/cxl/Makefile
+index a78270794150..f55c2751ac10 100644
+--- a/drivers/cxl/Makefile
++++ b/drivers/cxl/Makefile
+@@ -5,6 +5,7 @@ obj-$(CONFIG_CXL_MEM) += cxl_mem.o
+ obj-$(CONFIG_CXL_ACPI) += cxl_acpi.o
+ obj-$(CONFIG_CXL_PMEM) += cxl_pmem.o
+ obj-$(CONFIG_CXL_PORT) += cxl_port.o
++obj-$(CONFIG_CXL_CPMU) += cpmu.o
+ 
+ cxl_mem-y := mem.o
+ cxl_pci-y := pci.o
+diff --git a/drivers/cxl/cpmu.c b/drivers/cxl/cpmu.c
 new file mode 100644
-index 000000000000..cad02f3d43c3
+index 000000000000..7eed27853c88
 --- /dev/null
-+++ b/drivers/cxl/core/cpmu.c
-@@ -0,0 +1,69 @@
++++ b/drivers/cxl/cpmu.c
+@@ -0,0 +1,945 @@
 +// SPDX-License-Identifier: GPL-2.0-only
-+/* Copyright(c) 2022 Huawei. All rights reserved. */
 +
++/*
++ * Copyright(c) 2022 Huawei
++ *
++ * The CXL 3.0 specification includes a standard performance monitoring unit,
++ * called the CLX PMU, or CPMU. In order to allow a high degree of
++ * implementation flexibility the specification provides a wide range of
++ * options all of which are self describing.
++ *
++ * Details in CXL rev 3.0 section 8.2.7 CPMU Register Interface
++ *
++ * TODO:
++ * o May be useful to name some summed event groups. Figure out which.
++ *   CPMU event selection is based on summing of bitmaps of events within
++ *   a given event group. With a limited supply of configurable counters, this
++ *   provides flexibility between very specific events such as d2h_req_rdcurr
++ *   (one type of read request) or combining events counted by the hardware
++ *   counter to allow d2h_req_rd to be counted as sum of fine grained events
++ *   d2h_req_rd = d2h_req_rdcurr + d2h_req_rdown + d2h_req_rdshared +
++ *                d2h_req_rdany + d2h_req_rdownnodata
++ *   Thus d2h_req_rd requires one configurable counter instead of 5 if the
++ *   counters were summed in userspace.
++ *   Current interface allows userspace to specify the bitmap directly, but
++ *   it may make sense to provide explicit attributes for commonly used
++ *   combinations.
++ * o Support free running counters - copy the intel uncore PMU handling for these.
++ * o CPMUs which do not support freeze.
++ * o Add filter validation in cpmu_event_init() so problems are detected earlier.
++ * o Reject configurations that the hardware is ignoring
++ *   (e.g. invert when not invertable)
++ * o Support CPMUs with no interrupts using an HRTIMER.
++ */
++
++#include <linux/bitops.h>
++#include <linux/bits.h>
++#include <linux/bug.h>
 +#include <linux/device.h>
-+#include <linux/slab.h>
-+#include <linux/idr.h>
-+#include <cxlmem.h>
-+#include <cpmu.h>
-+#include <cxl.h>
-+#include "core.h"
++#include <linux/list.h>
++#include <linux/pci.h>
++#include <linux/perf_event.h>
++#include "cpmu.h"
++#include "cxl.h"
 +
-+static DEFINE_IDA(cpmu_ida);
++/* CXL rev 3.0 Table 13-5 Events under CXL Vendor ID */
++#define CPMU_GID_CLOCK_TICKS		0x00
++#define CPMU_GID_D2H_REQ		0x0010
++#define CPMU_GID_D2H_RSP		0x0011
++#define CPMU_GID_H2D_REQ		0x0012
++#define CPMU_GID_H2D_RSP		0x0013
++#define CPMU_GID_CACHE_DATA		0x0014
++#define CPMU_GID_M2S_REQ		0x0020
++#define CPMU_GID_M2S_RWD		0x0021
++#define CPMU_GID_M2S_BIRSP		0x0022
++#define CPMU_GID_S2M_BISNP		0x0023
++#define CPMU_GID_S2M_NDR		0x0024
++#define CPMU_GID_S2M_DRS		0x0025
++#define CPMU_GID_DDR			0x8000
 +
-+static void cxl_cpmu_release(struct device *dev)
-+{
-+	struct cxl_cpmu *cpmu = container_of(dev, struct cxl_cpmu, dev);
++static int cpmu_cpuhp_state_num;
 +
-+	ida_free(&cpmu_ida, cpmu->id);
-+	kfree(cpmu);
-+}
-+
-+const struct device_type cxl_cpmu_type = {
-+	.name = "cxl_cpmu",
-+	.release = cxl_cpmu_release,
++struct cpmu_event {
++	u16 vid;
++	u16 gid;
++	u32 msk;
++	bool configurable;
++	union {
++		int counter_idx; /* fixed counters */
++		int event_idx; /* configurable counters */
++	};
++	struct list_head node;
 +};
 +
-+static void remove_dev(void *dev)
++#define CPMU_MAX_COUNTERS 32
++struct cpmu_info {
++	struct pmu pmu;
++	void __iomem *base;
++	struct perf_event **hw_events;
++	struct list_head cpmu_events;
++	DECLARE_BITMAP(conf_counter_bm, CPMU_MAX_COUNTERS);
++	u16 counter_width;
++	u8 num_counters;
++	u8 num_event_capabilities;
++	int on_cpu;
++	struct hlist_node node;
++	bool freeze_for_enable;
++	bool filter_hdm;
++	int irq;
++};
++
++#define pmu_to_cpmu_info(_pmu) container_of(_pmu, struct cpmu_info, pmu)
++
++/*
++ * All CPMU counters are discoverable via the Event Capabilities Registers.
++ * Each Event Capability register contains a a VID / GroupID.
++ * A counter may then count any combination (by summing) of events in
++ * that group which are in the Supported Events Bitmask.
++ * However, there are some complexities to the scheme.
++ *  - Fixed function counters refer to an Event Capabilities register.
++ *    That event capability register is not then used for Configurable
++ *    counters.
++ * TODO: Support summed events.
++ */
++static int cpmu_parse_caps(struct device *dev, struct cpmu_info *info)
 +{
-+	device_del(dev);
-+}
++	DECLARE_BITMAP(fixed_counter_event_cap_bm, 32) = {0};
++	void __iomem *base = info->base;
++	u64 val, eval;
++	int i;
 +
-+int devm_cxl_cpmu_add(struct device *parent, struct cxl_cpmu_regs *regs, int index)
-+{
-+	struct cxl_cpmu *cpmu;
-+	struct device *dev;
-+	int rc;
++	val = readq(base + CPMU_CAP_REG);
++	info->freeze_for_enable = FIELD_GET(CPMU_CAP_WRITEABLE_WHEN_FROZEN, val) &
++		FIELD_GET(CPMU_CAP_FREEZE, val);
++	if (!info->freeze_for_enable) {
++		dev_err(dev, "Driver does not support CPMUs that do not support freeze for enable\n");
++		return -ENODEV;
++	}
 +
-+	cpmu = kzalloc(sizeof(*cpmu), GFP_KERNEL);
-+	if (!cpmu)
-+		return -ENOMEM;
++	info->num_counters = FIELD_GET(CPMU_CAP_NUM_COUNTERS_MSK, val) + 1;
++	info->counter_width = FIELD_GET(CPMU_CAP_COUNTER_WIDTH_MSK, val);
++	info->num_event_capabilities = FIELD_GET(CPMU_CAP_NUM_EVN_CAP_REG_SUP_MSK, val) + 1;
 +
-+	cpmu->base = regs->cpmu;
-+	dev = &cpmu->dev;
-+	device_initialize(dev);
-+	device_set_pm_not_required(dev);
-+	dev->parent = parent;
-+	dev->bus = &cxl_bus_type;
-+	dev->type = &cxl_cpmu_type;
-+	rc = ida_alloc(&cpmu_ida, GFP_KERNEL);
-+	if (rc < 0)
-+		goto err;
-+	cpmu->id = rc;
++	info->filter_hdm = FIELD_GET(CPMU_CAP_FILTERS_SUP_MSK, val);
++	if (FIELD_GET(CPMU_CAP_INT, val))
++		info->irq = FIELD_GET(CPMU_CAP_MSI_N_MSK, val);
++	else
++		info->irq = -1;
 +
-+	rc = dev_set_name(dev, "cpmu%d", cpmu->id);
-+	if (rc)
-+		goto err;
++	/* First handle fixed function counters; note if configurable counters found. */
++	for (i = 0; i < info->num_counters; i++) {
++		struct cpmu_event *cpmu_ev;
++		u32 events_msk;
++		u8 group_idx;
 +
-+	rc = device_add(dev);
-+	if (rc)
-+		goto err;
++		val = readq(base + CPMU_COUNTER_CFG_REG(i));
 +
-+	return devm_add_action_or_reset(parent, remove_dev, dev);
++		if (FIELD_GET(CPMU_COUNTER_CFG_TYPE_MSK, val) ==
++			CPMU_COUNTER_CFG_TYPE_CONFIGURABLE) {
++			set_bit(i, info->conf_counter_bm);
++		}
 +
-+err:
-+	put_device(&cpmu->dev);
-+	return rc;
-+}
-+EXPORT_SYMBOL_NS_GPL(devm_cxl_cpmu_add, CXL);
++		if (FIELD_GET(CPMU_COUNTER_CFG_TYPE_MSK, val) !=
++		    CPMU_COUNTER_CFG_TYPE_FIXED_FUN)
++			continue;
 +
-diff --git a/drivers/cxl/core/port.c b/drivers/cxl/core/port.c
-index 1629c7a4033f..66bde8e2edb8 100644
---- a/drivers/cxl/core/port.c
-+++ b/drivers/cxl/core/port.c
-@@ -55,6 +55,8 @@ static int cxl_device_id(struct device *dev)
- 		return CXL_DEVICE_MEMORY_EXPANDER;
- 	if (dev->type == CXL_REGION_TYPE())
- 		return CXL_DEVICE_REGION;
-+	if (dev->type == &cxl_cpmu_type)
-+		return CXL_DEVICE_CPMU;
- 	return 0;
- }
- 
-diff --git a/drivers/cxl/core/regs.c b/drivers/cxl/core/regs.c
-index 2f651211d120..1ba1a77ecbf1 100644
---- a/drivers/cxl/core/regs.c
-+++ b/drivers/cxl/core/regs.c
-@@ -6,6 +6,7 @@
- #include <linux/pci.h>
- #include <cxlmem.h>
- #include <cxlpci.h>
-+#include <cpmu.h>
- 
- /**
-  * DOC: cxl registers
-@@ -331,3 +332,31 @@ int cxl_count_regblock(struct pci_dev *pdev, enum cxl_regloc_type type)
- }
- EXPORT_SYMBOL_NS_GPL(cxl_count_regblock, CXL);
- 
-+int cxl_map_cpmu_regs(struct pci_dev *pdev,
-+		      struct cxl_cpmu_regs *regs,
-+		      struct cxl_register_map *map)
-+{
-+	struct device *dev = &pdev->dev;
-+	resource_size_t phys_addr;
++		/* In this case we know which fields are const. */
++		group_idx = FIELD_GET(CPMU_COUNTER_CFG_EVENT_GRP_ID_IDX_MSK, val);
++		events_msk = FIELD_GET(CPMU_COUNTER_CFG_EVENTS_MSK, val);
++		eval = readq(base + CPMU_EVENT_CAP_REG(group_idx));
++		cpmu_ev = devm_kzalloc(dev, sizeof(*cpmu_ev), GFP_KERNEL);
++		if (!cpmu_ev)
++			return -ENOMEM;
 +
-+	phys_addr = pci_resource_start(pdev, map->barno) + map->block_offset;
-+	regs->cpmu = devm_cxl_iomap_block(dev, phys_addr, CPMU_REGMAP_SIZE);
-+	if (!regs->cpmu)
-+		return -ENOMEM;
++		cpmu_ev->vid = FIELD_GET(CPMU_EVENT_CAP_VENDOR_ID_MSK, eval);
++		cpmu_ev->gid = FIELD_GET(CPMU_EVENT_CAP_GROUP_ID_MSK, eval);
++		/* For a fixed purpose counter use the events mask from the counter CFG. */
++		cpmu_ev->msk = events_msk;
++		cpmu_ev->configurable = false;
++		cpmu_ev->counter_idx = i;
++		/* This list add is never unwound as all entries deleted on remove. */
++		list_add(&cpmu_ev->node, &info->cpmu_events);
++		/*
++		 * Configurable counters must not use an Event Capability registers that
++		 * is in use for a Fixed counter.
++		 */
++		set_bit(group_idx, fixed_counter_event_cap_bm);
++	}
++
++	if (!bitmap_empty(info->conf_counter_bm, CPMU_MAX_COUNTERS)) {
++		struct cpmu_event *cpmu_ev;
++		int j;
++		/* Walk event capabilities unused by fixed counters. */
++		for_each_clear_bit(j, fixed_counter_event_cap_bm,
++				   info->num_event_capabilities) {
++			cpmu_ev = devm_kzalloc(dev, sizeof(*cpmu_ev), GFP_KERNEL);
++			if (!cpmu_ev)
++				return -ENOMEM;
++
++			eval = readq(base + CPMU_EVENT_CAP_REG(j));
++			cpmu_ev->vid = FIELD_GET(CPMU_EVENT_CAP_VENDOR_ID_MSK, eval);
++			cpmu_ev->gid = FIELD_GET(CPMU_EVENT_CAP_GROUP_ID_MSK, eval);
++			cpmu_ev->msk = FIELD_GET(CPMU_EVENT_CAP_SUPPORTED_EVENTS_MSK, eval);
++			cpmu_ev->event_idx = j;
++			cpmu_ev->configurable = true;
++			list_add(&cpmu_ev->node, &info->cpmu_events);
++		}
++	}
 +
 +	return 0;
 +}
-+EXPORT_SYMBOL_NS_GPL(cxl_map_cpmu_regs, CXL);
 +
-+int cxl_cpmu_get_irq(struct cxl_cpmu_regs *regs)
++static ssize_t cpmu_event_sysfs_show(struct device *dev,
++				     struct device_attribute *attr, char *buf)
 +{
-+	int irq = -1;
-+	u64 val;
++	struct perf_pmu_events_attr *pmu_attr =
++		container_of(attr, struct perf_pmu_events_attr, attr);
 +
-+	val = readq(regs->cpmu + CPMU_CAP_REG);
-+	if (FIELD_GET(CPMU_CAP_INT, val))
-+		irq = FIELD_GET(CPMU_CAP_MSI_N_MSK, val);
-+
-+	return irq;
-+}
-+EXPORT_SYMBOL_NS_GPL(cxl_cpmu_get_irq, CXL);
-diff --git a/drivers/cxl/cpmu.h b/drivers/cxl/cpmu.h
-new file mode 100644
-index 000000000000..2db885524330
---- /dev/null
-+++ b/drivers/cxl/cpmu.h
-@@ -0,0 +1,54 @@
-+/* SPDX-License-Identifier: GPL-2.0-only */
-+/*
-+ * Copyright(c) 2022 Huawei
-+ * CXL Specification rev 3.0 Setion 8.2.7 (CPMU Register Interface)
-+ */
-+#ifndef CXL_CPMU_H
-+#define CXL_CPMU_H
-+
-+#define CPMU_CAP_REG			0x0
-+#define   CPMU_CAP_NUM_COUNTERS_MSK		GENMASK_ULL(4, 0)
-+#define   CPMU_CAP_COUNTER_WIDTH_MSK		GENMASK_ULL(15, 8)
-+#define   CPMU_CAP_NUM_EVN_CAP_REG_SUP_MSK	GENMASK_ULL(24, 20)
-+#define   CPMU_CAP_FILTERS_SUP_MSK		GENMASK_ULL(39, 32)
-+#define   CPMU_CAP_MSI_N_MSK			GENMASK_ULL(47, 44)
-+#define   CPMU_CAP_WRITEABLE_WHEN_FROZEN	BIT_ULL(48)
-+#define   CPMU_CAP_FREEZE			BIT_ULL(49)
-+#define   CPMU_CAP_INT				BIT_ULL(50)
-+#define   CPMU_CAP_VERSION_MSK			GENMASK_ULL(63, 60)
-+
-+#define CPMU_OVERFLOW_REG		0x10
-+#define CPMU_FREEZE_REG			0x18
-+#define CPMU_EVENT_CAP_REG(n)		(0x100 + 8 * (n))
-+#define   CPMU_EVENT_CAP_SUPPORTED_EVENTS_MSK	GENMASK_ULL(31, 0)
-+#define   CPMU_EVENT_CAP_GROUP_ID_MSK		GENMASK_ULL(47, 32)
-+#define   CPMU_EVENT_CAP_VENDOR_ID_MSK		GENMASK_ULL(63, 48)
-+
-+#define CPMU_COUNTER_CFG_REG(n)		(0x200 + 8 * (n))
-+#define   CPMU_COUNTER_CFG_TYPE_MSK		GENMASK_ULL(1, 0)
-+#define     CPMU_COUNTER_CFG_TYPE_FREE_RUN	0
-+#define     CPMU_COUNTER_CFG_TYPE_FIXED_FUN	1
-+#define     CPMU_COUNTER_CFG_TYPE_CONFIGURABLE	2
-+#define   CPMU_COUNTER_CFG_ENABLE		BIT_ULL(8)
-+#define   CPMU_COUNTER_CFG_INT_ON_OVRFLW	BIT_ULL(9)
-+#define   CPMU_COUNTER_CFG_FREEZE_ON_OVRFLW	BIT_ULL(10)
-+#define   CPMU_COUNTER_CFG_EDGE			BIT_ULL(11)
-+#define   CPMU_COUNTER_CFG_INVERT		BIT_ULL(12)
-+#define   CPMU_COUNTER_CFG_THRESHOLD_MSK	GENMASK_ULL(23, 16)
-+#define   CPMU_COUNTER_CFG_EVENTS_MSK		GENMASK_ULL(55, 24)
-+#define   CPMU_COUNTER_CFG_EVENT_GRP_ID_IDX_MSK	GENMASK_ULL(63, 59)
-+
-+#define CPMU_FILTER_CFG_REG(n, f)	(0x400 + 4 * ((f) + (n) * 8))
-+#define   CPMU_FILTER_CFG_VALUE_MSK		GENMASK(15, 0)
-+
-+#define CPMU_COUNTER_REG(n)			(0xc00 + 8 * (n))
-+
-+#define CPMU_REGMAP_SIZE 0xe00 /* Table 8-32 CXL 3.0 specification */
-+struct cxl_cpmu {
-+	struct device dev;
-+	void __iomem *base;
-+	int id;
-+};
-+
-+#define to_cxl_cpmu(dev) container_of(dev, struct cxl_cpmu, dev)
-+#endif
-diff --git a/drivers/cxl/cxl.h b/drivers/cxl/cxl.h
-index 5a1bcdbda654..2768e1677e2b 100644
---- a/drivers/cxl/cxl.h
-+++ b/drivers/cxl/cxl.h
-@@ -166,6 +166,10 @@ struct cxl_regs {
- 	struct_group_tagged(cxl_device_regs, device_regs,
- 		void __iomem *status, *mbox, *memdev;
- 	);
-+
-+	struct_group_tagged(cxl_cpmu_regs, cpmu_regs,
-+		void __iomem *cpmu;
-+	);
- };
- 
- struct cxl_reg_map {
-@@ -184,6 +188,10 @@ struct cxl_device_reg_map {
- 	struct cxl_reg_map memdev;
- };
- 
-+struct cxl_cpmu_reg_map {
-+	struct cxl_reg_map cpmu;
-+};
-+
- /**
-  * struct cxl_register_map - DVSEC harvested register block mapping parameters
-  * @base: virtual base of the register-block-BAR + @block_offset
-@@ -201,6 +209,7 @@ struct cxl_register_map {
- 	union {
- 		struct cxl_component_reg_map component_map;
- 		struct cxl_device_reg_map device_map;
-+		struct cxl_cpmu_reg_map cpmu_map;
- 	};
- };
- 
-@@ -219,6 +228,10 @@ enum cxl_regloc_type;
- int cxl_count_regblock(struct pci_dev *pdev, enum cxl_regloc_type type);
- int cxl_find_regblock(struct pci_dev *pdev, enum cxl_regloc_type type,
- 		      struct cxl_register_map *map, int index);
-+int cxl_map_cpmu_regs(struct pci_dev *pdev,
-+		      struct cxl_cpmu_regs *regs,
-+		      struct cxl_register_map *map);
-+int cxl_cpmu_get_irq(struct cxl_cpmu_regs *regs);
- void __iomem *devm_cxl_iomap_block(struct device *dev, resource_size_t addr,
- 				   resource_size_t length);
- 
-@@ -626,6 +639,7 @@ void cxl_driver_unregister(struct cxl_driver *cxl_drv);
- #define CXL_DEVICE_MEMORY_EXPANDER	5
- #define CXL_DEVICE_REGION		6
- #define CXL_DEVICE_PMEM_REGION		7
-+#define CXL_DEVICE_CPMU			8
- 
- #define MODULE_ALIAS_CXL(type) MODULE_ALIAS("cxl:t" __stringify(type) "*")
- #define CXL_MODALIAS_FMT "cxl:t%d"
-@@ -653,6 +667,7 @@ static inline struct cxl_pmem_region *to_cxl_pmem_region(struct device *dev)
- }
- #endif
- 
-+int devm_cxl_cpmu_add(struct device *parent, struct cxl_cpmu_regs *regs, int idx);
- /*
-  * Unit test builds overrides this to __weak, find the 'strong' version
-  * of these symbols in tools/testing/cxl/.
-diff --git a/drivers/cxl/cxlmem.h b/drivers/cxl/cxlmem.h
-index 72b69b003302..e2d5a4edd80d 100644
---- a/drivers/cxl/cxlmem.h
-+++ b/drivers/cxl/cxlmem.h
-@@ -212,6 +212,7 @@ struct cxl_endpoint_dvsec_info {
-  * @serial: PCIe Device Serial Number
-  * @doe_mbs: PCI DOE mailbox array
-  * @has_irq: PCIe MSI-X/MSI support
-+ * @cpmu_max_vector: Maximum MSI/MSIX vector used for CPMU instances.
-  * @mbox_send: @dev specific transport for transmitting mailbox commands
-  *
-  * See section 8.2.9.5.2 Capacity Configuration and Label Storage for
-@@ -249,6 +250,7 @@ struct cxl_dev_state {
- 	struct xarray doe_mbs;
- 
- 	bool has_irq;
-+	int cpmu_max_vector;
- 
- 	int (*mbox_send)(struct cxl_dev_state *cxlds, struct cxl_mbox_cmd *cmd);
- };
-diff --git a/drivers/cxl/cxlpci.h b/drivers/cxl/cxlpci.h
-index eec597dbe763..a842c3d1341a 100644
---- a/drivers/cxl/cxlpci.h
-+++ b/drivers/cxl/cxlpci.h
-@@ -59,6 +59,7 @@ enum cxl_regloc_type {
- 	CXL_REGLOC_RBI_COMPONENT,
- 	CXL_REGLOC_RBI_VIRT,
- 	CXL_REGLOC_RBI_MEMDEV,
-+	CXL_REGLOC_RBI_CPMU,
- 	CXL_REGLOC_RBI_TYPES
- };
- 
-diff --git a/drivers/cxl/pci.c b/drivers/cxl/pci.c
-index ef066e24d3a3..2e8361679431 100644
---- a/drivers/cxl/pci.c
-+++ b/drivers/cxl/pci.c
-@@ -428,6 +428,11 @@ static void devm_cxl_pci_create_doe(struct cxl_dev_state *cxlds)
- 	}
- }
- 
-+static int cxl_cpmu_get_max_msgnum(struct cxl_dev_state *cxlds)
-+{
-+	return cxlds->cpmu_max_vector;
++	return sysfs_emit(buf, "config=%#llx\n", pmu_attr->id);
 +}
 +
- /**
-  * struct cxl_irq_cap - CXL feature that is capable of receiving MSI-X/MSI irqs.
-  *
-@@ -442,7 +447,7 @@ struct cxl_irq_cap {
- };
- 
- static const struct cxl_irq_cap cxl_irq_cap_table[] = {
--	NULL
-+	{ "CPMU", cxl_cpmu_get_max_msgnum },
- };
- 
- static void cxl_pci_free_irq_vectors(void *data)
-@@ -497,10 +502,11 @@ static int cxl_pci_alloc_irq_vectors(struct cxl_dev_state *cxlds)
- 
- static int cxl_pci_probe(struct pci_dev *pdev, const struct pci_device_id *id)
- {
-+	struct cxl_cpmu_regs *cpmu_regs_array = NULL;
- 	struct cxl_register_map map;
- 	struct cxl_memdev *cxlmd;
- 	struct cxl_dev_state *cxlds;
--	int rc;
-+	int i, rc, cpmu_count;
- 
- 	/*
- 	 * Double check the anonymous union trickery in struct cxl_regs
-@@ -561,11 +567,54 @@ static int cxl_pci_probe(struct pci_dev *pdev, const struct pci_device_id *id)
- 	if (rc)
- 		return rc;
- 
++#define CPMU_PMU_EVENT_ATTR(_name, _vid, _gid, _msk)			\
++	PMU_EVENT_ATTR_ID(_name, cpmu_event_sysfs_show,			\
++			  ((u64)(_vid) << 48) | ((u64)(_gid) << 32) | (u64)(_msk))
++
++static struct attribute *cpmu_event_attrs[] = {
++	CPMU_PMU_EVENT_ATTR(clock_ticks,	0x1e98, CPMU_GID_CLOCK_TICKS, BIT(0)),
++	/* CXL rev 3.0 Table 3-17 - Device to Host Requests */
++	CPMU_PMU_EVENT_ATTR(d2h_req_rdcurr,		0x1e98, CPMU_GID_D2H_REQ, BIT(1)),
++	CPMU_PMU_EVENT_ATTR(d2h_req_rdown,		0x1e98, CPMU_GID_D2H_REQ, BIT(2)),
++	CPMU_PMU_EVENT_ATTR(d2h_req_rdshared,		0x1e98, CPMU_GID_D2H_REQ, BIT(3)),
++	CPMU_PMU_EVENT_ATTR(d2h_req_rdany,		0x1e98, CPMU_GID_D2H_REQ, BIT(4)),
++	CPMU_PMU_EVENT_ATTR(d2h_req_rdownnodata,	0x1e98, CPMU_GID_D2H_REQ, BIT(5)),
++	CPMU_PMU_EVENT_ATTR(d2h_req_itomwr,		0x1e98, CPMU_GID_D2H_REQ, BIT(6)),
++	CPMU_PMU_EVENT_ATTR(d2h_req_wrcurr,		0x1e98, CPMU_GID_D2H_REQ, BIT(7)),
++	CPMU_PMU_EVENT_ATTR(d2h_req_clflush,		0x1e98, CPMU_GID_D2H_REQ, BIT(8)),
++	CPMU_PMU_EVENT_ATTR(d2h_req_cleanevict,		0x1e98, CPMU_GID_D2H_REQ, BIT(9)),
++	CPMU_PMU_EVENT_ATTR(d2h_req_dirtyevict,		0x1e98, CPMU_GID_D2H_REQ, BIT(10)),
++	CPMU_PMU_EVENT_ATTR(d2h_req_cleanevictnodata,	0x1e98, CPMU_GID_D2H_REQ, BIT(11)),
++	CPMU_PMU_EVENT_ATTR(d2h_req_wowrinv,		0x1e98, CPMU_GID_D2H_REQ, BIT(12)),
++	CPMU_PMU_EVENT_ATTR(d2h_req_wowrinvf,		0x1e98, CPMU_GID_D2H_REQ, BIT(13)),
++	CPMU_PMU_EVENT_ATTR(d2h_req_wrinv,		0x1e98, CPMU_GID_D2H_REQ, BIT(14)),
++	CPMU_PMU_EVENT_ATTR(d2h_req_cacheflushed,	0x1e98, CPMU_GID_D2H_REQ, BIT(16)),
++	/* CXL rev 3.0 Table 3-20 - D2H Repsonse Encodings */
++	CPMU_PMU_EVENT_ATTR(d2h_rsp_rspihiti,		0x1e98, CPMU_GID_D2H_RSP, BIT(4)),
++	CPMU_PMU_EVENT_ATTR(d2h_rsp_rspvhitv,		0x1e98, CPMU_GID_D2H_RSP, BIT(6)),
++	CPMU_PMU_EVENT_ATTR(d2h_rsp_rspihitse,		0x1e98, CPMU_GID_D2H_RSP, BIT(5)),
++	CPMU_PMU_EVENT_ATTR(d2h_rsp_rspshitse,		0x1e98, CPMU_GID_D2H_RSP, BIT(1)),
++	CPMU_PMU_EVENT_ATTR(d2h_rsp_rspsfwdm,		0x1e98, CPMU_GID_D2H_RSP, BIT(7)),
++	CPMU_PMU_EVENT_ATTR(d2h_rsp_rspifwdm,		0x1e98, CPMU_GID_D2H_RSP, BIT(15)),
++	CPMU_PMU_EVENT_ATTR(d2h_rsp_rspvfwdv,		0x1e98, CPMU_GID_D2H_RSP, BIT(22)),
++	/* CXL rev 3.0 Table 3-21 - CXL.cache - Mapping of H2D Requests to D2H Responses */
++	CPMU_PMU_EVENT_ATTR(h2d_req_snpdata,		0x1e98, CPMU_GID_H2D_REQ, BIT(1)),
++	CPMU_PMU_EVENT_ATTR(h2d_req_snpinv,		0x1e98, CPMU_GID_H2D_REQ, BIT(2)),
++	CPMU_PMU_EVENT_ATTR(h2d_req_snpcur,		0x1e98, CPMU_GID_H2D_REQ, BIT(3)),
++	/* CXL rev 3.0 Table 3-22 - H2D Response Opcode Encodings */
++	CPMU_PMU_EVENT_ATTR(h2d_rsp_writepull,		0x1e98, CPMU_GID_H2D_RSP, BIT(1)),
++	CPMU_PMU_EVENT_ATTR(h2d_rsp_go,			0x1e98, CPMU_GID_H2D_RSP, BIT(4)),
++	CPMU_PMU_EVENT_ATTR(h2d_rsp_gowritepull,	0x1e98, CPMU_GID_H2D_RSP, BIT(5)),
++	CPMU_PMU_EVENT_ATTR(h2d_rsp_extcmp,		0x1e98, CPMU_GID_H2D_RSP, BIT(6)),
++	CPMU_PMU_EVENT_ATTR(h2d_rsp_gowritepulldrop,	0x1e98, CPMU_GID_H2D_RSP, BIT(8)),
++	CPMU_PMU_EVENT_ATTR(h2d_rsp_fastgowritepull,	0x1e98, CPMU_GID_H2D_RSP, BIT(13)),
++	CPMU_PMU_EVENT_ATTR(h2d_rsp_goerrwritepull,	0x1e98, CPMU_GID_H2D_RSP, BIT(15)),
++	/* CXL rev 3.0 Table 13-5 directly lists these */
++	CPMU_PMU_EVENT_ATTR(cachedata_d2h_data,		0x1e98, CPMU_GID_CACHE_DATA, BIT(0)),
++	CPMU_PMU_EVENT_ATTR(cachedata_h2d_data,		0x1e98, CPMU_GID_CACHE_DATA, BIT(1)),
++	/* CXL rev 3.0 Table 3-29 M2S Req Memory Opcodes */
++	CPMU_PMU_EVENT_ATTR(m2s_req_meminv,		0x1e98, CPMU_GID_M2S_REQ, BIT(0)),
++	CPMU_PMU_EVENT_ATTR(m2s_req_memrd,		0x1e98, CPMU_GID_M2S_REQ, BIT(1)),
++	CPMU_PMU_EVENT_ATTR(m2s_req_memrddata,		0x1e98, CPMU_GID_M2S_REQ, BIT(2)),
++	CPMU_PMU_EVENT_ATTR(m2s_req_memrdfwd,		0x1e98, CPMU_GID_M2S_REQ, BIT(3)),
++	CPMU_PMU_EVENT_ATTR(m2s_req_memwrfwd,		0x1e98, CPMU_GID_M2S_REQ, BIT(4)),
++	CPMU_PMU_EVENT_ATTR(m2s_req_memspecrd,		0x1e98, CPMU_GID_M2S_REQ, BIT(8)),
++	CPMU_PMU_EVENT_ATTR(m2s_req_meminvnt,		0x1e98, CPMU_GID_M2S_REQ, BIT(9)),
++	CPMU_PMU_EVENT_ATTR(m2s_req_memcleanevict,	0x1e98, CPMU_GID_M2S_REQ, BIT(10)),
++	/* CXL rev 3.0 Table 3-35 M2S RwD Memory Opcodes */
++	CPMU_PMU_EVENT_ATTR(m2s_rwd_memwr,		0x1e98, CPMU_GID_M2S_RWD, BIT(1)),
++	CPMU_PMU_EVENT_ATTR(m2s_rwd_memwrptl,		0x1e98, CPMU_GID_M2S_RWD, BIT(2)),
++	CPMU_PMU_EVENT_ATTR(m2s_rwd_biconflict,		0x1e98, CPMU_GID_M2S_RWD, BIT(4)),
++	/* CXL rev 3.0 Table 3-38 M2S BIRsp Memory Opcodes */
++	CPMU_PMU_EVENT_ATTR(m2s_birsp_i,		0x1e98, CPMU_GID_M2S_BIRSP, BIT(0)),
++	CPMU_PMU_EVENT_ATTR(m2s_birsp_s,		0x1e98, CPMU_GID_M2S_BIRSP, BIT(1)),
++	CPMU_PMU_EVENT_ATTR(m2s_birsp_e,		0x1e98, CPMU_GID_M2S_BIRSP, BIT(2)),
++	CPMU_PMU_EVENT_ATTR(m2s_birsp_iblk,		0x1e98, CPMU_GID_M2S_BIRSP, BIT(4)),
++	CPMU_PMU_EVENT_ATTR(m2s_birsp_sblk,		0x1e98, CPMU_GID_M2S_BIRSP, BIT(5)),
++	CPMU_PMU_EVENT_ATTR(m2s_birsp_eblk,		0x1e98, CPMU_GID_M2S_BIRSP, BIT(6)),
++	/* CXL rev 3.0 Table 3-40 S2M BISnp Opcodes */
++	CPMU_PMU_EVENT_ATTR(s2m_bisnp_cur,		0x1e98, CPMU_GID_S2M_BISNP, BIT(0)),
++	CPMU_PMU_EVENT_ATTR(s2m_bisnp_data,		0x1e98, CPMU_GID_S2M_BISNP, BIT(1)),
++	CPMU_PMU_EVENT_ATTR(s2m_bisnp_inv,		0x1e98, CPMU_GID_S2M_BISNP, BIT(2)),
++	CPMU_PMU_EVENT_ATTR(s2m_bisnp_curblk,		0x1e98, CPMU_GID_S2M_BISNP, BIT(4)),
++	CPMU_PMU_EVENT_ATTR(s2m_bisnp_datblk,		0x1e98, CPMU_GID_S2M_BISNP, BIT(5)),
++	CPMU_PMU_EVENT_ATTR(s2m_bisnp_invblk,		0x1e98, CPMU_GID_S2M_BISNP, BIT(6)),
++	/* CXL rev 3.0 Table 3-43 S2M NDR Opcopdes */
++	CPMU_PMU_EVENT_ATTR(s2m_ndr_cmp,		0x1e98, CPMU_GID_S2M_NDR, BIT(0)),
++	CPMU_PMU_EVENT_ATTR(s2m_ndr_cmps,		0x1e98, CPMU_GID_S2M_NDR, BIT(1)),
++	CPMU_PMU_EVENT_ATTR(s2m_ndr_cmpe,		0x1e98, CPMU_GID_S2M_NDR, BIT(2)),
++	CPMU_PMU_EVENT_ATTR(s2m_ndr_biconflictack,	0x1e98, CPMU_GID_S2M_NDR, BIT(3)),
++	/* CXL rev 3.0 Table 3-46 S2M DRS opcodes */
++	CPMU_PMU_EVENT_ATTR(s2m_drs_memdata,		0x1e98, CPMU_GID_S2M_DRS, BIT(0)),
++	CPMU_PMU_EVENT_ATTR(s2m_drs_memdatanxm,		0x1e98, CPMU_GID_S2M_DRS, BIT(1)),
++	/* CXL rev 3.0 Table 13-5 directly lists these. */
++	CPMU_PMU_EVENT_ATTR(ddr_act,			0x1e98, CPMU_GID_DDR, BIT(0)),
++	CPMU_PMU_EVENT_ATTR(ddr_pre,			0x1e98, CPMU_GID_DDR, BIT(1)),
++	CPMU_PMU_EVENT_ATTR(ddr_casrd,			0x1e98, CPMU_GID_DDR, BIT(2)),
++	CPMU_PMU_EVENT_ATTR(ddr_caswr,			0x1e98, CPMU_GID_DDR, BIT(3)),
++	CPMU_PMU_EVENT_ATTR(ddr_refresh,		0x1e98, CPMU_GID_DDR, BIT(4)),
++	CPMU_PMU_EVENT_ATTR(ddr_selfrefreshent,		0x1e98, CPMU_GID_DDR, BIT(5)),
++	CPMU_PMU_EVENT_ATTR(ddr_rfm,			0x1e98, CPMU_GID_DDR, BIT(6)),
++	NULL
++};
++
++static umode_t cpmu_event_is_visible(struct kobject *kobj, struct attribute *attr, int a)
++{
++	struct device_attribute *dev_attr = container_of(attr, struct device_attribute, attr);
++	struct perf_pmu_events_attr *pmu_attr =
++		container_of(dev_attr, struct perf_pmu_events_attr, attr);
++	struct device *dev = kobj_to_dev(kobj);
++	struct cpmu_info *info = dev_get_drvdata(dev);
++	struct cpmu_event *cpmu_ev;
++	int match_vid = FIELD_GET(GENMASK(63, 48), pmu_attr->id);
++	int match_gid = FIELD_GET(GENMASK(47, 32), pmu_attr->id);
++	int match_msk = FIELD_GET(GENMASK(31, 0), pmu_attr->id);
++
++	list_for_each_entry(cpmu_ev, &info->cpmu_events, node) {
++		if (match_vid != cpmu_ev->vid || match_gid != cpmu_ev->gid)
++			continue;
++
++		if (!cpmu_ev->configurable) {
++			/* Precise match for fixed counter. */
++			if (match_msk == cpmu_ev->msk)
++				return attr->mode;
++		} else {
++			/* Request mask must be subset of supported. */
++			if (!(match_msk & ~cpmu_ev->msk))
++				return attr->mode;
++		}
++	}
++
++	return 0;
++}
++
++static const struct attribute_group cpmu_events = {
++	.name = "events",
++	.attrs = cpmu_event_attrs,
++	.is_visible = cpmu_event_is_visible,
++};
++
++static ssize_t cpmu_format_sysfs_show(struct device *dev,
++				      struct device_attribute *attr, char *buf)
++{
++	struct dev_ext_attribute *eattr;
++
++	eattr = container_of(attr, struct dev_ext_attribute, attr);
++
++	return sysfs_emit(buf, "%s\n", (char *)eattr->var);
++}
++
++#define CPMU_FORMAT_ATTR(_name, _format)\
++	(&((struct dev_ext_attribute[]) {				\
++		{							\
++			.attr = __ATTR(_name, 0444,			\
++				       cpmu_format_sysfs_show, NULL),	\
++			.var = (void *)_format				\
++		}							  \
++		})[0].attr.attr)
++
++enum {
++	cpmu_mask_attr,
++	cpmu_gid_attr,
++	cpmu_vid_attr,
++	cpmu_threshold_attr,
++	cpmu_invert_attr,
++	cpmu_edge_attr,
++	cpmu_hdm_filter_en_attr,
++	cpmu_hdm_attr,
++};
++
++static struct attribute *cpmu_format_attr[] = {
++	[cpmu_mask_attr] = CPMU_FORMAT_ATTR(mask, "config:0-31"),
++	[cpmu_gid_attr] = CPMU_FORMAT_ATTR(gid, "config:32-47"),
++	[cpmu_vid_attr] = CPMU_FORMAT_ATTR(vid, "config:48-63"),
++	[cpmu_threshold_attr] = CPMU_FORMAT_ATTR(threshold, "config1:0-15"),
++	[cpmu_invert_attr] = CPMU_FORMAT_ATTR(invert, "config1:16"),
++	[cpmu_edge_attr] = CPMU_FORMAT_ATTR(edge, "config1:17"),
++	[cpmu_hdm_filter_en_attr] = CPMU_FORMAT_ATTR(hdm_filter_en, "config1:18"),
++	[cpmu_hdm_attr] = CPMU_FORMAT_ATTR(hdm, "config2:0-15"),
++	NULL
++};
++
++static umode_t cpmu_format_is_visible(struct kobject *kobj, struct attribute *attr, int a)
++{
++	struct device *dev = kobj_to_dev(kobj);
++	struct cpmu_info *info = dev_get_drvdata(dev);
++
 +	/*
-+	 * Before registering sub devices that use interrupts, the maximum
-+	 * interrupt used on the device should be established to allow the correct
-+	 * number of irq vectors to be requested. Separate the registration process
-+	 * into before / after interrupt vector request.
++	 * Filter capability at the CPMU level, so hide the attributes if the particular
++	 * filter is not supported.
 +	 */
-+	cpmu_count = cxl_count_regblock(pdev, CXL_REGLOC_RBI_CPMU);
-+	if (cpmu_count) {
-+		cpmu_regs_array = kmalloc_array(cpmu_count, sizeof(cpmu_regs_array),
-+						GFP_KERNEL);
-+		if (!cpmu_regs_array)
-+			return -ENOMEM;
++	if (attr == cpmu_format_attr[cpmu_hdm_filter_en_attr] ||
++	    attr == cpmu_format_attr[cpmu_hdm_attr]) {
++		if (info->filter_hdm)
++			return 0444;
++		else
++			return 0;
++	} else {
++		return 0444;
++	}
++}
++
++static const struct attribute_group cpmu_format_group = {
++	.name = "format",
++	.attrs = cpmu_format_attr,
++	.is_visible = cpmu_format_is_visible,
++};
++
++static u32 cpmu_config_get_mask(struct perf_event *event)
++{
++	return FIELD_GET(GENMASK(31, 0), event->attr.config);
++}
++
++static u16 cpmu_config_get_gid(struct perf_event *event)
++{
++	return FIELD_GET(GENMASK(47, 32), event->attr.config);
++}
++
++static u16 cpmu_config_get_vid(struct perf_event *event)
++{
++	return FIELD_GET(GENMASK(63, 48), event->attr.config);
++}
++
++static u8 cpmu_config1_get_threshold(struct perf_event *event)
++{
++	return FIELD_GET(GENMASK(15, 0), event->attr.config1);
++}
++
++static bool cpmu_config1_get_invert(struct perf_event *event)
++{
++	return FIELD_GET(BIT(16), event->attr.config1);
++}
++
++static bool cpmu_config1_get_edge(struct perf_event *event)
++{
++	return FIELD_GET(BIT(17), event->attr.config1);
++}
++
++/*
++ * CPMU specification allows for 8 filters, each with a 16 bit value...
++ * So we need to find 8x16bits to store it in.
++ * So far only one filter has been defined - HDM Decoder.
++ * As the value used for disable is 0xffff, a separate enable switch
++ * is needed.
++ */
++
++static bool cpmu_config1_hdm_filter_en(struct perf_event *event)
++{
++	return FIELD_GET(BIT(14), event->attr.config1);
++}
++
++static u16 cpmu_config2_get_hdm_decoder(struct perf_event *event)
++{
++	return FIELD_GET(GENMASK(15, 0), event->attr.config2);
++}
++
++static ssize_t cpumask_show(struct device *dev, struct device_attribute *attr,
++			    char *buf)
++{
++	struct cpmu_info *info = dev_get_drvdata(dev);
++
++	return cpumap_print_to_pagebuf(true, buf, cpumask_of(info->on_cpu));
++}
++static DEVICE_ATTR_RO(cpumask);
++
++static struct attribute *cpmu_cpumask_attrs[] = {
++	&dev_attr_cpumask.attr,
++	NULL
++};
++
++static const struct attribute_group cpmu_cpumask_group = {
++	.attrs = cpmu_cpumask_attrs,
++};
++
++static const struct attribute_group *cpmu_attr_groups[] = {
++	&cpmu_events,
++	&cpmu_format_group,
++	&cpmu_cpumask_group,
++	NULL
++};
++
++static int cpmu_event_init(struct perf_event *event)
++{
++	struct cpmu_info *info = pmu_to_cpmu_info(event->pmu);
++
++	event->cpu = info->on_cpu;
++	/* Top level type sanity check - is this a Hardware Event being requested. */
++	if (event->attr.type != event->pmu->type)
++		return -ENOENT;
++
++	if (is_sampling_event(event) || event->attach_state & PERF_ATTACH_TASK)
++		return -EOPNOTSUPP;
++	/* TODO: Validation of any filter */
++
++	return 0;
++}
++
++static void cpmu_pmu_enable(struct pmu *pmu)
++{
++	struct cpmu_info *info = pmu_to_cpmu_info(pmu);
++	void __iomem *base = info->base;
++	int num;
++
++	/* We don't have a global enable, but we 'might' have a global freeze which we can use. */
++	if (info->freeze_for_enable) {
++		/* Check if something is enabled. */
++		for (num = 0; num < info->num_counters; num++) {
++			if (info->hw_events[num])
++				break;
++		}
++		if (num == info->num_counters)
++			return;
++
++		/* Can assume frozen at this stage. */
++		writeq(0, base + CPMU_FREEZE_REG);
++
++		return;
++	}
++}
++
++static void cpmu_pmu_disable(struct pmu *pmu)
++{
++	struct cpmu_info *info = pmu_to_cpmu_info(pmu);
++	void __iomem *base = info->base;
++
++	if (info->freeze_for_enable) {
++		/*
++		 * Whilst bits above number of counters are RsvdZ
++		 * they are unlikely to be repurposed given
++		 * number of counters is allowed be 64 leaving
++		 * no reserved bits.  Hence this is only slightly
++		 * naughty.
++		 */
++		writeq(GENMASK(63, 0), base + CPMU_FREEZE_REG);
++		return;
++	}
++}
++
++static int cpmu_find_matching_event_cap(struct cpmu_info *info,
++					struct perf_event *event)
++{
++	struct cpmu_event *cpmu_ev;
++	u16 gid = cpmu_config_get_gid(event);
++	u16 vid = cpmu_config_get_vid(event);
++	u32 mask = cpmu_config_get_mask(event);
++
++	list_for_each_entry(cpmu_ev, &info->cpmu_events, node) {
++		if (vid != cpmu_ev->vid || gid != cpmu_ev->gid)
++			continue;
++
++		if (~cpmu_ev->msk & mask)
++			break;
++		return cpmu_ev->event_idx;
 +	}
 +
-+	/* Pass one - just enough to find out what interrupts are used */
-+	cxlds->cpmu_max_vector = -1;
-+	for (i = 0; i < cpmu_count; i++) {
-+		int irq;
++	return -EINVAL;
++}
 +
-+		rc = cxl_find_regblock(pdev, CXL_REGLOC_RBI_CPMU, &map, i);
-+		if (rc) {
-+			kfree(cpmu_regs_array);
-+			return rc;
++static void cpmu_event_start(struct perf_event *event, int flags)
++{
++	struct cpmu_info *info = pmu_to_cpmu_info(event->pmu);
++	struct hw_perf_event *hwc = &event->hw;
++	void __iomem *base = info->base;
++	u64 cfg;
++	u64 prev_cnt;
++
++	if (WARN_ON_ONCE(!(hwc->state & PERF_HES_STOPPED)))
++		return;
++
++	WARN_ON_ONCE(!(hwc->state & PERF_HES_UPTODATE));
++	hwc->state = 0;
++
++	/*
++	 * Currently only hdm filter is defined, this code will
++	 * want generalizing when more are defined.
++	 */
++	if (info->filter_hdm) {
++		if (cpmu_config1_hdm_filter_en(event))
++			cfg = cpmu_config2_get_hdm_decoder(event);
++
++		else
++			cfg = GENMASK(15, 0);
++		writeq(cfg, base + CPMU_FILTER_CFG_REG(hwc->idx, 0));
++	}
++
++	cfg = readq(base + CPMU_COUNTER_CFG_REG(hwc->idx));
++	cfg |= FIELD_PREP(CPMU_COUNTER_CFG_INT_ON_OVRFLW, 1);
++	cfg |= FIELD_PREP(CPMU_COUNTER_CFG_ENABLE, 1);
++	cfg |= FIELD_PREP(CPMU_COUNTER_CFG_EDGE, cpmu_config1_get_edge(event) ? 1 : 0);
++	cfg |= FIELD_PREP(CPMU_COUNTER_CFG_INVERT, cpmu_config1_get_invert(event) ? 1 : 0);
++
++	/* Fixed purpose counters have next two fields RO. */
++	if (test_bit(hwc->idx, info->conf_counter_bm)) {
++		int event_idx = cpmu_find_matching_event_cap(info, event);
++
++		if (event_idx < 0) {
++			dev_dbg(info->pmu.dev, "Could not find matching event capability\n");
++			return;
++		}
++		cfg |= FIELD_PREP(CPMU_COUNTER_CFG_EVENT_GRP_ID_IDX_MSK, event_idx);
++		cfg |= FIELD_PREP(CPMU_COUNTER_CFG_EVENTS_MSK, cpmu_config_get_mask(event));
++	}
++	cfg &= ~CPMU_COUNTER_CFG_THRESHOLD_MSK;
++	/*
++	 * For events that generate only 1 count per clock the CXL 3.0 spec
++	 * states the threshold shall be set to 1 but if set to 0 it will
++	 * count the raw value anwyay?
++	 * There is definition of what events will count multiple per cycle
++	 * and hence to which non 1 values of threshold can apply.
++	 * (CXL 3.0 8.2.7.2.1 Counter Configuration - threshold field definition)
++	 */
++	cfg |= FIELD_PREP(CPMU_COUNTER_CFG_THRESHOLD_MSK,
++			  cpmu_config1_get_threshold(event));
++	writeq(cfg, base + CPMU_COUNTER_CFG_REG(hwc->idx));
++
++	local64_set(&hwc->prev_count, 0);
++	writeq(0, base + CPMU_COUNTER_REG(hwc->idx));
++
++	if (flags & PERF_EF_RELOAD) {
++		prev_cnt = local64_read(&hwc->prev_count);
++		writeq(prev_cnt, base + CPMU_COUNTER_REG(hwc->idx));
++	}
++
++	perf_event_update_userpage(event);
++}
++
++static u64 cpmu_read_counter(struct perf_event *event)
++{
++	struct cpmu_info *info = pmu_to_cpmu_info(event->pmu);
++	void __iomem *base = info->base;
++
++	return readq(base + CPMU_COUNTER_REG(event->hw.idx));
++}
++
++static void __cpmu_read(struct perf_event *event, bool overflow)
++{
++	struct cpmu_info *info = pmu_to_cpmu_info(event->pmu);
++	struct hw_perf_event *hwc = &event->hw;
++	u64 new_cnt, prev_cnt, delta;
++
++	do {
++		prev_cnt = local64_read(&hwc->prev_count);
++		new_cnt = cpmu_read_counter(event);
++	} while (local64_cmpxchg(&hwc->prev_count, prev_cnt, new_cnt) != prev_cnt);
++
++	/*
++	 * If we know an overflow occur then take that into account.
++	 * Note counter is not reset as that would lose events.
++	 */
++	delta = (new_cnt - prev_cnt) & GENMASK(info->counter_width - 1, 0);
++	if (overflow && delta < GENMASK(info->counter_width - 1, 0))
++		delta += (1UL << info->counter_width);
++
++	local64_add(delta, &event->count);
++}
++
++static void cpmu_read(struct perf_event *event)
++{
++	__cpmu_read(event, false);
++}
++
++static void cpmu_event_stop(struct perf_event *event, int flags)
++{
++	struct cpmu_info *info = pmu_to_cpmu_info(event->pmu);
++	void __iomem *base = info->base;
++	struct hw_perf_event *hwc = &event->hw;
++	u64 cfg;
++
++	cpmu_read(event);
++	WARN_ON_ONCE(hwc->state & PERF_HES_STOPPED);
++	hwc->state |= PERF_HES_STOPPED;
++
++	cfg = readq(base + CPMU_COUNTER_CFG_REG(hwc->idx));
++	cfg &= ~(FIELD_PREP(CPMU_COUNTER_CFG_INT_ON_OVRFLW, 1) |
++		 FIELD_PREP(CPMU_COUNTER_CFG_ENABLE, 1));
++	writeq(cfg, base + CPMU_COUNTER_CFG_REG(hwc->idx));
++
++	if (hwc->state & PERF_HES_UPTODATE)
++		return;
++
++	hwc->state |= PERF_HES_UPTODATE;
++}
++
++static int cpmu_get_event_idx(struct perf_event *event)
++{
++	struct cpmu_info *info = pmu_to_cpmu_info(event->pmu);
++	struct cpmu_event *cpmu_ev;
++	u32 mask;
++	u16 gid, vid;
++
++	vid = cpmu_config_get_vid(event);
++	gid = cpmu_config_get_gid(event);
++	mask = cpmu_config_get_mask(event);
++
++	list_for_each_entry(cpmu_ev, &info->cpmu_events, node) {
++		int idx;
++
++		if (vid != cpmu_ev->vid || gid != cpmu_ev->gid)
++			continue;
++
++		/*
++		 * For fixed counters, must match exactly.
++		 * No need to support duplicates so if first in use
++		 * return an error.
++		 */
++		if (!cpmu_ev->configurable) {
++			if (cpmu_ev->msk != mask)
++				continue;
++			if (info->hw_events[cpmu_ev->counter_idx])
++				return -EINVAL;
++
++			return cpmu_ev->counter_idx;
 +		}
 +
-+		rc = cxl_map_cpmu_regs(pdev, &cpmu_regs_array[i], &map);
-+		if (rc) {
-+			kfree(cpmu_regs_array);
-+			return rc;
++		/* Requested mask needs to be subset of available. */
++		if (~cpmu_ev->msk & mask)
++			continue;
++
++		/* Found the group, now see if any configurable counters left. */
++		for_each_set_bit(idx, info->conf_counter_bm, 64) {
++			if (!info->hw_events[idx])
++				return idx;
++		}
++	}
++
++	return -EINVAL;
++}
++
++/*
++ * Reset ensures no possibility of any information leaking to wrong
++ * counter. Note that all fields written during start().
++ */
++static void cpmu_reset_counter(struct cpmu_info *info, int idx)
++{
++	void __iomem *base = info->base;
++
++	/* Much of this register is read only. */
++	writeq(0, base + CPMU_EVENT_CAP_REG(idx));
++	/* Filters are not per counter, so do not reset here. */
++	writeq(0, base + CPMU_COUNTER_REG(idx));
++}
++
++static int cpmu_event_add(struct perf_event *event, int flags)
++{
++	struct cpmu_info *info = pmu_to_cpmu_info(event->pmu);
++	struct hw_perf_event *hwc = &event->hw;
++	int idx;
++
++	hwc->state = PERF_HES_STOPPED | PERF_HES_UPTODATE;
++
++	idx = cpmu_get_event_idx(event);
++	if (idx < 0)
++		return idx;
++
++	hwc->idx = idx;
++	info->hw_events[idx] = event;
++
++	cpmu_reset_counter(info, idx);
++
++	if (flags & PERF_EF_START)
++		cpmu_event_start(event, PERF_EF_RELOAD);
++
++	return 0;
++}
++
++static void cpmu_event_del(struct perf_event *event, int flags)
++{
++	struct cpmu_info *info = pmu_to_cpmu_info(event->pmu);
++	struct hw_perf_event *hwc = &event->hw;
++
++	cpmu_event_stop(event, PERF_EF_UPDATE);
++	info->hw_events[hwc->idx] = NULL;
++	perf_event_update_userpage(event);
++}
++
++static irqreturn_t cpmu_irq(int irq, void *data)
++{
++	struct cpmu_info *info = data;
++	void __iomem *base = info->base;
++	u64 overflowed;
++	DECLARE_BITMAP(overflowedbm, 64);
++	int i;
++
++	overflowed = readq(base + CPMU_OVERFLOW_REG);
++
++	/* Interrupt may be shared, so maybe it isn't ours. */
++	if (!overflowed)
++		return IRQ_NONE;
++
++	bitmap_from_arr64(overflowedbm, &overflowed, 64);
++	for_each_set_bit(i, overflowedbm, info->num_counters) {
++		struct perf_event *event = info->hw_events[i];
++
++		if (!event) {
++			dev_dbg(info->pmu.dev,
++				"overflow but on non enabled counter %d\n", i);
++			continue;
 +		}
 +
-+		irq = cxl_cpmu_get_irq(&cpmu_regs_array[i]);
-+		cxlds->cpmu_max_vector = max(cxlds->cpmu_max_vector, irq);
++		__cpmu_read(event, true);
 +	}
 +
- 	if (!cxl_pci_alloc_irq_vectors(cxlds)) {
- 		cxlds->has_irq = true;
-+		pci_set_master(pdev);
- 	} else
- 		cxlds->has_irq = false;
- 
-+	/* Pass 2 - register the CPMU instances, currently no support without interrupts */
-+	if (cxlds->has_irq) {
-+		for (i = 0; i < cpmu_count; i++)
-+			devm_cxl_cpmu_add(cxlds->dev, &cpmu_regs_array[i], i);
-+	}
-+	kfree(cpmu_regs_array);
++	writeq(overflowed, base + CPMU_OVERFLOW_REG);
 +
- 	cxlmd = devm_cxl_add_memdev(cxlds);
- 	if (IS_ERR(cxlmd))
- 		return PTR_ERR(cxlmd);
++	return IRQ_HANDLED;
++}
++
++static int cxl_cpmu_probe(struct device *dev)
++{
++	struct cxl_cpmu *cpmu = to_cxl_cpmu(dev);
++	struct pci_dev *pdev = to_pci_dev(dev->parent);
++	struct cpmu_info *info;
++	char *irq_name;
++	int rc, irq;
++
++	info = devm_kzalloc(dev, sizeof(*info), GFP_KERNEL);
++	if (!info)
++		return -ENOMEM;
++
++	INIT_LIST_HEAD(&info->cpmu_events);
++
++	info->base = cpmu->base;
++
++	info->on_cpu = -1;
++	rc = cpmu_parse_caps(dev, info);
++	if (rc)
++		return rc;
++
++	info->hw_events = devm_kcalloc(dev, sizeof(*info->hw_events),
++				       info->num_counters, GFP_KERNEL);
++	if (!info->hw_events)
++		return -ENOMEM;
++
++	info->pmu = (struct pmu) {
++		.name = dev_name(dev),
++		.module = THIS_MODULE,
++		.event_init = cpmu_event_init,
++		.pmu_enable = cpmu_pmu_enable,
++		.pmu_disable = cpmu_pmu_disable,
++		.add = cpmu_event_add,
++		.del = cpmu_event_del,
++		.start = cpmu_event_start,
++		.stop = cpmu_event_stop,
++		.read = cpmu_read,
++		.task_ctx_nr = perf_invalid_context,
++		.attr_groups = cpmu_attr_groups,
++		.capabilities = PERF_PMU_CAP_NO_EXCLUDE,
++	};
++
++	if (info->irq <= 0)
++		return -EINVAL;
++
++
++	rc = pci_irq_vector(pdev, info->irq);
++	if (rc < 0)
++		return rc;
++	irq = rc;
++
++	irq_name = devm_kasprintf(dev, GFP_KERNEL, "%s_overflow\n", dev_name(dev));
++	if (!irq_name)
++		return -ENOMEM;
++
++	rc = devm_request_irq(dev, irq, cpmu_irq, IRQF_SHARED, irq_name, info);
++	if (rc)
++		return rc;
++	info->irq = irq;
++
++	rc = cpuhp_state_add_instance(cpmu_cpuhp_state_num, &info->node);
++	if (rc)
++		return rc;
++
++	rc = perf_pmu_register(&info->pmu, info->pmu.name, -1);
++	if (rc)
++		return rc;
++
++	dev_set_drvdata(dev, info);
++
++	return 0;
++}
++
++static void cxl_cpmu_remove(struct device *dev)
++{
++	struct cpmu_info *info = dev_get_drvdata(dev);
++
++	perf_pmu_unregister(&info->pmu);
++	cpuhp_state_remove_instance_nocalls(cpmu_cpuhp_state_num, &info->node);
++}
++
++static struct cxl_driver cxl_cpmu_driver = {
++	.name = "cxl_cpmu",
++	.probe = cxl_cpmu_probe,
++	.remove = cxl_cpmu_remove,
++	.id = CXL_DEVICE_CPMU,
++};
++
++static int cpmu_online_cpu(unsigned int cpu, struct hlist_node *node)
++{
++	struct cpmu_info *info = hlist_entry_safe(node, struct cpmu_info, node);
++
++	if (info->on_cpu != -1)
++		return 0;
++
++	info->on_cpu = cpu;
++	WARN_ON(irq_set_affinity(info->irq, cpumask_of(cpu)));
++
++	return 0;
++}
++
++static int cpmu_offline_cpu(unsigned int cpu, struct hlist_node *node)
++{
++	struct cpmu_info *info = hlist_entry_safe(node, struct cpmu_info, node);
++	unsigned int target;
++
++	if (info->on_cpu != cpu)
++		return 0;
++
++	info->on_cpu = -1;
++	target = cpumask_first(cpu_online_mask);
++	if (target >= nr_cpu_ids) {
++		dev_err(info->pmu.dev, "Unable to find a suitable CPU\n");
++		return 0;
++	}
++
++	perf_pmu_migrate_context(&info->pmu, cpu, target);
++	info->on_cpu = target;
++	WARN_ON(irq_set_affinity(info->irq, cpumask_of(target)));
++
++	return 0;
++}
++
++static __init int cxl_cpmu_init(void)
++{
++	int rc;
++
++	rc = cpuhp_setup_state_multi(CPUHP_AP_ONLINE_DYN,
++				     "AP_PERF_CPMU_ONLINE",
++				     cpmu_online_cpu, cpmu_offline_cpu);
++	if (rc < 0)
++		return rc;
++	cpmu_cpuhp_state_num = rc;
++
++	rc = cxl_driver_register(&cxl_cpmu_driver);
++	if (rc)
++		cpuhp_remove_multi_state(cpmu_cpuhp_state_num);
++
++	return rc;
++}
++
++static __exit void cxl_cpmu_exit(void)
++{
++	cxl_driver_unregister(&cxl_cpmu_driver);
++	cpuhp_remove_multi_state(cpmu_cpuhp_state_num);
++}
++
++MODULE_LICENSE("GPL");
++MODULE_IMPORT_NS(CXL);
++module_init(cxl_cpmu_init);
++module_exit(cxl_cpmu_exit);
 -- 
 2.37.2
 
