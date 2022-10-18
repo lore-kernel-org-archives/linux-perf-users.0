@@ -2,150 +2,113 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 676CBC4332F
-	for <linux-perf-users@archiver.kernel.org>; Tue, 18 Oct 2022 12:15:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CBE05C433FE
+	for <linux-perf-users@archiver.kernel.org>; Tue, 18 Oct 2022 12:47:14 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229608AbiJRMPv (ORCPT
+        id S230159AbiJRMrN (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Tue, 18 Oct 2022 08:15:51 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52422 "EHLO
+        Tue, 18 Oct 2022 08:47:13 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36752 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229572AbiJRMPu (ORCPT
+        with ESMTP id S230122AbiJRMrM (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Tue, 18 Oct 2022 08:15:50 -0400
-Received: from frasgout.his.huawei.com (frasgout.his.huawei.com [185.176.79.56])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 72278A285E;
-        Tue, 18 Oct 2022 05:15:47 -0700 (PDT)
-Received: from fraeml704-chm.china.huawei.com (unknown [172.18.147.226])
-        by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4MsCRS6tHMz67PDP;
-        Tue, 18 Oct 2022 20:12:36 +0800 (CST)
-Received: from lhrpeml500005.china.huawei.com (7.191.163.240) by
- fraeml704-chm.china.huawei.com (10.206.15.53) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id
- 15.1.2375.31; Tue, 18 Oct 2022 14:15:45 +0200
-Received: from SecurePC-101-06.china.huawei.com (10.122.247.231) by
- lhrpeml500005.china.huawei.com (7.191.163.240) with Microsoft SMTP Server
+        Tue, 18 Oct 2022 08:47:12 -0400
+Received: from szxga03-in.huawei.com (szxga03-in.huawei.com [45.249.212.189])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id AEF93C45A3;
+        Tue, 18 Oct 2022 05:47:07 -0700 (PDT)
+Received: from dggemv711-chm.china.huawei.com (unknown [172.30.72.55])
+        by szxga03-in.huawei.com (SkyGuard) with ESMTP id 4MsD8B5qhhzJn2r;
+        Tue, 18 Oct 2022 20:44:26 +0800 (CST)
+Received: from kwepemm600010.china.huawei.com (7.193.23.86) by
+ dggemv711-chm.china.huawei.com (10.1.198.66) with Microsoft SMTP Server
  (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2375.31; Tue, 18 Oct 2022 13:15:44 +0100
-From:   Jonathan Cameron <Jonathan.Cameron@huawei.com>
-To:     <linux-cxl@vger.kernel.org>, Dave Jiang <dave.jiang@intel.com>
-CC:     <linuxarm@huawei.com>, Dan Williams <dan.j.williams@intel.com>,
-        "Alison Schofield" <alison.schofield@intel.com>,
-        Vishal Verma <vishal.l.verma@intel.com>,
-        Ira Weiny <ira.weiny@intel.com>,
-        Ben Widawsky <bwidawsk@kernel.org>,
-        <linux-perf-users@vger.kernel.org>, Will Deacon <will@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Davidlohr Bueso <dave@stgolabs.net>
-Subject: [RFC PATCH v3 5/5] docs: perf: Minimal introduction the the CXL PMU device and driver.
-Date:   Tue, 18 Oct 2022 13:13:18 +0100
-Message-ID: <20221018121318.22385-6-Jonathan.Cameron@huawei.com>
-X-Mailer: git-send-email 2.37.2
-In-Reply-To: <20221018121318.22385-1-Jonathan.Cameron@huawei.com>
-References: <20221018121318.22385-1-Jonathan.Cameron@huawei.com>
+ 15.1.2375.31; Tue, 18 Oct 2022 20:47:04 +0800
+Received: from ubuntu1804.huawei.com (10.67.174.174) by
+ kwepemm600010.china.huawei.com (7.193.23.86) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2375.31; Tue, 18 Oct 2022 20:47:03 +0800
+From:   Li Huafei <lihuafei1@huawei.com>
+To:     <linux@armlinux.org.uk>, <linus.walleij@linaro.org>
+CC:     <peterz@infradead.org>, <mingo@redhat.com>, <acme@kernel.org>,
+        <mark.rutland@arm.com>, <alexander.shishkin@linux.intel.com>,
+        <jolsa@kernel.org>, <namhyung@kernel.org>, <will@kernel.org>,
+        <arnd@arndb.de>, <ardb@kernel.org>, <rmk+kernel@armlinux.org.uk>,
+        <geert+renesas@glider.be>, <nick.hawkins@hpe.com>,
+        <john@phrozen.org>, <mhiramat@kernel.org>, <lihuafei1@huawei.com>,
+        <ast@kernel.org>, <thunder.leizhen@huawei.com>,
+        <rostedt@goodmis.org>, <linyujun809@huawei.com>,
+        <linux-arm-kernel@lists.infradead.org>,
+        <linux-kernel@vger.kernel.org>, <linux-perf-users@vger.kernel.org>
+Subject: [PATCH v4 0/2] ARM: Convert to ARCH_STACKWALK
+Date:   Tue, 18 Oct 2022 20:43:37 +0800
+Message-ID: <20221018124339.115793-1-lihuafei1@huawei.com>
+X-Mailer: git-send-email 2.17.1
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7BIT
-Content-Type:   text/plain; charset=US-ASCII
-X-Originating-IP: [10.122.247.231]
-X-ClientProxiedBy: lhrpeml100005.china.huawei.com (7.191.160.25) To
- lhrpeml500005.china.huawei.com (7.191.163.240)
+Content-Type: text/plain
+X-Originating-IP: [10.67.174.174]
+X-ClientProxiedBy: dggems703-chm.china.huawei.com (10.3.19.180) To
+ kwepemm600010.china.huawei.com (7.193.23.86)
 X-CFilter-Loop: Reflected
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-Very basic introduction to the device and the current driver support
-provided. I expect to expand on this in future versions of this patch
-set.
+This series mainly updates the ARM stack trace code to use the newer and
+simpler arch_stack_walk() interface.
 
-Signed-off-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
+When Russell applied patch 1, the patch tracker complained of a minor
+conflict with Lei Zhen's patch (see [1]). Lei Zhen's patch has been
+merged into v6.1-rc1. Now rebase to v6.1-rc1 and resend this patch set.
 
---
-RFC:
-- I'll post separately about this shortly, but it seems very odd
-  to me that there is no way to assign a parent to an event_sources
-  device.  As a result we get the messy approach of playing match
-  the name to figure out what the CPMU instance is connected to.
----
- Documentation/admin-guide/perf/cxl.rst   | 60 ++++++++++++++++++++++++
- Documentation/admin-guide/perf/index.rst |  1 +
- 2 files changed, 61 insertions(+)
+Thanks!
 
-diff --git a/Documentation/admin-guide/perf/cxl.rst b/Documentation/admin-guide/perf/cxl.rst
-new file mode 100644
-index 000000000000..5105ae484e08
---- /dev/null
-+++ b/Documentation/admin-guide/perf/cxl.rst
-@@ -0,0 +1,60 @@
-+======================================
-+CXL Performance Monitoring Unit (CPMU)
-+======================================
-+
-+The CXL rev 3.0 specification provides a definition of CXL Performance
-+Monitoring Unit in section 13.2: Performance Monitoring.
-+
-+CXL components (e.g. Root Port, Switch Upstream Port, End Point) may have
-+any number of CPMU instances. CPMU capabilities are fully discoverable from
-+the devices. The specification provides event definitions for all CXL protocol
-+message types and a set of additional events for things commonly counted on
-+CXL devices (e.g. DRAM events).
-+
-+CPMU driver
-+===========
-+
-+The CPMU driver register a perf PMU with the name cpmu<id> on the CXL bus.
-+
-+    /sys/bus/cxl/device/cpmu<id>
-+
-+The associated PMU is registered as
-+
-+   /sys/bus/event_sources/devices/cpmu<id>
-+
-+In common with other CXL bus devices, the id has no specific meaning and the
-+relationship to specific CXL device should be established via the device parent
-+of the device on the CXL bus.
-+
-+PMU driver provides description of available events and filter options in sysfs.
-+
-+The "format" directory describes all formats of the config (event vendor id,
-+group id and mask) config1 (threshold, filter enables) and config2 (filter
-+parameters) fields of the perf_event_attr structure.  The "events" directory
-+describes all the documented events show in perf list.
-+
-+The events shown in perf list are the most fine grained events with a single
-+bit of the event mask set. More general events may be enable by setting
-+multiple mask bits in config. For example, all Device to Host Read Requests
-+may be captured on a single counter by setting the bits for all of
-+
-+* d2h_req_rdcurr
-+* d2h_req_rdown
-+* d2h_req_rdshared
-+* d2h_req_rdany
-+* d2h_req_rdownnodata
-+
-+Example of usage::
-+
-+  $#perf list
-+  cpmu0/clock_ticks/                                 [Kernel PMU event]
-+  cpmu0/d2h_req_itomwr/                              [Kernel PMU event]
-+  cpmu0/d2h_req_rdany/                               [Kernel PMU event]
-+  cpmu0/d2h_req_rdcurr/                              [Kernel PMU event]
-+  -----------------------------------------------------------
-+
-+  $# perf stat -e cpmu0/clock_ticks/ -e cpmu0/d2h_req_itowrm/
-+
-+The driver does not support sampling. So "perf record" and attaching to
-+a task are unsupported.
-+
-diff --git a/Documentation/admin-guide/perf/index.rst b/Documentation/admin-guide/perf/index.rst
-index 793e1970bc05..db7828f1f4ef 100644
---- a/Documentation/admin-guide/perf/index.rst
-+++ b/Documentation/admin-guide/perf/index.rst
-@@ -19,3 +19,4 @@ Performance monitor support
-    arm_dsu_pmu
-    thunderx2-pmu
-    alibaba_pmu
-+   cxl
+[1] https://www.armlinux.org.uk/developer/patches/viewpatch.php?id=9235/1
+
+v4:
+ - Rebase to v6.1-rc1.
+ - Fix commit log for patch 2: 'arch _stack_walk()' -> 'arch_stack_walk()'.
+ - Remove the two bugfix patches that have been merged in:
+    ARM: stacktrace: Skip frame pointer boundary check for call_with_stack()
+    ARM: stacktrace: Avoid duplicate saving of exception PC value
+
+v3 resend: https://lore.kernel.org/lkml/20220826074047.107357-1-lihuafei1@huawei.com/
+ It's been a month since I sent the v3. Linus told me I needed to add the
+ patch to Russell's patch tracker myself, rebase to v6.0-rc1 before that.
+ Thanks Linus for the tip!
+
+ Since commit af6f23b88e95 ("ARM/dma-mapping: use the generic versions of
+ dma_to_phys/phys_to_dma by default") and commit ae626eb97376
+ ("ARM/dma-mapping: use dma-direct unconditionally") modified
+ arch/arm/Kconfig, there is a minor conflict with patch 4 when rebase.
+
+v3: https://lore.kernel.org/lkml/20220727040022.139387-1-lihuafei1@huawei.com/
+ - According to the discussion with Linus and Russell in v1:
+   - Add a comment about "regs[1]" in patch 2, and remove the
+     unnecessary ternary operator in the initialization of
+     "frame->ex_frame".
+   - Remove the patch "ARM: stacktrace: Allow stack trace saving for
+     non-current tasks", and keep the check for not being able to
+     unwind non-current tasks (including tasks running on other CPUs)
+     when CONFIG_SMP=y in patch 4.
+ - Rebase to linux-5.19-rc8.
+
+v2: https://lore.kernel.org/lkml/20220713110020.85511-1-lihuafei1@huawei.com/
+ - As suggested by Mark, the commit logs for patch 4 and 5 were
+   refined for easy review.
+
+v1: https://lore.kernel.org/lkml/20220712021527.109921-1-lihuafei1@huawei.com/
+
+Li Huafei (2):
+  ARM: stacktrace: Make stack walk callback consistent with generic code
+  ARM: stacktrace: Convert stacktrace to generic ARCH_STACKWALK
+
+ arch/arm/Kconfig                  |   1 +
+ arch/arm/include/asm/stacktrace.h |   2 +-
+ arch/arm/kernel/perf_callchain.c  |   9 +--
+ arch/arm/kernel/return_address.c  |   8 +-
+ arch/arm/kernel/stacktrace.c      | 119 +++++++++---------------------
+ 5 files changed, 44 insertions(+), 95 deletions(-)
+
 -- 
-2.37.2
+2.17.1
 
