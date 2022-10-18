@@ -2,119 +2,108 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 03CBFC4332F
-	for <linux-perf-users@archiver.kernel.org>; Tue, 18 Oct 2022 12:54:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DF1B8C433FE
+	for <linux-perf-users@archiver.kernel.org>; Tue, 18 Oct 2022 13:56:38 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230259AbiJRMyM (ORCPT
+        id S231205AbiJRN4g (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Tue, 18 Oct 2022 08:54:12 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51878 "EHLO
+        Tue, 18 Oct 2022 09:56:36 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43548 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229669AbiJRMyL (ORCPT
+        with ESMTP id S231235AbiJRN4e (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Tue, 18 Oct 2022 08:54:11 -0400
-Received: from mail-ed1-x52e.google.com (mail-ed1-x52e.google.com [IPv6:2a00:1450:4864:20::52e])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 55AE6C4C2E;
-        Tue, 18 Oct 2022 05:54:10 -0700 (PDT)
-Received: by mail-ed1-x52e.google.com with SMTP id l22so20288495edj.5;
-        Tue, 18 Oct 2022 05:54:10 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20210112;
-        h=content-transfer-encoding:in-reply-to:from:references:cc:to:subject
-         :user-agent:mime-version:date:message-id:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=3VZrAcxYIFLhBzdmWrO+0osx70QYrpMUX4awPJm7NAI=;
-        b=ftXv806rGAILQ+FzU8QV4pQRO+u2iUTu9nNDx5gr0EITjpUgxiQYaD+uFko26DChbf
-         mteF68jR/Vl7xHlegQibANlr8D7p1xs9MOAb594xr23jplXZF+Ay+roWraFHR17d0z02
-         ZYbswuzR+9nH579Ql0xyfu4+uE3KeF6FbX05nQnHUl/tny+uwrt7sd5LFHuMvWXjrcKL
-         JW4xebwV3D/5/5BWpJWLZYH6kv0Q3mgFlGt83t2qxgi4gniGWJUtPa3kH44WSNI2UbIu
-         ufU1f2GoB8j5U6vJ6bi1zLIquXU2QCMLUKswrQH/rlrS2l5o50idJoewYg7pkgGaRdFh
-         ZOJQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=content-transfer-encoding:in-reply-to:from:references:cc:to:subject
-         :user-agent:mime-version:date:message-id:x-gm-message-state:from:to
-         :cc:subject:date:message-id:reply-to;
-        bh=3VZrAcxYIFLhBzdmWrO+0osx70QYrpMUX4awPJm7NAI=;
-        b=1SxOeoEq7z5nYd12VLmuMisdGmuqYYm5inZIQrqzAjjwqzVu3bynLUfbEOmR0MJ7qJ
-         8thN2ZKNCL/4xC48sg3Ramd/ZSOw1ROslgVStK0PHWM2qOfMXha8xvU5W3Qx80ARdtYU
-         J0Na4kO60ioEDPad4Wmr2wnx4eVWC2ESXbD7zksanmNoIrWY/MDi+PzX7JOdPKIFzgml
-         PUOYHL/h34dQsYcvHeNrCOvUjg5xqVcnH83Jb6HpZT4mirh+RW46jMKJbmT+jneeVF0I
-         3j3FasdYh+Rl06RpTSF+RfHTbDNWRCRrNbdsnPEZR9myDTvppldcXMylBCfT3qW1+g9h
-         /Ecg==
-X-Gm-Message-State: ACrzQf3ZJeEkSmQyjRrFg1OfRjTUmgAVBhkGD7FPZ+esVc/T0y7XdgRf
-        s6S2bn9LrAxMKD1Uhrc8+Y0=
-X-Google-Smtp-Source: AMsMyM7kL8grcFCnBhd5sOHIhyXGwrFcVflwEN5K6HesM+p/OpsVt1t8AZUk4PWPZsGvtMNiyXxjTg==
-X-Received: by 2002:a05:6402:3887:b0:458:289e:c9cc with SMTP id fd7-20020a056402388700b00458289ec9ccmr2491864edb.101.1666097648734;
-        Tue, 18 Oct 2022 05:54:08 -0700 (PDT)
-Received: from [192.168.26.149] (ip-194-187-74-233.konfederacka.maverick.com.pl. [194.187.74.233])
-        by smtp.googlemail.com with ESMTPSA id k17-20020aa7c391000000b00456cbd8c65bsm8962346edq.6.2022.10.18.05.54.07
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 18 Oct 2022 05:54:08 -0700 (PDT)
-Message-ID: <f7e79f3a-be97-334b-84f2-76da0981e991@gmail.com>
-Date:   Tue, 18 Oct 2022 14:54:07 +0200
+        Tue, 18 Oct 2022 09:56:34 -0400
+Received: from ams.source.kernel.org (ams.source.kernel.org [IPv6:2604:1380:4601:e00::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 481C3CF874;
+        Tue, 18 Oct 2022 06:56:33 -0700 (PDT)
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by ams.source.kernel.org (Postfix) with ESMTPS id E30ECB81F67;
+        Tue, 18 Oct 2022 13:56:31 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id BAE0CC433D6;
+        Tue, 18 Oct 2022 13:56:27 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1666101390;
+        bh=qJ6vThAIE44VrwsfcxpiUgz6ZVzbsL/WPJFVhMYDSlw=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=rx45QDPaSXJRF3zL7QHyHW33SWwq46lbIpEKwn6nTDAUPNQZLeiZDVidaRmpSzOfx
+         8ltj05lsXIF/1lfBJLtknkl6Ph11dGi2QR9s5k+n71W3I9HqVb5jQX/v6OEX5VQpJG
+         ByLs8gBcjQsUFWEnYHwjPRY+FtGKzjqmH0i6kP6IDt14E39MlohU6kIuCSydNaMTdL
+         Wu67/PqcFV4JjiKO3AMSY5/7VtTOFt3wkUL9NZpVJq4yNZEmhQxyrTiE2g+b52Dntf
+         koBythbCrMqOegKPPT5bW3trCbewh37572jmOg1VjVX/tXD3SMYqLJKcAXxcMulb3S
+         D0ebFN3mraDnw==
+Date:   Tue, 18 Oct 2022 14:56:24 +0100
+From:   Mark Brown <broonie@kernel.org>
+To:     Anshuman Khandual <anshuman.khandual@arm.com>
+Cc:     linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, peterz@infradead.org,
+        acme@kernel.org, mark.rutland@arm.com, will@kernel.org,
+        catalin.marinas@arm.com, James Clark <james.clark@arm.com>,
+        Rob Herring <robh@kernel.org>, Marc Zyngier <maz@kernel.org>,
+        Suzuki Poulose <suzuki.poulose@arm.com>,
+        Ingo Molnar <mingo@redhat.com>
+Subject: Re: [PATCH V4 1/7] arm64/perf: Add BRBE registers and fields
+Message-ID: <Y06wiI2hgsz5QPTh@sirena.org.uk>
+References: <20221017055713.451092-1-anshuman.khandual@arm.com>
+ <20221017055713.451092-2-anshuman.khandual@arm.com>
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:96.0) Gecko/20100101
- Thunderbird/96.0
-Subject: Re: [PATCH] perf report: Skip symbols for idle symbols
-To:     Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        Arnaldo Carvalho de Melo <acme@kernel.org>
-Cc:     Mark Rutland <mark.rutland@arm.com>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Jiri Olsa <jolsa@kernel.org>,
-        Namhyung Kim <namhyung@kernel.org>,
-        linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org,
-        =?UTF-8?B?UmFmYcWCIE1pxYJlY2tp?= <rafal@milecki.pl>
-References: <20220608055146.1446-1-zajec5@gmail.com>
-From:   =?UTF-8?B?UmFmYcWCIE1pxYJlY2tp?= <zajec5@gmail.com>
-In-Reply-To: <20220608055146.1446-1-zajec5@gmail.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
+Content-Type: multipart/signed; micalg=pgp-sha512;
+        protocol="application/pgp-signature"; boundary="GFneNsft22FHtzEa"
+Content-Disposition: inline
+In-Reply-To: <20221017055713.451092-2-anshuman.khandual@arm.com>
+X-Cookie: Lake Erie died for your sins.
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-On 8.06.2022 07:51, Rafał Miłecki wrote:
-> From: Rafał Miłecki <rafal@milecki.pl>
-> 
-> Displaying idle symbols is rather useless and makes reviewing "real"
-> symbols harder. perf top already skips them so perf report should
-> probably do the same.
-> 
-> BEFORE
-> 
-> # Overhead  Command          Shared Object          Symbol
-> # ........  ...............  .....................  ...................................
-> #
->      75.04%  swapper          [kernel.kallsyms]      [k] arch_cpu_idle
->       1.05%  ksoftirqd/0      [kernel.kallsyms]      [k] __pi___inval_dcache_area
->       0.78%  ksoftirqd/0      [kernel.kallsyms]      [k] __netif_receive_skb_core
->       0.75%  ksoftirqd/0      [kernel.kallsyms]      [k] fib_table_lookup
->       0.58%  ksoftirqd/0      [kernel.kallsyms]      [k] __dev_queue_xmit
->       0.56%  ksoftirqd/0      [kernel.kallsyms]      [k] bcm4908_enet_start_xmit
->       0.55%  ksoftirqd/0      [kernel.kallsyms]      [k] __skb_flow_dissect
->       0.53%  ksoftirqd/0      [kernel.kallsyms]      [k] __pi___clean_dcache_area_poc
-> 
-> AFTER
-> 
-> # Overhead  Command          Shared Object          Symbol
-> # ........  ...............  .....................  ...................................
-> #
->       4.21%  ksoftirqd/0      [kernel.kallsyms]      [k] __pi___inval_dcache_area
->       3.13%  ksoftirqd/0      [kernel.kallsyms]      [k] __netif_receive_skb_core
->       3.01%  ksoftirqd/0      [kernel.kallsyms]      [k] fib_table_lookup
->       2.32%  ksoftirqd/0      [kernel.kallsyms]      [k] __dev_queue_xmit
->       2.23%  ksoftirqd/0      [kernel.kallsyms]      [k] bcm4908_enet_start_xmit
->       2.21%  ksoftirqd/0      [kernel.kallsyms]      [k] __skb_flow_dissect
->       2.13%  ksoftirqd/0      [kernel.kallsyms]      [k] __pi___clean_dcache_area_poc
->       2.00%  ksoftirqd/0      [kernel.kallsyms]      [k] eth_type_trans
->       1.86%  ksoftirqd/0      [kernel.kallsyms]      [k] bcm4908_enet_poll_rx
->       1.73%  ksoftirqd/0      [kernel.kallsyms]      [k] __local_bh_enable_ip
->       1.63%  ksoftirqd/0      [kernel.kallsyms]      [k] fib_rules_lookup
->       1.61%  ksoftirqd/0      [kernel.kallsyms]      [k] bcm4908_enet_poll_tx
->       (...)
-> 
-> Signed-off-by: Rafał Miłecki <rafal@milecki.pl>
 
-Ping? Does it look OK to you?
+--GFneNsft22FHtzEa
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+
+On Mon, Oct 17, 2022 at 11:27:07AM +0530, Anshuman Khandual wrote:
+
+I spotted one typo below but otherwise this looks good!
+
+> +# This is just a dummy register declaration to get all common field masks and
+> +# shifts for accessing given BRBINF contents.
+> +Sysreg	BRBINF_EL1	2	1	8	0	0
+
+This seems reasonable to me, others may disagree.
+
+> +Sysreg	BRBCR_EL1	2	1	9	0	0
+> +Res0	63:24
+> +Field	23 	EXCEPTION
+> +Field	22 	ERTN
+> +Res0	21:9
+> +Field	8 	FZP
+> +Res0	7
+> +Enum	6:5	TS
+> +	0b1	VIRTUAL
+
+I'd have expected this to be written as 0b01.  Doesn't make any
+practical difference though.
+
+> +Sysreg	BRBFCR_EL1	2	1	9	0	1
+
+> +Field	16	EnL
+
+This is "EnI" in DDI0487I.a.
+
+--GFneNsft22FHtzEa
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAmNOsIcACgkQJNaLcl1U
+h9B8mQf/YGziWfn/iGHXXqP1g1TRcgidWG2RKf40LqRQFjE9CFIZXE9CFKF/phii
+c6DnpdV6gRyWoQUN/0YyyYoVQqoOiZuLiec5/5izwOR/sz5KHAsiOmSBNouC2URX
+HXB7X+ISeV8yJnmHv6LSTEPo9Wli55CDlcFa7r6gknyC6jz7pYG+jEBw6EGzLSAW
+5S4ulolNpsNeWvzCXm9lqljVU8U9LYkKESspFoLMylIf+E5kY1T7Nl70g+ZM0wpo
+3Y2eJZmaGg+tnXp7jPz4x9iJEpnc3YPdhTgOWKWSTS56qwxAo8jplreQdfEHdVwB
+qXammSL9S07Ms9UB+Bo8nigp3ywwZw==
+=cqL5
+-----END PGP SIGNATURE-----
+
+--GFneNsft22FHtzEa--
