@@ -2,188 +2,119 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 35BE6C4332F
-	for <linux-perf-users@archiver.kernel.org>; Tue, 18 Oct 2022 12:47:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 03CBFC4332F
+	for <linux-perf-users@archiver.kernel.org>; Tue, 18 Oct 2022 12:54:13 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230177AbiJRMrW (ORCPT
+        id S230259AbiJRMyM (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Tue, 18 Oct 2022 08:47:22 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36982 "EHLO
+        Tue, 18 Oct 2022 08:54:12 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51878 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230178AbiJRMrV (ORCPT
+        with ESMTP id S229669AbiJRMyL (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Tue, 18 Oct 2022 08:47:21 -0400
-Received: from szxga01-in.huawei.com (szxga01-in.huawei.com [45.249.212.187])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DF76BC45B5;
-        Tue, 18 Oct 2022 05:47:11 -0700 (PDT)
-Received: from dggemv704-chm.china.huawei.com (unknown [172.30.72.55])
-        by szxga01-in.huawei.com (SkyGuard) with ESMTP id 4MsD7W0y5RzpVjm;
-        Tue, 18 Oct 2022 20:43:51 +0800 (CST)
-Received: from kwepemm600010.china.huawei.com (7.193.23.86) by
- dggemv704-chm.china.huawei.com (10.3.19.47) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2375.31; Tue, 18 Oct 2022 20:47:05 +0800
-Received: from ubuntu1804.huawei.com (10.67.174.174) by
- kwepemm600010.china.huawei.com (7.193.23.86) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2375.31; Tue, 18 Oct 2022 20:47:04 +0800
-From:   Li Huafei <lihuafei1@huawei.com>
-To:     <linux@armlinux.org.uk>, <linus.walleij@linaro.org>
-CC:     <peterz@infradead.org>, <mingo@redhat.com>, <acme@kernel.org>,
-        <mark.rutland@arm.com>, <alexander.shishkin@linux.intel.com>,
-        <jolsa@kernel.org>, <namhyung@kernel.org>, <will@kernel.org>,
-        <arnd@arndb.de>, <ardb@kernel.org>, <rmk+kernel@armlinux.org.uk>,
-        <geert+renesas@glider.be>, <nick.hawkins@hpe.com>,
-        <john@phrozen.org>, <mhiramat@kernel.org>, <lihuafei1@huawei.com>,
-        <ast@kernel.org>, <thunder.leizhen@huawei.com>,
-        <rostedt@goodmis.org>, <linyujun809@huawei.com>,
-        <linux-arm-kernel@lists.infradead.org>,
-        <linux-kernel@vger.kernel.org>, <linux-perf-users@vger.kernel.org>
-Subject: [PATCH v4 1/2] ARM: stacktrace: Make stack walk callback consistent with generic code
-Date:   Tue, 18 Oct 2022 20:43:38 +0800
-Message-ID: <20221018124339.115793-2-lihuafei1@huawei.com>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20221018124339.115793-1-lihuafei1@huawei.com>
-References: <20221018124339.115793-1-lihuafei1@huawei.com>
+        Tue, 18 Oct 2022 08:54:11 -0400
+Received: from mail-ed1-x52e.google.com (mail-ed1-x52e.google.com [IPv6:2a00:1450:4864:20::52e])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 55AE6C4C2E;
+        Tue, 18 Oct 2022 05:54:10 -0700 (PDT)
+Received: by mail-ed1-x52e.google.com with SMTP id l22so20288495edj.5;
+        Tue, 18 Oct 2022 05:54:10 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20210112;
+        h=content-transfer-encoding:in-reply-to:from:references:cc:to:subject
+         :user-agent:mime-version:date:message-id:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=3VZrAcxYIFLhBzdmWrO+0osx70QYrpMUX4awPJm7NAI=;
+        b=ftXv806rGAILQ+FzU8QV4pQRO+u2iUTu9nNDx5gr0EITjpUgxiQYaD+uFko26DChbf
+         mteF68jR/Vl7xHlegQibANlr8D7p1xs9MOAb594xr23jplXZF+Ay+roWraFHR17d0z02
+         ZYbswuzR+9nH579Ql0xyfu4+uE3KeF6FbX05nQnHUl/tny+uwrt7sd5LFHuMvWXjrcKL
+         JW4xebwV3D/5/5BWpJWLZYH6kv0Q3mgFlGt83t2qxgi4gniGWJUtPa3kH44WSNI2UbIu
+         ufU1f2GoB8j5U6vJ6bi1zLIquXU2QCMLUKswrQH/rlrS2l5o50idJoewYg7pkgGaRdFh
+         ZOJQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=content-transfer-encoding:in-reply-to:from:references:cc:to:subject
+         :user-agent:mime-version:date:message-id:x-gm-message-state:from:to
+         :cc:subject:date:message-id:reply-to;
+        bh=3VZrAcxYIFLhBzdmWrO+0osx70QYrpMUX4awPJm7NAI=;
+        b=1SxOeoEq7z5nYd12VLmuMisdGmuqYYm5inZIQrqzAjjwqzVu3bynLUfbEOmR0MJ7qJ
+         8thN2ZKNCL/4xC48sg3Ramd/ZSOw1ROslgVStK0PHWM2qOfMXha8xvU5W3Qx80ARdtYU
+         J0Na4kO60ioEDPad4Wmr2wnx4eVWC2ESXbD7zksanmNoIrWY/MDi+PzX7JOdPKIFzgml
+         PUOYHL/h34dQsYcvHeNrCOvUjg5xqVcnH83Jb6HpZT4mirh+RW46jMKJbmT+jneeVF0I
+         3j3FasdYh+Rl06RpTSF+RfHTbDNWRCRrNbdsnPEZR9myDTvppldcXMylBCfT3qW1+g9h
+         /Ecg==
+X-Gm-Message-State: ACrzQf3ZJeEkSmQyjRrFg1OfRjTUmgAVBhkGD7FPZ+esVc/T0y7XdgRf
+        s6S2bn9LrAxMKD1Uhrc8+Y0=
+X-Google-Smtp-Source: AMsMyM7kL8grcFCnBhd5sOHIhyXGwrFcVflwEN5K6HesM+p/OpsVt1t8AZUk4PWPZsGvtMNiyXxjTg==
+X-Received: by 2002:a05:6402:3887:b0:458:289e:c9cc with SMTP id fd7-20020a056402388700b00458289ec9ccmr2491864edb.101.1666097648734;
+        Tue, 18 Oct 2022 05:54:08 -0700 (PDT)
+Received: from [192.168.26.149] (ip-194-187-74-233.konfederacka.maverick.com.pl. [194.187.74.233])
+        by smtp.googlemail.com with ESMTPSA id k17-20020aa7c391000000b00456cbd8c65bsm8962346edq.6.2022.10.18.05.54.07
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 18 Oct 2022 05:54:08 -0700 (PDT)
+Message-ID: <f7e79f3a-be97-334b-84f2-76da0981e991@gmail.com>
+Date:   Tue, 18 Oct 2022 14:54:07 +0200
 MIME-Version: 1.0
-Content-Type: text/plain
-X-Originating-IP: [10.67.174.174]
-X-ClientProxiedBy: dggems703-chm.china.huawei.com (10.3.19.180) To
- kwepemm600010.china.huawei.com (7.193.23.86)
-X-CFilter-Loop: Reflected
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:96.0) Gecko/20100101
+ Thunderbird/96.0
+Subject: Re: [PATCH] perf report: Skip symbols for idle symbols
+To:     Peter Zijlstra <peterz@infradead.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        Arnaldo Carvalho de Melo <acme@kernel.org>
+Cc:     Mark Rutland <mark.rutland@arm.com>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Jiri Olsa <jolsa@kernel.org>,
+        Namhyung Kim <namhyung@kernel.org>,
+        linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org,
+        =?UTF-8?B?UmFmYcWCIE1pxYJlY2tp?= <rafal@milecki.pl>
+References: <20220608055146.1446-1-zajec5@gmail.com>
+From:   =?UTF-8?B?UmFmYcWCIE1pxYJlY2tp?= <zajec5@gmail.com>
+In-Reply-To: <20220608055146.1446-1-zajec5@gmail.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-As with the generic arch_stack_walk() code the ARM stack walk code takes
-a callback that is called per stack frame. Currently the ARM code always
-passes a struct stackframe to the callback and the generic code just
-passes the pc, however none of the users ever reference anything in the
-struct other than the pc value. The ARM code also uses a return type of
-int while the generic code uses a return type of bool though in both
-cases the return value is a boolean value and the sense is inverted
-between the two.
+On 8.06.2022 07:51, Rafał Miłecki wrote:
+> From: Rafał Miłecki <rafal@milecki.pl>
+> 
+> Displaying idle symbols is rather useless and makes reviewing "real"
+> symbols harder. perf top already skips them so perf report should
+> probably do the same.
+> 
+> BEFORE
+> 
+> # Overhead  Command          Shared Object          Symbol
+> # ........  ...............  .....................  ...................................
+> #
+>      75.04%  swapper          [kernel.kallsyms]      [k] arch_cpu_idle
+>       1.05%  ksoftirqd/0      [kernel.kallsyms]      [k] __pi___inval_dcache_area
+>       0.78%  ksoftirqd/0      [kernel.kallsyms]      [k] __netif_receive_skb_core
+>       0.75%  ksoftirqd/0      [kernel.kallsyms]      [k] fib_table_lookup
+>       0.58%  ksoftirqd/0      [kernel.kallsyms]      [k] __dev_queue_xmit
+>       0.56%  ksoftirqd/0      [kernel.kallsyms]      [k] bcm4908_enet_start_xmit
+>       0.55%  ksoftirqd/0      [kernel.kallsyms]      [k] __skb_flow_dissect
+>       0.53%  ksoftirqd/0      [kernel.kallsyms]      [k] __pi___clean_dcache_area_poc
+> 
+> AFTER
+> 
+> # Overhead  Command          Shared Object          Symbol
+> # ........  ...............  .....................  ...................................
+> #
+>       4.21%  ksoftirqd/0      [kernel.kallsyms]      [k] __pi___inval_dcache_area
+>       3.13%  ksoftirqd/0      [kernel.kallsyms]      [k] __netif_receive_skb_core
+>       3.01%  ksoftirqd/0      [kernel.kallsyms]      [k] fib_table_lookup
+>       2.32%  ksoftirqd/0      [kernel.kallsyms]      [k] __dev_queue_xmit
+>       2.23%  ksoftirqd/0      [kernel.kallsyms]      [k] bcm4908_enet_start_xmit
+>       2.21%  ksoftirqd/0      [kernel.kallsyms]      [k] __skb_flow_dissect
+>       2.13%  ksoftirqd/0      [kernel.kallsyms]      [k] __pi___clean_dcache_area_poc
+>       2.00%  ksoftirqd/0      [kernel.kallsyms]      [k] eth_type_trans
+>       1.86%  ksoftirqd/0      [kernel.kallsyms]      [k] bcm4908_enet_poll_rx
+>       1.73%  ksoftirqd/0      [kernel.kallsyms]      [k] __local_bh_enable_ip
+>       1.63%  ksoftirqd/0      [kernel.kallsyms]      [k] fib_rules_lookup
+>       1.61%  ksoftirqd/0      [kernel.kallsyms]      [k] bcm4908_enet_poll_tx
+>       (...)
+> 
+> Signed-off-by: Rafał Miłecki <rafal@milecki.pl>
 
-In order to reduce code duplication when ARM is converted to use
-arch_stack_walk() change the signature and return sense of the ARM
-specific callback to match that of the generic code.
-
-Signed-off-by: Li Huafei <lihuafei1@huawei.com>
-Reviewed-by: Mark Brown <broonie@kernel.org>
-Reviewed-by: Linus Waleij <linus.walleij@linaro.org>
----
- arch/arm/include/asm/stacktrace.h |  2 +-
- arch/arm/kernel/perf_callchain.c  |  9 ++++-----
- arch/arm/kernel/return_address.c  |  8 ++++----
- arch/arm/kernel/stacktrace.c      | 13 ++++++-------
- 4 files changed, 15 insertions(+), 17 deletions(-)
-
-diff --git a/arch/arm/include/asm/stacktrace.h b/arch/arm/include/asm/stacktrace.h
-index 36b2ff44fcbb..360f0d2406bf 100644
---- a/arch/arm/include/asm/stacktrace.h
-+++ b/arch/arm/include/asm/stacktrace.h
-@@ -44,7 +44,7 @@ void arm_get_current_stackframe(struct pt_regs *regs, struct stackframe *frame)
- 
- extern int unwind_frame(struct stackframe *frame);
- extern void walk_stackframe(struct stackframe *frame,
--			    int (*fn)(struct stackframe *, void *), void *data);
-+			    bool (*fn)(void *, unsigned long), void *data);
- extern void dump_mem(const char *lvl, const char *str, unsigned long bottom,
- 		     unsigned long top);
- extern void dump_backtrace(struct pt_regs *regs, struct task_struct *tsk,
-diff --git a/arch/arm/kernel/perf_callchain.c b/arch/arm/kernel/perf_callchain.c
-index bc6b246ab55e..7147edbe56c6 100644
---- a/arch/arm/kernel/perf_callchain.c
-+++ b/arch/arm/kernel/perf_callchain.c
-@@ -81,13 +81,12 @@ perf_callchain_user(struct perf_callchain_entry_ctx *entry, struct pt_regs *regs
-  * whist unwinding the stackframe and is like a subroutine return so we use
-  * the PC.
-  */
--static int
--callchain_trace(struct stackframe *fr,
--		void *data)
-+static bool
-+callchain_trace(void *data, unsigned long pc)
- {
- 	struct perf_callchain_entry_ctx *entry = data;
--	perf_callchain_store(entry, fr->pc);
--	return 0;
-+	perf_callchain_store(entry, pc);
-+	return true;
- }
- 
- void
-diff --git a/arch/arm/kernel/return_address.c b/arch/arm/kernel/return_address.c
-index 38f1ea9c724d..ac15db66df4c 100644
---- a/arch/arm/kernel/return_address.c
-+++ b/arch/arm/kernel/return_address.c
-@@ -16,17 +16,17 @@ struct return_address_data {
- 	void *addr;
- };
- 
--static int save_return_addr(struct stackframe *frame, void *d)
-+static bool save_return_addr(void *d, unsigned long pc)
- {
- 	struct return_address_data *data = d;
- 
- 	if (!data->level) {
--		data->addr = (void *)frame->pc;
-+		data->addr = (void *)pc;
- 
--		return 1;
-+		return false;
- 	} else {
- 		--data->level;
--		return 0;
-+		return true;
- 	}
- }
- 
-diff --git a/arch/arm/kernel/stacktrace.c b/arch/arm/kernel/stacktrace.c
-index 85443b5d1922..d05968bc7812 100644
---- a/arch/arm/kernel/stacktrace.c
-+++ b/arch/arm/kernel/stacktrace.c
-@@ -127,12 +127,12 @@ int notrace unwind_frame(struct stackframe *frame)
- #endif
- 
- void notrace walk_stackframe(struct stackframe *frame,
--		     int (*fn)(struct stackframe *, void *), void *data)
-+		     bool (*fn)(void *, unsigned long), void *data)
- {
- 	while (1) {
- 		int ret;
- 
--		if (fn(frame, data))
-+		if (!fn(data, frame->pc))
- 			break;
- 		ret = unwind_frame(frame);
- 		if (ret < 0)
-@@ -148,21 +148,20 @@ struct stack_trace_data {
- 	unsigned int skip;
- };
- 
--static int save_trace(struct stackframe *frame, void *d)
-+static bool save_trace(void *d, unsigned long addr)
- {
- 	struct stack_trace_data *data = d;
- 	struct stack_trace *trace = data->trace;
--	unsigned long addr = frame->pc;
- 
- 	if (data->no_sched_functions && in_sched_functions(addr))
--		return 0;
-+		return true;
- 	if (data->skip) {
- 		data->skip--;
--		return 0;
-+		return true;
- 	}
- 
- 	trace->entries[trace->nr_entries++] = addr;
--	return trace->nr_entries >= trace->max_entries;
-+	return trace->nr_entries < trace->max_entries;
- }
- 
- /* This must be noinline to so that our skip calculation works correctly */
--- 
-2.17.1
-
+Ping? Does it look OK to you?
