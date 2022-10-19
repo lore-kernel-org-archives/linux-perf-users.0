@@ -2,113 +2,126 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 537E4C4332F
-	for <linux-perf-users@archiver.kernel.org>; Wed, 19 Oct 2022 15:24:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A5BE9C433FE
+	for <linux-perf-users@archiver.kernel.org>; Wed, 19 Oct 2022 19:11:35 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229848AbiJSPYH (ORCPT
+        id S230410AbiJSTLd (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Wed, 19 Oct 2022 11:24:07 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44944 "EHLO
+        Wed, 19 Oct 2022 15:11:33 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50040 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231981AbiJSPXr (ORCPT
+        with ESMTP id S229622AbiJSTLb (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Wed, 19 Oct 2022 11:23:47 -0400
-Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E8268F6C3C;
-        Wed, 19 Oct 2022 08:17:07 -0700 (PDT)
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id 0383B6192A;
-        Wed, 19 Oct 2022 15:17:02 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 02A4DC433D6;
-        Wed, 19 Oct 2022 15:17:00 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1666192621;
-        bh=emdSBMANCR6uNMgdrWui26CerAZMz0PO1mE8mf8K38I=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=NtIj5AaIJMQsoLDLshvbXse+vgPR9uUxazvQLqpajUFiEsaNXtiVlfdasyAicc5aI
-         pYoDam4WJeXG+x+zKgxRRnTD1l4cHgEwSY0AhU6Pz6MwQ1eCCG457+VdQTtqqOrNQ2
-         RU53lyEjQhbCiVYl73IlDkm6fmiM+/4aqRIybg10V2AezXadIy+0zbs6PWagl6J3JZ
-         kGPlEYUQh6hLKwWoVi+ND6QFoYNs7Mu2plmuFXBNiAy9DRmsWeMCPuiYzoRQItSOd+
-         H0bQIU2MP6hihlOoCUI5KfDC+7YOuduj+9i1zPgfR0C+X+8ffZ825BDa6OwzWkpn23
-         zSL82ii3pZjbQ==
-Received: by quaco.ghostprotocols.net (Postfix, from userid 1000)
-        id CF6E840B44; Wed, 19 Oct 2022 12:16:58 -0300 (-03)
-Date:   Wed, 19 Oct 2022 12:16:58 -0300
-From:   Arnaldo Carvalho de Melo <acme@kernel.org>
-To:     Leo Yan <leo.yan@linaro.org>
-Cc:     Carsten Haitzler <carsten.haitzler@foss.arm.com>,
-        Jiri Slaby <jirislaby@kernel.org>,
-        linux-kernel@vger.kernel.org, coresight@lists.linaro.org,
-        suzuki.poulose@arm.com, mathieu.poirier@linaro.org,
-        mike.leach@linaro.org, linux-perf-users@vger.kernel.org
-Subject: Re: [PATCH v9 02/13] perf test: Add build infra for perf test tools
- for CoreSight tests
-Message-ID: <Y1AU6qUGUVJB1KSX@kernel.org>
-References: <20220909152803.2317006-3-carsten.haitzler@foss.arm.com>
- <Yz67SHpIN5NggKEk@kernel.org>
- <Yz6/zlchVnNsVlzJ@kernel.org>
- <Yz7RAgMN6WGnD3OZ@leoy-yangtze.lan>
- <e9f980a7-fba8-4610-a058-b74e51d6ab24@foss.arm.com>
- <Y0AfK7sVphNkQA4q@kernel.org>
- <0b3afc5d-c4a1-8a50-45c3-20c706c3ecfd@foss.arm.com>
- <Y0QkIjO4pvPuzeMB@kernel.org>
- <9f2d2032-8859-4388-489a-ba5cd2cee432@foss.arm.com>
- <Y0+6jbL1oC4jk8Ja@leoy-huanghe.lan>
+        Wed, 19 Oct 2022 15:11:31 -0400
+Received: from mail-oa1-f49.google.com (mail-oa1-f49.google.com [209.85.160.49])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 20B2F181DA6;
+        Wed, 19 Oct 2022 12:11:25 -0700 (PDT)
+Received: by mail-oa1-f49.google.com with SMTP id 586e51a60fabf-132af5e5543so21823738fac.8;
+        Wed, 19 Oct 2022 12:11:25 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=cc:to:message-id:date:from:content-transfer-encoding:mime-version
+         :subject:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=8HWbMi0BhU5RSsaj3t9gz8sb2tRhVv6F39wL/nVJWCs=;
+        b=oY3643uoeK2h2EQmqcZb0CYchxdcS7t/3I8dZAO2bnQOyN+XVErSAd3/qDN2LTE3DG
+         Z3GqdkevO/bWez4+XMT9NYCBuDhoxwtSTxsRMgn2R0YF8CrxY3N9hPaweT5kack917CW
+         C/AtczxVOhzL1DBi0mkXJGnSzxs5wipjQYV8vSGLhrRpOEVoKImWU2zEtr1xPimes4ga
+         bIawoIPUNiDKD1P7uSGGeZ28zIJwXBgQDQF1sLab4byze/QgD2KRfNPkWlman8HwDJqx
+         BBd8NTi3TnQu2QOFiTGu7AUJWxGEAFHYP2x/rcRjEpPBFs080kbExbzL+lB/L9nkCg0k
+         dZ2g==
+X-Gm-Message-State: ACrzQf0ufe5BiFjlCtnZ0IwgyRUHiubl1UOtn+lsYCOvqKw9/6AY302h
+        GxxEb8+vkD5c/KH8bpGWaQ==
+X-Google-Smtp-Source: AMsMyM6L+gye/LwLSUbTwvcqYD3FLUzUB3vYmZL9Im4PgtcEfWLLmd/KydKz+OoIOnaMZdgD5mTlwg==
+X-Received: by 2002:a05:6870:9688:b0:132:9c55:72 with SMTP id o8-20020a056870968800b001329c550072mr6180621oaq.104.1666206684576;
+        Wed, 19 Oct 2022 12:11:24 -0700 (PDT)
+Received: from robh_at_kernel.org (66-90-144-107.dyn.grandenetworks.net. [66.90.144.107])
+        by smtp.gmail.com with ESMTPSA id q10-20020a056830018a00b006618f1fbb84sm7348116ota.80.2022.10.19.12.11.23
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 19 Oct 2022 12:11:24 -0700 (PDT)
+Received: (nullmailer pid 3420895 invoked by uid 1000);
+        Wed, 19 Oct 2022 19:11:25 -0000
+Subject: [PATCH v2 0/7] perf: Arm SPEv1.2 support
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <Y0+6jbL1oC4jk8Ja@leoy-huanghe.lan>
-X-Url:  http://acmel.wordpress.com
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 8bit
+X-b4-tracking: H4sIANtLUGMC/3WNzQrCMBCEX6Xs2ZV0tb8n30M8pO2mCdZENhqQknc3ePc0fAPfzA6RxXGEsdpBOL
+ nogi9Ahwpmq/3K6JbCQIpI9dSglgfGJ2PqsUPDi1FnrltDJyjKpCPjJNrPtkj+vW2ltC6+gnx+F6ku
+ cf2zlmpUOHfN1C8DcTvQ5c7ieTsGWeGWc/4CRvTey64AAAA=
+From:   Rob Herring <robh@kernel.org>
+Date:   Wed, 19 Oct 2022 14:11:23 -0500
+Message-Id: <20220825-arm-spe-v8-7-v2-0-e37322d68ac0@kernel.org>
+To:     Namhyung Kim <namhyung@kernel.org>,
+        James Morse <james.morse@arm.com>,
+        Ingo Molnar <mingo@redhat.com>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Marc Zyngier <maz@kernel.org>,
+        Suzuki K Poulose <suzuki.poulose@arm.com>,
+        Will Deacon <will@kernel.org>,
+        Alexandru Elisei <alexandru.elisei@arm.com>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Arnaldo Carvalho de Melo <acme@kernel.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Oliver Upton <oliver.upton@linux.dev>,
+        Jiri Olsa <jolsa@kernel.org>
+Cc:     kvmarm@lists.cs.columbia.edu, kvmarm@lists.linux.dev,
+        linux-arm-kernel@lists.infradead.org,
+        linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Mark Brown <broonie@kernel.org>
+X-Mailer: b4 0.11.0-dev
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-Em Wed, Oct 19, 2022 at 04:51:25PM +0800, Leo Yan escreveu:
-> On Wed, Oct 19, 2022 at 09:11:20AM +0100, Carsten Haitzler wrote:
-> > 
-> > 
-> > On 10/10/22 14:54, Arnaldo Carvalho de Melo wrote:
-> > > Em Mon, Oct 10, 2022 at 08:02:29AM +0100, Carsten Haitzler escreveu:
-> > > > On 10/7/22 13:44, Arnaldo Carvalho de Melo wrote:
-> > > > > Em Fri, Oct 07, 2022 at 12:34:51PM +0100, Carsten Haitzler escreveu:
-> > > > > > On 10/6/22 13:58, Leo Yan wrote:
-> > > > > > oh sorry - indeed i didn't see this problem coming after fixing the
-> > > > > > conflicts. i've got an update of the patches that fix that. should i just
-> > > > > > send through the 2 updates patches as a v10 or the whole series?
-> > > 
-> > > > > No need, I did some fixes taking into account the comments on this
-> > > > > thread, we can go on and fix things from what I have now at
-> > > > > acme/perf/core, which I'll send to Linus today.
-> > > > oh cool. i'll let patches sit for now - let me know if there's anything you
-> > > > want/need from me.
-> > > 
-> > > Not right now, I'm now just waiting for Linus to merge what I sent, then
-> > > you can continue from upstream.
-> > 
-> > I'm not sure what you have sent to Linus? The patch series? Specific
-> > patches?
-> 
-> I think the whole patch set has been merged into Linux mainline;
-> after git pull the Linux mainline code and you could see:
-> 
-> $ git log --oneline --author="Carsten Haitzle"
-> dc2e0fb00bb2 perf test coresight: Add relevant documentation about ARM64 CoreSight testing
-> 43c688cb3241 perf test: Add git ignore for tmp and output files of ARM CoreSight tests
-> b65c6477f6bb perf test coresight: Add unroll thread test shell script
-> fc0a0ea03980 perf test coresight: Add unroll thread test tool
-> 74c62b8d6161 perf test coresight: Add thread loop test shell scripts
-> e9664b96c6c0 perf test coresight: Add thread loop test tool
-> b76692fea7f2 perf test coresight: Add memcpy thread test shell script
-> f1288bdb6d48 perf test coresight: Add memcpy thread test tool
-> 6ea586b1e3dc perf test: Add git ignore for perf data generated by the ARM CoreSight tests
-> fdc25cc59c71 perf test: Add arm64 asm pureloop test shell script
-> 8b97519711c3 perf test: Add asm pureloop test tool
-> 34bec35cbbb2 perf test: Add build infra for perf test tools for ARM CoreSight tests
-> c63317ab14b0 perf test: Add CoreSight shell lib shared code for future tests
-> 7391db645938 perf test: Refactor shell tests allowing subdirs
+This series adds support for Arm SPEv1.2 which is part of the
+Armv8.7/Armv9.2 architecture. There's 2 new features that affect the 
+kernel: a new event filter bit, branch 'not taken', and an inverted 
+event filter register. 
 
-Thanks, Leo, Carsten, are we on the same page now? :-)
+Since this support adds new registers and fields, first the SPE register 
+defines are converted to automatic generation.
 
-- Arnaldo
+Note that the 'config3' addition in sysfs format files causes SPE to 
+break. A stable fix e552b7be12ed ("perf: Skip and warn on unknown format 
+'configN' attrs") landed in v6.1-rc1.
+
+The perf tool side changes are available here[1].
+
+Tested on FVP.
+
+[1] https://lore.kernel.org/all/20220914-arm-perf-tool-spe1-2-v2-v4-0-83c098e6212e@kernel.org/
+
+Signed-off-by: Rob Herring <robh@kernel.org>
+---
+Changes in v2:
+- Convert the SPE register defines to automatic generation
+- Fixed access to SYS_PMSNEVFR_EL1 when not present
+- Rebase on v6.1-rc1
+- Link to v1: https://lore.kernel.org/r/20220825-arm-spe-v8-7-v1-0-c75b8d92e692@kernel.org
+
+---
+Rob Herring (7):
+      perf: arm_spe: Use feature numbering for PMSEVFR_EL1 defines
+      arm64: Drop SYS_ from SPE register defines
+      arm64/sysreg: Convert SPE registers to automatic generation
+      perf: arm_spe: Drop BIT() and use FIELD_GET/PREP accessors
+      perf: arm_spe: Support new SPEv1.2/v8.7 'not taken' event
+      perf: Add perf_event_attr::config3
+      perf: arm_spe: Add support for SPEv1.2 inverted event filtering
+
+ arch/arm64/include/asm/el2_setup.h |   6 +-
+ arch/arm64/include/asm/sysreg.h    |  99 +++------------------------
+ arch/arm64/kvm/debug.c             |   2 +-
+ arch/arm64/kvm/hyp/nvhe/debug-sr.c |   2 +-
+ arch/arm64/tools/sysreg            | 116 +++++++++++++++++++++++++++++++
+ drivers/perf/arm_spe_pmu.c         | 136 ++++++++++++++++++++++++-------------
+ include/uapi/linux/perf_event.h    |   3 +
+ 7 files changed, 224 insertions(+), 140 deletions(-)
+---
+base-commit: 9abf2313adc1ca1b6180c508c25f22f9395cc780
+change-id: 20220825-arm-spe-v8-7-fedf04e16f23
+
+Best regards,
+-- 
+Rob Herring <robh@kernel.org>
