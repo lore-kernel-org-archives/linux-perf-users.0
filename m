@@ -2,125 +2,92 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B0DCDC4332F
-	for <linux-perf-users@archiver.kernel.org>; Wed, 19 Oct 2022 10:17:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 89ECCC4332F
+	for <linux-perf-users@archiver.kernel.org>; Wed, 19 Oct 2022 10:55:30 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229835AbiJSKRa (ORCPT
+        id S229832AbiJSKz1 (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Wed, 19 Oct 2022 06:17:30 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54042 "EHLO
+        Wed, 19 Oct 2022 06:55:27 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45046 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229800AbiJSKQa (ORCPT
+        with ESMTP id S235018AbiJSKy4 (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Wed, 19 Oct 2022 06:16:30 -0400
-Received: from mail-il1-x136.google.com (mail-il1-x136.google.com [IPv6:2607:f8b0:4864:20::136])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5471F10CFA0
-        for <linux-perf-users@vger.kernel.org>; Wed, 19 Oct 2022 02:57:36 -0700 (PDT)
-Received: by mail-il1-x136.google.com with SMTP id h18so8883036ilh.3
-        for <linux-perf-users@vger.kernel.org>; Wed, 19 Oct 2022 02:57:35 -0700 (PDT)
+        Wed, 19 Oct 2022 06:54:56 -0400
+Received: from mail-oa1-x2f.google.com (mail-oa1-x2f.google.com [IPv6:2001:4860:4864:20::2f])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 630FB1633B1
+        for <linux-perf-users@vger.kernel.org>; Wed, 19 Oct 2022 03:26:26 -0700 (PDT)
+Received: by mail-oa1-x2f.google.com with SMTP id 586e51a60fabf-12c8312131fso20066240fac.4
+        for <linux-perf-users@vger.kernel.org>; Wed, 19 Oct 2022 03:26:26 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
         h=in-reply-to:content-disposition:mime-version:references:message-id
          :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=W82ENRi/vWm2336iUxijeBhhPjgIoPANGK5XokAwjLM=;
-        b=AfZbhz6SL2hrtwh9lZFyL6cCLHpURECSAaG31B/o5dwTITxUgeqQidPyFMafuRAWzE
-         2iKiwoQbLrrjGZBvRWNh6Q2r5yw1rl8E9+ISOzb8HQoqAPVKj53pDitXacv83EUhtfAo
-         vO5oHmi8u17MiKlbizxhlEi/6X5Vr0lZwDwSQKhRbz/sOUsfKMxKUd3ox3TN0DWx0rTK
-         T34VJ43DFjRpB/1/4nc2GEEppkiicx08BXBc8Nu6cS0vppBBYDdWeZb8YCUc5gy+fr+v
-         dM4vMHpq2Gj/aRctQOJakIAx0GdXlmnGVwoo+mpDA2+/Q7sKolagnWGvmaICH7/nzu4Q
-         ad4g==
+        bh=5L2p0wiTIye73Ieybraxk3J6TT5B0mEvC2Vws56UVJk=;
+        b=l+r+f0vUiVDd+Bfz1YRm6DlhrxoPFcCXdKFyRCC76XU+70uzhGrGLF5tWEB8Lw1pxH
+         5LUrZ9rcze2+IAwhR8vBu4/oL/VCAxVsvK6xF03dkB9pATbvYTD+pzoVfPshj9w7/ySx
+         rtW0jjLYfmTZ0bHWOmx9NvW9W5/na8rJaOfWVU5/l4RldT3o/1hqtFdbmwAZ48BDBGZj
+         Rl5eoVuCz8ZcVsgAMWu6ASDChiYHghHr2Dogwt6ZzqO4w/NT+KtVA2+DMc7kbZh5yAzy
+         BvgYHBY4Ko8IUHni28UkIrhJu339pyiCCLQZ2QHvozC2K4esEB/6QgHHRDoMU8Sj0IEc
+         6Zig==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
         h=in-reply-to:content-disposition:mime-version:references:message-id
          :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=W82ENRi/vWm2336iUxijeBhhPjgIoPANGK5XokAwjLM=;
-        b=u/GdC98tH9mViMlvzAM7Nobi7gWhvv31IIqPqCIbNHLl8GNphMXi2hi/S9IM41aF51
-         Md4u7fPtjL/fGwWw+UXvCxysYAu8qpMMq6bfJAe9Xpmaww16f8FUXOKiQpTz2WcHstEA
-         e3r0URzCQf9N1jdUuHombLHMOhKiBNtopns2KxmuTdVVpy3rFj1xzs8rKMwYe6gJodEY
-         foJeLkXhe05CcFH3pinALb5/foil+TpO/niAo+OQsBOe1/At9+6GDYzSj1dAlc6zfM7R
-         GOfrirqzd1dZt4324CoKpodYIagB5fe55b3nSZQiyN9Q2igaQq2SCD7QVefT/WcNN4iI
-         knbg==
-X-Gm-Message-State: ACrzQf2pAoJhlO4SXF0lEkN4yJeouEMpog2bx7Ex69OrjOiTJeh7JFO6
-        TWG8VsLXOBJ5/IPJkB5/4PLQgWpG/gurozgBCXA=
-X-Google-Smtp-Source: AMsMyM6RTDhb7E9g5FHm/PpzD9A77KswvYCfiS1Xl0yUhM+9dmkn3sZYwkY9aT6Vn0KQgnkycF0OCA==
-X-Received: by 2002:a63:a06:0:b0:458:2853:45e4 with SMTP id 6-20020a630a06000000b00458285345e4mr6175346pgk.20.1666169491395;
-        Wed, 19 Oct 2022 01:51:31 -0700 (PDT)
+        bh=5L2p0wiTIye73Ieybraxk3J6TT5B0mEvC2Vws56UVJk=;
+        b=IL7PinGbzpApclKoLd589qwN6W7HpxKovi1E+oy2Kuozqf07mUfGkATFbAwLMBsxnX
+         9s9tSbPGSLKns7DeurWE82u3eBBgbkKlZPSih53fuYtd7CO806IFMxJ0xtfkxQh57VLD
+         Yzj8HP7IF1ISUL+Y/9IZKimhnfjAbNyr1g0350W+gCWrWKGXVgvjj++DpD/S9rSKVE8R
+         c90ZA9xfRg55FQC68vBX4o+vZ4TlmwNRe2XS82nVaBatKck6WJYFg2qcqLfqnihTQy+8
+         GTWSaNKdyi2htSt7BgqbZI10/dERK9XmyrgOPtlAGRAhC9EkY5ZvPoYJpGW3IhNRgVNJ
+         IMVw==
+X-Gm-Message-State: ACrzQf0h+UtMNe3rfP8q6E3l0moSY93LLU8b1iE3Rx0MFFYrwVw8REbQ
+        liEwolM5VNke2SmRS2fyHzG+jZDceYl5EqASH7s=
+X-Google-Smtp-Source: AMsMyM77gP3xxGPpPS/CNxNrJ3ojX9c/hCy2hcYAvIVxCPRhks0fKb9DCvzDjBjq5vNo3if6DjlalA==
+X-Received: by 2002:a17:90b:1648:b0:20b:f0ae:2169 with SMTP id il8-20020a17090b164800b0020bf0ae2169mr43009113pjb.173.1666169003001;
+        Wed, 19 Oct 2022 01:43:23 -0700 (PDT)
 Received: from leoy-huanghe.lan (211-75-219-199.hinet-ip.hinet.net. [211.75.219.199])
-        by smtp.gmail.com with ESMTPSA id t16-20020a170902e85000b00179eaf275d5sm10278662plg.27.2022.10.19.01.51.28
+        by smtp.gmail.com with ESMTPSA id j9-20020a17090a840900b0020d51aefb82sm9656742pjn.19.2022.10.19.01.43.18
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 19 Oct 2022 01:51:30 -0700 (PDT)
-Date:   Wed, 19 Oct 2022 16:51:25 +0800
+        Wed, 19 Oct 2022 01:43:22 -0700 (PDT)
+Date:   Wed, 19 Oct 2022 16:43:16 +0800
 From:   Leo Yan <leo.yan@linaro.org>
 To:     Carsten Haitzler <carsten.haitzler@foss.arm.com>
-Cc:     Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Jiri Slaby <jirislaby@kernel.org>,
-        linux-kernel@vger.kernel.org, coresight@lists.linaro.org,
-        suzuki.poulose@arm.com, mathieu.poirier@linaro.org,
-        mike.leach@linaro.org, linux-perf-users@vger.kernel.org
-Subject: Re: [PATCH v9 02/13] perf test: Add build infra for perf test tools
- for CoreSight tests
-Message-ID: <Y0+6jbL1oC4jk8Ja@leoy-huanghe.lan>
+Cc:     Sven Schnelle <svens@linux.ibm.com>, linux-kernel@vger.kernel.org,
+        coresight@lists.linaro.org, suzuki.poulose@arm.com,
+        mathieu.poirier@linaro.org, mike.leach@linaro.org,
+        linux-perf-users@vger.kernel.org, acme@kernel.org
+Subject: Re: [PATCH v9 13/13] perf test: Add relevant documentation about
+ CoreSight testing
+Message-ID: <Y0+4pLpUTsjhu05I@leoy-huanghe.lan>
 References: <20220909152803.2317006-1-carsten.haitzler@foss.arm.com>
- <20220909152803.2317006-3-carsten.haitzler@foss.arm.com>
- <Yz67SHpIN5NggKEk@kernel.org>
- <Yz6/zlchVnNsVlzJ@kernel.org>
- <Yz7RAgMN6WGnD3OZ@leoy-yangtze.lan>
- <e9f980a7-fba8-4610-a058-b74e51d6ab24@foss.arm.com>
- <Y0AfK7sVphNkQA4q@kernel.org>
- <0b3afc5d-c4a1-8a50-45c3-20c706c3ecfd@foss.arm.com>
- <Y0QkIjO4pvPuzeMB@kernel.org>
- <9f2d2032-8859-4388-489a-ba5cd2cee432@foss.arm.com>
+ <20220909152803.2317006-14-carsten.haitzler@foss.arm.com>
+ <yt9dr0zex1j4.fsf@linux.ibm.com>
+ <46328b62-d948-a5c2-25c6-f5caec123412@foss.arm.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <9f2d2032-8859-4388-489a-ba5cd2cee432@foss.arm.com>
+In-Reply-To: <46328b62-d948-a5c2-25c6-f5caec123412@foss.arm.com>
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-On Wed, Oct 19, 2022 at 09:11:20AM +0100, Carsten Haitzler wrote:
-> 
-> 
-> On 10/10/22 14:54, Arnaldo Carvalho de Melo wrote:
-> > Em Mon, Oct 10, 2022 at 08:02:29AM +0100, Carsten Haitzler escreveu:
-> > > On 10/7/22 13:44, Arnaldo Carvalho de Melo wrote:
-> > > > Em Fri, Oct 07, 2022 at 12:34:51PM +0100, Carsten Haitzler escreveu:
-> > > > > On 10/6/22 13:58, Leo Yan wrote:
-> > > > > oh sorry - indeed i didn't see this problem coming after fixing the
-> > > > > conflicts. i've got an update of the patches that fix that. should i just
-> > > > > send through the 2 updates patches as a v10 or the whole series?
-> > 
-> > > > No need, I did some fixes taking into account the comments on this
-> > > > thread, we can go on and fix things from what I have now at
-> > > > acme/perf/core, which I'll send to Linus today.
-> > > oh cool. i'll let patches sit for now - let me know if there's anything you
-> > > want/need from me.
-> > 
-> > Not right now, I'm now just waiting for Linus to merge what I sent, then
-> > you can continue from upstream.
-> 
-> I'm not sure what you have sent to Linus? The patch series? Specific
-> patches?
+Hi Carsten,
 
-I think the whole patch set has been merged into Linux mainline;
-after git pull the Linux mainline code and you could see:
+On Wed, Oct 19, 2022 at 09:16:03AM +0100, Carsten Haitzler wrote:
+> This is weird. This shouldn't be making its way into any man page at all.
+> It's just a file pointing people at other parts of the kernel tree for docs
+> (because when I looked for docs - i found nothing for any kind of getting
+> started guide - I put something here as this was the obvious place for perf
+> related docs for testing - but was told to put the docs elsewhere in core
+> kernel documentation, but I put a reference here for those who follow after
+> to be able to more easily find it).
+> 
+> There is some rule somewhere it seems that makes anything perf-*.txt into a
+> man page. I need to rename this file it seems.
 
-$ git log --oneline --author="Carsten Haitzle"
-dc2e0fb00bb2 perf test coresight: Add relevant documentation about ARM64 CoreSight testing
-43c688cb3241 perf test: Add git ignore for tmp and output files of ARM CoreSight tests
-b65c6477f6bb perf test coresight: Add unroll thread test shell script
-fc0a0ea03980 perf test coresight: Add unroll thread test tool
-74c62b8d6161 perf test coresight: Add thread loop test shell scripts
-e9664b96c6c0 perf test coresight: Add thread loop test tool
-b76692fea7f2 perf test coresight: Add memcpy thread test shell script
-f1288bdb6d48 perf test coresight: Add memcpy thread test tool
-6ea586b1e3dc perf test: Add git ignore for perf data generated by the ARM CoreSight tests
-fdc25cc59c71 perf test: Add arm64 asm pureloop test shell script
-8b97519711c3 perf test: Add asm pureloop test tool
-34bec35cbbb2 perf test: Add build infra for perf test tools for ARM CoreSight tests
-c63317ab14b0 perf test: Add CoreSight shell lib shared code for future tests
-7391db645938 perf test: Refactor shell tests allowing subdirs
+Adrian has sent a patch for renaming the file, see:
+https://lore.kernel.org/lkml/a176a3e1-6ddc-bb63-e41c-15cda8c2d5d2@intel.com/
 
 Thanks,
 Leo
