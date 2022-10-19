@@ -2,231 +2,125 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 09BB2C4332F
-	for <linux-perf-users@archiver.kernel.org>; Wed, 19 Oct 2022 08:21:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B0DCDC4332F
+	for <linux-perf-users@archiver.kernel.org>; Wed, 19 Oct 2022 10:17:31 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229955AbiJSIVi (ORCPT
+        id S229835AbiJSKRa (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Wed, 19 Oct 2022 04:21:38 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54392 "EHLO
+        Wed, 19 Oct 2022 06:17:30 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54042 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229697AbiJSIVh (ORCPT
+        with ESMTP id S229800AbiJSKQa (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Wed, 19 Oct 2022 04:21:37 -0400
-Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTP id 87F9B7C329;
-        Wed, 19 Oct 2022 01:21:35 -0700 (PDT)
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 87F811042;
-        Wed, 19 Oct 2022 01:21:41 -0700 (PDT)
-Received: from e126387.arm.com (unknown [10.57.4.219])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 10DF73F7D8;
-        Wed, 19 Oct 2022 01:21:33 -0700 (PDT)
-From:   carsten.haitzler@foss.arm.com
-To:     linux-kernel@vger.kernel.org
-Cc:     coresight@lists.linaro.org, suzuki.poulose@arm.com,
-        mathieu.poirier@linaro.org, mike.leach@linaro.org,
-        leo.yan@linaro.org, linux-perf-users@vger.kernel.org,
-        acme@kernel.org
-Subject: [PATCH v10 13/13] perf test: Add relevant documentation about CoreSight testing
-Date:   Wed, 19 Oct 2022 09:21:04 +0100
-Message-Id: <20221019082104.62408-1-carsten.haitzler@foss.arm.com>
-X-Mailer: git-send-email 2.25.1
+        Wed, 19 Oct 2022 06:16:30 -0400
+Received: from mail-il1-x136.google.com (mail-il1-x136.google.com [IPv6:2607:f8b0:4864:20::136])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5471F10CFA0
+        for <linux-perf-users@vger.kernel.org>; Wed, 19 Oct 2022 02:57:36 -0700 (PDT)
+Received: by mail-il1-x136.google.com with SMTP id h18so8883036ilh.3
+        for <linux-perf-users@vger.kernel.org>; Wed, 19 Oct 2022 02:57:35 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=W82ENRi/vWm2336iUxijeBhhPjgIoPANGK5XokAwjLM=;
+        b=AfZbhz6SL2hrtwh9lZFyL6cCLHpURECSAaG31B/o5dwTITxUgeqQidPyFMafuRAWzE
+         2iKiwoQbLrrjGZBvRWNh6Q2r5yw1rl8E9+ISOzb8HQoqAPVKj53pDitXacv83EUhtfAo
+         vO5oHmi8u17MiKlbizxhlEi/6X5Vr0lZwDwSQKhRbz/sOUsfKMxKUd3ox3TN0DWx0rTK
+         T34VJ43DFjRpB/1/4nc2GEEppkiicx08BXBc8Nu6cS0vppBBYDdWeZb8YCUc5gy+fr+v
+         dM4vMHpq2Gj/aRctQOJakIAx0GdXlmnGVwoo+mpDA2+/Q7sKolagnWGvmaICH7/nzu4Q
+         ad4g==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=W82ENRi/vWm2336iUxijeBhhPjgIoPANGK5XokAwjLM=;
+        b=u/GdC98tH9mViMlvzAM7Nobi7gWhvv31IIqPqCIbNHLl8GNphMXi2hi/S9IM41aF51
+         Md4u7fPtjL/fGwWw+UXvCxysYAu8qpMMq6bfJAe9Xpmaww16f8FUXOKiQpTz2WcHstEA
+         e3r0URzCQf9N1jdUuHombLHMOhKiBNtopns2KxmuTdVVpy3rFj1xzs8rKMwYe6gJodEY
+         foJeLkXhe05CcFH3pinALb5/foil+TpO/niAo+OQsBOe1/At9+6GDYzSj1dAlc6zfM7R
+         GOfrirqzd1dZt4324CoKpodYIagB5fe55b3nSZQiyN9Q2igaQq2SCD7QVefT/WcNN4iI
+         knbg==
+X-Gm-Message-State: ACrzQf2pAoJhlO4SXF0lEkN4yJeouEMpog2bx7Ex69OrjOiTJeh7JFO6
+        TWG8VsLXOBJ5/IPJkB5/4PLQgWpG/gurozgBCXA=
+X-Google-Smtp-Source: AMsMyM6RTDhb7E9g5FHm/PpzD9A77KswvYCfiS1Xl0yUhM+9dmkn3sZYwkY9aT6Vn0KQgnkycF0OCA==
+X-Received: by 2002:a63:a06:0:b0:458:2853:45e4 with SMTP id 6-20020a630a06000000b00458285345e4mr6175346pgk.20.1666169491395;
+        Wed, 19 Oct 2022 01:51:31 -0700 (PDT)
+Received: from leoy-huanghe.lan (211-75-219-199.hinet-ip.hinet.net. [211.75.219.199])
+        by smtp.gmail.com with ESMTPSA id t16-20020a170902e85000b00179eaf275d5sm10278662plg.27.2022.10.19.01.51.28
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 19 Oct 2022 01:51:30 -0700 (PDT)
+Date:   Wed, 19 Oct 2022 16:51:25 +0800
+From:   Leo Yan <leo.yan@linaro.org>
+To:     Carsten Haitzler <carsten.haitzler@foss.arm.com>
+Cc:     Arnaldo Carvalho de Melo <acme@kernel.org>,
+        Jiri Slaby <jirislaby@kernel.org>,
+        linux-kernel@vger.kernel.org, coresight@lists.linaro.org,
+        suzuki.poulose@arm.com, mathieu.poirier@linaro.org,
+        mike.leach@linaro.org, linux-perf-users@vger.kernel.org
+Subject: Re: [PATCH v9 02/13] perf test: Add build infra for perf test tools
+ for CoreSight tests
+Message-ID: <Y0+6jbL1oC4jk8Ja@leoy-huanghe.lan>
+References: <20220909152803.2317006-1-carsten.haitzler@foss.arm.com>
+ <20220909152803.2317006-3-carsten.haitzler@foss.arm.com>
+ <Yz67SHpIN5NggKEk@kernel.org>
+ <Yz6/zlchVnNsVlzJ@kernel.org>
+ <Yz7RAgMN6WGnD3OZ@leoy-yangtze.lan>
+ <e9f980a7-fba8-4610-a058-b74e51d6ab24@foss.arm.com>
+ <Y0AfK7sVphNkQA4q@kernel.org>
+ <0b3afc5d-c4a1-8a50-45c3-20c706c3ecfd@foss.arm.com>
+ <Y0QkIjO4pvPuzeMB@kernel.org>
+ <9f2d2032-8859-4388-489a-ba5cd2cee432@foss.arm.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <9f2d2032-8859-4388-489a-ba5cd2cee432@foss.arm.com>
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-From: Carsten Haitzler <carsten.haitzler@arm.com>
+On Wed, Oct 19, 2022 at 09:11:20AM +0100, Carsten Haitzler wrote:
+> 
+> 
+> On 10/10/22 14:54, Arnaldo Carvalho de Melo wrote:
+> > Em Mon, Oct 10, 2022 at 08:02:29AM +0100, Carsten Haitzler escreveu:
+> > > On 10/7/22 13:44, Arnaldo Carvalho de Melo wrote:
+> > > > Em Fri, Oct 07, 2022 at 12:34:51PM +0100, Carsten Haitzler escreveu:
+> > > > > On 10/6/22 13:58, Leo Yan wrote:
+> > > > > oh sorry - indeed i didn't see this problem coming after fixing the
+> > > > > conflicts. i've got an update of the patches that fix that. should i just
+> > > > > send through the 2 updates patches as a v10 or the whole series?
+> > 
+> > > > No need, I did some fixes taking into account the comments on this
+> > > > thread, we can go on and fix things from what I have now at
+> > > > acme/perf/core, which I'll send to Linus today.
+> > > oh cool. i'll let patches sit for now - let me know if there's anything you
+> > > want/need from me.
+> > 
+> > Not right now, I'm now just waiting for Linus to merge what I sent, then
+> > you can continue from upstream.
+> 
+> I'm not sure what you have sent to Linus? The patch series? Specific
+> patches?
 
-Add/improve documentation helping people get started with CoreSight and
-perf as well as describe the testing and how it works.
+I think the whole patch set has been merged into Linux mainline;
+after git pull the Linux mainline code and you could see:
 
-Cc: linux-doc@vger.kernel.org
-Signed-off-by: Carsten Haitzler <carsten.haitzler@arm.com>
----
- .../trace/coresight/coresight-perf.rst        | 158 ++++++++++++++++++
- tools/perf/Documentation/arm-coresight.txt    |   5 +
- 2 files changed, 163 insertions(+)
- create mode 100644 Documentation/trace/coresight/coresight-perf.rst
- create mode 100644 tools/perf/Documentation/arm-coresight.txt
+$ git log --oneline --author="Carsten Haitzle"
+dc2e0fb00bb2 perf test coresight: Add relevant documentation about ARM64 CoreSight testing
+43c688cb3241 perf test: Add git ignore for tmp and output files of ARM CoreSight tests
+b65c6477f6bb perf test coresight: Add unroll thread test shell script
+fc0a0ea03980 perf test coresight: Add unroll thread test tool
+74c62b8d6161 perf test coresight: Add thread loop test shell scripts
+e9664b96c6c0 perf test coresight: Add thread loop test tool
+b76692fea7f2 perf test coresight: Add memcpy thread test shell script
+f1288bdb6d48 perf test coresight: Add memcpy thread test tool
+6ea586b1e3dc perf test: Add git ignore for perf data generated by the ARM CoreSight tests
+fdc25cc59c71 perf test: Add arm64 asm pureloop test shell script
+8b97519711c3 perf test: Add asm pureloop test tool
+34bec35cbbb2 perf test: Add build infra for perf test tools for ARM CoreSight tests
+c63317ab14b0 perf test: Add CoreSight shell lib shared code for future tests
+7391db645938 perf test: Refactor shell tests allowing subdirs
 
-diff --git a/Documentation/trace/coresight/coresight-perf.rst b/Documentation/trace/coresight/coresight-perf.rst
-new file mode 100644
-index 000000000000..d087aae7d492
---- /dev/null
-+++ b/Documentation/trace/coresight/coresight-perf.rst
-@@ -0,0 +1,158 @@
-+.. SPDX-License-Identifier: GPL-2.0
-+
-+================
-+CoreSight - Perf
-+================
-+
-+    :Author:   Carsten Haitzler <carsten.haitzler@arm.com>
-+    :Date:     June 29th, 2022
-+
-+Perf is able to locally access CoreSight trace data and store it to the
-+output perf data files. This data can then be later decoded to give the
-+instructions that were traced for debugging or profiling purposes. You
-+can log such data with a perf record command like::
-+
-+   perf record -e cs_etm//u testbinary
-+
-+This would run some test binary (testbinary) until it exits and record
-+a perf.data trace file. That file would have AUX sections if CoreSight
-+is working correctly. You can dump the content of this file as
-+readable text with a command like::
-+
-+   perf report --stdio --dump -i perf.data
-+
-+You should find some sections of this file have AUX data blocks like::
-+
-+   0x1e78 [0x30]: PERF_RECORD_AUXTRACE size: 0x11dd0  offset: 0  ref: 0x1b614fc1061b0ad1  idx: 0  tid: 531230  cpu: -1
-+
-+   . ... CoreSight ETM Trace data: size 73168 bytes
-+           Idx:0; ID:10;   I_ASYNC : Alignment Synchronisation.
-+             Idx:12; ID:10;  I_TRACE_INFO : Trace Info.; INFO=0x0 { CC.0 }
-+             Idx:17; ID:10;  I_ADDR_L_64IS0 : Address, Long, 64 bit, IS0.; Addr=0x0000000000000000;
-+             Idx:26; ID:10;  I_TRACE_ON : Trace On.
-+             Idx:27; ID:10;  I_ADDR_CTXT_L_64IS0 : Address & Context, Long, 64 bit, IS0.; Addr=0x0000FFFFB6069140; Ctxt: AArch64,EL0, NS;
-+             Idx:38; ID:10;  I_ATOM_F6 : Atom format 6.; EEEEEEEEEEEEEEEEEEEEEEEE
-+             Idx:39; ID:10;  I_ATOM_F6 : Atom format 6.; EEEEEEEEEEEEEEEEEEEEEEEE
-+             Idx:40; ID:10;  I_ATOM_F6 : Atom format 6.; EEEEEEEEEEEEEEEEEEEEEEEE
-+             Idx:41; ID:10;  I_ATOM_F6 : Atom format 6.; EEEEEEEEEEEN
-+             ...
-+
-+If you see these above, then your system is tracing CoreSight data
-+correctly.
-+
-+To compile perf with CoreSight support in the tools/perf directory do::
-+
-+    make CORESIGHT=1
-+
-+This requires OpenCSD to build. You may install distribution packages
-+for the support such as libopencsd and libopencsd-dev or download it
-+and build yourself. Upstream OpenCSD is located at:
-+
-+  https://github.com/Linaro/OpenCSD
-+
-+For complete information on building perf with CoreSight support and
-+more extensive usage look at:
-+
-+  https://github.com/Linaro/OpenCSD/blob/master/HOWTO.md
-+
-+
-+Kernel CoreSight Support
-+------------------------
-+
-+You will also want CoreSight support enabled in your kernel config.
-+Ensure it is enabled with::
-+
-+   CONFIG_CORESIGHT=y
-+
-+There are various other CoreSight options you probably also want
-+enabled like::
-+
-+   CONFIG_CORESIGHT_LINKS_AND_SINKS=y
-+   CONFIG_CORESIGHT_LINK_AND_SINK_TMC=y
-+   CONFIG_CORESIGHT_CATU=y
-+   CONFIG_CORESIGHT_SINK_TPIU=y
-+   CONFIG_CORESIGHT_SINK_ETBV10=y
-+   CONFIG_CORESIGHT_SOURCE_ETM4X=y
-+   CONFIG_CORESIGHT_CTI=y
-+   CONFIG_CORESIGHT_CTI_INTEGRATION_REGS=y
-+
-+Please refer to the kernel configuration help for more information.
-+
-+Perf test - Verify kernel and userspace perf CoreSight work
-+-----------------------------------------------------------
-+
-+When you run perf test, it will do a lot of self tests. Some of those
-+tests will cover CoreSight (only if enabled and on ARM64). You
-+generally would run perf test from the tools/perf directory in the
-+kernel tree. Some tests will check some internal perf support like:
-+
-+   Check Arm CoreSight trace data recording and synthesized samples
-+   Check Arm SPE trace data recording and synthesized samples
-+
-+Some others will actually use perf record and some test binaries that
-+are in tests/shell/coresight and will collect traces to ensure a
-+minimum level of functionality is met. The scripts that launch these
-+tests are in the same directory. These will all look like:
-+
-+   CoreSight / ASM Pure Loop
-+   CoreSight / Memcpy 16k 10 Threads
-+   CoreSight / Thread Loop 10 Threads - Check TID
-+   etc.
-+
-+These perf record tests will not run if the tool binaries do not exist
-+in tests/shell/coresight/\*/ and will be skipped. If you do not have
-+CoreSight support in hardware then either do not build perf with
-+CoreSight support or remove these binaries in order to not have these
-+tests fail and have them skip instead.
-+
-+These tests will log historical results in the current working
-+directory (e.g. tools/perf) and will be named stats-\*.csv like:
-+
-+   stats-asm_pure_loop-out.csv
-+   stats-memcpy_thread-16k_10.csv
-+   ...
-+
-+These statistic files log some aspects of the AUX data sections in
-+the perf data output counting some numbers of certain encodings (a
-+good way to know that it's working in a very simple way). One problem
-+with CoreSight is that given a large enough amount of data needing to
-+be logged, some of it can be lost due to the processor not waking up
-+in time to read out all the data from buffers etc.. You will notice
-+that the amount of data collected can vary a lot per run of perf test.
-+If you wish to see how this changes over time, simply run perf test
-+multiple times and all these csv files will have more and more data
-+appended to it that you can later examine, graph and otherwise use to
-+figure out if things have become worse or better.
-+
-+This means sometimes these tests fail as they don't capture all the
-+data needed. This is about tracking quality and amount of data
-+produced over time and to see when changes to the Linux kernel improve
-+quality of traces.
-+
-+Be aware that some of these tests take quite a while to run, specifically
-+in processing the perf data file and dumping contents to then examine what
-+is inside.
-+
-+You can change where these csv logs are stored by setting the
-+PERF_TEST_CORESIGHT_STATDIR environment variable before running perf
-+test like::
-+
-+   export PERF_TEST_CORESIGHT_STATDIR=/var/tmp
-+   perf test
-+
-+They will also store resulting perf output data in the current
-+directory for later inspection like::
-+
-+   perf-asm_pure_loop-out.data
-+   perf-memcpy_thread-16k_10.data
-+   ...
-+
-+You can alter where the perf data files are stored by setting the
-+PERF_TEST_CORESIGHT_DATADIR environment variable such as::
-+
-+   PERF_TEST_CORESIGHT_DATADIR=/var/tmp
-+   perf test
-+
-+You may wish to set these above environment variables if you wish to
-+keep the output of tests outside of the current working directory for
-+longer term storage and examination.
-diff --git a/tools/perf/Documentation/arm-coresight.txt b/tools/perf/Documentation/arm-coresight.txt
-new file mode 100644
-index 000000000000..c117fc50a2a9
---- /dev/null
-+++ b/tools/perf/Documentation/arm-coresight.txt
-@@ -0,0 +1,5 @@
-+Arm CoreSight Support
-+=====================
-+
-+For full documentation, see Documentation/trace/coresight/coresight-perf.rst
-+in the kernel tree.
--- 
-2.32.0
-
+Thanks,
+Leo
