@@ -2,76 +2,95 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A41E0C4332F
-	for <linux-perf-users@archiver.kernel.org>; Wed, 19 Oct 2022 08:11:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3F2B0C433FE
+	for <linux-perf-users@archiver.kernel.org>; Wed, 19 Oct 2022 08:16:17 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229765AbiJSILl (ORCPT
+        id S230028AbiJSIQP (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Wed, 19 Oct 2022 04:11:41 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35458 "EHLO
+        Wed, 19 Oct 2022 04:16:15 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45210 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229769AbiJSILk (ORCPT
+        with ESMTP id S229726AbiJSIQP (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Wed, 19 Oct 2022 04:11:40 -0400
+        Wed, 19 Oct 2022 04:16:15 -0400
 Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTP id 263017B1C9;
-        Wed, 19 Oct 2022 01:11:38 -0700 (PDT)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTP id 4C3496110E;
+        Wed, 19 Oct 2022 01:16:14 -0700 (PDT)
 Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 8618E1042;
-        Wed, 19 Oct 2022 01:11:43 -0700 (PDT)
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 4DFDB20E3;
+        Wed, 19 Oct 2022 01:16:20 -0700 (PDT)
 Received: from [192.168.99.12] (unknown [172.31.20.19])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id E3FDD3F7D8;
-        Wed, 19 Oct 2022 01:11:35 -0700 (PDT)
-Message-ID: <9f2d2032-8859-4388-489a-ba5cd2cee432@foss.arm.com>
-Date:   Wed, 19 Oct 2022 09:11:20 +0100
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id B0DBA3F7D8;
+        Wed, 19 Oct 2022 01:16:12 -0700 (PDT)
+Message-ID: <46328b62-d948-a5c2-25c6-f5caec123412@foss.arm.com>
+Date:   Wed, 19 Oct 2022 09:16:03 +0100
 MIME-Version: 1.0
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
  Thunderbird/102.3.2
-Subject: Re: [PATCH v9 02/13] perf test: Add build infra for perf test tools
- for CoreSight tests
-Content-Language: en-US
-To:     Arnaldo Carvalho de Melo <acme@kernel.org>
-Cc:     Leo Yan <leo.yan@linaro.org>, Jiri Slaby <jirislaby@kernel.org>,
-        linux-kernel@vger.kernel.org, coresight@lists.linaro.org,
+Subject: Re: [PATCH v9 13/13] perf test: Add relevant documentation about
+ CoreSight testing
+To:     Sven Schnelle <svens@linux.ibm.com>
+Cc:     linux-kernel@vger.kernel.org, coresight@lists.linaro.org,
         suzuki.poulose@arm.com, mathieu.poirier@linaro.org,
-        mike.leach@linaro.org, linux-perf-users@vger.kernel.org
+        mike.leach@linaro.org, leo.yan@linaro.org,
+        linux-perf-users@vger.kernel.org, acme@kernel.org
 References: <20220909152803.2317006-1-carsten.haitzler@foss.arm.com>
- <20220909152803.2317006-3-carsten.haitzler@foss.arm.com>
- <Yz67SHpIN5NggKEk@kernel.org> <Yz6/zlchVnNsVlzJ@kernel.org>
- <Yz7RAgMN6WGnD3OZ@leoy-yangtze.lan>
- <e9f980a7-fba8-4610-a058-b74e51d6ab24@foss.arm.com>
- <Y0AfK7sVphNkQA4q@kernel.org>
- <0b3afc5d-c4a1-8a50-45c3-20c706c3ecfd@foss.arm.com>
- <Y0QkIjO4pvPuzeMB@kernel.org>
+ <20220909152803.2317006-14-carsten.haitzler@foss.arm.com>
+ <yt9dr0zex1j4.fsf@linux.ibm.com>
+Content-Language: en-US
 From:   Carsten Haitzler <carsten.haitzler@foss.arm.com>
 Organization: Arm Ltd.
-In-Reply-To: <Y0QkIjO4pvPuzeMB@kernel.org>
+In-Reply-To: <yt9dr0zex1j4.fsf@linux.ibm.com>
 Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 7bit
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
+This is weird. This shouldn't be making its way into any man page at 
+all. It's just a file pointing people at other parts of the kernel tree 
+for docs (because when I looked for docs - i found nothing for any kind 
+of getting started guide - I put something here as this was the obvious 
+place for perf related docs for testing - but was told to put the docs 
+elsewhere in core kernel documentation, but I put a reference here for 
+those who follow after to be able to more easily find it).
 
+There is some rule somewhere it seems that makes anything perf-*.txt 
+into a man page. I need to rename this file it seems.
 
-On 10/10/22 14:54, Arnaldo Carvalho de Melo wrote:
-> Em Mon, Oct 10, 2022 at 08:02:29AM +0100, Carsten Haitzler escreveu:
->> On 10/7/22 13:44, Arnaldo Carvalho de Melo wrote:
->>> Em Fri, Oct 07, 2022 at 12:34:51PM +0100, Carsten Haitzler escreveu:
->>>> On 10/6/22 13:58, Leo Yan wrote:
->>>> oh sorry - indeed i didn't see this problem coming after fixing the
->>>> conflicts. i've got an update of the patches that fix that. should i just
->>>> send through the 2 updates patches as a v10 or the whole series?
+On 10/11/22 08:27, Sven Schnelle wrote:
+> Hi Carsten,
 > 
->>> No need, I did some fixes taking into account the comments on this
->>> thread, we can go on and fix things from what I have now at
->>> acme/perf/core, which I'll send to Linus today.
->   
->> oh cool. i'll let patches sit for now - let me know if there's anything you
->> want/need from me.
+> carsten.haitzler@foss.arm.com writes:
 > 
-> Not right now, I'm now just waiting for Linus to merge what I sent, then
-> you can continue from upstream.
-
-I'm not sure what you have sent to Linus? The patch series? Specific 
-patches?
+>> From: Carsten Haitzler <carsten.haitzler@arm.com>
+>>
+>> Add/improve documentation helping people get started with CoreSight and
+>> perf as well as describe the testing and how it works.
+>>
+>> Cc: linux-doc@vger.kernel.org
+>> Signed-off-by: Carsten Haitzler <carsten.haitzler@arm.com>
+>> ---
+>>   .../trace/coresight/coresight-perf.rst        | 158 ++++++++++++++++++
+>>   .../perf/Documentation/perf-arm-coresight.txt |   5 +
+>>   2 files changed, 163 insertions(+)
+>>   create mode 100644 Documentation/trace/coresight/coresight-perf.rst
+>>   create mode 100644 tools/perf/Documentation/perf-arm-coresight.txt
+>>
+> 
+> Investigating a rpm build failure i see the following error with next-20221011:
+> 
+> % cd tools/perf/Documentation
+> % make O=/home/svens/linux-build/ man V=1
+> rm -f /home/svens/linux-build/perf-arm-coresight.xml+ /home/svens/linux-build/perf-arm-coresight.xml && \
+> asciidoc -b docbook -d manpage \
+>          --unsafe -f asciidoc.conf -aperf_version= \
+>          -aperf_date=2022-10-06 \
+>          -o /home/svens/linux-build/perf-arm-coresight.xml+ perf-arm-coresight.txt && \
+> mv /home/svens/linux-build/perf-arm-coresight.xml+ /home/svens/linux-build/perf-arm-coresight.xml
+> asciidoc: FAILED: manpage document title is mandatory
+> make: *** [Makefile:266: /home/svens/linux-build/perf-arm-coresight.xml] Error 1
+> 
+> Can you please fix this?
+> 
+> Thanks!
