@@ -2,47 +2,51 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6CD86C433FE
-	for <linux-perf-users@archiver.kernel.org>; Wed, 19 Oct 2022 03:01:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A41E0C4332F
+	for <linux-perf-users@archiver.kernel.org>; Wed, 19 Oct 2022 08:11:42 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229751AbiJSDBX (ORCPT
+        id S229765AbiJSILl (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Tue, 18 Oct 2022 23:01:23 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44934 "EHLO
+        Wed, 19 Oct 2022 04:11:41 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35458 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229605AbiJSDBW (ORCPT
+        with ESMTP id S229769AbiJSILk (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Tue, 18 Oct 2022 23:01:22 -0400
+        Wed, 19 Oct 2022 04:11:40 -0400
 Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTP id 9B437E6F6C;
-        Tue, 18 Oct 2022 20:01:21 -0700 (PDT)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTP id 263017B1C9;
+        Wed, 19 Oct 2022 01:11:38 -0700 (PDT)
 Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 5A1CD1042;
-        Tue, 18 Oct 2022 20:01:27 -0700 (PDT)
-Received: from [10.162.40.19] (unknown [10.162.40.19])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 9B1CF3F67D;
-        Tue, 18 Oct 2022 20:01:16 -0700 (PDT)
-Message-ID: <561e9e28-8459-b422-4989-176db9a2bd4b@arm.com>
-Date:   Wed, 19 Oct 2022 08:31:13 +0530
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 8618E1042;
+        Wed, 19 Oct 2022 01:11:43 -0700 (PDT)
+Received: from [192.168.99.12] (unknown [172.31.20.19])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id E3FDD3F7D8;
+        Wed, 19 Oct 2022 01:11:35 -0700 (PDT)
+Message-ID: <9f2d2032-8859-4388-489a-ba5cd2cee432@foss.arm.com>
+Date:   Wed, 19 Oct 2022 09:11:20 +0100
 MIME-Version: 1.0
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
- Thunderbird/102.2.2
-Subject: Re: [PATCH V4 1/7] arm64/perf: Add BRBE registers and fields
-To:     Mark Brown <broonie@kernel.org>
-Cc:     linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, peterz@infradead.org,
-        acme@kernel.org, mark.rutland@arm.com, will@kernel.org,
-        catalin.marinas@arm.com, James Clark <james.clark@arm.com>,
-        Rob Herring <robh@kernel.org>, Marc Zyngier <maz@kernel.org>,
-        Suzuki Poulose <suzuki.poulose@arm.com>,
-        Ingo Molnar <mingo@redhat.com>
-References: <20221017055713.451092-1-anshuman.khandual@arm.com>
- <20221017055713.451092-2-anshuman.khandual@arm.com>
- <Y06wiI2hgsz5QPTh@sirena.org.uk>
+ Thunderbird/102.3.2
+Subject: Re: [PATCH v9 02/13] perf test: Add build infra for perf test tools
+ for CoreSight tests
 Content-Language: en-US
-From:   Anshuman Khandual <anshuman.khandual@arm.com>
-In-Reply-To: <Y06wiI2hgsz5QPTh@sirena.org.uk>
-Content-Type: text/plain; charset=UTF-8
+To:     Arnaldo Carvalho de Melo <acme@kernel.org>
+Cc:     Leo Yan <leo.yan@linaro.org>, Jiri Slaby <jirislaby@kernel.org>,
+        linux-kernel@vger.kernel.org, coresight@lists.linaro.org,
+        suzuki.poulose@arm.com, mathieu.poirier@linaro.org,
+        mike.leach@linaro.org, linux-perf-users@vger.kernel.org
+References: <20220909152803.2317006-1-carsten.haitzler@foss.arm.com>
+ <20220909152803.2317006-3-carsten.haitzler@foss.arm.com>
+ <Yz67SHpIN5NggKEk@kernel.org> <Yz6/zlchVnNsVlzJ@kernel.org>
+ <Yz7RAgMN6WGnD3OZ@leoy-yangtze.lan>
+ <e9f980a7-fba8-4610-a058-b74e51d6ab24@foss.arm.com>
+ <Y0AfK7sVphNkQA4q@kernel.org>
+ <0b3afc5d-c4a1-8a50-45c3-20c706c3ecfd@foss.arm.com>
+ <Y0QkIjO4pvPuzeMB@kernel.org>
+From:   Carsten Haitzler <carsten.haitzler@foss.arm.com>
+Organization: Arm Ltd.
+In-Reply-To: <Y0QkIjO4pvPuzeMB@kernel.org>
+Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 7bit
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
@@ -50,37 +54,24 @@ X-Mailing-List: linux-perf-users@vger.kernel.org
 
 
 
-On 10/18/22 19:26, Mark Brown wrote:
-> On Mon, Oct 17, 2022 at 11:27:07AM +0530, Anshuman Khandual wrote:
+On 10/10/22 14:54, Arnaldo Carvalho de Melo wrote:
+> Em Mon, Oct 10, 2022 at 08:02:29AM +0100, Carsten Haitzler escreveu:
+>> On 10/7/22 13:44, Arnaldo Carvalho de Melo wrote:
+>>> Em Fri, Oct 07, 2022 at 12:34:51PM +0100, Carsten Haitzler escreveu:
+>>>> On 10/6/22 13:58, Leo Yan wrote:
+>>>> oh sorry - indeed i didn't see this problem coming after fixing the
+>>>> conflicts. i've got an update of the patches that fix that. should i just
+>>>> send through the 2 updates patches as a v10 or the whole series?
 > 
-> I spotted one typo below but otherwise this looks good!
+>>> No need, I did some fixes taking into account the comments on this
+>>> thread, we can go on and fix things from what I have now at
+>>> acme/perf/core, which I'll send to Linus today.
+>   
+>> oh cool. i'll let patches sit for now - let me know if there's anything you
+>> want/need from me.
 > 
->> +# This is just a dummy register declaration to get all common field masks and
->> +# shifts for accessing given BRBINF contents.
->> +Sysreg	BRBINF_EL1	2	1	8	0	0
-> 
-> This seems reasonable to me, others may disagree.
-> 
->> +Sysreg	BRBCR_EL1	2	1	9	0	0
->> +Res0	63:24
->> +Field	23 	EXCEPTION
->> +Field	22 	ERTN
->> +Res0	21:9
->> +Field	8 	FZP
->> +Res0	7
->> +Enum	6:5	TS
->> +	0b1	VIRTUAL
-> 
-> I'd have expected this to be written as 0b01.  Doesn't make any
-> practical difference though.
+> Not right now, I'm now just waiting for Linus to merge what I sent, then
+> you can continue from upstream.
 
-Sure, will change.
-
-> 
->> +Sysreg	BRBFCR_EL1	2	1	9	0	1
-> 
->> +Field	16	EnL
-> 
-> This is "EnI" in DDI0487I.a.
-
-Okay, will replace "EnL" with "EnI" instead.
+I'm not sure what you have sent to Linus? The patch series? Specific 
+patches?
