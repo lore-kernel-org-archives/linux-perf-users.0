@@ -2,53 +2,52 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3420CC4321E
-	for <linux-perf-users@archiver.kernel.org>; Wed, 19 Oct 2022 19:11:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1BE7FC433FE
+	for <linux-perf-users@archiver.kernel.org>; Wed, 19 Oct 2022 19:11:45 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230506AbiJSTLm (ORCPT
+        id S230517AbiJSTLn (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Wed, 19 Oct 2022 15:11:42 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50132 "EHLO
+        Wed, 19 Oct 2022 15:11:43 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50196 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230432AbiJSTLf (ORCPT
+        with ESMTP id S230441AbiJSTLh (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Wed, 19 Oct 2022 15:11:35 -0400
-Received: from mail-ot1-f49.google.com (mail-ot1-f49.google.com [209.85.210.49])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9C1411C712E;
-        Wed, 19 Oct 2022 12:11:31 -0700 (PDT)
-Received: by mail-ot1-f49.google.com with SMTP id p24-20020a9d6958000000b00661c528849eso10067435oto.9;
-        Wed, 19 Oct 2022 12:11:31 -0700 (PDT)
+        Wed, 19 Oct 2022 15:11:37 -0400
+Received: from mail-ot1-f50.google.com (mail-ot1-f50.google.com [209.85.210.50])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3BAB11C2F20;
+        Wed, 19 Oct 2022 12:11:34 -0700 (PDT)
+Received: by mail-ot1-f50.google.com with SMTP id d18-20020a05683025d200b00661c6f1b6a4so10070618otu.1;
+        Wed, 19 Oct 2022 12:11:34 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
         h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
          :mime-version:subject:date:from:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=43IaqXn32YycCBd3/SGJ6Da4qva/kGDXqjobO4DMXeA=;
-        b=wu01KFcU8n49Dijx+qpwD9N7YQGuwsLIRvHnDfNyuZe+3Z384rV/UQ+8F/SotO7i6e
-         DrxY20Cvg4cfQ4QkYaOq5ey1WjyJwueLPpdiUT08K4/jB2LqmV4yKsJqjKITH8rZ6exq
-         li4pLr+4rg74fump5v1f8O0Ell/EXLlCtha+PHVTifq7frUUHH/LEYWyBt33ql9GozQO
-         7tlPMQ5dwn0ry56KjEdFJUuBqJfdfflST7FMgiQ9nK+TStFpvYcc4AjLdopQQ3zmN1cI
-         PLulEbEEdT3vf/RzLQhOLbUcXSrT7x7hv189NYQWDJGcsmy1pnvLVA+nqblzyu+pp315
-         ERdA==
-X-Gm-Message-State: ACrzQf0A8K1UsN4mXHliL9212jwitNKN6eH3xBrfrn518Zpgv6wjr/26
-        mjj/Azxmelp/J1kE3qMFlw==
-X-Google-Smtp-Source: AMsMyM52ccM2SuB4fJVuNR6xyd3GwViwYeYnmewRYJ6qofqTylHkTtpXjuHE/sY2iyCkl53jTYlNfw==
-X-Received: by 2002:a9d:6948:0:b0:661:a43c:77a3 with SMTP id p8-20020a9d6948000000b00661a43c77a3mr4934314oto.222.1666206690183;
-        Wed, 19 Oct 2022 12:11:30 -0700 (PDT)
+        bh=JxlkIVs552Ejp+aX9wrJgo7YCeTd9sG0ZHnn6ZfglP4=;
+        b=uWT3wBwWtuLmr4ZFpImtSCFfr1YxpJey1dB3KFW3NOUuly34N42oSSmh1I7UNcCj39
+         laiWiBt2t4prnwhmhwAdEXkq9LgQKviX/1lNX0II98mBkFzE1r8zkHQjRhxGv/l5S+QZ
+         UXcEdFaftsd7nrN+n+cpo4PTlmYPHPJQXNQ8TbuCWWvs5+RAmmPHf1eXn9xyt5vAgBAF
+         EFc6jpOYJlTyHZyIf9ajHMqQJDYtTKE8sKH4ZrntllecgkKe7YfkiDv3pqESVMIAGF6Q
+         gYAeWH4b8vADJ+eHTcc+Kj8zMZ4w100p5PgwF+8nCpsWi8Ln0Bo8fsgAw4AOzbtewADb
+         XQBQ==
+X-Gm-Message-State: ACrzQf2qyPswqBV2SuoZzSHKNcUSTO5KiNRdWAkw53/Dc/MB8+fmc5h0
+        AXLjna2eRJcckxBAqK4SFQ==
+X-Google-Smtp-Source: AMsMyM4c6mVzFUrkq81v9/CA7Mnv6GIXWQ7zeNYDSSDTWnk1r6iqqax4wHful0HevpS2dD/tJHkWSg==
+X-Received: by 2002:a05:6830:25c3:b0:661:c7e4:e785 with SMTP id d3-20020a05683025c300b00661c7e4e785mr4817162otu.134.1666206692965;
+        Wed, 19 Oct 2022 12:11:32 -0700 (PDT)
 Received: from robh_at_kernel.org (66-90-144-107.dyn.grandenetworks.net. [66.90.144.107])
-        by smtp.gmail.com with ESMTPSA id q7-20020a4aac47000000b0047f8ceca22bsm6816526oon.15.2022.10.19.12.11.29
+        by smtp.gmail.com with ESMTPSA id f17-20020a4ae611000000b00480b7efd5d9sm5922591oot.6.2022.10.19.12.11.31
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 19 Oct 2022 12:11:29 -0700 (PDT)
-Received: (nullmailer pid 3420910 invoked by uid 1000);
+        Wed, 19 Oct 2022 12:11:32 -0700 (PDT)
+Received: (nullmailer pid 3420898 invoked by uid 1000);
         Wed, 19 Oct 2022 19:11:25 -0000
 From:   Rob Herring <robh@kernel.org>
-Date:   Wed, 19 Oct 2022 14:11:30 -0500
-Subject: [PATCH v2 7/7] perf: arm_spe: Add support for SPEv1.2 inverted event
- filtering
+Date:   Wed, 19 Oct 2022 14:11:24 -0500
+Subject: [PATCH v2 1/7] perf: arm_spe: Use feature numbering for PMSEVFR_EL1 defines
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 8bit
-Message-Id: <20220825-arm-spe-v8-7-v2-7-e37322d68ac0@kernel.org>
+Message-Id: <20220825-arm-spe-v8-7-v2-1-e37322d68ac0@kernel.org>
 References: <20220825-arm-spe-v8-7-v2-0-e37322d68ac0@kernel.org>
 In-Reply-To: <20220825-arm-spe-v8-7-v2-0-e37322d68ac0@kernel.org>
 To:     Namhyung Kim <namhyung@kernel.org>,
@@ -74,144 +73,55 @@ Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-Arm SPEv1.2 (Arm v8.7/v9.2) adds a new feature called Inverted Event
-Filter which excludes samples matching the event filter. The feature
-mirrors the existing event filter in PMSEVFR_EL1 adding a new register,
-PMSNEVFR_EL1, which has the same event bit assignments.
+Similar to commit 121a8fc088f1 ("arm64/sysreg: Use feature numbering for
+PMU and SPE revisions") use feature numbering instead of architecture
+versions for the PMSEVFR_EL1 Res0 defines.
 
 Signed-off-by: Rob Herring <robh@kernel.org>
 ---
 v2:
- - Update for auto generated register defines
- - Avoid accessing SYS_PMSNEVFR_EL1 on < v8.7
+ - New patch
 ---
- drivers/perf/arm_spe_pmu.c | 45 +++++++++++++++++++++++++++++++++++++++++++++
- 1 file changed, 45 insertions(+)
+ arch/arm64/include/asm/sysreg.h | 6 +++---
+ drivers/perf/arm_spe_pmu.c      | 4 ++--
+ 2 files changed, 5 insertions(+), 5 deletions(-)
 
+diff --git a/arch/arm64/include/asm/sysreg.h b/arch/arm64/include/asm/sysreg.h
+index 7d301700d1a9..9a4cf12e3e16 100644
+--- a/arch/arm64/include/asm/sysreg.h
++++ b/arch/arm64/include/asm/sysreg.h
+@@ -294,11 +294,11 @@
+ #define SYS_PMSFCR_EL1_ST_SHIFT		18
+ 
+ #define SYS_PMSEVFR_EL1			sys_reg(3, 0, 9, 9, 5)
+-#define SYS_PMSEVFR_EL1_RES0_8_2	\
++#define PMSEVFR_EL1_RES0_IMP	\
+ 	(GENMASK_ULL(47, 32) | GENMASK_ULL(23, 16) | GENMASK_ULL(11, 8) |\
+ 	 BIT_ULL(6) | BIT_ULL(4) | BIT_ULL(2) | BIT_ULL(0))
+-#define SYS_PMSEVFR_EL1_RES0_8_3	\
+-	(SYS_PMSEVFR_EL1_RES0_8_2 & ~(BIT_ULL(18) | BIT_ULL(17) | BIT_ULL(11)))
++#define PMSEVFR_EL1_RES0_V1P1	\
++	(PMSEVFR_EL1_RES0_IMP & ~(BIT_ULL(18) | BIT_ULL(17) | BIT_ULL(11)))
+ 
+ #define SYS_PMSLATFR_EL1		sys_reg(3, 0, 9, 9, 6)
+ #define SYS_PMSLATFR_EL1_MINLAT_SHIFT	0
 diff --git a/drivers/perf/arm_spe_pmu.c b/drivers/perf/arm_spe_pmu.c
-index 0b9b847919d0..ab5fcf02a4ca 100644
+index 00e3a637f7b6..65cf93dcc8ee 100644
 --- a/drivers/perf/arm_spe_pmu.c
 +++ b/drivers/perf/arm_spe_pmu.c
-@@ -85,6 +85,7 @@ struct arm_spe_pmu {
- #define SPE_PMU_FEAT_ARCH_INST			(1UL << 3)
- #define SPE_PMU_FEAT_LDS			(1UL << 4)
- #define SPE_PMU_FEAT_ERND			(1UL << 5)
-+#define SPE_PMU_FEAT_INV_FILT_EVT		(1UL << 6)
- #define SPE_PMU_FEAT_DEV_PROBED			(1UL << 63)
- 	u64					features;
- 
-@@ -202,6 +203,10 @@ static const struct attribute_group arm_spe_pmu_cap_group = {
- #define ATTR_CFG_FLD_min_latency_LO		0
- #define ATTR_CFG_FLD_min_latency_HI		11
- 
-+#define ATTR_CFG_FLD_inv_event_filter_CFG	config3	/* PMSNEVFR_EL1 */
-+#define ATTR_CFG_FLD_inv_event_filter_LO	0
-+#define ATTR_CFG_FLD_inv_event_filter_HI	63
-+
- /* Why does everything I do descend into this? */
- #define __GEN_PMU_FORMAT_ATTR(cfg, lo, hi)				\
- 	(lo) == (hi) ? #cfg ":" #lo "\n" : #cfg ":" #lo "-" #hi
-@@ -232,6 +237,7 @@ GEN_PMU_FORMAT_ATTR(branch_filter);
- GEN_PMU_FORMAT_ATTR(load_filter);
- GEN_PMU_FORMAT_ATTR(store_filter);
- GEN_PMU_FORMAT_ATTR(event_filter);
-+GEN_PMU_FORMAT_ATTR(inv_event_filter);
- GEN_PMU_FORMAT_ATTR(min_latency);
- 
- static struct attribute *arm_spe_pmu_formats_attr[] = {
-@@ -243,12 +249,27 @@ static struct attribute *arm_spe_pmu_formats_attr[] = {
- 	&format_attr_load_filter.attr,
- 	&format_attr_store_filter.attr,
- 	&format_attr_event_filter.attr,
-+	&format_attr_inv_event_filter.attr,
- 	&format_attr_min_latency.attr,
- 	NULL,
- };
- 
-+static umode_t arm_spe_pmu_format_attr_is_visible(struct kobject *kobj,
-+						  struct attribute *attr,
-+						  int unused)
-+	{
-+	struct device *dev = kobj_to_dev(kobj);
-+	struct arm_spe_pmu *spe_pmu = dev_get_drvdata(dev);
-+
-+	if (attr == &format_attr_inv_event_filter.attr && !(spe_pmu->features & SPE_PMU_FEAT_INV_FILT_EVT))
-+		return 0;
-+
-+	return attr->mode;
-+}
-+
- static const struct attribute_group arm_spe_pmu_format_group = {
- 	.name	= "format",
-+	.is_visible = arm_spe_pmu_format_attr_is_visible,
- 	.attrs	= arm_spe_pmu_formats_attr,
- };
- 
-@@ -343,6 +364,9 @@ static u64 arm_spe_event_to_pmsfcr(struct perf_event *event)
- 	if (ATTR_CFG_GET_FLD(attr, event_filter))
- 		reg |= PMSFCR_EL1_FE;
- 
-+	if (ATTR_CFG_GET_FLD(attr, inv_event_filter))
-+		reg |= PMSFCR_EL1_FnE;
-+
- 	if (ATTR_CFG_GET_FLD(attr, min_latency))
- 		reg |= PMSFCR_EL1_FL;
- 
-@@ -355,6 +379,12 @@ static u64 arm_spe_event_to_pmsevfr(struct perf_event *event)
- 	return ATTR_CFG_GET_FLD(attr, event_filter);
- }
- 
-+static u64 arm_spe_event_to_pmsnevfr(struct perf_event *event)
-+{
-+	struct perf_event_attr *attr = &event->attr;
-+	return ATTR_CFG_GET_FLD(attr, inv_event_filter);
-+}
-+
- static u64 arm_spe_event_to_pmslatfr(struct perf_event *event)
+@@ -677,11 +677,11 @@ static u64 arm_spe_pmsevfr_res0(u16 pmsver)
  {
- 	struct perf_event_attr *attr = &event->attr;
-@@ -703,6 +733,9 @@ static int arm_spe_pmu_event_init(struct perf_event *event)
- 	if (arm_spe_event_to_pmsevfr(event) & arm_spe_pmsevfr_res0(spe_pmu->pmsver))
- 		return -EOPNOTSUPP;
- 
-+	if (arm_spe_event_to_pmsnevfr(event) & arm_spe_pmsevfr_res0(spe_pmu->pmsver))
-+		return -EOPNOTSUPP;
-+
- 	if (attr->exclude_idle)
- 		return -EOPNOTSUPP;
- 
-@@ -721,6 +754,10 @@ static int arm_spe_pmu_event_init(struct perf_event *event)
- 	    !(spe_pmu->features & SPE_PMU_FEAT_FILT_EVT))
- 		return -EOPNOTSUPP;
- 
-+	if ((FIELD_GET(PMSFCR_EL1_FnE, reg)) &&
-+	    !(spe_pmu->features & SPE_PMU_FEAT_INV_FILT_EVT))
-+		return -EOPNOTSUPP;
-+
- 	if ((FIELD_GET(PMSFCR_EL1_FT, reg)) &&
- 	    !(spe_pmu->features & SPE_PMU_FEAT_FILT_TYP))
- 		return -EOPNOTSUPP;
-@@ -756,6 +793,11 @@ static void arm_spe_pmu_start(struct perf_event *event, int flags)
- 	reg = arm_spe_event_to_pmsevfr(event);
- 	write_sysreg_s(reg, SYS_PMSEVFR_EL1);
- 
-+	if (spe_pmu->features & SPE_PMU_FEAT_INV_FILT_EVT) {
-+		reg = arm_spe_event_to_pmsnevfr(event);
-+		write_sysreg_s(reg, SYS_PMSNEVFR_EL1);
-+	}
-+
- 	reg = arm_spe_event_to_pmslatfr(event);
- 	write_sysreg_s(reg, SYS_PMSLATFR_EL1);
- 
-@@ -990,6 +1032,9 @@ static void __arm_spe_pmu_dev_probe(void *info)
- 	if (FIELD_GET(PMSIDR_EL1_FE, reg))
- 		spe_pmu->features |= SPE_PMU_FEAT_FILT_EVT;
- 
-+	if (FIELD_GET(PMSIDR_EL1_FnE, reg))
-+		spe_pmu->features |= SPE_PMU_FEAT_INV_FILT_EVT;
-+
- 	if (FIELD_GET(PMSIDR_EL1_FT, reg))
- 		spe_pmu->features |= SPE_PMU_FEAT_FILT_TYP;
+ 	switch (pmsver) {
+ 	case ID_AA64DFR0_EL1_PMSVer_IMP:
+-		return SYS_PMSEVFR_EL1_RES0_8_2;
++		return PMSEVFR_EL1_RES0_IMP;
+ 	case ID_AA64DFR0_EL1_PMSVer_V1P1:
+ 	/* Return the highest version we support in default */
+ 	default:
+-		return SYS_PMSEVFR_EL1_RES0_8_3;
++		return PMSEVFR_EL1_RES0_V1P1;
+ 	}
+ }
  
 
 -- 
