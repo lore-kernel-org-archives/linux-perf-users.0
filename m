@@ -2,58 +2,58 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D7266C433FE
-	for <linux-perf-users@archiver.kernel.org>; Thu, 20 Oct 2022 23:48:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AE3B1C4332F
+	for <linux-perf-users@archiver.kernel.org>; Thu, 20 Oct 2022 23:52:31 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229652AbiJTXsR (ORCPT
+        id S229489AbiJTXwa (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Thu, 20 Oct 2022 19:48:17 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33710 "EHLO
+        Thu, 20 Oct 2022 19:52:30 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44966 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229452AbiJTXsQ (ORCPT
+        with ESMTP id S229556AbiJTXw3 (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Thu, 20 Oct 2022 19:48:16 -0400
-Received: from mail-wr1-x42e.google.com (mail-wr1-x42e.google.com [IPv6:2a00:1450:4864:20::42e])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E4A6922BCA1
-        for <linux-perf-users@vger.kernel.org>; Thu, 20 Oct 2022 16:48:14 -0700 (PDT)
-Received: by mail-wr1-x42e.google.com with SMTP id b4so2148350wrs.1
-        for <linux-perf-users@vger.kernel.org>; Thu, 20 Oct 2022 16:48:14 -0700 (PDT)
+        Thu, 20 Oct 2022 19:52:29 -0400
+Received: from mail-wm1-x330.google.com (mail-wm1-x330.google.com [IPv6:2a00:1450:4864:20::330])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id ACB37229E5F
+        for <linux-perf-users@vger.kernel.org>; Thu, 20 Oct 2022 16:52:27 -0700 (PDT)
+Received: by mail-wm1-x330.google.com with SMTP id e18so1132686wmq.3
+        for <linux-perf-users@vger.kernel.org>; Thu, 20 Oct 2022 16:52:27 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=google.com; s=20210112;
         h=cc:to:subject:message-id:date:from:in-reply-to:references
          :mime-version:from:to:cc:subject:date:message-id:reply-to;
-        bh=DAo+j/Kx/eYwkjkxQHVaiOLaYikKqvSkEAXHJj4lh6c=;
-        b=NsYqMoxLwvopRdWRaz57CxiyjPCONM7AggCSYYVz3fNxuCFZ9Ml7/5d/1i1hvwFVP4
-         UDlP4J+ZcbymbpRsDFklzyPYP3rdMRCQBRy288+JZMNtmKOt+cYfiWUNIfMxengcX3aX
-         b+LiD3GxZnRtGmrVISPvNWghArkpCLT66eErLrd7f+Na7u0xJVMKRkbbWoU3Yautym0J
-         bRbpFkngu+Z/5oDb3Fva1OPgxF0fTm4TuGw5yZEfk1uAGD1mm4yNKh6pwZZulrwS4mzy
-         qeB+BsjenWrwnEdU5zqYRLQ8dO5v4SfCepiYZ7VCd355OQ4ryhkOjlMcMI82YQhcrYF4
-         bORg==
+        bh=pnqK2ps8JvrXXGDBlqjstYuKdyyRp4pZ+7d+0HhxAN4=;
+        b=Ahy164ud4d1v9vY9Vlg+VAfQoLSlsObqKosgYRZ8mCdCLvjJFgr7YEMlZc/9hPHYSW
+         15xvz0CtAPHUzXW8QqrdPBESCvHWvawMqGHQbrib47vxILev5+xwcOdDUaEaLBOZf1Nd
+         xADuPX8PV0Nc3QzFjKewxo4zUNyDgC0pOh9X7xisAzN6uhN+8DFeh8yDQS7QaOMWL12h
+         PTHiw1Lv14KB1vrV71xUpVbZp0hgz2rnM7jR+IHaaqx7fPlNY+uU42yR5+swJgrB14Nu
+         7GKFopOteR8YSpHmLnngZmx7gGj0FX5fB96thjl4rxXrD45nqxLOeDdrw0kFaQqQgl+Z
+         ejnA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
         h=cc:to:subject:message-id:date:from:in-reply-to:references
          :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
          :reply-to;
-        bh=DAo+j/Kx/eYwkjkxQHVaiOLaYikKqvSkEAXHJj4lh6c=;
-        b=bQc0jov9OZLKNddg9gYlgt8wSqr1vnRgLOqoYGFSft2vfZKhy5pSSUOVKZiylFP2so
-         8ZLtG2xwZJo+7a1bQrYVYaII1dA57EhJ29p72koqoQ4NqG0E/ZjUe3/lsP1x0vdsQ7wo
-         OIOKzTR2KwfW53+8PLtXqwGsjMLgtNQIWTM4+phcKzqXDLD5OVIGXkWL4V9DH04DEvZF
-         NGI9iQrdB4QE8qKeJTlvSBm7ATEsOdHzHg3Exyakk5mxQHDizBZSc7IiFdsH2QnWZ8UM
-         3+ONpsKn3G+Eh+S9azBPr36kyQDVdL2Ll3sVqfTwxotPAiRec8dlsi/GmCn35He9sxOY
-         JHmg==
-X-Gm-Message-State: ACrzQf0mMBEmsLJUqglki4qeYhhZ/ATjgSY2U8KzfPW+RZ30to+j5r+o
-        S6pweNpAj/Z1l03sPywzH6rtXJ5JKI5CLDx5U86iNo0YxQCZpQ==
-X-Google-Smtp-Source: AMsMyM47IZ0+emCPVKcSR45YOrL8IcCmIAd4EzDAz37FOOqEp2+gEQR1BkSi1POdVLl2xE9553s8EzpP0OJMS+jtDwA=
-X-Received: by 2002:a5d:4c92:0:b0:236:4b97:6828 with SMTP id
- z18-20020a5d4c92000000b002364b976828mr2234355wrs.300.1666309693365; Thu, 20
- Oct 2022 16:48:13 -0700 (PDT)
+        bh=pnqK2ps8JvrXXGDBlqjstYuKdyyRp4pZ+7d+0HhxAN4=;
+        b=wfywf5Y2Z+rvKzVSMouaP9cuf2Wi27tSDX1jZRUWnuyMV/bnkc+Zr9BghzzFS+x8cm
+         6T7Eatnivxhx1cFf3ndr8aNjIAPj/Ul7bJ2YPemjbvSYCiJjwRcyYEOa1Rz+lxnI7Oax
+         nEXFI+2oDSlfQ6Z4FQGfzt5xjL0vM372O2940XiS36tNWZl+CB5mGJzHaB1XbkUVz7qi
+         HOTsl/AiJ1vxrpODq1w5GCpqTAfGp6jc2qPKDv2ANZZBk15Txh3IQv791p2DZ1iGiVq9
+         jTHPvP80B3fo0TQxYcUq1vNDGZhZr31UqXsbVfSUNW6Akln6p2591Z125qWijqlZtYpI
+         ZL3Q==
+X-Gm-Message-State: ACrzQf3HQNPmKF1nIF4lgKIfWmLevn/KYobVKO3xUzmKXIW7ceaXjXLi
+        OOorVDuusThnrJ9dTrCxhlqYlcxZY29qy7qcVdsKmQ==
+X-Google-Smtp-Source: AMsMyM42egusWMMznBTbFDhyA8QnDSVqVIZ5NPEet60tGYlD8F92gO9XSNST4V3Zks3DwsB3+Lm8gR49RrLTmM0sVoI=
+X-Received: by 2002:a05:600c:19cc:b0:3c6:fbb9:caab with SMTP id
+ u12-20020a05600c19cc00b003c6fbb9caabmr12672576wmq.182.1666309946032; Thu, 20
+ Oct 2022 16:52:26 -0700 (PDT)
 MIME-Version: 1.0
-References: <20221020172643.3458767-1-namhyung@kernel.org> <20221020172643.3458767-3-namhyung@kernel.org>
-In-Reply-To: <20221020172643.3458767-3-namhyung@kernel.org>
+References: <20221020172643.3458767-1-namhyung@kernel.org> <20221020172643.3458767-4-namhyung@kernel.org>
+In-Reply-To: <20221020172643.3458767-4-namhyung@kernel.org>
 From:   Ian Rogers <irogers@google.com>
-Date:   Thu, 20 Oct 2022 16:48:01 -0700
-Message-ID: <CAP-5=fVdoCUq9RrmPZhzA-4MaRMWGeFEzFk6R2uR=5xGugTXeg@mail.gmail.com>
-Subject: Re: [PATCH 2/8] perf test: Fix shellcheck issues in the record test
+Date:   Thu, 20 Oct 2022 16:52:14 -0700
+Message-ID: <CAP-5=fWKCdyFzR8ZZSK_2v6vT_RKngxxnXGieUVb8PBATJ64eQ@mail.gmail.com>
+Subject: Re: [PATCH 3/8] perf test: Use a test program in perf record tests
 To:     Namhyung Kim <namhyung@kernel.org>
 Cc:     Arnaldo Carvalho de Melo <acme@kernel.org>,
         Jiri Olsa <jolsa@kernel.org>, Ingo Molnar <mingo@kernel.org>,
@@ -68,91 +68,141 @@ X-Mailing-List: linux-perf-users@vger.kernel.org
 
 On Thu, Oct 20, 2022 at 10:26 AM Namhyung Kim <namhyung@kernel.org> wrote:
 >
-> Basically there are 3 issues:
+> If the system has cc it could build a test program with two threads
+> and then use it for more detailed testing.  Also it accepts an option
+> to run a thread forever to ensure multi-thread runs.
 >
->  1. quote shell expansion
->  2. do not use egrep
->  3. use upper case letters for signal names
+> If cc is not found, it falls back to use the default value 'true'.
 >
 > Signed-off-by: Namhyung Kim <namhyung@kernel.org>
 
 Acked-by: Ian Rogers <irogers@google.com>
 
+I wonder if these utilities should just be built into perf to avoid
+the cc dependency. Perhaps we can have a hidden option built into perf
+test.
+
 Thanks,
 Ian
 
 > ---
->  tools/perf/tests/shell/record.sh | 18 +++++++++---------
->  1 file changed, 9 insertions(+), 9 deletions(-)
+>  tools/perf/tests/shell/record.sh | 64 ++++++++++++++++++++++++++++++--
+>  1 file changed, 60 insertions(+), 4 deletions(-)
 >
 > diff --git a/tools/perf/tests/shell/record.sh b/tools/perf/tests/shell/record.sh
-> index 747c33a1ec45..464071462809 100755
+> index 464071462809..952981481239 100755
 > --- a/tools/perf/tests/shell/record.sh
 > +++ b/tools/perf/tests/shell/record.sh
-> @@ -8,16 +8,16 @@ err=0
+> @@ -6,10 +6,17 @@ set -e
+>
+>  err=0
 >  perfdata=$(mktemp /tmp/__perf_test.perf.data.XXXXX)
+> +testprog=$(mktemp /tmp/__perf_test.prog.XXXXXX)
+> +testsym="test_loop"
 >
 >  cleanup() {
-> -  rm -f ${perfdata}
-> -  rm -f ${perfdata}.old
-> -  trap - exit term int
-> +  rm -f "${perfdata}"
-> +  rm -f "${perfdata}".old
-> +  trap - EXIT TERM INT
+>    rm -f "${perfdata}"
+>    rm -f "${perfdata}".old
+> +
+> +  if [ "${testprog}" != "true" ]; then
+> +    rm -f "${testprog}"
+> +  fi
+> +
+>    trap - EXIT TERM INT
 >  }
 >
->  trap_cleanup() {
->    cleanup
->    exit 1
+> @@ -19,9 +26,56 @@ trap_cleanup() {
 >  }
-> -trap trap_cleanup exit term int
-> +trap trap_cleanup EXIT TERM INT
+>  trap trap_cleanup EXIT TERM INT
 >
+> +build_test_program() {
+> +  if ! [ -x "$(command -v cc)" ]; then
+> +    # No CC found. Fall back to 'true'
+> +    testprog=true
+> +    testsym=true
+> +    return
+> +  fi
+> +
+> +  echo "Build a test program"
+> +  cat <<EOF | cc -o ${testprog} -xc - -pthread
+> +#include <stdio.h>
+> +#include <stdlib.h>
+> +#include <pthread.h>
+> +
+> +void test_loop(void) {
+> +  volatile int count = 1000000;
+> +
+> +  while (count--)
+> +    continue;
+> +}
+> +
+> +void *thfunc(void *arg) {
+> +  int forever = *(int *)arg;
+> +
+> +  do {
+> +    test_loop();
+> +  } while (forever);
+> +
+> +  return NULL;
+> +}
+> +
+> +int main(int argc, char *argv[]) {
+> +  pthread_t th;
+> +  int forever = 0;
+> +
+> +  if (argc > 1)
+> +    forever = atoi(argv[1]);
+> +
+> +  pthread_create(&th, NULL, thfunc, &forever);
+> +  test_loop();
+> +  pthread_join(th, NULL);
+> +
+> +  return 0;
+> +}
+> +EOF
+> +}
+> +
 >  test_per_thread() {
 >    echo "Basic --per-thread mode test"
-> @@ -30,13 +30,13 @@ test_per_thread() {
+> -  if ! perf record -o /dev/null --quiet true 2> /dev/null
+> +  if ! perf record -o /dev/null --quiet ${testprog} 2> /dev/null
+>    then
+>      echo "Per-thread record [Skipped event not supported]"
+>      if [ $err -ne 1 ]
+> @@ -30,13 +84,13 @@ test_per_thread() {
 >      fi
 >      return
 >    fi
-> -  if ! perf record --per-thread -o ${perfdata} true 2> /dev/null
-> +  if ! perf record --per-thread -o "${perfdata}" true 2> /dev/null
+> -  if ! perf record --per-thread -o "${perfdata}" true 2> /dev/null
+> +  if ! perf record --per-thread -o "${perfdata}" ${testprog} 2> /dev/null
 >    then
 >      echo "Per-thread record [Failed record]"
 >      err=1
 >      return
 >    fi
-> -  if ! perf report -i ${perfdata} -q | egrep -q true
-> +  if ! perf report -i "${perfdata}" -q | grep -q true
+> -  if ! perf report -i "${perfdata}" -q | grep -q true
+> +  if ! perf report -i "${perfdata}" -q | grep -q "${testsym}"
 >    then
 >      echo "Per-thread record [Failed missing output]"
 >      err=1
-> @@ -47,7 +47,7 @@ test_per_thread() {
->
->  test_register_capture() {
->    echo "Register capture test"
-> -  if ! perf list | egrep -q 'br_inst_retired.near_call'
-> +  if ! perf list | grep -q 'br_inst_retired.near_call'
->    then
->      echo "Register capture test [Skipped missing event]"
->      if [ $err -ne 1 ]
-> @@ -56,7 +56,7 @@ test_register_capture() {
->      fi
+> @@ -62,7 +116,7 @@ test_register_capture() {
 >      return
 >    fi
-> -  if ! perf record --intr-regs=\? 2>&1 | egrep -q 'available registers: AX BX CX DX SI DI BP SP IP FLAGS CS SS R8 R9 R10 R11 R12 R13 R14 R15'
-> +  if ! perf record --intr-regs=\? 2>&1 | grep -q 'available registers: AX BX CX DX SI DI BP SP IP FLAGS CS SS R8 R9 R10 R11 R12 R13 R14 R15'
->    then
->      echo "Register capture test [Skipped missing registers]"
->      return
-> @@ -64,7 +64,7 @@ test_register_capture() {
 >    if ! perf record -o - --intr-regs=di,r8,dx,cx -e br_inst_retired.near_call:p \
->      -c 1000 --per-thread true 2> /dev/null \
+> -    -c 1000 --per-thread true 2> /dev/null \
+> +    -c 1000 --per-thread ${testprog} 2> /dev/null \
 >      | perf script -F ip,sym,iregs -i - 2> /dev/null \
-> -    | egrep -q "DI:"
-> +    | grep -q "DI:"
+>      | grep -q "DI:"
 >    then
->      echo "Register capture test [Failed missing output]"
->      err=1
+> @@ -73,6 +127,8 @@ test_register_capture() {
+>    echo "Register capture test [Success]"
+>  }
+>
+> +build_test_program
+> +
+>  test_per_thread
+>  test_register_capture
+>
 > --
 > 2.38.0.135.g90850a2211-goog
 >
