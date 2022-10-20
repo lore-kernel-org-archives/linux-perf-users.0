@@ -2,58 +2,59 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AE3B1C4332F
-	for <linux-perf-users@archiver.kernel.org>; Thu, 20 Oct 2022 23:52:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2B154C433FE
+	for <linux-perf-users@archiver.kernel.org>; Thu, 20 Oct 2022 23:57:40 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229489AbiJTXwa (ORCPT
+        id S229541AbiJTX5j (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Thu, 20 Oct 2022 19:52:30 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44966 "EHLO
+        Thu, 20 Oct 2022 19:57:39 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56712 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229556AbiJTXw3 (ORCPT
+        with ESMTP id S229460AbiJTX5i (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Thu, 20 Oct 2022 19:52:29 -0400
-Received: from mail-wm1-x330.google.com (mail-wm1-x330.google.com [IPv6:2a00:1450:4864:20::330])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id ACB37229E5F
-        for <linux-perf-users@vger.kernel.org>; Thu, 20 Oct 2022 16:52:27 -0700 (PDT)
-Received: by mail-wm1-x330.google.com with SMTP id e18so1132686wmq.3
-        for <linux-perf-users@vger.kernel.org>; Thu, 20 Oct 2022 16:52:27 -0700 (PDT)
+        Thu, 20 Oct 2022 19:57:38 -0400
+Received: from mail-wm1-x334.google.com (mail-wm1-x334.google.com [IPv6:2a00:1450:4864:20::334])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8656222C826
+        for <linux-perf-users@vger.kernel.org>; Thu, 20 Oct 2022 16:57:36 -0700 (PDT)
+Received: by mail-wm1-x334.google.com with SMTP id m29-20020a05600c3b1d00b003c6bf423c71so3897512wms.0
+        for <linux-perf-users@vger.kernel.org>; Thu, 20 Oct 2022 16:57:36 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=google.com; s=20210112;
         h=cc:to:subject:message-id:date:from:in-reply-to:references
          :mime-version:from:to:cc:subject:date:message-id:reply-to;
-        bh=pnqK2ps8JvrXXGDBlqjstYuKdyyRp4pZ+7d+0HhxAN4=;
-        b=Ahy164ud4d1v9vY9Vlg+VAfQoLSlsObqKosgYRZ8mCdCLvjJFgr7YEMlZc/9hPHYSW
-         15xvz0CtAPHUzXW8QqrdPBESCvHWvawMqGHQbrib47vxILev5+xwcOdDUaEaLBOZf1Nd
-         xADuPX8PV0Nc3QzFjKewxo4zUNyDgC0pOh9X7xisAzN6uhN+8DFeh8yDQS7QaOMWL12h
-         PTHiw1Lv14KB1vrV71xUpVbZp0hgz2rnM7jR+IHaaqx7fPlNY+uU42yR5+swJgrB14Nu
-         7GKFopOteR8YSpHmLnngZmx7gGj0FX5fB96thjl4rxXrD45nqxLOeDdrw0kFaQqQgl+Z
-         ejnA==
+        bh=H0mgUk8pHuNN2LGzO3jLHbR7my+DG/R2XSHZQG1d+tQ=;
+        b=GQP6baGtP+EPBYErGgmNhObaaaVnkritMmDJdM4Chiw4675C3aPExwrW8lJmqArKFO
+         vHhPgP6Ydefb6G0kK4nEB2vBfXaWk2jHV8yc3V1hSNqgT7JNSGV5Ic2pEXSxGBTP6gG1
+         QZGVS2W4uYnxlkh8LKaEkklATW4UVT8KQpJ1Pyjgj+Vdm4X4z/h8HEQa9bV5nPTHIVsG
+         PqYscwX1aCi7Jw2Ynh5yhD4y87bO1wfxKWUhqVC4bAa14GgOMOH/YORjFLOqRWPU5qJq
+         dPAMBfkuw7yVAiUdEDmfXu9BSOUWgcospD9BExA1Ha2mVFXpONezTdVI0D+OQKncC/rP
+         BXEA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
         h=cc:to:subject:message-id:date:from:in-reply-to:references
          :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
          :reply-to;
-        bh=pnqK2ps8JvrXXGDBlqjstYuKdyyRp4pZ+7d+0HhxAN4=;
-        b=wfywf5Y2Z+rvKzVSMouaP9cuf2Wi27tSDX1jZRUWnuyMV/bnkc+Zr9BghzzFS+x8cm
-         6T7Eatnivxhx1cFf3ndr8aNjIAPj/Ul7bJ2YPemjbvSYCiJjwRcyYEOa1Rz+lxnI7Oax
-         nEXFI+2oDSlfQ6Z4FQGfzt5xjL0vM372O2940XiS36tNWZl+CB5mGJzHaB1XbkUVz7qi
-         HOTsl/AiJ1vxrpODq1w5GCpqTAfGp6jc2qPKDv2ANZZBk15Txh3IQv791p2DZ1iGiVq9
-         jTHPvP80B3fo0TQxYcUq1vNDGZhZr31UqXsbVfSUNW6Akln6p2591Z125qWijqlZtYpI
-         ZL3Q==
-X-Gm-Message-State: ACrzQf3HQNPmKF1nIF4lgKIfWmLevn/KYobVKO3xUzmKXIW7ceaXjXLi
-        OOorVDuusThnrJ9dTrCxhlqYlcxZY29qy7qcVdsKmQ==
-X-Google-Smtp-Source: AMsMyM42egusWMMznBTbFDhyA8QnDSVqVIZ5NPEet60tGYlD8F92gO9XSNST4V3Zks3DwsB3+Lm8gR49RrLTmM0sVoI=
-X-Received: by 2002:a05:600c:19cc:b0:3c6:fbb9:caab with SMTP id
- u12-20020a05600c19cc00b003c6fbb9caabmr12672576wmq.182.1666309946032; Thu, 20
- Oct 2022 16:52:26 -0700 (PDT)
+        bh=H0mgUk8pHuNN2LGzO3jLHbR7my+DG/R2XSHZQG1d+tQ=;
+        b=1Mmov4OTACq3uyJvtRl/D9NDYiNkYHlpnTuPMbllsZNhnNFCy5LKi/zc/0AK6Wy7mI
+         pV8f/OxQKUjEhYlS8wczPyRKiPsWBDPR3KcLcZPExx6A8GN/NY+WpDuYD88psRor7mv7
+         XI4FWyVwmb6bR9H2wB66GL4Pzl/B6c7ZZjoxag62fAtm8h3twp1BYnjz9BUSmf0It/N+
+         GodNJR8YZ9lVmDuGoFs4CkBj/lPmFFMatpj84NizpCcefQ0mMWPHIy1GmkamucgE21BX
+         Z7tmnXD0SzJGf0D4XSxMm88+BFKx9PxD8eqiY986cw5yfNGckB5O+GjvX+vFrvi14csy
+         lWWg==
+X-Gm-Message-State: ACrzQf1w3mQTLL70oFqrCStKOFLtxOKWFs/vbEatiChTsKItEfZxz4XX
+        8bWbaJ9yuKZ2g15v1AX8UQOW0mN02lzrdRau38jM+A==
+X-Google-Smtp-Source: AMsMyM6hc+nFD36eoAsIU3qJo1l4LizrOoMMzLLozBscEo9C1W0QEzcXNpB3aExEUabqsg4p5mPSyM+XP/kv/G7M/4E=
+X-Received: by 2002:a05:600c:314f:b0:3c7:87f:6c7d with SMTP id
+ h15-20020a05600c314f00b003c7087f6c7dmr6576761wmo.149.1666310254928; Thu, 20
+ Oct 2022 16:57:34 -0700 (PDT)
 MIME-Version: 1.0
-References: <20221020172643.3458767-1-namhyung@kernel.org> <20221020172643.3458767-4-namhyung@kernel.org>
-In-Reply-To: <20221020172643.3458767-4-namhyung@kernel.org>
+References: <20221020172643.3458767-1-namhyung@kernel.org> <20221020172643.3458767-5-namhyung@kernel.org>
+In-Reply-To: <20221020172643.3458767-5-namhyung@kernel.org>
 From:   Ian Rogers <irogers@google.com>
-Date:   Thu, 20 Oct 2022 16:52:14 -0700
-Message-ID: <CAP-5=fWKCdyFzR8ZZSK_2v6vT_RKngxxnXGieUVb8PBATJ64eQ@mail.gmail.com>
-Subject: Re: [PATCH 3/8] perf test: Use a test program in perf record tests
+Date:   Thu, 20 Oct 2022 16:57:23 -0700
+Message-ID: <CAP-5=fVehUL0YtVcn46nLNfpNr1UQ1dOvz2FixatQiDJkU3Ppw@mail.gmail.com>
+Subject: Re: [PATCH 4/8] perf test: Wait for a new thread when testing
+ --per-thread record
 To:     Namhyung Kim <namhyung@kernel.org>
 Cc:     Arnaldo Carvalho de Melo <acme@kernel.org>,
         Jiri Olsa <jolsa@kernel.org>, Ingo Molnar <mingo@kernel.org>,
@@ -68,140 +69,69 @@ X-Mailing-List: linux-perf-users@vger.kernel.org
 
 On Thu, Oct 20, 2022 at 10:26 AM Namhyung Kim <namhyung@kernel.org> wrote:
 >
-> If the system has cc it could build a test program with two threads
-> and then use it for more detailed testing.  Also it accepts an option
-> to run a thread forever to ensure multi-thread runs.
+> Just running the target program is not enough to test multi-thread
+> target because it'd be racy perf vs target startup.  I used the
+> initial delay but it cannot guarantee for perf to see the thread.
 >
-> If cc is not found, it falls back to use the default value 'true'.
+> Instead, use wait_for_threads helper from shell/lib/waiting.sh to make
+> sure it starts the sibling thread first.  Then perf record can use -p
+> option to profile the target process.
 >
 > Signed-off-by: Namhyung Kim <namhyung@kernel.org>
 
 Acked-by: Ian Rogers <irogers@google.com>
 
-I wonder if these utilities should just be built into perf to avoid
-the cc dependency. Perhaps we can have a hidden option built into perf
-test.
-
 Thanks,
 Ian
 
 > ---
->  tools/perf/tests/shell/record.sh | 64 ++++++++++++++++++++++++++++++--
->  1 file changed, 60 insertions(+), 4 deletions(-)
+>  tools/perf/tests/shell/record.sh | 27 +++++++++++++++++++++++++++
+>  1 file changed, 27 insertions(+)
 >
 > diff --git a/tools/perf/tests/shell/record.sh b/tools/perf/tests/shell/record.sh
-> index 464071462809..952981481239 100755
+> index 952981481239..d1640d1daf2e 100755
 > --- a/tools/perf/tests/shell/record.sh
 > +++ b/tools/perf/tests/shell/record.sh
-> @@ -6,10 +6,17 @@ set -e
+> @@ -4,6 +4,9 @@
 >
+>  set -e
+>
+> +shelldir=$(dirname "$0")
+> +. "${shelldir}"/lib/waiting.sh
+> +
 >  err=0
 >  perfdata=$(mktemp /tmp/__perf_test.perf.data.XXXXX)
-> +testprog=$(mktemp /tmp/__perf_test.prog.XXXXXX)
-> +testsym="test_loop"
->
->  cleanup() {
->    rm -f "${perfdata}"
->    rm -f "${perfdata}".old
+>  testprog=$(mktemp /tmp/__perf_test.prog.XXXXXX)
+> @@ -96,6 +99,30 @@ test_per_thread() {
+>      err=1
+>      return
+>    fi
 > +
-> +  if [ "${testprog}" != "true" ]; then
-> +    rm -f "${testprog}"
+> +  # run the test program in background (forever)
+> +  ${testprog} 1 &
+> +  TESTPID=$!
+> +
+> +  rm -f "${perfdata}"
+> +
+> +  wait_for_threads ${TESTPID} 2
+> +  perf record -p "${TESTPID}" --per-thread -o "${perfdata}" sleep 1 2> /dev/null
+> +  kill ${TESTPID}
+> +
+> +  if [ ! -e "${perfdata}" ]
+> +  then
+> +    echo "Per-thread record [Failed record -p]"
+> +    err=1
+> +    return
 > +  fi
-> +
->    trap - EXIT TERM INT
->  }
->
-> @@ -19,9 +26,56 @@ trap_cleanup() {
->  }
->  trap trap_cleanup EXIT TERM INT
->
-> +build_test_program() {
-> +  if ! [ -x "$(command -v cc)" ]; then
-> +    # No CC found. Fall back to 'true'
-> +    testprog=true
-> +    testsym=true
+> +  if ! perf report -i "${perfdata}" -q | grep -q "${testsym}"
+> +  then
+> +    echo "Per-thread record [Failed -p missing output]"
+> +    err=1
 > +    return
 > +  fi
 > +
-> +  echo "Build a test program"
-> +  cat <<EOF | cc -o ${testprog} -xc - -pthread
-> +#include <stdio.h>
-> +#include <stdlib.h>
-> +#include <pthread.h>
-> +
-> +void test_loop(void) {
-> +  volatile int count = 1000000;
-> +
-> +  while (count--)
-> +    continue;
-> +}
-> +
-> +void *thfunc(void *arg) {
-> +  int forever = *(int *)arg;
-> +
-> +  do {
-> +    test_loop();
-> +  } while (forever);
-> +
-> +  return NULL;
-> +}
-> +
-> +int main(int argc, char *argv[]) {
-> +  pthread_t th;
-> +  int forever = 0;
-> +
-> +  if (argc > 1)
-> +    forever = atoi(argv[1]);
-> +
-> +  pthread_create(&th, NULL, thfunc, &forever);
-> +  test_loop();
-> +  pthread_join(th, NULL);
-> +
-> +  return 0;
-> +}
-> +EOF
-> +}
-> +
->  test_per_thread() {
->    echo "Basic --per-thread mode test"
-> -  if ! perf record -o /dev/null --quiet true 2> /dev/null
-> +  if ! perf record -o /dev/null --quiet ${testprog} 2> /dev/null
->    then
->      echo "Per-thread record [Skipped event not supported]"
->      if [ $err -ne 1 ]
-> @@ -30,13 +84,13 @@ test_per_thread() {
->      fi
->      return
->    fi
-> -  if ! perf record --per-thread -o "${perfdata}" true 2> /dev/null
-> +  if ! perf record --per-thread -o "${perfdata}" ${testprog} 2> /dev/null
->    then
->      echo "Per-thread record [Failed record]"
->      err=1
->      return
->    fi
-> -  if ! perf report -i "${perfdata}" -q | grep -q true
-> +  if ! perf report -i "${perfdata}" -q | grep -q "${testsym}"
->    then
->      echo "Per-thread record [Failed missing output]"
->      err=1
-> @@ -62,7 +116,7 @@ test_register_capture() {
->      return
->    fi
->    if ! perf record -o - --intr-regs=di,r8,dx,cx -e br_inst_retired.near_call:p \
-> -    -c 1000 --per-thread true 2> /dev/null \
-> +    -c 1000 --per-thread ${testprog} 2> /dev/null \
->      | perf script -F ip,sym,iregs -i - 2> /dev/null \
->      | grep -q "DI:"
->    then
-> @@ -73,6 +127,8 @@ test_register_capture() {
->    echo "Register capture test [Success]"
+>    echo "Basic --per-thread mode test [Success]"
 >  }
->
-> +build_test_program
-> +
->  test_per_thread
->  test_register_capture
 >
 > --
 > 2.38.0.135.g90850a2211-goog
