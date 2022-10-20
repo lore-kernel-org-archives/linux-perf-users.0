@@ -2,61 +2,84 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0DD5FC433FE
-	for <linux-perf-users@archiver.kernel.org>; Thu, 20 Oct 2022 09:48:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4E675C433FE
+	for <linux-perf-users@archiver.kernel.org>; Thu, 20 Oct 2022 10:22:16 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230131AbiJTJse (ORCPT
+        id S229815AbiJTKWN (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Thu, 20 Oct 2022 05:48:34 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41322 "EHLO
+        Thu, 20 Oct 2022 06:22:13 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37600 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230129AbiJTJsd (ORCPT
+        with ESMTP id S230493AbiJTKVS (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Thu, 20 Oct 2022 05:48:33 -0400
-Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 298001905C9;
-        Thu, 20 Oct 2022 02:48:32 -0700 (PDT)
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id A506D61A97;
-        Thu, 20 Oct 2022 09:48:31 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id B7D35C433C1;
-        Thu, 20 Oct 2022 09:48:30 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linuxfoundation.org;
-        s=korg; t=1666259311;
-        bh=EWg2c2AgwAaw/YZy71aIoNZJWUST4zAX/8vc4OFM3cA=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=wPpgP4zYanx0koPMPzn/bmuFTdSS5wUdIsSKLUmdT5wQmL6MJe63tet5x1LyJsJIL
-         KsD4UCbUtjWrmKjyd6a8wOUnn8DEuQD11zDXTXm/P+NGBtjXx66h9sClWZzS+Ina2b
-         JlkCCG4VkVNpYyLvxAnmXqxfn4eMJx7uW4f3TMzw=
-Date:   Thu, 20 Oct 2022 11:48:28 +0200
-From:   Greg KH <gregkh@linuxfoundation.org>
-To:     cuijinpeng666@gmail.com
-Cc:     peterz@infradead.org, mingo@redhat.com, acme@kernel.org,
-        mark.rutland@arm.com, namhyung@kernel.org,
-        linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Jinpeng Cui <cui.jinpeng2@zte.com.cn>,
-        Zeal Robot <zealci@zte.com.cn>
-Subject: Re: [PATCH linux-next] perf: Use strscpy() instead of strlcpy()
-Message-ID: <Y1EZbJGoIFY2NX1V@kroah.com>
-References: <20221020085411.398450-1-cui.jinpeng2@zte.com.cn>
+        Thu, 20 Oct 2022 06:21:18 -0400
+Received: from foss.arm.com (foss.arm.com [217.140.110.172])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTP id 77E6B80E8E;
+        Thu, 20 Oct 2022 03:20:41 -0700 (PDT)
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 4F088ED1;
+        Thu, 20 Oct 2022 03:20:46 -0700 (PDT)
+Received: from e121896.arm.com (unknown [10.57.5.110])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPA id 3C8B13F792;
+        Thu, 20 Oct 2022 03:20:37 -0700 (PDT)
+From:   James Clark <james.clark@arm.com>
+To:     linux-perf-users@vger.kernel.org
+Cc:     linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        broonie@kernel.org, acme@kernel.org,
+        James Clark <james.clark@arm.com>,
+        Will Deacon <will@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Jiri Olsa <jolsa@kernel.org>,
+        Namhyung Kim <namhyung@kernel.org>,
+        Catalin Marinas <catalin.marinas@arm.com>
+Subject: [PATCH v2 0/1] Perf stack unwinding with pointer authentication
+Date:   Thu, 20 Oct 2022 11:19:19 +0100
+Message-Id: <20221020101921.1219533-1-james.clark@arm.com>
+X-Mailer: git-send-email 2.28.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20221020085411.398450-1-cui.jinpeng2@zte.com.cn>
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-On Thu, Oct 20, 2022 at 08:54:11AM +0000, cuijinpeng666@gmail.com wrote:
-> From: Jinpeng Cui <cui.jinpeng2@zte.com.cn>
-> 
-> The implementation of strscpy() is more robust and safer.
-> 
-> Reported-by: Zeal Robot <zealci@zte.com.cn>
-> Signed-off-by: Jinpeng Cui <cui.jinpeng2@zte.com.cn>
-> ---
+Hi,
 
-Please ignore based on this response:
-	https://lore.kernel.org/r/Y1EVnZS9BalesrC1@kroah.com
+I've taken up this change from Andrew and made some improvements. It
+also didn't apply cleanly anymore so I thought I would resend.
+
+I know there were some discussions with Vince Weaver about having
+something arch specific in perf_event_open, so it would be good to get
+some more feedback on that. I'm happy to change it so that it's just
+called PERF_SAMPLE_PTRAUTH, but given how arch specific the output is,
+I'm not sure if that is best.
+
+Thanks
+James
+
+Changes since V1:
+
+  * Use weak symbols instead of #ifdefs which simplified things
+  * Remove the new files as everything fits well into existing ones
+  * Never allow opening the event if CONFIG_ARM64_PTR_AUTH isn't set
+  * Include only the kernel side change in this set, the perf tool
+    changes are here [1] which I will also rebase and resubmit
+  * Rebase onto tip/perf/core (82aad7ff7ac)
+
+[1]: https://lore.kernel.org/lkml/20220704145333.22557-1-andrew.kilroy@arm.com/T/#t
+
+Andrew Kilroy (1):
+  perf arm64: Send pointer auth masks to ring buffer
+
+ arch/arm64/include/asm/perf_event.h | 32 +++++++++++++++++++++++++++++
+ arch/arm64/kernel/perf_event.c      | 32 +++++++++++++++++++++++++++++
+ include/linux/perf_event.h          | 12 +++++++++++
+ include/uapi/linux/perf_event.h     |  4 +++-
+ kernel/events/core.c                | 31 ++++++++++++++++++++++++++++
+ 5 files changed, 110 insertions(+), 1 deletion(-)
+
+-- 
+2.28.0
+
