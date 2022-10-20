@@ -2,98 +2,133 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 650BAC433FE
-	for <linux-perf-users@archiver.kernel.org>; Thu, 20 Oct 2022 17:01:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 54EBBC433FE
+	for <linux-perf-users@archiver.kernel.org>; Thu, 20 Oct 2022 17:26:50 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229484AbiJTRBJ (ORCPT
+        id S229661AbiJTR0t (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Thu, 20 Oct 2022 13:01:09 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56862 "EHLO
+        Thu, 20 Oct 2022 13:26:49 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55826 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229449AbiJTRBI (ORCPT
+        with ESMTP id S229519AbiJTR0s (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Thu, 20 Oct 2022 13:01:08 -0400
-Received: from casper.infradead.org (casper.infradead.org [IPv6:2001:8b0:10b:1236::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 14AAB19D88B;
-        Thu, 20 Oct 2022 10:01:05 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=casper.20170209; h=In-Reply-To:Content-Type:MIME-Version:
-        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description;
-        bh=cNSLBsKzCRIUurXKxibUZ4iV/rXzCfaN7SiOZ3WxXrA=; b=lXG8/LbTcMdxz0IfQ5G/WVEhM3
-        46zvWJfc8xilRyVv/setRDzxTcqcUQAsuvsM5CDltALZO6N2VhsH77WW8NlaeJ8+T6/890VoyPLab
-        b+l71bY3d12e6QEg3Lz4n+zZgs/M3CWXQ/2sIGiV3/Z2/xqA9OSPnO7b1ZL3z5SJo1WdbEDlAYj0G
-        TjObZL8BspoaBlOreEbs//sfeL+S9Iu2RVDdvVDs2g0h+KWkFBSCMrx3WOSB7uWuYTOkIeMyeYBXy
-        OvIfHTQMYLslp7dutHMPLCUAC5y5gWNWfMhNX9W10NrRFte1AmNkhckue/Ji571na0oOCmpz3HZkR
-        kyLv3tWg==;
-Received: from j130084.upc-j.chello.nl ([24.132.130.84] helo=noisy.programming.kicks-ass.net)
-        by casper.infradead.org with esmtpsa (Exim 4.94.2 #2 (Red Hat Linux))
-        id 1olYuj-00CX40-JI; Thu, 20 Oct 2022 17:01:01 +0000
-Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange X25519 server-signature RSA-PSS (4096 bits))
-        (Client did not present a certificate)
-        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id 759C7300472;
-        Thu, 20 Oct 2022 19:00:56 +0200 (CEST)
-Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
-        id 56C3F2C1596B5; Thu, 20 Oct 2022 19:00:56 +0200 (CEST)
-Date:   Thu, 20 Oct 2022 19:00:56 +0200
-From:   Peter Zijlstra <peterz@infradead.org>
-To:     James Clark <james.clark@arm.com>
-Cc:     linux-perf-users@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        broonie@kernel.org, acme@kernel.org,
-        Andrew Kilroy <andrew.kilroy@arm.com>,
-        Vince Weaver <vincent.weaver@maine.edu>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Ingo Molnar <mingo@redhat.com>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Jiri Olsa <jolsa@kernel.org>,
-        Namhyung Kim <namhyung@kernel.org>,
-        Will Deacon <will@kernel.org>,
-        Catalin Marinas <catalin.marinas@arm.com>
-Subject: Re: [PATCH v2 1/1] perf arm64: Send pointer auth masks to ring buffer
-Message-ID: <Y1F+yAWy4VVaDb+5@hirez.programming.kicks-ass.net>
-References: <20221020101921.1219533-1-james.clark@arm.com>
- <20221020101921.1219533-2-james.clark@arm.com>
- <Y1F8DUWaWhlh/phL@hirez.programming.kicks-ass.net>
+        Thu, 20 Oct 2022 13:26:48 -0400
+Received: from mail-pj1-x102b.google.com (mail-pj1-x102b.google.com [IPv6:2607:f8b0:4864:20::102b])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6B00A2A971;
+        Thu, 20 Oct 2022 10:26:47 -0700 (PDT)
+Received: by mail-pj1-x102b.google.com with SMTP id p6-20020a17090a748600b002103d1ef63aso223535pjk.1;
+        Thu, 20 Oct 2022 10:26:47 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20210112;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:sender:from:to:cc:subject:date:message-id:reply-to;
+        bh=FSWnRxtqE96/g59wuJmgIQrOE2XEcx+NdrwZOCesEeY=;
+        b=Lc3/Qqy0FWXejyUn2ZGcudk75Sb5MrnTavlEcsFv+zx5wsK3El2aW6ggg8B/BhU77J
+         SNTm6ObFWwRa1ssCp0ju1iUQKQlQt/iP3hD9AvY7PSFoEWsGKQ5tFvqY37j0BZa/ZZ/C
+         EAZvNK13xlD5jcB7nXnKlt5n0I4CXX4neqpT4TZOlEkyokwe9zYQbfW1nmKJk0RffMQJ
+         pmlw4gufyUYiDh7EwxdIvh4RpQOMV+XWKYZPQtRf8b0mRWZLrtHm5yHl/9snjuWAPVsp
+         un4NgZUzBh6NRpljNfBphrH73MQltXfCK6WgGo8VfDuZAD7q/W9Dzf4LHt06CJ1hMQ+l
+         vm9Q==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:sender:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=FSWnRxtqE96/g59wuJmgIQrOE2XEcx+NdrwZOCesEeY=;
+        b=HL0Iz3nScNNMPO8Ift/c+AOb2Mk+SPmcNU4z8ubOsnvmCAqzWMCRWI+QE7OG8oDP0+
+         KWPrku9N+Wqao0Vddj+paaOT+VST9K3KsdA97T5EnVvA8/0W9lXM9o6mzbK086cXJdN3
+         kL6e0EXAN/TOxISsCPNROQVHc7aVmGneLQq6aC34jKUSfhIpgnGhQjyu1XA3ZiGIY6x+
+         JywBAnHKoekqFzJnbUeQbbYcAe65Fqpp1bR/pGOZItxnygZIHt3QNDe67zgle4plvSN5
+         DCX8tKJYBsDlwjUERb2ZkVAyr1LwxIYvF5vgRmLKSINUFxaPOEWJOe1XxvEG0cws2G0+
+         ytGQ==
+X-Gm-Message-State: ACrzQf3UXZTprZTqCRxhXVaUKT5qrSQDjGS2zzwXKwpd2dt/ielReJ1V
+        roabQdinlfyjVdGoqYK9zknroqGikhQ=
+X-Google-Smtp-Source: AMsMyM6qgSpZKhOE+HrZHAp2sTf+//3IsfuB9TQ7IKy4Hu7JpZE5Hp3lEQrhI97MCwpEe6ncpBhFvQ==
+X-Received: by 2002:a17:90b:2691:b0:20c:d655:c67d with SMTP id pl17-20020a17090b269100b0020cd655c67dmr53307076pjb.36.1666286806758;
+        Thu, 20 Oct 2022 10:26:46 -0700 (PDT)
+Received: from youngsil.svl.corp.google.com ([2620:15c:2d4:203:637f:7dcc:4bbf:4981])
+        by smtp.gmail.com with ESMTPSA id q13-20020a170902f34d00b0017680faa1a8sm12951754ple.112.2022.10.20.10.26.45
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 20 Oct 2022 10:26:46 -0700 (PDT)
+Sender: Namhyung Kim <namhyung@gmail.com>
+From:   Namhyung Kim <namhyung@kernel.org>
+To:     Arnaldo Carvalho de Melo <acme@kernel.org>,
+        Jiri Olsa <jolsa@kernel.org>
+Cc:     Ingo Molnar <mingo@kernel.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Ian Rogers <irogers@google.com>,
+        Adrian Hunter <adrian.hunter@intel.com>,
+        linux-perf-users@vger.kernel.org
+Subject: [PATCHSET 0/8] perf test: Improve perf record tests (v2)
+Date:   Thu, 20 Oct 2022 10:26:35 -0700
+Message-Id: <20221020172643.3458767-1-namhyung@kernel.org>
+X-Mailer: git-send-email 2.38.0.135.g90850a2211-goog
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <Y1F8DUWaWhlh/phL@hirez.programming.kicks-ass.net>
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-On Thu, Oct 20, 2022 at 06:49:17PM +0200, Peter Zijlstra wrote:
-> On Thu, Oct 20, 2022 at 11:19:20AM +0100, James Clark wrote:
-> > From: Andrew Kilroy <andrew.kilroy@arm.com>
-> > 
-> > Perf report cannot produce callgraphs using dwarf on arm64 where pointer
-> > authentication is enabled.  This is because libunwind and libdw cannot
-> > unmangle instruction pointers that have a pointer authentication code
-> > (PAC) embedded in them.
-> > 
-> > libunwind and libdw need to be given an instruction mask which they can
-> > use to arrive at the correct return address that does not contain the
-> > PAC.
-> > 
-> > The bits in the return address that contain the PAC can differ by
-> > process, so this patch adds a new sample field PERF_SAMPLE_ARCH_1
-> > to allow the kernel to send the masks up to userspace perf.
-> > 
-> > This field can be used in a architecture specific fashion, but on
-> > arm64, it contains the ptrauth mask information. The event will
-> > currently fail to open on architectures other than arm64 if
-> > PERF_SAMPLE_ARCH_1 is set. It will also fail to open on arm64 if
-> > CONFIG_ARM64_PTR_AUTH isn't set, as the data would always be zeros.
-> 
-> A little more information please; wth is pointer authentication? Are we
+Hello,
 
-Mark got me: https://events.static.linuxfound.org/sites/events/files/slides/slides_23.pdf
+This patchset improves the perf record tests to check more cases so that it
+can find problems early.  The motivation was a failure per-thread mmap with
+multi-threaded targets which Adrian is working on the fix.
 
-> going to be having the same thing with x86 LAM where only a subset of
-> the available bits have meaning to the hardware?
-> 
-> Why do we want the same mask repeated over and over with each sample;
-> should this not be part of the address space (side-band) data?
+Changes in v2)
+ * fix shellcheck issues
+ * drop unsupported --per-thread and --threads combination
+ * do not use initial delay (-D option); instead it runs the target
+   and wait for it separately using the recent waiting.sh library
+ * add Adrian's Reviewed-by tags
+
+I added a custom test program and more combinations like system-wide and
+command line workload (in per-process mode) testing with multi-threaded
+recording mode.
+
+Currently it succeeds every tests when running as root!
+
+  $ sudo ./perf test -v 91
+   91: perf record tests                                               :
+  --- start ---
+  test child forked, pid 108975
+  Build a test program
+  Basic --per-thread mode test
+  Basic --per-thread mode test [Success]
+  Register capture test
+  Register capture test [Success]
+  Basic --system-wide mode test
+  Basic --system-wide mode test [Success]
+  Basic target workload test
+  Basic target workload test [Success]
+  test child finished with 0
+  ---- end ----
+  perf record tests: Ok
+
+You can find it in 'perf/record-test-v2' branch in
+
+  git://git.kernel.org/pub/scm/linux/kernel/git/namhyung/linux-perf.git
+
+Thanks,
+Namhyung
+
+
+Namhyung Kim (8):
+  perf test: Do not use instructions:u explicitly
+  perf test: Fix shellcheck issues in the record test
+  perf test: Use a test program in perf record tests
+  perf test: Wait for a new thread when testing --per-thread record
+  perf test: Add system-wide mode in perf record tests
+  perf test: Add target workload test in perf record tests
+  perf test: Test record with --threads option
+  perf test: Do not set TEST_SKIP for record subtests
+
+ tools/perf/tests/shell/record.sh | 180 +++++++++++++++++++++++++++----
+ 1 file changed, 158 insertions(+), 22 deletions(-)
+
+
+base-commit: a3a365655a28f12f07eddf4f3fd596987b175e1d
+-- 
+2.38.0.135.g90850a2211-goog
+
