@@ -2,115 +2,112 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 59349C43217
-	for <linux-perf-users@archiver.kernel.org>; Thu, 20 Oct 2022 07:08:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 82D9FC4332F
+	for <linux-perf-users@archiver.kernel.org>; Thu, 20 Oct 2022 08:54:29 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229987AbiJTHIA (ORCPT
+        id S229543AbiJTIy2 (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Thu, 20 Oct 2022 03:08:00 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37082 "EHLO
+        Thu, 20 Oct 2022 04:54:28 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35288 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229999AbiJTHH6 (ORCPT
+        with ESMTP id S229515AbiJTIy1 (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Thu, 20 Oct 2022 03:07:58 -0400
-Received: from mx0b-001b2d01.pphosted.com (mx0b-001b2d01.pphosted.com [148.163.158.5])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 53949153837;
-        Thu, 20 Oct 2022 00:07:58 -0700 (PDT)
-Received: from pps.filterd (m0098421.ppops.net [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (8.17.1.5/8.17.1.5) with ESMTP id 29K6bY2r031759;
-        Thu, 20 Oct 2022 07:07:46 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=from : to : cc : subject
- : date : message-id : in-reply-to : references : mime-version :
- content-transfer-encoding; s=pp1;
- bh=q0IYKObOpZMNiqFVVVJy1j3P8SAwe0uiRVGDkJEZCiI=;
- b=Qv0Bbx9yurUNJ0BWTN0rV/GkGIgA85BgZfdnfzBWFKIdw/rQdqAGhEgt6Jfbw3Hrzfzk
- url5CvfzLndeEQjEH+WVaHfMARXdrJzjQ3LByleR5QloNjtO56jN4UuGmmAn7FxAa7G0
- rf+iai9tpdS/hAlGg4J4j8kdQoQ8HPxegu4cZpfIrtUgHs7b/Z8CoD+qke8gbOlKVIYG
- lfTcZam+khfvHw7U44wLLssgJ3oCLg+K/CfQCuHU+HuRis7VNq2ZMBgSMkdV4mrOZLxr
- DAZYXt/CdkM9Ac2H92IMBgr3zNsVX+9m1sF5Jg+RuOGpjudzsQN4QVHfJqSY846aqORQ 6w== 
-Received: from pps.reinject (localhost [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 3kawfaebev-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Thu, 20 Oct 2022 07:07:45 +0000
-Received: from m0098421.ppops.net (m0098421.ppops.net [127.0.0.1])
-        by pps.reinject (8.17.1.5/8.17.1.5) with ESMTP id 29K6cg3i008507;
-        Thu, 20 Oct 2022 07:07:23 GMT
-Received: from ppma04ams.nl.ibm.com (63.31.33a9.ip4.static.sl-reverse.com [169.51.49.99])
-        by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 3kawfaea68-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Thu, 20 Oct 2022 07:07:23 +0000
-Received: from pps.filterd (ppma04ams.nl.ibm.com [127.0.0.1])
-        by ppma04ams.nl.ibm.com (8.16.1.2/8.16.1.2) with SMTP id 29K75Qkq029188;
-        Thu, 20 Oct 2022 07:07:08 GMT
-Received: from b06avi18626390.portsmouth.uk.ibm.com (b06avi18626390.portsmouth.uk.ibm.com [9.149.26.192])
-        by ppma04ams.nl.ibm.com with ESMTP id 3k7mg98buf-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Thu, 20 Oct 2022 07:07:08 +0000
-Received: from d06av21.portsmouth.uk.ibm.com (d06av21.portsmouth.uk.ibm.com [9.149.105.232])
-        by b06avi18626390.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 29K723Ot43385214
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Thu, 20 Oct 2022 07:02:03 GMT
-Received: from d06av21.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 98B125204E;
-        Thu, 20 Oct 2022 07:07:05 +0000 (GMT)
-Received: from localhost.localdomain (unknown [9.43.103.147])
-        by d06av21.portsmouth.uk.ibm.com (Postfix) with ESMTP id 5371D52051;
-        Thu, 20 Oct 2022 07:07:02 +0000 (GMT)
-From:   Athira Rajeev <atrajeev@linux.vnet.ibm.com>
-To:     peterz@infradead.org, acme@kernel.org, jolsa@kernel.org,
-        namhyung@kernel.org
-Cc:     irogers@google.com, james.clark@arm.com, mpe@ellerman.id.au,
-        linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org,
-        linuxppc-dev@lists.ozlabs.org, maddy@linux.ibm.com,
-        rnsastry@linux.ibm.com, kjain@linux.ibm.com, disgoel@linux.ibm.com
-Subject: [PATCH] [perf/core: Update sample_flags for raw_data in perf_output_sample
-Date:   Thu, 20 Oct 2022 12:36:57 +0530
-Message-Id: <20221020070657.21571-2-atrajeev@linux.vnet.ibm.com>
-X-Mailer: git-send-email 2.35.1
-In-Reply-To: <20221020070657.21571-1-atrajeev@linux.vnet.ibm.com>
-References: <20221020070657.21571-1-atrajeev@linux.vnet.ibm.com>
+        Thu, 20 Oct 2022 04:54:27 -0400
+Received: from mail-pf1-x436.google.com (mail-pf1-x436.google.com [IPv6:2607:f8b0:4864:20::436])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4230018C976;
+        Thu, 20 Oct 2022 01:54:18 -0700 (PDT)
+Received: by mail-pf1-x436.google.com with SMTP id d10so19681989pfh.6;
+        Thu, 20 Oct 2022 01:54:18 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20210112;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=NiLYN93U8S13XfLcXOgHc8FUAWbV+3e6ZIb50KAygfM=;
+        b=H9dvlsEWbqnAq8BgOovWeNH6M9d7j8pLbOvrISyaNZCBkzu1VFT85kasJfH5M4ZhE4
+         4ynAMRwyJTpUO+SRcvaY6pQJ5ak47G/Q+T2PF6w+Ea/UfRh47iS3GkH7EyYvhjNeDZqh
+         AmpydE3chYZ9zKueeO2ys8r/WxqdJ2j3UUuE2c7Zk/41uwOyMMPqzx2nIK2yo3eUtht5
+         9f3yL15t8kdJuYdeSWuLhc2zn6DlzeTfhDr0Z95c415ZVfnAL5FDxA/tGrk5PIid+iHL
+         1WYCo+VVC4oydlbaG+IBOGgTZD0ulFDU9rz71yFzYiIZeTSlJosNUuzIOW+h2LJfUgxd
+         XLdg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=NiLYN93U8S13XfLcXOgHc8FUAWbV+3e6ZIb50KAygfM=;
+        b=ZDWk2hSudmZgeNRij0SZjN/PtX54EAYKAJx5Fd6ysTOWujhRnXBEI3+og6gIxEVPCU
+         nkMpIuJxCKYMqOG3vix9/LKONCGD3xxEYM8x82vHYPhd2smQjHkkqDsb182SjE02cNEN
+         mi8A10o2I201kO80nVwxNCDJzpGhDT8a/52xre8vfbZPwcoJobwmsnQaZSEfQAPMnzcZ
+         qUOdNUaUisKI4K5g1reBACHxPVgikQWwDYeTkkJr1NZ5afgoOAOEZIqpS7Fyrec2N1kT
+         qL3BX4uWKO+r68kPo7ZTdw97TRFL9INIMIZYY6RQePHCEtj4yhnA1Mb5bVvIsdxqgvZT
+         f/Rw==
+X-Gm-Message-State: ACrzQf3MlElTa5NcegBaFwrnHb0M25BI6EtKuiDq323ZYXru0/YzZAnI
+        HGfl0wYo/8g1LlJARmJ1btFesJhoMZjDVQ==
+X-Google-Smtp-Source: AMsMyM4IZ8N1NVXQZbG71/Cr20n8KhJ7ZYc1VICUq0+Pll6dFamqkZyTPI67uX4OBtp/fNsiWoUb9g==
+X-Received: by 2002:a63:2c90:0:b0:439:ee2c:ab2f with SMTP id s138-20020a632c90000000b00439ee2cab2fmr11418433pgs.2.1666256057430;
+        Thu, 20 Oct 2022 01:54:17 -0700 (PDT)
+Received: from localhost.localdomain ([193.203.214.57])
+        by smtp.gmail.com with ESMTPSA id b3-20020a170903228300b0017f205d91d9sm12401860plh.118.2022.10.20.01.54.14
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 20 Oct 2022 01:54:16 -0700 (PDT)
+From:   cuijinpeng666@gmail.com
+X-Google-Original-From: cui.jinpeng2@zte.com.cn
+To:     peterz@infradead.org, mingo@redhat.com
+Cc:     acme@kernel.org, mark.rutland@arm.com, namhyung@kernel.org,
+        linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Jinpeng Cui <cui.jinpeng2@zte.com.cn>,
+        Zeal Robot <zealci@zte.com.cn>
+Subject: [PATCH linux-next] perf: Use strscpy() instead of strlcpy()
+Date:   Thu, 20 Oct 2022 08:54:11 +0000
+Message-Id: <20221020085411.398450-1-cui.jinpeng2@zte.com.cn>
+X-Mailer: git-send-email 2.25.1
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-X-TM-AS-GCONF: 00
-X-Proofpoint-ORIG-GUID: 2FcgorJJ70ye-IGwmnSfXTfWl11z-rrG
-X-Proofpoint-GUID: wyA3TauZ3EPHtZYr7ArM6icNO4IcLris
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.205,Aquarius:18.0.895,Hydra:6.0.545,FMLib:17.11.122.1
- definitions=2022-10-20_01,2022-10-19_04,2022-06-22_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 clxscore=1015 mlxlogscore=999
- priorityscore=1501 malwarescore=0 spamscore=0 lowpriorityscore=0
- bulkscore=0 adultscore=0 impostorscore=0 suspectscore=0 mlxscore=0
- phishscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2209130000 definitions=main-2210200041
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-commit 838d9bb62d13 ("perf: Use sample_flags for raw_data")
-added check for PERF_SAMPLE_RAW in sample_flags in
-perf_prepare_sample(). But while copying the sample in memory,
-the check for sample_flags is not added in perf_output_sample().
-Fix adds the same in perf_output_sample as well.
+From: Jinpeng Cui <cui.jinpeng2@zte.com.cn>
 
-Fixes: 838d9bb62d13 ("perf: Use sample_flags for raw_data")
-Signed-off-by: Athira Rajeev <atrajeev@linux.vnet.ibm.com>
+The implementation of strscpy() is more robust and safer.
+
+Reported-by: Zeal Robot <zealci@zte.com.cn>
+Signed-off-by: Jinpeng Cui <cui.jinpeng2@zte.com.cn>
 ---
- kernel/events/core.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ kernel/events/core.c | 6 +++---
+ 1 file changed, 3 insertions(+), 3 deletions(-)
 
 diff --git a/kernel/events/core.c b/kernel/events/core.c
-index 4ec3717003d5..daf387c75d33 100644
+index 01933db7629c..5adf68cbd173 100644
 --- a/kernel/events/core.c
 +++ b/kernel/events/core.c
-@@ -7099,7 +7099,7 @@ void perf_output_sample(struct perf_output_handle *handle,
- 	if (sample_type & PERF_SAMPLE_RAW) {
- 		struct perf_raw_record *raw = data->raw;
+@@ -8053,7 +8053,7 @@ static void perf_event_comm_event(struct perf_comm_event *comm_event)
+ 	unsigned int size;
  
--		if (raw) {
-+		if (raw && (data->sample_flags & PERF_SAMPLE_RAW)) {
- 			struct perf_raw_frag *frag = &raw->frag;
+ 	memset(comm, 0, sizeof(comm));
+-	strlcpy(comm, comm_event->task->comm, sizeof(comm));
++	strscpy(comm, comm_event->task->comm, sizeof(comm));
+ 	size = ALIGN(strlen(comm)+1, sizeof(u64));
  
- 			perf_output_put(handle, raw->size);
+ 	comm_event->comm = comm;
+@@ -8508,7 +8508,7 @@ static void perf_event_mmap_event(struct perf_mmap_event *mmap_event)
+ 	}
+ 
+ cpy_name:
+-	strlcpy(tmp, name, sizeof(tmp));
++	strscpy(tmp, name, sizeof(tmp));
+ 	name = tmp;
+ got_name:
+ 	/*
+@@ -8937,7 +8937,7 @@ void perf_event_ksymbol(u16 ksym_type, u64 addr, u32 len, bool unregister,
+ 	    ksym_type == PERF_RECORD_KSYMBOL_TYPE_UNKNOWN)
+ 		goto err;
+ 
+-	strlcpy(name, sym, KSYM_NAME_LEN);
++	strscpy(name, sym, KSYM_NAME_LEN);
+ 	name_len = strlen(name) + 1;
+ 	while (!IS_ALIGNED(name_len, sizeof(u64)))
+ 		name[name_len++] = '\0';
 -- 
-2.31.1
+2.25.1
 
