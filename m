@@ -2,104 +2,157 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0F6D7C4332F
-	for <linux-perf-users@archiver.kernel.org>; Thu, 20 Oct 2022 19:29:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A4F01C433FE
+	for <linux-perf-users@archiver.kernel.org>; Thu, 20 Oct 2022 19:51:16 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229765AbiJTT32 (ORCPT
+        id S229622AbiJTTvP (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Thu, 20 Oct 2022 15:29:28 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34522 "EHLO
+        Thu, 20 Oct 2022 15:51:15 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35280 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229988AbiJTT31 (ORCPT
+        with ESMTP id S229489AbiJTTvO (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Thu, 20 Oct 2022 15:29:27 -0400
-Received: from mail-pj1-x1032.google.com (mail-pj1-x1032.google.com [IPv6:2607:f8b0:4864:20::1032])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DDFC11008;
-        Thu, 20 Oct 2022 12:29:21 -0700 (PDT)
-Received: by mail-pj1-x1032.google.com with SMTP id t10-20020a17090a4e4a00b0020af4bcae10so591760pjl.3;
-        Thu, 20 Oct 2022 12:29:21 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20210112;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:sender:from:to:cc:subject:date:message-id:reply-to;
-        bh=3IhfJV/ujEMz2VKCojZus2oWqbEOyKbn3J2D7DFU0U4=;
-        b=m/YmPmdSeKWw68CQWY77WtCYKP4sk7RmpdviGct4nk3WTQF9K4Bv0loTBpi/NhPdNZ
-         eu24hydAsAkIiu8WtuidUxz5/AT3RawWQvm+NwTwZHHsHKesQkzh4xXk1Zdcz9ZgIcs6
-         ZSwxreAKF9vmrJkm770z3i/RNIsdgjsVA2KwoARQdD1f+H0JtgXPi5pHdGBr5ScpzGDN
-         bKM3oLmk5NCVVnTk6w7YXpe2bGuWx8/x+T1E7Ywjqhu8R/XUkggf0Dyyfwe0VYkJrEgf
-         zUOI53F7wCUwR9tgYB/cIqu5IQwjs8iFztOsIZeXM/iuHlYc+305/rRQ2QwT9Trp+Aw0
-         b2Gg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:sender:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=3IhfJV/ujEMz2VKCojZus2oWqbEOyKbn3J2D7DFU0U4=;
-        b=QfpVDRHYgrdLQC+f6uF8CDy4188tjCjqUywJuaEW2gveW+wX6XIOPGZsd62KyHex5/
-         1uBI/xpMU3W9xTpcqz+3pgM/0OAiKkSHfcQXH07KDdhCgt50Hn3YOhqDVoeMK4E8V1V4
-         w3toshuvM6fjnXV+NFTC1GCQzQn4J9qtPBv6IIGyUZrO3f7kpCIGyZPacfEowAXHeXkj
-         Dddq/R8J6TMhNqlSh7nxpFScAHggkyASXfHi7SODC4NmhoBBtaCDVpMe/Du/zzPKXKJd
-         wZ9bOFw3qM7DoTw0EVXQtGYvPXxwRu3LE/xKUUr8UJu6pDS9wagUbiu7Bofm3y0q6DTX
-         ocpg==
-X-Gm-Message-State: ACrzQf3zuD60CcNfktAPJO1LVR5uMBbWU5hCKB4oeZ2gTAXa8vdZZ8kw
-        9r++WJYVzJtkrswSpni+muk=
-X-Google-Smtp-Source: AMsMyM6BFkt/4Umtx/UkV+izdSEu/8B243G5U5IqDFk1S8zMwE98ymly8FBCMJtX7PyxO1VUZ3s1RA==
-X-Received: by 2002:a17:903:230a:b0:17d:707a:360e with SMTP id d10-20020a170903230a00b0017d707a360emr15764571plh.118.1666294160982;
-        Thu, 20 Oct 2022 12:29:20 -0700 (PDT)
-Received: from youngsil.svl.corp.google.com ([2620:15c:2d4:203:637f:7dcc:4bbf:4981])
-        by smtp.gmail.com with ESMTPSA id p189-20020a625bc6000000b00562e9f636e0sm14230825pfb.10.2022.10.20.12.29.19
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 20 Oct 2022 12:29:20 -0700 (PDT)
-Sender: Namhyung Kim <namhyung@gmail.com>
-From:   Namhyung Kim <namhyung@kernel.org>
-To:     Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Jiri Olsa <jolsa@kernel.org>
-Cc:     Ingo Molnar <mingo@kernel.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Ian Rogers <irogers@google.com>,
-        Adrian Hunter <adrian.hunter@intel.com>,
-        linux-perf-users@vger.kernel.org, Ammy Yi <ammy.yi@intel.com>
-Subject: [PATCH] perf test: Do not fail Intel-PT misc test w/o libpython
-Date:   Thu, 20 Oct 2022 12:29:17 -0700
-Message-Id: <20221020192917.3542757-1-namhyung@kernel.org>
-X-Mailer: git-send-email 2.38.0.135.g90850a2211-goog
+        Thu, 20 Oct 2022 15:51:14 -0400
+Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0489A1FAE6A;
+        Thu, 20 Oct 2022 12:51:14 -0700 (PDT)
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by dfw.source.kernel.org (Postfix) with ESMTPS id 939CE61CFD;
+        Thu, 20 Oct 2022 19:51:13 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id F04FFC43144;
+        Thu, 20 Oct 2022 19:51:12 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1666295473;
+        bh=A9VoRgR6bzi4c4yYMEbN8DyaGqa9LNIhOqN8jYUfKqA=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=UR1Ek2h1WAD92kTiNaDUijKxQtHMHSGViP8SV6zeeFRgcbHgtrPJId/RWk1hFMrwx
+         X2n2479KewtlMdR18WhLfOsS4mpOcansX+viFWhImWZBMQL2DtDSey0LUJBy+lK5EJ
+         07jXp6qiZr1cLpds9TgS/Y0csl841mLKPjoDdWn1q9MKKbjMDBleZBGUJhjLVsHikb
+         GWZ8VygEZ8bkUHZPSh+9E/SGYYcLJdxzPC9kKwvaX/5/rCXeK6JoT5ykKm1Wruym/o
+         W4oPH9u78EEpzFDrSTLaRVGbPczO0TIAuN1rv2jFsliLJkKy5xdwYZJD1QLCq63kU3
+         zRYOigY4k8w1w==
+Received: by mail-vk1-f174.google.com with SMTP id u204so339289vkb.13;
+        Thu, 20 Oct 2022 12:51:12 -0700 (PDT)
+X-Gm-Message-State: ACrzQf3FvhnrDo6ZvV4KU2IHQbx+yke/NRJlje+vEsU/6mHAc5OpfBT0
+        c7vEMBXdT1byGZS7b+QQ94G9jPlVntnyIY0iyA==
+X-Google-Smtp-Source: AMsMyM7u7wV871a7sMf6cDm8Cp2SxQcmq+IVFFx8ESqkntMYR2zBJYwu6TxtcDkd2XcyxAgHl8fZrJU2s7ju9Elrgj0=
+X-Received: by 2002:a1f:3d4c:0:b0:3aa:feb8:3ec6 with SMTP id
+ k73-20020a1f3d4c000000b003aafeb83ec6mr8414254vka.26.1666295471867; Thu, 20
+ Oct 2022 12:51:11 -0700 (PDT)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+References: <20220825-arm-spe-v8-7-v2-0-e37322d68ac0@kernel.org>
+ <20220825-arm-spe-v8-7-v2-3-e37322d68ac0@kernel.org> <Y1FcRNhFpZxZ7AMx@sirena.org.uk>
+In-Reply-To: <Y1FcRNhFpZxZ7AMx@sirena.org.uk>
+From:   Rob Herring <robh@kernel.org>
+Date:   Thu, 20 Oct 2022 14:51:02 -0500
+X-Gmail-Original-Message-ID: <CAL_JsqLVjWH-x3jxGQpJ3ax_ddvBqHd-P2DE=DEnrknoHuq+Qg@mail.gmail.com>
+Message-ID: <CAL_JsqLVjWH-x3jxGQpJ3ax_ddvBqHd-P2DE=DEnrknoHuq+Qg@mail.gmail.com>
+Subject: Re: [PATCH v2 3/7] arm64/sysreg: Convert SPE registers to automatic generation
+To:     Mark Brown <broonie@kernel.org>
+Cc:     Namhyung Kim <namhyung@kernel.org>,
+        James Morse <james.morse@arm.com>,
+        Ingo Molnar <mingo@redhat.com>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Marc Zyngier <maz@kernel.org>,
+        Suzuki K Poulose <suzuki.poulose@arm.com>,
+        Will Deacon <will@kernel.org>,
+        Alexandru Elisei <alexandru.elisei@arm.com>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Arnaldo Carvalho de Melo <acme@kernel.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Oliver Upton <oliver.upton@linux.dev>,
+        Jiri Olsa <jolsa@kernel.org>, kvmarm@lists.cs.columbia.edu,
+        kvmarm@lists.linux.dev, linux-arm-kernel@lists.infradead.org,
+        linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-The virtuall LBR test uses a python script to check the max size of
-branch stack in the Intel-PT generated LBR.  But it didn't check whether
-python scripting is available (as it's optional).
+On Thu, Oct 20, 2022 at 9:33 AM Mark Brown <broonie@kernel.org> wrote:
+>
+> On Wed, Oct 19, 2022 at 02:11:26PM -0500, Rob Herring wrote:
+> > Convert all the SPE register defines to automatic generation. No
+> > functional changes.
+> >
+> > New registers and fields for SPEv1.2 are added with the conversion.
+> >
+> > Some of the PMBSR MSS field defines are kept as the automatic generation
+> > has no way to create multiple names for the same register bits. The
+> > meaning of the MSS field depends on other bits.
+>
+> A few small things below from checking against DDI0487I.a, nothing
+> major:
 
-Let's skip the test if the python support is not available.
+[...]
 
-Fixes: f77811a0f625 ("perf test: test_intel_pt.sh: Add 9 tests")
-Cc: Ammy Yi <ammy.yi@intel.com>
-Signed-off-by: Namhyung Kim <namhyung@kernel.org>
----
- tools/perf/tests/shell/test_intel_pt.sh | 6 ++++++
- 1 file changed, 6 insertions(+)
+> > +Sysreg       PMSIDR_EL1      3       0       9       9       7
+>
+> > +Field        23:20   FORMAT
+> > +Field        19:16   COUNTSIZE
+> > +Field        15:12   MAXSIZE
+> > +Field        11:8    INTERVAL
+>
+> These should really be enums.
 
-diff --git a/tools/perf/tests/shell/test_intel_pt.sh b/tools/perf/tests/shell/test_intel_pt.sh
-index 4c0aabbe33bd..e66b7d977462 100755
---- a/tools/perf/tests/shell/test_intel_pt.sh
-+++ b/tools/perf/tests/shell/test_intel_pt.sh
-@@ -526,6 +526,12 @@ test_kernel_trace()
- test_virtual_lbr()
- {
- 	echo "--- Test virtual LBR ---"
-+	# Check if python script is supported
-+	libpython=$(ldd $(which perf) | grep -c python)
-+	if [ "${libpython}" != "1" ] ; then
-+		echo "SKIP: python scripting is not supported"
-+		return 2
-+	fi
- 
- 	# Python script to determine the maximum size of branch stacks
- 	cat << "_end_of_file_" > "${maxbrstack}"
--- 
-2.38.0.135.g90850a2211-goog
+Okay for COUNTSIZE and INTERVAL.
 
+The only defined value for FORMAT is 'Format 0'. I assume next will be
+'Format 1'. I don't think defines with the value in the name are too
+useful. When this is used, we'll just be passing the value to
+userspace via either sysfs or perf aux buffer.
+
+MAXSIZE is the power of 2 encoded size and we just convert to bytes
+(1<<MAXSIZE). So I can add them, but they will never be used.
+
+> > +Sysreg       PMBLIMITR_EL1   3       0       9       10      0
+> > +Enum 2:1     FM
+> > +     0b0000  STOP_IRQ
+> > +EndEnum
+>
+> DDI0487I.a also defines
+>
+>         0b01    DISCARD
+
+STOP_IRQ doesn't seem like the best name either. It's not used, so I
+changed it to 'FILL'.
+
+> > +Sysreg       PMBIDR_EL1      3       0       9       10      7
+> > +Res0 63:12
+> > +Field        11:8    EA
+>
+> This looks like it should be described as an enum.
+
+    0b0000    Not_Described
+    0b0001    Ignored
+    0b0010    SError
+
+What's the preferred case here?
+
+>
+> > +Field        3:0     ALIGN
+>
+> This could potentially also be an enum.
+
+Another power of 2 encoding.
+
+> > +Sysreg       PMSCR_EL2       3       4       9       9       0
+> > +Res0 63:8
+> > +Field        7:6     PCT
+>
+> This lookslike it should be an enum.
+
+Humm, PCT is a bit tricky. Here's what I came up with:
+
+Enum    7:6    PCT
+    0b00    VIRT
+    0b01    PHYS
+    0b11    GUEST
+EndEnum
+
+Again, CAPS or CarrotCase for new things?
+
+Rob
