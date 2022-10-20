@@ -2,170 +2,92 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3868AC4332F
-	for <linux-perf-users@archiver.kernel.org>; Thu, 20 Oct 2022 14:33:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 74A80C433FE
+	for <linux-perf-users@archiver.kernel.org>; Thu, 20 Oct 2022 14:41:01 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230017AbiJTOdw (ORCPT
+        id S230054AbiJTOlA (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Thu, 20 Oct 2022 10:33:52 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37092 "EHLO
+        Thu, 20 Oct 2022 10:41:00 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59842 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229520AbiJTOdv (ORCPT
+        with ESMTP id S229998AbiJTOk5 (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Thu, 20 Oct 2022 10:33:51 -0400
-Received: from ams.source.kernel.org (ams.source.kernel.org [145.40.68.75])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2484211CB4B;
-        Thu, 20 Oct 2022 07:33:50 -0700 (PDT)
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by ams.source.kernel.org (Postfix) with ESMTPS id C655FB82773;
-        Thu, 20 Oct 2022 14:33:48 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id AA8E6C433D6;
-        Thu, 20 Oct 2022 14:33:43 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1666276427;
-        bh=FaeuPMUHhNdQ1un6IB5cPZDWQfSVNpn50XrmvqcBfDw=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=butNE0E3dApCwaoRTHIlqK9ITMhgzR7ZUe+MsoLn8uT7/c6LhoBOaxgAFYY/P/Ymq
-         dGVUw50NJC/IJAmWiq7ap+++fHy/puTkKmI9cmEzhQeh28vbOGkJummh70lLBAJbk8
-         7UOd7a1VlAbtSrg5+x5L76WVOMmjIyf7YQc57mTkSs3D2pUoKFC12SibW/YzziTBJj
-         mD5dUHYD3NOPkWczFb5pwGqAdlF1X4hx+qW/CSwLDPsRGf9r6PrzF1mOe/ja0STLRU
-         VNsiLEjS8Oss+IkCJlL6tx6TxTSswYI4AlamDLdIGUs+x8UkVVkJznD7iLOUNCtBUk
-         v9kpsctpHUd/Q==
-Date:   Thu, 20 Oct 2022 15:33:40 +0100
-From:   Mark Brown <broonie@kernel.org>
-To:     Rob Herring <robh@kernel.org>
-Cc:     Namhyung Kim <namhyung@kernel.org>,
-        James Morse <james.morse@arm.com>,
-        Ingo Molnar <mingo@redhat.com>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Marc Zyngier <maz@kernel.org>,
-        Suzuki K Poulose <suzuki.poulose@arm.com>,
-        Will Deacon <will@kernel.org>,
-        Alexandru Elisei <alexandru.elisei@arm.com>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Oliver Upton <oliver.upton@linux.dev>,
-        Jiri Olsa <jolsa@kernel.org>, kvmarm@lists.cs.columbia.edu,
-        kvmarm@lists.linux.dev, linux-arm-kernel@lists.infradead.org,
-        linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v2 3/7] arm64/sysreg: Convert SPE registers to automatic
- generation
-Message-ID: <Y1FcRNhFpZxZ7AMx@sirena.org.uk>
-References: <20220825-arm-spe-v8-7-v2-0-e37322d68ac0@kernel.org>
- <20220825-arm-spe-v8-7-v2-3-e37322d68ac0@kernel.org>
+        Thu, 20 Oct 2022 10:40:57 -0400
+Received: from casper.infradead.org (casper.infradead.org [IPv6:2001:8b0:10b:1236::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id F29A1144E38;
+        Thu, 20 Oct 2022 07:40:55 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=casper.20170209; h=In-Reply-To:Content-Type:MIME-Version:
+        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description;
+        bh=6sKArn3fl5+ouv8EYn7A1qXEQs1M7gQhoItikJI0JG8=; b=TxFdT5ShdrFFI1JVzL+bFVTMWP
+        /9do5iqXYdMe5lUBOiGbBhoWfJuI0R+/+7if2AvKoB2Kzh5GjErgTwgPQDe1Px8JrQV1QFep4L2+E
+        UeUevas2gpKatqsafsmX7JPRqhQ7AIGor6/rd23cHSAKEhk3pcieKGKEcoMnHFqr2WNAuH3BpfFBU
+        WmVi8lK7BHvpDHcviVSnt/N6Hxiq4Rpc7sLKL8qirXDNDR/JDWWQJUFkUsN4noEtnzkpcHbxwGy2/
+        jidGIha3Zg+HAvYGbFHdkXPzukCLpWeh+8vDlfEveauyRs9Wb2uO2R+aEWSbu7UhiCZ8IALdv85XH
+        FL8SVRuw==;
+Received: from j130084.upc-j.chello.nl ([24.132.130.84] helo=noisy.programming.kicks-ass.net)
+        by casper.infradead.org with esmtpsa (Exim 4.94.2 #2 (Red Hat Linux))
+        id 1olWiz-00CRqm-3Q; Thu, 20 Oct 2022 14:40:45 +0000
+Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange X25519 server-signature RSA-PSS (4096 bits))
+        (Client did not present a certificate)
+        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id 5B03C300209;
+        Thu, 20 Oct 2022 16:40:39 +0200 (CEST)
+Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
+        id 335682BF40BC0; Thu, 20 Oct 2022 16:40:39 +0200 (CEST)
+Date:   Thu, 20 Oct 2022 16:40:39 +0200
+From:   Peter Zijlstra <peterz@infradead.org>
+To:     Athira Rajeev <atrajeev@linux.vnet.ibm.com>
+Cc:     acme@kernel.org, jolsa@kernel.org, namhyung@kernel.org,
+        irogers@google.com, james.clark@arm.com, mpe@ellerman.id.au,
+        linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org,
+        linuxppc-dev@lists.ozlabs.org, maddy@linux.ibm.com,
+        rnsastry@linux.ibm.com, kjain@linux.ibm.com, disgoel@linux.ibm.com
+Subject: Re: [PATCH] [perf/core: Update sample_flags for raw_data in
+ perf_output_sample
+Message-ID: <Y1Fd57P5I+aSNT/V@hirez.programming.kicks-ass.net>
+References: <20221020070657.21571-1-atrajeev@linux.vnet.ibm.com>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="VOl7BrjAsP2F3VXr"
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20220825-arm-spe-v8-7-v2-3-e37322d68ac0@kernel.org>
-X-Cookie: Today is what happened to yesterday.
+In-Reply-To: <20221020070657.21571-1-atrajeev@linux.vnet.ibm.com>
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
+On Thu, Oct 20, 2022 at 12:36:56PM +0530, Athira Rajeev wrote:
+> commit 838d9bb62d13 ("perf: Use sample_flags for raw_data")
+> added check for PERF_SAMPLE_RAW in sample_flags in
+> perf_prepare_sample(). But while copying the sample in memory,
+> the check for sample_flags is not added in perf_output_sample().
+> Fix adds the same in perf_output_sample as well.
+> 
+> Fixes: 838d9bb62d13 ("perf: Use sample_flags for raw_data")
+> Signed-off-by: Athira Rajeev <atrajeev@linux.vnet.ibm.com>
+> ---
+>  kernel/events/core.c | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+> 
+> diff --git a/kernel/events/core.c b/kernel/events/core.c
+> index 4ec3717003d5..daf387c75d33 100644
+> --- a/kernel/events/core.c
+> +++ b/kernel/events/core.c
+> @@ -7099,7 +7099,7 @@ void perf_output_sample(struct perf_output_handle *handle,
+>  	if (sample_type & PERF_SAMPLE_RAW) {
+>  		struct perf_raw_record *raw = data->raw;
+>  
+> -		if (raw) {
+> +		if (raw && (data->sample_flags & PERF_SAMPLE_RAW)) {
+>  			struct perf_raw_frag *frag = &raw->frag;
+>  
+>  			perf_output_put(handle, raw->size);
 
---VOl7BrjAsP2F3VXr
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+Urgh.. something smells here. We already did a PERF_SAMPLE_RAW test.
 
-On Wed, Oct 19, 2022 at 02:11:26PM -0500, Rob Herring wrote:
-> Convert all the SPE register defines to automatic generation. No
-> functional changes.
->=20
-> New registers and fields for SPEv1.2 are added with the conversion.
->=20
-> Some of the PMBSR MSS field defines are kept as the automatic generation
-> has no way to create multiple names for the same register bits. The
-> meaning of the MSS field depends on other bits.
+And perf_prepare_sample() explicitly makes data->raw be NULL when not
+set earlier.
 
-A few small things below from checking against DDI0487I.a, nothing
-major:
+So what's going wrong?
 
-> +Sysreg	PMSCR_EL1	3	0	9	9	0
-> +Res0	63:8
-> +Field	7:6	PCT
-
-Given the potential multiple meanings depending on both integration and
-runtime configuration representing this as a field seems sensible.
-
-> +Sysreg	PMSNEVFR_EL1	3	0	9	9	1
-> +Field	63:0	E
-> +EndSysreg
-
-While this does look rather different to the spec it does appear to be a
-sensible interpretation - the intent is clearly to have a mask of
-feature bits.
-
-> +Sysreg	PMSIDR_EL1	3	0	9	9	7
-
-> +Field	23:20	FORMAT
-> +Field	19:16	COUNTSIZE
-> +Field	15:12	MAXSIZE
-> +Field	11:8	INTERVAL
-
-These should really be enums.
-
-> +Sysreg	PMBLIMITR_EL1	3	0	9	10	0
-> +Enum	2:1	FM
-> +	0b0000	STOP_IRQ
-> +EndEnum
-
-DDI0487I.a also defines
-
-	0b01	DISCARD
-
-=66rom FEAT_SPEv1p2.  Also this is a two bit field so 0b00 would be a bit
-better.
-
-> +Sysreg	PMBSR_EL1	3	0	9	10	3
-> +Res0	63:32
-> +Enum	31:26	EC
-> +	0b000000	BUF
-> +	0b100100	FAULT_S1
-> +	0b100101	FAULT_S2
-> +EndEnum
-
-DDI0487I.a also has
-
-	0b011110	FAULT_GPC
-	0b011111	IMP_DEF
-
-(the former from FEAT_RME).
-
-> +Sysreg	PMBIDR_EL1	3	0	9	10	7
-> +Res0	63:12
-> +Field	11:8	EA
-
-This looks like it should be described as an enum.
-
-> +Field	3:0	ALIGN
-
-This could potentially also be an enum.
-
-> +Sysreg	PMSCR_EL2	3	4	9	9	0
-> +Res0	63:8
-> +Field	7:6	PCT
-
-This lookslike it should be an enum.
-
---VOl7BrjAsP2F3VXr
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAmNRXEMACgkQJNaLcl1U
-h9BxoAf/WoPWB2G/B9tOuYVL94BuR2DecQwcEGhVK7tOMRJ27Vo4dCUdnfTloTZz
-Jj0O/V6pHcc1kxMopuhhYRDYTW/kcub+dw2Rdj1T+Nv/OSMB2nISyK26sdYHa61+
-Rx7OT3fRDFmaAcJ04jma1wlwlBa3Busy60PGtTbT9CdWrYLUZo3AVeJkb7Mtacgo
-/XHM616UHZ8emOWdatKMQkYmTs0X9mNJ48cyOBrItDpbERep49qB8pDlxAfcSaYT
-oHICs5H0KJ66c/yRWC02LOFBIJBWmmmce6qLyqcNynxPbW5XSYV6k50wZXaIE0H/
-U6qk5ya1kaFNQ4WUN70owOOlw/nQ3g==
-=JWVG
------END PGP SIGNATURE-----
-
---VOl7BrjAsP2F3VXr--
