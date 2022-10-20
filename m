@@ -2,112 +2,101 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 82D9FC4332F
-	for <linux-perf-users@archiver.kernel.org>; Thu, 20 Oct 2022 08:54:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 10FD7C4332F
+	for <linux-perf-users@archiver.kernel.org>; Thu, 20 Oct 2022 09:00:03 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229543AbiJTIy2 (ORCPT
+        id S229892AbiJTJAB (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Thu, 20 Oct 2022 04:54:28 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35288 "EHLO
+        Thu, 20 Oct 2022 05:00:01 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49662 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229515AbiJTIy1 (ORCPT
+        with ESMTP id S229861AbiJTJAA (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Thu, 20 Oct 2022 04:54:27 -0400
-Received: from mail-pf1-x436.google.com (mail-pf1-x436.google.com [IPv6:2607:f8b0:4864:20::436])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4230018C976;
-        Thu, 20 Oct 2022 01:54:18 -0700 (PDT)
-Received: by mail-pf1-x436.google.com with SMTP id d10so19681989pfh.6;
-        Thu, 20 Oct 2022 01:54:18 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20210112;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=NiLYN93U8S13XfLcXOgHc8FUAWbV+3e6ZIb50KAygfM=;
-        b=H9dvlsEWbqnAq8BgOovWeNH6M9d7j8pLbOvrISyaNZCBkzu1VFT85kasJfH5M4ZhE4
-         4ynAMRwyJTpUO+SRcvaY6pQJ5ak47G/Q+T2PF6w+Ea/UfRh47iS3GkH7EyYvhjNeDZqh
-         AmpydE3chYZ9zKueeO2ys8r/WxqdJ2j3UUuE2c7Zk/41uwOyMMPqzx2nIK2yo3eUtht5
-         9f3yL15t8kdJuYdeSWuLhc2zn6DlzeTfhDr0Z95c415ZVfnAL5FDxA/tGrk5PIid+iHL
-         1WYCo+VVC4oydlbaG+IBOGgTZD0ulFDU9rz71yFzYiIZeTSlJosNUuzIOW+h2LJfUgxd
-         XLdg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=NiLYN93U8S13XfLcXOgHc8FUAWbV+3e6ZIb50KAygfM=;
-        b=ZDWk2hSudmZgeNRij0SZjN/PtX54EAYKAJx5Fd6ysTOWujhRnXBEI3+og6gIxEVPCU
-         nkMpIuJxCKYMqOG3vix9/LKONCGD3xxEYM8x82vHYPhd2smQjHkkqDsb182SjE02cNEN
-         mi8A10o2I201kO80nVwxNCDJzpGhDT8a/52xre8vfbZPwcoJobwmsnQaZSEfQAPMnzcZ
-         qUOdNUaUisKI4K5g1reBACHxPVgikQWwDYeTkkJr1NZ5afgoOAOEZIqpS7Fyrec2N1kT
-         qL3BX4uWKO+r68kPo7ZTdw97TRFL9INIMIZYY6RQePHCEtj4yhnA1Mb5bVvIsdxqgvZT
-         f/Rw==
-X-Gm-Message-State: ACrzQf3MlElTa5NcegBaFwrnHb0M25BI6EtKuiDq323ZYXru0/YzZAnI
-        HGfl0wYo/8g1LlJARmJ1btFesJhoMZjDVQ==
-X-Google-Smtp-Source: AMsMyM4IZ8N1NVXQZbG71/Cr20n8KhJ7ZYc1VICUq0+Pll6dFamqkZyTPI67uX4OBtp/fNsiWoUb9g==
-X-Received: by 2002:a63:2c90:0:b0:439:ee2c:ab2f with SMTP id s138-20020a632c90000000b00439ee2cab2fmr11418433pgs.2.1666256057430;
-        Thu, 20 Oct 2022 01:54:17 -0700 (PDT)
-Received: from localhost.localdomain ([193.203.214.57])
-        by smtp.gmail.com with ESMTPSA id b3-20020a170903228300b0017f205d91d9sm12401860plh.118.2022.10.20.01.54.14
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 20 Oct 2022 01:54:16 -0700 (PDT)
-From:   cuijinpeng666@gmail.com
-X-Google-Original-From: cui.jinpeng2@zte.com.cn
-To:     peterz@infradead.org, mingo@redhat.com
-Cc:     acme@kernel.org, mark.rutland@arm.com, namhyung@kernel.org,
-        linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Jinpeng Cui <cui.jinpeng2@zte.com.cn>,
-        Zeal Robot <zealci@zte.com.cn>
-Subject: [PATCH linux-next] perf: Use strscpy() instead of strlcpy()
-Date:   Thu, 20 Oct 2022 08:54:11 +0000
-Message-Id: <20221020085411.398450-1-cui.jinpeng2@zte.com.cn>
-X-Mailer: git-send-email 2.25.1
+        Thu, 20 Oct 2022 05:00:00 -0400
+Received: from mail.skyhub.de (mail.skyhub.de [IPv6:2a01:4f8:190:11c2::b:1457])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8413B40E09;
+        Thu, 20 Oct 2022 01:59:58 -0700 (PDT)
+Received: from zn.tnic (p200300ea9733e710329c23fffea6a903.dip0.t-ipconnect.de [IPv6:2003:ea:9733:e710:329c:23ff:fea6:a903])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.skyhub.de (SuperMail on ZX Spectrum 128k) with ESMTPSA id 113011EC072D;
+        Thu, 20 Oct 2022 10:59:53 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alien8.de; s=dkim;
+        t=1666256393;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:in-reply-to:in-reply-to:  references:references;
+        bh=Bs1/OT7XUduIKrkt7gmt/mUSJU7zQYJbSy05qdldQNg=;
+        b=JqkuLsWX55sdDVkn/5SupKyGgqEoWX2+xhPhAfsJc2jAKR6ytCr3JkrdemqyaJfyDVlUAY
+        iejUF6bQy87xJ4Iyxep3XVaNnBA3THZeZMAjR9AQGFwtQtHgkWERKPSFeX2rybcyeCpkYV
+        ghzhPd7L6QZ0fjSBTJnVEvi4hr+OHAM=
+Date:   Thu, 20 Oct 2022 10:59:48 +0200
+From:   Borislav Petkov <bp@alien8.de>
+To:     Maxim Levitsky <mlevitsk@redhat.com>
+Cc:     linux-kernel@vger.kernel.org, kvm@vger.kernel.org,
+        Pawan Gupta <pawan.kumar.gupta@linux.intel.com>,
+        Ingo Molnar <mingo@redhat.com>,
+        Josh Poimboeuf <jpoimboe@kernel.org>,
+        Namhyung Kim <namhyung@kernel.org>,
+        Tony Luck <tony.luck@intel.com>,
+        Paolo Bonzini <pbonzini@redhat.com>,
+        "H. Peter Anvin" <hpa@zytor.com>,
+        Arnaldo Carvalho de Melo <acme@kernel.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Tim Chen <tim.c.chen@linux.intel.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        Dave Hansen <dave.hansen@linux.intel.com>,
+        "Chang S. Bae" <chang.seok.bae@intel.com>,
+        Jane Malalane <jane.malalane@citrix.com>,
+        Kees Cook <keescook@chromium.org>,
+        Kan Liang <kan.liang@linux.intel.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        "maintainer:X86 ARCHITECTURE (32-BIT AND 64-BIT)" <x86@kernel.org>,
+        Herbert Xu <herbert@gondor.apana.org.au>,
+        Jiri Olsa <jolsa@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        linux-perf-users@vger.kernel.org,
+        "open list:CRYPTO API" <linux-crypto@vger.kernel.org>
+Subject: Re: [PATCH v2 1/5] perf/x86/intel/lbr: use setup_clear_cpu_cap
+ instead of clear_cpu_cap
+Message-ID: <Y1EOBAaLbv2CXBDL@zn.tnic>
+References: <20220718141123.136106-1-mlevitsk@redhat.com>
+ <20220718141123.136106-2-mlevitsk@redhat.com>
+ <Yyh9RDbaRqUR1XSW@zn.tnic>
+ <c105971a72dfe6d46ad75fb7e71f79ba716e081c.camel@redhat.com>
+ <YzGlQBkCSJxY+8Jf@zn.tnic>
+ <c1168e8bd9077a2cc9ef61ee06db7a4e8c0f1600.camel@redhat.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <c1168e8bd9077a2cc9ef61ee06db7a4e8c0f1600.camel@redhat.com>
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-From: Jinpeng Cui <cui.jinpeng2@zte.com.cn>
+On Wed, Sep 28, 2022 at 01:49:34PM +0300, Maxim Levitsky wrote:
+> Patch 5 is the main fix - it makes the kernel to be tolerant to a
+> broken CPUID config (coming hopefully from hypervisor), where you have
+> a feature (AVX2 in my case) but not a feature on which this feature
+> depends (AVX).
 
-The implementation of strscpy() is more robust and safer.
+I really really don't like it when people are fixing the wrong thing.
 
-Reported-by: Zeal Robot <zealci@zte.com.cn>
-Signed-off-by: Jinpeng Cui <cui.jinpeng2@zte.com.cn>
----
- kernel/events/core.c | 6 +++---
- 1 file changed, 3 insertions(+), 3 deletions(-)
+Why does the kernel need to get fixed when something else can't get its
+CPUID dependencies straight? I don't even want to know why something
+would set AVX2 without AVX?!?!
 
-diff --git a/kernel/events/core.c b/kernel/events/core.c
-index 01933db7629c..5adf68cbd173 100644
---- a/kernel/events/core.c
-+++ b/kernel/events/core.c
-@@ -8053,7 +8053,7 @@ static void perf_event_comm_event(struct perf_comm_event *comm_event)
- 	unsigned int size;
- 
- 	memset(comm, 0, sizeof(comm));
--	strlcpy(comm, comm_event->task->comm, sizeof(comm));
-+	strscpy(comm, comm_event->task->comm, sizeof(comm));
- 	size = ALIGN(strlen(comm)+1, sizeof(u64));
- 
- 	comm_event->comm = comm;
-@@ -8508,7 +8508,7 @@ static void perf_event_mmap_event(struct perf_mmap_event *mmap_event)
- 	}
- 
- cpy_name:
--	strlcpy(tmp, name, sizeof(tmp));
-+	strscpy(tmp, name, sizeof(tmp));
- 	name = tmp;
- got_name:
- 	/*
-@@ -8937,7 +8937,7 @@ void perf_event_ksymbol(u16 ksym_type, u64 addr, u32 len, bool unregister,
- 	    ksym_type == PERF_RECORD_KSYMBOL_TYPE_UNKNOWN)
- 		goto err;
- 
--	strlcpy(name, sym, KSYM_NAME_LEN);
-+	strscpy(name, sym, KSYM_NAME_LEN);
- 	name_len = strlen(name) + 1;
- 	while (!IS_ALIGNED(name_len, sizeof(u64)))
- 		name[name_len++] = '\0';
+Srsly.
+
+Some of your other bits look sensible and I'd take a deeper look but
+this does not make any sense. This is a hypervisor problem - not a
+kernel one.
+
+Thx.
+
 -- 
-2.25.1
+Regards/Gruss,
+    Boris.
 
+https://people.kernel.org/tglx/notes-about-netiquette
