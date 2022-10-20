@@ -2,95 +2,142 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CF7D8C4332F
-	for <linux-perf-users@archiver.kernel.org>; Thu, 20 Oct 2022 11:13:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9D651C4332F
+	for <linux-perf-users@archiver.kernel.org>; Thu, 20 Oct 2022 13:47:59 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230243AbiJTLNj (ORCPT
+        id S229998AbiJTNr6 (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Thu, 20 Oct 2022 07:13:39 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35528 "EHLO
+        Thu, 20 Oct 2022 09:47:58 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60822 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231267AbiJTLNh (ORCPT
+        with ESMTP id S230038AbiJTNrz (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Thu, 20 Oct 2022 07:13:37 -0400
-Received: from mail.skyhub.de (mail.skyhub.de [IPv6:2a01:4f8:190:11c2::b:1457])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D3AB7119BC4;
-        Thu, 20 Oct 2022 04:13:32 -0700 (PDT)
-Received: from zn.tnic (p200300ea9733e710329c23fffea6a903.dip0.t-ipconnect.de [IPv6:2003:ea:9733:e710:329c:23ff:fea6:a903])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.skyhub.de (SuperMail on ZX Spectrum 128k) with ESMTPSA id 5AF701EC01A9;
-        Thu, 20 Oct 2022 13:13:26 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alien8.de; s=dkim;
-        t=1666264406;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:in-reply-to:in-reply-to:  references:references;
-        bh=j2i2KgCp3P7IRZRg0PairiL8EiPXc7wkVc3ASgZ2HEs=;
-        b=nvGUaSvR6A9hfSBZvJ2166fkCoN9jlFe7Fz9VBt1MIcQ9aCGKXY9k1PjxuqUW6hj1PLxCz
-        o3aYLOAoDJ0TbLhc52+8EmfoJdd0E/dLM7hI2Twbaq9PVxSx5pMQQK2e6JGboEmfVImLQz
-        6GMqiNGgihuUQoLtrN87k/YQWhoBmuo=
-Date:   Thu, 20 Oct 2022 13:13:22 +0200
-From:   Borislav Petkov <bp@alien8.de>
-To:     Maxim Levitsky <mlevitsk@redhat.com>
-Cc:     Herbert Xu <herbert@gondor.apana.org.au>,
-        linux-kernel@vger.kernel.org, kvm@vger.kernel.org,
-        Pawan Gupta <pawan.kumar.gupta@linux.intel.com>,
-        Ingo Molnar <mingo@redhat.com>,
-        Josh Poimboeuf <jpoimboe@kernel.org>,
-        Namhyung Kim <namhyung@kernel.org>,
-        Tony Luck <tony.luck@intel.com>,
-        Paolo Bonzini <pbonzini@redhat.com>,
-        "H. Peter Anvin" <hpa@zytor.com>,
-        Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Tim Chen <tim.c.chen@linux.intel.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        Dave Hansen <dave.hansen@linux.intel.com>,
-        "Chang S. Bae" <chang.seok.bae@intel.com>,
-        Jane Malalane <jane.malalane@citrix.com>,
-        Kees Cook <keescook@chromium.org>,
-        Kan Liang <kan.liang@linux.intel.com>,
+        Thu, 20 Oct 2022 09:47:55 -0400
+Received: from foss.arm.com (foss.arm.com [217.140.110.172])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTP id 033431A9133;
+        Thu, 20 Oct 2022 06:47:52 -0700 (PDT)
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 74163ED1;
+        Thu, 20 Oct 2022 06:47:58 -0700 (PDT)
+Received: from e121896.arm.com (unknown [10.57.5.110])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPA id 7D5093F67D;
+        Thu, 20 Oct 2022 06:47:49 -0700 (PDT)
+From:   James Clark <james.clark@arm.com>
+To:     linux-perf-users@vger.kernel.org, john.garry@huawei.com,
+        acme@kernel.org
+Cc:     linux-kernel@vger.kernel.org, nick.forrington@arm.com,
+        al.grant@arm.com, James Clark <james.clark@arm.com>,
+        Will Deacon <will@kernel.org>,
+        Mike Leach <mike.leach@linaro.org>,
+        Leo Yan <leo.yan@linaro.org>,
         Peter Zijlstra <peterz@infradead.org>,
-        "maintainer:X86 ARCHITECTURE (32-BIT AND 64-BIT)" <x86@kernel.org>,
-        Jiri Olsa <jolsa@kernel.org>,
+        Ingo Molnar <mingo@redhat.com>,
         Mark Rutland <mark.rutland@arm.com>,
-        linux-perf-users@vger.kernel.org,
-        "open list:CRYPTO API" <linux-crypto@vger.kernel.org>
-Subject: Re: [PATCH v2 1/5] perf/x86/intel/lbr: use setup_clear_cpu_cap
- instead of clear_cpu_cap
-Message-ID: <Y1EtUiyXkPlCe8/Z@zn.tnic>
-References: <20220718141123.136106-1-mlevitsk@redhat.com>
- <20220718141123.136106-2-mlevitsk@redhat.com>
- <Yyh9RDbaRqUR1XSW@zn.tnic>
- <c105971a72dfe6d46ad75fb7e71f79ba716e081c.camel@redhat.com>
- <YzGlQBkCSJxY+8Jf@zn.tnic>
- <c1168e8bd9077a2cc9ef61ee06db7a4e8c0f1600.camel@redhat.com>
- <Y1EOBAaLbv2CXBDL@zn.tnic>
- <Y1EPRauBmAXMVrCa@loth.rohan.me.apana.org.au>
- <3cc09554f20231aecdf0cd762a282c42aee9273c.camel@redhat.com>
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Jiri Olsa <jolsa@kernel.org>,
+        Namhyung Kim <namhyung@kernel.org>,
+        linux-arm-kernel@lists.infradead.org
+Subject: [PATCH] perf vendor events: Add Arm Neoverse V2 PMU events
+Date:   Thu, 20 Oct 2022 14:45:11 +0100
+Message-Id: <20221020134512.1345013-1-james.clark@arm.com>
+X-Mailer: git-send-email 2.28.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <3cc09554f20231aecdf0cd762a282c42aee9273c.camel@redhat.com>
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-On Thu, Oct 20, 2022 at 01:21:30PM +0300, Maxim Levitsky wrote:
-> I agree with you, however this patch series is just
-> refactoring/hardening of the kernel - if the kernel can avoid crashing
-> - why not.
+Rename the neoverse-n2 folder to make it clear that it includes V2, and
+add V2 to mapfile.csv. V2 has the same events as N2, visible by running
+the following command in the ARM-software/data github repo [1]:
 
-Because we're already drowning in patches which are trying to fix real
-problems. If we open the floodgates on alleged hardening just because
-some other part of the stack is misbehaving, there'll be no end of it.
+  diff pmu/neoverse-v2.json pmu/neoverse-n2.json | grep code
 
-Thx.
+Testing:
 
+  $ perf test pmu
+
+  10: PMU events                                           :
+  10.1: PMU event table sanity                             : Ok
+  10.2: PMU event map aliases                              : Ok
+  10.3: Parsing of PMU event table metrics                 : Ok
+  10.4: Parsing of PMU event table metrics with fake PMUs  : Ok
+
+[1]: https://github.com/ARM-software/data
+
+Signed-off-by: James Clark <james.clark@arm.com>
+---
+ .../arch/arm64/arm/{neoverse-n2 => neoverse-n2-v2}/branch.json | 0
+ .../arch/arm64/arm/{neoverse-n2 => neoverse-n2-v2}/bus.json    | 0
+ .../arch/arm64/arm/{neoverse-n2 => neoverse-n2-v2}/cache.json  | 0
+ .../arm64/arm/{neoverse-n2 => neoverse-n2-v2}/exception.json   | 0
+ .../arm64/arm/{neoverse-n2 => neoverse-n2-v2}/instruction.json | 0
+ .../arch/arm64/arm/{neoverse-n2 => neoverse-n2-v2}/memory.json | 0
+ .../arm64/arm/{neoverse-n2 => neoverse-n2-v2}/pipeline.json    | 0
+ .../arch/arm64/arm/{neoverse-n2 => neoverse-n2-v2}/spe.json    | 0
+ .../arch/arm64/arm/{neoverse-n2 => neoverse-n2-v2}/trace.json  | 0
+ tools/perf/pmu-events/arch/arm64/mapfile.csv                   | 3 ++-
+ 10 files changed, 2 insertions(+), 1 deletion(-)
+ rename tools/perf/pmu-events/arch/arm64/arm/{neoverse-n2 => neoverse-n2-v2}/branch.json (100%)
+ rename tools/perf/pmu-events/arch/arm64/arm/{neoverse-n2 => neoverse-n2-v2}/bus.json (100%)
+ rename tools/perf/pmu-events/arch/arm64/arm/{neoverse-n2 => neoverse-n2-v2}/cache.json (100%)
+ rename tools/perf/pmu-events/arch/arm64/arm/{neoverse-n2 => neoverse-n2-v2}/exception.json (100%)
+ rename tools/perf/pmu-events/arch/arm64/arm/{neoverse-n2 => neoverse-n2-v2}/instruction.json (100%)
+ rename tools/perf/pmu-events/arch/arm64/arm/{neoverse-n2 => neoverse-n2-v2}/memory.json (100%)
+ rename tools/perf/pmu-events/arch/arm64/arm/{neoverse-n2 => neoverse-n2-v2}/pipeline.json (100%)
+ rename tools/perf/pmu-events/arch/arm64/arm/{neoverse-n2 => neoverse-n2-v2}/spe.json (100%)
+ rename tools/perf/pmu-events/arch/arm64/arm/{neoverse-n2 => neoverse-n2-v2}/trace.json (100%)
+
+diff --git a/tools/perf/pmu-events/arch/arm64/arm/neoverse-n2/branch.json b/tools/perf/pmu-events/arch/arm64/arm/neoverse-n2-v2/branch.json
+similarity index 100%
+rename from tools/perf/pmu-events/arch/arm64/arm/neoverse-n2/branch.json
+rename to tools/perf/pmu-events/arch/arm64/arm/neoverse-n2-v2/branch.json
+diff --git a/tools/perf/pmu-events/arch/arm64/arm/neoverse-n2/bus.json b/tools/perf/pmu-events/arch/arm64/arm/neoverse-n2-v2/bus.json
+similarity index 100%
+rename from tools/perf/pmu-events/arch/arm64/arm/neoverse-n2/bus.json
+rename to tools/perf/pmu-events/arch/arm64/arm/neoverse-n2-v2/bus.json
+diff --git a/tools/perf/pmu-events/arch/arm64/arm/neoverse-n2/cache.json b/tools/perf/pmu-events/arch/arm64/arm/neoverse-n2-v2/cache.json
+similarity index 100%
+rename from tools/perf/pmu-events/arch/arm64/arm/neoverse-n2/cache.json
+rename to tools/perf/pmu-events/arch/arm64/arm/neoverse-n2-v2/cache.json
+diff --git a/tools/perf/pmu-events/arch/arm64/arm/neoverse-n2/exception.json b/tools/perf/pmu-events/arch/arm64/arm/neoverse-n2-v2/exception.json
+similarity index 100%
+rename from tools/perf/pmu-events/arch/arm64/arm/neoverse-n2/exception.json
+rename to tools/perf/pmu-events/arch/arm64/arm/neoverse-n2-v2/exception.json
+diff --git a/tools/perf/pmu-events/arch/arm64/arm/neoverse-n2/instruction.json b/tools/perf/pmu-events/arch/arm64/arm/neoverse-n2-v2/instruction.json
+similarity index 100%
+rename from tools/perf/pmu-events/arch/arm64/arm/neoverse-n2/instruction.json
+rename to tools/perf/pmu-events/arch/arm64/arm/neoverse-n2-v2/instruction.json
+diff --git a/tools/perf/pmu-events/arch/arm64/arm/neoverse-n2/memory.json b/tools/perf/pmu-events/arch/arm64/arm/neoverse-n2-v2/memory.json
+similarity index 100%
+rename from tools/perf/pmu-events/arch/arm64/arm/neoverse-n2/memory.json
+rename to tools/perf/pmu-events/arch/arm64/arm/neoverse-n2-v2/memory.json
+diff --git a/tools/perf/pmu-events/arch/arm64/arm/neoverse-n2/pipeline.json b/tools/perf/pmu-events/arch/arm64/arm/neoverse-n2-v2/pipeline.json
+similarity index 100%
+rename from tools/perf/pmu-events/arch/arm64/arm/neoverse-n2/pipeline.json
+rename to tools/perf/pmu-events/arch/arm64/arm/neoverse-n2-v2/pipeline.json
+diff --git a/tools/perf/pmu-events/arch/arm64/arm/neoverse-n2/spe.json b/tools/perf/pmu-events/arch/arm64/arm/neoverse-n2-v2/spe.json
+similarity index 100%
+rename from tools/perf/pmu-events/arch/arm64/arm/neoverse-n2/spe.json
+rename to tools/perf/pmu-events/arch/arm64/arm/neoverse-n2-v2/spe.json
+diff --git a/tools/perf/pmu-events/arch/arm64/arm/neoverse-n2/trace.json b/tools/perf/pmu-events/arch/arm64/arm/neoverse-n2-v2/trace.json
+similarity index 100%
+rename from tools/perf/pmu-events/arch/arm64/arm/neoverse-n2/trace.json
+rename to tools/perf/pmu-events/arch/arm64/arm/neoverse-n2-v2/trace.json
+diff --git a/tools/perf/pmu-events/arch/arm64/mapfile.csv b/tools/perf/pmu-events/arch/arm64/mapfile.csv
+index ad502d00f460..f134e833c069 100644
+--- a/tools/perf/pmu-events/arch/arm64/mapfile.csv
++++ b/tools/perf/pmu-events/arch/arm64/mapfile.csv
+@@ -34,7 +34,8 @@
+ 0x00000000410fd460,v1,arm/cortex-a510,core
+ 0x00000000410fd470,v1,arm/cortex-a710,core
+ 0x00000000410fd480,v1,arm/cortex-x2,core
+-0x00000000410fd490,v1,arm/neoverse-n2,core
++0x00000000410fd490,v1,arm/neoverse-n2-v2,core
++0x00000000410fd4f0,v1,arm/neoverse-n2-v2,core
+ 0x00000000420f5160,v1,cavium/thunderx2,core
+ 0x00000000430f0af0,v1,cavium/thunderx2,core
+ 0x00000000460f0010,v1,fujitsu/a64fx,core
 -- 
-Regards/Gruss,
-    Boris.
+2.28.0
 
-https://people.kernel.org/tglx/notes-about-netiquette
