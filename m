@@ -2,55 +2,54 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6FDFEC4332F
-	for <linux-perf-users@archiver.kernel.org>; Thu, 20 Oct 2022 17:27:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0F6D7C4332F
+	for <linux-perf-users@archiver.kernel.org>; Thu, 20 Oct 2022 19:29:30 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230126AbiJTR1W (ORCPT
+        id S229765AbiJTT32 (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Thu, 20 Oct 2022 13:27:22 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56088 "EHLO
+        Thu, 20 Oct 2022 15:29:28 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34522 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229900AbiJTR1E (ORCPT
+        with ESMTP id S229988AbiJTT31 (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Thu, 20 Oct 2022 13:27:04 -0400
-Received: from mail-pg1-x52a.google.com (mail-pg1-x52a.google.com [IPv6:2607:f8b0:4864:20::52a])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1B0051C4ED7;
-        Thu, 20 Oct 2022 10:26:56 -0700 (PDT)
-Received: by mail-pg1-x52a.google.com with SMTP id b5so144769pgb.6;
-        Thu, 20 Oct 2022 10:26:56 -0700 (PDT)
+        Thu, 20 Oct 2022 15:29:27 -0400
+Received: from mail-pj1-x1032.google.com (mail-pj1-x1032.google.com [IPv6:2607:f8b0:4864:20::1032])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DDFC11008;
+        Thu, 20 Oct 2022 12:29:21 -0700 (PDT)
+Received: by mail-pj1-x1032.google.com with SMTP id t10-20020a17090a4e4a00b0020af4bcae10so591760pjl.3;
+        Thu, 20 Oct 2022 12:29:21 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20210112;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:sender:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=l6Z6RkNEbmfwHHP7f+jrXNR4HQTQXY+7XH5KVa3sTHw=;
-        b=TdE6JdKCuD5lMOIrusLTVhFxkdEoXK78uY18+UWcYmD/XXdwZiTurzJucoD8xt6on8
-         ALYWqn6VexTkr4HtfJ3TBe8OSxfyFmgkUWZr6FiD0LDScoMeMUXoDNKOsZ1ZZJFvFZqd
-         yXCdbJ45pLBU3uC7qEmUYCz/5+ghkrtWo74dliJ9k4NYXRTc93XOMNR63/jy9DrQMaCx
-         Y39YMm9Y/U+ZIRmjoeLQrn13iQEFzzWKumwPShygqhJghQsWVe9BeBkGWzMsDyOtDDma
-         rMLOtPmf9M8GwJ96NsL4/x7eELb4aXGiDJ/EBr7n+SPcvnBTy2YFNENfTgEopqdnXzUJ
-         7EHg==
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:sender:from:to:cc:subject:date:message-id:reply-to;
+        bh=3IhfJV/ujEMz2VKCojZus2oWqbEOyKbn3J2D7DFU0U4=;
+        b=m/YmPmdSeKWw68CQWY77WtCYKP4sk7RmpdviGct4nk3WTQF9K4Bv0loTBpi/NhPdNZ
+         eu24hydAsAkIiu8WtuidUxz5/AT3RawWQvm+NwTwZHHsHKesQkzh4xXk1Zdcz9ZgIcs6
+         ZSwxreAKF9vmrJkm770z3i/RNIsdgjsVA2KwoARQdD1f+H0JtgXPi5pHdGBr5ScpzGDN
+         bKM3oLmk5NCVVnTk6w7YXpe2bGuWx8/x+T1E7Ywjqhu8R/XUkggf0Dyyfwe0VYkJrEgf
+         zUOI53F7wCUwR9tgYB/cIqu5IQwjs8iFztOsIZeXM/iuHlYc+305/rRQ2QwT9Trp+Aw0
+         b2Gg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:sender:x-gm-message-state:from
-         :to:cc:subject:date:message-id:reply-to;
-        bh=l6Z6RkNEbmfwHHP7f+jrXNR4HQTQXY+7XH5KVa3sTHw=;
-        b=fyLLbSWaYT3wMOM6ZKigZsNyht5Nct+zUWn1564wfUqQx95+xTpgLZFX/5IGllb6gN
-         mH6RDJOjJfvPx37yqXpoUGGV1lkKEyxb8IqkJa+BbUdsJMmUcFD5p9+weL5Crah4PQr+
-         qG+LBpYoDtcR8SLULGYnqcRMgbWWy7AtZPmBAnpLl3us8l6d5USQBI+2aks5Ntjf6QdV
-         UjWpWNon0tjBrkqaGFYPsF6skUbwsnrn7ab42vgYfk7Wyqnl0PzfNw2O2yBCfPgNn24t
-         280IgQMaFs4uF/8eVC+UEs0GN628CxQ2zsUMUzqwfFq+ppbi3rt0YRQ3Vw5HLAlI56CL
-         MUMA==
-X-Gm-Message-State: ACrzQf2vPiGn0iWn4FsaAR/vjVPjTIPoCRiXM+GPPCsYaFTkcQuhGfTO
-        iItjuFXN3EawQ21YV5sEGqs=
-X-Google-Smtp-Source: AMsMyM5k7+OIuh6T71CZ8bUyJoIiko21r7jEhqcX5Nm/GdfSb/EgqHo6yZFZeP+TQ1KygNw5FncH1Q==
-X-Received: by 2002:a62:1553:0:b0:565:a402:8b28 with SMTP id 80-20020a621553000000b00565a4028b28mr14813218pfv.36.1666286815298;
-        Thu, 20 Oct 2022 10:26:55 -0700 (PDT)
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:sender:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=3IhfJV/ujEMz2VKCojZus2oWqbEOyKbn3J2D7DFU0U4=;
+        b=QfpVDRHYgrdLQC+f6uF8CDy4188tjCjqUywJuaEW2gveW+wX6XIOPGZsd62KyHex5/
+         1uBI/xpMU3W9xTpcqz+3pgM/0OAiKkSHfcQXH07KDdhCgt50Hn3YOhqDVoeMK4E8V1V4
+         w3toshuvM6fjnXV+NFTC1GCQzQn4J9qtPBv6IIGyUZrO3f7kpCIGyZPacfEowAXHeXkj
+         Dddq/R8J6TMhNqlSh7nxpFScAHggkyASXfHi7SODC4NmhoBBtaCDVpMe/Du/zzPKXKJd
+         wZ9bOFw3qM7DoTw0EVXQtGYvPXxwRu3LE/xKUUr8UJu6pDS9wagUbiu7Bofm3y0q6DTX
+         ocpg==
+X-Gm-Message-State: ACrzQf3zuD60CcNfktAPJO1LVR5uMBbWU5hCKB4oeZ2gTAXa8vdZZ8kw
+        9r++WJYVzJtkrswSpni+muk=
+X-Google-Smtp-Source: AMsMyM6BFkt/4Umtx/UkV+izdSEu/8B243G5U5IqDFk1S8zMwE98ymly8FBCMJtX7PyxO1VUZ3s1RA==
+X-Received: by 2002:a17:903:230a:b0:17d:707a:360e with SMTP id d10-20020a170903230a00b0017d707a360emr15764571plh.118.1666294160982;
+        Thu, 20 Oct 2022 12:29:20 -0700 (PDT)
 Received: from youngsil.svl.corp.google.com ([2620:15c:2d4:203:637f:7dcc:4bbf:4981])
-        by smtp.gmail.com with ESMTPSA id q13-20020a170902f34d00b0017680faa1a8sm12951754ple.112.2022.10.20.10.26.54
+        by smtp.gmail.com with ESMTPSA id p189-20020a625bc6000000b00562e9f636e0sm14230825pfb.10.2022.10.20.12.29.19
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 20 Oct 2022 10:26:55 -0700 (PDT)
+        Thu, 20 Oct 2022 12:29:20 -0700 (PDT)
 Sender: Namhyung Kim <namhyung@gmail.com>
 From:   Namhyung Kim <namhyung@kernel.org>
 To:     Arnaldo Carvalho de Melo <acme@kernel.org>,
@@ -60,70 +59,47 @@ Cc:     Ingo Molnar <mingo@kernel.org>,
         LKML <linux-kernel@vger.kernel.org>,
         Ian Rogers <irogers@google.com>,
         Adrian Hunter <adrian.hunter@intel.com>,
-        linux-perf-users@vger.kernel.org
-Subject: [PATCH 8/8] perf test: Do not set TEST_SKIP for record subtests
-Date:   Thu, 20 Oct 2022 10:26:43 -0700
-Message-Id: <20221020172643.3458767-9-namhyung@kernel.org>
+        linux-perf-users@vger.kernel.org, Ammy Yi <ammy.yi@intel.com>
+Subject: [PATCH] perf test: Do not fail Intel-PT misc test w/o libpython
+Date:   Thu, 20 Oct 2022 12:29:17 -0700
+Message-Id: <20221020192917.3542757-1-namhyung@kernel.org>
 X-Mailer: git-send-email 2.38.0.135.g90850a2211-goog
-In-Reply-To: <20221020172643.3458767-1-namhyung@kernel.org>
-References: <20221020172643.3458767-1-namhyung@kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-It now has 4 sub tests and one of them should run at least.
-But once TEST_SKIP (= 2) return value is set, it won't be overwritten
-unless there's a failure.  I think we should return success when one
-or more tested are skipped but the remaining subtests are passed.
+The virtuall LBR test uses a python script to check the max size of
+branch stack in the Intel-PT generated LBR.  But it didn't check whether
+python scripting is available (as it's optional).
 
-So update the test code not to set the err variable when it skips
-the test.
+Let's skip the test if the python support is not available.
 
-Reviewed-by: Adrian Hunter <adrian.hunter@intel.com>
+Fixes: f77811a0f625 ("perf test: test_intel_pt.sh: Add 9 tests")
+Cc: Ammy Yi <ammy.yi@intel.com>
 Signed-off-by: Namhyung Kim <namhyung@kernel.org>
 ---
- tools/perf/tests/shell/record.sh | 12 ------------
- 1 file changed, 12 deletions(-)
+ tools/perf/tests/shell/test_intel_pt.sh | 6 ++++++
+ 1 file changed, 6 insertions(+)
 
-diff --git a/tools/perf/tests/shell/record.sh b/tools/perf/tests/shell/record.sh
-index 01aa9531b369..e93b3a8871fe 100755
---- a/tools/perf/tests/shell/record.sh
-+++ b/tools/perf/tests/shell/record.sh
-@@ -81,10 +81,6 @@ test_per_thread() {
-   if ! perf record -o /dev/null --quiet ${testprog} 2> /dev/null
-   then
-     echo "Per-thread record [Skipped event not supported]"
--    if [ $err -ne 1 ]
--    then
--      err=2
--    fi
-     return
-   fi
-   if ! perf record --per-thread -o "${perfdata}" ${testprog} 2> /dev/null
-@@ -131,10 +127,6 @@ test_register_capture() {
-   if ! perf list | grep -q 'br_inst_retired.near_call'
-   then
-     echo "Register capture test [Skipped missing event]"
--    if [ $err -ne 1 ]
--    then
--      err=2
--    fi
-     return
-   fi
-   if ! perf record --intr-regs=\? 2>&1 | grep -q 'available registers: AX BX CX DX SI DI BP SP IP FLAGS CS SS R8 R9 R10 R11 R12 R13 R14 R15'
-@@ -159,10 +151,6 @@ test_system_wide() {
-   if ! perf record -aB --synth=no -o "${perfdata}" ${testprog} 2> /dev/null
-   then
-     echo "System-wide record [Skipped not supported]"
--    if [ $err -ne 1 ]
--    then
--      err=2
--    fi
-     return
-   fi
-   if ! perf report -i "${perfdata}" -q | grep -q "${testsym}"
+diff --git a/tools/perf/tests/shell/test_intel_pt.sh b/tools/perf/tests/shell/test_intel_pt.sh
+index 4c0aabbe33bd..e66b7d977462 100755
+--- a/tools/perf/tests/shell/test_intel_pt.sh
++++ b/tools/perf/tests/shell/test_intel_pt.sh
+@@ -526,6 +526,12 @@ test_kernel_trace()
+ test_virtual_lbr()
+ {
+ 	echo "--- Test virtual LBR ---"
++	# Check if python script is supported
++	libpython=$(ldd $(which perf) | grep -c python)
++	if [ "${libpython}" != "1" ] ; then
++		echo "SKIP: python scripting is not supported"
++		return 2
++	fi
+ 
+ 	# Python script to determine the maximum size of branch stacks
+ 	cat << "_end_of_file_" > "${maxbrstack}"
 -- 
 2.38.0.135.g90850a2211-goog
 
