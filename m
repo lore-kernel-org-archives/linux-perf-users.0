@@ -2,76 +2,108 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 852B3C4332F
-	for <linux-perf-users@archiver.kernel.org>; Fri, 21 Oct 2022 10:32:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 001CEC4332F
+	for <linux-perf-users@archiver.kernel.org>; Fri, 21 Oct 2022 10:45:07 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229902AbiJUKc5 (ORCPT
+        id S229742AbiJUKpG (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Fri, 21 Oct 2022 06:32:57 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58678 "EHLO
+        Fri, 21 Oct 2022 06:45:06 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40056 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229994AbiJUKcz (ORCPT
+        with ESMTP id S229832AbiJUKpF (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Fri, 21 Oct 2022 06:32:55 -0400
-Received: from szxga03-in.huawei.com (szxga03-in.huawei.com [45.249.212.189])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 201C325DAD5
-        for <linux-perf-users@vger.kernel.org>; Fri, 21 Oct 2022 03:32:53 -0700 (PDT)
-Received: from dggemv711-chm.china.huawei.com (unknown [172.30.72.55])
-        by szxga03-in.huawei.com (SkyGuard) with ESMTP id 4Mv11s5cH4zJn6C;
-        Fri, 21 Oct 2022 18:30:09 +0800 (CST)
-Received: from kwepemm600008.china.huawei.com (7.193.23.88) by
- dggemv711-chm.china.huawei.com (10.1.198.66) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2375.31; Fri, 21 Oct 2022 18:32:38 +0800
-Received: from [10.174.176.230] (10.174.176.230) by
- kwepemm600008.china.huawei.com (7.193.23.88) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2375.31; Fri, 21 Oct 2022 18:32:37 +0800
-Message-ID: <08505070-dd38-eff8-aaf2-7843e28f1166@huawei.com>
-Date:   Fri, 21 Oct 2022 18:32:36 +0800
+        Fri, 21 Oct 2022 06:45:05 -0400
+Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BF66C5B73B;
+        Fri, 21 Oct 2022 03:45:03 -0700 (PDT)
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by dfw.source.kernel.org (Postfix) with ESMTPS id C4F1761E3B;
+        Fri, 21 Oct 2022 10:45:02 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 4577AC433D6;
+        Fri, 21 Oct 2022 10:44:58 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1666349102;
+        bh=J7/tgj0zGETukgrM7kBytQZ9k9B0vXsbKGc9ccx9mwE=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=V9jDZnDKZ4ly7SGBtpEnWUgSo4oWfTF5Tv5/EN3XbynhRsqs7T/+03XWHp8sWs19C
+         fqPEyZlxOMIm/DIr91kDpoegLD5bWdFWE436SY/ZCTgVhfL7HCd5nwposBFyPMxiJN
+         Wte9FNAJstcg5uEgiE0eW28UDAUT1sztXXp//DpJkRihq6g33sH2F+NOiHbDuzqADJ
+         VgftPFM+qTuDk8loSTSeZoAaRH4XTtdCLQw6nvSxMTBGjxc+wrwMSCSRoWeuZRlytC
+         s+GXOnyHtrqpiTVy5QKJpaFeZT8Ved/SAanLjeMtWF0cgFlzkBTyVncTW6IoATAPkY
+         qYh/4h4oY+VeA==
+Date:   Fri, 21 Oct 2022 11:44:54 +0100
+From:   Mark Brown <broonie@kernel.org>
+To:     Rob Herring <robh@kernel.org>
+Cc:     Namhyung Kim <namhyung@kernel.org>,
+        James Morse <james.morse@arm.com>,
+        Ingo Molnar <mingo@redhat.com>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Marc Zyngier <maz@kernel.org>,
+        Suzuki K Poulose <suzuki.poulose@arm.com>,
+        Will Deacon <will@kernel.org>,
+        Alexandru Elisei <alexandru.elisei@arm.com>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Arnaldo Carvalho de Melo <acme@kernel.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Oliver Upton <oliver.upton@linux.dev>,
+        Jiri Olsa <jolsa@kernel.org>, kvmarm@lists.cs.columbia.edu,
+        kvmarm@lists.linux.dev, linux-arm-kernel@lists.infradead.org,
+        linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v2 3/7] arm64/sysreg: Convert SPE registers to automatic
+ generation
+Message-ID: <Y1J4JhJZs9w1zn6q@sirena.org.uk>
+References: <20220825-arm-spe-v8-7-v2-0-e37322d68ac0@kernel.org>
+ <20220825-arm-spe-v8-7-v2-3-e37322d68ac0@kernel.org>
+ <Y1FcRNhFpZxZ7AMx@sirena.org.uk>
+ <CAL_JsqLVjWH-x3jxGQpJ3ax_ddvBqHd-P2DE=DEnrknoHuq+Qg@mail.gmail.com>
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:102.0) Gecko/20100101
- Thunderbird/102.1.0
-Subject: Re: [PATCH 1/3] perf vendor events arm64: Fix incorrect Hisi hip08 L3
- metrics
-To:     John Garry <john.garry@huawei.com>, <will@kernel.org>,
-        <james.clark@arm.com>, <mike.leach@linaro.org>,
-        <leo.yan@linaro.org>, <peterz@infradead.org>, <mingo@redhat.com>,
-        <acme@kernel.org>, <mark.rutland@arm.com>,
-        <alexander.shishkin@linux.intel.com>, <jolsa@kernel.org>,
-        <namhyung@kernel.org>, <kjain@linux.ibm.com>,
-        <linux-arm-kernel@lists.infradead.org>,
-        <linux-perf-users@vger.kernel.org>
-References: <20221021085326.17139-1-shangxiaojing@huawei.com>
- <20221021085326.17139-2-shangxiaojing@huawei.com>
- <b3b814ef-50ed-52db-1b01-835234644264@huawei.com>
-From:   shangxiaojing <shangxiaojing@huawei.com>
-In-Reply-To: <b3b814ef-50ed-52db-1b01-835234644264@huawei.com>
-Content-Type: text/plain; charset="UTF-8"; format=flowed
-Content-Transfer-Encoding: 7bit
-X-Originating-IP: [10.174.176.230]
-X-ClientProxiedBy: dggems702-chm.china.huawei.com (10.3.19.179) To
- kwepemm600008.china.huawei.com (7.193.23.88)
-X-CFilter-Loop: Reflected
+Content-Type: multipart/signed; micalg=pgp-sha512;
+        protocol="application/pgp-signature"; boundary="h8OqzCyx1D8l8y4i"
+Content-Disposition: inline
+In-Reply-To: <CAL_JsqLVjWH-x3jxGQpJ3ax_ddvBqHd-P2DE=DEnrknoHuq+Qg@mail.gmail.com>
+X-Cookie: On the eighth day, God created FORTRAN.
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
 
+--h8OqzCyx1D8l8y4i
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-On 2022/10/21 17:59, John Garry wrote:
-> On 21/10/2022 09:53, Shang XiaoJing wrote:
->> Commit 0cc177cfc95d ("perf vendor events arm64: Add Hisi hip08 L3
->> metrics") add L3 metrics of hip08, but some metrics (IF_BP_MISP_BR_RET,
->> IF_BP_MISP_BR_RET, IF_BP_MISP_BR_BL) have incorrect event number, which
->> caused incorrect result. Fix the incorrect metrics.
-> 
-> It would be proper to mention why they were wrong - that is, not a 
-> mistake by the original JSON author, but rather a mistake in the 
-> document which the events were transscribed from.
+On Thu, Oct 20, 2022 at 02:51:02PM -0500, Rob Herring wrote:
+> On Thu, Oct 20, 2022 at 9:33 AM Mark Brown <broonie@kernel.org> wrote:
 
-Yes, will be adjusted in v2.
+> > > +Field        11:8    EA
 
-Thanks,
--- 
-Shang XiaoJing
+> > This looks like it should be described as an enum.
+
+>     0b0000    Not_Described
+>     0b0001    Ignored
+>     0b0010    SError
+
+> What's the preferred case here?
+
+Either option is good for case I think, it's a taste question - going
+with upper case is more the kernel coding style so fine there, though
+sometimes it makes things hard to read.
+
+--h8OqzCyx1D8l8y4i
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAmNSeCYACgkQJNaLcl1U
+h9Atiwf+OSs1WYEEU3S40lQi7fccTKxTPnixytK3Sph02dBD9R/EnwsFK6DnnBsA
+hyaxC2aWvjmz1oplivZ7qQwM6CKRyfPoi3f62/L2Ne0A+PILHTWjsr8CRkYHaipd
+iPss2Dszd5K65d9ZULDEuUR6tgCWodejetEY1bCu3g7dtB2ZoZPDlfXnvssxm3MP
+pKjj58ynCwhGeHMJ6T7ASJOmvvkLbTvLTni4MJ7o56/ltB0+JuNyf28MQzRiG+Ts
+A19juSTfZvW8g6aG9P2+byuIXeMJJyas2bz46021mDn6Ch/jkrIfeIsVVlf8UpCp
+gHbpAw48zWWXQbb3phklP/cvtYisSQ==
+=/DQ9
+-----END PGP SIGNATURE-----
+
+--h8OqzCyx1D8l8y4i--
