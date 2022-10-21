@@ -2,50 +2,50 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 07639C4332F
-	for <linux-perf-users@archiver.kernel.org>; Fri, 21 Oct 2022 08:46:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 300BAC43217
+	for <linux-perf-users@archiver.kernel.org>; Fri, 21 Oct 2022 08:46:38 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230332AbiJUIqb (ORCPT
+        id S229967AbiJUIqf (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Fri, 21 Oct 2022 04:46:31 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43810 "EHLO
+        Fri, 21 Oct 2022 04:46:35 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45240 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230273AbiJUIqI (ORCPT
+        with ESMTP id S230314AbiJUIqI (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
         Fri, 21 Oct 2022 04:46:08 -0400
 Received: from mga04.intel.com (mga04.intel.com [192.55.52.120])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id AC95811E47E;
-        Fri, 21 Oct 2022 01:45:50 -0700 (PDT)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 567C4122BD8;
+        Fri, 21 Oct 2022 01:45:53 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
   t=1666341955; x=1697877955;
   h=message-id:date:mime-version:subject:to:cc:references:
    from:in-reply-to:content-transfer-encoding;
-  bh=MC3e58wHe4Ov1qfXX/UpYagXIF2oKZtIqFoVB0OWPpQ=;
-  b=BAskgQZsTt1JqtWI+oARsz0NOAcFEJMlB+W6q5szK/JPDdRu03o31E0s
-   XF5iWr4u41NNBn07ixCqGwSsDrbauBuX4EpLtck8Ueqe4CC/d5s+82l06
-   IxAx3ctQIFh+Fy+/z2NeN67IXPItmqG28wH8QS/QaRaNFHwWNDV563XLt
-   6w6sPiI1k6dFLuJqLzmXX2FPHN8M7PX1vnpXubjFfIJlSsJ17J5+0uiVw
-   1fEVV021NGu8REsFT3cbA2Ce+sC8HQNwEtK6nJohAAHF9aDcB2zH9OQxZ
-   XHWmRf+xLVPsCBD/9EGHdjDuVPhKhV7hAtqlMTyVPgj181bnlQ5xA69um
-   Q==;
-X-IronPort-AV: E=McAfee;i="6500,9779,10506"; a="305687725"
+  bh=ha7NloLaREqqfPcCh6ph5TTwUFuy1F1puCKnzB50uDc=;
+  b=jVXXFOue4bLnOVg+Zpg7kzTWin2Oxb6oOI5XKq+TGF02CTBPWiu/5aM5
+   hXBZWHCusr4uyZlAqULVbG5P9EJgXxXLJUdGwq6K8/E90HC6NSQ9yhdDJ
+   OerHbatxZvoqGepJWH5yJbTlI93+lb5S3Rp9B4pxF6Xv9Vvoat1LHzhOY
+   kk8OHUsLLIq/SBlRgXjVA9YixPCqRGLPl5nmRIuaR1BajRaUEGm7rq7tX
+   y/s23l7ArkH0EH88LCZkFLGnBlxcVwEFaKDhEEdQni6iudJ5etlVzesLw
+   AAfTWKYBvTpTC9qsMu7PTPaYBFQCyEZiPI0UVwiGjot/iM8TnCRR+d8r+
+   A==;
+X-IronPort-AV: E=McAfee;i="6500,9779,10506"; a="305687731"
 X-IronPort-AV: E=Sophos;i="5.95,200,1661842800"; 
-   d="scan'208";a="305687725"
+   d="scan'208";a="305687731"
 Received: from orsmga002.jf.intel.com ([10.7.209.21])
-  by fmsmga104.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 21 Oct 2022 01:45:49 -0700
-X-IronPort-AV: E=McAfee;i="6500,9779,10506"; a="630376913"
+  by fmsmga104.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 21 Oct 2022 01:45:52 -0700
+X-IronPort-AV: E=McAfee;i="6500,9779,10506"; a="630376938"
 X-IronPort-AV: E=Sophos;i="5.95,200,1661842800"; 
-   d="scan'208";a="630376913"
+   d="scan'208";a="630376938"
 Received: from ahunter6-mobl1.ger.corp.intel.com (HELO [10.0.2.15]) ([10.252.45.134])
-  by orsmga002-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 21 Oct 2022 01:45:46 -0700
-Message-ID: <723b1feb-b36b-ae7f-172d-24cbb46447ea@intel.com>
-Date:   Fri, 21 Oct 2022 11:45:43 +0300
+  by orsmga002-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 21 Oct 2022 01:45:50 -0700
+Message-ID: <b82a3829-9ea9-1dbd-7318-f6ac4e5ea94e@intel.com>
+Date:   Fri, 21 Oct 2022 11:45:47 +0300
 MIME-Version: 1.0
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
  Firefox/102.0 Thunderbird/102.4.0
-Subject: Re: [PATCH 4/8] perf test: Wait for a new thread when testing
- --per-thread record
+Subject: Re: [PATCH 6/8] perf test: Add target workload test in perf record
+ tests
 Content-Language: en-US
 To:     Namhyung Kim <namhyung@kernel.org>,
         Arnaldo Carvalho de Melo <acme@kernel.org>,
@@ -56,11 +56,11 @@ Cc:     Ingo Molnar <mingo@kernel.org>,
         Ian Rogers <irogers@google.com>,
         linux-perf-users@vger.kernel.org
 References: <20221020172643.3458767-1-namhyung@kernel.org>
- <20221020172643.3458767-5-namhyung@kernel.org>
+ <20221020172643.3458767-7-namhyung@kernel.org>
 From:   Adrian Hunter <adrian.hunter@intel.com>
 Organization: Intel Finland Oy, Registered Address: PL 281, 00181 Helsinki,
  Business Identity Code: 0357606 - 4, Domiciled in Helsinki
-In-Reply-To: <20221020172643.3458767-5-namhyung@kernel.org>
+In-Reply-To: <20221020172643.3458767-7-namhyung@kernel.org>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 Precedence: bulk
@@ -68,65 +68,50 @@ List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
 On 20/10/22 20:26, Namhyung Kim wrote:
-> Just running the target program is not enough to test multi-thread
-> target because it'd be racy perf vs target startup.  I used the
-> initial delay but it cannot guarantee for perf to see the thread.
-> 
-> Instead, use wait_for_threads helper from shell/lib/waiting.sh to make
-> sure it starts the sibling thread first.  Then perf record can use -p
-> option to profile the target process.
+> Add a subtest which profiles the given workload on the command line.
+> As it's a minimal requirement, test should run ok so it doesn't skip
+> the test even if it failed to run the perf record.
 > 
 > Signed-off-by: Namhyung Kim <namhyung@kernel.org>
 
 Reviewed-by: Adrian Hunter <adrian.hunter@intel.com>
 
 > ---
->  tools/perf/tests/shell/record.sh | 27 +++++++++++++++++++++++++++
->  1 file changed, 27 insertions(+)
+>  tools/perf/tests/shell/record.sh | 18 ++++++++++++++++++
+>  1 file changed, 18 insertions(+)
 > 
 > diff --git a/tools/perf/tests/shell/record.sh b/tools/perf/tests/shell/record.sh
-> index 952981481239..d1640d1daf2e 100755
+> index 345764afb745..c59d1459c960 100755
 > --- a/tools/perf/tests/shell/record.sh
 > +++ b/tools/perf/tests/shell/record.sh
-> @@ -4,6 +4,9 @@
+> @@ -174,11 +174,29 @@ test_system_wide() {
+>    echo "Basic --system-wide mode test [Success]"
+>  }
 >  
->  set -e
->  
-> +shelldir=$(dirname "$0")
-> +. "${shelldir}"/lib/waiting.sh
-> +
->  err=0
->  perfdata=$(mktemp /tmp/__perf_test.perf.data.XXXXX)
->  testprog=$(mktemp /tmp/__perf_test.prog.XXXXXX)
-> @@ -96,6 +99,30 @@ test_per_thread() {
->      err=1
->      return
->    fi
-> +
-> +  # run the test program in background (forever)
-> +  ${testprog} 1 &
-> +  TESTPID=$!
-> +
-> +  rm -f "${perfdata}"
-> +
-> +  wait_for_threads ${TESTPID} 2
-> +  perf record -p "${TESTPID}" --per-thread -o "${perfdata}" sleep 1 2> /dev/null
-> +  kill ${TESTPID}
-> +
-> +  if [ ! -e "${perfdata}" ]
+> +test_workload() {
+> +  echo "Basic target workload test"
+> +  if ! perf record -o "${perfdata}" ${testprog} 2> /dev/null
 > +  then
-> +    echo "Per-thread record [Failed record -p]"
+> +    echo "Workload record [Failed record]"
 > +    err=1
 > +    return
 > +  fi
 > +  if ! perf report -i "${perfdata}" -q | grep -q "${testsym}"
 > +  then
-> +    echo "Per-thread record [Failed -p missing output]"
+> +    echo "Workload record [Failed missing output]"
 > +    err=1
 > +    return
 > +  fi
+> +  echo "Basic target workload test [Success]"
+> +}
 > +
->    echo "Basic --per-thread mode test [Success]"
->  }
+>  build_test_program
 >  
+>  test_per_thread
+>  test_register_capture
+>  test_system_wide
+> +test_workload
+>  
+>  cleanup
+>  exit $err
 
