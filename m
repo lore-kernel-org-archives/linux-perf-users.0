@@ -2,100 +2,96 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 98837FA3741
-	for <linux-perf-users@archiver.kernel.org>; Fri, 21 Oct 2022 16:20:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AF40CFA373D
+	for <linux-perf-users@archiver.kernel.org>; Fri, 21 Oct 2022 16:25:30 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230409AbiJUQT7 (ORCPT
+        id S229602AbiJUQZ3 (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Fri, 21 Oct 2022 12:19:59 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55310 "EHLO
+        Fri, 21 Oct 2022 12:25:29 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48350 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230436AbiJUQTy (ORCPT
+        with ESMTP id S229460AbiJUQZ2 (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Fri, 21 Oct 2022 12:19:54 -0400
-Received: from mail.skyhub.de (mail.skyhub.de [IPv6:2a01:4f8:190:11c2::b:1457])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D557D4456E;
-        Fri, 21 Oct 2022 09:19:36 -0700 (PDT)
-Received: from zn.tnic (p200300ea9733e769329c23fffea6a903.dip0.t-ipconnect.de [IPv6:2003:ea:9733:e769:329c:23ff:fea6:a903])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.skyhub.de (SuperMail on ZX Spectrum 128k) with ESMTPSA id 0CC6D1EC0731;
-        Fri, 21 Oct 2022 18:19:34 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alien8.de; s=dkim;
-        t=1666369174;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:in-reply-to:in-reply-to:  references:references;
-        bh=osvnA1VVG8lOO7CofSEE3U1qKE+FmJzIhRV7z1btuj4=;
-        b=kTrJPiFSirvT8QAitnYEpzpcdMbtcXA5yOQxTep7XgZPzoZ7lttGRZVygRLbYsnaOD+LzU
-        /RhEgA3iGecU55zSIGnw2ZiO8DllFm7LXz29lmQH3D3HkNrqJcr2lCuQHbKV8uRxNlwMvW
-        ITkPMYEdCWAcH8rJMRHThhLuixBO9Z8=
-Date:   Fri, 21 Oct 2022 18:19:29 +0200
-From:   Borislav Petkov <bp@alien8.de>
-To:     Maxim Levitsky <mlevitsk@redhat.com>
-Cc:     linux-kernel@vger.kernel.org, kvm@vger.kernel.org,
-        Pawan Gupta <pawan.kumar.gupta@linux.intel.com>,
-        Ingo Molnar <mingo@redhat.com>,
-        Josh Poimboeuf <jpoimboe@kernel.org>,
-        Namhyung Kim <namhyung@kernel.org>,
-        Tony Luck <tony.luck@intel.com>,
-        Paolo Bonzini <pbonzini@redhat.com>,
-        "H. Peter Anvin" <hpa@zytor.com>,
-        Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Tim Chen <tim.c.chen@linux.intel.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        Dave Hansen <dave.hansen@linux.intel.com>,
-        "Chang S. Bae" <chang.seok.bae@intel.com>,
-        Jane Malalane <jane.malalane@citrix.com>,
-        Kees Cook <keescook@chromium.org>,
-        Kan Liang <kan.liang@linux.intel.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        "maintainer:X86 ARCHITECTURE (32-BIT AND 64-BIT)" <x86@kernel.org>,
-        Herbert Xu <herbert@gondor.apana.org.au>,
-        Jiri Olsa <jolsa@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        linux-perf-users@vger.kernel.org,
-        "open list:CRYPTO API" <linux-crypto@vger.kernel.org>
-Subject: Re: [PATCH v2 2/5] x86/cpuid: refactor
- setup_clear_cpu_cap()/clear_cpu_cap()
-Message-ID: <Y1LGkTXCksqAYLHD@zn.tnic>
-References: <20220718141123.136106-1-mlevitsk@redhat.com>
- <20220718141123.136106-3-mlevitsk@redhat.com>
+        Fri, 21 Oct 2022 12:25:28 -0400
+Received: from mail-ot1-f41.google.com (mail-ot1-f41.google.com [209.85.210.41])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 125891989A0;
+        Fri, 21 Oct 2022 09:25:27 -0700 (PDT)
+Received: by mail-ot1-f41.google.com with SMTP id r13-20020a056830418d00b0065601df69c0so2111018otu.7;
+        Fri, 21 Oct 2022 09:25:27 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=gc70kGbL9d0j2d/EsthLu44LYzEyGZWdvK0hdiHTOLM=;
+        b=8KHwlHM1Jm1NvqL5IOWcrukVLWKgvGIcqdQS8kUHyBKKxvB1HZ2b9MAGwvhKNLGneR
+         TOVRPO9FUCX/i44eo0aChsKusoglKC5k7o19EsY7w+kvhKI/MvhP/gjnA648B7RRItni
+         uYG/oQYtVTeVY3mvjDvb0V+v8DxvBKfpwMtoyROULeWBAT7ByYFRIi6Yl6V+iF3M3vnV
+         pznrdZsOr9xSx/g/5TROXnYsex/s1A5cU9I0M2b5WdIybbN3lu6ah+5p88Ko1U8/xYXV
+         3Mw8xpPT+P//cWBY29HnE4E1K25kZTQK/ooVmeC2BXKOOdHmSb3RASRlkNd1jXtqwh5N
+         dOcw==
+X-Gm-Message-State: ACrzQf1f7tQJR1bLUhmyWWHOWhhZ9F6xF7jHVKGGBngs4ie60IojJI3o
+        rHP93Fk5+9PYD/lDF1JMtMhpUCKRMC4shR4sYqk=
+X-Google-Smtp-Source: AMsMyM7zvO2bXNXiH9Xmm7Nm7RfH62DrrgjpZa0j6SlfPdB+dihwpXqc1pIi0WuCdYeSnlAaLPY/jI3g3usFPEldWO0=
+X-Received: by 2002:a9d:3e9:0:b0:661:a8a2:7b96 with SMTP id
+ f96-20020a9d03e9000000b00661a8a27b96mr10604547otf.190.1666369526322; Fri, 21
+ Oct 2022 09:25:26 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <20220718141123.136106-3-mlevitsk@redhat.com>
+References: <20221020192917.3542757-1-namhyung@kernel.org> <0beb829f-82e7-9caa-806e-276adc8e697f@intel.com>
+In-Reply-To: <0beb829f-82e7-9caa-806e-276adc8e697f@intel.com>
+From:   Namhyung Kim <namhyung@kernel.org>
+Date:   Fri, 21 Oct 2022 09:25:15 -0700
+Message-ID: <CAM9d7chnXa8XEYQiUyn6fJp8MsS+cb+FhaZTQksQbrFqSF_JUQ@mail.gmail.com>
+Subject: Re: [PATCH] perf test: Do not fail Intel-PT misc test w/o libpython
+To:     Adrian Hunter <adrian.hunter@intel.com>,
+        Ian Rogers <irogers@google.com>
+Cc:     Arnaldo Carvalho de Melo <acme@kernel.org>,
+        Jiri Olsa <jolsa@kernel.org>, Ingo Molnar <mingo@kernel.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        linux-perf-users@vger.kernel.org, Ammy Yi <ammy.yi@intel.com>
+Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-On Mon, Jul 18, 2022 at 05:11:20PM +0300, Maxim Levitsky wrote:
-> Currently setup_clear_cpu_cap passes NULL 'struct cpuinfo_x86*'
-> to clear_cpu_cap to indicate that capability should be cleared from boot_cpu_data.
-> 
-> Later that is used in clear_feature to do recursive call to
-> clear_cpu_cap together with clearing the feature bit from 'cpu_caps_cleared'
-> 
-> Remove that code and just call the do_clear_cpu_cap on boot_cpu_data directly
-> from the setup_clear_cpu_cap.
-> 
-> The only functional change this introduces is that now calling clear_cpu_cap
-> explicitly on boot_cpu_data also sets the bits in cpu_caps_cleared,
-> which is the only thing that makes sense anyway.
-> 
-> All callers of both functions were checked for this and fixed.
+Hi Adrian and Ian,
 
-Change looks ok. What I can't grok is this sentence: what was checked
-and fixed where?
+On Thu, Oct 20, 2022 at 10:22 PM Adrian Hunter <adrian.hunter@intel.com> wrote:
+>
+> On 20/10/22 22:29, Namhyung Kim wrote:
+> > The virtuall LBR test uses a python script to check the max size of
+> > branch stack in the Intel-PT generated LBR.  But it didn't check whether
+> > python scripting is available (as it's optional).
+> >
+> > Let's skip the test if the python support is not available.
+> >
+> > Fixes: f77811a0f625 ("perf test: test_intel_pt.sh: Add 9 tests")
+> > Cc: Ammy Yi <ammy.yi@intel.com>
+> > Signed-off-by: Namhyung Kim <namhyung@kernel.org>
+> > ---
+> >  tools/perf/tests/shell/test_intel_pt.sh | 6 ++++++
+> >  1 file changed, 6 insertions(+)
+> >
+> > diff --git a/tools/perf/tests/shell/test_intel_pt.sh b/tools/perf/tests/shell/test_intel_pt.sh
+> > index 4c0aabbe33bd..e66b7d977462 100755
+> > --- a/tools/perf/tests/shell/test_intel_pt.sh
+> > +++ b/tools/perf/tests/shell/test_intel_pt.sh
+> > @@ -526,6 +526,12 @@ test_kernel_trace()
+> >  test_virtual_lbr()
+> >  {
+> >       echo "--- Test virtual LBR ---"
+> > +     # Check if python script is supported
+> > +     libpython=$(ldd $(which perf) | grep -c python)
+>
+> 'which' might not be installed.  Don't about 'ldd'.
+>
+> Maybe 'perf version --build-options' can be used instead e.g.
+>
+> $ perf version --build-options | grep -i libpython | grep -vi off
+>              libpython: [ on  ]  # HAVE_LIBPYTHON_SUPPORT
 
-What does need fixing and why?
+Thanks for the suggestion, will change.
 
-Thx.
-
--- 
-Regards/Gruss,
-    Boris.
-
-https://people.kernel.org/tglx/notes-about-netiquette
+Thanks,
+Namhyung
