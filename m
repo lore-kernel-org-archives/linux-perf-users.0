@@ -2,115 +2,104 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9948FFA373F
-	for <linux-perf-users@archiver.kernel.org>; Fri, 21 Oct 2022 17:26:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BC2AAFA373D
+	for <linux-perf-users@archiver.kernel.org>; Fri, 21 Oct 2022 18:11:06 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229932AbiJUR0y (ORCPT
+        id S229941AbiJUSLF (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Fri, 21 Oct 2022 13:26:54 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46162 "EHLO
+        Fri, 21 Oct 2022 14:11:05 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55568 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230134AbiJUR0v (ORCPT
+        with ESMTP id S230148AbiJUSLB (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Fri, 21 Oct 2022 13:26:51 -0400
-Received: from mga06.intel.com (mga06b.intel.com [134.134.136.31])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 828872498A7;
-        Fri, 21 Oct 2022 10:26:38 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1666373198; x=1697909198;
-  h=message-id:date:mime-version:subject:to:cc:references:
-   from:in-reply-to:content-transfer-encoding;
-  bh=wtXgXABX03UjxiDLcsHFgZveW+3WXgnLLx/+XNeHUEA=;
-  b=i5at2Zfxk0vwcRaTVp547ZxU1n6RFQD2k9KExrEfH1kvFbuWKFbpLrWX
-   NJOZm7wOfMDCR5EUVvK7DKo4kIeIpeNcPiCJDraJ4F8p6hTVA2ZUY/EvY
-   zVaqs5Y+KLT2F5cy7QJry7tVzoZv9cS2PyHqoCfvemL4uOMyl/gQ5kd+b
-   KbzpwMrrrLnzSEaLx3RylvzAAU5bo1TqkiU09Dttx7fTM/QBHUxSxc9qt
-   xu+Ne4X8u/CpNOWpfFZp4LfYoWfYRz8oDhcb/ofT0tLBSRrS4p/9OYfzX
-   GpEAssZJ/ZYlzJDXbybWDL0d9Nd+tes/Fzp/iVM/NfaFt5fdeHls9ncpE
-   Q==;
-X-IronPort-AV: E=McAfee;i="6500,9779,10507"; a="369108970"
-X-IronPort-AV: E=Sophos;i="5.95,202,1661842800"; 
-   d="scan'208";a="369108970"
-Received: from fmsmga006.fm.intel.com ([10.253.24.20])
-  by orsmga104.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 21 Oct 2022 10:26:37 -0700
-X-IronPort-AV: E=McAfee;i="6500,9779,10507"; a="875770040"
-X-IronPort-AV: E=Sophos;i="5.95,202,1661842800"; 
-   d="scan'208";a="875770040"
-Received: from djiang5-mobl2.amr.corp.intel.com (HELO [10.212.30.144]) ([10.212.30.144])
-  by fmsmga006-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 21 Oct 2022 10:26:36 -0700
-Message-ID: <d48acad7-9805-2f5e-842e-5af9afae00fa@intel.com>
-Date:   Fri, 21 Oct 2022 10:26:36 -0700
+        Fri, 21 Oct 2022 14:11:01 -0400
+Received: from mail-pg1-x52b.google.com (mail-pg1-x52b.google.com [IPv6:2607:f8b0:4864:20::52b])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D2DF61285D5;
+        Fri, 21 Oct 2022 11:11:00 -0700 (PDT)
+Received: by mail-pg1-x52b.google.com with SMTP id r18so3193510pgr.12;
+        Fri, 21 Oct 2022 11:11:00 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20210112;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:sender:from:to:cc:subject:date:message-id:reply-to;
+        bh=RGIAKus/Xgp2gelQEMCjN5mUafX169J7aaTKPb1JrtI=;
+        b=FIwyGa5nFa/qllpYs9rRhQ4m9fVW9NILhvw4Za5RaRfnL36GJhddiCfTkYHFDAHIfe
+         pN9VlLaUT/WKovBbKN+mnBbc0x0ZcWolgcc98JV6HXDJ39sHjDG+Nqg9zei2QN8Rx0B2
+         IKrefMsv2LNATKgCoo/8K/3E6dJhJvfEmjd9IThoDb8x8yotI6ESUDDwatjgkN1ofcs6
+         vpaJyyxbY6iy56NtTkUNbdhLh/CurXW6uZhyKuFAyyo0NzsLaRpcXiB5dAg7sDDoeu1K
+         RO49CVEfGo7Dsp9szUdm0GuUHGiQN0PqMhAtDCSB7F+oV4V95DuOcH+Wz+zUHgSkbVVh
+         9W5Q==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:sender:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=RGIAKus/Xgp2gelQEMCjN5mUafX169J7aaTKPb1JrtI=;
+        b=IX5qJBcHcmoQOglS9V2x6C7fz2nP90q2/yQqSgB+fMK3rIytvbzFSPfSWEB8vqYjQY
+         BuNPTOZs1ig7JeHNgoifo4URjJUZ94QSqarF+kIVHlDtBhdCPAPAK1o4KWnJjXrUNjwa
+         qy8YMZl5YSIyrO1Dgg5p0NtcW321XP57udWEF1rAg4bV0e8MjCvHeuc9bOJ/nFwP0io1
+         Ov+yxhNUdXo+JGtqe+XT5zhRb/ILJoVL6qWduABQpnTRL59F/X732q/w/8IFLvqDBYUY
+         MJ73rcO8DmJ6dBbsBWoAGb3cFO1EqjbWixAjNTyxKgohXWmz9lSAHg2088I1p4tDBfAs
+         ognA==
+X-Gm-Message-State: ACrzQf0u7IkKZ8ug5L3u1Zw9/Bp5aAe8KYdzvVymchuhD7m701el1+fB
+        wDpg6+SH/3OBRMQWes8xWYI=
+X-Google-Smtp-Source: AMsMyM7tlUNrSDUN2QfXD5FgZCwou4jlq8Mo8S4x8Cz+8wbgQsy5wx6dxXV9tFaAGyiyTCOaq2gFrQ==
+X-Received: by 2002:a05:6a02:112:b0:440:5515:b908 with SMTP id bg18-20020a056a02011200b004405515b908mr17483097pgb.13.1666375860017;
+        Fri, 21 Oct 2022 11:11:00 -0700 (PDT)
+Received: from balhae.roam.corp.google.com ([2607:fb90:8066:9c69:66a3:c7aa:d7e4:8f8b])
+        by smtp.gmail.com with ESMTPSA id n12-20020a170902d2cc00b00172897952a0sm15396223plc.283.2022.10.21.11.10.57
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 21 Oct 2022 11:10:59 -0700 (PDT)
+Sender: Namhyung Kim <namhyung@gmail.com>
+From:   Namhyung Kim <namhyung@kernel.org>
+To:     Arnaldo Carvalho de Melo <acme@kernel.org>,
+        Jiri Olsa <jolsa@kernel.org>
+Cc:     Ingo Molnar <mingo@kernel.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Ian Rogers <irogers@google.com>,
+        Adrian Hunter <adrian.hunter@intel.com>,
+        linux-perf-users@vger.kernel.org, Ammy Yi <ammy.yi@intel.com>
+Subject: [PATCH v2] perf test: Do not fail Intel-PT misc test w/o libpython
+Date:   Fri, 21 Oct 2022 11:10:55 -0700
+Message-Id: <20221021181055.60183-1-namhyung@kernel.org>
+X-Mailer: git-send-email 2.38.0.135.g90850a2211-goog
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:102.0) Gecko/20100101
- Firefox/102.0 Thunderbird/102.3.3
-Subject: Re: [RFC PATCH v2 2/4] cxl/pci: Find and register CXL PMU devices
-Content-Language: en-US
-To:     Jonathan Cameron <Jonathan.Cameron@huawei.com>
-Cc:     linux-cxl@vger.kernel.org, Dan Williams <dan.j.williams@intel.com>,
-        Alison Schofield <alison.schofield@intel.com>,
-        Vishal Verma <vishal.l.verma@intel.com>,
-        Ira Weiny <ira.weiny@intel.com>,
-        Ben Widawsky <bwidawsk@kernel.org>,
-        linux-perf-users@vger.kernel.org, Will Deacon <will@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>, linuxarm@huawei.com
-References: <20220824103617.21781-1-Jonathan.Cameron@huawei.com>
- <20220824103617.21781-3-Jonathan.Cameron@huawei.com>
- <b3be74ca-aa5e-e3d7-5337-0254d5f42a84@intel.com>
- <20221018121900.00004ff8@huawei.com>
-From:   Dave Jiang <dave.jiang@intel.com>
-In-Reply-To: <20221018121900.00004ff8@huawei.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
+The virtuall LBR test uses a python script to check the max size of
+branch stack in the Intel-PT generated LBR.  But it didn't check whether
+python scripting is available (as it's optional).
 
-On 10/18/2022 4:19 AM, Jonathan Cameron wrote:
-> On Thu, 1 Sep 2022 15:36:23 -0700
-> Dave Jiang <dave.jiang@intel.com> wrote:
->
->> On 8/24/2022 3:36 AM, Jonathan Cameron wrote:
->>> CXL PMU devices can be found from entries in the Register
->>> Locator DVSEC.
->>>
->>> In order to register the minimum number of IRQ vectors necessary
->>> to support all CPMUs found, separate the registration into two
->>> steps.  First find the devices, and query the IRQs used and then
->>> register the devices. Between these two steps, request the
->>> IRQ vectors necessary and enable bus master support.
->>>
->>> Future IRQ users for CXL type 3 devices (e.g. DOEs) will need to
->>> follow a similar pattern the number of vectors necessary is known
->>> before any parts of the driver stack rely on their availability.
->>>
->>> Signed-off-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
->>>
->
->>> +static int cxl_alloc_irq_vectors(struct cxl_dev_state *cxlds, int vectors)
->>> +{
->>> +	struct device *dev = cxlds->dev;
->>> +	struct pci_dev *pdev = to_pci_dev(dev);
->>> +	int rc;
->>> +
->>> +	rc = pci_alloc_irq_vectors(pdev, vectors, vectors,
->>> +				   PCI_IRQ_MSI | PCI_IRQ_MSIX);
->>> +	if (rc < 0)
->>> +		return rc;
->>> +	if (rc != vectors) {
->> I don't think you'll hit here since you passed in vectors for min and
->> max. You'll get -ENOSPC and return from the earlier check.
->>
->> https://elixir.bootlin.com/linux/v6.0-rc3/source/drivers/pci/msi/msi.c#L1005
->>
->> DJ
->>
-> Good point.  This also applies to the version of the same function in
-> Davidlohr's patch set, so I've cut and paste your comment to there.
+Let's skip the test if the python support is not available.
 
-Somehow I totally missed that reviewing his set. Ooops. Thanks!
+Fixes: f77811a0f625 ("perf test: test_intel_pt.sh: Add 9 tests")
+Cc: Ammy Yi <ammy.yi@intel.com>
+Signed-off-by: Namhyung Kim <namhyung@kernel.org>
+---
+ tools/perf/tests/shell/test_intel_pt.sh | 6 ++++++
+ 1 file changed, 6 insertions(+)
 
+diff --git a/tools/perf/tests/shell/test_intel_pt.sh b/tools/perf/tests/shell/test_intel_pt.sh
+index 4c0aabbe33bd..f5ed7b1af419 100755
+--- a/tools/perf/tests/shell/test_intel_pt.sh
++++ b/tools/perf/tests/shell/test_intel_pt.sh
+@@ -526,6 +526,12 @@ test_kernel_trace()
+ test_virtual_lbr()
+ {
+ 	echo "--- Test virtual LBR ---"
++	# Check if python script is supported
++	libpython=$(perf version --build-options | grep python | grep -cv OFF)
++	if [ "${libpython}" != "1" ] ; then
++		echo "SKIP: python scripting is not supported"
++		return 2
++	fi
+ 
+ 	# Python script to determine the maximum size of branch stacks
+ 	cat << "_end_of_file_" > "${maxbrstack}"
+-- 
+2.38.0.135.g90850a2211-goog
 
->
-> Jonathan
