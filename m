@@ -2,114 +2,151 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6E798C43217
-	for <linux-perf-users@archiver.kernel.org>; Fri, 21 Oct 2022 08:26:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 00250C433FE
+	for <linux-perf-users@archiver.kernel.org>; Fri, 21 Oct 2022 08:45:41 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229695AbiJUI0a (ORCPT
+        id S230288AbiJUIpk (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Fri, 21 Oct 2022 04:26:30 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42584 "EHLO
+        Fri, 21 Oct 2022 04:45:40 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42574 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229524AbiJUI0Z (ORCPT
+        with ESMTP id S230206AbiJUIph (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Fri, 21 Oct 2022 04:26:25 -0400
-Received: from mx0a-001b2d01.pphosted.com (mx0b-001b2d01.pphosted.com [148.163.158.5])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1546CF0188;
-        Fri, 21 Oct 2022 01:26:24 -0700 (PDT)
-Received: from pps.filterd (m0098419.ppops.net [127.0.0.1])
-        by mx0b-001b2d01.pphosted.com (8.17.1.5/8.17.1.5) with ESMTP id 29L8DFQi011308;
-        Fri, 21 Oct 2022 08:26:15 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=from : to : cc : subject
- : date : message-id : mime-version : content-transfer-encoding; s=pp1;
- bh=zYFwWlKHLIqKID6jP8gRJWcqxPLr50ivrBdQZkwRy1E=;
- b=QfA7lyvVILhsuZtFzWf3i5ARKostnQfwA3PTY6qPPQDtww1ccNuiOxrV1ndwrK1LUhPy
- d4rWv6w+f/MEFzE/PoGJzG1i1wDGvTt+f8/P1y7sjF2IM/pACQArXfzuFm381o+L7e/x
- FOkKmhkYmAjbmfAlooR6tOjU7oe7i+zi/BSqrqfJbW/juKEFWTWzPDmlDpKlm0EGYdsS
- 6zIUNEXW6chwE5ehCrl4dukBEaJSoVr+p+XqHyhwRIDhPunA3erRyjmqM9hfVyT6yqRp
- v6n6S12Ggivnoia078D9nzwNw1XzuOOylLl62KHmqcFWOcrsQGusZyu44GsNJmmCvYzP Kw== 
-Received: from ppma03fra.de.ibm.com (6b.4a.5195.ip4.static.sl-reverse.com [149.81.74.107])
-        by mx0b-001b2d01.pphosted.com (PPS) with ESMTPS id 3kbqqhrba6-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Fri, 21 Oct 2022 08:26:14 +0000
-Received: from pps.filterd (ppma03fra.de.ibm.com [127.0.0.1])
-        by ppma03fra.de.ibm.com (8.16.1.2/8.16.1.2) with SMTP id 29L8KW3X002601;
-        Fri, 21 Oct 2022 08:26:13 GMT
-Received: from b06cxnps3074.portsmouth.uk.ibm.com (d06relay09.portsmouth.uk.ibm.com [9.149.109.194])
-        by ppma03fra.de.ibm.com with ESMTP id 3k7mg9fn41-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Fri, 21 Oct 2022 08:26:13 +0000
-Received: from d06av21.portsmouth.uk.ibm.com (d06av21.portsmouth.uk.ibm.com [9.149.105.232])
-        by b06cxnps3074.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 29L8Q9MB44040592
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Fri, 21 Oct 2022 08:26:09 GMT
-Received: from d06av21.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id B2DD652052;
-        Fri, 21 Oct 2022 08:26:09 +0000 (GMT)
-Received: from tuxmaker.boeblingen.de.ibm.com (unknown [9.152.85.9])
-        by d06av21.portsmouth.uk.ibm.com (Postfix) with ESMTP id 7B4D05204F;
-        Fri, 21 Oct 2022 08:26:09 +0000 (GMT)
-From:   Thomas Richter <tmricht@linux.ibm.com>
-To:     linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org,
-        acme@kernel.org
-Cc:     svens@linux.ibm.com, gor@linux.ibm.com, sumanthk@linux.ibm.com,
-        hca@linux.ibm.com, Thomas Richter <tmricht@linux.ibm.com>
-Subject: [PATCH] perf list: Fix PMU name pai_crypto in perf list on s390
-Date:   Fri, 21 Oct 2022 10:25:57 +0200
-Message-Id: <20221021082557.2695382-1-tmricht@linux.ibm.com>
-X-Mailer: git-send-email 2.34.1
+        Fri, 21 Oct 2022 04:45:37 -0400
+Received: from mga12.intel.com (mga12.intel.com [192.55.52.136])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 97601D2CEE;
+        Fri, 21 Oct 2022 01:45:31 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1666341931; x=1697877931;
+  h=message-id:date:mime-version:subject:to:cc:references:
+   from:in-reply-to:content-transfer-encoding;
+  bh=bCmnXMxEdIpqLDpzSjuss3n0Raqam0wXCvy5gepTCeE=;
+  b=VLg+PsFwgygfl4Vdmi4Ce66iuu+07bSrFK88bjpovUn/R3kluWZ10u76
+   4nqLgwlNuc3xTIOqlHR7J0YaUgGShyQQmcUfaRhLb4vefKpObaXRKARgC
+   /fmzPOXVB4bREB31x5KZOLob8BWG7nL+uam2PNE8t47i1hIze+J9gGWoo
+   04q35emxDo55yngENjZ+K7KARLColFgiIORYti/+De1hWbWY/CMD4mlVz
+   RBUAJfeCU9f0ls3s0GXrWkzX2CG0l7BdJlLFNEUxoVMyT4/xtXIvWqdqj
+   zXY6xNeHe3j2yay2dW6BBOrHMFXjMvg3WJX2Iyn58bnpLMPCGWGaiCXEq
+   w==;
+X-IronPort-AV: E=McAfee;i="6500,9779,10506"; a="286670037"
+X-IronPort-AV: E=Sophos;i="5.95,200,1661842800"; 
+   d="scan'208";a="286670037"
+Received: from orsmga002.jf.intel.com ([10.7.209.21])
+  by fmsmga106.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 21 Oct 2022 01:45:30 -0700
+X-IronPort-AV: E=McAfee;i="6500,9779,10506"; a="630376775"
+X-IronPort-AV: E=Sophos;i="5.95,200,1661842800"; 
+   d="scan'208";a="630376775"
+Received: from ahunter6-mobl1.ger.corp.intel.com (HELO [10.0.2.15]) ([10.252.45.134])
+  by orsmga002-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 21 Oct 2022 01:45:28 -0700
+Message-ID: <132e3bcd-c64a-5c55-bb52-efe013e55157@intel.com>
+Date:   Fri, 21 Oct 2022 11:45:24 +0300
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-TM-AS-GCONF: 00
-X-Proofpoint-GUID: Ez9bo-iXwJJpwk5F9RCFwsI7z3u0FrjX
-X-Proofpoint-ORIG-GUID: Ez9bo-iXwJJpwk5F9RCFwsI7z3u0FrjX
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.205,Aquarius:18.0.895,Hydra:6.0.545,FMLib:17.11.122.1
- definitions=2022-10-21_03,2022-10-20_01,2022-06-22_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 impostorscore=0 mlxscore=0
- malwarescore=0 suspectscore=0 adultscore=0 clxscore=1011
- lowpriorityscore=0 priorityscore=1501 spamscore=0 phishscore=0
- mlxlogscore=999 bulkscore=0 classifier=spam adjust=0 reason=mlx
- scancount=1 engine=8.12.0-2209130000 definitions=main-2210210047
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
+ Firefox/102.0 Thunderbird/102.4.0
+Subject: Re: [PATCH 2/8] perf test: Fix shellcheck issues in the record test
+Content-Language: en-US
+To:     Namhyung Kim <namhyung@kernel.org>,
+        Arnaldo Carvalho de Melo <acme@kernel.org>,
+        Jiri Olsa <jolsa@kernel.org>
+Cc:     Ingo Molnar <mingo@kernel.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Ian Rogers <irogers@google.com>,
+        linux-perf-users@vger.kernel.org
+References: <20221020172643.3458767-1-namhyung@kernel.org>
+ <20221020172643.3458767-3-namhyung@kernel.org>
+From:   Adrian Hunter <adrian.hunter@intel.com>
+Organization: Intel Finland Oy, Registered Address: PL 281, 00181 Helsinki,
+ Business Identity Code: 0357606 - 4, Domiciled in Helsinki
+In-Reply-To: <20221020172643.3458767-3-namhyung@kernel.org>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-commit e0b23af82d6f4 ("perf list: Add PMU pai_crypto event description for IBM z16")
-introduced the Processor Activity Instrumentation for cryptographic
-counters for z16. The PMU device driver exports the counters via sysfs
-files listed in directory /sys/devices/pai_crypto.
+On 20/10/22 20:26, Namhyung Kim wrote:
+> Basically there are 3 issues:
+> 
+>  1. quote shell expansion
+>  2. do not use egrep
+>  3. use upper case letters for signal names
+> 
+> Signed-off-by: Namhyung Kim <namhyung@kernel.org>
 
-To specify an event from that PMU, use perf stat -e pai_crypto/XXX/
+Reviewed-by: Adrian Hunter <adrian.hunter@intel.com>
 
-However the json file mentioned in above commit exports the counter
-decriptions in file pmu-events/arch/s390/cf_z16/pai.json.
-Rename this file to pmu-events/arch/s390/cf_z16/pai_crypto.json
-to make the naming consistent.
-
-Now perf list shows the counter names under pai_crypto section:
-pai_crypto:
-  CRYPTO_ALL
-       [CRYPTO ALL. Unit: pai_crypto]
-  ....
-
-Output before was
-pai:
-  CRYPTO_ALL
-       [CRYPTO ALL. Unit: pai_crypto]
-  ....
-
-Fixes: e0b23af82d6f4 ("perf list: Add PMU pai_crypto event description for IBM z16")
-Signed-off-by: Thomas Richter <tmricht@linux.ibm.com>
-Acked-by: Sumanth Korikkar <sumanthk@linux.ibm.com>
----
- .../pmu-events/arch/s390/cf_z16/{pai.json => pai_crypto.json}     | 0
- 1 file changed, 0 insertions(+), 0 deletions(-)
- rename tools/perf/pmu-events/arch/s390/cf_z16/{pai.json => pai_crypto.json} (100%)
-
-diff --git a/tools/perf/pmu-events/arch/s390/cf_z16/pai.json b/tools/perf/pmu-events/arch/s390/cf_z16/pai_crypto.json
-similarity index 100%
-rename from tools/perf/pmu-events/arch/s390/cf_z16/pai.json
-rename to tools/perf/pmu-events/arch/s390/cf_z16/pai_crypto.json
--- 
-2.37.3
+> ---
+>  tools/perf/tests/shell/record.sh | 18 +++++++++---------
+>  1 file changed, 9 insertions(+), 9 deletions(-)
+> 
+> diff --git a/tools/perf/tests/shell/record.sh b/tools/perf/tests/shell/record.sh
+> index 747c33a1ec45..464071462809 100755
+> --- a/tools/perf/tests/shell/record.sh
+> +++ b/tools/perf/tests/shell/record.sh
+> @@ -8,16 +8,16 @@ err=0
+>  perfdata=$(mktemp /tmp/__perf_test.perf.data.XXXXX)
+>  
+>  cleanup() {
+> -  rm -f ${perfdata}
+> -  rm -f ${perfdata}.old
+> -  trap - exit term int
+> +  rm -f "${perfdata}"
+> +  rm -f "${perfdata}".old
+> +  trap - EXIT TERM INT
+>  }
+>  
+>  trap_cleanup() {
+>    cleanup
+>    exit 1
+>  }
+> -trap trap_cleanup exit term int
+> +trap trap_cleanup EXIT TERM INT
+>  
+>  test_per_thread() {
+>    echo "Basic --per-thread mode test"
+> @@ -30,13 +30,13 @@ test_per_thread() {
+>      fi
+>      return
+>    fi
+> -  if ! perf record --per-thread -o ${perfdata} true 2> /dev/null
+> +  if ! perf record --per-thread -o "${perfdata}" true 2> /dev/null
+>    then
+>      echo "Per-thread record [Failed record]"
+>      err=1
+>      return
+>    fi
+> -  if ! perf report -i ${perfdata} -q | egrep -q true
+> +  if ! perf report -i "${perfdata}" -q | grep -q true
+>    then
+>      echo "Per-thread record [Failed missing output]"
+>      err=1
+> @@ -47,7 +47,7 @@ test_per_thread() {
+>  
+>  test_register_capture() {
+>    echo "Register capture test"
+> -  if ! perf list | egrep -q 'br_inst_retired.near_call'
+> +  if ! perf list | grep -q 'br_inst_retired.near_call'
+>    then
+>      echo "Register capture test [Skipped missing event]"
+>      if [ $err -ne 1 ]
+> @@ -56,7 +56,7 @@ test_register_capture() {
+>      fi
+>      return
+>    fi
+> -  if ! perf record --intr-regs=\? 2>&1 | egrep -q 'available registers: AX BX CX DX SI DI BP SP IP FLAGS CS SS R8 R9 R10 R11 R12 R13 R14 R15'
+> +  if ! perf record --intr-regs=\? 2>&1 | grep -q 'available registers: AX BX CX DX SI DI BP SP IP FLAGS CS SS R8 R9 R10 R11 R12 R13 R14 R15'
+>    then
+>      echo "Register capture test [Skipped missing registers]"
+>      return
+> @@ -64,7 +64,7 @@ test_register_capture() {
+>    if ! perf record -o - --intr-regs=di,r8,dx,cx -e br_inst_retired.near_call:p \
+>      -c 1000 --per-thread true 2> /dev/null \
+>      | perf script -F ip,sym,iregs -i - 2> /dev/null \
+> -    | egrep -q "DI:"
+> +    | grep -q "DI:"
+>    then
+>      echo "Register capture test [Failed missing output]"
+>      err=1
 
