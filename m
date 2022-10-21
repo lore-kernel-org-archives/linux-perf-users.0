@@ -2,87 +2,239 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 084ACC4332F
-	for <linux-perf-users@archiver.kernel.org>; Fri, 21 Oct 2022 10:47:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B3573C4332F
+	for <linux-perf-users@archiver.kernel.org>; Fri, 21 Oct 2022 10:51:35 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229510AbiJUKr1 (ORCPT
+        id S230156AbiJUKve (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Fri, 21 Oct 2022 06:47:27 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46258 "EHLO
+        Fri, 21 Oct 2022 06:51:34 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58254 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229576AbiJUKr0 (ORCPT
+        with ESMTP id S230111AbiJUKvb (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Fri, 21 Oct 2022 06:47:26 -0400
-Received: from frasgout.his.huawei.com (frasgout.his.huawei.com [185.176.79.56])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CA40B25F1E4;
-        Fri, 21 Oct 2022 03:47:20 -0700 (PDT)
-Received: from frapeml500004.china.huawei.com (unknown [172.18.147.201])
-        by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4Mv1Mb2jFBz688Yy;
-        Fri, 21 Oct 2022 18:45:31 +0800 (CST)
-Received: from lhrpeml500003.china.huawei.com (7.191.162.67) by
- frapeml500004.china.huawei.com (7.182.85.22) with Microsoft SMTP Server
+        Fri, 21 Oct 2022 06:51:31 -0400
+Received: from szxga01-in.huawei.com (szxga01-in.huawei.com [45.249.212.187])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8064A251F49
+        for <linux-perf-users@vger.kernel.org>; Fri, 21 Oct 2022 03:51:27 -0700 (PDT)
+Received: from dggemv711-chm.china.huawei.com (unknown [172.30.72.53])
+        by szxga01-in.huawei.com (SkyGuard) with ESMTP id 4Mv1Nv1Y7yzmVHb;
+        Fri, 21 Oct 2022 18:46:39 +0800 (CST)
+Received: from kwepemm600008.china.huawei.com (7.193.23.88) by
+ dggemv711-chm.china.huawei.com (10.1.198.66) with Microsoft SMTP Server
  (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2375.31; Fri, 21 Oct 2022 12:47:18 +0200
-Received: from [10.126.168.107] (10.126.168.107) by
- lhrpeml500003.china.huawei.com (7.191.162.67) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2375.31; Fri, 21 Oct 2022 11:47:17 +0100
-Message-ID: <dcf5d62d-8163-dfee-a6b7-e75207650551@huawei.com>
-Date:   Fri, 21 Oct 2022 11:47:18 +0100
+ 15.1.2375.31; Fri, 21 Oct 2022 18:51:25 +0800
+Received: from huawei.com (10.175.100.227) by kwepemm600008.china.huawei.com
+ (7.193.23.88) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2375.31; Fri, 21 Oct
+ 2022 18:51:24 +0800
+From:   Shang XiaoJing <shangxiaojing@huawei.com>
+To:     <john.garry@huawei.com>, <will@kernel.org>, <james.clark@arm.com>,
+        <mike.leach@linaro.org>, <leo.yan@linaro.org>,
+        <peterz@infradead.org>, <mingo@redhat.com>, <acme@kernel.org>,
+        <mark.rutland@arm.com>, <alexander.shishkin@linux.intel.com>,
+        <jolsa@kernel.org>, <namhyung@kernel.org>, <kjain@linux.ibm.com>,
+        <linux-arm-kernel@lists.infradead.org>,
+        <linux-perf-users@vger.kernel.org>
+CC:     <shangxiaojing@huawei.com>
+Subject: [PATCH v2 2/3] perf vendor events arm64: Add HiSilicon hip08 core events
+Date:   Fri, 21 Oct 2022 18:50:34 +0800
+Message-ID: <20221021105035.10000-3-shangxiaojing@huawei.com>
+X-Mailer: git-send-email 2.17.1
+In-Reply-To: <20221021105035.10000-1-shangxiaojing@huawei.com>
+References: <20221021105035.10000-1-shangxiaojing@huawei.com>
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:91.0) Gecko/20100101
- Thunderbird/91.6.1
-Subject: Re: [PATCH] perf vendor events: Add Arm Neoverse V2 PMU events
-To:     James Clark <james.clark@arm.com>,
-        <linux-perf-users@vger.kernel.org>, <acme@kernel.org>
-CC:     <linux-kernel@vger.kernel.org>, <nick.forrington@arm.com>,
-        <al.grant@arm.com>, Will Deacon <will@kernel.org>,
-        Mike Leach <mike.leach@linaro.org>,
-        Leo Yan <leo.yan@linaro.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Jiri Olsa <jolsa@kernel.org>,
-        "Namhyung Kim" <namhyung@kernel.org>,
-        <linux-arm-kernel@lists.infradead.org>
-References: <20221020134512.1345013-1-james.clark@arm.com>
-From:   John Garry <john.garry@huawei.com>
-In-Reply-To: <20221020134512.1345013-1-james.clark@arm.com>
-Content-Type: text/plain; charset="UTF-8"; format=flowed
-Content-Transfer-Encoding: 7bit
-X-Originating-IP: [10.126.168.107]
-X-ClientProxiedBy: lhrpeml500002.china.huawei.com (7.191.160.78) To
- lhrpeml500003.china.huawei.com (7.191.162.67)
+Content-Type: text/plain
+X-Originating-IP: [10.175.100.227]
+X-ClientProxiedBy: dggems706-chm.china.huawei.com (10.3.19.183) To
+ kwepemm600008.china.huawei.com (7.193.23.88)
 X-CFilter-Loop: Reflected
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-On 20/10/2022 14:45, James Clark wrote:
-> Rename the neoverse-n2 folder to make it clear that it includes V2, and
-> add V2 to mapfile.csv. V2 has the same events as N2, visible by running
-> the following command in the ARM-software/data github repo [1]:
-> 
->    diff pmu/neoverse-v2.json pmu/neoverse-n2.json | grep code
-> 
-> Testing:
-> 
->    $ perf test pmu
-> 
->    10: PMU events                                           :
->    10.1: PMU event table sanity                             : Ok
->    10.2: PMU event map aliases                              : Ok
->    10.3: Parsing of PMU event table metrics                 : Ok
->    10.4: Parsing of PMU event table metrics with fake PMUs  : Ok
-> 
-> [1]:https://github.com/ARM-software/data
-> 
-> Signed-off-by: James Clark<james.clark@arm.com>
-> ---
+Add some core events of hip08 to the corresponding core-imp-def.json.
 
-This looks ok. Out of curiosity, do you know how the naming works for 
-these neoverse cores? Were "n" a predecessor to "v"?
+Signed-off-by: Shang XiaoJing <shangxiaojing@huawei.com>
+Acked-by: James Clark <james.clark@arm.com>
+---
+ .../arm64/hisilicon/hip08/core-imp-def.json   | 132 ++++++++++++++++++
+ 1 file changed, 132 insertions(+)
 
-thanks,
-John
+diff --git a/tools/perf/pmu-events/arch/arm64/hisilicon/hip08/core-imp-def.json b/tools/perf/pmu-events/arch/arm64/hisilicon/hip08/core-imp-def.json
+index a4a6408639b4..f9a90d6a958d 100644
+--- a/tools/perf/pmu-events/arch/arm64/hisilicon/hip08/core-imp-def.json
++++ b/tools/perf/pmu-events/arch/arm64/hisilicon/hip08/core-imp-def.json
+@@ -53,6 +53,36 @@
+     {
+         "ArchStdEvent": "L2D_CACHE_INVAL"
+     },
++    {
++        "PublicDescription": "Number of predictable branches predicted by static predictor",
++        "EventCode": "0x1001",
++        "EventName": "IF_BP_PRED_BR_SP",
++        "BriefDescription": "Static predictor predict count"
++    },
++    {
++        "PublicDescription": "Number of mispredicted procedure returns",
++        "EventCode": "0x100d",
++        "EventName": "IF_BP_MISP_BR_RET",
++        "BriefDescription": "Mispredicted procedures"
++    },
++    {
++        "PublicDescription": "Number of mispredicted indirect branches",
++        "EventCode": "0x1010",
++        "EventName": "IF_BP_MISP_BR_IND",
++        "BriefDescription": "Mispredicted indirect branches"
++    },
++    {
++        "PublicDescription": "Number of mispredicted BLR branches",
++        "EventCode": "0x1013",
++        "EventName": "IF_BP_MISP_BR_BLR",
++        "BriefDescription": "Mispredicted BLR branches"
++    },
++    {
++        "PublicDescription": "Number of mispredicted BL branches",
++        "EventCode": "0x1016",
++        "EventName": "IF_BP_MISP_BR_BL",
++        "BriefDescription": "Mispredicted BL branches"
++    },
+     {
+         "PublicDescription": "Level 1 instruction cache prefetch access count",
+         "EventCode": "0x102e",
+@@ -77,12 +107,90 @@
+         "EventName": "IF_IS_STALL",
+         "BriefDescription": "Instruction fetch stall cycles"
+     },
++    {
++        "PublicDescription": "Number of times ROB is full",
++        "EventCode": "0x2004",
++        "EventName": "ROB_STALL",
++        "BriefDescription": "ROB stall"
++    },
++    {
++        "PublicDescription": "Number of times PC buffer is full",
++        "EventCode": "0x2005",
++        "EventName": "PCBUF_STALL",
++        "BriefDescription": "PC buffer stall"
++    },
++    {
++        "PublicDescription": "No INT ptag allocated from free list",
++        "EventCode": "0x2006",
++        "EventName": "INT_PTAG_STALL",
++        "BriefDescription": "INT ptag stall"
++    },
++    {
++        "PublicDescription": "No CC ptag allocated from free list",
++        "EventCode": "0x2007",
++        "EventName": "CC_PTAG_STALL",
++        "BriefDescription": "CC ptag stall"
++    },
++    {
++        "PublicDescription": "No VFP ptag allocated from free list",
++        "EventCode": "0x2008",
++        "EventName": "VFP_PTAG_STALL",
++        "BriefDescription": "VFP ptag stall"
++    },
++    {
++        "PublicDescription": "Issue queue of ALU is full",
++        "EventCode": "0x200b",
++        "EventName": "ALU_ISQ_STALL",
++        "BriefDescription": "ALU issue queue stall"
++    },
++    {
++        "PublicDescription": "Issue queue of LSU is full",
++        "EventCode": "0x200c",
++        "EventName": "LSU_ISQ_STALL",
++        "BriefDescription": "LSU issueQ stall"
++    },
++    {
++        "PublicDescription": "Issue queue of FSU is full",
++        "EventCode": "0x200d",
++        "EventName": "FSU_ISQ_STALL",
++        "BriefDescription": "FSU issueQ stall"
++    },
++    {
++        "PublicDescription": "Sync buffer is full",
++        "EventCode": "0x2010",
++        "EventName": "SYNC_STALL",
++        "BriefDescription": "Sync buffer stall"
++    },
++    {
++        "PublicDescription": "LSU nuke flush caused by incorrect data from speculative execution",
++        "EventCode": "0x2012",
++        "EventName": "NUKE_FLUSH",
++        "BriefDescription": "LSU nuke flush"
++    },
++    {
++        "PublicDescription": "OoO ROB flush",
++        "EventCode": "0x2013",
++        "EventName": "OOO_FLUSH",
++        "BriefDescription": "OoO ROB flush"
++    },
+     {
+         "PublicDescription": "Instructions can receive, but not send",
+         "EventCode": "0x2014",
+         "EventName": "FETCH_BUBBLE",
+         "BriefDescription": "Instructions can receive, but not send"
+     },
++    {
++        "PublicDescription": "Cycles of Fetch bubble >= 4",
++        "EventCode": "0x201d",
++        "EventName": "FETCH_BUBBLE_EXCEEDMIW",
++        "BriefDescription": "Cycles of Fetch bubble >= 4"
++    },
++    {
++        "PublicDescription": "SaveOp queue is full",
++        "EventCode": "0x201e",
++        "EventName": "SAVEOP_QUEUE_STALL",
++        "BriefDescription": "SaveOp queue stall"
++    },
+     {
+         "PublicDescription": "Prefetch request from LSU",
+         "EventCode": "0x6013",
+@@ -95,18 +203,42 @@
+         "EventName": "HIT_ON_PRF",
+         "BriefDescription": "Hit on prefetched data"
+     },
++    {
++        "PublicDescription": "OoO Stall & Inst in OoO but No_Dispatch & IssueQ_can_Accept",
++        "EventCode": "0x7000",
++        "EventName": "RESOURCE_BOUND",
++        "BriefDescription": "OoO Stall & Inst in OoO but No_Dispatch & IssueQ_can_Accept"
++    },
+     {
+         "PublicDescription": "Cycles of that the number of issuing micro operations are less than 4",
+         "EventCode": "0x7001",
+         "EventName": "EXE_STALL_CYCLE",
+         "BriefDescription": "Cycles of that the number of issue ups are less than 4"
+     },
++    {
++        "PublicDescription": "No any micro operation is issued & no memstall & executing DIV operation",
++        "EventCode": "0x7002",
++        "EventName": "EXE_STALL_DIV",
++        "BriefDescription": "No any micro operation is issued & no memstall & executing DIV operation"
++    },
++    {
++        "PublicDescription": "No INT operation is issued & no FSU operation is issued & executing FSU operation",
++        "EventCode": "0x7003",
++        "EventName": "FSU_STALL",
++        "BriefDescription": "No INT operation is issued & no FSU operation is issued & executing FSU operation"
++    },
+     {
+         "PublicDescription": "No any micro operation is issued and meanwhile any load operation is not resolved",
+         "EventCode": "0x7004",
+         "EventName": "MEM_STALL_ANYLOAD",
+         "BriefDescription": "No any micro operation is issued and meanwhile any load operation is not resolved"
+     },
++    {
++        "PublicDescription": "No any micro operation is issued and meanwhile any store operation is not resolved",
++        "EventCode": "0x7005",
++        "EventName": "MEM_STALL_ANYSTORE",
++        "BriefDescription": "No any micro operation is issued and meanwhile any store operation is not resolved"
++    },
+     {
+         "PublicDescription": "No any micro operation is issued and meanwhile there is any load operation missing L1 cache and pending data refill",
+         "EventCode": "0x7006",
+-- 
+2.17.1
+
