@@ -2,104 +2,111 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BC2AAFA373D
-	for <linux-perf-users@archiver.kernel.org>; Fri, 21 Oct 2022 18:11:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 08A9EC38A2D
+	for <linux-perf-users@archiver.kernel.org>; Fri, 21 Oct 2022 22:00:22 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229941AbiJUSLF (ORCPT
+        id S229779AbiJUWAV (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Fri, 21 Oct 2022 14:11:05 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55568 "EHLO
+        Fri, 21 Oct 2022 18:00:21 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41656 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230148AbiJUSLB (ORCPT
+        with ESMTP id S229585AbiJUWAU (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Fri, 21 Oct 2022 14:11:01 -0400
-Received: from mail-pg1-x52b.google.com (mail-pg1-x52b.google.com [IPv6:2607:f8b0:4864:20::52b])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D2DF61285D5;
-        Fri, 21 Oct 2022 11:11:00 -0700 (PDT)
-Received: by mail-pg1-x52b.google.com with SMTP id r18so3193510pgr.12;
-        Fri, 21 Oct 2022 11:11:00 -0700 (PDT)
+        Fri, 21 Oct 2022 18:00:20 -0400
+Received: from mail-wm1-x32e.google.com (mail-wm1-x32e.google.com [IPv6:2a00:1450:4864:20::32e])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 950AB17EF26
+        for <linux-perf-users@vger.kernel.org>; Fri, 21 Oct 2022 15:00:17 -0700 (PDT)
+Received: by mail-wm1-x32e.google.com with SMTP id l32so3127640wms.2
+        for <linux-perf-users@vger.kernel.org>; Fri, 21 Oct 2022 15:00:17 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20210112;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:sender:from:to:cc:subject:date:message-id:reply-to;
-        bh=RGIAKus/Xgp2gelQEMCjN5mUafX169J7aaTKPb1JrtI=;
-        b=FIwyGa5nFa/qllpYs9rRhQ4m9fVW9NILhvw4Za5RaRfnL36GJhddiCfTkYHFDAHIfe
-         pN9VlLaUT/WKovBbKN+mnBbc0x0ZcWolgcc98JV6HXDJ39sHjDG+Nqg9zei2QN8Rx0B2
-         IKrefMsv2LNATKgCoo/8K/3E6dJhJvfEmjd9IThoDb8x8yotI6ESUDDwatjgkN1ofcs6
-         vpaJyyxbY6iy56NtTkUNbdhLh/CurXW6uZhyKuFAyyo0NzsLaRpcXiB5dAg7sDDoeu1K
-         RO49CVEfGo7Dsp9szUdm0GuUHGiQN0PqMhAtDCSB7F+oV4V95DuOcH+Wz+zUHgSkbVVh
-         9W5Q==
+        d=google.com; s=20210112;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:from:to:cc:subject:date:message-id:reply-to;
+        bh=fhok6/NjJ3lgD3XSBtpHWBa7hONW7Sg42t3Fv6voOSo=;
+        b=gBIUjVTnBXjaaKpxrLw94mlXTaYQ3ZH7oz/RzFj9itX/WbjkVcA64/mmNzzHVRB7lv
+         RTV0y4Zm6OkRZV6cH9p/gwAZByZRqVK/BMK2NJLQknvk3yrDUOWybyk+XdPDxjsPRGbb
+         +pzUFJlUgyL+UMYC65SQyqOBh7i2s090yJUmu6hXTod5qVAvFo+yvsXViLPyg4bdswtv
+         VoeXkfYlE1jH9X9Uf73hSCiCXNSk8UMcGy4zC8Mwf7llo25/OMAHdBtoP/13KdynurKg
+         ZoKYWnS1vStTZ547Mq+UY3aXfPDXbt/9D3asXA/eORYpkii4ElIck/wJ5Nis1kQzmTo8
+         nA5A==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:sender:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=RGIAKus/Xgp2gelQEMCjN5mUafX169J7aaTKPb1JrtI=;
-        b=IX5qJBcHcmoQOglS9V2x6C7fz2nP90q2/yQqSgB+fMK3rIytvbzFSPfSWEB8vqYjQY
-         BuNPTOZs1ig7JeHNgoifo4URjJUZ94QSqarF+kIVHlDtBhdCPAPAK1o4KWnJjXrUNjwa
-         qy8YMZl5YSIyrO1Dgg5p0NtcW321XP57udWEF1rAg4bV0e8MjCvHeuc9bOJ/nFwP0io1
-         Ov+yxhNUdXo+JGtqe+XT5zhRb/ILJoVL6qWduABQpnTRL59F/X732q/w/8IFLvqDBYUY
-         MJ73rcO8DmJ6dBbsBWoAGb3cFO1EqjbWixAjNTyxKgohXWmz9lSAHg2088I1p4tDBfAs
-         ognA==
-X-Gm-Message-State: ACrzQf0u7IkKZ8ug5L3u1Zw9/Bp5aAe8KYdzvVymchuhD7m701el1+fB
-        wDpg6+SH/3OBRMQWes8xWYI=
-X-Google-Smtp-Source: AMsMyM7tlUNrSDUN2QfXD5FgZCwou4jlq8Mo8S4x8Cz+8wbgQsy5wx6dxXV9tFaAGyiyTCOaq2gFrQ==
-X-Received: by 2002:a05:6a02:112:b0:440:5515:b908 with SMTP id bg18-20020a056a02011200b004405515b908mr17483097pgb.13.1666375860017;
-        Fri, 21 Oct 2022 11:11:00 -0700 (PDT)
-Received: from balhae.roam.corp.google.com ([2607:fb90:8066:9c69:66a3:c7aa:d7e4:8f8b])
-        by smtp.gmail.com with ESMTPSA id n12-20020a170902d2cc00b00172897952a0sm15396223plc.283.2022.10.21.11.10.57
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 21 Oct 2022 11:10:59 -0700 (PDT)
-Sender: Namhyung Kim <namhyung@gmail.com>
-From:   Namhyung Kim <namhyung@kernel.org>
-To:     Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Jiri Olsa <jolsa@kernel.org>
-Cc:     Ingo Molnar <mingo@kernel.org>,
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=fhok6/NjJ3lgD3XSBtpHWBa7hONW7Sg42t3Fv6voOSo=;
+        b=Rojg+Kv5Fxo7i6v7L/kancCOrWUV4jroddgLgfJXmIZkSp4W6O0AvdlDq8w2OwRlJr
+         Umu27a5siNwJJcs8++wcCyTfZBvXSvKhehzKSZrqB7kAD5b3o72BJFzFF7Pc32zT1IdD
+         StrHvFNW+URcUeTyq33s4lq87W/YEe+ujzVsWlMO+29bzgHSo/5oSTXvr8IZz8rEqlZo
+         ImApyFCW02/UifHSM+78K2c1zcqfzXxdSIzKqDlMm0hNVq0T9lRHPo2kZKKiReTw+ogp
+         rLscupR9el81xYbFIbPhw7YRbKmjX3VNjoPKzIOQRYiBhYO5fxUDNa/+mAw0mbOb0/dI
+         Zvbw==
+X-Gm-Message-State: ACrzQf1dZXLDhXlTwO1qoglHxHrg7bsKZKyK/EUTAQ92L0Pzrpi87bLS
+        bsndiNlw+ThrN3lEUTC55eB5nDycshM13ymeRfBm6w==
+X-Google-Smtp-Source: AMsMyM5zNI8Ni6t5s+a+q7ics0RkH7FIO0TJeg+pf0/1RO1KQi9sA28ISvNDGkBgOnuYVaTgczyfkr7YTnFMQQ9DrSI=
+X-Received: by 2002:a05:600c:19cc:b0:3c6:fbb9:caab with SMTP id
+ u12-20020a05600c19cc00b003c6fbb9caabmr16233710wmq.182.1666389616002; Fri, 21
+ Oct 2022 15:00:16 -0700 (PDT)
+MIME-Version: 1.0
+References: <20221021181055.60183-1-namhyung@kernel.org>
+In-Reply-To: <20221021181055.60183-1-namhyung@kernel.org>
+From:   Ian Rogers <irogers@google.com>
+Date:   Fri, 21 Oct 2022 15:00:04 -0700
+Message-ID: <CAP-5=fWaqhZu0sUTgBogpeOxF1gf=V0CZjQ=2NDJEbVB-Cvjew@mail.gmail.com>
+Subject: Re: [PATCH v2] perf test: Do not fail Intel-PT misc test w/o libpython
+To:     Namhyung Kim <namhyung@kernel.org>
+Cc:     Arnaldo Carvalho de Melo <acme@kernel.org>,
+        Jiri Olsa <jolsa@kernel.org>, Ingo Molnar <mingo@kernel.org>,
         Peter Zijlstra <peterz@infradead.org>,
         LKML <linux-kernel@vger.kernel.org>,
-        Ian Rogers <irogers@google.com>,
         Adrian Hunter <adrian.hunter@intel.com>,
         linux-perf-users@vger.kernel.org, Ammy Yi <ammy.yi@intel.com>
-Subject: [PATCH v2] perf test: Do not fail Intel-PT misc test w/o libpython
-Date:   Fri, 21 Oct 2022 11:10:55 -0700
-Message-Id: <20221021181055.60183-1-namhyung@kernel.org>
-X-Mailer: git-send-email 2.38.0.135.g90850a2211-goog
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-The virtuall LBR test uses a python script to check the max size of
-branch stack in the Intel-PT generated LBR.  But it didn't check whether
-python scripting is available (as it's optional).
+On Fri, Oct 21, 2022 at 11:11 AM Namhyung Kim <namhyung@kernel.org> wrote:
+>
+> The virtuall LBR test uses a python script to check the max size of
 
-Let's skip the test if the python support is not available.
+nit: virtual
 
-Fixes: f77811a0f625 ("perf test: test_intel_pt.sh: Add 9 tests")
-Cc: Ammy Yi <ammy.yi@intel.com>
-Signed-off-by: Namhyung Kim <namhyung@kernel.org>
----
- tools/perf/tests/shell/test_intel_pt.sh | 6 ++++++
- 1 file changed, 6 insertions(+)
+> branch stack in the Intel-PT generated LBR.  But it didn't check whether
+> python scripting is available (as it's optional).
+>
+> Let's skip the test if the python support is not available.
+>
+> Fixes: f77811a0f625 ("perf test: test_intel_pt.sh: Add 9 tests")
+> Cc: Ammy Yi <ammy.yi@intel.com>
+> Signed-off-by: Namhyung Kim <namhyung@kernel.org>
 
-diff --git a/tools/perf/tests/shell/test_intel_pt.sh b/tools/perf/tests/shell/test_intel_pt.sh
-index 4c0aabbe33bd..f5ed7b1af419 100755
---- a/tools/perf/tests/shell/test_intel_pt.sh
-+++ b/tools/perf/tests/shell/test_intel_pt.sh
-@@ -526,6 +526,12 @@ test_kernel_trace()
- test_virtual_lbr()
- {
- 	echo "--- Test virtual LBR ---"
-+	# Check if python script is supported
-+	libpython=$(perf version --build-options | grep python | grep -cv OFF)
-+	if [ "${libpython}" != "1" ] ; then
-+		echo "SKIP: python scripting is not supported"
-+		return 2
-+	fi
- 
- 	# Python script to determine the maximum size of branch stacks
- 	cat << "_end_of_file_" > "${maxbrstack}"
--- 
-2.38.0.135.g90850a2211-goog
+Acked-by: Ian Rogers <irogers@google.com>
 
+Thanks,
+Ian
+
+> ---
+>  tools/perf/tests/shell/test_intel_pt.sh | 6 ++++++
+>  1 file changed, 6 insertions(+)
+>
+> diff --git a/tools/perf/tests/shell/test_intel_pt.sh b/tools/perf/tests/shell/test_intel_pt.sh
+> index 4c0aabbe33bd..f5ed7b1af419 100755
+> --- a/tools/perf/tests/shell/test_intel_pt.sh
+> +++ b/tools/perf/tests/shell/test_intel_pt.sh
+> @@ -526,6 +526,12 @@ test_kernel_trace()
+>  test_virtual_lbr()
+>  {
+>         echo "--- Test virtual LBR ---"
+> +       # Check if python script is supported
+> +       libpython=$(perf version --build-options | grep python | grep -cv OFF)
+> +       if [ "${libpython}" != "1" ] ; then
+> +               echo "SKIP: python scripting is not supported"
+> +               return 2
+> +       fi
+>
+>         # Python script to determine the maximum size of branch stacks
+>         cat << "_end_of_file_" > "${maxbrstack}"
+> --
+> 2.38.0.135.g90850a2211-goog
+>
