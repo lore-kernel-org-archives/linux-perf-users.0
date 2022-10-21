@@ -2,58 +2,58 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E60A1C433FE
-	for <linux-perf-users@archiver.kernel.org>; Fri, 21 Oct 2022 00:01:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A2A3FC43219
+	for <linux-perf-users@archiver.kernel.org>; Fri, 21 Oct 2022 00:02:50 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229784AbiJUABw (ORCPT
+        id S229803AbiJUACt (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Thu, 20 Oct 2022 20:01:52 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41700 "EHLO
+        Thu, 20 Oct 2022 20:02:49 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42358 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229786AbiJUABu (ORCPT
+        with ESMTP id S229796AbiJUACs (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Thu, 20 Oct 2022 20:01:50 -0400
-Received: from mail-wr1-x42b.google.com (mail-wr1-x42b.google.com [IPv6:2a00:1450:4864:20::42b])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C33891F040A
-        for <linux-perf-users@vger.kernel.org>; Thu, 20 Oct 2022 17:01:49 -0700 (PDT)
-Received: by mail-wr1-x42b.google.com with SMTP id bk15so2060327wrb.13
-        for <linux-perf-users@vger.kernel.org>; Thu, 20 Oct 2022 17:01:49 -0700 (PDT)
+        Thu, 20 Oct 2022 20:02:48 -0400
+Received: from mail-wr1-x436.google.com (mail-wr1-x436.google.com [IPv6:2a00:1450:4864:20::436])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0EDAE22E8C4
+        for <linux-perf-users@vger.kernel.org>; Thu, 20 Oct 2022 17:02:46 -0700 (PDT)
+Received: by mail-wr1-x436.google.com with SMTP id bv10so2159924wrb.4
+        for <linux-perf-users@vger.kernel.org>; Thu, 20 Oct 2022 17:02:46 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=google.com; s=20210112;
         h=cc:to:subject:message-id:date:from:in-reply-to:references
          :mime-version:from:to:cc:subject:date:message-id:reply-to;
-        bh=tVxqnzg2CQoXzM/FEJLJ4vB8d+PRNtldamw8EejWJiM=;
-        b=WzRWLOfmifnX8e1gqHJc6StZxrr62W+fIUIanHn/GRcVFvbLOKPxXKA8HpBO+GwFym
-         7Ze3y/pWGfhkDmBeUvkuliRZxVBYSpbH67b96ly9NBv3VKR+WJAEvLmhDEvt/LNpFLhA
-         m/qoMViQr5IMTkt2rsnGEFSwDuLG9JtC3WjaUGacfgjUFwNAkgrQ+RwqSunVXAGaiS/p
-         mFDIyKw6UuL8J3iezA5UlhxpiTDDtrUvT8/Dd/R+eBNjeO1AmBkctjFBcFmWm/QKCYXD
-         ZcvyvVW3hObLcc7hmg6BiYJCuBGoasOmYUw7CcRhoGlsxB1tFHxM8f843FCe2qJsL6xF
-         Zt7g==
+        bh=g0tXLeeeAU3F8Jn7158QLbBdSreE5CWF4BGqfvBib/E=;
+        b=W8BszXRc3L9rOZMbFio2HR17eURTaVCmPO1K97+HvYdLlUJ+PB50lDJ5EcsqGpJ0wI
+         6NRovIuu1hIS0QbInAt8ulY3XPKBN8HwBv0Vgljw3SoWfh915TiDxh5sMSENWrAp/qvF
+         vsH5aD9qtG1LCMM4TWScmDKFMzDLZ/rvrkh3QVNdYMRn39gqGAorBAqLIMSwQ7N4NHy/
+         QjPd4eB9N14ks6mLB5aJav/5LKioPKC2FqvY5e8larY/lU1diyhySw9lyQEpO4xVwCXd
+         ILKzcOzXX7RlpaTbIlxvdaj6N+QsXYlzM573nn4WV0pqXR9MjRR/n5yn9v+Jwz5yT2+Y
+         o+bg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
         h=cc:to:subject:message-id:date:from:in-reply-to:references
          :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
          :reply-to;
-        bh=tVxqnzg2CQoXzM/FEJLJ4vB8d+PRNtldamw8EejWJiM=;
-        b=XskRbNseklzLM0SbOvzaxXcON8JoCM/dCxavSwl0LkATmy2qWQxn3w9iYv7lcU+Xf1
-         j4AaR/nihd30bhxLuPoxL455uVsFiVxOnexFW596LUa4sfzDb4Cg5bv0JUc2PDpkKedz
-         RwmerzvSVgHSjWJONWiVcnkTVSSLYkB8Pn/19Qw+N++bcMOyoExBwKGWEm6G3UppeqHl
-         heD9+jpFjxN9S3YM5QmRFAku57cUdMPNyZgpuwb4U/v7DdDR7b+zhIqg6o0kN1Wc/Z4Q
-         2+UZfZO/8tBlTtzRxeqdio+xFEWF0wMtfmquA/Pq/RmZ/LX6UfkA5R5H3viq2vnO8ZQv
-         hnTA==
-X-Gm-Message-State: ACrzQf1ZxZx23yotNN52hH0r+yB2fJK/l4ULUvTRHm9PDegX6Y8Y/O4/
-        ilogkFaNypy5cvI44f0ONqPIjmUtUJztpE7/dn3dbg==
-X-Google-Smtp-Source: AMsMyM5DL6pO4cZtMef+uj1ttL5V4D6aZYbBxqgnivzV6zY32D4jZYX/yn6Zip7TVuA5pCjpQo6lab4jkRRtkd0kZV4=
-X-Received: by 2002:a5d:4c92:0:b0:236:4b97:6828 with SMTP id
- z18-20020a5d4c92000000b002364b976828mr2255308wrs.300.1666310508197; Thu, 20
- Oct 2022 17:01:48 -0700 (PDT)
+        bh=g0tXLeeeAU3F8Jn7158QLbBdSreE5CWF4BGqfvBib/E=;
+        b=KpkKOGTWYloFtSkzWaD6V1lTY1RpuE6k/OBwoq3Z8WQzTjrHKYDqUsHnUTDrlzm9ao
+         w9fganFP7AnJoVHY8r8wT9zJwKyd8Lcil1/VhBnQ4ElXIxXBy4Rov7iQhLpynJcE+45E
+         A/DVGVDV2lkhxxntTGnLNxzY9W0nxUZ8aCzvJ/z/8uQQEmiEg9lWGqztUN0up+H4DYnM
+         HBSLTw68u5XpC1H+v1WWF8L7YPGbH3z2Yru/u9GaxV0rQD8AUvF55+C1b7cU+zj/S7gI
+         Cjnj6bO7IAHKIsB4CL8yNd2C82YlZIcCf7ZebOoT0uKnbGMgnUXTRQw8YuZexMuxoFOm
+         xyvw==
+X-Gm-Message-State: ACrzQf3OTQlTJsgbAqdMC57GY7CmRXaEYz2hz9BzHWA15NHA+hwM+75y
+        8TAvZ63fijSrLZxqt5BGLhT4sARYrKi2TuL4ZH9w5g==
+X-Google-Smtp-Source: AMsMyM7wiItTvNOVVnd6tmij9VOFr3KQYEZYNqcGGG/7i26+pUy2oXOVyp4qXX7Pe0Fw/r6B8zN/Du4+Q7FZkfi4qNI=
+X-Received: by 2002:adf:e711:0:b0:236:2f7f:4f08 with SMTP id
+ c17-20020adfe711000000b002362f7f4f08mr3389855wrm.375.1666310565290; Thu, 20
+ Oct 2022 17:02:45 -0700 (PDT)
 MIME-Version: 1.0
-References: <20221020172643.3458767-1-namhyung@kernel.org> <20221020172643.3458767-7-namhyung@kernel.org>
-In-Reply-To: <20221020172643.3458767-7-namhyung@kernel.org>
+References: <20221020172643.3458767-1-namhyung@kernel.org> <20221020172643.3458767-8-namhyung@kernel.org>
+In-Reply-To: <20221020172643.3458767-8-namhyung@kernel.org>
 From:   Ian Rogers <irogers@google.com>
-Date:   Thu, 20 Oct 2022 17:01:36 -0700
-Message-ID: <CAP-5=fW0eS9C+K1DqXRJmU9nz02EpVxUSoJfWpYmMskBp8=gZQ@mail.gmail.com>
-Subject: Re: [PATCH 6/8] perf test: Add target workload test in perf record tests
+Date:   Thu, 20 Oct 2022 17:02:33 -0700
+Message-ID: <CAP-5=fXJcS6GoPePdT1PKAY3D7JpEQuBt2=YUgY2u+7Vv30K0g@mail.gmail.com>
+Subject: Re: [PATCH 7/8] perf test: Test record with --threads option
 To:     Namhyung Kim <namhyung@kernel.org>
 Cc:     Arnaldo Carvalho de Melo <acme@kernel.org>,
         Jiri Olsa <jolsa@kernel.org>, Ingo Molnar <mingo@kernel.org>,
@@ -68,9 +68,12 @@ X-Mailing-List: linux-perf-users@vger.kernel.org
 
 On Thu, Oct 20, 2022 at 10:26 AM Namhyung Kim <namhyung@kernel.org> wrote:
 >
-> Add a subtest which profiles the given workload on the command line.
-> As it's a minimal requirement, test should run ok so it doesn't skip
-> the test even if it failed to run the perf record.
+> The --threads option changed the perf record behavior significantly, so
+> it'd be nice if we test it separately.  Add --threads options with
+> different argument in each test supported and check the result.
+>
+> Also update the cleanup routine because threads recording produces data
+> in a directory.
 >
 > Signed-off-by: Namhyung Kim <namhyung@kernel.org>
 
@@ -80,43 +83,64 @@ Thanks,
 Ian
 
 > ---
->  tools/perf/tests/shell/record.sh | 18 ++++++++++++++++++
->  1 file changed, 18 insertions(+)
+>  tools/perf/tests/shell/record.sh | 30 ++++++++++++++++++++++++++++--
+>  1 file changed, 28 insertions(+), 2 deletions(-)
 >
 > diff --git a/tools/perf/tests/shell/record.sh b/tools/perf/tests/shell/record.sh
-> index 345764afb745..c59d1459c960 100755
+> index c59d1459c960..01aa9531b369 100755
 > --- a/tools/perf/tests/shell/record.sh
 > +++ b/tools/perf/tests/shell/record.sh
-> @@ -174,11 +174,29 @@ test_system_wide() {
->    echo "Basic --system-wide mode test [Success]"
->  }
+> @@ -13,8 +13,8 @@ testprog=$(mktemp /tmp/__perf_test.prog.XXXXXX)
+>  testsym="test_loop"
 >
-> +test_workload() {
-> +  echo "Basic target workload test"
-> +  if ! perf record -o "${perfdata}" ${testprog} 2> /dev/null
+>  cleanup() {
+> -  rm -f "${perfdata}"
+> -  rm -f "${perfdata}".old
+> +  rm -rf "${perfdata}"
+> +  rm -rf "${perfdata}".old
+>
+>    if [ "${testprog}" != "true" ]; then
+>      rm -f "${testprog}"
+> @@ -171,6 +171,19 @@ test_system_wide() {
+>      err=1
+>      return
+>    fi
+> +  if ! perf record -aB --synth=no -e cpu-clock,cs --threads=cpu \
+> +    -o "${perfdata}" ${testprog} 2> /dev/null
 > +  then
-> +    echo "Workload record [Failed record]"
+> +    echo "System-wide record [Failed record --threads option]"
 > +    err=1
 > +    return
 > +  fi
 > +  if ! perf report -i "${perfdata}" -q | grep -q "${testsym}"
 > +  then
-> +    echo "Workload record [Failed missing output]"
+> +    echo "System-wide record [Failed --threads missing output]"
 > +    err=1
 > +    return
 > +  fi
-> +  echo "Basic target workload test [Success]"
-> +}
-> +
->  build_test_program
+>    echo "Basic --system-wide mode test [Success]"
+>  }
 >
->  test_per_thread
->  test_register_capture
->  test_system_wide
-> +test_workload
+> @@ -188,6 +201,19 @@ test_workload() {
+>      err=1
+>      return
+>    fi
+> +  if ! perf record -e cpu-clock,cs --threads=package \
+> +    -o "${perfdata}" ${testprog} 2> /dev/null
+> +  then
+> +    echo "Workload record [Failed record --threads option]"
+> +    err=1
+> +    return
+> +  fi
+> +  if ! perf report -i "${perfdata}" -q | grep -q "${testsym}"
+> +  then
+> +    echo "Workload record [Failed --threads missing output]"
+> +    err=1
+> +    return
+> +  fi
+>    echo "Basic target workload test [Success]"
+>  }
 >
->  cleanup
->  exit $err
 > --
 > 2.38.0.135.g90850a2211-goog
 >
