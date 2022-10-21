@@ -2,243 +2,91 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7FE6CC433FE
-	for <linux-perf-users@archiver.kernel.org>; Fri, 21 Oct 2022 10:52:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 86A8EC4332F
+	for <linux-perf-users@archiver.kernel.org>; Fri, 21 Oct 2022 10:59:37 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230040AbiJUKwB (ORCPT
+        id S229739AbiJUK7g (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Fri, 21 Oct 2022 06:52:01 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58690 "EHLO
+        Fri, 21 Oct 2022 06:59:36 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45986 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230136AbiJUKwA (ORCPT
+        with ESMTP id S229695AbiJUK7f (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Fri, 21 Oct 2022 06:52:00 -0400
-Received: from szxga02-in.huawei.com (szxga02-in.huawei.com [45.249.212.188])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 04D2624D8B9
-        for <linux-perf-users@vger.kernel.org>; Fri, 21 Oct 2022 03:51:58 -0700 (PDT)
-Received: from dggemv704-chm.china.huawei.com (unknown [172.30.72.54])
-        by szxga02-in.huawei.com (SkyGuard) with ESMTP id 4Mv1Vq4q9NzHv8S;
-        Fri, 21 Oct 2022 18:51:47 +0800 (CST)
-Received: from kwepemm600008.china.huawei.com (7.193.23.88) by
- dggemv704-chm.china.huawei.com (10.3.19.47) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2375.31; Fri, 21 Oct 2022 18:51:26 +0800
-Received: from huawei.com (10.175.100.227) by kwepemm600008.china.huawei.com
- (7.193.23.88) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2375.31; Fri, 21 Oct
- 2022 18:51:25 +0800
-From:   Shang XiaoJing <shangxiaojing@huawei.com>
-To:     <john.garry@huawei.com>, <will@kernel.org>, <james.clark@arm.com>,
-        <mike.leach@linaro.org>, <leo.yan@linaro.org>,
-        <peterz@infradead.org>, <mingo@redhat.com>, <acme@kernel.org>,
-        <mark.rutland@arm.com>, <alexander.shishkin@linux.intel.com>,
-        <jolsa@kernel.org>, <namhyung@kernel.org>, <kjain@linux.ibm.com>,
-        <linux-arm-kernel@lists.infradead.org>,
-        <linux-perf-users@vger.kernel.org>
-CC:     <shangxiaojing@huawei.com>
-Subject: [PATCH v2 3/3] perf vendor events arm64: Use event name instead of event code
-Date:   Fri, 21 Oct 2022 18:50:35 +0800
-Message-ID: <20221021105035.10000-4-shangxiaojing@huawei.com>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20221021105035.10000-1-shangxiaojing@huawei.com>
-References: <20221021105035.10000-1-shangxiaojing@huawei.com>
+        Fri, 21 Oct 2022 06:59:35 -0400
+Received: from foss.arm.com (foss.arm.com [217.140.110.172])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTP id 8068915A27;
+        Fri, 21 Oct 2022 03:59:32 -0700 (PDT)
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id CF9C71063;
+        Fri, 21 Oct 2022 03:59:37 -0700 (PDT)
+Received: from [10.57.2.49] (unknown [10.57.2.49])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 6AFEE3F792;
+        Fri, 21 Oct 2022 03:59:29 -0700 (PDT)
+Message-ID: <39c5a7cb-076a-a6ba-df27-7dee7d98a2a5@arm.com>
+Date:   Fri, 21 Oct 2022 11:59:27 +0100
 MIME-Version: 1.0
-Content-Type: text/plain
-X-Originating-IP: [10.175.100.227]
-X-ClientProxiedBy: dggems706-chm.china.huawei.com (10.3.19.183) To
- kwepemm600008.china.huawei.com (7.193.23.88)
-X-CFilter-Loop: Reflected
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
+ Thunderbird/102.2.2
+Subject: Re: [PATCH] perf vendor events: Add Arm Neoverse V2 PMU events
+Content-Language: en-US
+To:     John Garry <john.garry@huawei.com>
+Cc:     linux-kernel@vger.kernel.org, nick.forrington@arm.com,
+        al.grant@arm.com, Will Deacon <will@kernel.org>,
+        Mike Leach <mike.leach@linaro.org>,
+        Leo Yan <leo.yan@linaro.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Jiri Olsa <jolsa@kernel.org>,
+        Namhyung Kim <namhyung@kernel.org>,
+        linux-arm-kernel@lists.infradead.org,
+        linux-perf-users@vger.kernel.org, acme@kernel.org
+References: <20221020134512.1345013-1-james.clark@arm.com>
+ <dcf5d62d-8163-dfee-a6b7-e75207650551@huawei.com>
+From:   James Clark <james.clark@arm.com>
+In-Reply-To: <dcf5d62d-8163-dfee-a6b7-e75207650551@huawei.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-Use the event name instead of the corresponding event code for more
-clear, which makes the result of perf more readable.
 
-Signed-off-by: Shang XiaoJing <shangxiaojing@huawei.com>
-Acked-by: James Clark <james.clark@arm.com>
----
-changes in v2:
-- fix the tab.
----
- .../arch/arm64/hisilicon/hip08/metrics.json   | 48 +++++++++----------
- 1 file changed, 24 insertions(+), 24 deletions(-)
 
-diff --git a/tools/perf/pmu-events/arch/arm64/hisilicon/hip08/metrics.json b/tools/perf/pmu-events/arch/arm64/hisilicon/hip08/metrics.json
-index 6443a061e22a..59c693236ad2 100644
---- a/tools/perf/pmu-events/arch/arm64/hisilicon/hip08/metrics.json
-+++ b/tools/perf/pmu-events/arch/arm64/hisilicon/hip08/metrics.json
-@@ -28,7 +28,7 @@
-         "MetricName": "backend_bound"
-     },
-     {
--        "MetricExpr": "armv8_pmuv3_0@event\\=0x201d@ / CPU_CYCLES",
-+        "MetricExpr": "FETCH_BUBBLE_EXCEEDMIW / CPU_CYCLES",
-         "PublicDescription": "Fetch latency bound L2 topdown metric",
-         "BriefDescription": "Fetch latency bound L2 topdown metric",
-         "MetricGroup": "TopDownL2",
-@@ -42,7 +42,7 @@
-         "MetricName": "fetch_bandwidth_bound"
-     },
-     {
--        "MetricExpr": "(bad_speculation * BR_MIS_PRED) / (BR_MIS_PRED + armv8_pmuv3_0@event\\=0x2013@)",
-+        "MetricExpr": "(bad_speculation * BR_MIS_PRED) / (BR_MIS_PRED + OOO_FLUSH)",
-         "PublicDescription": "Branch mispredicts L2 topdown metric",
-         "BriefDescription": "Branch mispredicts L2 topdown metric",
-         "MetricGroup": "TopDownL2",
-@@ -56,14 +56,14 @@
-         "MetricName": "machine_clears"
-     },
-     {
--        "MetricExpr": "(EXE_STALL_CYCLE - (MEM_STALL_ANYLOAD + armv8_pmuv3_0@event\\=0x7005@)) / CPU_CYCLES",
-+        "MetricExpr": "(EXE_STALL_CYCLE - (MEM_STALL_ANYLOAD + MEM_STALL_ANYSTORE)) / CPU_CYCLES",
-         "PublicDescription": "Core bound L2 topdown metric",
-         "BriefDescription": "Core bound L2 topdown metric",
-         "MetricGroup": "TopDownL2",
-         "MetricName": "core_bound"
-     },
-     {
--        "MetricExpr": "(MEM_STALL_ANYLOAD + armv8_pmuv3_0@event\\=0x7005@) / CPU_CYCLES",
-+        "MetricExpr": "(MEM_STALL_ANYLOAD + MEM_STALL_ANYSTORE) / CPU_CYCLES",
-         "PublicDescription": "Memory bound L2 topdown metric",
-         "BriefDescription": "Memory bound L2 topdown metric",
-         "MetricGroup": "TopDownL2",
-@@ -91,53 +91,53 @@
-         "MetricName": "bp_misp_flush"
-     },
-     {
--        "MetricExpr": "(armv8_pmuv3_0@event\\=0x2013@ * 5) / CPU_CYCLES",
-+        "MetricExpr": "(OOO_FLUSH * 5) / CPU_CYCLES",
-         "PublicDescription": "OOO flush L3 topdown metric",
-         "BriefDescription": "OOO flush L3 topdown metric",
-         "MetricGroup": "TopDownL3",
--        "MetricName": "ooo_flush"
-+        "MetricName": "ooo_flush_ratio"
-     },
-     {
--        "MetricExpr": "(armv8_pmuv3_0@event\\=0x1001@ * 5) / CPU_CYCLES",
-+        "MetricExpr": "(IF_BP_PRED_BR_SP * 5) / CPU_CYCLES",
-         "PublicDescription": "Static predictor flush L3 topdown metric",
-         "BriefDescription": "Static predictor flush L3 topdown metric",
-         "MetricGroup": "TopDownL3",
-         "MetricName": "sp_flush"
-     },
-     {
--        "MetricExpr": "armv8_pmuv3_0@event\\=0x1010@ / BR_MIS_PRED",
-+        "MetricExpr": "IF_BP_MISP_BR_IND / BR_MIS_PRED",
-         "PublicDescription": "Indirect branch L3 topdown metric",
-         "BriefDescription": "Indirect branch L3 topdown metric",
-         "MetricGroup": "TopDownL3",
-         "MetricName": "indirect_branch"
-     },
-     {
--        "MetricExpr": "(armv8_pmuv3_0@event\\=0x1013@ + armv8_pmuv3_0@event\\=0x1016@) / BR_MIS_PRED",
-+        "MetricExpr": "(IF_BP_MISP_BR_BLR + IF_BP_MISP_BR_BL) / BR_MIS_PRED",
-         "PublicDescription": "Push branch L3 topdown metric",
-         "BriefDescription": "Push branch L3 topdown metric",
-         "MetricGroup": "TopDownL3",
-         "MetricName": "push_branch"
-     },
-     {
--        "MetricExpr": "armv8_pmuv3_0@event\\=0x100d@ / BR_MIS_PRED",
-+        "MetricExpr": "IF_BP_MISP_BR_RET / BR_MIS_PRED",
-         "PublicDescription": "Pop branch L3 topdown metric",
-         "BriefDescription": "Pop branch L3 topdown metric",
-         "MetricGroup": "TopDownL3",
-         "MetricName": "pop_branch"
-     },
-     {
--        "MetricExpr": "(BR_MIS_PRED - armv8_pmuv3_0@event\\=0x1010@ - armv8_pmuv3_0@event\\=0x1013@ - armv8_pmuv3_0@event\\=0x1016@ - armv8_pmuv3_0@event\\=0x100d@) / BR_MIS_PRED",
-+        "MetricExpr": "(BR_MIS_PRED - IF_BP_MISP_BR_IND - IF_BP_MISP_BR_BLR - IF_BP_MISP_BR_BL - IF_BP_MISP_BR_RET) / BR_MIS_PRED",
-         "PublicDescription": "Other branch L3 topdown metric",
-         "BriefDescription": "Other branch L3 topdown metric",
-         "MetricGroup": "TopDownL3",
-         "MetricName": "other_branch"
-     },
-     {
--        "MetricExpr": "armv8_pmuv3_0@event\\=0x2012@ / armv8_pmuv3_0@event\\=0x2013@",
-+        "MetricExpr": "NUKE_FLUSH / OOO_FLUSH",
-         "PublicDescription": "Nuke flush L3 topdown metric",
-         "BriefDescription": "Nuke flush L3 topdown metric",
-         "MetricGroup": "TopDownL3",
--        "MetricName": "nuke_flush"
-+        "MetricName": "nuke_flush_ratio"
-     },
-     {
-         "MetricExpr": "1 - nuke_flush",
-@@ -147,53 +147,53 @@
-         "MetricName": "other_flush"
-     },
-     {
--        "MetricExpr": "armv8_pmuv3_0@event\\=0x2010@ / CPU_CYCLES",
-+        "MetricExpr": "SYNC_STALL / CPU_CYCLES",
-         "PublicDescription": "Sync stall L3 topdown metric",
-         "BriefDescription": "Sync stall L3 topdown metric",
-         "MetricGroup": "TopDownL3",
--        "MetricName": "sync_stall"
-+        "MetricName": "sync_stall_ratio"
-     },
-     {
--        "MetricExpr": "armv8_pmuv3_0@event\\=0x2004@ / CPU_CYCLES",
-+        "MetricExpr": "ROB_STALL / CPU_CYCLES",
-         "PublicDescription": "Rob stall L3 topdown metric",
-         "BriefDescription": "Rob stall L3 topdown metric",
-         "MetricGroup": "TopDownL3",
--        "MetricName": "rob_stall"
-+        "MetricName": "rob_stall_ratio"
-     },
-     {
--        "MetricExpr": "(armv8_pmuv3_0@event\\=0x2006@ + armv8_pmuv3_0@event\\=0x2007@ + armv8_pmuv3_0@event\\=0x2008@) / CPU_CYCLES",
-+        "MetricExpr": "(INT_PTAG_STALL + CC_PTAG_STALL + VFP_PTAG_STALL) / CPU_CYCLES",
-         "PublicDescription": "Ptag stall L3 topdown metric",
-         "BriefDescription": "Ptag stall L3 topdown metric",
-         "MetricGroup": "TopDownL3",
-         "MetricName": "ptag_stall"
-     },
-     {
--        "MetricExpr": "armv8_pmuv3_0@event\\=0x201e@ / CPU_CYCLES",
-+        "MetricExpr": "SAVEOP_QUEUE_STALL / CPU_CYCLES",
-         "PublicDescription": "SaveOpQ stall L3 topdown metric",
-         "BriefDescription": "SaveOpQ stall L3 topdown metric",
-         "MetricGroup": "TopDownL3",
-         "MetricName": "saveopq_stall"
-     },
-     {
--        "MetricExpr": "armv8_pmuv3_0@event\\=0x2005@ / CPU_CYCLES",
-+        "MetricExpr": "PCBUF_STALL / CPU_CYCLES",
-         "PublicDescription": "PC buffer stall L3 topdown metric",
-         "BriefDescription": "PC buffer stall L3 topdown metric",
-         "MetricGroup": "TopDownL3",
-         "MetricName": "pc_buffer_stall"
-     },
-     {
--        "MetricExpr": "armv8_pmuv3_0@event\\=0x7002@ / CPU_CYCLES",
-+        "MetricExpr": "EXE_STALL_DIV / CPU_CYCLES",
-         "PublicDescription": "Divider L3 topdown metric",
-         "BriefDescription": "Divider L3 topdown metric",
-         "MetricGroup": "TopDownL3",
-         "MetricName": "divider"
-     },
-     {
--        "MetricExpr": "armv8_pmuv3_0@event\\=0x7003@ / CPU_CYCLES",
-+        "MetricExpr": "FSU_STALL / CPU_CYCLES",
-         "PublicDescription": "FSU stall L3 topdown metric",
-         "BriefDescription": "FSU stall L3 topdown metric",
-         "MetricGroup": "TopDownL3",
--        "MetricName": "fsu_stall"
-+        "MetricName": "fsu_stall_ratio"
-     },
-     {
-         "MetricExpr": "core_bound - divider - fsu_stall",
-@@ -224,7 +224,7 @@
-         "MetricName": "mem_bound"
-     },
-     {
--        "MetricExpr": "armv8_pmuv3_0@event\\=0x7005@ / CPU_CYCLES",
-+        "MetricExpr": "MEM_STALL_ANYSTORE / CPU_CYCLES",
-         "PublicDescription": "Store bound L3 topdown metric",
-         "BriefDescription": "Store bound L3 topdown metric",
-         "MetricGroup": "TopDownL3",
--- 
-2.17.1
+On 21/10/2022 11:47, John Garry wrote:
+> On 20/10/2022 14:45, James Clark wrote:
+>> Rename the neoverse-n2 folder to make it clear that it includes V2, and
+>> add V2 to mapfile.csv. V2 has the same events as N2, visible by running
+>> the following command in the ARM-software/data github repo [1]:
+>>
+>>    diff pmu/neoverse-v2.json pmu/neoverse-n2.json | grep code
+>>
+>> Testing:
+>>
+>>    $ perf test pmu
+>>
+>>    10: PMU events                                           :
+>>    10.1: PMU event table sanity                             : Ok
+>>    10.2: PMU event map aliases                              : Ok
+>>    10.3: Parsing of PMU event table metrics                 : Ok
+>>    10.4: Parsing of PMU event table metrics with fake PMUs  : Ok
+>>
+>> [1]:https://github.com/ARM-software/data
+>>
+>> Signed-off-by: James Clark<james.clark@arm.com>
+>> ---
+> 
+> This looks ok. Out of curiosity, do you know how the naming works for
+> these neoverse cores? Were "n" a predecessor to "v"?
 
+Thanks for the review. No, they're more like different product lines
+than predecessors. From the image on this article [1], N are focused on
+performance per watt and V are high performance.
+
+[1]:
+https://www.arm.com/company/news/2022/09/redefining-the-global-computing-infrastructure-with-next-generation-arm-neoverse-platforms
+
+> 
+> thanks,
+> John
