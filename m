@@ -2,91 +2,100 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 86A8EC4332F
-	for <linux-perf-users@archiver.kernel.org>; Fri, 21 Oct 2022 10:59:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 98837FA3741
+	for <linux-perf-users@archiver.kernel.org>; Fri, 21 Oct 2022 16:20:01 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229739AbiJUK7g (ORCPT
+        id S230409AbiJUQT7 (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Fri, 21 Oct 2022 06:59:36 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45986 "EHLO
+        Fri, 21 Oct 2022 12:19:59 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55310 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229695AbiJUK7f (ORCPT
+        with ESMTP id S230436AbiJUQTy (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Fri, 21 Oct 2022 06:59:35 -0400
-Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTP id 8068915A27;
-        Fri, 21 Oct 2022 03:59:32 -0700 (PDT)
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id CF9C71063;
-        Fri, 21 Oct 2022 03:59:37 -0700 (PDT)
-Received: from [10.57.2.49] (unknown [10.57.2.49])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 6AFEE3F792;
-        Fri, 21 Oct 2022 03:59:29 -0700 (PDT)
-Message-ID: <39c5a7cb-076a-a6ba-df27-7dee7d98a2a5@arm.com>
-Date:   Fri, 21 Oct 2022 11:59:27 +0100
-MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
- Thunderbird/102.2.2
-Subject: Re: [PATCH] perf vendor events: Add Arm Neoverse V2 PMU events
-Content-Language: en-US
-To:     John Garry <john.garry@huawei.com>
-Cc:     linux-kernel@vger.kernel.org, nick.forrington@arm.com,
-        al.grant@arm.com, Will Deacon <will@kernel.org>,
-        Mike Leach <mike.leach@linaro.org>,
-        Leo Yan <leo.yan@linaro.org>,
-        Peter Zijlstra <peterz@infradead.org>,
+        Fri, 21 Oct 2022 12:19:54 -0400
+Received: from mail.skyhub.de (mail.skyhub.de [IPv6:2a01:4f8:190:11c2::b:1457])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D557D4456E;
+        Fri, 21 Oct 2022 09:19:36 -0700 (PDT)
+Received: from zn.tnic (p200300ea9733e769329c23fffea6a903.dip0.t-ipconnect.de [IPv6:2003:ea:9733:e769:329c:23ff:fea6:a903])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.skyhub.de (SuperMail on ZX Spectrum 128k) with ESMTPSA id 0CC6D1EC0731;
+        Fri, 21 Oct 2022 18:19:34 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alien8.de; s=dkim;
+        t=1666369174;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:in-reply-to:in-reply-to:  references:references;
+        bh=osvnA1VVG8lOO7CofSEE3U1qKE+FmJzIhRV7z1btuj4=;
+        b=kTrJPiFSirvT8QAitnYEpzpcdMbtcXA5yOQxTep7XgZPzoZ7lttGRZVygRLbYsnaOD+LzU
+        /RhEgA3iGecU55zSIGnw2ZiO8DllFm7LXz29lmQH3D3HkNrqJcr2lCuQHbKV8uRxNlwMvW
+        ITkPMYEdCWAcH8rJMRHThhLuixBO9Z8=
+Date:   Fri, 21 Oct 2022 18:19:29 +0200
+From:   Borislav Petkov <bp@alien8.de>
+To:     Maxim Levitsky <mlevitsk@redhat.com>
+Cc:     linux-kernel@vger.kernel.org, kvm@vger.kernel.org,
+        Pawan Gupta <pawan.kumar.gupta@linux.intel.com>,
         Ingo Molnar <mingo@redhat.com>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Jiri Olsa <jolsa@kernel.org>,
+        Josh Poimboeuf <jpoimboe@kernel.org>,
         Namhyung Kim <namhyung@kernel.org>,
-        linux-arm-kernel@lists.infradead.org,
-        linux-perf-users@vger.kernel.org, acme@kernel.org
-References: <20221020134512.1345013-1-james.clark@arm.com>
- <dcf5d62d-8163-dfee-a6b7-e75207650551@huawei.com>
-From:   James Clark <james.clark@arm.com>
-In-Reply-To: <dcf5d62d-8163-dfee-a6b7-e75207650551@huawei.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+        Tony Luck <tony.luck@intel.com>,
+        Paolo Bonzini <pbonzini@redhat.com>,
+        "H. Peter Anvin" <hpa@zytor.com>,
+        Arnaldo Carvalho de Melo <acme@kernel.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Tim Chen <tim.c.chen@linux.intel.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        Dave Hansen <dave.hansen@linux.intel.com>,
+        "Chang S. Bae" <chang.seok.bae@intel.com>,
+        Jane Malalane <jane.malalane@citrix.com>,
+        Kees Cook <keescook@chromium.org>,
+        Kan Liang <kan.liang@linux.intel.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        "maintainer:X86 ARCHITECTURE (32-BIT AND 64-BIT)" <x86@kernel.org>,
+        Herbert Xu <herbert@gondor.apana.org.au>,
+        Jiri Olsa <jolsa@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        linux-perf-users@vger.kernel.org,
+        "open list:CRYPTO API" <linux-crypto@vger.kernel.org>
+Subject: Re: [PATCH v2 2/5] x86/cpuid: refactor
+ setup_clear_cpu_cap()/clear_cpu_cap()
+Message-ID: <Y1LGkTXCksqAYLHD@zn.tnic>
+References: <20220718141123.136106-1-mlevitsk@redhat.com>
+ <20220718141123.136106-3-mlevitsk@redhat.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <20220718141123.136106-3-mlevitsk@redhat.com>
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-
-
-On 21/10/2022 11:47, John Garry wrote:
-> On 20/10/2022 14:45, James Clark wrote:
->> Rename the neoverse-n2 folder to make it clear that it includes V2, and
->> add V2 to mapfile.csv. V2 has the same events as N2, visible by running
->> the following command in the ARM-software/data github repo [1]:
->>
->>    diff pmu/neoverse-v2.json pmu/neoverse-n2.json | grep code
->>
->> Testing:
->>
->>    $ perf test pmu
->>
->>    10: PMU events                                           :
->>    10.1: PMU event table sanity                             : Ok
->>    10.2: PMU event map aliases                              : Ok
->>    10.3: Parsing of PMU event table metrics                 : Ok
->>    10.4: Parsing of PMU event table metrics with fake PMUs  : Ok
->>
->> [1]:https://github.com/ARM-software/data
->>
->> Signed-off-by: James Clark<james.clark@arm.com>
->> ---
+On Mon, Jul 18, 2022 at 05:11:20PM +0300, Maxim Levitsky wrote:
+> Currently setup_clear_cpu_cap passes NULL 'struct cpuinfo_x86*'
+> to clear_cpu_cap to indicate that capability should be cleared from boot_cpu_data.
 > 
-> This looks ok. Out of curiosity, do you know how the naming works for
-> these neoverse cores? Were "n" a predecessor to "v"?
-
-Thanks for the review. No, they're more like different product lines
-than predecessors. From the image on this article [1], N are focused on
-performance per watt and V are high performance.
-
-[1]:
-https://www.arm.com/company/news/2022/09/redefining-the-global-computing-infrastructure-with-next-generation-arm-neoverse-platforms
-
+> Later that is used in clear_feature to do recursive call to
+> clear_cpu_cap together with clearing the feature bit from 'cpu_caps_cleared'
 > 
-> thanks,
-> John
+> Remove that code and just call the do_clear_cpu_cap on boot_cpu_data directly
+> from the setup_clear_cpu_cap.
+> 
+> The only functional change this introduces is that now calling clear_cpu_cap
+> explicitly on boot_cpu_data also sets the bits in cpu_caps_cleared,
+> which is the only thing that makes sense anyway.
+> 
+> All callers of both functions were checked for this and fixed.
+
+Change looks ok. What I can't grok is this sentence: what was checked
+and fixed where?
+
+What does need fixing and why?
+
+Thx.
+
+-- 
+Regards/Gruss,
+    Boris.
+
+https://people.kernel.org/tglx/notes-about-netiquette
