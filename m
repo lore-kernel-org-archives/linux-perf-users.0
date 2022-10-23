@@ -2,78 +2,102 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 628F7ECAAA1
-	for <linux-perf-users@archiver.kernel.org>; Sun, 23 Oct 2022 12:49:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3A755C3A59D
+	for <linux-perf-users@archiver.kernel.org>; Sun, 23 Oct 2022 16:46:52 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229781AbiJWMtK (ORCPT
+        id S230438AbiJWQqv (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Sun, 23 Oct 2022 08:49:10 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42806 "EHLO
+        Sun, 23 Oct 2022 12:46:51 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58314 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230299AbiJWMtB (ORCPT
+        with ESMTP id S230455AbiJWQqt (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Sun, 23 Oct 2022 08:49:01 -0400
-Received: from mga03.intel.com (mga03.intel.com [134.134.136.65])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2786475383;
-        Sun, 23 Oct 2022 05:48:52 -0700 (PDT)
+        Sun, 23 Oct 2022 12:46:49 -0400
+Received: from mga07.intel.com (mga07.intel.com [134.134.136.100])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 621A760693;
+        Sun, 23 Oct 2022 09:46:47 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1666529332; x=1698065332;
-  h=from:to:cc:subject:date:message-id;
-  bh=EBDEp9fMFhSMNQl9t4zJ05KU6qeNGLZnGb/t5yOcmfY=;
-  b=EfCgMhm1c6P+bf7gvhukjz/GLK+iSsN/2nUlRcN55x9MbFa9AZwhVD3J
-   htFTvpLQDkOPWUFlbx/qNlubcJJjIeih0LFdyINFxZLV763NVY7kaOKVD
-   QLgxLPBZaVP6FjrqpPXHNqdyJ2LsOjzEjhEI2KzT9jDxME37cqpPDVy9r
-   nfhEDYn56lAb1aYhTCEfmgrlT9S5WZ7H8FDWvkNsZ6cxMZaYl/zejA5cx
-   f6a4V+4TGmcUoS+d7JRRBFN4CcmOTIz+uirAQ+sywx9uNY1P3M+VASnXO
-   ubZWDEjYYfrWSR+DMtcNraMbyC6AnmW5/X13HUOisTirT5hWgX9soqR3I
-   Q==;
-X-IronPort-AV: E=McAfee;i="6500,9779,10509"; a="308944499"
+  t=1666543607; x=1698079607;
+  h=message-id:date:mime-version:subject:to:cc:references:
+   from:in-reply-to:content-transfer-encoding;
+  bh=jjcKY1AML8veP32zA0GqudSRI7EtoeO02Jl9LYsqrDo=;
+  b=NpTX5Xga9aSrhML8woht6b2geJgH6dAk4X6L4VlxEPFRUL5X1LaBpNZx
+   FAUXG4vn3Nj06NuzhehwjkjJGmNpeFsCgIOnDvIVs0dj2rM4bC+fVoXNf
+   v3aAVtT/bfx8jDYI+nNYICDCY9674/IXGBh1xbFZQGfY3TsdJo3uznhvF
+   lwn03B+rxpIZjtMhEdwqFkOjiz9HAPWTKRe390PNP38K+2jgC93iuarc9
+   AWRiKdEqYMw4eSZ2yEg+QcyM8w/buceQ4nNUeiqGMFc2g7wrAPPue1Y4v
+   zqIP0a2v+TBz5hIC6m45ShI5yRPIkDJ04fK+hvws0dw1VI5PB1Nd9YS9H
+   g==;
+X-IronPort-AV: E=McAfee;i="6500,9779,10509"; a="371501093"
 X-IronPort-AV: E=Sophos;i="5.95,207,1661842800"; 
-   d="scan'208";a="308944499"
-Received: from orsmga004.jf.intel.com ([10.7.209.38])
-  by orsmga103.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 23 Oct 2022 05:48:51 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6500,9779,10509"; a="756303919"
+   d="scan'208";a="371501093"
+Received: from orsmga003.jf.intel.com ([10.7.209.27])
+  by orsmga105.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 23 Oct 2022 09:46:46 -0700
+X-IronPort-AV: E=McAfee;i="6500,9779,10509"; a="582191192"
 X-IronPort-AV: E=Sophos;i="5.95,207,1661842800"; 
-   d="scan'208";a="756303919"
-Received: from power-sh.sh.intel.com ([10.239.183.122])
-  by orsmga004.jf.intel.com with ESMTP; 23 Oct 2022 05:48:49 -0700
-From:   Zhang Rui <rui.zhang@intel.com>
-To:     peterz@infradead.org
-Cc:     mingo@redhat.com, tglx@linutronix.de, bp@alien8.de,
-        dave.hansen@linux.intel.com, x86@kernel.org,
-        linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org,
-        ak@linux.intel.com, kan.liang@linux.intel.com
-Subject: [PATCH 1/2] perf/x86/rapl: Add support for Intel AlderLake-N
-Date:   Sun, 23 Oct 2022 20:51:19 +0800
-Message-Id: <20221023125120.2727-1-rui.zhang@intel.com>
-X-Mailer: git-send-email 2.17.1
+   d="scan'208";a="582191192"
+Received: from etyuvae-mobl1.ger.corp.intel.com (HELO [10.0.2.15]) ([10.252.44.32])
+  by orsmga003-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 23 Oct 2022 09:46:44 -0700
+Message-ID: <f79b22ea-2018-cb57-81b3-cdab2f66ea67@intel.com>
+Date:   Sun, 23 Oct 2022 19:46:40 +0300
+MIME-Version: 1.0
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
+ Firefox/102.0 Thunderbird/102.4.0
+Subject: Re: [PATCH v2] perf test: Do not fail Intel-PT misc test w/o
+ libpython
+To:     Namhyung Kim <namhyung@kernel.org>,
+        Arnaldo Carvalho de Melo <acme@kernel.org>,
+        Jiri Olsa <jolsa@kernel.org>
+Cc:     Ingo Molnar <mingo@kernel.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Ian Rogers <irogers@google.com>,
+        linux-perf-users@vger.kernel.org, Ammy Yi <ammy.yi@intel.com>
+References: <20221021181055.60183-1-namhyung@kernel.org>
+Content-Language: en-US
+From:   Adrian Hunter <adrian.hunter@intel.com>
+Organization: Intel Finland Oy, Registered Address: PL 281, 00181 Helsinki,
+ Business Identity Code: 0357606 - 4, Domiciled in Helsinki
+In-Reply-To: <20221021181055.60183-1-namhyung@kernel.org>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-AlderLake-N RAPL support is the same as previous Sky Lake.
-Add AlderLake-N model for RAPL.
+On 21/10/22 21:10, Namhyung Kim wrote:
+> The virtuall LBR test uses a python script to check the max size of
+> branch stack in the Intel-PT generated LBR.  But it didn't check whether
+> python scripting is available (as it's optional).
+> 
+> Let's skip the test if the python support is not available.
+> 
+> Fixes: f77811a0f625 ("perf test: test_intel_pt.sh: Add 9 tests")
+> Cc: Ammy Yi <ammy.yi@intel.com>
+> Signed-off-by: Namhyung Kim <namhyung@kernel.org>
 
-Signed-off-by: Zhang Rui <rui.zhang@intel.com>
-Tested-by: Wang Wendy <wendy.wang@intel.com>
----
- arch/x86/events/rapl.c | 1 +
- 1 file changed, 1 insertion(+)
+Reviewed-by: Adrian Hunter <adrian.hunter@intel.com>
 
-diff --git a/arch/x86/events/rapl.c b/arch/x86/events/rapl.c
-index 77e3a47af5ad..165c506cd37c 100644
---- a/arch/x86/events/rapl.c
-+++ b/arch/x86/events/rapl.c
-@@ -806,6 +806,7 @@ static const struct x86_cpu_id rapl_model_match[] __initconst = {
- 	X86_MATCH_INTEL_FAM6_MODEL(COMETLAKE,		&model_skl),
- 	X86_MATCH_INTEL_FAM6_MODEL(ALDERLAKE,		&model_skl),
- 	X86_MATCH_INTEL_FAM6_MODEL(ALDERLAKE_L,		&model_skl),
-+	X86_MATCH_INTEL_FAM6_MODEL(ALDERLAKE_N,		&model_skl),
- 	X86_MATCH_INTEL_FAM6_MODEL(SAPPHIRERAPIDS_X,	&model_spr),
- 	{},
- };
--- 
-2.25.1
+> ---
+>  tools/perf/tests/shell/test_intel_pt.sh | 6 ++++++
+>  1 file changed, 6 insertions(+)
+> 
+> diff --git a/tools/perf/tests/shell/test_intel_pt.sh b/tools/perf/tests/shell/test_intel_pt.sh
+> index 4c0aabbe33bd..f5ed7b1af419 100755
+> --- a/tools/perf/tests/shell/test_intel_pt.sh
+> +++ b/tools/perf/tests/shell/test_intel_pt.sh
+> @@ -526,6 +526,12 @@ test_kernel_trace()
+>  test_virtual_lbr()
+>  {
+>  	echo "--- Test virtual LBR ---"
+> +	# Check if python script is supported
+> +	libpython=$(perf version --build-options | grep python | grep -cv OFF)
+> +	if [ "${libpython}" != "1" ] ; then
+> +		echo "SKIP: python scripting is not supported"
+> +		return 2
+> +	fi
+>  
+>  	# Python script to determine the maximum size of branch stacks
+>  	cat << "_end_of_file_" > "${maxbrstack}"
 
