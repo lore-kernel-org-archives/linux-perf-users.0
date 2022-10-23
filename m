@@ -2,99 +2,83 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E333AFA373E
-	for <linux-perf-users@archiver.kernel.org>; Sat, 22 Oct 2022 21:29:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5778BC433FE
+	for <linux-perf-users@archiver.kernel.org>; Sun, 23 Oct 2022 12:49:11 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229850AbiJVV34 (ORCPT
+        id S230366AbiJWMtK (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Sat, 22 Oct 2022 17:29:56 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51756 "EHLO
+        Sun, 23 Oct 2022 08:49:10 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42832 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229744AbiJVV3z (ORCPT
+        with ESMTP id S230310AbiJWMtC (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Sat, 22 Oct 2022 17:29:55 -0400
-X-Greylist: delayed 1153 seconds by postgrey-1.37 at lindbergh.monkeyblade.net; Sat, 22 Oct 2022 14:29:48 PDT
-Received: from terminus.zytor.com (unknown [IPv6:2607:7c80:54:3::136])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 42F432A95C;
-        Sat, 22 Oct 2022 14:29:45 -0700 (PDT)
-Received: from [127.0.0.1] ([73.223.250.219])
-        (authenticated bits=0)
-        by mail.zytor.com (8.17.1/8.17.1) with ESMTPSA id 29ML8eEF2420262
-        (version=TLSv1.3 cipher=TLS_AES_128_GCM_SHA256 bits=128 verify=NO);
-        Sat, 22 Oct 2022 14:08:40 -0700
-DKIM-Filter: OpenDKIM Filter v2.11.0 mail.zytor.com 29ML8eEF2420262
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=zytor.com;
-        s=2022100601; t=1666472925;
-        bh=6+RY9iRcpIT3J7CLCZno8RRf3RLOv3Q087OMBJ+x97E=;
-        h=Date:From:To:CC:Subject:In-Reply-To:References:From;
-        b=ua66S0skPTe1vO2SZSgS2viQ/FflA40OHsC3Pj6699LV7Bi5V/d4NdVcSlOqA15Yn
-         Nxm+uQeMGlSaUqJ/UCCEnLlIQypZc8URTE/hnB9O4RElzY8oWyusHAZz+Big61WNVW
-         jKkHpNeZOqeT0AwMD9RpBbQ+H/skXhgNMWlz4jvAKEZrm2PTg4L7BywspYB4c9QL62
-         nhjMptrmaBHP98aAzh+knOS3p4JrTDZ/pZNm/n0YPcMp20ttKwmBF1BTTw4u/WY9dq
-         5GEHlfxQWApwWVJ7xHiyQr7b43sUqLOFqnD1YuYPQef4GAupHNcFBvO/Xb1Vs1wwBz
-         p/E3WpuQTLe2Q==
-Date:   Sat, 22 Oct 2022 14:08:37 -0700
-From:   "H. Peter Anvin" <hpa@zytor.com>
-To:     Borislav Petkov <bp@alien8.de>,
-        Maxim Levitsky <mlevitsk@redhat.com>
-CC:     linux-kernel@vger.kernel.org, kvm@vger.kernel.org,
-        Pawan Gupta <pawan.kumar.gupta@linux.intel.com>,
-        Ingo Molnar <mingo@redhat.com>,
-        Josh Poimboeuf <jpoimboe@kernel.org>,
-        Namhyung Kim <namhyung@kernel.org>,
-        Tony Luck <tony.luck@intel.com>,
-        Paolo Bonzini <pbonzini@redhat.com>,
-        Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Tim Chen <tim.c.chen@linux.intel.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        Dave Hansen <dave.hansen@linux.intel.com>,
-        "Chang S. Bae" <chang.seok.bae@intel.com>,
-        Jane Malalane <jane.malalane@citrix.com>,
-        Kees Cook <keescook@chromium.org>,
-        Kan Liang <kan.liang@linux.intel.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        "maintainer:X86 ARCHITECTURE (32-BIT AND 64-BIT)" <x86@kernel.org>,
-        Herbert Xu <herbert@gondor.apana.org.au>,
-        Jiri Olsa <jolsa@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        linux-perf-users@vger.kernel.org,
-        "open list:CRYPTO API" <linux-crypto@vger.kernel.org>
-Subject: =?US-ASCII?Q?Re=3A_=5BPATCH_v2_1/5=5D_perf/x86/intel/lbr=3A_use_?= =?US-ASCII?Q?setup=5Fclear=5Fcpu=5Fcap_instead_of_clear=5Fcpu=5Fcap?=
-User-Agent: K-9 Mail for Android
-In-Reply-To: <Y1EOBAaLbv2CXBDL@zn.tnic>
-References: <20220718141123.136106-1-mlevitsk@redhat.com> <20220718141123.136106-2-mlevitsk@redhat.com> <Yyh9RDbaRqUR1XSW@zn.tnic> <c105971a72dfe6d46ad75fb7e71f79ba716e081c.camel@redhat.com> <YzGlQBkCSJxY+8Jf@zn.tnic> <c1168e8bd9077a2cc9ef61ee06db7a4e8c0f1600.camel@redhat.com> <Y1EOBAaLbv2CXBDL@zn.tnic>
-Message-ID: <892F8AE5-9FF9-4452-A6A7-A130C49D0C51@zytor.com>
-MIME-Version: 1.0
-Content-Type: text/plain;
- charset=utf-8
-Content-Transfer-Encoding: quoted-printable
+        Sun, 23 Oct 2022 08:49:02 -0400
+Received: from mga03.intel.com (mga03.intel.com [134.134.136.65])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 19DDF7538D;
+        Sun, 23 Oct 2022 05:48:55 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1666529335; x=1698065335;
+  h=from:to:cc:subject:date:message-id:in-reply-to:
+   references;
+  bh=Wr1wExNIpkZXMw8IkZIKKVQFVsJkOI8UO9dU31zeISw=;
+  b=PqUBTylKQfMX6PM+/LBBI8ckXMPilMyy2UmEBSEPNkwgaL+FeoU/yHRD
+   J02U2e89mjCWAaSqs+8P449uL/MtX2z84F3kq6eY6hx0Vx1RV6Bqi9z7w
+   LO9CIFxw8ce5+kNmBcbHdYtgtJRmbbQOOxDxQ3pReK5hP676Ufu/wKeCX
+   ROqHzjgJZVqv4zD6/sfcaBSgtS1lA4t+mwiC57BAJxoMhPD0WnXrnfb5t
+   S7hh36WjAJSWlfQrYQXXyVtUPRocJ1+lRvstFuZWTqcyZ4ED4xp+jpMlZ
+   IT6DMCp9eKsJkGq3b0ZaoFX7q6ABIHFdq9ccwKpAjY4Td7J5J6wAVw7f+
+   w==;
+X-IronPort-AV: E=McAfee;i="6500,9779,10509"; a="308944506"
+X-IronPort-AV: E=Sophos;i="5.95,207,1661842800"; 
+   d="scan'208";a="308944506"
+Received: from orsmga004.jf.intel.com ([10.7.209.38])
+  by orsmga103.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 23 Oct 2022 05:48:54 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=McAfee;i="6500,9779,10509"; a="756303924"
+X-IronPort-AV: E=Sophos;i="5.95,207,1661842800"; 
+   d="scan'208";a="756303924"
+Received: from power-sh.sh.intel.com ([10.239.183.122])
+  by orsmga004.jf.intel.com with ESMTP; 23 Oct 2022 05:48:51 -0700
+From:   Zhang Rui <rui.zhang@intel.com>
+To:     peterz@infradead.org
+Cc:     mingo@redhat.com, tglx@linutronix.de, bp@alien8.de,
+        dave.hansen@linux.intel.com, x86@kernel.org,
+        linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org,
+        ak@linux.intel.com, kan.liang@linux.intel.com
+Subject: [PATCH 2/2] perf/x86/rapl: Add support for Intel Raptor Lake
+Date:   Sun, 23 Oct 2022 20:51:20 +0800
+Message-Id: <20221023125120.2727-2-rui.zhang@intel.com>
+X-Mailer: git-send-email 2.17.1
+In-Reply-To: <20221023125120.2727-1-rui.zhang@intel.com>
+References: <20221023125120.2727-1-rui.zhang@intel.com>
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-On October 20, 2022 1:59:48 AM PDT, Borislav Petkov <bp@alien8=2Ede> wrote:
->On Wed, Sep 28, 2022 at 01:49:34PM +0300, Maxim Levitsky wrote:
->> Patch 5 is the main fix - it makes the kernel to be tolerant to a
->> broken CPUID config (coming hopefully from hypervisor), where you have
->> a feature (AVX2 in my case) but not a feature on which this feature
->> depends (AVX)=2E
->
->I really really don't like it when people are fixing the wrong thing=2E
->
->Why does the kernel need to get fixed when something else can't get its
->CPUID dependencies straight? I don't even want to know why something
->would set AVX2 without AVX?!?!
->
->Srsly=2E
->
->Some of your other bits look sensible and I'd take a deeper look but
->this does not make any sense=2E This is a hypervisor problem - not a
->kernel one=2E
->
->Thx=2E
->
+Raptor Lake RAPL support is the same as previous Sky Lake.
+Add Raptor Lake model for RAPL.
 
-Yes, this is utterly nonsensical and it will break user space applications=
- left, right, and center=2E
+Signed-off-by: Zhang Rui <rui.zhang@intel.com>
+Tested-by: Wang Wendy <wendy.wang@intel.com>
+---
+ arch/x86/events/rapl.c | 3 +++
+ 1 file changed, 3 insertions(+)
+
+diff --git a/arch/x86/events/rapl.c b/arch/x86/events/rapl.c
+index 165c506cd37c..fea544e5842a 100644
+--- a/arch/x86/events/rapl.c
++++ b/arch/x86/events/rapl.c
+@@ -808,6 +808,9 @@ static const struct x86_cpu_id rapl_model_match[] __initconst = {
+ 	X86_MATCH_INTEL_FAM6_MODEL(ALDERLAKE_L,		&model_skl),
+ 	X86_MATCH_INTEL_FAM6_MODEL(ALDERLAKE_N,		&model_skl),
+ 	X86_MATCH_INTEL_FAM6_MODEL(SAPPHIRERAPIDS_X,	&model_spr),
++	X86_MATCH_INTEL_FAM6_MODEL(RAPTORLAKE,		&model_skl),
++	X86_MATCH_INTEL_FAM6_MODEL(RAPTORLAKE_P,	&model_skl),
++	X86_MATCH_INTEL_FAM6_MODEL(RAPTORLAKE_S,	&model_skl),
+ 	{},
+ };
+ MODULE_DEVICE_TABLE(x86cpu, rapl_model_match);
+-- 
+2.25.1
+
