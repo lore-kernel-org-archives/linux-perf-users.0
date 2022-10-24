@@ -2,56 +2,58 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 59674C38A2D
-	for <linux-perf-users@archiver.kernel.org>; Mon, 24 Oct 2022 19:57:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B0539C67871
+	for <linux-perf-users@archiver.kernel.org>; Mon, 24 Oct 2022 19:58:18 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232817AbiJXT5o (ORCPT
+        id S233804AbiJXT6R (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Mon, 24 Oct 2022 15:57:44 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52708 "EHLO
+        Mon, 24 Oct 2022 15:58:17 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45988 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S233905AbiJXT5T (ORCPT
+        with ESMTP id S233816AbiJXT5h (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Mon, 24 Oct 2022 15:57:19 -0400
-Received: from mail-pl1-x64a.google.com (mail-pl1-x64a.google.com [IPv6:2607:f8b0:4864:20::64a])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7A84DEF5B5
-        for <linux-perf-users@vger.kernel.org>; Mon, 24 Oct 2022 11:20:24 -0700 (PDT)
-Received: by mail-pl1-x64a.google.com with SMTP id l16-20020a170902f69000b001865f863784so6784859plg.2
-        for <linux-perf-users@vger.kernel.org>; Mon, 24 Oct 2022 11:20:23 -0700 (PDT)
+        Mon, 24 Oct 2022 15:57:37 -0400
+Received: from mail-yw1-x1149.google.com (mail-yw1-x1149.google.com [IPv6:2607:f8b0:4864:20::1149])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E359218F935
+        for <linux-perf-users@vger.kernel.org>; Mon, 24 Oct 2022 11:20:36 -0700 (PDT)
+Received: by mail-yw1-x1149.google.com with SMTP id 00721157ae682-349423f04dbso98567947b3.13
+        for <linux-perf-users@vger.kernel.org>; Mon, 24 Oct 2022 11:20:36 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=google.com; s=20210112;
-        h=cc:to:from:subject:mime-version:message-id:date:from:to:cc:subject
-         :date:message-id:reply-to;
-        bh=OdPpZnwd5jRn69z8VmyRRXOs+WnLWZPFgd+7/iBzwHk=;
-        b=NfrgsUTi4AApD9BZxfhAegOIzfnADBYbmqWCGsTBOOc7z6DCGVA6S5DGI56c3/0HTK
-         3BuxuXx7aAY92LOmjN8o6+cd2dWG2ItvAJs2cNSk/KXbYeoUybsaEXziRA1t0YN6Io53
-         Vg1GCS1dJ4xCUUxB6HolGFsWwaXlY9IllaWJonUcug574p7flVeJc9EgvgLtCaV/DXb5
-         rNPH89aOcXb8wQjOZuw7PvPeSOKL3r61V8Em7fupmdz6/IberQWfB3vrQgONNxqTBR5a
-         XVYq31YpR56iR0tRAxHK9QXbEYG+HLkoRNnoCIcdT4wTqMABZL528o45hcEMERtSsoqC
-         iF4w==
+        h=cc:to:from:subject:references:mime-version:message-id:in-reply-to
+         :date:from:to:cc:subject:date:message-id:reply-to;
+        bh=yf//nKniGE2IxHdCyFgbypJdJyKGDk5InFKRkZy7usI=;
+        b=VRBpSdHVTZnE+YXvFegVopepFbQ4rBU/QUHcsshpgXkjl8MaSdIQyGG6rx5fBbADpN
+         xMvXZyLIQ9EeU5rKOW3YQugY1FE1YvVJL3Aam8IsGX43Us52UyYNk0qsy0Gzgvy3b42r
+         i00PdJSbsUpUiyeZdfsD1Tu0dqaUQGkI24CTo+6c9/PvhAmHZRHZdd6Ihbc5pKj7gC6I
+         zt8b4JNH31YlusjfnXVQj9XLJbc5x8ZZPPXRcudD3sO9JBxMfP38PJaqmAChSU3Bi30k
+         MNh0Qc1AL/nplEstpRJc4gHksFuwYc33HHJbGp7zBCtWV1hPDPD164mlrKu1LZ3lKP52
+         2eLg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=cc:to:from:subject:mime-version:message-id:date:x-gm-message-state
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=OdPpZnwd5jRn69z8VmyRRXOs+WnLWZPFgd+7/iBzwHk=;
-        b=isDz8bZCjW4dPJt/ILa34ipn1jnxV19crbCO3Dq2kOthDessWn7mfCJagY8wrVhBj7
-         wYpNgGBixU0Ehu/3D4N0nwPuhdcDes+xEpo13yxENW9s/fFNqXLYjEIPuI5gG6nEkNBj
-         st+njlvxf2KBo6vQiZhjgNfKKkGFskr7bbf5t6bk+uEGk3x4yO79B82c0YlmstPIpYJW
-         ckBlssOFc1gwkGBmFZXC35WZaE6m7jQXeHTXVlI/UDOsQ18PJWkwSwRYZM8m644g299m
-         Fv6Y474RQVMCjAxE7y/u5Pjoq7TP3gvp9pJwHgt580LYsShmoW3kAG9+9pJ3UOX92887
-         E/3A==
-X-Gm-Message-State: ACrzQf3QU0WK6whbTE1ep6Ol9TP8hjWmexe3Gdje0JyH0kcLhh7SZ9Re
-        BWbsQvuoBDLFuXyLI0QPGcfqUR9CPGak
-X-Google-Smtp-Source: AMsMyM7gOJ73zL6REh5JLPAg6wf0lT6uPprEpgZedLo1aYSYyI73sfxgXgK0r3WCA8xTVaZu8s4FZZYmNjnv
+        h=cc:to:from:subject:references:mime-version:message-id:in-reply-to
+         :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=yf//nKniGE2IxHdCyFgbypJdJyKGDk5InFKRkZy7usI=;
+        b=YVRsJhqVVCHx+siPiT7v8D5cxqPHmwYY/C68AA+h3C9BNt+QAwY56pcezj8ZTGMpkJ
+         GsiPbXpnX0avfW+1HE/0TeiKrhNnWMnXRL8qXvB61MgwawlCF4lYOiQ6QV0/RWie41l6
+         6rDkhciJofjSdj7y5ZmhwhY42q6X/a4r1sqGGy5drS6ReA5U5k8Krxxgy+T5kWJPXKTs
+         R0YXulRa57uHwX5sV651FJiyynalgFQS5D37K6RQi6jjWYsQUBksZf9mvx/CRg0HpymN
+         zVpyCaRuKc6Bc2f6WCuXhdZxUXMHeyjDGWfu5RQCHhyighHAKpjXwLC9hqXhymFSVN6V
+         hW8A==
+X-Gm-Message-State: ACrzQf1j7+4dZMC2XWc7e2RrTtlYjM67AL2gAjTvtxMC+UxUjSRudzrb
+        ZWf6w0llxtnDarovaerte0PfDJieqSsM
+X-Google-Smtp-Source: AMsMyM4ftlJbQC5kXUpk84+mlsdvadwXGidOSZUitz+A5zvltHJN1xBUP8bVYVwr15+jb75wIFuEUJj+6OeI
 X-Received: from irogers.svl.corp.google.com ([2620:15c:2d4:203:b8bc:a57d:a2a2:efdc])
- (user=irogers job=sendgmr) by 2002:a17:90b:e90:b0:213:2708:8dc3 with SMTP id
- fv16-20020a17090b0e9000b0021327088dc3mr247684pjb.2.1666635575295; Mon, 24 Oct
- 2022 11:19:35 -0700 (PDT)
-Date:   Mon, 24 Oct 2022 11:19:05 -0700
-Message-Id: <20221024181913.630986-1-irogers@google.com>
+ (user=irogers job=sendgmr) by 2002:a25:504a:0:b0:6c9:8926:9048 with SMTP id
+ e71-20020a25504a000000b006c989269048mr26969653ybb.38.1666635582786; Mon, 24
+ Oct 2022 11:19:42 -0700 (PDT)
+Date:   Mon, 24 Oct 2022 11:19:06 -0700
+In-Reply-To: <20221024181913.630986-1-irogers@google.com>
+Message-Id: <20221024181913.630986-2-irogers@google.com>
 Mime-Version: 1.0
+References: <20221024181913.630986-1-irogers@google.com>
 X-Mailer: git-send-email 2.38.0.135.g90850a2211-goog
-Subject: [PATCH v2 0/8] Update to C11, fix signal undefined behavior
+Subject: [PATCH v2 1/8] perf build: Update to C standard to gnu11
 From:   Ian Rogers <irogers@google.com>
 To:     Leo Yan <leo.yan@linaro.org>,
         Peter Zijlstra <peterz@infradead.org>,
@@ -72,39 +74,31 @@ Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-The use of C11 is mainstream in the kernel [1]. There was some
-confusion on volatile and signal handlers in [2] for which atomics
-(present in C11) make things clearer. Switch to using volatile
-sig_atomic_t as per [3]. Thanks to Leo Yan <leo.yan@linaro.org> for
-the suggestions.
+C11 has become the standard for mainstream kernel development [1],
+allowing it in the perf build enables libraries like stdatomic.h to be
+assumed to be present. This came up in the context of [2].
 
 [1] https://lore.kernel.org/lkml/CAHk-=whWbENRz-vLY6vpESDLj6kGUTKO3khGtVfipHqwewh2HQ@mail.gmail.com/
 [2] https://lore.kernel.org/lkml/20221024011024.462518-1-irogers@google.com/
-[3] https://wiki.sei.cmu.edu/confluence/display/c/SIG31-C.+Do+not+access+shared+objects+in+signal+handlers
 
-v2. Remove unneeded stdatomic.h includes for sig_atomic_t as it is
-    declared in signal.h.
+Signed-off-by: Ian Rogers <irogers@google.com>
+---
+ tools/perf/Makefile.config | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-Ian Rogers (8):
-  perf build: Update to C standard to gnu11
-  perf record: Use sig_atomic_t for signal handlers
-  perf daemon: Use sig_atomic_t to avoid UB
-  perf ftrace: Use sig_atomic_t to avoid UB
-  perf session: Change type to avoid UB
-  perf stat: Use sig_atomic_t to avoid UB
-  perf top: Use sig_atomic_t to avoid UB
-  perf trace: Use sig_atomic_t to avoid UB
-
- tools/perf/Makefile.config  | 2 +-
- tools/perf/builtin-daemon.c | 2 +-
- tools/perf/builtin-ftrace.c | 4 ++--
- tools/perf/builtin-record.c | 8 ++++----
- tools/perf/builtin-stat.c   | 8 ++++----
- tools/perf/builtin-top.c    | 4 ++--
- tools/perf/builtin-trace.c  | 4 ++--
- tools/perf/util/session.c   | 3 ++-
- 8 files changed, 18 insertions(+), 17 deletions(-)
-
+diff --git a/tools/perf/Makefile.config b/tools/perf/Makefile.config
+index 6fd4b1384b97..29c49e6e76a1 100644
+--- a/tools/perf/Makefile.config
++++ b/tools/perf/Makefile.config
+@@ -307,7 +307,7 @@ CORE_CFLAGS += -ggdb3
+ CORE_CFLAGS += -funwind-tables
+ CORE_CFLAGS += -Wall
+ CORE_CFLAGS += -Wextra
+-CORE_CFLAGS += -std=gnu99
++CORE_CFLAGS += -std=gnu11
+ 
+ CXXFLAGS += -std=gnu++14 -fno-exceptions -fno-rtti
+ CXXFLAGS += -Wall
 -- 
 2.38.0.135.g90850a2211-goog
 
