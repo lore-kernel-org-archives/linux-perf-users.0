@@ -2,102 +2,153 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3A755C3A59D
-	for <linux-perf-users@archiver.kernel.org>; Sun, 23 Oct 2022 16:46:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 93581C3A59D
+	for <linux-perf-users@archiver.kernel.org>; Mon, 24 Oct 2022 01:10:54 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230438AbiJWQqv (ORCPT
+        id S229665AbiJXBKx (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Sun, 23 Oct 2022 12:46:51 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58314 "EHLO
+        Sun, 23 Oct 2022 21:10:53 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35938 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230455AbiJWQqt (ORCPT
+        with ESMTP id S229667AbiJXBKu (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Sun, 23 Oct 2022 12:46:49 -0400
-Received: from mga07.intel.com (mga07.intel.com [134.134.136.100])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 621A760693;
-        Sun, 23 Oct 2022 09:46:47 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1666543607; x=1698079607;
-  h=message-id:date:mime-version:subject:to:cc:references:
-   from:in-reply-to:content-transfer-encoding;
-  bh=jjcKY1AML8veP32zA0GqudSRI7EtoeO02Jl9LYsqrDo=;
-  b=NpTX5Xga9aSrhML8woht6b2geJgH6dAk4X6L4VlxEPFRUL5X1LaBpNZx
-   FAUXG4vn3Nj06NuzhehwjkjJGmNpeFsCgIOnDvIVs0dj2rM4bC+fVoXNf
-   v3aAVtT/bfx8jDYI+nNYICDCY9674/IXGBh1xbFZQGfY3TsdJo3uznhvF
-   lwn03B+rxpIZjtMhEdwqFkOjiz9HAPWTKRe390PNP38K+2jgC93iuarc9
-   AWRiKdEqYMw4eSZ2yEg+QcyM8w/buceQ4nNUeiqGMFc2g7wrAPPue1Y4v
-   zqIP0a2v+TBz5hIC6m45ShI5yRPIkDJ04fK+hvws0dw1VI5PB1Nd9YS9H
-   g==;
-X-IronPort-AV: E=McAfee;i="6500,9779,10509"; a="371501093"
-X-IronPort-AV: E=Sophos;i="5.95,207,1661842800"; 
-   d="scan'208";a="371501093"
-Received: from orsmga003.jf.intel.com ([10.7.209.27])
-  by orsmga105.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 23 Oct 2022 09:46:46 -0700
-X-IronPort-AV: E=McAfee;i="6500,9779,10509"; a="582191192"
-X-IronPort-AV: E=Sophos;i="5.95,207,1661842800"; 
-   d="scan'208";a="582191192"
-Received: from etyuvae-mobl1.ger.corp.intel.com (HELO [10.0.2.15]) ([10.252.44.32])
-  by orsmga003-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 23 Oct 2022 09:46:44 -0700
-Message-ID: <f79b22ea-2018-cb57-81b3-cdab2f66ea67@intel.com>
-Date:   Sun, 23 Oct 2022 19:46:40 +0300
-MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
- Firefox/102.0 Thunderbird/102.4.0
-Subject: Re: [PATCH v2] perf test: Do not fail Intel-PT misc test w/o
- libpython
-To:     Namhyung Kim <namhyung@kernel.org>,
-        Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Jiri Olsa <jolsa@kernel.org>
-Cc:     Ingo Molnar <mingo@kernel.org>,
+        Sun, 23 Oct 2022 21:10:50 -0400
+Received: from mail-pf1-x44a.google.com (mail-pf1-x44a.google.com [IPv6:2607:f8b0:4864:20::44a])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 997875FAE8
+        for <linux-perf-users@vger.kernel.org>; Sun, 23 Oct 2022 18:10:49 -0700 (PDT)
+Received: by mail-pf1-x44a.google.com with SMTP id t7-20020a62ea07000000b005619a832f68so3931660pfh.11
+        for <linux-perf-users@vger.kernel.org>; Sun, 23 Oct 2022 18:10:49 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20210112;
+        h=cc:to:from:subject:mime-version:message-id:date:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=bPFUPgqfkuveFVX9ctMwkjUhtRM4a3rz3/7u8h2+JCY=;
+        b=tS9ysiGKKfafl7Yy2AmyJBOWCbaWVea5uX+3ZhaWOph14OQ4/vNuCdX8cDRQ2xJdDX
+         4JUyqkUXGJOPDSCPP2OncfSFAcW5zfU1m8bj8zM1SJvDl/BUFh3czJtJivaZmlJb/gro
+         6GcyTBWU5FQfH9lWsieRrt1rKdTzJpIjaJwOGxqPgYddAQi1CYcP5AMsHmcxk/fMq6FK
+         UB3vVYxn3ERUz/PWtOODhhjMFlXLAjW/FRsfmZ2mZn+BxTYk6cByHEXFe+zbBUNVkphi
+         aMsQHBuQbYEbxKWCSDW5uyTWCB4RnTXDg6YLF+9IQCB/RNFxaujVeGMcRyJGh8JMc7vL
+         pnRw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=cc:to:from:subject:mime-version:message-id:date:x-gm-message-state
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=bPFUPgqfkuveFVX9ctMwkjUhtRM4a3rz3/7u8h2+JCY=;
+        b=E58aOI/EH145SaSdzR0VPRjFoY3h5eYKErOEEM+HNS81KgIvCxLIYS0s4PvcZOD8C7
+         8jwCwHNv55+UdDTKGdV9WXyedIYt2Z2PhpAREz0le+wSvLm1BILV5ol6t1ijklzqk/P3
+         cFzX6LhZ+e4CffdJADn6Reym0geWYDvsEap3W5vHL4wnSTDKZ2AUDnZsMMP8lEXlfBLj
+         IW2KfV0yKvsMO+bAW3zciy4nfdDQtS+kKPBZr3rnKMCgwOjrN4JX8UnZOykAcl1eYNUx
+         8UaUIDGZRf8w2q6Ji6Bq3sNrwclpLKoARQPwVwLJ07U1ZwN4klsMnXiIpjAM25AufhXk
+         0wlA==
+X-Gm-Message-State: ACrzQf3pT5QPIZyEFFbtrVAuk8LQeBGDpNpSnDfC1Bzu1r/fTK+mFHdD
+        /pCRugw+Nx8Vkhl+C9+i3zqVI68t4bHn
+X-Google-Smtp-Source: AMsMyM6YyfQ2C/XewMSO/l0VcFR0qtxjlNlk/yqa2un/Snk0pDZ9L9fT0kv67mi6rO9guRp1S8xsVBLyDTbE
+X-Received: from irogers.svl.corp.google.com ([2620:15c:2d4:203:26d5:b9c8:e16c:3a45])
+ (user=irogers job=sendgmr) by 2002:a05:6a00:10c8:b0:563:1bd1:2ce4 with SMTP
+ id d8-20020a056a0010c800b005631bd12ce4mr31080819pfu.6.1666573849036; Sun, 23
+ Oct 2022 18:10:49 -0700 (PDT)
+Date:   Sun, 23 Oct 2022 18:10:24 -0700
+Message-Id: <20221024011024.462518-1-irogers@google.com>
+Mime-Version: 1.0
+X-Mailer: git-send-email 2.38.0.135.g90850a2211-goog
+Subject: [PATCH v1] perf record: Fix event fd races
+From:   Ian Rogers <irogers@google.com>
+To:     Greg Thelen <gthelen@google.com>,
+        Anand K Mistry <amistry@google.com>,
         Peter Zijlstra <peterz@infradead.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Ian Rogers <irogers@google.com>,
-        linux-perf-users@vger.kernel.org, Ammy Yi <ammy.yi@intel.com>
-References: <20221021181055.60183-1-namhyung@kernel.org>
-Content-Language: en-US
-From:   Adrian Hunter <adrian.hunter@intel.com>
-Organization: Intel Finland Oy, Registered Address: PL 281, 00181 Helsinki,
- Business Identity Code: 0357606 - 4, Domiciled in Helsinki
-In-Reply-To: <20221021181055.60183-1-namhyung@kernel.org>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+        Ingo Molnar <mingo@redhat.com>,
+        Arnaldo Carvalho de Melo <acme@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Jiri Olsa <jolsa@kernel.org>,
+        Namhyung Kim <namhyung@kernel.org>,
+        linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
+Cc:     Stephane Eranian <eranian@google.com>,
+        Ian Rogers <irogers@google.com>
+Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-On 21/10/22 21:10, Namhyung Kim wrote:
-> The virtuall LBR test uses a python script to check the max size of
-> branch stack in the Intel-PT generated LBR.  But it didn't check whether
-> python scripting is available (as it's optional).
-> 
-> Let's skip the test if the python support is not available.
-> 
-> Fixes: f77811a0f625 ("perf test: test_intel_pt.sh: Add 9 tests")
-> Cc: Ammy Yi <ammy.yi@intel.com>
-> Signed-off-by: Namhyung Kim <namhyung@kernel.org>
+The write call may set errno which is problematic if occurring in a
+function also setting errno. Save and restore errno around the write
+call.
 
-Reviewed-by: Adrian Hunter <adrian.hunter@intel.com>
+done_fd may be used after close, clear it as part of the close and
+check its validity in the signal handler.
 
-> ---
->  tools/perf/tests/shell/test_intel_pt.sh | 6 ++++++
->  1 file changed, 6 insertions(+)
-> 
-> diff --git a/tools/perf/tests/shell/test_intel_pt.sh b/tools/perf/tests/shell/test_intel_pt.sh
-> index 4c0aabbe33bd..f5ed7b1af419 100755
-> --- a/tools/perf/tests/shell/test_intel_pt.sh
-> +++ b/tools/perf/tests/shell/test_intel_pt.sh
-> @@ -526,6 +526,12 @@ test_kernel_trace()
->  test_virtual_lbr()
->  {
->  	echo "--- Test virtual LBR ---"
-> +	# Check if python script is supported
-> +	libpython=$(perf version --build-options | grep python | grep -cv OFF)
-> +	if [ "${libpython}" != "1" ] ; then
-> +		echo "SKIP: python scripting is not supported"
-> +		return 2
-> +	fi
->  
->  	# Python script to determine the maximum size of branch stacks
->  	cat << "_end_of_file_" > "${maxbrstack}"
+Suggested-by: Greg Thelen <gthelen@google.com>
+Signed-off-by: Ian Rogers <irogers@google.com>
+---
+ tools/perf/builtin-record.c | 41 ++++++++++++++++++++++---------------
+ 1 file changed, 25 insertions(+), 16 deletions(-)
+
+diff --git a/tools/perf/builtin-record.c b/tools/perf/builtin-record.c
+index 52d254b1530c..e128b855ddde 100644
+--- a/tools/perf/builtin-record.c
++++ b/tools/perf/builtin-record.c
+@@ -649,7 +649,7 @@ static int record__pushfn(struct mmap *map, void *to, void *bf, size_t size)
+ static volatile int signr = -1;
+ static volatile int child_finished;
+ #ifdef HAVE_EVENTFD_SUPPORT
+-static int done_fd = -1;
++static volatile int done_fd = -1;
+ #endif
+ 
+ static void sig_handler(int sig)
+@@ -661,19 +661,24 @@ static void sig_handler(int sig)
+ 
+ 	done = 1;
+ #ifdef HAVE_EVENTFD_SUPPORT
+-{
+-	u64 tmp = 1;
+-	/*
+-	 * It is possible for this signal handler to run after done is checked
+-	 * in the main loop, but before the perf counter fds are polled. If this
+-	 * happens, the poll() will continue to wait even though done is set,
+-	 * and will only break out if either another signal is received, or the
+-	 * counters are ready for read. To ensure the poll() doesn't sleep when
+-	 * done is set, use an eventfd (done_fd) to wake up the poll().
+-	 */
+-	if (write(done_fd, &tmp, sizeof(tmp)) < 0)
+-		pr_err("failed to signal wakeup fd, error: %m\n");
+-}
++	if (done_fd >= 0) {
++		u64 tmp = 1;
++		int orig_errno = errno;
++
++		/*
++		 * It is possible for this signal handler to run after done is
++		 * checked in the main loop, but before the perf counter fds are
++		 * polled. If this happens, the poll() will continue to wait
++		 * even though done is set, and will only break out if either
++		 * another signal is received, or the counters are ready for
++		 * read. To ensure the poll() doesn't sleep when done is set,
++		 * use an eventfd (done_fd) to wake up the poll().
++		 */
++		if (write(done_fd, &tmp, sizeof(tmp)) < 0)
++			pr_err("failed to signal wakeup fd, error: %m\n");
++
++		errno = orig_errno;
++	}
+ #endif // HAVE_EVENTFD_SUPPORT
+ }
+ 
+@@ -2834,8 +2839,12 @@ static int __cmd_record(struct record *rec, int argc, const char **argv)
+ 
+ out_delete_session:
+ #ifdef HAVE_EVENTFD_SUPPORT
+-	if (done_fd >= 0)
+-		close(done_fd);
++	if (done_fd >= 0) {
++		fd = done_fd;
++		done_fd = -1;
++
++		close(fd);
++	}
+ #endif
+ 	zstd_fini(&session->zstd_data);
+ 	perf_session__delete(session);
+-- 
+2.38.0.135.g90850a2211-goog
 
