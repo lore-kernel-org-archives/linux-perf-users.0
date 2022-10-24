@@ -2,64 +2,141 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A5EF4FA3741
-	for <linux-perf-users@archiver.kernel.org>; Mon, 24 Oct 2022 11:41:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C15A2ECAAA1
+	for <linux-perf-users@archiver.kernel.org>; Mon, 24 Oct 2022 12:06:28 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231313AbiJXLlz (ORCPT
+        id S232655AbiJXMG1 (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Mon, 24 Oct 2022 07:41:55 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50272 "EHLO
+        Mon, 24 Oct 2022 08:06:27 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39064 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231395AbiJXLky (ORCPT
+        with ESMTP id S233064AbiJXMFC (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Mon, 24 Oct 2022 07:40:54 -0400
-Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C6CF54A13A;
-        Mon, 24 Oct 2022 04:39:18 -0700 (PDT)
+        Mon, 24 Oct 2022 08:05:02 -0400
+Received: from ams.source.kernel.org (ams.source.kernel.org [IPv6:2604:1380:4601:e00::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 81ED87D7B3;
+        Mon, 24 Oct 2022 04:51:17 -0700 (PDT)
 Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id 2474E6122D;
-        Mon, 24 Oct 2022 11:37:22 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 60AD8C433D6;
-        Mon, 24 Oct 2022 11:37:21 +0000 (UTC)
+        by ams.source.kernel.org (Postfix) with ESMTPS id 3B2FEB811A6;
+        Mon, 24 Oct 2022 11:50:26 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id B172EC433C1;
+        Mon, 24 Oct 2022 11:50:24 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1666611441;
-        bh=Sg7RXm6gaNLBY3hXnDTCoheg+w3EZUt8S3uWmJ5qWcw=;
+        s=k20201202; t=1666612224;
+        bh=G+CUiQUJ1bZrDrtFfptsL95qRNAeWuDsQo98fY38vHc=;
         h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=Ly7aPXct+oC2rDalw7JI8/35mFbH3FCRTes8nSXENb8o9F8hc4Fi/44e3veZDAV8L
-         eOfMBrKVNtuMmIgSRDucvghtEMc2cGhYFctJr1uxEEOdqOMlTeiG8eVnuuirnbLj17
-         NgsVOGsoT7QwMvRvzB3U9rYu1juqjSgTxq2IDk8SM+Ficb2+OZL47ZVugGjjtFb0FD
-         liPMaK1R794cze2jlHY3jojT4r5aOmBRvmuYACbZIa4b4IExQzteF1gSuDpE5xNJPw
-         rBkYDdZSwCArwYsxMvP6rQi74U4GPATSl+O32RizilrTCnSQD5Fsitt64Gpf4TIaSw
-         pp/c72Rt1XLTQ==
+        b=lboxBCI1uZp7dqHyNgbq/Tsb1EzRMKiAXaoJGxoX2Lic709NQpDfLIIp2TTHsJY5o
+         K1LK82nj9+J/j46Zb7zYIqy6uNToxFlPMa+zv5z6Oy8K2CzM3caJhCuaSmJYIjESns
+         TdzHLr2SKKWLmzXjAOzxKc44f0VgWVixqbA1Vdz7/zyhq0j5ICE0Jq5VIsEJ5oOua0
+         tuyV0w9Km5yYLSK0UpDLSwtHgKQK4PJ/pOYv2sPnOhN3SRsEI1YHxMXNE0Le2ij89L
+         YO6d0a4vhFIfIRNzKq+8TDuEdI4PhlMJSNX218lx4lJkg5YtTchd8MWN9YSoFyPLD9
+         0cBD0wixZYJgA==
 Received: by quaco.ghostprotocols.net (Postfix, from userid 1000)
-        id DA2F9404BE; Mon, 24 Oct 2022 08:37:18 -0300 (-03)
-Date:   Mon, 24 Oct 2022 08:37:18 -0300
+        id B966A404BE; Mon, 24 Oct 2022 08:50:21 -0300 (-03)
+Date:   Mon, 24 Oct 2022 08:50:21 -0300
 From:   Arnaldo Carvalho de Melo <acme@kernel.org>
-To:     Thomas Richter <tmricht@linux.ibm.com>
-Cc:     linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org,
-        svens@linux.ibm.com, gor@linux.ibm.com, sumanthk@linux.ibm.com,
-        hca@linux.ibm.com
-Subject: Re: [PATCH] perf list: Fix PMU name pai_crypto in perf list on s390
-Message-ID: <Y1Z47jk7411ZFtJQ@kernel.org>
-References: <20221021082557.2695382-1-tmricht@linux.ibm.com>
+To:     Jiri Olsa <jolsa@kernel.org>, Yang Jihong <yangjihong1@huawei.com>
+Cc:     peterz@infradead.org, mingo@redhat.com, mark.rutland@arm.com,
+        alexander.shishkin@linux.intel.com, namhyung@kernel.org,
+        adrian.hunter@intel.com, ak@linux.intel.com,
+        linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 1/3] perf daemon: Check err before calling
+ setup_server_config in __cmd_start
+Message-ID: <Y1Z7/U0ld3QBSHol@kernel.org>
+References: <20221022092735.114967-1-yangjihong1@huawei.com>
+ <20221022092735.114967-2-yangjihong1@huawei.com>
+ <Y1Z7JB/4t8sEJkV/@kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20221021082557.2695382-1-tmricht@linux.ibm.com>
+In-Reply-To: <Y1Z7JB/4t8sEJkV/@kernel.org>
 X-Url:  http://acmel.wordpress.com
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-Em Fri, Oct 21, 2022 at 10:25:57AM +0200, Thomas Richter escreveu:
-> commit e0b23af82d6f4 ("perf list: Add PMU pai_crypto event description for IBM z16")
-> introduced the Processor Activity Instrumentation for cryptographic
-> counters for z16. The PMU device driver exports the counters via sysfs
-> files listed in directory /sys/devices/pai_crypto.
+Em Mon, Oct 24, 2022 at 08:46:44AM -0300, Arnaldo Carvalho de Melo escreveu:
+> Em Sat, Oct 22, 2022 at 05:27:33PM +0800, Yang Jihong escreveu:
+> > If err!=0 before calling setup_server_config and reconfig==true,
+> > setup_server_config function may return 0 and err becomes 0.
+> > As a result, previous error is overwritten, need to check value of err first.
 
-Thanks, applied.
+Applied patches 2 and 3 meanwhile, thanks.
 
 - Arnaldo
 
+> > Signed-off-by: Yang Jihong <yangjihong1@huawei.com>
+> > ---
+> >  tools/perf/builtin-daemon.c | 2 +-
+> >  1 file changed, 1 insertion(+), 1 deletion(-)
+> > 
+> > diff --git a/tools/perf/builtin-daemon.c b/tools/perf/builtin-daemon.c
+> > index 6cb3f6cc36d0..b82bd902602a 100644
+> > --- a/tools/perf/builtin-daemon.c
+> > +++ b/tools/perf/builtin-daemon.c
+> > @@ -1333,7 +1333,7 @@ static int __cmd_start(struct daemon *daemon, struct option parent_options[],
+> >  			if (fda.entries[signal_pos].revents & POLLIN)
+> >  				err = handle_signalfd(daemon) < 0;
+> >  
+> > -			if (reconfig)
+> > +			if (!err && reconfig)
+> >  				err = setup_server_config(daemon);
+> >  		}
+> 
+> Expanding the context a bit:
+> 
+>         while (!done && !err) {
+>                 err = daemon__reconfig(daemon);
+> 
+>                 if (!err && fdarray__poll(&fda, -1)) {
+>                         bool reconfig = false;
+> 
+>                         if (fda.entries[sock_pos].revents & POLLIN)
+>                                 err = handle_server_socket(daemon, sock_fd);
+>                         if (fda.entries[file_pos].revents & POLLIN)
+>                                 err = handle_config_changes(daemon, conf_fd, &reconfig);
+>                         if (fda.entries[signal_pos].revents & POLLIN)
+>                                 err = handle_signalfd(daemon) < 0;
+> 
+>                         if (!err && reconfig)
+>                                 err = setup_server_config(daemon);
+>                 }
+>         }
+> 
+> The err you're checking may be the last one, that may have overwritten
+> 'err' from handle_config_changes(), perhaps moving things around helps?
+> I.e.:
+>                 if (!err && fdarray__poll(&fda, -1)) {
+>                         bool reconfig = false;
+> 
+>                         if (fda.entries[sock_pos].revents & POLLIN)
+>                                 err = handle_server_socket(daemon, sock_fd);
+>                         if (fda.entries[signal_pos].revents & POLLIN)
+>                                 err = handle_signalfd(daemon) < 0;
+>                         if (fda.entries[file_pos].revents & POLLIN)
+>                                 err = handle_config_changes(daemon, conf_fd, &reconfig);
+> 
+>                         if (!err && reconfig)
+>                                 err = setup_server_config(daemon);
+>                 }
+> 
+> 
+> ?
+> 
+> Jiri?
+> 
+> - Arnaldo
+> 
+> >  	}
+> > -- 
+> > 2.30.GIT
+> 
+> -- 
+> 
+> - Arnaldo
+
+-- 
+
+- Arnaldo
