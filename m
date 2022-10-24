@@ -2,141 +2,95 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C15A2ECAAA1
-	for <linux-perf-users@archiver.kernel.org>; Mon, 24 Oct 2022 12:06:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EB8EEC38A2D
+	for <linux-perf-users@archiver.kernel.org>; Mon, 24 Oct 2022 15:29:55 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232655AbiJXMG1 (ORCPT
+        id S231809AbiJXP3v (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Mon, 24 Oct 2022 08:06:27 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39064 "EHLO
+        Mon, 24 Oct 2022 11:29:51 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47004 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S233064AbiJXMFC (ORCPT
+        with ESMTP id S231157AbiJXP3e (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Mon, 24 Oct 2022 08:05:02 -0400
-Received: from ams.source.kernel.org (ams.source.kernel.org [IPv6:2604:1380:4601:e00::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 81ED87D7B3;
-        Mon, 24 Oct 2022 04:51:17 -0700 (PDT)
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by ams.source.kernel.org (Postfix) with ESMTPS id 3B2FEB811A6;
-        Mon, 24 Oct 2022 11:50:26 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id B172EC433C1;
-        Mon, 24 Oct 2022 11:50:24 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1666612224;
-        bh=G+CUiQUJ1bZrDrtFfptsL95qRNAeWuDsQo98fY38vHc=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=lboxBCI1uZp7dqHyNgbq/Tsb1EzRMKiAXaoJGxoX2Lic709NQpDfLIIp2TTHsJY5o
-         K1LK82nj9+J/j46Zb7zYIqy6uNToxFlPMa+zv5z6Oy8K2CzM3caJhCuaSmJYIjESns
-         TdzHLr2SKKWLmzXjAOzxKc44f0VgWVixqbA1Vdz7/zyhq0j5ICE0Jq5VIsEJ5oOua0
-         tuyV0w9Km5yYLSK0UpDLSwtHgKQK4PJ/pOYv2sPnOhN3SRsEI1YHxMXNE0Le2ij89L
-         YO6d0a4vhFIfIRNzKq+8TDuEdI4PhlMJSNX218lx4lJkg5YtTchd8MWN9YSoFyPLD9
-         0cBD0wixZYJgA==
-Received: by quaco.ghostprotocols.net (Postfix, from userid 1000)
-        id B966A404BE; Mon, 24 Oct 2022 08:50:21 -0300 (-03)
-Date:   Mon, 24 Oct 2022 08:50:21 -0300
-From:   Arnaldo Carvalho de Melo <acme@kernel.org>
-To:     Jiri Olsa <jolsa@kernel.org>, Yang Jihong <yangjihong1@huawei.com>
-Cc:     peterz@infradead.org, mingo@redhat.com, mark.rutland@arm.com,
-        alexander.shishkin@linux.intel.com, namhyung@kernel.org,
-        adrian.hunter@intel.com, ak@linux.intel.com,
-        linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 1/3] perf daemon: Check err before calling
- setup_server_config in __cmd_start
-Message-ID: <Y1Z7/U0ld3QBSHol@kernel.org>
-References: <20221022092735.114967-1-yangjihong1@huawei.com>
- <20221022092735.114967-2-yangjihong1@huawei.com>
- <Y1Z7JB/4t8sEJkV/@kernel.org>
+        Mon, 24 Oct 2022 11:29:34 -0400
+Received: from mga12.intel.com (mga12.intel.com [192.55.52.136])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3881B2CDE4;
+        Mon, 24 Oct 2022 07:16:18 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1666620978; x=1698156978;
+  h=message-id:date:mime-version:subject:to:cc:references:
+   from:in-reply-to:content-transfer-encoding;
+  bh=X3/yRnGq3LuZ70IQMEINL0knE9wzrPyEZSHDBsDmTRc=;
+  b=O/R/MdLcwnBg+tz+cBBPOFp6gc0SiBV1GmIzghiA6T1PQ7E48q4y7VWj
+   muDgZHUt9FeAx6tth8Udm8kP9Vsf/LJgJ7ZnkcOHY2kOx9Fu8tN2bsf5K
+   hKLQ4SwDc4cNcB9nk+Gp0AJpVPuiqp5BIQqHYF2buYBVbEuSej23bvXOU
+   7rkS0ipONqGMGOUyO9W557/y9XVvOwPZgHbeG5SWMdf2wxLswAraxZgY6
+   Z5U+S1WUFFhi7fqAyqBtsrf735KO0/z0XTtZIomYNSafwO82rP/AhHxl7
+   +VviyNyK6G1MbsLzuJKAByVq7NgABvNAfi1jy4Wp96Aoc/Xuzf4rKpMvA
+   g==;
+X-IronPort-AV: E=McAfee;i="6500,9779,10510"; a="287139504"
+X-IronPort-AV: E=Sophos;i="5.95,209,1661842800"; 
+   d="scan'208";a="287139504"
+Received: from fmsmga007.fm.intel.com ([10.253.24.52])
+  by fmsmga106.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 24 Oct 2022 07:00:23 -0700
+X-IronPort-AV: E=McAfee;i="6500,9779,10510"; a="633715546"
+X-IronPort-AV: E=Sophos;i="5.95,209,1661842800"; 
+   d="scan'208";a="633715546"
+Received: from ahunter6-mobl1.ger.corp.intel.com (HELO [10.0.2.15]) ([10.252.52.9])
+  by fmsmga007-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 24 Oct 2022 07:00:20 -0700
+Message-ID: <960317d2-1bf8-cc2a-8772-8d0f5a136b6b@intel.com>
+Date:   Mon, 24 Oct 2022 17:00:14 +0300
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <Y1Z7JB/4t8sEJkV/@kernel.org>
-X-Url:  http://acmel.wordpress.com
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
+ Firefox/102.0 Thunderbird/102.4.0
+Subject: Re: [PATCH 3/8] perf test: Use a test program in perf record tests
+Content-Language: en-US
+To:     Arnaldo Carvalho de Melo <acme@kernel.org>,
+        Ian Rogers <irogers@google.com>
+Cc:     Namhyung Kim <namhyung@kernel.org>, Jiri Olsa <jolsa@kernel.org>,
+        Ingo Molnar <mingo@kernel.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Adrian Hunter <adrian.hunter@intel.com>,
+        linux-perf-users@vger.kernel.org
+References: <20221020172643.3458767-1-namhyung@kernel.org>
+ <20221020172643.3458767-4-namhyung@kernel.org>
+ <CAP-5=fWKCdyFzR8ZZSK_2v6vT_RKngxxnXGieUVb8PBATJ64eQ@mail.gmail.com>
+ <Y1Z3/t4RtnB8r03t@kernel.org>
+From:   Adrian Hunter <adrian.hunter@intel.com>
+Organization: Intel Finland Oy, Registered Address: PL 281, 00181 Helsinki,
+ Business Identity Code: 0357606 - 4, Domiciled in Helsinki
+In-Reply-To: <Y1Z3/t4RtnB8r03t@kernel.org>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-Em Mon, Oct 24, 2022 at 08:46:44AM -0300, Arnaldo Carvalho de Melo escreveu:
-> Em Sat, Oct 22, 2022 at 05:27:33PM +0800, Yang Jihong escreveu:
-> > If err!=0 before calling setup_server_config and reconfig==true,
-> > setup_server_config function may return 0 and err becomes 0.
-> > As a result, previous error is overwritten, need to check value of err first.
+On 24/10/22 14:33, Arnaldo Carvalho de Melo wrote:
+> Em Thu, Oct 20, 2022 at 04:52:14PM -0700, Ian Rogers escreveu:
+>> On Thu, Oct 20, 2022 at 10:26 AM Namhyung Kim <namhyung@kernel.org> wrote:
+> 
+>>> If the system has cc it could build a test program with two threads
+>>> and then use it for more detailed testing.  Also it accepts an option
+>>> to run a thread forever to ensure multi-thread runs.
+>>>
+>>> If cc is not found, it falls back to use the default value 'true'.
+>>>
+>>> Signed-off-by: Namhyung Kim <namhyung@kernel.org>
+>>
+>> Acked-by: Ian Rogers <irogers@google.com>
+>>
+>> I wonder if these utilities should just be built into perf to avoid
+>> the cc dependency. Perhaps we can have a hidden option built into perf
+>> test.
+> 
+> Agreed, not depending on a compiler makes 'perf test' usable in more
+> systems, particularly production ones where we may want to check if perf
+> is passing all tests applicable to that system.
 
-Applied patches 2 and 3 meanwhile, thanks.
+I haven't seen anyone package anything except the perf executable, so
+I presume the only people running these tests install the source, and
+so need a compiler anyway.
 
-- Arnaldo
-
-> > Signed-off-by: Yang Jihong <yangjihong1@huawei.com>
-> > ---
-> >  tools/perf/builtin-daemon.c | 2 +-
-> >  1 file changed, 1 insertion(+), 1 deletion(-)
-> > 
-> > diff --git a/tools/perf/builtin-daemon.c b/tools/perf/builtin-daemon.c
-> > index 6cb3f6cc36d0..b82bd902602a 100644
-> > --- a/tools/perf/builtin-daemon.c
-> > +++ b/tools/perf/builtin-daemon.c
-> > @@ -1333,7 +1333,7 @@ static int __cmd_start(struct daemon *daemon, struct option parent_options[],
-> >  			if (fda.entries[signal_pos].revents & POLLIN)
-> >  				err = handle_signalfd(daemon) < 0;
-> >  
-> > -			if (reconfig)
-> > +			if (!err && reconfig)
-> >  				err = setup_server_config(daemon);
-> >  		}
-> 
-> Expanding the context a bit:
-> 
->         while (!done && !err) {
->                 err = daemon__reconfig(daemon);
-> 
->                 if (!err && fdarray__poll(&fda, -1)) {
->                         bool reconfig = false;
-> 
->                         if (fda.entries[sock_pos].revents & POLLIN)
->                                 err = handle_server_socket(daemon, sock_fd);
->                         if (fda.entries[file_pos].revents & POLLIN)
->                                 err = handle_config_changes(daemon, conf_fd, &reconfig);
->                         if (fda.entries[signal_pos].revents & POLLIN)
->                                 err = handle_signalfd(daemon) < 0;
-> 
->                         if (!err && reconfig)
->                                 err = setup_server_config(daemon);
->                 }
->         }
-> 
-> The err you're checking may be the last one, that may have overwritten
-> 'err' from handle_config_changes(), perhaps moving things around helps?
-> I.e.:
->                 if (!err && fdarray__poll(&fda, -1)) {
->                         bool reconfig = false;
-> 
->                         if (fda.entries[sock_pos].revents & POLLIN)
->                                 err = handle_server_socket(daemon, sock_fd);
->                         if (fda.entries[signal_pos].revents & POLLIN)
->                                 err = handle_signalfd(daemon) < 0;
->                         if (fda.entries[file_pos].revents & POLLIN)
->                                 err = handle_config_changes(daemon, conf_fd, &reconfig);
-> 
->                         if (!err && reconfig)
->                                 err = setup_server_config(daemon);
->                 }
-> 
-> 
-> ?
-> 
-> Jiri?
-> 
-> - Arnaldo
-> 
-> >  	}
-> > -- 
-> > 2.30.GIT
-> 
-> -- 
-> 
-> - Arnaldo
-
--- 
-
-- Arnaldo
