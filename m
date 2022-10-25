@@ -2,112 +2,147 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 88E5DFA373F
-	for <linux-perf-users@archiver.kernel.org>; Mon, 24 Oct 2022 22:54:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C1EBEC38A2D
+	for <linux-perf-users@archiver.kernel.org>; Tue, 25 Oct 2022 04:12:38 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231642AbiJXWyy (ORCPT
+        id S229890AbiJYEMh (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Mon, 24 Oct 2022 18:54:54 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35230 "EHLO
+        Tue, 25 Oct 2022 00:12:37 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52852 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232155AbiJXWye (ORCPT
+        with ESMTP id S229515AbiJYEMg (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Mon, 24 Oct 2022 18:54:34 -0400
-Received: from sin.source.kernel.org (sin.source.kernel.org [145.40.73.55])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id EEC39321FE6;
-        Mon, 24 Oct 2022 14:16:13 -0700 (PDT)
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by sin.source.kernel.org (Postfix) with ESMTPS id 6B8F3CE132B;
-        Mon, 24 Oct 2022 11:39:55 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 75F69C433B5;
-        Mon, 24 Oct 2022 11:39:53 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1666611593;
-        bh=fCEDp+PSEpDcC1ByB+UoAAPsz26Ay97tQb1BDgCAMcw=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=QSrakSOHsS3P5RL6IVRNLl5dfP43mYfX5r5hqT2sjPb1KXq9PkhUgrQVjF4/g82ZQ
-         mfxoyjfTbGOYo/3mWl0Q+flNELb7tHYPdD2m5FOsxMWHG24jsJTvfRZhRrDBSRDsD3
-         PeMIIbEgLURz4ntcCQYZuVkJPaQZhGHQm3wIT9FmEuEJRINx5oBrm9hwvl4KOME4Zq
-         8GS75NZ0KRDOqjMuyCmN1vutpmVilT2xGBJD2mTpBDH4qn9coOOGAv0OQcNLTGiGbU
-         ed0fRsuDR8fJMfBcJeqLt/UDgZayIC67sZiQS+zlJFXqUHXnnPW9XY3DtJ4lYUmLk/
-         5IvECQW6HEkJA==
-Received: by quaco.ghostprotocols.net (Postfix, from userid 1000)
-        id D915F404BE; Mon, 24 Oct 2022 08:39:51 -0300 (-03)
-Date:   Mon, 24 Oct 2022 08:39:51 -0300
-From:   Arnaldo Carvalho de Melo <acme@kernel.org>
-To:     Ian Rogers <irogers@google.com>
-Cc:     Namhyung Kim <namhyung@kernel.org>, Jiri Olsa <jolsa@kernel.org>,
+        Tue, 25 Oct 2022 00:12:36 -0400
+Received: from mail-oo1-f52.google.com (mail-oo1-f52.google.com [209.85.161.52])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id F2D9C4D4E3;
+        Mon, 24 Oct 2022 21:12:33 -0700 (PDT)
+Received: by mail-oo1-f52.google.com with SMTP id v8-20020a4ab688000000b00486ac81143fso609353ooo.1;
+        Mon, 24 Oct 2022 21:12:33 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=I+n3ELpnrMQZ9UlUM+88jrlsmKbPc2HnIditUU8hHxo=;
+        b=ZabQiwBNbE8egXjQLE0EsOY6VYoIhSdBChxKeSGonyF23olE5aqQWBP7aGRXxTewt9
+         SCNQhtk/FzbkZi499/2MtNGaLMfTAv9v1aLpkUuO2uU3oMasLauMHPL0B+WkJqW7WcHr
+         6dKDx0OJ6gsWgvf/eBmWrDlmiofWNaTX2b8V35y4XfwKLSvz8FU7BCp4c5Vh/2+UOCX2
+         chntskEmalEbCdNwoLPZbvS0xEqYXX6VdMPnoHrvpip+IK39W5qCGSTznQfNVjzXovLy
+         7G1MzavB7ijFdm5AO8M3GoLTgPe2xUn609yotRrhVvPcEYMm/mvfYWyUz+sJERPv8M/M
+         l52g==
+X-Gm-Message-State: ACrzQf0JC+QQtJwH/2P82vdxco28GIP9sSapgI5TvZw/TwHzxnFmuoFl
+        7WOCec8nWFNQy/gbVi8DXPINgqSgIiceyvG4qRE=
+X-Google-Smtp-Source: AMsMyM4a+TrRji3DXcaLtkdv+PXEKCRuKgatUYfE767a0ILZ6tgQBCGXswqANrxmm4UEpJ3eCWe1HhVqB5xFrGumx4c=
+X-Received: by 2002:a4a:b4cd:0:b0:476:8f72:5b60 with SMTP id
+ g13-20020a4ab4cd000000b004768f725b60mr15884896ooo.58.1666671153179; Mon, 24
+ Oct 2022 21:12:33 -0700 (PDT)
+MIME-Version: 1.0
+References: <20221020172643.3458767-1-namhyung@kernel.org> <20221020172643.3458767-4-namhyung@kernel.org>
+ <CAP-5=fWKCdyFzR8ZZSK_2v6vT_RKngxxnXGieUVb8PBATJ64eQ@mail.gmail.com>
+ <Y1Z3/t4RtnB8r03t@kernel.org> <960317d2-1bf8-cc2a-8772-8d0f5a136b6b@intel.com>
+ <Y1a2lmO/dmjEiZb0@kernel.org>
+In-Reply-To: <Y1a2lmO/dmjEiZb0@kernel.org>
+From:   Namhyung Kim <namhyung@kernel.org>
+Date:   Mon, 24 Oct 2022 21:12:21 -0700
+Message-ID: <CAM9d7cidzNM1XJbcouF47HY0UHH_EoYjx=3FYMJOm3q4f+Cu+w@mail.gmail.com>
+Subject: Re: [PATCH 3/8] perf test: Use a test program in perf record tests
+To:     Arnaldo Carvalho de Melo <acme@kernel.org>
+Cc:     Adrian Hunter <adrian.hunter@intel.com>,
+        Ian Rogers <irogers@google.com>, Jiri Olsa <jolsa@kernel.org>,
         Ingo Molnar <mingo@kernel.org>,
         Peter Zijlstra <peterz@infradead.org>,
         LKML <linux-kernel@vger.kernel.org>,
-        Adrian Hunter <adrian.hunter@intel.com>,
-        linux-perf-users@vger.kernel.org, Ammy Yi <ammy.yi@intel.com>
-Subject: Re: [PATCH v2] perf test: Do not fail Intel-PT misc test w/o
- libpython
-Message-ID: <Y1Z5h/Sy6s8AFp1P@kernel.org>
-References: <20221021181055.60183-1-namhyung@kernel.org>
- <CAP-5=fWaqhZu0sUTgBogpeOxF1gf=V0CZjQ=2NDJEbVB-Cvjew@mail.gmail.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CAP-5=fWaqhZu0sUTgBogpeOxF1gf=V0CZjQ=2NDJEbVB-Cvjew@mail.gmail.com>
-X-Url:  http://acmel.wordpress.com
+        linux-perf-users@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-Em Fri, Oct 21, 2022 at 03:00:04PM -0700, Ian Rogers escreveu:
-> On Fri, Oct 21, 2022 at 11:11 AM Namhyung Kim <namhyung@kernel.org> wrote:
-> >
-> > The virtuall LBR test uses a python script to check the max size of
-> 
-> nit: virtual
+On Mon, Oct 24, 2022 at 9:00 AM Arnaldo Carvalho de Melo
+<acme@kernel.org> wrote:
+>
+> Em Mon, Oct 24, 2022 at 05:00:14PM +0300, Adrian Hunter escreveu:
+> > On 24/10/22 14:33, Arnaldo Carvalho de Melo wrote:
+> > > Em Thu, Oct 20, 2022 at 04:52:14PM -0700, Ian Rogers escreveu:
+> > >> I wonder if these utilities should just be built into perf to avoid
+> > >> the cc dependency. Perhaps we can have a hidden option built into
+> > >> perf test.
+>
+> > > Agreed, not depending on a compiler makes 'perf test' usable in more
+> > > systems, particularly production ones where we may want to check if perf
+> > > is passing all tests applicable to that system.
+>
+> > I haven't seen anyone package anything except the perf executable, so
+> > I presume the only people running these tests install the source, and
+> > so need a compiler anyway.
+>
+> Humm?
+>
+> [root@quaco ~]# head -3 /etc/os-release
+> NAME="Fedora Linux"
+> VERSION="36 (Workstation Edition)"
+> ID=fedora
+> [root@quaco ~]#G
+>
+> [root@quaco ~]# rpm -qi perf
+> Name        : perf
+> Version     : 5.19.4
+> Release     : 200.fc36
+> Architecture: x86_64
+> Install Date: Mon 24 Oct 2022 12:57:34 PM -03
+> Group       : Unspecified
+> Size        : 12663136
+> License     : GPLv2
+> Signature   : RSA/SHA256, Thu 25 Aug 2022 07:16:04 PM -03, Key ID 999f7cbf38ab71f4
+> Source RPM  : kernel-tools-5.19.4-200.fc36.src.rpm
+> Build Date  : Thu 25 Aug 2022 06:30:42 PM -03
+> Build Host  : bkernel02.iad2.fedoraproject.org
+> Packager    : Fedora Project
+> Vendor      : Fedora Project
+> URL         : http://www.kernel.org/
+> Bug URL     : https://bugz.fedoraproject.org/kernel-tools
+> Summary     : Performance monitoring for the Linux kernel
+> Description :
+> This package contains the perf tool, which enables performance monitoring
+> of the Linux kernel.
+> [root@quaco ~]#
+>
+> [root@quaco ~]# rpm -ql perf
+> /etc/bash_completion.d/perf
+> /usr/bin/perf
+> /usr/lib/.build-id
+> /usr/lib/.build-id/0c
+> /usr/lib/.build-id/0c/54d587cab1b533b9ab777717ddd256ff84f241
+> /usr/lib/.build-id/15
+> /usr/lib/.build-id/15/6552556be0d4ca8cffb8e002d8a67add55aed5
+> /usr/lib/.build-id/15/c4dfaa3861f530ef60def5506385d4b0b8924f
+> /usr/lib/.build-id/1f
+> /usr/lib/.build-id/1f/799c084e326516a24a647cfd5f484cd054e0a2
+> /usr/lib/.build-id/23
+> /usr/lib/.build-id/23/311fe148dd3f3d487ca5ace54ff2faa72ea8da
+> /usr/lib/.build-id/37
+> /usr/lib/.build-id/37/c9ee70f321fae7fc1fc00fca91514c63f9f052
+> /usr/lib/.build-id/54
+> /usr/lib/.build-id/54/43b6bc332ad188b907fdde69ac02c9a69d158f
+> /usr/lib/.build-id/7e
+> /usr/lib/.build-id/7e/55e7a8e4df03137ec23b4135e205bc8eb77e05
+> /usr/lib/.build-id/84
+> /usr/lib/.build-id/84/3c3863a123d129c98fa7cb99a58d620c9e5edc
+> /usr/lib/.build-id/86
+> /usr/lib/.build-id/86/d063d2f9833a447d96504e5f9e472048d12c49
+> /usr/lib/.build-id/98
+> /usr/lib/.build-id/98/a28589fde6ce95d9f3d305f7c9853333a9415b
+> /usr/lib/.build-id/9e
+> /usr/lib/.build-id/9e/567f55ca9c2b4867eb95d4182da07d4843976d
+> /usr/lib/.build-id/b6
+> /usr/lib/.build-id/b6/f8c9a6d6e1990f8577a9fbac875f812a316a20
+> /usr/lib/.build-id/c0
+> /usr/lib/.build-id/c0/8b255f02ce8f3e90df2b6156d2d38b1221995d
+> /usr/lib/.build-id/d5/e964c3413f52492e6355852d25b2ab23b03e38
+> /usr/lib/.build-id/e8
+> /usr/lib/.build-id/e8/2de614bf77f501a4511cb70151b98392669c77
 
-Thanks, fixed and applied.
+Interesting, it contains some build-ids for system libraries?
 
-- Arnaldo
- 
-> > branch stack in the Intel-PT generated LBR.  But it didn't check whether
-> > python scripting is available (as it's optional).
-> >
-> > Let's skip the test if the python support is not available.
-> >
-> > Fixes: f77811a0f625 ("perf test: test_intel_pt.sh: Add 9 tests")
-> > Cc: Ammy Yi <ammy.yi@intel.com>
-> > Signed-off-by: Namhyung Kim <namhyung@kernel.org>
-> 
-> Acked-by: Ian Rogers <irogers@google.com>
-> 
-> Thanks,
-> Ian
-> 
-> > ---
-> >  tools/perf/tests/shell/test_intel_pt.sh | 6 ++++++
-> >  1 file changed, 6 insertions(+)
-> >
-> > diff --git a/tools/perf/tests/shell/test_intel_pt.sh b/tools/perf/tests/shell/test_intel_pt.sh
-> > index 4c0aabbe33bd..f5ed7b1af419 100755
-> > --- a/tools/perf/tests/shell/test_intel_pt.sh
-> > +++ b/tools/perf/tests/shell/test_intel_pt.sh
-> > @@ -526,6 +526,12 @@ test_kernel_trace()
-> >  test_virtual_lbr()
-> >  {
-> >         echo "--- Test virtual LBR ---"
-> > +       # Check if python script is supported
-> > +       libpython=$(perf version --build-options | grep python | grep -cv OFF)
-> > +       if [ "${libpython}" != "1" ] ; then
-> > +               echo "SKIP: python scripting is not supported"
-> > +               return 2
-> > +       fi
-> >
-> >         # Python script to determine the maximum size of branch stacks
-> >         cat << "_end_of_file_" > "${maxbrstack}"
-> > --
-> > 2.38.0.135.g90850a2211-goog
-> >
-
--- 
-
-- Arnaldo
+Thanks,
+Namhyung
