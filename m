@@ -2,147 +2,296 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 62CB9C38A2D
-	for <linux-perf-users@archiver.kernel.org>; Tue, 25 Oct 2022 13:07:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6CA9CC38A2D
+	for <linux-perf-users@archiver.kernel.org>; Tue, 25 Oct 2022 13:11:11 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231435AbiJYNHa (ORCPT
+        id S232620AbiJYNLK (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Tue, 25 Oct 2022 09:07:30 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38148 "EHLO
+        Tue, 25 Oct 2022 09:11:10 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34264 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232732AbiJYNHN (ORCPT
+        with ESMTP id S232031AbiJYNKx (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Tue, 25 Oct 2022 09:07:13 -0400
-Received: from NAM10-DM6-obe.outbound.protection.outlook.com (mail-dm6nam10on2061.outbound.protection.outlook.com [40.107.93.61])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 259CA26AFA;
-        Tue, 25 Oct 2022 06:07:06 -0700 (PDT)
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=juIQ+3YUVxwJ92wr7EA/RA6ifXZjs/o+ZS9knbZtalx8usupwYZzPgu6TaVva0DZIeDuBdKhdACE0EeIYpDfxQHOrMwI0Ey/U08nC3lyXczHfl8AnIDkU3O0IcXgzBKD+APZgMyhii36FWy3+OtrizZL1Mw/E4L7hW9gqUfHHWZKPh9a59EpiMchGZYrgZDl1l1xwyuQndodD/xwPyax2meURMW6KLsERlFuPt+ufVjr61Wsr9JR1e56poyCoktiZj9M6au7MONqAEGKnYi0TYXOhk16Lzr06vrbIz0ZZQS4W9/8Orz5U0h6eylSlf7AE7pMZOeL+h0KwV63ZZJBRg==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=IeZEfp6i9AIFm3Et71jHn9SScpNXSRc09vv1TiS4fJs=;
- b=og/lnRFmC1L87L7L3EE3t+cWqHUaepWkF32YwRQCI5vhRbiKn3qYuSbhE/2Y7kbBv3vSjuHSPGpQxdDdtaLaiRPoleKB8OhQfOOeu2ipFAndDD5rD4I8Fk4ojpi++fIjXfhuUn5DxgFW3BPKrmT010fUOEzbsYzSCZsVon1Koy0Pmh4gwpM5ZjqLspNXLvNQPWupR/JjadCjnyQ+W5dulO+ET8rpXD1hXVzTCr8xrSi2Z7HzS4bY+qNTTXjqQTDG4N9YYHVMYdWWJh+d0by7h9xH7ufXl6sxqvAjwJxLLxTDB5T2tsXs/EdihcjWm8/h8ixC5+ULcyqTyR8FCarTFw==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=amd.com; dmarc=pass action=none header.from=amd.com; dkim=pass
- header.d=amd.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=IeZEfp6i9AIFm3Et71jHn9SScpNXSRc09vv1TiS4fJs=;
- b=pDT6DoxW8VWuWtH97ht31nlHfoEbGNNWSggoZA0y5iC9kijzbCmDboNnE9hUXE73PBtVw3Uxd5FermDnbrvqEZqFYNbSr8I2TBiVtt8xjC5XVniyMKVwN4J1yd5CBYCVUS/C+AzZfDsfTeeD0MAQJ7vQnhUQ7UXgMGZQ3sLiVWg=
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=amd.com;
-Received: from PH7PR12MB6588.namprd12.prod.outlook.com (2603:10b6:510:210::10)
- by PH0PR12MB5484.namprd12.prod.outlook.com (2603:10b6:510:eb::14) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.5746.26; Tue, 25 Oct
- 2022 13:07:04 +0000
-Received: from PH7PR12MB6588.namprd12.prod.outlook.com
- ([fe80::fa1e:a29e:2f2c:43d1]) by PH7PR12MB6588.namprd12.prod.outlook.com
- ([fe80::fa1e:a29e:2f2c:43d1%9]) with mapi id 15.20.5746.028; Tue, 25 Oct 2022
- 13:07:04 +0000
-Message-ID: <d577887d-b86b-82be-8081-f7bebacd8067@amd.com>
-Date:   Tue, 25 Oct 2022 18:36:46 +0530
-User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:102.0) Gecko/20100101
- Thunderbird/102.3.3
-Subject: Re: Perf: BUG: kernel NULL pointer dereference, address:
- 0000000000000198
-Content-Language: en-US
-To:     Naresh Kamboju <naresh.kamboju@linaro.org>
-Cc:     Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Borislav Petkov <bp@alien8.de>,
+        Tue, 25 Oct 2022 09:10:53 -0400
+Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5D74133343;
+        Tue, 25 Oct 2022 06:10:49 -0700 (PDT)
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by dfw.source.kernel.org (Postfix) with ESMTPS id ED10C6192B;
+        Tue, 25 Oct 2022 13:10:48 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 00E2DC433D6;
+        Tue, 25 Oct 2022 13:10:47 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1666703448;
+        bh=bw03ye+rKmsbJIFPx/gqKVQcse2xCyext/afkDTHNgA=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=GFF1KfhIa+bjSE5HPkhIJ5sFxpcsyvYHolYGozyIAgw8a/YnpBippARd7DVRhDrjE
+         +yw1Y7+2xS0IoS2JuE7Oe3aOltqiUA1GzL8nWbK1cD02yQRWWq3L0eEex+q+Xukw/9
+         PY5ID6lyYe33QctLppJC29WO53mjWA7pHbKnx8HMmHCZsPhnEgINvOpIQ7XyQ+6m99
+         /io8ELlCHYY4qkcoH8bFRcwRwBolSb5yWRu78PV6ohCllQGzU8NjHESWv8ktnQtznl
+         7ZiJa0cXpekoP4LDZO0MMvT0LRCeYidnsMGPfhf5wDEbXXrxDhQvTStAylxtiw80m6
+         Mq1Y6ClxQepQQ==
+Received: by quaco.ghostprotocols.net (Postfix, from userid 1000)
+        id 46BA7404BE; Tue, 25 Oct 2022 10:10:45 -0300 (-03)
+Date:   Tue, 25 Oct 2022 10:10:45 -0300
+From:   Arnaldo Carvalho de Melo <acme@kernel.org>
+To:     Namhyung Kim <namhyung@kernel.org>,
+        "Justin M. Forbes" <jforbes@fedoraproject.org>,
+        Steven Rostedt <rostedt@goodmis.org>
+Cc:     Adrian Hunter <adrian.hunter@intel.com>,
+        Ian Rogers <irogers@google.com>, Jiri Olsa <jolsa@kernel.org>,
+        Ingo Molnar <mingo@kernel.org>,
         Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        linux-perf-users@vger.kernel.org,
-        open list <linux-kernel@vger.kernel.org>,
-        regressions@lists.linux.dev, lkft-triage@lists.linaro.org
-References: <CA+G9fYtOP-spGS7gYyBB-8wpUDiKxd5e_Nk05J9gzWR_DLBeFA@mail.gmail.com>
- <4429582f-155a-04d2-d139-a834bb325612@amd.com>
-From:   Ravi Bangoria <ravi.bangoria@amd.com>
-In-Reply-To: <4429582f-155a-04d2-d139-a834bb325612@amd.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: PN2PR01CA0025.INDPRD01.PROD.OUTLOOK.COM
- (2603:1096:c01:25::30) To PH7PR12MB6588.namprd12.prod.outlook.com
- (2603:10b6:510:210::10)
+        LKML <linux-kernel@vger.kernel.org>,
+        linux-perf-users@vger.kernel.org
+Subject: Re: [PATCH 3/8] perf test: Use a test program in perf record tests
+Message-ID: <Y1fgVUaOhEdYro2P@kernel.org>
+References: <20221020172643.3458767-1-namhyung@kernel.org>
+ <20221020172643.3458767-4-namhyung@kernel.org>
+ <CAP-5=fWKCdyFzR8ZZSK_2v6vT_RKngxxnXGieUVb8PBATJ64eQ@mail.gmail.com>
+ <Y1Z3/t4RtnB8r03t@kernel.org>
+ <960317d2-1bf8-cc2a-8772-8d0f5a136b6b@intel.com>
+ <Y1a2lmO/dmjEiZb0@kernel.org>
+ <CAM9d7cidzNM1XJbcouF47HY0UHH_EoYjx=3FYMJOm3q4f+Cu+w@mail.gmail.com>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: PH7PR12MB6588:EE_|PH0PR12MB5484:EE_
-X-MS-Office365-Filtering-Correlation-Id: 87945682-e052-45a2-84b9-08dab689cffd
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: X/xWd/E/4J6nS/JqoRTVN2tBLdI4XdL8DDFSFg2pERQJD/a5CxLQFj9bqrADq7ZT4CAF6oCcHzDmLYEgEavFDH9e6HpcxYQWTSuI7mbAdtErasw520T8mX/+nwt7btL0UTCqKud8KzKQ5SYFOEBrMgvWW4vEG10SwlI+h64PdgiHrAkOQGEbjXXJeIXDr9JjQAOhprCZ3ZtESkFIxXSiZ/6DvFdEQ2uedhp9a6hUVo53ma/W5JLaWjVcu9tH4ue9ThqWkfDAzQLuij43eGSRZ7EJMV6I26M88jQ3LGgNhhvQsvx5xtFXKy7/x0KZak6Z3RvrfnzbnNg2d5P3MUeq5LDYQz9PHE5M9OmY79tXDQ8y5v3T7/KLkgKlosIPyAa3+94odCEH9SrXMgwfGFQtlNTzp46FjOH1voGnMExggFhx/XqUXScNRB+Mr6wHV/CIejvLdM7F1NC4iRVXB/ueNDCv17tZIOno7UQzmWmP70EJ/DnJZ7uvum49jGILXoVFXlbgUxT9GPuMdczs2lDHHxh0sZzpQgTtJvQebP/95y97MeqZL2GDFVqkgu/0SDq1zoU8iLznYEjeOmihsnOb0CdIEUU9W83bbiA6i4bsjgZrH4i8H1ZyM5Tyl+4y+fvGKKftl6XgpXQT7NpSLjVGih+pxXGTs46czozi2YwfxaZLxbvVkl/tkg0wUVS8GwcbsNthuEHw3FcCQDZ8DXUpZQDGrCGxTg1mvD5lEAH5zHgaT9dWwwht7tP7cff1PXPtn03ZAp2kBHEWYr4VAJ+zIFowc661AjHhJtVFk+l1bpZtumU3NuaayGDItQyKR+DKfO2DawS1kseMRazQGbplSA==
-X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:PH7PR12MB6588.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230022)(4636009)(366004)(396003)(39860400002)(346002)(136003)(376002)(451199015)(6486002)(31686004)(6916009)(6512007)(316002)(53546011)(26005)(36756003)(54906003)(44832011)(4744005)(66556008)(4326008)(41300700001)(86362001)(66946007)(66476007)(8676002)(8936002)(2906002)(31696002)(5660300002)(6666004)(478600001)(83380400001)(966005)(6506007)(38100700002)(186003)(2616005)(43740500002)(45980500001);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0: =?utf-8?B?TWo3OXJaVXBrVGdHTFAzcG56d0syTGQ3Q1p4cktmbE1MYm9qbkNxVkpudEU2?=
- =?utf-8?B?LzFwbmRoMEtKWjI3em03WlJ3UklnUEliSE5ZMlM0YUVjNVhCRC9XQVo3Qmtu?=
- =?utf-8?B?cHg5cVFtMy9lNEZocmgxK2tSaFQvS0ViblIwNVdPcDF3OVdNck94YmVOZjNG?=
- =?utf-8?B?am53VmZtUWF0VStyZXpkZXEzZTBSUU5uTjd5WVVIeEJWNUpaVitlN0NjY1lX?=
- =?utf-8?B?ZlRoMHY1VG9BcnMrYVI0OEFhWWhoMXhSUGd0UXk2QWZOZURsU0YzRmZVTW5t?=
- =?utf-8?B?WHp2WU9nb2J5MSsrZ3R0cTFTanV3OHhKcUZIdHVoRmlNU2U0c2NUMUtUMU1j?=
- =?utf-8?B?Q3ZkMEZPcWJMNlYxL3JrR1lnSDhOUTdOeUZuZ2IyQ3IwVDhnSDJjYmkxaFhv?=
- =?utf-8?B?R2ZSeUUyZXhIMFVqSFY0aUZyQy9Wa1l6QnpyV2VOLzFBaytTRndsOUpoVkZn?=
- =?utf-8?B?VndpL0N3alhpNWQvSTBHT3psZmtQUndQNElpWGlvMThZQWg4UHpUNndKMzR2?=
- =?utf-8?B?b0hsWlhzZ2ZQNVJDTjJPMDE5ZmV0cTAyRG9PcUswSHpxalNjSFNnUlU1SmRv?=
- =?utf-8?B?SlFIbGlFMXFta2JKcU5KRkJPYXJxTXJHbjdCcDVzRFJra2VLcWVtT210amNF?=
- =?utf-8?B?SHhseTZLeWRacVpmMjd0YkJFUEJ3dkJETFc2K0lTcHkyM3UxOVZVMFFrbURT?=
- =?utf-8?B?VGFBSkU4a0N0MkF6T1VaMVJIWGVRaHd2eEZFZWNmd3Bqa1hPRlZPVU9mNHpT?=
- =?utf-8?B?RUNVOWZoZW9VM0dIc3dxRnV6MTIxTHRHTmpKeEFIby9QYXdqWVZHM1h4TGpY?=
- =?utf-8?B?Mk1VRUUxSzFMRTFoRXlIZjlmVTMxbldHZTZrazNoOGVnRUxwSkpqNFhYNWI4?=
- =?utf-8?B?RHgyRTRkSG5qMXBObERqZUMvdmFzVmxwUGRkYkM3RGRMbUJOWG42c2ZCd3Uz?=
- =?utf-8?B?WGJueHhOUSt1WkZod0IrZUN2ZnVwYXJYaEhLQWJKa3dERzdLT3EzWGlWNnJ4?=
- =?utf-8?B?T0FjVVRoWjRkNDkrOWNnMTBrTU5WMkp3a0NxR1pKMENXYzhiMWVHOG9ocEdh?=
- =?utf-8?B?bm9tYVBTSXZUV3BJZE9NdFlWeDVnQlRXY2Q2RmdZV2lOdm9zSytqeWhUSzU2?=
- =?utf-8?B?SXp1ejRvbE1tTktKNmhxNmxoWlpyVUFVMTZmcG9YRTZhRTZrT0lnd0d4MHAz?=
- =?utf-8?B?dXprcWxQR3VuRnUvYzNBcisxTnVGUVFEd1laT0RqM3NQSXZZSVB6ekU2WENS?=
- =?utf-8?B?WDZPU01QcDFiMDNYcUZKZS9sUTBMdHM1V3ljUGtnZTFpampWV3h2akpNa0lG?=
- =?utf-8?B?VXlDa2o1YlZlQnJqVkdXdExxYlFLcFJYZFplTENVdDZTTlB5eDBYM3craTB1?=
- =?utf-8?B?dVJhTjdoRVcvMm90UVpuRXB2YjZwMEc4bGlMVDQ1NVZ4TWZLdmxWSHlsZmtT?=
- =?utf-8?B?Z1ZmTnBmSjFodDZnRnY1RkhXbTBkd044dnNuRGJiNk15WVhjZ3dkWXF4aWQ2?=
- =?utf-8?B?L0tqbDZkNFNiWlJmYjV1WEdMVk1kZFM2NkFzRGc3bG9XUFRyK3hUdWVLdU55?=
- =?utf-8?B?cmlrbkdwRUhpUXI5RDAwRVVUelEzUTl5REloeUFGZ2xiV1FmVzk3SXdQREpt?=
- =?utf-8?B?eVJycE5rQmt6bEd5dWMzNkl3L3d0dTZJZTFFemdKRlJ2Z1NWWXorV3ZqanVz?=
- =?utf-8?B?QzNhMVhJVEs3TzZSSTNsNDY4MEhibkoxczBaWVppY3VwZExRZEVtbTd3U0k1?=
- =?utf-8?B?TXZkREtXa01uTE9lbnU3Y2dyNEZUUmI3RkttY1Q1T0pPL2pldjFBS0hxaDQ2?=
- =?utf-8?B?d2twYzlud0tZVi95RlRUdkVUMklKM1JQT0tNeDJxRDRiN0w1NERSWWlrQTh2?=
- =?utf-8?B?WU1rWmpIditvaTN2UTVaNUsxZGNrY2NONW5sZXJRaEFUVTRoTUNzQ2tHdE9x?=
- =?utf-8?B?K2kxY0kzei9hSmp4bzVEMHBuNGtTSUd6RXpXS2hPTDhibHQwYzBad2UwSVpZ?=
- =?utf-8?B?Z0dNRGRRWnhLMDg2R0EzaUNxdDdKQnRTZnluT1hEY2Z3QUpOTXo5T3pFYjdZ?=
- =?utf-8?B?c2JyYlJLRENSUlMyVFV6L2g4c0E4b1hQbzhUc2ZCS2E1RndaL3F0OFE2Nmxq?=
- =?utf-8?Q?Slw3ZOmj0t+4djgLTvWLd4mHg?=
-X-OriginatorOrg: amd.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 87945682-e052-45a2-84b9-08dab689cffd
-X-MS-Exchange-CrossTenant-AuthSource: PH7PR12MB6588.namprd12.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 25 Oct 2022 13:07:04.5913
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: 40J6DNhyxrRl62xJuNo+zUlzXOlhUzPNdUdDvd+blRt0oQJeHLPjUYUab0b/F9chbJjn/5ox74+mEIVLAooa+A==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: PH0PR12MB5484
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CAM9d7cidzNM1XJbcouF47HY0UHH_EoYjx=3FYMJOm3q4f+Cu+w@mail.gmail.com>
+X-Url:  http://acmel.wordpress.com
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-On 25-Oct-22 9:59 AM, Ravi Bangoria wrote:
-> On 20-Oct-22 12:24 PM, Naresh Kamboju wrote:
->> Following kernel BUG noticed while running perf testing on qemu-x86-64.
+Em Mon, Oct 24, 2022 at 09:12:21PM -0700, Namhyung Kim escreveu:
+> On Mon, Oct 24, 2022 at 9:00 AM Arnaldo Carvalho de Melo <acme@kernel.org> wrote:
+
+> > Em Mon, Oct 24, 2022 at 05:00:14PM +0300, Adrian Hunter escreveu:
+> > > On 24/10/22 14:33, Arnaldo Carvalho de Melo wrote:
+> > > > Em Thu, Oct 20, 2022 at 04:52:14PM -0700, Ian Rogers escreveu:
+> > > >> I wonder if these utilities should just be built into perf to avoid
+> > > >> the cc dependency. Perhaps we can have a hidden option built into
+> > > >> perf test.
+
+> > > > Agreed, not depending on a compiler makes 'perf test' usable in more
+> > > > systems, particularly production ones where we may want to check if perf
+> > > > is passing all tests applicable to that system.
+
+> > > I haven't seen anyone package anything except the perf executable, so
+> > > I presume the only people running these tests install the source, and
+> > > so need a compiler anyway.
+
+> > Humm?
+
+> > [root@quaco ~]# head -3 /etc/os-release
+> > NAME="Fedora Linux"
+> > VERSION="36 (Workstation Edition)"
+> > ID=fedora
+> > [root@quaco ~]#G
+
+> > [root@quaco ~]# rpm -qi perf
+> > Name        : perf
+> > Version     : 5.19.4
+> > Release     : 200.fc36
+> > Architecture: x86_64
+> > Install Date: Mon 24 Oct 2022 12:57:34 PM -03
+> > Group       : Unspecified
+> > Size        : 12663136
+> > License     : GPLv2
+> > Signature   : RSA/SHA256, Thu 25 Aug 2022 07:16:04 PM -03, Key ID 999f7cbf38ab71f4
+> > Source RPM  : kernel-tools-5.19.4-200.fc36.src.rpm
+> > Build Date  : Thu 25 Aug 2022 06:30:42 PM -03
+> > Build Host  : bkernel02.iad2.fedoraproject.org
+> > Packager    : Fedora Project
+> > Vendor      : Fedora Project
+> > URL         : http://www.kernel.org/
+> > Bug URL     : https://bugz.fedoraproject.org/kernel-tools
+> > Summary     : Performance monitoring for the Linux kernel
+> > Description :
+> > This package contains the perf tool, which enables performance monitoring
+> > of the Linux kernel.
+> > [root@quaco ~]#
+> >
+> > [root@quaco ~]# rpm -ql perf
+> > /etc/bash_completion.d/perf
+> > /usr/bin/perf
+> > /usr/lib/.build-id
+> > /usr/lib/.build-id/0c
+> > /usr/lib/.build-id/0c/54d587cab1b533b9ab777717ddd256ff84f241
+> > /usr/lib/.build-id/15
+> > /usr/lib/.build-id/15/6552556be0d4ca8cffb8e002d8a67add55aed5
+> > /usr/lib/.build-id/15/c4dfaa3861f530ef60def5506385d4b0b8924f
+> > /usr/lib/.build-id/1f
+> > /usr/lib/.build-id/1f/799c084e326516a24a647cfd5f484cd054e0a2
+> > /usr/lib/.build-id/23
+> > /usr/lib/.build-id/23/311fe148dd3f3d487ca5ace54ff2faa72ea8da
+> > /usr/lib/.build-id/37
+> > /usr/lib/.build-id/37/c9ee70f321fae7fc1fc00fca91514c63f9f052
+> > /usr/lib/.build-id/54
+> > /usr/lib/.build-id/54/43b6bc332ad188b907fdde69ac02c9a69d158f
+> > /usr/lib/.build-id/7e
+> > /usr/lib/.build-id/7e/55e7a8e4df03137ec23b4135e205bc8eb77e05
+> > /usr/lib/.build-id/84
+> > /usr/lib/.build-id/84/3c3863a123d129c98fa7cb99a58d620c9e5edc
+> > /usr/lib/.build-id/86
+> > /usr/lib/.build-id/86/d063d2f9833a447d96504e5f9e472048d12c49
+> > /usr/lib/.build-id/98
+> > /usr/lib/.build-id/98/a28589fde6ce95d9f3d305f7c9853333a9415b
+> > /usr/lib/.build-id/9e
+> > /usr/lib/.build-id/9e/567f55ca9c2b4867eb95d4182da07d4843976d
+> > /usr/lib/.build-id/b6
+> > /usr/lib/.build-id/b6/f8c9a6d6e1990f8577a9fbac875f812a316a20
+> > /usr/lib/.build-id/c0
+> > /usr/lib/.build-id/c0/8b255f02ce8f3e90df2b6156d2d38b1221995d
+> > /usr/lib/.build-id/d5/e964c3413f52492e6355852d25b2ab23b03e38
+> > /usr/lib/.build-id/e8
+> > /usr/lib/.build-id/e8/2de614bf77f501a4511cb70151b98392669c77
 > 
-> Thanks Naresh. I'm aware of the crash[1] but haven't got a chance to
-> root cause it. Let me try to spend some time on it.
+> Interesting, it contains some build-ids for system libraries?
 
-I tried to mimic https://lkft.validation.linaro.org/scheduler/job/5708609.
-However, I don't see a way to download lava-guest.qcow2. So I just used
-rootfs and kernel:
+[acme@quaco ~]$ ls -la /usr/lib/.build-id/e8/2de614bf77f501a4511cb70151b98392669c77
+lrwxrwxrwx. 1 root root 67 Aug 25 18:33 /usr/lib/.build-id/e8/2de614bf77f501a4511cb70151b98392669c77 -> ../../../../usr/libexec/perf-core/dlfilters/dlfilter-test-api-v0.so
+[acme@quaco ~]$
 
-  /usr/bin/qemu-system-x86_64 -cpu host -enable-kvm -nographic -net nic,model=virtio,macaddr=DE:AD:BE:EF:66:20 -net user -m 1024 -monitor none -kernel bzImage --append "root=/dev/sda  rootwait console=ttyS0,115200" -hda lkft-console-image-intel-corei7-64-20221019172733.rootfs.ext4 -m 4096 -smp 4 -nographic
+Yeah, strange:
 
-And I ran perf test inside the guest, which ran fine.
+[acme@quaco ~]$ rpm -ql perf | grep build-id/../
+/usr/lib/.build-id/0c/54d587cab1b533b9ab777717ddd256ff84f241
+/usr/lib/.build-id/15/6552556be0d4ca8cffb8e002d8a67add55aed5
+/usr/lib/.build-id/15/c4dfaa3861f530ef60def5506385d4b0b8924f
+/usr/lib/.build-id/1f/799c084e326516a24a647cfd5f484cd054e0a2
+/usr/lib/.build-id/23/311fe148dd3f3d487ca5ace54ff2faa72ea8da
+/usr/lib/.build-id/37/c9ee70f321fae7fc1fc00fca91514c63f9f052
+/usr/lib/.build-id/54/43b6bc332ad188b907fdde69ac02c9a69d158f
+/usr/lib/.build-id/7e/55e7a8e4df03137ec23b4135e205bc8eb77e05
+/usr/lib/.build-id/84/3c3863a123d129c98fa7cb99a58d620c9e5edc
+/usr/lib/.build-id/86/d063d2f9833a447d96504e5f9e472048d12c49
+/usr/lib/.build-id/98/a28589fde6ce95d9f3d305f7c9853333a9415b
+/usr/lib/.build-id/9e/567f55ca9c2b4867eb95d4182da07d4843976d
+/usr/lib/.build-id/b6/f8c9a6d6e1990f8577a9fbac875f812a316a20
+/usr/lib/.build-id/c0/8b255f02ce8f3e90df2b6156d2d38b1221995d
+/usr/lib/.build-id/d5/e964c3413f52492e6355852d25b2ab23b03e38
+/usr/lib/.build-id/e8/2de614bf77f501a4511cb70151b98392669c77
+[acme@quaco ~]$
+[acme@quaco ~]$ rpm -ql perf | grep build-id/../ | xargs realpath
+/usr/lib64/traceevent/plugins/plugin_sched_switch.so
+/usr/lib64/traceevent/plugins/plugin_kmem.so
+/usr/lib64/traceevent/plugins/plugin_tlb.so
+/usr/lib64/traceevent/plugins/plugin_jbd2.so
+/usr/lib64/traceevent/plugins/plugin_hrtimer.so
+/usr/lib64/traceevent/plugins/plugin_mac80211.so
+/usr/lib64/libperf-jvmti.so
+/usr/lib64/traceevent/plugins/plugin_cfg80211.so
+/usr/lib64/traceevent/plugins/plugin_xen.so
+/usr/lib64/traceevent/plugins/plugin_kvm.so
+/usr/libexec/perf-core/dlfilters/dlfilter-show-cycles.so
+/usr/lib64/traceevent/plugins/plugin_scsi.so
+/usr/lib64/traceevent/plugins/plugin_futex.so
+/usr/bin/perf
+/usr/lib64/traceevent/plugins/plugin_function.so
+/usr/libexec/perf-core/dlfilters/dlfilter-test-api-v0.so
+[acme@quaco ~]$ rpm -ql perf | grep build-id/../ | xargs realpath | xargs rpm -qf
+libtraceevent-1.5.3-2.fc36.x86_64
+libtraceevent-1.5.3-2.fc36.x86_64
+libtraceevent-1.5.3-2.fc36.x86_64
+libtraceevent-1.5.3-2.fc36.x86_64
+libtraceevent-1.5.3-2.fc36.x86_64
+libtraceevent-1.5.3-2.fc36.x86_64
+perf-5.19.4-200.fc36.x86_64
+libtraceevent-1.5.3-2.fc36.x86_64
+libtraceevent-1.5.3-2.fc36.x86_64
+libtraceevent-1.5.3-2.fc36.x86_64
+perf-5.19.4-200.fc36.x86_64
+libtraceevent-1.5.3-2.fc36.x86_64
+libtraceevent-1.5.3-2.fc36.x86_64
+perf-5.19.4-200.fc36.x86_64
+libtraceevent-1.5.3-2.fc36.x86_64
+perf-5.19.4-200.fc36.x86_64
+[acme@quaco ~]$
 
-Would it be possible for you to redo the experiment and see if you are able
-to reproduce it consistently.
+Humm, but then the build-ids are different...
 
-Thanks,
-Ravi
+[acme@quaco ~]$ rpm -ql libtraceevent | grep build-id/../
+/usr/lib/.build-id/00/59bd37dc1c345eb2f98cf2bc1163bc1fd4b63e
+/usr/lib/.build-id/00/b22aa8cc2b81e4cb383d8b4dc14cbeb958fda6
+/usr/lib/.build-id/11/6a8d17c89795d2269d3d65906ea7c7c5bcb856
+/usr/lib/.build-id/24/8bfb4534954eb71ab3e5f7887507cb8981f921
+/usr/lib/.build-id/57/0768e8ea5155cf2759c4f5dca3736a73c3dfad
+/usr/lib/.build-id/61/2744cd9cb2d1b0c569b0c86578d11be7227f27
+/usr/lib/.build-id/9d/630834441f4e382ddcecef810b100737bb56e4
+/usr/lib/.build-id/b0/57189b558351ace427ae0a650c248deca4badd
+/usr/lib/.build-id/b1/a0003b83e307cf61d7c8a2751e5c78e6ccfc87
+/usr/lib/.build-id/b4/b8a30ebf86cb849bcb0cabc4d452c1a44487cc
+/usr/lib/.build-id/ce/5e0647f756ec2c30b2e6df9a5a98e552871cb6
+/usr/lib/.build-id/e0/a6a6207f56674ffacd7b063fd2acd4cec3f661
+/usr/lib/.build-id/f4/86fb5b3072945405d0590045715d18adc7aa18
+[acme@quaco ~]$
+[acme@quaco ~]$ rpm -ql libtraceevent | grep build-id/../ | xargs realpath
+/usr/lib64/traceevent/plugins/plugin_function.so
+/usr/lib64/traceevent/plugins/plugin_scsi.so
+/usr/lib64/traceevent/plugins/plugin_futex.so
+/usr/lib64/traceevent/plugins/plugin_cfg80211.so
+/usr/lib64/traceevent/plugins/plugin_hrtimer.so
+/usr/lib64/traceevent/plugins/plugin_mac80211.so
+/usr/lib64/traceevent/plugins/plugin_sched_switch.so
+/usr/lib64/traceevent/plugins/plugin_jbd2.so
+/usr/lib64/traceevent/plugins/plugin_tlb.so
+/usr/lib64/traceevent/plugins/plugin_xen.so
+/usr/lib64/traceevent/plugins/plugin_kvm.so
+/usr/lib64/traceevent/plugins/plugin_kmem.so
+/usr/lib64/libtraceevent.so.1.5.3
+[acme@quaco ~]$ rpm -ql libtraceevent | grep build-id/../ | xargs realpath  | xargs rpm -qf
+libtraceevent-1.5.3-2.fc36.x86_64
+libtraceevent-1.5.3-2.fc36.x86_64
+libtraceevent-1.5.3-2.fc36.x86_64
+libtraceevent-1.5.3-2.fc36.x86_64
+libtraceevent-1.5.3-2.fc36.x86_64
+libtraceevent-1.5.3-2.fc36.x86_64
+libtraceevent-1.5.3-2.fc36.x86_64
+libtraceevent-1.5.3-2.fc36.x86_64
+libtraceevent-1.5.3-2.fc36.x86_64
+libtraceevent-1.5.3-2.fc36.x86_64
+libtraceevent-1.5.3-2.fc36.x86_64
+libtraceevent-1.5.3-2.fc36.x86_64
+libtraceevent-1.5.3-2.fc36.x86_64
+[acme@quaco ~]$
+
+I.e. libtraceevent has the plugins and the build-id symlinks, perf has
+just the symlinks:
+
+[acme@quaco ~]$ rpm -ql libtraceevent | grep plugin_.*so
+/usr/lib64/traceevent/plugins/plugin_cfg80211.so
+/usr/lib64/traceevent/plugins/plugin_function.so
+/usr/lib64/traceevent/plugins/plugin_futex.so
+/usr/lib64/traceevent/plugins/plugin_hrtimer.so
+/usr/lib64/traceevent/plugins/plugin_jbd2.so
+/usr/lib64/traceevent/plugins/plugin_kmem.so
+/usr/lib64/traceevent/plugins/plugin_kvm.so
+/usr/lib64/traceevent/plugins/plugin_mac80211.so
+/usr/lib64/traceevent/plugins/plugin_sched_switch.so
+/usr/lib64/traceevent/plugins/plugin_scsi.so
+/usr/lib64/traceevent/plugins/plugin_tlb.so
+/usr/lib64/traceevent/plugins/plugin_xen.so
+[acme@quaco ~]$ rpm -ql perf | grep plugin_.*so
+[acme@quaco ~]$ 
+
+And perf is being built with the libtraceevent that is in fedora:
+
+[acme@quaco ~]$ ldd `which perf` | grep traceevent
+	libtraceevent.so.1 => /lib64/libtraceevent.so.1 (0x00007f43496dc000)
+[acme@quaco ~]$ rpm -qf /lib64/libtraceevent.so.1
+libtraceevent-1.5.3-2.fc36.x86_64
+[acme@quaco ~]$ rpm -qf /usr/bin/perf
+perf-5.19.4-200.fc36.x86_64
+[acme@quaco ~]$
+[acme@quaco ~]$ file /usr/bin/perf
+/usr/bin/perf: ELF 64-bit LSB pie executable, x86-64, version 1 (SYSV), dynamically linked, interpreter /lib64/ld-linux-x86-64.so.2, BuildID[sha1]=c08b255f02ce8f3e90df2b6156d2d38b1221995d, for GNU/Linux 3.2.0, stripped
+[acme@quaco ~]$
+
+So it seems its just a matter of removing those /usr/lib/.build-id/
+symlinks to the libtraceevent plugins from the fedora perf rpm.
+
+Justin?
+
+- Arnaldo
