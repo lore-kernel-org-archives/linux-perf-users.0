@@ -2,218 +2,151 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1FC4DC04A95
-	for <linux-perf-users@archiver.kernel.org>; Tue, 25 Oct 2022 15:37:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 05119FA373E
+	for <linux-perf-users@archiver.kernel.org>; Tue, 25 Oct 2022 18:41:02 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232270AbiJYPh0 (ORCPT
+        id S231868AbiJYSlA (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Tue, 25 Oct 2022 11:37:26 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55952 "EHLO
+        Tue, 25 Oct 2022 14:41:00 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33964 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231742AbiJYPhY (ORCPT
+        with ESMTP id S232518AbiJYSk7 (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Tue, 25 Oct 2022 11:37:24 -0400
-Received: from mail-wr1-x433.google.com (mail-wr1-x433.google.com [IPv6:2a00:1450:4864:20::433])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A6464DCEA3
-        for <linux-perf-users@vger.kernel.org>; Tue, 25 Oct 2022 08:37:22 -0700 (PDT)
-Received: by mail-wr1-x433.google.com with SMTP id j15so11234446wrq.3
-        for <linux-perf-users@vger.kernel.org>; Tue, 25 Oct 2022 08:37:22 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20210112;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:from:to:cc:subject:date:message-id:reply-to;
-        bh=23SsZSw/1NrmKAtnYWodEwVyGyRFfxdjumQj+Wu9VNY=;
-        b=ogpTgLJ4JQp4OHIInETJFxtlRExrjwqfExrmFhu1LaywnFQTxRzobA3DaKg8Zh3o0f
-         HJ6k60NPtz7jQcbLvmJ68jGcrWJ0EhR7HUcC6duCcz4paT3ipvYtme4Q00Mes3KHcFAr
-         IpFTi2O9Lh6hOLMNp2LNZn/nDXxcjvVtrn+Qjek1Aj6ey9bz1ufN3G6wHC3Aq8w2APDc
-         yNIBDBSn7PEB5rlxuoWNXem2VIS3PyNFFwATFOJoJWko9dqIcaZEOdhdX/zIMIcBamch
-         A+0aTmmdT0IyiwitjDU91iL8w/7EnLerSKQI1ND0L4JLxNkSegZtBNz2m8y+JFHgHTSA
-         pfsA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=23SsZSw/1NrmKAtnYWodEwVyGyRFfxdjumQj+Wu9VNY=;
-        b=axppSwSCnsPueeRmDyXZEJcd7ls1jcMspepReUthkNTaji4Ms6xdeDwpHw4/UFLRgG
-         B6uYgSpN1EAiuh2y1MRnPdqcFduktmGo4IEgbFxHK4+TMS3kd2GXnYRieYKLsSejtAyh
-         vRz1kEzz6j0MFwxi3OPaYyzoPFaAxT2Q9JcgRlpTiZoWDnG9/ThdmVZ1k3VUpUcZqe/T
-         cqxyrUbxXvtEBZk/S/dfvR3Bo9oQEUPd/9o4dXoPskuxN20W7bgjL9lG1Zab3QrwtLXM
-         Z2+NJ5GJw6OyQRs2w/VuoFaRO3Xlj9LlrLuUHNfKbY+iJgBEjPK8Xomkc1pAfWvD5rNe
-         jhuQ==
-X-Gm-Message-State: ACrzQf3CCAFGvkp9q5ZQqX7sHMs644CarcyIQlYhi5JVRLXo9YgTCPvg
-        BC949AOA701a2X6Yuu9ENuCzmOCv3iKFa4TIzqsNrw==
-X-Google-Smtp-Source: AMsMyM5W8Cq6h9vgTQGgpQM/5JYgS6JaXSFfVf7jDbfc1dru083NbUO2kiHaA4FBT/E0+bGF0vVZnzOGRe+BYbkPWNg=
-X-Received: by 2002:a5d:47a9:0:b0:22e:3beb:dc3a with SMTP id
- 9-20020a5d47a9000000b0022e3bebdc3amr26057264wrb.654.1666712241029; Tue, 25
- Oct 2022 08:37:21 -0700 (PDT)
+        Tue, 25 Oct 2022 14:40:59 -0400
+Received: from wp530.webpack.hosteurope.de (wp530.webpack.hosteurope.de [IPv6:2a01:488:42:1000:50ed:8234::])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 289CEF617D;
+        Tue, 25 Oct 2022 11:40:55 -0700 (PDT)
+Received: from [2a02:8108:963f:de38:eca4:7d19:f9a2:22c5]; authenticated
+        by wp530.webpack.hosteurope.de running ExIM with esmtpsa (TLS1.3:ECDHE_RSA_AES_128_GCM_SHA256:128)
+        id 1onOr5-0000mZ-6x; Tue, 25 Oct 2022 20:40:51 +0200
+Message-ID: <6e7f32f2-5397-e0cf-4271-a9826d318996@leemhuis.info>
+Date:   Tue, 25 Oct 2022 20:40:50 +0200
 MIME-Version: 1.0
-References: <1665042130-15786-1-git-send-email-yangtiezhu@loongson.cn> <1665042130-15786-3-git-send-email-yangtiezhu@loongson.cn>
-In-Reply-To: <1665042130-15786-3-git-send-email-yangtiezhu@loongson.cn>
-From:   Ian Rogers <irogers@google.com>
-Date:   Tue, 25 Oct 2022 08:37:09 -0700
-Message-ID: <CAP-5=fX8_Q3EujmfBXF_66y=n+VUyeBZtzjZU9WGj4QBN2TZ5w@mail.gmail.com>
-Subject: Re: [PATCH v3 2/3] perf bench syscall: Add close syscall benchmark
-To:     Tiezhu Yang <yangtiezhu@loongson.cn>
-Cc:     Peter Zijlstra <peterz@infradead.org>,
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
+ Thunderbird/102.4.0
+Content-Language: en-US, de-DE
+To:     Namhyung Kim <namhyung@kernel.org>,
+        Peter Zijlstra <peterz@infradead.org>
+Cc:     "regressions@lists.linux.dev" <regressions@lists.linux.dev>,
+        LKML <linux-kernel@vger.kernel.org>,
         Ingo Molnar <mingo@redhat.com>,
         Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Jiri Olsa <jolsa@kernel.org>,
-        Namhyung Kim <namhyung@kernel.org>,
-        linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+        linux-perf-users@vger.kernel.org
+From:   Thorsten Leemhuis <linux@leemhuis.info>
+Subject: Regression: starting powertop crashes my machine hard since
+ 838d9bb62d13 ("perf: Use sample_flags for raw_data")
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
+X-bounce-key: webpack.hosteurope.de;linux@leemhuis.info;1666723257;fc546857;
+X-HE-SMSGID: 1onOr5-0000mZ-6x
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-On Thu, Oct 6, 2022 at 12:42 AM Tiezhu Yang <yangtiezhu@loongson.cn> wrote:
->
-> This commit adds a simple close syscall benchmark, more syscall
-> benchmarks can be added in the future.
->
-> Here are the test results:
->
->   [loongson@linux perf]$ ./perf bench syscall
->
->           # List of available benchmarks for collection 'syscall':
->
->            basic: Benchmark for basic getppid(2) calls
->            close: Benchmark for close(2) calls
->              all: Run all syscall benchmarks
->
->   [loongson@linux perf]$ ./perf bench syscall basic
->   # Running 'syscall/basic' benchmark:
->   # Executed 10000000 getppid() calls
->        Total time: 1.956 [sec]
->
->          0.195687 usecs/op
->           5110201 ops/sec
->   [loongson@linux perf]$ ./perf bench syscall close
->   # Running 'syscall/close' benchmark:
->   # Executed 10000000 close() calls
->        Total time: 6.302 [sec]
->
->          0.630297 usecs/op
->           1586553 ops/sec
->   [loongson@linux perf]$ ./perf bench syscall all
->   # Running syscall/basic benchmark...
->   # Executed 10000000 getppid() calls
->        Total time: 1.956 [sec]
->
->          0.195686 usecs/op
->           5110232 ops/sec
->
->   # Running syscall/close benchmark...
->   # Executed 10000000 close() calls
->        Total time: 6.302 [sec]
->
->          0.630271 usecs/op
->           1586619 ops/sec
->
-> Signed-off-by: Tiezhu Yang <yangtiezhu@loongson.cn>
-> ---
->  tools/arch/x86/include/uapi/asm/unistd_32.h |  3 +++
->  tools/arch/x86/include/uapi/asm/unistd_64.h |  3 +++
->  tools/perf/bench/bench.h                    |  1 +
->  tools/perf/bench/syscall.c                  | 11 +++++++++++
->  tools/perf/builtin-bench.c                  |  1 +
->  5 files changed, 19 insertions(+)
->
-> diff --git a/tools/arch/x86/include/uapi/asm/unistd_32.h b/tools/arch/x86/include/uapi/asm/unistd_32.h
-> index 4a480a0..2f24b0eb 100644
-> --- a/tools/arch/x86/include/uapi/asm/unistd_32.h
-> +++ b/tools/arch/x86/include/uapi/asm/unistd_32.h
-> @@ -2,6 +2,9 @@
->  #ifndef __NR_perf_event_open
->  # define __NR_perf_event_open 336
->  #endif
-> +#ifndef __NR_close
-> +# define __NR_close 6
-> +#endif
->  #ifndef __NR_futex
->  # define __NR_futex 240
->  #endif
-> diff --git a/tools/arch/x86/include/uapi/asm/unistd_64.h b/tools/arch/x86/include/uapi/asm/unistd_64.h
-> index 860257f..8eb32b2 100644
-> --- a/tools/arch/x86/include/uapi/asm/unistd_64.h
-> +++ b/tools/arch/x86/include/uapi/asm/unistd_64.h
-> @@ -2,6 +2,9 @@
->  #ifndef __NR_perf_event_open
->  # define __NR_perf_event_open 298
->  #endif
-> +#ifndef __NR_close
-> +# define __NR_close 3
-> +#endif
->  #ifndef __NR_futex
->  # define __NR_futex 202
->  #endif
-> diff --git a/tools/perf/bench/bench.h b/tools/perf/bench/bench.h
-> index 6cefb43..916cd47 100644
-> --- a/tools/perf/bench/bench.h
-> +++ b/tools/perf/bench/bench.h
-> @@ -34,6 +34,7 @@ int bench_numa(int argc, const char **argv);
->  int bench_sched_messaging(int argc, const char **argv);
->  int bench_sched_pipe(int argc, const char **argv);
->  int bench_syscall_basic(int argc, const char **argv);
-> +int bench_syscall_close(int argc, const char **argv);
->  int bench_mem_memcpy(int argc, const char **argv);
->  int bench_mem_memset(int argc, const char **argv);
->  int bench_mem_find_bit(int argc, const char **argv);
-> diff --git a/tools/perf/bench/syscall.c b/tools/perf/bench/syscall.c
-> index 746fd71..058394b 100644
-> --- a/tools/perf/bench/syscall.c
-> +++ b/tools/perf/bench/syscall.c
-> @@ -46,6 +46,9 @@ static int bench_syscall_common(int argc, const char **argv, int syscall)
->                 case __NR_getppid:
->                         getppid();
->                         break;
-> +               case __NR_close:
-> +                       close(dup(0));
+Hi! Since 838d9bb62d13 ("perf: Use sample_flags for raw_data") starting
+powertop makes my machine crash hard: keyboard is dead, Sysrq does not
+work, and most of the time there is not even a error message on the
+screen; only once in maybe ~20 cases I got the line "kernel NULL pointer
+dereference, address: 0000000000000010", but nothing else.
 
-Thanks for contributing! This benchmark will compute the cost of close
-and dup, naively dup could perform memory allocation and be slow.
-Perhaps a number of file descriptors could be made outside of the
-timed region?
+This is on a Lenovo Thinkpad T14s Gen1 (AMD Ryzen 5 PRO 4650U) running
+Fedora 37 with a vanilla kernel. Master as of a six hours ago shows the
+problem (IOW: 21da7472a040 didn't fix this). Reverting 838d9bb62d13 on
+top of master makes the problem go away. Applying
+https://lore.kernel.org/lkml/20221020070657.21571-2-atrajeev@linux.vnet.ibm.com/
+(another fix for 838d9bb62d13) didn't help. My config file is based on
+the one from Fedora's 6.0.3 kernel, but stripped down with localmodconfig.
 
-Thanks,
-Ian
-> +                       break;
->                 default:
->                         break;
->                 }
-> @@ -58,6 +61,9 @@ static int bench_syscall_common(int argc, const char **argv, int syscall)
->         case __NR_getppid:
->                 name = "getppid()";
->                 break;
-> +       case __NR_close:
-> +               name = "close()";
-> +               break;
->         default:
->                 break;
->         }
-> @@ -100,3 +106,8 @@ int bench_syscall_basic(int argc, const char **argv)
->  {
->         return bench_syscall_common(argc, argv, __NR_getppid);
->  }
-> +
-> +int bench_syscall_close(int argc, const char **argv)
-> +{
-> +       return bench_syscall_common(argc, argv, __NR_close);
-> +}
-> diff --git a/tools/perf/builtin-bench.c b/tools/perf/builtin-bench.c
-> index 334ab89..b63c711 100644
-> --- a/tools/perf/builtin-bench.c
-> +++ b/tools/perf/builtin-bench.c
-> @@ -52,6 +52,7 @@ static struct bench sched_benchmarks[] = {
+Apparently I'm not the only one hitting this problem:
+https://github.com/fenrus75/powertop/issues/109
+
+Ciao, Thorsten.
+
+P.S.: From /proc/cpuinfo
+
+> processor       : 0
+> vendor_id       : AuthenticAMD
+> cpu family      : 23
+> model           : 96
+> model name      : AMD Ryzen 5 PRO 4650U with Radeon Graphics
+> stepping        : 1
+> microcode       : 0x8600106
+> cpu MHz         : 1397.267
+> cache size      : 512 KB
+> physical id     : 0
+> siblings        : 12
+> core id         : 0
+> cpu cores       : 6
+> apicid          : 0
+> initial apicid  : 0
+> fpu             : yes
+> fpu_exception   : yes
+> cpuid level     : 16
+> wp              : yes
+> flags           : fpu vme de pse tsc msr pae mce cx8 apic sep mtrr pge 
+> mca cmov pat pse36 clflush mmx fxsr sse sse2 ht syscall nx mmxext
+> fxsr_opt pdpe1gb rdtscp lm constant_tsc rep_good nopl nonstop_tsc cpuid
+> extd_apicid aperfmperf rapl pni pclmulqdq monitor ssse3 fma cx16 sse4_1
+> sse4_2 movbe popcnt aes xsave avx f16c rdrand lahf_lm cmp_legacy svm
+> extapic cr8_legacy abm sse4a misalignsse 3dnowprefetch osvw ibs skinit
+> wdt tce topoext perfctr_core perfctr_nb bpext perfctr_llc mwaitx cpb
+> cat_l3 cdp_l3 hw_pstate ssbd mba ibrs ibpb stibp vmmcall fsgsbase bmi1
+> avx2 smep bmi2 cqm rdt_a rdseed adx smap clflushopt clwb sha_ni xsaveopt
+> xsavec xgetbv1 xsaves cqm_llc cqm_occup_llc cqm_mbm_total cqm_mbm_local
+> clzero irperf xsaveerptr rdpru wbnoinvd cppc arat npt lbrv svm_lock
+> nrip_save tsc_scale vmcb_clean flushbyasid decodeassists pausefilter
+> pfthreshold avic v_vmsave_vmload vgif v_spec_ctrl umip rdpid
+> overflow_recov succor smca
 >
->  static struct bench syscall_benchmarks[] = {
->         { "basic",      "Benchmark for basic getppid(2) calls",         bench_syscall_basic     },
-> +       { "close",      "Benchmark for close(2) calls",                 bench_syscall_close     },
->         { "all",        "Run all syscall benchmarks",                   NULL                    },
->         { NULL,         NULL,                                           NULL                    },
->  };
-> --
-> 2.1.0
->
+> bugs            : sysret_ss_attrs spectre_v1 spectre_v2 spec_store_bypass retbleed
+> bogomips        : 4191.92
+> TLB size        : 3072 4K pages
+> clflush size    : 64
+> cache_alignment : 64
+> address sizes   : 48 bits physical, 48 bits virtual
+> power management: ts ttp tm hwpstate cpb eff_freq_ro [13] [14]
+
+Bisect log:
+
+> git bisect start
+> # status: waiting for both good and bad commits
+> # bad: [1a2dcbdde82e3a5f1db9b2f4c48aa1aeba534fb2] scsi: mpt3sas: re-do lost mpt3sas DMA mask fix
+> git bisect bad 1a2dcbdde82e3a5f1db9b2f4c48aa1aeba534fb2
+> # status: waiting for good commit(s), bad commit known
+> # good: [4fe89d07dcc2804c8b562f6c7896a45643d34b2f] Linux 6.0
+> git bisect good 4fe89d07dcc2804c8b562f6c7896a45643d34b2f
+> # good: [76e45035348c247a70ed50eb29a9906657e4444f] Merge tag 'for-6.1-tag' of git://git.kernel.org/pub/scm/linux/kernel/git/kdave/linux
+> git bisect good 76e45035348c247a70ed50eb29a9906657e4444f
+> # bad: [52abb27abfff8c5ddf44eef4d759f3d1e9f166c5] Merge tag 'slab-for-6.1-rc1' of git://git.kernel.org/pub/scm/linux/kernel/git/vbabka/slab
+> git bisect bad 52abb27abfff8c5ddf44eef4d759f3d1e9f166c5
+> # good: [e8bc52cb8df80c31c73c726ab58ea9746e9ff734] Merge tag 'driver-core-6.1-rc1' of git://git.kernel.org/pub/scm/linux/kernel/git/gregkh/driver-core
+> git bisect good e8bc52cb8df80c31c73c726ab58ea9746e9ff734
+> # good: [f01603979a4afaad7504a728918b678d572cda9e] Merge tag 'gpio-updates-for-v6.1-rc1' of git://git.kernel.org/pub/scm/linux/kernel/git/brgl/linux
+> git bisect good f01603979a4afaad7504a728918b678d572cda9e
+> # good: [2e64066dab157ffcd0e9ec2ff631862e6e222876] Merge tag 'riscv-for-linus-6.1-mw1' of git://git.kernel.org/pub/scm/linux/kernel/git/riscv/linux
+> git bisect good 2e64066dab157ffcd0e9ec2ff631862e6e222876
+> # good: [376b3275c19f83d373e841e9af2d7658693190b9] KVM: PPC: Book3S HV: Fix stack frame regs marker
+> git bisect good 376b3275c19f83d373e841e9af2d7658693190b9
+> # bad: [3871d93b82a4a6c1f4308064f046a544f16ada21] Merge tag 'perf-core-2022-10-07' of git://git.kernel.org/pub/scm/linux/kernel/git/tip/tip
+> git bisect bad 3871d93b82a4a6c1f4308064f046a544f16ada21
+> # bad: [7be51cc1c68dfa180ef84e71bcb4204237bb5620] perf: Fix pmu_filter_match()
+> git bisect bad 7be51cc1c68dfa180ef84e71bcb4204237bb5620
+> # good: [ee9db0e14b0575aa827579dc2471a29ec5fc6877] perf: Use sample_flags for txn
+> git bisect good ee9db0e14b0575aa827579dc2471a29ec5fc6877
+> # good: [7b084630153152239d84990ac4540c2dd360186f] perf: Use sample_flags for addr
+> git bisect good 7b084630153152239d84990ac4540c2dd360186f
+> # bad: [ee3e88dfec23153d0675b5d00522297b9adf657c] perf/mem: Introduce PERF_MEM_LVLNUM_{EXTN_MEM|IO}
+> git bisect bad ee3e88dfec23153d0675b5d00522297b9adf657c
+> # bad: [a1ebcd59430236b336428bbf8e1da16fb87d56e4] Merge branch 'v6.0-rc7'
+> git bisect bad a1ebcd59430236b336428bbf8e1da16fb87d56e4
+> # bad: [4674ffe2fcad45a9b164401cc0794115702326cf] perf, hw_breakpoint: Fix use-after-free if perf_event_open() fails
+> git bisect bad 4674ffe2fcad45a9b164401cc0794115702326cf
+> # bad: [838d9bb62d132ec3baf1b5aba2e95ef9a7a9a3cd] perf: Use sample_flags for raw_data
+> git bisect bad 838d9bb62d132ec3baf1b5aba2e95ef9a7a9a3cd
+> # first bad commit: [838d9bb62d132ec3baf1b5aba2e95ef9a7a9a3cd] perf: Use sample_flags for raw_data
+
+For regzbot:
+
+#regzbot introduced 838d9bb62d13
+#regzbot title perf: starting powertop crashes machines
+#regzbot link: https://github.com/fenrus75/powertop/issues/109
