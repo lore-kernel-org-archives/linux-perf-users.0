@@ -2,167 +2,264 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D2E76C38A2D
-	for <linux-perf-users@archiver.kernel.org>; Tue, 25 Oct 2022 18:58:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EDB04C38A2D
+	for <linux-perf-users@archiver.kernel.org>; Tue, 25 Oct 2022 20:46:00 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230245AbiJYS5y (ORCPT
+        id S229937AbiJYUqA (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Tue, 25 Oct 2022 14:57:54 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36088 "EHLO
+        Tue, 25 Oct 2022 16:46:00 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51490 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232041AbiJYS5w (ORCPT
+        with ESMTP id S229898AbiJYUp6 (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Tue, 25 Oct 2022 14:57:52 -0400
-Received: from wp530.webpack.hosteurope.de (wp530.webpack.hosteurope.de [IPv6:2a01:488:42:1000:50ed:8234::])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3AA2C6B152;
-        Tue, 25 Oct 2022 11:57:50 -0700 (PDT)
-Received: from [2a02:8108:963f:de38:eca4:7d19:f9a2:22c5]; authenticated
-        by wp530.webpack.hosteurope.de running ExIM with esmtpsa (TLS1.3:ECDHE_RSA_AES_128_GCM_SHA256:128)
-        id 1onP7S-0005EO-1n; Tue, 25 Oct 2022 20:57:46 +0200
-Message-ID: <b2b109f6-48a1-031d-2f4b-d618e678f2da@leemhuis.info>
-Date:   Tue, 25 Oct 2022 20:57:45 +0200
-MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
- Thunderbird/102.4.0
-From:   Thorsten Leemhuis <linux@leemhuis.info>
-To:     Namhyung Kim <namhyung@kernel.org>,
-        Peter Zijlstra <peterz@infradead.org>
-Cc:     "regressions@lists.linux.dev" <regressions@lists.linux.dev>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        Arnaldo Carvalho de Melo <acme@kernel.org>,
+        Tue, 25 Oct 2022 16:45:58 -0400
+Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id EF8A9ED9A6;
+        Tue, 25 Oct 2022 13:45:57 -0700 (PDT)
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by dfw.source.kernel.org (Postfix) with ESMTPS id 8EAB161B97;
+        Tue, 25 Oct 2022 20:45:57 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 9AD0AC433D6;
+        Tue, 25 Oct 2022 20:45:56 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1666730757;
+        bh=Q3NnogyKq4BuOPpJIGr/iyeMSki4k6rPV8wa5IwYE9k=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=rxwkJzo7AcBxsXZ87ldh0qv26DsNCeLdIZZc6tR6G5o3XD5tnW4NQRG3VMAsgsOcM
+         4FgiyH0Kq7jagUoGJIJfmbJ1iQrfr29jc8wys4SVgTiYsvZAQWVw6Tj8XRI6U6Cv22
+         YVUTi1hcw4afpDfIfVZHuzOClhdQLAe9sMREe1KTks0tZ4AISOuhetj15nREEj1Lxf
+         NQ7wIMJTCf1u9XriW0RkIQ1zAxu4s40cjZnBnY0sINwt0AiMZJXlfZmcAHt+Im8Z/r
+         C/6yiMuaI3TuiOmpXZIbCqBSBUdMQIp7BitZYyGn2yH4kLJIVyDR6t+I2nGuXUZqcJ
+         F+6O2S4T8Ur5A==
+Received: by quaco.ghostprotocols.net (Postfix, from userid 1000)
+        id 82BFB404BE; Tue, 25 Oct 2022 17:45:53 -0300 (-03)
+Date:   Tue, 25 Oct 2022 17:45:53 -0300
+From:   Arnaldo Carvalho de Melo <acme@kernel.org>
+To:     Adrian Hunter <adrian.hunter@intel.com>
+Cc:     Jiri Olsa <jolsa@redhat.com>, Andi Kleen <ak@linux.intel.com>,
+        Namhyung Kim <namhyung@kernel.org>,
+        Ian Rogers <irogers@google.com>, linux-kernel@vger.kernel.org,
         linux-perf-users@vger.kernel.org
-References: <6e7f32f2-5397-e0cf-4271-a9826d318996@leemhuis.info>
-Content-Language: en-US, de-DE
-Subject: Re: Regression: starting powertop crashes my machine hard since
- 838d9bb62d13 ("perf: Use sample_flags for raw_data")
-In-Reply-To: <6e7f32f2-5397-e0cf-4271-a9826d318996@leemhuis.info>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-X-bounce-key: webpack.hosteurope.de;linux@leemhuis.info;1666724270;c8aa6c7c;
-X-HE-SMSGID: 1onP7S-0005EO-1n
+Subject: Re: [PATCH] perf scripts python: intel-pt-events.py: Add ability
+ interleave output
+Message-ID: <Y1hLAT5L4ffmFhWe@kernel.org>
+References: <20221020152509.5298-1-adrian.hunter@intel.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20221020152509.5298-1-adrian.hunter@intel.com>
+X-Url:  http://acmel.wordpress.com
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-On 25.10.22 20:40, Thorsten Leemhuis wrote:
-> Hi! Since 838d9bb62d13 ("perf: Use sample_flags for raw_data") starting
-> powertop makes my machine crash hard: keyboard is dead, Sysrq does not
-> work, and most of the time there is not even a error message on the
-> screen; only once in maybe ~20 cases I got the line "kernel NULL pointer
-> dereference, address: 0000000000000010", but nothing else.
+Em Thu, Oct 20, 2022 at 06:25:09PM +0300, Adrian Hunter escreveu:
+> Intel PT timestamps are not provided for every branch, let alone every
+> instruction, so there can be many samples with the same timestamp. With
+> per-cpu contexts, decoding is done for each CPU in turn, which can make it
+> difficult to see what is happening on different CPUs at the same time.
+> Currently the interleaving from perf script --itrace=i0ns is quite coarse
+> grained. There are often long stretches executing on one CPU and nothing on
+> another.
 
-Boris on another channel asked me to test "perf: Fix missing raw data on
-tracepoint events" (
-https://git.kernel.org/pub/scm/linux/kernel/git/peterz/queue.git/commit/?h=perf/urgent&id=d6e63577059a8207df764404f1c55a19ca0d8e24
-) which I somehow missed when search lore an hour ago
-(https://lore.kernel.org/all/20221012143857.48198-1-james.clark@arm.com/
-). Sorry.
+Thanks, applied.
 
-That patches fixes the problem for me. Thx everyone.
+- Arnaldo
 
-Ciao, Thorsten
+ 
+> Some people are interested in seeing what happened on multiple CPUs before
+> a crash to debug races etc.
+> 
+> To improve perf script interleaving for parallel execution, the
+> intel-pt-events.py script has been enhanced to enable interleaving the
+> output with the same timestamp from different CPUs. It is understood that
+> interleaving is not perfect or causal.
+> 
+> Add parameter --interleave [<n>] to interleave sample output for the same
+> timestamp so that no more than n samples for a CPU are displayed in a row.
+> 'n' defaults to 4. Note this only affects the order of output, and only
+> when the timestamp is the same.
+> 
+> Example:
+> 
+>   $ perf script intel-pt-events.py --insn-trace --interleave 3
+>   ...
+>   bash  2267/2267  [004]  9323.692625625  563caa3c86f0  jz 0x563caa3c89c7        run_pending_traps+0x30 (/usr/bin/bash)   IPC: 1.52 (38/25)
+>   bash  2267/2267  [004]  9323.692625625  563caa3c89c7  movq  0x118(%rsp), %rax  run_pending_traps+0x307 (/usr/bin/bash)
+>   bash  2267/2267  [004]  9323.692625625  563caa3c89cf  subq  %fs:0x28, %rax     run_pending_traps+0x30f (/usr/bin/bash)
+>   bash  2270/2270  [007]  9323.692625625  55dc58cabf02  jz 0x55dc58cabf48        unquoted_glob_pattern_p+0x102 (/usr/bin/bash)   IPC: 1.56 (25/16)
+>   bash  2270/2270  [007]  9323.692625625  55dc58cabf04  cmp $0x5d, %al           unquoted_glob_pattern_p+0x104 (/usr/bin/bash)
+>   bash  2270/2270  [007]  9323.692625625  55dc58cabf06  jnz 0x55dc58cabf10       unquoted_glob_pattern_p+0x106 (/usr/bin/bash)
+>   bash  2264/2264  [001]  9323.692625625  7fd556a4376c  jbe 0x7fd556a43ac8       round_and_return+0x3fc (/usr/lib/x86_64-linux-gnu/libc.so.6)   IPC: 4.30 (43/10)
+>   bash  2264/2264  [001]  9323.692625625  7fd556a43772  and $0x8, %edx           round_and_return+0x402 (/usr/lib/x86_64-linux-gnu/libc.so.6)
+>   bash  2264/2264  [001]  9323.692625625  7fd556a43775  jnz 0x7fd556a43ac8       round_and_return+0x405 (/usr/lib/x86_64-linux-gnu/libc.so.6)
+>   bash  2267/2267  [004]  9323.692625625  563caa3c89d8  jnz 0x563caa3c8b11       run_pending_traps+0x318 (/usr/bin/bash)
+>   bash  2267/2267  [004]  9323.692625625  563caa3c89de  add $0x128, %rsp         run_pending_traps+0x31e (/usr/bin/bash)
+>   bash  2267/2267  [004]  9323.692625625  563caa3c89e5  popq  %rbx               run_pending_traps+0x325 (/usr/bin/bash)
+>   ...
+> 
+> Signed-off-by: Adrian Hunter <adrian.hunter@intel.com>
+> ---
+>  tools/perf/Documentation/perf-intel-pt.txt   | 12 +++-
+>  tools/perf/scripts/python/intel-pt-events.py | 65 +++++++++++++++++++-
+>  2 files changed, 74 insertions(+), 3 deletions(-)
+> 
+> diff --git a/tools/perf/Documentation/perf-intel-pt.txt b/tools/perf/Documentation/perf-intel-pt.txt
+> index 92464a5d7eaf..7b6ccd2fa3bf 100644
+> --- a/tools/perf/Documentation/perf-intel-pt.txt
+> +++ b/tools/perf/Documentation/perf-intel-pt.txt
+> @@ -189,8 +189,16 @@ There is also script intel-pt-events.py which provides an example of how to
+>  unpack the raw data for power events and PTWRITE. The script also displays
+>  branches, and supports 2 additional modes selected by option:
+>  
+> - --insn-trace - instruction trace
+> - --src-trace - source trace
+> + - --insn-trace - instruction trace
+> + - --src-trace - source trace
+> +
+> +The intel-pt-events.py script also has options:
+> +
+> + - --all-switch-events - display all switch events, not only the last consecutive.
+> + - --interleave [<n>] - interleave sample output for the same timestamp so that
+> + no more than n samples for a CPU are displayed in a row. 'n' defaults to 4.
+> + Note this only affects the order of output, and only when the timestamp is the
+> + same.
+>  
+>  As mentioned above, it is easy to capture too much data.  One way to limit the
+>  data captured is to use 'snapshot' mode which is explained further below.
+> diff --git a/tools/perf/scripts/python/intel-pt-events.py b/tools/perf/scripts/python/intel-pt-events.py
+> index 6be7fd8fd615..08862a2582f4 100644
+> --- a/tools/perf/scripts/python/intel-pt-events.py
+> +++ b/tools/perf/scripts/python/intel-pt-events.py
+> @@ -13,10 +13,12 @@
+>  
+>  from __future__ import print_function
+>  
+> +import io
+>  import os
+>  import sys
+>  import struct
+>  import argparse
+> +import contextlib
+>  
+>  from libxed import LibXED
+>  from ctypes import create_string_buffer, addressof
+> @@ -39,6 +41,11 @@ glb_src			= False
+>  glb_source_file_name	= None
+>  glb_line_number		= None
+>  glb_dso			= None
+> +glb_stash_dict		= {}
+> +glb_output		= None
+> +glb_output_pos		= 0
+> +glb_cpu			= -1
+> +glb_time		= 0
+>  
+>  def get_optional_null(perf_dict, field):
+>  	if field in perf_dict:
+> @@ -70,6 +77,7 @@ def trace_begin():
+>  	ap.add_argument("--insn-trace", action='store_true')
+>  	ap.add_argument("--src-trace", action='store_true')
+>  	ap.add_argument("--all-switch-events", action='store_true')
+> +	ap.add_argument("--interleave", type=int, nargs='?', const=4, default=0)
+>  	global glb_args
+>  	global glb_insn
+>  	global glb_src
+> @@ -94,11 +102,39 @@ def trace_begin():
+>  	perf_set_itrace_options(perf_script_context, itrace)
+>  
+>  def trace_end():
+> +	if glb_args.interleave:
+> +		flush_stashed_output()
+>  	print("End")
+>  
+>  def trace_unhandled(event_name, context, event_fields_dict):
+>  		print(' '.join(['%s=%s'%(k,str(v))for k,v in sorted(event_fields_dict.items())]))
+>  
+> +def stash_output():
+> +	global glb_stash_dict
+> +	global glb_output_pos
+> +	output_str = glb_output.getvalue()[glb_output_pos:]
+> +	n = len(output_str)
+> +	if n:
+> +		glb_output_pos += n
+> +		if glb_cpu not in glb_stash_dict:
+> +			glb_stash_dict[glb_cpu] = []
+> +		glb_stash_dict[glb_cpu].append(output_str)
+> +
+> +def flush_stashed_output():
+> +	global glb_stash_dict
+> +	while glb_stash_dict:
+> +		cpus = list(glb_stash_dict.keys())
+> +		# Output at most glb_args.interleave output strings per cpu
+> +		for cpu in cpus:
+> +			items = glb_stash_dict[cpu]
+> +			countdown = glb_args.interleave
+> +			while len(items) and countdown:
+> +				sys.stdout.write(items[0])
+> +				del items[0]
+> +				countdown -= 1
+> +			if not items:
+> +				del glb_stash_dict[cpu]
+> +
+>  def print_ptwrite(raw_buf):
+>  	data = struct.unpack_from("<IQ", raw_buf)
+>  	flags = data[0]
+> @@ -375,15 +411,40 @@ def do_process_event(param_dict):
+>  		print_common_start(comm, sample, name)
+>  		print_common_ip(param_dict, sample, symbol, dso)
+>  
+> +def interleave_events(param_dict):
+> +	global glb_cpu
+> +	global glb_time
+> +	global glb_output
+> +	global glb_output_pos
+> +
+> +	sample  = param_dict["sample"]
+> +	glb_cpu = sample["cpu"]
+> +	ts      = sample["time"]
+> +
+> +	if glb_time != ts:
+> +		glb_time = ts
+> +		flush_stashed_output()
+> +
+> +	glb_output_pos = 0
+> +	with contextlib.redirect_stdout(io.StringIO()) as glb_output:
+> +		do_process_event(param_dict)
+> +
+> +	stash_output()
+> +
+>  def process_event(param_dict):
+>  	try:
+> -		do_process_event(param_dict)
+> +		if glb_args.interleave:
+> +			interleave_events(param_dict)
+> +		else:
+> +			do_process_event(param_dict)
+>  	except broken_pipe_exception:
+>  		# Stop python printing broken pipe errors and traceback
+>  		sys.stdout = open(os.devnull, 'w')
+>  		sys.exit(1)
+>  
+>  def auxtrace_error(typ, code, cpu, pid, tid, ip, ts, msg, cpumode, *x):
+> +	if glb_args.interleave:
+> +		flush_stashed_output()
+>  	if len(x) >= 2 and x[0]:
+>  		machine_pid = x[0]
+>  		vcpu = x[1]
+> @@ -403,6 +464,8 @@ def auxtrace_error(typ, code, cpu, pid, tid, ip, ts, msg, cpumode, *x):
+>  		sys.exit(1)
+>  
+>  def context_switch(ts, cpu, pid, tid, np_pid, np_tid, machine_pid, out, out_preempt, *x):
+> +	if glb_args.interleave:
+> +		flush_stashed_output()
+>  	if out:
+>  		out_str = "Switch out "
+>  	else:
+> -- 
+> 2.34.1
 
-> This is on a Lenovo Thinkpad T14s Gen1 (AMD Ryzen 5 PRO 4650U) running
-> Fedora 37 with a vanilla kernel. Master as of a six hours ago shows the
-> problem (IOW: 21da7472a040 didn't fix this). Reverting 838d9bb62d13 on
-> top of master makes the problem go away. Applying
-> https://lore.kernel.org/lkml/20221020070657.21571-2-atrajeev@linux.vnet.ibm.com/
-> (another fix for 838d9bb62d13) didn't help. My config file is based on
-> the one from Fedora's 6.0.3 kernel, but stripped down with localmodconfig.
-> 
-> Apparently I'm not the only one hitting this problem:
-> https://github.com/fenrus75/powertop/issues/109
-> 
-> Ciao, Thorsten.
-> 
-> P.S.: From /proc/cpuinfo
-> 
->> processor       : 0
->> vendor_id       : AuthenticAMD
->> cpu family      : 23
->> model           : 96
->> model name      : AMD Ryzen 5 PRO 4650U with Radeon Graphics
->> stepping        : 1
->> microcode       : 0x8600106
->> cpu MHz         : 1397.267
->> cache size      : 512 KB
->> physical id     : 0
->> siblings        : 12
->> core id         : 0
->> cpu cores       : 6
->> apicid          : 0
->> initial apicid  : 0
->> fpu             : yes
->> fpu_exception   : yes
->> cpuid level     : 16
->> wp              : yes
->> flags           : fpu vme de pse tsc msr pae mce cx8 apic sep mtrr pge 
->> mca cmov pat pse36 clflush mmx fxsr sse sse2 ht syscall nx mmxext
->> fxsr_opt pdpe1gb rdtscp lm constant_tsc rep_good nopl nonstop_tsc cpuid
->> extd_apicid aperfmperf rapl pni pclmulqdq monitor ssse3 fma cx16 sse4_1
->> sse4_2 movbe popcnt aes xsave avx f16c rdrand lahf_lm cmp_legacy svm
->> extapic cr8_legacy abm sse4a misalignsse 3dnowprefetch osvw ibs skinit
->> wdt tce topoext perfctr_core perfctr_nb bpext perfctr_llc mwaitx cpb
->> cat_l3 cdp_l3 hw_pstate ssbd mba ibrs ibpb stibp vmmcall fsgsbase bmi1
->> avx2 smep bmi2 cqm rdt_a rdseed adx smap clflushopt clwb sha_ni xsaveopt
->> xsavec xgetbv1 xsaves cqm_llc cqm_occup_llc cqm_mbm_total cqm_mbm_local
->> clzero irperf xsaveerptr rdpru wbnoinvd cppc arat npt lbrv svm_lock
->> nrip_save tsc_scale vmcb_clean flushbyasid decodeassists pausefilter
->> pfthreshold avic v_vmsave_vmload vgif v_spec_ctrl umip rdpid
->> overflow_recov succor smca
->>
->> bugs            : sysret_ss_attrs spectre_v1 spectre_v2 spec_store_bypass retbleed
->> bogomips        : 4191.92
->> TLB size        : 3072 4K pages
->> clflush size    : 64
->> cache_alignment : 64
->> address sizes   : 48 bits physical, 48 bits virtual
->> power management: ts ttp tm hwpstate cpb eff_freq_ro [13] [14]
-> 
-> Bisect log:
-> 
->> git bisect start
->> # status: waiting for both good and bad commits
->> # bad: [1a2dcbdde82e3a5f1db9b2f4c48aa1aeba534fb2] scsi: mpt3sas: re-do lost mpt3sas DMA mask fix
->> git bisect bad 1a2dcbdde82e3a5f1db9b2f4c48aa1aeba534fb2
->> # status: waiting for good commit(s), bad commit known
->> # good: [4fe89d07dcc2804c8b562f6c7896a45643d34b2f] Linux 6.0
->> git bisect good 4fe89d07dcc2804c8b562f6c7896a45643d34b2f
->> # good: [76e45035348c247a70ed50eb29a9906657e4444f] Merge tag 'for-6.1-tag' of git://git.kernel.org/pub/scm/linux/kernel/git/kdave/linux
->> git bisect good 76e45035348c247a70ed50eb29a9906657e4444f
->> # bad: [52abb27abfff8c5ddf44eef4d759f3d1e9f166c5] Merge tag 'slab-for-6.1-rc1' of git://git.kernel.org/pub/scm/linux/kernel/git/vbabka/slab
->> git bisect bad 52abb27abfff8c5ddf44eef4d759f3d1e9f166c5
->> # good: [e8bc52cb8df80c31c73c726ab58ea9746e9ff734] Merge tag 'driver-core-6.1-rc1' of git://git.kernel.org/pub/scm/linux/kernel/git/gregkh/driver-core
->> git bisect good e8bc52cb8df80c31c73c726ab58ea9746e9ff734
->> # good: [f01603979a4afaad7504a728918b678d572cda9e] Merge tag 'gpio-updates-for-v6.1-rc1' of git://git.kernel.org/pub/scm/linux/kernel/git/brgl/linux
->> git bisect good f01603979a4afaad7504a728918b678d572cda9e
->> # good: [2e64066dab157ffcd0e9ec2ff631862e6e222876] Merge tag 'riscv-for-linus-6.1-mw1' of git://git.kernel.org/pub/scm/linux/kernel/git/riscv/linux
->> git bisect good 2e64066dab157ffcd0e9ec2ff631862e6e222876
->> # good: [376b3275c19f83d373e841e9af2d7658693190b9] KVM: PPC: Book3S HV: Fix stack frame regs marker
->> git bisect good 376b3275c19f83d373e841e9af2d7658693190b9
->> # bad: [3871d93b82a4a6c1f4308064f046a544f16ada21] Merge tag 'perf-core-2022-10-07' of git://git.kernel.org/pub/scm/linux/kernel/git/tip/tip
->> git bisect bad 3871d93b82a4a6c1f4308064f046a544f16ada21
->> # bad: [7be51cc1c68dfa180ef84e71bcb4204237bb5620] perf: Fix pmu_filter_match()
->> git bisect bad 7be51cc1c68dfa180ef84e71bcb4204237bb5620
->> # good: [ee9db0e14b0575aa827579dc2471a29ec5fc6877] perf: Use sample_flags for txn
->> git bisect good ee9db0e14b0575aa827579dc2471a29ec5fc6877
->> # good: [7b084630153152239d84990ac4540c2dd360186f] perf: Use sample_flags for addr
->> git bisect good 7b084630153152239d84990ac4540c2dd360186f
->> # bad: [ee3e88dfec23153d0675b5d00522297b9adf657c] perf/mem: Introduce PERF_MEM_LVLNUM_{EXTN_MEM|IO}
->> git bisect bad ee3e88dfec23153d0675b5d00522297b9adf657c
->> # bad: [a1ebcd59430236b336428bbf8e1da16fb87d56e4] Merge branch 'v6.0-rc7'
->> git bisect bad a1ebcd59430236b336428bbf8e1da16fb87d56e4
->> # bad: [4674ffe2fcad45a9b164401cc0794115702326cf] perf, hw_breakpoint: Fix use-after-free if perf_event_open() fails
->> git bisect bad 4674ffe2fcad45a9b164401cc0794115702326cf
->> # bad: [838d9bb62d132ec3baf1b5aba2e95ef9a7a9a3cd] perf: Use sample_flags for raw_data
->> git bisect bad 838d9bb62d132ec3baf1b5aba2e95ef9a7a9a3cd
->> # first bad commit: [838d9bb62d132ec3baf1b5aba2e95ef9a7a9a3cd] perf: Use sample_flags for raw_data
-> 
-> For regzbot:
-> 
-> #regzbot introduced 838d9bb62d13
-> #regzbot title perf: starting powertop crashes machines
-> #regzbot link: https://github.com/fenrus75/powertop/issues/109
-> 
-> 
+-- 
+
+- Arnaldo
