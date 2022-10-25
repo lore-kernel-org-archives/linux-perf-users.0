@@ -2,121 +2,218 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 17C58C38A2D
-	for <linux-perf-users@archiver.kernel.org>; Tue, 25 Oct 2022 15:28:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1FC4DC04A95
+	for <linux-perf-users@archiver.kernel.org>; Tue, 25 Oct 2022 15:37:28 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233077AbiJYP2S (ORCPT
+        id S232270AbiJYPh0 (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Tue, 25 Oct 2022 11:28:18 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47900 "EHLO
+        Tue, 25 Oct 2022 11:37:26 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55952 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S233068AbiJYP2R (ORCPT
+        with ESMTP id S231742AbiJYPhY (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Tue, 25 Oct 2022 11:28:17 -0400
-Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTP id 3566243328;
-        Tue, 25 Oct 2022 08:28:16 -0700 (PDT)
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 307ADD6E;
-        Tue, 25 Oct 2022 08:28:22 -0700 (PDT)
-Received: from [10.57.1.104] (unknown [10.57.1.104])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id C27A83F71A;
-        Tue, 25 Oct 2022 08:28:13 -0700 (PDT)
-Message-ID: <4e50b890-0588-1551-fb7c-6cd8191d1054@arm.com>
-Date:   Tue, 25 Oct 2022 16:28:12 +0100
+        Tue, 25 Oct 2022 11:37:24 -0400
+Received: from mail-wr1-x433.google.com (mail-wr1-x433.google.com [IPv6:2a00:1450:4864:20::433])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A6464DCEA3
+        for <linux-perf-users@vger.kernel.org>; Tue, 25 Oct 2022 08:37:22 -0700 (PDT)
+Received: by mail-wr1-x433.google.com with SMTP id j15so11234446wrq.3
+        for <linux-perf-users@vger.kernel.org>; Tue, 25 Oct 2022 08:37:22 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20210112;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:from:to:cc:subject:date:message-id:reply-to;
+        bh=23SsZSw/1NrmKAtnYWodEwVyGyRFfxdjumQj+Wu9VNY=;
+        b=ogpTgLJ4JQp4OHIInETJFxtlRExrjwqfExrmFhu1LaywnFQTxRzobA3DaKg8Zh3o0f
+         HJ6k60NPtz7jQcbLvmJ68jGcrWJ0EhR7HUcC6duCcz4paT3ipvYtme4Q00Mes3KHcFAr
+         IpFTi2O9Lh6hOLMNp2LNZn/nDXxcjvVtrn+Qjek1Aj6ey9bz1ufN3G6wHC3Aq8w2APDc
+         yNIBDBSn7PEB5rlxuoWNXem2VIS3PyNFFwATFOJoJWko9dqIcaZEOdhdX/zIMIcBamch
+         A+0aTmmdT0IyiwitjDU91iL8w/7EnLerSKQI1ND0L4JLxNkSegZtBNz2m8y+JFHgHTSA
+         pfsA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=23SsZSw/1NrmKAtnYWodEwVyGyRFfxdjumQj+Wu9VNY=;
+        b=axppSwSCnsPueeRmDyXZEJcd7ls1jcMspepReUthkNTaji4Ms6xdeDwpHw4/UFLRgG
+         B6uYgSpN1EAiuh2y1MRnPdqcFduktmGo4IEgbFxHK4+TMS3kd2GXnYRieYKLsSejtAyh
+         vRz1kEzz6j0MFwxi3OPaYyzoPFaAxT2Q9JcgRlpTiZoWDnG9/ThdmVZ1k3VUpUcZqe/T
+         cqxyrUbxXvtEBZk/S/dfvR3Bo9oQEUPd/9o4dXoPskuxN20W7bgjL9lG1Zab3QrwtLXM
+         Z2+NJ5GJw6OyQRs2w/VuoFaRO3Xlj9LlrLuUHNfKbY+iJgBEjPK8Xomkc1pAfWvD5rNe
+         jhuQ==
+X-Gm-Message-State: ACrzQf3CCAFGvkp9q5ZQqX7sHMs644CarcyIQlYhi5JVRLXo9YgTCPvg
+        BC949AOA701a2X6Yuu9ENuCzmOCv3iKFa4TIzqsNrw==
+X-Google-Smtp-Source: AMsMyM5W8Cq6h9vgTQGgpQM/5JYgS6JaXSFfVf7jDbfc1dru083NbUO2kiHaA4FBT/E0+bGF0vVZnzOGRe+BYbkPWNg=
+X-Received: by 2002:a5d:47a9:0:b0:22e:3beb:dc3a with SMTP id
+ 9-20020a5d47a9000000b0022e3bebdc3amr26057264wrb.654.1666712241029; Tue, 25
+ Oct 2022 08:37:21 -0700 (PDT)
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
- Thunderbird/102.2.2
-From:   James Clark <james.clark@arm.com>
-Subject: Re: [PATCH v2 1/1] perf arm64: Send pointer auth masks to ring buffer
-To:     Peter Zijlstra <peterz@infradead.org>
-Cc:     linux-perf-users@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        broonie@kernel.org, acme@kernel.org,
-        Andrew Kilroy <andrew.kilroy@arm.com>,
-        Vince Weaver <vincent.weaver@maine.edu>,
-        Mark Rutland <mark.rutland@arm.com>,
+References: <1665042130-15786-1-git-send-email-yangtiezhu@loongson.cn> <1665042130-15786-3-git-send-email-yangtiezhu@loongson.cn>
+In-Reply-To: <1665042130-15786-3-git-send-email-yangtiezhu@loongson.cn>
+From:   Ian Rogers <irogers@google.com>
+Date:   Tue, 25 Oct 2022 08:37:09 -0700
+Message-ID: <CAP-5=fX8_Q3EujmfBXF_66y=n+VUyeBZtzjZU9WGj4QBN2TZ5w@mail.gmail.com>
+Subject: Re: [PATCH v3 2/3] perf bench syscall: Add close syscall benchmark
+To:     Tiezhu Yang <yangtiezhu@loongson.cn>
+Cc:     Peter Zijlstra <peterz@infradead.org>,
         Ingo Molnar <mingo@redhat.com>,
+        Arnaldo Carvalho de Melo <acme@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
         Alexander Shishkin <alexander.shishkin@linux.intel.com>,
         Jiri Olsa <jolsa@kernel.org>,
         Namhyung Kim <namhyung@kernel.org>,
-        Will Deacon <will@kernel.org>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        kristina.martsenko@arm.com
-References: <20221020101921.1219533-1-james.clark@arm.com>
- <20221020101921.1219533-2-james.clark@arm.com>
- <Y1F8DUWaWhlh/phL@hirez.programming.kicks-ass.net>
-Content-Language: en-US
-In-Reply-To: <Y1F8DUWaWhlh/phL@hirez.programming.kicks-ass.net>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+        linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
+On Thu, Oct 6, 2022 at 12:42 AM Tiezhu Yang <yangtiezhu@loongson.cn> wrote:
+>
+> This commit adds a simple close syscall benchmark, more syscall
+> benchmarks can be added in the future.
+>
+> Here are the test results:
+>
+>   [loongson@linux perf]$ ./perf bench syscall
+>
+>           # List of available benchmarks for collection 'syscall':
+>
+>            basic: Benchmark for basic getppid(2) calls
+>            close: Benchmark for close(2) calls
+>              all: Run all syscall benchmarks
+>
+>   [loongson@linux perf]$ ./perf bench syscall basic
+>   # Running 'syscall/basic' benchmark:
+>   # Executed 10000000 getppid() calls
+>        Total time: 1.956 [sec]
+>
+>          0.195687 usecs/op
+>           5110201 ops/sec
+>   [loongson@linux perf]$ ./perf bench syscall close
+>   # Running 'syscall/close' benchmark:
+>   # Executed 10000000 close() calls
+>        Total time: 6.302 [sec]
+>
+>          0.630297 usecs/op
+>           1586553 ops/sec
+>   [loongson@linux perf]$ ./perf bench syscall all
+>   # Running syscall/basic benchmark...
+>   # Executed 10000000 getppid() calls
+>        Total time: 1.956 [sec]
+>
+>          0.195686 usecs/op
+>           5110232 ops/sec
+>
+>   # Running syscall/close benchmark...
+>   # Executed 10000000 close() calls
+>        Total time: 6.302 [sec]
+>
+>          0.630271 usecs/op
+>           1586619 ops/sec
+>
+> Signed-off-by: Tiezhu Yang <yangtiezhu@loongson.cn>
+> ---
+>  tools/arch/x86/include/uapi/asm/unistd_32.h |  3 +++
+>  tools/arch/x86/include/uapi/asm/unistd_64.h |  3 +++
+>  tools/perf/bench/bench.h                    |  1 +
+>  tools/perf/bench/syscall.c                  | 11 +++++++++++
+>  tools/perf/builtin-bench.c                  |  1 +
+>  5 files changed, 19 insertions(+)
+>
+> diff --git a/tools/arch/x86/include/uapi/asm/unistd_32.h b/tools/arch/x86/include/uapi/asm/unistd_32.h
+> index 4a480a0..2f24b0eb 100644
+> --- a/tools/arch/x86/include/uapi/asm/unistd_32.h
+> +++ b/tools/arch/x86/include/uapi/asm/unistd_32.h
+> @@ -2,6 +2,9 @@
+>  #ifndef __NR_perf_event_open
+>  # define __NR_perf_event_open 336
+>  #endif
+> +#ifndef __NR_close
+> +# define __NR_close 6
+> +#endif
+>  #ifndef __NR_futex
+>  # define __NR_futex 240
+>  #endif
+> diff --git a/tools/arch/x86/include/uapi/asm/unistd_64.h b/tools/arch/x86/include/uapi/asm/unistd_64.h
+> index 860257f..8eb32b2 100644
+> --- a/tools/arch/x86/include/uapi/asm/unistd_64.h
+> +++ b/tools/arch/x86/include/uapi/asm/unistd_64.h
+> @@ -2,6 +2,9 @@
+>  #ifndef __NR_perf_event_open
+>  # define __NR_perf_event_open 298
+>  #endif
+> +#ifndef __NR_close
+> +# define __NR_close 3
+> +#endif
+>  #ifndef __NR_futex
+>  # define __NR_futex 202
+>  #endif
+> diff --git a/tools/perf/bench/bench.h b/tools/perf/bench/bench.h
+> index 6cefb43..916cd47 100644
+> --- a/tools/perf/bench/bench.h
+> +++ b/tools/perf/bench/bench.h
+> @@ -34,6 +34,7 @@ int bench_numa(int argc, const char **argv);
+>  int bench_sched_messaging(int argc, const char **argv);
+>  int bench_sched_pipe(int argc, const char **argv);
+>  int bench_syscall_basic(int argc, const char **argv);
+> +int bench_syscall_close(int argc, const char **argv);
+>  int bench_mem_memcpy(int argc, const char **argv);
+>  int bench_mem_memset(int argc, const char **argv);
+>  int bench_mem_find_bit(int argc, const char **argv);
+> diff --git a/tools/perf/bench/syscall.c b/tools/perf/bench/syscall.c
+> index 746fd71..058394b 100644
+> --- a/tools/perf/bench/syscall.c
+> +++ b/tools/perf/bench/syscall.c
+> @@ -46,6 +46,9 @@ static int bench_syscall_common(int argc, const char **argv, int syscall)
+>                 case __NR_getppid:
+>                         getppid();
+>                         break;
+> +               case __NR_close:
+> +                       close(dup(0));
 
+Thanks for contributing! This benchmark will compute the cost of close
+and dup, naively dup could perform memory allocation and be slow.
+Perhaps a number of file descriptors could be made outside of the
+timed region?
 
-On 20/10/2022 17:49, Peter Zijlstra wrote:
-> On Thu, Oct 20, 2022 at 11:19:20AM +0100, James Clark wrote:
->> From: Andrew Kilroy <andrew.kilroy@arm.com>
->>
->> Perf report cannot produce callgraphs using dwarf on arm64 where pointer
->> authentication is enabled.  This is because libunwind and libdw cannot
->> unmangle instruction pointers that have a pointer authentication code
->> (PAC) embedded in them.
->>
->> libunwind and libdw need to be given an instruction mask which they can
->> use to arrive at the correct return address that does not contain the
->> PAC.
->>
->> The bits in the return address that contain the PAC can differ by
->> process, so this patch adds a new sample field PERF_SAMPLE_ARCH_1
->> to allow the kernel to send the masks up to userspace perf.
->>
->> This field can be used in a architecture specific fashion, but on
->> arm64, it contains the ptrauth mask information. The event will
->> currently fail to open on architectures other than arm64 if
->> PERF_SAMPLE_ARCH_1 is set. It will also fail to open on arm64 if
->> CONFIG_ARM64_PTR_AUTH isn't set, as the data would always be zeros.
-> 
-> A little more information please; wth is pointer authentication? Are we
-
-Yes the commit message could do with some links and details. I
-will add more background about the feature if I resend it.
-
-
-> going to be having the same thing with x86 LAM where only a subset of
-> the available bits have meaning to the hardware?
-
-If LAM is used with things like return addresses on the stack then yes.
-For data addresses then it wouldn't cause this exact issue.
-
-The problem is that libunwind and perf do pointer arithmetic when
-unwinding with other values that don't have these bits set. For example
-computing offset in an mmap where the base address doesn't have an
-authentication code but a return value does results in an incorrect
-value. Like x-y=offset is only correct if the PAC bits are masked out first.
-
-> 
-> Why do we want the same mask repeated over and over with each sample;
-> should this not be part of the address space (side-band) data?
-
-You are probably right that it could be done that way. The reason that
-we did it this way was to be consistent with ptrace feature [1] where it
-is delivered to userspace on a per-process basis. And there is also a
-prctl for the enabled key types [2] which can be changed dynamically.
-Particularly for the last reason is why it was done per sample.
-
-Having said that, the enabled keys field is not used by perf, only the
-mask is used, so I can drop the per sample data until enabled keys is
-needed, which may be never.
-
-I'm going to assume that perf shouldn't use ptrace because of
-permissions and conflicts with debuggers, so I could put the mask
-somewhere like PERF_RECORD_FORK instead of per sample.
-
-
-[1]:
-https://lore.kernel.org/all/20181207183931.4285-9-kristina.martsenko@arm.com/
-[2]:
-https://lore.kernel.org/all/d6609065f8f40397a4124654eb68c9f490b4d477.1616123271.git.pcc@google.com/
+Thanks,
+Ian
+> +                       break;
+>                 default:
+>                         break;
+>                 }
+> @@ -58,6 +61,9 @@ static int bench_syscall_common(int argc, const char **argv, int syscall)
+>         case __NR_getppid:
+>                 name = "getppid()";
+>                 break;
+> +       case __NR_close:
+> +               name = "close()";
+> +               break;
+>         default:
+>                 break;
+>         }
+> @@ -100,3 +106,8 @@ int bench_syscall_basic(int argc, const char **argv)
+>  {
+>         return bench_syscall_common(argc, argv, __NR_getppid);
+>  }
+> +
+> +int bench_syscall_close(int argc, const char **argv)
+> +{
+> +       return bench_syscall_common(argc, argv, __NR_close);
+> +}
+> diff --git a/tools/perf/builtin-bench.c b/tools/perf/builtin-bench.c
+> index 334ab89..b63c711 100644
+> --- a/tools/perf/builtin-bench.c
+> +++ b/tools/perf/builtin-bench.c
+> @@ -52,6 +52,7 @@ static struct bench sched_benchmarks[] = {
+>
+>  static struct bench syscall_benchmarks[] = {
+>         { "basic",      "Benchmark for basic getppid(2) calls",         bench_syscall_basic     },
+> +       { "close",      "Benchmark for close(2) calls",                 bench_syscall_close     },
+>         { "all",        "Run all syscall benchmarks",                   NULL                    },
+>         { NULL,         NULL,                                           NULL                    },
+>  };
+> --
+> 2.1.0
+>
