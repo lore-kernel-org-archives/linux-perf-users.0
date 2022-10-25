@@ -2,96 +2,121 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DEE94C04A95
-	for <linux-perf-users@archiver.kernel.org>; Tue, 25 Oct 2022 13:17:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 17C58C38A2D
+	for <linux-perf-users@archiver.kernel.org>; Tue, 25 Oct 2022 15:28:19 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232592AbiJYNRK (ORCPT
+        id S233077AbiJYP2S (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Tue, 25 Oct 2022 09:17:10 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60224 "EHLO
+        Tue, 25 Oct 2022 11:28:18 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47900 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232481AbiJYNRJ (ORCPT
+        with ESMTP id S233068AbiJYP2R (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Tue, 25 Oct 2022 09:17:09 -0400
-Received: from mga07.intel.com (mga07.intel.com [134.134.136.100])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D2E89DCAF4;
-        Tue, 25 Oct 2022 06:17:08 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1666703828; x=1698239828;
-  h=message-id:date:mime-version:subject:to:cc:references:
-   from:in-reply-to:content-transfer-encoding;
-  bh=2F7Eoa9lBQCmf/5MvcL4NAHZcvTMNySoe8rV9kJTiZQ=;
-  b=EgKuYrLTgcBzYTKWx/MyWkotI6T4BfMz/qyJ4eJUQz8RPCvW6PYWmgYX
-   f00fonDagLQrkZHhfs/EyKS73skitojJSrjCiD5vKo4m9KGHjuxvCxwWR
-   4DemFSUTnfjduQqJl207weX1vxLsRfD/194zS5dOSKNya4DLPz3U9b6xw
-   YWTjqA1v8RLqteocJ4Y2L2APLvaIwGmbU0d8pGlZSNX7EcjhmJ5dE7uCH
-   cOwcQir+dso3CL2rhExBtDfvn/fdaYMqSMGpmCPt03LhWJKDUrtmmO7pc
-   dNBZ2PxpIvw6jovGBGpc+ceLU2RJFZHCcZddWxGpdRs6yQzP/S6FvHv68
-   Q==;
-X-IronPort-AV: E=McAfee;i="6500,9779,10510"; a="371882989"
-X-IronPort-AV: E=Sophos;i="5.95,212,1661842800"; 
-   d="scan'208";a="371882989"
-Received: from orsmga007.jf.intel.com ([10.7.209.58])
-  by orsmga105.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 25 Oct 2022 06:17:08 -0700
-X-IronPort-AV: E=McAfee;i="6500,9779,10510"; a="626417672"
-X-IronPort-AV: E=Sophos;i="5.95,212,1661842800"; 
-   d="scan'208";a="626417672"
-Received: from ahunter6-mobl1.ger.corp.intel.com (HELO [10.0.2.15]) ([10.252.45.236])
-  by orsmga007-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 25 Oct 2022 06:17:05 -0700
-Message-ID: <243d2f33-258e-4bc2-326f-e74f39c6a714@intel.com>
-Date:   Tue, 25 Oct 2022 16:17:01 +0300
+        Tue, 25 Oct 2022 11:28:17 -0400
+Received: from foss.arm.com (foss.arm.com [217.140.110.172])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTP id 3566243328;
+        Tue, 25 Oct 2022 08:28:16 -0700 (PDT)
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 307ADD6E;
+        Tue, 25 Oct 2022 08:28:22 -0700 (PDT)
+Received: from [10.57.1.104] (unknown [10.57.1.104])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id C27A83F71A;
+        Tue, 25 Oct 2022 08:28:13 -0700 (PDT)
+Message-ID: <4e50b890-0588-1551-fb7c-6cd8191d1054@arm.com>
+Date:   Tue, 25 Oct 2022 16:28:12 +0100
 MIME-Version: 1.0
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
- Firefox/102.0 Thunderbird/102.4.0
-Subject: Re: [PATCH 3/8] perf test: Use a test program in perf record tests
-Content-Language: en-US
-To:     Arnaldo Carvalho de Melo <acme@kernel.org>
-Cc:     Ian Rogers <irogers@google.com>,
+ Thunderbird/102.2.2
+From:   James Clark <james.clark@arm.com>
+Subject: Re: [PATCH v2 1/1] perf arm64: Send pointer auth masks to ring buffer
+To:     Peter Zijlstra <peterz@infradead.org>
+Cc:     linux-perf-users@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        broonie@kernel.org, acme@kernel.org,
+        Andrew Kilroy <andrew.kilroy@arm.com>,
+        Vince Weaver <vincent.weaver@maine.edu>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Ingo Molnar <mingo@redhat.com>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Jiri Olsa <jolsa@kernel.org>,
         Namhyung Kim <namhyung@kernel.org>,
-        Jiri Olsa <jolsa@kernel.org>, Ingo Molnar <mingo@kernel.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        linux-perf-users@vger.kernel.org
-References: <20221020172643.3458767-1-namhyung@kernel.org>
- <20221020172643.3458767-4-namhyung@kernel.org>
- <CAP-5=fWKCdyFzR8ZZSK_2v6vT_RKngxxnXGieUVb8PBATJ64eQ@mail.gmail.com>
- <Y1Z3/t4RtnB8r03t@kernel.org>
- <960317d2-1bf8-cc2a-8772-8d0f5a136b6b@intel.com>
- <Y1a2lmO/dmjEiZb0@kernel.org>
-From:   Adrian Hunter <adrian.hunter@intel.com>
-Organization: Intel Finland Oy, Registered Address: PL 281, 00181 Helsinki,
- Business Identity Code: 0357606 - 4, Domiciled in Helsinki
-In-Reply-To: <Y1a2lmO/dmjEiZb0@kernel.org>
+        Will Deacon <will@kernel.org>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        kristina.martsenko@arm.com
+References: <20221020101921.1219533-1-james.clark@arm.com>
+ <20221020101921.1219533-2-james.clark@arm.com>
+ <Y1F8DUWaWhlh/phL@hirez.programming.kicks-ass.net>
+Content-Language: en-US
+In-Reply-To: <Y1F8DUWaWhlh/phL@hirez.programming.kicks-ass.net>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-On 24/10/22 19:00, Arnaldo Carvalho de Melo wrote:
-> Em Mon, Oct 24, 2022 at 05:00:14PM +0300, Adrian Hunter escreveu:
->> On 24/10/22 14:33, Arnaldo Carvalho de Melo wrote:
->>> Em Thu, Oct 20, 2022 at 04:52:14PM -0700, Ian Rogers escreveu:
->>>> I wonder if these utilities should just be built into perf to avoid
->>>> the cc dependency. Perhaps we can have a hidden option built into
->>>> perf test.
-> 
->>> Agreed, not depending on a compiler makes 'perf test' usable in more
->>> systems, particularly production ones where we may want to check if perf
->>> is passing all tests applicable to that system.
->  
->> I haven't seen anyone package anything except the perf executable, so
->> I presume the only people running these tests install the source, and
->> so need a compiler anyway.
-> 
-> Humm?
-> 
-> [root@quaco ~]# head -3 /etc/os-release
-> NAME="Fedora Linux"
-> VERSION="36 (Workstation Edition)"
-> ID=fedora
-> [root@quaco ~]#G
 
-I guess I got confused - it seems it is only Ubuntu that does that.
 
+On 20/10/2022 17:49, Peter Zijlstra wrote:
+> On Thu, Oct 20, 2022 at 11:19:20AM +0100, James Clark wrote:
+>> From: Andrew Kilroy <andrew.kilroy@arm.com>
+>>
+>> Perf report cannot produce callgraphs using dwarf on arm64 where pointer
+>> authentication is enabled.  This is because libunwind and libdw cannot
+>> unmangle instruction pointers that have a pointer authentication code
+>> (PAC) embedded in them.
+>>
+>> libunwind and libdw need to be given an instruction mask which they can
+>> use to arrive at the correct return address that does not contain the
+>> PAC.
+>>
+>> The bits in the return address that contain the PAC can differ by
+>> process, so this patch adds a new sample field PERF_SAMPLE_ARCH_1
+>> to allow the kernel to send the masks up to userspace perf.
+>>
+>> This field can be used in a architecture specific fashion, but on
+>> arm64, it contains the ptrauth mask information. The event will
+>> currently fail to open on architectures other than arm64 if
+>> PERF_SAMPLE_ARCH_1 is set. It will also fail to open on arm64 if
+>> CONFIG_ARM64_PTR_AUTH isn't set, as the data would always be zeros.
+> 
+> A little more information please; wth is pointer authentication? Are we
+
+Yes the commit message could do with some links and details. I
+will add more background about the feature if I resend it.
+
+
+> going to be having the same thing with x86 LAM where only a subset of
+> the available bits have meaning to the hardware?
+
+If LAM is used with things like return addresses on the stack then yes.
+For data addresses then it wouldn't cause this exact issue.
+
+The problem is that libunwind and perf do pointer arithmetic when
+unwinding with other values that don't have these bits set. For example
+computing offset in an mmap where the base address doesn't have an
+authentication code but a return value does results in an incorrect
+value. Like x-y=offset is only correct if the PAC bits are masked out first.
+
+> 
+> Why do we want the same mask repeated over and over with each sample;
+> should this not be part of the address space (side-band) data?
+
+You are probably right that it could be done that way. The reason that
+we did it this way was to be consistent with ptrace feature [1] where it
+is delivered to userspace on a per-process basis. And there is also a
+prctl for the enabled key types [2] which can be changed dynamically.
+Particularly for the last reason is why it was done per sample.
+
+Having said that, the enabled keys field is not used by perf, only the
+mask is used, so I can drop the per sample data until enabled keys is
+needed, which may be never.
+
+I'm going to assume that perf shouldn't use ptrace because of
+permissions and conflicts with debuggers, so I could put the mask
+somewhere like PERF_RECORD_FORK instead of per sample.
+
+
+[1]:
+https://lore.kernel.org/all/20181207183931.4285-9-kristina.martsenko@arm.com/
+[2]:
+https://lore.kernel.org/all/d6609065f8f40397a4124654eb68c9f490b4d477.1616123271.git.pcc@google.com/
