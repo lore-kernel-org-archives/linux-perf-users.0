@@ -2,164 +2,85 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 36EF7FA373D
-	for <linux-perf-users@archiver.kernel.org>; Wed, 26 Oct 2022 08:08:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0D632C433FE
+	for <linux-perf-users@archiver.kernel.org>; Wed, 26 Oct 2022 09:07:54 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233264AbiJZIH6 (ORCPT
+        id S230327AbiJZJHx (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Wed, 26 Oct 2022 04:07:58 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52196 "EHLO
+        Wed, 26 Oct 2022 05:07:53 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49254 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232769AbiJZIH5 (ORCPT
+        with ESMTP id S232540AbiJZJHw (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Wed, 26 Oct 2022 04:07:57 -0400
-Received: from mail-qv1-f50.google.com (mail-qv1-f50.google.com [209.85.219.50])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 543BFA98E7;
-        Wed, 26 Oct 2022 01:07:57 -0700 (PDT)
-Received: by mail-qv1-f50.google.com with SMTP id i12so10866419qvs.2;
-        Wed, 26 Oct 2022 01:07:57 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=VQEEiiTh8IYFR3lRTgfMpxwgMeIOqIFndmpnifBl0C8=;
-        b=yS/VJPfdjJGCuBLo2Ul9Krr2Dh8Lp3KXMKhD0cO+2/sb9u8DesxcpQqrESwpHiVReK
-         oKidbNJufoNnNR53ltH7x06RK/t6op9D6whe0lzOD+fzzvrm2l1gFe+4h+8vtr0qnhYq
-         VLXMhZ4qg71/8JaSrpGaIPfWj16IT9i/46BWUEdfk7IZsXM8G/th4RH3glWxKVw27uNs
-         toKycU5XCO3s7Ei0Eo4g5UvRqoF7DwVR0/c3gGZQF8oT9oe3Cx+44dMLvbVeAw4sNOcZ
-         pQ+NtCzyvih3zT3+shLjr0+4AszQc4K3JAvQisNhY0yPIihqFzEFx1WAvxK5V4V3Whm5
-         SfwQ==
-X-Gm-Message-State: ACrzQf0Z3/2aHf+OfTxbSuQy/IjBaGkNp3CaTf+J6oVeYlQ9a0ZwlLem
-        JDRb/ViQx9MyTdysJIH2HDv4Mrb6PxWi9g==
-X-Google-Smtp-Source: AMsMyM5wUfCqBMO9b3tRLPZm9mHX6nxG3qIn9Ljq0Hecieql8IIhOnV6w7zsL+Js8rDq+iQnkbG2HQ==
-X-Received: by 2002:a05:6214:21a6:b0:4bb:85b4:fd96 with SMTP id t6-20020a05621421a600b004bb85b4fd96mr8295689qvc.28.1666771676366;
-        Wed, 26 Oct 2022 01:07:56 -0700 (PDT)
-Received: from mail-yb1-f179.google.com (mail-yb1-f179.google.com. [209.85.219.179])
-        by smtp.gmail.com with ESMTPSA id u5-20020a05620a430500b006bb78d095c5sm3567121qko.79.2022.10.26.01.07.55
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 26 Oct 2022 01:07:56 -0700 (PDT)
-Received: by mail-yb1-f179.google.com with SMTP id y72so17819499yby.13;
-        Wed, 26 Oct 2022 01:07:55 -0700 (PDT)
-X-Received: by 2002:a25:687:0:b0:6c2:2b0c:26e with SMTP id 129-20020a250687000000b006c22b0c026emr38190526ybg.202.1666771675521;
- Wed, 26 Oct 2022 01:07:55 -0700 (PDT)
+        Wed, 26 Oct 2022 05:07:52 -0400
+Received: from frasgout.his.huawei.com (frasgout.his.huawei.com [185.176.79.56])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 555D89B851
+        for <linux-perf-users@vger.kernel.org>; Wed, 26 Oct 2022 02:07:51 -0700 (PDT)
+Received: from frapeml500008.china.huawei.com (unknown [172.18.147.226])
+        by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4My2tM4Qlzz6H6px;
+        Wed, 26 Oct 2022 17:04:11 +0800 (CST)
+Received: from lhrpeml500003.china.huawei.com (7.191.162.67) by
+ frapeml500008.china.huawei.com (7.182.85.71) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2375.31; Wed, 26 Oct 2022 11:07:44 +0200
+Received: from [10.202.227.197] (10.202.227.197) by
+ lhrpeml500003.china.huawei.com (7.191.162.67) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2375.31; Wed, 26 Oct 2022 10:07:44 +0100
+Message-ID: <c84fa985-7c86-880a-a10b-088120fb2b06@huawei.com>
+Date:   Wed, 26 Oct 2022 10:07:44 +0100
 MIME-Version: 1.0
-References: <20221025184519.13231-1-casey@schaufler-ca.com> <20221025184519.13231-9-casey@schaufler-ca.com>
-In-Reply-To: <20221025184519.13231-9-casey@schaufler-ca.com>
-From:   Geert Uytterhoeven <geert@linux-m68k.org>
-Date:   Wed, 26 Oct 2022 10:07:43 +0200
-X-Gmail-Original-Message-ID: <CAMuHMdVCjhLeHbDp1R3QPaY-TgTx31TBUdXq8PQeUE8OKeDP5g@mail.gmail.com>
-Message-ID: <CAMuHMdVCjhLeHbDp1R3QPaY-TgTx31TBUdXq8PQeUE8OKeDP5g@mail.gmail.com>
-Subject: Re: [PATCH v1 8/8] lsm: wireup syscalls lsm_self_attr and lsm_module_list
-To:     Casey Schaufler <casey@schaufler-ca.com>
-Cc:     casey.schaufler@intel.com, paul@paul-moore.com,
-        linux-security-module@vger.kernel.org, jmorris@namei.org,
-        keescook@chromium.org, john.johansen@canonical.com,
-        penguin-kernel@i-love.sakura.ne.jp, stephen.smalley.work@gmail.com,
-        linux-kernel@vger.kernel.org, linux-api@vger.kernel.org,
-        mic@digikod.net, linux-perf-users@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:91.0) Gecko/20100101
+ Thunderbird/91.6.1
+Subject: Re: [PATCH v2 1/3] perf vendor events arm64: Fix incorrect Hisi hip08
+ L3 metrics
+To:     Shang XiaoJing <shangxiaojing@huawei.com>, <will@kernel.org>,
+        <james.clark@arm.com>, <mike.leach@linaro.org>,
+        <leo.yan@linaro.org>, <peterz@infradead.org>, <mingo@redhat.com>,
+        <acme@kernel.org>, <mark.rutland@arm.com>,
+        <alexander.shishkin@linux.intel.com>, <jolsa@kernel.org>,
+        <namhyung@kernel.org>, <kjain@linux.ibm.com>,
+        <linux-arm-kernel@lists.infradead.org>,
+        <linux-perf-users@vger.kernel.org>
+References: <20221021105035.10000-1-shangxiaojing@huawei.com>
+ <20221021105035.10000-2-shangxiaojing@huawei.com>
+From:   John Garry <john.garry@huawei.com>
+In-Reply-To: <20221021105035.10000-2-shangxiaojing@huawei.com>
+Content-Type: text/plain; charset="UTF-8"; format=flowed
+Content-Transfer-Encoding: 7bit
+X-Originating-IP: [10.202.227.197]
+X-ClientProxiedBy: lhrpeml100004.china.huawei.com (7.191.162.219) To
+ lhrpeml500003.china.huawei.com (7.191.162.67)
+X-CFilter-Loop: Reflected
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-Hi Casey,
+On 21/10/2022 11:50, Shang XiaoJing wrote:
+> Commit 0cc177cfc95d ("perf vendor events arm64: Add Hisi hip08 L3
+> metrics") add L3 metrics of hip08, but some metrics (IF_BP_MISP_BR_RET,
+> IF_BP_MISP_BR_RET, IF_BP_MISP_BR_BL) have incorrect event number due to
+> the mistakes in document, which caused incorrect result. Fix the
+> incorrect metrics.
+> 
+> before:
+> 65,811,214,308	armv8_pmuv3_0/event=0x1014/	# 18.87 push_branch
+> 						# -40.19 other_branch
+> 3,564,316,780	BR_MIS_PRED			# 0.51 indirect_branch
+> 						# 21.81 pop_branch
+> 
+> after:
+> 6,537,146,245	BR_MIS_PRED			# 0.48 indirect_branch
+> 						# 0.47 pop_branch
+> 						# 0.00 push_branch
+> 						# 0.05 other_branch
+> 
+> Fixes: 0cc177cfc95d ("perf vendor events arm64: Add Hisi hip08 L3 metrics")
+> Signed-off-by: Shang XiaoJing<shangxiaojing@huawei.com>
+> Cc: John Garry<john.garry@huawei.com>
+> Acked-by: James Clark<james.clark@arm.com>
 
-CC linux-perf
+Reviewed-by: John Garry <john.garry@huawei.com>
 
-On Tue, Oct 25, 2022 at 8:52 PM Casey Schaufler <casey@schaufler-ca.com> wrote:
-> Wireup two syscalls for Linux Security Modules.
->
-> Signed-off-by: Casey Schaufler <casey@schaufler-ca.com>
+> ---
 
-Thanks for your patch!
-
->  arch/m68k/kernel/syscalls/syscall.tbl               | 2 ++
-
-Acked-by: Geert Uytterhoeven <geert@linux-m68k.org> # m68k
-
-> --- a/arch/arm64/include/asm/unistd32.h
-> +++ b/arch/arm64/include/asm/unistd32.h
-> @@ -907,6 +907,8 @@ __SYSCALL(__NR_process_mrelease, sys_process_mrelease)
->  __SYSCALL(__NR_futex_waitv, sys_futex_waitv)
->  #define __NR_set_mempolicy_home_node 450
->  __SYSCALL(__NR_set_mempolicy_home_node, sys_set_mempolicy_home_node)
-> +#define __NR_lsm_attr_set 451
-> +__SYSCALL(__NR_lsm_attr_set, sys_lsm_attr_set)
-
-Missing lsm_module_list.
-
->
->  /*
->   * Please add new compat syscalls above this comment and update
-
-> --- a/include/uapi/asm-generic/unistd.h
-> +++ b/include/uapi/asm-generic/unistd.h
-> @@ -886,8 +886,11 @@ __SYSCALL(__NR_futex_waitv, sys_futex_waitv)
->  #define __NR_set_mempolicy_home_node 450
->  __SYSCALL(__NR_set_mempolicy_home_node, sys_set_mempolicy_home_node)
->
-> +#define __NR_lsm_self_attr 451
-> +__SYSCALL(__NR_lsm_self_attr, sys_lsm_self_attr)
-
-Missing lsm_module_list.
-
-> +
->  #undef __NR_syscalls
-> -#define __NR_syscalls 451
-> +#define __NR_syscalls 452
-
-Hence one off.
-
-> --- a/tools/perf/arch/mips/entry/syscalls/syscall_n64.tbl
-> +++ b/tools/perf/arch/mips/entry/syscalls/syscall_n64.tbl
-> @@ -365,3 +365,5 @@
->  448    n64     process_mrelease                sys_process_mrelease
->  449    n64     futex_waitv                     sys_futex_waitv
->  450    common  set_mempolicy_home_node         sys_set_mempolicy_home_node
-> +451    n64     lsm_self_attr                   sys_lsm_self_attr
-> +452    n64     lsm_module_list                 sys_lsm_module_list
-> diff --git a/tools/perf/arch/powerpc/entry/syscalls/syscall.tbl b/tools/perf/arch/powerpc/entry/syscalls/syscall.tbl
-> index 2bca64f96164..7b779080acbe 100644
-> --- a/tools/perf/arch/powerpc/entry/syscalls/syscall.tbl
-> +++ b/tools/perf/arch/powerpc/entry/syscalls/syscall.tbl
-> @@ -530,3 +530,5 @@
->  448    common  process_mrelease                sys_process_mrelease
->  449    common  futex_waitv                     sys_futex_waitv
->  450    nospu   set_mempolicy_home_node         sys_set_mempolicy_home_node
-> +451    common  lsm_self_attr                   sys_lsm_self_attr
-> +452    common  lsm_module_list                 sys_lsm_module_list
-> diff --git a/tools/perf/arch/s390/entry/syscalls/syscall.tbl b/tools/perf/arch/s390/entry/syscalls/syscall.tbl
-> index 799147658dee..eaba1ed5654e 100644
-> --- a/tools/perf/arch/s390/entry/syscalls/syscall.tbl
-> +++ b/tools/perf/arch/s390/entry/syscalls/syscall.tbl
-> @@ -453,3 +453,5 @@
->  448  common    process_mrelease        sys_process_mrelease            sys_process_mrelease
->  449  common    futex_waitv             sys_futex_waitv                 sys_futex_waitv
->  450  common    set_mempolicy_home_node sys_set_mempolicy_home_node     sys_set_mempolicy_home_node
-> +451  common    lsm_self_attr           sys_lsm_self_attr       sys_lsm_self_attr
-> +452  common    lsm_module_list         sys_lsm_module_list     sys_lsm_module_list
-> diff --git a/tools/perf/arch/x86/entry/syscalls/syscall_64.tbl b/tools/perf/arch/x86/entry/syscalls/syscall_64.tbl
-> index c84d12608cd2..40b35e7069a7 100644
-> --- a/tools/perf/arch/x86/entry/syscalls/syscall_64.tbl
-> +++ b/tools/perf/arch/x86/entry/syscalls/syscall_64.tbl
-> @@ -372,6 +372,8 @@
->  448    common  process_mrelease        sys_process_mrelease
->  449    common  futex_waitv             sys_futex_waitv
->  450    common  set_mempolicy_home_node sys_set_mempolicy_home_node
-> +451    common  lsm_self_attr           sys_lsm_self_attr
-> +452    common  lsm_module_list         sys_lsm_module_list
-
-BTW, why are the syscall tables not shared between arch/ and tools/perf/?
-They seem to be identical (except for ppc due to 32/64 vs. common)?
-
-Gr{oetje,eeting}s,
-
-                        Geert
-
---
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
-
-In personal conversations with technical people, I call myself a hacker. But
-when I'm talking to journalists I just say "programmer" or something like that.
-                                -- Linus Torvalds
