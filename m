@@ -2,198 +2,96 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D4ED1C38A2D
-	for <linux-perf-users@archiver.kernel.org>; Wed, 26 Oct 2022 04:37:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DC13DC38A2D
+	for <linux-perf-users@archiver.kernel.org>; Wed, 26 Oct 2022 07:28:31 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232761AbiJZEhs (ORCPT
+        id S232727AbiJZH2a (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Wed, 26 Oct 2022 00:37:48 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56924 "EHLO
+        Wed, 26 Oct 2022 03:28:30 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57514 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229753AbiJZEhr (ORCPT
+        with ESMTP id S231649AbiJZH23 (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Wed, 26 Oct 2022 00:37:47 -0400
-Received: from loongson.cn (mail.loongson.cn [114.242.206.163])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTP id 3F53E74E00;
-        Tue, 25 Oct 2022 21:37:44 -0700 (PDT)
-Received: from loongson.cn (unknown [113.200.148.30])
-        by gateway (Coremail) with SMTP id _____8Dx_7eXuVhjp4gCAA--.8046S3;
-        Wed, 26 Oct 2022 12:37:43 +0800 (CST)
-Received: from [10.130.0.135] (unknown [113.200.148.30])
-        by localhost.localdomain (Coremail) with SMTP id AQAAf8CxqFeWuVhjWCYFAA--.1146S3;
-        Wed, 26 Oct 2022 12:37:43 +0800 (CST)
-Subject: Re: [PATCH v3 2/3] perf bench syscall: Add close syscall benchmark
-To:     Ian Rogers <irogers@google.com>
-References: <1665042130-15786-1-git-send-email-yangtiezhu@loongson.cn>
- <1665042130-15786-3-git-send-email-yangtiezhu@loongson.cn>
- <CAP-5=fX8_Q3EujmfBXF_66y=n+VUyeBZtzjZU9WGj4QBN2TZ5w@mail.gmail.com>
-Cc:     Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Jiri Olsa <jolsa@kernel.org>,
-        Namhyung Kim <namhyung@kernel.org>,
-        linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
-From:   Tiezhu Yang <yangtiezhu@loongson.cn>
-Message-ID: <6a2d2031-0773-e1af-027f-8939ce596d52@loongson.cn>
-Date:   Wed, 26 Oct 2022 12:37:42 +0800
-User-Agent: Mozilla/5.0 (X11; Linux mips64; rv:45.0) Gecko/20100101
- Thunderbird/45.4.0
+        Wed, 26 Oct 2022 03:28:29 -0400
+Received: from mga14.intel.com (mga14.intel.com [192.55.52.115])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9C119B8C15;
+        Wed, 26 Oct 2022 00:28:28 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1666769308; x=1698305308;
+  h=from:to:cc:subject:date:message-id:mime-version:
+   content-transfer-encoding;
+  bh=BtdY9zOLzOchXhwl2IJHG9U9vbffqPHfgouauBD7/4c=;
+  b=GWMixoIruoNS9N8IkSPrcMzV8z0sSp//IiJDvz3CTRj8suroGj6mNzIH
+   D86o6/XGvbFYAOLXmT4Z9vcvROkURb9gwei9Pp8QXQJBwNLJYpuH2++VJ
+   LAaEEOKLsleAWaKTbJvnddbzHe186v7Cko3D9pPbjfto3FMy80J67qX9k
+   /oMDgJwNbqHH6Ga40K2xqq8lPUCEJNA3TQSexMwS1unUMEmYqgFnFnyfM
+   zeBveBXI8Unj7GwANEI4xBgpXzzzQJcObtGgxNoAnl5n7sFDhLP3tj1tR
+   n5Jt5g3Q89e0xEeDGr7kwLKrAj5XNWO0N8yZXUnLB1llaVzMRBgQvHnbZ
+   w==;
+X-IronPort-AV: E=McAfee;i="6500,9779,10511"; a="307876250"
+X-IronPort-AV: E=Sophos;i="5.95,214,1661842800"; 
+   d="scan'208";a="307876250"
+Received: from orsmga005.jf.intel.com ([10.7.209.41])
+  by fmsmga103.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 26 Oct 2022 00:28:06 -0700
+X-IronPort-AV: E=McAfee;i="6500,9779,10511"; a="806949236"
+X-IronPort-AV: E=Sophos;i="5.95,213,1661842800"; 
+   d="scan'208";a="806949236"
+Received: from ahunter6-mobl1.ger.corp.intel.com (HELO ahunter-VirtualBox.home\044ger.corp.intel.com) ([10.252.53.127])
+  by orsmga005-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 26 Oct 2022 00:27:48 -0700
+From:   Adrian Hunter <adrian.hunter@intel.com>
+To:     Arnaldo Carvalho de Melo <acme@kernel.org>
+Cc:     Jiri Olsa <jolsa@redhat.com>, Namhyung Kim <namhyung@kernel.org>,
+        Ian Rogers <irogers@google.com>, linux-kernel@vger.kernel.org,
+        linux-perf-users@vger.kernel.org
+Subject: [PATCH] perf auxtrace: Fix address filter symbol name match for modules
+Date:   Wed, 26 Oct 2022 10:27:36 +0300
+Message-Id: <20221026072736.2982-1-adrian.hunter@intel.com>
+X-Mailer: git-send-email 2.34.1
 MIME-Version: 1.0
-In-Reply-To: <CAP-5=fX8_Q3EujmfBXF_66y=n+VUyeBZtzjZU9WGj4QBN2TZ5w@mail.gmail.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 7bit
-X-CM-TRANSID: AQAAf8CxqFeWuVhjWCYFAA--.1146S3
-X-CM-SenderInfo: p1dqw3xlh2x3gn0dqz5rrqw2lrqou0/
-X-Coremail-Antispam: 1Uk129KBjvJXoWxZr1DJryDtF4xKw1xZF13Jwb_yoW5uFy7pF
-        47Ca1Utw4rAF4jv3W3Jr4kXFyrJr12qF1YywnIkws8Zr13X3s0gayjgay5XFnruFW7K345
-        ua1vvry8WF4xZaDanT9S1TB71UUUUjUqnTZGkaVYY2UrUUUUj1kv1TuYvTs0mT0YCTnIWj
-        qI5I8CrVACY4xI64kE6c02F40Ex7xfYxn0WfASr-VFAUDa7-sFnT9fnUUIcSsGvfJTRUUU
-        bqxYFVCjjxCrM7AC8VAFwI0_Jr0_Gr1l1xkIjI8I6I8E6xAIw20EY4v20xvaj40_Wr0E3s
-        1l1IIY67AEw4v_JrI_Jryl8cAvFVAK0II2c7xJM28CjxkF64kEwVA0rcxSw2x7M28EF7xv
-        wVC0I7IYx2IY67AKxVWUJVWUCwA2z4x0Y4vE2Ix0cI8IcVCY1x0267AKxVWUJVW8JwA2z4
-        x0Y4vEx4A2jsIE14v26r4UJVWxJr1l84ACjcxK6I8E87Iv6xkF7I0E14v26r4UJVWxJr1l
-        n4kS14v26r1Y6r17M2AIxVAIcxkEcVAq07x20xvEncxIr21l57IF6xkI12xvs2x26I8E6x
-        ACxx1l5I8CrVACY4xI64kE6c02F40Ex7xfMcIj6xIIjxv20xvE14v26r126r1DMcIj6I8E
-        87Iv67AKxVW8JVWxJwAm72CE4IkC6x0Yz7v_Jr0_Gr1lF7xvr2IY64vIr41lc7I2V7IY0V
-        AS07AlzVAYIcxG8wCY1x0262kKe7AKxVWUAVWUtwCF04k20xvY0x0EwIxGrwCFx2IqxVCF
-        s4IE7xkEbVWUJVW8JwCFI7km07C267AKxVWUXVWUAwC20s026c02F40E14v26r1j6r18MI
-        8I3I0E7480Y4vE14v26r106r1rMI8E67AF67kF1VAFwI0_Jw0_GFylIxkGc2Ij64vIr41l
-        IxAIcVC0I7IYx2IY67AKxVWUJVWUCwCI42IY6xIIjxv20xvEc7CjxVAFwI0_Jr0_Gr1lIx
-        AIcVCF04k26cxKx2IYs7xG6r1j6r1xMIIF0xvEx4A2jsIE14v26r1j6r4UMIIF0xvEx4A2
-        jsIEc7CjxVAFwI0_Jr0_GrUvcSsGvfC2KfnxnUUI43ZEXa7IU8RuWPUUUUU==
+Organization: Intel Finland Oy, Registered Address: PL 281, 00181 Helsinki, Business Identity Code: 0357606 - 4, Domiciled in Helsinki
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
+For modules, names from kallsyms__parse() contain the module name which
+meant that module symbols did not match exactly by name.
 
+Fix by matching the name string up to the separating tab character.
 
-On 10/25/2022 11:37 PM, Ian Rogers wrote:
-> On Thu, Oct 6, 2022 at 12:42 AM Tiezhu Yang <yangtiezhu@loongson.cn> wrote:
->>
->> This commit adds a simple close syscall benchmark, more syscall
->> benchmarks can be added in the future.
->>
+Fixes: 1b36c03e3569 ("perf record: Add support for using symbols in address filters")
+Cc: stable@vger.kernel.org
+Signed-off-by: Adrian Hunter <adrian.hunter@intel.com>
+---
+ tools/perf/util/auxtrace.c | 10 +++++++++-
+ 1 file changed, 9 insertions(+), 1 deletion(-)
 
-...
-
->> diff --git a/tools/perf/bench/syscall.c b/tools/perf/bench/syscall.c
->> index 746fd71..058394b 100644
->> --- a/tools/perf/bench/syscall.c
->> +++ b/tools/perf/bench/syscall.c
->> @@ -46,6 +46,9 @@ static int bench_syscall_common(int argc, const char **argv, int syscall)
->>                 case __NR_getppid:
->>                         getppid();
->>                         break;
->> +               case __NR_close:
->> +                       close(dup(0));
->
-> Thanks for contributing! This benchmark will compute the cost of close
-> and dup, naively dup could perform memory allocation and be slow.
-> Perhaps a number of file descriptors could be made outside of the
-> timed region?
->
-
-Hi Ian,
-
-Thanks for your review and suggestion.
-
-I tried the following changes based on this patchset, it shows
-"dup failed" due to the default number of "max open files"
-(ulimit -n) is 1024 but the loops is 10000000, if reduce the
-loops to 1000, the test time is too short and seems meaningless.
-
-diff --git a/tools/perf/bench/syscall.c b/tools/perf/bench/syscall.c
-index c8f8bee..76571a4 100644
---- a/tools/perf/bench/syscall.c
-+++ b/tools/perf/bench/syscall.c
-@@ -57,10 +57,26 @@ static int bench_syscall_common(int argc, const char 
-**argv, int syscall)
-         struct timeval start, stop, diff;
-         unsigned long long result_usec = 0;
-         const char *name = NULL;
--       int i;
-+       int i, *fd = NULL;
-
-         argc = parse_options(argc, argv, options, bench_syscall_usage, 0);
-
-+       if (syscall == __NR_close) {
-+               fd = (int *) malloc(sizeof(int) * loops);
-+               if (fd == NULL) {
-+                       fprintf(stderr, "malloc failed\n");
-+                       exit(1);
-+               }
+diff --git a/tools/perf/util/auxtrace.c b/tools/perf/util/auxtrace.c
+index b59c278fe9ed..c50eb2bfc518 100644
+--- a/tools/perf/util/auxtrace.c
++++ b/tools/perf/util/auxtrace.c
+@@ -2321,11 +2321,19 @@ struct sym_args {
+ 	bool		near;
+ };
+ 
++static bool kern_sym_name_match(const char *kname, const char *name)
++{
++	size_t n = strlen(name);
 +
-+               for (i = 0; i < loops; i++) {
-+                       fd[i] = dup(i);
-+                       if (fd[i] < 0) {
-+                               fprintf(stderr, "dup failed\n");
-+                               exit(1);
-+                       }
-+               }
-+       }
++	return !strcmp(kname, name) ||
++	       (!strncmp(kname, name, n) && kname[n] == '\t');
++}
 +
-         gettimeofday(&start, NULL);
-
-         for (i = 0; i < loops; i++) {
-@@ -69,7 +85,7 @@ static int bench_syscall_common(int argc, const char 
-**argv, int syscall)
-                         getppid();
-                         break;
-                 case __NR_close:
--                       close(dup(0));
-+                       close(fd[i]);
-                         break;
-                 case __NR_execve:
-                         test_execve();
-@@ -85,6 +101,9 @@ static int bench_syscall_common(int argc, const char 
-**argv, int syscall)
-         gettimeofday(&stop, NULL);
-         timersub(&stop, &start, &diff);
-
-+       if (syscall == __NR_close)
-+               free(fd);
-+
-         switch (syscall) {
-         case __NR_getppid:
-                 name = "getppid()";
-
-What about the following changes? Use "open" instead of "dup" to
-generate fd (it nees more test time), or just leave the code as
-it is?
-
-diff --git a/tools/perf/bench/syscall.c b/tools/perf/bench/syscall.c
-index c8f8bee..3aab5fd 100644
---- a/tools/perf/bench/syscall.c
-+++ b/tools/perf/bench/syscall.c
-@@ -57,7 +57,7 @@ static int bench_syscall_common(int argc, const char 
-**argv, int syscall)
-         struct timeval start, stop, diff;
-         unsigned long long result_usec = 0;
-         const char *name = NULL;
--       int i;
-+       int i, fd;
-
-         argc = parse_options(argc, argv, options, bench_syscall_usage, 0);
-
-@@ -69,7 +69,12 @@ static int bench_syscall_common(int argc, const char 
-**argv, int syscall)
-                         getppid();
-                         break;
-                 case __NR_close:
--                       close(dup(0));
-+                       fd = open("/etc/passwd", O_RDONLY);
-+                       if (fd < 0) {
-+                               fprintf(stderr, "open failed\n");
-+                               exit(1);
-+                       }
-+                       close(fd);
-                         break;
-                 case __NR_execve:
-                         test_execve();
-
-
-Thanks,
-Tiezhu
+ static bool kern_sym_match(struct sym_args *args, const char *name, char type)
+ {
+ 	/* A function with the same name, and global or the n'th found or any */
+ 	return kallsyms__is_function(type) &&
+-	       !strcmp(name, args->name) &&
++	       kern_sym_name_match(name, args->name) &&
+ 	       ((args->global && isupper(type)) ||
+ 		(args->selected && ++(args->cnt) == args->idx) ||
+ 		(!args->global && !args->selected));
+-- 
+2.34.1
 
