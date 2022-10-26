@@ -2,264 +2,198 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EDB04C38A2D
-	for <linux-perf-users@archiver.kernel.org>; Tue, 25 Oct 2022 20:46:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D4ED1C38A2D
+	for <linux-perf-users@archiver.kernel.org>; Wed, 26 Oct 2022 04:37:48 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229937AbiJYUqA (ORCPT
+        id S232761AbiJZEhs (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Tue, 25 Oct 2022 16:46:00 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51490 "EHLO
+        Wed, 26 Oct 2022 00:37:48 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56924 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229898AbiJYUp6 (ORCPT
+        with ESMTP id S229753AbiJZEhr (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Tue, 25 Oct 2022 16:45:58 -0400
-Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id EF8A9ED9A6;
-        Tue, 25 Oct 2022 13:45:57 -0700 (PDT)
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id 8EAB161B97;
-        Tue, 25 Oct 2022 20:45:57 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 9AD0AC433D6;
-        Tue, 25 Oct 2022 20:45:56 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1666730757;
-        bh=Q3NnogyKq4BuOPpJIGr/iyeMSki4k6rPV8wa5IwYE9k=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=rxwkJzo7AcBxsXZ87ldh0qv26DsNCeLdIZZc6tR6G5o3XD5tnW4NQRG3VMAsgsOcM
-         4FgiyH0Kq7jagUoGJIJfmbJ1iQrfr29jc8wys4SVgTiYsvZAQWVw6Tj8XRI6U6Cv22
-         YVUTi1hcw4afpDfIfVZHuzOClhdQLAe9sMREe1KTks0tZ4AISOuhetj15nREEj1Lxf
-         NQ7wIMJTCf1u9XriW0RkIQ1zAxu4s40cjZnBnY0sINwt0AiMZJXlfZmcAHt+Im8Z/r
-         C/6yiMuaI3TuiOmpXZIbCqBSBUdMQIp7BitZYyGn2yH4kLJIVyDR6t+I2nGuXUZqcJ
-         F+6O2S4T8Ur5A==
-Received: by quaco.ghostprotocols.net (Postfix, from userid 1000)
-        id 82BFB404BE; Tue, 25 Oct 2022 17:45:53 -0300 (-03)
-Date:   Tue, 25 Oct 2022 17:45:53 -0300
-From:   Arnaldo Carvalho de Melo <acme@kernel.org>
-To:     Adrian Hunter <adrian.hunter@intel.com>
-Cc:     Jiri Olsa <jolsa@redhat.com>, Andi Kleen <ak@linux.intel.com>,
+        Wed, 26 Oct 2022 00:37:47 -0400
+Received: from loongson.cn (mail.loongson.cn [114.242.206.163])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTP id 3F53E74E00;
+        Tue, 25 Oct 2022 21:37:44 -0700 (PDT)
+Received: from loongson.cn (unknown [113.200.148.30])
+        by gateway (Coremail) with SMTP id _____8Dx_7eXuVhjp4gCAA--.8046S3;
+        Wed, 26 Oct 2022 12:37:43 +0800 (CST)
+Received: from [10.130.0.135] (unknown [113.200.148.30])
+        by localhost.localdomain (Coremail) with SMTP id AQAAf8CxqFeWuVhjWCYFAA--.1146S3;
+        Wed, 26 Oct 2022 12:37:43 +0800 (CST)
+Subject: Re: [PATCH v3 2/3] perf bench syscall: Add close syscall benchmark
+To:     Ian Rogers <irogers@google.com>
+References: <1665042130-15786-1-git-send-email-yangtiezhu@loongson.cn>
+ <1665042130-15786-3-git-send-email-yangtiezhu@loongson.cn>
+ <CAP-5=fX8_Q3EujmfBXF_66y=n+VUyeBZtzjZU9WGj4QBN2TZ5w@mail.gmail.com>
+Cc:     Peter Zijlstra <peterz@infradead.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        Arnaldo Carvalho de Melo <acme@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Jiri Olsa <jolsa@kernel.org>,
         Namhyung Kim <namhyung@kernel.org>,
-        Ian Rogers <irogers@google.com>, linux-kernel@vger.kernel.org,
-        linux-perf-users@vger.kernel.org
-Subject: Re: [PATCH] perf scripts python: intel-pt-events.py: Add ability
- interleave output
-Message-ID: <Y1hLAT5L4ffmFhWe@kernel.org>
-References: <20221020152509.5298-1-adrian.hunter@intel.com>
+        linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
+From:   Tiezhu Yang <yangtiezhu@loongson.cn>
+Message-ID: <6a2d2031-0773-e1af-027f-8939ce596d52@loongson.cn>
+Date:   Wed, 26 Oct 2022 12:37:42 +0800
+User-Agent: Mozilla/5.0 (X11; Linux mips64; rv:45.0) Gecko/20100101
+ Thunderbird/45.4.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20221020152509.5298-1-adrian.hunter@intel.com>
-X-Url:  http://acmel.wordpress.com
+In-Reply-To: <CAP-5=fX8_Q3EujmfBXF_66y=n+VUyeBZtzjZU9WGj4QBN2TZ5w@mail.gmail.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 7bit
+X-CM-TRANSID: AQAAf8CxqFeWuVhjWCYFAA--.1146S3
+X-CM-SenderInfo: p1dqw3xlh2x3gn0dqz5rrqw2lrqou0/
+X-Coremail-Antispam: 1Uk129KBjvJXoWxZr1DJryDtF4xKw1xZF13Jwb_yoW5uFy7pF
+        47Ca1Utw4rAF4jv3W3Jr4kXFyrJr12qF1YywnIkws8Zr13X3s0gayjgay5XFnruFW7K345
+        ua1vvry8WF4xZaDanT9S1TB71UUUUjUqnTZGkaVYY2UrUUUUj1kv1TuYvTs0mT0YCTnIWj
+        qI5I8CrVACY4xI64kE6c02F40Ex7xfYxn0WfASr-VFAUDa7-sFnT9fnUUIcSsGvfJTRUUU
+        bqxYFVCjjxCrM7AC8VAFwI0_Jr0_Gr1l1xkIjI8I6I8E6xAIw20EY4v20xvaj40_Wr0E3s
+        1l1IIY67AEw4v_JrI_Jryl8cAvFVAK0II2c7xJM28CjxkF64kEwVA0rcxSw2x7M28EF7xv
+        wVC0I7IYx2IY67AKxVWUJVWUCwA2z4x0Y4vE2Ix0cI8IcVCY1x0267AKxVWUJVW8JwA2z4
+        x0Y4vEx4A2jsIE14v26r4UJVWxJr1l84ACjcxK6I8E87Iv6xkF7I0E14v26r4UJVWxJr1l
+        n4kS14v26r1Y6r17M2AIxVAIcxkEcVAq07x20xvEncxIr21l57IF6xkI12xvs2x26I8E6x
+        ACxx1l5I8CrVACY4xI64kE6c02F40Ex7xfMcIj6xIIjxv20xvE14v26r126r1DMcIj6I8E
+        87Iv67AKxVW8JVWxJwAm72CE4IkC6x0Yz7v_Jr0_Gr1lF7xvr2IY64vIr41lc7I2V7IY0V
+        AS07AlzVAYIcxG8wCY1x0262kKe7AKxVWUAVWUtwCF04k20xvY0x0EwIxGrwCFx2IqxVCF
+        s4IE7xkEbVWUJVW8JwCFI7km07C267AKxVWUXVWUAwC20s026c02F40E14v26r1j6r18MI
+        8I3I0E7480Y4vE14v26r106r1rMI8E67AF67kF1VAFwI0_Jw0_GFylIxkGc2Ij64vIr41l
+        IxAIcVC0I7IYx2IY67AKxVWUJVWUCwCI42IY6xIIjxv20xvEc7CjxVAFwI0_Jr0_Gr1lIx
+        AIcVCF04k26cxKx2IYs7xG6r1j6r1xMIIF0xvEx4A2jsIE14v26r1j6r4UMIIF0xvEx4A2
+        jsIEc7CjxVAFwI0_Jr0_GrUvcSsGvfC2KfnxnUUI43ZEXa7IU8RuWPUUUUU==
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-Em Thu, Oct 20, 2022 at 06:25:09PM +0300, Adrian Hunter escreveu:
-> Intel PT timestamps are not provided for every branch, let alone every
-> instruction, so there can be many samples with the same timestamp. With
-> per-cpu contexts, decoding is done for each CPU in turn, which can make it
-> difficult to see what is happening on different CPUs at the same time.
-> Currently the interleaving from perf script --itrace=i0ns is quite coarse
-> grained. There are often long stretches executing on one CPU and nothing on
-> another.
 
-Thanks, applied.
 
-- Arnaldo
+On 10/25/2022 11:37 PM, Ian Rogers wrote:
+> On Thu, Oct 6, 2022 at 12:42 AM Tiezhu Yang <yangtiezhu@loongson.cn> wrote:
+>>
+>> This commit adds a simple close syscall benchmark, more syscall
+>> benchmarks can be added in the future.
+>>
 
- 
-> Some people are interested in seeing what happened on multiple CPUs before
-> a crash to debug races etc.
-> 
-> To improve perf script interleaving for parallel execution, the
-> intel-pt-events.py script has been enhanced to enable interleaving the
-> output with the same timestamp from different CPUs. It is understood that
-> interleaving is not perfect or causal.
-> 
-> Add parameter --interleave [<n>] to interleave sample output for the same
-> timestamp so that no more than n samples for a CPU are displayed in a row.
-> 'n' defaults to 4. Note this only affects the order of output, and only
-> when the timestamp is the same.
-> 
-> Example:
-> 
->   $ perf script intel-pt-events.py --insn-trace --interleave 3
->   ...
->   bash  2267/2267  [004]  9323.692625625  563caa3c86f0  jz 0x563caa3c89c7        run_pending_traps+0x30 (/usr/bin/bash)   IPC: 1.52 (38/25)
->   bash  2267/2267  [004]  9323.692625625  563caa3c89c7  movq  0x118(%rsp), %rax  run_pending_traps+0x307 (/usr/bin/bash)
->   bash  2267/2267  [004]  9323.692625625  563caa3c89cf  subq  %fs:0x28, %rax     run_pending_traps+0x30f (/usr/bin/bash)
->   bash  2270/2270  [007]  9323.692625625  55dc58cabf02  jz 0x55dc58cabf48        unquoted_glob_pattern_p+0x102 (/usr/bin/bash)   IPC: 1.56 (25/16)
->   bash  2270/2270  [007]  9323.692625625  55dc58cabf04  cmp $0x5d, %al           unquoted_glob_pattern_p+0x104 (/usr/bin/bash)
->   bash  2270/2270  [007]  9323.692625625  55dc58cabf06  jnz 0x55dc58cabf10       unquoted_glob_pattern_p+0x106 (/usr/bin/bash)
->   bash  2264/2264  [001]  9323.692625625  7fd556a4376c  jbe 0x7fd556a43ac8       round_and_return+0x3fc (/usr/lib/x86_64-linux-gnu/libc.so.6)   IPC: 4.30 (43/10)
->   bash  2264/2264  [001]  9323.692625625  7fd556a43772  and $0x8, %edx           round_and_return+0x402 (/usr/lib/x86_64-linux-gnu/libc.so.6)
->   bash  2264/2264  [001]  9323.692625625  7fd556a43775  jnz 0x7fd556a43ac8       round_and_return+0x405 (/usr/lib/x86_64-linux-gnu/libc.so.6)
->   bash  2267/2267  [004]  9323.692625625  563caa3c89d8  jnz 0x563caa3c8b11       run_pending_traps+0x318 (/usr/bin/bash)
->   bash  2267/2267  [004]  9323.692625625  563caa3c89de  add $0x128, %rsp         run_pending_traps+0x31e (/usr/bin/bash)
->   bash  2267/2267  [004]  9323.692625625  563caa3c89e5  popq  %rbx               run_pending_traps+0x325 (/usr/bin/bash)
->   ...
-> 
-> Signed-off-by: Adrian Hunter <adrian.hunter@intel.com>
-> ---
->  tools/perf/Documentation/perf-intel-pt.txt   | 12 +++-
->  tools/perf/scripts/python/intel-pt-events.py | 65 +++++++++++++++++++-
->  2 files changed, 74 insertions(+), 3 deletions(-)
-> 
-> diff --git a/tools/perf/Documentation/perf-intel-pt.txt b/tools/perf/Documentation/perf-intel-pt.txt
-> index 92464a5d7eaf..7b6ccd2fa3bf 100644
-> --- a/tools/perf/Documentation/perf-intel-pt.txt
-> +++ b/tools/perf/Documentation/perf-intel-pt.txt
-> @@ -189,8 +189,16 @@ There is also script intel-pt-events.py which provides an example of how to
->  unpack the raw data for power events and PTWRITE. The script also displays
->  branches, and supports 2 additional modes selected by option:
->  
-> - --insn-trace - instruction trace
-> - --src-trace - source trace
-> + - --insn-trace - instruction trace
-> + - --src-trace - source trace
-> +
-> +The intel-pt-events.py script also has options:
-> +
-> + - --all-switch-events - display all switch events, not only the last consecutive.
-> + - --interleave [<n>] - interleave sample output for the same timestamp so that
-> + no more than n samples for a CPU are displayed in a row. 'n' defaults to 4.
-> + Note this only affects the order of output, and only when the timestamp is the
-> + same.
->  
->  As mentioned above, it is easy to capture too much data.  One way to limit the
->  data captured is to use 'snapshot' mode which is explained further below.
-> diff --git a/tools/perf/scripts/python/intel-pt-events.py b/tools/perf/scripts/python/intel-pt-events.py
-> index 6be7fd8fd615..08862a2582f4 100644
-> --- a/tools/perf/scripts/python/intel-pt-events.py
-> +++ b/tools/perf/scripts/python/intel-pt-events.py
-> @@ -13,10 +13,12 @@
->  
->  from __future__ import print_function
->  
-> +import io
->  import os
->  import sys
->  import struct
->  import argparse
-> +import contextlib
->  
->  from libxed import LibXED
->  from ctypes import create_string_buffer, addressof
-> @@ -39,6 +41,11 @@ glb_src			= False
->  glb_source_file_name	= None
->  glb_line_number		= None
->  glb_dso			= None
-> +glb_stash_dict		= {}
-> +glb_output		= None
-> +glb_output_pos		= 0
-> +glb_cpu			= -1
-> +glb_time		= 0
->  
->  def get_optional_null(perf_dict, field):
->  	if field in perf_dict:
-> @@ -70,6 +77,7 @@ def trace_begin():
->  	ap.add_argument("--insn-trace", action='store_true')
->  	ap.add_argument("--src-trace", action='store_true')
->  	ap.add_argument("--all-switch-events", action='store_true')
-> +	ap.add_argument("--interleave", type=int, nargs='?', const=4, default=0)
->  	global glb_args
->  	global glb_insn
->  	global glb_src
-> @@ -94,11 +102,39 @@ def trace_begin():
->  	perf_set_itrace_options(perf_script_context, itrace)
->  
->  def trace_end():
-> +	if glb_args.interleave:
-> +		flush_stashed_output()
->  	print("End")
->  
->  def trace_unhandled(event_name, context, event_fields_dict):
->  		print(' '.join(['%s=%s'%(k,str(v))for k,v in sorted(event_fields_dict.items())]))
->  
-> +def stash_output():
-> +	global glb_stash_dict
-> +	global glb_output_pos
-> +	output_str = glb_output.getvalue()[glb_output_pos:]
-> +	n = len(output_str)
-> +	if n:
-> +		glb_output_pos += n
-> +		if glb_cpu not in glb_stash_dict:
-> +			glb_stash_dict[glb_cpu] = []
-> +		glb_stash_dict[glb_cpu].append(output_str)
-> +
-> +def flush_stashed_output():
-> +	global glb_stash_dict
-> +	while glb_stash_dict:
-> +		cpus = list(glb_stash_dict.keys())
-> +		# Output at most glb_args.interleave output strings per cpu
-> +		for cpu in cpus:
-> +			items = glb_stash_dict[cpu]
-> +			countdown = glb_args.interleave
-> +			while len(items) and countdown:
-> +				sys.stdout.write(items[0])
-> +				del items[0]
-> +				countdown -= 1
-> +			if not items:
-> +				del glb_stash_dict[cpu]
-> +
->  def print_ptwrite(raw_buf):
->  	data = struct.unpack_from("<IQ", raw_buf)
->  	flags = data[0]
-> @@ -375,15 +411,40 @@ def do_process_event(param_dict):
->  		print_common_start(comm, sample, name)
->  		print_common_ip(param_dict, sample, symbol, dso)
->  
-> +def interleave_events(param_dict):
-> +	global glb_cpu
-> +	global glb_time
-> +	global glb_output
-> +	global glb_output_pos
-> +
-> +	sample  = param_dict["sample"]
-> +	glb_cpu = sample["cpu"]
-> +	ts      = sample["time"]
-> +
-> +	if glb_time != ts:
-> +		glb_time = ts
-> +		flush_stashed_output()
-> +
-> +	glb_output_pos = 0
-> +	with contextlib.redirect_stdout(io.StringIO()) as glb_output:
-> +		do_process_event(param_dict)
-> +
-> +	stash_output()
-> +
->  def process_event(param_dict):
->  	try:
-> -		do_process_event(param_dict)
-> +		if glb_args.interleave:
-> +			interleave_events(param_dict)
-> +		else:
-> +			do_process_event(param_dict)
->  	except broken_pipe_exception:
->  		# Stop python printing broken pipe errors and traceback
->  		sys.stdout = open(os.devnull, 'w')
->  		sys.exit(1)
->  
->  def auxtrace_error(typ, code, cpu, pid, tid, ip, ts, msg, cpumode, *x):
-> +	if glb_args.interleave:
-> +		flush_stashed_output()
->  	if len(x) >= 2 and x[0]:
->  		machine_pid = x[0]
->  		vcpu = x[1]
-> @@ -403,6 +464,8 @@ def auxtrace_error(typ, code, cpu, pid, tid, ip, ts, msg, cpumode, *x):
->  		sys.exit(1)
->  
->  def context_switch(ts, cpu, pid, tid, np_pid, np_tid, machine_pid, out, out_preempt, *x):
-> +	if glb_args.interleave:
-> +		flush_stashed_output()
->  	if out:
->  		out_str = "Switch out "
->  	else:
-> -- 
-> 2.34.1
+...
 
--- 
+>> diff --git a/tools/perf/bench/syscall.c b/tools/perf/bench/syscall.c
+>> index 746fd71..058394b 100644
+>> --- a/tools/perf/bench/syscall.c
+>> +++ b/tools/perf/bench/syscall.c
+>> @@ -46,6 +46,9 @@ static int bench_syscall_common(int argc, const char **argv, int syscall)
+>>                 case __NR_getppid:
+>>                         getppid();
+>>                         break;
+>> +               case __NR_close:
+>> +                       close(dup(0));
+>
+> Thanks for contributing! This benchmark will compute the cost of close
+> and dup, naively dup could perform memory allocation and be slow.
+> Perhaps a number of file descriptors could be made outside of the
+> timed region?
+>
 
-- Arnaldo
+Hi Ian,
+
+Thanks for your review and suggestion.
+
+I tried the following changes based on this patchset, it shows
+"dup failed" due to the default number of "max open files"
+(ulimit -n) is 1024 but the loops is 10000000, if reduce the
+loops to 1000, the test time is too short and seems meaningless.
+
+diff --git a/tools/perf/bench/syscall.c b/tools/perf/bench/syscall.c
+index c8f8bee..76571a4 100644
+--- a/tools/perf/bench/syscall.c
++++ b/tools/perf/bench/syscall.c
+@@ -57,10 +57,26 @@ static int bench_syscall_common(int argc, const char 
+**argv, int syscall)
+         struct timeval start, stop, diff;
+         unsigned long long result_usec = 0;
+         const char *name = NULL;
+-       int i;
++       int i, *fd = NULL;
+
+         argc = parse_options(argc, argv, options, bench_syscall_usage, 0);
+
++       if (syscall == __NR_close) {
++               fd = (int *) malloc(sizeof(int) * loops);
++               if (fd == NULL) {
++                       fprintf(stderr, "malloc failed\n");
++                       exit(1);
++               }
++
++               for (i = 0; i < loops; i++) {
++                       fd[i] = dup(i);
++                       if (fd[i] < 0) {
++                               fprintf(stderr, "dup failed\n");
++                               exit(1);
++                       }
++               }
++       }
++
+         gettimeofday(&start, NULL);
+
+         for (i = 0; i < loops; i++) {
+@@ -69,7 +85,7 @@ static int bench_syscall_common(int argc, const char 
+**argv, int syscall)
+                         getppid();
+                         break;
+                 case __NR_close:
+-                       close(dup(0));
++                       close(fd[i]);
+                         break;
+                 case __NR_execve:
+                         test_execve();
+@@ -85,6 +101,9 @@ static int bench_syscall_common(int argc, const char 
+**argv, int syscall)
+         gettimeofday(&stop, NULL);
+         timersub(&stop, &start, &diff);
+
++       if (syscall == __NR_close)
++               free(fd);
++
+         switch (syscall) {
+         case __NR_getppid:
+                 name = "getppid()";
+
+What about the following changes? Use "open" instead of "dup" to
+generate fd (it nees more test time), or just leave the code as
+it is?
+
+diff --git a/tools/perf/bench/syscall.c b/tools/perf/bench/syscall.c
+index c8f8bee..3aab5fd 100644
+--- a/tools/perf/bench/syscall.c
++++ b/tools/perf/bench/syscall.c
+@@ -57,7 +57,7 @@ static int bench_syscall_common(int argc, const char 
+**argv, int syscall)
+         struct timeval start, stop, diff;
+         unsigned long long result_usec = 0;
+         const char *name = NULL;
+-       int i;
++       int i, fd;
+
+         argc = parse_options(argc, argv, options, bench_syscall_usage, 0);
+
+@@ -69,7 +69,12 @@ static int bench_syscall_common(int argc, const char 
+**argv, int syscall)
+                         getppid();
+                         break;
+                 case __NR_close:
+-                       close(dup(0));
++                       fd = open("/etc/passwd", O_RDONLY);
++                       if (fd < 0) {
++                               fprintf(stderr, "open failed\n");
++                               exit(1);
++                       }
++                       close(fd);
+                         break;
+                 case __NR_execve:
+                         test_execve();
+
+
+Thanks,
+Tiezhu
+
