@@ -2,91 +2,112 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A7CA4C433FE
-	for <linux-perf-users@archiver.kernel.org>; Wed, 26 Oct 2022 14:03:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D19A9C38A2D
+	for <linux-perf-users@archiver.kernel.org>; Wed, 26 Oct 2022 14:10:49 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233166AbiJZODR (ORCPT
+        id S234161AbiJZOKs (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Wed, 26 Oct 2022 10:03:17 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34678 "EHLO
+        Wed, 26 Oct 2022 10:10:48 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50966 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S233348AbiJZODQ (ORCPT
+        with ESMTP id S234158AbiJZOKs (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Wed, 26 Oct 2022 10:03:16 -0400
-Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id ECE41E099D
-        for <linux-perf-users@vger.kernel.org>; Wed, 26 Oct 2022 07:03:15 -0700 (PDT)
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id 885A361F10
-        for <linux-perf-users@vger.kernel.org>; Wed, 26 Oct 2022 14:03:15 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id A8BE9C433D6;
-        Wed, 26 Oct 2022 14:03:14 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1666792994;
-        bh=+OYbymwXVTHjvyIEncJj+Ub6BuMmBJ+TqAfwpTzCG6U=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=BBGu/bMrJfbLF4zDN30qDk1YV8yHnqEgNf0ONFiJkT8e5nZuiP3HbpOqnZOATwayL
-         y3PkhHpnl+JaHwusm05BH0ZgVQsiR5YF34Kacu5ErvBtC8SMmr1K855nm3WFoM1P9J
-         l3SFolJqOeEcg74pEURUtrBDf7O4MAnrSHFTyEjs/KUst1eXCSX8vCFH1J8ZvABii3
-         Vl1xWO9Ydiu+W8I0a7py0KKuJWdbkBgEbVMJxXkjudWFmmahi1q2XnVUhmt9a0/yQm
-         S/6Zxx+C3/IcXi49VhTiEwfdOoNhEYszOGk0L+gcjnpAJnSAPckwL3oSpNL+Inj9rr
-         krTYvir8uTlAg==
-Received: by quaco.ghostprotocols.net (Postfix, from userid 1000)
-        id 64BF9404BE; Wed, 26 Oct 2022 11:03:12 -0300 (-03)
-Date:   Wed, 26 Oct 2022 11:03:12 -0300
-From:   Arnaldo Carvalho de Melo <acme@kernel.org>
-To:     John Garry <john.garry@huawei.com>
-Cc:     Shang XiaoJing <shangxiaojing@huawei.com>, will@kernel.org,
-        james.clark@arm.com, mike.leach@linaro.org, leo.yan@linaro.org,
-        peterz@infradead.org, mingo@redhat.com, mark.rutland@arm.com,
-        alexander.shishkin@linux.intel.com, jolsa@kernel.org,
-        namhyung@kernel.org, kjain@linux.ibm.com,
-        linux-arm-kernel@lists.infradead.org,
-        linux-perf-users@vger.kernel.org
-Subject: Re: [PATCH v2 1/3] perf vendor events arm64: Fix incorrect Hisi
- hip08 L3 metrics
-Message-ID: <Y1k+IPn+uvgdyY5c@kernel.org>
-References: <20221021105035.10000-1-shangxiaojing@huawei.com>
- <20221021105035.10000-2-shangxiaojing@huawei.com>
- <c84fa985-7c86-880a-a10b-088120fb2b06@huawei.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <c84fa985-7c86-880a-a10b-088120fb2b06@huawei.com>
-X-Url:  http://acmel.wordpress.com
+        Wed, 26 Oct 2022 10:10:48 -0400
+Received: from mail-yw1-x1149.google.com (mail-yw1-x1149.google.com [IPv6:2607:f8b0:4864:20::1149])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 27EBD8B2D6
+        for <linux-perf-users@vger.kernel.org>; Wed, 26 Oct 2022 07:10:47 -0700 (PDT)
+Received: by mail-yw1-x1149.google.com with SMTP id 00721157ae682-367f94b9b16so148381177b3.11
+        for <linux-perf-users@vger.kernel.org>; Wed, 26 Oct 2022 07:10:47 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20210112;
+        h=cc:to:from:subject:message-id:mime-version:date:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=oVCnLyxMsU2FaLl3D+PS+uuU9HLGod0PTLLsMzXQBPI=;
+        b=MpZihCZI6V0d3vjHzoWFyZNUGKtaDmyQeeQjONz5yCsLwixNRtRYH8kVbw4IAj071I
+         RtI5ylTTr0HmD103lHtW8GBjStpSSNk7D2IdMVsYQ4YozdkznqH/iHzaYWETb+Gb4s5A
+         clqSzqiPC21fxU4gz1CciKwcJqKxXl6U66oOiuk6W/D6fsilKWyi7v/PxHeAQjRdQ0Yl
+         4f194yEaUt9VdJlHvDFcDgIl2/GU9prcdlsKivsUZaYe/wLHWO3865s7Q2e79/zhVqKq
+         42x/T7UNAP0Etik7BBFtJ8htlIYmUX4A55kRJXFgloxuG60P3M+tySMy5GQjuqin4mzn
+         Y+ng==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=cc:to:from:subject:message-id:mime-version:date:x-gm-message-state
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=oVCnLyxMsU2FaLl3D+PS+uuU9HLGod0PTLLsMzXQBPI=;
+        b=6TuSC7IcTYjLB0x/xtsNmaVIj6ds9NSINz4YrAoAKiybLRUJTNUNdsnC5K39kDwnTk
+         XtCRdB0euBm+LNJqt1yjpXOp/q7DiPbszmOHu9E0Eh+bFeKBFKapBf5kgRnwjWJqTf5K
+         2wwRqU3JKC6uGlYX4WD/KpOcsQJ2hWLZbIoBcYrkLNXW7otQ+xVLjgUsjc9+bZ8VuC/+
+         qTZU/jLmy2Zld2/wDhfBjaP5Ld1vYGt4dF+xcEm6s4DGIDOkUM3ztVADQAWh4V5MSbG3
+         7e4DMtLDqwoyoCLRH6q4jAUQjUff4QqWP0VVG5IGtqsExGbMRKag7L69zAdcW5OaP8EP
+         RnGQ==
+X-Gm-Message-State: ACrzQf3SoR1p3wLzG9uigBctKlpq5CkEM1OAwQiu+qO/IMGQRkpsHnvO
+        rg2Lusy7qPLrYaD6vo+JJZndmRCADmCCUg==
+X-Google-Smtp-Source: AMsMyM5filAM/Pnh+qhZG7fTAorWRnmibQoVWzKGwKCoBdzpgJyDwpDWGy9Rm7JLRaju1rk5h1H22IP+svXzdg==
+X-Received: from slicestar.c.googlers.com ([fda3:e722:ac3:cc00:4f:4b78:c0a8:20a1])
+ (user=davidgow job=sendgmr) by 2002:a0d:d857:0:b0:36f:c0f7:f0ec with SMTP id
+ a84-20020a0dd857000000b0036fc0f7f0ecmr7838435ywe.82.1666793446446; Wed, 26
+ Oct 2022 07:10:46 -0700 (PDT)
+Date:   Wed, 26 Oct 2022 22:10:40 +0800
+Mime-Version: 1.0
+X-Mailer: git-send-email 2.38.0.135.g90850a2211-goog
+Message-ID: <20221026141040.1609203-1-davidgow@google.com>
+Subject: [PATCH] perf/hw_breakpoint: test: Skip the test if dependencies unmet
+From:   David Gow <davidgow@google.com>
+To:     Marco Elver <elver@google.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        Dmitry Vyukov <dvyukov@google.com>
+Cc:     David Gow <davidgow@google.com>, linux-perf-users@vger.kernel.org,
+        linux-kernel@vger.kernel.org, kunit-dev@googlegroups.com,
+        Brendan Higgins <brendanhiggins@google.com>,
+        Daniel Latypov <dlatypov@google.com>,
+        kasan-dev@googlegroups.com
+Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-Em Wed, Oct 26, 2022 at 10:07:44AM +0100, John Garry escreveu:
-> On 21/10/2022 11:50, Shang XiaoJing wrote:
-> > Commit 0cc177cfc95d ("perf vendor events arm64: Add Hisi hip08 L3
-> > metrics") add L3 metrics of hip08, but some metrics (IF_BP_MISP_BR_RET,
-> > IF_BP_MISP_BR_RET, IF_BP_MISP_BR_BL) have incorrect event number due to
-> > the mistakes in document, which caused incorrect result. Fix the
-> > incorrect metrics.
-> > 
-> > before:
-> > 65,811,214,308	armv8_pmuv3_0/event=0x1014/	# 18.87 push_branch
-> > 						# -40.19 other_branch
-> > 3,564,316,780	BR_MIS_PRED			# 0.51 indirect_branch
-> > 						# 21.81 pop_branch
-> > 
-> > after:
-> > 6,537,146,245	BR_MIS_PRED			# 0.48 indirect_branch
-> > 						# 0.47 pop_branch
-> > 						# 0.00 push_branch
-> > 						# 0.05 other_branch
-> > 
-> > Fixes: 0cc177cfc95d ("perf vendor events arm64: Add Hisi hip08 L3 metrics")
-> > Signed-off-by: Shang XiaoJing<shangxiaojing@huawei.com>
-> > Cc: John Garry<john.garry@huawei.com>
-> > Acked-by: James Clark<james.clark@arm.com>
-> 
-> Reviewed-by: John Garry <john.garry@huawei.com>
+Running the test currently fails on non-SMP systems, despite being
+enabled by default. This means that running the test with:
 
-Applied to perf/urgent.
+ ./tools/testing/kunit/kunit.py run --arch x86_64 hw_breakpoint
 
-- Arnaldo
+results in every hw_breakpoint test failing with:
+
+ # test_one_cpu: failed to initialize: -22
+ not ok 1 - test_one_cpu
+
+Instead, use kunit_skip(), which will mark the test as skipped, and give
+a more comprehensible message:
+
+ ok 1 - test_one_cpu # SKIP not enough cpus
+
+This makes it more obvious that the test is not suited to the test
+environment, and so wasn't run, rather than having run and failed.
+
+Signed-off-by: David Gow <davidgow@google.com>
+---
+ kernel/events/hw_breakpoint_test.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
+
+diff --git a/kernel/events/hw_breakpoint_test.c b/kernel/events/hw_breakpoint_test.c
+index 5ced822df788..c57610f52bb4 100644
+--- a/kernel/events/hw_breakpoint_test.c
++++ b/kernel/events/hw_breakpoint_test.c
+@@ -295,11 +295,11 @@ static int test_init(struct kunit *test)
+ {
+ 	/* Most test cases want 2 distinct CPUs. */
+ 	if (num_online_cpus() < 2)
+-		return -EINVAL;
++		kunit_skip(test, "not enough cpus");
+ 
+ 	/* Want the system to not use breakpoints elsewhere. */
+ 	if (hw_breakpoint_is_used())
+-		return -EBUSY;
++		kunit_skip(test, "hw breakpoint already in use");
+ 
+ 	return 0;
+ }
+-- 
+2.38.0.135.g90850a2211-goog
+
