@@ -2,106 +2,121 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A1364C38A2D
-	for <linux-perf-users@archiver.kernel.org>; Wed, 26 Oct 2022 14:36:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8BDE9C38A2D
+	for <linux-perf-users@archiver.kernel.org>; Wed, 26 Oct 2022 16:22:03 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S234336AbiJZOg3 (ORCPT
+        id S229949AbiJZQWC (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Wed, 26 Oct 2022 10:36:29 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51352 "EHLO
+        Wed, 26 Oct 2022 12:22:02 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57926 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S233902AbiJZOg2 (ORCPT
+        with ESMTP id S231476AbiJZQWA (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Wed, 26 Oct 2022 10:36:28 -0400
-Received: from ams.source.kernel.org (ams.source.kernel.org [IPv6:2604:1380:4601:e00::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 45307B14FA;
-        Wed, 26 Oct 2022 07:36:27 -0700 (PDT)
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by ams.source.kernel.org (Postfix) with ESMTPS id C9924B822AA;
-        Wed, 26 Oct 2022 14:36:25 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 52B2EC433D6;
-        Wed, 26 Oct 2022 14:36:24 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1666794984;
-        bh=Ky/FE3/Moh+iG/G3rskZGi3VmMi9zVI+wEL/m6hB8o0=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=A5hTwyBrs634N2r5h45aU+IHz4Gz984WNVTDFx6etf+eaFueLEkgCf5PS+lPu5puI
-         Y8cX4GwNaYj5RfJUgw6tsfpY8PDdkk08eEsCsrc2B7EJOYw0xmc3kSbZ1KFAE3UYPi
-         5ew+bb1p0Z/0+3gJw9KTkfxZvgXi4EDv9uQ6I6hzgOYIqhZu4EcwBC6te2QppVaOFR
-         XdLbG+0ldcFhohFCskJz5P+1T/SYh9fzQHI49FFT9hqDImGCdODEiPT6Lg2ZUyBBJ9
-         W9jHf2Ug6Cv1nbW2LymFmMMuPaxHK/Kb2NmMJsiAOjiAmMGpe/lQg41/+5ubisCXWR
-         ZxyoO+fykffAA==
-Received: by quaco.ghostprotocols.net (Postfix, from userid 1000)
-        id 2C28C404BE; Wed, 26 Oct 2022 11:36:22 -0300 (-03)
-Date:   Wed, 26 Oct 2022 11:36:22 -0300
-From:   Arnaldo Carvalho de Melo <acme@kernel.org>
-To:     James Clark <james.clark@arm.com>
-Cc:     linux-perf-users@vger.kernel.org, namhyung@kernel.org,
-        linux-kernel@vger.kernel.org,
-        Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Jiri Olsa <jolsa@kernel.org>,
-        Adrian Hunter <adrian.hunter@intel.com>,
-        Ian Rogers <irogers@google.com>
-Subject: Re: [PATCH v2 0/2] perf: Fix "kernel lock contention analysis" test
- by not printing warnings in quiet mode
-Message-ID: <Y1lF5lZ26nTBpyaR@kernel.org>
-References: <20221018094137.783081-1-james.clark@arm.com>
+        Wed, 26 Oct 2022 12:22:00 -0400
+Received: from mail-yb1-xb32.google.com (mail-yb1-xb32.google.com [IPv6:2607:f8b0:4864:20::b32])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D3B4710F894
+        for <linux-perf-users@vger.kernel.org>; Wed, 26 Oct 2022 09:21:59 -0700 (PDT)
+Received: by mail-yb1-xb32.google.com with SMTP id j130so19553036ybj.9
+        for <linux-perf-users@vger.kernel.org>; Wed, 26 Oct 2022 09:21:59 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20210112;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:from:to:cc:subject:date:message-id:reply-to;
+        bh=dyd6cIxqMoiV31eHklrQhs9akoYIl7JR8zcy+9Yf9Ek=;
+        b=MBEkyQ/uyWiwu/66kX0ye1vCdV2WVAqC0KC4h/5JzVBpJECVcleXeWcAF4SY6gHA6E
+         sZMr5TNKsl25CGoqofAWdfi2k9QwqCOTf665XxKRkKT1kAk74fmR6KqoTesUOL9sA7+p
+         zOr/zNk9efUmsgUqGb3MbKH4qLYzzGnd6PqKIJt12cMo5NmuB6BMoelVvZzM5MaUQVNf
+         wJ3UR5Z0CMq9O5lq0Hdo6TZ8jfN6P+t3UNSbpBwPtOzmSsDR2qHc7lnBeQG1MXEiQ/gt
+         UiKSQHclevB+86rHW+L7tIendd4JtU4jVk2rd4PA2O5bqosHCxBfxytKsV34VmjH4Dis
+         obPQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=dyd6cIxqMoiV31eHklrQhs9akoYIl7JR8zcy+9Yf9Ek=;
+        b=Zt7FVVSEdhVOTqVvBiRcVmpmwQ+DVx4hywDGoeJCpjXdQDp5VZjTDv+MtNne7ITT7E
+         IAiPhjfwOPVeTB0UWLpPn2/ZwqyVplTOWoLHrSnU8JTpCe7a/DRwQpYWmLhSi+5l332i
+         DhXvkD+bT+dWUCHZU2TagRogkxJQE3g1U1sG3Ru2s9/8mUsgNOYWtqfMC3qGgwBkPEfV
+         s162JAFqdhv50WCS1w+mIOEiathfkJzqDr4jh/TZlqrKBlotnIHBp81eGZYiMP/Eq/M5
+         pnkYL745Yj1lD79RmsLhm39hsLEcuPhnp2zb35HRzlkurv5j5bBixhOTKECsukxvkmZ+
+         J6qQ==
+X-Gm-Message-State: ACrzQf3PJbn6nFH+kW0E1qLGK15HGtXdLWMWeuIG90+HzO6uX2y8Xphd
+        9AQW/nKUnsDn6ey0wwwo4EWmQCgFJ199jUvwnIsBzg==
+X-Google-Smtp-Source: AMsMyM4Ghir/aZcnPIPwDCiFDhAkrglmo8h6kwMd9/ZLmLkRq6xzIV3AhzmkeBd/MJxhyucE59YHgxL45g1eTQ0OkvQ=
+X-Received: by 2002:a25:c102:0:b0:6c4:c94:2842 with SMTP id
+ r2-20020a25c102000000b006c40c942842mr41389384ybf.611.1666801318874; Wed, 26
+ Oct 2022 09:21:58 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20221018094137.783081-1-james.clark@arm.com>
-X-Url:  http://acmel.wordpress.com
+References: <20221026141040.1609203-1-davidgow@google.com>
+In-Reply-To: <20221026141040.1609203-1-davidgow@google.com>
+From:   Marco Elver <elver@google.com>
+Date:   Wed, 26 Oct 2022 09:21:22 -0700
+Message-ID: <CANpmjNMLuep71fz2P=9ZrYSaD_GwE6XDf69+auf=2G7FYqu4sw@mail.gmail.com>
+Subject: Re: [PATCH] perf/hw_breakpoint: test: Skip the test if dependencies unmet
+To:     David Gow <davidgow@google.com>
+Cc:     Peter Zijlstra <peterz@infradead.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        Dmitry Vyukov <dvyukov@google.com>,
+        linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org,
+        kunit-dev@googlegroups.com,
+        Brendan Higgins <brendanhiggins@google.com>,
+        Daniel Latypov <dlatypov@google.com>,
+        kasan-dev@googlegroups.com
+Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-Em Tue, Oct 18, 2022 at 10:41:34AM +0100, James Clark escreveu:
-> This is V2, but the previous patch was titled 'perf: Fix "Track with
-> sched_switch" test by not printing warnings in quiet mode'
-> 
-> Changes since V1:
-> 
->   * Add a commit to make the behavior consistent between tools and
->     update the docs
->   * Fix the incorrect test name in the commit message
+On Wed, 26 Oct 2022 at 07:10, David Gow <davidgow@google.com> wrote:
+>
+> Running the test currently fails on non-SMP systems, despite being
+> enabled by default. This means that running the test with:
+>
+>  ./tools/testing/kunit/kunit.py run --arch x86_64 hw_breakpoint
+>
+> results in every hw_breakpoint test failing with:
+>
+>  # test_one_cpu: failed to initialize: -22
+>  not ok 1 - test_one_cpu
+>
+> Instead, use kunit_skip(), which will mark the test as skipped, and give
+> a more comprehensible message:
+>
+>  ok 1 - test_one_cpu # SKIP not enough cpus
+>
+> This makes it more obvious that the test is not suited to the test
+> environment, and so wasn't run, rather than having run and failed.
+>
+> Signed-off-by: David Gow <davidgow@google.com>
 
-Thanks, applied.
+Acked-by: Marco Elver <elver@google.com>
 
-- Arnaldo
+Although I still get confused by the fact that skipped tests say "ok"
+and then need to double check the log that tests weren't skipped.
 
- 
-> James Clark (2):
->   perf: Fix "kernel lock contention analysis" test by not printing
->     warnings in quiet mode
->   perf: Make quiet mode consistent between tools
-> 
->  tools/perf/Documentation/perf-annotate.txt | 2 +-
->  tools/perf/Documentation/perf-diff.txt     | 2 +-
->  tools/perf/Documentation/perf-lock.txt     | 2 +-
->  tools/perf/Documentation/perf-probe.txt    | 2 +-
->  tools/perf/Documentation/perf-record.txt   | 2 +-
->  tools/perf/Documentation/perf-report.txt   | 2 +-
->  tools/perf/Documentation/perf-stat.txt     | 4 ++--
->  tools/perf/bench/numa.c                    | 9 +++++----
->  tools/perf/builtin-annotate.c              | 2 +-
->  tools/perf/builtin-diff.c                  | 2 +-
->  tools/perf/builtin-lock.c                  | 2 +-
->  tools/perf/builtin-probe.c                 | 7 +++----
->  tools/perf/builtin-record.c                | 2 +-
->  tools/perf/builtin-report.c                | 2 +-
->  tools/perf/builtin-stat.c                  | 8 ++++----
->  tools/perf/ui/util.c                       | 5 +++++
->  tools/perf/util/stat.h                     | 1 -
->  17 files changed, 30 insertions(+), 26 deletions(-)
-> 
-> -- 
-> 2.28.0
-
--- 
-
-- Arnaldo
+> ---
+>  kernel/events/hw_breakpoint_test.c | 4 ++--
+>  1 file changed, 2 insertions(+), 2 deletions(-)
+>
+> diff --git a/kernel/events/hw_breakpoint_test.c b/kernel/events/hw_breakpoint_test.c
+> index 5ced822df788..c57610f52bb4 100644
+> --- a/kernel/events/hw_breakpoint_test.c
+> +++ b/kernel/events/hw_breakpoint_test.c
+> @@ -295,11 +295,11 @@ static int test_init(struct kunit *test)
+>  {
+>         /* Most test cases want 2 distinct CPUs. */
+>         if (num_online_cpus() < 2)
+> -               return -EINVAL;
+> +               kunit_skip(test, "not enough cpus");
+>
+>         /* Want the system to not use breakpoints elsewhere. */
+>         if (hw_breakpoint_is_used())
+> -               return -EBUSY;
+> +               kunit_skip(test, "hw breakpoint already in use");
+>
+>         return 0;
+>  }
+> --
+> 2.38.0.135.g90850a2211-goog
+>
