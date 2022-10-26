@@ -2,96 +2,164 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DC13DC38A2D
-	for <linux-perf-users@archiver.kernel.org>; Wed, 26 Oct 2022 07:28:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 36EF7FA373D
+	for <linux-perf-users@archiver.kernel.org>; Wed, 26 Oct 2022 08:08:00 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232727AbiJZH2a (ORCPT
+        id S233264AbiJZIH6 (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Wed, 26 Oct 2022 03:28:30 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57514 "EHLO
+        Wed, 26 Oct 2022 04:07:58 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52196 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231649AbiJZH23 (ORCPT
+        with ESMTP id S232769AbiJZIH5 (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Wed, 26 Oct 2022 03:28:29 -0400
-Received: from mga14.intel.com (mga14.intel.com [192.55.52.115])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9C119B8C15;
-        Wed, 26 Oct 2022 00:28:28 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1666769308; x=1698305308;
-  h=from:to:cc:subject:date:message-id:mime-version:
-   content-transfer-encoding;
-  bh=BtdY9zOLzOchXhwl2IJHG9U9vbffqPHfgouauBD7/4c=;
-  b=GWMixoIruoNS9N8IkSPrcMzV8z0sSp//IiJDvz3CTRj8suroGj6mNzIH
-   D86o6/XGvbFYAOLXmT4Z9vcvROkURb9gwei9Pp8QXQJBwNLJYpuH2++VJ
-   LAaEEOKLsleAWaKTbJvnddbzHe186v7Cko3D9pPbjfto3FMy80J67qX9k
-   /oMDgJwNbqHH6Ga40K2xqq8lPUCEJNA3TQSexMwS1unUMEmYqgFnFnyfM
-   zeBveBXI8Unj7GwANEI4xBgpXzzzQJcObtGgxNoAnl5n7sFDhLP3tj1tR
-   n5Jt5g3Q89e0xEeDGr7kwLKrAj5XNWO0N8yZXUnLB1llaVzMRBgQvHnbZ
-   w==;
-X-IronPort-AV: E=McAfee;i="6500,9779,10511"; a="307876250"
-X-IronPort-AV: E=Sophos;i="5.95,214,1661842800"; 
-   d="scan'208";a="307876250"
-Received: from orsmga005.jf.intel.com ([10.7.209.41])
-  by fmsmga103.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 26 Oct 2022 00:28:06 -0700
-X-IronPort-AV: E=McAfee;i="6500,9779,10511"; a="806949236"
-X-IronPort-AV: E=Sophos;i="5.95,213,1661842800"; 
-   d="scan'208";a="806949236"
-Received: from ahunter6-mobl1.ger.corp.intel.com (HELO ahunter-VirtualBox.home\044ger.corp.intel.com) ([10.252.53.127])
-  by orsmga005-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 26 Oct 2022 00:27:48 -0700
-From:   Adrian Hunter <adrian.hunter@intel.com>
-To:     Arnaldo Carvalho de Melo <acme@kernel.org>
-Cc:     Jiri Olsa <jolsa@redhat.com>, Namhyung Kim <namhyung@kernel.org>,
-        Ian Rogers <irogers@google.com>, linux-kernel@vger.kernel.org,
-        linux-perf-users@vger.kernel.org
-Subject: [PATCH] perf auxtrace: Fix address filter symbol name match for modules
-Date:   Wed, 26 Oct 2022 10:27:36 +0300
-Message-Id: <20221026072736.2982-1-adrian.hunter@intel.com>
-X-Mailer: git-send-email 2.34.1
+        Wed, 26 Oct 2022 04:07:57 -0400
+Received: from mail-qv1-f50.google.com (mail-qv1-f50.google.com [209.85.219.50])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 543BFA98E7;
+        Wed, 26 Oct 2022 01:07:57 -0700 (PDT)
+Received: by mail-qv1-f50.google.com with SMTP id i12so10866419qvs.2;
+        Wed, 26 Oct 2022 01:07:57 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=VQEEiiTh8IYFR3lRTgfMpxwgMeIOqIFndmpnifBl0C8=;
+        b=yS/VJPfdjJGCuBLo2Ul9Krr2Dh8Lp3KXMKhD0cO+2/sb9u8DesxcpQqrESwpHiVReK
+         oKidbNJufoNnNR53ltH7x06RK/t6op9D6whe0lzOD+fzzvrm2l1gFe+4h+8vtr0qnhYq
+         VLXMhZ4qg71/8JaSrpGaIPfWj16IT9i/46BWUEdfk7IZsXM8G/th4RH3glWxKVw27uNs
+         toKycU5XCO3s7Ei0Eo4g5UvRqoF7DwVR0/c3gGZQF8oT9oe3Cx+44dMLvbVeAw4sNOcZ
+         pQ+NtCzyvih3zT3+shLjr0+4AszQc4K3JAvQisNhY0yPIihqFzEFx1WAvxK5V4V3Whm5
+         SfwQ==
+X-Gm-Message-State: ACrzQf0Z3/2aHf+OfTxbSuQy/IjBaGkNp3CaTf+J6oVeYlQ9a0ZwlLem
+        JDRb/ViQx9MyTdysJIH2HDv4Mrb6PxWi9g==
+X-Google-Smtp-Source: AMsMyM5wUfCqBMO9b3tRLPZm9mHX6nxG3qIn9Ljq0Hecieql8IIhOnV6w7zsL+Js8rDq+iQnkbG2HQ==
+X-Received: by 2002:a05:6214:21a6:b0:4bb:85b4:fd96 with SMTP id t6-20020a05621421a600b004bb85b4fd96mr8295689qvc.28.1666771676366;
+        Wed, 26 Oct 2022 01:07:56 -0700 (PDT)
+Received: from mail-yb1-f179.google.com (mail-yb1-f179.google.com. [209.85.219.179])
+        by smtp.gmail.com with ESMTPSA id u5-20020a05620a430500b006bb78d095c5sm3567121qko.79.2022.10.26.01.07.55
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 26 Oct 2022 01:07:56 -0700 (PDT)
+Received: by mail-yb1-f179.google.com with SMTP id y72so17819499yby.13;
+        Wed, 26 Oct 2022 01:07:55 -0700 (PDT)
+X-Received: by 2002:a25:687:0:b0:6c2:2b0c:26e with SMTP id 129-20020a250687000000b006c22b0c026emr38190526ybg.202.1666771675521;
+ Wed, 26 Oct 2022 01:07:55 -0700 (PDT)
 MIME-Version: 1.0
-Organization: Intel Finland Oy, Registered Address: PL 281, 00181 Helsinki, Business Identity Code: 0357606 - 4, Domiciled in Helsinki
-Content-Transfer-Encoding: 8bit
+References: <20221025184519.13231-1-casey@schaufler-ca.com> <20221025184519.13231-9-casey@schaufler-ca.com>
+In-Reply-To: <20221025184519.13231-9-casey@schaufler-ca.com>
+From:   Geert Uytterhoeven <geert@linux-m68k.org>
+Date:   Wed, 26 Oct 2022 10:07:43 +0200
+X-Gmail-Original-Message-ID: <CAMuHMdVCjhLeHbDp1R3QPaY-TgTx31TBUdXq8PQeUE8OKeDP5g@mail.gmail.com>
+Message-ID: <CAMuHMdVCjhLeHbDp1R3QPaY-TgTx31TBUdXq8PQeUE8OKeDP5g@mail.gmail.com>
+Subject: Re: [PATCH v1 8/8] lsm: wireup syscalls lsm_self_attr and lsm_module_list
+To:     Casey Schaufler <casey@schaufler-ca.com>
+Cc:     casey.schaufler@intel.com, paul@paul-moore.com,
+        linux-security-module@vger.kernel.org, jmorris@namei.org,
+        keescook@chromium.org, john.johansen@canonical.com,
+        penguin-kernel@i-love.sakura.ne.jp, stephen.smalley.work@gmail.com,
+        linux-kernel@vger.kernel.org, linux-api@vger.kernel.org,
+        mic@digikod.net, linux-perf-users@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-For modules, names from kallsyms__parse() contain the module name which
-meant that module symbols did not match exactly by name.
+Hi Casey,
 
-Fix by matching the name string up to the separating tab character.
+CC linux-perf
 
-Fixes: 1b36c03e3569 ("perf record: Add support for using symbols in address filters")
-Cc: stable@vger.kernel.org
-Signed-off-by: Adrian Hunter <adrian.hunter@intel.com>
----
- tools/perf/util/auxtrace.c | 10 +++++++++-
- 1 file changed, 9 insertions(+), 1 deletion(-)
+On Tue, Oct 25, 2022 at 8:52 PM Casey Schaufler <casey@schaufler-ca.com> wrote:
+> Wireup two syscalls for Linux Security Modules.
+>
+> Signed-off-by: Casey Schaufler <casey@schaufler-ca.com>
 
-diff --git a/tools/perf/util/auxtrace.c b/tools/perf/util/auxtrace.c
-index b59c278fe9ed..c50eb2bfc518 100644
---- a/tools/perf/util/auxtrace.c
-+++ b/tools/perf/util/auxtrace.c
-@@ -2321,11 +2321,19 @@ struct sym_args {
- 	bool		near;
- };
- 
-+static bool kern_sym_name_match(const char *kname, const char *name)
-+{
-+	size_t n = strlen(name);
-+
-+	return !strcmp(kname, name) ||
-+	       (!strncmp(kname, name, n) && kname[n] == '\t');
-+}
-+
- static bool kern_sym_match(struct sym_args *args, const char *name, char type)
- {
- 	/* A function with the same name, and global or the n'th found or any */
- 	return kallsyms__is_function(type) &&
--	       !strcmp(name, args->name) &&
-+	       kern_sym_name_match(name, args->name) &&
- 	       ((args->global && isupper(type)) ||
- 		(args->selected && ++(args->cnt) == args->idx) ||
- 		(!args->global && !args->selected));
--- 
-2.34.1
+Thanks for your patch!
 
+>  arch/m68k/kernel/syscalls/syscall.tbl               | 2 ++
+
+Acked-by: Geert Uytterhoeven <geert@linux-m68k.org> # m68k
+
+> --- a/arch/arm64/include/asm/unistd32.h
+> +++ b/arch/arm64/include/asm/unistd32.h
+> @@ -907,6 +907,8 @@ __SYSCALL(__NR_process_mrelease, sys_process_mrelease)
+>  __SYSCALL(__NR_futex_waitv, sys_futex_waitv)
+>  #define __NR_set_mempolicy_home_node 450
+>  __SYSCALL(__NR_set_mempolicy_home_node, sys_set_mempolicy_home_node)
+> +#define __NR_lsm_attr_set 451
+> +__SYSCALL(__NR_lsm_attr_set, sys_lsm_attr_set)
+
+Missing lsm_module_list.
+
+>
+>  /*
+>   * Please add new compat syscalls above this comment and update
+
+> --- a/include/uapi/asm-generic/unistd.h
+> +++ b/include/uapi/asm-generic/unistd.h
+> @@ -886,8 +886,11 @@ __SYSCALL(__NR_futex_waitv, sys_futex_waitv)
+>  #define __NR_set_mempolicy_home_node 450
+>  __SYSCALL(__NR_set_mempolicy_home_node, sys_set_mempolicy_home_node)
+>
+> +#define __NR_lsm_self_attr 451
+> +__SYSCALL(__NR_lsm_self_attr, sys_lsm_self_attr)
+
+Missing lsm_module_list.
+
+> +
+>  #undef __NR_syscalls
+> -#define __NR_syscalls 451
+> +#define __NR_syscalls 452
+
+Hence one off.
+
+> --- a/tools/perf/arch/mips/entry/syscalls/syscall_n64.tbl
+> +++ b/tools/perf/arch/mips/entry/syscalls/syscall_n64.tbl
+> @@ -365,3 +365,5 @@
+>  448    n64     process_mrelease                sys_process_mrelease
+>  449    n64     futex_waitv                     sys_futex_waitv
+>  450    common  set_mempolicy_home_node         sys_set_mempolicy_home_node
+> +451    n64     lsm_self_attr                   sys_lsm_self_attr
+> +452    n64     lsm_module_list                 sys_lsm_module_list
+> diff --git a/tools/perf/arch/powerpc/entry/syscalls/syscall.tbl b/tools/perf/arch/powerpc/entry/syscalls/syscall.tbl
+> index 2bca64f96164..7b779080acbe 100644
+> --- a/tools/perf/arch/powerpc/entry/syscalls/syscall.tbl
+> +++ b/tools/perf/arch/powerpc/entry/syscalls/syscall.tbl
+> @@ -530,3 +530,5 @@
+>  448    common  process_mrelease                sys_process_mrelease
+>  449    common  futex_waitv                     sys_futex_waitv
+>  450    nospu   set_mempolicy_home_node         sys_set_mempolicy_home_node
+> +451    common  lsm_self_attr                   sys_lsm_self_attr
+> +452    common  lsm_module_list                 sys_lsm_module_list
+> diff --git a/tools/perf/arch/s390/entry/syscalls/syscall.tbl b/tools/perf/arch/s390/entry/syscalls/syscall.tbl
+> index 799147658dee..eaba1ed5654e 100644
+> --- a/tools/perf/arch/s390/entry/syscalls/syscall.tbl
+> +++ b/tools/perf/arch/s390/entry/syscalls/syscall.tbl
+> @@ -453,3 +453,5 @@
+>  448  common    process_mrelease        sys_process_mrelease            sys_process_mrelease
+>  449  common    futex_waitv             sys_futex_waitv                 sys_futex_waitv
+>  450  common    set_mempolicy_home_node sys_set_mempolicy_home_node     sys_set_mempolicy_home_node
+> +451  common    lsm_self_attr           sys_lsm_self_attr       sys_lsm_self_attr
+> +452  common    lsm_module_list         sys_lsm_module_list     sys_lsm_module_list
+> diff --git a/tools/perf/arch/x86/entry/syscalls/syscall_64.tbl b/tools/perf/arch/x86/entry/syscalls/syscall_64.tbl
+> index c84d12608cd2..40b35e7069a7 100644
+> --- a/tools/perf/arch/x86/entry/syscalls/syscall_64.tbl
+> +++ b/tools/perf/arch/x86/entry/syscalls/syscall_64.tbl
+> @@ -372,6 +372,8 @@
+>  448    common  process_mrelease        sys_process_mrelease
+>  449    common  futex_waitv             sys_futex_waitv
+>  450    common  set_mempolicy_home_node sys_set_mempolicy_home_node
+> +451    common  lsm_self_attr           sys_lsm_self_attr
+> +452    common  lsm_module_list         sys_lsm_module_list
+
+BTW, why are the syscall tables not shared between arch/ and tools/perf/?
+They seem to be identical (except for ppc due to 32/64 vs. common)?
+
+Gr{oetje,eeting}s,
+
+                        Geert
+
+--
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
+
+In personal conversations with technical people, I call myself a hacker. But
+when I'm talking to journalists I just say "programmer" or something like that.
+                                -- Linus Torvalds
