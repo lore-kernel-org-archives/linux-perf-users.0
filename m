@@ -2,42 +2,42 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 88680ECAAA1
-	for <linux-perf-users@archiver.kernel.org>; Thu, 27 Oct 2022 17:20:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B5DAAECAAA1
+	for <linux-perf-users@archiver.kernel.org>; Thu, 27 Oct 2022 17:25:21 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S234021AbiJ0RUl (ORCPT
+        id S235086AbiJ0RZU (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Thu, 27 Oct 2022 13:20:41 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45222 "EHLO
+        Thu, 27 Oct 2022 13:25:20 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54964 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S233619AbiJ0RUk (ORCPT
+        with ESMTP id S235679AbiJ0RZS (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Thu, 27 Oct 2022 13:20:40 -0400
+        Thu, 27 Oct 2022 13:25:18 -0400
 Received: from casper.infradead.org (casper.infradead.org [IPv6:2001:8b0:10b:1236::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CD73BFF224;
-        Thu, 27 Oct 2022 10:20:38 -0700 (PDT)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8EB6E43E73;
+        Thu, 27 Oct 2022 10:25:16 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
         d=infradead.org; s=casper.20170209; h=In-Reply-To:Content-Type:MIME-Version:
         References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
         Content-Transfer-Encoding:Content-ID:Content-Description;
-        bh=13CSR5SLPkPzpOSCAc49kTBJVPes/WepABZjQ1sDdeI=; b=F29jWpxaiIdY/S9C+hHbIdCff7
-        v1FJXG/DuCbJv6uAi8CKaR8XpXdG1w3m99vPaViJpREZ6g/nPvKHj6mdBbHMkBXZmpzJdulQTmk1D
-        tC0A2jm6PnBamEG4Zd9fkQZGZXxpt9MSwuIxWsmjksDq9lCO1qwK/bifU3dfHkZs5EsJYjYa6WZ8/
-        Z8bVgztCbRiY8HWqx//I8W77VRd3TjlzEhPRy6W/0jc3YsYLMy0WiRN9eeY8HRKXZDpzJo3/8tOnL
-        GpssH8K/yLtHzq9wsPGaIzOOwV7JQArKPuSwExsZq9TslnX24WXBs+CjwkCKgPZTD9JPyYLvpvnia
-        kLnihmZw==;
+        bh=xudGXE+bH5g0uONSt7W7O2capWykcQVvMeLlbM88H0c=; b=onax5cj46BBmSaer2uSKXZEkQs
+        oA+FAjxCJOlLeWflBb9VqaU0mPXUetzMX4sRSEFNdQQV7deJs5IEMxW8YqxOBdy5KM7CPRm6W3YNz
+        A6Z1jGTb7uG/eyXfAViZ+nOUoUlMFwXff8YQJfFBFd2ELbYvZiAwBcLw4wFcAjSnVw7R2+29163hL
+        /FauygackP6NDvE/INb7d/CHDJFSwzXwwPVlQFCWKisG9DeGZEVl897BuI5KRjO4grAWxfOryKkIP
+        tvzjtjebSFEj0PCd1NgIbaBQJmarf6VQ8QkfAVHviEhArYSEUlB8taSbVrKBoZ3q8omk9+/qZnSA8
+        kRRZSr8A==;
 Received: from j130084.upc-j.chello.nl ([24.132.130.84] helo=noisy.programming.kicks-ass.net)
         by casper.infradead.org with esmtpsa (Exim 4.94.2 #2 (Red Hat Linux))
-        id 1oo6YP-000RU3-GC; Thu, 27 Oct 2022 17:20:29 +0000
+        id 1oo6cw-000RdB-7A; Thu, 27 Oct 2022 17:25:10 +0000
 Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
         (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
          key-exchange X25519 server-signature RSA-PSS (4096 bits))
         (Client did not present a certificate)
-        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id 9C4C530008D;
-        Thu, 27 Oct 2022 19:20:23 +0200 (CEST)
+        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id 2174D30029C;
+        Thu, 27 Oct 2022 19:25:05 +0200 (CEST)
 Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
-        id 7BC142C450532; Thu, 27 Oct 2022 19:20:23 +0200 (CEST)
-Date:   Thu, 27 Oct 2022 19:20:23 +0200
+        id 0DC6B2C450539; Thu, 27 Oct 2022 19:25:05 +0200 (CEST)
+Date:   Thu, 27 Oct 2022 19:25:04 +0200
 From:   Peter Zijlstra <peterz@infradead.org>
 To:     James Clark <james.clark@arm.com>
 Cc:     linux-perf-users@vger.kernel.org,
@@ -54,42 +54,41 @@ Cc:     linux-perf-users@vger.kernel.org,
         Catalin Marinas <catalin.marinas@arm.com>,
         kristina.martsenko@arm.com
 Subject: Re: [PATCH v2 1/1] perf arm64: Send pointer auth masks to ring buffer
-Message-ID: <Y1q914IVy6XgE1xq@hirez.programming.kicks-ass.net>
+Message-ID: <Y1q+8JF7uYlcvasM@hirez.programming.kicks-ass.net>
 References: <20221020101921.1219533-1-james.clark@arm.com>
  <20221020101921.1219533-2-james.clark@arm.com>
  <Y1F8DUWaWhlh/phL@hirez.programming.kicks-ass.net>
  <4e50b890-0588-1551-fb7c-6cd8191d1054@arm.com>
+ <8eb174c0-c785-c092-96f5-3a4fa3441287@arm.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <4e50b890-0588-1551-fb7c-6cd8191d1054@arm.com>
+In-Reply-To: <8eb174c0-c785-c092-96f5-3a4fa3441287@arm.com>
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-On Tue, Oct 25, 2022 at 04:28:12PM +0100, James Clark wrote:
+On Thu, Oct 27, 2022 at 03:11:47PM +0100, James Clark wrote:
 
-> > Why do we want the same mask repeated over and over with each sample;
-> > should this not be part of the address space (side-band) data?
+> Sorry for flip flopping, but I've read those threads that I linked and
+> spoke with Kristina and we would like to stick with the per sample
+> implementation after all.
 > 
-> You are probably right that it could be done that way. The reason that
-> we did it this way was to be consistent with ptrace feature [1] where it
-> is delivered to userspace on a per-process basis. And there is also a
-> prctl for the enabled key types [2] which can be changed dynamically.
-> Particularly for the last reason is why it was done per sample.
+> The reason is that in the future there may also be a prctrl for 48/52
+> bit userspace addressing which would change the mask dynamically in the
+> same way as the enabled keys. Although this isn't possible now it makes
+> sense to do it this way in case of that, and also for consistency with
+> the ptrace feature.
 > 
-> Having said that, the enabled keys field is not used by perf, only the
-> mask is used, so I can drop the per sample data until enabled keys is
-> needed, which may be never.
+> I also think that repeating the mask in this case has a very low impact
+> because if you are doing dwarf unwinding, then the whole stack is saved
+> anyway, so a few extra u64s wouldn't be noticeable.
 > 
-> I'm going to assume that perf shouldn't use ptrace because of
-> permissions and conflicts with debuggers, so I could put the mask
-> somewhere like PERF_RECORD_FORK instead of per sample.
+> Are you ok with that and for me to resubmit with the expanded commit
+> message?
 
-Yeah, or create an new RECORD type which you can also send around at
-prctl() time.
+But you can send a side-band thing around if/when it changes. Same as
+all the other stuff. We don't include MMAP data with each event either.
 
-The only thing that's needed on top of that is exposing the mask
-somewhere in /proc for existing tasks; which is what perf also uses to
-syntesize RECORD_MMAP events on startup etc..
-
+Yes, the DWARF thing is slow as anything. but imagine needing this for
+something else as well, and then you're stuck with it.
