@@ -2,118 +2,122 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 32619C67871
-	for <linux-perf-users@archiver.kernel.org>; Thu, 27 Oct 2022 08:26:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 89A5BECAAA1
+	for <linux-perf-users@archiver.kernel.org>; Thu, 27 Oct 2022 13:35:46 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S234456AbiJ0I0O (ORCPT
+        id S236169AbiJ0Nfp (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Thu, 27 Oct 2022 04:26:14 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53180 "EHLO
+        Thu, 27 Oct 2022 09:35:45 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41520 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S234235AbiJ0I0L (ORCPT
+        with ESMTP id S236160AbiJ0Nfo (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Thu, 27 Oct 2022 04:26:11 -0400
-Received: from casper.infradead.org (casper.infradead.org [IPv6:2001:8b0:10b:1236::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8AC853DBF7;
-        Thu, 27 Oct 2022 01:26:05 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=casper.20170209; h=In-Reply-To:Content-Type:MIME-Version:
-        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description;
-        bh=cyV55dw90naYEG3Ap/95NF6dsAJTLZCPc38XNt8Lu6M=; b=Q9XTqCBIN4KYQwVI2HKkTOpyIH
-        MtUhXT9sX7JdpWWiR7/DghIpuoDT3twXkAIZdk+H70/bBpllZVXM/esCO55OiUzrJ1/IYLVMG+qxb
-        44gxAshQa2/kmfAeIsqJruK+844SBmKCR5W80iN/g0CP9QorEWoD40IDRGasr/UiJ8lNX5O0tLjjp
-        xbNiupxI83d/e/aSDEfPHSAui6OAeVKM52Qm922YTPRP3Er1Vobw59g0/iGcIrSTuf8UjOkHghXK1
-        hAfPfjoa+6kcXxYRGceGregLTDwSeYqH9chbGiJQD8UCJD/y8VgN6SBGNRbLXOLmGwi4pzqkp7N50
-        cWG7MDIw==;
-Received: from j130084.upc-j.chello.nl ([24.132.130.84] helo=noisy.programming.kicks-ass.net)
-        by casper.infradead.org with esmtpsa (Exim 4.94.2 #2 (Red Hat Linux))
-        id 1onyCu-000312-IG; Thu, 27 Oct 2022 08:25:44 +0000
-Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-        (Client did not present a certificate)
-        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id A1E4930035C;
-        Thu, 27 Oct 2022 10:25:37 +0200 (CEST)
-Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
-        id 8C8E120125B3B; Thu, 27 Oct 2022 10:25:37 +0200 (CEST)
-Date:   Thu, 27 Oct 2022 10:25:37 +0200
-From:   Peter Zijlstra <peterz@infradead.org>
-To:     Ravi Bangoria <ravi.bangoria@amd.com>
-Cc:     "Liang, Kan" <kan.liang@linux.intel.com>,
-        kajoljain <kjain@linux.ibm.com>, acme@kernel.org,
-        jolsa@kernel.org, namhyung@kernel.org, eranian@google.com,
-        irogers@google.com, jmario@redhat.com, leo.yan@linaro.org,
-        alisaidi@amazon.com, ak@linux.intel.com,
-        dave.hansen@linux.intel.com, hpa@zytor.com, mingo@redhat.com,
-        mark.rutland@arm.com, alexander.shishkin@linux.intel.com,
-        tglx@linutronix.de, bp@alien8.de, x86@kernel.org,
-        linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org,
-        sandipan.das@amd.com, ananth.narayan@amd.com, kim.phillips@amd.com,
-        santosh.shukla@amd.com
-Subject: Re: [PATCH v3 01/15] perf/mem: Introduce
- PERF_MEM_LVLNUM_{EXTN_MEM|IO}
-Message-ID: <Y1pAgRHpV294J0Kw@hirez.programming.kicks-ass.net>
-References: <20220928095805.596-1-ravi.bangoria@amd.com>
- <20220928095805.596-2-ravi.bangoria@amd.com>
- <bf4ec1cb-49a4-f5cd-8fd0-c70b287180c0@linux.ibm.com>
- <a36ffee0-b0d5-5941-8d98-cc8e9b100a50@amd.com>
- <88c920de-5af6-c7b0-d6a8-6c365491dd3e@linux.intel.com>
- <f6268268-b4e9-9ed6-0453-65792644d953@amd.com>
+        Thu, 27 Oct 2022 09:35:44 -0400
+Received: from mail-vs1-xe30.google.com (mail-vs1-xe30.google.com [IPv6:2607:f8b0:4864:20::e30])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 58006152014
+        for <linux-perf-users@vger.kernel.org>; Thu, 27 Oct 2022 06:35:43 -0700 (PDT)
+Received: by mail-vs1-xe30.google.com with SMTP id d187so1591782vsd.6
+        for <linux-perf-users@vger.kernel.org>; Thu, 27 Oct 2022 06:35:43 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=digitalocean.com; s=google;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=0ybstN7f+kXd58VgRIov/9s6MeFgWJ+N6wj257nI0Lg=;
+        b=ayUh8+OznejXo7f1dKWpgAMW3XuQtibP2G1DZgTqysx++FMKRtun60GcOPXiQfrt+8
+         jRQpG50j2IU4zKFP0YxPUJ1Zxg5IMZK1zGunVusO/5m3nHZ20MXtQp+Qu5sxEreJjfLp
+         l9wh3ZYONuvKcG5HW09HyYp3eZ6t/215AUOxA=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=0ybstN7f+kXd58VgRIov/9s6MeFgWJ+N6wj257nI0Lg=;
+        b=pTlxxcT16qbz9cYaajAm6ciwoMu9b4rpK+kBIEYw8vywsxWSw7zND9uUPgVxXu36nD
+         4NIiqGmI/7aOOJhljVm91c13IzfkT2pjCN7eLWB75pZYA/dhG3aE676OHtJgv4CpWtqk
+         RqRf6uOYSMYjZp0bU4LLhXSTW6irwZDRCIYW/Lc/Ct5ZRAD2HgeU9yLvvWlF9/0nPgZx
+         ZD98XbM31/e2bWVXEUF6g3ue3rIRSDwmX52TnzAJZlaT3X21/F2IHNVmS9mJ4s8uAUp+
+         HXGyMn700XNC4+JbHvtDRKi9LPqteLPabuvdeCIZyaUvhMSdBa/WXuvfBd005i2Ht5GW
+         KJLQ==
+X-Gm-Message-State: ACrzQf1f1jFM4rYSDZl4rZIaonMhAePgBqKw9TY5ZIXvJVAkgIOTep5L
+        YNaw1+8i3Xt1V4zkmXnxdRqjiO2qijRdY7QB
+X-Google-Smtp-Source: AMsMyM6GjEspIfDhmpWT+Lgb6seweBY5igaXFywtPUP3WVl3yJPb6YUFL08ldQtHPalME0xxS98pjg==
+X-Received: by 2002:a05:6214:4015:b0:4b1:78f2:8dfd with SMTP id kd21-20020a056214401500b004b178f28dfdmr42091251qvb.81.1666877731516;
+        Thu, 27 Oct 2022 06:35:31 -0700 (PDT)
+Received: from xryan.lan (107-142-220-210.lightspeed.wlfrct.sbcglobal.net. [107.142.220.210])
+        by smtp.gmail.com with ESMTPSA id j3-20020a05620a410300b006eef13ef4c8sm971265qko.94.2022.10.27.06.35.30
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 27 Oct 2022 06:35:30 -0700 (PDT)
+From:   Liang Yan <lyan@digitalocean.com>
+X-Google-Original-From: Liang Yan <lyan@digtalocean.com>
+Cc:     Peter Zijlstra <peterz@infradead.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        Arnaldo Carvalho de Melo <acme@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Jiri Olsa <jolsa@kernel.org>,
+        Namhyung Kim <namhyung@kernel.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Borislav Petkov <bp@alien8.de>,
+        Dave Hansen <dave.hansen@linux.intel.com>, x86@kernel.org,
+        "H. Peter Anvin" <hpa@zytor.com>, linux-perf-users@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: [PATCH] arch/x86/events/amd/core.c: Return -ENODEV when CPU does not have PERFCTL_CORE bit
+Date:   Thu, 27 Oct 2022 09:35:11 -0400
+Message-Id: <20221027133511.161922-1-lyan@digtalocean.com>
+X-Mailer: git-send-email 2.34.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <f6268268-b4e9-9ed6-0453-65792644d953@amd.com>
+Content-Transfer-Encoding: 8bit
+To:     unlisted-recipients:; (no To-header on input)
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-On Sat, Oct 01, 2022 at 12:07:40PM +0530, Ravi Bangoria wrote:
+After disabling cpu.perfctr_core in qemu, I noticed that the guest kernel
+still loads the pmu driver while the cpuid does not have perfctl_core.
 
-> From 5deb2055e2b5b0a61403f2d5f4e5a784b14a65e3 Mon Sep 17 00:00:00 2001
-> From: Ravi Bangoria <ravi.bangoria@amd.com>
-> Date: Sat, 1 Oct 2022 11:37:05 +0530
-> Subject: [PATCH] perf/mem: Rename PERF_MEM_LVLNUM_EXTN_MEM to
->  PERF_MEM_LVLNUM_CXL
-> 
-> PERF_MEM_LVLNUM_EXTN_MEM was introduced to cover CXL devices but it's
-> bit ambiguous name and also not generic enough to cover cxl.cache and
-> cxl.io devices. Rename it to PERF_MEM_LVLNUM_CXL to be more specific.
-> 
-> Signed-off-by: Ravi Bangoria <ravi.bangoria@amd.com>
+The test is running on an EPYC Rome machine.
+root@ubuntu-s-4vcpu-8gb-amd-nyc1-01:~# lscpu | grep perfctl
+root@ubuntu-s-4vcpu-8gb-amd-nyc1-01:~#
+root@ubuntu-s-4vcpu-8gb-amd-nyc1-01:~# dmesg | grep PMU
+[    0.732097] Performance Events: AMD PMU driver.
 
-Thanks!
+By further looking,
 
-> ---
->  arch/x86/events/amd/ibs.c       | 2 +-
->  include/uapi/linux/perf_event.h | 2 +-
->  2 files changed, 2 insertions(+), 2 deletions(-)
-> 
-> diff --git a/arch/x86/events/amd/ibs.c b/arch/x86/events/amd/ibs.c
-> index 3271735f0070..4cb710efbdd9 100644
-> --- a/arch/x86/events/amd/ibs.c
-> +++ b/arch/x86/events/amd/ibs.c
-> @@ -801,7 +801,7 @@ static void perf_ibs_get_mem_lvl(union ibs_op_data2 *op_data2,
->  	/* Extension Memory */
->  	if (ibs_caps & IBS_CAPS_ZEN4 &&
->  	    ibs_data_src == IBS_DATA_SRC_EXT_EXT_MEM) {
-> -		data_src->mem_lvl_num = PERF_MEM_LVLNUM_EXTN_MEM;
-> +		data_src->mem_lvl_num = PERF_MEM_LVLNUM_CXL;
->  		if (op_data2->rmt_node) {
->  			data_src->mem_remote = PERF_MEM_REMOTE_REMOTE;
->  			/* IBS doesn't provide Remote socket detail */
-> diff --git a/include/uapi/linux/perf_event.h b/include/uapi/linux/perf_event.h
-> index 85be78e0e7f6..eb1090604d53 100644
-> --- a/include/uapi/linux/perf_event.h
-> +++ b/include/uapi/linux/perf_event.h
-> @@ -1337,7 +1337,7 @@ union perf_mem_data_src {
->  #define PERF_MEM_LVLNUM_L3	0x03 /* L3 */
->  #define PERF_MEM_LVLNUM_L4	0x04 /* L4 */
->  /* 5-0x8 available */
-> -#define PERF_MEM_LVLNUM_EXTN_MEM 0x09 /* Extension memory */
-> +#define PERF_MEM_LVLNUM_CXL	0x09 /* CXL */
->  #define PERF_MEM_LVLNUM_IO	0x0a /* I/O */
->  #define PERF_MEM_LVLNUM_ANY_CACHE 0x0b /* Any cache */
->  #define PERF_MEM_LVLNUM_LFB	0x0c /* LFB */
-> -- 
-> 2.31.1
+==> init_hw_perf_events
+    ==> amd_pmu_init
+        ==> amd_core_pmu_init
+            ==>
+                if (!boot_cpu_has(X86_FEATURE_PERFCTR_CORE))
+			return 0;
+
+With returning 0, it will bypass amd_pmu_init and return 0 to
+init_hw_perf_events, and continue the initialization.
+
+I am not a perf expert and not sure if it is expected for AMD PMU,
+otherwise, it would be nice to return -ENODEV instead.
+
+New output after the change:
+root@ubuntu-s-4vcpu-8gb-amd-nyc1-01:~# dmesg | grep PMU
+[    0.531609] Performance Events: no PMU driver, software events only.
+
+Signed-off-by: Liang Yan <lyan@digtalocean.com>
+---
+ arch/x86/events/amd/core.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/arch/x86/events/amd/core.c b/arch/x86/events/amd/core.c
+index 8b70237c33f7..34d3d2944020 100644
+--- a/arch/x86/events/amd/core.c
++++ b/arch/x86/events/amd/core.c
+@@ -1335,7 +1335,7 @@ static int __init amd_core_pmu_init(void)
+ 	int i;
+ 
+ 	if (!boot_cpu_has(X86_FEATURE_PERFCTR_CORE))
+-		return 0;
++		return -ENODEV;
+ 
+ 	/* Avoid calculating the value each time in the NMI handler */
+ 	perf_nmi_window = msecs_to_jiffies(100);
+-- 
+2.34.1
+
