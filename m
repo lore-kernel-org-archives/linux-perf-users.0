@@ -2,69 +2,118 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D6FFFC38A2D
-	for <linux-perf-users@archiver.kernel.org>; Thu, 27 Oct 2022 02:51:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 32619C67871
+	for <linux-perf-users@archiver.kernel.org>; Thu, 27 Oct 2022 08:26:16 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233702AbiJ0Cvv (ORCPT
+        id S234456AbiJ0I0O (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Wed, 26 Oct 2022 22:51:51 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54830 "EHLO
+        Thu, 27 Oct 2022 04:26:14 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53180 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S233687AbiJ0Cvu (ORCPT
+        with ESMTP id S234235AbiJ0I0L (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Wed, 26 Oct 2022 22:51:50 -0400
-Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTP id BE7F7125004;
-        Wed, 26 Oct 2022 19:51:49 -0700 (PDT)
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 3FCAE23A;
-        Wed, 26 Oct 2022 19:51:55 -0700 (PDT)
-Received: from [10.163.38.26] (unknown [10.163.38.26])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 791D43F792;
-        Wed, 26 Oct 2022 19:51:44 -0700 (PDT)
-Message-ID: <7f66a0df-1fc5-b00f-d734-601b70baa018@arm.com>
-Date:   Thu, 27 Oct 2022 08:21:47 +0530
+        Thu, 27 Oct 2022 04:26:11 -0400
+Received: from casper.infradead.org (casper.infradead.org [IPv6:2001:8b0:10b:1236::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8AC853DBF7;
+        Thu, 27 Oct 2022 01:26:05 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=casper.20170209; h=In-Reply-To:Content-Type:MIME-Version:
+        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description;
+        bh=cyV55dw90naYEG3Ap/95NF6dsAJTLZCPc38XNt8Lu6M=; b=Q9XTqCBIN4KYQwVI2HKkTOpyIH
+        MtUhXT9sX7JdpWWiR7/DghIpuoDT3twXkAIZdk+H70/bBpllZVXM/esCO55OiUzrJ1/IYLVMG+qxb
+        44gxAshQa2/kmfAeIsqJruK+844SBmKCR5W80iN/g0CP9QorEWoD40IDRGasr/UiJ8lNX5O0tLjjp
+        xbNiupxI83d/e/aSDEfPHSAui6OAeVKM52Qm922YTPRP3Er1Vobw59g0/iGcIrSTuf8UjOkHghXK1
+        hAfPfjoa+6kcXxYRGceGregLTDwSeYqH9chbGiJQD8UCJD/y8VgN6SBGNRbLXOLmGwi4pzqkp7N50
+        cWG7MDIw==;
+Received: from j130084.upc-j.chello.nl ([24.132.130.84] helo=noisy.programming.kicks-ass.net)
+        by casper.infradead.org with esmtpsa (Exim 4.94.2 #2 (Red Hat Linux))
+        id 1onyCu-000312-IG; Thu, 27 Oct 2022 08:25:44 +0000
+Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+        (Client did not present a certificate)
+        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id A1E4930035C;
+        Thu, 27 Oct 2022 10:25:37 +0200 (CEST)
+Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
+        id 8C8E120125B3B; Thu, 27 Oct 2022 10:25:37 +0200 (CEST)
+Date:   Thu, 27 Oct 2022 10:25:37 +0200
+From:   Peter Zijlstra <peterz@infradead.org>
+To:     Ravi Bangoria <ravi.bangoria@amd.com>
+Cc:     "Liang, Kan" <kan.liang@linux.intel.com>,
+        kajoljain <kjain@linux.ibm.com>, acme@kernel.org,
+        jolsa@kernel.org, namhyung@kernel.org, eranian@google.com,
+        irogers@google.com, jmario@redhat.com, leo.yan@linaro.org,
+        alisaidi@amazon.com, ak@linux.intel.com,
+        dave.hansen@linux.intel.com, hpa@zytor.com, mingo@redhat.com,
+        mark.rutland@arm.com, alexander.shishkin@linux.intel.com,
+        tglx@linutronix.de, bp@alien8.de, x86@kernel.org,
+        linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org,
+        sandipan.das@amd.com, ananth.narayan@amd.com, kim.phillips@amd.com,
+        santosh.shukla@amd.com
+Subject: Re: [PATCH v3 01/15] perf/mem: Introduce
+ PERF_MEM_LVLNUM_{EXTN_MEM|IO}
+Message-ID: <Y1pAgRHpV294J0Kw@hirez.programming.kicks-ass.net>
+References: <20220928095805.596-1-ravi.bangoria@amd.com>
+ <20220928095805.596-2-ravi.bangoria@amd.com>
+ <bf4ec1cb-49a4-f5cd-8fd0-c70b287180c0@linux.ibm.com>
+ <a36ffee0-b0d5-5941-8d98-cc8e9b100a50@amd.com>
+ <88c920de-5af6-c7b0-d6a8-6c365491dd3e@linux.intel.com>
+ <f6268268-b4e9-9ed6-0453-65792644d953@amd.com>
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
- Thunderbird/102.2.2
-Subject: Re: [PATCH V4 0/7] arm64/perf: Enable branch stack sampling
-Content-Language: en-US
-To:     linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, peterz@infradead.org,
-        acme@kernel.org, mark.rutland@arm.com, will@kernel.org,
-        catalin.marinas@arm.com
-Cc:     Mark Brown <broonie@kernel.org>, James Clark <james.clark@arm.com>,
-        Rob Herring <robh@kernel.org>, Marc Zyngier <maz@kernel.org>,
-        Suzuki Poulose <suzuki.poulose@arm.com>,
-        Ingo Molnar <mingo@redhat.com>
-References: <20221017055713.451092-1-anshuman.khandual@arm.com>
-From:   Anshuman Khandual <anshuman.khandual@arm.com>
-In-Reply-To: <20221017055713.451092-1-anshuman.khandual@arm.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <f6268268-b4e9-9ed6-0453-65792644d953@amd.com>
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-On 10/17/22 11:27, Anshuman Khandual wrote:
-> This series enables perf branch stack sampling support on arm64 platform
-> via a new arch feature called Branch Record Buffer Extension (BRBE). All
-> relevant register definitions could be accessed here.
-> 
-> https://developer.arm.com/documentation/ddi0601/2021-12/AArch64-Registers
-> 
-> This series applies on v6.1-rc1.
-> 
-> Changes in V4:
-> 
-> - Changed ../tools/sysreg declarations as suggested
-> - Set PERF_SAMPLE_BRANCH_STACK in data.sample_flags
-> - Dropped perfmon_capable() check in armpmu_event_init()
-> - s/pr_warn_once/pr_info in armpmu_event_init()
-> - Added brbe_format element into struct pmu_hw_events
-> - Changed v1p1 as brbe_v1p1 in struct pmu_hw_events
-> - Dropped pr_info() from arm64_pmu_brbe_probe(), solved LOCKDEP warning
+On Sat, Oct 01, 2022 at 12:07:40PM +0530, Ravi Bangoria wrote:
 
-Folks,
+> From 5deb2055e2b5b0a61403f2d5f4e5a784b14a65e3 Mon Sep 17 00:00:00 2001
+> From: Ravi Bangoria <ravi.bangoria@amd.com>
+> Date: Sat, 1 Oct 2022 11:37:05 +0530
+> Subject: [PATCH] perf/mem: Rename PERF_MEM_LVLNUM_EXTN_MEM to
+>  PERF_MEM_LVLNUM_CXL
+> 
+> PERF_MEM_LVLNUM_EXTN_MEM was introduced to cover CXL devices but it's
+> bit ambiguous name and also not generic enough to cover cxl.cache and
+> cxl.io devices. Rename it to PERF_MEM_LVLNUM_CXL to be more specific.
+> 
+> Signed-off-by: Ravi Bangoria <ravi.bangoria@amd.com>
 
-Gentle ping, any updates on this series ?
+Thanks!
+
+> ---
+>  arch/x86/events/amd/ibs.c       | 2 +-
+>  include/uapi/linux/perf_event.h | 2 +-
+>  2 files changed, 2 insertions(+), 2 deletions(-)
+> 
+> diff --git a/arch/x86/events/amd/ibs.c b/arch/x86/events/amd/ibs.c
+> index 3271735f0070..4cb710efbdd9 100644
+> --- a/arch/x86/events/amd/ibs.c
+> +++ b/arch/x86/events/amd/ibs.c
+> @@ -801,7 +801,7 @@ static void perf_ibs_get_mem_lvl(union ibs_op_data2 *op_data2,
+>  	/* Extension Memory */
+>  	if (ibs_caps & IBS_CAPS_ZEN4 &&
+>  	    ibs_data_src == IBS_DATA_SRC_EXT_EXT_MEM) {
+> -		data_src->mem_lvl_num = PERF_MEM_LVLNUM_EXTN_MEM;
+> +		data_src->mem_lvl_num = PERF_MEM_LVLNUM_CXL;
+>  		if (op_data2->rmt_node) {
+>  			data_src->mem_remote = PERF_MEM_REMOTE_REMOTE;
+>  			/* IBS doesn't provide Remote socket detail */
+> diff --git a/include/uapi/linux/perf_event.h b/include/uapi/linux/perf_event.h
+> index 85be78e0e7f6..eb1090604d53 100644
+> --- a/include/uapi/linux/perf_event.h
+> +++ b/include/uapi/linux/perf_event.h
+> @@ -1337,7 +1337,7 @@ union perf_mem_data_src {
+>  #define PERF_MEM_LVLNUM_L3	0x03 /* L3 */
+>  #define PERF_MEM_LVLNUM_L4	0x04 /* L4 */
+>  /* 5-0x8 available */
+> -#define PERF_MEM_LVLNUM_EXTN_MEM 0x09 /* Extension memory */
+> +#define PERF_MEM_LVLNUM_CXL	0x09 /* CXL */
+>  #define PERF_MEM_LVLNUM_IO	0x0a /* I/O */
+>  #define PERF_MEM_LVLNUM_ANY_CACHE 0x0b /* Any cache */
+>  #define PERF_MEM_LVLNUM_LFB	0x0c /* LFB */
+> -- 
+> 2.31.1
