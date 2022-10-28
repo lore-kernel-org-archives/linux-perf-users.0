@@ -2,116 +2,149 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BBD95FA3742
-	for <linux-perf-users@archiver.kernel.org>; Fri, 28 Oct 2022 18:01:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 66F7EECAAA1
+	for <linux-perf-users@archiver.kernel.org>; Fri, 28 Oct 2022 19:20:08 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230093AbiJ1SBt (ORCPT
+        id S229864AbiJ1TUG (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Fri, 28 Oct 2022 14:01:49 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38776 "EHLO
+        Fri, 28 Oct 2022 15:20:06 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45278 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230012AbiJ1SBp (ORCPT
+        with ESMTP id S229456AbiJ1TUE (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Fri, 28 Oct 2022 14:01:45 -0400
-Received: from mail-pf1-x42c.google.com (mail-pf1-x42c.google.com [IPv6:2607:f8b0:4864:20::42c])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 24B16211290;
-        Fri, 28 Oct 2022 11:01:40 -0700 (PDT)
-Received: by mail-pf1-x42c.google.com with SMTP id e4so5416208pfl.2;
-        Fri, 28 Oct 2022 11:01:40 -0700 (PDT)
+        Fri, 28 Oct 2022 15:20:04 -0400
+Received: from mail-qk1-x731.google.com (mail-qk1-x731.google.com [IPv6:2607:f8b0:4864:20::731])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5E3F6C07;
+        Fri, 28 Oct 2022 12:20:02 -0700 (PDT)
+Received: by mail-qk1-x731.google.com with SMTP id o28so1440018qkl.4;
+        Fri, 28 Oct 2022 12:20:02 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20210112;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:sender:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=bUx8fY5yV5k6b3NAzZ7ONnYGBUoPPnSRBV9IAdB2IcQ=;
-        b=R5qTkGNPJ2owG22N7vSR56g7SchuiPlUzXI4dNN1k/rvLdTdqG4kadsZfKegVIwN3o
-         TvJ+pVZ2pU3FtvqqRVpQ3m52vnAGIAr95xQetLdYfQ4vq28RiTHw9kdJTuDUysll5xnO
-         3Tos32ojE0o1gtPF2NjT8CPvwK8nzy+JcYOsS6vVJSWpMIbTbdX6T63xKsDjuBi3Kiu1
-         eVING4QaSDU1jdHSCxToNVDMQIros4oZD2YpJHGXTO+mfkDRwiM4NmeqUN5cSUCyrQW7
-         1/kY9mkFENtb2XZzYGnwY+R5EFuLHvnUUHAawQEd0e6id73h9c/3NLyUoYcwZAtB8cSw
-         cPHA==
+        h=content-transfer-encoding:in-reply-to:references:cc:to:from
+         :content-language:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=XFtzDp1GmCsTv7CuMlTyHutAb+I5WP7vletAv2HWDNc=;
+        b=EpEDr6Ey6WfAXuzpa4OZrcb2T5JyYMgqDvYRgnKe5QjROwWYyUDbl5XL7UlTlCcDOT
+         ubcIGNK3xYa5pgURVJ2ur1lrulnFssCwYhEdSCD19ATc3tTjyVlXvDYpvhfLkuTiUfn5
+         adqbdblIMRG+vdv/YyDzV2QQ8HztVP+GivJX74mcUgy+x7QuCIgdQoijWes81oaDJvBZ
+         PubF0EXcWPu1FMzYm4uMb+niofLQ4VX/er0acUiMZjhmQLktTYPxaIVpZU9R4HEyo//T
+         4wMU9Q3XB/w5dIpMiFGjy2w4NL0412VmuQIsNhapKJSh1Vyci7MkT5F5aJ7ghGZ78bFq
+         wJUQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:sender:x-gm-message-state:from
-         :to:cc:subject:date:message-id:reply-to;
-        bh=bUx8fY5yV5k6b3NAzZ7ONnYGBUoPPnSRBV9IAdB2IcQ=;
-        b=bscsi6Us4db1wZnhialOlVVYmGLNL28PjeBy+ULBGEDa+nA6hPhf8lLHziaFvl0R6U
-         BMgvYt1X2ocTVAa6vj37pJM4Id/PNUsepAQSzXD8++Ibu9wgwp4Fdxbq9JN5uB3mMtiA
-         R15UCFXLG6sODhBYIWmGJB3Dg9J4PqZF2StFxWXeetGKBkegAXIB+twBNXphPJciUb6a
-         cN5haWj1nSC9dh/y9I+5nmcX26cen/oy+ejxRdsLxGmO43IS4V3V00jYlLfSaCwg2V6F
-         xVgZ3a27pvkuFv1rv/MBkcYxiHc61EqO7GjMtJ7DOxQzxgR7z1LlbtRxRYav9d+9HwMf
-         dD7Q==
-X-Gm-Message-State: ACrzQf3+u7hfy7izE+tmR8BD8wzoZ7hBH/Wi9cm/rRKh/flH/uV5tO0x
-        MoEAPbRo+et/IADdVYTrT8A=
-X-Google-Smtp-Source: AMsMyM4/4142AtL9gDKsW66R2DQwFckkQXdIqI8rIATA3ZjgBGVT7PVXnop8c1DLVI7LR3SYgeTyiQ==
-X-Received: by 2002:a63:1308:0:b0:440:5517:c99d with SMTP id i8-20020a631308000000b004405517c99dmr636154pgl.550.1666980100358;
-        Fri, 28 Oct 2022 11:01:40 -0700 (PDT)
-Received: from youngsil.svl.corp.google.com ([2620:15c:2d4:203:976f:f075:7c14:87a2])
-        by smtp.gmail.com with ESMTPSA id n3-20020a170903110300b00186b86ed450sm3400236plh.156.2022.10.28.11.01.38
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 28 Oct 2022 11:01:38 -0700 (PDT)
-Sender: Namhyung Kim <namhyung@gmail.com>
-From:   Namhyung Kim <namhyung@kernel.org>
-To:     Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Jiri Olsa <jolsa@kernel.org>
-Cc:     Ingo Molnar <mingo@kernel.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Ian Rogers <irogers@google.com>,
-        Adrian Hunter <adrian.hunter@intel.com>,
-        linux-perf-users@vger.kernel.org, Song Liu <song@kernel.org>,
-        bpf@vger.kernel.org
-Subject: [PATCH 4/4] perf lock contention: Increase default stack skip to 4
-Date:   Fri, 28 Oct 2022 11:01:28 -0700
-Message-Id: <20221028180128.3311491-5-namhyung@kernel.org>
-X-Mailer: git-send-email 2.38.1.273.g43a17bfeac-goog
-In-Reply-To: <20221028180128.3311491-1-namhyung@kernel.org>
-References: <20221028180128.3311491-1-namhyung@kernel.org>
+        h=content-transfer-encoding:in-reply-to:references:cc:to:from
+         :content-language:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=XFtzDp1GmCsTv7CuMlTyHutAb+I5WP7vletAv2HWDNc=;
+        b=KYIjNDk+D+gwcVjP+tDoZ2NH3xbGLL4UKp1A7kQdYlHlOLa7RI+nBpCDwOHy3JD8fP
+         vPWWX+ECoYdWr0tMNJWnBebXdFxvhjkxctaNRmlveiFlFuMw+vNaZjbjeByiN8CQZBpw
+         5GC2pIaGUM2OoTlwwPf/cuWfy4pyd4tjzqCx3PSpMrc5OAfR3Vw0IAVpB/Pt39WYiIY1
+         yp5WwIGk2WSqUm4a/UGywlQZCg4OF+4qV6txq6WxSBiw0uwCq/ZXx5+NGbYMa7FbHzzQ
+         AVpYrjw1OwTBzCVhvY1s0eRXi+o9RYgwinITIdqjQ2qfGujUShc5oEzQLI2cLTh/GizR
+         cr3w==
+X-Gm-Message-State: ACrzQf0jSaHqwSa/O0Q5VhIdF+JdN9Hi1sv12nR5PQMqyAhNKNL+bLVr
+        aj4KK3denjpjQVaXInFBeZB7cHVC/r4dmw==
+X-Google-Smtp-Source: AMsMyM5oZr8OPAlWj4c3h/ga6550MUS6ZhwfBdY9Ty3fAWElG5gkSSJGyXnHzommGtawZMqllL7utw==
+X-Received: by 2002:a05:620a:2601:b0:6bc:70bb:c56b with SMTP id z1-20020a05620a260100b006bc70bbc56bmr665970qko.416.1666984801430;
+        Fri, 28 Oct 2022 12:20:01 -0700 (PDT)
+Received: from [10.67.48.245] ([192.19.223.252])
+        by smtp.googlemail.com with ESMTPSA id d20-20020ac851d4000000b00399fe4aac3esm2783285qtn.50.2022.10.28.12.19.51
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Fri, 28 Oct 2022 12:20:00 -0700 (PDT)
+Message-ID: <28a8fccb-508c-7a49-a79a-5167da8fba81@gmail.com>
+Date:   Fri, 28 Oct 2022 12:19:48 -0700
 MIME-Version: 1.0
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
+ Thunderbird/102.2.2
+Subject: Re: [PATCH] include/uapi/linux/swab: Fix potentially missing
+ __always_inline
+Content-Language: en-US
+From:   Florian Fainelli <f.fainelli@gmail.com>
+To:     Nathan Chancellor <nathan@kernel.org>,
+        Arnd Bergmann <arnd@arndb.de>
+Cc:     linux-kernel@vger.kernel.org,
+        =?UTF-8?Q?Petr_Van=c4=9bk?= <arkamar@atlas.cz>,
+        Nick Desaulniers <ndesaulniers@google.com>,
+        Tom Rix <trix@redhat.com>, Justin Stitt <jstitt007@gmail.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Denys Vlasenko <dvlasenk@redhat.com>,
+        Ingo Molnar <mingo@kernel.org>,
+        "open list:CLANG/LLVM BUILD SUPPORT" <llvm@lists.linux.dev>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        Arnaldo Carvalho de Melo <acme@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Jiri Olsa <jolsa@kernel.org>,
+        Namhyung Kim <namhyung@kernel.org>,
+        "open list:PERFORMANCE EVENTS SUBSYSTEM" 
+        <linux-perf-users@vger.kernel.org>, mmayer@broadcom.com,
+        Khem Raj <raj.khem@gmail.com>,
+        Philippe Ombredanne <pombredanne@nexb.com>,
+        Kate Stewart <kstewart@linuxfoundation.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Thomas Gleixner <tglx@linutronix.de>
+References: <20220927215256.528619-1-f.fainelli@gmail.com>
+ <YzTMUpd6HbHmZu8f@dev-arch.thelio-3990X>
+ <ed9b8268-0128-0486-04a3-54f343afd38b@gmail.com>
+In-Reply-To: <ed9b8268-0128-0486-04a3-54f343afd38b@gmail.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-In most configurations, it works well with skipping 4 entries by
-default.  If some systems still have 3 BPF internal stack frames,
-the next frame should be in a lock function which will be skipped
-later when it tries to find a caller.  So increasing to 4 won't
-affect such systems too.
+On 10/6/22 13:33, Florian Fainelli wrote:
+> Hi Nathan,
+> 
+> On 9/28/2022 3:36 PM, Nathan Chancellor wrote:
+>> Hi Florian,
+>>
+>> On Tue, Sep 27, 2022 at 02:52:56PM -0700, Florian Fainelli wrote:
+>>> From: Matt Redfearn <matt.redfearn@mips.com>
+>>>
+>>> Commit bc27fb68aaad ("include/uapi/linux/byteorder, swab: force inlining
+>>> of some byteswap operations") added __always_inline to swab functions
+>>> and commit 283d75737837 ("uapi/linux/stddef.h: Provide 
+>>> __always_inline to
+>>> userspace headers") added a definition of __always_inline for use in
+>>> exported headers when the kernel's compiler.h is not available.
+>>>
+>>> However, since swab.h does not include stddef.h, if the header soup does
+>>> not indirectly include it, the definition of __always_inline is missing,
+>>> resulting in a compilation failure, which was observed compiling the
+>>> perf tool using exported headers containing this commit:
+>>>
+>>> In file included from /usr/include/linux/byteorder/little_endian.h:12:0,
+>>>                   from /usr/include/asm/byteorder.h:14,
+>>>                   from tools/include/uapi/linux/perf_event.h:20,
+>>>                   from perf.h:8,
+>>>                   from builtin-bench.c:18:
+>>> /usr/include/linux/swab.h:160:8: error: unknown type name 
+>>> `__always_inline'
+>>>   static __always_inline __u16 __swab16p(const __u16 *p)
+>>>
+>>> Fix this by replacing the inclusion of linux/compiler.h with
+>>> linux/stddef.h to ensure that we pick up that definition if required,
+>>> without relying on it's indirect inclusion. compiler.h is then included
+>>> indirectly, via stddef.h.
+>>>
+>>> Fixes: 283d75737837 ("uapi/linux/stddef.h: Provide __always_inline to 
+>>> userspace headers")
+>>> Signed-off-by: Matt Redfearn <matt.redfearn@mips.com>
+>>> Reviewed-by: Petr Vaněk <arkamar@atlas.cz>
+>>> Signed-off-by: Florian Fainelli <f.fainelli@gmail.com>
+>>
+>> I took this through my kernel build matrix and did not see any new
+>> issues.
+>>
+>> Tested-by: Nathan Chancellor <nathan@kernel.org>
+> 
+> Great thanks! Since this is really useful for kernel-headers in 
+> toolchains, it would be great to get this picked up. Arnd is this 
+> something that would go via your tree?
 
-With --stack-skip=0, I can see something like this:
-
-    24     49.84 us      7.41 us      2.08 us        mutex   bpf_prog_e1b85959d520446c_contention_begin+0x12e
-                    0xffffffffc045040e  bpf_prog_e1b85959d520446c_contention_begin+0x12e
-                    0xffffffffc045040e  bpf_prog_e1b85959d520446c_contention_begin+0x12e
-                    0xffffffff82ea2071  bpf_trace_run2+0x51
-                    0xffffffff82de775b  __bpf_trace_contention_begin+0xb
-                    0xffffffff82c02045  __mutex_lock+0x245
-                    0xffffffff82c019e3  __mutex_lock_slowpath+0x13
-                    0xffffffff82c019c0  mutex_lock+0x20
-                    0xffffffff830a083c  kernfs_iop_permission+0x2c
-
-Cc: Song Liu <song@kernel.org>
-Cc: bpf@vger.kernel.org
-Signed-off-by: Namhyung Kim <namhyung@kernel.org>
----
- tools/perf/util/lock-contention.h | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
-
-diff --git a/tools/perf/util/lock-contention.h b/tools/perf/util/lock-contention.h
-index b8cb8830b7bc..e3c061b1795b 100644
---- a/tools/perf/util/lock-contention.h
-+++ b/tools/perf/util/lock-contention.h
-@@ -91,7 +91,7 @@ struct thread_stat {
-  * Number of stack trace entries to skip when finding callers.
-  * The first few entries belong to the locking implementation itself.
-  */
--#define CONTENTION_STACK_SKIP  3
-+#define CONTENTION_STACK_SKIP  4
- 
- /*
-  * flags for lock:contention_begin
+Arnd, is this a patch you can merge? Thanks
 -- 
-2.38.1.273.g43a17bfeac-goog
+Florian
 
