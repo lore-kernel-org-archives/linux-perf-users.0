@@ -2,149 +2,151 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 66F7EECAAA1
-	for <linux-perf-users@archiver.kernel.org>; Fri, 28 Oct 2022 19:20:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4AAE7C38A02
+	for <linux-perf-users@archiver.kernel.org>; Fri, 28 Oct 2022 19:45:54 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229864AbiJ1TUG (ORCPT
+        id S229995AbiJ1Tpv (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Fri, 28 Oct 2022 15:20:06 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45278 "EHLO
+        Fri, 28 Oct 2022 15:45:51 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40190 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229456AbiJ1TUE (ORCPT
+        with ESMTP id S229552AbiJ1Tpu (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Fri, 28 Oct 2022 15:20:04 -0400
-Received: from mail-qk1-x731.google.com (mail-qk1-x731.google.com [IPv6:2607:f8b0:4864:20::731])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5E3F6C07;
-        Fri, 28 Oct 2022 12:20:02 -0700 (PDT)
-Received: by mail-qk1-x731.google.com with SMTP id o28so1440018qkl.4;
-        Fri, 28 Oct 2022 12:20:02 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20210112;
-        h=content-transfer-encoding:in-reply-to:references:cc:to:from
-         :content-language:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=XFtzDp1GmCsTv7CuMlTyHutAb+I5WP7vletAv2HWDNc=;
-        b=EpEDr6Ey6WfAXuzpa4OZrcb2T5JyYMgqDvYRgnKe5QjROwWYyUDbl5XL7UlTlCcDOT
-         ubcIGNK3xYa5pgURVJ2ur1lrulnFssCwYhEdSCD19ATc3tTjyVlXvDYpvhfLkuTiUfn5
-         adqbdblIMRG+vdv/YyDzV2QQ8HztVP+GivJX74mcUgy+x7QuCIgdQoijWes81oaDJvBZ
-         PubF0EXcWPu1FMzYm4uMb+niofLQ4VX/er0acUiMZjhmQLktTYPxaIVpZU9R4HEyo//T
-         4wMU9Q3XB/w5dIpMiFGjy2w4NL0412VmuQIsNhapKJSh1Vyci7MkT5F5aJ7ghGZ78bFq
-         wJUQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=content-transfer-encoding:in-reply-to:references:cc:to:from
-         :content-language:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=XFtzDp1GmCsTv7CuMlTyHutAb+I5WP7vletAv2HWDNc=;
-        b=KYIjNDk+D+gwcVjP+tDoZ2NH3xbGLL4UKp1A7kQdYlHlOLa7RI+nBpCDwOHy3JD8fP
-         vPWWX+ECoYdWr0tMNJWnBebXdFxvhjkxctaNRmlveiFlFuMw+vNaZjbjeByiN8CQZBpw
-         5GC2pIaGUM2OoTlwwPf/cuWfy4pyd4tjzqCx3PSpMrc5OAfR3Vw0IAVpB/Pt39WYiIY1
-         yp5WwIGk2WSqUm4a/UGywlQZCg4OF+4qV6txq6WxSBiw0uwCq/ZXx5+NGbYMa7FbHzzQ
-         AVpYrjw1OwTBzCVhvY1s0eRXi+o9RYgwinITIdqjQ2qfGujUShc5oEzQLI2cLTh/GizR
-         cr3w==
-X-Gm-Message-State: ACrzQf0jSaHqwSa/O0Q5VhIdF+JdN9Hi1sv12nR5PQMqyAhNKNL+bLVr
-        aj4KK3denjpjQVaXInFBeZB7cHVC/r4dmw==
-X-Google-Smtp-Source: AMsMyM5oZr8OPAlWj4c3h/ga6550MUS6ZhwfBdY9Ty3fAWElG5gkSSJGyXnHzommGtawZMqllL7utw==
-X-Received: by 2002:a05:620a:2601:b0:6bc:70bb:c56b with SMTP id z1-20020a05620a260100b006bc70bbc56bmr665970qko.416.1666984801430;
-        Fri, 28 Oct 2022 12:20:01 -0700 (PDT)
-Received: from [10.67.48.245] ([192.19.223.252])
-        by smtp.googlemail.com with ESMTPSA id d20-20020ac851d4000000b00399fe4aac3esm2783285qtn.50.2022.10.28.12.19.51
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Fri, 28 Oct 2022 12:20:00 -0700 (PDT)
-Message-ID: <28a8fccb-508c-7a49-a79a-5167da8fba81@gmail.com>
-Date:   Fri, 28 Oct 2022 12:19:48 -0700
-MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
- Thunderbird/102.2.2
-Subject: Re: [PATCH] include/uapi/linux/swab: Fix potentially missing
- __always_inline
-Content-Language: en-US
-From:   Florian Fainelli <f.fainelli@gmail.com>
-To:     Nathan Chancellor <nathan@kernel.org>,
-        Arnd Bergmann <arnd@arndb.de>
-Cc:     linux-kernel@vger.kernel.org,
-        =?UTF-8?Q?Petr_Van=c4=9bk?= <arkamar@atlas.cz>,
-        Nick Desaulniers <ndesaulniers@google.com>,
-        Tom Rix <trix@redhat.com>, Justin Stitt <jstitt007@gmail.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Denys Vlasenko <dvlasenk@redhat.com>,
-        Ingo Molnar <mingo@kernel.org>,
-        "open list:CLANG/LLVM BUILD SUPPORT" <llvm@lists.linux.dev>,
+        Fri, 28 Oct 2022 15:45:50 -0400
+Received: from ams.source.kernel.org (ams.source.kernel.org [145.40.68.75])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7DE3113F6D;
+        Fri, 28 Oct 2022 12:45:47 -0700 (PDT)
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by ams.source.kernel.org (Postfix) with ESMTPS id A8B30B82C9C;
+        Fri, 28 Oct 2022 19:45:46 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id E5877C433C1;
+        Fri, 28 Oct 2022 19:45:44 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1666986345;
+        bh=8jVvfqwooB2XxehexdbsReWOhqoAsAkOoqcVmubSgWA=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=JX0VqiHEt315CgVzGyMEXQBsgq8WJh9HtWHSCVgHGneb4InPT315/0LP4P2BN/eDe
+         K7tqjiP7QLWU+etqmRXrU5LI8XJoPGMAVKzuzJADWSju1uFHh71y3P1kQ3r9eZvvet
+         4FU+Kt72ImaGq2Uf9FFWuQAaTsf5mlLbP3mAnZlutDCfw3YWLdfCewQHblPBpDB1Sq
+         mhEAJeWxtkAbD+qfDjqKGO28Z5wiHDPFU1tkBWxz+WNQ+y0cvPCwQTLlg/r9g7yFdD
+         zZ9lDrzypYCNBxEoBXMEKyNicBTTzyRHQTA7/ZYkCGGXT9fwroYn3251j+oT3013ij
+         O7wC9njA5Y/CA==
+Received: by quaco.ghostprotocols.net (Postfix, from userid 1000)
+        id 1D6384034E; Fri, 28 Oct 2022 16:45:42 -0300 (-03)
+Date:   Fri, 28 Oct 2022 16:45:42 -0300
+From:   Arnaldo Carvalho de Melo <acme@kernel.org>
+To:     Ian Rogers <irogers@google.com>
+Cc:     John Garry <john.garry@huawei.com>,
         Peter Zijlstra <peterz@infradead.org>,
         Ingo Molnar <mingo@redhat.com>,
-        Arnaldo Carvalho de Melo <acme@kernel.org>,
         Mark Rutland <mark.rutland@arm.com>,
         Alexander Shishkin <alexander.shishkin@linux.intel.com>,
         Jiri Olsa <jolsa@kernel.org>,
         Namhyung Kim <namhyung@kernel.org>,
-        "open list:PERFORMANCE EVENTS SUBSYSTEM" 
-        <linux-perf-users@vger.kernel.org>, mmayer@broadcom.com,
-        Khem Raj <raj.khem@gmail.com>,
-        Philippe Ombredanne <pombredanne@nexb.com>,
-        Kate Stewart <kstewart@linuxfoundation.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Thomas Gleixner <tglx@linutronix.de>
-References: <20220927215256.528619-1-f.fainelli@gmail.com>
- <YzTMUpd6HbHmZu8f@dev-arch.thelio-3990X>
- <ed9b8268-0128-0486-04a3-54f343afd38b@gmail.com>
-In-Reply-To: <ed9b8268-0128-0486-04a3-54f343afd38b@gmail.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
+        linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Ravi Bangoria <ravi.bangoria@amd.com>,
+        Stephane Eranian <eranian@google.com>
+Subject: Re: [PATCH v1] perf test: Parse events workaround for dash/minus
+Message-ID: <Y1wxZgWWPwuRZ+xj@kernel.org>
+References: <20221013011205.3151391-1-irogers@google.com>
+ <715c8e4a-f3c3-6521-778e-8ba8c2bf659e@huawei.com>
+ <CAP-5=fVBSDPPFnBnLF775noQPyHnjbpu+hC=LiEJo5566oONrA@mail.gmail.com>
+ <CAP-5=fVmd-f=HAQPJ-UfG5EdnXMk5j6a-PdF5592LDrd8K8neA@mail.gmail.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CAP-5=fVmd-f=HAQPJ-UfG5EdnXMk5j6a-PdF5592LDrd8K8neA@mail.gmail.com>
+X-Url:  http://acmel.wordpress.com
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-On 10/6/22 13:33, Florian Fainelli wrote:
-> Hi Nathan,
+Em Fri, Oct 28, 2022 at 10:55:14AM -0700, Ian Rogers escreveu:
+> On Mon, Oct 17, 2022 at 4:07 PM Ian Rogers <irogers@google.com> wrote:
+> >
+> > On Thu, Oct 13, 2022 at 5:11 AM John Garry <john.garry@huawei.com> wrote:
+> > >
+> > > On 13/10/2022 02:12, Ian Rogers wrote:
+> > > > Skip an event configuration for event names with a dash/minus in them.
+> > > > Events with a dash/minus in their name cause parsing issues as legacy
+> > > > encoding of events would use a dash/minus as a separator. The parser
+> > > > separates events with dashes into prefixes and suffixes and then
+> > > > recombines them. Unfortunately if an event has part of its name that
+> > > > matches a legacy token then the recombining fails. This is seen for
+> > > > branch-brs where branch is a legacy token. branch-brs was introduced
+> > > > to sysfs in:
+> > > > https://lore.kernel.org/all/20220322221517.2510440-5-eranian@google.com/
+> > > > The failure is shown below as well as the workaround to use a config
+> > > > where the dash/minus isn't treated specially:
+> > > >
+> > > > ```
+> > > > $ perf stat -e branch-brs true
+> > > > event syntax error: 'branch-brs'
+> > > >                             \___ parser error
+> > > >
+> > > > $ perf stat -e cpu/branch-brs/ true
+> > > >
+> > > >   Performance counter stats for 'true':
+> > > >
+> > > >              46,179      cpu/branch-brs/
+> > > > ```
+> > > >
+> > > > Signed-off-by: Ian Rogers <irogers@google.com>
+> > > > ---
+> > > >   tools/perf/tests/parse-events.c | 13 +++++++++++++
+> > > >   1 file changed, 13 insertions(+)
+> > > >
+> > > > diff --git a/tools/perf/tests/parse-events.c b/tools/perf/tests/parse-events.c
+> > > > index 459afdb256a1..3440dd2616b0 100644
+> > > > --- a/tools/perf/tests/parse-events.c
+> > > > +++ b/tools/perf/tests/parse-events.c
+> > > > @@ -2237,6 +2237,19 @@ static int test__pmu_events(struct test_suite *test __maybe_unused, int subtest
+> > > >                       pr_debug("Test PMU event failed for '%s'", name);
+> > > >                       ret = combine_test_results(ret, test_ret);
+> > > >
+> > >
+> > > Hi Ian,
+> > >
+> > > }
+> > > > +             /*
+> > > > +              * Names containing '-' are recognized as prefixes and suffixes
+> > > > +              * due to '-' being a legacy PMU separator. This fails when the
+> > > > +              * prefix or suffix collides with an existing legacy token. For
+> > > > +              * example, branch-brs has a prefix (branch) that collides with
+> > > > +              * a PE_NAME_CACHE_TYPE token causing a parse error as a suffix
+> > > > +              * isn't expected after this.
+> > >
+> > > OK, so you want to skip anything with '-'. Will we now miss out on
+> > > events which contain a '-' but don't clash with an existing legacy token?
+> >
+> > Yes. The long term solution here is to ditch the current parse event
+> > code and its legacy support. An idea is to create a simplified parser
+> > as part of libperf2 (libperf but with a libbpf style license), use the
+> > new parser for metrics and events. In the events case, if the new
+> > parser fails then use the legacy parser and its weird handling of
+> > dashes.
+> >
+> > > >  As event names in the config
+> > > > +              * slashes are allowed a '-' in the name we check this works
+> > > > +              * above.
+> > >
+> > > Sorry, I can't follow what you mean here. Do you mean that
+> > > "cpu/branch-brs/" works ok and we continue to test it?
+> >
+> > Yep, as shown in the commit message. The comment isn't great, it
+> > should be worded something like:
+> >
+> > If an event name is in the config slashes, such as cpu/branch-brs/,  a
+> > '-' in the name works as the dash doesn't separate the parts of the
+> > name. This continues to be tested above.
 > 
-> On 9/28/2022 3:36 PM, Nathan Chancellor wrote:
->> Hi Florian,
->>
->> On Tue, Sep 27, 2022 at 02:52:56PM -0700, Florian Fainelli wrote:
->>> From: Matt Redfearn <matt.redfearn@mips.com>
->>>
->>> Commit bc27fb68aaad ("include/uapi/linux/byteorder, swab: force inlining
->>> of some byteswap operations") added __always_inline to swab functions
->>> and commit 283d75737837 ("uapi/linux/stddef.h: Provide 
->>> __always_inline to
->>> userspace headers") added a definition of __always_inline for use in
->>> exported headers when the kernel's compiler.h is not available.
->>>
->>> However, since swab.h does not include stddef.h, if the header soup does
->>> not indirectly include it, the definition of __always_inline is missing,
->>> resulting in a compilation failure, which was observed compiling the
->>> perf tool using exported headers containing this commit:
->>>
->>> In file included from /usr/include/linux/byteorder/little_endian.h:12:0,
->>>                   from /usr/include/asm/byteorder.h:14,
->>>                   from tools/include/uapi/linux/perf_event.h:20,
->>>                   from perf.h:8,
->>>                   from builtin-bench.c:18:
->>> /usr/include/linux/swab.h:160:8: error: unknown type name 
->>> `__always_inline'
->>>   static __always_inline __u16 __swab16p(const __u16 *p)
->>>
->>> Fix this by replacing the inclusion of linux/compiler.h with
->>> linux/stddef.h to ensure that we pick up that definition if required,
->>> without relying on it's indirect inclusion. compiler.h is then included
->>> indirectly, via stddef.h.
->>>
->>> Fixes: 283d75737837 ("uapi/linux/stddef.h: Provide __always_inline to 
->>> userspace headers")
->>> Signed-off-by: Matt Redfearn <matt.redfearn@mips.com>
->>> Reviewed-by: Petr Vaněk <arkamar@atlas.cz>
->>> Signed-off-by: Florian Fainelli <f.fainelli@gmail.com>
->>
->> I took this through my kernel build matrix and did not see any new
->> issues.
->>
->> Tested-by: Nathan Chancellor <nathan@kernel.org>
-> 
-> Great thanks! Since this is really useful for kernel-headers in 
-> toolchains, it would be great to get this picked up. Arnd is this 
-> something that would go via your tree?
+> Ping. It'd be nice to merge this as otherwise we have a perf test
+> failure on AMD.
 
-Arnd, is this a patch you can merge? Thanks
--- 
-Florian
+I added it for perf/core, i.e. 6.2.
 
+Thanks,
+
+- Arnaldo
