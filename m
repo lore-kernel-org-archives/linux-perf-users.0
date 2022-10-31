@@ -2,159 +2,122 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2B479C38A02
-	for <linux-perf-users@archiver.kernel.org>; Mon, 31 Oct 2022 09:35:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 648D2FA3740
+	for <linux-perf-users@archiver.kernel.org>; Mon, 31 Oct 2022 11:11:47 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230287AbiJaJfb (ORCPT
+        id S230142AbiJaLLq (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Mon, 31 Oct 2022 05:35:31 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40676 "EHLO
+        Mon, 31 Oct 2022 07:11:46 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53434 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229907AbiJaJf0 (ORCPT
+        with ESMTP id S230107AbiJaLLp (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Mon, 31 Oct 2022 05:35:26 -0400
-Received: from mail-yb1-xb4a.google.com (mail-yb1-xb4a.google.com [IPv6:2607:f8b0:4864:20::b4a])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 482B2DF3D
-        for <linux-perf-users@vger.kernel.org>; Mon, 31 Oct 2022 02:35:22 -0700 (PDT)
-Received: by mail-yb1-xb4a.google.com with SMTP id 69-20020a250548000000b006cc9d755afaso1657128ybf.16
-        for <linux-perf-users@vger.kernel.org>; Mon, 31 Oct 2022 02:35:22 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20210112;
-        h=cc:to:from:subject:message-id:mime-version:date:from:to:cc:subject
-         :date:message-id:reply-to;
-        bh=7abLUKvfL513QAFSaGq2FlNA+/gNLlKgxsoNfFkz71Q=;
-        b=GEZadzE3OPQ69P/n9wzBiPa9xCjhhx07Ov1aXmlD2Yk58eKcXfjmchldx36yLgGfVS
-         t2tQB10CpkjrukG5aa66VN9wk+v0Pg3AjiH16Hd3QS4hTKy3db8+P+8wMvaXl28CQfBW
-         qu79LGcYMSlEyMWPjh8fPVvuGqimolUZ5zHAX5gZZSUynGiSjPW3y4LLpx6G+LFOz4t1
-         kbGpfTh8yveIDW/MJcJlczu+YU4vsVJwrSvQ7f+fPNFxSDJ2Sh1fG7ivfUJI8N75yOcw
-         kJ7obHNgX+4no4XOQheutxgZyJWDPfspzBu5fEbU2EHuB764OrsI0ivBIgAQhdmIx08p
-         BvPA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=cc:to:from:subject:message-id:mime-version:date:x-gm-message-state
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=7abLUKvfL513QAFSaGq2FlNA+/gNLlKgxsoNfFkz71Q=;
-        b=7J6uS8jyqvSHPDWHYHEWnFv/P/+C3vo5SBlcs6heXsSiQJrn8M4w3yNep8VUiYWhHZ
-         c0lmSt+CnRcKzSRjZzgZw1/foKgUXb/j2EtFr6M9lx2jVe+yM21ry3ytdC+pSsu/6uIR
-         joMUc0JJljO91gamiYYIlcNb7niXV9keJFXGEHD8bUDZoFMT+a9U3bC9EseVe8VjwlBx
-         uVqWribD4DuNmUQPf+lewzuHfVK1fJYwp+H5xX4JWbNwr1ZxE7qc+xeT9l3QfccjPpLN
-         qFCtHb+u9xSvHHO52whVyuzlUk6EdKT+rlh7ApOctQU101BurDkDgczLzY+2iqWI+b6N
-         2wkw==
-X-Gm-Message-State: ACrzQf1llIegOR40EPjje1JOK1/ZwCJkLPGasqFj6MhIf+ydJKPPMZdP
-        Kw9ap3QFVci+UiQTRIhB1+nnVlNOcg==
-X-Google-Smtp-Source: AMsMyM4AOPVeX6O6SMv4SCnvGU0VzNgzj9XEcJg1kKd63RW68m9UljlGzZdrBM8FICLmS1FlRAWoRPyjmA==
-X-Received: from elver.muc.corp.google.com ([2a00:79e0:9c:201:3b03:2ab7:7f10:fc94])
- (user=elver job=sendgmr) by 2002:a81:5003:0:b0:368:40be:6e47 with SMTP id
- e3-20020a815003000000b0036840be6e47mr12022330ywb.477.1667208921550; Mon, 31
- Oct 2022 02:35:21 -0700 (PDT)
-Date:   Mon, 31 Oct 2022 10:35:13 +0100
-Mime-Version: 1.0
-X-Mailer: git-send-email 2.38.1.273.g43a17bfeac-goog
-Message-ID: <20221031093513.3032814-1-elver@google.com>
-Subject: [PATCH] perf: Improve missing SIGTRAP checking
-From:   Marco Elver <elver@google.com>
-To:     elver@google.com, Peter Zijlstra <peterz@infradead.org>
-Cc:     Ingo Molnar <mingo@redhat.com>,
+        Mon, 31 Oct 2022 07:11:45 -0400
+Received: from out30-43.freemail.mail.aliyun.com (out30-43.freemail.mail.aliyun.com [115.124.30.43])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C7B03BE12;
+        Mon, 31 Oct 2022 04:11:43 -0700 (PDT)
+X-Alimail-AntiSpam: AC=PASS;BC=-1|-1;BR=01201311R181e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=ay29a033018046059;MF=renyu.zj@linux.alibaba.com;NM=1;PH=DS;RN=18;SR=0;TI=SMTPD_---0VTVxoG-_1667214695;
+Received: from j66e01291.sqa.eu95.tbsite.net(mailfrom:renyu.zj@linux.alibaba.com fp:SMTPD_---0VTVxoG-_1667214695)
+          by smtp.aliyun-inc.com;
+          Mon, 31 Oct 2022 19:11:41 +0800
+From:   Jing Zhang <renyu.zj@linux.alibaba.com>
+To:     linux-arm-kernel@lists.infradead.org,
+        linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
+Cc:     John Garry <john.garry@huawei.com>, Will Deacon <will@kernel.org>,
+        James Clark <james.clark@arm.com>,
+        Mike Leach <mike.leach@linaro.org>,
+        Leo Yan <leo.yan@linaro.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Ingo Molnar <mingo@redhat.com>,
         Arnaldo Carvalho de Melo <acme@kernel.org>,
         Mark Rutland <mark.rutland@arm.com>,
         Alexander Shishkin <alexander.shishkin@linux.intel.com>,
         Jiri Olsa <jolsa@kernel.org>,
         Namhyung Kim <namhyung@kernel.org>,
-        linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Dmitry Vyukov <dvyukov@google.com>, kasan-dev@googlegroups.com,
-        syzbot+b8ded3e2e2c6adde4990@syzkaller.appspotmail.com
-Content-Type: text/plain; charset="UTF-8"
+        Andrew Kilroy <andrew.kilroy@arm.com>,
+        Shuai Xue <xueshuai@linux.alibaba.com>,
+        Zhuo Song <zhuo.song@linux.alibaba.com>
+Subject: [PATCH RFC 0/6] Add metrics for neoverse-n2
+Date:   Mon, 31 Oct 2022 19:11:28 +0800
+Message-Id: <1667214694-89839-1-git-send-email-renyu.zj@linux.alibaba.com>
+X-Mailer: git-send-email 1.8.3.1
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-To catch missing SIGTRAP we employ a WARN in __perf_event_overflow(),
-which fires if pending_sigtrap was already set: returning to user space
-without consuming pending_sigtrap, and then having the event fire again
-would re-enter the kernel and trigger the WARN.
+This series add six metricgroups for neoverse-n2, among which, the
+formula of topdown L1 is from the document:
+https://documentation-service.arm.com/static/60250c7395978b529036da86?token=
 
-This, however, seemed to miss the case where some events not associated
-with progress in the user space task can fire and the interrupt handler
-runs before the IRQ work meant to consume pending_sigtrap (and generate
-the SIGTRAP).
+Since neoverse-n2 does not yet support topdown L2, metricgroups such
+as Cache, TLB, Branch, InstructionsMix, and PEutilization are added to
+help further analysis of performance bottlenecks.
 
-syzbot gifted us this stack trace:
+with this series on neoverse-n2:
 
- | WARNING: CPU: 0 PID: 3607 at kernel/events/core.c:9313 __perf_event_overflow
- | Modules linked in:
- | CPU: 0 PID: 3607 Comm: syz-executor100 Not tainted 6.1.0-rc2-syzkaller-00073-g88619e77b33d #0
- | Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 10/11/2022
- | RIP: 0010:__perf_event_overflow+0x498/0x540 kernel/events/core.c:9313
- | <...>
- | Call Trace:
- |  <TASK>
- |  perf_swevent_hrtimer+0x34f/0x3c0 kernel/events/core.c:10729
- |  __run_hrtimer kernel/time/hrtimer.c:1685 [inline]
- |  __hrtimer_run_queues+0x1c6/0xfb0 kernel/time/hrtimer.c:1749
- |  hrtimer_interrupt+0x31c/0x790 kernel/time/hrtimer.c:1811
- |  local_apic_timer_interrupt arch/x86/kernel/apic/apic.c:1096 [inline]
- |  __sysvec_apic_timer_interrupt+0x17c/0x640 arch/x86/kernel/apic/apic.c:1113
- |  sysvec_apic_timer_interrupt+0x40/0xc0 arch/x86/kernel/apic/apic.c:1107
- |  asm_sysvec_apic_timer_interrupt+0x16/0x20 arch/x86/include/asm/idtentry.h:649
- | <...>
- |  </TASK>
+$./perf list metricgroup
 
-In this case, syzbot produced a program with event type
-PERF_TYPE_SOFTWARE and config PERF_COUNT_SW_CPU_CLOCK. The hrtimer
-manages to fire again before the IRQ work got a chance to run, all while
-never having returned to user space.
+List of pre-defined events (to be used in -e):
 
-Improve the WARN to check for real progress in user space: approximate
-this by storing a 32-bit hash of the current IP into pending_sigtrap,
-and if an event fires while pending_sigtrap still matches the previous
-IP, we assume no progress (false negatives are possible given we could
-return to user space and trigger again on the same IP).
 
-Fixes: ca6c21327c6a ("perf: Fix missing SIGTRAPs")
-Reported-by: syzbot+b8ded3e2e2c6adde4990@syzkaller.appspotmail.com
-Signed-off-by: Marco Elver <elver@google.com>
----
- kernel/events/core.c | 25 +++++++++++++++++++------
- 1 file changed, 19 insertions(+), 6 deletions(-)
+Metric Groups:
 
-diff --git a/kernel/events/core.c b/kernel/events/core.c
-index 068412fe8dff..f87030487d9b 100644
---- a/kernel/events/core.c
-+++ b/kernel/events/core.c
-@@ -9312,14 +9312,27 @@ static int __perf_event_overflow(struct perf_event *event,
- 	}
- 
- 	if (event->attr.sigtrap) {
--		/*
--		 * Should not be able to return to user space without processing
--		 * pending_sigtrap (kernel events can overflow multiple times).
--		 */
--		WARN_ON_ONCE(event->pending_sigtrap && event->attr.exclude_kernel);
-+		unsigned int pending_id = 1;
-+
-+		if (regs)
-+			pending_id = hash32_ptr((void *)instruction_pointer(regs)) ?: 1;
- 		if (!event->pending_sigtrap) {
--			event->pending_sigtrap = 1;
-+			event->pending_sigtrap = pending_id;
- 			local_inc(&event->ctx->nr_pending);
-+		} else if (event->attr.exclude_kernel) {
-+			/*
-+			 * Should not be able to return to user space without
-+			 * consuming pending_sigtrap; with exceptions:
-+			 *
-+			 *  1. Where !exclude_kernel, events can overflow again
-+			 *     in the kernel without returning to user space.
-+			 *
-+			 *  2. Events that can overflow again before the IRQ-
-+			 *     work without user space progress (e.g. hrtimer).
-+			 *     To approximate progress (with false negatives),
-+			 *     check 32-bit hash of the current IP.
-+			 */
-+			WARN_ON_ONCE(event->pending_sigtrap != pending_id);
- 		}
- 		event->pending_addr = data->addr;
- 		irq_work_queue(&event->pending_irq);
+Branch
+Cache
+InstructionMix
+PEutilization
+TLB
+TopDownL1
+
+
+$./perf list
+
+...
+Metric Groups:
+
+Branch:
+  branch_miss_pred_rate
+       [The rate of branches mis-predited to the overall branches]
+  branch_mpki
+       [The rate of branches mis-predicted per kilo instructions]
+  branch_pki
+       [The rate of branches retired per kilo instructions]
+Cache:
+  l1d_cache_miss_rate
+       [The rate of L1 D-Cache misses to the overall L1 D-Cache]
+  l1d_cache_mpki
+       [The rate of L1 D-Cache misses per kilo instructions]
+...
+
+
+$sudo ./perf stat -a -M TLB sleep 1
+
+ Performance counter stats for 'system wide':
+
+        35,861,936      L1I_TLB                          #     0.00 itlb_walk_rate           (74.91%)
+             5,661      ITLB_WALK                                                            (74.91%)
+        97,279,240      INST_RETIRED                     #     0.07 itlb_mpki                (74.91%)
+             6,851      ITLB_WALK                                                            (74.91%)
+            26,391      DTLB_WALK                        #     0.00 dtlb_walk_rate           (75.07%)
+        35,585,545      L1D_TLB                                                              (75.07%)
+        85,923,244      INST_RETIRED                     #     0.35 dtlb_mpki                (75.11%)
+            29,992      DTLB_WALK                                                            (75.11%)
+
+       1.003450755 seconds time elapsed
+       
+
+Jing Zhang (6):
+  perf vendor events arm64: Add topdown L1 metrics for neoverse-n2
+  perf vendor events arm64: Add TLB metrics for neoverse-n2
+  perf vendor events arm64: Add cache metrics for neoverse-n2
+  perf vendor events arm64: Add branch metrics for neoverse-n2
+  perf vendor events arm64: Add PE utilization metrics for neoverse-n2
+  perf vendor events arm64: Add instruction mix metrics for neoverse-n2
+
+ .../arch/arm64/arm/neoverse-n2/metrics.json        | 247 +++++++++++++++++++++
+ 1 file changed, 247 insertions(+)
+ create mode 100644 tools/perf/pmu-events/arch/arm64/arm/neoverse-n2/metrics.json
+
 -- 
-2.38.1.273.g43a17bfeac-goog
+1.8.3.1
 
