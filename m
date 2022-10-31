@@ -2,100 +2,92 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9A284ECAAA1
-	for <linux-perf-users@archiver.kernel.org>; Mon, 31 Oct 2022 13:12:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 15BDAFA3744
+	for <linux-perf-users@archiver.kernel.org>; Mon, 31 Oct 2022 13:49:08 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231458AbiJaNL7 (ORCPT
+        id S230241AbiJaNtG (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Mon, 31 Oct 2022 09:11:59 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57192 "EHLO
+        Mon, 31 Oct 2022 09:49:06 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46790 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231448AbiJaNL5 (ORCPT
+        with ESMTP id S231265AbiJaNtA (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Mon, 31 Oct 2022 09:11:57 -0400
-Received: from szxga02-in.huawei.com (szxga02-in.huawei.com [45.249.212.188])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E5B1DFD1B
-        for <linux-perf-users@vger.kernel.org>; Mon, 31 Oct 2022 06:11:55 -0700 (PDT)
-Received: from dggpemm500024.china.huawei.com (unknown [172.30.72.54])
-        by szxga02-in.huawei.com (SkyGuard) with ESMTP id 4N1D7X6lJZzHvWJ;
-        Mon, 31 Oct 2022 21:11:36 +0800 (CST)
-Received: from dggpemm500007.china.huawei.com (7.185.36.183) by
- dggpemm500024.china.huawei.com (7.185.36.203) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2375.31; Mon, 31 Oct 2022 21:11:54 +0800
-Received: from [10.174.178.174] (10.174.178.174) by
- dggpemm500007.china.huawei.com (7.185.36.183) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2375.31; Mon, 31 Oct 2022 21:11:53 +0800
-Subject: Re: [PATCH -next] perf/core: Using kfree_rcu() to simplify the code
- in put_ctx()
-To:     Peter Zijlstra <peterz@infradead.org>
-CC:     <linux-perf-users@vger.kernel.org>, <ravi.bangoria@amd.com>,
-        <yangyingliang@huawei.com>
-References: <20221029034027.2006045-1-yangyingliang@huawei.com>
- <Y1/CGIjCpWmou8nk@hirez.programming.kicks-ass.net>
-From:   Yang Yingliang <yangyingliang@huawei.com>
-Message-ID: <c63b58e5-7d84-a2aa-e9ae-fc20182a5c81@huawei.com>
-Date:   Mon, 31 Oct 2022 21:11:53 +0800
-User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:68.0) Gecko/20100101
- Thunderbird/68.7.0
+        Mon, 31 Oct 2022 09:49:00 -0400
+Received: from foss.arm.com (foss.arm.com [217.140.110.172])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTP id 177D4764E;
+        Mon, 31 Oct 2022 06:49:00 -0700 (PDT)
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 1FE921FB;
+        Mon, 31 Oct 2022 06:49:06 -0700 (PDT)
+Received: from [10.57.3.132] (unknown [10.57.3.132])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id A0BDC3F5A1;
+        Mon, 31 Oct 2022 06:48:57 -0700 (PDT)
+Message-ID: <133c2f4b-1ca5-2d0c-f4f4-e01ff5e028c8@arm.com>
+Date:   Mon, 31 Oct 2022 13:48:56 +0000
 MIME-Version: 1.0
-In-Reply-To: <Y1/CGIjCpWmou8nk@hirez.programming.kicks-ass.net>
-Content-Type: text/plain; charset="utf-8"; format=flowed
-Content-Transfer-Encoding: 7bit
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
+ Thunderbird/102.2.2
+Subject: Re: [PATCH v2 1/1] perf arm64: Send pointer auth masks to ring buffer
 Content-Language: en-US
-X-Originating-IP: [10.174.178.174]
-X-ClientProxiedBy: dggems703-chm.china.huawei.com (10.3.19.180) To
- dggpemm500007.china.huawei.com (7.185.36.183)
-X-CFilter-Loop: Reflected
+To:     Peter Zijlstra <peterz@infradead.org>
+Cc:     linux-perf-users@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        broonie@kernel.org, acme@kernel.org,
+        Andrew Kilroy <andrew.kilroy@arm.com>,
+        Vince Weaver <vincent.weaver@maine.edu>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Ingo Molnar <mingo@redhat.com>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Jiri Olsa <jolsa@kernel.org>,
+        Namhyung Kim <namhyung@kernel.org>,
+        Will Deacon <will@kernel.org>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        kristina.martsenko@arm.com
+References: <20221020101921.1219533-1-james.clark@arm.com>
+ <20221020101921.1219533-2-james.clark@arm.com>
+ <Y1F8DUWaWhlh/phL@hirez.programming.kicks-ass.net>
+ <4e50b890-0588-1551-fb7c-6cd8191d1054@arm.com>
+ <Y1q914IVy6XgE1xq@hirez.programming.kicks-ass.net>
+From:   James Clark <james.clark@arm.com>
+In-Reply-To: <Y1q914IVy6XgE1xq@hirez.programming.kicks-ass.net>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-Hi,
 
-On 2022/10/31 20:39, Peter Zijlstra wrote:
-> On Sat, Oct 29, 2022 at 11:40:27AM +0800, Yang Yingliang wrote:
->> After commit 983bd8543b5a ("perf: Rewrite core context handling"),
->> the callback function of call_rcu() just calls a kfree(), so we
->> can use kfree_rcu() instead of call_rcu() + callback function.
->>
->> Signed-off-by: Yang Yingliang <yangyingliang@huawei.com>
->> ---
->>   kernel/events/core.c | 10 +---------
->>   1 file changed, 1 insertion(+), 9 deletions(-)
->>
->> diff --git a/kernel/events/core.c b/kernel/events/core.c
->> index ebd9ebd53238..9bb274dd2aa6 100644
->> --- a/kernel/events/core.c
->> +++ b/kernel/events/core.c
->> @@ -1157,14 +1157,6 @@ static void free_task_ctx_data(struct pmu *pmu, void *task_ctx_data)
->>   		kmem_cache_free(pmu->task_ctx_cache, task_ctx_data);
->>   }
->>   
->> -static void free_ctx(struct rcu_head *head)
->> -{
->> -	struct perf_event_context *ctx;
->> -
->> -	ctx = container_of(head, struct perf_event_context, rcu_head);
->> -	kfree(ctx);
->> -}
->> -
->>   static void put_ctx(struct perf_event_context *ctx)
->>   {
->>   	if (refcount_dec_and_test(&ctx->refcount)) {
->> @@ -1172,7 +1164,7 @@ static void put_ctx(struct perf_event_context *ctx)
->>   			put_ctx(ctx->parent_ctx);
->>   		if (ctx->task && ctx->task != TASK_TOMBSTONE)
->>   			put_task_struct(ctx->task);
->> -		call_rcu(&ctx->rcu_head, free_ctx);
->> +		kfree_rcu(ctx, rcu_head);
->>   	}
->>   }
-> While valid; I think I prefer the explicit form. This makes it much
-> easier to add some debug code for example.
-Good point, thanks for replying.
 
-Yang
->
-> .
+On 27/10/2022 18:20, Peter Zijlstra wrote:
+> On Tue, Oct 25, 2022 at 04:28:12PM +0100, James Clark wrote:
+> 
+>>> Why do we want the same mask repeated over and over with each sample;
+>>> should this not be part of the address space (side-band) data?
+>>
+>> You are probably right that it could be done that way. The reason that
+>> we did it this way was to be consistent with ptrace feature [1] where it
+>> is delivered to userspace on a per-process basis. And there is also a
+>> prctl for the enabled key types [2] which can be changed dynamically.
+>> Particularly for the last reason is why it was done per sample.
+>>
+>> Having said that, the enabled keys field is not used by perf, only the
+>> mask is used, so I can drop the per sample data until enabled keys is
+>> needed, which may be never.
+>>
+>> I'm going to assume that perf shouldn't use ptrace because of
+>> permissions and conflicts with debuggers, so I could put the mask
+>> somewhere like PERF_RECORD_FORK instead of per sample.
+> 
+> Yeah, or create an new RECORD type which you can also send around at
+> prctl() time.
+> 
+> The only thing that's needed on top of that is exposing the mask
+> somewhere in /proc for existing tasks; which is what perf also uses to
+> syntesize RECORD_MMAP events on startup etc..
+> 
+
+Hmm ok, in that case I can just add the /proc interface for now because
+the mask won't change and we can add the new record type at the point
+it's needed in the future.
+
+Thanks for the feedback.
