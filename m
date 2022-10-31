@@ -2,58 +2,159 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DE23BECAAA1
-	for <linux-perf-users@archiver.kernel.org>; Sun, 30 Oct 2022 16:54:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2B479C38A02
+	for <linux-perf-users@archiver.kernel.org>; Mon, 31 Oct 2022 09:35:32 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229681AbiJ3Qyo (ORCPT
+        id S230287AbiJaJfb (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Sun, 30 Oct 2022 12:54:44 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42356 "EHLO
+        Mon, 31 Oct 2022 05:35:31 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40676 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229494AbiJ3Qyn (ORCPT
+        with ESMTP id S229907AbiJaJf0 (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Sun, 30 Oct 2022 12:54:43 -0400
-Received: from wp530.webpack.hosteurope.de (wp530.webpack.hosteurope.de [IPv6:2a01:488:42:1000:50ed:8234::])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 126FCF1A
-        for <linux-perf-users@vger.kernel.org>; Sun, 30 Oct 2022 09:54:43 -0700 (PDT)
-Received: from [2a02:8108:963f:de38:eca4:7d19:f9a2:22c5]; authenticated
-        by wp530.webpack.hosteurope.de running ExIM with esmtpsa (TLS1.3:ECDHE_RSA_AES_128_GCM_SHA256:128)
-        id 1opBa3-0008Re-8k; Sun, 30 Oct 2022 17:54:39 +0100
-Message-ID: <0d4c6064-4869-f841-0c46-399264474f94@leemhuis.info>
-Date:   Sun, 30 Oct 2022 17:54:38 +0100
-MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
- Thunderbird/102.4.0
-Subject: Re: Regression: starting powertop crashes my machine hard since
- 838d9bb62d13 ("perf: Use sample_flags for raw_data") #forregzbot
-Content-Language: en-US, de-DE
-From:   Thorsten Leemhuis <regressions@leemhuis.info>
-To:     "regressions@lists.linux.dev" <regressions@lists.linux.dev>
-Cc:     LKML <linux-kernel@vger.kernel.org>,
-        linux-perf-users@vger.kernel.org
-References: <6e7f32f2-5397-e0cf-4271-a9826d318996@leemhuis.info>
-In-Reply-To: <6e7f32f2-5397-e0cf-4271-a9826d318996@leemhuis.info>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-X-bounce-key: webpack.hosteurope.de;regressions@leemhuis.info;1667148883;0d62e90b;
-X-HE-SMSGID: 1opBa3-0008Re-8k
+        Mon, 31 Oct 2022 05:35:26 -0400
+Received: from mail-yb1-xb4a.google.com (mail-yb1-xb4a.google.com [IPv6:2607:f8b0:4864:20::b4a])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 482B2DF3D
+        for <linux-perf-users@vger.kernel.org>; Mon, 31 Oct 2022 02:35:22 -0700 (PDT)
+Received: by mail-yb1-xb4a.google.com with SMTP id 69-20020a250548000000b006cc9d755afaso1657128ybf.16
+        for <linux-perf-users@vger.kernel.org>; Mon, 31 Oct 2022 02:35:22 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20210112;
+        h=cc:to:from:subject:message-id:mime-version:date:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=7abLUKvfL513QAFSaGq2FlNA+/gNLlKgxsoNfFkz71Q=;
+        b=GEZadzE3OPQ69P/n9wzBiPa9xCjhhx07Ov1aXmlD2Yk58eKcXfjmchldx36yLgGfVS
+         t2tQB10CpkjrukG5aa66VN9wk+v0Pg3AjiH16Hd3QS4hTKy3db8+P+8wMvaXl28CQfBW
+         qu79LGcYMSlEyMWPjh8fPVvuGqimolUZ5zHAX5gZZSUynGiSjPW3y4LLpx6G+LFOz4t1
+         kbGpfTh8yveIDW/MJcJlczu+YU4vsVJwrSvQ7f+fPNFxSDJ2Sh1fG7ivfUJI8N75yOcw
+         kJ7obHNgX+4no4XOQheutxgZyJWDPfspzBu5fEbU2EHuB764OrsI0ivBIgAQhdmIx08p
+         BvPA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=cc:to:from:subject:message-id:mime-version:date:x-gm-message-state
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=7abLUKvfL513QAFSaGq2FlNA+/gNLlKgxsoNfFkz71Q=;
+        b=7J6uS8jyqvSHPDWHYHEWnFv/P/+C3vo5SBlcs6heXsSiQJrn8M4w3yNep8VUiYWhHZ
+         c0lmSt+CnRcKzSRjZzgZw1/foKgUXb/j2EtFr6M9lx2jVe+yM21ry3ytdC+pSsu/6uIR
+         joMUc0JJljO91gamiYYIlcNb7niXV9keJFXGEHD8bUDZoFMT+a9U3bC9EseVe8VjwlBx
+         uVqWribD4DuNmUQPf+lewzuHfVK1fJYwp+H5xX4JWbNwr1ZxE7qc+xeT9l3QfccjPpLN
+         qFCtHb+u9xSvHHO52whVyuzlUk6EdKT+rlh7ApOctQU101BurDkDgczLzY+2iqWI+b6N
+         2wkw==
+X-Gm-Message-State: ACrzQf1llIegOR40EPjje1JOK1/ZwCJkLPGasqFj6MhIf+ydJKPPMZdP
+        Kw9ap3QFVci+UiQTRIhB1+nnVlNOcg==
+X-Google-Smtp-Source: AMsMyM4AOPVeX6O6SMv4SCnvGU0VzNgzj9XEcJg1kKd63RW68m9UljlGzZdrBM8FICLmS1FlRAWoRPyjmA==
+X-Received: from elver.muc.corp.google.com ([2a00:79e0:9c:201:3b03:2ab7:7f10:fc94])
+ (user=elver job=sendgmr) by 2002:a81:5003:0:b0:368:40be:6e47 with SMTP id
+ e3-20020a815003000000b0036840be6e47mr12022330ywb.477.1667208921550; Mon, 31
+ Oct 2022 02:35:21 -0700 (PDT)
+Date:   Mon, 31 Oct 2022 10:35:13 +0100
+Mime-Version: 1.0
+X-Mailer: git-send-email 2.38.1.273.g43a17bfeac-goog
+Message-ID: <20221031093513.3032814-1-elver@google.com>
+Subject: [PATCH] perf: Improve missing SIGTRAP checking
+From:   Marco Elver <elver@google.com>
+To:     elver@google.com, Peter Zijlstra <peterz@infradead.org>
+Cc:     Ingo Molnar <mingo@redhat.com>,
+        Arnaldo Carvalho de Melo <acme@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Jiri Olsa <jolsa@kernel.org>,
+        Namhyung Kim <namhyung@kernel.org>,
+        linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Dmitry Vyukov <dvyukov@google.com>, kasan-dev@googlegroups.com,
+        syzbot+b8ded3e2e2c6adde4990@syzkaller.appspotmail.com
+Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-[Note: this mail is primarily send for documentation purposes and/or for
-regzbot, my Linux kernel regression tracking bot. That's why I removed
-most or all folks from the list of recipients, but left any that looked
-like a mailing lists. These mails usually contain '#forregzbot' in the
-subject, to make them easy to spot and filter out.]
+To catch missing SIGTRAP we employ a WARN in __perf_event_overflow(),
+which fires if pending_sigtrap was already set: returning to user space
+without consuming pending_sigtrap, and then having the event fire again
+would re-enter the kernel and trigger the WARN.
 
-On 25.10.22 20:40, Thorsten Leemhuis wrote:
-> Hi! Since 838d9bb62d13 ("perf: Use sample_flags for raw_data") starting
-> powertop makes my machine crash hard: keyboard is dead, Sysrq does not
-> work, and most of the time there is not even a error message on the
-> screen; only once in maybe ~20 cases I got the line "kernel NULL pointer
-> dereference, address: 0000000000000010", but nothing else.
->  
-> #regzbot introduced 838d9bb62d13
+This, however, seemed to miss the case where some events not associated
+with progress in the user space task can fire and the interrupt handler
+runs before the IRQ work meant to consume pending_sigtrap (and generate
+the SIGTRAP).
 
-#regzbot fixed-by: 4b66ff46f2e18
+syzbot gifted us this stack trace:
+
+ | WARNING: CPU: 0 PID: 3607 at kernel/events/core.c:9313 __perf_event_overflow
+ | Modules linked in:
+ | CPU: 0 PID: 3607 Comm: syz-executor100 Not tainted 6.1.0-rc2-syzkaller-00073-g88619e77b33d #0
+ | Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 10/11/2022
+ | RIP: 0010:__perf_event_overflow+0x498/0x540 kernel/events/core.c:9313
+ | <...>
+ | Call Trace:
+ |  <TASK>
+ |  perf_swevent_hrtimer+0x34f/0x3c0 kernel/events/core.c:10729
+ |  __run_hrtimer kernel/time/hrtimer.c:1685 [inline]
+ |  __hrtimer_run_queues+0x1c6/0xfb0 kernel/time/hrtimer.c:1749
+ |  hrtimer_interrupt+0x31c/0x790 kernel/time/hrtimer.c:1811
+ |  local_apic_timer_interrupt arch/x86/kernel/apic/apic.c:1096 [inline]
+ |  __sysvec_apic_timer_interrupt+0x17c/0x640 arch/x86/kernel/apic/apic.c:1113
+ |  sysvec_apic_timer_interrupt+0x40/0xc0 arch/x86/kernel/apic/apic.c:1107
+ |  asm_sysvec_apic_timer_interrupt+0x16/0x20 arch/x86/include/asm/idtentry.h:649
+ | <...>
+ |  </TASK>
+
+In this case, syzbot produced a program with event type
+PERF_TYPE_SOFTWARE and config PERF_COUNT_SW_CPU_CLOCK. The hrtimer
+manages to fire again before the IRQ work got a chance to run, all while
+never having returned to user space.
+
+Improve the WARN to check for real progress in user space: approximate
+this by storing a 32-bit hash of the current IP into pending_sigtrap,
+and if an event fires while pending_sigtrap still matches the previous
+IP, we assume no progress (false negatives are possible given we could
+return to user space and trigger again on the same IP).
+
+Fixes: ca6c21327c6a ("perf: Fix missing SIGTRAPs")
+Reported-by: syzbot+b8ded3e2e2c6adde4990@syzkaller.appspotmail.com
+Signed-off-by: Marco Elver <elver@google.com>
+---
+ kernel/events/core.c | 25 +++++++++++++++++++------
+ 1 file changed, 19 insertions(+), 6 deletions(-)
+
+diff --git a/kernel/events/core.c b/kernel/events/core.c
+index 068412fe8dff..f87030487d9b 100644
+--- a/kernel/events/core.c
++++ b/kernel/events/core.c
+@@ -9312,14 +9312,27 @@ static int __perf_event_overflow(struct perf_event *event,
+ 	}
+ 
+ 	if (event->attr.sigtrap) {
+-		/*
+-		 * Should not be able to return to user space without processing
+-		 * pending_sigtrap (kernel events can overflow multiple times).
+-		 */
+-		WARN_ON_ONCE(event->pending_sigtrap && event->attr.exclude_kernel);
++		unsigned int pending_id = 1;
++
++		if (regs)
++			pending_id = hash32_ptr((void *)instruction_pointer(regs)) ?: 1;
+ 		if (!event->pending_sigtrap) {
+-			event->pending_sigtrap = 1;
++			event->pending_sigtrap = pending_id;
+ 			local_inc(&event->ctx->nr_pending);
++		} else if (event->attr.exclude_kernel) {
++			/*
++			 * Should not be able to return to user space without
++			 * consuming pending_sigtrap; with exceptions:
++			 *
++			 *  1. Where !exclude_kernel, events can overflow again
++			 *     in the kernel without returning to user space.
++			 *
++			 *  2. Events that can overflow again before the IRQ-
++			 *     work without user space progress (e.g. hrtimer).
++			 *     To approximate progress (with false negatives),
++			 *     check 32-bit hash of the current IP.
++			 */
++			WARN_ON_ONCE(event->pending_sigtrap != pending_id);
+ 		}
+ 		event->pending_addr = data->addr;
+ 		irq_work_queue(&event->pending_irq);
+-- 
+2.38.1.273.g43a17bfeac-goog
+
