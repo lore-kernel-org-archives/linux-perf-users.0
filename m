@@ -2,24 +2,24 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3204CFA3740
-	for <linux-perf-users@archiver.kernel.org>; Mon, 31 Oct 2022 11:11:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 20745FA3745
+	for <linux-perf-users@archiver.kernel.org>; Mon, 31 Oct 2022 11:11:52 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230204AbiJaLLs (ORCPT
+        id S230232AbiJaLLu (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Mon, 31 Oct 2022 07:11:48 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53446 "EHLO
+        Mon, 31 Oct 2022 07:11:50 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53462 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230174AbiJaLLr (ORCPT
+        with ESMTP id S230205AbiJaLLt (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Mon, 31 Oct 2022 07:11:47 -0400
-Received: from out30-44.freemail.mail.aliyun.com (out30-44.freemail.mail.aliyun.com [115.124.30.44])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E9AEBC75B;
-        Mon, 31 Oct 2022 04:11:45 -0700 (PDT)
-X-Alimail-AntiSpam: AC=PASS;BC=-1|-1;BR=01201311R111e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=ay29a033018046060;MF=renyu.zj@linux.alibaba.com;NM=1;PH=DS;RN=18;SR=0;TI=SMTPD_---0VTVxoHo_1667214702;
-Received: from j66e01291.sqa.eu95.tbsite.net(mailfrom:renyu.zj@linux.alibaba.com fp:SMTPD_---0VTVxoHo_1667214702)
+        Mon, 31 Oct 2022 07:11:49 -0400
+Received: from out30-56.freemail.mail.aliyun.com (out30-56.freemail.mail.aliyun.com [115.124.30.56])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B1705BE12;
+        Mon, 31 Oct 2022 04:11:47 -0700 (PDT)
+X-Alimail-AntiSpam: AC=PASS;BC=-1|-1;BR=01201311R141e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=ay29a033018045168;MF=renyu.zj@linux.alibaba.com;NM=1;PH=DS;RN=18;SR=0;TI=SMTPD_---0VTVxoIV_1667214704;
+Received: from j66e01291.sqa.eu95.tbsite.net(mailfrom:renyu.zj@linux.alibaba.com fp:SMTPD_---0VTVxoIV_1667214704)
           by smtp.aliyun-inc.com;
-          Mon, 31 Oct 2022 19:11:43 +0800
+          Mon, 31 Oct 2022 19:11:45 +0800
 From:   Jing Zhang <renyu.zj@linux.alibaba.com>
 To:     linux-arm-kernel@lists.infradead.org,
         linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
@@ -37,9 +37,9 @@ Cc:     John Garry <john.garry@huawei.com>, Will Deacon <will@kernel.org>,
         Andrew Kilroy <andrew.kilroy@arm.com>,
         Shuai Xue <xueshuai@linux.alibaba.com>,
         Zhuo Song <zhuo.song@linux.alibaba.com>
-Subject: [PATCH RFC 2/6] perf vendor events arm64: Add TLB metrics for neoverse-n2
-Date:   Mon, 31 Oct 2022 19:11:30 +0800
-Message-Id: <1667214694-89839-3-git-send-email-renyu.zj@linux.alibaba.com>
+Subject: [PATCH RFC 4/6] perf vendor events arm64: Add branch metrics for neoverse-n2
+Date:   Mon, 31 Oct 2022 19:11:32 +0800
+Message-Id: <1667214694-89839-5-git-send-email-renyu.zj@linux.alibaba.com>
 X-Mailer: git-send-email 1.8.3.1
 In-Reply-To: <1667214694-89839-1-git-send-email-renyu.zj@linux.alibaba.com>
 References: <1667214694-89839-1-git-send-email-renyu.zj@linux.alibaba.com>
@@ -47,49 +47,42 @@ Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-Add TLB related metrics.
+Add branch related metrics.
 
 Signed-off-by: Jing Zhang <renyu.zj@linux.alibaba.com>
 ---
- .../arch/arm64/arm/neoverse-n2/metrics.json        | 28 ++++++++++++++++++++++
- 1 file changed, 28 insertions(+)
+ .../arch/arm64/arm/neoverse-n2/metrics.json         | 21 +++++++++++++++++++++
+ 1 file changed, 21 insertions(+)
 
 diff --git a/tools/perf/pmu-events/arch/arm64/arm/neoverse-n2/metrics.json b/tools/perf/pmu-events/arch/arm64/arm/neoverse-n2/metrics.json
-index b6b3b19..066d905 100644
+index 2dc6d9e..6b5aaf7 100644
 --- a/tools/perf/pmu-events/arch/arm64/arm/neoverse-n2/metrics.json
 +++ b/tools/perf/pmu-events/arch/arm64/arm/neoverse-n2/metrics.json
-@@ -26,5 +26,33 @@
-         "BriefDescription": "Backend Bound L1 topdown metric",
-         "MetricGroup": "TopDownL1",
-         "MetricName": "backend_bound"
+@@ -131,5 +131,26 @@
+         "BriefDescription": "The rate of LL Cache read hit to the overall LL Cache read",
+         "MetricGroup": "Cache",
+         "MetricName": "ll_cache_read_hit_rate"
 +    },
 +    {
-+        "MetricExpr": "ITLB_WALK / INST_RETIRED * 1000",
-+        "PublicDescription": "The rate of TLB Walks per kilo instructions for instruction accesses",
-+        "BriefDescription": "The rate of TLB Walks per kilo instructions for instruction accesses",
-+        "MetricGroup": "TLB",
-+        "MetricName": "itlb_mpki"
++        "MetricExpr": "BR_MIS_PRED / INST_RETIRED * 1000",
++        "PublicDescription": "The rate of branches mis-predicted per kilo instructions",
++        "BriefDescription": "The rate of branches mis-predicted per kilo instructions",
++        "MetricGroup": "Branch",
++        "MetricName": "branch_mpki"
 +    },
 +    {
-+        "MetricExpr": "ITLB_WALK / L1I_TLB",
-+        "PublicDescription": "The rate of ITLB Walks to the overall TLB lookups initiated from the instruction side",
-+        "BriefDescription": "The rate of ITLB Walks to the overall TLB lookups",
-+        "MetricGroup": "TLB",
-+        "MetricName": "itlb_walk_rate"
++        "MetricExpr": "(BR_PRED - BR_MIS_PRED) / INST_RETIRED * 1000",
++        "PublicDescription": "The rate of branches retired per kilo instructions",
++        "BriefDescription": "The rate of branches retired per kilo instructions",
++        "MetricGroup": "Branch",
++        "MetricName": "branch_pki"
 +    },
 +    {
-+        "MetricExpr": "DTLB_WALK / INST_RETIRED * 1000",
-+        "PublicDescription": "The rate of TLB Walks per kilo instructions for data accesses",
-+        "BriefDescription": "The rate of TLB Walks per kilo instructions for data accesses",
-+        "MetricGroup": "TLB",
-+        "MetricName": "dtlb_mpki"
-+    },
-+    {
-+        "MetricExpr": "DTLB_WALK / L1D_TLB",
-+        "PublicDescription": "The rate of DTLB Walks to the overall TLB lookups made by the program",
-+        "BriefDescription": "The rate of DTLB Walks to the overall TLB lookups",
-+        "MetricGroup": "TLB",
-+        "MetricName": "dtlb_walk_rate"
++        "MetricExpr": "BR_MIS_PRED / BR_PRED",
++        "PublicDescription": "The rate of branches mis-predited to the overall branches",
++        "BriefDescription": "The rate of branches mis-predited to the overall branches",
++        "MetricGroup": "Branch",
++        "MetricName": "branch_miss_pred_rate"
      }
  ]
 \ No newline at end of file
