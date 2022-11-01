@@ -2,90 +2,93 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7B7C9FA373D
-	for <linux-perf-users@archiver.kernel.org>; Tue,  1 Nov 2022 09:15:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B6964FA373D
+	for <linux-perf-users@archiver.kernel.org>; Tue,  1 Nov 2022 12:30:50 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229976AbiKAJPG convert rfc822-to-8bit (ORCPT
+        id S229574AbiKAMar (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Tue, 1 Nov 2022 05:15:06 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59388 "EHLO
+        Tue, 1 Nov 2022 08:30:47 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45768 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229954AbiKAJPF (ORCPT
+        with ESMTP id S229841AbiKAMan (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Tue, 1 Nov 2022 05:15:05 -0400
-Received: from mail-qv1-f45.google.com (mail-qv1-f45.google.com [209.85.219.45])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C3B3E10E2
-        for <linux-perf-users@vger.kernel.org>; Tue,  1 Nov 2022 02:15:04 -0700 (PDT)
-Received: by mail-qv1-f45.google.com with SMTP id t16so9875197qvm.9
-        for <linux-perf-users@vger.kernel.org>; Tue, 01 Nov 2022 02:15:04 -0700 (PDT)
+        Tue, 1 Nov 2022 08:30:43 -0400
+Received: from mail-qt1-x82a.google.com (mail-qt1-x82a.google.com [IPv6:2607:f8b0:4864:20::82a])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7CE2110B48
+        for <linux-perf-users@vger.kernel.org>; Tue,  1 Nov 2022 05:30:42 -0700 (PDT)
+Received: by mail-qt1-x82a.google.com with SMTP id cr19so9166102qtb.0
+        for <linux-perf-users@vger.kernel.org>; Tue, 01 Nov 2022 05:30:42 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linuxfoundation.org; s=google;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date:from:to
+         :cc:subject:date:message-id:reply-to;
+        bh=E0MVcqZkcDPOPSgzRXDEe65d21fujTQpJBF1uKl2lS0=;
+        b=ijZzMbKjYJhMGE+szQRFvLqhhjYwDH/TfdQsP+W3cMTpSta/tVYRKoHO5U83NtWlqV
+         aGwTqOmt7lhYfqRKKZqlwMlPR7bBsW+TWjSj/nfsuvc5wSNeWS3xLiitskst6NUeeAuK
+         NuDflRrg0meVvuSCgq7r6vEbHws1QccUG9DlM=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=FmJJgqvBpyrMUSHZDbpYR1KLY/ylEZoQf2la41iyXts=;
-        b=d88eApNIH19z9iXPcjiv4Rh/B4WfnwK5M9g3swiclOo1DhdeSHdQU8Z3gkuvzYEkzC
-         RGX9mG+PLeE/4bXjZPej8VHXX0pmkWSD6FIJ2O1GRcZKlq8c7vWax+LejDEYR5wmTsgS
-         x/HXclmmTKe9b3/IEOjOIaB77IZX2hfP3/E+y90QX4ottpGO31nloihUB6Az4J9ZG+wh
-         4pZ2X8AdicJNbGnc2+aIgjXNPDf/C2TgTpp2sBomL7ewbthZZpcG/0zVJLMymo6ShEeI
-         MOsho0blGnw8pnGju0WJ+6m9loGSL6puZ43OzsIZ/wvJg1UbnTZdjx5UmiCBn3unwvB8
-         BoeQ==
-X-Gm-Message-State: ACrzQf3KccysnrWJdfnSHTZym/9k/GBidc2pdW3eKUJzzf347yfdugND
-        fro9a7b7WlnzFBD2+42wShnN5q7mO30cRA==
-X-Google-Smtp-Source: AMsMyM470jpetxRPw8sCJDwTTlJkOhVWxKF/3Ek0J0QXlH1+niwC3Xqvdxwff56B7Se3FF22KzOg5w==
-X-Received: by 2002:a05:6214:2501:b0:4bb:ac4c:466 with SMTP id gf1-20020a056214250100b004bbac4c0466mr15073874qvb.93.1667294103689;
-        Tue, 01 Nov 2022 02:15:03 -0700 (PDT)
-Received: from mail-yb1-f180.google.com (mail-yb1-f180.google.com. [209.85.219.180])
-        by smtp.gmail.com with ESMTPSA id c9-20020a05620a11a900b006b949afa980sm2372130qkk.56.2022.11.01.02.15.03
-        for <linux-perf-users@vger.kernel.org>
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 01 Nov 2022 02:15:03 -0700 (PDT)
-Received: by mail-yb1-f180.google.com with SMTP id g127so8065200ybg.8
-        for <linux-perf-users@vger.kernel.org>; Tue, 01 Nov 2022 02:15:03 -0700 (PDT)
-X-Received: by 2002:a05:6902:503:b0:6cf:c510:6a23 with SMTP id
- x3-20020a056902050300b006cfc5106a23mr390524ybs.380.1667294103174; Tue, 01 Nov
- 2022 02:15:03 -0700 (PDT)
-MIME-Version: 1.0
-From:   Geert Uytterhoeven <geert@linux-m68k.org>
-Date:   Tue, 1 Nov 2022 10:14:51 +0100
-X-Gmail-Original-Message-ID: <CAMuHMdUsfc-NNHswtS8jjhWFwk4fX2yvynKh4q0x_u01bnUQBA@mail.gmail.com>
-Message-ID: <CAMuHMdUsfc-NNHswtS8jjhWFwk4fX2yvynKh4q0x_u01bnUQBA@mail.gmail.com>
-Subject: b4 ignoring Reviewed-by: in quoted-printable email
-To:     Konstantin Ryabitsev <konstantin@linuxfoundation.org>
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=E0MVcqZkcDPOPSgzRXDEe65d21fujTQpJBF1uKl2lS0=;
+        b=5q+ontdCBfnEO33eecDt8Klz0iSlYRzXyuUqPlUknYyMa4IdAgQpX84NnIDxWEq4XY
+         t9dSobqa2mYiPtlLKtVu2mMMuy7eOv1PZZhPNp+0H6NV4Jw6lnt0UZlQFSb+KmpzLeOT
+         /HgrynGdHXyO4GgNu27JT333EadCi4LeoQjWJYWaA/SOJU0bix5y4hVPlmUzE69atHRN
+         C2fq24kZyGnqCmQbqhcFFxExCBFQo/5cS/CSHgTJSyI+VveTJxzbAFpCj/I8mj/6CAtF
+         MeOfK/6UUq7AV9XKnUNPVxWASkGc2ieHR/pboZBtp/WHM1lZ9kcj6m+A0HQaoNVIUmNL
+         BlUg==
+X-Gm-Message-State: ACrzQf1e+GdIWd8CJW4BnBXTrtNezKZrY1qniA0PqOv4nEvnFxXnVq2e
+        rnganFFDTxRy2xE9SZlIhz3IhQ==
+X-Google-Smtp-Source: AMsMyM7MviYflCNLUwIRaw8I5UL/A2lSyIFhUwA9BFRgI7AJvRfsUJiQY4j5/JQJDi4/PyUc/SgFLA==
+X-Received: by 2002:a05:622a:170d:b0:3a5:e6b:641d with SMTP id h13-20020a05622a170d00b003a50e6b641dmr14665702qtk.449.1667305841574;
+        Tue, 01 Nov 2022 05:30:41 -0700 (PDT)
+Received: from meerkat.local ([142.113.79.147])
+        by smtp.gmail.com with ESMTPSA id bi23-20020a05620a319700b006eeca296c00sm6427699qkb.104.2022.11.01.05.30.40
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 01 Nov 2022 05:30:40 -0700 (PDT)
+Date:   Tue, 1 Nov 2022 08:30:35 -0400
+From:   Konstantin Ryabitsev <konstantin@linuxfoundation.org>
+To:     Geert Uytterhoeven <geert@linux-m68k.org>
 Cc:     tools@linux.kernel.org, linux-perf-users@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 8BIT
+Subject: Re: b4 ignoring Reviewed-by: in quoted-printable email
+Message-ID: <20221101123035.xkytwxrhrkhjadc3@meerkat.local>
+References: <CAMuHMdUsfc-NNHswtS8jjhWFwk4fX2yvynKh4q0x_u01bnUQBA@mail.gmail.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <CAMuHMdUsfc-NNHswtS8jjhWFwk4fX2yvynKh4q0x_u01bnUQBA@mail.gmail.com>
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-Hi Konstantin,
+On Tue, Nov 01, 2022 at 10:14:51AM +0100, Geert Uytterhoeven wrote:
+> Hi Konstantin,
+> 
+> $ b4 am OS0PR01MB5571A141EC9159DB281867C8DF379@OS0PR01MB5571.jpnprd01.prod.outlook.com
+> Analyzing 2 messages in the thread
+> Checking attestation on all messages, may take a moment...
+> ---
+>   ✓ [PATCH v2] clk: renesas: r9a06g032: Repair grave increment error
+>   ---
+>   ✓ Signed: DKIM/denx.de
+> ---
+> Total patches: 1
+> ---
+>  Link: https://lore.kernel.org/r/20221028113834.7496-1-marex@denx.de
+>  Base: not specified
+>        git am ./v2_20221028_marex_clk_renesas_r9a06g032_repair_grave_increment_error.mbx
+> 
+> The Reviewed-by tag given by Gareth is not picked up by b4.
 
-$ b4 am OS0PR01MB5571A141EC9159DB281867C8DF379@OS0PR01MB5571.jpnprd01.prod.outlook.com
-Analyzing 2 messages in the thread
-Checking attestation on all messages, may take a moment...
----
-  ✓ [PATCH v2] clk: renesas: r9a06g032: Repair grave increment error
-  ---
-  ✓ Signed: DKIM/denx.de
----
-Total patches: 1
----
- Link: https://lore.kernel.org/r/20221028113834.7496-1-marex@denx.de
- Base: not specified
-       git am ./v2_20221028_marex_clk_renesas_r9a06g032_repair_grave_increment_error.mbx
+It's actually because that message has a subject that doesn't indicate a
+follow-up (doesn't have a Re:):
 
-The Reviewed-by tag given by Gareth is not picked up by b4.
+    Subject: [PATCH v2] clk: renesas: r9a06g032: Repair grave increment error
 
-Thanks!
+I'll see if we can recognize this situation, but it's definitely an odd
+corner-case.
 
-Gr{oetje,eeting}s,
-
-                        Geert
-
---
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
-
-In personal conversations with technical people, I call myself a hacker. But
-when I'm talking to journalists I just say "programmer" or something like that.
-                                -- Linus Torvalds
+-K
