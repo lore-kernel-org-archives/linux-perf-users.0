@@ -2,53 +2,53 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 10252C43219
-	for <linux-perf-users@archiver.kernel.org>; Tue,  1 Nov 2022 16:31:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 27786C433FE
+	for <linux-perf-users@archiver.kernel.org>; Tue,  1 Nov 2022 16:31:40 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230266AbiKAQbh (ORCPT
+        id S229516AbiKAQbh (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
         Tue, 1 Nov 2022 12:31:37 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34544 "EHLO
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34774 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229516AbiKAQbb (ORCPT
+        with ESMTP id S230238AbiKAQba (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Tue, 1 Nov 2022 12:31:31 -0400
-Received: from mail-wm1-x332.google.com (mail-wm1-x332.google.com [IPv6:2a00:1450:4864:20::332])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 622001CFFA
-        for <linux-perf-users@vger.kernel.org>; Tue,  1 Nov 2022 09:31:29 -0700 (PDT)
-Received: by mail-wm1-x332.google.com with SMTP id c3-20020a1c3503000000b003bd21e3dd7aso13091687wma.1
-        for <linux-perf-users@vger.kernel.org>; Tue, 01 Nov 2022 09:31:29 -0700 (PDT)
+        Tue, 1 Nov 2022 12:31:30 -0400
+Received: from mail-wm1-x335.google.com (mail-wm1-x335.google.com [IPv6:2a00:1450:4864:20::335])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1F6C21CFF2
+        for <linux-perf-users@vger.kernel.org>; Tue,  1 Nov 2022 09:31:27 -0700 (PDT)
+Received: by mail-wm1-x335.google.com with SMTP id m29-20020a05600c3b1d00b003c6bf423c71so13124975wms.0
+        for <linux-perf-users@vger.kernel.org>; Tue, 01 Nov 2022 09:31:27 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
         h=references:in-reply-to:message-id:date:subject:cc:to:from:from:to
          :cc:subject:date:message-id:reply-to;
-        bh=fdNBgmLA0ARtvmJ0vN5Z/w6aKfYyu8s0U0URVnDv14o=;
-        b=GmBttxW57q4eTxB+S/I89JTXG96fqaGKEX3+vysn28FpPRqw9ol3jkXM4Xe5wINmTf
-         IGcsWtkLLUIXPUNEVtiqiq2ZFUJ2v5pvNs9aZzXdg88hYWdjrvDFSjN26E2pHza6T986
-         +elzQiNRNdXLay3Jig/5ard3PSZzzYRo74dnyrDS8441jJLnH61N3aPVHLDTf+rTW7GU
-         VzcNPftF3plhDka6AHNmZJmHmntfsZNjyDy+6hlK4L18eENgEkBXMy2kU5MgkSxuRTxI
-         RQSSUfGwMQhe3JJF4kVbdnFhr3ZFAIvKdy9+69eQvdCeNsaFMK9PmtsGXQ9zdHUu8vI8
-         HISQ==
+        bh=Msiba57uIoQyW0yBXGfGPLCUUWKUrx8bYCzahjs4eQE=;
+        b=xkyBzfZ/qvkEPYtJJ/tFUtt+SWB31CHZL+J6ISL9W6kDJX8DVF3+em0wRmakkx6MuM
+         WmwIvJYHGsHMWupgFn7jAboL8vHCQY6RnelTi0f4yTtVWVcvcm22Bc8O5lJt90WGWAsw
+         2FP5qpprfmQFsZiffssNrcgM7tk8enOExuCMgahoXQNUZh79ZfcSpcuZVPpY/fmXqjOI
+         ANTd3DjQXD/IUkO0l938KH2H3QBjNjvO2pyJGTb2fGL3qvpZJUgED/ImvnLknz/R+22N
+         nUfhxy9EosSi+aoslQVGlRFn7N15w+SmF2WnF1DAakF91VB1a1pq42qcjM0tauX0r0Xq
+         M02Q==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
         h=references:in-reply-to:message-id:date:subject:cc:to:from
          :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=fdNBgmLA0ARtvmJ0vN5Z/w6aKfYyu8s0U0URVnDv14o=;
-        b=qJTOGD4u2TwRvwGivkYgn3vJe7lF+3Dk2EZFL8DLl5od8lD8kULCGm++8brQvi1Zb8
-         aMjIHHRlsqCtmoPy+stLAogmYirRjzE6dBYsi1YA4xDR2X1LerG+t29hdvq9f6VaRtSb
-         3jeJoerhartE25gz87/3R7xO5t9vKiCo18KvIrRmeeKlbfLlXcn2PWUpTDUQonqdfNEm
-         N+P+5vltve8dwC9XGZwsCqNqNm/Q9IiR8G4ObeeNjEE2Rxonzc96ZvlgRdhlOssFh8yl
-         f8kZqvwJKapKBJJOjZiRrZ4idQyNmeyelMS3K6csv6vvMvkDMTJWxfRK9S238NBLFfEY
-         b1/g==
-X-Gm-Message-State: ACrzQf3iDKgpY3plj5nUZeLkdyY4D5mT0TMPAJGdH4DptZWN0T03lr0y
-        w4LmZWxHN0Wo+sRGCN+MDljsmg==
-X-Google-Smtp-Source: AMsMyM5TSEWjTx8x+xRblm1eFpK1faSNEwZCU48u8GG46iWu6Y9mu8PLqBH9P6FaCw59yn8vvjSygQ==
-X-Received: by 2002:a05:600c:230d:b0:3c4:2975:321a with SMTP id 13-20020a05600c230d00b003c42975321amr22606104wmo.155.1667320287924;
-        Tue, 01 Nov 2022 09:31:27 -0700 (PDT)
+        bh=Msiba57uIoQyW0yBXGfGPLCUUWKUrx8bYCzahjs4eQE=;
+        b=rCJox1RAD6XrREQhRV1DpcXuRQUChydNIfsvyjVs0yNGBdEUUvNkfzHaUoyen7zqsA
+         wLUxJ4Lov8twDxQPUEpyRtk4emLveT8PiuJDY56tNVpvVm0xaSVEhYT2V6BT7AN3Cs+R
+         2UW4I4MYD6RnX2JCbS647KxY9tPqfUU4YaqXQEiOJuPqYgWr78Ax1CqU5O/WDRtSqFQp
+         mul6EielU2k+dpqMN6CwMlhN3dOn342EPnuJIvJHwAOnAkZpvk5rNDg6suw5Lj6aGrfL
+         nwokovih1w+34QhbzWhP0YP1Z2QahhrD6MDTqpDkD79BQeuB8reitszXg236ny1tQAUt
+         I2Yw==
+X-Gm-Message-State: ACrzQf0yoEgD6+H6ltz+lHZN8/0Sa6I5hVLjTgLHLX+ItO0ewVBOIitr
+        d+uFOIPhVm1nrRRTBRueRlc7jg==
+X-Google-Smtp-Source: AMsMyM7grgGro5gge+919nXbiGqekcFAHp1UnOzkqrFAXyKsjkMilBLOMtfANRNkXVrpvkyH0qY2IQ==
+X-Received: by 2002:a05:600c:4252:b0:3cf:678a:d189 with SMTP id r18-20020a05600c425200b003cf678ad189mr11653758wmm.51.1667320285595;
+        Tue, 01 Nov 2022 09:31:25 -0700 (PDT)
 Received: from linaro.org ([2a00:23c5:6809:2201:e844:18b6:fc5:bbc9])
-        by smtp.gmail.com with ESMTPSA id bu15-20020a056000078f00b0022ac1be009esm8339844wrb.16.2022.11.01.09.31.26
+        by smtp.gmail.com with ESMTPSA id bu15-20020a056000078f00b0022ac1be009esm8339844wrb.16.2022.11.01.09.31.24
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 01 Nov 2022 09:31:27 -0700 (PDT)
+        Tue, 01 Nov 2022 09:31:24 -0700 (PDT)
 From:   Mike Leach <mike.leach@linaro.org>
 To:     coresight@lists.linaro.org, linux-arm-kernel@lists.infradead.org,
         linux-kernel@vger.kernel.org
@@ -56,9 +56,9 @@ Cc:     mathieu.poirier@linaro.org, suzuki.poulose@arm.com,
         peterz@infradead.org, mingo@redhat.com, acme@kernel.org,
         linux-perf-users@vger.kernel.org, leo.yan@linaro.org,
         quic_jinlmao@quicinc.com, Mike Leach <mike.leach@linaro.org>
-Subject: [PATCH v5 06/14] coresight: etm3x: Update ETM3 driver to use Trace ID API
-Date:   Tue,  1 Nov 2022 16:30:55 +0000
-Message-Id: <20221101163103.17921-7-mike.leach@linaro.org>
+Subject: [PATCH v5 04/14] coresight: stm: Update STM driver to use Trace ID API
+Date:   Tue,  1 Nov 2022 16:30:53 +0000
+Message-Id: <20221101163103.17921-5-mike.leach@linaro.org>
 X-Mailer: git-send-email 2.17.1
 In-Reply-To: <20221101163103.17921-1-mike.leach@linaro.org>
 References: <20221101163103.17921-1-mike.leach@linaro.org>
@@ -66,198 +66,37 @@ Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-Use the TraceID API to allocate ETM trace IDs dynamically.
+Updates the STM driver to use the trace ID allocation API.
+This uses the _system_id calls to allocate an ID on device poll,
+and release on device remove.
 
-As with the etm4x we allocate on enable / disable for perf,
-allocate on enable / reset for sysfs.
-
-Additionally we allocate on sysfs file read as both perf and sysfs
-can read the ID before enabling the hardware.
-
-Remove sysfs option to write trace ID - which is inconsistent with
-both the dynamic allocation method and the fixed allocation method
-previously used.
+The sysfs access to the STMTRACEIDR register has been changed from RW
+to RO. Having this value as writable is not appropriate for the new
+Trace ID scheme - and had potential to cause errors in the previous
+scheme if values clashed with other sources.
 
 Signed-off-by: Mike Leach <mike.leach@linaro.org>
+Reviewed-by: Suzuki K Poulose <suzuki.poulose@arm.com>
 ---
- drivers/hwtracing/coresight/coresight-etm.h   |  2 +
- .../coresight/coresight-etm3x-core.c          | 69 +++++++++++++++++--
- .../coresight/coresight-etm3x-sysfs.c         | 27 ++------
- 3 files changed, 72 insertions(+), 26 deletions(-)
+ drivers/hwtracing/coresight/coresight-stm.c | 41 +++++++--------------
+ 1 file changed, 14 insertions(+), 27 deletions(-)
 
-diff --git a/drivers/hwtracing/coresight/coresight-etm.h b/drivers/hwtracing/coresight/coresight-etm.h
-index f3ab96eaf44e..3667428d38b6 100644
---- a/drivers/hwtracing/coresight/coresight-etm.h
-+++ b/drivers/hwtracing/coresight/coresight-etm.h
-@@ -287,4 +287,6 @@ int etm_get_trace_id(struct etm_drvdata *drvdata);
- void etm_set_default(struct etm_config *config);
- void etm_config_trace_mode(struct etm_config *config);
- struct etm_config *get_etm_config(struct etm_drvdata *drvdata);
-+int etm_read_alloc_trace_id(struct etm_drvdata *drvdata);
-+void etm_release_trace_id(struct etm_drvdata *drvdata);
- #endif
-diff --git a/drivers/hwtracing/coresight/coresight-etm3x-core.c b/drivers/hwtracing/coresight/coresight-etm3x-core.c
-index d0ab9933472b..9a7a9e974d41 100644
---- a/drivers/hwtracing/coresight/coresight-etm3x-core.c
-+++ b/drivers/hwtracing/coresight/coresight-etm3x-core.c
-@@ -32,6 +32,7 @@
+diff --git a/drivers/hwtracing/coresight/coresight-stm.c b/drivers/hwtracing/coresight/coresight-stm.c
+index 463f449cfb79..6af1b996af6f 100644
+--- a/drivers/hwtracing/coresight/coresight-stm.c
++++ b/drivers/hwtracing/coresight/coresight-stm.c
+@@ -31,6 +31,7 @@
+ #include <linux/stm.h>
  
- #include "coresight-etm.h"
- #include "coresight-etm-perf.h"
+ #include "coresight-priv.h"
 +#include "coresight-trace-id.h"
  
- /*
-  * Not really modular but using module_param is the easiest way to
-@@ -490,16 +491,59 @@ static int etm_trace_id(struct coresight_device *csdev)
- 	return etm_get_trace_id(drvdata);
+ #define STMDMASTARTR			0xc04
+ #define STMDMASTOPR			0xc08
+@@ -615,24 +616,7 @@ static ssize_t traceid_show(struct device *dev,
+ 	val = drvdata->traceid;
+ 	return sprintf(buf, "%#lx\n", val);
  }
- 
-+int etm_read_alloc_trace_id(struct etm_drvdata *drvdata)
-+{
-+	int trace_id;
-+
-+	/*
-+	 * This will allocate a trace ID to the cpu,
-+	 * or return the one currently allocated.
-+	 *
-+	 * trace id function has its own lock
-+	 */
-+	trace_id = coresight_trace_id_get_cpu_id(drvdata->cpu);
-+	if (IS_VALID_ID(trace_id))
-+		drvdata->traceid = (u8)trace_id;
-+	else
-+		dev_err(&drvdata->csdev->dev,
-+			"Failed to allocate trace ID for %s on CPU%d\n",
-+			dev_name(&drvdata->csdev->dev), drvdata->cpu);
-+	return trace_id;
-+}
-+
-+void etm_release_trace_id(struct etm_drvdata *drvdata)
-+{
-+	coresight_trace_id_put_cpu_id(drvdata->cpu);
-+}
-+
- static int etm_enable_perf(struct coresight_device *csdev,
- 			   struct perf_event *event)
- {
- 	struct etm_drvdata *drvdata = dev_get_drvdata(csdev->dev.parent);
-+	int trace_id;
- 
- 	if (WARN_ON_ONCE(drvdata->cpu != smp_processor_id()))
- 		return -EINVAL;
- 
- 	/* Configure the tracer based on the session's specifics */
- 	etm_parse_event_config(drvdata, event);
-+
-+	/*
-+	 * perf allocates cpu ids as part of _setup_aux() - device needs to use
-+	 * the allocated ID. This reads the current version without allocation.
-+	 *
-+	 * This does not use the trace id lock to prevent lock_dep issues
-+	 * with perf locks - we know the ID cannot change until perf shuts down
-+	 * the session
-+	 */
-+	trace_id = coresight_trace_id_read_cpu_id(drvdata->cpu);
-+	if (!IS_VALID_ID(trace_id)) {
-+		dev_err(&drvdata->csdev->dev, "Failed to set trace ID for %s on CPU%d\n",
-+			dev_name(&drvdata->csdev->dev), drvdata->cpu);
-+		return -EINVAL;
-+	}
-+	drvdata->traceid = (u8)trace_id;
-+
- 	/* And enable it */
- 	return etm_enable_hw(drvdata);
- }
-@@ -512,6 +556,11 @@ static int etm_enable_sysfs(struct coresight_device *csdev)
- 
- 	spin_lock(&drvdata->spinlock);
- 
-+	/* sysfs needs to allocate and set a trace ID */
-+	ret = etm_read_alloc_trace_id(drvdata);
-+	if (ret < 0)
-+		goto unlock_enable_sysfs;
-+
- 	/*
- 	 * Configure the ETM only if the CPU is online.  If it isn't online
- 	 * hw configuration will take place on the local CPU during bring up.
-@@ -528,6 +577,10 @@ static int etm_enable_sysfs(struct coresight_device *csdev)
- 		ret = -ENODEV;
- 	}
- 
-+	if (ret)
-+		etm_release_trace_id(drvdata);
-+
-+unlock_enable_sysfs:
- 	spin_unlock(&drvdata->spinlock);
- 
- 	if (!ret)
-@@ -611,6 +664,9 @@ static void etm_disable_perf(struct coresight_device *csdev)
- 	coresight_disclaim_device_unlocked(csdev);
- 
- 	CS_LOCK(drvdata->base);
-+
-+	/* perf will release trace ids when _free_aux() is called at the end of the session */
-+
- }
- 
- static void etm_disable_sysfs(struct coresight_device *csdev)
-@@ -635,6 +691,13 @@ static void etm_disable_sysfs(struct coresight_device *csdev)
- 	spin_unlock(&drvdata->spinlock);
- 	cpus_read_unlock();
- 
-+	/*
-+	 * we only release trace IDs when resetting sysfs.
-+	 * This permits sysfs users to read the trace ID after the trace
-+	 * session has completed. This maintains operational behaviour with
-+	 * prior trace id allocation method
-+	 */
-+
- 	dev_dbg(&csdev->dev, "ETM tracing disabled\n");
- }
- 
-@@ -781,11 +844,6 @@ static void etm_init_arch_data(void *info)
- 	CS_LOCK(drvdata->base);
- }
- 
--static void etm_init_trace_id(struct etm_drvdata *drvdata)
--{
--	drvdata->traceid = coresight_get_trace_id(drvdata->cpu);
--}
--
- static int __init etm_hp_setup(void)
- {
- 	int ret;
-@@ -871,7 +929,6 @@ static int etm_probe(struct amba_device *adev, const struct amba_id *id)
- 	if (etm_arch_supported(drvdata->arch) == false)
- 		return -EINVAL;
- 
--	etm_init_trace_id(drvdata);
- 	etm_set_default(&drvdata->config);
- 
- 	pdata = coresight_get_platform_data(dev);
-diff --git a/drivers/hwtracing/coresight/coresight-etm3x-sysfs.c b/drivers/hwtracing/coresight/coresight-etm3x-sysfs.c
-index fd81eca3ec18..2f271b7fb048 100644
---- a/drivers/hwtracing/coresight/coresight-etm3x-sysfs.c
-+++ b/drivers/hwtracing/coresight/coresight-etm3x-sysfs.c
-@@ -85,6 +85,7 @@ static ssize_t reset_store(struct device *dev,
- 		}
- 
- 		etm_set_default(config);
-+		etm_release_trace_id(drvdata);
- 		spin_unlock(&drvdata->spinlock);
- 	}
- 
-@@ -1189,30 +1190,16 @@ static DEVICE_ATTR_RO(cpu);
- static ssize_t traceid_show(struct device *dev,
- 			    struct device_attribute *attr, char *buf)
- {
--	unsigned long val;
--	struct etm_drvdata *drvdata = dev_get_drvdata(dev->parent);
--
--	val = etm_get_trace_id(drvdata);
--
--	return sprintf(buf, "%#lx\n", val);
--}
 -
 -static ssize_t traceid_store(struct device *dev,
 -			     struct device_attribute *attr,
@@ -265,25 +104,76 @@ index fd81eca3ec18..2f271b7fb048 100644
 -{
 -	int ret;
 -	unsigned long val;
-+	int trace_id;
- 	struct etm_drvdata *drvdata = dev_get_drvdata(dev->parent);
- 
+-	struct stm_drvdata *drvdata = dev_get_drvdata(dev->parent);
+-
 -	ret = kstrtoul(buf, 16, &val);
 -	if (ret)
 -		return ret;
-+	trace_id = etm_read_alloc_trace_id(drvdata);
-+	if (trace_id < 0)
-+		return trace_id;
- 
--	drvdata->traceid = val & ETM_TRACEID_MASK;
+-
+-	/* traceid field is 7bit wide on STM32 */
+-	drvdata->traceid = val & 0x7f;
 -	return size;
-+	return sysfs_emit(buf, "%#x\n", trace_id);
- }
+-}
 -static DEVICE_ATTR_RW(traceid);
 +static DEVICE_ATTR_RO(traceid);
  
- static struct attribute *coresight_etm_attrs[] = {
- 	&dev_attr_nr_addr_cmp.attr,
+ static struct attribute *coresight_stm_attrs[] = {
+ 	&dev_attr_hwevent_enable.attr,
+@@ -803,14 +787,6 @@ static void stm_init_default_data(struct stm_drvdata *drvdata)
+ 	 */
+ 	drvdata->stmsper = ~0x0;
+ 
+-	/*
+-	 * The trace ID value for *ETM* tracers start at CPU_ID * 2 + 0x10 and
+-	 * anything equal to or higher than 0x70 is reserved.  Since 0x00 is
+-	 * also reserved the STM trace ID needs to be higher than 0x00 and
+-	 * lowner than 0x10.
+-	 */
+-	drvdata->traceid = 0x1;
+-
+ 	/* Set invariant transaction timing on all channels */
+ 	bitmap_clear(drvdata->chs.guaranteed, 0, drvdata->numsp);
+ }
+@@ -838,7 +814,7 @@ static void stm_init_generic_data(struct stm_drvdata *drvdata,
+ 
+ static int stm_probe(struct amba_device *adev, const struct amba_id *id)
+ {
+-	int ret;
++	int ret, trace_id;
+ 	void __iomem *base;
+ 	struct device *dev = &adev->dev;
+ 	struct coresight_platform_data *pdata = NULL;
+@@ -922,12 +898,22 @@ static int stm_probe(struct amba_device *adev, const struct amba_id *id)
+ 		goto stm_unregister;
+ 	}
+ 
++	trace_id = coresight_trace_id_get_system_id();
++	if (trace_id < 0) {
++		ret = trace_id;
++		goto cs_unregister;
++	}
++	drvdata->traceid = (u8)trace_id;
++
+ 	pm_runtime_put(&adev->dev);
+ 
+ 	dev_info(&drvdata->csdev->dev, "%s initialized\n",
+ 		 (char *)coresight_get_uci_data(id));
+ 	return 0;
+ 
++cs_unregister:
++	coresight_unregister(drvdata->csdev);
++
+ stm_unregister:
+ 	stm_unregister_device(&drvdata->stm);
+ 	return ret;
+@@ -937,6 +923,7 @@ static void stm_remove(struct amba_device *adev)
+ {
+ 	struct stm_drvdata *drvdata = dev_get_drvdata(&adev->dev);
+ 
++	coresight_trace_id_put_system_id(drvdata->traceid);
+ 	coresight_unregister(drvdata->csdev);
+ 
+ 	stm_unregister_device(&drvdata->stm);
 -- 
 2.17.1
 
