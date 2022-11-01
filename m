@@ -2,149 +2,90 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8BCB6FA3741
-	for <linux-perf-users@archiver.kernel.org>; Mon, 31 Oct 2022 19:03:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7B7C9FA373D
+	for <linux-perf-users@archiver.kernel.org>; Tue,  1 Nov 2022 09:15:07 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229795AbiJaTDb convert rfc822-to-8bit (ORCPT
+        id S229976AbiKAJPG convert rfc822-to-8bit (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Mon, 31 Oct 2022 15:03:31 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60854 "EHLO
+        Tue, 1 Nov 2022 05:15:06 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59388 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229739AbiJaTDb (ORCPT
+        with ESMTP id S229954AbiKAJPF (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Mon, 31 Oct 2022 15:03:31 -0400
-Received: from mail-oi1-f172.google.com (mail-oi1-f172.google.com [209.85.167.172])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6A9A5D57;
-        Mon, 31 Oct 2022 12:03:30 -0700 (PDT)
-Received: by mail-oi1-f172.google.com with SMTP id r76so7197038oie.13;
-        Mon, 31 Oct 2022 12:03:30 -0700 (PDT)
+        Tue, 1 Nov 2022 05:15:05 -0400
+Received: from mail-qv1-f45.google.com (mail-qv1-f45.google.com [209.85.219.45])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C3B3E10E2
+        for <linux-perf-users@vger.kernel.org>; Tue,  1 Nov 2022 02:15:04 -0700 (PDT)
+Received: by mail-qv1-f45.google.com with SMTP id t16so9875197qvm.9
+        for <linux-perf-users@vger.kernel.org>; Tue, 01 Nov 2022 02:15:04 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=PrACHCXTgI6KhnSmfV8BnCwgxOijfG3ClYDgUf87v8k=;
-        b=leqGdMZyv6qASgIS6PWWIsscN1+zSrY3hMUs1/qYgyjlyB7f9W1XP1Z4qia/AZlCyP
-         mlmatj8eqT3h8TwhdokcEA965Pz/MGTs52iTdwvrCXqm/AmHJO1PGPOc+8SWN9qPxEdd
-         3f/D4S/ZHjhWDCaZsfqytQS18ukuL8fZY1dF/6l+Dcp0GkVzFsL1oo9a70Qk7Xx2rjvn
-         RJujB5gGuG2dMn8YGsg4XJnDZcSbA20RnVe9UbS5L1XzSWYCjSaYXgivQtih73G3O5BJ
-         08V9eYNgyEZ1lwreaSRvhS2Blf8PeU1n8/GrkuC51cukRndo+0YyGW92yaGrNxhrUafF
-         JJcQ==
-X-Gm-Message-State: ACrzQf0DtRDBhjs5SPUCEuke3rGMlMLwROoFR1DSAPZrEgWz+wkpOiJq
-        cwQj+Ds84j+s1PfxGgj+vTDkPjiAv+ke38pRkdk=
-X-Google-Smtp-Source: AMsMyM7Ewupj28lX4TIsCjnUHYcWcTWdhJDDfDnpoy8k9qHa7VbtJcCz6IZu37ypGDnNMxAsMHgv6HNLREFScY0LeHI=
-X-Received: by 2002:aca:ac82:0:b0:359:d662:5bfb with SMTP id
- v124-20020acaac82000000b00359d6625bfbmr7726817oie.218.1667243009659; Mon, 31
- Oct 2022 12:03:29 -0700 (PDT)
+         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=FmJJgqvBpyrMUSHZDbpYR1KLY/ylEZoQf2la41iyXts=;
+        b=d88eApNIH19z9iXPcjiv4Rh/B4WfnwK5M9g3swiclOo1DhdeSHdQU8Z3gkuvzYEkzC
+         RGX9mG+PLeE/4bXjZPej8VHXX0pmkWSD6FIJ2O1GRcZKlq8c7vWax+LejDEYR5wmTsgS
+         x/HXclmmTKe9b3/IEOjOIaB77IZX2hfP3/E+y90QX4ottpGO31nloihUB6Az4J9ZG+wh
+         4pZ2X8AdicJNbGnc2+aIgjXNPDf/C2TgTpp2sBomL7ewbthZZpcG/0zVJLMymo6ShEeI
+         MOsho0blGnw8pnGju0WJ+6m9loGSL6puZ43OzsIZ/wvJg1UbnTZdjx5UmiCBn3unwvB8
+         BoeQ==
+X-Gm-Message-State: ACrzQf3KccysnrWJdfnSHTZym/9k/GBidc2pdW3eKUJzzf347yfdugND
+        fro9a7b7WlnzFBD2+42wShnN5q7mO30cRA==
+X-Google-Smtp-Source: AMsMyM470jpetxRPw8sCJDwTTlJkOhVWxKF/3Ek0J0QXlH1+niwC3Xqvdxwff56B7Se3FF22KzOg5w==
+X-Received: by 2002:a05:6214:2501:b0:4bb:ac4c:466 with SMTP id gf1-20020a056214250100b004bbac4c0466mr15073874qvb.93.1667294103689;
+        Tue, 01 Nov 2022 02:15:03 -0700 (PDT)
+Received: from mail-yb1-f180.google.com (mail-yb1-f180.google.com. [209.85.219.180])
+        by smtp.gmail.com with ESMTPSA id c9-20020a05620a11a900b006b949afa980sm2372130qkk.56.2022.11.01.02.15.03
+        for <linux-perf-users@vger.kernel.org>
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 01 Nov 2022 02:15:03 -0700 (PDT)
+Received: by mail-yb1-f180.google.com with SMTP id g127so8065200ybg.8
+        for <linux-perf-users@vger.kernel.org>; Tue, 01 Nov 2022 02:15:03 -0700 (PDT)
+X-Received: by 2002:a05:6902:503:b0:6cf:c510:6a23 with SMTP id
+ x3-20020a056902050300b006cfc5106a23mr390524ybs.380.1667294103174; Tue, 01 Nov
+ 2022 02:15:03 -0700 (PDT)
 MIME-Version: 1.0
-References: <20220415050003.3257645-1-mattst88@gmail.com> <20221019232952.2212729-1-mattst88@gmail.com>
-In-Reply-To: <20221019232952.2212729-1-mattst88@gmail.com>
-From:   Namhyung Kim <namhyung@kernel.org>
-Date:   Mon, 31 Oct 2022 12:03:18 -0700
-Message-ID: <CAM9d7cgxOmtw=djorzjBnfqgLm04r9bVoGm31C8uMA-SRQTa4w@mail.gmail.com>
-Subject: Re: [PATCH v2] tools: port perf ui from GTK 2 to GTK 3
-To:     Matt Turner <mattst88@gmail.com>
-Cc:     linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Jiri Olsa <jolsa@kernel.org>,
-        Jelle van der Waa <jvanderwaa@redhat.com>
+From:   Geert Uytterhoeven <geert@linux-m68k.org>
+Date:   Tue, 1 Nov 2022 10:14:51 +0100
+X-Gmail-Original-Message-ID: <CAMuHMdUsfc-NNHswtS8jjhWFwk4fX2yvynKh4q0x_u01bnUQBA@mail.gmail.com>
+Message-ID: <CAMuHMdUsfc-NNHswtS8jjhWFwk4fX2yvynKh4q0x_u01bnUQBA@mail.gmail.com>
+Subject: b4 ignoring Reviewed-by: in quoted-printable email
+To:     Konstantin Ryabitsev <konstantin@linuxfoundation.org>
+Cc:     tools@linux.kernel.org, linux-perf-users@vger.kernel.org
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: 8BIT
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-Hello,
+Hi Konstantin,
 
-On Wed, Oct 19, 2022 at 4:30 PM Matt Turner <mattst88@gmail.com> wrote:
->
-> From: Jelle van der Waa <jvanderwaa@redhat.com>
->
-> GTK 2 is a legacy API and the newer version is GTK 3 which changes a few
-> API functions. gtk_tree_view_set_rules_hint is no longer required since
-> theme's are now responsible to handle this, gtk_vbox_new is deprecated
-> and replaced by passing the orientation to gtk_box_new. Apart from these
-> changes the accessing of the screen changed in GTK which requires using
-> new functions for getting geometry. Lastly the GTK_STOCK_OK define is
-> deprecated in GTK 3.
->
-> Signed-off-by: Jelle van der Waa <jvanderwaa@redhat.com>
-> Signed-off-by: Matt Turner <mattst88@gmail.com>
-> ---
-> Originally sent in 2019. I've rebased it and given it a test.
->
-> One problem I've noticed is that C++ symbol names are often broken.
-> E.g.:
->
-> (perf:3254940): Gtk-WARNING **: 21:47:46.663: Failed to set text from
-> markup due to error parsing markup: Error on line 1 char 95:
-> “std::char_traits<char” is not a valid name: “<”
->
-> Presumably we need to call g_markup_escape_text() somewhere, but I
-> struggled to find the right place.
->
-> Without the patch, the GTK-2 version repeatedly segfaults, so this is an
-> improvement regardless.
+$ b4 am OS0PR01MB5571A141EC9159DB281867C8DF379@OS0PR01MB5571.jpnprd01.prod.outlook.com
+Analyzing 2 messages in the thread
+Checking attestation on all messages, may take a moment...
+---
+  ✓ [PATCH v2] clk: renesas: r9a06g032: Repair grave increment error
+  ---
+  ✓ Signed: DKIM/denx.de
+---
+Total patches: 1
+---
+ Link: https://lore.kernel.org/r/20221028113834.7496-1-marex@denx.de
+ Base: not specified
+       git am ./v2_20221028_marex_clk_renesas_r9a06g032_repair_grave_increment_error.mbx
 
-Thanks for working on this.
+The Reviewed-by tag given by Gareth is not picked up by b4.
 
->
-> v2: Dropped changes to test-all.c. I don't know how to build that
->     apparently.
->
->  tools/build/Makefile.feature                  |  5 +++--
->  tools/build/feature/Makefile                  | 12 +++++-----
->  ...est-gtk2-infobar.c => test-gtk3-infobar.c} |  0
->  .../feature/{test-gtk2.c => test-gtk3.c}      |  0
->  tools/perf/Documentation/perf-report.txt      |  2 +-
->  tools/perf/Makefile                           |  2 +-
->  tools/perf/Makefile.config                    | 22 +++++++++----------
->  tools/perf/Makefile.perf                      |  6 ++---
->  tools/perf/builtin-report.c                   |  2 +-
->  tools/perf/builtin-version.c                  |  1 +
->  tools/perf/tests/make                         | 12 +++++-----
->  tools/perf/ui/gtk/annotate.c                  |  2 +-
->  tools/perf/ui/gtk/browser.c                   | 16 ++++++++------
->  tools/perf/ui/gtk/hists.c                     |  6 +----
->  tools/perf/ui/gtk/progress.c                  |  2 +-
->  tools/perf/ui/setup.c                         |  2 +-
->  16 files changed, 46 insertions(+), 46 deletions(-)
->  rename tools/build/feature/{test-gtk2-infobar.c => test-gtk3-infobar.c} (100%)
->  rename tools/build/feature/{test-gtk2.c => test-gtk3.c} (100%)
->
-> diff --git a/tools/build/Makefile.feature b/tools/build/Makefile.feature
-> index 57619f240b56..967b8be96b65 100644
-> --- a/tools/build/Makefile.feature
-> +++ b/tools/build/Makefile.feature
-> @@ -80,8 +80,8 @@ FEATURE_TESTS_EXTRA :=                  \
->           compile-32                     \
->           compile-x32                    \
->           cplus-demangle                 \
-> -         gtk2                           \
-> -         gtk2-infobar                   \
-> +         gtk3                           \
-> +         gtk3-infobar                   \
+Thanks!
 
-I don't think gtk3-inforbar check is necessary anymore.  IIRC the infobar
-was introduced in the middle of gtk2 so it needs to check if the current
-version supports it or not.  But I guess gtk3 should support it by default.
+Gr{oetje,eeting}s,
 
-Thanks,
-Namhyung
+                        Geert
 
+--
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
 
->           hello                          \
->           libbabeltrace                  \
->           libbfd-liberty                 \
-> @@ -119,6 +119,7 @@ FEATURE_DISPLAY ?=              \
->           dwarf                  \
->           dwarf_getlocations     \
->           glibc                  \
-> +         gtk3                   \
->           libbfd                 \
->           libbfd-buildid                \
->           libcap                 \
+In personal conversations with technical people, I call myself a hacker. But
+when I'm talking to journalists I just say "programmer" or something like that.
+                                -- Linus Torvalds
