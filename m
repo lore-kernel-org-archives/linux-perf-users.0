@@ -2,123 +2,114 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1D42EC433FE
-	for <linux-perf-users@archiver.kernel.org>; Tue,  1 Nov 2022 13:30:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E26A8ECAAA1
+	for <linux-perf-users@archiver.kernel.org>; Tue,  1 Nov 2022 13:48:31 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229591AbiKANaW (ORCPT
+        id S230008AbiKANsa (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Tue, 1 Nov 2022 09:30:22 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57682 "EHLO
+        Tue, 1 Nov 2022 09:48:30 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47158 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230149AbiKANaE (ORCPT
+        with ESMTP id S229487AbiKANs1 (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Tue, 1 Nov 2022 09:30:04 -0400
-Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E2AA513E20;
-        Tue,  1 Nov 2022 06:30:03 -0700 (PDT)
+        Tue, 1 Nov 2022 09:48:27 -0400
+Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B667C1162;
+        Tue,  1 Nov 2022 06:48:26 -0700 (PDT)
 Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id 783C361326;
-        Tue,  1 Nov 2022 13:30:03 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 2B30FC433C1;
-        Tue,  1 Nov 2022 13:30:01 +0000 (UTC)
+        by dfw.source.kernel.org (Postfix) with ESMTPS id 16730611E7;
+        Tue,  1 Nov 2022 13:48:26 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id B0F14C433D6;
+        Tue,  1 Nov 2022 13:48:23 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1667309402;
-        bh=dOBkh2Voj6UgfzAK9AwIha7a75ZaMGSpzsdKHn+BTOM=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=KEP7pSmtclln9h4NGUy/PbL5ZX3RG/w3N2KGYv22vLb7y/T40LC3SKX0yxIDcjjwx
-         XJyNuaEvsvkfYOzbq/32yf58O8/b8j29D09D8HyJd43pgeqD4YEeuguD3aCotbl19o
-         ftMS3gPJoF+fOvaruD6CcIxtS7iVsPIMqfO3nNloazTOWZWgwYudz9hb4+oQtbIgMg
-         N/blHjI1Ohddox0cIeGlNmq/hG1ACP5n/E8unZISHknkfHk2+3uc3E5PWxfdsjNaKa
-         UHc5VIGEufpomBchRrP7BFOBFuwt4qHhye7Pz+jKoGkK208Zc1IzcLF18Hu1Uh5vRV
-         QsCAfUL0AmRyQ==
-Date:   Tue, 1 Nov 2022 22:29:59 +0900
-From:   Masami Hiramatsu (Google) <mhiramat@kernel.org>
-To:     "Masami Hiramatsu (Google)" <mhiramat@kernel.org>
-Cc:     Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Peter Zijlstra <peterz@infradead.org>,
+        s=k20201202; t=1667310505;
+        bh=2r6RMNudw65t+LrmOPtjGBPzbGcSI8my0xvyNFh7v7c=;
+        h=From:To:Cc:Subject:Date:From;
+        b=u5+TP2f9XGevZNTdAqt4Z6sTDENHb1y8A2EB/sZeIJBNN5gNKhdu7VRPYYjTRbjoR
+         rN+rfjLGrVZv6sOSAAMzo/gVxb9HhjrMCeJYQzhO0fRuZXQzGvHEWmPzfeQ4D68lur
+         UmGTrEWmKkGaTh4fclViL4/nVhGi7GqeSzFPbkKC60Yo5gJXxt8E33slKoN+ePtv1E
+         EsbpwrIlXzxari5SEvfTDmcVq1fKlCRCG8/DNDp9YfhLVSGQ8+AeeIl4fGw1xBZVsr
+         v1cNvJDF9KowiwjFdIOFnb6lF3MLCL/n8DYnURo64OmDJsz9Qd7hHbeOPlrnq9DEJy
+         KEpr1Lh8PEnCg==
+From:   "Masami Hiramatsu (Google)" <mhiramat@kernel.org>
+To:     Arnaldo Carvalho de Melo <acme@kernel.org>
+Cc:     Peter Zijlstra <peterz@infradead.org>,
         Ingo Molnar <mingo@redhat.com>,
         Mark Rutland <mark.rutland@arm.com>,
         Alexander Shishkin <alexander.shishkin@linux.intel.com>,
         Jiri Olsa <jolsa@kernel.org>,
         Namhyung Kim <namhyung@kernel.org>,
         linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Masami Hiramatsu <mhiramat@kernel.org>,
         Steven Rostedt <rostedt@goodmis.org>
-Subject: Re: [PATCH 0/3] tools/perf: Fix perf probe crash by broken DWARF
- file
-Message-Id: <20221101222959.0815521a31e45c1ddabad756@kernel.org>
-In-Reply-To: <166730844138.2095228.4225918836201778608.stgit@devnote3>
-References: <166730844138.2095228.4225918836201778608.stgit@devnote3>
-X-Mailer: Sylpheed 3.8.0beta1 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
-Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+Subject: [PATCH v2 0/3] tools/perf: Fix perf probe crash by clang DWARF5 file
+Date:   Tue,  1 Nov 2022 22:48:21 +0900
+Message-Id: <166731050151.2100653.8202870942871353491.stgit@devnote3>
+X-Mailer: git-send-email 2.38.1.273.g43a17bfeac-goog
+User-Agent: StGit/0.19
+MIME-Version: 1.0
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-On Tue,  1 Nov 2022 22:14:01 +0900
-"Masami Hiramatsu (Google)" <mhiramat@kernel.org> wrote:
+Hi,
 
-> Hi,
-> 
-> Here is a series of patches for perf probe which improves the robustness
-> against broken DWARF file.
-> 
-> Since the Clang generates the out of standard DWARF5 file, the perf probe
-> crashes or failed to analyze it. There are actually fragile code against
-> it, so I fixed it ([1/3]) to avoid crash by SEGV. And make it accepts
-> Clang's DWARF5 file ([2/3],[3/3]).
-> 
-> Without this series, the perf probe crashes with the DWARF5 file
-> which generated by clang as below;
->  
->   $ ./perf probe -k $BIN_PATH/vmlinux -s $SRC_PATH -L vfs_read:10
->   Segmentation fault
-> 
-> This series fixes it to handle such file correctly;
-> 
->   $ ./perf probe -k $BIN_PATH/vmlinux -s $SRC_PATH -L vfs_read:10
->   <vfs_read@$SRC_PATH/fs/read_write.c:10>
->  
->        11         ret = rw_verify_area(READ, file, pos, count);
->        12         if (ret)
->                            return ret;
-> 
-> This issue is reported on LLVM ML;
-> https://www.mail-archive.com/dwarf-discuss@lists.dwarfstd.org/msg00884.html
+Here is the 2nd version of the patches for perf probe which improves the
+robustness against clang DWARF5 file.
 
-Hmm, according to the discussion in this thread, this spec is under discussion
-(still?). As far as I can see the "DWARF Debugging Information Format Version 5"
-2.14, it says "The value 0 indicates that no source line has been specified."
-But the description will be updated(?)
+Since the Clang generates a bit different DWARF5 file, the perf probe
+crashes or failes to analyze it. There are actually fragile code against
+it, so I fixed it ([1/3]) to avoid crash by SEGV. And make it accepts
+Clang's DWARF5 file ([2/3],[3/3]).
+
+Without this series, the perf probe crashes with the DWARF5 file
+which generated by clang as below;
+ 
+  $ ./perf probe -k $BIN_PATH/vmlinux -s $SRC_PATH -L vfs_read:10
+  Segmentation fault
+
+This series fixes it to handle such file correctly;
+
+  $ ./perf probe -k $BIN_PATH/vmlinux -s $SRC_PATH -L vfs_read:10
+  <vfs_read@$SRC_PATH/fs/read_write.c:10>
+ 
+       11         ret = rw_verify_area(READ, file, pos, count);
+       12         if (ret)
+                           return ret;
+
+
+On the DWARF5 specification, Sec 2.14, there is
+"The value 0 indicates that no source file has been specified."
+for DW_AT_decl_file, but clang generated DWARF5 will use the value 0.
+
+This issue is discussed on DWARF std ML;
+https://www.mail-archive.com/dwarf-discuss@lists.dwarfstd.org/msg00884.html
+
+And suggested that removing this part from the specification.
 http://wiki.dwarfstd.org/index.php?title=DWARF5_Line_Table_File_Numbers
 
-Let me update the series so that carefully remove the "broken". Maybe "clang"
-DWARF5?
+So as far as I understand, this is out of standard at this moment,
+but the standard itself has a discussion on this part. And maybe updated
+as currently clang does in the next release/revision.
 
 Thank you,
 
-> 
-> Thank you,
-> 
-> ---
-> 
-> Masami Hiramatsu (Google) (3):
->       tools/perf: Fix to avoid crashing with a broken DWARF file
->       tools/perf: Fix to use dwarf_attr_integrate for generic attr accessor
->       tools/perf: Fix to get declared file name from broken DWARF5
-> 
-> 
->  tools/perf/util/dwarf-aux.c    |   58 ++++++++++++++++++++++++++++------------
->  tools/perf/util/dwarf-aux.h    |    3 ++
->  tools/perf/util/probe-finder.c |   37 +++++++++++++++++---------
->  3 files changed, 68 insertions(+), 30 deletions(-)
-> 
-> --
-> Masami Hiramatsu (Google) <mhiramat@kernel.org>
+---
+
+Masami Hiramatsu (Google) (3):
+      tools/perf: Fix to avoid crashing if DW_AT_decl_file is NULL
+      tools/perf: Fix to use dwarf_attr_integrate for generic attr accessor
+      tools/perf: Fix to get declared file name from clang DWARF5
 
 
--- 
+ tools/perf/util/dwarf-aux.c    |   58 ++++++++++++++++++++++++++++------------
+ tools/perf/util/dwarf-aux.h    |    3 ++
+ tools/perf/util/probe-finder.c |   37 +++++++++++++++++---------
+ 3 files changed, 68 insertions(+), 30 deletions(-)
+
+--
 Masami Hiramatsu (Google) <mhiramat@kernel.org>
