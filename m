@@ -2,53 +2,53 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B0C2BC4321E
-	for <linux-perf-users@archiver.kernel.org>; Tue,  1 Nov 2022 16:31:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4D85BC4332F
+	for <linux-perf-users@archiver.kernel.org>; Tue,  1 Nov 2022 16:31:37 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230232AbiKAQbe (ORCPT
+        id S230253AbiKAQbg (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Tue, 1 Nov 2022 12:31:34 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34512 "EHLO
+        Tue, 1 Nov 2022 12:31:36 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34816 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230187AbiKAQb2 (ORCPT
+        with ESMTP id S229628AbiKAQbb (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Tue, 1 Nov 2022 12:31:28 -0400
-Received: from mail-wr1-x432.google.com (mail-wr1-x432.google.com [IPv6:2a00:1450:4864:20::432])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9C3431CFE1
-        for <linux-perf-users@vger.kernel.org>; Tue,  1 Nov 2022 09:31:24 -0700 (PDT)
-Received: by mail-wr1-x432.google.com with SMTP id a14so20894816wru.5
-        for <linux-perf-users@vger.kernel.org>; Tue, 01 Nov 2022 09:31:24 -0700 (PDT)
+        Tue, 1 Nov 2022 12:31:31 -0400
+Received: from mail-wm1-x329.google.com (mail-wm1-x329.google.com [IPv6:2a00:1450:4864:20::329])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CBE421CFEB
+        for <linux-perf-users@vger.kernel.org>; Tue,  1 Nov 2022 09:31:25 -0700 (PDT)
+Received: by mail-wm1-x329.google.com with SMTP id v124-20020a1cac82000000b003cf7a4ea2caso2503628wme.5
+        for <linux-perf-users@vger.kernel.org>; Tue, 01 Nov 2022 09:31:25 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
         h=references:in-reply-to:message-id:date:subject:cc:to:from:from:to
          :cc:subject:date:message-id:reply-to;
-        bh=5MdleZXvt+JyHILxZIr8nt6Rc30u8pB2zD6TyZEOZ4E=;
-        b=N0OHoOCfoadYHDve9A10mdduXwDqxckCMBXiPMJkrQLef+eysdKmGp4/vghZIe6ts5
-         RlaYTAUndyvkgq6ziXZryvLpbUbZE0lyW/8Gj8n1sLV2ZKKVpSbFlR464jusNnUk+qsP
-         U6Ig1UJvGX74Eq/KxUFdJO48PqCtqAGHkH7oQU9+5ocuFdkxGVTgWndwIS4fvh60r0vC
-         mMQ7nFtRlksH0XF5JDnRlPJesa5boH7ytuNNYo7ugu4Qq7GIUjp/zAB48IU0B6G+VCIw
-         yv5W6gOPpJKVMlBfo+uaBR5KA3j71cIO47kulqokHpqSqrA07kMTrDkOgb+cwcZPGDql
-         SEAQ==
+        bh=2aaVV6pFHQQs3G0gqxThN1mgpQWRGOin990n6a0ouVg=;
+        b=jZGfZj+rM3bPcMkMrDpWSq3/FcMrUDQpjptYvoqs3gDmYbbHjyRXEWxumCyDuEcLJr
+         /QCkNRwZ0wgMqi8WCS9WmVAWERSDnpCol2QKgomWIDYj3Ri2wTgtZ3LZLGXFQ+kQvm0y
+         Cht60DMMbw2fGvH8A5qGjzPK+PIE8cuBHNK1wVHLJE5scZCvZ9q5kh49IwmC5tema/Mh
+         pCl1MYhlvla2pSBK0krCbS6idHxlZKg6kpkSgHUZ2CeZ7rjIPZiKjxILkOVDMU8Ca8cm
+         HunKsVmh+WKMIvDCdhX630Gcxz0x0tol8UGxzTfbEkBCk2IiqSrb5UHPBviHzIU99cil
+         9cxQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
         h=references:in-reply-to:message-id:date:subject:cc:to:from
          :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=5MdleZXvt+JyHILxZIr8nt6Rc30u8pB2zD6TyZEOZ4E=;
-        b=YUu0bx6jAGklthK2OvUuv9FgC/dvk616g0vez32eigTQi0ay0Nuh2XFXnBAbeuZQ4P
-         9oh5q+8V0BI0OaknJ9rc6OL8k98jqvTYatx+d77ea+Ia6MxHX8gaE0rLqitD5PF7RKsB
-         9tFZFMmhIAXOF8IIrbUS8h2Ue9hY8D18dCtog0zDoAENt4BjnRmlX2Fv8F/95qxAVXeS
-         WwiWlHp4ki2oRql5zeWRUMfbRwS9TobAydbkigA1mVNvZBEvz42z57vNjALoif2ahSEA
-         jvY9vl3CDcDG0wrEMIbi9q5wYseaiKkuItVr1It66EX1BJwdKiVGRY1i85tNccn5UMbn
-         /0Cg==
-X-Gm-Message-State: ACrzQf30iPElhqXZoV1zZaXtLK1lpxjSI4jGBu9V1S+rm3m568BSTFoF
-        FuV4CX9lmFK/zvgMn8V9b2w082nZ/s/gMQ==
-X-Google-Smtp-Source: AMsMyM6rZBY+SRuvU6afB3H/N607It4scVT7TDau8qicMc11AO4dH+gwLsmVyLpvWDm+RkYOsw0I/g==
-X-Received: by 2002:adf:f4c7:0:b0:236:c415:c707 with SMTP id h7-20020adff4c7000000b00236c415c707mr8974540wrp.24.1667320283203;
-        Tue, 01 Nov 2022 09:31:23 -0700 (PDT)
+        bh=2aaVV6pFHQQs3G0gqxThN1mgpQWRGOin990n6a0ouVg=;
+        b=xoBBhddi6sEjYcZve9g3TpsdzHM1xFgRMKTiw6L3IWsn8H+Qd9b4DlxaSmeKBINmWX
+         oK+lZBCNqlLcGAiQJ5dUPLIL/ohFv06EElHVbRSYa+/PSOVPi5DB3Acck2X44Vj0CZFH
+         wZ6npVij7StiufgtbFDOGGQcymgMnr3J75dmF0jgWb0ez6osndmXfBz77CI6n+ltDIJ7
+         zwds+0gDAAZsQZutcwNIN9eT4B1Akiqe1800RBWwCkOP1Z20v5R4ozl0M1M9vcgSzfqD
+         AVkRXtnbqJ5K6FBUrGSjrLbgzYLa+Jp8f0g4z8oYdzOGBeZtdI8G376bGNLhEDp+fJ/+
+         J4MQ==
+X-Gm-Message-State: ACrzQf0jg3oSabInoGWM/bpP1yuPOdUUvR9h+QXXoX7Y4409wU/TUavg
+        47SKh1YB7ujQI0qrRdYZsXn2wg==
+X-Google-Smtp-Source: AMsMyM6dh88kPLl+NvzXxrgse3p39GCv8Ek8adzfOcmlQka455lVxS4FRvQtPCzyHjhV2uvhchoy4w==
+X-Received: by 2002:a05:600c:1e2a:b0:3c8:353b:253f with SMTP id ay42-20020a05600c1e2a00b003c8353b253fmr12596910wmb.51.1667320284399;
+        Tue, 01 Nov 2022 09:31:24 -0700 (PDT)
 Received: from linaro.org ([2a00:23c5:6809:2201:e844:18b6:fc5:bbc9])
-        by smtp.gmail.com with ESMTPSA id bu15-20020a056000078f00b0022ac1be009esm8339844wrb.16.2022.11.01.09.31.22
+        by smtp.gmail.com with ESMTPSA id bu15-20020a056000078f00b0022ac1be009esm8339844wrb.16.2022.11.01.09.31.23
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 01 Nov 2022 09:31:22 -0700 (PDT)
+        Tue, 01 Nov 2022 09:31:23 -0700 (PDT)
 From:   Mike Leach <mike.leach@linaro.org>
 To:     coresight@lists.linaro.org, linux-arm-kernel@lists.infradead.org,
         linux-kernel@vger.kernel.org
@@ -56,9 +56,9 @@ Cc:     mathieu.poirier@linaro.org, suzuki.poulose@arm.com,
         peterz@infradead.org, mingo@redhat.com, acme@kernel.org,
         linux-perf-users@vger.kernel.org, leo.yan@linaro.org,
         quic_jinlmao@quicinc.com, Mike Leach <mike.leach@linaro.org>
-Subject: [PATCH v5 02/14] coresight: Remove obsolete Trace ID unniqueness checks
-Date:   Tue,  1 Nov 2022 16:30:51 +0000
-Message-Id: <20221101163103.17921-3-mike.leach@linaro.org>
+Subject: [PATCH v5 03/14] coresight: perf: traceid: Add perf ID allocation and notifiers
+Date:   Tue,  1 Nov 2022 16:30:52 +0000
+Message-Id: <20221101163103.17921-4-mike.leach@linaro.org>
 X-Mailer: git-send-email 2.17.1
 In-Reply-To: <20221101163103.17921-1-mike.leach@linaro.org>
 References: <20221101163103.17921-1-mike.leach@linaro.org>
@@ -66,79 +66,78 @@ Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-The checks for sources to have unique IDs has been removed - this is now
-guaranteed by the ID allocation mechanisms, and inappropriate where
-multiple ID maps are in use in larger systems
+Adds in calls to allocate and release Trace ID for the CPUs in use
+by the perf session.
+
+Adds in notifier calls to the trace ID allocator that perf
+events are starting and stopping.
+
+This ensures that Trace IDs associated with CPUs remain the same
+throughout the perf session, and are only released when all perf
+sessions are complete.
 
 Signed-off-by: Mike Leach <mike.leach@linaro.org>
-Reviewed-by: Suzuki K Poulose <suzuki.poulose@arm.com>
 ---
- drivers/hwtracing/coresight/coresight-core.c | 45 --------------------
- 1 file changed, 45 deletions(-)
+ drivers/hwtracing/coresight/coresight-etm-perf.c | 16 ++++++++++++++++
+ 1 file changed, 16 insertions(+)
 
-diff --git a/drivers/hwtracing/coresight/coresight-core.c b/drivers/hwtracing/coresight/coresight-core.c
-index 554a18039e10..45828564f0c8 100644
---- a/drivers/hwtracing/coresight/coresight-core.c
-+++ b/drivers/hwtracing/coresight/coresight-core.c
-@@ -113,45 +113,6 @@ struct coresight_device *coresight_get_percpu_sink(int cpu)
+diff --git a/drivers/hwtracing/coresight/coresight-etm-perf.c b/drivers/hwtracing/coresight/coresight-etm-perf.c
+index 43bbd5dc3d3b..6166f716a6ac 100644
+--- a/drivers/hwtracing/coresight/coresight-etm-perf.c
++++ b/drivers/hwtracing/coresight/coresight-etm-perf.c
+@@ -22,6 +22,7 @@
+ #include "coresight-etm-perf.h"
+ #include "coresight-priv.h"
+ #include "coresight-syscfg.h"
++#include "coresight-trace-id.h"
+ 
+ static struct pmu etm_pmu;
+ static bool etm_perf_up;
+@@ -228,8 +229,12 @@ static void free_event_data(struct work_struct *work)
+ 		if (!(IS_ERR_OR_NULL(*ppath)))
+ 			coresight_release_path(*ppath);
+ 		*ppath = NULL;
++		coresight_trace_id_put_cpu_id(cpu);
+ 	}
+ 
++	/* mark perf event as done for trace id allocator */
++	coresight_trace_id_perf_stop();
++
+ 	free_percpu(event_data->path);
+ 	kfree(event_data);
  }
- EXPORT_SYMBOL_GPL(coresight_get_percpu_sink);
- 
--static int coresight_id_match(struct device *dev, void *data)
--{
--	int trace_id, i_trace_id;
--	struct coresight_device *csdev, *i_csdev;
--
--	csdev = data;
--	i_csdev = to_coresight_device(dev);
--
--	/*
--	 * No need to care about oneself and components that are not
--	 * sources or not enabled
--	 */
--	if (i_csdev == csdev || !i_csdev->enable ||
--	    i_csdev->type != CORESIGHT_DEV_TYPE_SOURCE)
--		return 0;
--
--	/* Get the source ID for both components */
--	trace_id = source_ops(csdev)->trace_id(csdev);
--	i_trace_id = source_ops(i_csdev)->trace_id(i_csdev);
--
--	/* All you need is one */
--	if (trace_id == i_trace_id)
--		return 1;
--
--	return 0;
--}
--
--static int coresight_source_is_unique(struct coresight_device *csdev)
--{
--	int trace_id = source_ops(csdev)->trace_id(csdev);
--
--	/* this shouldn't happen */
--	if (trace_id < 0)
--		return 0;
--
--	return !bus_for_each_dev(&coresight_bustype, NULL,
--				 csdev, coresight_id_match);
--}
--
- static int coresight_find_link_inport(struct coresight_device *csdev,
- 				      struct coresight_device *parent)
+@@ -300,6 +305,7 @@ static void *etm_setup_aux(struct perf_event *event, void **pages,
  {
-@@ -460,12 +421,6 @@ static int coresight_enable_source(struct coresight_device *csdev, u32 mode)
- {
- 	int ret;
+ 	u32 id, cfg_hash;
+ 	int cpu = event->cpu;
++	int trace_id;
+ 	cpumask_t *mask;
+ 	struct coresight_device *sink = NULL;
+ 	struct coresight_device *user_sink = NULL, *last_sink = NULL;
+@@ -316,6 +322,9 @@ static void *etm_setup_aux(struct perf_event *event, void **pages,
+ 		sink = user_sink = coresight_get_sink_by_id(id);
+ 	}
  
--	if (!coresight_source_is_unique(csdev)) {
--		dev_warn(&csdev->dev, "traceID %d not unique\n",
--			 source_ops(csdev)->trace_id(csdev));
--		return -EINVAL;
--	}
--
- 	if (!csdev->enable) {
- 		if (source_ops(csdev)->enable) {
- 			ret = coresight_control_assoc_ectdev(csdev, true);
++	/* tell the trace ID allocator that a perf event is starting up */
++	coresight_trace_id_perf_start();
++
+ 	/* check if user wants a coresight configuration selected */
+ 	cfg_hash = (u32)((event->attr.config2 & GENMASK_ULL(63, 32)) >> 32);
+ 	if (cfg_hash) {
+@@ -388,6 +397,13 @@ static void *etm_setup_aux(struct perf_event *event, void **pages,
+ 			continue;
+ 		}
+ 
++		/* ensure we can allocate a trace ID for this CPU */
++		trace_id = coresight_trace_id_get_cpu_id(cpu);
++		if (!IS_VALID_ID(trace_id)) {
++			cpumask_clear_cpu(cpu, mask);
++			continue;
++		}
++
+ 		*etm_event_cpu_path_ptr(event_data, cpu) = path;
+ 	}
+ 
 -- 
 2.17.1
 
