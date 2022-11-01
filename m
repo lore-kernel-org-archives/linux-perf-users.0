@@ -2,89 +2,194 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 23684C433FE
-	for <linux-perf-users@archiver.kernel.org>; Tue,  1 Nov 2022 15:19:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 72E5FC4332F
+	for <linux-perf-users@archiver.kernel.org>; Tue,  1 Nov 2022 16:31:34 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229941AbiKAPTG (ORCPT
+        id S230035AbiKAQbc (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Tue, 1 Nov 2022 11:19:06 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42200 "EHLO
+        Tue, 1 Nov 2022 12:31:32 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34618 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231492AbiKAPSg (ORCPT
+        with ESMTP id S230136AbiKAQbY (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Tue, 1 Nov 2022 11:18:36 -0400
-Received: from mail-qt1-f172.google.com (mail-qt1-f172.google.com [209.85.160.172])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1FC2411818
-        for <linux-perf-users@vger.kernel.org>; Tue,  1 Nov 2022 08:16:48 -0700 (PDT)
-Received: by mail-qt1-f172.google.com with SMTP id l2so4782802qtq.11
-        for <linux-perf-users@vger.kernel.org>; Tue, 01 Nov 2022 08:16:48 -0700 (PDT)
+        Tue, 1 Nov 2022 12:31:24 -0400
+Received: from mail-wr1-x433.google.com (mail-wr1-x433.google.com [IPv6:2a00:1450:4864:20::433])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4BD6C1CFD9
+        for <linux-perf-users@vger.kernel.org>; Tue,  1 Nov 2022 09:31:22 -0700 (PDT)
+Received: by mail-wr1-x433.google.com with SMTP id bs21so20911641wrb.4
+        for <linux-perf-users@vger.kernel.org>; Tue, 01 Nov 2022 09:31:22 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=message-id:date:subject:cc:to:from:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=IzO3d+PnqVX4eqOOm0vFp5Ik8ZhQdVIOcsgj2Vbb6Tw=;
+        b=mNDgzceo8zQsGTRZoPjjNL4wKPdLICJmBeFBzYpp/cpoVOX8EnBtqG4Bt7L6dyT4Z6
+         BLqEgELUYPkcP6b/RUrscw3jLLIHmdM9Zgx7WccySrCPFPa7ThDtgRQLgBgu8FoisxbR
+         zWqlMBH2baTfXoAI5x+we0u+gdbvEKW78/wkEfnSzCsUTdG+c3/RfsvhOPBV3YTsJ3GJ
+         rPEKNvRA851cFxIMZUwF0Dd+0vuwvZtF/zM9fAxpbpVWN+5BD/h80k9o6zkzXEjNADEs
+         JitFYf3LOnQEpK2Yn99tnifajIYNwkaXApZIB2/7tUQz8798F6FGc9/PxjksBohtscGX
+         D2jQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=NdCgoNIOCLrjJEAxFBcxqF43KwlKXZNll1NW/0wnzcM=;
-        b=zduSsqPWuc8cyPHa+LYRBCV6qqx4EiWJqz6gevvsbB0DSTClmLUHKC8b45SiClK62B
-         JisEkYjxgtD4ns/2CLPURhf0aAAjd7vE2FTsuf3od3yjVVsL0QdxezhT1Rp48OBPNvwy
-         QADihldtNq19QZJU9g0C/KTXfLVB9LDK7/YNKw0DjZv8QTGz0eM84GZP7yJtp6pyDTu7
-         nIuWjZXCD21LYtPCuGPS+JW1LbvR6duDBS+FZXwoNhOO4nA5bUai7NIS8XMXK1XuqnOv
-         BPyV01ED1wR8YHcAL+uFkF9+wlpEtDkRQMgig8x9o4W/FjE/r+qJTL77IvEybVjNxK5H
-         e00g==
-X-Gm-Message-State: ACrzQf06PDTqI8aQ9d/X+BgnqtnyAqahgFIA5R5hy4tMd/atseKWikxl
-        mt/hR+rwOlzOHVBqo/bSAiCKQCLuq4H+6g==
-X-Google-Smtp-Source: AMsMyM405TmASF+fY7YKmgfhrp/Uma7FoGVawqgw6Fb+XfjGa4VgAP3SZJmFkROgVV9bwZesGemw6A==
-X-Received: by 2002:a05:622a:1c4:b0:39c:f5a3:2f67 with SMTP id t4-20020a05622a01c400b0039cf5a32f67mr15456220qtw.29.1667315806822;
-        Tue, 01 Nov 2022 08:16:46 -0700 (PDT)
-Received: from mail-yb1-f170.google.com (mail-yb1-f170.google.com. [209.85.219.170])
-        by smtp.gmail.com with ESMTPSA id i5-20020ac84f45000000b0039ee562799csm5242585qtw.59.2022.11.01.08.16.46
-        for <linux-perf-users@vger.kernel.org>
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 01 Nov 2022 08:16:46 -0700 (PDT)
-Received: by mail-yb1-f170.google.com with SMTP id o70so17671921yba.7
-        for <linux-perf-users@vger.kernel.org>; Tue, 01 Nov 2022 08:16:46 -0700 (PDT)
-X-Received: by 2002:a05:6902:503:b0:6cf:c510:6a23 with SMTP id
- x3-20020a056902050300b006cfc5106a23mr1766786ybs.380.1667315806284; Tue, 01
- Nov 2022 08:16:46 -0700 (PDT)
-MIME-Version: 1.0
-References: <CAMuHMdUsfc-NNHswtS8jjhWFwk4fX2yvynKh4q0x_u01bnUQBA@mail.gmail.com>
- <20221101123035.xkytwxrhrkhjadc3@meerkat.local> <20221101151339.rhp6hys6vnxm4skj@nitro.local>
-In-Reply-To: <20221101151339.rhp6hys6vnxm4skj@nitro.local>
-From:   Geert Uytterhoeven <geert@linux-m68k.org>
-Date:   Tue, 1 Nov 2022 16:16:35 +0100
-X-Gmail-Original-Message-ID: <CAMuHMdWS-uK63y1D1qGPOvUbrSuhUnAgiCW+RdChP4xKN67OmA@mail.gmail.com>
-Message-ID: <CAMuHMdWS-uK63y1D1qGPOvUbrSuhUnAgiCW+RdChP4xKN67OmA@mail.gmail.com>
-Subject: Re: b4 ignoring Reviewed-by: in quoted-printable email
-To:     Konstantin Ryabitsev <konstantin@linuxfoundation.org>
-Cc:     tools@linux.kernel.org, linux-perf-users@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+        h=message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=IzO3d+PnqVX4eqOOm0vFp5Ik8ZhQdVIOcsgj2Vbb6Tw=;
+        b=115uPV++q/PHE5+41+p5Cr/BlmfWAvNB3P6gJ6Ug6+8etZ1o+5PHcaYGOmAG/D4XSw
+         V0yeCWU5BXMEYfRYrjLFTcHlDB0Xn249ex+sxmSZxw7+z0qtkdfx1HP2PBbDeUc9kXO1
+         /vKAMep4zNMPh0VnzQLb0PVMXDOnkY1wq70ifMBjBRy/alpBYPKLfBK/CpfPHWmXtviA
+         N7LGek44Xquhy/NbWs4KTpE1+dWrbSATKFKQUWFAPgVIw1TGBW54rZaQYpu9KqBEJiRn
+         iO0h+VDSHfesUsWvA5phOD9zcsxMRS0+xAgSRN+O7Sbu4pDwztDYIBj7q3SF9Oz2PHe6
+         E29A==
+X-Gm-Message-State: ACrzQf3ghdncnqEOdga4uRpek1jId/G2OZHeWwCxihzdYTWJmI94J/FI
+        fny3QH3b4NpscFQsfQDILdh1sQ==
+X-Google-Smtp-Source: AMsMyM5wXfc9H9fvY5c0jpbqRy0kwubQO5OYYdhMVEMxrxKX5tVk8qsr+tm4Ie0fvYRa+FkY5LbNAg==
+X-Received: by 2002:a5d:5551:0:b0:236:c715:59bf with SMTP id g17-20020a5d5551000000b00236c71559bfmr8245183wrw.124.1667320280715;
+        Tue, 01 Nov 2022 09:31:20 -0700 (PDT)
+Received: from linaro.org ([2a00:23c5:6809:2201:e844:18b6:fc5:bbc9])
+        by smtp.gmail.com with ESMTPSA id bu15-20020a056000078f00b0022ac1be009esm8339844wrb.16.2022.11.01.09.31.18
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 01 Nov 2022 09:31:19 -0700 (PDT)
+From:   Mike Leach <mike.leach@linaro.org>
+To:     coresight@lists.linaro.org, linux-arm-kernel@lists.infradead.org,
+        linux-kernel@vger.kernel.org
+Cc:     mathieu.poirier@linaro.org, suzuki.poulose@arm.com,
+        peterz@infradead.org, mingo@redhat.com, acme@kernel.org,
+        linux-perf-users@vger.kernel.org, leo.yan@linaro.org,
+        quic_jinlmao@quicinc.com, Mike Leach <mike.leach@linaro.org>
+Subject: [PATCH v5 00/14]  coresight: Add new API to allocate trace source ID values
+Date:   Tue,  1 Nov 2022 16:30:49 +0000
+Message-Id: <20221101163103.17921-1-mike.leach@linaro.org>
+X-Mailer: git-send-email 2.17.1
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-Hi Konstantin,
+The current method for allocating trace source ID values to sources is
+to use a fixed algorithm for CPU based sources of (cpu_num * 2 + 0x10).
+The STM is allocated ID 0x1.
 
-On Tue, Nov 1, 2022 at 4:13 PM Konstantin Ryabitsev
-<konstantin@linuxfoundation.org> wrote:
-> On Tue, Nov 01, 2022 at 08:30:35AM -0400, Konstantin Ryabitsev wrote:
-> > It's actually because that message has a subject that doesn't indicate a
-> > follow-up (doesn't have a Re:):
-> >
-> >     Subject: [PATCH v2] clk: renesas: r9a06g032: Repair grave increment error
-> >
-> > I'll see if we can recognize this situation, but it's definitely an odd
-> > corner-case.
->
-> There is a fix for this in master.
+This fixed algorithm is used in both the CoreSight driver code, and by
+perf when writing the trace metadata in the AUXTRACE_INFO record.
 
-Thank you, confirmed.
+The method needs replacing as currently:-
+1. It is inefficient in using available IDs.
+2. Does not scale to larger systems with many cores and the algorithm
+has no limits so will generate invalid trace IDs for cpu number > 44.
 
-Gr{oetje,eeting}s,
+Additionally requirements to allocate additional system IDs on some
+systems have been seen.
 
-                        Geert
+This patch set  introduces an API that allows the allocation of trace IDs
+in a dynamic manner.
 
---
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
+Architecturally reserved IDs are never allocated, and the system is
+limited to allocating only valid IDs.
 
-In personal conversations with technical people, I call myself a hacker. But
-when I'm talking to journalists I just say "programmer" or something like that.
-                                -- Linus Torvalds
+Each of the current trace sources ETM3.x, ETM4.x and STM is updated to use
+the new API.
+
+For the ETMx.x devices IDs are allocated on certain events
+a) When using sysfs, an ID will be allocated on hardware enable, or a read of
+sysfs TRCTRACEID register and freed when the sysfs reset is written.
+
+b) When using perf, ID is allocated on during setup AUX event, and freed on
+event free. IDs are communicated using the AUX_OUTPUT_HW_ID packet.
+The ID allocator is notified when perf sessions start and stop
+so CPU based IDs are kept constant throughout any perf session.
+
+
+Note: This patchset breaks some backward compatibility for perf record and
+perf report.
+
+The version of the AUXTRACE_INFO has been updated to reflect the fact that
+the trace source IDs are generated differently. This will
+mean older versions of perf report cannot decode the newer file.
+
+Appies to coresight/next [30a0b95b1335]
+
+Changes since v4:
+1) update to ensure that compiling after each individual patch added still
+works - ie. git bisect not broken through the patchset..
+
+2) Revision to some of the now redundant code in cs-etm (James)
+
+3) Comments and other minor fixes requested by Suzuki.
+
+Changes since v3:
+1) Fixed aarch32 build error in ETM3.x driver.
+Reported-by: kernel test robot <lkp@intel.com>
+
+Changes since v2:
+1) Improved backward compatibility: (requested by James)
+
+Using the new version of perf on an old kernel will generate a usable file
+legacy metadata values are set by the new perf and will be used if mew
+ID packets are not present in the file.
+
+Using an older version of perf / simpleperf on an updated kernel may still
+work. The trace ID allocator has been updated to use the legacy ID values
+where possible, so generated file and used trace IDs will match up to the
+point where the legacy algorithm is broken anyway.
+
+2) Various changes to the ID allocator and ID packet format.
+(suggested by Suzuki)
+
+3) per CPU ID info in allocator now stored as atomic type to allow a passive read
+without taking the allocator spinlock. perf flow now allocates and releases ID
+values in setup_aux / free_event. Device enable and event enable use the passive
+read to set the allocated values. This simplifies the locking mechanisms on the
+perf run and fixes issues that arose with locking dependencies.
+
+Changes since v1:
+(after feedback & discussion with Mathieu & Suzuki).
+
+1) API has changed. The global trace ID map is managed internally, so it
+is no longer passed in to the API functions.
+
+2) perf record does not use sysfs to find the trace IDs. These are now
+output as AUX_OUTPUT_HW_ID events. The drivers, perf record, and perf report
+have been updated accordingly to generate and handle these events.
+
+Mike Leach (14):
+  coresight: trace-id: Add API to dynamically assign Trace ID values
+  coresight: Remove obsolete Trace ID unniqueness checks
+  coresight: perf: traceid: Add perf ID allocation and notifiers
+  coresight: stm: Update STM driver to use Trace ID API
+  coresight: etm4x: Update ETM4 driver to use Trace ID API
+  coresight: etm3x: Update ETM3 driver to use Trace ID API
+  coresight: etmX.X: stm: Remove trace_id() callback
+  coresight: trace id: Remove legacy get trace ID function.
+  perf: cs-etm: Move mapping of Trace ID and cpu into helper function
+  perf: cs-etm: Update record event to use new Trace ID protocol
+  kernel: events: Export perf_report_aux_output_id()
+  perf: cs-etm: Handle PERF_RECORD_AUX_OUTPUT_HW_ID packet
+  coresight: events: PERF_RECORD_AUX_OUTPUT_HW_ID used for Trace ID
+  coresight: trace-id: Add debug & test macros to Trace ID allocation
+
+ drivers/hwtracing/coresight/Makefile          |   2 +-
+ drivers/hwtracing/coresight/coresight-core.c  |  49 +--
+ .../hwtracing/coresight/coresight-etm-perf.c  |  23 ++
+ drivers/hwtracing/coresight/coresight-etm.h   |   3 +-
+ .../coresight/coresight-etm3x-core.c          |  90 +++--
+ .../coresight/coresight-etm3x-sysfs.c         |  27 +-
+ .../coresight/coresight-etm4x-core.c          |  70 +++-
+ .../coresight/coresight-etm4x-sysfs.c         |  27 +-
+ drivers/hwtracing/coresight/coresight-etm4x.h |   3 +
+ drivers/hwtracing/coresight/coresight-stm.c   |  49 +--
+ .../hwtracing/coresight/coresight-trace-id.c  | 258 ++++++++++++++
+ .../hwtracing/coresight/coresight-trace-id.h  | 154 ++++++++
+ include/linux/coresight-pmu.h                 |  34 +-
+ include/linux/coresight.h                     |   3 -
+ kernel/events/core.c                          |   1 +
+ tools/include/linux/coresight-pmu.h           |  48 ++-
+ tools/perf/arch/arm/util/cs-etm.c             |  21 +-
+ .../perf/util/cs-etm-decoder/cs-etm-decoder.c |   7 +
+ tools/perf/util/cs-etm.c                      | 328 +++++++++++++++---
+ tools/perf/util/cs-etm.h                      |  14 +-
+ 20 files changed, 980 insertions(+), 231 deletions(-)
+ create mode 100644 drivers/hwtracing/coresight/coresight-trace-id.c
+ create mode 100644 drivers/hwtracing/coresight/coresight-trace-id.h
+
+-- 
+2.17.1
+
