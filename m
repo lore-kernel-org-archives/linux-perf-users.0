@@ -2,147 +2,155 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6983EC433FE
-	for <linux-perf-users@archiver.kernel.org>; Wed,  2 Nov 2022 16:29:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4255BC43217
+	for <linux-perf-users@archiver.kernel.org>; Wed,  2 Nov 2022 17:19:39 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231718AbiKBQ3A (ORCPT
+        id S230353AbiKBRTh (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Wed, 2 Nov 2022 12:29:00 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47552 "EHLO
+        Wed, 2 Nov 2022 13:19:37 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45222 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231320AbiKBQ2i (ORCPT
+        with ESMTP id S229772AbiKBRTg (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Wed, 2 Nov 2022 12:28:38 -0400
-Received: from mail.zytor.com (unknown [IPv6:2607:7c80:54:3::138])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 99DFD13F;
-        Wed,  2 Nov 2022 09:24:16 -0700 (PDT)
-Received: from [127.0.0.1] ([73.223.250.219])
-        (authenticated bits=0)
-        by mail.zytor.com (8.17.1/8.17.1) with ESMTPSA id 2A2GN1Vs193304
-        (version=TLSv1.3 cipher=TLS_AES_128_GCM_SHA256 bits=128 verify=NO);
-        Wed, 2 Nov 2022 09:23:02 -0700
-DKIM-Filter: OpenDKIM Filter v2.11.0 mail.zytor.com 2A2GN1Vs193304
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=zytor.com;
-        s=2022100601; t=1667406185;
-        bh=2qhL9paa9Bl7NcpRAYoQBHnYYys+tFYJuc63a/wNIYo=;
-        h=Date:From:To:CC:Subject:In-Reply-To:References:From;
-        b=KhcjIUs4JOQM6QdM8BkvkEYHy5B5naetJ5p05f4nXNwi7dHQsUlNXGHq9sSP+kGLB
-         w2D9rEwDL+UAMJpOa3ENcn+m28FA3FjKPH3C5UlwNkOjoPbY5xpuk0mRfLsaQaa6v2
-         CKW6UyQTl9lHGXaPWnv92pbKoRDNFr3vTo6ykHLkJtHG4pE8vCblV0HBXu0GQx2Ozk
-         sq1IZBPhFyr1NWLC+iQBEsiYH7oaPuFNwk9Gwyz4HoJtPoA7JleF+w8f9p8zSa46+i
-         VkstF+w7FahRyvNMT7YpOiWemAqf7ReKeNBGDhVbspPLUdPzlvFF6ymSsPK0bZI1y2
-         aKlLPae2S9gnQ==
-Date:   Wed, 02 Nov 2022 09:23:00 -0700
-From:   "H. Peter Anvin" <hpa@zytor.com>
-To:     "Elliott, Robert (Servers)" <elliott@hpe.com>,
-        Paolo Bonzini <pbonzini@redhat.com>,
-        Borislav Petkov <bp@alien8.de>,
-        Maxim Levitsky <mlevitsk@redhat.com>
-CC:     "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "kvm@vger.kernel.org" <kvm@vger.kernel.org>,
-        Pawan Gupta <pawan.kumar.gupta@linux.intel.com>,
-        Ingo Molnar <mingo@redhat.com>,
-        Josh Poimboeuf <jpoimboe@kernel.org>,
-        Namhyung Kim <namhyung@kernel.org>,
-        Tony Luck <tony.luck@intel.com>,
-        Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Tim Chen <tim.c.chen@linux.intel.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        Dave Hansen <dave.hansen@linux.intel.com>,
-        "Chang S. Bae" <chang.seok.bae@intel.com>,
-        Jane Malalane <jane.malalane@citrix.com>,
-        Kees Cook <keescook@chromium.org>,
-        Kan Liang <kan.liang@linux.intel.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        "maintainer:X86 ARCHITECTURE (32-BIT AND 64-BIT)" <x86@kernel.org>,
-        Herbert Xu <herbert@gondor.apana.org.au>,
-        Jiri Olsa <jolsa@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        "linux-perf-users@vger.kernel.org" <linux-perf-users@vger.kernel.org>,
-        "open list:CRYPTO API" <linux-crypto@vger.kernel.org>
-Subject: =?US-ASCII?Q?RE=3A_=5BPATCH_v2_1/5=5D_perf/x86/intel/lbr=3A_use_?= =?US-ASCII?Q?setup=5Fclear=5Fcpu=5Fcap_instead_of_clear=5Fcpu=5Fcap?=
-User-Agent: K-9 Mail for Android
-In-Reply-To: <MW5PR84MB18428331677C881764E615D2AB399@MW5PR84MB1842.NAMPRD84.PROD.OUTLOOK.COM>
-References: <20220718141123.136106-1-mlevitsk@redhat.com> <20220718141123.136106-2-mlevitsk@redhat.com> <Yyh9RDbaRqUR1XSW@zn.tnic> <c105971a72dfe6d46ad75fb7e71f79ba716e081c.camel@redhat.com> <YzGlQBkCSJxY+8Jf@zn.tnic> <c1168e8bd9077a2cc9ef61ee06db7a4e8c0f1600.camel@redhat.com> <Y1EOBAaLbv2CXBDL@zn.tnic> <fd2cf028-bd83-57ff-7e6d-ef3ee11852a1@redhat.com> <MW5PR84MB18428331677C881764E615D2AB399@MW5PR84MB1842.NAMPRD84.PROD.OUTLOOK.COM>
-Message-ID: <EFDA4E40-4133-4CED-97FA-DC75AEA24556@zytor.com>
+        Wed, 2 Nov 2022 13:19:36 -0400
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8262227B3A
+        for <linux-perf-users@vger.kernel.org>; Wed,  2 Nov 2022 10:18:42 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1667409521;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=6bHZ6RhzwZqcFqy+ASS3SxP9gnDv328z5/6b9PXyycI=;
+        b=KdG5/u3vXjO1WdxS6SJ0FMJB+hpFfTGICFTaTH3CV5O/Bp2INmfAVakTBQfy457biuaPY2
+        Q+pvwoGwtayP8caKaSndGsktDS7q0ayIou/7OgUWR1JzpaPm/ViqI6rzxU91q10StKV9am
+        RBWcfd6tf15Czlg/0C5N/JTLpVxzz9M=
+Received: from mail-ed1-f70.google.com (mail-ed1-f70.google.com
+ [209.85.208.70]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_128_GCM_SHA256) id
+ us-mta-237-OhvOSc1yO_WJWHc5tFJ-og-1; Wed, 02 Nov 2022 13:18:40 -0400
+X-MC-Unique: OhvOSc1yO_WJWHc5tFJ-og-1
+Received: by mail-ed1-f70.google.com with SMTP id z11-20020a056402274b00b00461dba91468so12322151edd.6
+        for <linux-perf-users@vger.kernel.org>; Wed, 02 Nov 2022 10:18:40 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=content-transfer-encoding:in-reply-to:from:references:cc:to
+         :content-language:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=6bHZ6RhzwZqcFqy+ASS3SxP9gnDv328z5/6b9PXyycI=;
+        b=qdmOzH9BNP48UR1IRc4rJM0bYuPyQV7y+T2IpKE1sMjNiG2Ag1glxe9KPt9RVuCoKk
+         KeRsNfWUBc2kcMvH6NV5tNhYDNUZ5FncskcLZsayDE4uCM/9uem+Xfw2kc3ALI4caf1z
+         JY3TB8HV7+c+4C/1rbIYcqyP1V67c7H8rWkutLu60J4bH/FYLhBwwjT0ihO6yTONNgUE
+         F4qvs1Q6574k9F1kt7FBR6XzB7NEQxKti2bK9QskB4HqeLbMJ3TJv2+82z9hEwNdTHnV
+         aepMBp00qS/0s9VkWrzKucBYNQZqr0xjmgunjQtGcH/P7rbiDYQTWN+seIl1tzImEp5O
+         5uPg==
+X-Gm-Message-State: ACrzQf0JfLYN2TzgktAhnXcCollwF6CMdXmhDInk34CcJCSZR9mDcr/9
+        Kd/8moiwHERS62lwpnM1gVz4QMwha7JNfPZ70T/XQ5Wi+b9ytI+ARXnhRm1BAaq2dqnwdV2Xc8j
+        R3HAAE/BA1RHw9HZzGAXaAfDE2fuxaA==
+X-Received: by 2002:aa7:ce8d:0:b0:461:50fd:e358 with SMTP id y13-20020aa7ce8d000000b0046150fde358mr25568801edv.194.1667409518908;
+        Wed, 02 Nov 2022 10:18:38 -0700 (PDT)
+X-Google-Smtp-Source: AMsMyM4/x6PwTbAurOsVP1zVclwSL+Yxg9TvaRFUydU5orfswpNxKcJmxdeZGEr7BJDb268QdsewlQ==
+X-Received: by 2002:aa7:ce8d:0:b0:461:50fd:e358 with SMTP id y13-20020aa7ce8d000000b0046150fde358mr25568766edv.194.1667409518634;
+        Wed, 02 Nov 2022 10:18:38 -0700 (PDT)
+Received: from ?IPV6:2001:b07:add:ec09:c399:bc87:7b6c:fb2a? ([2001:b07:add:ec09:c399:bc87:7b6c:fb2a])
+        by smtp.googlemail.com with ESMTPSA id d7-20020aa7ce07000000b004589da5e5cesm6056704edv.41.2022.11.02.10.18.37
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 02 Nov 2022 10:18:37 -0700 (PDT)
+Message-ID: <a817ec49-adae-50b5-6c3e-8e4e91d91e93@redhat.com>
+Date:   Wed, 2 Nov 2022 18:18:36 +0100
 MIME-Version: 1.0
-Content-Type: text/plain;
- charset=utf-8
-Content-Transfer-Encoding: quoted-printable
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
+ Thunderbird/102.4.0
+Subject: Re: [PATCH v5 0/8] KVM: x86: Intel LBR related perf cleanups
+Content-Language: en-US
+To:     Sean Christopherson <seanjc@google.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        Arnaldo Carvalho de Melo <acme@kernel.org>
+Cc:     Mark Rutland <mark.rutland@arm.com>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Jiri Olsa <jolsa@kernel.org>,
+        Namhyung Kim <namhyung@kernel.org>,
+        linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org,
+        kvm@vger.kernel.org, Like Xu <like.xu.linux@gmail.com>
+References: <20221006000314.73240-1-seanjc@google.com>
+From:   Paolo Bonzini <pbonzini@redhat.com>
+In-Reply-To: <20221006000314.73240-1-seanjc@google.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-On November 2, 2022 7:27:52 AM PDT, "Elliott, Robert (Servers)" <elliott@hp=
-e=2Ecom> wrote:
->
->> From: Paolo Bonzini <pbonzini@redhat=2Ecom>
->=2E=2E=2E
->> (2) in particular holds even on bare metal=2E  The kernel bug here is t=
-hat
->> X86_FEATURE_AVX only tells you if the instructions are _present_, not i=
-f
->> they are _usable_=2E   Indeed, the XCR0 check is present for all other
->> files in arch/x86/crypto, either instead or in addition to
->> boot_cpu_has(X86_FEATURE_AVX)=2E
->>=20
->> Maxim had sent a patch about a year ago to do it in aesni-intel-glue=2E=
-c
->> but Dave told him to fix the dependencies instead
->> (https://lore=2Ekernel=2Eorg/all/20211103124614=2E499580-1-
->> mlevitsk@redhat=2Ecom/)=2E
->>   What do you think of applying that patch instead?
->
->Most of the x86 crypto modules using X86_FEATURE_AVX do check
->	cpu_has_xfeatures(XFEATURE_MASK_YMM, =2E=2E=2E
->
->so it's probably prudent to add it to the rest (or remove it everywhere
->if it is not needed)=2E
->
->1=2E Currently checking XSAVE YMM:
->  aria_aesni_avx_glue
->  blake2s-glue
->  camellia_aesni_avx2_glue	camellia_aesni_avx_glue
->  cast5_avx_glue		cast6_avx_glue
->  chacha_glue
->  poly1305_glue
->  serpent_avx2_glue		serpent_avx_glue
->  sha1_ssse3_glue		sha256_ssse3_glue	sha512_ssse3_glue
->  sm3_avx_glue
->  sm4_aesni_avx2_glue	sm4_aesni_avx_glue
->  twofish_avx_glue
->
->Currently not checking XSAVE YMM:
->  aesni-intel_glue
->  curve25519-x86_64
->  nhpoly1305-avx2-glue
->  polyval-clmulni_glue
->
->2=2E Similarly, modules using X86_FEATURE_AVX512F, X86_FEATURE_AVXX512VL
->and/or X86_FEATURE_AVX512BW probably need to check XFEATURE_MASK_AVX512:
->
->Currently checking XSAVE AVX512:
->  blake2s-glue
->  poly1305_glue
->
->Currently not checking XSAVE AVX512:
->  chacha_glue
->
->3=2E Similarly, modules using X86_FEATURE_XMM2 probably need to
->check XFEATURE_MASK_SSE:
->
->Currently checking XSAVE SSE:
->  aegis128-aesni-glue=20
->
->Current not checking XSAVE SSE:
->  nhpoly1305-sse2_glue
->  serpent_sse2_glue
->
->
->
+On 10/6/22 02:03, Sean Christopherson wrote:
+> PeterZ, I dropped your ACK from v4 because the perf patches were completely
+> broken.
+> 
+> Fix a bug where KVM incorrectly advertises PMU_CAP_LBR_FMT to userspace if
+> perf has disabled LBRs, e.g. because probing one or more LBR MSRs during
+> setup hit a #GP.
+> 
+> The non-KVM patch cleans up a KVM-specific perf API to fix a benign bug
+> where KVM ignores the error return from the API.
+> 
+> The remaining patches clean up KVM's PERF_CAPABILITIES mess, which makes
+> everything far more complex than it needs to be by
+> 
+> v5:
+>   - Drop perf patches that removed stubs.  The stubs are sadly necessary
+>     when CPU_SUP_INTEL=n && KVM_INTEL={m,y}, which is possible due to
+>     KVM_INTEL effectively depending on INTEL || CENTAUR || ZHAOXIN.
+>     [hint provided by kernel test robot].
+>   - Add a patch to ignore guest CPUID on host userspace MSR writes.
+>   - Add supported PERF_CAPABILITIES to kvm_caps to simplify code for all
+>     parties.
+> 
+> v4
+>   - https://lore.kernel.org/all/20220901173258.925729-1-seanjc@google.com:
+>   - Make vmx_get_perf_capabilities() non-inline to avoid references to
+>     x86_perf_get_lbr() when CPU_SUP_INTEL=n. [kernel test robot]
+> 
+> v3:
+>   - https://lore.kernel.org/all/20220831000051.4015031-1-seanjc@google.com
+>   - Drop patches for bug #1 (already merged).
+>   - Drop misguided "clean up the capability check" patch. [Like]
+> 
+> v2:
+>   - https://lore.kernel.org/all/20220803192658.860033-1-seanjc@google.com
+>   - Add patches to fix bug #2. [Like]
+>   - Add a patch to clean up the capability check.
+>   - Tweak the changelog for the PMU refresh bug fix to call out that
+>     KVM should disallow changing feature MSRs after KVM_RUN. [Like]
+> 
+> v1: https://lore.kernel.org/all/20220727233424.2968356-1-seanjc@google.com
+> 
+> Sean Christopherson (8):
+>    perf/x86/core: Zero @lbr instead of returning -1 in x86_perf_get_lbr()
+>      stub
+>    KVM: VMX: Advertise PMU LBRs if and only if perf supports LBRs
+>    KVM: VMX: Fold vmx_supported_debugctl() into vcpu_supported_debugctl()
+>    KVM: VMX: Ignore guest CPUID for host userspace writes to DEBUGCTL
+>    KVM: x86: Track supported PERF_CAPABILITIES in kvm_caps
+>    KVM: x86: Init vcpu->arch.perf_capabilities in common x86 code
+>    KVM: x86: Handle PERF_CAPABILITIES in common x86's
+>      kvm_get_msr_feature()
+>    KVM: x86: Directly query supported PERF_CAPABILITIES for WRMSR checks
+> 
+>   arch/x86/events/intel/lbr.c       |  6 +---
+>   arch/x86/include/asm/perf_event.h |  6 ++--
+>   arch/x86/kvm/svm/svm.c            |  3 +-
+>   arch/x86/kvm/vmx/capabilities.h   | 37 ----------------------
+>   arch/x86/kvm/vmx/pmu_intel.c      |  1 -
+>   arch/x86/kvm/vmx/vmx.c            | 51 +++++++++++++++++++++++--------
+>   arch/x86/kvm/x86.c                | 14 ++++-----
+>   arch/x86/kvm/x86.h                |  1 +
+>   8 files changed, 52 insertions(+), 67 deletions(-)
+> 
+> 
+> base-commit: e18d6152ff0f41b7f01f9817372022df04e0d354
 
-We have a dependency system for CPUID features=2E If you are going to do t=
-his (as opposed to "fixing" this in Qemu or just saying "don't do that, it =
-isn't a valid hardware configuration=2E"
+Queued, with patches 2-4 destined to kvm/master.
+
+Paolo
+
