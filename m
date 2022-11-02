@@ -2,126 +2,199 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 98AD4C433FE
-	for <linux-perf-users@archiver.kernel.org>; Wed,  2 Nov 2022 00:04:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 09BCEC433FE
+	for <linux-perf-users@archiver.kernel.org>; Wed,  2 Nov 2022 06:51:48 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229487AbiKBAEF (ORCPT
+        id S229516AbiKBGvp (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Tue, 1 Nov 2022 20:04:05 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40874 "EHLO
+        Wed, 2 Nov 2022 02:51:45 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49420 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229457AbiKBAEF (ORCPT
+        with ESMTP id S229459AbiKBGvo (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Tue, 1 Nov 2022 20:04:05 -0400
-Received: from mail-oa1-f50.google.com (mail-oa1-f50.google.com [209.85.160.50])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BCC7CCE6;
-        Tue,  1 Nov 2022 17:04:03 -0700 (PDT)
-Received: by mail-oa1-f50.google.com with SMTP id 586e51a60fabf-13c2cfd1126so18621517fac.10;
-        Tue, 01 Nov 2022 17:04:03 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=sRe4Rhg+AzQ1C8960wXYonENiHb2NOvfma+pJy2edvA=;
-        b=u2T4eS6MeB8AjRZLB0FAmEZgb5u5aoVI9souGYuhrkE+Cve2nUG2qjE8aPxm1zsRnt
-         awUypBGKSm6s/me62C9lLXHEt0sqFQRWt+6/8E3PyrBhzie4RL4Npb6l+f1DlHpn2VyD
-         Eg6qO4wIFsz1VCSYuQGe+ORvEQF9oQl5p4yHpD7JkI0HLAGPpIZAc81Dajsq7ZkdfnAi
-         kiNVvp3xZ3NICVwgrLErnaLWme8pZ74PZaRLB8eTzVkoZ6K3hW8oyGwwk0CUJqP7UOUd
-         0zcUcV85M6THp3o2L4jnpVOktoo2J1ma7yRNLyyQhzxtp4eOGLCM2wfjp3Wf155VRzvb
-         9f9Q==
-X-Gm-Message-State: ACrzQf32osLOsVh1uE77nb2ZWMb+k1+/z73yx7hCE1120rhhmBVgN+Wk
-        2LbKvhghbDTCoSHqH/MSoWg2+5Fv3sPkQMY7UyrVQlGs
-X-Google-Smtp-Source: AMsMyM6ChSMuBRK6j4CncDwXG+bn2htdD9iQH62m7TfMQ1M8+hUcqoVh0iMamhCUVlpw5QQzi1IUm6VFZ327A9jPEcs=
-X-Received: by 2002:a05:6870:d18f:b0:13b:a366:f448 with SMTP id
- a15-20020a056870d18f00b0013ba366f448mr12277351oac.209.1667347442908; Tue, 01
- Nov 2022 17:04:02 -0700 (PDT)
-MIME-Version: 1.0
-References: <166731050151.2100653.8202870942871353491.stgit@devnote3>
-In-Reply-To: <166731050151.2100653.8202870942871353491.stgit@devnote3>
-From:   Namhyung Kim <namhyung@kernel.org>
-Date:   Tue, 1 Nov 2022 17:03:51 -0700
-Message-ID: <CAM9d7chbMQ5Zxn00-VTbvaarBu1rkWZopqQCxfQqFq0Cnr_C+A@mail.gmail.com>
-Subject: Re: [PATCH v2 0/3] tools/perf: Fix perf probe crash by clang DWARF5 file
-To:     "Masami Hiramatsu (Google)" <mhiramat@kernel.org>
-Cc:     Arnaldo Carvalho de Melo <acme@kernel.org>,
+        Wed, 2 Nov 2022 02:51:44 -0400
+Received: from mx0a-001b2d01.pphosted.com (mx0a-001b2d01.pphosted.com [148.163.156.1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id EA4E625F6;
+        Tue,  1 Nov 2022 23:51:43 -0700 (PDT)
+Received: from pps.filterd (m0098410.ppops.net [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (8.17.1.5/8.17.1.5) with ESMTP id 2A26IJIc012406;
+        Wed, 2 Nov 2022 06:51:23 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=content-type :
+ mime-version : subject : from : in-reply-to : date : cc :
+ content-transfer-encoding : message-id : references : to; s=pp1;
+ bh=LHqYGDj6v9S6R3aREm6PgatDmspsJeXiILHjBKsg8ZQ=;
+ b=JRTIJy1FDSLxKUnCgQOLQcxzukV25k5TaP5Tf3E8liUVzW15zFBvHMYbJ9uBFSXijCtL
+ o4FWU22Ho4yBugjQWLrKsTrRgQC17W7hJ4TauctDdW5YyiOjh8qAvLHytEY73Q+q2v0g
+ DVniuYv1BybAYBKmkrZ57I7aDph5XxwNUluQMQeAWi2YHNGBF527fEGM46KtOTi7iUC2
+ 6pgdFfsVWsNC5o+QPY7a7+Dlgcz5rQMxeGFGpjk8Rqe2loNFfRWz8m9QwXr897bhd9+C
+ ITwvzwXHtstsDeKQxrn/BlQhPN6Iam9IKFe7wGdnDwYvGh8jvZ6bkQbwNn88i+Titwfx Yg== 
+Received: from pps.reinject (localhost [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 3kjufhrfhw-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Wed, 02 Nov 2022 06:51:23 +0000
+Received: from m0098410.ppops.net (m0098410.ppops.net [127.0.0.1])
+        by pps.reinject (8.17.1.5/8.17.1.5) with ESMTP id 2A26TuV9001276;
+        Wed, 2 Nov 2022 06:51:22 GMT
+Received: from ppma04ams.nl.ibm.com (63.31.33a9.ip4.static.sl-reverse.com [169.51.49.99])
+        by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 3kjufhrfgn-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Wed, 02 Nov 2022 06:51:22 +0000
+Received: from pps.filterd (ppma04ams.nl.ibm.com [127.0.0.1])
+        by ppma04ams.nl.ibm.com (8.16.1.2/8.16.1.2) with SMTP id 2A26admD028277;
+        Wed, 2 Nov 2022 06:51:19 GMT
+Received: from b06cxnps4075.portsmouth.uk.ibm.com (d06relay12.portsmouth.uk.ibm.com [9.149.109.197])
+        by ppma04ams.nl.ibm.com with ESMTP id 3kgut963gt-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Wed, 02 Nov 2022 06:51:19 +0000
+Received: from b06wcsmtp001.portsmouth.uk.ibm.com (b06wcsmtp001.portsmouth.uk.ibm.com [9.149.105.160])
+        by b06cxnps4075.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 2A26pHXA37618270
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Wed, 2 Nov 2022 06:51:17 GMT
+Received: from b06wcsmtp001.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 48F01A405C;
+        Wed,  2 Nov 2022 06:51:17 +0000 (GMT)
+Received: from b06wcsmtp001.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id D1238A405B;
+        Wed,  2 Nov 2022 06:51:13 +0000 (GMT)
+Received: from smtpclient.apple (unknown [9.43.40.163])
+        by b06wcsmtp001.portsmouth.uk.ibm.com (Postfix) with ESMTPS;
+        Wed,  2 Nov 2022 06:51:13 +0000 (GMT)
+Content-Type: text/plain;
+        charset=us-ascii
+Mime-Version: 1.0 (Mac OS X Mail 16.0 \(3696.120.41.1.1\))
+Subject: Re: [PATCH] perf test: Fix skipping branch stack sampling test
+From:   Athira Rajeev <atrajeev@linux.vnet.ibm.com>
+In-Reply-To: <2265e166-da9c-f540-a108-0d0b133f7da9@arm.com>
+Date:   Wed, 2 Nov 2022 12:21:11 +0530
+Cc:     LKML <linux-kernel@vger.kernel.org>, Anshuman.Khandual@arm.com,
         Peter Zijlstra <peterz@infradead.org>,
         Ingo Molnar <mingo@redhat.com>,
         Mark Rutland <mark.rutland@arm.com>,
         Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Jiri Olsa <jolsa@kernel.org>, linux-perf-users@vger.kernel.org,
-        linux-kernel@vger.kernel.org, Steven Rostedt <rostedt@goodmis.org>
-Content-Type: text/plain; charset="UTF-8"
+        Jiri Olsa <jolsa@kernel.org>,
+        Namhyung Kim <namhyung@kernel.org>,
+        Kajol Jain <kjain@linux.ibm.com>,
+        linux-perf-users@vger.kernel.org, acme@kernel.org
+Content-Transfer-Encoding: quoted-printable
+Message-Id: <F79AE69A-4D87-4F4E-A3FD-EF06A6E12839@linux.vnet.ibm.com>
+References: <20221028121913.745307-1-james.clark@arm.com>
+ <2265e166-da9c-f540-a108-0d0b133f7da9@arm.com>
+To:     James Clark <james.clark@arm.com>
+X-Mailer: Apple Mail (2.3696.120.41.1.1)
+X-TM-AS-GCONF: 00
+X-Proofpoint-GUID: e-mxlTSTwei_hsaVcn_kOxWIGmXveDU0
+X-Proofpoint-ORIG-GUID: h1emuicVceHJGZc-7aq68lCZXPrXyRkV
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.205,Aquarius:18.0.895,Hydra:6.0.545,FMLib:17.11.122.1
+ definitions=2022-11-02_03,2022-11-01_02,2022-06-22_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 suspectscore=0 clxscore=1011
+ mlxscore=0 spamscore=0 lowpriorityscore=0 malwarescore=0 bulkscore=0
+ impostorscore=0 priorityscore=1501 adultscore=0 mlxlogscore=999
+ phishscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2210170000 definitions=main-2211020039
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-Hi Masami,
-
-On Tue, Nov 1, 2022 at 6:48 AM Masami Hiramatsu (Google)
-<mhiramat@kernel.org> wrote:
->
-> Hi,
->
-> Here is the 2nd version of the patches for perf probe which improves the
-> robustness against clang DWARF5 file.
->
-> Since the Clang generates a bit different DWARF5 file, the perf probe
-> crashes or failes to analyze it. There are actually fragile code against
-> it, so I fixed it ([1/3]) to avoid crash by SEGV. And make it accepts
-> Clang's DWARF5 file ([2/3],[3/3]).
->
-> Without this series, the perf probe crashes with the DWARF5 file
-> which generated by clang as below;
->
->   $ ./perf probe -k $BIN_PATH/vmlinux -s $SRC_PATH -L vfs_read:10
->   Segmentation fault
->
-> This series fixes it to handle such file correctly;
->
->   $ ./perf probe -k $BIN_PATH/vmlinux -s $SRC_PATH -L vfs_read:10
->   <vfs_read@$SRC_PATH/fs/read_write.c:10>
->
->        11         ret = rw_verify_area(READ, file, pos, count);
->        12         if (ret)
->                            return ret;
->
->
-> On the DWARF5 specification, Sec 2.14, there is
-> "The value 0 indicates that no source file has been specified."
-> for DW_AT_decl_file, but clang generated DWARF5 will use the value 0.
->
-> This issue is discussed on DWARF std ML;
-> https://www.mail-archive.com/dwarf-discuss@lists.dwarfstd.org/msg00884.html
->
-> And suggested that removing this part from the specification.
-> http://wiki.dwarfstd.org/index.php?title=DWARF5_Line_Table_File_Numbers
->
-> So as far as I understand, this is out of standard at this moment,
-> but the standard itself has a discussion on this part. And maybe updated
-> as currently clang does in the next release/revision.
->
-> Thank you,
->
-> ---
->
-> Masami Hiramatsu (Google) (3):
->       tools/perf: Fix to avoid crashing if DW_AT_decl_file is NULL
->       tools/perf: Fix to use dwarf_attr_integrate for generic attr accessor
->       tools/perf: Fix to get declared file name from clang DWARF5
-
-Acked-by: Namhyung Kim <namhyung@kernel.org>
-
-Thanks,
-Namhyung
 
 
->
->
->  tools/perf/util/dwarf-aux.c    |   58 ++++++++++++++++++++++++++++------------
->  tools/perf/util/dwarf-aux.h    |    3 ++
->  tools/perf/util/probe-finder.c |   37 +++++++++++++++++---------
->  3 files changed, 68 insertions(+), 30 deletions(-)
->
-> --
-> Masami Hiramatsu (Google) <mhiramat@kernel.org>
+> On 28-Oct-2022, at 5:52 PM, James Clark <james.clark@arm.com> wrote:
+>=20
+>=20
+>=20
+> On 28/10/2022 13:19, James Clark wrote:
+>> Commit f4a2aade6809 ("perf tests powerpc: Fix branch stack sampling =
+test
+>> to include sanity check for branch filter") added a skip if certain
+>> branch options aren't available. But the change added both -b
+>> (--branch-any) and --branch-filter options at the same time, which =
+will
+>> always result in a failure on any platform because the arguments =
+can't
+>> be used together.
+>>=20
+>> Fix this by removing -b (--branch-any) and leaving --branch-filter =
+which
+>> already specifies 'any'. Also add warning messages to the test and =
+perf
+>> tool.
+>>=20
+>=20
+> Hi Athira,
+>=20
+> Are you able to check if this still skips for you on PowerPC with this
+> new change?
+>=20
+
+Hi James,
+
+Sorry for the late response. I was out on vacation couple of days.
+
+I tested with the new change and verified it skips on powerpc.
+
+Tested-by: Athira Rajeev <atrajeev@linux.vnet.ibm.com>
+
+Thanks
+Athira
+> Thanks
+> James
+>=20
+>> Output on x86 before this fix:
+>>=20
+>>   $ sudo ./perf test branch
+>>   108: Check branch stack sampling         : Skip
+>>=20
+>> After:
+>>=20
+>>   $ sudo ./perf test branch
+>>   108: Check branch stack sampling         : Ok
+>>=20
+>> Fixes: f4a2aade6809 ("perf tests powerpc: Fix branch stack sampling =
+test to include sanity check for branch filter")
+>> Signed-off-by: James Clark <james.clark@arm.com>
+>> ---
+>> tools/perf/tests/shell/test_brstack.sh | 5 ++++-
+>> tools/perf/util/parse-branch-options.c | 4 +++-
+>> 2 files changed, 7 insertions(+), 2 deletions(-)
+>>=20
+>> diff --git a/tools/perf/tests/shell/test_brstack.sh =
+b/tools/perf/tests/shell/test_brstack.sh
+>> index ec801cffae6b..d7ff5c4b4da4 100755
+>> --- a/tools/perf/tests/shell/test_brstack.sh
+>> +++ b/tools/perf/tests/shell/test_brstack.sh
+>> @@ -13,7 +13,10 @@ fi
+>>=20
+>> # skip the test if the hardware doesn't support branch stack sampling
+>> # and if the architecture doesn't support filter types: =
+any,save_type,u
+>> -perf record -b -o- -B --branch-filter any,save_type,u true > =
+/dev/null 2>&1 || exit 2
+>> +if ! perf record -o- --no-buildid --branch-filter any,save_type,u -- =
+true > /dev/null 2>&1 ; then
+>> +	echo "skip: system doesn't support filter types: =
+any,save_type,u"
+>> +	exit 2
+>> +fi
+>>=20
+>> TMPDIR=3D$(mktemp -d /tmp/__perf_test.program.XXXXX)
+>>=20
+>> diff --git a/tools/perf/util/parse-branch-options.c =
+b/tools/perf/util/parse-branch-options.c
+>> index 00588b9db474..31faf2bb49ff 100644
+>> --- a/tools/perf/util/parse-branch-options.c
+>> +++ b/tools/perf/util/parse-branch-options.c
+>> @@ -102,8 +102,10 @@ parse_branch_stack(const struct option *opt, =
+const char *str, int unset)
+>> 	/*
+>> 	 * cannot set it twice, -b + --branch-filter for instance
+>> 	 */
+>> -	if (*mode)
+>> +	if (*mode) {
+>> +		pr_err("Error: Can't use --branch-any (-b) with =
+--branch-filter (-j).\n");
+>> 		return -1;
+>> +	}
+>>=20
+>> 	return parse_branch_str(str, mode);
+>> }
+
