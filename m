@@ -2,220 +2,96 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CA235C4332F
-	for <linux-perf-users@archiver.kernel.org>; Wed,  2 Nov 2022 08:37:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CB93BC4332F
+	for <linux-perf-users@archiver.kernel.org>; Wed,  2 Nov 2022 10:23:25 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230124AbiKBIh1 (ORCPT
+        id S229975AbiKBKXX (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Wed, 2 Nov 2022 04:37:27 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44362 "EHLO
+        Wed, 2 Nov 2022 06:23:23 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41812 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230462AbiKBIhY (ORCPT
+        with ESMTP id S229949AbiKBKXV (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Wed, 2 Nov 2022 04:37:24 -0400
-Received: from mx0a-001b2d01.pphosted.com (mx0a-001b2d01.pphosted.com [148.163.156.1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E0AE56257
-        for <linux-perf-users@vger.kernel.org>; Wed,  2 Nov 2022 01:37:23 -0700 (PDT)
-Received: from pps.filterd (m0098409.ppops.net [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (8.17.1.5/8.17.1.5) with ESMTP id 2A28JS6i032466;
-        Wed, 2 Nov 2022 08:37:15 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=content-type :
- mime-version : subject : from : in-reply-to : date : cc :
- content-transfer-encoding : message-id : references : to; s=pp1;
- bh=2rKR66kxdOmPMZg7QKoxkfX4fLaIF+HsWrtg7XnFrQE=;
- b=h2kuVdIwY+pgb2p3DclniokkSyRMfLs8ZBsyLptUJbnGFwMhLS9CsahkcdnvFko//ueO
- hE4KQWdCzyG1s6vb1K70HlnmW5WsPsCNVBjhFoGNUio3GwX/RoFf/49+dmQroxxkDTNg
- gT0exCohlHrOl0JiZFbtZGWBfphXZR4ihuqYzb4NFYV0BYxGI8ZjzD1hW0+VSxAiwWRL
- I0oGxUJduS6AyEF7X2R/2sHFJv68LFzZo3nfTV4cTwP8JAdRdxROP9S7+jsk3dR9Jh3q
- 4jeL5QphLUbJTzzc8/WsjMQqeA2gcd2Xli+Ud7B142p/1/dCSczM/wn+0nHsZZ+yx27H ow== 
-Received: from pps.reinject (localhost [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 3kjvbj20fd-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Wed, 02 Nov 2022 08:37:15 +0000
-Received: from m0098409.ppops.net (m0098409.ppops.net [127.0.0.1])
-        by pps.reinject (8.17.1.5/8.17.1.5) with ESMTP id 2A26oLL0003036;
-        Wed, 2 Nov 2022 08:37:15 GMT
-Received: from ppma04ams.nl.ibm.com (63.31.33a9.ip4.static.sl-reverse.com [169.51.49.99])
-        by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 3kjvbj20e8-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Wed, 02 Nov 2022 08:37:14 +0000
-Received: from pps.filterd (ppma04ams.nl.ibm.com [127.0.0.1])
-        by ppma04ams.nl.ibm.com (8.16.1.2/8.16.1.2) with SMTP id 2A28KmZj018960;
-        Wed, 2 Nov 2022 08:37:12 GMT
-Received: from b06cxnps3075.portsmouth.uk.ibm.com (d06relay10.portsmouth.uk.ibm.com [9.149.109.195])
-        by ppma04ams.nl.ibm.com with ESMTP id 3kgut96a7k-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Wed, 02 Nov 2022 08:37:12 +0000
-Received: from d06av23.portsmouth.uk.ibm.com (d06av23.portsmouth.uk.ibm.com [9.149.105.59])
-        by b06cxnps3075.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 2A28b91M2884258
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Wed, 2 Nov 2022 08:37:09 GMT
-Received: from d06av23.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 58371A4055;
-        Wed,  2 Nov 2022 08:37:09 +0000 (GMT)
-Received: from d06av23.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id F249DA4040;
-        Wed,  2 Nov 2022 08:37:06 +0000 (GMT)
-Received: from smtpclient.apple (unknown [9.43.40.163])
-        by d06av23.portsmouth.uk.ibm.com (Postfix) with ESMTPS;
-        Wed,  2 Nov 2022 08:37:06 +0000 (GMT)
-Content-Type: text/plain;
-        charset=us-ascii
-Mime-Version: 1.0 (Mac OS X Mail 16.0 \(3696.120.41.1.1\))
-Subject: Re: [PATCH 2/2] tools/perf: Fix printing field separator in CSV
- metrics output
-From:   Athira Rajeev <atrajeev@linux.vnet.ibm.com>
-In-Reply-To: <20221018085605.63834-2-atrajeev@linux.vnet.ibm.com>
-Date:   Wed, 2 Nov 2022 14:07:06 +0530
-Cc:     Ian Rogers <irogers@google.com>, maddy@linux.vnet.ibm.com,
-        Nageswara Sastry <rnsastry@linux.ibm.com>,
-        linux-perf-users@vger.kernel.org, james.clark@arm.com,
-        kjain@linux.ibm.com, namhyung@kernel.org, disgoel@linux.ibm.com,
-        linuxppc-dev@lists.ozlabs.org
-Content-Transfer-Encoding: quoted-printable
-Message-Id: <173AA14E-B018-4BA7-A7A8-E7069E273960@linux.vnet.ibm.com>
-References: <20221018085605.63834-1-atrajeev@linux.vnet.ibm.com>
- <20221018085605.63834-2-atrajeev@linux.vnet.ibm.com>
-To:     Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Jiri Olsa <jolsa@kernel.org>, Andi Kleen <ak@linux.intel.com>
-X-Mailer: Apple Mail (2.3696.120.41.1.1)
-X-TM-AS-GCONF: 00
-X-Proofpoint-GUID: ml4UXXR46W7SWnhvlvQfZAwefSuSd1Sm
-X-Proofpoint-ORIG-GUID: iGY1F8ukEYDiYkfG1JMplqPdBEgj7yAO
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.205,Aquarius:18.0.895,Hydra:6.0.545,FMLib:17.11.122.1
- definitions=2022-11-02_04,2022-11-01_02,2022-06-22_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 clxscore=1015
- lowpriorityscore=0 phishscore=0 priorityscore=1501 impostorscore=0
- bulkscore=0 adultscore=0 mlxscore=0 spamscore=0 malwarescore=0
- mlxlogscore=999 suspectscore=0 classifier=spam adjust=0 reason=mlx
- scancount=1 engine=8.12.0-2210170000 definitions=main-2211020051
+        Wed, 2 Nov 2022 06:23:21 -0400
+Received: from mail-yw1-x112b.google.com (mail-yw1-x112b.google.com [IPv6:2607:f8b0:4864:20::112b])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9D25DBC7
+        for <linux-perf-users@vger.kernel.org>; Wed,  2 Nov 2022 03:23:20 -0700 (PDT)
+Received: by mail-yw1-x112b.google.com with SMTP id 00721157ae682-3704852322fso91175777b3.8
+        for <linux-perf-users@vger.kernel.org>; Wed, 02 Nov 2022 03:23:20 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20210112;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:from:to:cc:subject:date:message-id:reply-to;
+        bh=BafOkd8SvWuco2I/Z6NsmvGa0Z/TQs4XgUWd22MNZzc=;
+        b=NPdjisJ5hNB1CU5k7SrGdS78wdIMQ35AbWxkPyxqx9aL9gR6tT2qcf5So6UgE14miE
+         z7gOzr46BLEHymsJkzRVeR/56iAjly+mfLrnFD65Wmc+yMM7vZO79LfXuoKeoAxu+daC
+         PYIfrp56gZ3+onhotCroAAE5VTLTz08lL4s7BpZWugEHy3nVRtxX/sznuxTan+S1JQzH
+         jyfhHmbsmmWZL/NoV/6eBNz/hmgblLhtGQAqgPPPzx5c3RYpKS0CynLa1FFc1SzNlKpe
+         hMQGEL9/jcIDrHZv43atvExR4SQJTKAoQGtmCRJ+2xZyZJh/gKsE91FNd0ec4JrMIJRX
+         OnYw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=BafOkd8SvWuco2I/Z6NsmvGa0Z/TQs4XgUWd22MNZzc=;
+        b=doSkvBOoXR/16mqEhqKRjaazrsZZS89A0W3fRB7achKRM+IV3c3Oanu3eM45z/2GtN
+         BHj8u16xsgxiCxDLmejRTsTC9Ao8dMQeZlvlOOD0emCpSETLbEW34T1WkS+4CsPaqbHp
+         ua9VYCgGUo41GhsEAjcgBQ66PnK+AtGq15KYven369+6FNTaYRq245QXQKTsTMD+SCaB
+         J0Aa7mzxJqpKM/8HSf6rJqqx480Aq9dPb+Oesb8b1LiSCbEMGmausmHaRLgP7gs8Nimu
+         1hilN+xnmwjeoJoaKeez9am60TrU6G5qzeh2zwtg2LIyVK/3voftGn4x07WApJwwgInA
+         eX7A==
+X-Gm-Message-State: ACrzQf282s2nVoufqi8gDoR3GGsTRrlzCYZwp2vmHpGb/dsWHHRqWqbR
+        25xFexitD8GXy+YBm5Qb66xixFIZ9+QmBli3oUT/+A==
+X-Google-Smtp-Source: AMsMyM78/8o4DpKdBUatsiMGIue/Gjo4Q1lrx5/fvrBsDm/9QhuEiH96aDbvtyTuaCQX9YLMspA436QjMxp7LeGSn1I=
+X-Received: by 2002:a81:a04a:0:b0:369:1030:fbd3 with SMTP id
+ x71-20020a81a04a000000b003691030fbd3mr22760635ywg.465.1667384599743; Wed, 02
+ Nov 2022 03:23:19 -0700 (PDT)
+MIME-Version: 1.0
+References: <20221026141040.1609203-1-davidgow@google.com> <CAGS_qxrd7kPzXexF_WvFX6YyVqdE_gf_7E7-XJhY2F0QAHPQ=w@mail.gmail.com>
+In-Reply-To: <CAGS_qxrd7kPzXexF_WvFX6YyVqdE_gf_7E7-XJhY2F0QAHPQ=w@mail.gmail.com>
+From:   Marco Elver <elver@google.com>
+Date:   Wed, 2 Nov 2022 11:22:43 +0100
+Message-ID: <CANpmjNOgADdGqze9ZA-o8cb6=isYfE3tEBf1HhwtwJkFJqNe=w@mail.gmail.com>
+Subject: Re: [PATCH] perf/hw_breakpoint: test: Skip the test if dependencies unmet
+To:     Daniel Latypov <dlatypov@google.com>
+Cc:     David Gow <davidgow@google.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        Dmitry Vyukov <dvyukov@google.com>,
+        linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org,
+        kunit-dev@googlegroups.com,
+        Brendan Higgins <brendanhiggins@google.com>,
+        kasan-dev@googlegroups.com
+Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
+Hi David, Daniel,
 
+On Wed, 26 Oct 2022 at 20:31, Daniel Latypov <dlatypov@google.com> wrote:
+[...]
+> > -               return -EINVAL;
+> > +               kunit_skip(test, "not enough cpus");
+>
+> The only minor nit I have is that I'd personally prefer something like
+>   kunit_skip(test, "need >=2 cpus");
+> since that makes it clearer
+> a) that we must only have 1 CPU by default
+> b) roughly how one might address this.
+>
+> Note: b) is a bit more complicated than I would like. The final
+> command is something like
+> $ ./tools/testing/kunit/kunit.py run --arch x86_64 --qemu_args='-smp
+> 2' --kconfig_add='CONFIG_SMP=y'
+>
+> But that's orthogonal to this patch.
 
-> On 18-Oct-2022, at 2:26 PM, Athira Rajeev =
-<atrajeev@linux.vnet.ibm.com> wrote:
->=20
-> In perf stat with CSV output option, number of fields
-> in metrics output is not matching with number of fields
-> in other event output lines.
->=20
-> Sample output below after applying patch to fix
-> printing os->prefix.
->=20
-> 	# ./perf stat -x, --per-socket -a -C 1 ls
-> 	S0,1,1.89,msec,cpu-clock,1887692,100.00,1.013,CPUs utilized
-> 	S0,1,2,,context-switches,1885842,100.00,1.060,K/sec
-> 	S0,1,0,,cpu-migrations,1885374,100.00,0.000,/sec
-> 	S0,1,2,,page-faults,1884880,100.00,1.060,K/sec
-> 	S0,1,189544,,cycles,1263158,67.00,0.100,GHz
-> 	=
-S0,1,64602,,stalled-cycles-frontend,1876146,100.00,34.08,frontend cycles =
-idle
-> 	S0,1,128241,,stalled-cycles-backend,1875512,100.00,67.66,backend =
-cycles idle
-> 	S0,1,95578,,instructions,1874676,100.00,0.50,insn per cycle
-> =3D=3D=3D>	S0,1,,,,,,,1.34,stalled cycles per insn
->=20
-> The above command line uses field separator as ","
-> via "-x," option and per-socket option displays
-> socket value as first field. But here the last line
-> for "stalled cycles per insn" has more separators.
-> Each csv output line is expected to have 8 field
-> separatorsi (for the 9 fields), where as last line
-> has 10 "," in the result. Patch fixes this issue.
->=20
-> The counter stats are displayed by function
-> "perf_stat__print_shadow_stats" in code
-> "util/stat-shadow.c". While printing the stats info
-> for "stalled cycles per insn", function "new_line_csv"
-> is used as new_line callback.
->=20
-> The fields printed in each line contains:
-> "Socket_id,aggr nr,Avg,unit,event_name,run,enable_percent,ratio,unit"
->=20
-> The metric output prints Socket_id, aggr nr, ratio
-> and unit. It has to skip through remaining five fields
-> ie, Avg,unit,event_name,run,enable_percent. The csv
-> line callback uses "os->nfields" to know the number of
-> fields to skip to match with other lines.
-> Currently it is set as:
-> 	os.nfields =3D 3 + aggr_fields[config->aggr_mode] + =
-(counter->cgrp ? 1 : 0);
->=20
-> But in case of aggregation modes, csv_sep already
-> gets printed along with each field (Function "aggr_printout"
-> in util/stat-display.c). So aggr_fields can be
-> removed from nfields. And fixed number of fields to
-> skip has to be "4". This is to skip fields for:
-> "avg, unit, event name, run, enable_percent"
-> Example from line for instructions:
-> "1.89,msec,cpu-clock,1887692,100.00"
->=20
-> This needs 4 csv separators. Patch removes aggr_fields
-> and uses 4 as fixed number of os->nfields to skip.
->=20
-> After the patch:
->=20
-> 	# ./perf stat -x, --per-socket -a -C 1 ls
-> 	S0,1,1.92,msec,cpu-clock,1917648,100.00,1.010,CPUs utilized
-> 	S0,1,54,,context-switches,1916762,100.00,28.176,K/sec
-> 	-------
-> 	S0,1,528693,,instructions,1908854,100.00,0.36,insn per cycle
-> 	S0,1,,,,,,1.81,stalled cycles per insn
->=20
-> Fixes: 92a61f6412d3 ("perf stat: Implement CSV metrics output")
-> Reported-by: Disha Goel <disgoel@linux.vnet.ibm.com>
-> Signed-off-by: Athira Rajeev <atrajeev@linux.vnet.ibm.com>
+Was there going to be a v2 to address (a), or is this patch ready to
+be picked up?
 
-Hi All,
+I assume (unless I hear otherwise), this patch shall also go through -tip?
 
-Looking for review comments for this change.
-
-Thanks
-Athira
-
-> ---
-> tools/perf/util/stat-display.c | 13 +------------
-> 1 file changed, 1 insertion(+), 12 deletions(-)
->=20
-> diff --git a/tools/perf/util/stat-display.c =
-b/tools/perf/util/stat-display.c
-> index 879874a4bc07..5ca151adf826 100644
-> --- a/tools/perf/util/stat-display.c
-> +++ b/tools/perf/util/stat-display.c
-> @@ -551,20 +551,9 @@ static void printout(struct perf_stat_config =
-*config, struct aggr_cpu_id id, int
-> 	new_line_t nl;
->=20
-> 	if (config->csv_output) {
-> -		static const int aggr_fields[AGGR_MAX] =3D {
-> -			[AGGR_NONE] =3D 1,
-> -			[AGGR_GLOBAL] =3D 0,
-> -			[AGGR_SOCKET] =3D 2,
-> -			[AGGR_DIE] =3D 2,
-> -			[AGGR_CORE] =3D 2,
-> -			[AGGR_THREAD] =3D 1,
-> -			[AGGR_UNSET] =3D 0,
-> -			[AGGR_NODE] =3D 0,
-> -		};
-> -
-> 		pm =3D config->metric_only ? print_metric_only_csv : =
-print_metric_csv;
-> 		nl =3D config->metric_only ? new_line_metric : =
-new_line_csv;
-> -		os.nfields =3D 3 + aggr_fields[config->aggr_mode] + =
-(counter->cgrp ? 1 : 0);
-> +		os.nfields =3D 4 + (counter->cgrp ? 1 : 0);
-> 	} else if (config->json_output) {
-> 		pm =3D config->metric_only ? print_metric_only_json : =
-print_metric_json;
-> 		nl =3D config->metric_only ? new_line_metric : =
-new_line_json;
-> --=20
-> 2.31.1
->=20
-
+Thanks,
+-- Marco
