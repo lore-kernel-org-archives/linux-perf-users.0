@@ -2,105 +2,154 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8F598C4332F
-	for <linux-perf-users@archiver.kernel.org>; Wed,  2 Nov 2022 17:38:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4C55DC433FE
+	for <linux-perf-users@archiver.kernel.org>; Wed,  2 Nov 2022 18:19:53 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231367AbiKBRi1 (ORCPT
+        id S231383AbiKBSTu (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Wed, 2 Nov 2022 13:38:27 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35034 "EHLO
+        Wed, 2 Nov 2022 14:19:50 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45256 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231249AbiKBRiS (ORCPT
+        with ESMTP id S231289AbiKBSTu (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Wed, 2 Nov 2022 13:38:18 -0400
-Received: from mail-ed1-x532.google.com (mail-ed1-x532.google.com [IPv6:2a00:1450:4864:20::532])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 476E32E9EC
-        for <linux-perf-users@vger.kernel.org>; Wed,  2 Nov 2022 10:38:17 -0700 (PDT)
-Received: by mail-ed1-x532.google.com with SMTP id y69so27596871ede.5
-        for <linux-perf-users@vger.kernel.org>; Wed, 02 Nov 2022 10:38:17 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20210112;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:from:to:cc:subject:date:message-id:reply-to;
-        bh=B7ABouFgHj5ByNLmtwAswNa0h/Rt+M2oBytR/Rw8uLA=;
-        b=QpvQxcSUTA1O6xF55mulqkLaZsShG+Sff81BNMiM9v5YKPDWuzOnTREHmMnu+iTF/D
-         w/dbC1a2HGnnuyux7lkTNV2qaXQWqv7qBl8VEJUfj+n/upmlt6Ja2PdDrNIA8WISq9mS
-         UHJstI54PIB7jAzDPZkswyD/xookUkhC7RM/jFEc/bvGK6oNv8ky6RfS+6VkFvJHeq5w
-         3RT+nYj4MsWdM4hyCEFipLfFd8+DL8nDnF7NMzzoiojb00OFIhutrGya7HsVvz/HQCO6
-         4HFUlULQAkvmNX+p0BBBKYUeoVx8crQlt5JmxjWOy3OkYVOTmA8zIGX5atwpKzldYhgW
-         g5VQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=B7ABouFgHj5ByNLmtwAswNa0h/Rt+M2oBytR/Rw8uLA=;
-        b=KdWMxAp5xMMbKkQKdKscwOxGl7kIh76kyji2gylzjWuWdQZ46NzsJqNCuTK8OoEMnB
-         iukq6VF3mBwdl4IAfcLQC7OrnVCwLzI/cbfql3fnwgsfpxbx6vfn+LK4MTR61qzGNUVE
-         4I5S3Qfu5kmUuKZRz6mAnagpMwn78M2XWaEg94H/8PUu34tnJz7lp/cNtuP83L9Wq2Dd
-         tk7rcDb93lvQoAhABYsmh8vKIDJvfo9XsaKNeDTXXaXaCvVNYFBF2yIp3waXRfL23at6
-         HdT8SUimORqxA4rswOulDu8m0PVWkU6PuBXhnJxURxYJIqCUVDdOA0RJJ9KeXvzExCKK
-         xT6A==
-X-Gm-Message-State: ACrzQf2TlK8sGB4fD8SfPVALalcuHK7gZqTNFohcRzkoKgLJhBgY1vSG
-        5QIef9bO1DFc7t/uTL+6geA4rxn5OIJmQGAntxFWJQ==
-X-Google-Smtp-Source: AMsMyM4oBTrJV7DcVnahMpuWfOJgDLYhbj61/lrNgSjXLaA5ap6eQgOpfZt9WT33sE6fp3lkT4INWWRy88dkV8zNmoI=
-X-Received: by 2002:a05:6402:d0b:b0:458:a244:4e99 with SMTP id
- eb11-20020a0564020d0b00b00458a2444e99mr26154062edb.46.1667410695620; Wed, 02
- Nov 2022 10:38:15 -0700 (PDT)
-MIME-Version: 1.0
-References: <20221026141040.1609203-1-davidgow@google.com> <CAGS_qxrd7kPzXexF_WvFX6YyVqdE_gf_7E7-XJhY2F0QAHPQ=w@mail.gmail.com>
- <CANpmjNOgADdGqze9ZA-o8cb6=isYfE3tEBf1HhwtwJkFJqNe=w@mail.gmail.com>
-In-Reply-To: <CANpmjNOgADdGqze9ZA-o8cb6=isYfE3tEBf1HhwtwJkFJqNe=w@mail.gmail.com>
-From:   Daniel Latypov <dlatypov@google.com>
-Date:   Wed, 2 Nov 2022 10:38:04 -0700
-Message-ID: <CAGS_qxr3dRQ8hUwA9LaFrbH9u4mdxjgfqtCByQ7kWCk-U2L-sg@mail.gmail.com>
-Subject: Re: [PATCH] perf/hw_breakpoint: test: Skip the test if dependencies unmet
-To:     Marco Elver <elver@google.com>
-Cc:     David Gow <davidgow@google.com>,
-        Peter Zijlstra <peterz@infradead.org>,
+        Wed, 2 Nov 2022 14:19:50 -0400
+Received: from mail.zytor.com (unknown [IPv6:2607:7c80:54:3::138])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5AB2A2F392;
+        Wed,  2 Nov 2022 11:19:48 -0700 (PDT)
+Received: from [127.0.0.1] ([73.223.250.219])
+        (authenticated bits=0)
+        by mail.zytor.com (8.17.1/8.17.1) with ESMTPSA id 2A2IIxBB204854
+        (version=TLSv1.3 cipher=TLS_AES_128_GCM_SHA256 bits=128 verify=NO);
+        Wed, 2 Nov 2022 11:19:00 -0700
+DKIM-Filter: OpenDKIM Filter v2.11.0 mail.zytor.com 2A2IIxBB204854
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=zytor.com;
+        s=2022100601; t=1667413142;
+        bh=vIjTqafDHMz12/79Y+kw+Cq7rrIa/6hI7Ssn5drf0vY=;
+        h=Date:From:To:CC:Subject:In-Reply-To:References:From;
+        b=TJZEPFER/BiGN+mylQebG9EXskkhAarmnEzi6qVzgCxhKCedILTFc1X5/PqpeE0DT
+         0H1LbklDD/UFXkz3ZIT7qGi83v4a8BKAXtFa3NIJJi6z8aOB2I+vhddrNPUAjZCe/m
+         J10Hr+KkYlzz2veGEtEalm0kCbf7T7baIPWeQJExnd130T8u84q+so3b9QpiB5PjqQ
+         d64uKZnYAHxOQ5BjoaY7tFB22R94DR9nh4wphinYYKnL+hEbruNvkBRa62E9+lvqpu
+         SUV1DJuHARGIUmxOdFYEgVjRDhecyqckTsb9Vqt/nKw/ZmXSDq5xWlVceihlRThEQN
+         hGOwJtEK1tpIQ==
+Date:   Wed, 02 Nov 2022 11:19:00 -0700
+From:   "H. Peter Anvin" <hpa@zytor.com>
+To:     "Elliott, Robert (Servers)" <elliott@hpe.com>,
+        Paolo Bonzini <pbonzini@redhat.com>,
+        Borislav Petkov <bp@alien8.de>,
+        Maxim Levitsky <mlevitsk@redhat.com>
+CC:     "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "kvm@vger.kernel.org" <kvm@vger.kernel.org>,
+        Pawan Gupta <pawan.kumar.gupta@linux.intel.com>,
         Ingo Molnar <mingo@redhat.com>,
-        Dmitry Vyukov <dvyukov@google.com>,
-        linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org,
-        kunit-dev@googlegroups.com,
-        Brendan Higgins <brendanhiggins@google.com>,
-        kasan-dev@googlegroups.com
-Content-Type: text/plain; charset="UTF-8"
+        Josh Poimboeuf <jpoimboe@kernel.org>,
+        Namhyung Kim <namhyung@kernel.org>,
+        Tony Luck <tony.luck@intel.com>,
+        Arnaldo Carvalho de Melo <acme@kernel.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Tim Chen <tim.c.chen@linux.intel.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        Dave Hansen <dave.hansen@linux.intel.com>,
+        "Chang S. Bae" <chang.seok.bae@intel.com>,
+        Jane Malalane <jane.malalane@citrix.com>,
+        Kees Cook <keescook@chromium.org>,
+        Kan Liang <kan.liang@linux.intel.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        "maintainer:X86 ARCHITECTURE (32-BIT AND 64-BIT)" <x86@kernel.org>,
+        Herbert Xu <herbert@gondor.apana.org.au>,
+        Jiri Olsa <jolsa@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        "linux-perf-users@vger.kernel.org" <linux-perf-users@vger.kernel.org>,
+        "open list:CRYPTO API" <linux-crypto@vger.kernel.org>
+Subject: =?US-ASCII?Q?RE=3A_=5BPATCH_v2_1/5=5D_perf/x86/intel/lbr=3A_use_?= =?US-ASCII?Q?setup=5Fclear=5Fcpu=5Fcap_instead_of_clear=5Fcpu=5Fcap?=
+User-Agent: K-9 Mail for Android
+In-Reply-To: <EFDA4E40-4133-4CED-97FA-DC75AEA24556@zytor.com>
+References: <20220718141123.136106-1-mlevitsk@redhat.com> <20220718141123.136106-2-mlevitsk@redhat.com> <Yyh9RDbaRqUR1XSW@zn.tnic> <c105971a72dfe6d46ad75fb7e71f79ba716e081c.camel@redhat.com> <YzGlQBkCSJxY+8Jf@zn.tnic> <c1168e8bd9077a2cc9ef61ee06db7a4e8c0f1600.camel@redhat.com> <Y1EOBAaLbv2CXBDL@zn.tnic> <fd2cf028-bd83-57ff-7e6d-ef3ee11852a1@redhat.com> <MW5PR84MB18428331677C881764E615D2AB399@MW5PR84MB1842.NAMPRD84.PROD.OUTLOOK.COM> <EFDA4E40-4133-4CED-97FA-DC75AEA24556@zytor.com>
+Message-ID: <B5ECAF37-5B38-4B6C-83AD-E49885B2A5B6@zytor.com>
+MIME-Version: 1.0
+Content-Type: text/plain;
+ charset=utf-8
+Content-Transfer-Encoding: quoted-printable
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-On Wed, Nov 2, 2022 at 3:23 AM Marco Elver <elver@google.com> wrote:
+On November 2, 2022 9:23:00 AM PDT, "H=2E Peter Anvin" <hpa@zytor=2Ecom> wr=
+ote:
+>On November 2, 2022 7:27:52 AM PDT, "Elliott, Robert (Servers)" <elliott@=
+hpe=2Ecom> wrote:
+>>
+>>> From: Paolo Bonzini <pbonzini@redhat=2Ecom>
+>>=2E=2E=2E
+>>> (2) in particular holds even on bare metal=2E  The kernel bug here is =
+that
+>>> X86_FEATURE_AVX only tells you if the instructions are _present_, not =
+if
+>>> they are _usable_=2E   Indeed, the XCR0 check is present for all other
+>>> files in arch/x86/crypto, either instead or in addition to
+>>> boot_cpu_has(X86_FEATURE_AVX)=2E
+>>>=20
+>>> Maxim had sent a patch about a year ago to do it in aesni-intel-glue=
+=2Ec
+>>> but Dave told him to fix the dependencies instead
+>>> (https://lore=2Ekernel=2Eorg/all/20211103124614=2E499580-1-
+>>> mlevitsk@redhat=2Ecom/)=2E
+>>>   What do you think of applying that patch instead?
+>>
+>>Most of the x86 crypto modules using X86_FEATURE_AVX do check
+>>	cpu_has_xfeatures(XFEATURE_MASK_YMM, =2E=2E=2E
+>>
+>>so it's probably prudent to add it to the rest (or remove it everywhere
+>>if it is not needed)=2E
+>>
+>>1=2E Currently checking XSAVE YMM:
+>>  aria_aesni_avx_glue
+>>  blake2s-glue
+>>  camellia_aesni_avx2_glue	camellia_aesni_avx_glue
+>>  cast5_avx_glue		cast6_avx_glue
+>>  chacha_glue
+>>  poly1305_glue
+>>  serpent_avx2_glue		serpent_avx_glue
+>>  sha1_ssse3_glue		sha256_ssse3_glue	sha512_ssse3_glue
+>>  sm3_avx_glue
+>>  sm4_aesni_avx2_glue	sm4_aesni_avx_glue
+>>  twofish_avx_glue
+>>
+>>Currently not checking XSAVE YMM:
+>>  aesni-intel_glue
+>>  curve25519-x86_64
+>>  nhpoly1305-avx2-glue
+>>  polyval-clmulni_glue
+>>
+>>2=2E Similarly, modules using X86_FEATURE_AVX512F, X86_FEATURE_AVXX512VL
+>>and/or X86_FEATURE_AVX512BW probably need to check XFEATURE_MASK_AVX512:
+>>
+>>Currently checking XSAVE AVX512:
+>>  blake2s-glue
+>>  poly1305_glue
+>>
+>>Currently not checking XSAVE AVX512:
+>>  chacha_glue
+>>
+>>3=2E Similarly, modules using X86_FEATURE_XMM2 probably need to
+>>check XFEATURE_MASK_SSE:
+>>
+>>Currently checking XSAVE SSE:
+>>  aegis128-aesni-glue=20
+>>
+>>Current not checking XSAVE SSE:
+>>  nhpoly1305-sse2_glue
+>>  serpent_sse2_glue
+>>
+>>
+>>
 >
-> Hi David, Daniel,
->
-> On Wed, 26 Oct 2022 at 20:31, Daniel Latypov <dlatypov@google.com> wrote:
-> [...]
-> > > -               return -EINVAL;
-> > > +               kunit_skip(test, "not enough cpus");
-> >
-> > The only minor nit I have is that I'd personally prefer something like
-> >   kunit_skip(test, "need >=2 cpus");
-> > since that makes it clearer
-> > a) that we must only have 1 CPU by default
-> > b) roughly how one might address this.
-> >
-> > Note: b) is a bit more complicated than I would like. The final
-> > command is something like
-> > $ ./tools/testing/kunit/kunit.py run --arch x86_64 --qemu_args='-smp
-> > 2' --kconfig_add='CONFIG_SMP=y'
-> >
-> > But that's orthogonal to this patch.
->
-> Was there going to be a v2 to address (a), or is this patch ready to
-> be picked up?
->
-> I assume (unless I hear otherwise), this patch shall also go through -tip?
-
-Just noting for the record:
-I'm totally fine with this version going in, esp. if Peter is already
-planning on picking it up.
-
-This patch makes it so `kunit.py run --arch=x86_64` doesn't have test
-failures, so I don't want it delayed due to just my small nit.
-
-Daniel
+>We have a dependency system for CPUID features=2E If you are going to do =
+this (as opposed to "fixing" this in Qemu or just saying "don't do that, it=
+ isn't a valid hardware configuration=2E"
+One more thing: for obvious reasons, this doesn't fix user space if user s=
+pace calls CPUID directly as opposed to reading /proc/cpuinfo or looking in=
+ sysfs=2E Unfortunately this is the rule rather than the exception, althoug=
+h for some features like AVX user space is also supposed to check XCR0, in =
+which case it will work properly anyway=2E
