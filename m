@@ -2,97 +2,92 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D7C55C433FE
-	for <linux-perf-users@archiver.kernel.org>; Wed,  2 Nov 2022 08:20:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C981EC433FE
+	for <linux-perf-users@archiver.kernel.org>; Wed,  2 Nov 2022 08:37:06 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229598AbiKBIUE (ORCPT
+        id S230465AbiKBIhF (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Wed, 2 Nov 2022 04:20:04 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55088 "EHLO
+        Wed, 2 Nov 2022 04:37:05 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44146 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230182AbiKBIUD (ORCPT
+        with ESMTP id S230462AbiKBIhE (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Wed, 2 Nov 2022 04:20:03 -0400
-Received: from mx0b-001b2d01.pphosted.com (mx0b-001b2d01.pphosted.com [148.163.158.5])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5511427175;
-        Wed,  2 Nov 2022 01:20:02 -0700 (PDT)
-Received: from pps.filterd (m0127361.ppops.net [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (8.17.1.5/8.17.1.5) with ESMTP id 2A26oTe3001526;
-        Wed, 2 Nov 2022 08:19:45 GMT
+        Wed, 2 Nov 2022 04:37:04 -0400
+Received: from mx0a-001b2d01.pphosted.com (mx0b-001b2d01.pphosted.com [148.163.158.5])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3153560F1
+        for <linux-perf-users@vger.kernel.org>; Wed,  2 Nov 2022 01:37:04 -0700 (PDT)
+Received: from pps.filterd (m0098419.ppops.net [127.0.0.1])
+        by mx0b-001b2d01.pphosted.com (8.17.1.5/8.17.1.5) with ESMTP id 2A27iAZJ009086;
+        Wed, 2 Nov 2022 08:36:54 GMT
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=content-type :
  mime-version : subject : from : in-reply-to : date : cc :
  content-transfer-encoding : message-id : references : to; s=pp1;
- bh=js1Lu0//I9VGl7gfT9uz8O/3ugKZA96/iR1SoLjuf6g=;
- b=D7WKNDLVY5LD7z5t6iX30aZJYQtdPTpyxHEYM3qvw75yAy1AiKFwN0gHMG7pjGpPjbEy
- +HEMaCabMTorWiLlvaCm4IssmnZrFihAttFmHVbTvrly/7kZlWiJDWYNsfPVXcixNyxz
- 5/RapZK+UPux6NM6ePZ9e34lF+wqcGkINURoOSM02TTVwN7zlGzwTaPXOFKSY/noGp53
- q92VB9o+4I46kRkXcF8+s5EQMhIMWEXWMb2h8jKeEbI5x2bSDYifJANpo1Yy99FpEyp6
- Ijbhu3/x2N+VJie4OhaJ4wsVY4MNUTEXMbjuXKLmxbhec+z1/Ab7KdCZWKzw0lCc73Ka eg== 
+ bh=JivTOdfixVYHEs09laLwGqBUW7omVWi6ADjS+gN6678=;
+ b=TUVhjAseGuRkIEd6zIM1vvngzvMeAOyuTKBpuvdEWhjCGdhA5hlrPq6Of10+FAA29BY9
+ 4m1VVjUNFdMJKcO+6DABPCyE4nwEF29WjyH5xOuisOYkHutCbl5WmTKWwChjMjh5Cb5J
+ GdTwTMqsN30y0XDlHM8BztzsaTm2FcEp+rrGNQVue5+2h/wygALnvULazRLfmyYBxDo9
+ NVMjMEjdzYbf7FU6S4o07dzL/4JOcgAsNAdqCpBmkNri/soB78a5JSrlT9aaC53IVyxw
+ Fc4tbQ4c7gAwSpVGtIpwDo2CUX/ZCJHpHFa21GZ/GI3XOXb0k9z7m7qBhBt8vliF4OrJ pw== 
 Received: from pps.reinject (localhost [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 3kkh3qy1nw-1
+        by mx0b-001b2d01.pphosted.com (PPS) with ESMTPS id 3kjruhfa4w-1
         (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Wed, 02 Nov 2022 08:19:45 +0000
-Received: from m0127361.ppops.net (m0127361.ppops.net [127.0.0.1])
-        by pps.reinject (8.17.1.5/8.17.1.5) with ESMTP id 2A28BgR9021824;
-        Wed, 2 Nov 2022 08:19:44 GMT
-Received: from ppma04ams.nl.ibm.com (63.31.33a9.ip4.static.sl-reverse.com [169.51.49.99])
-        by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 3kkh3qy1nc-1
+        Wed, 02 Nov 2022 08:36:53 +0000
+Received: from m0098419.ppops.net (m0098419.ppops.net [127.0.0.1])
+        by pps.reinject (8.17.1.5/8.17.1.5) with ESMTP id 2A26ixhw021423;
+        Wed, 2 Nov 2022 08:36:53 GMT
+Received: from ppma01fra.de.ibm.com (46.49.7a9f.ip4.static.sl-reverse.com [159.122.73.70])
+        by mx0b-001b2d01.pphosted.com (PPS) with ESMTPS id 3kjruhfa3u-1
         (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Wed, 02 Nov 2022 08:19:44 +0000
-Received: from pps.filterd (ppma04ams.nl.ibm.com [127.0.0.1])
-        by ppma04ams.nl.ibm.com (8.16.1.2/8.16.1.2) with SMTP id 2A286c8n006948;
-        Wed, 2 Nov 2022 08:19:42 GMT
-Received: from b06cxnps3075.portsmouth.uk.ibm.com (d06relay10.portsmouth.uk.ibm.com [9.149.109.195])
-        by ppma04ams.nl.ibm.com with ESMTP id 3kgut969aq-1
+        Wed, 02 Nov 2022 08:36:53 +0000
+Received: from pps.filterd (ppma01fra.de.ibm.com [127.0.0.1])
+        by ppma01fra.de.ibm.com (8.16.1.2/8.16.1.2) with SMTP id 2A28LI3i007398;
+        Wed, 2 Nov 2022 08:36:51 GMT
+Received: from b06cxnps4075.portsmouth.uk.ibm.com (d06relay12.portsmouth.uk.ibm.com [9.149.109.197])
+        by ppma01fra.de.ibm.com with ESMTP id 3kgut9cpy9-1
         (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Wed, 02 Nov 2022 08:19:42 +0000
+        Wed, 02 Nov 2022 08:36:51 +0000
 Received: from d06av23.portsmouth.uk.ibm.com (d06av23.portsmouth.uk.ibm.com [9.149.105.59])
-        by b06cxnps3075.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 2A28Jdfb655986
+        by b06cxnps4075.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 2A28alKt26149568
         (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Wed, 2 Nov 2022 08:19:39 GMT
+        Wed, 2 Nov 2022 08:36:47 GMT
 Received: from d06av23.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 60821A404D;
-        Wed,  2 Nov 2022 08:19:39 +0000 (GMT)
+        by IMSVA (Postfix) with ESMTP id D57FCA404D;
+        Wed,  2 Nov 2022 08:36:47 +0000 (GMT)
 Received: from d06av23.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id CA6D5A4040;
-        Wed,  2 Nov 2022 08:19:36 +0000 (GMT)
+        by IMSVA (Postfix) with ESMTP id 7DA3EA4040;
+        Wed,  2 Nov 2022 08:36:45 +0000 (GMT)
 Received: from smtpclient.apple (unknown [9.43.40.163])
         by d06av23.portsmouth.uk.ibm.com (Postfix) with ESMTPS;
-        Wed,  2 Nov 2022 08:19:36 +0000 (GMT)
+        Wed,  2 Nov 2022 08:36:45 +0000 (GMT)
 Content-Type: text/plain;
         charset=us-ascii
 Mime-Version: 1.0 (Mac OS X Mail 16.0 \(3696.120.41.1.1\))
-Subject: Re: [PATCH] [perf/core: Update sample_flags for raw_data in
- perf_output_sample
+Subject: Re: [PATCH 1/2] tools/perf: Fix printing os->prefix in CSV metrics
+ output
 From:   Athira Rajeev <atrajeev@linux.vnet.ibm.com>
-In-Reply-To: <Y1Fd57P5I+aSNT/V@hirez.programming.kicks-ass.net>
-Date:   Wed, 2 Nov 2022 13:49:34 +0530
-Cc:     Ian Rogers <irogers@google.com>,
-        Madhavan Srinivasan <maddy@linux.ibm.com>,
+In-Reply-To: <20221018085605.63834-1-atrajeev@linux.vnet.ibm.com>
+Date:   Wed, 2 Nov 2022 14:06:43 +0530
+Cc:     Ian Rogers <irogers@google.com>, maddy@linux.vnet.ibm.com,
         Nageswara Sastry <rnsastry@linux.ibm.com>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Arnaldo Carvalho de Melo <acme@kernel.org>,
-        linux-perf-users@vger.kernel.org,
-        James Clark <james.clark@arm.com>,
-        Jiri Olsa <jolsa@kernel.org>, Kajol Jain <kjain@linux.ibm.com>,
-        Namhyung Kim <namhyung@kernel.org>, disgoel@linux.ibm.com,
+        linux-perf-users@vger.kernel.org, james.clark@arm.com,
+        kjain@linux.ibm.com, namhyung@kernel.org, disgoel@linux.ibm.com,
         linuxppc-dev@lists.ozlabs.org
 Content-Transfer-Encoding: quoted-printable
-Message-Id: <164ED8DD-C9A0-40C2-AA12-EB8FA9D4C4C1@linux.vnet.ibm.com>
-References: <20221020070657.21571-1-atrajeev@linux.vnet.ibm.com>
- <Y1Fd57P5I+aSNT/V@hirez.programming.kicks-ass.net>
-To:     Peter Zijlstra <peterz@infradead.org>
+Message-Id: <0B7A4A12-2528-439A-BB83-BBC5606A27B0@linux.vnet.ibm.com>
+References: <20221018085605.63834-1-atrajeev@linux.vnet.ibm.com>
+To:     Arnaldo Carvalho de Melo <acme@kernel.org>,
+        Jiri Olsa <jolsa@kernel.org>, Andi Kleen <ak@linux.intel.com>
 X-Mailer: Apple Mail (2.3696.120.41.1.1)
 X-TM-AS-GCONF: 00
-X-Proofpoint-ORIG-GUID: adkodxSF1G9EWweVkaq_Agl-B2UyfgJj
-X-Proofpoint-GUID: xoh5G8LW7eUt5W0p11G7KN0OWnHqXz64
+X-Proofpoint-GUID: 0464VflaKYXQX1Cglt2vR5w2L8BYf-x8
+X-Proofpoint-ORIG-GUID: I75WzbeDYWs2yoj8ShEzQTuzEvCcV_2G
 X-Proofpoint-Virus-Version: vendor=baseguard
  engine=ICAP:2.0.205,Aquarius:18.0.895,Hydra:6.0.545,FMLib:17.11.122.1
  definitions=2022-11-02_04,2022-11-01_02,2022-06-22_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 lowpriorityscore=0
- clxscore=1011 priorityscore=1501 mlxscore=0 suspectscore=0 phishscore=0
- mlxlogscore=999 spamscore=0 adultscore=0 bulkscore=0 impostorscore=0
- malwarescore=0 classifier=spam adjust=0 reason=mlx scancount=1
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 bulkscore=0
+ priorityscore=1501 mlxscore=0 suspectscore=0 phishscore=0 impostorscore=0
+ lowpriorityscore=0 spamscore=0 adultscore=0 mlxlogscore=999 malwarescore=0
+ clxscore=1015 classifier=spam adjust=0 reason=mlx scancount=1
  engine=8.12.0-2210170000 definitions=main-2211020048
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
@@ -100,54 +95,128 @@ X-Mailing-List: linux-perf-users@vger.kernel.org
 
 
 
-> On 20-Oct-2022, at 8:10 PM, Peter Zijlstra <peterz@infradead.org> =
-wrote:
+> On 18-Oct-2022, at 2:26 PM, Athira Rajeev =
+<atrajeev@linux.vnet.ibm.com> wrote:
 >=20
-> On Thu, Oct 20, 2022 at 12:36:56PM +0530, Athira Rajeev wrote:
->> commit 838d9bb62d13 ("perf: Use sample_flags for raw_data")
->> added check for PERF_SAMPLE_RAW in sample_flags in
->> perf_prepare_sample(). But while copying the sample in memory,
->> the check for sample_flags is not added in perf_output_sample().
->> Fix adds the same in perf_output_sample as well.
->>=20
->> Fixes: 838d9bb62d13 ("perf: Use sample_flags for raw_data")
->> Signed-off-by: Athira Rajeev <atrajeev@linux.vnet.ibm.com>
->> ---
->> kernel/events/core.c | 2 +-
->> 1 file changed, 1 insertion(+), 1 deletion(-)
->>=20
->> diff --git a/kernel/events/core.c b/kernel/events/core.c
->> index 4ec3717003d5..daf387c75d33 100644
->> --- a/kernel/events/core.c
->> +++ b/kernel/events/core.c
->> @@ -7099,7 +7099,7 @@ void perf_output_sample(struct =
-perf_output_handle *handle,
->> 	if (sample_type & PERF_SAMPLE_RAW) {
->> 		struct perf_raw_record *raw =3D data->raw;
->>=20
->> -		if (raw) {
->> +		if (raw && (data->sample_flags & PERF_SAMPLE_RAW)) {
->> 			struct perf_raw_frag *frag =3D &raw->frag;
->>=20
->> 			perf_output_put(handle, raw->size);
+> Perf stat with CSV output option prints an extra empty
+> string as first field in metrics output line.
+> Sample output below:
 >=20
-> Urgh.. something smells here. We already did a PERF_SAMPLE_RAW test.
+> 	# ./perf stat -x, --per-socket -a -C 1 ls
+> 	S0,1,1.78,msec,cpu-clock,1785146,100.00,0.973,CPUs utilized
+> 	S0,1,26,,context-switches,1781750,100.00,0.015,M/sec
+> 	S0,1,1,,cpu-migrations,1780526,100.00,0.561,K/sec
+> 	S0,1,1,,page-faults,1779060,100.00,0.561,K/sec
+> 	S0,1,875807,,cycles,1769826,100.00,0.491,GHz
+> 	S0,1,85281,,stalled-cycles-frontend,1767512,100.00,9.74,frontend =
+cycles idle
+> 	S0,1,576839,,stalled-cycles-backend,1766260,100.00,65.86,backend =
+cycles idle
+> 	S0,1,288430,,instructions,1762246,100.00,0.33,insn per cycle
+> =3D=3D=3D=3D>	,S0,1,,,,,,,2.00,stalled cycles per insn
 >=20
-> And perf_prepare_sample() explicitly makes data->raw be NULL when not
-> set earlier.
+> The above command line uses field separator as ","
+> via "-x," option and per-socket option displays
+> socket value as first field. But here the last line
+> for "stalled cycles per insn" has "," in the
+> beginning.
 >=20
-> So what's going wrong?
+> Sample output using interval mode:
+> 	# ./perf stat -I 1000 -x, --per-socket -a -C 1 ls
+> 	0.001813453,S0,1,1.87,msec,cpu-clock,1872052,100.00,0.002,CPUs =
+utilized
+> 	0.001813453,S0,1,2,,context-switches,1868028,100.00,1.070,K/sec
+> 	------
+> 	0.001813453,S0,1,85379,,instructions,1856754,100.00,0.32,insn =
+per cycle
+> =3D=3D=3D=3D>	0.001813453,,S0,1,,,,,,,1.34,stalled cycles per insn
+>=20
+> Above result also has an extra csv separator after
+> the timestamp. Patch addresses extra field separator
+> in the beginning of the metric output line.
+>=20
+> The counter stats are displayed by function
+> "perf_stat__print_shadow_stats" in code
+> "util/stat-shadow.c". While printing the stats info
+> for "stalled cycles per insn", function "new_line_csv"
+> is used as new_line callback.
+>=20
+> The new_line_csv function has check for "os->prefix"
+> and if prefix is not null, it will be printed along
+> with cvs separator.
+> Snippet from "new_line_csv":
+> 	if (os->prefix)
+>               fprintf(os->fh, "%s%s", os->prefix, config->csv_sep);
+>=20
+> Here os->prefix gets printed followed by ","
+> which is the cvs separator. The os->prefix is
+> used in interval mode option ( -I ), to print
+> time stamp on every new line. But prefix is
+> already set to contain csv separator when used
+> in interval mode for csv option.
+>=20
+> Reference: Function "static void print_interval"
+> Snippet:
+> 	sprintf(prefix, "%6lu.%09lu%s", ts->tv_sec, ts->tv_nsec, =
+config->csv_sep);
+>=20
+> Also if prefix is not assigned (if not used with
+> -I option), it gets set to empty string.
+> Reference: function printout() in util/stat-display.c
+> Snippet:
+> 	.prefix =3D prefix ? prefix : "",
+>=20
+> Since prefix already set to contain cvs_sep in interval
+> option, patch removes printing config->csv_sep in
+> new_line_csv function to avoid printing extra field.
+>=20
+> After the patch:
+>=20
+> 	# ./perf stat -x, --per-socket -a -C 1 ls
+> 	S0,1,2.04,msec,cpu-clock,2045202,100.00,1.013,CPUs utilized
+> 	S0,1,2,,context-switches,2041444,100.00,979.289,/sec
+> 	S0,1,0,,cpu-migrations,2040820,100.00,0.000,/sec
+> 	S0,1,2,,page-faults,2040288,100.00,979.289,/sec
+> 	S0,1,254589,,cycles,2036066,100.00,0.125,GHz
+> 	=
+S0,1,82481,,stalled-cycles-frontend,2032420,100.00,32.40,frontend cycles =
+idle
+> 	S0,1,113170,,stalled-cycles-backend,2031722,100.00,44.45,backend =
+cycles idle
+> 	S0,1,88766,,instructions,2030942,100.00,0.35,insn per cycle
+> 	S0,1,,,,,,,1.27,stalled cycles per insn
+>=20
+> Fixes: 92a61f6412d3 ("perf stat: Implement CSV metrics output")
+> Reported-by: Disha Goel <disgoel@linux.vnet.ibm.com>
+> Signed-off-by: Athira Rajeev <atrajeev@linux.vnet.ibm.com>
 
-Hi Peter,
+Hi All,
 
-Sorry for late response. I was out on vacation couple of days.
-
-I didn't hit any specific issue or fail with current code. But patch =
-intention was
-to keep the perf_prepare_sample and perf_output_sample to be in sync =
-with the checks that we
-are doing.
+Looking for review comments for this change.
 
 Thanks
 Athira
+
+> ---
+> tools/perf/util/stat-display.c | 2 +-
+> 1 file changed, 1 insertion(+), 1 deletion(-)
+>=20
+> diff --git a/tools/perf/util/stat-display.c =
+b/tools/perf/util/stat-display.c
+> index 5c47ee9963a7..879874a4bc07 100644
+> --- a/tools/perf/util/stat-display.c
+> +++ b/tools/perf/util/stat-display.c
+> @@ -273,7 +273,7 @@ static void new_line_csv(struct perf_stat_config =
+*config, void *ctx)
+>=20
+> 	fputc('\n', os->fh);
+> 	if (os->prefix)
+> -		fprintf(os->fh, "%s%s", os->prefix, config->csv_sep);
+> +		fprintf(os->fh, "%s", os->prefix);
+> 	aggr_printout(config, os->evsel, os->id, os->nr);
+> 	for (i =3D 0; i < os->nfields; i++)
+> 		fputs(config->csv_sep, os->fh);
+> --=20
+> 2.31.1
+>=20
 
