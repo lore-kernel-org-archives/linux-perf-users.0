@@ -2,142 +2,126 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 79045C4332F
-	for <linux-perf-users@archiver.kernel.org>; Tue,  1 Nov 2022 16:31:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 98AD4C433FE
+	for <linux-perf-users@archiver.kernel.org>; Wed,  2 Nov 2022 00:04:06 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230400AbiKAQbv (ORCPT
+        id S229487AbiKBAEF (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Tue, 1 Nov 2022 12:31:51 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34512 "EHLO
+        Tue, 1 Nov 2022 20:04:05 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40874 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230288AbiKAQbh (ORCPT
+        with ESMTP id S229457AbiKBAEF (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Tue, 1 Nov 2022 12:31:37 -0400
-Received: from mail-wr1-x430.google.com (mail-wr1-x430.google.com [IPv6:2a00:1450:4864:20::430])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 813061C908
-        for <linux-perf-users@vger.kernel.org>; Tue,  1 Nov 2022 09:31:36 -0700 (PDT)
-Received: by mail-wr1-x430.google.com with SMTP id z14so20874923wrn.7
-        for <linux-perf-users@vger.kernel.org>; Tue, 01 Nov 2022 09:31:36 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=references:in-reply-to:message-id:date:subject:cc:to:from:from:to
-         :cc:subject:date:message-id:reply-to;
-        bh=/OkoZY2NT7ICxt6pxMECbhZ/ZuX+9qnqpKwLzS1JpjA=;
-        b=EhKSmM7wPBsoMr34pTYH6e/an7N4hbVBb7+MUj8exfJTgPvysY4/RZ/sDw+5OrBp1p
-         EynSFNVHCstaJbQYy2hP8Q7iA4BNFO8Qqeqth5aS0bVBLkskG/uYguNwOC9a8Q4YisQE
-         dNbMTLuWaz1AWw2EzmmCfquCOG7n0z3+B/z9biojkID7rdx+Fl9abdhOKSUelYVcJGvY
-         lGKrxIyztTx4DtiWTH8bPyeK93ov/+WlRt8zkm+qWoJ2f0oTSc6yIzOOuc5hEisQFouO
-         ISJjntj9pUl484uzl2EoFCqW/83vLno6cGnH7KOx965AsNVq/1uX84YS8DSnu+UFvJH+
-         FReQ==
+        Tue, 1 Nov 2022 20:04:05 -0400
+Received: from mail-oa1-f50.google.com (mail-oa1-f50.google.com [209.85.160.50])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BCC7CCE6;
+        Tue,  1 Nov 2022 17:04:03 -0700 (PDT)
+Received: by mail-oa1-f50.google.com with SMTP id 586e51a60fabf-13c2cfd1126so18621517fac.10;
+        Tue, 01 Nov 2022 17:04:03 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=references:in-reply-to:message-id:date:subject:cc:to:from
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=/OkoZY2NT7ICxt6pxMECbhZ/ZuX+9qnqpKwLzS1JpjA=;
-        b=jcTKA6cTCxHnQnsCzd+SBjm6snX4E7lLiU7uCb9x6w6YPP+pzHy7KStTIEAnt5MYQY
-         RZQzzo+PYoqk9mEFVtSL1xL1PMLAaKRfoCqYN2r4E20zkZfUbhHWTFPSfJGCntUfxqts
-         efLxXfDVL0ymDL5a3zGD7+Gc3dB7HSD0fInYsMuPf+qSyT+pYPS805NIaZsrY5mkZ1wR
-         yy48MYhtnzXzpX01rnDJsezjtDl1xyEO+Zp5DQ/2ADPTxrTabwTuA4+HQl/RiMXK01p1
-         yUWmcD0kEJK1tlIJ1T+UsLZX0Zm2K77GlV8ZccCk4AeX1SGb0n6JdY1hn9EEF024eZ2o
-         e+CQ==
-X-Gm-Message-State: ACrzQf0vESJ8yZ9MQwzamr5/PTfuEqbJd7f5ZohLpNSfdPDrRoZjDgG1
-        XD+JhwGQUzsKqUAQLSfwGuXTQg==
-X-Google-Smtp-Source: AMsMyM77kln0fy1pQKA4tkqa0x+IGaKF48rLr+qQuFCXC+pvHrgYTw/Zh+Allkx6uCVtggLlSPQBWA==
-X-Received: by 2002:a5d:5d09:0:b0:236:c650:e449 with SMTP id ch9-20020a5d5d09000000b00236c650e449mr8682046wrb.406.1667320296126;
-        Tue, 01 Nov 2022 09:31:36 -0700 (PDT)
-Received: from linaro.org ([2a00:23c5:6809:2201:e844:18b6:fc5:bbc9])
-        by smtp.gmail.com with ESMTPSA id bu15-20020a056000078f00b0022ac1be009esm8339844wrb.16.2022.11.01.09.31.35
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 01 Nov 2022 09:31:35 -0700 (PDT)
-From:   Mike Leach <mike.leach@linaro.org>
-To:     coresight@lists.linaro.org, linux-arm-kernel@lists.infradead.org,
-        linux-kernel@vger.kernel.org
-Cc:     mathieu.poirier@linaro.org, suzuki.poulose@arm.com,
-        peterz@infradead.org, mingo@redhat.com, acme@kernel.org,
-        linux-perf-users@vger.kernel.org, leo.yan@linaro.org,
-        quic_jinlmao@quicinc.com, Mike Leach <mike.leach@linaro.org>
-Subject: [PATCH v5 13/14] coresight: events: PERF_RECORD_AUX_OUTPUT_HW_ID used for Trace ID
-Date:   Tue,  1 Nov 2022 16:31:02 +0000
-Message-Id: <20221101163103.17921-14-mike.leach@linaro.org>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20221101163103.17921-1-mike.leach@linaro.org>
-References: <20221101163103.17921-1-mike.leach@linaro.org>
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=sRe4Rhg+AzQ1C8960wXYonENiHb2NOvfma+pJy2edvA=;
+        b=u2T4eS6MeB8AjRZLB0FAmEZgb5u5aoVI9souGYuhrkE+Cve2nUG2qjE8aPxm1zsRnt
+         awUypBGKSm6s/me62C9lLXHEt0sqFQRWt+6/8E3PyrBhzie4RL4Npb6l+f1DlHpn2VyD
+         Eg6qO4wIFsz1VCSYuQGe+ORvEQF9oQl5p4yHpD7JkI0HLAGPpIZAc81Dajsq7ZkdfnAi
+         kiNVvp3xZ3NICVwgrLErnaLWme8pZ74PZaRLB8eTzVkoZ6K3hW8oyGwwk0CUJqP7UOUd
+         0zcUcV85M6THp3o2L4jnpVOktoo2J1ma7yRNLyyQhzxtp4eOGLCM2wfjp3Wf155VRzvb
+         9f9Q==
+X-Gm-Message-State: ACrzQf32osLOsVh1uE77nb2ZWMb+k1+/z73yx7hCE1120rhhmBVgN+Wk
+        2LbKvhghbDTCoSHqH/MSoWg2+5Fv3sPkQMY7UyrVQlGs
+X-Google-Smtp-Source: AMsMyM6ChSMuBRK6j4CncDwXG+bn2htdD9iQH62m7TfMQ1M8+hUcqoVh0iMamhCUVlpw5QQzi1IUm6VFZ327A9jPEcs=
+X-Received: by 2002:a05:6870:d18f:b0:13b:a366:f448 with SMTP id
+ a15-20020a056870d18f00b0013ba366f448mr12277351oac.209.1667347442908; Tue, 01
+ Nov 2022 17:04:02 -0700 (PDT)
+MIME-Version: 1.0
+References: <166731050151.2100653.8202870942871353491.stgit@devnote3>
+In-Reply-To: <166731050151.2100653.8202870942871353491.stgit@devnote3>
+From:   Namhyung Kim <namhyung@kernel.org>
+Date:   Tue, 1 Nov 2022 17:03:51 -0700
+Message-ID: <CAM9d7chbMQ5Zxn00-VTbvaarBu1rkWZopqQCxfQqFq0Cnr_C+A@mail.gmail.com>
+Subject: Re: [PATCH v2 0/3] tools/perf: Fix perf probe crash by clang DWARF5 file
+To:     "Masami Hiramatsu (Google)" <mhiramat@kernel.org>
+Cc:     Arnaldo Carvalho de Melo <acme@kernel.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Jiri Olsa <jolsa@kernel.org>, linux-perf-users@vger.kernel.org,
+        linux-kernel@vger.kernel.org, Steven Rostedt <rostedt@goodmis.org>
+Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-Use the perf_report_aux_output_id() call to output the CoreSight trace ID
-and associated CPU as a PERF_RECORD_AUX_OUTPUT_HW_ID record in the
-perf.data file.
+Hi Masami,
 
-Signed-off-by: Mike Leach <mike.leach@linaro.org>
----
- drivers/hwtracing/coresight/coresight-etm-perf.c |  7 +++++++
- include/linux/coresight-pmu.h                    | 14 ++++++++++++++
- 2 files changed, 21 insertions(+)
+On Tue, Nov 1, 2022 at 6:48 AM Masami Hiramatsu (Google)
+<mhiramat@kernel.org> wrote:
+>
+> Hi,
+>
+> Here is the 2nd version of the patches for perf probe which improves the
+> robustness against clang DWARF5 file.
+>
+> Since the Clang generates a bit different DWARF5 file, the perf probe
+> crashes or failes to analyze it. There are actually fragile code against
+> it, so I fixed it ([1/3]) to avoid crash by SEGV. And make it accepts
+> Clang's DWARF5 file ([2/3],[3/3]).
+>
+> Without this series, the perf probe crashes with the DWARF5 file
+> which generated by clang as below;
+>
+>   $ ./perf probe -k $BIN_PATH/vmlinux -s $SRC_PATH -L vfs_read:10
+>   Segmentation fault
+>
+> This series fixes it to handle such file correctly;
+>
+>   $ ./perf probe -k $BIN_PATH/vmlinux -s $SRC_PATH -L vfs_read:10
+>   <vfs_read@$SRC_PATH/fs/read_write.c:10>
+>
+>        11         ret = rw_verify_area(READ, file, pos, count);
+>        12         if (ret)
+>                            return ret;
+>
+>
+> On the DWARF5 specification, Sec 2.14, there is
+> "The value 0 indicates that no source file has been specified."
+> for DW_AT_decl_file, but clang generated DWARF5 will use the value 0.
+>
+> This issue is discussed on DWARF std ML;
+> https://www.mail-archive.com/dwarf-discuss@lists.dwarfstd.org/msg00884.html
+>
+> And suggested that removing this part from the specification.
+> http://wiki.dwarfstd.org/index.php?title=DWARF5_Line_Table_File_Numbers
+>
+> So as far as I understand, this is out of standard at this moment,
+> but the standard itself has a discussion on this part. And maybe updated
+> as currently clang does in the next release/revision.
+>
+> Thank you,
+>
+> ---
+>
+> Masami Hiramatsu (Google) (3):
+>       tools/perf: Fix to avoid crashing if DW_AT_decl_file is NULL
+>       tools/perf: Fix to use dwarf_attr_integrate for generic attr accessor
+>       tools/perf: Fix to get declared file name from clang DWARF5
 
-diff --git a/drivers/hwtracing/coresight/coresight-etm-perf.c b/drivers/hwtracing/coresight/coresight-etm-perf.c
-index 6166f716a6ac..59a2ad95c1dc 100644
---- a/drivers/hwtracing/coresight/coresight-etm-perf.c
-+++ b/drivers/hwtracing/coresight/coresight-etm-perf.c
-@@ -4,6 +4,7 @@
-  * Author: Mathieu Poirier <mathieu.poirier@linaro.org>
-  */
- 
-+#include <linux/bitfield.h>
- #include <linux/coresight.h>
- #include <linux/coresight-pmu.h>
- #include <linux/cpumask.h>
-@@ -448,6 +449,7 @@ static void etm_event_start(struct perf_event *event, int flags)
- 	struct perf_output_handle *handle = &ctxt->handle;
- 	struct coresight_device *sink, *csdev = per_cpu(csdev_src, cpu);
- 	struct list_head *path;
-+	u64 hw_id;
- 
- 	if (!csdev)
- 		goto fail;
-@@ -493,6 +495,11 @@ static void etm_event_start(struct perf_event *event, int flags)
- 	if (source_ops(csdev)->enable(csdev, event, CS_MODE_PERF))
- 		goto fail_disable_path;
- 
-+	/* output cpu / trace ID in perf record */
-+	hw_id = FIELD_PREP(CS_AUX_HW_ID_VERSION_MASK, CS_AUX_HW_ID_CURR_VERSION) |
-+		FIELD_PREP(CS_AUX_HW_ID_TRACE_ID_MASK, coresight_trace_id_read_cpu_id(cpu));
-+	perf_report_aux_output_id(event, hw_id);
-+
- out:
- 	/* Tell the perf core the event is alive */
- 	event->hw.state = 0;
-diff --git a/include/linux/coresight-pmu.h b/include/linux/coresight-pmu.h
-index 624f4843453e..51ac441a37c3 100644
---- a/include/linux/coresight-pmu.h
-+++ b/include/linux/coresight-pmu.h
-@@ -7,6 +7,8 @@
- #ifndef _LINUX_CORESIGHT_PMU_H
- #define _LINUX_CORESIGHT_PMU_H
- 
-+#include <linux/bits.h>
-+
- #define CORESIGHT_ETM_PMU_NAME "cs_etm"
- 
- /*
-@@ -43,4 +45,16 @@
- #define ETM4_CFG_BIT_RETSTK	12
- #define ETM4_CFG_BIT_VMID_OPT	15
- 
-+/*
-+ * Interpretation of the PERF_RECORD_AUX_OUTPUT_HW_ID payload.
-+ * Used to associate a CPU with the CoreSight Trace ID.
-+ * [07:00] - Trace ID - uses 8 bits to make value easy to read in file.
-+ * [59:08] - Unused (SBZ)
-+ * [63:60] - Version
-+ */
-+#define CS_AUX_HW_ID_TRACE_ID_MASK	GENMASK_ULL(7, 0)
-+#define CS_AUX_HW_ID_VERSION_MASK	GENMASK_ULL(63, 60)
-+
-+#define CS_AUX_HW_ID_CURR_VERSION 0
-+
- #endif
--- 
-2.17.1
+Acked-by: Namhyung Kim <namhyung@kernel.org>
 
+Thanks,
+Namhyung
+
+
+>
+>
+>  tools/perf/util/dwarf-aux.c    |   58 ++++++++++++++++++++++++++++------------
+>  tools/perf/util/dwarf-aux.h    |    3 ++
+>  tools/perf/util/probe-finder.c |   37 +++++++++++++++++---------
+>  3 files changed, 68 insertions(+), 30 deletions(-)
+>
+> --
+> Masami Hiramatsu (Google) <mhiramat@kernel.org>
