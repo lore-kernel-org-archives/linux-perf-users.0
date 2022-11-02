@@ -2,96 +2,123 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CB93BC4332F
-	for <linux-perf-users@archiver.kernel.org>; Wed,  2 Nov 2022 10:23:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 48882C43219
+	for <linux-perf-users@archiver.kernel.org>; Wed,  2 Nov 2022 10:24:51 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229975AbiKBKXX (ORCPT
+        id S230336AbiKBKYt (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Wed, 2 Nov 2022 06:23:23 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41812 "EHLO
+        Wed, 2 Nov 2022 06:24:49 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42596 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229949AbiKBKXV (ORCPT
+        with ESMTP id S229880AbiKBKYs (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Wed, 2 Nov 2022 06:23:21 -0400
-Received: from mail-yw1-x112b.google.com (mail-yw1-x112b.google.com [IPv6:2607:f8b0:4864:20::112b])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9D25DBC7
-        for <linux-perf-users@vger.kernel.org>; Wed,  2 Nov 2022 03:23:20 -0700 (PDT)
-Received: by mail-yw1-x112b.google.com with SMTP id 00721157ae682-3704852322fso91175777b3.8
-        for <linux-perf-users@vger.kernel.org>; Wed, 02 Nov 2022 03:23:20 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20210112;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:from:to:cc:subject:date:message-id:reply-to;
-        bh=BafOkd8SvWuco2I/Z6NsmvGa0Z/TQs4XgUWd22MNZzc=;
-        b=NPdjisJ5hNB1CU5k7SrGdS78wdIMQ35AbWxkPyxqx9aL9gR6tT2qcf5So6UgE14miE
-         z7gOzr46BLEHymsJkzRVeR/56iAjly+mfLrnFD65Wmc+yMM7vZO79LfXuoKeoAxu+daC
-         PYIfrp56gZ3+onhotCroAAE5VTLTz08lL4s7BpZWugEHy3nVRtxX/sznuxTan+S1JQzH
-         jyfhHmbsmmWZL/NoV/6eBNz/hmgblLhtGQAqgPPPzx5c3RYpKS0CynLa1FFc1SzNlKpe
-         hMQGEL9/jcIDrHZv43atvExR4SQJTKAoQGtmCRJ+2xZyZJh/gKsE91FNd0ec4JrMIJRX
-         OnYw==
+        Wed, 2 Nov 2022 06:24:48 -0400
+Received: from mail-il1-f198.google.com (mail-il1-f198.google.com [209.85.166.198])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D234B24BFC
+        for <linux-perf-users@vger.kernel.org>; Wed,  2 Nov 2022 03:24:46 -0700 (PDT)
+Received: by mail-il1-f198.google.com with SMTP id s15-20020a056e02216f00b00300d14ba82bso943738ilv.5
+        for <linux-perf-users@vger.kernel.org>; Wed, 02 Nov 2022 03:24:46 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=BafOkd8SvWuco2I/Z6NsmvGa0Z/TQs4XgUWd22MNZzc=;
-        b=doSkvBOoXR/16mqEhqKRjaazrsZZS89A0W3fRB7achKRM+IV3c3Oanu3eM45z/2GtN
-         BHj8u16xsgxiCxDLmejRTsTC9Ao8dMQeZlvlOOD0emCpSETLbEW34T1WkS+4CsPaqbHp
-         ua9VYCgGUo41GhsEAjcgBQ66PnK+AtGq15KYven369+6FNTaYRq245QXQKTsTMD+SCaB
-         J0Aa7mzxJqpKM/8HSf6rJqqx480Aq9dPb+Oesb8b1LiSCbEMGmausmHaRLgP7gs8Nimu
-         1hilN+xnmwjeoJoaKeez9am60TrU6G5qzeh2zwtg2LIyVK/3voftGn4x07WApJwwgInA
-         eX7A==
-X-Gm-Message-State: ACrzQf282s2nVoufqi8gDoR3GGsTRrlzCYZwp2vmHpGb/dsWHHRqWqbR
-        25xFexitD8GXy+YBm5Qb66xixFIZ9+QmBli3oUT/+A==
-X-Google-Smtp-Source: AMsMyM78/8o4DpKdBUatsiMGIue/Gjo4Q1lrx5/fvrBsDm/9QhuEiH96aDbvtyTuaCQX9YLMspA436QjMxp7LeGSn1I=
-X-Received: by 2002:a81:a04a:0:b0:369:1030:fbd3 with SMTP id
- x71-20020a81a04a000000b003691030fbd3mr22760635ywg.465.1667384599743; Wed, 02
- Nov 2022 03:23:19 -0700 (PDT)
+        h=to:from:subject:message-id:date:mime-version:x-gm-message-state
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=qe4WNd93mX+EjZAZzx27OolHw122E3xiRIqW7icjVMc=;
+        b=Cbf35DzuFCiLiyCpkZoOL6yj/WUTF5tpdBOt+gt1CfXraXAQcqLg9cgLu6DKslbOOJ
+         /M+tR32B2DLhhEGd6aacJkilvpnl9cWTAPE7Q//NNybVbPV3KCUE9XVXRW/gOjSyOZEB
+         OMlxlijgPutbqKIJ0re0NSFm3NvzWZYIfwwGQCx6JKAHhOmFGpHUpPppJ5HtpIm4QIW1
+         /rFjkqQmvOp1Ygf+jsDE4cYhKbc/8QrsYRN4i7tKiZCpRvdPTdCPFS/YL/S/oK/N3Uww
+         4OtqUOhM0S1b1tNuBhN+EwfbhNC5aC9Y1Q7ZcrLqLnMspsWeyX7bx8UYV6X8zAO9oKY7
+         eLpQ==
+X-Gm-Message-State: ACrzQf1trIJw0vb8yHh+sC+JNz5s7y3lHBXOaaRRjgdMv1HuI1mf/FIp
+        s1J1Wlh+0XacM2Pa+QkpFyYvPuFkoQKB5IMUk2HcAoUTXkdn
+X-Google-Smtp-Source: AMsMyM6BTFKYR3WBDxUEE1qjqiyMu0X3uBEGrHLvNH1UP50P/gGpkV0jP/A+hN9YMyE4vRfi26vF2vzKdc+JF1YQLr/a2i+kc7/+
 MIME-Version: 1.0
-References: <20221026141040.1609203-1-davidgow@google.com> <CAGS_qxrd7kPzXexF_WvFX6YyVqdE_gf_7E7-XJhY2F0QAHPQ=w@mail.gmail.com>
-In-Reply-To: <CAGS_qxrd7kPzXexF_WvFX6YyVqdE_gf_7E7-XJhY2F0QAHPQ=w@mail.gmail.com>
-From:   Marco Elver <elver@google.com>
-Date:   Wed, 2 Nov 2022 11:22:43 +0100
-Message-ID: <CANpmjNOgADdGqze9ZA-o8cb6=isYfE3tEBf1HhwtwJkFJqNe=w@mail.gmail.com>
-Subject: Re: [PATCH] perf/hw_breakpoint: test: Skip the test if dependencies unmet
-To:     Daniel Latypov <dlatypov@google.com>
-Cc:     David Gow <davidgow@google.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        Dmitry Vyukov <dvyukov@google.com>,
-        linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org,
-        kunit-dev@googlegroups.com,
-        Brendan Higgins <brendanhiggins@google.com>,
-        kasan-dev@googlegroups.com
+X-Received: by 2002:a6b:6710:0:b0:6ce:cc99:b11 with SMTP id
+ b16-20020a6b6710000000b006cecc990b11mr12384343ioc.74.1667384686008; Wed, 02
+ Nov 2022 03:24:46 -0700 (PDT)
+Date:   Wed, 02 Nov 2022 03:24:45 -0700
+X-Google-Appengine-App-Id: s~syzkaller
+X-Google-Appengine-App-Id-Alias: syzkaller
+Message-ID: <000000000000e9df4305ec7a3fc7@google.com>
+Subject: [syzbot] WARNING in __perf_event_overflow
+From:   syzbot <syzbot+589d998651a580e6135d@syzkaller.appspotmail.com>
+To:     acme@kernel.org, alexander.shishkin@linux.intel.com,
+        bpf@vger.kernel.org, jolsa@kernel.org,
+        linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org,
+        mark.rutland@arm.com, mingo@redhat.com, namhyung@kernel.org,
+        netdev@vger.kernel.org, peterz@infradead.org,
+        syzkaller-bugs@googlegroups.com
 Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-Hi David, Daniel,
+Hello,
 
-On Wed, 26 Oct 2022 at 20:31, Daniel Latypov <dlatypov@google.com> wrote:
-[...]
-> > -               return -EINVAL;
-> > +               kunit_skip(test, "not enough cpus");
->
-> The only minor nit I have is that I'd personally prefer something like
->   kunit_skip(test, "need >=2 cpus");
-> since that makes it clearer
-> a) that we must only have 1 CPU by default
-> b) roughly how one might address this.
->
-> Note: b) is a bit more complicated than I would like. The final
-> command is something like
-> $ ./tools/testing/kunit/kunit.py run --arch x86_64 --qemu_args='-smp
-> 2' --kconfig_add='CONFIG_SMP=y'
->
-> But that's orthogonal to this patch.
+syzbot found the following issue on:
 
-Was there going to be a v2 to address (a), or is this patch ready to
-be picked up?
+HEAD commit:    88619e77b33d net: stmmac: rk3588: Allow multiple gmac cont..
+git tree:       bpf
+console+strace: https://syzkaller.appspot.com/x/log.txt?x=11842046880000
+kernel config:  https://syzkaller.appspot.com/x/.config?x=a66c6c673fb555e8
+dashboard link: https://syzkaller.appspot.com/bug?extid=589d998651a580e6135d
+compiler:       gcc (Debian 10.2.1-6) 10.2.1 20210110, GNU ld (GNU Binutils for Debian) 2.35.2
+syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=11eabcea880000
+C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=10f7e632880000
 
-I assume (unless I hear otherwise), this patch shall also go through -tip?
+Downloadable assets:
+disk image: https://storage.googleapis.com/syzbot-assets/f8435d5c2c21/disk-88619e77.raw.xz
+vmlinux: https://storage.googleapis.com/syzbot-assets/551d8a013e81/vmlinux-88619e77.xz
+kernel image: https://storage.googleapis.com/syzbot-assets/7d3f5c29064d/bzImage-88619e77.xz
 
-Thanks,
--- Marco
+IMPORTANT: if you fix the issue, please add the following tag to the commit:
+Reported-by: syzbot+589d998651a580e6135d@syzkaller.appspotmail.com
+
+------------[ cut here ]------------
+WARNING: CPU: 0 PID: 3607 at kernel/events/core.c:9313 __perf_event_overflow+0x498/0x540 kernel/events/core.c:9313
+Modules linked in:
+CPU: 0 PID: 3607 Comm: syz-executor100 Not tainted 6.1.0-rc2-syzkaller-00073-g88619e77b33d #0
+Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 10/11/2022
+RIP: 0010:__perf_event_overflow+0x498/0x540 kernel/events/core.c:9313
+Code: 80 3c 02 00 0f 85 b2 00 00 00 48 8b 83 20 02 00 00 48 ff 80 b8 01 00 00 e9 5b fe ff ff 45 31 f6 e9 a2 fd ff ff e8 f8 ae dd ff <0f> 0b e9 47 fe ff ff 4c 89 e7 e8 39 ff 29 00 e9 b2 fb ff ff e8 0f
+RSP: 0000:ffffc90003c4fb00 EFLAGS: 00010046
+RAX: 0000000080010000 RBX: ffff888011a891d0 RCX: 0000000000000000
+RDX: ffff88801a4d57c0 RSI: ffffffff819eecc8 RDI: 0000000000000001
+RBP: ffffc90003c4fb80 R08: 0000000000000001 R09: 0000000000000000
+R10: 0000000000000020 R11: 0000000000000001 R12: 0000000000000020
+R13: ffff888011a895f4 R14: 0000000000000000 R15: 0000000000000000
+FS:  0000555555a8e300(0000) GS:ffff8880b9a00000(0000) knlGS:0000000000000000
+CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+CR2: 0000000020000648 CR3: 000000007c988000 CR4: 00000000003506f0
+DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
+DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
+Call Trace:
+ <TASK>
+ perf_swevent_hrtimer+0x34f/0x3c0 kernel/events/core.c:10729
+ __run_hrtimer kernel/time/hrtimer.c:1685 [inline]
+ __hrtimer_run_queues+0x1c6/0xfb0 kernel/time/hrtimer.c:1749
+ hrtimer_interrupt+0x31c/0x790 kernel/time/hrtimer.c:1811
+ local_apic_timer_interrupt arch/x86/kernel/apic/apic.c:1096 [inline]
+ __sysvec_apic_timer_interrupt+0x17c/0x640 arch/x86/kernel/apic/apic.c:1113
+ sysvec_apic_timer_interrupt+0x40/0xc0 arch/x86/kernel/apic/apic.c:1107
+ asm_sysvec_apic_timer_interrupt+0x16/0x20 arch/x86/include/asm/idtentry.h:649
+RIP: 0033:0x7f74350afae5
+Code: 00 c7 04 25 b0 06 00 20 00 00 00 00 c7 04 25 b4 06 00 20 00 00 00 00 48 c7 04 25 b8 06 00 20 4f ff ff ff e8 ed e2 03 00 31 ff <e8> a6 75 00 00 66 0f 1f 44 00 00 41 57 41 56 41 55 41 54 55 53 48
+RSP: 002b:00007fffceb2b0e0 EFLAGS: 00000246
+RAX: 0000000000000003 RBX: 000000000000a025 RCX: 00007f74350edde9
+RDX: 0000000000000000 RSI: 0000000000000000 RDI: 0000000000000000
+RBP: 0000000000000000 R08: 0000000000000008 R09: 00007fffceb2b278
+R10: 00000000ffffffff R11: 0000000000000246 R12: 00007fffceb2b0ec
+R13: 431bde82d7b634db R14: 0000000000000000 R15: 0000000000000000
+ </TASK>
+
+
+---
+This report is generated by a bot. It may contain errors.
+See https://goo.gl/tpsmEJ for more information about syzbot.
+syzbot engineers can be reached at syzkaller@googlegroups.com.
+
+syzbot will keep track of this issue. See:
+https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
+syzbot can test patches for this issue, for details see:
+https://goo.gl/tpsmEJ#testing-patches
