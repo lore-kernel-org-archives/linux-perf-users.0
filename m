@@ -1,57 +1,57 @@
 Return-Path: <linux-perf-users-owner@kernel.org>
-X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
-	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CC7BAC4332F
-	for <linux-perf-users@archiver.kernel.org>; Thu,  3 Nov 2022 04:54:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3AF18C4332F
+	for <linux-perf-users@archiver.kernel.org>; Thu,  3 Nov 2022 04:55:01 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230013AbiKCEyu (ORCPT
+        id S229579AbiKCEy7 (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Thu, 3 Nov 2022 00:54:50 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38504 "EHLO
+        Thu, 3 Nov 2022 00:54:59 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38602 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229662AbiKCEys (ORCPT
+        with ESMTP id S230315AbiKCEy5 (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Thu, 3 Nov 2022 00:54:48 -0400
+        Thu, 3 Nov 2022 00:54:57 -0400
 Received: from mail-yb1-xb4a.google.com (mail-yb1-xb4a.google.com [IPv6:2607:f8b0:4864:20::b4a])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 003C417598
-        for <linux-perf-users@vger.kernel.org>; Wed,  2 Nov 2022 21:54:47 -0700 (PDT)
-Received: by mail-yb1-xb4a.google.com with SMTP id m4-20020a258004000000b006cbf32f7ed8so1113790ybk.9
-        for <linux-perf-users@vger.kernel.org>; Wed, 02 Nov 2022 21:54:47 -0700 (PDT)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 849E117AB6
+        for <linux-perf-users@vger.kernel.org>; Wed,  2 Nov 2022 21:54:56 -0700 (PDT)
+Received: by mail-yb1-xb4a.google.com with SMTP id b142-20020a253494000000b006ca86d5f40fso1080684yba.19
+        for <linux-perf-users@vger.kernel.org>; Wed, 02 Nov 2022 21:54:56 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=google.com; s=20210112;
-        h=cc:to:from:subject:mime-version:message-id:date:from:to:cc:subject
-         :date:message-id:reply-to;
-        bh=jZXowGsurJE+s3+HfBZ6GT+6g7K96tSBIPyO+vNCcsA=;
-        b=NxXkPe3pHcYT8iN7ya3pJumFi+pQ0vkHaIriviOdmvPthV36Y5/415d2g41J5VldXl
-         WQ8ILJP0mmK8scFWbpLeRf3cPnKM0ktYsPaaIPcBU/2yYdwFDwkAEtUVtU9FutGvJ81Z
-         og9FRK7xk9I9WPZsv3H/fnCJNmGcbyN1oc+FREMP61iWQKUCdwJQ7Sz1/+1eXI+oKVSv
-         OoclwxiwCBCXSv+1uJDQc/IzPL7kZBvAsodPlJwaHbAuBW63OeLXfFo3/GwP6qNh5D7M
-         fpWFMFamJD/hFyEDZ8iRGyDIxLrMz4ysj5Q0WwN7pmWqcbb+IMC58wX1oVfkE+L4KRz1
-         po5Q==
+        h=cc:to:from:subject:references:mime-version:message-id:in-reply-to
+         :date:from:to:cc:subject:date:message-id:reply-to;
+        bh=gJ2um6c1slJC7mFKEqkDgLoAnh4NP6kllgPCGRDYU3g=;
+        b=DHyGb7HoSpr040k5uJEFe9wBkt7167do1UmLynLyH7i9mUWinY5NVyCMyuqvQ6OmKV
+         CLT34lD3Qc+ttTZ7chOOm6AemNbVfckUEOf69YpqGwJHWYoe93kMc81jnE+V+Qj8QqYb
+         Op/jfokAzEDmJ0O0W6nxvl8uFLmiFLP+9i/M8tpBMw4ELp/aMj9fVvh2uh31hrFNBPPk
+         PofLimqurLiDI2/PR5lOLinOb8luvpM1Wx+1fx3x3KcfNjBdvTecU73Irv1hINeW7BPf
+         4BX9pJDUv5OJnKYWOm5tpG8O7ha+CpAA1DlHTpFW50iYnOek9wIPRD1C7Hph1lKkf5T3
+         ReNA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=cc:to:from:subject:mime-version:message-id:date:x-gm-message-state
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=jZXowGsurJE+s3+HfBZ6GT+6g7K96tSBIPyO+vNCcsA=;
-        b=DHMeVmQOF/QqDokvhw30ZXCiaBhD84CMUQGG1v9+BUUjWW6VwfPqrOc7WI5ckBxb5x
-         OUzufI0iBXjPdyXcVSS6KdBKhpTDNkbfHkzNGDGj0xQqdYKRJmmss9xr23ex9KTmqEzO
-         k5vldwoK+3LoJfNIBQ+6IRi1z/X8lW3kAPKNuDxetHmUt/5v64oRDQb3SpAk1hBk1qvL
-         deQzTjypk6bzYi9vuGOpbQQXufEnR42jvZnLCoaeKVXbePBh5bzofv+taxJtH7nndNzF
-         aoIvTjp7YkJro8bcyclROHHNnvfS6LvmvwQ6aUhqXGnlw3UL+TnV08xCI7/7rRlpLvNj
-         idAQ==
-X-Gm-Message-State: ACrzQf1czgZdY9xZjpLeeOlDv/431f6gFRXq6ghQz6WbJEAt7kb5Hbf5
-        r1kGrMDEng8Fr6cCiX6ALBOi8UExO597
-X-Google-Smtp-Source: AMsMyM5gQLmkoq2wQlEnKPsDCXgEFk1fpShBi3BSXv4S72Lx55H99KGCQPG78W+rGnj5gX7yY6U9qKtx776d
+        h=cc:to:from:subject:references:mime-version:message-id:in-reply-to
+         :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=gJ2um6c1slJC7mFKEqkDgLoAnh4NP6kllgPCGRDYU3g=;
+        b=fgWSJjRlp0oegPHh4ZMFiI9AzyIpvn5jlYsMgTGkKGHG67gDMOiHnKgERW9RTYU1/h
+         dsw1l549mmPKDJpXCdAxiL315wet6XDa13c2iq+z4nBZdqNklUzmATnTyzOeFP/KqjHU
+         g4VskIuGU+HFO5rHg9zMK5nPUgh/KxzLFpLLkMrxGpVCmYDf5uhh6v0Dy7G42ZGp69aQ
+         2BV64r+RMsguza8Tt2LTXKvmxy6xVXsoOUWjOhdkcYFz/O2WBPgMWcL8jMIb383UENNT
+         S032AQpCo6I45DRW6ne2EzwGQUeYyAsS3a2MrBpS4cuh1sQt/a2v8Q62l0GexTgVFuze
+         JYzg==
+X-Gm-Message-State: ACrzQf3IffjYb1TLbju8fkspCfCUUInXx7sevQwKbFYEX7HSuITO1wax
+        jsXkXoYbtxVNH3ruTTQFwGlRWBYMydRv
+X-Google-Smtp-Source: AMsMyM41EYdW4Fepyy6eE2wThz3USEHotnrEX8Xm3fBADOLCi7moleXHTwl3G2eXvoHch9hyWyr2Kvrhoog+
 X-Received: from irogers.svl.corp.google.com ([2620:15c:2d4:203:8a9d:7f38:6465:2d7b])
- (user=irogers job=sendgmr) by 2002:a25:6dc4:0:b0:6c1:822b:391f with SMTP id
- i187-20020a256dc4000000b006c1822b391fmr25547855ybc.586.1667451287286; Wed, 02
- Nov 2022 21:54:47 -0700 (PDT)
-Date:   Wed,  2 Nov 2022 21:54:30 -0700
-Message-Id: <20221103045437.163510-1-irogers@google.com>
+ (user=irogers job=sendgmr) by 2002:a0d:f9c2:0:b0:36f:9950:c456 with SMTP id
+ j185-20020a0df9c2000000b0036f9950c456mr180239ywf.338.1667451295275; Wed, 02
+ Nov 2022 21:54:55 -0700 (PDT)
+Date:   Wed,  2 Nov 2022 21:54:31 -0700
+In-Reply-To: <20221103045437.163510-1-irogers@google.com>
+Message-Id: <20221103045437.163510-2-irogers@google.com>
 Mime-Version: 1.0
+References: <20221103045437.163510-1-irogers@google.com>
 X-Mailer: git-send-email 2.38.1.273.g43a17bfeac-goog
-Subject: [PATCH v1 0/7] Fix perf trace libbpf 1.0+ compatibility
+Subject: [PATCH v1 1/7] perf trace: Raw augmented syscalls fix libbpf 1.0+ compatibility
 From:   Ian Rogers <irogers@google.com>
 To:     Leo Yan <leo.yan@linaro.org>,
         Peter Zijlstra <peterz@infradead.org>,
@@ -65,45 +65,200 @@ To:     Leo Yan <leo.yan@linaro.org>,
 Cc:     Stephane Eranian <eranian@google.com>,
         Ian Rogers <irogers@google.com>
 Content-Type: text/plain; charset="UTF-8"
+X-Spam-Status: No, score=-9.6 required=5.0 tests=BAYES_00,DKIMWL_WL_MED,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_NONE,
+        SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL autolearn=ham
+        autolearn_force=no version=3.4.6
+X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
+        lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-Perf trace can augment system calls with a BPF program passed as an
-event. The BPF code for this lives in examples. This patch fixes the
-example code to not used deprecated/removed APIs in libbpf. As libbpf
-has similar header files to tools/perf/include/bpf the code is
-transitioned to use the more standard libbpf code and the perf BPF
-header files removed.
+Don't use deprecated and now broken map style. Avoid use of
+tools/perf/include/bpf/bpf.h and use the more regular BPF headers.
 
-Ian Rogers (7):
-  perf trace: Raw augmented syscalls fix libbpf 1.0+ compatibility
-  perf trace: Etcsnoop fix libbpf 1.0+ compatibility
-  perf trace: Augmented syscalls fix libbpf 1.0+ compatibility
-  perf trace: hello fix libbpf 1.0+ compatibility
-  perf trace: empty fix libbpf 1.0+ compatibility
-  perf trace: 5sec fix libbpf 1.0+ compatibility
-  perf bpf: Remove now unused BPF headers
-
- tools/perf/Makefile.perf                      |  5 --
- tools/perf/examples/bpf/5sec.c                |  8 +-
+Signed-off-by: Ian Rogers <irogers@google.com>
+---
  .../examples/bpf/augmented_raw_syscalls.c     | 75 ++++++++++++++-----
- tools/perf/examples/bpf/augmented_syscalls.c  | 58 +++++++++-----
- tools/perf/examples/bpf/empty.c               | 13 +++-
- tools/perf/examples/bpf/etcsnoop.c            | 41 ++++++++--
- tools/perf/examples/bpf/hello.c               | 24 +++++-
- tools/perf/include/bpf/bpf.h                  | 70 -----------------
- tools/perf/include/bpf/linux/socket.h         | 24 ------
- tools/perf/include/bpf/pid_filter.h           | 21 ------
- tools/perf/include/bpf/stdio.h                | 16 ----
- tools/perf/include/bpf/unistd.h               | 10 ---
- 12 files changed, 169 insertions(+), 196 deletions(-)
- delete mode 100644 tools/perf/include/bpf/bpf.h
- delete mode 100644 tools/perf/include/bpf/linux/socket.h
- delete mode 100644 tools/perf/include/bpf/pid_filter.h
- delete mode 100644 tools/perf/include/bpf/stdio.h
- delete mode 100644 tools/perf/include/bpf/unistd.h
+ 1 file changed, 58 insertions(+), 17 deletions(-)
 
+diff --git a/tools/perf/examples/bpf/augmented_raw_syscalls.c b/tools/perf/examples/bpf/augmented_raw_syscalls.c
+index a262dcd020f4..13c72fd602c3 100644
+--- a/tools/perf/examples/bpf/augmented_raw_syscalls.c
++++ b/tools/perf/examples/bpf/augmented_raw_syscalls.c
+@@ -14,13 +14,19 @@
+  * code that will combine entry/exit in a strace like way.
+  */
+ 
+-#include <unistd.h>
++#include <linux/bpf.h>
++#include <bpf/bpf_helpers.h>
+ #include <linux/limits.h>
+-#include <linux/socket.h>
+-#include <pid_filter.h>
++#include <stdbool.h>
++#include <sys/socket.h>
+ 
+ /* bpf-output associated map */
+-bpf_map(__augmented_syscalls__, PERF_EVENT_ARRAY, int, u32, __NR_CPUS__);
++struct __augmented_syscalls__ {
++	__uint(type, BPF_MAP_TYPE_PERF_EVENT_ARRAY);
++	__type(key, int);
++	__type(value, __u32);
++	__uint(max_entries, __NR_CPUS__);
++} __augmented_syscalls__ SEC(".maps");
+ 
+ /*
+  * string_args_len: one per syscall arg, 0 means not a string or don't copy it,
+@@ -29,24 +35,39 @@ bpf_map(__augmented_syscalls__, PERF_EVENT_ARRAY, int, u32, __NR_CPUS__);
+  */
+ struct syscall {
+ 	bool	enabled;
+-	u16	string_args_len[6];
++	__u16	string_args_len[6];
+ };
+ 
+-bpf_map(syscalls, ARRAY, int, struct syscall, 512);
++struct syscalls {
++	__uint(type, BPF_MAP_TYPE_ARRAY);
++	__type(key, int);
++	__type(value, struct syscall);
++	__uint(max_entries, 512);
++} syscalls SEC(".maps");
+ 
+ /*
+  * What to augment at entry?
+  *
+  * Pointer arg payloads (filenames, etc) passed from userspace to the kernel
+  */
+-bpf_map(syscalls_sys_enter, PROG_ARRAY, u32, u32, 512);
++struct syscalls_sys_enter {
++	__uint(type, BPF_MAP_TYPE_PROG_ARRAY);
++	__type(key, __u32);
++	__type(value, __u32);
++	__uint(max_entries, 512);
++} syscalls_sys_enter SEC(".maps");
+ 
+ /*
+  * What to augment at exit?
+  *
+  * Pointer arg payloads returned from the kernel (struct stat, etc) to userspace.
+  */
+-bpf_map(syscalls_sys_exit, PROG_ARRAY, u32, u32, 512);
++struct syscalls_sys_exit {
++	__uint(type, BPF_MAP_TYPE_PROG_ARRAY);
++	__type(key, __u32);
++	__type(value, __u32);
++	__uint(max_entries, 512);
++} syscalls_sys_exit SEC(".maps");
+ 
+ struct syscall_enter_args {
+ 	unsigned long long common_tp_fields;
+@@ -66,7 +87,12 @@ struct augmented_arg {
+ 	char		value[PATH_MAX];
+ };
+ 
+-pid_filter(pids_filtered);
++struct pids_filtered {
++	__uint(type, BPF_MAP_TYPE_HASH);
++	__type(key, pid_t);
++	__type(value, bool);
++	__uint(max_entries, 64);
++} pids_filtered SEC(".maps");
+ 
+ struct augmented_args_payload {
+        struct syscall_enter_args args;
+@@ -79,7 +105,12 @@ struct augmented_args_payload {
+ };
+ 
+ // We need more tmp space than the BPF stack can give us
+-bpf_map(augmented_args_tmp, PERCPU_ARRAY, int, struct augmented_args_payload, 1);
++struct augmented_args_tmp {
++	__uint(type, BPF_MAP_TYPE_PERCPU_ARRAY);
++	__type(key, int);
++	__type(value, struct augmented_args_payload);
++	__uint(max_entries, 1);
++} augmented_args_tmp SEC(".maps");
+ 
+ static inline struct augmented_args_payload *augmented_args_payload(void)
+ {
+@@ -90,14 +121,14 @@ static inline struct augmented_args_payload *augmented_args_payload(void)
+ static inline int augmented__output(void *ctx, struct augmented_args_payload *args, int len)
+ {
+ 	/* If perf_event_output fails, return non-zero so that it gets recorded unaugmented */
+-	return perf_event_output(ctx, &__augmented_syscalls__, BPF_F_CURRENT_CPU, args, len);
++	return bpf_perf_event_output(ctx, &__augmented_syscalls__, BPF_F_CURRENT_CPU, args, len);
+ }
+ 
+ static inline
+ unsigned int augmented_arg__read_str(struct augmented_arg *augmented_arg, const void *arg, unsigned int arg_len)
+ {
+ 	unsigned int augmented_len = sizeof(*augmented_arg);
+-	int string_len = probe_read_str(&augmented_arg->value, arg_len, arg);
++	int string_len = bpf_probe_read_str(&augmented_arg->value, arg_len, arg);
+ 
+ 	augmented_arg->size = augmented_arg->err = 0;
+ 	/*
+@@ -146,7 +177,7 @@ int sys_enter_connect(struct syscall_enter_args *args)
+ 	if (socklen > sizeof(augmented_args->saddr))
+ 		socklen = sizeof(augmented_args->saddr);
+ 
+-	probe_read(&augmented_args->saddr, socklen, sockaddr_arg);
++	bpf_probe_read(&augmented_args->saddr, socklen, sockaddr_arg);
+ 
+ 	return augmented__output(args, augmented_args, len + socklen);
+ }
+@@ -165,7 +196,7 @@ int sys_enter_sendto(struct syscall_enter_args *args)
+ 	if (socklen > sizeof(augmented_args->saddr))
+ 		socklen = sizeof(augmented_args->saddr);
+ 
+-	probe_read(&augmented_args->saddr, socklen, sockaddr_arg);
++	bpf_probe_read(&augmented_args->saddr, socklen, sockaddr_arg);
+ 
+ 	return augmented__output(args, augmented_args, len + socklen);
+ }
+@@ -234,6 +265,16 @@ int sys_enter_renameat(struct syscall_enter_args *args)
+ 	return augmented__output(args, augmented_args, len);
+ }
+ 
++static pid_t getpid(void)
++{
++	return bpf_get_current_pid_tgid();
++}
++
++static bool pid_filter__has(struct pids_filtered *pids, pid_t pid)
++{
++	return bpf_map_lookup_elem(pids, &pid) != NULL;
++}
++
+ SEC("raw_syscalls:sys_enter")
+ int sys_enter(struct syscall_enter_args *args)
+ {
+@@ -257,7 +298,7 @@ int sys_enter(struct syscall_enter_args *args)
+ 	if (augmented_args == NULL)
+ 		return 1;
+ 
+-	probe_read(&augmented_args->args, sizeof(augmented_args->args), args);
++	bpf_probe_read(&augmented_args->args, sizeof(augmented_args->args), args);
+ 
+ 	/*
+ 	 * Jump to syscall specific augmenter, even if the default one,
+@@ -278,7 +319,7 @@ int sys_exit(struct syscall_exit_args *args)
+ 	if (pid_filter__has(&pids_filtered, getpid()))
+ 		return 0;
+ 
+-	probe_read(&exit_args, sizeof(exit_args), args);
++	bpf_probe_read(&exit_args, sizeof(exit_args), args);
+ 	/*
+ 	 * Jump to syscall specific return augmenter, even if the default one,
+ 	 * "!raw_syscalls:unaugmented" that will just return 1 to return the
+@@ -291,4 +332,4 @@ int sys_exit(struct syscall_exit_args *args)
+ 	return 0;
+ }
+ 
+-license(GPL);
++char _license[] SEC("license") = "GPL";
 -- 
 2.38.1.273.g43a17bfeac-goog
 
