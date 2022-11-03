@@ -2,104 +2,93 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B2B6DC433FE
-	for <linux-perf-users@archiver.kernel.org>; Thu,  3 Nov 2022 03:40:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 79C07C4332F
+	for <linux-perf-users@archiver.kernel.org>; Thu,  3 Nov 2022 04:03:45 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229971AbiKCDkT (ORCPT
+        id S229666AbiKCEDo (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Wed, 2 Nov 2022 23:40:19 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38848 "EHLO
+        Thu, 3 Nov 2022 00:03:44 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49460 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230196AbiKCDkS (ORCPT
+        with ESMTP id S229662AbiKCEDn (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Wed, 2 Nov 2022 23:40:18 -0400
-X-Greylist: delayed 1026 seconds by postgrey-1.37 at lindbergh.monkeyblade.net; Wed, 02 Nov 2022 20:40:16 PDT
-Received: from mx1.zhaoxin.com (MX1.ZHAOXIN.COM [210.0.225.12])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 34BF11571F
-        for <linux-perf-users@vger.kernel.org>; Wed,  2 Nov 2022 20:40:15 -0700 (PDT)
-X-ASG-Debug-ID: 1667445785-086e235325630c0001-i5rUwQ
-Received: from ZXSHMBX2.zhaoxin.com (ZXSHMBX2.zhaoxin.com [10.28.252.164]) by mx1.zhaoxin.com with ESMTP id 4H8CKghlSEVnENGS (version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NO); Thu, 03 Nov 2022 11:23:05 +0800 (CST)
-X-Barracuda-Envelope-From: SilviaZhao-oc@zhaoxin.com
-X-Barracuda-RBL-Trusted-Forwarder: 10.28.252.164
-Received: from ZXBJMBX02.zhaoxin.com (10.29.252.6) by ZXSHMBX2.zhaoxin.com
- (10.28.252.164) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.12; Thu, 3 Nov
- 2022 11:23:05 +0800
-Received: from silvia-OptiPlex-3010.zhaoxin.com (10.29.8.47) by
- ZXBJMBX02.zhaoxin.com (10.29.252.6) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2507.12; Thu, 3 Nov 2022 11:23:04 +0800
-X-Barracuda-RBL-Trusted-Forwarder: 10.28.252.164
-From:   silviazhao-oc <silviazhao-oc@zhaoxin.com>
-X-Barracuda-RBL-Trusted-Forwarder: 10.29.252.6
-To:     <peterz@infradead.org>, <mingo@redhat.com>, <acme@kernel.org>,
-        <mark.rutland@arm.com>, <alexander.shishkin@linux.intel.com>,
-        <jolsa@kernel.org>, <namhyung@kernel.org>, <tglx@linutronix.de>,
-        <bp@alien8.de>, <dave.hansen@linux.intel.com>, <x86@kernel.org>,
-        <hpa@zytor.com>, <linux-perf-users@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>
-CC:     <cobechen@zhaoxin.com>, <louisqi@zhaoxin.com>,
-        <silviazhao@zhaoxin.com>
-Subject: [PATCH] x86/perf: Fixed kernel panic during boot on Nano processor.
-Date:   Thu, 3 Nov 2022 11:23:04 +0800
-X-ASG-Orig-Subj: [PATCH] x86/perf: Fixed kernel panic during boot on Nano processor.
-Message-ID: <20221103032304.27753-1-silviazhao-oc@zhaoxin.com>
-X-Mailer: git-send-email 2.17.1
+        Thu, 3 Nov 2022 00:03:43 -0400
+Received: from mail-pl1-x62e.google.com (mail-pl1-x62e.google.com [IPv6:2607:f8b0:4864:20::62e])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5569913E8A;
+        Wed,  2 Nov 2022 21:03:42 -0700 (PDT)
+Received: by mail-pl1-x62e.google.com with SMTP id p21so769062plr.7;
+        Wed, 02 Nov 2022 21:03:42 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20210112;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=1H2zzTzRPTmUgI0UyMApMa3/ZtTK/YRKX99EEtraxW0=;
+        b=Iks06j2hpnu7NyiHNXf+EYE54sE7V+2ljQ/+GqgpeM9Mfi5TPGHkWx7IrOr0LJo+vP
+         ZgDPfRsBkKdzaDoyeZnaae3lvf2B5xE4A+r2Bz4MdpXWtuhWLfgVlXBzdvDJSwppxuda
+         uLbSR/+3h6THx3WZ7YqIaEwumCrnoZrPjhZw7T7RqtStir3TBmwHCbQgjr252HETUukn
+         vArPbrHBPHPqHhd8kFN0sfD2TiUENp9ZAF7hDi7cWO/yfluXZyFkjzh3NkjUjeRqmR9w
+         sECI7/EKstRBqPjhCaOCO2XdQu935Kl2TiDLVz1Cr9qLxj2fqWo8CSzxLbuJ3KHHsjHh
+         1M3g==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=1H2zzTzRPTmUgI0UyMApMa3/ZtTK/YRKX99EEtraxW0=;
+        b=0U0LDYHagkapX/lfFg0/MpihFrfheGjHuZhtGS8u7sMSUAMCHf6WBJJ1FLgf79dfQW
+         n8gnlNTSClpWreg3OtaEZLSA08D528+VAEug9cMbI6RbGs36j8TaR+BCWz8/zP7XHNus
+         v/l5AQezkzAGw2btgNNky0CFcLfUAtRouenpSUVU2vUXzV4NEsHxycNBtVa9EmvzTbD0
+         TYBKnNu9ag9p7ic9Mlv65kDlfHf/aGYb/Vx0t2fINzuk1oHHJZ2yf3+YSqeM1SrPNCbS
+         5KcKROsIje+YiI4Seb5ikTwIDOTFuJVN7nUNNJO3sPe2mioOotFuRCQsOqri8q0zuZdQ
+         pMJA==
+X-Gm-Message-State: ACrzQf2kQtj9+8jGHZtzqEt6PpHIGQ+BBkRbbIefksvLjZzSPnkf/UOX
+        cowygOmhdEyLkC0cDHcyT94=
+X-Google-Smtp-Source: AMsMyM6GkRw/oMp+ZihyZQWKtOLxFzkFpTpqxKDS+mO3j2623gGYJ3XmzauiVZ/Rr42wDZor2zxmXg==
+X-Received: by 2002:a17:902:db12:b0:187:2596:8b0c with SMTP id m18-20020a170902db1200b0018725968b0cmr17755125plx.172.1667448221816;
+        Wed, 02 Nov 2022 21:03:41 -0700 (PDT)
+Received: from ubuntu.localdomain ([118.73.150.53])
+        by smtp.gmail.com with ESMTPSA id qe15-20020a17090b4f8f00b0020d9c2f6c39sm2208742pjb.34.2022.11.02.21.03.39
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 02 Nov 2022 21:03:41 -0700 (PDT)
+From:   Donglin Peng <dolinux.peng@gmail.com>
+To:     peterz@infradead.org
+Cc:     adrian.hunter@intel.com, linux-kernel@vger.kernel.org,
+        linux-perf-users@vger.kernel.org,
+        Donglin Peng <dolinux.peng@gmail.com>
+Subject: [PATCH] perf tools: exclude the include/perf/ directory
+Date:   Wed,  2 Nov 2022 21:03:21 -0700
+Message-Id: <20221103040321.56233-1-dolinux.peng@gmail.com>
+X-Mailer: git-send-email 2.25.1
 MIME-Version: 1.0
-Content-Type: text/plain
-X-Originating-IP: [10.29.8.47]
-X-ClientProxiedBy: zxbjmbx1.zhaoxin.com (10.29.252.163) To
- ZXBJMBX02.zhaoxin.com (10.29.252.6)
-X-Barracuda-Connect: ZXSHMBX2.zhaoxin.com[10.28.252.164]
-X-Barracuda-Start-Time: 1667445785
-X-Barracuda-Encrypted: ECDHE-RSA-AES128-GCM-SHA256
-X-Barracuda-URL: https://10.28.252.35:4443/cgi-mod/mark.cgi
-X-Virus-Scanned: by bsmtpd at zhaoxin.com
-X-Barracuda-Scan-Msg-Size: 1332
-X-Barracuda-BRTS-Status: 1
-X-Barracuda-Bayes: INNOCENT GLOBAL 0.0007 1.0000 -2.0164
-X-Barracuda-Spam-Score: -2.02
-X-Barracuda-Spam-Status: No, SCORE=-2.02 using global scores of TAG_LEVEL=1000.0 QUARANTINE_LEVEL=1000.0 KILL_LEVEL=9.0 tests=
-X-Barracuda-Spam-Report: Code version 3.2, rules version 3.2.3.101869
-        Rule breakdown below
-         pts rule name              description
-        ---- ---------------------- --------------------------------------------------
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-Nano processor may not fully support rdpmc instruction, it works well
-for reading general pmc counter, but will lead GP(general protection)
-when accessing fixed pmc counter. Furthermore, family/mode information
-is same between Nano processor and ZX-C processor, it leads to zhaoxin
-pmu driver is wrongly loaded for Nano processor, which resulting boot
-kernal fail.
+Commit 3af1dfdd51e0 ("perf build: Move perf_dlfilters.h in the
+source tree") moved perf_dlfilters.h to the include/perf/ directory
+without updating the .gitignore file, causing new files in the
+include/perf/ directory will be ignored.
 
-To solve this problem, stepping information will be checked to distinguish
-between Nano processor and ZX-C processor.
+Add !include/perf/ to perf's .gitignore file.
 
-[https://bugzilla.kernel.org/show_bug.cgi?id=212389]
-
-Reported-by: Arjan <8vvbbqzo567a@nospam.xutrox.com>
-Signed-off-by: silviazhao-oc <silviazhao-oc@zhaoxin.com>
+Signed-off-by: Donglin Peng <dolinux.peng@gmail.com>
 ---
- arch/x86/events/zhaoxin/core.c | 3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
+ tools/perf/.gitignore | 1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/arch/x86/events/zhaoxin/core.c b/arch/x86/events/zhaoxin/core.c
-index 949d845c922b..cef1de251613 100644
---- a/arch/x86/events/zhaoxin/core.c
-+++ b/arch/x86/events/zhaoxin/core.c
-@@ -541,7 +541,8 @@ __init int zhaoxin_pmu_init(void)
- 
- 	switch (boot_cpu_data.x86) {
- 	case 0x06:
--		if (boot_cpu_data.x86_model == 0x0f || boot_cpu_data.x86_model == 0x19) {
-+		if ((boot_cpu_data.x86_model == 0x0f && boot_cpu_data.x86_stepping >= 0x0e) ||
-+			boot_cpu_data.x86_model == 0x19) {
- 
- 			x86_pmu.max_period = x86_pmu.cntval_mask >> 1;
- 
+diff --git a/tools/perf/.gitignore b/tools/perf/.gitignore
+index a653311d9693..fd7a6ff9e7aa 100644
+--- a/tools/perf/.gitignore
++++ b/tools/perf/.gitignore
+@@ -4,6 +4,7 @@ PERF-GUI-VARS
+ PERF-VERSION-FILE
+ FEATURE-DUMP
+ perf
++!include/perf/
+ perf-read-vdso32
+ perf-read-vdsox32
+ perf-help
 -- 
-2.17.1
+2.25.1
 
