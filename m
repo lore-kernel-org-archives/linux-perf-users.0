@@ -2,247 +2,173 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 15C7EC43217
-	for <linux-perf-users@archiver.kernel.org>; Thu,  3 Nov 2022 16:07:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0BAB7C433FE
+	for <linux-perf-users@archiver.kernel.org>; Thu,  3 Nov 2022 16:13:15 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231315AbiKCQHF (ORCPT
+        id S231476AbiKCQNO (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Thu, 3 Nov 2022 12:07:05 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37236 "EHLO
+        Thu, 3 Nov 2022 12:13:14 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43276 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231854AbiKCQGf (ORCPT
+        with ESMTP id S230099AbiKCQNM (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Thu, 3 Nov 2022 12:06:35 -0400
-Received: from mail-wr1-x42b.google.com (mail-wr1-x42b.google.com [IPv6:2a00:1450:4864:20::42b])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 393501BEB3
-        for <linux-perf-users@vger.kernel.org>; Thu,  3 Nov 2022 09:05:04 -0700 (PDT)
-Received: by mail-wr1-x42b.google.com with SMTP id o4so3469315wrq.6
-        for <linux-perf-users@vger.kernel.org>; Thu, 03 Nov 2022 09:05:04 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20210112;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=5bE8gvgD+2CCW16QhdR/C9Tp3/1YBHbwrBZ657evZ5Y=;
-        b=F1TCMOc2gM4JBh0MBoUOVi99cQwxmFYb93bNL2AuobLpA6CQZnI2wv20FpdiIW1z4O
-         ElrcKIn4T3moqZK6tIvDlU1rjn5yq3+E5rrz9U8TJ8q/Gg+dkyFclY7bMFXgyGkE4AE1
-         etxECpvWXiLAeKknhmyxim+kAuHw71s6Nq+BB4Eal7iAL69tfHRtoaItQ1P0m6B1YdCg
-         AwWnUzWuyEKmk9gSlLbKPHz4jtzts8Aq4Zfo2rk316da+inBaaCLHk3VW+KGqa/vpA2F
-         czcqZhNstTnL5tisz3Ee1p7wJR8cjhjuZOxVmemReEXB/3mZz1XZKGZVMGzKx1teK6E4
-         9eig==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=5bE8gvgD+2CCW16QhdR/C9Tp3/1YBHbwrBZ657evZ5Y=;
-        b=51MWaqdFgEffFfCCwG2QDBsKHWctIpnCBCcPJu1FP5J9gvxvYaOm6qknzf7kASmeid
-         YbSJF/3gRwnlgtKMPXUy+c7MWYflVsRipbswDt/z4uyx7BdqEa0LOYXO9AbKudCOCen4
-         1C4E+XMqkzw+YlQoGetr/OWuB8MNEgM+4o1FRq2ni86VgvddEMypopQYCdr5FWJKLwHY
-         U/eOw4/XGWlcrHmxHVMwnZKiDnt4Fq2zuzgpIBKMq525JHZ47tN2k5TQ+GNv+cCyBOaF
-         UOSnUS/6l1Zm3EWKzxbw1NU1IJE563rdSqTUrCp9qDwyQmaoxZ7Z6Zb/jdB259e4auS/
-         ssQA==
-X-Gm-Message-State: ACrzQf0EkFsVB6W5lSluDvHE6dz7b5/SfDW80okXRSjtQz0sh48ffL01
-        yetbYGww1xEdFVbo8ejX3A4KSVIgcPq9f2pLsS81IA==
-X-Google-Smtp-Source: AMsMyM7KGjzWxsn9UIlOy5zupS8mkGqY+lpsgwhZ4+kB961c8ksKJG+519bRWFK0ps8avU81e13cyeIrXLbAv3qbc3M=
-X-Received: by 2002:a05:6000:1817:b0:236:77f0:ef60 with SMTP id
- m23-20020a056000181700b0023677f0ef60mr18849090wrh.343.1667491502407; Thu, 03
- Nov 2022 09:05:02 -0700 (PDT)
+        Thu, 3 Nov 2022 12:13:12 -0400
+Received: from NAM12-MW2-obe.outbound.protection.outlook.com (mail-mw2nam12on2049.outbound.protection.outlook.com [40.107.244.49])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id ECB5B10F2;
+        Thu,  3 Nov 2022 09:13:11 -0700 (PDT)
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=ZcvF2ULoYJLx1M8Nmm1kmhf0vLWx30c1vEF8YETJN9p3SFqd9UMZW5dllG9nhAtyvE0UgcpIQEvrGZ1BVwx+IQgReICpiJHXtDkYd0MSGevImHUt5RheWkVvQxHsD9Pl/icRzNDFhogYno5d7jldR03B8ZLeiZwUptx/1zPNMvn47T3+8fhvzKWJzd3KCy90ixU8xrJ34AjoOe2KSmzyEA/UZV3kJNi2acKFQxnK+OeKuCp7p7AlZ3R1RMlLCSgIy4GD8UE0IU7RUsLWr+qaDpfnwHk/sR87BfwQUcJ5sKzjdKVa+DyxI79jZKiAN/EaL3ME1UZJST4ggv5p+6X7JA==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=IlhZ2bJZoQBEjJLOWausbWUdhELHAoLKU8vP+pfVq2g=;
+ b=JZfKwsyg+iTTljwJV1kn5Y1t5QlRTzChG2sMHBLycM1dfI2EIyVej0c7i7vVeixo4kz3dNZnmspMhUwgGyPDhx/j3EBn9HrgncsWJsv+SNH9Pmypl41GCjr9l/pR39qWf5KRoTZSVMcmmuG3bF5XceTAVlGNfoRnpFNhezJ31bYokZ8udZN+uOZLu1CYwui6mN81RUNuh8nHZWyhiA7zPTZrH3SbaeqRp15kejdTz9sW4xX0D8snhimOpz+IZgrnpuj6UJOqYBdMK0ShsitZqLg6VTW/8r+GhfHdtlMh0bJCf2dadZ/EJE/4TA4FQUFkNADZRPuDkGlOs+GQCE7YHg==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=amd.com; dmarc=pass action=none header.from=amd.com; dkim=pass
+ header.d=amd.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=IlhZ2bJZoQBEjJLOWausbWUdhELHAoLKU8vP+pfVq2g=;
+ b=Fz28dejx+oAXyRQr9qcrTAIeF0YNp0l9oOUDaOxRGGGLVGFW4OeB/0LQDlubRviT9ZfBiWHWpHfgLmrkfY6Z9k9KoV05nFvCyehdCzf3595Kous3rnc1yKF1kS6/FaLdnpB8kBDeAgbwoyGHJLavJGHwsy3SA8Z1QE7cAcEUc3A=
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=amd.com;
+Received: from PH7PR12MB6588.namprd12.prod.outlook.com (2603:10b6:510:210::10)
+ by SJ0PR12MB7065.namprd12.prod.outlook.com (2603:10b6:a03:4ae::19) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.5791.20; Thu, 3 Nov
+ 2022 16:13:10 +0000
+Received: from PH7PR12MB6588.namprd12.prod.outlook.com
+ ([fe80::f397:c6b1:a8a5:55f5]) by PH7PR12MB6588.namprd12.prod.outlook.com
+ ([fe80::f397:c6b1:a8a5:55f5%6]) with mapi id 15.20.5791.020; Thu, 3 Nov 2022
+ 16:13:10 +0000
+Message-ID: <f00ecc51-a387-1801-0db6-e18060c620a7@amd.com>
+Date:   Thu, 3 Nov 2022 21:42:56 +0530
+User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:102.0) Gecko/20100101
+ Thunderbird/102.3.3
+Subject: Re: Perf: BUG: kernel NULL pointer dereference, address:
+ 0000000000000198
+Content-Language: en-US
+To:     Peter Zijlstra <peterz@infradead.org>
+Cc:     Naresh Kamboju <naresh.kamboju@linaro.org>,
+        Arnaldo Carvalho de Melo <acme@kernel.org>,
+        Borislav Petkov <bp@alien8.de>, Ingo Molnar <mingo@redhat.com>,
+        linux-perf-users@vger.kernel.org,
+        open list <linux-kernel@vger.kernel.org>,
+        regressions@lists.linux.dev, lkft-triage@lists.linaro.org,
+        Stephane Eranian <eranian@google.com>,
+        Sandipan Das <sandipan.das@amd.com>,
+        Ravi Bangoria <ravi.bangoria@amd.com>
+References: <CA+G9fYtOP-spGS7gYyBB-8wpUDiKxd5e_Nk05J9gzWR_DLBeFA@mail.gmail.com>
+ <4429582f-155a-04d2-d139-a834bb325612@amd.com>
+ <d577887d-b86b-82be-8081-f7bebacd8067@amd.com>
+ <5bec4620-2e2b-abe0-1e82-528c084d4d16@amd.com>
+ <cb40c209-9c4c-f645-8454-bcd74cb72405@amd.com>
+ <Y2O1GDRrJqIu17vM@hirez.programming.kicks-ass.net>
+From:   Ravi Bangoria <ravi.bangoria@amd.com>
+In-Reply-To: <Y2O1GDRrJqIu17vM@hirez.programming.kicks-ass.net>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: PN2PR01CA0043.INDPRD01.PROD.OUTLOOK.COM
+ (2603:1096:c01:22::18) To PH7PR12MB6588.namprd12.prod.outlook.com
+ (2603:10b6:510:210::10)
 MIME-Version: 1.0
-References: <20221103045437.163510-1-irogers@google.com> <20221103045437.163510-7-irogers@google.com>
- <Y2PgBPeZsd9+YWB4@kernel.org> <Y2Pgz7luG77Wr+Ci@kernel.org> <Y2Pj0KVbbw9rMcPH@kernel.org>
-In-Reply-To: <Y2Pj0KVbbw9rMcPH@kernel.org>
-From:   Ian Rogers <irogers@google.com>
-Date:   Thu, 3 Nov 2022 09:04:49 -0700
-Message-ID: <CAP-5=fXkM52E5VvX9s2CfvF8ckQvcbSm8N_7BCfhW3dyuH7YUg@mail.gmail.com>
-Subject: Re: [PATCH v1 6/7] perf trace: 5sec fix libbpf 1.0+ compatibility
-To:     Arnaldo Carvalho de Melo <acme@kernel.org>
-Cc:     Leo Yan <leo.yan@linaro.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Jiri Olsa <jolsa@kernel.org>,
-        Namhyung Kim <namhyung@kernel.org>,
-        linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Stephane Eranian <eranian@google.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: PH7PR12MB6588:EE_|SJ0PR12MB7065:EE_
+X-MS-Office365-Filtering-Correlation-Id: 22b1b87e-e4d7-4626-1b44-08dabdb64cfa
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info: AVpnJZM+BLiE50b4N7STIWBkpE7jMhd7yDo7pVedK+Oi+Hb9N5jSMwzweC3o9W6/eYxPWu+FpaEArL0FTsCdMPql/T4M9Ad3YffjWbFkxr985RzNd/jTCvy1BkAR4XYmYvyBx1CnU6ZPzXZ027KwmWJ1FmXLKNWCnDaLbwr0+G9BTS5Il9ETh5yMOcZse9yms745+sDPOkzoaJGgiE7Eml7alPNkCO2AY8a1sxg0MFbNgznOqe0DdqI0ye+ah1bBGMrmqFpNGaB2IY4SY57oQh5SshzDcDB+9e28ZC2ef0+2zWidmheZXabCLsomwmOAFFOkus51dnKNJHiQfDlqggekZ0ID3iufG/ky3N/GmW5eppJhiz/UiGDYje8u+P2yzFzKJYNSkM/cw/OeajWKaBIZiKpWXZ4s+wG3jCB+D0g5lSg/lh1N1bvP3bzRCWO1Ph4+vcG9fx9fyMsM0HjleizwELDpfhga9+WEY8qNg9QohmyRzYbhuGkKBXP77OG6d2oDQ5YOCh2bmJBHNZIGm9dhwRKr3F5WQP1hBWXGO2ksr+7mkJbP4ojNYD2sJCtsr8f+Ybgmrs1pPD2hlG0swVHRZVVhFbBnKUEb7yHqsGfEOlfFFcKqcBjsSd4f5fzIe1axM+KvvaiZLNnx4yGm9EqHMficnapaXH1uB+zYUZPBorfd9QxgZiC0QmrsSyISNSaEL49yJA7FrQqkxFsZuqmNnlQuqpi7KYSEepxaNUNo4DxyztU6HWtlpLz8Dtx4i9PgFUuNxxADC9iNo6qRJMe72YNitO3U142Ehn6jKf5fDBoH2Y5NyC0vm7kGeH3T
+X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:PH7PR12MB6588.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230022)(4636009)(346002)(39860400002)(376002)(136003)(366004)(396003)(451199015)(66946007)(4326008)(54906003)(8676002)(66476007)(6916009)(66556008)(83380400001)(316002)(2906002)(6506007)(26005)(966005)(186003)(2616005)(6486002)(7416002)(5660300002)(36756003)(53546011)(38100700002)(31686004)(86362001)(478600001)(6512007)(31696002)(41300700001)(8936002)(6666004)(44832011)(43740500002)(45980500001);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0: =?utf-8?B?cXJJQzcxN2Rkd0FyS2hGNStDbS92Z0M1VXRnbGtsRHdkQVhxWXRxZU5qRkUv?=
+ =?utf-8?B?a0RYcmpZc2hxbG9zN2NVWVFFWEpnbkRMOVFpL3czOXA5Q0pCWjBmZ3NnVGY5?=
+ =?utf-8?B?VFVTb0czV0ZURVUrVXArcmRMQk1vTDdNTytUa3kvV1BaTWRVVFdYWUY5emhH?=
+ =?utf-8?B?bUduLzJmSkMvam1mYUk4WUovdTVnM0F3MVo0UUtnR05OYTlCY2w3UDJwV3Fw?=
+ =?utf-8?B?ay9HSWRyWktsQ1dhazdaOU5HZDZaYi8rM2QzaENjR0poK2lwZVhTTDI1UDlz?=
+ =?utf-8?B?Mm15ei9CeDEyUHdvQUwyM1ROaHowaGZvYUZBczZneFR1WWRCNUplaExsUU5U?=
+ =?utf-8?B?M0FvZUwyMGpnUm1kcDV0K2RCMTd5QXZkY2V6RFl1aEFJekVsSnVmdk1HT2x6?=
+ =?utf-8?B?ZUM2bjhPMTZ4N2E0eSs0Zm92MmxrbEV1UGhKTGgxL0VnSXJNWTJqcm12OE5i?=
+ =?utf-8?B?YXh5RGxEeW1PdExCY0hJWVZuNmt6WnJPWkRiSUZydHk0bUdyWUJiZzE4ZDlU?=
+ =?utf-8?B?b01zWHFPZmw5d3A3YVFJRU5lbUJIZmk1UEd6MXJENS9sUHZ4ZUwwVjVaZ2VE?=
+ =?utf-8?B?VDcySDFFaG9zbmpjY0lFZVRLOWFWYThQSXBvWFlucDRoQ2lCZjc4ckFqTmVT?=
+ =?utf-8?B?R1IrMzNxV2Y4aUkzbHBrMFFtbVhvVWdSdGZqdk8weEo3a3FlaWlINkNZT2l2?=
+ =?utf-8?B?TlJDanlFc084eGpTbWo4THpPbzlidVRLY2VYY05LV2krdGZMbHJ3RGJPc0Y4?=
+ =?utf-8?B?OVlFOWRSUS9Zd2xJS2tSMUpENVpUVDladG0ybWlBUTNnQktlT0U2dGpNMTNv?=
+ =?utf-8?B?aEJXSXFOUm9FbzQ0eWhtZk1SYVhvMUMzajIrcGJNV0pvazhGRHFaVU9VVGtw?=
+ =?utf-8?B?TDFmUkRYSCthTnZQUnhnZFFkTnBGcmJYVjE1cG9kMllXRk0rREp5YkNmSFJT?=
+ =?utf-8?B?dlNZR0E4WFBKbTIzZk55aVVmTGJlNmVtRTBCS1hHdDJUcUxFTldzTisvaU9F?=
+ =?utf-8?B?ZUZOYjUydlE1ZmEvd0V0WDRHeGhtdlF1WWV3Mk9wK3V0TS9iQ3crZ3NRci9w?=
+ =?utf-8?B?dzE0WDd4QkpwVEFQWHAvYVhPaWJnSmk0cjM5UEZmaWtVRVcyNXZMSzFuZkJa?=
+ =?utf-8?B?N09uWUhyOVRYUkRhV3NmQi83R1B3YktvU2N5SnNqYzEwWkNySjErYkZGemZK?=
+ =?utf-8?B?a2NQcnlsSFVqYkw2OXZhTmpCTWp6R1hlcEtjaDJJaW9pSjBnM0NKcElia2E4?=
+ =?utf-8?B?azNkT3RiV04xMXFkR1VkY3ZqV2J0TTZuSXBxMU5wWGo2dWxWRE5EaE9TWVJx?=
+ =?utf-8?B?eTFlNWd5SzhFQjF0M0hEOFVtWW1LSjYydVZVM1REVkY4aTBrL2xHeVZVcXNW?=
+ =?utf-8?B?S2NuNlJKV2UyMUlCb2o1b3kveWQ0Mk95YjYybDBxOHo2YVN2S2g1bFNhRnpt?=
+ =?utf-8?B?d3U5UGRKajlCemVONkpsRVlKMGNNWm9sQ0xpTW1GV0FVaGtKNjJqaXZBbUda?=
+ =?utf-8?B?MVJLNmFYbVdsTEh5V0E2cTF1ZVNQUlB3MGtMd2MzK3hTVkJLTkhRVDBCL1cv?=
+ =?utf-8?B?dndPc0RIeGFDTG9RdC82aDlvMkYxL2hOYWxudExsVUd2NDRvSHo4aXg3c21N?=
+ =?utf-8?B?akttdWJWZVZDbE5FaCt2S25RNnJ1RUZEMWF5VGZXYytxVW1DZXlWdXBVckF6?=
+ =?utf-8?B?SjM4VnpSN0QxTEZnaXhwVXV4YnNkS0NrT0Q0dFVmeDQvcEY5M0Y3ZFlyY1lB?=
+ =?utf-8?B?RkNZeWlZOXFHakdCbzdGelFwM0NmWnpicnpqNGdOdlNjSnVhTkpxK1lyQUNO?=
+ =?utf-8?B?ZlIwcjhDbytLVXdnMGttekhVak1NVE9DQ09FUlNvaGY3N1lVaVBOVWdieVls?=
+ =?utf-8?B?UDEzc0hyM0oreTVLaFU5T1hvLzRTM1dUMmR6azUwSmhQcGVvS0hhQk9WcktS?=
+ =?utf-8?B?Z0VLZ3ByOWVrcEh4d2RYekJUWGpvSU1yY1F0K2dyMFVBdUphUnBIbkt0VjZQ?=
+ =?utf-8?B?MGFDOTUwZTJBcmhLMlBjVFY5VEoxVGRaYTlITFJ1UFhpUU0rVjlKdTRXcVd1?=
+ =?utf-8?B?dVpIc3ZEMFJLRGpHZ3BxS1lvcVdwK3RKTk1sclp4UEFBSDJEMGo4NXZMWmdH?=
+ =?utf-8?Q?PXxz8jim+dfjm8X/RIVsZr4fM?=
+X-OriginatorOrg: amd.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 22b1b87e-e4d7-4626-1b44-08dabdb64cfa
+X-MS-Exchange-CrossTenant-AuthSource: PH7PR12MB6588.namprd12.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 03 Nov 2022 16:13:10.3110
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: YR6FwxTz+bAntxA0BRNHbQYzeLKRdhFnXvuefm4U+p7J6O3klxtNGln4/35P4Q7kprbja3BmS/PF4EwYrcekzg==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: SJ0PR12MB7065
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-On Thu, Nov 3, 2022 at 8:52 AM Arnaldo Carvalho de Melo <acme@kernel.org> w=
-rote:
->
-> Em Thu, Nov 03, 2022 at 12:39:59PM -0300, Arnaldo Carvalho de Melo escrev=
-eu:
-> > Em Thu, Nov 03, 2022 at 12:36:36PM -0300, Arnaldo Carvalho de Melo escr=
-eveu:
-> > > [root@quaco ~]# perf trace -e /home/acme/git/perf/tools/perf/examples=
-/bpf/5sec.c
-> > > /home/acme/git/perf/tools/perf/examples/bpf/5sec.c:42:10: fatal error=
-: 'bpf/bpf_helpers.h' file not found
-> > > #include <bpf/bpf_helpers.h>
-> > >          ^~~~~~~~~~~~~~~~~~~
-> > > 1 error generated.
-> > > ERROR:      unable to compile /home/acme/git/perf/tools/perf/examples=
-/bpf/5sec.c
-> > > Hint:       Check error message shown above.
-> > > Hint:       You can also pre-compile it into .o using:
-> > >                     clang -target bpf -O2 -c /home/acme/git/perf/tool=
-s/perf/examples/bpf/5sec.c
-> > >             with proper -I and -D options.
-> > > event syntax error: '/home/acme/git/perf/tools/perf/examples/bpf/5sec=
-.c'
-> > >                      \___ Failed to load /home/acme/git/perf/tools/pe=
-rf/examples/bpf/5sec.c from source: Error when compiling BPF scriptlet
-> > >
-> > > (add -v to see detail)
-> > > Run 'perf list' for a list of valid events
-> > >
-> > >  Usage: perf trace [<options>] [<command>]
-> > >     or: perf trace [<options>] -- <command> [<options>]
-> > >     or: perf trace record [<options>] [<command>]
-> > >     or: perf trace record [<options>] -- <command> [<options>]
-> > >
-> > >     -e, --event <event>   event/syscall selector. use 'perf list' to =
-list available events
-> > > [root@quaco ~]#
-> > >
-> > > It is not even finding it, in this machine I have libbpf 0.7.0, so th=
-ere
-> > > is a /usr/include/bpf/bpf_helpers.h, but probably that isn't in the
-> > > include path set up to build the tools/perf/examples/bpf/ files, perh=
-aps
-> > > it should use:
-> > >
-> > > -Itools/lib/  so that it gets tools/lib/bpf_helpers.h?
-> > >
-> > > Trying to get this tested...
-> >
-> > Running with -v:
-> >
-> > llvm compiling command : /usr/lib64/ccache/clang -D__KERNEL__ -D__NR_CP=
-US__=3D8 -DLINUX_VERSION_CODE=3D0x51310 -g -I/home/acme/lib/perf/include/bp=
-f -nostdinc -I./arch/x86/include -I./arch/x86/include/generated  -I./includ=
-e -I./arch/x86/include/uapi -I./arch/x86/include/generated/uapi -I./include=
-/uapi -I./include/generated/uapi -include ./include/linux/compiler-version.=
-h -include ./include/linux/kconfig.h  -Wno-unused-value -Wno-pointer-sign -=
-working-directory /lib/modules/5.19.16-200.fc36.x86_64/build -c /home/acme/=
-git/perf/tools/perf/examples/bpf/5sec.c -target bpf  -g -O2 -o -
-> > /home/acme/git/perf/tools/perf/examples/bpf/5sec.c:42:10: fatal error: =
-'bpf/bpf_helpers.h' file not found
-> >
-> > There is still that -I/home/acme/lib/perf/include/bpf, I'll remove it
-> > from the include path and try to replace it with the libbpf path...
->
-> Ok, works with the patch below, that needs some more renaming from "perf_=
-" to
-> "libbpf_", etc:
->
-> [root@quaco ~]# perf trace -e /home/acme/git/perf/tools/perf/examples/bpf=
-/5sec.c  sleep 5
->      0.000 sleep/160828 perf_bpf_probe:hrtimer_nanosleep(__probe_ip: -147=
-4734416, rqtp: 5000000000)
-> [root@quaco ~]#
->
-> Since I have:
->
-> [root@quaco ~]# cat ~/.perfconfig
-> [llvm]
->         dump-obj =3D true
->         clang-opt =3D -g
-> #
->
-> I end up with:
->
-> [root@quaco ~]# ls -la /home/acme/git/perf/tools/perf/examples/bpf/5sec.o
-> -rw-r--r--. 1 root root 3696 Nov  3 12:47 /home/acme/git/perf/tools/perf/=
-examples/bpf/5sec.o
-> [root@quaco ~]# file /home/acme/git/perf/tools/perf/examples/bpf/5sec.o
-> /home/acme/git/perf/tools/perf/examples/bpf/5sec.o: ELF 64-bit LSB reloca=
-table, eBPF, version 1 (SYSV), with debug_info, not stripped
-> [root@quaco ~]#
->
-> and can test with the pre-built .o eBPF bytecode + capped backtrace:
->
-> [root@quaco ~]# perf trace -e /home/acme/git/perf/tools/perf/examples/bpf=
-/5sec.o/max-stack=3D6/  sleep 5
->      0.000 sleep/161037 perf_bpf_probe:hrtimer_nanosleep(__probe_ip: -147=
-4734416, rqtp: 5000000000)
->                                        hrtimer_nanosleep ([kernel.kallsym=
-s])
->                                        common_nsleep ([kernel.kallsyms])
->                                        __x64_sys_clock_nanosleep ([kernel=
-.kallsyms])
->                                        do_syscall_64 ([kernel.kallsyms])
->                                        entry_SYSCALL_64_after_hwframe ([k=
-ernel.kallsyms])
->                                        __GI___clock_nanosleep (/usr/lib64=
-/libc.so.6)
-> [root@quaco ~]#
->
-> I'll test the other examples with these changes after I drive Pedro to
-> school and get back to the office.
+On 03-Nov-22 6:03 PM, Peter Zijlstra wrote:
+> On Thu, Nov 03, 2022 at 05:15:30PM +0530, Ravi Bangoria wrote:
+> 
+>> Sorry was distracted a bit. So, this seems to be happening because of
+>> race between amd_pmu_enable_all() and perf event NMI. Something like:
+>>
+>>   amd_pmu_enable_all()
+>>   {
+>>       if (!test_bit(idx, cpuc->active_mask))
+>>
+>>   --->/* perf NMI entry */
+>>       ...
+>>       x86_pmu_stop() {
+>>           __clear_bit(hwc->idx, cpuc->active_mask);
+>>           cpuc->events[hwc->idx] = NULL;
+>>       }
+>>       ...
+>>   <---/* perf NMI exit */
+>>
+>>       amd_pmu_enable_event(cpuc->events[idx]);
+>>   }
+> 
+> Hmm, do you have more information?
 
-Thanks, I was somewhat coding in the dark with this as I was using a
-bpf object file and clearly there's been some attention missed for a
-while in these code paths. I couldn't get the hello variant to do
-anything with the openat tracing it was set up for, for example, the
-change puts the call on the sys_enter raw syscall. I suspect you
-remember how these things should be and I'm happy to roll a v2, have
-you fix it, etc.
+I've extracted function graph logs from crash dump and uploaded it here:
+https://github.com/BangoriaRavi/function_graph/blob/main/trace.function_graph.dat
 
-Fwiw, two things I'd like to see further here is somehow the augmented
-code to be the default (with a BPF skeleton possibly) and an ability
-for perf_event_open tracing to dump the perf_event_attr. I'm unclear
-on the advantages of having different augmenters. Perhaps we could
-just drop support for different augmenters, use BPF skeletons for the
-raw syscall version and keep the BPF logic in parse events for adding
-filters - the process of doing augmentation isn't clear to me even
-after having produced these changes. There is quite a bit of plumbing
-necessary to remove the notion that the BPF object comes from event
-parsing and I suspect to achieve this in the current code there is
-some overhead that the skeleton could remove - like the empty
-sys_enter functions I added.
+crash was on CPU1.
 
-Anyway, fixing libbpf 1.0+ and removing a header file called bpf.h
-were what I was after achieving here :-)
+> Something like that would require
+> calling amd_pmu_enable_all() while it is already active -- and that
+> seems suspect at first glance.
+> 
+> That is, you shouldn't be getting an NMI for @idx before
+> amd_pmu_enable_event().
+
+I too was wondering about this. Will try to get some more data tomorrow.
 
 Thanks,
-Ian
-
-
-> - Arnaldo
->
-> diff --git a/tools/perf/Makefile.config b/tools/perf/Makefile.config
-> index d3d3c13a9f25b55c..067a6e56eeacc9fc 100644
-> --- a/tools/perf/Makefile.config
-> +++ b/tools/perf/Makefile.config
-> @@ -1239,7 +1239,7 @@ includedir =3D $(abspath $(prefix)/$(includedir_rel=
-ative))
->  mandir =3D share/man
->  infodir =3D share/info
->  perfexecdir =3D libexec/perf-core
-> -perf_include_dir =3D lib/perf/include
-> +perf_include_dir =3D /usr/include
->  perf_examples_dir =3D lib/perf/examples
->  sharedir =3D $(prefix)/share
->  template_dir =3D share/perf-core/templates
-> diff --git a/tools/perf/util/llvm-utils.c b/tools/perf/util/llvm-utils.c
-> index 2dc7970074196ca8..a5cac85783d8711f 100644
-> --- a/tools/perf/util/llvm-utils.c
-> +++ b/tools/perf/util/llvm-utils.c
-> @@ -495,7 +495,7 @@ int llvm__compile_bpf(const char *path, void **p_obj_=
-buf,
->
->         snprintf(linux_version_code_str, sizeof(linux_version_code_str),
->                  "0x%x", kernel_version);
-> -       if (asprintf(&perf_bpf_include_opts, "-I%s/bpf", perf_include_dir=
-) < 0)
-> +       if (asprintf(&perf_bpf_include_opts, "-I%s/", perf_include_dir) <=
- 0)
->                 goto errout;
->         force_set_env("NR_CPUS", nr_cpus_avail_str);
->         force_set_env("LINUX_VERSION_CODE", linux_version_code_str);
+Ravi
