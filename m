@@ -2,71 +2,70 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9BE9BC4332F
-	for <linux-perf-users@archiver.kernel.org>; Thu,  3 Nov 2022 13:27:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B2504C43217
+	for <linux-perf-users@archiver.kernel.org>; Thu,  3 Nov 2022 13:32:07 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229742AbiKCN1i (ORCPT
+        id S229611AbiKCNcG (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Thu, 3 Nov 2022 09:27:38 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33866 "EHLO
+        Thu, 3 Nov 2022 09:32:06 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36198 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231420AbiKCN1h (ORCPT
+        with ESMTP id S230098AbiKCNcE (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Thu, 3 Nov 2022 09:27:37 -0400
+        Thu, 3 Nov 2022 09:32:04 -0400
 Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3878013F09
-        for <linux-perf-users@vger.kernel.org>; Thu,  3 Nov 2022 06:26:35 -0700 (PDT)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6418365E3
+        for <linux-perf-users@vger.kernel.org>; Thu,  3 Nov 2022 06:31:02 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1667481994;
+        s=mimecast20190719; t=1667482261;
         h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
          to:to:cc:cc:mime-version:mime-version:content-type:content-type:
          content-transfer-encoding:content-transfer-encoding:
          in-reply-to:in-reply-to:references:references;
-        bh=cuPtpUWRIBBX5sUQfRc1MFba94GA2Vpd0z/+sy98D5k=;
-        b=Kp17p6B1VjDNcYLxfMHOe0FXrrMFxkE9j8apow9ePstGNsiMmjs0g2hM8nuWgDOeFqy1cB
-        1XDkUVf8tC4WGSKnmEP8qSi+G5ivbcr4Au6DGtqUJRexY2+UlZLmdkNkah8mmyaj2c6XLq
-        e9mSp4WYfan+5NNVXYsYI4EsrcLFdn0=
-Received: from mail-ed1-f70.google.com (mail-ed1-f70.google.com
- [209.85.208.70]) by relay.mimecast.com with ESMTP with STARTTLS
+        bh=J1pwMoixehBB6/exsa/xgFUL6PKhjwpqvEeah5GcAlk=;
+        b=iW0/jonnrA7eMEqBDQoyYwSsrkFEq4zl/NXrt5KjMqqy66O/6H4OyZ0jYPaVo/ATeesOVn
+        OvM37oA2HewMB/lAL38LvJIVIgKyUiyoLn7HS+S9ZRisvNvXg5lwpQ0d4of7yyWd9aMCB5
+        0rAjvahaJzrSgpaMvULBDucT4iVuo4g=
+Received: from mail-ej1-f69.google.com (mail-ej1-f69.google.com
+ [209.85.218.69]) by relay.mimecast.com with ESMTP with STARTTLS
  (version=TLSv1.3, cipher=TLS_AES_128_GCM_SHA256) id
- us-mta-403-RN7sqeIUM6-d-su0OVWtkw-1; Thu, 03 Nov 2022 09:26:33 -0400
-X-MC-Unique: RN7sqeIUM6-d-su0OVWtkw-1
-Received: by mail-ed1-f70.google.com with SMTP id h9-20020a05640250c900b00461d8ee12e2so1371161edb.23
-        for <linux-perf-users@vger.kernel.org>; Thu, 03 Nov 2022 06:26:33 -0700 (PDT)
+ us-mta-371-riT6TtQiNpGi7W6sYbBuxw-1; Thu, 03 Nov 2022 09:31:00 -0400
+X-MC-Unique: riT6TtQiNpGi7W6sYbBuxw-1
+Received: by mail-ej1-f69.google.com with SMTP id xj11-20020a170906db0b00b0077b6ecb23fcso1249911ejb.5
+        for <linux-perf-users@vger.kernel.org>; Thu, 03 Nov 2022 06:31:00 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
         h=content-transfer-encoding:in-reply-to:from:references:cc:to
          :content-language:subject:user-agent:mime-version:date:message-id
          :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=cuPtpUWRIBBX5sUQfRc1MFba94GA2Vpd0z/+sy98D5k=;
-        b=NVZaJLrmrjGh4omFb4saRvyDRPUGlR8ZOp+pragJQv3vHJsX/nTG025njLikzdzLO9
-         me/izMu3Ni777QZpX8t/q1MAv/+mSt7utJCn+zyuZ5XxS49vHk+WLf30X4HOBRSqWZ7r
-         HUopqwT0oDYxwBzgBRXDvNiWwCvzfFQtPbkBh4GoV7uY9m2nyhfUEipeAb01jonW1dtF
-         xMqlHj2ug0vEcQ9FDbv2CmNRWpRbeRV8li2QEBgzfJGu7CvBJaEqhG0PmD2TQzpOQ0b8
-         H7Qhd45+Di5yTVaSkGUmGIva1t1ZOR78IhWQHVtTiPR5c+5zLMXW6IhIULdatMSBCUeR
-         JUnQ==
-X-Gm-Message-State: ACrzQf2V9DgVuJpyBVKosvWwuo3cUQR68Gvcwk09cWygXdpjrPM/4Tx1
-        RQLJTvXpxZeAFI0byzjfPDmMQnC1dNeKAOvGEIrFlvyvIcjScqOCAYg75fsrvDkJLh6MYF1wUTb
-        NZeeUlwkAcYCyrGbU00Qaf4J4TO/jKA==
-X-Received: by 2002:a50:c302:0:b0:463:26d6:25fb with SMTP id a2-20020a50c302000000b0046326d625fbmr25724999edb.204.1667481992038;
-        Thu, 03 Nov 2022 06:26:32 -0700 (PDT)
-X-Google-Smtp-Source: AMsMyM7JxVpynVEuwDtNmx56dfxLJ+jvldPq9eu49Pvjr5E1N9lkwwPwDD30FVj7JUT6f3BxyYUKQA==
-X-Received: by 2002:a50:c302:0:b0:463:26d6:25fb with SMTP id a2-20020a50c302000000b0046326d625fbmr25724972edb.204.1667481991766;
-        Thu, 03 Nov 2022 06:26:31 -0700 (PDT)
+        bh=J1pwMoixehBB6/exsa/xgFUL6PKhjwpqvEeah5GcAlk=;
+        b=O4jnIh0n75CMOVJmPzoFD1WHhz1LTnw0U/eOs6zsJ48CCpLlMHNYGtRFDIhnzkiTTY
+         n+pZbpfVK1dcLUJ3otZ7028/jb+4YVd+SHyE7hbj9T1iFoQLLW9zOOAglBI2O/4xL8aF
+         ngDsfgopRRLs+2nHrxKQ/wQz4QIh6eDBQBfrqfIrqAalCchCOfwS1G+f3BWklOvEQtkX
+         xIhjwGVAkEGF4hSpD19/hr2qQLCwP8ASHGYj+TE0i29eaMRhLeA0WVNVbDottqoZoQDn
+         TTV1SvpwwhfW32K9MDxq49T2OoBnaGoZq4kjvHacpW4FDN1d7mSU4PlSDRbjJ8sp2xbC
+         TLwA==
+X-Gm-Message-State: ACrzQf1qM7/6No8h0wYg0tkgCLQO7wq9E4ldiHrVscbmnLvSodySCSoJ
+        /rnMV2GCDrOlk0E1xBgRjNnjGIiFNtAJAEWNrYrZ1KNJ15sKHusrw6AN0hRpyepwhbShv0e/Rxh
+        laJGYOcmwkgKf7rv2+7wzrHNOsYB/ZQ==
+X-Received: by 2002:aa7:da0a:0:b0:461:135e:7298 with SMTP id r10-20020aa7da0a000000b00461135e7298mr29826280eds.242.1667482259083;
+        Thu, 03 Nov 2022 06:30:59 -0700 (PDT)
+X-Google-Smtp-Source: AMsMyM4uP66wYjZQz+zFm2TRRot723nL19VWlEAfPOzWcUzZlqhtnavJOZFU4zZK5IHLVc6ZLRkUpw==
+X-Received: by 2002:aa7:da0a:0:b0:461:135e:7298 with SMTP id r10-20020aa7da0a000000b00461135e7298mr29826243eds.242.1667482258880;
+        Thu, 03 Nov 2022 06:30:58 -0700 (PDT)
 Received: from ?IPV6:2001:b07:6468:f312:1c09:f536:3de6:228c? ([2001:b07:6468:f312:1c09:f536:3de6:228c])
-        by smtp.googlemail.com with ESMTPSA id p25-20020a056402501900b0046191f5e946sm530591eda.21.2022.11.03.06.26.29
+        by smtp.googlemail.com with ESMTPSA id g16-20020a170906539000b007ad98918743sm513858ejo.1.2022.11.03.06.30.57
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 03 Nov 2022 06:26:31 -0700 (PDT)
-Message-ID: <ad56eb5a-a999-52b4-4c5d-4ff4b124b0a0@redhat.com>
-Date:   Thu, 3 Nov 2022 14:26:28 +0100
+        Thu, 03 Nov 2022 06:30:58 -0700 (PDT)
+Message-ID: <122e2dc2-743a-0518-c910-fdf5ced328e3@redhat.com>
+Date:   Thu, 3 Nov 2022 14:30:56 +0100
 MIME-Version: 1.0
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
  Thunderbird/102.4.0
 Subject: Re: [PATCH v2 1/5] perf/x86/intel/lbr: use setup_clear_cpu_cap
  instead of clear_cpu_cap
 Content-Language: en-US
-To:     "H. Peter Anvin" <hpa@zytor.com>,
-        "Elliott, Robert (Servers)" <elliott@hpe.com>,
+To:     "Elliott, Robert (Servers)" <elliott@hpe.com>,
         Borislav Petkov <bp@alien8.de>,
         Maxim Levitsky <mlevitsk@redhat.com>
 Cc:     "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
@@ -76,6 +75,7 @@ Cc:     "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
         Josh Poimboeuf <jpoimboe@kernel.org>,
         Namhyung Kim <namhyung@kernel.org>,
         Tony Luck <tony.luck@intel.com>,
+        "H. Peter Anvin" <hpa@zytor.com>,
         Arnaldo Carvalho de Melo <acme@kernel.org>,
         Thomas Gleixner <tglx@linutronix.de>,
         Alexander Shishkin <alexander.shishkin@linux.intel.com>,
@@ -100,69 +100,33 @@ References: <20220718141123.136106-1-mlevitsk@redhat.com>
  <c1168e8bd9077a2cc9ef61ee06db7a4e8c0f1600.camel@redhat.com>
  <Y1EOBAaLbv2CXBDL@zn.tnic> <fd2cf028-bd83-57ff-7e6d-ef3ee11852a1@redhat.com>
  <MW5PR84MB18428331677C881764E615D2AB399@MW5PR84MB1842.NAMPRD84.PROD.OUTLOOK.COM>
- <EFDA4E40-4133-4CED-97FA-DC75AEA24556@zytor.com>
 From:   Paolo Bonzini <pbonzini@redhat.com>
-In-Reply-To: <EFDA4E40-4133-4CED-97FA-DC75AEA24556@zytor.com>
+In-Reply-To: <MW5PR84MB18428331677C881764E615D2AB399@MW5PR84MB1842.NAMPRD84.PROD.OUTLOOK.COM>
 Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 7bit
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-On 11/2/22 17:23, H. Peter Anvin wrote:
-> We have a dependency system for CPUID features. If you are going to
-> do this (as opposed to "fixing" this in Qemu or just saying "don't do
-> that, it isn't a valid hardware configuration."
-
-I didn't check Robert's full list, but at least in the case of 
-aesni-intel_glue this is not about AVX2-depends-on-AVX or 
-AVX-depends-on-XSAVE (and it is not about QEMU at all).  It's just that 
-checking AVX or AVX2 only tells you about presence and is not enough to 
-say whether the instructions are _usable_.  Likewise for AVX512.
-
-What would the dependency be?
-
-Paolo
-
-> 
-> 
-> 1. Currently checking XSAVE YMM:
->  aria_aesni_avx_glue
->  blake2s-glue
->  camellia_aesni_avx2_glue	camellia_aesni_avx_glue
->  cast5_avx_glue		cast6_avx_glue
->  chacha_glue
->  poly1305_glue
->  serpent_avx2_glue		serpent_avx_glue
->  sha1_ssse3_glue		sha256_ssse3_glue	sha512_ssse3_glue
->  sm3_avx_glue
->  sm4_aesni_avx2_glue	sm4_aesni_avx_glue
->  twofish_avx_glue
-> 
-> Currently not checking XSAVE YMM:
->  aesni-intel_glue
->  curve25519-x86_64
->  nhpoly1305-avx2-glue
->  polyval-clmulni_glue
-> 
-> 2. Similarly, modules using X86_FEATURE_AVX512F, X86_FEATURE_AVXX512VL
-> and/or X86_FEATURE_AVX512BW probably need to check XFEATURE_MASK_AVX512:
-> 
-> Currently checking XSAVE AVX512:
->  blake2s-glue
->  poly1305_glue
-> 
-> Currently not checking XSAVE AVX512:
->  chacha_glue
+On 11/2/22 15:27, Elliott, Robert (Servers) wrote:
 > 
 > 3. Similarly, modules using X86_FEATURE_XMM2 probably need to
 > check XFEATURE_MASK_SSE:
 > 
 > Currently checking XSAVE SSE:
->  aegis128-aesni-glue 
+>    aegis128-aesni-glue
 > 
 > Current not checking XSAVE SSE:
->  nhpoly1305-sse2_glue
->  serpent_sse2_glue
-> 
+>    nhpoly1305-sse2_glue
+>    serpent_sse2_glue
+
+These should check boot_cpu_has(X86_FEATURE_FXSR).  Checking 
+XFEATURE_MASK_SSE will fail on systems without XSAVE, because 
+fpu_kernel_cfg.max_features is zero there (see fpu__init_system_xstate() 
+in arch/x86/kernel/fpu/xstate.c).
+
+It happens to work for aegis128-aesni-glue because AES instructions only 
+exist on new-enough parts, but it should probably be changed as well.
+
+Paolo
 
