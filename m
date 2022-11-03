@@ -2,82 +2,92 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7DE61C433FE
-	for <linux-perf-users@archiver.kernel.org>; Thu,  3 Nov 2022 12:32:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 565C9C433FE
+	for <linux-perf-users@archiver.kernel.org>; Thu,  3 Nov 2022 12:33:54 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229770AbiKCMcC (ORCPT
+        id S230388AbiKCMdx (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Thu, 3 Nov 2022 08:32:02 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50006 "EHLO
+        Thu, 3 Nov 2022 08:33:53 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51366 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229587AbiKCMcB (ORCPT
+        with ESMTP id S231297AbiKCMdw (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Thu, 3 Nov 2022 08:32:01 -0400
-Received: from ams.source.kernel.org (ams.source.kernel.org [145.40.68.75])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2C15ABF40;
-        Thu,  3 Nov 2022 05:32:01 -0700 (PDT)
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by ams.source.kernel.org (Postfix) with ESMTPS id C4E14B8277C;
-        Thu,  3 Nov 2022 12:31:59 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 3A43EC433C1;
-        Thu,  3 Nov 2022 12:31:58 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1667478718;
-        bh=KQLUDHFSpcXR73+ABRyCiieiASoreoHSgD8oxGMrEWY=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=JnCyewCXLr57zeVcBtf8fvxW276yAO5YKRsvMDFiH+Ksy/YSOHqz8zZ6znO0OWk24
-         VgaSthNgyE6BTCg7awfgee2TtxhAz/daCEZMmRx3uZsDsZQizcvBQ5R7KfjRaUOhWY
-         3d5h3GcTS4cW3+jpVBBe+YzLUFUxIXP207nut42jwo+cfxLTRkCNeJLgpS5aHmX8Rv
-         hR0E5nwjjm/ieqfzjQK/7A+FsTjxGrUjicBeiWIcCy/tWYQqXbzvx5juaMVNXdIphF
-         3QzY+uTu8VpWpN4DmeTmeo3g13H2WgBucF2lq5K05hQxhLPC/JqGGM8xsE7NDZ/5e2
-         PVSNKDfHVBuLQ==
-Received: by quaco.ghostprotocols.net (Postfix, from userid 1000)
-        id 803AC4034E; Thu,  3 Nov 2022 09:31:55 -0300 (-03)
-Date:   Thu, 3 Nov 2022 09:31:55 -0300
-From:   Arnaldo Carvalho de Melo <acme@kernel.org>
-To:     Namhyung Kim <namhyung@kernel.org>
-Cc:     "Masami Hiramatsu (Google)" <mhiramat@kernel.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Jiri Olsa <jolsa@kernel.org>, linux-perf-users@vger.kernel.org,
-        linux-kernel@vger.kernel.org, Steven Rostedt <rostedt@goodmis.org>
-Subject: Re: [PATCH v2 0/3] tools/perf: Fix perf probe crash by clang DWARF5
- file
-Message-ID: <Y2O0u2BqLH9XFCbD@kernel.org>
-References: <166731050151.2100653.8202870942871353491.stgit@devnote3>
- <CAM9d7chbMQ5Zxn00-VTbvaarBu1rkWZopqQCxfQqFq0Cnr_C+A@mail.gmail.com>
+        Thu, 3 Nov 2022 08:33:52 -0400
+Received: from desiato.infradead.org (desiato.infradead.org [IPv6:2001:8b0:10b:1:d65d:64ff:fe57:4e05])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4A81C64C4;
+        Thu,  3 Nov 2022 05:33:47 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=desiato.20200630; h=In-Reply-To:Content-Type:MIME-Version:
+        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description;
+        bh=c5YMV9yUNvIid7Fs8dSYFPL0djGzo2bChVrVUTEnC/4=; b=TaQlsQou6F9DUu+vSB9GMRqfQ7
+        b8Zsl9kuEiSltVX+qU9sJc3EYv0YN8JUTOn1EHkSXSu0XvtFN3Uaiw3umC1qzHCL40hupSMSzhey+
+        Dn7NRad7NQs+7J9fG7jyytdUjAPrbWZpPS5PAQghIQiilIOOYzVd29SH/i9K3HfKsF8IKXncdYoPD
+        bnbqQ+nIPOZCslhIf1ZFMXTGx99qNreVpOq/J3CI3lOkQJP5ILV21VM60Ib+vYt6FWkDYNz2HKyiE
+        q0G2IyTcRKaE8foUUQxxKWJVVZYn4aX2iR2YTRh6RFCNA9P4Xy1JpM6GkYzLyb7tMx3l91o5DIpgB
+        mbIA8eVw==;
+Received: from j130084.upc-j.chello.nl ([24.132.130.84] helo=noisy.programming.kicks-ass.net)
+        by desiato.infradead.org with esmtpsa (Exim 4.94.2 #2 (Red Hat Linux))
+        id 1oqZPW-008gCC-4Q; Thu, 03 Nov 2022 12:33:31 +0000
+Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange X25519 server-signature RSA-PSS (4096 bits))
+        (Client did not present a certificate)
+        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id 1D33930012F;
+        Thu,  3 Nov 2022 13:33:29 +0100 (CET)
+Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
+        id F14E62011672D; Thu,  3 Nov 2022 13:33:28 +0100 (CET)
+Date:   Thu, 3 Nov 2022 13:33:28 +0100
+From:   Peter Zijlstra <peterz@infradead.org>
+To:     Ravi Bangoria <ravi.bangoria@amd.com>
+Cc:     Naresh Kamboju <naresh.kamboju@linaro.org>,
+        Arnaldo Carvalho de Melo <acme@kernel.org>,
+        Borislav Petkov <bp@alien8.de>, Ingo Molnar <mingo@redhat.com>,
+        linux-perf-users@vger.kernel.org,
+        open list <linux-kernel@vger.kernel.org>,
+        regressions@lists.linux.dev, lkft-triage@lists.linaro.org,
+        Stephane Eranian <eranian@google.com>,
+        Sandipan Das <sandipan.das@amd.com>
+Subject: Re: Perf: BUG: kernel NULL pointer dereference, address:
+ 0000000000000198
+Message-ID: <Y2O1GDRrJqIu17vM@hirez.programming.kicks-ass.net>
+References: <CA+G9fYtOP-spGS7gYyBB-8wpUDiKxd5e_Nk05J9gzWR_DLBeFA@mail.gmail.com>
+ <4429582f-155a-04d2-d139-a834bb325612@amd.com>
+ <d577887d-b86b-82be-8081-f7bebacd8067@amd.com>
+ <5bec4620-2e2b-abe0-1e82-528c084d4d16@amd.com>
+ <cb40c209-9c4c-f645-8454-bcd74cb72405@amd.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <CAM9d7chbMQ5Zxn00-VTbvaarBu1rkWZopqQCxfQqFq0Cnr_C+A@mail.gmail.com>
-X-Url:  http://acmel.wordpress.com
+In-Reply-To: <cb40c209-9c4c-f645-8454-bcd74cb72405@amd.com>
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-Em Tue, Nov 01, 2022 at 05:03:51PM -0700, Namhyung Kim escreveu:
-> On Tue, Nov 1, 2022 at 6:48 AM Masami Hiramatsu (Google)
-> <mhiramat@kernel.org> wrote:
-> > Here is the 2nd version of the patches for perf probe which improves the
-> > robustness against clang DWARF5 file.
-> >
-> > Since the Clang generates a bit different DWARF5 file, the perf probe
-> > crashes or failes to analyze it. There are actually fragile code against
-> > it, so I fixed it ([1/3]) to avoid crash by SEGV. And make it accepts
-> > Clang's DWARF5 file ([2/3],[3/3]).
+On Thu, Nov 03, 2022 at 05:15:30PM +0530, Ravi Bangoria wrote:
 
-> > Masami Hiramatsu (Google) (3):
-> >       tools/perf: Fix to avoid crashing if DW_AT_decl_file is NULL
-> >       tools/perf: Fix to use dwarf_attr_integrate for generic attr accessor
-> >       tools/perf: Fix to get declared file name from clang DWARF5
+> Sorry was distracted a bit. So, this seems to be happening because of
+> race between amd_pmu_enable_all() and perf event NMI. Something like:
 > 
-> Acked-by: Namhyung Kim <namhyung@kernel.org>
+>   amd_pmu_enable_all()
+>   {
+>       if (!test_bit(idx, cpuc->active_mask))
+> 
+>   --->/* perf NMI entry */
+>       ...
+>       x86_pmu_stop() {
+>           __clear_bit(hwc->idx, cpuc->active_mask);
+>           cpuc->events[hwc->idx] = NULL;
+>       }
+>       ...
+>   <---/* perf NMI exit */
+> 
+>       amd_pmu_enable_event(cpuc->events[idx]);
+>   }
 
-Thanks, applied.
+Hmm, do you have more information? Something like that would require
+calling amd_pmu_enable_all() while it is already active -- and that
+seems suspect at first glance.
 
-- Arnaldo
-
+That is, you shouldn't be getting an NMI for @idx before
+amd_pmu_enable_event().
