@@ -2,115 +2,111 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 80B03C4332F
-	for <linux-perf-users@archiver.kernel.org>; Thu,  3 Nov 2022 08:07:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 69843C4332F
+	for <linux-perf-users@archiver.kernel.org>; Thu,  3 Nov 2022 09:28:59 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230329AbiKCIHk (ORCPT
+        id S229850AbiKCJ25 (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Thu, 3 Nov 2022 04:07:40 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55812 "EHLO
+        Thu, 3 Nov 2022 05:28:57 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47172 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230302AbiKCIHj (ORCPT
+        with ESMTP id S230005AbiKCJ2R (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Thu, 3 Nov 2022 04:07:39 -0400
-Received: from mail-wr1-x433.google.com (mail-wr1-x433.google.com [IPv6:2a00:1450:4864:20::433])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C2644632F;
-        Thu,  3 Nov 2022 01:07:36 -0700 (PDT)
-Received: by mail-wr1-x433.google.com with SMTP id y16so1402013wrt.12;
-        Thu, 03 Nov 2022 01:07:36 -0700 (PDT)
+        Thu, 3 Nov 2022 05:28:17 -0400
+Received: from mail-pl1-x636.google.com (mail-pl1-x636.google.com [IPv6:2607:f8b0:4864:20::636])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8A8E21057D;
+        Thu,  3 Nov 2022 02:27:19 -0700 (PDT)
+Received: by mail-pl1-x636.google.com with SMTP id j12so1366162plj.5;
+        Thu, 03 Nov 2022 02:27:19 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20210112;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:from:to:cc:subject:date:message-id:reply-to;
-        bh=GcIGqPOa10v06aLIXgn+5GXP6MAwOJhEwURiBI3VGnM=;
-        b=QPuERkKHwBbrFrAJq9SOw+GtvmExxWW/S/DbqIRKSJiUjOmyab9PWipwkHkBBHU7Se
-         lPO/gKd01DLySmnCRhgi2ACwnHyX2D0p/lTEHoav69m5YT7qSifdh40xppCRcWJLRgw2
-         E1ouJ70qBcqsjitcTkDVEcfIMKDDB5N/Ftk7UfDqtT8sjmlylMvmy0nJeljSyWtTP/8Z
-         kSRVSgmpj2OIDRvOHaeQ3lsG1SxOYGH+nqdA6u+CWMkzzQ2KmMaBG7OrC4YRhzVqxorQ
-         LWT0xd6hBAZSbxJtF8xEFW8F0Jt3Y+4wdTFPtLKkyrbea9QeFlVscHsh9zkWdSJRfll0
-         uCDQ==
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=aF9SCZOYOqwuCRWtDO+Kri8E5TpMnho7XD2CtgbqYc0=;
+        b=b7EcIXacH91Qelc+VV9DqHnM4gDYc/WCC8Wnf1U1iRRrIjiZ3Gd5a0nTM83zBRoqXR
+         aCrWJ/V0udsrsR65dS3rIv/ijySbIV6jez/PP3gLdDGe0lAduO12P5OJYw6/5kDkEqkw
+         qAjj0zi7LdOxrXrOzoq0TAIpAjIDNNzf7dtanfCTvhwCaIYpqRwokCmHMRTHerrL+Pvw
+         dV+vjZkWaR2RbWbIHuVkh7KVHkWXOhUYq/nuBOVGnPohp41bBr7ndbDdwTPR9AmLoqzm
+         YtyM1RapXaVytwfy7Zkaz2WjLQd3oKznS03+JcPT0jH5KSBhQ7KwfpP0OvB5Vx6+xbQp
+         gsFA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
          :reply-to;
-        bh=GcIGqPOa10v06aLIXgn+5GXP6MAwOJhEwURiBI3VGnM=;
-        b=bwAAmOKycakYr+nSN/S2hjrNfBp8XSqL2uyRD9DEtifuM+FCAZpDZjdZaEIa6Bu9ab
-         At7DSoXR2qELSy15l6BxbwLXHo5z7Uj1QnpiOZuBSD4U8C1Xo5W0ljvI2bVOBr2fhjCt
-         aBNSA6oFdJBNKw4txRtHG3noF6l/8bGyvN2d+neTQruTVLYU6efw8eRhOirv5GyHMsy2
-         Ur5smolL+6twGbUqxLiFMfxb4SjF4hbhGbuLTFH3tQA3jO8m83GxlUmJIbQQ7cmHZ6mI
-         cpMCz0AY4N2r/L8eClklE8L5v/grKdM6pkYmI5gnMFt83iYztYUqHGVM65lsMw+hMFeb
-         2Y7g==
-X-Gm-Message-State: ACrzQf1qQ3LVIRj9zHEm0RmbmVtGSw78mAwXNzNtw3fPTHqchdhabPYO
-        1Y9hJMpRguTNXZMkIGEapahHmucX56KMEy1qyCg=
-X-Google-Smtp-Source: AMsMyM4vRVojAzjb5nlKKs2EweGb7JPSREdWAE6agvoLhzzPpFXRgKfeZwCizsL21dTRBo3UWVgB7EGttUO7k3/BU+0=
-X-Received: by 2002:a05:6000:186e:b0:22e:5dd3:e32a with SMTP id
- d14-20020a056000186e00b0022e5dd3e32amr17685846wri.167.1667462855253; Thu, 03
- Nov 2022 01:07:35 -0700 (PDT)
-MIME-Version: 1.0
-References: <20221103040321.56233-1-dolinux.peng@gmail.com> <ea7fba87-6132-5f05-6c1c-7afc8d576b89@intel.com>
-In-Reply-To: <ea7fba87-6132-5f05-6c1c-7afc8d576b89@intel.com>
+        bh=aF9SCZOYOqwuCRWtDO+Kri8E5TpMnho7XD2CtgbqYc0=;
+        b=UFUvdePw+eGp4CeO/jJU0Btm+ZaYXY2n/jkns5girJUCVkJcIR7ygHEJNfyKR5kolu
+         3X5LeIhdxa7cTec52VFRE4X/fAyAELkCucKEu0UCeEObMOD9bstrX/mTwMsUoZDVuPUI
+         O9jRDqubJbFhoY7AnSpH2Zj70QcrrDfAA404zHsEXru2TQ+P2ecbFKEH8iN+rWQS1/ZE
+         6WI3Tr4WfP+adnI/5CCmPkv1rludvGS3R9CFFQRToxbRLR7gSYpOn7APk8M09T2v3XTn
+         oaRhacXUQ5EtIxGOhPmoeeoKuJIDcT8/hSfJiRjPMshVEJyUUyeZWTbdanLM87Y3tS7P
+         h5yw==
+X-Gm-Message-State: ACrzQf23tZI8P14VaWR1iR+EbGDjdOJGulwwELpr8KNvcXTCIH7E7fAr
+        p0Wa6DFeGg8PuUvsF6XlVls=
+X-Google-Smtp-Source: AMsMyM4+zqTTSGTgjqft+ak4Qp7b8N8HRL45G/Q5OKiqSymM2orthr0wi99Ls53bPdY7HFIK/hPByQ==
+X-Received: by 2002:a17:903:1112:b0:178:a030:5f72 with SMTP id n18-20020a170903111200b00178a0305f72mr29324771plh.12.1667467638702;
+        Thu, 03 Nov 2022 02:27:18 -0700 (PDT)
+Received: from ubuntu.localdomain ([118.73.150.53])
+        by smtp.gmail.com with ESMTPSA id s4-20020a170902ea0400b00186727e5f5csm82129plg.248.2022.11.03.02.27.15
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 03 Nov 2022 02:27:17 -0700 (PDT)
 From:   Donglin Peng <dolinux.peng@gmail.com>
-Date:   Thu, 3 Nov 2022 16:07:23 +0800
-Message-ID: <CAErzpmsxu_SLRQWX8DhizF27bupxf-=+wq7av03vLsOHJVaxDg@mail.gmail.com>
-Subject: Re: [PATCH] perf tools: exclude the include/perf/ directory
-To:     Adrian Hunter <adrian.hunter@intel.com>,
-        Arnaldo Carvalho de Melo <acme@kernel.org>
+To:     peterz@infradead.org, acme@kernel.org, adrian.hunter@intel.com
 Cc:     linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org,
-        peterz@infradead.org
-Content-Type: text/plain; charset="UTF-8"
+        Donglin Peng <dolinux.peng@gmail.com>
+Subject: [PATCH v2] perf tools: exclude the include/perf/ directory
+Date:   Thu,  3 Nov 2022 02:27:04 -0700
+Message-Id: <20221103092704.173391-1-dolinux.peng@gmail.com>
+X-Mailer: git-send-email 2.25.1
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-On Thu, Nov 3, 2022 at 3:08 PM Adrian Hunter <adrian.hunter@intel.com> wrote:
->
-> On 3/11/22 06:03, Donglin Peng wrote:
-> > Commit 3af1dfdd51e0 ("perf build: Move perf_dlfilters.h in the
-> > source tree") moved perf_dlfilters.h to the include/perf/ directory
-> > without updating the .gitignore file, causing new files in the
-> > include/perf/ directory will be ignored.
->
-> Note:
->
-> include/perf is ignored because it has 'perf' in the name
->
-Right.
-> Can check:
->
->  Before:
->  $ touch tools/perf/include/perf/junk
->  $ git status | grep junk
->  $ git check-ignore -v tools/perf/include/perf/junk
->  tools/perf/.gitignore:6:perf    tools/perf/include/perf/junk
->
->  After:
->  $ git status | grep junk
->          tools/perf/include/perf/junk
->  $ git check-ignore -v tools/perf/include/perf/junk
->
-Thanks,I will modify the commit log and send a v2.
-> >
-> > Add !include/perf/ to perf's .gitignore file.
-> >
-> > Signed-off-by: Donglin Peng <dolinux.peng@gmail.com>
->
-> Acked-by: Adrian Hunter <adrian.hunter@intel.com>
->
-> > ---
-> >  tools/perf/.gitignore | 1 +
-> >  1 file changed, 1 insertion(+)
-> >
-> > diff --git a/tools/perf/.gitignore b/tools/perf/.gitignore
-> > index a653311d9693..fd7a6ff9e7aa 100644
-> > --- a/tools/perf/.gitignore
-> > +++ b/tools/perf/.gitignore
-> > @@ -4,6 +4,7 @@ PERF-GUI-VARS
-> >  PERF-VERSION-FILE
-> >  FEATURE-DUMP
-> >  perf
-> > +!include/perf/
-> >  perf-read-vdso32
-> >  perf-read-vdsox32
-> >  perf-help
->
+Commit 3af1dfdd51e0 ("perf build: Move perf_dlfilters.h in the
+source tree") moved perf_dlfilters.h to the include/perf/ directory
+while include/perf is ignored because it has 'perf' in the name.
+Newly created files in the include/perf/ directory will be ignored.
+
+Can check:
+
+Before:
+$ touch tools/perf/include/perf/junk
+$ git status | grep junk
+$ git check-ignore -v tools/perf/include/perf/junk
+tools/perf/.gitignore:6:perf    tools/perf/include/perf/junk
+
+After:
+$ git status | grep junk
+tools/perf/include/perf/junk
+$ git check-ignore -v tools/perf/include/perf/junk
+
+Add !include/perf/ to perf's .gitignore file.
+
+Fixes: 3af1dfdd51e0 ("perf build: Move perf_dlfilters.h in the source tree")
+Signed-off-by: Donglin Peng <dolinux.peng@gmail.com>
+Acked-by: Adrian Hunter <adrian.hunter@intel.com>
+---
+Changes in v2:
+- add 'Fixes:' tag in commit message
+- make commit message more clearer
+---
+ tools/perf/.gitignore | 1 +
+ 1 file changed, 1 insertion(+)
+
+diff --git a/tools/perf/.gitignore b/tools/perf/.gitignore
+index a653311d9693..fd7a6ff9e7aa 100644
+--- a/tools/perf/.gitignore
++++ b/tools/perf/.gitignore
+@@ -4,6 +4,7 @@ PERF-GUI-VARS
+ PERF-VERSION-FILE
+ FEATURE-DUMP
+ perf
++!include/perf/
+ perf-read-vdso32
+ perf-read-vdsox32
+ perf-help
+-- 
+2.25.1
+
