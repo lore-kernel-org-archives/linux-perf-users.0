@@ -2,66 +2,104 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 046F2C4332F
-	for <linux-perf-users@archiver.kernel.org>; Wed,  2 Nov 2022 21:24:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B2B6DC433FE
+	for <linux-perf-users@archiver.kernel.org>; Thu,  3 Nov 2022 03:40:21 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231181AbiKBVY1 (ORCPT
+        id S229971AbiKCDkT (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Wed, 2 Nov 2022 17:24:27 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59846 "EHLO
+        Wed, 2 Nov 2022 23:40:19 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38848 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229882AbiKBVYZ (ORCPT
+        with ESMTP id S230196AbiKCDkS (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Wed, 2 Nov 2022 17:24:25 -0400
-Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 008045589;
-        Wed,  2 Nov 2022 14:24:24 -0700 (PDT)
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id 999A961C35;
-        Wed,  2 Nov 2022 21:24:24 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id B0236C433C1;
-        Wed,  2 Nov 2022 21:24:22 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linuxfoundation.org;
-        s=korg; t=1667424264;
-        bh=UPPJwSNTnyLmzOsbFdZZkHNDvlO5sX3PxijtsFsBNj8=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=rDqdSsm36TYRbIlu/qG/Q8fEFqijWfDhh8m1xeEY3EtSrpqE6R+Ix5Ihg1fb1Y+oU
-         nyLdoYm2AnIDMouP419upczNgU4uqiCBDZoIIBdF62jSl1vEd/RpJibpOZb8KMNkIO
-         tk71/5eXgR6dTIvFwAaxYQ1GBW5/mE6HNIrlyhuM=
-Date:   Wed, 2 Nov 2022 22:25:17 +0100
-From:   Greg KH <gregkh@linuxfoundation.org>
-To:     Thorsten Leemhuis <regressions@leemhuis.info>
-Cc:     Naresh Kamboju <naresh.kamboju@linaro.org>,
-        linux-perf-users@vger.kernel.org,
-        open list <linux-kernel@vger.kernel.org>,
-        Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        regressions@lists.linux.dev, lkft-triage@lists.linaro.org,
-        Marco Elver <elver@google.com>,
-        "Eric W. Biederman" <ebiederm@xmission.com>,
-        "stable@vger.kernel.org" <stable@vger.kernel.org>
-Subject: Re: qemu-i386: perf: BUG: kernel NULL pointer dereference, address:
- 00000148
-Message-ID: <Y2LgPWgHx77ld/k8@kroah.com>
-References: <CA+G9fYsGFoC5TciCuijZXLx48TZnoTSkq=iUgb+vFdi9EYTucw@mail.gmail.com>
- <84f79a09-7cdb-d6cc-ef28-df5ac6b048e7@leemhuis.info>
+        Wed, 2 Nov 2022 23:40:18 -0400
+X-Greylist: delayed 1026 seconds by postgrey-1.37 at lindbergh.monkeyblade.net; Wed, 02 Nov 2022 20:40:16 PDT
+Received: from mx1.zhaoxin.com (MX1.ZHAOXIN.COM [210.0.225.12])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 34BF11571F
+        for <linux-perf-users@vger.kernel.org>; Wed,  2 Nov 2022 20:40:15 -0700 (PDT)
+X-ASG-Debug-ID: 1667445785-086e235325630c0001-i5rUwQ
+Received: from ZXSHMBX2.zhaoxin.com (ZXSHMBX2.zhaoxin.com [10.28.252.164]) by mx1.zhaoxin.com with ESMTP id 4H8CKghlSEVnENGS (version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NO); Thu, 03 Nov 2022 11:23:05 +0800 (CST)
+X-Barracuda-Envelope-From: SilviaZhao-oc@zhaoxin.com
+X-Barracuda-RBL-Trusted-Forwarder: 10.28.252.164
+Received: from ZXBJMBX02.zhaoxin.com (10.29.252.6) by ZXSHMBX2.zhaoxin.com
+ (10.28.252.164) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.12; Thu, 3 Nov
+ 2022 11:23:05 +0800
+Received: from silvia-OptiPlex-3010.zhaoxin.com (10.29.8.47) by
+ ZXBJMBX02.zhaoxin.com (10.29.252.6) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2507.12; Thu, 3 Nov 2022 11:23:04 +0800
+X-Barracuda-RBL-Trusted-Forwarder: 10.28.252.164
+From:   silviazhao-oc <silviazhao-oc@zhaoxin.com>
+X-Barracuda-RBL-Trusted-Forwarder: 10.29.252.6
+To:     <peterz@infradead.org>, <mingo@redhat.com>, <acme@kernel.org>,
+        <mark.rutland@arm.com>, <alexander.shishkin@linux.intel.com>,
+        <jolsa@kernel.org>, <namhyung@kernel.org>, <tglx@linutronix.de>,
+        <bp@alien8.de>, <dave.hansen@linux.intel.com>, <x86@kernel.org>,
+        <hpa@zytor.com>, <linux-perf-users@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>
+CC:     <cobechen@zhaoxin.com>, <louisqi@zhaoxin.com>,
+        <silviazhao@zhaoxin.com>
+Subject: [PATCH] x86/perf: Fixed kernel panic during boot on Nano processor.
+Date:   Thu, 3 Nov 2022 11:23:04 +0800
+X-ASG-Orig-Subj: [PATCH] x86/perf: Fixed kernel panic during boot on Nano processor.
+Message-ID: <20221103032304.27753-1-silviazhao-oc@zhaoxin.com>
+X-Mailer: git-send-email 2.17.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <84f79a09-7cdb-d6cc-ef28-df5ac6b048e7@leemhuis.info>
+Content-Type: text/plain
+X-Originating-IP: [10.29.8.47]
+X-ClientProxiedBy: zxbjmbx1.zhaoxin.com (10.29.252.163) To
+ ZXBJMBX02.zhaoxin.com (10.29.252.6)
+X-Barracuda-Connect: ZXSHMBX2.zhaoxin.com[10.28.252.164]
+X-Barracuda-Start-Time: 1667445785
+X-Barracuda-Encrypted: ECDHE-RSA-AES128-GCM-SHA256
+X-Barracuda-URL: https://10.28.252.35:4443/cgi-mod/mark.cgi
+X-Virus-Scanned: by bsmtpd at zhaoxin.com
+X-Barracuda-Scan-Msg-Size: 1332
+X-Barracuda-BRTS-Status: 1
+X-Barracuda-Bayes: INNOCENT GLOBAL 0.0007 1.0000 -2.0164
+X-Barracuda-Spam-Score: -2.02
+X-Barracuda-Spam-Status: No, SCORE=-2.02 using global scores of TAG_LEVEL=1000.0 QUARANTINE_LEVEL=1000.0 KILL_LEVEL=9.0 tests=
+X-Barracuda-Spam-Report: Code version 3.2, rules version 3.2.3.101869
+        Rule breakdown below
+         pts rule name              description
+        ---- ---------------------- --------------------------------------------------
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-On Wed, Nov 02, 2022 at 03:24:22PM +0100, Thorsten Leemhuis wrote:
-> [just writing this to CC the stable list and Greg, to make sure they are
-> in the loop before 6.0.7 is released]
-> 
-> [/me wonders why that wasn't done and hopes there isn't a good reason
-> why it wasn't done]
+Nano processor may not fully support rdpmc instruction, it works well
+for reading general pmc counter, but will lead GP(general protection)
+when accessing fixed pmc counter. Furthermore, family/mode information
+is same between Nano processor and ZX-C processor, it leads to zhaoxin
+pmu driver is wrongly loaded for Nano processor, which resulting boot
+kernal fail.
 
-Yeah, that was odd, thanks for the heads up.
+To solve this problem, stepping information will be checked to distinguish
+between Nano processor and ZX-C processor.
 
-greg k-h
+[https://bugzilla.kernel.org/show_bug.cgi?id=212389]
+
+Reported-by: Arjan <8vvbbqzo567a@nospam.xutrox.com>
+Signed-off-by: silviazhao-oc <silviazhao-oc@zhaoxin.com>
+---
+ arch/x86/events/zhaoxin/core.c | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
+
+diff --git a/arch/x86/events/zhaoxin/core.c b/arch/x86/events/zhaoxin/core.c
+index 949d845c922b..cef1de251613 100644
+--- a/arch/x86/events/zhaoxin/core.c
++++ b/arch/x86/events/zhaoxin/core.c
+@@ -541,7 +541,8 @@ __init int zhaoxin_pmu_init(void)
+ 
+ 	switch (boot_cpu_data.x86) {
+ 	case 0x06:
+-		if (boot_cpu_data.x86_model == 0x0f || boot_cpu_data.x86_model == 0x19) {
++		if ((boot_cpu_data.x86_model == 0x0f && boot_cpu_data.x86_stepping >= 0x0e) ||
++			boot_cpu_data.x86_model == 0x19) {
+ 
+ 			x86_pmu.max_period = x86_pmu.cntval_mask >> 1;
+ 
+-- 
+2.17.1
+
