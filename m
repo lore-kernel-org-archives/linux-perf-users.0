@@ -2,107 +2,167 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 90703C433FE
-	for <linux-perf-users@archiver.kernel.org>; Thu,  3 Nov 2022 13:06:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9BE9BC4332F
+	for <linux-perf-users@archiver.kernel.org>; Thu,  3 Nov 2022 13:27:40 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230153AbiKCNGV (ORCPT
+        id S229742AbiKCN1i (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Thu, 3 Nov 2022 09:06:21 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43704 "EHLO
+        Thu, 3 Nov 2022 09:27:38 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33866 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229745AbiKCNFX (ORCPT
+        with ESMTP id S231420AbiKCN1h (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Thu, 3 Nov 2022 09:05:23 -0400
-Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0B3E9140C1;
-        Thu,  3 Nov 2022 06:04:56 -0700 (PDT)
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id 9B26C61E8D;
-        Thu,  3 Nov 2022 13:04:55 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id C4B3AC433D6;
-        Thu,  3 Nov 2022 13:04:54 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1667480695;
-        bh=oy5jtXucnFC2/KubkB95H1Awbln/AILB0UMEh4jDg28=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=mhMNge0Q1TP9KjVEmQZfOM2Il3+WXy9uOQaHZ7DYqmnAjHgwhb5tVjy2lTn8AKBfV
-         ATL8Ee0vS6Qfki9ECYXr1fXhXSIQRCYeLDGuRmFKbqaaNxXClcneHoELLnoo111QxM
-         6QAlAw6CSybITIBF+DkTq5KSz145uqwTyUNyF+++k3HO18sYGQlzHcwpvq+UtWFD1+
-         xwcLfgARG0subSG5SbS1MvwNly0POnIp8ou8RumWjTg42+l2IE6w37vUWPuGYDq28I
-         EEdduGleZ+x2l6TfOVKYnumgKLtWHdtePUBEMYBjP5v+iKyaaxcNP0N1e7Bp+yQX1H
-         JLt0Vun/kvwAw==
-Received: by quaco.ghostprotocols.net (Postfix, from userid 1000)
-        id C30DA4034E; Thu,  3 Nov 2022 10:04:52 -0300 (-03)
-Date:   Thu, 3 Nov 2022 10:04:52 -0300
-From:   Arnaldo Carvalho de Melo <acme@kernel.org>
-To:     Ian Rogers <irogers@google.com>
-Cc:     Leo Yan <leo.yan@linaro.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Jiri Olsa <jolsa@kernel.org>,
-        Namhyung Kim <namhyung@kernel.org>,
-        Adrian Hunter <adrian.hunter@intel.com>,
-        Alexey Bayduraev <alexey.v.bayduraev@linux.intel.com>,
-        German Gomez <german.gomez@arm.com>,
-        linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Stephane Eranian <eranian@google.com>
-Subject: Re: [PATCH v2 0/8] Update to C11, fix signal undefined behavior
-Message-ID: <Y2O8dD/Noe+XnyT4@kernel.org>
-References: <20221024181913.630986-1-irogers@google.com>
+        Thu, 3 Nov 2022 09:27:37 -0400
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3878013F09
+        for <linux-perf-users@vger.kernel.org>; Thu,  3 Nov 2022 06:26:35 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1667481994;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=cuPtpUWRIBBX5sUQfRc1MFba94GA2Vpd0z/+sy98D5k=;
+        b=Kp17p6B1VjDNcYLxfMHOe0FXrrMFxkE9j8apow9ePstGNsiMmjs0g2hM8nuWgDOeFqy1cB
+        1XDkUVf8tC4WGSKnmEP8qSi+G5ivbcr4Au6DGtqUJRexY2+UlZLmdkNkah8mmyaj2c6XLq
+        e9mSp4WYfan+5NNVXYsYI4EsrcLFdn0=
+Received: from mail-ed1-f70.google.com (mail-ed1-f70.google.com
+ [209.85.208.70]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_128_GCM_SHA256) id
+ us-mta-403-RN7sqeIUM6-d-su0OVWtkw-1; Thu, 03 Nov 2022 09:26:33 -0400
+X-MC-Unique: RN7sqeIUM6-d-su0OVWtkw-1
+Received: by mail-ed1-f70.google.com with SMTP id h9-20020a05640250c900b00461d8ee12e2so1371161edb.23
+        for <linux-perf-users@vger.kernel.org>; Thu, 03 Nov 2022 06:26:33 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=content-transfer-encoding:in-reply-to:from:references:cc:to
+         :content-language:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=cuPtpUWRIBBX5sUQfRc1MFba94GA2Vpd0z/+sy98D5k=;
+        b=NVZaJLrmrjGh4omFb4saRvyDRPUGlR8ZOp+pragJQv3vHJsX/nTG025njLikzdzLO9
+         me/izMu3Ni777QZpX8t/q1MAv/+mSt7utJCn+zyuZ5XxS49vHk+WLf30X4HOBRSqWZ7r
+         HUopqwT0oDYxwBzgBRXDvNiWwCvzfFQtPbkBh4GoV7uY9m2nyhfUEipeAb01jonW1dtF
+         xMqlHj2ug0vEcQ9FDbv2CmNRWpRbeRV8li2QEBgzfJGu7CvBJaEqhG0PmD2TQzpOQ0b8
+         H7Qhd45+Di5yTVaSkGUmGIva1t1ZOR78IhWQHVtTiPR5c+5zLMXW6IhIULdatMSBCUeR
+         JUnQ==
+X-Gm-Message-State: ACrzQf2V9DgVuJpyBVKosvWwuo3cUQR68Gvcwk09cWygXdpjrPM/4Tx1
+        RQLJTvXpxZeAFI0byzjfPDmMQnC1dNeKAOvGEIrFlvyvIcjScqOCAYg75fsrvDkJLh6MYF1wUTb
+        NZeeUlwkAcYCyrGbU00Qaf4J4TO/jKA==
+X-Received: by 2002:a50:c302:0:b0:463:26d6:25fb with SMTP id a2-20020a50c302000000b0046326d625fbmr25724999edb.204.1667481992038;
+        Thu, 03 Nov 2022 06:26:32 -0700 (PDT)
+X-Google-Smtp-Source: AMsMyM7JxVpynVEuwDtNmx56dfxLJ+jvldPq9eu49Pvjr5E1N9lkwwPwDD30FVj7JUT6f3BxyYUKQA==
+X-Received: by 2002:a50:c302:0:b0:463:26d6:25fb with SMTP id a2-20020a50c302000000b0046326d625fbmr25724972edb.204.1667481991766;
+        Thu, 03 Nov 2022 06:26:31 -0700 (PDT)
+Received: from ?IPV6:2001:b07:6468:f312:1c09:f536:3de6:228c? ([2001:b07:6468:f312:1c09:f536:3de6:228c])
+        by smtp.googlemail.com with ESMTPSA id p25-20020a056402501900b0046191f5e946sm530591eda.21.2022.11.03.06.26.29
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 03 Nov 2022 06:26:31 -0700 (PDT)
+Message-ID: <ad56eb5a-a999-52b4-4c5d-4ff4b124b0a0@redhat.com>
+Date:   Thu, 3 Nov 2022 14:26:28 +0100
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20221024181913.630986-1-irogers@google.com>
-X-Url:  http://acmel.wordpress.com
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
+ Thunderbird/102.4.0
+Subject: Re: [PATCH v2 1/5] perf/x86/intel/lbr: use setup_clear_cpu_cap
+ instead of clear_cpu_cap
+Content-Language: en-US
+To:     "H. Peter Anvin" <hpa@zytor.com>,
+        "Elliott, Robert (Servers)" <elliott@hpe.com>,
+        Borislav Petkov <bp@alien8.de>,
+        Maxim Levitsky <mlevitsk@redhat.com>
+Cc:     "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "kvm@vger.kernel.org" <kvm@vger.kernel.org>,
+        Pawan Gupta <pawan.kumar.gupta@linux.intel.com>,
+        Ingo Molnar <mingo@redhat.com>,
+        Josh Poimboeuf <jpoimboe@kernel.org>,
+        Namhyung Kim <namhyung@kernel.org>,
+        Tony Luck <tony.luck@intel.com>,
+        Arnaldo Carvalho de Melo <acme@kernel.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Tim Chen <tim.c.chen@linux.intel.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        Dave Hansen <dave.hansen@linux.intel.com>,
+        "Chang S. Bae" <chang.seok.bae@intel.com>,
+        Jane Malalane <jane.malalane@citrix.com>,
+        Kees Cook <keescook@chromium.org>,
+        Kan Liang <kan.liang@linux.intel.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        "maintainer:X86 ARCHITECTURE (32-BIT AND 64-BIT)" <x86@kernel.org>,
+        Herbert Xu <herbert@gondor.apana.org.au>,
+        Jiri Olsa <jolsa@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        "linux-perf-users@vger.kernel.org" <linux-perf-users@vger.kernel.org>,
+        "open list:CRYPTO API" <linux-crypto@vger.kernel.org>
+References: <20220718141123.136106-1-mlevitsk@redhat.com>
+ <20220718141123.136106-2-mlevitsk@redhat.com> <Yyh9RDbaRqUR1XSW@zn.tnic>
+ <c105971a72dfe6d46ad75fb7e71f79ba716e081c.camel@redhat.com>
+ <YzGlQBkCSJxY+8Jf@zn.tnic>
+ <c1168e8bd9077a2cc9ef61ee06db7a4e8c0f1600.camel@redhat.com>
+ <Y1EOBAaLbv2CXBDL@zn.tnic> <fd2cf028-bd83-57ff-7e6d-ef3ee11852a1@redhat.com>
+ <MW5PR84MB18428331677C881764E615D2AB399@MW5PR84MB1842.NAMPRD84.PROD.OUTLOOK.COM>
+ <EFDA4E40-4133-4CED-97FA-DC75AEA24556@zytor.com>
+From:   Paolo Bonzini <pbonzini@redhat.com>
+In-Reply-To: <EFDA4E40-4133-4CED-97FA-DC75AEA24556@zytor.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-Em Mon, Oct 24, 2022 at 11:19:05AM -0700, Ian Rogers escreveu:
-> The use of C11 is mainstream in the kernel [1]. There was some
-> confusion on volatile and signal handlers in [2] for which atomics
-> (present in C11) make things clearer. Switch to using volatile
-> sig_atomic_t as per [3]. Thanks to Leo Yan <leo.yan@linaro.org> for
-> the suggestions.
+On 11/2/22 17:23, H. Peter Anvin wrote:
+> We have a dependency system for CPUID features. If you are going to
+> do this (as opposed to "fixing" this in Qemu or just saying "don't do
+> that, it isn't a valid hardware configuration."
 
-Thanks, applied and testing building it now.
+I didn't check Robert's full list, but at least in the case of 
+aesni-intel_glue this is not about AVX2-depends-on-AVX or 
+AVX-depends-on-XSAVE (and it is not about QEMU at all).  It's just that 
+checking AVX or AVX2 only tells you about presence and is not enough to 
+say whether the instructions are _usable_.  Likewise for AVX512.
 
-- Arnaldo
- 
-> [1] https://lore.kernel.org/lkml/CAHk-=whWbENRz-vLY6vpESDLj6kGUTKO3khGtVfipHqwewh2HQ@mail.gmail.com/
-> [2] https://lore.kernel.org/lkml/20221024011024.462518-1-irogers@google.com/
-> [3] https://wiki.sei.cmu.edu/confluence/display/c/SIG31-C.+Do+not+access+shared+objects+in+signal+handlers
-> 
-> v2. Remove unneeded stdatomic.h includes for sig_atomic_t as it is
->     declared in signal.h.
-> 
-> Ian Rogers (8):
->   perf build: Update to C standard to gnu11
->   perf record: Use sig_atomic_t for signal handlers
->   perf daemon: Use sig_atomic_t to avoid UB
->   perf ftrace: Use sig_atomic_t to avoid UB
->   perf session: Change type to avoid UB
->   perf stat: Use sig_atomic_t to avoid UB
->   perf top: Use sig_atomic_t to avoid UB
->   perf trace: Use sig_atomic_t to avoid UB
-> 
->  tools/perf/Makefile.config  | 2 +-
->  tools/perf/builtin-daemon.c | 2 +-
->  tools/perf/builtin-ftrace.c | 4 ++--
->  tools/perf/builtin-record.c | 8 ++++----
->  tools/perf/builtin-stat.c   | 8 ++++----
->  tools/perf/builtin-top.c    | 4 ++--
->  tools/perf/builtin-trace.c  | 4 ++--
->  tools/perf/util/session.c   | 3 ++-
->  8 files changed, 18 insertions(+), 17 deletions(-)
-> 
-> -- 
-> 2.38.0.135.g90850a2211-goog
+What would the dependency be?
 
--- 
+Paolo
 
-- Arnaldo
+> 
+> 
+> 1. Currently checking XSAVE YMM:
+>  aria_aesni_avx_glue
+>  blake2s-glue
+>  camellia_aesni_avx2_glue	camellia_aesni_avx_glue
+>  cast5_avx_glue		cast6_avx_glue
+>  chacha_glue
+>  poly1305_glue
+>  serpent_avx2_glue		serpent_avx_glue
+>  sha1_ssse3_glue		sha256_ssse3_glue	sha512_ssse3_glue
+>  sm3_avx_glue
+>  sm4_aesni_avx2_glue	sm4_aesni_avx_glue
+>  twofish_avx_glue
+> 
+> Currently not checking XSAVE YMM:
+>  aesni-intel_glue
+>  curve25519-x86_64
+>  nhpoly1305-avx2-glue
+>  polyval-clmulni_glue
+> 
+> 2. Similarly, modules using X86_FEATURE_AVX512F, X86_FEATURE_AVXX512VL
+> and/or X86_FEATURE_AVX512BW probably need to check XFEATURE_MASK_AVX512:
+> 
+> Currently checking XSAVE AVX512:
+>  blake2s-glue
+>  poly1305_glue
+> 
+> Currently not checking XSAVE AVX512:
+>  chacha_glue
+> 
+> 3. Similarly, modules using X86_FEATURE_XMM2 probably need to
+> check XFEATURE_MASK_SSE:
+> 
+> Currently checking XSAVE SSE:
+>  aegis128-aesni-glue 
+> 
+> Current not checking XSAVE SSE:
+>  nhpoly1305-sse2_glue
+>  serpent_sse2_glue
+> 
+
