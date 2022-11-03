@@ -2,173 +2,209 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0BAB7C433FE
-	for <linux-perf-users@archiver.kernel.org>; Thu,  3 Nov 2022 16:13:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D380EC433FE
+	for <linux-perf-users@archiver.kernel.org>; Thu,  3 Nov 2022 16:15:56 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231476AbiKCQNO (ORCPT
+        id S231654AbiKCQPz (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Thu, 3 Nov 2022 12:13:14 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43276 "EHLO
+        Thu, 3 Nov 2022 12:15:55 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44902 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230099AbiKCQNM (ORCPT
+        with ESMTP id S231473AbiKCQPy (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Thu, 3 Nov 2022 12:13:12 -0400
-Received: from NAM12-MW2-obe.outbound.protection.outlook.com (mail-mw2nam12on2049.outbound.protection.outlook.com [40.107.244.49])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id ECB5B10F2;
-        Thu,  3 Nov 2022 09:13:11 -0700 (PDT)
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=ZcvF2ULoYJLx1M8Nmm1kmhf0vLWx30c1vEF8YETJN9p3SFqd9UMZW5dllG9nhAtyvE0UgcpIQEvrGZ1BVwx+IQgReICpiJHXtDkYd0MSGevImHUt5RheWkVvQxHsD9Pl/icRzNDFhogYno5d7jldR03B8ZLeiZwUptx/1zPNMvn47T3+8fhvzKWJzd3KCy90ixU8xrJ34AjoOe2KSmzyEA/UZV3kJNi2acKFQxnK+OeKuCp7p7AlZ3R1RMlLCSgIy4GD8UE0IU7RUsLWr+qaDpfnwHk/sR87BfwQUcJ5sKzjdKVa+DyxI79jZKiAN/EaL3ME1UZJST4ggv5p+6X7JA==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=IlhZ2bJZoQBEjJLOWausbWUdhELHAoLKU8vP+pfVq2g=;
- b=JZfKwsyg+iTTljwJV1kn5Y1t5QlRTzChG2sMHBLycM1dfI2EIyVej0c7i7vVeixo4kz3dNZnmspMhUwgGyPDhx/j3EBn9HrgncsWJsv+SNH9Pmypl41GCjr9l/pR39qWf5KRoTZSVMcmmuG3bF5XceTAVlGNfoRnpFNhezJ31bYokZ8udZN+uOZLu1CYwui6mN81RUNuh8nHZWyhiA7zPTZrH3SbaeqRp15kejdTz9sW4xX0D8snhimOpz+IZgrnpuj6UJOqYBdMK0ShsitZqLg6VTW/8r+GhfHdtlMh0bJCf2dadZ/EJE/4TA4FQUFkNADZRPuDkGlOs+GQCE7YHg==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=amd.com; dmarc=pass action=none header.from=amd.com; dkim=pass
- header.d=amd.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=IlhZ2bJZoQBEjJLOWausbWUdhELHAoLKU8vP+pfVq2g=;
- b=Fz28dejx+oAXyRQr9qcrTAIeF0YNp0l9oOUDaOxRGGGLVGFW4OeB/0LQDlubRviT9ZfBiWHWpHfgLmrkfY6Z9k9KoV05nFvCyehdCzf3595Kous3rnc1yKF1kS6/FaLdnpB8kBDeAgbwoyGHJLavJGHwsy3SA8Z1QE7cAcEUc3A=
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=amd.com;
-Received: from PH7PR12MB6588.namprd12.prod.outlook.com (2603:10b6:510:210::10)
- by SJ0PR12MB7065.namprd12.prod.outlook.com (2603:10b6:a03:4ae::19) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.5791.20; Thu, 3 Nov
- 2022 16:13:10 +0000
-Received: from PH7PR12MB6588.namprd12.prod.outlook.com
- ([fe80::f397:c6b1:a8a5:55f5]) by PH7PR12MB6588.namprd12.prod.outlook.com
- ([fe80::f397:c6b1:a8a5:55f5%6]) with mapi id 15.20.5791.020; Thu, 3 Nov 2022
- 16:13:10 +0000
-Message-ID: <f00ecc51-a387-1801-0db6-e18060c620a7@amd.com>
-Date:   Thu, 3 Nov 2022 21:42:56 +0530
-User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:102.0) Gecko/20100101
- Thunderbird/102.3.3
-Subject: Re: Perf: BUG: kernel NULL pointer dereference, address:
- 0000000000000198
-Content-Language: en-US
-To:     Peter Zijlstra <peterz@infradead.org>
-Cc:     Naresh Kamboju <naresh.kamboju@linaro.org>,
-        Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Borislav Petkov <bp@alien8.de>, Ingo Molnar <mingo@redhat.com>,
-        linux-perf-users@vger.kernel.org,
-        open list <linux-kernel@vger.kernel.org>,
-        regressions@lists.linux.dev, lkft-triage@lists.linaro.org,
-        Stephane Eranian <eranian@google.com>,
-        Sandipan Das <sandipan.das@amd.com>,
-        Ravi Bangoria <ravi.bangoria@amd.com>
-References: <CA+G9fYtOP-spGS7gYyBB-8wpUDiKxd5e_Nk05J9gzWR_DLBeFA@mail.gmail.com>
- <4429582f-155a-04d2-d139-a834bb325612@amd.com>
- <d577887d-b86b-82be-8081-f7bebacd8067@amd.com>
- <5bec4620-2e2b-abe0-1e82-528c084d4d16@amd.com>
- <cb40c209-9c4c-f645-8454-bcd74cb72405@amd.com>
- <Y2O1GDRrJqIu17vM@hirez.programming.kicks-ass.net>
-From:   Ravi Bangoria <ravi.bangoria@amd.com>
-In-Reply-To: <Y2O1GDRrJqIu17vM@hirez.programming.kicks-ass.net>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: PN2PR01CA0043.INDPRD01.PROD.OUTLOOK.COM
- (2603:1096:c01:22::18) To PH7PR12MB6588.namprd12.prod.outlook.com
- (2603:10b6:510:210::10)
+        Thu, 3 Nov 2022 12:15:54 -0400
+Received: from mail-wr1-x42a.google.com (mail-wr1-x42a.google.com [IPv6:2a00:1450:4864:20::42a])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D95511154
+        for <linux-perf-users@vger.kernel.org>; Thu,  3 Nov 2022 09:15:52 -0700 (PDT)
+Received: by mail-wr1-x42a.google.com with SMTP id k8so3560406wrh.1
+        for <linux-perf-users@vger.kernel.org>; Thu, 03 Nov 2022 09:15:52 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20210112;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:from:to:cc:subject:date:message-id:reply-to;
+        bh=PIA3GBeXOfRhXEjRCDEwyUNKkrK8wlI75UwFpO43d88=;
+        b=ByazuTSmWWuXJkPK6GFWUlorHo3+SwvoeOlBaVRszTLGLJnV1sjESVtie558CjO1Mk
+         BmMu9XqRllW3tVM8CnoWbCfVPRjvWvE3vpWRgG+3dlu19UC27kD4FI48Pn4aZ/4JqVT2
+         mgCkhxPHtXomrO7/4N1wisI7SLn6GMXgWGDoThYHmkiLbXs10BJHVwFnH6J8V2gID/XS
+         q0JaKyR2NTQkdrHpgCj3vWkWVfMh9yxO7yVGNcv1yC8eWnG0PDx6dzvPO/n7XJT+7vEx
+         d7lFvKuOAZ7m1mSjgUT9ZFYX/VHSfoYaLZjPsUY6tHpnksWRkrur9192SaLjvQQX+y2F
+         b7Ag==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=PIA3GBeXOfRhXEjRCDEwyUNKkrK8wlI75UwFpO43d88=;
+        b=Io3OMyL7VbYAqy8inU7Q7ShvlxVbdfhfDRWYsqAFnIh0DY2SoiQCzUmheKdWJxckWH
+         X4LNstQU7Lvf3kTUyk5EnGskiTkZCb3TjqhxxyvwshqY1KQnQLdIpnhSrtUbgaxek9rI
+         n7xYBMRYX+cQ7VtUXlWqwvPUIBxM2dqL2WH8lxxP5PykrvGkCwa/tudv08WKx3xvhhjd
+         OO/OEbI2phjaGv68QdygM+W89zfCkba0L09uMPUlp0A9S0I9N9DLMhl7zruh6ISyYtv7
+         wrFamZv8tsmurgjUUgc+Cj7KQehWF5IPCNSN+fG8f/RpqzTKrGT9RAkJrA+UeAmLMuFQ
+         H8Vw==
+X-Gm-Message-State: ACrzQf1iXQrnlN1cEWDdp/o+5U1wpdB0rGHnS82FyAJ82t+3GG4BW2rX
+        vH6uihM0IhTStrS/pRpHuTZ+UBu4PRPDeQRsPrp0Yg==
+X-Google-Smtp-Source: AMsMyM74xNT8KKrwvdpYNSaCNP0OJJDK9ogT5tFmLzsIQzW5O1a8m6DxkHcwTnHLMC3GNIriNc0h7wNhU4UWN8WacGc=
+X-Received: by 2002:a05:6000:1817:b0:236:77f0:ef60 with SMTP id
+ m23-20020a056000181700b0023677f0ef60mr18894921wrh.343.1667492151162; Thu, 03
+ Nov 2022 09:15:51 -0700 (PDT)
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: PH7PR12MB6588:EE_|SJ0PR12MB7065:EE_
-X-MS-Office365-Filtering-Correlation-Id: 22b1b87e-e4d7-4626-1b44-08dabdb64cfa
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: AVpnJZM+BLiE50b4N7STIWBkpE7jMhd7yDo7pVedK+Oi+Hb9N5jSMwzweC3o9W6/eYxPWu+FpaEArL0FTsCdMPql/T4M9Ad3YffjWbFkxr985RzNd/jTCvy1BkAR4XYmYvyBx1CnU6ZPzXZ027KwmWJ1FmXLKNWCnDaLbwr0+G9BTS5Il9ETh5yMOcZse9yms745+sDPOkzoaJGgiE7Eml7alPNkCO2AY8a1sxg0MFbNgznOqe0DdqI0ye+ah1bBGMrmqFpNGaB2IY4SY57oQh5SshzDcDB+9e28ZC2ef0+2zWidmheZXabCLsomwmOAFFOkus51dnKNJHiQfDlqggekZ0ID3iufG/ky3N/GmW5eppJhiz/UiGDYje8u+P2yzFzKJYNSkM/cw/OeajWKaBIZiKpWXZ4s+wG3jCB+D0g5lSg/lh1N1bvP3bzRCWO1Ph4+vcG9fx9fyMsM0HjleizwELDpfhga9+WEY8qNg9QohmyRzYbhuGkKBXP77OG6d2oDQ5YOCh2bmJBHNZIGm9dhwRKr3F5WQP1hBWXGO2ksr+7mkJbP4ojNYD2sJCtsr8f+Ybgmrs1pPD2hlG0swVHRZVVhFbBnKUEb7yHqsGfEOlfFFcKqcBjsSd4f5fzIe1axM+KvvaiZLNnx4yGm9EqHMficnapaXH1uB+zYUZPBorfd9QxgZiC0QmrsSyISNSaEL49yJA7FrQqkxFsZuqmNnlQuqpi7KYSEepxaNUNo4DxyztU6HWtlpLz8Dtx4i9PgFUuNxxADC9iNo6qRJMe72YNitO3U142Ehn6jKf5fDBoH2Y5NyC0vm7kGeH3T
-X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:PH7PR12MB6588.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230022)(4636009)(346002)(39860400002)(376002)(136003)(366004)(396003)(451199015)(66946007)(4326008)(54906003)(8676002)(66476007)(6916009)(66556008)(83380400001)(316002)(2906002)(6506007)(26005)(966005)(186003)(2616005)(6486002)(7416002)(5660300002)(36756003)(53546011)(38100700002)(31686004)(86362001)(478600001)(6512007)(31696002)(41300700001)(8936002)(6666004)(44832011)(43740500002)(45980500001);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0: =?utf-8?B?cXJJQzcxN2Rkd0FyS2hGNStDbS92Z0M1VXRnbGtsRHdkQVhxWXRxZU5qRkUv?=
- =?utf-8?B?a0RYcmpZc2hxbG9zN2NVWVFFWEpnbkRMOVFpL3czOXA5Q0pCWjBmZ3NnVGY5?=
- =?utf-8?B?VFVTb0czV0ZURVUrVXArcmRMQk1vTDdNTytUa3kvV1BaTWRVVFdYWUY5emhH?=
- =?utf-8?B?bUduLzJmSkMvam1mYUk4WUovdTVnM0F3MVo0UUtnR05OYTlCY2w3UDJwV3Fw?=
- =?utf-8?B?ay9HSWRyWktsQ1dhazdaOU5HZDZaYi8rM2QzaENjR0poK2lwZVhTTDI1UDlz?=
- =?utf-8?B?Mm15ei9CeDEyUHdvQUwyM1ROaHowaGZvYUZBczZneFR1WWRCNUplaExsUU5U?=
- =?utf-8?B?M0FvZUwyMGpnUm1kcDV0K2RCMTd5QXZkY2V6RFl1aEFJekVsSnVmdk1HT2x6?=
- =?utf-8?B?ZUM2bjhPMTZ4N2E0eSs0Zm92MmxrbEV1UGhKTGgxL0VnSXJNWTJqcm12OE5i?=
- =?utf-8?B?YXh5RGxEeW1PdExCY0hJWVZuNmt6WnJPWkRiSUZydHk0bUdyWUJiZzE4ZDlU?=
- =?utf-8?B?b01zWHFPZmw5d3A3YVFJRU5lbUJIZmk1UEd6MXJENS9sUHZ4ZUwwVjVaZ2VE?=
- =?utf-8?B?VDcySDFFaG9zbmpjY0lFZVRLOWFWYThQSXBvWFlucDRoQ2lCZjc4ckFqTmVT?=
- =?utf-8?B?R1IrMzNxV2Y4aUkzbHBrMFFtbVhvVWdSdGZqdk8weEo3a3FlaWlINkNZT2l2?=
- =?utf-8?B?TlJDanlFc084eGpTbWo4THpPbzlidVRLY2VYY05LV2krdGZMbHJ3RGJPc0Y4?=
- =?utf-8?B?OVlFOWRSUS9Zd2xJS2tSMUpENVpUVDladG0ybWlBUTNnQktlT0U2dGpNMTNv?=
- =?utf-8?B?aEJXSXFOUm9FbzQ0eWhtZk1SYVhvMUMzajIrcGJNV0pvazhGRHFaVU9VVGtw?=
- =?utf-8?B?TDFmUkRYSCthTnZQUnhnZFFkTnBGcmJYVjE1cG9kMllXRk0rREp5YkNmSFJT?=
- =?utf-8?B?dlNZR0E4WFBKbTIzZk55aVVmTGJlNmVtRTBCS1hHdDJUcUxFTldzTisvaU9F?=
- =?utf-8?B?ZUZOYjUydlE1ZmEvd0V0WDRHeGhtdlF1WWV3Mk9wK3V0TS9iQ3crZ3NRci9w?=
- =?utf-8?B?dzE0WDd4QkpwVEFQWHAvYVhPaWJnSmk0cjM5UEZmaWtVRVcyNXZMSzFuZkJa?=
- =?utf-8?B?N09uWUhyOVRYUkRhV3NmQi83R1B3YktvU2N5SnNqYzEwWkNySjErYkZGemZK?=
- =?utf-8?B?a2NQcnlsSFVqYkw2OXZhTmpCTWp6R1hlcEtjaDJJaW9pSjBnM0NKcElia2E4?=
- =?utf-8?B?azNkT3RiV04xMXFkR1VkY3ZqV2J0TTZuSXBxMU5wWGo2dWxWRE5EaE9TWVJx?=
- =?utf-8?B?eTFlNWd5SzhFQjF0M0hEOFVtWW1LSjYydVZVM1REVkY4aTBrL2xHeVZVcXNW?=
- =?utf-8?B?S2NuNlJKV2UyMUlCb2o1b3kveWQ0Mk95YjYybDBxOHo2YVN2S2g1bFNhRnpt?=
- =?utf-8?B?d3U5UGRKajlCemVONkpsRVlKMGNNWm9sQ0xpTW1GV0FVaGtKNjJqaXZBbUda?=
- =?utf-8?B?MVJLNmFYbVdsTEh5V0E2cTF1ZVNQUlB3MGtMd2MzK3hTVkJLTkhRVDBCL1cv?=
- =?utf-8?B?dndPc0RIeGFDTG9RdC82aDlvMkYxL2hOYWxudExsVUd2NDRvSHo4aXg3c21N?=
- =?utf-8?B?akttdWJWZVZDbE5FaCt2S25RNnJ1RUZEMWF5VGZXYytxVW1DZXlWdXBVckF6?=
- =?utf-8?B?SjM4VnpSN0QxTEZnaXhwVXV4YnNkS0NrT0Q0dFVmeDQvcEY5M0Y3ZFlyY1lB?=
- =?utf-8?B?RkNZeWlZOXFHakdCbzdGelFwM0NmWnpicnpqNGdOdlNjSnVhTkpxK1lyQUNO?=
- =?utf-8?B?ZlIwcjhDbytLVXdnMGttekhVak1NVE9DQ09FUlNvaGY3N1lVaVBOVWdieVls?=
- =?utf-8?B?UDEzc0hyM0oreTVLaFU5T1hvLzRTM1dUMmR6azUwSmhQcGVvS0hhQk9WcktS?=
- =?utf-8?B?Z0VLZ3ByOWVrcEh4d2RYekJUWGpvSU1yY1F0K2dyMFVBdUphUnBIbkt0VjZQ?=
- =?utf-8?B?MGFDOTUwZTJBcmhLMlBjVFY5VEoxVGRaYTlITFJ1UFhpUU0rVjlKdTRXcVd1?=
- =?utf-8?B?dVpIc3ZEMFJLRGpHZ3BxS1lvcVdwK3RKTk1sclp4UEFBSDJEMGo4NXZMWmdH?=
- =?utf-8?Q?PXxz8jim+dfjm8X/RIVsZr4fM?=
-X-OriginatorOrg: amd.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 22b1b87e-e4d7-4626-1b44-08dabdb64cfa
-X-MS-Exchange-CrossTenant-AuthSource: PH7PR12MB6588.namprd12.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 03 Nov 2022 16:13:10.3110
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: YR6FwxTz+bAntxA0BRNHbQYzeLKRdhFnXvuefm4U+p7J6O3klxtNGln4/35P4Q7kprbja3BmS/PF4EwYrcekzg==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: SJ0PR12MB7065
+References: <20221018085605.63834-1-atrajeev@linux.vnet.ibm.com> <0B7A4A12-2528-439A-BB83-BBC5606A27B0@linux.vnet.ibm.com>
+In-Reply-To: <0B7A4A12-2528-439A-BB83-BBC5606A27B0@linux.vnet.ibm.com>
+From:   Ian Rogers <irogers@google.com>
+Date:   Thu, 3 Nov 2022 09:15:38 -0700
+Message-ID: <CAP-5=fVdsaNPptvgQ0NaqhXYELFY8HwwhjAaem0B_HrL2GUkUw@mail.gmail.com>
+Subject: Re: [PATCH 1/2] tools/perf: Fix printing os->prefix in CSV metrics output
+To:     Athira Rajeev <atrajeev@linux.vnet.ibm.com>
+Cc:     Arnaldo Carvalho de Melo <acme@kernel.org>,
+        Jiri Olsa <jolsa@kernel.org>, Andi Kleen <ak@linux.intel.com>,
+        maddy@linux.vnet.ibm.com,
+        Nageswara Sastry <rnsastry@linux.ibm.com>,
+        linux-perf-users@vger.kernel.org, james.clark@arm.com,
+        kjain@linux.ibm.com, namhyung@kernel.org, disgoel@linux.ibm.com,
+        linuxppc-dev@lists.ozlabs.org
+Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-On 03-Nov-22 6:03 PM, Peter Zijlstra wrote:
-> On Thu, Nov 03, 2022 at 05:15:30PM +0530, Ravi Bangoria wrote:
-> 
->> Sorry was distracted a bit. So, this seems to be happening because of
->> race between amd_pmu_enable_all() and perf event NMI. Something like:
->>
->>   amd_pmu_enable_all()
->>   {
->>       if (!test_bit(idx, cpuc->active_mask))
->>
->>   --->/* perf NMI entry */
->>       ...
->>       x86_pmu_stop() {
->>           __clear_bit(hwc->idx, cpuc->active_mask);
->>           cpuc->events[hwc->idx] = NULL;
->>       }
->>       ...
->>   <---/* perf NMI exit */
->>
->>       amd_pmu_enable_event(cpuc->events[idx]);
->>   }
-> 
-> Hmm, do you have more information?
+On Wed, Nov 2, 2022 at 1:36 AM Athira Rajeev
+<atrajeev@linux.vnet.ibm.com> wrote:
+>
+>
+>
+> > On 18-Oct-2022, at 2:26 PM, Athira Rajeev <atrajeev@linux.vnet.ibm.com> wrote:
+> >
+> > Perf stat with CSV output option prints an extra empty
+> > string as first field in metrics output line.
+> > Sample output below:
+> >
+> >       # ./perf stat -x, --per-socket -a -C 1 ls
+> >       S0,1,1.78,msec,cpu-clock,1785146,100.00,0.973,CPUs utilized
+> >       S0,1,26,,context-switches,1781750,100.00,0.015,M/sec
+> >       S0,1,1,,cpu-migrations,1780526,100.00,0.561,K/sec
+> >       S0,1,1,,page-faults,1779060,100.00,0.561,K/sec
+> >       S0,1,875807,,cycles,1769826,100.00,0.491,GHz
+> >       S0,1,85281,,stalled-cycles-frontend,1767512,100.00,9.74,frontend cycles idle
+> >       S0,1,576839,,stalled-cycles-backend,1766260,100.00,65.86,backend cycles idle
+> >       S0,1,288430,,instructions,1762246,100.00,0.33,insn per cycle
+> > ====> ,S0,1,,,,,,,2.00,stalled cycles per insn
+> >
+> > The above command line uses field separator as ","
+> > via "-x," option and per-socket option displays
+> > socket value as first field. But here the last line
+> > for "stalled cycles per insn" has "," in the
+> > beginning.
+> >
+> > Sample output using interval mode:
+> >       # ./perf stat -I 1000 -x, --per-socket -a -C 1 ls
+> >       0.001813453,S0,1,1.87,msec,cpu-clock,1872052,100.00,0.002,CPUs utilized
+> >       0.001813453,S0,1,2,,context-switches,1868028,100.00,1.070,K/sec
+> >       ------
+> >       0.001813453,S0,1,85379,,instructions,1856754,100.00,0.32,insn per cycle
+> > ====> 0.001813453,,S0,1,,,,,,,1.34,stalled cycles per insn
+> >
+> > Above result also has an extra csv separator after
+> > the timestamp. Patch addresses extra field separator
+> > in the beginning of the metric output line.
+> >
+> > The counter stats are displayed by function
+> > "perf_stat__print_shadow_stats" in code
+> > "util/stat-shadow.c". While printing the stats info
+> > for "stalled cycles per insn", function "new_line_csv"
+> > is used as new_line callback.
+> >
+> > The new_line_csv function has check for "os->prefix"
+> > and if prefix is not null, it will be printed along
+> > with cvs separator.
+> > Snippet from "new_line_csv":
+> >       if (os->prefix)
+> >               fprintf(os->fh, "%s%s", os->prefix, config->csv_sep);
+> >
+> > Here os->prefix gets printed followed by ","
+> > which is the cvs separator. The os->prefix is
+> > used in interval mode option ( -I ), to print
+> > time stamp on every new line. But prefix is
+> > already set to contain csv separator when used
+> > in interval mode for csv option.
+> >
+> > Reference: Function "static void print_interval"
+> > Snippet:
+> >       sprintf(prefix, "%6lu.%09lu%s", ts->tv_sec, ts->tv_nsec, config->csv_sep);
+> >
+> > Also if prefix is not assigned (if not used with
+> > -I option), it gets set to empty string.
+> > Reference: function printout() in util/stat-display.c
+> > Snippet:
+> >       .prefix = prefix ? prefix : "",
+> >
+> > Since prefix already set to contain cvs_sep in interval
+> > option, patch removes printing config->csv_sep in
+> > new_line_csv function to avoid printing extra field.
+> >
+> > After the patch:
+> >
+> >       # ./perf stat -x, --per-socket -a -C 1 ls
+> >       S0,1,2.04,msec,cpu-clock,2045202,100.00,1.013,CPUs utilized
+> >       S0,1,2,,context-switches,2041444,100.00,979.289,/sec
+> >       S0,1,0,,cpu-migrations,2040820,100.00,0.000,/sec
+> >       S0,1,2,,page-faults,2040288,100.00,979.289,/sec
+> >       S0,1,254589,,cycles,2036066,100.00,0.125,GHz
+> >       S0,1,82481,,stalled-cycles-frontend,2032420,100.00,32.40,frontend cycles idle
+> >       S0,1,113170,,stalled-cycles-backend,2031722,100.00,44.45,backend cycles idle
+> >       S0,1,88766,,instructions,2030942,100.00,0.35,insn per cycle
+> >       S0,1,,,,,,,1.27,stalled cycles per insn
+> >
+> > Fixes: 92a61f6412d3 ("perf stat: Implement CSV metrics output")
+> > Reported-by: Disha Goel <disgoel@linux.vnet.ibm.com>
+> > Signed-off-by: Athira Rajeev <atrajeev@linux.vnet.ibm.com>
+>
+> Hi All,
+>
+> Looking for review comments for this change.
 
-I've extracted function graph logs from crash dump and uploaded it here:
-https://github.com/BangoriaRavi/function_graph/blob/main/trace.function_graph.dat
+Hi,
 
-crash was on CPU1.
+Thanks for addressing issues in this code. What is the status of the
+CSV output test following these changes?
 
-> Something like that would require
-> calling amd_pmu_enable_all() while it is already active -- and that
-> seems suspect at first glance.
-> 
-> That is, you shouldn't be getting an NMI for @idx before
-> amd_pmu_enable_event().
+I think going forward we need to move away from CSV and columns, to
+something with structure like json. We also need to refactor this
+code, trying to add meaning to a newline character is a bad strategy
+and creates some unnatural things. To some extent this overlaps with
+Namhyung's aggregation cleanup. There are also weirdnesses in
+jevents/pmu-events, like the same ScaleUnit applying to a metric and
+an event - why are metrics even parts of events?
 
-I too was wondering about this. Will try to get some more data tomorrow.
+Given the current code is wac-a-mole, and this is another whack, if
+the testing is okay I think we should move forward with this change.
 
 Thanks,
-Ravi
+Ian
+
+
+
+
+> Thanks
+> Athira
+>
+> > ---
+> > tools/perf/util/stat-display.c | 2 +-
+> > 1 file changed, 1 insertion(+), 1 deletion(-)
+> >
+> > diff --git a/tools/perf/util/stat-display.c b/tools/perf/util/stat-display.c
+> > index 5c47ee9963a7..879874a4bc07 100644
+> > --- a/tools/perf/util/stat-display.c
+> > +++ b/tools/perf/util/stat-display.c
+> > @@ -273,7 +273,7 @@ static void new_line_csv(struct perf_stat_config *config, void *ctx)
+> >
+> >       fputc('\n', os->fh);
+> >       if (os->prefix)
+> > -             fprintf(os->fh, "%s%s", os->prefix, config->csv_sep);
+> > +             fprintf(os->fh, "%s", os->prefix);
+> >       aggr_printout(config, os->evsel, os->id, os->nr);
+> >       for (i = 0; i < os->nfields; i++)
+> >               fputs(config->csv_sep, os->fh);
+> > --
+> > 2.31.1
+> >
+>
