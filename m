@@ -2,254 +2,271 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B0602C433FE
-	for <linux-perf-users@archiver.kernel.org>; Fri,  4 Nov 2022 05:14:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CE954C4332F
+	for <linux-perf-users@archiver.kernel.org>; Fri,  4 Nov 2022 07:31:22 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229646AbiKDFOo (ORCPT
+        id S230089AbiKDHbV (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Fri, 4 Nov 2022 01:14:44 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43156 "EHLO
+        Fri, 4 Nov 2022 03:31:21 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58340 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229563AbiKDFOn (ORCPT
+        with ESMTP id S230473AbiKDHbT (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Fri, 4 Nov 2022 01:14:43 -0400
-Received: from mail-pl1-x633.google.com (mail-pl1-x633.google.com [IPv6:2607:f8b0:4864:20::633])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id F1CF6126;
-        Thu,  3 Nov 2022 22:14:42 -0700 (PDT)
-Received: by mail-pl1-x633.google.com with SMTP id u6so3891312plq.12;
-        Thu, 03 Nov 2022 22:14:42 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20210112;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:sender:from:to:cc:subject:date:message-id:reply-to;
-        bh=XPT0F7aWd1Zvy4cX41IUsDJJqvU5anaASodKHGZ1l1o=;
-        b=EIDao6cwt3mt9nCyjMT/L1NDwSWnQbs6bH/fFjebn3rNpxboSUr9U4b4P/cEXehrLX
-         suK0gI6I4gRkZIf/MkN/rguGWySFVxXolqN/HnmjsaeQ3lhKfsbiiZlsoceRQvE136Oi
-         t5SqvyG89AVTGHtSNAfVDA0b2cJ61Ecsta58VLLTaQ7iWpTK3YW+9IRPKFA4cCNNGZFW
-         cCXiXJT7M4ckSL4jf3ZFCRls/pEy9lXtKI20JVHdEez7smh+vx/m38ywv4xXmrPbUQpt
-         /Qc2LFOgcsWRVTZPIVWeNLUK9RVkgIXMBMU993QsxFIbCVPv38klzQIfMydPUV13q7Zy
-         zDqw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:sender:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=XPT0F7aWd1Zvy4cX41IUsDJJqvU5anaASodKHGZ1l1o=;
-        b=g6nxC4vQ+mWhzaDmo535Fx9jullRSXbzPZkUA/7K97x5UgkK9nFpA12flzI+4UdIZS
-         4Jy5orLfbRuvyMKnPU0/GI/biYhv05dkTmVulOKzNbV1NrAuq2eXmpPQhHWNRdAwrkI9
-         Zo8JL4xAT5+gfh75rcnXf0cdqBMGknyNjvDeRyOm+YTi80zxssT3Tce3LNFlvSQE96vP
-         7wP6VF6m6uMMyi82tQ5LsWsy7PuTRDgPnLwtXN3jpKel0+Rf7PsOEHTHrnvDT3F8zH8D
-         1kNQa23E3RwYEuHAQGJnWDw4obFDrNtenUURNCamuJiz6/QY1F6+JX1d5M5mh0s9l8By
-         OCog==
-X-Gm-Message-State: ACrzQf1+K+hBHpl9hc5RqzXmErYhUspjUXxoRoo5GUXfQIKG8YK7P53d
-        i+M5UtiiUj3ZGnEr9/vD3LfYiTm7f6U=
-X-Google-Smtp-Source: AMsMyM65onVSq7q+e0vpzcWusfs84J6zPwyDIQIKmYnJnHS1dJd1GbZNYzoGCi007J0JvAfR39vR0A==
-X-Received: by 2002:a17:903:2348:b0:186:970e:739e with SMTP id c8-20020a170903234800b00186970e739emr34339612plh.115.1667538882376;
-        Thu, 03 Nov 2022 22:14:42 -0700 (PDT)
-Received: from balhae.hsd1.ca.comcast.net ([2601:647:6780:a80:db74:6cd1:5932:e363])
-        by smtp.gmail.com with ESMTPSA id g8-20020a170902868800b0017ec1b1bf9fsm1546309plo.217.2022.11.03.22.14.41
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 03 Nov 2022 22:14:41 -0700 (PDT)
-Sender: Namhyung Kim <namhyung@gmail.com>
-From:   Namhyung Kim <namhyung@kernel.org>
-To:     Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Jiri Olsa <jolsa@kernel.org>
-Cc:     Ingo Molnar <mingo@kernel.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Ian Rogers <irogers@google.com>,
-        Adrian Hunter <adrian.hunter@intel.com>,
-        linux-perf-users@vger.kernel.org
-Subject: [PATCH] perf lock: Allow concurrent record and report
-Date:   Thu,  3 Nov 2022 22:14:40 -0700
-Message-Id: <20221104051440.220989-1-namhyung@kernel.org>
-X-Mailer: git-send-email 2.38.1.431.g37b22c650d-goog
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+        Fri, 4 Nov 2022 03:31:19 -0400
+Received: from mx0a-001b2d01.pphosted.com (mx0b-001b2d01.pphosted.com [148.163.158.5])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B216F29CB3
+        for <linux-perf-users@vger.kernel.org>; Fri,  4 Nov 2022 00:31:17 -0700 (PDT)
+Received: from pps.filterd (m0098420.ppops.net [127.0.0.1])
+        by mx0b-001b2d01.pphosted.com (8.17.1.5/8.17.1.5) with ESMTP id 2A45ZvL6006372;
+        Fri, 4 Nov 2022 07:29:57 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=content-type :
+ mime-version : subject : from : in-reply-to : date : cc :
+ content-transfer-encoding : message-id : references : to; s=pp1;
+ bh=nyt3yH/ZUqK5wrFenzM6hbu/nJuAdErSHp4oGbAAwyg=;
+ b=os/cq5iUVeqiJLcv505HkTUmjlErGJ9ekEcaUQFGejozFjdFi0qobdguUzyBviELqAbw
+ Uiy35IiDlbzunB1SWnRY+FnKxQNPXKxbZsvNF6Rt5iidaL1Yy/+mZU1HdkTBAfNPu5z6
+ sOiM/f2dkzGmRh343vMenxRu1Dz3RkFQ3GKx/AIRWlL71wjvmNPUsNCX45+moQQqEBAe
+ YREFzhdMKdONeU1XvV/vgwNOBHtor4lR5IMvc+IBgo3A7Cdl2D1zjVaYWvsrrBK5sZdT
+ Z3Orcig6kUpMqaa1KOzMxRn+vk0PcrhXCa3QI0sR9V8ifAEDNKEghTxFmGuMye9C5tn6 Dw== 
+Received: from pps.reinject (localhost [127.0.0.1])
+        by mx0b-001b2d01.pphosted.com (PPS) with ESMTPS id 3kmq07mehg-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Fri, 04 Nov 2022 07:29:57 +0000
+Received: from m0098420.ppops.net (m0098420.ppops.net [127.0.0.1])
+        by pps.reinject (8.17.1.5/8.17.1.5) with ESMTP id 2A47Sc6F028056;
+        Fri, 4 Nov 2022 07:29:56 GMT
+Received: from ppma06ams.nl.ibm.com (66.31.33a9.ip4.static.sl-reverse.com [169.51.49.102])
+        by mx0b-001b2d01.pphosted.com (PPS) with ESMTPS id 3kmq07megx-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Fri, 04 Nov 2022 07:29:56 +0000
+Received: from pps.filterd (ppma06ams.nl.ibm.com [127.0.0.1])
+        by ppma06ams.nl.ibm.com (8.16.1.2/8.16.1.2) with SMTP id 2A47Locp029245;
+        Fri, 4 Nov 2022 07:29:54 GMT
+Received: from b06cxnps4074.portsmouth.uk.ibm.com (d06relay11.portsmouth.uk.ibm.com [9.149.109.196])
+        by ppma06ams.nl.ibm.com with ESMTP id 3kguej20wg-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Fri, 04 Nov 2022 07:29:54 +0000
+Received: from d06av22.portsmouth.uk.ibm.com (d06av22.portsmouth.uk.ibm.com [9.149.105.58])
+        by b06cxnps4074.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 2A47TpaT63439194
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Fri, 4 Nov 2022 07:29:51 GMT
+Received: from d06av22.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 44C324C046;
+        Fri,  4 Nov 2022 07:29:51 +0000 (GMT)
+Received: from d06av22.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 476344C044;
+        Fri,  4 Nov 2022 07:29:48 +0000 (GMT)
+Received: from smtpclient.apple (unknown [9.43.68.139])
+        by d06av22.portsmouth.uk.ibm.com (Postfix) with ESMTPS;
+        Fri,  4 Nov 2022 07:29:47 +0000 (GMT)
+Content-Type: text/plain;
+        charset=us-ascii
+Mime-Version: 1.0 (Mac OS X Mail 16.0 \(3696.120.41.1.1\))
+Subject: Re: [PATCH 1/2] tools/perf: Fix printing os->prefix in CSV metrics
+ output
+From:   Athira Rajeev <atrajeev@linux.vnet.ibm.com>
+In-Reply-To: <CAP-5=fVdsaNPptvgQ0NaqhXYELFY8HwwhjAaem0B_HrL2GUkUw@mail.gmail.com>
+Date:   Fri, 4 Nov 2022 12:59:45 +0530
+Cc:     Andi Kleen <ak@linux.intel.com>,
+        Nageswara Sastry <rnsastry@linux.ibm.com>,
+        Kajol Jain <kjain@linux.ibm.com>,
+        Arnaldo Carvalho de Melo <acme@kernel.org>,
+        linux-perf-users@vger.kernel.org, maddy@linux.vnet.ibm.com,
+        James Clark <james.clark@arm.com>,
+        Jiri Olsa <jolsa@kernel.org>,
+        Namhyung Kim <namhyung@kernel.org>, disgoel@linux.ibm.com,
+        linuxppc-dev@lists.ozlabs.org
+Content-Transfer-Encoding: quoted-printable
+Message-Id: <D12F3A8A-AD9F-4B9D-98EA-8E8AD11A858F@linux.vnet.ibm.com>
+References: <20221018085605.63834-1-atrajeev@linux.vnet.ibm.com>
+ <0B7A4A12-2528-439A-BB83-BBC5606A27B0@linux.vnet.ibm.com>
+ <CAP-5=fVdsaNPptvgQ0NaqhXYELFY8HwwhjAaem0B_HrL2GUkUw@mail.gmail.com>
+To:     Ian Rogers <irogers@google.com>
+X-Mailer: Apple Mail (2.3696.120.41.1.1)
+X-TM-AS-GCONF: 00
+X-Proofpoint-GUID: hA3zSuTAS4xq7CDOMOVte4TRpU7U6fMH
+X-Proofpoint-ORIG-GUID: Qg4gbmiyHQjEx2-joCWlJ35u7aZ4Wx7G
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.219,Aquarius:18.0.895,Hydra:6.0.545,FMLib:17.11.122.1
+ definitions=2022-11-04_02,2022-11-03_01,2022-06-22_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 suspectscore=0 spamscore=0
+ impostorscore=0 adultscore=0 bulkscore=0 mlxlogscore=999 mlxscore=0
+ priorityscore=1501 clxscore=1015 malwarescore=0 phishscore=0
+ lowpriorityscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2210170000 definitions=main-2211040047
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-To support live monitoring of kernel lock contention without BPF,
-it should support something like below:
 
-  # perf lock record -a -o- sleep 1 | perf lock contention -i-
-   contended   total wait     max wait     avg wait         type   caller
 
-           2     10.27 us      6.17 us      5.13 us     spinlock   load_balance+0xc03
-           1      5.29 us      5.29 us      5.29 us     rwlock:W   ep_scan_ready_list+0x54
-           1      4.12 us      4.12 us      4.12 us     spinlock   smpboot_thread_fn+0x116
-           1      3.28 us      3.28 us      3.28 us        mutex   pipe_read+0x50
+> On 03-Nov-2022, at 9:45 PM, Ian Rogers <irogers@google.com> wrote:
+>=20
+> On Wed, Nov 2, 2022 at 1:36 AM Athira Rajeev
+> <atrajeev@linux.vnet.ibm.com> wrote:
+>>=20
+>>=20
+>>=20
+>>> On 18-Oct-2022, at 2:26 PM, Athira Rajeev =
+<atrajeev@linux.vnet.ibm.com> wrote:
+>>>=20
+>>> Perf stat with CSV output option prints an extra empty
+>>> string as first field in metrics output line.
+>>> Sample output below:
+>>>=20
+>>>      # ./perf stat -x, --per-socket -a -C 1 ls
+>>>      S0,1,1.78,msec,cpu-clock,1785146,100.00,0.973,CPUs utilized
+>>>      S0,1,26,,context-switches,1781750,100.00,0.015,M/sec
+>>>      S0,1,1,,cpu-migrations,1780526,100.00,0.561,K/sec
+>>>      S0,1,1,,page-faults,1779060,100.00,0.561,K/sec
+>>>      S0,1,875807,,cycles,1769826,100.00,0.491,GHz
+>>>      =
+S0,1,85281,,stalled-cycles-frontend,1767512,100.00,9.74,frontend cycles =
+idle
+>>>      =
+S0,1,576839,,stalled-cycles-backend,1766260,100.00,65.86,backend cycles =
+idle
+>>>      S0,1,288430,,instructions,1762246,100.00,0.33,insn per cycle
+>>> =3D=3D=3D=3D> ,S0,1,,,,,,,2.00,stalled cycles per insn
+>>>=20
+>>> The above command line uses field separator as ","
+>>> via "-x," option and per-socket option displays
+>>> socket value as first field. But here the last line
+>>> for "stalled cycles per insn" has "," in the
+>>> beginning.
+>>>=20
+>>> Sample output using interval mode:
+>>>      # ./perf stat -I 1000 -x, --per-socket -a -C 1 ls
+>>>      0.001813453,S0,1,1.87,msec,cpu-clock,1872052,100.00,0.002,CPUs =
+utilized
+>>>      0.001813453,S0,1,2,,context-switches,1868028,100.00,1.070,K/sec
+>>>      ------
+>>>      0.001813453,S0,1,85379,,instructions,1856754,100.00,0.32,insn =
+per cycle
+>>> =3D=3D=3D=3D> 0.001813453,,S0,1,,,,,,,1.34,stalled cycles per insn
+>>>=20
+>>> Above result also has an extra csv separator after
+>>> the timestamp. Patch addresses extra field separator
+>>> in the beginning of the metric output line.
+>>>=20
+>>> The counter stats are displayed by function
+>>> "perf_stat__print_shadow_stats" in code
+>>> "util/stat-shadow.c". While printing the stats info
+>>> for "stalled cycles per insn", function "new_line_csv"
+>>> is used as new_line callback.
+>>>=20
+>>> The new_line_csv function has check for "os->prefix"
+>>> and if prefix is not null, it will be printed along
+>>> with cvs separator.
+>>> Snippet from "new_line_csv":
+>>>      if (os->prefix)
+>>>              fprintf(os->fh, "%s%s", os->prefix, config->csv_sep);
+>>>=20
+>>> Here os->prefix gets printed followed by ","
+>>> which is the cvs separator. The os->prefix is
+>>> used in interval mode option ( -I ), to print
+>>> time stamp on every new line. But prefix is
+>>> already set to contain csv separator when used
+>>> in interval mode for csv option.
+>>>=20
+>>> Reference: Function "static void print_interval"
+>>> Snippet:
+>>>      sprintf(prefix, "%6lu.%09lu%s", ts->tv_sec, ts->tv_nsec, =
+config->csv_sep);
+>>>=20
+>>> Also if prefix is not assigned (if not used with
+>>> -I option), it gets set to empty string.
+>>> Reference: function printout() in util/stat-display.c
+>>> Snippet:
+>>>      .prefix =3D prefix ? prefix : "",
+>>>=20
+>>> Since prefix already set to contain cvs_sep in interval
+>>> option, patch removes printing config->csv_sep in
+>>> new_line_csv function to avoid printing extra field.
+>>>=20
+>>> After the patch:
+>>>=20
+>>>      # ./perf stat -x, --per-socket -a -C 1 ls
+>>>      S0,1,2.04,msec,cpu-clock,2045202,100.00,1.013,CPUs utilized
+>>>      S0,1,2,,context-switches,2041444,100.00,979.289,/sec
+>>>      S0,1,0,,cpu-migrations,2040820,100.00,0.000,/sec
+>>>      S0,1,2,,page-faults,2040288,100.00,979.289,/sec
+>>>      S0,1,254589,,cycles,2036066,100.00,0.125,GHz
+>>>      =
+S0,1,82481,,stalled-cycles-frontend,2032420,100.00,32.40,frontend cycles =
+idle
+>>>      =
+S0,1,113170,,stalled-cycles-backend,2031722,100.00,44.45,backend cycles =
+idle
+>>>      S0,1,88766,,instructions,2030942,100.00,0.35,insn per cycle
+>>>      S0,1,,,,,,,1.27,stalled cycles per insn
+>>>=20
+>>> Fixes: 92a61f6412d3 ("perf stat: Implement CSV metrics output")
+>>> Reported-by: Disha Goel <disgoel@linux.vnet.ibm.com>
+>>> Signed-off-by: Athira Rajeev <atrajeev@linux.vnet.ibm.com>
+>>=20
+>> Hi All,
+>>=20
+>> Looking for review comments for this change.
+>=20
+> Hi,
+>=20
+> Thanks for addressing issues in this code. What is the status of the
+> CSV output test following these changes?
+>=20
+> I think going forward we need to move away from CSV and columns, to
+> something with structure like json. We also need to refactor this
+> code, trying to add meaning to a newline character is a bad strategy
+> and creates some unnatural things. To some extent this overlaps with
+> Namhyung's aggregation cleanup. There are also weirdnesses in
+> jevents/pmu-events, like the same ScaleUnit applying to a metric and
+> an event - why are metrics even parts of events?
+>=20
+> Given the current code is wac-a-mole, and this is another whack, if
+> the testing is okay I think we should move forward with this change.
+>=20
+> Thanks,
+> Ian
 
-To do that, it needs to handle HEAD_ATTR, HEADER_EVENT_UPDATE and
-HEADER_TRACING_DATA which are generated only for the pipe mode.
-And setting event handler also should be delayed until it gets the
-event information.
+Hi Ian,
 
-Signed-off-by: Namhyung Kim <namhyung@kernel.org>
----
- tools/perf/builtin-lock.c                 | 68 +++++++++++++++--------
- tools/perf/tests/shell/lock_contention.sh | 15 ++++-
- 2 files changed, 60 insertions(+), 23 deletions(-)
+Thanks for checking the patch.
+Yes, CSV output test passes with the change.
 
-diff --git a/tools/perf/builtin-lock.c b/tools/perf/builtin-lock.c
-index 6f79175365a8..0d280093b19a 100644
---- a/tools/perf/builtin-lock.c
-+++ b/tools/perf/builtin-lock.c
-@@ -1390,6 +1390,34 @@ static int dump_info(void)
- 	return rc;
- }
- 
-+static const struct evsel_str_handler lock_tracepoints[] = {
-+	{ "lock:lock_acquire",	 evsel__process_lock_acquire,   }, /* CONFIG_LOCKDEP */
-+	{ "lock:lock_acquired",	 evsel__process_lock_acquired,  }, /* CONFIG_LOCKDEP, CONFIG_LOCK_STAT */
-+	{ "lock:lock_contended", evsel__process_lock_contended, }, /* CONFIG_LOCKDEP, CONFIG_LOCK_STAT */
-+	{ "lock:lock_release",	 evsel__process_lock_release,   }, /* CONFIG_LOCKDEP */
-+};
-+
-+static const struct evsel_str_handler contention_tracepoints[] = {
-+	{ "lock:contention_begin", evsel__process_contention_begin, },
-+	{ "lock:contention_end",   evsel__process_contention_end,   },
-+};
-+
-+static int process_event_update(struct perf_tool *tool,
-+				union perf_event *event,
-+				struct evlist **pevlist)
-+{
-+	int ret;
-+
-+	ret = perf_event__process_event_update(tool, event, pevlist);
-+	if (ret < 0)
-+		return ret;
-+
-+	/* this can return -EEXIST since we call it for each evsel */
-+	perf_session__set_tracepoints_handlers(session, lock_tracepoints);
-+	perf_session__set_tracepoints_handlers(session, contention_tracepoints);
-+	return 0;
-+}
-+
- typedef int (*tracepoint_handler)(struct evsel *evsel,
- 				  struct perf_sample *sample);
- 
-@@ -1545,28 +1573,19 @@ static void print_contention_result(struct lock_contention *con)
- 	print_bad_events(bad, total);
- }
- 
--static const struct evsel_str_handler lock_tracepoints[] = {
--	{ "lock:lock_acquire",	 evsel__process_lock_acquire,   }, /* CONFIG_LOCKDEP */
--	{ "lock:lock_acquired",	 evsel__process_lock_acquired,  }, /* CONFIG_LOCKDEP, CONFIG_LOCK_STAT */
--	{ "lock:lock_contended", evsel__process_lock_contended, }, /* CONFIG_LOCKDEP, CONFIG_LOCK_STAT */
--	{ "lock:lock_release",	 evsel__process_lock_release,   }, /* CONFIG_LOCKDEP */
--};
--
--static const struct evsel_str_handler contention_tracepoints[] = {
--	{ "lock:contention_begin", evsel__process_contention_begin, },
--	{ "lock:contention_end",   evsel__process_contention_end,   },
--};
--
- static bool force;
- 
- static int __cmd_report(bool display_info)
- {
- 	int err = -EINVAL;
- 	struct perf_tool eops = {
-+		.attr		 = perf_event__process_attr,
-+		.event_update	 = process_event_update,
- 		.sample		 = process_sample_event,
- 		.comm		 = perf_event__process_comm,
- 		.mmap		 = perf_event__process_mmap,
- 		.namespaces	 = perf_event__process_namespaces,
-+		.tracing_data	 = perf_event__process_tracing_data,
- 		.ordered_events	 = true,
- 	};
- 	struct perf_data data = {
-@@ -1585,17 +1604,19 @@ static int __cmd_report(bool display_info)
- 	symbol_conf.sort_by_name = true;
- 	symbol__init(&session->header.env);
- 
--	if (!perf_session__has_traces(session, "lock record"))
--		goto out_delete;
-+	if (!data.is_pipe) {
-+		if (!perf_session__has_traces(session, "lock record"))
-+			goto out_delete;
- 
--	if (perf_session__set_tracepoints_handlers(session, lock_tracepoints)) {
--		pr_err("Initializing perf session tracepoint handlers failed\n");
--		goto out_delete;
--	}
-+		if (perf_session__set_tracepoints_handlers(session, lock_tracepoints)) {
-+			pr_err("Initializing perf session tracepoint handlers failed\n");
-+			goto out_delete;
-+		}
- 
--	if (perf_session__set_tracepoints_handlers(session, contention_tracepoints)) {
--		pr_err("Initializing perf session tracepoint handlers failed\n");
--		goto out_delete;
-+		if (perf_session__set_tracepoints_handlers(session, contention_tracepoints)) {
-+			pr_err("Initializing perf session tracepoint handlers failed\n");
-+			goto out_delete;
-+		}
- 	}
- 
- 	if (setup_output_field(false, output_fields))
-@@ -1633,9 +1654,12 @@ static int __cmd_contention(int argc, const char **argv)
- {
- 	int err = -EINVAL;
- 	struct perf_tool eops = {
-+		.attr		 = perf_event__process_attr,
-+		.event_update	 = process_event_update,
- 		.sample		 = process_sample_event,
- 		.comm		 = perf_event__process_comm,
- 		.mmap		 = perf_event__process_mmap,
-+		.tracing_data	 = perf_event__process_tracing_data,
- 		.ordered_events	 = true,
- 	};
- 	struct perf_data data = {
-@@ -1698,7 +1722,7 @@ static int __cmd_contention(int argc, const char **argv)
- 			pr_err("lock contention BPF setup failed\n");
- 			goto out_delete;
- 		}
--	} else {
-+	} else if (!data.is_pipe) {
- 		if (!perf_session__has_traces(session, "lock record"))
- 			goto out_delete;
- 
-diff --git a/tools/perf/tests/shell/lock_contention.sh b/tools/perf/tests/shell/lock_contention.sh
-index 04bf604e3c6f..f7bd0d8eb5c3 100755
---- a/tools/perf/tests/shell/lock_contention.sh
-+++ b/tools/perf/tests/shell/lock_contention.sh
-@@ -53,7 +53,7 @@ test_bpf()
- 
- 	if ! perf lock con -b true > /dev/null 2>&1 ; then
- 		echo "[Skip] No BPF support"
--		exit
-+		return
- 	fi
- 
- 	# the perf lock contention output goes to the stderr
-@@ -65,9 +65,22 @@ test_bpf()
- 	fi
- }
- 
-+test_record_concurrent()
-+{
-+	echo "Testing perf lock record and perf lock contention at the same time"
-+	perf lock record -o- -- perf bench sched messaging 2> /dev/null | \
-+	perf lock contention -i- -E 1 -q 2> ${result}
-+	if [ $(cat "${result}" | wc -l) != "1" ]; then
-+		echo "[Fail] Recorded result count is not 1:" $(cat "${result}" | wc -l)
-+		err=1
-+		exit
-+	fi
-+}
-+
- check
- 
- test_record
- test_bpf
-+test_record_concurrent
- 
- exit ${err}
--- 
-2.38.1.431.g37b22c650d-goog
+	perf stat CSV output linter                                     =
+: Ok
+	perf stat csv summary test                                      =
+: Ok
+
+Thanks
+Athira
+
+>=20
+>=20
+>=20
+>=20
+>> Thanks
+>> Athira
+>>=20
+>>> ---
+>>> tools/perf/util/stat-display.c | 2 +-
+>>> 1 file changed, 1 insertion(+), 1 deletion(-)
+>>>=20
+>>> diff --git a/tools/perf/util/stat-display.c =
+b/tools/perf/util/stat-display.c
+>>> index 5c47ee9963a7..879874a4bc07 100644
+>>> --- a/tools/perf/util/stat-display.c
+>>> +++ b/tools/perf/util/stat-display.c
+>>> @@ -273,7 +273,7 @@ static void new_line_csv(struct perf_stat_config =
+*config, void *ctx)
+>>>=20
+>>>      fputc('\n', os->fh);
+>>>      if (os->prefix)
+>>> -             fprintf(os->fh, "%s%s", os->prefix, config->csv_sep);
+>>> +             fprintf(os->fh, "%s", os->prefix);
+>>>      aggr_printout(config, os->evsel, os->id, os->nr);
+>>>      for (i =3D 0; i < os->nfields; i++)
+>>>              fputs(config->csv_sep, os->fh);
+>>> --
+>>> 2.31.1
 
