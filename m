@@ -2,236 +2,402 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4B8DBC4332F
-	for <linux-perf-users@archiver.kernel.org>; Fri,  4 Nov 2022 20:30:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0A4BEC4332F
+	for <linux-perf-users@archiver.kernel.org>; Fri,  4 Nov 2022 20:56:26 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230043AbiKDUaP (ORCPT
+        id S229556AbiKDU4Z (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Fri, 4 Nov 2022 16:30:15 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36854 "EHLO
+        Fri, 4 Nov 2022 16:56:25 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51210 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230031AbiKDUaN (ORCPT
+        with ESMTP id S229523AbiKDU4Y (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Fri, 4 Nov 2022 16:30:13 -0400
-Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9532D1ADB3;
-        Fri,  4 Nov 2022 13:30:10 -0700 (PDT)
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id 0A9EF62285;
-        Fri,  4 Nov 2022 20:30:10 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 104C1C433D6;
-        Fri,  4 Nov 2022 20:30:09 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1667593809;
-        bh=c7Tfz81xRf9WZuBuzfYaSrnJW0HRBQPHuv/lgGHwz8c=;
-        h=Date:From:To:Cc:Subject:From;
-        b=C7wsr/SpM/WHW9UuKo/+MpxGl1gy62biXEwW21PAB6ttiXtasUJ0EUDcPKZu01Dnh
-         puw04hl5Gi02p5qFWWVFc8jhhiwrESNyo9KTiZ3D+lMf3zQasYCtyhc/GtGwT2GfO0
-         d4zCqV1PpdbRQRf1+mMa6yNO9/Y51exy5cihwDA7kpuAkEot4NYeef9F8gz5UexKWg
-         r0sZyhhgwpc/7+800k09fEnra7qviQ+kg4vVyu4kAhT/sKkwsQkPj4Tvfx2o32FVfg
-         qRPTbbHvmkpoGsP9EhLw6wlw5BcgPlYTxQJApA4gJ6t7vhojsZP1607ZFhhcAipXtF
-         7hrOp1qsRNPCA==
-Received: by quaco.ghostprotocols.net (Postfix, from userid 1000)
-        id 7ED624034E; Fri,  4 Nov 2022 17:30:06 -0300 (-03)
-Date:   Fri, 4 Nov 2022 17:30:06 -0300
-From:   Arnaldo Carvalho de Melo <acme@kernel.org>
-To:     Ian Rogers <irogers@google.com>
+        Fri, 4 Nov 2022 16:56:24 -0400
+Received: from mail-wm1-x335.google.com (mail-wm1-x335.google.com [IPv6:2a00:1450:4864:20::335])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id F34D8BC02
+        for <linux-perf-users@vger.kernel.org>; Fri,  4 Nov 2022 13:56:20 -0700 (PDT)
+Received: by mail-wm1-x335.google.com with SMTP id ja4-20020a05600c556400b003cf6e77f89cso5974572wmb.0
+        for <linux-perf-users@vger.kernel.org>; Fri, 04 Nov 2022 13:56:20 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20210112;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=PRY3WjMJR+gDEY+LNqfUTeggtG9YcWsAif47IMb8FRA=;
+        b=jUEIot2ndLamGxQNDwHkESnQSkIH6T79k6qXHzu9T8Cx4TjlGMM1idzytv0cbU8/Qc
+         SkhCXGSoPqFzm9oB2MZTULVMA8C2BoMHSELuJFpAa27jpHs3UIHkGwGS9WzjMj8gsy0q
+         BvYlsV03j9ty9R596AKMNxyzWaByRMtXpnUWNKGrLJSv9pS2642OzXptyeN/0FGJekLD
+         iEZhIc/fTuY36zu4nzH6e72ujIsDlBNzW59XPl77H8XVcA1jpGiRTMif86b0luyZU55+
+         3hrBtMhKYADwP6dRnj6PoIGKopqXybCwPuvVhWxqaBkJ2ngop8TJM2Ju6MgoyqFdN5Q0
+         pNnQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=PRY3WjMJR+gDEY+LNqfUTeggtG9YcWsAif47IMb8FRA=;
+        b=03zltJ0CvYi3I1g4mb7E8iDefrKLjV4pIhIfTBgPeOESshPLdWh26vPG/8wb3aGA7C
+         8rICkbJNFHFtBgmwmDW3AJvmEsmebj33FMH0/kYb4UByua7STjwzZkwLP5iXu5TJ+kS5
+         LrtJpYyYs+osb/FlN0/XIdBgYHwqSLf6zWKjY0YPw4P6r1rkVDhXKqiyQIie1giKlITA
+         iATWORF5Os20I2zQF0UPEvRcgkeR6OxF0ogsc3FKJ7LEewqcKcRN8MWM+pxDRRvm9wAx
+         U0OXgl8ZDGeLY9cLxA1TzxDa5o15pfiGU9jyYDubtc2q9XVObbISWQhd3mOrClYqUJ83
+         5qpA==
+X-Gm-Message-State: ACrzQf3PXZxkoE62CzPMCHGNFwquEKQfjqdVY1ckAVwF2rFGHo7Z6QnD
+        wUvIBolnDrHpRl1buZu+jixCy+f1oYx1HgN2mTNBCQ==
+X-Google-Smtp-Source: AMsMyM7dvEq2fkb9KXIXXbZLF6QXeJoTDbAGlQL31ENjbZ5VG46RNxoxoX9w6zjeRR7NlOsyVRBMLGuQqcxfWyEkrM4=
+X-Received: by 2002:a05:600c:2194:b0:3cf:7065:99e5 with SMTP id
+ e20-20020a05600c219400b003cf706599e5mr19867517wme.174.1667595379273; Fri, 04
+ Nov 2022 13:56:19 -0700 (PDT)
+MIME-Version: 1.0
+References: <Y2V2Tpu+2vzJyon2@kernel.org>
+In-Reply-To: <Y2V2Tpu+2vzJyon2@kernel.org>
+From:   Ian Rogers <irogers@google.com>
+Date:   Fri, 4 Nov 2022 13:56:07 -0700
+Message-ID: <CAP-5=fVkz=gKkeAV2dW5Q+XzZrjkGJ+4bSH0mc8LZZ8EJGW90A@mail.gmail.com>
+Subject: Re: [PATCH 1/1] perf trace: Add BPF augmenter to perf_event_open()'s
+ 'struct perf_event_attr' arg
+To:     Arnaldo Carvalho de Melo <acme@kernel.org>
 Cc:     Adrian Hunter <adrian.hunter@intel.com>,
         Jiri Olsa <jolsa@kernel.org>,
         Namhyung Kim <namhyung@kernel.org>,
         linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org
-Subject: [PATCH 1/1] perf trace: Add BPF augmenter to perf_event_open()'s
- 'struct perf_event_attr' arg
-Message-ID: <Y2V2Tpu+2vzJyon2@kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-Please test it together with what is in my tmp.perf/core branch, as it
-has the fixes for perf to build and run with libbpf 1.0, please install
-libbpf-devel from your distro, at least for now.
+On Fri, Nov 4, 2022 at 1:30 PM Arnaldo Carvalho de Melo <acme@kernel.org> w=
+rote:
+>
+> Please test it together with what is in my tmp.perf/core branch, as it
+> has the fixes for perf to build and run with libbpf 1.0, please install
+> libbpf-devel from your distro, at least for now.
+>
+> There is polishing to do here, but its interesting as an example of how
+> to augment a syscall.
+>
+> If you run 'perf trace -v' with
+> ~acme/git/perf/tools/perf/examples/bpf/augmented_raw_syscalls.c you'll
+> see that it reuses augmenters for other syscalls that have similar
+> signatures, so, in the future, doing for one struct gets it reused in
+> all the other syscalls using such struct.
+>
+> Also more annotation is needed, as with other syscalls already in 'perf
+> trace' to associate a type syscall integer arguments, for things like
+> flags, enumerations not using enum, etc.
+>
+> - Arnaldo
+>
 
-There is polishing to do here, but its interesting as an example of how
-to augment a syscall.
+Looks good.
 
-If you run 'perf trace -v' with
-~acme/git/perf/tools/perf/examples/bpf/augmented_raw_syscalls.c you'll
-see that it reuses augmenters for other syscalls that have similar
-signatures, so, in the future, doing for one struct gets it reused in
-all the other syscalls using such struct.
+Before:
+$ sudo perf trace -e ./augmented_raw_syscalls.o,perf_event_open
+--max-events 10 perf stat --quiet sleep 0.001
+    0.000 ( 0.011 ms): perf/366155 perf_event_open(attr_uptr:
+0x56344c9ab1e0, pid: 366156 (perf), cpu: -1, group_fd: -1, flags:
+FD_CLOEXEC) =3D 3
+    0.014 ( 0.261 ms): perf/366155 perf_event_open(attr_uptr:
+0x56344c9ae6b0, pid: 366156 (perf), cpu: -1, group_fd: -1, flags:
+FD_CLOEXEC) =3D 4
+    0.276 ( 0.192 ms): perf/366155 perf_event_open(attr_uptr:
+0x56344c9ae920, pid: 366156 (perf), cpu: -1, group_fd: -1, flags:
+FD_CLOEXEC) =3D 5
+    0.470 ( 0.012 ms): perf/366155 perf_event_open(attr_uptr:
+0x56344c9aeb90, pid: 366156 (perf), cpu: -1, group_fd: -1, flags:
+FD_CLOEXEC) =3D 7
+    0.485 ( 0.005 ms): perf/366155 perf_event_open(attr_uptr:
+0x56344c9acdc0, pid: 366156 (perf), cpu: -1, group_fd: -1, flags:
+FD_CLOEXEC) =3D 8
+    0.493 ( 0.003 ms): perf/366155 perf_event_open(attr_uptr:
+0x56344c9aaf60, pid: 366156 (perf), cpu: -1, group_fd: -1, flags:
+FD_CLOEXEC) =3D 9
+    0.498 ( 0.003 ms): perf/366155 perf_event_open(attr_uptr:
+0x56344c9ad030, pid: 366156 (perf), cpu: -1, group_fd: -1, flags:
+FD_CLOEXEC) =3D 10
+    0.502 ( 0.002 ms): perf/366155 perf_event_open(attr_uptr:
+0x56344c9ad2a0, pid: 366156 (perf), cpu: -1, group_fd: -1, flags:
+FD_CLOEXEC) =3D 11
+    0.506 ( 0.002 ms): perf/366155 perf_event_open(attr_uptr:
+0x56344c9a3120, pid: 366156 (perf), cpu: -1, group_fd: -1, flags:
+FD_CLOEXEC) =3D 12
+    0.510 ( 0.003 ms): perf/366155 perf_event_open(attr_uptr:
+0x56344c9a3410, pid: 366156 (perf), cpu: -1, group_fd: 12, flags:
+FD_CLOEXEC) =3D 13
 
-Also more annotation is needed, as with other syscalls already in 'perf
-trace' to associate a type syscall integer arguments, for things like
-flags, enumerations not using enum, etc.
+After:
+$ sudo /tmp/perf/perf trace -e
+./augmented_raw_syscalls.o,perf_event_open --max-events 10 perf stat
+--quiet sleep 0.001
+    0.000 ( 0.009 ms): perf/366177 perf_event_open(attr_uptr: { type:
+1, size: 128, config: 0x1, sample_type: IDENTIFIER, read_format:
+TOTAL_TIME_ENABLED|TOTAL_TIME_RUNNING, disabled: 1, inherit: 1,
+enable_on_exec: 1, exclude_guest: 1 }, pid: 366178 (perf), cpu: -1,
+group_fd: -1, flags: FD_CLOEXEC) =3D 3
+    0.013 ( 0.093 ms): perf/366177 perf_event_open(attr_uptr: { type:
+1, size: 128, config: 0x3, sample_type: IDENTIFIER, read_format:
+TOTAL_TIME_ENABLED|TOTAL_TIME_RUNNING, disabled: 1, inherit: 1,
+enable_on_exec: 1, exclude_guest: 1 }, pid: 366178 (perf), cpu: -1,
+group_fd: -1, flags: FD_CLOEXEC) =3D 4
+    0.107 ( 0.026 ms): perf/366177 perf_event_open(attr_uptr: { type:
+1, size: 128, config: 0x4, sample_type: IDENTIFIER, read_format:
+TOTAL_TIME_ENABLED|TOTAL_TIME_RUNNING, disabled: 1, inherit: 1,
+enable_on_exec: 1, exclude_guest: 1 }, pid: 366178 (perf), cpu: -1,
+group_fd: -1, flags: FD_CLOEXEC) =3D 5
+    0.135 ( 0.026 ms): perf/366177 perf_event_open(attr_uptr: { type:
+1, size: 128, config: 0x2, sample_type: IDENTIFIER, read_format:
+TOTAL_TIME_ENABLED|TOTAL_TIME_RUNNING, disabled: 1, inherit: 1,
+enable_on_exec: 1, exclude_guest: 1 }, pid: 366178 (perf), cpu: -1,
+group_fd: -1, flags: FD_CLOEXEC) =3D 7
+    0.162 ( 0.006 ms): perf/366177 perf_event_open(attr_uptr: { size:
+128, sample_type: IDENTIFIER, read_format:
+TOTAL_TIME_ENABLED|TOTAL_TIME_RUNNING, disabled: 1, inherit: 1,
+enable_on_exec: 1, exclude_guest: 1 }, pid: 366178 (perf), cpu: -1,
+group_fd: -1, flags: FD_CLOEXEC) =3D 8
+    0.169 ( 0.002 ms): perf/366177 perf_event_open(attr_uptr: { size:
+128, config: 0x1, sample_type: IDENTIFIER, read_format:
+TOTAL_TIME_ENABLED|TOTAL_TIME_RUNNING, disabled: 1, inherit: 1,
+enable_on_exec: 1, exclude_guest: 1 }, pid: 366178 (perf), cpu: -1,
+group_fd: -1, flags: FD_CLOEXEC) =3D 9
+    0.172 ( 0.003 ms): perf/366177 perf_event_open(attr_uptr: { size:
+128, config: 0x4, sample_type: IDENTIFIER, read_format:
+TOTAL_TIME_ENABLED|TOTAL_TIME_RUNNING, disabled: 1, inherit: 1,
+enable_on_exec: 1, exclude_guest: 1 }, pid: 366178 (perf), cpu: -1,
+group_fd: -1, flags: FD_CLOEXEC) =3D 10
+    0.176 ( 0.002 ms): perf/366177 perf_event_open(attr_uptr: { size:
+128, config: 0x5, sample_type: IDENTIFIER, read_format:
+TOTAL_TIME_ENABLED|TOTAL_TIME_RUNNING, disabled: 1, inherit: 1,
+enable_on_exec: 1, exclude_guest: 1 }, pid: 366178 (perf), cpu: -1,
+group_fd: -1, flags: FD_CLOEXEC) =3D 11
+    0.179 ( 0.002 ms): perf/366177 perf_event_open(attr_uptr: { type:
+4, size: 128, config: 0x400, sample_type: IDENTIFIER, read_format:
+TOTAL_TIME_ENABLED|TOTAL_TIME_RUNNING|ID|GROUP, disabled: 1, inherit:
+1, enable_on_exec: 1, exclude_guest: 1 }, pid: 366178 (perf), cpu: -1,
+group_fd: -1, flags: FD_CLOEXEC) =3D 12
+    0.182 ( 0.003 ms): perf/366177 perf_event_open(attr_uptr: { type:
+4, size: 128, config: 0x8000, sample_type: IDENTIFIER, read_format:
+TOTAL_TIME_ENABLED|TOTAL_TIME_RUNNING|ID|GROUP, inherit: 1,
+exclude_guest: 1 }, pid: 366178 (perf), cpu: -1, group_fd: 12, flags:
+FD_CLOEXEC) =3D 13
 
-- Arnaldo
+Tested-by: Ian Rogers <irogers@google.com>
 
-----
+Thanks,
+Ian
 
-Using BPF for that, doing a cleverish reuse of perf_event_attr__fprintf(),
-that really needs to be turned into __snprintf(), etc.
-
-But since the plan is to go the BTF way probably use libbpf's
-btf_dump__dump_type_data().
-
-Example:
-
-[root@quaco ~]# perf trace -e ~acme/git/perf/tools/perf/examples/bpf/augmented_raw_syscalls.c,perf_event_open --max-events 10 perf stat --quiet sleep 0.001
-fg
-     0.000 perf_event_open(attr_uptr: { type: 1, size: 128, config: 0x1, sample_type: IDENTIFIER, read_format: TOTAL_TIME_ENABLED|TOTAL_TIME_RUNNING, disabled: 1, inherit: 1, enable_on_exec: 1, exclude_guest: 1 }, pid: 258859 (perf), cpu: -1, group_fd: -1, flags: FD_CLOEXEC) = 3
-     0.067 perf_event_open(attr_uptr: { type: 1, size: 128, config: 0x3, sample_type: IDENTIFIER, read_format: TOTAL_TIME_ENABLED|TOTAL_TIME_RUNNING, disabled: 1, inherit: 1, enable_on_exec: 1, exclude_guest: 1 }, pid: 258859 (perf), cpu: -1, group_fd: -1, flags: FD_CLOEXEC) = 4
-     0.120 perf_event_open(attr_uptr: { type: 1, size: 128, config: 0x4, sample_type: IDENTIFIER, read_format: TOTAL_TIME_ENABLED|TOTAL_TIME_RUNNING, disabled: 1, inherit: 1, enable_on_exec: 1, exclude_guest: 1 }, pid: 258859 (perf), cpu: -1, group_fd: -1, flags: FD_CLOEXEC) = 5
-     0.172 perf_event_open(attr_uptr: { type: 1, size: 128, config: 0x2, sample_type: IDENTIFIER, read_format: TOTAL_TIME_ENABLED|TOTAL_TIME_RUNNING, disabled: 1, inherit: 1, enable_on_exec: 1, exclude_guest: 1 }, pid: 258859 (perf), cpu: -1, group_fd: -1, flags: FD_CLOEXEC) = 7
-     0.190 perf_event_open(attr_uptr: { size: 128, sample_type: IDENTIFIER, read_format: TOTAL_TIME_ENABLED|TOTAL_TIME_RUNNING, disabled: 1, inherit: 1, enable_on_exec: 1, exclude_guest: 1 }, pid: 258859 (perf), cpu: -1, group_fd: -1, flags: FD_CLOEXEC) = 8
-     0.199 perf_event_open(attr_uptr: { size: 128, config: 0x1, sample_type: IDENTIFIER, read_format: TOTAL_TIME_ENABLED|TOTAL_TIME_RUNNING, disabled: 1, inherit: 1, enable_on_exec: 1, exclude_guest: 1 }, pid: 258859 (perf), cpu: -1, group_fd: -1, flags: FD_CLOEXEC) = 9
-     0.204 perf_event_open(attr_uptr: { size: 128, config: 0x4, sample_type: IDENTIFIER, read_format: TOTAL_TIME_ENABLED|TOTAL_TIME_RUNNING, disabled: 1, inherit: 1, enable_on_exec: 1, exclude_guest: 1 }, pid: 258859 (perf), cpu: -1, group_fd: -1, flags: FD_CLOEXEC) = 10
-     0.210 perf_event_open(attr_uptr: { size: 128, config: 0x5, sample_type: IDENTIFIER, read_format: TOTAL_TIME_ENABLED|TOTAL_TIME_RUNNING, disabled: 1, inherit: 1, enable_on_exec: 1, exclude_guest: 1 }, pid: 258859 (perf), cpu: -1, group_fd: -1, flags: FD_CLOEXEC) = 11
-[root@quaco ~]#
-
-Suggested-by: Ian Rogers <irogers@google.com>
-Cc: Adrian Hunter <adrian.hunter@intel.com>
-Cc: Jiri Olsa <jolsa@kernel.org>
-Cc: Namhyung Kim <namhyung@kernel.org>
-Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
----
- tools/perf/builtin-trace.c                    |  3 +-
- .../examples/bpf/augmented_raw_syscalls.c     | 44 +++++++++++++++++++
- tools/perf/trace/beauty/perf_event_open.c     | 44 +++++++++++++++++++
- 3 files changed, 90 insertions(+), 1 deletion(-)
-
-diff --git a/tools/perf/builtin-trace.c b/tools/perf/builtin-trace.c
-index 72991528687ea60b..5690c33c523b37d7 100644
---- a/tools/perf/builtin-trace.c
-+++ b/tools/perf/builtin-trace.c
-@@ -1053,7 +1053,8 @@ static struct syscall_fmt syscall_fmts[] = {
- 	  .arg = { [0] = { .scnprintf = SCA_FDAT,	/* dfd */ },
- 		   [2] = { .scnprintf = SCA_OPEN_FLAGS, /* flags */ }, }, },
- 	{ .name	    = "perf_event_open",
--	  .arg = { [2] = { .scnprintf = SCA_INT,	/* cpu */ },
-+	  .arg = { [0] = { .scnprintf = SCA_PERF_ATTR,  /* attr */ },
-+		   [2] = { .scnprintf = SCA_INT,	/* cpu */ },
- 		   [3] = { .scnprintf = SCA_FD,		/* group_fd */ },
- 		   [4] = { .scnprintf = SCA_PERF_FLAGS, /* flags */ }, }, },
- 	{ .name	    = "pipe2",
-diff --git a/tools/perf/examples/bpf/augmented_raw_syscalls.c b/tools/perf/examples/bpf/augmented_raw_syscalls.c
-index 926238efd7d8d0df..0599823e8ae1b4c0 100644
---- a/tools/perf/examples/bpf/augmented_raw_syscalls.c
-+++ b/tools/perf/examples/bpf/augmented_raw_syscalls.c
-@@ -129,6 +129,7 @@ struct augmented_args_payload {
- 			struct augmented_arg arg, arg2;
- 		};
- 		struct sockaddr_storage saddr;
-+		char   __data[sizeof(struct augmented_arg)];
- 	};
- };
- 
-@@ -293,6 +294,49 @@ int sys_enter_renameat(struct syscall_enter_args *args)
- 	return augmented__output(args, augmented_args, len);
- }
- 
-+#define PERF_ATTR_SIZE_VER0     64      /* sizeof first published struct */
-+
-+// we need just the start, get the size to then copy it
-+struct perf_event_attr_size {
-+        __u32                   type;
-+        /*
-+         * Size of the attr structure, for fwd/bwd compat.
-+         */
-+        __u32                   size;
-+};
-+
-+SEC("!syscalls:sys_enter_perf_event_open")
-+int sys_enter_perf_event_open(struct syscall_enter_args *args)
-+{
-+	struct augmented_args_payload *augmented_args = augmented_args_payload();
-+	const struct perf_event_attr_size *attr = (const struct perf_event_attr_size *)args->args[0], *attr_read;
-+	unsigned int len = sizeof(augmented_args->args);
-+
-+        if (augmented_args == NULL)
-+		goto failure;
-+
-+	if (bpf_probe_read(&augmented_args->__data, sizeof(*attr), attr) < 0)
-+		goto failure;
-+
-+	attr_read = (const struct perf_event_attr_size *)augmented_args->__data;
-+
-+	__u32 size = attr_read->size;
-+
-+	if (!size)
-+		size = PERF_ATTR_SIZE_VER0;
-+
-+	if (size > sizeof(augmented_args->__data))
-+                goto failure;
-+
-+	// Now that we read attr->size and tested it against the size limits, read it completely
-+	if (bpf_probe_read(&augmented_args->__data, size, attr) < 0)
-+		goto failure;
-+
-+	return augmented__output(args, augmented_args, len + size);
-+failure:
-+	return 1; /* Failure: don't filter */
-+}
-+
- static pid_t getpid(void)
- {
- 	return bpf_get_current_pid_tgid();
-diff --git a/tools/perf/trace/beauty/perf_event_open.c b/tools/perf/trace/beauty/perf_event_open.c
-index 11d47dbe63bd1edc..01ee15fe9d0c7a98 100644
---- a/tools/perf/trace/beauty/perf_event_open.c
-+++ b/tools/perf/trace/beauty/perf_event_open.c
-@@ -44,3 +44,47 @@ static size_t syscall_arg__scnprintf_perf_flags(char *bf, size_t size,
- }
- 
- #define SCA_PERF_FLAGS syscall_arg__scnprintf_perf_flags
-+
-+struct attr_fprintf_args {
-+	size_t size, printed;
-+	char *bf;
-+	bool first;
-+};
-+
-+static int attr__fprintf(FILE *fp __maybe_unused, const char *name, const char *val, void *priv)
-+{
-+	struct attr_fprintf_args *args = priv;
-+	size_t printed = scnprintf(args->bf + args->printed , args->size - args->printed, "%s%s: %s", args->first ? "" : ", ", name, val);
-+
-+	args->first = false;
-+	args->printed += printed;
-+	return printed;
-+}
-+
-+static size_t perf_event_attr___scnprintf(struct perf_event_attr *attr, char *bf, size_t size, bool show_zeros __maybe_unused)
-+{
-+	struct attr_fprintf_args args = {
-+		.printed = scnprintf(bf, size, "{ "),
-+		.size    = size,
-+		.first   = true,
-+		.bf	 = bf,
-+	};
-+
-+	perf_event_attr__fprintf(stdout, attr, attr__fprintf, &args);
-+	return args.printed + scnprintf(bf + args.printed, size - args.printed, " }");
-+}
-+
-+static size_t syscall_arg__scnprintf_augmented_perf_event_attr(struct syscall_arg *arg, char *bf, size_t size)
-+{
-+	return perf_event_attr___scnprintf((void *)arg->augmented.args, bf, size, arg->trace->show_zeros);
-+}
-+
-+static size_t syscall_arg__scnprintf_perf_event_attr(char *bf, size_t size, struct syscall_arg *arg)
-+{
-+	if (arg->augmented.args)
-+		return syscall_arg__scnprintf_augmented_perf_event_attr(arg, bf, size);
-+
-+	return scnprintf(bf, size, "%#lx", arg->val);
-+}
-+
-+#define SCA_PERF_ATTR syscall_arg__scnprintf_perf_event_attr
--- 
-2.37.3
-
+> ----
+>
+> Using BPF for that, doing a cleverish reuse of perf_event_attr__fprintf()=
+,
+> that really needs to be turned into __snprintf(), etc.
+>
+> But since the plan is to go the BTF way probably use libbpf's
+> btf_dump__dump_type_data().
+>
+> Example:
+>
+> [root@quaco ~]# perf trace -e ~acme/git/perf/tools/perf/examples/bpf/augm=
+ented_raw_syscalls.c,perf_event_open --max-events 10 perf stat --quiet slee=
+p 0.001
+> fg
+>      0.000 perf_event_open(attr_uptr: { type: 1, size: 128, config: 0x1, =
+sample_type: IDENTIFIER, read_format: TOTAL_TIME_ENABLED|TOTAL_TIME_RUNNING=
+, disabled: 1, inherit: 1, enable_on_exec: 1, exclude_guest: 1 }, pid: 2588=
+59 (perf), cpu: -1, group_fd: -1, flags: FD_CLOEXEC) =3D 3
+>      0.067 perf_event_open(attr_uptr: { type: 1, size: 128, config: 0x3, =
+sample_type: IDENTIFIER, read_format: TOTAL_TIME_ENABLED|TOTAL_TIME_RUNNING=
+, disabled: 1, inherit: 1, enable_on_exec: 1, exclude_guest: 1 }, pid: 2588=
+59 (perf), cpu: -1, group_fd: -1, flags: FD_CLOEXEC) =3D 4
+>      0.120 perf_event_open(attr_uptr: { type: 1, size: 128, config: 0x4, =
+sample_type: IDENTIFIER, read_format: TOTAL_TIME_ENABLED|TOTAL_TIME_RUNNING=
+, disabled: 1, inherit: 1, enable_on_exec: 1, exclude_guest: 1 }, pid: 2588=
+59 (perf), cpu: -1, group_fd: -1, flags: FD_CLOEXEC) =3D 5
+>      0.172 perf_event_open(attr_uptr: { type: 1, size: 128, config: 0x2, =
+sample_type: IDENTIFIER, read_format: TOTAL_TIME_ENABLED|TOTAL_TIME_RUNNING=
+, disabled: 1, inherit: 1, enable_on_exec: 1, exclude_guest: 1 }, pid: 2588=
+59 (perf), cpu: -1, group_fd: -1, flags: FD_CLOEXEC) =3D 7
+>      0.190 perf_event_open(attr_uptr: { size: 128, sample_type: IDENTIFIE=
+R, read_format: TOTAL_TIME_ENABLED|TOTAL_TIME_RUNNING, disabled: 1, inherit=
+: 1, enable_on_exec: 1, exclude_guest: 1 }, pid: 258859 (perf), cpu: -1, gr=
+oup_fd: -1, flags: FD_CLOEXEC) =3D 8
+>      0.199 perf_event_open(attr_uptr: { size: 128, config: 0x1, sample_ty=
+pe: IDENTIFIER, read_format: TOTAL_TIME_ENABLED|TOTAL_TIME_RUNNING, disable=
+d: 1, inherit: 1, enable_on_exec: 1, exclude_guest: 1 }, pid: 258859 (perf)=
+, cpu: -1, group_fd: -1, flags: FD_CLOEXEC) =3D 9
+>      0.204 perf_event_open(attr_uptr: { size: 128, config: 0x4, sample_ty=
+pe: IDENTIFIER, read_format: TOTAL_TIME_ENABLED|TOTAL_TIME_RUNNING, disable=
+d: 1, inherit: 1, enable_on_exec: 1, exclude_guest: 1 }, pid: 258859 (perf)=
+, cpu: -1, group_fd: -1, flags: FD_CLOEXEC) =3D 10
+>      0.210 perf_event_open(attr_uptr: { size: 128, config: 0x5, sample_ty=
+pe: IDENTIFIER, read_format: TOTAL_TIME_ENABLED|TOTAL_TIME_RUNNING, disable=
+d: 1, inherit: 1, enable_on_exec: 1, exclude_guest: 1 }, pid: 258859 (perf)=
+, cpu: -1, group_fd: -1, flags: FD_CLOEXEC) =3D 11
+> [root@quaco ~]#
+>
+> Suggested-by: Ian Rogers <irogers@google.com>
+> Cc: Adrian Hunter <adrian.hunter@intel.com>
+> Cc: Jiri Olsa <jolsa@kernel.org>
+> Cc: Namhyung Kim <namhyung@kernel.org>
+> Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
+> ---
+>  tools/perf/builtin-trace.c                    |  3 +-
+>  .../examples/bpf/augmented_raw_syscalls.c     | 44 +++++++++++++++++++
+>  tools/perf/trace/beauty/perf_event_open.c     | 44 +++++++++++++++++++
+>  3 files changed, 90 insertions(+), 1 deletion(-)
+>
+> diff --git a/tools/perf/builtin-trace.c b/tools/perf/builtin-trace.c
+> index 72991528687ea60b..5690c33c523b37d7 100644
+> --- a/tools/perf/builtin-trace.c
+> +++ b/tools/perf/builtin-trace.c
+> @@ -1053,7 +1053,8 @@ static struct syscall_fmt syscall_fmts[] =3D {
+>           .arg =3D { [0] =3D { .scnprintf =3D SCA_FDAT,       /* dfd */ }=
+,
+>                    [2] =3D { .scnprintf =3D SCA_OPEN_FLAGS, /* flags */ }=
+, }, },
+>         { .name     =3D "perf_event_open",
+> -         .arg =3D { [2] =3D { .scnprintf =3D SCA_INT,        /* cpu */ }=
+,
+> +         .arg =3D { [0] =3D { .scnprintf =3D SCA_PERF_ATTR,  /* attr */ =
+},
+> +                  [2] =3D { .scnprintf =3D SCA_INT,        /* cpu */ },
+>                    [3] =3D { .scnprintf =3D SCA_FD,         /* group_fd *=
+/ },
+>                    [4] =3D { .scnprintf =3D SCA_PERF_FLAGS, /* flags */ }=
+, }, },
+>         { .name     =3D "pipe2",
+> diff --git a/tools/perf/examples/bpf/augmented_raw_syscalls.c b/tools/per=
+f/examples/bpf/augmented_raw_syscalls.c
+> index 926238efd7d8d0df..0599823e8ae1b4c0 100644
+> --- a/tools/perf/examples/bpf/augmented_raw_syscalls.c
+> +++ b/tools/perf/examples/bpf/augmented_raw_syscalls.c
+> @@ -129,6 +129,7 @@ struct augmented_args_payload {
+>                         struct augmented_arg arg, arg2;
+>                 };
+>                 struct sockaddr_storage saddr;
+> +               char   __data[sizeof(struct augmented_arg)];
+>         };
+>  };
+>
+> @@ -293,6 +294,49 @@ int sys_enter_renameat(struct syscall_enter_args *ar=
+gs)
+>         return augmented__output(args, augmented_args, len);
+>  }
+>
+> +#define PERF_ATTR_SIZE_VER0     64      /* sizeof first published struct=
+ */
+> +
+> +// we need just the start, get the size to then copy it
+> +struct perf_event_attr_size {
+> +        __u32                   type;
+> +        /*
+> +         * Size of the attr structure, for fwd/bwd compat.
+> +         */
+> +        __u32                   size;
+> +};
+> +
+> +SEC("!syscalls:sys_enter_perf_event_open")
+> +int sys_enter_perf_event_open(struct syscall_enter_args *args)
+> +{
+> +       struct augmented_args_payload *augmented_args =3D augmented_args_=
+payload();
+> +       const struct perf_event_attr_size *attr =3D (const struct perf_ev=
+ent_attr_size *)args->args[0], *attr_read;
+> +       unsigned int len =3D sizeof(augmented_args->args);
+> +
+> +        if (augmented_args =3D=3D NULL)
+> +               goto failure;
+> +
+> +       if (bpf_probe_read(&augmented_args->__data, sizeof(*attr), attr) =
+< 0)
+> +               goto failure;
+> +
+> +       attr_read =3D (const struct perf_event_attr_size *)augmented_args=
+->__data;
+> +
+> +       __u32 size =3D attr_read->size;
+> +
+> +       if (!size)
+> +               size =3D PERF_ATTR_SIZE_VER0;
+> +
+> +       if (size > sizeof(augmented_args->__data))
+> +                goto failure;
+> +
+> +       // Now that we read attr->size and tested it against the size lim=
+its, read it completely
+> +       if (bpf_probe_read(&augmented_args->__data, size, attr) < 0)
+> +               goto failure;
+> +
+> +       return augmented__output(args, augmented_args, len + size);
+> +failure:
+> +       return 1; /* Failure: don't filter */
+> +}
+> +
+>  static pid_t getpid(void)
+>  {
+>         return bpf_get_current_pid_tgid();
+> diff --git a/tools/perf/trace/beauty/perf_event_open.c b/tools/perf/trace=
+/beauty/perf_event_open.c
+> index 11d47dbe63bd1edc..01ee15fe9d0c7a98 100644
+> --- a/tools/perf/trace/beauty/perf_event_open.c
+> +++ b/tools/perf/trace/beauty/perf_event_open.c
+> @@ -44,3 +44,47 @@ static size_t syscall_arg__scnprintf_perf_flags(char *=
+bf, size_t size,
+>  }
+>
+>  #define SCA_PERF_FLAGS syscall_arg__scnprintf_perf_flags
+> +
+> +struct attr_fprintf_args {
+> +       size_t size, printed;
+> +       char *bf;
+> +       bool first;
+> +};
+> +
+> +static int attr__fprintf(FILE *fp __maybe_unused, const char *name, cons=
+t char *val, void *priv)
+> +{
+> +       struct attr_fprintf_args *args =3D priv;
+> +       size_t printed =3D scnprintf(args->bf + args->printed , args->siz=
+e - args->printed, "%s%s: %s", args->first ? "" : ", ", name, val);
+> +
+> +       args->first =3D false;
+> +       args->printed +=3D printed;
+> +       return printed;
+> +}
+> +
+> +static size_t perf_event_attr___scnprintf(struct perf_event_attr *attr, =
+char *bf, size_t size, bool show_zeros __maybe_unused)
+> +{
+> +       struct attr_fprintf_args args =3D {
+> +               .printed =3D scnprintf(bf, size, "{ "),
+> +               .size    =3D size,
+> +               .first   =3D true,
+> +               .bf      =3D bf,
+> +       };
+> +
+> +       perf_event_attr__fprintf(stdout, attr, attr__fprintf, &args);
+> +       return args.printed + scnprintf(bf + args.printed, size - args.pr=
+inted, " }");
+> +}
+> +
+> +static size_t syscall_arg__scnprintf_augmented_perf_event_attr(struct sy=
+scall_arg *arg, char *bf, size_t size)
+> +{
+> +       return perf_event_attr___scnprintf((void *)arg->augmented.args, b=
+f, size, arg->trace->show_zeros);
+> +}
+> +
+> +static size_t syscall_arg__scnprintf_perf_event_attr(char *bf, size_t si=
+ze, struct syscall_arg *arg)
+> +{
+> +       if (arg->augmented.args)
+> +               return syscall_arg__scnprintf_augmented_perf_event_attr(a=
+rg, bf, size);
+> +
+> +       return scnprintf(bf, size, "%#lx", arg->val);
+> +}
+> +
+> +#define SCA_PERF_ATTR syscall_arg__scnprintf_perf_event_attr
+> --
+> 2.37.3
+>
