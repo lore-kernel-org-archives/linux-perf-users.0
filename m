@@ -2,52 +2,53 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 72BC5C43217
-	for <linux-perf-users@archiver.kernel.org>; Fri,  4 Nov 2022 15:55:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3A54BC433FE
+	for <linux-perf-users@archiver.kernel.org>; Fri,  4 Nov 2022 15:56:04 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231950AbiKDPzc (ORCPT
+        id S232108AbiKDP4D (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Fri, 4 Nov 2022 11:55:32 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59850 "EHLO
+        Fri, 4 Nov 2022 11:56:03 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59930 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231841AbiKDPz2 (ORCPT
+        with ESMTP id S231892AbiKDPzc (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Fri, 4 Nov 2022 11:55:28 -0400
-Received: from mail-oa1-f41.google.com (mail-oa1-f41.google.com [209.85.160.41])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4AD053121A;
-        Fri,  4 Nov 2022 08:55:27 -0700 (PDT)
-Received: by mail-oa1-f41.google.com with SMTP id 586e51a60fabf-13bd2aea61bso6025220fac.0;
-        Fri, 04 Nov 2022 08:55:27 -0700 (PDT)
+        Fri, 4 Nov 2022 11:55:32 -0400
+Received: from mail-oa1-f46.google.com (mail-oa1-f46.google.com [209.85.160.46])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D57AF3054E;
+        Fri,  4 Nov 2022 08:55:30 -0700 (PDT)
+Received: by mail-oa1-f46.google.com with SMTP id 586e51a60fabf-13c2cfd1126so5952937fac.10;
+        Fri, 04 Nov 2022 08:55:30 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
         h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
          :mime-version:subject:date:from:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=ubE2AAZXlCuiNyL1KuoZrNEXriWN5pZWIN4cSFgHZnA=;
-        b=a4O7YS/6RX0oYSVl8ccdjpdKbmp4Evp9HCmRKyaFxlMzkzuu9kH4bH4GQ4GWIVeVw3
-         iZlcoQ/oVjJKaI+Gb9f93uImSfV5xJsGvD7kZSFJtD5dqxoYSqBsG/nWOl/o/Ze/wpos
-         9DuYVWcDrJumVEDnffA8YidiD2ti5finW7jpe52tIapeeGHqMZIorOq681DhY39qB9Zu
-         KXeLfnhxr3q2MLt5K6f1ZOxiaF4tqU6eawFbkkKz5w3HZdzpGdGfNqYobfD6OoKPCWZl
-         AQuTUclMDxe7G0ujB0wv2SB3NzTfpS5qzQmVC4Spzlv5JiL40ZAQhyVWJPDiJoafElqY
-         N1Ew==
-X-Gm-Message-State: ACrzQf14SbUtJ3VB8jFBrapv+6bwFZ7m0x/cbCpQaVC8uEc75KqvsoAp
-        LXMRisQNWY2yzz3QYgyrCg==
-X-Google-Smtp-Source: AMsMyM5i6RcuCkLATEdqES8PyM2eEeChV16kftf4iuKKCEnn8hY58tD8/bZ9w+Cv8IMCuJDpXPQTQA==
-X-Received: by 2002:a05:6870:a70a:b0:13c:19bc:12ae with SMTP id g10-20020a056870a70a00b0013c19bc12aemr21300865oam.240.1667577326358;
-        Fri, 04 Nov 2022 08:55:26 -0700 (PDT)
+        bh=fY5WLVvBtjin9otYHyxvqw7D/OBaUkyJnRUdtIxFHiA=;
+        b=uKl75G2/ALgUHuuVauw34T6B26XDrA4Hc4ffk66G9mvUPagq94KuCiTTnRBUVUwboG
+         JAkgmMSzFBMNZ1Jk1TL2QHw8WGkb0V3YM41Y/gP1tYgLnO1xHsVxwXJMe/QkjFf4LqOQ
+         /AYteq5oLMm4BcaHRBfkSan/OIvV2b/sX/ZGiPPxrpbknoqx52t0q7uw2HoWbucTIcxt
+         zy3PXDK5thX2w+83wTIKbcOvF6I7iVnr5jB2jwVZMzkFQGNbxwk8tB9YFgrugs4eN5kf
+         9qXYvS1CfYrYCh3e2i/6itx0rTOc9Iw2YnizV0+ADvlQkbHNM69FcujavvLI1FE8Rsdo
+         UNrg==
+X-Gm-Message-State: ACrzQf04ts7cAa9vUii4OlnXJe+PiHlvZ9Jooer0hYRd6sECYRkLdwYC
+        It87WKN7H6kj/8pb9lM0ww==
+X-Google-Smtp-Source: AMsMyM4hNP3YtD1AjfgdVy7Wwt0avfUZHLw8qObIfSKL9fYTqIcOZIAAguh8sEaoNEPCMLo5eWKqXA==
+X-Received: by 2002:a05:6871:20c:b0:13c:12cf:1fee with SMTP id t12-20020a056871020c00b0013c12cf1feemr22484223oad.120.1667577329944;
+        Fri, 04 Nov 2022 08:55:29 -0700 (PDT)
 Received: from robh_at_kernel.org (66-90-144-107.dyn.grandenetworks.net. [66.90.144.107])
-        by smtp.gmail.com with ESMTPSA id v20-20020a4ac014000000b0049052c66126sm1278110oop.2.2022.11.04.08.55.25
+        by smtp.gmail.com with ESMTPSA id p36-20020a05687056a400b0013b1301ce42sm1871096oao.47.2022.11.04.08.55.28
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 04 Nov 2022 08:55:25 -0700 (PDT)
-Received: (nullmailer pid 1880416 invoked by uid 1000);
+        Fri, 04 Nov 2022 08:55:29 -0700 (PDT)
+Received: (nullmailer pid 1880424 invoked by uid 1000);
         Fri, 04 Nov 2022 15:55:18 -0000
 From:   Rob Herring <robh@kernel.org>
-Date:   Fri, 04 Nov 2022 10:55:04 -0500
-Subject: [PATCH v3 4/8] perf: arm_spe: Drop BIT() and use FIELD_GET/PREP accessors
+Date:   Fri, 04 Nov 2022 10:55:08 -0500
+Subject: [PATCH v3 8/8] perf: arm_spe: Add support for SPEv1.2 inverted event
+ filtering
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 8bit
-Message-Id: <20220825-arm-spe-v8-7-v3-4-87682f78caac@kernel.org>
+Message-Id: <20220825-arm-spe-v8-7-v3-8-87682f78caac@kernel.org>
 References: <20220825-arm-spe-v8-7-v3-0-87682f78caac@kernel.org>
 In-Reply-To: <20220825-arm-spe-v8-7-v3-0-87682f78caac@kernel.org>
 To:     Namhyung Kim <namhyung@kernel.org>, Will Deacon <will@kernel.org>,
@@ -72,228 +73,148 @@ Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-Now that generated sysregs are in place, update the register field
-accesses. The use of BIT() is no longer needed with the new defines. Use
-FIELD_GET and FIELD_PREP instead of open coding masking and shifting.
-
-No functional change.
+Arm SPEv1.2 (Arm v8.7/v9.2) adds a new feature called Inverted Event
+Filter which excludes samples matching the event filter. The feature
+mirrors the existing event filter in PMSEVFR_EL1 adding a new register,
+PMSNEVFR_EL1, which has the same event bit assignments.
 
 Tested-by: James Clark <james.clark@arm.com>
 Signed-off-by: Rob Herring <robh@kernel.org>
 ---
 v3:
- - no change
+ - No change
+v2:
+ - Update for auto generated register defines
+ - Avoid accessing SYS_PMSNEVFR_EL1 on < v8.7
 ---
- drivers/perf/arm_spe_pmu.c | 70 ++++++++++++++++++++++------------------------
- 1 file changed, 34 insertions(+), 36 deletions(-)
+ drivers/perf/arm_spe_pmu.c | 45 +++++++++++++++++++++++++++++++++++++++++++++
+ 1 file changed, 45 insertions(+)
 
 diff --git a/drivers/perf/arm_spe_pmu.c b/drivers/perf/arm_spe_pmu.c
-index 814ed18346b6..9b4bd72087ea 100644
+index 82f67e941bc4..573db4211acd 100644
 --- a/drivers/perf/arm_spe_pmu.c
 +++ b/drivers/perf/arm_spe_pmu.c
-@@ -283,18 +283,18 @@ static u64 arm_spe_event_to_pmscr(struct perf_event *event)
- 	struct perf_event_attr *attr = &event->attr;
- 	u64 reg = 0;
+@@ -85,6 +85,7 @@ struct arm_spe_pmu {
+ #define SPE_PMU_FEAT_ARCH_INST			(1UL << 3)
+ #define SPE_PMU_FEAT_LDS			(1UL << 4)
+ #define SPE_PMU_FEAT_ERND			(1UL << 5)
++#define SPE_PMU_FEAT_INV_FILT_EVT		(1UL << 6)
+ #define SPE_PMU_FEAT_DEV_PROBED			(1UL << 63)
+ 	u64					features;
  
--	reg |= ATTR_CFG_GET_FLD(attr, ts_enable) << PMSCR_EL1_TS_SHIFT;
--	reg |= ATTR_CFG_GET_FLD(attr, pa_enable) << PMSCR_EL1_PA_SHIFT;
--	reg |= ATTR_CFG_GET_FLD(attr, pct_enable) << PMSCR_EL1_PCT_SHIFT;
-+	reg |= FIELD_PREP(PMSCR_EL1_TS, ATTR_CFG_GET_FLD(attr, ts_enable));
-+	reg |= FIELD_PREP(PMSCR_EL1_PA, ATTR_CFG_GET_FLD(attr, pa_enable));
-+	reg |= FIELD_PREP(PMSCR_EL1_PCT, ATTR_CFG_GET_FLD(attr, pct_enable));
+@@ -202,6 +203,10 @@ static const struct attribute_group arm_spe_pmu_cap_group = {
+ #define ATTR_CFG_FLD_min_latency_LO		0
+ #define ATTR_CFG_FLD_min_latency_HI		11
  
- 	if (!attr->exclude_user)
--		reg |= BIT(PMSCR_EL1_E0SPE_SHIFT);
-+		reg |= PMSCR_EL1_E0SPE;
++#define ATTR_CFG_FLD_inv_event_filter_CFG	config3	/* PMSNEVFR_EL1 */
++#define ATTR_CFG_FLD_inv_event_filter_LO	0
++#define ATTR_CFG_FLD_inv_event_filter_HI	63
++
+ /* Why does everything I do descend into this? */
+ #define __GEN_PMU_FORMAT_ATTR(cfg, lo, hi)				\
+ 	(lo) == (hi) ? #cfg ":" #lo "\n" : #cfg ":" #lo "-" #hi
+@@ -232,6 +237,7 @@ GEN_PMU_FORMAT_ATTR(branch_filter);
+ GEN_PMU_FORMAT_ATTR(load_filter);
+ GEN_PMU_FORMAT_ATTR(store_filter);
+ GEN_PMU_FORMAT_ATTR(event_filter);
++GEN_PMU_FORMAT_ATTR(inv_event_filter);
+ GEN_PMU_FORMAT_ATTR(min_latency);
  
- 	if (!attr->exclude_kernel)
--		reg |= BIT(PMSCR_EL1_E1SPE_SHIFT);
-+		reg |= PMSCR_EL1_E1SPE;
+ static struct attribute *arm_spe_pmu_formats_attr[] = {
+@@ -243,12 +249,27 @@ static struct attribute *arm_spe_pmu_formats_attr[] = {
+ 	&format_attr_load_filter.attr,
+ 	&format_attr_store_filter.attr,
+ 	&format_attr_event_filter.attr,
++	&format_attr_inv_event_filter.attr,
+ 	&format_attr_min_latency.attr,
+ 	NULL,
+ };
  
- 	if (get_spe_event_has_cx(event))
--		reg |= BIT(PMSCR_EL1_CX_SHIFT);
-+		reg |= PMSCR_EL1_CX;
++static umode_t arm_spe_pmu_format_attr_is_visible(struct kobject *kobj,
++						  struct attribute *attr,
++						  int unused)
++	{
++	struct device *dev = kobj_to_dev(kobj);
++	struct arm_spe_pmu *spe_pmu = dev_get_drvdata(dev);
++
++	if (attr == &format_attr_inv_event_filter.attr && !(spe_pmu->features & SPE_PMU_FEAT_INV_FILT_EVT))
++		return 0;
++
++	return attr->mode;
++}
++
+ static const struct attribute_group arm_spe_pmu_format_group = {
+ 	.name	= "format",
++	.is_visible = arm_spe_pmu_format_attr_is_visible,
+ 	.attrs	= arm_spe_pmu_formats_attr,
+ };
  
- 	return reg;
- }
-@@ -322,7 +322,7 @@ static u64 arm_spe_event_to_pmsirr(struct perf_event *event)
- 
- 	arm_spe_event_sanitise_period(event);
- 
--	reg |= ATTR_CFG_GET_FLD(attr, jitter) << PMSIRR_EL1_RND_SHIFT;
-+	reg |= FIELD_PREP(PMSIRR_EL1_RND, ATTR_CFG_GET_FLD(attr, jitter));
- 	reg |= event->hw.sample_period;
- 
- 	return reg;
-@@ -333,18 +333,18 @@ static u64 arm_spe_event_to_pmsfcr(struct perf_event *event)
- 	struct perf_event_attr *attr = &event->attr;
- 	u64 reg = 0;
- 
--	reg |= ATTR_CFG_GET_FLD(attr, load_filter) << PMSFCR_EL1_LD_SHIFT;
--	reg |= ATTR_CFG_GET_FLD(attr, store_filter) << PMSFCR_EL1_ST_SHIFT;
--	reg |= ATTR_CFG_GET_FLD(attr, branch_filter) << PMSFCR_EL1_B_SHIFT;
-+	reg |= FIELD_PREP(PMSFCR_EL1_LD, ATTR_CFG_GET_FLD(attr, load_filter));
-+	reg |= FIELD_PREP(PMSFCR_EL1_ST, ATTR_CFG_GET_FLD(attr, store_filter));
-+	reg |= FIELD_PREP(PMSFCR_EL1_B, ATTR_CFG_GET_FLD(attr, branch_filter));
- 
- 	if (reg)
--		reg |= BIT(PMSFCR_EL1_FT_SHIFT);
-+		reg |= PMSFCR_EL1_FT;
- 
+@@ -343,6 +364,9 @@ static u64 arm_spe_event_to_pmsfcr(struct perf_event *event)
  	if (ATTR_CFG_GET_FLD(attr, event_filter))
--		reg |= BIT(PMSFCR_EL1_FE_SHIFT);
-+		reg |= PMSFCR_EL1_FE;
+ 		reg |= PMSFCR_EL1_FE;
  
++	if (ATTR_CFG_GET_FLD(attr, inv_event_filter))
++		reg |= PMSFCR_EL1_FnE;
++
  	if (ATTR_CFG_GET_FLD(attr, min_latency))
--		reg |= BIT(PMSFCR_EL1_FL_SHIFT);
-+		reg |= PMSFCR_EL1_FL;
+ 		reg |= PMSFCR_EL1_FL;
  
- 	return reg;
+@@ -355,6 +379,12 @@ static u64 arm_spe_event_to_pmsevfr(struct perf_event *event)
+ 	return ATTR_CFG_GET_FLD(attr, event_filter);
  }
-@@ -358,8 +358,7 @@ static u64 arm_spe_event_to_pmsevfr(struct perf_event *event)
+ 
++static u64 arm_spe_event_to_pmsnevfr(struct perf_event *event)
++{
++	struct perf_event_attr *attr = &event->attr;
++	return ATTR_CFG_GET_FLD(attr, inv_event_filter);
++}
++
  static u64 arm_spe_event_to_pmslatfr(struct perf_event *event)
  {
  	struct perf_event_attr *attr = &event->attr;
--	return ATTR_CFG_GET_FLD(attr, min_latency)
--	       << PMSLATFR_EL1_MINLAT_SHIFT;
-+	return FIELD_PREP(PMSLATFR_EL1_MINLAT, ATTR_CFG_GET_FLD(attr, min_latency));
- }
+@@ -703,6 +733,9 @@ static int arm_spe_pmu_event_init(struct perf_event *event)
+ 	if (arm_spe_event_to_pmsevfr(event) & arm_spe_pmsevfr_res0(spe_pmu->pmsver))
+ 		return -EOPNOTSUPP;
  
- static void arm_spe_pmu_pad_buf(struct perf_output_handle *handle, int len)
-@@ -511,7 +510,7 @@ static void arm_spe_perf_aux_output_begin(struct perf_output_handle *handle,
- 	limit = buf->snapshot ? arm_spe_pmu_next_snapshot_off(handle)
- 			      : arm_spe_pmu_next_off(handle);
- 	if (limit)
--		limit |= BIT(PMBLIMITR_EL1_E_SHIFT);
-+		limit |= PMBLIMITR_EL1_E;
++	if (arm_spe_event_to_pmsnevfr(event) & arm_spe_pmsevfr_res0(spe_pmu->pmsver))
++		return -EOPNOTSUPP;
++
+ 	if (attr->exclude_idle)
+ 		return -EOPNOTSUPP;
  
- 	limit += (u64)buf->base;
- 	base = (u64)buf->base + PERF_IDX2OFF(handle->head, buf);
-@@ -570,23 +569,23 @@ arm_spe_pmu_buf_get_fault_act(struct perf_output_handle *handle)
- 
- 	/* Service required? */
- 	pmbsr = read_sysreg_s(SYS_PMBSR_EL1);
--	if (!(pmbsr & BIT(PMBSR_EL1_S_SHIFT)))
-+	if (!FIELD_GET(PMBSR_EL1_S, pmbsr))
- 		return SPE_PMU_BUF_FAULT_ACT_SPURIOUS;
- 
- 	/*
- 	 * If we've lost data, disable profiling and also set the PARTIAL
- 	 * flag to indicate that the last record is corrupted.
- 	 */
--	if (pmbsr & BIT(PMBSR_EL1_DL_SHIFT))
-+	if (FIELD_GET(PMBSR_EL1_DL, pmbsr))
- 		perf_aux_output_flag(handle, PERF_AUX_FLAG_TRUNCATED |
- 					     PERF_AUX_FLAG_PARTIAL);
- 
- 	/* Report collisions to userspace so that it can up the period */
--	if (pmbsr & BIT(PMBSR_EL1_COLL_SHIFT))
-+	if (FIELD_GET(PMBSR_EL1_COLL, pmbsr))
- 		perf_aux_output_flag(handle, PERF_AUX_FLAG_COLLISION);
- 
- 	/* We only expect buffer management events */
--	switch (FIELD_GET(PMBSR_EL1_EC_MASK, pmbsr)) {
-+	switch (FIELD_GET(PMBSR_EL1_EC, pmbsr)) {
- 	case PMBSR_EL1_EC_BUF:
- 		/* Handled below */
- 		break;
-@@ -716,23 +715,22 @@ static int arm_spe_pmu_event_init(struct perf_event *event)
- 		return -EINVAL;
- 
- 	reg = arm_spe_event_to_pmsfcr(event);
--	if ((reg & BIT(PMSFCR_EL1_FE_SHIFT)) &&
-+	if ((FIELD_GET(PMSFCR_EL1_FE, reg)) &&
+@@ -721,6 +754,10 @@ static int arm_spe_pmu_event_init(struct perf_event *event)
  	    !(spe_pmu->features & SPE_PMU_FEAT_FILT_EVT))
  		return -EOPNOTSUPP;
  
--	if ((reg & BIT(PMSFCR_EL1_FT_SHIFT)) &&
-+	if ((FIELD_GET(PMSFCR_EL1_FT, reg)) &&
++	if ((FIELD_GET(PMSFCR_EL1_FnE, reg)) &&
++	    !(spe_pmu->features & SPE_PMU_FEAT_INV_FILT_EVT))
++		return -EOPNOTSUPP;
++
+ 	if ((FIELD_GET(PMSFCR_EL1_FT, reg)) &&
  	    !(spe_pmu->features & SPE_PMU_FEAT_FILT_TYP))
  		return -EOPNOTSUPP;
+@@ -756,6 +793,11 @@ static void arm_spe_pmu_start(struct perf_event *event, int flags)
+ 	reg = arm_spe_event_to_pmsevfr(event);
+ 	write_sysreg_s(reg, SYS_PMSEVFR_EL1);
  
--	if ((reg & BIT(PMSFCR_EL1_FL_SHIFT)) &&
-+	if ((FIELD_GET(PMSFCR_EL1_FL, reg)) &&
- 	    !(spe_pmu->features & SPE_PMU_FEAT_FILT_LAT))
- 		return -EOPNOTSUPP;
++	if (spe_pmu->features & SPE_PMU_FEAT_INV_FILT_EVT) {
++		reg = arm_spe_event_to_pmsnevfr(event);
++		write_sysreg_s(reg, SYS_PMSNEVFR_EL1);
++	}
++
+ 	reg = arm_spe_event_to_pmslatfr(event);
+ 	write_sysreg_s(reg, SYS_PMSLATFR_EL1);
  
- 	set_spe_event_has_cx(event);
- 	reg = arm_spe_event_to_pmscr(event);
- 	if (!perfmon_capable() &&
--	    (reg & (BIT(PMSCR_EL1_PA_SHIFT) |
--		    BIT(PMSCR_EL1_PCT_SHIFT))))
-+	    (reg & (PMSCR_EL1_PA | PMSCR_EL1_PCT)))
- 		return -EACCES;
- 
- 	return 0;
-@@ -970,14 +968,14 @@ static void __arm_spe_pmu_dev_probe(void *info)
- 
- 	/* Read PMBIDR first to determine whether or not we have access */
- 	reg = read_sysreg_s(SYS_PMBIDR_EL1);
--	if (reg & BIT(PMBIDR_EL1_P_SHIFT)) {
-+	if (FIELD_GET(PMBIDR_EL1_P, reg)) {
- 		dev_err(dev,
- 			"profiling buffer owned by higher exception level\n");
- 		return;
- 	}
- 
- 	/* Minimum alignment. If it's out-of-range, then fail the probe */
--	fld = (reg & PMBIDR_EL1_ALIGN_MASK) >> PMBIDR_EL1_ALIGN_SHIFT;
-+	fld = FIELD_GET(PMBIDR_EL1_ALIGN, reg);
- 	spe_pmu->align = 1 << fld;
- 	if (spe_pmu->align > SZ_2K) {
- 		dev_err(dev, "unsupported PMBIDR.Align [%d] on CPU %d\n",
-@@ -987,26 +985,26 @@ static void __arm_spe_pmu_dev_probe(void *info)
- 
- 	/* It's now safe to read PMSIDR and figure out what we've got */
- 	reg = read_sysreg_s(SYS_PMSIDR_EL1);
--	if (reg & BIT(PMSIDR_EL1_FE_SHIFT))
-+	if (FIELD_GET(PMSIDR_EL1_FE, reg))
+@@ -990,6 +1032,9 @@ static void __arm_spe_pmu_dev_probe(void *info)
+ 	if (FIELD_GET(PMSIDR_EL1_FE, reg))
  		spe_pmu->features |= SPE_PMU_FEAT_FILT_EVT;
  
--	if (reg & BIT(PMSIDR_EL1_FT_SHIFT))
-+	if (FIELD_GET(PMSIDR_EL1_FT, reg))
++	if (FIELD_GET(PMSIDR_EL1_FnE, reg))
++		spe_pmu->features |= SPE_PMU_FEAT_INV_FILT_EVT;
++
+ 	if (FIELD_GET(PMSIDR_EL1_FT, reg))
  		spe_pmu->features |= SPE_PMU_FEAT_FILT_TYP;
  
--	if (reg & BIT(PMSIDR_EL1_FL_SHIFT))
-+	if (FIELD_GET(PMSIDR_EL1_FL, reg))
- 		spe_pmu->features |= SPE_PMU_FEAT_FILT_LAT;
- 
--	if (reg & BIT(PMSIDR_EL1_ARCHINST_SHIFT))
-+	if (FIELD_GET(PMSIDR_EL1_ARCHINST, reg))
- 		spe_pmu->features |= SPE_PMU_FEAT_ARCH_INST;
- 
--	if (reg & BIT(PMSIDR_EL1_LDS_SHIFT))
-+	if (FIELD_GET(PMSIDR_EL1_LDS, reg))
- 		spe_pmu->features |= SPE_PMU_FEAT_LDS;
- 
--	if (reg & BIT(PMSIDR_EL1_ERND_SHIFT))
-+	if (FIELD_GET(PMSIDR_EL1_ERND, reg))
- 		spe_pmu->features |= SPE_PMU_FEAT_ERND;
- 
- 	/* This field has a spaced out encoding, so just use a look-up */
--	fld = (reg & PMSIDR_EL1_INTERVAL_MASK) >> PMSIDR_EL1_INTERVAL_SHIFT;
-+	fld = FIELD_GET(PMSIDR_EL1_INTERVAL, reg);
- 	switch (fld) {
- 	case 0:
- 		spe_pmu->min_period = 256;
-@@ -1038,7 +1036,7 @@ static void __arm_spe_pmu_dev_probe(void *info)
- 	}
- 
- 	/* Maximum record size. If it's out-of-range, then fail the probe */
--	fld = (reg & PMSIDR_EL1_MAXSIZE_MASK) >> PMSIDR_EL1_MAXSIZE_SHIFT;
-+	fld = FIELD_GET(PMSIDR_EL1_MAXSIZE, reg);
- 	spe_pmu->max_record_sz = 1 << fld;
- 	if (spe_pmu->max_record_sz > SZ_2K || spe_pmu->max_record_sz < 16) {
- 		dev_err(dev, "unsupported PMSIDR_EL1.MaxSize [%d] on CPU %d\n",
-@@ -1046,7 +1044,7 @@ static void __arm_spe_pmu_dev_probe(void *info)
- 		return;
- 	}
- 
--	fld = (reg & PMSIDR_EL1_COUNTSIZE_MASK) >> PMSIDR_EL1_COUNTSIZE_SHIFT;
-+	fld = FIELD_GET(PMSIDR_EL1_COUNTSIZE, reg);
- 	switch (fld) {
- 	default:
- 		dev_warn(dev, "unknown PMSIDR_EL1.CountSize [%d]; assuming 2\n",
 
 -- 
 b4 0.11.0-dev
