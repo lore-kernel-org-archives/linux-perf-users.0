@@ -2,277 +2,125 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 82B61C4332F
-	for <linux-perf-users@archiver.kernel.org>; Fri,  4 Nov 2022 12:18:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 512BFC433FE
+	for <linux-perf-users@archiver.kernel.org>; Fri,  4 Nov 2022 13:07:10 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231725AbiKDMSe (ORCPT
+        id S231243AbiKDNHJ (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Fri, 4 Nov 2022 08:18:34 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45052 "EHLO
+        Fri, 4 Nov 2022 09:07:09 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43556 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231671AbiKDMSc (ORCPT
+        with ESMTP id S231961AbiKDNGu (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Fri, 4 Nov 2022 08:18:32 -0400
-Received: from mga17.intel.com (mga17.intel.com [192.55.52.151])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C31171B1D2;
-        Fri,  4 Nov 2022 05:18:31 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1667564311; x=1699100311;
-  h=from:to:cc:subject:date:message-id:in-reply-to:
-   references:mime-version:content-transfer-encoding;
-  bh=Nkb1aoerxeuYEOdE+BsMw78xrCR9ITNnBZN8jPViLk4=;
-  b=CD6Z6h/Ly83Bg9Ymn5uAUs8888CE4mB2YMwVBvRqAV3GE1j0phRiXgaT
-   BRPno56+4/+ayJ7Egc12Ck4ie0umPGb203Pwf4JVluDJyJ8wQyADdWQwa
-   C3ld4POLt7DRAuTpB1G2ePDT6818LWmOGYsDAHvYfw26ySJjoCWp0GY/h
-   PXiVC02lzGBCwd91Ke1KMEnY6OYcVJHVDQybJi/ckjtqzteAr2sh1h0G/
-   vmbQnASEFze305kpakADnNfgMx4hEzQxOIspAiqkMaWWVML5ML6PCIpva
-   z/GTLGrXdvW5jWhnJXi/C6qXE6dVnaynmfvQWrhtISp0xslr+VNyJLkUK
-   A==;
-X-IronPort-AV: E=McAfee;i="6500,9779,10520"; a="290341731"
-X-IronPort-AV: E=Sophos;i="5.96,137,1665471600"; 
-   d="scan'208";a="290341731"
-Received: from orsmga004.jf.intel.com ([10.7.209.38])
-  by fmsmga107.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 04 Nov 2022 05:18:31 -0700
-X-IronPort-AV: E=McAfee;i="6500,9779,10520"; a="760309132"
-X-IronPort-AV: E=Sophos;i="5.96,137,1665471600"; 
-   d="scan'208";a="760309132"
-Received: from ahunter6-mobl1.ger.corp.intel.com (HELO ahunter-VirtualBox.home\044ger.corp.intel.com) ([10.252.46.118])
-  by orsmga004-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 04 Nov 2022 05:18:29 -0700
-From:   Adrian Hunter <adrian.hunter@intel.com>
-To:     Arnaldo Carvalho de Melo <acme@kernel.org>
-Cc:     Jiri Olsa <jolsa@redhat.com>, Namhyung Kim <namhyung@kernel.org>,
-        Ian Rogers <irogers@google.com>, linux-kernel@vger.kernel.org,
-        linux-perf-users@vger.kernel.org
-Subject: [PATCH 3/3] perf: intel-pt: Add hybrid CPU compatibility test
-Date:   Fri,  4 Nov 2022 14:18:05 +0200
-Message-Id: <20221104121805.5264-4-adrian.hunter@intel.com>
-X-Mailer: git-send-email 2.34.1
-In-Reply-To: <20221104121805.5264-1-adrian.hunter@intel.com>
-References: <20221104121805.5264-1-adrian.hunter@intel.com>
+        Fri, 4 Nov 2022 09:06:50 -0400
+Received: from desiato.infradead.org (desiato.infradead.org [IPv6:2001:8b0:10b:1:d65d:64ff:fe57:4e05])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D6F4E2F01C;
+        Fri,  4 Nov 2022 06:06:24 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=desiato.20200630; h=In-Reply-To:Content-Type:MIME-Version:
+        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description;
+        bh=LtHz5uPmwMnRA8pug11cAIugKhPmlVYnrt/fWjr2UQs=; b=D5/B7gyRf31MPbDuHBPq7nvyyP
+        OTMpHwhz789CRYrPf6cXtunXceOPmlcI5l0W/zyMT9U1hHrx7YB6IOQM4eLHQ1m4yK0WRcnBq1IdR
+        L29PkD26HOPr8vgV26Zu9iapv55p6bN/SK/2btYjPvlFEvLiAZzqN2KnRwz6nY5pP4Q7cu3/rHzL6
+        WBqNB/LXdcckZpuY6+wGUiQg0IobaaH6X00iku04xOleQnkrumlpOwma57rnIYkbG+ljIdTTpoCBN
+        XYDx3t6k1GphY4K9w/vYM20SjDlBfLLq7WnOuqjxBDctQIwxaA0s69ct73ND0eOLeS6jhcLlhGnSR
+        yS0GrHeQ==;
+Received: from j130084.upc-j.chello.nl ([24.132.130.84] helo=noisy.programming.kicks-ass.net)
+        by desiato.infradead.org with esmtpsa (Exim 4.94.2 #2 (Red Hat Linux))
+        id 1oqwOh-008yeU-UO; Fri, 04 Nov 2022 13:06:12 +0000
+Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange X25519 server-signature RSA-PSS (4096 bits))
+        (Client did not present a certificate)
+        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id B9E8E300282;
+        Fri,  4 Nov 2022 14:06:10 +0100 (CET)
+Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
+        id 9A07F201E232E; Fri,  4 Nov 2022 14:06:10 +0100 (CET)
+Date:   Fri, 4 Nov 2022 14:06:10 +0100
+From:   Peter Zijlstra <peterz@infradead.org>
+To:     Florian Fainelli <f.fainelli@gmail.com>
+Cc:     linux-kernel@vger.kernel.org, anand.gore@broadcom.com,
+        william.zhang@broadcom.com, Ingo Molnar <mingo@redhat.com>,
+        Arnaldo Carvalho de Melo <acme@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Jiri Olsa <jolsa@kernel.org>,
+        Namhyung Kim <namhyung@kernel.org>,
+        Anna-Maria Gleixner <anna-maria@linutronix.de>,
+        Sebastian Siewior <bigeasy@linutronix.de>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        "open list:PERFORMANCE EVENTS SUBSYSTEM" 
+        <linux-perf-users@vger.kernel.org>
+Subject: Re: [PATCH] perf: Fix perf_event_{init,exit}_cpu stubs
+Message-ID: <Y2UOQpniaV12E0P9@hirez.programming.kicks-ass.net>
+References: <20221103224303.3910486-1-f.fainelli@gmail.com>
 MIME-Version: 1.0
-Organization: Intel Finland Oy, Registered Address: PL 281, 00181 Helsinki, Business Identity Code: 0357606 - 4, Domiciled in Helsinki
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20221103224303.3910486-1-f.fainelli@gmail.com>
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-The kernel driver assumes hybrid CPUs will have Intel PT capabilities
-that are compatible with the boot CPU. Add a test to check that is the
-case.
+On Thu, Nov 03, 2022 at 03:43:03PM -0700, Florian Fainelli wrote:
+> The original commit that introduced those stubs was already at fault,
+> but in the absence of a caller of perf_event_{init,exit}_cpu outside of
+> code that is compiled regardless of CONFIG_PERF_EVENTS, the build
+> failure cannot be observed. This was observed with the Android kernel to
+> produce a build failure similar to this:
+> 
+>     In file included from ./include/uapi/linux/posix_types.h:5,
+>                      from ./include/uapi/linux/types.h:14,
+>                      from ./include/linux/types.h:6,
+>                      from ./include/linux/limits.h:6,
+>                      from ./include/linux/kernel.h:7,
+>                      from ./include/linux/sched/mm.h:5,
+>                      from kernel/cpu.c:6:
+>     kernel/cpu.c: In function 'random_and_perf_prepare_fusion':
+>     ./include/linux/stddef.h:8:14: error: called object is not a function or function pointer
+>      #define NULL ((void *)0)
+>                   ^
+>     ./include/linux/perf_event.h:1607:29: note: in expansion of macro 'NULL'
+>      #define perf_event_init_cpu NULL
+>                                  ^~~~
+>     kernel/cpu.c:1686:2: note: in expansion of macro 'perf_event_init_cpu'
+>       perf_event_init_cpu(cpu);
+>       ^~~~~~~~~~~~~~~~~~~
 
-Signed-off-by: Adrian Hunter <adrian.hunter@intel.com>
----
- tools/perf/arch/x86/include/arch-tests.h  |   1 +
- tools/perf/arch/x86/tests/arch-tests.c    |   3 +-
- tools/perf/arch/x86/tests/intel-pt-test.c | 154 ++++++++++++++++++++++
- 3 files changed, 157 insertions(+), 1 deletion(-)
+What is the actual problem reported here? Did you see all the other NULL
+assignments in cpuhp_hp_states ?
 
-diff --git a/tools/perf/arch/x86/include/arch-tests.h b/tools/perf/arch/x86/include/arch-tests.h
-index 6a1a1b3c0827..902e9ea9b99e 100644
---- a/tools/perf/arch/x86/include/arch-tests.h
-+++ b/tools/perf/arch/x86/include/arch-tests.h
-@@ -8,6 +8,7 @@ struct test_suite;
- int test__rdpmc(struct test_suite *test, int subtest);
- int test__insn_x86(struct test_suite *test, int subtest);
- int test__intel_pt_pkt_decoder(struct test_suite *test, int subtest);
-+int test__intel_pt_hybrid_compat(struct test_suite *test, int subtest);
- int test__bp_modify(struct test_suite *test, int subtest);
- int test__x86_sample_parsing(struct test_suite *test, int subtest);
- 
-diff --git a/tools/perf/arch/x86/tests/arch-tests.c b/tools/perf/arch/x86/tests/arch-tests.c
-index 8d5e4a0831d5..aae6ea0fe52b 100644
---- a/tools/perf/arch/x86/tests/arch-tests.c
-+++ b/tools/perf/arch/x86/tests/arch-tests.c
-@@ -8,11 +8,12 @@ DEFINE_SUITE("x86 instruction decoder - new instructions", insn_x86);
- 
- static struct test_case intel_pt_tests[] = {
- 	TEST_CASE("Intel PT packet decoder", intel_pt_pkt_decoder),
-+	TEST_CASE("Intel PT hybrid CPU compatibility", intel_pt_hybrid_compat),
- 	{ .name = NULL, }
- };
- 
- struct test_suite suite__intel_pt = {
--	.desc = "Intel PT packet decoder",
-+	.desc = "Intel PT",
- 	.test_cases = intel_pt_tests,
- };
- 
-diff --git a/tools/perf/arch/x86/tests/intel-pt-test.c b/tools/perf/arch/x86/tests/intel-pt-test.c
-index 42237656f453..70b7f79396b1 100644
---- a/tools/perf/arch/x86/tests/intel-pt-test.c
-+++ b/tools/perf/arch/x86/tests/intel-pt-test.c
-@@ -1,12 +1,17 @@
- // SPDX-License-Identifier: GPL-2.0
- 
-+#include <linux/compiler.h>
-+#include <linux/bits.h>
- #include <string.h>
-+#include <cpuid.h>
-+#include <sched.h>
- 
- #include "intel-pt-decoder/intel-pt-pkt-decoder.h"
- 
- #include "debug.h"
- #include "tests/tests.h"
- #include "arch-tests.h"
-+#include "cpumap.h"
- 
- /**
-  * struct test_data - Test data.
-@@ -313,3 +318,152 @@ int test__intel_pt_pkt_decoder(struct test_suite *test __maybe_unused, int subte
- 
- 	return TEST_OK;
- }
-+
-+static int setaffinity(int cpu)
-+{
-+	cpu_set_t cpu_set;
-+
-+	CPU_ZERO(&cpu_set);
-+	CPU_SET(cpu, &cpu_set);
-+	if (sched_setaffinity(0, sizeof(cpu_set), &cpu_set)) {
-+		pr_debug("sched_setaffinity() failed for CPU %d\n", cpu);
-+		return -1;
-+	}
-+	return 0;
-+}
-+
-+#define INTEL_PT_ADDR_FILT_CNT_MASK	GENMASK(2, 0)
-+#define INTEL_PT_SUBLEAF_CNT		2
-+#define CPUID_REG_CNT			4
-+
-+struct cpuid_result {
-+	union {
-+		struct {
-+			unsigned int eax;
-+			unsigned int ebx;
-+			unsigned int ecx;
-+			unsigned int edx;
-+		};
-+		unsigned int reg[CPUID_REG_CNT];
-+	};
-+};
-+
-+struct pt_caps {
-+	struct cpuid_result subleaf[INTEL_PT_SUBLEAF_CNT];
-+};
-+
-+static int get_pt_caps(int cpu, struct pt_caps *caps)
-+{
-+	struct cpuid_result r;
-+	int i;
-+
-+	if (setaffinity(cpu))
-+		return -1;
-+
-+	memset(caps, 0, sizeof(*caps));
-+
-+	for (i = 0; i < INTEL_PT_SUBLEAF_CNT; i++) {
-+		__get_cpuid_count(20, i, &r.eax, &r.ebx, &r.ecx, &r.edx);
-+		pr_debug("CPU %d CPUID leaf 20 subleaf %d\n", cpu, i);
-+		pr_debug("eax = 0x%08x\n", r.eax);
-+		pr_debug("ebx = 0x%08x\n", r.ebx);
-+		pr_debug("ecx = 0x%08x\n", r.ecx);
-+		pr_debug("edx = 0x%08x\n", r.edx);
-+		caps->subleaf[i] = r;
-+	}
-+
-+	return 0;
-+}
-+
-+static bool is_hydrid(void)
-+{
-+	unsigned int eax, ebx, ecx, edx = 0;
-+	bool result;
-+
-+	__get_cpuid_count(7, 0, &eax, &ebx, &ecx, &edx);
-+	result = edx & BIT(15);
-+	pr_debug("Is %shybrid : CPUID leaf 7 subleaf 0 edx %#x (bit-15 indicates hybrid)\n",
-+		 result ? "" : "not ", edx);
-+	return result;
-+}
-+
-+static int compare_caps(int cpu, struct pt_caps *caps, struct pt_caps *caps0)
-+{
-+	struct pt_caps mask = { /* Mask of bits to check*/
-+		.subleaf = {
-+			[0] = {
-+				.ebx = GENMASK(8, 0),
-+				.ecx = GENMASK(3, 0),
-+			},
-+			[1] = {
-+				.eax = GENMASK(31, 16),
-+				.ebx = GENMASK(31, 0),
-+			}
-+		}
-+	};
-+	unsigned int m, reg, reg0;
-+	int ret = 0;
-+	int i, j;
-+
-+	for (i = 0; i < INTEL_PT_SUBLEAF_CNT; i++) {
-+		for (j = 0; j < CPUID_REG_CNT; j++) {
-+			m = mask.subleaf[i].reg[j];
-+			reg = m & caps->subleaf[i].reg[j];
-+			reg0 = m & caps0->subleaf[i].reg[j];
-+			if ((reg & reg0) != reg0) {
-+				pr_debug("CPU %d subleaf %d reg %d FAIL %#x vs %#x\n",
-+					 cpu, i, j, reg, reg0);
-+				ret = -1;
-+			}
-+		}
-+	}
-+
-+	m = INTEL_PT_ADDR_FILT_CNT_MASK;
-+	reg = m & caps->subleaf[1].eax;
-+	reg0 = m & caps0->subleaf[1].eax;
-+	if (reg < reg0) {
-+		pr_debug("CPU %d subleaf 1 reg 0 FAIL address filter count %#x vs %#x\n",
-+			 cpu, reg, reg0);
-+		ret = -1;
-+	}
-+
-+	if (!ret)
-+		pr_debug("CPU %d OK\n", cpu);
-+
-+	return ret;
-+}
-+
-+int test__intel_pt_hybrid_compat(struct test_suite *test, int subtest)
-+{
-+	int max_cpu = cpu__max_cpu().cpu;
-+	struct pt_caps last_caps;
-+	struct pt_caps caps0;
-+	int ret = TEST_OK;
-+	int cpu;
-+
-+	if (!is_hydrid()) {
-+		test->test_cases[subtest].skip_reason = "not hybrid";
-+		return TEST_SKIP;
-+	}
-+
-+	if (get_pt_caps(0, &caps0))
-+		return TEST_FAIL;
-+
-+	for (cpu = 1, last_caps = caps0; cpu < max_cpu; cpu++) {
-+		struct pt_caps caps;
-+
-+		if (get_pt_caps(cpu, &caps)) {
-+			pr_debug("CPU %d not found\n", cpu);
-+			continue;
-+		}
-+		if (!memcmp(&caps, &last_caps, sizeof(caps))) {
-+			pr_debug("CPU %d same caps as previous CPU\n", cpu);
-+			continue;
-+		}
-+		if (compare_caps(cpu, &caps, &caps0))
-+			ret = TEST_FAIL;
-+		last_caps = caps;
-+	}
-+
-+	return ret;
-+}
--- 
-2.34.1
-
+> 
+> Fixes: 00e16c3d68fc ("perf/core: Convert to hotplug state machine")
+> Reported-by: Anand Gore <anand.gore@broadcom.com>
+> Signed-off-by: Florian Fainelli <f.fainelli@gmail.com>
+> ---
+>  include/linux/perf_event.h | 11 +++++++++--
+>  1 file changed, 9 insertions(+), 2 deletions(-)
+> 
+> diff --git a/include/linux/perf_event.h b/include/linux/perf_event.h
+> index 0031f7b4d9ab..592040e2398c 100644
+> --- a/include/linux/perf_event.h
+> +++ b/include/linux/perf_event.h
+> @@ -1678,8 +1678,15 @@ static struct device_attribute format_attr_##_name = __ATTR_RO(_name)
+>  int perf_event_init_cpu(unsigned int cpu);
+>  int perf_event_exit_cpu(unsigned int cpu);
+>  #else
+> -#define perf_event_init_cpu	NULL
+> -#define perf_event_exit_cpu	NULL
+> +static inline int perf_event_init_cpu(unsigned int cpu)
+> +{
+> +	return 0;
+> +}
+> +
+> +static inline int perf_event_exit_cpu(unsigned int cpu)
+> +{
+> +	return 0;
+> +}
+>  #endif
+>  
+>  extern void __weak arch_perf_update_userpage(struct perf_event *event,
+> -- 
+> 2.25.1
+> 
