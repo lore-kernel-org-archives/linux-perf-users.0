@@ -2,129 +2,236 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C9105C433FE
-	for <linux-perf-users@archiver.kernel.org>; Fri,  4 Nov 2022 17:38:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4B8DBC4332F
+	for <linux-perf-users@archiver.kernel.org>; Fri,  4 Nov 2022 20:30:16 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231431AbiKDRiS (ORCPT
+        id S230043AbiKDUaP (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Fri, 4 Nov 2022 13:38:18 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46524 "EHLO
+        Fri, 4 Nov 2022 16:30:15 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36854 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231607AbiKDRiN (ORCPT
+        with ESMTP id S230031AbiKDUaN (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Fri, 4 Nov 2022 13:38:13 -0400
-Received: from mail-qv1-xf36.google.com (mail-qv1-xf36.google.com [IPv6:2607:f8b0:4864:20::f36])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1627645EEF;
-        Fri,  4 Nov 2022 10:38:09 -0700 (PDT)
-Received: by mail-qv1-xf36.google.com with SMTP id mi9so3663548qvb.8;
-        Fri, 04 Nov 2022 10:38:09 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20210112;
-        h=content-transfer-encoding:in-reply-to:content-language:references
-         :cc:to:subject:from:user-agent:mime-version:date:message-id:from:to
-         :cc:subject:date:message-id:reply-to;
-        bh=1xqFT1BPG8FOzQWQlEWabgc/qypLmKyViciJsyKXXqA=;
-        b=FVTfhE4E7I8hJxdMXrETfiSnPsDDfKpuggLSa40CXM7uVh9khU0FLkFEPZpsIetXuo
-         8NOBnp/EceXHgV09v9kQmWZ5remhjEJk/4Ao5l4PFtJtRJpCGxIb4NH+3+qLMvs8WGMw
-         snx7nhvopjUE1UN0xBAIDeNP7T0xf+uGgQQz/FoQgB1zyOcdbhDIBmqgsq6gA4vtU2R/
-         O9DxqQWwA5ucQCEFD4WzbEr/8lrx0nXPDpUNPOgjFkDLRJuMH6F4UCa0poF8iK3+R3Z3
-         wI84+NkmKuKEYVvrh7kJF/45Zv9J9eHDU9yCD2kMqzJJ5y3iSyvYpxV4KiS0nB4omANR
-         RTcA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=content-transfer-encoding:in-reply-to:content-language:references
-         :cc:to:subject:from:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=1xqFT1BPG8FOzQWQlEWabgc/qypLmKyViciJsyKXXqA=;
-        b=Y1idXqBWUqMsagipUMkgkckTNbHROMZ+9k3M/K6A5CQ4N2Xvxo2dbCR1wHKPZbbdX1
-         EPGi6yGJJ87zzuAlBrnSWbsnCqNDDKZjHeF97H3m6QiDamL5DGhNLNL7CyMXMW9lvNMq
-         SU+mHszlT1ifiZFH4qvZV+ITQxdTTMDOahKzoo/kKnk4NALmlj33vyHuyz5MMQo98K3l
-         6YX2y/9ZgZ3Sh4Ew13/e1NN2SgbllbjH5+CXtf1Z7JeY7Vzst6ClHXLU+Pq1/0y868BX
-         6+7C8YYvqNh2vu10sWUkp3ftPoYob67ZyXOvzMcEtEeoLmVQR2BjXbNIKzF4Khlch7hN
-         t3/A==
-X-Gm-Message-State: ACrzQf12A0HiDpZEpRXwQKzcY0ymHroS/oAe9P/IGk0OL3UkSkzoWhK0
-        Vb4h1saVlqEOjJN2heaNvHHjvXsiL5w+hw==
-X-Google-Smtp-Source: AMsMyM6TO/xTEJzgy0dKYvbrxZtw0tQ7BJDFffkEhHJbQc/DwCBLNcAtZRTsXfUEldjyWmTCKITPKQ==
-X-Received: by 2002:a05:6214:d0c:b0:4bc:1388:8d80 with SMTP id 12-20020a0562140d0c00b004bc13888d80mr19243190qvh.68.1667583488083;
-        Fri, 04 Nov 2022 10:38:08 -0700 (PDT)
-Received: from [10.69.64.228] ([192.19.223.252])
-        by smtp.gmail.com with ESMTPSA id t10-20020a05620a450a00b006cbc6e1478csm3550114qkp.57.2022.11.04.10.38.05
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Fri, 04 Nov 2022 10:38:07 -0700 (PDT)
-Message-ID: <c6852cb4-a929-2f42-bfcd-04c4aa99b4a5@gmail.com>
-Date:   Fri, 4 Nov 2022 10:38:02 -0700
-MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:102.0) Gecko/20100101
- Thunderbird/102.4.2
-From:   Florian Fainelli <f.fainelli@gmail.com>
-Subject: Re: [PATCH] perf: Fix perf_event_{init,exit}_cpu stubs
-To:     Peter Zijlstra <peterz@infradead.org>
-Cc:     linux-kernel@vger.kernel.org, anand.gore@broadcom.com,
-        william.zhang@broadcom.com, Ingo Molnar <mingo@redhat.com>,
-        Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Fri, 4 Nov 2022 16:30:13 -0400
+Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9532D1ADB3;
+        Fri,  4 Nov 2022 13:30:10 -0700 (PDT)
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by dfw.source.kernel.org (Postfix) with ESMTPS id 0A9EF62285;
+        Fri,  4 Nov 2022 20:30:10 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 104C1C433D6;
+        Fri,  4 Nov 2022 20:30:09 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1667593809;
+        bh=c7Tfz81xRf9WZuBuzfYaSrnJW0HRBQPHuv/lgGHwz8c=;
+        h=Date:From:To:Cc:Subject:From;
+        b=C7wsr/SpM/WHW9UuKo/+MpxGl1gy62biXEwW21PAB6ttiXtasUJ0EUDcPKZu01Dnh
+         puw04hl5Gi02p5qFWWVFc8jhhiwrESNyo9KTiZ3D+lMf3zQasYCtyhc/GtGwT2GfO0
+         d4zCqV1PpdbRQRf1+mMa6yNO9/Y51exy5cihwDA7kpuAkEot4NYeef9F8gz5UexKWg
+         r0sZyhhgwpc/7+800k09fEnra7qviQ+kg4vVyu4kAhT/sKkwsQkPj4Tvfx2o32FVfg
+         qRPTbbHvmkpoGsP9EhLw6wlw5BcgPlYTxQJApA4gJ6t7vhojsZP1607ZFhhcAipXtF
+         7hrOp1qsRNPCA==
+Received: by quaco.ghostprotocols.net (Postfix, from userid 1000)
+        id 7ED624034E; Fri,  4 Nov 2022 17:30:06 -0300 (-03)
+Date:   Fri, 4 Nov 2022 17:30:06 -0300
+From:   Arnaldo Carvalho de Melo <acme@kernel.org>
+To:     Ian Rogers <irogers@google.com>
+Cc:     Adrian Hunter <adrian.hunter@intel.com>,
         Jiri Olsa <jolsa@kernel.org>,
         Namhyung Kim <namhyung@kernel.org>,
-        Anna-Maria Gleixner <anna-maria@linutronix.de>,
-        Sebastian Siewior <bigeasy@linutronix.de>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        "open list:PERFORMANCE EVENTS SUBSYSTEM" 
-        <linux-perf-users@vger.kernel.org>
-References: <20221103224303.3910486-1-f.fainelli@gmail.com>
- <Y2UOQpniaV12E0P9@hirez.programming.kicks-ass.net>
-Content-Language: en-US
-In-Reply-To: <Y2UOQpniaV12E0P9@hirez.programming.kicks-ass.net>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+        linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org
+Subject: [PATCH 1/1] perf trace: Add BPF augmenter to perf_event_open()'s
+ 'struct perf_event_attr' arg
+Message-ID: <Y2V2Tpu+2vzJyon2@kernel.org>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
+Please test it together with what is in my tmp.perf/core branch, as it
+has the fixes for perf to build and run with libbpf 1.0, please install
+libbpf-devel from your distro, at least for now.
 
+There is polishing to do here, but its interesting as an example of how
+to augment a syscall.
 
-On 11/4/2022 6:06 AM, Peter Zijlstra wrote:
-> On Thu, Nov 03, 2022 at 03:43:03PM -0700, Florian Fainelli wrote:
->> The original commit that introduced those stubs was already at fault,
->> but in the absence of a caller of perf_event_{init,exit}_cpu outside of
->> code that is compiled regardless of CONFIG_PERF_EVENTS, the build
->> failure cannot be observed. This was observed with the Android kernel to
->> produce a build failure similar to this:
->>
->>      In file included from ./include/uapi/linux/posix_types.h:5,
->>                       from ./include/uapi/linux/types.h:14,
->>                       from ./include/linux/types.h:6,
->>                       from ./include/linux/limits.h:6,
->>                       from ./include/linux/kernel.h:7,
->>                       from ./include/linux/sched/mm.h:5,
->>                       from kernel/cpu.c:6:
->>      kernel/cpu.c: In function 'random_and_perf_prepare_fusion':
->>      ./include/linux/stddef.h:8:14: error: called object is not a function or function pointer
->>       #define NULL ((void *)0)
->>                    ^
->>      ./include/linux/perf_event.h:1607:29: note: in expansion of macro 'NULL'
->>       #define perf_event_init_cpu NULL
->>                                   ^~~~
->>      kernel/cpu.c:1686:2: note: in expansion of macro 'perf_event_init_cpu'
->>        perf_event_init_cpu(cpu);
->>        ^~~~~~~~~~~~~~~~~~~
-> 
-> What is the actual problem reported here? Did you see all the other NULL
-> assignments in cpuhp_hp_states ?
+If you run 'perf trace -v' with
+~acme/git/perf/tools/perf/examples/bpf/augmented_raw_syscalls.c you'll
+see that it reuses augmenters for other syscalls that have similar
+signatures, so, in the future, doing for one struct gets it reused in
+all the other syscalls using such struct.
 
-Anand reported to me that the following downstream commit in the Android 
-common kernel repository:
+Also more annotation is needed, as with other syscalls already in 'perf
+trace' to associate a type syscall integer arguments, for things like
+flags, enumerations not using enum, etc.
 
-https://android.googlesource.com/kernel/common/+/ca927bd22ad8bd26fd8dcebf3c7f2a093385d8ea
+- Arnaldo
 
-was resulting in the build failure above.
+----
 
-While this is an Android inflicted change and I still intend to get a 
-fix there, upon closer look, the build failure could be experienced 
-upstream as well with any code calling perf_event_{init,exit}_cpu() as a 
-regular function call as opposed to being used as a function pointer.
+Using BPF for that, doing a cleverish reuse of perf_event_attr__fprintf(),
+that really needs to be turned into __snprintf(), etc.
 
-This felt worthy of fixing in the upstream kernel, hence this patch.
+But since the plan is to go the BTF way probably use libbpf's
+btf_dump__dump_type_data().
+
+Example:
+
+[root@quaco ~]# perf trace -e ~acme/git/perf/tools/perf/examples/bpf/augmented_raw_syscalls.c,perf_event_open --max-events 10 perf stat --quiet sleep 0.001
+fg
+     0.000 perf_event_open(attr_uptr: { type: 1, size: 128, config: 0x1, sample_type: IDENTIFIER, read_format: TOTAL_TIME_ENABLED|TOTAL_TIME_RUNNING, disabled: 1, inherit: 1, enable_on_exec: 1, exclude_guest: 1 }, pid: 258859 (perf), cpu: -1, group_fd: -1, flags: FD_CLOEXEC) = 3
+     0.067 perf_event_open(attr_uptr: { type: 1, size: 128, config: 0x3, sample_type: IDENTIFIER, read_format: TOTAL_TIME_ENABLED|TOTAL_TIME_RUNNING, disabled: 1, inherit: 1, enable_on_exec: 1, exclude_guest: 1 }, pid: 258859 (perf), cpu: -1, group_fd: -1, flags: FD_CLOEXEC) = 4
+     0.120 perf_event_open(attr_uptr: { type: 1, size: 128, config: 0x4, sample_type: IDENTIFIER, read_format: TOTAL_TIME_ENABLED|TOTAL_TIME_RUNNING, disabled: 1, inherit: 1, enable_on_exec: 1, exclude_guest: 1 }, pid: 258859 (perf), cpu: -1, group_fd: -1, flags: FD_CLOEXEC) = 5
+     0.172 perf_event_open(attr_uptr: { type: 1, size: 128, config: 0x2, sample_type: IDENTIFIER, read_format: TOTAL_TIME_ENABLED|TOTAL_TIME_RUNNING, disabled: 1, inherit: 1, enable_on_exec: 1, exclude_guest: 1 }, pid: 258859 (perf), cpu: -1, group_fd: -1, flags: FD_CLOEXEC) = 7
+     0.190 perf_event_open(attr_uptr: { size: 128, sample_type: IDENTIFIER, read_format: TOTAL_TIME_ENABLED|TOTAL_TIME_RUNNING, disabled: 1, inherit: 1, enable_on_exec: 1, exclude_guest: 1 }, pid: 258859 (perf), cpu: -1, group_fd: -1, flags: FD_CLOEXEC) = 8
+     0.199 perf_event_open(attr_uptr: { size: 128, config: 0x1, sample_type: IDENTIFIER, read_format: TOTAL_TIME_ENABLED|TOTAL_TIME_RUNNING, disabled: 1, inherit: 1, enable_on_exec: 1, exclude_guest: 1 }, pid: 258859 (perf), cpu: -1, group_fd: -1, flags: FD_CLOEXEC) = 9
+     0.204 perf_event_open(attr_uptr: { size: 128, config: 0x4, sample_type: IDENTIFIER, read_format: TOTAL_TIME_ENABLED|TOTAL_TIME_RUNNING, disabled: 1, inherit: 1, enable_on_exec: 1, exclude_guest: 1 }, pid: 258859 (perf), cpu: -1, group_fd: -1, flags: FD_CLOEXEC) = 10
+     0.210 perf_event_open(attr_uptr: { size: 128, config: 0x5, sample_type: IDENTIFIER, read_format: TOTAL_TIME_ENABLED|TOTAL_TIME_RUNNING, disabled: 1, inherit: 1, enable_on_exec: 1, exclude_guest: 1 }, pid: 258859 (perf), cpu: -1, group_fd: -1, flags: FD_CLOEXEC) = 11
+[root@quaco ~]#
+
+Suggested-by: Ian Rogers <irogers@google.com>
+Cc: Adrian Hunter <adrian.hunter@intel.com>
+Cc: Jiri Olsa <jolsa@kernel.org>
+Cc: Namhyung Kim <namhyung@kernel.org>
+Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
+---
+ tools/perf/builtin-trace.c                    |  3 +-
+ .../examples/bpf/augmented_raw_syscalls.c     | 44 +++++++++++++++++++
+ tools/perf/trace/beauty/perf_event_open.c     | 44 +++++++++++++++++++
+ 3 files changed, 90 insertions(+), 1 deletion(-)
+
+diff --git a/tools/perf/builtin-trace.c b/tools/perf/builtin-trace.c
+index 72991528687ea60b..5690c33c523b37d7 100644
+--- a/tools/perf/builtin-trace.c
++++ b/tools/perf/builtin-trace.c
+@@ -1053,7 +1053,8 @@ static struct syscall_fmt syscall_fmts[] = {
+ 	  .arg = { [0] = { .scnprintf = SCA_FDAT,	/* dfd */ },
+ 		   [2] = { .scnprintf = SCA_OPEN_FLAGS, /* flags */ }, }, },
+ 	{ .name	    = "perf_event_open",
+-	  .arg = { [2] = { .scnprintf = SCA_INT,	/* cpu */ },
++	  .arg = { [0] = { .scnprintf = SCA_PERF_ATTR,  /* attr */ },
++		   [2] = { .scnprintf = SCA_INT,	/* cpu */ },
+ 		   [3] = { .scnprintf = SCA_FD,		/* group_fd */ },
+ 		   [4] = { .scnprintf = SCA_PERF_FLAGS, /* flags */ }, }, },
+ 	{ .name	    = "pipe2",
+diff --git a/tools/perf/examples/bpf/augmented_raw_syscalls.c b/tools/perf/examples/bpf/augmented_raw_syscalls.c
+index 926238efd7d8d0df..0599823e8ae1b4c0 100644
+--- a/tools/perf/examples/bpf/augmented_raw_syscalls.c
++++ b/tools/perf/examples/bpf/augmented_raw_syscalls.c
+@@ -129,6 +129,7 @@ struct augmented_args_payload {
+ 			struct augmented_arg arg, arg2;
+ 		};
+ 		struct sockaddr_storage saddr;
++		char   __data[sizeof(struct augmented_arg)];
+ 	};
+ };
+ 
+@@ -293,6 +294,49 @@ int sys_enter_renameat(struct syscall_enter_args *args)
+ 	return augmented__output(args, augmented_args, len);
+ }
+ 
++#define PERF_ATTR_SIZE_VER0     64      /* sizeof first published struct */
++
++// we need just the start, get the size to then copy it
++struct perf_event_attr_size {
++        __u32                   type;
++        /*
++         * Size of the attr structure, for fwd/bwd compat.
++         */
++        __u32                   size;
++};
++
++SEC("!syscalls:sys_enter_perf_event_open")
++int sys_enter_perf_event_open(struct syscall_enter_args *args)
++{
++	struct augmented_args_payload *augmented_args = augmented_args_payload();
++	const struct perf_event_attr_size *attr = (const struct perf_event_attr_size *)args->args[0], *attr_read;
++	unsigned int len = sizeof(augmented_args->args);
++
++        if (augmented_args == NULL)
++		goto failure;
++
++	if (bpf_probe_read(&augmented_args->__data, sizeof(*attr), attr) < 0)
++		goto failure;
++
++	attr_read = (const struct perf_event_attr_size *)augmented_args->__data;
++
++	__u32 size = attr_read->size;
++
++	if (!size)
++		size = PERF_ATTR_SIZE_VER0;
++
++	if (size > sizeof(augmented_args->__data))
++                goto failure;
++
++	// Now that we read attr->size and tested it against the size limits, read it completely
++	if (bpf_probe_read(&augmented_args->__data, size, attr) < 0)
++		goto failure;
++
++	return augmented__output(args, augmented_args, len + size);
++failure:
++	return 1; /* Failure: don't filter */
++}
++
+ static pid_t getpid(void)
+ {
+ 	return bpf_get_current_pid_tgid();
+diff --git a/tools/perf/trace/beauty/perf_event_open.c b/tools/perf/trace/beauty/perf_event_open.c
+index 11d47dbe63bd1edc..01ee15fe9d0c7a98 100644
+--- a/tools/perf/trace/beauty/perf_event_open.c
++++ b/tools/perf/trace/beauty/perf_event_open.c
+@@ -44,3 +44,47 @@ static size_t syscall_arg__scnprintf_perf_flags(char *bf, size_t size,
+ }
+ 
+ #define SCA_PERF_FLAGS syscall_arg__scnprintf_perf_flags
++
++struct attr_fprintf_args {
++	size_t size, printed;
++	char *bf;
++	bool first;
++};
++
++static int attr__fprintf(FILE *fp __maybe_unused, const char *name, const char *val, void *priv)
++{
++	struct attr_fprintf_args *args = priv;
++	size_t printed = scnprintf(args->bf + args->printed , args->size - args->printed, "%s%s: %s", args->first ? "" : ", ", name, val);
++
++	args->first = false;
++	args->printed += printed;
++	return printed;
++}
++
++static size_t perf_event_attr___scnprintf(struct perf_event_attr *attr, char *bf, size_t size, bool show_zeros __maybe_unused)
++{
++	struct attr_fprintf_args args = {
++		.printed = scnprintf(bf, size, "{ "),
++		.size    = size,
++		.first   = true,
++		.bf	 = bf,
++	};
++
++	perf_event_attr__fprintf(stdout, attr, attr__fprintf, &args);
++	return args.printed + scnprintf(bf + args.printed, size - args.printed, " }");
++}
++
++static size_t syscall_arg__scnprintf_augmented_perf_event_attr(struct syscall_arg *arg, char *bf, size_t size)
++{
++	return perf_event_attr___scnprintf((void *)arg->augmented.args, bf, size, arg->trace->show_zeros);
++}
++
++static size_t syscall_arg__scnprintf_perf_event_attr(char *bf, size_t size, struct syscall_arg *arg)
++{
++	if (arg->augmented.args)
++		return syscall_arg__scnprintf_augmented_perf_event_attr(arg, bf, size);
++
++	return scnprintf(bf, size, "%#lx", arg->val);
++}
++
++#define SCA_PERF_ATTR syscall_arg__scnprintf_perf_event_attr
 -- 
-Florian
+2.37.3
 
