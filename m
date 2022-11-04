@@ -2,271 +2,117 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CE954C4332F
-	for <linux-perf-users@archiver.kernel.org>; Fri,  4 Nov 2022 07:31:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 38DDAC4332F
+	for <linux-perf-users@archiver.kernel.org>; Fri,  4 Nov 2022 11:30:18 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230089AbiKDHbV (ORCPT
+        id S231496AbiKDLaR (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Fri, 4 Nov 2022 03:31:21 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58340 "EHLO
+        Fri, 4 Nov 2022 07:30:17 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51962 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230473AbiKDHbT (ORCPT
+        with ESMTP id S231359AbiKDLaQ (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Fri, 4 Nov 2022 03:31:19 -0400
-Received: from mx0a-001b2d01.pphosted.com (mx0b-001b2d01.pphosted.com [148.163.158.5])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B216F29CB3
-        for <linux-perf-users@vger.kernel.org>; Fri,  4 Nov 2022 00:31:17 -0700 (PDT)
-Received: from pps.filterd (m0098420.ppops.net [127.0.0.1])
-        by mx0b-001b2d01.pphosted.com (8.17.1.5/8.17.1.5) with ESMTP id 2A45ZvL6006372;
-        Fri, 4 Nov 2022 07:29:57 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=content-type :
- mime-version : subject : from : in-reply-to : date : cc :
- content-transfer-encoding : message-id : references : to; s=pp1;
- bh=nyt3yH/ZUqK5wrFenzM6hbu/nJuAdErSHp4oGbAAwyg=;
- b=os/cq5iUVeqiJLcv505HkTUmjlErGJ9ekEcaUQFGejozFjdFi0qobdguUzyBviELqAbw
- Uiy35IiDlbzunB1SWnRY+FnKxQNPXKxbZsvNF6Rt5iidaL1Yy/+mZU1HdkTBAfNPu5z6
- sOiM/f2dkzGmRh343vMenxRu1Dz3RkFQ3GKx/AIRWlL71wjvmNPUsNCX45+moQQqEBAe
- YREFzhdMKdONeU1XvV/vgwNOBHtor4lR5IMvc+IBgo3A7Cdl2D1zjVaYWvsrrBK5sZdT
- Z3Orcig6kUpMqaa1KOzMxRn+vk0PcrhXCa3QI0sR9V8ifAEDNKEghTxFmGuMye9C5tn6 Dw== 
-Received: from pps.reinject (localhost [127.0.0.1])
-        by mx0b-001b2d01.pphosted.com (PPS) with ESMTPS id 3kmq07mehg-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Fri, 04 Nov 2022 07:29:57 +0000
-Received: from m0098420.ppops.net (m0098420.ppops.net [127.0.0.1])
-        by pps.reinject (8.17.1.5/8.17.1.5) with ESMTP id 2A47Sc6F028056;
-        Fri, 4 Nov 2022 07:29:56 GMT
-Received: from ppma06ams.nl.ibm.com (66.31.33a9.ip4.static.sl-reverse.com [169.51.49.102])
-        by mx0b-001b2d01.pphosted.com (PPS) with ESMTPS id 3kmq07megx-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Fri, 04 Nov 2022 07:29:56 +0000
-Received: from pps.filterd (ppma06ams.nl.ibm.com [127.0.0.1])
-        by ppma06ams.nl.ibm.com (8.16.1.2/8.16.1.2) with SMTP id 2A47Locp029245;
-        Fri, 4 Nov 2022 07:29:54 GMT
-Received: from b06cxnps4074.portsmouth.uk.ibm.com (d06relay11.portsmouth.uk.ibm.com [9.149.109.196])
-        by ppma06ams.nl.ibm.com with ESMTP id 3kguej20wg-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Fri, 04 Nov 2022 07:29:54 +0000
-Received: from d06av22.portsmouth.uk.ibm.com (d06av22.portsmouth.uk.ibm.com [9.149.105.58])
-        by b06cxnps4074.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 2A47TpaT63439194
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Fri, 4 Nov 2022 07:29:51 GMT
-Received: from d06av22.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 44C324C046;
-        Fri,  4 Nov 2022 07:29:51 +0000 (GMT)
-Received: from d06av22.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 476344C044;
-        Fri,  4 Nov 2022 07:29:48 +0000 (GMT)
-Received: from smtpclient.apple (unknown [9.43.68.139])
-        by d06av22.portsmouth.uk.ibm.com (Postfix) with ESMTPS;
-        Fri,  4 Nov 2022 07:29:47 +0000 (GMT)
-Content-Type: text/plain;
-        charset=us-ascii
-Mime-Version: 1.0 (Mac OS X Mail 16.0 \(3696.120.41.1.1\))
-Subject: Re: [PATCH 1/2] tools/perf: Fix printing os->prefix in CSV metrics
- output
-From:   Athira Rajeev <atrajeev@linux.vnet.ibm.com>
-In-Reply-To: <CAP-5=fVdsaNPptvgQ0NaqhXYELFY8HwwhjAaem0B_HrL2GUkUw@mail.gmail.com>
-Date:   Fri, 4 Nov 2022 12:59:45 +0530
-Cc:     Andi Kleen <ak@linux.intel.com>,
-        Nageswara Sastry <rnsastry@linux.ibm.com>,
-        Kajol Jain <kjain@linux.ibm.com>,
+        Fri, 4 Nov 2022 07:30:16 -0400
+Received: from foss.arm.com (foss.arm.com [217.140.110.172])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTP id 39C1A329;
+        Fri,  4 Nov 2022 04:30:15 -0700 (PDT)
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id A4A3E1FB;
+        Fri,  4 Nov 2022 04:30:20 -0700 (PDT)
+Received: from [10.57.69.48] (unknown [10.57.69.48])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id EEB5E3F703;
+        Fri,  4 Nov 2022 04:30:10 -0700 (PDT)
+Message-ID: <5c410969-2176-49cf-640f-8023c421682e@arm.com>
+Date:   Fri, 4 Nov 2022 11:30:09 +0000
+MIME-Version: 1.0
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
+ Thunderbird/102.2.2
+Subject: Re: [PATCH v2 0/7] perf: Arm SPEv1.2 support
+Content-Language: en-US
+To:     Rob Herring <robh@kernel.org>
+Cc:     kvmarm@lists.cs.columbia.edu, kvmarm@lists.linux.dev,
+        linux-arm-kernel@lists.infradead.org,
+        linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Mark Brown <broonie@kernel.org>,
+        Namhyung Kim <namhyung@kernel.org>,
+        James Morse <james.morse@arm.com>,
+        Ingo Molnar <mingo@redhat.com>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Marc Zyngier <maz@kernel.org>,
+        Suzuki K Poulose <suzuki.poulose@arm.com>,
+        Will Deacon <will@kernel.org>,
+        Alexandru Elisei <alexandru.elisei@arm.com>,
+        Catalin Marinas <catalin.marinas@arm.com>,
         Arnaldo Carvalho de Melo <acme@kernel.org>,
-        linux-perf-users@vger.kernel.org, maddy@linux.vnet.ibm.com,
-        James Clark <james.clark@arm.com>,
-        Jiri Olsa <jolsa@kernel.org>,
-        Namhyung Kim <namhyung@kernel.org>, disgoel@linux.ibm.com,
-        linuxppc-dev@lists.ozlabs.org
-Content-Transfer-Encoding: quoted-printable
-Message-Id: <D12F3A8A-AD9F-4B9D-98EA-8E8AD11A858F@linux.vnet.ibm.com>
-References: <20221018085605.63834-1-atrajeev@linux.vnet.ibm.com>
- <0B7A4A12-2528-439A-BB83-BBC5606A27B0@linux.vnet.ibm.com>
- <CAP-5=fVdsaNPptvgQ0NaqhXYELFY8HwwhjAaem0B_HrL2GUkUw@mail.gmail.com>
-To:     Ian Rogers <irogers@google.com>
-X-Mailer: Apple Mail (2.3696.120.41.1.1)
-X-TM-AS-GCONF: 00
-X-Proofpoint-GUID: hA3zSuTAS4xq7CDOMOVte4TRpU7U6fMH
-X-Proofpoint-ORIG-GUID: Qg4gbmiyHQjEx2-joCWlJ35u7aZ4Wx7G
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.219,Aquarius:18.0.895,Hydra:6.0.545,FMLib:17.11.122.1
- definitions=2022-11-04_02,2022-11-03_01,2022-06-22_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 suspectscore=0 spamscore=0
- impostorscore=0 adultscore=0 bulkscore=0 mlxlogscore=999 mlxscore=0
- priorityscore=1501 clxscore=1015 malwarescore=0 phishscore=0
- lowpriorityscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2210170000 definitions=main-2211040047
+        Peter Zijlstra <peterz@infradead.org>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Oliver Upton <oliver.upton@linux.dev>,
+        Jiri Olsa <jolsa@kernel.org>
+References: <20220825-arm-spe-v8-7-v2-0-e37322d68ac0@kernel.org>
+From:   James Clark <james.clark@arm.com>
+In-Reply-To: <20220825-arm-spe-v8-7-v2-0-e37322d68ac0@kernel.org>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
 
 
-> On 03-Nov-2022, at 9:45 PM, Ian Rogers <irogers@google.com> wrote:
->=20
-> On Wed, Nov 2, 2022 at 1:36 AM Athira Rajeev
-> <atrajeev@linux.vnet.ibm.com> wrote:
->>=20
->>=20
->>=20
->>> On 18-Oct-2022, at 2:26 PM, Athira Rajeev =
-<atrajeev@linux.vnet.ibm.com> wrote:
->>>=20
->>> Perf stat with CSV output option prints an extra empty
->>> string as first field in metrics output line.
->>> Sample output below:
->>>=20
->>>      # ./perf stat -x, --per-socket -a -C 1 ls
->>>      S0,1,1.78,msec,cpu-clock,1785146,100.00,0.973,CPUs utilized
->>>      S0,1,26,,context-switches,1781750,100.00,0.015,M/sec
->>>      S0,1,1,,cpu-migrations,1780526,100.00,0.561,K/sec
->>>      S0,1,1,,page-faults,1779060,100.00,0.561,K/sec
->>>      S0,1,875807,,cycles,1769826,100.00,0.491,GHz
->>>      =
-S0,1,85281,,stalled-cycles-frontend,1767512,100.00,9.74,frontend cycles =
-idle
->>>      =
-S0,1,576839,,stalled-cycles-backend,1766260,100.00,65.86,backend cycles =
-idle
->>>      S0,1,288430,,instructions,1762246,100.00,0.33,insn per cycle
->>> =3D=3D=3D=3D> ,S0,1,,,,,,,2.00,stalled cycles per insn
->>>=20
->>> The above command line uses field separator as ","
->>> via "-x," option and per-socket option displays
->>> socket value as first field. But here the last line
->>> for "stalled cycles per insn" has "," in the
->>> beginning.
->>>=20
->>> Sample output using interval mode:
->>>      # ./perf stat -I 1000 -x, --per-socket -a -C 1 ls
->>>      0.001813453,S0,1,1.87,msec,cpu-clock,1872052,100.00,0.002,CPUs =
-utilized
->>>      0.001813453,S0,1,2,,context-switches,1868028,100.00,1.070,K/sec
->>>      ------
->>>      0.001813453,S0,1,85379,,instructions,1856754,100.00,0.32,insn =
-per cycle
->>> =3D=3D=3D=3D> 0.001813453,,S0,1,,,,,,,1.34,stalled cycles per insn
->>>=20
->>> Above result also has an extra csv separator after
->>> the timestamp. Patch addresses extra field separator
->>> in the beginning of the metric output line.
->>>=20
->>> The counter stats are displayed by function
->>> "perf_stat__print_shadow_stats" in code
->>> "util/stat-shadow.c". While printing the stats info
->>> for "stalled cycles per insn", function "new_line_csv"
->>> is used as new_line callback.
->>>=20
->>> The new_line_csv function has check for "os->prefix"
->>> and if prefix is not null, it will be printed along
->>> with cvs separator.
->>> Snippet from "new_line_csv":
->>>      if (os->prefix)
->>>              fprintf(os->fh, "%s%s", os->prefix, config->csv_sep);
->>>=20
->>> Here os->prefix gets printed followed by ","
->>> which is the cvs separator. The os->prefix is
->>> used in interval mode option ( -I ), to print
->>> time stamp on every new line. But prefix is
->>> already set to contain csv separator when used
->>> in interval mode for csv option.
->>>=20
->>> Reference: Function "static void print_interval"
->>> Snippet:
->>>      sprintf(prefix, "%6lu.%09lu%s", ts->tv_sec, ts->tv_nsec, =
-config->csv_sep);
->>>=20
->>> Also if prefix is not assigned (if not used with
->>> -I option), it gets set to empty string.
->>> Reference: function printout() in util/stat-display.c
->>> Snippet:
->>>      .prefix =3D prefix ? prefix : "",
->>>=20
->>> Since prefix already set to contain cvs_sep in interval
->>> option, patch removes printing config->csv_sep in
->>> new_line_csv function to avoid printing extra field.
->>>=20
->>> After the patch:
->>>=20
->>>      # ./perf stat -x, --per-socket -a -C 1 ls
->>>      S0,1,2.04,msec,cpu-clock,2045202,100.00,1.013,CPUs utilized
->>>      S0,1,2,,context-switches,2041444,100.00,979.289,/sec
->>>      S0,1,0,,cpu-migrations,2040820,100.00,0.000,/sec
->>>      S0,1,2,,page-faults,2040288,100.00,979.289,/sec
->>>      S0,1,254589,,cycles,2036066,100.00,0.125,GHz
->>>      =
-S0,1,82481,,stalled-cycles-frontend,2032420,100.00,32.40,frontend cycles =
-idle
->>>      =
-S0,1,113170,,stalled-cycles-backend,2031722,100.00,44.45,backend cycles =
-idle
->>>      S0,1,88766,,instructions,2030942,100.00,0.35,insn per cycle
->>>      S0,1,,,,,,,1.27,stalled cycles per insn
->>>=20
->>> Fixes: 92a61f6412d3 ("perf stat: Implement CSV metrics output")
->>> Reported-by: Disha Goel <disgoel@linux.vnet.ibm.com>
->>> Signed-off-by: Athira Rajeev <atrajeev@linux.vnet.ibm.com>
->>=20
->> Hi All,
->>=20
->> Looking for review comments for this change.
->=20
-> Hi,
->=20
-> Thanks for addressing issues in this code. What is the status of the
-> CSV output test following these changes?
->=20
-> I think going forward we need to move away from CSV and columns, to
-> something with structure like json. We also need to refactor this
-> code, trying to add meaning to a newline character is a bad strategy
-> and creates some unnatural things. To some extent this overlaps with
-> Namhyung's aggregation cleanup. There are also weirdnesses in
-> jevents/pmu-events, like the same ScaleUnit applying to a metric and
-> an event - why are metrics even parts of events?
->=20
-> Given the current code is wac-a-mole, and this is another whack, if
-> the testing is okay I think we should move forward with this change.
->=20
-> Thanks,
-> Ian
+On 19/10/2022 20:11, Rob Herring wrote:
+> This series adds support for Arm SPEv1.2 which is part of the
+> Armv8.7/Armv9.2 architecture. There's 2 new features that affect the 
+> kernel: a new event filter bit, branch 'not taken', and an inverted 
+> event filter register. 
+> 
+> Since this support adds new registers and fields, first the SPE register 
+> defines are converted to automatic generation.
+> 
+> Note that the 'config3' addition in sysfs format files causes SPE to 
+> break. A stable fix e552b7be12ed ("perf: Skip and warn on unknown format 
+> 'configN' attrs") landed in v6.1-rc1.
+> 
+> The perf tool side changes are available here[1].
+> 
+> Tested on FVP.
+> 
+> [1] https://lore.kernel.org/all/20220914-arm-perf-tool-spe1-2-v2-v4-0-83c098e6212e@kernel.org/
+> 
 
-Hi Ian,
+LGTM. Tested with [1] applied and on N1SDP (where it isn't supported),
+and on the FVP. Enabling all the inverted filters results in no trace
+and other combinations work as expected.
 
-Thanks for checking the patch.
-Yes, CSV output test passes with the change.
+James
 
-	perf stat CSV output linter                                     =
-: Ok
-	perf stat csv summary test                                      =
-: Ok
-
-Thanks
-Athira
-
->=20
->=20
->=20
->=20
->> Thanks
->> Athira
->>=20
->>> ---
->>> tools/perf/util/stat-display.c | 2 +-
->>> 1 file changed, 1 insertion(+), 1 deletion(-)
->>>=20
->>> diff --git a/tools/perf/util/stat-display.c =
-b/tools/perf/util/stat-display.c
->>> index 5c47ee9963a7..879874a4bc07 100644
->>> --- a/tools/perf/util/stat-display.c
->>> +++ b/tools/perf/util/stat-display.c
->>> @@ -273,7 +273,7 @@ static void new_line_csv(struct perf_stat_config =
-*config, void *ctx)
->>>=20
->>>      fputc('\n', os->fh);
->>>      if (os->prefix)
->>> -             fprintf(os->fh, "%s%s", os->prefix, config->csv_sep);
->>> +             fprintf(os->fh, "%s", os->prefix);
->>>      aggr_printout(config, os->evsel, os->id, os->nr);
->>>      for (i =3D 0; i < os->nfields; i++)
->>>              fputs(config->csv_sep, os->fh);
->>> --
->>> 2.31.1
-
+> Signed-off-by: Rob Herring <robh@kernel.org>
+> ---
+> Changes in v2:
+> - Convert the SPE register defines to automatic generation
+> - Fixed access to SYS_PMSNEVFR_EL1 when not present
+> - Rebase on v6.1-rc1
+> - Link to v1: https://lore.kernel.org/r/20220825-arm-spe-v8-7-v1-0-c75b8d92e692@kernel.org
+> 
+> ---
+> Rob Herring (7):
+>       perf: arm_spe: Use feature numbering for PMSEVFR_EL1 defines
+>       arm64: Drop SYS_ from SPE register defines
+>       arm64/sysreg: Convert SPE registers to automatic generation
+>       perf: arm_spe: Drop BIT() and use FIELD_GET/PREP accessors
+>       perf: arm_spe: Support new SPEv1.2/v8.7 'not taken' event
+>       perf: Add perf_event_attr::config3
+>       perf: arm_spe: Add support for SPEv1.2 inverted event filtering
+> 
+>  arch/arm64/include/asm/el2_setup.h |   6 +-
+>  arch/arm64/include/asm/sysreg.h    |  99 +++------------------------
+>  arch/arm64/kvm/debug.c             |   2 +-
+>  arch/arm64/kvm/hyp/nvhe/debug-sr.c |   2 +-
+>  arch/arm64/tools/sysreg            | 116 +++++++++++++++++++++++++++++++
+>  drivers/perf/arm_spe_pmu.c         | 136 ++++++++++++++++++++++++-------------
+>  include/uapi/linux/perf_event.h    |   3 +
+>  7 files changed, 224 insertions(+), 140 deletions(-)
+> ---
+> base-commit: 9abf2313adc1ca1b6180c508c25f22f9395cc780
+> change-id: 20220825-arm-spe-v8-7-fedf04e16f23
+> 
+> Best regards,
