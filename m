@@ -2,125 +2,108 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 512BFC433FE
-	for <linux-perf-users@archiver.kernel.org>; Fri,  4 Nov 2022 13:07:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id ACE25C4332F
+	for <linux-perf-users@archiver.kernel.org>; Fri,  4 Nov 2022 14:47:42 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231243AbiKDNHJ (ORCPT
+        id S231338AbiKDOrl (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Fri, 4 Nov 2022 09:07:09 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43556 "EHLO
+        Fri, 4 Nov 2022 10:47:41 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33764 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231961AbiKDNGu (ORCPT
+        with ESMTP id S231610AbiKDOri (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Fri, 4 Nov 2022 09:06:50 -0400
-Received: from desiato.infradead.org (desiato.infradead.org [IPv6:2001:8b0:10b:1:d65d:64ff:fe57:4e05])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D6F4E2F01C;
-        Fri,  4 Nov 2022 06:06:24 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=desiato.20200630; h=In-Reply-To:Content-Type:MIME-Version:
-        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description;
-        bh=LtHz5uPmwMnRA8pug11cAIugKhPmlVYnrt/fWjr2UQs=; b=D5/B7gyRf31MPbDuHBPq7nvyyP
-        OTMpHwhz789CRYrPf6cXtunXceOPmlcI5l0W/zyMT9U1hHrx7YB6IOQM4eLHQ1m4yK0WRcnBq1IdR
-        L29PkD26HOPr8vgV26Zu9iapv55p6bN/SK/2btYjPvlFEvLiAZzqN2KnRwz6nY5pP4Q7cu3/rHzL6
-        WBqNB/LXdcckZpuY6+wGUiQg0IobaaH6X00iku04xOleQnkrumlpOwma57rnIYkbG+ljIdTTpoCBN
-        XYDx3t6k1GphY4K9w/vYM20SjDlBfLLq7WnOuqjxBDctQIwxaA0s69ct73ND0eOLeS6jhcLlhGnSR
-        yS0GrHeQ==;
-Received: from j130084.upc-j.chello.nl ([24.132.130.84] helo=noisy.programming.kicks-ass.net)
-        by desiato.infradead.org with esmtpsa (Exim 4.94.2 #2 (Red Hat Linux))
-        id 1oqwOh-008yeU-UO; Fri, 04 Nov 2022 13:06:12 +0000
-Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange X25519 server-signature RSA-PSS (4096 bits))
-        (Client did not present a certificate)
-        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id B9E8E300282;
-        Fri,  4 Nov 2022 14:06:10 +0100 (CET)
-Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
-        id 9A07F201E232E; Fri,  4 Nov 2022 14:06:10 +0100 (CET)
-Date:   Fri, 4 Nov 2022 14:06:10 +0100
-From:   Peter Zijlstra <peterz@infradead.org>
-To:     Florian Fainelli <f.fainelli@gmail.com>
-Cc:     linux-kernel@vger.kernel.org, anand.gore@broadcom.com,
-        william.zhang@broadcom.com, Ingo Molnar <mingo@redhat.com>,
-        Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Jiri Olsa <jolsa@kernel.org>,
-        Namhyung Kim <namhyung@kernel.org>,
-        Anna-Maria Gleixner <anna-maria@linutronix.de>,
-        Sebastian Siewior <bigeasy@linutronix.de>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        "open list:PERFORMANCE EVENTS SUBSYSTEM" 
-        <linux-perf-users@vger.kernel.org>
-Subject: Re: [PATCH] perf: Fix perf_event_{init,exit}_cpu stubs
-Message-ID: <Y2UOQpniaV12E0P9@hirez.programming.kicks-ass.net>
-References: <20221103224303.3910486-1-f.fainelli@gmail.com>
+        Fri, 4 Nov 2022 10:47:38 -0400
+Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A2BD130550;
+        Fri,  4 Nov 2022 07:47:25 -0700 (PDT)
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by dfw.source.kernel.org (Postfix) with ESMTPS id 3EF2D62239;
+        Fri,  4 Nov 2022 14:47:25 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id A2194C4347C;
+        Fri,  4 Nov 2022 14:47:24 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1667573244;
+        bh=wPPnLNZ+4T3Fuos8Ly78Qj2v7R8MfGXYzebSE4GJ56s=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=d/7GPpvjH1jr3aFEkcWCRke/i2dOsHwqocnWKSK5H2rrqObWkDPivRKZkiVinqC4w
+         bvWGdrmA0VYgrnLo+/GwxKgpCGCsFhFVdt5ucL0svuahYo1cCgJaeRt72YcLbRUMsd
+         DIpZtLpgik8mbY4FbRSuaQ1g7+h7ypYO2lARwHmOworsjMxsa/IEmKxdayPgqGx5fG
+         jFj9fw/UCASzCMJu6J5BUxwzpJnE74f5nu9/iyNSSXgEydIeyy6J7SQNehKy9rBwzl
+         JMiH8gPJD1hPCE5DFBlxiMyCte/KDagvwV3b4yVqbTj7Rqmrohl6ofddDWvI45URLt
+         sVZuLstD5UZAw==
+Received: by mail-lj1-f176.google.com with SMTP id u11so6673060ljk.6;
+        Fri, 04 Nov 2022 07:47:24 -0700 (PDT)
+X-Gm-Message-State: ACrzQf3TCaZXEm7JNrkTwWoEgxA/LqXymG5Z56HHtCj4DkbiCi/g08HE
+        S9JOwkFpcXqPqzrJ+KMZNzgXDOTiowLU8TTTDQ==
+X-Google-Smtp-Source: AMsMyM62Xs6fCvQyp5qZFL0MJl4QpNNhlm01k6mmAVVcbjT5g/d41ex992OtIiF0ZA7d3S+KRipg5DVCEr5R0NJZekA=
+X-Received: by 2002:a05:651c:114a:b0:25d:5ae6:42a4 with SMTP id
+ h10-20020a05651c114a00b0025d5ae642a4mr13404029ljo.255.1667573242688; Fri, 04
+ Nov 2022 07:47:22 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20221103224303.3910486-1-f.fainelli@gmail.com>
+References: <20220825-arm-spe-v8-7-v2-0-e37322d68ac0@kernel.org> <5c410969-2176-49cf-640f-8023c421682e@arm.com>
+In-Reply-To: <5c410969-2176-49cf-640f-8023c421682e@arm.com>
+From:   Rob Herring <robh@kernel.org>
+Date:   Fri, 4 Nov 2022 09:47:13 -0500
+X-Gmail-Original-Message-ID: <CAL_JsqJ6hdCxTOFk=r6RE_3XGtBhF1HRCMKdjrW-D2FuYazZrQ@mail.gmail.com>
+Message-ID: <CAL_JsqJ6hdCxTOFk=r6RE_3XGtBhF1HRCMKdjrW-D2FuYazZrQ@mail.gmail.com>
+Subject: Re: [PATCH v2 0/7] perf: Arm SPEv1.2 support
+To:     James Clark <james.clark@arm.com>
+Cc:     kvmarm@lists.cs.columbia.edu, kvmarm@lists.linux.dev,
+        linux-arm-kernel@lists.infradead.org,
+        linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Mark Brown <broonie@kernel.org>,
+        Namhyung Kim <namhyung@kernel.org>,
+        James Morse <james.morse@arm.com>,
+        Ingo Molnar <mingo@redhat.com>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Marc Zyngier <maz@kernel.org>,
+        Suzuki K Poulose <suzuki.poulose@arm.com>,
+        Will Deacon <will@kernel.org>,
+        Alexandru Elisei <alexandru.elisei@arm.com>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Arnaldo Carvalho de Melo <acme@kernel.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Oliver Upton <oliver.upton@linux.dev>,
+        Jiri Olsa <jolsa@kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-On Thu, Nov 03, 2022 at 03:43:03PM -0700, Florian Fainelli wrote:
-> The original commit that introduced those stubs was already at fault,
-> but in the absence of a caller of perf_event_{init,exit}_cpu outside of
-> code that is compiled regardless of CONFIG_PERF_EVENTS, the build
-> failure cannot be observed. This was observed with the Android kernel to
-> produce a build failure similar to this:
-> 
->     In file included from ./include/uapi/linux/posix_types.h:5,
->                      from ./include/uapi/linux/types.h:14,
->                      from ./include/linux/types.h:6,
->                      from ./include/linux/limits.h:6,
->                      from ./include/linux/kernel.h:7,
->                      from ./include/linux/sched/mm.h:5,
->                      from kernel/cpu.c:6:
->     kernel/cpu.c: In function 'random_and_perf_prepare_fusion':
->     ./include/linux/stddef.h:8:14: error: called object is not a function or function pointer
->      #define NULL ((void *)0)
->                   ^
->     ./include/linux/perf_event.h:1607:29: note: in expansion of macro 'NULL'
->      #define perf_event_init_cpu NULL
->                                  ^~~~
->     kernel/cpu.c:1686:2: note: in expansion of macro 'perf_event_init_cpu'
->       perf_event_init_cpu(cpu);
->       ^~~~~~~~~~~~~~~~~~~
+On Fri, Nov 4, 2022 at 6:30 AM James Clark <james.clark@arm.com> wrote:
+>
+>
+>
+> On 19/10/2022 20:11, Rob Herring wrote:
+> > This series adds support for Arm SPEv1.2 which is part of the
+> > Armv8.7/Armv9.2 architecture. There's 2 new features that affect the
+> > kernel: a new event filter bit, branch 'not taken', and an inverted
+> > event filter register.
+> >
+> > Since this support adds new registers and fields, first the SPE register
+> > defines are converted to automatic generation.
+> >
+> > Note that the 'config3' addition in sysfs format files causes SPE to
+> > break. A stable fix e552b7be12ed ("perf: Skip and warn on unknown format
+> > 'configN' attrs") landed in v6.1-rc1.
+> >
+> > The perf tool side changes are available here[1].
+> >
+> > Tested on FVP.
+> >
+> > [1] https://lore.kernel.org/all/20220914-arm-perf-tool-spe1-2-v2-v4-0-83c098e6212e@kernel.org/
+> >
+>
+> LGTM. Tested with [1] applied and on N1SDP (where it isn't supported),
+> and on the FVP. Enabling all the inverted filters results in no trace
+> and other combinations work as expected.
 
-What is the actual problem reported here? Did you see all the other NULL
-assignments in cpuhp_hp_states ?
+Thanks, I'll take that as a 'Tested-by' tag if that's okay.
 
-> 
-> Fixes: 00e16c3d68fc ("perf/core: Convert to hotplug state machine")
-> Reported-by: Anand Gore <anand.gore@broadcom.com>
-> Signed-off-by: Florian Fainelli <f.fainelli@gmail.com>
-> ---
->  include/linux/perf_event.h | 11 +++++++++--
->  1 file changed, 9 insertions(+), 2 deletions(-)
-> 
-> diff --git a/include/linux/perf_event.h b/include/linux/perf_event.h
-> index 0031f7b4d9ab..592040e2398c 100644
-> --- a/include/linux/perf_event.h
-> +++ b/include/linux/perf_event.h
-> @@ -1678,8 +1678,15 @@ static struct device_attribute format_attr_##_name = __ATTR_RO(_name)
->  int perf_event_init_cpu(unsigned int cpu);
->  int perf_event_exit_cpu(unsigned int cpu);
->  #else
-> -#define perf_event_init_cpu	NULL
-> -#define perf_event_exit_cpu	NULL
-> +static inline int perf_event_init_cpu(unsigned int cpu)
-> +{
-> +	return 0;
-> +}
-> +
-> +static inline int perf_event_exit_cpu(unsigned int cpu)
-> +{
-> +	return 0;
-> +}
->  #endif
->  
->  extern void __weak arch_perf_update_userpage(struct perf_event *event,
-> -- 
-> 2.25.1
-> 
+In the future, please be explicit with tags. Tools such as b4 and
+patchwork will recognize them and add them automatically.
+
+Rob
