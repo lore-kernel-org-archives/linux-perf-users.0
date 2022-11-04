@@ -2,52 +2,52 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 24253C4167D
-	for <linux-perf-users@archiver.kernel.org>; Fri,  4 Nov 2022 15:55:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 067E4C43217
+	for <linux-perf-users@archiver.kernel.org>; Fri,  4 Nov 2022 15:55:30 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231244AbiKDPz0 (ORCPT
+        id S231795AbiKDPz1 (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Fri, 4 Nov 2022 11:55:26 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59788 "EHLO
+        Fri, 4 Nov 2022 11:55:27 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59822 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231790AbiKDPzY (ORCPT
+        with ESMTP id S231827AbiKDPzZ (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Fri, 4 Nov 2022 11:55:24 -0400
+        Fri, 4 Nov 2022 11:55:25 -0400
 Received: from mail-oi1-f170.google.com (mail-oi1-f170.google.com [209.85.167.170])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 664D82FFD2;
-        Fri,  4 Nov 2022 08:55:23 -0700 (PDT)
-Received: by mail-oi1-f170.google.com with SMTP id v81so5592731oie.5;
-        Fri, 04 Nov 2022 08:55:23 -0700 (PDT)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 61DB7303DE;
+        Fri,  4 Nov 2022 08:55:25 -0700 (PDT)
+Received: by mail-oi1-f170.google.com with SMTP id r76so5549396oie.13;
+        Fri, 04 Nov 2022 08:55:25 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
         h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
          :mime-version:subject:date:from:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=1LuRWZ+uGAhH28zFK+adTPuM2Aq0aZSCcYB6eJqAff0=;
-        b=n6JwNr1494B1IS3yVuRf9KG/Gicq7BlI2jCdg1HlM3CNAiLRNMUsbTqIXucZ+0tQ4P
-         Hn1gfJkrwoc4mw/xLX9kZdRv7wHqa94hP/mby+u2V27v7yWzrc8dH/9y3C8YsE1dXQXC
-         Q9y37wvVU32FSRiwAK4GnZVjnmq0VuY+FJhP/N8jB3Jrf9g/358303jo0Gxf5qOn7QMC
-         0XWfrCYDJbmiKzUjBFwDzC8gHdlsJ6ZIRIiqR9Wpr8C7OIDSmT9A0Vn83QEaq6zuRHmd
-         iQSO4xSg/L6CCLuKC8Td+JEPSAMvxcrqYh7RoeYCgAjNlekk6i69q9mSnHqOMmUU7+Eg
-         BAsQ==
-X-Gm-Message-State: ACrzQf3UZLjzu/PHBZnFVM/MaLD0kFUlMIRKJX2O1yZy5TwpNfYgM98y
-        T7y94+GVpRI4nWt7RNnJqg==
-X-Google-Smtp-Source: AMsMyM4d6TDw2T7GbRam3QWG/Wa4RT72PM5DQk1E8uYmT91uYVnx3slmlmbYjUyO46tJ6RiQPcimSQ==
-X-Received: by 2002:a05:6808:1492:b0:353:f28f:6fb with SMTP id e18-20020a056808149200b00353f28f06fbmr258038oiw.246.1667577322632;
-        Fri, 04 Nov 2022 08:55:22 -0700 (PDT)
+        bh=nbh4kYtAszd2WFH06dmd+kkJjoRcl20JJM5emroag08=;
+        b=w8+XoRPoYdUI32UFboAgxt8QAXevzgE3bSJZ4GfcXzIulYjGWG85JonQNcwQfIa49n
+         7UQwpsCKxVV7NrzeOW9IYHB9lN3dZVPtIOrB4kskypfU3bJjCIGAQSe5yX84t9+Ch1ue
+         m1vY2vy0sXRbl6oIsv+2KL31sbaWgxbUMsBC7uZZIXw6worzZdRXsq5sZdbDjlLV1eT5
+         3GCRmvxb9EDPHOpqhf1N4Weg2xi/zaeLFpCfHdiMcZ8ulb35Wd+Wkd/IJNNw3sBA0MRQ
+         56VjZvT1BszXpF6gcg0Ts5JTV2YzHcQ4JXLssMnD4BHOGkWcpyB8us5PgmBDtire3ICv
+         IGXg==
+X-Gm-Message-State: ACrzQf1CdJt3nqci1YGvnG0a0cbpXKQTWh4ngXodaF8qFHwfJVoYVeBQ
+        jFElJqlGnHOASlQVAAh8zg==
+X-Google-Smtp-Source: AMsMyM6XCGOxDkWp/KDtlfrAH+Z735zS9ydDsev6tHg8eM+cXyEV7Ga+K7IZqgQFpv3gP3gCDvvgow==
+X-Received: by 2002:a05:6808:11c1:b0:353:f1a5:207a with SMTP id p1-20020a05680811c100b00353f1a5207amr27451988oiv.183.1667577324586;
+        Fri, 04 Nov 2022 08:55:24 -0700 (PDT)
 Received: from robh_at_kernel.org (66-90-144-107.dyn.grandenetworks.net. [66.90.144.107])
-        by smtp.gmail.com with ESMTPSA id z15-20020a056870e30f00b00136a0143de8sm1876818oad.40.2022.11.04.08.55.21
+        by smtp.gmail.com with ESMTPSA id cg27-20020a056830631b00b00661b019accbsm1588176otb.3.2022.11.04.08.55.23
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 04 Nov 2022 08:55:22 -0700 (PDT)
-Received: (nullmailer pid 1880420 invoked by uid 1000);
+        Fri, 04 Nov 2022 08:55:24 -0700 (PDT)
+Received: (nullmailer pid 1880410 invoked by uid 1000);
         Fri, 04 Nov 2022 15:55:18 -0000
 From:   Rob Herring <robh@kernel.org>
-Date:   Fri, 04 Nov 2022 10:55:06 -0500
-Subject: [PATCH v3 6/8] perf: arm_spe: Support new SPEv1.2/v8.7 'not taken' event
+Date:   Fri, 04 Nov 2022 10:55:01 -0500
+Subject: [PATCH v3 1/8] perf: arm_spe: Use feature numbering for PMSEVFR_EL1 defines
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 8bit
-Message-Id: <20220825-arm-spe-v8-7-v3-6-87682f78caac@kernel.org>
+Message-Id: <20220825-arm-spe-v8-7-v3-1-87682f78caac@kernel.org>
 References: <20220825-arm-spe-v8-7-v3-0-87682f78caac@kernel.org>
 In-Reply-To: <20220825-arm-spe-v8-7-v3-0-87682f78caac@kernel.org>
 To:     Namhyung Kim <namhyung@kernel.org>, Will Deacon <will@kernel.org>,
@@ -72,9 +72,9 @@ Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-Arm SPEv1.2 (Armv8.7/v9.2) adds a new event, 'not taken', in bit 6 of
-the PMSEVFR_EL1 register. Update arm_spe_pmsevfr_res0() to support the
-additional event.
+Similar to commit 121a8fc088f1 ("arm64/sysreg: Use feature numbering for
+PMU and SPE revisions") use feature numbering instead of architecture
+versions for the PMSEVFR_EL1 Res0 defines.
 
 Tested-by: James Clark <james.clark@arm.com>
 Signed-off-by: Rob Herring <robh@kernel.org>
@@ -82,39 +82,46 @@ Signed-off-by: Rob Herring <robh@kernel.org>
 v3:
  - No change
 v2:
- - Update for v6.1 sysreg generated header changes
+ - New patch
 ---
- arch/arm64/include/asm/sysreg.h | 2 ++
- drivers/perf/arm_spe_pmu.c      | 4 +++-
- 2 files changed, 5 insertions(+), 1 deletion(-)
+ arch/arm64/include/asm/sysreg.h | 6 +++---
+ drivers/perf/arm_spe_pmu.c      | 4 ++--
+ 2 files changed, 5 insertions(+), 5 deletions(-)
 
 diff --git a/arch/arm64/include/asm/sysreg.h b/arch/arm64/include/asm/sysreg.h
-index d002dd00e53e..06231e896832 100644
+index 7d301700d1a9..9a4cf12e3e16 100644
 --- a/arch/arm64/include/asm/sysreg.h
 +++ b/arch/arm64/include/asm/sysreg.h
-@@ -242,6 +242,8 @@
- 	 BIT_ULL(6) | BIT_ULL(4) | BIT_ULL(2) | BIT_ULL(0))
- #define PMSEVFR_EL1_RES0_V1P1	\
- 	(PMSEVFR_EL1_RES0_IMP & ~(BIT_ULL(18) | BIT_ULL(17) | BIT_ULL(11)))
-+#define PMSEVFR_EL1_RES0_V1P2	\
-+	(PMSEVFR_EL1_RES0_V1P1 & ~BIT_ULL(6))
+@@ -294,11 +294,11 @@
+ #define SYS_PMSFCR_EL1_ST_SHIFT		18
  
- /* Buffer error reporting */
- #define PMBSR_EL1_FAULT_FSC_SHIFT	PMBSR_EL1_MSS_SHIFT
+ #define SYS_PMSEVFR_EL1			sys_reg(3, 0, 9, 9, 5)
+-#define SYS_PMSEVFR_EL1_RES0_8_2	\
++#define PMSEVFR_EL1_RES0_IMP	\
+ 	(GENMASK_ULL(47, 32) | GENMASK_ULL(23, 16) | GENMASK_ULL(11, 8) |\
+ 	 BIT_ULL(6) | BIT_ULL(4) | BIT_ULL(2) | BIT_ULL(0))
+-#define SYS_PMSEVFR_EL1_RES0_8_3	\
+-	(SYS_PMSEVFR_EL1_RES0_8_2 & ~(BIT_ULL(18) | BIT_ULL(17) | BIT_ULL(11)))
++#define PMSEVFR_EL1_RES0_V1P1	\
++	(PMSEVFR_EL1_RES0_IMP & ~(BIT_ULL(18) | BIT_ULL(17) | BIT_ULL(11)))
+ 
+ #define SYS_PMSLATFR_EL1		sys_reg(3, 0, 9, 9, 6)
+ #define SYS_PMSLATFR_EL1_MINLAT_SHIFT	0
 diff --git a/drivers/perf/arm_spe_pmu.c b/drivers/perf/arm_spe_pmu.c
-index af6d3867c3e7..82f67e941bc4 100644
+index 00e3a637f7b6..65cf93dcc8ee 100644
 --- a/drivers/perf/arm_spe_pmu.c
 +++ b/drivers/perf/arm_spe_pmu.c
-@@ -677,9 +677,11 @@ static u64 arm_spe_pmsevfr_res0(u16 pmsver)
+@@ -677,11 +677,11 @@ static u64 arm_spe_pmsevfr_res0(u16 pmsver)
+ {
+ 	switch (pmsver) {
  	case ID_AA64DFR0_EL1_PMSVer_IMP:
- 		return PMSEVFR_EL1_RES0_IMP;
+-		return SYS_PMSEVFR_EL1_RES0_8_2;
++		return PMSEVFR_EL1_RES0_IMP;
  	case ID_AA64DFR0_EL1_PMSVer_V1P1:
-+		return PMSEVFR_EL1_RES0_V1P1;
-+	case ID_AA64DFR0_EL1_PMSVer_V1P2:
  	/* Return the highest version we support in default */
  	default:
--		return PMSEVFR_EL1_RES0_V1P1;
-+		return PMSEVFR_EL1_RES0_V1P2;
+-		return SYS_PMSEVFR_EL1_RES0_8_3;
++		return PMSEVFR_EL1_RES0_V1P1;
  	}
  }
  
