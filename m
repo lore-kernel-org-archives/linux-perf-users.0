@@ -2,40 +2,40 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9E8F4C433FE
-	for <linux-perf-users@archiver.kernel.org>; Fri,  4 Nov 2022 00:21:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 26425C433FE
+	for <linux-perf-users@archiver.kernel.org>; Fri,  4 Nov 2022 01:05:01 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229994AbiKDAVN (ORCPT
+        id S229992AbiKDBFA (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Thu, 3 Nov 2022 20:21:13 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42718 "EHLO
+        Thu, 3 Nov 2022 21:05:00 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54986 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229461AbiKDAVM (ORCPT
+        with ESMTP id S229485AbiKDBE6 (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Thu, 3 Nov 2022 20:21:12 -0400
-Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 514CE205F2;
-        Thu,  3 Nov 2022 17:21:11 -0700 (PDT)
+        Thu, 3 Nov 2022 21:04:58 -0400
+Received: from ams.source.kernel.org (ams.source.kernel.org [IPv6:2604:1380:4601:e00::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 03523102E;
+        Thu,  3 Nov 2022 18:04:56 -0700 (PDT)
 Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id E405961FCB;
-        Fri,  4 Nov 2022 00:21:10 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id EA3F7C433D6;
-        Fri,  4 Nov 2022 00:21:09 +0000 (UTC)
+        by ams.source.kernel.org (Postfix) with ESMTPS id 9513FB829AB;
+        Fri,  4 Nov 2022 01:04:55 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id DAC96C433D6;
+        Fri,  4 Nov 2022 01:04:53 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1667521270;
-        bh=dZf7UOWFjzjgRlUGjCkHuP3jDdpPVutaFjZJBxrMiIk=;
+        s=k20201202; t=1667523894;
+        bh=k5m4HcM/H4aY8U/2muzNcpORFVLxijrfXYSNOiQeADU=;
         h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=g818dXngYDEKEoxAAwl9/axoXbClNQHjVJ1/gen8s0bSCsQJMaJorHEzOJmCqeLY1
-         LIXTA9co8l3hFHpC+QyY1l2ea2PZ9lIIPDP4a65dpWYI+8/zo+z6zYcfBLvQVFPsBi
-         4SbMN34oh7R7MrZAIwlBeiAqejXxA6eMcOYWqCs1oblmorvvQq84w8r2RfJqBUvzoN
-         4wvA/4SPhTNN1PGNqYpzJQNpIe/QoDgHIXoBkLDqkttrg9kuxy+StsfdUeBoB76YI8
-         Cq0BL94Cr9QH0e9WPayEFZKAId6NuSU8OEX5wGVjpGMQ6+Y5sD4Q28e0Oxj0ybeTkv
-         hI/pBf2WCLFyw==
+        b=A6NiF9Iaz1HjS67DBuiA29ABpMGsMhrwP/33eq4TrZYomLdoXIgZ/p+caHfxmWSpX
+         kxFzBRi+Dy/FpA+p6WbPgWV8eXBB4/j5F1DtWG7dZn8jLBeMZ4OYw3g1jA5yeHJODo
+         XjbjMi9wdh6df7XEJRmOMK7WFdCgS+vliDKPNqnTfg3NKGkrBw3PplUol5sIdhNNJh
+         tPrgHZ+XLwEZ+ZqybDAy9HRwZhnnkPQfCc8R3uclBMGp3+JogUkFpsNV7MdYByFb+h
+         XaAO+rfAXdAqBPAur8vM2ceJ4SheI21tNAIK8/xVP1iEK+WXpfO0ZW28PDpSH2mjse
+         dgxl5HMoEMwyg==
 Received: by quaco.ghostprotocols.net (Postfix, from userid 1000)
-        id BC3F14034E; Thu,  3 Nov 2022 21:21:06 -0300 (-03)
-Date:   Thu, 3 Nov 2022 21:21:06 -0300
+        id C68334034E; Thu,  3 Nov 2022 22:04:51 -0300 (-03)
+Date:   Thu, 3 Nov 2022 22:04:51 -0300
 From:   Arnaldo Carvalho de Melo <acme@kernel.org>
 To:     Ian Rogers <irogers@google.com>
 Cc:     Leo Yan <leo.yan@linaro.org>,
@@ -48,7 +48,7 @@ Cc:     Leo Yan <leo.yan@linaro.org>,
         linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org,
         Stephane Eranian <eranian@google.com>
 Subject: Re: [PATCH v1 6/7] perf trace: 5sec fix libbpf 1.0+ compatibility
-Message-ID: <Y2Ra8twZ/4Wqi2JN@kernel.org>
+Message-ID: <Y2RlMwiHl9jWjkiJ@kernel.org>
 References: <20221103045437.163510-1-irogers@google.com>
  <20221103045437.163510-7-irogers@google.com>
  <Y2PgBPeZsd9+YWB4@kernel.org>
@@ -58,130 +58,136 @@ References: <20221103045437.163510-1-irogers@google.com>
  <Y2QcgdJNXE/bVZvk@kernel.org>
  <Y2Q0NSeoEqwUztFe@kernel.org>
  <CAP-5=fUcawweX-n2nmGg5+ZEo5nG7QuRN7yyVtz-FmUGctrEjw@mail.gmail.com>
+ <Y2Ra8twZ/4Wqi2JN@kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <CAP-5=fUcawweX-n2nmGg5+ZEo5nG7QuRN7yyVtz-FmUGctrEjw@mail.gmail.com>
+In-Reply-To: <Y2Ra8twZ/4Wqi2JN@kernel.org>
 X-Url:  http://acmel.wordpress.com
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-Em Thu, Nov 03, 2022 at 03:01:21PM -0700, Ian Rogers escreveu:
-> On Thu, Nov 3, 2022 at 2:35 PM Arnaldo Carvalho de Melo <acme@kernel.org> wrote:
-> >
-> > With this:
-> >
-> > diff --git a/tools/perf/Makefile.config b/tools/perf/Makefile.config
-> > index d3d3c13a9f25b55c..067a6e56eeacc9fc 100644
-> > --- a/tools/perf/Makefile.config
-> > +++ b/tools/perf/Makefile.config
-> > @@ -1239,7 +1239,7 @@ includedir = $(abspath $(prefix)/$(includedir_relative))
-> >  mandir = share/man
-> >  infodir = share/info
-> >  perfexecdir = libexec/perf-core
-> > -perf_include_dir = lib/perf/include
-> > +perf_include_dir = /usr/include
-> >  perf_examples_dir = lib/perf/examples
-> >  sharedir = $(prefix)/share
-> >  template_dir = share/perf-core/templates
-> > diff --git a/tools/perf/examples/bpf/augmented_raw_syscalls.c b/tools/perf/examples/bpf/augmented_raw_syscalls.c
-> > index 13c72fd602c307e4..98a2731c011339ba 100644
-> > --- a/tools/perf/examples/bpf/augmented_raw_syscalls.c
-> > +++ b/tools/perf/examples/bpf/augmented_raw_syscalls.c
-> > @@ -17,8 +17,9 @@
-> >  #include <linux/bpf.h>
-> >  #include <bpf/bpf_helpers.h>
-> >  #include <linux/limits.h>
-> > -#include <stdbool.h>
-> > -#include <sys/socket.h>
-> > +
-> > +typedef char bool;
-> > +typedef int pid_t;
-> >
-> >  /* bpf-output associated map */
-> >  struct __augmented_syscalls__ {
-> > @@ -94,6 +95,30 @@ struct pids_filtered {
-> >         __uint(max_entries, 64);
-> >  } pids_filtered SEC(".maps");
-> >
-> > +/*
-> > + * Desired design of maximum size and alignment (see RFC2553)
-> > + */
-> > +#define _K_SS_MAXSIZE   128     /* Implementation specific max size */
-> > +
-> > +typedef unsigned short sa_family_t;
-> > +
-> > +/*
-> > + * The definition uses anonymous union and struct in order to control the
-> > + * default alignment.
-> > + */
-> > +struct sockaddr_storage {
-> > +        union {
-> > +                struct {
-> > +                        sa_family_t    ss_family; /* address family */
-> > +                        /* Following field(s) are implementation specific */
-> > +                        char __data[_K_SS_MAXSIZE - sizeof(unsigned short)];
-> > +                                /* space to achieve desired size, */
-> > +                                /* _SS_MAXSIZE value minus size of ss_family */
-> > +                };
-> > +                void *__align; /* implementation specific desired alignment */
-> > +        };
-> > +};
-> > +
-> >  struct augmented_args_payload {
-> >         struct syscall_enter_args args;
-> >         union {
-> > diff --git a/tools/perf/examples/bpf/empty.c b/tools/perf/examples/bpf/empty.c
-> > index 3e296c0c53d7d8e2..e4872c48a484f218 100644
-> > --- a/tools/perf/examples/bpf/empty.c
-> > +++ b/tools/perf/examples/bpf/empty.c
-> > @@ -7,6 +7,6 @@ struct syscall_enter_args;
-> >  SEC("raw_syscalls:sys_enter")
-> >  int sys_enter(struct syscall_enter_args *args)
-> >  {
-> > -       return 0;
-> > +       return 1;
-> >  }
-> >  char _license[] SEC("license") = "GPL";
-> > diff --git a/tools/perf/util/llvm-utils.c b/tools/perf/util/llvm-utils.c
-> > index 2dc7970074196ca8..a5cac85783d8711f 100644
-> > --- a/tools/perf/util/llvm-utils.c
-> > +++ b/tools/perf/util/llvm-utils.c
-> > @@ -495,7 +495,7 @@ int llvm__compile_bpf(const char *path, void **p_obj_buf,
-> >
-> >         snprintf(linux_version_code_str, sizeof(linux_version_code_str),
-> >                  "0x%x", kernel_version);
-> > -       if (asprintf(&perf_bpf_include_opts, "-I%s/bpf", perf_include_dir) < 0)
-> > +       if (asprintf(&perf_bpf_include_opts, "-I%s/", perf_include_dir) < 0)
-> >                 goto errout;
-> >         force_set_env("NR_CPUS", nr_cpus_avail_str);
-> >         force_set_env("LINUX_VERSION_CODE", linux_version_code_str);
-> >
-> >
-> > The connect calls gets served, tomorrow, if you don't beat me I'll apply
-> > the series after adding these minimal changes so that we have this
-> > working with libbpf 1.0 and then we can move from there, with a switch
-> > to a BPF skel, simplest things first, then deal with faults at pointer
-> > payload copy, which is another avenue, AFAIK with solutions already.
+Em Thu, Nov 03, 2022 at 09:21:06PM -0300, Arnaldo Carvalho de Melo escreveu:
+> Em Thu, Nov 03, 2022 at 03:01:21PM -0700, Ian Rogers escreveu:
+> > On Thu, Nov 3, 2022 at 2:35 PM Arnaldo Carvalho de Melo <acme@kernel.org> wrote:
+> > >
+> > > With this:
+> > >
+> > > diff --git a/tools/perf/Makefile.config b/tools/perf/Makefile.config
+> > > index d3d3c13a9f25b55c..067a6e56eeacc9fc 100644
+> > > --- a/tools/perf/Makefile.config
+> > > +++ b/tools/perf/Makefile.config
+> > > @@ -1239,7 +1239,7 @@ includedir = $(abspath $(prefix)/$(includedir_relative))
+> > >  mandir = share/man
+> > >  infodir = share/info
+> > >  perfexecdir = libexec/perf-core
+> > > -perf_include_dir = lib/perf/include
+> > > +perf_include_dir = /usr/include
+> > >  perf_examples_dir = lib/perf/examples
+> > >  sharedir = $(prefix)/share
+> > >  template_dir = share/perf-core/templates
+> > > diff --git a/tools/perf/examples/bpf/augmented_raw_syscalls.c b/tools/perf/examples/bpf/augmented_raw_syscalls.c
+> > > index 13c72fd602c307e4..98a2731c011339ba 100644
+> > > --- a/tools/perf/examples/bpf/augmented_raw_syscalls.c
+> > > +++ b/tools/perf/examples/bpf/augmented_raw_syscalls.c
+> > > @@ -17,8 +17,9 @@
+> > >  #include <linux/bpf.h>
+> > >  #include <bpf/bpf_helpers.h>
+> > >  #include <linux/limits.h>
+> > > -#include <stdbool.h>
+> > > -#include <sys/socket.h>
+> > > +
+> > > +typedef char bool;
+> > > +typedef int pid_t;
+> > >
+> > >  /* bpf-output associated map */
+> > >  struct __augmented_syscalls__ {
+> > > @@ -94,6 +95,30 @@ struct pids_filtered {
+> > >         __uint(max_entries, 64);
+> > >  } pids_filtered SEC(".maps");
+> > >
+> > > +/*
+> > > + * Desired design of maximum size and alignment (see RFC2553)
+> > > + */
+> > > +#define _K_SS_MAXSIZE   128     /* Implementation specific max size */
+> > > +
+> > > +typedef unsigned short sa_family_t;
+> > > +
+> > > +/*
+> > > + * The definition uses anonymous union and struct in order to control the
+> > > + * default alignment.
+> > > + */
+> > > +struct sockaddr_storage {
+> > > +        union {
+> > > +                struct {
+> > > +                        sa_family_t    ss_family; /* address family */
+> > > +                        /* Following field(s) are implementation specific */
+> > > +                        char __data[_K_SS_MAXSIZE - sizeof(unsigned short)];
+> > > +                                /* space to achieve desired size, */
+> > > +                                /* _SS_MAXSIZE value minus size of ss_family */
+> > > +                };
+> > > +                void *__align; /* implementation specific desired alignment */
+> > > +        };
+> > > +};
+> > > +
+> > >  struct augmented_args_payload {
+> > >         struct syscall_enter_args args;
+> > >         union {
+> > > diff --git a/tools/perf/examples/bpf/empty.c b/tools/perf/examples/bpf/empty.c
+> > > index 3e296c0c53d7d8e2..e4872c48a484f218 100644
+> > > --- a/tools/perf/examples/bpf/empty.c
+> > > +++ b/tools/perf/examples/bpf/empty.c
+> > > @@ -7,6 +7,6 @@ struct syscall_enter_args;
+> > >  SEC("raw_syscalls:sys_enter")
+> > >  int sys_enter(struct syscall_enter_args *args)
+> > >  {
+> > > -       return 0;
+> > > +       return 1;
+> > >  }
+> > >  char _license[] SEC("license") = "GPL";
+> > > diff --git a/tools/perf/util/llvm-utils.c b/tools/perf/util/llvm-utils.c
+> > > index 2dc7970074196ca8..a5cac85783d8711f 100644
+> > > --- a/tools/perf/util/llvm-utils.c
+> > > +++ b/tools/perf/util/llvm-utils.c
+> > > @@ -495,7 +495,7 @@ int llvm__compile_bpf(const char *path, void **p_obj_buf,
+> > >
+> > >         snprintf(linux_version_code_str, sizeof(linux_version_code_str),
+> > >                  "0x%x", kernel_version);
+> > > -       if (asprintf(&perf_bpf_include_opts, "-I%s/bpf", perf_include_dir) < 0)
+> > > +       if (asprintf(&perf_bpf_include_opts, "-I%s/", perf_include_dir) < 0)
+> > >                 goto errout;
+> > >         force_set_env("NR_CPUS", nr_cpus_avail_str);
+> > >         force_set_env("LINUX_VERSION_CODE", linux_version_code_str);
+> > >
+> > >
+> > > The connect calls gets served, tomorrow, if you don't beat me I'll apply
+> > > the series after adding these minimal changes so that we have this
+> > > working with libbpf 1.0 and then we can move from there, with a switch
+> > > to a BPF skel, simplest things first, then deal with faults at pointer
+> > > payload copy, which is another avenue, AFAIK with solutions already.
+> > 
+> > So I was trying to be clean and not redefine too much. My clang
+> > command line was:
+> > 
+> > clang -target bpf -O2 -g -c -I/usr/include/x86_64-linux-gnu
+> > -D__NR_CPUS__=16 -D__x86_64__=1
 > 
-> So I was trying to be clean and not redefine too much. My clang
-> command line was:
+> Sure, I haven't even checked why that is needed, maybe its not anymore.
 > 
-> clang -target bpf -O2 -g -c -I/usr/include/x86_64-linux-gnu
-> -D__NR_CPUS__=16 -D__x86_64__=1
+> I just tried the first hunch about the header files, those other
+> variables maybe were needed long ago, maybe its just more stuff to trow
+> out in the direction of doing it the modern way, BPF skels.
+>  
+> > It'd be nice to just drop the need for __NR_CPUS__ and have it be
+> > dynamic, the skeleton approach would require this. Not sure how to
+> > workaround the x86 define and path :-/ Perhaps send out your changes
+> > for review and I can look at and test them.
+> 
+> Done deal, early tomorrow I'll send it and wait for your review.
 
-Sure, I haven't even checked why that is needed, maybe its not anymore.
+Did it now, please take a look at my tmp.perf/core branch.
 
-I just tried the first hunch about the header files, those other
-variables maybe were needed long ago, maybe its just more stuff to trow
-out in the direction of doing it the modern way, BPF skels.
- 
-> It'd be nice to just drop the need for __NR_CPUS__ and have it be
-> dynamic, the skeleton approach would require this. Not sure how to
-> workaround the x86 define and path :-/ Perhaps send out your changes
-> for review and I can look at and test them.
-
-Done deal, early tomorrow I'll send it and wait for your review.
+Tomorrow I'll add the Tested-by tags.
 
 - Arnaldo
