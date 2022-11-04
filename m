@@ -2,52 +2,52 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 067E4C43217
-	for <linux-perf-users@archiver.kernel.org>; Fri,  4 Nov 2022 15:55:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E0D8BC4332F
+	for <linux-perf-users@archiver.kernel.org>; Fri,  4 Nov 2022 15:55:33 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231795AbiKDPz1 (ORCPT
+        id S231844AbiKDPzc (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Fri, 4 Nov 2022 11:55:27 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59822 "EHLO
+        Fri, 4 Nov 2022 11:55:32 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59888 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231827AbiKDPzZ (ORCPT
+        with ESMTP id S231873AbiKDPza (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Fri, 4 Nov 2022 11:55:25 -0400
+        Fri, 4 Nov 2022 11:55:30 -0400
 Received: from mail-oi1-f170.google.com (mail-oi1-f170.google.com [209.85.167.170])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 61DB7303DE;
-        Fri,  4 Nov 2022 08:55:25 -0700 (PDT)
-Received: by mail-oi1-f170.google.com with SMTP id r76so5549396oie.13;
-        Fri, 04 Nov 2022 08:55:25 -0700 (PDT)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A4E5A31230;
+        Fri,  4 Nov 2022 08:55:28 -0700 (PDT)
+Received: by mail-oi1-f170.google.com with SMTP id v81so5593020oie.5;
+        Fri, 04 Nov 2022 08:55:28 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
         h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
          :mime-version:subject:date:from:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=nbh4kYtAszd2WFH06dmd+kkJjoRcl20JJM5emroag08=;
-        b=w8+XoRPoYdUI32UFboAgxt8QAXevzgE3bSJZ4GfcXzIulYjGWG85JonQNcwQfIa49n
-         7UQwpsCKxVV7NrzeOW9IYHB9lN3dZVPtIOrB4kskypfU3bJjCIGAQSe5yX84t9+Ch1ue
-         m1vY2vy0sXRbl6oIsv+2KL31sbaWgxbUMsBC7uZZIXw6worzZdRXsq5sZdbDjlLV1eT5
-         3GCRmvxb9EDPHOpqhf1N4Weg2xi/zaeLFpCfHdiMcZ8ulb35Wd+Wkd/IJNNw3sBA0MRQ
-         56VjZvT1BszXpF6gcg0Ts5JTV2YzHcQ4JXLssMnD4BHOGkWcpyB8us5PgmBDtire3ICv
-         IGXg==
-X-Gm-Message-State: ACrzQf1CdJt3nqci1YGvnG0a0cbpXKQTWh4ngXodaF8qFHwfJVoYVeBQ
-        jFElJqlGnHOASlQVAAh8zg==
-X-Google-Smtp-Source: AMsMyM6XCGOxDkWp/KDtlfrAH+Z735zS9ydDsev6tHg8eM+cXyEV7Ga+K7IZqgQFpv3gP3gCDvvgow==
-X-Received: by 2002:a05:6808:11c1:b0:353:f1a5:207a with SMTP id p1-20020a05680811c100b00353f1a5207amr27451988oiv.183.1667577324586;
-        Fri, 04 Nov 2022 08:55:24 -0700 (PDT)
+        bh=YXxvA5Cmwe9nSMxNL2yH3Amn9qhEZ+Ppqa0CVXQahDM=;
+        b=U5UbxaBfThQJ39oJqQdTdI2p+ZQIub5m6zMuOmnFaFq09GZaQc5YSYFG+sXxDhfsqG
+         2PZUNnohR5t3csC5mK/hv/mB7Rz6cQXY6Ias2vCqs8a/8zXIIv5s7hSQeeUSjiLSHXSb
+         /wpwImNReSt3PdlO9vYA7/ogU52tOqZ4xJqLEeogHU+FcCySge7PKMusji2ue4f4kmTF
+         98vxlmIIGQY2PD6aq8AzzpWWg6X5mx5xaLFi6npJae08JhcrEwSOR/XIoGsn64OE9qdv
+         HGXDNqtIsCd0fhaG3QpohBTR0+BZwClCgfZUkRqtmiBh1rSfqLfk6WZcwoxR6PY3bvZl
+         ksXw==
+X-Gm-Message-State: ACrzQf0oGtbwstFQbFU7t9JkkgTnkamHoozSgNlK6TbL/ZI2FhqQ89hx
+        qCJ8aOJSRhtLgVhWzVw0z3gHfzuoSA==
+X-Google-Smtp-Source: AMsMyM7j75hsQAjfZIMDag+E+uxVO086sbySFKGpZQmxBHGiFVlWgpE6vfapy3lhNwjdU+847kbdBg==
+X-Received: by 2002:a05:6808:2023:b0:359:c826:8085 with SMTP id q35-20020a056808202300b00359c8268085mr19906327oiw.156.1667577328221;
+        Fri, 04 Nov 2022 08:55:28 -0700 (PDT)
 Received: from robh_at_kernel.org (66-90-144-107.dyn.grandenetworks.net. [66.90.144.107])
-        by smtp.gmail.com with ESMTPSA id cg27-20020a056830631b00b00661b019accbsm1588176otb.3.2022.11.04.08.55.23
+        by smtp.gmail.com with ESMTPSA id h4-20020a9d2f04000000b00661a3f4113bsm1532860otb.64.2022.11.04.08.55.26
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 04 Nov 2022 08:55:24 -0700 (PDT)
-Received: (nullmailer pid 1880410 invoked by uid 1000);
+        Fri, 04 Nov 2022 08:55:27 -0700 (PDT)
+Received: (nullmailer pid 1880418 invoked by uid 1000);
         Fri, 04 Nov 2022 15:55:18 -0000
 From:   Rob Herring <robh@kernel.org>
-Date:   Fri, 04 Nov 2022 10:55:01 -0500
-Subject: [PATCH v3 1/8] perf: arm_spe: Use feature numbering for PMSEVFR_EL1 defines
+Date:   Fri, 04 Nov 2022 10:55:05 -0500
+Subject: [PATCH v3 5/8] perf: arm_spe: Use new PMSIDR_EL1 register enums
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 8bit
-Message-Id: <20220825-arm-spe-v8-7-v3-1-87682f78caac@kernel.org>
+Message-Id: <20220825-arm-spe-v8-7-v3-5-87682f78caac@kernel.org>
 References: <20220825-arm-spe-v8-7-v3-0-87682f78caac@kernel.org>
 In-Reply-To: <20220825-arm-spe-v8-7-v3-0-87682f78caac@kernel.org>
 To:     Namhyung Kim <namhyung@kernel.org>, Will Deacon <will@kernel.org>,
@@ -72,58 +72,73 @@ Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-Similar to commit 121a8fc088f1 ("arm64/sysreg: Use feature numbering for
-PMU and SPE revisions") use feature numbering instead of architecture
-versions for the PMSEVFR_EL1 Res0 defines.
+Now that the SPE register definitions include enums for some PMSIDR_EL1
+fields, use them in the driver in place of magic values.
 
-Tested-by: James Clark <james.clark@arm.com>
 Signed-off-by: Rob Herring <robh@kernel.org>
 ---
-v3:
- - No change
-v2:
- - New patch
+v3: New patch
 ---
- arch/arm64/include/asm/sysreg.h | 6 +++---
- drivers/perf/arm_spe_pmu.c      | 4 ++--
- 2 files changed, 5 insertions(+), 5 deletions(-)
+ drivers/perf/arm_spe_pmu.c | 20 ++++++++++----------
+ 1 file changed, 10 insertions(+), 10 deletions(-)
 
-diff --git a/arch/arm64/include/asm/sysreg.h b/arch/arm64/include/asm/sysreg.h
-index 7d301700d1a9..9a4cf12e3e16 100644
---- a/arch/arm64/include/asm/sysreg.h
-+++ b/arch/arm64/include/asm/sysreg.h
-@@ -294,11 +294,11 @@
- #define SYS_PMSFCR_EL1_ST_SHIFT		18
- 
- #define SYS_PMSEVFR_EL1			sys_reg(3, 0, 9, 9, 5)
--#define SYS_PMSEVFR_EL1_RES0_8_2	\
-+#define PMSEVFR_EL1_RES0_IMP	\
- 	(GENMASK_ULL(47, 32) | GENMASK_ULL(23, 16) | GENMASK_ULL(11, 8) |\
- 	 BIT_ULL(6) | BIT_ULL(4) | BIT_ULL(2) | BIT_ULL(0))
--#define SYS_PMSEVFR_EL1_RES0_8_3	\
--	(SYS_PMSEVFR_EL1_RES0_8_2 & ~(BIT_ULL(18) | BIT_ULL(17) | BIT_ULL(11)))
-+#define PMSEVFR_EL1_RES0_V1P1	\
-+	(PMSEVFR_EL1_RES0_IMP & ~(BIT_ULL(18) | BIT_ULL(17) | BIT_ULL(11)))
- 
- #define SYS_PMSLATFR_EL1		sys_reg(3, 0, 9, 9, 6)
- #define SYS_PMSLATFR_EL1_MINLAT_SHIFT	0
 diff --git a/drivers/perf/arm_spe_pmu.c b/drivers/perf/arm_spe_pmu.c
-index 00e3a637f7b6..65cf93dcc8ee 100644
+index 9b4bd72087ea..af6d3867c3e7 100644
 --- a/drivers/perf/arm_spe_pmu.c
 +++ b/drivers/perf/arm_spe_pmu.c
-@@ -677,11 +677,11 @@ static u64 arm_spe_pmsevfr_res0(u16 pmsver)
- {
- 	switch (pmsver) {
- 	case ID_AA64DFR0_EL1_PMSVer_IMP:
--		return SYS_PMSEVFR_EL1_RES0_8_2;
-+		return PMSEVFR_EL1_RES0_IMP;
- 	case ID_AA64DFR0_EL1_PMSVer_V1P1:
- 	/* Return the highest version we support in default */
+@@ -1006,32 +1006,32 @@ static void __arm_spe_pmu_dev_probe(void *info)
+ 	/* This field has a spaced out encoding, so just use a look-up */
+ 	fld = FIELD_GET(PMSIDR_EL1_INTERVAL, reg);
+ 	switch (fld) {
+-	case 0:
++	case PMSIDR_EL1_INTERVAL_256:
+ 		spe_pmu->min_period = 256;
+ 		break;
+-	case 2:
++	case PMSIDR_EL1_INTERVAL_512:
+ 		spe_pmu->min_period = 512;
+ 		break;
+-	case 3:
++	case PMSIDR_EL1_INTERVAL_768:
+ 		spe_pmu->min_period = 768;
+ 		break;
+-	case 4:
++	case PMSIDR_EL1_INTERVAL_1024:
+ 		spe_pmu->min_period = 1024;
+ 		break;
+-	case 5:
++	case PMSIDR_EL1_INTERVAL_1536:
+ 		spe_pmu->min_period = 1536;
+ 		break;
+-	case 6:
++	case PMSIDR_EL1_INTERVAL_2048:
+ 		spe_pmu->min_period = 2048;
+ 		break;
+-	case 7:
++	case PMSIDR_EL1_INTERVAL_3072:
+ 		spe_pmu->min_period = 3072;
+ 		break;
  	default:
--		return SYS_PMSEVFR_EL1_RES0_8_3;
-+		return PMSEVFR_EL1_RES0_V1P1;
+ 		dev_warn(dev, "unknown PMSIDR_EL1.Interval [%d]; assuming 8\n",
+ 			 fld);
+ 		fallthrough;
+-	case 8:
++	case PMSIDR_EL1_INTERVAL_4096:
+ 		spe_pmu->min_period = 4096;
  	}
- }
+ 
+@@ -1050,10 +1050,10 @@ static void __arm_spe_pmu_dev_probe(void *info)
+ 		dev_warn(dev, "unknown PMSIDR_EL1.CountSize [%d]; assuming 2\n",
+ 			 fld);
+ 		fallthrough;
+-	case 2:
++	case PMSIDR_EL1_COUNTSIZE_12_BIT_SAT:
+ 		spe_pmu->counter_sz = 12;
+ 		break;
+-	case 3:
++	case PMSIDR_EL1_COUNTSIZE_16_BIT_SAT:
+ 		spe_pmu->counter_sz = 16;
+ 	}
  
 
 -- 
