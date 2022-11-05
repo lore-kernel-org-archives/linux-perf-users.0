@@ -2,57 +2,48 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 023C9C433FE
-	for <linux-perf-users@archiver.kernel.org>; Sat,  5 Nov 2022 07:24:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 583DEC4332F
+	for <linux-perf-users@archiver.kernel.org>; Sat,  5 Nov 2022 13:28:48 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229635AbiKEHYG (ORCPT
+        id S229739AbiKEN2r (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Sat, 5 Nov 2022 03:24:06 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58874 "EHLO
+        Sat, 5 Nov 2022 09:28:47 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53038 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229609AbiKEHYC (ORCPT
+        with ESMTP id S229725AbiKEN2q (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Sat, 5 Nov 2022 03:24:02 -0400
-Received: from mail-pj1-x102c.google.com (mail-pj1-x102c.google.com [IPv6:2607:f8b0:4864:20::102c])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 62B632408D
-        for <linux-perf-users@vger.kernel.org>; Sat,  5 Nov 2022 00:23:55 -0700 (PDT)
-Received: by mail-pj1-x102c.google.com with SMTP id gw22so6344867pjb.3
-        for <linux-perf-users@vger.kernel.org>; Sat, 05 Nov 2022 00:23:55 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=S8CxQ8M2QM9sBIlwmPDF3sO4KY64cCnbt7okAkRcIdI=;
-        b=c0dlly7hwTw7JU56MQSd2/9OjXdPEB8Z/l2dmasIIKMvsyZHc8sBbN5UJQtR7mVC09
-         q1RR61V+SDTO2DuU2hQynG5H3e4yn4CM6fXf36AcT70kPYKmFbcQCH7SXXZkg4VyVfhu
-         EPFrH9rYmLzLRfPkGFi1Qz02uF9/Zt1E3vUw0+DG9adou/Lc4Ndq83SCfiSm6MmDRz8s
-         s1D/JRn7aWkc58Nrswu24cJ8DSKi/vsbmPgm6gAHhajuLe1RWjCt6XzHurTyatoUKKtT
-         7iVtd1ml8i5VhcahkoMggu5Al7bKaRASIgh9v83JNHCWiqAvE+xNgcz8FYTpsyBAMetU
-         3/EQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=S8CxQ8M2QM9sBIlwmPDF3sO4KY64cCnbt7okAkRcIdI=;
-        b=JtxweF/88bfUmJKPGFRucbPgs4KxlZd6UTbU+yrpQTHy+3sLnf5Z37Z7eTgeeQ0s3U
-         QfgtgrZd1wUAuAbnBEqJE8aIref6XXH42Wt1qDt7GlEOHRo6Da2F+xWLKfRE6Eo0BoDr
-         eH8d/6qt3OK7Q2xMaLsdq+zHMjeY/mR8CAlFs1RGGTyATwqnxlaVUr1n/IstzG/bk731
-         o3fdcv5wt0/HylmiA01MsizkIxLKTnFRUv5LBvB6OgAOasnqpa/rptbY5wzwEvADC2lU
-         YmpvLSvvNRMcb6t7cTbYMGBfhM8VVev/fZKysmvwxkv3JIWd55c4YQa02REl3bqtoSLs
-         rpJA==
-X-Gm-Message-State: ACrzQf0DdE4Anl12fWqtvmaC3yYaFfwELFIP3aOlIF1ynylhwd1W5UcV
-        cf91PSd9DLSKbQw4RbEP+H7CwQ==
-X-Google-Smtp-Source: AMsMyM5leRTjPX8cC2BZ8OxRg1qLemGZp+/Aqexr9F666mTxh2xSMl5cDCaV8E5Oxa1vtL+dJHRYXA==
-X-Received: by 2002:a17:902:ec92:b0:186:9fc6:868c with SMTP id x18-20020a170902ec9200b001869fc6868cmr39074139plg.12.1667633034808;
-        Sat, 05 Nov 2022 00:23:54 -0700 (PDT)
-Received: from leoy-huangpu.lan (211-75-219-201.hinet-ip.hinet.net. [211.75.219.201])
-        by smtp.gmail.com with ESMTPSA id w27-20020aa79a1b000000b00562ef28aac6sm698138pfj.185.2022.11.05.00.23.48
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sat, 05 Nov 2022 00:23:54 -0700 (PDT)
-From:   Leo Yan <leo.yan@linaro.org>
-To:     Marc Zyngier <maz@kernel.org>, James Morse <james.morse@arm.com>,
+        Sat, 5 Nov 2022 09:28:46 -0400
+Received: from ams.source.kernel.org (ams.source.kernel.org [IPv6:2604:1380:4601:e00::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CCE72DEA0;
+        Sat,  5 Nov 2022 06:28:45 -0700 (PDT)
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by ams.source.kernel.org (Postfix) with ESMTPS id 870C9B80025;
+        Sat,  5 Nov 2022 13:28:44 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 2A5AAC433D6;
+        Sat,  5 Nov 2022 13:28:43 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1667654923;
+        bh=LHNxWfv4lFpGRWDjFEVWeEhY+NjqCvnXHLnf01bxTdY=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=LbwYLN5SeGDotOAWDCaYThJR9r5jNTQbm8tt06i9Y3Qvrj76515aGET7+Or4bmHe/
+         h+6mK7YUmxJxBdlnRHV8THYyvUg3n8hpmZnkFaAxjxwptoa3yM5uwmxc7Xz7kh1Snu
+         d2veqeJqK6WbelqUT8FM5DjjsGQKzQEOLOEQDpQvrY00VksUjfH2K99AV0p0R7GAVa
+         GDBSBgGA+8gFNaFdbVanPmv0YOiYSLaC4KL3JmpbPR2xFu+J/crsASLM+UsMN8Kb1k
+         2WEqypGh9UCPfYpxb9Ff4I8WrCxX9PB76At0fb+5Fx9EfkVE8gPHKw0dAsEP+OQSkf
+         s/1UFPuaJbIBw==
+Received: from sofa.misterjones.org ([185.219.108.64] helo=goblin-girl.misterjones.org)
+        by disco-boy.misterjones.org with esmtpsa  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
+        (Exim 4.95)
+        (envelope-from <maz@kernel.org>)
+        id 1orJE0-0043rY-Rv;
+        Sat, 05 Nov 2022 13:28:40 +0000
+Date:   Sat, 05 Nov 2022 13:28:40 +0000
+Message-ID: <868rkpr0mv.wl-maz@kernel.org>
+From:   Marc Zyngier <maz@kernel.org>
+To:     Leo Yan <leo.yan@linaro.org>
+Cc:     James Morse <james.morse@arm.com>,
         Alexandru Elisei <alexandru.elisei@arm.com>,
         Suzuki K Poulose <suzuki.poulose@arm.com>,
         Oliver Upton <oliver.upton@linux.dev>,
@@ -71,150 +62,87 @@ To:     Marc Zyngier <maz@kernel.org>, James Morse <james.morse@arm.com>,
         linux-arm-kernel@lists.infradead.org, kvmarm@lists.linux.dev,
         kvmarm@lists.cs.columbia.edu, linux-kernel@vger.kernel.org,
         linux-perf-users@vger.kernel.org
-Cc:     Leo Yan <leo.yan@linaro.org>
-Subject: [PATCH v1 3/3] perf arm64: Support virtual CPU ID for kvm-stat
-Date:   Sat,  5 Nov 2022 07:23:11 +0000
-Message-Id: <20221105072311.8214-4-leo.yan@linaro.org>
-X-Mailer: git-send-email 2.34.1
-In-Reply-To: <20221105072311.8214-1-leo.yan@linaro.org>
+Subject: Re: [PATCH v1 3/3] perf arm64: Support virtual CPU ID for kvm-stat
+In-Reply-To: <20221105072311.8214-4-leo.yan@linaro.org>
 References: <20221105072311.8214-1-leo.yan@linaro.org>
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+        <20221105072311.8214-4-leo.yan@linaro.org>
+User-Agent: Wanderlust/2.15.9 (Almost Unreal) SEMI-EPG/1.14.7 (Harue)
+ FLIM-LB/1.14.9 (=?UTF-8?B?R29qxY0=?=) APEL-LB/10.8 EasyPG/1.0.0 Emacs/27.1
+ (aarch64-unknown-linux-gnu) MULE/6.0 (HANACHIRUSATO)
+MIME-Version: 1.0 (generated by SEMI-EPG 1.14.7 - "Harue")
+Content-Type: text/plain; charset=US-ASCII
+X-SA-Exim-Connect-IP: 185.219.108.64
+X-SA-Exim-Rcpt-To: leo.yan@linaro.org, james.morse@arm.com, alexandru.elisei@arm.com, suzuki.poulose@arm.com, oliver.upton@linux.dev, catalin.marinas@arm.com, will@kernel.org, acme@kernel.org, john.garry@huawei.com, james.clark@arm.com, mike.leach@linaro.org, peterz@infradead.org, mingo@redhat.com, mark.rutland@arm.com, alexander.shishkin@linux.intel.com, jolsa@kernel.org, namhyung@kernel.org, linux-arm-kernel@lists.infradead.org, kvmarm@lists.linux.dev, kvmarm@lists.cs.columbia.edu, linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org
+X-SA-Exim-Mail-From: maz@kernel.org
+X-SA-Exim-Scanned: No (on disco-boy.misterjones.org); SAEximRunCond expanded to false
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-Since the two trace events kvm_entry_v2/kvm_exit_v2 are added, we can
-use the field "vcpu_id" in the events to get to know the virtual CPU ID.
-To keep backward compatibility, we still need to rely on the trace
-events kvm_entry/kvm_exit for old kernels.
+On Sat, 05 Nov 2022 07:23:11 +0000,
+Leo Yan <leo.yan@linaro.org> wrote:
+> 
+> Since the two trace events kvm_entry_v2/kvm_exit_v2 are added, we can
+> use the field "vcpu_id" in the events to get to know the virtual CPU ID.
+> To keep backward compatibility, we still need to rely on the trace
+> events kvm_entry/kvm_exit for old kernels.
+> 
+> This patch adds Arm64's functions setup_kvm_events_tp() and
+> arm64__setup_kvm_tp(), by detecting the nodes under sysfs folder, it can
+> dynamically register trace events kvm_entry_v2/kvm_exit_v2 when the
+> kernel has provided them, otherwise, it rolls back to use events
+> kvm_entry/kvm_exit for backward compatibility.
+> 
+> Let cpu_isa_init() to invoke arm64__setup_kvm_tp(), this can allow the
+> command "perf kvm stat report" also to dynamically setup trace events.
+> 
+> Before:
+> 
+>   # perf kvm stat report --vcpu 27
+> 
+>   Analyze events for all VMs, VCPU 27:
+> 
+>                VM-EXIT    Samples  Samples%     Time%    Min Time    Max Time         Avg time
+> 
+>   Total Samples:0, Total events handled time:0.00us.
+>
+> After:
+> 
+>   # perf kvm stat report --vcpu 27
+> 
+>   Analyze events for all VMs, VCPU 27:
+> 
+>                VM-EXIT    Samples  Samples%     Time%    Min Time    Max Time         Avg time
+> 
+>                  SYS64        808    98.54%    91.24%      0.00us    303.76us      3.46us ( +-  13.54% )
+>                    WFx         10     1.22%     7.79%      0.00us     69.48us     23.91us ( +-  25.91% )
+>                    IRQ          2     0.24%     0.97%      0.00us     22.64us     14.82us ( +-  52.77% )
+> 
+>   Total Samples:820, Total events handled time:3068.28us.
 
-This patch adds Arm64's functions setup_kvm_events_tp() and
-arm64__setup_kvm_tp(), by detecting the nodes under sysfs folder, it can
-dynamically register trace events kvm_entry_v2/kvm_exit_v2 when the
-kernel has provided them, otherwise, it rolls back to use events
-kvm_entry/kvm_exit for backward compatibility.
+Please educate me: how useful is it to filter on a vcpu number across
+all VMs? What sense does it even make?
 
-Let cpu_isa_init() to invoke arm64__setup_kvm_tp(), this can allow the
-command "perf kvm stat report" also to dynamically setup trace events.
+Conversely, what would be the purpose of filtering on a 5th thread of
+any process irrespective of what the process does? To me, this is the
+same level of non-sense.
 
-Before:
+AFAICT, this is just piling more arbitrary data extraction for no
+particular reason other than "just because we can", and there is
+absolutely no guarantee that this is fit for anyone else's purpose.
 
-  # perf kvm stat report --vcpu 27
+I'd rather you have a generic tracepoint taking the vcpu as a context
+and a BPF program that spits out the information people actually need,
+keeping things out of the kernel. Or even a tracehook (like the
+scheduler does), and let people load a module to dump whatever
+information they please.
 
-  Analyze events for all VMs, VCPU 27:
+But randomly adding new tracepoints to output a semi-useless field
+without any consideration for future-proofing? No, thank you.
 
-               VM-EXIT    Samples  Samples%     Time%    Min Time    Max Time         Avg time
+Thanks,
 
-  Total Samples:0, Total events handled time:0.00us.
+	M.
 
-After:
-
-  # perf kvm stat report --vcpu 27
-
-  Analyze events for all VMs, VCPU 27:
-
-               VM-EXIT    Samples  Samples%     Time%    Min Time    Max Time         Avg time
-
-                 SYS64        808    98.54%    91.24%      0.00us    303.76us      3.46us ( +-  13.54% )
-                   WFx         10     1.22%     7.79%      0.00us     69.48us     23.91us ( +-  25.91% )
-                   IRQ          2     0.24%     0.97%      0.00us     22.64us     14.82us ( +-  52.77% )
-
-  Total Samples:820, Total events handled time:3068.28us.
-
-Signed-off-by: Leo Yan <leo.yan@linaro.org>
----
- tools/perf/arch/arm64/util/kvm-stat.c | 54 ++++++++++++++++++++++++---
- 1 file changed, 49 insertions(+), 5 deletions(-)
-
-diff --git a/tools/perf/arch/arm64/util/kvm-stat.c b/tools/perf/arch/arm64/util/kvm-stat.c
-index 73d18e0ed6f6..1ba54ce3d7d8 100644
---- a/tools/perf/arch/arm64/util/kvm-stat.c
-+++ b/tools/perf/arch/arm64/util/kvm-stat.c
-@@ -3,6 +3,7 @@
- #include <memory.h>
- #include "../../../util/evsel.h"
- #include "../../../util/kvm-stat.h"
-+#include "../../../util/tracepoint.h"
- #include "arm64_exception_types.h"
- #include "debug.h"
- 
-@@ -10,18 +11,28 @@ define_exit_reasons_table(arm64_exit_reasons, kvm_arm_exception_type);
- define_exit_reasons_table(arm64_trap_exit_reasons, kvm_arm_exception_class);
- 
- const char *kvm_trap_exit_reason = "esr_ec";
--const char *vcpu_id_str = "id";
-+const char *vcpu_id_str = "vcpu_id";
- const int decode_str_len = 20;
- const char *kvm_exit_reason = "ret";
--const char *kvm_entry_trace = "kvm:kvm_entry";
--const char *kvm_exit_trace = "kvm:kvm_exit";
-+const char *kvm_entry_trace;
-+const char *kvm_exit_trace;
- 
--const char *kvm_events_tp[] = {
-+#define NR_TPS	2
-+
-+static const char *kvm_events_tp_v1[NR_TPS + 1] = {
- 	"kvm:kvm_entry",
- 	"kvm:kvm_exit",
- 	NULL,
- };
- 
-+static const char *kvm_events_tp_v2[NR_TPS + 1] = {
-+	"kvm:kvm_entry_v2",
-+	"kvm:kvm_exit_v2",
-+	NULL,
-+};
-+
-+const char *kvm_events_tp[NR_TPS + 1];
-+
- static void event_get_key(struct evsel *evsel,
- 			  struct perf_sample *sample,
- 			  struct event_key *key)
-@@ -78,8 +89,41 @@ const char * const kvm_skip_events[] = {
- 	NULL,
- };
- 
--int cpu_isa_init(struct perf_kvm_stat *kvm, const char *cpuid __maybe_unused)
-+static int arm64__setup_kvm_tp(struct perf_kvm_stat *kvm)
- {
-+	const char **kvm_events, **events_ptr;
-+	int i, nr_tp = 0;
-+
-+	if (is_valid_tracepoint("kvm:kvm_entry_v2")) {
-+		kvm_events = kvm_events_tp_v2;
-+		kvm_entry_trace = "kvm:kvm_entry_v2";
-+		kvm_exit_trace = "kvm:kvm_exit_v2";
-+	} else {
-+		kvm_events = kvm_events_tp_v1;
-+		kvm_entry_trace = "kvm:kvm_entry";
-+		kvm_exit_trace = "kvm:kvm_exit";
-+	}
-+
-+	for (events_ptr = kvm_events; *events_ptr; events_ptr++) {
-+		if (!is_valid_tracepoint(*events_ptr))
-+			return -1;
-+		nr_tp++;
-+	}
-+
-+	for (i = 0; i < nr_tp; i++)
-+		kvm_events_tp[i] = kvm_events[i];
-+	kvm_events_tp[i] = NULL;
-+
- 	kvm->exit_reasons_isa = "arm64";
- 	return 0;
- }
-+
-+int setup_kvm_events_tp(struct perf_kvm_stat *kvm)
-+{
-+	return arm64__setup_kvm_tp(kvm);
-+}
-+
-+int cpu_isa_init(struct perf_kvm_stat *kvm, const char *cpuid __maybe_unused)
-+{
-+	return arm64__setup_kvm_tp(kvm);
-+}
 -- 
-2.34.1
-
+Without deviation from the norm, progress is not possible.
