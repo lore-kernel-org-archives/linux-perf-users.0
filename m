@@ -2,147 +2,98 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 583DEC4332F
-	for <linux-perf-users@archiver.kernel.org>; Sat,  5 Nov 2022 13:28:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F0F23C433FE
+	for <linux-perf-users@archiver.kernel.org>; Sat,  5 Nov 2022 13:59:42 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229739AbiKEN2r (ORCPT
+        id S229531AbiKEN7l (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Sat, 5 Nov 2022 09:28:47 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53038 "EHLO
+        Sat, 5 Nov 2022 09:59:41 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59996 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229725AbiKEN2q (ORCPT
+        with ESMTP id S229453AbiKEN7k (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Sat, 5 Nov 2022 09:28:46 -0400
-Received: from ams.source.kernel.org (ams.source.kernel.org [IPv6:2604:1380:4601:e00::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CCE72DEA0;
-        Sat,  5 Nov 2022 06:28:45 -0700 (PDT)
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by ams.source.kernel.org (Postfix) with ESMTPS id 870C9B80025;
-        Sat,  5 Nov 2022 13:28:44 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 2A5AAC433D6;
-        Sat,  5 Nov 2022 13:28:43 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1667654923;
-        bh=LHNxWfv4lFpGRWDjFEVWeEhY+NjqCvnXHLnf01bxTdY=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=LbwYLN5SeGDotOAWDCaYThJR9r5jNTQbm8tt06i9Y3Qvrj76515aGET7+Or4bmHe/
-         h+6mK7YUmxJxBdlnRHV8THYyvUg3n8hpmZnkFaAxjxwptoa3yM5uwmxc7Xz7kh1Snu
-         d2veqeJqK6WbelqUT8FM5DjjsGQKzQEOLOEQDpQvrY00VksUjfH2K99AV0p0R7GAVa
-         GDBSBgGA+8gFNaFdbVanPmv0YOiYSLaC4KL3JmpbPR2xFu+J/crsASLM+UsMN8Kb1k
-         2WEqypGh9UCPfYpxb9Ff4I8WrCxX9PB76At0fb+5Fx9EfkVE8gPHKw0dAsEP+OQSkf
-         s/1UFPuaJbIBw==
-Received: from sofa.misterjones.org ([185.219.108.64] helo=goblin-girl.misterjones.org)
-        by disco-boy.misterjones.org with esmtpsa  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
-        (Exim 4.95)
-        (envelope-from <maz@kernel.org>)
-        id 1orJE0-0043rY-Rv;
-        Sat, 05 Nov 2022 13:28:40 +0000
-Date:   Sat, 05 Nov 2022 13:28:40 +0000
-Message-ID: <868rkpr0mv.wl-maz@kernel.org>
-From:   Marc Zyngier <maz@kernel.org>
-To:     Leo Yan <leo.yan@linaro.org>
-Cc:     James Morse <james.morse@arm.com>,
-        Alexandru Elisei <alexandru.elisei@arm.com>,
-        Suzuki K Poulose <suzuki.poulose@arm.com>,
-        Oliver Upton <oliver.upton@linux.dev>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Will Deacon <will@kernel.org>,
-        Arnaldo Carvalho de Melo <acme@kernel.org>,
-        John Garry <john.garry@huawei.com>,
-        James Clark <james.clark@arm.com>,
-        Mike Leach <mike.leach@linaro.org>,
-        Peter Zijlstra <peterz@infradead.org>,
+        Sat, 5 Nov 2022 09:59:40 -0400
+Received: from mail-pf1-x42a.google.com (mail-pf1-x42a.google.com [IPv6:2607:f8b0:4864:20::42a])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DE15620BE3;
+        Sat,  5 Nov 2022 06:59:38 -0700 (PDT)
+Received: by mail-pf1-x42a.google.com with SMTP id y203so6849507pfb.4;
+        Sat, 05 Nov 2022 06:59:38 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20210112;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=2VGen5F4wRHnElI7bxeSRaRwtCRZafiIgyKdmdxpY5M=;
+        b=ZBSwev+3fS8foai/lxRVCQ5HORJW/mX6OK+S/745P8Dxqp4yXbJTGjskKbayxJCh2F
+         Xx2ib0n+1wGNw7tXkt0UkgJvwgTGvjnMUrHcngpR8PLendVZMMXScDukSJwPSOGOECEx
+         3nf1XyAsBfbBfzcW/g5Zt+5cXWPq2+uroIq4/m8NBkBoGFzOINBUhPQBWVi0CsQCeYHc
+         ajx9c7JHHw/kkMUG1KlEQmAa5DES2fxC6PASbC+fIjtLy6X8VSpbCE6PMxJBrTtvoxTE
+         4HvuhUDke2vfHDyRJr5xKi9Y3/zVWkqCJzfgmP2T3muYERaGgJ+Uff2PUgwYsQgDvi3Y
+         ux5Q==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=2VGen5F4wRHnElI7bxeSRaRwtCRZafiIgyKdmdxpY5M=;
+        b=L1JHIdaQcpJtLnoxs5fPaD0ODHF3mIrsVU1Ek6nB154wJyHV40t0n/6LP4Nyn4HDM4
+         ZrjswH5/Elupnz8hNlfKx+JPFjWBnx5OYIMwGHuW/we57oINkVeOrY+87WPB0fFVBrwz
+         LcSNJyAVEKlpcxvSDF6Zy4i9LFhZzQr5Og+tKIjj1aJo2NY2ORN//+EtlhK2omfn4n/W
+         YfXBRqbVK1kT0svk1Vfsu8yBxXzb4u9WhoFvKenBWfbo1YcBCDW6TeJT1Qyvbj7lQQaS
+         EfjzoZR42GPsLBvfLKS9mZgXY4ZbdsBUV/JNOZfzcJ7kAvO6G8mBsb0Gs/1sKx+cQwgg
+         yyew==
+X-Gm-Message-State: ACrzQf2Zm9sNXy293sxF/X1KPUjbEkHbeNGC+f29lJDYKwf3KgtdAa7q
+        yNlHk2GfYWYrRa9PKhOMuLY=
+X-Google-Smtp-Source: AMsMyM4Yv6iBcUYVoQ3nH2DFk/VbgI33wuXw9f4LHs8PMStaADQ08aQEMg2ivczJTlKGDEs/Bm/m8g==
+X-Received: by 2002:a65:6e0f:0:b0:43a:1cd4:4ae6 with SMTP id bd15-20020a656e0f000000b0043a1cd44ae6mr34023270pgb.289.1667656778238;
+        Sat, 05 Nov 2022 06:59:38 -0700 (PDT)
+Received: from uftrace.. ([14.5.161.231])
+        by smtp.gmail.com with ESMTPSA id a1-20020a1709027e4100b0017f5ba1fffasm1672000pln.297.2022.11.05.06.59.35
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sat, 05 Nov 2022 06:59:37 -0700 (PDT)
+From:   Kang Minchul <tegongkang@gmail.com>
+To:     Peter Zijlstra <peterz@infradead.org>,
         Ingo Molnar <mingo@redhat.com>,
-        Mark Rutland <mark.rutland@arm.com>,
+        Arnaldo Carvalho de Melo <acme@kernel.org>
+Cc:     Mark Rutland <mark.rutland@arm.com>,
         Alexander Shishkin <alexander.shishkin@linux.intel.com>,
         Jiri Olsa <jolsa@kernel.org>,
         Namhyung Kim <namhyung@kernel.org>,
-        linux-arm-kernel@lists.infradead.org, kvmarm@lists.linux.dev,
-        kvmarm@lists.cs.columbia.edu, linux-kernel@vger.kernel.org,
-        linux-perf-users@vger.kernel.org
-Subject: Re: [PATCH v1 3/3] perf arm64: Support virtual CPU ID for kvm-stat
-In-Reply-To: <20221105072311.8214-4-leo.yan@linaro.org>
-References: <20221105072311.8214-1-leo.yan@linaro.org>
-        <20221105072311.8214-4-leo.yan@linaro.org>
-User-Agent: Wanderlust/2.15.9 (Almost Unreal) SEMI-EPG/1.14.7 (Harue)
- FLIM-LB/1.14.9 (=?UTF-8?B?R29qxY0=?=) APEL-LB/10.8 EasyPG/1.0.0 Emacs/27.1
- (aarch64-unknown-linux-gnu) MULE/6.0 (HANACHIRUSATO)
-MIME-Version: 1.0 (generated by SEMI-EPG 1.14.7 - "Harue")
-Content-Type: text/plain; charset=US-ASCII
-X-SA-Exim-Connect-IP: 185.219.108.64
-X-SA-Exim-Rcpt-To: leo.yan@linaro.org, james.morse@arm.com, alexandru.elisei@arm.com, suzuki.poulose@arm.com, oliver.upton@linux.dev, catalin.marinas@arm.com, will@kernel.org, acme@kernel.org, john.garry@huawei.com, james.clark@arm.com, mike.leach@linaro.org, peterz@infradead.org, mingo@redhat.com, mark.rutland@arm.com, alexander.shishkin@linux.intel.com, jolsa@kernel.org, namhyung@kernel.org, linux-arm-kernel@lists.infradead.org, kvmarm@lists.linux.dev, kvmarm@lists.cs.columbia.edu, linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org
-X-SA-Exim-Mail-From: maz@kernel.org
-X-SA-Exim-Scanned: No (on disco-boy.misterjones.org); SAEximRunCond expanded to false
+        linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Kang Minchul <tegongkang@gmail.com>
+Subject: [PATCH] perf print-events: Remove redundant comparison with zero
+Date:   Sat,  5 Nov 2022 22:59:32 +0900
+Message-Id: <20221105135932.81612-1-tegongkang@gmail.com>
+X-Mailer: git-send-email 2.34.1
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-On Sat, 05 Nov 2022 07:23:11 +0000,
-Leo Yan <leo.yan@linaro.org> wrote:
-> 
-> Since the two trace events kvm_entry_v2/kvm_exit_v2 are added, we can
-> use the field "vcpu_id" in the events to get to know the virtual CPU ID.
-> To keep backward compatibility, we still need to rely on the trace
-> events kvm_entry/kvm_exit for old kernels.
-> 
-> This patch adds Arm64's functions setup_kvm_events_tp() and
-> arm64__setup_kvm_tp(), by detecting the nodes under sysfs folder, it can
-> dynamically register trace events kvm_entry_v2/kvm_exit_v2 when the
-> kernel has provided them, otherwise, it rolls back to use events
-> kvm_entry/kvm_exit for backward compatibility.
-> 
-> Let cpu_isa_init() to invoke arm64__setup_kvm_tp(), this can allow the
-> command "perf kvm stat report" also to dynamically setup trace events.
-> 
-> Before:
-> 
->   # perf kvm stat report --vcpu 27
-> 
->   Analyze events for all VMs, VCPU 27:
-> 
->                VM-EXIT    Samples  Samples%     Time%    Min Time    Max Time         Avg time
-> 
->   Total Samples:0, Total events handled time:0.00us.
->
-> After:
-> 
->   # perf kvm stat report --vcpu 27
-> 
->   Analyze events for all VMs, VCPU 27:
-> 
->                VM-EXIT    Samples  Samples%     Time%    Min Time    Max Time         Avg time
-> 
->                  SYS64        808    98.54%    91.24%      0.00us    303.76us      3.46us ( +-  13.54% )
->                    WFx         10     1.22%     7.79%      0.00us     69.48us     23.91us ( +-  25.91% )
->                    IRQ          2     0.24%     0.97%      0.00us     22.64us     14.82us ( +-  52.77% )
-> 
->   Total Samples:820, Total events handled time:3068.28us.
+Since variable npmus is unsigned int, comparing with 0 is unnecessary.
 
-Please educate me: how useful is it to filter on a vcpu number across
-all VMs? What sense does it even make?
+Signed-off-by: Kang Minchul <tegongkang@gmail.com>
+---
+ tools/perf/util/print-events.c | 6 ++----
+ 1 file changed, 2 insertions(+), 4 deletions(-)
 
-Conversely, what would be the purpose of filtering on a 5th thread of
-any process irrespective of what the process does? To me, this is the
-same level of non-sense.
-
-AFAICT, this is just piling more arbitrary data extraction for no
-particular reason other than "just because we can", and there is
-absolutely no guarantee that this is fit for anyone else's purpose.
-
-I'd rather you have a generic tracepoint taking the vcpu as a context
-and a BPF program that spits out the information people actually need,
-keeping things out of the kernel. Or even a tracehook (like the
-scheduler does), and let people load a module to dump whatever
-information they please.
-
-But randomly adding new tracepoints to output a semi-useless field
-without any consideration for future-proofing? No, thank you.
-
-Thanks,
-
-	M.
-
+diff --git a/tools/perf/util/print-events.c b/tools/perf/util/print-events.c
+index c4d5d87fae2f..6df947df1c0f 100644
+--- a/tools/perf/util/print-events.c
++++ b/tools/perf/util/print-events.c
+@@ -311,10 +311,8 @@ int print_hwcache_events(const char *event_glob, bool name_only)
+ 				if ((hybrid_supported == 0) ||
+ 				    (hybrid_supported == npmus)) {
+ 					evt_list[evt_i] = strdup(name);
+-					if (npmus > 0) {
+-						for (j = 0; j < npmus; j++)
+-							zfree(&evt_pmus[j]);
+-					}
++					for (j = 0; j < npmus; j++)
++						zfree(&evt_pmus[j]);
+ 				} else {
+ 					for (j = 0; j < hybrid_supported; j++) {
+ 						evt_list[evt_i++] = evt_pmus[j];
 -- 
-Without deviation from the norm, progress is not possible.
+2.34.1
+
