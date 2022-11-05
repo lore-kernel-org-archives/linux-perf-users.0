@@ -2,54 +2,55 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EE39AC433FE
-	for <linux-perf-users@archiver.kernel.org>; Sat,  5 Nov 2022 07:23:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B965EC4332F
+	for <linux-perf-users@archiver.kernel.org>; Sat,  5 Nov 2022 07:23:49 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229486AbiKEHXj (ORCPT
+        id S229557AbiKEHXs (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Sat, 5 Nov 2022 03:23:39 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58422 "EHLO
+        Sat, 5 Nov 2022 03:23:48 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58486 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229469AbiKEHXi (ORCPT
+        with ESMTP id S229550AbiKEHXn (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Sat, 5 Nov 2022 03:23:38 -0400
-Received: from mail-pj1-x102d.google.com (mail-pj1-x102d.google.com [IPv6:2607:f8b0:4864:20::102d])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id F359E63EF
-        for <linux-perf-users@vger.kernel.org>; Sat,  5 Nov 2022 00:23:36 -0700 (PDT)
-Received: by mail-pj1-x102d.google.com with SMTP id u8-20020a17090a5e4800b002106dcdd4a0so10154241pji.1
-        for <linux-perf-users@vger.kernel.org>; Sat, 05 Nov 2022 00:23:36 -0700 (PDT)
+        Sat, 5 Nov 2022 03:23:43 -0400
+Received: from mail-pj1-x102b.google.com (mail-pj1-x102b.google.com [IPv6:2607:f8b0:4864:20::102b])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C0BA89583
+        for <linux-perf-users@vger.kernel.org>; Sat,  5 Nov 2022 00:23:42 -0700 (PDT)
+Received: by mail-pj1-x102b.google.com with SMTP id l6so6371096pjj.0
+        for <linux-perf-users@vger.kernel.org>; Sat, 05 Nov 2022 00:23:42 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=LgggK8hkZgVH++8BD/dM0aO2tMGo/D//b9l3kVhUdaM=;
-        b=U/x0+UrK6WD6QwysmwpCA6LmD53P1GxIR19amIkClJs1U+DHkp7esj810/Xw7URgnY
-         6NZVQQh5o9g8yaYpc02GHR8JOzUihaJcqSDdOE4cbtwJ85fzUguLvM3x7ZP842rNUC4G
-         IOH+V7ahbW783oQ8t1L6kNWapP1kP/J2F7tFsu6XQqecGj3cX7fYSRayd64pTmcy8HAn
-         d6cI4eeNhbX20o3Zwkz6bJbo5zvNtLkTeCPbaESHSN2yBcXQQxv6d5gjfmS+2xwxXfSZ
-         fv3McoM3OjyE9c0uf4tT/4mLzwamPM6YxCUj/eClgwuZOznnXV4mUenapD7gr/s648tl
-         fm7Q==
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=Yq52tAH/MxGM65Yx9zGEKaWPTvFueeiBIyUIbXR0M9Q=;
+        b=bFB2F0dOk+7RmyqlODQN6AV4el3iyfkqJDX87HRZQndWourFb9NRcH/jeGdUNWvhhQ
+         1Y3ToDkfdz0hTYXOxYzZo32ler1S0My6evWkO5zOa6+91gnb3qxnN7M30VMidZ7Y71v4
+         fv9mQDDqwX+6BLqZgt96OY8pLxHRks3jScJxhXvzetgjf4hT+lV7J6MbZK2n3SbUzCN6
+         UV80MP+Ij9HvNjBFttNcEo4irYujAbTkhW96yFlGTPGj3sWmVhvreoNbw/QF8V/xMzlR
+         cmgP60deL5rIgHc0zXWnvRtIPsJTgLNYySxvzgzdts+vgbtK3Z7F8xnfCoZksNnav2dW
+         hy3g==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=LgggK8hkZgVH++8BD/dM0aO2tMGo/D//b9l3kVhUdaM=;
-        b=fB1YagfgW+dX2a8sHtRfb21QF3FZELPEAeTc96zh49abDaRbutVXKwpmGl8A0DYYi3
-         Bo/g+8Hq1aNTt+0Ozdslhyn5xzlAQaWukQAEtL1s33idjUsLpzAtXjO0F8PBLhv1RjWU
-         RMJ/dkH6qUU/qvVfOL5EBD19CLKHMFu/DCKScJh4y1gwiegyfXKI86Fbw3rKHGocx9oO
-         QKY6rLlSqkZUR/fOyN7e4JwMs/oofF3BprJrEvaJ7wxumvHBfwKdo6nIEDYLfHJVJQ1Q
-         PDRkzfPfvrlYDCmqe/r9MBGF6AdCc1WPhw9cp+iQUJu1zLxXkNV+sCXcma7Z0R5Kuyk/
-         ytDg==
-X-Gm-Message-State: ACrzQf2XYmwwNQnO6w8qfI6EupCWLQKd6s6N4o8kE2CgTxq1VFtBzw/1
-        p+7qa3xO1vzj2xkK38G0fkjwXg==
-X-Google-Smtp-Source: AMsMyM44ZOypFpAKOh/gnh0gedsNVpBtxc3XmEVYmQYriCbTJfC96MuNcATWjqEewuhMoI5TXce8Dw==
-X-Received: by 2002:a17:902:e745:b0:187:2033:1832 with SMTP id p5-20020a170902e74500b0018720331832mr31176766plf.119.1667633016062;
-        Sat, 05 Nov 2022 00:23:36 -0700 (PDT)
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=Yq52tAH/MxGM65Yx9zGEKaWPTvFueeiBIyUIbXR0M9Q=;
+        b=JaQsJKKSDNEKphrard2RX8qafOCdmgd8/M3qZIAMBJUmQEz0FAuVMvPsn5ZvQKPI1q
+         1glqPXPJ2vy5koLcETJjaE7cG0RFBjXQiTdlZIjDd+m1S0iUrES00E3pAeI4zjT94dnn
+         syxstU+zZr2HMQuwpTSZFTm7GnlF6Uo1yFpBCXRbg8UTZgtXkFN5Cgtcc7K53fWitxOZ
+         +qYoKmZWLygYDkergNiRLi5SxUA01qyGTuaoCyelSrCkyt/I3ovNKNJOIQgTbgRLeLmW
+         qvMSvf+nGJPq3dBFkxjnVxqS2eCZcxfww2n+t1qg3+y19RRKu4X7c85knY+Qrur6GMuW
+         qFaQ==
+X-Gm-Message-State: ACrzQf3Xs/3ZoCzggM45qzfsRRCmsKvOYewa8zOOXe881jAgkCvJKoH6
+        jdshqtCsaz+rRpq1qiYf9zqVRA==
+X-Google-Smtp-Source: AMsMyM4LKijNmkyOB/EbOSqn/NWSN8cvycYETzVLpnbzyZIBhOtJ7jYzZjEQ2n+eOgZwOZPCi5+YAw==
+X-Received: by 2002:a17:90b:1c0d:b0:213:1a9c:5b1 with SMTP id oc13-20020a17090b1c0d00b002131a9c05b1mr55848573pjb.188.1667633022220;
+        Sat, 05 Nov 2022 00:23:42 -0700 (PDT)
 Received: from leoy-huangpu.lan (211-75-219-201.hinet-ip.hinet.net. [211.75.219.201])
-        by smtp.gmail.com with ESMTPSA id w27-20020aa79a1b000000b00562ef28aac6sm698138pfj.185.2022.11.05.00.23.29
+        by smtp.gmail.com with ESMTPSA id w27-20020aa79a1b000000b00562ef28aac6sm698138pfj.185.2022.11.05.00.23.36
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sat, 05 Nov 2022 00:23:35 -0700 (PDT)
+        Sat, 05 Nov 2022 00:23:41 -0700 (PDT)
 From:   Leo Yan <leo.yan@linaro.org>
 To:     Marc Zyngier <maz@kernel.org>, James Morse <james.morse@arm.com>,
         Alexandru Elisei <alexandru.elisei@arm.com>,
@@ -71,64 +72,129 @@ To:     Marc Zyngier <maz@kernel.org>, James Morse <james.morse@arm.com>,
         kvmarm@lists.cs.columbia.edu, linux-kernel@vger.kernel.org,
         linux-perf-users@vger.kernel.org
 Cc:     Leo Yan <leo.yan@linaro.org>
-Subject: [PATCH v1 0/3] KVM: arm64: Support tracing virtual CPU ID
-Date:   Sat,  5 Nov 2022 07:23:08 +0000
-Message-Id: <20221105072311.8214-1-leo.yan@linaro.org>
+Subject: [PATCH v1 1/3] KVM: arm64: Dynamically register callback for tracepoints
+Date:   Sat,  5 Nov 2022 07:23:09 +0000
+Message-Id: <20221105072311.8214-2-leo.yan@linaro.org>
 X-Mailer: git-send-email 2.34.1
+In-Reply-To: <20221105072311.8214-1-leo.yan@linaro.org>
+References: <20221105072311.8214-1-leo.yan@linaro.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-Before there have some efforts and discussion for supprot tracing
-virtual CPU ID in Arm64 KVM, see [1][2].
+This commit doesn't change any functionality but only refactoring.
 
-The issue was blocked with a main concern that we cannot change the
-existed trace events to avoid ABI breakage.  So the question is how
-we add new trace events with tracing virtual CPU ID and also need to
-keep backward compatibility.
+It registers callbacks for tracepoints dynamically, with this way, the
+existed trace events (in this case kvm_entry and kvm_exit) are kept.
+This is a preparation to add new trace events in later patch.
 
-This patch set is to restart the work, it's inspired by Qais Yousef's
-work for adding scheduler tracepoints [3].
-
-The first patch changes to register tracepoint callbacks, this can allow
-us to support multiple trace events with a single call site, it's a
-preparation to add new trace events.
-
-The second patch is to add two new trace events kvm_entry_v2 and
-kvm_exit_v2, and these two trace events contain the field "vcpu_id" for
-virtual CPU ID.
-
-For more complete view, the third patch is the change in perf tool.
-It dynamically detects trace nodes under sysfs and decide to use the
-version 2's trace events or rollback to use original events.
-
-This patch set has been tested with mainline kernel on Arm64 Ampere
-Altra platform.
-
-Note: I used checkpatch.pl to validate patches format and observed it
-reports error for second patch for adding trace events; since the trace
-event definition uses its own coding style, I just keep as it is.
-
-[1] https://lore.kernel.org/lkml/1560330526-15468-2-git-send-email-yuzenghui@huawei.com/
-[2] https://lore.kernel.org/lkml/20200917003645.689665-1-sergey.senozhatsky@gmail.com/
-[3] https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/commit/kernel/sched/core.c?id=a056a5bed7fa67706574b00cf1122c38596b2be1
-
-
-Leo Yan (3):
-  KVM: arm64: Dynamically register callback for tracepoints
-  KVM: arm64: Add trace events with field 'vcpu_id'
-  perf arm64: Support virtual CPU ID for kvm-stat
-
- arch/arm64/kvm/Makefile               |  2 +-
- arch/arm64/kvm/arm.c                  |  4 +-
- arch/arm64/kvm/trace.c                | 35 +++++++++++++++++
- arch/arm64/kvm/trace_arm.h            | 53 ++++++++++++++++++++++++++
- tools/perf/arch/arm64/util/kvm-stat.c | 54 ++++++++++++++++++++++++---
- 5 files changed, 140 insertions(+), 8 deletions(-)
+Signed-off-by: Leo Yan <leo.yan@linaro.org>
+---
+ arch/arm64/kvm/Makefile    |  2 +-
+ arch/arm64/kvm/arm.c       |  4 ++--
+ arch/arm64/kvm/trace.c     | 29 +++++++++++++++++++++++++++++
+ arch/arm64/kvm/trace_arm.h |  8 ++++++++
+ 4 files changed, 40 insertions(+), 3 deletions(-)
  create mode 100644 arch/arm64/kvm/trace.c
 
+diff --git a/arch/arm64/kvm/Makefile b/arch/arm64/kvm/Makefile
+index 5e33c2d4645a..4e641d2df7ad 100644
+--- a/arch/arm64/kvm/Makefile
++++ b/arch/arm64/kvm/Makefile
+@@ -14,7 +14,7 @@ kvm-y += arm.o mmu.o mmio.o psci.o hypercalls.o pvtime.o \
+ 	 inject_fault.o va_layout.o handle_exit.o \
+ 	 guest.o debug.o reset.o sys_regs.o stacktrace.o \
+ 	 vgic-sys-reg-v3.o fpsimd.o pkvm.o \
+-	 arch_timer.o trng.o vmid.o \
++	 arch_timer.o trng.o vmid.o trace.o \
+ 	 vgic/vgic.o vgic/vgic-init.o \
+ 	 vgic/vgic-irqfd.o vgic/vgic-v2.o \
+ 	 vgic/vgic-v3.o vgic/vgic-v4.o \
+diff --git a/arch/arm64/kvm/arm.c b/arch/arm64/kvm/arm.c
+index 94d33e296e10..03ed5f6c92bc 100644
+--- a/arch/arm64/kvm/arm.c
++++ b/arch/arm64/kvm/arm.c
+@@ -917,7 +917,7 @@ int kvm_arch_vcpu_ioctl_run(struct kvm_vcpu *vcpu)
+ 		/**************************************************************
+ 		 * Enter the guest
+ 		 */
+-		trace_kvm_entry(*vcpu_pc(vcpu));
++		trace_kvm_entry_tp(vcpu);
+ 		guest_timing_enter_irqoff();
+ 
+ 		ret = kvm_arm_vcpu_enter_exit(vcpu);
+@@ -974,7 +974,7 @@ int kvm_arch_vcpu_ioctl_run(struct kvm_vcpu *vcpu)
+ 
+ 		local_irq_enable();
+ 
+-		trace_kvm_exit(ret, kvm_vcpu_trap_get_class(vcpu), *vcpu_pc(vcpu));
++		trace_kvm_exit_tp(ret, vcpu);
+ 
+ 		/* Exit types that need handling before we can be preempted */
+ 		handle_exit_early(vcpu, ret);
+diff --git a/arch/arm64/kvm/trace.c b/arch/arm64/kvm/trace.c
+new file mode 100644
+index 000000000000..d25a3db994e2
+--- /dev/null
++++ b/arch/arm64/kvm/trace.c
+@@ -0,0 +1,29 @@
++// SPDX-License-Identifier: GPL-2.0
++#include <linux/init.h>
++#include <linux/tracepoint.h>
++
++#include <asm/kvm_emulate.h>
++
++#include "trace_arm.h"
++
++static void kvm_entry_tp(void *data, struct kvm_vcpu *vcpu)
++{
++	if (trace_kvm_entry_enabled())
++		trace_kvm_entry(*vcpu_pc(vcpu));
++}
++
++static void kvm_exit_tp(void *data, int ret, struct kvm_vcpu *vcpu)
++{
++	if (trace_kvm_exit_enabled())
++		trace_kvm_exit(ret, kvm_vcpu_trap_get_class(vcpu),
++			       *vcpu_pc(vcpu));
++}
++
++static int __init kvm_tp_init(void)
++{
++	register_trace_kvm_entry_tp(kvm_entry_tp, NULL);
++	register_trace_kvm_exit_tp(kvm_exit_tp, NULL);
++	return 0;
++}
++
++core_initcall(kvm_tp_init)
+diff --git a/arch/arm64/kvm/trace_arm.h b/arch/arm64/kvm/trace_arm.h
+index 33e4e7dd2719..ef02ae93b28b 100644
+--- a/arch/arm64/kvm/trace_arm.h
++++ b/arch/arm64/kvm/trace_arm.h
+@@ -11,6 +11,10 @@
+ /*
+  * Tracepoints for entry/exit to guest
+  */
++DECLARE_TRACE(kvm_entry_tp,
++	TP_PROTO(struct kvm_vcpu *vcpu),
++	TP_ARGS(vcpu));
++
+ TRACE_EVENT(kvm_entry,
+ 	TP_PROTO(unsigned long vcpu_pc),
+ 	TP_ARGS(vcpu_pc),
+@@ -26,6 +30,10 @@ TRACE_EVENT(kvm_entry,
+ 	TP_printk("PC: 0x%016lx", __entry->vcpu_pc)
+ );
+ 
++DECLARE_TRACE(kvm_exit_tp,
++	TP_PROTO(int ret, struct kvm_vcpu *vcpu),
++	TP_ARGS(ret, vcpu));
++
+ TRACE_EVENT(kvm_exit,
+ 	TP_PROTO(int ret, unsigned int esr_ec, unsigned long vcpu_pc),
+ 	TP_ARGS(ret, esr_ec, vcpu_pc),
 -- 
 2.34.1
 
