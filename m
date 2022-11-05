@@ -2,128 +2,133 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 88D2AC4332F
-	for <linux-perf-users@archiver.kernel.org>; Sat,  5 Nov 2022 03:01:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EE39AC433FE
+	for <linux-perf-users@archiver.kernel.org>; Sat,  5 Nov 2022 07:23:39 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229598AbiKEDBW (ORCPT
+        id S229486AbiKEHXj (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Fri, 4 Nov 2022 23:01:22 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55514 "EHLO
+        Sat, 5 Nov 2022 03:23:39 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58422 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229485AbiKEDBU (ORCPT
+        with ESMTP id S229469AbiKEHXi (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Fri, 4 Nov 2022 23:01:20 -0400
-Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 97ECA419BA;
-        Fri,  4 Nov 2022 20:01:19 -0700 (PDT)
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id 3EA8662337;
-        Sat,  5 Nov 2022 03:01:19 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id A22A2C433D6;
-        Sat,  5 Nov 2022 03:01:16 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1667617278;
-        bh=XWBTGLGkXGLU+mCSt2cLIm7GsobSKxeFBJJ1G4ny2WA=;
-        h=From:To:Cc:Subject:Date:From;
-        b=pJLO5YjHw8ouJzmGFDcAsrpsp5fV2ZA8bc1w6djo1w/vhlPhSrpQbjQ45ChpGJJoW
-         bwxmk6QobTDpSPZZNSad6ROf9CQNd4cwqBRTsOGUsdxrkRBhc9uM1+W99JrnKa7HSO
-         CJ4wU3dFKsOQBnBnkR+krZ80Hf9oUK9JlO6BKoQjWDH8Uld4Cmb8+FiMZNGvm0NALR
-         emPaPy5yMGk80Yr7ni2DCXJGKi3JpnCWRXMgb8V2qSXE7uhq9XbNrXp+YIUyJjO5pj
-         zy6f8tXRDN96sBIZXoylugFmJgFiCUEPigGeiSxNQ3IJtuZog2in38QUw6zlELMZSk
-         GPuiDx4IRe3mw==
-From:   "Masami Hiramatsu (Google)" <mhiramat@kernel.org>
-To:     Arnaldo Carvalho de Melo <acme@kernel.org>
-Cc:     Peter Zijlstra <peterz@infradead.org>,
+        Sat, 5 Nov 2022 03:23:38 -0400
+Received: from mail-pj1-x102d.google.com (mail-pj1-x102d.google.com [IPv6:2607:f8b0:4864:20::102d])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id F359E63EF
+        for <linux-perf-users@vger.kernel.org>; Sat,  5 Nov 2022 00:23:36 -0700 (PDT)
+Received: by mail-pj1-x102d.google.com with SMTP id u8-20020a17090a5e4800b002106dcdd4a0so10154241pji.1
+        for <linux-perf-users@vger.kernel.org>; Sat, 05 Nov 2022 00:23:36 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=LgggK8hkZgVH++8BD/dM0aO2tMGo/D//b9l3kVhUdaM=;
+        b=U/x0+UrK6WD6QwysmwpCA6LmD53P1GxIR19amIkClJs1U+DHkp7esj810/Xw7URgnY
+         6NZVQQh5o9g8yaYpc02GHR8JOzUihaJcqSDdOE4cbtwJ85fzUguLvM3x7ZP842rNUC4G
+         IOH+V7ahbW783oQ8t1L6kNWapP1kP/J2F7tFsu6XQqecGj3cX7fYSRayd64pTmcy8HAn
+         d6cI4eeNhbX20o3Zwkz6bJbo5zvNtLkTeCPbaESHSN2yBcXQQxv6d5gjfmS+2xwxXfSZ
+         fv3McoM3OjyE9c0uf4tT/4mLzwamPM6YxCUj/eClgwuZOznnXV4mUenapD7gr/s648tl
+         fm7Q==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=LgggK8hkZgVH++8BD/dM0aO2tMGo/D//b9l3kVhUdaM=;
+        b=fB1YagfgW+dX2a8sHtRfb21QF3FZELPEAeTc96zh49abDaRbutVXKwpmGl8A0DYYi3
+         Bo/g+8Hq1aNTt+0Ozdslhyn5xzlAQaWukQAEtL1s33idjUsLpzAtXjO0F8PBLhv1RjWU
+         RMJ/dkH6qUU/qvVfOL5EBD19CLKHMFu/DCKScJh4y1gwiegyfXKI86Fbw3rKHGocx9oO
+         QKY6rLlSqkZUR/fOyN7e4JwMs/oofF3BprJrEvaJ7wxumvHBfwKdo6nIEDYLfHJVJQ1Q
+         PDRkzfPfvrlYDCmqe/r9MBGF6AdCc1WPhw9cp+iQUJu1zLxXkNV+sCXcma7Z0R5Kuyk/
+         ytDg==
+X-Gm-Message-State: ACrzQf2XYmwwNQnO6w8qfI6EupCWLQKd6s6N4o8kE2CgTxq1VFtBzw/1
+        p+7qa3xO1vzj2xkK38G0fkjwXg==
+X-Google-Smtp-Source: AMsMyM44ZOypFpAKOh/gnh0gedsNVpBtxc3XmEVYmQYriCbTJfC96MuNcATWjqEewuhMoI5TXce8Dw==
+X-Received: by 2002:a17:902:e745:b0:187:2033:1832 with SMTP id p5-20020a170902e74500b0018720331832mr31176766plf.119.1667633016062;
+        Sat, 05 Nov 2022 00:23:36 -0700 (PDT)
+Received: from leoy-huangpu.lan (211-75-219-201.hinet-ip.hinet.net. [211.75.219.201])
+        by smtp.gmail.com with ESMTPSA id w27-20020aa79a1b000000b00562ef28aac6sm698138pfj.185.2022.11.05.00.23.29
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sat, 05 Nov 2022 00:23:35 -0700 (PDT)
+From:   Leo Yan <leo.yan@linaro.org>
+To:     Marc Zyngier <maz@kernel.org>, James Morse <james.morse@arm.com>,
+        Alexandru Elisei <alexandru.elisei@arm.com>,
+        Suzuki K Poulose <suzuki.poulose@arm.com>,
+        Oliver Upton <oliver.upton@linux.dev>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Will Deacon <will@kernel.org>,
+        Arnaldo Carvalho de Melo <acme@kernel.org>,
+        John Garry <john.garry@huawei.com>,
+        James Clark <james.clark@arm.com>,
+        Mike Leach <mike.leach@linaro.org>,
+        Peter Zijlstra <peterz@infradead.org>,
         Ingo Molnar <mingo@redhat.com>,
         Mark Rutland <mark.rutland@arm.com>,
         Alexander Shishkin <alexander.shishkin@linux.intel.com>,
         Jiri Olsa <jolsa@kernel.org>,
         Namhyung Kim <namhyung@kernel.org>,
-        linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Masami Hiramatsu <mhiramat@kernel.org>,
-        Steven Rostedt <rostedt@goodmis.org>
-Subject: [PATCH] tools/perf: Fix to get the DW_AT_decl_file and DW_AT_call_file as unsinged data
-Date:   Sat,  5 Nov 2022 12:01:14 +0900
-Message-Id: <166761727445.480106.3738447577082071942.stgit@devnote3>
-X-Mailer: git-send-email 2.38.1.431.g37b22c650d-goog
-User-Agent: StGit/0.19
+        linux-arm-kernel@lists.infradead.org, kvmarm@lists.linux.dev,
+        kvmarm@lists.cs.columbia.edu, linux-kernel@vger.kernel.org,
+        linux-perf-users@vger.kernel.org
+Cc:     Leo Yan <leo.yan@linaro.org>
+Subject: [PATCH v1 0/3] KVM: arm64: Support tracing virtual CPU ID
+Date:   Sat,  5 Nov 2022 07:23:08 +0000
+Message-Id: <20221105072311.8214-1-leo.yan@linaro.org>
+X-Mailer: git-send-email 2.34.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-From: Masami Hiramatsu (Google) <mhiramat@kernel.org>
+Before there have some efforts and discussion for supprot tracing
+virtual CPU ID in Arm64 KVM, see [1][2].
 
-Dwarf version 5 standard Sec 2.14 says that
+The issue was blocked with a main concern that we cannot change the
+existed trace events to avoid ABI breakage.  So the question is how
+we add new trace events with tracing virtual CPU ID and also need to
+keep backward compatibility.
 
-  Any debugging information entry representing the declaration of an object,
-  module, subprogram or type may have DW_AT_decl_file, DW_AT_decl_line and
-  DW_AT_decl_column attributes, each of whose value is an unsigned integer
-  constant.
+This patch set is to restart the work, it's inspired by Qais Yousef's
+work for adding scheduler tracepoints [3].
 
-So it should be an unsigned integer data. Also, even though the standard
-doesn't clearly say the DW_AT_call_file is signed or unsigned, the
-elfutils (eu-readelf) interprets it as unsigned integer data and it is
-natural to handle it as unsigned integer data as same as DW_AT_decl_file.
-This changes the DW_AT_call_file as unsigned integer data too.
+The first patch changes to register tracepoint callbacks, this can allow
+us to support multiple trace events with a single call site, it's a
+preparation to add new trace events.
 
-Fixes: 3f4460a28fb2 ("perf probe: Filter out redundant inline-instances")
-Cc: stable@vger.kernel.org
-Signed-off-by: Masami Hiramatsu (Google) <mhiramat@kernel.org>
----
- tools/perf/util/dwarf-aux.c |   21 ++++-----------------
- 1 file changed, 4 insertions(+), 17 deletions(-)
+The second patch is to add two new trace events kvm_entry_v2 and
+kvm_exit_v2, and these two trace events contain the field "vcpu_id" for
+virtual CPU ID.
 
-diff --git a/tools/perf/util/dwarf-aux.c b/tools/perf/util/dwarf-aux.c
-index 30b36b525681..b07414409771 100644
---- a/tools/perf/util/dwarf-aux.c
-+++ b/tools/perf/util/dwarf-aux.c
-@@ -315,19 +315,6 @@ static int die_get_attr_udata(Dwarf_Die *tp_die, unsigned int attr_name,
- 	return 0;
- }
- 
--/* Get attribute and translate it as a sdata */
--static int die_get_attr_sdata(Dwarf_Die *tp_die, unsigned int attr_name,
--			      Dwarf_Sword *result)
--{
--	Dwarf_Attribute attr;
--
--	if (dwarf_attr_integrate(tp_die, attr_name, &attr) == NULL ||
--	    dwarf_formsdata(&attr, result) != 0)
--		return -ENOENT;
--
--	return 0;
--}
--
- /**
-  * die_is_signed_type - Check whether a type DIE is signed or not
-  * @tp_die: a DIE of a type
-@@ -467,9 +454,9 @@ int die_get_data_member_location(Dwarf_Die *mb_die, Dwarf_Word *offs)
- /* Get the call file index number in CU DIE */
- static int die_get_call_fileno(Dwarf_Die *in_die)
- {
--	Dwarf_Sword idx;
-+	Dwarf_Word idx;
- 
--	if (die_get_attr_sdata(in_die, DW_AT_call_file, &idx) == 0)
-+	if (die_get_attr_udata(in_die, DW_AT_call_file, &idx) == 0)
- 		return (int)idx;
- 	else
- 		return -ENOENT;
-@@ -478,9 +465,9 @@ static int die_get_call_fileno(Dwarf_Die *in_die)
- /* Get the declared file index number in CU DIE */
- static int die_get_decl_fileno(Dwarf_Die *pdie)
- {
--	Dwarf_Sword idx;
-+	Dwarf_Word idx;
- 
--	if (die_get_attr_sdata(pdie, DW_AT_decl_file, &idx) == 0)
-+	if (die_get_attr_udata(pdie, DW_AT_decl_file, &idx) == 0)
- 		return (int)idx;
- 	else
- 		return -ENOENT;
+For more complete view, the third patch is the change in perf tool.
+It dynamically detects trace nodes under sysfs and decide to use the
+version 2's trace events or rollback to use original events.
+
+This patch set has been tested with mainline kernel on Arm64 Ampere
+Altra platform.
+
+Note: I used checkpatch.pl to validate patches format and observed it
+reports error for second patch for adding trace events; since the trace
+event definition uses its own coding style, I just keep as it is.
+
+[1] https://lore.kernel.org/lkml/1560330526-15468-2-git-send-email-yuzenghui@huawei.com/
+[2] https://lore.kernel.org/lkml/20200917003645.689665-1-sergey.senozhatsky@gmail.com/
+[3] https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/commit/kernel/sched/core.c?id=a056a5bed7fa67706574b00cf1122c38596b2be1
+
+
+Leo Yan (3):
+  KVM: arm64: Dynamically register callback for tracepoints
+  KVM: arm64: Add trace events with field 'vcpu_id'
+  perf arm64: Support virtual CPU ID for kvm-stat
+
+ arch/arm64/kvm/Makefile               |  2 +-
+ arch/arm64/kvm/arm.c                  |  4 +-
+ arch/arm64/kvm/trace.c                | 35 +++++++++++++++++
+ arch/arm64/kvm/trace_arm.h            | 53 ++++++++++++++++++++++++++
+ tools/perf/arch/arm64/util/kvm-stat.c | 54 ++++++++++++++++++++++++---
+ 5 files changed, 140 insertions(+), 8 deletions(-)
+ create mode 100644 arch/arm64/kvm/trace.c
+
+-- 
+2.34.1
 
