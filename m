@@ -2,238 +2,129 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 71914C4332F
-	for <linux-perf-users@archiver.kernel.org>; Mon,  7 Nov 2022 15:39:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8BE08C43217
+	for <linux-perf-users@archiver.kernel.org>; Mon,  7 Nov 2022 19:11:09 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231936AbiKGPjP (ORCPT
+        id S232159AbiKGTLI (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Mon, 7 Nov 2022 10:39:15 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42530 "EHLO
+        Mon, 7 Nov 2022 14:11:08 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46830 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232912AbiKGPjO (ORCPT
+        with ESMTP id S232611AbiKGTKt (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Mon, 7 Nov 2022 10:39:14 -0500
-Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 112CF1F9F5;
-        Mon,  7 Nov 2022 07:39:11 -0800 (PST)
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+        Mon, 7 Nov 2022 14:10:49 -0500
+Received: from mail.skyhub.de (mail.skyhub.de [IPv6:2a01:4f8:190:11c2::b:1457])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C4DF629C82;
+        Mon,  7 Nov 2022 11:10:48 -0800 (PST)
+Received: from zn.tnic (p200300ea9733e71f329c23fffea6a903.dip0.t-ipconnect.de [IPv6:2003:ea:9733:e71f:329c:23ff:fea6:a903])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id A275060EC9;
-        Mon,  7 Nov 2022 15:39:10 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id DF7BEC433D6;
-        Mon,  7 Nov 2022 15:39:09 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1667835550;
-        bh=LJTIX6EOyaGeco5U/ATP5mMAgf2Y3X8oNl0EWEryn5o=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=nsdFJc9TqagjKvmFhMqOxOGFd9zPtEIUDgrKBq1eaNwvFUXm/2MT2aEvrvPfmz7J7
-         JIw+bt+4p8KLa/zn3pkuPjPS8R0Bh1J+xpk+eX/gVzh8hVLMkb52DFNTZXSq14utSE
-         rzVVJDENJRiZLmhavv6oR67vreSXOvHPNGz4XhvbYqOCH8AIs9rXMVSsclitgNiG5x
-         ZNL1FBuqhtZnRUidWMLLrEGZCt5miwTj+H9/522i6VgM2oCNT94tTEvR4849xFqzdm
-         vUxQ0Vvsh/UD0V7Kfavqdl7K4xON3elnskuxhxpest11c2Ytv1bhlBIsg/gC2bctp8
-         7upVCChMDUuLA==
-Received: from sofa.misterjones.org ([185.219.108.64] helo=goblin-girl.misterjones.org)
-        by disco-boy.misterjones.org with esmtpsa  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
-        (Exim 4.95)
-        (envelope-from <maz@kernel.org>)
-        id 1os4DL-004Qsn-Ss;
-        Mon, 07 Nov 2022 15:39:08 +0000
-Date:   Mon, 07 Nov 2022 15:39:07 +0000
-Message-ID: <86y1smpyec.wl-maz@kernel.org>
-From:   Marc Zyngier <maz@kernel.org>
-To:     Leo Yan <leo.yan@linaro.org>
-Cc:     James Morse <james.morse@arm.com>,
-        Alexandru Elisei <alexandru.elisei@arm.com>,
-        Suzuki K Poulose <suzuki.poulose@arm.com>,
-        Oliver Upton <oliver.upton@linux.dev>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Will Deacon <will@kernel.org>,
-        Arnaldo Carvalho de Melo <acme@kernel.org>,
-        John Garry <john.garry@huawei.com>,
-        James Clark <james.clark@arm.com>,
-        Mike Leach <mike.leach@linaro.org>,
-        Peter Zijlstra <peterz@infradead.org>,
+        by mail.skyhub.de (SuperMail on ZX Spectrum 128k) with ESMTPSA id 5052F1EC0567;
+        Mon,  7 Nov 2022 20:10:47 +0100 (CET)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alien8.de; s=dkim;
+        t=1667848247;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:in-reply-to:in-reply-to:  references:references;
+        bh=zgafXme/YlkPVTuatr/YKPrpFzsJCUOJ17VfQBIvcIA=;
+        b=YJ2hJxTGDz78MWs+NfxNQAyMXBGKrEZmSid4LJPUTmJhcqkjulwoXe2CRpAhwfWGGNZKQ6
+        6JPQWgbT+W8ye6miqzwlNMJ9vi0JFMbpNL4rbENdJMpKUORXbbOn5W6v74Kv+p7xWGIUiR
+        Qu2rcfVifxdsrSfF/1L0UBDJJRgfyW0=
+Date:   Mon, 7 Nov 2022 20:10:42 +0100
+From:   Borislav Petkov <bp@alien8.de>
+To:     Maxim Levitsky <mlevitsk@redhat.com>
+Cc:     linux-kernel@vger.kernel.org, kvm@vger.kernel.org,
+        Pawan Gupta <pawan.kumar.gupta@linux.intel.com>,
         Ingo Molnar <mingo@redhat.com>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Jiri Olsa <jolsa@kernel.org>,
+        Josh Poimboeuf <jpoimboe@kernel.org>,
         Namhyung Kim <namhyung@kernel.org>,
-        linux-arm-kernel@lists.infradead.org, kvmarm@lists.linux.dev,
-        kvmarm@lists.cs.columbia.edu, linux-kernel@vger.kernel.org,
-        linux-perf-users@vger.kernel.org
-Subject: Re: [PATCH v1 3/3] perf arm64: Support virtual CPU ID for kvm-stat
-In-Reply-To: <Y2kabsQdddiX4G+O@leoy-huanghe.lan>
-References: <20221105072311.8214-1-leo.yan@linaro.org>
-        <20221105072311.8214-4-leo.yan@linaro.org>
-        <868rkpr0mv.wl-maz@kernel.org>
-        <Y2kabsQdddiX4G+O@leoy-huanghe.lan>
-User-Agent: Wanderlust/2.15.9 (Almost Unreal) SEMI-EPG/1.14.7 (Harue)
- FLIM-LB/1.14.9 (=?UTF-8?B?R29qxY0=?=) APEL-LB/10.8 EasyPG/1.0.0 Emacs/27.1
- (aarch64-unknown-linux-gnu) MULE/6.0 (HANACHIRUSATO)
-MIME-Version: 1.0 (generated by SEMI-EPG 1.14.7 - "Harue")
-Content-Type: text/plain; charset=US-ASCII
-X-SA-Exim-Connect-IP: 185.219.108.64
-X-SA-Exim-Rcpt-To: leo.yan@linaro.org, james.morse@arm.com, alexandru.elisei@arm.com, suzuki.poulose@arm.com, oliver.upton@linux.dev, catalin.marinas@arm.com, will@kernel.org, acme@kernel.org, john.garry@huawei.com, james.clark@arm.com, mike.leach@linaro.org, peterz@infradead.org, mingo@redhat.com, mark.rutland@arm.com, alexander.shishkin@linux.intel.com, jolsa@kernel.org, namhyung@kernel.org, linux-arm-kernel@lists.infradead.org, kvmarm@lists.linux.dev, kvmarm@lists.cs.columbia.edu, linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org
-X-SA-Exim-Mail-From: maz@kernel.org
-X-SA-Exim-Scanned: No (on disco-boy.misterjones.org); SAEximRunCond expanded to false
+        Tony Luck <tony.luck@intel.com>,
+        Paolo Bonzini <pbonzini@redhat.com>,
+        "H. Peter Anvin" <hpa@zytor.com>,
+        Arnaldo Carvalho de Melo <acme@kernel.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Tim Chen <tim.c.chen@linux.intel.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        Dave Hansen <dave.hansen@linux.intel.com>,
+        "Chang S. Bae" <chang.seok.bae@intel.com>,
+        Jane Malalane <jane.malalane@citrix.com>,
+        Kees Cook <keescook@chromium.org>,
+        Kan Liang <kan.liang@linux.intel.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        "maintainer:X86 ARCHITECTURE (32-BIT AND 64-BIT)" <x86@kernel.org>,
+        Herbert Xu <herbert@gondor.apana.org.au>,
+        Jiri Olsa <jolsa@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        linux-perf-users@vger.kernel.org,
+        "open list:CRYPTO API" <linux-crypto@vger.kernel.org>
+Subject: Re: [PATCH v2 2/5] x86/cpuid: refactor
+ setup_clear_cpu_cap()/clear_cpu_cap()
+Message-ID: <Y2lYMqLVP+00Rpu5@zn.tnic>
+References: <20220718141123.136106-1-mlevitsk@redhat.com>
+ <20220718141123.136106-3-mlevitsk@redhat.com>
+ <Y1LGkTXCksqAYLHD@zn.tnic>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <Y1LGkTXCksqAYLHD@zn.tnic>
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-On Mon, 07 Nov 2022 14:47:10 +0000,
-Leo Yan <leo.yan@linaro.org> wrote:
-> 
-> On Sat, Nov 05, 2022 at 01:28:40PM +0000, Marc Zyngier wrote:
-> 
-> [...]
-> 
-> > > Before:
-> > > 
-> > >   # perf kvm stat report --vcpu 27
-> > > 
-> > >   Analyze events for all VMs, VCPU 27:
-> > > 
-> > >                VM-EXIT    Samples  Samples%     Time%    Min Time    Max Time         Avg time
-> > > 
-> > >   Total Samples:0, Total events handled time:0.00us.
-> > >
-> > > After:
-> > > 
-> > >   # perf kvm stat report --vcpu 27
-> > > 
-> > >   Analyze events for all VMs, VCPU 27:
-> > > 
-> > >                VM-EXIT    Samples  Samples%     Time%    Min Time    Max Time         Avg time
-> > > 
-> > >                  SYS64        808    98.54%    91.24%      0.00us    303.76us      3.46us ( +-  13.54% )
-> > >                    WFx         10     1.22%     7.79%      0.00us     69.48us     23.91us ( +-  25.91% )
-> > >                    IRQ          2     0.24%     0.97%      0.00us     22.64us     14.82us ( +-  52.77% )
-> > > 
-> > >   Total Samples:820, Total events handled time:3068.28us.
+On Fri, Oct 21, 2022 at 06:19:29PM +0200, Borislav Petkov wrote:
+> On Mon, Jul 18, 2022 at 05:11:20PM +0300, Maxim Levitsky wrote:
+> > Currently setup_clear_cpu_cap passes NULL 'struct cpuinfo_x86*'
+> > to clear_cpu_cap to indicate that capability should be cleared from boot_cpu_data.
 > > 
-> > Please educate me: how useful is it to filter on a vcpu number across
-> > all VMs? What sense does it even make?
-> 
-> Now "perf kvm" tool is not sophisticated since it doesn't capture VMID
-> and virtual CPU ID together.
-
-VMID is not a relevant indicator anyway, as it can change at any
-point. But that's only to show that everybody has a different view on
-what they need to collect. At which point, we need to provide an
-infrastructure for data extraction, and not the data itself.
-
-> I think a case is we can spin a program on a specific virtual CPU with
-> taskset in VM, in this way we can check if any bottleneck is caused by
-> VM entry/exit, but I have to say that it's inaccurate if we only filter
-> on VCPU ID, we should consider tracing VMID and VCPU ID together in
-> later's enhancement.
-> 
-> > Conversely, what would be the purpose of filtering on a 5th thread of
-> > any process irrespective of what the process does? To me, this is the
-> > same level of non-sense.
-> 
-> I agree.
-> 
-> > AFAICT, this is just piling more arbitrary data extraction for no
-> > particular reason other than "just because we can", and there is
-> > absolutely no guarantee that this is fit for anyone else's purpose.
+> > Later that is used in clear_feature to do recursive call to
+> > clear_cpu_cap together with clearing the feature bit from 'cpu_caps_cleared'
 > > 
-> > I'd rather you have a generic tracepoint taking the vcpu as a context
-> > and a BPF program that spits out the information people actually need,
-> > keeping things out of the kernel. Or even a tracehook (like the
-> > scheduler does), and let people load a module to dump whatever
-> > information they please.
+> > Remove that code and just call the do_clear_cpu_cap on boot_cpu_data directly
+> > from the setup_clear_cpu_cap.
+> > 
+> > The only functional change this introduces is that now calling clear_cpu_cap
+> > explicitly on boot_cpu_data also sets the bits in cpu_caps_cleared,
+> > which is the only thing that makes sense anyway.
+> > 
+> > All callers of both functions were checked for this and fixed.
 > 
-> Actually I considered three options:
-> 
-> Option 1: Simply add new version's trace events for recording more info.
-> This is not flexible and we even have risk to add more version's trace
-> event if later we might find that more data should traced.
-> 
-> This approach is straightforward and the implementation would be
-> simple.  This is main reason why finally I choosed to add new trace
-> events.
+> Change looks ok. What I can't grok is this sentence: what was checked
+> and fixed where?
 
-But that doesn't scale at all.
+Ok, I think I know what you mean. That:
 
-> 
-> Option 2: use Kprobe to dynamically insert tracepoints; but this means
-> the user must have the corresponding vmlinux file, otherwise, perf
-> tool might inject tracepoint at an incorrect address.  This is the
-> main reason I didn't use Kprobe to add dynamic tracepoints.
->
-> Option 3: As you suggested, I can bind KVM tracepoints with a eBPF
-> program and the eBPF program records perf events.
-> 
-> When I reviewed Arm64's kvm_entry / kvm_exit trace events, they don't
-> have vcpu context in the arguments, this means I need to add new trace
-> events for accessing "vcpu" context.
+git grep -E "clear_cpu_cap.*boot"
+arch/x86/events/intel/lbr.c:1599:       clear_cpu_cap(&boot_cpu_data, X86_FEATURE_ARCH_LBR);
+arch/x86/kernel/alternative.c:746:              clear_cpu_cap(&boot_cpu_data, X86_FEATURE_UP);
 
-I'm not opposed to adding new trace{point,hook}s if you demonstrate
-that they are generic enough or will never need to evolve.
+Right, so here's the difference:
 
-> 
-> Option 1 and 3 both need to add trace events; option 1 is more
-> straightforward solution and this is why it was choosed in current patch
-> set.
-> 
-> I recognized that I made a mistake, actually we can modify the trace
-> event's definition for kvm_entry / kvm_exit, note we only modify the
-> trace event's arguments, this will change the trace function's
-> definition but it will not break ABI (the format is exactly same for
-> the user space).  Below changes demonstrate what's my proposing:
-> 
-> diff --git a/arch/arm64/kvm/arm.c b/arch/arm64/kvm/arm.c
-> index 94d33e296e10..16f6b61abfec 100644
-> --- a/arch/arm64/kvm/arm.c
-> +++ b/arch/arm64/kvm/arm.c
-> @@ -917,7 +917,7 @@ int kvm_arch_vcpu_ioctl_run(struct kvm_vcpu *vcpu)
->                 /**************************************************************
->                  * Enter the guest
->                  */
-> -               trace_kvm_entry(*vcpu_pc(vcpu));
-> +               trace_kvm_entry(vcpu);
->                 guest_timing_enter_irqoff();
->  
->                 ret = kvm_arm_vcpu_enter_exit(vcpu);
-> diff --git a/arch/arm64/kvm/trace_arm.h b/arch/arm64/kvm/trace_arm.h
-> index 33e4e7dd2719..9df4fd30093c 100644
-> --- a/arch/arm64/kvm/trace_arm.h
-> +++ b/arch/arm64/kvm/trace_arm.h
-> @@ -12,15 +12,15 @@
->   * Tracepoints for entry/exit to guest
->   */
->  TRACE_EVENT(kvm_entry,
-> -       TP_PROTO(unsigned long vcpu_pc),
-> -       TP_ARGS(vcpu_pc),
-> +       TP_PROTO(struct kvm_vcpu *vcpu),
-> +       TP_ARGS(vcpu),
->  
->         TP_STRUCT__entry(
->                 __field(        unsigned long,  vcpu_pc         )
->         ),
->  
->         TP_fast_assign(
-> -               __entry->vcpu_pc                = vcpu_pc;
-> +               __entry->vcpu_pc                = *vcpu_pc(vcpu);
->         ),
->  
->         TP_printk("PC: 0x%016lx", __entry->vcpu_pc)
-> 
-> Please let me know your opinion, if you don't object, I can move
-> forward with this approach.
+When you call setup_clear_cpu_cap(), it basically means, to disable the
+cap on *every* CPU. This is done with cpu_caps_cleared which gets ANDed
+in in apply_forced_caps().
 
-I have no issue with this if this doesn't change anything else.
+clear_cpu_cap() clears the bit *only* in the first parameter supplied.
 
-And if you can make use of this with a BPF program and get to the same
-result as your initial patch, then please submit it for inclusion in
-the kernel as an example. We can then point people to it next time
-this crop up (probably before Xmas).
+Now, that first parameter can be boot_cpu_data too but then, strictly
+speaking, clear_cpu_cap() would really do what you want it to do - to
+clear it only in its first param.
 
-Thanks,
+If you really want to enforce that bit cleared everywhere, you need to
+use the setup_* variant.
 
-	M.
+So this patch is actually incorrect but I admit, the CPU caps handling
+are kinda subtle and probably need cleaning.
+
+Lemme document it so that it is at least clear. Who knows, we might end
+up improving it in the process.
+
+:-)
+
+Thx.
 
 -- 
-Without deviation from the norm, progress is not possible.
+Regards/Gruss,
+    Boris.
+
+https://people.kernel.org/tglx/notes-about-netiquette
