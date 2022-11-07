@@ -2,55 +2,55 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1432FC4332F
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DCD0EC43219
 	for <linux-perf-users@archiver.kernel.org>; Mon,  7 Nov 2022 21:33:47 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233504AbiKGVdp (ORCPT
+        id S233518AbiKGVdq (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Mon, 7 Nov 2022 16:33:45 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54708 "EHLO
+        Mon, 7 Nov 2022 16:33:46 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54650 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S233400AbiKGVd2 (ORCPT
+        with ESMTP id S233477AbiKGVd3 (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Mon, 7 Nov 2022 16:33:28 -0500
-Received: from mail-pl1-x62e.google.com (mail-pl1-x62e.google.com [IPv6:2607:f8b0:4864:20::62e])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E59BAB1B;
-        Mon,  7 Nov 2022 13:33:26 -0800 (PST)
-Received: by mail-pl1-x62e.google.com with SMTP id b21so12303325plc.9;
-        Mon, 07 Nov 2022 13:33:26 -0800 (PST)
+        Mon, 7 Nov 2022 16:33:29 -0500
+Received: from mail-pg1-x535.google.com (mail-pg1-x535.google.com [IPv6:2607:f8b0:4864:20::535])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6A39FDA2;
+        Mon,  7 Nov 2022 13:33:24 -0800 (PST)
+Received: by mail-pg1-x535.google.com with SMTP id v3so11629342pgh.4;
+        Mon, 07 Nov 2022 13:33:24 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20210112;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:sender:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=uEwG62U2ocTRAE+zcAm5Rx1np9/Wr63UQVaH+5ioR9I=;
-        b=Hc+KCEIHI0yjOOxQWtJwjkjcfiZXxl/jTVZifw/Fon9yqTKXtKv5u4DbvdbdDg7b0G
-         kG8o1emeN56chtVXqrb982qGiSNzp6P3NbXfUnbckq0ANeuDN0wppNwD3xQ8hwOtMNNP
-         jwLuRjW0Jab1wVy26+mMwtVkZWLgj8c/5rtJ2OB2wJc/HT7E/JOe9wAXDm3ZTXd7mZKC
-         kATtnMx12FaYWV0jgws7UYZWrWyxSZNjbVW6m3EaXFE+58au9jrY1kz0hkdR+tDplIDh
-         4kKLsAadGt7rZXfbu1QFAbgkvLbeUVLIFa1aHcdq9aDMZmqGE9m+/XC6BMp2PlomTXff
-         Bwxw==
+        bh=AIzOeW4bqFAI0ZH2XjiJS5dG7CBesFCQCZcY4ffv/5k=;
+        b=Rdq9AtpQ8XqcN3B/WunTUwRM/esIVOLGUjjW0IkrxsTEQDcHBwSY2wQIXEWg/sdJS5
+         rarfpDM9YCvt5+LMJohUnxBSQXo6pgGP2kxUFXcwA0cj408Z5u2TR9GedsgRndqnO79I
+         9REV/ya38OwppOAY5PKuKzVk4GTzrm1DTfk07FRrzUeKtLqaV8kS3aY31LXl3O3Ik8a/
+         E1y0DdGllTSXmnh/wit5D7kyii3XanD79Voxw+NqwLlGvlRrF9it3SKKBOJ3NWl8vvGd
+         vQc8upcdNm8xB9fdsed8VEbpGlDKGHtjeFC8p8nM0b7mlHivMZfn9G1F0QpPektOlTsn
+         59lA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:sender:x-gm-message-state:from
          :to:cc:subject:date:message-id:reply-to;
-        bh=uEwG62U2ocTRAE+zcAm5Rx1np9/Wr63UQVaH+5ioR9I=;
-        b=VwnpDz7gviu5bMT5MQ4ANzsk1SfuyKfqbWY0UeZ5ZX5TyT9b9ArFhMBnRTPXkjXoe6
-         xdVnCafIM4ozPsp63rXmVvKUL44hEBWMEY+uYYWLWEMJpxpxYnIZLL4wg7ktH36lFV+f
-         Deprk4l3OKl0NYw8TtevbSxrFJxmvs/YjUjQbrIRDCH4B353GMvb0zz5me9bVgtCT1fd
-         k+5onsCND3m/UNLeJx8Iue8HnKexYjIVmH0LixKPANRh182no98OAGAyx0WKUnj4GvSZ
-         qNnzkf9BLNR+Jw8cCG0WR4seh2wgyJz35DPIu0AzS3jUqRT4Hx6TK6E/1olrYHP8Wi6p
-         l6wA==
-X-Gm-Message-State: ACrzQf3I52dlikkKv/1pbCAfnYH4KYGpY69szDPERkuMWyZiMbXPTdXj
-        JkrXneT6dtkvC+fuqoevOro=
-X-Google-Smtp-Source: AMsMyM5n/dzXkOfJeTpeQ97B/T0IHKk094vL/ofETPkyF4jUeyUS3qx/VwbZwR6AO8iNAdaFHXqQvg==
-X-Received: by 2002:a17:902:9a41:b0:188:50c2:89cf with SMTP id x1-20020a1709029a4100b0018850c289cfmr27538355plv.34.1667856806361;
-        Mon, 07 Nov 2022 13:33:26 -0800 (PST)
+        bh=AIzOeW4bqFAI0ZH2XjiJS5dG7CBesFCQCZcY4ffv/5k=;
+        b=QBWJISr+Etq3HBF+F6pMPoC7gBY4Gy13pTJ3Mo4e6ynOJPD094G/DIq2K3pE+X57dZ
+         sYTzfPwqdBtz87wZrpjfjdCn01J3CXEq93HA1gcmrgpqrzBeRlYeVTjoh54uR/1s0e9n
+         +nhAzI2zlLRXTFdWs0ZiruGJJLSxrAFUFRkaOcNB0CyYUQjtDxaDiZBwUFASogKEyQ3N
+         K3fYiXJUYQqzmgm5hLpo9xv/G/8wwyA+kR1jrX2a6+i5QSOJFzrl8YgXWSo+CS9Hps7a
+         RWC5oS1JzZVG/HWb1UZ7HxR7WSvZH7X5ECoeGLfY312nec3r9yDjI+yMX2YDUKcgNzMg
+         2Abw==
+X-Gm-Message-State: ACrzQf1kv48I5JoI21YX8J+ZFM9b0N4iaLiXT63UEnPoWnEu6jjwE5Ug
+        cNSoev++4WxzDssYtp2a6ySrLdxMsqE=
+X-Google-Smtp-Source: AMsMyM4Ryq09UYPfCZ5YqDppNoZLZOICO2oqCN2VSHAs0RRj9xSG3jBA1+bYKUeEOYeVLMZR3osqdA==
+X-Received: by 2002:a05:6a00:240b:b0:56c:f55a:65b4 with SMTP id z11-20020a056a00240b00b0056cf55a65b4mr887433pfh.35.1667856803802;
+        Mon, 07 Nov 2022 13:33:23 -0800 (PST)
 Received: from youngsil.svl.corp.google.com ([2620:15c:2d4:203:5850:5958:9c77:f623])
-        by smtp.gmail.com with ESMTPSA id a1-20020a1709027e4100b0017f5ba1fffasm5366413pln.297.2022.11.07.13.33.25
+        by smtp.gmail.com with ESMTPSA id a1-20020a1709027e4100b0017f5ba1fffasm5366413pln.297.2022.11.07.13.33.22
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 07 Nov 2022 13:33:26 -0800 (PST)
+        Mon, 07 Nov 2022 13:33:23 -0800 (PST)
 Sender: Namhyung Kim <namhyung@gmail.com>
 From:   Namhyung Kim <namhyung@kernel.org>
 To:     Arnaldo Carvalho de Melo <acme@kernel.org>,
@@ -64,9 +64,9 @@ Cc:     Ingo Molnar <mingo@kernel.org>,
         Kan Liang <kan.liang@linux.intel.com>,
         Zhengjun Xing <zhengjun.xing@linux.intel.com>,
         James Clark <james.clark@arm.com>
-Subject: [PATCH 6/9] perf stat: Do not indent headers for JSON
-Date:   Mon,  7 Nov 2022 13:33:11 -0800
-Message-Id: <20221107213314.3239159-7-namhyung@kernel.org>
+Subject: [PATCH 4/9] perf stat: Move common code in print_metric_headers()
+Date:   Mon,  7 Nov 2022 13:33:09 -0800
+Message-Id: <20221107213314.3239159-5-namhyung@kernel.org>
 X-Mailer: git-send-email 2.38.1.431.g37b22c650d-goog
 In-Reply-To: <20221107213314.3239159-1-namhyung@kernel.org>
 References: <20221107213314.3239159-1-namhyung@kernel.org>
@@ -76,36 +76,52 @@ Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-Currently --metric-only with --json indents header lines.  This is not
-needed for JSON.
-
-  $ perf stat -aA --metric-only -j true
-        {"unit" : "GHz"}{"unit" : "insn per cycle"}{"unit" : "branch-misses of all branches"}
-  {"cpu" : "0", {"metric-value" : "0.101"}{"metric-value" : "0.86"}{"metric-value" : "1.91"}
-  {"cpu" : "1", {"metric-value" : "0.102"}{"metric-value" : "0.87"}{"metric-value" : "2.02"}
-  {"cpu" : "2", {"metric-value" : "0.085"}{"metric-value" : "1.02"}{"metric-value" : "1.69"}
-  ...
-
-Note that the other lines are broken JSON, but it will be handled later.
+The struct perf_stat_output_ctx is set in a loop with the same values.
+Move the code out of the loop and keep the loop minimal.
 
 Signed-off-by: Namhyung Kim <namhyung@kernel.org>
 ---
- tools/perf/util/stat-display.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ tools/perf/util/stat-display.c | 13 ++++++++-----
+ 1 file changed, 8 insertions(+), 5 deletions(-)
 
 diff --git a/tools/perf/util/stat-display.c b/tools/perf/util/stat-display.c
-index 515fb6db3d67..25f67fb37f6d 100644
+index d4936a502560..115477461224 100644
 --- a/tools/perf/util/stat-display.c
 +++ b/tools/perf/util/stat-display.c
-@@ -851,7 +851,7 @@ static void print_metric_headers(struct perf_stat_config *config,
- 	if (prefix && !config->json_output)
- 		fprintf(config->output, "%s", prefix);
+@@ -837,11 +837,16 @@ static void print_metric_headers(struct perf_stat_config *config,
+ 				 struct evlist *evlist,
+ 				 const char *prefix, bool no_indent)
+ {
+-	struct perf_stat_output_ctx out;
+ 	struct evsel *counter;
+ 	struct outstate os = {
+ 		.fh = config->output
+ 	};
++	struct perf_stat_output_ctx out = {
++		.ctx = &os,
++		.print_metric = print_metric_header,
++		.new_line = new_line_metric,
++		.force_header = true,
++	};
+ 	bool first = true;
  
--	if (!config->csv_output && !no_indent)
-+	if (!config->csv_output && !config->json_output && !no_indent)
- 		fprintf(config->output, "%*s",
- 			aggr_header_lens[config->aggr_mode], "");
- 	if (config->csv_output) {
+ 	if (config->json_output && !config->interval)
+@@ -865,13 +870,11 @@ static void print_metric_headers(struct perf_stat_config *config,
+ 	/* Print metrics headers only */
+ 	evlist__for_each_entry(evlist, counter) {
+ 		os.evsel = counter;
+-		out.ctx = &os;
+-		out.print_metric = print_metric_header;
++
+ 		if (!first && config->json_output)
+ 			fprintf(config->output, ", ");
+ 		first = false;
+-		out.new_line = new_line_metric;
+-		out.force_header = true;
++
+ 		perf_stat__print_shadow_stats(config, counter, 0,
+ 					      0,
+ 					      &out,
 -- 
 2.38.1.431.g37b22c650d-goog
 
