@@ -2,87 +2,93 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E11A6C433FE
-	for <linux-perf-users@archiver.kernel.org>; Mon,  7 Nov 2022 19:33:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 36FE8C433FE
+	for <linux-perf-users@archiver.kernel.org>; Mon,  7 Nov 2022 19:48:38 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231481AbiKGTdK (ORCPT
+        id S231909AbiKGTsh (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Mon, 7 Nov 2022 14:33:10 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60314 "EHLO
+        Mon, 7 Nov 2022 14:48:37 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38160 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231351AbiKGTdJ (ORCPT
+        with ESMTP id S231808AbiKGTsg (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Mon, 7 Nov 2022 14:33:09 -0500
+        Mon, 7 Nov 2022 14:48:36 -0500
 Received: from mail-oi1-f178.google.com (mail-oi1-f178.google.com [209.85.167.178])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 83B422529C;
-        Mon,  7 Nov 2022 11:33:08 -0800 (PST)
-Received: by mail-oi1-f178.google.com with SMTP id q186so853658oia.9;
-        Mon, 07 Nov 2022 11:33:08 -0800 (PST)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BE7F61A39D;
+        Mon,  7 Nov 2022 11:48:35 -0800 (PST)
+Received: by mail-oi1-f178.google.com with SMTP id q83so1602891oib.10;
+        Mon, 07 Nov 2022 11:48:35 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
         h=cc:to:subject:message-id:date:from:in-reply-to:references
          :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
          :reply-to;
-        bh=bY31HDe7M3SSa1pI1yBsat1eyKCY1gr8xmUrHz5gwqU=;
-        b=ClvKk5HlRKUHsc/0lT1PCrVl9JU70QldSu2aI9gmpsyFHKOTmLaqR/vxQt2GJH9j4P
-         YO65XMPtsqwagUQDzBcN14WK+0sw5tgw+CWGZJYN2+ztegzJjMO4RNxCYAtDNBZ7c5b8
-         AnrUbhlkzybakHXsM9iFJ8XQjGlPBoglRwTI6DvzxfVdSDuT4mR1+oU67wYnagYjjsQY
-         Ki2f8id6P/sB0bklszDI76qcNnFEC97u7yxRXYu7Q8ojgKZccdmgX4uHv6PKO6HF//2X
-         +xcph0x0qDQryrxERW1YE4oQ7td3lqe70u5DnzcIGWHYv5MvrTzt9JAu6qvrmciC+TkW
-         Sz7Q==
-X-Gm-Message-State: ACrzQf3tRFS9DjR3JwRa+hscINVZjYSTm0okAcG3uVSQ+62svU0rgtkm
-        xhgQc6HmeC1DHoCcgGeP/3phC1u/QPD6iwnk7V8=
-X-Google-Smtp-Source: AMsMyM42hLefen7H4IPJAB0bFoU1yZWFCA3+B4rdXf/9hLvX4vkiHnuCz8qdbw0WaJXfK862mmHdcNf1zqeUcBwxuds=
+        bh=pC3VraCs8s6YEvpVTV0I2PtrYdEY09JJSU0EEtgPIig=;
+        b=8Ff7h7c7PzfRTraUgtt8CqdPg/AT/y3NcWSq3rEmkNeZuCdZ6XilxmxEwRcIO88hVp
+         L3joOTCR/AASQkSrog+CnHnM6E8K3e/VQs1iVvYYXfK4PuIhIfAkgClk2Karc15lHhAy
+         VdxrVO9mgb7KbrqO0MJP6DBv5/u6h+zx0QFyAf0lH7KKHtTRPkQ4xBIaAU6BYDdF2x8k
+         +Ri88DPumSxor7scCKhCqvaeUeB5KhXDDHb+pPsmj8T0QRqAzUOlA3G7EDOobHXfbfV5
+         Ny+sJJdGNEwDlqgnivyJ4vWYhvwTot9Ns+RroEQsVnOu3CKjJU4iwdlxP/ohU5jgJ3vm
+         tjKw==
+X-Gm-Message-State: ACrzQf3+IsyaDl8S4ebimafd7v/JrogrPcdit1WPonPXhvghxyMctiJo
+        khzIkFG6cIc4GFGLakSQTN6f1lM05856aXBmuWI=
+X-Google-Smtp-Source: AMsMyM4Z/18xRjOjvwABmJlezj2L/eczEI73izOERN6BTvW3w6fEqYeDeoy80slhhl69ZKNf1gn6csGrVR6G4/dsA4Q=
 X-Received: by 2002:aca:2805:0:b0:359:e340:d53 with SMTP id
- 5-20020aca2805000000b00359e3400d53mr26578086oix.209.1667849587792; Mon, 07
- Nov 2022 11:33:07 -0800 (PST)
+ 5-20020aca2805000000b00359e3400d53mr26615294oix.209.1667850515046; Mon, 07
+ Nov 2022 11:48:35 -0800 (PST)
 MIME-Version: 1.0
-References: <20221104121805.5264-1-adrian.hunter@intel.com>
-In-Reply-To: <20221104121805.5264-1-adrian.hunter@intel.com>
+References: <20220825-arm-spe-v8-7-v3-0-87682f78caac@kernel.org> <20220825-arm-spe-v8-7-v3-8-87682f78caac@kernel.org>
+In-Reply-To: <20220825-arm-spe-v8-7-v3-8-87682f78caac@kernel.org>
 From:   Namhyung Kim <namhyung@kernel.org>
-Date:   Mon, 7 Nov 2022 11:32:56 -0800
-Message-ID: <CAM9d7cjHb4tKsuNjD+Mhj_4coO=H-822uBxpNAmnm6NN=Eavhw@mail.gmail.com>
-Subject: Re: [PATCH 0/3] perf: intel-pt: Add hybrid CPU compatibility test
-To:     Adrian Hunter <adrian.hunter@intel.com>
-Cc:     Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Jiri Olsa <jolsa@redhat.com>, Ian Rogers <irogers@google.com>,
-        linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org
+Date:   Mon, 7 Nov 2022 11:48:23 -0800
+Message-ID: <CAM9d7ciYabTpo0q5Z8h229dZ+RXG7JP1zgOoR1fgdZZCH87vow@mail.gmail.com>
+Subject: Re: [PATCH v3 8/8] perf: arm_spe: Add support for SPEv1.2 inverted
+ event filtering
+To:     Rob Herring <robh@kernel.org>
+Cc:     Will Deacon <will@kernel.org>,
+        Arnaldo Carvalho de Melo <acme@kernel.org>,
+        Jiri Olsa <jolsa@kernel.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Marc Zyngier <maz@kernel.org>,
+        Oliver Upton <oliver.upton@linux.dev>,
+        Ingo Molnar <mingo@redhat.com>,
+        Suzuki K Poulose <suzuki.poulose@arm.com>,
+        James Morse <james.morse@arm.com>,
+        Alexandru Elisei <alexandru.elisei@arm.com>,
+        kvmarm@lists.linux.dev, linux-perf-users@vger.kernel.org,
+        linux-kernel@vger.kernel.org, James Clark <james.clark@arm.com>,
+        Mark Brown <broonie@kernel.org>,
+        linux-arm-kernel@lists.infradead.org, kvmarm@lists.cs.columbia.edu
 Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-Hi Adrian,
+Hello,
 
-On Fri, Nov 4, 2022 at 5:18 AM Adrian Hunter <adrian.hunter@intel.com> wrote:
+On Fri, Nov 4, 2022 at 8:55 AM Rob Herring <robh@kernel.org> wrote:
 >
-> Hi
->
-> The kernel driver assumes hybrid CPUs will have Intel PT capabilities
-> that are compatible with the boot CPU. Add a test to check that is the
-> case.
->
-> First 2 patches are preparation.
->
->
-> Adrian Hunter (3):
->       perf: intel-pt: Rename intel-pt-pkt-decoder-test.c
->       perf: intel-pt: Redefine test_suite
->       perf: intel-pt: Add hybrid CPU compatibility test
+> Arm SPEv1.2 (Arm v8.7/v9.2) adds a new feature called Inverted Event
+> Filter which excludes samples matching the event filter. The feature
+> mirrors the existing event filter in PMSEVFR_EL1 adding a new register,
+> PMSNEVFR_EL1, which has the same event bit assignments.
 
-Acked-by: Namhyung Kim <namhyung@kernel.org>
+Just out of curiosity, is it possible to have the event filter and
+inverted filter at the same time?  What if they have the same?
 
 Thanks,
 Namhyung
 
 >
->  tools/perf/arch/x86/include/arch-tests.h           |   1 +
->  tools/perf/arch/x86/tests/Build                    |   2 +-
->  tools/perf/arch/x86/tests/arch-tests.c             |  15 +-
->  ...intel-pt-pkt-decoder-test.c => intel-pt-test.c} | 154 +++++++++++++++++++++
->  4 files changed, 169 insertions(+), 3 deletions(-)
->  rename tools/perf/arch/x86/tests/{intel-pt-pkt-decoder-test.c => intel-pt-test.c} (80%)
->
->
-> Regards
-> Adrian
+> Tested-by: James Clark <james.clark@arm.com>
+> Signed-off-by: Rob Herring <robh@kernel.org>
+> ---
+> v3:
+>  - No change
+> v2:
+>  - Update for auto generated register defines
+>  - Avoid accessing SYS_PMSNEVFR_EL1 on < v8.7
+> ---
