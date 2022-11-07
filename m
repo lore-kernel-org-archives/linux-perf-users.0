@@ -2,73 +2,238 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4AE71C433FE
-	for <linux-perf-users@archiver.kernel.org>; Mon,  7 Nov 2022 15:18:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 71914C4332F
+	for <linux-perf-users@archiver.kernel.org>; Mon,  7 Nov 2022 15:39:16 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232556AbiKGPSf (ORCPT
+        id S231936AbiKGPjP (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Mon, 7 Nov 2022 10:18:35 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57756 "EHLO
+        Mon, 7 Nov 2022 10:39:15 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42530 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232833AbiKGPSd (ORCPT
+        with ESMTP id S232912AbiKGPjO (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Mon, 7 Nov 2022 10:18:33 -0500
-Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E7423101A;
-        Mon,  7 Nov 2022 07:18:29 -0800 (PST)
+        Mon, 7 Nov 2022 10:39:14 -0500
+Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 112CF1F9F5;
+        Mon,  7 Nov 2022 07:39:11 -0800 (PST)
 Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id 6527161175;
-        Mon,  7 Nov 2022 15:18:29 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 2F181C433D7;
-        Mon,  7 Nov 2022 15:18:24 +0000 (UTC)
+        by dfw.source.kernel.org (Postfix) with ESMTPS id A275060EC9;
+        Mon,  7 Nov 2022 15:39:10 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id DF7BEC433D6;
+        Mon,  7 Nov 2022 15:39:09 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1667834308;
-        bh=AnnreFD0cOvjlr58KEWYY82PgAKKww7aoT8x4brf1EU=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=jLd5uAPiCOvWXKrYzcJptWZaW9+0RZr1WUOv3ulrwfs+pbPvIsGXSPtdcsA2qtpX5
-         o5CGyWn9hDSKaoLYgwpiQacUbP/n6+7wPFVJnGf78t15bMUjw/HUofrV70iQkR3V5I
-         0CXcpRD4zP1pVVrdorilN6IGopRyt8ZyENGWuTXB9ctCGI8GvYogoDbKGB0q5NaGpX
-         0kjGx3pb4oP78kWstUJr5gpD6PuYDy2kNKEfi2P48MDFVJfpV/0jq7jzUx10vuGKQZ
-         wuqNKWPcGu5s5HSrogsvgRSaApuQyqEUhhqchC6XaJnSHp4pte+GAWxJw2OVVTtx1K
-         E2JEFMH/d5z1Q==
-Date:   Mon, 7 Nov 2022 15:18:20 +0000
-From:   Will Deacon <will@kernel.org>
-To:     Lecopzer Chen <lecopzer.chen@mediatek.com>
-Cc:     linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        linux-perf-users@vger.kernel.org, mark.rutland@arm.com,
-        acme@kernel.org, akpm@linux-foundation.org,
-        alexander.shishkin@linux.intel.com, catalin.marinas@arm.com,
-        davem@davemloft.net, jolsa@redhat.com, jthierry@redhat.com,
-        keescook@chromium.org, kernelfans@gmail.com, masahiroy@kernel.org,
-        matthias.bgg@gmail.com, maz@kernel.org, mcgrof@kernel.org,
-        mingo@redhat.com, namhyung@kernel.org, nixiaoming@huawei.com,
-        peterz@infradead.org, pmladek@suse.com, sparclinux@vger.kernel.org,
-        sumit.garg@linaro.org, wangqing@vivo.com, yj.chiang@mediatek.com
-Subject: Re: [PATCH v7 0/6] Support hld delayed init based on Pseudo-NMI for
-Message-ID: <20221107151819.GA21002@willie-the-truck>
-References: <20220903093415.15850-1-lecopzer.chen@mediatek.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20220903093415.15850-1-lecopzer.chen@mediatek.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+        s=k20201202; t=1667835550;
+        bh=LJTIX6EOyaGeco5U/ATP5mMAgf2Y3X8oNl0EWEryn5o=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=nsdFJc9TqagjKvmFhMqOxOGFd9zPtEIUDgrKBq1eaNwvFUXm/2MT2aEvrvPfmz7J7
+         JIw+bt+4p8KLa/zn3pkuPjPS8R0Bh1J+xpk+eX/gVzh8hVLMkb52DFNTZXSq14utSE
+         rzVVJDENJRiZLmhavv6oR67vreSXOvHPNGz4XhvbYqOCH8AIs9rXMVSsclitgNiG5x
+         ZNL1FBuqhtZnRUidWMLLrEGZCt5miwTj+H9/522i6VgM2oCNT94tTEvR4849xFqzdm
+         vUxQ0Vvsh/UD0V7Kfavqdl7K4xON3elnskuxhxpest11c2Ytv1bhlBIsg/gC2bctp8
+         7upVCChMDUuLA==
+Received: from sofa.misterjones.org ([185.219.108.64] helo=goblin-girl.misterjones.org)
+        by disco-boy.misterjones.org with esmtpsa  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
+        (Exim 4.95)
+        (envelope-from <maz@kernel.org>)
+        id 1os4DL-004Qsn-Ss;
+        Mon, 07 Nov 2022 15:39:08 +0000
+Date:   Mon, 07 Nov 2022 15:39:07 +0000
+Message-ID: <86y1smpyec.wl-maz@kernel.org>
+From:   Marc Zyngier <maz@kernel.org>
+To:     Leo Yan <leo.yan@linaro.org>
+Cc:     James Morse <james.morse@arm.com>,
+        Alexandru Elisei <alexandru.elisei@arm.com>,
+        Suzuki K Poulose <suzuki.poulose@arm.com>,
+        Oliver Upton <oliver.upton@linux.dev>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Will Deacon <will@kernel.org>,
+        Arnaldo Carvalho de Melo <acme@kernel.org>,
+        John Garry <john.garry@huawei.com>,
+        James Clark <james.clark@arm.com>,
+        Mike Leach <mike.leach@linaro.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Jiri Olsa <jolsa@kernel.org>,
+        Namhyung Kim <namhyung@kernel.org>,
+        linux-arm-kernel@lists.infradead.org, kvmarm@lists.linux.dev,
+        kvmarm@lists.cs.columbia.edu, linux-kernel@vger.kernel.org,
+        linux-perf-users@vger.kernel.org
+Subject: Re: [PATCH v1 3/3] perf arm64: Support virtual CPU ID for kvm-stat
+In-Reply-To: <Y2kabsQdddiX4G+O@leoy-huanghe.lan>
+References: <20221105072311.8214-1-leo.yan@linaro.org>
+        <20221105072311.8214-4-leo.yan@linaro.org>
+        <868rkpr0mv.wl-maz@kernel.org>
+        <Y2kabsQdddiX4G+O@leoy-huanghe.lan>
+User-Agent: Wanderlust/2.15.9 (Almost Unreal) SEMI-EPG/1.14.7 (Harue)
+ FLIM-LB/1.14.9 (=?UTF-8?B?R29qxY0=?=) APEL-LB/10.8 EasyPG/1.0.0 Emacs/27.1
+ (aarch64-unknown-linux-gnu) MULE/6.0 (HANACHIRUSATO)
+MIME-Version: 1.0 (generated by SEMI-EPG 1.14.7 - "Harue")
+Content-Type: text/plain; charset=US-ASCII
+X-SA-Exim-Connect-IP: 185.219.108.64
+X-SA-Exim-Rcpt-To: leo.yan@linaro.org, james.morse@arm.com, alexandru.elisei@arm.com, suzuki.poulose@arm.com, oliver.upton@linux.dev, catalin.marinas@arm.com, will@kernel.org, acme@kernel.org, john.garry@huawei.com, james.clark@arm.com, mike.leach@linaro.org, peterz@infradead.org, mingo@redhat.com, mark.rutland@arm.com, alexander.shishkin@linux.intel.com, jolsa@kernel.org, namhyung@kernel.org, linux-arm-kernel@lists.infradead.org, kvmarm@lists.linux.dev, kvmarm@lists.cs.columbia.edu, linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org
+X-SA-Exim-Mail-From: maz@kernel.org
+X-SA-Exim-Scanned: No (on disco-boy.misterjones.org); SAEximRunCond expanded to false
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-On Sat, Sep 03, 2022 at 05:34:09PM +0800, Lecopzer Chen wrote:
-> As we already used hld internally for arm64 since 2020, there still
-> doesn't have a proper commit on the upstream and we badly need it.
+On Mon, 07 Nov 2022 14:47:10 +0000,
+Leo Yan <leo.yan@linaro.org> wrote:
 > 
-> This serise rework on 5.17 from [1] and the origin author is
-> Pingfan Liu <kernelfans@gmail.com>
-> Sumit Garg <sumit.garg@linaro.org>
+> On Sat, Nov 05, 2022 at 01:28:40PM +0000, Marc Zyngier wrote:
+> 
+> [...]
+> 
+> > > Before:
+> > > 
+> > >   # perf kvm stat report --vcpu 27
+> > > 
+> > >   Analyze events for all VMs, VCPU 27:
+> > > 
+> > >                VM-EXIT    Samples  Samples%     Time%    Min Time    Max Time         Avg time
+> > > 
+> > >   Total Samples:0, Total events handled time:0.00us.
+> > >
+> > > After:
+> > > 
+> > >   # perf kvm stat report --vcpu 27
+> > > 
+> > >   Analyze events for all VMs, VCPU 27:
+> > > 
+> > >                VM-EXIT    Samples  Samples%     Time%    Min Time    Max Time         Avg time
+> > > 
+> > >                  SYS64        808    98.54%    91.24%      0.00us    303.76us      3.46us ( +-  13.54% )
+> > >                    WFx         10     1.22%     7.79%      0.00us     69.48us     23.91us ( +-  25.91% )
+> > >                    IRQ          2     0.24%     0.97%      0.00us     22.64us     14.82us ( +-  52.77% )
+> > > 
+> > >   Total Samples:820, Total events handled time:3068.28us.
+> > 
+> > Please educate me: how useful is it to filter on a vcpu number across
+> > all VMs? What sense does it even make?
+> 
+> Now "perf kvm" tool is not sophisticated since it doesn't capture VMID
+> and virtual CPU ID together.
 
-I'd definitely want Mark's ack on this, as he previously had suggestions
-when we reverted the old broken code back in:
+VMID is not a relevant indicator anyway, as it can change at any
+point. But that's only to show that everybody has a different view on
+what they need to collect. At which point, we need to provide an
+infrastructure for data extraction, and not the data itself.
 
-https://lore.kernel.org/r/20210113130235.GB19011@C02TD0UTHF1T.local
+> I think a case is we can spin a program on a specific virtual CPU with
+> taskset in VM, in this way we can check if any bottleneck is caused by
+> VM entry/exit, but I have to say that it's inaccurate if we only filter
+> on VCPU ID, we should consider tracing VMID and VCPU ID together in
+> later's enhancement.
+> 
+> > Conversely, what would be the purpose of filtering on a 5th thread of
+> > any process irrespective of what the process does? To me, this is the
+> > same level of non-sense.
+> 
+> I agree.
+> 
+> > AFAICT, this is just piling more arbitrary data extraction for no
+> > particular reason other than "just because we can", and there is
+> > absolutely no guarantee that this is fit for anyone else's purpose.
+> > 
+> > I'd rather you have a generic tracepoint taking the vcpu as a context
+> > and a BPF program that spits out the information people actually need,
+> > keeping things out of the kernel. Or even a tracehook (like the
+> > scheduler does), and let people load a module to dump whatever
+> > information they please.
+> 
+> Actually I considered three options:
+> 
+> Option 1: Simply add new version's trace events for recording more info.
+> This is not flexible and we even have risk to add more version's trace
+> event if later we might find that more data should traced.
+> 
+> This approach is straightforward and the implementation would be
+> simple.  This is main reason why finally I choosed to add new trace
+> events.
 
-Will
+But that doesn't scale at all.
+
+> 
+> Option 2: use Kprobe to dynamically insert tracepoints; but this means
+> the user must have the corresponding vmlinux file, otherwise, perf
+> tool might inject tracepoint at an incorrect address.  This is the
+> main reason I didn't use Kprobe to add dynamic tracepoints.
+>
+> Option 3: As you suggested, I can bind KVM tracepoints with a eBPF
+> program and the eBPF program records perf events.
+> 
+> When I reviewed Arm64's kvm_entry / kvm_exit trace events, they don't
+> have vcpu context in the arguments, this means I need to add new trace
+> events for accessing "vcpu" context.
+
+I'm not opposed to adding new trace{point,hook}s if you demonstrate
+that they are generic enough or will never need to evolve.
+
+> 
+> Option 1 and 3 both need to add trace events; option 1 is more
+> straightforward solution and this is why it was choosed in current patch
+> set.
+> 
+> I recognized that I made a mistake, actually we can modify the trace
+> event's definition for kvm_entry / kvm_exit, note we only modify the
+> trace event's arguments, this will change the trace function's
+> definition but it will not break ABI (the format is exactly same for
+> the user space).  Below changes demonstrate what's my proposing:
+> 
+> diff --git a/arch/arm64/kvm/arm.c b/arch/arm64/kvm/arm.c
+> index 94d33e296e10..16f6b61abfec 100644
+> --- a/arch/arm64/kvm/arm.c
+> +++ b/arch/arm64/kvm/arm.c
+> @@ -917,7 +917,7 @@ int kvm_arch_vcpu_ioctl_run(struct kvm_vcpu *vcpu)
+>                 /**************************************************************
+>                  * Enter the guest
+>                  */
+> -               trace_kvm_entry(*vcpu_pc(vcpu));
+> +               trace_kvm_entry(vcpu);
+>                 guest_timing_enter_irqoff();
+>  
+>                 ret = kvm_arm_vcpu_enter_exit(vcpu);
+> diff --git a/arch/arm64/kvm/trace_arm.h b/arch/arm64/kvm/trace_arm.h
+> index 33e4e7dd2719..9df4fd30093c 100644
+> --- a/arch/arm64/kvm/trace_arm.h
+> +++ b/arch/arm64/kvm/trace_arm.h
+> @@ -12,15 +12,15 @@
+>   * Tracepoints for entry/exit to guest
+>   */
+>  TRACE_EVENT(kvm_entry,
+> -       TP_PROTO(unsigned long vcpu_pc),
+> -       TP_ARGS(vcpu_pc),
+> +       TP_PROTO(struct kvm_vcpu *vcpu),
+> +       TP_ARGS(vcpu),
+>  
+>         TP_STRUCT__entry(
+>                 __field(        unsigned long,  vcpu_pc         )
+>         ),
+>  
+>         TP_fast_assign(
+> -               __entry->vcpu_pc                = vcpu_pc;
+> +               __entry->vcpu_pc                = *vcpu_pc(vcpu);
+>         ),
+>  
+>         TP_printk("PC: 0x%016lx", __entry->vcpu_pc)
+> 
+> Please let me know your opinion, if you don't object, I can move
+> forward with this approach.
+
+I have no issue with this if this doesn't change anything else.
+
+And if you can make use of this with a BPF program and get to the same
+result as your initial patch, then please submit it for inclusion in
+the kernel as an example. We can then point people to it next time
+this crop up (probably before Xmas).
+
+Thanks,
+
+	M.
+
+-- 
+Without deviation from the norm, progress is not possible.
