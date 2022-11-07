@@ -2,105 +2,87 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3D9E7C4332F
-	for <linux-perf-users@archiver.kernel.org>; Mon,  7 Nov 2022 21:34:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EECF5C43217
+	for <linux-perf-users@archiver.kernel.org>; Mon,  7 Nov 2022 21:58:20 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233062AbiKGVeD (ORCPT
+        id S233113AbiKGV6T (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Mon, 7 Nov 2022 16:34:03 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54652 "EHLO
+        Mon, 7 Nov 2022 16:58:19 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40902 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S233514AbiKGVdq (ORCPT
+        with ESMTP id S233181AbiKGV6J (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Mon, 7 Nov 2022 16:33:46 -0500
-Received: from mail-pj1-x102c.google.com (mail-pj1-x102c.google.com [IPv6:2607:f8b0:4864:20::102c])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CCD1F2195;
-        Mon,  7 Nov 2022 13:33:29 -0800 (PST)
-Received: by mail-pj1-x102c.google.com with SMTP id z5-20020a17090a8b8500b00210a3a2364fso182795pjn.0;
-        Mon, 07 Nov 2022 13:33:29 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20210112;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:sender:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=F3kWpBC1NLbl49EVyM6kuTlOZ/tQuDbS9uiyiK9Bcd8=;
-        b=FcSbzoNLCo8OoQLRTy1AojjTte1miTZf2JSnw5QprLwVDsrGsELCcwIEOdIuBoGpuI
-         v5+QS0SkLzYXJtsLG8JJ19RCg1oSgUJNg6OMEKclucZVbPXotCqihsfZWk9GZfFgIqWG
-         0Tl69ccf++bhhstTYh68opUzCqfz0nKNORwqH72toYynd+9Jvq6gLdU+gMo7f7qyAQuh
-         5G+CqBcYQ/S6LR6b0mn8ceudSUEWwh0AXmK31d4feFd0YjHjQpivKkBuzRUyNhc4EFiv
-         wCaAwr6Q2pvBvaNONSW5yJSEmo4bYtd8WrOoqJLnYK/xo4Z/eGoOTlgvZa8MJpV7pZu9
-         HUxA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:sender:x-gm-message-state:from
-         :to:cc:subject:date:message-id:reply-to;
-        bh=F3kWpBC1NLbl49EVyM6kuTlOZ/tQuDbS9uiyiK9Bcd8=;
-        b=x4KYb1PdRWFTJFwHweqkRg2bJdPCyxNasrfpt8O8tTyvHeoi6n5JOiPNMnsjfVlLbV
-         G8uiFLTnhPMQlufccdSENX4Z+1kUQeqsg2W96qtfR3UZ/WJ9nApnyTNXU5Qge13mYk6N
-         2OhkxzedUVuuqiP0Ije5l9SfcWkiO5ylRyz91VYjo2Li0t1InFsCdd2Rsn9meL90t1Kp
-         3E72IveYcUFRIqPanYGUEpZgNfjaWrkFiWQh2M1DjLkjnT5R7lx0HrWkJDPuel3SDEzB
-         Ykc/KhlZ8uG9IMwcL7ZWtTOSKJ3Owso+1JfPIMPo/85mc4Zeiq8QjWZKygEg3R0LRTo4
-         rYEQ==
-X-Gm-Message-State: ACrzQf1/Fwohts8nM9NW4IcMleU+elBHttkM3z9HpsiqbtnPUbFa0eBz
-        eBcPoblCH/eMIGPuExFthQM=
-X-Google-Smtp-Source: AMsMyM5fLV37+O7kmaviYn3MmW+LUXgk4eB5+qxKrSreo0uaQHUHcCC7GfzhORwSE+ongdf/sXPXUA==
-X-Received: by 2002:a17:902:e846:b0:187:2127:cbb with SMTP id t6-20020a170902e84600b0018721270cbbmr44249969plg.125.1667856808976;
-        Mon, 07 Nov 2022 13:33:28 -0800 (PST)
-Received: from youngsil.svl.corp.google.com ([2620:15c:2d4:203:5850:5958:9c77:f623])
-        by smtp.gmail.com with ESMTPSA id a1-20020a1709027e4100b0017f5ba1fffasm5366413pln.297.2022.11.07.13.33.27
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 07 Nov 2022 13:33:28 -0800 (PST)
-Sender: Namhyung Kim <namhyung@gmail.com>
-From:   Namhyung Kim <namhyung@kernel.org>
-To:     Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Jiri Olsa <jolsa@kernel.org>
-Cc:     Ingo Molnar <mingo@kernel.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Ian Rogers <irogers@google.com>,
-        Adrian Hunter <adrian.hunter@intel.com>,
-        linux-perf-users@vger.kernel.org,
+        Mon, 7 Nov 2022 16:58:09 -0500
+Received: from mail.skyhub.de (mail.skyhub.de [5.9.137.197])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C127128E16;
+        Mon,  7 Nov 2022 13:58:03 -0800 (PST)
+Received: from zn.tnic (p200300ea9733e764329c23fffea6a903.dip0.t-ipconnect.de [IPv6:2003:ea:9733:e764:329c:23ff:fea6:a903])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.skyhub.de (SuperMail on ZX Spectrum 128k) with ESMTPSA id 4D3D41EC071E;
+        Mon,  7 Nov 2022 22:58:02 +0100 (CET)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alien8.de; s=dkim;
+        t=1667858282;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:in-reply-to:in-reply-to:  references:references;
+        bh=uQcKspdlDKpk49zfyausr9OngCMvETATkpBKm+sBLhk=;
+        b=Qwtyu/SGJvknZmcPnQ2RVX7AM+OQGNt7XRtmeoNiddst/4dyq3Twq5mY7V+q5GRPPX8JBv
+        oL90uqH946ccxeIPpTbSO4VMjvvJ1iOX4FrOWLBvAhr71mqYWcJDb7cztQmoChrcj7ydpF
+        EHzowFWLanlPhgD4che2ALb0pw2wqYw=
+Date:   Mon, 7 Nov 2022 22:57:58 +0100
+From:   Borislav Petkov <bp@alien8.de>
+To:     Maxim Levitsky <mlevitsk@redhat.com>
+Cc:     linux-kernel@vger.kernel.org, kvm@vger.kernel.org,
+        Pawan Gupta <pawan.kumar.gupta@linux.intel.com>,
+        Ingo Molnar <mingo@redhat.com>,
+        Josh Poimboeuf <jpoimboe@kernel.org>,
+        Namhyung Kim <namhyung@kernel.org>,
+        Tony Luck <tony.luck@intel.com>,
+        Paolo Bonzini <pbonzini@redhat.com>,
+        "H. Peter Anvin" <hpa@zytor.com>,
+        Arnaldo Carvalho de Melo <acme@kernel.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Tim Chen <tim.c.chen@linux.intel.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        Dave Hansen <dave.hansen@linux.intel.com>,
+        "Chang S. Bae" <chang.seok.bae@intel.com>,
+        Jane Malalane <jane.malalane@citrix.com>,
+        Kees Cook <keescook@chromium.org>,
         Kan Liang <kan.liang@linux.intel.com>,
-        Zhengjun Xing <zhengjun.xing@linux.intel.com>,
-        James Clark <james.clark@arm.com>
-Subject: [PATCH 8/9] perf stat: Fix condition in print_interval()
-Date:   Mon,  7 Nov 2022 13:33:13 -0800
-Message-Id: <20221107213314.3239159-9-namhyung@kernel.org>
-X-Mailer: git-send-email 2.38.1.431.g37b22c650d-goog
-In-Reply-To: <20221107213314.3239159-1-namhyung@kernel.org>
-References: <20221107213314.3239159-1-namhyung@kernel.org>
+        Peter Zijlstra <peterz@infradead.org>,
+        "maintainer:X86 ARCHITECTURE (32-BIT AND 64-BIT)" <x86@kernel.org>,
+        Herbert Xu <herbert@gondor.apana.org.au>,
+        Jiri Olsa <jolsa@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        linux-perf-users@vger.kernel.org,
+        "open list:CRYPTO API" <linux-crypto@vger.kernel.org>
+Subject: Re: [PATCH v2 2/5] x86/cpuid: refactor
+ setup_clear_cpu_cap()/clear_cpu_cap()
+Message-ID: <Y2l/ZibeaD3P8lBp@zn.tnic>
+References: <20220718141123.136106-1-mlevitsk@redhat.com>
+ <20220718141123.136106-3-mlevitsk@redhat.com>
+ <Y1LGkTXCksqAYLHD@zn.tnic>
+ <Y2lYMqLVP+00Rpu5@zn.tnic>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <Y2lYMqLVP+00Rpu5@zn.tnic>
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-The num_print_interval and config->interval_clear should be checked
-together like other places like later in the function.  Otherwise,
-the --interval-clear option could print the headers for the CSV or
-JSON output unnecessarily.
+On Mon, Nov 07, 2022 at 08:10:42PM +0100, Borislav Petkov wrote:
+> Lemme document it so that it is at least clear. Who knows, we might end
+> up improving it in the process.
 
-Signed-off-by: Namhyung Kim <namhyung@kernel.org>
----
- tools/perf/util/stat-display.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+IOW, something like this. It's a start at least...
 
-diff --git a/tools/perf/util/stat-display.c b/tools/perf/util/stat-display.c
-index aab2576bd40f..a10af26c26ab 100644
---- a/tools/perf/util/stat-display.c
-+++ b/tools/perf/util/stat-display.c
-@@ -902,8 +902,8 @@ static void print_interval(struct perf_stat_config *config,
- 		sprintf(prefix, "{\"interval\" : %lu.%09lu}", (unsigned long)
- 				 ts->tv_sec, ts->tv_nsec);
- 
--	if ((num_print_interval == 0 && !config->csv_output && !config->json_output)
--			 || config->interval_clear) {
-+	if ((num_print_interval == 0 || config->interval_clear) &&
-+			!config->csv_output && !config->json_output) {
- 		switch (config->aggr_mode) {
- 		case AGGR_NODE:
- 			fprintf(output, "#           time node   cpus");
+https://lore.kernel.org/r/20221107211505.8572-1-bp@alien8.de
+
 -- 
-2.38.1.431.g37b22c650d-goog
+Regards/Gruss,
+    Boris.
 
+https://people.kernel.org/tglx/notes-about-netiquette
