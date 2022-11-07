@@ -2,87 +2,84 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B736CC4332F
-	for <linux-perf-users@archiver.kernel.org>; Mon,  7 Nov 2022 20:59:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5E5A7C433FE
+	for <linux-perf-users@archiver.kernel.org>; Mon,  7 Nov 2022 21:12:39 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232976AbiKGU7P (ORCPT
+        id S233362AbiKGVMi (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Mon, 7 Nov 2022 15:59:15 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47114 "EHLO
+        Mon, 7 Nov 2022 16:12:38 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35034 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S233084AbiKGU7N (ORCPT
+        with ESMTP id S233588AbiKGVML (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Mon, 7 Nov 2022 15:59:13 -0500
-Received: from mail-oa1-f43.google.com (mail-oa1-f43.google.com [209.85.160.43])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 729F5CD;
-        Mon,  7 Nov 2022 12:59:12 -0800 (PST)
-Received: by mail-oa1-f43.google.com with SMTP id 586e51a60fabf-13ae8117023so14088242fac.9;
-        Mon, 07 Nov 2022 12:59:12 -0800 (PST)
+        Mon, 7 Nov 2022 16:12:11 -0500
+Received: from mail-oo1-f44.google.com (mail-oo1-f44.google.com [209.85.161.44])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9C3E92FC21;
+        Mon,  7 Nov 2022 13:09:12 -0800 (PST)
+Received: by mail-oo1-f44.google.com with SMTP id q2-20020a4a3302000000b0049ee5fe3ab7so622104ooq.8;
+        Mon, 07 Nov 2022 13:09:12 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
         h=cc:to:subject:message-id:date:from:in-reply-to:references
          :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
          :reply-to;
-        bh=EurRGdIXmrZYEmrrxoQ5RYPb5xqSkjb6kydBYZiyHNg=;
-        b=djETqYxWR4XFQN8ucGfMg041tASMbeWnfjwroo9Znpk2b+Da45PzE3w35evs9e6SIX
-         3fmxulUiOyznd67H+UBFjTj/Z5snYPXcKGQufbxgxxQQt49DYVSHJPBsjncNzTJwmIj+
-         MvavP8zkXV+DvBxKHAwqvjR9xnsJg9iUy4h/RhsP8HmP3T7luCQlahNvFG6pQwrBBBAi
-         /jXfP2RBPd1KnOqmjCfmYYeSnFzb4QnTR6JWca+OjTtA4cW0rScI4dDZ8tECp2bZU3Zg
-         bxXteGB91Asnd9+3M9Z+t4Fn7s62mhmwU6WRL/4meG9X2kAzjw+gjjgt1K3JsAiDiB2F
-         6zSw==
-X-Gm-Message-State: ACrzQf1WTYtusRVk9+qhmw9jUtYdU/jSKxsMUoOCWMRCpZfFAbylLffe
-        KiH1Cf2nUgs/0nvKtgxEEEYTnTqk4LJGcmnQrXE=
-X-Google-Smtp-Source: AMsMyM4EFjXZNq+yVBfuWjXYn+r6rhsFoosLyTP7TmEdjjU2ziECawiB7ho+2LxhbYUHD2bOUGReT0JRRxw20vfNmOY=
-X-Received: by 2002:a05:6870:9a27:b0:140:6f4c:f532 with SMTP id
- fo39-20020a0568709a2700b001406f4cf532mr11190737oab.209.1667854751778; Mon, 07
- Nov 2022 12:59:11 -0800 (PST)
+        bh=zJRjXYPrBJnSWOuAvcjC4UzikNviJ6pcXZBPjMYgmEU=;
+        b=RLkdwBoWC75Tc/Ms1KSv9WUgwQrUd8yYqybHokZFwSfTaTYH6xCf54efHTOBMVoTDa
+         bUWSJmUlpoo3LUw+pyIBM1VnDAUwhYyyMoBzf6FWqQZ4zc6t0K2T8XIVO6vkHnyY+rqv
+         1uORYszq47Mcs/zjfXshOOCmTuJKq6dk4qwxF2Dtc+zbME9kyKzADz506jTd9e68auEJ
+         Jups4Qfo4vYjb3dxF3ON/2ehua15aPGWh2HHbDDfMhWw9dWgJbMws1eoggQhl4+mjxAR
+         FYIJevXroW1x/6F7NNCbzOIXjNpsYwNI3R+CIDuFrKgFa7M/ghq43JQ0lYmZWNASfzUq
+         bFcg==
+X-Gm-Message-State: ACrzQf3/kJxxZHn3softwadg1oFE1ji2kmlwcjzpip7cfDZayECMVo50
+        sgo4JgMecuCFX+hYY+BPRFRXnOVKdwKE9NPGak3Evm3o
+X-Google-Smtp-Source: AMsMyM58h+AC38zp7Qdffo3gCYh/exaBPOgKomdQnStR3tjmFAq3T5TffdkResyJhkY8BxBKetsFmOzdd40MQDIB8Uc=
+X-Received: by 2002:a4a:b913:0:b0:480:b3bf:7812 with SMTP id
+ x19-20020a4ab913000000b00480b3bf7812mr22421024ooo.97.1667855351882; Mon, 07
+ Nov 2022 13:09:11 -0800 (PST)
 MIME-Version: 1.0
-References: <20221105135932.81612-1-tegongkang@gmail.com>
-In-Reply-To: <20221105135932.81612-1-tegongkang@gmail.com>
+References: <166761727445.480106.3738447577082071942.stgit@devnote3>
+In-Reply-To: <166761727445.480106.3738447577082071942.stgit@devnote3>
 From:   Namhyung Kim <namhyung@kernel.org>
-Date:   Mon, 7 Nov 2022 12:59:00 -0800
-Message-ID: <CAM9d7cjm+_h3C6=0UYR=pSiB4m8fEt3WUy-tkLos_yYu4bFWsA@mail.gmail.com>
-Subject: Re: [PATCH] perf print-events: Remove redundant comparison with zero
-To:     Kang Minchul <tegongkang@gmail.com>
-Cc:     Peter Zijlstra <peterz@infradead.org>,
+Date:   Mon, 7 Nov 2022 13:09:00 -0800
+Message-ID: <CAM9d7ci8YX22Bp31ZD9k31NFN6pP3fbPKpNDNZYnmdZiqav1Vg@mail.gmail.com>
+Subject: Re: [PATCH] tools/perf: Fix to get the DW_AT_decl_file and
+ DW_AT_call_file as unsinged data
+To:     "Masami Hiramatsu (Google)" <mhiramat@kernel.org>
+Cc:     Arnaldo Carvalho de Melo <acme@kernel.org>,
+        Peter Zijlstra <peterz@infradead.org>,
         Ingo Molnar <mingo@redhat.com>,
-        Arnaldo Carvalho de Melo <acme@kernel.org>,
         Mark Rutland <mark.rutland@arm.com>,
         Alexander Shishkin <alexander.shishkin@linux.intel.com>,
         Jiri Olsa <jolsa@kernel.org>, linux-perf-users@vger.kernel.org,
-        linux-kernel@vger.kernel.org
+        linux-kernel@vger.kernel.org, Steven Rostedt <rostedt@goodmis.org>
 Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-Hi Minchul,
+Hi Masami,
 
-On Sat, Nov 5, 2022 at 6:59 AM Kang Minchul <tegongkang@gmail.com> wrote:
+On Fri, Nov 4, 2022 at 8:01 PM Masami Hiramatsu (Google)
+<mhiramat@kernel.org> wrote:
 >
-> Since variable npmus is unsigned int, comparing with 0 is unnecessary.
+> From: Masami Hiramatsu (Google) <mhiramat@kernel.org>
 >
-> Signed-off-by: Kang Minchul <tegongkang@gmail.com>
-> ---
->  tools/perf/util/print-events.c | 6 ++----
->  1 file changed, 2 insertions(+), 4 deletions(-)
+> Dwarf version 5 standard Sec 2.14 says that
 >
-> diff --git a/tools/perf/util/print-events.c b/tools/perf/util/print-events.c
-> index c4d5d87fae2f..6df947df1c0f 100644
-> --- a/tools/perf/util/print-events.c
-> +++ b/tools/perf/util/print-events.c
-> @@ -311,10 +311,8 @@ int print_hwcache_events(const char *event_glob, bool name_only)
->                                 if ((hybrid_supported == 0) ||
->                                     (hybrid_supported == npmus)) {
->                                         evt_list[evt_i] = strdup(name);
-> -                                       if (npmus > 0) {
-> -                                               for (j = 0; j < npmus; j++)
-> -                                                       zfree(&evt_pmus[j]);
-> -                                       }
-> +                                       for (j = 0; j < npmus; j++)
-> +                                               zfree(&evt_pmus[j]);
-
-You can still have 0 npmus, but then the for loop will not be executed.  So,
+>   Any debugging information entry representing the declaration of an object,
+>   module, subprogram or type may have DW_AT_decl_file, DW_AT_decl_line and
+>   DW_AT_decl_column attributes, each of whose value is an unsigned integer
+>   constant.
+>
+> So it should be an unsigned integer data. Also, even though the standard
+> doesn't clearly say the DW_AT_call_file is signed or unsigned, the
+> elfutils (eu-readelf) interprets it as unsigned integer data and it is
+> natural to handle it as unsigned integer data as same as DW_AT_decl_file.
+> This changes the DW_AT_call_file as unsigned integer data too.
+>
+> Fixes: 3f4460a28fb2 ("perf probe: Filter out redundant inline-instances")
+> Cc: stable@vger.kernel.org
+> Signed-off-by: Masami Hiramatsu (Google) <mhiramat@kernel.org>
 
 Acked-by: Namhyung Kim <namhyung@kernel.org>
 
@@ -90,9 +87,56 @@ Thanks,
 Namhyung
 
 
->                                 } else {
->                                         for (j = 0; j < hybrid_supported; j++) {
->                                                 evt_list[evt_i++] = evt_pmus[j];
-> --
-> 2.34.1
+> ---
+>  tools/perf/util/dwarf-aux.c |   21 ++++-----------------
+>  1 file changed, 4 insertions(+), 17 deletions(-)
+>
+> diff --git a/tools/perf/util/dwarf-aux.c b/tools/perf/util/dwarf-aux.c
+> index 30b36b525681..b07414409771 100644
+> --- a/tools/perf/util/dwarf-aux.c
+> +++ b/tools/perf/util/dwarf-aux.c
+> @@ -315,19 +315,6 @@ static int die_get_attr_udata(Dwarf_Die *tp_die, unsigned int attr_name,
+>         return 0;
+>  }
+>
+> -/* Get attribute and translate it as a sdata */
+> -static int die_get_attr_sdata(Dwarf_Die *tp_die, unsigned int attr_name,
+> -                             Dwarf_Sword *result)
+> -{
+> -       Dwarf_Attribute attr;
+> -
+> -       if (dwarf_attr_integrate(tp_die, attr_name, &attr) == NULL ||
+> -           dwarf_formsdata(&attr, result) != 0)
+> -               return -ENOENT;
+> -
+> -       return 0;
+> -}
+> -
+>  /**
+>   * die_is_signed_type - Check whether a type DIE is signed or not
+>   * @tp_die: a DIE of a type
+> @@ -467,9 +454,9 @@ int die_get_data_member_location(Dwarf_Die *mb_die, Dwarf_Word *offs)
+>  /* Get the call file index number in CU DIE */
+>  static int die_get_call_fileno(Dwarf_Die *in_die)
+>  {
+> -       Dwarf_Sword idx;
+> +       Dwarf_Word idx;
+>
+> -       if (die_get_attr_sdata(in_die, DW_AT_call_file, &idx) == 0)
+> +       if (die_get_attr_udata(in_die, DW_AT_call_file, &idx) == 0)
+>                 return (int)idx;
+>         else
+>                 return -ENOENT;
+> @@ -478,9 +465,9 @@ static int die_get_call_fileno(Dwarf_Die *in_die)
+>  /* Get the declared file index number in CU DIE */
+>  static int die_get_decl_fileno(Dwarf_Die *pdie)
+>  {
+> -       Dwarf_Sword idx;
+> +       Dwarf_Word idx;
+>
+> -       if (die_get_attr_sdata(pdie, DW_AT_decl_file, &idx) == 0)
+> +       if (die_get_attr_udata(pdie, DW_AT_decl_file, &idx) == 0)
+>                 return (int)idx;
+>         else
+>                 return -ENOENT;
 >
