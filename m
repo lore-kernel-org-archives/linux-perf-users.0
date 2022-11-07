@@ -2,98 +2,159 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F0F23C433FE
-	for <linux-perf-users@archiver.kernel.org>; Sat,  5 Nov 2022 13:59:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BDBDBC433FE
+	for <linux-perf-users@archiver.kernel.org>; Mon,  7 Nov 2022 02:41:39 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229531AbiKEN7l (ORCPT
+        id S230136AbiKGCli (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Sat, 5 Nov 2022 09:59:41 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59996 "EHLO
+        Sun, 6 Nov 2022 21:41:38 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55690 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229453AbiKEN7k (ORCPT
+        with ESMTP id S229995AbiKGClh (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Sat, 5 Nov 2022 09:59:40 -0400
-Received: from mail-pf1-x42a.google.com (mail-pf1-x42a.google.com [IPv6:2607:f8b0:4864:20::42a])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DE15620BE3;
-        Sat,  5 Nov 2022 06:59:38 -0700 (PDT)
-Received: by mail-pf1-x42a.google.com with SMTP id y203so6849507pfb.4;
-        Sat, 05 Nov 2022 06:59:38 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20210112;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=2VGen5F4wRHnElI7bxeSRaRwtCRZafiIgyKdmdxpY5M=;
-        b=ZBSwev+3fS8foai/lxRVCQ5HORJW/mX6OK+S/745P8Dxqp4yXbJTGjskKbayxJCh2F
-         Xx2ib0n+1wGNw7tXkt0UkgJvwgTGvjnMUrHcngpR8PLendVZMMXScDukSJwPSOGOECEx
-         3nf1XyAsBfbBfzcW/g5Zt+5cXWPq2+uroIq4/m8NBkBoGFzOINBUhPQBWVi0CsQCeYHc
-         ajx9c7JHHw/kkMUG1KlEQmAa5DES2fxC6PASbC+fIjtLy6X8VSpbCE6PMxJBrTtvoxTE
-         4HvuhUDke2vfHDyRJr5xKi9Y3/zVWkqCJzfgmP2T3muYERaGgJ+Uff2PUgwYsQgDvi3Y
-         ux5Q==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=2VGen5F4wRHnElI7bxeSRaRwtCRZafiIgyKdmdxpY5M=;
-        b=L1JHIdaQcpJtLnoxs5fPaD0ODHF3mIrsVU1Ek6nB154wJyHV40t0n/6LP4Nyn4HDM4
-         ZrjswH5/Elupnz8hNlfKx+JPFjWBnx5OYIMwGHuW/we57oINkVeOrY+87WPB0fFVBrwz
-         LcSNJyAVEKlpcxvSDF6Zy4i9LFhZzQr5Og+tKIjj1aJo2NY2ORN//+EtlhK2omfn4n/W
-         YfXBRqbVK1kT0svk1Vfsu8yBxXzb4u9WhoFvKenBWfbo1YcBCDW6TeJT1Qyvbj7lQQaS
-         EfjzoZR42GPsLBvfLKS9mZgXY4ZbdsBUV/JNOZfzcJ7kAvO6G8mBsb0Gs/1sKx+cQwgg
-         yyew==
-X-Gm-Message-State: ACrzQf2Zm9sNXy293sxF/X1KPUjbEkHbeNGC+f29lJDYKwf3KgtdAa7q
-        yNlHk2GfYWYrRa9PKhOMuLY=
-X-Google-Smtp-Source: AMsMyM4Yv6iBcUYVoQ3nH2DFk/VbgI33wuXw9f4LHs8PMStaADQ08aQEMg2ivczJTlKGDEs/Bm/m8g==
-X-Received: by 2002:a65:6e0f:0:b0:43a:1cd4:4ae6 with SMTP id bd15-20020a656e0f000000b0043a1cd44ae6mr34023270pgb.289.1667656778238;
-        Sat, 05 Nov 2022 06:59:38 -0700 (PDT)
-Received: from uftrace.. ([14.5.161.231])
-        by smtp.gmail.com with ESMTPSA id a1-20020a1709027e4100b0017f5ba1fffasm1672000pln.297.2022.11.05.06.59.35
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sat, 05 Nov 2022 06:59:37 -0700 (PDT)
-From:   Kang Minchul <tegongkang@gmail.com>
-To:     Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        Arnaldo Carvalho de Melo <acme@kernel.org>
-Cc:     Mark Rutland <mark.rutland@arm.com>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Jiri Olsa <jolsa@kernel.org>,
-        Namhyung Kim <namhyung@kernel.org>,
-        linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Kang Minchul <tegongkang@gmail.com>
-Subject: [PATCH] perf print-events: Remove redundant comparison with zero
-Date:   Sat,  5 Nov 2022 22:59:32 +0900
-Message-Id: <20221105135932.81612-1-tegongkang@gmail.com>
-X-Mailer: git-send-email 2.34.1
+        Sun, 6 Nov 2022 21:41:37 -0500
+Received: from foss.arm.com (foss.arm.com [217.140.110.172])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTP id B87A3634D;
+        Sun,  6 Nov 2022 18:41:36 -0800 (PST)
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id A2D0D1FB;
+        Sun,  6 Nov 2022 18:41:41 -0800 (PST)
+Received: from [10.162.42.7] (unknown [10.162.42.7])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 456083F703;
+        Sun,  6 Nov 2022 18:41:30 -0800 (PST)
+Message-ID: <a3e223bb-fdfa-4acc-a2f0-c12cd585e1a6@arm.com>
+Date:   Mon, 7 Nov 2022 08:11:28 +0530
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
+ Thunderbird/102.2.2
+Subject: Re: [PATCH V4 6/7] arm64/perf: Add BRBE driver
+Content-Language: en-US
+To:     James Clark <james.clark@arm.com>
+Cc:     Mark Brown <broonie@kernel.org>, Rob Herring <robh@kernel.org>,
+        Marc Zyngier <maz@kernel.org>,
+        Suzuki Poulose <suzuki.poulose@arm.com>,
+        Ingo Molnar <mingo@redhat.com>, linux-kernel@vger.kernel.org,
+        linux-perf-users@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, peterz@infradead.org,
+        acme@kernel.org, mark.rutland@arm.com, will@kernel.org,
+        catalin.marinas@arm.com
+References: <20221017055713.451092-1-anshuman.khandual@arm.com>
+ <20221017055713.451092-7-anshuman.khandual@arm.com>
+ <c5585dd1-4491-c48d-311d-ddc27aaa01a3@arm.com>
+From:   Anshuman Khandual <anshuman.khandual@arm.com>
+In-Reply-To: <c5585dd1-4491-c48d-311d-ddc27aaa01a3@arm.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-Since variable npmus is unsigned int, comparing with 0 is unnecessary.
 
-Signed-off-by: Kang Minchul <tegongkang@gmail.com>
----
- tools/perf/util/print-events.c | 6 ++----
- 1 file changed, 2 insertions(+), 4 deletions(-)
 
-diff --git a/tools/perf/util/print-events.c b/tools/perf/util/print-events.c
-index c4d5d87fae2f..6df947df1c0f 100644
---- a/tools/perf/util/print-events.c
-+++ b/tools/perf/util/print-events.c
-@@ -311,10 +311,8 @@ int print_hwcache_events(const char *event_glob, bool name_only)
- 				if ((hybrid_supported == 0) ||
- 				    (hybrid_supported == npmus)) {
- 					evt_list[evt_i] = strdup(name);
--					if (npmus > 0) {
--						for (j = 0; j < npmus; j++)
--							zfree(&evt_pmus[j]);
--					}
-+					for (j = 0; j < npmus; j++)
-+						zfree(&evt_pmus[j]);
- 				} else {
- 					for (j = 0; j < hybrid_supported; j++) {
- 						evt_list[evt_i++] = evt_pmus[j];
--- 
-2.34.1
+On 11/2/22 21:06, James Clark wrote:
+> 
+> On 17/10/2022 06:57, Anshuman Khandual wrote:
+>> This adds a BRBE driver which implements all the required helper functions
+>> for struct arm_pmu. Following functions are defined by this driver which
+>> will configure, enable, capture, reset and disable BRBE buffer HW as and
+>> when requested via perf branch stack sampling framework.
+>>
+>> - arm64_pmu_brbe_filter()
+>> - arm64_pmu_brbe_enable()
+>> - arm64_pmu_brbe_disable()
+>> - arm64_pmu_brbe_read()
+>> - arm64_pmu_brbe_probe()
+>> - arm64_pmu_brbe_reset()
+>> - arm64_pmu_brbe_supported()
+>>
+>> Cc: Peter Zijlstra <peterz@infradead.org>
+>> Cc: Ingo Molnar <mingo@redhat.com>
+>> Cc: Arnaldo Carvalho de Melo <acme@kernel.org>
+>> Cc: Mark Rutland <mark.rutland@arm.com>
+>> Cc: Will Deacon <will@kernel.org>
+>> Cc: Catalin Marinas <catalin.marinas@arm.com>
+>> Cc: linux-arm-kernel@lists.infradead.org
+>> Cc: linux-perf-users@vger.kernel.org
+>> Cc: linux-kernel@vger.kernel.org
+>> Signed-off-by: Anshuman Khandual <anshuman.khandual@arm.com>
+>> ---
+>>  arch/arm64/kernel/perf_event.c |   8 +-
+>>  drivers/perf/Kconfig           |  11 +
+>>  drivers/perf/Makefile          |   1 +
+>>  drivers/perf/arm_pmu_brbe.c    | 441 +++++++++++++++++++++++++++++++++
+>>  drivers/perf/arm_pmu_brbe.h    | 259 +++++++++++++++++++
+>>  include/linux/perf/arm_pmu.h   |  20 ++
+>>  6 files changed, 739 insertions(+), 1 deletion(-)
+>>  create mode 100644 drivers/perf/arm_pmu_brbe.c
+>>  create mode 100644 drivers/perf/arm_pmu_brbe.h
+>>
+>> diff --git a/arch/arm64/kernel/perf_event.c b/arch/arm64/kernel/perf_event.c
+>> index 97db333d1208..85a3aaefc0fb 100644
+>> --- a/arch/arm64/kernel/perf_event.c
+>> +++ b/arch/arm64/kernel/perf_event.c
+>> @@ -1034,31 +1034,37 @@ static int armv8pmu_filter_match(struct perf_event *event)
+>>  
+>>  static void armv8pmu_brbe_filter(struct pmu_hw_events *hw_event, struct perf_event *event)
+>>  {
+>> +	arm64_pmu_brbe_filter(hw_event, event);
+>>  }
+>>  
+>>  static void armv8pmu_brbe_enable(struct pmu_hw_events *hw_event)
+>>  {
+>> +	arm64_pmu_brbe_enable(hw_event);
+>>  }
+>>  
+>>  static void armv8pmu_brbe_disable(struct pmu_hw_events *hw_event)
+>>  {
+>> +	arm64_pmu_brbe_disable(hw_event);
+>>  }
+>>  
+>>  static void armv8pmu_brbe_read(struct pmu_hw_events *hw_event, struct perf_event *event)
+>>  {
+>> +	arm64_pmu_brbe_read(hw_event, event);
+>>  }
+>>  
+>>  static void armv8pmu_brbe_probe(struct pmu_hw_events *hw_event)
+>>  {
+>> +	arm64_pmu_brbe_probe(hw_event);
+>>  }
+>>  
+>>  static void armv8pmu_brbe_reset(struct pmu_hw_events *hw_event)
+>>  {
+>> +	arm64_pmu_brbe_reset(hw_event);
+>>  }
+>>  
+>>  static bool armv8pmu_brbe_supported(struct perf_event *event)
+>>  {
+>> -	return false;
+>> +	return arm64_pmu_brbe_supported(event);
+>>  }
+>>  
+>>  static void armv8pmu_reset(void *info)
+>> diff --git a/drivers/perf/Kconfig b/drivers/perf/Kconfig
+>> index 341010f20b77..4efd0a77c5ff 100644
+>> --- a/drivers/perf/Kconfig
+>> +++ b/drivers/perf/Kconfig
+>> @@ -190,6 +190,17 @@ config ALIBABA_UNCORE_DRW_PMU
+>>  	  Support for Driveway PMU events monitoring on Yitian 710 DDR
+>>  	  Sub-system.
+>>  
+>> +config ARM_BRBE_PMU
+>> +	tristate "Enable support for Branch Record Buffer Extension (BRBE)"
+> Hi Anshuman,
+> 
+> I get a few build errors if this is enabled as a module, and it's
+> missing the module boilerplate stuff. I'm wondering if tristate is a
+> mistake and it's supposed to be static only? Otherwise it probably needs
+> a few different things fixing up.
+> 
+> It would be nice to have it as a module so it's easy to work on in the
+> future.
+> 
+>> +	depends on ARM64 && ARM_PMU
+>> +	default y
+> Should this be default m?
+> 
 
+Right, "Tristate" here does not really make sense as ARM_BRBE_PMU is dependent
+on base ARM_PMU, where as ARM_SPE is abstracted as a separate PMU in itself.
