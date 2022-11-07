@@ -2,93 +2,97 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 36FE8C433FE
-	for <linux-perf-users@archiver.kernel.org>; Mon,  7 Nov 2022 19:48:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B736CC4332F
+	for <linux-perf-users@archiver.kernel.org>; Mon,  7 Nov 2022 20:59:17 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231909AbiKGTsh (ORCPT
+        id S232976AbiKGU7P (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Mon, 7 Nov 2022 14:48:37 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38160 "EHLO
+        Mon, 7 Nov 2022 15:59:15 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47114 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231808AbiKGTsg (ORCPT
+        with ESMTP id S233084AbiKGU7N (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Mon, 7 Nov 2022 14:48:36 -0500
-Received: from mail-oi1-f178.google.com (mail-oi1-f178.google.com [209.85.167.178])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BE7F61A39D;
-        Mon,  7 Nov 2022 11:48:35 -0800 (PST)
-Received: by mail-oi1-f178.google.com with SMTP id q83so1602891oib.10;
-        Mon, 07 Nov 2022 11:48:35 -0800 (PST)
+        Mon, 7 Nov 2022 15:59:13 -0500
+Received: from mail-oa1-f43.google.com (mail-oa1-f43.google.com [209.85.160.43])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 729F5CD;
+        Mon,  7 Nov 2022 12:59:12 -0800 (PST)
+Received: by mail-oa1-f43.google.com with SMTP id 586e51a60fabf-13ae8117023so14088242fac.9;
+        Mon, 07 Nov 2022 12:59:12 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
         h=cc:to:subject:message-id:date:from:in-reply-to:references
          :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
          :reply-to;
-        bh=pC3VraCs8s6YEvpVTV0I2PtrYdEY09JJSU0EEtgPIig=;
-        b=8Ff7h7c7PzfRTraUgtt8CqdPg/AT/y3NcWSq3rEmkNeZuCdZ6XilxmxEwRcIO88hVp
-         L3joOTCR/AASQkSrog+CnHnM6E8K3e/VQs1iVvYYXfK4PuIhIfAkgClk2Karc15lHhAy
-         VdxrVO9mgb7KbrqO0MJP6DBv5/u6h+zx0QFyAf0lH7KKHtTRPkQ4xBIaAU6BYDdF2x8k
-         +Ri88DPumSxor7scCKhCqvaeUeB5KhXDDHb+pPsmj8T0QRqAzUOlA3G7EDOobHXfbfV5
-         Ny+sJJdGNEwDlqgnivyJ4vWYhvwTot9Ns+RroEQsVnOu3CKjJU4iwdlxP/ohU5jgJ3vm
-         tjKw==
-X-Gm-Message-State: ACrzQf3+IsyaDl8S4ebimafd7v/JrogrPcdit1WPonPXhvghxyMctiJo
-        khzIkFG6cIc4GFGLakSQTN6f1lM05856aXBmuWI=
-X-Google-Smtp-Source: AMsMyM4Z/18xRjOjvwABmJlezj2L/eczEI73izOERN6BTvW3w6fEqYeDeoy80slhhl69ZKNf1gn6csGrVR6G4/dsA4Q=
-X-Received: by 2002:aca:2805:0:b0:359:e340:d53 with SMTP id
- 5-20020aca2805000000b00359e3400d53mr26615294oix.209.1667850515046; Mon, 07
- Nov 2022 11:48:35 -0800 (PST)
+        bh=EurRGdIXmrZYEmrrxoQ5RYPb5xqSkjb6kydBYZiyHNg=;
+        b=djETqYxWR4XFQN8ucGfMg041tASMbeWnfjwroo9Znpk2b+Da45PzE3w35evs9e6SIX
+         3fmxulUiOyznd67H+UBFjTj/Z5snYPXcKGQufbxgxxQQt49DYVSHJPBsjncNzTJwmIj+
+         MvavP8zkXV+DvBxKHAwqvjR9xnsJg9iUy4h/RhsP8HmP3T7luCQlahNvFG6pQwrBBBAi
+         /jXfP2RBPd1KnOqmjCfmYYeSnFzb4QnTR6JWca+OjTtA4cW0rScI4dDZ8tECp2bZU3Zg
+         bxXteGB91Asnd9+3M9Z+t4Fn7s62mhmwU6WRL/4meG9X2kAzjw+gjjgt1K3JsAiDiB2F
+         6zSw==
+X-Gm-Message-State: ACrzQf1WTYtusRVk9+qhmw9jUtYdU/jSKxsMUoOCWMRCpZfFAbylLffe
+        KiH1Cf2nUgs/0nvKtgxEEEYTnTqk4LJGcmnQrXE=
+X-Google-Smtp-Source: AMsMyM4EFjXZNq+yVBfuWjXYn+r6rhsFoosLyTP7TmEdjjU2ziECawiB7ho+2LxhbYUHD2bOUGReT0JRRxw20vfNmOY=
+X-Received: by 2002:a05:6870:9a27:b0:140:6f4c:f532 with SMTP id
+ fo39-20020a0568709a2700b001406f4cf532mr11190737oab.209.1667854751778; Mon, 07
+ Nov 2022 12:59:11 -0800 (PST)
 MIME-Version: 1.0
-References: <20220825-arm-spe-v8-7-v3-0-87682f78caac@kernel.org> <20220825-arm-spe-v8-7-v3-8-87682f78caac@kernel.org>
-In-Reply-To: <20220825-arm-spe-v8-7-v3-8-87682f78caac@kernel.org>
+References: <20221105135932.81612-1-tegongkang@gmail.com>
+In-Reply-To: <20221105135932.81612-1-tegongkang@gmail.com>
 From:   Namhyung Kim <namhyung@kernel.org>
-Date:   Mon, 7 Nov 2022 11:48:23 -0800
-Message-ID: <CAM9d7ciYabTpo0q5Z8h229dZ+RXG7JP1zgOoR1fgdZZCH87vow@mail.gmail.com>
-Subject: Re: [PATCH v3 8/8] perf: arm_spe: Add support for SPEv1.2 inverted
- event filtering
-To:     Rob Herring <robh@kernel.org>
-Cc:     Will Deacon <will@kernel.org>,
-        Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Jiri Olsa <jolsa@kernel.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Marc Zyngier <maz@kernel.org>,
-        Oliver Upton <oliver.upton@linux.dev>,
+Date:   Mon, 7 Nov 2022 12:59:00 -0800
+Message-ID: <CAM9d7cjm+_h3C6=0UYR=pSiB4m8fEt3WUy-tkLos_yYu4bFWsA@mail.gmail.com>
+Subject: Re: [PATCH] perf print-events: Remove redundant comparison with zero
+To:     Kang Minchul <tegongkang@gmail.com>
+Cc:     Peter Zijlstra <peterz@infradead.org>,
         Ingo Molnar <mingo@redhat.com>,
-        Suzuki K Poulose <suzuki.poulose@arm.com>,
-        James Morse <james.morse@arm.com>,
-        Alexandru Elisei <alexandru.elisei@arm.com>,
-        kvmarm@lists.linux.dev, linux-perf-users@vger.kernel.org,
-        linux-kernel@vger.kernel.org, James Clark <james.clark@arm.com>,
-        Mark Brown <broonie@kernel.org>,
-        linux-arm-kernel@lists.infradead.org, kvmarm@lists.cs.columbia.edu
+        Arnaldo Carvalho de Melo <acme@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Jiri Olsa <jolsa@kernel.org>, linux-perf-users@vger.kernel.org,
+        linux-kernel@vger.kernel.org
 Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-Hello,
+Hi Minchul,
 
-On Fri, Nov 4, 2022 at 8:55 AM Rob Herring <robh@kernel.org> wrote:
+On Sat, Nov 5, 2022 at 6:59 AM Kang Minchul <tegongkang@gmail.com> wrote:
 >
-> Arm SPEv1.2 (Arm v8.7/v9.2) adds a new feature called Inverted Event
-> Filter which excludes samples matching the event filter. The feature
-> mirrors the existing event filter in PMSEVFR_EL1 adding a new register,
-> PMSNEVFR_EL1, which has the same event bit assignments.
+> Since variable npmus is unsigned int, comparing with 0 is unnecessary.
+>
+> Signed-off-by: Kang Minchul <tegongkang@gmail.com>
+> ---
+>  tools/perf/util/print-events.c | 6 ++----
+>  1 file changed, 2 insertions(+), 4 deletions(-)
+>
+> diff --git a/tools/perf/util/print-events.c b/tools/perf/util/print-events.c
+> index c4d5d87fae2f..6df947df1c0f 100644
+> --- a/tools/perf/util/print-events.c
+> +++ b/tools/perf/util/print-events.c
+> @@ -311,10 +311,8 @@ int print_hwcache_events(const char *event_glob, bool name_only)
+>                                 if ((hybrid_supported == 0) ||
+>                                     (hybrid_supported == npmus)) {
+>                                         evt_list[evt_i] = strdup(name);
+> -                                       if (npmus > 0) {
+> -                                               for (j = 0; j < npmus; j++)
+> -                                                       zfree(&evt_pmus[j]);
+> -                                       }
+> +                                       for (j = 0; j < npmus; j++)
+> +                                               zfree(&evt_pmus[j]);
 
-Just out of curiosity, is it possible to have the event filter and
-inverted filter at the same time?  What if they have the same?
+You can still have 0 npmus, but then the for loop will not be executed.  So,
+
+Acked-by: Namhyung Kim <namhyung@kernel.org>
 
 Thanks,
 Namhyung
 
+
+>                                 } else {
+>                                         for (j = 0; j < hybrid_supported; j++) {
+>                                                 evt_list[evt_i++] = evt_pmus[j];
+> --
+> 2.34.1
 >
-> Tested-by: James Clark <james.clark@arm.com>
-> Signed-off-by: Rob Herring <robh@kernel.org>
-> ---
-> v3:
->  - No change
-> v2:
->  - Update for auto generated register defines
->  - Avoid accessing SYS_PMSNEVFR_EL1 on < v8.7
-> ---
