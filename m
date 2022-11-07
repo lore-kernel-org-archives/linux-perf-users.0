@@ -2,141 +2,106 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5E5A7C433FE
-	for <linux-perf-users@archiver.kernel.org>; Mon,  7 Nov 2022 21:12:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6FBD3C4332F
+	for <linux-perf-users@archiver.kernel.org>; Mon,  7 Nov 2022 21:33:22 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233362AbiKGVMi (ORCPT
+        id S233099AbiKGVdV (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Mon, 7 Nov 2022 16:12:38 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35034 "EHLO
+        Mon, 7 Nov 2022 16:33:21 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53902 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S233588AbiKGVML (ORCPT
+        with ESMTP id S233373AbiKGVdU (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Mon, 7 Nov 2022 16:12:11 -0500
-Received: from mail-oo1-f44.google.com (mail-oo1-f44.google.com [209.85.161.44])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9C3E92FC21;
-        Mon,  7 Nov 2022 13:09:12 -0800 (PST)
-Received: by mail-oo1-f44.google.com with SMTP id q2-20020a4a3302000000b0049ee5fe3ab7so622104ooq.8;
-        Mon, 07 Nov 2022 13:09:12 -0800 (PST)
+        Mon, 7 Nov 2022 16:33:20 -0500
+Received: from mail-pg1-x529.google.com (mail-pg1-x529.google.com [IPv6:2607:f8b0:4864:20::529])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 11CBD2EF64;
+        Mon,  7 Nov 2022 13:33:19 -0800 (PST)
+Received: by mail-pg1-x529.google.com with SMTP id f63so11639310pgc.2;
+        Mon, 07 Nov 2022 13:33:19 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20210112;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:sender:from:to:cc:subject:date:message-id:reply-to;
+        bh=gyy9yeqWT2k5QTrvk/RJBXpqivCI5uZGvU+9WCo85hA=;
+        b=HIuQrVRyIVVkhXLShtxIMtpAcxjbqwECAJLv0mP+/vKOUyDfwJc/or06UW36RQYN//
+         oni3DRPy+QD+l6S1OwolsIToWrMNTBwZ2tQdZFaPauy2L/u22g0+6RKbS1pcaU2DBApD
+         6jB7qDCE96NqM4lE9ihqePMbW4x/oyVeM5zxiRlWSd43RlU/411KpWHAgEitSe/nXeoc
+         /cK5cQ7u2krDgiQWxThJQ+YIVMeGwzmdwSYPFJhFbb/9ov7O0tcjluImQAec1NiYAf2n
+         f7150J57hwzOPyTOdKr2hM72dy4qSwqqBTl/Hb22LZPEv7aa6xfC2Wm1OJXjAZir0uaF
+         kB2w==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=zJRjXYPrBJnSWOuAvcjC4UzikNviJ6pcXZBPjMYgmEU=;
-        b=RLkdwBoWC75Tc/Ms1KSv9WUgwQrUd8yYqybHokZFwSfTaTYH6xCf54efHTOBMVoTDa
-         bUWSJmUlpoo3LUw+pyIBM1VnDAUwhYyyMoBzf6FWqQZ4zc6t0K2T8XIVO6vkHnyY+rqv
-         1uORYszq47Mcs/zjfXshOOCmTuJKq6dk4qwxF2Dtc+zbME9kyKzADz506jTd9e68auEJ
-         Jups4Qfo4vYjb3dxF3ON/2ehua15aPGWh2HHbDDfMhWw9dWgJbMws1eoggQhl4+mjxAR
-         FYIJevXroW1x/6F7NNCbzOIXjNpsYwNI3R+CIDuFrKgFa7M/ghq43JQ0lYmZWNASfzUq
-         bFcg==
-X-Gm-Message-State: ACrzQf3/kJxxZHn3softwadg1oFE1ji2kmlwcjzpip7cfDZayECMVo50
-        sgo4JgMecuCFX+hYY+BPRFRXnOVKdwKE9NPGak3Evm3o
-X-Google-Smtp-Source: AMsMyM58h+AC38zp7Qdffo3gCYh/exaBPOgKomdQnStR3tjmFAq3T5TffdkResyJhkY8BxBKetsFmOzdd40MQDIB8Uc=
-X-Received: by 2002:a4a:b913:0:b0:480:b3bf:7812 with SMTP id
- x19-20020a4ab913000000b00480b3bf7812mr22421024ooo.97.1667855351882; Mon, 07
- Nov 2022 13:09:11 -0800 (PST)
-MIME-Version: 1.0
-References: <166761727445.480106.3738447577082071942.stgit@devnote3>
-In-Reply-To: <166761727445.480106.3738447577082071942.stgit@devnote3>
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:sender:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=gyy9yeqWT2k5QTrvk/RJBXpqivCI5uZGvU+9WCo85hA=;
+        b=Y4O94Yfr3gtofiOlnhy3xtlSInlYxZLib9MI7JJA3bYeanB0eGUiUDMeIkyRH+wlx/
+         rfsgfhGq91F8JD2N5TNb4omcAGs8ijDSlIcUFR8YTJ6OIke7OwqFMw1sy5Qzpzo4Hsfh
+         NE0HRmw7FJncDAs0T3HCXez46/Co+HcpVkAtmiVc7II/ucg0plR2zGzt2F94oekRDtVa
+         4uHOG/4RbsWWdlOItScImK41GLHYDzHFjtFMjw0Qu0CK8mRPyLNAOmqBChCj8UAVSjVa
+         IgwMnjcEXCaXSqD8iU5k/LShwX/oONYiMSg7KEtXy9Oj5gsnp0EAwKvZAIaaFin2gnfE
+         QNpw==
+X-Gm-Message-State: ACrzQf2iodTEgRbmVamjYDDc3XKXZDpTJ7sJrNKigzU4zS+n7b51CX65
+        eNYzpQ22zTCDRuzqvbDLf/I=
+X-Google-Smtp-Source: AMsMyM5Rco8mhyMPCyHwszz/07Hk6KhJOxrPQnfsnSRGtim9C+Zs9mQkjzGRTh+CrpGKwAheVsZZRg==
+X-Received: by 2002:a05:6a00:1304:b0:555:6d3f:1223 with SMTP id j4-20020a056a00130400b005556d3f1223mr53000295pfu.60.1667856798413;
+        Mon, 07 Nov 2022 13:33:18 -0800 (PST)
+Received: from youngsil.svl.corp.google.com ([2620:15c:2d4:203:5850:5958:9c77:f623])
+        by smtp.gmail.com with ESMTPSA id a1-20020a1709027e4100b0017f5ba1fffasm5366413pln.297.2022.11.07.13.33.16
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 07 Nov 2022 13:33:17 -0800 (PST)
+Sender: Namhyung Kim <namhyung@gmail.com>
 From:   Namhyung Kim <namhyung@kernel.org>
-Date:   Mon, 7 Nov 2022 13:09:00 -0800
-Message-ID: <CAM9d7ci8YX22Bp31ZD9k31NFN6pP3fbPKpNDNZYnmdZiqav1Vg@mail.gmail.com>
-Subject: Re: [PATCH] tools/perf: Fix to get the DW_AT_decl_file and
- DW_AT_call_file as unsinged data
-To:     "Masami Hiramatsu (Google)" <mhiramat@kernel.org>
-Cc:     Arnaldo Carvalho de Melo <acme@kernel.org>,
+To:     Arnaldo Carvalho de Melo <acme@kernel.org>,
+        Jiri Olsa <jolsa@kernel.org>
+Cc:     Ingo Molnar <mingo@kernel.org>,
         Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Jiri Olsa <jolsa@kernel.org>, linux-perf-users@vger.kernel.org,
-        linux-kernel@vger.kernel.org, Steven Rostedt <rostedt@goodmis.org>
-Content-Type: text/plain; charset="UTF-8"
+        LKML <linux-kernel@vger.kernel.org>,
+        Ian Rogers <irogers@google.com>,
+        Adrian Hunter <adrian.hunter@intel.com>,
+        linux-perf-users@vger.kernel.org,
+        Kan Liang <kan.liang@linux.intel.com>,
+        Zhengjun Xing <zhengjun.xing@linux.intel.com>,
+        James Clark <james.clark@arm.com>
+Subject: [PATCHSET 0/9] perf stat: Cleanup perf stat output display (v1)
+Date:   Mon,  7 Nov 2022 13:33:05 -0800
+Message-Id: <20221107213314.3239159-1-namhyung@kernel.org>
+X-Mailer: git-send-email 2.38.1.431.g37b22c650d-goog
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-Hi Masami,
+Hello,
 
-On Fri, Nov 4, 2022 at 8:01 PM Masami Hiramatsu (Google)
-<mhiramat@kernel.org> wrote:
->
-> From: Masami Hiramatsu (Google) <mhiramat@kernel.org>
->
-> Dwarf version 5 standard Sec 2.14 says that
->
->   Any debugging information entry representing the declaration of an object,
->   module, subprogram or type may have DW_AT_decl_file, DW_AT_decl_line and
->   DW_AT_decl_column attributes, each of whose value is an unsigned integer
->   constant.
->
-> So it should be an unsigned integer data. Also, even though the standard
-> doesn't clearly say the DW_AT_call_file is signed or unsigned, the
-> elfutils (eu-readelf) interprets it as unsigned integer data and it is
-> natural to handle it as unsigned integer data as same as DW_AT_decl_file.
-> This changes the DW_AT_call_file as unsigned integer data too.
->
-> Fixes: 3f4460a28fb2 ("perf probe: Filter out redundant inline-instances")
-> Cc: stable@vger.kernel.org
-> Signed-off-by: Masami Hiramatsu (Google) <mhiramat@kernel.org>
+I'm working on cleaning up the perf stat code and found a number of issues.
+Before moving on to the real changes, I'd like to fix those first.  I'll
+think about how to test this properly.
 
-Acked-by: Namhyung Kim <namhyung@kernel.org>
+You can get it from 'perf/stat-cleanup-v1' branch in
+
+  git://git.kernel.org/pub/scm/linux/kernel/git/namhyung/linux-perf.git
 
 Thanks,
 Namhyung
 
+Namhyung Kim (9):
+  perf stat: Fix crash with --per-node --metric-only in CSV mode
+  perf stat: Increase metric length to align outputs
+  perf stat: Clear screen only if output file is a tty
+  perf stat: Move common code in print_metric_headers()
+  perf stat: Fix --metric-only --json output
+  perf stat: Do not indent headers for JSON
+  perf stat: Add header for interval in JSON output
+  perf stat: Fix condition in print_interval()
+  perf stat: Consolidate condition to print metrics
 
-> ---
->  tools/perf/util/dwarf-aux.c |   21 ++++-----------------
->  1 file changed, 4 insertions(+), 17 deletions(-)
->
-> diff --git a/tools/perf/util/dwarf-aux.c b/tools/perf/util/dwarf-aux.c
-> index 30b36b525681..b07414409771 100644
-> --- a/tools/perf/util/dwarf-aux.c
-> +++ b/tools/perf/util/dwarf-aux.c
-> @@ -315,19 +315,6 @@ static int die_get_attr_udata(Dwarf_Die *tp_die, unsigned int attr_name,
->         return 0;
->  }
->
-> -/* Get attribute and translate it as a sdata */
-> -static int die_get_attr_sdata(Dwarf_Die *tp_die, unsigned int attr_name,
-> -                             Dwarf_Sword *result)
-> -{
-> -       Dwarf_Attribute attr;
-> -
-> -       if (dwarf_attr_integrate(tp_die, attr_name, &attr) == NULL ||
-> -           dwarf_formsdata(&attr, result) != 0)
-> -               return -ENOENT;
-> -
-> -       return 0;
-> -}
-> -
->  /**
->   * die_is_signed_type - Check whether a type DIE is signed or not
->   * @tp_die: a DIE of a type
-> @@ -467,9 +454,9 @@ int die_get_data_member_location(Dwarf_Die *mb_die, Dwarf_Word *offs)
->  /* Get the call file index number in CU DIE */
->  static int die_get_call_fileno(Dwarf_Die *in_die)
->  {
-> -       Dwarf_Sword idx;
-> +       Dwarf_Word idx;
->
-> -       if (die_get_attr_sdata(in_die, DW_AT_call_file, &idx) == 0)
-> +       if (die_get_attr_udata(in_die, DW_AT_call_file, &idx) == 0)
->                 return (int)idx;
->         else
->                 return -ENOENT;
-> @@ -478,9 +465,9 @@ static int die_get_call_fileno(Dwarf_Die *in_die)
->  /* Get the declared file index number in CU DIE */
->  static int die_get_decl_fileno(Dwarf_Die *pdie)
->  {
-> -       Dwarf_Sword idx;
-> +       Dwarf_Word idx;
->
-> -       if (die_get_attr_sdata(pdie, DW_AT_decl_file, &idx) == 0)
-> +       if (die_get_attr_udata(pdie, DW_AT_decl_file, &idx) == 0)
->                 return (int)idx;
->         else
->                 return -ENOENT;
->
+ tools/perf/util/stat-display.c | 55 ++++++++++++++--------------------
+ 1 file changed, 23 insertions(+), 32 deletions(-)
+
+
+base-commit: 96e6d929a6c3368ad6327a52f870294747888c77
+-- 
+2.38.1.431.g37b22c650d-goog
+
