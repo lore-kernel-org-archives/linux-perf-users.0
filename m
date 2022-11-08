@@ -2,58 +2,58 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BC32FC433FE
-	for <linux-perf-users@archiver.kernel.org>; Tue,  8 Nov 2022 23:14:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 44DBDC4332F
+	for <linux-perf-users@archiver.kernel.org>; Tue,  8 Nov 2022 23:16:19 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230006AbiKHXO5 (ORCPT
+        id S229530AbiKHXQS (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Tue, 8 Nov 2022 18:14:57 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57528 "EHLO
+        Tue, 8 Nov 2022 18:16:18 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58056 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229817AbiKHXO4 (ORCPT
+        with ESMTP id S229511AbiKHXQR (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Tue, 8 Nov 2022 18:14:56 -0500
-Received: from mail-ua1-x931.google.com (mail-ua1-x931.google.com [IPv6:2607:f8b0:4864:20::931])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id AA0CB1ADA7
-        for <linux-perf-users@vger.kernel.org>; Tue,  8 Nov 2022 15:14:51 -0800 (PST)
-Received: by mail-ua1-x931.google.com with SMTP id c31so5115917uae.10
-        for <linux-perf-users@vger.kernel.org>; Tue, 08 Nov 2022 15:14:51 -0800 (PST)
+        Tue, 8 Nov 2022 18:16:17 -0500
+Received: from mail-wr1-x436.google.com (mail-wr1-x436.google.com [IPv6:2a00:1450:4864:20::436])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 42FD3193D7
+        for <linux-perf-users@vger.kernel.org>; Tue,  8 Nov 2022 15:16:16 -0800 (PST)
+Received: by mail-wr1-x436.google.com with SMTP id j15so23293903wrq.3
+        for <linux-perf-users@vger.kernel.org>; Tue, 08 Nov 2022 15:16:16 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=google.com; s=20210112;
         h=cc:to:subject:message-id:date:from:in-reply-to:references
          :mime-version:from:to:cc:subject:date:message-id:reply-to;
-        bh=JYCuoIUGPE42ilDgGQytWyIslRZ6M8LJ2EAILalAs0o=;
-        b=To94lOqRjXZBN9kxBxfUKjfkICaQJCt722ripndWA1UY9X+AfSgYPwQWq9LOlL2O+h
-         3jyMOX2C9XRbqiI3mDa+ZNuRpWvUc4pDogFxLpy03rL3osnomGoZ5iWgo4voJBP8s9cj
-         WQOALsjljhqPfVnw5DXn6SlIa17W0NWNuWswFWvGI5LoobrBCcmih+ba6FwrgOTfQyMj
-         +GHf56vE6hPSz6X4/+jQ/7zYzBsMXK/pqWcVhJmgZOLYSWLd+tXpp5+a9mRi9m75Lvzs
-         Tm9uNZPa23PvJUdfhCscZjuVWX9kPMQx9HROz6gPJ/CEQS+aot/pWg3yQWwvqrYW5pmI
-         p7+g==
+        bh=o6bbEVkp/O+6HFBPQrcPCeDrxXI7++0ZLl8zYzUmUHM=;
+        b=Ei6BncYhV7jPMWsfnUvXvoN1cQzVOrERH3xmvYSdqOjTjsEKwUA/JKPZqLCiHD9uvh
+         mR1/quI0l6SKPQc6aa+ZYv9jM2FUgaNXeN7MnXOOp6HqT7I2dgAqYctcqQQ+DwCG69qo
+         e/R70p2aoxRAITBvw3NzrWfn2/Bm/Uhh/0zddIV7oul3dmM9iUrI8XysszGqwPVsaq8i
+         Bhf9/5Y4Bra5+07VBR4sb55TTawMazg02qZIp+nBy8PeNwBZsmsOT9gAwU2HYGocl1l3
+         KNNdCqRJIHw7mY8poaZYgmh7iN1Xa+Q2/vCZUIn1obYIG6/PL18j614Xv/s5JyFb3UfN
+         qpbQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
         h=cc:to:subject:message-id:date:from:in-reply-to:references
          :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
          :reply-to;
-        bh=JYCuoIUGPE42ilDgGQytWyIslRZ6M8LJ2EAILalAs0o=;
-        b=MwzgXu/S5FcN2VAFVA3CSipaH+uvElt0nydv/qTTlsgbllknhKOWi1fKA3w/3Vytr3
-         V0XicpvQkxRBGI+EM2EF+rTgbAN2MsFWClmfVC1CYL9OJjVzw0IcBRPjPwbMxejuKILA
-         Uy3PC9zQLJ4Gw0X5dcgQcamO6Dn72sg0S8hE5Egvq31yi6E04aXF38DYitfsMNp0xqFn
-         /VIVZIKzfw8dzK3QyhulMASK44iUyy0Eox5nsUf+IOtSdq7zrV/biI0y3mzVnB4/tNSx
-         dL8RFvKG/rhXz6CUVT/r6MliHM3u4ZjmiR9mL3vmXwIe3i5PqvYQOc11ybpvncptjuxi
-         ZuXg==
-X-Gm-Message-State: ACrzQf2W2MqWuxco+268k5nIkbsRIWQRrtwYrKYVMPu4ZqA2M9dlO/p/
-        r1UqD4CvQMURZ5x7Z+5qmq8s2vFulZQEq6+oGzb54w==
-X-Google-Smtp-Source: AMsMyM4w6MA55Zlevm3yMSNfNR488eK8ZwVcC6yOcOTIdorfxOZ0OYKwVQ9Khel5Eul5oJ8dDOvDX/NrktnnFcGHqNg=
-X-Received: by 2002:ab0:390f:0:b0:3af:3c62:bea2 with SMTP id
- b15-20020ab0390f000000b003af3c62bea2mr18747871uaw.21.1667949290602; Tue, 08
- Nov 2022 15:14:50 -0800 (PST)
+        bh=o6bbEVkp/O+6HFBPQrcPCeDrxXI7++0ZLl8zYzUmUHM=;
+        b=sJWRFz5OculPGgfkEZSnoxW6EyHQg1UwNLOiH4bfUGMn+/zFsE7VapG44MLzvBZuEU
+         z8RMgR9rWQgcIlRVtr4HPKbB/lagbiK2/r116fvo39tDaprobwHWhJai0AHYnJqPMuZv
+         0ZeAI2aJvqeYqexQM8EFbz3LrxL98qjPvCvmzCgCoTbovWHcWYnOecbhAsfuJ1vBzsI4
+         RqXtBaEJ8+O3Y5Phoi7s8VM5HXcmTLlNU+fRMXzcLtnwVtypKPrS0GUudj4ZKz5zpEkK
+         GNsoQ57V+zxBGPnLQozdBqhw8/z/9zwbHgW3pX+gOVbqtDnzfmJ3/KLq6ivjiE+XAigR
+         cYTA==
+X-Gm-Message-State: ACrzQf1JnsS8ro/1/pULDpHF2rzy/X+nm78g1OOge9fST7dFCnDYa1FJ
+        WDtwAXkHtl/uc9qhO8wnZ1Q1pPxAKTChFMzE5t6THg==
+X-Google-Smtp-Source: AMsMyM7/dic9/JyfUZsBFtA+TVNm7iuSTlgQA63H+lcm7Cyf1EqEGKz313B+P6eYpjNVycKyB4IaETcGY5BjeXP0We8=
+X-Received: by 2002:a5d:47a6:0:b0:236:7854:246d with SMTP id
+ 6-20020a5d47a6000000b002367854246dmr36320076wrb.300.1667949374614; Tue, 08
+ Nov 2022 15:16:14 -0800 (PST)
 MIME-Version: 1.0
-References: <20221107213314.3239159-1-namhyung@kernel.org> <20221107213314.3239159-3-namhyung@kernel.org>
-In-Reply-To: <20221107213314.3239159-3-namhyung@kernel.org>
+References: <20221107213314.3239159-1-namhyung@kernel.org> <20221107213314.3239159-4-namhyung@kernel.org>
+In-Reply-To: <20221107213314.3239159-4-namhyung@kernel.org>
 From:   Ian Rogers <irogers@google.com>
-Date:   Tue, 8 Nov 2022 15:14:39 -0800
-Message-ID: <CAP-5=fW+vsMEVCoGbouMbH0GQ875KsMKwJ9NKhCecYd7PFESWA@mail.gmail.com>
-Subject: Re: [PATCH 2/9] perf stat: Increase metric length to align outputs
+Date:   Tue, 8 Nov 2022 15:16:02 -0800
+Message-ID: <CAP-5=fWXAjWd-dbVXCVfRzP9iw5RzXo+cPWWPpOmTw-1xBECqg@mail.gmail.com>
+Subject: Re: [PATCH 3/9] perf stat: Clear screen only if output file is a tty
 To:     Namhyung Kim <namhyung@kernel.org>
 Cc:     Arnaldo Carvalho de Melo <acme@kernel.org>,
         Jiri Olsa <jolsa@kernel.org>, Ingo Molnar <mingo@kernel.org>,
@@ -71,62 +71,33 @@ X-Mailing-List: linux-perf-users@vger.kernel.org
 
 On Mon, Nov 7, 2022 at 1:33 PM Namhyung Kim <namhyung@kernel.org> wrote:
 >
-> When perf stat is called with very detailed events, the output doesn't
-> align well like below:
->
->   $ sudo perf stat -a -ddd sleep 1
->
->    Performance counter stats for 'system wide':
->
->           8,020.23 msec cpu-clock                        #    7.997 CPUs utilized
->              3,970      context-switches                 #  494.998 /sec
->                169      cpu-migrations                   #   21.072 /sec
->                586      page-faults                      #   73.065 /sec
->        649,568,060      cycles                           #    0.081 GHz                      (30.42%)
->        304,044,345      instructions                     #    0.47  insn per cycle           (38.40%)
->         60,313,022      branches                         #    7.520 M/sec                    (38.89%)
->          2,766,919      branch-misses                    #    4.59% of all branches          (39.26%)
->         74,422,951      L1-dcache-loads                  #    9.279 M/sec                    (39.39%)
->          8,025,568      L1-dcache-load-misses            #   10.78% of all L1-dcache accesses  (39.22%)
->          3,314,995      LLC-loads                        #  413.329 K/sec                    (30.83%)
->          1,225,619      LLC-load-misses                  #   36.97% of all LL-cache accesses  (30.45%)
->    <not supported>      L1-icache-loads
->         20,420,493      L1-icache-load-misses            #    0.00% of all L1-icache accesses  (30.29%)
->         58,017,947      dTLB-loads                       #    7.234 M/sec                    (30.37%)
->            704,677      dTLB-load-misses                 #    1.21% of all dTLB cache accesses  (30.27%)
->            234,225      iTLB-loads                       #   29.204 K/sec                    (30.29%)
->            417,166      iTLB-load-misses                 #  178.10% of all iTLB cache accesses  (30.32%)
->    <not supported>      L1-dcache-prefetches
->    <not supported>      L1-dcache-prefetch-misses
->
->        1.002947355 seconds time elapsed
->
-> Increase the METRIC_LEN by 3 so that it can align properly.
->
-> Signed-off-by: Namhyung Kim <namhyung@kernel.org>
+> The --interval-clear option makes perf stat to clear the terminal at
+> each interval.  But it doesn't need to clear the screen when it saves
+> to a file.
 
-Acked-by: Ian Rogers <irogers@google.com>
+Would it be more intuitive to warn if interval-clear is specified with a file?
 
 Thanks,
 Ian
 
+> Signed-off-by: Namhyung Kim <namhyung@kernel.org>
 > ---
 >  tools/perf/util/stat-display.c | 2 +-
 >  1 file changed, 1 insertion(+), 1 deletion(-)
 >
 > diff --git a/tools/perf/util/stat-display.c b/tools/perf/util/stat-display.c
-> index ea41e6308c50..17d656566cd9 100644
+> index 17d656566cd9..d4936a502560 100644
 > --- a/tools/perf/util/stat-display.c
 > +++ b/tools/perf/util/stat-display.c
-> @@ -218,7 +218,7 @@ struct outstate {
->         struct evsel *evsel;
->  };
+> @@ -892,7 +892,7 @@ static void print_interval(struct perf_stat_config *config,
+>         FILE *output = config->output;
+>         static int num_print_interval;
 >
-> -#define METRIC_LEN  35
-> +#define METRIC_LEN  38
+> -       if (config->interval_clear)
+> +       if (config->interval_clear && isatty(fileno(output)))
+>                 puts(CONSOLE_CLEAR);
 >
->  static void new_line_std(struct perf_stat_config *config __maybe_unused,
->                          void *ctx)
+>         if (!config->iostat_run && !config->json_output)
 > --
 > 2.38.1.431.g37b22c650d-goog
 >
