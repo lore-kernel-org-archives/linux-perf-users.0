@@ -2,58 +2,58 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 48828C4332F
-	for <linux-perf-users@archiver.kernel.org>; Tue,  8 Nov 2022 07:37:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9065FC43217
+	for <linux-perf-users@archiver.kernel.org>; Tue,  8 Nov 2022 07:37:23 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233352AbiKHHhH (ORCPT
+        id S233670AbiKHHhW (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Tue, 8 Nov 2022 02:37:07 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40146 "EHLO
+        Tue, 8 Nov 2022 02:37:22 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39434 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S233671AbiKHHgv (ORCPT
+        with ESMTP id S233591AbiKHHgy (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Tue, 8 Nov 2022 02:36:51 -0500
-Received: from mail-pf1-x449.google.com (mail-pf1-x449.google.com [IPv6:2607:f8b0:4864:20::449])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C9D2731F82
-        for <linux-perf-users@vger.kernel.org>; Mon,  7 Nov 2022 23:36:42 -0800 (PST)
-Received: by mail-pf1-x449.google.com with SMTP id m6-20020aa79006000000b0056bc283f477so6849633pfo.19
-        for <linux-perf-users@vger.kernel.org>; Mon, 07 Nov 2022 23:36:42 -0800 (PST)
+        Tue, 8 Nov 2022 02:36:54 -0500
+Received: from mail-yw1-x1149.google.com (mail-yw1-x1149.google.com [IPv6:2607:f8b0:4864:20::1149])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 744A02D1D7
+        for <linux-perf-users@vger.kernel.org>; Mon,  7 Nov 2022 23:36:52 -0800 (PST)
+Received: by mail-yw1-x1149.google.com with SMTP id 00721157ae682-360b9418f64so128859717b3.7
+        for <linux-perf-users@vger.kernel.org>; Mon, 07 Nov 2022 23:36:52 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=google.com; s=20210112;
         h=cc:to:from:subject:references:mime-version:message-id:in-reply-to
          :date:from:to:cc:subject:date:message-id:reply-to;
-        bh=muU+zEa3MJNYALn8xXqWOElORRD713Llcp74WiFN9WY=;
-        b=s92/M/iZnB81De9qQ/B8+ANBxDA6WVzJALt2qoWR4RIT83TBf13yHEF85BYlgiusVz
-         G4NmPsuDzNQh9XYIIZgz6RwzJyhghjdBDLl/ftSV+vdDNqvbBquyRzkve5rg1YDT4WYp
-         z/4+zAXpC1i9uGUP2mDcZfWxNvYvVLE8HGlRgSwFLNwKQEP/INDhHeHEf/lL+knSj/4R
-         +94JahGlY3OYRawNbAAi/b1k6PihXr/Ro0PXMRXRfOBQtJzOJnQnNl7pYwd8iDqLnxP0
-         xnp7z9gU1eq2u7UQqlfe51MNNnfG9juYdZkvC+YQIKvDpOJSGeadD70SoNAzDKRo9QoS
-         uBvQ==
+        bh=BWHBnleM/U+ALy+KZuJ6Xy7hOJ7pkM7npKBk7OqW5V4=;
+        b=D8qndW/cQLD55TMxBie/sblq1Jb5A2qhrqh1hSKQ5uTr300QOnou6RNSlnNfDdVkaK
+         om6LuWKDEgv0Wp9dRiI3Q5+QLcKIUfFjJeODPcWvs+tKJcci/xJewQrY0vUSKG40fLHg
+         8R/19PebzLeYbknSDk4WeFEJt/0Blrl0LUcIvrOJgvLyQr7sFFhUsOfF3zNVGTtl5wId
+         L6d61KnxC0StQ+18muwJ7H9aPnTHXUNR0kLRwo1wK1LmsY2HUsb9VdcAD/kxEb/7Id64
+         zLes4pTIRE05zL4cfzMIRAGo5iHQpEihSq7hYYiHi8P95gRyidxkNfXuqQhuRge91c+T
+         MSrw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
         h=cc:to:from:subject:references:mime-version:message-id:in-reply-to
          :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=muU+zEa3MJNYALn8xXqWOElORRD713Llcp74WiFN9WY=;
-        b=OdbN253OLjerj0ARf9SXb3rSbXzFB4j+okjWbipu9EuCuglPX6FIs2grte3rzYp4y4
-         2MyZl8gqGKFcW3bMVua+E2xK6u8bn+0I0z5CxHVRAt/FsYG/bgsYCrEPYDmI0oHaf9ju
-         d0s6HhPqVDZknXRkU41t/RMyBP4IYkB46jtBw6azHxtxVKk4Izzex5Y6Q3Zkyxqd+EVd
-         +B0bNwxeiZ95BVc58uNIVgVBFW6vFzUoyT+veYRcR6z2yo01SOogd+HW8BgypFLSjZ3W
-         lnQUxi0cv3OpJMhSg3GoVpxms6/KI26rZpMiZ1K1380LcRqCuA3h3cvJqnOGkTO02oJI
-         FtFQ==
-X-Gm-Message-State: ACrzQf0ny/VIef7MkuuBiOC/NMG4udhUksKU9CRA3Lv9C/wucmpTGzLN
-        l/VFKH9Cju2dn6BzhCcBPT9etWHB8hc8
-X-Google-Smtp-Source: AMsMyM6DEXsHR5Y8UnkemxuTdxdfyDjoHKiExtvL0O/OzgpbztTpntvxJIoSEBU/gsF9Q8Bih0Mq6L9SX3Q3
+        bh=BWHBnleM/U+ALy+KZuJ6Xy7hOJ7pkM7npKBk7OqW5V4=;
+        b=kagMERPa8jOFBbqbCBCh+qxnoojAFX2TUgadxbVDl82epkr45swm9/xDBXZ8zJrWIS
+         NNkwzI8GMSNXWgJrhIikYjRBbX5G4CFPtocJiqpfWohMASORhhpNL+v2gJmy8K0v4379
+         YaT//lH0OtF5eIoFBIbiQzIIXvlBXi0VHqBMVDMo7a8Yut8p70Z3zCXbR/r3Lt44HQCk
+         AVHsR2T7dKvr0NKbStI8CiMxQLiMMxptM5Uw0/z1xDwj9ItJ/fscBsilIb0/LfGPrbkh
+         nwXQLOLtG5JLtp6s5GBd+RAXc6DJwxLy0Jd4T+emiCr85RF+4bqpIot5/rSZTt/UIEbw
+         z7fQ==
+X-Gm-Message-State: ACrzQf18dm3kC5Ku3QHaCZLxo9zMXmkGqZI4B9tqw5a28KeEhRR6KXVk
+        +uWMX1jbZN+O8vwlY0XHOemTbWmjpM+W
+X-Google-Smtp-Source: AMsMyM7382PvVJzIVODHvjv7rbwxkqCcP0Qk7qOaP8pLrcAp+pLOXutt138aJypueQIQjjK+su/+kPSRMeMW
 X-Received: from irogers.svl.corp.google.com ([2620:15c:2d4:203:a697:9013:186f:ed07])
- (user=irogers job=sendgmr) by 2002:a17:902:e40c:b0:186:5bbc:2ad9 with SMTP id
- m12-20020a170902e40c00b001865bbc2ad9mr952636ple.157.1667893002263; Mon, 07
- Nov 2022 23:36:42 -0800 (PST)
-Date:   Mon,  7 Nov 2022 23:35:13 -0800
+ (user=irogers job=sendgmr) by 2002:a5b:110:0:b0:6be:3546:b761 with SMTP id
+ 16-20020a5b0110000000b006be3546b761mr53163291ybx.203.1667893011731; Mon, 07
+ Nov 2022 23:36:51 -0800 (PST)
+Date:   Mon,  7 Nov 2022 23:35:14 -0800
 In-Reply-To: <20221108073518.1154450-1-irogers@google.com>
-Message-Id: <20221108073518.1154450-10-irogers@google.com>
+Message-Id: <20221108073518.1154450-11-irogers@google.com>
 Mime-Version: 1.0
 References: <20221108073518.1154450-1-irogers@google.com>
 X-Mailer: git-send-email 2.38.1.431.g37b22c650d-goog
-Subject: [PATCH v1 09/14] tool lib symbol: Add Makefile/Build
+Subject: [PATCH v1 10/14] perf build: Install libsymbol locally when building
 From:   Ian Rogers <irogers@google.com>
 To:     Peter Zijlstra <peterz@infradead.org>,
         Ingo Molnar <mingo@redhat.com>,
@@ -74,145 +74,128 @@ Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-Add sufficient Makefile for libsymbol to be built as a dependency and
-header files installed.
+The perf build currently has a '-Itools/lib' on the CC command
+line. This causes issues as the libapi, libsubcmd, libtraceevent,
+libbpf and libsymbol headers are all found via this path, making it
+impossible to override include behavior. Change the libsymbol build
+mirroring the libbpf, libsubcmd, libapi, libperf and libtraceevent
+build, so that it is installed in a directory along with its
+headers. A later change will modify the include behavior. Don't build
+kallsyms.o as part of util as this will lead to duplicate definitions.
 
 Signed-off-by: Ian Rogers <irogers@google.com>
 ---
- tools/lib/symbol/Build    |   1 +
- tools/lib/symbol/Makefile | 115 ++++++++++++++++++++++++++++++++++++++
- 2 files changed, 116 insertions(+)
- create mode 100644 tools/lib/symbol/Build
- create mode 100644 tools/lib/symbol/Makefile
+ tools/perf/.gitignore    |  1 +
+ tools/perf/Makefile.perf | 25 ++++++++++++++++++++++---
+ tools/perf/util/Build    |  5 -----
+ 3 files changed, 23 insertions(+), 8 deletions(-)
 
-diff --git a/tools/lib/symbol/Build b/tools/lib/symbol/Build
-new file mode 100644
-index 000000000000..9b9a9c78d3c9
---- /dev/null
-+++ b/tools/lib/symbol/Build
-@@ -0,0 +1 @@
-+libsymbol-y += kallsyms.o
-diff --git a/tools/lib/symbol/Makefile b/tools/lib/symbol/Makefile
-new file mode 100644
-index 000000000000..4c1d6b53032d
---- /dev/null
-+++ b/tools/lib/symbol/Makefile
-@@ -0,0 +1,115 @@
-+# SPDX-License-Identifier: GPL-2.0
-+include ../../scripts/Makefile.include
-+include ../../scripts/utilities.mak		# QUIET_CLEAN
-+
-+ifeq ($(srctree),)
-+srctree := $(patsubst %/,%,$(dir $(CURDIR)))
-+srctree := $(patsubst %/,%,$(dir $(srctree)))
-+srctree := $(patsubst %/,%,$(dir $(srctree)))
-+#$(info Determined 'srctree' to be $(srctree))
-+endif
-+
-+CC ?= $(CROSS_COMPILE)gcc
-+AR ?= $(CROSS_COMPILE)ar
-+LD ?= $(CROSS_COMPILE)ld
-+
-+MAKEFLAGS += --no-print-directory
-+
-+INSTALL = install
-+
-+
-+# Use DESTDIR for installing into a different root directory.
-+# This is useful for building a package. The program will be
-+# installed in this directory as if it was the root directory.
-+# Then the build tool can move it later.
-+DESTDIR ?=
-+DESTDIR_SQ = '$(subst ','\'',$(DESTDIR))'
-+
-+LIBFILE = $(OUTPUT)libsymbol.a
-+
-+CFLAGS := $(EXTRA_WARNINGS) $(EXTRA_CFLAGS)
-+CFLAGS += -ggdb3 -Wall -Wextra -std=gnu11 -U_FORTIFY_SOURCE -fPIC
-+
-+ifeq ($(DEBUG),0)
-+ifeq ($(CC_NO_CLANG), 0)
-+  CFLAGS += -O3
+diff --git a/tools/perf/.gitignore b/tools/perf/.gitignore
+index 65b995159cf1..675c03ec1f1c 100644
+--- a/tools/perf/.gitignore
++++ b/tools/perf/.gitignore
+@@ -42,6 +42,7 @@ libapi/
+ libbpf/
+ libperf/
+ libsubcmd/
++libsymbol/
+ libtraceevent/
+ libtraceevent_plugins/
+ fixdep
+diff --git a/tools/perf/Makefile.perf b/tools/perf/Makefile.perf
+index 537ac7055a35..1d90d78303b4 100644
+--- a/tools/perf/Makefile.perf
++++ b/tools/perf/Makefile.perf
+@@ -246,6 +246,7 @@ LIBTRACEEVENT_DIR = $(srctree)/tools/lib/traceevent/
+ LIBTRACEEVENT_PLUGINS_DIR = $(LIBTRACEEVENT_DIR)/plugins
+ LIBBPF_DIR      = $(srctree)/tools/lib/bpf/
+ LIBSUBCMD_DIR   = $(srctree)/tools/lib/subcmd/
++LIBSYMBOL_DIR   = $(srctree)/tools/lib/symbol/
+ LIBPERF_DIR     = $(srctree)/tools/lib/perf/
+ DOC_DIR         = $(srctree)/tools/perf/Documentation/
+ 
+@@ -340,6 +341,15 @@ LIBSUBCMD_DESTDIR = $(LIBSUBCMD_OUTPUT)
+ LIBSUBCMD_INCLUDE = $(LIBSUBCMD_DESTDIR)/include
+ LIBSUBCMD = $(LIBSUBCMD_OUTPUT)/libsubcmd.a
+ 
++ifneq ($(OUTPUT),)
++  LIBSYMBOL_OUTPUT = $(abspath $(OUTPUT))/libsymbol
 +else
-+  CFLAGS += -O6
++  LIBSYMBOL_OUTPUT = $(CURDIR)/libsymbol
 +endif
-+endif
++LIBSYMBOL_DESTDIR = $(LIBSYMBOL_OUTPUT)
++LIBSYMBOL_INCLUDE = $(LIBSYMBOL_DESTDIR)/include
++LIBSYMBOL = $(LIBSYMBOL_OUTPUT)/libsymbol.a
 +
-+ifeq ($(DEBUG),0)
-+  CFLAGS += -D_FORTIFY_SOURCE
-+endif
+ ifneq ($(OUTPUT),)
+   LIBPERF_OUTPUT = $(abspath $(OUTPUT))/libperf
+ else
+@@ -398,7 +408,7 @@ endif
+ 
+ export PERL_PATH
+ 
+-PERFLIBS = $(LIBAPI) $(LIBSUBCMD) $(LIBPERF)
++PERFLIBS = $(LIBAPI) $(LIBPERF) $(LIBSUBCMD) $(LIBSYMBOL)
+ ifndef NO_LIBBPF
+   ifndef LIBBPF_DYNAMIC
+     PERFLIBS += $(LIBBPF)
+@@ -887,6 +897,15 @@ $(LIBSUBCMD)-clean:
+ 	$(call QUIET_CLEAN, libsubcmd)
+ 	$(Q)$(RM) -r -- $(LIBSUBCMD_OUTPUT)
+ 
++$(LIBSYMBOL): FORCE | $(LIBSYMBOL_OUTPUT)
++	$(Q)$(MAKE) -C $(LIBSYMBOL_DIR) O=$(LIBSYMBOL_OUTPUT) \
++		DESTDIR=$(LIBSYMBOL_DESTDIR) prefix= \
++		$@ install_headers
 +
-+# Treat warnings as errors unless directed not to
-+ifneq ($(WERROR),0)
-+  CFLAGS += -Werror
-+endif
++$(LIBSYMBOL)-clean:
++	$(call QUIET_CLEAN, libsymbol)
++	$(Q)$(RM) -r -- $(LIBSYMBOL_OUTPUT)
 +
-+CFLAGS += -D_LARGEFILE64_SOURCE -D_FILE_OFFSET_BITS=64
-+
-+CFLAGS += -I$(srctree)/tools/lib
-+CFLAGS += -I$(srctree)/tools/include
-+
-+RM = rm -f
-+
-+SYMBOL_IN := $(OUTPUT)libsymbol-in.o
-+
-+ifeq ($(LP64), 1)
-+  libdir_relative = lib64
-+else
-+  libdir_relative = lib
-+endif
-+
-+prefix ?=
-+libdir = $(prefix)/$(libdir_relative)
-+
-+# Shell quotes
-+libdir_SQ = $(subst ','\'',$(libdir))
-+
-+all:
-+
-+export srctree OUTPUT CC LD CFLAGS V
-+include $(srctree)/tools/build/Makefile.include
-+include $(srctree)/tools/scripts/Makefile.include
-+
-+all: fixdep $(LIBFILE)
-+
-+$(SYMBOL_IN): FORCE
-+	$(MAKE) $(build)=libsymbol V=1
-+
-+$(LIBFILE): $(SYMBOL_IN)
-+	$(QUIET_AR)$(RM) $@ && $(AR) rcs $@ $(SYMBOL_IN)
-+
-+define do_install_mkdir
-+	if [ ! -d '$(DESTDIR_SQ)$1' ]; then             \
-+		$(INSTALL) -d -m 755 '$(DESTDIR_SQ)$1'; \
-+	fi
-+endef
-+
-+define do_install
-+	if [ ! -d '$(DESTDIR_SQ)$2' ]; then             \
-+		$(INSTALL) -d -m 755 '$(DESTDIR_SQ)$2'; \
-+	fi;                                             \
-+	$(INSTALL) $1 $(if $3,-m $3,) '$(DESTDIR_SQ)$2'
-+endef
-+
-+install_lib: $(LIBFILE)
-+	$(call QUIET_INSTALL, $(LIBFILE)) \
-+		$(call do_install_mkdir,$(libdir_SQ)); \
-+		cp -fpR $(LIBFILE) $(DESTDIR)$(libdir_SQ)
-+
-+install_headers:
-+	$(call QUIET_INSTALL, headers) \
-+		$(call do_install,kallsyms.h,$(prefix)/include/symbol,644);
-+
-+install: install_lib install_headers
-+
-+clean:
-+	$(call QUIET_CLEAN, libsymbol) $(RM) $(LIBFILE); \
-+	find $(or $(OUTPUT),.) -name \*.o -or -name \*.o.cmd -or -name \*.o.d | xargs $(RM)
-+
-+FORCE:
-+
-+.PHONY: clean FORCE
+ help:
+ 	@echo 'Perf make targets:'
+ 	@echo '  doc		- make *all* documentation (see below)'
+@@ -1076,7 +1095,7 @@ SKELETONS += $(SKEL_OUT)/bperf_cgroup.skel.h $(SKEL_OUT)/func_latency.skel.h
+ SKELETONS += $(SKEL_OUT)/off_cpu.skel.h $(SKEL_OUT)/lock_contention.skel.h
+ SKELETONS += $(SKEL_OUT)/kwork_trace.skel.h
+ 
+-$(SKEL_TMP_OUT) $(LIBAPI_OUTPUT) $(LIBBPF_OUTPUT) $(LIBPERF_OUTPUT) $(LIBSUBCMD_OUTPUT):
++$(SKEL_TMP_OUT) $(LIBAPI_OUTPUT) $(LIBBPF_OUTPUT) $(LIBPERF_OUTPUT) $(LIBSUBCMD_OUTPUT) $(LIBSYMBOL_OUTPUT):
+ 	$(Q)$(MKDIR) -p $@
+ 
+ ifndef LIBTRACEEVENT_DYNAMIC
+@@ -1126,7 +1145,7 @@ endif # BUILD_BPF_SKEL
+ bpf-skel-clean:
+ 	$(call QUIET_CLEAN, bpf-skel) $(RM) -r $(SKEL_TMP_OUT) $(SKELETONS)
+ 
+-clean:: $(LIBTRACEEVENT)-clean $(LIBAPI)-clean $(LIBBPF)-clean $(LIBSUBCMD)-clean $(LIBPERF)-clean fixdep-clean python-clean bpf-skel-clean tests-coresight-targets-clean libtraceevent_plugins-clean
++clean:: $(LIBTRACEEVENT)-clean $(LIBAPI)-clean $(LIBBPF)-clean $(LIBSUBCMD)-clean $(LIBSYMBOL)-clean $(LIBPERF)-clean fixdep-clean python-clean bpf-skel-clean tests-coresight-targets-clean libtraceevent_plugins-clean
+ 	$(call QUIET_CLEAN, core-objs)  $(RM) $(LIBPERF_A) $(OUTPUT)perf-archive $(OUTPUT)perf-iostat $(LANG_BINDINGS)
+ 	$(Q)find $(or $(OUTPUT),.) -name '*.o' -delete -o -name '\.*.cmd' -delete -o -name '\.*.d' -delete
+ 	$(Q)$(RM) $(OUTPUT).config-detected
+diff --git a/tools/perf/util/Build b/tools/perf/util/Build
+index e315ecaec323..45f3d2723725 100644
+--- a/tools/perf/util/Build
++++ b/tools/perf/util/Build
+@@ -19,7 +19,6 @@ perf-y += perf_event_attr_fprintf.o
+ perf-y += evswitch.o
+ perf-y += find_bit.o
+ perf-y += get_current_dir_name.o
+-perf-y += kallsyms.o
+ perf-y += levenshtein.o
+ perf-y += llvm-utils.o
+ perf-y += mmap.o
+@@ -294,10 +293,6 @@ CFLAGS_expr.o          += -Wno-redundant-decls
+ CFLAGS_header.o        += -include $(OUTPUT)PERF-VERSION-FILE
+ CFLAGS_arm-spe.o       += -I$(srctree)/tools/arch/arm64/include/
+ 
+-$(OUTPUT)util/kallsyms.o: ../lib/symbol/kallsyms.c FORCE
+-	$(call rule_mkdir)
+-	$(call if_changed_dep,cc_o_c)
+-
+ $(OUTPUT)util/argv_split.o: ../lib/argv_split.c FORCE
+ 	$(call rule_mkdir)
+ 	$(call if_changed_dep,cc_o_c)
 -- 
 2.38.1.431.g37b22c650d-goog
 
