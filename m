@@ -2,32 +2,32 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 443AFC433FE
-	for <linux-perf-users@archiver.kernel.org>; Tue,  8 Nov 2022 22:28:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BC68BC4332F
+	for <linux-perf-users@archiver.kernel.org>; Tue,  8 Nov 2022 22:29:20 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229938AbiKHW2o (ORCPT
+        id S230188AbiKHW3T (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Tue, 8 Nov 2022 17:28:44 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55860 "EHLO
+        Tue, 8 Nov 2022 17:29:19 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55786 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230222AbiKHW2Z (ORCPT
+        with ESMTP id S230187AbiKHW3D (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Tue, 8 Nov 2022 17:28:25 -0500
+        Tue, 8 Nov 2022 17:29:03 -0500
 Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTP id 97F3668ADB;
-        Tue,  8 Nov 2022 14:25:04 -0800 (PST)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTP id C393166C8A;
+        Tue,  8 Nov 2022 14:25:49 -0800 (PST)
 Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id D57701FB;
-        Tue,  8 Nov 2022 14:24:37 -0800 (PST)
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id AA8F11FB;
+        Tue,  8 Nov 2022 14:25:54 -0800 (PST)
 Received: from [10.57.68.207] (unknown [10.57.68.207])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 0CC4E3F73D;
-        Tue,  8 Nov 2022 14:24:29 -0800 (PST)
-Message-ID: <ce50327b-d42c-713f-2529-74eac8d1e5b9@arm.com>
-Date:   Tue, 8 Nov 2022 22:24:28 +0000
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id DBD4D3F73D;
+        Tue,  8 Nov 2022 14:25:46 -0800 (PST)
+Message-ID: <bffacfbb-9623-4aa9-a3f7-6c850b8941bc@arm.com>
+Date:   Tue, 8 Nov 2022 22:25:45 +0000
 MIME-Version: 1.0
 User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.15; rv:102.0)
  Gecko/20100101 Thunderbird/102.4.1
-Subject: Re: [PATCH v5 05/14] coresight: etm4x: Update ETM4 driver to use
+Subject: Re: [PATCH v5 06/14] coresight: etm3x: Update ETM3 driver to use
  Trace ID API
 To:     Mike Leach <mike.leach@linaro.org>, coresight@lists.linaro.org,
         linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
@@ -35,9 +35,9 @@ Cc:     mathieu.poirier@linaro.org, peterz@infradead.org, mingo@redhat.com,
         acme@kernel.org, linux-perf-users@vger.kernel.org,
         leo.yan@linaro.org, quic_jinlmao@quicinc.com
 References: <20221101163103.17921-1-mike.leach@linaro.org>
- <20221101163103.17921-6-mike.leach@linaro.org>
+ <20221101163103.17921-7-mike.leach@linaro.org>
 From:   Suzuki K Poulose <suzuki.poulose@arm.com>
-In-Reply-To: <20221101163103.17921-6-mike.leach@linaro.org>
+In-Reply-To: <20221101163103.17921-7-mike.leach@linaro.org>
 Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 7bit
 Precedence: bulk
@@ -45,58 +45,65 @@ List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
 On 01/11/2022 16:30, Mike Leach wrote:
-> The trace ID API is now used to allocate trace IDs for ETM4.x / ETE
-> devices.
+> Use the TraceID API to allocate ETM trace IDs dynamically.
 > 
-> For perf sessions, these will be allocated on enable, and released on
-> disable.
+> As with the etm4x we allocate on enable / disable for perf,
+> allocate on enable / reset for sysfs.
 > 
-> For sysfs sessions, these will be allocated on enable, but only released
-> on reset. This allows the sysfs session to interrogate the Trace ID used
-> after the session is over - maintaining functional consistency with the
-> previous allocation scheme.
+> Additionally we allocate on sysfs file read as both perf and sysfs
+> can read the ID before enabling the hardware.
 > 
-> The trace ID will also be allocated on read of the mgmt/trctraceid file.
-> This ensures that if perf or sysfs read this before enabling trace, the
-> value will be the one used for the trace session.
-> 
-> Trace ID initialisation is removed from the _probe() function.
+> Remove sysfs option to write trace ID - which is inconsistent with
+> both the dynamic allocation method and the fixed allocation method
+> previously used.
 > 
 > Signed-off-by: Mike Leach <mike.leach@linaro.org>
 > ---
->   .../coresight/coresight-etm4x-core.c          | 70 +++++++++++++++++--
->   .../coresight/coresight-etm4x-sysfs.c         | 27 ++++++-
->   drivers/hwtracing/coresight/coresight-etm4x.h |  3 +
->   3 files changed, 90 insertions(+), 10 deletions(-)
+>   drivers/hwtracing/coresight/coresight-etm.h   |  2 +
+>   .../coresight/coresight-etm3x-core.c          | 69 +++++++++++++++++--
+>   .../coresight/coresight-etm3x-sysfs.c         | 27 ++------
+>   3 files changed, 72 insertions(+), 26 deletions(-)
 > 
-> diff --git a/drivers/hwtracing/coresight/coresight-etm4x-core.c b/drivers/hwtracing/coresight/coresight-etm4x-core.c
-> index 80fefaba58ee..0e361d35c611 100644
-> --- a/drivers/hwtracing/coresight/coresight-etm4x-core.c
-> +++ b/drivers/hwtracing/coresight/coresight-etm4x-core.c
-> @@ -42,6 +42,7 @@
->   #include "coresight-etm4x-cfg.h"
->   #include "coresight-self-hosted-trace.h"
->   #include "coresight-syscfg.h"
+> diff --git a/drivers/hwtracing/coresight/coresight-etm.h b/drivers/hwtracing/coresight/coresight-etm.h
+> index f3ab96eaf44e..3667428d38b6 100644
+> --- a/drivers/hwtracing/coresight/coresight-etm.h
+> +++ b/drivers/hwtracing/coresight/coresight-etm.h
+> @@ -287,4 +287,6 @@ int etm_get_trace_id(struct etm_drvdata *drvdata);
+>   void etm_set_default(struct etm_config *config);
+>   void etm_config_trace_mode(struct etm_config *config);
+>   struct etm_config *get_etm_config(struct etm_drvdata *drvdata);
+> +int etm_read_alloc_trace_id(struct etm_drvdata *drvdata);
+> +void etm_release_trace_id(struct etm_drvdata *drvdata);
+>   #endif
+> diff --git a/drivers/hwtracing/coresight/coresight-etm3x-core.c b/drivers/hwtracing/coresight/coresight-etm3x-core.c
+> index d0ab9933472b..9a7a9e974d41 100644
+> --- a/drivers/hwtracing/coresight/coresight-etm3x-core.c
+> +++ b/drivers/hwtracing/coresight/coresight-etm3x-core.c
+> @@ -32,6 +32,7 @@
+>   
+>   #include "coresight-etm.h"
+>   #include "coresight-etm-perf.h"
 > +#include "coresight-trace-id.h"
 >   
->   static int boot_enable;
->   module_param(boot_enable, int, 0444);
-> @@ -234,6 +235,30 @@ static int etm4_trace_id(struct coresight_device *csdev)
->   	return drvdata->trcid;
+>   /*
+>    * Not really modular but using module_param is the easiest way to
+> @@ -490,16 +491,59 @@ static int etm_trace_id(struct coresight_device *csdev)
+>   	return etm_get_trace_id(drvdata);
 >   }
 >   
-> +int etm4_read_alloc_trace_id(struct etmv4_drvdata *drvdata)
+> +int etm_read_alloc_trace_id(struct etm_drvdata *drvdata)
 > +{
 > +	int trace_id;
 > +
 > +	/*
 > +	 * This will allocate a trace ID to the cpu,
 > +	 * or return the one currently allocated.
-> +	 * The trace id function has its own lock
+> +	 *
+> +	 * trace id function has its own lock
 > +	 */
 > +	trace_id = coresight_trace_id_get_cpu_id(drvdata->cpu);
 > +	if (IS_VALID_ID(trace_id))
-> +		drvdata->trcid = (u8)trace_id;
+> +		drvdata->traceid = (u8)trace_id;
 > +	else
 > +		dev_err(&drvdata->csdev->dev,
 > +			"Failed to allocate trace ID for %s on CPU%d\n",
@@ -104,27 +111,22 @@ On 01/11/2022 16:30, Mike Leach wrote:
 > +	return trace_id;
 > +}
 > +
-> +void etm4_release_trace_id(struct etmv4_drvdata *drvdata)
+> +void etm_release_trace_id(struct etm_drvdata *drvdata)
 > +{
 > +	coresight_trace_id_put_cpu_id(drvdata->cpu);
 > +}
 > +
->   struct etm4_enable_arg {
->   	struct etmv4_drvdata *drvdata;
->   	int rc;
-> @@ -717,7 +742,7 @@ static int etm4_parse_event_config(struct coresight_device *csdev,
->   static int etm4_enable_perf(struct coresight_device *csdev,
->   			    struct perf_event *event)
+>   static int etm_enable_perf(struct coresight_device *csdev,
+>   			   struct perf_event *event)
 >   {
-> -	int ret = 0;
-> +	int ret = 0, trace_id;
->   	struct etmv4_drvdata *drvdata = dev_get_drvdata(csdev->dev.parent);
+>   	struct etm_drvdata *drvdata = dev_get_drvdata(csdev->dev.parent);
+> +	int trace_id;
 >   
->   	if (WARN_ON_ONCE(drvdata->cpu != smp_processor_id())) {
-> @@ -729,6 +754,24 @@ static int etm4_enable_perf(struct coresight_device *csdev,
->   	ret = etm4_parse_event_config(csdev, event);
->   	if (ret)
->   		goto out;
+>   	if (WARN_ON_ONCE(drvdata->cpu != smp_processor_id()))
+>   		return -EINVAL;
+>   
+>   	/* Configure the tracer based on the session's specifics */
+>   	etm_parse_event_config(drvdata, event);
 > +
 > +	/*
 > +	 * perf allocates cpu ids as part of _setup_aux() - device needs to use
@@ -138,47 +140,46 @@ On 01/11/2022 16:30, Mike Leach wrote:
 > +	if (!IS_VALID_ID(trace_id)) {
 > +		dev_err(&drvdata->csdev->dev, "Failed to set trace ID for %s on CPU%d\n",
 > +			dev_name(&drvdata->csdev->dev), drvdata->cpu);
-> +		ret = -EINVAL;
-> +		goto out;
+> +		return -EINVAL;
 > +	}
-> +	drvdata->trcid = (u8)trace_id;
+> +	drvdata->traceid = (u8)trace_id;
 > +
 >   	/* And enable it */
->   	ret = etm4_enable_hw(drvdata);
->   
-> @@ -753,6 +796,11 @@ static int etm4_enable_sysfs(struct coresight_device *csdev)
+>   	return etm_enable_hw(drvdata);
+>   }
+> @@ -512,6 +556,11 @@ static int etm_enable_sysfs(struct coresight_device *csdev)
 >   
 >   	spin_lock(&drvdata->spinlock);
 >   
-> +	/* sysfs needs to read and allocate a trace ID */
-> +	ret = etm4_read_alloc_trace_id(drvdata);
+> +	/* sysfs needs to allocate and set a trace ID */
+> +	ret = etm_read_alloc_trace_id(drvdata);
 > +	if (ret < 0)
-> +		goto unlock_sysfs_enable;
+> +		goto unlock_enable_sysfs;
 > +
 >   	/*
->   	 * Executing etm4_enable_hw on the cpu whose ETM is being enabled
->   	 * ensures that register writes occur when cpu is powered.
-> @@ -764,6 +812,11 @@ static int etm4_enable_sysfs(struct coresight_device *csdev)
->   		ret = arg.rc;
->   	if (!ret)
->   		drvdata->sticky_enable = true;
-> +
+>   	 * Configure the ETM only if the CPU is online.  If it isn't online
+>   	 * hw configuration will take place on the local CPU during bring up.
+> @@ -528,6 +577,10 @@ static int etm_enable_sysfs(struct coresight_device *csdev)
+>   		ret = -ENODEV;
+>   	}
+>   
 > +	if (ret)
-> +		etm4_release_trace_id(drvdata);
+> +		etm_release_trace_id(drvdata);
 > +
-> +unlock_sysfs_enable:
+> +unlock_enable_sysfs:
 >   	spin_unlock(&drvdata->spinlock);
 >   
 >   	if (!ret)
-> @@ -895,6 +948,8 @@ static int etm4_disable_perf(struct coresight_device *csdev,
->   	/* TRCVICTLR::SSSTATUS, bit[9] */
->   	filters->ssstatus = (control & BIT(9));
+> @@ -611,6 +664,9 @@ static void etm_disable_perf(struct coresight_device *csdev)
+>   	coresight_disclaim_device_unlocked(csdev);
 >   
+>   	CS_LOCK(drvdata->base);
+> +
 > +	/* perf will release trace ids when _free_aux() is called at the end of the session */
 
-minor nit: Please split this to multi-line.
+Minor nit: Please split the line.
 
-With that:
+With that
 
 Reviewed-by: Suzuki K Poulose <suzuki.poulose@arm.com>
 
