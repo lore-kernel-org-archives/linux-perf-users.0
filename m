@@ -2,58 +2,58 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 686EFC4332F
-	for <linux-perf-users@archiver.kernel.org>; Tue,  8 Nov 2022 23:23:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B81E9C43217
+	for <linux-perf-users@archiver.kernel.org>; Tue,  8 Nov 2022 23:24:22 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230150AbiKHXXP (ORCPT
+        id S230153AbiKHXYV (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Tue, 8 Nov 2022 18:23:15 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:32808 "EHLO
+        Tue, 8 Nov 2022 18:24:21 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33532 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230079AbiKHXXA (ORCPT
+        with ESMTP id S230164AbiKHXXw (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Tue, 8 Nov 2022 18:23:00 -0500
-Received: from mail-wr1-x430.google.com (mail-wr1-x430.google.com [IPv6:2a00:1450:4864:20::430])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DA9E84C243
-        for <linux-perf-users@vger.kernel.org>; Tue,  8 Nov 2022 15:22:53 -0800 (PST)
-Received: by mail-wr1-x430.google.com with SMTP id l14so23340854wrw.2
-        for <linux-perf-users@vger.kernel.org>; Tue, 08 Nov 2022 15:22:53 -0800 (PST)
+        Tue, 8 Nov 2022 18:23:52 -0500
+Received: from mail-wr1-x42b.google.com (mail-wr1-x42b.google.com [IPv6:2a00:1450:4864:20::42b])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1E65CE1D
+        for <linux-perf-users@vger.kernel.org>; Tue,  8 Nov 2022 15:23:21 -0800 (PST)
+Received: by mail-wr1-x42b.google.com with SMTP id g12so23256262wrs.10
+        for <linux-perf-users@vger.kernel.org>; Tue, 08 Nov 2022 15:23:21 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=google.com; s=20210112;
         h=cc:to:subject:message-id:date:from:in-reply-to:references
          :mime-version:from:to:cc:subject:date:message-id:reply-to;
-        bh=vcavttwH0q3M9PraafemTP01iTUHxHGotv46eg3YbBs=;
-        b=rxPbT0U5+f/HhF5uwizaUfRbdFygOsBf7nhQiLgvAV6cOj1b7nnFFZAUyfXKfDuenf
-         heZI60ZEINlWgvsmECMf1D6Ov6qqVXt5xaQS9AY9d76xf4lpLfo31nC97tsKkup6+PA3
-         ZSZFinu/h2+DeVvpmJBlrAy1hmIvct9YLFk0GCtOtnqZF2sPMLpf6C6pxvosgIE+PC68
-         Leznntw061i/+IHhbBMOMXUTtOgG+Olv1WLxAhR+hgO7+Z+vLMt1dT0xa+42ptEJaaoi
-         TObTFSsPwxXSrXT+wMmfRucP5CdWNqSYLKK0tRUl55K0p8hIhH2wWRxeoPlHpzHimyeC
-         uaOA==
+        bh=AYY27CHCBp8aK7/t2oC4sqeVRM8MWfwLNJDQiNepGd0=;
+        b=FlSm+XMleqvvRQunx5UXOGP84aWOdZ8IuY3HzZdNr6efOzgmUuAgM1W6gl42lDTL/t
+         1UYRuXiqhGR7UW+LKv8B1xRlUXO68/l9zwooMrXPris7Q+9RQMN5//EDchFpH2Ojwest
+         aOXgK0wSVaZY1bk+zNfKfJRiv05ujyzyWSHBhvES14fDrn1EXexkkgtl4KuX0OMQh8bd
+         Ffvqf3CDH3R+/HK4O45wRlBVoU0L7ui26iTv5a0NTzEVYgBLdHsym41NE0CNAe2qM6BA
+         vZ+G4s1H423nZoMjTDk23RKrWfdaxTeCx2MLWAdElZ4xzOYBVoZPwOkC+S9Xh0ov6LcC
+         DNBQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
         h=cc:to:subject:message-id:date:from:in-reply-to:references
          :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
          :reply-to;
-        bh=vcavttwH0q3M9PraafemTP01iTUHxHGotv46eg3YbBs=;
-        b=yvXlDHHsDdEdT2+jBxDgWdF3FNIn+xwyZaTwTZMHIBCBkvwOEfIyqrcfxjppbRsiGn
-         0LKHhnh/8jhvwM1T25bdilP1g9Hy/VaZtkzKxCfIdbF/8WfOElRfl+AC7V45uRUGPmV4
-         hi8TsbU1ffEtqWsXboqfZlUu/dgbZ735KGtDqoKHqXFT9evNVGcd5Ti9cDpApSn+e8vF
-         YtzH2kcswust94bU6r52AVnKps1wQ29jWHbnIVBp41PUieLgCe3DXTiSJtJhzFCKPZ+h
-         PNqMSDP0JH3SvoGDKDh0zdGJR0GnNXIAj6gFTH/OKnX1Y6dpHMFlS5Y2mppgA/sXeeNn
-         yDPQ==
-X-Gm-Message-State: ACrzQf2yj3xZmV0LMZ9ZS6RbyvjO7J2yvt+SyvIixe9zjpTGZbbqQEbd
-        QrW5jE263PbNr3GnZC1XPqMj3sks24PXTNEMguhV/A==
-X-Google-Smtp-Source: AMsMyM5y2i4ewEOMisgv/IT0ccWDvptArlraGJCg4PGzsgAfhXW+PMTycbgC0Fd9TLCJhykdEfACkB8+AdLs9SKnO1Q=
-X-Received: by 2002:adf:db92:0:b0:236:9d4a:476f with SMTP id
- u18-20020adfdb92000000b002369d4a476fmr37191905wri.654.1667949772244; Tue, 08
- Nov 2022 15:22:52 -0800 (PST)
+        bh=AYY27CHCBp8aK7/t2oC4sqeVRM8MWfwLNJDQiNepGd0=;
+        b=qdhGNaBIH+6UjRl6BczM5BM/5seCs7V9psLf2lKdgLEpti1xmaOg6n0ZPeolixqWvL
+         6dbPxgXLevo4OzmguW9I4Mn3tiwrzE3jdCpK+ZUDh8Axrt1InxenMVEreDmL+aZ+DDuA
+         uZ+pFxpvjQkYsjTIgJf53KsPHfPxg+XVArMftpm4A7DakGlOF7Onu8X0Yz3m20EXsxkr
+         ltzO/vKjgu+1oowWs5Pl1rdRF2MLqS1LaeSW2pDV36cUZm2KatF3Bn0VkGTixUsEaDBs
+         OpKYtDscZB0uUQ1NGpJAAooPlmrsNAMMzTLQU6VEMIBAOoxfPac9eyLSdi+5eooXUXL+
+         9Q9g==
+X-Gm-Message-State: ACrzQf0SokjPWhVSRTe8M/MIRJJVloAjsd/pgFBkzpf1eFJ+TB9JmsSn
+        oAdEYiTtlgk7RMLzEfuaIcxlaH/o79kaawKzduJrekvUmbir8A==
+X-Google-Smtp-Source: AMsMyM5h7J0P/PUzGAOqi3WOJZ+P94yBxjYzQo/QJvzJmKG8jVSwbooLinTm0fu+SLtBUtINwBjEYvG/E2GKMz6iBOg=
+X-Received: by 2002:a5d:47a6:0:b0:236:7854:246d with SMTP id
+ 6-20020a5d47a6000000b002367854246dmr36330718wrb.300.1667949799496; Tue, 08
+ Nov 2022 15:23:19 -0800 (PST)
 MIME-Version: 1.0
-References: <20221107213314.3239159-1-namhyung@kernel.org> <20221107213314.3239159-8-namhyung@kernel.org>
-In-Reply-To: <20221107213314.3239159-8-namhyung@kernel.org>
+References: <20221107213314.3239159-1-namhyung@kernel.org> <20221107213314.3239159-9-namhyung@kernel.org>
+In-Reply-To: <20221107213314.3239159-9-namhyung@kernel.org>
 From:   Ian Rogers <irogers@google.com>
-Date:   Tue, 8 Nov 2022 15:22:32 -0800
-Message-ID: <CAP-5=fVyRrU_oFU_r3jsoY2MK=zMKLKvgLvhG+v8SjtSQmmoeg@mail.gmail.com>
-Subject: Re: [PATCH 7/9] perf stat: Add header for interval in JSON output
+Date:   Tue, 8 Nov 2022 15:23:07 -0800
+Message-ID: <CAP-5=fXWdaGr3cNsUMWqrb_be38z01Eq5UhyPU6eUSLJNQHyQg@mail.gmail.com>
+Subject: Re: [PATCH 8/9] perf stat: Fix condition in print_interval()
 To:     Namhyung Kim <namhyung@kernel.org>
 Cc:     Arnaldo Carvalho de Melo <acme@kernel.org>,
         Jiri Olsa <jolsa@kernel.org>, Ingo Molnar <mingo@kernel.org>,
@@ -71,19 +71,10 @@ X-Mailing-List: linux-perf-users@vger.kernel.org
 
 On Mon, Nov 7, 2022 at 1:33 PM Namhyung Kim <namhyung@kernel.org> wrote:
 >
-> It missed to print a matching header line for intervals.
->
-> Before:
->   # perf stat -a -e cycles,instructions --metric-only -j -I 500
->   {"unit" : "insn per cycle"}
->   {"interval" : 0.500544283}{"metric-value" : "1.96"}
->   ^C
->
-> After:
->   # perf stat -a -e cycles,instructions --metric-only -j -I 500
->   {"unit" : "sec"}{"unit" : "insn per cycle"}
->   {"interval" : 0.500515681}{"metric-value" : "2.31"}
->   ^C
+> The num_print_interval and config->interval_clear should be checked
+> together like other places like later in the function.  Otherwise,
+> the --interval-clear option could print the headers for the CSV or
+> JSON output unnecessarily.
 >
 > Signed-off-by: Namhyung Kim <namhyung@kernel.org>
 
@@ -93,24 +84,24 @@ Thanks,
 Ian
 
 > ---
->  tools/perf/util/stat-display.c | 4 ++++
->  1 file changed, 4 insertions(+)
+>  tools/perf/util/stat-display.c | 4 ++--
+>  1 file changed, 2 insertions(+), 2 deletions(-)
 >
 > diff --git a/tools/perf/util/stat-display.c b/tools/perf/util/stat-display.c
-> index 25f67fb37f6d..aab2576bd40f 100644
+> index aab2576bd40f..a10af26c26ab 100644
 > --- a/tools/perf/util/stat-display.c
 > +++ b/tools/perf/util/stat-display.c
-> @@ -860,6 +860,10 @@ static void print_metric_headers(struct perf_stat_config *config,
->                 if (!config->iostat_run)
->                         fputs(aggr_header_csv[config->aggr_mode], config->output);
->         }
-> +       if (config->json_output) {
-> +               if (config->interval)
-> +                       fputs("{\"unit\" : \"sec\"}", config->output);
-> +       }
->         if (config->iostat_run)
->                 iostat_print_header_prefix(config);
+> @@ -902,8 +902,8 @@ static void print_interval(struct perf_stat_config *config,
+>                 sprintf(prefix, "{\"interval\" : %lu.%09lu}", (unsigned long)
+>                                  ts->tv_sec, ts->tv_nsec);
 >
+> -       if ((num_print_interval == 0 && !config->csv_output && !config->json_output)
+> -                        || config->interval_clear) {
+> +       if ((num_print_interval == 0 || config->interval_clear) &&
+> +                       !config->csv_output && !config->json_output) {
+>                 switch (config->aggr_mode) {
+>                 case AGGR_NODE:
+>                         fprintf(output, "#           time node   cpus");
 > --
 > 2.38.1.431.g37b22c650d-goog
 >
