@@ -2,152 +2,107 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 64F71C4332F
-	for <linux-perf-users@archiver.kernel.org>; Tue,  8 Nov 2022 21:08:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EB017C4332F
+	for <linux-perf-users@archiver.kernel.org>; Tue,  8 Nov 2022 21:16:05 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229554AbiKHVId (ORCPT
+        id S229464AbiKHVQE (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Tue, 8 Nov 2022 16:08:33 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38158 "EHLO
+        Tue, 8 Nov 2022 16:16:04 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44592 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229447AbiKHVIc (ORCPT
+        with ESMTP id S229488AbiKHVQC (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Tue, 8 Nov 2022 16:08:32 -0500
-Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 406451AF0F;
-        Tue,  8 Nov 2022 13:08:31 -0800 (PST)
+        Tue, 8 Nov 2022 16:16:02 -0500
+Received: from sin.source.kernel.org (sin.source.kernel.org [145.40.73.55])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id F0E3056564;
+        Tue,  8 Nov 2022 13:16:01 -0800 (PST)
 Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id D060061777;
-        Tue,  8 Nov 2022 21:08:30 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 1817EC433C1;
-        Tue,  8 Nov 2022 21:08:30 +0000 (UTC)
+        by sin.source.kernel.org (Postfix) with ESMTPS id 67221CE1CE6;
+        Tue,  8 Nov 2022 21:16:00 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 27B96C433D6;
+        Tue,  8 Nov 2022 21:15:58 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1667941710;
-        bh=3GlHu5yvHpYryUxh56d4Wb/AASxB0UBpxBfH92jwobc=;
+        s=k20201202; t=1667942158;
+        bh=pcLNw0Istjy7ekvKgb8Hilkkldz4DcMsYXFQYpKmAlM=;
         h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=QVcd8Dym0GlpOtjERCRf/ewP9h45ZaL2OATHfkgK6RQCHDjuwwZk8D9qcuFEWmMH7
-         AQ776103W7cI0ZBVyOGaJhTPbA2H9je6TdvOW1v+gPTy4stZWMz4jORWU1qMVvBnHp
-         qROV7J555ykUQGJSqu33mwCvQn5b8X0DWlW1/shf5uhvdw9ZHmn3E7a8QSNFo5x1lk
-         +T0FDRSu9i22qxlTwbSMG/ksqHChIf8arA43NU7xbCX/RftfBwmZPDxplhtpxvQZra
-         BFRrF9Fg2SSD2Un4ek53cj0H74wk5thcuwDJxliaTElAYV3u3voam2hFpLMplpeRx+
-         cGHCe39elP11g==
+        b=hgu7z3UzcSjB/Z7s2EP8kGi4vJBqUD0Jy7owy+6TdGHdk43+aoz9JLnxRD7RsAmpi
+         vFOZIxUrEAbmLcpQ7CTx7Cso2JdZp/eLuF7EqyS90qZ8hpSec/DO4CXB1ny9mKjxRA
+         l8ZUOM28rh1HMvbDdYUHxji4vHb0kbBOdk0LjtPVutkaf1Ytk6VUdPgiWc+RzHmtua
+         tt4LePODoyltJopnsUjOPFL00VGKhraIVXSnphMVXqOAmpRL7VjE81LrR+B2WHjYlf
+         g/6ykC3YCYSNk6urDQR0SPg0kih41RxbbmBNJaoB8AlKk9my5rp3s3F4J6jsGUMENz
+         JYpctaswuiE1Q==
 Received: by quaco.ghostprotocols.net (Postfix, from userid 1000)
-        id 82F304034E; Tue,  8 Nov 2022 18:08:27 -0300 (-03)
-Date:   Tue, 8 Nov 2022 18:08:27 -0300
+        id C7B4E4034E; Tue,  8 Nov 2022 18:15:55 -0300 (-03)
+Date:   Tue, 8 Nov 2022 18:15:55 -0300
 From:   Arnaldo Carvalho de Melo <acme@kernel.org>
-To:     Namhyung Kim <namhyung@kernel.org>
-Cc:     "Masami Hiramatsu (Google)" <mhiramat@kernel.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Jiri Olsa <jolsa@kernel.org>, linux-perf-users@vger.kernel.org,
-        linux-kernel@vger.kernel.org, Steven Rostedt <rostedt@goodmis.org>
-Subject: Re: [PATCH] tools/perf: Fix to get the DW_AT_decl_file and
- DW_AT_call_file as unsinged data
-Message-ID: <Y2rFS6CPfhIQhYUc@kernel.org>
-References: <166761727445.480106.3738447577082071942.stgit@devnote3>
- <CAM9d7ci8YX22Bp31ZD9k31NFN6pP3fbPKpNDNZYnmdZiqav1Vg@mail.gmail.com>
+To:     Donglin Peng <dolinux.peng@gmail.com>
+Cc:     peterz@infradead.org, adrian.hunter@intel.com,
+        linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org
+Subject: Re: [PATCH v2] perf tools: exclude the include/perf/ directory
+Message-ID: <Y2rHC5W1qi0PGwc2@kernel.org>
+References: <20221103092704.173391-1-dolinux.peng@gmail.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <CAM9d7ci8YX22Bp31ZD9k31NFN6pP3fbPKpNDNZYnmdZiqav1Vg@mail.gmail.com>
+In-Reply-To: <20221103092704.173391-1-dolinux.peng@gmail.com>
 X-Url:  http://acmel.wordpress.com
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-Em Mon, Nov 07, 2022 at 01:09:00PM -0800, Namhyung Kim escreveu:
-> Hi Masami,
-> 
-> On Fri, Nov 4, 2022 at 8:01 PM Masami Hiramatsu (Google)
-> <mhiramat@kernel.org> wrote:
-> >
-> > From: Masami Hiramatsu (Google) <mhiramat@kernel.org>
-> >
-> > Dwarf version 5 standard Sec 2.14 says that
-> >
-> >   Any debugging information entry representing the declaration of an object,
-> >   module, subprogram or type may have DW_AT_decl_file, DW_AT_decl_line and
-> >   DW_AT_decl_column attributes, each of whose value is an unsigned integer
-> >   constant.
-> >
-> > So it should be an unsigned integer data. Also, even though the standard
-> > doesn't clearly say the DW_AT_call_file is signed or unsigned, the
-> > elfutils (eu-readelf) interprets it as unsigned integer data and it is
-> > natural to handle it as unsigned integer data as same as DW_AT_decl_file.
-> > This changes the DW_AT_call_file as unsigned integer data too.
-> >
-> > Fixes: 3f4460a28fb2 ("perf probe: Filter out redundant inline-instances")
-> > Cc: stable@vger.kernel.org
-> > Signed-off-by: Masami Hiramatsu (Google) <mhiramat@kernel.org>
-> 
-> Acked-by: Namhyung Kim <namhyung@kernel.org>
+Em Thu, Nov 03, 2022 at 02:27:04AM -0700, Donglin Peng escreveu:
+> Commit 3af1dfdd51e0 ("perf build: Move perf_dlfilters.h in the
+> source tree") moved perf_dlfilters.h to the include/perf/ directory
+> while include/perf is ignored because it has 'perf' in the name.
+> Newly created files in the include/perf/ directory will be ignored.
 
 Thanks, applied.
 
 - Arnaldo
 
  
-> Thanks,
-> Namhyung
+> Can check:
 > 
+> Before:
+> $ touch tools/perf/include/perf/junk
+> $ git status | grep junk
+> $ git check-ignore -v tools/perf/include/perf/junk
+> tools/perf/.gitignore:6:perf    tools/perf/include/perf/junk
 > 
-> > ---
-> >  tools/perf/util/dwarf-aux.c |   21 ++++-----------------
-> >  1 file changed, 4 insertions(+), 17 deletions(-)
-> >
-> > diff --git a/tools/perf/util/dwarf-aux.c b/tools/perf/util/dwarf-aux.c
-> > index 30b36b525681..b07414409771 100644
-> > --- a/tools/perf/util/dwarf-aux.c
-> > +++ b/tools/perf/util/dwarf-aux.c
-> > @@ -315,19 +315,6 @@ static int die_get_attr_udata(Dwarf_Die *tp_die, unsigned int attr_name,
-> >         return 0;
-> >  }
-> >
-> > -/* Get attribute and translate it as a sdata */
-> > -static int die_get_attr_sdata(Dwarf_Die *tp_die, unsigned int attr_name,
-> > -                             Dwarf_Sword *result)
-> > -{
-> > -       Dwarf_Attribute attr;
-> > -
-> > -       if (dwarf_attr_integrate(tp_die, attr_name, &attr) == NULL ||
-> > -           dwarf_formsdata(&attr, result) != 0)
-> > -               return -ENOENT;
-> > -
-> > -       return 0;
-> > -}
-> > -
-> >  /**
-> >   * die_is_signed_type - Check whether a type DIE is signed or not
-> >   * @tp_die: a DIE of a type
-> > @@ -467,9 +454,9 @@ int die_get_data_member_location(Dwarf_Die *mb_die, Dwarf_Word *offs)
-> >  /* Get the call file index number in CU DIE */
-> >  static int die_get_call_fileno(Dwarf_Die *in_die)
-> >  {
-> > -       Dwarf_Sword idx;
-> > +       Dwarf_Word idx;
-> >
-> > -       if (die_get_attr_sdata(in_die, DW_AT_call_file, &idx) == 0)
-> > +       if (die_get_attr_udata(in_die, DW_AT_call_file, &idx) == 0)
-> >                 return (int)idx;
-> >         else
-> >                 return -ENOENT;
-> > @@ -478,9 +465,9 @@ static int die_get_call_fileno(Dwarf_Die *in_die)
-> >  /* Get the declared file index number in CU DIE */
-> >  static int die_get_decl_fileno(Dwarf_Die *pdie)
-> >  {
-> > -       Dwarf_Sword idx;
-> > +       Dwarf_Word idx;
-> >
-> > -       if (die_get_attr_sdata(pdie, DW_AT_decl_file, &idx) == 0)
-> > +       if (die_get_attr_udata(pdie, DW_AT_decl_file, &idx) == 0)
-> >                 return (int)idx;
-> >         else
-> >                 return -ENOENT;
-> >
+> After:
+> $ git status | grep junk
+> tools/perf/include/perf/junk
+> $ git check-ignore -v tools/perf/include/perf/junk
+> 
+> Add !include/perf/ to perf's .gitignore file.
+> 
+> Fixes: 3af1dfdd51e0 ("perf build: Move perf_dlfilters.h in the source tree")
+> Signed-off-by: Donglin Peng <dolinux.peng@gmail.com>
+> Acked-by: Adrian Hunter <adrian.hunter@intel.com>
+> ---
+> Changes in v2:
+> - add 'Fixes:' tag in commit message
+> - make commit message more clearer
+> ---
+>  tools/perf/.gitignore | 1 +
+>  1 file changed, 1 insertion(+)
+> 
+> diff --git a/tools/perf/.gitignore b/tools/perf/.gitignore
+> index a653311d9693..fd7a6ff9e7aa 100644
+> --- a/tools/perf/.gitignore
+> +++ b/tools/perf/.gitignore
+> @@ -4,6 +4,7 @@ PERF-GUI-VARS
+>  PERF-VERSION-FILE
+>  FEATURE-DUMP
+>  perf
+> +!include/perf/
+>  perf-read-vdso32
+>  perf-read-vdsox32
+>  perf-help
+> -- 
+> 2.25.1
 
 -- 
 
