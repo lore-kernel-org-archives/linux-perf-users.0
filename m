@@ -2,58 +2,58 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2C549C4332F
-	for <linux-perf-users@archiver.kernel.org>; Tue,  8 Nov 2022 07:35:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0EDF9C433FE
+	for <linux-perf-users@archiver.kernel.org>; Tue,  8 Nov 2022 07:35:54 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233376AbiKHHfl (ORCPT
+        id S233346AbiKHHfw (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Tue, 8 Nov 2022 02:35:41 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38802 "EHLO
+        Tue, 8 Nov 2022 02:35:52 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39102 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S233501AbiKHHfi (ORCPT
+        with ESMTP id S233546AbiKHHfs (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Tue, 8 Nov 2022 02:35:38 -0500
-Received: from mail-yw1-x1149.google.com (mail-yw1-x1149.google.com [IPv6:2607:f8b0:4864:20::1149])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1D77B26543
-        for <linux-perf-users@vger.kernel.org>; Mon,  7 Nov 2022 23:35:38 -0800 (PST)
-Received: by mail-yw1-x1149.google.com with SMTP id 00721157ae682-37342ba89dbso129142967b3.1
-        for <linux-perf-users@vger.kernel.org>; Mon, 07 Nov 2022 23:35:38 -0800 (PST)
+        Tue, 8 Nov 2022 02:35:48 -0500
+Received: from mail-yb1-xb49.google.com (mail-yb1-xb49.google.com [IPv6:2607:f8b0:4864:20::b49])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BD38A2DA86
+        for <linux-perf-users@vger.kernel.org>; Mon,  7 Nov 2022 23:35:45 -0800 (PST)
+Received: by mail-yb1-xb49.google.com with SMTP id l188-20020a2525c5000000b006cbcff0ab41so13405422ybl.4
+        for <linux-perf-users@vger.kernel.org>; Mon, 07 Nov 2022 23:35:45 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=google.com; s=20210112;
         h=cc:to:from:subject:references:mime-version:message-id:in-reply-to
          :date:from:to:cc:subject:date:message-id:reply-to;
-        bh=rOWTS1f0segyhlSbmQWDTAnD8D0Og1YhYgrPvc18rTU=;
-        b=EmO+WsH8dN6GDO6/5h7GCdX/Cnv9NhRf6EYSqpe4AqmNS2cH2SGTPbKtl6G7yQjMAz
-         CwnXS6hLmcL64RHhKL4RTxmTGjPO+Kkvjgsj+uoBkr1/5rDfcdZtlSB+/eq0kuXDIaWc
-         dCfNfHNVqf5PoEK+/GtMHiSjIPbLSPIE/PWCKmc2ikni/UHY4xXbhZR6in0lwhf3LVi3
-         3ovYrwdURdQKrKJtYn0r7TO6abLkNaf9kll6D0w5PKsLerjX9mioksy5T102jb4GTJ0b
-         UcNeWv0Nn7M91jk4hEFODz2prIJIrQoZvPF9JB83knRIcNQX0tDHnH8VEcYnrWmOfx4Z
-         Ohtw==
+        bh=05tcS3sAQNNzElcGvhYcBZhblO5ft3NSeZEHHXzfROg=;
+        b=Zg46QtP7hcn+P4fbi7N9yBIbX3ahfdclkZHaF/TnGZCqShkEQAWMz8WJFH+opdhDDp
+         eYIhkkaTDXJ7XiNR87v75N/uwhgnwsQhhuzlvIsgB4VIz3GF86py59diJgouGb/YSlfS
+         YfbQp7r4rXYLgS+7qiPfSqqHfFybuVnf6olvHf6PZnXtg1K3QEgo7CQA6v/WKbCtEBqZ
+         40MvScHyvg2QbhmdyfY4eM8F/aZdXvP6H0kIukoTGEDuBtHr5UVpJX9F4IGVcV5YdfPn
+         D/SIUvEuj/+wg+buoKXtv1MjWpe/ydZhBnKviqVonVtO+926/BJkhhbi8eORy7E5Nds3
+         1kog==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
         h=cc:to:from:subject:references:mime-version:message-id:in-reply-to
          :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=rOWTS1f0segyhlSbmQWDTAnD8D0Og1YhYgrPvc18rTU=;
-        b=Rxl5pBEcPKhen2o2XEpuN56vXCyBDihfQ/1WIIqGdkW8O3Xg7TjVavkI3Q7q8MLcwE
-         Qc6/oT5uRXxV8Ec5yDCRG2lum7kMvS1oQRK5nwts7HM7+rJAtoMhvriKs0zUPHaWZd1S
-         54ubI50oOhTUKQkMoGyyeElzQ73TjKKPyT/WkGJWa9GPmUO/vHntsvW7jl4BG1PqqmSa
-         rDuMVdsYxuHSysUG+IfIWMX1PILeQVB1IrkPEKr/9gKsRnQkJ+XjPTK3Wp48cl3Xgd10
-         jvQ96FbcfeC9kVLg7Ca6WmcAqtwBotEsXs7vFad8fEk3dtUs17f3d02r5BYpoJyztZik
-         X47Q==
-X-Gm-Message-State: ACrzQf0UrZMyAhY0lWNKnuu9xBAfMrAvIdbQKPJTdTYLveVIz3Fd8dzg
-        bXap+gXrp2v9cmRTMv8D+OpWunhZ6ucy
-X-Google-Smtp-Source: AMsMyM7LnZu/wFQy9EA+L0NQtPfNNkmgSpLUuGqf9WDzu0ltDYcO5eusfEvGywPc5TooCw2k5ktF6/93eYEA
+        bh=05tcS3sAQNNzElcGvhYcBZhblO5ft3NSeZEHHXzfROg=;
+        b=fygE3qvsaRsbLpS6S6QLtlFEh807umiD3uwaxPbGN/DKhgvGhxB+7baL8z88ScikC7
+         remZ/5YJQKYFEtiTGRZt7FJpMMRJ8xvhYHYSDRuDxdgNxfpsdoiSLsg8uEubL8EBxs/D
+         6nL0ewEHTtyXmcH0EtNoUa04SdzciaIbWgKNlqaPVE8kW9o8OstHKpFlL8Yww7hBGOGe
+         9npl8i/faAYU1efI021Q6CuXMF1s2CXSBnueTKKpPL3QwxX8LjVEL66SBq4rfCnGKlTB
+         VR5JzF9l9GKAkp+WWXfoWD9a4D8lqGt7XCcuO7UwfH1T3xpL4IqtQw0ie8Mff9hCGCPW
+         syRw==
+X-Gm-Message-State: ACrzQf15VY6gEHzlcTQD0yMvwNyczYgydyRd+TErrW09WhhbP2C7rw+W
+        l46UTOZLZ93tyWr2A9YGn2jwEFD10tD3
+X-Google-Smtp-Source: AMsMyM5H6bu38+gvGtVWkxb2IyyE+GkPaEZYykvvSKX12o5MsTAtI/Zh+9ZFWbEm7+FUwl/0gzd6rhudStIk
 X-Received: from irogers.svl.corp.google.com ([2620:15c:2d4:203:a697:9013:186f:ed07])
- (user=irogers job=sendgmr) by 2002:a5b:792:0:b0:6bd:2b3:a4de with SMTP id
- b18-20020a5b0792000000b006bd02b3a4demr879898ybq.123.1667892937391; Mon, 07
- Nov 2022 23:35:37 -0800 (PST)
-Date:   Mon,  7 Nov 2022 23:35:05 -0800
+ (user=irogers job=sendgmr) by 2002:a5b:c92:0:b0:688:436c:b2b with SMTP id
+ i18-20020a5b0c92000000b00688436c0b2bmr52487113ybq.436.1667892945099; Mon, 07
+ Nov 2022 23:35:45 -0800 (PST)
+Date:   Mon,  7 Nov 2022 23:35:06 -0800
 In-Reply-To: <20221108073518.1154450-1-irogers@google.com>
-Message-Id: <20221108073518.1154450-2-irogers@google.com>
+Message-Id: <20221108073518.1154450-3-irogers@google.com>
 Mime-Version: 1.0
 References: <20221108073518.1154450-1-irogers@google.com>
 X-Mailer: git-send-email 2.38.1.431.g37b22c650d-goog
-Subject: [PATCH v1 01/14] tools lib api: Add install target
+Subject: [PATCH v1 02/14] tools lib subcmd: Add install target
 From:   Ian Rogers <irogers@google.com>
 To:     Peter Zijlstra <peterz@infradead.org>,
         Ingo Molnar <mingo@redhat.com>,
@@ -74,23 +74,22 @@ Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-This allows libapi to be installed as a dependency.
+This allows libsubcmd to be installed as a dependency.
 
 Signed-off-by: Ian Rogers <irogers@google.com>
 ---
- tools/lib/api/Makefile | 49 ++++++++++++++++++++++++++++++++++++++++++
+ tools/lib/subcmd/Makefile | 49 +++++++++++++++++++++++++++++++++++++++
  1 file changed, 49 insertions(+)
 
-diff --git a/tools/lib/api/Makefile b/tools/lib/api/Makefile
-index e21e1b40b525..6629d0fd0130 100644
---- a/tools/lib/api/Makefile
-+++ b/tools/lib/api/Makefile
-@@ -15,6 +15,16 @@ LD ?= $(CROSS_COMPILE)ld
+diff --git a/tools/lib/subcmd/Makefile b/tools/lib/subcmd/Makefile
+index 8f1a09cdfd17..e96566f8991c 100644
+--- a/tools/lib/subcmd/Makefile
++++ b/tools/lib/subcmd/Makefile
+@@ -17,6 +17,15 @@ RM = rm -f
  
  MAKEFLAGS += --no-print-directory
  
 +INSTALL = install
-+
 +
 +# Use DESTDIR for installing into a different root directory.
 +# This is useful for building a package. The program will be
@@ -99,12 +98,12 @@ index e21e1b40b525..6629d0fd0130 100644
 +DESTDIR ?=
 +DESTDIR_SQ = '$(subst ','\'',$(DESTDIR))'
 +
- LIBFILE = $(OUTPUT)libapi.a
+ LIBFILE = $(OUTPUT)libsubcmd.a
  
- CFLAGS := $(EXTRA_WARNINGS) $(EXTRA_CFLAGS)
-@@ -45,10 +55,23 @@ RM = rm -f
+ CFLAGS := -ggdb3 -Wall -Wextra -std=gnu99 -fPIC
+@@ -48,6 +57,18 @@ CFLAGS += $(EXTRA_WARNINGS) $(EXTRA_CFLAGS)
  
- API_IN := $(OUTPUT)libapi-in.o
+ SUBCMD_IN := $(OUTPUT)libsubcmd-in.o
  
 +ifeq ($(LP64), 1)
 +  libdir_relative = lib64
@@ -121,14 +120,9 @@ index e21e1b40b525..6629d0fd0130 100644
  all:
  
  export srctree OUTPUT CC LD CFLAGS V
- include $(srctree)/tools/build/Makefile.include
-+include $(srctree)/tools/scripts/Makefile.include
- 
- all: fixdep $(LIBFILE)
- 
-@@ -58,6 +81,32 @@ $(API_IN): FORCE
- $(LIBFILE): $(API_IN)
- 	$(QUIET_AR)$(RM) $@ && $(AR) rcs $@ $(API_IN)
+@@ -61,6 +82,34 @@ $(SUBCMD_IN): FORCE
+ $(LIBFILE): $(SUBCMD_IN)
+ 	$(QUIET_AR)$(RM) $@ && $(AR) rcs $@ $(SUBCMD_IN)
  
 +define do_install_mkdir
 +	if [ ! -d '$(DESTDIR_SQ)$1' ]; then             \
@@ -150,14 +144,16 @@ index e21e1b40b525..6629d0fd0130 100644
 +
 +install_headers:
 +	$(call QUIET_INSTALL, headers) \
-+		$(call do_install,cpu.h,$(prefix)/include/api,644); \
-+		$(call do_install,debug.h,$(prefix)/include/api,644); \
-+		$(call do_install,io.h,$(prefix)/include/api,644);
++		$(call do_install,exec-cmd.h,$(prefix)/include/subcmd,644); \
++		$(call do_install,help.h,$(prefix)/include/subcmd,644); \
++		$(call do_install,pager.h,$(prefix)/include/subcmd,644); \
++		$(call do_install,parse-options.h,$(prefix)/include/subcmd,644); \
++		$(call do_install,run-command.h,$(prefix)/include/subcmd,644);
 +
 +install: install_lib install_headers
 +
  clean:
- 	$(call QUIET_CLEAN, libapi) $(RM) $(LIBFILE); \
+ 	$(call QUIET_CLEAN, libsubcmd) $(RM) $(LIBFILE); \
  	find $(or $(OUTPUT),.) -name \*.o -or -name \*.o.cmd -or -name \*.o.d | xargs $(RM)
 -- 
 2.38.1.431.g37b22c650d-goog
