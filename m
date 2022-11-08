@@ -2,108 +2,172 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EB017C4332F
-	for <linux-perf-users@archiver.kernel.org>; Tue,  8 Nov 2022 21:16:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3FDFAC4332F
+	for <linux-perf-users@archiver.kernel.org>; Tue,  8 Nov 2022 22:08:05 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229464AbiKHVQE (ORCPT
+        id S229547AbiKHWIC (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Tue, 8 Nov 2022 16:16:04 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44592 "EHLO
+        Tue, 8 Nov 2022 17:08:02 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39908 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229488AbiKHVQC (ORCPT
+        with ESMTP id S229508AbiKHWH4 (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Tue, 8 Nov 2022 16:16:02 -0500
-Received: from sin.source.kernel.org (sin.source.kernel.org [145.40.73.55])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id F0E3056564;
-        Tue,  8 Nov 2022 13:16:01 -0800 (PST)
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by sin.source.kernel.org (Postfix) with ESMTPS id 67221CE1CE6;
-        Tue,  8 Nov 2022 21:16:00 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 27B96C433D6;
-        Tue,  8 Nov 2022 21:15:58 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1667942158;
-        bh=pcLNw0Istjy7ekvKgb8Hilkkldz4DcMsYXFQYpKmAlM=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=hgu7z3UzcSjB/Z7s2EP8kGi4vJBqUD0Jy7owy+6TdGHdk43+aoz9JLnxRD7RsAmpi
-         vFOZIxUrEAbmLcpQ7CTx7Cso2JdZp/eLuF7EqyS90qZ8hpSec/DO4CXB1ny9mKjxRA
-         l8ZUOM28rh1HMvbDdYUHxji4vHb0kbBOdk0LjtPVutkaf1Ytk6VUdPgiWc+RzHmtua
-         tt4LePODoyltJopnsUjOPFL00VGKhraIVXSnphMVXqOAmpRL7VjE81LrR+B2WHjYlf
-         g/6ykC3YCYSNk6urDQR0SPg0kih41RxbbmBNJaoB8AlKk9my5rp3s3F4J6jsGUMENz
-         JYpctaswuiE1Q==
-Received: by quaco.ghostprotocols.net (Postfix, from userid 1000)
-        id C7B4E4034E; Tue,  8 Nov 2022 18:15:55 -0300 (-03)
-Date:   Tue, 8 Nov 2022 18:15:55 -0300
-From:   Arnaldo Carvalho de Melo <acme@kernel.org>
-To:     Donglin Peng <dolinux.peng@gmail.com>
-Cc:     peterz@infradead.org, adrian.hunter@intel.com,
-        linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org
-Subject: Re: [PATCH v2] perf tools: exclude the include/perf/ directory
-Message-ID: <Y2rHC5W1qi0PGwc2@kernel.org>
-References: <20221103092704.173391-1-dolinux.peng@gmail.com>
+        Tue, 8 Nov 2022 17:07:56 -0500
+Received: from mail-oi1-f181.google.com (mail-oi1-f181.google.com [209.85.167.181])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 720B16317B;
+        Tue,  8 Nov 2022 14:07:51 -0800 (PST)
+Received: by mail-oi1-f181.google.com with SMTP id v81so16998802oie.5;
+        Tue, 08 Nov 2022 14:07:51 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=Hc+pFzeni5c3FOxhO6gVInX/MV2dGrMGFiE5k1b00W4=;
+        b=pUARpJpPypKkIHi7vfr9GtmuFfW79+qox7cczZ5SPLhVUS75/S6mH87WrZsFuitl1l
+         Fw9prWDOikJI9eM1V3wPMQsIrI4imrm2o/UaVBzkhBydu6IeyL5iT5hDqWt6bcRRu+ND
+         YxorYKRVEtB00/CJ54K8EfC87W/JlVVxWyuyrGhppLURtbWjSe5OiVPkzuSXMU4OqaKu
+         ZVOHosmyHdYPMk7+mmphtcsKWflUZlBTY7TvpljPyEiBl61dJkb9AN9dAt4Ibn3TlP9y
+         V+7sGeV55LHq6nm0az9/G1cjJxK18VWeWE/YPWI70XqG8ZxVlRZQKHiyl4yvuM/MjHP0
+         vwVg==
+X-Gm-Message-State: ACrzQf0+iEdNDs4O+5G69JND8fd5SbOFCOisyiwFs3I9uqFkxoO3ctQL
+        mq7UC2/h850fCzwTg4jLx7NzlIRZIX/hL/WQrDg=
+X-Google-Smtp-Source: AMsMyM53NDwHQRXcGZbkw/oYYH09GXawLDVqcVUJ1RfguMAps5EL1CH5g0vd3CTOccBdtU+pEc9UdjrO3E6ChBygfEk=
+X-Received: by 2002:aca:2b0a:0:b0:35a:d72:5504 with SMTP id
+ i10-20020aca2b0a000000b0035a0d725504mr713590oik.209.1667945270621; Tue, 08
+ Nov 2022 14:07:50 -0800 (PST)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20221103092704.173391-1-dolinux.peng@gmail.com>
-X-Url:  http://acmel.wordpress.com
+References: <20221107213314.3239159-1-namhyung@kernel.org> <20221107213314.3239159-6-namhyung@kernel.org>
+ <Y2q/0LNDCspN0Tm8@kernel.org>
+In-Reply-To: <Y2q/0LNDCspN0Tm8@kernel.org>
+From:   Namhyung Kim <namhyung@kernel.org>
+Date:   Tue, 8 Nov 2022 14:07:39 -0800
+Message-ID: <CAM9d7chsOAQ_y3Z8ZUPzmcAFfS5x8E2s7eH68Nu792TG-ZnzdA@mail.gmail.com>
+Subject: Re: [PATCH 5/9] perf stat: Fix --metric-only --json output
+To:     Arnaldo Carvalho de Melo <acme@kernel.org>
+Cc:     Jiri Olsa <jolsa@kernel.org>, Ingo Molnar <mingo@kernel.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Ian Rogers <irogers@google.com>,
+        Adrian Hunter <adrian.hunter@intel.com>,
+        linux-perf-users@vger.kernel.org,
+        Kan Liang <kan.liang@linux.intel.com>,
+        Zhengjun Xing <zhengjun.xing@linux.intel.com>,
+        James Clark <james.clark@arm.com>
+Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-Em Thu, Nov 03, 2022 at 02:27:04AM -0700, Donglin Peng escreveu:
-> Commit 3af1dfdd51e0 ("perf build: Move perf_dlfilters.h in the
-> source tree") moved perf_dlfilters.h to the include/perf/ directory
-> while include/perf is ignored because it has 'perf' in the name.
-> Newly created files in the include/perf/ directory will be ignored.
+Hi Arnaldo,
 
-Thanks, applied.
+On Tue, Nov 8, 2022 at 12:45 PM Arnaldo Carvalho de Melo
+<acme@kernel.org> wrote:
+>
+> Em Mon, Nov 07, 2022 at 01:33:10PM -0800, Namhyung Kim escreveu:
+> > Currently it prints all metric headers for JSON output.  But actually it
+> > skips some metrics with valid_only_metric().  So the output looks like:
+> >
+> >   $ perf stat --metric-only --json true
+> >   {"unit" : "CPUs utilized", "unit" : "/sec", "unit" : "/sec", "unit" : "/sec", "unit" : "GHz", "unit" : "insn per cycle", "unit" : "/sec", "unit" : "branch-misses of all branches"}
+> >   {"metric-value" : "3.861"}{"metric-value" : "0.79"}{"metric-value" : "3.04"}
+> >
+> > As you can see there are 8 units in the header but only 3 metric-values
+> > are there.  It should skip the unused headers as well.  Also each unit
+> > should be printed as a separate object like metric values.
+> >
+> > With this patch:
+> >
+> >   $ perf stat --metric-only --json true
+> >   {"unit" : "GHz"}{"unit" : "insn per cycle"}{"unit" : "branch-misses of all branches"}
+> >   {"metric-value" : "4.166"}{"metric-value" : "0.73"}{"metric-value" : "2.96"}
+>
+> Can we get a Fixes tag for this one?
 
-- Arnaldo
+I think this is it:
 
- 
-> Can check:
-> 
-> Before:
-> $ touch tools/perf/include/perf/junk
-> $ git status | grep junk
-> $ git check-ignore -v tools/perf/include/perf/junk
-> tools/perf/.gitignore:6:perf    tools/perf/include/perf/junk
-> 
-> After:
-> $ git status | grep junk
-> tools/perf/include/perf/junk
-> $ git check-ignore -v tools/perf/include/perf/junk
-> 
-> Add !include/perf/ to perf's .gitignore file.
-> 
-> Fixes: 3af1dfdd51e0 ("perf build: Move perf_dlfilters.h in the source tree")
-> Signed-off-by: Donglin Peng <dolinux.peng@gmail.com>
-> Acked-by: Adrian Hunter <adrian.hunter@intel.com>
-> ---
-> Changes in v2:
-> - add 'Fixes:' tag in commit message
-> - make commit message more clearer
-> ---
->  tools/perf/.gitignore | 1 +
->  1 file changed, 1 insertion(+)
-> 
-> diff --git a/tools/perf/.gitignore b/tools/perf/.gitignore
-> index a653311d9693..fd7a6ff9e7aa 100644
-> --- a/tools/perf/.gitignore
-> +++ b/tools/perf/.gitignore
-> @@ -4,6 +4,7 @@ PERF-GUI-VARS
->  PERF-VERSION-FILE
->  FEATURE-DUMP
->  perf
-> +!include/perf/
->  perf-read-vdso32
->  perf-read-vdsox32
->  perf-help
-> -- 
-> 2.25.1
+df936cadfb58 ("perf stat: Add JSON output option")
 
--- 
+But this also depends on patch 4.  Do you want me to rebase
+this not to depend on it?
 
-- Arnaldo
+Thanks,
+Namhyung
+
+>
+> > Signed-off-by: Namhyung Kim <namhyung@kernel.org>
+> > ---
+> >  tools/perf/util/stat-display.c | 22 +++-------------------
+> >  1 file changed, 3 insertions(+), 19 deletions(-)
+> >
+> > diff --git a/tools/perf/util/stat-display.c b/tools/perf/util/stat-display.c
+> > index 115477461224..515fb6db3d67 100644
+> > --- a/tools/perf/util/stat-display.c
+> > +++ b/tools/perf/util/stat-display.c
+> > @@ -430,12 +430,12 @@ static void print_metric_header(struct perf_stat_config *config,
+> >           os->evsel->priv != os->evsel->evlist->selected->priv)
+> >               return;
+> >
+> > -     if (!valid_only_metric(unit) && !config->json_output)
+> > +     if (!valid_only_metric(unit))
+> >               return;
+> >       unit = fixunit(tbuf, os->evsel, unit);
+> >
+> >       if (config->json_output)
+> > -             fprintf(os->fh, "\"unit\" : \"%s\"", unit);
+> > +             fprintf(os->fh, "{\"unit\" : \"%s\"}", unit);
+> >       else if (config->csv_output)
+> >               fprintf(os->fh, "%s%s", unit, config->csv_sep);
+> >       else
+> > @@ -847,10 +847,6 @@ static void print_metric_headers(struct perf_stat_config *config,
+> >               .new_line = new_line_metric,
+> >               .force_header = true,
+> >       };
+> > -     bool first = true;
+> > -
+> > -     if (config->json_output && !config->interval)
+> > -             fprintf(config->output, "{");
+> >
+> >       if (prefix && !config->json_output)
+> >               fprintf(config->output, "%s", prefix);
+> > @@ -871,18 +867,12 @@ static void print_metric_headers(struct perf_stat_config *config,
+> >       evlist__for_each_entry(evlist, counter) {
+> >               os.evsel = counter;
+> >
+> > -             if (!first && config->json_output)
+> > -                     fprintf(config->output, ", ");
+> > -             first = false;
+> > -
+> >               perf_stat__print_shadow_stats(config, counter, 0,
+> >                                             0,
+> >                                             &out,
+> >                                             &config->metric_events,
+> >                                             &rt_stat);
+> >       }
+> > -     if (config->json_output)
+> > -             fprintf(config->output, "}");
+> >       fputc('\n', config->output);
+> >  }
+> >
+> > @@ -954,14 +944,8 @@ static void print_interval(struct perf_stat_config *config,
+> >               }
+> >       }
+> >
+> > -     if ((num_print_interval == 0 || config->interval_clear)
+> > -                      && metric_only && !config->json_output)
+> > +     if ((num_print_interval == 0 || config->interval_clear) && metric_only)
+> >               print_metric_headers(config, evlist, " ", true);
+> > -     if ((num_print_interval == 0 || config->interval_clear)
+> > -                      && metric_only && config->json_output) {
+> > -             fprintf(output, "{");
+> > -             print_metric_headers(config, evlist, " ", true);
+> > -     }
+> >       if (++num_print_interval == 25)
+> >               num_print_interval = 0;
+> >  }
+> > --
+> > 2.38.1.431.g37b22c650d-goog
+>
+> --
+>
+> - Arnaldo
