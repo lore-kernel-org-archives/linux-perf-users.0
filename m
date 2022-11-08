@@ -2,146 +2,190 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1AA02C4332F
-	for <linux-perf-users@archiver.kernel.org>; Tue,  8 Nov 2022 08:36:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B6A7AC433FE
+	for <linux-perf-users@archiver.kernel.org>; Tue,  8 Nov 2022 11:49:43 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233494AbiKHIgB (ORCPT
+        id S233528AbiKHLtm (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Tue, 8 Nov 2022 03:36:01 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46238 "EHLO
+        Tue, 8 Nov 2022 06:49:42 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49136 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S233437AbiKHIgA (ORCPT
+        with ESMTP id S233203AbiKHLtl (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Tue, 8 Nov 2022 03:36:00 -0500
-X-Greylist: delayed 1070 seconds by postgrey-1.37 at lindbergh.monkeyblade.net; Tue, 08 Nov 2022 00:35:59 PST
-Received: from mx2.zhaoxin.com (mx2.zhaoxin.com [203.110.167.99])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3B359E0A3
-        for <linux-perf-users@vger.kernel.org>; Tue,  8 Nov 2022 00:35:59 -0800 (PST)
-X-ASG-Debug-ID: 1667895486-1eb14e7e6373080001-i5rUwQ
-Received: from ZXSHMBX3.zhaoxin.com (ZXSHMBX3.zhaoxin.com [10.28.252.165]) by mx2.zhaoxin.com with ESMTP id 6ZgbfOXCQ0FcdbrC (version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NO); Tue, 08 Nov 2022 16:18:06 +0800 (CST)
-X-Barracuda-Envelope-From: SilviaZhao-oc@zhaoxin.com
-X-Barracuda-RBL-Trusted-Forwarder: 10.28.252.165
-Received: from ZXBJMBX02.zhaoxin.com (10.29.252.6) by ZXSHMBX3.zhaoxin.com
- (10.28.252.165) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.12; Tue, 8 Nov
- 2022 16:18:06 +0800
-Received: from [10.29.8.47] (10.29.8.47) by ZXBJMBX02.zhaoxin.com
- (10.29.252.6) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.12; Tue, 8 Nov
- 2022 16:18:04 +0800
-X-Barracuda-RBL-Trusted-Forwarder: 10.28.252.165
-Message-ID: <3c7da7fd-402f-c74f-c96c-0e88828eab58@zhaoxin.com>
-X-Barracuda-RBL-Trusted-Forwarder: 10.29.8.47
-Date:   Tue, 8 Nov 2022 16:18:02 +0800
+        Tue, 8 Nov 2022 06:49:41 -0500
+Received: from mail-pg1-x52d.google.com (mail-pg1-x52d.google.com [IPv6:2607:f8b0:4864:20::52d])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 573DB11811
+        for <linux-perf-users@vger.kernel.org>; Tue,  8 Nov 2022 03:49:40 -0800 (PST)
+Received: by mail-pg1-x52d.google.com with SMTP id h193so13151043pgc.10
+        for <linux-perf-users@vger.kernel.org>; Tue, 08 Nov 2022 03:49:40 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=zfjKxjXUk1H8XvV8Joi7KrSFnmtiI6pTn2vr1B8zM+U=;
+        b=BqUP7cf2VkeswKuK/Q76Q9SSNQ0qyv9NkFINWVV3RFyhGZsqVCcy3ekIipKPj6x1dr
+         yxP8MFlaJ+WBY6dD7XPy82RD/wEVHkhif73yRTZbtPsxNheJMXaorL1/QoRhiGKfqa0h
+         F4kzKKXeBsvx0OsW7FF37umqgGDj1gbKN8VJ3tgVLpCWKL1BrtjMU1PKqgKbqnD48F1u
+         5QdpuLvi+dCbUSDWEyt2ILKxNCFpHhn83c4tt7xXUlkDSXn7TkoDOUTWGe24YHrWEv43
+         zb+6pT8tS97Oy0EjMX8AwxkKnWD5Byz0JDWE7jHavUhBkiwiJNGqxl5ULMVk3Z95uh6p
+         4mTw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=zfjKxjXUk1H8XvV8Joi7KrSFnmtiI6pTn2vr1B8zM+U=;
+        b=vDBGw1wiSLk4oTgpjK+KAIgUHao5mNLcOHLGY8sr+1RyPKVYFozhhbgWrDzEkStLhT
+         rphpz570/+0eu7Jtcq/8DrACCcfEuvFgeMnb4KhVAmO02GTHdsvntD0zPljwUGl5aD1o
+         C45fhwR/Dp7+cTAWcRzTIGQC5I+KI1zmCkXaU5RZF3FhoCOoabJKkRANT4M4FKN2RUIp
+         4WwnJztHlcfP1Lbc3fi/xcN347N7Yafb74e7gmFEekimA+E/Uo+jNKmPo9HHsw8HxyIn
+         dVE7AEMOUE8hkMaTjdYjcqVnS1gcdsR6gnhrjHWEJFp+CdFlykzmbUVBFWIc5UUKl8kt
+         kutA==
+X-Gm-Message-State: ANoB5pmG8cHW/4edCW+Iyp2XpMv6kjiq7k97jdgNkGSyb8vxU39glbj8
+        +NBzf0jkr1Cad5VO5TqPyh7/iA==
+X-Google-Smtp-Source: AA0mqf6vjDfIbDyVFeo3AvJ0KSgLGlwmsRKEpVVOPRuGdMbXRnbrm0st88ePvjQJeYvlXX5SXVgWWQ==
+X-Received: by 2002:a63:4d52:0:b0:470:71df:a461 with SMTP id n18-20020a634d52000000b0047071dfa461mr10043218pgl.209.1667908179704;
+        Tue, 08 Nov 2022 03:49:39 -0800 (PST)
+Received: from leoy-huanghe ([218.82.143.143])
+        by smtp.gmail.com with ESMTPSA id d15-20020a17090a7bcf00b0020d51aefb82sm5933271pjl.19.2022.11.08.03.49.33
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 08 Nov 2022 03:49:38 -0800 (PST)
+Date:   Tue, 8 Nov 2022 19:49:31 +0800
+From:   Leo Yan <leo.yan@linaro.org>
+To:     Marc Zyngier <maz@kernel.org>
+Cc:     James Morse <james.morse@arm.com>,
+        Alexandru Elisei <alexandru.elisei@arm.com>,
+        Suzuki K Poulose <suzuki.poulose@arm.com>,
+        Oliver Upton <oliver.upton@linux.dev>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Will Deacon <will@kernel.org>,
+        Arnaldo Carvalho de Melo <acme@kernel.org>,
+        John Garry <john.garry@huawei.com>,
+        James Clark <james.clark@arm.com>,
+        Mike Leach <mike.leach@linaro.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Jiri Olsa <jolsa@kernel.org>,
+        Namhyung Kim <namhyung@kernel.org>,
+        linux-arm-kernel@lists.infradead.org, kvmarm@lists.linux.dev,
+        kvmarm@lists.cs.columbia.edu, linux-kernel@vger.kernel.org,
+        linux-perf-users@vger.kernel.org
+Subject: Re: [PATCH v1 3/3] perf arm64: Support virtual CPU ID for kvm-stat
+Message-ID: <Y2pCS3gLqspzDgry@leoy-huanghe>
+References: <20221105072311.8214-1-leo.yan@linaro.org>
+ <20221105072311.8214-4-leo.yan@linaro.org>
+ <868rkpr0mv.wl-maz@kernel.org>
+ <Y2kabsQdddiX4G+O@leoy-huanghe.lan>
+ <86y1smpyec.wl-maz@kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
- Thunderbird/91.7.0
-From:   silviazhaooc <silviazhao-oc@zhaoxin.com>
-Subject: Fwd: [PATCH] x86/perf: Fixed kernel panic during boot on Nano
- processor.
-To:     Borislav Petkov <bp@alien8.de>
-X-ASG-Orig-Subj: Fwd: [PATCH] x86/perf: Fixed kernel panic during boot on Nano
- processor.
-CC:     <peterz@infradead.org>, <mingo@redhat.com>, <acme@kernel.org>,
-        <mark.rutland@arm.com>, <alexander.shishkin@linux.intel.com>,
-        <jolsa@kernel.org>, <namhyung@kernel.org>, <tglx@linutronix.de>,
-        <dave.hansen@linux.intel.com>, <x86@kernel.org>, <hpa@zytor.com>,
-        <linux-perf-users@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        "Cobe Chen(BJ-RD)" <CobeChen@zhaoxin.com>,
-        "Louis Qi(BJ-RD)" <LouisQi@zhaoxin.com>,
-        "Silvia Zhao(BJ-RD)" <SilviaZhao@zhaoxin.com>,
-        <8vvbbqzo567a@nospam.xutrox.com>
-References: <3a7a5935-05ed-3054-b3fc-292202eef845@zhaoxin.com>
-Content-Language: en-US
-In-Reply-To: <3a7a5935-05ed-3054-b3fc-292202eef845@zhaoxin.com>
-Content-Type: text/plain; charset="UTF-8"; format=flowed
-Content-Transfer-Encoding: 7bit
-X-Originating-IP: [10.29.8.47]
-X-ClientProxiedBy: ZXSHCAS2.zhaoxin.com (10.28.252.162) To
- ZXBJMBX02.zhaoxin.com (10.29.252.6)
-X-Barracuda-Connect: ZXSHMBX3.zhaoxin.com[10.28.252.165]
-X-Barracuda-Start-Time: 1667895486
-X-Barracuda-Encrypted: ECDHE-RSA-AES128-GCM-SHA256
-X-Barracuda-URL: https://10.28.252.36:4443/cgi-mod/mark.cgi
-X-Virus-Scanned: by bsmtpd at zhaoxin.com
-X-Barracuda-Scan-Msg-Size: 2404
-X-Barracuda-BRTS-Status: 1
-X-Barracuda-Bayes: INNOCENT GLOBAL 0.4987 1.0000 0.0000
-X-Barracuda-Spam-Score: 0.00
-X-Barracuda-Spam-Status: No, SCORE=0.00 using global scores of TAG_LEVEL=1000.0 QUARANTINE_LEVEL=1000.0 KILL_LEVEL=9.0 tests=
-X-Barracuda-Spam-Report: Code version 3.2, rules version 3.2.3.101989
-        Rule breakdown below
-         pts rule name              description
-        ---- ---------------------- --------------------------------------------------
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <86y1smpyec.wl-maz@kernel.org>
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
+On Mon, Nov 07, 2022 at 03:39:07PM +0000, Marc Zyngier wrote:
 
-On 2022/11/3 18:07, Borislav Petkov wrote:
-> 
-> On Thu, Nov 03, 2022 at 11:23:04AM +0800, silviazhao-oc wrote:
->> Nano processor may not fully support rdpmc instruction,
-> 
-> What does that even mean? Not fully support?
+[...]
 
-rdpmc instruction on Nano processor has a limitation that it cannot 
-access fixed performance counter, while it can read general pmc counter 
-successfully.
+> > > Please educate me: how useful is it to filter on a vcpu number across
+> > > all VMs? What sense does it even make?
+> > 
+> > Now "perf kvm" tool is not sophisticated since it doesn't capture VMID
+> > and virtual CPU ID together.
+> 
+> VMID is not a relevant indicator anyway, as it can change at any
+> point.
 
-> 
->> it works well for reading general pmc counter, but will lead
->> GP(general protection) when accessing fixed pmc counter.
-> 
-> RDPMC will #GP when the perf counter specified cannot be read.
-> 
-> AFAICT, that is RCX: 0000000040000001 which looks like perf counter index 1 with INTEL_PMC_FIXED_RDPMC_BASE ORed in.
+Thanks for correction.  IIUC, VMID is not fixed for virtual machine, it
+can be re-allocated after overflow.
 
-Yes, RCX: 0000000040000001 indicates we are accessing fixed performance 
-counters with index 1.
+> But that's only to show that everybody has a different view on
+> what they need to collect. At which point, we need to provide an
+> infrastructure for data extraction, and not the data itself.
 
-> 
->> Furthermore, family/mode information is same between Nano processor
->> and ZX-C processor, it leads to zhaoxin pmu driver is wrongly loaded
->> for Nano processor, which resulting boot kernal fail.
-> 
-> So *that* is the real problem - it tries to access perf counters thinking it is running on architectural perf counters implementation but nano doesn't have that.
+Totally agree.
 
-Actually Nano do support architectural perf counters. But due to rdpmc 
-instruction issue, accessing fixed counters via rdpmc will cause GP.
+[...]
 
+> > Option 3: As you suggested, I can bind KVM tracepoints with a eBPF
+> > program and the eBPF program records perf events.
+> > 
+> > When I reviewed Arm64's kvm_entry / kvm_exit trace events, they don't
+> > have vcpu context in the arguments, this means I need to add new trace
+> > events for accessing "vcpu" context.
 > 
->> To solve this problem, stepping information will be checked to
->> distinguish between Nano processor and ZX-C processor.
+> I'm not opposed to adding new trace{point,hook}s if you demonstrate
+> that they are generic enough or will never need to evolve.
 > 
-> Why doesn't that ZXC thing doesn't have a CPUID flag to check instead of looking at models and steppings and thus confusing it with a nano CPU?
+> > 
+> > Option 1 and 3 both need to add trace events; option 1 is more
+> > straightforward solution and this is why it was choosed in current patch
+> > set.
+> > 
+> > I recognized that I made a mistake, actually we can modify the trace
+> > event's definition for kvm_entry / kvm_exit, note we only modify the
+> > trace event's arguments, this will change the trace function's
+> > definition but it will not break ABI (the format is exactly same for
+> > the user space).  Below changes demonstrate what's my proposing:
+> > 
+> > diff --git a/arch/arm64/kvm/arm.c b/arch/arm64/kvm/arm.c
+> > index 94d33e296e10..16f6b61abfec 100644
+> > --- a/arch/arm64/kvm/arm.c
+> > +++ b/arch/arm64/kvm/arm.c
+> > @@ -917,7 +917,7 @@ int kvm_arch_vcpu_ioctl_run(struct kvm_vcpu *vcpu)
+> >                 /**************************************************************
+> >                  * Enter the guest
+> >                  */
+> > -               trace_kvm_entry(*vcpu_pc(vcpu));
+> > +               trace_kvm_entry(vcpu);
+> >                 guest_timing_enter_irqoff();
+> >  
+> >                 ret = kvm_arm_vcpu_enter_exit(vcpu);
+> > diff --git a/arch/arm64/kvm/trace_arm.h b/arch/arm64/kvm/trace_arm.h
+> > index 33e4e7dd2719..9df4fd30093c 100644
+> > --- a/arch/arm64/kvm/trace_arm.h
+> > +++ b/arch/arm64/kvm/trace_arm.h
+> > @@ -12,15 +12,15 @@
+> >   * Tracepoints for entry/exit to guest
+> >   */
+> >  TRACE_EVENT(kvm_entry,
+> > -       TP_PROTO(unsigned long vcpu_pc),
+> > -       TP_ARGS(vcpu_pc),
+> > +       TP_PROTO(struct kvm_vcpu *vcpu),
+> > +       TP_ARGS(vcpu),
+> >  
+> >         TP_STRUCT__entry(
+> >                 __field(        unsigned long,  vcpu_pc         )
+> >         ),
+> >  
+> >         TP_fast_assign(
+> > -               __entry->vcpu_pc                = vcpu_pc;
+> > +               __entry->vcpu_pc                = *vcpu_pc(vcpu);
+> >         ),
+> >  
+> >         TP_printk("PC: 0x%016lx", __entry->vcpu_pc)
+> > 
+> > Please let me know your opinion, if you don't object, I can move
+> > forward with this approach.
+> 
+> I have no issue with this if this doesn't change anything else.
 
-Nano and ZXC both support architectural perf counters, and they both 
-have a CPUID flag to check that. The difference is Nano has rdpmc issue 
-while ZXC does not, which cannot be checked through CPUID.
+Thanks for confirmation.
 
-> 
->> [https://bugzilla.kernel.org/show_bug.cgi?id=212389]
->>
->> Reported-by: Arjan <8vvbbqzo567a@nospam.xutrox.com>
-> 
-> Does Arjan have a last name?
+> And if you can make use of this with a BPF program and get to the same
+> result as your initial patch, then please submit it for inclusion in
+> the kernel as an example. We can then point people to it next time
+> this crop up (probably before Xmas).
 
-Sorry, I don't know Arjan either.
+Will do.
 
-> 
->> Signed-off-by: silviazhao-oc <silviazhao-oc@zhaoxin.com>
-> 
-> I'm assuming your name is properly spelled "Silvia Zhao" and not in a single word with a "-oc" string appended at the end, yes?
+Just head up, if everything is going well, I will place the eBPF
+program in the folder tools/perf/examples/bpf/, this can be easy for
+integration and release with perf tool.
 
-Yes, Silvia Zhao is my name.
-Thx for your kindly reply.
-
-> 
-> Thx.
-> 
-> --
-> Regards/Gruss,
->      Boris.
-> 
-> https://people.kernel.org/tglx/notes-about-netiquette
+Thanks,
+Leo
