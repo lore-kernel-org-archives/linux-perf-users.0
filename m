@@ -2,100 +2,131 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 28CFEC4332F
-	for <linux-perf-users@archiver.kernel.org>; Tue,  8 Nov 2022 22:49:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BC32FC433FE
+	for <linux-perf-users@archiver.kernel.org>; Tue,  8 Nov 2022 23:14:58 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229531AbiKHWtV (ORCPT
+        id S230006AbiKHXO5 (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Tue, 8 Nov 2022 17:49:21 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43720 "EHLO
+        Tue, 8 Nov 2022 18:14:57 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57528 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229492AbiKHWtU (ORCPT
+        with ESMTP id S229817AbiKHXO4 (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Tue, 8 Nov 2022 17:49:20 -0500
-Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTP id 692286035B;
-        Tue,  8 Nov 2022 14:49:19 -0800 (PST)
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 56F2F1FB;
-        Tue,  8 Nov 2022 14:49:25 -0800 (PST)
-Received: from [10.57.68.207] (unknown [10.57.68.207])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 83CFB3F703;
-        Tue,  8 Nov 2022 14:49:17 -0800 (PST)
-Message-ID: <994b80f8-5c92-f82c-d43a-cc24fb002c98@arm.com>
-Date:   Tue, 8 Nov 2022 22:49:16 +0000
+        Tue, 8 Nov 2022 18:14:56 -0500
+Received: from mail-ua1-x931.google.com (mail-ua1-x931.google.com [IPv6:2607:f8b0:4864:20::931])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id AA0CB1ADA7
+        for <linux-perf-users@vger.kernel.org>; Tue,  8 Nov 2022 15:14:51 -0800 (PST)
+Received: by mail-ua1-x931.google.com with SMTP id c31so5115917uae.10
+        for <linux-perf-users@vger.kernel.org>; Tue, 08 Nov 2022 15:14:51 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20210112;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:from:to:cc:subject:date:message-id:reply-to;
+        bh=JYCuoIUGPE42ilDgGQytWyIslRZ6M8LJ2EAILalAs0o=;
+        b=To94lOqRjXZBN9kxBxfUKjfkICaQJCt722ripndWA1UY9X+AfSgYPwQWq9LOlL2O+h
+         3jyMOX2C9XRbqiI3mDa+ZNuRpWvUc4pDogFxLpy03rL3osnomGoZ5iWgo4voJBP8s9cj
+         WQOALsjljhqPfVnw5DXn6SlIa17W0NWNuWswFWvGI5LoobrBCcmih+ba6FwrgOTfQyMj
+         +GHf56vE6hPSz6X4/+jQ/7zYzBsMXK/pqWcVhJmgZOLYSWLd+tXpp5+a9mRi9m75Lvzs
+         Tm9uNZPa23PvJUdfhCscZjuVWX9kPMQx9HROz6gPJ/CEQS+aot/pWg3yQWwvqrYW5pmI
+         p7+g==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=JYCuoIUGPE42ilDgGQytWyIslRZ6M8LJ2EAILalAs0o=;
+        b=MwzgXu/S5FcN2VAFVA3CSipaH+uvElt0nydv/qTTlsgbllknhKOWi1fKA3w/3Vytr3
+         V0XicpvQkxRBGI+EM2EF+rTgbAN2MsFWClmfVC1CYL9OJjVzw0IcBRPjPwbMxejuKILA
+         Uy3PC9zQLJ4Gw0X5dcgQcamO6Dn72sg0S8hE5Egvq31yi6E04aXF38DYitfsMNp0xqFn
+         /VIVZIKzfw8dzK3QyhulMASK44iUyy0Eox5nsUf+IOtSdq7zrV/biI0y3mzVnB4/tNSx
+         dL8RFvKG/rhXz6CUVT/r6MliHM3u4ZjmiR9mL3vmXwIe3i5PqvYQOc11ybpvncptjuxi
+         ZuXg==
+X-Gm-Message-State: ACrzQf2W2MqWuxco+268k5nIkbsRIWQRrtwYrKYVMPu4ZqA2M9dlO/p/
+        r1UqD4CvQMURZ5x7Z+5qmq8s2vFulZQEq6+oGzb54w==
+X-Google-Smtp-Source: AMsMyM4w6MA55Zlevm3yMSNfNR488eK8ZwVcC6yOcOTIdorfxOZ0OYKwVQ9Khel5Eul5oJ8dDOvDX/NrktnnFcGHqNg=
+X-Received: by 2002:ab0:390f:0:b0:3af:3c62:bea2 with SMTP id
+ b15-20020ab0390f000000b003af3c62bea2mr18747871uaw.21.1667949290602; Tue, 08
+ Nov 2022 15:14:50 -0800 (PST)
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.15; rv:102.0)
- Gecko/20100101 Thunderbird/102.4.1
-Subject: Re: [PATCH v5 13/14] coresight: events: PERF_RECORD_AUX_OUTPUT_HW_ID
- used for Trace ID
-To:     Mike Leach <mike.leach@linaro.org>, coresight@lists.linaro.org,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
-Cc:     mathieu.poirier@linaro.org, peterz@infradead.org, mingo@redhat.com,
-        acme@kernel.org, linux-perf-users@vger.kernel.org,
-        leo.yan@linaro.org, quic_jinlmao@quicinc.com
-References: <20221101163103.17921-1-mike.leach@linaro.org>
- <20221101163103.17921-14-mike.leach@linaro.org>
-From:   Suzuki K Poulose <suzuki.poulose@arm.com>
-In-Reply-To: <20221101163103.17921-14-mike.leach@linaro.org>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+References: <20221107213314.3239159-1-namhyung@kernel.org> <20221107213314.3239159-3-namhyung@kernel.org>
+In-Reply-To: <20221107213314.3239159-3-namhyung@kernel.org>
+From:   Ian Rogers <irogers@google.com>
+Date:   Tue, 8 Nov 2022 15:14:39 -0800
+Message-ID: <CAP-5=fW+vsMEVCoGbouMbH0GQ875KsMKwJ9NKhCecYd7PFESWA@mail.gmail.com>
+Subject: Re: [PATCH 2/9] perf stat: Increase metric length to align outputs
+To:     Namhyung Kim <namhyung@kernel.org>
+Cc:     Arnaldo Carvalho de Melo <acme@kernel.org>,
+        Jiri Olsa <jolsa@kernel.org>, Ingo Molnar <mingo@kernel.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Adrian Hunter <adrian.hunter@intel.com>,
+        linux-perf-users@vger.kernel.org,
+        Kan Liang <kan.liang@linux.intel.com>,
+        Zhengjun Xing <zhengjun.xing@linux.intel.com>,
+        James Clark <james.clark@arm.com>
+Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-On 01/11/2022 16:31, Mike Leach wrote:
-> Use the perf_report_aux_output_id() call to output the CoreSight trace ID
-> and associated CPU as a PERF_RECORD_AUX_OUTPUT_HW_ID record in the
-> perf.data file.
-> 
-> Signed-off-by: Mike Leach <mike.leach@linaro.org>
+On Mon, Nov 7, 2022 at 1:33 PM Namhyung Kim <namhyung@kernel.org> wrote:
+>
+> When perf stat is called with very detailed events, the output doesn't
+> align well like below:
+>
+>   $ sudo perf stat -a -ddd sleep 1
+>
+>    Performance counter stats for 'system wide':
+>
+>           8,020.23 msec cpu-clock                        #    7.997 CPUs utilized
+>              3,970      context-switches                 #  494.998 /sec
+>                169      cpu-migrations                   #   21.072 /sec
+>                586      page-faults                      #   73.065 /sec
+>        649,568,060      cycles                           #    0.081 GHz                      (30.42%)
+>        304,044,345      instructions                     #    0.47  insn per cycle           (38.40%)
+>         60,313,022      branches                         #    7.520 M/sec                    (38.89%)
+>          2,766,919      branch-misses                    #    4.59% of all branches          (39.26%)
+>         74,422,951      L1-dcache-loads                  #    9.279 M/sec                    (39.39%)
+>          8,025,568      L1-dcache-load-misses            #   10.78% of all L1-dcache accesses  (39.22%)
+>          3,314,995      LLC-loads                        #  413.329 K/sec                    (30.83%)
+>          1,225,619      LLC-load-misses                  #   36.97% of all LL-cache accesses  (30.45%)
+>    <not supported>      L1-icache-loads
+>         20,420,493      L1-icache-load-misses            #    0.00% of all L1-icache accesses  (30.29%)
+>         58,017,947      dTLB-loads                       #    7.234 M/sec                    (30.37%)
+>            704,677      dTLB-load-misses                 #    1.21% of all dTLB cache accesses  (30.27%)
+>            234,225      iTLB-loads                       #   29.204 K/sec                    (30.29%)
+>            417,166      iTLB-load-misses                 #  178.10% of all iTLB cache accesses  (30.32%)
+>    <not supported>      L1-dcache-prefetches
+>    <not supported>      L1-dcache-prefetch-misses
+>
+>        1.002947355 seconds time elapsed
+>
+> Increase the METRIC_LEN by 3 so that it can align properly.
+>
+> Signed-off-by: Namhyung Kim <namhyung@kernel.org>
 
-Reviewed-by: Suzuki K Poulose <suzuki.poulose@arm.com>
+Acked-by: Ian Rogers <irogers@google.com>
+
+Thanks,
+Ian
 
 > ---
->   drivers/hwtracing/coresight/coresight-etm-perf.c |  7 +++++++
->   include/linux/coresight-pmu.h                    | 14 ++++++++++++++
->   2 files changed, 21 insertions(+)
-> 
-> diff --git a/drivers/hwtracing/coresight/coresight-etm-perf.c b/drivers/hwtracing/coresight/coresight-etm-perf.c
-> index 6166f716a6ac..59a2ad95c1dc 100644
-> --- a/drivers/hwtracing/coresight/coresight-etm-perf.c
-> +++ b/drivers/hwtracing/coresight/coresight-etm-perf.c
-> @@ -4,6 +4,7 @@
->    * Author: Mathieu Poirier <mathieu.poirier@linaro.org>
->    */
->   
-> +#include <linux/bitfield.h>
->   #include <linux/coresight.h>
->   #include <linux/coresight-pmu.h>
->   #include <linux/cpumask.h>
-> @@ -448,6 +449,7 @@ static void etm_event_start(struct perf_event *event, int flags)
->   	struct perf_output_handle *handle = &ctxt->handle;
->   	struct coresight_device *sink, *csdev = per_cpu(csdev_src, cpu);
->   	struct list_head *path;
-> +	u64 hw_id;
->   
->   	if (!csdev)
->   		goto fail;
-> @@ -493,6 +495,11 @@ static void etm_event_start(struct perf_event *event, int flags)
->   	if (source_ops(csdev)->enable(csdev, event, CS_MODE_PERF))
->   		goto fail_disable_path;
->   
-> +	/* output cpu / trace ID in perf record */
-> +	hw_id = FIELD_PREP(CS_AUX_HW_ID_VERSION_MASK, CS_AUX_HW_ID_CURR_VERSION) |
-> +		FIELD_PREP(CS_AUX_HW_ID_TRACE_ID_MASK, coresight_trace_id_read_cpu_id(cpu));
-
-super minor nit: You may split this for better readability.
-
-	traceid = coresight_trace_id_read_cpu_id(cpu);
-
-	hw_id = FIELD_PREP(CS_AUX_HW_ID_VERSION_MASK, CS_AUX_HW_ID_CURR_VERSION);
-	hw_id |= FIELD_PREP(CS_AUX_HW_ID_TRACE_ID_MASK, traceid);
-
-
-Either ways,
-
-Reviewed-by: Suzuki K Poulose <suzuki.poulose@arm.com>
-
-
+>  tools/perf/util/stat-display.c | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+>
+> diff --git a/tools/perf/util/stat-display.c b/tools/perf/util/stat-display.c
+> index ea41e6308c50..17d656566cd9 100644
+> --- a/tools/perf/util/stat-display.c
+> +++ b/tools/perf/util/stat-display.c
+> @@ -218,7 +218,7 @@ struct outstate {
+>         struct evsel *evsel;
+>  };
+>
+> -#define METRIC_LEN  35
+> +#define METRIC_LEN  38
+>
+>  static void new_line_std(struct perf_stat_config *config __maybe_unused,
+>                          void *ctx)
+> --
+> 2.38.1.431.g37b22c650d-goog
+>
