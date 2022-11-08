@@ -2,159 +2,152 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 87542C433FE
-	for <linux-perf-users@archiver.kernel.org>; Tue,  8 Nov 2022 21:01:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 64F71C4332F
+	for <linux-perf-users@archiver.kernel.org>; Tue,  8 Nov 2022 21:08:34 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229517AbiKHVBB (ORCPT
+        id S229554AbiKHVId (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Tue, 8 Nov 2022 16:01:01 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35086 "EHLO
+        Tue, 8 Nov 2022 16:08:33 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38158 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229975AbiKHVA7 (ORCPT
+        with ESMTP id S229447AbiKHVIc (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Tue, 8 Nov 2022 16:00:59 -0500
+        Tue, 8 Nov 2022 16:08:32 -0500
 Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 58E3A6069C;
-        Tue,  8 Nov 2022 13:00:58 -0800 (PST)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 406451AF0F;
+        Tue,  8 Nov 2022 13:08:31 -0800 (PST)
 Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id EAD686178B;
-        Tue,  8 Nov 2022 21:00:57 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 32294C433D6;
-        Tue,  8 Nov 2022 21:00:57 +0000 (UTC)
+        by dfw.source.kernel.org (Postfix) with ESMTPS id D060061777;
+        Tue,  8 Nov 2022 21:08:30 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 1817EC433C1;
+        Tue,  8 Nov 2022 21:08:30 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1667941257;
-        bh=TbBcZqlA9hZFZiK0znBTp3l6Bdf+6JHPlXaM56tzaKU=;
+        s=k20201202; t=1667941710;
+        bh=3GlHu5yvHpYryUxh56d4Wb/AASxB0UBpxBfH92jwobc=;
         h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=aKgCKTgU7ie+MzsF6DWCsZpUD2ScDZUag5Njqwow4yXbpmn9SUX4LfDt1MZy2QiPO
-         zHDl6Oe9NzmhyaZgN4nTtwbmqvw0ZmikDjKDtD/suwTes1/Y45WLZVF2as/LZVbZz2
-         QCBlmT+P8LULdn8Gut7KKw2QsLlA8I+YfcSFGGgJZSJoBIoZwU3of49K2n7lYXAwL9
-         dXTlPevHC//WO4txEJ/PsCDc/owiQ9n7H+/WBnT3PrAhdjck7iIqpK6j9A865U2tAE
-         Z4rtskjdhF0aMkg9WQFoM63evwRvDYuSFjuz4wjhZXHflL1qvYSpJ7Tzq2OEOAhbks
-         skwsp3K0wPyKg==
+        b=QVcd8Dym0GlpOtjERCRf/ewP9h45ZaL2OATHfkgK6RQCHDjuwwZk8D9qcuFEWmMH7
+         AQ776103W7cI0ZBVyOGaJhTPbA2H9je6TdvOW1v+gPTy4stZWMz4jORWU1qMVvBnHp
+         qROV7J555ykUQGJSqu33mwCvQn5b8X0DWlW1/shf5uhvdw9ZHmn3E7a8QSNFo5x1lk
+         +T0FDRSu9i22qxlTwbSMG/ksqHChIf8arA43NU7xbCX/RftfBwmZPDxplhtpxvQZra
+         BFRrF9Fg2SSD2Un4ek53cj0H74wk5thcuwDJxliaTElAYV3u3voam2hFpLMplpeRx+
+         cGHCe39elP11g==
 Received: by quaco.ghostprotocols.net (Postfix, from userid 1000)
-        id DEA3A4034E; Tue,  8 Nov 2022 18:00:54 -0300 (-03)
-Date:   Tue, 8 Nov 2022 18:00:54 -0300
+        id 82F304034E; Tue,  8 Nov 2022 18:08:27 -0300 (-03)
+Date:   Tue, 8 Nov 2022 18:08:27 -0300
 From:   Arnaldo Carvalho de Melo <acme@kernel.org>
-To:     Athira Rajeev <atrajeev@linux.vnet.ibm.com>
-Cc:     James Clark <james.clark@arm.com>,
-        LKML <linux-kernel@vger.kernel.org>, Anshuman.Khandual@arm.com,
+To:     Namhyung Kim <namhyung@kernel.org>
+Cc:     "Masami Hiramatsu (Google)" <mhiramat@kernel.org>,
         Peter Zijlstra <peterz@infradead.org>,
         Ingo Molnar <mingo@redhat.com>,
         Mark Rutland <mark.rutland@arm.com>,
         Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Jiri Olsa <jolsa@kernel.org>,
-        Namhyung Kim <namhyung@kernel.org>,
-        Kajol Jain <kjain@linux.ibm.com>,
-        linux-perf-users@vger.kernel.org
-Subject: Re: [PATCH] perf test: Fix skipping branch stack sampling test
-Message-ID: <Y2rDhkyn9ta5skDm@kernel.org>
-References: <20221028121913.745307-1-james.clark@arm.com>
- <2265e166-da9c-f540-a108-0d0b133f7da9@arm.com>
- <F79AE69A-4D87-4F4E-A3FD-EF06A6E12839@linux.vnet.ibm.com>
+        Jiri Olsa <jolsa@kernel.org>, linux-perf-users@vger.kernel.org,
+        linux-kernel@vger.kernel.org, Steven Rostedt <rostedt@goodmis.org>
+Subject: Re: [PATCH] tools/perf: Fix to get the DW_AT_decl_file and
+ DW_AT_call_file as unsinged data
+Message-ID: <Y2rFS6CPfhIQhYUc@kernel.org>
+References: <166761727445.480106.3738447577082071942.stgit@devnote3>
+ <CAM9d7ci8YX22Bp31ZD9k31NFN6pP3fbPKpNDNZYnmdZiqav1Vg@mail.gmail.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <F79AE69A-4D87-4F4E-A3FD-EF06A6E12839@linux.vnet.ibm.com>
+In-Reply-To: <CAM9d7ci8YX22Bp31ZD9k31NFN6pP3fbPKpNDNZYnmdZiqav1Vg@mail.gmail.com>
 X-Url:  http://acmel.wordpress.com
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-Em Wed, Nov 02, 2022 at 12:21:11PM +0530, Athira Rajeev escreveu:
+Em Mon, Nov 07, 2022 at 01:09:00PM -0800, Namhyung Kim escreveu:
+> Hi Masami,
 > 
+> On Fri, Nov 4, 2022 at 8:01 PM Masami Hiramatsu (Google)
+> <mhiramat@kernel.org> wrote:
+> >
+> > From: Masami Hiramatsu (Google) <mhiramat@kernel.org>
+> >
+> > Dwarf version 5 standard Sec 2.14 says that
+> >
+> >   Any debugging information entry representing the declaration of an object,
+> >   module, subprogram or type may have DW_AT_decl_file, DW_AT_decl_line and
+> >   DW_AT_decl_column attributes, each of whose value is an unsigned integer
+> >   constant.
+> >
+> > So it should be an unsigned integer data. Also, even though the standard
+> > doesn't clearly say the DW_AT_call_file is signed or unsigned, the
+> > elfutils (eu-readelf) interprets it as unsigned integer data and it is
+> > natural to handle it as unsigned integer data as same as DW_AT_decl_file.
+> > This changes the DW_AT_call_file as unsigned integer data too.
+> >
+> > Fixes: 3f4460a28fb2 ("perf probe: Filter out redundant inline-instances")
+> > Cc: stable@vger.kernel.org
+> > Signed-off-by: Masami Hiramatsu (Google) <mhiramat@kernel.org>
 > 
-> > On 28-Oct-2022, at 5:52 PM, James Clark <james.clark@arm.com> wrote:
-> > 
-> > 
-> > 
-> > On 28/10/2022 13:19, James Clark wrote:
-> >> Commit f4a2aade6809 ("perf tests powerpc: Fix branch stack sampling test
-> >> to include sanity check for branch filter") added a skip if certain
-> >> branch options aren't available. But the change added both -b
-> >> (--branch-any) and --branch-filter options at the same time, which will
-> >> always result in a failure on any platform because the arguments can't
-> >> be used together.
-> >> 
-> >> Fix this by removing -b (--branch-any) and leaving --branch-filter which
-> >> already specifies 'any'. Also add warning messages to the test and perf
-> >> tool.
-> >> 
-> > 
-> > Hi Athira,
-> > 
-> > Are you able to check if this still skips for you on PowerPC with this
-> > new change?
-> > 
-> 
-> Hi James,
-> 
-> Sorry for the late response. I was out on vacation couple of days.
-> 
-> I tested with the new change and verified it skips on powerpc.
-> 
-> Tested-by: Athira Rajeev <atrajeev@linux.vnet.ibm.com>
+> Acked-by: Namhyung Kim <namhyung@kernel.org>
 
 Thanks, applied.
 
 - Arnaldo
 
  
-> Thanks
-> Athira
-> > Thanks
-> > James
-> > 
-> >> Output on x86 before this fix:
-> >> 
-> >>   $ sudo ./perf test branch
-> >>   108: Check branch stack sampling         : Skip
-> >> 
-> >> After:
-> >> 
-> >>   $ sudo ./perf test branch
-> >>   108: Check branch stack sampling         : Ok
-> >> 
-> >> Fixes: f4a2aade6809 ("perf tests powerpc: Fix branch stack sampling test to include sanity check for branch filter")
-> >> Signed-off-by: James Clark <james.clark@arm.com>
-> >> ---
-> >> tools/perf/tests/shell/test_brstack.sh | 5 ++++-
-> >> tools/perf/util/parse-branch-options.c | 4 +++-
-> >> 2 files changed, 7 insertions(+), 2 deletions(-)
-> >> 
-> >> diff --git a/tools/perf/tests/shell/test_brstack.sh b/tools/perf/tests/shell/test_brstack.sh
-> >> index ec801cffae6b..d7ff5c4b4da4 100755
-> >> --- a/tools/perf/tests/shell/test_brstack.sh
-> >> +++ b/tools/perf/tests/shell/test_brstack.sh
-> >> @@ -13,7 +13,10 @@ fi
-> >> 
-> >> # skip the test if the hardware doesn't support branch stack sampling
-> >> # and if the architecture doesn't support filter types: any,save_type,u
-> >> -perf record -b -o- -B --branch-filter any,save_type,u true > /dev/null 2>&1 || exit 2
-> >> +if ! perf record -o- --no-buildid --branch-filter any,save_type,u -- true > /dev/null 2>&1 ; then
-> >> +	echo "skip: system doesn't support filter types: any,save_type,u"
-> >> +	exit 2
-> >> +fi
-> >> 
-> >> TMPDIR=$(mktemp -d /tmp/__perf_test.program.XXXXX)
-> >> 
-> >> diff --git a/tools/perf/util/parse-branch-options.c b/tools/perf/util/parse-branch-options.c
-> >> index 00588b9db474..31faf2bb49ff 100644
-> >> --- a/tools/perf/util/parse-branch-options.c
-> >> +++ b/tools/perf/util/parse-branch-options.c
-> >> @@ -102,8 +102,10 @@ parse_branch_stack(const struct option *opt, const char *str, int unset)
-> >> 	/*
-> >> 	 * cannot set it twice, -b + --branch-filter for instance
-> >> 	 */
-> >> -	if (*mode)
-> >> +	if (*mode) {
-> >> +		pr_err("Error: Can't use --branch-any (-b) with --branch-filter (-j).\n");
-> >> 		return -1;
-> >> +	}
-> >> 
-> >> 	return parse_branch_str(str, mode);
-> >> }
+> Thanks,
+> Namhyung
+> 
+> 
+> > ---
+> >  tools/perf/util/dwarf-aux.c |   21 ++++-----------------
+> >  1 file changed, 4 insertions(+), 17 deletions(-)
+> >
+> > diff --git a/tools/perf/util/dwarf-aux.c b/tools/perf/util/dwarf-aux.c
+> > index 30b36b525681..b07414409771 100644
+> > --- a/tools/perf/util/dwarf-aux.c
+> > +++ b/tools/perf/util/dwarf-aux.c
+> > @@ -315,19 +315,6 @@ static int die_get_attr_udata(Dwarf_Die *tp_die, unsigned int attr_name,
+> >         return 0;
+> >  }
+> >
+> > -/* Get attribute and translate it as a sdata */
+> > -static int die_get_attr_sdata(Dwarf_Die *tp_die, unsigned int attr_name,
+> > -                             Dwarf_Sword *result)
+> > -{
+> > -       Dwarf_Attribute attr;
+> > -
+> > -       if (dwarf_attr_integrate(tp_die, attr_name, &attr) == NULL ||
+> > -           dwarf_formsdata(&attr, result) != 0)
+> > -               return -ENOENT;
+> > -
+> > -       return 0;
+> > -}
+> > -
+> >  /**
+> >   * die_is_signed_type - Check whether a type DIE is signed or not
+> >   * @tp_die: a DIE of a type
+> > @@ -467,9 +454,9 @@ int die_get_data_member_location(Dwarf_Die *mb_die, Dwarf_Word *offs)
+> >  /* Get the call file index number in CU DIE */
+> >  static int die_get_call_fileno(Dwarf_Die *in_die)
+> >  {
+> > -       Dwarf_Sword idx;
+> > +       Dwarf_Word idx;
+> >
+> > -       if (die_get_attr_sdata(in_die, DW_AT_call_file, &idx) == 0)
+> > +       if (die_get_attr_udata(in_die, DW_AT_call_file, &idx) == 0)
+> >                 return (int)idx;
+> >         else
+> >                 return -ENOENT;
+> > @@ -478,9 +465,9 @@ static int die_get_call_fileno(Dwarf_Die *in_die)
+> >  /* Get the declared file index number in CU DIE */
+> >  static int die_get_decl_fileno(Dwarf_Die *pdie)
+> >  {
+> > -       Dwarf_Sword idx;
+> > +       Dwarf_Word idx;
+> >
+> > -       if (die_get_attr_sdata(pdie, DW_AT_decl_file, &idx) == 0)
+> > +       if (die_get_attr_udata(pdie, DW_AT_decl_file, &idx) == 0)
+> >                 return (int)idx;
+> >         else
+> >                 return -ENOENT;
+> >
 
 -- 
 
