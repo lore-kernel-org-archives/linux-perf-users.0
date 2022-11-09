@@ -2,178 +2,135 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F1C62C433FE
-	for <linux-perf-users@archiver.kernel.org>; Wed,  9 Nov 2022 01:26:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7E0E6C433FE
+	for <linux-perf-users@archiver.kernel.org>; Wed,  9 Nov 2022 01:35:46 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229587AbiKIB06 (ORCPT
+        id S229777AbiKIBfp (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Tue, 8 Nov 2022 20:26:58 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59542 "EHLO
+        Tue, 8 Nov 2022 20:35:45 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34600 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229453AbiKIB05 (ORCPT
+        with ESMTP id S229612AbiKIBfo (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Tue, 8 Nov 2022 20:26:57 -0500
-Received: from mail-wr1-x435.google.com (mail-wr1-x435.google.com [IPv6:2a00:1450:4864:20::435])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A15476034D
-        for <linux-perf-users@vger.kernel.org>; Tue,  8 Nov 2022 17:26:55 -0800 (PST)
-Received: by mail-wr1-x435.google.com with SMTP id j15so23614018wrq.3
-        for <linux-perf-users@vger.kernel.org>; Tue, 08 Nov 2022 17:26:55 -0800 (PST)
+        Tue, 8 Nov 2022 20:35:44 -0500
+Received: from mail-wm1-x331.google.com (mail-wm1-x331.google.com [IPv6:2a00:1450:4864:20::331])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4A3CD60379
+        for <linux-perf-users@vger.kernel.org>; Tue,  8 Nov 2022 17:35:43 -0800 (PST)
+Received: by mail-wm1-x331.google.com with SMTP id i5-20020a1c3b05000000b003cfa97c05cdso293425wma.4
+        for <linux-perf-users@vger.kernel.org>; Tue, 08 Nov 2022 17:35:43 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=google.com; s=20210112;
         h=cc:to:subject:message-id:date:from:in-reply-to:references
          :mime-version:from:to:cc:subject:date:message-id:reply-to;
-        bh=7n+Gogs44J3MJAJFkEwmyw3zIckfNB0Js5JwY2k9IMU=;
-        b=Le+s4FRc9ouIMB0kqkuqrKi4XeMgA8YMCXURQLU5VFsV7hy6fVBAjHQfq5HZ0EPYVq
-         wpMilK1lDWQvTqHWZdCZfPaYbJAqWAp9siesyO7BjXXFa+1SZMDEcEf/EDrAY5Y3xgjm
-         N6nvh/EVn3TJw//wiJTj0/x85UAeByx+ayY4VauJLwVURWlxb/9Ztj3GCLctIFeOZ/+T
-         jNnzamm4YEiZJxiUshD8DhYhnpFFX+oSu1yxSDcuO4i0N/kVMR1420RtfddRKvJZ1r2C
-         /pw4CNRHLFJi3bZoGnTaEs6xtL5H+9WpBWUIp7jTNFjuMdDySYEkY16Hc8f8/SKjT2Tm
-         T9uQ==
+        bh=fgZcpnnS6jFiy53mvb4fnTvOCCqRJfW+5InA+MbQqyc=;
+        b=YN4HBuXK5uaQvKP9tkjWDHuu9kUveWlJq7pmW30IyiWiRUYXkVzrdPJVoRTTuN4wwL
+         vraxwoeBfsYUZM0kydZJSNC8GdMoYJXXfBosYpagw7equK0D79Tm0nKAeVXtqjYI59KK
+         uhpv1xfQ2pokPo733P5v1Fv3DgznFdxlyviZDe5HxRcqDdHB6LNMf3JURFxxzOzRMeVc
+         7jmIBKfDrF2gPYbCYMDJJKIGQxRQq2IvFtK+vbftKe0R1kcwEr4JUjJSZA+dD3YKdJW8
+         erMy1+Jr1eSfwOOnniu+wEHLQF1O2TcCedFVm7Au8sjEcUxwI3oCV9iswwPkjByaKG1j
+         0V8w==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
         h=cc:to:subject:message-id:date:from:in-reply-to:references
          :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
          :reply-to;
-        bh=7n+Gogs44J3MJAJFkEwmyw3zIckfNB0Js5JwY2k9IMU=;
-        b=Rt+K76qLCk7FlEAWTiq0GLJZHIWA+0U8NE9DGidb1807AQ7/GPJTz9ETzW+dWH9C2L
-         0CUUFkaDOc5IeaiEbAwV03fKoRFLJL2y+z9ons2RYjZQ4LDqVXAoAmpZSvv7b7Z3u60g
-         o9ftegjZ51mLX5w+09uWg9qkSS/tk076dBM0GMHxZWJK/wq1PiAo2R/Ts8z1EssAlHPG
-         JGiPYxs1vpR2n2NlaDJWfz/YzERqebfpjLN+nq35yCaTezqYWvpU6R/sW2C2Z8zwd7vg
-         KM/RZHs/7bDveKqWJd8Nr3xYezgu1VAWYQ+Xy4NZPPrDuA82cjhEbAReIoCjzPlHdBjt
-         LGFA==
-X-Gm-Message-State: ACrzQf1yPgrRFCbPaWdC/4tda9H0WFeuvbZbs7E19iES5K29WRIhNuI6
-        8M2mGoy4gfK2iC4NAKvf5EmpiJOotd0pKInUrESgag==
-X-Google-Smtp-Source: AMsMyM4/riFfccIbi5E00FSgoiJMy1SJ2ltr1Pxqlx3R8Ubo5hkaajkI673foBf+8LVYZG9zQJTYkvJ9JIkUn7KYYhQ=
-X-Received: by 2002:adf:e711:0:b0:236:2f7f:4f08 with SMTP id
- c17-20020adfe711000000b002362f7f4f08mr37777536wrm.375.1667957214030; Tue, 08
- Nov 2022 17:26:54 -0800 (PST)
+        bh=fgZcpnnS6jFiy53mvb4fnTvOCCqRJfW+5InA+MbQqyc=;
+        b=CHRCeEqmb9NKRXIWsCVLq2IrbCftvfQHEUZeWTzbV9Cni029mFSZXXCHjbQ+Bp74Ei
+         CUarrC1oid49M4JJGLOF6N5eqk1+ogRSb9hnZ0vgF6n+RTRVHfxO/U0A3XDyqi4k67fY
+         YcErqPvBjF7LpEOJQKxR6XivMmXetZcx45AV0d1ypVh0bCku4v+t21zzBSCowBwfF01S
+         mr9Lw/81as7j5rSYvz/E0w4bJMtfv3P1JTSs2FD3LMfM6dqoQ3bQKE6r4ERkiV113dfc
+         AaUhkvxsqZrVfBAbSAMq+qgE+oAaBSLLxSQvZ2hwRiaa2Poxn7wkXyspX+lODomMBO8t
+         VWkQ==
+X-Gm-Message-State: ACrzQf1B0JKfz2ncFKlO2T1h0l79loQ8zIelAPaNjhE+SyFiNgKnxfe+
+        ogmDrE9GMP5AFzUjCsyiAZ+Dk3RnbKl3UgcyfUIvdg==
+X-Google-Smtp-Source: AMsMyM728if3sjhSn5CaoHbXsQeD2Jd4YIz9kNhgDYXrC2w4pKPxujhbNps+Krbi88bPbZzZVeI3ubN2je6bfH4PEU0=
+X-Received: by 2002:a05:600c:2194:b0:3cf:7065:99e5 with SMTP id
+ e20-20020a05600c219400b003cf706599e5mr33021992wme.174.1667957741635; Tue, 08
+ Nov 2022 17:35:41 -0800 (PST)
 MIME-Version: 1.0
-References: <20221107213314.3239159-1-namhyung@kernel.org> <20221107213314.3239159-6-namhyung@kernel.org>
-In-Reply-To: <20221107213314.3239159-6-namhyung@kernel.org>
+References: <20221108190019.19265-1-9erthalion6@gmail.com>
+In-Reply-To: <20221108190019.19265-1-9erthalion6@gmail.com>
 From:   Ian Rogers <irogers@google.com>
-Date:   Tue, 8 Nov 2022 17:26:41 -0800
-Message-ID: <CAP-5=fUjOMDQoKbo3a2nLY06u7udTjY_chJm_BvQtMUZEPXmzA@mail.gmail.com>
-Subject: Re: [PATCH 5/9] perf stat: Fix --metric-only --json output
-To:     Namhyung Kim <namhyung@kernel.org>
-Cc:     Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Jiri Olsa <jolsa@kernel.org>, Ingo Molnar <mingo@kernel.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Adrian Hunter <adrian.hunter@intel.com>,
-        linux-perf-users@vger.kernel.org,
-        Kan Liang <kan.liang@linux.intel.com>,
-        Zhengjun Xing <zhengjun.xing@linux.intel.com>,
-        James Clark <james.clark@arm.com>
+Date:   Tue, 8 Nov 2022 17:35:28 -0800
+Message-ID: <CAP-5=fXgO4ai5EvsYHw+_F2FUYqBRkBzXuBOZg_wHK0=_ymgFg@mail.gmail.com>
+Subject: Re: [RFC PATCH v1] perf data: Add fields when converting to json
+To:     Dmitrii Dolgov <9erthalion6@gmail.com>
+Cc:     linux-perf-users@vger.kernel.org, acme@kernel.org,
+        mingo@redhat.com, jolsa@kernel.org
 Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-On Mon, Nov 7, 2022 at 1:33 PM Namhyung Kim <namhyung@kernel.org> wrote:
+On Tue, Nov 8, 2022 at 11:00 AM Dmitrii Dolgov <9erthalion6@gmail.com> wrote:
 >
-> Currently it prints all metric headers for JSON output.  But actually it
-> skips some metrics with valid_only_metric().  So the output looks like:
+> When converting recorded data into json format, perf data omits probe
+> variables. Add them to the output in the format "field name": "field value"
+> using tep_print_field:
 >
->   $ perf stat --metric-only --json true
->   {"unit" : "CPUs utilized", "unit" : "/sec", "unit" : "/sec", "unit" : "/sec", "unit" : "GHz", "unit" : "insn per cycle", "unit" : "/sec", "unit" : "branch-misses of all branches"}
->   {"metric-value" : "3.861"}{"metric-value" : "0.79"}{"metric-value" : "3.04"}
+>     $ perf data convert --to-json output.json
 >
-> As you can see there are 8 units in the header but only 3 metric-values
-> are there.  It should skip the unused headers as well.  Also each unit
-> should be printed as a separate object like metric values.
+>     // output.json
+>     {
+>         "linux-perf-json-version": 1,
+>         "headers": { ... },
+>         "samples": [
+>             {
+>             "timestamp": 29182079082999,
+>             "pid": 309194,
+>                     [...]
+>             "__probe_ip": "0x93ee35",
+>             "query_string_string": "select 2;",
+>             "nxids": "0"
+>             }
+>         ]
+>     }
 >
-> With this patch:
->
->   $ perf stat --metric-only --json true
->   {"unit" : "GHz"}{"unit" : "insn per cycle"}{"unit" : "branch-misses of all branches"}
->   {"metric-value" : "4.166"}{"metric-value" : "0.73"}{"metric-value" : "2.96"}
+> Signed-off-by: Dmitrii Dolgov <9erthalion6@gmail.com>
 
-It looks like the correct output would be to place the unit with the
-metric-value, but perhaps that's something best done by deleting the
-output code and starting again - the new output is wrong but better.
-We could really do with functions like emit counter, emit metric and
-have appropriate output for CSV, JSON, etc. A lot of the problems in
-JSON and CSV outputting come from the unnatural way it is driven and
-placing a large significance on newline characters. Putting the CSV
-and JSON output to stdout also is problematic, as it naturally gets
-interwoven with the monitored commands output. The dictionaries in the
-new output should really be in a list, this is fixed in the test here:
-https://git.kernel.org/pub/scm/linux/kernel/git/acme/linux.git/tree/tools/perf/tests/shell/lib/perf_json_output_lint.py?h=perf/core#n74
+Acked-by: Ian Rogers <irogers@google.com>
 
 Thanks,
 Ian
 
->
-> Signed-off-by: Namhyung Kim <namhyung@kernel.org>
 > ---
->  tools/perf/util/stat-display.c | 22 +++-------------------
->  1 file changed, 3 insertions(+), 19 deletions(-)
+>  tools/perf/util/data-convert-json.c | 20 ++++++++++++++++++++
+>  1 file changed, 20 insertions(+)
 >
-> diff --git a/tools/perf/util/stat-display.c b/tools/perf/util/stat-display.c
-> index 115477461224..515fb6db3d67 100644
-> --- a/tools/perf/util/stat-display.c
-> +++ b/tools/perf/util/stat-display.c
-> @@ -430,12 +430,12 @@ static void print_metric_header(struct perf_stat_config *config,
->             os->evsel->priv != os->evsel->evlist->selected->priv)
->                 return;
->
-> -       if (!valid_only_metric(unit) && !config->json_output)
-> +       if (!valid_only_metric(unit))
->                 return;
->         unit = fixunit(tbuf, os->evsel, unit);
->
->         if (config->json_output)
-> -               fprintf(os->fh, "\"unit\" : \"%s\"", unit);
-> +               fprintf(os->fh, "{\"unit\" : \"%s\"}", unit);
->         else if (config->csv_output)
->                 fprintf(os->fh, "%s%s", unit, config->csv_sep);
->         else
-> @@ -847,10 +847,6 @@ static void print_metric_headers(struct perf_stat_config *config,
->                 .new_line = new_line_metric,
->                 .force_header = true,
->         };
-> -       bool first = true;
-> -
-> -       if (config->json_output && !config->interval)
-> -               fprintf(config->output, "{");
->
->         if (prefix && !config->json_output)
->                 fprintf(config->output, "%s", prefix);
-> @@ -871,18 +867,12 @@ static void print_metric_headers(struct perf_stat_config *config,
->         evlist__for_each_entry(evlist, counter) {
->                 os.evsel = counter;
->
-> -               if (!first && config->json_output)
-> -                       fprintf(config->output, ", ");
-> -               first = false;
-> -
->                 perf_stat__print_shadow_stats(config, counter, 0,
->                                               0,
->                                               &out,
->                                               &config->metric_events,
->                                               &rt_stat);
+> diff --git a/tools/perf/util/data-convert-json.c b/tools/perf/util/data-convert-json.c
+> index 613d6ae82663..d30816eafb2f 100644
+> --- a/tools/perf/util/data-convert-json.c
+> +++ b/tools/perf/util/data-convert-json.c
+> @@ -217,6 +217,26 @@ static int process_sample_event(struct perf_tool *tool,
 >         }
-> -       if (config->json_output)
-> -               fprintf(config->output, "}");
->         fputc('\n', config->output);
->  }
+>         output_json_format(out, false, 3, "]");
 >
-> @@ -954,14 +944,8 @@ static void print_interval(struct perf_stat_config *config,
->                 }
->         }
->
-> -       if ((num_print_interval == 0 || config->interval_clear)
-> -                        && metric_only && !config->json_output)
-> +       if ((num_print_interval == 0 || config->interval_clear) && metric_only)
->                 print_metric_headers(config, evlist, " ", true);
-> -       if ((num_print_interval == 0 || config->interval_clear)
-> -                        && metric_only && config->json_output) {
-> -               fprintf(output, "{");
-> -               print_metric_headers(config, evlist, " ", true);
-> -       }
->         if (++num_print_interval == 25)
->                 num_print_interval = 0;
+> +       if (sample->raw_data) {
+> +               int i;
+> +               struct tep_format_field **fields;
+> +
+> +               fields = tep_event_fields(evsel->tp_format);
+> +               if (fields != NULL) {
+
+nit: just "if(fields) {" as you did above with sample->raw_data
+
+> +                       i = 0;
+> +                       while (fields[i]) {
+> +                               struct trace_seq s;
+> +
+> +                               trace_seq_init(&s);
+> +                               tep_print_field(&s, sample->raw_data, fields[i]);
+> +                               output_json_key_string(out, true, 3, fields[i]->name, s.buffer);
+> +
+> +                               i++;
+> +                       }
+> +                       free(fields);
+> +               }
+> +       }
+> +
+>         output_json_format(out, false, 2, "}");
+>         return 0;
 >  }
 > --
-> 2.38.1.431.g37b22c650d-goog
+> 2.27.0
 >
