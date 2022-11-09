@@ -2,164 +2,119 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 867D5C433FE
-	for <linux-perf-users@archiver.kernel.org>; Wed,  9 Nov 2022 17:47:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 962A4C433FE
+	for <linux-perf-users@archiver.kernel.org>; Wed,  9 Nov 2022 18:03:02 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231855AbiKIRrP (ORCPT
+        id S229733AbiKISDA (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Wed, 9 Nov 2022 12:47:15 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57128 "EHLO
+        Wed, 9 Nov 2022 13:03:00 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37326 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231846AbiKIRrA (ORCPT
+        with ESMTP id S231761AbiKISCV (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Wed, 9 Nov 2022 12:47:00 -0500
-Received: from mail-pj1-x102f.google.com (mail-pj1-x102f.google.com [IPv6:2607:f8b0:4864:20::102f])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 712367676;
-        Wed,  9 Nov 2022 09:46:52 -0800 (PST)
-Received: by mail-pj1-x102f.google.com with SMTP id l6so17422611pjj.0;
-        Wed, 09 Nov 2022 09:46:52 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20210112;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:sender:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=qf7pwJ+tSfBXBsT3Fnhwy44UrI7lbOL4kA5MHT45Zio=;
-        b=Pdcq6EHiScmcD4rAn0pVStsuOUCS5frBTuOuSUYbRSYhCbYuA1wwygpj/cyCGCspBC
-         4pIEJpigZQbZ+dQFaksHOqxhREZ/HUzc+qlvxFL6cyYPre53fk91cTcoDnCy4Uy/uy8e
-         Hib0zvSKRklbBL5wfnHazsaAu/YUeR5vVehk3VvuQa+rcsFrR4lm54fLFi6YtuVcQB5q
-         9yOVCYHqVaWbYst3NRLNA0D/l1rzQ9K4CiWdRucyGUS9ON0tlTELaSj7s2zJuRutBQfB
-         7lW0uQLuwJOFH3+yEjRwZ93mvTDtMLLvOokiIm1esD7RwdT/S1AUJq8Ozo62lUoSdHZj
-         Rz3g==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:sender:x-gm-message-state:from
-         :to:cc:subject:date:message-id:reply-to;
-        bh=qf7pwJ+tSfBXBsT3Fnhwy44UrI7lbOL4kA5MHT45Zio=;
-        b=lq9RpoumCu9IcwMuT6RXy58Q5DF3O9duPG8JCxI60RHmurbi1NwvpZ/PcbERDdzeJ2
-         /Kokiicb2kky/VkiT19CBvQ3Uoxoohd269Ffuyh4yoDVTT1t8SJCa4ID4uAvOcSPRbGV
-         UgcPEEpyDzInmhwEoGkbtNoiGxGSWvo6qML/tPnsk+M7JQd9lfkJPaU/lybe06qs62o9
-         KRIPsJDAwTTSrdcANScXGbOV/Brdbu9Mr/5VuqZjLEh/7V1SSZU8N83jYuX/WPTdq3UX
-         WLBvpxAIhxk87Gr8nGZne+3G3Fp7vKBmDBbMmbjw69khnsmxND0wmCEjy7ZPoqt6v4MW
-         6pFQ==
-X-Gm-Message-State: ACrzQf3L2QcmATXd/n5Faqa/FCA0XXETz1+iyLeDXTvh9c+oPsicUezO
-        37IMgUU/Xq+DgkO9o2D/DNo=
-X-Google-Smtp-Source: AMsMyM5Q0pgxR/3dUuiJftmQ8Q2+O9QzRiEWhvcMDTBjcqDFZm9QZHUC92uzrxCdk4e1xo1SJAei4g==
-X-Received: by 2002:a17:902:7894:b0:188:6300:640f with SMTP id q20-20020a170902789400b001886300640fmr1043883pll.124.1668016011817;
-        Wed, 09 Nov 2022 09:46:51 -0800 (PST)
-Received: from balhae.corp.google.com ([2620:15c:2c1:200:fa05:f3cd:da75:3103])
-        by smtp.gmail.com with ESMTPSA id a10-20020a63cd4a000000b0043941566481sm7877909pgj.39.2022.11.09.09.46.50
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 09 Nov 2022 09:46:51 -0800 (PST)
-Sender: Namhyung Kim <namhyung@gmail.com>
-From:   Namhyung Kim <namhyung@kernel.org>
-To:     Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Jiri Olsa <jolsa@kernel.org>
-Cc:     Ingo Molnar <mingo@kernel.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Ian Rogers <irogers@google.com>,
-        Adrian Hunter <adrian.hunter@intel.com>,
-        linux-perf-users@vger.kernel.org, Leo Yan <leo.yan@linaro.org>,
-        German Gomez <german.gomez@arm.com>,
-        Zhengjun Xing <zhengjun.xing@linux.intel.com>,
-        James Clark <james.clark@arm.com>
-Subject: [PATCH 11/12] perf test: Add 'datasym' test workload
-Date:   Wed,  9 Nov 2022 09:46:34 -0800
-Message-Id: <20221109174635.859406-12-namhyung@kernel.org>
-X-Mailer: git-send-email 2.38.1.431.g37b22c650d-goog
-In-Reply-To: <20221109174635.859406-1-namhyung@kernel.org>
-References: <20221109174635.859406-1-namhyung@kernel.org>
+        Wed, 9 Nov 2022 13:02:21 -0500
+Received: from ams.source.kernel.org (ams.source.kernel.org [145.40.68.75])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2AABA27CD8;
+        Wed,  9 Nov 2022 10:01:04 -0800 (PST)
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by ams.source.kernel.org (Postfix) with ESMTPS id D1E7DB81F68;
+        Wed,  9 Nov 2022 18:01:02 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 534BEC433D6;
+        Wed,  9 Nov 2022 18:01:01 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1668016861;
+        bh=o9wTu/uqSuvdOyiepZ3oFdSFK2MQWtuIFpBt23bEtU0=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=rG02Xt5hmMd6WxUE4MxWTCf4oMF3Xoie56LpENu7uxTvTeMyyhtJ1M5lLU8l+u11P
+         m88Elu4UGVsV3hcMLNdZpW2v8XxkvpnTDJWM9s3PDEkLjbxsUv7xm2KbNd1RpvsYxU
+         VwIHIUvwE9eOZwmLIugAKVfTW57Q67WckG0JvXBKodszdK3O904iX7jdRw9Z/T8Lk+
+         vr1oe0HIQ/txYXcFUSe41g+kZLs38MebRJRdW8ymqj4bJ+U7y9fZ/SJkyvKwonObTx
+         kz+lSb40wl3cXUc2LWoSpWcG/nQR9pf5zXa6Gt/CKEkxrfqJRoYiWn7FCiiEFbEkRF
+         q58XCLxHyarQQ==
+Received: by quaco.ghostprotocols.net (Postfix, from userid 1000)
+        id E08B34034E; Wed,  9 Nov 2022 15:00:58 -0300 (-03)
+Date:   Wed, 9 Nov 2022 15:00:58 -0300
+From:   Arnaldo Carvalho de Melo <acme@kernel.org>
+To:     Ian Rogers <irogers@google.com>
+Cc:     Peter Zijlstra <peterz@infradead.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Jiri Olsa <jolsa@kernel.org>,
+        Namhyung Kim <namhyung@kernel.org>,
+        Masahiro Yamada <masahiroy@kernel.org>,
+        Nicolas Schier <nicolas@fjasle.eu>,
+        linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org,
+        bpf@vger.kernel.org, Nick Desaulniers <ndesaulniers@google.com>,
+        Andrii Nakryiko <andrii.nakryiko@gmail.com>,
+        Stephane Eranian <eranian@google.com>
+Subject: Re: [PATCH v1 00/14] Fix perf tools/lib includes
+Message-ID: <Y2vq2tWzdBzIwA6H@kernel.org>
+References: <20221108073518.1154450-1-irogers@google.com>
+ <Y2vG13WVahGoib57@kernel.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
+In-Reply-To: <Y2vG13WVahGoib57@kernel.org>
+X-Url:  http://acmel.wordpress.com
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-The datasym workload is to check if perf mem command gets the data
-addresses precisely.  This is needed for data symbol test.
+Em Wed, Nov 09, 2022 at 12:27:19PM -0300, Arnaldo Carvalho de Melo escreveu:
+> Em Mon, Nov 07, 2022 at 11:35:04PM -0800, Ian Rogers escreveu:
+> > The previous build would add -Itools/lib and get dependencies for
+> > libtraceevent, libsubcmd, libsymbol, libapi and libbpf meaning that
+> > overriding these libraries would change the link time dependency but
+> > the headers would erroneously come from tools/lib. Fix the build to
+> > install headers and then depend on these. To reduce exposing internal
+> > headers/APIs some clean up is performed. tools/lib/symbol has a
+> > Makefile added, while tools/lib/api and tools/lib/subcmd have install
+> > targets added. The pattern used for the dependencies in Makefile.perf
+> > is modelled on libbpf.
+> 
+> It builds with O=, I tried it one by one, but  there are problems with
+> make from a detached tarball, that is how I do the container builds, see
+> below, I'm trying to figure this out...
+> 
+> ⬢[acme@toolbox perf]$ make perf-tar-src-pkg
+>   TAR
+>   PERF_VERSION = 6.1.rc3.g7e5d8b7a1fbd
+> ⬢[acme@toolbox perf]$ mv perf-6.1.0-rc3.tar /tmp
+> ⬢[acme@toolbox perf]$ cd /tmp
+> ⬢[acme@toolbox tmp]$ tar xf perf-6.1.0-rc3.tar
+> ⬢[acme@toolbox tmp]$ cd perf-6.1.0-rc3/
+> ⬢[acme@toolbox perf-6.1.0-rc3]$ make -C tools/perf
+> make: Entering directory '/tmp/perf-6.1.0-rc3/tools/perf'
+>   BUILD:   Doing 'make -j32' parallel build
+>   HOSTCC  fixdep.o
+>   HOSTLD  fixdep-in.o
+>   LINK    fixdep
+> 
+> Auto-detecting system features:
+<SNIP>
+> ...                                   dwarf: [ on  ]
+>   CC      jvmti/libjvmti.o
+> make[3]: *** No rule to make target '/tmp/perf-6.1.0-rc3/tools/perf/libsymbol/libsymbol.a'.  Stop.
+> make[2]: *** [Makefile.perf:907: /tmp/perf-6.1.0-rc3/tools/perf/libsymbol/libsymbol.a] Error 2
+> make[2]: *** Waiting for unfinished jobs....
 
-  $ perf test -w datasym
+So this cures it:
 
-I had to keep the buf1 in the data section, otherwise it could end
-up in the BSS and was mmaped as a separate //anon region, then it
-was not symbolized at all.  It needs to be fixed separately.
-
-Signed-off-by: Namhyung Kim <namhyung@kernel.org>
----
- tools/perf/tests/builtin-test.c      |  1 +
- tools/perf/tests/tests.h             |  1 +
- tools/perf/tests/workloads/Build     |  2 ++
- tools/perf/tests/workloads/datasym.c | 24 ++++++++++++++++++++++++
- 4 files changed, 28 insertions(+)
- create mode 100644 tools/perf/tests/workloads/datasym.c
-
-diff --git a/tools/perf/tests/builtin-test.c b/tools/perf/tests/builtin-test.c
-index 69fa56939309..4c6ae59a4dfd 100644
---- a/tools/perf/tests/builtin-test.c
-+++ b/tools/perf/tests/builtin-test.c
-@@ -124,6 +124,7 @@ static struct test_workload *workloads[] = {
- 	&workload__leafloop,
- 	&workload__sqrtloop,
- 	&workload__brstack,
-+	&workload__datasym,
- };
- 
- static int num_subtests(const struct test_suite *t)
-diff --git a/tools/perf/tests/tests.h b/tools/perf/tests/tests.h
-index dc96f59cac2e..e15f24cfc909 100644
---- a/tools/perf/tests/tests.h
-+++ b/tools/perf/tests/tests.h
-@@ -205,5 +205,6 @@ DECLARE_WORKLOAD(thloop);
- DECLARE_WORKLOAD(leafloop);
- DECLARE_WORKLOAD(sqrtloop);
- DECLARE_WORKLOAD(brstack);
-+DECLARE_WORKLOAD(datasym);
- 
- #endif /* TESTS_H */
-diff --git a/tools/perf/tests/workloads/Build b/tools/perf/tests/workloads/Build
-index c933cdcf91d1..ec3cb10c52ae 100644
---- a/tools/perf/tests/workloads/Build
-+++ b/tools/perf/tests/workloads/Build
-@@ -5,6 +5,8 @@ perf-y += thloop.o
- perf-y += leafloop.o
- perf-y += sqrtloop.o
- perf-y += brstack.o
-+perf-y += datasym.o
- 
- CFLAGS_leafloop.o         = -g -O0 -fno-inline -fno-omit-frame-pointer
- CFLAGS_brstack.o          = -g -O0 -fno-inline
-+CFLAGS_datasym.o          = -g -O0 -fno-inline
-diff --git a/tools/perf/tests/workloads/datasym.c b/tools/perf/tests/workloads/datasym.c
-new file mode 100644
-index 000000000000..ddd40bc63448
---- /dev/null
-+++ b/tools/perf/tests/workloads/datasym.c
-@@ -0,0 +1,24 @@
-+#include <linux/compiler.h>
-+#include "../tests.h"
-+
-+typedef struct _buf {
-+	char data1;
-+	char reserved[55];
-+	char data2;
-+} buf __attribute__((aligned(64)));
-+
-+static buf buf1 = {
-+	/* to have this in the data section */
-+	.reserved[0] = 1,
-+};
-+
-+static int datasym(int argc __maybe_unused, const char **argv __maybe_unused)
-+{
-+	for (;;) {
-+		buf1.data1++;
-+		buf1.data2 += buf1.data1;
-+	}
-+	return 0;
-+}
-+
-+DEFINE_WORKLOAD(datasym);
--- 
-2.38.1.431.g37b22c650d-goog
-
+diff --git a/tools/perf/MANIFEST b/tools/perf/MANIFEST
+index f5d72f936a6bad2c..c8e8e05b4ff1f56f 100644
+--- a/tools/perf/MANIFEST
++++ b/tools/perf/MANIFEST
+@@ -13,8 +13,7 @@ tools/lib/ctype.c
+ tools/lib/hweight.c
+ tools/lib/rbtree.c
+ tools/lib/string.c
+-tools/lib/symbol/kallsyms.c
+-tools/lib/symbol/kallsyms.h
++tools/lib/symbol
+ tools/lib/find_bit.c
+ tools/lib/bitmap.c
+ tools/lib/list_sort.c
