@@ -2,48 +2,48 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EFBB8C4332F
-	for <linux-perf-users@archiver.kernel.org>; Wed,  9 Nov 2022 18:03:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9CDB2C4332F
+	for <linux-perf-users@archiver.kernel.org>; Wed,  9 Nov 2022 18:04:38 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229527AbiKISDc (ORCPT
+        id S229578AbiKISEg (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Wed, 9 Nov 2022 13:03:32 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37788 "EHLO
+        Wed, 9 Nov 2022 13:04:36 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39958 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231933AbiKISC4 (ORCPT
+        with ESMTP id S230413AbiKISE3 (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Wed, 9 Nov 2022 13:02:56 -0500
-Received: from mail-oi1-f176.google.com (mail-oi1-f176.google.com [209.85.167.176])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 101C125C6E;
-        Wed,  9 Nov 2022 10:02:54 -0800 (PST)
-Received: by mail-oi1-f176.google.com with SMTP id l127so19634141oia.8;
-        Wed, 09 Nov 2022 10:02:54 -0800 (PST)
+        Wed, 9 Nov 2022 13:04:29 -0500
+Received: from mail-oa1-f42.google.com (mail-oa1-f42.google.com [209.85.160.42])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id EA1A41D0;
+        Wed,  9 Nov 2022 10:04:28 -0800 (PST)
+Received: by mail-oa1-f42.google.com with SMTP id 586e51a60fabf-13ba86b5ac0so20515852fac.1;
+        Wed, 09 Nov 2022 10:04:28 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
         h=cc:to:subject:message-id:date:from:in-reply-to:references
          :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
          :reply-to;
-        bh=v65PkuQjKTHQdc19gFzSt8e8ZJKq+oCVZt1MzCmow2k=;
-        b=KWU7wydo1mRWKs8a/41YUugJJ5iNiZ8kqeBJVcNcZ1P/BE5qloc+5D65pBaGNajBPR
-         cRmMqX1MRvqUEv3olP3KemeOYQYjo/wTDfnLrR6/q2VKgmRYkYIkr5zlnOz/Rlbtjw1q
-         HT4TSsn9GozUEDNYmV+oj+sq2vld1sBpN5b8d7nSUmEILQIl5E/3cmTq2EjESsbZzDdz
-         tAWRyYtcNXWRU30nRApHydjTudrcOH4CScOv4caJuPERhmXaVA5zwls1Y521SdUWMANA
-         CM2uYVrcJG2lVQTAeBgiMVBb9Ky3zcuZDqUe2PsGWfdv7QK6wW5aENCRG2s8UrVZlvts
-         sGHg==
-X-Gm-Message-State: ACrzQf3w6plCAnmBo/ioXGzQ9nxVX9rKMahAHf9Y2HPK+oT0AGDala9g
-        YxTAswkSPy/P6aoxhRkNc1ACRVYqRv4UFnG5py5N7t1Q
-X-Google-Smtp-Source: AMsMyM6P64mXF96xlWlJJBgPkppkmrmr469ozds/QsLjGImzDjBeJskYqBvMaDPQhbA7YSkRaOB0OTEwvMvHrKTdVoo=
-X-Received: by 2002:aca:2805:0:b0:359:e340:d53 with SMTP id
- 5-20020aca2805000000b00359e3400d53mr31683937oix.209.1668016973150; Wed, 09
- Nov 2022 10:02:53 -0800 (PST)
+        bh=p46dqoJSw8bP5Xrwkyogv/cFNXRfHSlK4u22fVva9CE=;
+        b=cJO4q64CevlsFKKyxFNc4HpeGLx4Ba+ys5qVXeIkG+TblZJmFEuOvYnIQUw/rXL2yu
+         1mcjCVtgPx+HJ+4ExkaYxZsiLQK3FMfjzIg/uNmpj8jMSoz4oUpegMbK1GIe/WOO4ki9
+         YH53MZjzLaCUyPPprv0ApUAYCLQa5icpMcJ5Hl2kZhHI8GCd666LdE2CrQzo60rMhfsN
+         s3eXWZpf4YQ0NjGtnp0x5HKX8NOXdTYWGwZjj0esP6Bc7fXmKQtb9WjZNCiJvkHvkGNe
+         aSOeALZbD5Xyez1Ux5v/h2UEbnlUbOMBv+V+WdaHpHmIsFIdiF23/8FhJT+tFLqni308
+         8HQw==
+X-Gm-Message-State: ACrzQf0tK4JXzMKh7beSTQoUJIlBl+Ksa90AZ19EfSVkPo2w/3Qutxta
+        uCmdMUZiBznYTXCajjO/YlHAY4rfunNcP2KrblI=
+X-Google-Smtp-Source: AMsMyM4PNbiHpCGT33PlBOe4Cjvqr2v9IFss8aL/nIZa7B6W80YX9Tphnu1annkI0XjuxDwSGg3kcxJ7nmcklnQgoL0=
+X-Received: by 2002:a05:6870:9a27:b0:140:6f4c:f532 with SMTP id
+ fo39-20020a0568709a2700b001406f4cf532mr16454902oab.209.1668017068196; Wed, 09
+ Nov 2022 10:04:28 -0800 (PST)
 MIME-Version: 1.0
-References: <20221107213314.3239159-1-namhyung@kernel.org> <20221107213314.3239159-4-namhyung@kernel.org>
- <CAP-5=fWXAjWd-dbVXCVfRzP9iw5RzXo+cPWWPpOmTw-1xBECqg@mail.gmail.com>
-In-Reply-To: <CAP-5=fWXAjWd-dbVXCVfRzP9iw5RzXo+cPWWPpOmTw-1xBECqg@mail.gmail.com>
+References: <20221107213314.3239159-1-namhyung@kernel.org> <20221107213314.3239159-5-namhyung@kernel.org>
+ <CAP-5=fXOsQFGo90mg8yRvgMF3k4-s51-HC-n0+1hnE=4VR-rew@mail.gmail.com>
+In-Reply-To: <CAP-5=fXOsQFGo90mg8yRvgMF3k4-s51-HC-n0+1hnE=4VR-rew@mail.gmail.com>
 From:   Namhyung Kim <namhyung@kernel.org>
-Date:   Wed, 9 Nov 2022 10:02:41 -0800
-Message-ID: <CAM9d7cgAiAUqv0PZXMLjHqxfZO9u5NJgip=7Zd5QAJsBbzaOOw@mail.gmail.com>
-Subject: Re: [PATCH 3/9] perf stat: Clear screen only if output file is a tty
+Date:   Wed, 9 Nov 2022 10:04:17 -0800
+Message-ID: <CAM9d7cjmVsd4FU5a73vCmg9pgosQUAipTABi5Agjj92W8=9YJA@mail.gmail.com>
+Subject: Re: [PATCH 4/9] perf stat: Move common code in print_metric_headers()
 To:     Ian Rogers <irogers@google.com>
 Cc:     Arnaldo Carvalho de Melo <acme@kernel.org>,
         Jiri Olsa <jolsa@kernel.org>, Ingo Molnar <mingo@kernel.org>,
@@ -59,19 +59,20 @@ Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-Hi Ian,
-
-On Tue, Nov 8, 2022 at 3:16 PM Ian Rogers <irogers@google.com> wrote:
+On Tue, Nov 8, 2022 at 3:19 PM Ian Rogers <irogers@google.com> wrote:
 >
 > On Mon, Nov 7, 2022 at 1:33 PM Namhyung Kim <namhyung@kernel.org> wrote:
 > >
-> > The --interval-clear option makes perf stat to clear the terminal at
-> > each interval.  But it doesn't need to clear the screen when it saves
-> > to a file.
+> > The struct perf_stat_output_ctx is set in a loop with the same values.
+> > Move the code out of the loop and keep the loop minimal.
+> >
+> > Signed-off-by: Namhyung Kim <namhyung@kernel.org>
 >
-> Would it be more intuitive to warn if interval-clear is specified with a file?
+> Acked-by: Ian Rogers <irogers@google.com>
+> Could also potentially make it const, but functions it is passed to
+> would also need changing.
 
-Makes sense, will change.
+I'll consider when I work on it later.
 
 Thanks,
 Namhyung
