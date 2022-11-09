@@ -2,75 +2,58 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B0844C4332F
-	for <linux-perf-users@archiver.kernel.org>; Wed,  9 Nov 2022 11:30:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 831D4C433FE
+	for <linux-perf-users@archiver.kernel.org>; Wed,  9 Nov 2022 12:00:42 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229633AbiKILao (ORCPT
+        id S229526AbiKIMAl (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Wed, 9 Nov 2022 06:30:44 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49264 "EHLO
+        Wed, 9 Nov 2022 07:00:41 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40172 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229527AbiKILan (ORCPT
+        with ESMTP id S229541AbiKIMAl (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Wed, 9 Nov 2022 06:30:43 -0500
+        Wed, 9 Nov 2022 07:00:41 -0500
 Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTP id CC1561CFF5;
-        Wed,  9 Nov 2022 03:30:41 -0800 (PST)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTP id 3D7732AC67;
+        Wed,  9 Nov 2022 04:00:40 -0800 (PST)
 Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 445581FB;
-        Wed,  9 Nov 2022 03:30:47 -0800 (PST)
-Received: from [10.1.36.52] (FVFF763DQ05P.cambridge.arm.com [10.1.36.52])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 60D5A3F534;
-        Wed,  9 Nov 2022 03:30:39 -0800 (PST)
-Message-ID: <8f6d3424-2650-8e8b-61f7-1431aec4633b@arm.com>
-Date:   Wed, 9 Nov 2022 11:30:38 +0000
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 2D0581FB;
+        Wed,  9 Nov 2022 04:00:46 -0800 (PST)
+Received: from [10.1.197.1] (ewhatever.cambridge.arm.com [10.1.197.1])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 2422B3F534;
+        Wed,  9 Nov 2022 04:00:38 -0800 (PST)
+Message-ID: <94ee3daf-f6f8-129d-0160-c7584393a3c7@arm.com>
+Date:   Wed, 9 Nov 2022 12:00:36 +0000
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.15; rv:102.0)
- Gecko/20100101 Thunderbird/102.4.2
-Subject: Re: [PATCH V5 2/7] arm64/perf: Update struct arm_pmu for BRBE
-To:     Anshuman Khandual <anshuman.khandual@arm.com>,
-        linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, peterz@infradead.org,
-        acme@kernel.org, mark.rutland@arm.com, will@kernel.org,
-        catalin.marinas@arm.com
-Cc:     Mark Brown <broonie@kernel.org>, James Clark <james.clark@arm.com>,
-        Rob Herring <robh@kernel.org>, Marc Zyngier <maz@kernel.org>,
-        Ingo Molnar <mingo@redhat.com>
-References: <20221107062514.2851047-1-anshuman.khandual@arm.com>
- <20221107062514.2851047-3-anshuman.khandual@arm.com>
-From:   Suzuki K Poulose <suzuki.poulose@arm.com>
-In-Reply-To: <20221107062514.2851047-3-anshuman.khandual@arm.com>
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
+ Thunderbird/102.3.1
+Subject: Re: [PATCH v5 12/14] perf: cs-etm: Handle
+ PERF_RECORD_AUX_OUTPUT_HW_ID packet
+Content-Language: en-US
+To:     Mike Leach <mike.leach@linaro.org>, coresight@lists.linaro.org,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+Cc:     mathieu.poirier@linaro.org, peterz@infradead.org, mingo@redhat.com,
+        acme@kernel.org, linux-perf-users@vger.kernel.org,
+        leo.yan@linaro.org, quic_jinlmao@quicinc.com
+References: <20221101163103.17921-1-mike.leach@linaro.org>
+ <20221101163103.17921-13-mike.leach@linaro.org>
+From:   Suzuki Kuruppassery Poulose <suzuki.poulose@arm.com>
+In-Reply-To: <20221101163103.17921-13-mike.leach@linaro.org>
 Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 7bit
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-On 07/11/2022 06:25, Anshuman Khandual wrote:
-> Although BRBE is an armv8 speciifc HW feature, abstracting out its various
-> function callbacks at the struct arm_pmu level is preferred, as it cleaner
-> , easier to follow and maintain.
+On 01/11/2022 16:31, Mike Leach wrote:
+> When using dynamically assigned CoreSight trace IDs the drivers can output
+> the ID / CPU association as a PERF_RECORD_AUX_OUTPUT_HW_ID packet.
 > 
-> Besides some helpers i.e brbe_supported(), brbe_probe() and brbe_reset()
-> might not fit seamlessly, when tried to be embedded via existing arm_pmu
-> helpers in the armv8 implementation.
+> Update cs-etm decoder to handle this packet by setting the CPU/Trace ID
+> mapping.
 > 
-> Updates the struct arm_pmu to include all required helpers that will drive
-> BRBE functionality for a given PMU implementation. These are the following.
-> 
-> - brbe_filter	: Convert perf event filters into BRBE HW filters
-> - brbe_probe	: Probe BRBE HW and capture its attributes
-> - brbe_enable	: Enable BRBE HW with a given config
-> - brbe_disable	: Disable BRBE HW
-> - brbe_read	: Read BRBE buffer for captured branch records
-> - brbe_reset	: Reset BRBE buffer
-> - brbe_supported: Whether BRBE is supported or not
-> 
-> A BRBE driver implementation needs to provide these functionalities.
+> Signed-off-by: Mike Leach <mike.leach@linaro.org>
+> Reviewed-by: James Clark <james.clark@arm.com>
 
-Could these not be hidden from the generic arm_pmu and kept in the
-arm64 pmu backend  ? It looks like they are quite easy to simply
-move these to the corresponding hooks in arm64 pmu.
-
-Suzuki
+Acked-by: Suzuki K Poulose <suzuki.poulose@arm.com>
 
