@@ -2,196 +2,362 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CA22CC433FE
-	for <linux-perf-users@archiver.kernel.org>; Wed,  9 Nov 2022 08:30:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 66C72C433FE
+	for <linux-perf-users@archiver.kernel.org>; Wed,  9 Nov 2022 10:24:50 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230146AbiKIIaq (ORCPT
+        id S230351AbiKIKYt (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Wed, 9 Nov 2022 03:30:46 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40340 "EHLO
+        Wed, 9 Nov 2022 05:24:49 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45042 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230032AbiKIIaU (ORCPT
+        with ESMTP id S230475AbiKIKY0 (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Wed, 9 Nov 2022 03:30:20 -0500
-Received: from loongson.cn (mail.loongson.cn [114.242.206.163])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTP id 8CA9122B19;
-        Wed,  9 Nov 2022 00:29:20 -0800 (PST)
-Received: from loongson.cn (unknown [113.200.148.30])
-        by gateway (Coremail) with SMTP id _____8Bx37fYZGtjh4EFAA--.12874S3;
-        Wed, 09 Nov 2022 16:29:12 +0800 (CST)
-Received: from linux.localdomain (unknown [113.200.148.30])
-        by localhost.localdomain (Coremail) with SMTP id AQAAf8BxtuPTZGtjJnIPAA--.42697S6;
-        Wed, 09 Nov 2022 16:29:11 +0800 (CST)
-From:   Tiezhu Yang <yangtiezhu@loongson.cn>
-To:     Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        Arnaldo Carvalho de Melo <acme@kernel.org>
-Cc:     Mark Rutland <mark.rutland@arm.com>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Wed, 9 Nov 2022 05:24:26 -0500
+Received: from mx0a-001b2d01.pphosted.com (mx0a-001b2d01.pphosted.com [148.163.156.1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 338962497B
+        for <linux-perf-users@vger.kernel.org>; Wed,  9 Nov 2022 02:24:14 -0800 (PST)
+Received: from pps.filterd (m0098404.ppops.net [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (8.17.1.5/8.17.1.5) with ESMTP id 2A98g5o6002280;
+        Wed, 9 Nov 2022 10:23:43 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=content-type : subject :
+ from : in-reply-to : date : cc : message-id : references : to :
+ content-transfer-encoding : mime-version; s=pp1;
+ bh=gLvRbnEM3M0rDrTFL5isxIIAuNK0+1RcXFBORpLJ3ZI=;
+ b=m6EbH6+UySJcuHPADj8+lOYaV9XfbUzbASbJjQefhAUm2IKsY5m45Vtj7MB56BOB2Sjg
+ bPVrUxbUczKJuEnG9kOfVWSte4dfGcXZaQOdLZx44LaU6f6W/JdSgxj6fdQhft2Q1kNS
+ qLwUvn8a2ZcDA4zPr8xcXo8hJ2E7P8hrZzw/2IVV4hkslhih+gRYZotsUetF0CK2NA1y
+ yTE8dAjwAibjqGC+JwJdgjVq9IGBkbG6awkAGesYc9PD/1TuAgH7VJ13Fk0j2EzxuNX2
+ DUErwSlWThWGZOSMM40bUqVkoOQh3hj5C4KugRvTkhYcTZfAFHBjWavCxtd+Ggcfp6og bg== 
+Received: from pps.reinject (localhost [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 3kr8wxjm5h-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Wed, 09 Nov 2022 10:23:43 +0000
+Received: from m0098404.ppops.net (m0098404.ppops.net [127.0.0.1])
+        by pps.reinject (8.17.1.5/8.17.1.5) with ESMTP id 2A99odnX017389;
+        Wed, 9 Nov 2022 10:23:42 GMT
+Received: from ppma03fra.de.ibm.com (6b.4a.5195.ip4.static.sl-reverse.com [149.81.74.107])
+        by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 3kr8wxjm4q-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Wed, 09 Nov 2022 10:23:42 +0000
+Received: from pps.filterd (ppma03fra.de.ibm.com [127.0.0.1])
+        by ppma03fra.de.ibm.com (8.16.1.2/8.16.1.2) with SMTP id 2A9AKWTM012426;
+        Wed, 9 Nov 2022 10:23:40 GMT
+Received: from b06cxnps4074.portsmouth.uk.ibm.com (d06relay11.portsmouth.uk.ibm.com [9.149.109.196])
+        by ppma03fra.de.ibm.com with ESMTP id 3kngp5m0ua-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Wed, 09 Nov 2022 10:23:39 +0000
+Received: from d06av22.portsmouth.uk.ibm.com (d06av22.portsmouth.uk.ibm.com [9.149.105.58])
+        by b06cxnps4074.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 2A9ANaZa63242584
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Wed, 9 Nov 2022 10:23:36 GMT
+Received: from d06av22.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 7FB604C046;
+        Wed,  9 Nov 2022 10:23:36 +0000 (GMT)
+Received: from d06av22.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 58CD54C04A;
+        Wed,  9 Nov 2022 10:23:33 +0000 (GMT)
+Received: from smtpclient.apple (unknown [9.43.119.87])
+        by d06av22.portsmouth.uk.ibm.com (Postfix) with ESMTPS;
+        Wed,  9 Nov 2022 10:23:33 +0000 (GMT)
+Content-Type: text/plain;
+        charset=us-ascii
+Subject: Re: [PATCH 2/2] tools/perf: Fix printing field separator in CSV
+ metrics output
+From:   Athira Rajeev <atrajeev@linux.vnet.ibm.com>
+In-Reply-To: <Y2rCuGSKoIjHwWGx@kernel.org>
+Date:   Wed, 9 Nov 2022 15:53:30 +0530
+Cc:     Ian Rogers <irogers@google.com>, Andi Kleen <ak@linux.intel.com>,
+        Nageswara Sastry <rnsastry@linux.ibm.com>,
+        Kajol Jain <kjain@linux.ibm.com>,
+        linux-perf-users@vger.kernel.org, maddy@linux.vnet.ibm.com,
+        James Clark <james.clark@arm.com>,
         Jiri Olsa <jolsa@kernel.org>,
-        Namhyung Kim <namhyung@kernel.org>,
-        linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org
-Subject: [PATCH v4 4/4] perf bench syscall: Add execve syscall benchmark
-Date:   Wed,  9 Nov 2022 16:29:07 +0800
-Message-Id: <1667982547-22331-5-git-send-email-yangtiezhu@loongson.cn>
-X-Mailer: git-send-email 2.1.0
-In-Reply-To: <1667982547-22331-1-git-send-email-yangtiezhu@loongson.cn>
-References: <1667982547-22331-1-git-send-email-yangtiezhu@loongson.cn>
-X-CM-TRANSID: AQAAf8BxtuPTZGtjJnIPAA--.42697S6
-X-CM-SenderInfo: p1dqw3xlh2x3gn0dqz5rrqw2lrqou0/
-X-Coremail-Antispam: 1Uk129KBjvJXoWxAF13JryxJF1UCw1rAF4ktFb_yoWrCFy3pF
-        s7Ca18Jws5WFWYvr13tr1DKFy3Awn7Zry5Kw17C3yDZr42g343tr42gFy3GF17XwsrK343
-        uFs7Zry8Wa1rXaUanT9S1TB71UUUUj7qnTZGkaVYY2UrUUUUj1kv1TuYvTs0mT0YCTnIWj
-        qI5I8CrVACY4xI64kE6c02F40Ex7xfYxn0WfASr-VFAUDa7-sFnT9fnUUIcSsGvfJTRUUU
-        bSkYFVCjjxCrM7AC8VAFwI0_Jr0_Gr1l1xkIjI8I6I8E6xAIw20EY4v20xvaj40_Wr0E3s
-        1l1IIY67AEw4v_JF0_JFyl8cAvFVAK0II2c7xJM28CjxkF64kEwVA0rcxSw2x7M28EF7xv
-        wVC0I7IYx2IY67AKxVW5JVW7JwA2z4x0Y4vE2Ix0cI8IcVCY1x0267AKxVWxJVW8Jr1l84
-        ACjcxK6I8E87Iv67AKxVW8Jr0_Cr1UM28EF7xvwVC2z280aVCY1x0267AKxVW8Jr0_Cr1U
-        M2kKe7AKxVWUAVWUtwAS0I0E0xvYzxvE52x082IY62kv0487Mc804VCY07AIYIkI8VC2zV
-        CFFI0UMc02F40EFcxC0VAKzVAqx4xG6I80ewAv7VC0I7IYx2IY67AKxVWUtVWrXwAv7VC2
-        z280aVAFwI0_Gr0_Cr1lOx8S6xCaFVCjc4AY6r1j6r4UM4x0Y48IcxkI7VAKI48JMxkF7I
-        0En4kS14v26r126r1DMxAIw28IcxkI7VAKI48JMxC20s026xCaFVCjc4AY6r1j6r4UMxCI
-        bckI1I0E14v26r126r1DMI8I3I0E5I8CrVAFwI0_Jr0_Jr4lx2IqxVCjr7xvwVAFwI0_Jr
-        I_JrWlx4CE17CEb7AF67AKxVWUtVW8ZwCIc40Y0x0EwIxGrwCI42IY6xIIjxv20xvE14v2
-        6ryj6F1UMIIF0xvE2Ix0cI8IcVCY1x0267AKxVW8JVWxJwCI42IY6xAIw20EY4v20xvaj4
-        0_Jr0_JF4lIxAIcVC2z280aVAFwI0_Gr0_Cr1lIxAIcVC2z280aVCY1x0267AKxVW8JVW8
-        JrUvcSsGvfC2KfnxnUUI43ZEXa7IU8Gii3UUUUU==
+        Namhyung Kim <namhyung@kernel.org>, disgoel@linux.ibm.com,
+        linuxppc-dev@lists.ozlabs.org
+Message-Id: <B036F80D-D642-439A-B5ED-A8D79853E20D@linux.vnet.ibm.com>
+References: <20221018085605.63834-1-atrajeev@linux.vnet.ibm.com>
+ <20221018085605.63834-2-atrajeev@linux.vnet.ibm.com>
+ <173AA14E-B018-4BA7-A7A8-E7069E273960@linux.vnet.ibm.com>
+ <Y2rCuGSKoIjHwWGx@kernel.org>
+To:     Arnaldo Carvalho de Melo <acme@kernel.org>
+X-Mailer: Apple Mail (2.3696.120.41.1.1)
+X-TM-AS-GCONF: 00
+X-Proofpoint-ORIG-GUID: 8VLVwqVLG5LbTRdRwDBH_GdHVF_KXGAC
+X-Proofpoint-GUID: qLI09scSvM_jAnOD5kpXalzQCpKLS0ug
+Content-Transfer-Encoding: quoted-printable
+X-Proofpoint-UnRewURL: 0 URL was un-rewritten
+MIME-Version: 1.0
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.219,Aquarius:18.0.895,Hydra:6.0.545,FMLib:17.11.122.1
+ definitions=2022-11-09_03,2022-11-09_01,2022-06-22_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 bulkscore=0
+ priorityscore=1501 clxscore=1015 phishscore=0 mlxlogscore=999
+ lowpriorityscore=0 impostorscore=0 adultscore=0 malwarescore=0 mlxscore=0
+ suspectscore=0 spamscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2210170000 definitions=main-2211090077
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-This commit adds the execve syscall benchmark, more syscall
-benchmarks can be added in the future.
 
-Signed-off-by: Tiezhu Yang <yangtiezhu@loongson.cn>
+
+> On 09-Nov-2022, at 2:27 AM, Arnaldo Carvalho de Melo <acme@kernel.org> wr=
+ote:
+>=20
+> Em Wed, Nov 02, 2022 at 02:07:06PM +0530, Athira Rajeev escreveu:
+>>=20
+>>=20
+>>> On 18-Oct-2022, at 2:26 PM, Athira Rajeev <atrajeev@linux.vnet.ibm.com>=
+ wrote:
+>>>=20
+>>> In perf stat with CSV output option, number of fields
+>>> in metrics output is not matching with number of fields
+>>> in other event output lines.
+>>>=20
+>>> Sample output below after applying patch to fix
+>>> printing os->prefix.
+>>>=20
+>>> 	# ./perf stat -x, --per-socket -a -C 1 ls
+>>> 	S0,1,1.89,msec,cpu-clock,1887692,100.00,1.013,CPUs utilized
+>>> 	S0,1,2,,context-switches,1885842,100.00,1.060,K/sec
+>>> 	S0,1,0,,cpu-migrations,1885374,100.00,0.000,/sec
+>>> 	S0,1,2,,page-faults,1884880,100.00,1.060,K/sec
+>>> 	S0,1,189544,,cycles,1263158,67.00,0.100,GHz
+>>> 	S0,1,64602,,stalled-cycles-frontend,1876146,100.00,34.08,frontend cycl=
+es idle
+>>> 	S0,1,128241,,stalled-cycles-backend,1875512,100.00,67.66,backend cycle=
+s idle
+>>> 	S0,1,95578,,instructions,1874676,100.00,0.50,insn per cycle
+>>> =3D=3D=3D>	S0,1,,,,,,,1.34,stalled cycles per insn
+>>>=20
+>>> The above command line uses field separator as ","
+>>> via "-x," option and per-socket option displays
+>>> socket value as first field. But here the last line
+>>> for "stalled cycles per insn" has more separators.
+>>> Each csv output line is expected to have 8 field
+>>> separatorsi (for the 9 fields), where as last line
+>>> has 10 "," in the result. Patch fixes this issue.
+>>>=20
+>>> The counter stats are displayed by function
+>>> "perf_stat__print_shadow_stats" in code
+>>> "util/stat-shadow.c". While printing the stats info
+>>> for "stalled cycles per insn", function "new_line_csv"
+>>> is used as new_line callback.
+>>>=20
+>>> The fields printed in each line contains:
+>>> "Socket_id,aggr nr,Avg,unit,event_name,run,enable_percent,ratio,unit"
+>>>=20
+>>> The metric output prints Socket_id, aggr nr, ratio
+>>> and unit. It has to skip through remaining five fields
+>>> ie, Avg,unit,event_name,run,enable_percent. The csv
+>>> line callback uses "os->nfields" to know the number of
+>>> fields to skip to match with other lines.
+>>> Currently it is set as:
+>>> 	os.nfields =3D 3 + aggr_fields[config->aggr_mode] + (counter->cgrp ? 1=
+ : 0);
+>>>=20
+>>> But in case of aggregation modes, csv_sep already
+>>> gets printed along with each field (Function "aggr_printout"
+>>> in util/stat-display.c). So aggr_fields can be
+>>> removed from nfields. And fixed number of fields to
+>>> skip has to be "4". This is to skip fields for:
+>>> "avg, unit, event name, run, enable_percent"
+>>> Example from line for instructions:
+>>> "1.89,msec,cpu-clock,1887692,100.00"
+>>>=20
+>>> This needs 4 csv separators. Patch removes aggr_fields
+>>> and uses 4 as fixed number of os->nfields to skip.
+>>>=20
+>>> After the patch:
+>>>=20
+>>> 	# ./perf stat -x, --per-socket -a -C 1 ls
+>>> 	S0,1,1.92,msec,cpu-clock,1917648,100.00,1.010,CPUs utilized
+>>> 	S0,1,54,,context-switches,1916762,100.00,28.176,K/sec
+>>> 	-------
+>>> 	S0,1,528693,,instructions,1908854,100.00,0.36,insn per cycle
+>>> 	S0,1,,,,,,1.81,stalled cycles per insn
+>>>=20
+>>> Fixes: 92a61f6412d3 ("perf stat: Implement CSV metrics output")
+>>> Reported-by: Disha Goel <disgoel@linux.vnet.ibm.com>
+>>> Signed-off-by: Athira Rajeev <atrajeev@linux.vnet.ibm.com>
+>>=20
+>> Hi All,
+>>=20
+>> Looking for review comments for this change.
+>=20
+> This clashed with a patch from Namhyung that I just applied:
+>=20
+> http://lore.kernel.org/lkml/20221107213314.3239159-2-namhyung@kernel.org
+>=20
+> Can you please check? I just applied the other patch in this series.
+>=20
+> Thanks,
+>=20
+> - Arnaldo
+
+Hi Arnaldo,
+
+Thanks for checking the patch series.
+Please find the updated patch below which is created on top of perf/urgent.
+
+From dde8f830ad318c9111c3fea5415fd8170b4c51bd Mon Sep 17 00:00:00 2001
+From: Athira Rajeev <atrajeev@linux.vnet.ibm.com>
+Date: Tue, 18 Oct 2022 14:26:05 +0530
+Subject: [PATCH] tools/perf: Fix printing field separator in CSV metrics
+ output
+
+In perf stat with CSV output option, number of fields
+in metrics output is not matching with number of fields
+in other event output lines.
+
+Sample output below after applying patch to fix
+printing os->prefix.
+
+	# ./perf stat -x, --per-socket -a -C 1 ls
+	S0,1,1.89,msec,cpu-clock,1887692,100.00,1.013,CPUs utilized
+	S0,1,2,,context-switches,1885842,100.00,1.060,K/sec
+	S0,1,0,,cpu-migrations,1885374,100.00,0.000,/sec
+	S0,1,2,,page-faults,1884880,100.00,1.060,K/sec
+	S0,1,189544,,cycles,1263158,67.00,0.100,GHz
+	S0,1,64602,,stalled-cycles-frontend,1876146,100.00,34.08,frontend cycles i=
+dle
+	S0,1,128241,,stalled-cycles-backend,1875512,100.00,67.66,backend cycles id=
+le
+	S0,1,95578,,instructions,1874676,100.00,0.50,insn per cycle
+=3D=3D=3D>	S0,1,,,,,,,1.34,stalled cycles per insn
+
+The above command line uses field separator as ","
+via "-x," option and per-socket option displays
+socket value as first field. But here the last line
+for "stalled cycles per insn" has more separators.
+Each csv output line is expected to have 8 field
+separatorsi (for the 9 fields), where as last line
+has 10 "," in the result. Patch fixes this issue.
+
+The counter stats are displayed by function
+"perf_stat__print_shadow_stats" in code
+"util/stat-shadow.c". While printing the stats info
+for "stalled cycles per insn", function "new_line_csv"
+is used as new_line callback.
+
+The fields printed in each line contains:
+"Socket_id,aggr nr,Avg,unit,event_name,run,enable_percent,ratio,unit"
+
+The metric output prints Socket_id, aggr nr, ratio
+and unit. It has to skip through remaining five fields
+ie, Avg,unit,event_name,run,enable_percent. The csv
+line callback uses "os->nfields" to know the number of
+fields to skip to match with other lines.
+Currently it is set as:
+	os.nfields =3D 3 + aggr_fields[config->aggr_mode] + (counter->cgrp ? 1 : 0=
+);
+
+But in case of aggregation modes, csv_sep already
+gets printed along with each field (Function "aggr_printout"
+in util/stat-display.c). So aggr_fields can be
+removed from nfields. And fixed number of fields to
+skip has to be "4". This is to skip fields for:
+"avg, unit, event name, run, enable_percent"
+Example from line for instructions:
+"1.89,msec,cpu-clock,1887692,100.00"
+
+This needs 4 csv separators. Patch removes aggr_fields
+and uses 4 as fixed number of os->nfields to skip.
+
+After the patch:
+
+	# ./perf stat -x, --per-socket -a -C 1 ls
+	S0,1,1.92,msec,cpu-clock,1917648,100.00,1.010,CPUs utilized
+	S0,1,54,,context-switches,1916762,100.00,28.176,K/sec
+	-------
+	S0,1,528693,,instructions,1908854,100.00,0.36,insn per cycle
+	S0,1,,,,,,1.81,stalled cycles per insn
+
+Fixes: 92a61f6412d3 ("perf stat: Implement CSV metrics output")
+Reported-by: Disha Goel <disgoel@linux.vnet.ibm.com>
+Signed-off-by: Athira Rajeev <atrajeev@linux.vnet.ibm.com>
 ---
- tools/arch/x86/include/uapi/asm/unistd_32.h |  3 +++
- tools/arch/x86/include/uapi/asm/unistd_64.h |  3 +++
- tools/perf/bench/bench.h                    |  1 +
- tools/perf/bench/syscall.c                  | 36 +++++++++++++++++++++++++++++
- tools/perf/builtin-bench.c                  |  1 +
- 5 files changed, 44 insertions(+)
+ tools/perf/util/stat-display.c | 13 +------------
+ 1 file changed, 1 insertion(+), 12 deletions(-)
 
-diff --git a/tools/arch/x86/include/uapi/asm/unistd_32.h b/tools/arch/x86/include/uapi/asm/unistd_32.h
-index 2bcf47f..d20b43c 100644
---- a/tools/arch/x86/include/uapi/asm/unistd_32.h
-+++ b/tools/arch/x86/include/uapi/asm/unistd_32.h
-@@ -1,4 +1,7 @@
- /* SPDX-License-Identifier: GPL-2.0 */
-+#ifndef __NR_execve
-+#define __NR_execve 11
-+#endif
- #ifndef __NR_getppid
- #define __NR_getppid 64
- #endif
-diff --git a/tools/arch/x86/include/uapi/asm/unistd_64.h b/tools/arch/x86/include/uapi/asm/unistd_64.h
-index 5472203..80d4d90 100644
---- a/tools/arch/x86/include/uapi/asm/unistd_64.h
-+++ b/tools/arch/x86/include/uapi/asm/unistd_64.h
-@@ -1,4 +1,7 @@
- /* SPDX-License-Identifier: GPL-2.0 */
-+#ifndef __NR_execve
-+#define __NR_execve 59
-+#endif
- #ifndef __NR_getppid
- #define __NR_getppid 110
- #endif
-diff --git a/tools/perf/bench/bench.h b/tools/perf/bench/bench.h
-index 7ccc021..9d6f692 100644
---- a/tools/perf/bench/bench.h
-+++ b/tools/perf/bench/bench.h
-@@ -35,6 +35,7 @@ int bench_sched_messaging(int argc, const char **argv);
- int bench_sched_pipe(int argc, const char **argv);
- int bench_syscall_basic(int argc, const char **argv);
- int bench_syscall_getpgrp(int argc, const char **argv);
-+int bench_syscall_execve(int argc, const char **argv);
- int bench_mem_memcpy(int argc, const char **argv);
- int bench_mem_memset(int argc, const char **argv);
- int bench_mem_find_bit(int argc, const char **argv);
-diff --git a/tools/perf/bench/syscall.c b/tools/perf/bench/syscall.c
-index 2b89884..c71334c 100644
---- a/tools/perf/bench/syscall.c
-+++ b/tools/perf/bench/syscall.c
-@@ -14,6 +14,7 @@
- #include <sys/time.h>
- #include <sys/syscall.h>
- #include <sys/types.h>
-+#include <sys/wait.h>
- #include <unistd.h>
- #include <stdlib.h>
- 
-@@ -30,6 +31,27 @@ static const char * const bench_syscall_usage[] = {
- 	NULL
- };
- 
-+static void test_execve(void)
-+{
-+	const char *pathname = "/bin/true";
-+	char *const argv[] = { (char *)pathname, NULL };
-+	pid_t pid = fork();
-+
-+	if (pid < 0) {
-+		fprintf(stderr, "fork failed\n");
-+		exit(1);
-+	} else if (pid == 0) {
-+		execve(pathname, argv, NULL);
-+		fprintf(stderr, "execve /bin/true failed\n");
-+		exit(1);
-+	} else {
-+		if (waitpid(pid, NULL, 0) < 0) {
-+			fprintf(stderr, "waitpid failed\n");
-+			exit(1);
-+		}
-+	}
-+}
-+
- static int bench_syscall_common(int argc, const char **argv, int syscall)
- {
- 	struct timeval start, stop, diff;
-@@ -49,6 +71,12 @@ static int bench_syscall_common(int argc, const char **argv, int syscall)
- 		case __NR_getpgrp:
- 			getpgrp();
- 			break;
-+		case __NR_execve:
-+			test_execve();
-+			/* Only loop 10000 times to save time */
-+			if (i == 10000)
-+				loops = 10000;
-+			break;
- 		default:
- 			break;
- 		}
-@@ -64,6 +92,9 @@ static int bench_syscall_common(int argc, const char **argv, int syscall)
- 	case __NR_getpgrp:
- 		name = "getpgrp()";
- 		break;
-+	case __NR_execve:
-+		name = "execve()";
-+		break;
- 	default:
- 		break;
- 	}
-@@ -111,3 +142,8 @@ int bench_syscall_getpgrp(int argc, const char **argv)
- {
- 	return bench_syscall_common(argc, argv, __NR_getpgrp);
- }
-+
-+int bench_syscall_execve(int argc, const char **argv)
-+{
-+	return bench_syscall_common(argc, argv, __NR_execve);
-+}
-diff --git a/tools/perf/builtin-bench.c b/tools/perf/builtin-bench.c
-index 20ca4ac..ace7a2a 100644
---- a/tools/perf/builtin-bench.c
-+++ b/tools/perf/builtin-bench.c
-@@ -53,6 +53,7 @@ static struct bench sched_benchmarks[] = {
- static struct bench syscall_benchmarks[] = {
- 	{ "basic",	"Benchmark for basic getppid(2) calls",		bench_syscall_basic	},
- 	{ "getpgrp",	"Benchmark for getpgrp(2) calls",		bench_syscall_getpgrp	},
-+	{ "execve",	"Benchmark for execve(2) calls",		bench_syscall_execve    },
- 	{ "all",	"Run all syscall benchmarks",			NULL			},
- 	{ NULL,		NULL,						NULL			},
- };
--- 
-2.1.0
+diff --git a/tools/perf/util/stat-display.c b/tools/perf/util/stat-display.c
+index ba66bb7fc1ca..5ce14bf18055 100644
+--- a/tools/perf/util/stat-display.c
++++ b/tools/perf/util/stat-display.c
+@@ -551,20 +551,9 @@ static void printout(struct perf_stat_config *config, =
+struct aggr_cpu_id id, int
+ 	new_line_t nl;
+=20
+ 	if (config->csv_output) {
+-		static const int aggr_fields[AGGR_MAX] =3D {
+-			[AGGR_NONE] =3D 1,
+-			[AGGR_GLOBAL] =3D 0,
+-			[AGGR_SOCKET] =3D 2,
+-			[AGGR_DIE] =3D 2,
+-			[AGGR_CORE] =3D 2,
+-			[AGGR_THREAD] =3D 1,
+-			[AGGR_UNSET] =3D 0,
+-			[AGGR_NODE] =3D 1,
+-		};
+-
+ 		pm =3D config->metric_only ? print_metric_only_csv : print_metric_csv;
+ 		nl =3D config->metric_only ? new_line_metric : new_line_csv;
+-		os.nfields =3D 3 + aggr_fields[config->aggr_mode] + (counter->cgrp ? 1 :=
+ 0);
++		os.nfields =3D 4 + (counter->cgrp ? 1 : 0);
+ 	} else if (config->json_output) {
+ 		pm =3D config->metric_only ? print_metric_only_json : print_metric_json;
+ 		nl =3D config->metric_only ? new_line_metric : new_line_json;
+--=20
+2.31.1
+
+
+Thanks
+Athira
+
+>=20
+>> Thanks
+>> Athira
+>>=20
+>>> ---
+>>> tools/perf/util/stat-display.c | 13 +------------
+>>> 1 file changed, 1 insertion(+), 12 deletions(-)
+>>>=20
+>>> diff --git a/tools/perf/util/stat-display.c b/tools/perf/util/stat-disp=
+lay.c
+>>> index 879874a4bc07..5ca151adf826 100644
+>>> --- a/tools/perf/util/stat-display.c
+>>> +++ b/tools/perf/util/stat-display.c
+>>> @@ -551,20 +551,9 @@ static void printout(struct perf_stat_config *conf=
+ig, struct aggr_cpu_id id, int
+>>> 	new_line_t nl;
+>>>=20
+>>> 	if (config->csv_output) {
+>>> -		static const int aggr_fields[AGGR_MAX] =3D {
+>>> -			[AGGR_NONE] =3D 1,
+>>> -			[AGGR_GLOBAL] =3D 0,
+>>> -			[AGGR_SOCKET] =3D 2,
+>>> -			[AGGR_DIE] =3D 2,
+>>> -			[AGGR_CORE] =3D 2,
+>>> -			[AGGR_THREAD] =3D 1,
+>>> -			[AGGR_UNSET] =3D 0,
+>>> -			[AGGR_NODE] =3D 0,
+>>> -		};
+>>> -
+>>> 		pm =3D config->metric_only ? print_metric_only_csv : print_metric_csv;
+>>> 		nl =3D config->metric_only ? new_line_metric : new_line_csv;
+>>> -		os.nfields =3D 3 + aggr_fields[config->aggr_mode] + (counter->cgrp ?=
+ 1 : 0);
+>>> +		os.nfields =3D 4 + (counter->cgrp ? 1 : 0);
+>>> 	} else if (config->json_output) {
+>>> 		pm =3D config->metric_only ? print_metric_only_json : print_metric_js=
+on;
+>>> 		nl =3D config->metric_only ? new_line_metric : new_line_json;
+>>> --=20
+>>> 2.31.1
+>>>=20
+>=20
+> --=20
+>=20
+> - Arnaldo
 
