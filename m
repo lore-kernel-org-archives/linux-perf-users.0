@@ -2,179 +2,147 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8AC15C4332F
-	for <linux-perf-users@archiver.kernel.org>; Wed,  9 Nov 2022 18:40:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 313E7C433FE
+	for <linux-perf-users@archiver.kernel.org>; Wed,  9 Nov 2022 18:49:29 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230336AbiKISkB (ORCPT
+        id S230301AbiKISt2 (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Wed, 9 Nov 2022 13:40:01 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59120 "EHLO
+        Wed, 9 Nov 2022 13:49:28 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39598 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229550AbiKISkA (ORCPT
+        with ESMTP id S230096AbiKISt1 (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Wed, 9 Nov 2022 13:40:00 -0500
-Received: from ams.source.kernel.org (ams.source.kernel.org [IPv6:2604:1380:4601:e00::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E924DF5B0;
-        Wed,  9 Nov 2022 10:39:59 -0800 (PST)
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by ams.source.kernel.org (Postfix) with ESMTPS id A325FB81F90;
-        Wed,  9 Nov 2022 18:39:58 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 27ABCC433C1;
-        Wed,  9 Nov 2022 18:39:57 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1668019197;
-        bh=GYxMAZ3wSyTinwzhB7VkfYbbF5onx9+U4IQcdZlqAss=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=VrPBc8QnNZGVmwKtQBYXVXcUAOHh+lb3V3nSFWS+2B3rFmj7i4envYwUzaLdvBXi6
-         VLa9uCayrG/GdM9ipqB/fcdfRbDYvHWdRknCE2DmaDrmrkTB5Dgwih2HPSR3pnrXm+
-         FDumyi8L2uS7BQw3TgUgg4rwpSrv1z231mDowcwfI5sV6EuoR3roDHR7JR+HOXs6mS
-         DruBBLWNUsZNy44m+7+P9AldO1ZZmuTweva1ZgYMbrMuhwlqWo6PZz12sTojNSXTsC
-         WAVEhI5O1nRJvk1VaY8YWZCWDvsU7weTW944VqllYsRRgEXELVPXIxh2OAWTnUPN13
-         iWg2RIgcuIpug==
-Received: by quaco.ghostprotocols.net (Postfix, from userid 1000)
-        id 4ABFB4034E; Wed,  9 Nov 2022 15:39:55 -0300 (-03)
-Date:   Wed, 9 Nov 2022 15:39:55 -0300
-From:   Arnaldo Carvalho de Melo <acme@kernel.org>
-To:     Namhyung Kim <namhyung@kernel.org>
-Cc:     Jiri Olsa <jolsa@kernel.org>, Ingo Molnar <mingo@kernel.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Ian Rogers <irogers@google.com>,
-        Adrian Hunter <adrian.hunter@intel.com>,
-        linux-perf-users@vger.kernel.org, Leo Yan <leo.yan@linaro.org>,
-        German Gomez <german.gomez@arm.com>,
-        Zhengjun Xing <zhengjun.xing@linux.intel.com>,
-        James Clark <james.clark@arm.com>
-Subject: Re: [PATCH 03/12] perf test: Add 'thloop' test workload
-Message-ID: <Y2vz+3u9shFbWy1B@kernel.org>
-References: <20221109174635.859406-1-namhyung@kernel.org>
- <20221109174635.859406-4-namhyung@kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20221109174635.859406-4-namhyung@kernel.org>
-X-Url:  http://acmel.wordpress.com
+        Wed, 9 Nov 2022 13:49:27 -0500
+Received: from mail-pf1-x44a.google.com (mail-pf1-x44a.google.com [IPv6:2607:f8b0:4864:20::44a])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5593213F6D
+        for <linux-perf-users@vger.kernel.org>; Wed,  9 Nov 2022 10:49:26 -0800 (PST)
+Received: by mail-pf1-x44a.google.com with SMTP id x11-20020a056a000bcb00b0056c6ec11eefso9260655pfu.14
+        for <linux-perf-users@vger.kernel.org>; Wed, 09 Nov 2022 10:49:26 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20210112;
+        h=cc:to:from:subject:mime-version:message-id:date:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=lkoognfiz4T0FO9qiJqVW8CCjbYEKiYWyfXc5YQhyvU=;
+        b=j69pt3b65opmCrEUZi5UPc1HYd/XHA0eHlmdQQkHI+ARnwDXXgf8KRyvL4NEZd7ajs
+         x4iit8Zps0gDdr4HFiP8+viZ/HZYB2E9C874CDUbvquklngUPsMre2ujqhCQOnPfb0NF
+         AxFGGgIDYJkTyPmwnMSwmPFdxZr/CgABD5SeaRHK17Y7N1wduXBq7rnqSSSulFHRSycz
+         BRbFDhGcBNLAwNcZK3uAa5So2ICT5ZKA125taXxkT6I3R86sG6irVFVe5c8jJu3rl0F+
+         4h3Uj8aQO4jCE+CZJwDhlhj+iKyr3mv2du7I1hmGySLgFGoANhaL+gHzt9tBPiII78ZQ
+         Fp6Q==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=cc:to:from:subject:mime-version:message-id:date:x-gm-message-state
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=lkoognfiz4T0FO9qiJqVW8CCjbYEKiYWyfXc5YQhyvU=;
+        b=MnxG4UsU5m02MoQWrzYEYJsq1k/O2nS0V8/20D1RxcVOX/z1yWFyKGRr+NelHkk5wc
+         dK9PlaxUFjCBMb79o4Fq5cFYICBmvefaFV1zmOAjH/UFUEBpCKeQ7sDacYnVbmIt2E/b
+         RrLHHipsQqC28vkZqAlmAsLvSdmXlTo//MSHGkaRXdmx5NGiM52bNuIQfSpBNhJWP1Y6
+         xFRv0T5q/d3Go33ga2cstzFFm/sWe+ibxxvtj+QB2+oBdLaTOa42yJYgaztK2tAt8rM0
+         vgvZv3HEdWBL1pyXy9u/NuQ8q5dwlyDdgL8FRJ9K78JdYxx7jQSFrx9ANMDMRJT38ve3
+         28uA==
+X-Gm-Message-State: ANoB5pnPowgO/bvLHXIGV6Tmb3FByZpza/oSNTfLV2UIK6Xfa/z5RZyR
+        MNQ66MhY9nJR0GCI+7dLCw8y4LSs8Lbp
+X-Google-Smtp-Source: AA0mqf6xXKCdkNXpupIQmxg0yHjBRRkaNlNnkQCtsTWy9wBoQEixEhlbyuYNPEZw62+aKLbuJYhHW1jqB27F
+X-Received: from irogers.svl.corp.google.com ([2620:15c:2d4:203:b06f:a254:5ce9:c442])
+ (user=irogers job=sendgmr) by 2002:a17:90b:4003:b0:20a:fee1:8f69 with SMTP id
+ ie3-20020a17090b400300b0020afee18f69mr55292pjb.0.1668019765401; Wed, 09 Nov
+ 2022 10:49:25 -0800 (PST)
+Date:   Wed,  9 Nov 2022 10:49:00 -0800
+Message-Id: <20221109184914.1357295-1-irogers@google.com>
+Mime-Version: 1.0
+X-Mailer: git-send-email 2.38.1.431.g37b22c650d-goog
+Subject: [PATCH v2 00/14] Fix perf tools/lib includes
+From:   Ian Rogers <irogers@google.com>
+To:     Peter Zijlstra <peterz@infradead.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        Arnaldo Carvalho de Melo <acme@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Jiri Olsa <jolsa@kernel.org>,
+        Namhyung Kim <namhyung@kernel.org>,
+        Masahiro Yamada <masahiroy@kernel.org>,
+        Nicolas Schier <nicolas@fjasle.eu>,
+        linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org,
+        bpf@vger.kernel.org, Nick Desaulniers <ndesaulniers@google.com>,
+        Andrii Nakryiko <andrii.nakryiko@gmail.com>
+Cc:     Stephane Eranian <eranian@google.com>,
+        Ian Rogers <irogers@google.com>
+Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-Em Wed, Nov 09, 2022 at 09:46:26AM -0800, Namhyung Kim escreveu:
-> The thloop is similar to noploop but runs in two threads.  This is
-> needed to verify perf record --per-thread to handle multi-threaded
-> programs properly.
-> 
->   $ perf test -w thloop
-> 
-> It also takes an optional argument to specify runtime in seconds
-> (default: 1).
-> 
-> Signed-off-by: Namhyung Kim <namhyung@kernel.org>
-> ---
->  tools/perf/tests/builtin-test.c     |  1 +
->  tools/perf/tests/tests.h            |  1 +
->  tools/perf/tests/workloads/Build    |  1 +
->  tools/perf/tests/workloads/thloop.c | 53 +++++++++++++++++++++++++++++
->  4 files changed, 56 insertions(+)
->  create mode 100644 tools/perf/tests/workloads/thloop.c
-> 
-> diff --git a/tools/perf/tests/builtin-test.c b/tools/perf/tests/builtin-test.c
-> index ce641ccfcf81..161f38476e77 100644
-> --- a/tools/perf/tests/builtin-test.c
-> +++ b/tools/perf/tests/builtin-test.c
-> @@ -120,6 +120,7 @@ static struct test_suite **tests[] = {
->  
->  static struct test_workload *workloads[] = {
->  	&workload__noploop,
-> +	&workload__thloop,
->  };
->  
->  static int num_subtests(const struct test_suite *t)
-> diff --git a/tools/perf/tests/tests.h b/tools/perf/tests/tests.h
-> index d315d0d6fc97..e6edfeeadaeb 100644
-> --- a/tools/perf/tests/tests.h
-> +++ b/tools/perf/tests/tests.h
-> @@ -201,5 +201,6 @@ struct test_workload workload__##work = {	\
->  
->  /* The list of test workloads */
->  DECLARE_WORKLOAD(noploop);
-> +DECLARE_WORKLOAD(thloop);
->  
->  #endif /* TESTS_H */
-> diff --git a/tools/perf/tests/workloads/Build b/tools/perf/tests/workloads/Build
-> index f98e968d4633..b8964b1099c0 100644
-> --- a/tools/perf/tests/workloads/Build
-> +++ b/tools/perf/tests/workloads/Build
-> @@ -1,3 +1,4 @@
->  # SPDX-License-Identifier: GPL-2.0
->  
->  perf-y += noploop.o
-> +perf-y += thloop.o
-> diff --git a/tools/perf/tests/workloads/thloop.c b/tools/perf/tests/workloads/thloop.c
-> new file mode 100644
-> index 000000000000..7fd3ac79e732
-> --- /dev/null
-> +++ b/tools/perf/tests/workloads/thloop.c
-> @@ -0,0 +1,53 @@
-> +/* SPDX-License-Identifier: GPL-2.0 */
-> +#include <pthread.h>
-> +#include <stdlib.h>
-> +#include <signal.h>
-> +#include <unistd.h>
-> +#include <linux/compiler.h>
-> +#include "../tests.h"
-> +
-> +static volatile int done;
-> +static volatile unsigned count;
+The previous build would add -Itools/lib and get dependencies for
+libtraceevent, libsubcmd, libsymbol, libapi and libbpf meaning that
+overriding these libraries would change the link time dependency but
+the headers would erroneously come from tools/lib. Fix the build to
+install headers and then depend on these. To reduce exposing internal
+headers/APIs some clean up is performed. tools/lib/symbol has a
+Makefile added, while tools/lib/api and tools/lib/subcmd have install
+targets added. The pattern used for the dependencies in Makefile.perf
+is modelled on libbpf.
 
-sig_atomic_t
+The problem and solution were motivated by this issue and discussion:
+https://lore.kernel.org/lkml/CAEf4BzbbOHQZUAe6iWaehKCPQAf3VC=hq657buqe2_yRKxaK-A@mail.gmail.com/
 
-> +/* We want to check this symbol in perf report */
-> +noinline void test_loop(void);
-> +
-> +static void sighandler(int sig __maybe_unused)
-> +{
-> +	done = 1;
-> +}
-> +
-> +noinline void test_loop(void)
-> +{
-> +	while (!done)
-> +		count++;
-> +}
-> +
-> +static void *thfunc(void *arg)
-> +{
-> +	void (*loop_fn)(void) = arg;
-> +
-> +	loop_fn();
-> +	return NULL;
-> +}
-> +
-> +static int thloop(int argc, const char **argv)
-> +{
-> +	int sec = 1;
-> +	pthread_t th;
-> +
-> +	if (argc > 0)
-> +		sec = atoi(argv[0]);
-> +
-> +	signal(SIGINT, sighandler);
-> +	signal(SIGALRM, sighandler);
-> +	alarm(sec);
-> +
-> +	pthread_create(&th, NULL, thfunc, test_loop);
-> +	test_loop();
-> +	pthread_join(th, NULL);
-> +
-> +	return 0;
-> +}
-> +
-> +DEFINE_WORKLOAD(thloop);
-> -- 
-> 2.38.1.431.g37b22c650d-goog
+v2. Fix a MANIFEST issue for the source tar ball. Add dependencies for
+    the installed header files so that the build doesn't overtake
+    building these dependencies. Both issues reported by Arnaldo
+    Carvalho de Melo <acme@kernel.org>.
+
+Ian Rogers (14):
+  tools lib api: Add install target
+  tools lib subcmd: Add install target
+  perf build: Install libsubcmd locally when building
+  perf build: Install libapi locally when building
+  perf build: Install libperf locally when building
+  perf build: Install libtraceevent locally when building
+  tools lib api: Add missing install headers
+  tools lib perf: Add missing install headers
+  tool lib symbol: Add Makefile/Build
+  perf build: Install libsymbol locally when building
+  perf expr: Tidy hashmap dependency
+  perf thread_map: Reduce exposure of libperf internal API
+  perf cpumap: Tidy libperf includes
+  perf build: Use tools/lib headers from install path
+
+ tools/lib/api/Makefile                        |  52 +++++
+ tools/lib/perf/Makefile                       |  10 +-
+ tools/lib/subcmd/Makefile                     |  49 +++++
+ tools/lib/symbol/Build                        |   1 +
+ tools/lib/symbol/Makefile                     | 115 +++++++++++
+ tools/perf/.gitignore                         |   7 +-
+ tools/perf/MANIFEST                           |   3 +-
+ tools/perf/Makefile.config                    |   2 -
+ tools/perf/Makefile.perf                      | 192 ++++++++++++++----
+ tools/perf/builtin-stat.c                     |   1 +
+ tools/perf/builtin-trace.c                    |   4 +-
+ tools/perf/tests/cpumap.c                     |   2 +-
+ tools/perf/tests/expr.c                       |   1 +
+ tools/perf/tests/openat-syscall.c             |   1 +
+ tools/perf/tests/pmu-events.c                 |   1 +
+ tools/perf/tests/thread-map.c                 |   1 +
+ tools/perf/util/Build                         |   5 -
+ tools/perf/util/auxtrace.h                    |   2 +-
+ tools/perf/util/bpf-loader.c                  |   4 -
+ tools/perf/util/bpf_counter.c                 |   2 +-
+ tools/perf/util/cpumap.c                      |   1 +
+ tools/perf/util/cpumap.h                      |   2 +-
+ tools/perf/util/evsel.c                       |   5 +-
+ tools/perf/util/evsel.h                       |   2 -
+ tools/perf/util/expr.c                        |   1 +
+ tools/perf/util/expr.h                        |   7 +-
+ tools/perf/util/metricgroup.c                 |   1 +
+ tools/perf/util/python.c                      |   6 +-
+ .../scripting-engines/trace-event-python.c    |   2 +-
+ tools/perf/util/stat-shadow.c                 |   1 +
+ tools/perf/util/stat.c                        |   4 -
+ tools/perf/util/thread_map.c                  |   1 +
+ tools/perf/util/thread_map.h                  |   2 -
+ 33 files changed, 402 insertions(+), 88 deletions(-)
+ create mode 100644 tools/lib/symbol/Build
+ create mode 100644 tools/lib/symbol/Makefile
 
 -- 
+2.38.1.431.g37b22c650d-goog
 
-- Arnaldo
