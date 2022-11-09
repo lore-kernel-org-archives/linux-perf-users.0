@@ -2,55 +2,55 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 468FCC433FE
-	for <linux-perf-users@archiver.kernel.org>; Wed,  9 Nov 2022 17:47:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 28967C4321E
+	for <linux-perf-users@archiver.kernel.org>; Wed,  9 Nov 2022 17:47:15 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231786AbiKIRrK (ORCPT
+        id S231811AbiKIRrL (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Wed, 9 Nov 2022 12:47:10 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57126 "EHLO
+        Wed, 9 Nov 2022 12:47:11 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57154 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231836AbiKIRrA (ORCPT
+        with ESMTP id S231807AbiKIRqt (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Wed, 9 Nov 2022 12:47:00 -0500
-Received: from mail-pj1-x1034.google.com (mail-pj1-x1034.google.com [IPv6:2607:f8b0:4864:20::1034])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0B4726562;
-        Wed,  9 Nov 2022 09:46:51 -0800 (PST)
-Received: by mail-pj1-x1034.google.com with SMTP id e7-20020a17090a77c700b00216928a3917so2532197pjs.4;
-        Wed, 09 Nov 2022 09:46:51 -0800 (PST)
+        Wed, 9 Nov 2022 12:46:49 -0500
+Received: from mail-pg1-x530.google.com (mail-pg1-x530.google.com [IPv6:2607:f8b0:4864:20::530])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 716D59FCA;
+        Wed,  9 Nov 2022 09:46:48 -0800 (PST)
+Received: by mail-pg1-x530.google.com with SMTP id 78so16811777pgb.13;
+        Wed, 09 Nov 2022 09:46:48 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20210112;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:sender:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=CiF3YnCQsrF/gvWg4IJtalMbBErjLNwZf+63Zgv2mbg=;
-        b=hatPA4XtREHlwkvzVLI1nc18tp1XpKw8QO75TiIhdxakEb7zyL+K9819A20gtZd9Iz
-         iDOEzWXNwExj2Ok1R2tYpZCP516eHXzdIRpBJeIyao/q5PvPFA24rT0CXywDscN5zReG
-         bBFkRKyERzXOQ8AOnSIRkESnQjD1iHvV7zsvbW6Fr32vjxVta/8r//p8O5rq3tJ/wrwK
-         y0k4M/Zq6a+fBTysACsAAhiYerzTF7hMvbn3uzeFx3XODCf6UPnt8TV/PflZouKJT6oN
-         FdythhovjLJe836zD7bgZNpY+kbUnSQFK+9RfZ1PE8Ky70T+UadFOrw8e0QZkOgJUfI3
-         BtIA==
+        bh=ZnolDoJWoN1jSsgwiCbHUTF9CcTJ9HQuyPHUeyGhWlM=;
+        b=hyFbfy3B8gm/SCbNi6Q5PNjxZM0cM7w11zxRzVEhg6Y5bLHA8iZkrJtxvO7/BSXOuM
+         PVGy/A7ZXUjMUnIyiDCQC2SyTJK/HHYEVLLYlpcO3L/T8P6lT4oj6wkZLzRCblpFeEB0
+         Jd16IYN8aqQRbD7OAbdRPofZZHckqtJ9tPZyDpVdfIerQdLDseBkS30CgbCY3ijoP0tY
+         tKLhOafU167M+f1ZV+owyVU4dEDuh8a6Zc60GaDzFPyKCjUOBgM2M7+fdpW6qPf34mxB
+         mddvpK6b3tpHbdczghlZDBeL7/AJIrR89e+QMUp+WxaIs0s1QrK27Q2UjaT5lzYUW7DG
+         YxCw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:sender:x-gm-message-state:from
          :to:cc:subject:date:message-id:reply-to;
-        bh=CiF3YnCQsrF/gvWg4IJtalMbBErjLNwZf+63Zgv2mbg=;
-        b=YJjNtRM18DeJS0XMU9CSn1NkzKCEn8PL2zUASK75fLUj/kbjglo5BP+Srz2UdaLGO1
-         wMbWzGbARPn5n//2z2yr4U4OcRaPF1/gI7gAVKKUJpW5jPNzTk5g7yAa8tKTDyY39HfF
-         N6YdoQepP2yBFG1bHzTKUwxV4+7yyxx0BrmRU+o1KH51kGnu36fLSSbErNJi/bSUkIf/
-         019lW837OIcXb8QMOStZQP3Xcd9hw4mHhZ5VFnoeZxLl4eBqk7/CHuJ60uhEmqgjATpI
-         8vvPNzSBGMk5QV6XPJI+SPI0R1563zEpm46UP6+2q3iyUD/ZvZGxRHgxqWkioIjAmT8J
-         iaHw==
-X-Gm-Message-State: ACrzQf3ff/NfI/wojz4TflpJQa7ZLs/uepISN+7flZBWbuge1GnJK/de
-        g9a5bP6Ey51LBgauELl7DWQ=
-X-Google-Smtp-Source: AMsMyM7vhuPkpcMYEZ3I53QqkQFf2afZjATrO7UAJPHR9aKBuBVthqp/ZOahDUpg+f/PhwjQivArQA==
-X-Received: by 2002:a17:90a:df91:b0:213:8a69:c504 with SMTP id p17-20020a17090adf9100b002138a69c504mr69026009pjv.82.1668016010394;
-        Wed, 09 Nov 2022 09:46:50 -0800 (PST)
+        bh=ZnolDoJWoN1jSsgwiCbHUTF9CcTJ9HQuyPHUeyGhWlM=;
+        b=4Jqzh2tn+aFtaHc9iTeDyd9caM1sqtWbOTDaNIH8vMBLPCSG3keGJ6UnxrYGiptDJd
+         s5g2MkqXovUWs5zNM5dEKpNRx1cjvbJdm10A+XGotdK5Xrwfnz5BiGn2R8/BJkywsvUm
+         0/plT36BszwyJuLtqqFpfYVuzMc3eidYOUo1GTHTcq8LvhcJdb/S7C4n2INEY2cRVfkD
+         k/Xe9P1d2YHMBV6w08dLOLQpPT9A3e2QmOHzN+Z4DGTbb9/hovL81Ye91/MQNMd//d2v
+         cZ2zGWcCITBbC4ApU73K3Uz9kJsLZyx5pIM/QF77jrB1jntrhmuh+lUlOtdf83G0+p25
+         FROw==
+X-Gm-Message-State: ACrzQf2c/c1iWtlETIAwnnW9hcpbk5x4j1pQgOOHqaFM7mNwDV93mwYX
+        /u5gKvY1NcjTDspdfdyJuag=
+X-Google-Smtp-Source: AMsMyM7SrZoed1mWEtvSA0b1V/M3P+ImxkQXZd5FSJ2/6DPJuJP+AJe6y7pkq6pLwyKQNTcGTAOw0Q==
+X-Received: by 2002:a05:6a00:cd4:b0:56c:b47:a743 with SMTP id b20-20020a056a000cd400b0056c0b47a743mr61321304pfv.25.1668016007901;
+        Wed, 09 Nov 2022 09:46:47 -0800 (PST)
 Received: from balhae.corp.google.com ([2620:15c:2c1:200:fa05:f3cd:da75:3103])
-        by smtp.gmail.com with ESMTPSA id a10-20020a63cd4a000000b0043941566481sm7877909pgj.39.2022.11.09.09.46.49
+        by smtp.gmail.com with ESMTPSA id a10-20020a63cd4a000000b0043941566481sm7877909pgj.39.2022.11.09.09.46.46
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 09 Nov 2022 09:46:50 -0800 (PST)
+        Wed, 09 Nov 2022 09:46:47 -0800 (PST)
 Sender: Namhyung Kim <namhyung@gmail.com>
 From:   Namhyung Kim <namhyung@kernel.org>
 To:     Arnaldo Carvalho de Melo <acme@kernel.org>,
@@ -64,9 +64,9 @@ Cc:     Ingo Molnar <mingo@kernel.org>,
         German Gomez <german.gomez@arm.com>,
         Zhengjun Xing <zhengjun.xing@linux.intel.com>,
         James Clark <james.clark@arm.com>
-Subject: [PATCH 10/12] perf test: Replace brstack test workload
-Date:   Wed,  9 Nov 2022 09:46:33 -0800
-Message-Id: <20221109174635.859406-11-namhyung@kernel.org>
+Subject: [PATCH 08/12] perf test: Replace arm spe fork test workload with sqrtloop
+Date:   Wed,  9 Nov 2022 09:46:31 -0800
+Message-Id: <20221109174635.859406-9-namhyung@kernel.org>
 X-Mailer: git-send-email 2.38.1.431.g37b22c650d-goog
 In-Reply-To: <20221109174635.859406-1-namhyung@kernel.org>
 References: <20221109174635.859406-1-namhyung@kernel.org>
@@ -76,119 +76,88 @@ Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-So that it can get rid of requirement of a compiler.  Also rename the
-symbols to match with the perf test workload.
+So that it can get rid of requirement of a compiler.  I've also removed
+killall as it'll kill perf process now and run the test workload for 10
+sec instead.
 
-Cc: German Gomez <german.gomez@arm.com>
 Signed-off-by: Namhyung Kim <namhyung@kernel.org>
 ---
- tools/perf/tests/shell/test_brstack.sh | 66 +++++---------------------
- 1 file changed, 12 insertions(+), 54 deletions(-)
+ tools/perf/tests/shell/test_arm_spe_fork.sh | 44 +--------------------
+ 1 file changed, 1 insertion(+), 43 deletions(-)
 
-diff --git a/tools/perf/tests/shell/test_brstack.sh b/tools/perf/tests/shell/test_brstack.sh
-index ec801cffae6b..a8a182dea25f 100755
---- a/tools/perf/tests/shell/test_brstack.sh
-+++ b/tools/perf/tests/shell/test_brstack.sh
-@@ -4,18 +4,12 @@
- # SPDX-License-Identifier: GPL-2.0
- # German Gomez <german.gomez@arm.com>, 2022
+diff --git a/tools/perf/tests/shell/test_arm_spe_fork.sh b/tools/perf/tests/shell/test_arm_spe_fork.sh
+index c920d3583d30..da810e1b2b9e 100755
+--- a/tools/perf/tests/shell/test_arm_spe_fork.sh
++++ b/tools/perf/tests/shell/test_arm_spe_fork.sh
+@@ -11,14 +11,7 @@ skip_if_no_arm_spe_event() {
  
--# we need a C compiler to build the test programs
--# so bail if none is found
+ skip_if_no_arm_spe_event || exit 2
+ 
+-# skip if there's no compiler
 -if ! [ -x "$(command -v cc)" ]; then
 -	echo "failed: no compiler, install gcc"
 -	exit 2
 -fi
 -
- # skip the test if the hardware doesn't support branch stack sampling
- # and if the architecture doesn't support filter types: any,save_type,u
- perf record -b -o- -B --branch-filter any,save_type,u true > /dev/null 2>&1 || exit 2
+-TEST_PROGRAM_SOURCE=$(mktemp /tmp/__perf_test.program.XXXXX.c)
+-TEST_PROGRAM=$(mktemp /tmp/__perf_test.program.XXXXX)
++TEST_PROGRAM="perf test -w sqrtloop 10"
+ PERF_DATA=$(mktemp /tmp/__perf_test.perf.data.XXXXX)
+ PERF_RECORD_LOG=$(mktemp /tmp/__perf_test.log.XXXXX)
  
- TMPDIR=$(mktemp -d /tmp/__perf_test.program.XXXXX)
-+TESTPROG="perf test -w brstack"
+@@ -27,43 +20,10 @@ cleanup_files()
+ 	echo "Cleaning up files..."
+ 	rm -f ${PERF_RECORD_LOG}
+ 	rm -f ${PERF_DATA}
+-	rm -f ${TEST_PROGRAM_SOURCE}
+-	rm -f ${TEST_PROGRAM}
+ }
  
- cleanup() {
- 	rm -rf $TMPDIR
-@@ -23,57 +17,24 @@ cleanup() {
+ trap cleanup_files exit term int
  
- trap cleanup exit term int
- 
--gen_test_program() {
--	# generate test program
--	cat << EOF > $1
--#define BENCH_RUNS 999999
--int cnt;
--void bar(void) {
--}			/* return */
--void foo(void) {
--	bar();		/* call */
--}			/* return */
--void bench(void) {
--  void (*foo_ind)(void) = foo;
--  if ((cnt++) % 3)	/* branch (cond) */
--    foo();		/* call */
--  bar();		/* call */
--  foo_ind();		/* call (ind) */
+-# compile test program
+-cat << EOF > $TEST_PROGRAM_SOURCE
+-#include <math.h>
+-#include <stdio.h>
+-#include <stdlib.h>
+-#include <unistd.h>
+-#include <sys/wait.h>
+-
+-int workload() {
+-  while (1)
+-    sqrt(rand());
+-  return 0;
 -}
--int main(void)
--{
--  int cnt = 0;
--  while (1) {
--    if ((cnt++) > BENCH_RUNS)
--      break;
--    bench();		/* call */
--  }			/* branch (uncond) */
+-
+-int main() {
+-  switch (fork()) {
+-    case 0:
+-      return workload();
+-    case -1:
+-      return 1;
+-    default:
+-      wait(NULL);
+-  }
 -  return 0;
 -}
 -EOF
--}
 -
- test_user_branches() {
- 	echo "Testing user branch stack sampling"
- 
--	gen_test_program "$TEMPDIR/program.c"
--	cc -fno-inline -g "$TEMPDIR/program.c" -o $TMPDIR/a.out
+-echo "Compiling test program..."
+-CFLAGS="-lm"
+-cc $TEST_PROGRAM_SOURCE $CFLAGS -o $TEST_PROGRAM || exit 1
 -
--	perf record -o $TMPDIR/perf.data --branch-filter any,save_type,u -- $TMPDIR/a.out > /dev/null 2>&1
-+	perf record -o $TMPDIR/perf.data --branch-filter any,save_type,u -- ${TESTPROG} > /dev/null 2>&1
- 	perf script -i $TMPDIR/perf.data --fields brstacksym | xargs -n1 > $TMPDIR/perf.script
+ echo "Recording workload..."
+ perf record -o ${PERF_DATA} -e arm_spe/period=65536/ -vvv -- $TEST_PROGRAM > ${PERF_RECORD_LOG} 2>&1 &
+ PERFPID=$!
+@@ -78,8 +38,6 @@ echo Log lines after 1 second = $log1
  
- 	# example of branch entries:
--	# 	foo+0x14/bar+0x40/P/-/-/0/CALL
-+	# 	brstack_foo+0x14/brstack_bar+0x40/P/-/-/0/CALL
+ kill $PERFPID
+ wait $PERFPID
+-# test program may leave an orphan process running the workload
+-killall $(basename $TEST_PROGRAM)
  
- 	set -x
--	egrep -m1 "^bench\+[^ ]*/foo\+[^ ]*/IND_CALL$"	$TMPDIR/perf.script
--	egrep -m1 "^foo\+[^ ]*/bar\+[^ ]*/CALL$"	$TMPDIR/perf.script
--	egrep -m1 "^bench\+[^ ]*/foo\+[^ ]*/CALL$"	$TMPDIR/perf.script
--	egrep -m1 "^bench\+[^ ]*/bar\+[^ ]*/CALL$"	$TMPDIR/perf.script
--	egrep -m1 "^bar\+[^ ]*/foo\+[^ ]*/RET$"		$TMPDIR/perf.script
--	egrep -m1 "^foo\+[^ ]*/bench\+[^ ]*/RET$"	$TMPDIR/perf.script
--	egrep -m1 "^bench\+[^ ]*/bench\+[^ ]*/COND$"	$TMPDIR/perf.script
--	egrep -m1 "^main\+[^ ]*/main\+[^ ]*/UNCOND$"	$TMPDIR/perf.script
-+	egrep -m1 "^brstack_bench\+[^ ]*/brstack_foo\+[^ ]*/IND_CALL$"	$TMPDIR/perf.script
-+	egrep -m1 "^brstack_foo\+[^ ]*/brstack_bar\+[^ ]*/CALL$"	$TMPDIR/perf.script
-+	egrep -m1 "^brstack_bench\+[^ ]*/brstack_foo\+[^ ]*/CALL$"	$TMPDIR/perf.script
-+	egrep -m1 "^brstack_bench\+[^ ]*/brstack_bar\+[^ ]*/CALL$"	$TMPDIR/perf.script
-+	egrep -m1 "^brstack_bar\+[^ ]*/brstack_foo\+[^ ]*/RET$"		$TMPDIR/perf.script
-+	egrep -m1 "^brstack_foo\+[^ ]*/brstsack_bench\+[^ ]*/RET$"	$TMPDIR/perf.script
-+	egrep -m1 "^brstack_bench\+[^ ]*/brstack_bench\+[^ ]*/COND$"	$TMPDIR/perf.script
-+	egrep -m1 "^brstack\+[^ ]*/brstack\+[^ ]*/UNCOND$"		$TMPDIR/perf.script
- 	set +x
- 
- 	# some branch types are still not being tested:
-@@ -88,10 +49,7 @@ test_filter() {
- 
- 	echo "Testing branch stack filtering permutation ($filter,$expect)"
- 
--	gen_test_program "$TEMPDIR/program.c"
--	cc -fno-inline -g "$TEMPDIR/program.c" -o $TMPDIR/a.out
--
--	perf record -o $TMPDIR/perf.data --branch-filter $filter,save_type,u -- $TMPDIR/a.out > /dev/null 2>&1
-+	perf record -o $TMPDIR/perf.data --branch-filter $filter,save_type,u -- ${TESTPROG} > /dev/null 2>&1
- 	perf script -i $TMPDIR/perf.data --fields brstack | xargs -n1 > $TMPDIR/perf.script
- 
- 	# fail if we find any branch type that doesn't match any of the expected ones
+ if [ "$log0" = "$log1" ];
+ then
 -- 
 2.38.1.431.g37b22c650d-goog
 
