@@ -2,55 +2,55 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B7B86C43217
-	for <linux-perf-users@archiver.kernel.org>; Wed,  9 Nov 2022 17:47:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 867D5C433FE
+	for <linux-perf-users@archiver.kernel.org>; Wed,  9 Nov 2022 17:47:17 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231843AbiKIRrN (ORCPT
+        id S231855AbiKIRrP (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Wed, 9 Nov 2022 12:47:13 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57162 "EHLO
+        Wed, 9 Nov 2022 12:47:15 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57128 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229915AbiKIRqu (ORCPT
+        with ESMTP id S231846AbiKIRrA (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Wed, 9 Nov 2022 12:46:50 -0500
-Received: from mail-pf1-x430.google.com (mail-pf1-x430.google.com [IPv6:2607:f8b0:4864:20::430])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 95ADC659C;
-        Wed,  9 Nov 2022 09:46:49 -0800 (PST)
-Received: by mail-pf1-x430.google.com with SMTP id b29so17354695pfp.13;
-        Wed, 09 Nov 2022 09:46:49 -0800 (PST)
+        Wed, 9 Nov 2022 12:47:00 -0500
+Received: from mail-pj1-x102f.google.com (mail-pj1-x102f.google.com [IPv6:2607:f8b0:4864:20::102f])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 712367676;
+        Wed,  9 Nov 2022 09:46:52 -0800 (PST)
+Received: by mail-pj1-x102f.google.com with SMTP id l6so17422611pjj.0;
+        Wed, 09 Nov 2022 09:46:52 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20210112;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:sender:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=6ybVelHPiskCNH6fllR2RvI9SCAjZ5b8Tt7/oz7w9lQ=;
-        b=geMmBOuPjKLU7pZSlNSnodyozLusn2++H+Pw70vxMxbmq15wKDGv6FL5Z/ll7loMfO
-         mykYxcAlwZu+6RuzIUfhDrT4FqpyCcE6ArZQs+zEorfLZKbKzLQxNfzje7SNyx0BiM+k
-         r1s9Jo9YixWegrENQn2JhWwexzwFrbZqqxt7vgD3ciVF775rFb+LZVa0RXSFnDE1ejWR
-         p2LspXjdsXc1Rr1SeQKdKUk19DcSc5gxX0esRx7M4RA5Xb/rRZaokVDKpU2wkNnYR5j6
-         l0BEFwS64dW3GjiMKfidGR/FsI31Hq3ARg9vRtkKbn/oOefG1QFsoDnU4/zme6KSRCfk
-         kk6Q==
+        bh=qf7pwJ+tSfBXBsT3Fnhwy44UrI7lbOL4kA5MHT45Zio=;
+        b=Pdcq6EHiScmcD4rAn0pVStsuOUCS5frBTuOuSUYbRSYhCbYuA1wwygpj/cyCGCspBC
+         4pIEJpigZQbZ+dQFaksHOqxhREZ/HUzc+qlvxFL6cyYPre53fk91cTcoDnCy4Uy/uy8e
+         Hib0zvSKRklbBL5wfnHazsaAu/YUeR5vVehk3VvuQa+rcsFrR4lm54fLFi6YtuVcQB5q
+         9yOVCYHqVaWbYst3NRLNA0D/l1rzQ9K4CiWdRucyGUS9ON0tlTELaSj7s2zJuRutBQfB
+         7lW0uQLuwJOFH3+yEjRwZ93mvTDtMLLvOokiIm1esD7RwdT/S1AUJq8Ozo62lUoSdHZj
+         Rz3g==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:sender:x-gm-message-state:from
          :to:cc:subject:date:message-id:reply-to;
-        bh=6ybVelHPiskCNH6fllR2RvI9SCAjZ5b8Tt7/oz7w9lQ=;
-        b=uh+eq9DYtTmyBE2o2SoMUGQBj2CIX/fE69/Geul6vfPVJ7/AfW/bqzqjQwDWA4gP9P
-         uEXXGIw4EvS0XwpHIegyK9IsXxH0hWj+p4K0dlJq6pjX5CcVcgSKHRNT9G96bSu1LKZG
-         cMFM8xAtG5L+Mf9sFpKm16FVHRkbU+kbIxr8Zvtdd/Jr4iFzNG6SkdyI0lbpfQS+ZwTz
-         6GCX8luIkJe9FzcViGXkTvYHs2OHNEGpVrJy31D7siGjC7Y3VhcaqLGiYRxojM/I7/96
-         A0hjjaH2uSOU71+3l0z5IvhgwImP7/2KlA9e704ORsKbp1UQ02tk7d3ERYuKZSWTYRdo
-         98Pg==
-X-Gm-Message-State: ACrzQf2gmbp4xy+5D96KozoCiKx8SKKxvsVzh7LeDleHbt9Qa71d7n0q
-        HzmLqoPAqpHSxQpSmMWH1PDYJICamuk=
-X-Google-Smtp-Source: AMsMyM68dIkYNdoIe11g5ikpXyS4mnncrLtkdb4tGofE+urFF1T/3A897D65pznzj70ZuL+6pm3CaQ==
-X-Received: by 2002:a63:1206:0:b0:470:18c:1489 with SMTP id h6-20020a631206000000b00470018c1489mr36187235pgl.357.1668016009081;
-        Wed, 09 Nov 2022 09:46:49 -0800 (PST)
+        bh=qf7pwJ+tSfBXBsT3Fnhwy44UrI7lbOL4kA5MHT45Zio=;
+        b=lq9RpoumCu9IcwMuT6RXy58Q5DF3O9duPG8JCxI60RHmurbi1NwvpZ/PcbERDdzeJ2
+         /Kokiicb2kky/VkiT19CBvQ3Uoxoohd269Ffuyh4yoDVTT1t8SJCa4ID4uAvOcSPRbGV
+         UgcPEEpyDzInmhwEoGkbtNoiGxGSWvo6qML/tPnsk+M7JQd9lfkJPaU/lybe06qs62o9
+         KRIPsJDAwTTSrdcANScXGbOV/Brdbu9Mr/5VuqZjLEh/7V1SSZU8N83jYuX/WPTdq3UX
+         WLBvpxAIhxk87Gr8nGZne+3G3Fp7vKBmDBbMmbjw69khnsmxND0wmCEjy7ZPoqt6v4MW
+         6pFQ==
+X-Gm-Message-State: ACrzQf3L2QcmATXd/n5Faqa/FCA0XXETz1+iyLeDXTvh9c+oPsicUezO
+        37IMgUU/Xq+DgkO9o2D/DNo=
+X-Google-Smtp-Source: AMsMyM5Q0pgxR/3dUuiJftmQ8Q2+O9QzRiEWhvcMDTBjcqDFZm9QZHUC92uzrxCdk4e1xo1SJAei4g==
+X-Received: by 2002:a17:902:7894:b0:188:6300:640f with SMTP id q20-20020a170902789400b001886300640fmr1043883pll.124.1668016011817;
+        Wed, 09 Nov 2022 09:46:51 -0800 (PST)
 Received: from balhae.corp.google.com ([2620:15c:2c1:200:fa05:f3cd:da75:3103])
-        by smtp.gmail.com with ESMTPSA id a10-20020a63cd4a000000b0043941566481sm7877909pgj.39.2022.11.09.09.46.48
+        by smtp.gmail.com with ESMTPSA id a10-20020a63cd4a000000b0043941566481sm7877909pgj.39.2022.11.09.09.46.50
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 09 Nov 2022 09:46:48 -0800 (PST)
+        Wed, 09 Nov 2022 09:46:51 -0800 (PST)
 Sender: Namhyung Kim <namhyung@gmail.com>
 From:   Namhyung Kim <namhyung@kernel.org>
 To:     Arnaldo Carvalho de Melo <acme@kernel.org>,
@@ -64,9 +64,9 @@ Cc:     Ingo Molnar <mingo@kernel.org>,
         German Gomez <german.gomez@arm.com>,
         Zhengjun Xing <zhengjun.xing@linux.intel.com>,
         James Clark <james.clark@arm.com>
-Subject: [PATCH 09/12] perf test: Add 'brstack' test workload
-Date:   Wed,  9 Nov 2022 09:46:32 -0800
-Message-Id: <20221109174635.859406-10-namhyung@kernel.org>
+Subject: [PATCH 11/12] perf test: Add 'datasym' test workload
+Date:   Wed,  9 Nov 2022 09:46:34 -0800
+Message-Id: <20221109174635.859406-12-namhyung@kernel.org>
 X-Mailer: git-send-email 2.38.1.431.g37b22c650d-goog
 In-Reply-To: <20221109174635.859406-1-namhyung@kernel.org>
 References: <20221109174635.859406-1-namhyung@kernel.org>
@@ -76,103 +76,90 @@ Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-The brstack is to run different kinds of branches repeatedly.  This is
-necessary for brstack test case to verify if it has correct branch info.
+The datasym workload is to check if perf mem command gets the data
+addresses precisely.  This is needed for data symbol test.
 
-  $ perf test -w brstack
+  $ perf test -w datasym
 
-I renamed the internal functions to have brstack_ prefix as it's too
-generic name.
+I had to keep the buf1 in the data section, otherwise it could end
+up in the BSS and was mmaped as a separate //anon region, then it
+was not symbolized at all.  It needs to be fixed separately.
 
 Signed-off-by: Namhyung Kim <namhyung@kernel.org>
 ---
  tools/perf/tests/builtin-test.c      |  1 +
  tools/perf/tests/tests.h             |  1 +
  tools/perf/tests/workloads/Build     |  2 ++
- tools/perf/tests/workloads/brstack.c | 39 ++++++++++++++++++++++++++++
- 4 files changed, 43 insertions(+)
- create mode 100644 tools/perf/tests/workloads/brstack.c
+ tools/perf/tests/workloads/datasym.c | 24 ++++++++++++++++++++++++
+ 4 files changed, 28 insertions(+)
+ create mode 100644 tools/perf/tests/workloads/datasym.c
 
 diff --git a/tools/perf/tests/builtin-test.c b/tools/perf/tests/builtin-test.c
-index 9acb7a93eeb9..69fa56939309 100644
+index 69fa56939309..4c6ae59a4dfd 100644
 --- a/tools/perf/tests/builtin-test.c
 +++ b/tools/perf/tests/builtin-test.c
-@@ -123,6 +123,7 @@ static struct test_workload *workloads[] = {
- 	&workload__thloop,
+@@ -124,6 +124,7 @@ static struct test_workload *workloads[] = {
  	&workload__leafloop,
  	&workload__sqrtloop,
-+	&workload__brstack,
+ 	&workload__brstack,
++	&workload__datasym,
  };
  
  static int num_subtests(const struct test_suite *t)
 diff --git a/tools/perf/tests/tests.h b/tools/perf/tests/tests.h
-index 18c40319e67c..dc96f59cac2e 100644
+index dc96f59cac2e..e15f24cfc909 100644
 --- a/tools/perf/tests/tests.h
 +++ b/tools/perf/tests/tests.h
-@@ -204,5 +204,6 @@ DECLARE_WORKLOAD(noploop);
- DECLARE_WORKLOAD(thloop);
+@@ -205,5 +205,6 @@ DECLARE_WORKLOAD(thloop);
  DECLARE_WORKLOAD(leafloop);
  DECLARE_WORKLOAD(sqrtloop);
-+DECLARE_WORKLOAD(brstack);
+ DECLARE_WORKLOAD(brstack);
++DECLARE_WORKLOAD(datasym);
  
  #endif /* TESTS_H */
 diff --git a/tools/perf/tests/workloads/Build b/tools/perf/tests/workloads/Build
-index 1ca95cb0fdb5..c933cdcf91d1 100644
+index c933cdcf91d1..ec3cb10c52ae 100644
 --- a/tools/perf/tests/workloads/Build
 +++ b/tools/perf/tests/workloads/Build
-@@ -4,5 +4,7 @@ perf-y += noploop.o
- perf-y += thloop.o
+@@ -5,6 +5,8 @@ perf-y += thloop.o
  perf-y += leafloop.o
  perf-y += sqrtloop.o
-+perf-y += brstack.o
+ perf-y += brstack.o
++perf-y += datasym.o
  
  CFLAGS_leafloop.o         = -g -O0 -fno-inline -fno-omit-frame-pointer
-+CFLAGS_brstack.o          = -g -O0 -fno-inline
-diff --git a/tools/perf/tests/workloads/brstack.c b/tools/perf/tests/workloads/brstack.c
+ CFLAGS_brstack.o          = -g -O0 -fno-inline
++CFLAGS_datasym.o          = -g -O0 -fno-inline
+diff --git a/tools/perf/tests/workloads/datasym.c b/tools/perf/tests/workloads/datasym.c
 new file mode 100644
-index 000000000000..61c9a9f24b43
+index 000000000000..ddd40bc63448
 --- /dev/null
-+++ b/tools/perf/tests/workloads/brstack.c
-@@ -0,0 +1,39 @@
-+/* SPDX-License-Identifier: GPL-2.0 */
-+#include <stdlib.h>
++++ b/tools/perf/tests/workloads/datasym.c
+@@ -0,0 +1,24 @@
++#include <linux/compiler.h>
 +#include "../tests.h"
 +
++typedef struct _buf {
++	char data1;
++	char reserved[55];
++	char data2;
++} buf __attribute__((aligned(64)));
 +
-+#define BENCH_RUNS 999999
++static buf buf1 = {
++	/* to have this in the data section */
++	.reserved[0] = 1,
++};
 +
-+static volatile int cnt;
-+
-+static void brstack_bar(void) {
-+}				/* return */
-+
-+static void brstack_foo(void) {
-+	brstack_bar();		/* call */
-+}				/* return */
-+
-+static void brstack_bench(void) {
-+	void (*brstack_foo_ind)(void) = brstack_foo;
-+
-+	if ((cnt++) % 3)	/* branch (cond) */
-+		brstack_foo();	/* call */
-+	brstack_bar();		/* call */
-+	brstack_foo_ind();	/* call (ind) */
-+}
-+
-+static int brstack(int argc, const char **argv)
++static int datasym(int argc __maybe_unused, const char **argv __maybe_unused)
 +{
-+	if (argc > 0)
-+		cnt = atoi(argv[0]);
-+
-+	while (1) {
-+		if ((cnt++) > BENCH_RUNS)
-+			break;
-+		brstack_bench();/* call */
-+	}			/* branch (uncond) */
++	for (;;) {
++		buf1.data1++;
++		buf1.data2 += buf1.data1;
++	}
 +	return 0;
 +}
 +
-+DEFINE_WORKLOAD(brstack);
++DEFINE_WORKLOAD(datasym);
 -- 
 2.38.1.431.g37b22c650d-goog
 
