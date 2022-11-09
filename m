@@ -2,55 +2,55 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 66C4FC4332F
-	for <linux-perf-users@archiver.kernel.org>; Wed,  9 Nov 2022 17:46:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2CCC8C433FE
+	for <linux-perf-users@archiver.kernel.org>; Wed,  9 Nov 2022 17:47:10 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230243AbiKIRqu (ORCPT
+        id S229809AbiKIRrH (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Wed, 9 Nov 2022 12:46:50 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57082 "EHLO
+        Wed, 9 Nov 2022 12:47:07 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57152 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231795AbiKIRqq (ORCPT
+        with ESMTP id S231853AbiKIRrB (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Wed, 9 Nov 2022 12:46:46 -0500
-Received: from mail-pf1-x42f.google.com (mail-pf1-x42f.google.com [IPv6:2607:f8b0:4864:20::42f])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id EB7D5659F;
-        Wed,  9 Nov 2022 09:46:45 -0800 (PST)
-Received: by mail-pf1-x42f.google.com with SMTP id i3so17363174pfc.11;
-        Wed, 09 Nov 2022 09:46:45 -0800 (PST)
+        Wed, 9 Nov 2022 12:47:01 -0500
+Received: from mail-pj1-x1030.google.com (mail-pj1-x1030.google.com [IPv6:2607:f8b0:4864:20::1030])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D7AD4A189;
+        Wed,  9 Nov 2022 09:46:53 -0800 (PST)
+Received: by mail-pj1-x1030.google.com with SMTP id d59-20020a17090a6f4100b00213202d77e1so2549441pjk.2;
+        Wed, 09 Nov 2022 09:46:53 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20210112;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:sender:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=6wE8Me379mSupxG/Q4MDBJ3KdIEi26s+14+TmqgM5rk=;
-        b=C+ttYSOxJxIEIEFyyJ5ogzydLA0DxS6DU3gqCqezxULR/kleYyHQlDuIrosSrqMJ4s
-         dLvZOA+QPOdNUaNXXXWgiCVhb2WVxrGOPgss2tN6gdmcFD9GmjZ31r2Axkh0+icg5ryS
-         A921XnKjvSB2uNdkAq3qy0Lp4ZeLFF5aX7UUHfn6L03UiBF6cGTqMCr8/4JgR1GNfjKj
-         fsXOUZs/LzgMyr4irSpjayQvgsHLCd82kHjSE2ubCxOL4cTfFfeLgz301EuP0IJCQ1uD
-         TYgbAIQVdDnF+jDjXobh1Ks9XiYABK0zWM1LBfw0O4wz9TxZh1+DaWd5nwHOanTVvq93
-         Kl6w==
+        bh=W0zLgQdSAIqAU+WOoh8QcTGRCE1+p+yashdyC8yN0/4=;
+        b=KsEREoges0F7NLoKhExkw1DyTx3/yMVl0I967wXWVWd6CkOCd93c6pXeHKi8sPAX7H
+         d3sEFja87m883x4BOw2BPyYmKbZJi9gU2FxzcmSN9AVyTbLNfqR+2l3/AHR2ZHO5k/No
+         ifeTe6Ve4vTbdSJfT5a/Pj/mRcC3GwfUiSKbPoDQ+9y/BBylqJg5xeuq8XDBgyuOqM60
+         QlycBxlTtLCKtVu9RZ96bwY/4ZTaAuCvc9hLpWE4r4XT8KRspJtxydjxvMqlngIZyz0g
+         C+w0MtUOwR3ewWYJGR/2dd3B9n9X6qmelVMJb8894/BxhogW31k+czZXjvSgqVdb6kF7
+         cQ3g==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:sender:x-gm-message-state:from
          :to:cc:subject:date:message-id:reply-to;
-        bh=6wE8Me379mSupxG/Q4MDBJ3KdIEi26s+14+TmqgM5rk=;
-        b=jydHdMxCkHfl5DMbYT9ObWK22m0vj1vh2Q4DwwvBNUCrTVbwWXKUy49oH29G+gIa0A
-         0nPVgYxjfaxI8Q7o08XiSK5rlcY0AkBGKPL5Hl5UnM3C+/Z04XbGcZ0nqzKsBf8Ot4hC
-         BcRo7AvKXZwdeCa0ZMj52NVSS9cG90qJZrn+wsLkkUzSK5ImKvdQAPp8eMNExU2NJc+f
-         Kz3XgkuLWnzEYK1fADATZvsP0MbAUofwrN/67zPcFwwMG1zL9jssrHCCTNZUtfrHM5pl
-         KT6FyCJyKR5meRsvNJku5924RAidpMbJR9GuM8KBX/W7PPOC//t4jBLR1w+RrNn7lAbF
-         IC1A==
-X-Gm-Message-State: ACrzQf1LWDk8kktepI99WmEziUy0cwYtnfpiqvNnfHBeeO1MkyhziS7r
-        P5DJnLInutEej2LhDhfDE4U=
-X-Google-Smtp-Source: AMsMyM7HyQWIGi/d2zKtyFv6WyijfsqMOdT+F9yMVIjqhjWuprUS59giR2ovW/1AkcrqBe55GwYsDw==
-X-Received: by 2002:a63:90c9:0:b0:46e:dd5a:d921 with SMTP id a192-20020a6390c9000000b0046edd5ad921mr52329416pge.282.1668016005320;
-        Wed, 09 Nov 2022 09:46:45 -0800 (PST)
+        bh=W0zLgQdSAIqAU+WOoh8QcTGRCE1+p+yashdyC8yN0/4=;
+        b=HY93gGMMSpqTuzLo7U2NxMngzKtAyJTLsdUkegCIvaAP846x5neypQ1gX4OVSNWPnA
+         JHeMKMLeVzIbphyxS8q8G5OXaXa0BP7QYYBsC4GCJh2e3w7K3oarlrBs04S3bN0mkuMM
+         aW0ElOg/waSVsEps7addmceudKNzo2zNzAjcI/o6EUs0fFmcpRed9cZEF7HVeX+I/Tfu
+         tBfYzT4skjhnEHdS7MyCtjxN5OiXHOjOE/hgK9sEP5+2xh6Rfo2964T7IvgWYcfJsFzM
+         SxMGGLCsT+hhe5Qkia9cFTfeoDwyoBONcZPgTVWoHwl3vFyLPTuft6JG2sHzjIox8Uc3
+         6TwQ==
+X-Gm-Message-State: ACrzQf0wP1NHaaItIzwRzaBEWAlwGM9ncGFjFZPDmYindUy+5UIqbJGG
+        imd48g7uAZX+r8M+bGOtOTY=
+X-Google-Smtp-Source: AMsMyM5cfDmsKklEm7jwgKoBTdqSIAAFVo9O1YJZuIUQ798AnkHoy29sCF1ZlFPkyiJT7x+wITIz5A==
+X-Received: by 2002:a17:90a:ba05:b0:213:b1c2:ff88 with SMTP id s5-20020a17090aba0500b00213b1c2ff88mr62367294pjr.240.1668016013193;
+        Wed, 09 Nov 2022 09:46:53 -0800 (PST)
 Received: from balhae.corp.google.com ([2620:15c:2c1:200:fa05:f3cd:da75:3103])
-        by smtp.gmail.com with ESMTPSA id a10-20020a63cd4a000000b0043941566481sm7877909pgj.39.2022.11.09.09.46.44
+        by smtp.gmail.com with ESMTPSA id a10-20020a63cd4a000000b0043941566481sm7877909pgj.39.2022.11.09.09.46.52
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 09 Nov 2022 09:46:44 -0800 (PST)
+        Wed, 09 Nov 2022 09:46:52 -0800 (PST)
 Sender: Namhyung Kim <namhyung@gmail.com>
 From:   Namhyung Kim <namhyung@kernel.org>
 To:     Arnaldo Carvalho de Melo <acme@kernel.org>,
@@ -64,9 +64,9 @@ Cc:     Ingo Molnar <mingo@kernel.org>,
         German Gomez <german.gomez@arm.com>,
         Zhengjun Xing <zhengjun.xing@linux.intel.com>,
         James Clark <james.clark@arm.com>
-Subject: [PATCH 06/12] perf test: Replace arm callgraph fp test workload with leafloop
-Date:   Wed,  9 Nov 2022 09:46:29 -0800
-Message-Id: <20221109174635.859406-7-namhyung@kernel.org>
+Subject: [PATCH 12/12] perf test: Replace data symbol test workload with datasym
+Date:   Wed,  9 Nov 2022 09:46:35 -0800
+Message-Id: <20221109174635.859406-13-namhyung@kernel.org>
 X-Mailer: git-send-email 2.38.1.431.g37b22c650d-goog
 In-Reply-To: <20221109174635.859406-1-namhyung@kernel.org>
 References: <20221109174635.859406-1-namhyung@kernel.org>
@@ -78,61 +78,75 @@ X-Mailing-List: linux-perf-users@vger.kernel.org
 
 So that it can get rid of requirement of a compiler.
 
+  $ sudo ./perf test -v 109
+  109: Test data symbol                                                :
+  --- start ---
+  test child forked, pid 844526
+  Recording workload...
+  [ perf record: Woken up 2 times to write data ]
+  [ perf record: Captured and wrote 0.354 MB /tmp/__perf_test.perf.data.GFeZO (4847 samples) ]
+  Cleaning up files...
+  test child finished with 0
+  ---- end ----
+  Test data symbol: Ok
+
+Cc: Leo Yan <leo.yan@linaro.org>
 Signed-off-by: Namhyung Kim <namhyung@kernel.org>
 ---
- .../perf/tests/shell/test_arm_callgraph_fp.sh | 30 +------------------
- 1 file changed, 1 insertion(+), 29 deletions(-)
+ tools/perf/tests/shell/test_data_symbol.sh | 29 +---------------------
+ 1 file changed, 1 insertion(+), 28 deletions(-)
 
-diff --git a/tools/perf/tests/shell/test_arm_callgraph_fp.sh b/tools/perf/tests/shell/test_arm_callgraph_fp.sh
-index ec108d45d3c6..9d6d1b2d99c5 100755
---- a/tools/perf/tests/shell/test_arm_callgraph_fp.sh
-+++ b/tools/perf/tests/shell/test_arm_callgraph_fp.sh
-@@ -4,44 +4,16 @@
+diff --git a/tools/perf/tests/shell/test_data_symbol.sh b/tools/perf/tests/shell/test_data_symbol.sh
+index cd6eb54d235d..d871e6c743ef 100755
+--- a/tools/perf/tests/shell/test_data_symbol.sh
++++ b/tools/perf/tests/shell/test_data_symbol.sh
+@@ -11,13 +11,7 @@ skip_if_no_mem_event() {
  
- lscpu | grep -q "aarch64" || exit 2
+ skip_if_no_mem_event || exit 2
  
+-# skip if there's no compiler
 -if ! [ -x "$(command -v cc)" ]; then
--	echo "failed: no compiler, install gcc"
+-	echo "skip: no compiler, install gcc"
 -	exit 2
 -fi
 -
+-TEST_PROGRAM=$(mktemp /tmp/__perf_test.program.XXXXX)
++TEST_PROGRAM="perf test -w datasym"
  PERF_DATA=$(mktemp /tmp/__perf_test.perf.data.XXXXX)
--TEST_PROGRAM_SOURCE=$(mktemp /tmp/test_program.XXXXX.c)
--TEST_PROGRAM=$(mktemp /tmp/test_program.XXXXX)
-+TEST_PROGRAM="perf test -w leafloop"
  
- cleanup_files()
+ check_result() {
+@@ -45,31 +39,10 @@ cleanup_files()
  {
- 	rm -f $PERF_DATA
--	rm -f $TEST_PROGRAM_SOURCE
--	rm -f $TEST_PROGRAM
+ 	echo "Cleaning up files..."
+ 	rm -f ${PERF_DATA}
+-	rm -f ${TEST_PROGRAM}
  }
  
  trap cleanup_files exit term int
  
--cat << EOF > $TEST_PROGRAM_SOURCE
--int a = 0;
--void leaf(void) {
--  for (;;)
--    a += a;
--}
--void parent(void) {
--  leaf();
--}
+-# compile test program
+-echo "Compiling test program..."
+-cat << EOF | cc -o ${TEST_PROGRAM} -x c -
+-typedef struct _buf {
+-	char data1;
+-	char reserved[55];
+-	char data2;
+-} buf __attribute__((aligned(64)));
+-
+-static buf buf1;
+-
 -int main(void) {
--  parent();
--  return 0;
+-	for (;;) {
+-		buf1.data1++;
+-		buf1.data2 += buf1.data1;
+-	}
+-	return 0;
 -}
 -EOF
 -
--echo " + Compiling test program ($TEST_PROGRAM)..."
--
--CFLAGS="-g -O0 -fno-inline -fno-omit-frame-pointer"
--cc $CFLAGS $TEST_PROGRAM_SOURCE -o $TEST_PROGRAM || exit 1
--
- # Add a 1 second delay to skip samples that are not in the leaf() function
- perf record -o $PERF_DATA --call-graph fp -e cycles//u -D 1000 --user-callchains -- $TEST_PROGRAM 2> /dev/null &
- PID=$!
+ echo "Recording workload..."
+ 
+ # perf mem/c2c internally uses IBS PMU on AMD CPU which doesn't support
 -- 
 2.38.1.431.g37b22c650d-goog
 
