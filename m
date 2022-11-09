@@ -2,119 +2,76 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 962A4C433FE
-	for <linux-perf-users@archiver.kernel.org>; Wed,  9 Nov 2022 18:03:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EFBB8C4332F
+	for <linux-perf-users@archiver.kernel.org>; Wed,  9 Nov 2022 18:03:33 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229733AbiKISDA (ORCPT
+        id S229527AbiKISDc (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Wed, 9 Nov 2022 13:03:00 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37326 "EHLO
+        Wed, 9 Nov 2022 13:03:32 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37788 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231761AbiKISCV (ORCPT
+        with ESMTP id S231933AbiKISC4 (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Wed, 9 Nov 2022 13:02:21 -0500
-Received: from ams.source.kernel.org (ams.source.kernel.org [145.40.68.75])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2AABA27CD8;
-        Wed,  9 Nov 2022 10:01:04 -0800 (PST)
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by ams.source.kernel.org (Postfix) with ESMTPS id D1E7DB81F68;
-        Wed,  9 Nov 2022 18:01:02 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 534BEC433D6;
-        Wed,  9 Nov 2022 18:01:01 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1668016861;
-        bh=o9wTu/uqSuvdOyiepZ3oFdSFK2MQWtuIFpBt23bEtU0=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=rG02Xt5hmMd6WxUE4MxWTCf4oMF3Xoie56LpENu7uxTvTeMyyhtJ1M5lLU8l+u11P
-         m88Elu4UGVsV3hcMLNdZpW2v8XxkvpnTDJWM9s3PDEkLjbxsUv7xm2KbNd1RpvsYxU
-         VwIHIUvwE9eOZwmLIugAKVfTW57Q67WckG0JvXBKodszdK3O904iX7jdRw9Z/T8Lk+
-         vr1oe0HIQ/txYXcFUSe41g+kZLs38MebRJRdW8ymqj4bJ+U7y9fZ/SJkyvKwonObTx
-         kz+lSb40wl3cXUc2LWoSpWcG/nQR9pf5zXa6Gt/CKEkxrfqJRoYiWn7FCiiEFbEkRF
-         q58XCLxHyarQQ==
-Received: by quaco.ghostprotocols.net (Postfix, from userid 1000)
-        id E08B34034E; Wed,  9 Nov 2022 15:00:58 -0300 (-03)
-Date:   Wed, 9 Nov 2022 15:00:58 -0300
-From:   Arnaldo Carvalho de Melo <acme@kernel.org>
-To:     Ian Rogers <irogers@google.com>
-Cc:     Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Jiri Olsa <jolsa@kernel.org>,
-        Namhyung Kim <namhyung@kernel.org>,
-        Masahiro Yamada <masahiroy@kernel.org>,
-        Nicolas Schier <nicolas@fjasle.eu>,
-        linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org,
-        bpf@vger.kernel.org, Nick Desaulniers <ndesaulniers@google.com>,
-        Andrii Nakryiko <andrii.nakryiko@gmail.com>,
-        Stephane Eranian <eranian@google.com>
-Subject: Re: [PATCH v1 00/14] Fix perf tools/lib includes
-Message-ID: <Y2vq2tWzdBzIwA6H@kernel.org>
-References: <20221108073518.1154450-1-irogers@google.com>
- <Y2vG13WVahGoib57@kernel.org>
+        Wed, 9 Nov 2022 13:02:56 -0500
+Received: from mail-oi1-f176.google.com (mail-oi1-f176.google.com [209.85.167.176])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 101C125C6E;
+        Wed,  9 Nov 2022 10:02:54 -0800 (PST)
+Received: by mail-oi1-f176.google.com with SMTP id l127so19634141oia.8;
+        Wed, 09 Nov 2022 10:02:54 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=v65PkuQjKTHQdc19gFzSt8e8ZJKq+oCVZt1MzCmow2k=;
+        b=KWU7wydo1mRWKs8a/41YUugJJ5iNiZ8kqeBJVcNcZ1P/BE5qloc+5D65pBaGNajBPR
+         cRmMqX1MRvqUEv3olP3KemeOYQYjo/wTDfnLrR6/q2VKgmRYkYIkr5zlnOz/Rlbtjw1q
+         HT4TSsn9GozUEDNYmV+oj+sq2vld1sBpN5b8d7nSUmEILQIl5E/3cmTq2EjESsbZzDdz
+         tAWRyYtcNXWRU30nRApHydjTudrcOH4CScOv4caJuPERhmXaVA5zwls1Y521SdUWMANA
+         CM2uYVrcJG2lVQTAeBgiMVBb9Ky3zcuZDqUe2PsGWfdv7QK6wW5aENCRG2s8UrVZlvts
+         sGHg==
+X-Gm-Message-State: ACrzQf3w6plCAnmBo/ioXGzQ9nxVX9rKMahAHf9Y2HPK+oT0AGDala9g
+        YxTAswkSPy/P6aoxhRkNc1ACRVYqRv4UFnG5py5N7t1Q
+X-Google-Smtp-Source: AMsMyM6P64mXF96xlWlJJBgPkppkmrmr469ozds/QsLjGImzDjBeJskYqBvMaDPQhbA7YSkRaOB0OTEwvMvHrKTdVoo=
+X-Received: by 2002:aca:2805:0:b0:359:e340:d53 with SMTP id
+ 5-20020aca2805000000b00359e3400d53mr31683937oix.209.1668016973150; Wed, 09
+ Nov 2022 10:02:53 -0800 (PST)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <Y2vG13WVahGoib57@kernel.org>
-X-Url:  http://acmel.wordpress.com
+References: <20221107213314.3239159-1-namhyung@kernel.org> <20221107213314.3239159-4-namhyung@kernel.org>
+ <CAP-5=fWXAjWd-dbVXCVfRzP9iw5RzXo+cPWWPpOmTw-1xBECqg@mail.gmail.com>
+In-Reply-To: <CAP-5=fWXAjWd-dbVXCVfRzP9iw5RzXo+cPWWPpOmTw-1xBECqg@mail.gmail.com>
+From:   Namhyung Kim <namhyung@kernel.org>
+Date:   Wed, 9 Nov 2022 10:02:41 -0800
+Message-ID: <CAM9d7cgAiAUqv0PZXMLjHqxfZO9u5NJgip=7Zd5QAJsBbzaOOw@mail.gmail.com>
+Subject: Re: [PATCH 3/9] perf stat: Clear screen only if output file is a tty
+To:     Ian Rogers <irogers@google.com>
+Cc:     Arnaldo Carvalho de Melo <acme@kernel.org>,
+        Jiri Olsa <jolsa@kernel.org>, Ingo Molnar <mingo@kernel.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Adrian Hunter <adrian.hunter@intel.com>,
+        linux-perf-users@vger.kernel.org,
+        Kan Liang <kan.liang@linux.intel.com>,
+        Zhengjun Xing <zhengjun.xing@linux.intel.com>,
+        James Clark <james.clark@arm.com>
+Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-Em Wed, Nov 09, 2022 at 12:27:19PM -0300, Arnaldo Carvalho de Melo escreveu:
-> Em Mon, Nov 07, 2022 at 11:35:04PM -0800, Ian Rogers escreveu:
-> > The previous build would add -Itools/lib and get dependencies for
-> > libtraceevent, libsubcmd, libsymbol, libapi and libbpf meaning that
-> > overriding these libraries would change the link time dependency but
-> > the headers would erroneously come from tools/lib. Fix the build to
-> > install headers and then depend on these. To reduce exposing internal
-> > headers/APIs some clean up is performed. tools/lib/symbol has a
-> > Makefile added, while tools/lib/api and tools/lib/subcmd have install
-> > targets added. The pattern used for the dependencies in Makefile.perf
-> > is modelled on libbpf.
-> 
-> It builds with O=, I tried it one by one, but  there are problems with
-> make from a detached tarball, that is how I do the container builds, see
-> below, I'm trying to figure this out...
-> 
-> ⬢[acme@toolbox perf]$ make perf-tar-src-pkg
->   TAR
->   PERF_VERSION = 6.1.rc3.g7e5d8b7a1fbd
-> ⬢[acme@toolbox perf]$ mv perf-6.1.0-rc3.tar /tmp
-> ⬢[acme@toolbox perf]$ cd /tmp
-> ⬢[acme@toolbox tmp]$ tar xf perf-6.1.0-rc3.tar
-> ⬢[acme@toolbox tmp]$ cd perf-6.1.0-rc3/
-> ⬢[acme@toolbox perf-6.1.0-rc3]$ make -C tools/perf
-> make: Entering directory '/tmp/perf-6.1.0-rc3/tools/perf'
->   BUILD:   Doing 'make -j32' parallel build
->   HOSTCC  fixdep.o
->   HOSTLD  fixdep-in.o
->   LINK    fixdep
-> 
-> Auto-detecting system features:
-<SNIP>
-> ...                                   dwarf: [ on  ]
->   CC      jvmti/libjvmti.o
-> make[3]: *** No rule to make target '/tmp/perf-6.1.0-rc3/tools/perf/libsymbol/libsymbol.a'.  Stop.
-> make[2]: *** [Makefile.perf:907: /tmp/perf-6.1.0-rc3/tools/perf/libsymbol/libsymbol.a] Error 2
-> make[2]: *** Waiting for unfinished jobs....
+Hi Ian,
 
-So this cures it:
+On Tue, Nov 8, 2022 at 3:16 PM Ian Rogers <irogers@google.com> wrote:
+>
+> On Mon, Nov 7, 2022 at 1:33 PM Namhyung Kim <namhyung@kernel.org> wrote:
+> >
+> > The --interval-clear option makes perf stat to clear the terminal at
+> > each interval.  But it doesn't need to clear the screen when it saves
+> > to a file.
+>
+> Would it be more intuitive to warn if interval-clear is specified with a file?
 
-diff --git a/tools/perf/MANIFEST b/tools/perf/MANIFEST
-index f5d72f936a6bad2c..c8e8e05b4ff1f56f 100644
---- a/tools/perf/MANIFEST
-+++ b/tools/perf/MANIFEST
-@@ -13,8 +13,7 @@ tools/lib/ctype.c
- tools/lib/hweight.c
- tools/lib/rbtree.c
- tools/lib/string.c
--tools/lib/symbol/kallsyms.c
--tools/lib/symbol/kallsyms.h
-+tools/lib/symbol
- tools/lib/find_bit.c
- tools/lib/bitmap.c
- tools/lib/list_sort.c
+Makes sense, will change.
+
+Thanks,
+Namhyung
