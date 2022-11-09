@@ -2,427 +2,146 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A0C7BC4167B
-	for <linux-perf-users@archiver.kernel.org>; Wed,  9 Nov 2022 17:00:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7B352C4332F
+	for <linux-perf-users@archiver.kernel.org>; Wed,  9 Nov 2022 17:46:41 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230244AbiKIRAx (ORCPT
+        id S230271AbiKIRqk (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Wed, 9 Nov 2022 12:00:53 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60524 "EHLO
+        Wed, 9 Nov 2022 12:46:40 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56980 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229745AbiKIRAe (ORCPT
+        with ESMTP id S229516AbiKIRqj (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Wed, 9 Nov 2022 12:00:34 -0500
-Received: from mail-wr1-x433.google.com (mail-wr1-x433.google.com [IPv6:2a00:1450:4864:20::433])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 669692AC41
-        for <linux-perf-users@vger.kernel.org>; Wed,  9 Nov 2022 08:57:16 -0800 (PST)
-Received: by mail-wr1-x433.google.com with SMTP id z14so26694854wrn.7
-        for <linux-perf-users@vger.kernel.org>; Wed, 09 Nov 2022 08:57:16 -0800 (PST)
+        Wed, 9 Nov 2022 12:46:39 -0500
+Received: from mail-pj1-x1033.google.com (mail-pj1-x1033.google.com [IPv6:2607:f8b0:4864:20::1033])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6566CE70;
+        Wed,  9 Nov 2022 09:46:38 -0800 (PST)
+Received: by mail-pj1-x1033.google.com with SMTP id d59-20020a17090a6f4100b00213202d77e1so2548751pjk.2;
+        Wed, 09 Nov 2022 09:46:38 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20210112;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=Sm+dCJJEEQ7+EkYSQ+2VmevEgeRaXIz8X5u6MUXZr/4=;
-        b=pt1hevZ/5ESgT5JreBgXBlk/6uOGLTnnGIj/GQxrwlw4Q8rVXWUcxYcwD5Q76rUQeM
-         XIeuSoUziACWuO0j+ulMnNjc7yYF22PDy2OdVKL0F5O9x4fFgBZvleZbeW83DHyJmfVp
-         3ZPjOlmhaVBefvjqFJ6q5dvnRvDjZQ1VNxjuFBRIAa7Po+RJwNNyI143AEYVytPj54MO
-         G3Jp0fm+yaRnFioLGyK6hX5zer53xQsjYADktpKhOLW6lLB2VNyt055iv/Z16iFF6dZb
-         GdP+YwE9jOsAygmm9y3FBsxYln65X9smPMZisDgKxKNHfB6N6LITt8iS7tFEXZnnwMsZ
-         kEYg==
+        d=gmail.com; s=20210112;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:sender:from:to:cc:subject:date:message-id:reply-to;
+        bh=re07EFtuKaEOGB0eQGg49+EHjkyElXhCnkp7HcHtDLo=;
+        b=DFF5qFJpWYljLoTozfGQMth5gZ6mxCbKAQJayCTsy2IfWn1cLVndhE76GIxHAPIfVi
+         lPfE5hb8c+dTDOqGfVNrHupZkd8hG5vHqkAQ43nBoi+pMMOy8mPevpy07pJKEzfDo/q9
+         haet19MLhKMPy2cqdXg698wUJvF7XNB1JVEAfoIUxf/ZXAUHpC1m9jJzhxuj5rtAH8Z/
+         we7RtHuIsG1oxIASnX3RHQoJeI/SUoiqfzfowcltrVK4c5P8GAtRs4LKr/AF8VBMK5A8
+         AQLgF0NEUvq3ugyBKplDRxrc4zUCbZgP5uJT+2+5121lf8w97uvcZ1UHE/zlg9Kde7LA
+         97hA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=Sm+dCJJEEQ7+EkYSQ+2VmevEgeRaXIz8X5u6MUXZr/4=;
-        b=2k7gnaiWrEsC5yYYKUqZN/JaWlqf8meHw/dT0xUkqUfYyBUV4K0Vu8W/KFz5RQp2g5
-         egUCAIsqaozUs+/BtBBmwBdrEJQ67Y1yymlIdJl87kRKkhnLbQwS74NnKthF03+A/cQG
-         kSa6kpWmd3GXH9yAx7/F+pWPKUwF6MCKLg2zLpmtLO2hpcwOPxGHdhIgxSrnUbyszUVL
-         B8w0gmzDDhnuhc/uWXeY8W/JPH0zeTYQscWmQcp7BvLaIVpXArdEzLOxDwI9hv1u1wLw
-         QYzaEXXfX4UifVfZXlcUqM3wcRcyy8Edow9i7PxCzqsMZPRSnVY+MMobu2GuCjVuG8Cm
-         l3OA==
-X-Gm-Message-State: ACrzQf1ME0lWARqQhUPPVeCWtHroRbwnamRr4/WdXtBnU1ZTNnuQo3hs
-        6zLd3spc+WVCgxU6bTM22KxRJOhv6bzncemhhV1Niw==
-X-Google-Smtp-Source: AMsMyM7f9ipxs0uFXI99tel5Zn8OfimI7ECFVy1MVtrJ/1z2KWpRTqQT8fQGCnnh957/FkfpU4FCmuC2AqOEZAokIaE=
-X-Received: by 2002:a5d:47a6:0:b0:236:7854:246d with SMTP id
- 6-20020a5d47a6000000b002367854246dmr38446444wrb.300.1668013034686; Wed, 09
- Nov 2022 08:57:14 -0800 (PST)
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:sender:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=re07EFtuKaEOGB0eQGg49+EHjkyElXhCnkp7HcHtDLo=;
+        b=aSeNl2/QemPehXpdiDiDjhSxD7a8RUQsMdWSXxpfXbLkRi2n7bcmRddMSkcWRfHp/J
+         lq/8BnHGGrOO1LVwMbvhjzu/sHImzFAlqE+eUO4sYX229tAoDBJyJBdKYE49kzFf/YSF
+         BQ3+zeizPWJI/oN3vznRY9embgw26xBssNR/TkPL8jZDIRP/CDgqWHmFISN9Cl1u+zTY
+         uoFxx5Noq/KvVygs+eE2/oXbDQtx4dBf2G46tzYG6wfn7nxojWMUTxCcmBu+wXXWiG5S
+         s9NzNtIQIxIZlfQewxEAhMc+C6cOHZozyjn0K4PTfQJaeSxlzKURRFBoRJfF6mKGP7z6
+         ayvQ==
+X-Gm-Message-State: ANoB5pkUqgGQLMz+odd9sKB36v2KEWC3aYCneEe2Uo+O8kdmZFhCu7qE
+        duqumSvHMyROiPCI92jux0Y=
+X-Google-Smtp-Source: AA0mqf4dJ6SH7nQ3eMzDu4CGIqlpZeEiljNdmmLx7++/tiO6BF5StlZNzPqqh0vSnDZm8H722bb//Q==
+X-Received: by 2002:a17:903:249:b0:188:8f93:dc3e with SMTP id j9-20020a170903024900b001888f93dc3emr6095998plh.124.1668015997761;
+        Wed, 09 Nov 2022 09:46:37 -0800 (PST)
+Received: from balhae.corp.google.com ([2620:15c:2c1:200:fa05:f3cd:da75:3103])
+        by smtp.gmail.com with ESMTPSA id a10-20020a63cd4a000000b0043941566481sm7877909pgj.39.2022.11.09.09.46.36
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 09 Nov 2022 09:46:37 -0800 (PST)
+Sender: Namhyung Kim <namhyung@gmail.com>
+From:   Namhyung Kim <namhyung@kernel.org>
+To:     Arnaldo Carvalho de Melo <acme@kernel.org>,
+        Jiri Olsa <jolsa@kernel.org>
+Cc:     Ingo Molnar <mingo@kernel.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Ian Rogers <irogers@google.com>,
+        Adrian Hunter <adrian.hunter@intel.com>,
+        linux-perf-users@vger.kernel.org, Leo Yan <leo.yan@linaro.org>,
+        German Gomez <german.gomez@arm.com>,
+        Zhengjun Xing <zhengjun.xing@linux.intel.com>,
+        James Clark <james.clark@arm.com>
+Subject: [PATCHSET 00/12] perf test: Add test workloads (v1)
+Date:   Wed,  9 Nov 2022 09:46:23 -0800
+Message-Id: <20221109174635.859406-1-namhyung@kernel.org>
+X-Mailer: git-send-email 2.38.1.431.g37b22c650d-goog
 MIME-Version: 1.0
-References: <20221108073518.1154450-1-irogers@google.com> <Y2vG13WVahGoib57@kernel.org>
- <CAP-5=fXMEE6LAoBcV-UtRRhG3wvVtzBW4r5FGz06=qsE2U6jPw@mail.gmail.com>
-In-Reply-To: <CAP-5=fXMEE6LAoBcV-UtRRhG3wvVtzBW4r5FGz06=qsE2U6jPw@mail.gmail.com>
-From:   Ian Rogers <irogers@google.com>
-Date:   Wed, 9 Nov 2022 08:57:01 -0800
-Message-ID: <CAP-5=fXECqhQpvMVdyzFpNixGwC+9BBo_Jj9nXEZ1hsDvjRd8Q@mail.gmail.com>
-Subject: Re: [PATCH v1 00/14] Fix perf tools/lib includes
-To:     Arnaldo Carvalho de Melo <acme@kernel.org>
-Cc:     Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Jiri Olsa <jolsa@kernel.org>,
-        Namhyung Kim <namhyung@kernel.org>,
-        Masahiro Yamada <masahiroy@kernel.org>,
-        Nicolas Schier <nicolas@fjasle.eu>,
-        linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org,
-        bpf@vger.kernel.org, Nick Desaulniers <ndesaulniers@google.com>,
-        Andrii Nakryiko <andrii.nakryiko@gmail.com>,
-        Stephane Eranian <eranian@google.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-On Wed, Nov 9, 2022 at 8:52 AM Ian Rogers <irogers@google.com> wrote:
->
-> On Wed, Nov 9, 2022 at 7:27 AM Arnaldo Carvalho de Melo <acme@kernel.org>=
- wrote:
-> >
-> > Em Mon, Nov 07, 2022 at 11:35:04PM -0800, Ian Rogers escreveu:
-> > > The previous build would add -Itools/lib and get dependencies for
-> > > libtraceevent, libsubcmd, libsymbol, libapi and libbpf meaning that
-> > > overriding these libraries would change the link time dependency but
-> > > the headers would erroneously come from tools/lib. Fix the build to
-> > > install headers and then depend on these. To reduce exposing internal
-> > > headers/APIs some clean up is performed. tools/lib/symbol has a
-> > > Makefile added, while tools/lib/api and tools/lib/subcmd have install
-> > > targets added. The pattern used for the dependencies in Makefile.perf
-> > > is modelled on libbpf.
-> >
-> > It builds with O=3D, I tried it one by one, but  there are problems wit=
-h
-> > make from a detached tarball, that is how I do the container builds, se=
-e
-> > below, I'm trying to figure this out...
->
-> Sorry, I didn't know to test this. The added Build and Makefile in
-> libsymbol are missing, so I'd guess that's the major issue.
->
-> Thanks,
-> Ian
+Hello,
 
-The following fixes this for me:
+In the shell tests, it needs to run a custom test workload to verify
+the behaviors.  This requires a working compiler when it runs the
+tests.  However it's not available in some test environments, making
+hard to run those tests.
 
---- a/tools/perf/MANIFEST
-+++ b/tools/perf/MANIFEST
-@@ -13,8 +13,7 @@ tools/lib/ctype.c
-tools/lib/hweight.c
-tools/lib/rbtree.c
-tools/lib/string.c
--tools/lib/symbol/kallsyms.c
--tools/lib/symbol/kallsyms.h
-+tools/lib/symbol
-tools/lib/find_bit.c
-tools/lib/bitmap.c
-tools/lib/list_sort.c
+So I've added the test workload to the perf binary directly, so that
+we can run them simply like:
+
+  $ perf test -w noploop
+
+And convert most of the shell tests need compilers with this workloads.
+The buildid test still requires a compiler since it needs to check
+different build options to generate different kind of build-IDs.
+
+I've checked perf test result after the changes but could not verify
+architecture-specific ones (e.g. for arm64).  It'd be nice if anyone
+can check it out.
+
+You can find it in 'perf/test-workload-v1' branch in
+
+  git://git.kernel.org/pub/scm/linux/kernel/git/namhyung/linux-perf.git
 
 Thanks,
-Ian
+Namhyung
 
-> > =E2=AC=A2[acme@toolbox perf]$ make perf-tar-src-pkg
-> >   TAR
-> >   PERF_VERSION =3D 6.1.rc3.g7e5d8b7a1fbd
-> > =E2=AC=A2[acme@toolbox perf]$ mv perf-6.1.0-rc3.tar /tmp
-> > =E2=AC=A2[acme@toolbox perf]$ cd /tmp
-> > =E2=AC=A2[acme@toolbox tmp]$ tar xf perf-6.1.0-rc3.tar
-> > =E2=AC=A2[acme@toolbox tmp]$ cd perf-6.1.0-rc3/
-> > =E2=AC=A2[acme@toolbox perf-6.1.0-rc3]$ make -C tools/perf
-> > make: Entering directory '/tmp/perf-6.1.0-rc3/tools/perf'
-> >   BUILD:   Doing 'make -j32' parallel build
-> >   HOSTCC  fixdep.o
-> >   HOSTLD  fixdep-in.o
-> >   LINK    fixdep
-> >
-> > Auto-detecting system features:
-> > ...                                   dwarf: [ on  ]
-> > ...                      dwarf_getlocations: [ on  ]
-> > ...                                   glibc: [ on  ]
-> > ...                                  libbfd: [ on  ]
-> > ...                          libbfd-buildid: [ on  ]
-> > ...                                  libcap: [ on  ]
-> > ...                                  libelf: [ on  ]
-> > ...                                 libnuma: [ on  ]
-> > ...                  numa_num_possible_cpus: [ on  ]
-> > ...                                 libperl: [ on  ]
-> > ...                               libpython: [ on  ]
-> > ...                               libcrypto: [ on  ]
-> > ...                               libunwind: [ on  ]
-> > ...                      libdw-dwarf-unwind: [ on  ]
-> > ...                                    zlib: [ on  ]
-> > ...                                    lzma: [ on  ]
-> > ...                               get_cpuid: [ on  ]
-> > ...                                     bpf: [ on  ]
-> > ...                                  libaio: [ on  ]
-> > ...                                 libzstd: [ on  ]
-> >
-> >   GEN     common-cmds.h
-> >   PERF_VERSION =3D 6.1.rc3.g7e5d8b7a1fbd
-> >   CC      perf-read-vdso32
-> >   GEN     perf-archive
-> >   GEN     perf-iostat
-> >   CC      dlfilters/dlfilter-test-api-v0.o
-> >   CC      dlfilters/dlfilter-show-cycles.o
-> >   CC      jvmti/libjvmti.o
-> > make[3]: *** No rule to make target '/tmp/perf-6.1.0-rc3/tools/perf/lib=
-symbol/libsymbol.a'.  Stop.
-> > make[2]: *** [Makefile.perf:907: /tmp/perf-6.1.0-rc3/tools/perf/libsymb=
-ol/libsymbol.a] Error 2
-> > make[2]: *** Waiting for unfinished jobs....
-> >   CC      jvmti/jvmti_agent.o
-> >   CC      jvmti/libstring.o
-> >   CC      jvmti/libctype.o
-> >   GEN     pmu-events/pmu-events.c
-> >   INSTALL headers
-> >   CC      /tmp/perf-6.1.0-rc3/tools/perf/libsubcmd/exec-cmd.o
-> >   CC      /tmp/perf-6.1.0-rc3/tools/perf/libsubcmd/help.o
-> >   CC      /tmp/perf-6.1.0-rc3/tools/perf/libsubcmd/pager.o
-> >   CC      /tmp/perf-6.1.0-rc3/tools/perf/libsubcmd/parse-options.o
-> >   CC      /tmp/perf-6.1.0-rc3/tools/perf/libsubcmd/run-command.o
-> >   CC      /tmp/perf-6.1.0-rc3/tools/perf/libsubcmd/sigchain.o
-> >   CC      /tmp/perf-6.1.0-rc3/tools/perf/libsubcmd/subcmd-config.o
-> >   INSTALL headers
-> >   CC      /tmp/perf-6.1.0-rc3/tools/perf/libtraceevent/event-parse.o
-> >   CC      /tmp/perf-6.1.0-rc3/tools/perf/libtraceevent_plugins/plugin_j=
-bd2.o
-> >   CC      /tmp/perf-6.1.0-rc3/tools/perf/libtraceevent_plugins/plugin_h=
-rtimer.o
-> >   CC      /tmp/perf-6.1.0-rc3/tools/perf/libtraceevent_plugins/plugin_k=
-mem.o
-> >   CC      /tmp/perf-6.1.0-rc3/tools/perf/libtraceevent_plugins/plugin_k=
-vm.o
-> >   CC      /tmp/perf-6.1.0-rc3/tools/perf/libtraceevent_plugins/plugin_m=
-ac80211.o
-> >   CC      /tmp/perf-6.1.0-rc3/tools/perf/libtraceevent_plugins/plugin_f=
-unction.o
-> >   CC      /tmp/perf-6.1.0-rc3/tools/perf/libtraceevent_plugins/plugin_s=
-ched_switch.o
-> >   INSTALL headers
-> >   CC      /tmp/perf-6.1.0-rc3/tools/perf/libperf/core.o
-> >   CC      /tmp/perf-6.1.0-rc3/tools/perf/libapi/cpu.o
-> >   MKDIR   /tmp/perf-6.1.0-rc3/tools/perf/libapi/fd/
-> >   MKDIR   /tmp/perf-6.1.0-rc3/tools/perf/libapi/fs/
-> >   MKDIR   /tmp/perf-6.1.0-rc3/tools/perf/libapi/fs/
-> >   MKDIR   /tmp/perf-6.1.0-rc3/tools/perf/libapi/fs/
-> >   CC      /tmp/perf-6.1.0-rc3/tools/perf/libapi/fd/array.o
-> >   CC      /tmp/perf-6.1.0-rc3/tools/perf/libapi/fs/fs.o
-> >   GEN     /tmp/perf-6.1.0-rc3/tools/perf/libbpf/bpf_helper_defs.h
-> >   CC      /tmp/perf-6.1.0-rc3/tools/perf/libapi/fs/tracing_path.o
-> >   CC      /tmp/perf-6.1.0-rc3/tools/perf/libapi/fs/cgroup.o
-> >   INSTALL /tmp/perf-6.1.0-rc3/tools/perf/libbpf/include/bpf/bpf.h
-> >   CC      /tmp/perf-6.1.0-rc3/tools/perf/libapi/debug.o
-> >   CC      /tmp/perf-6.1.0-rc3/tools/perf/libtraceevent_plugins/plugin_f=
-utex.o
-> >   CC      /tmp/perf-6.1.0-rc3/tools/perf/libtraceevent_plugins/plugin_x=
-en.o
-> >   CC      /tmp/perf-6.1.0-rc3/tools/perf/libtraceevent_plugins/plugin_s=
-csi.o
-> >   CC      /tmp/perf-6.1.0-rc3/tools/perf/libtraceevent_plugins/plugin_c=
-fg80211.o
-> >   CC      /tmp/perf-6.1.0-rc3/tools/perf/libtraceevent_plugins/plugin_t=
-lb.o
-> >   LD      /tmp/perf-6.1.0-rc3/tools/perf/libtraceevent_plugins/plugin_j=
-bd2-in.o
-> >   LD      /tmp/perf-6.1.0-rc3/tools/perf/libtraceevent_plugins/plugin_h=
-rtimer-in.o
-> >   INSTALL /tmp/perf-6.1.0-rc3/tools/perf/libbpf/include/bpf/libbpf.h
-> >   LD      /tmp/perf-6.1.0-rc3/tools/perf/libtraceevent_plugins/plugin_k=
-mem-in.o
-> >   INSTALL headers
-> >   INSTALL /tmp/perf-6.1.0-rc3/tools/perf/libbpf/include/bpf/btf.h
-> >   LD      /tmp/perf-6.1.0-rc3/tools/perf/libtraceevent_plugins/plugin_m=
-ac80211-in.o
-> >   LD      /tmp/perf-6.1.0-rc3/tools/perf/libtraceevent_plugins/plugin_s=
-ched_switch-in.o
-> >   CC      /tmp/perf-6.1.0-rc3/tools/perf/libperf/cpumap.o
-> >   CC      /tmp/perf-6.1.0-rc3/tools/perf/libperf/threadmap.o
-> >   CC      /tmp/perf-6.1.0-rc3/tools/perf/libapi/str_error_r.o
-> >   INSTALL /tmp/perf-6.1.0-rc3/tools/perf/libbpf/include/bpf/libbpf_comm=
-on.h
-> >   LINK    /tmp/perf-6.1.0-rc3/tools/perf/libtraceevent_plugins/plugin_j=
-bd2.so
-> >   LINK    /tmp/perf-6.1.0-rc3/tools/perf/libtraceevent_plugins/plugin_h=
-rtimer.so
-> >   INSTALL /tmp/perf-6.1.0-rc3/tools/perf/libbpf/include/bpf/libbpf_lega=
-cy.h
-> >   LD      /tmp/perf-6.1.0-rc3/tools/perf/libtraceevent_plugins/plugin_f=
-unction-in.o
-> >   CC      /tmp/perf-6.1.0-rc3/tools/perf/libperf/evsel.o
-> >   LD      /tmp/perf-6.1.0-rc3/tools/perf/libtraceevent_plugins/plugin_k=
-vm-in.o
-> >   LINK    /tmp/perf-6.1.0-rc3/tools/perf/libtraceevent_plugins/plugin_k=
-mem.so
-> >   LINK    /tmp/perf-6.1.0-rc3/tools/perf/libtraceevent_plugins/plugin_m=
-ac80211.so
-> >   LINK    /tmp/perf-6.1.0-rc3/tools/perf/libtraceevent_plugins/plugin_s=
-ched_switch.so
-> >   INSTALL /tmp/perf-6.1.0-rc3/tools/perf/libbpf/include/bpf/bpf_helpers=
-.h
-> >   INSTALL /tmp/perf-6.1.0-rc3/tools/perf/libbpf/include/bpf/bpf_tracing=
-.h
-> >   CC      /tmp/perf-6.1.0-rc3/tools/perf/libtraceevent/event-plugin.o
-> >   CC      /tmp/perf-6.1.0-rc3/tools/perf/libperf/evlist.o
-> >   CC      /tmp/perf-6.1.0-rc3/tools/perf/libperf/mmap.o
-> >   CC      /tmp/perf-6.1.0-rc3/tools/perf/libtraceevent/trace-seq.o
-> >   INSTALL /tmp/perf-6.1.0-rc3/tools/perf/libbpf/include/bpf/bpf_endian.=
-h
-> >   INSTALL /tmp/perf-6.1.0-rc3/tools/perf/libbpf/include/bpf/bpf_core_re=
-ad.h
-> > if [ ! -d ''/tmp/perf-6.1.0-rc3/tools/perf/libapi'/include/api/fs' ]; t=
-hen install -d -m 755 ''/tmp/perf-6.1.0-rc3/tools/perf/libapi'/include/api/=
-fs'; fi; install fs/tracing_path.h -m 644 ''/tmp/perf-6.1.0-rc3/tools/perf/=
-libapi'/include/api/fs';
-> >   LD      /tmp/perf-6.1.0-rc3/tools/perf/libapi/fd/libapi-in.o
-> >   CC      /tmp/perf-6.1.0-rc3/tools/perf/libperf/zalloc.o
-> >   CC      /tmp/perf-6.1.0-rc3/tools/perf/libtraceevent/parse-filter.o
-> >   CC      /tmp/perf-6.1.0-rc3/tools/perf/libtraceevent/parse-utils.o
-> >   CC      /tmp/perf-6.1.0-rc3/tools/perf/libtraceevent/kbuffer-parse.o
-> >   LD      /tmp/perf-6.1.0-rc3/tools/perf/libtraceevent_plugins/plugin_x=
-en-in.o
-> >   INSTALL /tmp/perf-6.1.0-rc3/tools/perf/libbpf/include/bpf/skel_intern=
-al.h
-> >   INSTALL /tmp/perf-6.1.0-rc3/tools/perf/libbpf/include/bpf/libbpf_vers=
-ion.h
-> >   CC      /tmp/perf-6.1.0-rc3/tools/perf/libtraceevent/tep_strerror.o
-> >   INSTALL /tmp/perf-6.1.0-rc3/tools/perf/libbpf/include/bpf/usdt.bpf.h
-> >   INSTALL /tmp/perf-6.1.0-rc3/tools/perf/libbpf/include/bpf/bpf_helper_=
-defs.h
-> >   CC      /tmp/perf-6.1.0-rc3/tools/perf/libtraceevent/event-parse-api.=
-o
-> >   CC      /tmp/perf-6.1.0-rc3/tools/perf/libperf/xyarray.o
-> >   LINK    /tmp/perf-6.1.0-rc3/tools/perf/libtraceevent_plugins/plugin_f=
-unction.so
-> >   LINK    /tmp/perf-6.1.0-rc3/tools/perf/libtraceevent_plugins/plugin_x=
-en.so
-> >   LD      /tmp/perf-6.1.0-rc3/tools/perf/libtraceevent_plugins/plugin_f=
-utex-in.o
-> >   CC      /tmp/perf-6.1.0-rc3/tools/perf/libperf/lib.o
-> >   LD      /tmp/perf-6.1.0-rc3/tools/perf/libtraceevent_plugins/plugin_s=
-csi-in.o
-> >   LD      /tmp/perf-6.1.0-rc3/tools/perf/libtraceevent_plugins/plugin_c=
-fg80211-in.o
-> >   MKDIR   /tmp/perf-6.1.0-rc3/tools/perf/libbpf/staticobjs/
-> >   MKDIR   /tmp/perf-6.1.0-rc3/tools/perf/libbpf/staticobjs/
-> >   MKDIR   /tmp/perf-6.1.0-rc3/tools/perf/libbpf/staticobjs/
-> >   MKDIR   /tmp/perf-6.1.0-rc3/tools/perf/libbpf/staticobjs/
-> >   LINK    /tmp/perf-6.1.0-rc3/tools/perf/libtraceevent_plugins/plugin_k=
-vm.so
-> >   CC      /tmp/perf-6.1.0-rc3/tools/perf/libbpf/staticobjs/libbpf.o
-> >   LINK    /tmp/perf-6.1.0-rc3/tools/perf/libtraceevent_plugins/plugin_f=
-utex.so
-> >   LINK    /tmp/perf-6.1.0-rc3/tools/perf/libtraceevent_plugins/plugin_s=
-csi.so
-> >   CC      /tmp/perf-6.1.0-rc3/tools/perf/libbpf/staticobjs/bpf.o
-> >   LD      /tmp/perf-6.1.0-rc3/tools/perf/libapi/fs/libapi-in.o
-> >   CC      /tmp/perf-6.1.0-rc3/tools/perf/libbpf/staticobjs/nlattr.o
-> >   CC      /tmp/perf-6.1.0-rc3/tools/perf/libbpf/staticobjs/btf.o
-> >   MKDIR   /tmp/perf-6.1.0-rc3/tools/perf/libbpf/staticobjs/
-> >   LD      /tmp/perf-6.1.0-rc3/tools/perf/libtraceevent_plugins/plugin_t=
-lb-in.o
-> >   LINK    /tmp/perf-6.1.0-rc3/tools/perf/libtraceevent_plugins/plugin_c=
-fg80211.so
-> >   CC      /tmp/perf-6.1.0-rc3/tools/perf/libbpf/staticobjs/str_error.o
-> >   CC      /tmp/perf-6.1.0-rc3/tools/perf/libbpf/staticobjs/netlink.o
-> >   LD      /tmp/perf-6.1.0-rc3/tools/perf/libapi/libapi-in.o
-> >   LD      jvmti/jvmti-in.o
-> >   CC      /tmp/perf-6.1.0-rc3/tools/perf/libbpf/staticobjs/libbpf_errno=
-.o
-> >   LINK    /tmp/perf-6.1.0-rc3/tools/perf/libtraceevent_plugins/plugin_t=
-lb.so
-> >   CC      /tmp/perf-6.1.0-rc3/tools/perf/libbpf/staticobjs/bpf_prog_lin=
-fo.o
-> >   AR      /tmp/perf-6.1.0-rc3/tools/perf/libapi/libapi.a
-> >   CC      /tmp/perf-6.1.0-rc3/tools/perf/libbpf/staticobjs/libbpf_probe=
-s.o
-> >   CC      /tmp/perf-6.1.0-rc3/tools/perf/libbpf/staticobjs/hashmap.o
-> >   CC      /tmp/perf-6.1.0-rc3/tools/perf/libbpf/staticobjs/btf_dump.o
-> >   CC      /tmp/perf-6.1.0-rc3/tools/perf/libbpf/staticobjs/ringbuf.o
-> >   CC      /tmp/perf-6.1.0-rc3/tools/perf/libbpf/staticobjs/strset.o
-> >   GEN     /tmp/perf-6.1.0-rc3/tools/perf/libtraceevent_plugins/libtrace=
-event-dynamic-list
-> >   CC      /tmp/perf-6.1.0-rc3/tools/perf/libbpf/staticobjs/linker.o
-> >   CC      /tmp/perf-6.1.0-rc3/tools/perf/libbpf/staticobjs/gen_loader.o
-> >   CC      /tmp/perf-6.1.0-rc3/tools/perf/libbpf/staticobjs/relo_core.o
-> >   CC      /tmp/perf-6.1.0-rc3/tools/perf/libbpf/staticobjs/usdt.o
-> >   LD      /tmp/perf-6.1.0-rc3/tools/perf/libsubcmd/libsubcmd-in.o
-> >   AR      /tmp/perf-6.1.0-rc3/tools/perf/libsubcmd/libsubcmd.a
-> >   LD      /tmp/perf-6.1.0-rc3/tools/perf/libperf/libperf-in.o
-> >   LD      /tmp/perf-6.1.0-rc3/tools/perf/libtraceevent/libtraceevent-in=
-.o
-> >   AR      /tmp/perf-6.1.0-rc3/tools/perf/libperf/libperf.a
-> >   LINK    /tmp/perf-6.1.0-rc3/tools/perf/libtraceevent/libtraceevent.a
-> >   CC      pmu-events/pmu-events.o
-> >   LD      pmu-events/pmu-events-in.o
-> >   LD      /tmp/perf-6.1.0-rc3/tools/perf/libbpf/staticobjs/libbpf-in.o
-> >   LINK    /tmp/perf-6.1.0-rc3/tools/perf/libbpf/libbpf.a
-> > make[1]: *** [Makefile.perf:240: sub-make] Error 2
-> > make: *** [Makefile:70: all] Error 2
-> > make: Leaving directory '/tmp/perf-6.1.0-rc3/tools/perf'
-> > =E2=AC=A2[acme@toolbox perf-6.1.0-rc3]$
-> >
-> >
-> >
-> > > The problem and solution were motivated by this issue and discussion:
-> > > https://lore.kernel.org/lkml/CAEf4BzbbOHQZUAe6iWaehKCPQAf3VC=3Dhq657b=
-uqe2_yRKxaK-A@mail.gmail.com/
-> > >
-> > > Ian Rogers (14):
-> > >   tools lib api: Add install target
-> > >   tools lib subcmd: Add install target
-> > >   perf build: Install libsubcmd locally when building
-> > >   perf build: Install libapi locally when building
-> > >   perf build: Install libperf locally when building
-> > >   perf build: Install libtraceevent locally when building
-> > >   tools lib api: Add missing install headers
-> > >   tools lib perf: Add missing install headers
-> > >   tool lib symbol: Add Makefile/Build
-> > >   perf build: Install libsymbol locally when building
-> > >   perf expr: Tidy hashmap dependency
-> > >   perf thread_map: Reduce exposure of libperf internal API
-> > >   perf cpumap: Tidy libperf includes
-> > >   perf build: Use tools/lib headers from install path
-> > >
-> > >  tools/lib/api/Makefile                        |  52 ++++++
-> > >  tools/lib/perf/Makefile                       |  10 +-
-> > >  tools/lib/subcmd/Makefile                     |  49 ++++++
-> > >  tools/lib/symbol/Build                        |   1 +
-> > >  tools/lib/symbol/Makefile                     | 115 +++++++++++++
-> > >  tools/perf/.gitignore                         |   7 +-
-> > >  tools/perf/Makefile.config                    |   2 -
-> > >  tools/perf/Makefile.perf                      | 152 ++++++++++++----=
---
-> > >  tools/perf/builtin-stat.c                     |   1 +
-> > >  tools/perf/builtin-trace.c                    |   4 +-
-> > >  tools/perf/tests/cpumap.c                     |   2 +-
-> > >  tools/perf/tests/expr.c                       |   1 +
-> > >  tools/perf/tests/openat-syscall.c             |   1 +
-> > >  tools/perf/tests/pmu-events.c                 |   1 +
-> > >  tools/perf/tests/thread-map.c                 |   1 +
-> > >  tools/perf/util/Build                         |   5 -
-> > >  tools/perf/util/auxtrace.h                    |   2 +-
-> > >  tools/perf/util/bpf-loader.c                  |   4 -
-> > >  tools/perf/util/bpf_counter.c                 |   2 +-
-> > >  tools/perf/util/cpumap.c                      |   1 +
-> > >  tools/perf/util/cpumap.h                      |   2 +-
-> > >  tools/perf/util/evsel.c                       |   5 +-
-> > >  tools/perf/util/evsel.h                       |   2 -
-> > >  tools/perf/util/expr.c                        |   1 +
-> > >  tools/perf/util/expr.h                        |   7 +-
-> > >  tools/perf/util/metricgroup.c                 |   1 +
-> > >  tools/perf/util/python.c                      |   6 +-
-> > >  .../scripting-engines/trace-event-python.c    |   2 +-
-> > >  tools/perf/util/stat-shadow.c                 |   1 +
-> > >  tools/perf/util/stat.c                        |   4 -
-> > >  tools/perf/util/thread_map.c                  |   1 +
-> > >  tools/perf/util/thread_map.h                  |   2 -
-> > >  32 files changed, 361 insertions(+), 86 deletions(-)
-> > >  create mode 100644 tools/lib/symbol/Build
-> > >  create mode 100644 tools/lib/symbol/Makefile
-> > >
-> > > --
-> > > 2.38.1.431.g37b22c650d-goog
-> >
-> > --
-> >
-> > - Arnaldo
+
+Namhyung Kim (12):
+  perf test: Add -w/--workload option
+  perf test: Replace pipe test workload with noploop
+  perf test: Add 'thloop' test workload
+  perf test: Replace record test workload with thloop
+  perf test: Add 'leafloop' test workload
+  perf test: Replace arm callgraph fp test workload with leafloop
+  perf test: Add 'sqrtloop' test workload
+  perf test: Replace arm spe fork test workload with sqrtloop
+  perf test: Add 'brstack' test workload
+  perf test: Replace brstack test workload
+  perf test: Add 'datasym' test workload
+  perf test: Replace data symbol test workload with datasym
+
+ tools/perf/tests/Build                        |  2 +
+ tools/perf/tests/builtin-test.c               | 29 ++++++++
+ tools/perf/tests/shell/pipe_test.sh           | 55 +++-------------
+ tools/perf/tests/shell/record.sh              | 59 +----------------
+ .../perf/tests/shell/test_arm_callgraph_fp.sh | 30 +--------
+ tools/perf/tests/shell/test_arm_spe_fork.sh   | 44 +------------
+ tools/perf/tests/shell/test_brstack.sh        | 66 ++++---------------
+ tools/perf/tests/shell/test_data_symbol.sh    | 29 +-------
+ tools/perf/tests/tests.h                      | 27 ++++++++
+ tools/perf/tests/workloads/Build              | 12 ++++
+ tools/perf/tests/workloads/brstack.c          | 39 +++++++++++
+ tools/perf/tests/workloads/datasym.c          | 24 +++++++
+ tools/perf/tests/workloads/leafloop.c         | 34 ++++++++++
+ tools/perf/tests/workloads/noploop.c          | 32 +++++++++
+ tools/perf/tests/workloads/sqrtloop.c         | 44 +++++++++++++
+ tools/perf/tests/workloads/thloop.c           | 53 +++++++++++++++
+ 16 files changed, 324 insertions(+), 255 deletions(-)
+ create mode 100644 tools/perf/tests/workloads/Build
+ create mode 100644 tools/perf/tests/workloads/brstack.c
+ create mode 100644 tools/perf/tests/workloads/datasym.c
+ create mode 100644 tools/perf/tests/workloads/leafloop.c
+ create mode 100644 tools/perf/tests/workloads/noploop.c
+ create mode 100644 tools/perf/tests/workloads/sqrtloop.c
+ create mode 100644 tools/perf/tests/workloads/thloop.c
+
+
+base-commit: 816815b852216f3aa3a43e2ce91c5510927cd61b
+-- 
+2.38.1.431.g37b22c650d-goog
+
