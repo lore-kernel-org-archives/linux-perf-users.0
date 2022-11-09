@@ -2,125 +2,73 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0BC4AC433FE
-	for <linux-perf-users@archiver.kernel.org>; Wed,  9 Nov 2022 08:29:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BFAD3C433FE
+	for <linux-perf-users@archiver.kernel.org>; Wed,  9 Nov 2022 08:30:44 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230036AbiKII3E (ORCPT
+        id S230088AbiKIIan (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Wed, 9 Nov 2022 03:29:04 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40944 "EHLO
+        Wed, 9 Nov 2022 03:30:43 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40420 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229955AbiKII2l (ORCPT
+        with ESMTP id S230095AbiKIIaS (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Wed, 9 Nov 2022 03:28:41 -0500
-Received: from mail-pf1-x42f.google.com (mail-pf1-x42f.google.com [IPv6:2607:f8b0:4864:20::42f])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 00CA42DF4;
-        Wed,  9 Nov 2022 00:28:26 -0800 (PST)
-Received: by mail-pf1-x42f.google.com with SMTP id y203so16053316pfb.4;
-        Wed, 09 Nov 2022 00:28:26 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20210112;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=rsRdQU8Ady+UGmrXI+CqXDPucP2vHJde8y88ZmpGZsM=;
-        b=LKISIc2cB6Z6TO9vuFDS5ZgjgvbrRGTXBX69S8YrBIn0o1OHvc2k9kK8Kx6t6+VfuD
-         o8bCBUU6n2Fzs+eSZm9X5jFoWEgpt4tl0w+bMyANW/Zpk2v/2BHzD7QL6Iq6X/MZtsCm
-         rzmyM5DIu8P5S+7wi/49ISCXvUoPZDyDngxblUiYnY3oJ6PgYmMQKx/D4N0ft6YLewXf
-         sk9cQMXrM5vgs16LzKtFy3d9dewRtMSGyyMoWBowgUZwmendk2wya/p2hiM3RDOkcFt2
-         257FgWVBfrtCTtnYWk4ynJUnUugj9ZUga6NzbKbT2OOBIywsj6u0YytRIn8iTiYUcrzo
-         q7jQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=rsRdQU8Ady+UGmrXI+CqXDPucP2vHJde8y88ZmpGZsM=;
-        b=BMQ96bu9CBees8hdhpQmZXYb1keT7KvMqwdyziLq1ZHzzxpg9UHjOl+2+rKzFQuY76
-         fuClxejPqS1id2ftkVHP6MXPHvBoFlYLGYDmqRVYU6Fb0HNk0Sqmnh+T9B4UBalHbTh2
-         NRIgk1UJ/Ub24OM1eVtwjdJrRHgwn7Jy9wUmlY6GN+hpDGmhiMbkM0WuxF7YsSQ8xTtJ
-         PZoauSQirVxofAwSGhhv5OOXxuu6e2g2o2JwY5rxQI8x9epStVYHe/ZSh1MWUiUXpzEu
-         HMlF4axYm77J5lmp90kPtsw/wHhlPooQzrPOZLS5S91wUAn1JE3XoatLhqZfEF7FxrZE
-         lqng==
-X-Gm-Message-State: ACrzQf31ITDUByQfZ59GRsvlmEjCc4Ga980bMK5WPkVuMTWpC255E5W2
-        JmlJS1953kbaHIjKxIHZreg=
-X-Google-Smtp-Source: AMsMyM7uM/wr15aY5dKimOK9PE2hO2hPz/ddyvr/0+ef1EuLKlZcHLXgIJo1RN4nRzQ1ElZq3gS2mA==
-X-Received: by 2002:a63:d14a:0:b0:470:3fc2:bed5 with SMTP id c10-20020a63d14a000000b004703fc2bed5mr21992121pgj.590.1667982506475;
-        Wed, 09 Nov 2022 00:28:26 -0800 (PST)
-Received: from localhost.localdomain ([103.7.29.32])
-        by smtp.gmail.com with ESMTPSA id b14-20020a63d30e000000b00470537b9b0asm6587700pgg.51.2022.11.09.00.28.24
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 09 Nov 2022 00:28:26 -0800 (PST)
-From:   Like Xu <like.xu.linux@gmail.com>
-X-Google-Original-From: Like Xu <likexu@tencent.com>
-To:     Sean Christopherson <seanjc@google.com>,
-        Paolo Bonzini <pbonzini@redhat.com>
-Cc:     linux-kernel@vger.kernel.org, kvm@vger.kernel.org,
-        Peter Zijlstra <peterz@infradead.org>,
-        linux-perf-users@vger.kernel.org,
-        Kan Liang <kan.liang@linux.intel.com>
-Subject: [PATCH v3 3/3] perf/x86/intel: Expose EPT-friendly PEBS for SPR and future models
-Date:   Wed,  9 Nov 2022 16:28:02 +0800
-Message-Id: <20221109082802.27543-4-likexu@tencent.com>
-X-Mailer: git-send-email 2.38.1
-In-Reply-To: <20221109082802.27543-1-likexu@tencent.com>
-References: <20221109082802.27543-1-likexu@tencent.com>
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+        Wed, 9 Nov 2022 03:30:18 -0500
+Received: from loongson.cn (mail.loongson.cn [114.242.206.163])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTP id 32E0D22539;
+        Wed,  9 Nov 2022 00:29:18 -0800 (PST)
+Received: from loongson.cn (unknown [113.200.148.30])
+        by gateway (Coremail) with SMTP id _____8DxTtvUZGtjboEFAA--.17857S3;
+        Wed, 09 Nov 2022 16:29:08 +0800 (CST)
+Received: from linux.localdomain (unknown [113.200.148.30])
+        by localhost.localdomain (Coremail) with SMTP id AQAAf8BxtuPTZGtjJnIPAA--.42697S2;
+        Wed, 09 Nov 2022 16:29:08 +0800 (CST)
+From:   Tiezhu Yang <yangtiezhu@loongson.cn>
+To:     Peter Zijlstra <peterz@infradead.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        Arnaldo Carvalho de Melo <acme@kernel.org>
+Cc:     Mark Rutland <mark.rutland@arm.com>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Jiri Olsa <jolsa@kernel.org>,
+        Namhyung Kim <namhyung@kernel.org>,
+        linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org
+Subject: [PATCH v4 0/4] perf: Add more syscalls to benchmark
+Date:   Wed,  9 Nov 2022 16:29:03 +0800
+Message-Id: <1667982547-22331-1-git-send-email-yangtiezhu@loongson.cn>
+X-Mailer: git-send-email 2.1.0
+X-CM-TRANSID: AQAAf8BxtuPTZGtjJnIPAA--.42697S2
+X-CM-SenderInfo: p1dqw3xlh2x3gn0dqz5rrqw2lrqou0/
+X-Coremail-Antispam: 1Uk129KBjDUn29KB7ZKAUJUUUUU529EdanIXcx71UUUUU7KY7
+        ZEXasCq-sGcSsGvfJ3Ic02F40EFcxC0VAKzVAqx4xG6I80ebIjqfuFe4nvWSU5nxnvy29K
+        BjDU0xBIdaVrnRJUUUPjb4IE77IF4wAFF20E14v26r1j6r4UM7CY07I20VC2zVCF04k26c
+        xKx2IYs7xG6rWj6s0DM7CIcVAFz4kK6r1Y6r17M28lY4IEw2IIxxk0rwA2F7IY1VAKz4vE
+        j48ve4kI8wA2z4x0Y4vE2Ix0cI8IcVAFwI0_Gr0_Xr1l84ACjcxK6xIIjxv20xvEc7CjxV
+        AFwI0_Gr0_Cr1l84ACjcxK6I8E87Iv67AKxVW8Jr0_Cr1UM28EF7xvwVC2z280aVCY1x02
+        67AKxVW8Jr0_Cr1UM2AIxVAIcxkEcVAq07x20xvEncxIr21l57IF6xkI12xvs2x26I8E6x
+        ACxx1l5I8CrVACY4xI64kE6c02F40Ex7xfMcIj6xIIjxv20xvE14v26r126r1DMcIj6I8E
+        87Iv67AKxVWUJVW8JwAm72CE4IkC6x0Yz7v_Jr0_Gr1lF7xvr2IYc2Ij64vIr41l42xK82
+        IYc2Ij64vIr41l4c8EcI0En4kS14v26r1Y6r17MxAqzxv26xkF7I0En4kS14v26r126r1D
+        MxC20s026xCaFVCjc4AY6r1j6r4UMxCIbckI1I0E14v26r1Y6r17MI8I3I0E5I8CrVAFwI
+        0_Jr0_Jr4lx2IqxVCjr7xvwVAFwI0_JrI_JrWlx4CE17CEb7AF67AKxVWUtVW8ZwCIc40Y
+        0x0EwIxGrwCI42IY6xIIjxv20xvE14v26r1j6r1xMIIF0xvE2Ix0cI8IcVCY1x0267AKxV
+        WUJVW8JwCI42IY6xAIw20EY4v20xvaj40_Jr0_JF4lIxAIcVC2z280aVAFwI0_Jr0_Gr1l
+        IxAIcVC2z280aVCY1x0267AKxVWUJVW8JbIYCTnIWIevJa73UjIFyTuYvjxU2nYFDUUUU
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-From: Like Xu <likexu@tencent.com>
+Tiezhu Yang (4):
+  tools x86: Keep list sorted by number in unistd_{32,64}.h
+  perf bench syscall: Introduce bench_syscall_common()
+  perf bench syscall: Add getpgrp syscall benchmark
+  perf bench syscall: Add execve syscall benchmark
 
-According to Intel SDM, the EPT-friendly PEBS is supported by all the
-platforms after ICX, ADL and the future platforms with PEBS format 5.
+ tools/arch/x86/include/uapi/asm/unistd_32.h | 23 ++++++---
+ tools/arch/x86/include/uapi/asm/unistd_64.h | 23 ++++++---
+ tools/perf/bench/bench.h                    |  2 +
+ tools/perf/bench/syscall.c                  | 76 +++++++++++++++++++++++++++--
+ tools/perf/builtin-bench.c                  |  2 +
+ 5 files changed, 108 insertions(+), 18 deletions(-)
 
-Currently the only in-kernel user of this capability is KVM, which has
-very limited support for hybrid core pmu, so ADL and its successors do
-not currently expose this capability. When both hybrid core and PEBS
-format 5 are present, KVM will decide on its own merits.
-
-Cc: Peter Zijlstra <peterz@infradead.org>
-Cc: linux-perf-users@vger.kernel.org
-Suggested-by: Kan Liang <kan.liang@linux.intel.com>
-Signed-off-by: Like Xu <likexu@tencent.com>
-Reviewed-by: Kan Liang <kan.liang@linux.intel.com>
----
-Nit: This change is proposed to be applied via the KVM tree.
-
- arch/x86/events/intel/core.c | 1 +
- arch/x86/events/intel/ds.c   | 4 +++-
- 2 files changed, 4 insertions(+), 1 deletion(-)
-
-diff --git a/arch/x86/events/intel/core.c b/arch/x86/events/intel/core.c
-index a646a5f9a235..15e061fbb2f3 100644
---- a/arch/x86/events/intel/core.c
-+++ b/arch/x86/events/intel/core.c
-@@ -6350,6 +6350,7 @@ __init int intel_pmu_init(void)
- 		x86_pmu.pebs_constraints = intel_spr_pebs_event_constraints;
- 		x86_pmu.extra_regs = intel_spr_extra_regs;
- 		x86_pmu.limit_period = spr_limit_period;
-+		x86_pmu.pebs_ept = 1;
- 		x86_pmu.pebs_aliases = NULL;
- 		x86_pmu.pebs_prec_dist = true;
- 		x86_pmu.pebs_block = true;
-diff --git a/arch/x86/events/intel/ds.c b/arch/x86/events/intel/ds.c
-index 7839507b3844..185e66b4ce31 100644
---- a/arch/x86/events/intel/ds.c
-+++ b/arch/x86/events/intel/ds.c
-@@ -2293,8 +2293,10 @@ void __init intel_ds_init(void)
- 			x86_pmu.large_pebs_flags |= PERF_SAMPLE_TIME;
- 			break;
- 
--		case 4:
- 		case 5:
-+			x86_pmu.pebs_ept = 1;
-+			fallthrough;
-+		case 4:
- 			x86_pmu.drain_pebs = intel_pmu_drain_pebs_icl;
- 			x86_pmu.pebs_record_size = sizeof(struct pebs_basic);
- 			if (x86_pmu.intel_cap.pebs_baseline) {
 -- 
-2.38.1
+2.1.0
 
