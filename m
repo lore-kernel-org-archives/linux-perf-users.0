@@ -2,58 +2,58 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 19A44C4332F
-	for <linux-perf-users@archiver.kernel.org>; Wed,  9 Nov 2022 18:50:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4593BC4332F
+	for <linux-perf-users@archiver.kernel.org>; Wed,  9 Nov 2022 18:50:55 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231723AbiKISue (ORCPT
+        id S231712AbiKISux (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Wed, 9 Nov 2022 13:50:34 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40430 "EHLO
+        Wed, 9 Nov 2022 13:50:53 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40416 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231650AbiKISuT (ORCPT
+        with ESMTP id S231710AbiKISud (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Wed, 9 Nov 2022 13:50:19 -0500
+        Wed, 9 Nov 2022 13:50:33 -0500
 Received: from mail-yb1-xb4a.google.com (mail-yb1-xb4a.google.com [IPv6:2607:f8b0:4864:20::b4a])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3569F2C66D
-        for <linux-perf-users@vger.kernel.org>; Wed,  9 Nov 2022 10:50:15 -0800 (PST)
-Received: by mail-yb1-xb4a.google.com with SMTP id q62-20020a25d941000000b006cac1a4000cso17451063ybg.14
-        for <linux-perf-users@vger.kernel.org>; Wed, 09 Nov 2022 10:50:15 -0800 (PST)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 00EE91E3F4
+        for <linux-perf-users@vger.kernel.org>; Wed,  9 Nov 2022 10:50:24 -0800 (PST)
+Received: by mail-yb1-xb4a.google.com with SMTP id s201-20020a2577d2000000b006d5848a04e4so10467005ybc.23
+        for <linux-perf-users@vger.kernel.org>; Wed, 09 Nov 2022 10:50:24 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=google.com; s=20210112;
         h=cc:to:from:subject:references:mime-version:message-id:in-reply-to
          :date:from:to:cc:subject:date:message-id:reply-to;
-        bh=xRgbCoc/lULFyNJb294eYOHrQbLaJy+ZT5w1IQWAa5I=;
-        b=EumB9bc4LH+lOr72gPsmnqZkbUVJvtNqnAVGqcBRzbOPIPb93lyP9xToyLVVrTW3xi
-         pE+Cb4RJx8qP+7rA7yW7Lo/U5cfjAW3dN1yaug91A2NmofBdX2kRGhXyoID3tcEjVg3V
-         lnwEX8y2VL5Xz3GSosbkHJtAWKZTiqCCH5IZUjJn92jP9Mr+v69xYOxll43mTd2txxGN
-         oQVNVy9V/+H0bFD77QGdw8vtLTZMf+Ynbj5kBjTJ+H7JvvJaPeOhhzJyjKdF6V3kvBbK
-         irywbIPvvygBGF5IyDes/rIC7V83mRqgk7KoeO+v+1pqCWkWPTXB5X8fdFa7wg1stjV4
-         B6cg==
+        bh=fypXC5s+GJmcY7CDMLyT+XFtNB7Xjp9TotzTIy3WOeg=;
+        b=HAbhjun7P8t/79/dqBqP+rj7CyYnqpzlHYOYz8g1nvpWXxuQZYlbqRh9LHbV8RqgbL
+         uHS/oLrLpvr+aQyl134bv9P6wJamiQBmge0w+xR1tvbKtSbUiEl/4P5xNGSy9WgNLmOu
+         e0GS5qQ8N9KNKNIeQn/LxUMprUnZkwBEnLjNUfxMnxm/kL6MCYkN3M0NKRK0NBPfuZoG
+         D7MQqsgGpWM3iNH3CmKU/JibAvi23pTxMjWaKuLGHvOiZPJAQ8qAZaaFgKc1RHunC6od
+         EdQdtmjfGgzZjdrFGBzbvDoaU+hH6HIcL1nb10UsK5Oy6++UaslT+MVj06OpPYiDjF4b
+         gPZg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
         h=cc:to:from:subject:references:mime-version:message-id:in-reply-to
          :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=xRgbCoc/lULFyNJb294eYOHrQbLaJy+ZT5w1IQWAa5I=;
-        b=lVaTJ6BoeslK+6uUyKLNopR0CTta7at19pw+IKYVvzlNN+lz0OKoHs67IVDueqNMFF
-         VYj5Q6XijaTcF7Q4tVzB/tKrvquRoGrOGx4/7D375kWphLtX5JaZPG0jV27DE8H77mgB
-         khKq10EUjRCK6gQCLiOkYKLLcLq2lo5mh12yZCuVk9U54tP1hUCmfK9N4Gld0MTI9cOu
-         8bg36lHhjmk48GPdj0hR3vpgQz9vwnkczifoB7lqAmbrbv1iQQH4kJQK7UkToC8xDntT
-         ab1/AxzDBCRQTADh/ftk5pLZwYKBqgYYeAY4Rv59KpMbz0AnuniSHydrq9HNGsiF0Adz
-         ZmlA==
-X-Gm-Message-State: ACrzQf1+MNdtUU9Cs6DfxngPSBcXIXI5nMm1ol6i8baQyqaxNF/PcLu/
-        FqNVIS16/bUAfPYK6uFYlMb833xJVTwN
-X-Google-Smtp-Source: AMsMyM6KIdfrpnuXHUD5FvQVfsOL1ei9T1aZnZ6PxsfVWAnlux/l0AOjXJKp4Xtin/4Hi/yL3cr1WxHC4aFw
+        bh=fypXC5s+GJmcY7CDMLyT+XFtNB7Xjp9TotzTIy3WOeg=;
+        b=eR0eWZkk7S4ncslZ8Dkk/2F0fid1PtUp6Ow5elleeTiOBF+uIEHhfy+J+0Eiz5JylF
+         XLvzrOxnjSf7SwQNp+GPYmjeCux0dBng9m+7DnA/MdkwNlXTMAQ/Nai0TQU8GXb+Xg+v
+         X+SoRwHJdCqlutlKH831toIoAfBFFeHnX34rVF/euHhG9Op67LT9TPRAY72jT496ijUd
+         MOOlrd+Ep0vLH1LC26M1P9yVjnPQGblbBS4DAqU92ENZznons+ABVDjKc4/RDLTPz/wi
+         tEgEOoGEQ7hlIQnLB61cAoR+eE5LXmggtrKc3tRnuX6Q5Oxm7u7TTFpqU5aZ5SMUPVTr
+         kcpg==
+X-Gm-Message-State: ACrzQf0wLcCdZt5w7xrzF3v6v4KeiyqB8dXRibFmvTfwMG81QbNYrQcx
+        FOo6czvYwUjYiVkfjQpzMfvHvRzrKZWL
+X-Google-Smtp-Source: AMsMyM7tKim5J0Fz3dpcQcx/D4llXsXbixQRKNPsvCvSgNnuoFw4d8N8sIGcMW/o/deoohzIfFLpecviFfba
 X-Received: from irogers.svl.corp.google.com ([2620:15c:2d4:203:b06f:a254:5ce9:c442])
- (user=irogers job=sendgmr) by 2002:a5b:6d1:0:b0:6cb:77dc:1cde with SMTP id
- r17-20020a5b06d1000000b006cb77dc1cdemr58509073ybq.447.1668019815231; Wed, 09
- Nov 2022 10:50:15 -0800 (PST)
-Date:   Wed,  9 Nov 2022 10:49:06 -0800
+ (user=irogers job=sendgmr) by 2002:a25:dc87:0:b0:6cc:7352:b4dc with SMTP id
+ y129-20020a25dc87000000b006cc7352b4dcmr1156840ybe.480.1668019824272; Wed, 09
+ Nov 2022 10:50:24 -0800 (PST)
+Date:   Wed,  9 Nov 2022 10:49:07 -0800
 In-Reply-To: <20221109184914.1357295-1-irogers@google.com>
-Message-Id: <20221109184914.1357295-7-irogers@google.com>
+Message-Id: <20221109184914.1357295-8-irogers@google.com>
 Mime-Version: 1.0
 References: <20221109184914.1357295-1-irogers@google.com>
 X-Mailer: git-send-email 2.38.1.431.g37b22c650d-goog
-Subject: [PATCH v2 06/14] perf build: Install libtraceevent locally when building
+Subject: [PATCH v2 07/14] tools lib api: Add missing install headers
 From:   Ian Rogers <irogers@google.com>
 To:     Peter Zijlstra <peterz@infradead.org>,
         Ingo Molnar <mingo@redhat.com>,
@@ -74,140 +74,29 @@ Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-The perf build currently has a '-Itools/lib' on the CC command
-line. This causes issues as the libapi, libsubcmd, libtraceevent,
-libbpf headers are all found via this path, making it impossible to
-override include behavior. Change the libtraceevent build mirroring
-the libbpf, libsubcmd, libapi and libperf build, so that it is
-installed in a directory along with its headers. A later change will
-modify the include behavior.
-
-Similarly, the plugins are now installed into libtraceevent_plugins
-except they have no header files.
+Headers necessary for the perf build.
 
 Signed-off-by: Ian Rogers <irogers@google.com>
 ---
- tools/perf/.gitignore    |  3 ++-
- tools/perf/Makefile.perf | 57 ++++++++++++++++++++++++++--------------
- 2 files changed, 40 insertions(+), 20 deletions(-)
+ tools/lib/api/Makefile | 5 ++++-
+ 1 file changed, 4 insertions(+), 1 deletion(-)
 
-diff --git a/tools/perf/.gitignore b/tools/perf/.gitignore
-index 43f6621ef05e..65b995159cf1 100644
---- a/tools/perf/.gitignore
-+++ b/tools/perf/.gitignore
-@@ -42,6 +42,7 @@ libapi/
- libbpf/
- libperf/
- libsubcmd/
-+libtraceevent/
-+libtraceevent_plugins/
- fixdep
--libtraceevent-dynamic-list
- Documentation/doc.dep
-diff --git a/tools/perf/Makefile.perf b/tools/perf/Makefile.perf
-index 57aec5a97270..6e5e3f7730b5 100644
---- a/tools/perf/Makefile.perf
-+++ b/tools/perf/Makefile.perf
-@@ -242,7 +242,8 @@ sub-make: fixdep
- else # force_fixdep
+diff --git a/tools/lib/api/Makefile b/tools/lib/api/Makefile
+index 6629d0fd0130..3e5ef1e0e890 100644
+--- a/tools/lib/api/Makefile
++++ b/tools/lib/api/Makefile
+@@ -103,7 +103,10 @@ install_headers:
+ 	$(call QUIET_INSTALL, headers) \
+ 		$(call do_install,cpu.h,$(prefix)/include/api,644); \
+ 		$(call do_install,debug.h,$(prefix)/include/api,644); \
+-		$(call do_install,io.h,$(prefix)/include/api,644);
++		$(call do_install,io.h,$(prefix)/include/api,644); \
++		$(call do_install,fd/array.h,$(prefix)/include/api/fd,644); \
++		$(call do_install,fs/fs.h,$(prefix)/include/api/fs,644);
++		$(call do_install,fs/tracing_path.h,$(prefix)/include/api/fs,644);
  
- LIBAPI_DIR      = $(srctree)/tools/lib/api/
--TRACE_EVENT_DIR = $(srctree)/tools/lib/traceevent/
-+LIBTRACEEVENT_DIR = $(srctree)/tools/lib/traceevent/
-+LIBTRACEEVENT_PLUGINS_DIR = $(LIBTRACEEVENT_DIR)/plugins
- LIBBPF_DIR      = $(srctree)/tools/lib/bpf/
- LIBSUBCMD_DIR   = $(srctree)/tools/lib/subcmd/
- LIBPERF_DIR     = $(srctree)/tools/lib/perf/
-@@ -292,16 +293,17 @@ grep-libs = $(filter -l%,$(1))
- strip-libs = $(filter-out -l%,$(1))
+ install: install_lib install_headers
  
- ifneq ($(OUTPUT),)
--  TE_PATH=$(OUTPUT)
--  PLUGINS_PATH=$(OUTPUT)
-+  LIBTRACEEVENT_OUTPUT = $(abspath $(OUTPUT))/libtraceevent
- else
--  TE_PATH=$(TRACE_EVENT_DIR)
--  PLUGINS_PATH=$(TRACE_EVENT_DIR)plugins/
-+  LIBTRACEEVENT_OUTPUT = $(CURDIR)/libtraceevent
- endif
--
--LIBTRACEEVENT = $(TE_PATH)libtraceevent.a
-+LIBTRACEEVENT_PLUGINS_OUTPUT = $(LIBTRACEEVENT_OUTPUT)_plugins
-+LIBTRACEEVENT_DESTDIR = $(LIBTRACEEVENT_OUTPUT)
-+LIBTRACEEVENT_PLUGINS_DESTDIR = $(LIBTRACEEVENT_PLUGINS_OUTPUT)
-+LIBTRACEEVENT_INCLUDE = $(LIBTRACEEVENT_DESTDIR)/include
-+LIBTRACEEVENT = $(LIBTRACEEVENT_OUTPUT)/libtraceevent.a
- export LIBTRACEEVENT
--LIBTRACEEVENT_DYNAMIC_LIST = $(PLUGINS_PATH)libtraceevent-dynamic-list
-+LIBTRACEEVENT_DYNAMIC_LIST = $(LIBTRACEEVENT_PLUGINS_OUTPUT)/libtraceevent-dynamic-list
- 
- #
- # The static build has no dynsym table, so this does not work for
-@@ -821,21 +823,33 @@ $(patsubst perf-%,%.o,$(PROGRAMS)): $(wildcard */*.h)
- 
- LIBTRACEEVENT_FLAGS += plugin_dir=$(plugindir_SQ) 'EXTRA_CFLAGS=$(EXTRA_CFLAGS)' 'LDFLAGS=$(filter-out -static,$(LDFLAGS))'
- 
--$(LIBTRACEEVENT): FORCE
--	$(Q)$(MAKE) -C $(TRACE_EVENT_DIR) $(LIBTRACEEVENT_FLAGS) O=$(OUTPUT) $(OUTPUT)libtraceevent.a
--
--libtraceevent_plugins: FORCE
--	$(Q)$(MAKE) -C $(TRACE_EVENT_DIR)plugins $(LIBTRACEEVENT_FLAGS) O=$(OUTPUT) plugins
--
--$(LIBTRACEEVENT_DYNAMIC_LIST): libtraceevent_plugins
--	$(Q)$(MAKE) -C $(TRACE_EVENT_DIR)plugins $(LIBTRACEEVENT_FLAGS) O=$(OUTPUT) $(OUTPUT)libtraceevent-dynamic-list
-+$(LIBTRACEEVENT): FORCE | $(LIBTRACEEVENT_OUTPUT)
-+	$(Q)$(MAKE) -C $(LIBTRACEEVENT_DIR) O=$(LIBTRACEEVENT_OUTPUT) \
-+		DESTDIR=$(LIBTRACEEVENT_DESTDIR) prefix= \
-+		$@ install_headers
- 
- $(LIBTRACEEVENT)-clean:
- 	$(call QUIET_CLEAN, libtraceevent)
--	$(Q)$(MAKE) -C $(TRACE_EVENT_DIR) O=$(OUTPUT) clean >/dev/null
-+	$(Q)$(RM) -r -- $(LIBTRACEEVENT_OUTPUT)
-+
-+libtraceevent_plugins: FORCE | $(LIBTRACEEVENT_PLUGINS_OUTPUT)
-+	$(Q)$(MAKE) -C $(LIBTRACEEVENT_PLUGINS_DIR) O=$(LIBTRACEEVENT_PLUGINS_OUTPUT) \
-+		DESTDIR=$(LIBTRACEEVENT_PLUGINS_DESTDIR) prefix= \
-+		plugins
-+
-+libtraceevent_plugins-clean:
-+	$(call QUIET_CLEAN, libtraceevent_plugins)
-+	$(Q)$(RM) -r -- $(LIBTRACEEVENT_PLUGINS_OUTPUT)
-+
-+$(LIBTRACEEVENT_DYNAMIC_LIST): libtraceevent_plugins
-+	$(Q)$(MAKE) -C $(LIBTRACEEVENT_PLUGINS_DIR) O=$(LIBTRACEEVENT_PLUGINS_OUTPUT) \
-+		DESTDIR=$(LIBTRACEEVENT_PLUGINS_DESTDIR) prefix= \
-+		$(LIBTRACEEVENT_FLAGS) $@
- 
- install-traceevent-plugins: libtraceevent_plugins
--	$(Q)$(MAKE) -C $(TRACE_EVENT_DIR) $(LIBTRACEEVENT_FLAGS) O=$(OUTPUT) install_plugins
-+	$(Q)$(MAKE) -C $(LIBTRACEEVENT_PLUGINS_DIR) O=$(LIBTRACEEVENT_PLUGINS_OUTPUT) \
-+		DESTDIR=$(LIBTRACEEVENT_PLUGINS_DESTDIR) prefix= \
-+		$(LIBTRACEEVENT_FLAGS) install
- 
- $(LIBAPI): FORCE | $(LIBAPI_OUTPUT)
- 	$(Q)$(MAKE) -C $(LIBAPI_DIR) O=$(LIBAPI_OUTPUT) \
-@@ -1060,6 +1074,11 @@ SKELETONS += $(SKEL_OUT)/kwork_trace.skel.h
- $(SKEL_TMP_OUT) $(LIBAPI_OUTPUT) $(LIBBPF_OUTPUT) $(LIBPERF_OUTPUT) $(LIBSUBCMD_OUTPUT):
- 	$(Q)$(MKDIR) -p $@
- 
-+ifndef LIBTRACEEVENT_DYNAMIC
-+$(LIBTRACEEVENT_OUTPUT) $(LIBTRACEEVENT_PLUGINS_OUTPUT):
-+	$(Q)$(MKDIR) -p $@
-+endif
-+
- ifdef BUILD_BPF_SKEL
- BPFTOOL := $(SKEL_TMP_OUT)/bootstrap/bpftool
- BPF_INCLUDE := -I$(SKEL_TMP_OUT)/.. -I$(LIBBPF_INCLUDE)
-@@ -1102,7 +1121,7 @@ endif # BUILD_BPF_SKEL
- bpf-skel-clean:
- 	$(call QUIET_CLEAN, bpf-skel) $(RM) -r $(SKEL_TMP_OUT) $(SKELETONS)
- 
--clean:: $(LIBTRACEEVENT)-clean $(LIBAPI)-clean $(LIBBPF)-clean $(LIBSUBCMD)-clean $(LIBPERF)-clean fixdep-clean python-clean bpf-skel-clean tests-coresight-targets-clean
-+clean:: $(LIBTRACEEVENT)-clean $(LIBAPI)-clean $(LIBBPF)-clean $(LIBSUBCMD)-clean $(LIBPERF)-clean fixdep-clean python-clean bpf-skel-clean tests-coresight-targets-clean libtraceevent_plugins-clean
- 	$(call QUIET_CLEAN, core-objs)  $(RM) $(LIBPERF_A) $(OUTPUT)perf-archive $(OUTPUT)perf-iostat $(LANG_BINDINGS)
- 	$(Q)find $(or $(OUTPUT),.) -name '*.o' -delete -o -name '\.*.cmd' -delete -o -name '\.*.d' -delete
- 	$(Q)$(RM) $(OUTPUT).config-detected
 -- 
 2.38.1.431.g37b22c650d-goog
 
