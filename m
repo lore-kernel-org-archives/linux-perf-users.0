@@ -2,85 +2,99 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 07D98C433FE
-	for <linux-perf-users@archiver.kernel.org>; Wed,  9 Nov 2022 18:15:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 149CBC4332F
+	for <linux-perf-users@archiver.kernel.org>; Wed,  9 Nov 2022 18:21:37 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229714AbiKISP3 (ORCPT
+        id S230176AbiKISVf (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Wed, 9 Nov 2022 13:15:29 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44608 "EHLO
+        Wed, 9 Nov 2022 13:21:35 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47484 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229452AbiKISP3 (ORCPT
+        with ESMTP id S229639AbiKISVf (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Wed, 9 Nov 2022 13:15:29 -0500
-Received: from mail-oa1-f42.google.com (mail-oa1-f42.google.com [209.85.160.42])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6DED610B55;
-        Wed,  9 Nov 2022 10:15:28 -0800 (PST)
-Received: by mail-oa1-f42.google.com with SMTP id 586e51a60fabf-13be3ef361dso20493873fac.12;
-        Wed, 09 Nov 2022 10:15:28 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=boHIOzdbezf2BQcC57pQ2ZTCZGFD8AJvBKKorhnN5Yw=;
-        b=oRxsUnUMYYTu7ccQ8ve3UpOCwfXxPQQ/Bs8PsNL0EB/COTrpytzCJiCinE5GRhNPJX
-         3y8Kk1lVr4p+MJmhXukeDDNH20zxlOgYaGh5oWtrXAtwBSJceySi6tTjbdJLvVVdp6Vn
-         TCPTEOiYEi+T/r7S8nReggh3qRsQ6XOmBLOrrMS8REppImox1cRriuiAo1QR8eZD1q4+
-         g9tkkA7/rIi9tsifxZk9EQj/wE1S8HQWe1la93KstFQrejlFdBUUiTLBUuXSgOByKFuZ
-         dzkaN0gniN+OwwKdq4MP/Wi2Kcp4IQs+wyX8J/sWhyu2Q0i9ewjUc/NwKQW9UE3who0z
-         gUzQ==
-X-Gm-Message-State: ACrzQf0U9kfey1IBaWJNpzEOpaMCH7JdOTUW0TyWJmagsXqDflhW95PM
-        nyWVtAhGU1UY7zLAk/dXyr6w5BNhq9MuvEaQem95c0Fu
-X-Google-Smtp-Source: AMsMyM5yDqY5KhSDdeMhpy/0I26DsUZ0bTY5dr9qCprppdYhxWBYS0fqf4EaynISnAHKsW8sTYPNEC6HT86FOKXF9S8=
-X-Received: by 2002:a05:6870:9a27:b0:140:6f4c:f532 with SMTP id
- fo39-20020a0568709a2700b001406f4cf532mr16480170oab.209.1668017727719; Wed, 09
- Nov 2022 10:15:27 -0800 (PST)
+        Wed, 9 Nov 2022 13:21:35 -0500
+Received: from ams.source.kernel.org (ams.source.kernel.org [145.40.68.75])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2777A27DDA;
+        Wed,  9 Nov 2022 10:21:34 -0800 (PST)
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by ams.source.kernel.org (Postfix) with ESMTPS id CC777B81F6A;
+        Wed,  9 Nov 2022 18:21:32 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 52B43C433D6;
+        Wed,  9 Nov 2022 18:21:31 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1668018091;
+        bh=JydyiqWSrBJsGOyUV0/mvuFmyyGEnLF2W48C4pxZAUg=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=T4Tg86mtWcIx2gQeCbDzBEGjPU6j1LxBc3Df6DOEYmVJVGXLu5xQcDaGey2mhEHoH
+         DapLCFM7taF2TNuqvRWi9Dr1M6SKMT74TSLav2bKBjml8+vJB0w0t5pl8jizCXeNET
+         hrpohLYBxyHB8sYCLBPHuX0GzcHCcYenoEgqsXPMG8fiI3pEp6SSu8wPdRORBlZWwv
+         U2oHSTgORulafMXZHI7SwHRHXLbUoofb6RtrH6Tqme2sWQQQEj6YfJb7DW3Gjvr21U
+         PnCxnELMyI/TJQAzgkKjsjiSNmYvxszfDued7+Lu13h3TuRnyZR1tLcr3cOjBt+eUA
+         kZ0WmUNZxgMLw==
+Received: by quaco.ghostprotocols.net (Postfix, from userid 1000)
+        id 120A54034E; Wed,  9 Nov 2022 15:21:29 -0300 (-03)
+Date:   Wed, 9 Nov 2022 15:21:29 -0300
+From:   Arnaldo Carvalho de Melo <acme@kernel.org>
+To:     Namhyung Kim <namhyung@kernel.org>
+Cc:     Adrian Hunter <adrian.hunter@intel.com>,
+        Jiri Olsa <jolsa@redhat.com>, Ian Rogers <irogers@google.com>,
+        linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org
+Subject: Re: [PATCH 0/3] perf: intel-pt: Add hybrid CPU compatibility test
+Message-ID: <Y2vvqTOWRJMnDqIo@kernel.org>
+References: <20221104121805.5264-1-adrian.hunter@intel.com>
+ <CAM9d7cjHb4tKsuNjD+Mhj_4coO=H-822uBxpNAmnm6NN=Eavhw@mail.gmail.com>
 MIME-Version: 1.0
-References: <1667982547-22331-1-git-send-email-yangtiezhu@loongson.cn>
-In-Reply-To: <1667982547-22331-1-git-send-email-yangtiezhu@loongson.cn>
-From:   Namhyung Kim <namhyung@kernel.org>
-Date:   Wed, 9 Nov 2022 10:15:16 -0800
-Message-ID: <CAM9d7ciVpT05OCSzB9t9v71Yb7pfhSat3XpK3cTwn-z+DVkJqQ@mail.gmail.com>
-Subject: Re: [PATCH v4 0/4] perf: Add more syscalls to benchmark
-To:     Tiezhu Yang <yangtiezhu@loongson.cn>
-Cc:     Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Jiri Olsa <jolsa@kernel.org>, linux-kernel@vger.kernel.org,
-        linux-perf-users@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CAM9d7cjHb4tKsuNjD+Mhj_4coO=H-822uBxpNAmnm6NN=Eavhw@mail.gmail.com>
+X-Url:  http://acmel.wordpress.com
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-Hello,
+Em Mon, Nov 07, 2022 at 11:32:56AM -0800, Namhyung Kim escreveu:
+> Hi Adrian,
+> 
+> On Fri, Nov 4, 2022 at 5:18 AM Adrian Hunter <adrian.hunter@intel.com> wrote:
+> >
+> > Hi
+> >
+> > The kernel driver assumes hybrid CPUs will have Intel PT capabilities
+> > that are compatible with the boot CPU. Add a test to check that is the
+> > case.
+> >
+> > First 2 patches are preparation.
+> >
+> >
+> > Adrian Hunter (3):
+> >       perf: intel-pt: Rename intel-pt-pkt-decoder-test.c
+> >       perf: intel-pt: Redefine test_suite
+> >       perf: intel-pt: Add hybrid CPU compatibility test
+> 
+> Acked-by: Namhyung Kim <namhyung@kernel.org>
 
-On Wed, Nov 9, 2022 at 12:29 AM Tiezhu Yang <yangtiezhu@loongson.cn> wrote:
->
-> Tiezhu Yang (4):
->   tools x86: Keep list sorted by number in unistd_{32,64}.h
->   perf bench syscall: Introduce bench_syscall_common()
->   perf bench syscall: Add getpgrp syscall benchmark
->   perf bench syscall: Add execve syscall benchmark
+Thanks, applied.
 
-Have you tested it on non-x86 too?  It seems you only added the syscall
-numbers to x86.
+- Arnaldo
 
-Thanks,
-Namhyung
+ 
+> Thanks,
+> Namhyung
+> 
+> >
+> >  tools/perf/arch/x86/include/arch-tests.h           |   1 +
+> >  tools/perf/arch/x86/tests/Build                    |   2 +-
+> >  tools/perf/arch/x86/tests/arch-tests.c             |  15 +-
+> >  ...intel-pt-pkt-decoder-test.c => intel-pt-test.c} | 154 +++++++++++++++++++++
+> >  4 files changed, 169 insertions(+), 3 deletions(-)
+> >  rename tools/perf/arch/x86/tests/{intel-pt-pkt-decoder-test.c => intel-pt-test.c} (80%)
+> >
+> >
+> > Regards
+> > Adrian
 
+-- 
 
->
->  tools/arch/x86/include/uapi/asm/unistd_32.h | 23 ++++++---
->  tools/arch/x86/include/uapi/asm/unistd_64.h | 23 ++++++---
->  tools/perf/bench/bench.h                    |  2 +
->  tools/perf/bench/syscall.c                  | 76 +++++++++++++++++++++++++++--
->  tools/perf/builtin-bench.c                  |  2 +
->  5 files changed, 108 insertions(+), 18 deletions(-)
->
-> --
-> 2.1.0
->
+- Arnaldo
