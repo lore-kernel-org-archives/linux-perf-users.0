@@ -2,130 +2,75 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7C5CDC43217
-	for <linux-perf-users@archiver.kernel.org>; Wed,  9 Nov 2022 10:39:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B0844C4332F
+	for <linux-perf-users@archiver.kernel.org>; Wed,  9 Nov 2022 11:30:45 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229938AbiKIKjp (ORCPT
+        id S229633AbiKILao (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Wed, 9 Nov 2022 05:39:45 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54568 "EHLO
+        Wed, 9 Nov 2022 06:30:44 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49264 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230504AbiKIKjo (ORCPT
+        with ESMTP id S229527AbiKILan (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Wed, 9 Nov 2022 05:39:44 -0500
-Received: from mail-wr1-x42b.google.com (mail-wr1-x42b.google.com [IPv6:2a00:1450:4864:20::42b])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 179C51CFCF
-        for <linux-perf-users@vger.kernel.org>; Wed,  9 Nov 2022 02:39:43 -0800 (PST)
-Received: by mail-wr1-x42b.google.com with SMTP id bs21so25114555wrb.4
-        for <linux-perf-users@vger.kernel.org>; Wed, 09 Nov 2022 02:39:43 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20210112;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=dR3cBGwI6tyesmJbjauTaf6DUSEm8DN9qJcNBBjh/so=;
-        b=JE1uWUK27UrW5sYBArg8DgNY5YzkxXgaDek/yDxHwnYrWgF2lJJEdHRKJQAmOeT89u
-         qlWmEiWTADTJ+SLoGvL4psLbmLZRLFrJPjJcId0Jn0j+WOnITGcmqMmOGJoKhIG9EKON
-         6kUGvpDw7Xru+xyJGaBAEaimxjCusv+CKHBsbQWbTPXmqAopRxnt9Plt7wHr3W7yWYDM
-         GEvFVPtmENCsOi6W4PIi6XM9XZsLrzk3V4MFUgH75BDt/ycJc1CbQpOD8APW+SXLXHYF
-         BkjETEwBBaQBRyhX48NcY0dXo3gaAJX0RoFYxKr2H+i4fwdrReFt9GLn44485UTq2TJ0
-         wo7w==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=dR3cBGwI6tyesmJbjauTaf6DUSEm8DN9qJcNBBjh/so=;
-        b=c5KLPSTGCmNtzNw1USg1O9vEeYe39DOsWA2EKgkaEaryQaZM1+BhGrqkoL5P54ec4V
-         CmWV8Yq6Zhyz1tfuGnLcpSE71tql+6TPJjTySwPgI/NfvLe2oUiqBjXYrSpkkGWpr1/L
-         YgjigrjLCy1+Ibz1xKXetht3PLyuZRuI988yc8jhaRxCfYQHHz9PPihhzBLjxvxW5dNG
-         CN7AvGeU28J2EaQG3p9F2TLN5TjhWlUPLcbFRa+Cdght5eWmQB1rRStqpfYzNHmJ0MT+
-         1Whsqn6fZtiescQuCII0W4im8/yg41nXAtYzaYDdNl9TIvBWpFxCjnTkA6lxhYDCaXxL
-         i+gA==
-X-Gm-Message-State: ACrzQf1SwgosXsax3QEGcC74ZRUNRccurbJUsMHfdR8PoP88+ngJybX+
-        ggWEk9UO7AJKBraIHKFixi6dw54rJZPRUQ==
-X-Google-Smtp-Source: AMsMyM7dleWmqKRZoavjy9ugJBkFJMUAfbF5WTuKX2sMVrq0ImhttjsiWcq6zsEe1QcWHPLPRNoy+g==
-X-Received: by 2002:a05:6000:1143:b0:236:5ede:cdad with SMTP id d3-20020a056000114300b002365edecdadmr39016145wrx.410.1667990381646;
-        Wed, 09 Nov 2022 02:39:41 -0800 (PST)
-Received: from ddolgov.local (dslb-094-222-001-087.094.222.pools.vodafone-ip.de. [94.222.1.87])
-        by smtp.gmail.com with ESMTPSA id 26-20020a05600c029a00b003cf5ec79bf9sm1156101wmk.40.2022.11.09.02.39.40
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 09 Nov 2022 02:39:41 -0800 (PST)
-From:   Dmitrii Dolgov <9erthalion6@gmail.com>
-To:     linux-perf-users@vger.kernel.org
-Cc:     acme@kernel.org, mingo@redhat.com, jolsa@kernel.org,
-        irogers@google.com, Dmitrii Dolgov <9erthalion6@gmail.com>
-Subject: [PATCH v2] perf data: Add fields when converting to json
-Date:   Wed,  9 Nov 2022 11:39:32 +0100
-Message-Id: <20221109103932.65675-1-9erthalion6@gmail.com>
-X-Mailer: git-send-email 2.31.1
+        Wed, 9 Nov 2022 06:30:43 -0500
+Received: from foss.arm.com (foss.arm.com [217.140.110.172])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTP id CC1561CFF5;
+        Wed,  9 Nov 2022 03:30:41 -0800 (PST)
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 445581FB;
+        Wed,  9 Nov 2022 03:30:47 -0800 (PST)
+Received: from [10.1.36.52] (FVFF763DQ05P.cambridge.arm.com [10.1.36.52])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 60D5A3F534;
+        Wed,  9 Nov 2022 03:30:39 -0800 (PST)
+Message-ID: <8f6d3424-2650-8e8b-61f7-1431aec4633b@arm.com>
+Date:   Wed, 9 Nov 2022 11:30:38 +0000
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.15; rv:102.0)
+ Gecko/20100101 Thunderbird/102.4.2
+Subject: Re: [PATCH V5 2/7] arm64/perf: Update struct arm_pmu for BRBE
+To:     Anshuman Khandual <anshuman.khandual@arm.com>,
+        linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, peterz@infradead.org,
+        acme@kernel.org, mark.rutland@arm.com, will@kernel.org,
+        catalin.marinas@arm.com
+Cc:     Mark Brown <broonie@kernel.org>, James Clark <james.clark@arm.com>,
+        Rob Herring <robh@kernel.org>, Marc Zyngier <maz@kernel.org>,
+        Ingo Molnar <mingo@redhat.com>
+References: <20221107062514.2851047-1-anshuman.khandual@arm.com>
+ <20221107062514.2851047-3-anshuman.khandual@arm.com>
+From:   Suzuki K Poulose <suzuki.poulose@arm.com>
+In-Reply-To: <20221107062514.2851047-3-anshuman.khandual@arm.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-When converting recorded data into json format, perf data omits probe
-variables. Add them to the output in the format "field name": "field value"
-using tep_print_field:
+On 07/11/2022 06:25, Anshuman Khandual wrote:
+> Although BRBE is an armv8 speciifc HW feature, abstracting out its various
+> function callbacks at the struct arm_pmu level is preferred, as it cleaner
+> , easier to follow and maintain.
+> 
+> Besides some helpers i.e brbe_supported(), brbe_probe() and brbe_reset()
+> might not fit seamlessly, when tried to be embedded via existing arm_pmu
+> helpers in the armv8 implementation.
+> 
+> Updates the struct arm_pmu to include all required helpers that will drive
+> BRBE functionality for a given PMU implementation. These are the following.
+> 
+> - brbe_filter	: Convert perf event filters into BRBE HW filters
+> - brbe_probe	: Probe BRBE HW and capture its attributes
+> - brbe_enable	: Enable BRBE HW with a given config
+> - brbe_disable	: Disable BRBE HW
+> - brbe_read	: Read BRBE buffer for captured branch records
+> - brbe_reset	: Reset BRBE buffer
+> - brbe_supported: Whether BRBE is supported or not
+> 
+> A BRBE driver implementation needs to provide these functionalities.
 
-    $ perf data convert --to-json output.json
+Could these not be hidden from the generic arm_pmu and kept in the
+arm64 pmu backend  ? It looks like they are quite easy to simply
+move these to the corresponding hooks in arm64 pmu.
 
-    // output.json
-    {
-        "linux-perf-json-version": 1,
-        "headers": { ... },
-        "samples": [
-            {
-            "timestamp": 29182079082999,
-            "pid": 309194,
-                    [...]
-            "__probe_ip": "0x93ee35",
-            "query_string_string": "select 2;",
-            "nxids": "0"
-            }
-        ]
-    }
-
-Acked-by: Ian Rogers <irogers@google.com>
-Signed-off-by: Dmitrii Dolgov <9erthalion6@gmail.com>
----
-Changes in v2:
-    - Slight improvement of fields condition
-
- tools/perf/util/data-convert-json.c | 20 ++++++++++++++++++++
- 1 file changed, 20 insertions(+)
-
-diff --git a/tools/perf/util/data-convert-json.c b/tools/perf/util/data-convert-json.c
-index 613d6ae82663..57db59068cb6 100644
---- a/tools/perf/util/data-convert-json.c
-+++ b/tools/perf/util/data-convert-json.c
-@@ -217,6 +217,26 @@ static int process_sample_event(struct perf_tool *tool,
- 	}
- 	output_json_format(out, false, 3, "]");
- 
-+	if (sample->raw_data) {
-+		int i;
-+		struct tep_format_field **fields;
-+
-+		fields = tep_event_fields(evsel->tp_format);
-+		if (fields) {
-+			i = 0;
-+			while (fields[i]) {
-+				struct trace_seq s;
-+
-+				trace_seq_init(&s);
-+				tep_print_field(&s, sample->raw_data, fields[i]);
-+				output_json_key_string(out, true, 3, fields[i]->name, s.buffer);
-+
-+				i++;
-+			}
-+			free(fields);
-+		}
-+	}
-+
- 	output_json_format(out, false, 2, "}");
- 	return 0;
- }
--- 
-2.31.1
+Suzuki
 
