@@ -2,135 +2,268 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7E0E6C433FE
-	for <linux-perf-users@archiver.kernel.org>; Wed,  9 Nov 2022 01:35:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E536BC433FE
+	for <linux-perf-users@archiver.kernel.org>; Wed,  9 Nov 2022 03:08:43 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229777AbiKIBfp (ORCPT
+        id S229776AbiKIDIm (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Tue, 8 Nov 2022 20:35:45 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34600 "EHLO
+        Tue, 8 Nov 2022 22:08:42 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58982 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229612AbiKIBfo (ORCPT
+        with ESMTP id S229552AbiKIDIl (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Tue, 8 Nov 2022 20:35:44 -0500
-Received: from mail-wm1-x331.google.com (mail-wm1-x331.google.com [IPv6:2a00:1450:4864:20::331])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4A3CD60379
-        for <linux-perf-users@vger.kernel.org>; Tue,  8 Nov 2022 17:35:43 -0800 (PST)
-Received: by mail-wm1-x331.google.com with SMTP id i5-20020a1c3b05000000b003cfa97c05cdso293425wma.4
-        for <linux-perf-users@vger.kernel.org>; Tue, 08 Nov 2022 17:35:43 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20210112;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:from:to:cc:subject:date:message-id:reply-to;
-        bh=fgZcpnnS6jFiy53mvb4fnTvOCCqRJfW+5InA+MbQqyc=;
-        b=YN4HBuXK5uaQvKP9tkjWDHuu9kUveWlJq7pmW30IyiWiRUYXkVzrdPJVoRTTuN4wwL
-         vraxwoeBfsYUZM0kydZJSNC8GdMoYJXXfBosYpagw7equK0D79Tm0nKAeVXtqjYI59KK
-         uhpv1xfQ2pokPo733P5v1Fv3DgznFdxlyviZDe5HxRcqDdHB6LNMf3JURFxxzOzRMeVc
-         7jmIBKfDrF2gPYbCYMDJJKIGQxRQq2IvFtK+vbftKe0R1kcwEr4JUjJSZA+dD3YKdJW8
-         erMy1+Jr1eSfwOOnniu+wEHLQF1O2TcCedFVm7Au8sjEcUxwI3oCV9iswwPkjByaKG1j
-         0V8w==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=fgZcpnnS6jFiy53mvb4fnTvOCCqRJfW+5InA+MbQqyc=;
-        b=CHRCeEqmb9NKRXIWsCVLq2IrbCftvfQHEUZeWTzbV9Cni029mFSZXXCHjbQ+Bp74Ei
-         CUarrC1oid49M4JJGLOF6N5eqk1+ogRSb9hnZ0vgF6n+RTRVHfxO/U0A3XDyqi4k67fY
-         YcErqPvBjF7LpEOJQKxR6XivMmXetZcx45AV0d1ypVh0bCku4v+t21zzBSCowBwfF01S
-         mr9Lw/81as7j5rSYvz/E0w4bJMtfv3P1JTSs2FD3LMfM6dqoQ3bQKE6r4ERkiV113dfc
-         AaUhkvxsqZrVfBAbSAMq+qgE+oAaBSLLxSQvZ2hwRiaa2Poxn7wkXyspX+lODomMBO8t
-         VWkQ==
-X-Gm-Message-State: ACrzQf1B0JKfz2ncFKlO2T1h0l79loQ8zIelAPaNjhE+SyFiNgKnxfe+
-        ogmDrE9GMP5AFzUjCsyiAZ+Dk3RnbKl3UgcyfUIvdg==
-X-Google-Smtp-Source: AMsMyM728if3sjhSn5CaoHbXsQeD2Jd4YIz9kNhgDYXrC2w4pKPxujhbNps+Krbi88bPbZzZVeI3ubN2je6bfH4PEU0=
-X-Received: by 2002:a05:600c:2194:b0:3cf:7065:99e5 with SMTP id
- e20-20020a05600c219400b003cf706599e5mr33021992wme.174.1667957741635; Tue, 08
- Nov 2022 17:35:41 -0800 (PST)
+        Tue, 8 Nov 2022 22:08:41 -0500
+Received: from foss.arm.com (foss.arm.com [217.140.110.172])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTP id B56291704B;
+        Tue,  8 Nov 2022 19:08:39 -0800 (PST)
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 719F11FB;
+        Tue,  8 Nov 2022 19:08:45 -0800 (PST)
+Received: from [10.162.42.10] (unknown [10.162.42.10])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id D633B3F73D;
+        Tue,  8 Nov 2022 19:08:34 -0800 (PST)
+Message-ID: <c0401131-e0b4-7a25-8590-58402acb1e5b@arm.com>
+Date:   Wed, 9 Nov 2022 08:38:31 +0530
 MIME-Version: 1.0
-References: <20221108190019.19265-1-9erthalion6@gmail.com>
-In-Reply-To: <20221108190019.19265-1-9erthalion6@gmail.com>
-From:   Ian Rogers <irogers@google.com>
-Date:   Tue, 8 Nov 2022 17:35:28 -0800
-Message-ID: <CAP-5=fXgO4ai5EvsYHw+_F2FUYqBRkBzXuBOZg_wHK0=_ymgFg@mail.gmail.com>
-Subject: Re: [RFC PATCH v1] perf data: Add fields when converting to json
-To:     Dmitrii Dolgov <9erthalion6@gmail.com>
-Cc:     linux-perf-users@vger.kernel.org, acme@kernel.org,
-        mingo@redhat.com, jolsa@kernel.org
-Content-Type: text/plain; charset="UTF-8"
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
+ Thunderbird/102.2.2
+Subject: Re: [PATCH V5 6/7] arm64/perf: Add BRBE driver
+Content-Language: en-US
+To:     linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, peterz@infradead.org,
+        acme@kernel.org, mark.rutland@arm.com, will@kernel.org,
+        catalin.marinas@arm.com
+Cc:     Mark Brown <broonie@kernel.org>, James Clark <james.clark@arm.com>,
+        Rob Herring <robh@kernel.org>, Marc Zyngier <maz@kernel.org>,
+        Suzuki Poulose <suzuki.poulose@arm.com>,
+        Ingo Molnar <mingo@redhat.com>
+References: <20221107062514.2851047-1-anshuman.khandual@arm.com>
+ <20221107062514.2851047-7-anshuman.khandual@arm.com>
+From:   Anshuman Khandual <anshuman.khandual@arm.com>
+In-Reply-To: <20221107062514.2851047-7-anshuman.khandual@arm.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-On Tue, Nov 8, 2022 at 11:00 AM Dmitrii Dolgov <9erthalion6@gmail.com> wrote:
->
-> When converting recorded data into json format, perf data omits probe
-> variables. Add them to the output in the format "field name": "field value"
-> using tep_print_field:
->
->     $ perf data convert --to-json output.json
->
->     // output.json
->     {
->         "linux-perf-json-version": 1,
->         "headers": { ... },
->         "samples": [
->             {
->             "timestamp": 29182079082999,
->             "pid": 309194,
->                     [...]
->             "__probe_ip": "0x93ee35",
->             "query_string_string": "select 2;",
->             "nxids": "0"
->             }
->         ]
->     }
->
-> Signed-off-by: Dmitrii Dolgov <9erthalion6@gmail.com>
-
-Acked-by: Ian Rogers <irogers@google.com>
-
-Thanks,
-Ian
-
-> ---
->  tools/perf/util/data-convert-json.c | 20 ++++++++++++++++++++
->  1 file changed, 20 insertions(+)
->
-> diff --git a/tools/perf/util/data-convert-json.c b/tools/perf/util/data-convert-json.c
-> index 613d6ae82663..d30816eafb2f 100644
-> --- a/tools/perf/util/data-convert-json.c
-> +++ b/tools/perf/util/data-convert-json.c
-> @@ -217,6 +217,26 @@ static int process_sample_event(struct perf_tool *tool,
->         }
->         output_json_format(out, false, 3, "]");
->
-> +       if (sample->raw_data) {
-> +               int i;
-> +               struct tep_format_field **fields;
+On 11/7/22 11:55, Anshuman Khandual wrote:
+> +void arm64_pmu_brbe_read(struct pmu_hw_events *cpuc, struct perf_event *event)
+> +{
+> +	u64 brbinf;
+> +	int idx;
 > +
-> +               fields = tep_event_fields(evsel->tp_format);
-> +               if (fields != NULL) {
+> +	if (brbe_disabled(cpuc))
+> +		return;
+> +
+> +	set_brbe_paused();
+> +	for (idx = 0; idx < cpuc->brbe_nr; idx++) {
+> +		select_brbe_bank_index(idx);
+> +		brbinf = get_brbinf_reg(idx);
+> +		/*
+> +		 * There are no valid entries anymore on the buffer.
+> +		 * Abort the branch record processing to save some
+> +		 * cycles and also reduce the capture/process load
+> +		 * for the user space as well.
+> +		 */
+> +		if (brbe_invalid(brbinf))
+> +			break;
+> +
+> +		if (brbe_valid(brbinf)) {
+> +			cpuc->branches->brbe_entries[idx].from =  get_brbsrc_reg(idx);
+> +			cpuc->branches->brbe_entries[idx].to =  get_brbtgt_reg(idx);
+> +		} else if (brbe_source(brbinf)) {
+> +			cpuc->branches->brbe_entries[idx].from =  get_brbsrc_reg(idx);
+> +			cpuc->branches->brbe_entries[idx].to = 0;
+> +		} else if (brbe_target(brbinf)) {
+> +			cpuc->branches->brbe_entries[idx].from = 0;
+> +			cpuc->branches->brbe_entries[idx].to =  get_brbtgt_reg(idx);
+> +		}
+> +		capture_brbe_flags(cpuc, event, brbinf, idx);
+> +	}
+> +	cpuc->branches->brbe_stack.nr = idx;
+> +	cpuc->branches->brbe_stack.hw_idx = -1ULL;
+> +	process_branch_aborts(cpuc);
+> +}
 
-nit: just "if(fields) {" as you did above with sample->raw_data
+The following additional changes are required to ensure that BRBE remains "un-paused" after
+processing the branch records inside PMU interrupt handler. Without this change, there will
+PMU interrupts without valid branch records, reducing branch stack sample collection during
+given workload execution. I will fold this into the BRBE driver.
 
-> +                       i = 0;
-> +                       while (fields[i]) {
-> +                               struct trace_seq s;
-> +
-> +                               trace_seq_init(&s);
-> +                               tep_print_field(&s, sample->raw_data, fields[i]);
-> +                               output_json_key_string(out, true, 3, fields[i]->name, s.buffer);
-> +
-> +                               i++;
-> +                       }
-> +                       free(fields);
-> +               }
-> +       }
-> +
->         output_json_format(out, false, 2, "}");
->         return 0;
->  }
-> --
-> 2.27.0
->
+diff --git a/drivers/perf/arm_pmu_brbe.c b/drivers/perf/arm_pmu_brbe.c
+index ce1aa4171481..c8154ddd341d 100644
+--- a/drivers/perf/arm_pmu_brbe.c
++++ b/drivers/perf/arm_pmu_brbe.c
+@@ -429,6 +429,7 @@ void arm64_pmu_brbe_read(struct pmu_hw_events *cpuc, struct perf_event *event)
+        cpuc->branches->brbe_stack.nr = idx;
+        cpuc->branches->brbe_stack.hw_idx = -1ULL;
+        process_branch_aborts(cpuc);
++       clr_brbe_paused();
+ }
+ 
+ void arm64_pmu_brbe_reset(struct pmu_hw_events *cpuc)
+diff --git a/drivers/perf/arm_pmu_brbe.h b/drivers/perf/arm_pmu_brbe.h
+index 22c4b25b1777..33da6fc9aefa 100644
+--- a/drivers/perf/arm_pmu_brbe.h
++++ b/drivers/perf/arm_pmu_brbe.h
+@@ -257,3 +257,11 @@ static inline void set_brbe_paused(void)
+        write_sysreg_s(brbfcr | BRBFCR_EL1_PAUSED, SYS_BRBFCR_EL1);
+        isb();
+ }
++
++static inline void clr_brbe_paused(void)
++{
++       u64 brbfcr = read_sysreg_s(SYS_BRBFCR_EL1);
++
++       write_sysreg_s(brbfcr & ~BRBFCR_EL1_PAUSED, SYS_BRBFCR_EL1);
++       isb();
++}
+
+For example:
+
+./perf record -j any,u,k,save_type ls
+./perf report -D | grep branch
+
+Before this change -
+
+# cat out | grep "branch stack: nr:64" | wc -l
+4
+# cat out | grep "branch stack: nr:0" | wc -l
+57
+# perf report -D | grep branch
+
+... branch stack: nr:64
+... branch stack: nr:0
+... branch stack: nr:64
+... branch stack: nr:0
+... branch stack: nr:0
+... branch stack: nr:0
+... branch stack: nr:0
+... branch stack: nr:0
+... branch stack: nr:0
+... branch stack: nr:0
+... branch stack: nr:0
+... branch stack: nr:0
+... branch stack: nr:0
+... branch stack: nr:0
+... branch stack: nr:0
+... branch stack: nr:0
+... branch stack: nr:0
+... branch stack: nr:0
+... branch stack: nr:0
+... branch stack: nr:0
+... branch stack: nr:0
+... branch stack: nr:0
+... branch stack: nr:0
+... branch stack: nr:0
+... branch stack: nr:0
+... branch stack: nr:0
+... branch stack: nr:0
+... branch stack: nr:0
+... branch stack: nr:0
+... branch stack: nr:0
+... branch stack: nr:0
+... branch stack: nr:0
+... branch stack: nr:0
+... branch stack: nr:0
+... branch stack: nr:0
+... branch stack: nr:64
+... branch stack: nr:0
+... branch stack: nr:0
+... branch stack: nr:0
+... branch stack: nr:0
+... branch stack: nr:0
+... branch stack: nr:0
+... branch stack: nr:0
+... branch stack: nr:0
+... branch stack: nr:0
+... branch stack: nr:0
+... branch stack: nr:0
+... branch stack: nr:0
+... branch stack: nr:0
+... branch stack: nr:0
+... branch stack: nr:64
+... branch stack: nr:0
+... branch stack: nr:0
+... branch stack: nr:0
+... branch stack: nr:0
+... branch stack: nr:0
+... branch stack: nr:0
+... branch stack: nr:0
+... branch stack: nr:0
+... branch stack: nr:0
+... branch stack: nr:0
+
+But after this change -
+
+$ cat out | grep "branch stack: nr:64" | wc -l
+107
+# cat out | grep "branch stack: nr:0" | wc -l
+0
+$ perf report -D | grep branch
+
+.......................
+
+... branch stack: nr:64
+... branch stack: nr:64
+... branch stack: nr:64
+... branch stack: nr:64
+... branch stack: nr:64
+... branch stack: nr:64
+... branch stack: nr:64
+... branch stack: nr:64
+... branch stack: nr:64
+... branch stack: nr:64
+... branch stack: nr:64
+... branch stack: nr:64
+... branch stack: nr:64
+... branch stack: nr:64
+... branch stack: nr:64
+... branch stack: nr:64
+... branch stack: nr:64
+... branch stack: nr:64
+... branch stack: nr:64
+... branch stack: nr:64
+... branch stack: nr:64
+... branch stack: nr:64
+... branch stack: nr:64
+... branch stack: nr:64
+... branch stack: nr:64
+... branch stack: nr:64
+... branch stack: nr:64
+... branch stack: nr:64
+... branch stack: nr:64
+... branch stack: nr:64
+... branch stack: nr:64
+... branch stack: nr:64
+... branch stack: nr:64
+... branch stack: nr:64
+... branch stack: nr:64
+... branch stack: nr:64
+... branch stack: nr:64
+... branch stack: nr:64
+... branch stack: nr:64
+... branch stack: nr:64
+... branch stack: nr:64
+... branch stack: nr:64
+... branch stack: nr:64
+... branch stack: nr:64
+... branch stack: nr:64
+... branch stack: nr:64
+... branch stack: nr:64
+... branch stack: nr:64
+... branch stack: nr:64
+... branch stack: nr:64
+... branch stack: nr:64
+... branch stack: nr:64
+... branch stack: nr:64
+... branch stack: nr:64
+... branch stack: nr:64
+... branch stack: nr:64
+... branch stack: nr:64
+... branch stack: nr:64
+
+.......................
+
+- Anshuman
