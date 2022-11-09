@@ -2,268 +2,125 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E536BC433FE
-	for <linux-perf-users@archiver.kernel.org>; Wed,  9 Nov 2022 03:08:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0BC4AC433FE
+	for <linux-perf-users@archiver.kernel.org>; Wed,  9 Nov 2022 08:29:06 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229776AbiKIDIm (ORCPT
+        id S230036AbiKII3E (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Tue, 8 Nov 2022 22:08:42 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58982 "EHLO
+        Wed, 9 Nov 2022 03:29:04 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40944 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229552AbiKIDIl (ORCPT
+        with ESMTP id S229955AbiKII2l (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Tue, 8 Nov 2022 22:08:41 -0500
-Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTP id B56291704B;
-        Tue,  8 Nov 2022 19:08:39 -0800 (PST)
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 719F11FB;
-        Tue,  8 Nov 2022 19:08:45 -0800 (PST)
-Received: from [10.162.42.10] (unknown [10.162.42.10])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id D633B3F73D;
-        Tue,  8 Nov 2022 19:08:34 -0800 (PST)
-Message-ID: <c0401131-e0b4-7a25-8590-58402acb1e5b@arm.com>
-Date:   Wed, 9 Nov 2022 08:38:31 +0530
+        Wed, 9 Nov 2022 03:28:41 -0500
+Received: from mail-pf1-x42f.google.com (mail-pf1-x42f.google.com [IPv6:2607:f8b0:4864:20::42f])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 00CA42DF4;
+        Wed,  9 Nov 2022 00:28:26 -0800 (PST)
+Received: by mail-pf1-x42f.google.com with SMTP id y203so16053316pfb.4;
+        Wed, 09 Nov 2022 00:28:26 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20210112;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=rsRdQU8Ady+UGmrXI+CqXDPucP2vHJde8y88ZmpGZsM=;
+        b=LKISIc2cB6Z6TO9vuFDS5ZgjgvbrRGTXBX69S8YrBIn0o1OHvc2k9kK8Kx6t6+VfuD
+         o8bCBUU6n2Fzs+eSZm9X5jFoWEgpt4tl0w+bMyANW/Zpk2v/2BHzD7QL6Iq6X/MZtsCm
+         rzmyM5DIu8P5S+7wi/49ISCXvUoPZDyDngxblUiYnY3oJ6PgYmMQKx/D4N0ft6YLewXf
+         sk9cQMXrM5vgs16LzKtFy3d9dewRtMSGyyMoWBowgUZwmendk2wya/p2hiM3RDOkcFt2
+         257FgWVBfrtCTtnYWk4ynJUnUugj9ZUga6NzbKbT2OOBIywsj6u0YytRIn8iTiYUcrzo
+         q7jQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=rsRdQU8Ady+UGmrXI+CqXDPucP2vHJde8y88ZmpGZsM=;
+        b=BMQ96bu9CBees8hdhpQmZXYb1keT7KvMqwdyziLq1ZHzzxpg9UHjOl+2+rKzFQuY76
+         fuClxejPqS1id2ftkVHP6MXPHvBoFlYLGYDmqRVYU6Fb0HNk0Sqmnh+T9B4UBalHbTh2
+         NRIgk1UJ/Ub24OM1eVtwjdJrRHgwn7Jy9wUmlY6GN+hpDGmhiMbkM0WuxF7YsSQ8xTtJ
+         PZoauSQirVxofAwSGhhv5OOXxuu6e2g2o2JwY5rxQI8x9epStVYHe/ZSh1MWUiUXpzEu
+         HMlF4axYm77J5lmp90kPtsw/wHhlPooQzrPOZLS5S91wUAn1JE3XoatLhqZfEF7FxrZE
+         lqng==
+X-Gm-Message-State: ACrzQf31ITDUByQfZ59GRsvlmEjCc4Ga980bMK5WPkVuMTWpC255E5W2
+        JmlJS1953kbaHIjKxIHZreg=
+X-Google-Smtp-Source: AMsMyM7uM/wr15aY5dKimOK9PE2hO2hPz/ddyvr/0+ef1EuLKlZcHLXgIJo1RN4nRzQ1ElZq3gS2mA==
+X-Received: by 2002:a63:d14a:0:b0:470:3fc2:bed5 with SMTP id c10-20020a63d14a000000b004703fc2bed5mr21992121pgj.590.1667982506475;
+        Wed, 09 Nov 2022 00:28:26 -0800 (PST)
+Received: from localhost.localdomain ([103.7.29.32])
+        by smtp.gmail.com with ESMTPSA id b14-20020a63d30e000000b00470537b9b0asm6587700pgg.51.2022.11.09.00.28.24
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 09 Nov 2022 00:28:26 -0800 (PST)
+From:   Like Xu <like.xu.linux@gmail.com>
+X-Google-Original-From: Like Xu <likexu@tencent.com>
+To:     Sean Christopherson <seanjc@google.com>,
+        Paolo Bonzini <pbonzini@redhat.com>
+Cc:     linux-kernel@vger.kernel.org, kvm@vger.kernel.org,
+        Peter Zijlstra <peterz@infradead.org>,
+        linux-perf-users@vger.kernel.org,
+        Kan Liang <kan.liang@linux.intel.com>
+Subject: [PATCH v3 3/3] perf/x86/intel: Expose EPT-friendly PEBS for SPR and future models
+Date:   Wed,  9 Nov 2022 16:28:02 +0800
+Message-Id: <20221109082802.27543-4-likexu@tencent.com>
+X-Mailer: git-send-email 2.38.1
+In-Reply-To: <20221109082802.27543-1-likexu@tencent.com>
+References: <20221109082802.27543-1-likexu@tencent.com>
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
- Thunderbird/102.2.2
-Subject: Re: [PATCH V5 6/7] arm64/perf: Add BRBE driver
-Content-Language: en-US
-To:     linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, peterz@infradead.org,
-        acme@kernel.org, mark.rutland@arm.com, will@kernel.org,
-        catalin.marinas@arm.com
-Cc:     Mark Brown <broonie@kernel.org>, James Clark <james.clark@arm.com>,
-        Rob Herring <robh@kernel.org>, Marc Zyngier <maz@kernel.org>,
-        Suzuki Poulose <suzuki.poulose@arm.com>,
-        Ingo Molnar <mingo@redhat.com>
-References: <20221107062514.2851047-1-anshuman.khandual@arm.com>
- <20221107062514.2851047-7-anshuman.khandual@arm.com>
-From:   Anshuman Khandual <anshuman.khandual@arm.com>
-In-Reply-To: <20221107062514.2851047-7-anshuman.khandual@arm.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-On 11/7/22 11:55, Anshuman Khandual wrote:
-> +void arm64_pmu_brbe_read(struct pmu_hw_events *cpuc, struct perf_event *event)
-> +{
-> +	u64 brbinf;
-> +	int idx;
-> +
-> +	if (brbe_disabled(cpuc))
-> +		return;
-> +
-> +	set_brbe_paused();
-> +	for (idx = 0; idx < cpuc->brbe_nr; idx++) {
-> +		select_brbe_bank_index(idx);
-> +		brbinf = get_brbinf_reg(idx);
-> +		/*
-> +		 * There are no valid entries anymore on the buffer.
-> +		 * Abort the branch record processing to save some
-> +		 * cycles and also reduce the capture/process load
-> +		 * for the user space as well.
-> +		 */
-> +		if (brbe_invalid(brbinf))
-> +			break;
-> +
-> +		if (brbe_valid(brbinf)) {
-> +			cpuc->branches->brbe_entries[idx].from =  get_brbsrc_reg(idx);
-> +			cpuc->branches->brbe_entries[idx].to =  get_brbtgt_reg(idx);
-> +		} else if (brbe_source(brbinf)) {
-> +			cpuc->branches->brbe_entries[idx].from =  get_brbsrc_reg(idx);
-> +			cpuc->branches->brbe_entries[idx].to = 0;
-> +		} else if (brbe_target(brbinf)) {
-> +			cpuc->branches->brbe_entries[idx].from = 0;
-> +			cpuc->branches->brbe_entries[idx].to =  get_brbtgt_reg(idx);
-> +		}
-> +		capture_brbe_flags(cpuc, event, brbinf, idx);
-> +	}
-> +	cpuc->branches->brbe_stack.nr = idx;
-> +	cpuc->branches->brbe_stack.hw_idx = -1ULL;
-> +	process_branch_aborts(cpuc);
-> +}
+From: Like Xu <likexu@tencent.com>
 
-The following additional changes are required to ensure that BRBE remains "un-paused" after
-processing the branch records inside PMU interrupt handler. Without this change, there will
-PMU interrupts without valid branch records, reducing branch stack sample collection during
-given workload execution. I will fold this into the BRBE driver.
+According to Intel SDM, the EPT-friendly PEBS is supported by all the
+platforms after ICX, ADL and the future platforms with PEBS format 5.
 
-diff --git a/drivers/perf/arm_pmu_brbe.c b/drivers/perf/arm_pmu_brbe.c
-index ce1aa4171481..c8154ddd341d 100644
---- a/drivers/perf/arm_pmu_brbe.c
-+++ b/drivers/perf/arm_pmu_brbe.c
-@@ -429,6 +429,7 @@ void arm64_pmu_brbe_read(struct pmu_hw_events *cpuc, struct perf_event *event)
-        cpuc->branches->brbe_stack.nr = idx;
-        cpuc->branches->brbe_stack.hw_idx = -1ULL;
-        process_branch_aborts(cpuc);
-+       clr_brbe_paused();
- }
+Currently the only in-kernel user of this capability is KVM, which has
+very limited support for hybrid core pmu, so ADL and its successors do
+not currently expose this capability. When both hybrid core and PEBS
+format 5 are present, KVM will decide on its own merits.
+
+Cc: Peter Zijlstra <peterz@infradead.org>
+Cc: linux-perf-users@vger.kernel.org
+Suggested-by: Kan Liang <kan.liang@linux.intel.com>
+Signed-off-by: Like Xu <likexu@tencent.com>
+Reviewed-by: Kan Liang <kan.liang@linux.intel.com>
+---
+Nit: This change is proposed to be applied via the KVM tree.
+
+ arch/x86/events/intel/core.c | 1 +
+ arch/x86/events/intel/ds.c   | 4 +++-
+ 2 files changed, 4 insertions(+), 1 deletion(-)
+
+diff --git a/arch/x86/events/intel/core.c b/arch/x86/events/intel/core.c
+index a646a5f9a235..15e061fbb2f3 100644
+--- a/arch/x86/events/intel/core.c
++++ b/arch/x86/events/intel/core.c
+@@ -6350,6 +6350,7 @@ __init int intel_pmu_init(void)
+ 		x86_pmu.pebs_constraints = intel_spr_pebs_event_constraints;
+ 		x86_pmu.extra_regs = intel_spr_extra_regs;
+ 		x86_pmu.limit_period = spr_limit_period;
++		x86_pmu.pebs_ept = 1;
+ 		x86_pmu.pebs_aliases = NULL;
+ 		x86_pmu.pebs_prec_dist = true;
+ 		x86_pmu.pebs_block = true;
+diff --git a/arch/x86/events/intel/ds.c b/arch/x86/events/intel/ds.c
+index 7839507b3844..185e66b4ce31 100644
+--- a/arch/x86/events/intel/ds.c
++++ b/arch/x86/events/intel/ds.c
+@@ -2293,8 +2293,10 @@ void __init intel_ds_init(void)
+ 			x86_pmu.large_pebs_flags |= PERF_SAMPLE_TIME;
+ 			break;
  
- void arm64_pmu_brbe_reset(struct pmu_hw_events *cpuc)
-diff --git a/drivers/perf/arm_pmu_brbe.h b/drivers/perf/arm_pmu_brbe.h
-index 22c4b25b1777..33da6fc9aefa 100644
---- a/drivers/perf/arm_pmu_brbe.h
-+++ b/drivers/perf/arm_pmu_brbe.h
-@@ -257,3 +257,11 @@ static inline void set_brbe_paused(void)
-        write_sysreg_s(brbfcr | BRBFCR_EL1_PAUSED, SYS_BRBFCR_EL1);
-        isb();
- }
-+
-+static inline void clr_brbe_paused(void)
-+{
-+       u64 brbfcr = read_sysreg_s(SYS_BRBFCR_EL1);
-+
-+       write_sysreg_s(brbfcr & ~BRBFCR_EL1_PAUSED, SYS_BRBFCR_EL1);
-+       isb();
-+}
+-		case 4:
+ 		case 5:
++			x86_pmu.pebs_ept = 1;
++			fallthrough;
++		case 4:
+ 			x86_pmu.drain_pebs = intel_pmu_drain_pebs_icl;
+ 			x86_pmu.pebs_record_size = sizeof(struct pebs_basic);
+ 			if (x86_pmu.intel_cap.pebs_baseline) {
+-- 
+2.38.1
 
-For example:
-
-./perf record -j any,u,k,save_type ls
-./perf report -D | grep branch
-
-Before this change -
-
-# cat out | grep "branch stack: nr:64" | wc -l
-4
-# cat out | grep "branch stack: nr:0" | wc -l
-57
-# perf report -D | grep branch
-
-... branch stack: nr:64
-... branch stack: nr:0
-... branch stack: nr:64
-... branch stack: nr:0
-... branch stack: nr:0
-... branch stack: nr:0
-... branch stack: nr:0
-... branch stack: nr:0
-... branch stack: nr:0
-... branch stack: nr:0
-... branch stack: nr:0
-... branch stack: nr:0
-... branch stack: nr:0
-... branch stack: nr:0
-... branch stack: nr:0
-... branch stack: nr:0
-... branch stack: nr:0
-... branch stack: nr:0
-... branch stack: nr:0
-... branch stack: nr:0
-... branch stack: nr:0
-... branch stack: nr:0
-... branch stack: nr:0
-... branch stack: nr:0
-... branch stack: nr:0
-... branch stack: nr:0
-... branch stack: nr:0
-... branch stack: nr:0
-... branch stack: nr:0
-... branch stack: nr:0
-... branch stack: nr:0
-... branch stack: nr:0
-... branch stack: nr:0
-... branch stack: nr:0
-... branch stack: nr:0
-... branch stack: nr:64
-... branch stack: nr:0
-... branch stack: nr:0
-... branch stack: nr:0
-... branch stack: nr:0
-... branch stack: nr:0
-... branch stack: nr:0
-... branch stack: nr:0
-... branch stack: nr:0
-... branch stack: nr:0
-... branch stack: nr:0
-... branch stack: nr:0
-... branch stack: nr:0
-... branch stack: nr:0
-... branch stack: nr:0
-... branch stack: nr:64
-... branch stack: nr:0
-... branch stack: nr:0
-... branch stack: nr:0
-... branch stack: nr:0
-... branch stack: nr:0
-... branch stack: nr:0
-... branch stack: nr:0
-... branch stack: nr:0
-... branch stack: nr:0
-... branch stack: nr:0
-
-But after this change -
-
-$ cat out | grep "branch stack: nr:64" | wc -l
-107
-# cat out | grep "branch stack: nr:0" | wc -l
-0
-$ perf report -D | grep branch
-
-.......................
-
-... branch stack: nr:64
-... branch stack: nr:64
-... branch stack: nr:64
-... branch stack: nr:64
-... branch stack: nr:64
-... branch stack: nr:64
-... branch stack: nr:64
-... branch stack: nr:64
-... branch stack: nr:64
-... branch stack: nr:64
-... branch stack: nr:64
-... branch stack: nr:64
-... branch stack: nr:64
-... branch stack: nr:64
-... branch stack: nr:64
-... branch stack: nr:64
-... branch stack: nr:64
-... branch stack: nr:64
-... branch stack: nr:64
-... branch stack: nr:64
-... branch stack: nr:64
-... branch stack: nr:64
-... branch stack: nr:64
-... branch stack: nr:64
-... branch stack: nr:64
-... branch stack: nr:64
-... branch stack: nr:64
-... branch stack: nr:64
-... branch stack: nr:64
-... branch stack: nr:64
-... branch stack: nr:64
-... branch stack: nr:64
-... branch stack: nr:64
-... branch stack: nr:64
-... branch stack: nr:64
-... branch stack: nr:64
-... branch stack: nr:64
-... branch stack: nr:64
-... branch stack: nr:64
-... branch stack: nr:64
-... branch stack: nr:64
-... branch stack: nr:64
-... branch stack: nr:64
-... branch stack: nr:64
-... branch stack: nr:64
-... branch stack: nr:64
-... branch stack: nr:64
-... branch stack: nr:64
-... branch stack: nr:64
-... branch stack: nr:64
-... branch stack: nr:64
-... branch stack: nr:64
-... branch stack: nr:64
-... branch stack: nr:64
-... branch stack: nr:64
-... branch stack: nr:64
-... branch stack: nr:64
-... branch stack: nr:64
-
-.......................
-
-- Anshuman
