@@ -2,200 +2,198 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1F1FDC4167D
-	for <linux-perf-users@archiver.kernel.org>; Wed,  9 Nov 2022 18:52:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BCF49C433FE
+	for <linux-perf-users@archiver.kernel.org>; Wed,  9 Nov 2022 19:00:30 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229900AbiKISwM (ORCPT
+        id S230128AbiKITA3 convert rfc822-to-8bit (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Wed, 9 Nov 2022 13:52:12 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41404 "EHLO
+        Wed, 9 Nov 2022 14:00:29 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47626 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231876AbiKISv6 (ORCPT
+        with ESMTP id S229811AbiKITA3 (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Wed, 9 Nov 2022 13:51:58 -0500
-Received: from mail-yb1-xb49.google.com (mail-yb1-xb49.google.com [IPv6:2607:f8b0:4864:20::b49])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A9DD42D1E2
-        for <linux-perf-users@vger.kernel.org>; Wed,  9 Nov 2022 10:51:23 -0800 (PST)
-Received: by mail-yb1-xb49.google.com with SMTP id j132-20020a25238a000000b006da635e2073so3903192ybj.2
-        for <linux-perf-users@vger.kernel.org>; Wed, 09 Nov 2022 10:51:23 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20210112;
-        h=cc:to:from:subject:references:mime-version:message-id:in-reply-to
-         :date:from:to:cc:subject:date:message-id:reply-to;
-        bh=hRpn0P3+fcqOignA9YAOhkIfzWGGy39oUBEKle0pWl4=;
-        b=Gum16eZlyNc399k5d3tx6ll5pKDYbio/60xDhY7KrQQQTJnfdPao24XhCFCL0DMhbb
-         qhuhZ7+QZdM51F5m8K6I5jt9r9MzyOXKsVF+cvGL4mDrk5nJJGXlDfNVBFYHudWU8kws
-         3Nn9958gEw2UiddLZMUkOrS/YkoQSsNfYzdla3r/4O/X9rWeSoKUS/H7hEQJVLptlp/l
-         YwNPr3UBMdaXuQVTtJz84Zp0qOCOuxwEoiq71oB/v9GMwFWXXRSUuvNFUah0aAJUYwlW
-         5roVXQcMwnPiM6w6Ips7fTqCM/mflO0K0aLpNUtAyNtVBeOLRRI3QxrVm8FzFGlE8N1d
-         gL/g==
+        Wed, 9 Nov 2022 14:00:29 -0500
+Received: from mail-oi1-f180.google.com (mail-oi1-f180.google.com [209.85.167.180])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C55E8193EA;
+        Wed,  9 Nov 2022 11:00:27 -0800 (PST)
+Received: by mail-oi1-f180.google.com with SMTP id n205so8732986oib.1;
+        Wed, 09 Nov 2022 11:00:27 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=cc:to:from:subject:references:mime-version:message-id:in-reply-to
-         :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=hRpn0P3+fcqOignA9YAOhkIfzWGGy39oUBEKle0pWl4=;
-        b=FtLqqMLWm6OZS2Lmfj165q8GHVaQSkAUKR82kQ1wwyfywuNuXLhUnAdXsVbHpwIZpR
-         NeuiLXQbO/8qdty865qyySUSng+3cu8kPaW5Ct09HjPqfflkB64AoFgG9pzytG3rEKgm
-         +Twk1y/VuISZ8XZlbrSVZrWdKdrABp4BJol9hTjWjdSs29me90L5WISsphzeX3ISMAR9
-         M6hxbkgerLoVnUyZo9c8WS2FB6lggawmjHawF2tPH1Re3X/yThHvRm9FTZIHyUYZ/Nmn
-         rSLcKOfcIBnb05Vu4en4nSCseZxEXgQKy1thmyB95K9PKlec5JZ6NRtaqtvsRxcW+A4R
-         dmXw==
-X-Gm-Message-State: ACrzQf2yVngk02gDwdavj+KTrz0+gM0aWb/95u0i4tOh8xUA9Z2+1O38
-        tGcpj5R5wwt7Kb9p5gbwz1TLpDNWDWw3
-X-Google-Smtp-Source: AMsMyM6UYHYvI9oRglfbF00i/rXNWsAuwQ6/Jdg2ihwWhfW0WufkEgYQy01iVSCK8Q9cfdVmss5mD7PwOXZ0
-X-Received: from irogers.svl.corp.google.com ([2620:15c:2d4:203:b06f:a254:5ce9:c442])
- (user=irogers job=sendgmr) by 2002:a25:df85:0:b0:6d0:6e1:85bc with SMTP id
- w127-20020a25df85000000b006d006e185bcmr36982852ybg.519.1668019882993; Wed, 09
- Nov 2022 10:51:22 -0800 (PST)
-Date:   Wed,  9 Nov 2022 10:49:14 -0800
-In-Reply-To: <20221109184914.1357295-1-irogers@google.com>
-Message-Id: <20221109184914.1357295-15-irogers@google.com>
-Mime-Version: 1.0
-References: <20221109184914.1357295-1-irogers@google.com>
-X-Mailer: git-send-email 2.38.1.431.g37b22c650d-goog
-Subject: [PATCH v2 14/14] perf build: Use tools/lib headers from install path
-From:   Ian Rogers <irogers@google.com>
-To:     Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Jiri Olsa <jolsa@kernel.org>,
-        Namhyung Kim <namhyung@kernel.org>,
-        Masahiro Yamada <masahiroy@kernel.org>,
-        Nicolas Schier <nicolas@fjasle.eu>,
-        linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org,
-        bpf@vger.kernel.org, Nick Desaulniers <ndesaulniers@google.com>,
-        Andrii Nakryiko <andrii.nakryiko@gmail.com>
-Cc:     Stephane Eranian <eranian@google.com>,
-        Ian Rogers <irogers@google.com>
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=sMpsMLyiCgwuPwl0+GxzMfLoA8jDIII47LVKf8n7yz8=;
+        b=j6CV5pliJJwPBdqIq8jOy1cmkQzwKmq8fZUrtlU/7SWSuAnfQPQSDF2DEaAvxKmjf5
+         T36bHMnMkDraDbceA8PFcN+g7UWBAcZJJ/EiuXioGae2hZ4aiOcEnVB8tOYjqd1aOAim
+         lad21SunjRSs9FWOAlV4FQ25amY8Sz7sTM/vnlfF1HE1goW0XGzDIZZe+FczcAOVNhyx
+         5m77KaBdOwPv0aC1MCqJ8cpR65TCAva4gGowMnRtIR7ean/gdKtGerDS550d2LQlVkTF
+         XzevjYqtbB+YoqWM0dAgyQNtHltXksmBZidu3VnNpj7BtsJNNea/JtYgwmUIJCSBIa1A
+         EZIg==
+X-Gm-Message-State: ACrzQf3NmGlDnvvrTEhnFtZL/pae3W/m0G6XKXQrR6ApsVrhhts1Njtm
+        IHSte8Q2jgpMJzlNSeBc8SVBTo9HK10K+InH+dI=
+X-Google-Smtp-Source: AMsMyM4/QC5OTudpw+11FpWjsynsIC/pUi06eH6hsHduFUNI1wqH/RPpSPHP/zs6Nz9mq+91MEIMTe6VwZ79vWAALKE=
+X-Received: by 2002:aca:2805:0:b0:359:e340:d53 with SMTP id
+ 5-20020aca2805000000b00359e3400d53mr31799603oix.209.1668020427039; Wed, 09
+ Nov 2022 11:00:27 -0800 (PST)
+MIME-Version: 1.0
+References: <20221109174635.859406-1-namhyung@kernel.org> <20221109174635.859406-2-namhyung@kernel.org>
+ <Y2vz3zmn/jIFkCKp@kernel.org>
+In-Reply-To: <Y2vz3zmn/jIFkCKp@kernel.org>
+From:   Namhyung Kim <namhyung@kernel.org>
+Date:   Wed, 9 Nov 2022 11:00:15 -0800
+Message-ID: <CAM9d7ciQ1Co89oHc005SCgEfv3zATHQM6ZnHYTTgsF9uXpNLMg@mail.gmail.com>
+Subject: Re: [PATCH 01/12] perf test: Add -w/--workload option
+To:     Arnaldo Carvalho de Melo <acme@kernel.org>
+Cc:     Jiri Olsa <jolsa@kernel.org>, Ingo Molnar <mingo@kernel.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Ian Rogers <irogers@google.com>,
+        Adrian Hunter <adrian.hunter@intel.com>,
+        linux-perf-users@vger.kernel.org, Leo Yan <leo.yan@linaro.org>,
+        German Gomez <german.gomez@arm.com>,
+        Zhengjun Xing <zhengjun.xing@linux.intel.com>,
+        James Clark <james.clark@arm.com>
 Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8BIT
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-Switch -I from tools/lib to the install path for the tools/lib
-libraries that are depended upon. List header files provided by
-libraries so that dependencies are built in the correct order.
+Hi Arnaldo,
 
-Signed-off-by: Ian Rogers <irogers@google.com>
----
- tools/perf/Makefile.config |  2 --
- tools/perf/Makefile.perf   | 46 ++++++++++++++++++++++++++++++++++++++
- 2 files changed, 46 insertions(+), 2 deletions(-)
+On Wed, Nov 9, 2022 at 10:39 AM Arnaldo Carvalho de Melo
+<acme@kernel.org> wrote:
+>
+> Em Wed, Nov 09, 2022 at 09:46:24AM -0800, Namhyung Kim escreveu:
+> > --- /dev/null
+> > +++ b/tools/perf/tests/workloads/noploop.c
+> > @@ -0,0 +1,32 @@
+> > +/* SPDX-License-Identifier: GPL-2.0 */
+> > +#include <stdlib.h>
+> > +#include <signal.h>
+> > +#include <unistd.h>
+> > +#include <linux/compiler.h>
+> > +#include "../tests.h"
+> > +
+> > +static volatile int done;
+> > +
+> > +static void sighandler(int sig __maybe_unused)
+> > +{
+> > +     done = 1;
+> > +}
+>
+> You forgot to do what was done in:
 
-diff --git a/tools/perf/Makefile.config b/tools/perf/Makefile.config
-index a7f6c0669fae..9cc3c48f3288 100644
---- a/tools/perf/Makefile.config
-+++ b/tools/perf/Makefile.config
-@@ -349,7 +349,6 @@ ifeq ($(DEBUG),0)
-   endif
- endif
- 
--INC_FLAGS += -I$(srctree)/tools/lib/perf/include
- INC_FLAGS += -I$(src-perf)/util/include
- INC_FLAGS += -I$(src-perf)/arch/$(SRCARCH)/include
- INC_FLAGS += -I$(srctree)/tools/include/
-@@ -367,7 +366,6 @@ endif
- 
- INC_FLAGS += -I$(src-perf)/util
- INC_FLAGS += -I$(src-perf)
--INC_FLAGS += -I$(srctree)/tools/lib/
- 
- CORE_CFLAGS += -D_LARGEFILE64_SOURCE -D_FILE_OFFSET_BITS=64 -D_GNU_SOURCE
- 
-diff --git a/tools/perf/Makefile.perf b/tools/perf/Makefile.perf
-index 6c1a2a3ccc38..d71e728e7a5c 100644
---- a/tools/perf/Makefile.perf
-+++ b/tools/perf/Makefile.perf
-@@ -305,6 +305,7 @@ LIBTRACEEVENT_INCLUDE = $(LIBTRACEEVENT_DESTDIR)/include
- LIBTRACEEVENT = $(LIBTRACEEVENT_OUTPUT)/libtraceevent.a
- export LIBTRACEEVENT
- LIBTRACEEVENT_DYNAMIC_LIST = $(LIBTRACEEVENT_PLUGINS_OUTPUT)/libtraceevent-dynamic-list
-+CFLAGS += -I$(LIBTRACEEVENT_OUTPUT)/include
- 
- #
- # The static build has no dynsym table, so this does not work for
-@@ -322,6 +323,13 @@ LIBAPI_DESTDIR = $(LIBAPI_OUTPUT)
- LIBAPI_INCLUDE = $(LIBAPI_DESTDIR)/include
- LIBAPI = $(LIBAPI_OUTPUT)/libapi.a
- export LIBAPI
-+CFLAGS += -I$(LIBAPI_OUTPUT)/include
-+$(LIBAPI_OUTPUT)/include/api/fs/fs.h \
-+$(LIBAPI_OUTPUT)/include/api/fs/tracing_path.h \
-+$(LIBAPI_OUTPUT)/include/api/io.h \
-+$(LIBAPI_OUTPUT)/include/api/debug.h \
-+$(LIBAPI_OUTPUT)/include/api/cpu.h \
-+$(LIBAPI_OUTPUT)/include/api/fd/array.h: $(LIBAPI)
- 
- ifneq ($(OUTPUT),)
-   LIBBPF_OUTPUT = $(abspath $(OUTPUT))/libbpf
-@@ -331,6 +339,20 @@ endif
- LIBBPF_DESTDIR = $(LIBBPF_OUTPUT)
- LIBBPF_INCLUDE = $(LIBBPF_DESTDIR)/include
- LIBBPF = $(LIBBPF_OUTPUT)/libbpf.a
-+CFLAGS += -I$(LIBBPF_OUTPUT)/include
-+$(LIBBPF_OUTPUT)/include/bpf/bpf_helpers.h \
-+$(LIBBPF_OUTPUT)/include/bpf/libbpf_legacy.h \
-+$(LIBBPF_OUTPUT)/include/bpf/bpf_tracing.h \
-+$(LIBBPF_OUTPUT)/include/bpf/usdt.bpf.h \
-+$(LIBBPF_OUTPUT)/include/bpf/bpf_helper_defs.h \
-+$(LIBBPF_OUTPUT)/include/bpf/libbpf_common.h \
-+$(LIBBPF_OUTPUT)/include/bpf/bpf_core_read.h \
-+$(LIBBPF_OUTPUT)/include/bpf/bpf.h \
-+$(LIBBPF_OUTPUT)/include/bpf/libbpf.h \
-+$(LIBBPF_OUTPUT)/include/bpf/skel_internal.h \
-+$(LIBBPF_OUTPUT)/include/bpf/bpf_endian.h \
-+$(LIBBPF_OUTPUT)/include/bpf/btf.h \
-+$(LIBBPF_OUTPUT)/include/bpf/libbpf_version.h: $(LIBBPF)
- 
- ifneq ($(OUTPUT),)
-   LIBSUBCMD_OUTPUT = $(abspath $(OUTPUT))/libsubcmd
-@@ -340,6 +362,12 @@ endif
- LIBSUBCMD_DESTDIR = $(LIBSUBCMD_OUTPUT)
- LIBSUBCMD_INCLUDE = $(LIBSUBCMD_DESTDIR)/include
- LIBSUBCMD = $(LIBSUBCMD_OUTPUT)/libsubcmd.a
-+CFLAGS += -I$(LIBSUBCMD_OUTPUT)/include
-+$(LIBSUBCMD_OUTPUT)/include/subcmd/run-command.h \
-+$(LIBSUBCMD_OUTPUT)/include/subcmd/exec-cmd.h \
-+$(LIBSUBCMD_OUTPUT)/include/subcmd/help.h \
-+$(LIBSUBCMD_OUTPUT)/include/subcmd/pager.h \
-+$(LIBSUBCMD_OUTPUT)/include/subcmd/parse-options.h : $(LIBSUBCMD)
- 
- ifneq ($(OUTPUT),)
-   LIBSYMBOL_OUTPUT = $(abspath $(OUTPUT))/libsymbol
-@@ -349,6 +377,8 @@ endif
- LIBSYMBOL_DESTDIR = $(LIBSYMBOL_OUTPUT)
- LIBSYMBOL_INCLUDE = $(LIBSYMBOL_DESTDIR)/include
- LIBSYMBOL = $(LIBSYMBOL_OUTPUT)/libsymbol.a
-+CFLAGS += -I$(LIBSYMBOL_OUTPUT)/include
-+$(LIBSYMBOL_OUTPUT)/symbol/kallsyms.h: $(LIBSYMBOL)
- 
- ifneq ($(OUTPUT),)
-   LIBPERF_OUTPUT = $(abspath $(OUTPUT))/libperf
-@@ -359,6 +389,22 @@ LIBPERF_DESTDIR = $(LIBPERF_OUTPUT)
- LIBPERF_INCLUDE = $(LIBPERF_DESTDIR)/include
- LIBPERF = $(LIBPERF_OUTPUT)/libperf.a
- export LIBPERF
-+CFLAGS += -I$(LIBPERF_OUTPUT)/include
-+$(LIBPERF_OUTPUT)/include/perf/core.h \
-+$(LIBPERF_OUTPUT)/include/perf/mmap.h \
-+$(LIBPERF_OUTPUT)/include/perf/evsel.h \
-+$(LIBPERF_OUTPUT)/include/perf/evlist.h \
-+$(LIBPERF_OUTPUT)/include/perf/bpf_perf.h \
-+$(LIBPERF_OUTPUT)/include/perf/event.h \
-+$(LIBPERF_OUTPUT)/include/perf/cpumap.h \
-+$(LIBPERF_OUTPUT)/include/perf/threadmap.h \
-+$(LIBPERF_OUTPUT)/include/internal/mmap.h \
-+$(LIBPERF_OUTPUT)/include/internal/evsel.h \
-+$(LIBPERF_OUTPUT)/include/internal/lib.h \
-+$(LIBPERF_OUTPUT)/include/internal/evlist.h \
-+$(LIBPERF_OUTPUT)/include/internal/cpumap.h \
-+$(LIBPERF_OUTPUT)/include/internal/xyarray.h \
-+$(LIBPERF_OUTPUT)/include/internal/threadmap.h: $(LIBPERF)
- 
- # python extension build directories
- PYTHON_EXTBUILD     := $(OUTPUT)python_ext_build/
--- 
-2.38.1.431.g37b22c650d-goog
+Oops, right.  Will fix in v2.
 
+Thanks,
+Namhyung
+
+
+>
+> 92ea0720ba9cf7f0 perf trace: Use sig_atomic_t to avoid undefined behaviour in a signal handler
+> 691768968f2a13eb perf top: Use sig_atomic_t to avoid undefined behaviour in a signal handler
+> 01513fdc18f395db perf stat: Use sig_atomic_t to avoid undefined behaviour in a signal handler
+> 057929f9d083e80c perf session: Change type to avoid undefined behaviour in a signal handler
+> 853596fb71f7c2f7 perf ftrace: Use sig_atomic_t to avoid UB
+> 7f3374299f9762ba perf daemon: Use sig_atomic_t to avoid UB
+> 8ed28c2b56b78442 perf record: Use sig_atomic_t for signal handlers
+> f3c9bd4e16a503cb perf build: Update to C standard to gnu11
+>
+> To speed up the process here is one of those csets:
+>
+> ⬢[acme@toolbox perf]$ git show 01513fdc18f395db
+> commit 01513fdc18f395dbcc924bc5e9962b12f86f947a
+> Author: Ian Rogers <irogers@google.com>
+> Date:   Mon Oct 24 11:19:11 2022 -0700
+>
+>     perf stat: Use sig_atomic_t to avoid undefined behaviour in a signal handler
+>
+>     Use sig_atomic_t for variables written/accessed in signal
+>     handlers. This is undefined behavior as per:
+>
+>       https://wiki.sei.cmu.edu/confluence/display/c/SIG31-C.+Do+not+access+shared+objects+in+signal+handlers
+>
+>     Signed-off-by: Ian Rogers <irogers@google.com>
+>     Cc: Adrian Hunter <adrian.hunter@intel.com>
+>     Cc: Alexander Shishkin <alexander.shishkin@linux.intel.com>
+>     Cc: Alexey Bayduraev <alexey.v.bayduraev@linux.intel.com>
+>     Cc: German Gomez <german.gomez@arm.com>
+>     Cc: Ingo Molnar <mingo@redhat.com>
+>     Cc: Jiri Olsa <jolsa@kernel.org>
+>     Cc: Leo Yan <leo.yan@linaro.org>
+>     Cc: Mark Rutland <mark.rutland@arm.com>
+>     Cc: Namhyung Kim <namhyung@kernel.org>
+>     Cc: Peter Zijlstra <peterz@infradead.org>
+>     Cc: Stephane Eranian <eranian@google.com>
+>     Link: https://lore.kernel.org/r/20221024181913.630986-7-irogers@google.com
+>     Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
+>
+> diff --git a/tools/perf/builtin-stat.c b/tools/perf/builtin-stat.c
+> index e52601a54b26d669..d5e1670bca204450 100644
+> --- a/tools/perf/builtin-stat.c
+> +++ b/tools/perf/builtin-stat.c
+> @@ -173,7 +173,7 @@ static struct target target = {
+>
+>  #define METRIC_ONLY_LEN 20
+>
+> -static volatile pid_t          child_pid                       = -1;
+> +static volatile sig_atomic_t   child_pid                       = -1;
+>  static int                     detailed_run                    =  0;
+>  static bool                    transaction_run;
+>  static bool                    topdown_run                     = false;
+> @@ -208,7 +208,7 @@ struct perf_stat {
+>  static struct perf_stat                perf_stat;
+>  #define STAT_RECORD            perf_stat.record
+>
+> -static volatile int done = 0;
+> +static volatile sig_atomic_t done = 0;
+>
+>  static struct perf_stat_config stat_config = {
+>         .aggr_mode              = AGGR_GLOBAL,
+> @@ -580,7 +580,7 @@ static void disable_counters(void)
+>         }
+>  }
+>
+> -static volatile int workload_exec_errno;
+> +static volatile sig_atomic_t workload_exec_errno;
+>
+>  /*
+>   * evlist__prepare_workload will send a SIGUSR1
+> @@ -1039,7 +1039,7 @@ static void print_counters(struct timespec *ts, int argc, const char **argv)
+>         evlist__print_counters(evsel_list, &stat_config, &target, ts, argc, argv);
+>  }
+>
+> -static volatile int signr = -1;
+> +static volatile sig_atomic_t signr = -1;
+>
+>  static void skip_signal(int signo)
+>  {
+> ⬢[acme@toolbox perf]$
+>
+> > +
+> > +static int noploop(int argc, const char **argv)
+> > +{
+> > +     int sec = 1;
+> > +
+> > +     if (argc > 0)
+> > +             sec = atoi(argv[0]);
+> > +
+> > +     signal(SIGINT, sighandler);
+> > +     signal(SIGALRM, sighandler);
+> > +     alarm(sec);
+> > +
+> > +     while (!done)
+> > +             continue;
+> > +
+> > +     return 0;
+> > +}
+> > +
+> > +DEFINE_WORKLOAD(noploop);
+> > --
+> > 2.38.1.431.g37b22c650d-goog
+>
+> --
+>
+> - Arnaldo
