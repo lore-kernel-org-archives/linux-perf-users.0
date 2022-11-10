@@ -2,81 +2,84 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B9F8DC433FE
-	for <linux-perf-users@archiver.kernel.org>; Thu, 10 Nov 2022 18:35:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CACA2C433FE
+	for <linux-perf-users@archiver.kernel.org>; Thu, 10 Nov 2022 18:37:34 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229962AbiKJSfI (ORCPT
+        id S230181AbiKJShd (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Thu, 10 Nov 2022 13:35:08 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35892 "EHLO
+        Thu, 10 Nov 2022 13:37:33 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36670 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229588AbiKJSfH (ORCPT
+        with ESMTP id S230311AbiKJShb (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Thu, 10 Nov 2022 13:35:07 -0500
+        Thu, 10 Nov 2022 13:37:31 -0500
 Received: from sin.source.kernel.org (sin.source.kernel.org [145.40.73.55])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A1CA11582A;
-        Thu, 10 Nov 2022 10:35:06 -0800 (PST)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E4C1F15FEF
+        for <linux-perf-users@vger.kernel.org>; Thu, 10 Nov 2022 10:37:30 -0800 (PST)
 Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by sin.source.kernel.org (Postfix) with ESMTPS id 17E41CE249A;
-        Thu, 10 Nov 2022 18:35:05 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id D15EEC433D6;
-        Thu, 10 Nov 2022 18:35:02 +0000 (UTC)
+        by sin.source.kernel.org (Postfix) with ESMTPS id 60A5CCE2487
+        for <linux-perf-users@vger.kernel.org>; Thu, 10 Nov 2022 18:37:29 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 701B0C433D7;
+        Thu, 10 Nov 2022 18:37:27 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1668105303;
-        bh=w217Ff/N57hJS24hKUs+XsjXvSk1sr2hCTvbGYBVlOA=;
+        s=k20201202; t=1668105447;
+        bh=S6sYlGLdlLsx5U6PB6C1tBSkf5UuJ9wMVebxh8yNMl8=;
         h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=brq2G995vju4lbKn11htJgaxjDNbsxO2OQXdViBbo8E+Fzk2sZTkgO7kFhpU0Pzpw
-         G0CCGPtq6L/pHCMmWcRU4i7CQTeywNaIUpC+YiXMJg4vTlzEIaQQiJtXmJw0JIh+bY
-         K1Nq3KkBf30ffsgv+wAR37/tDqO5oNQwr99G7rg8SBBW9llKgo6DryXYestO7KrJkj
-         yka27yiSUfHg4fhQOlkMXWMf8JauU7n1CLE77heh8ejFku3GHSYS9Xcsrr+I+AXsKF
-         bqIsZsOSzaBFPC2+TLP3ESzeVIZFkUcfzCu/Yp7A6OHAUOg9AKd0/f72tzxS5qdOwb
-         9a3YYdO4OjC9w==
+        b=LyPXrNcCWZkapzx/NdnglGruUTLJifd1AL6uu1l4EMCpxU0pDPq9cGvpbeRsAYR+0
+         o/OAUqAT7zoT/sPp5qUfXy7El1k8QsEpdkfS1RsT1U6NQjwTbxqYJ5OrKtakzEUE2s
+         4QNc8LoGkn5657rPIFbjHcDo7FSdIxdHqX13IDgyAcQoNMK1tbqyvQCp1h8UwWeAsZ
+         oHIaxUboMzPofd/vdHbqa9FtyTbLL+xh4Of0x1Zad3nxV0TjUF4Fvo1s/c/M7aTP0a
+         JF+k2/cjzEEtQui/Se2Qc400m3l+P+JAvPzXURA8st5riVkpJnIz22XlE2XdJ44mLQ
+         LA/DTf35o4z+A==
 Received: by quaco.ghostprotocols.net (Postfix, from userid 1000)
-        id DB6604034E; Thu, 10 Nov 2022 15:34:53 -0300 (-03)
-Date:   Thu, 10 Nov 2022 15:34:53 -0300
+        id 367974034E; Thu, 10 Nov 2022 15:37:25 -0300 (-03)
+Date:   Thu, 10 Nov 2022 15:37:25 -0300
 From:   Arnaldo Carvalho de Melo <acme@kernel.org>
 To:     Ian Rogers <irogers@google.com>
-Cc:     Namhyung Kim <namhyung@kernel.org>, Jiri Olsa <jolsa@kernel.org>,
-        Ingo Molnar <mingo@kernel.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Adrian Hunter <adrian.hunter@intel.com>,
-        linux-perf-users@vger.kernel.org
-Subject: Re: [PATCH] perf lock: Allow concurrent record and report
-Message-ID: <Y21ETduUDa86eib6@kernel.org>
-References: <20221104051440.220989-1-namhyung@kernel.org>
- <CAP-5=fXm1EkFiQMWmTgG80xkwzcPDKjwA4wCQr765AGVSG=Ucw@mail.gmail.com>
+Cc:     Dmitrii Dolgov <9erthalion6@gmail.com>,
+        linux-perf-users@vger.kernel.org, mingo@redhat.com,
+        jolsa@kernel.org
+Subject: Re: [RFC PATCH v1] perf data: Add fields when converting to json
+Message-ID: <Y21E5RpLbBchuOdC@kernel.org>
+References: <20221108190019.19265-1-9erthalion6@gmail.com>
+ <CAP-5=fXgO4ai5EvsYHw+_F2FUYqBRkBzXuBOZg_wHK0=_ymgFg@mail.gmail.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <CAP-5=fXm1EkFiQMWmTgG80xkwzcPDKjwA4wCQr765AGVSG=Ucw@mail.gmail.com>
+In-Reply-To: <CAP-5=fXgO4ai5EvsYHw+_F2FUYqBRkBzXuBOZg_wHK0=_ymgFg@mail.gmail.com>
 X-Url:  http://acmel.wordpress.com
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-Em Tue, Nov 08, 2022 at 03:26:01PM -0800, Ian Rogers escreveu:
-> On Thu, Nov 3, 2022 at 10:14 PM Namhyung Kim <namhyung@kernel.org> wrote:
+Em Tue, Nov 08, 2022 at 05:35:28PM -0800, Ian Rogers escreveu:
+> On Tue, Nov 8, 2022 at 11:00 AM Dmitrii Dolgov <9erthalion6@gmail.com> wrote:
 > >
-> > To support live monitoring of kernel lock contention without BPF,
-> > it should support something like below:
+> > When converting recorded data into json format, perf data omits probe
+> > variables. Add them to the output in the format "field name": "field value"
+> > using tep_print_field:
 > >
-> >   # perf lock record -a -o- sleep 1 | perf lock contention -i-
-> >    contended   total wait     max wait     avg wait         type   caller
+> >     $ perf data convert --to-json output.json
 > >
-> >            2     10.27 us      6.17 us      5.13 us     spinlock   load_balance+0xc03
-> >            1      5.29 us      5.29 us      5.29 us     rwlock:W   ep_scan_ready_list+0x54
-> >            1      4.12 us      4.12 us      4.12 us     spinlock   smpboot_thread_fn+0x116
-> >            1      3.28 us      3.28 us      3.28 us        mutex   pipe_read+0x50
+> >     // output.json
+> >     {
+> >         "linux-perf-json-version": 1,
+> >         "headers": { ... },
+> >         "samples": [
+> >             {
+> >             "timestamp": 29182079082999,
+> >             "pid": 309194,
+> >                     [...]
+> >             "__probe_ip": "0x93ee35",
+> >             "query_string_string": "select 2;",
+> >             "nxids": "0"
+> >             }
+> >         ]
+> >     }
 > >
-> > To do that, it needs to handle HEAD_ATTR, HEADER_EVENT_UPDATE and
-> > HEADER_TRACING_DATA which are generated only for the pipe mode.
-> > And setting event handler also should be delayed until it gets the
-> > event information.
-> >
-> > Signed-off-by: Namhyung Kim <namhyung@kernel.org>
+> > Signed-off-by: Dmitrii Dolgov <9erthalion6@gmail.com>
 > 
 > Acked-by: Ian Rogers <irogers@google.com>
 
