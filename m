@@ -2,168 +2,112 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8A184C4332F
-	for <linux-perf-users@archiver.kernel.org>; Thu, 10 Nov 2022 14:49:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B0B55C4332F
+	for <linux-perf-users@archiver.kernel.org>; Thu, 10 Nov 2022 17:28:58 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229678AbiKJOtp (ORCPT
+        id S229862AbiKJR24 (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Thu, 10 Nov 2022 09:49:45 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39646 "EHLO
+        Thu, 10 Nov 2022 12:28:56 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51518 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229463AbiKJOto (ORCPT
+        with ESMTP id S231586AbiKJR2w (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Thu, 10 Nov 2022 09:49:44 -0500
-Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTP id A2FC0FAD7;
-        Thu, 10 Nov 2022 06:49:43 -0800 (PST)
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 8C0A71FB;
-        Thu, 10 Nov 2022 06:49:49 -0800 (PST)
-Received: from [10.1.28.168] (e127744.cambridge.arm.com [10.1.28.168])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id C74C03F703;
-        Thu, 10 Nov 2022 06:49:41 -0800 (PST)
-Subject: Re: [PATCH 07/12] perf test: Add 'sqrtloop' test workload
-To:     Namhyung Kim <namhyung@kernel.org>,
-        Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Jiri Olsa <jolsa@kernel.org>
+        Thu, 10 Nov 2022 12:28:52 -0500
+Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7ADB71156;
+        Thu, 10 Nov 2022 09:28:45 -0800 (PST)
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by dfw.source.kernel.org (Postfix) with ESMTPS id 2052761D53;
+        Thu, 10 Nov 2022 17:28:45 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id BA40BC433C1;
+        Thu, 10 Nov 2022 17:28:40 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1668101324;
+        bh=sENMuzY4sr/Mt+Bk+aCRj2lY72CbUnhjfFRJxImy25A=;
+        h=From:To:Cc:Subject:Date:From;
+        b=KZjfd5PhyhUj66YaQCxMlmBJynHn8W2peKPHltHHc+N7D6aO0/MSf0l03Qg2d77ch
+         YLq9+fKeIAuN3ohwutirv8enXifCudKDgWAcmdbWm+7Bn7ADdh83kUwPzglgE6I5si
+         8rOLPVIAp8VRpLuGlYxMi7rxedECQzEb274uo/qVtn1q6/i/k5TdzfplGYhzoBKNR9
+         uuqELUn5LWrO+0/ZOa+T9bi45XYLrHD6OjqFL5tgXnuyijm4hZ4wclteE6eA4GgQ8G
+         HQtJRSiZPlop+rDFsfuatnDU8EuZrgz/jnlrKWnTYfScB9ULsiYRtIagayuEvWFlP0
+         PDotxcgGSzM6g==
+From:   Arnaldo Carvalho de Melo <acme@kernel.org>
+To:     Linus Torvalds <torvalds@linux-foundation.org>
 Cc:     Ingo Molnar <mingo@kernel.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Ian Rogers <irogers@google.com>,
-        Adrian Hunter <adrian.hunter@intel.com>,
-        linux-perf-users@vger.kernel.org, Leo Yan <leo.yan@linaro.org>,
-        Zhengjun Xing <zhengjun.xing@linux.intel.com>,
-        James Clark <james.clark@arm.com>
-References: <20221109174635.859406-1-namhyung@kernel.org>
- <20221109174635.859406-8-namhyung@kernel.org>
-From:   German Gomez <german.gomez@arm.com>
-Message-ID: <3be361f6-dd50-8998-872e-27bbf9f02017@arm.com>
-Date:   Thu, 10 Nov 2022 14:49:36 +0000
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:78.0) Gecko/20100101
- Thunderbird/78.14.0
+        Thomas Gleixner <tglx@linutronix.de>,
+        Jiri Olsa <jolsa@kernel.org>,
+        Namhyung Kim <namhyung@kernel.org>,
+        Clark Williams <williams@redhat.com>,
+        Kate Carcia <kcarcia@redhat.com>, linux-kernel@vger.kernel.org,
+        linux-perf-users@vger.kernel.org,
+        Arnaldo Carvalho de Melo <acme@kernel.org>,
+        Athira Jajeev <atrajeev@linux.vnet.ibm.com>,
+        Disha Goel <disgoel@linux.vnet.ibm.com>,
+        Donglin Peng <dolinux.peng@gmail.com>,
+        James Clark <james.clark@arm.com>,
+        Arnaldo Carvalho de Melo <acme@redhat.com>
+Subject: [GIT PULL] perf tools fixes for v6.1: 2nd batch
+Date:   Thu, 10 Nov 2022 14:28:31 -0300
+Message-Id: <20221110172831.369713-1-acme@kernel.org>
+X-Mailer: git-send-email 2.37.3
 MIME-Version: 1.0
-In-Reply-To: <20221109174635.859406-8-namhyung@kernel.org>
-Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: 8bit
-Content-Language: en-US
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-On 09/11/2022 17:46, Namhyung Kim wrote:
-> The sqrtloop creates a child process to run an infinite loop calling
-> sqrt() with rand().  This is needed for ARM SPE fork test.
->
->   $ perf test -w sqrtloop
->
-> It can take an optional argument to specify how long it will run in
-> seconds (default: 1).
->
-> Signed-off-by: Namhyung Kim <namhyung@kernel.org>
-> ---
->  tools/perf/tests/builtin-test.c       |  1 +
->  tools/perf/tests/tests.h              |  1 +
->  tools/perf/tests/workloads/Build      |  1 +
->  tools/perf/tests/workloads/sqrtloop.c | 44 +++++++++++++++++++++++++++
->  4 files changed, 47 insertions(+)
->  create mode 100644 tools/perf/tests/workloads/sqrtloop.c
->
-> diff --git a/tools/perf/tests/builtin-test.c b/tools/perf/tests/builtin-test.c
-> index 0ed5ac452f6e..9acb7a93eeb9 100644
-> --- a/tools/perf/tests/builtin-test.c
-> +++ b/tools/perf/tests/builtin-test.c
-> @@ -122,6 +122,7 @@ static struct test_workload *workloads[] = {
->  	&workload__noploop,
->  	&workload__thloop,
->  	&workload__leafloop,
-> +	&workload__sqrtloop,
->  };
->  
->  static int num_subtests(const struct test_suite *t)
-> diff --git a/tools/perf/tests/tests.h b/tools/perf/tests/tests.h
-> index 86804dd6452b..18c40319e67c 100644
-> --- a/tools/perf/tests/tests.h
-> +++ b/tools/perf/tests/tests.h
-> @@ -203,5 +203,6 @@ struct test_workload workload__##work = {	\
->  DECLARE_WORKLOAD(noploop);
->  DECLARE_WORKLOAD(thloop);
->  DECLARE_WORKLOAD(leafloop);
-> +DECLARE_WORKLOAD(sqrtloop);
->  
->  #endif /* TESTS_H */
-> diff --git a/tools/perf/tests/workloads/Build b/tools/perf/tests/workloads/Build
-> index 631596bdb2b3..1ca95cb0fdb5 100644
-> --- a/tools/perf/tests/workloads/Build
-> +++ b/tools/perf/tests/workloads/Build
-> @@ -3,5 +3,6 @@
->  perf-y += noploop.o
->  perf-y += thloop.o
->  perf-y += leafloop.o
-> +perf-y += sqrtloop.o
->  
->  CFLAGS_leafloop.o         = -g -O0 -fno-inline -fno-omit-frame-pointer
-> diff --git a/tools/perf/tests/workloads/sqrtloop.c b/tools/perf/tests/workloads/sqrtloop.c
-> new file mode 100644
-> index 000000000000..f7d1f8d4867b
-> --- /dev/null
-> +++ b/tools/perf/tests/workloads/sqrtloop.c
-> @@ -0,0 +1,44 @@
-> +/* SPDX-License-Identifier: GPL-2.0 */
-> +#include <math.h>
-> +#include <signal.h>
-> +#include <stdlib.h>
-> +#include <linux/compiler.h>
-> +#include <sys/wait.h>
-> +#include "../tests.h"
-> +
-> +static volatile int done;
-> +
-> +static void sighandler(int sig __maybe_unused)
-> +{
-> +	done = 1;
-> +}
-> +
-> +static int __sqrtloop(int sec)
-> +{
-> +	signal(SIGALRM, sighandler);
-> +	alarm(sec);
-> +
-> +	while (!done)
-> +		sqrt(rand());
-> +	return 0;
-> +}
+Hi Linus,
 
-I get some implicit declaration errors on x86 build
+	Please consider pulling,
 
-(gcc (Ubuntu 9.3.0-17ubuntu1~20.04) 9.3.0)
+Best regards,
 
-.  CC      tests/workloads/sqrtloop.o
-.tests/workloads/sqrtloop.c: In function ‘__sqrtloop’:
-.tests/workloads/sqrtloop.c:19:2: error: implicit declaration of function ‘alarm’ [-Werror=implicit-function-declaration]
-.   19 |  alarm(sec);
-.      |  ^~~~~
-.tests/workloads/sqrtloop.c: In function ‘sqrtloop’:
-.tests/workloads/sqrtloop.c:33:10: error: implicit declaration of function ‘fork’ [-Werror=implicit-function-declaration]
-.   33 |  switch (fork()) {
-.      |          ^~~~
+- Arnaldo
 
-> +
-> +static int sqrtloop(int argc, const char **argv)
-> +{
-> +	int sec = 1;
-> +
-> +	if (argc > 0)
-> +		sec = atoi(argv[0]);
-> +
-> +	switch (fork()) {
-> +	case 0:
-> +		return __sqrtloop(sec);
-> +	case -1:
-> +		return -1;
-> +	default:
-> +		wait(NULL);
-> +	}
-> +	return 0;
-> +}
-> +
-> +DEFINE_WORKLOAD(sqrtloop);
+The following changes since commit 59f2f4b8a757412fce372f6d0767bdb55da127a8:
+
+  fs/userfaultfd: Fix maple tree iterator in userfaultfd_unregister() (2022-11-07 12:58:26 -0800)
+
+are available in the Git repository at:
+
+  git://git.kernel.org/pub/scm/linux/kernel/git/acme/linux.git tags/perf-tools-fixes-for-v6.1-2-2022-11-10
+
+for you to fetch changes up to 94d957ae513fc420d0a5a9bac815eb49ffebb56f:
+
+  perf tools: Add the include/perf/ directory to .gitignore (2022-11-08 18:54:41 -0300)
+
+----------------------------------------------------------------
+perf tools fixes for v6.1: 2nd batch
+
+- Fix 'perf stat' crash with --per-node --metric-only in CSV mode, due
+  to the AGGR_NODE slot in the 'aggr_header_csv' array not being set.
+
+- Fix printing prefix in CSV output of 'perf stat' metrics in interval
+  mode (-I), where an extra separator was being added to the start of
+  some lines.
+
+- Fix skipping branch stack sampling 'perf test' entry, that was using
+  both --branch-any and --branch-filter, which can't be used together.
+
+Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
+
+----------------------------------------------------------------
+Athira Rajeev (1):
+      perf stat: Fix printing os->prefix in CSV metrics output
+
+Donglin Peng (1):
+      perf tools: Add the include/perf/ directory to .gitignore
+
+James Clark (1):
+      perf test: Fix skipping branch stack sampling test
+
+Namhyung Kim (1):
+      perf stat: Fix crash with --per-node --metric-only in CSV mode
+
+ tools/perf/.gitignore                  | 1 +
+ tools/perf/tests/shell/test_brstack.sh | 5 ++++-
+ tools/perf/util/parse-branch-options.c | 4 +++-
+ tools/perf/util/stat-display.c         | 6 ++++--
+ 4 files changed, 12 insertions(+), 4 deletions(-)
