@@ -2,112 +2,86 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B0B55C4332F
-	for <linux-perf-users@archiver.kernel.org>; Thu, 10 Nov 2022 17:28:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A7B6CC4332F
+	for <linux-perf-users@archiver.kernel.org>; Thu, 10 Nov 2022 17:35:51 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229862AbiKJR24 (ORCPT
+        id S229790AbiKJRfu (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Thu, 10 Nov 2022 12:28:56 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51518 "EHLO
+        Thu, 10 Nov 2022 12:35:50 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54458 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231586AbiKJR2w (ORCPT
+        with ESMTP id S229531AbiKJRfs (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Thu, 10 Nov 2022 12:28:52 -0500
-Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7ADB71156;
-        Thu, 10 Nov 2022 09:28:45 -0800 (PST)
+        Thu, 10 Nov 2022 12:35:48 -0500
+Received: from ams.source.kernel.org (ams.source.kernel.org [145.40.68.75])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 26C7719C09;
+        Thu, 10 Nov 2022 09:35:47 -0800 (PST)
 Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id 2052761D53;
-        Thu, 10 Nov 2022 17:28:45 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id BA40BC433C1;
-        Thu, 10 Nov 2022 17:28:40 +0000 (UTC)
+        by ams.source.kernel.org (Postfix) with ESMTPS id CE7C8B8225D;
+        Thu, 10 Nov 2022 17:35:45 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 55D82C433C1;
+        Thu, 10 Nov 2022 17:35:44 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1668101324;
-        bh=sENMuzY4sr/Mt+Bk+aCRj2lY72CbUnhjfFRJxImy25A=;
-        h=From:To:Cc:Subject:Date:From;
-        b=KZjfd5PhyhUj66YaQCxMlmBJynHn8W2peKPHltHHc+N7D6aO0/MSf0l03Qg2d77ch
-         YLq9+fKeIAuN3ohwutirv8enXifCudKDgWAcmdbWm+7Bn7ADdh83kUwPzglgE6I5si
-         8rOLPVIAp8VRpLuGlYxMi7rxedECQzEb274uo/qVtn1q6/i/k5TdzfplGYhzoBKNR9
-         uuqELUn5LWrO+0/ZOa+T9bi45XYLrHD6OjqFL5tgXnuyijm4hZ4wclteE6eA4GgQ8G
-         HQtJRSiZPlop+rDFsfuatnDU8EuZrgz/jnlrKWnTYfScB9ULsiYRtIagayuEvWFlP0
-         PDotxcgGSzM6g==
+        s=k20201202; t=1668101744;
+        bh=Y1XMNG3ILmebfWRjz2r1LuSVX/IBJ6YwFNQjqKXoROk=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=B5qX9p06vXKaCOnie51zhMED6gflAlTgiHvpnx2wjfRq1szxxKAM2zzxzzAxH8i5Y
+         E//EJZ50Hyhs3l7YWrE9dyq59RbE/UeUUcvozebwfcgAZT7CIhk8r6nwqt33vSsgh6
+         qa7q6QHW+568C4FqfbQyiV/SoBoLVA5WdFz4VRPDUDKe4eoeql8FI7trq8+kZ318kN
+         mnVsHOeHHHV2t5153Ay+jUDgrMoqzK4D3EnoEgg5zjSH5z3xftE6uO+vfg5Adpjjx0
+         ILpuOqbTIuQB4lTNwe7tf81ghRBqsSOjQhF8nCJybFUqI/MAVCah/J72wW5Ny80/Kt
+         xoQwjPMrg1VUg==
+Received: by quaco.ghostprotocols.net (Postfix, from userid 1000)
+        id 384264034E; Thu, 10 Nov 2022 14:35:42 -0300 (-03)
+Date:   Thu, 10 Nov 2022 14:35:42 -0300
 From:   Arnaldo Carvalho de Melo <acme@kernel.org>
-To:     Linus Torvalds <torvalds@linux-foundation.org>
-Cc:     Ingo Molnar <mingo@kernel.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
+To:     Namhyung Kim <namhyung@kernel.org>
+Cc:     Ian Rogers <irogers@google.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
         Jiri Olsa <jolsa@kernel.org>,
-        Namhyung Kim <namhyung@kernel.org>,
-        Clark Williams <williams@redhat.com>,
-        Kate Carcia <kcarcia@redhat.com>, linux-kernel@vger.kernel.org,
-        linux-perf-users@vger.kernel.org,
-        Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Athira Jajeev <atrajeev@linux.vnet.ibm.com>,
-        Disha Goel <disgoel@linux.vnet.ibm.com>,
-        Donglin Peng <dolinux.peng@gmail.com>,
-        James Clark <james.clark@arm.com>,
-        Arnaldo Carvalho de Melo <acme@redhat.com>
-Subject: [GIT PULL] perf tools fixes for v6.1: 2nd batch
-Date:   Thu, 10 Nov 2022 14:28:31 -0300
-Message-Id: <20221110172831.369713-1-acme@kernel.org>
-X-Mailer: git-send-email 2.37.3
+        Masahiro Yamada <masahiroy@kernel.org>,
+        Nicolas Schier <nicolas@fjasle.eu>,
+        linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org,
+        bpf@vger.kernel.org, Nick Desaulniers <ndesaulniers@google.com>,
+        Andrii Nakryiko <andrii.nakryiko@gmail.com>,
+        Stephane Eranian <eranian@google.com>
+Subject: Re: [PATCH v2 08/14] tools lib perf: Add missing install headers
+Message-ID: <Y202br0IHVj9SDJ+@kernel.org>
+References: <20221109184914.1357295-1-irogers@google.com>
+ <20221109184914.1357295-9-irogers@google.com>
+ <CAM9d7cgpcVcUZo6ExLWis2Pu4V0FXdsNx+ZoKUWrOYqgqyZTiQ@mail.gmail.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CAM9d7cgpcVcUZo6ExLWis2Pu4V0FXdsNx+ZoKUWrOYqgqyZTiQ@mail.gmail.com>
+X-Url:  http://acmel.wordpress.com
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-Hi Linus,
+Em Wed, Nov 09, 2022 at 12:12:16PM -0800, Namhyung Kim escreveu:
+> On Wed, Nov 9, 2022 at 10:50 AM Ian Rogers <irogers@google.com> wrote:
+> > Headers necessary for the perf build. Note, internal headers are also
+> > installed as these are necessary for the build.
+ 
+> Yeah, it's sad we are using those internal headers in perf.
 
-	Please consider pulling,
+The plan is for perf to eventually be a libperf tool, but what was done
+so far was make available classes and methods that were asked for by
+libperf users.
 
-Best regards,
+Completely untangling tools/perf/ from those internal bits will needs
+lots more work, so doing it the way Ian is doing now seems ok.
 
 - Arnaldo
 
-The following changes since commit 59f2f4b8a757412fce372f6d0767bdb55da127a8:
-
-  fs/userfaultfd: Fix maple tree iterator in userfaultfd_unregister() (2022-11-07 12:58:26 -0800)
-
-are available in the Git repository at:
-
-  git://git.kernel.org/pub/scm/linux/kernel/git/acme/linux.git tags/perf-tools-fixes-for-v6.1-2-2022-11-10
-
-for you to fetch changes up to 94d957ae513fc420d0a5a9bac815eb49ffebb56f:
-
-  perf tools: Add the include/perf/ directory to .gitignore (2022-11-08 18:54:41 -0300)
-
-----------------------------------------------------------------
-perf tools fixes for v6.1: 2nd batch
-
-- Fix 'perf stat' crash with --per-node --metric-only in CSV mode, due
-  to the AGGR_NODE slot in the 'aggr_header_csv' array not being set.
-
-- Fix printing prefix in CSV output of 'perf stat' metrics in interval
-  mode (-I), where an extra separator was being added to the start of
-  some lines.
-
-- Fix skipping branch stack sampling 'perf test' entry, that was using
-  both --branch-any and --branch-filter, which can't be used together.
-
-Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
-
-----------------------------------------------------------------
-Athira Rajeev (1):
-      perf stat: Fix printing os->prefix in CSV metrics output
-
-Donglin Peng (1):
-      perf tools: Add the include/perf/ directory to .gitignore
-
-James Clark (1):
-      perf test: Fix skipping branch stack sampling test
-
-Namhyung Kim (1):
-      perf stat: Fix crash with --per-node --metric-only in CSV mode
-
- tools/perf/.gitignore                  | 1 +
- tools/perf/tests/shell/test_brstack.sh | 5 ++++-
- tools/perf/util/parse-branch-options.c | 4 +++-
- tools/perf/util/stat-display.c         | 6 ++++--
- 4 files changed, 12 insertions(+), 4 deletions(-)
+> Ideally libperf provides callbacks to associate private data
+> to each public data structure (e.g. evsel, evlist, etc).  And
+> external users just use public APIs only.
+> 
+> But that would be a major change.
