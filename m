@@ -2,137 +2,175 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F21BCC433FE
-	for <linux-perf-users@archiver.kernel.org>; Thu, 10 Nov 2022 19:07:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 28822C4332F
+	for <linux-perf-users@archiver.kernel.org>; Thu, 10 Nov 2022 19:20:43 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231270AbiKJTHB (ORCPT
+        id S231220AbiKJTUl (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Thu, 10 Nov 2022 14:07:01 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48850 "EHLO
+        Thu, 10 Nov 2022 14:20:41 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59332 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229561AbiKJTGK (ORCPT
+        with ESMTP id S230333AbiKJTUe (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Thu, 10 Nov 2022 14:06:10 -0500
-Received: from mail-qt1-x82f.google.com (mail-qt1-x82f.google.com [IPv6:2607:f8b0:4864:20::82f])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5176E45A3C;
-        Thu, 10 Nov 2022 11:05:48 -0800 (PST)
-Received: by mail-qt1-x82f.google.com with SMTP id a27so1500012qtw.10;
-        Thu, 10 Nov 2022 11:05:48 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20210112;
-        h=content-transfer-encoding:in-reply-to:references:cc:to:from
-         :content-language:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=rokvtl75XxkOCdp16d0xR65MKlSaNsdfqv2851bbu3Q=;
-        b=NK4WtyUnA4cU9/Na3TW3AQ2+nwvFNrcLPvxRKE/NyAe9a0PSP/2jlAiAI64WJrDJwE
-         hYGHJ7vhrgiT96sX9LTyfpsGocf/aD3/tBq8+/Xg3+gePpAPsVmB1ci21XkuGtpCCXb5
-         y9qhhtC+pNic3NOzemZbHh2pEAAi/yKfNz6UVHuPPkv1HSnnS2h8SUmvy82sDYpY2HPG
-         el9f1Rij9Zrcy06YpV3h+7H/R+3/py31sxyFYaGwlx7p4vTXv7SUoZn9gC8mA4CYhZG6
-         +2XlPiLOUE7e5K8jeGok6SCDMhsWKcxLdWBozxd1Xvru3jk/8O9zV5yWm2Y6ht/BibXj
-         zYTg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=content-transfer-encoding:in-reply-to:references:cc:to:from
-         :content-language:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=rokvtl75XxkOCdp16d0xR65MKlSaNsdfqv2851bbu3Q=;
-        b=e7GN3QZpqgD3QZWJeDa0lQ6fptnZw9v1fnaxaNMVySVtLF38KyWWHsjBv1ypI3GILg
-         ddJTVyItBa/oS+oA32PfXl0aZqUjSoOE29+zJsMn20fIyn4XXIx3HMVjm+p7D1yMAaIS
-         xIj1hG6uWEP0NjNfFwVpHOOIo/mc/CN7XOBK5K+/7NiDuT6cA9Q66prCwjWKIc4izqEK
-         1kHqebsG7Khfo/3iRojOooRCcT24sS5xJweAbOdfBcycQ1I/CZp5ntB+Z4I2NYRt2QOs
-         fgRngdV31dUK2EYIRJHPjPaR3/0f+ykLr65J1NliFMGInbbmAg5WhONYsXoQqt7HWaS2
-         BW3A==
-X-Gm-Message-State: ACrzQf36YfKTOCg+zZiiNOkC5+UXmYTnclIMUD5uCUZpSxL8mYesG7Yh
-        n7kE9pD1a5yrD5Ftqf7RN/w=
-X-Google-Smtp-Source: AMsMyM5C+OzzE0m0MheuUF6pkJIuPd88S44wge8lT+izBl325Rfy03ls5do3rjxIpgQlO1jkcatpfA==
-X-Received: by 2002:ac8:5494:0:b0:3a5:6854:32fe with SMTP id h20-20020ac85494000000b003a5685432femr1466889qtq.655.1668107146861;
-        Thu, 10 Nov 2022 11:05:46 -0800 (PST)
-Received: from [10.67.48.245] ([192.19.223.252])
-        by smtp.googlemail.com with ESMTPSA id x11-20020a05620a258b00b006e42a8e9f9bsm35258qko.121.2022.11.10.11.05.43
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 10 Nov 2022 11:05:46 -0800 (PST)
-Message-ID: <4193aa1b-6836-08c0-58fd-5f53c66682da@gmail.com>
-Date:   Thu, 10 Nov 2022 11:05:42 -0800
-MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
- Thunderbird/102.2.2
-Subject: Re: [PATCH] perf: Fix perf_event_{init,exit}_cpu stubs
-Content-Language: en-US
-From:   Florian Fainelli <f.fainelli@gmail.com>
-To:     Peter Zijlstra <peterz@infradead.org>
-Cc:     linux-kernel@vger.kernel.org, anand.gore@broadcom.com,
-        william.zhang@broadcom.com, Ingo Molnar <mingo@redhat.com>,
+        Thu, 10 Nov 2022 14:20:34 -0500
+Received: from foss.arm.com (foss.arm.com [217.140.110.172])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTP id D3051218A;
+        Thu, 10 Nov 2022 11:20:33 -0800 (PST)
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 91E8D1FB;
+        Thu, 10 Nov 2022 11:20:39 -0800 (PST)
+Received: from [10.1.28.168] (e127744.cambridge.arm.com [10.1.28.168])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id DEED53F73D;
+        Thu, 10 Nov 2022 11:20:30 -0800 (PST)
+Subject: Re: [PATCH 10/12] perf test: Replace brstack test workload
+To:     Namhyung Kim <namhyung@kernel.org>,
         Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Jiri Olsa <jolsa@kernel.org>,
-        Namhyung Kim <namhyung@kernel.org>,
-        Anna-Maria Gleixner <anna-maria@linutronix.de>,
-        Sebastian Siewior <bigeasy@linutronix.de>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        "open list:PERFORMANCE EVENTS SUBSYSTEM" 
-        <linux-perf-users@vger.kernel.org>
-References: <20221103224303.3910486-1-f.fainelli@gmail.com>
- <Y2UOQpniaV12E0P9@hirez.programming.kicks-ass.net>
- <c6852cb4-a929-2f42-bfcd-04c4aa99b4a5@gmail.com>
-In-Reply-To: <c6852cb4-a929-2f42-bfcd-04c4aa99b4a5@gmail.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
+        Jiri Olsa <jolsa@kernel.org>
+Cc:     Ingo Molnar <mingo@kernel.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Ian Rogers <irogers@google.com>,
+        Adrian Hunter <adrian.hunter@intel.com>,
+        linux-perf-users@vger.kernel.org, Leo Yan <leo.yan@linaro.org>,
+        Zhengjun Xing <zhengjun.xing@linux.intel.com>,
+        James Clark <james.clark@arm.com>,
+        Athira Jajeev <atrajeev@linux.vnet.ibm.com>
+References: <20221110181920.84900-1-namhyung@kernel.org>
+ <20221110181920.84900-11-namhyung@kernel.org>
+From:   German Gomez <german.gomez@arm.com>
+Message-ID: <1036a42b-b438-67b2-c4ca-0e440d266d6d@arm.com>
+Date:   Thu, 10 Nov 2022 19:20:25 +0000
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:78.0) Gecko/20100101
+ Thunderbird/78.14.0
+MIME-Version: 1.0
+In-Reply-To: <20221110181920.84900-11-namhyung@kernel.org>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 7bit
+Content-Language: en-US
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-On 11/4/22 10:38, Florian Fainelli wrote:
-> 
-> 
-> On 11/4/2022 6:06 AM, Peter Zijlstra wrote:
->> On Thu, Nov 03, 2022 at 03:43:03PM -0700, Florian Fainelli wrote:
->>> The original commit that introduced those stubs was already at fault,
->>> but in the absence of a caller of perf_event_{init,exit}_cpu outside of
->>> code that is compiled regardless of CONFIG_PERF_EVENTS, the build
->>> failure cannot be observed. This was observed with the Android kernel to
->>> produce a build failure similar to this:
->>>
->>>      In file included from ./include/uapi/linux/posix_types.h:5,
->>>                       from ./include/uapi/linux/types.h:14,
->>>                       from ./include/linux/types.h:6,
->>>                       from ./include/linux/limits.h:6,
->>>                       from ./include/linux/kernel.h:7,
->>>                       from ./include/linux/sched/mm.h:5,
->>>                       from kernel/cpu.c:6:
->>>      kernel/cpu.c: In function 'random_and_perf_prepare_fusion':
->>>      ./include/linux/stddef.h:8:14: error: called object is not a 
->>> function or function pointer
->>>       #define NULL ((void *)0)
->>>                    ^
->>>      ./include/linux/perf_event.h:1607:29: note: in expansion of 
->>> macro 'NULL'
->>>       #define perf_event_init_cpu NULL
->>>                                   ^~~~
->>>      kernel/cpu.c:1686:2: note: in expansion of macro 
->>> 'perf_event_init_cpu'
->>>        perf_event_init_cpu(cpu);
->>>        ^~~~~~~~~~~~~~~~~~~
->>
->> What is the actual problem reported here? Did you see all the other NULL
->> assignments in cpuhp_hp_states ?
-> 
-> Anand reported to me that the following downstream commit in the Android 
-> common kernel repository:
-> 
-> https://android.googlesource.com/kernel/common/+/ca927bd22ad8bd26fd8dcebf3c7f2a093385d8ea
-> 
-> was resulting in the build failure above.
-> 
-> While this is an Android inflicted change and I still intend to get a 
-> fix there, upon closer look, the build failure could be experienced 
-> upstream as well with any code calling perf_event_{init,exit}_cpu() as a 
-> regular function call as opposed to being used as a function pointer.
-> 
-> This felt worthy of fixing in the upstream kernel, hence this patch.
+Hi Namhyung, thanks for doing the refactor, it looks a lot cleaner
 
-No response meaning it's a don't care because upstream is not (yet?) 
-impacted?
--- 
-Florian
+On 10/11/2022 18:19, Namhyung Kim wrote:
+> So that it can get rid of requirement of a compiler.  Also rename the
+> symbols to match with the perf test workload.
+>
+> Cc: German Gomez <german.gomez@arm.com>
+> Signed-off-by: Namhyung Kim <namhyung@kernel.org>
+> ---
+>  tools/perf/tests/shell/test_brstack.sh | 66 +++++---------------------
+>  1 file changed, 12 insertions(+), 54 deletions(-)
+>
+> diff --git a/tools/perf/tests/shell/test_brstack.sh b/tools/perf/tests/shell/test_brstack.sh
+> index ec801cffae6b..a8a182dea25f 100755
+> --- a/tools/perf/tests/shell/test_brstack.sh
+> +++ b/tools/perf/tests/shell/test_brstack.sh
+> @@ -4,18 +4,12 @@
+>  # SPDX-License-Identifier: GPL-2.0
+>  # German Gomez <german.gomez@arm.com>, 2022
+>  
+> -# we need a C compiler to build the test programs
+> -# so bail if none is found
+> -if ! [ -x "$(command -v cc)" ]; then
+> -	echo "failed: no compiler, install gcc"
+> -	exit 2
+> -fi
+> -
+>  # skip the test if the hardware doesn't support branch stack sampling
+>  # and if the architecture doesn't support filter types: any,save_type,u
+>  perf record -b -o- -B --branch-filter any,save_type,u true > /dev/null 2>&1 || exit 2
+>  
+>  TMPDIR=$(mktemp -d /tmp/__perf_test.program.XXXXX)
+> +TESTPROG="perf test -w brstack"
+>  
+>  cleanup() {
+>  	rm -rf $TMPDIR
+> @@ -23,57 +17,24 @@ cleanup() {
+>  
+>  trap cleanup exit term int
+>  
+> -gen_test_program() {
+> -	# generate test program
+> -	cat << EOF > $1
+> -#define BENCH_RUNS 999999
+> -int cnt;
+> -void bar(void) {
+> -}			/* return */
+> -void foo(void) {
+> -	bar();		/* call */
+> -}			/* return */
+> -void bench(void) {
+> -  void (*foo_ind)(void) = foo;
+> -  if ((cnt++) % 3)	/* branch (cond) */
+> -    foo();		/* call */
+> -  bar();		/* call */
+> -  foo_ind();		/* call (ind) */
+> -}
+> -int main(void)
+> -{
+> -  int cnt = 0;
+> -  while (1) {
+> -    if ((cnt++) > BENCH_RUNS)
+> -      break;
+> -    bench();		/* call */
+> -  }			/* branch (uncond) */
+> -  return 0;
+> -}
+> -EOF
+> -}
+> -
+>  test_user_branches() {
+>  	echo "Testing user branch stack sampling"
+>  
+> -	gen_test_program "$TEMPDIR/program.c"
+> -	cc -fno-inline -g "$TEMPDIR/program.c" -o $TMPDIR/a.out
+> -
+> -	perf record -o $TMPDIR/perf.data --branch-filter any,save_type,u -- $TMPDIR/a.out > /dev/null 2>&1
+> +	perf record -o $TMPDIR/perf.data --branch-filter any,save_type,u -- ${TESTPROG} > /dev/null 2>&1
+>  	perf script -i $TMPDIR/perf.data --fields brstacksym | xargs -n1 > $TMPDIR/perf.script
+>  
+>  	# example of branch entries:
+> -	# 	foo+0x14/bar+0x40/P/-/-/0/CALL
+> +	# 	brstack_foo+0x14/brstack_bar+0x40/P/-/-/0/CALL
+>  
+>  	set -x
+> -	egrep -m1 "^bench\+[^ ]*/foo\+[^ ]*/IND_CALL$"	$TMPDIR/perf.script
+> -	egrep -m1 "^foo\+[^ ]*/bar\+[^ ]*/CALL$"	$TMPDIR/perf.script
+> -	egrep -m1 "^bench\+[^ ]*/foo\+[^ ]*/CALL$"	$TMPDIR/perf.script
+> -	egrep -m1 "^bench\+[^ ]*/bar\+[^ ]*/CALL$"	$TMPDIR/perf.script
+> -	egrep -m1 "^bar\+[^ ]*/foo\+[^ ]*/RET$"		$TMPDIR/perf.script
+> -	egrep -m1 "^foo\+[^ ]*/bench\+[^ ]*/RET$"	$TMPDIR/perf.script
+> -	egrep -m1 "^bench\+[^ ]*/bench\+[^ ]*/COND$"	$TMPDIR/perf.script
+> -	egrep -m1 "^main\+[^ ]*/main\+[^ ]*/UNCOND$"	$TMPDIR/perf.script
+> +	egrep -m1 "^brstack_bench\+[^ ]*/brstack_foo\+[^ ]*/IND_CALL$"	$TMPDIR/perf.script
+> +	egrep -m1 "^brstack_foo\+[^ ]*/brstack_bar\+[^ ]*/CALL$"	$TMPDIR/perf.script
+> +	egrep -m1 "^brstack_bench\+[^ ]*/brstack_foo\+[^ ]*/CALL$"	$TMPDIR/perf.script
+> +	egrep -m1 "^brstack_bench\+[^ ]*/brstack_bar\+[^ ]*/CALL$"	$TMPDIR/perf.script
+> +	egrep -m1 "^brstack_bar\+[^ ]*/brstack_foo\+[^ ]*/RET$"		$TMPDIR/perf.script
+> +	egrep -m1 "^brstack_foo\+[^ ]*/brstsack_bench\+[^ ]*/RET$"	$TMPDIR/perf.script
 
+Small typo here s/brstsack_bench/brstack_bench
+
+I think James was doing some BRBE work here, so probably best if he also gives his review/test tag.
+
+Acked-by: German Gomez <german.gomez@arm.com>
+
+> +	egrep -m1 "^brstack_bench\+[^ ]*/brstack_bench\+[^ ]*/COND$"	$TMPDIR/perf.script
+> +	egrep -m1 "^brstack\+[^ ]*/brstack\+[^ ]*/UNCOND$"		$TMPDIR/perf.script
+>  	set +x
+>  
+>  	# some branch types are still not being tested:
+> @@ -88,10 +49,7 @@ test_filter() {
+>  
+>  	echo "Testing branch stack filtering permutation ($filter,$expect)"
+>  
+> -	gen_test_program "$TEMPDIR/program.c"
+> -	cc -fno-inline -g "$TEMPDIR/program.c" -o $TMPDIR/a.out
+> -
+> -	perf record -o $TMPDIR/perf.data --branch-filter $filter,save_type,u -- $TMPDIR/a.out > /dev/null 2>&1
+> +	perf record -o $TMPDIR/perf.data --branch-filter $filter,save_type,u -- ${TESTPROG} > /dev/null 2>&1
+>  	perf script -i $TMPDIR/perf.data --fields brstack | xargs -n1 > $TMPDIR/perf.script
+>  
+>  	# fail if we find any branch type that doesn't match any of the expected ones
