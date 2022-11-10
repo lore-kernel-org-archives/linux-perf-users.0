@@ -2,147 +2,153 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9D392C433FE
-	for <linux-perf-users@archiver.kernel.org>; Thu, 10 Nov 2022 18:10:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9DAE3C4332F
+	for <linux-perf-users@archiver.kernel.org>; Thu, 10 Nov 2022 18:19:27 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231139AbiKJSKc (ORCPT
+        id S229688AbiKJST0 (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Thu, 10 Nov 2022 13:10:32 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51972 "EHLO
+        Thu, 10 Nov 2022 13:19:26 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56576 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229591AbiKJSKb (ORCPT
+        with ESMTP id S230083AbiKJSTZ (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Thu, 10 Nov 2022 13:10:31 -0500
-Received: from mail-oa1-f41.google.com (mail-oa1-f41.google.com [209.85.160.41])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D022865F2;
-        Thu, 10 Nov 2022 10:10:30 -0800 (PST)
-Received: by mail-oa1-f41.google.com with SMTP id 586e51a60fabf-13c569e5ff5so3005696fac.6;
-        Thu, 10 Nov 2022 10:10:30 -0800 (PST)
+        Thu, 10 Nov 2022 13:19:25 -0500
+Received: from mail-pf1-x434.google.com (mail-pf1-x434.google.com [IPv6:2607:f8b0:4864:20::434])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 200EF2CE3F;
+        Thu, 10 Nov 2022 10:19:23 -0800 (PST)
+Received: by mail-pf1-x434.google.com with SMTP id b29so2819483pfp.13;
+        Thu, 10 Nov 2022 10:19:23 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20210112;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:sender:from:to:cc:subject:date:message-id:reply-to;
+        bh=KsL/wRAm4nyOycOMfToP7JfNb8E+2RBLrLxA03bHh00=;
+        b=mYjt6pHh+COaQ5sC5npZ549zLIl71Vq2OSxs2r3jesqCVm9kc8mAYtYOG+3UHhOwtU
+         FX6FUJyIgxdB+MXvGEyEXpXPVaTUdehnx0/rA30oSJdHAD2ohCp2eyPlcuRvRQR1Kz4M
+         bM0ZNA+pnG+7JmZoTPdCxbo7AN7u0iMaysIbx8/xYTBQ1LfXO9lLXZCgWPxBS4GUW9n7
+         sLR90KcZ9x/yasviIhRphbyEwa5DjgrBzvO/HOvhwM+sxJwFfE7UI2MWMbRq3AulmVrf
+         4Q2lOKdgiZJeB8p6BMHIPZg8G+Cqrv4n5offyCNCR+LPgefP1XtEcoG8hWqZvgPbZDuE
+         xrgA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=ii2uAwWf7GjMB0IiYJRHuLlDIfmuSdb6hv0bvJzZ04k=;
-        b=hZGg/tMYHdvIq6uUvgBFQWg362cZZ65q1EovZWwFXzIy3/6Y9KCBzNShlCy8vFp6Sh
-         NoRulcDK2Rq5YzNrtKrtHpGeXjMSllIiRDsT6DAmAg6vpP8mCSvLCCfjsTSabA/oHn38
-         Le8rN7dyhHxNwLUak4JqppwGEh0CDpNMH3O3TIB3gGEZPjsE+C6qGRZr5Nh0O4KNlQbe
-         qRqHBVAoazxWbIl/NXKopfi6iQVBT/IYfQaAxqxLhr50iun71ndJImr2PfhNR/PiGSXt
-         h7rlkVIG4OigOfsy2ss93ChX9tWQYSfPQx3pCKfJxtSKj+USehDIBdeHgbyvjN+Za29P
-         V0dA==
-X-Gm-Message-State: ACrzQf2w3u31zv8OrYZhrinvU5ehdIDx9N9josXxgAEyBbU6vYqNI6zS
-        L5GWaFdx3aKi1Jjr1XdCmTwtAOsEjRCspiCl8Kg=
-X-Google-Smtp-Source: AMsMyM4vPjtYENfiSr6Uu6NX2CAOWsgWXktTtBylzHXoXDEA0dIm/3nVVQ1EvdUoMqdNRTYEisZ65gKK0POUas8u90c=
-X-Received: by 2002:a05:6870:b6a8:b0:13c:8991:2ac7 with SMTP id
- cy40-20020a056870b6a800b0013c89912ac7mr1792064oab.209.1668103830064; Thu, 10
- Nov 2022 10:10:30 -0800 (PST)
-MIME-Version: 1.0
-References: <20221109184914.1357295-1-irogers@google.com>
-In-Reply-To: <20221109184914.1357295-1-irogers@google.com>
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:sender:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=KsL/wRAm4nyOycOMfToP7JfNb8E+2RBLrLxA03bHh00=;
+        b=7/gxCdisULw0PySxnW3c5fBDfyYrz68QIT9a7f6VayrgNCiaw6acuUdUVx42VkQ0sJ
+         kGxf1sbP7S2H78LuKp1cSN56091bFF7L73bZIYIzOs1QZ203QhjwJJLnda9ErzpH7TV5
+         /PQwwu+EiZCzsImZqg/9rQr+nTQwZReOZ2Jh/g3r99tt1krE+YyZW97XqnDl3o25B9Hu
+         CFdrEowJ7CW8ZAi/SnjgEvea6HUNwuJdRtg7r87u5ACIqwGMY6epJrKRzatGgBvpAlq+
+         MBhSsnqCsXpF0wZPHoR37e89EP/JuCFxAuaWFgxY9tNZ4IUlcCF4c/mJ0cGvYTSvOS70
+         eIow==
+X-Gm-Message-State: ACrzQf15n9Cz8jy1PBqJ8sdhp0C+rIxwzt7/CVNkCAZE8N3rl6LwJTyE
+        RQFLsllvEAxLBvgRH8+hFOQ=
+X-Google-Smtp-Source: AMsMyM7EqvYuYWiTkIYaI4tqfcRdNiJvLy14s2MYuZRwtOG18reNGeSiqtUyt9spGh0HhYzUwDem4g==
+X-Received: by 2002:a63:f741:0:b0:45f:b2a7:2659 with SMTP id f1-20020a63f741000000b0045fb2a72659mr3065054pgk.132.1668104363186;
+        Thu, 10 Nov 2022 10:19:23 -0800 (PST)
+Received: from youngsil.svl.corp.google.com ([2620:15c:2d4:203:12cb:b694:b3d8:467c])
+        by smtp.gmail.com with ESMTPSA id e9-20020a170902784900b00183e2a96414sm11518744pln.121.2022.11.10.10.19.22
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 10 Nov 2022 10:19:22 -0800 (PST)
+Sender: Namhyung Kim <namhyung@gmail.com>
 From:   Namhyung Kim <namhyung@kernel.org>
-Date:   Thu, 10 Nov 2022 10:10:18 -0800
-Message-ID: <CAM9d7ciPe-uR5MdayhUEEK8a-j1QDm50qPffsod9BHdUF5Z-TA@mail.gmail.com>
-Subject: Re: [PATCH v2 00/14] Fix perf tools/lib includes
-To:     Ian Rogers <irogers@google.com>
-Cc:     Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Jiri Olsa <jolsa@kernel.org>,
-        Masahiro Yamada <masahiroy@kernel.org>,
-        Nicolas Schier <nicolas@fjasle.eu>,
-        linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org,
-        bpf@vger.kernel.org, Nick Desaulniers <ndesaulniers@google.com>,
-        Andrii Nakryiko <andrii.nakryiko@gmail.com>,
-        Stephane Eranian <eranian@google.com>
-Content-Type: text/plain; charset="UTF-8"
+To:     Arnaldo Carvalho de Melo <acme@kernel.org>,
+        Jiri Olsa <jolsa@kernel.org>
+Cc:     Ingo Molnar <mingo@kernel.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Ian Rogers <irogers@google.com>,
+        Adrian Hunter <adrian.hunter@intel.com>,
+        linux-perf-users@vger.kernel.org, Leo Yan <leo.yan@linaro.org>,
+        German Gomez <german.gomez@arm.com>,
+        Zhengjun Xing <zhengjun.xing@linux.intel.com>,
+        James Clark <james.clark@arm.com>,
+        Athira Jajeev <atrajeev@linux.vnet.ibm.com>
+Subject: [PATCHSET 00/12] perf test: Add test workloads (v2)
+Date:   Thu, 10 Nov 2022 10:19:08 -0800
+Message-Id: <20221110181920.84900-1-namhyung@kernel.org>
+X-Mailer: git-send-email 2.38.1.493.g58b659f92b-goog
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-Hi Ian,
+Hello,
 
-On Wed, Nov 9, 2022 at 10:49 AM Ian Rogers <irogers@google.com> wrote:
->
-> The previous build would add -Itools/lib and get dependencies for
-> libtraceevent, libsubcmd, libsymbol, libapi and libbpf meaning that
-> overriding these libraries would change the link time dependency but
-> the headers would erroneously come from tools/lib. Fix the build to
-> install headers and then depend on these. To reduce exposing internal
-> headers/APIs some clean up is performed. tools/lib/symbol has a
-> Makefile added, while tools/lib/api and tools/lib/subcmd have install
-> targets added. The pattern used for the dependencies in Makefile.perf
-> is modelled on libbpf.
->
-> The problem and solution were motivated by this issue and discussion:
-> https://lore.kernel.org/lkml/CAEf4BzbbOHQZUAe6iWaehKCPQAf3VC=hq657buqe2_yRKxaK-A@mail.gmail.com/
->
-> v2. Fix a MANIFEST issue for the source tar ball. Add dependencies for
->     the installed header files so that the build doesn't overtake
->     building these dependencies. Both issues reported by Arnaldo
->     Carvalho de Melo <acme@kernel.org>.
->
-> Ian Rogers (14):
->   tools lib api: Add install target
->   tools lib subcmd: Add install target
->   perf build: Install libsubcmd locally when building
->   perf build: Install libapi locally when building
->   perf build: Install libperf locally when building
->   perf build: Install libtraceevent locally when building
->   tools lib api: Add missing install headers
->   tools lib perf: Add missing install headers
->   tool lib symbol: Add Makefile/Build
->   perf build: Install libsymbol locally when building
->   perf expr: Tidy hashmap dependency
->   perf thread_map: Reduce exposure of libperf internal API
->   perf cpumap: Tidy libperf includes
->   perf build: Use tools/lib headers from install path
+In the shell tests, it needs to run a custom test workload to verify
+the behaviors.  This requires a working compiler when it runs the
+tests.  However it's not available in some test environments, making
+hard to run those tests.
 
-Acked-by: Namhyung Kim <namhyung@kernel.org>
+changes in v2)
+ * use sig_atomic_t  (Arnaldo)
+ * fix callgraph fp test  (Leo)
+ * fix bulid in sqrtloop  (German)
+ * add tags from Leo Yan
+
+So I've added the test workload to the perf binary directly, so that
+we can run them simply like:
+
+  $ perf test -w noploop
+
+And convert most of the shell tests need compilers with this workloads.
+The buildid test still requires a compiler since it needs to check
+different build options to generate different kind of build-IDs.
+
+I've checked perf test result after the changes but could not verify
+architecture-specific ones (e.g. for arm64).  It'd be nice if anyone
+can check it out.
+
+You can find it in 'perf/test-workload-v2' branch in
+
+  git://git.kernel.org/pub/scm/linux/kernel/git/namhyung/linux-perf.git
 
 Thanks,
 Namhyung
 
 
->
->  tools/lib/api/Makefile                        |  52 +++++
->  tools/lib/perf/Makefile                       |  10 +-
->  tools/lib/subcmd/Makefile                     |  49 +++++
->  tools/lib/symbol/Build                        |   1 +
->  tools/lib/symbol/Makefile                     | 115 +++++++++++
->  tools/perf/.gitignore                         |   7 +-
->  tools/perf/MANIFEST                           |   3 +-
->  tools/perf/Makefile.config                    |   2 -
->  tools/perf/Makefile.perf                      | 192 ++++++++++++++----
->  tools/perf/builtin-stat.c                     |   1 +
->  tools/perf/builtin-trace.c                    |   4 +-
->  tools/perf/tests/cpumap.c                     |   2 +-
->  tools/perf/tests/expr.c                       |   1 +
->  tools/perf/tests/openat-syscall.c             |   1 +
->  tools/perf/tests/pmu-events.c                 |   1 +
->  tools/perf/tests/thread-map.c                 |   1 +
->  tools/perf/util/Build                         |   5 -
->  tools/perf/util/auxtrace.h                    |   2 +-
->  tools/perf/util/bpf-loader.c                  |   4 -
->  tools/perf/util/bpf_counter.c                 |   2 +-
->  tools/perf/util/cpumap.c                      |   1 +
->  tools/perf/util/cpumap.h                      |   2 +-
->  tools/perf/util/evsel.c                       |   5 +-
->  tools/perf/util/evsel.h                       |   2 -
->  tools/perf/util/expr.c                        |   1 +
->  tools/perf/util/expr.h                        |   7 +-
->  tools/perf/util/metricgroup.c                 |   1 +
->  tools/perf/util/python.c                      |   6 +-
->  .../scripting-engines/trace-event-python.c    |   2 +-
->  tools/perf/util/stat-shadow.c                 |   1 +
->  tools/perf/util/stat.c                        |   4 -
->  tools/perf/util/thread_map.c                  |   1 +
->  tools/perf/util/thread_map.h                  |   2 -
->  33 files changed, 402 insertions(+), 88 deletions(-)
->  create mode 100644 tools/lib/symbol/Build
->  create mode 100644 tools/lib/symbol/Makefile
->
-> --
-> 2.38.1.431.g37b22c650d-goog
->
+Namhyung Kim (12):
+  perf test: Add -w/--workload option
+  perf test: Replace pipe test workload with noploop
+  perf test: Add 'thloop' test workload
+  perf test: Replace record test workload with thloop
+  perf test: Add 'leafloop' test workload
+  perf test: Replace arm callgraph fp test workload with leafloop
+  perf test: Add 'sqrtloop' test workload
+  perf test: Replace arm spe fork test workload with sqrtloop
+  perf test: Add 'brstack' test workload
+  perf test: Replace brstack test workload
+  perf test: Add 'datasym' test workload
+  perf test: Replace data symbol test workload with datasym
+
+ tools/perf/tests/Build                        |  2 +
+ tools/perf/tests/builtin-test.c               | 29 ++++++++
+ tools/perf/tests/shell/pipe_test.sh           | 55 +++-------------
+ tools/perf/tests/shell/record.sh              | 59 +----------------
+ .../perf/tests/shell/test_arm_callgraph_fp.sh | 34 +---------
+ tools/perf/tests/shell/test_arm_spe_fork.sh   | 44 +------------
+ tools/perf/tests/shell/test_brstack.sh        | 66 ++++---------------
+ tools/perf/tests/shell/test_data_symbol.sh    | 29 +-------
+ tools/perf/tests/tests.h                      | 27 ++++++++
+ tools/perf/tests/workloads/Build              | 12 ++++
+ tools/perf/tests/workloads/brstack.c          | 39 +++++++++++
+ tools/perf/tests/workloads/datasym.c          | 24 +++++++
+ tools/perf/tests/workloads/leafloop.c         | 34 ++++++++++
+ tools/perf/tests/workloads/noploop.c          | 32 +++++++++
+ tools/perf/tests/workloads/sqrtloop.c         | 45 +++++++++++++
+ tools/perf/tests/workloads/thloop.c           | 53 +++++++++++++++
+ 16 files changed, 327 insertions(+), 257 deletions(-)
+ create mode 100644 tools/perf/tests/workloads/Build
+ create mode 100644 tools/perf/tests/workloads/brstack.c
+ create mode 100644 tools/perf/tests/workloads/datasym.c
+ create mode 100644 tools/perf/tests/workloads/leafloop.c
+ create mode 100644 tools/perf/tests/workloads/noploop.c
+ create mode 100644 tools/perf/tests/workloads/sqrtloop.c
+ create mode 100644 tools/perf/tests/workloads/thloop.c
+
+
+base-commit: 816815b852216f3aa3a43e2ce91c5510927cd61b
+-- 
+2.38.1.493.g58b659f92b-goog
+
