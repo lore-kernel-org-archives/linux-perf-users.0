@@ -2,96 +2,97 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 87105C43217
-	for <linux-perf-users@archiver.kernel.org>; Fri, 11 Nov 2022 07:27:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C3436C433FE
+	for <linux-perf-users@archiver.kernel.org>; Fri, 11 Nov 2022 09:39:38 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231681AbiKKH1U (ORCPT
+        id S232749AbiKKJjh (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Fri, 11 Nov 2022 02:27:20 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53992 "EHLO
+        Fri, 11 Nov 2022 04:39:37 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54564 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229703AbiKKH1S (ORCPT
+        with ESMTP id S231167AbiKKJjg (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Fri, 11 Nov 2022 02:27:18 -0500
-Received: from mail-wr1-x42e.google.com (mail-wr1-x42e.google.com [IPv6:2a00:1450:4864:20::42e])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6BEB6657D9;
-        Thu, 10 Nov 2022 23:27:17 -0800 (PST)
-Received: by mail-wr1-x42e.google.com with SMTP id o4so5337171wrq.6;
-        Thu, 10 Nov 2022 23:27:17 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20210112;
-        h=message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=88ryav6TjdsBnuYHNgOaRaKfsuTkckPVXqoY4uilu+s=;
-        b=pL5ImJSeUAk8JdsH1VE9cmKYRBNoP5wd5R1gm7DPnQb7kKZMfjkD4Qa7PQ7jSdQmnl
-         XcyV1uA3Ir2iK/sb8Tjh3fFqSNGHxlnZUuFgln+Q9LTf5LNOe5S+W5cryUHTu1PH6vZS
-         g6vpiNbCLS6iTaffhffTVIZzuBKcQEi2EObpdXbff0yHCgiIvRAn4PFPm/6kvmXBTbmg
-         /AxRRFTqqj4L4I41BOQA6d2QkRoqqMMgwDywATcOmV1g1lhVLjFFqAbCcO16pL4qjd//
-         Dtlt1+36ujwYXAkqaW3LIChu19NRm+viZ7NrNv3a8zxzQuw6cm9JREXWRwUVaXiZuwP5
-         8uTA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=88ryav6TjdsBnuYHNgOaRaKfsuTkckPVXqoY4uilu+s=;
-        b=tXEV+ZQxsO1cp177Z2pbDgUbAsznDKp+3PY2fxheZkEc1N7vWT+d7l7NUoiNvLweOT
-         Wyw8DpNLqIN6q/Op60vrnrbkjtA/0s/nbxVl87hDW3DGTwOp6HqlX8mlwBa5h9uXSnvB
-         0dPQYWp4EfSVgjW2kDzEWTnwZwFGc64RuEoAobOR8x91wpUq/ZAVmEOOvtKB5BMSOz+1
-         qalYnZ0YZX+BCTTM6eUmWTJeOjtstjtdos7QclFzGAbWmT52I/G3JBrgw7S0mGSyiP/A
-         Uw7pTrZtLyuTJdTrDFJuhdRtf6A8I8/YcuX3wnwikchm5VkXaJL2VDrJIlYIHd4OogG2
-         CkOQ==
-X-Gm-Message-State: ANoB5pmqsnromWa0xPQO6Mm7V5zYMTgfUG97h7PSfjU9ZoL4lPTroQdz
-        GDVSTN6OQlcD2Ecaiv79rtE=
-X-Google-Smtp-Source: AA0mqf6xxlopbmCifV1vDxNwLYg89KRXWLRf6Da8Zp1T0pn5pzhTFhh3FoGdsb0EA6JDcILxxJxiBQ==
-X-Received: by 2002:a5d:4b8c:0:b0:236:e52d:b0d7 with SMTP id b12-20020a5d4b8c000000b00236e52db0d7mr421841wrt.46.1668151635760;
-        Thu, 10 Nov 2022 23:27:15 -0800 (PST)
-Received: from felia.fritz.box (200116b8262ac400710df4e5ad386bbd.dip.versatel-1u1.de. [2001:16b8:262a:c400:710d:f4e5:ad38:6bbd])
-        by smtp.gmail.com with ESMTPSA id o15-20020a05600c510f00b003c6d21a19a0sm2101690wms.29.2022.11.10.23.27.14
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 10 Nov 2022 23:27:15 -0800 (PST)
-From:   Lukas Bulwahn <lukas.bulwahn@gmail.com>
-To:     Peter Zijlstra <peterz@infradead.org>,
-        Ravi Bangoria <ravi.bangoria@amd.com>,
-        linux-perf-users@vger.kernel.org, bpf@vger.kernel.org
-Cc:     Ingo Molnar <mingo@redhat.com>,
-        Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Jiri Olsa <jolsa@kernel.org>,
+        Fri, 11 Nov 2022 04:39:36 -0500
+Received: from foss.arm.com (foss.arm.com [217.140.110.172])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTP id 8074B654FF;
+        Fri, 11 Nov 2022 01:39:34 -0800 (PST)
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 96CB81FB;
+        Fri, 11 Nov 2022 01:39:40 -0800 (PST)
+Received: from [10.57.69.19] (unknown [10.57.69.19])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 9E17A3F534;
+        Fri, 11 Nov 2022 01:39:32 -0800 (PST)
+Message-ID: <a396936c-7df6-8fb7-320e-435b852d0702@arm.com>
+Date:   Fri, 11 Nov 2022 09:39:30 +0000
+MIME-Version: 1.0
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
+ Thunderbird/102.2.2
+Subject: Re: [PATCH 10/12] perf test: Replace brstack test workload
+To:     German Gomez <german.gomez@arm.com>,
         Namhyung Kim <namhyung@kernel.org>,
-        kernel-janitors@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Lukas Bulwahn <lukas.bulwahn@gmail.com>
-Subject: [PATCH] perf: remove unneeded assignment in find_get_context()
-Date:   Fri, 11 Nov 2022 08:26:56 +0100
-Message-Id: <20221111072656.14591-1-lukas.bulwahn@gmail.com>
-X-Mailer: git-send-email 2.17.1
+        Arnaldo Carvalho de Melo <acme@kernel.org>,
+        Jiri Olsa <jolsa@kernel.org>
+Cc:     Ingo Molnar <mingo@kernel.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Ian Rogers <irogers@google.com>,
+        Adrian Hunter <adrian.hunter@intel.com>,
+        linux-perf-users@vger.kernel.org, Leo Yan <leo.yan@linaro.org>,
+        Zhengjun Xing <zhengjun.xing@linux.intel.com>,
+        Athira Jajeev <atrajeev@linux.vnet.ibm.com>
+References: <20221110181920.84900-1-namhyung@kernel.org>
+ <20221110181920.84900-11-namhyung@kernel.org>
+ <1036a42b-b438-67b2-c4ca-0e440d266d6d@arm.com>
+ <a9a6eabf-e102-b7f8-92b4-48c2b77e013e@arm.com>
+Content-Language: en-US
+From:   James Clark <james.clark@arm.com>
+In-Reply-To: <a9a6eabf-e102-b7f8-92b4-48c2b77e013e@arm.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-Commit bd2756811766 ("perf: Rewrite core context handling") refactors
-find_get_context() and with that, the err variable does not need to be
-initialized to -EINVAL, as it is set again before all further uses.
 
-Remove this unneeded assignment. No functional change.
 
-Signed-off-by: Lukas Bulwahn <lukas.bulwahn@gmail.com>
----
- kernel/events/core.c | 1 -
- 1 file changed, 1 deletion(-)
+On 10/11/2022 19:31, German Gomez wrote:
+> 
+> On 10/11/2022 19:20, German Gomez wrote:
+>> Hi Namhyung, thanks for doing the refactor, it looks a lot cleaner
+>>
+>> On 10/11/2022 18:19, Namhyung Kim wrote:
+>>> So that it can get rid of requirement of a compiler.  Also rename the
+>>> symbols to match with the perf test workload.
+>>>
+>>> Cc: German Gomez <german.gomez@arm.com>
+>>> Signed-off-by: Namhyung Kim <namhyung@kernel.org>
+>>> ---
+>>>  tools/perf/tests/shell/test_brstack.sh | 66 +++++---------------------
+>>>  1 file changed, 12 insertions(+), 54 deletions(-)
+>>>
+>>> diff --git a/tools/perf/tests/shell/test_brstack.sh b/tools/perf/tests/shell/test_brstack.sh
+>>> index ec801cffae6b..a8a182dea25f 100755
+>>> --- a/tools/perf/tests/shell/test_brstack.sh
+>>> +++ b/tools/perf/tests/shell/test_brstack.sh
+>>> @@ -4,18 +4,12 @@
+>>>  # SPDX-License-Identifier: GPL-2.0
+>>>  # German Gomez <german.gomez@arm.com>, 2022
+>>>  
+>>> -# we need a C compiler to build the test programs
+>>> -# so bail if none is found
+>>> -if ! [ -x "$(command -v cc)" ]; then
+>>> -	echo "failed: no compiler, install gcc"
+>>> -	exit 2
+>>> -fi
+>>> -
+>>>  # skip the test if the hardware doesn't support branch stack sampling
+>>>  # and if the architecture doesn't support filter types: any,save_type,u
+>>>  perf record -b -o- -B --branch-filter any,save_type,u true > /dev/null 2>&1 || exit 2
+> 
+> Hmm I was wondering why this command was failing for me and always skipping the test. Is the -b conflicting with the --branch-filter here?
+> 
 
-diff --git a/kernel/events/core.c b/kernel/events/core.c
-index c7157f8d8d2f..836f8fbb9980 100644
---- a/kernel/events/core.c
-+++ b/kernel/events/core.c
-@@ -4735,7 +4735,6 @@ find_get_context(struct task_struct *task, struct perf_event *event)
- 		return ctx;
- 	}
- 
--	err = -EINVAL;
- retry:
- 	ctx = perf_lock_task_context(task, &flags);
- 	if (ctx) {
--- 
-2.17.1
+Yes, the fix is here [1], but I don't see it on git yet.
 
+[1]:
+https://lore.kernel.org/linux-perf-users/Y2rDhkyn9ta5skDm@kernel.org/T/#t
