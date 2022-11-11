@@ -2,104 +2,107 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A452FC433FE
-	for <linux-perf-users@archiver.kernel.org>; Fri, 11 Nov 2022 09:43:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8282FC433FE
+	for <linux-perf-users@archiver.kernel.org>; Fri, 11 Nov 2022 10:40:12 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233369AbiKKJnT (ORCPT
+        id S232506AbiKKKkL (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Fri, 11 Nov 2022 04:43:19 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57444 "EHLO
+        Fri, 11 Nov 2022 05:40:11 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45942 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S233637AbiKKJnP (ORCPT
+        with ESMTP id S233915AbiKKKkH (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Fri, 11 Nov 2022 04:43:15 -0500
-Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTP id 4DDED7018F;
-        Fri, 11 Nov 2022 01:43:14 -0800 (PST)
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 453711FB;
-        Fri, 11 Nov 2022 01:43:20 -0800 (PST)
-Received: from [10.57.69.19] (unknown [10.57.69.19])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 4D5803F73D;
-        Fri, 11 Nov 2022 01:43:12 -0800 (PST)
-Message-ID: <896a2ff0-d6c4-3695-7b01-102cd6cf040c@arm.com>
-Date:   Fri, 11 Nov 2022 09:43:10 +0000
+        Fri, 11 Nov 2022 05:40:07 -0500
+Received: from szxga02-in.huawei.com (szxga02-in.huawei.com [45.249.212.188])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 31803654E5;
+        Fri, 11 Nov 2022 02:40:06 -0800 (PST)
+Received: from dggpemm500023.china.huawei.com (unknown [172.30.72.56])
+        by szxga02-in.huawei.com (SkyGuard) with ESMTP id 4N7wFN1BB9zRp1W;
+        Fri, 11 Nov 2022 18:39:52 +0800 (CST)
+Received: from dggpemm500013.china.huawei.com (7.185.36.172) by
+ dggpemm500023.china.huawei.com (7.185.36.83) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2375.31; Fri, 11 Nov 2022 18:40:04 +0800
+Received: from ubuntu1804.huawei.com (10.67.175.36) by
+ dggpemm500013.china.huawei.com (7.185.36.172) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2375.31; Fri, 11 Nov 2022 18:40:04 +0800
+From:   Chen Zhongjin <chenzhongjin@huawei.com>
+To:     <linux-kernel@vger.kernel.org>, <linux-perf-users@vger.kernel.org>
+CC:     <peterz@infradead.org>, <mingo@redhat.com>, <acme@kernel.org>,
+        <mark.rutland@arm.com>, <alexander.shishkin@linux.intel.com>,
+        <jolsa@kernel.org>, <namhyung@kernel.org>,
+        <chenzhongjin@huawei.com>
+Subject: [PATCH] perf: Fix possible memleak in pmu_dev_alloc()
+Date:   Fri, 11 Nov 2022 18:36:53 +0800
+Message-ID: <20221111103653.91058-1-chenzhongjin@huawei.com>
+X-Mailer: git-send-email 2.17.1
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
- Thunderbird/102.2.2
-Subject: Re: [PATCH 10/12] perf test: Replace brstack test workload
-Content-Language: en-US
-From:   James Clark <james.clark@arm.com>
-To:     German Gomez <german.gomez@arm.com>,
-        Namhyung Kim <namhyung@kernel.org>,
-        Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Jiri Olsa <jolsa@kernel.org>
-Cc:     Ingo Molnar <mingo@kernel.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Ian Rogers <irogers@google.com>,
-        Adrian Hunter <adrian.hunter@intel.com>,
-        linux-perf-users@vger.kernel.org, Leo Yan <leo.yan@linaro.org>,
-        Zhengjun Xing <zhengjun.xing@linux.intel.com>,
-        Athira Jajeev <atrajeev@linux.vnet.ibm.com>
-References: <20221110181920.84900-1-namhyung@kernel.org>
- <20221110181920.84900-11-namhyung@kernel.org>
- <1036a42b-b438-67b2-c4ca-0e440d266d6d@arm.com>
- <a9a6eabf-e102-b7f8-92b4-48c2b77e013e@arm.com>
- <a396936c-7df6-8fb7-320e-435b852d0702@arm.com>
-In-Reply-To: <a396936c-7df6-8fb7-320e-435b852d0702@arm.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain
+X-Originating-IP: [10.67.175.36]
+X-ClientProxiedBy: dggems706-chm.china.huawei.com (10.3.19.183) To
+ dggpemm500013.china.huawei.com (7.185.36.172)
+X-CFilter-Loop: Reflected
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
+In pmu_dev_alloc(), when dev_set_name() failed, it will goto free_dev
+and call put_device(pmu->dev) to release it.
+However pmu->dev->release is assigned after this, which makes warning
+and memleak.
+Call dev_set_name() after pmu->dev->release = pmu_dev_release to fix it.
 
+  Device '(null)' does not have a release() function...
+  WARNING: CPU: 2 PID: 441 at drivers/base/core.c:2332 device_release+0x1b9/0x240
+  ...
+  Call Trace:
+    <TASK>
+    kobject_put+0x17f/0x460
+    put_device+0x20/0x30
+    pmu_dev_alloc+0x152/0x400
+    perf_pmu_register+0x96b/0xee0
+    ...
+  kmemleak: 1 new suspected memory leaks (see /sys/kernel/debug/kmemleak)
+  unreferenced object 0xffff888014759000 (size 2048):
+    comm "modprobe", pid 441, jiffies 4294931444 (age 38.332s)
+    backtrace:
+      [<0000000005aed3b4>] kmalloc_trace+0x27/0x110
+      [<000000006b38f9b8>] pmu_dev_alloc+0x50/0x400
+      [<00000000735f17be>] perf_pmu_register+0x96b/0xee0
+      [<00000000e38477f1>] 0xffffffffc0ad8603
+      [<000000004e162216>] do_one_initcall+0xd0/0x4e0
+      ...
 
-On 11/11/2022 09:39, James Clark wrote:
-> 
-> 
-> On 10/11/2022 19:31, German Gomez wrote:
->>
->> On 10/11/2022 19:20, German Gomez wrote:
->>> Hi Namhyung, thanks for doing the refactor, it looks a lot cleaner
->>>
->>> On 10/11/2022 18:19, Namhyung Kim wrote:
->>>> So that it can get rid of requirement of a compiler.  Also rename the
->>>> symbols to match with the perf test workload.
->>>>
->>>> Cc: German Gomez <german.gomez@arm.com>
->>>> Signed-off-by: Namhyung Kim <namhyung@kernel.org>
->>>> ---
->>>>  tools/perf/tests/shell/test_brstack.sh | 66 +++++---------------------
->>>>  1 file changed, 12 insertions(+), 54 deletions(-)
->>>>
->>>> diff --git a/tools/perf/tests/shell/test_brstack.sh b/tools/perf/tests/shell/test_brstack.sh
->>>> index ec801cffae6b..a8a182dea25f 100755
->>>> --- a/tools/perf/tests/shell/test_brstack.sh
->>>> +++ b/tools/perf/tests/shell/test_brstack.sh
->>>> @@ -4,18 +4,12 @@
->>>>  # SPDX-License-Identifier: GPL-2.0
->>>>  # German Gomez <german.gomez@arm.com>, 2022
->>>>  
->>>> -# we need a C compiler to build the test programs
->>>> -# so bail if none is found
->>>> -if ! [ -x "$(command -v cc)" ]; then
->>>> -	echo "failed: no compiler, install gcc"
->>>> -	exit 2
->>>> -fi
->>>> -
->>>>  # skip the test if the hardware doesn't support branch stack sampling
->>>>  # and if the architecture doesn't support filter types: any,save_type,u
->>>>  perf record -b -o- -B --branch-filter any,save_type,u true > /dev/null 2>&1 || exit 2
->>
->> Hmm I was wondering why this command was failing for me and always skipping the test. Is the -b conflicting with the --branch-filter here?
->>
-> 
-> Yes, the fix is here [1], but I don't see it on git yet.
+Fixes: abe43400579d ("perf: Sysfs enumeration")
+Signed-off-by: Chen Zhongjin <chenzhongjin@huawei.com>
+---
+ kernel/events/core.c | 8 +++++---
+ 1 file changed, 5 insertions(+), 3 deletions(-)
 
-Oh sorry it's on perf/urgent. I wasn't looking there.
+diff --git a/kernel/events/core.c b/kernel/events/core.c
+index 4ec3717003d5..baf0f33b06af 100644
+--- a/kernel/events/core.c
++++ b/kernel/events/core.c
+@@ -11148,13 +11148,15 @@ static int pmu_dev_alloc(struct pmu *pmu)
+ 
+ 	pmu->dev->groups = pmu->attr_groups;
+ 	device_initialize(pmu->dev);
+-	ret = dev_set_name(pmu->dev, "%s", pmu->name);
+-	if (ret)
+-		goto free_dev;
+ 
+ 	dev_set_drvdata(pmu->dev, pmu);
+ 	pmu->dev->bus = &pmu_bus;
+ 	pmu->dev->release = pmu_dev_release;
++
++	ret = dev_set_name(pmu->dev, "%s", pmu->name);
++	if (ret)
++		goto free_dev;
++
+ 	ret = device_add(pmu->dev);
+ 	if (ret)
+ 		goto free_dev;
+-- 
+2.17.1
 
-> 
-> [1]:
-> https://lore.kernel.org/linux-perf-users/Y2rDhkyn9ta5skDm@kernel.org/T/#t
