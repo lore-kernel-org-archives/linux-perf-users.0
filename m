@@ -2,55 +2,55 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9F315C43219
-	for <linux-perf-users@archiver.kernel.org>; Sat, 12 Nov 2022 03:23:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D69C9C433FE
+	for <linux-perf-users@archiver.kernel.org>; Sat, 12 Nov 2022 03:23:04 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S234325AbiKLDW5 (ORCPT
+        id S234477AbiKLDXC (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Fri, 11 Nov 2022 22:22:57 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54936 "EHLO
+        Fri, 11 Nov 2022 22:23:02 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55002 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S234250AbiKLDW4 (ORCPT
+        with ESMTP id S234425AbiKLDW7 (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Fri, 11 Nov 2022 22:22:56 -0500
-Received: from mail-pj1-x1031.google.com (mail-pj1-x1031.google.com [IPv6:2607:f8b0:4864:20::1031])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 88F536BDEF;
-        Fri, 11 Nov 2022 19:22:55 -0800 (PST)
-Received: by mail-pj1-x1031.google.com with SMTP id r61-20020a17090a43c300b00212f4e9cccdso9259941pjg.5;
-        Fri, 11 Nov 2022 19:22:55 -0800 (PST)
+        Fri, 11 Nov 2022 22:22:59 -0500
+Received: from mail-pg1-x531.google.com (mail-pg1-x531.google.com [IPv6:2607:f8b0:4864:20::531])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2B9AD6CA1D;
+        Fri, 11 Nov 2022 19:22:59 -0800 (PST)
+Received: by mail-pg1-x531.google.com with SMTP id o13so5795786pgu.7;
+        Fri, 11 Nov 2022 19:22:59 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20210112;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:sender:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=LQLHI1VILRgMSu/jKiHmF9iPDf4ibjWi9PVbqPg9gSo=;
-        b=UsCcGGDGGhfTo+D44aLiaSYlWe2328dlot3oI5NEGpGnSb++qvwFNLDtlB+UVBqMML
-         hhuFPLzTUf0ejOG1uhfd2GVH2OW1/J/haXHpDOh2z5HFmTZ5Y1lkWietE5VrqNlYgvdn
-         Cece/NY/SjugMB6Adrg6ZqsR3YZJltAOybC5zSAZSmSK2VsOIQqMH1C58NHJXyGzOIGm
-         pjd456XTbMWqTL9IH6g9+fmcEQV409Q+VyFaVePZq71r4R3hfGvzyBGU+xLVY7J7QLy9
-         bYI/LLd8uHPO1arOSrNvreagsxk2gBTsfBWt2vYa7kuHHitCl749LNwWCov+5EnC9MV9
-         KQ+Q==
+        bh=mRuX+j+EX9l8i8hDmmemd16C6a6HV399XyOmvJyZheQ=;
+        b=eCmqycyV6SF4+MBfj8mZjtXU83WS4vKKwxamThMHBx5bhoGOBddHio63RFoG1x/S6q
+         dduEPCFh01zoEp6IVarbUn5JnQhJejBfO5ppqWTHXHQl5drY0pxIDRtZgdKAxuuwkIJq
+         0vUkrfCXO+f+KeIf9WJ2UCfW7T8/2RnrOGw+bBS2R+5rs6zHezmlhRPOimkiiHLdOyip
+         kTQPUFtBQJgC77VAgAxF56CH6ITFZ8hV4HWQWPJsD9rje8WvhIfmt3nWUIbx+VbpdqCc
+         JBt8x8P0CKxwmOTPf5vzF1EWE4PQxoIC6zmDQH07uOQG2SxDDFh2nWSSS5A/H55+Jy+N
+         VD8w==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:sender:x-gm-message-state:from
          :to:cc:subject:date:message-id:reply-to;
-        bh=LQLHI1VILRgMSu/jKiHmF9iPDf4ibjWi9PVbqPg9gSo=;
-        b=I8K9Mh3/56fWmHSV6vaKPfoyuSEydBYsEYb5uFu7Q6DBUSHVJAX1+0bqjtHoQJiPqd
-         E1HlVBvdL2p37tdtouNR/mFlwa+7QVtB2iW+eTuefYOlSLc5SzXdtlII+j+vxOQVCWTC
-         /w/jodvh07feuSO9ZOgrymwJABri9UmViInNOmSyd+Jobf4UwEorvyEIYPX4WaXt78Ff
-         8imMll0G3N9W0hs979tnTDCOJdYAjDX3N7qjKJdHwpQClP60Etpi58wKjkIe090gAuc3
-         T9ujCggjIoKEXDUytJPzwD03gUcoPp+btrATy+AA/BsxpkbYxxqPQE+e5rLbN+piwXgu
-         CF6A==
-X-Gm-Message-State: ANoB5pk45tgBXJDKVJJ60qHnN0YvIuwycJWSXiwwCqJIgs2ySrZuYi1q
-        Gt98HK5Olv7JzbPqmCPEirU=
-X-Google-Smtp-Source: AA0mqf4d2B9NIg7YT8D6UyzsqIvD7Y0hIy+p6nFTjTI3gS+QU4u6gt7QMEIJzaRVAeoLJ2hV1m9f+Q==
-X-Received: by 2002:a17:902:c651:b0:187:3bc8:fc56 with SMTP id s17-20020a170902c65100b001873bc8fc56mr4956125pls.83.1668223374900;
-        Fri, 11 Nov 2022 19:22:54 -0800 (PST)
+        bh=mRuX+j+EX9l8i8hDmmemd16C6a6HV399XyOmvJyZheQ=;
+        b=PfMltaOb7ltalhSghgXoEJ+krMOldG+CQfutiSaaS15SxB2BB/1ckdXtWpU+/FvgYV
+         5f4EQz+ue6nN8iPy+oYMvASEC9x49X3dhPdzJHWnPCEISgDMgt0vNjIXwQ72s3OXIIwQ
+         /mS2UZ0U+/usME12ryHmpquwZfyh3/+eVNtbJunWwTaWrO5Xv1rzWBTpudMiKqNm0kgO
+         yuBpR/qJ1FFGk97P81zur9e6Ht/LQ2QjmTGgtBc0T/or6onsYveZHIH9EnINpdXjP1ci
+         tolux5t5vRUr+pyrtJCevP3AltHjZeNw2oNmXMnFziun3jpHpxouBjjg1Ur5uvmXel8h
+         9BYQ==
+X-Gm-Message-State: ANoB5pnc2NG23EvtRy8Nyi7n8Z6/arDbbaoE1Ip2ls0rwYG3IjNN2nwO
+        YlO1OKFDHbb/ME8N7N6DENSRGlFRoXQ=
+X-Google-Smtp-Source: AA0mqf6RGm5DjGG9GMLCY75uITjGxkEM4Mqa16cxF9++STXV2UR+3A8KGDgUgmcCm1lvrQsS1KHv7w==
+X-Received: by 2002:a65:498c:0:b0:46f:918e:7338 with SMTP id r12-20020a65498c000000b0046f918e7338mr4179286pgs.8.1668223378601;
+        Fri, 11 Nov 2022 19:22:58 -0800 (PST)
 Received: from balhae.roam.corp.google.com ([2607:fb90:27dc:8408:33d7:3b01:eee1:84b])
-        by smtp.gmail.com with ESMTPSA id ij25-20020a170902ab5900b00186f0f59d1esm2434552plb.192.2022.11.11.19.22.53
+        by smtp.gmail.com with ESMTPSA id ij25-20020a170902ab5900b00186f0f59d1esm2434552plb.192.2022.11.11.19.22.56
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 11 Nov 2022 19:22:54 -0800 (PST)
+        Fri, 11 Nov 2022 19:22:58 -0800 (PST)
 Sender: Namhyung Kim <namhyung@gmail.com>
 From:   Namhyung Kim <namhyung@kernel.org>
 To:     Arnaldo Carvalho de Melo <acme@kernel.org>,
@@ -64,9 +64,9 @@ Cc:     Ingo Molnar <mingo@kernel.org>,
         Kan Liang <kan.liang@linux.intel.com>,
         Zhengjun Xing <zhengjun.xing@linux.intel.com>,
         James Clark <james.clark@arm.com>
-Subject: [PATCH 04/11] perf stat: Increase metric length to align outputs
-Date:   Fri, 11 Nov 2022 19:22:37 -0800
-Message-Id: <20221112032244.1077370-5-namhyung@kernel.org>
+Subject: [PATCH 06/11] perf stat: Do not indent headers for JSON
+Date:   Fri, 11 Nov 2022 19:22:39 -0800
+Message-Id: <20221112032244.1077370-7-namhyung@kernel.org>
 X-Mailer: git-send-email 2.38.1.493.g58b659f92b-goog
 In-Reply-To: <20221112032244.1077370-1-namhyung@kernel.org>
 References: <20221112032244.1077370-1-namhyung@kernel.org>
@@ -76,62 +76,17 @@ Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-When perf stat is called with very detailed events, the output doesn't
-align well like below:
+Currently --metric-only with --json indents header lines.  This is not
+needed for JSON.
 
-  $ sudo perf stat -a -ddd sleep 1
+  $ perf stat -aA --metric-only -j true
+        {"unit" : "GHz"}{"unit" : "insn per cycle"}{"unit" : "branch-misses of all branches"}
+  {"cpu" : "0", {"metric-value" : "0.101"}{"metric-value" : "0.86"}{"metric-value" : "1.91"}
+  {"cpu" : "1", {"metric-value" : "0.102"}{"metric-value" : "0.87"}{"metric-value" : "2.02"}
+  {"cpu" : "2", {"metric-value" : "0.085"}{"metric-value" : "1.02"}{"metric-value" : "1.69"}
+  ...
 
-   Performance counter stats for 'system wide':
-
-          8,020.23 msec cpu-clock                        #    7.997 CPUs utilized
-             3,970      context-switches                 #  494.998 /sec
-               169      cpu-migrations                   #   21.072 /sec
-               586      page-faults                      #   73.065 /sec
-       649,568,060      cycles                           #    0.081 GHz                      (30.42%)
-       304,044,345      instructions                     #    0.47  insn per cycle           (38.40%)
-        60,313,022      branches                         #    7.520 M/sec                    (38.89%)
-         2,766,919      branch-misses                    #    4.59% of all branches          (39.26%)
-        74,422,951      L1-dcache-loads                  #    9.279 M/sec                    (39.39%)
-         8,025,568      L1-dcache-load-misses            #   10.78% of all L1-dcache accesses  (39.22%)
-         3,314,995      LLC-loads                        #  413.329 K/sec                    (30.83%)
-         1,225,619      LLC-load-misses                  #   36.97% of all LL-cache accesses  (30.45%)
-   <not supported>      L1-icache-loads
-        20,420,493      L1-icache-load-misses            #    0.00% of all L1-icache accesses  (30.29%)
-        58,017,947      dTLB-loads                       #    7.234 M/sec                    (30.37%)
-           704,677      dTLB-load-misses                 #    1.21% of all dTLB cache accesses  (30.27%)
-           234,225      iTLB-loads                       #   29.204 K/sec                    (30.29%)
-           417,166      iTLB-load-misses                 #  178.10% of all iTLB cache accesses  (30.32%)
-   <not supported>      L1-dcache-prefetches
-   <not supported>      L1-dcache-prefetch-misses
-
-       1.002947355 seconds time elapsed
-
-Increase the METRIC_LEN by 3 so that it can align properly.
-
-  $ sudo ./perf stat -a -ddd true
-
-   Performance counter stats for 'system wide':
-
-              233.70 msec cpu-clock                        #   11.714 CPUs utilized
-                 320      context-switches                 #    1.369 K/sec
-                  31      cpu-migrations                   #  132.648 /sec
-                 482      page-faults                      #    2.062 K/sec
-          38,414,140      cycles                           #    0.164 GHz                         (6.65%)
-          13,656,335      instructions                     #    0.36  insn per cycle              (20.31%)
-           3,594,871      branches                         #   15.382 M/sec                       (34.06%)
-             124,071      branch-misses                    #    3.45% of all branches             (47.74%)
-          14,016,847      L1-dcache-loads                  #   59.977 M/sec                       (61.42%)
-             789,534      L1-dcache-load-misses            #    5.63% of all L1-dcache accesses   (65.98%)
-             315,353      LLC-loads                        #    1.349 M/sec                       (47.13%)
-             171,244      LLC-load-misses                  #   54.30% of all LL-cache accesses    (41.98%)
-     <not supported>      L1-icache-loads
-           2,591,299      L1-icache-load-misses            #    0.00% of all L1-icache accesses   (36.10%)
-          60,421,987      dTLB-loads                       #  258.543 M/sec                       (27.47%)
-             123,843      dTLB-load-misses                 #    0.20% of all dTLB cache accesses  (18.88%)
-              38,289      iTLB-loads                       #  163.837 K/sec                       (10.34%)
-              21,631      iTLB-load-misses                 #   56.49% of all iTLB cache accesses  (2.53%)
-     <not supported>      L1-dcache-prefetches
-     <not supported>      L1-dcache-prefetch-misses
+Note that the other lines are broken JSON, but it will be handled later.
 
 Acked-by: Ian Rogers <irogers@google.com>
 Signed-off-by: Namhyung Kim <namhyung@kernel.org>
@@ -140,18 +95,18 @@ Signed-off-by: Namhyung Kim <namhyung@kernel.org>
  1 file changed, 1 insertion(+), 1 deletion(-)
 
 diff --git a/tools/perf/util/stat-display.c b/tools/perf/util/stat-display.c
-index 96ad0c71adc2..3ddc159df4b2 100644
+index 3ddc159df4b2..dbd3ba380c9f 100644
 --- a/tools/perf/util/stat-display.c
 +++ b/tools/perf/util/stat-display.c
-@@ -218,7 +218,7 @@ struct outstate {
- 	struct evsel *evsel;
- };
+@@ -851,7 +851,7 @@ static void print_metric_headers(struct perf_stat_config *config,
+ 	if (prefix && !config->json_output)
+ 		fprintf(config->output, "%s", prefix);
  
--#define METRIC_LEN  35
-+#define METRIC_LEN  38
- 
- static void new_line_std(struct perf_stat_config *config __maybe_unused,
- 			 void *ctx)
+-	if (!config->csv_output && !no_indent)
++	if (!config->csv_output && !config->json_output && !no_indent)
+ 		fprintf(config->output, "%*s",
+ 			aggr_header_lens[config->aggr_mode], "");
+ 	if (config->csv_output) {
 -- 
 2.38.1.493.g58b659f92b-goog
 
