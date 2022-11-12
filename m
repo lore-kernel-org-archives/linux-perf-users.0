@@ -2,115 +2,90 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9E408C4332F
-	for <linux-perf-users@archiver.kernel.org>; Sat, 12 Nov 2022 03:23:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C111CC4332F
+	for <linux-perf-users@archiver.kernel.org>; Sat, 12 Nov 2022 15:15:24 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S234736AbiKLDXs (ORCPT
+        id S230447AbiKLPPW (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Fri, 11 Nov 2022 22:23:48 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55398 "EHLO
+        Sat, 12 Nov 2022 10:15:22 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52516 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S234660AbiKLDX3 (ORCPT
+        with ESMTP id S230170AbiKLPPV (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Fri, 11 Nov 2022 22:23:29 -0500
-Received: from mail-pl1-x635.google.com (mail-pl1-x635.google.com [IPv6:2607:f8b0:4864:20::635])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4C15A76FAA;
-        Fri, 11 Nov 2022 19:23:08 -0800 (PST)
-Received: by mail-pl1-x635.google.com with SMTP id j12so5688681plj.5;
-        Fri, 11 Nov 2022 19:23:08 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20210112;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:sender:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=cbdcYDsOPafiPSVZSATOaxGNpCzEo4xQfFV4O82eayw=;
-        b=f6lJ8r26ECT6R8yo7oa+mPmSnf0+R4JS32T/9zbBThdOT5XMFIW+6NByrFFmsWgTS1
-         Q6Y0NYtG5bR2FrV8ILv91bYmzP9MTKP/948C8gEuVncwxRMqTa5fZmUzrSYZN7siQ04v
-         qI176pCpR2V5bVy5HEUXDBtBujLLF/jKHMnS7Uj6u/Cpx/GsNiF4ar5ls2fS88D0gK63
-         7ihLLuh0jOZaT0BF17sqY8w1YQuM01a3STrMQN8KBvO9WshWdxvbQQYOYJmeH7FT2b7d
-         ZxB1ZoNDWfhced6wuJbm7ip71wKogU354ovn7EMzA+qe1PkdDkx1G9l8a8P9WGs0B3Ll
-         OXYg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:sender:x-gm-message-state:from
-         :to:cc:subject:date:message-id:reply-to;
-        bh=cbdcYDsOPafiPSVZSATOaxGNpCzEo4xQfFV4O82eayw=;
-        b=0qL7SBX97FiTstx1paFl2ZzmdDWKmFBaBEgEQtU5acARmsDWpvD5HO7d0uM31y31yq
-         zS0T5+Umunxun/SbxSd2xSPhAl658qkVsm43zSY6inUYuttxjq5NHooNl8G/J14/a04p
-         /MslJ7OYTmnnlXfIDwPL7WZ3QUxHIB2wJEk3jz2IWasOOS4m6fffUDg4kwmgh52mudBj
-         r3xLBpNwvAmG/0lVic4QzD3LevMj6m68AOum0myC/VsZGVFjvRvQdeSl9E3UU6/ZTAYb
-         N0t+2vLJ/TXdlU8QeSp7VmaVHXlcJHZL0RZHpGytmgHSaJfZxs6QDBqnLtxL+ecOfcst
-         KfGA==
-X-Gm-Message-State: ANoB5pnzHkDqDi9SXFHc/Jz57R8VFAJdRdfCOVDD6SEtWyei/PKQHQIZ
-        xJssqW9htS5E+2dZ7i8UzZg=
-X-Google-Smtp-Source: AA0mqf61+i7dWsxeI0VjYMJSQm11smPrJi5IfQVjytbzw/XE/DkW8u3/CXChBl5Y3AioXJ10E0uPUw==
-X-Received: by 2002:a17:903:c3:b0:186:8431:ece3 with SMTP id x3-20020a17090300c300b001868431ece3mr5486622plc.8.1668223387781;
-        Fri, 11 Nov 2022 19:23:07 -0800 (PST)
-Received: from balhae.roam.corp.google.com ([2607:fb90:27dc:8408:33d7:3b01:eee1:84b])
-        by smtp.gmail.com with ESMTPSA id ij25-20020a170902ab5900b00186f0f59d1esm2434552plb.192.2022.11.11.19.23.06
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 11 Nov 2022 19:23:07 -0800 (PST)
-Sender: Namhyung Kim <namhyung@gmail.com>
-From:   Namhyung Kim <namhyung@kernel.org>
-To:     Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Jiri Olsa <jolsa@kernel.org>
-Cc:     Ingo Molnar <mingo@kernel.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Ian Rogers <irogers@google.com>,
-        Adrian Hunter <adrian.hunter@intel.com>,
-        linux-perf-users@vger.kernel.org,
-        Kan Liang <kan.liang@linux.intel.com>,
-        Zhengjun Xing <zhengjun.xing@linux.intel.com>,
-        James Clark <james.clark@arm.com>
-Subject: [PATCH 11/11] perf stat: Add missing separator in the CSV header
-Date:   Fri, 11 Nov 2022 19:22:44 -0800
-Message-Id: <20221112032244.1077370-12-namhyung@kernel.org>
-X-Mailer: git-send-email 2.38.1.493.g58b659f92b-goog
-In-Reply-To: <20221112032244.1077370-1-namhyung@kernel.org>
-References: <20221112032244.1077370-1-namhyung@kernel.org>
+        Sat, 12 Nov 2022 10:15:21 -0500
+Received: from mga06.intel.com (mga06b.intel.com [134.134.136.31])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C7F9C2D0;
+        Sat, 12 Nov 2022 07:15:20 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1668266120; x=1699802120;
+  h=from:to:cc:subject:date:message-id:mime-version:
+   content-transfer-encoding;
+  bh=7w9FJuInitetdnszaHj4UPSjYnaM0MxZY/ipUusdnWE=;
+  b=l649lpxFpO76ETFqDu/YajIzIYhyh/lVikeA9okD8iMT6T1pCRjHtuoK
+   dBBJytssIx82GtPj09VVWixmhfUmJ4oAOOWdD353HXI8uxgRGWCnvCnIo
+   1RSUL+cLwIxvM38ze/ptx3ImkoBRVwLA1igIFMHXdoJQWHdP6A/KyFgSO
+   EiFHKJ+ik+tW+nn0NiuO5fFPAQKulHOO0dNd1u5oyue4TxERjgrc9kjN6
+   X0d2X/zUYIRJDNzAyWBpJoGPcYSxsNtVBURzKHg8AGLX/xLdiylIMenSu
+   MTRVMHYeq8+YWd5U6oQcFnnPTPUjNZmB9Ndj6McCpDWWUe7hFZmuvQPbl
+   w==;
+X-IronPort-AV: E=McAfee;i="6500,9779,10529"; a="373864310"
+X-IronPort-AV: E=Sophos;i="5.96,159,1665471600"; 
+   d="scan'208";a="373864310"
+Received: from orsmga004.jf.intel.com ([10.7.209.38])
+  by orsmga104.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 12 Nov 2022 07:15:20 -0800
+X-IronPort-AV: E=McAfee;i="6500,9779,10529"; a="762924419"
+X-IronPort-AV: E=Sophos;i="5.96,159,1665471600"; 
+   d="scan'208";a="762924419"
+Received: from ahunter6-mobl1.ger.corp.intel.com (HELO ahunter-VirtualBox.home\044ger.corp.intel.com) ([10.252.57.165])
+  by orsmga004-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 12 Nov 2022 07:15:18 -0800
+From:   Adrian Hunter <adrian.hunter@intel.com>
+To:     Peter Zijlstra <peterz@infradead.org>
+Cc:     Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        linux-kernel@vger.kernel.org, Ingo Molnar <mingo@redhat.com>,
+        linux-perf-users@vger.kernel.org
+Subject: [PATCH] perf/x86/intel/pt: Fix sampling using single range output
+Date:   Sat, 12 Nov 2022 17:15:08 +0200
+Message-Id: <20221112151508.13768-1-adrian.hunter@intel.com>
+X-Mailer: git-send-email 2.34.1
 MIME-Version: 1.0
+Organization: Intel Finland Oy, Registered Address: PL 281, 00181 Helsinki, Business Identity Code: 0357606 - 4, Domiciled in Helsinki
 Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-It should have a comma after 'cpus' for socket and die aggregation mode.
-The output of the following command shows the issue.
+Deal with errata TGL052, ADL037 and RPL017 "Trace May Contain Incorrect
+Data When Configured With Single Range Output Larger Than 4KB" by
+disabling single range output whenever larger than 4KB.
 
-  $ sudo perf stat -a --per-socket -x, --metric-only -I1 true
-
-Before:
-                  +--- here
-                  V
-   time,socket,cpusGhz,insn per cycle,branch-misses of all branches,
-       0.000908461,S0,8,0.950,1.65,1.21,
-
-After:
-   time,socket,cpus,GHz,insn per cycle,branch-misses of all branches,
-       0.000683094,S0,8,0.593,2.00,0.60,
-
-Signed-off-by: Namhyung Kim <namhyung@kernel.org>
+Fixes: 670638477aed ("perf/x86/intel/pt: Opportunistically use single range output mode")
+Cc: stable@vger.kernel.org
+Signed-off-by: Adrian Hunter <adrian.hunter@intel.com>
 ---
- tools/perf/util/stat-display.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+ arch/x86/events/intel/pt.c | 9 +++++++++
+ 1 file changed, 9 insertions(+)
 
-diff --git a/tools/perf/util/stat-display.c b/tools/perf/util/stat-display.c
-index 96bb7a42fd41..a316807255cd 100644
---- a/tools/perf/util/stat-display.c
-+++ b/tools/perf/util/stat-display.c
-@@ -828,8 +828,8 @@ static int aggr_header_lens[] = {
+diff --git a/arch/x86/events/intel/pt.c b/arch/x86/events/intel/pt.c
+index 82ef87e9a897..42a55794004a 100644
+--- a/arch/x86/events/intel/pt.c
++++ b/arch/x86/events/intel/pt.c
+@@ -1263,6 +1263,15 @@ static int pt_buffer_try_single(struct pt_buffer *buf, int nr_pages)
+ 	if (1 << order != nr_pages)
+ 		goto out;
  
- static const char *aggr_header_csv[] = {
- 	[AGGR_CORE] 	= 	"core,cpus,",
--	[AGGR_DIE] 	= 	"die,cpus",
--	[AGGR_SOCKET] 	= 	"socket,cpus",
-+	[AGGR_DIE] 	= 	"die,cpus,",
-+	[AGGR_SOCKET] 	= 	"socket,cpus,",
- 	[AGGR_NONE] 	= 	"cpu,",
- 	[AGGR_THREAD] 	= 	"comm-pid,",
- 	[AGGR_NODE] 	= 	"node,",
++	/*
++	 * Some processors cannot always support single range for more than
++	 * 4KB - refer errata TGL052, ADL037 and RPL017. Future processors might
++	 * also be affected, so for now rather than trying to keep track of
++	 * which ones, just disable it for all.
++	 */
++	if (nr_pages > 1)
++		goto out;
++
+ 	buf->single = true;
+ 	buf->nr_pages = nr_pages;
+ 	ret = 0;
 -- 
-2.38.1.493.g58b659f92b-goog
+2.34.1
 
