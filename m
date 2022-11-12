@@ -2,81 +2,116 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3CD2EC43219
-	for <linux-perf-users@archiver.kernel.org>; Fri, 11 Nov 2022 18:03:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C835FC4332F
+	for <linux-perf-users@archiver.kernel.org>; Sat, 12 Nov 2022 03:22:51 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S234449AbiKKSDG (ORCPT
+        id S233439AbiKLDWu (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Fri, 11 Nov 2022 13:03:06 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49062 "EHLO
+        Fri, 11 Nov 2022 22:22:50 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54882 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S234438AbiKKSDE (ORCPT
+        with ESMTP id S229991AbiKLDWt (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Fri, 11 Nov 2022 13:03:04 -0500
-Received: from ams.source.kernel.org (ams.source.kernel.org [145.40.68.75])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5420563BB0;
-        Fri, 11 Nov 2022 10:03:03 -0800 (PST)
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by ams.source.kernel.org (Postfix) with ESMTPS id F1AE2B826C3;
-        Fri, 11 Nov 2022 18:03:01 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPS id 92671C433D7;
-        Fri, 11 Nov 2022 18:03:00 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1668189780;
-        bh=+f0h4Qhh4wuT7imWh2jrAJvBiSiNN77peZRU4IakahY=;
-        h=Subject:From:In-Reply-To:References:Date:To:Cc:From;
-        b=AtcfWvXlV7+tpPU8DBEdp8ktP6v+t7Kb8r2EiGdobMNgIdgCB6Wtbv+1ew9rh7E0P
-         VJ1Hrg1rCk7wwQoMoien2Gh5laHgTzpdlZVZVIVUOlJR6dTmRzg4lVtH6KO0tSS6sY
-         knQoP8nSyH5RTNcDHpWboQF/0fqfKz8YWH8D/3jLhUTd+iMLG0/bP2u/YsPpEEw1bb
-         TFq5U0mt83nNl8XvYzMtwlVpW/jq5eX8WxECO2z3TM0NMFOjgkcvrYDplEveooEHHT
-         BRcRFxgXExOwyRJeS6D2n4Em1NONYEV4FZ8Qhsc1kLzZhQx4Zop904/aLboLIHIZhH
-         gptn7ROx4y70g==
-Received: from aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (localhost.localdomain [127.0.0.1])
-        by aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (Postfix) with ESMTP id 80BDFC395FE;
-        Fri, 11 Nov 2022 18:03:00 +0000 (UTC)
-Subject: Re: [GIT PULL] perf tools fixes for v6.1: 2nd batch
-From:   pr-tracker-bot@kernel.org
-In-Reply-To: <20221110172831.369713-1-acme@kernel.org>
-References: <20221110172831.369713-1-acme@kernel.org>
-X-PR-Tracked-List-Id: <linux-perf-users.vger.kernel.org>
-X-PR-Tracked-Message-Id: <20221110172831.369713-1-acme@kernel.org>
-X-PR-Tracked-Remote: git://git.kernel.org/pub/scm/linux/kernel/git/acme/linux.git tags/perf-tools-fixes-for-v6.1-2-2022-11-10
-X-PR-Tracked-Commit-Id: 94d957ae513fc420d0a5a9bac815eb49ffebb56f
-X-PR-Merge-Tree: torvalds/linux.git
-X-PR-Merge-Refname: refs/heads/master
-X-PR-Merge-Commit-Id: eb037f16f7e843722db5f0275d84b3f738d5649d
-Message-Id: <166818978052.15878.10606140585889084138.pr-tracker-bot@kernel.org>
-Date:   Fri, 11 Nov 2022 18:03:00 +0000
-To:     Arnaldo Carvalho de Melo <acme@kernel.org>
-Cc:     Linus Torvalds <torvalds@linux-foundation.org>,
-        Ingo Molnar <mingo@kernel.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Jiri Olsa <jolsa@kernel.org>,
-        Namhyung Kim <namhyung@kernel.org>,
-        Clark Williams <williams@redhat.com>,
-        Kate Carcia <kcarcia@redhat.com>, linux-kernel@vger.kernel.org,
+        Fri, 11 Nov 2022 22:22:49 -0500
+Received: from mail-pl1-x62b.google.com (mail-pl1-x62b.google.com [IPv6:2607:f8b0:4864:20::62b])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2920B6A747;
+        Fri, 11 Nov 2022 19:22:48 -0800 (PST)
+Received: by mail-pl1-x62b.google.com with SMTP id v17so5702585plo.1;
+        Fri, 11 Nov 2022 19:22:48 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20210112;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:sender:from:to:cc:subject:date:message-id:reply-to;
+        bh=8ZWAGA3aNlOdnA5uwx0EBItPfceZKGAcWsdEstGFXow=;
+        b=Q6GlUldhaY0Y+4SFlM9fV7vvSB5Pp/wVsNGhikyU1YkJTsTiby0bskW5woSeVEXnV4
+         p8L2Y0SJwv9F9xAPMnveOuZ1qIKa1mafqZtqOufd46uDtrL5OhOHgX3wtuo8zW0VMngz
+         bQIQvgMTG3vOV63KDHRnMwvUfLhUE6DVuj+E6Ra137XsVFpTi3kQj/GKbYYzwoYYpFCK
+         0KpsvN32y9fmc1tNymX7Wyuow1whnSTBIfLU12JRjL9MZs+f3k0W7QjVSM4DLuvDC9uc
+         S1UaFtLAlko7jipLO7Z4YYyKAqYIm1kmqTayZ9BL/C6tRMRBbPRFkI/DR7aYMSWi37Fu
+         kKtA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:sender:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=8ZWAGA3aNlOdnA5uwx0EBItPfceZKGAcWsdEstGFXow=;
+        b=lMbdhrOu571QstjWCPO+AEbJmAwccHl9CLplJxZfINxU8gYSVn9EJaQJ8mdFyqBy7q
+         KY17jyITprL5bpZYfq/Jd2jQGVk3GKcs9EEI5HGVeOZQLd9wPDNkpiGQBZGOi4KrONA5
+         LcfuOzXgNyBWxF3grIGUHn/Zvb3yJBDqOHiAaxNoFx6Gqqon+rp8vhmEPMCcmX5UMf4/
+         MGBTCMy7/EGD20H275QiKTxL0nFHVbp4YwKsDaawpohnjPPfUhD4Oqzu9GHnDlJNZGy/
+         MymATqTQPj4ta7PQIHXBHf8PL5iQuYxt7uC57S99P6nQ7HeulrVIYqB5ijKSpXug/Hjx
+         mF4w==
+X-Gm-Message-State: ANoB5pnOC4AJn/3jcgfi9iiT3BtzRaV4bVr6BvY86iIjJXXJespbzvTG
+        U1vfJJV9Elbu0k9jr59uXGY=
+X-Google-Smtp-Source: AA0mqf7DY7ZKlLB1HCorMiIx4lCw/RXIEXIiTQyinWqRO9IuJkeq/0rhJ9vi0We5SXvZiTdDyCzxMQ==
+X-Received: by 2002:a17:90a:c205:b0:20b:590:46b1 with SMTP id e5-20020a17090ac20500b0020b059046b1mr4858039pjt.83.1668223367466;
+        Fri, 11 Nov 2022 19:22:47 -0800 (PST)
+Received: from balhae.roam.corp.google.com ([2607:fb90:27dc:8408:33d7:3b01:eee1:84b])
+        by smtp.gmail.com with ESMTPSA id ij25-20020a170902ab5900b00186f0f59d1esm2434552plb.192.2022.11.11.19.22.45
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 11 Nov 2022 19:22:47 -0800 (PST)
+Sender: Namhyung Kim <namhyung@gmail.com>
+From:   Namhyung Kim <namhyung@kernel.org>
+To:     Arnaldo Carvalho de Melo <acme@kernel.org>,
+        Jiri Olsa <jolsa@kernel.org>
+Cc:     Ingo Molnar <mingo@kernel.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Ian Rogers <irogers@google.com>,
+        Adrian Hunter <adrian.hunter@intel.com>,
         linux-perf-users@vger.kernel.org,
-        Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Athira Jajeev <atrajeev@linux.vnet.ibm.com>,
-        Disha Goel <disgoel@linux.vnet.ibm.com>,
-        Donglin Peng <dolinux.peng@gmail.com>,
-        James Clark <james.clark@arm.com>,
-        Arnaldo Carvalho de Melo <acme@redhat.com>
+        Kan Liang <kan.liang@linux.intel.com>,
+        Zhengjun Xing <zhengjun.xing@linux.intel.com>,
+        James Clark <james.clark@arm.com>
+Subject: [PATCHSET 00/11] perf stat: Cleanup perf stat output display (v2)
+Date:   Fri, 11 Nov 2022 19:22:33 -0800
+Message-Id: <20221112032244.1077370-1-namhyung@kernel.org>
+X-Mailer: git-send-email 2.38.1.493.g58b659f92b-goog
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-The pull request you sent on Thu, 10 Nov 2022 14:28:31 -0300:
+Hello,
 
-> git://git.kernel.org/pub/scm/linux/kernel/git/acme/linux.git tags/perf-tools-fixes-for-v6.1-2-2022-11-10
+I'm working on cleaning up the perf stat code and found a number of issues.
+Before moving on to the real changes, I'd like to fix those first.  I'll
+think about how to test this properly.
 
-has been merged into torvalds/linux.git:
-https://git.kernel.org/torvalds/c/eb037f16f7e843722db5f0275d84b3f738d5649d
+changes in v2)
+ * move applied patches to the beginning  (Arnaldo)
+ * make it error to use --interval-clear with other output  (Ian)
+ * add two more patches for CSV output
+ * add Acked-by from Ian
 
-Thank you!
+You can get it from 'perf/stat-cleanup-v2' branch in
 
+  git://git.kernel.org/pub/scm/linux/kernel/git/namhyung/linux-perf.git
+
+Thanks,
+Namhyung
+
+
+Namhyung Kim (11):
+  perf stat: Fix crash with --per-node --metric-only in CSV mode
+  perf stat: Move common code in print_metric_headers()
+  perf stat: Fix --metric-only --json output
+  perf stat: Increase metric length to align outputs
+  perf stat: Clear screen only if output file is a tty
+  perf stat: Do not indent headers for JSON
+  perf stat: Add header for interval in JSON output
+  perf stat: Fix condition in print_interval()
+  perf stat: Consolidate condition to print metrics
+  perf stat: Fix summary output in CSV with --metric-only
+  perf stat: Add missing separator in the CSV header
+
+ tools/perf/builtin-stat.c      |  8 ++++
+ tools/perf/util/stat-display.c | 68 ++++++++++++++++------------------
+ 2 files changed, 40 insertions(+), 36 deletions(-)
+
+
+base-commit: 816815b852216f3aa3a43e2ce91c5510927cd61b
 -- 
-Deet-doot-dot, I am a bot.
-https://korg.docs.kernel.org/prtracker.html
+2.38.1.493.g58b659f92b-goog
+
