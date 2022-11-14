@@ -2,477 +2,179 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8FBC8C4332F
-	for <linux-perf-users@archiver.kernel.org>; Mon, 14 Nov 2022 07:53:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4E4B7C4332F
+	for <linux-perf-users@archiver.kernel.org>; Mon, 14 Nov 2022 08:36:06 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S235935AbiKNHxq (ORCPT
+        id S236537AbiKNIgF (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Mon, 14 Nov 2022 02:53:46 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46896 "EHLO
+        Mon, 14 Nov 2022 03:36:05 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54354 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S236071AbiKNHxQ (ORCPT
+        with ESMTP id S236545AbiKNIgB (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Mon, 14 Nov 2022 02:53:16 -0500
-Received: from mail-pg1-x54a.google.com (mail-pg1-x54a.google.com [IPv6:2607:f8b0:4864:20::54a])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3BE5719C23
-        for <linux-perf-users@vger.kernel.org>; Sun, 13 Nov 2022 23:53:15 -0800 (PST)
-Received: by mail-pg1-x54a.google.com with SMTP id s16-20020a632c10000000b0047084b16f23so5447120pgs.7
-        for <linux-perf-users@vger.kernel.org>; Sun, 13 Nov 2022 23:53:15 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20210112;
-        h=cc:to:from:subject:references:mime-version:message-id:in-reply-to
-         :date:from:to:cc:subject:date:message-id:reply-to;
-        bh=nAX60ecFtxgT+PDunRPYKAFBfhjC2kUCNn7e5xMw2JM=;
-        b=buGqKnielvJwFkIZh5KnRlsCoQyiK3G1y/CNoBamUlBH5JV/Cifos89LeN123Ozmac
-         axidpKkzBNDMZ8jNK7z1suD0cOyTqRSvsrcCILT79EzFnqwxip2ae74Mlq8BrSo5jcwI
-         ZHsi2k1DudB15Aq/+cBACKSzIpjYKCt1MZhizZtuANMRZQSjSFNX2kXH3V5nt/FghEj0
-         0WtRXgCbXKB+dwW9AxCJ/auGvTPBaEuNNNOgef9BYRY+5k6D1JQR5IzBwWEyJleInXvN
-         jGjbQacFrVPHuduF3QhjeeQ5//PL3CFx/FQKlLU6I300gDhM/XAo/zWD9s/g4v+GNg2z
-         qH1Q==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=cc:to:from:subject:references:mime-version:message-id:in-reply-to
-         :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=nAX60ecFtxgT+PDunRPYKAFBfhjC2kUCNn7e5xMw2JM=;
-        b=nA7qeJSrBQMjo0ve9x5gSt61DWuTysERwjVCOuEfoYAJzGzhdfCpGtCAgKwrLSoMNW
-         Cdbde9b9voRQiCjLMUJxTldf3ldPKYDGf3bul1QzJquL0rSThqWTnJKYyPuVdT0ntNZd
-         vImt8Knl0IlombKSRduMnFdj+tvV/iC7Gd6Sjaqbusf5hOZNahPd0AOxrkh3MFM8lH9w
-         EM9UShW87/JgNcQk+r4JIsWlJzyl5/XeUE+8vqCQ7YCVKxc59FfPfxumv/PYbXIdcO6x
-         6x8ieaDH060WV21l/x+ugFuP+WBcVV5CznN1cZNUG6XMuFZb9/uULvUIjWiv5U3Bi5UF
-         N05w==
-X-Gm-Message-State: ANoB5pnMv8sT3EXnlmIURlNajxkgncoPfFTkiY1RNX5Me29ixYjNIOLx
-        3GHHC5SssEwVPMHIPLSoTrKBDsi/RQBN
-X-Google-Smtp-Source: AA0mqf5LtZ/I3nyYUy9i7XP06eUtsBJJ2jH8YLuDJ+643JLOqdp4Fpwgv/Ycvqsz8UGnevFML5okx/OFKn5q
-X-Received: from irogers.svl.corp.google.com ([2620:15c:2d4:203:cba6:8279:98e6:3d6e])
- (user=irogers job=sendgmr) by 2002:a62:442:0:b0:562:86a3:12fc with SMTP id
- 63-20020a620442000000b0056286a312fcmr13130193pfe.8.1668412394679; Sun, 13 Nov
- 2022 23:53:14 -0800 (PST)
-Date:   Sun, 13 Nov 2022 23:51:27 -0800
-In-Reply-To: <20221114075127.2650315-1-irogers@google.com>
-Message-Id: <20221114075127.2650315-10-irogers@google.com>
-Mime-Version: 1.0
-References: <20221114075127.2650315-1-irogers@google.com>
-X-Mailer: git-send-email 2.38.1.431.g37b22c650d-goog
-Subject: [PATCH v1 9/9] perf list: Add json output option
-From:   Ian Rogers <irogers@google.com>
-To:     Weilin Wang <weilin.wang@intel.com>,
-        Perry Taylor <perry.taylor@intel.com>,
-        Caleb Biggers <caleb.biggers@intel.com>,
-        Leo Yan <leo.yan@linaro.org>,
-        Adrian Hunter <adrian.hunter@intel.com>,
-        Peter Zijlstra <peterz@infradead.org>,
+        Mon, 14 Nov 2022 03:36:01 -0500
+Received: from mga18.intel.com (mga18.intel.com [134.134.136.126])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 17CAC1C114;
+        Mon, 14 Nov 2022 00:36:01 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1668414961; x=1699950961;
+  h=message-id:date:mime-version:subject:to:cc:references:
+   from:in-reply-to:content-transfer-encoding;
+  bh=fdpZZ4r1hTVkoO3kGE4DlZQf60aaP2bmV66mBFHDQ/U=;
+  b=C2Wg0o2p64l9epkj4axYH6U+R/sMR/Du/H79RR1+XV7jxrn/V+dK5TL4
+   +XlL1RyOmLSpy2K/5o/FBAJd4vDn5/IDArmo0LyEwCNdMPEMjNiFZ67b7
+   KFY3Asrw+q01CbnV7BGS0eDdYle87O6AGv+WRKz3x9L7NrCRNhJo8saUA
+   iWyYVU7v9iFcSpJwDQ7ajNvlfOa4oHXI+hhWtjQeReX91Hl0OrVjvzFUs
+   uh/stjv8jfHBKK5DICrzCYZYORd5CgWAWi2h0VSPC4I1bc6iujbxDXJ+A
+   5YV2gkDLofyLkjn16G7LXMluPiLXZVsOOKMziu9mhnZ9BXg526AQK7eTG
+   g==;
+X-IronPort-AV: E=McAfee;i="6500,9779,10530"; a="295277104"
+X-IronPort-AV: E=Sophos;i="5.96,161,1665471600"; 
+   d="scan'208";a="295277104"
+Received: from fmsmga005.fm.intel.com ([10.253.24.32])
+  by orsmga106.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 14 Nov 2022 00:36:00 -0800
+X-IronPort-AV: E=McAfee;i="6500,9779,10530"; a="967483826"
+X-IronPort-AV: E=Sophos;i="5.96,161,1665471600"; 
+   d="scan'208";a="967483826"
+Received: from xingzhen-mobl.ccr.corp.intel.com (HELO [10.254.211.184]) ([10.254.211.184])
+  by fmsmga005-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 14 Nov 2022 00:35:56 -0800
+Message-ID: <b39171e6-4af3-6102-2207-aad57dc92226@linux.intel.com>
+Date:   Mon, 14 Nov 2022 16:35:35 +0800
+MIME-Version: 1.0
+User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:102.0) Gecko/20100101
+ Thunderbird/102.4.2
+Subject: Re: [RFC PATCH v2 3/6] perf vendor events arm64: Add cache metrics
+ for neoverse-n2
+To:     Jing Zhang <renyu.zj@linux.alibaba.com>,
+        linux-arm-kernel@lists.infradead.org,
+        linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org,
+        John Garry <john.garry@huawei.com>,
+        Will Deacon <will@kernel.org>,
+        James Clark <james.clark@arm.com>,
+        Mike Leach <mike.leach@linaro.org>,
+        Leo Yan <leo.yan@linaro.org>
+Cc:     Peter Zijlstra <peterz@infradead.org>,
         Ingo Molnar <mingo@redhat.com>,
         Arnaldo Carvalho de Melo <acme@kernel.org>,
         Mark Rutland <mark.rutland@arm.com>,
         Alexander Shishkin <alexander.shishkin@linux.intel.com>,
         Jiri Olsa <jolsa@kernel.org>,
         Namhyung Kim <namhyung@kernel.org>,
-        Sandipan Das <sandipan.das@amd.com>,
-        Kajol Jain <kjain@linux.ibm.com>,
-        Zhengjun Xing <zhengjun.xing@linux.intel.com>,
-        Kan Liang <kan.liang@linux.intel.com>,
-        Ravi Bangoria <ravi.bangoria@amd.com>,
-        Xin Gao <gaoxin@cdjrlc.com>, Rob Herring <robh@kernel.org>,
-        linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org
-Cc:     Stephane Eranian <eranian@google.com>,
-        Ian Rogers <irogers@google.com>
-Content-Type: text/plain; charset="UTF-8"
+        Andrew Kilroy <andrew.kilroy@arm.com>,
+        Shuai Xue <xueshuai@linux.alibaba.com>,
+        Zhuo Song <zhuo.song@linux.alibaba.com>
+References: <1668411720-3581-1-git-send-email-renyu.zj@linux.alibaba.com>
+ <1668411720-3581-4-git-send-email-renyu.zj@linux.alibaba.com>
+Content-Language: en-US
+From:   Xing Zhengjun <zhengjun.xing@linux.intel.com>
+In-Reply-To: <1668411720-3581-4-git-send-email-renyu.zj@linux.alibaba.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-Output events and metrics in a json format by overriding the print
-callbacks. Currently other command line options aren't supported and
-metrics are repeated once per metric group.
 
-Signed-off-by: Ian Rogers <irogers@google.com>
----
- tools/perf/Documentation/perf-list.txt |   4 +
- tools/perf/builtin-list.c              | 283 ++++++++++++++++++++-----
- 2 files changed, 229 insertions(+), 58 deletions(-)
 
-diff --git a/tools/perf/Documentation/perf-list.txt b/tools/perf/Documentation/perf-list.txt
-index 44a819af573d..43263ca88ff7 100644
---- a/tools/perf/Documentation/perf-list.txt
-+++ b/tools/perf/Documentation/perf-list.txt
-@@ -43,6 +43,10 @@ Print deprecated events. By default the deprecated events are hidden.
- Print PMU events and metrics limited to the specific PMU name.
- (e.g. --unit cpu, --unit msr, --unit cpu_core, --unit cpu_atom)
- 
-+-j::
-+--json::
-+Output in json format.
-+
- [[EVENT_MODIFIERS]]
- EVENT MODIFIERS
- ---------------
-diff --git a/tools/perf/builtin-list.c b/tools/perf/builtin-list.c
-index 91e2b6f52548..910b5c3a7365 100644
---- a/tools/perf/builtin-list.c
-+++ b/tools/perf/builtin-list.c
-@@ -19,6 +19,7 @@
- #include "util/strlist.h"
- #include <subcmd/pager.h>
- #include <subcmd/parse-options.h>
-+#include <stdarg.h>
- #include <stdio.h>
- 
- struct print_state {
-@@ -217,10 +218,165 @@ static void default_print_metric(void *ps,
- 	}
- }
- 
-+struct json_print_state {
-+	/** Should a separator be printed prior to the next item? */
-+	bool need_sep;
-+};
-+
-+static void json_print_start(void *print_state __maybe_unused)
-+{
-+	printf("[\n");
-+}
-+
-+static void json_print_end(void *ps)
-+{
-+	struct json_print_state *print_state = ps;
-+
-+	printf("%s]\n", print_state->need_sep ? "\n" : "");
-+}
-+
-+static void fix_escape_printf(const char *fmt, ...)
-+{
-+	va_list args;
-+	char buf[2048];
-+	size_t buf_pos = 0;
-+
-+	va_start(args, fmt);
-+	for (size_t fmt_pos = 0; fmt_pos < strlen(fmt); fmt_pos++) {
-+		switch (fmt[fmt_pos]) {
-+		case '%': {
-+			const char *s = va_arg(args, const char*);
-+
-+			fmt_pos++;
-+			assert(fmt[fmt_pos] == 's');
-+			for (size_t s_pos = 0; s_pos < strlen(s); s_pos++) {
-+				switch (s[s_pos]) {
-+				case '\\':
-+					__fallthrough;
-+				case '\"':
-+					buf[buf_pos++] = '\\';
-+					assert(buf_pos < sizeof(buf));
-+					__fallthrough;
-+				default:
-+					buf[buf_pos++] = s[s_pos];
-+					assert(buf_pos < sizeof(buf));
-+					break;
-+				}
-+			}
-+			break;
-+		}
-+		default:
-+			buf[buf_pos++] = fmt[fmt_pos];
-+			assert(buf_pos < sizeof(buf));
-+			break;
-+		}
-+	}
-+	va_end(args);
-+	buf[buf_pos] = '\0';
-+	fputs(buf, stdout);
-+}
-+
-+static void json_print_event(void *ps, const char *pmu_name, const char *topic,
-+			     const char *event_name, const char *event_alias,
-+			     bool deprecated, const char *event_type_desc,
-+			     const char *desc, const char *long_desc,
-+			     const char *encoding_desc,
-+			     const char *metric_name, const char *metric_expr)
-+{
-+	struct json_print_state *print_state = ps;
-+	bool need_sep = false;
-+
-+	printf("%s{\n", print_state->need_sep ? ",\n" : "");
-+	print_state->need_sep = true;
-+	if (pmu_name) {
-+		fix_escape_printf("\t\"Unit\": \"%s\"", pmu_name);
-+		need_sep = true;
-+	}
-+	if (topic) {
-+		fix_escape_printf("%s\t\"Topic\": \"%s\"", need_sep ? ",\n" : "", topic);
-+		need_sep = true;
-+	}
-+	if (event_name) {
-+		fix_escape_printf("%s\t\"EventName\": \"%s\"", need_sep ? ",\n" : "", event_name);
-+		need_sep = true;
-+	}
-+	if (event_alias && strlen(event_alias)) {
-+		fix_escape_printf("%s\t\"EventAlias\": \"%s\"", need_sep ? ",\n" : "", event_alias);
-+		need_sep = true;
-+	}
-+	if (event_type_desc) {
-+		fix_escape_printf("%s\t\"EventType\": \"%s\"", need_sep ? ",\n" : "",
-+				  event_type_desc);
-+		need_sep = true;
-+	}
-+	if (deprecated) {
-+		fix_escape_printf("%s\t\"Deprecated\": \"%s\"", need_sep ? ",\n" : "",
-+				  deprecated ? "1" : "0");
-+		need_sep = true;
-+	}
-+	if (desc) {
-+		fix_escape_printf("%s\t\"BriefDescription\": \"%s\"", need_sep ? ",\n" : "", desc);
-+		need_sep = true;
-+	}
-+	if (long_desc) {
-+		fix_escape_printf("%s\t\"PublicDescription\": \"%s\"", need_sep ? ",\n" : "",
-+				  long_desc);
-+		need_sep = true;
-+	}
-+	if (encoding_desc) {
-+		fix_escape_printf("%s\t\"Encoding\": \"%s\"", need_sep ? ",\n" : "", encoding_desc);
-+		need_sep = true;
-+	}
-+	if (metric_name) {
-+		fix_escape_printf("%s\t\"MetricName\": \"%s\"", need_sep ? ",\n" : "", metric_name);
-+		need_sep = true;
-+	}
-+	if (metric_expr) {
-+		fix_escape_printf("%s\t\"MetricExpr\": \"%s\"", need_sep ? ",\n" : "", metric_expr);
-+		need_sep = true;
-+	}
-+	printf("%s}", need_sep ? "\n" : "");
-+}
-+
-+static void json_print_metric(void *ps __maybe_unused, const char *group,
-+			      const char *name, const char *desc,
-+			      const char *long_desc, const char *expr)
-+{
-+	struct json_print_state *print_state = ps;
-+	bool need_sep = false;
-+
-+	printf("%s{\n", print_state->need_sep ? ",\n" : "");
-+	print_state->need_sep = true;
-+	if (group) {
-+		fix_escape_printf("\t\"MetricGroup\": \"%s\"", group);
-+		need_sep = true;
-+	}
-+	if (name) {
-+		fix_escape_printf("%s\t\"MetricName\": \"%s\"", need_sep ? ",\n" : "", name);
-+		need_sep = true;
-+	}
-+	if (expr) {
-+		fix_escape_printf("%s\t\"MetricExpr\": \"%s\"", need_sep ? ",\n" : "", expr);
-+		need_sep = true;
-+	}
-+	if (desc) {
-+		fix_escape_printf("%s\t\"BriefDescription\": \"%s\"", need_sep ? ",\n" : "", desc);
-+		need_sep = true;
-+	}
-+	if (long_desc) {
-+		fix_escape_printf("%s\t\"PublicDescription\": \"%s\"", need_sep ? ",\n" : "",
-+				  long_desc);
-+		need_sep = true;
-+	}
-+	printf("%s}", need_sep ? "\n" : "");
-+}
-+
- int cmd_list(int argc, const char **argv)
- {
- 	int i, ret = 0;
--	struct print_state ps = {};
-+	struct print_state default_ps = {};
-+	struct print_state json_ps = {};
-+	void *ps = &default_ps;
- 	struct print_callbacks print_cb = {
- 		.print_start = default_print_start,
- 		.print_end = default_print_end,
-@@ -229,15 +385,17 @@ int cmd_list(int argc, const char **argv)
- 	};
- 	const char *hybrid_name = NULL;
- 	const char *unit_name = NULL;
-+	bool json = false;
- 	struct option list_options[] = {
--		OPT_BOOLEAN(0, "raw-dump", &ps.name_only, "Dump raw events"),
--		OPT_BOOLEAN('d', "desc", &ps.desc,
-+		OPT_BOOLEAN(0, "raw-dump", &default_ps.name_only, "Dump raw events"),
-+		OPT_BOOLEAN('j', "json", &json, "JSON encode events and metrics"),
-+		OPT_BOOLEAN('d', "desc", &default_ps.desc,
- 			    "Print extra event descriptions. --no-desc to not print."),
--		OPT_BOOLEAN('v', "long-desc", &ps.long_desc,
-+		OPT_BOOLEAN('v', "long-desc", &default_ps.long_desc,
- 			    "Print longer event descriptions."),
--		OPT_BOOLEAN(0, "details", &ps.detailed,
-+		OPT_BOOLEAN(0, "details", &default_ps.detailed,
- 			    "Print information on the perf event names and expressions used internally by events."),
--		OPT_BOOLEAN(0, "deprecated", &ps.deprecated,
-+		OPT_BOOLEAN(0, "deprecated", &default_ps.deprecated,
- 			    "Print deprecated events."),
- 		OPT_STRING(0, "cputype", &hybrid_name, "hybrid cpu type",
- 			   "Limit PMU or metric printing to the given hybrid PMU (e.g. core or atom)."),
-@@ -261,28 +419,37 @@ int cmd_list(int argc, const char **argv)
- 
- 	setup_pager();
- 
--	if (!ps.name_only)
-+	if (!default_ps.name_only)
- 		setup_pager();
- 
--	ps.desc = !ps.long_desc;
--	ps.last_topic = strdup("");
--	assert(ps.last_topic);
--	ps.visited_metrics = strlist__new(NULL, NULL);
--	assert(ps.visited_metrics);
--	if (unit_name)
--		ps.pmu_glob = strdup(unit_name);
--	else if (hybrid_name) {
--		ps.pmu_glob = perf_pmu__hybrid_type_to_pmu(hybrid_name);
--		if (!ps.pmu_glob)
--			pr_warning("WARNING: hybrid cputype is not supported!\n");
-+	if (json) {
-+		print_cb = (struct print_callbacks){
-+			.print_start = json_print_start,
-+			.print_end = json_print_end,
-+			.print_event = json_print_event,
-+			.print_metric = json_print_metric,
-+		};
-+		ps = &json_ps;
-+	} else {
-+		default_ps.desc = !default_ps.long_desc;
-+		default_ps.last_topic = strdup("");
-+		assert(default_ps.last_topic);
-+		default_ps.visited_metrics = strlist__new(NULL, NULL);
-+		assert(default_ps.visited_metrics);
-+		if (unit_name)
-+			default_ps.pmu_glob = strdup(unit_name);
-+		else if (hybrid_name) {
-+			default_ps.pmu_glob = perf_pmu__hybrid_type_to_pmu(hybrid_name);
-+			if (!default_ps.pmu_glob)
-+				pr_warning("WARNING: hybrid cputype is not supported!\n");
-+		}
- 	}
--
- 	print_cb.print_start(&ps);
- 
- 	if (argc == 0) {
--		ps.metrics = true;
--		ps.metricgroups = true;
--		print_events(&print_cb, &ps);
-+		default_ps.metrics = true;
-+		default_ps.metricgroups = true;
-+		print_events(&print_cb, ps);
- 		goto out;
- 	}
- 
-@@ -290,32 +457,32 @@ int cmd_list(int argc, const char **argv)
- 		char *sep, *s;
- 
- 		if (strcmp(argv[i], "tracepoint") == 0)
--			print_tracepoint_events(&print_cb, &ps);
-+			print_tracepoint_events(&print_cb, ps);
- 		else if (strcmp(argv[i], "hw") == 0 ||
- 			 strcmp(argv[i], "hardware") == 0)
--			print_symbol_events(&print_cb, &ps, PERF_TYPE_HARDWARE,
-+			print_symbol_events(&print_cb, ps, PERF_TYPE_HARDWARE,
- 					event_symbols_hw, PERF_COUNT_HW_MAX);
- 		else if (strcmp(argv[i], "sw") == 0 ||
- 			 strcmp(argv[i], "software") == 0) {
--			print_symbol_events(&print_cb, &ps, PERF_TYPE_SOFTWARE,
-+			print_symbol_events(&print_cb, ps, PERF_TYPE_SOFTWARE,
- 					event_symbols_sw, PERF_COUNT_SW_MAX);
--			print_tool_events(&print_cb, &ps);
-+			print_tool_events(&print_cb, ps);
- 		} else if (strcmp(argv[i], "cache") == 0 ||
- 			 strcmp(argv[i], "hwcache") == 0)
--			print_hwcache_events(&print_cb, &ps);
-+			print_hwcache_events(&print_cb, ps);
- 		else if (strcmp(argv[i], "pmu") == 0)
--			print_pmu_events(&print_cb, &ps);
-+			print_pmu_events(&print_cb, ps);
- 		else if (strcmp(argv[i], "sdt") == 0)
--			print_sdt_events(&print_cb, &ps);
-+			print_sdt_events(&print_cb, ps);
- 		else if (strcmp(argv[i], "metric") == 0 || strcmp(argv[i], "metrics") == 0) {
--			ps.metricgroups = false;
--			ps.metrics = true;
--			metricgroup__print(&print_cb, &ps);
-+			default_ps.metricgroups = false;
-+			default_ps.metrics = true;
-+			metricgroup__print(&print_cb, ps);
- 		} else if (strcmp(argv[i], "metricgroup") == 0 ||
- 			   strcmp(argv[i], "metricgroups") == 0) {
--			ps.metricgroups = true;
--			ps.metrics = false;
--			metricgroup__print(&print_cb, &ps);
-+			default_ps.metricgroups = true;
-+			default_ps.metrics = false;
-+			metricgroup__print(&print_cb, ps);
- 		} else if ((sep = strchr(argv[i], ':')) != NULL) {
- 			int sep_idx;
- 
-@@ -327,41 +494,41 @@ int cmd_list(int argc, const char **argv)
- 			}
- 
- 			s[sep_idx] = '\0';
--			ps.pmu_glob = s;
--			ps.event_glob = s + sep_idx + 1;
--			print_tracepoint_events(&print_cb, &ps);
--			print_sdt_events(&print_cb, &ps);
--			ps.metrics = true;
--			ps.metricgroups = true;
--			metricgroup__print(&print_cb, &ps);
-+			default_ps.pmu_glob = s;
-+			default_ps.event_glob = s + sep_idx + 1;
-+			print_tracepoint_events(&print_cb, ps);
-+			print_sdt_events(&print_cb, ps);
-+			default_ps.metrics = true;
-+			default_ps.metricgroups = true;
-+			metricgroup__print(&print_cb, ps);
- 			free(s);
- 		} else {
- 			if (asprintf(&s, "*%s*", argv[i]) < 0) {
- 				printf("Critical: Not enough memory! Trying to continue...\n");
- 				continue;
- 			}
--			ps.event_glob = s;
--			print_symbol_events(&print_cb, &ps, PERF_TYPE_HARDWARE,
-+			default_ps.event_glob = s;
-+			print_symbol_events(&print_cb, ps, PERF_TYPE_HARDWARE,
- 					event_symbols_hw, PERF_COUNT_HW_MAX);
--			print_symbol_events(&print_cb, &ps, PERF_TYPE_SOFTWARE,
-+			print_symbol_events(&print_cb, ps, PERF_TYPE_SOFTWARE,
- 					event_symbols_sw, PERF_COUNT_SW_MAX);
--			print_tool_events(&print_cb, &ps);
--			print_hwcache_events(&print_cb, &ps);
--			print_pmu_events(&print_cb, &ps);
--			print_tracepoint_events(&print_cb, &ps);
--			print_sdt_events(&print_cb, &ps);
--			ps.metrics = true;
--			ps.metricgroups = true;
--			metricgroup__print(&print_cb, &ps);
-+			print_tool_events(&print_cb, ps);
-+			print_hwcache_events(&print_cb, ps);
-+			print_pmu_events(&print_cb, ps);
-+			print_tracepoint_events(&print_cb, ps);
-+			print_sdt_events(&print_cb, ps);
-+			default_ps.metrics = true;
-+			default_ps.metricgroups = true;
-+			metricgroup__print(&print_cb, ps);
- 			free(s);
- 		}
- 	}
- 
- out:
--	print_cb.print_end(&ps);
--	free(ps.pmu_glob);
--	free(ps.last_topic);
--	free(ps.last_metricgroups);
--	strlist__delete(ps.visited_metrics);
-+	print_cb.print_end(ps);
-+	free(default_ps.pmu_glob);
-+	free(default_ps.last_topic);
-+	free(default_ps.last_metricgroups);
-+	strlist__delete(default_ps.visited_metrics);
- 	return ret;
- }
+On 11/14/2022 3:41 PM, Jing Zhang wrote:
+> Add cache related metrics.
+> 
+> Signed-off-by: Jing Zhang <renyu.zj@linux.alibaba.com>
+> ---
+>   .../arch/arm64/arm/neoverse-n2/metrics.json        | 77 ++++++++++++++++++++++
+>   1 file changed, 77 insertions(+)
+> 
+> diff --git a/tools/perf/pmu-events/arch/arm64/arm/neoverse-n2/metrics.json b/tools/perf/pmu-events/arch/arm64/arm/neoverse-n2/metrics.json
+> index 324ca12..1690ef6 100644
+> --- a/tools/perf/pmu-events/arch/arm64/arm/neoverse-n2/metrics.json
+> +++ b/tools/perf/pmu-events/arch/arm64/arm/neoverse-n2/metrics.json
+> @@ -54,5 +54,82 @@
+>           "BriefDescription": "The rate of DTLB Walks to the overall TLB lookups",
+>           "MetricGroup": "TLB",
+>           "MetricName": "dtlb_walk_rate"
+> +    },
+> +    {
+> +        "MetricExpr": "L1I_CACHE_REFILL / INST_RETIRED * 1000",
+> +        "PublicDescription": "The rate of L1 I-Cache misses per kilo instructions",
+> +        "BriefDescription": "The rate of L1 I-Cache misses per kilo instructions",
+> +        "MetricGroup": "Cache",
+> +        "MetricName": "l1i_cache_mpki"
+> +    },
+> +    {
+> +        "MetricExpr": "L1I_CACHE_REFILL / L1I_CACHE",
+> +        "PublicDescription": "The rate of L1 I-Cache misses to the overall L1 I-Cache",
+> +        "BriefDescription": "The rate of L1 I-Cache misses to the overall L1 I-Cache",
+> +        "MetricGroup": "Cache",
+> +        "MetricName": "l1i_cache_miss_rate"
+> +    },
+> +    {
+> +        "MetricExpr": "L1D_CACHE_REFILL / INST_RETIRED * 1000",
+> +        "PublicDescription": "The rate of L1 D-Cache misses per kilo instructions",
+> +        "BriefDescription": "The rate of L1 D-Cache misses per kilo instructions",
+> +        "MetricGroup": "Cache",
+> +        "MetricName": "l1d_cache_mpki"
+> +    },
+> +    {
+> +        "MetricExpr": "L1D_CACHE_REFILL / L1D_CACHE",
+> +        "PublicDescription": "The rate of L1 D-Cache misses to the overall L1 D-Cache",
+> +        "BriefDescription": "The rate of L1 D-Cache misses to the overall L1 D-Cache",
+> +        "MetricGroup": "Cache",
+> +        "MetricName": "l1d_cache_miss_rate"
+> +    },
+> +    {
+> +        "MetricExpr": "L2D_CACHE_REFILL / INST_RETIRED * 1000",
+> +        "PublicDescription": "The rate of L2 D-Cache misses per kilo instructions",
+> +        "BriefDescription": "The rate of L2 D-Cache misses per kilo instructions",
+> +        "MetricGroup": "Cache",
+> +        "MetricName": "l2d_cache_mpki"
+> +    },
+> +    {
+> +        "MetricExpr": "L2D_CACHE_REFILL / L2D_CACHE",
+> +        "PublicDescription": "The rate of L2 D-Cache misses to the overall L2 D-Cache",
+> +        "BriefDescription": "The rate of L2 D-Cache misses to the overall L2 D-Cache",
+> +        "MetricGroup": "Cache",
+> +        "MetricName": "l2d_cache_miss_rate"
+> +    },
+> +    {
+> +        "MetricExpr": "L3D_CACHE_REFILL / INST_RETIRED * 1000",
+> +        "PublicDescription": "The rate of L3 D-Cache misses per kilo instructions",
+> +        "BriefDescription": "The rate of L3 D-Cache misses per kilo instructions",
+> +        "MetricGroup": "Cache",
+> +        "MetricName": "l3d_cache_mpki"
+> +    },
+> +    {
+> +        "MetricExpr": "L3D_CACHE_REFILL / L3D_CACHE",
+> +        "PublicDescription": "The rate of L3 D-Cache misses to the overall L3 D-Cache",
+> +        "BriefDescription": "The rate of L3 D-Cache misses to the overall L3 D-Cache",
+> +        "MetricGroup": "Cache",
+> +        "MetricName": "l3d_cache_miss_rate"
+> +    },
+> +    {
+> +        "MetricExpr": "LL_CACHE_MISS_RD / INST_RETIRED * 1000",
+> +        "PublicDescription": "The rate of LL Cache read misses per kilo instructions",
+> +        "BriefDescription": "The rate of LL Cache read misses per kilo instructions",
+> +        "MetricGroup": "Cache",
+> +        "MetricName": "ll_cache_read_mpki"
+> +    },
+> +    {
+> +        "MetricExpr": "LL_CACHE_MISS_RD / LL_CACHE_RD",
+> +        "PublicDescription": "The rate of LL Cache read misses to the overall LL Cache read",
+> +        "BriefDescription": "The rate of LL Cache read misses to the overall LL Cache read",
+> +        "MetricGroup": "Cache",
+> +        "MetricName": "ll_cache_read_miss_rate"
+> +    },
+> +    {
+> +        "MetricExpr": "(LL_CACHE_RD - LL_CACHE_MISS_RD) / LL_CACHE_RD",
+> +        "PublicDescription": "The rate of LL Cache read hit to the overall LL Cache read",
+> +        "BriefDescription": "The rate of LL Cache read hit to the overall LL Cache read",
+> +        "MetricGroup": "Cache",
+> +        "MetricName": "ll_cache_read_hit_rate"
+>       }
+>   ]
+> \ No newline at end of file
+
+It is better to fix this by adding a newline at the end of the file.
+
 -- 
-2.38.1.431.g37b22c650d-goog
-
+Zhengjun Xing
