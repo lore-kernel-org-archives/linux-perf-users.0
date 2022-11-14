@@ -2,477 +2,122 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 70004C433FE
-	for <linux-perf-users@archiver.kernel.org>; Mon, 14 Nov 2022 18:16:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 027BBC433FE
+	for <linux-perf-users@archiver.kernel.org>; Mon, 14 Nov 2022 18:18:28 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S238345AbiKNSQC (ORCPT
+        id S236546AbiKNSS0 (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Mon, 14 Nov 2022 13:16:02 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44568 "EHLO
+        Mon, 14 Nov 2022 13:18:26 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44600 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S238372AbiKNSPj (ORCPT
+        with ESMTP id S238349AbiKNSSH (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Mon, 14 Nov 2022 13:15:39 -0500
-Received: from mail-pj1-x104a.google.com (mail-pj1-x104a.google.com [IPv6:2607:f8b0:4864:20::104a])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 08E3345085
-        for <linux-perf-users@vger.kernel.org>; Mon, 14 Nov 2022 10:14:30 -0800 (PST)
-Received: by mail-pj1-x104a.google.com with SMTP id b1-20020a17090a10c100b0020da29fa5e5so6201075pje.2
-        for <linux-perf-users@vger.kernel.org>; Mon, 14 Nov 2022 10:14:30 -0800 (PST)
+        Mon, 14 Nov 2022 13:18:07 -0500
+Received: from mail-wr1-x432.google.com (mail-wr1-x432.google.com [IPv6:2a00:1450:4864:20::432])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 922D42EF32
+        for <linux-perf-users@vger.kernel.org>; Mon, 14 Nov 2022 10:17:36 -0800 (PST)
+Received: by mail-wr1-x432.google.com with SMTP id bs21so19805309wrb.4
+        for <linux-perf-users@vger.kernel.org>; Mon, 14 Nov 2022 10:17:36 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=google.com; s=20210112;
-        h=cc:to:from:subject:references:mime-version:message-id:in-reply-to
-         :date:from:to:cc:subject:date:message-id:reply-to;
-        bh=nAX60ecFtxgT+PDunRPYKAFBfhjC2kUCNn7e5xMw2JM=;
-        b=iF9G5NRA91tx9faK3iFNTr9LXSL/ZAQJq/NY4pO4LuBFVIcd09jwsextlDdC3YyBKR
-         ErFC0E+3WxRGILlo2J5MlFPLGD2bkvE0maN3Y0lg1c5+FP7Eq5vFBGNEbkKoSJ7SMxvY
-         B1coOsfgtotteEQ0GNXe3hMRw1+OxLZjb92Sf8L808aaLaR0dLOc+fZDT37XhADYf+a+
-         vLRD4w8FeQVEBo25h/6btw9CRcVDW8aaZwZolJMTbzAGmQXU8cY5stW9mYb21abWg/18
-         YG4MK+1SYf2AMq8lLtwS+GjSF5GNL65trUQC27YXr5qfPhWfGXvZ0g9TyFPb4BgBRD5i
-         43xA==
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:from:to:cc:subject:date:message-id:reply-to;
+        bh=ReBzsBimdpveLsy+Lkg8Fji3O2Fl/6cfbARc8AiQfvs=;
+        b=NMN/xH8R+SLKUOKCqztbFprqD4QQFBZBIMsn2qSQwp5gh0JsF10UlcY1OBJC4qgOlW
+         7ximjAX4ZJ6Gj3x9e/4ZiPRTdZteuQiDYVTKAPoRSJO5XhpPfT626xd3g1n5IOx29b5G
+         V16b2eg/y3XsLMUg53LRs8XdHewdUHf5ujP23Dt2kscw4jNXyTBimpkdCIdGUC+IF3sW
+         z76Zt86/kfvLdSld/bSODvQbEnDL+6WEm5YCP1QdfBEyNj4hxsglk82oU0B3cpRRX9UW
+         Ytipd0OsoPd+NuUHeMKLd2xmztnyptsPnSkC18B0ZMYosLJcWXTYo+yI9FHGXZJ/jxaZ
+         rkdA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=cc:to:from:subject:references:mime-version:message-id:in-reply-to
-         :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=nAX60ecFtxgT+PDunRPYKAFBfhjC2kUCNn7e5xMw2JM=;
-        b=LVZEUKuJ4Ew+fd2AtQEvkKPYh6iw4RFyHDN8kM0JQB/Dz2kFSZRG0VjdDtnOOEJB7F
-         pQmREmCIanT92m63g3FQNqBpxRuVpRBoYJ83AAH4SjlRvNoyDdxjcw21UUJlQCN5Y7dp
-         Pb/IycixpnQD32UKos7BUsgUCKlVVTAJtfJa4xwR8TdknjbSIcQ4IZYsvxr1jz0DjHkP
-         +GPamdly/Fy+uX84i424NGAyH1eMgOtVf3kDQFtJDnJaXOeldqk673KLOafooS6GGjz3
-         yw4ZQHlhyi4Figzjk6osQpNpOxwp6TFTALoSJUeZmTND83tKhijslap/fu6P6Tb6PViC
-         H+Jg==
-X-Gm-Message-State: ANoB5pmOdGrTPkJ6ltYKZcSwjsI1bTh7rKkf6dZ70pDc671tg7uHzpfy
-        6ht0Oob8xt6nbI6QoD/OptfCuMnB0MUd
-X-Google-Smtp-Source: AA0mqf4VSmvuX27sHnLvqKtgeRSFz4Auq0mq/vBu2k5mNn/LxCQK5AFjPymZIQd4w1mxmybX4hWMHH7aMQBq
-X-Received: from irogers.svl.corp.google.com ([2620:15c:2d4:203:553:438f:b86a:87f])
- (user=irogers job=sendgmr) by 2002:a17:90b:a10:b0:20a:eab5:cf39 with SMTP id
- gg16-20020a17090b0a1000b0020aeab5cf39mr1115442pjb.1.1668449669656; Mon, 14
- Nov 2022 10:14:29 -0800 (PST)
-Date:   Mon, 14 Nov 2022 10:12:51 -0800
-In-Reply-To: <20221114181251.2683871-1-irogers@google.com>
-Message-Id: <20221114181251.2683871-10-irogers@google.com>
-Mime-Version: 1.0
-References: <20221114181251.2683871-1-irogers@google.com>
-X-Mailer: git-send-email 2.38.1.431.g37b22c650d-goog
-Subject: [PATCH v2 9/9] perf list: Add json output option
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=ReBzsBimdpveLsy+Lkg8Fji3O2Fl/6cfbARc8AiQfvs=;
+        b=franngAonU4NbtVPBgCR+l+eB2RXi0dToDGzo78Zuny8q0uqXB5riOvqLe+1oaVYRw
+         EDp91/F1wRinVk7OAkrYoxSmxmleR+e6kmLeYNbF+a5x63MmT557Q3z84jocTWi1rfX9
+         lFj3zRrM0Fx7LJKSNMgVBP79C+SYNhdRgzpCW+8iLsNuBS+VgzW3eO7dhm4oN9HRstPu
+         mxQMhFwcqUrqGziZuWYMifEBlxdokaEbPPZ011rquGTcJsjnx1O/keepo6IC47XEGcCG
+         L6rw1pMR0zUnkHCthP4W2qFCrzNZ0m20CM16lAQWsIzDHM+15G+qy6yI5zPXbGm7RIJR
+         6qOw==
+X-Gm-Message-State: ANoB5plmUJi4jmtMocynm7vF1u95Qn5In9hotdnuhOFjFeqIizwm3Llp
+        7IJ1p2la+7tHtDptGOo0XdnQdRhtZanBv4e05f+SEA==
+X-Google-Smtp-Source: AA0mqf4j2XZu4W7wXvD7hTiCUa5tk5anNfQoyv5Q23/o/kY8GrZvi3Lo4Tpw1PP0IkdLpHg/OlFk8Nyg865KgGd6n1k=
+X-Received: by 2002:adf:a492:0:b0:22d:d4c:e99c with SMTP id
+ g18-20020adfa492000000b0022d0d4ce99cmr8270139wrb.582.1668449854955; Mon, 14
+ Nov 2022 10:17:34 -0800 (PST)
+MIME-Version: 1.0
+References: <20221112032244.1077370-1-namhyung@kernel.org> <20221112032244.1077370-2-namhyung@kernel.org>
+In-Reply-To: <20221112032244.1077370-2-namhyung@kernel.org>
 From:   Ian Rogers <irogers@google.com>
-To:     Weilin Wang <weilin.wang@intel.com>,
-        Perry Taylor <perry.taylor@intel.com>,
-        Caleb Biggers <caleb.biggers@intel.com>,
-        Leo Yan <leo.yan@linaro.org>,
-        Adrian Hunter <adrian.hunter@intel.com>,
+Date:   Mon, 14 Nov 2022 10:17:22 -0800
+Message-ID: <CAP-5=fWwnnRDDyf+DknFYU4aYeagXeemXOK9X-yP9Tax+bVnNA@mail.gmail.com>
+Subject: Re: [PATCH 01/11] perf stat: Fix crash with --per-node --metric-only
+ in CSV mode
+To:     Namhyung Kim <namhyung@kernel.org>
+Cc:     Arnaldo Carvalho de Melo <acme@kernel.org>,
+        Jiri Olsa <jolsa@kernel.org>, Ingo Molnar <mingo@kernel.org>,
         Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Jiri Olsa <jolsa@kernel.org>,
-        Namhyung Kim <namhyung@kernel.org>,
-        Sandipan Das <sandipan.das@amd.com>,
-        Kajol Jain <kjain@linux.ibm.com>,
-        Zhengjun Xing <zhengjun.xing@linux.intel.com>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Adrian Hunter <adrian.hunter@intel.com>,
+        linux-perf-users@vger.kernel.org,
         Kan Liang <kan.liang@linux.intel.com>,
-        Ravi Bangoria <ravi.bangoria@amd.com>,
-        Xin Gao <gaoxin@cdjrlc.com>, Rob Herring <robh@kernel.org>,
-        linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org
-Cc:     Stephane Eranian <eranian@google.com>,
-        Ian Rogers <irogers@google.com>
+        Zhengjun Xing <zhengjun.xing@linux.intel.com>,
+        James Clark <james.clark@arm.com>
 Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-Output events and metrics in a json format by overriding the print
-callbacks. Currently other command line options aren't supported and
-metrics are repeated once per metric group.
+On Fri, Nov 11, 2022 at 7:22 PM Namhyung Kim <namhyung@kernel.org> wrote:
+>
+> The following command will get segfault due to missing aggr_header_csv
+> for AGGR_NODE:
+>
+>   $ sudo perf stat -a --per-node -x, --metric-only true
+>
+> Fixes: 86895b480a2f ("perf stat: Add --per-node agregation support")
+> Signed-off-by: Namhyung Kim <namhyung@kernel.org>
 
-Signed-off-by: Ian Rogers <irogers@google.com>
----
- tools/perf/Documentation/perf-list.txt |   4 +
- tools/perf/builtin-list.c              | 283 ++++++++++++++++++++-----
- 2 files changed, 229 insertions(+), 58 deletions(-)
+Acked-by: Ian Rogers <irogers@google.com>
 
-diff --git a/tools/perf/Documentation/perf-list.txt b/tools/perf/Documentation/perf-list.txt
-index 44a819af573d..43263ca88ff7 100644
---- a/tools/perf/Documentation/perf-list.txt
-+++ b/tools/perf/Documentation/perf-list.txt
-@@ -43,6 +43,10 @@ Print deprecated events. By default the deprecated events are hidden.
- Print PMU events and metrics limited to the specific PMU name.
- (e.g. --unit cpu, --unit msr, --unit cpu_core, --unit cpu_atom)
- 
-+-j::
-+--json::
-+Output in json format.
-+
- [[EVENT_MODIFIERS]]
- EVENT MODIFIERS
- ---------------
-diff --git a/tools/perf/builtin-list.c b/tools/perf/builtin-list.c
-index 91e2b6f52548..910b5c3a7365 100644
---- a/tools/perf/builtin-list.c
-+++ b/tools/perf/builtin-list.c
-@@ -19,6 +19,7 @@
- #include "util/strlist.h"
- #include <subcmd/pager.h>
- #include <subcmd/parse-options.h>
-+#include <stdarg.h>
- #include <stdio.h>
- 
- struct print_state {
-@@ -217,10 +218,165 @@ static void default_print_metric(void *ps,
- 	}
- }
- 
-+struct json_print_state {
-+	/** Should a separator be printed prior to the next item? */
-+	bool need_sep;
-+};
-+
-+static void json_print_start(void *print_state __maybe_unused)
-+{
-+	printf("[\n");
-+}
-+
-+static void json_print_end(void *ps)
-+{
-+	struct json_print_state *print_state = ps;
-+
-+	printf("%s]\n", print_state->need_sep ? "\n" : "");
-+}
-+
-+static void fix_escape_printf(const char *fmt, ...)
-+{
-+	va_list args;
-+	char buf[2048];
-+	size_t buf_pos = 0;
-+
-+	va_start(args, fmt);
-+	for (size_t fmt_pos = 0; fmt_pos < strlen(fmt); fmt_pos++) {
-+		switch (fmt[fmt_pos]) {
-+		case '%': {
-+			const char *s = va_arg(args, const char*);
-+
-+			fmt_pos++;
-+			assert(fmt[fmt_pos] == 's');
-+			for (size_t s_pos = 0; s_pos < strlen(s); s_pos++) {
-+				switch (s[s_pos]) {
-+				case '\\':
-+					__fallthrough;
-+				case '\"':
-+					buf[buf_pos++] = '\\';
-+					assert(buf_pos < sizeof(buf));
-+					__fallthrough;
-+				default:
-+					buf[buf_pos++] = s[s_pos];
-+					assert(buf_pos < sizeof(buf));
-+					break;
-+				}
-+			}
-+			break;
-+		}
-+		default:
-+			buf[buf_pos++] = fmt[fmt_pos];
-+			assert(buf_pos < sizeof(buf));
-+			break;
-+		}
-+	}
-+	va_end(args);
-+	buf[buf_pos] = '\0';
-+	fputs(buf, stdout);
-+}
-+
-+static void json_print_event(void *ps, const char *pmu_name, const char *topic,
-+			     const char *event_name, const char *event_alias,
-+			     bool deprecated, const char *event_type_desc,
-+			     const char *desc, const char *long_desc,
-+			     const char *encoding_desc,
-+			     const char *metric_name, const char *metric_expr)
-+{
-+	struct json_print_state *print_state = ps;
-+	bool need_sep = false;
-+
-+	printf("%s{\n", print_state->need_sep ? ",\n" : "");
-+	print_state->need_sep = true;
-+	if (pmu_name) {
-+		fix_escape_printf("\t\"Unit\": \"%s\"", pmu_name);
-+		need_sep = true;
-+	}
-+	if (topic) {
-+		fix_escape_printf("%s\t\"Topic\": \"%s\"", need_sep ? ",\n" : "", topic);
-+		need_sep = true;
-+	}
-+	if (event_name) {
-+		fix_escape_printf("%s\t\"EventName\": \"%s\"", need_sep ? ",\n" : "", event_name);
-+		need_sep = true;
-+	}
-+	if (event_alias && strlen(event_alias)) {
-+		fix_escape_printf("%s\t\"EventAlias\": \"%s\"", need_sep ? ",\n" : "", event_alias);
-+		need_sep = true;
-+	}
-+	if (event_type_desc) {
-+		fix_escape_printf("%s\t\"EventType\": \"%s\"", need_sep ? ",\n" : "",
-+				  event_type_desc);
-+		need_sep = true;
-+	}
-+	if (deprecated) {
-+		fix_escape_printf("%s\t\"Deprecated\": \"%s\"", need_sep ? ",\n" : "",
-+				  deprecated ? "1" : "0");
-+		need_sep = true;
-+	}
-+	if (desc) {
-+		fix_escape_printf("%s\t\"BriefDescription\": \"%s\"", need_sep ? ",\n" : "", desc);
-+		need_sep = true;
-+	}
-+	if (long_desc) {
-+		fix_escape_printf("%s\t\"PublicDescription\": \"%s\"", need_sep ? ",\n" : "",
-+				  long_desc);
-+		need_sep = true;
-+	}
-+	if (encoding_desc) {
-+		fix_escape_printf("%s\t\"Encoding\": \"%s\"", need_sep ? ",\n" : "", encoding_desc);
-+		need_sep = true;
-+	}
-+	if (metric_name) {
-+		fix_escape_printf("%s\t\"MetricName\": \"%s\"", need_sep ? ",\n" : "", metric_name);
-+		need_sep = true;
-+	}
-+	if (metric_expr) {
-+		fix_escape_printf("%s\t\"MetricExpr\": \"%s\"", need_sep ? ",\n" : "", metric_expr);
-+		need_sep = true;
-+	}
-+	printf("%s}", need_sep ? "\n" : "");
-+}
-+
-+static void json_print_metric(void *ps __maybe_unused, const char *group,
-+			      const char *name, const char *desc,
-+			      const char *long_desc, const char *expr)
-+{
-+	struct json_print_state *print_state = ps;
-+	bool need_sep = false;
-+
-+	printf("%s{\n", print_state->need_sep ? ",\n" : "");
-+	print_state->need_sep = true;
-+	if (group) {
-+		fix_escape_printf("\t\"MetricGroup\": \"%s\"", group);
-+		need_sep = true;
-+	}
-+	if (name) {
-+		fix_escape_printf("%s\t\"MetricName\": \"%s\"", need_sep ? ",\n" : "", name);
-+		need_sep = true;
-+	}
-+	if (expr) {
-+		fix_escape_printf("%s\t\"MetricExpr\": \"%s\"", need_sep ? ",\n" : "", expr);
-+		need_sep = true;
-+	}
-+	if (desc) {
-+		fix_escape_printf("%s\t\"BriefDescription\": \"%s\"", need_sep ? ",\n" : "", desc);
-+		need_sep = true;
-+	}
-+	if (long_desc) {
-+		fix_escape_printf("%s\t\"PublicDescription\": \"%s\"", need_sep ? ",\n" : "",
-+				  long_desc);
-+		need_sep = true;
-+	}
-+	printf("%s}", need_sep ? "\n" : "");
-+}
-+
- int cmd_list(int argc, const char **argv)
- {
- 	int i, ret = 0;
--	struct print_state ps = {};
-+	struct print_state default_ps = {};
-+	struct print_state json_ps = {};
-+	void *ps = &default_ps;
- 	struct print_callbacks print_cb = {
- 		.print_start = default_print_start,
- 		.print_end = default_print_end,
-@@ -229,15 +385,17 @@ int cmd_list(int argc, const char **argv)
- 	};
- 	const char *hybrid_name = NULL;
- 	const char *unit_name = NULL;
-+	bool json = false;
- 	struct option list_options[] = {
--		OPT_BOOLEAN(0, "raw-dump", &ps.name_only, "Dump raw events"),
--		OPT_BOOLEAN('d', "desc", &ps.desc,
-+		OPT_BOOLEAN(0, "raw-dump", &default_ps.name_only, "Dump raw events"),
-+		OPT_BOOLEAN('j', "json", &json, "JSON encode events and metrics"),
-+		OPT_BOOLEAN('d', "desc", &default_ps.desc,
- 			    "Print extra event descriptions. --no-desc to not print."),
--		OPT_BOOLEAN('v', "long-desc", &ps.long_desc,
-+		OPT_BOOLEAN('v', "long-desc", &default_ps.long_desc,
- 			    "Print longer event descriptions."),
--		OPT_BOOLEAN(0, "details", &ps.detailed,
-+		OPT_BOOLEAN(0, "details", &default_ps.detailed,
- 			    "Print information on the perf event names and expressions used internally by events."),
--		OPT_BOOLEAN(0, "deprecated", &ps.deprecated,
-+		OPT_BOOLEAN(0, "deprecated", &default_ps.deprecated,
- 			    "Print deprecated events."),
- 		OPT_STRING(0, "cputype", &hybrid_name, "hybrid cpu type",
- 			   "Limit PMU or metric printing to the given hybrid PMU (e.g. core or atom)."),
-@@ -261,28 +419,37 @@ int cmd_list(int argc, const char **argv)
- 
- 	setup_pager();
- 
--	if (!ps.name_only)
-+	if (!default_ps.name_only)
- 		setup_pager();
- 
--	ps.desc = !ps.long_desc;
--	ps.last_topic = strdup("");
--	assert(ps.last_topic);
--	ps.visited_metrics = strlist__new(NULL, NULL);
--	assert(ps.visited_metrics);
--	if (unit_name)
--		ps.pmu_glob = strdup(unit_name);
--	else if (hybrid_name) {
--		ps.pmu_glob = perf_pmu__hybrid_type_to_pmu(hybrid_name);
--		if (!ps.pmu_glob)
--			pr_warning("WARNING: hybrid cputype is not supported!\n");
-+	if (json) {
-+		print_cb = (struct print_callbacks){
-+			.print_start = json_print_start,
-+			.print_end = json_print_end,
-+			.print_event = json_print_event,
-+			.print_metric = json_print_metric,
-+		};
-+		ps = &json_ps;
-+	} else {
-+		default_ps.desc = !default_ps.long_desc;
-+		default_ps.last_topic = strdup("");
-+		assert(default_ps.last_topic);
-+		default_ps.visited_metrics = strlist__new(NULL, NULL);
-+		assert(default_ps.visited_metrics);
-+		if (unit_name)
-+			default_ps.pmu_glob = strdup(unit_name);
-+		else if (hybrid_name) {
-+			default_ps.pmu_glob = perf_pmu__hybrid_type_to_pmu(hybrid_name);
-+			if (!default_ps.pmu_glob)
-+				pr_warning("WARNING: hybrid cputype is not supported!\n");
-+		}
- 	}
--
- 	print_cb.print_start(&ps);
- 
- 	if (argc == 0) {
--		ps.metrics = true;
--		ps.metricgroups = true;
--		print_events(&print_cb, &ps);
-+		default_ps.metrics = true;
-+		default_ps.metricgroups = true;
-+		print_events(&print_cb, ps);
- 		goto out;
- 	}
- 
-@@ -290,32 +457,32 @@ int cmd_list(int argc, const char **argv)
- 		char *sep, *s;
- 
- 		if (strcmp(argv[i], "tracepoint") == 0)
--			print_tracepoint_events(&print_cb, &ps);
-+			print_tracepoint_events(&print_cb, ps);
- 		else if (strcmp(argv[i], "hw") == 0 ||
- 			 strcmp(argv[i], "hardware") == 0)
--			print_symbol_events(&print_cb, &ps, PERF_TYPE_HARDWARE,
-+			print_symbol_events(&print_cb, ps, PERF_TYPE_HARDWARE,
- 					event_symbols_hw, PERF_COUNT_HW_MAX);
- 		else if (strcmp(argv[i], "sw") == 0 ||
- 			 strcmp(argv[i], "software") == 0) {
--			print_symbol_events(&print_cb, &ps, PERF_TYPE_SOFTWARE,
-+			print_symbol_events(&print_cb, ps, PERF_TYPE_SOFTWARE,
- 					event_symbols_sw, PERF_COUNT_SW_MAX);
--			print_tool_events(&print_cb, &ps);
-+			print_tool_events(&print_cb, ps);
- 		} else if (strcmp(argv[i], "cache") == 0 ||
- 			 strcmp(argv[i], "hwcache") == 0)
--			print_hwcache_events(&print_cb, &ps);
-+			print_hwcache_events(&print_cb, ps);
- 		else if (strcmp(argv[i], "pmu") == 0)
--			print_pmu_events(&print_cb, &ps);
-+			print_pmu_events(&print_cb, ps);
- 		else if (strcmp(argv[i], "sdt") == 0)
--			print_sdt_events(&print_cb, &ps);
-+			print_sdt_events(&print_cb, ps);
- 		else if (strcmp(argv[i], "metric") == 0 || strcmp(argv[i], "metrics") == 0) {
--			ps.metricgroups = false;
--			ps.metrics = true;
--			metricgroup__print(&print_cb, &ps);
-+			default_ps.metricgroups = false;
-+			default_ps.metrics = true;
-+			metricgroup__print(&print_cb, ps);
- 		} else if (strcmp(argv[i], "metricgroup") == 0 ||
- 			   strcmp(argv[i], "metricgroups") == 0) {
--			ps.metricgroups = true;
--			ps.metrics = false;
--			metricgroup__print(&print_cb, &ps);
-+			default_ps.metricgroups = true;
-+			default_ps.metrics = false;
-+			metricgroup__print(&print_cb, ps);
- 		} else if ((sep = strchr(argv[i], ':')) != NULL) {
- 			int sep_idx;
- 
-@@ -327,41 +494,41 @@ int cmd_list(int argc, const char **argv)
- 			}
- 
- 			s[sep_idx] = '\0';
--			ps.pmu_glob = s;
--			ps.event_glob = s + sep_idx + 1;
--			print_tracepoint_events(&print_cb, &ps);
--			print_sdt_events(&print_cb, &ps);
--			ps.metrics = true;
--			ps.metricgroups = true;
--			metricgroup__print(&print_cb, &ps);
-+			default_ps.pmu_glob = s;
-+			default_ps.event_glob = s + sep_idx + 1;
-+			print_tracepoint_events(&print_cb, ps);
-+			print_sdt_events(&print_cb, ps);
-+			default_ps.metrics = true;
-+			default_ps.metricgroups = true;
-+			metricgroup__print(&print_cb, ps);
- 			free(s);
- 		} else {
- 			if (asprintf(&s, "*%s*", argv[i]) < 0) {
- 				printf("Critical: Not enough memory! Trying to continue...\n");
- 				continue;
- 			}
--			ps.event_glob = s;
--			print_symbol_events(&print_cb, &ps, PERF_TYPE_HARDWARE,
-+			default_ps.event_glob = s;
-+			print_symbol_events(&print_cb, ps, PERF_TYPE_HARDWARE,
- 					event_symbols_hw, PERF_COUNT_HW_MAX);
--			print_symbol_events(&print_cb, &ps, PERF_TYPE_SOFTWARE,
-+			print_symbol_events(&print_cb, ps, PERF_TYPE_SOFTWARE,
- 					event_symbols_sw, PERF_COUNT_SW_MAX);
--			print_tool_events(&print_cb, &ps);
--			print_hwcache_events(&print_cb, &ps);
--			print_pmu_events(&print_cb, &ps);
--			print_tracepoint_events(&print_cb, &ps);
--			print_sdt_events(&print_cb, &ps);
--			ps.metrics = true;
--			ps.metricgroups = true;
--			metricgroup__print(&print_cb, &ps);
-+			print_tool_events(&print_cb, ps);
-+			print_hwcache_events(&print_cb, ps);
-+			print_pmu_events(&print_cb, ps);
-+			print_tracepoint_events(&print_cb, ps);
-+			print_sdt_events(&print_cb, ps);
-+			default_ps.metrics = true;
-+			default_ps.metricgroups = true;
-+			metricgroup__print(&print_cb, ps);
- 			free(s);
- 		}
- 	}
- 
- out:
--	print_cb.print_end(&ps);
--	free(ps.pmu_glob);
--	free(ps.last_topic);
--	free(ps.last_metricgroups);
--	strlist__delete(ps.visited_metrics);
-+	print_cb.print_end(ps);
-+	free(default_ps.pmu_glob);
-+	free(default_ps.last_topic);
-+	free(default_ps.last_metricgroups);
-+	strlist__delete(default_ps.visited_metrics);
- 	return ret;
- }
--- 
-2.38.1.431.g37b22c650d-goog
+Thanks,
+Ian
 
+> ---
+>  tools/perf/util/stat-display.c | 4 +++-
+>  1 file changed, 3 insertions(+), 1 deletion(-)
+>
+> diff --git a/tools/perf/util/stat-display.c b/tools/perf/util/stat-display.c
+> index 657434cd29ee..ea41e6308c50 100644
+> --- a/tools/perf/util/stat-display.c
+> +++ b/tools/perf/util/stat-display.c
+> @@ -534,7 +534,7 @@ static void printout(struct perf_stat_config *config, struct aggr_cpu_id id, int
+>                         [AGGR_CORE] = 2,
+>                         [AGGR_THREAD] = 1,
+>                         [AGGR_UNSET] = 0,
+> -                       [AGGR_NODE] = 0,
+> +                       [AGGR_NODE] = 1,
+>                 };
+>
+>                 pm = config->metric_only ? print_metric_only_csv : print_metric_csv;
+> @@ -819,6 +819,7 @@ static int aggr_header_lens[] = {
+>         [AGGR_SOCKET] = 12,
+>         [AGGR_NONE] = 6,
+>         [AGGR_THREAD] = 24,
+> +       [AGGR_NODE] = 6,
+>         [AGGR_GLOBAL] = 0,
+>  };
+>
+> @@ -828,6 +829,7 @@ static const char *aggr_header_csv[] = {
+>         [AGGR_SOCKET]   =       "socket,cpus",
+>         [AGGR_NONE]     =       "cpu,",
+>         [AGGR_THREAD]   =       "comm-pid,",
+> +       [AGGR_NODE]     =       "node,",
+>         [AGGR_GLOBAL]   =       ""
+>  };
+>
+> --
+> 2.38.1.493.g58b659f92b-goog
+>
