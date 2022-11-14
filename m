@@ -2,219 +2,193 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6C35AC433FE
-	for <linux-perf-users@archiver.kernel.org>; Mon, 14 Nov 2022 08:51:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1DC93C433FE
+	for <linux-perf-users@archiver.kernel.org>; Mon, 14 Nov 2022 08:55:57 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S235675AbiKNIva (ORCPT
+        id S235846AbiKNIz4 (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Mon, 14 Nov 2022 03:51:30 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35632 "EHLO
+        Mon, 14 Nov 2022 03:55:56 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38354 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S233166AbiKNIv3 (ORCPT
+        with ESMTP id S235805AbiKNIzz (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Mon, 14 Nov 2022 03:51:29 -0500
-Received: from mga06.intel.com (mga06b.intel.com [134.134.136.31])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id AA36719C35;
-        Mon, 14 Nov 2022 00:51:28 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1668415888; x=1699951888;
-  h=message-id:date:mime-version:subject:to:cc:references:
-   from:in-reply-to:content-transfer-encoding;
-  bh=xFTYNBP+TcEy3dDL/kF6xEoY/vWH2jxHcttCdo+RdSg=;
-  b=PSsQGYoKxMTwLQfmrxDc9OYL8M63IHfwHURc6kCiM6k4MxS9Qw+/jXjh
-   96tc1zL4hYMJoyzDNKldQZCg1ZEZ/W96Me0YKlPiuWqlO4BPXrVDglSH1
-   C48mqQXzBlFRSF7XACKsMJmA12tx8Gs5DnLa2F/eorFExn+3etFbOZ26K
-   DmUGu0uqwqrsrKeTILPKfSyugEZDcw6yNO5oPv9TzmuIFxhrzsAaDpG8c
-   4Yar/q7VKq+EQTqsPSDcB2I1qissYE15QVVjXUC7KdopgTn82yU4fhaCD
-   myGAqmXw2scTqwCgKcJb3dETxPNrDzEtTBNZQRnK1p2nnGONDJjVT/CiO
-   w==;
-X-IronPort-AV: E=McAfee;i="6500,9779,10530"; a="374046209"
-X-IronPort-AV: E=Sophos;i="5.96,161,1665471600"; 
-   d="scan'208";a="374046209"
-Received: from orsmga008.jf.intel.com ([10.7.209.65])
-  by orsmga104.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 14 Nov 2022 00:51:28 -0800
-X-IronPort-AV: E=McAfee;i="6500,9779,10530"; a="669562754"
-X-IronPort-AV: E=Sophos;i="5.96,161,1665471600"; 
-   d="scan'208";a="669562754"
-Received: from xingzhen-mobl.ccr.corp.intel.com (HELO [10.254.211.184]) ([10.254.211.184])
-  by orsmga008-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 14 Nov 2022 00:51:22 -0800
-Message-ID: <63b7b6d5-f441-7ebc-fd3f-9d5f36d2938d@linux.intel.com>
-Date:   Mon, 14 Nov 2022 16:51:20 +0800
+        Mon, 14 Nov 2022 03:55:55 -0500
+Received: from mx0a-001b2d01.pphosted.com (mx0a-001b2d01.pphosted.com [148.163.156.1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 43BE41ADBE
+        for <linux-perf-users@vger.kernel.org>; Mon, 14 Nov 2022 00:55:54 -0800 (PST)
+Received: from pps.filterd (m0187473.ppops.net [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (8.17.1.19/8.17.1.5) with ESMTP id 2AE7rlwW024630;
+        Mon, 14 Nov 2022 08:55:34 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=from : to : cc : subject
+ : date : message-id : mime-version : content-transfer-encoding; s=pp1;
+ bh=a9Obil4L/SqCYDOBgLgYhTRskWi+CX5jOMidKyVBrlA=;
+ b=dTAGpTXjx2ZN3626mtb1tecvHuQWaaZLiDHA0vT9N0xv8Xux5i01wn0ZMOlK3q1SsFmo
+ xCOvCtAArS/+ldbrD4Du/DpBMTlcQf5C9m8rC7OgiMoRc0CScszhKQkLL4GN6z10bXIk
+ XNdtyC/hbkcf7phVmT3UpcC206lXXL//K4hiAPk/BAA2upUMo+21ku0Vk+gCcw6kLKSt
+ 5mjDcdWmIGhkvCAVEmWhB59/fwfCHrPp1Onj1cegn/pOnrl2qqB1Q3yKqMSvReIiHUVd
+ 87ixwp/lX7sED2U4l6PrKB+4CHLmY3+kTKXrdVfe/0CmicdCtixts0FjN+dOnA4vb+5K 1Q== 
+Received: from pps.reinject (localhost [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 3kuhpe1np7-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Mon, 14 Nov 2022 08:55:34 +0000
+Received: from m0187473.ppops.net (m0187473.ppops.net [127.0.0.1])
+        by pps.reinject (8.17.1.5/8.17.1.5) with ESMTP id 2AE8BVbt018129;
+        Mon, 14 Nov 2022 08:55:34 GMT
+Received: from ppma03fra.de.ibm.com (6b.4a.5195.ip4.static.sl-reverse.com [149.81.74.107])
+        by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 3kuhpe1nnf-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Mon, 14 Nov 2022 08:55:33 +0000
+Received: from pps.filterd (ppma03fra.de.ibm.com [127.0.0.1])
+        by ppma03fra.de.ibm.com (8.16.1.2/8.16.1.2) with SMTP id 2AE8oeMt005023;
+        Mon, 14 Nov 2022 08:55:31 GMT
+Received: from b06cxnps4076.portsmouth.uk.ibm.com (d06relay13.portsmouth.uk.ibm.com [9.149.109.198])
+        by ppma03fra.de.ibm.com with ESMTP id 3kt348smr9-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Mon, 14 Nov 2022 08:55:31 +0000
+Received: from b06wcsmtp001.portsmouth.uk.ibm.com (b06wcsmtp001.portsmouth.uk.ibm.com [9.149.105.160])
+        by b06cxnps4076.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 2AE8tSwH31195432
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Mon, 14 Nov 2022 08:55:28 GMT
+Received: from b06wcsmtp001.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id F18FFA405F;
+        Mon, 14 Nov 2022 08:55:27 +0000 (GMT)
+Received: from b06wcsmtp001.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 34DF1A405B;
+        Mon, 14 Nov 2022 08:55:25 +0000 (GMT)
+Received: from localhost.localdomain (unknown [9.43.93.244])
+        by b06wcsmtp001.portsmouth.uk.ibm.com (Postfix) with ESMTP;
+        Mon, 14 Nov 2022 08:55:24 +0000 (GMT)
+From:   Athira Rajeev <atrajeev@linux.vnet.ibm.com>
+To:     acme@kernel.org, jolsa@kernel.org, ak@linux.intel.com
+Cc:     namhyung@kernel.org, irogers@google.com, james.clark@arm.com,
+        mpe@ellerman.id.au, linux-perf-users@vger.kernel.org,
+        linuxppc-dev@lists.ozlabs.org, maddy@linux.vnet.ibm.com,
+        rnsastry@linux.ibm.com, kjain@linux.ibm.com, disgoel@linux.ibm.com
+Subject: [PATCH V2] tools/perf: Fix printing field separator in CSV metrics output
+Date:   Mon, 14 Nov 2022 14:25:23 +0530
+Message-Id: <20221114085523.86570-1-atrajeev@linux.vnet.ibm.com>
+X-Mailer: git-send-email 2.35.1
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:102.0) Gecko/20100101
- Thunderbird/102.4.2
-Subject: Re: [PATCH v1 4/9] perf list: Generalize limiting to a PMU name
-Content-Language: en-US
-To:     Ian Rogers <irogers@google.com>,
-        Weilin Wang <weilin.wang@intel.com>,
-        Perry Taylor <perry.taylor@intel.com>,
-        Caleb Biggers <caleb.biggers@intel.com>,
-        Leo Yan <leo.yan@linaro.org>,
-        Adrian Hunter <adrian.hunter@intel.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Jiri Olsa <jolsa@kernel.org>,
-        Namhyung Kim <namhyung@kernel.org>,
-        Sandipan Das <sandipan.das@amd.com>,
-        Kajol Jain <kjain@linux.ibm.com>,
-        Kan Liang <kan.liang@linux.intel.com>,
-        Ravi Bangoria <ravi.bangoria@amd.com>,
-        Xin Gao <gaoxin@cdjrlc.com>, Rob Herring <robh@kernel.org>,
-        linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org
-Cc:     Stephane Eranian <eranian@google.com>
-References: <20221114075127.2650315-1-irogers@google.com>
- <20221114075127.2650315-5-irogers@google.com>
-From:   Xing Zhengjun <zhengjun.xing@linux.intel.com>
-In-Reply-To: <20221114075127.2650315-5-irogers@google.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
+X-TM-AS-GCONF: 00
+X-Proofpoint-GUID: wV_CAXtjCpK4GCaneK3GaqjU9JhdaTjT
+X-Proofpoint-ORIG-GUID: HJsW2mD2HkIq5dMObAkQmoujL5f3KQzX
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.219,Aquarius:18.0.895,Hydra:6.0.545,FMLib:17.11.122.1
+ definitions=2022-11-14_07,2022-11-11_01,2022-06-22_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 adultscore=0 spamscore=0
+ priorityscore=1501 lowpriorityscore=0 suspectscore=0 phishscore=0
+ clxscore=1015 bulkscore=0 mlxlogscore=999 malwarescore=0 impostorscore=0
+ mlxscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2210170000 definitions=main-2211140062
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
+In perf stat with CSV output option, number of fields
+in metrics output is not matching with number of fields
+in other event output lines.
 
+Sample output below after applying patch to fix
+printing os->prefix.
 
-On 11/14/2022 3:51 PM, Ian Rogers wrote:
-> Deprecate the --cputype option and add a --unit option where '--unit
-> cpu_atom' behaves like '--cputype atom'. The --unit option can be used
-> with arbitrary PMUs, for example:
-> 
-> ```
-> $ perf list --unit msr pmu
-> 
-> List of pre-defined events (to be used in -e or -M):
-> 
->    msr/aperf/                                         [Kernel PMU event]
->    msr/cpu_thermal_margin/                            [Kernel PMU event]
->    msr/mperf/                                         [Kernel PMU event]
->    msr/pperf/                                         [Kernel PMU event]
->    msr/smi/                                           [Kernel PMU event]
->    msr/tsc/                                           [Kernel PMU event]
-> ```
-> 
-> Signed-off-by: Ian Rogers <irogers@google.com>
-> ---
->   tools/perf/Documentation/perf-list.txt |  6 +++---
->   tools/perf/builtin-list.c              | 18 ++++++++++++------
->   tools/perf/util/metricgroup.c          |  3 ++-
->   tools/perf/util/pmu.c                  |  4 +---
->   4 files changed, 18 insertions(+), 13 deletions(-)
-> 
-> diff --git a/tools/perf/Documentation/perf-list.txt b/tools/perf/Documentation/perf-list.txt
-> index 57384a97c04f..44a819af573d 100644
-> --- a/tools/perf/Documentation/perf-list.txt
-> +++ b/tools/perf/Documentation/perf-list.txt
-> @@ -39,9 +39,9 @@ any extra expressions computed by perf stat.
->   --deprecated::
->   Print deprecated events. By default the deprecated events are hidden.
->   
-> ---cputype::
-> -Print events applying cpu with this type for hybrid platform
-> -(e.g. --cputype core or --cputype atom)
-> +--unit::
-> +Print PMU events and metrics limited to the specific PMU name.
-> +(e.g. --unit cpu, --unit msr, --unit cpu_core, --unit cpu_atom)
->   
->   [[EVENT_MODIFIERS]]
->   EVENT MODIFIERS
-> diff --git a/tools/perf/builtin-list.c b/tools/perf/builtin-list.c
-> index 58e1ec1654ef..cc84ced6da26 100644
-> --- a/tools/perf/builtin-list.c
-> +++ b/tools/perf/builtin-list.c
-> @@ -21,7 +21,6 @@
->   
->   static bool desc_flag = true;
->   static bool details_flag;
-> -static const char *hybrid_type;
->   
->   int cmd_list(int argc, const char **argv)
->   {
-> @@ -30,6 +29,8 @@ int cmd_list(int argc, const char **argv)
->   	bool long_desc_flag = false;
->   	bool deprecated = false;
->   	char *pmu_name = NULL;
-> +	const char *hybrid_name = NULL;
-> +	const char *unit_name = NULL;
->   	struct option list_options[] = {
->   		OPT_BOOLEAN(0, "raw-dump", &raw_dump, "Dump raw events"),
->   		OPT_BOOLEAN('d', "desc", &desc_flag,
-> @@ -40,9 +41,10 @@ int cmd_list(int argc, const char **argv)
->   			    "Print information on the perf event names and expressions used internally by events."),
->   		OPT_BOOLEAN(0, "deprecated", &deprecated,
->   			    "Print deprecated events."),
-> -		OPT_STRING(0, "cputype", &hybrid_type, "hybrid cpu type",
-> -			   "Print events applying cpu with this type for hybrid platform "
-> -			   "(e.g. core or atom)"),
-> +		OPT_STRING(0, "cputype", &hybrid_name, "hybrid cpu type",
-> +			   "Limit PMU or metric printing to the given hybrid PMU (e.g. core or atom)."),
-> +		OPT_STRING(0, "unit", &unit_name, "PMU name",
-> +			   "Limit PMU or metric printing to the specified PMU."),
->   		OPT_INCR(0, "debug", &verbose,
->   			     "Enable debugging output"),
->   		OPT_END()
-> @@ -53,6 +55,8 @@ int cmd_list(int argc, const char **argv)
->   	};
->   
->   	set_option_flag(list_options, 0, "raw-dump", PARSE_OPT_HIDDEN);
-> +	/* Hide hybrid flag for the more generic 'unit' flag. */
-> +	set_option_flag(list_options, 0, "cputype", PARSE_OPT_HIDDEN);
->   
->   	argc = parse_options(argc, argv, list_options, list_usage,
->   			     PARSE_OPT_STOP_AT_NON_OPTION);
-> @@ -62,8 +66,10 @@ int cmd_list(int argc, const char **argv)
->   	if (!raw_dump && pager_in_use())
->   		printf("\nList of pre-defined events (to be used in -e or -M):\n\n");
->   
-> -	if (hybrid_type) {
-> -		pmu_name = perf_pmu__hybrid_type_to_pmu(hybrid_type);
-> +	if (unit_name)
-> +		pmu_name = strdup(unit_name);
-> +	else if (hybrid_name) {
-> +		pmu_name = perf_pmu__hybrid_type_to_pmu(hybrid_name);
->   		if (!pmu_name)
->   			pr_warning("WARNING: hybrid cputype is not supported!\n");
->   	}
-> diff --git a/tools/perf/util/metricgroup.c b/tools/perf/util/metricgroup.c
-> index 4c98ac29ee13..1943fed9b6d9 100644
-> --- a/tools/perf/util/metricgroup.c
-> +++ b/tools/perf/util/metricgroup.c
-> @@ -556,11 +556,12 @@ static int metricgroup__print_callback(const struct pmu_event *pe,
->   				       void *vdata)
->   {
->   	struct metricgroup_print_data *data = vdata;
-> +	const char *pmu = pe->pmu ?: "cpu";
->   
->   	if (!pe->metric_expr)
->   		return 0;
->   
-> -	if (data->pmu_name && perf_pmu__is_hybrid(pe->pmu) && strcmp(data->pmu_name, pe->pmu))
-> +	if (data->pmu_name && strcmp(data->pmu_name, pmu))
->   		return 0;
->   
->   	return metricgroup__print_pmu_event(pe, data->metricgroups, data->filter,
-> diff --git a/tools/perf/util/pmu.c b/tools/perf/util/pmu.c
-> index a8f9f47c6ed9..9c771f136b81 100644
-> --- a/tools/perf/util/pmu.c
-> +++ b/tools/perf/util/pmu.c
-> @@ -1694,10 +1694,8 @@ void print_pmu_events(const char *event_glob, bool name_only, bool quiet_flag,
->   	pmu = NULL;
->   	j = 0;
->   	while ((pmu = perf_pmu__scan(pmu)) != NULL) {
-> -		if (pmu_name && perf_pmu__is_hybrid(pmu->name) &&
-> -		    strcmp(pmu_name, pmu->name)) {
-> +		if (pmu_name && pmu->name && strcmp(pmu_name, pmu->name))
+	# ./perf stat -x, --per-socket -a -C 1 ls
+	S0,1,1.89,msec,cpu-clock,1887692,100.00,1.013,CPUs utilized
+	S0,1,2,,context-switches,1885842,100.00,1.060,K/sec
+	S0,1,0,,cpu-migrations,1885374,100.00,0.000,/sec
+	S0,1,2,,page-faults,1884880,100.00,1.060,K/sec
+	S0,1,189544,,cycles,1263158,67.00,0.100,GHz
+	S0,1,64602,,stalled-cycles-frontend,1876146,100.00,34.08,frontend cycles idle
+	S0,1,128241,,stalled-cycles-backend,1875512,100.00,67.66,backend cycles idle
+	S0,1,95578,,instructions,1874676,100.00,0.50,insn per cycle
+===>	S0,1,,,,,,,1.34,stalled cycles per insn
 
-Why remove perf_pmu__is_hybrid check?
+The above command line uses field separator as ","
+via "-x," option and per-socket option displays
+socket value as first field. But here the last line
+for "stalled cycles per insn" has more separators.
+Each csv output line is expected to have 8 field
+separatorsi (for the 9 fields), where as last line
+has 10 "," in the result. Patch fixes this issue.
 
->   			continue;
-> -		}
->   
->   		list_for_each_entry(alias, &pmu->aliases, list) {
->   			char *name = alias->desc ? alias->name :
+The counter stats are displayed by function
+"perf_stat__print_shadow_stats" in code
+"util/stat-shadow.c". While printing the stats info
+for "stalled cycles per insn", function "new_line_csv"
+is used as new_line callback.
 
+The fields printed in each line contains:
+"Socket_id,aggr nr,Avg,unit,event_name,run,enable_percent,ratio,unit"
+
+The metric output prints Socket_id, aggr nr, ratio
+and unit. It has to skip through remaining five fields
+ie, Avg,unit,event_name,run,enable_percent. The csv
+line callback uses "os->nfields" to know the number of
+fields to skip to match with other lines.
+Currently it is set as:
+	os.nfields = 3 + aggr_fields[config->aggr_mode] + (counter->cgrp ? 1 : 0);
+
+But in case of aggregation modes, csv_sep already
+gets printed along with each field (Function "aggr_printout"
+in util/stat-display.c). So aggr_fields can be
+removed from nfields. And fixed number of fields to
+skip has to be "4". This is to skip fields for:
+"avg, unit, event name, run, enable_percent"
+Example from line for instructions:
+"1.89,msec,cpu-clock,1887692,100.00"
+
+This needs 4 csv separators. Patch removes aggr_fields
+and uses 4 as fixed number of os->nfields to skip.
+
+After the patch:
+
+	# ./perf stat -x, --per-socket -a -C 1 ls
+	S0,1,1.92,msec,cpu-clock,1917648,100.00,1.010,CPUs utilized
+	S0,1,54,,context-switches,1916762,100.00,28.176,K/sec
+	-------
+	S0,1,528693,,instructions,1908854,100.00,0.36,insn per cycle
+	S0,1,,,,,,1.81,stalled cycles per insn
+
+Fixes: 92a61f6412d3 ("perf stat: Implement CSV metrics output")
+Reported-by: Disha Goel <disgoel@linux.vnet.ibm.com>
+Reviewed-By: Kajol Jain <kjain@linux.ibm.com>
+Tested-by: Disha Goel<disgoel@linux.vnet.ibm.com>
+Signed-off-by: Athira Rajeev <atrajeev@linux.vnet.ibm.com>
+---
+Changelog:
+- Rebased on top of latest source.
+- Added Reviewed-by and Tested-by from Kajol and
+  Disha.
+
+ tools/perf/util/stat-display.c | 13 +------------
+ 1 file changed, 1 insertion(+), 12 deletions(-)
+
+diff --git a/tools/perf/util/stat-display.c b/tools/perf/util/stat-display.c
+index ba66bb7fc1ca..5ce14bf18055 100644
+--- a/tools/perf/util/stat-display.c
++++ b/tools/perf/util/stat-display.c
+@@ -551,20 +551,9 @@ static void printout(struct perf_stat_config *config, struct aggr_cpu_id id, int
+ 	new_line_t nl;
+ 
+ 	if (config->csv_output) {
+-		static const int aggr_fields[AGGR_MAX] = {
+-			[AGGR_NONE] = 1,
+-			[AGGR_GLOBAL] = 0,
+-			[AGGR_SOCKET] = 2,
+-			[AGGR_DIE] = 2,
+-			[AGGR_CORE] = 2,
+-			[AGGR_THREAD] = 1,
+-			[AGGR_UNSET] = 0,
+-			[AGGR_NODE] = 1,
+-		};
+-
+ 		pm = config->metric_only ? print_metric_only_csv : print_metric_csv;
+ 		nl = config->metric_only ? new_line_metric : new_line_csv;
+-		os.nfields = 3 + aggr_fields[config->aggr_mode] + (counter->cgrp ? 1 : 0);
++		os.nfields = 4 + (counter->cgrp ? 1 : 0);
+ 	} else if (config->json_output) {
+ 		pm = config->metric_only ? print_metric_only_json : print_metric_json;
+ 		nl = config->metric_only ? new_line_metric : new_line_json;
 -- 
-Zhengjun Xing
+2.31.1
+
