@@ -2,73 +2,74 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4E4B7C4332F
-	for <linux-perf-users@archiver.kernel.org>; Mon, 14 Nov 2022 08:36:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6C35AC433FE
+	for <linux-perf-users@archiver.kernel.org>; Mon, 14 Nov 2022 08:51:31 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S236537AbiKNIgF (ORCPT
+        id S235675AbiKNIva (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Mon, 14 Nov 2022 03:36:05 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54354 "EHLO
+        Mon, 14 Nov 2022 03:51:30 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35632 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S236545AbiKNIgB (ORCPT
+        with ESMTP id S233166AbiKNIv3 (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Mon, 14 Nov 2022 03:36:01 -0500
-Received: from mga18.intel.com (mga18.intel.com [134.134.136.126])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 17CAC1C114;
-        Mon, 14 Nov 2022 00:36:01 -0800 (PST)
+        Mon, 14 Nov 2022 03:51:29 -0500
+Received: from mga06.intel.com (mga06b.intel.com [134.134.136.31])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id AA36719C35;
+        Mon, 14 Nov 2022 00:51:28 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1668414961; x=1699950961;
+  t=1668415888; x=1699951888;
   h=message-id:date:mime-version:subject:to:cc:references:
    from:in-reply-to:content-transfer-encoding;
-  bh=fdpZZ4r1hTVkoO3kGE4DlZQf60aaP2bmV66mBFHDQ/U=;
-  b=C2Wg0o2p64l9epkj4axYH6U+R/sMR/Du/H79RR1+XV7jxrn/V+dK5TL4
-   +XlL1RyOmLSpy2K/5o/FBAJd4vDn5/IDArmo0LyEwCNdMPEMjNiFZ67b7
-   KFY3Asrw+q01CbnV7BGS0eDdYle87O6AGv+WRKz3x9L7NrCRNhJo8saUA
-   iWyYVU7v9iFcSpJwDQ7ajNvlfOa4oHXI+hhWtjQeReX91Hl0OrVjvzFUs
-   uh/stjv8jfHBKK5DICrzCYZYORd5CgWAWi2h0VSPC4I1bc6iujbxDXJ+A
-   5YV2gkDLofyLkjn16G7LXMluPiLXZVsOOKMziu9mhnZ9BXg526AQK7eTG
-   g==;
-X-IronPort-AV: E=McAfee;i="6500,9779,10530"; a="295277104"
+  bh=xFTYNBP+TcEy3dDL/kF6xEoY/vWH2jxHcttCdo+RdSg=;
+  b=PSsQGYoKxMTwLQfmrxDc9OYL8M63IHfwHURc6kCiM6k4MxS9Qw+/jXjh
+   96tc1zL4hYMJoyzDNKldQZCg1ZEZ/W96Me0YKlPiuWqlO4BPXrVDglSH1
+   C48mqQXzBlFRSF7XACKsMJmA12tx8Gs5DnLa2F/eorFExn+3etFbOZ26K
+   DmUGu0uqwqrsrKeTILPKfSyugEZDcw6yNO5oPv9TzmuIFxhrzsAaDpG8c
+   4Yar/q7VKq+EQTqsPSDcB2I1qissYE15QVVjXUC7KdopgTn82yU4fhaCD
+   myGAqmXw2scTqwCgKcJb3dETxPNrDzEtTBNZQRnK1p2nnGONDJjVT/CiO
+   w==;
+X-IronPort-AV: E=McAfee;i="6500,9779,10530"; a="374046209"
 X-IronPort-AV: E=Sophos;i="5.96,161,1665471600"; 
-   d="scan'208";a="295277104"
-Received: from fmsmga005.fm.intel.com ([10.253.24.32])
-  by orsmga106.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 14 Nov 2022 00:36:00 -0800
-X-IronPort-AV: E=McAfee;i="6500,9779,10530"; a="967483826"
+   d="scan'208";a="374046209"
+Received: from orsmga008.jf.intel.com ([10.7.209.65])
+  by orsmga104.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 14 Nov 2022 00:51:28 -0800
+X-IronPort-AV: E=McAfee;i="6500,9779,10530"; a="669562754"
 X-IronPort-AV: E=Sophos;i="5.96,161,1665471600"; 
-   d="scan'208";a="967483826"
+   d="scan'208";a="669562754"
 Received: from xingzhen-mobl.ccr.corp.intel.com (HELO [10.254.211.184]) ([10.254.211.184])
-  by fmsmga005-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 14 Nov 2022 00:35:56 -0800
-Message-ID: <b39171e6-4af3-6102-2207-aad57dc92226@linux.intel.com>
-Date:   Mon, 14 Nov 2022 16:35:35 +0800
+  by orsmga008-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 14 Nov 2022 00:51:22 -0800
+Message-ID: <63b7b6d5-f441-7ebc-fd3f-9d5f36d2938d@linux.intel.com>
+Date:   Mon, 14 Nov 2022 16:51:20 +0800
 MIME-Version: 1.0
 User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:102.0) Gecko/20100101
  Thunderbird/102.4.2
-Subject: Re: [RFC PATCH v2 3/6] perf vendor events arm64: Add cache metrics
- for neoverse-n2
-To:     Jing Zhang <renyu.zj@linux.alibaba.com>,
-        linux-arm-kernel@lists.infradead.org,
-        linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org,
-        John Garry <john.garry@huawei.com>,
-        Will Deacon <will@kernel.org>,
-        James Clark <james.clark@arm.com>,
-        Mike Leach <mike.leach@linaro.org>,
-        Leo Yan <leo.yan@linaro.org>
-Cc:     Peter Zijlstra <peterz@infradead.org>,
+Subject: Re: [PATCH v1 4/9] perf list: Generalize limiting to a PMU name
+Content-Language: en-US
+To:     Ian Rogers <irogers@google.com>,
+        Weilin Wang <weilin.wang@intel.com>,
+        Perry Taylor <perry.taylor@intel.com>,
+        Caleb Biggers <caleb.biggers@intel.com>,
+        Leo Yan <leo.yan@linaro.org>,
+        Adrian Hunter <adrian.hunter@intel.com>,
+        Peter Zijlstra <peterz@infradead.org>,
         Ingo Molnar <mingo@redhat.com>,
         Arnaldo Carvalho de Melo <acme@kernel.org>,
         Mark Rutland <mark.rutland@arm.com>,
         Alexander Shishkin <alexander.shishkin@linux.intel.com>,
         Jiri Olsa <jolsa@kernel.org>,
         Namhyung Kim <namhyung@kernel.org>,
-        Andrew Kilroy <andrew.kilroy@arm.com>,
-        Shuai Xue <xueshuai@linux.alibaba.com>,
-        Zhuo Song <zhuo.song@linux.alibaba.com>
-References: <1668411720-3581-1-git-send-email-renyu.zj@linux.alibaba.com>
- <1668411720-3581-4-git-send-email-renyu.zj@linux.alibaba.com>
-Content-Language: en-US
+        Sandipan Das <sandipan.das@amd.com>,
+        Kajol Jain <kjain@linux.ibm.com>,
+        Kan Liang <kan.liang@linux.intel.com>,
+        Ravi Bangoria <ravi.bangoria@amd.com>,
+        Xin Gao <gaoxin@cdjrlc.com>, Rob Herring <robh@kernel.org>,
+        linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org
+Cc:     Stephane Eranian <eranian@google.com>
+References: <20221114075127.2650315-1-irogers@google.com>
+ <20221114075127.2650315-5-irogers@google.com>
 From:   Xing Zhengjun <zhengjun.xing@linux.intel.com>
-In-Reply-To: <1668411720-3581-4-git-send-email-renyu.zj@linux.alibaba.com>
+In-Reply-To: <20221114075127.2650315-5-irogers@google.com>
 Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 7bit
 Precedence: bulk
@@ -77,104 +78,143 @@ X-Mailing-List: linux-perf-users@vger.kernel.org
 
 
 
-On 11/14/2022 3:41 PM, Jing Zhang wrote:
-> Add cache related metrics.
+On 11/14/2022 3:51 PM, Ian Rogers wrote:
+> Deprecate the --cputype option and add a --unit option where '--unit
+> cpu_atom' behaves like '--cputype atom'. The --unit option can be used
+> with arbitrary PMUs, for example:
 > 
-> Signed-off-by: Jing Zhang <renyu.zj@linux.alibaba.com>
+> ```
+> $ perf list --unit msr pmu
+> 
+> List of pre-defined events (to be used in -e or -M):
+> 
+>    msr/aperf/                                         [Kernel PMU event]
+>    msr/cpu_thermal_margin/                            [Kernel PMU event]
+>    msr/mperf/                                         [Kernel PMU event]
+>    msr/pperf/                                         [Kernel PMU event]
+>    msr/smi/                                           [Kernel PMU event]
+>    msr/tsc/                                           [Kernel PMU event]
+> ```
+> 
+> Signed-off-by: Ian Rogers <irogers@google.com>
 > ---
->   .../arch/arm64/arm/neoverse-n2/metrics.json        | 77 ++++++++++++++++++++++
->   1 file changed, 77 insertions(+)
+>   tools/perf/Documentation/perf-list.txt |  6 +++---
+>   tools/perf/builtin-list.c              | 18 ++++++++++++------
+>   tools/perf/util/metricgroup.c          |  3 ++-
+>   tools/perf/util/pmu.c                  |  4 +---
+>   4 files changed, 18 insertions(+), 13 deletions(-)
 > 
-> diff --git a/tools/perf/pmu-events/arch/arm64/arm/neoverse-n2/metrics.json b/tools/perf/pmu-events/arch/arm64/arm/neoverse-n2/metrics.json
-> index 324ca12..1690ef6 100644
-> --- a/tools/perf/pmu-events/arch/arm64/arm/neoverse-n2/metrics.json
-> +++ b/tools/perf/pmu-events/arch/arm64/arm/neoverse-n2/metrics.json
-> @@ -54,5 +54,82 @@
->           "BriefDescription": "The rate of DTLB Walks to the overall TLB lookups",
->           "MetricGroup": "TLB",
->           "MetricName": "dtlb_walk_rate"
-> +    },
-> +    {
-> +        "MetricExpr": "L1I_CACHE_REFILL / INST_RETIRED * 1000",
-> +        "PublicDescription": "The rate of L1 I-Cache misses per kilo instructions",
-> +        "BriefDescription": "The rate of L1 I-Cache misses per kilo instructions",
-> +        "MetricGroup": "Cache",
-> +        "MetricName": "l1i_cache_mpki"
-> +    },
-> +    {
-> +        "MetricExpr": "L1I_CACHE_REFILL / L1I_CACHE",
-> +        "PublicDescription": "The rate of L1 I-Cache misses to the overall L1 I-Cache",
-> +        "BriefDescription": "The rate of L1 I-Cache misses to the overall L1 I-Cache",
-> +        "MetricGroup": "Cache",
-> +        "MetricName": "l1i_cache_miss_rate"
-> +    },
-> +    {
-> +        "MetricExpr": "L1D_CACHE_REFILL / INST_RETIRED * 1000",
-> +        "PublicDescription": "The rate of L1 D-Cache misses per kilo instructions",
-> +        "BriefDescription": "The rate of L1 D-Cache misses per kilo instructions",
-> +        "MetricGroup": "Cache",
-> +        "MetricName": "l1d_cache_mpki"
-> +    },
-> +    {
-> +        "MetricExpr": "L1D_CACHE_REFILL / L1D_CACHE",
-> +        "PublicDescription": "The rate of L1 D-Cache misses to the overall L1 D-Cache",
-> +        "BriefDescription": "The rate of L1 D-Cache misses to the overall L1 D-Cache",
-> +        "MetricGroup": "Cache",
-> +        "MetricName": "l1d_cache_miss_rate"
-> +    },
-> +    {
-> +        "MetricExpr": "L2D_CACHE_REFILL / INST_RETIRED * 1000",
-> +        "PublicDescription": "The rate of L2 D-Cache misses per kilo instructions",
-> +        "BriefDescription": "The rate of L2 D-Cache misses per kilo instructions",
-> +        "MetricGroup": "Cache",
-> +        "MetricName": "l2d_cache_mpki"
-> +    },
-> +    {
-> +        "MetricExpr": "L2D_CACHE_REFILL / L2D_CACHE",
-> +        "PublicDescription": "The rate of L2 D-Cache misses to the overall L2 D-Cache",
-> +        "BriefDescription": "The rate of L2 D-Cache misses to the overall L2 D-Cache",
-> +        "MetricGroup": "Cache",
-> +        "MetricName": "l2d_cache_miss_rate"
-> +    },
-> +    {
-> +        "MetricExpr": "L3D_CACHE_REFILL / INST_RETIRED * 1000",
-> +        "PublicDescription": "The rate of L3 D-Cache misses per kilo instructions",
-> +        "BriefDescription": "The rate of L3 D-Cache misses per kilo instructions",
-> +        "MetricGroup": "Cache",
-> +        "MetricName": "l3d_cache_mpki"
-> +    },
-> +    {
-> +        "MetricExpr": "L3D_CACHE_REFILL / L3D_CACHE",
-> +        "PublicDescription": "The rate of L3 D-Cache misses to the overall L3 D-Cache",
-> +        "BriefDescription": "The rate of L3 D-Cache misses to the overall L3 D-Cache",
-> +        "MetricGroup": "Cache",
-> +        "MetricName": "l3d_cache_miss_rate"
-> +    },
-> +    {
-> +        "MetricExpr": "LL_CACHE_MISS_RD / INST_RETIRED * 1000",
-> +        "PublicDescription": "The rate of LL Cache read misses per kilo instructions",
-> +        "BriefDescription": "The rate of LL Cache read misses per kilo instructions",
-> +        "MetricGroup": "Cache",
-> +        "MetricName": "ll_cache_read_mpki"
-> +    },
-> +    {
-> +        "MetricExpr": "LL_CACHE_MISS_RD / LL_CACHE_RD",
-> +        "PublicDescription": "The rate of LL Cache read misses to the overall LL Cache read",
-> +        "BriefDescription": "The rate of LL Cache read misses to the overall LL Cache read",
-> +        "MetricGroup": "Cache",
-> +        "MetricName": "ll_cache_read_miss_rate"
-> +    },
-> +    {
-> +        "MetricExpr": "(LL_CACHE_RD - LL_CACHE_MISS_RD) / LL_CACHE_RD",
-> +        "PublicDescription": "The rate of LL Cache read hit to the overall LL Cache read",
-> +        "BriefDescription": "The rate of LL Cache read hit to the overall LL Cache read",
-> +        "MetricGroup": "Cache",
-> +        "MetricName": "ll_cache_read_hit_rate"
->       }
->   ]
-> \ No newline at end of file
+> diff --git a/tools/perf/Documentation/perf-list.txt b/tools/perf/Documentation/perf-list.txt
+> index 57384a97c04f..44a819af573d 100644
+> --- a/tools/perf/Documentation/perf-list.txt
+> +++ b/tools/perf/Documentation/perf-list.txt
+> @@ -39,9 +39,9 @@ any extra expressions computed by perf stat.
+>   --deprecated::
+>   Print deprecated events. By default the deprecated events are hidden.
+>   
+> ---cputype::
+> -Print events applying cpu with this type for hybrid platform
+> -(e.g. --cputype core or --cputype atom)
+> +--unit::
+> +Print PMU events and metrics limited to the specific PMU name.
+> +(e.g. --unit cpu, --unit msr, --unit cpu_core, --unit cpu_atom)
+>   
+>   [[EVENT_MODIFIERS]]
+>   EVENT MODIFIERS
+> diff --git a/tools/perf/builtin-list.c b/tools/perf/builtin-list.c
+> index 58e1ec1654ef..cc84ced6da26 100644
+> --- a/tools/perf/builtin-list.c
+> +++ b/tools/perf/builtin-list.c
+> @@ -21,7 +21,6 @@
+>   
+>   static bool desc_flag = true;
+>   static bool details_flag;
+> -static const char *hybrid_type;
+>   
+>   int cmd_list(int argc, const char **argv)
+>   {
+> @@ -30,6 +29,8 @@ int cmd_list(int argc, const char **argv)
+>   	bool long_desc_flag = false;
+>   	bool deprecated = false;
+>   	char *pmu_name = NULL;
+> +	const char *hybrid_name = NULL;
+> +	const char *unit_name = NULL;
+>   	struct option list_options[] = {
+>   		OPT_BOOLEAN(0, "raw-dump", &raw_dump, "Dump raw events"),
+>   		OPT_BOOLEAN('d', "desc", &desc_flag,
+> @@ -40,9 +41,10 @@ int cmd_list(int argc, const char **argv)
+>   			    "Print information on the perf event names and expressions used internally by events."),
+>   		OPT_BOOLEAN(0, "deprecated", &deprecated,
+>   			    "Print deprecated events."),
+> -		OPT_STRING(0, "cputype", &hybrid_type, "hybrid cpu type",
+> -			   "Print events applying cpu with this type for hybrid platform "
+> -			   "(e.g. core or atom)"),
+> +		OPT_STRING(0, "cputype", &hybrid_name, "hybrid cpu type",
+> +			   "Limit PMU or metric printing to the given hybrid PMU (e.g. core or atom)."),
+> +		OPT_STRING(0, "unit", &unit_name, "PMU name",
+> +			   "Limit PMU or metric printing to the specified PMU."),
+>   		OPT_INCR(0, "debug", &verbose,
+>   			     "Enable debugging output"),
+>   		OPT_END()
+> @@ -53,6 +55,8 @@ int cmd_list(int argc, const char **argv)
+>   	};
+>   
+>   	set_option_flag(list_options, 0, "raw-dump", PARSE_OPT_HIDDEN);
+> +	/* Hide hybrid flag for the more generic 'unit' flag. */
+> +	set_option_flag(list_options, 0, "cputype", PARSE_OPT_HIDDEN);
+>   
+>   	argc = parse_options(argc, argv, list_options, list_usage,
+>   			     PARSE_OPT_STOP_AT_NON_OPTION);
+> @@ -62,8 +66,10 @@ int cmd_list(int argc, const char **argv)
+>   	if (!raw_dump && pager_in_use())
+>   		printf("\nList of pre-defined events (to be used in -e or -M):\n\n");
+>   
+> -	if (hybrid_type) {
+> -		pmu_name = perf_pmu__hybrid_type_to_pmu(hybrid_type);
+> +	if (unit_name)
+> +		pmu_name = strdup(unit_name);
+> +	else if (hybrid_name) {
+> +		pmu_name = perf_pmu__hybrid_type_to_pmu(hybrid_name);
+>   		if (!pmu_name)
+>   			pr_warning("WARNING: hybrid cputype is not supported!\n");
+>   	}
+> diff --git a/tools/perf/util/metricgroup.c b/tools/perf/util/metricgroup.c
+> index 4c98ac29ee13..1943fed9b6d9 100644
+> --- a/tools/perf/util/metricgroup.c
+> +++ b/tools/perf/util/metricgroup.c
+> @@ -556,11 +556,12 @@ static int metricgroup__print_callback(const struct pmu_event *pe,
+>   				       void *vdata)
+>   {
+>   	struct metricgroup_print_data *data = vdata;
+> +	const char *pmu = pe->pmu ?: "cpu";
+>   
+>   	if (!pe->metric_expr)
+>   		return 0;
+>   
+> -	if (data->pmu_name && perf_pmu__is_hybrid(pe->pmu) && strcmp(data->pmu_name, pe->pmu))
+> +	if (data->pmu_name && strcmp(data->pmu_name, pmu))
+>   		return 0;
+>   
+>   	return metricgroup__print_pmu_event(pe, data->metricgroups, data->filter,
+> diff --git a/tools/perf/util/pmu.c b/tools/perf/util/pmu.c
+> index a8f9f47c6ed9..9c771f136b81 100644
+> --- a/tools/perf/util/pmu.c
+> +++ b/tools/perf/util/pmu.c
+> @@ -1694,10 +1694,8 @@ void print_pmu_events(const char *event_glob, bool name_only, bool quiet_flag,
+>   	pmu = NULL;
+>   	j = 0;
+>   	while ((pmu = perf_pmu__scan(pmu)) != NULL) {
+> -		if (pmu_name && perf_pmu__is_hybrid(pmu->name) &&
+> -		    strcmp(pmu_name, pmu->name)) {
+> +		if (pmu_name && pmu->name && strcmp(pmu_name, pmu->name))
 
-It is better to fix this by adding a newline at the end of the file.
+Why remove perf_pmu__is_hybrid check?
+
+>   			continue;
+> -		}
+>   
+>   		list_for_each_entry(alias, &pmu->aliases, list) {
+>   			char *name = alias->desc ? alias->name :
 
 -- 
 Zhengjun Xing
