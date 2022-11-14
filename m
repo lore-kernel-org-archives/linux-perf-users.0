@@ -2,58 +2,58 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D144BC4167D
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B2F70C4321E
 	for <linux-perf-users@archiver.kernel.org>; Mon, 14 Nov 2022 18:14:15 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S237850AbiKNSNq (ORCPT
+        id S237320AbiKNSNn (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Mon, 14 Nov 2022 13:13:46 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42278 "EHLO
+        Mon, 14 Nov 2022 13:13:43 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41592 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S238388AbiKNSNk (ORCPT
+        with ESMTP id S238297AbiKNSNZ (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Mon, 14 Nov 2022 13:13:40 -0500
-Received: from mail-pf1-x449.google.com (mail-pf1-x449.google.com [IPv6:2607:f8b0:4864:20::449])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6A9F923BC7
-        for <linux-perf-users@vger.kernel.org>; Mon, 14 Nov 2022 10:13:38 -0800 (PST)
-Received: by mail-pf1-x449.google.com with SMTP id bq9-20020a056a000e0900b00571802a2eaaso5862246pfb.22
-        for <linux-perf-users@vger.kernel.org>; Mon, 14 Nov 2022 10:13:38 -0800 (PST)
+        Mon, 14 Nov 2022 13:13:25 -0500
+Received: from mail-yb1-xb4a.google.com (mail-yb1-xb4a.google.com [IPv6:2607:f8b0:4864:20::b4a])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id F0222286E1
+        for <linux-perf-users@vger.kernel.org>; Mon, 14 Nov 2022 10:13:17 -0800 (PST)
+Received: by mail-yb1-xb4a.google.com with SMTP id c188-20020a25c0c5000000b006d8eba07513so11188193ybf.17
+        for <linux-perf-users@vger.kernel.org>; Mon, 14 Nov 2022 10:13:17 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=google.com; s=20210112;
         h=cc:to:from:subject:references:mime-version:message-id:in-reply-to
          :date:from:to:cc:subject:date:message-id:reply-to;
-        bh=FAjkIdGz/j9kJ1xDL5dYREJTueL8AT+RXQYxwRGY3ak=;
-        b=DAt71PWrjoITyAdCRE+Lj7mQUuYa3hVc6OS4Titnc+6zDLr3m+IeSlbkwTB6xk6oAd
-         AU8DRW0kfELM38hqTfMjyQNKlY+Dh0CKMtbk4hcok0lcIPw/QATk/mSHf91CbDRs8LzN
-         05NmLbPTsgxnyzdeNLFGxmNsbHYmt23xWbDfE8JADZ7xCzr1vbbZJvQismQ10uBBliui
-         f5uPz/rLFtmacHATZY8F028mZc4jctekE3UW+E8OpgRaKLJiqA3KSUJjss3XJ2ly9Sv7
-         b1DcSaDPmU7fPr2aZrVhVVFpBLVwI3bzM1TuY3iI1Pvn+sqF4U3YlbiFZhh7OzavwCud
-         RjoQ==
+        bh=IWjziziyWCL9ANTddckpRcCDgTKHv1YzBEeGesj8X4M=;
+        b=Z1vW6YtBcmpz1uRXy9oUq83oCkscQDF4giyMlLAQnSqvcegJHwh6TZx1ptKlHFWfOL
+         jKmvOd42xB4ddU6IaOmWcD5nh4uwLZAU7AEk9ev5yXDzw1FlAlmd+HEBIENpBYaavm3M
+         Y+NBiKeW13mbxd6E3CWao4LE2D9+UOc1IHXBcrra20VTJBnFJj4CJHT8wn/ecpjx6T4l
+         OiN6Rtd7JAzfe4FHhjFT2nLKh9173k/1W/OBC0o7GTL9GHJv+sTrmfAkKnrYm5xR6NKt
+         eREIO3mxZPXOZJVsNEuZDLN64PxvLVENYHCdgMAtAdAr/zfoqGpglm0MXTg58fpcb3tH
+         AfHw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
         h=cc:to:from:subject:references:mime-version:message-id:in-reply-to
          :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=FAjkIdGz/j9kJ1xDL5dYREJTueL8AT+RXQYxwRGY3ak=;
-        b=xaRGSqZ/vcaxhug/f/6MIspjvRStXzO/7OftOEa8oYoYwBH17CUJ34spCK+XFrVCAo
-         D6HbzAKILzJ8nn9KmT7huUEsbK7PmlvV5VAj1JPegC1KY9sZgkNIaJ7KDAl5pxgmlYKr
-         vsxpZSDFzDL0094xavQC6JGNdwi8nx26wDK1l2vHFmTK+k2PRXs5EWQIFEx4ISRgaWRr
-         0njcKDw4v41aZmgm++G0eelLSqfyi2rVHzKtkBI7Dk8Dyw+1M5wrzmqg7DXseh5WFPGN
-         K7RkOi4XXQimTG7eI39z0Rsz+mkciHh2NCBmEZmpDocJBlQHDb590uvBxhBtRp6umGUH
-         LNEQ==
-X-Gm-Message-State: ANoB5pluXhVye2C4Yr8ONR022qcTLYCqt0/euCa66tY7Ah+33JZtwr34
-        2mQ3dcdGOLJjAAHaD7mX7MoZOm/CyhuY
-X-Google-Smtp-Source: AA0mqf7malxvbgoC6c+8CWumNqmJRYnC9BDfjyV6zPhBgMR9mlhbG4r9/ZYBE2aMoHw2HcLrlmW5IEBZldcS
+        bh=IWjziziyWCL9ANTddckpRcCDgTKHv1YzBEeGesj8X4M=;
+        b=4dUw8BfIYO7+u6CclogOTR/JKc2Gq5DgwaR2y5iq3fkRcZsOjD9yDepD4fsU6TUYrC
+         IV7PEyTkobmuzVuDU6rwd35476qDlX4EW9dnDChtxF+jW10hNTFd1TCYgbw8exUuoCER
+         aec/tHQF8lAupzrEloxK7+DVRPBlbdSi7aO62uXdNL7GtZ+YtT5EzwWyPcx1ULuzCv1p
+         lh/XDMlDOYHoOL78V3B0+IkjD7sBeoLKvHNwmMayqQjtBhSHR+fDfT7JeTsRUHoikPIm
+         UzwfvtaojPKJO91B+JAzBDHTtSCSgky2Rjm3aqMPrfzoBAPuBvu0u4YmWunfykHJqpWL
+         PD6A==
+X-Gm-Message-State: ANoB5plh7RKZ7O/tDbU/3xuozZwOGVy4b9C7O8HT4OGHYjKHDOzIiu3x
+        orAhyXAcCaFdT+qP/s1yXUmsVa0EFJeF
+X-Google-Smtp-Source: AA0mqf5misNJZNIjUPm5eqEFWsObkGjNCGwnSTuq8/yXVPdCmj+KVWovjbjw+q9/z5IcWSeVQ59B/4h/uhgX
 X-Received: from irogers.svl.corp.google.com ([2620:15c:2d4:203:553:438f:b86a:87f])
- (user=irogers job=sendgmr) by 2002:a62:f245:0:b0:56c:3696:ad5f with SMTP id
- y5-20020a62f245000000b0056c3696ad5fmr14860112pfl.30.1668449617898; Mon, 14
- Nov 2022 10:13:37 -0800 (PST)
-Date:   Mon, 14 Nov 2022 10:12:45 -0800
+ (user=irogers job=sendgmr) by 2002:a0d:d442:0:b0:377:e4ac:6c3b with SMTP id
+ w63-20020a0dd442000000b00377e4ac6c3bmr13752108ywd.285.1668449597176; Mon, 14
+ Nov 2022 10:13:17 -0800 (PST)
+Date:   Mon, 14 Nov 2022 10:12:43 -0800
 In-Reply-To: <20221114181251.2683871-1-irogers@google.com>
-Message-Id: <20221114181251.2683871-4-irogers@google.com>
+Message-Id: <20221114181251.2683871-2-irogers@google.com>
 Mime-Version: 1.0
 References: <20221114181251.2683871-1-irogers@google.com>
 X-Mailer: git-send-email 2.38.1.431.g37b22c650d-goog
-Subject: [PATCH v2 3/9] perf tracepoint: Sort events in iterator
+Subject: [PATCH v2 1/9] perf pmu: Add documentation
 From:   Ian Rogers <irogers@google.com>
 To:     Weilin Wang <weilin.wang@intel.com>,
         Perry Taylor <perry.taylor@intel.com>,
@@ -81,172 +81,221 @@ Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-In print_tracepoint_events use tracing_events__scandir_alphasort and
-scandir alphasort so that the subsystem and events are sorted and
-don't need a secondary qsort. Locally this results in the following
-change:
-
-...
-   ext4:ext4_zero_range                               [Tracepoint event]
--  fib6:fib6_table_lookup                             [Tracepoint event]
-   fib:fib_table_lookup                               [Tracepoint event]
-+  fib6:fib6_table_lookup                             [Tracepoint event]
-   filelock:break_lease_block                         [Tracepoint event]
-...
-
-ie fib6 now is after fib and not before it. This is more consistent
-with how numbers are more generally sorted, such as:
-
-...
-  syscalls:sys_enter_renameat                        [Tracepoint event]
-  syscalls:sys_enter_renameat2                       [Tracepoint event]
-...
-
-and so an improvement over the qsort approach.
+Add documentation to struct perf_pmu and the associated structs of
+perf_pmu_alias and perf_pmu_format.
 
 Signed-off-by: Ian Rogers <irogers@google.com>
 ---
- tools/perf/util/print-events.c | 108 +++++++++++----------------------
- 1 file changed, 37 insertions(+), 71 deletions(-)
+ tools/perf/util/pmu.c |  16 ++++++
+ tools/perf/util/pmu.h | 123 +++++++++++++++++++++++++++++++++++++++---
+ 2 files changed, 133 insertions(+), 6 deletions(-)
 
-diff --git a/tools/perf/util/print-events.c b/tools/perf/util/print-events.c
-index c4d5d87fae2f..fefc025bc259 100644
---- a/tools/perf/util/print-events.c
-+++ b/tools/perf/util/print-events.c
-@@ -66,26 +66,21 @@ static int cmp_string(const void *a, const void *b)
- void print_tracepoint_events(const char *subsys_glob,
- 			     const char *event_glob, bool name_only)
- {
--	DIR *sys_dir, *evt_dir;
--	struct dirent *sys_dirent, *evt_dirent;
--	char evt_path[MAXPATHLEN];
--	char *dir_path;
--	char **evt_list = NULL;
--	unsigned int evt_i = 0, evt_num = 0;
--	bool evt_num_known = false;
--
--restart:
--	sys_dir = tracing_events__opendir();
--	if (!sys_dir)
--		return;
--
--	if (evt_num_known) {
--		evt_list = zalloc(sizeof(char *) * evt_num);
--		if (!evt_list)
--			goto out_close_sys_dir;
--	}
-+	struct dirent **sys_namelist = NULL;
-+	bool printed = false;
-+	int sys_items = tracing_events__scandir_alphasort(&sys_namelist);
-+
-+	for (int i = 0; i < sys_items; i++) {
-+		struct dirent *sys_dirent = sys_namelist[i];
-+		struct dirent **evt_namelist = NULL;
-+		char *dir_path;
-+		int evt_items;
-+
-+		if (sys_dirent->d_type != DT_DIR ||
-+		    !strcmp(sys_dirent->d_name, ".") ||
-+		    !strcmp(sys_dirent->d_name, ".."))
-+			continue;
+diff --git a/tools/perf/util/pmu.c b/tools/perf/util/pmu.c
+index 6a86e6af0903..8396504855cc 100644
+--- a/tools/perf/util/pmu.c
++++ b/tools/perf/util/pmu.c
+@@ -31,10 +31,26 @@
  
--	for_each_subsystem(sys_dir, sys_dirent) {
- 		if (subsys_glob != NULL &&
- 		    !strglobmatch(sys_dirent->d_name, subsys_glob))
- 			continue;
-@@ -93,69 +88,40 @@ void print_tracepoint_events(const char *subsys_glob,
- 		dir_path = get_events_file(sys_dirent->d_name);
- 		if (!dir_path)
- 			continue;
--		evt_dir = opendir(dir_path);
--		if (!evt_dir)
--			goto next;
+ struct perf_pmu perf_pmu__fake;
  
--		for_each_event(dir_path, evt_dir, evt_dirent) {
--			if (event_glob != NULL &&
--			    !strglobmatch(evt_dirent->d_name, event_glob))
-+		evt_items = scandir(dir_path, &evt_namelist, NULL, alphasort);
-+		for (int j = 0; j < evt_items; j++) {
-+			struct dirent *evt_dirent = evt_namelist[j];
-+			char evt_path[MAXPATHLEN];
-+
-+			if (evt_dirent->d_type != DT_DIR ||
-+			    !strcmp(evt_dirent->d_name, ".") ||
-+			    !strcmp(evt_dirent->d_name, ".."))
- 				continue;
++/**
++ * struct perf_pmu_format - Values from a format file read from
++ * <sysfs>/devices/cpu/format/ held in struct perf_pmu.
++ *
++ * For example, the contents of <sysfs>/devices/cpu/format/event may be
++ * "config:0-7" and will be represented here as name="event",
++ * value=PERF_PMU_FORMAT_VALUE_CONFIG and bits 0 to 7 will be set.
++ */
+ struct perf_pmu_format {
++	/** @name: The modifier/file name. */
+ 	char *name;
++	/**
++	 * @value : Which config value the format relates to. Supported values
++	 * are from PERF_PMU_FORMAT_VALUE_CONFIG to
++	 * PERF_PMU_FORMAT_VALUE_CONFIG_END.
++	 */
+ 	int value;
++	/** @bits: Which config bits are set by this format value. */
+ 	DECLARE_BITMAP(bits, PERF_PMU_FORMAT_BITS);
++	/** @list: Element on list within struct perf_pmu. */
+ 	struct list_head list;
+ };
  
--			if (!evt_num_known) {
--				evt_num++;
-+			if (tp_event_has_id(dir_path, evt_dirent) != 0)
-+				continue;
-+
-+			if (event_glob != NULL &&
-+			    !strglobmatch(evt_dirent->d_name, event_glob))
- 				continue;
--			}
+diff --git a/tools/perf/util/pmu.h b/tools/perf/util/pmu.h
+index 68e15c38ae71..ce718bab3018 100644
+--- a/tools/perf/util/pmu.h
++++ b/tools/perf/util/pmu.h
+@@ -33,31 +33,103 @@ struct perf_pmu_caps {
+ 	struct list_head list;
+ };
  
- 			snprintf(evt_path, MAXPATHLEN, "%s:%s",
- 				 sys_dirent->d_name, evt_dirent->d_name);
--
--			evt_list[evt_i] = strdup(evt_path);
--			if (evt_list[evt_i] == NULL) {
--				put_events_file(dir_path);
--				goto out_close_evt_dir;
-+			if (name_only)
-+				printf("%s ", evt_path);
-+			else {
-+				printf("  %-50s [%s]\n", evt_path,
-+				       event_type_descriptors[PERF_TYPE_TRACEPOINT]);
- 			}
--			evt_i++;
-+			printed = true;
- 		}
--		closedir(evt_dir);
--next:
--		put_events_file(dir_path);
-+		free(dir_path);
-+		free(evt_namelist);
- 	}
--	closedir(sys_dir);
--
--	if (!evt_num_known) {
--		evt_num_known = true;
--		goto restart;
--	}
--	qsort(evt_list, evt_num, sizeof(char *), cmp_string);
--	evt_i = 0;
--	while (evt_i < evt_num) {
--		if (name_only) {
--			printf("%s ", evt_list[evt_i++]);
--			continue;
--		}
--		printf("  %-50s [%s]\n", evt_list[evt_i++],
--				event_type_descriptors[PERF_TYPE_TRACEPOINT]);
--	}
--	if (evt_num && pager_in_use())
-+	free(sys_namelist);
-+	if (printed && pager_in_use())
- 		printf("\n");
--
--out_free:
--	evt_num = evt_i;
--	for (evt_i = 0; evt_i < evt_num; evt_i++)
--		zfree(&evt_list[evt_i]);
--	zfree(&evt_list);
--	return;
--
--out_close_evt_dir:
--	closedir(evt_dir);
--out_close_sys_dir:
--	closedir(sys_dir);
--
--	printf("FATAL: not enough memory to print %s\n",
--			event_type_descriptors[PERF_TYPE_TRACEPOINT]);
--	if (evt_list)
--		goto out_free;
- }
++/**
++ * struct perf_pmu - hi
++ */
+ struct perf_pmu {
++	/** @name: The name of the PMU such as "cpu". */
+ 	char *name;
++	/**
++	 * @alias_name: Optional alternate name for the PMU determined in
++	 * architecture specific code.
++	 */
+ 	char *alias_name;
++	/**
++	 * @id: Optional PMU identifier read from
++	 * <sysfs>/bus/event_source/devices/<name>/identifier.
++	 */
+ 	char *id;
++	/**
++	 * @type: Perf event attributed type value, read from
++	 * <sysfs>/bus/event_source/devices/<name>/type.
++	 */
+ 	__u32 type;
++	/**
++	 * @selectable: Can the PMU name be selected as if it were an event?
++	 */
+ 	bool selectable;
++	/**
++	 * @is_uncore: Is the PMU not within the CPU core? Determined by the
++	 * presence of <sysfs>/bus/event_source/devices/<name>/cpumask.
++	 */
+ 	bool is_uncore;
++	/** @is_hybrid: Is the PMU name either cpu_core or cpu_atom. */
+ 	bool is_hybrid;
++	/**
++	 * @auxtrace: Are events auxiliary events? Determined in architecture
++	 * specific code.
++	 */
+ 	bool auxtrace;
++	/**
++	 * @max_precise: Number of levels of :ppp precision supported by the
++	 * PMU, read from
++	 * <sysfs>/bus/event_source/devices/<name>/caps/max_precise.
++	 */
+ 	int max_precise;
++	/**
++	 * @default_config: Optional default perf_event_attr determined in
++	 * architecture specific code.
++	 */
+ 	struct perf_event_attr *default_config;
++	/**
++	 * @cpus: Empty or the contents of either of:
++	 * <sysfs>/bus/event_source/devices/<name>/cpumask.
++	 * <sysfs>/bus/event_source/devices/<cpu>/cpus.
++	 */
+ 	struct perf_cpu_map *cpus;
+-	struct list_head format;  /* HEAD struct perf_pmu_format -> list */
+-	struct list_head aliases; /* HEAD struct perf_pmu_alias -> list */
++	/**
++	 * @format: Holds the contents of files read from
++	 * <sysfs>/bus/event_source/devices/<name>/format/. The contents specify
++	 * which event parameter changes what config, config1 or config2 bits.
++	 */
++	struct list_head format;
++	/**
++	 * @aliases: List of struct perf_pmu_alias. Each alias corresponds to an
++	 * event read from <sysfs>/bus/event_source/devices/<name>/events/ or
++	 * from json events in pmu-events.c.
++	 */
++	struct list_head aliases;
++	/** @caps_initialized: Has the list caps been initialized? */
+ 	bool caps_initialized;
++	/** @nr_caps: The length of the list caps. */
+ 	u32 nr_caps;
+-	struct list_head caps;    /* HEAD struct perf_pmu_caps -> list */
+-	struct list_head list;    /* ELEM */
++	/**
++	 * @caps: Holds the contents of files read from
++	 * <sysfs>/bus/event_source/devices/<name>/caps/.
++	 *
++	 * The contents are pairs of the filename with the value of its
++	 * contents, for example, max_precise (see above) may have a value of 3.
++	 */
++	struct list_head caps;
++	/** @list: Element on pmus list in pmu.c. */
++	struct list_head list;
++	/** @hybrid_list: Element on perf_pmu__hybrid_pmus. */
+ 	struct list_head hybrid_list;
  
- void print_sdt_events(const char *subsys_glob, const char *event_glob,
++	/**
++	 * @missing_features: Features to inhibit when events on this PMU are
++	 * opened.
++	 */
+ 	struct {
++		/**
++		 * @exclude_guest: Disables perf_event_attr exclude_guest and
++		 * exclude_host.
++		 */
+ 		bool exclude_guest;
+ 	} missing_features;
+ };
+ 
++/** @perf_pmu__fake: A special global PMU used for testing. */
+ extern struct perf_pmu perf_pmu__fake;
+ 
+ struct perf_pmu_info {
+@@ -71,21 +143,60 @@ struct perf_pmu_info {
+ 
+ #define UNIT_MAX_LEN	31 /* max length for event unit name */
+ 
++/**
++ * struct perf_pmu_alias - An event either read from sysfs or builtin in
++ * pmu-events.c, created by parsing the pmu-events json files.
++ */
+ struct perf_pmu_alias {
++	/** @name: Name of the event like "mem-loads". */
+ 	char *name;
++	/** @desc: Optional short description of the event. */
+ 	char *desc;
++	/** @long_desc: Optional long description. */
+ 	char *long_desc;
++	/**
++	 * @topic: Optional topic such as cache or pipeline, particularly for
++	 * json events.
++	 */
+ 	char *topic;
++	/**
++	 * @str: Comma separated parameter list like
++	 * "event=0xcd,umask=0x1,ldlat=0x3".
++	 */
+ 	char *str;
+-	struct list_head terms; /* HEAD struct parse_events_term -> list */
+-	struct list_head list;  /* ELEM */
++	/** @terms: Owned list of the original parsed parameters. */
++	struct list_head terms;
++	/** @list: List element of struct perf_pmu aliases. */
++	struct list_head list;
++	/** @unit: Units for the event, such as bytes or cache lines. */
+ 	char unit[UNIT_MAX_LEN+1];
++	/** @scale: Value to scale read counter values by. */
+ 	double scale;
++	/**
++	 * @per_pkg: Does the file
++	 * <sysfs>/bus/event_source/devices/<pmu_name>/events/<name>.per-pkg or
++	 * equivalent json value exist and have the value 1.
++	 */
+ 	bool per_pkg;
++	/**
++	 * @snapshot: Does the file
++	 * <sysfs>/bus/event_source/devices/<pmu_name>/events/<name>.snapshot
++	 * exist and have the value 1.
++	 */
+ 	bool snapshot;
++	/**
++	 * @deprecated: Is the event hidden and so not shown in perf list by
++	 * default.
++	 */
+ 	bool deprecated;
++	/**
++	 * @metric_expr: A metric expression associated with an event. Doing
++	 * this makes little sense due to scale and unit applying to both.
++	 */
+ 	char *metric_expr;
++	/** @metric_name: A name for the metric. unit applying to both. */
+ 	char *metric_name;
++	/** @pmu_name: The name copied from struct perf_pmu. */
+ 	char *pmu_name;
+ };
+ 
 -- 
 2.38.1.431.g37b22c650d-goog
 
