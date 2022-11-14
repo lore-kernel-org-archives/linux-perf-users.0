@@ -2,231 +2,288 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1E935C43217
-	for <linux-perf-users@archiver.kernel.org>; Mon, 14 Nov 2022 13:01:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6D38FC4332F
+	for <linux-perf-users@archiver.kernel.org>; Mon, 14 Nov 2022 13:40:26 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S237706AbiKNNBW (ORCPT
+        id S236319AbiKNNkY (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Mon, 14 Nov 2022 08:01:22 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54908 "EHLO
+        Mon, 14 Nov 2022 08:40:24 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33140 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S237695AbiKNNBP (ORCPT
+        with ESMTP id S235560AbiKNNkX (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Mon, 14 Nov 2022 08:01:15 -0500
-Received: from mx0a-00069f02.pphosted.com (mx0a-00069f02.pphosted.com [205.220.165.32])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2F82A29343;
-        Mon, 14 Nov 2022 05:01:12 -0800 (PST)
-Received: from pps.filterd (m0246629.ppops.net [127.0.0.1])
-        by mx0b-00069f02.pphosted.com (8.17.1.19/8.17.1.19) with ESMTP id 2AEBfeGR017219;
-        Mon, 14 Nov 2022 12:59:37 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=message-id : date :
- subject : to : cc : references : from : in-reply-to : content-type :
- content-transfer-encoding : mime-version; s=corp-2022-7-12;
- bh=CSF38ocPhOmE+FPP3AK7nI7CFTIZOvE9aJCgoL67WVw=;
- b=yssw3hchC+Vou8NqnAgP/2vKLfCtuk+D5XTtZrh3ChalsMt4II9aOqK+AfvZBvuBYBA9
- 3hKeyubXtKibD+r81hyIeqxre/MF7MtdS4do6zV6AhrnXJxyCCAiEr+L3R2ZUT6m50bn
- DME8QvEvHVek6Xd8BBy+N47LqJvFnZTk2ckyP8eGrow1B9JDqZHVi+x2n9ZYOYfU3CKm
- kSivuNs+7f+QQVzaDU8DjOMKQuOhKiGAFk1oVDIUwKTyNWJvkG9n1xui3s7cfU1hOcCB
- nGlgMh+FxTmD+GRTMqE7h0X1AoXWRCQ5t76lMbl6hf3hjz1oRT6L+AlldQjByeZMPC1B vg== 
-Received: from phxpaimrmta01.imrmtpd1.prodappphxaev1.oraclevcn.com (phxpaimrmta01.appoci.oracle.com [138.1.114.2])
-        by mx0b-00069f02.pphosted.com (PPS) with ESMTPS id 3ku1ng1vta-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Mon, 14 Nov 2022 12:59:36 +0000
-Received: from pps.filterd (phxpaimrmta01.imrmtpd1.prodappphxaev1.oraclevcn.com [127.0.0.1])
-        by phxpaimrmta01.imrmtpd1.prodappphxaev1.oraclevcn.com (8.17.1.5/8.17.1.5) with ESMTP id 2AECE9F3013280;
-        Mon, 14 Nov 2022 12:59:36 GMT
-Received: from nam10-bn7-obe.outbound.protection.outlook.com (mail-bn7nam10lp2103.outbound.protection.outlook.com [104.47.70.103])
-        by phxpaimrmta01.imrmtpd1.prodappphxaev1.oraclevcn.com (PPS) with ESMTPS id 3kt1x43c53-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Mon, 14 Nov 2022 12:59:36 +0000
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=byPEQfy1eK1fV82zI2CWrVw362MYSwvKYECaD038E32tAkB9q/5w77Lxr3KgtJWkpa4VCbb78sgqduO5hDcMfKUzuGYnVI4FiBvagtAliRS4OU7sct1SIvSOgQYWrPIr5DF6i//79Vzki+BHWvsa7asUuPe29X/7KKyuivAnnoLOzPU5v8BjW9PaVgpjICcm11LBUdmH7hE2mmurMbwvOn0jVYUCeKkuZ7NYn6Fo6jgwhMlB3CpkehoDS2g/4DnvlO/f7kO1Kc9u/qmN13ODm/VNfMUwzSx82BuZnO57GpwwmPr/NQTexeA4H9I+VvjTONfHcCi0fU/4eCeBqSgt+g==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=CSF38ocPhOmE+FPP3AK7nI7CFTIZOvE9aJCgoL67WVw=;
- b=IKhC9JNoeX5lsamGcTyWYL6F/R7a54XnEZNBsBiUIUtcvecT5AjGERVLPEfjzyAp9ZKG8fry+FJl29gvGk01TKmzf42RpQ5P/TtiDdKu6mjkRzkCHpRjqhX58SdB1l29AkfvgUBUeRrkURz2hMz45Mk+4T0ynqRt2BDTbpG0AjLvWjY9LNsMAbX4ipkCeSmeS/tWIpJBkwrz2UDyjp39homV5Ii/5LNuuvgqLnMVEQNWXQ0GklA56upyWneY8dFS+svNT0hQt0CiAvrqFxEiXCXeOV7yVhs5Urg38g04a0yYWiZ+rUFoQ4hsebJ3SuGyNH6voNLitTBm6CxsIcV8EQ==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=oracle.com; dmarc=pass action=none header.from=oracle.com;
- dkim=pass header.d=oracle.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=oracle.onmicrosoft.com; s=selector2-oracle-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=CSF38ocPhOmE+FPP3AK7nI7CFTIZOvE9aJCgoL67WVw=;
- b=vAd8I4xk35ux9/EuBMlWvpOHoGBbUIWletHDiLzaPe8SUrOcnlHSeC/7QTJpoRgOrqfM6r/aPjjPe84TS5SPJDnlUqoJSf95egn9gayUFWtU2XZBF6ZW+jch7OImFKFf30eACDebWF/a0o7RUSEtBoJFpEUssJ0tIDX912/J32I=
-Received: from DM6PR10MB4313.namprd10.prod.outlook.com (2603:10b6:5:212::20)
- by MN2PR10MB4208.namprd10.prod.outlook.com (2603:10b6:208:1d7::11) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.5813.17; Mon, 14 Nov
- 2022 12:59:33 +0000
-Received: from DM6PR10MB4313.namprd10.prod.outlook.com
- ([fe80::d0c4:8da4:2702:8b3b]) by DM6PR10MB4313.namprd10.prod.outlook.com
- ([fe80::d0c4:8da4:2702:8b3b%5]) with mapi id 15.20.5813.017; Mon, 14 Nov 2022
- 12:59:33 +0000
-Message-ID: <590ff032-d271-48ee-a4d8-141cc070c335@oracle.com>
-Date:   Mon, 14 Nov 2022 12:59:30 +0000
-User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:91.0) Gecko/20100101
- Thunderbird/91.13.1
-Subject: Re: [External] : [RFC PATCH v2 1/6] perf vendor events arm64: Add
- topdown L1 metrics for neoverse-n2
+        Mon, 14 Nov 2022 08:40:23 -0500
+Received: from mga04.intel.com (mga04.intel.com [192.55.52.120])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4C7951F2D0;
+        Mon, 14 Nov 2022 05:40:22 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1668433222; x=1699969222;
+  h=message-id:date:mime-version:subject:to:cc:references:
+   from:in-reply-to:content-transfer-encoding;
+  bh=sn+BVRD719enYHls8iG1p906iTBmNSnWJWJ7q80LPN4=;
+  b=M1jRXo9+6PKmOglh9EmCu4dK7MjqM4oy0cvJCF4ERFhlTDqEtwogBtR8
+   eDd4I/dBJyH85LhAqtgks5S9RiR6zObJHrqs89VWa353vXVHweySi8Eee
+   B+fzJRBEbxw2UPHloaWos0XBr4nzRRgcZ8ZgE18VCu/nLo0gtxB7W6Lc6
+   JtjqVquGM2SKuUsXyyh4qm3CJFLJlwoaADQ+FER1EJea+JTOnJ8jcn9DQ
+   wELXyKNdVetibiv9FixGGE968BI6BOdKuuwBC6SzaGBbYPdUf5UbAbBqT
+   Su8isq+f8/tzUm1KmS/G+3VROnsNer2Qj+2hRvxghGkWUcKHLoUzYT/wL
+   w==;
+X-IronPort-AV: E=McAfee;i="6500,9779,10531"; a="310677459"
+X-IronPort-AV: E=Sophos;i="5.96,161,1665471600"; 
+   d="scan'208";a="310677459"
+Received: from orsmga008.jf.intel.com ([10.7.209.65])
+  by fmsmga104.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 14 Nov 2022 05:40:21 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=McAfee;i="6500,9779,10531"; a="669656094"
+X-IronPort-AV: E=Sophos;i="5.96,161,1665471600"; 
+   d="scan'208";a="669656094"
+Received: from linux.intel.com ([10.54.29.200])
+  by orsmga008.jf.intel.com with ESMTP; 14 Nov 2022 05:40:21 -0800
+Received: from [10.252.208.163] (kliang2-mobl1.ccr.corp.intel.com [10.252.208.163])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by linux.intel.com (Postfix) with ESMTPS id 77A8A580A5F;
+        Mon, 14 Nov 2022 05:40:18 -0800 (PST)
+Message-ID: <bbb73e4b-a73e-6ce5-db1f-e54d1bb19c2c@linux.intel.com>
+Date:   Mon, 14 Nov 2022 08:40:17 -0500
+MIME-Version: 1.0
+User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:102.0) Gecko/20100101
+ Thunderbird/102.4.2
+Subject: Re: [PATCH v1 1/9] perf pmu: Add documentation
 Content-Language: en-US
-To:     Jing Zhang <renyu.zj@linux.alibaba.com>,
-        linux-arm-kernel@lists.infradead.org,
-        linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org,
-        John Garry <john.garry@huawei.com>,
-        Will Deacon <will@kernel.org>,
-        James Clark <james.clark@arm.com>,
-        Mike Leach <mike.leach@linaro.org>,
-        Leo Yan <leo.yan@linaro.org>
-Cc:     Peter Zijlstra <peterz@infradead.org>,
+To:     Ian Rogers <irogers@google.com>,
+        Weilin Wang <weilin.wang@intel.com>,
+        Perry Taylor <perry.taylor@intel.com>,
+        Caleb Biggers <caleb.biggers@intel.com>,
+        Leo Yan <leo.yan@linaro.org>,
+        Adrian Hunter <adrian.hunter@intel.com>,
+        Peter Zijlstra <peterz@infradead.org>,
         Ingo Molnar <mingo@redhat.com>,
         Arnaldo Carvalho de Melo <acme@kernel.org>,
         Mark Rutland <mark.rutland@arm.com>,
         Alexander Shishkin <alexander.shishkin@linux.intel.com>,
         Jiri Olsa <jolsa@kernel.org>,
         Namhyung Kim <namhyung@kernel.org>,
-        Andrew Kilroy <andrew.kilroy@arm.com>,
-        Shuai Xue <xueshuai@linux.alibaba.com>,
-        Zhuo Song <zhuo.song@linux.alibaba.com>
-References: <1667214694-89839-1-git-send-email-renyu.zj@linux.alibaba.com>
- <1668411720-3581-2-git-send-email-renyu.zj@linux.alibaba.com>
-From:   John Garry <john.g.garry@oracle.com>
-Organization: Oracle Corporation
-In-Reply-To: <1668411720-3581-2-git-send-email-renyu.zj@linux.alibaba.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
+        Sandipan Das <sandipan.das@amd.com>,
+        Kajol Jain <kjain@linux.ibm.com>,
+        Zhengjun Xing <zhengjun.xing@linux.intel.com>,
+        Ravi Bangoria <ravi.bangoria@amd.com>,
+        Xin Gao <gaoxin@cdjrlc.com>, Rob Herring <robh@kernel.org>,
+        linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org
+Cc:     Stephane Eranian <eranian@google.com>
+References: <20221114075127.2650315-1-irogers@google.com>
+ <20221114075127.2650315-2-irogers@google.com>
+From:   "Liang, Kan" <kan.liang@linux.intel.com>
+In-Reply-To: <20221114075127.2650315-2-irogers@google.com>
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: LO4P123CA0456.GBRP123.PROD.OUTLOOK.COM
- (2603:10a6:600:1aa::11) To DM6PR10MB4313.namprd10.prod.outlook.com
- (2603:10b6:5:212::20)
-MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: DM6PR10MB4313:EE_|MN2PR10MB4208:EE_
-X-MS-Office365-Filtering-Correlation-Id: 36997523-b88d-47eb-26d0-08dac6401356
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: pl51h6+8DQWZzZUUP/a2kttHzfKRCLYh44lFq4hLLW9nz01ZXhHFG7RWBvHa5JCZHAn51lqPWnvULCDB0/9/LHsr2Ap14Il7VPEaoZFE9rWCO8vGW93BvY5wlldSe/exwgzKEE3ldu9+iDUA5Dn2ksIXDAJoSJpePdRPtXzNKOvs7b7MicJXo8hzj2Qb7iPZcx0fYRdN+1Ounk714OzV3K+irsub36xC0+1ShtcklOwA9boQQH9z8+hWcKHD+OzHLD5Qlns5bgwOjPEhIJeNhiXQWnsBMKwbddgS+rhSF4b4PZrJl5c/eIg/ghJ91iMbZxpBq6efMIX4ww016hEVL0X89y+36jsTdag6OZ9w/b4AjSGPT81g6BigjACLg3gRzLUPzFouFOerpyabqzf0H4QFBOvG8dll/1G5FNHbiXEWBE6FqPk1jYvSyxJTooavLVGUUkXLBMzyJaAy91iee28yIMcQSwUMYNKY1R1MR+vXwRKdou0p64tuhkYEjmdDJcQRz6Ksqh5DchezEBK/L31n2UAOY30UvTehW8+H38UE0X8HVosKvVMXuspem8sErxO+bly+CDMlhiTuS8KMTbf6KPcptzMRoJ79yQMIGBoptd+roEPrvZcuqnXJ/ri6U1p8lcqjJbLo/WuFhDV9vpzn2yT10/BJI8gVAghBGdtbHxiz9giNkahCsUPs5dp9EQemrw4y+yI91vqixh97MCJnisBJnUltZVtwMnYgHvq6j/ArBLQ/pbhL1q/pXWiYAQZrhkQhxzjIPfuPx6BqyU+oinRYbAFnbSQkRCk7JUryj/j/+ZVqRtCn0XpfvyDq
-X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DM6PR10MB4313.namprd10.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230022)(346002)(396003)(366004)(136003)(376002)(39860400002)(451199015)(6512007)(7416002)(8676002)(5660300002)(26005)(186003)(4326008)(8936002)(66476007)(66556008)(66946007)(2616005)(36756003)(41300700001)(316002)(53546011)(31696002)(38100700002)(86362001)(2906002)(478600001)(6486002)(966005)(6506007)(110136005)(54906003)(36916002)(31686004)(45980500001)(43740500002);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0: =?utf-8?B?RjlIR3V6K09UZ3BCZFR2blB5WnB5V01vOTJPb3BCWjNOYzZ2N3VsNk1zS0ti?=
- =?utf-8?B?d3IvZGZDb01OUVFoTnVSS2FpVkZ6akMxMXYrM2YrbzlNTVM5eklDeGNQMGYy?=
- =?utf-8?B?SVJ4Tm02NWd4dGFXbUVVK1NiSGpobVlaTVBvL0lZbzJ0eXF3d1F3RTBtV0l6?=
- =?utf-8?B?U1d0MzBLZi9qVWhFM0IwK0dhbU5OMWZRYkxHQUQrVTVHQjBaNFhtK2V1Sk5F?=
- =?utf-8?B?RlpTQkdOZlNsb0ZCSHFnMUZ2eTlmaktRaWg4Z0FEUUxkZUdBVnJ1RGQvRlNt?=
- =?utf-8?B?bTF6RG1rbEx2UDFyc1F3K3h1MmJvNk0wYXFTVWpGVjdCTTNjd0NhTUFwNTdL?=
- =?utf-8?B?dEpEdTlqbktHYmdIR1AxNGs4cHNwQ3d3Q0EzVWlvOERSRGZha0dNOTNwRHcz?=
- =?utf-8?B?eE92c0hnK2hwbGRPbTI1ZHZWZk56UTRUYlg3aW1ORW5jS3p5RmZWcWJjT003?=
- =?utf-8?B?Sld5ZFdXa1MzUThVNHU2YTBRRFROOU1keXFhdzZhS01GZTg2Vkp0NEhKbms3?=
- =?utf-8?B?NUFxemRjVGZ0T0FBVk9maTZXOGk0SGdHOWlSOGZHdUZVZElyQk01UGtVaXFF?=
- =?utf-8?B?OWNBWURRMjJwKzFNUlR0TmNYQVQxajFKUWVORU9oeGo3anoxMldtd2pySG5K?=
- =?utf-8?B?ejVsdVNHeWFCMTE3d09jVlY1dXN6K1ZsTFlsVFg5MHV5SS9jU2s3MExnTDht?=
- =?utf-8?B?V0d1NllXWE1aZ24rTG1MWWZSekFEa2VKOHo0WkZvRGRhRXpaTVVkR1Jwam5k?=
- =?utf-8?B?OEdyMFpoOUZvYVpvaFdZalBWaCtUQXhEZFZYZ1BFallDMGFLUExvbmNPaXdn?=
- =?utf-8?B?T1R3Y3h3THQrbTRFYlgwOHI2Y2k3d3E2NDdHZ0hnR2NNS0ppZUtxK1p0dmlL?=
- =?utf-8?B?MXJKNTd1VHRqRldVbG41YWdONk5kdWxUeUIvdTRXWFc0Zmk2aVdhbnRQUW5G?=
- =?utf-8?B?RVg5UjJsbHRtcFh4MzdLQmJKSk5ZWldmeEpsUHVNMFBndmRKM2dzRjY1Z3lx?=
- =?utf-8?B?L2w0Q3pleWtIbG9EM0UrMzdYcGlNR0lrSGNGYkpKNzR0MUhlL21OZmhac3N4?=
- =?utf-8?B?dnRVb1VXRUNGVXM4UzdnR25SZFlSUzlsaHNRazdHMkxzdUhrTXZ0UzgxdmJY?=
- =?utf-8?B?dWtWTVJIYzh4cEZ4cWpjY1lVdUJJeWpRVUlNbUFqMW8xdHFjbFBZdUFjZ1kr?=
- =?utf-8?B?MVN1eWUydk1tQThlRnFNaU9rZC94aXN3WWNwQ1lCSXBPdjYxdm14enhGZHZL?=
- =?utf-8?B?L05uU1JuMmxvQWk2V2JOOXVBNDY5MWxjM1F2Z2J2KzFVWHlqdUtNcGplTFlm?=
- =?utf-8?B?QVdGVUczTUg1bEJ5SThITGJ3YXdPZ0k4dTNBQktWZE82TGVtcDBWNy9MbXEx?=
- =?utf-8?B?WVVzbkZwUlY5dUpTdk1ldHZ1dmh2ZktrMmFscGp2dWtKK0JxbDNFNXBHMlgz?=
- =?utf-8?B?Y05lMnFDaTBnSmN2RkNqR0FsRXVIc2FLbWJsR3J5L3BZUEVjU21vOXZ1WG1v?=
- =?utf-8?B?NHlHc1cxazJHVEg5WUpyOU8xY3V0alg0eThOeGVBZU1YN2JIOTdXREJ3WGVE?=
- =?utf-8?B?enRwV1RMZFVNRUhGYllLTlo5MzNoNXhPL2kwbWtVb3BtdjhxSlZzU2VXc0xU?=
- =?utf-8?B?c2FROG5WL0hxZ3ZUalRXR3ZFTWtOOHByOXV5T3hDLzdNbDd0WnlOTyt3YXVz?=
- =?utf-8?B?RXFGZXpxNHBlYktUcWZOdFVzTUgvc2t5Q3FpWThPa3l5Zk5UWHJmRjY3citC?=
- =?utf-8?B?UDJ1amtQQXIxZHhJMjlDeVQ1cFpwc3ZLUVZtVnNDWE9LK0JGRmRnNEkybXJt?=
- =?utf-8?B?c2s0NFVlZkttSFF1Qm0yZDVDZWZPaHI0aGdacXZZN3VuL2k2eDZEaUZjSVc3?=
- =?utf-8?B?S0VwS2FzK3ZKTDJReVJKdGxDcHovNXRKOWtnTkNnL1RXQis4TTZYakRtK2Na?=
- =?utf-8?B?QXNITThYc3Q4NlNUckk5NFFyVXJ3T0FaU1dyc0lEREpmR0FscE9uV0RKYzNM?=
- =?utf-8?B?OGc4S0NuSTVZTGZNTkxKYVVtYWJXUUJmaFpocldKaWlONWFiV3hqTEpVZjEw?=
- =?utf-8?B?WWlWRWVoR3lMSURTNGFFKzZqTzBVMmhneDhYYmJyK1FuWVdFeWlpdlZRMk1r?=
- =?utf-8?Q?KP+UYOUSHB8+upPS9KYuxts3w?=
-X-MS-Exchange-AntiSpam-ExternalHop-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-ExternalHop-MessageData-0: =?utf-8?B?ZjR2YWVxZG9wSWo1UkV1YkNuY1hsYmswWXdaQ25IK2dIUFBtL1VjL0N4eHI2?=
- =?utf-8?B?cFJ0UlY5MWYrU2taZXhPcCtHNDM2K2N5bEEyUm55dGE4cm5Xc1Byd0pTZ0hW?=
- =?utf-8?B?TzZyaTlwK2t2VnlGaXBjZ3hjTUxzY3g1WVNnVjMvbXJtUGxCT0F3UjI5ZjZQ?=
- =?utf-8?B?NG1ZQWkxQzB4WSt4OUZVZW1LNXFNYWtPVUx3bTRiZko3b1NOWlZIRVI1UndD?=
- =?utf-8?B?WDBPVFlnQkEzUDhjeHE2a0d2NHYxc0ZWd2hiYjlyMzlacTIrelg0cDRndjgz?=
- =?utf-8?B?RHdPQTZHaFFjZ2h1WUFvRTNUdGZQN3RRU3B4bXZ0U29rN01pcFkxTXpSak53?=
- =?utf-8?B?ZklRTFVGQUR1UVdnQXhaUWtObG0vbEhkR0xadFVkVXpXVzVKY0dvOFVXVDlC?=
- =?utf-8?B?NWFPaGxTdmNBNElnVDJJaGxSbCs1eEowSWwwd2RFQW1CK1Q0aVJqWXhqZ3Ja?=
- =?utf-8?B?S2E0Tk9uTy9pM01naTYwR3lYU3Q5UW4vYjRDY1VPazJ0aEdZaGhCTlNtekdw?=
- =?utf-8?B?NlVyUnhtbDczREpXUjhWYUNIcHZQQXA4YjFmdkRrZzJOMW1ZaURHdWZhRGRu?=
- =?utf-8?B?RkNqc2wzakxvOVVZRExQSW9IVmJCK1l1QW1zaWc4M0xIbFR0RzR2OWhwYlcy?=
- =?utf-8?B?TDBKMzZkalZVdlZNNnpCTEZpaVIva0NobVNxaFFLQTc1U216T3BhWGVXdkZ6?=
- =?utf-8?B?UmZXaC9wdWMvTzFacEl5cVBnUlBmUm9XWjYvM1MwL29qMUJEYzJYRDlxY2w4?=
- =?utf-8?B?RHV4d2gxaU9SNHhFRjVyTDFUeEYzdHVYQkpaMU9kMVZPYnJxV1Ywc3M2SjFp?=
- =?utf-8?B?TU1qZzZZalVvd25pNjlTVEtnZjVBeEt6NkZrcnhzYlI3N2xRNDk3QnlCU1ZN?=
- =?utf-8?B?SVVVMmxnam5KOFZJdzZ2YnlCUXUySEk1UmFjbDNFMmpNYnVtVjBpWVZLQmYv?=
- =?utf-8?B?Z2EySTFtMmlBVDkya2VKTnRVS2pnVkF3VXI0ckRFQUl1ZzJUUU1GNVFieEdz?=
- =?utf-8?B?aFJSeGh3UElnb3RTTDduMVl4dCtCUnRQN2IrQTl3cllza2pIeUlqd2h4aVEx?=
- =?utf-8?B?b3JHUk93TWgwT2hSa0hwWXNMWjhYbHNTTVRKZGFHMUpITjQxOWJtZTZjRnpq?=
- =?utf-8?B?UmlLRXM0VlhYRGxvb0RrclUvdXFhOGNNV0dCR01QQ2pYNytYbS9nOTBTdktX?=
- =?utf-8?B?SjNxVnpLZ0x2YlA3QXB5Uzh6NU1SRXRhZzM1a2wwY0hLcUVSeGpObUMvYitP?=
- =?utf-8?B?YXNDRzZsbzJNOUFrYTg0akFIWHV3bVM3VW1Jc1Q5NFlhUXdEWEtWQzlBTDB2?=
- =?utf-8?B?UTdlblBWckNqY0lEK05ySTc4RlQ2anhBa041NXJJYUFrMXVGa1VoRVRTZXUy?=
- =?utf-8?B?K1RsSVpJUjA4alBGeGFvekdtTDNKd2xzNmtad0k4bjFHTGpXWkZreWFld2Ja?=
- =?utf-8?B?TnJYRHltYWd4bTNBWkFtbk9VbFh3czZkZUxRbDljU0NqblJKSFNkRFZSM3dR?=
- =?utf-8?B?b1BVYVNiR01OME91cmo5bTBNb2Z3cEhyMSt4QjIvN3NvS29YODFYTWdyQUQ0?=
- =?utf-8?B?NE04L0prTit1SVFoemxOVmdqNDcvS1V6WE5UN3o1SXkyK1RiMkQ0Uk1DZWRq?=
- =?utf-8?B?bkVEQTZSUVA4Q0M3TzhuR0Fxb3cwQ1g0YWVmbU92Tno1ZlJGQk11THdINDlQ?=
- =?utf-8?B?NnBScTJFSGZ0VThud3oyQTBTYlkrM01OVDZ0NHRReDFzYjdpdWY3dlV4TDBl?=
- =?utf-8?B?RjVuUDBJTjVOTVh3KzQwSmVIUmJnWjVNbm9EbkN6ZG9uY1hCWmt3WUhTdWEr?=
- =?utf-8?B?aDk4YTVlNjBaOVdOS3NhNTZuSGFGRk9xbVVxa0tsVEhxUk9pRk5HaGhLTEhV?=
- =?utf-8?Q?ZR37FpgITn13S?=
-X-OriginatorOrg: oracle.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 36997523-b88d-47eb-26d0-08dac6401356
-X-MS-Exchange-CrossTenant-AuthSource: DM6PR10MB4313.namprd10.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 14 Nov 2022 12:59:33.2997
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 4e2c6054-71cb-48f1-bd6c-3a9705aca71b
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: rPwSFwF8ty6f54X/Czif6cmdXgBI4gOGo/u/zD5yzbZ+jYpt0LB7YxcPYn1UUqqIlsK4RiDV38PNLpimhPxlSw==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: MN2PR10MB4208
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.219,Aquarius:18.0.895,Hydra:6.0.545,FMLib:17.11.122.1
- definitions=2022-11-14_12,2022-11-11_01,2022-06-22_01
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 mlxscore=0 bulkscore=0 phishscore=0
- spamscore=0 mlxlogscore=999 suspectscore=0 malwarescore=0 adultscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2210170000
- definitions=main-2211140093
-X-Proofpoint-ORIG-GUID: Wc01msYbW7CuCicBPOCZ2Cx8VfzRgFmT
-X-Proofpoint-GUID: Wc01msYbW7CuCicBPOCZ2Cx8VfzRgFmT
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-On 14/11/2022 07:41, Jing Zhang wrote:
-> The calculation formula of topdown L1 is from the document:
-> https://urldefense.com/v3/__https://documentation-service.arm.com/static/60250c7395978b529036da86?token=__;!!ACWV5N9M2RV99hQ!Ll-Jgvfs0LitTCU-hC6i6BKBVJfhke-pbQq2VoO-gmuSAcglQ3ZqMVMd2r0An_5a3ZDPYmn8zXuCrpUbehwnLHplVQ$  
 
-So since this is a from "standard" document, did you consider putting 
-these as an arch std event? I think arch std events would work for 
-metrics, like they do for regular events.
 
+On 2022-11-14 2:51 a.m., Ian Rogers wrote:
+> Add documentation to struct perf_pmu and the associated structs of
+> perf_pmu_alias and perf_pmu_format.
 > 
-> However, due to the wrong count of stall_slot and stall_slot_frontend
-> in neoverse-n2, the real stall_slot and real stall_slot_frontend need
-> to subtract cpu_cycles, so when calculating the topdownL1 metrics,
-> stall_slot and stall_slot_frontend are corrected.
-
-Is there a reference to this? It would be indeed useful to pass a link 
-to the n2 doc as these metrics are not part of the arm64 arm. At least I 
-assume that they are not there.
-
+> Signed-off-by: Ian Rogers <irogers@google.com>
+> ---
+>  tools/perf/util/pmu.c |  14 ++++++
+>  tools/perf/util/pmu.h | 105 +++++++++++++++++++++++++++++++++++++++---
+>  2 files changed, 113 insertions(+), 6 deletions(-)
 > 
-> Since neoverse-n2 does not yet support topdown L2, metricgroups such
-> as Cache, TLB, Branch, InstructionsMix, and PEutilization will be
-> added to further analysis of performance bottlenecks in the following
-> patches.
-> 
+> diff --git a/tools/perf/util/pmu.c b/tools/perf/util/pmu.c
+> index 6a86e6af0903..a8f9f47c6ed9 100644
+> --- a/tools/perf/util/pmu.c
+> +++ b/tools/perf/util/pmu.c
+> @@ -31,10 +31,24 @@
+>  
+>  struct perf_pmu perf_pmu__fake;
+>  
+> +/**
+> + * Values from a format file read from <sysfs>/devices/cpu/format/ held in
+> + * struct perf_pmu. For example, the contents of
+> + * <sysfs>/devices/cpu/format/event may be "config:0-7" and will be represented
+> + * here as name="event", value=PERF_PMU_FORMAT_VALUE_CONFIG and bits 0 to 7 will
+> + * be set.
+> + */
+>  struct perf_pmu_format {
+> +	/** The modifier/file name. */
+>  	char *name;
+> +	/**
+> +	 * Which config value the format relates to. Supported values are from
+> +	 * PERF_PMU_FORMAT_VALUE_CONFIG to PERF_PMU_FORMAT_VALUE_CONFIG_END.
+> +	 */
+>  	int value;
+> +	/** Which config bits are set by this format value. */
+>  	DECLARE_BITMAP(bits, PERF_PMU_FORMAT_BITS);
+> +	/** Element on list within struct perf_pmu. */
+>  	struct list_head list;
+>  };
+>  
+> diff --git a/tools/perf/util/pmu.h b/tools/perf/util/pmu.h
+> index 68e15c38ae71..29571c0f9d15 100644
+> --- a/tools/perf/util/pmu.h
+> +++ b/tools/perf/util/pmu.h
+> @@ -34,30 +34,91 @@ struct perf_pmu_caps {
+>  };
+>  
+>  struct perf_pmu {
+> +	/** The name of the PMU such as "cpu". */
+>  	char *name;
+> +	/**
+> +	 * Optional alternate name for the PMU determined in architecture
+> +	 * specific code.
+> +	 */
+>  	char *alias_name;
+> +	/**
+> +	 * Optional PMU identifier read from
+> +	 * <sysfs>/bus/event_source/devices/<name>/identifier.
+> +	 */
+>  	char *id;
+> +	/**
+> +	 * Perf event attributed type value, read from
+> +	 * <sysfs>/bus/event_source/devices/<name>/type.
+> +	 */
+>  	__u32 type;
+> +	/**
+> +	 * Can the PMU name be selected as if it were an event?
+> +	 */
+>  	bool selectable;
+> +	/**
+> +	 * Is the PMU not within the CPU core? Determined by the presence of
+> +	 * <sysfs>/bus/event_source/devices/<name>/cpumask.
+> +	 */
+>  	bool is_uncore;
+> +	/** Is the PMU name either cpu_core or cpu_atom. */
 
+I don't think we want to limit the hybrid names only to cpu_core or
+cpu_atom. Maybe something as below?
+/* Is a hybrid CPU PMU, e.g., cpu_core, cpu_atom. */
 
 Thanks,
-John
+Kan
 
+>  	bool is_hybrid;
+> +	/**
+> +	 * Are events auxiliary events? Determined in architecture specific
+> +	 * code.
+> +	 */
+>  	bool auxtrace;
+> +	/**
+> +	 * Number of levels of :ppp precision supported by the PMU, read from
+> +	 * <sysfs>/bus/event_source/devices/<name>/caps/max_precise.
+> +	 */
+>  	int max_precise;
+> +	/**
+> +	 * Optional default perf_event_attr determined in architecture specific
+> +	 * code.
+> +	 */
+>  	struct perf_event_attr *default_config;
+> +	/**
+> +	 * Empty or the contents of either of:
+> +	 * <sysfs>/bus/event_source/devices/<name>/cpumask.
+> +	 * <sysfs>/bus/event_source/devices/<cpu>/cpus.
+> +	 */
+>  	struct perf_cpu_map *cpus;
+> -	struct list_head format;  /* HEAD struct perf_pmu_format -> list */
+> -	struct list_head aliases; /* HEAD struct perf_pmu_alias -> list */
+> +	/**
+> +	 * Holds the contents of files read from
+> +	 * <sysfs>/bus/event_source/devices/<name>/format/. The contents specify
+> +	 * which event parameter changes what config, config1 or config2 bits.
+> +	 */
+> +	struct list_head format;
+> +	/**
+> +	 * List of struct perf_pmu_alias. Each alias corresponds to an event
+> +	 * read from <sysfs>/bus/event_source/devices/<name>/events/ or from
+> +	 * json events in pmu-events.c.
+> +	 */
+> +	struct list_head aliases;
+> +	/** Has the list caps been initialized? */
+>  	bool caps_initialized;
+> +	/** The length of the list caps. */
+>  	u32 nr_caps;
+> -	struct list_head caps;    /* HEAD struct perf_pmu_caps -> list */
+> -	struct list_head list;    /* ELEM */
+> +	/**
+> +	 * Holds the contents of files read from
+> +	 * <sysfs>/bus/event_source/devices/<name>/caps/. The contents are pairs
+> +	 * of the filename with the value of its contents, for example,
+> +	 * max_precise (see above) may have a value of 3.
+> +	 */
+> +	struct list_head caps;
+> +	/** Element on pmus list in pmu.c. */
+> +	struct list_head list;
+> +	/** Element on perf_pmu__hybrid_pmus. */
+>  	struct list_head hybrid_list;
+>  
+> +	/** Features to inhibit when events on this PMU are opened. */
+>  	struct {
+> +		/** Disables perf_event_attr exclude_guest and exclude_host. */
+>  		bool exclude_guest;
+>  	} missing_features;
+>  };
+>  
+> +/** A special global PMU used for testing. */
+>  extern struct perf_pmu perf_pmu__fake;
+>  
+>  struct perf_pmu_info {
+> @@ -71,21 +132,53 @@ struct perf_pmu_info {
+>  
+>  #define UNIT_MAX_LEN	31 /* max length for event unit name */
+>  
+> +/**
+> + * An event either read from sysfs or builtin in pmu-events.c, created by
+> + * parsing the pmu-events json files.
+> + */
+>  struct perf_pmu_alias {
+>  	char *name;
+> +	/** Optional short description of the event. */
+>  	char *desc;
+> +	/** Optional long description. */
+>  	char *long_desc;
+> +	/**
+> +	 * Optional topic such as cache or pipeline, particularly for json
+> +	 * events.
+> +	 */
+>  	char *topic;
+> +	/** Comma separated parameter list. */
+>  	char *str;
+> -	struct list_head terms; /* HEAD struct parse_events_term -> list */
+> -	struct list_head list;  /* ELEM */
+> +	/** Owned list of the original parsed parameters. */
+> +	struct list_head terms;
+> +	/** List element of struct perf_pmu aliases. */
+> +	struct list_head list;
+> +	/** Units for the event, such as bytes or cache lines. */
+>  	char unit[UNIT_MAX_LEN+1];
+> +	/** Value to scale read counter values by. */
+>  	double scale;
+> +	/**
+> +	 * Does the file
+> +	 * <sysfs>/bus/event_source/devices/<pmu_name>/events/<name>.per-pkg or
+> +	 * equivalent json value exist and have the value 1.
+> +	 */
+>  	bool per_pkg;
+> +	/**
+> +	 * Does the file
+> +	 * <sysfs>/bus/event_source/devices/<pmu_name>/events/<name>.snapshot
+> +	 * exist and have the value 1.
+> +	 */
+>  	bool snapshot;
+> +	/** Is the event hidden and so not shown in perf list by default. */
+>  	bool deprecated;
+> +	/**
+> +	 * A metric expression associated with an event. Doing this makes little
+> +	 * sense due to scale and unit applying to both.
+> +	 */
+>  	char *metric_expr;
+> +	/** A name for the metric. unit applying to both. */
+>  	char *metric_name;
+> +	/** The name copied from struct perf_pmu. */
+>  	char *pmu_name;
+>  };
+>  
