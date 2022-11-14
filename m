@@ -2,205 +2,120 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2F350C433FE
-	for <linux-perf-users@archiver.kernel.org>; Mon, 14 Nov 2022 20:18:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D8E79C433FE
+	for <linux-perf-users@archiver.kernel.org>; Mon, 14 Nov 2022 21:07:41 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S236525AbiKNUS5 (ORCPT
+        id S237254AbiKNVHk (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Mon, 14 Nov 2022 15:18:57 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42928 "EHLO
+        Mon, 14 Nov 2022 16:07:40 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44058 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S235917AbiKNUS4 (ORCPT
+        with ESMTP id S235551AbiKNVHj (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Mon, 14 Nov 2022 15:18:56 -0500
-Received: from ams.source.kernel.org (ams.source.kernel.org [145.40.68.75])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id ADFA5259;
-        Mon, 14 Nov 2022 12:18:54 -0800 (PST)
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by ams.source.kernel.org (Postfix) with ESMTPS id 40168B8125A;
-        Mon, 14 Nov 2022 20:18:53 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id AF707C433D6;
-        Mon, 14 Nov 2022 20:18:51 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1668457131;
-        bh=WnKG8ZISj2Fikluo+ep25Wp8f1pjWOsJqtgzHy6pIYw=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=h1n9MZd7qnR11d/Gn6IY66xj5vmT3d3OK7VDQ/7hDB5udS10BVWG9cGAsXsC0H/+b
-         HjDKHvrz0PRmQVLbTPSshMf3dOBcxmQvGk4mevzAIhNxbzmlQx4XxHmQmrlREpn6wd
-         XX4UcrP64p4MiJ0kNbRH/DQUWN2nFnmKelqLYyz7k9sQiectOEZTLWz4egF/lnoYpw
-         7+YlgndY7gcX8w87UHDnuPMWkMr0lKG3/fUXODjREkZ6t7DeogCDI42c8Y81PpWx42
-         Y2ZWgo+8cF376z5S+exx0lqNnsK944CFuzM/VjMudmS6+Up0woG6sswSlvb9tLaCD2
-         N4/xl5LEwJ6OA==
-Received: by quaco.ghostprotocols.net (Postfix, from userid 1000)
-        id 489144034E; Mon, 14 Nov 2022 17:18:49 -0300 (-03)
-Date:   Mon, 14 Nov 2022 17:18:49 -0300
-From:   Arnaldo Carvalho de Melo <acme@kernel.org>
-To:     Namhyung Kim <namhyung@kernel.org>
-Cc:     Ian Rogers <irogers@google.com>,
+        Mon, 14 Nov 2022 16:07:39 -0500
+Received: from mail-pg1-x549.google.com (mail-pg1-x549.google.com [IPv6:2607:f8b0:4864:20::549])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CF749BDD
+        for <linux-perf-users@vger.kernel.org>; Mon, 14 Nov 2022 13:07:38 -0800 (PST)
+Received: by mail-pg1-x549.google.com with SMTP id f19-20020a63f113000000b0046fde69a09dso6383486pgi.10
+        for <linux-perf-users@vger.kernel.org>; Mon, 14 Nov 2022 13:07:38 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20210112;
+        h=cc:to:from:subject:mime-version:message-id:date:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=bnk6QcACKDHfLaerzSC+1vUeLHtUQc78SZsram1d2Ns=;
+        b=cYOIca+NENhdYACfSPVmKjGEQejr4Fzt4sx/bRNYYxGS7WA+7LWkliB7ofeINiW5Ms
+         7Mo+vOvxe2sOljrDaJVzTAgD7JZsSDAoswQjxGt7VCm4y6AWk2H4cFa3TudXjUR/v4/n
+         Bg5eaxBFhCgr8P/QYJY3wvJQLzAe0PWA57d+3m5El8CMl6WLjEsF27B2awPef3C6ogMM
+         7BXVlXXWsdgrha+Z+1awDzFnC2NbxTvkvh6YuuH5+0wlq+r1PTBuurnIsrSoquELUbx/
+         Zuxbpw9yOpCqDTyToLd/qn33k7H/fYB5M3mTBVPcxrsaHXvp1V2X28/NGzEUNMQwj3xk
+         SZmA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=cc:to:from:subject:mime-version:message-id:date:x-gm-message-state
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=bnk6QcACKDHfLaerzSC+1vUeLHtUQc78SZsram1d2Ns=;
+        b=ihv5YLdggWSoFROitstjyK+zjBo74JBCcTPOwTvdQPao/HM2+eEh6LzqzHGOrPVvD1
+         bgnuiKmo7yLTljlUUZPkbQibLMvzCXJ4yT6pXUj9yDdBBy4M/OZ/R0JMPqdDXetarIHX
+         VFq3j+XgpV9QKA7eyI3V6sruib82wYlOlgbl+7qsPe+V1AlY/C/dhAoR+33ZSgEkvmsR
+         SpzJyZVy8eVRnvSmkXk4OStI6pS4nzO9PaLW2MdXkQx89uhiOPLERTYdwTPmTVOxjvI1
+         d7sLdrAu9mIXKbmGczuQLXITtLyDMlK7vpXb9yOdLZzEDNE543Im6t+9nHm2AGKHlhVB
+         vxNQ==
+X-Gm-Message-State: ANoB5plRd7kja4Y4qNNK5kMgcTZhwqA606VYWeM0E8NQdBB8rdlvuUSz
+        Y1duLyjPscB75ILp7vgVanc+OCsyJvFi
+X-Google-Smtp-Source: AA0mqf5XLHjklsrSGEkkJMrepVuOU97r0u2RyqqeVSUn4+rizrpjePhHSNj9GGDN3SSU11FFNjz6Oy0zOSu1
+X-Received: from irogers.svl.corp.google.com ([2620:15c:2d4:203:553:438f:b86a:87f])
+ (user=irogers job=sendgmr) by 2002:a63:4f54:0:b0:476:85ee:aee2 with SMTP id
+ p20-20020a634f54000000b0047685eeaee2mr5230552pgl.582.1668460058138; Mon, 14
+ Nov 2022 13:07:38 -0800 (PST)
+Date:   Mon, 14 Nov 2022 13:07:13 -0800
+Message-Id: <20221114210723.2749751-1-irogers@google.com>
+Mime-Version: 1.0
+X-Mailer: git-send-email 2.38.1.431.g37b22c650d-goog
+Subject: [PATCH v3 00/10] Restructure perf list and add json output
+From:   Ian Rogers <irogers@google.com>
+To:     Weilin Wang <weilin.wang@intel.com>,
+        Perry Taylor <perry.taylor@intel.com>,
+        Caleb Biggers <caleb.biggers@intel.com>,
+        Leo Yan <leo.yan@linaro.org>,
+        Adrian Hunter <adrian.hunter@intel.com>,
         Peter Zijlstra <peterz@infradead.org>,
         Ingo Molnar <mingo@redhat.com>,
+        Arnaldo Carvalho de Melo <acme@kernel.org>,
         Mark Rutland <mark.rutland@arm.com>,
         Alexander Shishkin <alexander.shishkin@linux.intel.com>,
         Jiri Olsa <jolsa@kernel.org>,
-        Masahiro Yamada <masahiroy@kernel.org>,
-        Nicolas Schier <nicolas@fjasle.eu>,
-        linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org,
-        bpf@vger.kernel.org, Nick Desaulniers <ndesaulniers@google.com>,
-        Andrii Nakryiko <andrii.nakryiko@gmail.com>,
-        Stephane Eranian <eranian@google.com>
-Subject: Re: [PATCH v2 00/14] Fix perf tools/lib includes
-Message-ID: <Y3KiqToCI/YsqcAW@kernel.org>
-References: <20221109184914.1357295-1-irogers@google.com>
- <CAM9d7ciPe-uR5MdayhUEEK8a-j1QDm50qPffsod9BHdUF5Z-TA@mail.gmail.com>
- <Y3KiOU/bYokRSENk@kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <Y3KiOU/bYokRSENk@kernel.org>
-X-Url:  http://acmel.wordpress.com
+        Namhyung Kim <namhyung@kernel.org>,
+        Sandipan Das <sandipan.das@amd.com>,
+        Kajol Jain <kjain@linux.ibm.com>,
+        Zhengjun Xing <zhengjun.xing@linux.intel.com>,
+        Kan Liang <kan.liang@linux.intel.com>,
+        Ravi Bangoria <ravi.bangoria@amd.com>,
+        Xin Gao <gaoxin@cdjrlc.com>, Rob Herring <robh@kernel.org>,
+        linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org
+Cc:     Stephane Eranian <eranian@google.com>,
+        Ian Rogers <irogers@google.com>
+Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-Em Mon, Nov 14, 2022 at 05:16:57PM -0300, Arnaldo Carvalho de Melo escreveu:
-> Em Thu, Nov 10, 2022 at 10:10:18AM -0800, Namhyung Kim escreveu:
-> > Hi Ian,
-> > 
-> > On Wed, Nov 9, 2022 at 10:49 AM Ian Rogers <irogers@google.com> wrote:
-> > >
-> > > The previous build would add -Itools/lib and get dependencies for
-> > > libtraceevent, libsubcmd, libsymbol, libapi and libbpf meaning that
-> > > overriding these libraries would change the link time dependency but
-> > > the headers would erroneously come from tools/lib. Fix the build to
-> > > install headers and then depend on these. To reduce exposing internal
-> > > headers/APIs some clean up is performed. tools/lib/symbol has a
-> > > Makefile added, while tools/lib/api and tools/lib/subcmd have install
-> > > targets added. The pattern used for the dependencies in Makefile.perf
-> > > is modelled on libbpf.
-> > >
-> > > The problem and solution were motivated by this issue and discussion:
-> > > https://lore.kernel.org/lkml/CAEf4BzbbOHQZUAe6iWaehKCPQAf3VC=hq657buqe2_yRKxaK-A@mail.gmail.com/
-> > >
-> > > v2. Fix a MANIFEST issue for the source tar ball. Add dependencies for
-> > >     the installed header files so that the build doesn't overtake
-> > >     building these dependencies. Both issues reported by Arnaldo
-> > >     Carvalho de Melo <acme@kernel.org>.
-> > >
-> > > Ian Rogers (14):
-> > >   tools lib api: Add install target
-> > >   tools lib subcmd: Add install target
-> > >   perf build: Install libsubcmd locally when building
-> > >   perf build: Install libapi locally when building
-> > >   perf build: Install libperf locally when building
-> > >   perf build: Install libtraceevent locally when building
-> > >   tools lib api: Add missing install headers
-> > >   tools lib perf: Add missing install headers
-> > >   tool lib symbol: Add Makefile/Build
-> > >   perf build: Install libsymbol locally when building
-> > >   perf expr: Tidy hashmap dependency
-> > >   perf thread_map: Reduce exposure of libperf internal API
-> > >   perf cpumap: Tidy libperf includes
-> > >   perf build: Use tools/lib headers from install path
-> > 
-> > Acked-by: Namhyung Kim <namhyung@kernel.org>
-> 
-> 'make -C tools/perf build-test' is failing, looks like parallelization
-> woes again:
- 
-It's all at the perf/tools-libs-includes branch in my tree.
+Restructure perf list so that it uses callbacks to print events and
+metrics. Use the callbacks to implement json output. In the process
+add documentation to pmu.h, avoid some sorting of events, fix some
+command line and output bugs.
 
-- Arnaldo
+v3. Removes is_hybrid from perf_pmu as suggested by Kan Liang.
+    ScaleUnit is added to the json output as suggested by
+    Weilin Wang. Some comments are also improved.
+v2. Address feedback from Adrian Hunter and make kernel-doc work.
 
-> ⬢[acme@toolbox perf]$ getconf _NPROCESSORS_ONLN
-> 32
-> ⬢[acme@toolbox perf]$
-> 
-> ⬢[acme@toolbox perf]$ git log --oneline -1 ; time make -C tools/perf build-test
-> 9f22d36a1dd0297a (HEAD -> perf/core) perf build: Use tools/lib headers from install path
-> make: Entering directory '/var/home/acme/git/perf/tools/perf'
-> - tarpkg: ./tests/perf-targz-src-pkg .
->                  make_static: cd . && make LDFLAGS=-static NO_PERF_READ_VDSO32=1 NO_PERF_READ_VDSOX32=1 NO_JVMTI=1 -j32  DESTDIR=/tmp/tmp.i0kUDsiQbV
->               make_with_gtk2: cd . && make GTK2=1 -j32  DESTDIR=/tmp/tmp.MNcgfeG07c
-> cd . && make GTK2=1 -j32 DESTDIR=/tmp/tmp.MNcgfeG07c
->   BUILD:   Doing 'make -j32' parallel build
->   HOSTCC  fixdep.o
->   HOSTLD  fixdep-in.o
->   LINK    fixdep
-> Warning: Kernel ABI header at 'tools/arch/arm64/include/uapi/asm/perf_regs.h' differs from latest version at 'arch/arm64/include/uapi/asm/perf_regs.h'
-> diff -u tools/arch/arm64/include/uapi/asm/perf_regs.h arch/arm64/include/uapi/asm/perf_regs.h
-> Warning: Kernel ABI header at 'tools/arch/arm64/include/asm/cputype.h' differs from latest version at 'arch/arm64/include/asm/cputype.h'
-> diff -u tools/arch/arm64/include/asm/cputype.h arch/arm64/include/asm/cputype.h
-> Warning: Kernel ABI header at 'tools/perf/arch/powerpc/entry/syscalls/syscall.tbl' differs from latest version at 'arch/powerpc/kernel/syscalls/syscall.tbl'
-> diff -u tools/perf/arch/powerpc/entry/syscalls/syscall.tbl arch/powerpc/kernel/syscalls/syscall.tbl
-> 
-> Auto-detecting system features:
-> ...                                   dwarf: [ on  ]
-> ...                      dwarf_getlocations: [ on  ]
-> ...                                   glibc: [ on  ]
-> ...                                  libbfd: [ on  ]
-> ...                          libbfd-buildid: [ on  ]
-> ...                                  libcap: [ on  ]
-> ...                                  libelf: [ on  ]
-> ...                                 libnuma: [ on  ]
-> ...                  numa_num_possible_cpus: [ on  ]
-> ...                                 libperl: [ on  ]
-> ...                               libpython: [ on  ]
-> ...                               libcrypto: [ on  ]
-> ...                               libunwind: [ on  ]
-> ...                      libdw-dwarf-unwind: [ on  ]
-> ...                                    zlib: [ on  ]
-> ...                                    lzma: [ on  ]
-> ...                               get_cpuid: [ on  ]
-> ...                                     bpf: [ on  ]
-> ...                                  libaio: [ on  ]
-> ...                                 libzstd: [ on  ]
-> 
->   GEN     common-cmds.h
->   CC      perf-read-vdso32
->   CC      dlfilters/dlfilter-test-api-v0.o
->   CC      dlfilters/dlfilter-show-cycles.o
->   CC      jvmti/libjvmti.o
->   CC      jvmti/jvmti_agent.o
->   CC      jvmti/libstring.o
->   CC      jvmti/libctype.o
->   CC      ui/gtk/browser.o
->   CC      ui/gtk/hists.o
->   CC      ui/gtk/setup.o
->   CC      ui/gtk/util.o
->   GEN     pmu-events/pmu-events.c
->   CC      ui/gtk/helpline.o
->   LINK    dlfilters/dlfilter-show-cycles.so
->   CC      ui/gtk/progress.o
->   CC      ui/gtk/annotate.o
->   CC      ui/gtk/zalloc.o
->   LINK    dlfilters/dlfilter-test-api-v0.so
->   INSTALL headers
->   CC      /var/home/acme/git/perf/tools/perf/libsubcmd/exec-cmd.o
->   CC      /var/home/acme/git/perf/tools/perf/libsubcmd/help.o
->   CC      /var/home/acme/git/perf/tools/perf/libsubcmd/pager.o
->   CC      /var/home/acme/git/perf/tools/perf/libsubcmd/parse-options.o
->   CC      /var/home/acme/git/perf/tools/perf/libsubcmd/run-command.o
-> In file included from ui/gtk/hists.c:2:
-> /var/home/acme/git/perf/tools/perf/util/include/../evlist.h:9:10: fatal error: api/fd/array.h: No such file or directory
->     9 | #include <api/fd/array.h>
->       |          ^~~~~~~~~~~~~~~~
-> compilation terminated.
-> make[6]: *** [/var/home/acme/git/perf/tools/build/Makefile.build:97: ui/gtk/hists.o] Error 1
-> make[6]: *** Waiting for unfinished jobs....
->   CC      /var/home/acme/git/perf/tools/perf/libsubcmd/sigchain.o
-> make -f /var/home/acme/git/perf/tools/build/Makefile.build dir=. obj=libsymbol V=1
-> In file included from ui/gtk/browser.c:2:
-> /var/home/acme/git/perf/tools/perf/util/include/../evsel.h:10:10: fatal error: internal/evsel.h: No such file or directory
->    10 | #include <internal/evsel.h>
->       |          ^~~~~~~~~~~~~~~~~~
-> compilation terminated.
-> make[6]: *** [/var/home/acme/git/perf/tools/build/Makefile.build:97: ui/gtk/browser.o] Error 1
->   INSTALL headers
->   CC      /var/home/acme/git/perf/tools/perf/libtraceevent/event-parse.o
+Ian Rogers (10):
+  perf pmu: Remove is_hybrid member
+  perf pmu: Add documentation
+  tools lib api fs tracing_path: Add scandir alphasort
+  perf tracepoint: Sort events in iterator
+  perf list: Generalize limiting to a PMU name
+  perf list: Simplify cache event printing
+  perf list: Simplify symbol event printing
+  perf pmu: Restructure print_pmu_events
+  perf list: Reorganize to use callbacks
+  perf list: Add json output option
+
+ tools/lib/api/fs/tracing_path.c        |  16 +
+ tools/lib/api/fs/tracing_path.h        |   1 +
+ tools/perf/Documentation/perf-list.txt |  10 +-
+ tools/perf/builtin-list.c              | 525 +++++++++++++++++---
+ tools/perf/util/evsel.c                |   5 +-
+ tools/perf/util/evsel.h                |   2 +-
+ tools/perf/util/metricgroup.c          | 242 +++-------
+ tools/perf/util/metricgroup.h          |   4 +-
+ tools/perf/util/pmu.c                  | 288 ++++++-----
+ tools/perf/util/pmu.h                  | 128 ++++-
+ tools/perf/util/print-events.c         | 638 ++++++++++---------------
+ tools/perf/util/print-events.h         |  42 +-
+ tools/perf/util/stat.c                 |  11 +-
+ 13 files changed, 1102 insertions(+), 810 deletions(-)
 
 -- 
+2.38.1.431.g37b22c650d-goog
 
-- Arnaldo
