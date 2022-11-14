@@ -2,316 +2,312 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 08A99C4332F
-	for <linux-perf-users@archiver.kernel.org>; Mon, 14 Nov 2022 15:27:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 53D9EC4332F
+	for <linux-perf-users@archiver.kernel.org>; Mon, 14 Nov 2022 16:06:50 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S236248AbiKNP07 (ORCPT
+        id S236962AbiKNQGs (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Mon, 14 Nov 2022 10:26:59 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50196 "EHLO
+        Mon, 14 Nov 2022 11:06:48 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46626 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S236339AbiKNP04 (ORCPT
+        with ESMTP id S235617AbiKNQGr (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Mon, 14 Nov 2022 10:26:56 -0500
-Received: from mga14.intel.com (mga14.intel.com [192.55.52.115])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 617EB205CA;
-        Mon, 14 Nov 2022 07:26:55 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1668439615; x=1699975615;
-  h=message-id:date:mime-version:subject:to:cc:references:
-   from:in-reply-to:content-transfer-encoding;
-  bh=RLWKHnED+ezAz4xPOgfwYdUQ+x776iSR8SbypCj3UpY=;
-  b=nWxgSsLVb95XL8o2L3AezFw/OILqbM8LA1MgPdAvFmfHd9eKUa5H9dz7
-   xC8pfvn6qNRwVfLYJnX2T07wVP8ahmYMnaymiH0lbqbkAJs2jlSs9Ilat
-   L+w4wd+MctrPDkIl+39ipLvLM3jXbnsiKl4MUclE1XILJTmrG+QwY4pF2
-   D6D1rmojFNPBIFz7xrwy9+XZILyQZRVjo/3NkxT40Beu6BMk23oxZLRNL
-   LDbY0x6qGFVVGU95RX2oNZDWfM8Shx/8P+OF7q77SYH2AJ+/iEnjiPhQ0
-   VajSRtFLkYl2fsKQry3oHWgV0OfGlkKuqOCcWYpAkF/fazs9pIZCGYN8n
-   A==;
-X-IronPort-AV: E=McAfee;i="6500,9779,10531"; a="312002456"
-X-IronPort-AV: E=Sophos;i="5.96,164,1665471600"; 
-   d="scan'208";a="312002456"
-Received: from fmsmga003.fm.intel.com ([10.253.24.29])
-  by fmsmga103.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 14 Nov 2022 07:26:52 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6500,9779,10531"; a="727563574"
-X-IronPort-AV: E=Sophos;i="5.96,164,1665471600"; 
-   d="scan'208";a="727563574"
-Received: from linux.intel.com ([10.54.29.200])
-  by FMSMGA003.fm.intel.com with ESMTP; 14 Nov 2022 07:26:52 -0800
-Received: from [10.252.208.163] (kliang2-mobl1.ccr.corp.intel.com [10.252.208.163])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        Mon, 14 Nov 2022 11:06:47 -0500
+Received: from ams.source.kernel.org (ams.source.kernel.org [IPv6:2604:1380:4601:e00::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 248E419C36;
+        Mon, 14 Nov 2022 08:06:43 -0800 (PST)
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by linux.intel.com (Postfix) with ESMTPS id 81A6858097C;
-        Mon, 14 Nov 2022 07:26:49 -0800 (PST)
-Message-ID: <3464d5c2-0438-18ba-fbea-ab95ca5f22b4@linux.intel.com>
-Date:   Mon, 14 Nov 2022 10:26:48 -0500
+        by ams.source.kernel.org (Postfix) with ESMTPS id 45F10B8105F;
+        Mon, 14 Nov 2022 16:06:42 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id C092BC433C1;
+        Mon, 14 Nov 2022 16:06:40 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1668442000;
+        bh=xyWUquctCgNLHTWoRXdAySXc382E+bpNpRue83ITrpE=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=EnDltw0kRGUACLQs4C1R+kwkbpZitnKDqn8xe9SnD8NGEB2/wfU8LPdryC67G7UgS
+         euPF7KkMKUvsxWSJE6ZtBqQPmeFTPOvs/YJda23pP/DsPIKywvruJ14Kxb6sScTR3e
+         w788Ij46RwocEAbu/2Z5HqktbCxSbaAIkprhDef9Pp35WDGZAMoJr7c+h7poDjewQC
+         Xk86qjGYkqVx5MCq/qT/nQHfy7wz2DC9EiJF6f5U67FgwqEfsf+yNzVOHsvyNYmNdK
+         aWmSLs0evm9OVPclXwcRp5OgSOxe3u380dxeMU1lxb+MkWwgl64vVy8oaqsR5eAulK
+         7LVaYB40KZJcw==
+Received: by quaco.ghostprotocols.net (Postfix, from userid 1000)
+        id 577F54034E; Mon, 14 Nov 2022 13:06:38 -0300 (-03)
+Date:   Mon, 14 Nov 2022 13:06:38 -0300
+From:   Arnaldo Carvalho de Melo <acme@kernel.org>
+To:     Thomas Richter <tmricht@linux.ibm.com>
+Cc:     linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org,
+        svens@linux.ibm.com, gor@linux.ibm.com, sumanthk@linux.ibm.com,
+        hca@linux.ibm.com, Ingo Molnar <mingo@kernel.org>
+Subject: Re: [PATCH v2] perf list: Add PMU pai_ext event description for IBM
+ z16
+Message-ID: <Y3JnjmxPX+m7G9HL@kernel.org>
+References: <20221111135402.858623-1-tmricht@linux.ibm.com>
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:102.0) Gecko/20100101
- Thunderbird/102.4.2
-Subject: Re: [PATCH v1 1/9] perf pmu: Add documentation
-Content-Language: en-US
-To:     Ian Rogers <irogers@google.com>
-Cc:     Weilin Wang <weilin.wang@intel.com>,
-        Perry Taylor <perry.taylor@intel.com>,
-        Caleb Biggers <caleb.biggers@intel.com>,
-        Leo Yan <leo.yan@linaro.org>,
-        Adrian Hunter <adrian.hunter@intel.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Jiri Olsa <jolsa@kernel.org>,
-        Namhyung Kim <namhyung@kernel.org>,
-        Sandipan Das <sandipan.das@amd.com>,
-        Kajol Jain <kjain@linux.ibm.com>,
-        Zhengjun Xing <zhengjun.xing@linux.intel.com>,
-        Ravi Bangoria <ravi.bangoria@amd.com>,
-        Xin Gao <gaoxin@cdjrlc.com>, Rob Herring <robh@kernel.org>,
-        linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org,
-        Stephane Eranian <eranian@google.com>
-References: <20221114075127.2650315-1-irogers@google.com>
- <20221114075127.2650315-2-irogers@google.com>
- <bbb73e4b-a73e-6ce5-db1f-e54d1bb19c2c@linux.intel.com>
- <CAP-5=fUTDtGDJ3ONW5iKaeszDRwezzZCJCW59yvXQ4tEYyHsdg@mail.gmail.com>
-From:   "Liang, Kan" <kan.liang@linux.intel.com>
-In-Reply-To: <CAP-5=fUTDtGDJ3ONW5iKaeszDRwezzZCJCW59yvXQ4tEYyHsdg@mail.gmail.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20221111135402.858623-1-tmricht@linux.ibm.com>
+X-Url:  http://acmel.wordpress.com
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-
-
-On 2022-11-14 9:09 a.m., Ian Rogers wrote:
-> On Mon, Nov 14, 2022 at 5:40 AM Liang, Kan <kan.liang@linux.intel.com> wrote:
->>
->>
->>
->> On 2022-11-14 2:51 a.m., Ian Rogers wrote:
->>> Add documentation to struct perf_pmu and the associated structs of
->>> perf_pmu_alias and perf_pmu_format.
->>>
->>> Signed-off-by: Ian Rogers <irogers@google.com>
->>> ---
->>>  tools/perf/util/pmu.c |  14 ++++++
->>>  tools/perf/util/pmu.h | 105 +++++++++++++++++++++++++++++++++++++++---
->>>  2 files changed, 113 insertions(+), 6 deletions(-)
->>>
->>> diff --git a/tools/perf/util/pmu.c b/tools/perf/util/pmu.c
->>> index 6a86e6af0903..a8f9f47c6ed9 100644
->>> --- a/tools/perf/util/pmu.c
->>> +++ b/tools/perf/util/pmu.c
->>> @@ -31,10 +31,24 @@
->>>
->>>  struct perf_pmu perf_pmu__fake;
->>>
->>> +/**
->>> + * Values from a format file read from <sysfs>/devices/cpu/format/ held in
->>> + * struct perf_pmu. For example, the contents of
->>> + * <sysfs>/devices/cpu/format/event may be "config:0-7" and will be represented
->>> + * here as name="event", value=PERF_PMU_FORMAT_VALUE_CONFIG and bits 0 to 7 will
->>> + * be set.
->>> + */
->>>  struct perf_pmu_format {
->>> +     /** The modifier/file name. */
->>>       char *name;
->>> +     /**
->>> +      * Which config value the format relates to. Supported values are from
->>> +      * PERF_PMU_FORMAT_VALUE_CONFIG to PERF_PMU_FORMAT_VALUE_CONFIG_END.
->>> +      */
->>>       int value;
->>> +     /** Which config bits are set by this format value. */
->>>       DECLARE_BITMAP(bits, PERF_PMU_FORMAT_BITS);
->>> +     /** Element on list within struct perf_pmu. */
->>>       struct list_head list;
->>>  };
->>>
->>> diff --git a/tools/perf/util/pmu.h b/tools/perf/util/pmu.h
->>> index 68e15c38ae71..29571c0f9d15 100644
->>> --- a/tools/perf/util/pmu.h
->>> +++ b/tools/perf/util/pmu.h
->>> @@ -34,30 +34,91 @@ struct perf_pmu_caps {
->>>  };
->>>
->>>  struct perf_pmu {
->>> +     /** The name of the PMU such as "cpu". */
->>>       char *name;
->>> +     /**
->>> +      * Optional alternate name for the PMU determined in architecture
->>> +      * specific code.
->>> +      */
->>>       char *alias_name;
->>> +     /**
->>> +      * Optional PMU identifier read from
->>> +      * <sysfs>/bus/event_source/devices/<name>/identifier.
->>> +      */
->>>       char *id;
->>> +     /**
->>> +      * Perf event attributed type value, read from
->>> +      * <sysfs>/bus/event_source/devices/<name>/type.
->>> +      */
->>>       __u32 type;
->>> +     /**
->>> +      * Can the PMU name be selected as if it were an event?
->>> +      */
->>>       bool selectable;
->>> +     /**
->>> +      * Is the PMU not within the CPU core? Determined by the presence of
->>> +      * <sysfs>/bus/event_source/devices/<name>/cpumask.
->>> +      */
->>>       bool is_uncore;
->>> +     /** Is the PMU name either cpu_core or cpu_atom. */
->>
->> I don't think we want to limit the hybrid names only to cpu_core or
->> cpu_atom. Maybe something as below?
->> /* Is a hybrid CPU PMU, e.g., cpu_core, cpu_atom. */
+Em Fri, Nov 11, 2022 at 02:54:02PM +0100, Thomas Richter escreveu:
+> Add the event description for the IBM z16 pai_ext PMU released with
+> commit c432fefe8e62 ("s390/pai: Add support for PAI Extension 1 NNPA counters")
 > 
-> Currently the hybrid code only works for cpu_core or cpu_atom, a
-> limitation of its implementation. 
-
-I don't think so. See perf_pmu__hybrid_mounted(). If a PMU is named as
-"cpu_", we treat it as a hybrid CPU PMU. The cpu_core or cpu_atom should
-only be hard coded to specially handle some model-specific cases, e.g.,
-mem-loads-aux event.
-
-Thanks,
-Kan
-
-> As pointed out in a later patch,
-> this bool isn't being used when it could be and I think we can work to
-> remove it. It would be possible to remove all uses of this with
-> perf_pmu__is_hybrid. As such I think it may be useful to mark the
-> hybrid variables in struct perf_pmu as deprecated while we work to
-> replace their use with more generic just any PMU code.
+> The document SA22-7832-13 "z/Architecture Principles of Operation",
+> published May, 2022, contains the description of the
+> Processor Activity Instrumentation Facility and the NNPA counter
+> set., See Pages 5-113 to 5-116.
 > 
-> Thanks,
-> Ian
+> Signed-off-by: Thomas Richter <tmricht@linux.ibm.com>
+> ---
+>  .../pmu-events/arch/s390/cf_z16/pai_ext.json  | 198 ++++++++++++++++++
+>  tools/perf/pmu-events/jevents.py              |   1 +
+>  2 files changed, 199 insertions(+)
+>  create mode 100644 tools/perf/pmu-events/arch/s390/cf_z16/pai_ext.json
 > 
->> Thanks,
->> Kan
->>
->>>       bool is_hybrid;
->>> +     /**
->>> +      * Are events auxiliary events? Determined in architecture specific
->>> +      * code.
->>> +      */
->>>       bool auxtrace;
->>> +     /**
->>> +      * Number of levels of :ppp precision supported by the PMU, read from
->>> +      * <sysfs>/bus/event_source/devices/<name>/caps/max_precise.
->>> +      */
->>>       int max_precise;
->>> +     /**
->>> +      * Optional default perf_event_attr determined in architecture specific
->>> +      * code.
->>> +      */
->>>       struct perf_event_attr *default_config;
->>> +     /**
->>> +      * Empty or the contents of either of:
->>> +      * <sysfs>/bus/event_source/devices/<name>/cpumask.
->>> +      * <sysfs>/bus/event_source/devices/<cpu>/cpus.
->>> +      */
->>>       struct perf_cpu_map *cpus;
->>> -     struct list_head format;  /* HEAD struct perf_pmu_format -> list */
->>> -     struct list_head aliases; /* HEAD struct perf_pmu_alias -> list */
->>> +     /**
->>> +      * Holds the contents of files read from
->>> +      * <sysfs>/bus/event_source/devices/<name>/format/. The contents specify
->>> +      * which event parameter changes what config, config1 or config2 bits.
->>> +      */
->>> +     struct list_head format;
->>> +     /**
->>> +      * List of struct perf_pmu_alias. Each alias corresponds to an event
->>> +      * read from <sysfs>/bus/event_source/devices/<name>/events/ or from
->>> +      * json events in pmu-events.c.
->>> +      */
->>> +     struct list_head aliases;
->>> +     /** Has the list caps been initialized? */
->>>       bool caps_initialized;
->>> +     /** The length of the list caps. */
->>>       u32 nr_caps;
->>> -     struct list_head caps;    /* HEAD struct perf_pmu_caps -> list */
->>> -     struct list_head list;    /* ELEM */
->>> +     /**
->>> +      * Holds the contents of files read from
->>> +      * <sysfs>/bus/event_source/devices/<name>/caps/. The contents are pairs
->>> +      * of the filename with the value of its contents, for example,
->>> +      * max_precise (see above) may have a value of 3.
->>> +      */
->>> +     struct list_head caps;
->>> +     /** Element on pmus list in pmu.c. */
->>> +     struct list_head list;
->>> +     /** Element on perf_pmu__hybrid_pmus. */
->>>       struct list_head hybrid_list;
->>>
->>> +     /** Features to inhibit when events on this PMU are opened. */
->>>       struct {
->>> +             /** Disables perf_event_attr exclude_guest and exclude_host. */
->>>               bool exclude_guest;
->>>       } missing_features;
->>>  };
->>>
->>> +/** A special global PMU used for testing. */
->>>  extern struct perf_pmu perf_pmu__fake;
->>>
->>>  struct perf_pmu_info {
->>> @@ -71,21 +132,53 @@ struct perf_pmu_info {
->>>
->>>  #define UNIT_MAX_LEN 31 /* max length for event unit name */
->>>
->>> +/**
->>> + * An event either read from sysfs or builtin in pmu-events.c, created by
->>> + * parsing the pmu-events json files.
->>> + */
->>>  struct perf_pmu_alias {
->>>       char *name;
->>> +     /** Optional short description of the event. */
->>>       char *desc;
->>> +     /** Optional long description. */
->>>       char *long_desc;
->>> +     /**
->>> +      * Optional topic such as cache or pipeline, particularly for json
->>> +      * events.
->>> +      */
->>>       char *topic;
->>> +     /** Comma separated parameter list. */
->>>       char *str;
->>> -     struct list_head terms; /* HEAD struct parse_events_term -> list */
->>> -     struct list_head list;  /* ELEM */
->>> +     /** Owned list of the original parsed parameters. */
->>> +     struct list_head terms;
->>> +     /** List element of struct perf_pmu aliases. */
->>> +     struct list_head list;
->>> +     /** Units for the event, such as bytes or cache lines. */
->>>       char unit[UNIT_MAX_LEN+1];
->>> +     /** Value to scale read counter values by. */
->>>       double scale;
->>> +     /**
->>> +      * Does the file
->>> +      * <sysfs>/bus/event_source/devices/<pmu_name>/events/<name>.per-pkg or
->>> +      * equivalent json value exist and have the value 1.
->>> +      */
->>>       bool per_pkg;
->>> +     /**
->>> +      * Does the file
->>> +      * <sysfs>/bus/event_source/devices/<pmu_name>/events/<name>.snapshot
->>> +      * exist and have the value 1.
->>> +      */
->>>       bool snapshot;
->>> +     /** Is the event hidden and so not shown in perf list by default. */
->>>       bool deprecated;
->>> +     /**
->>> +      * A metric expression associated with an event. Doing this makes little
->>> +      * sense due to scale and unit applying to both.
->>> +      */
->>>       char *metric_expr;
->>> +     /** A name for the metric. unit applying to both. */
->>>       char *metric_name;
->>> +     /** The name copied from struct perf_pmu. */
->>>       char *pmu_name;
->>>  };
->>>
+> diff --git a/tools/perf/pmu-events/arch/s390/cf_z16/pai_ext.json b/tools/perf/pmu-events/arch/s390/cf_z16/pai_ext.json
+> new file mode 100644
+> index 000000000000..8bee481f05d5
+> --- /dev/null
+> +++ b/tools/perf/pmu-events/arch/s390/cf_z16/pai_ext.json
+> @@ -0,0 +1,198 @@
+> +[
+> +	{
+> +		"Unit": "PAI-EXT",
+> +		"EventCode": "6144",
+> +		"EventName": "NNPA_ALL",
+> +		"BriefDescription": "NNPA ALL",
+> +		"PublicDescription": "Sum of all non zero NNPA counters"
+> +	},
+
+Since the Brief description mentions NNPA, shouldn't the Public
+Description expand on this "NNPA" acronym?, something like:
+
+Oops, can't expand on that since there isn't a link to that SA22-7832-13
+document.
+
+Googling for it...
+
+https://www-40.ibm.com/servers/resourcelink/svc03100.nsf/pages/zResourceLinkUrl?OpenDocument&url=http://www.ibm.com/servers/resourcelink/lib03010.nsf/0/B9DE5F05A9D57819852571C500428F9A/$file/SA22-7832-13.pdf
+
+Ok, requires registration.
+
+I wonder what is the value of these descriptions then :-\
+
+I miss Ingo jumping into these discussions :-)
+
+- Arnaldo
+
+> +	{
+> +		"Unit": "PAI-EXT",
+> +		"EventCode": "6145",
+> +		"EventName": "NNPA_ADD",
+> +		"BriefDescription": "NNPA ADD",
+> +		"PublicDescription": "NNPA ADD function ending with CC=0"
+> +	},
+> +	{
+> +		"Unit": "PAI-EXT",
+> +		"EventCode": "6146",
+> +		"EventName": "NNPA_SUB",
+> +		"BriefDescription": "NNPA SUB",
+> +		"PublicDescription": "NNPA SUB function ending with CC=0"
+> +	},
+> +	{
+> +		"Unit": "PAI-EXT",
+> +		"EventCode": "6147",
+> +		"EventName": "NNPA_MUL",
+> +		"BriefDescription": "NNPA MUL",
+> +		"PublicDescription": "NNPA MUL function ending with CC=0"
+> +	},
+> +	{
+> +		"Unit": "PAI-EXT",
+> +		"EventCode": "6148",
+> +		"EventName": "NNPA_DIV",
+> +		"BriefDescription": "NNPA DIV",
+> +		"PublicDescription": "NNPA DIV function ending with CC=0"
+> +	},
+> +	{
+> +		"Unit": "PAI-EXT",
+> +		"EventCode": "6149",
+> +		"EventName": "NNPA_MIN",
+> +		"BriefDescription": "NNPA MIN",
+> +		"PublicDescription": "NNPA MIN function ending with CC=0"
+> +	},
+> +	{
+> +		"Unit": "PAI-EXT",
+> +		"EventCode": "6150",
+> +		"EventName": "NNPA_MAX",
+> +		"BriefDescription": "NNPA MAX",
+> +		"PublicDescription": "NNPA-MAX function ending with CC=0"
+> +	},
+> +	{
+> +		"Unit": "PAI-EXT",
+> +		"EventCode": "6151",
+> +		"EventName": "NNPA_LOG",
+> +		"BriefDescription": "NNPA LOG",
+> +		"PublicDescription": "NNPA-LOG function ending with CC=0"
+> +	},
+> +	{
+> +		"Unit": "PAI-EXT",
+> +		"EventCode": "6152",
+> +		"EventName": "NNPA_EXP",
+> +		"BriefDescription": "NNPA EXP",
+> +		"PublicDescription": "NNPA-EXP function ending with CC=0"
+> +	},
+> +	{
+> +		"Unit": "PAI-EXT",
+> +		"EventCode": "6153",
+> +		"EventName": "NNPA_IBM_RESERVED_9",
+> +		"BriefDescription": "Reserved for IBM use",
+> +		"PublicDescription": "Reserved for IBM use"
+> +	},
+> +	{
+> +		"Unit": "PAI-EXT",
+> +		"EventCode": "6154",
+> +		"EventName": "NNPA_RELU",
+> +		"BriefDescription": "NNPA RELU",
+> +		"PublicDescription": "NNPA-RELU function ending with CC=0"
+> +	},
+> +	{
+> +		"Unit": "PAI-EXT",
+> +		"EventCode": "6155",
+> +		"EventName": "NNPA_TANH",
+> +		"BriefDescription": "NNPA TANH",
+> +		"PublicDescription": "NNPA-TANH function ending with CC=0"
+> +	},
+> +	{
+> +		"Unit": "PAI-EXT",
+> +		"EventCode": "6156",
+> +		"EventName": "NNPA_SIGMOID",
+> +		"BriefDescription": "NNPA SIGMOID",
+> +		"PublicDescription": "NNPA-SIGMOID function ending with CC=0"
+> +	},
+> +	{
+> +		"Unit": "PAI-EXT",
+> +		"EventCode": "6157",
+> +		"EventName": "NNPA_SOFTMAX",
+> +		"BriefDescription": "NNPA SOFTMAX",
+> +		"PublicDescription": "NNPA-SOFTMAX function ending with CC=0"
+> +	},
+> +	{
+> +		"Unit": "PAI-EXT",
+> +		"EventCode": "6158",
+> +		"EventName": "NNPA_BATCHNORM",
+> +		"BriefDescription": "NNPA BATCHNORM",
+> +		"PublicDescription": "NNPA-BATCHNORM function ending with CC=0"
+> +	},
+> +	{
+> +		"Unit": "PAI-EXT",
+> +		"EventCode": "6159",
+> +		"EventName": "NNPA_MAXPOOL2D",
+> +		"BriefDescription": "NNPA MAXPOOL2D",
+> +		"PublicDescription": "NNPA-MAXPOOL2D function ending with CC=0"
+> +	},
+> +	{
+> +		"Unit": "PAI-EXT",
+> +		"EventCode": "6160",
+> +		"EventName": "NNPA_AVGPOOL2D",
+> +		"BriefDescription": "NNPA AVGPOOL2D",
+> +		"PublicDescription": "NNPA-AVGPOOL2D function ending with CC=0"
+> +	},
+> +	{
+> +		"Unit": "PAI-EXT",
+> +		"EventCode": "6161",
+> +		"EventName": "NNPA_LSTMACT",
+> +		"BriefDescription": "NNPA LSTMACT",
+> +		"PublicDescription": "NNPA-LSTMACT function ending with CC=0"
+> +	},
+> +	{
+> +		"Unit": "PAI-EXT",
+> +		"EventCode": "6162",
+> +		"EventName": "NNPA_GRUACT",
+> +		"BriefDescription": "NNPA GRUACT",
+> +		"PublicDescription": "NNPA-GRUACT function ending with CC=0"
+> +	},
+> +	{
+> +		"Unit": "PAI-EXT",
+> +		"EventCode": "6163",
+> +		"EventName": "NNPA_CONVOLUTION",
+> +		"BriefDescription": "NNPA CONVOLUTION",
+> +		"PublicDescription": "NNPA-CONVOLUTION function ending with CC=0"
+> +	},
+> +	{
+> +		"Unit": "PAI-EXT",
+> +		"EventCode": "6164",
+> +		"EventName": "NNPA_MATMUL_OP",
+> +		"BriefDescription": "NNPA MATMUL OP",
+> +		"PublicDescription": "NNPA-MATMUL-OP function ending with CC=0"
+> +	},
+> +	{
+> +		"Unit": "PAI-EXT",
+> +		"EventCode": "6165",
+> +		"EventName": "NNPA_MATMUL_OP_BCAST23",
+> +		"BriefDescription": "NNPA NNPA-MATMUL_OP_BCAST23",
+> +		"PublicDescription": "NNPA-MATMUL-OP-BCAST23 function ending with CC=0"
+> +	},
+> +	{
+> +		"Unit": "PAI-EXT",
+> +		"EventCode": "6166",
+> +		"EventName": "NNPA_SMALLBATCH",
+> +		"BriefDescription": "NNPA SMALLBATCH",
+> +		"PublicDescription": "NNPA function with conditions as described in Common Operation"
+> +	},
+> +	{
+> +		"Unit": "PAI-EXT",
+> +		"EventCode": "6167",
+> +		"EventName": "NNPA_LARGEDIM",
+> +		"BriefDescription": "NNPA LARGEDIM",
+> +		"PublicDescription": "NNPA function with conditions as described in Common Operation"
+> +	},
+> +	{
+> +		"Unit": "PAI-EXT",
+> +		"EventCode": "6168",
+> +		"EventName": "NNPA_SMALLTENSOR",
+> +		"BriefDescription": "NNPA SMALLTENSOR",
+> +		"PublicDescription": "NNPA function with conditions as described in Common Operation"
+> +	},
+> +	{
+> +		"Unit": "PAI-EXT",
+> +		"EventCode": "6169",
+> +		"EventName": "NNPA_1MFRAME",
+> +		"BriefDescription": "NNPA 1MFRAME",
+> +		"PublicDescription": "NNPA function with conditions as described in Common Operation"
+> +	},
+> +	{
+> +		"Unit": "PAI-EXT",
+> +		"EventCode": "6170",
+> +		"EventName": "NNPA_2GFRAME",
+> +		"BriefDescription": "NNPA 2GFRAME",
+> +		"PublicDescription": "NNPA function with conditions as described in Common Operation"
+> +	},
+> +	{
+> +		"Unit": "PAI-EXT",
+> +		"EventCode": "6171",
+> +		"EventName": "NNPA_ACCESSEXCEPT",
+> +		"BriefDescription": "NNPA ACCESSEXCEPT",
+> +		"PublicDescription": "NNPA function with conditions as described in Common Operation"
+> + 	}
+> +]
+> diff --git a/tools/perf/pmu-events/jevents.py b/tools/perf/pmu-events/jevents.py
+> index 0daa3e007528..da630aab948b 100755
+> --- a/tools/perf/pmu-events/jevents.py
+> +++ b/tools/perf/pmu-events/jevents.py
+> @@ -225,6 +225,7 @@ class JsonEvent:
+>            'CPU-M-CF': 'cpum_cf',
+>            'CPU-M-SF': 'cpum_sf',
+>            'PAI-CRYPTO' : 'pai_crypto',
+> +          'PAI-EXT' : 'pai_ext',
+>            'UPI LL': 'uncore_upi',
+>            'hisi_sicl,cpa': 'hisi_sicl,cpa',
+>            'hisi_sccl,ddrc': 'hisi_sccl,ddrc',
+> -- 
+> 2.37.3
+
+-- 
+
+- Arnaldo
