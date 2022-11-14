@@ -2,60 +2,60 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B5C73C433FE
-	for <linux-perf-users@archiver.kernel.org>; Mon, 14 Nov 2022 13:58:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 654D7C433FE
+	for <linux-perf-users@archiver.kernel.org>; Mon, 14 Nov 2022 14:03:30 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S235838AbiKNN6d (ORCPT
+        id S236693AbiKNOD2 (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Mon, 14 Nov 2022 08:58:33 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43024 "EHLO
+        Mon, 14 Nov 2022 09:03:28 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47050 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S236302AbiKNN6Z (ORCPT
+        with ESMTP id S236754AbiKNODO (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Mon, 14 Nov 2022 08:58:25 -0500
-Received: from mail-wm1-x32b.google.com (mail-wm1-x32b.google.com [IPv6:2a00:1450:4864:20::32b])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0A9D628E37
-        for <linux-perf-users@vger.kernel.org>; Mon, 14 Nov 2022 05:58:22 -0800 (PST)
-Received: by mail-wm1-x32b.google.com with SMTP id v7so7560689wmn.0
-        for <linux-perf-users@vger.kernel.org>; Mon, 14 Nov 2022 05:58:21 -0800 (PST)
+        Mon, 14 Nov 2022 09:03:14 -0500
+Received: from mail-wr1-x42d.google.com (mail-wr1-x42d.google.com [IPv6:2a00:1450:4864:20::42d])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 84A202B27C
+        for <linux-perf-users@vger.kernel.org>; Mon, 14 Nov 2022 06:03:03 -0800 (PST)
+Received: by mail-wr1-x42d.google.com with SMTP id bs21so18438139wrb.4
+        for <linux-perf-users@vger.kernel.org>; Mon, 14 Nov 2022 06:03:03 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=google.com; s=20210112;
         h=cc:to:subject:message-id:date:from:in-reply-to:references
          :mime-version:from:to:cc:subject:date:message-id:reply-to;
-        bh=EO/Pqtiei9vpd8nzNVPXlc5XKBs6c32L3Re7V6has9w=;
-        b=hk9U6KeMh8wOPecY1j2O+XJqhHxiaiNkYwMT7pkryIoLf7qk0gGsPC9BFDRRNxzgqg
-         AdLi1Yk2rkH3XIsV3uNAgSFyKkdKScQ80wWq0Xgd9W3f7ja28sfnMDbGsPvq7Eqcpfg7
-         OupKmy/eeAhJZCiUOII2jcHnoi+JkRgxtW56EvK4rQHi8Wefjapzzqc9yCT3tysPV++X
-         zwO9bAXup2Ct7e73ondMtc2Cw8d7h+1inN0RmpnDu2JCmA1R7+9SUIqEb3RaKym31cFi
-         1BBkPAp05mSCugNUMR5OlwItlqkEACdO7qSC/ly8TqOvh1nk4JTxm4PuG68olcTrMW7u
-         xLnw==
+        bh=Upo1p7yIONTS34mP2hxbi+ym/yel8/NOBaTszJc+2m8=;
+        b=rS/yiHwceelQf46/zqQwOqIR1vKvGPK4tCohaDEb/jSJenMoXC9Pi1sfPDKMYl6S2Y
+         iiHOZTNaD7cBMXGvSi9R0S59wJUbxxAcMpngMnyiBkuRCNY99vwEMg7F1soV8nhsZAMy
+         0ISdZyYsVFvrT1I/HmHoAQxfY27a2DAOYXIOQzeCDd/rqEf2e/JBNDagwCe6nyblECh2
+         puXK4iUB/ogqbYCfk1wqxfgSsYe58dM6VJzYYKoREGIHGMSlBWCvWVMVBqCj6A/vAHSn
+         38YprkvpUHLPUT+o1fNAdVVXJK2QyvV1kw//KJ5mL5mqyy+yB6UzX/6EHBVQaShyxJI/
+         7LbA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
         h=cc:to:subject:message-id:date:from:in-reply-to:references
          :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
          :reply-to;
-        bh=EO/Pqtiei9vpd8nzNVPXlc5XKBs6c32L3Re7V6has9w=;
-        b=aHrEF3vIbn4QLuIXS2ob3QgcfSc5f5XsTCD38WVFcNYRIaL/gBCCurVFR2oQ0Nnjqm
-         anlNupIC7R5N5BkflxcNQyTFn4oiPGeFnCoGBoAjIpM1t7aE8wIUJ5Q2T5U3CABG8TYa
-         RfJ6nyH/qVTrSI0qfZpUD1evmPL6NLzWbbyL0wXU1Ju/78jdivcXXvMlWGh67x+UV1gX
-         8w1oeaFM9AWk/ZQ0WDNI0mz9pLBu0it9QptUsvD1QxhaNkY7kgUX13Q5j1gUKijmzb/v
-         jM3SH7coqJ1zTdru6toxPT+3HzXM/bf3oJbWzgVV0xjfOfDDCWKw+V2WSR2Ggvhz1oew
-         3ERg==
-X-Gm-Message-State: ANoB5plyhEAPShASCBx23RuxX6R6QnFjs9bLpo+8oe1KPZ2jw/nNz69d
-        oVglGGooBV1gEAQU5e6/dzGfKtWG+r9n82sxQTmdzA==
-X-Google-Smtp-Source: AA0mqf75EToT+RCEN74k7sOvL0CSo37F+9aarF/0UaZD2ORomJHzt0AKhQfsptokjfkmcy4cGo73IAYWE2GgwzNKKcM=
-X-Received: by 2002:a7b:c40b:0:b0:3c6:c109:2d9 with SMTP id
- k11-20020a7bc40b000000b003c6c10902d9mr8130656wmi.149.1668434300219; Mon, 14
- Nov 2022 05:58:20 -0800 (PST)
+        bh=Upo1p7yIONTS34mP2hxbi+ym/yel8/NOBaTszJc+2m8=;
+        b=cbJXFEPpgXzVGJ+29NOkjtWMap5m/BV+W0Tnyhlv7WvnyoWKRyPHyD/qVEKY16rUJP
+         70LQSaM+5XCZmGp7yUJjh+lJG4PFyj+TtkkZih3sHZVraWFPbuGD5H68VUzKoN1xy2Qp
+         DK3rN5suM8VdCLBl0xfHnBDpTgRhqsyhf1sJhQnVPkN/lQPUMsU7Gn4A8jzZNqpNXdT8
+         rJu3ksn1xF8kaRr2Aj+RrZWSd1HdFWJVfP8IZDqbCmQQHbk3BBZCxKXKmiyeApeRB1v7
+         LuQc9uJULEOXwVxcc4agIZR8gkisiOjD/k0lCnhiJxOu8MuCkt7gE0oZn/WaFNAwnaUu
+         DvvQ==
+X-Gm-Message-State: ANoB5pmgpBtw4ap0ayS+cVdmS2smertQvHFDtQWVmwyk0aCyQLhhMYWr
+        Cw6sPM0UySVHtRzbXnRy2kZOpB4p0m2adtB8eSzPqw==
+X-Google-Smtp-Source: AA0mqf7GRMqgC4D/dgQNmLYxA5fvH1meawTc+pw4z6h8JxFBlpxsHBdY6Fdn+siDFl7DV1VL9dWPwxwJcJI5qS2pW7A=
+X-Received: by 2002:a5d:6e89:0:b0:228:dd1d:8a42 with SMTP id
+ k9-20020a5d6e89000000b00228dd1d8a42mr7711198wrz.375.1668434581479; Mon, 14
+ Nov 2022 06:03:01 -0800 (PST)
 MIME-Version: 1.0
 References: <20221114075127.2650315-1-irogers@google.com> <20221114075127.2650315-5-irogers@google.com>
- <63b7b6d5-f441-7ebc-fd3f-9d5f36d2938d@linux.intel.com>
-In-Reply-To: <63b7b6d5-f441-7ebc-fd3f-9d5f36d2938d@linux.intel.com>
+ <78669391-0dec-1182-178d-aa4bbda54ea9@linux.intel.com>
+In-Reply-To: <78669391-0dec-1182-178d-aa4bbda54ea9@linux.intel.com>
 From:   Ian Rogers <irogers@google.com>
-Date:   Mon, 14 Nov 2022 05:58:06 -0800
-Message-ID: <CAP-5=fU4T93B49W1Of-sECNfLVRoue4zYfYz8Cur0JGRrUHjDA@mail.gmail.com>
+Date:   Mon, 14 Nov 2022 06:02:48 -0800
+Message-ID: <CAP-5=fVfAbhhSpGCpCZCt5J3dY7U5HfMrG2z+6yUDSy3Vr7_iQ@mail.gmail.com>
 Subject: Re: [PATCH v1 4/9] perf list: Generalize limiting to a PMU name
-To:     Xing Zhengjun <zhengjun.xing@linux.intel.com>
+To:     "Liang, Kan" <kan.liang@linux.intel.com>
 Cc:     Weilin Wang <weilin.wang@intel.com>,
         Perry Taylor <perry.taylor@intel.com>,
         Caleb Biggers <caleb.biggers@intel.com>,
@@ -70,7 +70,7 @@ Cc:     Weilin Wang <weilin.wang@intel.com>,
         Namhyung Kim <namhyung@kernel.org>,
         Sandipan Das <sandipan.das@amd.com>,
         Kajol Jain <kjain@linux.ibm.com>,
-        Kan Liang <kan.liang@linux.intel.com>,
+        Zhengjun Xing <zhengjun.xing@linux.intel.com>,
         Ravi Bangoria <ravi.bangoria@amd.com>,
         Xin Gao <gaoxin@cdjrlc.com>, Rob Herring <robh@kernel.org>,
         linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org,
@@ -80,12 +80,11 @@ Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-On Mon, Nov 14, 2022 at 12:51 AM Xing Zhengjun
-<zhengjun.xing@linux.intel.com> wrote:
+On Mon, Nov 14, 2022 at 5:58 AM Liang, Kan <kan.liang@linux.intel.com> wrote:
 >
 >
 >
-> On 11/14/2022 3:51 PM, Ian Rogers wrote:
+> On 2022-11-14 2:51 a.m., Ian Rogers wrote:
 > > Deprecate the --cputype option and add a --unit option where '--unit
 > > cpu_atom' behaves like '--cputype atom'. The --unit option can be used
 > > with arbitrary PMUs, for example:
@@ -95,51 +94,71 @@ On Mon, Nov 14, 2022 at 12:51 AM Xing Zhengjun
 > >
 > > List of pre-defined events (to be used in -e or -M):
 > >
-> >    msr/aperf/                                         [Kernel PMU event]
-> >    msr/cpu_thermal_margin/                            [Kernel PMU event]
-> >    msr/mperf/                                         [Kernel PMU event]
-> >    msr/pperf/                                         [Kernel PMU event]
-> >    msr/smi/                                           [Kernel PMU event]
-> >    msr/tsc/                                           [Kernel PMU event]
+> >   msr/aperf/                                         [Kernel PMU event]
+> >   msr/cpu_thermal_margin/                            [Kernel PMU event]
+> >   msr/mperf/                                         [Kernel PMU event]
+> >   msr/pperf/                                         [Kernel PMU event]
+> >   msr/smi/                                           [Kernel PMU event]
+> >   msr/tsc/                                           [Kernel PMU event]
 > > ```
 > >
 > > Signed-off-by: Ian Rogers <irogers@google.com>
 > > ---
-> >   tools/perf/Documentation/perf-list.txt |  6 +++---
-> >   tools/perf/builtin-list.c              | 18 ++++++++++++------
-> >   tools/perf/util/metricgroup.c          |  3 ++-
-> >   tools/perf/util/pmu.c                  |  4 +---
-> >   4 files changed, 18 insertions(+), 13 deletions(-)
+> >  tools/perf/Documentation/perf-list.txt |  6 +++---
+> >  tools/perf/builtin-list.c              | 18 ++++++++++++------
+> >  tools/perf/util/metricgroup.c          |  3 ++-
+> >  tools/perf/util/pmu.c                  |  4 +---
+> >  4 files changed, 18 insertions(+), 13 deletions(-)
 > >
 > > diff --git a/tools/perf/Documentation/perf-list.txt b/tools/perf/Documentation/perf-list.txt
 > > index 57384a97c04f..44a819af573d 100644
 > > --- a/tools/perf/Documentation/perf-list.txt
 > > +++ b/tools/perf/Documentation/perf-list.txt
 > > @@ -39,9 +39,9 @@ any extra expressions computed by perf stat.
-> >   --deprecated::
-> >   Print deprecated events. By default the deprecated events are hidden.
+> >  --deprecated::
+> >  Print deprecated events. By default the deprecated events are hidden.
 > >
 > > ---cputype::
 > > -Print events applying cpu with this type for hybrid platform
 > > -(e.g. --cputype core or --cputype atom)
+>
+> The "--cputype" is removed from the documentation, but the code is still
+> available. It sounds weird.
+>
+> Can we still keep the "--cputype" in the documentation? Just say that
+> it's a deprecated option, please use the --unit cpu_atom instead. I
+> think even better if we can throw a warning and point to --unit when the
+> "--cputype" is used.
+
+I think we want to remove --cputype widely in the code and replace
+what it does with specifying a PMU name. Advertising a flag but then
+warning seems strange and is a behavioral change from what is
+currently done. For raw-dump we don't document it in the man page and
+hide the flag, this is the pattern being followed here.
+
+Thanks,
+Ian
+
+> Thanks,
+> Kan
 > > +--unit::
 > > +Print PMU events and metrics limited to the specific PMU name.
 > > +(e.g. --unit cpu, --unit msr, --unit cpu_core, --unit cpu_atom)
 > >
-> >   [[EVENT_MODIFIERS]]
-> >   EVENT MODIFIERS
+> >  [[EVENT_MODIFIERS]]
+> >  EVENT MODIFIERS
 > > diff --git a/tools/perf/builtin-list.c b/tools/perf/builtin-list.c
 > > index 58e1ec1654ef..cc84ced6da26 100644
 > > --- a/tools/perf/builtin-list.c
 > > +++ b/tools/perf/builtin-list.c
 > > @@ -21,7 +21,6 @@
 > >
-> >   static bool desc_flag = true;
-> >   static bool details_flag;
+> >  static bool desc_flag = true;
+> >  static bool details_flag;
 > > -static const char *hybrid_type;
 > >
-> >   int cmd_list(int argc, const char **argv)
-> >   {
+> >  int cmd_list(int argc, const char **argv)
+> >  {
 > > @@ -30,6 +29,8 @@ int cmd_list(int argc, const char **argv)
 > >       bool long_desc_flag = false;
 > >       bool deprecated = false;
@@ -191,7 +210,7 @@ On Mon, Nov 14, 2022 at 12:51 AM Xing Zhengjun
 > > +++ b/tools/perf/util/metricgroup.c
 > > @@ -556,11 +556,12 @@ static int metricgroup__print_callback(const struct pmu_event *pe,
 > >                                      void *vdata)
-> >   {
+> >  {
 > >       struct metricgroup_print_data *data = vdata;
 > > +     const char *pmu = pe->pmu ?: "cpu";
 > >
@@ -214,25 +233,8 @@ On Mon, Nov 14, 2022 at 12:51 AM Xing Zhengjun
 > > -             if (pmu_name && perf_pmu__is_hybrid(pmu->name) &&
 > > -                 strcmp(pmu_name, pmu->name)) {
 > > +             if (pmu_name && pmu->name && strcmp(pmu_name, pmu->name))
->
-> Why remove perf_pmu__is_hybrid check?
-
-Thanks for checking! If you have the perf_pmu__is_hybrid check then
-the filter only applies PMUs that are hybrid. Firstly, why have
-is_hybrid in struct perf_pmu if you use this function that searches a
-list?  Secondly, the point of this change is to make the PMU name
-filtering a generic feature rather than one limited to specifically
-PMUs called cpu_core and cpu_atom.
-
-Thanks,
-Ian
-
->
 > >                       continue;
 > > -             }
 > >
 > >               list_for_each_entry(alias, &pmu->aliases, list) {
 > >                       char *name = alias->desc ? alias->name :
->
-> --
-> Zhengjun Xing
