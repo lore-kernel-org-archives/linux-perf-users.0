@@ -2,284 +2,195 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B4AE7C4332F
-	for <linux-perf-users@archiver.kernel.org>; Mon, 14 Nov 2022 19:00:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 40FC4C4332F
+	for <linux-perf-users@archiver.kernel.org>; Mon, 14 Nov 2022 20:17:18 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S236579AbiKNTAr (ORCPT
+        id S236552AbiKNURP (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Mon, 14 Nov 2022 14:00:47 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46820 "EHLO
+        Mon, 14 Nov 2022 15:17:15 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41818 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S236642AbiKNTAp (ORCPT
+        with ESMTP id S237515AbiKNURG (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Mon, 14 Nov 2022 14:00:45 -0500
-Received: from mga03.intel.com (mga03.intel.com [134.134.136.65])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CDCA91E0;
-        Mon, 14 Nov 2022 11:00:44 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1668452444; x=1699988444;
-  h=message-id:date:mime-version:subject:to:cc:references:
-   from:in-reply-to:content-transfer-encoding;
-  bh=mGcizqVz6xWnxM/0D0ppFgIN8DWwzGkC7L7Tge1y8VU=;
-  b=nrkBTK1zgOYThCy0ceNBTLLfbHs6A8hfzmnkDM1JZa7wVTMCnnf9xGTE
-   h5G8Kk63U/x/DALC6+6l8hfGCABJVEwWzz0nsJVE5iZzgf+MuN17L8nhH
-   zVgQG2iuJ1sVd7NxUPjRfKmhDAPX062WxQuAEVm2eSrIs+4ptwYnLTKQx
-   U/gV2hWSEidrlMxnzs8XCKPGNtE9p1ya8xHr3mVWFanB7TLXmojSQfG+f
-   BflrfriTO22Nn58dFpgEHzy8V7iV/2loNAi72BQO9IxUpBdfmaOJty3G1
-   J9KZmUmgNDK7Hg498kEdm66p20uOZqx2Xduu2WmDpgaj28noUB6y2kmvD
-   A==;
-X-IronPort-AV: E=McAfee;i="6500,9779,10531"; a="313860876"
-X-IronPort-AV: E=Sophos;i="5.96,164,1665471600"; 
-   d="scan'208";a="313860876"
-Received: from orsmga008.jf.intel.com ([10.7.209.65])
-  by orsmga103.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 14 Nov 2022 11:00:44 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6500,9779,10531"; a="669778526"
-X-IronPort-AV: E=Sophos;i="5.96,164,1665471600"; 
-   d="scan'208";a="669778526"
-Received: from linux.intel.com ([10.54.29.200])
-  by orsmga008.jf.intel.com with ESMTP; 14 Nov 2022 11:00:44 -0800
-Received: from [10.252.208.163] (kliang2-mobl1.ccr.corp.intel.com [10.252.208.163])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        Mon, 14 Nov 2022 15:17:06 -0500
+Received: from ams.source.kernel.org (ams.source.kernel.org [IPv6:2604:1380:4601:e00::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3D1EED80;
+        Mon, 14 Nov 2022 12:17:03 -0800 (PST)
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by linux.intel.com (Postfix) with ESMTPS id 2D772580A5F;
-        Mon, 14 Nov 2022 11:00:41 -0800 (PST)
-Message-ID: <83571dec-50b9-d8fd-71b8-0f870156cbd9@linux.intel.com>
-Date:   Mon, 14 Nov 2022 14:00:39 -0500
-MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:102.0) Gecko/20100101
- Thunderbird/102.4.2
-Subject: Re: [PATCH v1 4/9] perf list: Generalize limiting to a PMU name
-Content-Language: en-US
-To:     Ian Rogers <irogers@google.com>
-Cc:     Weilin Wang <weilin.wang@intel.com>,
-        Perry Taylor <perry.taylor@intel.com>,
-        Caleb Biggers <caleb.biggers@intel.com>,
-        Leo Yan <leo.yan@linaro.org>,
-        Adrian Hunter <adrian.hunter@intel.com>,
+        by ams.source.kernel.org (Postfix) with ESMTPS id BCA09B81250;
+        Mon, 14 Nov 2022 20:17:01 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 23131C433D6;
+        Mon, 14 Nov 2022 20:17:00 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1668457020;
+        bh=lArEVRhnhBStJg8lVysI0AXQxfySf17f2xZUNA8QEFA=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=qtTVz014n8NvY6nbqwwKhoZ2xNVIXYJFixHk1bHFUjMNV99l+ImUDlMSKp2NbDpP6
+         HkwTpHs3t0bDyPSHeTYbZuhfQ5ZP4d3BANOPOl2UWGAGOUHZrIs96mwoQ/X5VEKiAo
+         a2eSjLo3SvEmNr3D5jNGR9rBabqwWEtrKv0PmNuFq4ICnoZLi3jtZ5tlkupUTdKsWC
+         MAGSwZzhyAhturAJCh8CRFq6lBSOXsiA0d8wWKrHs+6KrWL5FjqXjU+MzpXmd2i59D
+         LMR+/bYNBmlMsqYBtOSfpBnU3gN4Ax86RrqNeRSUC7ruqQ4RygiAp+IUK43KN9NTmn
+         M1utTd37W/ixA==
+Received: by quaco.ghostprotocols.net (Postfix, from userid 1000)
+        id A96E44034E; Mon, 14 Nov 2022 17:16:57 -0300 (-03)
+Date:   Mon, 14 Nov 2022 17:16:57 -0300
+From:   Arnaldo Carvalho de Melo <acme@kernel.org>
+To:     Namhyung Kim <namhyung@kernel.org>
+Cc:     Ian Rogers <irogers@google.com>,
         Peter Zijlstra <peterz@infradead.org>,
         Ingo Molnar <mingo@redhat.com>,
-        Arnaldo Carvalho de Melo <acme@kernel.org>,
         Mark Rutland <mark.rutland@arm.com>,
         Alexander Shishkin <alexander.shishkin@linux.intel.com>,
         Jiri Olsa <jolsa@kernel.org>,
-        Namhyung Kim <namhyung@kernel.org>,
-        Sandipan Das <sandipan.das@amd.com>,
-        Kajol Jain <kjain@linux.ibm.com>,
-        Zhengjun Xing <zhengjun.xing@linux.intel.com>,
-        Ravi Bangoria <ravi.bangoria@amd.com>,
-        Xin Gao <gaoxin@cdjrlc.com>, Rob Herring <robh@kernel.org>,
+        Masahiro Yamada <masahiroy@kernel.org>,
+        Nicolas Schier <nicolas@fjasle.eu>,
         linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org,
+        bpf@vger.kernel.org, Nick Desaulniers <ndesaulniers@google.com>,
+        Andrii Nakryiko <andrii.nakryiko@gmail.com>,
         Stephane Eranian <eranian@google.com>
-References: <20221114075127.2650315-1-irogers@google.com>
- <20221114075127.2650315-5-irogers@google.com>
- <78669391-0dec-1182-178d-aa4bbda54ea9@linux.intel.com>
- <CAP-5=fVfAbhhSpGCpCZCt5J3dY7U5HfMrG2z+6yUDSy3Vr7_iQ@mail.gmail.com>
- <488758d4-2bfb-d5dd-473a-c2e9184ad470@linux.intel.com>
- <CAP-5=fVS79+oKx8P6ghhrviO_zb2Go=2bp2LV02zP32VtiiH0A@mail.gmail.com>
-From:   "Liang, Kan" <kan.liang@linux.intel.com>
-In-Reply-To: <CAP-5=fVS79+oKx8P6ghhrviO_zb2Go=2bp2LV02zP32VtiiH0A@mail.gmail.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Subject: Re: [PATCH v2 00/14] Fix perf tools/lib includes
+Message-ID: <Y3KiOU/bYokRSENk@kernel.org>
+References: <20221109184914.1357295-1-irogers@google.com>
+ <CAM9d7ciPe-uR5MdayhUEEK8a-j1QDm50qPffsod9BHdUF5Z-TA@mail.gmail.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <CAM9d7ciPe-uR5MdayhUEEK8a-j1QDm50qPffsod9BHdUF5Z-TA@mail.gmail.com>
+X-Url:  http://acmel.wordpress.com
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-
-
-On 2022-11-14 12:10 p.m., Ian Rogers wrote:
-> On Mon, Nov 14, 2022 at 6:55 AM Liang, Kan <kan.liang@linux.intel.com> wrote:
->>
->>
->>
->> On 2022-11-14 9:02 a.m., Ian Rogers wrote:
->>> On Mon, Nov 14, 2022 at 5:58 AM Liang, Kan <kan.liang@linux.intel.com> wrote:
->>>>
->>>>
->>>>
->>>> On 2022-11-14 2:51 a.m., Ian Rogers wrote:
->>>>> Deprecate the --cputype option and add a --unit option where '--unit
->>>>> cpu_atom' behaves like '--cputype atom'. The --unit option can be used
->>>>> with arbitrary PMUs, for example:
->>>>>
->>>>> ```
->>>>> $ perf list --unit msr pmu
->>>>>
->>>>> List of pre-defined events (to be used in -e or -M):
->>>>>
->>>>>   msr/aperf/                                         [Kernel PMU event]
->>>>>   msr/cpu_thermal_margin/                            [Kernel PMU event]
->>>>>   msr/mperf/                                         [Kernel PMU event]
->>>>>   msr/pperf/                                         [Kernel PMU event]
->>>>>   msr/smi/                                           [Kernel PMU event]
->>>>>   msr/tsc/                                           [Kernel PMU event]
->>>>> ```
->>>>>
->>>>> Signed-off-by: Ian Rogers <irogers@google.com>
->>>>> ---
->>>>>  tools/perf/Documentation/perf-list.txt |  6 +++---
->>>>>  tools/perf/builtin-list.c              | 18 ++++++++++++------
->>>>>  tools/perf/util/metricgroup.c          |  3 ++-
->>>>>  tools/perf/util/pmu.c                  |  4 +---
->>>>>  4 files changed, 18 insertions(+), 13 deletions(-)
->>>>>
->>>>> diff --git a/tools/perf/Documentation/perf-list.txt b/tools/perf/Documentation/perf-list.txt
->>>>> index 57384a97c04f..44a819af573d 100644
->>>>> --- a/tools/perf/Documentation/perf-list.txt
->>>>> +++ b/tools/perf/Documentation/perf-list.txt
->>>>> @@ -39,9 +39,9 @@ any extra expressions computed by perf stat.
->>>>>  --deprecated::
->>>>>  Print deprecated events. By default the deprecated events are hidden.
->>>>>
->>>>> ---cputype::
->>>>> -Print events applying cpu with this type for hybrid platform
->>>>> -(e.g. --cputype core or --cputype atom)
->>>>
->>>> The "--cputype" is removed from the documentation, but the code is still
->>>> available. It sounds weird.
->>>>
->>>> Can we still keep the "--cputype" in the documentation? Just say that
->>>> it's a deprecated option, please use the --unit cpu_atom instead. I
->>>> think even better if we can throw a warning and point to --unit when the
->>>> "--cputype" is used.
->>>
->>> I think we want to remove --cputype widely in the code and replace
->>> what it does with specifying a PMU name. Advertising a flag but then
->>> warning seems strange and is a behavioral change from what is
->>> currently done. For raw-dump we don't document it in the man page and
->>> hide the flag, this is the pattern being followed here.
->>
->> I see. So the --cputype is still supported, but only be hidden in the
->> default. Sure, we can follow the pattern.
->>
->>>
->>> Thanks,
->>> Ian
->>>
->>>> Thanks,
->>>> Kan
->>>>> +--unit::
->>>>> +Print PMU events and metrics limited to the specific PMU name.
->>>>> +(e.g. --unit cpu, --unit msr, --unit cpu_core, --unit cpu_atom)
->>>>>
->>>>>  [[EVENT_MODIFIERS]]
->>>>>  EVENT MODIFIERS
->>>>> diff --git a/tools/perf/builtin-list.c b/tools/perf/builtin-list.c
->>>>> index 58e1ec1654ef..cc84ced6da26 100644
->>>>> --- a/tools/perf/builtin-list.c
->>>>> +++ b/tools/perf/builtin-list.c
->>>>> @@ -21,7 +21,6 @@
->>>>>
->>>>>  static bool desc_flag = true;
->>>>>  static bool details_flag;
->>>>> -static const char *hybrid_type;
->>>>>
->>>>>  int cmd_list(int argc, const char **argv)
->>>>>  {
->>>>> @@ -30,6 +29,8 @@ int cmd_list(int argc, const char **argv)
->>>>>       bool long_desc_flag = false;
->>>>>       bool deprecated = false;
->>>>>       char *pmu_name = NULL;
->>>>> +     const char *hybrid_name = NULL;
->>>>> +     const char *unit_name = NULL;
->>>>>       struct option list_options[] = {
->>>>>               OPT_BOOLEAN(0, "raw-dump", &raw_dump, "Dump raw events"),
->>>>>               OPT_BOOLEAN('d', "desc", &desc_flag,
->>>>> @@ -40,9 +41,10 @@ int cmd_list(int argc, const char **argv)
->>>>>                           "Print information on the perf event names and expressions used internally by events."),
->>>>>               OPT_BOOLEAN(0, "deprecated", &deprecated,
->>>>>                           "Print deprecated events."),
->>>>> -             OPT_STRING(0, "cputype", &hybrid_type, "hybrid cpu type",
->>>>> -                        "Print events applying cpu with this type for hybrid platform "
->>>>> -                        "(e.g. core or atom)"),
->>>>> +             OPT_STRING(0, "cputype", &hybrid_name, "hybrid cpu type",
->>>>> +                        "Limit PMU or metric printing to the given hybrid PMU (e.g. core or atom)."),
->>>>> +             OPT_STRING(0, "unit", &unit_name, "PMU name",
->>>>> +                        "Limit PMU or metric printing to the specified PMU."),
->>>>>               OPT_INCR(0, "debug", &verbose,
->>>>>                            "Enable debugging output"),
->>>>>               OPT_END()
->>>>> @@ -53,6 +55,8 @@ int cmd_list(int argc, const char **argv)
->>>>>       };
->>>>>
->>>>>       set_option_flag(list_options, 0, "raw-dump", PARSE_OPT_HIDDEN);
->>>>> +     /* Hide hybrid flag for the more generic 'unit' flag. */
->>>>> +     set_option_flag(list_options, 0, "cputype", PARSE_OPT_HIDDEN);
->>>>>
->>>>>       argc = parse_options(argc, argv, list_options, list_usage,
->>>>>                            PARSE_OPT_STOP_AT_NON_OPTION);
->>>>> @@ -62,8 +66,10 @@ int cmd_list(int argc, const char **argv)
->>>>>       if (!raw_dump && pager_in_use())
->>>>>               printf("\nList of pre-defined events (to be used in -e or -M):\n\n");
->>>>>
->>>>> -     if (hybrid_type) {
->>>>> -             pmu_name = perf_pmu__hybrid_type_to_pmu(hybrid_type);
->>>>> +     if (unit_name)
->>>>> +             pmu_name = strdup(unit_name);
->>>>> +     else if (hybrid_name) {
->>>>> +             pmu_name = perf_pmu__hybrid_type_to_pmu(hybrid_name);
->>>>>               if (!pmu_name)
->>>>>                       pr_warning("WARNING: hybrid cputype is not supported!\n");
->>>>>       }
->>
->> Can the tool implicitly convert the --cputype to --unit at the very
->> beginning? (Just need to append a prefix "cpu_".). Here we only need to
->> handle the unit_name.
->> The same logic may be applied for other tools if someone implements the
->> --unit for the stat or record later.
->>
->> BTW: we may want to check the existence of a PMU here, just like what we
->> did for the hybrid. If a user perf list a nonexistence PMU, we can warn
->> here.
+Em Thu, Nov 10, 2022 at 10:10:18AM -0800, Namhyung Kim escreveu:
+> Hi Ian,
 > 
-> That'd be a fine follow up. I think it would be problematic as it
-> would warn because of a lack of permissions.
->
-
-Just check whether the PMU folder exists in the sysfs. I don't think it
-has a permission issue.
-
-Thanks,
-Kan
-
-> Thanks,
-> Ian
+> On Wed, Nov 9, 2022 at 10:49 AM Ian Rogers <irogers@google.com> wrote:
+> >
+> > The previous build would add -Itools/lib and get dependencies for
+> > libtraceevent, libsubcmd, libsymbol, libapi and libbpf meaning that
+> > overriding these libraries would change the link time dependency but
+> > the headers would erroneously come from tools/lib. Fix the build to
+> > install headers and then depend on these. To reduce exposing internal
+> > headers/APIs some clean up is performed. tools/lib/symbol has a
+> > Makefile added, while tools/lib/api and tools/lib/subcmd have install
+> > targets added. The pattern used for the dependencies in Makefile.perf
+> > is modelled on libbpf.
+> >
+> > The problem and solution were motivated by this issue and discussion:
+> > https://lore.kernel.org/lkml/CAEf4BzbbOHQZUAe6iWaehKCPQAf3VC=hq657buqe2_yRKxaK-A@mail.gmail.com/
+> >
+> > v2. Fix a MANIFEST issue for the source tar ball. Add dependencies for
+> >     the installed header files so that the build doesn't overtake
+> >     building these dependencies. Both issues reported by Arnaldo
+> >     Carvalho de Melo <acme@kernel.org>.
+> >
+> > Ian Rogers (14):
+> >   tools lib api: Add install target
+> >   tools lib subcmd: Add install target
+> >   perf build: Install libsubcmd locally when building
+> >   perf build: Install libapi locally when building
+> >   perf build: Install libperf locally when building
+> >   perf build: Install libtraceevent locally when building
+> >   tools lib api: Add missing install headers
+> >   tools lib perf: Add missing install headers
+> >   tool lib symbol: Add Makefile/Build
+> >   perf build: Install libsymbol locally when building
+> >   perf expr: Tidy hashmap dependency
+> >   perf thread_map: Reduce exposure of libperf internal API
+> >   perf cpumap: Tidy libperf includes
+> >   perf build: Use tools/lib headers from install path
 > 
->> Thanks,
->> Kan
->>
->>>>> diff --git a/tools/perf/util/metricgroup.c b/tools/perf/util/metricgroup.c
->>>>> index 4c98ac29ee13..1943fed9b6d9 100644
->>>>> --- a/tools/perf/util/metricgroup.c
->>>>> +++ b/tools/perf/util/metricgroup.c
->>>>> @@ -556,11 +556,12 @@ static int metricgroup__print_callback(const struct pmu_event *pe,
->>>>>                                      void *vdata)
->>>>>  {
->>>>>       struct metricgroup_print_data *data = vdata;
->>>>> +     const char *pmu = pe->pmu ?: "cpu";
->>>>>
->>>>>       if (!pe->metric_expr)
->>>>>               return 0;
->>>>>
->>>>> -     if (data->pmu_name && perf_pmu__is_hybrid(pe->pmu) && strcmp(data->pmu_name, pe->pmu))
->>>>> +     if (data->pmu_name && strcmp(data->pmu_name, pmu))
->>>>>               return 0;
->>>>>
->>>>>       return metricgroup__print_pmu_event(pe, data->metricgroups, data->filter,
->>>>> diff --git a/tools/perf/util/pmu.c b/tools/perf/util/pmu.c
->>>>> index a8f9f47c6ed9..9c771f136b81 100644
->>>>> --- a/tools/perf/util/pmu.c
->>>>> +++ b/tools/perf/util/pmu.c
->>>>> @@ -1694,10 +1694,8 @@ void print_pmu_events(const char *event_glob, bool name_only, bool quiet_flag,
->>>>>       pmu = NULL;
->>>>>       j = 0;
->>>>>       while ((pmu = perf_pmu__scan(pmu)) != NULL) {
->>>>> -             if (pmu_name && perf_pmu__is_hybrid(pmu->name) &&
->>>>> -                 strcmp(pmu_name, pmu->name)) {
->>>>> +             if (pmu_name && pmu->name && strcmp(pmu_name, pmu->name))
->>>>>                       continue;
->>>>> -             }
->>>>>
->>>>>               list_for_each_entry(alias, &pmu->aliases, list) {
->>>>>                       char *name = alias->desc ? alias->name :
+> Acked-by: Namhyung Kim <namhyung@kernel.org>
+
+'make -C tools/perf build-test' is failing, looks like parallelization
+woes again:
+
+⬢[acme@toolbox perf]$ getconf _NPROCESSORS_ONLN
+32
+⬢[acme@toolbox perf]$
+
+⬢[acme@toolbox perf]$ git log --oneline -1 ; time make -C tools/perf build-test
+9f22d36a1dd0297a (HEAD -> perf/core) perf build: Use tools/lib headers from install path
+make: Entering directory '/var/home/acme/git/perf/tools/perf'
+- tarpkg: ./tests/perf-targz-src-pkg .
+                 make_static: cd . && make LDFLAGS=-static NO_PERF_READ_VDSO32=1 NO_PERF_READ_VDSOX32=1 NO_JVMTI=1 -j32  DESTDIR=/tmp/tmp.i0kUDsiQbV
+              make_with_gtk2: cd . && make GTK2=1 -j32  DESTDIR=/tmp/tmp.MNcgfeG07c
+cd . && make GTK2=1 -j32 DESTDIR=/tmp/tmp.MNcgfeG07c
+  BUILD:   Doing 'make -j32' parallel build
+  HOSTCC  fixdep.o
+  HOSTLD  fixdep-in.o
+  LINK    fixdep
+Warning: Kernel ABI header at 'tools/arch/arm64/include/uapi/asm/perf_regs.h' differs from latest version at 'arch/arm64/include/uapi/asm/perf_regs.h'
+diff -u tools/arch/arm64/include/uapi/asm/perf_regs.h arch/arm64/include/uapi/asm/perf_regs.h
+Warning: Kernel ABI header at 'tools/arch/arm64/include/asm/cputype.h' differs from latest version at 'arch/arm64/include/asm/cputype.h'
+diff -u tools/arch/arm64/include/asm/cputype.h arch/arm64/include/asm/cputype.h
+Warning: Kernel ABI header at 'tools/perf/arch/powerpc/entry/syscalls/syscall.tbl' differs from latest version at 'arch/powerpc/kernel/syscalls/syscall.tbl'
+diff -u tools/perf/arch/powerpc/entry/syscalls/syscall.tbl arch/powerpc/kernel/syscalls/syscall.tbl
+
+Auto-detecting system features:
+...                                   dwarf: [ on  ]
+...                      dwarf_getlocations: [ on  ]
+...                                   glibc: [ on  ]
+...                                  libbfd: [ on  ]
+...                          libbfd-buildid: [ on  ]
+...                                  libcap: [ on  ]
+...                                  libelf: [ on  ]
+...                                 libnuma: [ on  ]
+...                  numa_num_possible_cpus: [ on  ]
+...                                 libperl: [ on  ]
+...                               libpython: [ on  ]
+...                               libcrypto: [ on  ]
+...                               libunwind: [ on  ]
+...                      libdw-dwarf-unwind: [ on  ]
+...                                    zlib: [ on  ]
+...                                    lzma: [ on  ]
+...                               get_cpuid: [ on  ]
+...                                     bpf: [ on  ]
+...                                  libaio: [ on  ]
+...                                 libzstd: [ on  ]
+
+  GEN     common-cmds.h
+  CC      perf-read-vdso32
+  CC      dlfilters/dlfilter-test-api-v0.o
+  CC      dlfilters/dlfilter-show-cycles.o
+  CC      jvmti/libjvmti.o
+  CC      jvmti/jvmti_agent.o
+  CC      jvmti/libstring.o
+  CC      jvmti/libctype.o
+  CC      ui/gtk/browser.o
+  CC      ui/gtk/hists.o
+  CC      ui/gtk/setup.o
+  CC      ui/gtk/util.o
+  GEN     pmu-events/pmu-events.c
+  CC      ui/gtk/helpline.o
+  LINK    dlfilters/dlfilter-show-cycles.so
+  CC      ui/gtk/progress.o
+  CC      ui/gtk/annotate.o
+  CC      ui/gtk/zalloc.o
+  LINK    dlfilters/dlfilter-test-api-v0.so
+  INSTALL headers
+  CC      /var/home/acme/git/perf/tools/perf/libsubcmd/exec-cmd.o
+  CC      /var/home/acme/git/perf/tools/perf/libsubcmd/help.o
+  CC      /var/home/acme/git/perf/tools/perf/libsubcmd/pager.o
+  CC      /var/home/acme/git/perf/tools/perf/libsubcmd/parse-options.o
+  CC      /var/home/acme/git/perf/tools/perf/libsubcmd/run-command.o
+In file included from ui/gtk/hists.c:2:
+/var/home/acme/git/perf/tools/perf/util/include/../evlist.h:9:10: fatal error: api/fd/array.h: No such file or directory
+    9 | #include <api/fd/array.h>
+      |          ^~~~~~~~~~~~~~~~
+compilation terminated.
+make[6]: *** [/var/home/acme/git/perf/tools/build/Makefile.build:97: ui/gtk/hists.o] Error 1
+make[6]: *** Waiting for unfinished jobs....
+  CC      /var/home/acme/git/perf/tools/perf/libsubcmd/sigchain.o
+make -f /var/home/acme/git/perf/tools/build/Makefile.build dir=. obj=libsymbol V=1
+In file included from ui/gtk/browser.c:2:
+/var/home/acme/git/perf/tools/perf/util/include/../evsel.h:10:10: fatal error: internal/evsel.h: No such file or directory
+   10 | #include <internal/evsel.h>
+      |          ^~~~~~~~~~~~~~~~~~
+compilation terminated.
+make[6]: *** [/var/home/acme/git/perf/tools/build/Makefile.build:97: ui/gtk/browser.o] Error 1
+  INSTALL headers
+  CC      /var/home/acme/git/perf/tools/perf/libtraceevent/event-parse.o
