@@ -2,129 +2,86 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8CF05C43219
-	for <linux-perf-users@archiver.kernel.org>; Mon, 14 Nov 2022 10:36:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5F6A2C4332F
+	for <linux-perf-users@archiver.kernel.org>; Mon, 14 Nov 2022 10:51:37 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S235126AbiKNKgr (ORCPT
+        id S230290AbiKNKvf (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Mon, 14 Nov 2022 05:36:47 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35550 "EHLO
+        Mon, 14 Nov 2022 05:51:35 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48422 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S235876AbiKNKga (ORCPT
+        with ESMTP id S235468AbiKNKv0 (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Mon, 14 Nov 2022 05:36:30 -0500
-Received: from mail-wr1-x432.google.com (mail-wr1-x432.google.com [IPv6:2a00:1450:4864:20::432])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 619092BD8;
-        Mon, 14 Nov 2022 02:36:29 -0800 (PST)
-Received: by mail-wr1-x432.google.com with SMTP id d9so12660135wrm.13;
-        Mon, 14 Nov 2022 02:36:29 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20210112;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:date:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=QnetFY3EhYjRnfuMLD0Bkg7u+YtAr/GNLWodII00ghI=;
-        b=Qb5QEYHGtlFMZu0koo17j7PDOQp5lK5yMvCuLjL36HJ0NG23Jymw904wkClKWJEscC
-         eFd7D0blGeBlb2VHzo2jHr2yisNPb7nMtWlzACsq1xoBju2olNIKG0mzmwVE3VLTKWAE
-         smvkmIsDLnJHt9jlnhgWrhn3s/mhdliHg0p9U2ZTFFWKKLXq0Z13yC/x+LTVpWs94xfe
-         WxWmMHFTQ++wkcdVM+nSQplNKliByOV4pRWoGYVHogl19TXBOpIJFisGjYl23kuLfXXY
-         1wj/mSBPxkjdPuxiHG2zwtAtOWZubOG0RCS+ISIOHldltaOdWhaJgtMTWBtpNeGD3SS9
-         tG5Q==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:date:from:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=QnetFY3EhYjRnfuMLD0Bkg7u+YtAr/GNLWodII00ghI=;
-        b=J4mbn2cfQc+WgopPZ92Wbb0tMXn+j/K1HEDxHnz5wsgrCSmcX/Up4ilxTfJxVPt+Ea
-         M00p9SSSrnbZBObac/KwsGEYcZhTQTgpvtER6PwPanLhF7/7Zf84bWKb/S7/E08PiiFn
-         7LyprSIhNNJNX2Zn9yQKPLQOrJtqOJ8Way8NYTSDESWz9Snggmu1WsLJEaMl7pqdDFzc
-         Ge0qJiIWO58w1dGCu0Nwdb9p3gkEgStk1mHp+MrI+iy/21ZKH4Z3CECwaLutkeziXU5H
-         T/n07ZE4gs3vyrMTPI69Oh6DrmVmzmqm1plYdFfoJOKarG86JpQ6AFoh2aKyRhLaaTFD
-         LNSQ==
-X-Gm-Message-State: ANoB5pmolUw7Sj19cb93WH7fX6KI4ZLdoZcaRy3cyJ8m3w43ttrnoNw6
-        c9KP51yAr0oTxrqSaNWxFu0=
-X-Google-Smtp-Source: AA0mqf7iL+LDWZpbb5z+rp+OqWXlIdCWiJo4VkCBdO+FsAu378cQVagXwfMnx+1M4wbpdennVwO9yQ==
-X-Received: by 2002:adf:fbc6:0:b0:22e:3392:fb46 with SMTP id d6-20020adffbc6000000b0022e3392fb46mr6836375wrs.706.1668422187811;
-        Mon, 14 Nov 2022 02:36:27 -0800 (PST)
-Received: from krava (2001-1ae9-1c2-4c00-726e-c10f-8833-ff22.ip6.tmcz.cz. [2001:1ae9:1c2:4c00:726e:c10f:8833:ff22])
-        by smtp.gmail.com with ESMTPSA id r8-20020a056000014800b002206203ed3dsm9280970wrx.29.2022.11.14.02.36.26
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 14 Nov 2022 02:36:27 -0800 (PST)
-From:   Jiri Olsa <olsajiri@gmail.com>
-X-Google-Original-From: Jiri Olsa <jolsa@kernel.org>
-Date:   Mon, 14 Nov 2022 11:36:25 +0100
-To:     Hou Tao <houtao@huaweicloud.com>
-Cc:     bpf@vger.kernel.org, Andrii Nakryiko <andrii@kernel.org>,
-        Song Liu <song@kernel.org>,
-        Alexei Starovoitov <ast@kernel.org>,
-        Daniel Borkmann <daniel@iogearbox.net>,
-        Stanislav Fomichev <sdf@google.com>, houtao1@huawei.com,
-        linux-perf-users@vger.kernel.org,
-        Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        Arnaldo Carvalho de Melo <acme@kernel.org>
-Subject: Re: [PATCH bpf] perf, bpf: Use subprog name when reporting subprog
- ksymbol
-Message-ID: <Y3IaKXuDcR7dr8vp@krava>
-References: <20221114095733.158588-1-houtao@huaweicloud.com>
+        Mon, 14 Nov 2022 05:51:26 -0500
+Received: from desiato.infradead.org (desiato.infradead.org [IPv6:2001:8b0:10b:1:d65d:64ff:fe57:4e05])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 96BCCFACD;
+        Mon, 14 Nov 2022 02:51:24 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=desiato.20200630; h=In-Reply-To:Content-Type:MIME-Version:
+        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description;
+        bh=DZwhkgbexAAKX9BZyF/psTtU2EJVl4ELavZcHztgZAo=; b=GA0CkS7MIDxpPDY9/3Uiovp2l5
+        70JaKqlVq3wG74jikmjDCiAj31wU7nO+sdA2VSmm8YuoJaYuWfPuPGTy803LRfiCFcjmGznVOgtgT
+        C8aI3Ku2jwn8e6dqAJ7WAWshOyUMAza4isjjpelfdJGy5W2RfmiPRN6t5JSKTiNjuXiU+1QHGXBS6
+        ZXFiW6MkFF9XC9k59D7d3F9nxjW/rfmpHA0+ueV//NLe+O37uY1VCxr38UtEYW59/emmo6Y3OwjLL
+        +2Got6arMc1bYv+UNGn3MnPk35APrD/7aVU7STdFz9QMLnxql0DoTUmi6Sjb2dTwo2CC7hLdEKaNB
+        mJkmq0ww==;
+Received: from j130084.upc-j.chello.nl ([24.132.130.84] helo=noisy.programming.kicks-ass.net)
+        by desiato.infradead.org with esmtpsa (Exim 4.94.2 #2 (Red Hat Linux))
+        id 1ouX3X-000oEJ-Tf; Mon, 14 Nov 2022 10:51:12 +0000
+Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+        (Client did not present a certificate)
+        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id 045B1300642;
+        Mon, 14 Nov 2022 11:51:09 +0100 (CET)
+Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
+        id B0F9E2B9781DD; Mon, 14 Nov 2022 11:51:09 +0100 (CET)
+Date:   Mon, 14 Nov 2022 11:51:09 +0100
+From:   Peter Zijlstra <peterz@infradead.org>
+To:     Adrian Hunter <adrian.hunter@intel.com>
+Cc:     Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        linux-kernel@vger.kernel.org, Ingo Molnar <mingo@redhat.com>,
+        linux-perf-users@vger.kernel.org
+Subject: Re: [PATCH] perf/x86/intel/pt: Fix sampling using single range output
+Message-ID: <Y3IdnRgEPq2FN/ZX@hirez.programming.kicks-ass.net>
+References: <20221112151508.13768-1-adrian.hunter@intel.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20221114095733.158588-1-houtao@huaweicloud.com>
+In-Reply-To: <20221112151508.13768-1-adrian.hunter@intel.com>
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-On Mon, Nov 14, 2022 at 05:57:33PM +0800, Hou Tao wrote:
-> From: Hou Tao <houtao1@huawei.com>
+On Sat, Nov 12, 2022 at 05:15:08PM +0200, Adrian Hunter wrote:
+> Deal with errata TGL052, ADL037 and RPL017 "Trace May Contain Incorrect
+> Data When Configured With Single Range Output Larger Than 4KB" by
+> disabling single range output whenever larger than 4KB.
 > 
-> Since commit bfea9a8574f3 ("bpf: Add name to struct bpf_ksym"), when
-> reporting subprog ksymbol to perf, prog name instead of subprog name is
-> used. The backtrace of bpf program with subprogs will be incorrect as
-> shown below:
-> 
->   ffffffffc02deace bpf_prog_e44a3057dcb151f8_overwrite+0x66
->   ffffffffc02de9f7 bpf_prog_e44a3057dcb151f8_overwrite+0x9f
->   ffffffffa71d8d4e trace_call_bpf+0xce
->   ffffffffa71c2938 perf_call_bpf_enter.isra.0+0x48
-> 
-> overwrite is the entry program and it invokes the overwrite_htab subprog
-> through bpf_loop, but in above backtrace, overwrite program just jumps
-> inside itself.
-> 
-> Fixing it by using subprog name when reporting subprog ksymbol. After
-> the fix, the output of perf script will be correct as shown below:
-> 
->   ffffffffc031aad2 bpf_prog_37c0bec7d7c764a4_overwrite_htab+0x66
->   ffffffffc031a9e7 bpf_prog_c7eb827ef4f23e71_overwrite+0x9f
->   ffffffffa3dd8d4e trace_call_bpf+0xce
->   ffffffffa3dc2938 perf_call_bpf_enter.isra.0+0x48
-> 
-> Fixes: bfea9a8574f3 ("bpf: Add name to struct bpf_ksym")
-> Signed-off-by: Hou Tao <houtao1@huawei.com>
-
-Acked-by: Jiri Olsa <jolsa@kernel.org>
-
-thanks,
-jirka
-
+> Fixes: 670638477aed ("perf/x86/intel/pt: Opportunistically use single range output mode")
+> Cc: stable@vger.kernel.org
+> Signed-off-by: Adrian Hunter <adrian.hunter@intel.com>
 > ---
->  kernel/events/core.c | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
+>  arch/x86/events/intel/pt.c | 9 +++++++++
+>  1 file changed, 9 insertions(+)
 > 
-> diff --git a/kernel/events/core.c b/kernel/events/core.c
-> index 4ec3717003d5..8b50ef2569d9 100644
-> --- a/kernel/events/core.c
-> +++ b/kernel/events/core.c
-> @@ -9030,7 +9030,7 @@ static void perf_event_bpf_emit_ksymbols(struct bpf_prog *prog,
->  				PERF_RECORD_KSYMBOL_TYPE_BPF,
->  				(u64)(unsigned long)subprog->bpf_func,
->  				subprog->jited_len, unregister,
-> -				prog->aux->ksym.name);
-> +				subprog->aux->ksym.name);
->  		}
->  	}
->  }
-> -- 
-> 2.29.2
-> 
+> diff --git a/arch/x86/events/intel/pt.c b/arch/x86/events/intel/pt.c
+> index 82ef87e9a897..42a55794004a 100644
+> --- a/arch/x86/events/intel/pt.c
+> +++ b/arch/x86/events/intel/pt.c
+> @@ -1263,6 +1263,15 @@ static int pt_buffer_try_single(struct pt_buffer *buf, int nr_pages)
+>  	if (1 << order != nr_pages)
+>  		goto out;
+>  
+> +	/*
+> +	 * Some processors cannot always support single range for more than
+> +	 * 4KB - refer errata TGL052, ADL037 and RPL017. Future processors might
+> +	 * also be affected, so for now rather than trying to keep track of
+> +	 * which ones, just disable it for all.
+> +	 */
+> +	if (nr_pages > 1)
+> +		goto out;
+
+This effectively declares single-output-mode dead? Because I don't think
+anybody uses PT with a single 4K buffer.
