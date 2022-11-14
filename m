@@ -2,55 +2,55 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3E7DAC4332F
-	for <linux-perf-users@archiver.kernel.org>; Mon, 14 Nov 2022 23:03:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BA831C43219
+	for <linux-perf-users@archiver.kernel.org>; Mon, 14 Nov 2022 23:03:35 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S237880AbiKNXDa (ORCPT
+        id S238007AbiKNXDe (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Mon, 14 Nov 2022 18:03:30 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51484 "EHLO
+        Mon, 14 Nov 2022 18:03:34 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52462 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S237980AbiKNXDE (ORCPT
+        with ESMTP id S237765AbiKNXDV (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Mon, 14 Nov 2022 18:03:04 -0500
-Received: from mail-pg1-x534.google.com (mail-pg1-x534.google.com [IPv6:2607:f8b0:4864:20::534])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 368211C10E;
-        Mon, 14 Nov 2022 15:02:39 -0800 (PST)
-Received: by mail-pg1-x534.google.com with SMTP id f3so5166342pgc.2;
-        Mon, 14 Nov 2022 15:02:39 -0800 (PST)
+        Mon, 14 Nov 2022 18:03:21 -0500
+Received: from mail-pj1-x1035.google.com (mail-pj1-x1035.google.com [IPv6:2607:f8b0:4864:20::1035])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 542F91C40F;
+        Mon, 14 Nov 2022 15:02:44 -0800 (PST)
+Received: by mail-pj1-x1035.google.com with SMTP id o7so11723882pjj.1;
+        Mon, 14 Nov 2022 15:02:44 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20210112;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:sender:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=gWTJCUMMuG2d3heYPVKFPEFB7/flVbDDi20CjhO794s=;
-        b=R9u8RjqhVZWOBpKgyOUL5+DiZvnxa6VpfFHjCrqW/mCfnsIqkvsKjce/wZVvuP2p+u
-         3jAfi4UxZEWCYB8W8t3/3yC7uJFfRz6TBJgiT4Gsu4jfbwfY9AoIxiSk2DDkjBVIKqxn
-         qRpx3N9JHrAwtOKePCTQY3zQX3OzUB/Vj7qPayR1WatwKytaDj/drmvIiF22gSb/KSHt
-         3mmNMpKiTcc3+g3b4OX5HWCVPPiiiX1FchwDFten3nEjGwPl0EWRkVyjIGaFF1UMK6jn
-         lVlSAe9rYNom0hN2gljFgq7hhAJKgkNZRRLOftUdAPe0Yze98IeODkH6fbRDLFQ+K5a1
-         1zcA==
+        bh=spAtbl47EygOQnxJUoTDwXbnzuvEBdxdVrBu6CoUdfg=;
+        b=GBNSrINHaYt7YJXAN4zG7nVOyn8d1arFdcIDDx14UM/9uLeOWaKTrmFNQDu+yACf8F
+         fb3luK2ENRMhRIo7wRpHx4gA7eEJ21RF1aJVOSJmvQOUmIWb2f4cqzPb71s8bgmP9ZsF
+         AnFWjzeVeHk9PYl4i0wk+la+pRHQDLt7sGrNKaN9QRoYNXviGiZCtoDF4UCiA/XvW/NU
+         M7KY4SnN6O5nMRowCre/OK5v1CN4LFLwEmHvovme6aJG5v8KR4FexPc2tSlvPbxvekAv
+         HsDTEOAyzC3s+pwqvRQMtlEIy7xDlkPYHPUBMwQGCp60C+bsd2fKJhLF9zc5q3p9hx7t
+         I8IQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:sender:x-gm-message-state:from
          :to:cc:subject:date:message-id:reply-to;
-        bh=gWTJCUMMuG2d3heYPVKFPEFB7/flVbDDi20CjhO794s=;
-        b=Q0E/59KShW9MYovlEfkAXGYq9u2pz+C7C2OtTtw27z4jDuAD1VZ1bpqwhsskafHKQT
-         2DnRiPSz2KWeZ+lFFYb8pkwnsvq3nhSWrM8TlDQe+RhEE6duguLTyWWYu7kXQDzhh50A
-         4ebOz7llap7CDHb9O9WRlUwfp1nfFjLVcXlgExdpUncNTxSJT3up6JyTcaVzA06t88S2
-         U+0eFV5Wm5oTpIhjRDUFTW8mgeMX7mg2bc+vmFFFes53ES2F8hXPJ4ebvJxVdNNKbyw+
-         yF0B0v6RvkmVjCBJtCNU+Z0EQ6QtgEdsbkg8cGJCA56aOiSjwmfR73gjvGLZ+kMdyN8z
-         RXFw==
-X-Gm-Message-State: ANoB5pl3MECrfCFL1OIMzgCWMlbH8HNT86freVXIwqw8o7qJJAwIiN9o
-        bMUnmYJZn9BWFwWXgOoKtmQ=
-X-Google-Smtp-Source: AA0mqf7KIRLjR6xF9YgSGRHmvxg7MWHFTFXgYnNLBMSEKgVR8VlWsqPhpMptr2yALWML2G+t1NsyBQ==
-X-Received: by 2002:a63:1b54:0:b0:476:a08b:b106 with SMTP id b20-20020a631b54000000b00476a08bb106mr2765184pgm.77.1668466959061;
-        Mon, 14 Nov 2022 15:02:39 -0800 (PST)
+        bh=spAtbl47EygOQnxJUoTDwXbnzuvEBdxdVrBu6CoUdfg=;
+        b=gjcvQTwf7Ff5fvI8tstf+dP+mIAUCsIT95GZ9msnq4AHFzLE48aEFxDWM2TZs+VynG
+         /Rkjn3h08qQ6JhSaCaySSNHUkTJ25MbfU/AU5NyBUEFTAOs8ghoOWnSzoxuWL4o9ZQz6
+         EDF3odJzDrgMLaKL7iONFdFy/LokgAOcGGkSX8jIyScQJ5srpxXspnMD6/1n1Nk2Y/GN
+         zkv7k83ygj9MTS8ke8+7nNTqL9HuhrvmVXyWYnT28XJ/LyibhFKuXzWhmcnYU83+XL81
+         UJ+ORwLhUfraalP5Y0EwmG0Zt6BXtS6SO/8+ybXIid1CRhQtd4dZS70zgEjaojQQICpn
+         FEjQ==
+X-Gm-Message-State: ANoB5pnpg89UI+eNrfI/9WrR5RWrk/gagtRktYhvmQVA+bMNHjR6Yk6a
+        +Bx3wb7GC22vFAjMWEFzTN0=
+X-Google-Smtp-Source: AA0mqf4zJw81epsfXlPYpMayfqaR81tLdkVga3ijGfPj/PA486n3mAYSnbKsWDveoSOo7lHxXgAQAw==
+X-Received: by 2002:a17:902:f10c:b0:186:cbf1:27e3 with SMTP id e12-20020a170902f10c00b00186cbf127e3mr1216130plb.143.1668466963791;
+        Mon, 14 Nov 2022 15:02:43 -0800 (PST)
 Received: from balhae.hsd1.ca.comcast.net ([2601:647:6780:a80:cf9f:e038:c19b:797e])
-        by smtp.gmail.com with ESMTPSA id 132-20020a62148a000000b0056c814a501dsm7534724pfu.10.2022.11.14.15.02.37
+        by smtp.gmail.com with ESMTPSA id 132-20020a62148a000000b0056c814a501dsm7534724pfu.10.2022.11.14.15.02.42
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 14 Nov 2022 15:02:38 -0800 (PST)
+        Mon, 14 Nov 2022 15:02:43 -0800 (PST)
 Sender: Namhyung Kim <namhyung@gmail.com>
 From:   Namhyung Kim <namhyung@kernel.org>
 To:     Arnaldo Carvalho de Melo <acme@kernel.org>,
@@ -65,9 +65,9 @@ Cc:     Ingo Molnar <mingo@kernel.org>,
         Zhengjun Xing <zhengjun.xing@linux.intel.com>,
         James Clark <james.clark@arm.com>,
         Athira Jajeev <atrajeev@linux.vnet.ibm.com>
-Subject: [PATCH 06/19] perf stat: Factor out print_counter_value() function
-Date:   Mon, 14 Nov 2022 15:02:14 -0800
-Message-Id: <20221114230227.1255976-7-namhyung@kernel.org>
+Subject: [PATCH 09/19] perf stat: Align cgroup names
+Date:   Mon, 14 Nov 2022 15:02:17 -0800
+Message-Id: <20221114230227.1255976-10-namhyung@kernel.org>
 X-Mailer: git-send-email 2.38.1.493.g58b659f92b-goog
 In-Reply-To: <20221114230227.1255976-1-namhyung@kernel.org>
 References: <20221114230227.1255976-1-namhyung@kernel.org>
@@ -77,119 +77,50 @@ Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-And split it for each output mode like others.  I believe it makes the
-code simpler and more intuitive.  Now abs_printout() becomes just to
-call sub-functions.
+We don't know how long cgroup name is, but at least we can align short
+ones like below.
+
+  $ perf stat -a --for-each-cgroup system.slice,user.slice true
+
+   Performance counter stats for 'system wide':
+
+                0.13 msec cpu-clock                        system.slice     #    0.010 CPUs utilized
+                   4      context-switches                 system.slice     #   31.989 K/sec
+                   1      cpu-migrations                   system.slice     #    7.997 K/sec
+                   0      page-faults                      system.slice     #    0.000 /sec
+             450,673      cycles                           system.slice     #    3.604 GHz                         (92.41%)
+             161,216      instructions                     system.slice     #    0.36  insn per cycle              (92.41%)
+              32,678      branches                         system.slice     #  261.332 M/sec                       (92.41%)
+               2,628      branch-misses                    system.slice     #    8.04% of all branches             (92.41%)
+               14.29 msec cpu-clock                        user.slice       #    1.163 CPUs utilized
+                  35      context-switches                 user.slice       #    2.449 K/sec
+                  12      cpu-migrations                   user.slice       #  839.691 /sec
+                  57      page-faults                      user.slice       #    3.989 K/sec
+          49,683,026      cycles                           user.slice       #    3.477 GHz                         (99.38%)
+         110,790,266      instructions                     user.slice       #    2.23  insn per cycle              (99.38%)
+          24,552,255      branches                         user.slice       #    1.718 G/sec                       (99.38%)
+             127,779      branch-misses                    user.slice       #    0.52% of all branches             (99.38%)
+
+         0.012289431 seconds time elapsed
 
 Signed-off-by: Namhyung Kim <namhyung@kernel.org>
 ---
- tools/perf/util/stat-display.c | 81 ++++++++++++++++++++++------------
- 1 file changed, 53 insertions(+), 28 deletions(-)
+ tools/perf/util/stat-display.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
 diff --git a/tools/perf/util/stat-display.c b/tools/perf/util/stat-display.c
-index ed421f6d512f..a72c7442ff3d 100644
+index bf3f2f9d5dee..e66f766a3d78 100644
 --- a/tools/perf/util/stat-display.c
 +++ b/tools/perf/util/stat-display.c
-@@ -517,46 +517,71 @@ static void print_metric_header(struct perf_stat_config *config,
- 		fprintf(os->fh, "%*s ", config->metric_only_len, unit);
- }
+@@ -116,7 +116,7 @@ static void print_noise(struct perf_stat_config *config,
  
--static void abs_printout(struct perf_stat_config *config,
--			 struct aggr_cpu_id id, int nr, struct evsel *evsel, double avg)
-+static void print_counter_value_std(struct perf_stat_config *config,
-+				    struct evsel *evsel, double avg)
+ static void print_cgroup_std(struct perf_stat_config *config, const char *cgrp_name)
  {
- 	FILE *output = config->output;
- 	double sc =  evsel->scale;
- 	const char *fmt;
- 
--	if (config->csv_output) {
--		fmt = floor(sc) != sc ?  "%.2f%s" : "%.0f%s";
--	} else {
--		if (config->big_num)
--			fmt = floor(sc) != sc ? "%'18.2f%s" : "%'18.0f%s";
--		else
--			fmt = floor(sc) != sc ? "%18.2f%s" : "%18.0f%s";
--	}
-+	if (config->big_num)
-+		fmt = floor(sc) != sc ? "%'18.2f " : "%'18.0f ";
-+	else
-+		fmt = floor(sc) != sc ? "%18.2f " : "%18.0f ";
- 
--	aggr_printout(config, evsel, id, nr);
-+	fprintf(output, fmt, avg);
- 
--	if (config->json_output)
--		fprintf(output, "\"counter-value\" : \"%f\", ", avg);
--	else
--		fprintf(output, fmt, avg, config->csv_sep);
-+	if (evsel->unit)
-+		fprintf(output, "%-*s ", config->unit_width, evsel->unit);
- 
--	if (config->json_output) {
--		if (evsel->unit) {
--			fprintf(output, "\"unit\" : \"%s\", ",
--				evsel->unit);
--		}
--	} else {
--		if (evsel->unit)
--			fprintf(output, "%-*s%s",
--				config->csv_output ? 0 : config->unit_width,
--				evsel->unit, config->csv_sep);
--	}
-+	fprintf(output, "%-*s", 32, evsel__name(evsel));
-+}
- 
-+static void print_counter_value_csv(struct perf_stat_config *config,
-+				    struct evsel *evsel, double avg)
-+{
-+	FILE *output = config->output;
-+	double sc =  evsel->scale;
-+	const char *sep = config->csv_sep;
-+	const char *fmt = floor(sc) != sc ? "%.2f%s" : "%.0f%s";
-+
-+	fprintf(output, fmt, avg, sep);
-+
-+	if (evsel->unit)
-+		fprintf(output, "%s%s", evsel->unit, sep);
-+
-+	fprintf(output, "%s", evsel__name(evsel));
-+}
-+
-+static void print_counter_value_json(struct perf_stat_config *config,
-+				     struct evsel *evsel, double avg)
-+{
-+	FILE *output = config->output;
-+
-+	fprintf(output, "\"counter-value\" : \"%f\", ", avg);
-+
-+	if (evsel->unit)
-+		fprintf(output, "\"unit\" : \"%s\", ", evsel->unit);
-+
-+	fprintf(output, "\"event\" : \"%s\", ", evsel__name(evsel));
-+}
-+
-+static void print_counter_value(struct perf_stat_config *config,
-+				struct evsel *evsel, double avg)
-+{
- 	if (config->json_output)
--		fprintf(output, "\"event\" : \"%s\", ", evsel__name(evsel));
-+		print_counter_value_json(config, evsel, avg);
-+	else if (config->csv_output)
-+		print_counter_value_csv(config, evsel, avg);
- 	else
--		fprintf(output, "%-*s", config->csv_output ? 0 : 32, evsel__name(evsel));
-+		print_counter_value_std(config, evsel, avg);
-+}
- 
-+static void abs_printout(struct perf_stat_config *config,
-+			 struct aggr_cpu_id id, int nr, struct evsel *evsel, double avg)
-+{
-+	aggr_printout(config, evsel, id, nr);
-+	print_counter_value(config, evsel, avg);
- 	print_cgroup(config, evsel);
+-	fprintf(config->output, " %s", cgrp_name);
++	fprintf(config->output, " %-16s", cgrp_name);
  }
  
+ static void print_cgroup_csv(struct perf_stat_config *config, const char *cgrp_name)
 -- 
 2.38.1.493.g58b659f92b-goog
 
