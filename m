@@ -2,65 +2,64 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DA844C4332F
-	for <linux-perf-users@archiver.kernel.org>; Mon, 14 Nov 2022 14:09:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3B972C433FE
+	for <linux-perf-users@archiver.kernel.org>; Mon, 14 Nov 2022 14:10:56 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S236923AbiKNOJh (ORCPT
+        id S236995AbiKNOKy (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Mon, 14 Nov 2022 09:09:37 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53106 "EHLO
+        Mon, 14 Nov 2022 09:10:54 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54856 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S236936AbiKNOJe (ORCPT
+        with ESMTP id S236993AbiKNOKw (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Mon, 14 Nov 2022 09:09:34 -0500
-Received: from mail-wm1-x334.google.com (mail-wm1-x334.google.com [IPv6:2a00:1450:4864:20::334])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 62166220C1
-        for <linux-perf-users@vger.kernel.org>; Mon, 14 Nov 2022 06:09:33 -0800 (PST)
-Received: by mail-wm1-x334.google.com with SMTP id p16so7556715wmc.3
-        for <linux-perf-users@vger.kernel.org>; Mon, 14 Nov 2022 06:09:33 -0800 (PST)
+        Mon, 14 Nov 2022 09:10:52 -0500
+Received: from mail-wr1-x42c.google.com (mail-wr1-x42c.google.com [IPv6:2a00:1450:4864:20::42c])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3DB132494A
+        for <linux-perf-users@vger.kernel.org>; Mon, 14 Nov 2022 06:10:51 -0800 (PST)
+Received: by mail-wr1-x42c.google.com with SMTP id l14so18478867wrw.2
+        for <linux-perf-users@vger.kernel.org>; Mon, 14 Nov 2022 06:10:51 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=google.com; s=20210112;
         h=cc:to:subject:message-id:date:from:in-reply-to:references
          :mime-version:from:to:cc:subject:date:message-id:reply-to;
-        bh=AQFsSA0lX/+5IkyPJ9u1kCFoht9PKz06jc946dKDKOM=;
-        b=rH2qmF911lXpP+uWU63LT9JCtwsCRYaPTCjKagYLyAp4ScX/uOLl6p3voGd/09bnCy
-         3rblUPanqe46NIBPamfMWf2ozgsT1v21ETD70XklI9z2RCLjYPed2NoZ6sJd/qRSZoj7
-         P8dSQCIs/9OFnuv71gnO9tbvbAiqHJd3z6bCcWuKSBPDcilxWZ+eyPDsCn76if4+fhfI
-         B1H1C4OfUL6mdu66FwGPzrbKBTfOlfnTSVlDmSjQ3QCe1pRO9Uj/ofNVJ3EglAQ6hbED
-         f6cgfh/NaMgXkI58YoDUalKAu7xbZTuP5lxLzboLb3jFKD428KRG2eB7pmu5cMuHp3cE
-         x3TA==
+        bh=rFv86mLduUjZD4Ir7B85b9X3A/QgnGw8k4ISAkiGULg=;
+        b=WUKiYL7PQ07V/pQKq0VIxVYNnk9YrBPnJhgyepUUM45Zz7YUF0MGu2jyX4H5yj5reK
+         0xmfuY/q73pVCXtARzRv2CNWOOkVrI9/gFQgKneQryD/aQ6Jx5815P1AkncyL1JC6Oyv
+         v07W2C+GuHYtLy8YhIiEaeMXtnujxEpCpTADYlzknH4OPBmR3z16zZElUZ88oyfeHzqK
+         8LgDpXaViu3VLHc/eEPvgOj7a64WMH9RmQRE1HKPKnvolBueCGaq1z6EAVVHZJ5A7PSt
+         E/fvoujPWoztvzf2U5lrirs30WjVlqSDi7NJH1Nb3AmNhUsDsMywk/S59aPwA91hOSyF
+         nHqQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
         h=cc:to:subject:message-id:date:from:in-reply-to:references
          :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
          :reply-to;
-        bh=AQFsSA0lX/+5IkyPJ9u1kCFoht9PKz06jc946dKDKOM=;
-        b=gfwKPGhYqmguyG8Vsz+piMCjfpAia7RFu9hjs97mXCGbUMT6wjeBP0XDErcF6x+xXa
-         W3OzZw9IqNytwW7JrOmtF0h+bf5fu4zCkuT4lxMOemHCPuuhTe1B++1C2T7ZIHafljFR
-         r4vSbuqQoZOqwsFyqF/qFyeYhN80wvcZE/IGr/cZnU3outaDqJTizo8safIZKj0O6Mjv
-         EaCjW3ax9accjJ5MC9Va2/U64yormJZpflHDw7nXwaVugRVB7GMsiAnfGwLgvFfe2Kd3
-         dabxvGe7y4KnfUpTXLJUTJt/7PFHTmPUQMGV3ujw7xyrQ8S/RCE297GMDavUH/SZ30ib
-         3hNg==
-X-Gm-Message-State: ANoB5pn6ECUJxfWcO7T+HEdIRb0fq0H2auHCF2VRT7JtkQl5J07xULu5
-        10ayxjDgmm4mHdBwXCIw0j9RvrFk7qvMB3xInvyMqg==
-X-Google-Smtp-Source: AA0mqf7Fv4aiROw8x+aFA+clWKDAn17CGEDbgkRNjDTBtZagM0KPuH5PW6Ds2dxsexIP/NjLgNgjWdyDgAyeFVcfAzs=
-X-Received: by 2002:a7b:c40b:0:b0:3c6:c109:2d9 with SMTP id
- k11-20020a7bc40b000000b003c6c10902d9mr8177329wmi.149.1668434971535; Mon, 14
- Nov 2022 06:09:31 -0800 (PST)
+        bh=rFv86mLduUjZD4Ir7B85b9X3A/QgnGw8k4ISAkiGULg=;
+        b=dMIWJmiLCxCk1mg8nelSz2b9EU20ZfdEr0cp5myeoK+Ce6Q14nlPMTfAbwuuC/3JTE
+         QoKza4w1kguGB2Lq64Jc4oBtaDOw0Ca6x2qKgYLDhI1aypobkJ445Mrrm3LLrZeNr5H2
+         xCCuxMjuAaGDDd8gNYI+cnK2ldN/CjEOiMkL8UWNbma547mm8cZRPRhqtJ/mOJZwhKrL
+         w88/1Obx8B5HQgjOTeoCv2Dh6YWfiyhwzc3TyWIpax1RwpZ3L8DLgJZf8TKBrd8n2FVH
+         8gCMpMpC2V6HZ9urnGhu7fMVWTG34dHd19fwO/yowMk95isIt9Q9TYgmucYFaxg1TFQ3
+         9pQQ==
+X-Gm-Message-State: ANoB5pksU70YqP46bvU8IrRN+HmKcQ/IZpHxeWHnR30ik8XMJVUHxtrZ
+        wH5hBbuTZCXQ4Xba/bU7E8wlV9gpbNhRURLWtzZoEA==
+X-Google-Smtp-Source: AA0mqf7bRf2STkWy1G3U1PeXjFIldYJw9UqKgTKmXbWtKIWmnYZqu/ECe6DVeenka1xwYXTXWQP23hF3fJ9W1aXKTo4=
+X-Received: by 2002:a05:6000:1241:b0:236:d8f8:b87d with SMTP id
+ j1-20020a056000124100b00236d8f8b87dmr7372533wrx.343.1668435049383; Mon, 14
+ Nov 2022 06:10:49 -0800 (PST)
 MIME-Version: 1.0
 References: <20221114075127.2650315-1-irogers@google.com> <20221114075127.2650315-2-irogers@google.com>
- <bbb73e4b-a73e-6ce5-db1f-e54d1bb19c2c@linux.intel.com>
-In-Reply-To: <bbb73e4b-a73e-6ce5-db1f-e54d1bb19c2c@linux.intel.com>
+ <0a54d2bc-142f-f62d-978c-70f97332fdfc@intel.com>
+In-Reply-To: <0a54d2bc-142f-f62d-978c-70f97332fdfc@intel.com>
 From:   Ian Rogers <irogers@google.com>
-Date:   Mon, 14 Nov 2022 06:09:17 -0800
-Message-ID: <CAP-5=fUTDtGDJ3ONW5iKaeszDRwezzZCJCW59yvXQ4tEYyHsdg@mail.gmail.com>
+Date:   Mon, 14 Nov 2022 06:10:35 -0800
+Message-ID: <CAP-5=fUzW6BrkbkX76SA+vBJzvYrxY2pJRe8yBATYdB0Gn3z+A@mail.gmail.com>
 Subject: Re: [PATCH v1 1/9] perf pmu: Add documentation
-To:     "Liang, Kan" <kan.liang@linux.intel.com>
+To:     Adrian Hunter <adrian.hunter@intel.com>
 Cc:     Weilin Wang <weilin.wang@intel.com>,
         Perry Taylor <perry.taylor@intel.com>,
         Caleb Biggers <caleb.biggers@intel.com>,
         Leo Yan <leo.yan@linaro.org>,
-        Adrian Hunter <adrian.hunter@intel.com>,
         Peter Zijlstra <peterz@infradead.org>,
         Ingo Molnar <mingo@redhat.com>,
         Arnaldo Carvalho de Melo <acme@kernel.org>,
@@ -71,6 +70,7 @@ Cc:     Weilin Wang <weilin.wang@intel.com>,
         Sandipan Das <sandipan.das@amd.com>,
         Kajol Jain <kjain@linux.ibm.com>,
         Zhengjun Xing <zhengjun.xing@linux.intel.com>,
+        Kan Liang <kan.liang@linux.intel.com>,
         Ravi Bangoria <ravi.bangoria@amd.com>,
         Xin Gao <gaoxin@cdjrlc.com>, Rob Herring <robh@kernel.org>,
         linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org,
@@ -80,15 +80,32 @@ Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-On Mon, Nov 14, 2022 at 5:40 AM Liang, Kan <kan.liang@linux.intel.com> wrote:
+On Mon, Nov 14, 2022 at 12:56 AM Adrian Hunter <adrian.hunter@intel.com> wrote:
 >
->
->
-> On 2022-11-14 2:51 a.m., Ian Rogers wrote:
+> On 14/11/22 09:51, Ian Rogers wrote:
 > > Add documentation to struct perf_pmu and the associated structs of
 > > perf_pmu_alias and perf_pmu_format.
 > >
 > > Signed-off-by: Ian Rogers <irogers@google.com>
+>
+> Should this be kernel-doc format?
+>
+> $ ./scripts/kernel-doc -man tools/perf/util/pmu.* > /tmp/manout
+> tools/perf/util/pmu.c:35: warning: This comment starts with '/**', but isn't a kernel-doc comment. Refer Documentation/doc-guide/kernel-doc.rst
+>  * Values from a format file read from <sysfs>/devices/cpu/format/ held in
+> tools/perf/util/pmu.c:1: warning: no structured comments found
+> tools/perf/util/pmu.h:140: warning: cannot understand function prototype: 'struct perf_pmu_alias '
+> tools/perf/util/pmu.h:1: warning: no structured comments found
+> tools/perf/util/pmu.l:1: warning: no structured comments found
+> tools/perf/util/pmu.o:1: warning: no structured comments found
+> tools/perf/util/pmu.y:1: warning: no structured comments found
+> $ man -l /tmp/manout | cat
+> $
+
+Thanks, I'll take a look into fixing this.
+
+Ian
+
 > > ---
 > >  tools/perf/util/pmu.c |  14 ++++++
 > >  tools/perf/util/pmu.h | 105 +++++++++++++++++++++++++++++++++++++++---
@@ -158,25 +175,6 @@ On Mon, Nov 14, 2022 at 5:40 AM Liang, Kan <kan.liang@linux.intel.com> wrote:
 > > +      */
 > >       bool is_uncore;
 > > +     /** Is the PMU name either cpu_core or cpu_atom. */
->
-> I don't think we want to limit the hybrid names only to cpu_core or
-> cpu_atom. Maybe something as below?
-> /* Is a hybrid CPU PMU, e.g., cpu_core, cpu_atom. */
-
-Currently the hybrid code only works for cpu_core or cpu_atom, a
-limitation of its implementation. As pointed out in a later patch,
-this bool isn't being used when it could be and I think we can work to
-remove it. It would be possible to remove all uses of this with
-perf_pmu__is_hybrid. As such I think it may be useful to mark the
-hybrid variables in struct perf_pmu as deprecated while we work to
-replace their use with more generic just any PMU code.
-
-Thanks,
-Ian
-
-> Thanks,
-> Kan
->
 > >       bool is_hybrid;
 > > +     /**
 > > +      * Are events auxiliary events? Determined in architecture specific
@@ -298,3 +296,4 @@ Ian
 > >       char *pmu_name;
 > >  };
 > >
+>
