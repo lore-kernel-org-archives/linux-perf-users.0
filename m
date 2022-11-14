@@ -2,107 +2,169 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0B109C433FE
-	for <linux-perf-users@archiver.kernel.org>; Mon, 14 Nov 2022 11:15:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 04DACC4332F
+	for <linux-perf-users@archiver.kernel.org>; Mon, 14 Nov 2022 11:16:14 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S235995AbiKNLPu (ORCPT
+        id S236030AbiKNLQL (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Mon, 14 Nov 2022 06:15:50 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42940 "EHLO
+        Mon, 14 Nov 2022 06:16:11 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41856 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S236758AbiKNLO6 (ORCPT
+        with ESMTP id S236706AbiKNLPd (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Mon, 14 Nov 2022 06:14:58 -0500
-Received: from mga09.intel.com (mga09.intel.com [134.134.136.24])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 71B9E21804;
-        Mon, 14 Nov 2022 03:10:44 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1668424244; x=1699960244;
-  h=message-id:date:mime-version:subject:to:cc:references:
-   from:in-reply-to:content-transfer-encoding;
-  bh=2Ej8ZqKGhtg6fCWt9IDlcrUqusBuzvWifpdUzrFtTFE=;
-  b=nJeYsI4shML2w/Ju1v1Y0sbrICNz2wW7+Dl3PzeHyK/fMzlyxyLNE5y8
-   D6iFbLARjbPbxhsyZO3UHLPoKSO49wt6rQnZgjKE03lFGHzxyEaTI5/MV
-   p4hVV3Ek3INcJ2TcMb2YpWuRlJUqfepRkokwbg5jkUEQH0fdLwwIfKkla
-   /vu3bG1E7mejhbMcnoXYRCAFipFxGYkB60ZB4dCo8/CYRcwjfmcGZzD7+
-   twzs0pNvmRk5mZmK/u6rfvHG6I8Wl8L3FIcLvafo+LE6Xos3aZ4oOJmZk
-   xrOKjv//V3heoxARMt6i5iAAnb2ucRciwkbOe6lKDnqDEcrHGdb3XslPd
-   A==;
-X-IronPort-AV: E=McAfee;i="6500,9779,10530"; a="313088906"
-X-IronPort-AV: E=Sophos;i="5.96,161,1665471600"; 
-   d="scan'208";a="313088906"
-Received: from fmsmga007.fm.intel.com ([10.253.24.52])
-  by orsmga102.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 14 Nov 2022 03:10:44 -0800
-X-IronPort-AV: E=McAfee;i="6500,9779,10530"; a="640730133"
-X-IronPort-AV: E=Sophos;i="5.96,161,1665471600"; 
-   d="scan'208";a="640730133"
-Received: from ahunter6-mobl1.ger.corp.intel.com (HELO [10.0.2.15]) ([10.252.58.157])
-  by fmsmga007-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 14 Nov 2022 03:10:42 -0800
-Message-ID: <dfbeecdb-c97c-993f-da03-5f3d1f141c61@intel.com>
-Date:   Mon, 14 Nov 2022 13:10:38 +0200
+        Mon, 14 Nov 2022 06:15:33 -0500
+Received: from foss.arm.com (foss.arm.com [217.140.110.172])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTP id 6DBADF51;
+        Mon, 14 Nov 2022 03:11:42 -0800 (PST)
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 25F4123A;
+        Mon, 14 Nov 2022 03:11:48 -0800 (PST)
+Received: from [10.57.70.83] (unknown [10.57.70.83])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 43DE83F73D;
+        Mon, 14 Nov 2022 03:11:39 -0800 (PST)
+Message-ID: <38c4c93d-c3a5-2649-a57a-3c1ccd2027f3@arm.com>
+Date:   Mon, 14 Nov 2022 11:11:37 +0000
 MIME-Version: 1.0
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
- Firefox/102.0 Thunderbird/102.4.2
-Subject: Re: [PATCH] perf/x86/intel/pt: Fix sampling using single range output
+ Thunderbird/102.2.2
+Subject: Re: [PATCH 02/12] perf test: Replace pipe test workload with noploop
 Content-Language: en-US
-To:     Peter Zijlstra <peterz@infradead.org>
-Cc:     Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        linux-kernel@vger.kernel.org, Ingo Molnar <mingo@redhat.com>,
-        linux-perf-users@vger.kernel.org
-References: <20221112151508.13768-1-adrian.hunter@intel.com>
- <Y3IdnRgEPq2FN/ZX@hirez.programming.kicks-ass.net>
-From:   Adrian Hunter <adrian.hunter@intel.com>
-Organization: Intel Finland Oy, Registered Address: PL 281, 00181 Helsinki,
- Business Identity Code: 0357606 - 4, Domiciled in Helsinki
-In-Reply-To: <Y3IdnRgEPq2FN/ZX@hirez.programming.kicks-ass.net>
+To:     Namhyung Kim <namhyung@kernel.org>,
+        Arnaldo Carvalho de Melo <acme@kernel.org>,
+        Jiri Olsa <jolsa@kernel.org>
+Cc:     Ingo Molnar <mingo@kernel.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Ian Rogers <irogers@google.com>,
+        Adrian Hunter <adrian.hunter@intel.com>,
+        linux-perf-users@vger.kernel.org, Leo Yan <leo.yan@linaro.org>,
+        German Gomez <german.gomez@arm.com>,
+        Zhengjun Xing <zhengjun.xing@linux.intel.com>,
+        Athira Jajeev <atrajeev@linux.vnet.ibm.com>
+References: <20221110181920.84900-1-namhyung@kernel.org>
+ <20221110181920.84900-3-namhyung@kernel.org>
+From:   James Clark <james.clark@arm.com>
+In-Reply-To: <20221110181920.84900-3-namhyung@kernel.org>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-On 14/11/22 12:51, Peter Zijlstra wrote:
-> On Sat, Nov 12, 2022 at 05:15:08PM +0200, Adrian Hunter wrote:
->> Deal with errata TGL052, ADL037 and RPL017 "Trace May Contain Incorrect
->> Data When Configured With Single Range Output Larger Than 4KB" by
->> disabling single range output whenever larger than 4KB.
->>
->> Fixes: 670638477aed ("perf/x86/intel/pt: Opportunistically use single range output mode")
->> Cc: stable@vger.kernel.org
->> Signed-off-by: Adrian Hunter <adrian.hunter@intel.com>
->> ---
->>  arch/x86/events/intel/pt.c | 9 +++++++++
->>  1 file changed, 9 insertions(+)
->>
->> diff --git a/arch/x86/events/intel/pt.c b/arch/x86/events/intel/pt.c
->> index 82ef87e9a897..42a55794004a 100644
->> --- a/arch/x86/events/intel/pt.c
->> +++ b/arch/x86/events/intel/pt.c
->> @@ -1263,6 +1263,15 @@ static int pt_buffer_try_single(struct pt_buffer *buf, int nr_pages)
->>  	if (1 << order != nr_pages)
->>  		goto out;
->>  
->> +	/*
->> +	 * Some processors cannot always support single range for more than
->> +	 * 4KB - refer errata TGL052, ADL037 and RPL017. Future processors might
->> +	 * also be affected, so for now rather than trying to keep track of
->> +	 * which ones, just disable it for all.
->> +	 */
->> +	if (nr_pages > 1)
->> +		goto out;
+
+
+On 10/11/2022 18:19, Namhyung Kim wrote:
+> So that it can get rid of requirement of a compiler.
+> Also define and use more local symbols to ease future changes.
 > 
-> This effectively declares single-output-mode dead? Because I don't think
-> anybody uses PT with a single 4K buffer.
+>   $ sudo ./perf test -v pipe
+>    87: perf pipe recording and injection test                          :
+>   --- start ---
+>   test child forked, pid 748003
+>   [ perf record: Woken up 1 times to write data ]
+>   [ perf record: Captured and wrote 0.000 MB - ]
+>       748014   748014       -1 |perf
+>   [ perf record: Woken up 1 times to write data ]
+>   [ perf record: Captured and wrote 0.000 MB - ]
+>       99.83%  perf     perf                  [.] noploop
+>   [ perf record: Woken up 1 times to write data ]
+>   [ perf record: Captured and wrote 0.000 MB - ]
+>       99.85%  perf     perf                  [.] noploop
+>   [ perf record: Woken up 1 times to write data ]
+>   [ perf record: Captured and wrote 0.160 MB /tmp/perf.data.2XYPdw (4007 samples) ]
+>       99.83%  perf     perf                  [.] noploop
+>   test child finished with 0
+>   ---- end ----
+>   perf pipe recording and injection test: Ok
+> 
+> Signed-off-by: Namhyung Kim <namhyung@kernel.org>
 
-4K is the default size for "sample mode" i.e. stuffing 4KB of Intel PT trace
-data into a PERF_RECORD_SAMPLE record that has sample_type bit PERF_SAMPLE_AUX
+Tested-by: James Clark <james.clark@arm.com>
 
-e.g.
-
-$ perf record -vv --aux-sample -e '{intel_pt//u,cycles:u}' uname 2>err.txt
-Linux
-$ grep aux_sample_size err.txt
-  aux_sample_size                  4096
-$ 
-
+> ---
+>  tools/perf/tests/shell/pipe_test.sh | 55 ++++++-----------------------
+>  1 file changed, 10 insertions(+), 45 deletions(-)
+> 
+> diff --git a/tools/perf/tests/shell/pipe_test.sh b/tools/perf/tests/shell/pipe_test.sh
+> index 1b32b4f28391..8dd115dd35a7 100755
+> --- a/tools/perf/tests/shell/pipe_test.sh
+> +++ b/tools/perf/tests/shell/pipe_test.sh
+> @@ -2,68 +2,33 @@
+>  # perf pipe recording and injection test
+>  # SPDX-License-Identifier: GPL-2.0
+>  
+> -# skip if there's no compiler
+> -if ! [ -x "$(command -v cc)" ]; then
+> -	echo "failed: no compiler, install gcc"
+> -	exit 2
+> -fi
+> -
+> -file=$(mktemp /tmp/test.file.XXXXXX)
+>  data=$(mktemp /tmp/perf.data.XXXXXX)
+> +prog="perf test -w noploop"
+> +task="perf"
+> +sym="noploop"
+>  
+> -cat <<EOF | cc -o ${file} -x c -
+> -#include <signal.h>
+> -#include <stdlib.h>
+> -#include <unistd.h>
+> -
+> -volatile int done;
+> -
+> -void sigalrm(int sig) {
+> -	done = 1;
+> -}
+> -
+> -__attribute__((noinline)) void noploop(void) {
+> -	while (!done)
+> -		continue;
+> -}
+> -
+> -int main(int argc, char *argv[]) {
+> -	int sec = 1;
+> -
+> -	if (argc > 1)
+> -		sec = atoi(argv[1]);
+> -
+> -	signal(SIGALRM, sigalrm);
+> -	alarm(sec);
+> -
+> -	noploop();
+> -	return 0;
+> -}
+> -EOF
+> -
+> -
+> -if ! perf record -e task-clock:u -o - ${file} | perf report -i - --task | grep test.file; then
+> +if ! perf record -e task-clock:u -o - ${prog} | perf report -i - --task | grep ${task}; then
+>  	echo "cannot find the test file in the perf report"
+>  	exit 1
+>  fi
+>  
+> -if ! perf record -e task-clock:u -o - ${file} | perf inject -b | perf report -i - | grep noploop; then
+> +if ! perf record -e task-clock:u -o - ${prog} | perf inject -b | perf report -i - | grep ${sym}; then
+>  	echo "cannot find noploop function in pipe #1"
+>  	exit 1
+>  fi
+>  
+> -perf record -e task-clock:u -o - ${file} | perf inject -b -o ${data}
+> -if ! perf report -i ${data} | grep noploop; then
+> +perf record -e task-clock:u -o - ${prog} | perf inject -b -o ${data}
+> +if ! perf report -i ${data} | grep ${sym}; then
+>  	echo "cannot find noploop function in pipe #2"
+>  	exit 1
+>  fi
+>  
+> -perf record -e task-clock:u -o ${data} ${file}
+> -if ! perf inject -b -i ${data} | perf report -i - | grep noploop; then
+> +perf record -e task-clock:u -o ${data} ${prog}
+> +if ! perf inject -b -i ${data} | perf report -i - | grep ${sym}; then
+>  	echo "cannot find noploop function in pipe #3"
+>  	exit 1
+>  fi
+>  
+>  
+> -rm -f ${file} ${data} ${data}.old
+> +rm -f ${data} ${data}.old
+>  exit 0
