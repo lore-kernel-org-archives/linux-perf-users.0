@@ -2,193 +2,290 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1DC93C433FE
-	for <linux-perf-users@archiver.kernel.org>; Mon, 14 Nov 2022 08:55:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EEB6AC4332F
+	for <linux-perf-users@archiver.kernel.org>; Mon, 14 Nov 2022 08:55:58 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S235846AbiKNIz4 (ORCPT
+        id S235951AbiKNIz6 (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Mon, 14 Nov 2022 03:55:56 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38354 "EHLO
+        Mon, 14 Nov 2022 03:55:58 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38360 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S235805AbiKNIzz (ORCPT
+        with ESMTP id S235805AbiKNIz5 (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Mon, 14 Nov 2022 03:55:55 -0500
-Received: from mx0a-001b2d01.pphosted.com (mx0a-001b2d01.pphosted.com [148.163.156.1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 43BE41ADBE
-        for <linux-perf-users@vger.kernel.org>; Mon, 14 Nov 2022 00:55:54 -0800 (PST)
-Received: from pps.filterd (m0187473.ppops.net [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (8.17.1.19/8.17.1.5) with ESMTP id 2AE7rlwW024630;
-        Mon, 14 Nov 2022 08:55:34 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=from : to : cc : subject
- : date : message-id : mime-version : content-transfer-encoding; s=pp1;
- bh=a9Obil4L/SqCYDOBgLgYhTRskWi+CX5jOMidKyVBrlA=;
- b=dTAGpTXjx2ZN3626mtb1tecvHuQWaaZLiDHA0vT9N0xv8Xux5i01wn0ZMOlK3q1SsFmo
- xCOvCtAArS/+ldbrD4Du/DpBMTlcQf5C9m8rC7OgiMoRc0CScszhKQkLL4GN6z10bXIk
- XNdtyC/hbkcf7phVmT3UpcC206lXXL//K4hiAPk/BAA2upUMo+21ku0Vk+gCcw6kLKSt
- 5mjDcdWmIGhkvCAVEmWhB59/fwfCHrPp1Onj1cegn/pOnrl2qqB1Q3yKqMSvReIiHUVd
- 87ixwp/lX7sED2U4l6PrKB+4CHLmY3+kTKXrdVfe/0CmicdCtixts0FjN+dOnA4vb+5K 1Q== 
-Received: from pps.reinject (localhost [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 3kuhpe1np7-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Mon, 14 Nov 2022 08:55:34 +0000
-Received: from m0187473.ppops.net (m0187473.ppops.net [127.0.0.1])
-        by pps.reinject (8.17.1.5/8.17.1.5) with ESMTP id 2AE8BVbt018129;
-        Mon, 14 Nov 2022 08:55:34 GMT
-Received: from ppma03fra.de.ibm.com (6b.4a.5195.ip4.static.sl-reverse.com [149.81.74.107])
-        by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 3kuhpe1nnf-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Mon, 14 Nov 2022 08:55:33 +0000
-Received: from pps.filterd (ppma03fra.de.ibm.com [127.0.0.1])
-        by ppma03fra.de.ibm.com (8.16.1.2/8.16.1.2) with SMTP id 2AE8oeMt005023;
-        Mon, 14 Nov 2022 08:55:31 GMT
-Received: from b06cxnps4076.portsmouth.uk.ibm.com (d06relay13.portsmouth.uk.ibm.com [9.149.109.198])
-        by ppma03fra.de.ibm.com with ESMTP id 3kt348smr9-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Mon, 14 Nov 2022 08:55:31 +0000
-Received: from b06wcsmtp001.portsmouth.uk.ibm.com (b06wcsmtp001.portsmouth.uk.ibm.com [9.149.105.160])
-        by b06cxnps4076.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 2AE8tSwH31195432
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Mon, 14 Nov 2022 08:55:28 GMT
-Received: from b06wcsmtp001.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id F18FFA405F;
-        Mon, 14 Nov 2022 08:55:27 +0000 (GMT)
-Received: from b06wcsmtp001.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 34DF1A405B;
-        Mon, 14 Nov 2022 08:55:25 +0000 (GMT)
-Received: from localhost.localdomain (unknown [9.43.93.244])
-        by b06wcsmtp001.portsmouth.uk.ibm.com (Postfix) with ESMTP;
-        Mon, 14 Nov 2022 08:55:24 +0000 (GMT)
-From:   Athira Rajeev <atrajeev@linux.vnet.ibm.com>
-To:     acme@kernel.org, jolsa@kernel.org, ak@linux.intel.com
-Cc:     namhyung@kernel.org, irogers@google.com, james.clark@arm.com,
-        mpe@ellerman.id.au, linux-perf-users@vger.kernel.org,
-        linuxppc-dev@lists.ozlabs.org, maddy@linux.vnet.ibm.com,
-        rnsastry@linux.ibm.com, kjain@linux.ibm.com, disgoel@linux.ibm.com
-Subject: [PATCH V2] tools/perf: Fix printing field separator in CSV metrics output
-Date:   Mon, 14 Nov 2022 14:25:23 +0530
-Message-Id: <20221114085523.86570-1-atrajeev@linux.vnet.ibm.com>
-X-Mailer: git-send-email 2.35.1
+        Mon, 14 Nov 2022 03:55:57 -0500
+Received: from mga04.intel.com (mga04.intel.com [192.55.52.120])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A5A0A1BE91;
+        Mon, 14 Nov 2022 00:55:55 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1668416155; x=1699952155;
+  h=message-id:date:mime-version:subject:to:cc:references:
+   from:in-reply-to:content-transfer-encoding;
+  bh=rRFtchUjQVP1jvMyJGehQTQ8v6Sk26CYocZPzri0fOE=;
+  b=Z1LhdjOYdA2Qfm6vY55YrYXfTmeJGFYevsG0kyXA86Y0j0dt+xoP4JD9
+   yacrMfOCLA6BE8ks1riJgy2SeKh4ciJUWXQvI4bI7qxtzs5yu8Ocw4USS
+   10+sB/B+scEigAvfjQdaR1XaGRLebQwmTqbRhCvInGrDcm+r++zs3S93s
+   LlMvWFH4HI8GcaiLA0WicYFSYkrrcCambg/rRGUIMRqno4R0MCMg1qczX
+   6iDzdjeREmFQhu8c2A5jIz3Vdpeui/3vOPKPYFg+souIhwy7MD+VmPo8k
+   rf7M72OWXahivOQSA8hwztSDYwCG0ZmBhIrOaMYKHHFQFboQPksHGlbiA
+   g==;
+X-IronPort-AV: E=McAfee;i="6500,9779,10530"; a="310626406"
+X-IronPort-AV: E=Sophos;i="5.96,161,1665471600"; 
+   d="scan'208";a="310626406"
+Received: from fmsmga007.fm.intel.com ([10.253.24.52])
+  by fmsmga104.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 14 Nov 2022 00:55:55 -0800
+X-IronPort-AV: E=McAfee;i="6500,9779,10530"; a="640692835"
+X-IronPort-AV: E=Sophos;i="5.96,161,1665471600"; 
+   d="scan'208";a="640692835"
+Received: from ahunter6-mobl1.ger.corp.intel.com (HELO [10.0.2.15]) ([10.252.58.157])
+  by fmsmga007-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 14 Nov 2022 00:55:50 -0800
+Message-ID: <0a54d2bc-142f-f62d-978c-70f97332fdfc@intel.com>
+Date:   Mon, 14 Nov 2022 10:55:46 +0200
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-TM-AS-GCONF: 00
-X-Proofpoint-GUID: wV_CAXtjCpK4GCaneK3GaqjU9JhdaTjT
-X-Proofpoint-ORIG-GUID: HJsW2mD2HkIq5dMObAkQmoujL5f3KQzX
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.219,Aquarius:18.0.895,Hydra:6.0.545,FMLib:17.11.122.1
- definitions=2022-11-14_07,2022-11-11_01,2022-06-22_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 adultscore=0 spamscore=0
- priorityscore=1501 lowpriorityscore=0 suspectscore=0 phishscore=0
- clxscore=1015 bulkscore=0 mlxlogscore=999 malwarescore=0 impostorscore=0
- mlxscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2210170000 definitions=main-2211140062
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
+ Firefox/102.0 Thunderbird/102.4.2
+Subject: Re: [PATCH v1 1/9] perf pmu: Add documentation
+To:     Ian Rogers <irogers@google.com>,
+        Weilin Wang <weilin.wang@intel.com>,
+        Perry Taylor <perry.taylor@intel.com>,
+        Caleb Biggers <caleb.biggers@intel.com>,
+        Leo Yan <leo.yan@linaro.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        Arnaldo Carvalho de Melo <acme@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Jiri Olsa <jolsa@kernel.org>,
+        Namhyung Kim <namhyung@kernel.org>,
+        Sandipan Das <sandipan.das@amd.com>,
+        Kajol Jain <kjain@linux.ibm.com>,
+        Zhengjun Xing <zhengjun.xing@linux.intel.com>,
+        Kan Liang <kan.liang@linux.intel.com>,
+        Ravi Bangoria <ravi.bangoria@amd.com>,
+        Xin Gao <gaoxin@cdjrlc.com>, Rob Herring <robh@kernel.org>,
+        linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org
+Cc:     Stephane Eranian <eranian@google.com>
+References: <20221114075127.2650315-1-irogers@google.com>
+ <20221114075127.2650315-2-irogers@google.com>
+Content-Language: en-US
+From:   Adrian Hunter <adrian.hunter@intel.com>
+Organization: Intel Finland Oy, Registered Address: PL 281, 00181 Helsinki,
+ Business Identity Code: 0357606 - 4, Domiciled in Helsinki
+In-Reply-To: <20221114075127.2650315-2-irogers@google.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-In perf stat with CSV output option, number of fields
-in metrics output is not matching with number of fields
-in other event output lines.
+On 14/11/22 09:51, Ian Rogers wrote:
+> Add documentation to struct perf_pmu and the associated structs of
+> perf_pmu_alias and perf_pmu_format.
+> 
+> Signed-off-by: Ian Rogers <irogers@google.com>
 
-Sample output below after applying patch to fix
-printing os->prefix.
+Should this be kernel-doc format?
 
-	# ./perf stat -x, --per-socket -a -C 1 ls
-	S0,1,1.89,msec,cpu-clock,1887692,100.00,1.013,CPUs utilized
-	S0,1,2,,context-switches,1885842,100.00,1.060,K/sec
-	S0,1,0,,cpu-migrations,1885374,100.00,0.000,/sec
-	S0,1,2,,page-faults,1884880,100.00,1.060,K/sec
-	S0,1,189544,,cycles,1263158,67.00,0.100,GHz
-	S0,1,64602,,stalled-cycles-frontend,1876146,100.00,34.08,frontend cycles idle
-	S0,1,128241,,stalled-cycles-backend,1875512,100.00,67.66,backend cycles idle
-	S0,1,95578,,instructions,1874676,100.00,0.50,insn per cycle
-===>	S0,1,,,,,,,1.34,stalled cycles per insn
+$ ./scripts/kernel-doc -man tools/perf/util/pmu.* > /tmp/manout
+tools/perf/util/pmu.c:35: warning: This comment starts with '/**', but isn't a kernel-doc comment. Refer Documentation/doc-guide/kernel-doc.rst
+ * Values from a format file read from <sysfs>/devices/cpu/format/ held in
+tools/perf/util/pmu.c:1: warning: no structured comments found
+tools/perf/util/pmu.h:140: warning: cannot understand function prototype: 'struct perf_pmu_alias '
+tools/perf/util/pmu.h:1: warning: no structured comments found
+tools/perf/util/pmu.l:1: warning: no structured comments found
+tools/perf/util/pmu.o:1: warning: no structured comments found
+tools/perf/util/pmu.y:1: warning: no structured comments found
+$ man -l /tmp/manout | cat
+$
 
-The above command line uses field separator as ","
-via "-x," option and per-socket option displays
-socket value as first field. But here the last line
-for "stalled cycles per insn" has more separators.
-Each csv output line is expected to have 8 field
-separatorsi (for the 9 fields), where as last line
-has 10 "," in the result. Patch fixes this issue.
-
-The counter stats are displayed by function
-"perf_stat__print_shadow_stats" in code
-"util/stat-shadow.c". While printing the stats info
-for "stalled cycles per insn", function "new_line_csv"
-is used as new_line callback.
-
-The fields printed in each line contains:
-"Socket_id,aggr nr,Avg,unit,event_name,run,enable_percent,ratio,unit"
-
-The metric output prints Socket_id, aggr nr, ratio
-and unit. It has to skip through remaining five fields
-ie, Avg,unit,event_name,run,enable_percent. The csv
-line callback uses "os->nfields" to know the number of
-fields to skip to match with other lines.
-Currently it is set as:
-	os.nfields = 3 + aggr_fields[config->aggr_mode] + (counter->cgrp ? 1 : 0);
-
-But in case of aggregation modes, csv_sep already
-gets printed along with each field (Function "aggr_printout"
-in util/stat-display.c). So aggr_fields can be
-removed from nfields. And fixed number of fields to
-skip has to be "4". This is to skip fields for:
-"avg, unit, event name, run, enable_percent"
-Example from line for instructions:
-"1.89,msec,cpu-clock,1887692,100.00"
-
-This needs 4 csv separators. Patch removes aggr_fields
-and uses 4 as fixed number of os->nfields to skip.
-
-After the patch:
-
-	# ./perf stat -x, --per-socket -a -C 1 ls
-	S0,1,1.92,msec,cpu-clock,1917648,100.00,1.010,CPUs utilized
-	S0,1,54,,context-switches,1916762,100.00,28.176,K/sec
-	-------
-	S0,1,528693,,instructions,1908854,100.00,0.36,insn per cycle
-	S0,1,,,,,,1.81,stalled cycles per insn
-
-Fixes: 92a61f6412d3 ("perf stat: Implement CSV metrics output")
-Reported-by: Disha Goel <disgoel@linux.vnet.ibm.com>
-Reviewed-By: Kajol Jain <kjain@linux.ibm.com>
-Tested-by: Disha Goel<disgoel@linux.vnet.ibm.com>
-Signed-off-by: Athira Rajeev <atrajeev@linux.vnet.ibm.com>
----
-Changelog:
-- Rebased on top of latest source.
-- Added Reviewed-by and Tested-by from Kajol and
-  Disha.
-
- tools/perf/util/stat-display.c | 13 +------------
- 1 file changed, 1 insertion(+), 12 deletions(-)
-
-diff --git a/tools/perf/util/stat-display.c b/tools/perf/util/stat-display.c
-index ba66bb7fc1ca..5ce14bf18055 100644
---- a/tools/perf/util/stat-display.c
-+++ b/tools/perf/util/stat-display.c
-@@ -551,20 +551,9 @@ static void printout(struct perf_stat_config *config, struct aggr_cpu_id id, int
- 	new_line_t nl;
- 
- 	if (config->csv_output) {
--		static const int aggr_fields[AGGR_MAX] = {
--			[AGGR_NONE] = 1,
--			[AGGR_GLOBAL] = 0,
--			[AGGR_SOCKET] = 2,
--			[AGGR_DIE] = 2,
--			[AGGR_CORE] = 2,
--			[AGGR_THREAD] = 1,
--			[AGGR_UNSET] = 0,
--			[AGGR_NODE] = 1,
--		};
--
- 		pm = config->metric_only ? print_metric_only_csv : print_metric_csv;
- 		nl = config->metric_only ? new_line_metric : new_line_csv;
--		os.nfields = 3 + aggr_fields[config->aggr_mode] + (counter->cgrp ? 1 : 0);
-+		os.nfields = 4 + (counter->cgrp ? 1 : 0);
- 	} else if (config->json_output) {
- 		pm = config->metric_only ? print_metric_only_json : print_metric_json;
- 		nl = config->metric_only ? new_line_metric : new_line_json;
--- 
-2.31.1
+> ---
+>  tools/perf/util/pmu.c |  14 ++++++
+>  tools/perf/util/pmu.h | 105 +++++++++++++++++++++++++++++++++++++++---
+>  2 files changed, 113 insertions(+), 6 deletions(-)
+> 
+> diff --git a/tools/perf/util/pmu.c b/tools/perf/util/pmu.c
+> index 6a86e6af0903..a8f9f47c6ed9 100644
+> --- a/tools/perf/util/pmu.c
+> +++ b/tools/perf/util/pmu.c
+> @@ -31,10 +31,24 @@
+>  
+>  struct perf_pmu perf_pmu__fake;
+>  
+> +/**
+> + * Values from a format file read from <sysfs>/devices/cpu/format/ held in
+> + * struct perf_pmu. For example, the contents of
+> + * <sysfs>/devices/cpu/format/event may be "config:0-7" and will be represented
+> + * here as name="event", value=PERF_PMU_FORMAT_VALUE_CONFIG and bits 0 to 7 will
+> + * be set.
+> + */
+>  struct perf_pmu_format {
+> +	/** The modifier/file name. */
+>  	char *name;
+> +	/**
+> +	 * Which config value the format relates to. Supported values are from
+> +	 * PERF_PMU_FORMAT_VALUE_CONFIG to PERF_PMU_FORMAT_VALUE_CONFIG_END.
+> +	 */
+>  	int value;
+> +	/** Which config bits are set by this format value. */
+>  	DECLARE_BITMAP(bits, PERF_PMU_FORMAT_BITS);
+> +	/** Element on list within struct perf_pmu. */
+>  	struct list_head list;
+>  };
+>  
+> diff --git a/tools/perf/util/pmu.h b/tools/perf/util/pmu.h
+> index 68e15c38ae71..29571c0f9d15 100644
+> --- a/tools/perf/util/pmu.h
+> +++ b/tools/perf/util/pmu.h
+> @@ -34,30 +34,91 @@ struct perf_pmu_caps {
+>  };
+>  
+>  struct perf_pmu {
+> +	/** The name of the PMU such as "cpu". */
+>  	char *name;
+> +	/**
+> +	 * Optional alternate name for the PMU determined in architecture
+> +	 * specific code.
+> +	 */
+>  	char *alias_name;
+> +	/**
+> +	 * Optional PMU identifier read from
+> +	 * <sysfs>/bus/event_source/devices/<name>/identifier.
+> +	 */
+>  	char *id;
+> +	/**
+> +	 * Perf event attributed type value, read from
+> +	 * <sysfs>/bus/event_source/devices/<name>/type.
+> +	 */
+>  	__u32 type;
+> +	/**
+> +	 * Can the PMU name be selected as if it were an event?
+> +	 */
+>  	bool selectable;
+> +	/**
+> +	 * Is the PMU not within the CPU core? Determined by the presence of
+> +	 * <sysfs>/bus/event_source/devices/<name>/cpumask.
+> +	 */
+>  	bool is_uncore;
+> +	/** Is the PMU name either cpu_core or cpu_atom. */
+>  	bool is_hybrid;
+> +	/**
+> +	 * Are events auxiliary events? Determined in architecture specific
+> +	 * code.
+> +	 */
+>  	bool auxtrace;
+> +	/**
+> +	 * Number of levels of :ppp precision supported by the PMU, read from
+> +	 * <sysfs>/bus/event_source/devices/<name>/caps/max_precise.
+> +	 */
+>  	int max_precise;
+> +	/**
+> +	 * Optional default perf_event_attr determined in architecture specific
+> +	 * code.
+> +	 */
+>  	struct perf_event_attr *default_config;
+> +	/**
+> +	 * Empty or the contents of either of:
+> +	 * <sysfs>/bus/event_source/devices/<name>/cpumask.
+> +	 * <sysfs>/bus/event_source/devices/<cpu>/cpus.
+> +	 */
+>  	struct perf_cpu_map *cpus;
+> -	struct list_head format;  /* HEAD struct perf_pmu_format -> list */
+> -	struct list_head aliases; /* HEAD struct perf_pmu_alias -> list */
+> +	/**
+> +	 * Holds the contents of files read from
+> +	 * <sysfs>/bus/event_source/devices/<name>/format/. The contents specify
+> +	 * which event parameter changes what config, config1 or config2 bits.
+> +	 */
+> +	struct list_head format;
+> +	/**
+> +	 * List of struct perf_pmu_alias. Each alias corresponds to an event
+> +	 * read from <sysfs>/bus/event_source/devices/<name>/events/ or from
+> +	 * json events in pmu-events.c.
+> +	 */
+> +	struct list_head aliases;
+> +	/** Has the list caps been initialized? */
+>  	bool caps_initialized;
+> +	/** The length of the list caps. */
+>  	u32 nr_caps;
+> -	struct list_head caps;    /* HEAD struct perf_pmu_caps -> list */
+> -	struct list_head list;    /* ELEM */
+> +	/**
+> +	 * Holds the contents of files read from
+> +	 * <sysfs>/bus/event_source/devices/<name>/caps/. The contents are pairs
+> +	 * of the filename with the value of its contents, for example,
+> +	 * max_precise (see above) may have a value of 3.
+> +	 */
+> +	struct list_head caps;
+> +	/** Element on pmus list in pmu.c. */
+> +	struct list_head list;
+> +	/** Element on perf_pmu__hybrid_pmus. */
+>  	struct list_head hybrid_list;
+>  
+> +	/** Features to inhibit when events on this PMU are opened. */
+>  	struct {
+> +		/** Disables perf_event_attr exclude_guest and exclude_host. */
+>  		bool exclude_guest;
+>  	} missing_features;
+>  };
+>  
+> +/** A special global PMU used for testing. */
+>  extern struct perf_pmu perf_pmu__fake;
+>  
+>  struct perf_pmu_info {
+> @@ -71,21 +132,53 @@ struct perf_pmu_info {
+>  
+>  #define UNIT_MAX_LEN	31 /* max length for event unit name */
+>  
+> +/**
+> + * An event either read from sysfs or builtin in pmu-events.c, created by
+> + * parsing the pmu-events json files.
+> + */
+>  struct perf_pmu_alias {
+>  	char *name;
+> +	/** Optional short description of the event. */
+>  	char *desc;
+> +	/** Optional long description. */
+>  	char *long_desc;
+> +	/**
+> +	 * Optional topic such as cache or pipeline, particularly for json
+> +	 * events.
+> +	 */
+>  	char *topic;
+> +	/** Comma separated parameter list. */
+>  	char *str;
+> -	struct list_head terms; /* HEAD struct parse_events_term -> list */
+> -	struct list_head list;  /* ELEM */
+> +	/** Owned list of the original parsed parameters. */
+> +	struct list_head terms;
+> +	/** List element of struct perf_pmu aliases. */
+> +	struct list_head list;
+> +	/** Units for the event, such as bytes or cache lines. */
+>  	char unit[UNIT_MAX_LEN+1];
+> +	/** Value to scale read counter values by. */
+>  	double scale;
+> +	/**
+> +	 * Does the file
+> +	 * <sysfs>/bus/event_source/devices/<pmu_name>/events/<name>.per-pkg or
+> +	 * equivalent json value exist and have the value 1.
+> +	 */
+>  	bool per_pkg;
+> +	/**
+> +	 * Does the file
+> +	 * <sysfs>/bus/event_source/devices/<pmu_name>/events/<name>.snapshot
+> +	 * exist and have the value 1.
+> +	 */
+>  	bool snapshot;
+> +	/** Is the event hidden and so not shown in perf list by default. */
+>  	bool deprecated;
+> +	/**
+> +	 * A metric expression associated with an event. Doing this makes little
+> +	 * sense due to scale and unit applying to both.
+> +	 */
+>  	char *metric_expr;
+> +	/** A name for the metric. unit applying to both. */
+>  	char *metric_name;
+> +	/** The name copied from struct perf_pmu. */
+>  	char *pmu_name;
+>  };
+>  
 
