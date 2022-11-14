@@ -2,59 +2,59 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 654D7C433FE
-	for <linux-perf-users@archiver.kernel.org>; Mon, 14 Nov 2022 14:03:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DA844C4332F
+	for <linux-perf-users@archiver.kernel.org>; Mon, 14 Nov 2022 14:09:38 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S236693AbiKNOD2 (ORCPT
+        id S236923AbiKNOJh (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Mon, 14 Nov 2022 09:03:28 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47050 "EHLO
+        Mon, 14 Nov 2022 09:09:37 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53106 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S236754AbiKNODO (ORCPT
+        with ESMTP id S236936AbiKNOJe (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Mon, 14 Nov 2022 09:03:14 -0500
-Received: from mail-wr1-x42d.google.com (mail-wr1-x42d.google.com [IPv6:2a00:1450:4864:20::42d])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 84A202B27C
-        for <linux-perf-users@vger.kernel.org>; Mon, 14 Nov 2022 06:03:03 -0800 (PST)
-Received: by mail-wr1-x42d.google.com with SMTP id bs21so18438139wrb.4
-        for <linux-perf-users@vger.kernel.org>; Mon, 14 Nov 2022 06:03:03 -0800 (PST)
+        Mon, 14 Nov 2022 09:09:34 -0500
+Received: from mail-wm1-x334.google.com (mail-wm1-x334.google.com [IPv6:2a00:1450:4864:20::334])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 62166220C1
+        for <linux-perf-users@vger.kernel.org>; Mon, 14 Nov 2022 06:09:33 -0800 (PST)
+Received: by mail-wm1-x334.google.com with SMTP id p16so7556715wmc.3
+        for <linux-perf-users@vger.kernel.org>; Mon, 14 Nov 2022 06:09:33 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=google.com; s=20210112;
         h=cc:to:subject:message-id:date:from:in-reply-to:references
          :mime-version:from:to:cc:subject:date:message-id:reply-to;
-        bh=Upo1p7yIONTS34mP2hxbi+ym/yel8/NOBaTszJc+2m8=;
-        b=rS/yiHwceelQf46/zqQwOqIR1vKvGPK4tCohaDEb/jSJenMoXC9Pi1sfPDKMYl6S2Y
-         iiHOZTNaD7cBMXGvSi9R0S59wJUbxxAcMpngMnyiBkuRCNY99vwEMg7F1soV8nhsZAMy
-         0ISdZyYsVFvrT1I/HmHoAQxfY27a2DAOYXIOQzeCDd/rqEf2e/JBNDagwCe6nyblECh2
-         puXK4iUB/ogqbYCfk1wqxfgSsYe58dM6VJzYYKoREGIHGMSlBWCvWVMVBqCj6A/vAHSn
-         38YprkvpUHLPUT+o1fNAdVVXJK2QyvV1kw//KJ5mL5mqyy+yB6UzX/6EHBVQaShyxJI/
-         7LbA==
+        bh=AQFsSA0lX/+5IkyPJ9u1kCFoht9PKz06jc946dKDKOM=;
+        b=rH2qmF911lXpP+uWU63LT9JCtwsCRYaPTCjKagYLyAp4ScX/uOLl6p3voGd/09bnCy
+         3rblUPanqe46NIBPamfMWf2ozgsT1v21ETD70XklI9z2RCLjYPed2NoZ6sJd/qRSZoj7
+         P8dSQCIs/9OFnuv71gnO9tbvbAiqHJd3z6bCcWuKSBPDcilxWZ+eyPDsCn76if4+fhfI
+         B1H1C4OfUL6mdu66FwGPzrbKBTfOlfnTSVlDmSjQ3QCe1pRO9Uj/ofNVJ3EglAQ6hbED
+         f6cgfh/NaMgXkI58YoDUalKAu7xbZTuP5lxLzboLb3jFKD428KRG2eB7pmu5cMuHp3cE
+         x3TA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
         h=cc:to:subject:message-id:date:from:in-reply-to:references
          :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
          :reply-to;
-        bh=Upo1p7yIONTS34mP2hxbi+ym/yel8/NOBaTszJc+2m8=;
-        b=cbJXFEPpgXzVGJ+29NOkjtWMap5m/BV+W0Tnyhlv7WvnyoWKRyPHyD/qVEKY16rUJP
-         70LQSaM+5XCZmGp7yUJjh+lJG4PFyj+TtkkZih3sHZVraWFPbuGD5H68VUzKoN1xy2Qp
-         DK3rN5suM8VdCLBl0xfHnBDpTgRhqsyhf1sJhQnVPkN/lQPUMsU7Gn4A8jzZNqpNXdT8
-         rJu3ksn1xF8kaRr2Aj+RrZWSd1HdFWJVfP8IZDqbCmQQHbk3BBZCxKXKmiyeApeRB1v7
-         LuQc9uJULEOXwVxcc4agIZR8gkisiOjD/k0lCnhiJxOu8MuCkt7gE0oZn/WaFNAwnaUu
-         DvvQ==
-X-Gm-Message-State: ANoB5pmgpBtw4ap0ayS+cVdmS2smertQvHFDtQWVmwyk0aCyQLhhMYWr
-        Cw6sPM0UySVHtRzbXnRy2kZOpB4p0m2adtB8eSzPqw==
-X-Google-Smtp-Source: AA0mqf7GRMqgC4D/dgQNmLYxA5fvH1meawTc+pw4z6h8JxFBlpxsHBdY6Fdn+siDFl7DV1VL9dWPwxwJcJI5qS2pW7A=
-X-Received: by 2002:a5d:6e89:0:b0:228:dd1d:8a42 with SMTP id
- k9-20020a5d6e89000000b00228dd1d8a42mr7711198wrz.375.1668434581479; Mon, 14
- Nov 2022 06:03:01 -0800 (PST)
+        bh=AQFsSA0lX/+5IkyPJ9u1kCFoht9PKz06jc946dKDKOM=;
+        b=gfwKPGhYqmguyG8Vsz+piMCjfpAia7RFu9hjs97mXCGbUMT6wjeBP0XDErcF6x+xXa
+         W3OzZw9IqNytwW7JrOmtF0h+bf5fu4zCkuT4lxMOemHCPuuhTe1B++1C2T7ZIHafljFR
+         r4vSbuqQoZOqwsFyqF/qFyeYhN80wvcZE/IGr/cZnU3outaDqJTizo8safIZKj0O6Mjv
+         EaCjW3ax9accjJ5MC9Va2/U64yormJZpflHDw7nXwaVugRVB7GMsiAnfGwLgvFfe2Kd3
+         dabxvGe7y4KnfUpTXLJUTJt/7PFHTmPUQMGV3ujw7xyrQ8S/RCE297GMDavUH/SZ30ib
+         3hNg==
+X-Gm-Message-State: ANoB5pn6ECUJxfWcO7T+HEdIRb0fq0H2auHCF2VRT7JtkQl5J07xULu5
+        10ayxjDgmm4mHdBwXCIw0j9RvrFk7qvMB3xInvyMqg==
+X-Google-Smtp-Source: AA0mqf7Fv4aiROw8x+aFA+clWKDAn17CGEDbgkRNjDTBtZagM0KPuH5PW6Ds2dxsexIP/NjLgNgjWdyDgAyeFVcfAzs=
+X-Received: by 2002:a7b:c40b:0:b0:3c6:c109:2d9 with SMTP id
+ k11-20020a7bc40b000000b003c6c10902d9mr8177329wmi.149.1668434971535; Mon, 14
+ Nov 2022 06:09:31 -0800 (PST)
 MIME-Version: 1.0
-References: <20221114075127.2650315-1-irogers@google.com> <20221114075127.2650315-5-irogers@google.com>
- <78669391-0dec-1182-178d-aa4bbda54ea9@linux.intel.com>
-In-Reply-To: <78669391-0dec-1182-178d-aa4bbda54ea9@linux.intel.com>
+References: <20221114075127.2650315-1-irogers@google.com> <20221114075127.2650315-2-irogers@google.com>
+ <bbb73e4b-a73e-6ce5-db1f-e54d1bb19c2c@linux.intel.com>
+In-Reply-To: <bbb73e4b-a73e-6ce5-db1f-e54d1bb19c2c@linux.intel.com>
 From:   Ian Rogers <irogers@google.com>
-Date:   Mon, 14 Nov 2022 06:02:48 -0800
-Message-ID: <CAP-5=fVfAbhhSpGCpCZCt5J3dY7U5HfMrG2z+6yUDSy3Vr7_iQ@mail.gmail.com>
-Subject: Re: [PATCH v1 4/9] perf list: Generalize limiting to a PMU name
+Date:   Mon, 14 Nov 2022 06:09:17 -0800
+Message-ID: <CAP-5=fUTDtGDJ3ONW5iKaeszDRwezzZCJCW59yvXQ4tEYyHsdg@mail.gmail.com>
+Subject: Re: [PATCH v1 1/9] perf pmu: Add documentation
 To:     "Liang, Kan" <kan.liang@linux.intel.com>
 Cc:     Weilin Wang <weilin.wang@intel.com>,
         Perry Taylor <perry.taylor@intel.com>,
@@ -80,161 +80,221 @@ Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-On Mon, Nov 14, 2022 at 5:58 AM Liang, Kan <kan.liang@linux.intel.com> wrote:
+On Mon, Nov 14, 2022 at 5:40 AM Liang, Kan <kan.liang@linux.intel.com> wrote:
 >
 >
 >
 > On 2022-11-14 2:51 a.m., Ian Rogers wrote:
-> > Deprecate the --cputype option and add a --unit option where '--unit
-> > cpu_atom' behaves like '--cputype atom'. The --unit option can be used
-> > with arbitrary PMUs, for example:
-> >
-> > ```
-> > $ perf list --unit msr pmu
-> >
-> > List of pre-defined events (to be used in -e or -M):
-> >
-> >   msr/aperf/                                         [Kernel PMU event]
-> >   msr/cpu_thermal_margin/                            [Kernel PMU event]
-> >   msr/mperf/                                         [Kernel PMU event]
-> >   msr/pperf/                                         [Kernel PMU event]
-> >   msr/smi/                                           [Kernel PMU event]
-> >   msr/tsc/                                           [Kernel PMU event]
-> > ```
+> > Add documentation to struct perf_pmu and the associated structs of
+> > perf_pmu_alias and perf_pmu_format.
 > >
 > > Signed-off-by: Ian Rogers <irogers@google.com>
 > > ---
-> >  tools/perf/Documentation/perf-list.txt |  6 +++---
-> >  tools/perf/builtin-list.c              | 18 ++++++++++++------
-> >  tools/perf/util/metricgroup.c          |  3 ++-
-> >  tools/perf/util/pmu.c                  |  4 +---
-> >  4 files changed, 18 insertions(+), 13 deletions(-)
+> >  tools/perf/util/pmu.c |  14 ++++++
+> >  tools/perf/util/pmu.h | 105 +++++++++++++++++++++++++++++++++++++++---
+> >  2 files changed, 113 insertions(+), 6 deletions(-)
 > >
-> > diff --git a/tools/perf/Documentation/perf-list.txt b/tools/perf/Documentation/perf-list.txt
-> > index 57384a97c04f..44a819af573d 100644
-> > --- a/tools/perf/Documentation/perf-list.txt
-> > +++ b/tools/perf/Documentation/perf-list.txt
-> > @@ -39,9 +39,9 @@ any extra expressions computed by perf stat.
-> >  --deprecated::
-> >  Print deprecated events. By default the deprecated events are hidden.
+> > diff --git a/tools/perf/util/pmu.c b/tools/perf/util/pmu.c
+> > index 6a86e6af0903..a8f9f47c6ed9 100644
+> > --- a/tools/perf/util/pmu.c
+> > +++ b/tools/perf/util/pmu.c
+> > @@ -31,10 +31,24 @@
 > >
-> > ---cputype::
-> > -Print events applying cpu with this type for hybrid platform
-> > -(e.g. --cputype core or --cputype atom)
+> >  struct perf_pmu perf_pmu__fake;
+> >
+> > +/**
+> > + * Values from a format file read from <sysfs>/devices/cpu/format/ held in
+> > + * struct perf_pmu. For example, the contents of
+> > + * <sysfs>/devices/cpu/format/event may be "config:0-7" and will be represented
+> > + * here as name="event", value=PERF_PMU_FORMAT_VALUE_CONFIG and bits 0 to 7 will
+> > + * be set.
+> > + */
+> >  struct perf_pmu_format {
+> > +     /** The modifier/file name. */
+> >       char *name;
+> > +     /**
+> > +      * Which config value the format relates to. Supported values are from
+> > +      * PERF_PMU_FORMAT_VALUE_CONFIG to PERF_PMU_FORMAT_VALUE_CONFIG_END.
+> > +      */
+> >       int value;
+> > +     /** Which config bits are set by this format value. */
+> >       DECLARE_BITMAP(bits, PERF_PMU_FORMAT_BITS);
+> > +     /** Element on list within struct perf_pmu. */
+> >       struct list_head list;
+> >  };
+> >
+> > diff --git a/tools/perf/util/pmu.h b/tools/perf/util/pmu.h
+> > index 68e15c38ae71..29571c0f9d15 100644
+> > --- a/tools/perf/util/pmu.h
+> > +++ b/tools/perf/util/pmu.h
+> > @@ -34,30 +34,91 @@ struct perf_pmu_caps {
+> >  };
+> >
+> >  struct perf_pmu {
+> > +     /** The name of the PMU such as "cpu". */
+> >       char *name;
+> > +     /**
+> > +      * Optional alternate name for the PMU determined in architecture
+> > +      * specific code.
+> > +      */
+> >       char *alias_name;
+> > +     /**
+> > +      * Optional PMU identifier read from
+> > +      * <sysfs>/bus/event_source/devices/<name>/identifier.
+> > +      */
+> >       char *id;
+> > +     /**
+> > +      * Perf event attributed type value, read from
+> > +      * <sysfs>/bus/event_source/devices/<name>/type.
+> > +      */
+> >       __u32 type;
+> > +     /**
+> > +      * Can the PMU name be selected as if it were an event?
+> > +      */
+> >       bool selectable;
+> > +     /**
+> > +      * Is the PMU not within the CPU core? Determined by the presence of
+> > +      * <sysfs>/bus/event_source/devices/<name>/cpumask.
+> > +      */
+> >       bool is_uncore;
+> > +     /** Is the PMU name either cpu_core or cpu_atom. */
 >
-> The "--cputype" is removed from the documentation, but the code is still
-> available. It sounds weird.
->
-> Can we still keep the "--cputype" in the documentation? Just say that
-> it's a deprecated option, please use the --unit cpu_atom instead. I
-> think even better if we can throw a warning and point to --unit when the
-> "--cputype" is used.
+> I don't think we want to limit the hybrid names only to cpu_core or
+> cpu_atom. Maybe something as below?
+> /* Is a hybrid CPU PMU, e.g., cpu_core, cpu_atom. */
 
-I think we want to remove --cputype widely in the code and replace
-what it does with specifying a PMU name. Advertising a flag but then
-warning seems strange and is a behavioral change from what is
-currently done. For raw-dump we don't document it in the man page and
-hide the flag, this is the pattern being followed here.
+Currently the hybrid code only works for cpu_core or cpu_atom, a
+limitation of its implementation. As pointed out in a later patch,
+this bool isn't being used when it could be and I think we can work to
+remove it. It would be possible to remove all uses of this with
+perf_pmu__is_hybrid. As such I think it may be useful to mark the
+hybrid variables in struct perf_pmu as deprecated while we work to
+replace their use with more generic just any PMU code.
 
 Thanks,
 Ian
 
 > Thanks,
 > Kan
-> > +--unit::
-> > +Print PMU events and metrics limited to the specific PMU name.
-> > +(e.g. --unit cpu, --unit msr, --unit cpu_core, --unit cpu_atom)
+>
+> >       bool is_hybrid;
+> > +     /**
+> > +      * Are events auxiliary events? Determined in architecture specific
+> > +      * code.
+> > +      */
+> >       bool auxtrace;
+> > +     /**
+> > +      * Number of levels of :ppp precision supported by the PMU, read from
+> > +      * <sysfs>/bus/event_source/devices/<name>/caps/max_precise.
+> > +      */
+> >       int max_precise;
+> > +     /**
+> > +      * Optional default perf_event_attr determined in architecture specific
+> > +      * code.
+> > +      */
+> >       struct perf_event_attr *default_config;
+> > +     /**
+> > +      * Empty or the contents of either of:
+> > +      * <sysfs>/bus/event_source/devices/<name>/cpumask.
+> > +      * <sysfs>/bus/event_source/devices/<cpu>/cpus.
+> > +      */
+> >       struct perf_cpu_map *cpus;
+> > -     struct list_head format;  /* HEAD struct perf_pmu_format -> list */
+> > -     struct list_head aliases; /* HEAD struct perf_pmu_alias -> list */
+> > +     /**
+> > +      * Holds the contents of files read from
+> > +      * <sysfs>/bus/event_source/devices/<name>/format/. The contents specify
+> > +      * which event parameter changes what config, config1 or config2 bits.
+> > +      */
+> > +     struct list_head format;
+> > +     /**
+> > +      * List of struct perf_pmu_alias. Each alias corresponds to an event
+> > +      * read from <sysfs>/bus/event_source/devices/<name>/events/ or from
+> > +      * json events in pmu-events.c.
+> > +      */
+> > +     struct list_head aliases;
+> > +     /** Has the list caps been initialized? */
+> >       bool caps_initialized;
+> > +     /** The length of the list caps. */
+> >       u32 nr_caps;
+> > -     struct list_head caps;    /* HEAD struct perf_pmu_caps -> list */
+> > -     struct list_head list;    /* ELEM */
+> > +     /**
+> > +      * Holds the contents of files read from
+> > +      * <sysfs>/bus/event_source/devices/<name>/caps/. The contents are pairs
+> > +      * of the filename with the value of its contents, for example,
+> > +      * max_precise (see above) may have a value of 3.
+> > +      */
+> > +     struct list_head caps;
+> > +     /** Element on pmus list in pmu.c. */
+> > +     struct list_head list;
+> > +     /** Element on perf_pmu__hybrid_pmus. */
+> >       struct list_head hybrid_list;
 > >
-> >  [[EVENT_MODIFIERS]]
-> >  EVENT MODIFIERS
-> > diff --git a/tools/perf/builtin-list.c b/tools/perf/builtin-list.c
-> > index 58e1ec1654ef..cc84ced6da26 100644
-> > --- a/tools/perf/builtin-list.c
-> > +++ b/tools/perf/builtin-list.c
-> > @@ -21,7 +21,6 @@
+> > +     /** Features to inhibit when events on this PMU are opened. */
+> >       struct {
+> > +             /** Disables perf_event_attr exclude_guest and exclude_host. */
+> >               bool exclude_guest;
+> >       } missing_features;
+> >  };
 > >
-> >  static bool desc_flag = true;
-> >  static bool details_flag;
-> > -static const char *hybrid_type;
+> > +/** A special global PMU used for testing. */
+> >  extern struct perf_pmu perf_pmu__fake;
 > >
-> >  int cmd_list(int argc, const char **argv)
-> >  {
-> > @@ -30,6 +29,8 @@ int cmd_list(int argc, const char **argv)
-> >       bool long_desc_flag = false;
-> >       bool deprecated = false;
-> >       char *pmu_name = NULL;
-> > +     const char *hybrid_name = NULL;
-> > +     const char *unit_name = NULL;
-> >       struct option list_options[] = {
-> >               OPT_BOOLEAN(0, "raw-dump", &raw_dump, "Dump raw events"),
-> >               OPT_BOOLEAN('d', "desc", &desc_flag,
-> > @@ -40,9 +41,10 @@ int cmd_list(int argc, const char **argv)
-> >                           "Print information on the perf event names and expressions used internally by events."),
-> >               OPT_BOOLEAN(0, "deprecated", &deprecated,
-> >                           "Print deprecated events."),
-> > -             OPT_STRING(0, "cputype", &hybrid_type, "hybrid cpu type",
-> > -                        "Print events applying cpu with this type for hybrid platform "
-> > -                        "(e.g. core or atom)"),
-> > +             OPT_STRING(0, "cputype", &hybrid_name, "hybrid cpu type",
-> > +                        "Limit PMU or metric printing to the given hybrid PMU (e.g. core or atom)."),
-> > +             OPT_STRING(0, "unit", &unit_name, "PMU name",
-> > +                        "Limit PMU or metric printing to the specified PMU."),
-> >               OPT_INCR(0, "debug", &verbose,
-> >                            "Enable debugging output"),
-> >               OPT_END()
-> > @@ -53,6 +55,8 @@ int cmd_list(int argc, const char **argv)
-> >       };
+> >  struct perf_pmu_info {
+> > @@ -71,21 +132,53 @@ struct perf_pmu_info {
 > >
-> >       set_option_flag(list_options, 0, "raw-dump", PARSE_OPT_HIDDEN);
-> > +     /* Hide hybrid flag for the more generic 'unit' flag. */
-> > +     set_option_flag(list_options, 0, "cputype", PARSE_OPT_HIDDEN);
+> >  #define UNIT_MAX_LEN 31 /* max length for event unit name */
 > >
-> >       argc = parse_options(argc, argv, list_options, list_usage,
-> >                            PARSE_OPT_STOP_AT_NON_OPTION);
-> > @@ -62,8 +66,10 @@ int cmd_list(int argc, const char **argv)
-> >       if (!raw_dump && pager_in_use())
-> >               printf("\nList of pre-defined events (to be used in -e or -M):\n\n");
+> > +/**
+> > + * An event either read from sysfs or builtin in pmu-events.c, created by
+> > + * parsing the pmu-events json files.
+> > + */
+> >  struct perf_pmu_alias {
+> >       char *name;
+> > +     /** Optional short description of the event. */
+> >       char *desc;
+> > +     /** Optional long description. */
+> >       char *long_desc;
+> > +     /**
+> > +      * Optional topic such as cache or pipeline, particularly for json
+> > +      * events.
+> > +      */
+> >       char *topic;
+> > +     /** Comma separated parameter list. */
+> >       char *str;
+> > -     struct list_head terms; /* HEAD struct parse_events_term -> list */
+> > -     struct list_head list;  /* ELEM */
+> > +     /** Owned list of the original parsed parameters. */
+> > +     struct list_head terms;
+> > +     /** List element of struct perf_pmu aliases. */
+> > +     struct list_head list;
+> > +     /** Units for the event, such as bytes or cache lines. */
+> >       char unit[UNIT_MAX_LEN+1];
+> > +     /** Value to scale read counter values by. */
+> >       double scale;
+> > +     /**
+> > +      * Does the file
+> > +      * <sysfs>/bus/event_source/devices/<pmu_name>/events/<name>.per-pkg or
+> > +      * equivalent json value exist and have the value 1.
+> > +      */
+> >       bool per_pkg;
+> > +     /**
+> > +      * Does the file
+> > +      * <sysfs>/bus/event_source/devices/<pmu_name>/events/<name>.snapshot
+> > +      * exist and have the value 1.
+> > +      */
+> >       bool snapshot;
+> > +     /** Is the event hidden and so not shown in perf list by default. */
+> >       bool deprecated;
+> > +     /**
+> > +      * A metric expression associated with an event. Doing this makes little
+> > +      * sense due to scale and unit applying to both.
+> > +      */
+> >       char *metric_expr;
+> > +     /** A name for the metric. unit applying to both. */
+> >       char *metric_name;
+> > +     /** The name copied from struct perf_pmu. */
+> >       char *pmu_name;
+> >  };
 > >
-> > -     if (hybrid_type) {
-> > -             pmu_name = perf_pmu__hybrid_type_to_pmu(hybrid_type);
-> > +     if (unit_name)
-> > +             pmu_name = strdup(unit_name);
-> > +     else if (hybrid_name) {
-> > +             pmu_name = perf_pmu__hybrid_type_to_pmu(hybrid_name);
-> >               if (!pmu_name)
-> >                       pr_warning("WARNING: hybrid cputype is not supported!\n");
-> >       }
-> > diff --git a/tools/perf/util/metricgroup.c b/tools/perf/util/metricgroup.c
-> > index 4c98ac29ee13..1943fed9b6d9 100644
-> > --- a/tools/perf/util/metricgroup.c
-> > +++ b/tools/perf/util/metricgroup.c
-> > @@ -556,11 +556,12 @@ static int metricgroup__print_callback(const struct pmu_event *pe,
-> >                                      void *vdata)
-> >  {
-> >       struct metricgroup_print_data *data = vdata;
-> > +     const char *pmu = pe->pmu ?: "cpu";
-> >
-> >       if (!pe->metric_expr)
-> >               return 0;
-> >
-> > -     if (data->pmu_name && perf_pmu__is_hybrid(pe->pmu) && strcmp(data->pmu_name, pe->pmu))
-> > +     if (data->pmu_name && strcmp(data->pmu_name, pmu))
-> >               return 0;
-> >
-> >       return metricgroup__print_pmu_event(pe, data->metricgroups, data->filter,
-> > diff --git a/tools/perf/util/pmu.c b/tools/perf/util/pmu.c
-> > index a8f9f47c6ed9..9c771f136b81 100644
-> > --- a/tools/perf/util/pmu.c
-> > +++ b/tools/perf/util/pmu.c
-> > @@ -1694,10 +1694,8 @@ void print_pmu_events(const char *event_glob, bool name_only, bool quiet_flag,
-> >       pmu = NULL;
-> >       j = 0;
-> >       while ((pmu = perf_pmu__scan(pmu)) != NULL) {
-> > -             if (pmu_name && perf_pmu__is_hybrid(pmu->name) &&
-> > -                 strcmp(pmu_name, pmu->name)) {
-> > +             if (pmu_name && pmu->name && strcmp(pmu_name, pmu->name))
-> >                       continue;
-> > -             }
-> >
-> >               list_for_each_entry(alias, &pmu->aliases, list) {
-> >                       char *name = alias->desc ? alias->name :
