@@ -2,58 +2,58 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E86D3C4332F
-	for <linux-perf-users@archiver.kernel.org>; Mon, 14 Nov 2022 18:19:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 70452C43217
+	for <linux-perf-users@archiver.kernel.org>; Mon, 14 Nov 2022 18:21:12 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S236360AbiKNST5 (ORCPT
+        id S236925AbiKNSVF (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Mon, 14 Nov 2022 13:19:57 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49822 "EHLO
+        Mon, 14 Nov 2022 13:21:05 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51198 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S236205AbiKNSTu (ORCPT
+        with ESMTP id S236797AbiKNSU6 (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Mon, 14 Nov 2022 13:19:50 -0500
-Received: from mail-wr1-x432.google.com (mail-wr1-x432.google.com [IPv6:2a00:1450:4864:20::432])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 18FECBE03
-        for <linux-perf-users@vger.kernel.org>; Mon, 14 Nov 2022 10:19:49 -0800 (PST)
-Received: by mail-wr1-x432.google.com with SMTP id y16so19796864wrt.12
-        for <linux-perf-users@vger.kernel.org>; Mon, 14 Nov 2022 10:19:49 -0800 (PST)
+        Mon, 14 Nov 2022 13:20:58 -0500
+Received: from mail-wr1-x42d.google.com (mail-wr1-x42d.google.com [IPv6:2a00:1450:4864:20::42d])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E1A88303D4
+        for <linux-perf-users@vger.kernel.org>; Mon, 14 Nov 2022 10:20:51 -0800 (PST)
+Received: by mail-wr1-x42d.google.com with SMTP id h9so19844574wrt.0
+        for <linux-perf-users@vger.kernel.org>; Mon, 14 Nov 2022 10:20:51 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=google.com; s=20210112;
         h=cc:to:subject:message-id:date:from:in-reply-to:references
          :mime-version:from:to:cc:subject:date:message-id:reply-to;
-        bh=PESbuKX8wYs7f7ll/+sNjX6qgPThW9GOG5aoQkZl7hU=;
-        b=Aprz0G9eHJcUQ1eL/YCsPTh4/3H0Aj0//WSViqcAUZo+QyoJUooJTbsA8JvvXq/dbr
-         kb84M3FO6Qp+oCcX68kSI6EfyUzztd3HYQkjbAPIbemqQN+p1EhTg7uB4UveMOnQKj4t
-         fJGwT1VwXrGKpMKxxsfaGcjtRxVBXdEqZCRqkHRkzY3o8FQ9vcsAoS69pOXgd+LHu8sr
-         pnmFQfKa6jyt1vWPuqEJ/L+p/8drQlJypsB/43Wjq8F97VsOR9o+PbXT6Z5hRoNth5uM
-         dvEqrqcJe7EZHay6aOSFK2I9dOCSclCp3yu+6sq9Hqb3nGedRZYwuope8WqUY9e9iNW/
-         TLOA==
+        bh=1XipPx7HJpL1+jctec2qyggfKC2GCddSF+AfxJOo69s=;
+        b=VEg6wNwDP3oW6fuxz9ug8JX3xb83qFjA0uDUpNJxZLXFOzUMHzI7X2l6qqTPHes+Z6
+         6BsCiRBg/LA/0J6WCbYEoBcy2JedfAj5q64amjnQlpKWEVuKm6tTwbezhlH5vl84ACns
+         UcmHYaaU8OnQQ+gZ3M7yDA6cbx0x9pM1SjsAUK/5xqsglu0ucC1uUCzD1w5zmKh/fvZg
+         AoCfaHVH+alqQoReRiZ2nUT2OYQ22UId7mhWtP7NfTVw3bOEgYuhDciR0McsTgGlLRci
+         v1yDgR7eTheaGMzy7YW1weOsVI3kyEGo2yQ+1+3t47feyvi6eKn09sU/f5lRRdAdYUtF
+         f2Og==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
         h=cc:to:subject:message-id:date:from:in-reply-to:references
          :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
          :reply-to;
-        bh=PESbuKX8wYs7f7ll/+sNjX6qgPThW9GOG5aoQkZl7hU=;
-        b=5beDqfwaB4zPFIzD7XoOTHH34V8LXge1x0Plv5b+SxpEtQlEuPKcsWLIOMFkB8UYjE
-         15/a3Lap+T247PqBeqkwqDIVQo+Ca/e46cKr0isItDqDjdXijijo1Phttl8Y5n0BDIXa
-         l7Ss7BBpvuK8QzRRpgO5HeleAuBxSa9XB6k6yhdMldt/xQ6z8K/r3q9uV60OJa4EWTRZ
-         ElMQVbB3VRSK7zyEUCHC8Fx9gGHzwl0dV+2LZY0ptcNATJFdjnIunRZYQJTxYldTRHC2
-         cwrqdEAPAG+rXOzuCU7HQvMdK9TDD4bmQ+pN+xsQpM2u7/hut7YW7C/vrEdstnc6m+D+
-         V9Qw==
-X-Gm-Message-State: ANoB5pmtQtmJSgbccyuRHfsFHhVh6IFE/hN/1Lm//ggFnUDvkeMG4g4a
-        gwlfr4ZcBWbNh4TlrfsvHV4bD63HOVmsUpehR7BwHA==
-X-Google-Smtp-Source: AA0mqf4L1ubNrUNtpw2RmbsAJYRPEJla/VKvYYa7+enHUdVcW6ZHC3sQN15aliy+vzkaVU7Rx48By/ems4/QUoMjkHk=
-X-Received: by 2002:a5d:6e89:0:b0:228:dd1d:8a42 with SMTP id
- k9-20020a5d6e89000000b00228dd1d8a42mr8568799wrz.375.1668449987445; Mon, 14
- Nov 2022 10:19:47 -0800 (PST)
+        bh=1XipPx7HJpL1+jctec2qyggfKC2GCddSF+AfxJOo69s=;
+        b=gBrqrD/F6YJi9MdaNSiMl9Xsjbh4b5g3Ni6LlMUgp8vR/UpGO3JOOOnoFzkwRwNXxF
+         ZaO7dL5HHcYca+fmUxgycB7m9MxhOY8KknXMYcaa2hG1E+xfzjnEUWxFthTCM5qgeYtR
+         /W8KxXkzHyh148bSwXH6WDXKm6idqFe77HRU6VJyZrqWaRqZM6kgvkpjsC7HDsukwuxh
+         5g/KgPZjyZLCG7MNK4hcrExx31E9/rpF47I18SktGs5TElS2Y8QijSfyb7sS6iKXdi+L
+         lXgQUgUnWWOlRZLlgtYCID4Y0drEV1np9Pn4VWebnvJMaMnZApwF716Z/AqmZVZOAn4y
+         0vAg==
+X-Gm-Message-State: ANoB5pkOcofETtTsFmSLna7XSTtEONtuqO6bQ1v6BUr3Jpot9lMzpjta
+        A+o2sbX3X0W/GcVVpPlgROLdUuNdTfltzp9K8GGfWg==
+X-Google-Smtp-Source: AA0mqf5DyQVRRmDuTWNxDf+5n0OCUxVOyaBhO4vRgH/W0oZuxPFVlq4j7ebz6Vu5HZn5ivqOm6tcIHVx73bJT0cBvv4=
+X-Received: by 2002:a05:6000:1241:b0:236:d8f8:b87d with SMTP id
+ j1-20020a056000124100b00236d8f8b87dmr8165981wrx.343.1668450050179; Mon, 14
+ Nov 2022 10:20:50 -0800 (PST)
 MIME-Version: 1.0
-References: <20221112032244.1077370-1-namhyung@kernel.org> <20221112032244.1077370-6-namhyung@kernel.org>
-In-Reply-To: <20221112032244.1077370-6-namhyung@kernel.org>
+References: <20221112032244.1077370-1-namhyung@kernel.org> <20221112032244.1077370-11-namhyung@kernel.org>
+In-Reply-To: <20221112032244.1077370-11-namhyung@kernel.org>
 From:   Ian Rogers <irogers@google.com>
-Date:   Mon, 14 Nov 2022 10:19:31 -0800
-Message-ID: <CAP-5=fXpKyqYzUxP73V7q6avJ2YRK-CtE5LzYdtDCrZXvrXtaw@mail.gmail.com>
-Subject: Re: [PATCH 05/11] perf stat: Clear screen only if output file is a tty
+Date:   Mon, 14 Nov 2022 10:20:38 -0800
+Message-ID: <CAP-5=fXhk7XLrAbBWR7X-O5Snnb-ST+MNzSZChWBLN_1b6f25A@mail.gmail.com>
+Subject: Re: [PATCH 10/11] perf stat: Fix summary output in CSV with --metric-only
 To:     Namhyung Kim <namhyung@kernel.org>
 Cc:     Arnaldo Carvalho de Melo <acme@kernel.org>,
         Jiri Olsa <jolsa@kernel.org>, Ingo Molnar <mingo@kernel.org>,
@@ -69,20 +69,21 @@ Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-On Fri, Nov 11, 2022 at 7:22 PM Namhyung Kim <namhyung@kernel.org> wrote:
+On Fri, Nov 11, 2022 at 7:23 PM Namhyung Kim <namhyung@kernel.org> wrote:
 >
-> The --interval-clear option makes perf stat to clear the terminal at
-> each interval.  But it doesn't need to clear the screen when it saves
-> to a file.  Make it fail when it's enabled with the output options.
+> It should not print "summary" for each event when --metric-only is set.
 >
->   $ perf stat -I 1 --interval-clear -o myfile true
->   --interval-clear does not work with output
+> Before:
+>   $ sudo perf stat -a --per-socket --summary -x, --metric-only true
+>    time,socket,cpusGhz,insn per cycle,branch-misses of all branches,
+>        0.000709079,S0,8,0.893,2.40,0.45,
+>   S0,8,         summary,         summary,         summary,         summary,         summary,0.893,         summary,2.40,         summary,         summary,0.45,
 >
->    Usage: perf stat [<options>] [<command>]
->
->       -o, --output <file>   output file name
->           --log-fd <n>      log output to fd, instead of stderr
->           --interval-clear  clear screen in between new interval
+> After:
+>   $ sudo perf stat -a --per-socket --summary -x, --metric-only true
+>    time,socket,cpusGHz,insn per cycle,branch-misses of all branches,
+>        0.000882297,S0,8,0.598,1.64,0.64,
+>            summary,S0,8,0.598,1.64,0.64,
 >
 > Signed-off-by: Namhyung Kim <namhyung@kernel.org>
 
@@ -92,28 +93,38 @@ Thanks,
 Ian
 
 > ---
->  tools/perf/builtin-stat.c | 8 ++++++++
->  1 file changed, 8 insertions(+)
+>  tools/perf/util/stat-display.c | 11 ++++++++---
+>  1 file changed, 8 insertions(+), 3 deletions(-)
 >
-> diff --git a/tools/perf/builtin-stat.c b/tools/perf/builtin-stat.c
-> index d5e1670bca20..1d79801f4e84 100644
-> --- a/tools/perf/builtin-stat.c
-> +++ b/tools/perf/builtin-stat.c
-> @@ -2403,6 +2403,14 @@ int cmd_stat(int argc, const char **argv)
->                 }
+> diff --git a/tools/perf/util/stat-display.c b/tools/perf/util/stat-display.c
+> index ce81798b5864..96bb7a42fd41 100644
+> --- a/tools/perf/util/stat-display.c
+> +++ b/tools/perf/util/stat-display.c
+> @@ -549,7 +549,7 @@ static void printout(struct perf_stat_config *config, struct aggr_cpu_id id, int
 >         }
 >
-> +       if (stat_config.interval_clear && !isatty(fileno(output))) {
-> +               fprintf(stderr, "--interval-clear does not work with output\n");
-> +               parse_options_usage(stat_usage, stat_options, "o", 1);
-> +               parse_options_usage(NULL, stat_options, "log-fd", 0);
-> +               parse_options_usage(NULL, stat_options, "interval-clear", 0);
-> +               return -1;
-> +       }
-> +
->         stat_config.output = output;
+>         if (!config->no_csv_summary && config->csv_output &&
+> -           config->summary && !config->interval) {
+> +           config->summary && !config->interval && !config->metric_only) {
+>                 fprintf(config->output, "%16s%s", "summary", config->csv_sep);
+>         }
 >
->         /*
+> @@ -732,8 +732,13 @@ static void print_aggr(struct perf_stat_config *config,
+>          * Without each counter has its own line.
+>          */
+>         for (s = 0; s < config->aggr_map->nr; s++) {
+> -               if (prefix && metric_only)
+> -                       fprintf(output, "%s", prefix);
+> +               if (metric_only) {
+> +                       if (prefix)
+> +                               fprintf(output, "%s", prefix);
+> +                       else if (config->summary && !config->no_csv_summary &&
+> +                                config->csv_output && !config->interval)
+> +                               fprintf(output, "%16s%s", "summary", config->csv_sep);
+> +               }
+>
+>                 first = true;
+>                 evlist__for_each_entry(evlist, counter) {
 > --
 > 2.38.1.493.g58b659f92b-goog
 >
