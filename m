@@ -2,105 +2,186 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DA8DBC4332F
-	for <linux-perf-users@archiver.kernel.org>; Tue, 15 Nov 2022 16:25:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3D7A1C433FE
+	for <linux-perf-users@archiver.kernel.org>; Tue, 15 Nov 2022 16:34:14 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230095AbiKOQZy (ORCPT
+        id S229552AbiKOQeN (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Tue, 15 Nov 2022 11:25:54 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45664 "EHLO
+        Tue, 15 Nov 2022 11:34:13 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50458 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S238628AbiKOQZx (ORCPT
+        with ESMTP id S229851AbiKOQeM (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Tue, 15 Nov 2022 11:25:53 -0500
-Received: from mga07.intel.com (mga07.intel.com [134.134.136.100])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D11AF29359
-        for <linux-perf-users@vger.kernel.org>; Tue, 15 Nov 2022 08:25:51 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1668529551; x=1700065551;
-  h=message-id:date:mime-version:subject:to:cc:references:
-   from:in-reply-to:content-transfer-encoding;
-  bh=6+ult5QnVacpxQBNhnKZo4EJcHUI/weGBDZpl/pvcDU=;
-  b=cKi0UG4R68R8HyBDj6QdYXdC7Abx7jtM18j8eIo3ezGFsqI1MoONOY61
-   sxh5h6VFGfmZiL0XoH4tPFcGhOFh/CyX35anoxhQOS/tw+DQHGUkRjoN1
-   td6+I8/FZP0Tng3Q0lGxwigt344dGKjUKe4hTziW9s0WxtmEFyLc336g3
-   mc+1Up+XnoSG+6CtJqnnIMVdnrWUEVrHRRnfZiTBc12cjm76nUeILSB0C
-   3WmhqlBrwI9w78wroftVn6suZlYjllKi6WQ1c3NO5o61hr+j9uezt3jvS
-   TbeKsxZwhRanJEaKzuVseCH6TMfbYH/BGpDZ7nmPANpE0QFVFlO+vNKmQ
-   g==;
-X-IronPort-AV: E=McAfee;i="6500,9779,10532"; a="376561974"
-X-IronPort-AV: E=Sophos;i="5.96,166,1665471600"; 
-   d="scan'208";a="376561974"
-Received: from fmsmga006.fm.intel.com ([10.253.24.20])
-  by orsmga105.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 15 Nov 2022 08:25:45 -0800
-X-IronPort-AV: E=McAfee;i="6500,9779,10532"; a="884017058"
-X-IronPort-AV: E=Sophos;i="5.96,166,1665471600"; 
-   d="scan'208";a="884017058"
-Received: from aantonov-mobl1.ger.corp.intel.com (HELO [10.252.34.78]) ([10.252.34.78])
-  by fmsmga006-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 15 Nov 2022 08:25:40 -0800
-Message-ID: <3383249f-8ce1-e41f-c12d-484b24c8e061@linux.intel.com>
-Date:   Tue, 15 Nov 2022 17:25:31 +0100
-MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:102.0) Gecko/20100101
- Thunderbird/102.4.2
-Subject: Re: [PATCH] perf/x86/intel/uncore: decrease reference count in error
- path
-To:     Xiongfeng Wang <wangxiongfeng2@huawei.com>,
-        adrian.hunter@intel.com, peterz@infradead.org, ak@linux.intel.com,
-        kan.liang@linux.intel.com, alexander.shishkin@linux.intel.com,
-        acme@kernel.org, jolsa@kernel.org
-Cc:     linux-perf-users@vger.kernel.org, yangyingliang@huawei.com
-References: <20221115112515.53177-1-wangxiongfeng2@huawei.com>
+        Tue, 15 Nov 2022 11:34:12 -0500
+Received: from mx0a-001b2d01.pphosted.com (mx0a-001b2d01.pphosted.com [148.163.156.1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CB7B8DEA9;
+        Tue, 15 Nov 2022 08:34:11 -0800 (PST)
+Received: from pps.filterd (m0098404.ppops.net [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (8.17.1.19/8.17.1.19) with ESMTP id 2AFFmW5O018678;
+        Tue, 15 Nov 2022 16:34:08 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=message-id : date :
+ subject : to : cc : references : from : in-reply-to : content-type :
+ content-transfer-encoding : mime-version; s=pp1;
+ bh=Wm1+y7h+8+ad0XSzXIUKyjqonxjk1+rSNFMyO+x8w4U=;
+ b=bBZuolwy/xCzKq1kTvZV+3YnOCU/0VKQDvPnYs5m0qvDG58G673VFZrdfhQA78vwcJpj
+ V0WCZKi/Xg5eOD+36TLDVWTsc3fRwnsq6UJHpg+feXEi7NC9m5qu9CTxW97SmOQeWRp3
+ Va7SOfZ92GjcvGH+POg//NP5mGGs35gLkjwTeglPzUzHQX95atZicS7eeuuEc3nnXjbr
+ 3nJFGu7+ddVEcfz0X7Lrk+uQkZ6ZdUwieJA30zHgZRa9WTj8HY7XF9iJ38q5mBpnOo/d
+ UeS3l4yUW2Chq8fi7va7oX6SNN1Alxt7LOCHPYD3yMdod9z4vT46L04FoVVcjo2gRTmh eQ== 
+Received: from ppma06ams.nl.ibm.com (66.31.33a9.ip4.static.sl-reverse.com [169.51.49.102])
+        by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 3kvdr299fm-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Tue, 15 Nov 2022 16:34:07 +0000
+Received: from pps.filterd (ppma06ams.nl.ibm.com [127.0.0.1])
+        by ppma06ams.nl.ibm.com (8.16.1.2/8.16.1.2) with SMTP id 2AFGKdQs012832;
+        Tue, 15 Nov 2022 16:34:05 GMT
+Received: from b06cxnps3075.portsmouth.uk.ibm.com (d06relay10.portsmouth.uk.ibm.com [9.149.109.195])
+        by ppma06ams.nl.ibm.com with ESMTP id 3kt2rjcms9-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Tue, 15 Nov 2022 16:34:05 +0000
+Received: from d06av21.portsmouth.uk.ibm.com (d06av21.portsmouth.uk.ibm.com [9.149.105.232])
+        by b06cxnps3075.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 2AFGY1ih62652676
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Tue, 15 Nov 2022 16:34:01 GMT
+Received: from d06av21.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id BC6DB5204F;
+        Tue, 15 Nov 2022 16:34:01 +0000 (GMT)
+Received: from [9.171.35.73] (unknown [9.171.35.73])
+        by d06av21.portsmouth.uk.ibm.com (Postfix) with ESMTP id 5E4815204E;
+        Tue, 15 Nov 2022 16:34:01 +0000 (GMT)
+Message-ID: <7c5e7e69-6b94-4e74-ad80-b90d27047dfc@linux.ibm.com>
+Date:   Tue, 15 Nov 2022 17:34:01 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
+ Thunderbird/102.4.0
+Subject: Re: [PATCH v2] perf list: Add PMU pai_ext event description for IBM
+ z16
 Content-Language: en-US
-From:   Alexander Antonov <alexander.antonov@linux.intel.com>
-In-Reply-To: <20221115112515.53177-1-wangxiongfeng2@huawei.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+To:     Arnaldo Carvalho de Melo <acme@kernel.org>
+Cc:     Andreas Krebbel <krebbel@linux.ibm.com>,
+        linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org,
+        svens@linux.ibm.com, gor@linux.ibm.com, sumanthk@linux.ibm.com,
+        hca@linux.ibm.com, Ingo Molnar <mingo@kernel.org>
+References: <20221111135402.858623-1-tmricht@linux.ibm.com>
+ <Y3JnjmxPX+m7G9HL@kernel.org>
+ <c1f8de28-1948-85b1-cd85-5bbd301e22bc@linux.ibm.com>
+ <Y3OPr3oIwld5omGu@kernel.org>
+From:   Thomas Richter <tmricht@linux.ibm.com>
+Organization: IBM
+In-Reply-To: <Y3OPr3oIwld5omGu@kernel.org>
+Content-Type: text/plain; charset=UTF-8
+X-TM-AS-GCONF: 00
+X-Proofpoint-GUID: 6KbBI5OhvIiLkHJBWmAJqpV6wFvKbsOY
+X-Proofpoint-ORIG-GUID: 6KbBI5OhvIiLkHJBWmAJqpV6wFvKbsOY
+Content-Transfer-Encoding: 8bit
+X-Proofpoint-UnRewURL: 0 URL was un-rewritten
+MIME-Version: 1.0
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.219,Aquarius:18.0.895,Hydra:6.0.545,FMLib:17.11.122.1
+ definitions=2022-11-15_08,2022-11-15_03,2022-06-22_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
+ phishscore=0 spamscore=0 mlxlogscore=999 adultscore=0 bulkscore=0
+ impostorscore=0 malwarescore=0 clxscore=1015 mlxscore=0 suspectscore=0
+ lowpriorityscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2210170000 definitions=main-2211150111
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
+On 11/15/22 14:10, Arnaldo Carvalho de Melo wrote:
+> Em Tue, Nov 15, 2022 at 09:58:22AM +0100, Thomas Richter escreveu:
+>> On 11/14/22 17:06, Arnaldo Carvalho de Melo wrote:
+>>> Em Fri, Nov 11, 2022 at 02:54:02PM +0100, Thomas Richter escreveu:
+>>>> Add the event description for the IBM z16 pai_ext PMU released with
+>>>> commit c432fefe8e62 ("s390/pai: Add support for PAI Extension 1 NNPA counters")
+> 
+>>>> The document SA22-7832-13 "z/Architecture Principles of Operation",
+>>>> published May, 2022, contains the description of the Processor
+>>>> Activity Instrumentation Facility and the NNPA counter set., See
+>>>> Pages 5-113 to 5-116.
+> 
+>>>> Signed-off-by: Thomas Richter <tmricht@linux.ibm.com>
+> 
+>>>> --- /dev/null
+>>>> +++ b/tools/perf/pmu-events/arch/s390/cf_z16/pai_ext.json
+>>>> @@ -0,0 +1,198 @@
+>>>> +[
+>>>> +	{
+>>>> +		"Unit": "PAI-EXT",
+>>>> +		"EventCode": "6144",
+>>>> +		"EventName": "NNPA_ALL",
+>>>> +		"BriefDescription": "NNPA ALL",
+>>>> +		"PublicDescription": "Sum of all non zero NNPA counters"
+>>>> +	},
+> 
+>>> Since the Brief description mentions NNPA, shouldn't the Public
+>>> Description expand on this "NNPA" acronym?, something like:
+> 
+>>> Oops, can't expand on that since there isn't a link to that SA22-7832-13
+>>> document.
+> 
+>>> Googling for it...
+> 
+>>> https://www-40.ibm.com/servers/resourcelink/svc03100.nsf/pages/zResourceLinkUrl?OpenDocument&url=http://www.ibm.com/servers/resourcelink/lib03010.nsf/0/B9DE5F05A9D57819852571C500428F9A/$file/SA22-7832-13.pdf
+> 
+>>> Ok, requires registration.
+> 
+>>> I wonder what is the value of these descriptions then :-\
+> 
+>>> I miss Ingo jumping into these discussions :-)
+>  
+>> I added Andreas Krebbel to the discussion, he knows more than I on this counters.
+>  
+>> NNPA stands for Neural Networks Processing Assist. This is a new feature in 
+>> the IBM z16. Here is a quote from Document SG2489-51 IBM z16 (3931) Technical Guide:
+>  
+>> <START-OF-QUOTE>
+>>   "The new IBM z16 microprocessor chip, also called the IBM Telum processor, integrates a
+>>    new AI accelerator. This innovation brings incredible value to applications and workloads that
+>>    are running on IBM Z platform.
+>>    Customers can benefit from the integrated AI accelerator by adding AI operations that are
+>>    used to perform fraud prevention and fraud detection, customer behavior predictions, and
+>>    supply chain operations. All of these operations are done in real time and fully integrated in
+>>    transactional workloads. As a result, valuable insights are gained from their data instantly.
+>>
+>>    ...
+>>    The AI accelerator is driven by the new Neural Networks Processing Assist (NNPA)
+>>    instruction.
+>>    NNPA is a new nonprivileged Complex Instruction Set Computer (CISC) memory-to-memory
+>>    instruction that operates on tensor objects that are in user program’s memory. AI functions
+>>    and macros are abstracted by NNPA."
+>> <END-OF-QUOTE>
+>>
+>> This intension of this patch is to give a small hint on what these NNPA counters are
+>> supposed to count and operate on. A full explanation is given in the document
+>> SA22-7832-13 "z/Architecture Principles of Operation", Chapter 26, pp 26-1 to 26-115.
+>>
+>> If you think this small description is not worth it, then we can drop the patch.
+> 
+> So perhaps:
+> 
+> +	{
+> +		"Unit": "PAI-EXT",
+> +		"EventCode": "6144",
+> +		"EventName": "NNPA_ALL",
+> +		"BriefDescription": "NNPA ALL",
+> +		"PublicDescription": "Sum of all non zero NNPA (Neural Networks Processing Assist) counters"
+> +	},
+> 
+> ?
+> 
+> - Arnaldo
 
-On 11/15/2022 12:25 PM, Xiongfeng Wang wrote:
-> pci_get_device() will increase the reference count for the returned
-> pci_dev, and also decrease the reference count for the input parameter
-> *from* if it is not NULL.
->
-> If we break the loop in sad_cfg_iio_topology() with 'dev' not NULL. We
-> need to use pci_dev_put() to decrease the reference count. Let's add it.
->
-> Fixes: c1777be3646b ("perf/x86/intel/uncore: Enable I/O stacks to IIO PMON mapping on SNR")
-> Signed-off-by: Xiongfeng Wang <wangxiongfeng2@huawei.com>
-> ---
->   arch/x86/events/intel/uncore_snbep.c | 2 ++
->   1 file changed, 2 insertions(+)
->
-> diff --git a/arch/x86/events/intel/uncore_snbep.c b/arch/x86/events/intel/uncore_snbep.c
-> index ed869443efb2..83fe3d80c9a7 100644
-> --- a/arch/x86/events/intel/uncore_snbep.c
-> +++ b/arch/x86/events/intel/uncore_snbep.c
-> @@ -4469,6 +4469,7 @@ static int sad_cfg_iio_topology(struct intel_uncore_type *type, u8 *sad_pmon_map
->   	while ((dev = pci_get_device(PCI_VENDOR_ID_INTEL, SNR_ICX_MESH2IIO_MMAP_DID, dev))) {
->   		ret = pci_read_config_dword(dev, SNR_ICX_SAD_CONTROL_CFG, &sad_cfg);
->   		if (ret) {
-> +			pci_dev_put(dev);
->   			ret = pcibios_err_to_errno(ret);
->   			break;
->   		}
-> @@ -4476,6 +4477,7 @@ static int sad_cfg_iio_topology(struct intel_uncore_type *type, u8 *sad_pmon_map
->   		die = uncore_pcibus_to_dieid(dev->bus);
->   		stack_id = SAD_CONTROL_STACK_ID(sad_cfg);
->   		if (die < 0 || stack_id >= type->num_boxes) {
-> +			pci_dev_put(dev);
->   			ret = -EPERM;
->   			break;
->   		}
-Hi Xiongfeng,
+Ahhh, now I get it. 
 
-Could you please update snr_uncore_mmio_map() and hswep_has_limit_sbox() 
-as well?
-pci_dev_put() is missed there also
+Yes I will provide a patch with the first mention of NNPA have 
+the abbreviation explained, as you pointed out.
 
-Thanks,
-Alexander
+Thanks.
+
+-- 
+Thomas Richter, Dept 3303, IBM s390 Linux Development, Boeblingen, Germany
+--
+Vorsitzender des Aufsichtsrats: Gregor Pillen
+Geschäftsführung: David Faller
+Sitz der Gesellschaft: Böblingen / Registergericht: Amtsgericht Stuttgart, HRB 243294
+
