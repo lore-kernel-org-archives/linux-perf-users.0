@@ -2,173 +2,148 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 56C6EC433FE
-	for <linux-perf-users@archiver.kernel.org>; Tue, 15 Nov 2022 08:58:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 95D2AC4332F
+	for <linux-perf-users@archiver.kernel.org>; Tue, 15 Nov 2022 09:39:31 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230023AbiKOI6l (ORCPT
+        id S229846AbiKOJja (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Tue, 15 Nov 2022 03:58:41 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33040 "EHLO
+        Tue, 15 Nov 2022 04:39:30 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33462 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229998AbiKOI6j (ORCPT
+        with ESMTP id S237091AbiKOJj2 (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Tue, 15 Nov 2022 03:58:39 -0500
-Received: from mx0a-001b2d01.pphosted.com (mx0a-001b2d01.pphosted.com [148.163.156.1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 66A27641A;
-        Tue, 15 Nov 2022 00:58:37 -0800 (PST)
-Received: from pps.filterd (m0098404.ppops.net [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (8.17.1.19/8.17.1.19) with ESMTP id 2AF8Yntt002802;
-        Tue, 15 Nov 2022 08:58:29 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=message-id : date :
- subject : to : cc : references : from : in-reply-to : content-type :
- content-transfer-encoding : mime-version; s=pp1;
- bh=y93H31PDnGNeHGJxuwKYXAQVout/WdMDytfWdJ6ezoA=;
- b=HQpnLNnZllwnX+hl4ZYEzsnShG3HyGEFm/wa2AENztf46ImuKFu/6gdZqx0JQJ5SABiw
- slsTuKXUHOrJVlfT4Mps2TO0gOqZeWmORu65p7shyg9dN2fORjOHu2BZkguE3PqS4Clx
- DngSLmhsy+3Z4tjNMMu5fXadMSMnXrN9WITJxpwoGalt5MM2R5PbfSV34S7h/jJUajz6
- zic8IFDaJNcSQ6Pwzko2ndqCrqfG9Fz6HeD2cB213M9NslxMjZDGB4MxXxFbWThMK5Ie
- lJG5FjBg9LdXF/yXaAhSnm3pwM4W6tHEsTodNz6xq9JkUg6agBdoropFlb/NvruYRD9P YA== 
-Received: from ppma01fra.de.ibm.com (46.49.7a9f.ip4.static.sl-reverse.com [159.122.73.70])
-        by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 3kv7cj8kuc-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Tue, 15 Nov 2022 08:58:28 +0000
-Received: from pps.filterd (ppma01fra.de.ibm.com [127.0.0.1])
-        by ppma01fra.de.ibm.com (8.16.1.2/8.16.1.2) with SMTP id 2AF8q5mC009305;
-        Tue, 15 Nov 2022 08:58:26 GMT
-Received: from b06cxnps4075.portsmouth.uk.ibm.com (d06relay12.portsmouth.uk.ibm.com [9.149.109.197])
-        by ppma01fra.de.ibm.com with ESMTP id 3ktbd9jmxc-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Tue, 15 Nov 2022 08:58:26 +0000
-Received: from d06av21.portsmouth.uk.ibm.com (d06av21.portsmouth.uk.ibm.com [9.149.105.232])
-        by b06cxnps4075.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 2AF8wNsq32703074
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Tue, 15 Nov 2022 08:58:23 GMT
-Received: from d06av21.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 2DBEC5204E;
-        Tue, 15 Nov 2022 08:58:23 +0000 (GMT)
-Received: from [9.171.35.73] (unknown [9.171.35.73])
-        by d06av21.portsmouth.uk.ibm.com (Postfix) with ESMTP id BDE3552051;
-        Tue, 15 Nov 2022 08:58:22 +0000 (GMT)
-Message-ID: <c1f8de28-1948-85b1-cd85-5bbd301e22bc@linux.ibm.com>
-Date:   Tue, 15 Nov 2022 09:58:22 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
- Thunderbird/102.4.0
-Subject: Re: [PATCH v2] perf list: Add PMU pai_ext event description for IBM
- z16
-Content-Language: en-US
-To:     Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Andreas Krebbel <krebbel@linux.ibm.com>
-Cc:     linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org,
-        svens@linux.ibm.com, gor@linux.ibm.com, sumanthk@linux.ibm.com,
-        hca@linux.ibm.com, Ingo Molnar <mingo@kernel.org>
-References: <20221111135402.858623-1-tmricht@linux.ibm.com>
- <Y3JnjmxPX+m7G9HL@kernel.org>
-From:   Thomas Richter <tmricht@linux.ibm.com>
-Organization: IBM
-In-Reply-To: <Y3JnjmxPX+m7G9HL@kernel.org>
-Content-Type: text/plain; charset=UTF-8
-X-TM-AS-GCONF: 00
-X-Proofpoint-ORIG-GUID: gLbghLxiKMVzY1OztwL0O3L8r9wUWTcp
-X-Proofpoint-GUID: gLbghLxiKMVzY1OztwL0O3L8r9wUWTcp
-Content-Transfer-Encoding: 8bit
-X-Proofpoint-UnRewURL: 0 URL was un-rewritten
+        Tue, 15 Nov 2022 04:39:28 -0500
+Received: from NAM04-MW2-obe.outbound.protection.outlook.com (mail-mw2nam04on2057.outbound.protection.outlook.com [40.107.101.57])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 48E731D0C2;
+        Tue, 15 Nov 2022 01:39:24 -0800 (PST)
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=bCaRJcoL0E5jMc4Bl4nryklRTM/RvOMWS6WnFYhf2CMltYFxS7Zh0UbIJ6hsOhjPeRVxziu/rejnbZtsU8DN41BlmYtvVuoLtNFfqwjmyanF7M45fiwsLlRE8KfKaT46jld4zAv4UE7bCBnD5w00CLguB22AmKh0djUm9Jd+Ls4dp6IjnVVYVBAdFYcv/iuQAIUmygomFSyIwTiicm5RRLLphtQG+25cCbFqQix3VY7GN2whwAPpvscqZUQMQrK71SNrFKEbzktE0JCyjKshXklwgT6ptm/mA8a615HhFZe+1+g2M9iJyqfTCh5R6u0pr5jX54aRPw24bcr3xP5g3g==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=iSPL99dGgd0BPJGm890qE454l+fcaJL7Xw4Zv5c0oOI=;
+ b=H95+zDUVpwbxUuESMbFYYhmJ9wAKqlTfQ8XaBQb3kYHH+xzE8VFdvbbfKSpW173pFz38VZ3BGsRfpljdEdDK0a6RqaOgYWrVolQdm++EwOuhS+buWpEqCUryBN2uHotXXYQG3o9I4M8HPJlm2VKd4M5Je5aPhoHf0qei6UPgmBewRk7MX1XxkHIqXZ19HpvJpJmYwW9qADsJDZzC/PyVX9TvnEAFqFVHw4Kr7UOY6q641ZJfGEOI/LyzEJHDitOsnfTu7NkuNy4h6BtLGKiaEwQScltgieN5ghw0jArAcPWiRNMTZVxXTgkyzNyL1nAkPqP4wgj2hi55rIwrGG7KzQ==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
+ 165.204.84.17) smtp.rcpttodomain=infradead.org smtp.mailfrom=amd.com;
+ dmarc=pass (p=quarantine sp=quarantine pct=100) action=none
+ header.from=amd.com; dkim=none (message not signed); arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=iSPL99dGgd0BPJGm890qE454l+fcaJL7Xw4Zv5c0oOI=;
+ b=Z8wyzsD3zY7p2i5AuIi/92QBCOOecs+V2oRGTwgMPAKbzux6Ay6XHUETaawg6GjzRdx0PG6IuLGPA2fFglMsThgl228GZHOmfRlr6uCXG6i9aZlcPStoC1+MpV/Iot/cZo6KlLAl3LYWjypzsVk+qwBDt9hKGLYd2cSIL+DCLtw=
+Received: from DS7PR07CA0006.namprd07.prod.outlook.com (2603:10b6:5:3af::16)
+ by PH8PR12MB7376.namprd12.prod.outlook.com (2603:10b6:510:214::12) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.5813.17; Tue, 15 Nov
+ 2022 09:39:22 +0000
+Received: from DM6NAM11FT100.eop-nam11.prod.protection.outlook.com
+ (2603:10b6:5:3af:cafe::6) by DS7PR07CA0006.outlook.office365.com
+ (2603:10b6:5:3af::16) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.5813.17 via Frontend
+ Transport; Tue, 15 Nov 2022 09:39:21 +0000
+X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 165.204.84.17)
+ smtp.mailfrom=amd.com; dkim=none (message not signed)
+ header.d=none;dmarc=pass action=none header.from=amd.com;
+Received-SPF: Pass (protection.outlook.com: domain of amd.com designates
+ 165.204.84.17 as permitted sender) receiver=protection.outlook.com;
+ client-ip=165.204.84.17; helo=SATLEXMB04.amd.com; pr=C
+Received: from SATLEXMB04.amd.com (165.204.84.17) by
+ DM6NAM11FT100.mail.protection.outlook.com (10.13.172.247) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.20.5813.12 via Frontend Transport; Tue, 15 Nov 2022 09:39:21 +0000
+Received: from BLR-5CG113396H.amd.com (10.180.168.240) by SATLEXMB04.amd.com
+ (10.181.40.145) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2375.34; Tue, 15 Nov
+ 2022 03:39:15 -0600
+From:   Ravi Bangoria <ravi.bangoria@amd.com>
+To:     <peterz@infradead.org>
+CC:     <ravi.bangoria@amd.com>, <acme@kernel.org>, <mark.rutland@arm.com>,
+        <jolsa@redhat.com>, <namhyung@kernel.org>, <eranian@google.com>,
+        <kan.liang@linux.intel.com>, <bp@alien8.de>, <x86@kernel.org>,
+        <linux-perf-users@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        <sandipan.das@amd.com>, <ananth.narayan@amd.com>,
+        <santosh.shukla@amd.com>
+Subject: [PATCH] perf/amd/ibs: Make IBS a core pmu
+Date:   Tue, 15 Nov 2022 15:09:04 +0530
+Message-ID: <20221115093904.1799-1-ravi.bangoria@amd.com>
+X-Mailer: git-send-email 2.25.1
 MIME-Version: 1.0
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.219,Aquarius:18.0.895,Hydra:6.0.545,FMLib:17.11.122.1
- definitions=2022-11-15_04,2022-11-11_01,2022-06-22_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 mlxscore=0 impostorscore=0
- mlxlogscore=999 clxscore=1011 priorityscore=1501 malwarescore=0
- lowpriorityscore=0 suspectscore=0 adultscore=0 spamscore=0 bulkscore=0
- phishscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2210170000 definitions=main-2211150058
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-Originating-IP: [10.180.168.240]
+X-ClientProxiedBy: SATLEXMB03.amd.com (10.181.40.144) To SATLEXMB04.amd.com
+ (10.181.40.145)
+X-EOPAttributedMessage: 0
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: DM6NAM11FT100:EE_|PH8PR12MB7376:EE_
+X-MS-Office365-Filtering-Correlation-Id: 7f5a9ff8-77fa-49c1-2525-08dac6ed4674
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info: 8ptl6g7OvQpriWA6cODd03GZstruKJ3kMuOrWvmQJJjmnI4GFmKFdB3XFTOUAe1MA/V/Tvv1cg5DnNS5z5vPgpoOzgUNmwqUZ0ni9KqVArutRj1nm5tQFmSZOp5MsPXW4sAlUSjX6Old0a3QUqlq05aRVB6oyI7zqgEGrzq8VukLOJnM5cu1g4vmgmsxqXguyt0BLkeKSy/og/99jlOvLu+74rYy0jhopxJM19/N4z5HNexzk/82r46RU2kPsjWXpVEO4V6cbdBVfIGd1oWPnzJOqx4SVPm0fh+YWt4sDoK1+3xbc5bPGuk3kwpexSvxY8pBZ3xngvbTs9dEaTgAu+Zrxme0di9DXAxDprdXs98KYeLE01BoIfaDIDQ7wfIQNwTo4llJWl+MAHHJkiPcEb2O+qerUatgzYnt2Xr62bdZj5ygfOJNEVw/1sEQmb9SDml0iysXzNuRH635tL6VLCgGW5sS9OKjPkWD3zmdTdKXbRtjsdxOjQ+ERkEl7osRgeP6lbRSU9PMF4CGZCX/HzXqWESLhWAwR2/XNkpZUELTL2EH1jh90vJXXhutQvTdySfpDZs59vUKh+BngcbUjaeeJS9pxLl1ilinl6BQviUzDTXf+bcq3CWniotRcXn9pq4RXxs8cG5K5Eo2BnmLfkbNI+T0Qdgpz6lwu7iPCUC9l5NFebiSenwP3jJqpfVWNMDoXPNkRurN0hjV7KkxLmPMeMtlKu5S46I8cWlYncS2Z21eBr5P1lxFJeThjCKNf7Zfg316gLZ5VdExaZCr9L8v5WV0rdsXjd21b0ia1Fhd1BVaE1nSb1eS6M0pXUSDbLAhke4Coynh4wlBHJQj3g==
+X-Forefront-Antispam-Report: CIP:165.204.84.17;CTRY:US;LANG:en;SCL:1;SRV:;IPV:CAL;SFV:NSPM;H:SATLEXMB04.amd.com;PTR:InfoDomainNonexistent;CAT:NONE;SFS:(13230022)(4636009)(136003)(346002)(376002)(396003)(39860400002)(451199015)(46966006)(40470700004)(36840700001)(8936002)(82310400005)(36756003)(7416002)(5660300002)(44832011)(2906002)(8676002)(316002)(6916009)(36860700001)(54906003)(70206006)(86362001)(70586007)(26005)(41300700001)(6666004)(4326008)(7696005)(1076003)(83380400001)(186003)(426003)(336012)(2616005)(40480700001)(40460700003)(478600001)(356005)(16526019)(81166007)(47076005)(966005)(82740400003)(36900700001);DIR:OUT;SFP:1101;
+X-OriginatorOrg: amd.com
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 15 Nov 2022 09:39:21.6974
+ (UTC)
+X-MS-Exchange-CrossTenant-Network-Message-Id: 7f5a9ff8-77fa-49c1-2525-08dac6ed4674
+X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
+X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=3dd8961f-e488-4e60-8e11-a82d994e183d;Ip=[165.204.84.17];Helo=[SATLEXMB04.amd.com]
+X-MS-Exchange-CrossTenant-AuthSource: DM6NAM11FT100.eop-nam11.prod.protection.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Anonymous
+X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: PH8PR12MB7376
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-On 11/14/22 17:06, Arnaldo Carvalho de Melo wrote:
-> Em Fri, Nov 11, 2022 at 02:54:02PM +0100, Thomas Richter escreveu:
->> Add the event description for the IBM z16 pai_ext PMU released with
->> commit c432fefe8e62 ("s390/pai: Add support for PAI Extension 1 NNPA counters")
->>
->> The document SA22-7832-13 "z/Architecture Principles of Operation",
->> published May, 2022, contains the description of the
->> Processor Activity Instrumentation Facility and the NNPA counter
->> set., See Pages 5-113 to 5-116.
->>
->> Signed-off-by: Thomas Richter <tmricht@linux.ibm.com>
->> ---
->>  .../pmu-events/arch/s390/cf_z16/pai_ext.json  | 198 ++++++++++++++++++
->>  tools/perf/pmu-events/jevents.py              |   1 +
->>  2 files changed, 199 insertions(+)
->>  create mode 100644 tools/perf/pmu-events/arch/s390/cf_z16/pai_ext.json
->>
->> diff --git a/tools/perf/pmu-events/arch/s390/cf_z16/pai_ext.json b/tools/perf/pmu-events/arch/s390/cf_z16/pai_ext.json
->> new file mode 100644
->> index 000000000000..8bee481f05d5
->> --- /dev/null
->> +++ b/tools/perf/pmu-events/arch/s390/cf_z16/pai_ext.json
->> @@ -0,0 +1,198 @@
->> +[
->> +	{
->> +		"Unit": "PAI-EXT",
->> +		"EventCode": "6144",
->> +		"EventName": "NNPA_ALL",
->> +		"BriefDescription": "NNPA ALL",
->> +		"PublicDescription": "Sum of all non zero NNPA counters"
->> +	},
-> 
-> Since the Brief description mentions NNPA, shouldn't the Public
-> Description expand on this "NNPA" acronym?, something like:
-> 
-> Oops, can't expand on that since there isn't a link to that SA22-7832-13
-> document.
-> 
-> Googling for it...
-> 
-> https://www-40.ibm.com/servers/resourcelink/svc03100.nsf/pages/zResourceLinkUrl?OpenDocument&url=http://www.ibm.com/servers/resourcelink/lib03010.nsf/0/B9DE5F05A9D57819852571C500428F9A/$file/SA22-7832-13.pdf
-> 
-> Ok, requires registration.
-> 
-> I wonder what is the value of these descriptions then :-\
-> 
-> I miss Ingo jumping into these discussions :-)
-> 
-> - Arnaldo
+So far, only one pmu was allowed to be registered as core pmu and thus
+IBS pmus were being registered as uncore. However, with the event context
+rewrite, that limitation no longer exists and thus IBS pmus can also be
+registered as core pmu. This makes IBS much more usable, for ex, user
+will be able to do per-process precise monitoring on AMD:
 
-I added Andreas Krebbel to the discussion, he knows more than I on this counters.
+Before patch:
+  $ sudo perf record -e cycles:pp ls
+  Error:
+  Invalid event (cycles:pp) in per-thread mode, enable system wide with '-a'
 
-NNPA stands for Neural Networks Processing Assist. This is a new feature in 
-the IBM z16. Here is a quote from Document SG2489-51 IBM z16 (3931) Technical Guide:
+After patch:
+  $ sudo perf record -e cycles:pp ls
+  [ perf record: Woken up 1 times to write data ]
+  [ perf record: Captured and wrote 0.017 MB perf.data (33 samples) ]
 
-<START-OF-QUOTE>
-  "The new IBM z16 microprocessor chip, also called the IBM Telum processor, integrates a
-   new AI accelerator. This innovation brings incredible value to applications and workloads that
-   are running on IBM Z platform.
-   Customers can benefit from the integrated AI accelerator by adding AI operations that are
-   used to perform fraud prevention and fraud detection, customer behavior predictions, and
-   supply chain operations. All of these operations are done in real time and fully integrated in
-   transactional workloads. As a result, valuable insights are gained from their data instantly.
+Signed-off-by: Ravi Bangoria <ravi.bangoria@amd.com>
+---
+Note:
+This patch is dependent on the event context rewrite patch which is
+already present in a tip tree:
+  https://git.kernel.org/tip/tip/c/bd27568117664
 
-   ...
-   The AI accelerator is driven by the new Neural Networks Processing Assist (NNPA)
-   instruction.
-   NNPA is a new nonprivileged Complex Instruction Set Computer (CISC) memory-to-memory
-   instruction that operates on tensor objects that are in user program’s memory. AI functions
-   and macros are abstracted by NNPA."
-<END-OF-QUOTE>
+ arch/x86/events/amd/ibs.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-This intension of this patch is to give a small hint on what these NNPA counters are
-supposed to count and operate on. A full explanation is given in the document
-SA22-7832-13 "z/Architecture Principles of Operation", Chapter 26, pp 26-1 to 26-115.
-
-If you think this small description is not worth it, then we can drop the patch.
-
-Thanks for you help and directions.
-
+diff --git a/arch/x86/events/amd/ibs.c b/arch/x86/events/amd/ibs.c
+index 3271735f0070..fbc2ce86f4b8 100644
+--- a/arch/x86/events/amd/ibs.c
++++ b/arch/x86/events/amd/ibs.c
+@@ -631,7 +631,7 @@ static const struct attribute_group *op_attr_update[] = {
+ 
+ static struct perf_ibs perf_ibs_fetch = {
+ 	.pmu = {
+-		.task_ctx_nr	= perf_invalid_context,
++		.task_ctx_nr	= perf_hw_context,
+ 
+ 		.event_init	= perf_ibs_init,
+ 		.add		= perf_ibs_add,
+@@ -655,7 +655,7 @@ static struct perf_ibs perf_ibs_fetch = {
+ 
+ static struct perf_ibs perf_ibs_op = {
+ 	.pmu = {
+-		.task_ctx_nr	= perf_invalid_context,
++		.task_ctx_nr	= perf_hw_context,
+ 
+ 		.event_init	= perf_ibs_init,
+ 		.add		= perf_ibs_add,
 -- 
-Thomas Richter, Dept 3303, IBM s390 Linux Development, Boeblingen, Germany
---
-Vorsitzender des Aufsichtsrats: Gregor Pillen
-Geschäftsführung: David Faller
-Sitz der Gesellschaft: Böblingen / Registergericht: Amtsgericht Stuttgart, HRB 243294
+2.37.3
 
