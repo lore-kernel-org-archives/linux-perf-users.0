@@ -2,82 +2,105 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E7FE3C4332F
-	for <linux-perf-users@archiver.kernel.org>; Tue, 15 Nov 2022 15:10:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DA8DBC4332F
+	for <linux-perf-users@archiver.kernel.org>; Tue, 15 Nov 2022 16:25:54 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231151AbiKOPJ7 (ORCPT
+        id S230095AbiKOQZy (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Tue, 15 Nov 2022 10:09:59 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48830 "EHLO
+        Tue, 15 Nov 2022 11:25:54 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45664 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231314AbiKOPJt (ORCPT
+        with ESMTP id S238628AbiKOQZx (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Tue, 15 Nov 2022 10:09:49 -0500
-Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5EFC317AB2;
-        Tue, 15 Nov 2022 07:09:45 -0800 (PST)
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id EF22A61821;
-        Tue, 15 Nov 2022 15:09:44 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 4499BC433D6;
-        Tue, 15 Nov 2022 15:09:42 +0000 (UTC)
-Date:   Tue, 15 Nov 2022 15:09:37 +0000
-From:   Catalin Marinas <catalin.marinas@arm.com>
-To:     Tomislav Novak <tnovak@fb.com>
-Cc:     Alexei Starovoitov <ast@kernel.org>, Will Deacon <will@kernel.org>,
-        bpf@vger.kernel.org, linux-perf-users@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        Samuel Gosselin <sgosselin@fb.com>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Russell King <linux@armlinux.org.uk>
-Subject: Re: [PATCH] hw_breakpoint: fix single-stepping when using
- bpf_overflow_handler
-Message-ID: <Y3OrsU9M+X2UUcRG@arm.com>
-References: <20220923203644.2731604-1-tnovak@fb.com>
+        Tue, 15 Nov 2022 11:25:53 -0500
+Received: from mga07.intel.com (mga07.intel.com [134.134.136.100])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D11AF29359
+        for <linux-perf-users@vger.kernel.org>; Tue, 15 Nov 2022 08:25:51 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1668529551; x=1700065551;
+  h=message-id:date:mime-version:subject:to:cc:references:
+   from:in-reply-to:content-transfer-encoding;
+  bh=6+ult5QnVacpxQBNhnKZo4EJcHUI/weGBDZpl/pvcDU=;
+  b=cKi0UG4R68R8HyBDj6QdYXdC7Abx7jtM18j8eIo3ezGFsqI1MoONOY61
+   sxh5h6VFGfmZiL0XoH4tPFcGhOFh/CyX35anoxhQOS/tw+DQHGUkRjoN1
+   td6+I8/FZP0Tng3Q0lGxwigt344dGKjUKe4hTziW9s0WxtmEFyLc336g3
+   mc+1Up+XnoSG+6CtJqnnIMVdnrWUEVrHRRnfZiTBc12cjm76nUeILSB0C
+   3WmhqlBrwI9w78wroftVn6suZlYjllKi6WQ1c3NO5o61hr+j9uezt3jvS
+   TbeKsxZwhRanJEaKzuVseCH6TMfbYH/BGpDZ7nmPANpE0QFVFlO+vNKmQ
+   g==;
+X-IronPort-AV: E=McAfee;i="6500,9779,10532"; a="376561974"
+X-IronPort-AV: E=Sophos;i="5.96,166,1665471600"; 
+   d="scan'208";a="376561974"
+Received: from fmsmga006.fm.intel.com ([10.253.24.20])
+  by orsmga105.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 15 Nov 2022 08:25:45 -0800
+X-IronPort-AV: E=McAfee;i="6500,9779,10532"; a="884017058"
+X-IronPort-AV: E=Sophos;i="5.96,166,1665471600"; 
+   d="scan'208";a="884017058"
+Received: from aantonov-mobl1.ger.corp.intel.com (HELO [10.252.34.78]) ([10.252.34.78])
+  by fmsmga006-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 15 Nov 2022 08:25:40 -0800
+Message-ID: <3383249f-8ce1-e41f-c12d-484b24c8e061@linux.intel.com>
+Date:   Tue, 15 Nov 2022 17:25:31 +0100
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20220923203644.2731604-1-tnovak@fb.com>
+User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:102.0) Gecko/20100101
+ Thunderbird/102.4.2
+Subject: Re: [PATCH] perf/x86/intel/uncore: decrease reference count in error
+ path
+To:     Xiongfeng Wang <wangxiongfeng2@huawei.com>,
+        adrian.hunter@intel.com, peterz@infradead.org, ak@linux.intel.com,
+        kan.liang@linux.intel.com, alexander.shishkin@linux.intel.com,
+        acme@kernel.org, jolsa@kernel.org
+Cc:     linux-perf-users@vger.kernel.org, yangyingliang@huawei.com
+References: <20221115112515.53177-1-wangxiongfeng2@huawei.com>
+Content-Language: en-US
+From:   Alexander Antonov <alexander.antonov@linux.intel.com>
+In-Reply-To: <20221115112515.53177-1-wangxiongfeng2@huawei.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-On Fri, Sep 23, 2022 at 01:36:45PM -0700, Tomislav Novak wrote:
-> On ARM platforms is_default_overflow_handler() is used to determine if
-> hw_breakpoint code should single-step over the watchpoint trigger or
-> let the custom handler deal with it.
-> 
-> Attaching a BPF program to a watchpoint replaces the handler with
-> bpf_overflow_handler, which isn't recognized as a default handler so we
-> never step over the instruction triggering the data abort exception (the
-> watchpoint keeps firing):
-> 
->   # bpftrace -e 'watchpoint:0x10000000:4:w { printf("hit\n"); }' ./wp_test
->   Attaching 1 probe...
->   hit
->   hit
->   hit
->   [...]
-> 
-> (wp_test performs a single 4-byte store to address 0x10000000)
-> 
-> This patch replaces the check with uses_default_overflow_handler(), which
-> accounts for the bpf_overflow_handler() case by also testing if the handler
-> invokes one of the perf_event_output functions via orig_default_handler.
-> 
-> Signed-off-by: Tomislav Novak <tnovak@fb.com>
-> Tested-by: Samuel Gosselin <sgosselin@fb.com> # arm64
+
+On 11/15/2022 12:25 PM, Xiongfeng Wang wrote:
+> pci_get_device() will increase the reference count for the returned
+> pci_dev, and also decrease the reference count for the input parameter
+> *from* if it is not NULL.
+>
+> If we break the loop in sad_cfg_iio_topology() with 'dev' not NULL. We
+> need to use pci_dev_put() to decrease the reference count. Let's add it.
+>
+> Fixes: c1777be3646b ("perf/x86/intel/uncore: Enable I/O stacks to IIO PMON mapping on SNR")
+> Signed-off-by: Xiongfeng Wang <wangxiongfeng2@huawei.com>
 > ---
->  arch/arm/kernel/hw_breakpoint.c   |  8 ++++----
->  arch/arm64/kernel/hw_breakpoint.c |  4 ++--
->  include/linux/perf_event.h        | 22 +++++++++++++++++++---
->  3 files changed, 25 insertions(+), 9 deletions(-)
+>   arch/x86/events/intel/uncore_snbep.c | 2 ++
+>   1 file changed, 2 insertions(+)
+>
+> diff --git a/arch/x86/events/intel/uncore_snbep.c b/arch/x86/events/intel/uncore_snbep.c
+> index ed869443efb2..83fe3d80c9a7 100644
+> --- a/arch/x86/events/intel/uncore_snbep.c
+> +++ b/arch/x86/events/intel/uncore_snbep.c
+> @@ -4469,6 +4469,7 @@ static int sad_cfg_iio_topology(struct intel_uncore_type *type, u8 *sad_pmon_map
+>   	while ((dev = pci_get_device(PCI_VENDOR_ID_INTEL, SNR_ICX_MESH2IIO_MMAP_DID, dev))) {
+>   		ret = pci_read_config_dword(dev, SNR_ICX_SAD_CONTROL_CFG, &sad_cfg);
+>   		if (ret) {
+> +			pci_dev_put(dev);
+>   			ret = pcibios_err_to_errno(ret);
+>   			break;
+>   		}
+> @@ -4476,6 +4477,7 @@ static int sad_cfg_iio_topology(struct intel_uncore_type *type, u8 *sad_pmon_map
+>   		die = uncore_pcibus_to_dieid(dev->bus);
+>   		stack_id = SAD_CONTROL_STACK_ID(sad_cfg);
+>   		if (die < 0 || stack_id >= type->num_boxes) {
+> +			pci_dev_put(dev);
+>   			ret = -EPERM;
+>   			break;
+>   		}
+Hi Xiongfeng,
 
-It looks like this slipped through the cracks. I'm fine with the patch
-but could you split the arm and arm64 parts in separate patches? Unless
-rmk acks it and we can take the patch through the arm64 (or perf) tree.
+Could you please update snr_uncore_mmio_map() and hswep_has_limit_sbox() 
+as well?
+pci_dev_put() is missed there also
 
--- 
-Catalin
+Thanks,
+Alexander
