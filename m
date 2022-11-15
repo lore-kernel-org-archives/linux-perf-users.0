@@ -2,111 +2,142 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 61946C4332F
-	for <linux-perf-users@archiver.kernel.org>; Tue, 15 Nov 2022 14:03:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AA89FC43217
+	for <linux-perf-users@archiver.kernel.org>; Tue, 15 Nov 2022 14:04:47 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S238294AbiKOOD2 (ORCPT
+        id S237725AbiKOOEp (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Tue, 15 Nov 2022 09:03:28 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60268 "EHLO
+        Tue, 15 Nov 2022 09:04:45 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60686 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S238391AbiKOOD1 (ORCPT
+        with ESMTP id S238496AbiKOOEi (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Tue, 15 Nov 2022 09:03:27 -0500
-Received: from mga07.intel.com (mga07.intel.com [134.134.136.100])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 26ACBDE6
-        for <linux-perf-users@vger.kernel.org>; Tue, 15 Nov 2022 06:03:26 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1668521006; x=1700057006;
-  h=message-id:date:mime-version:subject:to:cc:references:
-   from:in-reply-to:content-transfer-encoding;
-  bh=RPbu3swbHFaUQZLSOODaEifCJwE1F70V+CzD0G+sBo4=;
-  b=Ayxj2LVdejF0kFGVA/rOLUeo7eHEPAtVTWii0ljm2uYLO4wpbdOtBBpL
-   891H95yRCUG/wMrOqxcwTUEsUMPyHQpL22tlVyJE00ACxnIPdp1HNJa3F
-   f00hcL8gwFbO4HbAwZLGC+ux27qEIDRJACQ+3/H3oF03Nee4+IcJ0SJiy
-   iMFUOtLBqKOQ/pn7NkW5ycBNHJ0Xiahl9kOFjhdmT/EmA/fKnAJ04qPn4
-   QyGrWlL0iWFsgxordowTEHgfQKCy0FgIaKP/YqMVzZtMEGwPZUF9oPI4X
-   p9XnE5FuhSSmPpc3/3wklLTtoWZmZE+pym1ygPeAEot4th/ykg28VdgDF
-   w==;
-X-IronPort-AV: E=McAfee;i="6500,9779,10531"; a="376523237"
-X-IronPort-AV: E=Sophos;i="5.96,166,1665471600"; 
-   d="scan'208";a="376523237"
-Received: from orsmga003.jf.intel.com ([10.7.209.27])
-  by orsmga105.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 15 Nov 2022 06:03:20 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6500,9779,10531"; a="589797164"
-X-IronPort-AV: E=Sophos;i="5.96,166,1665471600"; 
-   d="scan'208";a="589797164"
-Received: from linux.intel.com ([10.54.29.200])
-  by orsmga003.jf.intel.com with ESMTP; 15 Nov 2022 06:03:20 -0800
-Received: from [10.252.215.14] (kliang2-mobl1.ccr.corp.intel.com [10.252.215.14])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        Tue, 15 Nov 2022 09:04:38 -0500
+Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 152452B1B8;
+        Tue, 15 Nov 2022 06:04:36 -0800 (PST)
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by linux.intel.com (Postfix) with ESMTPS id 54F895805BF;
-        Tue, 15 Nov 2022 06:03:19 -0800 (PST)
-Message-ID: <3b41a36b-30f4-5d6a-bb59-5e694a8feed0@linux.intel.com>
-Date:   Tue, 15 Nov 2022 09:03:18 -0500
+        by dfw.source.kernel.org (Postfix) with ESMTPS id C0CE96179B;
+        Tue, 15 Nov 2022 14:04:35 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 02317C433D7;
+        Tue, 15 Nov 2022 14:04:35 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1668521075;
+        bh=6Qvlg1lMg7fGpa0P20E6tpgyxeNcsHw0v3LYS/R+ins=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=BuVnbGVQaBDcYpT71SQqSB0uAmvRUAFOkRj21Wbt7EacCJ0FIaRRRiQ30gUhbqYyn
+         hAv9PGVP4xcMdCqQc7V/nrbje1A50Wdwg4ZES0NWj+dDNOEczihuH+lh4MPLLW2pPT
+         j0zIaf/kWvZHjl14AjWvXe72W76fRd/F+/IZ2nDQDXPMd4FRCCfPONz2n3mgNVpKWP
+         yYaberTyw1cGR9GUf94FnGfKGcLDp4YeslxH9PEkI64JNUDrpHv1VhAkWyeTEKfhId
+         vUib+maSyDdUiqKFxtmLQGRyotiTCgRA9Xn5tflkwB3TfuYwp97lW7yUPOrXu13Yna
+         nAzwfaND15YXA==
+Received: by quaco.ghostprotocols.net (Postfix, from userid 1000)
+        id B7B13407ED; Tue, 15 Nov 2022 11:04:31 -0300 (-03)
+Date:   Tue, 15 Nov 2022 11:04:31 -0300
+From:   Arnaldo Carvalho de Melo <acme@kernel.org>
+To:     Namhyung Kim <namhyung@kernel.org>
+Cc:     Jiri Olsa <jolsa@kernel.org>, Ingo Molnar <mingo@kernel.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Ian Rogers <irogers@google.com>,
+        Adrian Hunter <adrian.hunter@intel.com>,
+        linux-perf-users@vger.kernel.org,
+        Kan Liang <kan.liang@linux.intel.com>,
+        Zhengjun Xing <zhengjun.xing@linux.intel.com>,
+        James Clark <james.clark@arm.com>,
+        Athira Jajeev <atrajeev@linux.vnet.ibm.com>
+Subject: Re: [PATCHSET 00/19] perf stat: Improve perf stat output (v1)
+Message-ID: <Y3Ocb2Ie4PCx2t1X@kernel.org>
+References: <20221114230227.1255976-1-namhyung@kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:102.0) Gecko/20100101
- Thunderbird/102.4.2
-Subject: Re: [PATCH] perf/x86/intel/uncore: decrease reference count in error
- path
-To:     Xiongfeng Wang <wangxiongfeng2@huawei.com>,
-        adrian.hunter@intel.com, peterz@infradead.org, ak@linux.intel.com,
-        alexander.shishkin@linux.intel.com,
-        alexander.antonov@linux.intel.com, acme@kernel.org,
-        jolsa@kernel.org
-Cc:     linux-perf-users@vger.kernel.org, yangyingliang@huawei.com
-References: <20221115112515.53177-1-wangxiongfeng2@huawei.com>
-Content-Language: en-US
-From:   "Liang, Kan" <kan.liang@linux.intel.com>
-In-Reply-To: <20221115112515.53177-1-wangxiongfeng2@huawei.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20221114230227.1255976-1-namhyung@kernel.org>
+X-Url:  http://acmel.wordpress.com
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-
-
-On 2022-11-15 6:25 a.m., Xiongfeng Wang wrote:
-> pci_get_device() will increase the reference count for the returned
-> pci_dev, and also decrease the reference count for the input parameter
-> *from* if it is not NULL.
+Em Mon, Nov 14, 2022 at 03:02:08PM -0800, Namhyung Kim escreveu:
+> Hello,
 > 
-> If we break the loop in sad_cfg_iio_topology() with 'dev' not NULL. We
-> need to use pci_dev_put() to decrease the reference count. Let's add it.
+> I'm working on cleanup up the perf stat code.  The main focus this time
+> is the display logic which has various combinations of options.
 > 
-> Fixes: c1777be3646b ("perf/x86/intel/uncore: Enable I/O stacks to IIO PMON mapping on SNR")
-> Signed-off-by: Xiongfeng Wang <wangxiongfeng2@huawei.com>
-> ---
->  arch/x86/events/intel/uncore_snbep.c | 2 ++
->  1 file changed, 2 insertions(+)
+> I split the code for each output mode - std, csv and json.  And then
+> organize them according to the purpose like header, prefix, value,
+> metric and footer.  I hope this would help maintaining the code a bit
+> more.
 > 
-> diff --git a/arch/x86/events/intel/uncore_snbep.c b/arch/x86/events/intel/uncore_snbep.c
-> index ed869443efb2..83fe3d80c9a7 100644
-> --- a/arch/x86/events/intel/uncore_snbep.c
-> +++ b/arch/x86/events/intel/uncore_snbep.c
-> @@ -4469,6 +4469,7 @@ static int sad_cfg_iio_topology(struct intel_uncore_type *type, u8 *sad_pmon_map
->  	while ((dev = pci_get_device(PCI_VENDOR_ID_INTEL, SNR_ICX_MESH2IIO_MMAP_DID, dev))) {
->  		ret = pci_read_config_dword(dev, SNR_ICX_SAD_CONTROL_CFG, &sad_cfg);
->  		if (ret) {
-> +			pci_dev_put(dev);
->  			ret = pcibios_err_to_errno(ret);
->  			break;
->  		}
-> @@ -4476,6 +4477,7 @@ static int sad_cfg_iio_topology(struct intel_uncore_type *type, u8 *sad_pmon_map
->  		die = uncore_pcibus_to_dieid(dev->bus);
->  		stack_id = SAD_CONTROL_STACK_ID(sad_cfg);
->  		if (die < 0 || stack_id >= type->num_boxes) {
-> +			pci_dev_put(dev);
->  			ret = -EPERM;
->  			break;
->  		}
+> Also I found that cgroup support is missing or insufficient.
+> Specifically when --for-each-cgroup option is given, it'd have multiple
+> copies of the events for those cgroups.  Then the output should group
+> the result.  This is true for the normal output mode, but the metric-
+> only mode didn't support it well.
+> 
+> With this change, I can see the per-cgroup topdown metrics like below:
+> 
+>   $ sudo ./perf stat -a --topdown --for-each-cgroup user.slice,system.slice sleep 3
+>   nmi_watchdog enabled with topdown. May give wrong results.
+>   Disable with echo 0 > /proc/sys/kernel/nmi_watchdog
+> 
+>    Performance counter stats for 'system wide':
+> 
+>                                   retiring      bad speculation   frontend bound    backend bound
+>   S0-D0-C0      2  user.slice            117.3%         3.9%            47.8%           -69.1%
+>   S0-D0-C1      2  user.slice            119.8%         4.1%            49.3%           -73.2%
+>   S0-D0-C2      2  user.slice             24.4%         7.9%            68.4%             0.0%
+>   S0-D0-C3      2  user.slice             24.0%         9.2%            91.2%           -24.4%
+>   S0-D0-C0      2  system.slice           73.5%         4.0%            19.4%             3.1%
+>   S0-D0-C1      2  system.slice           90.0%         5.8%            19.7%           -15.5%
+>   S0-D0-C2      2  system.slice          101.2%         6.6%            33.4%           -41.1%
+>   S0-D0-C3      2  system.slice           90.7%         4.9%            22.3%           -18.0%
+> 
+>          3.001678216 seconds time elapsed
+> 
+> You can get it from 'perf/stat-display-v1' branch in
+> 
+>   git://git.kernel.org/pub/scm/linux/kernel/git/namhyung/linux-perf.git
 
-I think the pci_dev_put() itself checks the NULL. So we may just need to
-add one pci_dev_put() right before return ret;.
+applied locally, build testing.
 
-Thanks,
-Kan
+- Arnaldo
+ 
+> Thanks,
+> Namhyung
+> 
+> Namhyung Kim (19):
+>   perf stat: Clear screen only if output file is a tty
+>   perf stat: Split print_running() function
+>   perf stat: Split print_noise_pct() function
+>   perf stat: Split print_cgroup() function
+>   perf stat: Split aggr_printout() function
+>   perf stat: Factor out print_counter_value() function
+>   perf stat: Handle bad events in abs_printout()
+>   perf stat: Add before_metric argument
+>   perf stat: Align cgroup names
+>   perf stat: Split print_metric_headers() function
+>   perf stat: Factor out prepare_interval()
+>   perf stat: Cleanup interval print alignment
+>   perf stat: Remove impossible condition
+>   perf stat: Rework header display
+>   perf stat: Move condition to print_footer()
+>   perf stat: Factor out prefix display
+>   perf stat: Factor out print_metric_{begin,end}()
+>   perf stat: Support --for-each-cgroup and --metric-only
+>   perf stat: Add print_aggr_cgroup() for --for-each-cgroup and --topdown
+> 
+>  tools/perf/builtin-stat.c      |   8 +
+>  tools/perf/util/stat-display.c | 996 ++++++++++++++++++++-------------
+>  2 files changed, 624 insertions(+), 380 deletions(-)
+> 
+> 
+> base-commit: 7565f9617efac0c0c8e2dbd08dbe0695d56684f5
+> -- 
+> 2.38.1.493.g58b659f92b-goog
+
+-- 
+
+- Arnaldo
