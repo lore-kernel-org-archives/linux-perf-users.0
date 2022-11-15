@@ -2,100 +2,112 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 85B5CC4332F
-	for <linux-perf-users@archiver.kernel.org>; Tue, 15 Nov 2022 12:01:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 802F9C433FE
+	for <linux-perf-users@archiver.kernel.org>; Tue, 15 Nov 2022 12:14:42 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230139AbiKOMBd (ORCPT
+        id S238008AbiKOMOk (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Tue, 15 Nov 2022 07:01:33 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53560 "EHLO
+        Tue, 15 Nov 2022 07:14:40 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35692 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231822AbiKOMBc (ORCPT
+        with ESMTP id S232976AbiKOMOi (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Tue, 15 Nov 2022 07:01:32 -0500
-Received: from mxct.zte.com.cn (mxct.zte.com.cn [58.251.27.85])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B62BE220C7
-        for <linux-perf-users@vger.kernel.org>; Tue, 15 Nov 2022 04:01:29 -0800 (PST)
-Received: from mxde.zte.com.cn (unknown [10.35.20.121])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mxct.zte.com.cn (FangMail) with ESMTPS id 4NBPsg6VfMz7PFN
-        for <linux-perf-users@vger.kernel.org>; Tue, 15 Nov 2022 20:01:27 +0800 (CST)
-Received: from mxus.zte.com.cn (unknown [10.207.168.8])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mxde.zte.com.cn (FangMail) with ESMTPS id 4NBPsP0bXDz9vSpd
-        for <linux-perf-users@vger.kernel.org>; Tue, 15 Nov 2022 20:01:13 +0800 (CST)
-Received: from mxhk.zte.com.cn (unknown [192.168.250.137])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mxus.zte.com.cn (FangMail) with ESMTPS id 4NBPsG4gzmzdmc15;
-        Tue, 15 Nov 2022 20:01:06 +0800 (CST)
-Received: from mxct.zte.com.cn (unknown [192.168.251.13])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mxhk.zte.com.cn (FangMail) with ESMTPS id 4NBPsC1Z6Rz8R039;
-        Tue, 15 Nov 2022 20:01:03 +0800 (CST)
-Received: from mse-fl2.zte.com.cn (unknown [10.5.228.133])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mxct.zte.com.cn (FangMail) with ESMTPS id 4NBPs713Fgz501Qj;
-        Tue, 15 Nov 2022 20:00:59 +0800 (CST)
-Received: from szxlzmapp04.zte.com.cn ([10.5.231.166])
-        by mse-fl2.zte.com.cn with SMTP id 2AFC0rKn025108;
-        Tue, 15 Nov 2022 20:00:53 +0800 (+08)
-        (envelope-from yang.yang29@zte.com.cn)
-Received: from mapi (szxlzmapp04[null])
-        by mapi (Zmail) with MAPI id mid14;
-        Tue, 15 Nov 2022 20:00:56 +0800 (CST)
-Date:   Tue, 15 Nov 2022 20:00:56 +0800 (CST)
-X-Zmail-TransId: 2b0663737f78ffffffffffcf2e29
-X-Mailer: Zmail v1.0
-Message-ID: <202211152000566769480@zte.com.cn>
-Mime-Version: 1.0
-From:   <yang.yang29@zte.com.cn>
-To:     <mingo@redhat.com>
-Cc:     <acme@kernel.org>, <mark.rutland@arm.com>,
-        <alexander.shishkin@linux.intel.com>, <jolsa@kernel.org>,
-        <namhyung@kernel.org>, <tglx@linutronix.de>, <bp@alien8.de>,
-        <dave.hansen@linux.intel.com>, <x86@kernel.org>, <hpa@zytor.com>,
-        <linux-perf-users@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        <xu.panda@zte.com.cn>, <yang.yang29@zte.com.cn>
-Subject: =?UTF-8?B?W1BBVENIIGxpbnV4LW5leHRdIHBlcmYveDg2L2ludGVsL3B0OiB1c2Ugc3lzZnNfZW1pdCgpIHRvIGluc3RlYWQgb2Ygc2NucHJpbnRmKCk=?=
-Content-Type: text/plain;
-        charset="UTF-8"
-X-MAIL: mse-fl2.zte.com.cn 2AFC0rKn025108
-X-Fangmail-Gw-Spam-Type: 0
-X-FangMail-Miltered: at cgslv5.04-192.168.251.14.novalocal with ID 63737F96.000 by FangMail milter!
-X-FangMail-Envelope: 1668513688/4NBPsg6VfMz7PFN/63737F96.000/10.35.20.121/[10.35.20.121]/mxde.zte.com.cn/<yang.yang29@zte.com.cn>
-X-Fangmail-Anti-Spam-Filtered: true
-X-Fangmail-MID-QID: 63737F96.000/4NBPsg6VfMz7PFN
+        Tue, 15 Nov 2022 07:14:38 -0500
+Received: from mail-yw1-x1130.google.com (mail-yw1-x1130.google.com [IPv6:2607:f8b0:4864:20::1130])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 47D34140FE
+        for <linux-perf-users@vger.kernel.org>; Tue, 15 Nov 2022 04:14:37 -0800 (PST)
+Received: by mail-yw1-x1130.google.com with SMTP id 00721157ae682-37063f855e5so135219147b3.3
+        for <linux-perf-users@vger.kernel.org>; Tue, 15 Nov 2022 04:14:37 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=cc:to:subject:message-id:date:from:mime-version:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=pJ9B/AyuvfxCmb9k0O9GWQZuR6Is6hTYtAiZyyDXWr4=;
+        b=yTeZWAWuz0ZkGXPVuOdjw4baVc7XAMaPWlQo5pjBP0URrWDgUrGhgp9hjLrYaXy+as
+         t/o6dzEeNM/l9Lbju7acnc7EChNAZdIPiSKmrf2lGMfJnQN3jc5t+7L5E5HJYPeK5alL
+         xmKmIiGRM0ISe0AJBGDAvjhpesZ5S4z97AyKutBh2IIIBjfsZcfItXtVvpRlq0VJjbuM
+         SvTor1dTyVvVotzUGLvz2ok13rGrfbtLfyUzyfNMzpv48VYkerQ3dqGDWcdfM0VHA25d
+         9zZbrbNrberr+zH+1Y/GqFPzAxhHe/RqSjFzSSredc3J4NDefXvnvENipZ8EsvloXwxV
+         pwOQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=cc:to:subject:message-id:date:from:mime-version:x-gm-message-state
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=pJ9B/AyuvfxCmb9k0O9GWQZuR6Is6hTYtAiZyyDXWr4=;
+        b=mF3XewHZl/Tn2Dhi/4o8ugEjZSZFTLV+ElyHoARCwVYwVdqDwFuI5wLPk5GhJ6Fcje
+         GZBCN2m1pFMBDNDEqyZcdSxFHbtKI8FrI6aupZmzWM+g1UX34FLiQdvZt9SzsaqAdivw
+         zgMqzdFj5c0a3b594mkYBRg5kypW/TPxtgQKOc4gmQc4DM0GCNYlEiclxF2A+VRMfBvq
+         RyAZlMe5s3Qcv3GBRpRHEXPpYCskCFyvNLiedrgsGwhmV83uLaNzMab5R9S34QVTuRH8
+         RnbV6+wRTuVWEaMQ9X/OWxA1zZAxTbihMPFAadHXcJEvA7NGKwDGh1BrjIZkCEOB/wOS
+         LlyA==
+X-Gm-Message-State: ANoB5pldHS0aueTTrbXTgHOIJcJ/vQu/NPTz5Lj0cG1oLk3JhzL+nLdZ
+        wP2jjoAMAV7ZRNL8F6NvGH//4fU0dcaeR2v7L60MFZOYd0D13w==
+X-Google-Smtp-Source: AA0mqf4WgL5FyUuvn0rk8f3Rxa2UBLFMVnXy0SqIuqGpUtWEZoxgn/mDM93AtXin51nPduY+UYAqfKWIF45emxNi3aM=
+X-Received: by 2002:a0d:cc12:0:b0:373:6d43:2ee6 with SMTP id
+ o18-20020a0dcc12000000b003736d432ee6mr18109812ywd.443.1668514476253; Tue, 15
+ Nov 2022 04:14:36 -0800 (PST)
+MIME-Version: 1.0
+From:   Naresh Kamboju <naresh.kamboju@linaro.org>
+Date:   Tue, 15 Nov 2022 17:44:25 +0530
+Message-ID: <CA+G9fYvOGH92jByQYcFDGBKMQzFma=k=JLuaOOnHDq2FS1vWjQ@mail.gmail.com>
+Subject: perf: gcc-12: tests/builtin-test.c:242:66: error: array subscript 1
+ is outside array bounds of 'struct test_suite *[1]' [-Werror=array-bounds] ^
+To:     open list <linux-kernel@vger.kernel.org>,
+        linux-perf-users@vger.kernel.org
+Cc:     Arnaldo Carvalho de Melo <acme@kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-From: Xu Panda <xu.panda@zte.com.cn>
+You might be aware of the following perf build fails with gcc-12 for
+32bit arm and i386.
+Whereas gcc-11 builds passed.
 
-Replace the open-code with sysfs_emit() to simplify the code.
+Reported-by: Linux Kernel Functional Testing <lkft@linaro.org>
 
-Signed-off-by: Xu Panda <xu.panda@zte.com.cn>
-Signed-off-by: Yang Yang <yang.yang29@zte.com>
----
- arch/x86/events/intel/pt.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+Build log:
+-----------
+  CC      /home/tuxbuild/.cache/tuxmake/builds/1/build/util/block-info.o
+In function '__cmd_test',
+    inlined from 'cmd_test' at tests/builtin-test.c:522:9:
+tests/builtin-test.c:242:66: error: array subscript 1 is outside array
+bounds of 'struct test_suite *[1]' [-Werror=array-bounds]
+  242 |                 for (k = 0, t = tests[j][k]; tests[j][k]; k++,
+t = tests[j][k])
+      |                                                                  ^
+tests/builtin-test.c:351:9: note: in expansion of macro 'for_each_test'
+  351 |         for_each_test(j, k, t) {
+      |         ^~~~~~~~~~~~~
+tests/builtin-test.c: In function 'cmd_test':
+tests/builtin-test.c:35:27: note: at offset 4 into object 'arch_tests' of size 4
+   35 | struct test_suite *__weak arch_tests[] = {
+      |                           ^~~~~~~~~~
+cc1: all warnings being treated as errors
 
-diff --git a/arch/x86/events/intel/pt.c b/arch/x86/events/intel/pt.c
-index 82ef87e9a897..23e249e260f5 100644
---- a/arch/x86/events/intel/pt.c
-+++ b/arch/x86/events/intel/pt.c
-@@ -96,7 +96,7 @@ static ssize_t pt_cap_show(struct device *cdev,
- 		container_of(attr, struct dev_ext_attribute, attr);
- 	enum pt_capabilities cap = (long)ea->var;
+  CC      /home/tuxbuild/.cache/tuxmake/builds/1/build/util/expr.o
+In function 'parse_events_term__num',
+    inlined from 'parse_events_multi_pmu_add' at util/parse-events.c:1594:6:
+util/parse-events.c:2638:64: error: array subscript 'YYLTYPE[0]' is
+partly outside array bounds of 'char[4]' [-Werror=array-bounds]
+ 2638 |                 .err_term  = loc_term ? loc_term->first_column : 0,
+      |                              ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^~~
+util/parse-events.c: In function 'parse_events_multi_pmu_add':
+util/parse-events.c:1579:15: note: object 'config' of size 4
+ 1579 |         char *config;
+      |               ^~~~~~
+cc1: all warnings being treated as errors
 
--	return snprintf(buf, PAGE_SIZE, "%x\n", intel_pt_validate_hw_cap(cap));
-+	return sysfs_emit(buf, "%x\n", intel_pt_validate_hw_cap(cap));
- }
+build log link,
+https://builds.tuxbuild.com/2HXiqb3LCKg451GckF052odBiPY/
 
- static struct attribute_group pt_cap_group __ro_after_init = {
--- 
-2.15.2
+Please refer following links for perf build results comparison between
+gcc-11 and gcc-12
+
+https://qa-reports.linaro.org/lkft/linux-stable-rc-linux-6.0.y/build/v6.0.8-191-gf8896c3ebbcf/testrun/13003574/suite/build/test/gcc-11-lkftconfig-perf/history/
+
+https://qa-reports.linaro.org/lkft/linux-stable-rc-linux-6.0.y/build/v6.0.8-191-gf8896c3ebbcf/testrun/13003574/suite/build/test/gcc-12-lkftconfig-perf/history/
+
+--
+Linaro LKFT
+https://lkft.linaro.org
