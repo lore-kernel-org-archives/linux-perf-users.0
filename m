@@ -2,187 +2,141 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E18D5C433FE
-	for <linux-perf-users@archiver.kernel.org>; Tue, 15 Nov 2022 12:47:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8FF72C43219
+	for <linux-perf-users@archiver.kernel.org>; Tue, 15 Nov 2022 13:10:56 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229736AbiKOMrI (ORCPT
+        id S230088AbiKONKz (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Tue, 15 Nov 2022 07:47:08 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56754 "EHLO
+        Tue, 15 Nov 2022 08:10:55 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43502 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229725AbiKOMrG (ORCPT
+        with ESMTP id S238361AbiKONKQ (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Tue, 15 Nov 2022 07:47:06 -0500
-Received: from mail-wr1-x436.google.com (mail-wr1-x436.google.com [IPv6:2a00:1450:4864:20::436])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4B19C27CF9
-        for <linux-perf-users@vger.kernel.org>; Tue, 15 Nov 2022 04:47:05 -0800 (PST)
-Received: by mail-wr1-x436.google.com with SMTP id w14so24053814wru.8
-        for <linux-perf-users@vger.kernel.org>; Tue, 15 Nov 2022 04:47:05 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20210112;
-        h=content-disposition:mime-version:message-id:subject:cc:to:from:date
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=1SLk2IKOU4p5u1yLi59lJwNiPvqFLA1WCxKL3c6ObnU=;
-        b=OrfEksdNBMA2j/YJGIxsFjjKPVk/DeFSBAmNrhUH2m7Clg6Y9XCzMz1ElVCMslLNb0
-         UkyZn6yCM/CrRGaxRr2m3116ddTA1HpnHh/DVPrWj3HXNs02gMOeEa4W+x+apWiirqIy
-         vtvhqHfE4mQ3Wyje5CZdBHlbQAiYmy1s2LIDzOT4H5wF/fcUWyRpeST3V+rqoeh6nAnG
-         cGcX9WRMgW7Kx7a27BxeRaNNbrErIGZx1ksH8We+lvyQfkRpTyi2f96B/ZiFH6gKYUsZ
-         4ZH5CoEYxsxAQ0gRYaUKyx8ep8IGER6VUV1UN1oyFxRVd5meZFv8S+n9XvDm6ql8itGF
-         WsbA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=content-disposition:mime-version:message-id:subject:cc:to:from:date
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=1SLk2IKOU4p5u1yLi59lJwNiPvqFLA1WCxKL3c6ObnU=;
-        b=h7qerK5lIm7ibXAHg4Xw0qbjvUi+/70UB6letNe/Hzp8zuOnvnVgGRC18V2sNtWuXN
-         61/q5A+7imP9FUvCbAuQLVvCGh9hcV6ZD7kaOfBIKsehRwBlPzr9sgD1YFhTErECSofK
-         uJCfKwmRmsEcuuWPPpixCYbAkVHY5FaBwJrvSO7Qm2Bub8dlDk45T/Zn6b6vUO8Ba3J6
-         FRcslUdZDBfiZvsaPXWAkfRy22/OyNEyS9i8BWv18u0F5fo4l9vMrXGx7yi29hc2F4sZ
-         R/el7KTNvw1TNOsYCbsms2V7c8tTA7u5LD7y6+DlNJ2nc7/uf1nmO+5KB9eZc3+8s2b5
-         /Q3w==
-X-Gm-Message-State: ANoB5plhsEEVqSLKS29caMyBtdRWRegDOVY85hcADeOjdYaZjW7WMJyd
-        NyMQPjDq4/M0WmqScGFYNvCUvoy5oR0=
-X-Google-Smtp-Source: AA0mqf4nzQmtGTg3wnZ4vvQjYPcFHKmGQJt4QU++Ieik4yZjBQmQrFp5km2lYKSl1PF13tLFCVdF6w==
-X-Received: by 2002:adf:fa42:0:b0:22e:3e09:ffdd with SMTP id y2-20020adffa42000000b0022e3e09ffddmr10323594wrr.423.1668516423881;
-        Tue, 15 Nov 2022 04:47:03 -0800 (PST)
-Received: from localhost ([102.36.222.112])
-        by smtp.gmail.com with ESMTPSA id t5-20020adfe445000000b00236740c6e6fsm12250346wrm.100.2022.11.15.04.47.02
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 15 Nov 2022 04:47:03 -0800 (PST)
-Date:   Tue, 15 Nov 2022 15:46:59 +0300
-From:   Dan Carpenter <error27@gmail.com>
-To:     peterz@infradead.org
-Cc:     linux-perf-users@vger.kernel.org
-Subject: [bug report] perf: Rewrite core context handling
-Message-ID: <Y3OKQ/Rwm6qVyG3I@kili>
+        Tue, 15 Nov 2022 08:10:16 -0500
+Received: from ams.source.kernel.org (ams.source.kernel.org [IPv6:2604:1380:4601:e00::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A3DDBB0B;
+        Tue, 15 Nov 2022 05:10:13 -0800 (PST)
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by ams.source.kernel.org (Postfix) with ESMTPS id C52BDB80B31;
+        Tue, 15 Nov 2022 13:10:11 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 264C0C433C1;
+        Tue, 15 Nov 2022 13:10:10 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1668517810;
+        bh=MlDA+oqYxJDdDaP/NGSE8qbeh4hc59e+oXYuN/jvZZ4=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=odgzcxE5CbJWLLJz0EfUa/KYbt1sClD3O22Bq1xqx02zzYgWXYr4kunEQWHLK/2ON
+         RDaZ8TGixaV4OwllWGtFUuoGfNo6LwBiDqM/h3TzaYfN1x9Sk03qt3+zej+xT51JID
+         JyyMI+0l7XkRSdyloS8QwAFCntkpOQ9mxE3ADZp+DyaA7FpTCrsMmNxFqBFxGM+GPi
+         Fv4cPMRhVWLGn3UNV+Jso9qPWqzuSlF9LzvOCYAeZ0fEeKBY97Pjad2J+Uh8I4xPPR
+         SvZRN4ewBCARtdE7e/m22iOa++FgpDSHP+WQPgAm+Ynz0HwknvXofOUK6ItAQDFyRD
+         Xfysixmo6kflw==
+Received: by quaco.ghostprotocols.net (Postfix, from userid 1000)
+        id 919AF4034E; Tue, 15 Nov 2022 10:10:07 -0300 (-03)
+Date:   Tue, 15 Nov 2022 10:10:07 -0300
+From:   Arnaldo Carvalho de Melo <acme@kernel.org>
+To:     Thomas Richter <tmricht@linux.ibm.com>
+Cc:     Andreas Krebbel <krebbel@linux.ibm.com>,
+        linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org,
+        svens@linux.ibm.com, gor@linux.ibm.com, sumanthk@linux.ibm.com,
+        hca@linux.ibm.com, Ingo Molnar <mingo@kernel.org>
+Subject: Re: [PATCH v2] perf list: Add PMU pai_ext event description for IBM
+ z16
+Message-ID: <Y3OPr3oIwld5omGu@kernel.org>
+References: <20221111135402.858623-1-tmricht@linux.ibm.com>
+ <Y3JnjmxPX+m7G9HL@kernel.org>
+ <c1f8de28-1948-85b1-cd85-5bbd301e22bc@linux.ibm.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <c1f8de28-1948-85b1-cd85-5bbd301e22bc@linux.ibm.com>
+X-Url:  http://acmel.wordpress.com
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-[ Resending two weeks of email.  Crap.  -dan ]
+Em Tue, Nov 15, 2022 at 09:58:22AM +0100, Thomas Richter escreveu:
+> On 11/14/22 17:06, Arnaldo Carvalho de Melo wrote:
+> > Em Fri, Nov 11, 2022 at 02:54:02PM +0100, Thomas Richter escreveu:
+> >> Add the event description for the IBM z16 pai_ext PMU released with
+> >> commit c432fefe8e62 ("s390/pai: Add support for PAI Extension 1 NNPA counters")
 
-Hello Peter Zijlstra,
+> >> The document SA22-7832-13 "z/Architecture Principles of Operation",
+> >> published May, 2022, contains the description of the Processor
+> >> Activity Instrumentation Facility and the NNPA counter set., See
+> >> Pages 5-113 to 5-116.
 
-The patch bd2756811766: "perf: Rewrite core context handling" from
-Oct 8, 2022, leads to the following Smatch static checker warning:
+> >> Signed-off-by: Thomas Richter <tmricht@linux.ibm.com>
 
-kernel/events/core.c:13190 inherit_event() warn: 'pmu_ctx' is an error pointer or valid
+> >> --- /dev/null
+> >> +++ b/tools/perf/pmu-events/arch/s390/cf_z16/pai_ext.json
+> >> @@ -0,0 +1,198 @@
+> >> +[
+> >> +	{
+> >> +		"Unit": "PAI-EXT",
+> >> +		"EventCode": "6144",
+> >> +		"EventName": "NNPA_ALL",
+> >> +		"BriefDescription": "NNPA ALL",
+> >> +		"PublicDescription": "Sum of all non zero NNPA counters"
+> >> +	},
 
-kernel/events/core.c
-    13146 static struct perf_event *
-    13147 inherit_event(struct perf_event *parent_event,
-    13148               struct task_struct *parent,
-    13149               struct perf_event_context *parent_ctx,
-    13150               struct task_struct *child,
-    13151               struct perf_event *group_leader,
-    13152               struct perf_event_context *child_ctx)
-    13153 {
-    13154         enum perf_event_state parent_state = parent_event->state;
-    13155         struct perf_event_pmu_context *pmu_ctx;
-    13156         struct perf_event *child_event;
-    13157         unsigned long flags;
-    13158 
-    13159         /*
-    13160          * Instead of creating recursive hierarchies of events,
-    13161          * we link inherited events back to the original parent,
-    13162          * which has a filp for sure, which we use as the reference
-    13163          * count:
-    13164          */
-    13165         if (parent_event->parent)
-    13166                 parent_event = parent_event->parent;
-    13167 
-    13168         child_event = perf_event_alloc(&parent_event->attr,
-    13169                                            parent_event->cpu,
-    13170                                            child,
-    13171                                            group_leader, parent_event,
-    13172                                            NULL, NULL, -1);
-    13173         if (IS_ERR(child_event))
-    13174                 return child_event;
-                          ^^^^^^^^^^^^^^^^^^^
-inherit_event() has historically returned a mix of error pointers and
-NULL.  I am not clear on the rules.
+> > Since the Brief description mentions NNPA, shouldn't the Public
+> > Description expand on this "NNPA" acronym?, something like:
 
-    13175 
-    13176         pmu_ctx = find_get_pmu_context(child_event->pmu, child_ctx, child_event);
---> 13177         if (!pmu_ctx) {
+> > Oops, can't expand on that since there isn't a link to that SA22-7832-13
+> > document.
 
-The find_get_pmu_context() function only returns error pointers so this
-is straight forward, but I don't know if this path should return an
-error pointer or NULL or what.  Probably easiest to just report it to
-you.  :)
+> > Googling for it...
 
-    13178                 free_event(child_event);
-    13179                 return NULL;
-    13180         }
-    13181         child_event->pmu_ctx = pmu_ctx;
-    13182 
-    13183         /*
-    13184          * is_orphaned_event() and list_add_tail(&parent_event->child_list)
-    13185          * must be under the same lock in order to serialize against
-    13186          * perf_event_release_kernel(), such that either we must observe
-    13187          * is_orphaned_event() or they will observe us on the child_list.
-    13188          */
-    13189         mutex_lock(&parent_event->child_mutex);
-    13190         if (is_orphaned_event(parent_event) ||
-    13191             !atomic_long_inc_not_zero(&parent_event->refcount)) {
-    13192                 mutex_unlock(&parent_event->child_mutex);
-    13193                 /* task_ctx_data is freed with child_ctx */
-    13194                 free_event(child_event);
-    13195                 return NULL;
-    13196         }
-    13197 
-    13198         get_ctx(child_ctx);
-    13199 
-    13200         /*
-    13201          * Make the child state follow the state of the parent event,
-    13202          * not its attr.disabled bit.  We hold the parent's mutex,
-    13203          * so we won't race with perf_event_{en, dis}able_family.
-    13204          */
-    13205         if (parent_state >= PERF_EVENT_STATE_INACTIVE)
-    13206                 child_event->state = PERF_EVENT_STATE_INACTIVE;
-    13207         else
-    13208                 child_event->state = PERF_EVENT_STATE_OFF;
-    13209 
-    13210         if (parent_event->attr.freq) {
-    13211                 u64 sample_period = parent_event->hw.sample_period;
-    13212                 struct hw_perf_event *hwc = &child_event->hw;
-    13213 
-    13214                 hwc->sample_period = sample_period;
-    13215                 hwc->last_period   = sample_period;
-    13216 
-    13217                 local64_set(&hwc->period_left, sample_period);
-    13218         }
-    13219 
-    13220         child_event->ctx = child_ctx;
-    13221         child_event->overflow_handler = parent_event->overflow_handler;
-    13222         child_event->overflow_handler_context
-    13223                 = parent_event->overflow_handler_context;
-    13224 
-    13225         /*
-    13226          * Precalculate sample_data sizes
-    13227          */
-    13228         perf_event__header_size(child_event);
-    13229         perf_event__id_header_size(child_event);
-    13230 
-    13231         /*
-    13232          * Link it up in the child's context:
-    13233          */
-    13234         raw_spin_lock_irqsave(&child_ctx->lock, flags);
-    13235         add_event_to_ctx(child_event, child_ctx);
-    13236         child_event->attach_state |= PERF_ATTACH_CHILD;
-    13237         raw_spin_unlock_irqrestore(&child_ctx->lock, flags);
-    13238 
-    13239         /*
-    13240          * Link this into the parent event's child list
-    13241          */
-    13242         list_add_tail(&child_event->child_list, &parent_event->child_list);
-    13243         mutex_unlock(&parent_event->child_mutex);
-    13244 
-    13245         return child_event;
-    13246 }
+> > https://www-40.ibm.com/servers/resourcelink/svc03100.nsf/pages/zResourceLinkUrl?OpenDocument&url=http://www.ibm.com/servers/resourcelink/lib03010.nsf/0/B9DE5F05A9D57819852571C500428F9A/$file/SA22-7832-13.pdf
 
-regards,
-dan carpenter
+> > Ok, requires registration.
+
+> > I wonder what is the value of these descriptions then :-\
+
+> > I miss Ingo jumping into these discussions :-)
+ 
+> I added Andreas Krebbel to the discussion, he knows more than I on this counters.
+ 
+> NNPA stands for Neural Networks Processing Assist. This is a new feature in 
+> the IBM z16. Here is a quote from Document SG2489-51 IBM z16 (3931) Technical Guide:
+ 
+> <START-OF-QUOTE>
+>   "The new IBM z16 microprocessor chip, also called the IBM Telum processor, integrates a
+>    new AI accelerator. This innovation brings incredible value to applications and workloads that
+>    are running on IBM Z platform.
+>    Customers can benefit from the integrated AI accelerator by adding AI operations that are
+>    used to perform fraud prevention and fraud detection, customer behavior predictions, and
+>    supply chain operations. All of these operations are done in real time and fully integrated in
+>    transactional workloads. As a result, valuable insights are gained from their data instantly.
+> 
+>    ...
+>    The AI accelerator is driven by the new Neural Networks Processing Assist (NNPA)
+>    instruction.
+>    NNPA is a new nonprivileged Complex Instruction Set Computer (CISC) memory-to-memory
+>    instruction that operates on tensor objects that are in user program’s memory. AI functions
+>    and macros are abstracted by NNPA."
+> <END-OF-QUOTE>
+> 
+> This intension of this patch is to give a small hint on what these NNPA counters are
+> supposed to count and operate on. A full explanation is given in the document
+> SA22-7832-13 "z/Architecture Principles of Operation", Chapter 26, pp 26-1 to 26-115.
+> 
+> If you think this small description is not worth it, then we can drop the patch.
+
+So perhaps:
+
++	{
++		"Unit": "PAI-EXT",
++		"EventCode": "6144",
++		"EventName": "NNPA_ALL",
++		"BriefDescription": "NNPA ALL",
++		"PublicDescription": "Sum of all non zero NNPA (Neural Networks Processing Assist) counters"
++	},
+
+?
+
+- Arnaldo
