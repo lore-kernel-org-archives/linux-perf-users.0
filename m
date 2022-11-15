@@ -2,170 +2,163 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BCCBBC43219
-	for <linux-perf-users@archiver.kernel.org>; Mon, 14 Nov 2022 23:04:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1BD6BC4332F
+	for <linux-perf-users@archiver.kernel.org>; Tue, 15 Nov 2022 06:28:48 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S238189AbiKNXEy (ORCPT
+        id S229810AbiKOG2m (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Mon, 14 Nov 2022 18:04:54 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55382 "EHLO
+        Tue, 15 Nov 2022 01:28:42 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52072 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S238122AbiKNXES (ORCPT
+        with ESMTP id S230033AbiKOG2f (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Mon, 14 Nov 2022 18:04:18 -0500
-Received: from mail-pf1-x432.google.com (mail-pf1-x432.google.com [IPv6:2607:f8b0:4864:20::432])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 51A1F1D31B;
-        Mon, 14 Nov 2022 15:03:00 -0800 (PST)
-Received: by mail-pf1-x432.google.com with SMTP id v28so12454107pfi.12;
-        Mon, 14 Nov 2022 15:03:00 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20210112;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:sender:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=V4xN0opfJbQJnUhtmkfw3MqwhSTJXF+vfzMgniki+7E=;
-        b=qp+2rjNM+J44UCbw2i7qNgQQzk43z/lronElv7ycCE0x0q3pB0H01Zu+XInPlr3cmO
-         sdvCIDkGTMiM2xX06ojIfQgY3kfNbDU1fkd02QN1WVppq1OtZcJHbyuy1OoAbN0IUhyJ
-         JxmPVqs1Na39z65j+J5QHOnBoks2WCbahhJP/iwJAB4RJIXbuG1e+9SiahttpSTcxoAL
-         m+xamjwEljBP0Xs67NtjxDaOjH2pWsDh/UrqR0DCbuWdi8eSLj7uDD5OMa68htyWtCHG
-         ipKnF+4OkUzovf81ZtzQ7f4O5AwZN4Q0kvV0trr6pJhrYHGX8aQOGgOgOpmhZjDxHUAV
-         Va3g==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:sender:x-gm-message-state:from
-         :to:cc:subject:date:message-id:reply-to;
-        bh=V4xN0opfJbQJnUhtmkfw3MqwhSTJXF+vfzMgniki+7E=;
-        b=T9a71s3X6RFabSIv9Vs/sql/o1lj1SXeFznTQzdx4L1S9d7WB74CLh6dKgAYcXNJIK
-         KPFF0nUSl9y20T/OUiNmARkgR0fXpRWWr2PoRQaabk9OWzJ1XuXc+8tMgli1vBQogzzd
-         hK67eL4nleEzjG4p+TN/O6vG7d4Gkq3Cd2gY2l98FkWW3gxfqZo7TR/Ze8tbhekzSrm5
-         YLjEt9bfEpo+R1fs4AC9Hgnc/oZ3s3thrfYN5SgSs8JwFLx8WmaVbfbYXHeHaOl+Hy7N
-         xYu0hvJ/oBlVNE6ZswcgCHqNJrQY2O5B5axH4K9eoqmq6k9ktOZeK2XOAQhEd+4B4xhb
-         dT0g==
-X-Gm-Message-State: ANoB5pnCqkfg4hIjUpPy59uuEAIJBaKFy5BvInO5f55rUzEjUzSvsALy
-        M+G6rAKHWS24dZgHwebYYq0=
-X-Google-Smtp-Source: AA0mqf6chQrISyKGDSM8yTtWqC9coU7avrKK7VK5jxUBz0T8Xx+B1g2Cf8CKhjxGcJxwrPQMrIWkCA==
-X-Received: by 2002:a63:a504:0:b0:456:4f9a:fbb6 with SMTP id n4-20020a63a504000000b004564f9afbb6mr13599960pgf.318.1668466979496;
-        Mon, 14 Nov 2022 15:02:59 -0800 (PST)
-Received: from balhae.hsd1.ca.comcast.net ([2601:647:6780:a80:cf9f:e038:c19b:797e])
-        by smtp.gmail.com with ESMTPSA id 132-20020a62148a000000b0056c814a501dsm7534724pfu.10.2022.11.14.15.02.58
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 14 Nov 2022 15:02:59 -0800 (PST)
-Sender: Namhyung Kim <namhyung@gmail.com>
-From:   Namhyung Kim <namhyung@kernel.org>
-To:     Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Jiri Olsa <jolsa@kernel.org>
-Cc:     Ingo Molnar <mingo@kernel.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Ian Rogers <irogers@google.com>,
-        Adrian Hunter <adrian.hunter@intel.com>,
-        linux-perf-users@vger.kernel.org,
-        Kan Liang <kan.liang@linux.intel.com>,
-        Zhengjun Xing <zhengjun.xing@linux.intel.com>,
-        James Clark <james.clark@arm.com>,
-        Athira Jajeev <atrajeev@linux.vnet.ibm.com>
-Subject: [PATCH 19/19] perf stat: Add print_aggr_cgroup() for --for-each-cgroup and --topdown
-Date:   Mon, 14 Nov 2022 15:02:27 -0800
-Message-Id: <20221114230227.1255976-20-namhyung@kernel.org>
-X-Mailer: git-send-email 2.38.1.493.g58b659f92b-goog
-In-Reply-To: <20221114230227.1255976-1-namhyung@kernel.org>
-References: <20221114230227.1255976-1-namhyung@kernel.org>
+        Tue, 15 Nov 2022 01:28:35 -0500
+Received: from out30-130.freemail.mail.aliyun.com (out30-130.freemail.mail.aliyun.com [115.124.30.130])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id ECB729FF5;
+        Mon, 14 Nov 2022 22:28:32 -0800 (PST)
+X-Alimail-AntiSpam: AC=PASS;BC=-1|-1;BR=01201311R821e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=ay29a033018046056;MF=renyu.zj@linux.alibaba.com;NM=1;PH=DS;RN=19;SR=0;TI=SMTPD_---0VUs.4Oo_1668493707;
+Received: from 30.221.131.168(mailfrom:renyu.zj@linux.alibaba.com fp:SMTPD_---0VUs.4Oo_1668493707)
+          by smtp.aliyun-inc.com;
+          Tue, 15 Nov 2022 14:28:29 +0800
+Message-ID: <f832ac1f-5874-50f4-334f-5c4fb68cea7d@linux.alibaba.com>
+Date:   Tue, 15 Nov 2022 14:28:27 +0800
 MIME-Version: 1.0
+User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.15; rv:102.0)
+ Gecko/20100101 Thunderbird/102.4.1
+Subject: Re: [RFC PATCH v2 3/6] perf vendor events arm64: Add cache metrics
+ for neoverse-n2
+To:     Xing Zhengjun <zhengjun.xing@linux.intel.com>,
+        linux-arm-kernel@lists.infradead.org,
+        linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org,
+        John Garry <john.garry@huawei.com>,
+        Will Deacon <will@kernel.org>,
+        James Clark <james.clark@arm.com>,
+        Mike Leach <mike.leach@linaro.org>,
+        Leo Yan <leo.yan@linaro.org>
+Cc:     Peter Zijlstra <peterz@infradead.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        Arnaldo Carvalho de Melo <acme@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Jiri Olsa <jolsa@kernel.org>,
+        Namhyung Kim <namhyung@kernel.org>,
+        Andrew Kilroy <andrew.kilroy@arm.com>,
+        Shuai Xue <xueshuai@linux.alibaba.com>,
+        Zhuo Song <zhuo.song@linux.alibaba.com>
+References: <1668411720-3581-1-git-send-email-renyu.zj@linux.alibaba.com>
+ <1668411720-3581-4-git-send-email-renyu.zj@linux.alibaba.com>
+ <b39171e6-4af3-6102-2207-aad57dc92226@linux.intel.com>
+From:   Jing Zhang <renyu.zj@linux.alibaba.com>
+In-Reply-To: <b39171e6-4af3-6102-2207-aad57dc92226@linux.intel.com>
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-Normally, --for-each-cgroup only works with AGGR_GLOBAL.  However
-the --topdown on some cpu (e.g. Intel Skylake) converts it to the
-AGGR_CORE internally.
 
-To support those machines, add print_aggr_cgroup and handle the events
-like in print_cgroup_events().
 
-  $ perf stat -a --for-each-cgroup system.slice,user.slice --topdown sleep 1
-  nmi_watchdog enabled with topdown. May give wrong results.
-  Disable with echo 0 > /proc/sys/kernel/nmi_watchdog
-
-   Performance counter stats for 'system wide':
-
-                                                  retiring      bad speculation       frontend bound        backend bound
-  S0-D0-C0              2  system.slice                   49.0%               -46.6%                31.4%
-  S0-D0-C1              2  system.slice                   55.5%                 8.0%                45.5%                -9.0%
-  S0-D0-C2              2  system.slice                   87.8%                22.1%                30.3%               -40.3%
-  S0-D0-C3              2  system.slice                   53.3%               -11.9%                45.2%                13.4%
-  S0-D0-C0              2  user.slice                    123.5%                 4.0%                48.5%               -75.9%
-  S0-D0-C1              2  user.slice                     19.9%                 6.5%                89.9%               -16.3%
-  S0-D0-C2              2  user.slice                     29.9%                 7.9%                71.3%                -9.1%
-  S0-D0-C3              2  user.slice                     28.0%                 7.2%                43.3%                21.5%
-
-         1.004136937 seconds time elapsed
-
-Signed-off-by: Namhyung Kim <namhyung@kernel.org>
----
- tools/perf/util/stat-display.c | 41 +++++++++++++++++++++++++++++++++-
- 1 file changed, 40 insertions(+), 1 deletion(-)
-
-diff --git a/tools/perf/util/stat-display.c b/tools/perf/util/stat-display.c
-index cf25ed99b5df..f5501760ff2e 100644
---- a/tools/perf/util/stat-display.c
-+++ b/tools/perf/util/stat-display.c
-@@ -900,6 +900,42 @@ static void print_aggr(struct perf_stat_config *config,
- 	}
- }
- 
-+static void print_aggr_cgroup(struct perf_stat_config *config,
-+			      struct evlist *evlist,
-+			      char *prefix)
-+{
-+	bool metric_only = config->metric_only;
-+	struct evsel *counter, *evsel;
-+	struct cgroup *cgrp = NULL;
-+	int s;
-+
-+	if (!config->aggr_map || !config->aggr_get_id)
-+		return;
-+
-+	evlist__for_each_entry(evlist, evsel) {
-+		if (cgrp == evsel->cgrp)
-+			continue;
-+
-+		cgrp = evsel->cgrp;
-+
-+		for (s = 0; s < config->aggr_map->nr; s++) {
-+			print_metric_begin(config, evlist, prefix, s, cgrp);
-+
-+			evlist__for_each_entry(evlist, counter) {
-+				if (counter->merged_stat)
-+					continue;
-+
-+				if (counter->cgrp != cgrp)
-+					continue;
-+
-+				print_counter_aggrdata(config, counter, s, prefix,
-+						       metric_only);
-+			}
-+			print_metric_end(config);
-+		}
-+	}
-+}
-+
- static void print_counter(struct perf_stat_config *config,
- 			  struct evsel *counter, char *prefix)
- {
-@@ -1361,7 +1397,10 @@ void evlist__print_counters(struct evlist *evlist, struct perf_stat_config *conf
- 	case AGGR_DIE:
- 	case AGGR_SOCKET:
- 	case AGGR_NODE:
--		print_aggr(config, evlist, prefix);
-+		if (config->cgroup_list)
-+			print_aggr_cgroup(config, evlist, prefix);
-+		else
-+			print_aggr(config, evlist, prefix);
- 		break;
- 	case AGGR_THREAD:
- 	case AGGR_GLOBAL:
--- 
-2.38.1.493.g58b659f92b-goog
+在 2022/11/14 下午4:35, Xing Zhengjun 写道:
+> 
+> 
+> On 11/14/2022 3:41 PM, Jing Zhang wrote:
+>> Add cache related metrics.
+>>
+>> Signed-off-by: Jing Zhang <renyu.zj@linux.alibaba.com>
+>> ---
+>>   .../arch/arm64/arm/neoverse-n2/metrics.json        | 77 ++++++++++++++++++++++
+>>   1 file changed, 77 insertions(+)
+>>
+>> diff --git a/tools/perf/pmu-events/arch/arm64/arm/neoverse-n2/metrics.json b/tools/perf/pmu-events/arch/arm64/arm/neoverse-n2/metrics.json
+>> index 324ca12..1690ef6 100644
+>> --- a/tools/perf/pmu-events/arch/arm64/arm/neoverse-n2/metrics.json
+>> +++ b/tools/perf/pmu-events/arch/arm64/arm/neoverse-n2/metrics.json
+>> @@ -54,5 +54,82 @@
+>>           "BriefDescription": "The rate of DTLB Walks to the overall TLB lookups",
+>>           "MetricGroup": "TLB",
+>>           "MetricName": "dtlb_walk_rate"
+>> +    },
+>> +    {
+>> +        "MetricExpr": "L1I_CACHE_REFILL / INST_RETIRED * 1000",
+>> +        "PublicDescription": "The rate of L1 I-Cache misses per kilo instructions",
+>> +        "BriefDescription": "The rate of L1 I-Cache misses per kilo instructions",
+>> +        "MetricGroup": "Cache",
+>> +        "MetricName": "l1i_cache_mpki"
+>> +    },
+>> +    {
+>> +        "MetricExpr": "L1I_CACHE_REFILL / L1I_CACHE",
+>> +        "PublicDescription": "The rate of L1 I-Cache misses to the overall L1 I-Cache",
+>> +        "BriefDescription": "The rate of L1 I-Cache misses to the overall L1 I-Cache",
+>> +        "MetricGroup": "Cache",
+>> +        "MetricName": "l1i_cache_miss_rate"
+>> +    },
+>> +    {
+>> +        "MetricExpr": "L1D_CACHE_REFILL / INST_RETIRED * 1000",
+>> +        "PublicDescription": "The rate of L1 D-Cache misses per kilo instructions",
+>> +        "BriefDescription": "The rate of L1 D-Cache misses per kilo instructions",
+>> +        "MetricGroup": "Cache",
+>> +        "MetricName": "l1d_cache_mpki"
+>> +    },
+>> +    {
+>> +        "MetricExpr": "L1D_CACHE_REFILL / L1D_CACHE",
+>> +        "PublicDescription": "The rate of L1 D-Cache misses to the overall L1 D-Cache",
+>> +        "BriefDescription": "The rate of L1 D-Cache misses to the overall L1 D-Cache",
+>> +        "MetricGroup": "Cache",
+>> +        "MetricName": "l1d_cache_miss_rate"
+>> +    },
+>> +    {
+>> +        "MetricExpr": "L2D_CACHE_REFILL / INST_RETIRED * 1000",
+>> +        "PublicDescription": "The rate of L2 D-Cache misses per kilo instructions",
+>> +        "BriefDescription": "The rate of L2 D-Cache misses per kilo instructions",
+>> +        "MetricGroup": "Cache",
+>> +        "MetricName": "l2d_cache_mpki"
+>> +    },
+>> +    {
+>> +        "MetricExpr": "L2D_CACHE_REFILL / L2D_CACHE",
+>> +        "PublicDescription": "The rate of L2 D-Cache misses to the overall L2 D-Cache",
+>> +        "BriefDescription": "The rate of L2 D-Cache misses to the overall L2 D-Cache",
+>> +        "MetricGroup": "Cache",
+>> +        "MetricName": "l2d_cache_miss_rate"
+>> +    },
+>> +    {
+>> +        "MetricExpr": "L3D_CACHE_REFILL / INST_RETIRED * 1000",
+>> +        "PublicDescription": "The rate of L3 D-Cache misses per kilo instructions",
+>> +        "BriefDescription": "The rate of L3 D-Cache misses per kilo instructions",
+>> +        "MetricGroup": "Cache",
+>> +        "MetricName": "l3d_cache_mpki"
+>> +    },
+>> +    {
+>> +        "MetricExpr": "L3D_CACHE_REFILL / L3D_CACHE",
+>> +        "PublicDescription": "The rate of L3 D-Cache misses to the overall L3 D-Cache",
+>> +        "BriefDescription": "The rate of L3 D-Cache misses to the overall L3 D-Cache",
+>> +        "MetricGroup": "Cache",
+>> +        "MetricName": "l3d_cache_miss_rate"
+>> +    },
+>> +    {
+>> +        "MetricExpr": "LL_CACHE_MISS_RD / INST_RETIRED * 1000",
+>> +        "PublicDescription": "The rate of LL Cache read misses per kilo instructions",
+>> +        "BriefDescription": "The rate of LL Cache read misses per kilo instructions",
+>> +        "MetricGroup": "Cache",
+>> +        "MetricName": "ll_cache_read_mpki"
+>> +    },
+>> +    {
+>> +        "MetricExpr": "LL_CACHE_MISS_RD / LL_CACHE_RD",
+>> +        "PublicDescription": "The rate of LL Cache read misses to the overall LL Cache read",
+>> +        "BriefDescription": "The rate of LL Cache read misses to the overall LL Cache read",
+>> +        "MetricGroup": "Cache",
+>> +        "MetricName": "ll_cache_read_miss_rate"
+>> +    },
+>> +    {
+>> +        "MetricExpr": "(LL_CACHE_RD - LL_CACHE_MISS_RD) / LL_CACHE_RD",
+>> +        "PublicDescription": "The rate of LL Cache read hit to the overall LL Cache read",
+>> +        "BriefDescription": "The rate of LL Cache read hit to the overall LL Cache read",
+>> +        "MetricGroup": "Cache",
+>> +        "MetricName": "ll_cache_read_hit_rate"
+>>       }
+>>   ]
+>> \ No newline at end of file
+> 
+> It is better to fix this by adding a newline at the end of the file.
+> 
+OK, thanks for pointing it out.
 
