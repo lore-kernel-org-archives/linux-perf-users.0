@@ -2,163 +2,112 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1BD6BC4332F
-	for <linux-perf-users@archiver.kernel.org>; Tue, 15 Nov 2022 06:28:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 743B3C4332F
+	for <linux-perf-users@archiver.kernel.org>; Tue, 15 Nov 2022 07:16:51 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229810AbiKOG2m (ORCPT
+        id S230217AbiKOHQu (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Tue, 15 Nov 2022 01:28:42 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52072 "EHLO
+        Tue, 15 Nov 2022 02:16:50 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40836 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230033AbiKOG2f (ORCPT
+        with ESMTP id S229732AbiKOHQt (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Tue, 15 Nov 2022 01:28:35 -0500
-Received: from out30-130.freemail.mail.aliyun.com (out30-130.freemail.mail.aliyun.com [115.124.30.130])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id ECB729FF5;
-        Mon, 14 Nov 2022 22:28:32 -0800 (PST)
-X-Alimail-AntiSpam: AC=PASS;BC=-1|-1;BR=01201311R821e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=ay29a033018046056;MF=renyu.zj@linux.alibaba.com;NM=1;PH=DS;RN=19;SR=0;TI=SMTPD_---0VUs.4Oo_1668493707;
-Received: from 30.221.131.168(mailfrom:renyu.zj@linux.alibaba.com fp:SMTPD_---0VUs.4Oo_1668493707)
-          by smtp.aliyun-inc.com;
-          Tue, 15 Nov 2022 14:28:29 +0800
-Message-ID: <f832ac1f-5874-50f4-334f-5c4fb68cea7d@linux.alibaba.com>
-Date:   Tue, 15 Nov 2022 14:28:27 +0800
+        Tue, 15 Nov 2022 02:16:49 -0500
+Received: from mail-pj1-x1035.google.com (mail-pj1-x1035.google.com [IPv6:2607:f8b0:4864:20::1035])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E34A51DF05;
+        Mon, 14 Nov 2022 23:16:48 -0800 (PST)
+Received: by mail-pj1-x1035.google.com with SMTP id c15-20020a17090a1d0f00b0021365864446so13027154pjd.4;
+        Mon, 14 Nov 2022 23:16:48 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20210112;
+        h=content-transfer-encoding:in-reply-to:from:references:cc:to
+         :content-language:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=fjcqU0Yv2A32s2SZaZ6INj/8QiFmDDgMwnvLoZG299s=;
+        b=dNKpJeTd6cmZ1Y4DYaObSz+BJLYLnYUShR4aN0WDIO3wvs9eKnEM6tmit5ENISJbrU
+         NSAxdqpi/ESsnzioUNCYWYUcIQgY2dM7W0b8PaOqkP1Byg1YS3+L6V2BDjNEmLH1Bn33
+         vBLbs4wBd0/XDSQn6mTs97Vov5H78tf8S70wkNTElWLAAYlAPofG27S2zVArw716l1G3
+         pEQd5tq6cTcy5QxPhVyJbJgIwiSSf6xMrhw0GzpaIm+NbsVayjHXghHSoSWyEmtPWCG6
+         Gk0EK0R4f2fKPm9S1yn3DWjL6ghgjWYY5wtcNMVhu2HtDVGPVtTut9emFg/5c8CxGds2
+         Khhg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=content-transfer-encoding:in-reply-to:from:references:cc:to
+         :content-language:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=fjcqU0Yv2A32s2SZaZ6INj/8QiFmDDgMwnvLoZG299s=;
+        b=4VjdFQIi1QQWfj63qOR89dsxAL1hYj+XBaLq3MHtPWljQLY/MKFHQlOxwqJx/0wxPE
+         MgmjJhA2PdSZWjrWeXomY1yusx6yaVlNbhSgbRuGYlWmGWzhIyJNsEXq8WuzaGh3Eapp
+         fKyQnjWEC7MChc6/H4dy9nNNAlb0HPPXF2ZSvRlgZSwEi+5CgIOs+Lc6knuKEmm5xmqY
+         rD3GGmtCF6COyMXWmC67pU4PwVonN13SRxDk8r7KQSsk1NG2q0MhvRd8zPG7f40DzqFI
+         2NxI2jruIc1lVGKAZctxod027fd4fGuqaZqSK7Z6p3szCc0T0+jf1D8xsyYRU1J0O3+W
+         fr4w==
+X-Gm-Message-State: ANoB5pmNfsreifKfFs5DQcDLYkNpKnaKxQgws/knKskUyulraFn1huiI
+        JFC/BNOUngg8bnFB/AInzBs=
+X-Google-Smtp-Source: AA0mqf7j4019WSw9o5A9HTPkOlX3C5kSR007f4WWqq/s+ccX9gim1nD47CLbQfmjsANAkAmAFjEY1g==
+X-Received: by 2002:a17:902:b691:b0:187:30f0:b16b with SMTP id c17-20020a170902b69100b0018730f0b16bmr2832376pls.14.1668496608366;
+        Mon, 14 Nov 2022 23:16:48 -0800 (PST)
+Received: from [192.168.255.10] ([103.7.29.32])
+        by smtp.gmail.com with ESMTPSA id x2-20020a170902b40200b0018685257c0dsm8864195plr.58.2022.11.14.23.16.38
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Mon, 14 Nov 2022 23:16:47 -0800 (PST)
+Message-ID: <42fc9103-bbd8-0482-e2fc-49589b6698b5@gmail.com>
+Date:   Tue, 15 Nov 2022 15:16:28 +0800
 MIME-Version: 1.0
 User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.15; rv:102.0)
- Gecko/20100101 Thunderbird/102.4.1
-Subject: Re: [RFC PATCH v2 3/6] perf vendor events arm64: Add cache metrics
- for neoverse-n2
-To:     Xing Zhengjun <zhengjun.xing@linux.intel.com>,
-        linux-arm-kernel@lists.infradead.org,
-        linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org,
-        John Garry <john.garry@huawei.com>,
-        Will Deacon <will@kernel.org>,
-        James Clark <james.clark@arm.com>,
-        Mike Leach <mike.leach@linaro.org>,
-        Leo Yan <leo.yan@linaro.org>
-Cc:     Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Jiri Olsa <jolsa@kernel.org>,
-        Namhyung Kim <namhyung@kernel.org>,
-        Andrew Kilroy <andrew.kilroy@arm.com>,
-        Shuai Xue <xueshuai@linux.alibaba.com>,
-        Zhuo Song <zhuo.song@linux.alibaba.com>
-References: <1668411720-3581-1-git-send-email-renyu.zj@linux.alibaba.com>
- <1668411720-3581-4-git-send-email-renyu.zj@linux.alibaba.com>
- <b39171e6-4af3-6102-2207-aad57dc92226@linux.intel.com>
-From:   Jing Zhang <renyu.zj@linux.alibaba.com>
-In-Reply-To: <b39171e6-4af3-6102-2207-aad57dc92226@linux.intel.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+ Gecko/20100101 Thunderbird/102.4.2
+Subject: Re: [PATCH v3 3/3] perf/x86/intel: Expose EPT-friendly PEBS for SPR
+ and future models
+Content-Language: en-US
+To:     Peter Zijlstra <peterz@infradead.org>,
+        Kan Liang <kan.liang@linux.intel.com>
+Cc:     Sean Christopherson <seanjc@google.com>,
+        Paolo Bonzini <pbonzini@redhat.com>,
+        linux-kernel@vger.kernel.org, kvm@vger.kernel.org,
+        linux-perf-users@vger.kernel.org
+References: <20221109082802.27543-1-likexu@tencent.com>
+ <20221109082802.27543-4-likexu@tencent.com>
+ <Y3I4o4Y/TcqidyJT@hirez.programming.kicks-ass.net>
+From:   Like Xu <like.xu.linux@gmail.com>
+In-Reply-To: <Y3I4o4Y/TcqidyJT@hirez.programming.kicks-ass.net>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-
-
-在 2022/11/14 下午4:35, Xing Zhengjun 写道:
-> 
-> 
-> On 11/14/2022 3:41 PM, Jing Zhang wrote:
->> Add cache related metrics.
+On 14/11/2022 8:46 pm, Peter Zijlstra wrote:
+> On Wed, Nov 09, 2022 at 04:28:02PM +0800, Like Xu wrote:
+>> From: Like Xu <likexu@tencent.com>
 >>
->> Signed-off-by: Jing Zhang <renyu.zj@linux.alibaba.com>
+>> According to Intel SDM, the EPT-friendly PEBS is supported by all the
+>> platforms after ICX, ADL and the future platforms with PEBS format 5.
+>>
+>> Currently the only in-kernel user of this capability is KVM, which has
+>> very limited support for hybrid core pmu, so ADL and its successors do
+>> not currently expose this capability. When both hybrid core and PEBS
+>> format 5 are present, KVM will decide on its own merits.
+> 
+> Oh right; the whole ADL KVM trainwreck :/ What's the plan there?
+
+As we know, our community doesn't really have a plan in terms of feature reception,
+considering hyprid pmu doesn't have market share in the data center (where most KVM
+users are, and the test farms), and KVM-based client hypervisor will actively 
+control the
+cpu that the KVM module initializes, and adds more trainwreck, so as of now I don't
+have a timeline for vPMU on ADL+ (until there are noteworthy user complaints).
+
+Please let me know if you and Kan have other input.
+
+> 
+>> Cc: Peter Zijlstra <peterz@infradead.org>
+>> Cc: linux-perf-users@vger.kernel.org
+>> Suggested-by: Kan Liang <kan.liang@linux.intel.com>
+>> Signed-off-by: Like Xu <likexu@tencent.com>
+>> Reviewed-by: Kan Liang <kan.liang@linux.intel.com>
 >> ---
->>   .../arch/arm64/arm/neoverse-n2/metrics.json        | 77 ++++++++++++++++++++++
->>   1 file changed, 77 insertions(+)
->>
->> diff --git a/tools/perf/pmu-events/arch/arm64/arm/neoverse-n2/metrics.json b/tools/perf/pmu-events/arch/arm64/arm/neoverse-n2/metrics.json
->> index 324ca12..1690ef6 100644
->> --- a/tools/perf/pmu-events/arch/arm64/arm/neoverse-n2/metrics.json
->> +++ b/tools/perf/pmu-events/arch/arm64/arm/neoverse-n2/metrics.json
->> @@ -54,5 +54,82 @@
->>           "BriefDescription": "The rate of DTLB Walks to the overall TLB lookups",
->>           "MetricGroup": "TLB",
->>           "MetricName": "dtlb_walk_rate"
->> +    },
->> +    {
->> +        "MetricExpr": "L1I_CACHE_REFILL / INST_RETIRED * 1000",
->> +        "PublicDescription": "The rate of L1 I-Cache misses per kilo instructions",
->> +        "BriefDescription": "The rate of L1 I-Cache misses per kilo instructions",
->> +        "MetricGroup": "Cache",
->> +        "MetricName": "l1i_cache_mpki"
->> +    },
->> +    {
->> +        "MetricExpr": "L1I_CACHE_REFILL / L1I_CACHE",
->> +        "PublicDescription": "The rate of L1 I-Cache misses to the overall L1 I-Cache",
->> +        "BriefDescription": "The rate of L1 I-Cache misses to the overall L1 I-Cache",
->> +        "MetricGroup": "Cache",
->> +        "MetricName": "l1i_cache_miss_rate"
->> +    },
->> +    {
->> +        "MetricExpr": "L1D_CACHE_REFILL / INST_RETIRED * 1000",
->> +        "PublicDescription": "The rate of L1 D-Cache misses per kilo instructions",
->> +        "BriefDescription": "The rate of L1 D-Cache misses per kilo instructions",
->> +        "MetricGroup": "Cache",
->> +        "MetricName": "l1d_cache_mpki"
->> +    },
->> +    {
->> +        "MetricExpr": "L1D_CACHE_REFILL / L1D_CACHE",
->> +        "PublicDescription": "The rate of L1 D-Cache misses to the overall L1 D-Cache",
->> +        "BriefDescription": "The rate of L1 D-Cache misses to the overall L1 D-Cache",
->> +        "MetricGroup": "Cache",
->> +        "MetricName": "l1d_cache_miss_rate"
->> +    },
->> +    {
->> +        "MetricExpr": "L2D_CACHE_REFILL / INST_RETIRED * 1000",
->> +        "PublicDescription": "The rate of L2 D-Cache misses per kilo instructions",
->> +        "BriefDescription": "The rate of L2 D-Cache misses per kilo instructions",
->> +        "MetricGroup": "Cache",
->> +        "MetricName": "l2d_cache_mpki"
->> +    },
->> +    {
->> +        "MetricExpr": "L2D_CACHE_REFILL / L2D_CACHE",
->> +        "PublicDescription": "The rate of L2 D-Cache misses to the overall L2 D-Cache",
->> +        "BriefDescription": "The rate of L2 D-Cache misses to the overall L2 D-Cache",
->> +        "MetricGroup": "Cache",
->> +        "MetricName": "l2d_cache_miss_rate"
->> +    },
->> +    {
->> +        "MetricExpr": "L3D_CACHE_REFILL / INST_RETIRED * 1000",
->> +        "PublicDescription": "The rate of L3 D-Cache misses per kilo instructions",
->> +        "BriefDescription": "The rate of L3 D-Cache misses per kilo instructions",
->> +        "MetricGroup": "Cache",
->> +        "MetricName": "l3d_cache_mpki"
->> +    },
->> +    {
->> +        "MetricExpr": "L3D_CACHE_REFILL / L3D_CACHE",
->> +        "PublicDescription": "The rate of L3 D-Cache misses to the overall L3 D-Cache",
->> +        "BriefDescription": "The rate of L3 D-Cache misses to the overall L3 D-Cache",
->> +        "MetricGroup": "Cache",
->> +        "MetricName": "l3d_cache_miss_rate"
->> +    },
->> +    {
->> +        "MetricExpr": "LL_CACHE_MISS_RD / INST_RETIRED * 1000",
->> +        "PublicDescription": "The rate of LL Cache read misses per kilo instructions",
->> +        "BriefDescription": "The rate of LL Cache read misses per kilo instructions",
->> +        "MetricGroup": "Cache",
->> +        "MetricName": "ll_cache_read_mpki"
->> +    },
->> +    {
->> +        "MetricExpr": "LL_CACHE_MISS_RD / LL_CACHE_RD",
->> +        "PublicDescription": "The rate of LL Cache read misses to the overall LL Cache read",
->> +        "BriefDescription": "The rate of LL Cache read misses to the overall LL Cache read",
->> +        "MetricGroup": "Cache",
->> +        "MetricName": "ll_cache_read_miss_rate"
->> +    },
->> +    {
->> +        "MetricExpr": "(LL_CACHE_RD - LL_CACHE_MISS_RD) / LL_CACHE_RD",
->> +        "PublicDescription": "The rate of LL Cache read hit to the overall LL Cache read",
->> +        "BriefDescription": "The rate of LL Cache read hit to the overall LL Cache read",
->> +        "MetricGroup": "Cache",
->> +        "MetricName": "ll_cache_read_hit_rate"
->>       }
->>   ]
->> \ No newline at end of file
+>> Nit: This change is proposed to be applied via the KVM tree.
 > 
-> It is better to fix this by adding a newline at the end of the file.
+> Works for me;
 > 
-OK, thanks for pointing it out.
-
+> Acked-by: Peter Zijlstra (Intel) <peterz@infradead.org>
