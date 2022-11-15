@@ -2,142 +2,82 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AA89FC43217
-	for <linux-perf-users@archiver.kernel.org>; Tue, 15 Nov 2022 14:04:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 495A4C43217
+	for <linux-perf-users@archiver.kernel.org>; Tue, 15 Nov 2022 14:40:19 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S237725AbiKOOEp (ORCPT
+        id S230244AbiKOOkR (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Tue, 15 Nov 2022 09:04:45 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60686 "EHLO
+        Tue, 15 Nov 2022 09:40:17 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55232 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S238496AbiKOOEi (ORCPT
+        with ESMTP id S230222AbiKOOkR (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Tue, 15 Nov 2022 09:04:38 -0500
+        Tue, 15 Nov 2022 09:40:17 -0500
 Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 152452B1B8;
-        Tue, 15 Nov 2022 06:04:36 -0800 (PST)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A30081DDD6;
+        Tue, 15 Nov 2022 06:40:16 -0800 (PST)
 Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id C0CE96179B;
-        Tue, 15 Nov 2022 14:04:35 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 02317C433D7;
-        Tue, 15 Nov 2022 14:04:35 +0000 (UTC)
+        by dfw.source.kernel.org (Postfix) with ESMTPS id 3D525617D2;
+        Tue, 15 Nov 2022 14:40:16 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPS id 99CD9C433B5;
+        Tue, 15 Nov 2022 14:40:15 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1668521075;
-        bh=6Qvlg1lMg7fGpa0P20E6tpgyxeNcsHw0v3LYS/R+ins=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=BuVnbGVQaBDcYpT71SQqSB0uAmvRUAFOkRj21Wbt7EacCJ0FIaRRRiQ30gUhbqYyn
-         hAv9PGVP4xcMdCqQc7V/nrbje1A50Wdwg4ZES0NWj+dDNOEczihuH+lh4MPLLW2pPT
-         j0zIaf/kWvZHjl14AjWvXe72W76fRd/F+/IZ2nDQDXPMd4FRCCfPONz2n3mgNVpKWP
-         yYaberTyw1cGR9GUf94FnGfKGcLDp4YeslxH9PEkI64JNUDrpHv1VhAkWyeTEKfhId
-         vUib+maSyDdUiqKFxtmLQGRyotiTCgRA9Xn5tflkwB3TfuYwp97lW7yUPOrXu13Yna
-         nAzwfaND15YXA==
-Received: by quaco.ghostprotocols.net (Postfix, from userid 1000)
-        id B7B13407ED; Tue, 15 Nov 2022 11:04:31 -0300 (-03)
-Date:   Tue, 15 Nov 2022 11:04:31 -0300
-From:   Arnaldo Carvalho de Melo <acme@kernel.org>
-To:     Namhyung Kim <namhyung@kernel.org>
-Cc:     Jiri Olsa <jolsa@kernel.org>, Ingo Molnar <mingo@kernel.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Ian Rogers <irogers@google.com>,
-        Adrian Hunter <adrian.hunter@intel.com>,
-        linux-perf-users@vger.kernel.org,
-        Kan Liang <kan.liang@linux.intel.com>,
-        Zhengjun Xing <zhengjun.xing@linux.intel.com>,
-        James Clark <james.clark@arm.com>,
-        Athira Jajeev <atrajeev@linux.vnet.ibm.com>
-Subject: Re: [PATCHSET 00/19] perf stat: Improve perf stat output (v1)
-Message-ID: <Y3Ocb2Ie4PCx2t1X@kernel.org>
-References: <20221114230227.1255976-1-namhyung@kernel.org>
+        s=k20201202; t=1668523215;
+        bh=jPI1jRT23/lK6CcvQACSi0pCkrudmNLDNQtDy5gk1sc=;
+        h=Subject:From:Date:References:In-Reply-To:To:Cc:From;
+        b=VStS3lfiSlvSdEHo/Uw7gbGl+iObVNGENQ0p1ARp14DaNg2OQH+WSFzJ8s7yFOp1U
+         pDKScE2mBas788/vqlZ+ONGF9jzoEVSSxUxPNS0z3GYwZg8sakf47JhLunMX53xzhU
+         cb8yIREh8IxKviw5YAhbB6LvqoZFNAeZdTHf7U7J3oEvuty76Vt0GJ7hanolm5hJ3x
+         EZfOj/PYmudpI7eGGUG5oIzQLpiS7j90WE5m6DdrvaHMJOag4DkwsTuxy3CW3datcv
+         p8JYQcQlmdTx4uPGQP6IWCPfSvztBltbRQUoo8gXkyo+3ahkaVPpqik6DNtwwBmH1K
+         gqRfCXAZ4zSvQ==
+Received: from aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (localhost.localdomain [127.0.0.1])
+        by aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (Postfix) with ESMTP id 7D808C395FE;
+        Tue, 15 Nov 2022 14:40:15 +0000 (UTC)
+Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20221114230227.1255976-1-namhyung@kernel.org>
-X-Url:  http://acmel.wordpress.com
+Content-Transfer-Encoding: 8bit
+Subject: Re: [PATCH bpf] perf,
+ bpf: Use subprog name when reporting subprog ksymbol
+From:   patchwork-bot+netdevbpf@kernel.org
+Message-Id: <166852321551.8656.10733510198219998954.git-patchwork-notify@kernel.org>
+Date:   Tue, 15 Nov 2022 14:40:15 +0000
+References: <20221114095733.158588-1-houtao@huaweicloud.com>
+In-Reply-To: <20221114095733.158588-1-houtao@huaweicloud.com>
+To:     Hou Tao <houtao@huaweicloud.com>
+Cc:     bpf@vger.kernel.org, jolsa@kernel.org, andrii@kernel.org,
+        song@kernel.org, ast@kernel.org, daniel@iogearbox.net,
+        sdf@google.com, houtao1@huawei.com,
+        linux-perf-users@vger.kernel.org, peterz@infradead.org,
+        mingo@redhat.com, acme@kernel.org
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-Em Mon, Nov 14, 2022 at 03:02:08PM -0800, Namhyung Kim escreveu:
-> Hello,
-> 
-> I'm working on cleanup up the perf stat code.  The main focus this time
-> is the display logic which has various combinations of options.
-> 
-> I split the code for each output mode - std, csv and json.  And then
-> organize them according to the purpose like header, prefix, value,
-> metric and footer.  I hope this would help maintaining the code a bit
-> more.
-> 
-> Also I found that cgroup support is missing or insufficient.
-> Specifically when --for-each-cgroup option is given, it'd have multiple
-> copies of the events for those cgroups.  Then the output should group
-> the result.  This is true for the normal output mode, but the metric-
-> only mode didn't support it well.
-> 
-> With this change, I can see the per-cgroup topdown metrics like below:
-> 
->   $ sudo ./perf stat -a --topdown --for-each-cgroup user.slice,system.slice sleep 3
->   nmi_watchdog enabled with topdown. May give wrong results.
->   Disable with echo 0 > /proc/sys/kernel/nmi_watchdog
-> 
->    Performance counter stats for 'system wide':
-> 
->                                   retiring      bad speculation   frontend bound    backend bound
->   S0-D0-C0      2  user.slice            117.3%         3.9%            47.8%           -69.1%
->   S0-D0-C1      2  user.slice            119.8%         4.1%            49.3%           -73.2%
->   S0-D0-C2      2  user.slice             24.4%         7.9%            68.4%             0.0%
->   S0-D0-C3      2  user.slice             24.0%         9.2%            91.2%           -24.4%
->   S0-D0-C0      2  system.slice           73.5%         4.0%            19.4%             3.1%
->   S0-D0-C1      2  system.slice           90.0%         5.8%            19.7%           -15.5%
->   S0-D0-C2      2  system.slice          101.2%         6.6%            33.4%           -41.1%
->   S0-D0-C3      2  system.slice           90.7%         4.9%            22.3%           -18.0%
-> 
->          3.001678216 seconds time elapsed
-> 
-> You can get it from 'perf/stat-display-v1' branch in
-> 
->   git://git.kernel.org/pub/scm/linux/kernel/git/namhyung/linux-perf.git
+Hello:
 
-applied locally, build testing.
+This patch was applied to bpf/bpf.git (master)
+by Daniel Borkmann <daniel@iogearbox.net>:
 
-- Arnaldo
- 
-> Thanks,
-> Namhyung
+On Mon, 14 Nov 2022 17:57:33 +0800 you wrote:
+> From: Hou Tao <houtao1@huawei.com>
 > 
-> Namhyung Kim (19):
->   perf stat: Clear screen only if output file is a tty
->   perf stat: Split print_running() function
->   perf stat: Split print_noise_pct() function
->   perf stat: Split print_cgroup() function
->   perf stat: Split aggr_printout() function
->   perf stat: Factor out print_counter_value() function
->   perf stat: Handle bad events in abs_printout()
->   perf stat: Add before_metric argument
->   perf stat: Align cgroup names
->   perf stat: Split print_metric_headers() function
->   perf stat: Factor out prepare_interval()
->   perf stat: Cleanup interval print alignment
->   perf stat: Remove impossible condition
->   perf stat: Rework header display
->   perf stat: Move condition to print_footer()
->   perf stat: Factor out prefix display
->   perf stat: Factor out print_metric_{begin,end}()
->   perf stat: Support --for-each-cgroup and --metric-only
->   perf stat: Add print_aggr_cgroup() for --for-each-cgroup and --topdown
+> Since commit bfea9a8574f3 ("bpf: Add name to struct bpf_ksym"), when
+> reporting subprog ksymbol to perf, prog name instead of subprog name is
+> used. The backtrace of bpf program with subprogs will be incorrect as
+> shown below:
 > 
->  tools/perf/builtin-stat.c      |   8 +
->  tools/perf/util/stat-display.c | 996 ++++++++++++++++++++-------------
->  2 files changed, 624 insertions(+), 380 deletions(-)
-> 
-> 
-> base-commit: 7565f9617efac0c0c8e2dbd08dbe0695d56684f5
-> -- 
-> 2.38.1.493.g58b659f92b-goog
+> [...]
 
+Here is the summary with links:
+  - [bpf] perf, bpf: Use subprog name when reporting subprog ksymbol
+    https://git.kernel.org/bpf/bpf/c/47df8a2f78bc
+
+You are awesome, thank you!
 -- 
+Deet-doot-dot, I am a bot.
+https://korg.docs.kernel.org/patchwork/pwbot.html
 
-- Arnaldo
+
