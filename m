@@ -2,124 +2,98 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C4333C433FE
-	for <linux-perf-users@archiver.kernel.org>; Wed, 16 Nov 2022 06:27:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id ED5B9C4332F
+	for <linux-perf-users@archiver.kernel.org>; Wed, 16 Nov 2022 07:13:07 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231194AbiKPG1E (ORCPT
+        id S232678AbiKPHNG (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Wed, 16 Nov 2022 01:27:04 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45372 "EHLO
+        Wed, 16 Nov 2022 02:13:06 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41008 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232739AbiKPG0z (ORCPT
+        with ESMTP id S232501AbiKPHNF (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Wed, 16 Nov 2022 01:26:55 -0500
-Received: from mga09.intel.com (mga09.intel.com [134.134.136.24])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B8C731EADA;
-        Tue, 15 Nov 2022 22:26:54 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1668580014; x=1700116014;
-  h=message-id:date:mime-version:subject:to:cc:references:
-   from:in-reply-to:content-transfer-encoding;
-  bh=VPlFL8jUyFa1MMZ7DA2Tz8GtEeApeW6GmOfofaLQunk=;
-  b=bBvL9p1IVL2YLpoBYA2QY/6kPWTavry20Vvs6r241CKEmCfBqQiHHZ4P
-   8xcN/53zFaztS1nmuv2RFxGN+JsJ2fjKCPwS6TTBbGdD8vELT8EvniHyG
-   NDfN/BxY1Fv8V6UkIpVD3dGZ9CUxS2B0s0jffZpOi8pNRKryUt9MLW25l
-   46zydxSbCTkq/MhheitPafYHg3saMtiaDIrf20eU5hRcuvDAV/3T9YjHL
-   cwLUfwm/gqudjDEPha0nCvRVui0J/427QWznJRukBI8fcrti0b0CslxeI
-   fZp4M6V65TM2him1JAIlYWTj0N+JgC8Lz3gundPQJ2WM6uJnCHsOK/51k
-   A==;
-X-IronPort-AV: E=McAfee;i="6500,9779,10532"; a="313614475"
-X-IronPort-AV: E=Sophos;i="5.96,167,1665471600"; 
-   d="scan'208";a="313614475"
-Received: from fmsmga002.fm.intel.com ([10.253.24.26])
-  by orsmga102.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 15 Nov 2022 22:26:53 -0800
-X-IronPort-AV: E=McAfee;i="6500,9779,10532"; a="744921069"
-X-IronPort-AV: E=Sophos;i="5.96,167,1665471600"; 
-   d="scan'208";a="744921069"
-Received: from ahunter6-mobl1.ger.corp.intel.com (HELO [10.0.2.15]) ([10.252.32.88])
-  by fmsmga002-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 15 Nov 2022 22:26:51 -0800
-Message-ID: <64900077-5d34-2323-d642-8e6de958809f@intel.com>
-Date:   Wed, 16 Nov 2022 08:26:47 +0200
-MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
- Firefox/102.0 Thunderbird/102.4.2
-Subject: Re: [PATCH] perf/x86/intel/pt: Fix sampling using single range output
-Content-Language: en-US
-To:     Andi Kleen <ak@linux.intel.com>,
-        Peter Zijlstra <peterz@infradead.org>
-Cc:     Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        linux-kernel@vger.kernel.org, Ingo Molnar <mingo@redhat.com>,
-        linux-perf-users@vger.kernel.org
-References: <20221112151508.13768-1-adrian.hunter@intel.com>
- <Y3IdnRgEPq2FN/ZX@hirez.programming.kicks-ass.net>
- <dfbeecdb-c97c-993f-da03-5f3d1f141c61@intel.com>
- <Y3I7sIjlhQix81P2@hirez.programming.kicks-ass.net>
- <878rkcdmqv.fsf@linux.intel.com>
-From:   Adrian Hunter <adrian.hunter@intel.com>
-Organization: Intel Finland Oy, Registered Address: PL 281, 00181 Helsinki,
- Business Identity Code: 0357606 - 4, Domiciled in Helsinki
-In-Reply-To: <878rkcdmqv.fsf@linux.intel.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+        Wed, 16 Nov 2022 02:13:05 -0500
+Received: from mail-yb1-xb49.google.com (mail-yb1-xb49.google.com [IPv6:2607:f8b0:4864:20::b49])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 53CBC1F9FF
+        for <linux-perf-users@vger.kernel.org>; Tue, 15 Nov 2022 23:13:04 -0800 (PST)
+Received: by mail-yb1-xb49.google.com with SMTP id c188-20020a25c0c5000000b006d8eba07513so15519049ybf.17
+        for <linux-perf-users@vger.kernel.org>; Tue, 15 Nov 2022 23:13:04 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20210112;
+        h=cc:to:from:subject:mime-version:message-id:date:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=WXJjn8PYB9SLY1j1q0EeB8Piy7lrBilE/8YOyXaTxKY=;
+        b=R9DPkR8U/JCqLAjy/iASbJFaNlfs13ciAt/+B1Xr6//ErVax+n55QLO+EUZuvA+VfB
+         2pVuOsgmRzil/fEpWYMoEcLPRglB0Ehzkq21mYEGqsPs4A4YF+E5RMmBAoLmjWsO1eWj
+         but174NBpm33mr/15kApu2yitVhNIprLILB8Msli2IKr+rakI4O7hv654m4STCOQAAJc
+         j2jVVZLhQ2z94499I6GSdUIptbgySnp9m6CvRAfNWmRGy1mh7TscKwNCD5HF9mVnwVa7
+         94KF1dMAsMJviEXYeH3Ov9KuR2HUPm0jDJuKWxYnX4ALW14ApmAgvLI4MN0HT5hMBeb0
+         RvKQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=cc:to:from:subject:mime-version:message-id:date:x-gm-message-state
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=WXJjn8PYB9SLY1j1q0EeB8Piy7lrBilE/8YOyXaTxKY=;
+        b=Qf994/nmHa7mUaeIBF1k3U81B4cfWlSc1QG0QjNxtMpo0GXqPZPZ2nfANVqrxe7acc
+         93H5qB0R7vPYVdFqwT6pT2n4EhI/0rWkCaI0nRBaRFPbUBFV6hVHgf2YpXfcZrxKaPFF
+         JyHX5xwZzi3rAfxPzSG/daSL1T0ODUH0DUs/CJEPNHWywWkGUyuHOS3zaqHO9xPYS+GV
+         H+jvPemL5HURTO3YOU/dYa/LfXmOT9USj8NSQDpzLQBdLCIZjbhGR5JfipIQtDcmeRr9
+         aHY9TvCuZRU7NRftJ+QSI2PcShPfRcJ6imyWnjkOiV+RNdTnda06cCTkBYC437Oe1eO/
+         bnyg==
+X-Gm-Message-State: ANoB5pnqzO2aiByh7Y8zFNq2Z8wiDy0qg/p6kP4rr+1MgWuLT4hHmWjp
+        RbUuwnmSntUBUaewwrRSBtFHE0r1BGWE
+X-Google-Smtp-Source: AA0mqf5xyH2ENNOTYNJSqYf1bFldRQd/ujUpLe2WBGMxK8gXwmldQunucYc1jZ8DurLzY459eLTt3lmSL+n1
+X-Received: from irogers.svl.corp.google.com ([2620:15c:2d4:203:bf0f:58f3:342e:c1ec])
+ (user=irogers job=sendgmr) by 2002:a25:d808:0:b0:6bd:d36:f096 with SMTP id
+ p8-20020a25d808000000b006bd0d36f096mr20960547ybg.150.1668582783603; Tue, 15
+ Nov 2022 23:13:03 -0800 (PST)
+Date:   Tue, 15 Nov 2022 23:12:55 -0800
+Message-Id: <20221116071259.2832681-1-irogers@google.com>
+Mime-Version: 1.0
+X-Mailer: git-send-email 2.38.1.431.g37b22c650d-goog
+Subject: [PATCH v1 0/4] perf list libpfm support and other fixes
+From:   Ian Rogers <irogers@google.com>
+To:     Weilin Wang <weilin.wang@intel.com>,
+        Perry Taylor <perry.taylor@intel.com>,
+        Caleb Biggers <caleb.biggers@intel.com>,
+        Leo Yan <leo.yan@linaro.org>,
+        Adrian Hunter <adrian.hunter@intel.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        Arnaldo Carvalho de Melo <acme@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Jiri Olsa <jolsa@kernel.org>,
+        Namhyung Kim <namhyung@kernel.org>,
+        Sandipan Das <sandipan.das@amd.com>,
+        Kajol Jain <kjain@linux.ibm.com>,
+        Zhengjun Xing <zhengjun.xing@linux.intel.com>,
+        Kan Liang <kan.liang@linux.intel.com>,
+        Ravi Bangoria <ravi.bangoria@amd.com>,
+        Xin Gao <gaoxin@cdjrlc.com>, Rob Herring <robh@kernel.org>,
+        linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org
+Cc:     Stephane Eranian <eranian@google.com>,
+        Ian Rogers <irogers@google.com>
+Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-On 15/11/22 21:46, Andi Kleen wrote:
-> Peter Zijlstra <peterz@infradead.org> writes:
-> 
->> On Mon, Nov 14, 2022 at 01:10:38PM +0200, Adrian Hunter wrote:
->>> On 14/11/22 12:51, Peter Zijlstra wrote:
->>>> On Sat, Nov 12, 2022 at 05:15:08PM +0200, Adrian Hunter wrote:
->>>>> Deal with errata TGL052, ADL037 and RPL017 "Trace May Contain Incorrect
->>>>> Data When Configured With Single Range Output Larger Than 4KB" by
->>>>> disabling single range output whenever larger than 4KB.
->>>>>
->>>>> Fixes: 670638477aed ("perf/x86/intel/pt: Opportunistically use single range output mode")
->>>>> Cc: stable@vger.kernel.org
->>>>> Signed-off-by: Adrian Hunter <adrian.hunter@intel.com>
->>>>> ---
->>>>>  arch/x86/events/intel/pt.c | 9 +++++++++
->>>>>  1 file changed, 9 insertions(+)
->>>>>
->>>>> diff --git a/arch/x86/events/intel/pt.c b/arch/x86/events/intel/pt.c
->>>>> index 82ef87e9a897..42a55794004a 100644
->>>>> --- a/arch/x86/events/intel/pt.c
->>>>> +++ b/arch/x86/events/intel/pt.c
->>>>> @@ -1263,6 +1263,15 @@ static int pt_buffer_try_single(struct pt_buffer *buf, int nr_pages)
->>>>>  	if (1 << order != nr_pages)
->>>>>  		goto out;
->>>>>  
->>>>> +	/*
->>>>> +	 * Some processors cannot always support single range for more than
->>>>> +	 * 4KB - refer errata TGL052, ADL037 and RPL017. Future processors might
->>>>> +	 * also be affected, so for now rather than trying to keep track of
->>>>> +	 * which ones, just disable it for all.
->>>>> +	 */
->>>>> +	if (nr_pages > 1)
->>>>> +		goto out;
->>>>
->>>> This effectively declares single-output-mode dead? Because I don't think
->>>> anybody uses PT with a single 4K buffer.
->>>
->>> 4K is the default size for "sample mode" i.e. stuffing 4KB of Intel PT trace
->>> data into a PERF_RECORD_SAMPLE record that has sample_type bit PERF_SAMPLE_AUX
->>>
->>> e.g.
->>>
->>> $ perf record -vv --aux-sample -e '{intel_pt//u,cycles:u}' uname 2>err.txt
->>> Linux
->>> $ grep aux_sample_size err.txt
->>>   aux_sample_size                  4096
->>
->> Ah, ok. Not as bad then. Anyway, I'll go queue it for perf/urgent I
->> suppose.
-> 
-> It would be better to only limit on the CPUs with the bug because
-> switching buffers causes some extra latencies. So this patch may regress
-> PT overhead or tail latencies.
+Fix an asan issue and a a lack of libpfm support with the refactored
+perf list code. Add some improvements to wordwrap and the escape
+printing for json to aid this.
 
-I could whitelist CPUs that do not have the issue, because a blacklist
-would keep expanding, which would be a bit of a pain to maintain.
+Ian Rogers (4):
+  perf list: Fix asan issue
+  perf list: Support newlines in wordwrap
+  perf list: Json escape encoding improvements
+  perf list: List callback support for libpfm
+
+ tools/perf/builtin-list.c | 122 ++++++++++++++++++------------
+ tools/perf/util/pfm.c     | 154 +++++++++++++++++---------------------
+ tools/perf/util/pfm.h     |   6 +-
+ 3 files changed, 145 insertions(+), 137 deletions(-)
+
+-- 
+2.38.1.431.g37b22c650d-goog
 
