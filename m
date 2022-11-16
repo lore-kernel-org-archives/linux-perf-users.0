@@ -2,43 +2,42 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6AA3DC43217
-	for <linux-perf-users@archiver.kernel.org>; Wed, 16 Nov 2022 10:32:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 168D9C41535
+	for <linux-perf-users@archiver.kernel.org>; Wed, 16 Nov 2022 10:32:47 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230109AbiKPKck (ORCPT
+        id S233197AbiKPKcl (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Wed, 16 Nov 2022 05:32:40 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38916 "EHLO
+        Wed, 16 Nov 2022 05:32:41 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38358 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S233420AbiKPKcU (ORCPT
+        with ESMTP id S230052AbiKPKbr (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Wed, 16 Nov 2022 05:32:20 -0500
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9439A32BBD
-        for <linux-perf-users@vger.kernel.org>; Wed, 16 Nov 2022 02:27:50 -0800 (PST)
+        Wed, 16 Nov 2022 05:31:47 -0500
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0DDE131ED2
+        for <linux-perf-users@vger.kernel.org>; Wed, 16 Nov 2022 02:27:32 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1668594469;
+        s=mimecast20190719; t=1668594452;
         h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
          to:to:cc:cc:mime-version:mime-version:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=GX1A4FEx/LE5NKT2fU0VhMZiNOmIzFjwXIrq7S69i44=;
-        b=VLPgCw8IW0tQmZvbpZjwgTYSFgZ5hn7LExNbWqufbGcwxrRvwHf+ebFJiitF+MoVxhj8OR
-        ECHViGAp3U9zbBBeiHsRr1pHvpFgCQWJaY8QnqR7IE1NHxk/A6fvKH/jLLgYf0eFyb6Gpl
-        JkyoWG2A4ZKf63f098Jenbg1Zi961T0=
+         content-transfer-encoding:content-transfer-encoding;
+        bh=/1/81f1bc3wgoHEbP5M1Zz0wSDu9jba91U8WGSjmQ70=;
+        b=fYGj02cSbyLDknBriIwlpkOFe3POVgHog4PZhz8VpQFLiekpHMkXEGS1/s0Nqt2aAV7D/n
+        g+1oznKBx0236P8xtRj/h5t/RvfS6N9fDskodCcT/S8UFs6/mSE2Bc/ApXDlxeeX+1T9Kt
+        vyWK3PgEQ9dafk1D1c4vHIsbb5ec1X8=
 Received: from mimecast-mx02.redhat.com (mimecast-mx02.redhat.com
  [66.187.233.88]) by relay.mimecast.com with ESMTP with STARTTLS
  (version=TLSv1.2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- us-mta-553-e8D79onzO9-Dj-jIrITFeA-1; Wed, 16 Nov 2022 05:27:45 -0500
-X-MC-Unique: e8D79onzO9-Dj-jIrITFeA-1
+ us-mta-634-ZOxGenHbOYKZhsRLkhfmqA-1; Wed, 16 Nov 2022 05:27:25 -0500
+X-MC-Unique: ZOxGenHbOYKZhsRLkhfmqA-1
 Received: from smtp.corp.redhat.com (int-mx04.intmail.prod.int.rdu2.redhat.com [10.11.54.4])
         (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
         (No client certificate requested)
-        by mimecast-mx02.redhat.com (Postfix) with ESMTPS id 76CF7185A792;
-        Wed, 16 Nov 2022 10:27:38 +0000 (UTC)
+        by mimecast-mx02.redhat.com (Postfix) with ESMTPS id 71CBB833AED;
+        Wed, 16 Nov 2022 10:27:23 +0000 (UTC)
 Received: from t480s.fritz.box (unknown [10.39.193.216])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 761C02024CC8;
-        Wed, 16 Nov 2022 10:27:31 +0000 (UTC)
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 6687D2024CCA;
+        Wed, 16 Nov 2022 10:27:02 +0000 (UTC)
 From:   David Hildenbrand <david@redhat.com>
 To:     linux-kernel@vger.kernel.org
 Cc:     x86@kernel.org, linux-alpha@vger.kernel.org,
@@ -70,12 +69,59 @@ Cc:     x86@kernel.org, linux-alpha@vger.kernel.org,
         Arnd Bergmann <arnd@arndb.de>,
         Christoph Hellwig <hch@infradead.org>,
         Alex Williamson <alex.williamson@redhat.com>,
-        David Hildenbrand <david@redhat.com>
-Subject: [PATCH mm-unstable v1 02/20] selftests/vm: cow: basic COW tests for non-anonymous pages
-Date:   Wed, 16 Nov 2022 11:26:41 +0100
-Message-Id: <20221116102659.70287-3-david@redhat.com>
-In-Reply-To: <20221116102659.70287-1-david@redhat.com>
-References: <20221116102659.70287-1-david@redhat.com>
+        David Hildenbrand <david@redhat.com>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Alexander Viro <viro@zeniv.linux.org.uk>,
+        Andy Walls <awalls@md.metrocast.net>,
+        Anton Ivanov <anton.ivanov@cambridgegreys.com>,
+        Arnaldo Carvalho de Melo <acme@kernel.org>,
+        Bernard Metzler <bmt@zurich.ibm.com>,
+        Borislav Petkov <bp@alien8.de>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Christian Benvenuti <benve@cisco.com>,
+        Christian Gmeiner <christian.gmeiner@gmail.com>,
+        Christophe Leroy <christophe.leroy@csgroup.eu>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        Daniel Vetter <daniel.vetter@ffwll.ch>,
+        Dave Hansen <dave.hansen@linux.intel.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        Dennis Dalessandro <dennis.dalessandro@cornelisnetworks.com>,
+        Eric Biederman <ebiederm@xmission.com>,
+        Hans Verkuil <hverkuil@xs4all.nl>,
+        "H. Peter Anvin" <hpa@zytor.com>, Ingo Molnar <mingo@redhat.com>,
+        Inki Dae <inki.dae@samsung.com>,
+        Ivan Kokshaysky <ink@jurassic.park.msu.ru>,
+        James Morris <jmorris@namei.org>, Jiri Olsa <jolsa@kernel.org>,
+        Johannes Berg <johannes@sipsolutions.net>,
+        Kees Cook <keescook@chromium.org>,
+        Kentaro Takeda <takedakn@nttdata.co.jp>,
+        Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>,
+        Kyungmin Park <kyungmin.park@samsung.com>,
+        Leon Romanovsky <leon@kernel.org>,
+        Leon Romanovsky <leonro@nvidia.com>,
+        Marek Szyprowski <m.szyprowski@samsung.com>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Matt Turner <mattst88@gmail.com>,
+        Mauro Carvalho Chehab <mchehab@kernel.org>,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        Namhyung Kim <namhyung@kernel.org>,
+        Nelson Escobar <neescoba@cisco.com>,
+        Nicholas Piggin <npiggin@gmail.com>,
+        Oleg Nesterov <oleg@redhat.com>,
+        Paul Moore <paul@paul-moore.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Richard Henderson <richard.henderson@linaro.org>,
+        Richard Weinberger <richard@nod.at>,
+        Russell King <linux+etnaviv@armlinux.org.uk>,
+        "Serge E. Hallyn" <serge@hallyn.com>,
+        Seung-Woo Kim <sw0312.kim@samsung.com>,
+        Tetsuo Handa <penguin-kernel@I-love.SAKURA.ne.jp>,
+        Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Tomasz Figa <tfiga@chromium.org>, Will Deacon <will@kernel.org>
+Subject: [PATCH mm-unstable v1 00/20] mm/gup: remove FOLL_FORCE usage from drivers (reliable R/O long-term pinning)
+Date:   Wed, 16 Nov 2022 11:26:39 +0100
+Message-Id: <20221116102659.70287-1-david@redhat.com>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 X-Scanned-By: MIMEDefang 3.1 on 10.11.54.4
@@ -83,409 +129,128 @@ Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-Let's add basic tests for COW with non-anonymous pages in private
-mappings: write access should properly trigger COW and result in the
-private changes not being visible through other page mappings.
+For now, we did not support reliable R/O long-term pinning in COW mappings.
+That means, if we would trigger R/O long-term pinning in MAP_PRIVATE
+mapping, we could end up pinning the (R/O-mapped) shared zeropage or a
+pagecache page.
 
-Especially, add tests for:
-* Zeropage
-* Huge zeropage
-* Ordinary pagecache pages via memfd and tmpfile()
-* Hugetlb pages via memfd
+The next write access would trigger a write fault and replace the pinned
+page by an exclusive anonymous page in the process page table; whatever the
+process would write to that private page copy would not be visible by the
+owner of the previous page pin: for example, RDMA could read stale data.
+The end result is essentially an unexpected and hard-to-debug memory
+corruption.
 
-Fortunately, all tests pass.
+Some drivers tried working around that limitation by using
+"FOLL_FORCE|FOLL_WRITE|FOLL_LONGTERM" for R/O long-term pinning for now.
+FOLL_WRITE would trigger a write fault, if required, and break COW before
+pinning the page. FOLL_FORCE is required because the VMA might lack write
+permissions, and drivers wanted to make that working as well, just like
+one would expect (no write access, but still triggering a write access to
+break COW).
 
-Signed-off-by: David Hildenbrand <david@redhat.com>
----
- tools/testing/selftests/vm/cow.c | 338 ++++++++++++++++++++++++++++++-
- 1 file changed, 337 insertions(+), 1 deletion(-)
+However, that is not a practical solution, because
+(1) Drivers that don't stick to that undocumented and debatable pattern
+    would still run into that issue. For example, VFIO only uses
+    FOLL_LONGTERM for R/O long-term pinning.
+(2) Using FOLL_WRITE just to work around a COW mapping + page pinning
+    limitation is unintuitive. FOLL_WRITE would, for example, mark the
+    page softdirty or trigger uffd-wp, even though, there actually isn't
+    going to be any write access.
+(3) The purpose of FOLL_FORCE is debug access, not access without lack of
+    VMA permissions by arbitrarty drivers.
 
-diff --git a/tools/testing/selftests/vm/cow.c b/tools/testing/selftests/vm/cow.c
-index d202bfd63585..fb07bd44529c 100644
---- a/tools/testing/selftests/vm/cow.c
-+++ b/tools/testing/selftests/vm/cow.c
-@@ -19,6 +19,7 @@
- #include <sys/mman.h>
- #include <sys/ioctl.h>
- #include <sys/wait.h>
-+#include <linux/memfd.h>
- 
- #include "local_config.h"
- #ifdef LOCAL_CONFIG_HAVE_LIBURING
-@@ -35,6 +36,7 @@ static size_t thpsize;
- static int nr_hugetlbsizes;
- static size_t hugetlbsizes[10];
- static int gup_fd;
-+static bool has_huge_zeropage;
- 
- static void detect_thpsize(void)
- {
-@@ -64,6 +66,31 @@ static void detect_thpsize(void)
- 	close(fd);
- }
- 
-+static void detect_huge_zeropage(void)
-+{
-+	int fd = open("/sys/kernel/mm/transparent_hugepage/use_zero_page",
-+		      O_RDONLY);
-+	size_t enabled = 0;
-+	char buf[15];
-+	int ret;
-+
-+	if (fd < 0)
-+		return;
-+
-+	ret = pread(fd, buf, sizeof(buf), 0);
-+	if (ret > 0 && ret < sizeof(buf)) {
-+		buf[ret] = 0;
-+
-+		enabled = strtoul(buf, NULL, 10);
-+		if (enabled == 1) {
-+			has_huge_zeropage = true;
-+			ksft_print_msg("[INFO] huge zeropage is enabled\n");
-+		}
-+	}
-+
-+	close(fd);
-+}
-+
- static void detect_hugetlbsizes(void)
- {
- 	DIR *dir = opendir("/sys/kernel/mm/hugepages/");
-@@ -1148,6 +1175,312 @@ static int tests_per_anon_test_case(void)
- 	return tests;
- }
- 
-+typedef void (*non_anon_test_fn)(char *mem, const char *smem, size_t size);
-+
-+static void test_cow(char *mem, const char *smem, size_t size)
-+{
-+	char *old = malloc(size);
-+
-+	/* Backup the original content. */
-+	memcpy(old, smem, size);
-+
-+	/* Modify the page. */
-+	memset(mem, 0xff, size);
-+
-+	/* See if we still read the old values via the other mapping. */
-+	ksft_test_result(!memcmp(smem, old, size),
-+			 "Other mapping not modified\n");
-+	free(old);
-+}
-+
-+static void run_with_zeropage(non_anon_test_fn fn, const char *desc)
-+{
-+	char *mem, *smem, tmp;
-+
-+	ksft_print_msg("[RUN] %s ... with shared zeropage\n", desc);
-+
-+	mem = mmap(NULL, pagesize, PROT_READ | PROT_WRITE,
-+		   MAP_PRIVATE | MAP_ANON, -1, 0);
-+	if (mem == MAP_FAILED) {
-+		ksft_test_result_fail("mmap() failed\n");
-+		return;
-+	}
-+
-+	smem = mmap(NULL, pagesize, PROT_READ, MAP_PRIVATE | MAP_ANON, -1, 0);
-+	if (mem == MAP_FAILED) {
-+		ksft_test_result_fail("mmap() failed\n");
-+		goto munmap;
-+	}
-+
-+	/* Read from the page to populate the shared zeropage. */
-+	tmp = *mem + *smem;
-+	asm volatile("" : "+r" (tmp));
-+
-+	fn(mem, smem, pagesize);
-+munmap:
-+	munmap(mem, pagesize);
-+	if (smem != MAP_FAILED)
-+		munmap(smem, pagesize);
-+}
-+
-+static void run_with_huge_zeropage(non_anon_test_fn fn, const char *desc)
-+{
-+	char *mem, *smem, *mmap_mem, *mmap_smem, tmp;
-+	size_t mmap_size;
-+	int ret;
-+
-+	ksft_print_msg("[RUN] %s ... with huge zeropage\n", desc);
-+
-+	if (!has_huge_zeropage) {
-+		ksft_test_result_skip("Huge zeropage not enabled\n");
-+		return;
-+	}
-+
-+	/* For alignment purposes, we need twice the thp size. */
-+	mmap_size = 2 * thpsize;
-+	mmap_mem = mmap(NULL, mmap_size, PROT_READ | PROT_WRITE,
-+			MAP_PRIVATE | MAP_ANONYMOUS, -1, 0);
-+	if (mmap_mem == MAP_FAILED) {
-+		ksft_test_result_fail("mmap() failed\n");
-+		return;
-+	}
-+	mmap_smem = mmap(NULL, mmap_size, PROT_READ,
-+			 MAP_PRIVATE | MAP_ANONYMOUS, -1, 0);
-+	if (mmap_smem == MAP_FAILED) {
-+		ksft_test_result_fail("mmap() failed\n");
-+		goto munmap;
-+	}
-+
-+	/* We need a THP-aligned memory area. */
-+	mem = (char *)(((uintptr_t)mmap_mem + thpsize) & ~(thpsize - 1));
-+	smem = (char *)(((uintptr_t)mmap_smem + thpsize) & ~(thpsize - 1));
-+
-+	ret = madvise(mem, thpsize, MADV_HUGEPAGE);
-+	ret |= madvise(smem, thpsize, MADV_HUGEPAGE);
-+	if (ret) {
-+		ksft_test_result_fail("MADV_HUGEPAGE failed\n");
-+		goto munmap;
-+	}
-+
-+	/*
-+	 * Read from the memory to populate the huge shared zeropage. Read from
-+	 * the first sub-page and test if we get another sub-page populated
-+	 * automatically.
-+	 */
-+	tmp = *mem + *smem;
-+	asm volatile("" : "+r" (tmp));
-+	if (!pagemap_is_populated(pagemap_fd, mem + pagesize) ||
-+	    !pagemap_is_populated(pagemap_fd, smem + pagesize)) {
-+		ksft_test_result_skip("Did not get THPs populated\n");
-+		goto munmap;
-+	}
-+
-+	fn(mem, smem, thpsize);
-+munmap:
-+	munmap(mmap_mem, mmap_size);
-+	if (mmap_smem != MAP_FAILED)
-+		munmap(mmap_smem, mmap_size);
-+}
-+
-+static void run_with_memfd(non_anon_test_fn fn, const char *desc)
-+{
-+	char *mem, *smem, tmp;
-+	int fd;
-+
-+	ksft_print_msg("[RUN] %s ... with memfd\n", desc);
-+
-+	fd = memfd_create("test", 0);
-+	if (fd < 0) {
-+		ksft_test_result_fail("memfd_create() failed\n");
-+		return;
-+	}
-+
-+	/* File consists of a single page filled with zeroes. */
-+	if (fallocate(fd, 0, 0, pagesize)) {
-+		ksft_test_result_fail("fallocate() failed\n");
-+		goto close;
-+	}
-+
-+	/* Create a private mapping of the memfd. */
-+	mem = mmap(NULL, pagesize, PROT_READ | PROT_WRITE, MAP_PRIVATE, fd, 0);
-+	if (mem == MAP_FAILED) {
-+		ksft_test_result_fail("mmap() failed\n");
-+		goto close;
-+	}
-+	smem = mmap(NULL, pagesize, PROT_READ, MAP_SHARED, fd, 0);
-+	if (mem == MAP_FAILED) {
-+		ksft_test_result_fail("mmap() failed\n");
-+		goto munmap;
-+	}
-+
-+	/* Fault the page in. */
-+	tmp = *mem + *smem;
-+	asm volatile("" : "+r" (tmp));
-+
-+	fn(mem, smem, pagesize);
-+munmap:
-+	munmap(mem, pagesize);
-+	if (smem != MAP_FAILED)
-+		munmap(smem, pagesize);
-+close:
-+	close(fd);
-+}
-+
-+static void run_with_tmpfile(non_anon_test_fn fn, const char *desc)
-+{
-+	char *mem, *smem, tmp;
-+	FILE *file;
-+	int fd;
-+
-+	ksft_print_msg("[RUN] %s ... with tmpfile\n", desc);
-+
-+	file = tmpfile();
-+	if (!file) {
-+		ksft_test_result_fail("tmpfile() failed\n");
-+		return;
-+	}
-+
-+	fd = fileno(file);
-+	if (fd < 0) {
-+		ksft_test_result_skip("fileno() failed\n");
-+		return;
-+	}
-+
-+	/* File consists of a single page filled with zeroes. */
-+	if (fallocate(fd, 0, 0, pagesize)) {
-+		ksft_test_result_fail("fallocate() failed\n");
-+		goto close;
-+	}
-+
-+	/* Create a private mapping of the memfd. */
-+	mem = mmap(NULL, pagesize, PROT_READ | PROT_WRITE, MAP_PRIVATE, fd, 0);
-+	if (mem == MAP_FAILED) {
-+		ksft_test_result_fail("mmap() failed\n");
-+		goto close;
-+	}
-+	smem = mmap(NULL, pagesize, PROT_READ, MAP_SHARED, fd, 0);
-+	if (mem == MAP_FAILED) {
-+		ksft_test_result_fail("mmap() failed\n");
-+		goto munmap;
-+	}
-+
-+	/* Fault the page in. */
-+	tmp = *mem + *smem;
-+	asm volatile("" : "+r" (tmp));
-+
-+	fn(mem, smem, pagesize);
-+munmap:
-+	munmap(mem, pagesize);
-+	if (smem != MAP_FAILED)
-+		munmap(smem, pagesize);
-+close:
-+	fclose(file);
-+}
-+
-+static void run_with_memfd_hugetlb(non_anon_test_fn fn, const char *desc,
-+				   size_t hugetlbsize)
-+{
-+	int flags = MFD_HUGETLB;
-+	char *mem, *smem, tmp;
-+	int fd;
-+
-+	ksft_print_msg("[RUN] %s ... with memfd hugetlb (%zu kB)\n", desc,
-+		       hugetlbsize / 1024);
-+
-+	flags |= __builtin_ctzll(hugetlbsize) << MFD_HUGE_SHIFT;
-+
-+	fd = memfd_create("test", flags);
-+	if (fd < 0) {
-+		ksft_test_result_skip("memfd_create() failed\n");
-+		return;
-+	}
-+
-+	/* File consists of a single page filled with zeroes. */
-+	if (fallocate(fd, 0, 0, hugetlbsize)) {
-+		ksft_test_result_skip("need more free huge pages\n");
-+		goto close;
-+	}
-+
-+	/* Create a private mapping of the memfd. */
-+	mem = mmap(NULL, hugetlbsize, PROT_READ | PROT_WRITE, MAP_PRIVATE, fd,
-+		   0);
-+	if (mem == MAP_FAILED) {
-+		ksft_test_result_skip("need more free huge pages\n");
-+		goto close;
-+	}
-+	smem = mmap(NULL, hugetlbsize, PROT_READ, MAP_SHARED, fd, 0);
-+	if (mem == MAP_FAILED) {
-+		ksft_test_result_fail("mmap() failed\n");
-+		goto munmap;
-+	}
-+
-+	/* Fault the page in. */
-+	tmp = *mem + *smem;
-+	asm volatile("" : "+r" (tmp));
-+
-+	fn(mem, smem, hugetlbsize);
-+munmap:
-+	munmap(mem, hugetlbsize);
-+	if (mem != MAP_FAILED)
-+		munmap(smem, hugetlbsize);
-+close:
-+	close(fd);
-+}
-+
-+struct non_anon_test_case {
-+	const char *desc;
-+	non_anon_test_fn fn;
-+};
-+
-+/*
-+ * Test cases that target any pages in private mappings that are non anonymous:
-+ * pages that may get shared via COW ndependent of fork(). This includes
-+ * the shared zeropage(s), pagecache pages, ...
-+ */
-+static const struct non_anon_test_case non_anon_test_cases[] = {
-+	/*
-+	 * Basic COW test without any GUP. If we miss to break COW, changes are
-+	 * visible via other private/shared mappings.
-+	 */
-+	{
-+		"Basic COW",
-+		test_cow,
-+	},
-+};
-+
-+static void run_non_anon_test_case(struct non_anon_test_case const *test_case)
-+{
-+	int i;
-+
-+	run_with_zeropage(test_case->fn, test_case->desc);
-+	run_with_memfd(test_case->fn, test_case->desc);
-+	run_with_tmpfile(test_case->fn, test_case->desc);
-+	if (thpsize)
-+		run_with_huge_zeropage(test_case->fn, test_case->desc);
-+	for (i = 0; i < nr_hugetlbsizes; i++)
-+		run_with_memfd_hugetlb(test_case->fn, test_case->desc,
-+				       hugetlbsizes[i]);
-+}
-+
-+static void run_non_anon_test_cases(void)
-+{
-+	int i;
-+
-+	ksft_print_msg("[RUN] Non-anonymous memory tests in private mappings\n");
-+
-+	for (i = 0; i < ARRAY_SIZE(non_anon_test_cases); i++)
-+		run_non_anon_test_case(&non_anon_test_cases[i]);
-+}
-+
-+static int tests_per_non_anon_test_case(void)
-+{
-+	int tests = 3 + nr_hugetlbsizes;
-+
-+	if (thpsize)
-+		tests += 1;
-+	return tests;
-+}
-+
- int main(int argc, char **argv)
- {
- 	int err;
-@@ -1155,9 +1488,11 @@ int main(int argc, char **argv)
- 	pagesize = getpagesize();
- 	detect_thpsize();
- 	detect_hugetlbsizes();
-+	detect_huge_zeropage();
- 
- 	ksft_print_header();
--	ksft_set_plan(ARRAY_SIZE(anon_test_cases) * tests_per_anon_test_case());
-+	ksft_set_plan(ARRAY_SIZE(anon_test_cases) * tests_per_anon_test_case() +
-+		      ARRAY_SIZE(non_anon_test_cases) * tests_per_non_anon_test_case());
- 
- 	gup_fd = open("/sys/kernel/debug/gup_test", O_RDWR);
- 	pagemap_fd = open("/proc/self/pagemap", O_RDONLY);
-@@ -1165,6 +1500,7 @@ int main(int argc, char **argv)
- 		ksft_exit_fail_msg("opening pagemap failed\n");
- 
- 	run_anon_test_cases();
-+	run_non_anon_test_cases();
- 
- 	err = ksft_get_fail_cnt();
- 	if (err)
+So instead, make R/O long-term pinning work as expected, by breaking COW
+in a COW mapping early, such that we can remove any FOLL_FORCE usage from
+drivers and make FOLL_FORCE ptrace-specific (renaming it to FOLL_PTRACE).
+More details in patch #8.
+
+Patches #1--#3 add COW tests for non-anonymous pages.
+Patches #4--#7 prepare core MM for extended FAULT_FLAG_UNSHARE support in
+COW mappings.
+Patch #8 implements reliable R/O long-term pinning in COW mappings
+Patches #9--#19 remove any FOLL_FORCE usage from drivers.
+Patch #20 renames FOLL_FORCE to FOLL_PTRACE.
+
+I'm refraining from CCing all driver/arch maintainers on the whole patch
+set, but only CC them on the cover letter and the applicable patch
+(I know, I know, someone is always unhappy ... sorry).
+
+RFC -> v1:
+* Use term "ptrace" instead of "debuggers" in patch descriptions
+* Added ACK/Tested-by
+* "mm/frame-vector: remove FOLL_FORCE usage"
+ -> Adjust description
+* "mm: rename FOLL_FORCE to FOLL_PTRACE"
+ -> Added
+
+David Hildenbrand (20):
+  selftests/vm: anon_cow: prepare for non-anonymous COW tests
+  selftests/vm: cow: basic COW tests for non-anonymous pages
+  selftests/vm: cow: R/O long-term pinning reliability tests for
+    non-anon pages
+  mm: add early FAULT_FLAG_UNSHARE consistency checks
+  mm: add early FAULT_FLAG_WRITE consistency checks
+  mm: rework handling in do_wp_page() based on private vs. shared
+    mappings
+  mm: don't call vm_ops->huge_fault() in wp_huge_pmd()/wp_huge_pud() for
+    private mappings
+  mm: extend FAULT_FLAG_UNSHARE support to anything in a COW mapping
+  mm/gup: reliable R/O long-term pinning in COW mappings
+  RDMA/umem: remove FOLL_FORCE usage
+  RDMA/usnic: remove FOLL_FORCE usage
+  RDMA/siw: remove FOLL_FORCE usage
+  media: videobuf-dma-sg: remove FOLL_FORCE usage
+  drm/etnaviv: remove FOLL_FORCE usage
+  media: pci/ivtv: remove FOLL_FORCE usage
+  mm/frame-vector: remove FOLL_FORCE usage
+  drm/exynos: remove FOLL_FORCE usage
+  RDMA/hw/qib/qib_user_pages: remove FOLL_FORCE usage
+  habanalabs: remove FOLL_FORCE usage
+  mm: rename FOLL_FORCE to FOLL_PTRACE
+
+ arch/alpha/kernel/ptrace.c                    |   6 +-
+ arch/arm64/kernel/mte.c                       |   2 +-
+ arch/ia64/kernel/ptrace.c                     |  10 +-
+ arch/mips/kernel/ptrace32.c                   |   4 +-
+ arch/mips/math-emu/dsemul.c                   |   2 +-
+ arch/powerpc/kernel/ptrace/ptrace32.c         |   4 +-
+ arch/sparc/kernel/ptrace_32.c                 |   4 +-
+ arch/sparc/kernel/ptrace_64.c                 |   8 +-
+ arch/x86/kernel/step.c                        |   2 +-
+ arch/x86/um/ptrace_32.c                       |   2 +-
+ arch/x86/um/ptrace_64.c                       |   2 +-
+ drivers/gpu/drm/etnaviv/etnaviv_gem.c         |   8 +-
+ drivers/gpu/drm/exynos/exynos_drm_g2d.c       |   2 +-
+ drivers/infiniband/core/umem.c                |   8 +-
+ drivers/infiniband/hw/qib/qib_user_pages.c    |   2 +-
+ drivers/infiniband/hw/usnic/usnic_uiom.c      |   9 +-
+ drivers/infiniband/sw/siw/siw_mem.c           |   9 +-
+ drivers/media/common/videobuf2/frame_vector.c |   2 +-
+ drivers/media/pci/ivtv/ivtv-udma.c            |   2 +-
+ drivers/media/pci/ivtv/ivtv-yuv.c             |   5 +-
+ drivers/media/v4l2-core/videobuf-dma-sg.c     |  14 +-
+ drivers/misc/habanalabs/common/memory.c       |   3 +-
+ fs/exec.c                                     |   2 +-
+ fs/proc/base.c                                |   2 +-
+ include/linux/mm.h                            |  35 +-
+ include/linux/mm_types.h                      |   8 +-
+ kernel/events/uprobes.c                       |   4 +-
+ kernel/ptrace.c                               |  12 +-
+ mm/gup.c                                      |  38 +-
+ mm/huge_memory.c                              |  13 +-
+ mm/hugetlb.c                                  |  14 +-
+ mm/memory.c                                   |  97 +++--
+ mm/util.c                                     |   4 +-
+ security/tomoyo/domain.c                      |   2 +-
+ tools/testing/selftests/vm/.gitignore         |   2 +-
+ tools/testing/selftests/vm/Makefile           |  10 +-
+ tools/testing/selftests/vm/check_config.sh    |   4 +-
+ .../selftests/vm/{anon_cow.c => cow.c}        | 387 +++++++++++++++++-
+ tools/testing/selftests/vm/run_vmtests.sh     |   8 +-
+ 39 files changed, 575 insertions(+), 177 deletions(-)
+ rename tools/testing/selftests/vm/{anon_cow.c => cow.c} (75%)
+
 -- 
 2.38.1
 
