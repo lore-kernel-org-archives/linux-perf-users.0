@@ -2,199 +2,174 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AC44BC4321E
-	for <linux-perf-users@archiver.kernel.org>; Wed, 16 Nov 2022 18:56:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A1E3EC433FE
+	for <linux-perf-users@archiver.kernel.org>; Wed, 16 Nov 2022 19:53:14 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S239296AbiKPS4l (ORCPT
+        id S234015AbiKPTxN (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Wed, 16 Nov 2022 13:56:41 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53074 "EHLO
+        Wed, 16 Nov 2022 14:53:13 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56286 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S233512AbiKPS4T (ORCPT
+        with ESMTP id S234726AbiKPTw7 (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Wed, 16 Nov 2022 13:56:19 -0500
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1654C67120
-        for <linux-perf-users@vger.kernel.org>; Wed, 16 Nov 2022 10:54:04 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1668624844;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=XrMOrTfFoolcBWY273BC4KVOqyrI8gbytsgZlItRSSY=;
-        b=e0HLJWQOrV59rnSGTS6YIVqETW+MetNgrpEQbikp3pa0MOp9YQkUcSBKEy34EwX53rBRFD
-        0/8z3cE73sZ2kOYmBtxg+J08kdSPfrx1ndau6dZ1tPvBzgkqWSa2ycA4qZIE6IIlwIjnzj
-        IYmDlr5WO9CbNLhnJleRx34142BoDRo=
-Received: from mail-wr1-f69.google.com (mail-wr1-f69.google.com
- [209.85.221.69]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_128_GCM_SHA256) id
- us-mta-520-f-Jx7ugsOrmmVUc36Phq4g-1; Wed, 16 Nov 2022 13:54:02 -0500
-X-MC-Unique: f-Jx7ugsOrmmVUc36Phq4g-1
-Received: by mail-wr1-f69.google.com with SMTP id d23-20020adfa417000000b002364a31b7c9so4024899wra.15
-        for <linux-perf-users@vger.kernel.org>; Wed, 16 Nov 2022 10:54:02 -0800 (PST)
+        Wed, 16 Nov 2022 14:52:59 -0500
+Received: from mail-wr1-x42b.google.com (mail-wr1-x42b.google.com [IPv6:2a00:1450:4864:20::42b])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B5D5753EFD
+        for <linux-perf-users@vger.kernel.org>; Wed, 16 Nov 2022 11:52:53 -0800 (PST)
+Received: by mail-wr1-x42b.google.com with SMTP id a14so31744637wru.5
+        for <linux-perf-users@vger.kernel.org>; Wed, 16 Nov 2022 11:52:53 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20210112;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:from:to:cc:subject:date:message-id:reply-to;
+        bh=39FrZeC3ldj+FLM9X1uVpeGgui7FIaSFbHe+gmieiBI=;
+        b=I7DDyylHlmqNdBztRaCOoZdNNkKXkZU1deI2LZHgYeAwT9ohF8CwLdqnvdpTvHGnAJ
+         z6X3TZEO/12NlmnHbtctMhEYC7ke/7TKaRqpWisfbp15Y8Gq2r9dGUIIJ7nIs/A8agUX
+         6iNEHx8wAXDL0HlbZsoMCWMpt4kb3MHuKtcOrEU7+Pws5KnkQssBpj3/b77ElFuN//33
+         nK7HKn+lVli/J6Bt/aKm1KVu4azjtlTlVeblHiorthWAMS5NURVJTT+rJfYM9VDqat73
+         oRwxcZbbcT/20QiEqs86wy+2/pQVLQwj2+nsppCr/2EewHEvBaLMdgGIABKELc7IxX6j
+         kRTw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=content-transfer-encoding:in-reply-to:subject:organization:from
-         :references:cc:to:content-language:user-agent:mime-version:date
-         :message-id:x-gm-message-state:from:to:cc:subject:date:message-id
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
          :reply-to;
-        bh=XrMOrTfFoolcBWY273BC4KVOqyrI8gbytsgZlItRSSY=;
-        b=hGGRbkY6T8D39cZSRY0xjtHL6DshweVMONQiWU+FWX2l1y5YH8P0M3iZ6oudiS3Mi0
-         ty1Knij+S1iR+7zeJcbSltIKlDxDqKB7lIORcwruZyAP9YiWWqj1VLfrjqMOv1DnbNwN
-         CoDROvi89VluVHhC4roQ67ELvmq/PZTI7tx08pbO8v3S91aNvG7V8igiyn76C/1gF9mL
-         Nxi+3vtcFGyE1cAksScXg6eoTwr6EPbWVkmygsw1oni+An/u6eJPD/mKIQMk2c69tPe5
-         GlgMByzg2v8YtW5ijdjrImPZLPzH2c6faJgd0g854oaVLkhFtdb71CTNJorzQK6z0XTs
-         DlHQ==
-X-Gm-Message-State: ANoB5plO3x/UYH6D1fo7vo2/iP88RaRjeXJOUC9BlzK2rQeBeZ78Ol0i
-        1YYVjGl38bLD3z4flYD+kI8D0h+I8OOB+7pWTX8RDpPOj7M0d94Vq+WY8pfGgsiEv0qZ1/e6AuN
-        fN6/T3vpxG43QGcv3LeOwLQ6/EkxqsA==
-X-Received: by 2002:a05:600c:188a:b0:3cf:8e62:f769 with SMTP id x10-20020a05600c188a00b003cf8e62f769mr3135335wmp.52.1668624841277;
-        Wed, 16 Nov 2022 10:54:01 -0800 (PST)
-X-Google-Smtp-Source: AA0mqf5DCp6F6fiXltcSvKkMYb+ZcNvwNu+I48re+Q7o+sjDMiBTT1rVi2cU7FL82kIKKDnPvsKEPw==
-X-Received: by 2002:a05:600c:188a:b0:3cf:8e62:f769 with SMTP id x10-20020a05600c188a00b003cf8e62f769mr3135302wmp.52.1668624841029;
-        Wed, 16 Nov 2022 10:54:01 -0800 (PST)
-Received: from ?IPV6:2003:cb:c704:9f00:a98d:4026:7c44:40fd? (p200300cbc7049f00a98d40267c4440fd.dip0.t-ipconnect.de. [2003:cb:c704:9f00:a98d:4026:7c44:40fd])
-        by smtp.gmail.com with ESMTPSA id h16-20020a05600c315000b003cff309807esm3012333wmo.23.2022.11.16.10.53.57
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 16 Nov 2022 10:54:00 -0800 (PST)
-Message-ID: <caf52607-49cd-3073-ca4a-ddce9509e7c9@redhat.com>
-Date:   Wed, 16 Nov 2022 19:53:57 +0100
+        bh=39FrZeC3ldj+FLM9X1uVpeGgui7FIaSFbHe+gmieiBI=;
+        b=d3D1xNdZWYdupO6DrWlztTamgUEDR/PJB4gp8s7F8bLz4EfYmkOnw0EIUToDRBzc+Q
+         vA84dz4q2BcRszpyYQvZudZfKO9LDHB3NshVX/BlehujU3/k6xf0s3DBOy7wKUVv7Vy1
+         8XWv2M7rJCaK033YecSQgVnfgWM7h0JwvEhQ5zeheKwkWB/xu2ncEX1tqx/8Qn+A7HRG
+         TLhGdAMcYk76wh5oHk09NCci2wV845duoYiMfpxy97Bo/IGdrnycvUnuxV5ealW0g2Wl
+         Fpa5gVmM5QFEKNyLc1d9kLOFGx/0HLPtlZZ5NKCmq8EKOnYjLRiwAVvqbxz0UB47wlci
+         o06g==
+X-Gm-Message-State: ANoB5pnQtiTsp0esAh/z3IBkSYBnEPlOVhCFWTqkbC31F0o1Hl4Y65ng
+        dQH0HTSOTDkZMDN8gWgZBdd6K1aBDgTd3TzaFG5onQ==
+X-Google-Smtp-Source: AA0mqf5BoMWamLtMLOTBSfl9vCb3jBOp5Cgemlel7yfgZXbj7+1Ps46hMiNrTjfbihElPCeoUY7/NtmMkKhFexk5Yt8=
+X-Received: by 2002:a05:6000:1241:b0:236:d8f8:b87d with SMTP id
+ j1-20020a056000124100b00236d8f8b87dmr14186527wrx.343.1668628372056; Wed, 16
+ Nov 2022 11:52:52 -0800 (PST)
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
- Thunderbird/102.4.1
-Content-Language: en-US
-To:     Linus Torvalds <torvalds@linux-foundation.org>
-Cc:     linux-kernel@vger.kernel.org, x86@kernel.org,
-        linux-alpha@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-ia64@vger.kernel.org, linux-mips@vger.kernel.org,
-        linuxppc-dev@lists.ozlabs.org, sparclinux@vger.kernel.org,
-        linux-um@lists.infradead.org, etnaviv@lists.freedesktop.org,
-        dri-devel@lists.freedesktop.org, linux-samsung-soc@vger.kernel.org,
-        linux-rdma@vger.kernel.org, linux-media@vger.kernel.org,
-        linux-fsdevel@vger.kernel.org, linux-mm@kvack.org,
-        linux-perf-users@vger.kernel.org,
-        linux-security-module@vger.kernel.org,
-        linux-kselftest@vger.kernel.org,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Jason Gunthorpe <jgg@ziepe.ca>,
-        John Hubbard <jhubbard@nvidia.com>,
-        Peter Xu <peterx@redhat.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Andrea Arcangeli <aarcange@redhat.com>,
-        Hugh Dickins <hughd@google.com>, Nadav Amit <namit@vmware.com>,
-        Vlastimil Babka <vbabka@suse.cz>,
-        Matthew Wilcox <willy@infradead.org>,
-        Mike Kravetz <mike.kravetz@oracle.com>,
-        Muchun Song <songmuchun@bytedance.com>,
-        Shuah Khan <shuah@kernel.org>,
-        Lucas Stach <l.stach@pengutronix.de>,
-        David Airlie <airlied@gmail.com>,
-        Oded Gabbay <ogabbay@kernel.org>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Christoph Hellwig <hch@infradead.org>,
-        Alex Williamson <alex.williamson@redhat.com>,
-        Oleg Nesterov <oleg@redhat.com>,
-        Richard Henderson <richard.henderson@linaro.org>,
-        Ivan Kokshaysky <ink@jurassic.park.msu.ru>,
-        Matt Turner <mattst88@gmail.com>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Will Deacon <will@kernel.org>,
-        Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        Nicholas Piggin <npiggin@gmail.com>,
-        Christophe Leroy <christophe.leroy@csgroup.eu>,
-        "David S. Miller" <davem@davemloft.net>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-        Dave Hansen <dave.hansen@linux.intel.com>,
-        "H. Peter Anvin" <hpa@zytor.com>,
-        Richard Weinberger <richard@nod.at>,
-        Anton Ivanov <anton.ivanov@cambridgegreys.com>,
-        Johannes Berg <johannes@sipsolutions.net>,
-        Eric Biederman <ebiederm@xmission.com>,
-        Kees Cook <keescook@chromium.org>,
-        Alexander Viro <viro@zeniv.linux.org.uk>,
+References: <20221114210723.2749751-1-irogers@google.com> <20221114210723.2749751-11-irogers@google.com>
+ <Y3OX1pcclKCgbpeT@kernel.org> <Y3TIG7BIzltgvCPw@kernel.org>
+ <Y3TK/6bBFsHxduPc@kernel.org> <Y3TOwYdhzURKTgyB@kernel.org>
+ <Y3Tah5Ocvx6lQ4jP@kernel.org> <Y3ThXYH3SAyEGmQ+@kernel.org> <Y3T/35DcAw+h4R93@kernel.org>
+In-Reply-To: <Y3T/35DcAw+h4R93@kernel.org>
+From:   Ian Rogers <irogers@google.com>
+Date:   Wed, 16 Nov 2022 11:52:39 -0800
+Message-ID: <CAP-5=fU-tJPdxosVFfbbKtrswom7bnY6Ei3JczRJaQYyOnjcAA@mail.gmail.com>
+Subject: Re: [PATCH v3 10/10] perf list: Add json output option
+To:     Arnaldo Carvalho de Melo <acme@kernel.org>
+Cc:     Weilin Wang <weilin.wang@intel.com>,
+        Perry Taylor <perry.taylor@intel.com>,
+        Caleb Biggers <caleb.biggers@intel.com>,
+        Leo Yan <leo.yan@linaro.org>,
+        Adrian Hunter <adrian.hunter@intel.com>,
         Peter Zijlstra <peterz@infradead.org>,
-        Arnaldo Carvalho de Melo <acme@kernel.org>,
+        Ingo Molnar <mingo@redhat.com>,
         Mark Rutland <mark.rutland@arm.com>,
         Alexander Shishkin <alexander.shishkin@linux.intel.com>,
         Jiri Olsa <jolsa@kernel.org>,
         Namhyung Kim <namhyung@kernel.org>,
-        Kentaro Takeda <takedakn@nttdata.co.jp>,
-        Tetsuo Handa <penguin-kernel@i-love.sakura.ne.jp>,
-        Paul Moore <paul@paul-moore.com>,
-        James Morris <jmorris@namei.org>,
-        "Serge E. Hallyn" <serge@hallyn.com>
-References: <20221116102659.70287-1-david@redhat.com>
- <20221116102659.70287-21-david@redhat.com>
- <CAHk-=wgtEwpR-rE_=cXzecHMZ+zgrx5zf9UfvH0w-mKgckn4=Q@mail.gmail.com>
-From:   David Hildenbrand <david@redhat.com>
-Organization: Red Hat
-Subject: Re: [PATCH mm-unstable v1 20/20] mm: rename FOLL_FORCE to FOLL_PTRACE
-In-Reply-To: <CAHk-=wgtEwpR-rE_=cXzecHMZ+zgrx5zf9UfvH0w-mKgckn4=Q@mail.gmail.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+        Sandipan Das <sandipan.das@amd.com>,
+        Kajol Jain <kjain@linux.ibm.com>,
+        Zhengjun Xing <zhengjun.xing@linux.intel.com>,
+        Kan Liang <kan.liang@linux.intel.com>,
+        Ravi Bangoria <ravi.bangoria@amd.com>,
+        Xin Gao <gaoxin@cdjrlc.com>, Rob Herring <robh@kernel.org>,
+        linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org,
+        Stephane Eranian <eranian@google.com>
+Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-On 16.11.22 19:16, Linus Torvalds wrote:
-> On Wed, Nov 16, 2022 at 2:30 AM David Hildenbrand <david@redhat.com> wrote:
->>
->> Let's make it clearer that functionality provided by FOLL_FORCE is
->> really only for ptrace access.
-> 
-> I'm not super-happy about this one.
-> 
-> I do understand the "let's rename the bit so that no new user shows up".
-> 
-> And it's true that the main traditional use is ptrace.
-> 
-> But from the patch itself it becomes obvious that no, it's not *just*
-> ptrace. At least not yet.
-> 
-> It's used for get_arg_page(), which uses it to basically look up (and
-> install) pages in the newly created VM.
-> 
-> Now, I'm not entirely sure why it even uses FOLL_FORCE, - I think it
-> might be historical, because the target should always be the new stack
-> vma.
-> 
-> Following the history of it is a big of a mess, because there's a
-> number of renamings and re-organizations, but it seems to go back to
-> 2007 and commit b6a2fea39318 ("mm: variable length argument support").
-> 
+On Wed, Nov 16, 2022 at 7:21 AM Arnaldo Carvalho de Melo
+<acme@kernel.org> wrote:
+>
+> Em Wed, Nov 16, 2022 at 10:10:53AM -0300, Arnaldo Carvalho de Melo escreveu:
+> > Em Wed, Nov 16, 2022 at 09:41:43AM -0300, Arnaldo Carvalho de Melo escreveu:
+> > > But then:
+> >
+> > > [root@five ~]# perf list syscalls:sys_enter_open* |& grep syscalls:
+> > >   syscalls:sys_enter_open                            [Tracepoint event]
+> > >   syscalls:sys_enter_open_by_handle_at               [Tracepoint event]
+> > >   syscalls:sys_enter_open_tree                       [Tracepoint event]
+> > >   syscalls:sys_enter_openat                          [Tracepoint event]
+> > >   syscalls:sys_enter_openat2                         [Tracepoint event]
+> > > [root@five ~]#
+> > >
+> > > This stops working, looking into it.
+> >
+> > Sidetracked with other stuff, please find what I have patched at
+> > perf/perf-list-json-output in my tree.
+> >
+> > I removed the last two patches and I'm testing so that I can push
+> > perf/core with your series modulo the last two + Namhyung's 'perf list'
+> > kit.
+>
+> I just saw you sent a patch on top of the previous one, will try and
+> combine stuff to remove failures from the bisect history.
+>
+> - Arnaldo
 
-Right.
+So the failing test was skipping for me due to a lack of kernel
+symbols, sorry for not spotting it. I find that the issue is resolved
+with your fixes and:
 
-> Before that commit, we kept our own array of "this is the set of pages
-> that I will install in the new VM". That commit basically just inserts
-> the pages directly into the VM instead, getting rid of the array size
-> limitation.
-> 
-> So at a minimum, I think that FOLL_FORCE would need to be removed
-> before any renaming to FOLL_PTRACE, because that's not some kind of
-> small random case.
-> 
-> It *might* be as simple as just removing it, but maybe there's some
-> reason for having it that I don't immediately see.
+```
+diff --git a/tools/perf/builtin-list.c b/tools/perf/builtin-list.c
+index 30937e1dd82c..ad6cb5d2e1cc 100644
+--- a/tools/perf/builtin-list.c
++++ b/tools/perf/builtin-list.c
+@@ -107,7 +107,7 @@ static void default_print_event(void *ps, const
+char *pmu_name, const char *topi
+       if (deprecated && !print_state->deprecated)
+               return;
 
-Right, I have the same feeling. It might just be a copy-and-paste legacy 
-leftover.
+-       if (print_state->pmu_glob && !strglobmatch(pmu_name,
+print_state->pmu_glob))
++       if (print_state->pmu_glob && pmu_name &&
+!strglobmatch(pmu_name, print_state->pmu_glob))
+               return;
 
-> 
-> There _are_ also small random cases too, like get_cmdline(). Maybe
-> that counts as ptrace, but the execve() case most definitely does not.
+       if (print_state->event_glob &&
+@@ -534,24 +534,18 @@ int cmd_list(int argc, const char **argv)
+                       default_ps.metrics = false;
+                       metricgroup__print(&print_cb, ps);
+               } else if ((sep = strchr(argv[i], ':')) != NULL) {
+-                       int sep_idx;
+-
+-                       sep_idx = sep - argv[i];
+-                       s = strdup(argv[i]);
+-                       if (s == NULL) {
++                       default_ps.event_glob = strdup(argv[i]);
++                       if (!default_ps.event_glob) {
+                               ret = -1;
+                               goto out;
+                       }
+-
+-                       s[sep_idx] = '\0';
+-                       default_ps.pmu_glob = s;
+-                       default_ps.event_glob = s + sep_idx + 1;
+                       print_tracepoint_events(&print_cb, ps);
+                       print_sdt_events(&print_cb, ps);
+                       default_ps.metrics = true;
+                       default_ps.metricgroups = true;
+                       metricgroup__print(&print_cb, ps);
+-                       free(s);
++                       free(default_ps.event_glob);
++                       default_ps.event_glob = NULL;
+```
+I think this should be squashed into "perf list: Reorganize to use
+callbacks". Some explanation, in porting the : glob case I'd assumed
+the before the colon would be the PMU and the after the event. Doing
+things caused tracepoint output to differ too much and so for
+tracepoints the : is kept in the event name. So we can simplify the
+matching to not be pmu and event, just use the event glob.
 
-I agree. I'd suggest moving forward without this (last) patch for now 
-and figuring out how to further cleanup FOLL_FORCE usage on top.
-
-@Andrew, if you intend to put this into mm-unstable, please drop the 
-last patch for now.
-
--- 
 Thanks,
+Ian
 
-David / dhildenb
-
+               } else {
+                       if (asprintf(&s, "*%s*", argv[i]) < 0) {
+                               printf("Critical: Not enough memory!
+Trying to continue...\n");
