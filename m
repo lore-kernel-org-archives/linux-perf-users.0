@@ -2,85 +2,102 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A78E5C4332F
-	for <linux-perf-users@archiver.kernel.org>; Wed, 16 Nov 2022 15:19:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4A48FC4332F
+	for <linux-perf-users@archiver.kernel.org>; Wed, 16 Nov 2022 15:21:25 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233953AbiKPPTv (ORCPT
+        id S232762AbiKPPVW (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Wed, 16 Nov 2022 10:19:51 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37092 "EHLO
+        Wed, 16 Nov 2022 10:21:22 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37278 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232615AbiKPPTb (ORCPT
+        with ESMTP id S232298AbiKPPVH (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Wed, 16 Nov 2022 10:19:31 -0500
-Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 270435F94;
-        Wed, 16 Nov 2022 07:19:31 -0800 (PST)
+        Wed, 16 Nov 2022 10:21:07 -0500
+Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B739B2AD3;
+        Wed, 16 Nov 2022 07:21:06 -0800 (PST)
 Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id B748B61E69;
-        Wed, 16 Nov 2022 15:19:30 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id DE47BC433D6;
-        Wed, 16 Nov 2022 15:19:29 +0000 (UTC)
+        by dfw.source.kernel.org (Postfix) with ESMTPS id 5416361E9C;
+        Wed, 16 Nov 2022 15:21:06 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 88999C433D6;
+        Wed, 16 Nov 2022 15:21:05 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1668611970;
-        bh=amz+WZIooJmQLr8yARD9v3h2AKS1hVv79/Fc9v0jPko=;
+        s=k20201202; t=1668612065;
+        bh=CZHRUprQ4Szz7S5zdkW0Po6xn0FmY1Hxxb/CTgTtlhE=;
         h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=lgy7/EgfDDgiAjirNledOE4UcOvHe22VMXF11MKlJJEFIdilsk8r2lWx9pHCCiUBt
-         Le7C6+GaRANyL++vfbXrEUndFHYHwqkTiSbNL5Mp4xWjEsyLT182DzNc2sJpwj5+g9
-         hB3lrYqLRVDCMp/NUmmo3KfluO+FuUJsaySjonmcF3l4iZ4lo2dzKQXGfXWD6ygyEG
-         zeQJJ99gB3HGxq7Dy1Uq5zEEpNwPKTfrgh1QLSrU6eIC3MXxqUBMG88cFg3ONt+snm
-         JRM687rSpQtELuQtKSg3xv3RnnKzyMQ4YFa90ZI0Fd+s0iJCY6HGnOtKxDxR4g9sUQ
-         4w6FH2+FTyVdQ==
+        b=VZpiuppzFb0/NjOyFxqxM/jLs/1MrrX3R/xYlCLvVbteMCZRintOvI8TISMXsP13H
+         VAx2C7GUp0sK79FEXvfc2KdoPWyhi5x7kPfCcaBGadxqjPPIanWCPfo4GY3h67noJH
+         CDFKAgPQBilOvXJqx9Ivsa4TVwVzYJRFjlriG9XlqzEtO7VPTwqnrnIhwHom/AxllN
+         K3610CsKIAvwFGa4Q+pWsXDoZoa+BwyW0Y1rQJfERfCKU/JxOutmovxmcH533x1bz5
+         6H+EfVBGjpgTLMedvRR08RY26FK22+fD7gpR9auKst02b4o5sN1qIU/XBxl3xtvN/z
+         CGWZTTwprBEVQ==
 Received: by quaco.ghostprotocols.net (Postfix, from userid 1000)
-        id 734A04034E; Wed, 16 Nov 2022 12:19:27 -0300 (-03)
-Date:   Wed, 16 Nov 2022 12:19:27 -0300
+        id 0A5E74034E; Wed, 16 Nov 2022 12:21:03 -0300 (-03)
+Date:   Wed, 16 Nov 2022 12:21:03 -0300
 From:   Arnaldo Carvalho de Melo <acme@kernel.org>
 To:     Ian Rogers <irogers@google.com>
-Cc:     Peter Zijlstra <peterz@infradead.org>,
+Cc:     Weilin Wang <weilin.wang@intel.com>,
+        Perry Taylor <perry.taylor@intel.com>,
+        Caleb Biggers <caleb.biggers@intel.com>,
+        Leo Yan <leo.yan@linaro.org>,
+        Adrian Hunter <adrian.hunter@intel.com>,
+        Peter Zijlstra <peterz@infradead.org>,
         Ingo Molnar <mingo@redhat.com>,
         Mark Rutland <mark.rutland@arm.com>,
         Alexander Shishkin <alexander.shishkin@linux.intel.com>,
         Jiri Olsa <jolsa@kernel.org>,
         Namhyung Kim <namhyung@kernel.org>,
-        Masahiro Yamada <masahiroy@kernel.org>,
-        Nicolas Schier <nicolas@fjasle.eu>,
+        Sandipan Das <sandipan.das@amd.com>,
+        Kajol Jain <kjain@linux.ibm.com>,
+        Zhengjun Xing <zhengjun.xing@linux.intel.com>,
+        Kan Liang <kan.liang@linux.intel.com>,
+        Ravi Bangoria <ravi.bangoria@amd.com>,
+        Xin Gao <gaoxin@cdjrlc.com>, Rob Herring <robh@kernel.org>,
         linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org,
-        bpf@vger.kernel.org, Nick Desaulniers <ndesaulniers@google.com>,
-        Andrii Nakryiko <andrii.nakryiko@gmail.com>,
         Stephane Eranian <eranian@google.com>
-Subject: Re: [PATCH 0/1] Fix perf tools/lib includes
-Message-ID: <Y3T/fxPOvZgePIEz@kernel.org>
-References: <20221116072211.2837834-1-irogers@google.com>
+Subject: Re: [PATCH v3 10/10] perf list: Add json output option
+Message-ID: <Y3T/35DcAw+h4R93@kernel.org>
+References: <20221114210723.2749751-1-irogers@google.com>
+ <20221114210723.2749751-11-irogers@google.com>
+ <Y3OX1pcclKCgbpeT@kernel.org>
+ <Y3TIG7BIzltgvCPw@kernel.org>
+ <Y3TK/6bBFsHxduPc@kernel.org>
+ <Y3TOwYdhzURKTgyB@kernel.org>
+ <Y3Tah5Ocvx6lQ4jP@kernel.org>
+ <Y3ThXYH3SAyEGmQ+@kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20221116072211.2837834-1-irogers@google.com>
+In-Reply-To: <Y3ThXYH3SAyEGmQ+@kernel.org>
 X-Url:  http://acmel.wordpress.com
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-Em Tue, Nov 15, 2022 at 11:22:10PM -0800, Ian Rogers escreveu:
-> This patch replaces the last on kernel/git/acme/linux.git branch
-> perf/tools-libs-includes and fixes the race issue by using the prepare
-> dependency. pmu-events.c needs this dependency too, as the header
-> files it includes also include libperf - using perpare as a dependency
-> rather than $(LIBPERF) is more consistent with the rest of the makefile.
+Em Wed, Nov 16, 2022 at 10:10:53AM -0300, Arnaldo Carvalho de Melo escreveu:
+> Em Wed, Nov 16, 2022 at 09:41:43AM -0300, Arnaldo Carvalho de Melo escreveu:
+> > But then:
+>  
+> > [root@five ~]# perf list syscalls:sys_enter_open* |& grep syscalls:
+> >   syscalls:sys_enter_open                            [Tracepoint event]
+> >   syscalls:sys_enter_open_by_handle_at               [Tracepoint event]
+> >   syscalls:sys_enter_open_tree                       [Tracepoint event]
+> >   syscalls:sys_enter_openat                          [Tracepoint event]
+> >   syscalls:sys_enter_openat2                         [Tracepoint event]
+> > [root@five ~]#
+> > 
+> > This stops working, looking into it.
 > 
-> Ian Rogers (1):
->   perf build: Use tools/lib headers from install path
-
-Testing.
- 
->  tools/perf/Makefile.config |  2 --
->  tools/perf/Makefile.perf   | 14 +++++++++++++-
->  2 files changed, 13 insertions(+), 3 deletions(-)
+> Sidetracked with other stuff, please find what I have patched at
+> perf/perf-list-json-output in my tree.
 > 
-> -- 
-> 2.38.1.431.g37b22c650d-goog
+> I removed the last two patches and I'm testing so that I can push
+> perf/core with your series modulo the last two + Namhyung's 'perf list'
+> kit.
 
--- 
+I just saw you sent a patch on top of the previous one, will try and
+combine stuff to remove failures from the bisect history.
 
 - Arnaldo
