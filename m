@@ -2,40 +2,40 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5CBB3C433FE
-	for <linux-perf-users@archiver.kernel.org>; Wed, 16 Nov 2022 12:41:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 25BAEC4332F
+	for <linux-perf-users@archiver.kernel.org>; Wed, 16 Nov 2022 13:11:00 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233806AbiKPMlu (ORCPT
+        id S232915AbiKPNK7 (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Wed, 16 Nov 2022 07:41:50 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34158 "EHLO
+        Wed, 16 Nov 2022 08:10:59 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59412 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S233467AbiKPMls (ORCPT
+        with ESMTP id S229834AbiKPNK6 (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Wed, 16 Nov 2022 07:41:48 -0500
-Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A00D264E3;
-        Wed, 16 Nov 2022 04:41:47 -0800 (PST)
+        Wed, 16 Nov 2022 08:10:58 -0500
+Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3D3C120F46;
+        Wed, 16 Nov 2022 05:10:57 -0800 (PST)
 Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id 0A2A861D9C;
-        Wed, 16 Nov 2022 12:41:47 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 39BFCC433C1;
-        Wed, 16 Nov 2022 12:41:46 +0000 (UTC)
+        by dfw.source.kernel.org (Postfix) with ESMTPS id CE9AF61DC3;
+        Wed, 16 Nov 2022 13:10:56 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 084B3C433C1;
+        Wed, 16 Nov 2022 13:10:56 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1668602506;
-        bh=+QffJf1vwrSa5biws9YQZuWvKi77WepE94W+OP8tWMY=;
+        s=k20201202; t=1668604256;
+        bh=zCtCVJfN4MTsYIroUEMbBDznVPewtvyiuUQQBTsXqkw=;
         h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=UtBdDPbTy4enk9E+85aqEX15Ll2dJ+oJdm/xOnS5d0HTuttPNQSOTNG7Ny7nkd9GU
-         v8c6AVuspW12CNmzp+aNe7eCYmEVQ56N+qNJ/B6Z61Jdg1SLahHxzWnHEmbKDznL4c
-         WMtgorBMTI3f5yFTW/PS0LZvpW55kIrxzLXeWzrBLakmGijPJp2muEjiSVSlevD++w
-         s1pmAPjoggY9Vtui259Vgo3lgVv1dtyOPyRtrhUx1szqn5yeNSo/FWsXQxDRk67mBp
-         J3/ymAhAs7P6qFOZIshxsrwSpCYVICW/x2ieuYDXC6pZfDI9PiGYAwIsAoxBfPxoIX
-         8SkI8qdtT9ZfA==
+        b=Z9woAkQDji8/wzikdc9ve1IxcgM97Wsbpo/Uf+f+RinxLecz9GA0XQjyS6sW93Dmv
+         y/nNRHHyYb9bNouvoVYhVtXTkEEsuMy2j8iw475knCA96Ea2hu6Dq+8R18nvqXgsLa
+         Q2Xov4e2BSwuglpf2Pbl4OtRtifSTA+JeoyZB5f5BaCOdnDmODnUQTS0ARoIM9GuA+
+         xpvgrkorlt0x9Z7QcJUPsNAY+PHb9gjwi5uHxjRBsaP5b/y3HaSThovupBhHCnoYsI
+         utRDbW7GcGnSavNQ288SJs8b98IgCXoK5asJ+VBP09qhMcKBpk4JfySZ90qg1EDQ4j
+         PDqvYYZP+Mekw==
 Received: by quaco.ghostprotocols.net (Postfix, from userid 1000)
-        id BB4E14034E; Wed, 16 Nov 2022 09:41:43 -0300 (-03)
-Date:   Wed, 16 Nov 2022 09:41:43 -0300
+        id 8783B4034E; Wed, 16 Nov 2022 10:10:53 -0300 (-03)
+Date:   Wed, 16 Nov 2022 10:10:53 -0300
 From:   Arnaldo Carvalho de Melo <acme@kernel.org>
 To:     Ian Rogers <irogers@google.com>
 Cc:     Weilin Wang <weilin.wang@intel.com>,
@@ -58,76 +58,41 @@ Cc:     Weilin Wang <weilin.wang@intel.com>,
         linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org,
         Stephane Eranian <eranian@google.com>
 Subject: Re: [PATCH v3 10/10] perf list: Add json output option
-Message-ID: <Y3Tah5Ocvx6lQ4jP@kernel.org>
+Message-ID: <Y3ThXYH3SAyEGmQ+@kernel.org>
 References: <20221114210723.2749751-1-irogers@google.com>
  <20221114210723.2749751-11-irogers@google.com>
  <Y3OX1pcclKCgbpeT@kernel.org>
  <Y3TIG7BIzltgvCPw@kernel.org>
  <Y3TK/6bBFsHxduPc@kernel.org>
  <Y3TOwYdhzURKTgyB@kernel.org>
+ <Y3Tah5Ocvx6lQ4jP@kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <Y3TOwYdhzURKTgyB@kernel.org>
+In-Reply-To: <Y3Tah5Ocvx6lQ4jP@kernel.org>
 X-Url:  http://acmel.wordpress.com
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-Em Wed, Nov 16, 2022 at 08:51:29AM -0300, Arnaldo Carvalho de Melo escreveu:
-> Em Wed, Nov 16, 2022 at 08:35:28AM -0300, Arnaldo Carvalho de Melo escreveu:
-> > > Please always run 'perf test' before and after your patches and before
-> > > sending it upstream.
->  
-> > Running as !root on a different machine I get some other interesting
-> > info:
->  
-> > ⬢[acme@toolbox perf]$  perf list syscalls:sys_enter_open*
-> > double free or corruption (fasttop)
-> > Aborted (core dumped)
-> > ⬢[acme@toolbox perf]$
-> > 
-> > That is:
-> > 
-> >         free(ps.pmu_glob);
-> > 
-> > 
-> > at the end of cmd_list().
+Em Wed, Nov 16, 2022 at 09:41:43AM -0300, Arnaldo Carvalho de Melo escreveu:
+> But then:
+ 
+> [root@five ~]# perf list syscalls:sys_enter_open* |& grep syscalls:
+>   syscalls:sys_enter_open                            [Tracepoint event]
+>   syscalls:sys_enter_open_by_handle_at               [Tracepoint event]
+>   syscalls:sys_enter_open_tree                       [Tracepoint event]
+>   syscalls:sys_enter_openat                          [Tracepoint event]
+>   syscalls:sys_enter_openat2                         [Tracepoint event]
+> [root@five ~]#
 > 
-> This plus the change to default_ps in the subsequent patch cures the
-> double free, now working on the segfault.
+> This stops working, looking into it.
 
-The segfault is "cured" with:
+Sidetracked with other stuff, please find what I have patched at
+perf/perf-list-json-output in my tree.
 
-
-diff --git a/tools/perf/builtin-list.c b/tools/perf/builtin-list.c
-index 3183c0351cda6cee..5eb9ed4a5cd0ad71 100644
---- a/tools/perf/builtin-list.c
-+++ b/tools/perf/builtin-list.c
-@@ -104,7 +104,7 @@ static void default_print_event(void *ps, const char *pmu_name, const char *topi
- 	if (deprecated && !print_state->deprecated)
- 		return;
- 
--	if (print_state->pmu_glob && !strglobmatch(pmu_name, print_state->pmu_glob))
-+	if (print_state->pmu_glob && pmu_name && !strglobmatch(pmu_name, print_state->pmu_glob))
- 		return;
- 
- 	if (print_state->event_glob &&
-
-
-----------------------------
-
-But then:
-
-[root@five ~]# perf list syscalls:sys_enter_open* |& grep syscalls:
-  syscalls:sys_enter_open                            [Tracepoint event]
-  syscalls:sys_enter_open_by_handle_at               [Tracepoint event]
-  syscalls:sys_enter_open_tree                       [Tracepoint event]
-  syscalls:sys_enter_openat                          [Tracepoint event]
-  syscalls:sys_enter_openat2                         [Tracepoint event]
-[root@five ~]#
-
-This stops working, looking into it.
+I removed the last two patches and I'm testing so that I can push
+perf/core with your series modulo the last two + Namhyung's 'perf list'
+kit.
 
 - Arnaldo
