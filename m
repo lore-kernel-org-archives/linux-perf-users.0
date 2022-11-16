@@ -2,198 +2,115 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1D0BBC4332F
-	for <linux-perf-users@archiver.kernel.org>; Wed, 16 Nov 2022 23:05:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5DBE2C4332F
+	for <linux-perf-users@archiver.kernel.org>; Wed, 16 Nov 2022 23:07:04 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231688AbiKPXFG (ORCPT
+        id S232548AbiKPXHD (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Wed, 16 Nov 2022 18:05:06 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43142 "EHLO
+        Wed, 16 Nov 2022 18:07:03 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43914 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229641AbiKPXFF (ORCPT
+        with ESMTP id S229641AbiKPXHC (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Wed, 16 Nov 2022 18:05:05 -0500
-Received: from mail-ot1-f51.google.com (mail-ot1-f51.google.com [209.85.210.51])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0B926317CD;
-        Wed, 16 Nov 2022 15:05:05 -0800 (PST)
-Received: by mail-ot1-f51.google.com with SMTP id db10-20020a0568306b0a00b0066d43e80118so32697otb.1;
-        Wed, 16 Nov 2022 15:05:05 -0800 (PST)
+        Wed, 16 Nov 2022 18:07:02 -0500
+Received: from mail-oi1-f180.google.com (mail-oi1-f180.google.com [209.85.167.180])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A92A352882;
+        Wed, 16 Nov 2022 15:07:01 -0800 (PST)
+Received: by mail-oi1-f180.google.com with SMTP id v81so58391oie.5;
+        Wed, 16 Nov 2022 15:07:01 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
         h=cc:to:subject:message-id:date:from:in-reply-to:references
          :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
          :reply-to;
-        bh=sch7gU4JnEJeZm0TBzlZLEZhC+3AQoj3+UVYWjWRf4Y=;
-        b=VWxEk9L4tyQ8ZIkHG3Eat02HjroRu2diUWrcuAAa26m82dYJ9p7O1D9jLG8DJ1gp98
-         2SGOaysvYYk5VsZy1lTsVF5gBAjAFR8w0Y7AaxX6webhD1H9wasdunPprxoOsF6nYEHM
-         Upw4sCmes+DX3Vf3IwhyZG5xJuYZzFa1UnNRoxDUNfWhXwhrnJYIQyeLAb55FyHycMZe
-         5ZiebClQRbfxm9mC53Fc1swB5G694C6tDx32TGtH7lO+zakIHRxmbpWQev6z1CC6iNou
-         V8aGUEIYVLk3XQVAMt8VLRCOZ6nUy55QC1irQawLJA4WgVKDzo52uufxq7sCags1zpSK
-         xlvg==
-X-Gm-Message-State: ANoB5pnv0XPJpYSC8bJsQ5evv+TdKnHirhbiU9KscrC6IcREh4g9bHfu
-        uqNAZWKsHg4banNCl52UQTBCGSphGtiuwggbuaXCOUsC
-X-Google-Smtp-Source: AA0mqf7TtJVP83TCvzFw7lohwMhWEajHyRUN2mHS1nCyxot6jnARFVNR6lxYPj/Vz0BYXz65jqK06TvbSxJFTIxBW0g=
-X-Received: by 2002:a05:6830:1215:b0:66d:78b8:7b1a with SMTP id
- r21-20020a056830121500b0066d78b87b1amr175243otp.206.1668639904228; Wed, 16
- Nov 2022 15:05:04 -0800 (PST)
+        bh=exwunUZ/kcqkAH6HVxuBc9I6bVs9+z6PsdO9s6kIF5o=;
+        b=QHVRNnJluOIk5mwqA/oPdyz5t8RgnM+Y5gWIUPvPINw3WhpH3TDrLq9nQiobVEbZ8Q
+         sheojxhE/Ui3wqsbrkoXb+GQCEwd9hRBePYa698FzXDr0ApU2nIc9taJMexXXgi7uPfx
+         Ep84OrW/9ciGa1uCJhQILNJUnx7Uw6YtLjiWMjkCA8SjYflr4GVTT+JPXCxMMbGDiCTw
+         ++P0oHNwgISSUZ3BGAXVnH9CyNE2bCfFf7oTo6WB5bu/B5Pl/11CDZszFoR2XJyjwWKt
+         1YJzGzVc/yi7BrphN9SCl4xT5/1HoC8289+q9KANOgVbyJgdg1Un7xjDMPX8B7Ih+8YI
+         w1IA==
+X-Gm-Message-State: ANoB5plihTjmzolTDq2PUKoV2DzipqyenqzR3k3b6Y1/Qeb+juQJ+fFc
+        z4ViMVgjBzL8mR2rLYiTsUgKNudgdGAArowzTUE=
+X-Google-Smtp-Source: AA0mqf7X5fTQrBEK3PHi9gyxnFVRnOqSYNQoHd6MBnp8JMgtGMPwPhfUB9Uyt096rPWornfdybIqy8VZHMsGx4Za9y8=
+X-Received: by 2002:aca:654d:0:b0:35a:812c:3eae with SMTP id
+ j13-20020aca654d000000b0035a812c3eaemr2752516oiw.218.1668640020942; Wed, 16
+ Nov 2022 15:07:00 -0800 (PST)
 MIME-Version: 1.0
-References: <20221114210723.2749751-1-irogers@google.com> <20221114210723.2749751-11-irogers@google.com>
- <Y3OX1pcclKCgbpeT@kernel.org>
-In-Reply-To: <Y3OX1pcclKCgbpeT@kernel.org>
+References: <20221110181920.84900-1-namhyung@kernel.org> <20221110181920.84900-10-namhyung@kernel.org>
+ <86c42368-cbbb-2e13-ce7d-31865a12bb81@arm.com>
+In-Reply-To: <86c42368-cbbb-2e13-ce7d-31865a12bb81@arm.com>
 From:   Namhyung Kim <namhyung@kernel.org>
-Date:   Wed, 16 Nov 2022 15:04:52 -0800
-Message-ID: <CAM9d7ch3SkBzjXUsGXKTqQzAkvCpm1jOmf5YEf609t1v=4v0wg@mail.gmail.com>
-Subject: Re: [PATCH v3 10/10] perf list: Add json output option
-To:     Arnaldo Carvalho de Melo <acme@kernel.org>
-Cc:     Ian Rogers <irogers@google.com>,
-        Weilin Wang <weilin.wang@intel.com>,
-        Perry Taylor <perry.taylor@intel.com>,
-        Caleb Biggers <caleb.biggers@intel.com>,
-        Leo Yan <leo.yan@linaro.org>,
-        Adrian Hunter <adrian.hunter@intel.com>,
+Date:   Wed, 16 Nov 2022 15:06:49 -0800
+Message-ID: <CAM9d7ch3x4f3vNFhixjpHrcco=ifgCaYD6XYwRS_vMX_CjB43g@mail.gmail.com>
+Subject: Re: [PATCH 09/12] perf test: Add 'brstack' test workload
+To:     James Clark <james.clark@arm.com>
+Cc:     Ingo Molnar <mingo@kernel.org>,
         Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Jiri Olsa <jolsa@kernel.org>,
-        Sandipan Das <sandipan.das@amd.com>,
-        Kajol Jain <kjain@linux.ibm.com>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Ian Rogers <irogers@google.com>,
+        Adrian Hunter <adrian.hunter@intel.com>,
+        linux-perf-users@vger.kernel.org, Leo Yan <leo.yan@linaro.org>,
+        German Gomez <german.gomez@arm.com>,
         Zhengjun Xing <zhengjun.xing@linux.intel.com>,
-        Kan Liang <kan.liang@linux.intel.com>,
-        Ravi Bangoria <ravi.bangoria@amd.com>,
-        Xin Gao <gaoxin@cdjrlc.com>, Rob Herring <robh@kernel.org>,
-        linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org,
-        Stephane Eranian <eranian@google.com>
+        Athira Jajeev <atrajeev@linux.vnet.ibm.com>,
+        Arnaldo Carvalho de Melo <acme@kernel.org>,
+        Jiri Olsa <jolsa@kernel.org>
 Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-Hi,
+Hi James,
 
-On Tue, Nov 15, 2022 at 5:44 AM Arnaldo Carvalho de Melo
-<acme@kernel.org> wrote:
+On Wed, Nov 16, 2022 at 3:39 AM James Clark <james.clark@arm.com> wrote:
 >
-> Em Mon, Nov 14, 2022 at 01:07:23PM -0800, Ian Rogers escreveu:
-> > Output events and metrics in a json format by overriding the print
-> > callbacks. Currently other command line options aren't supported and
-> > metrics are repeated once per metric group.
 >
-> Applied the patch with a few fixes and added this to the last cset:
 >
-> commit c9367a0658ebcfe8ab0bc4af2648f144c64b53a4
-> Author: Ian Rogers <irogers@google.com>
-> Date:   Mon Nov 14 13:07:23 2022 -0800
+> On 10/11/2022 18:19, Namhyung Kim wrote:
+> [...]
+> > +
+> > +#define BENCH_RUNS 999999
+> > +
+> > +static volatile int cnt;
+> > +
+> > +static void brstack_bar(void) {
+> > +}                            /* return */
+> > +
+> > +static void brstack_foo(void) {
+> > +     brstack_bar();          /* call */
+> > +}                            /* return */
+> > +
+> > +static void brstack_bench(void) {
+> > +     void (*brstack_foo_ind)(void) = brstack_foo;
+> > +
+> > +     if ((cnt++) % 3)        /* branch (cond) */
+> > +             brstack_foo();  /* call */
+> > +     brstack_bar();          /* call */
+> > +     brstack_foo_ind();      /* call (ind) */
+> > +}
+> > +
+> > +static int brstack(int argc, const char **argv)
+> > +{
+> > +     if (argc > 0)
+> > +             cnt = atoi(argv[0]);
+> > +
+> > +     while (1) {
+> > +             if ((cnt++) > BENCH_RUNS)
+> > +                     break;
 >
->     perf list: Add JSON output option
+> Hi Namhyung,
 >
->     Output events and metrics in a JSON format by overriding the print
->     callbacks. Currently other command line options aren't supported and
->     metrics are repeated once per metric group.
+> I'm reading this as you can specify the number of loops as an argument.
 >
->     Committer testing:
+> In that case should it be more like this?
 >
->       $ perf list cache
+>         int num_loops = argc>0 ? atoi(argv[0]) : BENCH_RUNS;
 >
->       List of pre-defined events (to be used in -e or -M):
->
->         L1-dcache-load-misses                              [Hardware cache event]
->         L1-dcache-loads                                    [Hardware cache event]
->         L1-dcache-prefetches                               [Hardware cache event]
->         L1-icache-load-misses                              [Hardware cache event]
->         L1-icache-loads                                    [Hardware cache event]
->         branch-load-misses                                 [Hardware cache event]
->         branch-loads                                       [Hardware cache event]
->         dTLB-load-misses                                   [Hardware cache event]
->         dTLB-loads                                         [Hardware cache event]
->         iTLB-load-misses                                   [Hardware cache event]
->         iTLB-loads                                         [Hardware cache event]
->       $ perf list --json cache
->       [
->       {
->               "Unit": "cache",
+>         if ((cnt++) > num_loops)
+>                 break;
 
-It's confusing to call it 'unit', but we have it in the JSON metrics, sigh..
+Yep, that's more intuitive.  Will change!
 
 Thanks,
 Namhyung
-
-
->               "EventName": "L1-dcache-load-misses",
->               "EventType": "Hardware cache event"
->       },
->       {
->               "Unit": "cache",
->               "EventName": "L1-dcache-loads",
->               "EventType": "Hardware cache event"
->       },
->       {
->               "Unit": "cache",
->               "EventName": "L1-dcache-prefetches",
->               "EventType": "Hardware cache event"
->       },
->       {
->               "Unit": "cache",
->               "EventName": "L1-icache-load-misses",
->               "EventType": "Hardware cache event"
->       },
->       {
->               "Unit": "cache",
->               "EventName": "L1-icache-loads",
->               "EventType": "Hardware cache event"
->       },
->       {
->               "Unit": "cache",
->               "EventName": "branch-load-misses",
->               "EventType": "Hardware cache event"
->       },
->       {
->               "Unit": "cache",
->               "EventName": "branch-loads",
->               "EventType": "Hardware cache event"
->       },
->       {
->               "Unit": "cache",
->               "EventName": "dTLB-load-misses",
->               "EventType": "Hardware cache event"
->       },
->       {
->               "Unit": "cache",
->               "EventName": "dTLB-loads",
->               "EventType": "Hardware cache event"
->       },
->       {
->               "Unit": "cache",
->               "EventName": "iTLB-load-misses",
->               "EventType": "Hardware cache event"
->       },
->       {
->               "Unit": "cache",
->               "EventName": "iTLB-loads",
->               "EventType": "Hardware cache event"
->       }
->       ]
->       $
->
->     Signed-off-by: Ian Rogers <irogers@google.com>
->     Tested-by: Arnaldo Carvalho de Melo <acme@redhat.com>
->     Cc: Adrian Hunter <adrian.hunter@intel.com>
->     Cc: Alexander Shishkin <alexander.shishkin@linux.intel.com>
->     Cc: Caleb Biggers <caleb.biggers@intel.com>
->     Cc: Jiri Olsa <jolsa@kernel.org>
->     Cc: Kajol Jain <kjain@linux.ibm.com>
->     Cc: Kan Liang <kan.liang@linux.intel.com>
->     Cc: Leo Yan <leo.yan@linaro.org>
->     Cc: Mark Rutland <mark.rutland@arm.com>
->     Cc: Namhyung Kim <namhyung@kernel.org>
->     Cc: Perry Taylor <perry.taylor@intel.com>
->     Cc: Peter Zijlstra <peterz@infradead.org>
->     Cc: Ravi Bangoria <ravi.bangoria@amd.com>
->     Cc: Rob Herring <robh@kernel.org>
->     Cc: Sandipan Das <sandipan.das@amd.com>
->     Cc: Stephane Eranian <eranian@google.com>
->     Cc: Weilin Wang <weilin.wang@intel.com>
->     Cc: Xin Gao <gaoxin@cdjrlc.com>
->     Cc: Xing Zhengjun <zhengjun.xing@linux.intel.com>
->     Link: http://lore.kernel.org/lkml/20221114210723.2749751-11-irogers@google.com
->     Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
