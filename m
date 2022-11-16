@@ -2,174 +2,202 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A1E3EC433FE
-	for <linux-perf-users@archiver.kernel.org>; Wed, 16 Nov 2022 19:53:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B2B35C4332F
+	for <linux-perf-users@archiver.kernel.org>; Wed, 16 Nov 2022 22:46:19 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S234015AbiKPTxN (ORCPT
+        id S239123AbiKPWqS (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Wed, 16 Nov 2022 14:53:13 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56286 "EHLO
+        Wed, 16 Nov 2022 17:46:18 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60982 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S234726AbiKPTw7 (ORCPT
+        with ESMTP id S234178AbiKPWp4 (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Wed, 16 Nov 2022 14:52:59 -0500
-Received: from mail-wr1-x42b.google.com (mail-wr1-x42b.google.com [IPv6:2a00:1450:4864:20::42b])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B5D5753EFD
-        for <linux-perf-users@vger.kernel.org>; Wed, 16 Nov 2022 11:52:53 -0800 (PST)
-Received: by mail-wr1-x42b.google.com with SMTP id a14so31744637wru.5
-        for <linux-perf-users@vger.kernel.org>; Wed, 16 Nov 2022 11:52:53 -0800 (PST)
+        Wed, 16 Nov 2022 17:45:56 -0500
+Received: from mail-yb1-xb4a.google.com (mail-yb1-xb4a.google.com [IPv6:2607:f8b0:4864:20::b4a])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3BEB56CA31
+        for <linux-perf-users@vger.kernel.org>; Wed, 16 Nov 2022 14:45:31 -0800 (PST)
+Received: by mail-yb1-xb4a.google.com with SMTP id f71-20020a25384a000000b006dd7876e98eso16006585yba.15
+        for <linux-perf-users@vger.kernel.org>; Wed, 16 Nov 2022 14:45:31 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=google.com; s=20210112;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:from:to:cc:subject:date:message-id:reply-to;
-        bh=39FrZeC3ldj+FLM9X1uVpeGgui7FIaSFbHe+gmieiBI=;
-        b=I7DDyylHlmqNdBztRaCOoZdNNkKXkZU1deI2LZHgYeAwT9ohF8CwLdqnvdpTvHGnAJ
-         z6X3TZEO/12NlmnHbtctMhEYC7ke/7TKaRqpWisfbp15Y8Gq2r9dGUIIJ7nIs/A8agUX
-         6iNEHx8wAXDL0HlbZsoMCWMpt4kb3MHuKtcOrEU7+Pws5KnkQssBpj3/b77ElFuN//33
-         nK7HKn+lVli/J6Bt/aKm1KVu4azjtlTlVeblHiorthWAMS5NURVJTT+rJfYM9VDqat73
-         oRwxcZbbcT/20QiEqs86wy+2/pQVLQwj2+nsppCr/2EewHEvBaLMdgGIABKELc7IxX6j
-         kRTw==
+        h=cc:to:from:subject:mime-version:message-id:date:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=9fahfTN7gQdYGghMf/BqQFGqnV5aYRbsgDQfX2spz1M=;
+        b=J7ejO2+4pPwjvYasRYxGqprxcZToIIQir/+zCv8XJOXAMoIEz5oHnj13Y8NijHrFhl
+         omJb9OhW/gqGpL1NLmRkpbxYcnrraM5LGPZJwFksGnOgQ/DzMb5BTrVy7kM1SmnB7TOZ
+         ochF4Ipzbw6mYxgQRV+7WVG35O5xbVpFHMM+lIfNW2uizI14ZHcnEN6muh/uPbnLch2U
+         wUcrjLJXXvi1Rf2bjwAzb608dtEh7Nn3O+4LPDUG0pKk52Bx7ZPJeXV6kxRD5SRH/AiW
+         37sWLNgegGpwsAPiqmGDEPYburNB4KofqnCAOFjBpivk2rXIBmw7axJX5G0D+ZbvwZ0p
+         z1Ow==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=39FrZeC3ldj+FLM9X1uVpeGgui7FIaSFbHe+gmieiBI=;
-        b=d3D1xNdZWYdupO6DrWlztTamgUEDR/PJB4gp8s7F8bLz4EfYmkOnw0EIUToDRBzc+Q
-         vA84dz4q2BcRszpyYQvZudZfKO9LDHB3NshVX/BlehujU3/k6xf0s3DBOy7wKUVv7Vy1
-         8XWv2M7rJCaK033YecSQgVnfgWM7h0JwvEhQ5zeheKwkWB/xu2ncEX1tqx/8Qn+A7HRG
-         TLhGdAMcYk76wh5oHk09NCci2wV845duoYiMfpxy97Bo/IGdrnycvUnuxV5ealW0g2Wl
-         Fpa5gVmM5QFEKNyLc1d9kLOFGx/0HLPtlZZ5NKCmq8EKOnYjLRiwAVvqbxz0UB47wlci
-         o06g==
-X-Gm-Message-State: ANoB5pnQtiTsp0esAh/z3IBkSYBnEPlOVhCFWTqkbC31F0o1Hl4Y65ng
-        dQH0HTSOTDkZMDN8gWgZBdd6K1aBDgTd3TzaFG5onQ==
-X-Google-Smtp-Source: AA0mqf5BoMWamLtMLOTBSfl9vCb3jBOp5Cgemlel7yfgZXbj7+1Ps46hMiNrTjfbihElPCeoUY7/NtmMkKhFexk5Yt8=
-X-Received: by 2002:a05:6000:1241:b0:236:d8f8:b87d with SMTP id
- j1-20020a056000124100b00236d8f8b87dmr14186527wrx.343.1668628372056; Wed, 16
- Nov 2022 11:52:52 -0800 (PST)
-MIME-Version: 1.0
-References: <20221114210723.2749751-1-irogers@google.com> <20221114210723.2749751-11-irogers@google.com>
- <Y3OX1pcclKCgbpeT@kernel.org> <Y3TIG7BIzltgvCPw@kernel.org>
- <Y3TK/6bBFsHxduPc@kernel.org> <Y3TOwYdhzURKTgyB@kernel.org>
- <Y3Tah5Ocvx6lQ4jP@kernel.org> <Y3ThXYH3SAyEGmQ+@kernel.org> <Y3T/35DcAw+h4R93@kernel.org>
-In-Reply-To: <Y3T/35DcAw+h4R93@kernel.org>
+        h=cc:to:from:subject:mime-version:message-id:date:x-gm-message-state
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=9fahfTN7gQdYGghMf/BqQFGqnV5aYRbsgDQfX2spz1M=;
+        b=GB0y55gncn3pgYWQIVD5FyfATFCEv50j3P1hVVeF7RpZZztxZElz04mYOedmFs3XLl
+         7bb9zRNFAY95LG4kS6/wK8FH7NqVWo96ZoaKXOYKkqu4zOwfZYbV6jwi2opcA0ghQM4f
+         +0buj2yoXAKpUwbYx7LryX3uz7FfHtYw/DhbShzSrvB+PdaHAnU5R8cE3jUUtIsUX1Kq
+         bhPnepd2/DvgCi7Ylfv7IQkTYbs1kfZj2xVfv88HX67GHx6VM6cox/YOC6lk2X5aocjV
+         YkCba2I+ot1U0b2HlbtBwhrLUuau7dIz5SPsXKzVNNcpIDehCfIxsVl5c+SswAgM2yb4
+         uCFg==
+X-Gm-Message-State: ANoB5plWJ35qSiXH7l9bDP890ee+uZR3lBDh1f1sFyhQitNYDfTGYXXo
+        qj9DLuBPIqO7tb6lUqvMDvYltfFzwdzX
+X-Google-Smtp-Source: AA0mqf4Nb9ngGN3qX4fMKqqiImwtvR4v0w2iedkDOCXier2Uk2gOkfn2P+l1BjX+RTvpu1mgdn+Sr0cKx7BR
+X-Received: from irogers.svl.corp.google.com ([2620:15c:2d4:203:c14c:6035:5882:8faa])
+ (user=irogers job=sendgmr) by 2002:a25:55d4:0:b0:6ca:363a:9a1b with SMTP id
+ j203-20020a2555d4000000b006ca363a9a1bmr23754825ybb.1.1668638730427; Wed, 16
+ Nov 2022 14:45:30 -0800 (PST)
+Date:   Wed, 16 Nov 2022 14:45:11 -0800
+Message-Id: <20221116224511.207235-1-irogers@google.com>
+Mime-Version: 1.0
+X-Mailer: git-send-email 2.38.1.431.g37b22c650d-goog
+Subject: [PATCH] perf build: Fix LIBTRACEEVENT_DYNAMIC
 From:   Ian Rogers <irogers@google.com>
-Date:   Wed, 16 Nov 2022 11:52:39 -0800
-Message-ID: <CAP-5=fU-tJPdxosVFfbbKtrswom7bnY6Ei3JczRJaQYyOnjcAA@mail.gmail.com>
-Subject: Re: [PATCH v3 10/10] perf list: Add json output option
-To:     Arnaldo Carvalho de Melo <acme@kernel.org>
-Cc:     Weilin Wang <weilin.wang@intel.com>,
-        Perry Taylor <perry.taylor@intel.com>,
-        Caleb Biggers <caleb.biggers@intel.com>,
-        Leo Yan <leo.yan@linaro.org>,
-        Adrian Hunter <adrian.hunter@intel.com>,
-        Peter Zijlstra <peterz@infradead.org>,
+To:     Peter Zijlstra <peterz@infradead.org>,
         Ingo Molnar <mingo@redhat.com>,
+        Arnaldo Carvalho de Melo <acme@kernel.org>,
         Mark Rutland <mark.rutland@arm.com>,
         Alexander Shishkin <alexander.shishkin@linux.intel.com>,
         Jiri Olsa <jolsa@kernel.org>,
         Namhyung Kim <namhyung@kernel.org>,
-        Sandipan Das <sandipan.das@amd.com>,
-        Kajol Jain <kjain@linux.ibm.com>,
-        Zhengjun Xing <zhengjun.xing@linux.intel.com>,
-        Kan Liang <kan.liang@linux.intel.com>,
-        Ravi Bangoria <ravi.bangoria@amd.com>,
-        Xin Gao <gaoxin@cdjrlc.com>, Rob Herring <robh@kernel.org>,
+        Masahiro Yamada <masahiroy@kernel.org>,
+        Nicolas Schier <nicolas@fjasle.eu>,
         linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org,
-        Stephane Eranian <eranian@google.com>
+        bpf@vger.kernel.org, Nick Desaulniers <ndesaulniers@google.com>,
+        Andrii Nakryiko <andrii.nakryiko@gmail.com>
+Cc:     Stephane Eranian <eranian@google.com>,
+        Ian Rogers <irogers@google.com>
 Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-On Wed, Nov 16, 2022 at 7:21 AM Arnaldo Carvalho de Melo
-<acme@kernel.org> wrote:
->
-> Em Wed, Nov 16, 2022 at 10:10:53AM -0300, Arnaldo Carvalho de Melo escreveu:
-> > Em Wed, Nov 16, 2022 at 09:41:43AM -0300, Arnaldo Carvalho de Melo escreveu:
-> > > But then:
-> >
-> > > [root@five ~]# perf list syscalls:sys_enter_open* |& grep syscalls:
-> > >   syscalls:sys_enter_open                            [Tracepoint event]
-> > >   syscalls:sys_enter_open_by_handle_at               [Tracepoint event]
-> > >   syscalls:sys_enter_open_tree                       [Tracepoint event]
-> > >   syscalls:sys_enter_openat                          [Tracepoint event]
-> > >   syscalls:sys_enter_openat2                         [Tracepoint event]
-> > > [root@five ~]#
-> > >
-> > > This stops working, looking into it.
-> >
-> > Sidetracked with other stuff, please find what I have patched at
-> > perf/perf-list-json-output in my tree.
-> >
-> > I removed the last two patches and I'm testing so that I can push
-> > perf/core with your series modulo the last two + Namhyung's 'perf list'
-> > kit.
->
-> I just saw you sent a patch on top of the previous one, will try and
-> combine stuff to remove failures from the bisect history.
->
-> - Arnaldo
+The tools/lib includes fixes break LIBTRACEVENT_DYNAMIC as the
+makefile erroneously had depdendencies on building libtraceevent even
+when not linking with it. This change fixes the issues with
+LIBTRACEEVENT_DYNAMIC by making the built files optional.
+---
+ tools/perf/Makefile.perf | 25 ++++++++++++++++++++++---
+ tools/perf/util/setup.py |  3 ++-
+ 2 files changed, 24 insertions(+), 4 deletions(-)
 
-So the failing test was skipping for me due to a lack of kernel
-symbols, sorry for not spotting it. I find that the issue is resolved
-with your fixes and:
-
-```
-diff --git a/tools/perf/builtin-list.c b/tools/perf/builtin-list.c
-index 30937e1dd82c..ad6cb5d2e1cc 100644
---- a/tools/perf/builtin-list.c
-+++ b/tools/perf/builtin-list.c
-@@ -107,7 +107,7 @@ static void default_print_event(void *ps, const
-char *pmu_name, const char *topi
-       if (deprecated && !print_state->deprecated)
-               return;
-
--       if (print_state->pmu_glob && !strglobmatch(pmu_name,
-print_state->pmu_glob))
-+       if (print_state->pmu_glob && pmu_name &&
-!strglobmatch(pmu_name, print_state->pmu_glob))
-               return;
-
-       if (print_state->event_glob &&
-@@ -534,24 +534,18 @@ int cmd_list(int argc, const char **argv)
-                       default_ps.metrics = false;
-                       metricgroup__print(&print_cb, ps);
-               } else if ((sep = strchr(argv[i], ':')) != NULL) {
--                       int sep_idx;
+diff --git a/tools/perf/Makefile.perf b/tools/perf/Makefile.perf
+index dd096aba4430..59c4e8f9b014 100644
+--- a/tools/perf/Makefile.perf
++++ b/tools/perf/Makefile.perf
+@@ -242,8 +242,10 @@ sub-make: fixdep
+ else # force_fixdep
+ 
+ LIBAPI_DIR      = $(srctree)/tools/lib/api/
++ifndef LIBTRACEEVENT_DYNAMIC
+ LIBTRACEEVENT_DIR = $(srctree)/tools/lib/traceevent/
+ LIBTRACEEVENT_PLUGINS_DIR = $(LIBTRACEEVENT_DIR)/plugins
++endif
+ LIBBPF_DIR      = $(srctree)/tools/lib/bpf/
+ LIBSUBCMD_DIR   = $(srctree)/tools/lib/subcmd/
+ LIBSYMBOL_DIR   = $(srctree)/tools/lib/symbol/
+@@ -293,6 +295,7 @@ SCRIPT_SH += perf-iostat.sh
+ grep-libs = $(filter -l%,$(1))
+ strip-libs = $(filter-out -l%,$(1))
+ 
++ifndef LIBTRACEEVENT_DYNAMIC
+ ifneq ($(OUTPUT),)
+   LIBTRACEEVENT_OUTPUT = $(abspath $(OUTPUT))/libtraceevent
+ else
+@@ -306,13 +309,16 @@ LIBTRACEEVENT = $(LIBTRACEEVENT_OUTPUT)/libtraceevent.a
+ export LIBTRACEEVENT
+ LIBTRACEEVENT_DYNAMIC_LIST = $(LIBTRACEEVENT_PLUGINS_OUTPUT)/libtraceevent-dynamic-list
+ CFLAGS += -I$(LIBTRACEEVENT_OUTPUT)/include
 -
--                       sep_idx = sep - argv[i];
--                       s = strdup(argv[i]);
--                       if (s == NULL) {
-+                       default_ps.event_glob = strdup(argv[i]);
-+                       if (!default_ps.event_glob) {
-                               ret = -1;
-                               goto out;
-                       }
--
--                       s[sep_idx] = '\0';
--                       default_ps.pmu_glob = s;
--                       default_ps.event_glob = s + sep_idx + 1;
-                       print_tracepoint_events(&print_cb, ps);
-                       print_sdt_events(&print_cb, ps);
-                       default_ps.metrics = true;
-                       default_ps.metricgroups = true;
-                       metricgroup__print(&print_cb, ps);
--                       free(s);
-+                       free(default_ps.event_glob);
-+                       default_ps.event_glob = NULL;
-```
-I think this should be squashed into "perf list: Reorganize to use
-callbacks". Some explanation, in porting the : glob case I'd assumed
-the before the colon would be the PMU and the after the event. Doing
-things caused tracepoint output to differ too much and so for
-tracepoints the : is kept in the event name. So we can simplify the
-matching to not be pmu and event, just use the event glob.
+ #
+ # The static build has no dynsym table, so this does not work for
+ # static build. Looks like linker starts to scream about that now
+ # (in Fedora 26) so we need to switch it off for static build.
+ DYNAMIC_LIST_LDFLAGS               = -Xlinker --dynamic-list=$(LIBTRACEEVENT_DYNAMIC_LIST)
+ LIBTRACEEVENT_DYNAMIC_LIST_LDFLAGS = $(if $(findstring -static,$(LDFLAGS)),,$(DYNAMIC_LIST_LDFLAGS))
++else
++LIBTRACEEVENT_DYNAMIC_LIST =
++LIBTRACEEVENT_DYNAMIC_LIST_LDFLAGS =
++endif
+ 
+ ifneq ($(OUTPUT),)
+   LIBAPI_OUTPUT = $(abspath $(OUTPUT))/libapi
+@@ -375,7 +381,11 @@ export PYTHON_EXTBUILD_LIB PYTHON_EXTBUILD_TMP
+ python-clean := $(call QUIET_CLEAN, python) $(RM) -r $(PYTHON_EXTBUILD) $(OUTPUT)python/perf*.so
+ 
+ PYTHON_EXT_SRCS := $(shell grep -v ^\# util/python-ext-sources)
++ifndef LIBTRACEEVENT_DYNAMIC
+ PYTHON_EXT_DEPS := util/python-ext-sources util/setup.py $(LIBTRACEEVENT) $(LIBAPI)
++else
++PYTHON_EXT_DEPS := util/python-ext-sources util/setup.py $(LIBAPI)
++endif
+ 
+ SCRIPTS = $(patsubst %.sh,%,$(SCRIPT_SH))
+ 
+@@ -785,9 +795,12 @@ prepare: $(OUTPUT)PERF-VERSION-FILE $(OUTPUT)common-cmds.h archheaders $(drm_ioc
+ 	$(LIBPERF) \
+ 	$(LIBSUBCMD) \
+ 	$(LIBSYMBOL) \
+-	$(LIBTRACEEVENT) \
+ 	bpf-skel
+ 
++ifndef LIBTRACEEVENT_DYNAMIC
++prepare: $(LIBTRACEEVENT)
++endif
++
+ $(OUTPUT)%.o: %.c prepare FORCE
+ 	$(Q)$(MAKE) -f $(srctree)/tools/build/Makefile.build dir=$(build-dir) $@
+ 
+@@ -843,6 +856,7 @@ endif
+ 
+ $(patsubst perf-%,%.o,$(PROGRAMS)): $(wildcard */*.h)
+ 
++ifndef LIBTRACEEVENT_DYNAMIC
+ LIBTRACEEVENT_FLAGS += plugin_dir=$(plugindir_SQ) 'EXTRA_CFLAGS=$(EXTRA_CFLAGS)' 'LDFLAGS=$(filter-out -static,$(LDFLAGS))'
+ 
+ $(LIBTRACEEVENT): FORCE | $(LIBTRACEEVENT_OUTPUT)
+@@ -872,6 +886,7 @@ install-traceevent-plugins: libtraceevent_plugins
+ 	$(Q)$(MAKE) -C $(LIBTRACEEVENT_PLUGINS_DIR) O=$(LIBTRACEEVENT_PLUGINS_OUTPUT) \
+ 		DESTDIR=$(LIBTRACEEVENT_PLUGINS_DESTDIR) prefix= \
+ 		$(LIBTRACEEVENT_FLAGS) install
++endif
+ 
+ $(LIBAPI): FORCE | $(LIBAPI_OUTPUT)
+ 	$(Q)$(MAKE) -C $(LIBAPI_DIR) O=$(LIBAPI_OUTPUT) \
+@@ -1152,7 +1167,7 @@ endif # BUILD_BPF_SKEL
+ bpf-skel-clean:
+ 	$(call QUIET_CLEAN, bpf-skel) $(RM) -r $(SKEL_TMP_OUT) $(SKELETONS)
+ 
+-clean:: $(LIBTRACEEVENT)-clean $(LIBAPI)-clean $(LIBBPF)-clean $(LIBSUBCMD)-clean $(LIBSYMBOL)-clean $(LIBPERF)-clean fixdep-clean python-clean bpf-skel-clean tests-coresight-targets-clean libtraceevent_plugins-clean
++clean:: $(LIBAPI)-clean $(LIBBPF)-clean $(LIBSUBCMD)-clean $(LIBSYMBOL)-clean $(LIBPERF)-clean fixdep-clean python-clean bpf-skel-clean tests-coresight-targets-clean
+ 	$(call QUIET_CLEAN, core-objs)  $(RM) $(LIBPERF_A) $(OUTPUT)perf-archive $(OUTPUT)perf-iostat $(LANG_BINDINGS)
+ 	$(Q)find $(or $(OUTPUT),.) -name '*.o' -delete -o -name '\.*.cmd' -delete -o -name '\.*.d' -delete
+ 	$(Q)$(RM) $(OUTPUT).config-detected
+@@ -1192,6 +1207,10 @@ clean:: $(LIBTRACEEVENT)-clean $(LIBAPI)-clean $(LIBBPF)-clean $(LIBSUBCMD)-clea
+ 	$(call QUIET_CLEAN, Documentation) \
+ 	$(MAKE) -C $(DOC_DIR) O=$(OUTPUT) clean >/dev/null
+ 
++ifndef LIBTRACEEVENT_DYNAMIC
++clean:: $(LIBTRACEEVENT)-clean libtraceevent_plugins-clean
++endif
++
+ #
+ # To provide FEATURE-DUMP into $(FEATURE_DUMP_COPY)
+ # file if defined, with no further action.
+diff --git a/tools/perf/util/setup.py b/tools/perf/util/setup.py
+index 5b1e6468d5e8..43e7ca40b2ec 100644
+--- a/tools/perf/util/setup.py
++++ b/tools/perf/util/setup.py
+@@ -77,7 +77,8 @@ perf = Extension('perf',
+ 		  include_dirs = ['util/include'],
+ 		  libraries = extra_libraries,
+ 		  extra_compile_args = cflags,
+-		  extra_objects = [libtraceevent, libapikfs, libperf],
++		  extra_objects = [ x for x in [libtraceevent, libapikfs, libperf]
++                                    if x is not None],
+                  )
+ 
+ setup(name='perf',
+-- 
+2.38.1.431.g37b22c650d-goog
 
-Thanks,
-Ian
-
-               } else {
-                       if (asprintf(&s, "*%s*", argv[i]) < 0) {
-                               printf("Critical: Not enough memory!
-Trying to continue...\n");
