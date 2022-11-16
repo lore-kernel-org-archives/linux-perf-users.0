@@ -2,281 +2,646 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4775BC4167E
-	for <linux-perf-users@archiver.kernel.org>; Wed, 16 Nov 2022 15:29:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6B6A0C4332F
+	for <linux-perf-users@archiver.kernel.org>; Wed, 16 Nov 2022 16:46:41 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233206AbiKPP3q (ORCPT
+        id S238989AbiKPQqi (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Wed, 16 Nov 2022 10:29:46 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47254 "EHLO
+        Wed, 16 Nov 2022 11:46:38 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59174 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S234873AbiKPP3h (ORCPT
+        with ESMTP id S233652AbiKPQqP (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Wed, 16 Nov 2022 10:29:37 -0500
-Received: from casper.infradead.org (casper.infradead.org [IPv6:2001:8b0:10b:1236::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 51E134731D;
-        Wed, 16 Nov 2022 07:29:34 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=casper.20170209; h=In-Reply-To:Content-Type:MIME-Version:
-        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description;
-        bh=4XDB6ZbR3Awa7mOslon9xFqMWj0psrdiARhozQeRyJA=; b=gYnS7fY4SiIk8LhruYi5TSnTVA
-        fStgfkd5Z/zbz8yQZBnmnhyWOOmhlrhRObDB9G2KJoco51LBuhZxVkVxbSBrTCQ/HtHWliung+7ZZ
-        HbZe3Froz8dQdsOphMI16X4jllstvINRTH3i5h+4adnzIV8bwm2odcxdw/4ACLq7NTIENgyfmZxmW
-        flqbgkCx8yOd3LgZHd01MR5R1P5lI3CSROlGEycIvrRPVhabpLUb0rptouTmOLEERLT81z+aE6Z4G
-        +eccUWkk2tCLQB+FJ0eM8fcpEENqemtpoKisOMtzDEaLdPH2PhfiSrDXw+vDx7DBnwdyTpMo06laG
-        hxV51fpA==;
-Received: from j130084.upc-j.chello.nl ([24.132.130.84] helo=noisy.programming.kicks-ass.net)
-        by casper.infradead.org with esmtpsa (Exim 4.94.2 #2 (Red Hat Linux))
-        id 1ovKLj-00HX9A-0P; Wed, 16 Nov 2022 15:29:15 +0000
-Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange X25519 server-signature RSA-PSS (4096 bits))
-        (Client did not present a certificate)
-        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id DC2C03006DC;
-        Wed, 16 Nov 2022 16:29:05 +0100 (CET)
-Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
-        id A500120832696; Wed, 16 Nov 2022 16:29:05 +0100 (CET)
-Date:   Wed, 16 Nov 2022 16:29:05 +0100
-From:   Peter Zijlstra <peterz@infradead.org>
-To:     Ulf Hansson <ulf.hansson@linaro.org>
-Cc:     juri.lelli@redhat.com, rafael@kernel.org, catalin.marinas@arm.com,
-        linus.walleij@linaro.org, bsegall@google.com, guoren@kernel.org,
-        pavel@ucw.cz, agordeev@linux.ibm.com, linux-arch@vger.kernel.org,
-        vincent.guittot@linaro.org, mpe@ellerman.id.au,
-        chenhuacai@kernel.org, christophe.leroy@csgroup.eu,
-        linux-acpi@vger.kernel.org, agross@kernel.org,
-        geert@linux-m68k.org, linux-imx@nxp.com, vgupta@kernel.org,
-        mattst88@gmail.com, mturquette@baylibre.com, sammy@sammy.net,
-        pmladek@suse.com, linux-pm@vger.kernel.org,
-        Sascha Hauer <s.hauer@pengutronix.de>,
-        linux-um@lists.infradead.org, npiggin@gmail.com,
-        tglx@linutronix.de, linux-omap@vger.kernel.org,
-        dietmar.eggemann@arm.com, andreyknvl@gmail.com,
-        gregkh@linuxfoundation.org, linux-kernel@vger.kernel.org,
-        linux-perf-users@vger.kernel.org, senozhatsky@chromium.org,
-        svens@linux.ibm.com, jolsa@kernel.org, tj@kernel.org,
-        Andrew Morton <akpm@linux-foundation.org>,
-        mark.rutland@arm.com, linux-ia64@vger.kernel.org,
-        dave.hansen@linux.intel.com,
-        virtualization@lists.linux-foundation.org,
-        James.Bottomley@hansenpartnership.com, jcmvbkbc@gmail.com,
-        thierry.reding@gmail.com, kernel@xen0n.name, cl@linux.com,
-        linux-s390@vger.kernel.org, vschneid@redhat.com,
-        john.ogness@linutronix.de, ysato@users.sourceforge.jp,
-        linux-sh@vger.kernel.org, festevam@gmail.com, deller@gmx.de,
-        daniel.lezcano@linaro.org, jonathanh@nvidia.com, dennis@kernel.org,
-        lenb@kernel.org, linux-xtensa@linux-xtensa.org,
-        kernel@pengutronix.de, gor@linux.ibm.com,
-        linux-arm-msm@vger.kernel.org, linux-alpha@vger.kernel.org,
-        linux-m68k@lists.linux-m68k.org, loongarch@lists.linux.dev,
-        shorne@gmail.com, chris@zankel.net, sboyd@kernel.org,
-        dinguyen@kernel.org, bristot@redhat.com,
-        alexander.shishkin@linux.intel.com, fweisbec@gmail.com,
-        lpieralisi@kernel.org, atishp@atishpatra.org,
-        linux@rasmusvillemoes.dk, kasan-dev@googlegroups.com,
-        will@kernel.org, boris.ostrovsky@oracle.com, khilman@kernel.org,
-        linux-csky@vger.kernel.org, pv-drivers@vmware.com,
-        linux-snps-arc@lists.infradead.org, mgorman@suse.de,
-        jacob.jun.pan@linux.intel.com, Arnd Bergmann <arnd@arndb.de>,
-        ulli.kroll@googlemail.com, linux-clk@vger.kernel.org,
-        rostedt@goodmis.org, ink@jurassic.park.msu.ru, bcain@quicinc.com,
-        tsbogend@alpha.franken.de, linux-parisc@vger.kernel.org,
-        ryabinin.a.a@gmail.com, sudeep.holla@arm.com, shawnguo@kernel.org,
-        davem@davemloft.net, dalias@libc.org, tony@atomide.com,
-        amakhalov@vmware.com, konrad.dybcio@somainline.org,
-        bjorn.andersson@linaro.org, glider@google.com, hpa@zytor.com,
-        sparclinux@vger.kernel.org, linux-hexagon@vger.kernel.org,
-        linux-riscv@lists.infradead.org, vincenzo.frascino@arm.com,
-        anton.ivanov@cambridgegreys.com, jonas@southpole.se,
-        yury.norov@gmail.com, richard@nod.at, x86@kernel.org,
-        linux@armlinux.org.uk, mingo@redhat.com, aou@eecs.berkeley.edu,
-        hca@linux.ibm.com, richard.henderson@linaro.org,
-        stefan.kristiansson@saunalahti.fi, openrisc@lists.librecores.org,
-        acme@kernel.org, paul.walmsley@sifive.com,
-        linux-tegra@vger.kernel.org, namhyung@kernel.org,
-        andriy.shevchenko@linux.intel.com, jpoimboe@kernel.org,
-        dvyukov@google.com, jgross@suse.com, monstr@monstr.eu,
-        linux-mips@vger.kernel.org, palmer@dabbelt.com,
-        anup@brainfault.org, bp@alien8.de, johannes@sipsolutions.net,
-        linuxppc-dev@lists.ozlabs.org
-Subject: Re: [PATCH v2 12/44] cpuidle,dt: Push RCU-idle into driver
-Message-ID: <Y3UBwYNY15ETUKy9@hirez.programming.kicks-ass.net>
-References: <20220919095939.761690562@infradead.org>
- <20220919101521.139727471@infradead.org>
- <CAPDyKFqTWd4W5Ofk76CtC4X43dxBTNHtmY9YzN355-vpviLsPw@mail.gmail.com>
+        Wed, 16 Nov 2022 11:46:15 -0500
+Received: from foss.arm.com (foss.arm.com [217.140.110.172])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTP id 0CFB55B869;
+        Wed, 16 Nov 2022 08:42:28 -0800 (PST)
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id EBA941477;
+        Wed, 16 Nov 2022 08:42:33 -0800 (PST)
+Received: from [10.1.37.28] (e121896.cambridge.arm.com [10.1.37.28])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id C34973F587;
+        Wed, 16 Nov 2022 08:42:24 -0800 (PST)
+Message-ID: <1d06f05c-0e7f-7648-6b1b-b78e999bc65f@arm.com>
+Date:   Wed, 16 Nov 2022 16:42:22 +0000
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CAPDyKFqTWd4W5Ofk76CtC4X43dxBTNHtmY9YzN355-vpviLsPw@mail.gmail.com>
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
+ Thunderbird/102.2.2
+Subject: Re: [PATCH V5 6/7] arm64/perf: Add BRBE driver
+Content-Language: en-US
+To:     Anshuman Khandual <anshuman.khandual@arm.com>
+Cc:     Mark Brown <broonie@kernel.org>, Rob Herring <robh@kernel.org>,
+        Marc Zyngier <maz@kernel.org>,
+        Suzuki Poulose <suzuki.poulose@arm.com>,
+        Ingo Molnar <mingo@redhat.com>, linux-kernel@vger.kernel.org,
+        linux-perf-users@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, peterz@infradead.org,
+        acme@kernel.org, mark.rutland@arm.com, will@kernel.org,
+        catalin.marinas@arm.com
+References: <20221107062514.2851047-1-anshuman.khandual@arm.com>
+ <20221107062514.2851047-7-anshuman.khandual@arm.com>
+From:   James Clark <james.clark@arm.com>
+In-Reply-To: <20221107062514.2851047-7-anshuman.khandual@arm.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
 
-Sorry; things keep getting in the way of finishing this :/
 
-As such, I need a bit of time to get on-track again..
+On 07/11/2022 06:25, Anshuman Khandual wrote:
+[...]
 
-On Tue, Oct 04, 2022 at 01:03:57PM +0200, Ulf Hansson wrote:
+> +static void perf_branch_to_brbcr(struct pmu_hw_events *cpuc, int branch_type)
+> +{
+> +	cpuc->brbcr = (BRBCR_EL1_CC | BRBCR_EL1_MPRED);
+> +
+> +	if (branch_type & PERF_SAMPLE_BRANCH_USER)
+> +		cpuc->brbcr |= BRBCR_EL1_E0BRE;
+> +
+> +	if (branch_type & PERF_SAMPLE_BRANCH_NO_CYCLES)
+> +		cpuc->brbcr &= ~BRBCR_EL1_CC;
+> +
+> +	if (branch_type & PERF_SAMPLE_BRANCH_NO_FLAGS)
+> +		cpuc->brbcr &= ~BRBCR_EL1_MPRED;
+> +
+> +	if (branch_type & PERF_SAMPLE_BRANCH_KERNEL)
+> +		cpuc->brbcr |= BRBCR_EL1_E1BRE;
+> +	else
+> +		return;
+> +
+> +	/*
+> +	 * The exception and exception return branches could be
+> +	 * captured only when the event has necessary privilege
+> +	 * indicated via branch type PERF_SAMPLE_BRANCH_KERNEL,
+> +	 * which has been ascertained in generic perf. Please
+> +	 * refer perf_copy_attr() for more details.
+> +	 */
+> +	if (branch_type & PERF_SAMPLE_BRANCH_ANY) {
+> +		cpuc->brbcr |= BRBCR_EL1_EXCEPTION;
+> +		cpuc->brbcr |= BRBCR_EL1_ERTN;
 
-> > --- a/drivers/acpi/processor_idle.c
-> > +++ b/drivers/acpi/processor_idle.c
-> > @@ -1200,6 +1200,8 @@ static int acpi_processor_setup_lpi_stat
-> >                 state->target_residency = lpi->min_residency;
-> >                 if (lpi->arch_flags)
-> >                         state->flags |= CPUIDLE_FLAG_TIMER_STOP;
-> > +               if (lpi->entry_method == ACPI_CSTATE_FFH)
-> > +                       state->flags |= CPUIDLE_FLAG_RCU_IDLE;
-> 
-> I assume the state index here will never be 0?
-> 
-> If not, it may lead to that acpi_processor_ffh_lpi_enter() may trigger
-> CPU_PM_CPU_IDLE_ENTER_PARAM() to call ct_cpuidle_enter|exit() for an
-> idle-state that doesn't have the CPUIDLE_FLAG_RCU_IDLE bit set.
+Because this comes after the PERF_SAMPLE_BRANCH_KERNEL check, it's
+impossible to get syscall records from userspace. When you enable kernel
+branch records, the buffer always fills up before it gets to userspace.
 
-I'm not quite sure I see how. AFAICT this condition above implies
-acpi_processor_ffh_lpi_enter() gets called, no?
+Can you move this to the top so that it can be set if either
+PERF_SAMPLE_BRANCH_USER or PERF_SAMPLE_BRANCH_KERNEL is set. The
+hardware already handles the security by giving partial records with the
+kernel part zeroed out so I don't think the driver needs to add any
+additional rules other than setting BRBCR_EL1_E1BRE or BRBCR_EL1_E0BRE.
 
-Which in turn is an unconditional __CPU_PM_CPU_IDLE_ENTER() user, so
-even if idx==0, it ends up in ct_idle_{enter,exit}().
+For example I moved it to the top, removed the return below and then I
+get syscall partial records:
 
-> 
-> >                 state->enter = acpi_idle_lpi_enter;
-> >                 drv->safe_state_index = i;
-> >         }
-> > --- a/drivers/cpuidle/cpuidle-arm.c
-> > +++ b/drivers/cpuidle/cpuidle-arm.c
-> > @@ -53,6 +53,7 @@ static struct cpuidle_driver arm_idle_dr
-> >          * handler for idle state index 0.
-> >          */
-> >         .states[0] = {
-> > +               .flags                  = CPUIDLE_FLAG_RCU_IDLE,
-> 
-> Comparing arm64 and arm32 idle-states/idle-drivers, the $subject
-> series ends up setting the CPUIDLE_FLAG_RCU_IDLE for the ARM WFI idle
-> state (state zero), but only for the arm64 and psci cases (mostly
-> arm64). For arm32 we would need to update the ARM_CPUIDLE_WFI_STATE
-> too, as that is what most arm32 idle-drivers are using. My point is,
-> the code becomes a bit inconsistent.
+....  5: 0000000000745d0c -> 0000000000000000 0 cycles  P   9fbfbfbf SYSCALL
 
-True.
+I also get ERETS but with only the userspace part set:
 
-> Perhaps it's easier to avoid setting the CPUIDLE_FLAG_RCU_IDLE bit for
-> all of the ARM WFI idle states, for both arm64 and arm32?
+.....  4: 0000000000000000 -> 0000000000745d10 0 cycles  P   9fbfbfbf ERET
 
-As per the below?
-
-> 
-> >                 .enter                  = arm_enter_idle_state,
-> >                 .exit_latency           = 1,
-> >                 .target_residency       = 1,
-
-> > --- a/include/linux/cpuidle.h
-> > +++ b/include/linux/cpuidle.h
-> > @@ -282,14 +282,18 @@ extern s64 cpuidle_governor_latency_req(
-> >         int __ret = 0;                                                  \
-> >                                                                         \
-> >         if (!idx) {                                                     \
-> > +               ct_idle_enter();                                        \
-> 
-> According to my comment above, we should then drop these calls to
-> ct_idle_enter and ct_idle_exit() here. Right?
-
-Yes, if we ensure idx==0 never has RCU_IDLE set then these must be
-removed.
-
-> >                 cpu_do_idle();                                          \
-> > +               ct_idle_exit();                                         \
-> >                 return idx;                                             \
-> >         }                                                               \
-> >                                                                         \
-> >         if (!is_retention)                                              \
-> >                 __ret =  cpu_pm_enter();                                \
-> >         if (!__ret) {                                                   \
-> > +               ct_idle_enter();                                        \
-> >                 __ret = low_level_idle_enter(state);                    \
-> > +               ct_idle_exit();                                         \
-> >                 if (!is_retention)                                      \
-> >                         cpu_pm_exit();                                  \
-> >         }                                                               \
-> >
-
-So the basic premise is that everything that needs RCU inside the idle
-callback must set CPUIDLE_FLAG_RCU_IDLE and by doing that promise to
-call ct_idle_{enter,exit}() themselves.
-
-Setting RCU_IDLE is required when there is RCU usage, however even if
-there is no RCU usage, setting RCU_IDLE is fine, as long as
-ct_idle_{enter,exit}() then get called.
-
-
-So does the below (delta) look better to you?
-
---- a/drivers/acpi/processor_idle.c
-+++ b/drivers/acpi/processor_idle.c
-@@ -1218,7 +1218,7 @@ static int acpi_processor_setup_lpi_stat
- 		state->target_residency = lpi->min_residency;
- 		if (lpi->arch_flags)
- 			state->flags |= CPUIDLE_FLAG_TIMER_STOP;
--		if (lpi->entry_method == ACPI_CSTATE_FFH)
-+		if (i != 0 && lpi->entry_method == ACPI_CSTATE_FFH)
- 			state->flags |= CPUIDLE_FLAG_RCU_IDLE;
- 		state->enter = acpi_idle_lpi_enter;
- 		drv->safe_state_index = i;
---- a/drivers/cpuidle/cpuidle-arm.c
-+++ b/drivers/cpuidle/cpuidle-arm.c
-@@ -53,7 +53,7 @@ static struct cpuidle_driver arm_idle_dr
- 	 * handler for idle state index 0.
- 	 */
- 	.states[0] = {
--		.flags			= CPUIDLE_FLAG_RCU_IDLE,
-+		.flags			= 0,
- 		.enter                  = arm_enter_idle_state,
- 		.exit_latency           = 1,
- 		.target_residency       = 1,
---- a/drivers/cpuidle/cpuidle-psci.c
-+++ b/drivers/cpuidle/cpuidle-psci.c
-@@ -357,7 +357,7 @@ static int psci_idle_init_cpu(struct dev
- 	 * PSCI idle states relies on architectural WFI to be represented as
- 	 * state index 0.
- 	 */
--	drv->states[0].flags = CPUIDLE_FLAG_RCU_IDLE;
-+	drv->states[0].flags = 0;
- 	drv->states[0].enter = psci_enter_idle_state;
- 	drv->states[0].exit_latency = 1;
- 	drv->states[0].target_residency = 1;
---- a/drivers/cpuidle/cpuidle-qcom-spm.c
-+++ b/drivers/cpuidle/cpuidle-qcom-spm.c
-@@ -72,7 +72,7 @@ static struct cpuidle_driver qcom_spm_id
- 	.owner = THIS_MODULE,
- 	.states[0] = {
- 		.enter			= spm_enter_idle_state,
--		.flags			= CPUIDLE_FLAG_RCU_IDLE,
-+		.flags			= 0,
- 		.exit_latency		= 1,
- 		.target_residency	= 1,
- 		.power_usage		= UINT_MAX,
---- a/drivers/cpuidle/cpuidle-riscv-sbi.c
-+++ b/drivers/cpuidle/cpuidle-riscv-sbi.c
-@@ -337,7 +337,7 @@ static int sbi_cpuidle_init_cpu(struct d
- 	drv->cpumask = (struct cpumask *)cpumask_of(cpu);
- 
- 	/* RISC-V architectural WFI to be represented as state index 0. */
--	drv->states[0].flags = CPUIDLE_FLAG_RCU_IDLE;
-+	drv->states[0].flags = 0;
- 	drv->states[0].enter = sbi_cpuidle_enter_state;
- 	drv->states[0].exit_latency = 1;
- 	drv->states[0].target_residency = 1;
---- a/include/linux/cpuidle.h
-+++ b/include/linux/cpuidle.h
-@@ -282,9 +282,7 @@ extern s64 cpuidle_governor_latency_req(
- 	int __ret = 0;							\
- 									\
- 	if (!idx) {							\
--		ct_idle_enter();					\
- 		cpu_do_idle();						\
--		ct_idle_exit();						\
- 		return idx;						\
- 	}								\
- 									\
+> +		return;
+> +	}
+> +
+> +	if (branch_type & PERF_SAMPLE_BRANCH_ANY_CALL)
+> +		cpuc->brbcr |= BRBCR_EL1_EXCEPTION;
+> +
+> +	if (branch_type & PERF_SAMPLE_BRANCH_ANY_RETURN)
+> +		cpuc->brbcr |= BRBCR_EL1_ERTN;
+> +}
+> +
+> +
+> +void arm64_pmu_brbe_filter(struct pmu_hw_events *cpuc, struct perf_event *event)
+> +{
+> +	u64 branch_type = event->attr.branch_sample_type;
+> +
+> +	if (brbe_disabled(cpuc))
+> +		return;
+> +
+> +	perf_branch_to_brbfcr(cpuc, branch_type);
+> +	perf_branch_to_brbcr(cpuc, branch_type);
+> +}
+> +
+> +static int brbe_fetch_perf_type(u64 brbinf, bool *new_branch_type)
+> +{
+> +	int brbe_type = brbe_fetch_type(brbinf);
+> +	*new_branch_type = false;
+> +
+> +	switch (brbe_type) {
+> +	case BRBINF_EL1_TYPE_UNCOND_DIR:
+> +		return PERF_BR_UNCOND;
+> +	case BRBINF_EL1_TYPE_INDIR:
+> +		return PERF_BR_IND;
+> +	case BRBINF_EL1_TYPE_DIR_LINK:
+> +		return PERF_BR_CALL;
+> +	case BRBINF_EL1_TYPE_INDIR_LINK:
+> +		return PERF_BR_IND_CALL;
+> +	case BRBINF_EL1_TYPE_RET_SUB:
+> +		return PERF_BR_RET;
+> +	case BRBINF_EL1_TYPE_COND_DIR:
+> +		return PERF_BR_COND;
+> +	case BRBINF_EL1_TYPE_CALL:
+> +		return PERF_BR_CALL;
+> +	case BRBINF_EL1_TYPE_TRAP:
+> +		return PERF_BR_SYSCALL;
+> +	case BRBINF_EL1_TYPE_RET_EXCPT:
+> +		return PERF_BR_ERET;
+> +	case BRBINF_EL1_TYPE_IRQ:
+> +		return PERF_BR_IRQ;
+> +	case BRBINF_EL1_TYPE_DEBUG_HALT:
+> +		*new_branch_type = true;
+> +		return PERF_BR_ARM64_DEBUG_HALT;
+> +	case BRBINF_EL1_TYPE_SERROR:
+> +		return PERF_BR_SERROR;
+> +	case BRBINF_EL1_TYPE_INST_DEBUG:
+> +		*new_branch_type = true;
+> +		return PERF_BR_ARM64_DEBUG_INST;
+> +	case BRBINF_EL1_TYPE_DATA_DEBUG:
+> +		*new_branch_type = true;
+> +		return PERF_BR_ARM64_DEBUG_DATA;
+> +	case BRBINF_EL1_TYPE_ALGN_FAULT:
+> +		*new_branch_type = true;
+> +		return PERF_BR_NEW_FAULT_ALGN;
+> +	case BRBINF_EL1_TYPE_INST_FAULT:
+> +		*new_branch_type = true;
+> +		return PERF_BR_NEW_FAULT_INST;
+> +	case BRBINF_EL1_TYPE_DATA_FAULT:
+> +		*new_branch_type = true;
+> +		return PERF_BR_NEW_FAULT_DATA;
+> +	case BRBINF_EL1_TYPE_FIQ:
+> +		*new_branch_type = true;
+> +		return PERF_BR_ARM64_FIQ;
+> +	case BRBINF_EL1_TYPE_DEBUG_EXIT:
+> +		*new_branch_type = true;
+> +		return PERF_BR_ARM64_DEBUG_EXIT;
+> +	default:
+> +		pr_warn("unknown branch type captured\n");
+> +		return PERF_BR_UNKNOWN;
+> +	}
+> +}
+> +
+> +static int brbe_fetch_perf_priv(u64 brbinf)
+> +{
+> +	int brbe_el = brbe_fetch_el(brbinf);
+> +
+> +	switch (brbe_el) {
+> +	case BRBINF_EL1_EL_EL0:
+> +		return PERF_BR_PRIV_USER;
+> +	case BRBINF_EL1_EL_EL1:
+> +		return PERF_BR_PRIV_KERNEL;
+> +	case BRBINF_EL1_EL_EL2:
+> +		if (is_kernel_in_hyp_mode())
+> +			return PERF_BR_PRIV_KERNEL;
+> +		return PERF_BR_PRIV_HV;
+> +	default:
+> +		pr_warn("unknown branch privilege captured\n");
+> +		return PERF_BR_PRIV_UNKNOWN;
+> +       }
+> +}
+> +
+> +static void capture_brbe_flags(struct pmu_hw_events *cpuc, struct perf_event *event,
+> +			       u64 brbinf, int idx)
+> +{
+> +	int branch_type, type = brbe_record_valid(brbinf);
+> +	bool new_branch_type;
+> +
+> +	if (!branch_sample_no_cycles(event))
+> +		cpuc->branches->brbe_entries[idx].cycles = brbe_fetch_cycles(brbinf);
+> +
+> +	if (branch_sample_type(event)) {
+> +		branch_type = brbe_fetch_perf_type(brbinf, &new_branch_type);
+> +		if (new_branch_type) {
+> +			cpuc->branches->brbe_entries[idx].type = PERF_BR_EXTEND_ABI;
+> +			cpuc->branches->brbe_entries[idx].new_type = branch_type;
+> +		} else {
+> +			cpuc->branches->brbe_entries[idx].type = branch_type;
+> +		}
+> +	}
+> +
+> +	if (!branch_sample_no_flags(event)) {
+> +		/*
+> +		 * BRBINF_LASTFAILED does not indicate that the last transaction
+> +		 * got failed or aborted during the current branch record itself.
+> +		 * Rather, this indicates that all the branch records which were
+> +		 * in transaction until the curret branch record have failed. So
+> +		 * the entire BRBE buffer needs to be processed later on to find
+> +		 * all branch records which might have failed.
+> +		 */
+> +		cpuc->branches->brbe_entries[idx].abort = brbinf & BRBINF_EL1_LASTFAILED;
+> +
+> +		/*
+> +		 * All these information (i.e transaction state and mispredicts)
+> +		 * are not available for target only branch records.
+> +		 */
+> +		if (type != BRBINF_EL1_VALID_TARGET) {
+> +			cpuc->branches->brbe_entries[idx].mispred = brbinf & BRBINF_EL1_MPRED;
+> +			cpuc->branches->brbe_entries[idx].predicted = !(brbinf & BRBINF_EL1_MPRED);
+> +			cpuc->branches->brbe_entries[idx].in_tx = brbinf & BRBINF_EL1_T;
+> +		}
+> +	}
+> +
+> +	if (branch_sample_priv(event)) {
+> +		/*
+> +		 * All these information (i.e branch privilege level) are not
+> +		 * available for source only branch records.
+> +		 */
+> +		if (type != BRBINF_EL1_VALID_SOURCE)
+> +			cpuc->branches->brbe_entries[idx].priv = brbe_fetch_perf_priv(brbinf);
+> +	}
+> +}
+> +
+> +/*
+> + * A branch record with BRBINF_EL1.LASTFAILED set, implies that all
+> + * preceding consecutive branch records, that were in a transaction
+> + * (i.e their BRBINF_EL1.TX set) have been aborted.
+> + *
+> + * Similarly BRBFCR_EL1.LASTFAILED set, indicate that all preceding
+> + * consecutive branch records upto the last record, which were in a
+> + * transaction (i.e their BRBINF_EL1.TX set) have been aborted.
+> + *
+> + * --------------------------------- -------------------
+> + * | 00 | BRBSRC | BRBTGT | BRBINF | | TX = 1 | LF = 0 | [TX success]
+> + * --------------------------------- -------------------
+> + * | 01 | BRBSRC | BRBTGT | BRBINF | | TX = 1 | LF = 0 | [TX success]
+> + * --------------------------------- -------------------
+> + * | 02 | BRBSRC | BRBTGT | BRBINF | | TX = 0 | LF = 0 |
+> + * --------------------------------- -------------------
+> + * | 03 | BRBSRC | BRBTGT | BRBINF | | TX = 1 | LF = 0 | [TX failed]
+> + * --------------------------------- -------------------
+> + * | 04 | BRBSRC | BRBTGT | BRBINF | | TX = 1 | LF = 0 | [TX failed]
+> + * --------------------------------- -------------------
+> + * | 05 | BRBSRC | BRBTGT | BRBINF | | TX = 0 | LF = 1 |
+> + * --------------------------------- -------------------
+> + * | .. | BRBSRC | BRBTGT | BRBINF | | TX = 0 | LF = 0 |
+> + * --------------------------------- -------------------
+> + * | 61 | BRBSRC | BRBTGT | BRBINF | | TX = 1 | LF = 0 | [TX failed]
+> + * --------------------------------- -------------------
+> + * | 62 | BRBSRC | BRBTGT | BRBINF | | TX = 1 | LF = 0 | [TX failed]
+> + * --------------------------------- -------------------
+> + * | 63 | BRBSRC | BRBTGT | BRBINF | | TX = 1 | LF = 0 | [TX failed]
+> + * --------------------------------- -------------------
+> + *
+> + * BRBFCR_EL1.LASTFAILED == 1
+> + *
+> + * Here BRBFCR_EL1.LASTFAILED failes all those consecutive and also
+> + * in transaction branches near the end of the BRBE buffer.
+> + */
+> +static void process_branch_aborts(struct pmu_hw_events *cpuc)
+> +{
+> +	u64 brbfcr = read_sysreg_s(SYS_BRBFCR_EL1);
+> +	bool lastfailed = !!(brbfcr & BRBFCR_EL1_LASTFAILED);
+> +	int idx = cpuc->brbe_nr - 1;
+> +
+> +	do {
+> +		if (cpuc->branches->brbe_entries[idx].in_tx) {
+> +			cpuc->branches->brbe_entries[idx].abort = lastfailed;
+> +		} else {
+> +			lastfailed = cpuc->branches->brbe_entries[idx].abort;
+> +			cpuc->branches->brbe_entries[idx].abort = false;
+> +		}
+> +	} while (idx--, idx >= 0);
+> +}
+> +
+> +void arm64_pmu_brbe_read(struct pmu_hw_events *cpuc, struct perf_event *event)
+> +{
+> +	u64 brbinf;
+> +	int idx;
+> +
+> +	if (brbe_disabled(cpuc))
+> +		return;
+> +
+> +	set_brbe_paused();
+> +	for (idx = 0; idx < cpuc->brbe_nr; idx++) {
+> +		select_brbe_bank_index(idx);
+> +		brbinf = get_brbinf_reg(idx);
+> +		/*
+> +		 * There are no valid entries anymore on the buffer.
+> +		 * Abort the branch record processing to save some
+> +		 * cycles and also reduce the capture/process load
+> +		 * for the user space as well.
+> +		 */
+> +		if (brbe_invalid(brbinf))
+> +			break;
+> +
+> +		if (brbe_valid(brbinf)) {
+> +			cpuc->branches->brbe_entries[idx].from =  get_brbsrc_reg(idx);
+> +			cpuc->branches->brbe_entries[idx].to =  get_brbtgt_reg(idx);
+> +		} else if (brbe_source(brbinf)) {
+> +			cpuc->branches->brbe_entries[idx].from =  get_brbsrc_reg(idx);
+> +			cpuc->branches->brbe_entries[idx].to = 0;
+> +		} else if (brbe_target(brbinf)) {
+> +			cpuc->branches->brbe_entries[idx].from = 0;
+> +			cpuc->branches->brbe_entries[idx].to =  get_brbtgt_reg(idx);
+> +		}
+> +		capture_brbe_flags(cpuc, event, brbinf, idx);
+> +	}
+> +	cpuc->branches->brbe_stack.nr = idx;
+> +	cpuc->branches->brbe_stack.hw_idx = -1ULL;
+> +	process_branch_aborts(cpuc);
+> +}
+> +
+> +void arm64_pmu_brbe_reset(struct pmu_hw_events *cpuc)
+> +{
+> +	if (brbe_disabled(cpuc))
+> +		return;
+> +
+> +	asm volatile(BRB_IALL);
+> +	isb();
+> +}
+> diff --git a/drivers/perf/arm_pmu_brbe.h b/drivers/perf/arm_pmu_brbe.h
+> new file mode 100644
+> index 000000000000..22c4b25b1777
+> --- /dev/null
+> +++ b/drivers/perf/arm_pmu_brbe.h
+> @@ -0,0 +1,259 @@
+> +/* SPDX-License-Identifier: GPL-2.0-only */
+> +/*
+> + * Branch Record Buffer Extension Helpers.
+> + *
+> + * Copyright (C) 2021 ARM Limited
+> + *
+> + * Author: Anshuman Khandual <anshuman.khandual@arm.com>
+> + */
+> +#define pr_fmt(fmt) "brbe: " fmt
+> +
+> +#include <linux/perf/arm_pmu.h>
+> +
+> +/*
+> + * BRBE Instructions
+> + *
+> + * BRB_IALL : Invalidate the entire buffer
+> + * BRB_INJ  : Inject latest branch record derived from [BRBSRCINJ, BRBTGTINJ, BRBINFINJ]
+> + */
+> +#define BRB_IALL __emit_inst(0xD5000000 | sys_insn(1, 1, 7, 2, 4) | (0x1f))
+> +#define BRB_INJ  __emit_inst(0xD5000000 | sys_insn(1, 1, 7, 2, 5) | (0x1f))
+> +
+> +/*
+> + * BRBE Buffer Organization
+> + *
+> + * BRBE buffer is arranged as multiple banks of 32 branch record
+> + * entries each. An indivdial branch record in a given bank could
+> + * be accessedi, after selecting the bank in BRBFCR_EL1.BANK and
+> + * accessing the registers i.e [BRBSRC, BRBTGT, BRBINF] set with
+> + * indices [0..31].
+> + *
+> + * Bank 0
+> + *
+> + *	---------------------------------	------
+> + *	| 00 | BRBSRC | BRBTGT | BRBINF |	| 00 |
+> + *	---------------------------------	------
+> + *	| 01 | BRBSRC | BRBTGT | BRBINF |	| 01 |
+> + *	---------------------------------	------
+> + *	| .. | BRBSRC | BRBTGT | BRBINF |	| .. |
+> + *	---------------------------------	------
+> + *	| 31 | BRBSRC | BRBTGT | BRBINF |	| 31 |
+> + *	---------------------------------	------
+> + *
+> + * Bank 1
+> + *
+> + *	---------------------------------	------
+> + *	| 32 | BRBSRC | BRBTGT | BRBINF |	| 00 |
+> + *	---------------------------------	------
+> + *	| 33 | BRBSRC | BRBTGT | BRBINF |	| 01 |
+> + *	---------------------------------	------
+> + *	| .. | BRBSRC | BRBTGT | BRBINF |	| .. |
+> + *	---------------------------------	------
+> + *	| 63 | BRBSRC | BRBTGT | BRBINF |	| 31 |
+> + *	---------------------------------	------
+> + */
+> +#define BRBE_BANK0_IDX_MIN 0
+> +#define BRBE_BANK0_IDX_MAX 31
+> +#define BRBE_BANK1_IDX_MIN 32
+> +#define BRBE_BANK1_IDX_MAX 63
+> +
+> +#define RETURN_READ_BRBSRCN(n) \
+> +	read_sysreg_s(SYS_BRBSRC##n##_EL1)
+> +
+> +#define RETURN_READ_BRBTGTN(n) \
+> +	read_sysreg_s(SYS_BRBTGT##n##_EL1)
+> +
+> +#define RETURN_READ_BRBINFN(n) \
+> +	read_sysreg_s(SYS_BRBINF##n##_EL1)
+> +
+> +#define BRBE_REGN_CASE(n, case_macro) \
+> +	case n: return case_macro(n); break
+> +
+> +#define BRBE_REGN_SWITCH(x, case_macro)				\
+> +	do {							\
+> +		switch (x) {					\
+> +		BRBE_REGN_CASE(0, case_macro);			\
+> +		BRBE_REGN_CASE(1, case_macro);			\
+> +		BRBE_REGN_CASE(2, case_macro);			\
+> +		BRBE_REGN_CASE(3, case_macro);			\
+> +		BRBE_REGN_CASE(4, case_macro);			\
+> +		BRBE_REGN_CASE(5, case_macro);			\
+> +		BRBE_REGN_CASE(6, case_macro);			\
+> +		BRBE_REGN_CASE(7, case_macro);			\
+> +		BRBE_REGN_CASE(8, case_macro);			\
+> +		BRBE_REGN_CASE(9, case_macro);			\
+> +		BRBE_REGN_CASE(10, case_macro);			\
+> +		BRBE_REGN_CASE(11, case_macro);			\
+> +		BRBE_REGN_CASE(12, case_macro);			\
+> +		BRBE_REGN_CASE(13, case_macro);			\
+> +		BRBE_REGN_CASE(14, case_macro);			\
+> +		BRBE_REGN_CASE(15, case_macro);			\
+> +		BRBE_REGN_CASE(16, case_macro);			\
+> +		BRBE_REGN_CASE(17, case_macro);			\
+> +		BRBE_REGN_CASE(18, case_macro);			\
+> +		BRBE_REGN_CASE(19, case_macro);			\
+> +		BRBE_REGN_CASE(20, case_macro);			\
+> +		BRBE_REGN_CASE(21, case_macro);			\
+> +		BRBE_REGN_CASE(22, case_macro);			\
+> +		BRBE_REGN_CASE(23, case_macro);			\
+> +		BRBE_REGN_CASE(24, case_macro);			\
+> +		BRBE_REGN_CASE(25, case_macro);			\
+> +		BRBE_REGN_CASE(26, case_macro);			\
+> +		BRBE_REGN_CASE(27, case_macro);			\
+> +		BRBE_REGN_CASE(28, case_macro);			\
+> +		BRBE_REGN_CASE(29, case_macro);			\
+> +		BRBE_REGN_CASE(30, case_macro);			\
+> +		BRBE_REGN_CASE(31, case_macro);			\
+> +		default:					\
+> +			pr_warn("unknown register index\n");	\
+> +			return -1;				\
+> +		}						\
+> +	} while (0)
+> +
+> +static inline int buffer_to_brbe_idx(int buffer_idx)
+> +{
+> +	return buffer_idx % 32;
+> +}
+> +
+> +static inline u64 get_brbsrc_reg(int buffer_idx)
+> +{
+> +	int brbe_idx = buffer_to_brbe_idx(buffer_idx);
+> +
+> +	BRBE_REGN_SWITCH(brbe_idx, RETURN_READ_BRBSRCN);
+> +}
+> +
+> +static inline u64 get_brbtgt_reg(int buffer_idx)
+> +{
+> +	int brbe_idx = buffer_to_brbe_idx(buffer_idx);
+> +
+> +	BRBE_REGN_SWITCH(brbe_idx, RETURN_READ_BRBTGTN);
+> +}
+> +
+> +static inline u64 get_brbinf_reg(int buffer_idx)
+> +{
+> +	int brbe_idx = buffer_to_brbe_idx(buffer_idx);
+> +
+> +	BRBE_REGN_SWITCH(brbe_idx, RETURN_READ_BRBINFN);
+> +}
+> +
+> +static inline u64 brbe_record_valid(u64 brbinf)
+> +{
+> +	return (brbinf & BRBINF_EL1_VALID_MASK) >> BRBINF_EL1_VALID_SHIFT;
+> +}
+> +
+> +static inline bool brbe_invalid(u64 brbinf)
+> +{
+> +	return brbe_record_valid(brbinf) == BRBINF_EL1_VALID_NONE;
+> +}
+> +
+> +static inline bool brbe_valid(u64 brbinf)
+> +{
+> +	return brbe_record_valid(brbinf) == BRBINF_EL1_VALID_FULL;
+> +}
+> +
+> +static inline bool brbe_source(u64 brbinf)
+> +{
+> +	return brbe_record_valid(brbinf) == BRBINF_EL1_VALID_SOURCE;
+> +}
+> +
+> +static inline bool brbe_target(u64 brbinf)
+> +{
+> +	return brbe_record_valid(brbinf) == BRBINF_EL1_VALID_TARGET;
+> +}
+> +
+> +static inline int brbe_fetch_cycles(u64 brbinf)
+> +{
+> +	/*
+> +	 * Captured cycle count is unknown and hence
+> +	 * should not be passed on the user space.
+> +	 */
+> +	if (brbinf & BRBINF_EL1_CCU)
+> +		return 0;
+> +
+> +	return (brbinf & BRBINF_EL1_CC_MASK) >> BRBINF_EL1_CC_SHIFT;
+> +}
+> +
+> +static inline int brbe_fetch_type(u64 brbinf)
+> +{
+> +	return (brbinf & BRBINF_EL1_TYPE_MASK) >> BRBINF_EL1_TYPE_SHIFT;
+> +}
+> +
+> +static inline int brbe_fetch_el(u64 brbinf)
+> +{
+> +	return (brbinf & BRBINF_EL1_EL_MASK) >> BRBINF_EL1_EL_SHIFT;
+> +}
+> +
+> +static inline int brbe_fetch_numrec(u64 brbidr)
+> +{
+> +	return (brbidr & BRBIDR0_EL1_NUMREC_MASK) >> BRBIDR0_EL1_NUMREC_SHIFT;
+> +}
+> +
+> +static inline int brbe_fetch_format(u64 brbidr)
+> +{
+> +	return (brbidr & BRBIDR0_EL1_FORMAT_MASK) >> BRBIDR0_EL1_FORMAT_SHIFT;
+> +}
+> +
+> +static inline int brbe_fetch_cc_bits(u64 brbidr)
+> +{
+> +	return (brbidr & BRBIDR0_EL1_CC_MASK) >> BRBIDR0_EL1_CC_SHIFT;
+> +}
+> +
+> +static inline void select_brbe_bank(int bank)
+> +{
+> +	static int brbe_current_bank = -1;
+> +	u64 brbfcr;
+> +
+> +	if (brbe_current_bank == bank)
+> +		return;
+> +
+> +	WARN_ON(bank > 1);
+> +	brbfcr = read_sysreg_s(SYS_BRBFCR_EL1);
+> +	brbfcr &= ~BRBFCR_EL1_BANK_MASK;
+> +	brbfcr |= ((bank << BRBFCR_EL1_BANK_SHIFT) & BRBFCR_EL1_BANK_MASK);
+> +	write_sysreg_s(brbfcr, SYS_BRBFCR_EL1);
+> +	isb();
+> +	brbe_current_bank = bank;
+> +}
+> +
+> +static inline void select_brbe_bank_index(int buffer_idx)
+> +{
+> +	switch (buffer_idx) {
+> +	case BRBE_BANK0_IDX_MIN ... BRBE_BANK0_IDX_MAX:
+> +		select_brbe_bank(0);
+> +		break;
+> +	case BRBE_BANK1_IDX_MIN ... BRBE_BANK1_IDX_MAX:
+> +		select_brbe_bank(1);
+> +		break;
+> +	default:
+> +		pr_warn("unsupported BRBE index\n");
+> +	}
+> +}
+> +
+> +static inline bool valid_brbe_nr(int brbe_nr)
+> +{
+> +	switch (brbe_nr) {
+> +	case BRBIDR0_EL1_NUMREC_8:
+> +	case BRBIDR0_EL1_NUMREC_16:
+> +	case BRBIDR0_EL1_NUMREC_32:
+> +	case BRBIDR0_EL1_NUMREC_64:
+> +		return true;
+> +	default:
+> +		pr_warn("unsupported BRBE entries\n");
+> +		return false;
+> +	}
+> +}
+> +
+> +static inline bool brbe_paused(void)
+> +{
+> +	u64 brbfcr = read_sysreg_s(SYS_BRBFCR_EL1);
+> +
+> +	return brbfcr & BRBFCR_EL1_PAUSED;
+> +}
+> +
+> +static inline void set_brbe_paused(void)
+> +{
+> +	u64 brbfcr = read_sysreg_s(SYS_BRBFCR_EL1);
+> +
+> +	write_sysreg_s(brbfcr | BRBFCR_EL1_PAUSED, SYS_BRBFCR_EL1);
+> +	isb();
+> +}
+> diff --git a/include/linux/perf/arm_pmu.h b/include/linux/perf/arm_pmu.h
+> index bda0d9984a98..9c23b2b58b3d 100644
+> --- a/include/linux/perf/arm_pmu.h
+> +++ b/include/linux/perf/arm_pmu.h
+> @@ -168,6 +168,26 @@ struct arm_pmu {
+>  	unsigned long acpi_cpuid;
+>  };
+>  
+> +#ifdef CONFIG_ARM_BRBE_PMU
+> +void arm64_pmu_brbe_filter(struct pmu_hw_events *hw_events, struct perf_event *event);
+> +void arm64_pmu_brbe_read(struct pmu_hw_events *cpuc, struct perf_event *event);
+> +void arm64_pmu_brbe_disable(struct pmu_hw_events *cpuc);
+> +void arm64_pmu_brbe_enable(struct pmu_hw_events *cpuc);
+> +void arm64_pmu_brbe_probe(struct pmu_hw_events *cpuc);
+> +void arm64_pmu_brbe_reset(struct pmu_hw_events *cpuc);
+> +bool arm64_pmu_brbe_supported(struct perf_event *event);
+> +#else
+> +static inline void arm64_pmu_brbe_filter(struct pmu_hw_events *hw_events, struct perf_event *event)
+> +{
+> +}
+> +static inline void arm64_pmu_brbe_read(struct pmu_hw_events *cpuc, struct perf_event *event) { }
+> +static inline void arm64_pmu_brbe_disable(struct pmu_hw_events *cpuc) { }
+> +static inline void arm64_pmu_brbe_enable(struct pmu_hw_events *cpuc) { }
+> +static inline void arm64_pmu_brbe_probe(struct pmu_hw_events *cpuc) { }
+> +static inline void arm64_pmu_brbe_reset(struct pmu_hw_events *cpuc) { }
+> +static inline bool arm64_pmu_brbe_supported(struct perf_event *event) {return false; }
+> +#endif
+> +
+>  #define to_arm_pmu(p) (container_of(p, struct arm_pmu, pmu))
+>  
+>  u64 armpmu_event_update(struct perf_event *event);
