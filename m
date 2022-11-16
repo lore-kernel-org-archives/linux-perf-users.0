@@ -2,570 +2,156 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 38A0AC433FE
-	for <linux-perf-users@archiver.kernel.org>; Tue, 15 Nov 2022 21:29:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F0D98C4332F
+	for <linux-perf-users@archiver.kernel.org>; Wed, 16 Nov 2022 05:46:14 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231899AbiKOV27 (ORCPT
+        id S231708AbiKPFqN (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Tue, 15 Nov 2022 16:28:59 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53620 "EHLO
+        Wed, 16 Nov 2022 00:46:13 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59764 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231443AbiKOV2t (ORCPT
+        with ESMTP id S229489AbiKPFqM (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Tue, 15 Nov 2022 16:28:49 -0500
-Received: from mail-wr1-x42e.google.com (mail-wr1-x42e.google.com [IPv6:2a00:1450:4864:20::42e])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id AAE67C1C
-        for <linux-perf-users@vger.kernel.org>; Tue, 15 Nov 2022 13:28:47 -0800 (PST)
-Received: by mail-wr1-x42e.google.com with SMTP id l14so26587879wrw.2
-        for <linux-perf-users@vger.kernel.org>; Tue, 15 Nov 2022 13:28:47 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20210112;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:from:to:cc:subject:date:message-id:reply-to;
-        bh=+PgiIofeiO7mggN8M8Es7YtkIns3NfdA2xeFDYLNzow=;
-        b=hM9o4ZVb2rRwuUvmmVXgNJJ9k9LaTutYwMXp/FO3BMHVzs8gRRPfnfm5hUrmZ469Wm
-         OYX5cQrdLlzjprrOeOnMu2W31SEa1qrfMAvDbTb62rS4WqjvbYdCjs6ksAt0ViJ/rSqP
-         Q/ur7/jzz39580pDXxlDgSc3z335JmPt7M3WX8EEykr+/175YGnxV6awA4VCIrMQqL4c
-         YPdGSR1IvSG76fbH27sZW1rE6HthC1Vl2MT4XrOxFi69PP+pLf76+l+S7mRkfk66ztMm
-         F/vxmEGR1a8BZAE53eEpJO8BP8+3s1+fpgl5NzhjJ3FfW0UeHIZkz7Sn8M6yzj7xKUD8
-         AV9g==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=+PgiIofeiO7mggN8M8Es7YtkIns3NfdA2xeFDYLNzow=;
-        b=LEB21RrcigAm4YvthMBzSE//Fz/tIT+CGvr8mnzKHKZeKCy7ek8WRcuRwxiN5eFx1j
-         o61AacLNR+QCulv053GwGd/KIKxvbG0CMZXouLYDH2MjC0mp3Tt7RdtijkPpyX75yjy5
-         hSp2hdiVRDBq+rfDitEYDJUDVetWVbnxzYLHkPy0dvxET9zQCH72zPJY+469kxYRk5TY
-         3KSXAKyBjLYAJsXF8T0Awit2igu+sjXV6nKRJ9ztfgY2ZgCYXlkvqOtIrLlIX+2XFdvf
-         FFj0mHicq5/yRpyATL41JWB912bn2pTVDx9QG4xKuIeCvO085SGtQxF2E0AtcGOkhRwy
-         P8Tw==
-X-Gm-Message-State: ANoB5pny9Oe00G+RvlIf+8OM2p2d9KmW0MGOjayAHE1OB4KRJ6N/Yliv
-        WeuYnpp5B46wOuspbvHdSsRXYf+GqJsXfd4ws/sCjQ==
-X-Google-Smtp-Source: AA0mqf7/ybbL7Fm4aS6zCSaoRkv1jfJte6wj6XYfGQTNVKi2jcbzoS1GXJir7fal1xvWcrPDrnOZ9HhquljQEMxKb1s=
-X-Received: by 2002:a5d:6e89:0:b0:228:dd1d:8a42 with SMTP id
- k9-20020a5d6e89000000b00228dd1d8a42mr12152504wrz.375.1668547725891; Tue, 15
- Nov 2022 13:28:45 -0800 (PST)
+        Wed, 16 Nov 2022 00:46:12 -0500
+Received: from NAM11-BN8-obe.outbound.protection.outlook.com (mail-bn8nam11on2041.outbound.protection.outlook.com [40.107.236.41])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id F0CB762DA;
+        Tue, 15 Nov 2022 21:46:10 -0800 (PST)
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=BwZE5KkFOQWGAMfjSz9hV1xHU8qZ7l3df87ethOuTwo/FvoVLpgCRuY5OJS6N6EUZGWw7lQIV1ZY/pj+XhGos4O+m0Ig2dqhJN36NgwEeKg4D2rUdshk9COxgkJVC43LO4lweDg7YO/q4Y2XPhu9+vmQLFbHH1X6dgUwmqltVQ9D4ZFMQEOx1uyz98qPwHfPVhbrmi/DduMY0tBNSrOsFm5I5v5YyVcQd1+ntHu79n+StBH7Y1hEh7AYe//hzY5rmCj3T26MQtQEc3K0MV9zcf063DdPDOEj1hL8+pCsgFze9cUiybG+s/Riy8HmuBM6093vlVR8ngUBZlgoO/8OaA==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=RgsMhVU/VF+KS0Jt5J48KL/qHW+1VWVOkWSVrkO9rzk=;
+ b=dsBiBuYewllbmYF0PiNDbspuAmbnRnrOUtBKND8SqSZTt9hF0rNp1tI5QKd+FDrei9knvAWvcMbCzQQsg67e4HEXmOAUQxZ0xuf6Ur7arqxKbJxL3pkNyzy1KblG/zbKUWaL2r+Gxnl7biTLldROV+/nyMv+Kw+X7jO2U0jGJQCNO/kD4BmOj5mbr9hnvzRwKo0LPsgtrtIRcyoj5E2QTQULwX5mOBOxWBmZEN9fbneR006K/KDMGJECLp4kMtIkGf7wY44SZD4Hf+bc8LRJDBdwxWPcd0skL2hE6jB1qyOQDfr5exg+y4LYieTKGhg8fZwng78ko54b49X5BwzAjw==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=amd.com; dmarc=pass action=none header.from=amd.com; dkim=pass
+ header.d=amd.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=RgsMhVU/VF+KS0Jt5J48KL/qHW+1VWVOkWSVrkO9rzk=;
+ b=dnf2zIktApcgfIpYQxTfdmQvdiZEggsmpWiC/9AB8iV9RFMjQs20px1/XzDwhQY6WsIEGEDe5zmsBh73MfJn/z+QI9FtZMr7LayhstGKRdPFKyjooTdzyFpasOtxWZ+26Up4yTqxVDD2hrSpVolk0GUfjAjtNWzep6IIk8i+xCg=
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=amd.com;
+Received: from PH7PR12MB6588.namprd12.prod.outlook.com (2603:10b6:510:210::10)
+ by DM4PR12MB6256.namprd12.prod.outlook.com (2603:10b6:8:a3::7) with Microsoft
+ SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.5813.17; Wed, 16 Nov 2022 05:46:08 +0000
+Received: from PH7PR12MB6588.namprd12.prod.outlook.com
+ ([fe80::aa5f:5f2c:4143:f981]) by PH7PR12MB6588.namprd12.prod.outlook.com
+ ([fe80::aa5f:5f2c:4143:f981%9]) with mapi id 15.20.5813.017; Wed, 16 Nov 2022
+ 05:46:08 +0000
+Message-ID: <d839086b-826d-3642-5be2-a62714457b62@amd.com>
+Date:   Wed, 16 Nov 2022 11:15:54 +0530
+User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:102.0) Gecko/20100101
+ Thunderbird/102.3.3
+Subject: Re: [PATCH] perf/amd/ibs: Make IBS a core pmu
+Content-Language: en-US
+To:     peterz@infradead.org, Ian Rogers <irogers@google.com>
+Cc:     acme@kernel.org, mark.rutland@arm.com, jolsa@redhat.com,
+        namhyung@kernel.org, eranian@google.com, kan.liang@linux.intel.com,
+        bp@alien8.de, x86@kernel.org, linux-perf-users@vger.kernel.org,
+        linux-kernel@vger.kernel.org, sandipan.das@amd.com,
+        ananth.narayan@amd.com, santosh.shukla@amd.com,
+        Ravi Bangoria <ravi.bangoria@amd.com>
+References: <20221115093904.1799-1-ravi.bangoria@amd.com>
+ <CAP-5=fXq-YNKogH4DYQuf7rz8TZhu8=QnEsA2pvzj6YS_DQO7g@mail.gmail.com>
+From:   Ravi Bangoria <ravi.bangoria@amd.com>
+In-Reply-To: <CAP-5=fXq-YNKogH4DYQuf7rz8TZhu8=QnEsA2pvzj6YS_DQO7g@mail.gmail.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: PN2PR01CA0231.INDPRD01.PROD.OUTLOOK.COM
+ (2603:1096:c01:eb::7) To PH7PR12MB6588.namprd12.prod.outlook.com
+ (2603:10b6:510:210::10)
 MIME-Version: 1.0
-References: <20221108073518.1154450-1-irogers@google.com> <Y2vG13WVahGoib57@kernel.org>
- <CAP-5=fXMEE6LAoBcV-UtRRhG3wvVtzBW4r5FGz06=qsE2U6jPw@mail.gmail.com>
- <CAP-5=fXECqhQpvMVdyzFpNixGwC+9BBo_Jj9nXEZ1hsDvjRd8Q@mail.gmail.com> <Y2vxD1fgyCdO8nIO@kernel.org>
-In-Reply-To: <Y2vxD1fgyCdO8nIO@kernel.org>
-From:   Ian Rogers <irogers@google.com>
-Date:   Tue, 15 Nov 2022 13:28:33 -0800
-Message-ID: <CAP-5=fWL96JpGd0W+Q6cGWd_KQeNNv76w4qRcVBtGriMkQuxjQ@mail.gmail.com>
-Subject: Re: [PATCH v1 00/14] Fix perf tools/lib includes
-To:     Arnaldo Carvalho de Melo <acme@kernel.org>
-Cc:     Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Jiri Olsa <jolsa@kernel.org>,
-        Namhyung Kim <namhyung@kernel.org>,
-        Masahiro Yamada <masahiroy@kernel.org>,
-        Nicolas Schier <nicolas@fjasle.eu>,
-        linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org,
-        bpf@vger.kernel.org, Nick Desaulniers <ndesaulniers@google.com>,
-        Andrii Nakryiko <andrii.nakryiko@gmail.com>,
-        Stephane Eranian <eranian@google.com>
-Content-Type: multipart/mixed; boundary="0000000000007ee45705ed890aef"
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: PH7PR12MB6588:EE_|DM4PR12MB6256:EE_
+X-MS-Office365-Filtering-Correlation-Id: 497cec1e-1d37-4f45-7c6c-08dac795dc02
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info: XwzDmaqEQrEDIi29NilcUcSxqRGyPze4DW0ohvIARIbu4JNpRDZfWmifXq8tvwWpD51SEbFSqBph8p40n7t0o9Tie/q+Y7Kc3vOYvR2i1nudDI8BlEFpj+uCpZBHVgZgb2chJ+FkK3ldnTOFpz3OwaULlhBsyzcyrcbyRbwyD+jG8UhCbQRN3Blx2RbHF50CWYe0Np4X84PheRqD/8wK1LCYxwYvoMVAPKjQeNS7DepygTZV43GAapg8kW3/7DjHWsyKRw+FlgH7jobzx0TAn3uo745AaP3BRTUdZBdK6DYt7byAnrmxIJd9CTPeWi9LGgqKF3UapunJJtwUf/zgfIAZcBuPehJZH74cbGSTA5hNL7PWoPlFL8bSVtV4JlPr/9AOGIFe1/3ACVvqML9zbtwNPQj7duxISx4ZwqeA+Okg3F09sPBDMlRSQVFHZNvLcqRXvqQgitpRRafC4aSuu6Xp5c9wZTxj90hvZ3qrD+n2St/xNQUSYkTY58QNbZrEJ4izlMPcosFu2GEjuB1rVCKUoA3GucUmE2l4+7OsEJCXdwf2y+s9xVG1KkeSZg1BCuWpU3BuYZJYFxlTTFN0a1OIjrkI4Qo75ixpN5AI3sLD0aRTLpHcnqB+Ha0c5jRUPGmXhmNfJ1ySaIozyZV4NfzXASUl6j80ktAGAvVCC31si9KBHjRGoHW9S7iZrASoY223Bc4D5oOfLs/q2vdUlYX7u+ub9+75fzvL4O69cRgnwS153vYJoI+c2ZlH14cZIpzSgugJnw/yUKw3Upw2XTDG9SPlPtx477TK1DK+duw=
+X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:PH7PR12MB6588.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230022)(4636009)(346002)(366004)(376002)(136003)(39860400002)(396003)(451199015)(2906002)(8936002)(44832011)(186003)(7416002)(86362001)(41300700001)(83380400001)(6512007)(38100700002)(26005)(31696002)(5660300002)(66946007)(66556008)(6916009)(66476007)(8676002)(4326008)(6666004)(6506007)(316002)(6486002)(53546011)(478600001)(2616005)(31686004)(36756003)(43740500002)(45980500001);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0: =?utf-8?B?cmZOMzlhbUFxL2E3dGE4dlFhazFEYnJ1anVXVjNqc3dBZ1JETG5Jdm5qQ3VM?=
+ =?utf-8?B?b082UXhZMDBMQkFwSHdDeVVyWjBIY3E1UlBqbUZuTkVvQWR5WXJoOGRvRDU4?=
+ =?utf-8?B?SGVQaXZDWGhhemx4enlPMG5sdmJtZXFwOUlXYWt2Z3Z1U1NMWjkxcjc3eGVl?=
+ =?utf-8?B?WEdHUkdIYnRhbWxPZDl5Yng0WDYraTNxUDBKTnkzVnROUU84bi8zOU4wdGE0?=
+ =?utf-8?B?MjR3M3BETkZBYytDMC9RQzVrVitCbk9xS0lBdmU4UGk1TjNQZTRwZFh2b3or?=
+ =?utf-8?B?cjFtdE1XVVBodnFybGlEd3VFcW8xMFdaREc5dFRSOU5aVGljSkkwVWtWS01l?=
+ =?utf-8?B?L2ZpTVI3VUFscTdsN3JkeDkzWGZSclhDRGpGVnZ6VjI3eHhGNlBOaUJ4bUM0?=
+ =?utf-8?B?cG5PbFE1KzZrN2xmbGIrRXZVQWpzRW45Q2JVbzFOVUFHZ2NWSjFIcFZjenZL?=
+ =?utf-8?B?NVhTcW9QUk92Q1hwQlNWUWdvWHVVdFR5ejIxYlpYV3V6QzNhN0k5S1Y3ZW5R?=
+ =?utf-8?B?MyttSHV0RkVNaWNpc0ZMSlcyaDZnR0ozdHFVY2RxOFVvQnFjdU8yZ0o5b2pj?=
+ =?utf-8?B?bEdhQUg1ZjI1NmhnNGJRbjNmNkI2TlpGd01OUmUyU1FsMDZKbHFNMHJVNkFt?=
+ =?utf-8?B?cEI0V0hvUzc3dEh2Y09CWHAxMTJWT2xBL3lBei9CWlRrMWZKMjREUkFHQjVt?=
+ =?utf-8?B?SEoraE01aHJRQ3lsUHUwS0N6NmI4UUVYQTliZjFYSUloMDZkZmtEVDlOTENQ?=
+ =?utf-8?B?b0xSbHdxZkR0amRUWDh5NXdrODQ1M3hhKzZoVUtESTBWT2E1NS9XZ2MycUNp?=
+ =?utf-8?B?c1ZGNjZ2R3lLNEpkYW1EdVFPSzJpd3I3aVRXMnljZ0hqTThjbW54MVJRdUEr?=
+ =?utf-8?B?TlF0cGxWRXltelJ6RzBaV2I1Qi9CWE55NFNkZmhKdm9WeERiUCtOaWRGZEQw?=
+ =?utf-8?B?Y3ZkYnhYbDJQVm9tUzE3eUd2UXRRbmE0N21QZUhRakZxd0VOMnlZdzdnb2Jp?=
+ =?utf-8?B?cDlraHZiVVVRTVVTdkRSOGNLVDVvRUtPYnl3MS82THpXNXRFSEJxWnBkbE9C?=
+ =?utf-8?B?WFFIbmlLM3B6ZW9WQmVqRFIvVXJkMlUyeGJyR29iMG9QdlVCQk5Rb0ZQNWF0?=
+ =?utf-8?B?dk9YZzVJSDlBMTRhTzRReFZWdU9mQjlINGRjUWtxRDNITzlPL2RaUnlQejlV?=
+ =?utf-8?B?U1NXVCtQQjBQUmRIMFZyTFkreDFZSlZnWmlhVjBYR0JJS0w2Q05QbmoraFFU?=
+ =?utf-8?B?WUxSL3FEMVNOcWtYSDlka2JBaFNMbFlTWXg2VG1kK2lCcHk0SHBHQXhNSkYr?=
+ =?utf-8?B?ZzBQRWVldnlBZGFhcG9PUHRZa3gyaWNVUExZT0pZWUhFTzZINGIxak9PRzhN?=
+ =?utf-8?B?dnZqb01lT21yb0dhZEFTTnlRWUNyb2NPVW54bWVKdUo1aldKb3NzU2NrNkVT?=
+ =?utf-8?B?N3lSbWRGanZxaFBkV0lEbXhaZ3E0WG9PbVoyVlZWUjUrblY2bTZqVE5OaVNX?=
+ =?utf-8?B?Zm9iY3pLQkhWSHEyc3lMd3QwbUFFNnhMUGZrMCtKQ0oweFhxejRPN0lQdHk1?=
+ =?utf-8?B?a1J6V3pmS3ZBV1FiNmpobkxvV1NnYjQzNmhvUWF3TUpjZ3hmd2FOWjY5Uld5?=
+ =?utf-8?B?TWlBVk1rQklKTzZmYVVEQVZmdjRlaUdjcEhJcm1CWkp4Kyttekg2WGVVbFR4?=
+ =?utf-8?B?anlDZkFJOTBxRUZJdjVxQWRSVTVwSDhCeFVCOUprTk4xZ21YTlYxaFlBSkdI?=
+ =?utf-8?B?R09VS1RGaE53bXVndkFNMXljaTduVWRGUDAraEk1cEVvVW1uY1RPNytpSFFC?=
+ =?utf-8?B?N3BwZUZORHk3RUJ0NGQyK0UwYVdkWFViWTBKMnB4UkVLVXNYczhmdmduMjBo?=
+ =?utf-8?B?eFMrTnRSZUp2ZFlNNHEvS0p4bHlVWXFkVi9ncWFuTkJiK0V6NkQyekxpSlFN?=
+ =?utf-8?B?czFuNDdsWnE0TmxsYUpiMkRzVzM4dktlQ1V0QzhlcVRxOFp2akpzODlSTU5l?=
+ =?utf-8?B?MmJwdDc3QlJBQTE3UE9BOVhFV2U5ZisyYy9kWG9zMW96M29SNDY0anBMd3Rh?=
+ =?utf-8?B?ZzROdm9HTHdkcnNKUWNzZ2lWMmF3WUIvbGVTby9mOGFaS2lqclNwNWhyN3dI?=
+ =?utf-8?Q?+SOrGW1UF2tCdzUaemdNFrUPj?=
+X-OriginatorOrg: amd.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 497cec1e-1d37-4f45-7c6c-08dac795dc02
+X-MS-Exchange-CrossTenant-AuthSource: PH7PR12MB6588.namprd12.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 16 Nov 2022 05:46:08.4856
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: 79YRyLOMQejTS8JnnqQLyEcRnpEV8u9kjLiTGBVx7NGyLEX0TdJzjO38wcF8ylCPSGY12omV2B1VZL8zyAU5lw==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM4PR12MB6256
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
---0000000000007ee45705ed890aef
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+On 15-Nov-22 10:37 PM, Ian Rogers wrote:
+> On Tue, Nov 15, 2022 at 1:39 AM Ravi Bangoria <ravi.bangoria@amd.com> wrote:
+>>
+>> So far, only one pmu was allowed to be registered as core pmu and thus
+>> IBS pmus were being registered as uncore. However, with the event context
+>> rewrite, that limitation no longer exists and thus IBS pmus can also be
+>> registered as core pmu. This makes IBS much more usable, for ex, user
+>> will be able to do per-process precise monitoring on AMD:
+>>
+>> Before patch:
+>>   $ sudo perf record -e cycles:pp ls
+>>   Error:
+>>   Invalid event (cycles:pp) in per-thread mode, enable system wide with '-a'
+>>
+>> After patch:
+>>   $ sudo perf record -e cycles:pp ls
+>>   [ perf record: Woken up 1 times to write data ]
+>>   [ perf record: Captured and wrote 0.017 MB perf.data (33 samples) ]
+>>
+>> Signed-off-by: Ravi Bangoria <ravi.bangoria@amd.com>
+> 
+> Acked-by: Ian Rogers <irogers@google.com>
+> 
+> This is awesome!
+> Ian
 
-On Wed, Nov 9, 2022 at 10:27 AM Arnaldo Carvalho de Melo
-<acme@kernel.org> wrote:
->
-> Em Wed, Nov 09, 2022 at 08:57:01AM -0800, Ian Rogers escreveu:
-> > On Wed, Nov 9, 2022 at 8:52 AM Ian Rogers <irogers@google.com> wrote:
-> > >
-> > > On Wed, Nov 9, 2022 at 7:27 AM Arnaldo Carvalho de Melo <acme@kernel.=
-org> wrote:
-> > > >
-> > > > Em Mon, Nov 07, 2022 at 11:35:04PM -0800, Ian Rogers escreveu:
-> > > > > The previous build would add -Itools/lib and get dependencies for
-> > > > > libtraceevent, libsubcmd, libsymbol, libapi and libbpf meaning th=
-at
-> > > > > overriding these libraries would change the link time dependency =
-but
-> > > > > the headers would erroneously come from tools/lib. Fix the build =
-to
-> > > > > install headers and then depend on these. To reduce exposing inte=
-rnal
-> > > > > headers/APIs some clean up is performed. tools/lib/symbol has a
-> > > > > Makefile added, while tools/lib/api and tools/lib/subcmd have ins=
-tall
-> > > > > targets added. The pattern used for the dependencies in Makefile.=
-perf
-> > > > > is modelled on libbpf.
-> > > >
-> > > > It builds with O=3D, I tried it one by one, but  there are problems=
- with
-> > > > make from a detached tarball, that is how I do the container builds=
-, see
-> > > > below, I'm trying to figure this out...
-> > >
-> > > Sorry, I didn't know to test this. The added Build and Makefile in
-> > > libsymbol are missing, so I'd guess that's the major issue.
-> > >
-> > > Thanks,
-> > > Ian
-> >
-> > The following fixes this for me:
->
-> But then there are some other problems related to making sure those
-> libraries are built and installed _before_ perf proper starts building
-> when it expects to find the headers for those libraries.
->
-> So perhaps we need to first run the 'install' target for those libraries
-> before build perf proper?
->
-> I'm pushing what I have to perf/tools-libs-includes branch.
+Thanks Ian.
 
-Attached is the last patch with changes to the dependencies. Moving
-the dependencies to prepare addresses the issue. I tested by adding
-sleeps to the install_headers targets to make them slow.
+Peter, can we push this along with rewrite patch?
 
 Thanks,
-Ian
-
-> - Arnaldo
->
-> > --- a/tools/perf/MANIFEST
-> > +++ b/tools/perf/MANIFEST
-> > @@ -13,8 +13,7 @@ tools/lib/ctype.c
-> > tools/lib/hweight.c
-> > tools/lib/rbtree.c
-> > tools/lib/string.c
-> > -tools/lib/symbol/kallsyms.c
-> > -tools/lib/symbol/kallsyms.h
-> > +tools/lib/symbol
-> > tools/lib/find_bit.c
-> > tools/lib/bitmap.c
-> > tools/lib/list_sort.c
-> >
-> > Thanks,
-> > Ian
-> >
-> > > > =E2=AC=A2[acme@toolbox perf]$ make perf-tar-src-pkg
-> > > >   TAR
-> > > >   PERF_VERSION =3D 6.1.rc3.g7e5d8b7a1fbd
-> > > > =E2=AC=A2[acme@toolbox perf]$ mv perf-6.1.0-rc3.tar /tmp
-> > > > =E2=AC=A2[acme@toolbox perf]$ cd /tmp
-> > > > =E2=AC=A2[acme@toolbox tmp]$ tar xf perf-6.1.0-rc3.tar
-> > > > =E2=AC=A2[acme@toolbox tmp]$ cd perf-6.1.0-rc3/
-> > > > =E2=AC=A2[acme@toolbox perf-6.1.0-rc3]$ make -C tools/perf
-> > > > make: Entering directory '/tmp/perf-6.1.0-rc3/tools/perf'
-> > > >   BUILD:   Doing 'make -j32' parallel build
-> > > >   HOSTCC  fixdep.o
-> > > >   HOSTLD  fixdep-in.o
-> > > >   LINK    fixdep
-> > > >
-> > > > Auto-detecting system features:
-> > > > ...                                   dwarf: [ on  ]
-> > > > ...                      dwarf_getlocations: [ on  ]
-> > > > ...                                   glibc: [ on  ]
-> > > > ...                                  libbfd: [ on  ]
-> > > > ...                          libbfd-buildid: [ on  ]
-> > > > ...                                  libcap: [ on  ]
-> > > > ...                                  libelf: [ on  ]
-> > > > ...                                 libnuma: [ on  ]
-> > > > ...                  numa_num_possible_cpus: [ on  ]
-> > > > ...                                 libperl: [ on  ]
-> > > > ...                               libpython: [ on  ]
-> > > > ...                               libcrypto: [ on  ]
-> > > > ...                               libunwind: [ on  ]
-> > > > ...                      libdw-dwarf-unwind: [ on  ]
-> > > > ...                                    zlib: [ on  ]
-> > > > ...                                    lzma: [ on  ]
-> > > > ...                               get_cpuid: [ on  ]
-> > > > ...                                     bpf: [ on  ]
-> > > > ...                                  libaio: [ on  ]
-> > > > ...                                 libzstd: [ on  ]
-> > > >
-> > > >   GEN     common-cmds.h
-> > > >   PERF_VERSION =3D 6.1.rc3.g7e5d8b7a1fbd
-> > > >   CC      perf-read-vdso32
-> > > >   GEN     perf-archive
-> > > >   GEN     perf-iostat
-> > > >   CC      dlfilters/dlfilter-test-api-v0.o
-> > > >   CC      dlfilters/dlfilter-show-cycles.o
-> > > >   CC      jvmti/libjvmti.o
-> > > > make[3]: *** No rule to make target '/tmp/perf-6.1.0-rc3/tools/perf=
-/libsymbol/libsymbol.a'.  Stop.
-> > > > make[2]: *** [Makefile.perf:907: /tmp/perf-6.1.0-rc3/tools/perf/lib=
-symbol/libsymbol.a] Error 2
-> > > > make[2]: *** Waiting for unfinished jobs....
-> > > >   CC      jvmti/jvmti_agent.o
-> > > >   CC      jvmti/libstring.o
-> > > >   CC      jvmti/libctype.o
-> > > >   GEN     pmu-events/pmu-events.c
-> > > >   INSTALL headers
-> > > >   CC      /tmp/perf-6.1.0-rc3/tools/perf/libsubcmd/exec-cmd.o
-> > > >   CC      /tmp/perf-6.1.0-rc3/tools/perf/libsubcmd/help.o
-> > > >   CC      /tmp/perf-6.1.0-rc3/tools/perf/libsubcmd/pager.o
-> > > >   CC      /tmp/perf-6.1.0-rc3/tools/perf/libsubcmd/parse-options.o
-> > > >   CC      /tmp/perf-6.1.0-rc3/tools/perf/libsubcmd/run-command.o
-> > > >   CC      /tmp/perf-6.1.0-rc3/tools/perf/libsubcmd/sigchain.o
-> > > >   CC      /tmp/perf-6.1.0-rc3/tools/perf/libsubcmd/subcmd-config.o
-> > > >   INSTALL headers
-> > > >   CC      /tmp/perf-6.1.0-rc3/tools/perf/libtraceevent/event-parse.=
-o
-> > > >   CC      /tmp/perf-6.1.0-rc3/tools/perf/libtraceevent_plugins/plug=
-in_jbd2.o
-> > > >   CC      /tmp/perf-6.1.0-rc3/tools/perf/libtraceevent_plugins/plug=
-in_hrtimer.o
-> > > >   CC      /tmp/perf-6.1.0-rc3/tools/perf/libtraceevent_plugins/plug=
-in_kmem.o
-> > > >   CC      /tmp/perf-6.1.0-rc3/tools/perf/libtraceevent_plugins/plug=
-in_kvm.o
-> > > >   CC      /tmp/perf-6.1.0-rc3/tools/perf/libtraceevent_plugins/plug=
-in_mac80211.o
-> > > >   CC      /tmp/perf-6.1.0-rc3/tools/perf/libtraceevent_plugins/plug=
-in_function.o
-> > > >   CC      /tmp/perf-6.1.0-rc3/tools/perf/libtraceevent_plugins/plug=
-in_sched_switch.o
-> > > >   INSTALL headers
-> > > >   CC      /tmp/perf-6.1.0-rc3/tools/perf/libperf/core.o
-> > > >   CC      /tmp/perf-6.1.0-rc3/tools/perf/libapi/cpu.o
-> > > >   MKDIR   /tmp/perf-6.1.0-rc3/tools/perf/libapi/fd/
-> > > >   MKDIR   /tmp/perf-6.1.0-rc3/tools/perf/libapi/fs/
-> > > >   MKDIR   /tmp/perf-6.1.0-rc3/tools/perf/libapi/fs/
-> > > >   MKDIR   /tmp/perf-6.1.0-rc3/tools/perf/libapi/fs/
-> > > >   CC      /tmp/perf-6.1.0-rc3/tools/perf/libapi/fd/array.o
-> > > >   CC      /tmp/perf-6.1.0-rc3/tools/perf/libapi/fs/fs.o
-> > > >   GEN     /tmp/perf-6.1.0-rc3/tools/perf/libbpf/bpf_helper_defs.h
-> > > >   CC      /tmp/perf-6.1.0-rc3/tools/perf/libapi/fs/tracing_path.o
-> > > >   CC      /tmp/perf-6.1.0-rc3/tools/perf/libapi/fs/cgroup.o
-> > > >   INSTALL /tmp/perf-6.1.0-rc3/tools/perf/libbpf/include/bpf/bpf.h
-> > > >   CC      /tmp/perf-6.1.0-rc3/tools/perf/libapi/debug.o
-> > > >   CC      /tmp/perf-6.1.0-rc3/tools/perf/libtraceevent_plugins/plug=
-in_futex.o
-> > > >   CC      /tmp/perf-6.1.0-rc3/tools/perf/libtraceevent_plugins/plug=
-in_xen.o
-> > > >   CC      /tmp/perf-6.1.0-rc3/tools/perf/libtraceevent_plugins/plug=
-in_scsi.o
-> > > >   CC      /tmp/perf-6.1.0-rc3/tools/perf/libtraceevent_plugins/plug=
-in_cfg80211.o
-> > > >   CC      /tmp/perf-6.1.0-rc3/tools/perf/libtraceevent_plugins/plug=
-in_tlb.o
-> > > >   LD      /tmp/perf-6.1.0-rc3/tools/perf/libtraceevent_plugins/plug=
-in_jbd2-in.o
-> > > >   LD      /tmp/perf-6.1.0-rc3/tools/perf/libtraceevent_plugins/plug=
-in_hrtimer-in.o
-> > > >   INSTALL /tmp/perf-6.1.0-rc3/tools/perf/libbpf/include/bpf/libbpf.=
-h
-> > > >   LD      /tmp/perf-6.1.0-rc3/tools/perf/libtraceevent_plugins/plug=
-in_kmem-in.o
-> > > >   INSTALL headers
-> > > >   INSTALL /tmp/perf-6.1.0-rc3/tools/perf/libbpf/include/bpf/btf.h
-> > > >   LD      /tmp/perf-6.1.0-rc3/tools/perf/libtraceevent_plugins/plug=
-in_mac80211-in.o
-> > > >   LD      /tmp/perf-6.1.0-rc3/tools/perf/libtraceevent_plugins/plug=
-in_sched_switch-in.o
-> > > >   CC      /tmp/perf-6.1.0-rc3/tools/perf/libperf/cpumap.o
-> > > >   CC      /tmp/perf-6.1.0-rc3/tools/perf/libperf/threadmap.o
-> > > >   CC      /tmp/perf-6.1.0-rc3/tools/perf/libapi/str_error_r.o
-> > > >   INSTALL /tmp/perf-6.1.0-rc3/tools/perf/libbpf/include/bpf/libbpf_=
-common.h
-> > > >   LINK    /tmp/perf-6.1.0-rc3/tools/perf/libtraceevent_plugins/plug=
-in_jbd2.so
-> > > >   LINK    /tmp/perf-6.1.0-rc3/tools/perf/libtraceevent_plugins/plug=
-in_hrtimer.so
-> > > >   INSTALL /tmp/perf-6.1.0-rc3/tools/perf/libbpf/include/bpf/libbpf_=
-legacy.h
-> > > >   LD      /tmp/perf-6.1.0-rc3/tools/perf/libtraceevent_plugins/plug=
-in_function-in.o
-> > > >   CC      /tmp/perf-6.1.0-rc3/tools/perf/libperf/evsel.o
-> > > >   LD      /tmp/perf-6.1.0-rc3/tools/perf/libtraceevent_plugins/plug=
-in_kvm-in.o
-> > > >   LINK    /tmp/perf-6.1.0-rc3/tools/perf/libtraceevent_plugins/plug=
-in_kmem.so
-> > > >   LINK    /tmp/perf-6.1.0-rc3/tools/perf/libtraceevent_plugins/plug=
-in_mac80211.so
-> > > >   LINK    /tmp/perf-6.1.0-rc3/tools/perf/libtraceevent_plugins/plug=
-in_sched_switch.so
-> > > >   INSTALL /tmp/perf-6.1.0-rc3/tools/perf/libbpf/include/bpf/bpf_hel=
-pers.h
-> > > >   INSTALL /tmp/perf-6.1.0-rc3/tools/perf/libbpf/include/bpf/bpf_tra=
-cing.h
-> > > >   CC      /tmp/perf-6.1.0-rc3/tools/perf/libtraceevent/event-plugin=
-.o
-> > > >   CC      /tmp/perf-6.1.0-rc3/tools/perf/libperf/evlist.o
-> > > >   CC      /tmp/perf-6.1.0-rc3/tools/perf/libperf/mmap.o
-> > > >   CC      /tmp/perf-6.1.0-rc3/tools/perf/libtraceevent/trace-seq.o
-> > > >   INSTALL /tmp/perf-6.1.0-rc3/tools/perf/libbpf/include/bpf/bpf_end=
-ian.h
-> > > >   INSTALL /tmp/perf-6.1.0-rc3/tools/perf/libbpf/include/bpf/bpf_cor=
-e_read.h
-> > > > if [ ! -d ''/tmp/perf-6.1.0-rc3/tools/perf/libapi'/include/api/fs' =
-]; then install -d -m 755 ''/tmp/perf-6.1.0-rc3/tools/perf/libapi'/include/=
-api/fs'; fi; install fs/tracing_path.h -m 644 ''/tmp/perf-6.1.0-rc3/tools/p=
-erf/libapi'/include/api/fs';
-> > > >   LD      /tmp/perf-6.1.0-rc3/tools/perf/libapi/fd/libapi-in.o
-> > > >   CC      /tmp/perf-6.1.0-rc3/tools/perf/libperf/zalloc.o
-> > > >   CC      /tmp/perf-6.1.0-rc3/tools/perf/libtraceevent/parse-filter=
-.o
-> > > >   CC      /tmp/perf-6.1.0-rc3/tools/perf/libtraceevent/parse-utils.=
-o
-> > > >   CC      /tmp/perf-6.1.0-rc3/tools/perf/libtraceevent/kbuffer-pars=
-e.o
-> > > >   LD      /tmp/perf-6.1.0-rc3/tools/perf/libtraceevent_plugins/plug=
-in_xen-in.o
-> > > >   INSTALL /tmp/perf-6.1.0-rc3/tools/perf/libbpf/include/bpf/skel_in=
-ternal.h
-> > > >   INSTALL /tmp/perf-6.1.0-rc3/tools/perf/libbpf/include/bpf/libbpf_=
-version.h
-> > > >   CC      /tmp/perf-6.1.0-rc3/tools/perf/libtraceevent/tep_strerror=
-.o
-> > > >   INSTALL /tmp/perf-6.1.0-rc3/tools/perf/libbpf/include/bpf/usdt.bp=
-f.h
-> > > >   INSTALL /tmp/perf-6.1.0-rc3/tools/perf/libbpf/include/bpf/bpf_hel=
-per_defs.h
-> > > >   CC      /tmp/perf-6.1.0-rc3/tools/perf/libtraceevent/event-parse-=
-api.o
-> > > >   CC      /tmp/perf-6.1.0-rc3/tools/perf/libperf/xyarray.o
-> > > >   LINK    /tmp/perf-6.1.0-rc3/tools/perf/libtraceevent_plugins/plug=
-in_function.so
-> > > >   LINK    /tmp/perf-6.1.0-rc3/tools/perf/libtraceevent_plugins/plug=
-in_xen.so
-> > > >   LD      /tmp/perf-6.1.0-rc3/tools/perf/libtraceevent_plugins/plug=
-in_futex-in.o
-> > > >   CC      /tmp/perf-6.1.0-rc3/tools/perf/libperf/lib.o
-> > > >   LD      /tmp/perf-6.1.0-rc3/tools/perf/libtraceevent_plugins/plug=
-in_scsi-in.o
-> > > >   LD      /tmp/perf-6.1.0-rc3/tools/perf/libtraceevent_plugins/plug=
-in_cfg80211-in.o
-> > > >   MKDIR   /tmp/perf-6.1.0-rc3/tools/perf/libbpf/staticobjs/
-> > > >   MKDIR   /tmp/perf-6.1.0-rc3/tools/perf/libbpf/staticobjs/
-> > > >   MKDIR   /tmp/perf-6.1.0-rc3/tools/perf/libbpf/staticobjs/
-> > > >   MKDIR   /tmp/perf-6.1.0-rc3/tools/perf/libbpf/staticobjs/
-> > > >   LINK    /tmp/perf-6.1.0-rc3/tools/perf/libtraceevent_plugins/plug=
-in_kvm.so
-> > > >   CC      /tmp/perf-6.1.0-rc3/tools/perf/libbpf/staticobjs/libbpf.o
-> > > >   LINK    /tmp/perf-6.1.0-rc3/tools/perf/libtraceevent_plugins/plug=
-in_futex.so
-> > > >   LINK    /tmp/perf-6.1.0-rc3/tools/perf/libtraceevent_plugins/plug=
-in_scsi.so
-> > > >   CC      /tmp/perf-6.1.0-rc3/tools/perf/libbpf/staticobjs/bpf.o
-> > > >   LD      /tmp/perf-6.1.0-rc3/tools/perf/libapi/fs/libapi-in.o
-> > > >   CC      /tmp/perf-6.1.0-rc3/tools/perf/libbpf/staticobjs/nlattr.o
-> > > >   CC      /tmp/perf-6.1.0-rc3/tools/perf/libbpf/staticobjs/btf.o
-> > > >   MKDIR   /tmp/perf-6.1.0-rc3/tools/perf/libbpf/staticobjs/
-> > > >   LD      /tmp/perf-6.1.0-rc3/tools/perf/libtraceevent_plugins/plug=
-in_tlb-in.o
-> > > >   LINK    /tmp/perf-6.1.0-rc3/tools/perf/libtraceevent_plugins/plug=
-in_cfg80211.so
-> > > >   CC      /tmp/perf-6.1.0-rc3/tools/perf/libbpf/staticobjs/str_erro=
-r.o
-> > > >   CC      /tmp/perf-6.1.0-rc3/tools/perf/libbpf/staticobjs/netlink.=
-o
-> > > >   LD      /tmp/perf-6.1.0-rc3/tools/perf/libapi/libapi-in.o
-> > > >   LD      jvmti/jvmti-in.o
-> > > >   CC      /tmp/perf-6.1.0-rc3/tools/perf/libbpf/staticobjs/libbpf_e=
-rrno.o
-> > > >   LINK    /tmp/perf-6.1.0-rc3/tools/perf/libtraceevent_plugins/plug=
-in_tlb.so
-> > > >   CC      /tmp/perf-6.1.0-rc3/tools/perf/libbpf/staticobjs/bpf_prog=
-_linfo.o
-> > > >   AR      /tmp/perf-6.1.0-rc3/tools/perf/libapi/libapi.a
-> > > >   CC      /tmp/perf-6.1.0-rc3/tools/perf/libbpf/staticobjs/libbpf_p=
-robes.o
-> > > >   CC      /tmp/perf-6.1.0-rc3/tools/perf/libbpf/staticobjs/hashmap.=
-o
-> > > >   CC      /tmp/perf-6.1.0-rc3/tools/perf/libbpf/staticobjs/btf_dump=
-.o
-> > > >   CC      /tmp/perf-6.1.0-rc3/tools/perf/libbpf/staticobjs/ringbuf.=
-o
-> > > >   CC      /tmp/perf-6.1.0-rc3/tools/perf/libbpf/staticobjs/strset.o
-> > > >   GEN     /tmp/perf-6.1.0-rc3/tools/perf/libtraceevent_plugins/libt=
-raceevent-dynamic-list
-> > > >   CC      /tmp/perf-6.1.0-rc3/tools/perf/libbpf/staticobjs/linker.o
-> > > >   CC      /tmp/perf-6.1.0-rc3/tools/perf/libbpf/staticobjs/gen_load=
-er.o
-> > > >   CC      /tmp/perf-6.1.0-rc3/tools/perf/libbpf/staticobjs/relo_cor=
-e.o
-> > > >   CC      /tmp/perf-6.1.0-rc3/tools/perf/libbpf/staticobjs/usdt.o
-> > > >   LD      /tmp/perf-6.1.0-rc3/tools/perf/libsubcmd/libsubcmd-in.o
-> > > >   AR      /tmp/perf-6.1.0-rc3/tools/perf/libsubcmd/libsubcmd.a
-> > > >   LD      /tmp/perf-6.1.0-rc3/tools/perf/libperf/libperf-in.o
-> > > >   LD      /tmp/perf-6.1.0-rc3/tools/perf/libtraceevent/libtraceeven=
-t-in.o
-> > > >   AR      /tmp/perf-6.1.0-rc3/tools/perf/libperf/libperf.a
-> > > >   LINK    /tmp/perf-6.1.0-rc3/tools/perf/libtraceevent/libtraceeven=
-t.a
-> > > >   CC      pmu-events/pmu-events.o
-> > > >   LD      pmu-events/pmu-events-in.o
-> > > >   LD      /tmp/perf-6.1.0-rc3/tools/perf/libbpf/staticobjs/libbpf-i=
-n.o
-> > > >   LINK    /tmp/perf-6.1.0-rc3/tools/perf/libbpf/libbpf.a
-> > > > make[1]: *** [Makefile.perf:240: sub-make] Error 2
-> > > > make: *** [Makefile:70: all] Error 2
-> > > > make: Leaving directory '/tmp/perf-6.1.0-rc3/tools/perf'
-> > > > =E2=AC=A2[acme@toolbox perf-6.1.0-rc3]$
-> > > >
-> > > >
-> > > >
-> > > > > The problem and solution were motivated by this issue and discuss=
-ion:
-> > > > > https://lore.kernel.org/lkml/CAEf4BzbbOHQZUAe6iWaehKCPQAf3VC=3Dhq=
-657buqe2_yRKxaK-A@mail.gmail.com/
-> > > > >
-> > > > > Ian Rogers (14):
-> > > > >   tools lib api: Add install target
-> > > > >   tools lib subcmd: Add install target
-> > > > >   perf build: Install libsubcmd locally when building
-> > > > >   perf build: Install libapi locally when building
-> > > > >   perf build: Install libperf locally when building
-> > > > >   perf build: Install libtraceevent locally when building
-> > > > >   tools lib api: Add missing install headers
-> > > > >   tools lib perf: Add missing install headers
-> > > > >   tool lib symbol: Add Makefile/Build
-> > > > >   perf build: Install libsymbol locally when building
-> > > > >   perf expr: Tidy hashmap dependency
-> > > > >   perf thread_map: Reduce exposure of libperf internal API
-> > > > >   perf cpumap: Tidy libperf includes
-> > > > >   perf build: Use tools/lib headers from install path
-> > > > >
-> > > > >  tools/lib/api/Makefile                        |  52 ++++++
-> > > > >  tools/lib/perf/Makefile                       |  10 +-
-> > > > >  tools/lib/subcmd/Makefile                     |  49 ++++++
-> > > > >  tools/lib/symbol/Build                        |   1 +
-> > > > >  tools/lib/symbol/Makefile                     | 115 ++++++++++++=
-+
-> > > > >  tools/perf/.gitignore                         |   7 +-
-> > > > >  tools/perf/Makefile.config                    |   2 -
-> > > > >  tools/perf/Makefile.perf                      | 152 ++++++++++++=
-------
-> > > > >  tools/perf/builtin-stat.c                     |   1 +
-> > > > >  tools/perf/builtin-trace.c                    |   4 +-
-> > > > >  tools/perf/tests/cpumap.c                     |   2 +-
-> > > > >  tools/perf/tests/expr.c                       |   1 +
-> > > > >  tools/perf/tests/openat-syscall.c             |   1 +
-> > > > >  tools/perf/tests/pmu-events.c                 |   1 +
-> > > > >  tools/perf/tests/thread-map.c                 |   1 +
-> > > > >  tools/perf/util/Build                         |   5 -
-> > > > >  tools/perf/util/auxtrace.h                    |   2 +-
-> > > > >  tools/perf/util/bpf-loader.c                  |   4 -
-> > > > >  tools/perf/util/bpf_counter.c                 |   2 +-
-> > > > >  tools/perf/util/cpumap.c                      |   1 +
-> > > > >  tools/perf/util/cpumap.h                      |   2 +-
-> > > > >  tools/perf/util/evsel.c                       |   5 +-
-> > > > >  tools/perf/util/evsel.h                       |   2 -
-> > > > >  tools/perf/util/expr.c                        |   1 +
-> > > > >  tools/perf/util/expr.h                        |   7 +-
-> > > > >  tools/perf/util/metricgroup.c                 |   1 +
-> > > > >  tools/perf/util/python.c                      |   6 +-
-> > > > >  .../scripting-engines/trace-event-python.c    |   2 +-
-> > > > >  tools/perf/util/stat-shadow.c                 |   1 +
-> > > > >  tools/perf/util/stat.c                        |   4 -
-> > > > >  tools/perf/util/thread_map.c                  |   1 +
-> > > > >  tools/perf/util/thread_map.h                  |   2 -
-> > > > >  32 files changed, 361 insertions(+), 86 deletions(-)
-> > > > >  create mode 100644 tools/lib/symbol/Build
-> > > > >  create mode 100644 tools/lib/symbol/Makefile
-> > > > >
-> > > > > --
-> > > > > 2.38.1.431.g37b22c650d-goog
-> > > >
-> > > > --
-> > > >
-> > > > - Arnaldo
->
-> --
->
-> - Arnaldo
-
---0000000000007ee45705ed890aef
-Content-Type: text/x-patch; charset="US-ASCII"; 
-	name="0001-perf-build-Use-tools-lib-headers-from-install-path.patch"
-Content-Disposition: attachment; 
-	filename="0001-perf-build-Use-tools-lib-headers-from-install-path.patch"
-Content-Transfer-Encoding: base64
-Content-ID: <f_laiq5gx20>
-X-Attachment-Id: f_laiq5gx20
-
-RnJvbSA4Y2RjYTNmODVjZDQzOThjZWVkZGVhNWJiYzlkNDIxZjBiZmRjNzZhIE1vbiBTZXAgMTcg
-MDA6MDA6MDAgMjAwMQpGcm9tOiBJYW4gUm9nZXJzIDxpcm9nZXJzQGdvb2dsZS5jb20+CkRhdGU6
-IFdlZCwgOSBOb3YgMjAyMiAxMDo0OToxNCAtMDgwMApTdWJqZWN0OiBbUEFUQ0hdIHBlcmYgYnVp
-bGQ6IFVzZSB0b29scy9saWIgaGVhZGVycyBmcm9tIGluc3RhbGwgcGF0aAoKU3dpdGNoIC1JIGZy
-b20gdG9vbHMvbGliIHRvIHRoZSBpbnN0YWxsIHBhdGggZm9yIHRoZSB0b29scy9saWIKbGlicmFy
-aWVzLiBBZGQgdGhlIGluY2x1ZGVfaGVhZGVycyBidWlsZCB0YXJnZXRzIHRvIHByZXBhcmUgdGFy
-Z2V0LCBhcwp3ZWxsIGFzIHBtdS1ldmVudHMuYyBjb21waWxhdGlvbiB0aGF0IGRlcGVuZGVzIG9u
-IGxpYnBlcmYuCgpTaWduZWQtb2ZmLWJ5OiBJYW4gUm9nZXJzIDxpcm9nZXJzQGdvb2dsZS5jb20+
-CkFja2VkLWJ5OiBOYW1oeXVuZyBLaW0gPG5hbWh5dW5nQGtlcm5lbC5vcmc+CkNjOiBBbGV4YW5k
-ZXIgU2hpc2hraW4gPGFsZXhhbmRlci5zaGlzaGtpbkBsaW51eC5pbnRlbC5jb20+CkNjOiBBbmRy
-aWkgTmFrcnlpa28gPGFuZHJpaS5uYWtyeWlrb0BnbWFpbC5jb20+CkNjOiBKaXJpIE9sc2EgPGpv
-bHNhQGtlcm5lbC5vcmc+CkNjOiBNYXJrIFJ1dGxhbmQgPG1hcmsucnV0bGFuZEBhcm0uY29tPgpD
-YzogTWFzYWhpcm8gWWFtYWRhIDxtYXNhaGlyb3lAa2VybmVsLm9yZz4KQ2M6IE5pY2sgRGVzYXVs
-bmllcnMgPG5kZXNhdWxuaWVyc0Bnb29nbGUuY29tPgpDYzogTmljb2xhcyBTY2hpZXIgPG5pY29s
-YXNAZmphc2xlLmV1PgpDYzogUGV0ZXIgWmlqbHN0cmEgPHBldGVyekBpbmZyYWRlYWQub3JnPgpD
-YzogU3RlcGhhbmUgRXJhbmlhbiA8ZXJhbmlhbkBnb29nbGUuY29tPgpDYzogYnBmQHZnZXIua2Vy
-bmVsLm9yZwpMaW5rOiBodHRwOi8vbG9yZS5rZXJuZWwub3JnL2xrbWwvMjAyMjExMDkxODQ5MTQu
-MTM1NzI5NS0xNS1pcm9nZXJzQGdvb2dsZS5jb20KU2lnbmVkLW9mZi1ieTogQXJuYWxkbyBDYXJ2
-YWxobyBkZSBNZWxvIDxhY21lQHJlZGhhdC5jb20+Ci0tLQogdG9vbHMvcGVyZi9NYWtlZmlsZS5j
-b25maWcgfCAgMiAtLQogdG9vbHMvcGVyZi9NYWtlZmlsZS5wZXJmICAgfCAxNCArKysrKysrKysr
-KysrLQogMiBmaWxlcyBjaGFuZ2VkLCAxMyBpbnNlcnRpb25zKCspLCAzIGRlbGV0aW9ucygtKQoK
-ZGlmZiAtLWdpdCBhL3Rvb2xzL3BlcmYvTWFrZWZpbGUuY29uZmlnIGIvdG9vbHMvcGVyZi9NYWtl
-ZmlsZS5jb25maWcKaW5kZXggYTdmNmMwNjY5ZmFlLi45Y2MzYzQ4ZjMyODggMTAwNjQ0Ci0tLSBh
-L3Rvb2xzL3BlcmYvTWFrZWZpbGUuY29uZmlnCisrKyBiL3Rvb2xzL3BlcmYvTWFrZWZpbGUuY29u
-ZmlnCkBAIC0zNDksNyArMzQ5LDYgQEAgaWZlcSAoJChERUJVRyksMCkKICAgZW5kaWYKIGVuZGlm
-CiAKLUlOQ19GTEFHUyArPSAtSSQoc3JjdHJlZSkvdG9vbHMvbGliL3BlcmYvaW5jbHVkZQogSU5D
-X0ZMQUdTICs9IC1JJChzcmMtcGVyZikvdXRpbC9pbmNsdWRlCiBJTkNfRkxBR1MgKz0gLUkkKHNy
-Yy1wZXJmKS9hcmNoLyQoU1JDQVJDSCkvaW5jbHVkZQogSU5DX0ZMQUdTICs9IC1JJChzcmN0cmVl
-KS90b29scy9pbmNsdWRlLwpAQCAtMzY3LDcgKzM2Niw2IEBAIGVuZGlmCiAKIElOQ19GTEFHUyAr
-PSAtSSQoc3JjLXBlcmYpL3V0aWwKIElOQ19GTEFHUyArPSAtSSQoc3JjLXBlcmYpCi1JTkNfRkxB
-R1MgKz0gLUkkKHNyY3RyZWUpL3Rvb2xzL2xpYi8KIAogQ09SRV9DRkxBR1MgKz0gLURfTEFSR0VG
-SUxFNjRfU09VUkNFIC1EX0ZJTEVfT0ZGU0VUX0JJVFM9NjQgLURfR05VX1NPVVJDRQogCmRpZmYg
-LS1naXQgYS90b29scy9wZXJmL01ha2VmaWxlLnBlcmYgYi90b29scy9wZXJmL01ha2VmaWxlLnBl
-cmYKaW5kZXggNmMxYTJhM2NjYzM4Li43NjZlYzk0NzExODMgMTAwNjQ0Ci0tLSBhL3Rvb2xzL3Bl
-cmYvTWFrZWZpbGUucGVyZgorKysgYi90b29scy9wZXJmL01ha2VmaWxlLnBlcmYKQEAgLTMwNSw2
-ICszMDUsNyBAQCBMSUJUUkFDRUVWRU5UX0lOQ0xVREUgPSAkKExJQlRSQUNFRVZFTlRfREVTVERJ
-UikvaW5jbHVkZQogTElCVFJBQ0VFVkVOVCA9ICQoTElCVFJBQ0VFVkVOVF9PVVRQVVQpL2xpYnRy
-YWNlZXZlbnQuYQogZXhwb3J0IExJQlRSQUNFRVZFTlQKIExJQlRSQUNFRVZFTlRfRFlOQU1JQ19M
-SVNUID0gJChMSUJUUkFDRUVWRU5UX1BMVUdJTlNfT1VUUFVUKS9saWJ0cmFjZWV2ZW50LWR5bmFt
-aWMtbGlzdAorQ0ZMQUdTICs9IC1JJChMSUJUUkFDRUVWRU5UX09VVFBVVCkvaW5jbHVkZQogCiAj
-CiAjIFRoZSBzdGF0aWMgYnVpbGQgaGFzIG5vIGR5bnN5bSB0YWJsZSwgc28gdGhpcyBkb2VzIG5v
-dCB3b3JrIGZvcgpAQCAtMzIyLDYgKzMyMyw3IEBAIExJQkFQSV9ERVNURElSID0gJChMSUJBUElf
-T1VUUFVUKQogTElCQVBJX0lOQ0xVREUgPSAkKExJQkFQSV9ERVNURElSKS9pbmNsdWRlCiBMSUJB
-UEkgPSAkKExJQkFQSV9PVVRQVVQpL2xpYmFwaS5hCiBleHBvcnQgTElCQVBJCitDRkxBR1MgKz0g
-LUkkKExJQkFQSV9PVVRQVVQpL2luY2x1ZGUKIAogaWZuZXEgKCQoT1VUUFVUKSwpCiAgIExJQkJQ
-Rl9PVVRQVVQgPSAkKGFic3BhdGggJChPVVRQVVQpKS9saWJicGYKQEAgLTMzMSw2ICszMzMsNyBA
-QCBlbmRpZgogTElCQlBGX0RFU1RESVIgPSAkKExJQkJQRl9PVVRQVVQpCiBMSUJCUEZfSU5DTFVE
-RSA9ICQoTElCQlBGX0RFU1RESVIpL2luY2x1ZGUKIExJQkJQRiA9ICQoTElCQlBGX09VVFBVVCkv
-bGliYnBmLmEKK0NGTEFHUyArPSAtSSQoTElCQlBGX09VVFBVVCkvaW5jbHVkZQogCiBpZm5lcSAo
-JChPVVRQVVQpLCkKICAgTElCU1VCQ01EX09VVFBVVCA9ICQoYWJzcGF0aCAkKE9VVFBVVCkpL2xp
-YnN1YmNtZApAQCAtMzQwLDYgKzM0Myw3IEBAIGVuZGlmCiBMSUJTVUJDTURfREVTVERJUiA9ICQo
-TElCU1VCQ01EX09VVFBVVCkKIExJQlNVQkNNRF9JTkNMVURFID0gJChMSUJTVUJDTURfREVTVERJ
-UikvaW5jbHVkZQogTElCU1VCQ01EID0gJChMSUJTVUJDTURfT1VUUFVUKS9saWJzdWJjbWQuYQor
-Q0ZMQUdTICs9IC1JJChMSUJTVUJDTURfT1VUUFVUKS9pbmNsdWRlCiAKIGlmbmVxICgkKE9VVFBV
-VCksKQogICBMSUJTWU1CT0xfT1VUUFVUID0gJChhYnNwYXRoICQoT1VUUFVUKSkvbGlic3ltYm9s
-CkBAIC0zNDksNiArMzUzLDcgQEAgZW5kaWYKIExJQlNZTUJPTF9ERVNURElSID0gJChMSUJTWU1C
-T0xfT1VUUFVUKQogTElCU1lNQk9MX0lOQ0xVREUgPSAkKExJQlNZTUJPTF9ERVNURElSKS9pbmNs
-dWRlCiBMSUJTWU1CT0wgPSAkKExJQlNZTUJPTF9PVVRQVVQpL2xpYnN5bWJvbC5hCitDRkxBR1Mg
-Kz0gLUkkKExJQlNZTUJPTF9PVVRQVVQpL2luY2x1ZGUKIAogaWZuZXEgKCQoT1VUUFVUKSwpCiAg
-IExJQlBFUkZfT1VUUFVUID0gJChhYnNwYXRoICQoT1VUUFVUKSkvbGlicGVyZgpAQCAtMzU5LDYg
-KzM2NCw3IEBAIExJQlBFUkZfREVTVERJUiA9ICQoTElCUEVSRl9PVVRQVVQpCiBMSUJQRVJGX0lO
-Q0xVREUgPSAkKExJQlBFUkZfREVTVERJUikvaW5jbHVkZQogTElCUEVSRiA9ICQoTElCUEVSRl9P
-VVRQVVQpL2xpYnBlcmYuYQogZXhwb3J0IExJQlBFUkYKK0NGTEFHUyArPSAtSSQoTElCUEVSRl9P
-VVRQVVQpL2luY2x1ZGUKIAogIyBweXRob24gZXh0ZW5zaW9uIGJ1aWxkIGRpcmVjdG9yaWVzCiBQ
-WVRIT05fRVhUQlVJTEQgICAgIDo9ICQoT1VUUFVUKXB5dGhvbl9leHRfYnVpbGQvCkBAIC02OTEs
-NyArNjk3LDcgQEAgYnVpbGQgOj0gLWYgJChzcmN0cmVlKS90b29scy9idWlsZC9NYWtlZmlsZS5i
-dWlsZCBkaXI9LiBvYmoKICQoUEVSRl9JTik6IHByZXBhcmUgRk9SQ0UKIAkkKFEpJChNQUtFKSAk
-KGJ1aWxkKT1wZXJmCiAKLSQoUE1VX0VWRU5UU19JTik6IEZPUkNFCiskKFBNVV9FVkVOVFNfSU4p
-OiBGT1JDRSAkKExJQlBFUkYpCiAJJChRKSQoTUFLRSkgLWYgJChzcmN0cmVlKS90b29scy9idWls
-ZC9NYWtlZmlsZS5idWlsZCBkaXI9cG11LWV2ZW50cyBvYmo9cG11LWV2ZW50cwogCiAkKE9VVFBV
-VClwZXJmOiAkKFBFUkZMSUJTKSAkKFBFUkZfSU4pICQoUE1VX0VWRU5UU19JTikgJChMSUJUUkFD
-RUVWRU5UX0RZTkFNSUNfTElTVCkKQEAgLTc3NCw2ICs3ODAsMTIgQEAgcHJlcGFyZTogJChPVVRQ
-VVQpUEVSRi1WRVJTSU9OLUZJTEUgJChPVVRQVVQpY29tbW9uLWNtZHMuaCBhcmNoaGVhZGVycyAk
-KGRybV9pb2MKIAkkKHJlbmFtZV9mbGFnc19hcnJheSkgXAogCSQoYXJjaF9lcnJub19uYW1lX2Fy
-cmF5KSBcCiAJJChzeW5jX2ZpbGVfcmFuZ2VfYXJyYXlzKSBcCisJJChMSUJBUEkpIFwKKwkkKExJ
-QkJQRikgXAorCSQoTElCUEVSRikgXAorCSQoTElCU1VCQ01EKSBcCisJJChMSUJTWU1CT0wpIFwK
-KwkkKExJQlRSQUNFRVZFTlQpIFwKIAlicGYtc2tlbAogCiAkKE9VVFBVVCklLm86ICUuYyBwcmVw
-YXJlIEZPUkNFCi0tIAoyLjM4LjEuNDMxLmczN2IyMmM2NTBkLWdvb2cKCg==
---0000000000007ee45705ed890aef--
+Ravi
