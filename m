@@ -2,196 +2,309 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 40019C43217
-	for <linux-perf-users@archiver.kernel.org>; Wed, 16 Nov 2022 07:22:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0CBE0C4332F
+	for <linux-perf-users@archiver.kernel.org>; Wed, 16 Nov 2022 09:08:57 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229826AbiKPHWU (ORCPT
+        id S236796AbiKPJIz (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Wed, 16 Nov 2022 02:22:20 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44232 "EHLO
+        Wed, 16 Nov 2022 04:08:55 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:32768 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231604AbiKPHWT (ORCPT
+        with ESMTP id S238581AbiKPJIZ (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Wed, 16 Nov 2022 02:22:19 -0500
-Received: from mail-yb1-xb49.google.com (mail-yb1-xb49.google.com [IPv6:2607:f8b0:4864:20::b49])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1D929A1AB
-        for <linux-perf-users@vger.kernel.org>; Tue, 15 Nov 2022 23:22:18 -0800 (PST)
-Received: by mail-yb1-xb49.google.com with SMTP id b17-20020a25b851000000b006e32b877068so5735699ybm.16
-        for <linux-perf-users@vger.kernel.org>; Tue, 15 Nov 2022 23:22:18 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20210112;
-        h=cc:to:from:subject:references:mime-version:message-id:in-reply-to
-         :date:from:to:cc:subject:date:message-id:reply-to;
-        bh=NO6Jy27duk4navDIf91BiAlCfPwecqqBj66fQCAI5+k=;
-        b=Pr7mjdcYb4qAEw3uOgulSRygcajgBXTmQtAjMOaT4ntJSmqQPXKpb2/w3lKfSLncYU
-         iJB3rB6o6rbI5+Ulkzx5Vle1i67dxwFL9s45ZSE+3wwN4PQCTR8uR59jgQdpzQtvX3ln
-         9CeyrdspkbVCWBDKJySYuge6+beWXNM61UM6BnQtSL8y7boc8j/X58P071TDKAGD3pJ7
-         esUo7Cudp+Jg4L72D+3gQ2eeI/UxkEUfSkPmPJU7Jvh3zTG1+mlSvI7jspnqocGA/hSZ
-         TYbBphk5VzKjXeQHjL4fvvRAr0aVHQAi8WtOY8wpCklTel+uGRpCJI5S7ZLhekCsnQ56
-         HteA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=cc:to:from:subject:references:mime-version:message-id:in-reply-to
-         :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=NO6Jy27duk4navDIf91BiAlCfPwecqqBj66fQCAI5+k=;
-        b=3zCU5gOcl2QfjmC/z9AfXAmpOUpQiR18SIA7reBjI4Xb8KGgEts6z8OxfKqLhk6yrA
-         XmeBtqd4+gghObBcC284AOTWa8GKW5oU4UImc1nIOr84lutaqwhxShHOPslReuBa9hTl
-         V9W9PiyZSY9nRTbuGX9Uw87jVdjcpPK0k37I/lbbd/u4DTZJKW4s3Wyuyjz9j/e8losw
-         vhrHvgFi+xp13SevsV9rBumrvbsCMMKvHZgu7w+5kgWQvcgCoBUa42o3WEAP1xRb+bC9
-         28zaqP1iwCOn5ASqMAvizO8+dBIjib0MIVrUYTFVryQtHHWrys79zIfIGaC3YNoLGy58
-         wy7A==
-X-Gm-Message-State: ANoB5pkVeL2XZONL5G3XkbwwgnuBvDCYm+B/NedwcuKsecB1wieHSkg3
-        r/A5eLTdSlQ9pWhj66ZHimk3TCUGhm6e
-X-Google-Smtp-Source: AA0mqf6/s9UDBseMvwO0B9sUanmLV3Smc5IQvElHLCvgzuhy8jQ9dnTHlYJUB2ggKxcTcdYTeeB/U7gLdk9m
-X-Received: from irogers.svl.corp.google.com ([2620:15c:2d4:203:bf0f:58f3:342e:c1ec])
- (user=irogers job=sendgmr) by 2002:a25:2fd6:0:b0:6bc:738d:65c9 with SMTP id
- v205-20020a252fd6000000b006bc738d65c9mr18993829ybv.521.1668583337411; Tue, 15
- Nov 2022 23:22:17 -0800 (PST)
-Date:   Tue, 15 Nov 2022 23:22:11 -0800
-In-Reply-To: <20221116072211.2837834-1-irogers@google.com>
-Message-Id: <20221116072211.2837834-2-irogers@google.com>
-Mime-Version: 1.0
-References: <20221116072211.2837834-1-irogers@google.com>
-X-Mailer: git-send-email 2.38.1.431.g37b22c650d-goog
-Subject: [PATCH 1/1] perf build: Use tools/lib headers from install path
-From:   Ian Rogers <irogers@google.com>
-To:     Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Jiri Olsa <jolsa@kernel.org>,
-        Namhyung Kim <namhyung@kernel.org>,
-        Masahiro Yamada <masahiroy@kernel.org>,
-        Nicolas Schier <nicolas@fjasle.eu>,
-        linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org,
-        bpf@vger.kernel.org, Nick Desaulniers <ndesaulniers@google.com>,
-        Andrii Nakryiko <andrii.nakryiko@gmail.com>
-Cc:     Stephane Eranian <eranian@google.com>,
-        Ian Rogers <irogers@google.com>,
-        Arnaldo Carvalho de Melo <acme@redhat.com>
-Content-Type: text/plain; charset="UTF-8"
+        Wed, 16 Nov 2022 04:08:25 -0500
+Received: from mx0a-001b2d01.pphosted.com (mx0a-001b2d01.pphosted.com [148.163.156.1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 18B992496F;
+        Wed, 16 Nov 2022 01:07:51 -0800 (PST)
+Received: from pps.filterd (m0187473.ppops.net [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (8.17.1.19/8.17.1.19) with ESMTP id 2AG8V2YZ020442;
+        Wed, 16 Nov 2022 09:07:42 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=from : to : cc : subject
+ : date : message-id : mime-version : content-transfer-encoding; s=pp1;
+ bh=LSKCr/4vOEpzmDfgU4HsNgeICbcdAiEptfwI2LomrK0=;
+ b=flTX9t7Y/S+VDxY5zZMYinC60csTWzW/zDCOWbfJcDbad9/1txIkq+wFYtwMJRjY6+6A
+ 6yLhMBfLHHQhqkcYvAoglETEaGg+vcTJF6q0VGT8+2uhy6r+gQxE9Vu59jhDsyQ/oTcv
+ PSOQACDBDGvIeR1N2TX5myl9LlRZDt7O6oebsorCNC6rpoMIcs6/Bh8LcjbbnArftLSh
+ OZ+Owx+9hsh76rLwPkU21H4KaSZyk2P5ATZsqSFo7570nJ6CIrLgib6t7foyd+oSq/qp
+ DPKcq8wl3kHNs7/jFGzjzIe4fGswy2zOSDCkwxjEIi7SwLfYW4Was0bwD28XyMiHkxL4 sw== 
+Received: from ppma04fra.de.ibm.com (6a.4a.5195.ip4.static.sl-reverse.com [149.81.74.106])
+        by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 3kvve0gsw0-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Wed, 16 Nov 2022 09:07:41 +0000
+Received: from pps.filterd (ppma04fra.de.ibm.com [127.0.0.1])
+        by ppma04fra.de.ibm.com (8.16.1.2/8.16.1.2) with SMTP id 2AG95Ksc006737;
+        Wed, 16 Nov 2022 09:07:39 GMT
+Received: from b06cxnps3074.portsmouth.uk.ibm.com (d06relay09.portsmouth.uk.ibm.com [9.149.109.194])
+        by ppma04fra.de.ibm.com with ESMTP id 3kt349c6u7-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Wed, 16 Nov 2022 09:07:39 +0000
+Received: from d06av21.portsmouth.uk.ibm.com (d06av21.portsmouth.uk.ibm.com [9.149.105.232])
+        by b06cxnps3074.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 2AG97a0x7340714
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Wed, 16 Nov 2022 09:07:36 GMT
+Received: from d06av21.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 57D125204F;
+        Wed, 16 Nov 2022 09:07:36 +0000 (GMT)
+Received: from tuxmaker.boeblingen.de.ibm.com (unknown [9.152.85.9])
+        by d06av21.portsmouth.uk.ibm.com (Postfix) with ESMTP id 162125204E;
+        Wed, 16 Nov 2022 09:07:36 +0000 (GMT)
+From:   Thomas Richter <tmricht@linux.ibm.com>
+To:     linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org,
+        acme@kernel.org
+Cc:     svens@linux.ibm.com, gor@linux.ibm.com, sumanthk@linux.ibm.com,
+        hca@linux.ibm.com, Thomas Richter <tmricht@linux.ibm.com>
+Subject: [PATCH v3] perf list: Add PMU pai_ext event description for IBM z16
+Date:   Wed, 16 Nov 2022 10:07:31 +0100
+Message-Id: <20221116090731.4739-1-tmricht@linux.ibm.com>
+X-Mailer: git-send-email 2.34.1
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
+X-TM-AS-GCONF: 00
+X-Proofpoint-GUID: _ZVg2c8m4gpWbPzEHL99MBuylyOE4bwS
+X-Proofpoint-ORIG-GUID: _ZVg2c8m4gpWbPzEHL99MBuylyOE4bwS
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.219,Aquarius:18.0.895,Hydra:6.0.545,FMLib:17.11.122.1
+ definitions=2022-11-15_08,2022-11-15_03,2022-06-22_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 lowpriorityscore=0
+ impostorscore=0 mlxlogscore=816 suspectscore=0 malwarescore=0 adultscore=0
+ spamscore=0 clxscore=1015 mlxscore=0 priorityscore=1501 phishscore=0
+ bulkscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2210170000 definitions=main-2211160063
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-Switch -I from tools/lib to the install path for the tools/lib
-libraries. Add the include_headers build targets to prepare target, as
-well as pmu-events.c compilation that dependes on libperf.
+Add the event description for the IBM z16 pai_ext PMU released with
+commit c432fefe8e62 ("s390/pai: Add support for PAI Extension 1 NNPA counters")
 
-Signed-off-by: Ian Rogers <irogers@google.com>
-Acked-by: Namhyung Kim <namhyung@kernel.org>
-Cc: Alexander Shishkin <alexander.shishkin@linux.intel.com>
-Cc: Andrii Nakryiko <andrii.nakryiko@gmail.com>
-Cc: Jiri Olsa <jolsa@kernel.org>
-Cc: Mark Rutland <mark.rutland@arm.com>
-Cc: Masahiro Yamada <masahiroy@kernel.org>
-Cc: Nick Desaulniers <ndesaulniers@google.com>
-Cc: Nicolas Schier <nicolas@fjasle.eu>
-Cc: Peter Zijlstra <peterz@infradead.org>
-Cc: Stephane Eranian <eranian@google.com>
-Cc: bpf@vger.kernel.org
-Link: http://lore.kernel.org/lkml/20221109184914.1357295-15-irogers@google.com
-Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
+The document SA22-7832-13 "z/Architecture Principles of Operation",
+published May, 2022, contains the description of the
+Processor Activity Instrumentation Facility and the NNPA counter
+set., See Pages 5-113 to 5-116.
+
+Signed-off-by: Thomas Richter <tmricht@linux.ibm.com>
 ---
- tools/perf/Makefile.config |  2 --
- tools/perf/Makefile.perf   | 14 +++++++++++++-
- 2 files changed, 13 insertions(+), 3 deletions(-)
+ .../pmu-events/arch/s390/cf_z16/pai_ext.json  | 198 ++++++++++++++++++
+ tools/perf/pmu-events/jevents.py              |   1 +
+ 2 files changed, 199 insertions(+)
+ create mode 100644 tools/perf/pmu-events/arch/s390/cf_z16/pai_ext.json
 
-diff --git a/tools/perf/Makefile.config b/tools/perf/Makefile.config
-index a7f6c0669fae..9cc3c48f3288 100644
---- a/tools/perf/Makefile.config
-+++ b/tools/perf/Makefile.config
-@@ -349,7 +349,6 @@ ifeq ($(DEBUG),0)
-   endif
- endif
- 
--INC_FLAGS += -I$(srctree)/tools/lib/perf/include
- INC_FLAGS += -I$(src-perf)/util/include
- INC_FLAGS += -I$(src-perf)/arch/$(SRCARCH)/include
- INC_FLAGS += -I$(srctree)/tools/include/
-@@ -367,7 +366,6 @@ endif
- 
- INC_FLAGS += -I$(src-perf)/util
- INC_FLAGS += -I$(src-perf)
--INC_FLAGS += -I$(srctree)/tools/lib/
- 
- CORE_CFLAGS += -D_LARGEFILE64_SOURCE -D_FILE_OFFSET_BITS=64 -D_GNU_SOURCE
- 
-diff --git a/tools/perf/Makefile.perf b/tools/perf/Makefile.perf
-index 6c1a2a3ccc38..dd096aba4430 100644
---- a/tools/perf/Makefile.perf
-+++ b/tools/perf/Makefile.perf
-@@ -305,6 +305,7 @@ LIBTRACEEVENT_INCLUDE = $(LIBTRACEEVENT_DESTDIR)/include
- LIBTRACEEVENT = $(LIBTRACEEVENT_OUTPUT)/libtraceevent.a
- export LIBTRACEEVENT
- LIBTRACEEVENT_DYNAMIC_LIST = $(LIBTRACEEVENT_PLUGINS_OUTPUT)/libtraceevent-dynamic-list
-+CFLAGS += -I$(LIBTRACEEVENT_OUTPUT)/include
- 
- #
- # The static build has no dynsym table, so this does not work for
-@@ -322,6 +323,7 @@ LIBAPI_DESTDIR = $(LIBAPI_OUTPUT)
- LIBAPI_INCLUDE = $(LIBAPI_DESTDIR)/include
- LIBAPI = $(LIBAPI_OUTPUT)/libapi.a
- export LIBAPI
-+CFLAGS += -I$(LIBAPI_OUTPUT)/include
- 
- ifneq ($(OUTPUT),)
-   LIBBPF_OUTPUT = $(abspath $(OUTPUT))/libbpf
-@@ -331,6 +333,7 @@ endif
- LIBBPF_DESTDIR = $(LIBBPF_OUTPUT)
- LIBBPF_INCLUDE = $(LIBBPF_DESTDIR)/include
- LIBBPF = $(LIBBPF_OUTPUT)/libbpf.a
-+CFLAGS += -I$(LIBBPF_OUTPUT)/include
- 
- ifneq ($(OUTPUT),)
-   LIBSUBCMD_OUTPUT = $(abspath $(OUTPUT))/libsubcmd
-@@ -340,6 +343,7 @@ endif
- LIBSUBCMD_DESTDIR = $(LIBSUBCMD_OUTPUT)
- LIBSUBCMD_INCLUDE = $(LIBSUBCMD_DESTDIR)/include
- LIBSUBCMD = $(LIBSUBCMD_OUTPUT)/libsubcmd.a
-+CFLAGS += -I$(LIBSUBCMD_OUTPUT)/include
- 
- ifneq ($(OUTPUT),)
-   LIBSYMBOL_OUTPUT = $(abspath $(OUTPUT))/libsymbol
-@@ -349,6 +353,7 @@ endif
- LIBSYMBOL_DESTDIR = $(LIBSYMBOL_OUTPUT)
- LIBSYMBOL_INCLUDE = $(LIBSYMBOL_DESTDIR)/include
- LIBSYMBOL = $(LIBSYMBOL_OUTPUT)/libsymbol.a
-+CFLAGS += -I$(LIBSYMBOL_OUTPUT)/include
- 
- ifneq ($(OUTPUT),)
-   LIBPERF_OUTPUT = $(abspath $(OUTPUT))/libperf
-@@ -359,6 +364,7 @@ LIBPERF_DESTDIR = $(LIBPERF_OUTPUT)
- LIBPERF_INCLUDE = $(LIBPERF_DESTDIR)/include
- LIBPERF = $(LIBPERF_OUTPUT)/libperf.a
- export LIBPERF
-+CFLAGS += -I$(LIBPERF_OUTPUT)/include
- 
- # python extension build directories
- PYTHON_EXTBUILD     := $(OUTPUT)python_ext_build/
-@@ -691,7 +697,7 @@ build := -f $(srctree)/tools/build/Makefile.build dir=. obj
- $(PERF_IN): prepare FORCE
- 	$(Q)$(MAKE) $(build)=perf
- 
--$(PMU_EVENTS_IN): FORCE
-+$(PMU_EVENTS_IN): FORCE prepare
- 	$(Q)$(MAKE) -f $(srctree)/tools/build/Makefile.build dir=pmu-events obj=pmu-events
- 
- $(OUTPUT)perf: $(PERFLIBS) $(PERF_IN) $(PMU_EVENTS_IN) $(LIBTRACEEVENT_DYNAMIC_LIST)
-@@ -774,6 +780,12 @@ prepare: $(OUTPUT)PERF-VERSION-FILE $(OUTPUT)common-cmds.h archheaders $(drm_ioc
- 	$(rename_flags_array) \
- 	$(arch_errno_name_array) \
- 	$(sync_file_range_arrays) \
-+	$(LIBAPI) \
-+	$(LIBBPF) \
-+	$(LIBPERF) \
-+	$(LIBSUBCMD) \
-+	$(LIBSYMBOL) \
-+	$(LIBTRACEEVENT) \
- 	bpf-skel
- 
- $(OUTPUT)%.o: %.c prepare FORCE
+diff --git a/tools/perf/pmu-events/arch/s390/cf_z16/pai_ext.json b/tools/perf/pmu-events/arch/s390/cf_z16/pai_ext.json
+new file mode 100644
+index 000000000000..8bee481f05d5
+--- /dev/null
++++ b/tools/perf/pmu-events/arch/s390/cf_z16/pai_ext.json
+@@ -0,0 +1,198 @@
++[
++	{
++		"Unit": "PAI-EXT",
++		"EventCode": "6144",
++		"EventName": "NNPA_ALL",
++		"BriefDescription": "NNPA ALL",
++		"PublicDescription": "Sum of all non zero NNPA (Neural Networks Processing Assist) counters"
++	},
++	{
++		"Unit": "PAI-EXT",
++		"EventCode": "6145",
++		"EventName": "NNPA_ADD",
++		"BriefDescription": "NNPA ADD",
++		"PublicDescription": "NNPA ADD function ending with CC=0"
++	},
++	{
++		"Unit": "PAI-EXT",
++		"EventCode": "6146",
++		"EventName": "NNPA_SUB",
++		"BriefDescription": "NNPA SUB",
++		"PublicDescription": "NNPA SUB function ending with CC=0"
++	},
++	{
++		"Unit": "PAI-EXT",
++		"EventCode": "6147",
++		"EventName": "NNPA_MUL",
++		"BriefDescription": "NNPA MUL",
++		"PublicDescription": "NNPA MUL function ending with CC=0"
++	},
++	{
++		"Unit": "PAI-EXT",
++		"EventCode": "6148",
++		"EventName": "NNPA_DIV",
++		"BriefDescription": "NNPA DIV",
++		"PublicDescription": "NNPA DIV function ending with CC=0"
++	},
++	{
++		"Unit": "PAI-EXT",
++		"EventCode": "6149",
++		"EventName": "NNPA_MIN",
++		"BriefDescription": "NNPA MIN",
++		"PublicDescription": "NNPA MIN function ending with CC=0"
++	},
++	{
++		"Unit": "PAI-EXT",
++		"EventCode": "6150",
++		"EventName": "NNPA_MAX",
++		"BriefDescription": "NNPA MAX",
++		"PublicDescription": "NNPA-MAX function ending with CC=0"
++	},
++	{
++		"Unit": "PAI-EXT",
++		"EventCode": "6151",
++		"EventName": "NNPA_LOG",
++		"BriefDescription": "NNPA LOG",
++		"PublicDescription": "NNPA-LOG function ending with CC=0"
++	},
++	{
++		"Unit": "PAI-EXT",
++		"EventCode": "6152",
++		"EventName": "NNPA_EXP",
++		"BriefDescription": "NNPA EXP",
++		"PublicDescription": "NNPA-EXP function ending with CC=0"
++	},
++	{
++		"Unit": "PAI-EXT",
++		"EventCode": "6153",
++		"EventName": "NNPA_IBM_RESERVED_9",
++		"BriefDescription": "Reserved for IBM use",
++		"PublicDescription": "Reserved for IBM use"
++	},
++	{
++		"Unit": "PAI-EXT",
++		"EventCode": "6154",
++		"EventName": "NNPA_RELU",
++		"BriefDescription": "NNPA RELU",
++		"PublicDescription": "NNPA-RELU function ending with CC=0"
++	},
++	{
++		"Unit": "PAI-EXT",
++		"EventCode": "6155",
++		"EventName": "NNPA_TANH",
++		"BriefDescription": "NNPA TANH",
++		"PublicDescription": "NNPA-TANH function ending with CC=0"
++	},
++	{
++		"Unit": "PAI-EXT",
++		"EventCode": "6156",
++		"EventName": "NNPA_SIGMOID",
++		"BriefDescription": "NNPA SIGMOID",
++		"PublicDescription": "NNPA-SIGMOID function ending with CC=0"
++	},
++	{
++		"Unit": "PAI-EXT",
++		"EventCode": "6157",
++		"EventName": "NNPA_SOFTMAX",
++		"BriefDescription": "NNPA SOFTMAX",
++		"PublicDescription": "NNPA-SOFTMAX function ending with CC=0"
++	},
++	{
++		"Unit": "PAI-EXT",
++		"EventCode": "6158",
++		"EventName": "NNPA_BATCHNORM",
++		"BriefDescription": "NNPA BATCHNORM",
++		"PublicDescription": "NNPA-BATCHNORM function ending with CC=0"
++	},
++	{
++		"Unit": "PAI-EXT",
++		"EventCode": "6159",
++		"EventName": "NNPA_MAXPOOL2D",
++		"BriefDescription": "NNPA MAXPOOL2D",
++		"PublicDescription": "NNPA-MAXPOOL2D function ending with CC=0"
++	},
++	{
++		"Unit": "PAI-EXT",
++		"EventCode": "6160",
++		"EventName": "NNPA_AVGPOOL2D",
++		"BriefDescription": "NNPA AVGPOOL2D",
++		"PublicDescription": "NNPA-AVGPOOL2D function ending with CC=0"
++	},
++	{
++		"Unit": "PAI-EXT",
++		"EventCode": "6161",
++		"EventName": "NNPA_LSTMACT",
++		"BriefDescription": "NNPA LSTMACT",
++		"PublicDescription": "NNPA-LSTMACT function ending with CC=0"
++	},
++	{
++		"Unit": "PAI-EXT",
++		"EventCode": "6162",
++		"EventName": "NNPA_GRUACT",
++		"BriefDescription": "NNPA GRUACT",
++		"PublicDescription": "NNPA-GRUACT function ending with CC=0"
++	},
++	{
++		"Unit": "PAI-EXT",
++		"EventCode": "6163",
++		"EventName": "NNPA_CONVOLUTION",
++		"BriefDescription": "NNPA CONVOLUTION",
++		"PublicDescription": "NNPA-CONVOLUTION function ending with CC=0"
++	},
++	{
++		"Unit": "PAI-EXT",
++		"EventCode": "6164",
++		"EventName": "NNPA_MATMUL_OP",
++		"BriefDescription": "NNPA MATMUL OP",
++		"PublicDescription": "NNPA-MATMUL-OP function ending with CC=0"
++	},
++	{
++		"Unit": "PAI-EXT",
++		"EventCode": "6165",
++		"EventName": "NNPA_MATMUL_OP_BCAST23",
++		"BriefDescription": "NNPA NNPA-MATMUL_OP_BCAST23",
++		"PublicDescription": "NNPA-MATMUL-OP-BCAST23 function ending with CC=0"
++	},
++	{
++		"Unit": "PAI-EXT",
++		"EventCode": "6166",
++		"EventName": "NNPA_SMALLBATCH",
++		"BriefDescription": "NNPA SMALLBATCH",
++		"PublicDescription": "NNPA function with conditions as described in Common Operation"
++	},
++	{
++		"Unit": "PAI-EXT",
++		"EventCode": "6167",
++		"EventName": "NNPA_LARGEDIM",
++		"BriefDescription": "NNPA LARGEDIM",
++		"PublicDescription": "NNPA function with conditions as described in Common Operation"
++	},
++	{
++		"Unit": "PAI-EXT",
++		"EventCode": "6168",
++		"EventName": "NNPA_SMALLTENSOR",
++		"BriefDescription": "NNPA SMALLTENSOR",
++		"PublicDescription": "NNPA function with conditions as described in Common Operation"
++	},
++	{
++		"Unit": "PAI-EXT",
++		"EventCode": "6169",
++		"EventName": "NNPA_1MFRAME",
++		"BriefDescription": "NNPA 1MFRAME",
++		"PublicDescription": "NNPA function with conditions as described in Common Operation"
++	},
++	{
++		"Unit": "PAI-EXT",
++		"EventCode": "6170",
++		"EventName": "NNPA_2GFRAME",
++		"BriefDescription": "NNPA 2GFRAME",
++		"PublicDescription": "NNPA function with conditions as described in Common Operation"
++	},
++	{
++		"Unit": "PAI-EXT",
++		"EventCode": "6171",
++		"EventName": "NNPA_ACCESSEXCEPT",
++		"BriefDescription": "NNPA ACCESSEXCEPT",
++		"PublicDescription": "NNPA function with conditions as described in Common Operation"
++ 	}
++]
+diff --git a/tools/perf/pmu-events/jevents.py b/tools/perf/pmu-events/jevents.py
+index 0daa3e007528..da630aab948b 100755
+--- a/tools/perf/pmu-events/jevents.py
++++ b/tools/perf/pmu-events/jevents.py
+@@ -225,6 +225,7 @@ class JsonEvent:
+           'CPU-M-CF': 'cpum_cf',
+           'CPU-M-SF': 'cpum_sf',
+           'PAI-CRYPTO' : 'pai_crypto',
++          'PAI-EXT' : 'pai_ext',
+           'UPI LL': 'uncore_upi',
+           'hisi_sicl,cpa': 'hisi_sicl,cpa',
+           'hisi_sccl,ddrc': 'hisi_sccl,ddrc',
 -- 
-2.38.1.431.g37b22c650d-goog
+2.37.3
 
