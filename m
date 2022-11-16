@@ -2,40 +2,40 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4F932C433FE
-	for <linux-perf-users@archiver.kernel.org>; Wed, 16 Nov 2022 12:00:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5CBB3C433FE
+	for <linux-perf-users@archiver.kernel.org>; Wed, 16 Nov 2022 12:41:53 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233038AbiKPMAA (ORCPT
+        id S233806AbiKPMlu (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Wed, 16 Nov 2022 07:00:00 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44798 "EHLO
+        Wed, 16 Nov 2022 07:41:50 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34158 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S233142AbiKPL7k (ORCPT
+        with ESMTP id S233467AbiKPMls (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Wed, 16 Nov 2022 06:59:40 -0500
-Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C1EE82FC0D;
-        Wed, 16 Nov 2022 03:51:32 -0800 (PST)
+        Wed, 16 Nov 2022 07:41:48 -0500
+Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A00D264E3;
+        Wed, 16 Nov 2022 04:41:47 -0800 (PST)
 Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id 5DE3761D44;
-        Wed, 16 Nov 2022 11:51:32 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 8B335C433D6;
-        Wed, 16 Nov 2022 11:51:31 +0000 (UTC)
+        by dfw.source.kernel.org (Postfix) with ESMTPS id 0A2A861D9C;
+        Wed, 16 Nov 2022 12:41:47 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 39BFCC433C1;
+        Wed, 16 Nov 2022 12:41:46 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1668599491;
-        bh=oVmMYntouiaOEf7aTBjD4O602LixAMAv75Jho8nCQ04=;
+        s=k20201202; t=1668602506;
+        bh=+QffJf1vwrSa5biws9YQZuWvKi77WepE94W+OP8tWMY=;
         h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=O8+AQBnKP7fRdhhwUwTdJeAqI9WuPj3yAUrLBCqV9FnNVQHLB+BKlomy44OWDclja
-         lYdgZb1HQqeBNRxP2PPbEK1jZ0wH9ImTXjLHGsRRTFBGfjvvzN1y+/yravxFhA+PeL
-         fFwkcLadpwLTZdPLoF4OOYeFo5HgSVT6MBPis1vxhAmGVT69D3exiFWlDZXpR2ln/z
-         N4hfF/nW5MqyhFDZIZpSLASBhSOXwGZWDfApBlimKesFkSAu8hl1Ocus2g9IcVKHYY
-         k2aWhzH+xxvJNhzTaO2QqyEAZOSppAIEfGanW9iBaWdmvsrAPUVWca0d1PA/w33N4E
-         oospbyzgRPvOg==
+        b=UtBdDPbTy4enk9E+85aqEX15Ll2dJ+oJdm/xOnS5d0HTuttPNQSOTNG7Ny7nkd9GU
+         v8c6AVuspW12CNmzp+aNe7eCYmEVQ56N+qNJ/B6Z61Jdg1SLahHxzWnHEmbKDznL4c
+         WMtgorBMTI3f5yFTW/PS0LZvpW55kIrxzLXeWzrBLakmGijPJp2muEjiSVSlevD++w
+         s1pmAPjoggY9Vtui259Vgo3lgVv1dtyOPyRtrhUx1szqn5yeNSo/FWsXQxDRk67mBp
+         J3/ymAhAs7P6qFOZIshxsrwSpCYVICW/x2ieuYDXC6pZfDI9PiGYAwIsAoxBfPxoIX
+         8SkI8qdtT9ZfA==
 Received: by quaco.ghostprotocols.net (Postfix, from userid 1000)
-        id 123984034E; Wed, 16 Nov 2022 08:51:29 -0300 (-03)
-Date:   Wed, 16 Nov 2022 08:51:29 -0300
+        id BB4E14034E; Wed, 16 Nov 2022 09:41:43 -0300 (-03)
+Date:   Wed, 16 Nov 2022 09:41:43 -0300
 From:   Arnaldo Carvalho de Melo <acme@kernel.org>
 To:     Ian Rogers <irogers@google.com>
 Cc:     Weilin Wang <weilin.wang@intel.com>,
@@ -58,61 +58,76 @@ Cc:     Weilin Wang <weilin.wang@intel.com>,
         linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org,
         Stephane Eranian <eranian@google.com>
 Subject: Re: [PATCH v3 10/10] perf list: Add json output option
-Message-ID: <Y3TOwYdhzURKTgyB@kernel.org>
+Message-ID: <Y3Tah5Ocvx6lQ4jP@kernel.org>
 References: <20221114210723.2749751-1-irogers@google.com>
  <20221114210723.2749751-11-irogers@google.com>
  <Y3OX1pcclKCgbpeT@kernel.org>
  <Y3TIG7BIzltgvCPw@kernel.org>
  <Y3TK/6bBFsHxduPc@kernel.org>
+ <Y3TOwYdhzURKTgyB@kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <Y3TK/6bBFsHxduPc@kernel.org>
+In-Reply-To: <Y3TOwYdhzURKTgyB@kernel.org>
 X-Url:  http://acmel.wordpress.com
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-Em Wed, Nov 16, 2022 at 08:35:28AM -0300, Arnaldo Carvalho de Melo escreveu:
-> > Please always run 'perf test' before and after your patches and before
-> > sending it upstream.
- 
-> Running as !root on a different machine I get some other interesting
-> info:
- 
-> ⬢[acme@toolbox perf]$  perf list syscalls:sys_enter_open*
-> double free or corruption (fasttop)
-> Aborted (core dumped)
-> ⬢[acme@toolbox perf]$
+Em Wed, Nov 16, 2022 at 08:51:29AM -0300, Arnaldo Carvalho de Melo escreveu:
+> Em Wed, Nov 16, 2022 at 08:35:28AM -0300, Arnaldo Carvalho de Melo escreveu:
+> > > Please always run 'perf test' before and after your patches and before
+> > > sending it upstream.
+>  
+> > Running as !root on a different machine I get some other interesting
+> > info:
+>  
+> > ⬢[acme@toolbox perf]$  perf list syscalls:sys_enter_open*
+> > double free or corruption (fasttop)
+> > Aborted (core dumped)
+> > ⬢[acme@toolbox perf]$
+> > 
+> > That is:
+> > 
+> >         free(ps.pmu_glob);
+> > 
+> > 
+> > at the end of cmd_list().
 > 
-> That is:
-> 
->         free(ps.pmu_glob);
-> 
-> 
-> at the end of cmd_list().
+> This plus the change to default_ps in the subsequent patch cures the
+> double free, now working on the segfault.
 
-This plus the change to default_ps in the subsequent patch cures the
-double free, now working on the segfault.
+The segfault is "cured" with:
+
 
 diff --git a/tools/perf/builtin-list.c b/tools/perf/builtin-list.c
-index 12811fc40a3067cc..ce62a2fdcbd6ca61 100644
+index 3183c0351cda6cee..5eb9ed4a5cd0ad71 100644
 --- a/tools/perf/builtin-list.c
 +++ b/tools/perf/builtin-list.c
-@@ -329,6 +329,7 @@ int cmd_list(int argc, const char **argv)
- 			metricgroup__print(&print_cb, &ps);
- 		} else if ((sep = strchr(argv[i], ':')) != NULL) {
- 			int sep_idx;
-+			char *old_pmu_glob = ps.pmu_glob;
+@@ -104,7 +104,7 @@ static void default_print_event(void *ps, const char *pmu_name, const char *topi
+ 	if (deprecated && !print_state->deprecated)
+ 		return;
  
- 			sep_idx = sep - argv[i];
- 			s = strdup(argv[i]);
-@@ -346,6 +347,7 @@ int cmd_list(int argc, const char **argv)
- 			ps.metricgroups = true;
- 			metricgroup__print(&print_cb, &ps);
- 			free(s);
-+			ps.pmu_glob = old_pmu_glob;
- 		} else {
- 			if (asprintf(&s, "*%s*", argv[i]) < 0) {
- 				printf("Critical: Not enough memory! Trying to continue...\n");
+-	if (print_state->pmu_glob && !strglobmatch(pmu_name, print_state->pmu_glob))
++	if (print_state->pmu_glob && pmu_name && !strglobmatch(pmu_name, print_state->pmu_glob))
+ 		return;
+ 
+ 	if (print_state->event_glob &&
+
+
+----------------------------
+
+But then:
+
+[root@five ~]# perf list syscalls:sys_enter_open* |& grep syscalls:
+  syscalls:sys_enter_open                            [Tracepoint event]
+  syscalls:sys_enter_open_by_handle_at               [Tracepoint event]
+  syscalls:sys_enter_open_tree                       [Tracepoint event]
+  syscalls:sys_enter_openat                          [Tracepoint event]
+  syscalls:sys_enter_openat2                         [Tracepoint event]
+[root@five ~]#
+
+This stops working, looking into it.
+
+- Arnaldo
