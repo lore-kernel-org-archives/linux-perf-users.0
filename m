@@ -2,56 +2,58 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 28B48C433FE
-	for <linux-perf-users@archiver.kernel.org>; Wed, 16 Nov 2022 07:22:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 40019C43217
+	for <linux-perf-users@archiver.kernel.org>; Wed, 16 Nov 2022 07:22:29 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229937AbiKPHWR (ORCPT
+        id S229826AbiKPHWU (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Wed, 16 Nov 2022 02:22:17 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44206 "EHLO
+        Wed, 16 Nov 2022 02:22:20 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44232 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229796AbiKPHWQ (ORCPT
+        with ESMTP id S231604AbiKPHWT (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Wed, 16 Nov 2022 02:22:16 -0500
-Received: from mail-yw1-x114a.google.com (mail-yw1-x114a.google.com [IPv6:2607:f8b0:4864:20::114a])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DCF7CA193
-        for <linux-perf-users@vger.kernel.org>; Tue, 15 Nov 2022 23:22:15 -0800 (PST)
-Received: by mail-yw1-x114a.google.com with SMTP id 00721157ae682-360b9418f64so154415397b3.7
-        for <linux-perf-users@vger.kernel.org>; Tue, 15 Nov 2022 23:22:15 -0800 (PST)
+        Wed, 16 Nov 2022 02:22:19 -0500
+Received: from mail-yb1-xb49.google.com (mail-yb1-xb49.google.com [IPv6:2607:f8b0:4864:20::b49])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1D929A1AB
+        for <linux-perf-users@vger.kernel.org>; Tue, 15 Nov 2022 23:22:18 -0800 (PST)
+Received: by mail-yb1-xb49.google.com with SMTP id b17-20020a25b851000000b006e32b877068so5735699ybm.16
+        for <linux-perf-users@vger.kernel.org>; Tue, 15 Nov 2022 23:22:18 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=google.com; s=20210112;
-        h=cc:to:from:subject:mime-version:message-id:date:from:to:cc:subject
-         :date:message-id:reply-to;
-        bh=VVBCM8+4ewIYbqSIURDFLLj3mOBnhhjT5+m4tbboLyQ=;
-        b=T2CTy0cXc+GbTTmMdiCb9Zgs01lpkfqGh1mujEL0GETIM00jpRJOTM9isl/57BYYpO
-         am7/2xYPhQGL51IQmeSydcgTMgOaCbBe/iWEF/1QaNs4uMmDGOjEvr6tThLTBP3xiTiu
-         qHPrsTyARDCHIwmhf8qzvhgHN23WAFC155FXfQcUEMwQV117ZtFFqH+O50YFhgh70Lma
-         P1Jyk6OLy9hgpbPJwnr+QQng0IkyDGXVKgZgY8bk5ZQGLHQ6yXAPN9Ft9qPzLO7+v4EV
-         GNSDYjSHCj6mSU/5ZwuQxW88YpPNfWX0MEcWIElm4vIJpR4TkovIKaI5bhMOUMYLpEAD
-         QKxQ==
+        h=cc:to:from:subject:references:mime-version:message-id:in-reply-to
+         :date:from:to:cc:subject:date:message-id:reply-to;
+        bh=NO6Jy27duk4navDIf91BiAlCfPwecqqBj66fQCAI5+k=;
+        b=Pr7mjdcYb4qAEw3uOgulSRygcajgBXTmQtAjMOaT4ntJSmqQPXKpb2/w3lKfSLncYU
+         iJB3rB6o6rbI5+Ulkzx5Vle1i67dxwFL9s45ZSE+3wwN4PQCTR8uR59jgQdpzQtvX3ln
+         9CeyrdspkbVCWBDKJySYuge6+beWXNM61UM6BnQtSL8y7boc8j/X58P071TDKAGD3pJ7
+         esUo7Cudp+Jg4L72D+3gQ2eeI/UxkEUfSkPmPJU7Jvh3zTG1+mlSvI7jspnqocGA/hSZ
+         TYbBphk5VzKjXeQHjL4fvvRAr0aVHQAi8WtOY8wpCklTel+uGRpCJI5S7ZLhekCsnQ56
+         HteA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=cc:to:from:subject:mime-version:message-id:date:x-gm-message-state
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=VVBCM8+4ewIYbqSIURDFLLj3mOBnhhjT5+m4tbboLyQ=;
-        b=aP85z9rvjkIa7YQqIimoC1JxQ3RCi9V2vcySHBqnVyDU2zr1ZRMC+W962hZNnumMMA
-         hmv6XWvnxh1lCHLgGBpTDbhBxc7uE5UlaXkbAovXHsRcgTSH1ikW1s7ZQGAV46a8wJfq
-         TRGEF1ZWXi7Bo5qASqlg0Dwb3ol2UGkAPcsdzTgYRxoXJ3VPAh5IeZq1MQ2ZEZK8dy6o
-         0hnfBIplVZMurpiEsfmnh/XGAEH+Apolz1f0mxi6i9NiD413uNOl/tPiUfpaJrEgBCgy
-         V3Dq7+6HLrracl31c5+z9IP5uNuWaeZg8mOQ/gp/mm4F4ZM/E+/YVNLP4Vz1YFH6AOad
-         OLCA==
-X-Gm-Message-State: ANoB5pkPAOHxxAt0YkxEGf6vjkXAT5Q0A5vmqq6K2RrfsAmG8k43L96R
-        BvJpPbwPwQzV9OtdEpmb8NvKfxSlbcIG
-X-Google-Smtp-Source: AA0mqf4pIXOLejh00a4sx9JINJstuwQskCv32hgKgt29OuWehxer6qcT4BwlWPt2AFedMoyAfDHNiWoMQG9r
+        h=cc:to:from:subject:references:mime-version:message-id:in-reply-to
+         :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=NO6Jy27duk4navDIf91BiAlCfPwecqqBj66fQCAI5+k=;
+        b=3zCU5gOcl2QfjmC/z9AfXAmpOUpQiR18SIA7reBjI4Xb8KGgEts6z8OxfKqLhk6yrA
+         XmeBtqd4+gghObBcC284AOTWa8GKW5oU4UImc1nIOr84lutaqwhxShHOPslReuBa9hTl
+         V9W9PiyZSY9nRTbuGX9Uw87jVdjcpPK0k37I/lbbd/u4DTZJKW4s3Wyuyjz9j/e8losw
+         vhrHvgFi+xp13SevsV9rBumrvbsCMMKvHZgu7w+5kgWQvcgCoBUa42o3WEAP1xRb+bC9
+         28zaqP1iwCOn5ASqMAvizO8+dBIjib0MIVrUYTFVryQtHHWrys79zIfIGaC3YNoLGy58
+         wy7A==
+X-Gm-Message-State: ANoB5pkVeL2XZONL5G3XkbwwgnuBvDCYm+B/NedwcuKsecB1wieHSkg3
+        r/A5eLTdSlQ9pWhj66ZHimk3TCUGhm6e
+X-Google-Smtp-Source: AA0mqf6/s9UDBseMvwO0B9sUanmLV3Smc5IQvElHLCvgzuhy8jQ9dnTHlYJUB2ggKxcTcdYTeeB/U7gLdk9m
 X-Received: from irogers.svl.corp.google.com ([2620:15c:2d4:203:bf0f:58f3:342e:c1ec])
- (user=irogers job=sendgmr) by 2002:a05:6902:10c4:b0:6ca:1f22:2bed with SMTP
- id w4-20020a05690210c400b006ca1f222bedmr19587576ybu.462.1668583335191; Tue,
- 15 Nov 2022 23:22:15 -0800 (PST)
-Date:   Tue, 15 Nov 2022 23:22:10 -0800
-Message-Id: <20221116072211.2837834-1-irogers@google.com>
+ (user=irogers job=sendgmr) by 2002:a25:2fd6:0:b0:6bc:738d:65c9 with SMTP id
+ v205-20020a252fd6000000b006bc738d65c9mr18993829ybv.521.1668583337411; Tue, 15
+ Nov 2022 23:22:17 -0800 (PST)
+Date:   Tue, 15 Nov 2022 23:22:11 -0800
+In-Reply-To: <20221116072211.2837834-1-irogers@google.com>
+Message-Id: <20221116072211.2837834-2-irogers@google.com>
 Mime-Version: 1.0
+References: <20221116072211.2837834-1-irogers@google.com>
 X-Mailer: git-send-email 2.38.1.431.g37b22c650d-goog
-Subject: [PATCH 0/1] Fix perf tools/lib includes
+Subject: [PATCH 1/1] perf build: Use tools/lib headers from install path
 From:   Ian Rogers <irogers@google.com>
 To:     Peter Zijlstra <peterz@infradead.org>,
         Ingo Molnar <mingo@redhat.com>,
@@ -66,25 +68,130 @@ To:     Peter Zijlstra <peterz@infradead.org>,
         bpf@vger.kernel.org, Nick Desaulniers <ndesaulniers@google.com>,
         Andrii Nakryiko <andrii.nakryiko@gmail.com>
 Cc:     Stephane Eranian <eranian@google.com>,
-        Ian Rogers <irogers@google.com>
+        Ian Rogers <irogers@google.com>,
+        Arnaldo Carvalho de Melo <acme@redhat.com>
 Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-This patch replaces the last on kernel/git/acme/linux.git branch
-perf/tools-libs-includes and fixes the race issue by using the prepare
-dependency. pmu-events.c needs this dependency too, as the header
-files it includes also include libperf - using perpare as a dependency
-rather than $(LIBPERF) is more consistent with the rest of the makefile.
+Switch -I from tools/lib to the install path for the tools/lib
+libraries. Add the include_headers build targets to prepare target, as
+well as pmu-events.c compilation that dependes on libperf.
 
-Ian Rogers (1):
-  perf build: Use tools/lib headers from install path
-
+Signed-off-by: Ian Rogers <irogers@google.com>
+Acked-by: Namhyung Kim <namhyung@kernel.org>
+Cc: Alexander Shishkin <alexander.shishkin@linux.intel.com>
+Cc: Andrii Nakryiko <andrii.nakryiko@gmail.com>
+Cc: Jiri Olsa <jolsa@kernel.org>
+Cc: Mark Rutland <mark.rutland@arm.com>
+Cc: Masahiro Yamada <masahiroy@kernel.org>
+Cc: Nick Desaulniers <ndesaulniers@google.com>
+Cc: Nicolas Schier <nicolas@fjasle.eu>
+Cc: Peter Zijlstra <peterz@infradead.org>
+Cc: Stephane Eranian <eranian@google.com>
+Cc: bpf@vger.kernel.org
+Link: http://lore.kernel.org/lkml/20221109184914.1357295-15-irogers@google.com
+Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
+---
  tools/perf/Makefile.config |  2 --
  tools/perf/Makefile.perf   | 14 +++++++++++++-
  2 files changed, 13 insertions(+), 3 deletions(-)
 
+diff --git a/tools/perf/Makefile.config b/tools/perf/Makefile.config
+index a7f6c0669fae..9cc3c48f3288 100644
+--- a/tools/perf/Makefile.config
++++ b/tools/perf/Makefile.config
+@@ -349,7 +349,6 @@ ifeq ($(DEBUG),0)
+   endif
+ endif
+ 
+-INC_FLAGS += -I$(srctree)/tools/lib/perf/include
+ INC_FLAGS += -I$(src-perf)/util/include
+ INC_FLAGS += -I$(src-perf)/arch/$(SRCARCH)/include
+ INC_FLAGS += -I$(srctree)/tools/include/
+@@ -367,7 +366,6 @@ endif
+ 
+ INC_FLAGS += -I$(src-perf)/util
+ INC_FLAGS += -I$(src-perf)
+-INC_FLAGS += -I$(srctree)/tools/lib/
+ 
+ CORE_CFLAGS += -D_LARGEFILE64_SOURCE -D_FILE_OFFSET_BITS=64 -D_GNU_SOURCE
+ 
+diff --git a/tools/perf/Makefile.perf b/tools/perf/Makefile.perf
+index 6c1a2a3ccc38..dd096aba4430 100644
+--- a/tools/perf/Makefile.perf
++++ b/tools/perf/Makefile.perf
+@@ -305,6 +305,7 @@ LIBTRACEEVENT_INCLUDE = $(LIBTRACEEVENT_DESTDIR)/include
+ LIBTRACEEVENT = $(LIBTRACEEVENT_OUTPUT)/libtraceevent.a
+ export LIBTRACEEVENT
+ LIBTRACEEVENT_DYNAMIC_LIST = $(LIBTRACEEVENT_PLUGINS_OUTPUT)/libtraceevent-dynamic-list
++CFLAGS += -I$(LIBTRACEEVENT_OUTPUT)/include
+ 
+ #
+ # The static build has no dynsym table, so this does not work for
+@@ -322,6 +323,7 @@ LIBAPI_DESTDIR = $(LIBAPI_OUTPUT)
+ LIBAPI_INCLUDE = $(LIBAPI_DESTDIR)/include
+ LIBAPI = $(LIBAPI_OUTPUT)/libapi.a
+ export LIBAPI
++CFLAGS += -I$(LIBAPI_OUTPUT)/include
+ 
+ ifneq ($(OUTPUT),)
+   LIBBPF_OUTPUT = $(abspath $(OUTPUT))/libbpf
+@@ -331,6 +333,7 @@ endif
+ LIBBPF_DESTDIR = $(LIBBPF_OUTPUT)
+ LIBBPF_INCLUDE = $(LIBBPF_DESTDIR)/include
+ LIBBPF = $(LIBBPF_OUTPUT)/libbpf.a
++CFLAGS += -I$(LIBBPF_OUTPUT)/include
+ 
+ ifneq ($(OUTPUT),)
+   LIBSUBCMD_OUTPUT = $(abspath $(OUTPUT))/libsubcmd
+@@ -340,6 +343,7 @@ endif
+ LIBSUBCMD_DESTDIR = $(LIBSUBCMD_OUTPUT)
+ LIBSUBCMD_INCLUDE = $(LIBSUBCMD_DESTDIR)/include
+ LIBSUBCMD = $(LIBSUBCMD_OUTPUT)/libsubcmd.a
++CFLAGS += -I$(LIBSUBCMD_OUTPUT)/include
+ 
+ ifneq ($(OUTPUT),)
+   LIBSYMBOL_OUTPUT = $(abspath $(OUTPUT))/libsymbol
+@@ -349,6 +353,7 @@ endif
+ LIBSYMBOL_DESTDIR = $(LIBSYMBOL_OUTPUT)
+ LIBSYMBOL_INCLUDE = $(LIBSYMBOL_DESTDIR)/include
+ LIBSYMBOL = $(LIBSYMBOL_OUTPUT)/libsymbol.a
++CFLAGS += -I$(LIBSYMBOL_OUTPUT)/include
+ 
+ ifneq ($(OUTPUT),)
+   LIBPERF_OUTPUT = $(abspath $(OUTPUT))/libperf
+@@ -359,6 +364,7 @@ LIBPERF_DESTDIR = $(LIBPERF_OUTPUT)
+ LIBPERF_INCLUDE = $(LIBPERF_DESTDIR)/include
+ LIBPERF = $(LIBPERF_OUTPUT)/libperf.a
+ export LIBPERF
++CFLAGS += -I$(LIBPERF_OUTPUT)/include
+ 
+ # python extension build directories
+ PYTHON_EXTBUILD     := $(OUTPUT)python_ext_build/
+@@ -691,7 +697,7 @@ build := -f $(srctree)/tools/build/Makefile.build dir=. obj
+ $(PERF_IN): prepare FORCE
+ 	$(Q)$(MAKE) $(build)=perf
+ 
+-$(PMU_EVENTS_IN): FORCE
++$(PMU_EVENTS_IN): FORCE prepare
+ 	$(Q)$(MAKE) -f $(srctree)/tools/build/Makefile.build dir=pmu-events obj=pmu-events
+ 
+ $(OUTPUT)perf: $(PERFLIBS) $(PERF_IN) $(PMU_EVENTS_IN) $(LIBTRACEEVENT_DYNAMIC_LIST)
+@@ -774,6 +780,12 @@ prepare: $(OUTPUT)PERF-VERSION-FILE $(OUTPUT)common-cmds.h archheaders $(drm_ioc
+ 	$(rename_flags_array) \
+ 	$(arch_errno_name_array) \
+ 	$(sync_file_range_arrays) \
++	$(LIBAPI) \
++	$(LIBBPF) \
++	$(LIBPERF) \
++	$(LIBSUBCMD) \
++	$(LIBSYMBOL) \
++	$(LIBTRACEEVENT) \
+ 	bpf-skel
+ 
+ $(OUTPUT)%.o: %.c prepare FORCE
 -- 
 2.38.1.431.g37b22c650d-goog
 
