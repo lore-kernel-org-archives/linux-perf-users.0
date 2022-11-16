@@ -2,153 +2,158 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8B9F9C433FE
-	for <linux-perf-users@archiver.kernel.org>; Wed, 16 Nov 2022 11:13:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A3F39C4332F
+	for <linux-perf-users@archiver.kernel.org>; Wed, 16 Nov 2022 11:31:08 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S239107AbiKPLNb (ORCPT
+        id S229638AbiKPLbG (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Wed, 16 Nov 2022 06:13:31 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56770 "EHLO
+        Wed, 16 Nov 2022 06:31:06 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51062 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S239122AbiKPLNR (ORCPT
+        with ESMTP id S233647AbiKPLam (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Wed, 16 Nov 2022 06:13:17 -0500
-Received: from szxga03-in.huawei.com (szxga03-in.huawei.com [45.249.212.189])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2178657B48
-        for <linux-perf-users@vger.kernel.org>; Wed, 16 Nov 2022 03:00:38 -0800 (PST)
-Received: from dggpemm500020.china.huawei.com (unknown [172.30.72.53])
-        by szxga03-in.huawei.com (SkyGuard) with ESMTP id 4NC0PM3V8CzJnnR;
-        Wed, 16 Nov 2022 18:57:27 +0800 (CST)
-Received: from dggpemm500002.china.huawei.com (7.185.36.229) by
- dggpemm500020.china.huawei.com (7.185.36.49) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2375.31; Wed, 16 Nov 2022 19:00:36 +0800
-Received: from localhost.localdomain.localdomain (10.175.113.25) by
- dggpemm500002.china.huawei.com (7.185.36.229) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2375.31; Wed, 16 Nov 2022 19:00:35 +0800
-From:   Xiongfeng Wang <wangxiongfeng2@huawei.com>
-To:     <adrian.hunter@intel.com>, <peterz@infradead.org>,
-        <ak@linux.intel.com>, <kan.liang@linux.intel.com>,
-        <alexander.shishkin@linux.intel.com>,
-        <alexander.antonov@linux.intel.com>, <acme@kernel.org>,
-        <jolsa@kernel.org>
-CC:     <linux-perf-users@vger.kernel.org>, <yangyingliang@huawei.com>,
-        <wangxiongfeng2@huawei.com>
-Subject: [PATCH v2] perf/x86/intel/uncore: Fix reference count issues
-Date:   Wed, 16 Nov 2022 19:18:53 +0800
-Message-ID: <20221116111853.168539-1-wangxiongfeng2@huawei.com>
-X-Mailer: git-send-email 2.20.1
+        Wed, 16 Nov 2022 06:30:42 -0500
+Received: from foss.arm.com (foss.arm.com [217.140.110.172])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTP id A0900326D3;
+        Wed, 16 Nov 2022 03:19:34 -0800 (PST)
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 785E61477;
+        Wed, 16 Nov 2022 03:19:40 -0800 (PST)
+Received: from [10.1.39.20] (e121896.cambridge.arm.com [10.1.39.20])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 597EF3F663;
+        Wed, 16 Nov 2022 03:19:30 -0800 (PST)
+Message-ID: <d6553087-9157-21e8-6980-31bc8e44f066@arm.com>
+Date:   Wed, 16 Nov 2022 11:19:28 +0000
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7BIT
-Content-Type:   text/plain; charset=US-ASCII
-X-Originating-IP: [10.175.113.25]
-X-ClientProxiedBy: dggems704-chm.china.huawei.com (10.3.19.181) To
- dggpemm500002.china.huawei.com (7.185.36.229)
-X-CFilter-Loop: Reflected
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
+ Thunderbird/102.2.2
+Subject: Re: [PATCH RFC 0/6] Add metrics for neoverse-n2
+Content-Language: en-US
+To:     Jing Zhang <renyu.zj@linux.alibaba.com>,
+        nick Forrington <Nick.Forrington@arm.com>,
+        Jumana MP <Jumana.MP@arm.com>,
+        John Garry <john.garry@huawei.com>
+Cc:     Will Deacon <will@kernel.org>, Mike Leach <mike.leach@linaro.org>,
+        Leo Yan <leo.yan@linaro.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        Arnaldo Carvalho de Melo <acme@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Jiri Olsa <jolsa@kernel.org>,
+        Namhyung Kim <namhyung@kernel.org>,
+        Andrew Kilroy <andrew.kilroy@arm.com>,
+        Shuai Xue <xueshuai@linux.alibaba.com>,
+        Zhuo Song <zhuo.song@linux.alibaba.com>,
+        linux-arm-kernel@lists.infradead.org,
+        linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <1667214694-89839-1-git-send-email-renyu.zj@linux.alibaba.com>
+From:   James Clark <james.clark@arm.com>
+In-Reply-To: <1667214694-89839-1-git-send-email-renyu.zj@linux.alibaba.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-pci_get_device() will increase the reference count for the returned
-pci_dev, and also decrease the reference count for the input parameter
-*from* if it is not NULL.
 
-This commit fix the reference count issues in the following four
-functions:
-  sad_cfg_iio_topology()
-  snr_uncore_mmio_map()
-  hswep_has_limit_sbox()
-  __uncore_imc_init_box()
 
-For sad_cfg_iio_topology(), if we break the loop with 'dev' not NULL, we
-need to use pci_dev_put() to decrease the reference count. Since
-pci_dev_put() can handle the NULL input parameter, we can add it just
-before 'return ret'.
+On 31/10/2022 11:11, Jing Zhang wrote:
+> This series add six metricgroups for neoverse-n2, among which, the
+> formula of topdown L1 is from the document:
+> https://documentation-service.arm.com/static/60250c7395978b529036da86?token=
+> 
+> Since neoverse-n2 does not yet support topdown L2, metricgroups such
+> as Cache, TLB, Branch, InstructionsMix, and PEutilization are added to
+> help further analysis of performance bottlenecks.
+> 
 
-For the other three functions, we add pci_dev_put() for both the normal
-case and the error case.
+Hi Jing,
 
-Fixes: c1777be3646b ("perf/x86/intel/uncore: Enable I/O stacks to IIO PMON mapping on SNR")
-Fixes: ee49532b38dd ("perf/x86/intel/uncore: Add IMC uncore support for Snow Ridge")
-Fixes: 9d480158ee86 ("perf/x86/intel/uncore: Remove uncore extra PCI dev HSWEP_PCI_PCU_3")
-Fixes: fdb64822443e ("perf/x86: Add Intel Tiger Lake uncore support")
-Signed-off-by: Xiongfeng Wang <wangxiongfeng2@huawei.com>
----
-Changelog:
-v1->v2:
-  1. move pci_dev_put() to the last of function sad_cfg_iio_topology()
-  2. add fixes for snr_uncore_mmio_map(), hswep_has_limit_sbox() and
-     __uncore_imc_init_box()
+Thanks for working on this, these metrics look ok to me in general,
+although we're currently working on publishing standardised metrics
+across all new cores as part of a new project in Arm. This will include
+N2, and our ones are very similar (or almost identical) to yours,
+barring slightly different group names, metric names, and differences in
+things like outputting topdown metrics as percentages.
 
-  *Note that* we also add pci_dev_put() for the normal case not only
-  error case for the above three functions.
----
- arch/x86/events/intel/uncore_snb.c   |  3 +++
- arch/x86/events/intel/uncore_snbep.c | 11 ++++++++++-
- 2 files changed, 13 insertions(+), 1 deletion(-)
+We plan to publish our standard metrics some time in the next 2 months.
+Would you consider holding off on merging this change so that we have
+consistant group names and units going forward? Otherwise N2 would be
+the odd one out. I will send you the metrics when they are ready, and we
+will have a script to generate perf jsons from them, so you can review.
 
-diff --git a/arch/x86/events/intel/uncore_snb.c b/arch/x86/events/intel/uncore_snb.c
-index 1ef4f7861e2e..1f4869227efb 100644
---- a/arch/x86/events/intel/uncore_snb.c
-+++ b/arch/x86/events/intel/uncore_snb.c
-@@ -1338,6 +1338,7 @@ static void __uncore_imc_init_box(struct intel_uncore_box *box,
- 	/* MCHBAR is disabled */
- 	if (!(mch_bar & BIT(0))) {
- 		pr_warn("perf uncore: MCHBAR is disabled. Failed to map IMC free-running counters.\n");
-+		pci_dev_put(pdev);
- 		return;
- 	}
- 	mch_bar &= ~BIT(0);
-@@ -1352,6 +1353,8 @@ static void __uncore_imc_init_box(struct intel_uncore_box *box,
- 	box->io_addr = ioremap(addr, type->mmio_map_size);
- 	if (!box->io_addr)
- 		pr_warn("perf uncore: Failed to ioremap for %s.\n", type->name);
-+
-+	pci_dev_put(pdev);
- }
- 
- static void tgl_uncore_imc_freerunning_init_box(struct intel_uncore_box *box)
-diff --git a/arch/x86/events/intel/uncore_snbep.c b/arch/x86/events/intel/uncore_snbep.c
-index ed869443efb2..0481f5135cb1 100644
---- a/arch/x86/events/intel/uncore_snbep.c
-+++ b/arch/x86/events/intel/uncore_snbep.c
-@@ -2891,8 +2891,12 @@ static bool hswep_has_limit_sbox(unsigned int device)
- 		return false;
- 
- 	pci_read_config_dword(dev, HSWEP_PCU_CAPID4_OFFET, &capid4);
--	if (!hswep_get_chop(capid4))
-+	if (!hswep_get_chop(capid4)) {
-+		pci_dev_put(dev);
- 		return true;
-+	}
-+
-+	pci_dev_put(dev);
- 
- 	return false;
- }
-@@ -4492,6 +4496,8 @@ static int sad_cfg_iio_topology(struct intel_uncore_type *type, u8 *sad_pmon_map
- 		type->topology = NULL;
- 	}
- 
-+	pci_dev_put(dev);
-+
- 	return ret;
- }
- 
-@@ -4860,9 +4866,12 @@ static int snr_uncore_mmio_map(struct intel_uncore_box *box,
- 	box->io_addr = ioremap(addr, type->mmio_map_size);
- 	if (!box->io_addr) {
- 		pr_warn("perf uncore: Failed to ioremap for %s.\n", type->name);
-+		pci_dev_put(pdev);
- 		return -EINVAL;
- 	}
- 
-+	pci_dev_put(pdev);
-+
- 	return 0;
- }
- 
--- 
-2.20.1
+We also have a slightly different forumula for one of the top down
+metrics which I think would be slightly more accurate. We don't have
+anything for your "PE utilization" metrics, which I can raise
+internally. It could always be added to perf on top of the standardised
+ones if we don't add it to our standard ones.
 
+Thanks
+James
+
+> with this series on neoverse-n2:
+> 
+> $./perf list metricgroup
+> 
+> List of pre-defined events (to be used in -e):
+> 
+> 
+> Metric Groups:
+> 
+> Branch
+> Cache
+> InstructionMix
+> PEutilization
+> TLB
+> TopDownL1
+> 
+> 
+> $./perf list
+> 
+> ...
+> Metric Groups:
+> 
+> Branch:
+>   branch_miss_pred_rate
+>        [The rate of branches mis-predited to the overall branches]
+>   branch_mpki
+>        [The rate of branches mis-predicted per kilo instructions]
+>   branch_pki
+>        [The rate of branches retired per kilo instructions]
+> Cache:
+>   l1d_cache_miss_rate
+>        [The rate of L1 D-Cache misses to the overall L1 D-Cache]
+>   l1d_cache_mpki
+>        [The rate of L1 D-Cache misses per kilo instructions]
+> ...
+> 
+> 
+> $sudo ./perf stat -a -M TLB sleep 1
+> 
+>  Performance counter stats for 'system wide':
+> 
+>         35,861,936      L1I_TLB                          #     0.00 itlb_walk_rate           (74.91%)
+>              5,661      ITLB_WALK                                                            (74.91%)
+>         97,279,240      INST_RETIRED                     #     0.07 itlb_mpki                (74.91%)
+>              6,851      ITLB_WALK                                                            (74.91%)
+>             26,391      DTLB_WALK                        #     0.00 dtlb_walk_rate           (75.07%)
+>         35,585,545      L1D_TLB                                                              (75.07%)
+>         85,923,244      INST_RETIRED                     #     0.35 dtlb_mpki                (75.11%)
+>             29,992      DTLB_WALK                                                            (75.11%)
+> 
+>        1.003450755 seconds time elapsed
+>        
+> 
+> Jing Zhang (6):
+>   perf vendor events arm64: Add topdown L1 metrics for neoverse-n2
+>   perf vendor events arm64: Add TLB metrics for neoverse-n2
+>   perf vendor events arm64: Add cache metrics for neoverse-n2
+>   perf vendor events arm64: Add branch metrics for neoverse-n2
+>   perf vendor events arm64: Add PE utilization metrics for neoverse-n2
+>   perf vendor events arm64: Add instruction mix metrics for neoverse-n2
+> 
+>  .../arch/arm64/arm/neoverse-n2/metrics.json        | 247 +++++++++++++++++++++
+>  1 file changed, 247 insertions(+)
+>  create mode 100644 tools/perf/pmu-events/arch/arm64/arm/neoverse-n2/metrics.json
+> 
