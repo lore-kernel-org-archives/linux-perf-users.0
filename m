@@ -2,151 +2,233 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 35251C4332F
-	for <linux-perf-users@archiver.kernel.org>; Thu, 17 Nov 2022 22:09:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BB75CC4321E
+	for <linux-perf-users@archiver.kernel.org>; Thu, 17 Nov 2022 22:50:11 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S235011AbiKQWJf (ORCPT
+        id S240446AbiKQWuJ (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Thu, 17 Nov 2022 17:09:35 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47370 "EHLO
+        Thu, 17 Nov 2022 17:50:09 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47484 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S240381AbiKQWIt (ORCPT
+        with ESMTP id S240421AbiKQWuH (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Thu, 17 Nov 2022 17:08:49 -0500
-Received: from mail-wr1-x42d.google.com (mail-wr1-x42d.google.com [IPv6:2a00:1450:4864:20::42d])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4FCFE7EBC8
-        for <linux-perf-users@vger.kernel.org>; Thu, 17 Nov 2022 14:08:23 -0800 (PST)
-Received: by mail-wr1-x42d.google.com with SMTP id k8so6214976wrh.1
-        for <linux-perf-users@vger.kernel.org>; Thu, 17 Nov 2022 14:08:23 -0800 (PST)
+        Thu, 17 Nov 2022 17:50:07 -0500
+Received: from mail-yb1-xb4a.google.com (mail-yb1-xb4a.google.com [IPv6:2607:f8b0:4864:20::b4a])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id AE6B865E45
+        for <linux-perf-users@vger.kernel.org>; Thu, 17 Nov 2022 14:50:05 -0800 (PST)
+Received: by mail-yb1-xb4a.google.com with SMTP id a1-20020a056902056100b006e6f103d4c1so2896092ybt.23
+        for <linux-perf-users@vger.kernel.org>; Thu, 17 Nov 2022 14:50:05 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=google.com; s=20210112;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:from:to:cc:subject:date:message-id:reply-to;
-        bh=7/FTKNAmP6F3iAI6A3xeaew/xWrn0EKEXsTY8o2IBRY=;
-        b=hT9jf1YBUrY2/GUlTJ1sNhW99XnZkk1OVcjVRnVj0nUDpXf1Tbg0ovhIzvWi0lH9qC
-         l2npItjf5TRqGNoB75JC30SRzoPUtEHJZCki7dL/VF7ghubyOwvw8sq14Y3fHaufOap/
-         cRMHP0UjqQ9hWNImTTs7ZO1YWd/tdzysaXsU9YmBmDdsSpkEORBrid7B4sFfqNSDBNqc
-         +3+lWC4zZOR+yz8nLV3ddJeahpv3HtxvxTfhLXuaWc7FewzlOst0Un/RCWpcGxBYhpUI
-         1Gk8dzzBp5CIZHgsYko442p61qWBpYkN1GpaUrf//msPaNzDf1cE/ugBPAZnbGXucHQ6
-         YiBg==
+        h=cc:to:from:subject:mime-version:message-id:date:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=mkE/jseB+mAvo5T0KGdJHv7G0FFmlGhJP5kFwdKFknc=;
+        b=krp3Im7u4EE7ngh31O+puMO6xpuQb6aLCoGwbJ92YvbTje/EkifY+4TQxfmoaMaWlD
+         xB4GmxVxsMYdX7TmLoELM6RpFweoK/aHDX73QOMeCH6FWJRp86y3ESmCTd24lEUefJ1W
+         RbCozF+hPP+mKzQg/Qdh1QgjiH3XsXcxoNYGHSgOBpBmSxCxgklhGoahKdGFXBbouky8
+         afcvPi1w/ydB6NGfQEzU4/tQRMoHf0pLEVC5BzN+jvIVM6BmFVPDM1Evfn78Z3Ay2wdQ
+         6PwlCL/Y6pPS7voC1EbY5ODfg4fByTRSBVVwEM0hdmk/57PrGd/kLjHxJMqeRt+IWEql
+         4ROg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=7/FTKNAmP6F3iAI6A3xeaew/xWrn0EKEXsTY8o2IBRY=;
-        b=P8CDQUT5NrAR2SurKaBzC7E/Mjl7uOqgBTSpR/a9rcp80+Is6rneWbf1vracwpzmVs
-         tri4Sp51Mw3P0X2XNLCwUHnMMRxN+QG14Zzt4ezKH67dJy0ZFpfW6F3qCN2u68WQfopp
-         HhI8KiMcdez8aKXZhK7tNb5MMEdbtcemJzuy+a6oyP0a37s994Tjobvtf59ES3SasNYQ
-         SgTnSow1o1vij3RiCUR4Sf1yTriPMB1c7cOV4R5ttmyfelz3MIW2Gy6YFgLHUIYjCyrD
-         GxDLb1+o8C82WEJvp9PgxzEK9WwpxiJDq6gG4dLUozbSprFfhvxyDzaBI8LOqRZwpKyr
-         R0Nw==
-X-Gm-Message-State: ANoB5plVfqX9x4HOmSsvjpYG0Sg7vyAyBOBJMT4GteIBWrYDq3wi8N2+
-        JHSZOd1ukL7H/8g59GR36xQNrLv1Mo5vrm7eMN4MiA==
-X-Google-Smtp-Source: AA0mqf7VR+RYn9Xb12dyPHx7g/uaDcUS/zlSYV5fXtRVeSi+ehk7hS0Q/dpJEF2vNXhTnpDSJknubw/rfoJbi4y8YMs=
-X-Received: by 2002:adf:f6cc:0:b0:228:dd1d:8a42 with SMTP id
- y12-20020adff6cc000000b00228dd1d8a42mr2701812wrp.375.1668722901599; Thu, 17
- Nov 2022 14:08:21 -0800 (PST)
-MIME-Version: 1.0
-References: <20221012164244.3027730-1-irogers@google.com> <CAP-5=fW5+boUZqJV6-6VVa2bOcTrErHU3K5Fz-Z54j8uq_kfdw@mail.gmail.com>
- <Y21Hdoc8KsvNMbTQ@kernel.org> <CAP-5=fXbjk31SvZNVzo5x0uDnVndw7Z=BFPah9Dgx=AULkTPaA@mail.gmail.com>
- <f3e704f9-988c-e01f-eb40-13aa405e2857@oracle.com> <259f8e47-bd58-c8dc-c3fd-12e8dd5d013d@oracle.com>
-In-Reply-To: <259f8e47-bd58-c8dc-c3fd-12e8dd5d013d@oracle.com>
+        h=cc:to:from:subject:mime-version:message-id:date:x-gm-message-state
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=mkE/jseB+mAvo5T0KGdJHv7G0FFmlGhJP5kFwdKFknc=;
+        b=WRSbFOI9B0LOuZSTtlkQL8jozUwcOghYQXkVMMVhM54oVqvyMFZ4xyVfVWrPwH5BBI
+         25W4UL0oqtnUeNMgMMlcwj2Kt4qweCs2n4FPzLdIlUY+l/RJKihDHBkts+xqiX16TWi5
+         ezP11NO6hNubON3Cz8aCGMv0McOYm+KLrbi+f3MuytFET8SbaFm7PVnLhiNuk8drZsay
+         i2emN1r1IBVhXir30COrl+q7twHS+KGx/kBi+VDxlDgAN4qog4RpRF+bs2JasmHVUBWW
+         hGto2jPQwfGxqufWIESWHR+DWghwXDZ4TcMRnYr7GMhGSt8tQWYKo3+B7lgiGtbvkVM1
+         S2UA==
+X-Gm-Message-State: ANoB5pmGxtZoEz45r0Ih4JoWBmsU6f6rf+Xod12kmaifjePCYblTnxme
+        gnG//j9PdUIcKrku+4jGG7U/7FBMQYH3
+X-Google-Smtp-Source: AA0mqf7F7zom9i8xWEHIkUNYblobZwQJwp6/9AAJa/Rg8XPgD+B+ulVRzOK1PPLEBUzlvlpnsTtejtxb39SG
+X-Received: from irogers.svl.corp.google.com ([2620:15c:2d4:203:3f1e:c462:d6b8:fba8])
+ (user=irogers job=sendgmr) by 2002:a25:ca56:0:b0:6c9:9c1a:e8c with SMTP id
+ a83-20020a25ca56000000b006c99c1a0e8cmr4059860ybg.620.1668725405037; Thu, 17
+ Nov 2022 14:50:05 -0800 (PST)
+Date:   Thu, 17 Nov 2022 14:49:50 -0800
+Message-Id: <20221117224952.358639-1-irogers@google.com>
+Mime-Version: 1.0
+X-Mailer: git-send-email 2.38.1.584.g0f3c55d4c2-goog
+Subject: [PATCH v1 0/2] perf always use system libtraceevent
 From:   Ian Rogers <irogers@google.com>
-Date:   Thu, 17 Nov 2022 14:08:09 -0800
-Message-ID: <CAP-5=fV-pfdSP+L4+Gr0D_+MO9bAOSd3s1_2Ayahg5vcqC66HQ@mail.gmail.com>
-Subject: Re: [External] : Re: RFC Re: [PATCH v2] perf jevents: Parse metrics
- during conversion
-To:     John Garry <john.g.garry@oracle.com>
-Cc:     Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Thomas Richter <tmricht@linux.ibm.com>,
-        Jiri Olsa <jolsa@kernel.org>, Leo Yan <leo.yan@linaro.org>,
-        Peter Zijlstra <peterz@infradead.org>,
+To:     Peter Zijlstra <peterz@infradead.org>,
         Ingo Molnar <mingo@redhat.com>,
+        Arnaldo Carvalho de Melo <acme@kernel.org>,
         Mark Rutland <mark.rutland@arm.com>,
         Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Jiri Olsa <jolsa@kernel.org>,
         Namhyung Kim <namhyung@kernel.org>,
-        Sumanth Korikkar <sumanthk@linux.ibm.com>,
-        linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org
+        Steven Rostedt <rostedt@goodmis.org>,
+        Masami Hiramatsu <mhiramat@kernel.org>,
+        linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org,
+        Steven Rostedt <rostedt@google.com>,
+        Adrian Hunter <adrian.hunter@intel.com>,
+        Linux Trace Devel <linux-trace-devel@vger.kernel.org>
+Cc:     Stephane Eranian <eranian@google.com>,
+        Ian Rogers <irogers@google.com>
 Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-On Thu, Nov 17, 2022 at 10:16 AM John Garry <john.g.garry@oracle.com> wrote:
->
-> On 15/11/2022 17:35, John Garry wrote:
-> > On 15/11/2022 17:26, Ian Rogers wrote:
-> >> On Thu, Nov 10, 2022 at 10:48 AM Arnaldo Carvalho de Melo
-> >> <acme@kernel.org> wrote:
-> >>>
-> >>> Em Fri, Oct 28, 2022 at 10:57:02AM -0700, Ian Rogers escreveu:
-> >>>> On Wed, Oct 12, 2022 at 9:42 AM Ian Rogers <irogers@google.com> wrote:
-> >>>>>
-> >>>>> Currently the 'MetricExpr' json value is passed from the json
-> >>>>> file to the pmu-events.c. This change introduces an expression
-> >>>>> tree that is parsed into. The parsing is done largely by using
-> >>>>> operator overloading and python's 'eval' function. Two advantages
-> >>>>> in doing this are:
-> >>>>>
-> >>>>> 1) Broken metrics fail at compile time rather than relying on
-> >>>>>     `perf test` to detect. `perf test` remains relevant for checking
-> >>>>>     event encoding and actual metric use.
-> >>>>>
-> >>>>> 2) The conversion to a string from the tree can minimize the
-> >>>>>     metric's string size, for example, preferring 1e6 over 1000000
-> >>>>>     and removing unnecessary whitespace. On x86 this reduces the
-> >>>>>     string size by 2,823bytes (0.06%).
-> >>>>>
-> >>>>> In future changes it would be possible to programmatically
-> >>>>> generate the json expressions (a single line of text and so a
-> >>>>> pain to write manually) for an architecture using the expression
-> >>>>> tree. This could avoid copy-pasting metrics for all architecture
-> >>>>> variants.
-> >>>>>
-> >>>>> Signed-off-by: Ian Rogers <irogers@google.com>
-> >>>>
-> >>>> Ping, PTAL.
-> >>>
-> >>> That would be really nice if people working with JSON, metrics, could
-> >>> take a look at Ian's work and test it with their files, volunteers?
-> >>
-> >> Perhaps John could help?
-> >
-> > I'll have a look soon. I have to admit that I have not been tracking the
-> > jevents changes as close as before.
->
-> At least I can try to test it... so we support python 3.6 and later, right?
->
-> I have 3.6 and acme perf/core generated pmu-events.c is ok for me, but
-> this patch causes an error:
->
->    GEN     pmu-events/pmu-events.c
->   PERF_VERSION = 6.1.rc3.g39b7ecfa5b4a
->   GEN     perf-archive
->   GEN     perf-iostat
-> Traceback (most recent call last):
->   File "pmu-events/jevents.py", line 7, in <module>
->     import metric
->   File "/home/john/kernel-dev2/tools/perf/pmu-events/metric.py", line
-> 399, in <module>
->     class MetricGroup:
->   File "/home/john/kernel-dev2/tools/perf/pmu-events/metric.py", line
-> 408, in MetricGroup
->     'MetricGroup']]):
-> TypeError: 'type' object is not subscriptable
-> make[3]: *** [pmu-events/Build:26: pmu-events/pmu-events.c] Error 1
-> make[2]: *** [Makefile.perf:672: pmu-events/pmu-events-in.o] Error 2
-> make[2]: *** Waiting for unfinished jobs....
->
->
-> Any idea?
+Force the perf build to use the previously optional non-default
+LIBTRACEEVENT_DYNAMIC, ie the system libtraceevent. With nothing using
+the now out-of-date tools/lib/traceevent remove it.
 
-Apologies, this looks like a fault by me. I'll downgrade my python and
-fix this for the next version.
+Discussed on LKML here:
+https://lore.kernel.org/lkml/CAP-5=fWxAjEia-Qbm0RVzKOxyiod8rUOBieqaGK=DtQboDe3Qw@mail.gmail.com/
 
-Thanks!
-Ian
+Builds upon:
+https://lore.kernel.org/lkml/20221116224631.207631-1-irogers@google.com/
 
-> Thanks,
-> John
+Ian Rogers (2):
+  perf build: Require libtraceevent from the system
+  tools lib traceevent: Remove libtraceevent
+
+ tools/lib/traceevent/.gitignore               |    4 -
+ tools/lib/traceevent/Build                    |    8 -
+ tools/lib/traceevent/Documentation/Makefile   |  207 -
+ .../traceevent/Documentation/asciidoc.conf    |  120 -
+ .../Documentation/libtraceevent-commands.txt  |  153 -
+ .../Documentation/libtraceevent-cpus.txt      |   77 -
+ .../libtraceevent-endian_read.txt             |   78 -
+ .../libtraceevent-event_find.txt              |  103 -
+ .../Documentation/libtraceevent-event_get.txt |   99 -
+ .../libtraceevent-event_list.txt              |  122 -
+ .../libtraceevent-event_print.txt             |  130 -
+ .../libtraceevent-field_find.txt              |  118 -
+ .../libtraceevent-field_get_val.txt           |  122 -
+ .../libtraceevent-field_print.txt             |  126 -
+ .../libtraceevent-field_read.txt              |   81 -
+ .../Documentation/libtraceevent-fields.txt    |  105 -
+ .../libtraceevent-file_endian.txt             |   91 -
+ .../Documentation/libtraceevent-filter.txt    |  209 -
+ .../Documentation/libtraceevent-func_apis.txt |  183 -
+ .../Documentation/libtraceevent-func_find.txt |   88 -
+ .../Documentation/libtraceevent-handle.txt    |  101 -
+ .../libtraceevent-header_page.txt             |  102 -
+ .../libtraceevent-host_endian.txt             |  104 -
+ .../Documentation/libtraceevent-long_size.txt |   78 -
+ .../Documentation/libtraceevent-page_size.txt |   82 -
+ .../libtraceevent-parse_event.txt             |   90 -
+ .../libtraceevent-parse_head.txt              |   82 -
+ .../Documentation/libtraceevent-plugins.txt   |  122 -
+ .../libtraceevent-record_parse.txt            |  137 -
+ .../libtraceevent-reg_event_handler.txt       |  156 -
+ .../libtraceevent-reg_print_func.txt          |  155 -
+ .../Documentation/libtraceevent-set_flag.txt  |  104 -
+ .../Documentation/libtraceevent-strerror.txt  |   85 -
+ .../Documentation/libtraceevent-tseq.txt      |  158 -
+ .../Documentation/libtraceevent.txt           |  192 -
+ .../traceevent/Documentation/manpage-1.72.xsl |   14 -
+ .../traceevent/Documentation/manpage-base.xsl |   35 -
+ .../Documentation/manpage-bold-literal.xsl    |   17 -
+ .../Documentation/manpage-normal.xsl          |   13 -
+ .../Documentation/manpage-suppress-sp.xsl     |   21 -
+ tools/lib/traceevent/Makefile                 |  300 -
+ tools/lib/traceevent/event-parse-api.c        |  333 -
+ tools/lib/traceevent/event-parse-local.h      |  123 -
+ tools/lib/traceevent/event-parse.c            | 7624 -----------------
+ tools/lib/traceevent/event-parse.h            |  750 --
+ tools/lib/traceevent/event-plugin.c           |  711 --
+ tools/lib/traceevent/event-utils.h            |   67 -
+ tools/lib/traceevent/kbuffer-parse.c          |  809 --
+ tools/lib/traceevent/kbuffer.h                |   68 -
+ .../lib/traceevent/libtraceevent.pc.template  |   10 -
+ tools/lib/traceevent/parse-filter.c           | 2281 -----
+ tools/lib/traceevent/parse-utils.c            |   71 -
+ tools/lib/traceevent/plugins/Build            |   12 -
+ tools/lib/traceevent/plugins/Makefile         |  225 -
+ .../lib/traceevent/plugins/plugin_cfg80211.c  |   43 -
+ .../lib/traceevent/plugins/plugin_function.c  |  282 -
+ tools/lib/traceevent/plugins/plugin_futex.c   |  123 -
+ tools/lib/traceevent/plugins/plugin_hrtimer.c |   74 -
+ tools/lib/traceevent/plugins/plugin_jbd2.c    |   61 -
+ tools/lib/traceevent/plugins/plugin_kmem.c    |   80 -
+ tools/lib/traceevent/plugins/plugin_kvm.c     |  527 --
+ .../lib/traceevent/plugins/plugin_mac80211.c  |   88 -
+ .../traceevent/plugins/plugin_sched_switch.c  |  146 -
+ tools/lib/traceevent/plugins/plugin_scsi.c    |  434 -
+ tools/lib/traceevent/plugins/plugin_tlb.c     |   66 -
+ tools/lib/traceevent/plugins/plugin_xen.c     |  138 -
+ tools/lib/traceevent/tep_strerror.c           |   53 -
+ tools/lib/traceevent/trace-seq.c              |  249 -
+ tools/lib/traceevent/trace-seq.h              |   55 -
+ tools/perf/Makefile.config                    |   51 +-
+ tools/perf/Makefile.perf                      |   95 +-
+ 71 files changed, 28 insertions(+), 19993 deletions(-)
+ delete mode 100644 tools/lib/traceevent/.gitignore
+ delete mode 100644 tools/lib/traceevent/Build
+ delete mode 100644 tools/lib/traceevent/Documentation/Makefile
+ delete mode 100644 tools/lib/traceevent/Documentation/asciidoc.conf
+ delete mode 100644 tools/lib/traceevent/Documentation/libtraceevent-commands.txt
+ delete mode 100644 tools/lib/traceevent/Documentation/libtraceevent-cpus.txt
+ delete mode 100644 tools/lib/traceevent/Documentation/libtraceevent-endian_read.txt
+ delete mode 100644 tools/lib/traceevent/Documentation/libtraceevent-event_find.txt
+ delete mode 100644 tools/lib/traceevent/Documentation/libtraceevent-event_get.txt
+ delete mode 100644 tools/lib/traceevent/Documentation/libtraceevent-event_list.txt
+ delete mode 100644 tools/lib/traceevent/Documentation/libtraceevent-event_print.txt
+ delete mode 100644 tools/lib/traceevent/Documentation/libtraceevent-field_find.txt
+ delete mode 100644 tools/lib/traceevent/Documentation/libtraceevent-field_get_val.txt
+ delete mode 100644 tools/lib/traceevent/Documentation/libtraceevent-field_print.txt
+ delete mode 100644 tools/lib/traceevent/Documentation/libtraceevent-field_read.txt
+ delete mode 100644 tools/lib/traceevent/Documentation/libtraceevent-fields.txt
+ delete mode 100644 tools/lib/traceevent/Documentation/libtraceevent-file_endian.txt
+ delete mode 100644 tools/lib/traceevent/Documentation/libtraceevent-filter.txt
+ delete mode 100644 tools/lib/traceevent/Documentation/libtraceevent-func_apis.txt
+ delete mode 100644 tools/lib/traceevent/Documentation/libtraceevent-func_find.txt
+ delete mode 100644 tools/lib/traceevent/Documentation/libtraceevent-handle.txt
+ delete mode 100644 tools/lib/traceevent/Documentation/libtraceevent-header_page.txt
+ delete mode 100644 tools/lib/traceevent/Documentation/libtraceevent-host_endian.txt
+ delete mode 100644 tools/lib/traceevent/Documentation/libtraceevent-long_size.txt
+ delete mode 100644 tools/lib/traceevent/Documentation/libtraceevent-page_size.txt
+ delete mode 100644 tools/lib/traceevent/Documentation/libtraceevent-parse_event.txt
+ delete mode 100644 tools/lib/traceevent/Documentation/libtraceevent-parse_head.txt
+ delete mode 100644 tools/lib/traceevent/Documentation/libtraceevent-plugins.txt
+ delete mode 100644 tools/lib/traceevent/Documentation/libtraceevent-record_parse.txt
+ delete mode 100644 tools/lib/traceevent/Documentation/libtraceevent-reg_event_handler.txt
+ delete mode 100644 tools/lib/traceevent/Documentation/libtraceevent-reg_print_func.txt
+ delete mode 100644 tools/lib/traceevent/Documentation/libtraceevent-set_flag.txt
+ delete mode 100644 tools/lib/traceevent/Documentation/libtraceevent-strerror.txt
+ delete mode 100644 tools/lib/traceevent/Documentation/libtraceevent-tseq.txt
+ delete mode 100644 tools/lib/traceevent/Documentation/libtraceevent.txt
+ delete mode 100644 tools/lib/traceevent/Documentation/manpage-1.72.xsl
+ delete mode 100644 tools/lib/traceevent/Documentation/manpage-base.xsl
+ delete mode 100644 tools/lib/traceevent/Documentation/manpage-bold-literal.xsl
+ delete mode 100644 tools/lib/traceevent/Documentation/manpage-normal.xsl
+ delete mode 100644 tools/lib/traceevent/Documentation/manpage-suppress-sp.xsl
+ delete mode 100644 tools/lib/traceevent/Makefile
+ delete mode 100644 tools/lib/traceevent/event-parse-api.c
+ delete mode 100644 tools/lib/traceevent/event-parse-local.h
+ delete mode 100644 tools/lib/traceevent/event-parse.c
+ delete mode 100644 tools/lib/traceevent/event-parse.h
+ delete mode 100644 tools/lib/traceevent/event-plugin.c
+ delete mode 100644 tools/lib/traceevent/event-utils.h
+ delete mode 100644 tools/lib/traceevent/kbuffer-parse.c
+ delete mode 100644 tools/lib/traceevent/kbuffer.h
+ delete mode 100644 tools/lib/traceevent/libtraceevent.pc.template
+ delete mode 100644 tools/lib/traceevent/parse-filter.c
+ delete mode 100644 tools/lib/traceevent/parse-utils.c
+ delete mode 100644 tools/lib/traceevent/plugins/Build
+ delete mode 100644 tools/lib/traceevent/plugins/Makefile
+ delete mode 100644 tools/lib/traceevent/plugins/plugin_cfg80211.c
+ delete mode 100644 tools/lib/traceevent/plugins/plugin_function.c
+ delete mode 100644 tools/lib/traceevent/plugins/plugin_futex.c
+ delete mode 100644 tools/lib/traceevent/plugins/plugin_hrtimer.c
+ delete mode 100644 tools/lib/traceevent/plugins/plugin_jbd2.c
+ delete mode 100644 tools/lib/traceevent/plugins/plugin_kmem.c
+ delete mode 100644 tools/lib/traceevent/plugins/plugin_kvm.c
+ delete mode 100644 tools/lib/traceevent/plugins/plugin_mac80211.c
+ delete mode 100644 tools/lib/traceevent/plugins/plugin_sched_switch.c
+ delete mode 100644 tools/lib/traceevent/plugins/plugin_scsi.c
+ delete mode 100644 tools/lib/traceevent/plugins/plugin_tlb.c
+ delete mode 100644 tools/lib/traceevent/plugins/plugin_xen.c
+ delete mode 100644 tools/lib/traceevent/tep_strerror.c
+ delete mode 100644 tools/lib/traceevent/trace-seq.c
+ delete mode 100644 tools/lib/traceevent/trace-seq.h
+
+-- 
+2.38.1.584.g0f3c55d4c2-goog
+
