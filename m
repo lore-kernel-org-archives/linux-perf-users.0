@@ -2,58 +2,58 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9BCFFC43219
-	for <linux-perf-users@archiver.kernel.org>; Thu, 17 Nov 2022 00:44:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E4360C4332F
+	for <linux-perf-users@archiver.kernel.org>; Thu, 17 Nov 2022 00:45:29 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S234585AbiKQAo5 (ORCPT
+        id S233462AbiKQAp2 (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Wed, 16 Nov 2022 19:44:57 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38790 "EHLO
+        Wed, 16 Nov 2022 19:45:28 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39128 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S234495AbiKQAol (ORCPT
+        with ESMTP id S234458AbiKQAo7 (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Wed, 16 Nov 2022 19:44:41 -0500
-Received: from mail-yb1-xb4a.google.com (mail-yb1-xb4a.google.com [IPv6:2607:f8b0:4864:20::b4a])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3F8A330F6C
-        for <linux-perf-users@vger.kernel.org>; Wed, 16 Nov 2022 16:44:31 -0800 (PST)
-Received: by mail-yb1-xb4a.google.com with SMTP id v189-20020a252fc6000000b006e7396ee2c3so4719ybv.9
-        for <linux-perf-users@vger.kernel.org>; Wed, 16 Nov 2022 16:44:31 -0800 (PST)
+        Wed, 16 Nov 2022 19:44:59 -0500
+Received: from mail-yw1-x1149.google.com (mail-yw1-x1149.google.com [IPv6:2607:f8b0:4864:20::1149])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E634A6B23E
+        for <linux-perf-users@vger.kernel.org>; Wed, 16 Nov 2022 16:44:38 -0800 (PST)
+Received: by mail-yw1-x1149.google.com with SMTP id 00721157ae682-370624ca2e8so3737907b3.16
+        for <linux-perf-users@vger.kernel.org>; Wed, 16 Nov 2022 16:44:38 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=google.com; s=20210112;
         h=cc:to:from:subject:references:mime-version:message-id:in-reply-to
          :date:from:to:cc:subject:date:message-id:reply-to;
-        bh=jvCSVmgPzSHRqmw4ao0rkGS2JaSHBM4HPOCpMgiqjz8=;
-        b=W2oWY4rwEM5AaE08aIgnj/PebRcwaX0h1rd2nPnNIKAsZtTyvsHeYUyLOzBKXLYt1g
-         YAxqT2SVCT+CK+aN4x2+skH6QY/3HOgKZbGGIm4IFEP4OGJ2kga0C4f6vSRn3iu3Rqbf
-         GjDqjMHYEvk+E5Q8NpysMlNoAdbwT9dEVKlsr6SQcSVzbZQFCwupurkDP4M3z+P8YExg
-         QRtZb/u7zLory0PamwAn+cBuEas0IRnRp9bpDiWhmt+GAcCifejnya56qpBc+O8WcMMP
-         RGDalbNGetu+9dcmZsDYl3s9RMz0/Do59ws+R/4+5OSbljsNmFf1BUZT6EGS/HadENkr
-         867g==
+        bh=nXZGloJLo63EGaJ/mj4DMj71nEKbleTTzHSaXj91R5I=;
+        b=PdaVdTssRALELmv12cnJ+28wAmx/jCb6l++NOd+1kqRP+3zlkIEyt2UDxxS8WY/fpr
+         QVF1flCSaAr8RHKgMiDC1O7UDYlprAW2K65xrWtDZZ3qrcvRdKXV0IAWyAY4sdDRgoDj
+         U18qsdqIAdO+pisl+WpUEi/shMDhsMpAgUZ6TgU+13PDtLX3M3TKqPQ8CQonnv6OssIh
+         AFpo7AUS7Acci7Yvz5ZWL3yMVySQ2xR/uiuuIdROigp8MkNwg3+4WxGCyXe8XiHGnLw7
+         aJxigxfAaHDh3FtrLO+Nvu+YnvrSEsr1tCurh1jwYm43a7UYuPasV1nSqpnecFdrxpC6
+         791Q==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
         h=cc:to:from:subject:references:mime-version:message-id:in-reply-to
          :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=jvCSVmgPzSHRqmw4ao0rkGS2JaSHBM4HPOCpMgiqjz8=;
-        b=Ut6SZ+QHfqudZf8ivUEUYComQCJvdo2j8Yra2z2I6dI9d/bfAogBl2kkwjipGfncKC
-         nMDhkBi1Y9Z5ykWVD2OghgJ3TtvgGO9c9HbOc8FA3oRef1pDQY0FyJxMyxccRfH6V/ry
-         g6rCz3TSUAVkRQfeuNLQJEYFcH0VFZTLwMFwm+xbJA230XQmDIFkY9GYSWP6pvO77Trx
-         ks+aLQ1LPugiEpToiE2OCIKfbGeM8oD8ndTVhkhApqeX8yfbRFG7OHa4zH8hb6ystvKp
-         ZwAtgP57KjlSRTyaHqNWBaMsPj0iq/kwt7tqlfi4vCCrH5cWvF/wqtUM9iRRns+HTQTx
-         76jA==
-X-Gm-Message-State: ANoB5plCFrvxr1XQvIDObH+2Z8eSAbkm6NbwcnXb4p3KSyokjLa7mEfV
-        6p80GUp3qOqgM8ZFQNHODiC9z6z1q0HW
-X-Google-Smtp-Source: AA0mqf4dl6phgEboohJWHjzZMtx4etccfHoNQKn+VYvDhIjIWJyalrS3bM6sZyMhY8keOHUcTSoYEzN2d88W
+        bh=nXZGloJLo63EGaJ/mj4DMj71nEKbleTTzHSaXj91R5I=;
+        b=H00dnzgHG3oxglxy0bgzTsFnpiBuvcsOSrNB53uoC1umJQsVgVkayWBqa6LK4me9jE
+         DTjmm3hFY3+wqiq4hphj4WdqIjAQtc7M0Q/HggZQKz5AK2g98q3VpuAbx1Hh2VmmN1gs
+         D/VDzv/21oMcU5qnGzNBNJyifWoYTs8k6h5X4cDBeXBv6NyRrq9Cj+76EYzWLHB/UZYD
+         ekK87eOXpcYXAJf6MHSJWnB+xEZtoo5hOgQYO5etHkRtjIRpNTDmkuMDV97FjYsA2MdS
+         xWQcD9XpT8spQ81Q+Y3NpFNMuXQ7CJdxWTxJAjvRFcB92xGcvyEcFTiJDqz+h/COvZL3
+         GtDw==
+X-Gm-Message-State: ANoB5pkvcZ4K4+Ysvf/tUun9rq9U9GBDJC94cB9os+IKX86wuj4UwMKD
+        EKvdppnRqajiptyAgjM+8jEwOFtaSNFx
+X-Google-Smtp-Source: AA0mqf5fnncVZW1khFmDmYg++DUvRPG2nDUZ0Ddy3PKN1WNh2y9GXdzQJtAm7i4RSwY8oXq4UeMFoNVAJonJ
 X-Received: from irogers.svl.corp.google.com ([2620:15c:2d4:203:c14c:6035:5882:8faa])
- (user=irogers job=sendgmr) by 2002:a81:742:0:b0:38e:7550:171f with SMTP id
- 63-20020a810742000000b0038e7550171fmr2191297ywh.466.1668645870526; Wed, 16
- Nov 2022 16:44:30 -0800 (PST)
-Date:   Wed, 16 Nov 2022 16:43:53 -0800
+ (user=irogers job=sendgmr) by 2002:a81:1317:0:b0:38d:c597:474f with SMTP id
+ 23-20020a811317000000b0038dc597474fmr16278ywt.183.1668645878185; Wed, 16 Nov
+ 2022 16:44:38 -0800 (PST)
+Date:   Wed, 16 Nov 2022 16:43:54 -0800
 In-Reply-To: <20221117004356.279422-1-irogers@google.com>
-Message-Id: <20221117004356.279422-4-irogers@google.com>
+Message-Id: <20221117004356.279422-5-irogers@google.com>
 Mime-Version: 1.0
 References: <20221117004356.279422-1-irogers@google.com>
 X-Mailer: git-send-email 2.38.1.431.g37b22c650d-goog
-Subject: [PATCH 3/6] tools lib symbol: clean up build output
+Subject: [PATCH 4/6] tools lib perf: Make install_headers clearer
 From:   Ian Rogers <irogers@google.com>
 To:     Alexei Starovoitov <ast@kernel.org>,
         Daniel Borkmann <daniel@iogearbox.net>,
@@ -80,36 +80,27 @@ Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-Missing @ when building libsymbol. Make the install echo specific to
-installing the libsymbol headers.
+Add libperf to the name so that this install_headers build appears
+different to similar targets in different libraries.
 
 Signed-off-by: Ian Rogers <irogers@google.com>
 ---
- tools/lib/symbol/Makefile | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+ tools/lib/perf/Makefile | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/tools/lib/symbol/Makefile b/tools/lib/symbol/Makefile
-index 4c1d6b53032d..ea8707b3442a 100644
---- a/tools/lib/symbol/Makefile
-+++ b/tools/lib/symbol/Makefile
-@@ -77,7 +77,7 @@ include $(srctree)/tools/scripts/Makefile.include
- all: fixdep $(LIBFILE)
- 
- $(SYMBOL_IN): FORCE
--	$(MAKE) $(build)=libsymbol V=1
-+	@$(MAKE) $(build)=libsymbol
- 
- $(LIBFILE): $(SYMBOL_IN)
- 	$(QUIET_AR)$(RM) $@ && $(AR) rcs $@ $(SYMBOL_IN)
-@@ -101,7 +101,7 @@ install_lib: $(LIBFILE)
- 		cp -fpR $(LIBFILE) $(DESTDIR)$(libdir_SQ)
+diff --git a/tools/lib/perf/Makefile b/tools/lib/perf/Makefile
+index 1badc0a04676..a90fb8c6bed4 100644
+--- a/tools/lib/perf/Makefile
++++ b/tools/lib/perf/Makefile
+@@ -188,7 +188,7 @@ install_lib: libs
+ 		cp -fpR $(LIBPERF_ALL) $(DESTDIR)$(libdir_SQ)
  
  install_headers:
 -	$(call QUIET_INSTALL, headers) \
-+	$(call QUIET_INSTALL, libsymbol_headers) \
- 		$(call do_install,kallsyms.h,$(prefix)/include/symbol,644);
- 
- install: install_lib install_headers
++	$(call QUIET_INSTALL, libperf_headers) \
+ 		$(call do_install,include/perf/bpf_perf.h,$(prefix)/include/perf,644); \
+ 		$(call do_install,include/perf/core.h,$(prefix)/include/perf,644); \
+ 		$(call do_install,include/perf/cpumap.h,$(prefix)/include/perf,644); \
 -- 
 2.38.1.431.g37b22c650d-goog
 
