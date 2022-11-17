@@ -2,153 +2,105 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6EC2AC4332F
-	for <linux-perf-users@archiver.kernel.org>; Wed, 16 Nov 2022 23:39:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9B4DBC4332F
+	for <linux-perf-users@archiver.kernel.org>; Thu, 17 Nov 2022 00:44:14 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S238884AbiKPXj6 (ORCPT
+        id S233903AbiKQAoN (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Wed, 16 Nov 2022 18:39:58 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:32774 "EHLO
+        Wed, 16 Nov 2022 19:44:13 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37984 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S233893AbiKPXjV (ORCPT
+        with ESMTP id S233963AbiKQAoL (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Wed, 16 Nov 2022 18:39:21 -0500
-Received: from mail-pj1-x1033.google.com (mail-pj1-x1033.google.com [IPv6:2607:f8b0:4864:20::1033])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7582E6AEDE;
-        Wed, 16 Nov 2022 15:39:14 -0800 (PST)
-Received: by mail-pj1-x1033.google.com with SMTP id h14so105517pjv.4;
-        Wed, 16 Nov 2022 15:39:14 -0800 (PST)
+        Wed, 16 Nov 2022 19:44:11 -0500
+Received: from mail-yw1-x114a.google.com (mail-yw1-x114a.google.com [IPv6:2607:f8b0:4864:20::114a])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E64B367F6B
+        for <linux-perf-users@vger.kernel.org>; Wed, 16 Nov 2022 16:44:07 -0800 (PST)
+Received: by mail-yw1-x114a.google.com with SMTP id 00721157ae682-3697bd55974so3696127b3.15
+        for <linux-perf-users@vger.kernel.org>; Wed, 16 Nov 2022 16:44:07 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20210112;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:sender:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=y+MBjHLXrFB++GMwQ9Qm9dxDqVPjyqYA8sAvvb3VHA8=;
-        b=KO5GR2cRgLhvf8OFPJYQf72Kn7B46DuZgskYrT1iCiFw/RVDAkik+Px1eM3W040SeT
-         0OfNnY+zr1G/FyTiOSN01zXMupTNaKoPplxN4tgDx1xaA3U9rI1pPSaa/+sFH10UOinu
-         bsIjh7005H0PgciKL7SId0FARe/GYKuhLB+l8rJ3Llys8WwVk610mxKoFCHzQXEwqk8B
-         xJwSliW7wOR8DpsylRCRDJtHSCkVD6tBtgDLX5cHLTta/UDAXhNTMgOmXx8l+u29fqLL
-         CsQmmis9KgUrMiqC8joDavEzRljKyUkoMnFD8W6J8GmxSAIyuAR9A63m43RskhPoXZ8N
-         3zzw==
+        d=google.com; s=20210112;
+        h=cc:to:from:subject:mime-version:message-id:date:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=tqqMFjGDF/0cl1fPr35xPtWce5bPWD89nj4+3GOb1z4=;
+        b=BFYjUhrsDiR1+BxbHULASwYMDNbqySno6XJl0aiTiABXUBnXPaMKnRra8Xn2tB/vhG
+         jwylMf1HaJ/jPdg2FmJhihpjsA6XyMGO6XqUUo+ktUjqB3GEhXa8oSSravhLvpFnbg8P
+         2LN5y6b6JmYVtshl+UWhqtKkZyZRpsAAVLLJwGRJ4pvVBlpzyIZCOWRBoCtHLAxNGHoY
+         Yqy+R3vPjSKjuJgt5SDd9Gd5LaAUz6QR/NekqSteMG4OohazKWRQ4sFKXCwtO2xBVur7
+         qP+KVfvU0P/b7vt/D9GaanDxbVFnW6IvtrhxroXv3vKRcS59NJV489LlKf/fzN2EZxXm
+         xAbg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:sender:x-gm-message-state:from
-         :to:cc:subject:date:message-id:reply-to;
-        bh=y+MBjHLXrFB++GMwQ9Qm9dxDqVPjyqYA8sAvvb3VHA8=;
-        b=jIaavhVKVL1GPVLhBUI8x8vPVOblAjYSEAh2JV3NU44mmgY1kKBiXXZVt1IuJx3BFS
-         +UTNNsTw2uDWzv41apQjjf1eiAB5x9xTLUc0dlTIkWXq2PaR7/cnoF06S2eU72GqJN23
-         gRo6DcBpAvxU2yY+K65jO1M0a5acNA8XdrOFC9TlMihl8cajWZ2OetPchOPwBxvvIXSe
-         Rq0FYvKgqB1JJWay73Wfa6/o9d4hEw7lXdx8WiQafiFCgiXei7Bqvx1+b77A61zhSbXD
-         NbgsxXBBa2d/dTS8CQA7wbfSgw1bIAzopTsq/J0XGNgiVmxgR8DBjlXL0jWHbXStbZ37
-         4Hlg==
-X-Gm-Message-State: ANoB5pkB4mL8BRmbpwkqye3VM6Xctx2Kb35BCxwS6E0sU/iPYBCyQwqY
-        czBAEX0l7uxb75iVvVzHm5Q=
-X-Google-Smtp-Source: AA0mqf7CdIlZA5rGskaYKWMRpNCkWk0iFgQEXkA/pjeoi0PBKOmZ+dW4lpWAN9n0AM3KCkZUDz4mbg==
-X-Received: by 2002:a17:902:f383:b0:188:4f86:e4d5 with SMTP id f3-20020a170902f38300b001884f86e4d5mr247842ple.16.1668641953822;
-        Wed, 16 Nov 2022 15:39:13 -0800 (PST)
-Received: from youngsil.svl.corp.google.com ([2620:15c:2d4:203:5b40:ce8c:1f7c:9acc])
-        by smtp.gmail.com with ESMTPSA id bc10-20020a170902930a00b00188ef3ea2b6sm95929plb.262.2022.11.16.15.39.12
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 16 Nov 2022 15:39:13 -0800 (PST)
-Sender: Namhyung Kim <namhyung@gmail.com>
-From:   Namhyung Kim <namhyung@kernel.org>
-To:     Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Jiri Olsa <jolsa@kernel.org>
-Cc:     Ingo Molnar <mingo@kernel.org>,
+        h=cc:to:from:subject:mime-version:message-id:date:x-gm-message-state
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=tqqMFjGDF/0cl1fPr35xPtWce5bPWD89nj4+3GOb1z4=;
+        b=hXnU7nYvqKWaWNqPPHC4tfkrIhxNMK0hJLdLWC3wES3BzlvhetJzXof/bonRWY6z6V
+         AkrWBu5ZLr4A86JGsPNWsz5IYkKwPCdfnXc6vvSGbPSQQ/OTTebdeUCjeKZb6h7qaN6I
+         9MKucqRssO59r5yJFbQRPTkYFxnnRR3gD8+mNzfp3dnXL5DhApwH+N6Qnbnv2534lSCE
+         JlS+sXxZZGQQjutqEOQQKSOwaU8kjg2NuKhG87ekvg7gsPBvly1T+v05g/UCPC1jl8Yy
+         28brgNXm+DtznbPCzjjwWPcueNI/XN4OkvFAhuwP13Gsg5HdjnXtQ1iMm778kwRLidES
+         z+hw==
+X-Gm-Message-State: ACrzQf2iAm3TayN8qSun/K7czAYTCAGb0Galsf3qT5VV/NynIjDF2GHO
+        JwbhvTVMVYKVxJMiPEFAdkmb22w+KH+m
+X-Google-Smtp-Source: AMsMyM52Xjlx1f8M0J7+q4w+9/Kw25ejm+KUg3bd5OUgPQMdu8d/1Ve0ifOKYVqHDvGrR6H3yLtaRPDnttPh
+X-Received: from irogers.svl.corp.google.com ([2620:15c:2d4:203:c14c:6035:5882:8faa])
+ (user=irogers job=sendgmr) by 2002:a05:6902:14e:b0:6cb:e2cd:af57 with SMTP id
+ p14-20020a056902014e00b006cbe2cdaf57mr66209539ybh.284.1668645846447; Wed, 16
+ Nov 2022 16:44:06 -0800 (PST)
+Date:   Wed, 16 Nov 2022 16:43:50 -0800
+Message-Id: <20221117004356.279422-1-irogers@google.com>
+Mime-Version: 1.0
+X-Mailer: git-send-email 2.38.1.431.g37b22c650d-goog
+Subject: [PATCH 0/6] Build output clean up
+From:   Ian Rogers <irogers@google.com>
+To:     Alexei Starovoitov <ast@kernel.org>,
+        Daniel Borkmann <daniel@iogearbox.net>,
+        Andrii Nakryiko <andrii@kernel.org>,
+        Martin KaFai Lau <martin.lau@linux.dev>,
+        Song Liu <song@kernel.org>, Yonghong Song <yhs@fb.com>,
+        John Fastabend <john.fastabend@gmail.com>,
+        KP Singh <kpsingh@kernel.org>,
+        Stanislav Fomichev <sdf@google.com>,
+        Hao Luo <haoluo@google.com>, Jiri Olsa <jolsa@kernel.org>,
         Peter Zijlstra <peterz@infradead.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Ian Rogers <irogers@google.com>,
-        Adrian Hunter <adrian.hunter@intel.com>,
-        linux-perf-users@vger.kernel.org, Leo Yan <leo.yan@linaro.org>,
-        German Gomez <german.gomez@arm.com>,
-        Zhengjun Xing <zhengjun.xing@linux.intel.com>,
-        James Clark <james.clark@arm.com>,
-        Athira Jajeev <atrajeev@linux.vnet.ibm.com>
-Subject: [PATCH 12/12] perf test: Replace data symbol test workload with datasym
-Date:   Wed, 16 Nov 2022 15:38:54 -0800
-Message-Id: <20221116233854.1596378-13-namhyung@kernel.org>
-X-Mailer: git-send-email 2.38.1.584.g0f3c55d4c2-goog
-In-Reply-To: <20221116233854.1596378-1-namhyung@kernel.org>
-References: <20221116233854.1596378-1-namhyung@kernel.org>
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+        Ingo Molnar <mingo@redhat.com>,
+        Arnaldo Carvalho de Melo <acme@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Namhyung Kim <namhyung@kernel.org>,
+        Nicolas Schier <nicolas@fjasle.eu>,
+        Masahiro Yamada <masahiroy@kernel.org>,
+        Ian Rogers <irogers@google.com>, linux-kernel@vger.kernel.org,
+        bpf@vger.kernel.org, linux-perf-users@vger.kernel.org
+Cc:     Stephane Eranian <eranian@google.com>
+Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-So that it can get rid of requirement of a compiler.
+Reduce build spam from commands not prefixed with @. Make
+install_headers targets distinguishable by adding in the library name
+so:
+INSTALL headers
+becomes:
+INSTALL libapi_headers
 
-  $ sudo ./perf test -v 109
-  109: Test data symbol                                                :
-  --- start ---
-  test child forked, pid 844526
-  Recording workload...
-  [ perf record: Woken up 2 times to write data ]
-  [ perf record: Captured and wrote 0.354 MB /tmp/__perf_test.perf.data.GFeZO (4847 samples) ]
-  Cleaning up files...
-  test child finished with 0
-  ---- end ----
-  Test data symbol: Ok
+Ian Rogers (6):
+  tools lib api: clean up install_headers
+  tools lib bpf: Avoid install_headers make warning
+  tools lib symbol: clean up build output
+  tools lib perf: Make install_headers clearer
+  tools lib subcmd: Make install_headers clearer
+  tools lib traceevent: Make install_headers clearer
 
-Cc: Leo Yan <leo.yan@linaro.org>
-Tested-by: James Clark <james.clark@arm.com>
-Signed-off-by: Namhyung Kim <namhyung@kernel.org>
----
- tools/perf/tests/shell/test_data_symbol.sh | 29 +---------------------
- 1 file changed, 1 insertion(+), 28 deletions(-)
+ tools/lib/api/Makefile        | 4 ++--
+ tools/lib/bpf/Makefile        | 1 +
+ tools/lib/perf/Makefile       | 2 +-
+ tools/lib/subcmd/Makefile     | 2 +-
+ tools/lib/symbol/Makefile     | 4 ++--
+ tools/lib/traceevent/Makefile | 4 ++--
+ 6 files changed, 9 insertions(+), 8 deletions(-)
 
-diff --git a/tools/perf/tests/shell/test_data_symbol.sh b/tools/perf/tests/shell/test_data_symbol.sh
-index cd6eb54d235d..d871e6c743ef 100755
---- a/tools/perf/tests/shell/test_data_symbol.sh
-+++ b/tools/perf/tests/shell/test_data_symbol.sh
-@@ -11,13 +11,7 @@ skip_if_no_mem_event() {
- 
- skip_if_no_mem_event || exit 2
- 
--# skip if there's no compiler
--if ! [ -x "$(command -v cc)" ]; then
--	echo "skip: no compiler, install gcc"
--	exit 2
--fi
--
--TEST_PROGRAM=$(mktemp /tmp/__perf_test.program.XXXXX)
-+TEST_PROGRAM="perf test -w datasym"
- PERF_DATA=$(mktemp /tmp/__perf_test.perf.data.XXXXX)
- 
- check_result() {
-@@ -45,31 +39,10 @@ cleanup_files()
- {
- 	echo "Cleaning up files..."
- 	rm -f ${PERF_DATA}
--	rm -f ${TEST_PROGRAM}
- }
- 
- trap cleanup_files exit term int
- 
--# compile test program
--echo "Compiling test program..."
--cat << EOF | cc -o ${TEST_PROGRAM} -x c -
--typedef struct _buf {
--	char data1;
--	char reserved[55];
--	char data2;
--} buf __attribute__((aligned(64)));
--
--static buf buf1;
--
--int main(void) {
--	for (;;) {
--		buf1.data1++;
--		buf1.data2 += buf1.data1;
--	}
--	return 0;
--}
--EOF
--
- echo "Recording workload..."
- 
- # perf mem/c2c internally uses IBS PMU on AMD CPU which doesn't support
 -- 
-2.38.1.584.g0f3c55d4c2-goog
+2.38.1.431.g37b22c650d-goog
 
