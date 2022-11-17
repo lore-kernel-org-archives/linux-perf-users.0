@@ -2,141 +2,82 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 47774C433FE
-	for <linux-perf-users@archiver.kernel.org>; Thu, 17 Nov 2022 05:45:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C1AC4C433FE
+	for <linux-perf-users@archiver.kernel.org>; Thu, 17 Nov 2022 08:25:32 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233725AbiKQFpV (ORCPT
+        id S239506AbiKQIZa (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Thu, 17 Nov 2022 00:45:21 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43210 "EHLO
+        Thu, 17 Nov 2022 03:25:30 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34274 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S233899AbiKQFpU (ORCPT
+        with ESMTP id S233900AbiKQIZR (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Thu, 17 Nov 2022 00:45:20 -0500
-Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTP id 847505EFB1;
-        Wed, 16 Nov 2022 21:45:18 -0800 (PST)
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 2F71713D5;
-        Wed, 16 Nov 2022 21:45:24 -0800 (PST)
-Received: from [10.162.40.18] (unknown [10.162.40.18])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 538693F73B;
-        Wed, 16 Nov 2022 21:45:13 -0800 (PST)
-Message-ID: <a065d948-3b9c-86bf-4a10-45d9c47e7ea1@arm.com>
-Date:   Thu, 17 Nov 2022 11:15:10 +0530
+        Thu, 17 Nov 2022 03:25:17 -0500
+Received: from szxga08-in.huawei.com (szxga08-in.huawei.com [45.249.212.255])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 16E5949B5F
+        for <linux-perf-users@vger.kernel.org>; Thu, 17 Nov 2022 00:25:16 -0800 (PST)
+Received: from dggpemm500024.china.huawei.com (unknown [172.30.72.57])
+        by szxga08-in.huawei.com (SkyGuard) with ESMTP id 4NCXyp5YbTz15Ml9;
+        Thu, 17 Nov 2022 16:24:50 +0800 (CST)
+Received: from dggpemm500002.china.huawei.com (7.185.36.229) by
+ dggpemm500024.china.huawei.com (7.185.36.203) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2375.31; Thu, 17 Nov 2022 16:25:13 +0800
+Received: from localhost.localdomain.localdomain (10.175.113.25) by
+ dggpemm500002.china.huawei.com (7.185.36.229) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2375.31; Thu, 17 Nov 2022 16:25:12 +0800
+From:   Xiongfeng Wang <wangxiongfeng2@huawei.com>
+To:     <adrian.hunter@intel.com>, <peterz@infradead.org>,
+        <ak@linux.intel.com>, <kan.liang@linux.intel.com>,
+        <alexander.shishkin@linux.intel.com>,
+        <alexander.antonov@linux.intel.com>, <acme@kernel.org>,
+        <jolsa@kernel.org>
+CC:     <linux-perf-users@vger.kernel.org>, <yangyingliang@huawei.com>,
+        <wangxiongfeng2@huawei.com>
+Subject: [PATCH v3 0/4] perf/x86/intel/uncore: Fix PCI device reference count leak
+Date:   Thu, 17 Nov 2022 16:43:23 +0800
+Message-ID: <20221117084327.192058-1-wangxiongfeng2@huawei.com>
+X-Mailer: git-send-email 2.20.1
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
- Thunderbird/102.2.2
-Subject: Re: [PATCH V5 6/7] arm64/perf: Add BRBE driver
-Content-Language: en-US
-To:     James Clark <james.clark@arm.com>
-Cc:     Mark Brown <broonie@kernel.org>, Rob Herring <robh@kernel.org>,
-        Marc Zyngier <maz@kernel.org>,
-        Suzuki Poulose <suzuki.poulose@arm.com>,
-        Ingo Molnar <mingo@redhat.com>, linux-kernel@vger.kernel.org,
-        linux-perf-users@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, peterz@infradead.org,
-        acme@kernel.org, mark.rutland@arm.com, will@kernel.org,
-        catalin.marinas@arm.com
-References: <20221107062514.2851047-1-anshuman.khandual@arm.com>
- <20221107062514.2851047-7-anshuman.khandual@arm.com>
- <1d06f05c-0e7f-7648-6b1b-b78e999bc65f@arm.com>
-From:   Anshuman Khandual <anshuman.khandual@arm.com>
-In-Reply-To: <1d06f05c-0e7f-7648-6b1b-b78e999bc65f@arm.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 7BIT
+Content-Type:   text/plain; charset=US-ASCII
+X-Originating-IP: [10.175.113.25]
+X-ClientProxiedBy: dggems701-chm.china.huawei.com (10.3.19.178) To
+ dggpemm500002.china.huawei.com (7.185.36.229)
+X-CFilter-Loop: Reflected
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
+pci_get_device() will increase the reference count for the returned
+pci_dev, and also decrease the reference count for the input parameter
+*from* if it is not NULL. We add missing pci_dev_put() to decrease the
+reference count.
 
 
-On 11/16/22 22:12, James Clark wrote:
-> 
-> 
-> On 07/11/2022 06:25, Anshuman Khandual wrote:
-> [...]
-> 
->> +static void perf_branch_to_brbcr(struct pmu_hw_events *cpuc, int branch_type)
->> +{
->> +	cpuc->brbcr = (BRBCR_EL1_CC | BRBCR_EL1_MPRED);
->> +
->> +	if (branch_type & PERF_SAMPLE_BRANCH_USER)
->> +		cpuc->brbcr |= BRBCR_EL1_E0BRE;
->> +
->> +	if (branch_type & PERF_SAMPLE_BRANCH_NO_CYCLES)
->> +		cpuc->brbcr &= ~BRBCR_EL1_CC;
->> +
->> +	if (branch_type & PERF_SAMPLE_BRANCH_NO_FLAGS)
->> +		cpuc->brbcr &= ~BRBCR_EL1_MPRED;
->> +
->> +	if (branch_type & PERF_SAMPLE_BRANCH_KERNEL)
->> +		cpuc->brbcr |= BRBCR_EL1_E1BRE;
->> +	else
->> +		return;
->> +
->> +	/*
->> +	 * The exception and exception return branches could be
->> +	 * captured only when the event has necessary privilege
->> +	 * indicated via branch type PERF_SAMPLE_BRANCH_KERNEL,
->> +	 * which has been ascertained in generic perf. Please
->> +	 * refer perf_copy_attr() for more details.
->> +	 */
->> +	if (branch_type & PERF_SAMPLE_BRANCH_ANY) {
->> +		cpuc->brbcr |= BRBCR_EL1_EXCEPTION;
->> +		cpuc->brbcr |= BRBCR_EL1_ERTN;
-> 
-> Because this comes after the PERF_SAMPLE_BRANCH_KERNEL check, it's
-> impossible to get syscall records from userspace. When you enable kernel
-> branch records, the buffer always fills up before it gets to userspace.
+ChangeLog:
+v1->v2:
+  move pci_dev_put() to the last of function sad_cfg_iio_topology()
+  add fixes for snr_uncore_mmio_map(), hswep_has_limit_sbox() and __uncore_imc_init_box()
+v2->v3:
+  split one patch into several patches, one patch for one fix
+  
 
-Just to summerize.
+Xiongfeng Wang (4):
+  perf/x86/intel/uncore: Fix reference count leak in
+    sad_cfg_iio_topology()
+  perf/x86/intel/uncore: Fix reference count leak in
+    hswep_has_limit_sbox()
+  perf/x86/intel/uncore: Fix reference count leak in
+    snr_uncore_mmio_map()
+  perf/x86/intel/uncore: Fix reference count leak in
+    __uncore_imc_init_box()
 
-System call [user_addr -> kernel_addr] and return [kernel_addr -> user_addr]
-records are impossible to be captured, because
+ arch/x86/events/intel/uncore_snb.c   |  3 +++
+ arch/x86/events/intel/uncore_snbep.c | 11 ++++++++++-
+ 2 files changed, 13 insertions(+), 1 deletion(-)
 
-- Without PERF_SAMPLE_BRANCH_KERNEL, BRBCR_EL1_EXCEPTION/ERTN are not set
-- With PERF_SAMPLE_BRANCH_KERNEL, buffer fills up with in kernel branches
+-- 
+2.20.1
 
-Did you try with latest fix, that clears the paused BRBE after reading branch
-records during PMU interrupt ? That fix creates much more samples than before.
-
-> 
-> Can you move this to the top so that it can be set if either
-> PERF_SAMPLE_BRANCH_USER or PERF_SAMPLE_BRANCH_KERNEL is set. The
-
-Why should they depend on privilege filters i.e PERF_SAMPLE_BRANCH_USER/KERNEL
-rather than just branch filters PERF_SAMPLE_BRANCH_ANY/ANY_CALL/ANY_RETURN ?
-
-> hardware already handles the security by giving partial records with the
-> kernel part zeroed out so I don't think the driver needs to add any
-> additional rules other than setting BRBCR_EL1_E1BRE or BRBCR_EL1_E0BRE.
-
-Basically BRBCR_EL1_EXCEPTION/BRBCR_EL1_ERTN should be treated like any other
-branch filter rather than privilege filters as is the case now ?
-
-> 
-> For example I moved it to the top, removed the return below and then I
-> get syscall partial records:
-> 
-> ....  5: 0000000000745d0c -> 0000000000000000 0 cycles  P   9fbfbfbf SYSCALL
-> 
-> I also get ERETS but with only the userspace part set:
-> 
-> .....  4: 0000000000000000 -> 0000000000745d10 0 cycles  P   9fbfbfbf ERET
-But with both user and kernel privilege filters being set, these should have
-been complete branch records containing both user and kernel addresses ?
-
-> 
->> +		return;
->> +	}
->> +
->> +	if (branch_type & PERF_SAMPLE_BRANCH_ANY_CALL)
->> +		cpuc->brbcr |= BRBCR_EL1_EXCEPTION;
->> +
->> +	if (branch_type & PERF_SAMPLE_BRANCH_ANY_RETURN)
->> +		cpuc->brbcr |= BRBCR_EL1_ERTN;
->> +}
->> +
-
-[....]
