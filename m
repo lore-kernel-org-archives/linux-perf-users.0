@@ -2,127 +2,107 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D2331C433FE
-	for <linux-perf-users@archiver.kernel.org>; Thu, 17 Nov 2022 14:44:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 187A9C4332F
+	for <linux-perf-users@archiver.kernel.org>; Thu, 17 Nov 2022 15:40:23 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S234932AbiKQOoF (ORCPT
+        id S239460AbiKQPkU (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Thu, 17 Nov 2022 09:44:05 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38098 "EHLO
+        Thu, 17 Nov 2022 10:40:20 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51746 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S239808AbiKQOnc (ORCPT
+        with ESMTP id S239562AbiKQPkH (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Thu, 17 Nov 2022 09:43:32 -0500
-Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 29A8D2EE;
-        Thu, 17 Nov 2022 06:43:29 -0800 (PST)
+        Thu, 17 Nov 2022 10:40:07 -0500
+Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id AF5062609;
+        Thu, 17 Nov 2022 07:40:06 -0800 (PST)
 Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id 9327561F30;
-        Thu, 17 Nov 2022 14:43:28 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 00237C43145;
-        Thu, 17 Nov 2022 14:43:27 +0000 (UTC)
+        by dfw.source.kernel.org (Postfix) with ESMTPS id E336F61F86;
+        Thu, 17 Nov 2022 15:40:05 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 15C57C433C1;
+        Thu, 17 Nov 2022 15:40:05 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1668696208;
-        bh=PtQQuZh4x6gkV/7zv1jhLBJM1shrxLNzaR2wdAV4Bd0=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=kB2sPWpNiRz3Ae5/wQ0URqxkNLVMl/RxfCfciicYJPXxVc5Y2XSJ/yPnX2YBvz0cD
-         OTa9l2PKqLK95LJ7u8UH8tINKpDUs2hElD9P4RJm1SAeWti+PD9Q3rUiejlkp9BE/p
-         pEbgHD6MSE+4y1YjRNh9F0tLmC3lm9lQEYHj1MqDbLg4JkFxyhKwqLJFMRlT3Xza/1
-         XYUpqClvX3tNAGecFCaCLZ/Oam405WgZIJiYAtNJUhfqbc48PMmACkcw3iI2loi24S
-         dkiHMLnpG0EOssXf+F24ZRWgvAStUW3PMJdF2XcNZnI3DcY5+zV56DDjy7wH3CfUO0
-         /7jyoYL6te+/g==
-Received: by mail-lj1-f176.google.com with SMTP id b9so2987017ljr.5;
-        Thu, 17 Nov 2022 06:43:27 -0800 (PST)
-X-Gm-Message-State: ANoB5pmJnfkM50EWKbOtF7XWvUPLdtERekjFDZYifx61PRFV8wX5gmKp
-        WXvkZ9QK22dOUFwoPABRiUS7Jy0uDVHBtBsJ0Q==
-X-Google-Smtp-Source: AA0mqf7jB2iKLFyRkgEPhmDznVrq+mWMaPm8RVbm9kLapVF5jFapO3LQ2aTW4BZ64Qc2gAP6XYENyA06X1A0z4BBREg=
-X-Received: by 2002:a05:651c:1690:b0:277:2b10:bf69 with SMTP id
- bd16-20020a05651c169000b002772b10bf69mr1213015ljb.392.1668696205975; Thu, 17
- Nov 2022 06:43:25 -0800 (PST)
-MIME-Version: 1.0
-References: <20220825-arm-spe-v8-7-v3-0-87682f78caac@kernel.org>
-In-Reply-To: <20220825-arm-spe-v8-7-v3-0-87682f78caac@kernel.org>
-From:   Rob Herring <robh@kernel.org>
-Date:   Thu, 17 Nov 2022 08:43:17 -0600
-X-Gmail-Original-Message-ID: <CAL_Jsq+WOjoPW0FDSa=B9-aCMwXC3tc5HUqokoVkKUucKgqanQ@mail.gmail.com>
-Message-ID: <CAL_Jsq+WOjoPW0FDSa=B9-aCMwXC3tc5HUqokoVkKUucKgqanQ@mail.gmail.com>
-Subject: Re: [PATCH v3 0/8] perf: Arm SPEv1.2 support
-To:     Namhyung Kim <namhyung@kernel.org>, Will Deacon <will@kernel.org>,
-        Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Jiri Olsa <jolsa@kernel.org>,
+        s=k20201202; t=1668699605;
+        bh=Mc4ySWjClUjGsVC0d00yorexigtt/BL4IyUH3iK7Dms=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=esYymimzQxLQyT1zPNhzzNLMA9P11nnWOpGfhtQLbqqh32cB/bCL8RMeYTXChwavj
+         m6D777/MjK1+PH1gMGESslKB28HOG3RkUWpndfXnTwvKVwmorWa85rssjI4He7JrOX
+         XC/T0uRDs7yoIYUuvo4QVJR9VRsfmpdAzECzg0pdqGF/bSm0R3/GpnEpeTfVPmmvtK
+         lWi6jzj5dCx9iz4/Y1lBHmh1uZbOWC8EdPc3hjE6IvyKHZMZjg1vieesWw+8IrPkmz
+         P1wzog4efm6zpl9UzRl4JqsPRZrm6zypANXpCmDa3H4VWWJmMcI6HLwaqmfeyCMWOb
+         5LXb2WH+w7xnw==
+Received: by quaco.ghostprotocols.net (Postfix, from userid 1000)
+        id 3AF294034E; Thu, 17 Nov 2022 12:40:00 -0300 (-03)
+Date:   Thu, 17 Nov 2022 12:40:00 -0300
+From:   Arnaldo Carvalho de Melo <acme@kernel.org>
+To:     Ian Rogers <irogers@google.com>,
+        Andrii Nakryiko <andrii@kernel.org>
+Cc:     Alexei Starovoitov <ast@kernel.org>,
+        Daniel Borkmann <daniel@iogearbox.net>,
+        Martin KaFai Lau <martin.lau@linux.dev>,
+        Song Liu <song@kernel.org>, Yonghong Song <yhs@fb.com>,
+        John Fastabend <john.fastabend@gmail.com>,
+        KP Singh <kpsingh@kernel.org>,
+        Stanislav Fomichev <sdf@google.com>,
+        Hao Luo <haoluo@google.com>, Jiri Olsa <jolsa@kernel.org>,
         Peter Zijlstra <peterz@infradead.org>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Marc Zyngier <maz@kernel.org>,
-        Oliver Upton <oliver.upton@linux.dev>,
         Ingo Molnar <mingo@redhat.com>,
-        Suzuki K Poulose <suzuki.poulose@arm.com>,
-        James Morse <james.morse@arm.com>,
-        Alexandru Elisei <alexandru.elisei@arm.com>
-Cc:     kvmarm@lists.linux.dev, linux-perf-users@vger.kernel.org,
-        linux-kernel@vger.kernel.org, James Clark <james.clark@arm.com>,
-        Mark Brown <broonie@kernel.org>,
-        linux-arm-kernel@lists.infradead.org, kvmarm@lists.cs.columbia.edu
-Content-Type: text/plain; charset="UTF-8"
+        Mark Rutland <mark.rutland@arm.com>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Namhyung Kim <namhyung@kernel.org>,
+        Nicolas Schier <nicolas@fjasle.eu>,
+        Masahiro Yamada <masahiroy@kernel.org>,
+        linux-kernel@vger.kernel.org, bpf@vger.kernel.org,
+        linux-perf-users@vger.kernel.org,
+        Stephane Eranian <eranian@google.com>
+Subject: Re: [PATCH 0/6] Build output clean up
+Message-ID: <Y3ZV0FDW70ADoIYE@kernel.org>
+References: <20221117004356.279422-1-irogers@google.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20221117004356.279422-1-irogers@google.com>
+X-Url:  http://acmel.wordpress.com
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-On Fri, Nov 4, 2022 at 10:55 AM Rob Herring <robh@kernel.org> wrote:
->
-> This series adds support for Arm SPEv1.2 which is part of the
-> Armv8.7/Armv9.2 architecture. There's 2 new features that affect the
-> kernel: a new event filter bit, branch 'not taken', and an inverted
-> event filter register.
->
-> Since this support adds new registers and fields, first the SPE register
-> defines are converted to automatic generation.
->
-> Note that the 'config3' addition in sysfs format files causes SPE to
-> break. A stable fix e552b7be12ed ("perf: Skip and warn on unknown format
-> 'configN' attrs") landed in v6.1-rc1.
->
-> The perf tool side changes are available here[1].
->
-> Tested on FVP.
->
-> [1] https://lore.kernel.org/all/20220914-arm-perf-tool-spe1-2-v2-v4-0-83c098e6212e@kernel.org/
->
-> Signed-off-by: Rob Herring <robh@kernel.org>
-> ---
-> Changes in v3:
-> - Add some more missing SPE register fields and use Enums for some
->   fields
-> - Use the new PMSIDR_EL1 register Enum defines in the SPE driver
-> - Link to v2: https://lore.kernel.org/r/20220825-arm-spe-v8-7-v2-0-e37322d68ac0@kernel.org
->
-> Changes in v2:
-> - Convert the SPE register defines to automatic generation
-> - Fixed access to SYS_PMSNEVFR_EL1 when not present
-> - Rebase on v6.1-rc1
-> - Link to v1: https://lore.kernel.org/r/20220825-arm-spe-v8-7-v1-0-c75b8d92e692@kernel.org
->
-> ---
-> Rob Herring (8):
->       perf: arm_spe: Use feature numbering for PMSEVFR_EL1 defines
->       arm64: Drop SYS_ from SPE register defines
->       arm64/sysreg: Convert SPE registers to automatic generation
->       perf: arm_spe: Drop BIT() and use FIELD_GET/PREP accessors
->       perf: arm_spe: Use new PMSIDR_EL1 register enums
->       perf: arm_spe: Support new SPEv1.2/v8.7 'not taken' event
->       perf: Add perf_event_attr::config3
->       perf: arm_spe: Add support for SPEv1.2 inverted event filtering
->
->  arch/arm64/include/asm/el2_setup.h |   6 +-
->  arch/arm64/include/asm/sysreg.h    |  99 +++--------------------
->  arch/arm64/kvm/debug.c             |   2 +-
->  arch/arm64/kvm/hyp/nvhe/debug-sr.c |   2 +-
->  arch/arm64/tools/sysreg            | 139 +++++++++++++++++++++++++++++++++
->  drivers/perf/arm_spe_pmu.c         | 156 ++++++++++++++++++++++++-------------
->  include/uapi/linux/perf_event.h    |   3 +
->  7 files changed, 257 insertions(+), 150 deletions(-)
+Em Wed, Nov 16, 2022 at 04:43:50PM -0800, Ian Rogers escreveu:
+> Reduce build spam from commands not prefixed with @. Make
+> install_headers targets distinguishable by adding in the library name
+> so:
+> INSTALL headers
+> becomes:
+> INSTALL libapi_headers
+> 
+> Ian Rogers (6):
+>   tools lib api: clean up install_headers
+>   tools lib bpf: Avoid install_headers make warning
+>   tools lib symbol: clean up build output
+>   tools lib perf: Make install_headers clearer
+>   tools lib subcmd: Make install_headers clearer
+>   tools lib traceevent: Make install_headers clearer
 
-Will, any comments on this series?
+Andrii, are you ok with that? Can I carry this on my next (perf/core)
+branch?
+
+Testing it now.
+
+- Arnaldo
+ 
+>  tools/lib/api/Makefile        | 4 ++--
+>  tools/lib/bpf/Makefile        | 1 +
+>  tools/lib/perf/Makefile       | 2 +-
+>  tools/lib/subcmd/Makefile     | 2 +-
+>  tools/lib/symbol/Makefile     | 4 ++--
+>  tools/lib/traceevent/Makefile | 4 ++--
+>  6 files changed, 9 insertions(+), 8 deletions(-)
+> 
+> -- 
+> 2.38.1.431.g37b22c650d-goog
+
+-- 
+
+- Arnaldo
