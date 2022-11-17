@@ -2,334 +2,97 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 209BDC4332F
-	for <linux-perf-users@archiver.kernel.org>; Thu, 17 Nov 2022 22:51:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AECD5C4332F
+	for <linux-perf-users@archiver.kernel.org>; Thu, 17 Nov 2022 22:52:39 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231194AbiKQWvA (ORCPT
+        id S234510AbiKQWwi (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Thu, 17 Nov 2022 17:51:00 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47664 "EHLO
+        Thu, 17 Nov 2022 17:52:38 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49248 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S240621AbiKQWuQ (ORCPT
+        with ESMTP id S235197AbiKQWwV (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Thu, 17 Nov 2022 17:50:16 -0500
-Received: from mail-yw1-x1149.google.com (mail-yw1-x1149.google.com [IPv6:2607:f8b0:4864:20::1149])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D7BDA6712D
-        for <linux-perf-users@vger.kernel.org>; Thu, 17 Nov 2022 14:50:13 -0800 (PST)
-Received: by mail-yw1-x1149.google.com with SMTP id 00721157ae682-368994f4bc0so32714607b3.14
-        for <linux-perf-users@vger.kernel.org>; Thu, 17 Nov 2022 14:50:13 -0800 (PST)
+        Thu, 17 Nov 2022 17:52:21 -0500
+Received: from mail-wm1-x330.google.com (mail-wm1-x330.google.com [IPv6:2a00:1450:4864:20::330])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 84BA065E42
+        for <linux-perf-users@vger.kernel.org>; Thu, 17 Nov 2022 14:52:20 -0800 (PST)
+Received: by mail-wm1-x330.google.com with SMTP id o30so2424104wms.2
+        for <linux-perf-users@vger.kernel.org>; Thu, 17 Nov 2022 14:52:20 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=google.com; s=20210112;
-        h=cc:to:from:subject:references:mime-version:message-id:in-reply-to
-         :date:from:to:cc:subject:date:message-id:reply-to;
-        bh=5g4stZb5GhZxbwVvGKfu2i1DjHI8byuVQmgsHRcsgOA=;
-        b=LHPRuEbvEA2rgcRwJLn55niGiqPobJ8yItLkMOoFhex+zXR35sPs1zvoctcWOXHW6q
-         8SzA1FHfSDSiJwE2ebDYlCWjq5YtNoH1DdYCWdx2JyOkwrn6gvKTAK2qt36Qtx1PzV/m
-         4ULpFYaKJCYLSSqMI1Pxuy7d6/fQ9Fmwv8N5WVUD/o0bMbsiuAKKTHVdp5K9lv09endd
-         taxR7V4H1QgTEo1h/1P6qVOxLW5Nh9sI+WQ1FxfKlkvJKGi7Fkn3DLY4KV+dMxZiZ0ey
-         EejFFryTUFGqnDMXZ2WjaYZm1OboySBe9RBq19J5z5mxYBKjsC+ukO7exjIA7FoowW4f
-         sxsA==
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:from:to:cc:subject:date:message-id:reply-to;
+        bh=Wt8mo/vmbZwNG8GL/TKOQ4X0XW2Ob2p8e2KGFxJx1qo=;
+        b=S81v9zXCrlVa1P7JdBW/JpWc4PV1I/azzGigr+dVNTPAvkNJSd66X2QQ4AsI0Jvesb
+         BYu6xt9q+UIyPvvli2lQEImOd5npZYrtQzAA0tUzUTIPhuADa1svox4+UaWvWqvgx5+t
+         ieDx11JNpPMr9OgXPQccUR8OazG0Qmhd13bzqwJuzTmwoeJiiGQ6BNnIH0qmn/R7IrGV
+         OdQVhTNA5vTqoaTP1P7W+5EqyWsJ6k866/hxaCYaM09p9e8VTdIuhncN579tXoDGsqz2
+         ujwMrksk8nxB+dAFINDJhS0onaCXT3E62y/QAlxGzFsube6XYTVtJScTjdKJrc3SXay6
+         7i2Q==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=cc:to:from:subject:references:mime-version:message-id:in-reply-to
-         :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=5g4stZb5GhZxbwVvGKfu2i1DjHI8byuVQmgsHRcsgOA=;
-        b=ygOHiOs37bbVFiYntCo2kTpNyHUaTaOdouPvcLZVlIXc5fgJCtF/dJopguPUWJ699R
-         A0PgVzMXpdG41C22TubBajzUl3oD9hwFhASFwJyGwswvYD7KmAk6i3Svilgf0Dy/JnLB
-         mNFAWuPAgsTWFcN1jZ01DoEiEXd9HUkMcy9g5ZaTr5SyE+c70TxWPKy4jWl6m/m+rBVs
-         Io/m52y8zouhn32c3BS/RU51lSKTceivw9olxdHpG2Tqw1dV6zQYNluyHqRGL5BZlnN5
-         0XZDfzXrBzTuqqTDchtIjJ2nwA2UwtyJRBlKw4l9744yU4VWL+6shJKTfHpKcngHlOu2
-         9mjg==
-X-Gm-Message-State: ANoB5pkIuTHCJGdzkPo8CNAqi15DkjkOdlwYybpeZKGmhj6omnpOOSO2
-        lG7aX6025tXDaYN7TmpFLFPSwIeqQB/X
-X-Google-Smtp-Source: AA0mqf7ZSsdxktgQi+Xfz0RyTIOCliXhrMouXEdSZzQCaz0F2Z2qQfw8Ff4MDPUGtjtdFWMKw2CtD7TMPjaa
-X-Received: from irogers.svl.corp.google.com ([2620:15c:2d4:203:3f1e:c462:d6b8:fba8])
- (user=irogers job=sendgmr) by 2002:a05:690c:788:b0:38f:b0ef:4700 with SMTP id
- bw8-20020a05690c078800b0038fb0ef4700mr4133986ywb.263.1668725413131; Thu, 17
- Nov 2022 14:50:13 -0800 (PST)
-Date:   Thu, 17 Nov 2022 14:49:51 -0800
-In-Reply-To: <20221117224952.358639-1-irogers@google.com>
-Message-Id: <20221117224952.358639-2-irogers@google.com>
-Mime-Version: 1.0
-References: <20221117224952.358639-1-irogers@google.com>
-X-Mailer: git-send-email 2.38.1.584.g0f3c55d4c2-goog
-Subject: [PATCH v1 1/2] perf build: Require libtraceevent from the system
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=Wt8mo/vmbZwNG8GL/TKOQ4X0XW2Ob2p8e2KGFxJx1qo=;
+        b=fYjF1+ckxhJhoVr2kSL9uXGz1g1eTiZU1TJmZZswyFGSZrHZC827xM40ZA9yCAFeNI
+         YsIdq0IAwvtVR99y4yFkU6WD2TEXVxg7i0Px/dOsDT8eYR5RgUhfZZ7ZGFudxwddAfgf
+         tEY7iXK5YFd8hDUPYmQEgOqOETHCowu3pbb9Mx9jTXVWQPEpy7dKps06NyTwjPREXhNR
+         LEmSrG1N/surbTTaSVMRSfvMHQIk8RHnF/FtVgdTlegzpDWxFiqFb/hEQpyjPtI0r64b
+         Zhwp4Ck80agw6qgt6sFHiyvOdgICF98YhfIkqgENZl8JGJ7/xy7YUhDMg+ZK3T6voYz9
+         OvfQ==
+X-Gm-Message-State: ANoB5pkuOi6sHuiWofyajmBRzIFptYYdrABvXh6sd4jJE63i7glXoSjy
+        Lb4Q/aFIaj/ge7lHcI/Tf7Ql6JAvlve2LvIllMQbN59ckervGg==
+X-Google-Smtp-Source: AA0mqf7I7gZKcrogPJVyhv0VubDrk/oH7agbpOC6L9wKsryHGMj4QrtQY59KLOsHOGRRapuVENIWQjQ01+0QCtrGqTA=
+X-Received: by 2002:a05:600c:4920:b0:3cf:8b23:549c with SMTP id
+ f32-20020a05600c492000b003cf8b23549cmr2947166wmp.174.1668725538850; Thu, 17
+ Nov 2022 14:52:18 -0800 (PST)
+MIME-Version: 1.0
+References: <CAP-5=fWxAjEia-Qbm0RVzKOxyiod8rUOBieqaGK=DtQboDe3Qw@mail.gmail.com>
+ <20221117134250.532a44c9@gandalf.local.home>
+In-Reply-To: <20221117134250.532a44c9@gandalf.local.home>
 From:   Ian Rogers <irogers@google.com>
-To:     Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Jiri Olsa <jolsa@kernel.org>,
-        Namhyung Kim <namhyung@kernel.org>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Masami Hiramatsu <mhiramat@kernel.org>,
-        linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org,
+Date:   Thu, 17 Nov 2022 14:52:06 -0800
+Message-ID: <CAP-5=fUmWPz8ZyfuXu929VZkRNXKmD0PCX9WwZNWu+17-ENKiw@mail.gmail.com>
+Subject: Re: Remove traceevent from tools/lib
+To:     Steven Rostedt <rostedt@goodmis.org>
+Cc:     Arnaldo Carvalho de Melo <acme@kernel.org>,
         Steven Rostedt <rostedt@google.com>,
+        Namhyung Kim <namhyung@kernel.org>,
+        Jiri Olsa <jolsa@kernel.org>,
         Adrian Hunter <adrian.hunter@intel.com>,
+        LKML <linux-kernel@vger.kernel.org>,
+        linux-perf-users <linux-perf-users@vger.kernel.org>,
         Linux Trace Devel <linux-trace-devel@vger.kernel.org>
-Cc:     Stephane Eranian <eranian@google.com>,
-        Ian Rogers <irogers@google.com>
 Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-Unconditionally require libtraceevent to come from the system. Force
-the determination of the libtracefs version if it is present.
+On Thu, Nov 17, 2022 at 10:42 AM Steven Rostedt <rostedt@goodmis.org> wrote:
+>
+> On Thu, 17 Nov 2022 09:59:46 -0800
+> Ian Rogers <irogers@google.com> wrote:
+>
+> > Means that perf is cleanly(ish) separated from libraries in tools/lib.
+> > traceevent in tools/lib is out of date (~2years - version 1.1.0 whilst
+> > the latest is 1.6.3 [1]) . Should we delete traceevent from tools/lib
+>
+> Yes please!
+>
+> Strongly-acked-by: Steven Rostedt (Google) <rostedt@goodmis.org>
 
-Signed-off-by: Ian Rogers <irogers@google.com>
----
- tools/perf/Makefile.config | 51 +++++++++-----------
- tools/perf/Makefile.perf   | 95 ++------------------------------------
- 2 files changed, 28 insertions(+), 118 deletions(-)
+I sent v1 patches:
+https://lore.kernel.org/lkml/20221117224952.358639-1-irogers@google.com/
 
-diff --git a/tools/perf/Makefile.config b/tools/perf/Makefile.config
-index 9cc3c48f3288..38dd686277c1 100644
---- a/tools/perf/Makefile.config
-+++ b/tools/perf/Makefile.config
-@@ -1182,34 +1182,29 @@ ifdef LIBPFM4
-   endif
- endif
- 
--ifdef LIBTRACEEVENT_DYNAMIC
--  $(call feature_check,libtraceevent)
--  ifeq ($(feature-libtraceevent), 1)
--    EXTLIBS += -ltraceevent
--    LIBTRACEEVENT_VERSION := $(shell $(PKG_CONFIG) --modversion libtraceevent)
--    LIBTRACEEVENT_VERSION_1 := $(word 1, $(subst ., ,$(LIBTRACEEVENT_VERSION)))
--    LIBTRACEEVENT_VERSION_2 := $(word 2, $(subst ., ,$(LIBTRACEEVENT_VERSION)))
--    LIBTRACEEVENT_VERSION_3 := $(word 3, $(subst ., ,$(LIBTRACEEVENT_VERSION)))
--    LIBTRACEEVENT_VERSION_CPP := $(shell expr $(LIBTRACEEVENT_VERSION_1) \* 255 \* 255 + $(LIBTRACEEVENT_VERSION_2) \* 255 + $(LIBTRACEEVENT_VERSION_3))
--    CFLAGS += -DLIBTRACEEVENT_VERSION=$(LIBTRACEEVENT_VERSION_CPP)
--  else
--    dummy := $(error Error: No libtraceevent devel library found, please install libtraceevent-devel);
--  endif
--endif
--
--ifdef LIBTRACEFS_DYNAMIC
--  $(call feature_check,libtracefs)
--  ifeq ($(feature-libtracefs), 1)
--    EXTLIBS += -ltracefs
--    LIBTRACEFS_VERSION := $(shell $(PKG_CONFIG) --modversion libtracefs)
--    LIBTRACEFS_VERSION_1 := $(word 1, $(subst ., ,$(LIBTRACEFS_VERSION)))
--    LIBTRACEFS_VERSION_2 := $(word 2, $(subst ., ,$(LIBTRACEFS_VERSION)))
--    LIBTRACEFS_VERSION_3 := $(word 3, $(subst ., ,$(LIBTRACEFS_VERSION)))
--    LIBTRACEFS_VERSION_CPP := $(shell expr $(LIBTRACEFS_VERSION_1) \* 255 \* 255 + $(LIBTRACEFS_VERSION_2) \* 255 + $(LIBTRACEFS_VERSION_3))
--    CFLAGS += -DLIBTRACEFS_VERSION=$(LIBTRACEFS_VERSION_CPP)
--  else
--    dummy := $(error Error: No libtracefs devel library found, please install libtracefs-dev);
--  endif
-+# libtraceevent is a required dependency picked up from the system.
-+$(call feature_check,libtraceevent)
-+ifeq ($(feature-libtraceevent), 1)
-+  EXTLIBS += -ltraceevent
-+  LIBTRACEEVENT_VERSION := $(shell $(PKG_CONFIG) --modversion libtraceevent)
-+  LIBTRACEEVENT_VERSION_1 := $(word 1, $(subst ., ,$(LIBTRACEEVENT_VERSION)))
-+  LIBTRACEEVENT_VERSION_2 := $(word 2, $(subst ., ,$(LIBTRACEEVENT_VERSION)))
-+  LIBTRACEEVENT_VERSION_3 := $(word 3, $(subst ., ,$(LIBTRACEEVENT_VERSION)))
-+  LIBTRACEEVENT_VERSION_CPP := $(shell expr $(LIBTRACEEVENT_VERSION_1) \* 255 \* 255 + $(LIBTRACEEVENT_VERSION_2) \* 255 + $(LIBTRACEEVENT_VERSION_3))
-+  CFLAGS += -DLIBTRACEEVENT_VERSION=$(LIBTRACEEVENT_VERSION_CPP)
-+else
-+  dummy := $(error Error: libtraceevent is missing, please install libtraceevent-dev)
-+endif
-+
-+$(call feature_check,libtracefs)
-+ifeq ($(feature-libtracefs), 1)
-+  EXTLIBS += -ltracefs
-+  LIBTRACEFS_VERSION := $(shell $(PKG_CONFIG) --modversion libtracefs)
-+  LIBTRACEFS_VERSION_1 := $(word 1, $(subst ., ,$(LIBTRACEFS_VERSION)))
-+  LIBTRACEFS_VERSION_2 := $(word 2, $(subst ., ,$(LIBTRACEFS_VERSION)))
-+  LIBTRACEFS_VERSION_3 := $(word 3, $(subst ., ,$(LIBTRACEFS_VERSION)))
-+  LIBTRACEFS_VERSION_CPP := $(shell expr $(LIBTRACEFS_VERSION_1) \* 255 \* 255 + $(LIBTRACEFS_VERSION_2) \* 255 + $(LIBTRACEFS_VERSION_3))
-+  CFLAGS += -DLIBTRACEFS_VERSION=$(LIBTRACEFS_VERSION_CPP)
- endif
- 
- # Among the variables below, these:
-diff --git a/tools/perf/Makefile.perf b/tools/perf/Makefile.perf
-index 59c4e8f9b014..2e5617b64046 100644
---- a/tools/perf/Makefile.perf
-+++ b/tools/perf/Makefile.perf
-@@ -128,10 +128,6 @@ include ../scripts/utilities.mak
- #
- # Define BUILD_BPF_SKEL to enable BPF skeletons
- #
--# Define LIBTRACEEVENT_DYNAMIC to enable libtraceevent dynamic linking
--#
--# Define LIBTRACEFS_DYNAMIC to enable libtracefs dynamic linking
--#
- 
- # As per kernel Makefile, avoid funny character set dependencies
- unexport LC_ALL
-@@ -242,10 +238,6 @@ sub-make: fixdep
- else # force_fixdep
- 
- LIBAPI_DIR      = $(srctree)/tools/lib/api/
--ifndef LIBTRACEEVENT_DYNAMIC
--LIBTRACEEVENT_DIR = $(srctree)/tools/lib/traceevent/
--LIBTRACEEVENT_PLUGINS_DIR = $(LIBTRACEEVENT_DIR)/plugins
--endif
- LIBBPF_DIR      = $(srctree)/tools/lib/bpf/
- LIBSUBCMD_DIR   = $(srctree)/tools/lib/subcmd/
- LIBSYMBOL_DIR   = $(srctree)/tools/lib/symbol/
-@@ -295,31 +287,6 @@ SCRIPT_SH += perf-iostat.sh
- grep-libs = $(filter -l%,$(1))
- strip-libs = $(filter-out -l%,$(1))
- 
--ifndef LIBTRACEEVENT_DYNAMIC
--ifneq ($(OUTPUT),)
--  LIBTRACEEVENT_OUTPUT = $(abspath $(OUTPUT))/libtraceevent
--else
--  LIBTRACEEVENT_OUTPUT = $(CURDIR)/libtraceevent
--endif
--LIBTRACEEVENT_PLUGINS_OUTPUT = $(LIBTRACEEVENT_OUTPUT)_plugins
--LIBTRACEEVENT_DESTDIR = $(LIBTRACEEVENT_OUTPUT)
--LIBTRACEEVENT_PLUGINS_DESTDIR = $(LIBTRACEEVENT_PLUGINS_OUTPUT)
--LIBTRACEEVENT_INCLUDE = $(LIBTRACEEVENT_DESTDIR)/include
--LIBTRACEEVENT = $(LIBTRACEEVENT_OUTPUT)/libtraceevent.a
--export LIBTRACEEVENT
--LIBTRACEEVENT_DYNAMIC_LIST = $(LIBTRACEEVENT_PLUGINS_OUTPUT)/libtraceevent-dynamic-list
--CFLAGS += -I$(LIBTRACEEVENT_OUTPUT)/include
--#
--# The static build has no dynsym table, so this does not work for
--# static build. Looks like linker starts to scream about that now
--# (in Fedora 26) so we need to switch it off for static build.
--DYNAMIC_LIST_LDFLAGS               = -Xlinker --dynamic-list=$(LIBTRACEEVENT_DYNAMIC_LIST)
--LIBTRACEEVENT_DYNAMIC_LIST_LDFLAGS = $(if $(findstring -static,$(LDFLAGS)),,$(DYNAMIC_LIST_LDFLAGS))
--else
--LIBTRACEEVENT_DYNAMIC_LIST =
--LIBTRACEEVENT_DYNAMIC_LIST_LDFLAGS =
--endif
--
- ifneq ($(OUTPUT),)
-   LIBAPI_OUTPUT = $(abspath $(OUTPUT))/libapi
- else
-@@ -381,11 +348,7 @@ export PYTHON_EXTBUILD_LIB PYTHON_EXTBUILD_TMP
- python-clean := $(call QUIET_CLEAN, python) $(RM) -r $(PYTHON_EXTBUILD) $(OUTPUT)python/perf*.so
- 
- PYTHON_EXT_SRCS := $(shell grep -v ^\# util/python-ext-sources)
--ifndef LIBTRACEEVENT_DYNAMIC
--PYTHON_EXT_DEPS := util/python-ext-sources util/setup.py $(LIBTRACEEVENT) $(LIBAPI)
--else
- PYTHON_EXT_DEPS := util/python-ext-sources util/setup.py $(LIBAPI)
--endif
- 
- SCRIPTS = $(patsubst %.sh,%,$(SCRIPT_SH))
- 
-@@ -430,9 +393,6 @@ ifndef NO_LIBBPF
-     PERFLIBS += $(LIBBPF)
-   endif
- endif
--ifndef LIBTRACEEVENT_DYNAMIC
--  PERFLIBS += $(LIBTRACEEVENT)
--endif
- 
- # We choose to avoid "if .. else if .. else .. endif endif"
- # because maintaining the nesting to match is a pain.  If
-@@ -682,9 +642,9 @@ all: shell_compatibility_test $(ALL_PROGRAMS) $(LANG_BINDINGS) $(OTHER_PROGRAMS)
- # Create python binding output directory if not already present
- _dummy := $(shell [ -d '$(OUTPUT)python' ] || mkdir -p '$(OUTPUT)python')
- 
--$(OUTPUT)python/perf.so: $(PYTHON_EXT_SRCS) $(PYTHON_EXT_DEPS) $(LIBTRACEEVENT_DYNAMIC_LIST) $(LIBPERF)
-+$(OUTPUT)python/perf.so: $(PYTHON_EXT_SRCS) $(PYTHON_EXT_DEPS) $(LIBPERF)
- 	$(QUIET_GEN)LDSHARED="$(CC) -pthread -shared" \
--        CFLAGS='$(CFLAGS)' LDFLAGS='$(LDFLAGS) $(LIBTRACEEVENT_DYNAMIC_LIST_LDFLAGS)' \
-+        CFLAGS='$(CFLAGS)' LDFLAGS='$(LDFLAGS)' \
- 	  $(PYTHON_WORD) util/setup.py \
- 	  --quiet build_ext; \
- 	cp $(PYTHON_EXTBUILD_LIB)perf*.so $(OUTPUT)python/
-@@ -710,8 +670,8 @@ $(PERF_IN): prepare FORCE
- $(PMU_EVENTS_IN): FORCE prepare
- 	$(Q)$(MAKE) -f $(srctree)/tools/build/Makefile.build dir=pmu-events obj=pmu-events
- 
--$(OUTPUT)perf: $(PERFLIBS) $(PERF_IN) $(PMU_EVENTS_IN) $(LIBTRACEEVENT_DYNAMIC_LIST)
--	$(QUIET_LINK)$(CC) $(CFLAGS) $(LDFLAGS) $(LIBTRACEEVENT_DYNAMIC_LIST_LDFLAGS) \
-+$(OUTPUT)perf: $(PERFLIBS) $(PERF_IN) $(PMU_EVENTS_IN)
-+	$(QUIET_LINK)$(CC) $(CFLAGS) $(LDFLAGS) \
- 		$(PERF_IN) $(PMU_EVENTS_IN) $(LIBS) -o $@
- 
- $(GTK_IN): FORCE
-@@ -797,10 +757,6 @@ prepare: $(OUTPUT)PERF-VERSION-FILE $(OUTPUT)common-cmds.h archheaders $(drm_ioc
- 	$(LIBSYMBOL) \
- 	bpf-skel
- 
--ifndef LIBTRACEEVENT_DYNAMIC
--prepare: $(LIBTRACEEVENT)
--endif
--
- $(OUTPUT)%.o: %.c prepare FORCE
- 	$(Q)$(MAKE) -f $(srctree)/tools/build/Makefile.build dir=$(build-dir) $@
- 
-@@ -856,38 +812,6 @@ endif
- 
- $(patsubst perf-%,%.o,$(PROGRAMS)): $(wildcard */*.h)
- 
--ifndef LIBTRACEEVENT_DYNAMIC
--LIBTRACEEVENT_FLAGS += plugin_dir=$(plugindir_SQ) 'EXTRA_CFLAGS=$(EXTRA_CFLAGS)' 'LDFLAGS=$(filter-out -static,$(LDFLAGS))'
--
--$(LIBTRACEEVENT): FORCE | $(LIBTRACEEVENT_OUTPUT)
--	$(Q)$(MAKE) -C $(LIBTRACEEVENT_DIR) O=$(LIBTRACEEVENT_OUTPUT) \
--		DESTDIR=$(LIBTRACEEVENT_DESTDIR) prefix= \
--		$@ install_headers
--
--$(LIBTRACEEVENT)-clean:
--	$(call QUIET_CLEAN, libtraceevent)
--	$(Q)$(RM) -r -- $(LIBTRACEEVENT_OUTPUT)
--
--libtraceevent_plugins: FORCE | $(LIBTRACEEVENT_PLUGINS_OUTPUT)
--	$(Q)$(MAKE) -C $(LIBTRACEEVENT_PLUGINS_DIR) O=$(LIBTRACEEVENT_PLUGINS_OUTPUT) \
--		DESTDIR=$(LIBTRACEEVENT_PLUGINS_DESTDIR) prefix= \
--		plugins
--
--libtraceevent_plugins-clean:
--	$(call QUIET_CLEAN, libtraceevent_plugins)
--	$(Q)$(RM) -r -- $(LIBTRACEEVENT_PLUGINS_OUTPUT)
--
--$(LIBTRACEEVENT_DYNAMIC_LIST): libtraceevent_plugins
--	$(Q)$(MAKE) -C $(LIBTRACEEVENT_PLUGINS_DIR) O=$(LIBTRACEEVENT_PLUGINS_OUTPUT) \
--		DESTDIR=$(LIBTRACEEVENT_PLUGINS_DESTDIR) prefix= \
--		$(LIBTRACEEVENT_FLAGS) $@
--
--install-traceevent-plugins: libtraceevent_plugins
--	$(Q)$(MAKE) -C $(LIBTRACEEVENT_PLUGINS_DIR) O=$(LIBTRACEEVENT_PLUGINS_OUTPUT) \
--		DESTDIR=$(LIBTRACEEVENT_PLUGINS_DESTDIR) prefix= \
--		$(LIBTRACEEVENT_FLAGS) install
--endif
--
- $(LIBAPI): FORCE | $(LIBAPI_OUTPUT)
- 	$(Q)$(MAKE) -C $(LIBAPI_DIR) O=$(LIBAPI_OUTPUT) \
- 		DESTDIR=$(LIBAPI_DESTDIR) prefix= \
-@@ -1120,11 +1044,6 @@ SKELETONS += $(SKEL_OUT)/kwork_trace.skel.h
- $(SKEL_TMP_OUT) $(LIBAPI_OUTPUT) $(LIBBPF_OUTPUT) $(LIBPERF_OUTPUT) $(LIBSUBCMD_OUTPUT) $(LIBSYMBOL_OUTPUT):
- 	$(Q)$(MKDIR) -p $@
- 
--ifndef LIBTRACEEVENT_DYNAMIC
--$(LIBTRACEEVENT_OUTPUT) $(LIBTRACEEVENT_PLUGINS_OUTPUT):
--	$(Q)$(MKDIR) -p $@
--endif
--
- ifdef BUILD_BPF_SKEL
- BPFTOOL := $(SKEL_TMP_OUT)/bootstrap/bpftool
- BPF_INCLUDE := -I$(SKEL_TMP_OUT)/.. -I$(LIBBPF_INCLUDE)
-@@ -1207,10 +1126,6 @@ clean:: $(LIBAPI)-clean $(LIBBPF)-clean $(LIBSUBCMD)-clean $(LIBSYMBOL)-clean $(
- 	$(call QUIET_CLEAN, Documentation) \
- 	$(MAKE) -C $(DOC_DIR) O=$(OUTPUT) clean >/dev/null
- 
--ifndef LIBTRACEEVENT_DYNAMIC
--clean:: $(LIBTRACEEVENT)-clean libtraceevent_plugins-clean
--endif
--
- #
- # To provide FEATURE-DUMP into $(FEATURE_DUMP_COPY)
- # file if defined, with no further action.
-@@ -1228,6 +1143,6 @@ FORCE:
- .PHONY: all install clean config-clean strip install-gtk
- .PHONY: shell_compatibility_test please_set_SHELL_PATH_to_a_more_modern_shell
- .PHONY: .FORCE-PERF-VERSION-FILE TAGS tags cscope FORCE prepare
--.PHONY: libtraceevent_plugins archheaders
-+.PHONY: archheaders
- 
- endif # force_fixdep
--- 
-2.38.1.584.g0f3c55d4c2-goog
+Thanks,
+Ian
 
+> -- Steve
+>
+> > and just make LIBTRACEEVENT_DYNAMIC the only supported perf build
+> > option? I guess this may break old distributions that may not have
+> > libtraceevent, but even so I'm not sure that should motivate not
+> > cleaning this up (if they are building perf they can build
+> > libtraceevent).
+>
