@@ -2,111 +2,123 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E130CC43219
-	for <linux-perf-users@archiver.kernel.org>; Thu, 17 Nov 2022 00:45:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E7BB5C433FE
+	for <linux-perf-users@archiver.kernel.org>; Thu, 17 Nov 2022 00:47:01 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S238786AbiKQAp4 (ORCPT
+        id S234067AbiKQArA (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Wed, 16 Nov 2022 19:45:56 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39276 "EHLO
+        Wed, 16 Nov 2022 19:47:00 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40064 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S234619AbiKQApa (ORCPT
+        with ESMTP id S238629AbiKQAqd (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Wed, 16 Nov 2022 19:45:30 -0500
-Received: from mail-yb1-xb49.google.com (mail-yb1-xb49.google.com [IPv6:2607:f8b0:4864:20::b49])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7533A6CA3E
-        for <linux-perf-users@vger.kernel.org>; Wed, 16 Nov 2022 16:44:54 -0800 (PST)
-Received: by mail-yb1-xb49.google.com with SMTP id 137-20020a25048f000000b006e6a76f05e3so84860ybe.14
-        for <linux-perf-users@vger.kernel.org>; Wed, 16 Nov 2022 16:44:54 -0800 (PST)
+        Wed, 16 Nov 2022 19:46:33 -0500
+Received: from mail-qk1-x732.google.com (mail-qk1-x732.google.com [IPv6:2607:f8b0:4864:20::732])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7EC2B6AEE0
+        for <linux-perf-users@vger.kernel.org>; Wed, 16 Nov 2022 16:45:24 -0800 (PST)
+Received: by mail-qk1-x732.google.com with SMTP id 8so247840qka.1
+        for <linux-perf-users@vger.kernel.org>; Wed, 16 Nov 2022 16:45:24 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20210112;
-        h=cc:to:from:subject:references:mime-version:message-id:in-reply-to
-         :date:from:to:cc:subject:date:message-id:reply-to;
-        bh=l37iz2975hiUXVicXVT7NKOBiZU0GCzUGISmaxBrPSE=;
-        b=YEtTk8qH0jtvKJSEHhcLiPsmaqCVOUM78La82OlOJzpwzja6CkpMYWydiYo/iH3/6f
-         pqrgqraNl8eW4ZCAZCrPfhjyY+Gmgfllofnsle+j6KjtKN1sB2PdqOOY0VHg34xdlnhg
-         u+g+YvTV3juXHyMYp4lJKzWpX7SKUv2s0Mnv7CsYKPoPiQAy/fKeLN63CBbjme7ymu7l
-         dWQB/Fq+qMH7WcfU4gD6jIGoP4nBNcjmaZRjNoYpRFLJFYmjRTbqNTAgk4twdv8GQTEW
-         LXoTbQRmM95iql1Kr2Lhq+45T72RppqBzBPFOikBnHojLDObupSlWib16ZIy/zQmXYov
-         XFwA==
+        d=ziepe.ca; s=google;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=HEOs2OljVpzFekHebtNmxJNTS1biZDzbDC+7E+gbGXE=;
+        b=NKUDG6/HRBHYArrki2ErKlKAFAloDP3syGXEvUqNJ9D2fVrZim0dI4zYfgnJWEKy+2
+         eIgPOs+mttvXhYUIJL/UppN4gHtQqcQpWlrONSgHhATtfRfLqa70r2Y5AFUtDhoXumLz
+         QwAO0SpqErl+SpXb2isD+wqK260zhrI3m0OcjGKZmRIuadG54e+ieDR5HURAecTq4gww
+         +4XuPNBvBD2G5dec/bz8Eh9V9EDh1RbiHGn8GIrcO4V8END9r1k5y0xfRAbT/lxmG9Cm
+         d4SXiY9+ZupOQT/Gb+ZePnA6lwtOPkxvxI9tRVsC2WHBPZX7s+xnX8nZsTymxhqmYSZB
+         7vEA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=cc:to:from:subject:references:mime-version:message-id:in-reply-to
-         :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=l37iz2975hiUXVicXVT7NKOBiZU0GCzUGISmaxBrPSE=;
-        b=JkZCSqBYboMEx3q22fDz90MKWWHxXYyrNeGPZ12z3dfVLU+n3wirpKZgJxWal57rS/
-         jouNambpWcB4C10CIPRJY8yxWc07n1DqlRFNFxO0F06UCDrmRggZHjlzpzlhQ2FFy88Y
-         PrFmcyynDkSF9qrPcSE2eKOq3ZERYT77AYHqM18JnRKsyM+5cjgx7+LiXJfhUji/u39Y
-         KqpnWIPbmXvyrO6v0ZREhLvZ1kT++xGVBemgqBwjxQur/oc4vWLWCmNoBJKBROi8tKKA
-         BkBsMK9Fl54cbd7q9Zu505b1ssoMenIDWUD59hV9WOEOm8DOu1uZ/SX5r+pDMMLuBzg/
-         +A1g==
-X-Gm-Message-State: ANoB5pleb3Gk1LkFj7W3ylgZDid5A7rkFw/VyXFxpfLWQs2IdTcFCAco
-        PUovMjj3L/bANo9vUd6gKQ8l3g2V3SMS
-X-Google-Smtp-Source: AA0mqf4QChD4efywo1GyOLQSyHOZbW7thg0+t7VgEZ0tk8VKSYAD0O+aXxgO5KVqtsXVltD2KxrwhqBcj66F
-X-Received: from irogers.svl.corp.google.com ([2620:15c:2d4:203:c14c:6035:5882:8faa])
- (user=irogers job=sendgmr) by 2002:a81:3803:0:b0:380:c83a:35a5 with SMTP id
- f3-20020a813803000000b00380c83a35a5mr5ywa.496.1668645893816; Wed, 16 Nov 2022
- 16:44:53 -0800 (PST)
-Date:   Wed, 16 Nov 2022 16:43:56 -0800
-In-Reply-To: <20221117004356.279422-1-irogers@google.com>
-Message-Id: <20221117004356.279422-7-irogers@google.com>
-Mime-Version: 1.0
-References: <20221117004356.279422-1-irogers@google.com>
-X-Mailer: git-send-email 2.38.1.431.g37b22c650d-goog
-Subject: [PATCH 6/6] tools lib traceevent: Make install_headers clearer
-From:   Ian Rogers <irogers@google.com>
-To:     Alexei Starovoitov <ast@kernel.org>,
-        Daniel Borkmann <daniel@iogearbox.net>,
-        Andrii Nakryiko <andrii@kernel.org>,
-        Martin KaFai Lau <martin.lau@linux.dev>,
-        Song Liu <song@kernel.org>, Yonghong Song <yhs@fb.com>,
-        John Fastabend <john.fastabend@gmail.com>,
-        KP Singh <kpsingh@kernel.org>,
-        Stanislav Fomichev <sdf@google.com>,
-        Hao Luo <haoluo@google.com>, Jiri Olsa <jolsa@kernel.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Namhyung Kim <namhyung@kernel.org>,
-        Nicolas Schier <nicolas@fjasle.eu>,
-        Masahiro Yamada <masahiroy@kernel.org>,
-        Ian Rogers <irogers@google.com>, linux-kernel@vger.kernel.org,
-        bpf@vger.kernel.org, linux-perf-users@vger.kernel.org
-Cc:     Stephane Eranian <eranian@google.com>
-Content-Type: text/plain; charset="UTF-8"
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=HEOs2OljVpzFekHebtNmxJNTS1biZDzbDC+7E+gbGXE=;
+        b=LgqZlaabOzD1EcCom3pMWcmUwzDepJHbo4aPJ+igdeWKUzuFA+pyhhxOirmA+BW4wH
+         SQetP/G/Qp6I8+UgyDRtRbe0Ex+ll3ipB1Pq5TBon5QHPdDElGOaovfV5ZmLP+v5DlnT
+         aHuu9R+KTneMzLIe5ybUSpF6Vt7BpUKUKFJ7jQNqtfrJ/XWLUNuiAUNbD5Bhd+frfgL7
+         Ilu1PqDKMiwHGh4f+FIHRlXEgGB1K9FrLTY1sLDN0Rgavrz0DoMiwE20helaQ6lyVMxe
+         I5NxmwYUe6FCg8Owo5VgjUu/uGsuAG8zLXJMQJyfoKDsSrTHhvGy6/3adOLFAmqWUSNZ
+         594w==
+X-Gm-Message-State: ANoB5plJgZR9GfadCuxaPjhHJpHd8JgJzGfXvOkV6z4e1CCAcfDeuWoW
+        VZtQLW89Q6edfBuLj50u1uovng==
+X-Google-Smtp-Source: AA0mqf7xjJLeTnaPhhrans4JhE0iVba1LlwPzkyl9vYE07B6pyjsI7ODbIFQEN1WHHyVUFKfNxMUWg==
+X-Received: by 2002:a05:620a:1455:b0:6ee:80b5:32d3 with SMTP id i21-20020a05620a145500b006ee80b532d3mr22079595qkl.237.1668645923644;
+        Wed, 16 Nov 2022 16:45:23 -0800 (PST)
+Received: from ziepe.ca (hlfxns017vw-47-55-122-23.dhcp-dynamic.fibreop.ns.bellaliant.net. [47.55.122.23])
+        by smtp.gmail.com with ESMTPSA id n7-20020ac86747000000b00399ad646794sm9480378qtp.41.2022.11.16.16.45.22
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 16 Nov 2022 16:45:22 -0800 (PST)
+Received: from jgg by wakko with local (Exim 4.95)
+        (envelope-from <jgg@ziepe.ca>)
+        id 1ovT1t-0066TN-E8;
+        Wed, 16 Nov 2022 20:45:21 -0400
+Date:   Wed, 16 Nov 2022 20:45:21 -0400
+From:   Jason Gunthorpe <jgg@ziepe.ca>
+To:     David Hildenbrand <david@redhat.com>
+Cc:     linux-kernel@vger.kernel.org, x86@kernel.org,
+        linux-alpha@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-ia64@vger.kernel.org, linux-mips@vger.kernel.org,
+        linuxppc-dev@lists.ozlabs.org, sparclinux@vger.kernel.org,
+        linux-um@lists.infradead.org, etnaviv@lists.freedesktop.org,
+        dri-devel@lists.freedesktop.org, linux-samsung-soc@vger.kernel.org,
+        linux-rdma@vger.kernel.org, linux-media@vger.kernel.org,
+        linux-fsdevel@vger.kernel.org, linux-mm@kvack.org,
+        linux-perf-users@vger.kernel.org,
+        linux-security-module@vger.kernel.org,
+        linux-kselftest@vger.kernel.org,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        John Hubbard <jhubbard@nvidia.com>,
+        Peter Xu <peterx@redhat.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Andrea Arcangeli <aarcange@redhat.com>,
+        Hugh Dickins <hughd@google.com>, Nadav Amit <namit@vmware.com>,
+        Vlastimil Babka <vbabka@suse.cz>,
+        Matthew Wilcox <willy@infradead.org>,
+        Mike Kravetz <mike.kravetz@oracle.com>,
+        Muchun Song <songmuchun@bytedance.com>,
+        Shuah Khan <shuah@kernel.org>,
+        Lucas Stach <l.stach@pengutronix.de>,
+        David Airlie <airlied@gmail.com>,
+        Oded Gabbay <ogabbay@kernel.org>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Christoph Hellwig <hch@infradead.org>,
+        Alex Williamson <alex.williamson@redhat.com>,
+        Leon Romanovsky <leonro@nvidia.com>,
+        Leon Romanovsky <leon@kernel.org>
+Subject: Re: [PATCH mm-unstable v1 10/20] RDMA/umem: remove FOLL_FORCE usage
+Message-ID: <Y3WEIVROhUPTtaeQ@ziepe.ca>
+References: <20221116102659.70287-1-david@redhat.com>
+ <20221116102659.70287-11-david@redhat.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20221116102659.70287-11-david@redhat.com>
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-Add libtraceevent to the name so that this install_headers build
-appears different to similar targets in different libraries. Add ;
-after kbuffer.h install target for consistency.
+On Wed, Nov 16, 2022 at 11:26:49AM +0100, David Hildenbrand wrote:
+> GUP now supports reliable R/O long-term pinning in COW mappings, such
+> that we break COW early. MAP_SHARED VMAs only use the shared zeropage so
+> far in one corner case (DAXFS file with holes), which can be ignored
+> because GUP does not support long-term pinning in fsdax (see
+> check_vma_flags()).
+> 
+> Consequently, FOLL_FORCE | FOLL_WRITE | FOLL_LONGTERM is no longer required
+> for reliable R/O long-term pinning: FOLL_LONGTERM is sufficient. So stop
+> using FOLL_FORCE, which is really only for ptrace access.
+> 
+> Tested-by: Leon Romanovsky <leonro@nvidia.com> # Over mlx4 and mlx5.
+> Cc: Jason Gunthorpe <jgg@ziepe.ca>
+> Cc: Leon Romanovsky <leon@kernel.org>
+> Signed-off-by: David Hildenbrand <david@redhat.com>
+> ---
+>  drivers/infiniband/core/umem.c | 8 ++++----
+>  1 file changed, 4 insertions(+), 4 deletions(-)
 
-Signed-off-by: Ian Rogers <irogers@google.com>
----
- tools/lib/traceevent/Makefile | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+Reviewed-by: Jason Gunthorpe <jgg@nvidia.com>
 
-diff --git a/tools/lib/traceevent/Makefile b/tools/lib/traceevent/Makefile
-index c874c017c636..98dfd4badea3 100644
---- a/tools/lib/traceevent/Makefile
-+++ b/tools/lib/traceevent/Makefile
-@@ -234,11 +234,11 @@ install_pkgconfig:
- 		$(call do_install_pkgconfig_file,$(prefix))
- 
- install_headers:
--	$(call QUIET_INSTALL, headers) \
-+	$(call QUIET_INSTALL, traceevent_headers) \
- 		$(call do_install,event-parse.h,$(includedir_SQ),644); \
- 		$(call do_install,event-utils.h,$(includedir_SQ),644); \
- 		$(call do_install,trace-seq.h,$(includedir_SQ),644); \
--		$(call do_install,kbuffer.h,$(includedir_SQ),644)
-+		$(call do_install,kbuffer.h,$(includedir_SQ),644);
- 
- install: install_lib
- 
--- 
-2.38.1.431.g37b22c650d-goog
-
+Jason
