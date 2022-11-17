@@ -2,98 +2,202 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B4FEAC43217
-	for <linux-perf-users@archiver.kernel.org>; Thu, 17 Nov 2022 16:16:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A8BB4C4332F
+	for <linux-perf-users@archiver.kernel.org>; Thu, 17 Nov 2022 16:24:18 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S239669AbiKQQQU (ORCPT
+        id S240576AbiKQQYR (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Thu, 17 Nov 2022 11:16:20 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50882 "EHLO
+        Thu, 17 Nov 2022 11:24:17 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59482 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S240200AbiKQQQB (ORCPT
+        with ESMTP id S240467AbiKQQXy (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Thu, 17 Nov 2022 11:16:01 -0500
-Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C1B09748FD;
-        Thu, 17 Nov 2022 08:15:58 -0800 (PST)
+        Thu, 17 Nov 2022 11:23:54 -0500
+Received: from ams.source.kernel.org (ams.source.kernel.org [IPv6:2604:1380:4601:e00::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B721087551;
+        Thu, 17 Nov 2022 08:21:34 -0800 (PST)
 Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id 73F2E62161;
-        Thu, 17 Nov 2022 16:15:58 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 704ACC433C1;
-        Thu, 17 Nov 2022 16:15:57 +0000 (UTC)
+        by ams.source.kernel.org (Postfix) with ESMTPS id 56D90B82107;
+        Thu, 17 Nov 2022 16:21:32 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id DA21BC433D6;
+        Thu, 17 Nov 2022 16:21:30 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1668701757;
-        bh=txAsxsxAWAeuQLtW7hnoSdgRyY4Za7If3OTMuSmBKK0=;
+        s=k20201202; t=1668702091;
+        bh=n/NygUzBhqd3ZFxs/8CYZcGgEnlZ8O9Ef6l1bU7dJ0c=;
         h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=XQ5/qkY+fcqOxiyMK3r3yFajA3q7sEzrdbBJI1wsox33VG/XKQG7/aKp7n0lYtYww
-         ndY5Y1JKi6UC4BRoihnpFfWMb4DGt+JHJWLAZZmk2b5zAKPR46GYm7swUDtfr25KS8
-         RtEiGo+2PbKiUCsMuVevL5YzFNLzZPX31+is1yDq7ZYMUHaVTRwr+Tx29Vr5MsikBR
-         uNteM55UN7ehWWJjUfcB/qcFOaoYNfWoMgVMQtg14YoiFHvr/554HEgKhCJQF++pVw
-         skD0NPtPhiVpxAPjBN81cVMZ9pmEvYT1PH4MAmbbrwUjMBBJhs3BGNSUMn7dQUSNds
-         cFkZChVQ4j76w==
+        b=D2xV2OBD+Sb6EAp+o9CKPmmt1dZkPU38ljg9ZiKtG/LsmKrdlt+FKCypGpDJWL82a
+         IuHfZWrPFyjdYFSCjRvuVCh72To4YVtuUFzh3W+Jo521nobqjCnika+/HthJxjFaX8
+         rZoDwsLu7AluvlD1cStNMqgEnpuN+k9bye8qaK2N7qyKbzvE1RCbUyU5T0cgSuYjFD
+         8AzEKwApCWHuGqbFx4acJjx9vXawB//c81zdFKGKZ5Rk3hsAWLk+GriALwxHK76uuV
+         uDgwEpWBxh1GrV/K9MwVUK37X7J5wSxn8fX9BE88TLIKuBjnSQgu6KPIEhARyesHHw
+         IxJQ6ZL0dO4xQ==
 Received: by quaco.ghostprotocols.net (Postfix, from userid 1000)
-        id 762904034E; Thu, 17 Nov 2022 13:15:54 -0300 (-03)
-Date:   Thu, 17 Nov 2022 13:15:54 -0300
+        id 4FA884034E; Thu, 17 Nov 2022 13:21:28 -0300 (-03)
+Date:   Thu, 17 Nov 2022 13:21:28 -0300
 From:   Arnaldo Carvalho de Melo <acme@kernel.org>
-To:     Namhyung Kim <namhyung@kernel.org>
-Cc:     Jiri Olsa <jolsa@kernel.org>, Ingo Molnar <mingo@kernel.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Ian Rogers <irogers@google.com>,
-        Adrian Hunter <adrian.hunter@intel.com>,
-        linux-perf-users@vger.kernel.org, Leo Yan <leo.yan@linaro.org>,
-        German Gomez <german.gomez@arm.com>,
-        Zhengjun Xing <zhengjun.xing@linux.intel.com>,
-        James Clark <james.clark@arm.com>,
-        Athira Jajeev <atrajeev@linux.vnet.ibm.com>
-Subject: Re: [PATCH 05/12] perf test: Add 'leafloop' test workload
-Message-ID: <Y3ZeOuNnk0xclY2x@kernel.org>
-References: <20221116233854.1596378-1-namhyung@kernel.org>
- <20221116233854.1596378-6-namhyung@kernel.org>
- <Y3Zb+JChHoq+89yM@kernel.org>
+To:     Ian Rogers <irogers@google.com>
+Cc:     Peter Zijlstra <peterz@infradead.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Jiri Olsa <jolsa@kernel.org>,
+        Namhyung Kim <namhyung@kernel.org>,
+        Masahiro Yamada <masahiroy@kernel.org>,
+        Nicolas Schier <nicolas@fjasle.eu>,
+        linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org,
+        bpf@vger.kernel.org, Nick Desaulniers <ndesaulniers@google.com>,
+        Andrii Nakryiko <andrii.nakryiko@gmail.com>,
+        Stephane Eranian <eranian@google.com>
+Subject: Re: [PATCH] perf build: Fix LIBTRACEEVENT_DYNAMIC
+Message-ID: <Y3ZfiGFJ+EKIahsW@kernel.org>
+References: <20221116224631.207631-1-irogers@google.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <Y3Zb+JChHoq+89yM@kernel.org>
+In-Reply-To: <20221116224631.207631-1-irogers@google.com>
 X-Url:  http://acmel.wordpress.com
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-Em Thu, Nov 17, 2022 at 01:06:16PM -0300, Arnaldo Carvalho de Melo escreveu:
-> Em Wed, Nov 16, 2022 at 03:38:47PM -0800, Namhyung Kim escreveu:
-> > The leafloop workload is to run an infinite loop in the test_leaf
-> > function.  This is needed for the ARM fp callgraph test to verify if it
-> > gets the correct callchains.
-> > 
-> >   $ perf test -w leafloop
-> 
-> On fedora:36
-> 
-> In file included from /usr/include/bits/libc-header-start.h:33,
->                  from /usr/include/stdlib.h:26,
->                  from tests/workloads/leafloop.c:2:
-> /usr/include/features.h:412:4: error: #warning _FORTIFY_SOURCE requires compiling with optimization (-O) [-Werror=cpp]
->   412 | #  warning _FORTIFY_SOURCE requires compiling with optimization (-O)
->       |    ^~~~~~~
-> cc1: all warnings being treated as errors
-> make[5]: *** [/home/acme/git/perf/tools/build/Makefile.build:96: /tmp/build/perf/tests/workloads/leafloop.o] Error 1
-> make[5]: *** Waiting for unfinished jobs....
-> 
-> I'll try removing the _FORTIFY_SOURCE
+Em Wed, Nov 16, 2022 at 02:46:31PM -0800, Ian Rogers escreveu:
+> The tools/lib includes fixes break LIBTRACEVENT_DYNAMIC as the
+> makefile erroneously had depdendencies on building libtraceevent even
+> when not linking with it. This change fixes the issues with
+> LIBTRACEEVENT_DYNAMIC by making the built files optional.
 
-Works after I added this to datasym.c, leafloop.c and brstack.c:
+I had noticed this but didn't come around to fix it, thanks!
 
+- Arnaldo
+ 
+> Signed-off-by: Ian Rogers <irogers@google.com>
+> ---
+>  tools/perf/Makefile.perf | 25 ++++++++++++++++++++++---
+>  tools/perf/util/setup.py |  3 ++-
+>  2 files changed, 24 insertions(+), 4 deletions(-)
+> 
+> diff --git a/tools/perf/Makefile.perf b/tools/perf/Makefile.perf
+> index dd096aba4430..59c4e8f9b014 100644
+> --- a/tools/perf/Makefile.perf
+> +++ b/tools/perf/Makefile.perf
+> @@ -242,8 +242,10 @@ sub-make: fixdep
+>  else # force_fixdep
+>  
+>  LIBAPI_DIR      = $(srctree)/tools/lib/api/
+> +ifndef LIBTRACEEVENT_DYNAMIC
+>  LIBTRACEEVENT_DIR = $(srctree)/tools/lib/traceevent/
+>  LIBTRACEEVENT_PLUGINS_DIR = $(LIBTRACEEVENT_DIR)/plugins
+> +endif
+>  LIBBPF_DIR      = $(srctree)/tools/lib/bpf/
+>  LIBSUBCMD_DIR   = $(srctree)/tools/lib/subcmd/
+>  LIBSYMBOL_DIR   = $(srctree)/tools/lib/symbol/
+> @@ -293,6 +295,7 @@ SCRIPT_SH += perf-iostat.sh
+>  grep-libs = $(filter -l%,$(1))
+>  strip-libs = $(filter-out -l%,$(1))
+>  
+> +ifndef LIBTRACEEVENT_DYNAMIC
+>  ifneq ($(OUTPUT),)
+>    LIBTRACEEVENT_OUTPUT = $(abspath $(OUTPUT))/libtraceevent
+>  else
+> @@ -306,13 +309,16 @@ LIBTRACEEVENT = $(LIBTRACEEVENT_OUTPUT)/libtraceevent.a
+>  export LIBTRACEEVENT
+>  LIBTRACEEVENT_DYNAMIC_LIST = $(LIBTRACEEVENT_PLUGINS_OUTPUT)/libtraceevent-dynamic-list
+>  CFLAGS += -I$(LIBTRACEEVENT_OUTPUT)/include
+> -
+>  #
+>  # The static build has no dynsym table, so this does not work for
+>  # static build. Looks like linker starts to scream about that now
+>  # (in Fedora 26) so we need to switch it off for static build.
+>  DYNAMIC_LIST_LDFLAGS               = -Xlinker --dynamic-list=$(LIBTRACEEVENT_DYNAMIC_LIST)
+>  LIBTRACEEVENT_DYNAMIC_LIST_LDFLAGS = $(if $(findstring -static,$(LDFLAGS)),,$(DYNAMIC_LIST_LDFLAGS))
+> +else
+> +LIBTRACEEVENT_DYNAMIC_LIST =
+> +LIBTRACEEVENT_DYNAMIC_LIST_LDFLAGS =
+> +endif
+>  
+>  ifneq ($(OUTPUT),)
+>    LIBAPI_OUTPUT = $(abspath $(OUTPUT))/libapi
+> @@ -375,7 +381,11 @@ export PYTHON_EXTBUILD_LIB PYTHON_EXTBUILD_TMP
+>  python-clean := $(call QUIET_CLEAN, python) $(RM) -r $(PYTHON_EXTBUILD) $(OUTPUT)python/perf*.so
+>  
+>  PYTHON_EXT_SRCS := $(shell grep -v ^\# util/python-ext-sources)
+> +ifndef LIBTRACEEVENT_DYNAMIC
+>  PYTHON_EXT_DEPS := util/python-ext-sources util/setup.py $(LIBTRACEEVENT) $(LIBAPI)
+> +else
+> +PYTHON_EXT_DEPS := util/python-ext-sources util/setup.py $(LIBAPI)
+> +endif
+>  
+>  SCRIPTS = $(patsubst %.sh,%,$(SCRIPT_SH))
+>  
+> @@ -785,9 +795,12 @@ prepare: $(OUTPUT)PERF-VERSION-FILE $(OUTPUT)common-cmds.h archheaders $(drm_ioc
+>  	$(LIBPERF) \
+>  	$(LIBSUBCMD) \
+>  	$(LIBSYMBOL) \
+> -	$(LIBTRACEEVENT) \
+>  	bpf-skel
+>  
+> +ifndef LIBTRACEEVENT_DYNAMIC
+> +prepare: $(LIBTRACEEVENT)
+> +endif
+> +
+>  $(OUTPUT)%.o: %.c prepare FORCE
+>  	$(Q)$(MAKE) -f $(srctree)/tools/build/Makefile.build dir=$(build-dir) $@
+>  
+> @@ -843,6 +856,7 @@ endif
+>  
+>  $(patsubst perf-%,%.o,$(PROGRAMS)): $(wildcard */*.h)
+>  
+> +ifndef LIBTRACEEVENT_DYNAMIC
+>  LIBTRACEEVENT_FLAGS += plugin_dir=$(plugindir_SQ) 'EXTRA_CFLAGS=$(EXTRA_CFLAGS)' 'LDFLAGS=$(filter-out -static,$(LDFLAGS))'
+>  
+>  $(LIBTRACEEVENT): FORCE | $(LIBTRACEEVENT_OUTPUT)
+> @@ -872,6 +886,7 @@ install-traceevent-plugins: libtraceevent_plugins
+>  	$(Q)$(MAKE) -C $(LIBTRACEEVENT_PLUGINS_DIR) O=$(LIBTRACEEVENT_PLUGINS_OUTPUT) \
+>  		DESTDIR=$(LIBTRACEEVENT_PLUGINS_DESTDIR) prefix= \
+>  		$(LIBTRACEEVENT_FLAGS) install
+> +endif
+>  
+>  $(LIBAPI): FORCE | $(LIBAPI_OUTPUT)
+>  	$(Q)$(MAKE) -C $(LIBAPI_DIR) O=$(LIBAPI_OUTPUT) \
+> @@ -1152,7 +1167,7 @@ endif # BUILD_BPF_SKEL
+>  bpf-skel-clean:
+>  	$(call QUIET_CLEAN, bpf-skel) $(RM) -r $(SKEL_TMP_OUT) $(SKELETONS)
+>  
+> -clean:: $(LIBTRACEEVENT)-clean $(LIBAPI)-clean $(LIBBPF)-clean $(LIBSUBCMD)-clean $(LIBSYMBOL)-clean $(LIBPERF)-clean fixdep-clean python-clean bpf-skel-clean tests-coresight-targets-clean libtraceevent_plugins-clean
+> +clean:: $(LIBAPI)-clean $(LIBBPF)-clean $(LIBSUBCMD)-clean $(LIBSYMBOL)-clean $(LIBPERF)-clean fixdep-clean python-clean bpf-skel-clean tests-coresight-targets-clean
+>  	$(call QUIET_CLEAN, core-objs)  $(RM) $(LIBPERF_A) $(OUTPUT)perf-archive $(OUTPUT)perf-iostat $(LANG_BINDINGS)
+>  	$(Q)find $(or $(OUTPUT),.) -name '*.o' -delete -o -name '\.*.cmd' -delete -o -name '\.*.d' -delete
+>  	$(Q)$(RM) $(OUTPUT).config-detected
+> @@ -1192,6 +1207,10 @@ clean:: $(LIBTRACEEVENT)-clean $(LIBAPI)-clean $(LIBBPF)-clean $(LIBSUBCMD)-clea
+>  	$(call QUIET_CLEAN, Documentation) \
+>  	$(MAKE) -C $(DOC_DIR) O=$(OUTPUT) clean >/dev/null
+>  
+> +ifndef LIBTRACEEVENT_DYNAMIC
+> +clean:: $(LIBTRACEEVENT)-clean libtraceevent_plugins-clean
+> +endif
+> +
+>  #
+>  # To provide FEATURE-DUMP into $(FEATURE_DUMP_COPY)
+>  # file if defined, with no further action.
+> diff --git a/tools/perf/util/setup.py b/tools/perf/util/setup.py
+> index 5b1e6468d5e8..43e7ca40b2ec 100644
+> --- a/tools/perf/util/setup.py
+> +++ b/tools/perf/util/setup.py
+> @@ -77,7 +77,8 @@ perf = Extension('perf',
+>  		  include_dirs = ['util/include'],
+>  		  libraries = extra_libraries,
+>  		  extra_compile_args = cflags,
+> -		  extra_objects = [libtraceevent, libapikfs, libperf],
+> +		  extra_objects = [ x for x in [libtraceevent, libapikfs, libperf]
+> +                                    if x is not None],
+>                   )
+>  
+>  setup(name='perf',
+> -- 
+> 2.38.1.431.g37b22c650d-goog
 
-diff --git a/tools/perf/tests/workloads/leafloop.c b/tools/perf/tests/workloads/leafloop.c
-index 1bf5cc97649b0e23..5d72c001320e3013 100644
---- a/tools/perf/tests/workloads/leafloop.c
-+++ b/tools/perf/tests/workloads/leafloop.c
-@@ -1,4 +1,5 @@
- /* SPDX-License-Identifier: GPL-2.0 */
-+#undef _FORTIFY_SOURCE
- #include <stdlib.h>
- #include <linux/compiler.h>
- #include "../tests.h"
+-- 
+
+- Arnaldo
