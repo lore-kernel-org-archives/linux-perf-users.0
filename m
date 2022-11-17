@@ -2,202 +2,214 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A8BB4C4332F
-	for <linux-perf-users@archiver.kernel.org>; Thu, 17 Nov 2022 16:24:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 70276C4332F
+	for <linux-perf-users@archiver.kernel.org>; Thu, 17 Nov 2022 16:34:46 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S240576AbiKQQYR (ORCPT
+        id S240657AbiKQQeo (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Thu, 17 Nov 2022 11:24:17 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59482 "EHLO
+        Thu, 17 Nov 2022 11:34:44 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43796 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S240467AbiKQQXy (ORCPT
+        with ESMTP id S240280AbiKQQeO (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Thu, 17 Nov 2022 11:23:54 -0500
+        Thu, 17 Nov 2022 11:34:14 -0500
 Received: from ams.source.kernel.org (ams.source.kernel.org [IPv6:2604:1380:4601:e00::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B721087551;
-        Thu, 17 Nov 2022 08:21:34 -0800 (PST)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DD0CE5B5BD;
+        Thu, 17 Nov 2022 08:31:59 -0800 (PST)
 Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by ams.source.kernel.org (Postfix) with ESMTPS id 56D90B82107;
-        Thu, 17 Nov 2022 16:21:32 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id DA21BC433D6;
-        Thu, 17 Nov 2022 16:21:30 +0000 (UTC)
+        by ams.source.kernel.org (Postfix) with ESMTPS id 81AFAB8210C;
+        Thu, 17 Nov 2022 16:31:58 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id E6F09C433D6;
+        Thu, 17 Nov 2022 16:31:56 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1668702091;
-        bh=n/NygUzBhqd3ZFxs/8CYZcGgEnlZ8O9Ef6l1bU7dJ0c=;
+        s=k20201202; t=1668702717;
+        bh=b0YjUGAglSS0uu1T/tbf8INnGz3tzsSTKbmCWUW4cy8=;
         h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=D2xV2OBD+Sb6EAp+o9CKPmmt1dZkPU38ljg9ZiKtG/LsmKrdlt+FKCypGpDJWL82a
-         IuHfZWrPFyjdYFSCjRvuVCh72To4YVtuUFzh3W+Jo521nobqjCnika+/HthJxjFaX8
-         rZoDwsLu7AluvlD1cStNMqgEnpuN+k9bye8qaK2N7qyKbzvE1RCbUyU5T0cgSuYjFD
-         8AzEKwApCWHuGqbFx4acJjx9vXawB//c81zdFKGKZ5Rk3hsAWLk+GriALwxHK76uuV
-         uDgwEpWBxh1GrV/K9MwVUK37X7J5wSxn8fX9BE88TLIKuBjnSQgu6KPIEhARyesHHw
-         IxJQ6ZL0dO4xQ==
+        b=MN3s+Rl+pKxEChgQjLEVVHdepE/MYwmZikbLvEmzHaJ5B4+tkBAgs5THUxTgtu+2D
+         iZoacj4jBYsn3vD+/iEQl5RzH61pq4xYnO5yapYDtSwJP+RJ5TzcbkTZSK/JOVclUc
+         F14c3RhwBJAC+SO3gqtP+R9Iy0VQo6VIwQufzj0i/mZ7LwWpn7aTY4fz28hcxTcE6+
+         hjl5I2HQL8KVqMyK2bBUSDI5VBzyQxRk5yYiU+4nS1lQW18eQY2n1YNMc/eAiMiOe6
+         dTCIh/PRheS752t9n08YUT5oCBtteiX8xXQ0vQcoFtMXQAWLhJYxKxC5cfjZq35Ptd
+         uvuwmCxUZRV8Q==
 Received: by quaco.ghostprotocols.net (Postfix, from userid 1000)
-        id 4FA884034E; Thu, 17 Nov 2022 13:21:28 -0300 (-03)
-Date:   Thu, 17 Nov 2022 13:21:28 -0300
+        id 755ED4034E; Thu, 17 Nov 2022 13:31:53 -0300 (-03)
+Date:   Thu, 17 Nov 2022 13:31:53 -0300
 From:   Arnaldo Carvalho de Melo <acme@kernel.org>
 To:     Ian Rogers <irogers@google.com>
-Cc:     Peter Zijlstra <peterz@infradead.org>,
+Cc:     Weilin Wang <weilin.wang@intel.com>,
+        Perry Taylor <perry.taylor@intel.com>,
+        Caleb Biggers <caleb.biggers@intel.com>,
+        Leo Yan <leo.yan@linaro.org>,
+        Adrian Hunter <adrian.hunter@intel.com>,
+        Peter Zijlstra <peterz@infradead.org>,
         Ingo Molnar <mingo@redhat.com>,
         Mark Rutland <mark.rutland@arm.com>,
         Alexander Shishkin <alexander.shishkin@linux.intel.com>,
         Jiri Olsa <jolsa@kernel.org>,
         Namhyung Kim <namhyung@kernel.org>,
-        Masahiro Yamada <masahiroy@kernel.org>,
-        Nicolas Schier <nicolas@fjasle.eu>,
+        Sandipan Das <sandipan.das@amd.com>,
+        Kajol Jain <kjain@linux.ibm.com>,
+        Zhengjun Xing <zhengjun.xing@linux.intel.com>,
+        Kan Liang <kan.liang@linux.intel.com>,
+        Ravi Bangoria <ravi.bangoria@amd.com>,
+        Xin Gao <gaoxin@cdjrlc.com>, Rob Herring <robh@kernel.org>,
         linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org,
-        bpf@vger.kernel.org, Nick Desaulniers <ndesaulniers@google.com>,
-        Andrii Nakryiko <andrii.nakryiko@gmail.com>,
         Stephane Eranian <eranian@google.com>
-Subject: Re: [PATCH] perf build: Fix LIBTRACEEVENT_DYNAMIC
-Message-ID: <Y3ZfiGFJ+EKIahsW@kernel.org>
-References: <20221116224631.207631-1-irogers@google.com>
+Subject: Re: [PATCH v3 10/10] perf list: Add json output option
+Message-ID: <Y3Zh+XTXbhrOXAla@kernel.org>
+References: <20221114210723.2749751-1-irogers@google.com>
+ <20221114210723.2749751-11-irogers@google.com>
+ <Y3OX1pcclKCgbpeT@kernel.org>
+ <Y3TIG7BIzltgvCPw@kernel.org>
+ <Y3TK/6bBFsHxduPc@kernel.org>
+ <Y3TOwYdhzURKTgyB@kernel.org>
+ <Y3Tah5Ocvx6lQ4jP@kernel.org>
+ <Y3ThXYH3SAyEGmQ+@kernel.org>
+ <Y3T/35DcAw+h4R93@kernel.org>
+ <CAP-5=fU-tJPdxosVFfbbKtrswom7bnY6Ei3JczRJaQYyOnjcAA@mail.gmail.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20221116224631.207631-1-irogers@google.com>
+In-Reply-To: <CAP-5=fU-tJPdxosVFfbbKtrswom7bnY6Ei3JczRJaQYyOnjcAA@mail.gmail.com>
 X-Url:  http://acmel.wordpress.com
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-Em Wed, Nov 16, 2022 at 02:46:31PM -0800, Ian Rogers escreveu:
-> The tools/lib includes fixes break LIBTRACEVENT_DYNAMIC as the
-> makefile erroneously had depdendencies on building libtraceevent even
-> when not linking with it. This change fixes the issues with
-> LIBTRACEEVENT_DYNAMIC by making the built files optional.
-
-I had noticed this but didn't come around to fix it, thanks!
-
-- Arnaldo
- 
-> Signed-off-by: Ian Rogers <irogers@google.com>
-> ---
->  tools/perf/Makefile.perf | 25 ++++++++++++++++++++++---
->  tools/perf/util/setup.py |  3 ++-
->  2 files changed, 24 insertions(+), 4 deletions(-)
+Em Wed, Nov 16, 2022 at 11:52:39AM -0800, Ian Rogers escreveu:
+> On Wed, Nov 16, 2022 at 7:21 AM Arnaldo Carvalho de Melo
+> <acme@kernel.org> wrote:
+> >
+> > Em Wed, Nov 16, 2022 at 10:10:53AM -0300, Arnaldo Carvalho de Melo escreveu:
+> > > Em Wed, Nov 16, 2022 at 09:41:43AM -0300, Arnaldo Carvalho de Melo escreveu:
+> > > > But then:
+> > >
+> > > > [root@five ~]# perf list syscalls:sys_enter_open* |& grep syscalls:
+> > > >   syscalls:sys_enter_open                            [Tracepoint event]
+> > > >   syscalls:sys_enter_open_by_handle_at               [Tracepoint event]
+> > > >   syscalls:sys_enter_open_tree                       [Tracepoint event]
+> > > >   syscalls:sys_enter_openat                          [Tracepoint event]
+> > > >   syscalls:sys_enter_openat2                         [Tracepoint event]
+> > > > [root@five ~]#
+> > > >
+> > > > This stops working, looking into it.
+> > >
+> > > Sidetracked with other stuff, please find what I have patched at
+> > > perf/perf-list-json-output in my tree.
+> > >
+> > > I removed the last two patches and I'm testing so that I can push
+> > > perf/core with your series modulo the last two + Namhyung's 'perf list'
+> > > kit.
+> >
+> > I just saw you sent a patch on top of the previous one, will try and
+> > combine stuff to remove failures from the bisect history.
+> >
+> > - Arnaldo
 > 
-> diff --git a/tools/perf/Makefile.perf b/tools/perf/Makefile.perf
-> index dd096aba4430..59c4e8f9b014 100644
-> --- a/tools/perf/Makefile.perf
-> +++ b/tools/perf/Makefile.perf
-> @@ -242,8 +242,10 @@ sub-make: fixdep
->  else # force_fixdep
->  
->  LIBAPI_DIR      = $(srctree)/tools/lib/api/
-> +ifndef LIBTRACEEVENT_DYNAMIC
->  LIBTRACEEVENT_DIR = $(srctree)/tools/lib/traceevent/
->  LIBTRACEEVENT_PLUGINS_DIR = $(LIBTRACEEVENT_DIR)/plugins
-> +endif
->  LIBBPF_DIR      = $(srctree)/tools/lib/bpf/
->  LIBSUBCMD_DIR   = $(srctree)/tools/lib/subcmd/
->  LIBSYMBOL_DIR   = $(srctree)/tools/lib/symbol/
-> @@ -293,6 +295,7 @@ SCRIPT_SH += perf-iostat.sh
->  grep-libs = $(filter -l%,$(1))
->  strip-libs = $(filter-out -l%,$(1))
->  
-> +ifndef LIBTRACEEVENT_DYNAMIC
->  ifneq ($(OUTPUT),)
->    LIBTRACEEVENT_OUTPUT = $(abspath $(OUTPUT))/libtraceevent
->  else
-> @@ -306,13 +309,16 @@ LIBTRACEEVENT = $(LIBTRACEEVENT_OUTPUT)/libtraceevent.a
->  export LIBTRACEEVENT
->  LIBTRACEEVENT_DYNAMIC_LIST = $(LIBTRACEEVENT_PLUGINS_OUTPUT)/libtraceevent-dynamic-list
->  CFLAGS += -I$(LIBTRACEEVENT_OUTPUT)/include
+> So the failing test was skipping for me due to a lack of kernel
+> symbols, sorry for not spotting it. I find that the issue is resolved
+> with your fixes and:
+> 
+> ```
+> diff --git a/tools/perf/builtin-list.c b/tools/perf/builtin-list.c
+> index 30937e1dd82c..ad6cb5d2e1cc 100644
+> --- a/tools/perf/builtin-list.c
+> +++ b/tools/perf/builtin-list.c
+> @@ -107,7 +107,7 @@ static void default_print_event(void *ps, const
+> char *pmu_name, const char *topi
+>        if (deprecated && !print_state->deprecated)
+>                return;
+> 
+> -       if (print_state->pmu_glob && !strglobmatch(pmu_name,
+> print_state->pmu_glob))
+> +       if (print_state->pmu_glob && pmu_name &&
+> !strglobmatch(pmu_name, print_state->pmu_glob))
+>                return;
+> 
+>        if (print_state->event_glob &&
+> @@ -534,24 +534,18 @@ int cmd_list(int argc, const char **argv)
+>                        default_ps.metrics = false;
+>                        metricgroup__print(&print_cb, ps);
+>                } else if ((sep = strchr(argv[i], ':')) != NULL) {
+> -                       int sep_idx;
 > -
->  #
->  # The static build has no dynsym table, so this does not work for
->  # static build. Looks like linker starts to scream about that now
->  # (in Fedora 26) so we need to switch it off for static build.
->  DYNAMIC_LIST_LDFLAGS               = -Xlinker --dynamic-list=$(LIBTRACEEVENT_DYNAMIC_LIST)
->  LIBTRACEEVENT_DYNAMIC_LIST_LDFLAGS = $(if $(findstring -static,$(LDFLAGS)),,$(DYNAMIC_LIST_LDFLAGS))
-> +else
-> +LIBTRACEEVENT_DYNAMIC_LIST =
-> +LIBTRACEEVENT_DYNAMIC_LIST_LDFLAGS =
-> +endif
->  
->  ifneq ($(OUTPUT),)
->    LIBAPI_OUTPUT = $(abspath $(OUTPUT))/libapi
-> @@ -375,7 +381,11 @@ export PYTHON_EXTBUILD_LIB PYTHON_EXTBUILD_TMP
->  python-clean := $(call QUIET_CLEAN, python) $(RM) -r $(PYTHON_EXTBUILD) $(OUTPUT)python/perf*.so
->  
->  PYTHON_EXT_SRCS := $(shell grep -v ^\# util/python-ext-sources)
-> +ifndef LIBTRACEEVENT_DYNAMIC
->  PYTHON_EXT_DEPS := util/python-ext-sources util/setup.py $(LIBTRACEEVENT) $(LIBAPI)
-> +else
-> +PYTHON_EXT_DEPS := util/python-ext-sources util/setup.py $(LIBAPI)
-> +endif
->  
->  SCRIPTS = $(patsubst %.sh,%,$(SCRIPT_SH))
->  
-> @@ -785,9 +795,12 @@ prepare: $(OUTPUT)PERF-VERSION-FILE $(OUTPUT)common-cmds.h archheaders $(drm_ioc
->  	$(LIBPERF) \
->  	$(LIBSUBCMD) \
->  	$(LIBSYMBOL) \
-> -	$(LIBTRACEEVENT) \
->  	bpf-skel
->  
-> +ifndef LIBTRACEEVENT_DYNAMIC
-> +prepare: $(LIBTRACEEVENT)
-> +endif
-> +
->  $(OUTPUT)%.o: %.c prepare FORCE
->  	$(Q)$(MAKE) -f $(srctree)/tools/build/Makefile.build dir=$(build-dir) $@
->  
-> @@ -843,6 +856,7 @@ endif
->  
->  $(patsubst perf-%,%.o,$(PROGRAMS)): $(wildcard */*.h)
->  
-> +ifndef LIBTRACEEVENT_DYNAMIC
->  LIBTRACEEVENT_FLAGS += plugin_dir=$(plugindir_SQ) 'EXTRA_CFLAGS=$(EXTRA_CFLAGS)' 'LDFLAGS=$(filter-out -static,$(LDFLAGS))'
->  
->  $(LIBTRACEEVENT): FORCE | $(LIBTRACEEVENT_OUTPUT)
-> @@ -872,6 +886,7 @@ install-traceevent-plugins: libtraceevent_plugins
->  	$(Q)$(MAKE) -C $(LIBTRACEEVENT_PLUGINS_DIR) O=$(LIBTRACEEVENT_PLUGINS_OUTPUT) \
->  		DESTDIR=$(LIBTRACEEVENT_PLUGINS_DESTDIR) prefix= \
->  		$(LIBTRACEEVENT_FLAGS) install
-> +endif
->  
->  $(LIBAPI): FORCE | $(LIBAPI_OUTPUT)
->  	$(Q)$(MAKE) -C $(LIBAPI_DIR) O=$(LIBAPI_OUTPUT) \
-> @@ -1152,7 +1167,7 @@ endif # BUILD_BPF_SKEL
->  bpf-skel-clean:
->  	$(call QUIET_CLEAN, bpf-skel) $(RM) -r $(SKEL_TMP_OUT) $(SKELETONS)
->  
-> -clean:: $(LIBTRACEEVENT)-clean $(LIBAPI)-clean $(LIBBPF)-clean $(LIBSUBCMD)-clean $(LIBSYMBOL)-clean $(LIBPERF)-clean fixdep-clean python-clean bpf-skel-clean tests-coresight-targets-clean libtraceevent_plugins-clean
-> +clean:: $(LIBAPI)-clean $(LIBBPF)-clean $(LIBSUBCMD)-clean $(LIBSYMBOL)-clean $(LIBPERF)-clean fixdep-clean python-clean bpf-skel-clean tests-coresight-targets-clean
->  	$(call QUIET_CLEAN, core-objs)  $(RM) $(LIBPERF_A) $(OUTPUT)perf-archive $(OUTPUT)perf-iostat $(LANG_BINDINGS)
->  	$(Q)find $(or $(OUTPUT),.) -name '*.o' -delete -o -name '\.*.cmd' -delete -o -name '\.*.d' -delete
->  	$(Q)$(RM) $(OUTPUT).config-detected
-> @@ -1192,6 +1207,10 @@ clean:: $(LIBTRACEEVENT)-clean $(LIBAPI)-clean $(LIBBPF)-clean $(LIBSUBCMD)-clea
->  	$(call QUIET_CLEAN, Documentation) \
->  	$(MAKE) -C $(DOC_DIR) O=$(OUTPUT) clean >/dev/null
->  
-> +ifndef LIBTRACEEVENT_DYNAMIC
-> +clean:: $(LIBTRACEEVENT)-clean libtraceevent_plugins-clean
-> +endif
-> +
->  #
->  # To provide FEATURE-DUMP into $(FEATURE_DUMP_COPY)
->  # file if defined, with no further action.
-> diff --git a/tools/perf/util/setup.py b/tools/perf/util/setup.py
-> index 5b1e6468d5e8..43e7ca40b2ec 100644
-> --- a/tools/perf/util/setup.py
-> +++ b/tools/perf/util/setup.py
-> @@ -77,7 +77,8 @@ perf = Extension('perf',
->  		  include_dirs = ['util/include'],
->  		  libraries = extra_libraries,
->  		  extra_compile_args = cflags,
-> -		  extra_objects = [libtraceevent, libapikfs, libperf],
-> +		  extra_objects = [ x for x in [libtraceevent, libapikfs, libperf]
-> +                                    if x is not None],
->                   )
->  
->  setup(name='perf',
-> -- 
-> 2.38.1.431.g37b22c650d-goog
+> -                       sep_idx = sep - argv[i];
+> -                       s = strdup(argv[i]);
+> -                       if (s == NULL) {
+> +                       default_ps.event_glob = strdup(argv[i]);
+> +                       if (!default_ps.event_glob) {
+>                                ret = -1;
+>                                goto out;
+>                        }
+> -
+> -                       s[sep_idx] = '\0';
+> -                       default_ps.pmu_glob = s;
+> -                       default_ps.event_glob = s + sep_idx + 1;
+>                        print_tracepoint_events(&print_cb, ps);
+>                        print_sdt_events(&print_cb, ps);
+>                        default_ps.metrics = true;
+>                        default_ps.metricgroups = true;
+>                        metricgroup__print(&print_cb, ps);
+> -                       free(s);
+> +                       free(default_ps.event_glob);
+> +                       default_ps.event_glob = NULL;
+> ```
+> I think this should be squashed into "perf list: Reorganize to use
+> callbacks". Some explanation, in porting the : glob case I'd assumed
+> the before the colon would be the PMU and the after the event. Doing
+> things caused tracepoint output to differ too much and so for
+> tracepoints the : is kept in the event name. So we can simplify the
+> matching to not be pmu and event, just use the event glob.
 
--- 
+Next time please send the patch, I did it manually and before the last
+option I get:
 
-- Arnaldo
+[root@quaco ~]# perf list syscalls:sys_enter_open |& grep syscalls
+  syscalls:sys_enter_open                            [Tracepoint event]
+[root@quaco ~]# perf test 112
+112: Check open filename arg using perf trace + vfs_getname          : Ok
+[root@quaco ~]#
+
+diff --git a/tools/perf/builtin-list.c b/tools/perf/builtin-list.c
+index 0c84fdb3ad37c1ad..7b63bc30665a7f56 100644
+--- a/tools/perf/builtin-list.c
++++ b/tools/perf/builtin-list.c
+@@ -19,6 +19,7 @@
+ #include "util/strlist.h"
+ #include <subcmd/pager.h>
+ #include <subcmd/parse-options.h>
++#include <linux/zalloc.h>
+ #include <stdio.h>
+ 
+ /**
+@@ -328,25 +329,20 @@ int cmd_list(int argc, const char **argv)
+ 			ps.metrics = false;
+ 			metricgroup__print(&print_cb, &ps);
+ 		} else if ((sep = strchr(argv[i], ':')) != NULL) {
+-			int sep_idx;
+ 			char *old_pmu_glob = ps.pmu_glob;
+ 
+-			sep_idx = sep - argv[i];
+-			s = strdup(argv[i]);
+-			if (s == NULL) {
++			ps.event_glob = strdup(argv[i]);
++			if (!ps.event_glob) {
+ 				ret = -1;
+ 				goto out;
+ 			}
+ 
+-			s[sep_idx] = '\0';
+-			ps.pmu_glob = s;
+-			ps.event_glob = s + sep_idx + 1;
+ 			print_tracepoint_events(&print_cb, &ps);
+ 			print_sdt_events(&print_cb, &ps);
+ 			ps.metrics = true;
+ 			ps.metricgroups = true;
+ 			metricgroup__print(&print_cb, &ps);
+-			free(s);
++			zfree(&ps.event_glob);
+ 			ps.pmu_glob = old_pmu_glob;
+ 		} else {
+ 			if (asprintf(&s, "*%s*", argv[i]) < 0) {
