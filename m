@@ -2,97 +2,135 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AECD5C4332F
-	for <linux-perf-users@archiver.kernel.org>; Thu, 17 Nov 2022 22:52:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BE9F6C433FE
+	for <linux-perf-users@archiver.kernel.org>; Thu, 17 Nov 2022 22:58:25 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S234510AbiKQWwi (ORCPT
+        id S239893AbiKQW6Y (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Thu, 17 Nov 2022 17:52:38 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49248 "EHLO
+        Thu, 17 Nov 2022 17:58:24 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54564 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S235197AbiKQWwV (ORCPT
+        with ESMTP id S235006AbiKQW6W (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Thu, 17 Nov 2022 17:52:21 -0500
-Received: from mail-wm1-x330.google.com (mail-wm1-x330.google.com [IPv6:2a00:1450:4864:20::330])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 84BA065E42
-        for <linux-perf-users@vger.kernel.org>; Thu, 17 Nov 2022 14:52:20 -0800 (PST)
-Received: by mail-wm1-x330.google.com with SMTP id o30so2424104wms.2
-        for <linux-perf-users@vger.kernel.org>; Thu, 17 Nov 2022 14:52:20 -0800 (PST)
+        Thu, 17 Nov 2022 17:58:22 -0500
+Received: from mail-pj1-x1033.google.com (mail-pj1-x1033.google.com [IPv6:2607:f8b0:4864:20::1033])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B1A9262CE
+        for <linux-perf-users@vger.kernel.org>; Thu, 17 Nov 2022 14:58:21 -0800 (PST)
+Received: by mail-pj1-x1033.google.com with SMTP id r61-20020a17090a43c300b00212f4e9cccdso6693972pjg.5
+        for <linux-perf-users@vger.kernel.org>; Thu, 17 Nov 2022 14:58:21 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20210112;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:from:to:cc:subject:date:message-id:reply-to;
-        bh=Wt8mo/vmbZwNG8GL/TKOQ4X0XW2Ob2p8e2KGFxJx1qo=;
-        b=S81v9zXCrlVa1P7JdBW/JpWc4PV1I/azzGigr+dVNTPAvkNJSd66X2QQ4AsI0Jvesb
-         BYu6xt9q+UIyPvvli2lQEImOd5npZYrtQzAA0tUzUTIPhuADa1svox4+UaWvWqvgx5+t
-         ieDx11JNpPMr9OgXPQccUR8OazG0Qmhd13bzqwJuzTmwoeJiiGQ6BNnIH0qmn/R7IrGV
-         OdQVhTNA5vTqoaTP1P7W+5EqyWsJ6k866/hxaCYaM09p9e8VTdIuhncN579tXoDGsqz2
-         ujwMrksk8nxB+dAFINDJhS0onaCXT3E62y/QAlxGzFsube6XYTVtJScTjdKJrc3SXay6
-         7i2Q==
+        d=chromium.org; s=google;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=gB4fu8WxG++brcac1xEx09Jo8IsSv6jaRuNq5hahL+I=;
+        b=Fy4BdUGW9a1WNEtqYFLG188KBaVxCW7dlYHJCJYByhqbYzWtrREex26XefPtc0cld6
+         YCRtECSkUML5k6sMmax4MrQy/8YHDQGVY6nBvl6IgyA0kq1FCwf8z9yqhcxsos46Zhwv
+         H1rDgpoCNHoreRPMRNhXYMHZ9u7/T1h/SC+nQ=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=Wt8mo/vmbZwNG8GL/TKOQ4X0XW2Ob2p8e2KGFxJx1qo=;
-        b=fYjF1+ckxhJhoVr2kSL9uXGz1g1eTiZU1TJmZZswyFGSZrHZC827xM40ZA9yCAFeNI
-         YsIdq0IAwvtVR99y4yFkU6WD2TEXVxg7i0Px/dOsDT8eYR5RgUhfZZ7ZGFudxwddAfgf
-         tEY7iXK5YFd8hDUPYmQEgOqOETHCowu3pbb9Mx9jTXVWQPEpy7dKps06NyTwjPREXhNR
-         LEmSrG1N/surbTTaSVMRSfvMHQIk8RHnF/FtVgdTlegzpDWxFiqFb/hEQpyjPtI0r64b
-         Zhwp4Ck80agw6qgt6sFHiyvOdgICF98YhfIkqgENZl8JGJ7/xy7YUhDMg+ZK3T6voYz9
-         OvfQ==
-X-Gm-Message-State: ANoB5pkuOi6sHuiWofyajmBRzIFptYYdrABvXh6sd4jJE63i7glXoSjy
-        Lb4Q/aFIaj/ge7lHcI/Tf7Ql6JAvlve2LvIllMQbN59ckervGg==
-X-Google-Smtp-Source: AA0mqf7I7gZKcrogPJVyhv0VubDrk/oH7agbpOC6L9wKsryHGMj4QrtQY59KLOsHOGRRapuVENIWQjQ01+0QCtrGqTA=
-X-Received: by 2002:a05:600c:4920:b0:3cf:8b23:549c with SMTP id
- f32-20020a05600c492000b003cf8b23549cmr2947166wmp.174.1668725538850; Thu, 17
- Nov 2022 14:52:18 -0800 (PST)
-MIME-Version: 1.0
-References: <CAP-5=fWxAjEia-Qbm0RVzKOxyiod8rUOBieqaGK=DtQboDe3Qw@mail.gmail.com>
- <20221117134250.532a44c9@gandalf.local.home>
-In-Reply-To: <20221117134250.532a44c9@gandalf.local.home>
-From:   Ian Rogers <irogers@google.com>
-Date:   Thu, 17 Nov 2022 14:52:06 -0800
-Message-ID: <CAP-5=fUmWPz8ZyfuXu929VZkRNXKmD0PCX9WwZNWu+17-ENKiw@mail.gmail.com>
-Subject: Re: Remove traceevent from tools/lib
-To:     Steven Rostedt <rostedt@goodmis.org>
-Cc:     Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Steven Rostedt <rostedt@google.com>,
-        Namhyung Kim <namhyung@kernel.org>,
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=gB4fu8WxG++brcac1xEx09Jo8IsSv6jaRuNq5hahL+I=;
+        b=hbbM0QIGBCJk6mHbBTnvZsrsf0vcsbDO2kQjC/kDEjSe9eF86igLLzdCvKoxCzbPk8
+         t0RyrGvlLSU05qCimPc1HOGM3eMBxiTD2BwI0VWAG9Wmgs+YR0aElxbV9crXsGz1+Fq6
+         m1w77d6b6iH+8fGNKtCperdrZzzUFjdjmqnjX81v5RMIIJY+aZFWcbbEOQhflbWLzgZM
+         3Nf4qaPmzazf8c/r99H5ZzdSdPGotHS1eoO5o110eCdUX2i7pq1ZrHmRa+MZ/xmo/Rcs
+         f9Y4rVAK0MM7J+4POAVa9nwETe6frDFnLRSiHXkJUGh+fQ7N/SFMZ5qV/YNWRFras3nQ
+         hHhQ==
+X-Gm-Message-State: ANoB5pl9hoX7q/2nAmTkrFFyQVXbnKEjXSOu4+Yb9d+jUdSBQJWLWMLl
+        lMN1iyrqIaY2Am3sX9ZAAAlvlA==
+X-Google-Smtp-Source: AA0mqf5a5ur58uPnDpwIjYXEwn4PnQ44wkjJwk4UbGX/PChCoGId0YIreHCZd3TM/oH8mIHpTiFUgA==
+X-Received: by 2002:a17:90a:2b46:b0:213:aa5f:a026 with SMTP id y6-20020a17090a2b4600b00213aa5fa026mr4652677pjc.243.1668725901245;
+        Thu, 17 Nov 2022 14:58:21 -0800 (PST)
+Received: from www.outflux.net (198-0-35-241-static.hfc.comcastbusiness.net. [198.0.35.241])
+        by smtp.gmail.com with ESMTPSA id a11-20020a170902710b00b00186bc66d2cbsm1970473pll.73.2022.11.17.14.58.20
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 17 Nov 2022 14:58:20 -0800 (PST)
+Date:   Thu, 17 Nov 2022 14:58:19 -0800
+From:   Kees Cook <keescook@chromium.org>
+To:     Linus Torvalds <torvalds@linux-foundation.org>
+Cc:     David Hildenbrand <david@redhat.com>, linux-kernel@vger.kernel.org,
+        x86@kernel.org, linux-alpha@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, linux-ia64@vger.kernel.org,
+        linux-mips@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
+        sparclinux@vger.kernel.org, linux-um@lists.infradead.org,
+        etnaviv@lists.freedesktop.org, dri-devel@lists.freedesktop.org,
+        linux-samsung-soc@vger.kernel.org, linux-rdma@vger.kernel.org,
+        linux-media@vger.kernel.org, linux-fsdevel@vger.kernel.org,
+        linux-mm@kvack.org, linux-perf-users@vger.kernel.org,
+        linux-security-module@vger.kernel.org,
+        linux-kselftest@vger.kernel.org,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Jason Gunthorpe <jgg@ziepe.ca>,
+        John Hubbard <jhubbard@nvidia.com>,
+        Peter Xu <peterx@redhat.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Andrea Arcangeli <aarcange@redhat.com>,
+        Hugh Dickins <hughd@google.com>, Nadav Amit <namit@vmware.com>,
+        Vlastimil Babka <vbabka@suse.cz>,
+        Matthew Wilcox <willy@infradead.org>,
+        Mike Kravetz <mike.kravetz@oracle.com>,
+        Muchun Song <songmuchun@bytedance.com>,
+        Shuah Khan <shuah@kernel.org>,
+        Lucas Stach <l.stach@pengutronix.de>,
+        David Airlie <airlied@gmail.com>,
+        Oded Gabbay <ogabbay@kernel.org>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Christoph Hellwig <hch@infradead.org>,
+        Alex Williamson <alex.williamson@redhat.com>,
+        Oleg Nesterov <oleg@redhat.com>,
+        Richard Henderson <richard.henderson@linaro.org>,
+        Ivan Kokshaysky <ink@jurassic.park.msu.ru>,
+        Matt Turner <mattst88@gmail.com>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Will Deacon <will@kernel.org>,
+        Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        Nicholas Piggin <npiggin@gmail.com>,
+        Christophe Leroy <christophe.leroy@csgroup.eu>,
+        "David S. Miller" <davem@davemloft.net>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+        Dave Hansen <dave.hansen@linux.intel.com>,
+        "H. Peter Anvin" <hpa@zytor.com>,
+        Richard Weinberger <richard@nod.at>,
+        Anton Ivanov <anton.ivanov@cambridgegreys.com>,
+        Johannes Berg <johannes@sipsolutions.net>,
+        Eric Biederman <ebiederm@xmission.com>,
+        Alexander Viro <viro@zeniv.linux.org.uk>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Arnaldo Carvalho de Melo <acme@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
         Jiri Olsa <jolsa@kernel.org>,
-        Adrian Hunter <adrian.hunter@intel.com>,
-        LKML <linux-kernel@vger.kernel.org>,
-        linux-perf-users <linux-perf-users@vger.kernel.org>,
-        Linux Trace Devel <linux-trace-devel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+        Namhyung Kim <namhyung@kernel.org>,
+        Kentaro Takeda <takedakn@nttdata.co.jp>,
+        Tetsuo Handa <penguin-kernel@i-love.sakura.ne.jp>,
+        Paul Moore <paul@paul-moore.com>,
+        James Morris <jmorris@namei.org>,
+        "Serge E. Hallyn" <serge@hallyn.com>
+Subject: Re: [PATCH mm-unstable v1 20/20] mm: rename FOLL_FORCE to FOLL_PTRACE
+Message-ID: <202211171439.CDE720EAD@keescook>
+References: <20221116102659.70287-1-david@redhat.com>
+ <20221116102659.70287-21-david@redhat.com>
+ <CAHk-=wgtEwpR-rE_=cXzecHMZ+zgrx5zf9UfvH0w-mKgckn4=Q@mail.gmail.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CAHk-=wgtEwpR-rE_=cXzecHMZ+zgrx5zf9UfvH0w-mKgckn4=Q@mail.gmail.com>
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-On Thu, Nov 17, 2022 at 10:42 AM Steven Rostedt <rostedt@goodmis.org> wrote:
->
-> On Thu, 17 Nov 2022 09:59:46 -0800
-> Ian Rogers <irogers@google.com> wrote:
->
-> > Means that perf is cleanly(ish) separated from libraries in tools/lib.
-> > traceevent in tools/lib is out of date (~2years - version 1.1.0 whilst
-> > the latest is 1.6.3 [1]) . Should we delete traceevent from tools/lib
->
-> Yes please!
->
-> Strongly-acked-by: Steven Rostedt (Google) <rostedt@goodmis.org>
+On Wed, Nov 16, 2022 at 10:16:34AM -0800, Linus Torvalds wrote:
+> There _are_ also small random cases too, like get_cmdline(). Maybe
+> that counts as ptrace, but the execve() case most definitely does not.
 
-I sent v1 patches:
-https://lore.kernel.org/lkml/20221117224952.358639-1-irogers@google.com/
+Oh, er, why does get_arg_page() even need FOLL_FORCE? This is writing the
+new stack contents to the nascent brpm->vma, which was newly allocated
+with VM_STACK_FLAGS, which an arch can override, but they all appear to include
+VM_WRITE | VM_MAYWRITE.
 
-Thanks,
-Ian
-
-> -- Steve
->
-> > and just make LIBTRACEEVENT_DYNAMIC the only supported perf build
-> > option? I guess this may break old distributions that may not have
-> > libtraceevent, but even so I'm not sure that should motivate not
-> > cleaning this up (if they are building perf they can build
-> > libtraceevent).
->
+-- 
+Kees Cook
