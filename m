@@ -2,109 +2,127 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9FFE3C433FE
-	for <linux-perf-users@archiver.kernel.org>; Thu, 17 Nov 2022 13:28:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D2331C433FE
+	for <linux-perf-users@archiver.kernel.org>; Thu, 17 Nov 2022 14:44:06 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S239449AbiKQN2A (ORCPT
+        id S234932AbiKQOoF (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Thu, 17 Nov 2022 08:28:00 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44568 "EHLO
+        Thu, 17 Nov 2022 09:44:05 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38098 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S234551AbiKQN17 (ORCPT
+        with ESMTP id S239808AbiKQOnc (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Thu, 17 Nov 2022 08:27:59 -0500
-Received: from mga07.intel.com (mga07.intel.com [134.134.136.100])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E6EAD5A6C1
-        for <linux-perf-users@vger.kernel.org>; Thu, 17 Nov 2022 05:27:56 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1668691676; x=1700227676;
-  h=message-id:date:mime-version:subject:to:cc:references:
-   from:in-reply-to:content-transfer-encoding;
-  bh=wc3U9KLFAtf2/OGX95AllefU2cUf9I1rAojfHsbkOHs=;
-  b=khAwndOwhvRd05f0Mq8Q4ay9rWRyLJ0ETClzPFkMLpky5f+9hydcJvXo
-   /ylP9mrAuA1laZTx2MlEoJEBdH1dOkqfc4Z3zLzIkVR5O0uAIssFVOmfY
-   ej5TMmgmkBgi1AJSQe6n3D2tlJvdTMgksSbjX1nxmfZJqoqlVIq1zM1XI
-   o1jV/pP0dGngRSK23NCagGx9d23T3EaVIBPkgjGrU64n/WMgcX9pWMNdx
-   8O2I/xMuskOZXG6dt0Qronm5wcGQUtJbmarxXWW6Bg+HxS8jea8IGn3O0
-   P1Ri6lNDaipY72Tun22HNnpwlJDxUBwLRfdrctWPnV/tA95zCBAgPy470
-   w==;
-X-IronPort-AV: E=McAfee;i="6500,9779,10533"; a="377114238"
-X-IronPort-AV: E=Sophos;i="5.96,171,1665471600"; 
-   d="scan'208";a="377114238"
-Received: from fmsmga006.fm.intel.com ([10.253.24.20])
-  by orsmga105.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 17 Nov 2022 05:27:40 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6500,9779,10533"; a="884866057"
-X-IronPort-AV: E=Sophos;i="5.96,171,1665471600"; 
-   d="scan'208";a="884866057"
-Received: from linux.intel.com ([10.54.29.200])
-  by fmsmga006.fm.intel.com with ESMTP; 17 Nov 2022 05:27:39 -0800
-Received: from [10.252.215.146] (kliang2-mobl1.ccr.corp.intel.com [10.252.215.146])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        Thu, 17 Nov 2022 09:43:32 -0500
+Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 29A8D2EE;
+        Thu, 17 Nov 2022 06:43:29 -0800 (PST)
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by linux.intel.com (Postfix) with ESMTPS id A3DF0580DFD;
-        Thu, 17 Nov 2022 05:27:38 -0800 (PST)
-Message-ID: <1ca7d49a-c3c7-32b2-29ea-7e086c514b97@linux.intel.com>
-Date:   Thu, 17 Nov 2022 08:27:37 -0500
+        by dfw.source.kernel.org (Postfix) with ESMTPS id 9327561F30;
+        Thu, 17 Nov 2022 14:43:28 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 00237C43145;
+        Thu, 17 Nov 2022 14:43:27 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1668696208;
+        bh=PtQQuZh4x6gkV/7zv1jhLBJM1shrxLNzaR2wdAV4Bd0=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=kB2sPWpNiRz3Ae5/wQ0URqxkNLVMl/RxfCfciicYJPXxVc5Y2XSJ/yPnX2YBvz0cD
+         OTa9l2PKqLK95LJ7u8UH8tINKpDUs2hElD9P4RJm1SAeWti+PD9Q3rUiejlkp9BE/p
+         pEbgHD6MSE+4y1YjRNh9F0tLmC3lm9lQEYHj1MqDbLg4JkFxyhKwqLJFMRlT3Xza/1
+         XYUpqClvX3tNAGecFCaCLZ/Oam405WgZIJiYAtNJUhfqbc48PMmACkcw3iI2loi24S
+         dkiHMLnpG0EOssXf+F24ZRWgvAStUW3PMJdF2XcNZnI3DcY5+zV56DDjy7wH3CfUO0
+         /7jyoYL6te+/g==
+Received: by mail-lj1-f176.google.com with SMTP id b9so2987017ljr.5;
+        Thu, 17 Nov 2022 06:43:27 -0800 (PST)
+X-Gm-Message-State: ANoB5pmJnfkM50EWKbOtF7XWvUPLdtERekjFDZYifx61PRFV8wX5gmKp
+        WXvkZ9QK22dOUFwoPABRiUS7Jy0uDVHBtBsJ0Q==
+X-Google-Smtp-Source: AA0mqf7jB2iKLFyRkgEPhmDznVrq+mWMaPm8RVbm9kLapVF5jFapO3LQ2aTW4BZ64Qc2gAP6XYENyA06X1A0z4BBREg=
+X-Received: by 2002:a05:651c:1690:b0:277:2b10:bf69 with SMTP id
+ bd16-20020a05651c169000b002772b10bf69mr1213015ljb.392.1668696205975; Thu, 17
+ Nov 2022 06:43:25 -0800 (PST)
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:102.0) Gecko/20100101
- Thunderbird/102.5.0
-Subject: Re: [PATCH v4 3/4] perf/x86/intel/uncore: Fix reference count leak in
- snr_uncore_mmio_map()
-Content-Language: en-US
-To:     Xiongfeng Wang <wangxiongfeng2@huawei.com>,
-        adrian.hunter@intel.com, peterz@infradead.org, ak@linux.intel.com,
-        alexander.shishkin@linux.intel.com,
-        alexander.antonov@linux.intel.com, acme@kernel.org,
-        jolsa@kernel.org
-Cc:     linux-perf-users@vger.kernel.org, yangyingliang@huawei.com
-References: <20221117094336.10846-1-wangxiongfeng2@huawei.com>
- <20221117094336.10846-4-wangxiongfeng2@huawei.com>
-From:   "Liang, Kan" <kan.liang@linux.intel.com>
-In-Reply-To: <20221117094336.10846-4-wangxiongfeng2@huawei.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+References: <20220825-arm-spe-v8-7-v3-0-87682f78caac@kernel.org>
+In-Reply-To: <20220825-arm-spe-v8-7-v3-0-87682f78caac@kernel.org>
+From:   Rob Herring <robh@kernel.org>
+Date:   Thu, 17 Nov 2022 08:43:17 -0600
+X-Gmail-Original-Message-ID: <CAL_Jsq+WOjoPW0FDSa=B9-aCMwXC3tc5HUqokoVkKUucKgqanQ@mail.gmail.com>
+Message-ID: <CAL_Jsq+WOjoPW0FDSa=B9-aCMwXC3tc5HUqokoVkKUucKgqanQ@mail.gmail.com>
+Subject: Re: [PATCH v3 0/8] perf: Arm SPEv1.2 support
+To:     Namhyung Kim <namhyung@kernel.org>, Will Deacon <will@kernel.org>,
+        Arnaldo Carvalho de Melo <acme@kernel.org>,
+        Jiri Olsa <jolsa@kernel.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Marc Zyngier <maz@kernel.org>,
+        Oliver Upton <oliver.upton@linux.dev>,
+        Ingo Molnar <mingo@redhat.com>,
+        Suzuki K Poulose <suzuki.poulose@arm.com>,
+        James Morse <james.morse@arm.com>,
+        Alexandru Elisei <alexandru.elisei@arm.com>
+Cc:     kvmarm@lists.linux.dev, linux-perf-users@vger.kernel.org,
+        linux-kernel@vger.kernel.org, James Clark <james.clark@arm.com>,
+        Mark Brown <broonie@kernel.org>,
+        linux-arm-kernel@lists.infradead.org, kvmarm@lists.cs.columbia.edu
+Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-
-
-On 2022-11-17 4:43 a.m., Xiongfeng Wang wrote:
-> pci_get_device() will increase the reference count for the returned
-> pci_dev, so snr_uncore_get_mc_dev() will return a pci_dev with its
-> reference count increased. We need to call pci_dev_put() to decrease the
-> reference count before exiting from snr_uncore_mmio_map(). Add
-> pci_dev_put() for both normal and error path.
-> 
-> Fixes: ee49532b38dd ("perf/x86/intel/uncore: Add IMC uncore support for Snow Ridge")
-> Signed-off-by: Xiongfeng Wang <wangxiongfeng2@huawei.com>
+On Fri, Nov 4, 2022 at 10:55 AM Rob Herring <robh@kernel.org> wrote:
+>
+> This series adds support for Arm SPEv1.2 which is part of the
+> Armv8.7/Armv9.2 architecture. There's 2 new features that affect the
+> kernel: a new event filter bit, branch 'not taken', and an inverted
+> event filter register.
+>
+> Since this support adds new registers and fields, first the SPE register
+> defines are converted to automatic generation.
+>
+> Note that the 'config3' addition in sysfs format files causes SPE to
+> break. A stable fix e552b7be12ed ("perf: Skip and warn on unknown format
+> 'configN' attrs") landed in v6.1-rc1.
+>
+> The perf tool side changes are available here[1].
+>
+> Tested on FVP.
+>
+> [1] https://lore.kernel.org/all/20220914-arm-perf-tool-spe1-2-v2-v4-0-83c098e6212e@kernel.org/
+>
+> Signed-off-by: Rob Herring <robh@kernel.org>
 > ---
->  arch/x86/events/intel/uncore_snbep.c | 3 +++
->  1 file changed, 3 insertions(+)
-> 
-> diff --git a/arch/x86/events/intel/uncore_snbep.c b/arch/x86/events/intel/uncore_snbep.c
-> index 3fc484045ed6..0481f5135cb1 100644
-> --- a/arch/x86/events/intel/uncore_snbep.c
-> +++ b/arch/x86/events/intel/uncore_snbep.c
-> @@ -4866,9 +4866,12 @@ static int snr_uncore_mmio_map(struct intel_uncore_box *box,
+> Changes in v3:
+> - Add some more missing SPE register fields and use Enums for some
+>   fields
+> - Use the new PMSIDR_EL1 register Enum defines in the SPE driver
+> - Link to v2: https://lore.kernel.org/r/20220825-arm-spe-v8-7-v2-0-e37322d68ac0@kernel.org
+>
+> Changes in v2:
+> - Convert the SPE register defines to automatic generation
+> - Fixed access to SYS_PMSNEVFR_EL1 when not present
+> - Rebase on v6.1-rc1
+> - Link to v1: https://lore.kernel.org/r/20220825-arm-spe-v8-7-v1-0-c75b8d92e692@kernel.org
+>
+> ---
+> Rob Herring (8):
+>       perf: arm_spe: Use feature numbering for PMSEVFR_EL1 defines
+>       arm64: Drop SYS_ from SPE register defines
+>       arm64/sysreg: Convert SPE registers to automatic generation
+>       perf: arm_spe: Drop BIT() and use FIELD_GET/PREP accessors
+>       perf: arm_spe: Use new PMSIDR_EL1 register enums
+>       perf: arm_spe: Support new SPEv1.2/v8.7 'not taken' event
+>       perf: Add perf_event_attr::config3
+>       perf: arm_spe: Add support for SPEv1.2 inverted event filtering
+>
+>  arch/arm64/include/asm/el2_setup.h |   6 +-
+>  arch/arm64/include/asm/sysreg.h    |  99 +++--------------------
+>  arch/arm64/kvm/debug.c             |   2 +-
+>  arch/arm64/kvm/hyp/nvhe/debug-sr.c |   2 +-
+>  arch/arm64/tools/sysreg            | 139 +++++++++++++++++++++++++++++++++
+>  drivers/perf/arm_spe_pmu.c         | 156 ++++++++++++++++++++++++-------------
+>  include/uapi/linux/perf_event.h    |   3 +
+>  7 files changed, 257 insertions(+), 150 deletions(-)
 
-Similar to the previous comments.
-I think we can release the dev immediately once when we do not use it
-anymore. So we don't need to patch it everywhere later.
-
-Thanks,
-Kan
->  	box->io_addr = ioremap(addr, type->mmio_map_size);
->  	if (!box->io_addr) {
->  		pr_warn("perf uncore: Failed to ioremap for %s.\n", type->name);
-> +		pci_dev_put(pdev);
->  		return -EINVAL;
->  	}
->  
-> +	pci_dev_put(pdev);
-> +
->  	return 0;
->  }
->  
+Will, any comments on this series?
