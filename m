@@ -2,199 +2,118 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E7578C433FE
-	for <linux-perf-users@archiver.kernel.org>; Fri, 18 Nov 2022 16:34:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5787EC433FE
+	for <linux-perf-users@archiver.kernel.org>; Fri, 18 Nov 2022 16:46:02 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S235382AbiKRQeL (ORCPT
+        id S242290AbiKRQp7 (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Fri, 18 Nov 2022 11:34:11 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52588 "EHLO
+        Fri, 18 Nov 2022 11:45:59 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60918 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S235230AbiKRQeK (ORCPT
+        with ESMTP id S242234AbiKRQpk (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Fri, 18 Nov 2022 11:34:10 -0500
-Received: from ams.source.kernel.org (ams.source.kernel.org [IPv6:2604:1380:4601:e00::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A2C2A5BD5B;
-        Fri, 18 Nov 2022 08:34:08 -0800 (PST)
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        Fri, 18 Nov 2022 11:45:40 -0500
+Received: from smtp-out1.suse.de (smtp-out1.suse.de [195.135.220.28])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3C7FD13EAF;
+        Fri, 18 Nov 2022 08:45:34 -0800 (PST)
+Received: from imap2.suse-dmz.suse.de (imap2.suse-dmz.suse.de [192.168.254.74])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange X25519 server-signature ECDSA (P-521) server-digest SHA512)
         (No client certificate requested)
-        by ams.source.kernel.org (Postfix) with ESMTPS id 5B376B822E5;
-        Fri, 18 Nov 2022 16:34:07 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id BAF05C433C1;
-        Fri, 18 Nov 2022 16:34:05 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1668789246;
-        bh=HvpYsDoM0kbv0dGnSZGFMkheMby5lV6hgcABr8z3P/0=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=g1YihLXajpO15zRFFwgDKHehxVwKDcUZlZoVbt4gW+LjX36zPFhPQXDLHpXxhWt7E
-         t/QKqAxSfp9v72vADi3eHUNSbt5/SC+0I2KasMpplWDN1460XHTVBq5ErDg0k9qaVY
-         k8FDQ4fSbnBo4cdVgmSnyfo3g8n72WEKw4pOatkQPysRFDXisF/rxL3QLueYi1TXMX
-         XVMnIYxINuoEj8paVwM6iG5BUhl2Pw9HccPdH9PncPkJ5B/lzhMF8J2oggLpS9qaIW
-         LrP2/7GBCtrU8mLr3w1LJ0WNk8AuivXRzdsIIKPNeL1jAQWamJ3eF7DDp7jpe51lOb
-         zhJtxlVuVdOfA==
-Received: by quaco.ghostprotocols.net (Postfix, from userid 1000)
-        id 2E3524034E; Fri, 18 Nov 2022 13:34:03 -0300 (-03)
-Date:   Fri, 18 Nov 2022 13:34:03 -0300
-From:   Arnaldo Carvalho de Melo <acme@kernel.org>
-To:     Steven Rostedt <rostedt@goodmis.org>
-Cc:     Peter Zijlstra <peterz@infradead.org>,
-        Ian Rogers <irogers@google.com>,
-        Ingo Molnar <mingo@redhat.com>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Jiri Olsa <jolsa@kernel.org>,
-        Namhyung Kim <namhyung@kernel.org>,
-        Masami Hiramatsu <mhiramat@kernel.org>,
-        linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org,
-        Steven Rostedt <rostedt@google.com>,
-        Adrian Hunter <adrian.hunter@intel.com>,
-        Linux Trace Devel <linux-trace-devel@vger.kernel.org>,
-        Stephane Eranian <eranian@google.com>
-Subject: Re: [PATCH v1 1/2] perf build: Require libtraceevent from the system
-Message-ID: <Y3ez+y/k1dIip5hH@kernel.org>
-References: <20221117224952.358639-1-irogers@google.com>
- <20221117224952.358639-2-irogers@google.com>
- <Y3dQxVNwGmQMWPP0@hirez.programming.kicks-ass.net>
- <Y3eejjLjChlGC96I@kernel.org>
- <20221118103302.7ea12016@gandalf.local.home>
+        by smtp-out1.suse.de (Postfix) with ESMTPS id B457722809;
+        Fri, 18 Nov 2022 16:45:32 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.cz; s=susede2_rsa;
+        t=1668789932; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+         mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=gGWCBwR6W7N/T/oKVxq15JaXduGL74ybELQMLEOROjQ=;
+        b=oTTvOF9em1RBHrcDz3sPtZD55HB28JQKz0rq8O6fqbEdz69a/AXJF4jT92zC2TnMfoTP5o
+        N+/92zbPBa11XH4uj3j1PVuX4IFT5iMf+cuDaOPUiGYk17AhOFewCKsW2Vloee6rUH2cev
+        ywRRIq+dF6sPyizq6eVC4qLT8N+v1Fc=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.cz;
+        s=susede2_ed25519; t=1668789932;
+        h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+         mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=gGWCBwR6W7N/T/oKVxq15JaXduGL74ybELQMLEOROjQ=;
+        b=w1a8SK5GtUV98VIRjCKPQTv/uTPpGl8AZCdCXalMKOScuLDWEelI6GTSk7XWYEsOviak8d
+        9ZPPVSaQ1GZLctAg==
+Received: from imap2.suse-dmz.suse.de (imap2.suse-dmz.suse.de [192.168.254.74])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange X25519 server-signature ECDSA (P-521) server-digest SHA512)
+        (No client certificate requested)
+        by imap2.suse-dmz.suse.de (Postfix) with ESMTPS id 2CE531345B;
+        Fri, 18 Nov 2022 16:45:32 +0000 (UTC)
+Received: from dovecot-director2.suse.de ([192.168.254.65])
+        by imap2.suse-dmz.suse.de with ESMTPSA
+        id /+1SCqy2d2MoEAAAMHmgww
+        (envelope-from <vbabka@suse.cz>); Fri, 18 Nov 2022 16:45:32 +0000
+Message-ID: <f427422c-9af3-dc0a-dcc3-2a1114eb77ea@suse.cz>
+Date:   Fri, 18 Nov 2022 17:45:31 +0100
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20221118103302.7ea12016@gandalf.local.home>
-X-Url:  http://acmel.wordpress.com
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
+ Thunderbird/102.4.2
+Subject: Re: [PATCH mm-unstable v1 04/20] mm: add early FAULT_FLAG_UNSHARE
+ consistency checks
+Content-Language: en-US
+To:     David Hildenbrand <david@redhat.com>, linux-kernel@vger.kernel.org
+Cc:     x86@kernel.org, linux-alpha@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, linux-ia64@vger.kernel.org,
+        linux-mips@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
+        sparclinux@vger.kernel.org, linux-um@lists.infradead.org,
+        etnaviv@lists.freedesktop.org, dri-devel@lists.freedesktop.org,
+        linux-samsung-soc@vger.kernel.org, linux-rdma@vger.kernel.org,
+        linux-media@vger.kernel.org, linux-fsdevel@vger.kernel.org,
+        linux-mm@kvack.org, linux-perf-users@vger.kernel.org,
+        linux-security-module@vger.kernel.org,
+        linux-kselftest@vger.kernel.org,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Jason Gunthorpe <jgg@ziepe.ca>,
+        John Hubbard <jhubbard@nvidia.com>,
+        Peter Xu <peterx@redhat.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Andrea Arcangeli <aarcange@redhat.com>,
+        Hugh Dickins <hughd@google.com>, Nadav Amit <namit@vmware.com>,
+        Matthew Wilcox <willy@infradead.org>,
+        Mike Kravetz <mike.kravetz@oracle.com>,
+        Muchun Song <songmuchun@bytedance.com>,
+        Shuah Khan <shuah@kernel.org>,
+        Lucas Stach <l.stach@pengutronix.de>,
+        David Airlie <airlied@gmail.com>,
+        Oded Gabbay <ogabbay@kernel.org>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Christoph Hellwig <hch@infradead.org>,
+        Alex Williamson <alex.williamson@redhat.com>
+References: <20221116102659.70287-1-david@redhat.com>
+ <20221116102659.70287-5-david@redhat.com>
+From:   Vlastimil Babka <vbabka@suse.cz>
+In-Reply-To: <20221116102659.70287-5-david@redhat.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-Em Fri, Nov 18, 2022 at 10:33:02AM -0500, Steven Rostedt escreveu:
-> On Fri, 18 Nov 2022 12:02:38 -0300 Arnaldo Carvalho de Melo <acme@kernel.org> wrote:
- 
-> > yeah, this probably should work like with other libraries, don't stop
-> > the build, just don't build features that depend on libtraceevent,
-> > warning the user that features foo, bar and baz won't be available.
+On 11/16/22 11:26, David Hildenbrand wrote:
+> For now, FAULT_FLAG_UNSHARE only applies to anonymous pages, which
+> implies a COW mapping. Let's hide FAULT_FLAG_UNSHARE early if we're not
+> dealing with a COW mapping, such that we treat it like a read fault as
+> documented and don't have to worry about the flag throughout all fault
+> handlers.
+> 
+> While at it, centralize the check for mutual exclusion of
+> FAULT_FLAG_UNSHARE and FAULT_FLAG_WRITE and just drop the check that
+> either flag is set in the WP handler.
+> 
+> Signed-off-by: David Hildenbrand <david@redhat.com>
+> ---
+>  mm/huge_memory.c |  3 ---
+>  mm/hugetlb.c     |  5 -----
+>  mm/memory.c      | 23 ++++++++++++++++++++---
+>  3 files changed, 20 insertions(+), 11 deletions(-)
 
-> > For people working with just hardware, software, cache events, no
-> > problem.
- 
-> How are software events parsed?
+Reviewed-by: Vlastimil Babka <vbabka@suse.cz>
 
-Not parsed, fixed:
-
-root@roc-rk3399-pc:~# perf list sw
-
-List of pre-defined events (to be used in -e or -M):
-
-  alignment-faults                                   [Software event]
-  bpf-output                                         [Software event]
-  cgroup-switches                                    [Software event]
-  context-switches OR cs                             [Software event]
-  cpu-clock                                          [Software event]
-  cpu-migrations OR migrations                       [Software event]
-  dummy                                              [Software event]
-  emulation-faults                                   [Software event]
-  major-faults                                       [Software event]
-  minor-faults                                       [Software event]
-  page-faults OR faults                              [Software event]
-  task-clock                                         [Software event]
-
-  duration_time                                      [Tool event]
-  user_time                                          [Tool event]
-  system_time                                        [Tool event]
-
-root@roc-rk3399-pc:~#
-
-
-In addition to:
-
-root@roc-rk3399-pc:~# perf list hw
-
-List of pre-defined events (to be used in -e or -M):
-
-  branch-instructions OR branches                    [Hardware event]
-  branch-misses                                      [Hardware event]
-  bus-cycles                                         [Hardware event]
-  cache-misses                                       [Hardware event]
-  cache-references                                   [Hardware event]
-  cpu-cycles OR cycles                               [Hardware event]
-  instructions                                       [Hardware event]
-
-root@roc-rk3399-pc:~#
-
-And:
-
-root@roc-rk3399-pc:~# perf list cache
-
-List of pre-defined events (to be used in -e or -M):
-
-  L1-dcache-load-misses                              [Hardware cache event]
-  L1-dcache-loads                                    [Hardware cache event]
-  L1-dcache-prefetch-misses                          [Hardware cache event]
-  L1-dcache-store-misses                             [Hardware cache event]
-  L1-dcache-stores                                   [Hardware cache event]
-  L1-icache-load-misses                              [Hardware cache event]
-  L1-icache-loads                                    [Hardware cache event]
-  branch-load-misses                                 [Hardware cache event]
-  branch-loads                                       [Hardware cache event]
-  dTLB-load-misses                                   [Hardware cache event]
-  dTLB-store-misses                                  [Hardware cache event]
-  iTLB-load-misses                                   [Hardware cache event]
-  node-loads                                         [Hardware cache event]
-  node-stores                                        [Hardware cache event]
-
-root@roc-rk3399-pc:~#
-
-Without something like libtraceevent 'perf probe', 'perf trace' wouldn't
-work as of now, as it currently use libtraceevent to parse whats in
-tracefs.
-
-So for some people, just interested in profiling the above hw, sw and
-cache events, libtraceevent isn't strictly required and may even be
-desirable to reduce the number of library dependencies.
-
-So its a valid feature to allow perf to be built without libtraceevent,
-i.e. not something needed for the above scenarios.
-
-With libbpf and BTF tracefs isn't also strictly needed, as we already
-have to link with it and things like 'perf trace' want to use libbpf's
-btf pretty printing stuff, we can use BTF to enumerate events, iterate
-thru its fields, offsets, types, etc:
-
-root@roc-rk3399-pc:~# pahole --sizes | grep trace_event_raw_sched
-trace_event_raw_sched_kthread_stop	28	0
-trace_event_raw_sched_kthread_stop_ret	12	0
-trace_event_raw_sched_kthread_work_queue_work	32	0
-trace_event_raw_sched_kthread_work_execute_start	24	0
-trace_event_raw_sched_kthread_work_execute_end	24	0
-trace_event_raw_sched_wakeup_template	36	0
-trace_event_raw_sched_switch	64	0
-trace_event_raw_sched_migrate_task	40	0
-trace_event_raw_sched_process_template	32	0
-trace_event_raw_sched_process_wait	32	0
-trace_event_raw_sched_process_fork	48	0
-trace_event_raw_sched_process_exec	20	0
-trace_event_raw_sched_stat_runtime	48	1
-trace_event_raw_sched_pi_setprio	36	0
-trace_event_raw_sched_move_numa	36	0
-trace_event_raw_sched_numa_pair_template	48	0
-trace_event_raw_sched_wake_idle_without_ipi	12	0
-root@roc-rk3399-pc:~#
-
-root@roc-rk3399-pc:~# pahole trace_event_raw_sched_switch
-struct trace_event_raw_sched_switch {
-	struct trace_entry         ent;                  /*     0     8 */
-	char                       prev_comm[16];        /*     8    16 */
-	pid_t                      prev_pid;             /*    24     4 */
-	int                        prev_prio;            /*    28     4 */
-	long int                   prev_state;           /*    32     8 */
-	char                       next_comm[16];        /*    40    16 */
-	pid_t                      next_pid;             /*    56     4 */
-	int                        next_prio;            /*    60     4 */
-	/* --- cacheline 1 boundary (64 bytes) --- */
-	char                       __data[];             /*    64     0 */
-
-	/* size: 64, cachelines: 1, members: 9 */
-};
-root@roc-rk3399-pc:~#
-
-- Arnaldo
