@@ -2,142 +2,123 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 33986C43219
-	for <linux-perf-users@archiver.kernel.org>; Fri, 18 Nov 2022 17:03:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F01D2C4332F
+	for <linux-perf-users@archiver.kernel.org>; Fri, 18 Nov 2022 17:47:19 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S242340AbiKRRDJ (ORCPT
+        id S235251AbiKRRrT (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Fri, 18 Nov 2022 12:03:09 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42220 "EHLO
+        Fri, 18 Nov 2022 12:47:19 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41688 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S242402AbiKRRDF (ORCPT
+        with ESMTP id S242115AbiKRRrS (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Fri, 18 Nov 2022 12:03:05 -0500
-Received: from smtp-out2.suse.de (smtp-out2.suse.de [195.135.220.29])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4D05C87564;
-        Fri, 18 Nov 2022 09:03:03 -0800 (PST)
-Received: from imap2.suse-dmz.suse.de (imap2.suse-dmz.suse.de [192.168.254.74])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange X25519 server-signature ECDSA (P-521) server-digest SHA512)
-        (No client certificate requested)
-        by smtp-out2.suse.de (Postfix) with ESMTPS id D4BF31FDA4;
-        Fri, 18 Nov 2022 17:03:01 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.cz; s=susede2_rsa;
-        t=1668790981; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-         mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=fK2sdLfZqlxwdzyzeVC6Yy7wx8vYkqbsaxCq7BgcB58=;
-        b=LS+hNeQ4geGgj4IXWO5+0pS41T+O+kbhrtYk+pP+vVRIoeuKs+oW13F6Ht+tR7USTuEyYF
-        w44h38vtDK2kFPU+O2RCals0tqkM1nJKUf86qC24NucyatqLyr4TTvgkMY8PsBAD2uBX+L
-        cHUUR5s7utA0uOsl3r11W1mUfWblbh8=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.cz;
-        s=susede2_ed25519; t=1668790981;
-        h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-         mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=fK2sdLfZqlxwdzyzeVC6Yy7wx8vYkqbsaxCq7BgcB58=;
-        b=khb2AjlSZXqyWGI6UYbr+/ZmYWHGQEHMU8He9yK4yvl4DWCKZ0jYtp3ha5rFTfTmR/yC2u
-        C7/yrrNfpsGvyLBA==
-Received: from imap2.suse-dmz.suse.de (imap2.suse-dmz.suse.de [192.168.254.74])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange X25519 server-signature ECDSA (P-521) server-digest SHA512)
-        (No client certificate requested)
-        by imap2.suse-dmz.suse.de (Postfix) with ESMTPS id 41DED1345B;
-        Fri, 18 Nov 2022 17:03:01 +0000 (UTC)
-Received: from dovecot-director2.suse.de ([192.168.254.65])
-        by imap2.suse-dmz.suse.de with ESMTPSA
-        id kEZlD8W6d2PfGAAAMHmgww
-        (envelope-from <vbabka@suse.cz>); Fri, 18 Nov 2022 17:03:01 +0000
-Message-ID: <e4dd50b8-7ae9-a6fd-8765-2b2dd90ea1a8@suse.cz>
-Date:   Fri, 18 Nov 2022 18:03:00 +0100
+        Fri, 18 Nov 2022 12:47:18 -0500
+Received: from foss.arm.com (foss.arm.com [217.140.110.172])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTP id B290F6035C;
+        Fri, 18 Nov 2022 09:47:17 -0800 (PST)
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 71A2123A;
+        Fri, 18 Nov 2022 09:47:23 -0800 (PST)
+Received: from FVFF77S0Q05N.cambridge.arm.com (FVFF77S0Q05N.cambridge.arm.com [10.1.34.127])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 42EAB3F663;
+        Fri, 18 Nov 2022 09:47:15 -0800 (PST)
+Date:   Fri, 18 Nov 2022 17:47:05 +0000
+From:   Mark Rutland <mark.rutland@arm.com>
+To:     Anshuman Khandual <anshuman.khandual@arm.com>
+Cc:     Suzuki K Poulose <suzuki.poulose@arm.com>,
+        linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, peterz@infradead.org,
+        acme@kernel.org, will@kernel.org, catalin.marinas@arm.com,
+        Mark Brown <broonie@kernel.org>,
+        James Clark <james.clark@arm.com>,
+        Rob Herring <robh@kernel.org>, Marc Zyngier <maz@kernel.org>,
+        Ingo Molnar <mingo@redhat.com>
+Subject: Re: [PATCH V5 2/7] arm64/perf: Update struct arm_pmu for BRBE
+Message-ID: <Y3fFGQN55+LM5s5u@FVFF77S0Q05N.cambridge.arm.com>
+References: <20221107062514.2851047-1-anshuman.khandual@arm.com>
+ <20221107062514.2851047-3-anshuman.khandual@arm.com>
+ <8f6d3424-2650-8e8b-61f7-1431aec4633b@arm.com>
+ <4efc0ae1-564e-dd05-842a-46fb1aeb4ad8@arm.com>
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
- Thunderbird/102.4.2
-Subject: Re: [PATCH mm-unstable v1 05/20] mm: add early FAULT_FLAG_WRITE
- consistency checks
-Content-Language: en-US
-To:     David Hildenbrand <david@redhat.com>, linux-kernel@vger.kernel.org
-Cc:     x86@kernel.org, linux-alpha@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, linux-ia64@vger.kernel.org,
-        linux-mips@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
-        sparclinux@vger.kernel.org, linux-um@lists.infradead.org,
-        etnaviv@lists.freedesktop.org, dri-devel@lists.freedesktop.org,
-        linux-samsung-soc@vger.kernel.org, linux-rdma@vger.kernel.org,
-        linux-media@vger.kernel.org, linux-fsdevel@vger.kernel.org,
-        linux-mm@kvack.org, linux-perf-users@vger.kernel.org,
-        linux-security-module@vger.kernel.org,
-        linux-kselftest@vger.kernel.org,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Jason Gunthorpe <jgg@ziepe.ca>,
-        John Hubbard <jhubbard@nvidia.com>,
-        Peter Xu <peterx@redhat.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Andrea Arcangeli <aarcange@redhat.com>,
-        Hugh Dickins <hughd@google.com>, Nadav Amit <namit@vmware.com>,
-        Matthew Wilcox <willy@infradead.org>,
-        Mike Kravetz <mike.kravetz@oracle.com>,
-        Muchun Song <songmuchun@bytedance.com>,
-        Shuah Khan <shuah@kernel.org>,
-        Lucas Stach <l.stach@pengutronix.de>,
-        David Airlie <airlied@gmail.com>,
-        Oded Gabbay <ogabbay@kernel.org>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Christoph Hellwig <hch@infradead.org>,
-        Alex Williamson <alex.williamson@redhat.com>
-References: <20221116102659.70287-1-david@redhat.com>
- <20221116102659.70287-6-david@redhat.com>
-From:   Vlastimil Babka <vbabka@suse.cz>
-In-Reply-To: <20221116102659.70287-6-david@redhat.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <4efc0ae1-564e-dd05-842a-46fb1aeb4ad8@arm.com>
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-On 11/16/22 11:26, David Hildenbrand wrote:
-> Let's catch abuse of FAULT_FLAG_WRITE early, such that we don't have to
-> care in all other handlers and might get "surprises" if we forget to do
-> so.
-> 
-> Write faults without VM_MAYWRITE don't make any sense, and our
-> maybe_mkwrite() logic could have hidden such abuse for now.
-> 
-> Write faults without VM_WRITE on something that is not a COW mapping is
-> similarly broken, and e.g., do_wp_page() could end up placing an
-> anonymous page into a shared mapping, which would be bad.
-> 
-> This is a preparation for reliable R/O long-term pinning of pages in
-> private mappings, whereby we want to make sure that we will never break
-> COW in a read-only private mapping.
-> 
-> Signed-off-by: David Hildenbrand <david@redhat.com>
 
-Reviewed-by: Vlastimil Babka <vbabka@suse.cz>
+Hi Anshuman,
 
-> ---
->  mm/memory.c | 8 ++++++++
->  1 file changed, 8 insertions(+)
+Apologies for the delayi n reviewing this.
+
+On Fri, Nov 18, 2022 at 12:09:07PM +0530, Anshuman Khandual wrote:
+> On 11/9/22 17:00, Suzuki K Poulose wrote:
+> > On 07/11/2022 06:25, Anshuman Khandual wrote:
+> >> Although BRBE is an armv8 speciifc HW feature, abstracting out its various
+> >> function callbacks at the struct arm_pmu level is preferred, as it cleaner
+> >> , easier to follow and maintain.
+> >>
+> >> Besides some helpers i.e brbe_supported(), brbe_probe() and brbe_reset()
+> >> might not fit seamlessly, when tried to be embedded via existing arm_pmu
+> >> helpers in the armv8 implementation.
+> >>
+> >> Updates the struct arm_pmu to include all required helpers that will drive
+> >> BRBE functionality for a given PMU implementation. These are the following.
+> >>
+> >> - brbe_filter    : Convert perf event filters into BRBE HW filters
+> >> - brbe_probe    : Probe BRBE HW and capture its attributes
+> >> - brbe_enable    : Enable BRBE HW with a given config
+> >> - brbe_disable    : Disable BRBE HW
+> >> - brbe_read    : Read BRBE buffer for captured branch records
+> >> - brbe_reset    : Reset BRBE buffer
+> >> - brbe_supported: Whether BRBE is supported or not
+> >>
+> >> A BRBE driver implementation needs to provide these functionalities.
+> > 
+> > Could these not be hidden from the generic arm_pmu and kept in the
+> > arm64 pmu backend  ? It looks like they are quite easy to simply
+> > move these to the corresponding hooks in arm64 pmu.
 > 
-> diff --git a/mm/memory.c b/mm/memory.c
-> index e014435a87db..c4fa378ec2a0 100644
-> --- a/mm/memory.c
-> +++ b/mm/memory.c
-> @@ -5170,6 +5170,14 @@ static vm_fault_t sanitize_fault_flags(struct vm_area_struct *vma,
->  		 */
->  		if (!is_cow_mapping(vma->vm_flags))
->  			*flags &= ~FAULT_FLAG_UNSHARE;
-> +	} else if (*flags & FAULT_FLAG_WRITE) {
-> +		/* Write faults on read-only mappings are impossible ... */
-> +		if (WARN_ON_ONCE(!(vma->vm_flags & VM_MAYWRITE)))
-> +			return VM_FAULT_SIGSEGV;
-> +		/* ... and FOLL_FORCE only applies to COW mappings. */
-> +		if (WARN_ON_ONCE(!(vma->vm_flags & VM_WRITE) &&
-> +				 !is_cow_mapping(vma->vm_flags)))
-> +			return VM_FAULT_SIGSEGV;
->  	}
->  	return 0;
->  }
+> We have had this discussion multiple times in the past [1], but I still
+> believe, keeping BRBE implementation hooks at the PMU level rather than
+> embedding them with other PMU events handling, is a much better logical
+> abstraction.
+> 
+> [1] https://lore.kernel.org/all/c3804290-bdb1-d1eb-3526-9b0ce4c8e8b1@arm.com/
+> 
+> --------------------------------------------------------------------------
+> > 
+> > One thing to answer in the commit msg is why we need the hooks here.  
+> > Have we concluded that adding BRBE hooks to struct arm_pmu for what is 
+> > an armv8 specific feature is the right approach? I don't recall 
+> > reaching that conclusion.
+> 
+> Although it might be possible to have this implementation embedded in
+> the existing armv8 PMU implementation, I still believe that the BRBE
+> functionalities abstracted out at the arm_pmu level with a separate
+> config option is cleaner, easier to follow and to maintain as well.
+> 
+> Besides some helpers i.e brbe_supported(), brbe_probe() and brbe_reset()
+> might not fit seamlessly, when tried to be embedded via existing arm_pmu
+> helpers in the armv8 implementation.
+> 
+> Nonetheless if arm_pmu based additional BRBE helpers is absolutely a no
+> go for folks here in general, will explore arm64 based implementation.
+> ----------------------------------------------------------------------------
+> 
+> I am still waiting for maintainer's take on this issue. I will be happy to
+> rework this series to move all these implementation inside arm64 callbacks
+> instead, if that is required or preferred by the maintainers. But according
+> to me, this current abstraction layout is much better.
 
+To be honest, I'm not sure what's best right now; but at the moment it's not
+clear to me why this couldn't fit within the existing hooks.
+
+Above you say brbe_supported() / brbe_probe() / brbe_reset() didn't fit
+seamlessly; can you give an example of problem? I think I'm missing something
+obvious.
+
+Thanks,
+Mark.
