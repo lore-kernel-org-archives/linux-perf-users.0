@@ -2,128 +2,100 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 73FE9C4332F
-	for <linux-perf-users@archiver.kernel.org>; Fri, 18 Nov 2022 02:48:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9B4D1C4332F
+	for <linux-perf-users@archiver.kernel.org>; Fri, 18 Nov 2022 05:13:22 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S240496AbiKRCsQ (ORCPT
+        id S235098AbiKRFNV (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Thu, 17 Nov 2022 21:48:16 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57362 "EHLO
+        Fri, 18 Nov 2022 00:13:21 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46474 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S240350AbiKRCsO (ORCPT
+        with ESMTP id S234455AbiKRFNU (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Thu, 17 Nov 2022 21:48:14 -0500
-Received: from mail-wm1-x330.google.com (mail-wm1-x330.google.com [IPv6:2a00:1450:4864:20::330])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 593228DA4F
-        for <linux-perf-users@vger.kernel.org>; Thu, 17 Nov 2022 18:48:13 -0800 (PST)
-Received: by mail-wm1-x330.google.com with SMTP id 5so2728895wmo.1
-        for <linux-perf-users@vger.kernel.org>; Thu, 17 Nov 2022 18:48:13 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20210112;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:from:to:cc:subject:date:message-id:reply-to;
-        bh=BueznbYbggQL65sE4mcwNsXbMIiOLvwnyD78G/vrsK8=;
-        b=emQVGDvIHmzYwqxLLjcIKVs/9qc0VNR6MtpQ4f1cOoXtOa7ac74JEPtDlRZkp4MNrS
-         Xj+NX3MQ/cqzBxyLUK3JGN2mKiXrZk183Cc1TycNtq2lQs0FI8Mlw4Y0sT3aPoQkmaaJ
-         lQOLNNIabuQDRwI4bKNhuFndB3SMhdK50u45fKrQ9/MLI2QNr8NXBMpKf8zKwiHM3r7o
-         mJnMxzWVOQ9EbUKx0HC2cAkBe1/je9Yjzd5aZ5vG2XQk9BWjkWVdcQ3VfzYTKk1MiEp2
-         IQEOhXqq8kSt75OMaEVW5cHXiBdLpDD8glSpVvJ6fAFMEuMtbFBBetH91EzbSbbhwslI
-         28Ig==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=BueznbYbggQL65sE4mcwNsXbMIiOLvwnyD78G/vrsK8=;
-        b=FhuqNPbG+r6F3UVJREVGkSKd7O9udQj2ouxpttOXlqVTPy0NcAlLcMiCdpzq9elmLo
-         QfyW4IhoTJy/FgrHyWu8Jil2+aeOcHI27P+Oh7k+C0eR2xfvoXOHNKVPLlDva0WNiN8s
-         B4wu9XreJzt1MeYlgDymGD9ibAGqTisGFxli6d4xw2ECW3YgiIq3NAjbVoC1s9K/ktvp
-         AIk8FKW66NxiiJlllbqdt1ZumAi1w0qYuZb1NA3a1ybUDlwVX1YJyS49ey6/85WGAa7h
-         Zf2W1xniZH7i9KX/7RnXgb/rzfH2veF9Vyu+kzd5YESqJm4A6eeJmwXW9YcJPKFNPgd8
-         9Tvg==
-X-Gm-Message-State: ANoB5pmGLAIwifWxuNE4Bu3uf+2bZzO82JWODMg200oEOTYm2Nve/TDb
-        FHeiWCsQA8BOxxiAwG/hyXybUN5ZterJtg7kVRQSog==
-X-Google-Smtp-Source: AA0mqf5aLac6FQkKwINkhvxrzeSP9a5i5KYkEoUPsyqYr2rWNQe7FLXH1g0q+olvgMORkULyC1MP9F4ROOOHC8t8HKo=
-X-Received: by 2002:a05:600c:4fc4:b0:3c6:c109:2d9 with SMTP id
- o4-20020a05600c4fc400b003c6c10902d9mr3504087wmq.149.1668739691747; Thu, 17
- Nov 2022 18:48:11 -0800 (PST)
+        Fri, 18 Nov 2022 00:13:20 -0500
+X-Greylist: delayed 64 seconds by postgrey-1.37 at lindbergh.monkeyblade.net; Thu, 17 Nov 2022 21:13:19 PST
+Received: from esa4.hc1455-7.c3s2.iphmx.com (esa4.hc1455-7.c3s2.iphmx.com [68.232.139.117])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9669A6BDDA;
+        Thu, 17 Nov 2022 21:13:19 -0800 (PST)
+X-IronPort-AV: E=McAfee;i="6500,9779,10534"; a="96382888"
+X-IronPort-AV: E=Sophos;i="5.96,173,1665414000"; 
+   d="scan'208";a="96382888"
+Received: from unknown (HELO yto-r3.gw.nic.fujitsu.com) ([218.44.52.219])
+  by esa4.hc1455-7.c3s2.iphmx.com with ESMTP; 18 Nov 2022 14:12:14 +0900
+Received: from yto-m2.gw.nic.fujitsu.com (yto-nat-yto-m2.gw.nic.fujitsu.com [192.168.83.65])
+        by yto-r3.gw.nic.fujitsu.com (Postfix) with ESMTP id 2EBE2E8521;
+        Fri, 18 Nov 2022 14:12:12 +0900 (JST)
+Received: from yto-om1.fujitsu.com (yto-om1.o.css.fujitsu.com [10.128.89.162])
+        by yto-m2.gw.nic.fujitsu.com (Postfix) with ESMTP id 6E642DAD9D;
+        Fri, 18 Nov 2022 14:12:11 +0900 (JST)
+Received: from localhost.localdomain (unknown [10.124.154.64])
+        by yto-om1.fujitsu.com (Postfix) with ESMTP id 1F3474057108F;
+        Fri, 18 Nov 2022 14:12:11 +0900 (JST)
+From:   Itaru Kitayama <itaru.kitayama@fujitsu.com>
+To:     yamada.masahiko@fujitsu.com
+Cc:     acme@kernel.org, alexander.shishkin@linux.intel.com,
+        jolsa@kernel.org, linux-kernel@vger.kernel.org,
+        linux-perf-users@vger.kernel.org, mark.rutland@arm.com,
+        mingo@redhat.com, namhyung@kernel.org, peterz@infradead.org
+Subject: [PATCH 1/1] perf: fix reset interface potential failure
+Date:   Fri, 18 Nov 2022 14:11:56 +0900
+Message-Id: <20221118051156.961494-1-itaru.kitayama@fujitsu.com>
+X-Mailer: git-send-email 2.38.0
+In-Reply-To: <20221118020016.1571100-2-yamada.masahiko@fujitsu.com>
+References: <20221118020016.1571100-2-yamada.masahiko@fujitsu.com>
 MIME-Version: 1.0
-References: <20221114210723.2749751-11-irogers@google.com> <Y3OX1pcclKCgbpeT@kernel.org>
- <Y3TIG7BIzltgvCPw@kernel.org> <Y3TK/6bBFsHxduPc@kernel.org>
- <Y3TOwYdhzURKTgyB@kernel.org> <Y3Tah5Ocvx6lQ4jP@kernel.org>
- <Y3ThXYH3SAyEGmQ+@kernel.org> <Y3T/35DcAw+h4R93@kernel.org>
- <CAP-5=fU-tJPdxosVFfbbKtrswom7bnY6Ei3JczRJaQYyOnjcAA@mail.gmail.com>
- <Y3Zh+XTXbhrOXAla@kernel.org> <Y3Zlu4lAbZI8cQhT@kernel.org>
-In-Reply-To: <Y3Zlu4lAbZI8cQhT@kernel.org>
-From:   Ian Rogers <irogers@google.com>
-Date:   Thu, 17 Nov 2022 18:47:58 -0800
-Message-ID: <CAP-5=fW_VVi=cYmsJuMSqPK1kLv+MOaXBcunjWxnjZz5KZR2RA@mail.gmail.com>
-Subject: Re: [PATCH v3 10/10] perf list: Add json output option
-To:     Arnaldo Carvalho de Melo <acme@kernel.org>
-Cc:     Weilin Wang <weilin.wang@intel.com>,
-        Perry Taylor <perry.taylor@intel.com>,
-        Caleb Biggers <caleb.biggers@intel.com>,
-        Leo Yan <leo.yan@linaro.org>,
-        Adrian Hunter <adrian.hunter@intel.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Jiri Olsa <jolsa@kernel.org>,
-        Namhyung Kim <namhyung@kernel.org>,
-        Sandipan Das <sandipan.das@amd.com>,
-        Kajol Jain <kjain@linux.ibm.com>,
-        Zhengjun Xing <zhengjun.xing@linux.intel.com>,
-        Kan Liang <kan.liang@linux.intel.com>,
-        Ravi Bangoria <ravi.bangoria@amd.com>,
-        Xin Gao <gaoxin@cdjrlc.com>, Rob Herring <robh@kernel.org>,
-        linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org,
-        Stephane Eranian <eranian@google.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
+X-TM-AS-GCONF: 00
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-On Thu, Nov 17, 2022 at 8:48 AM Arnaldo Carvalho de Melo
-<acme@kernel.org> wrote:
->
-> Em Thu, Nov 17, 2022 at 01:31:53PM -0300, Arnaldo Carvalho de Melo escreveu:
-> > Em Wed, Nov 16, 2022 at 11:52:39AM -0800, Ian Rogers escreveu:
-> > > I think this should be squashed into "perf list: Reorganize to use
-> > > callbacks". Some explanation, in porting the : glob case I'd assumed
-> > > the before the colon would be the PMU and the after the event. Doing
-> > > things caused tracepoint output to differ too much and so for
-> > > tracepoints the : is kept in the event name. So we can simplify the
-> > > matching to not be pmu and event, just use the event glob.
->
-> > Next time please send the patch, I did it manually and before the last
-> > option I get:
->
-> > [root@quaco ~]# perf list syscalls:sys_enter_open |& grep syscalls
-> >   syscalls:sys_enter_open                            [Tracepoint event]
-> > [root@quaco ~]# perf test 112
-> > 112: Check open filename arg using perf trace + vfs_getname          : Ok
-> > [root@quaco ~]#
->
-> Ok, adjusted the last patch in the series, everything is in my
-> tmp.perf/core branch, will go to perf/core later today when all tests
-> gets passed.
->
-> Please check that what is at:
->
-> git://git.kernel.org/pub/scm/linux/kernel/git/acme/linux.git tmp.perf/core
->
-> Is ok, its passing 'perf test' for me, including the one that was
-> failing:
->
-> [root@quaco ~]# perf test 112
-> 112: Check open filename arg using perf trace + vfs_getname          : Ok
-> [root@quaco ~]#
->
-> - Arnaldo
+On Fri, Nov 18, 2022 at 11:00:16AM +0900, Masahiko wrote:
+> There is a potential bug where PERF_EVENT_IOC_RESET
+> does not work when accessing PMU registers directly
+> from userspace in the perf_event interface.
+> we have created a patch on the kernel
+> that fixes a potential perf_event reset failure.
+> 
+> The motivation is to initialize pc->offset.
+> The perf_mmap__read_self function in tools/lib/perf/mmap.c is set by:.
+> cnt = READ_ONCE(pc->offset);
+> The pc->offset value is set in the following process
+> in the perf_event_update_userpage function:.
+> userpg->offset -= local64_read(&event->hw.prev_count);
+> hw->prev_count is set in the armpmu_event_set_period function
+> in drivers/perf/arm_pmu.c and in the x86_perf_event_set_period function
+> in arch/x86/events/core.c as follows:.
+> local64_set(&hwc->prev_count, (u64)-left);
+> 
+> Therefore, this patch was created to initialize hwc->prev_count
+> during reset processing.
+> 
+> Signed-off-by: Masahiko, Yamada <yamada.masahiko@fujitsu.com>
+> ---
+>  kernel/events/core.c | 5 +++++
+>  1 file changed, 5 insertions(+)
+> 
+> diff --git a/kernel/events/core.c b/kernel/events/core.c
+> index 4ec3717003d5..296549755a9c 100644
+> --- a/kernel/events/core.c
+> +++ b/kernel/events/core.c
+> @@ -5468,8 +5468,13 @@ static __poll_t perf_poll(struct file *file, poll_table *wait)
+>  
+>  static void _perf_event_reset(struct perf_event *event)
+>  {
+> +	struct hw_perf_event *hwc = &event->hw;
+> +	s64 left;
+> +
+>  	(void)perf_event_read(event, false);
+>  	local64_set(&event->count, 0);
+> +	left = local64_read(&hwc->period_left);
+> +	local64_set(&hwc->prev_count, (u64)-left);
+>  	perf_event_update_userpage(event);
+>  }
+>  
+> -- 
+> 2.27.0
 
-Thanks! Looks good to me, I rebased the libpfm4 fix on it:
-https://lore.kernel.org/lkml/20221118024607.409083-1-irogers@google.com/
+Reviewed-by: Itaru Kitayama <itaru.kitayama@fujitsu.com>
 
-Thanks,
-Ian
