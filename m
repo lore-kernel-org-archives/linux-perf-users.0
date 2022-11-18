@@ -2,128 +2,145 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C04EEC43217
-	for <linux-perf-users@archiver.kernel.org>; Fri, 18 Nov 2022 11:09:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 78EAAC4332F
+	for <linux-perf-users@archiver.kernel.org>; Fri, 18 Nov 2022 11:34:17 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S241840AbiKRLJb (ORCPT
+        id S235282AbiKRLdq (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Fri, 18 Nov 2022 06:09:31 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47952 "EHLO
+        Fri, 18 Nov 2022 06:33:46 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35000 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S241694AbiKRLJP (ORCPT
+        with ESMTP id S241738AbiKRLcu (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Fri, 18 Nov 2022 06:09:15 -0500
-Received: from casper.infradead.org (casper.infradead.org [IPv6:2001:8b0:10b:1236::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 27B2E3B1;
-        Fri, 18 Nov 2022 03:09:13 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=casper.20170209; h=In-Reply-To:Content-Type:MIME-Version:
-        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description;
-        bh=EfRO0ptxO3+ypU2KxCKexp96MUHxMRW8bunXh9MGsDQ=; b=LDGBrfajYbkT9xph6b6097Xb/c
-        syw/S6y4TG1cS360/nd6d+c79/tEze+2e0txBMIoIcDriZE8lsPhASFA+NSJ8eg8EVkJO2kPb4qlI
-        t0uGnwKkqKm3kAMzV9dozjGsuBQAveUb/UOZDYoK75AExM4rxBzbgukAnzxUTKevVJRGZPyPEIYWw
-        gSP3hqrNt8ek+/8tR8KcdqQYYDbVJVIGKeEUat+AOQu3Lb7Rqyh8OcjxgSig6/MAUk9wvWAe8ysnQ
-        uQjyqr2Z5/P12vcorm9ew0TUB/Z1OlxqyFa9I2mva2wnFCskZFBF8h9xXwfF4ZV+daEJb09cWUoJB
-        0tx5p2IQ==;
-Received: from j130084.upc-j.chello.nl ([24.132.130.84] helo=noisy.programming.kicks-ass.net)
-        by casper.infradead.org with esmtpsa (Exim 4.94.2 #2 (Red Hat Linux))
-        id 1ovzF8-002Dxl-JB; Fri, 18 Nov 2022 11:09:10 +0000
-Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-        (Client did not present a certificate)
-        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id A8C81300422;
-        Fri, 18 Nov 2022 12:09:02 +0100 (CET)
-Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
-        id 7C5AF205A9605; Fri, 18 Nov 2022 12:09:02 +0100 (CET)
-Date:   Fri, 18 Nov 2022 12:09:02 +0100
-From:   Peter Zijlstra <peterz@infradead.org>
-To:     Linus Torvalds <torvalds@linux-foundation.org>
-Cc:     David Hildenbrand <david@redhat.com>, linux-kernel@vger.kernel.org,
-        x86@kernel.org, linux-alpha@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, linux-ia64@vger.kernel.org,
-        linux-mips@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
-        sparclinux@vger.kernel.org, linux-um@lists.infradead.org,
-        etnaviv@lists.freedesktop.org, dri-devel@lists.freedesktop.org,
-        linux-samsung-soc@vger.kernel.org, linux-rdma@vger.kernel.org,
-        linux-media@vger.kernel.org, linux-fsdevel@vger.kernel.org,
-        linux-mm@kvack.org, linux-perf-users@vger.kernel.org,
-        linux-security-module@vger.kernel.org,
-        linux-kselftest@vger.kernel.org,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Jason Gunthorpe <jgg@ziepe.ca>,
-        John Hubbard <jhubbard@nvidia.com>,
-        Peter Xu <peterx@redhat.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Andrea Arcangeli <aarcange@redhat.com>,
-        Hugh Dickins <hughd@google.com>, Nadav Amit <namit@vmware.com>,
-        Vlastimil Babka <vbabka@suse.cz>,
-        Matthew Wilcox <willy@infradead.org>,
-        Mike Kravetz <mike.kravetz@oracle.com>,
-        Muchun Song <songmuchun@bytedance.com>,
-        Shuah Khan <shuah@kernel.org>,
-        Lucas Stach <l.stach@pengutronix.de>,
-        David Airlie <airlied@gmail.com>,
-        Oded Gabbay <ogabbay@kernel.org>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Christoph Hellwig <hch@infradead.org>,
-        Alex Williamson <alex.williamson@redhat.com>,
-        Oleg Nesterov <oleg@redhat.com>,
-        Richard Henderson <richard.henderson@linaro.org>,
-        Ivan Kokshaysky <ink@jurassic.park.msu.ru>,
-        Matt Turner <mattst88@gmail.com>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Will Deacon <will@kernel.org>,
-        Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        Nicholas Piggin <npiggin@gmail.com>,
-        Christophe Leroy <christophe.leroy@csgroup.eu>,
-        "David S. Miller" <davem@davemloft.net>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-        Dave Hansen <dave.hansen@linux.intel.com>,
-        "H. Peter Anvin" <hpa@zytor.com>,
-        Richard Weinberger <richard@nod.at>,
-        Anton Ivanov <anton.ivanov@cambridgegreys.com>,
-        Johannes Berg <johannes@sipsolutions.net>,
-        Eric Biederman <ebiederm@xmission.com>,
-        Kees Cook <keescook@chromium.org>,
-        Alexander Viro <viro@zeniv.linux.org.uk>,
-        Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Jiri Olsa <jolsa@kernel.org>,
-        Namhyung Kim <namhyung@kernel.org>,
-        Kentaro Takeda <takedakn@nttdata.co.jp>,
-        Tetsuo Handa <penguin-kernel@i-love.sakura.ne.jp>,
-        Paul Moore <paul@paul-moore.com>,
-        James Morris <jmorris@namei.org>,
-        "Serge E. Hallyn" <serge@hallyn.com>
-Subject: Re: [PATCH mm-unstable v1 20/20] mm: rename FOLL_FORCE to FOLL_PTRACE
-Message-ID: <Y3dnzgwJpjTQXI9y@hirez.programming.kicks-ass.net>
-References: <20221116102659.70287-1-david@redhat.com>
- <20221116102659.70287-21-david@redhat.com>
- <CAHk-=wgtEwpR-rE_=cXzecHMZ+zgrx5zf9UfvH0w-mKgckn4=Q@mail.gmail.com>
+        Fri, 18 Nov 2022 06:32:50 -0500
+Received: from foss.arm.com (foss.arm.com [217.140.110.172])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTP id B2A529BA11;
+        Fri, 18 Nov 2022 03:32:47 -0800 (PST)
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id C7EE023A;
+        Fri, 18 Nov 2022 03:32:53 -0800 (PST)
+Received: from [10.1.26.29] (e121896.cambridge.arm.com [10.1.26.29])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id F0A8B3F587;
+        Fri, 18 Nov 2022 03:32:44 -0800 (PST)
+Message-ID: <13f1a15c-b14f-b4cd-a523-2ec6df168224@arm.com>
+Date:   Fri, 18 Nov 2022 11:32:43 +0000
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CAHk-=wgtEwpR-rE_=cXzecHMZ+zgrx5zf9UfvH0w-mKgckn4=Q@mail.gmail.com>
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
+ Thunderbird/102.2.2
+Subject: Re: [PATCH 05/12] perf test: Add 'leafloop' test workload
+To:     Namhyung Kim <namhyung@kernel.org>,
+        Ian Rogers <irogers@google.com>,
+        German Gomez <german.gomez@arm.com>
+Cc:     Arnaldo Carvalho de Melo <acme@kernel.org>,
+        Jiri Olsa <jolsa@kernel.org>, Ingo Molnar <mingo@kernel.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Adrian Hunter <adrian.hunter@intel.com>,
+        linux-perf-users@vger.kernel.org, Leo Yan <leo.yan@linaro.org>,
+        Zhengjun Xing <zhengjun.xing@linux.intel.com>,
+        Athira Jajeev <atrajeev@linux.vnet.ibm.com>
+References: <20221116233854.1596378-1-namhyung@kernel.org>
+ <20221116233854.1596378-6-namhyung@kernel.org> <Y3Zb+JChHoq+89yM@kernel.org>
+ <Y3ZeOuNnk0xclY2x@kernel.org>
+ <CAP-5=fVh0cQDeqSgVkLHbuiZKoFAp628oggQKwN6KxfUusA01Q@mail.gmail.com>
+ <Y3ZuW2IxVWp9yoaD@kernel.org>
+ <CAP-5=fWYi2ASE=v0UgrqbBDA2+jC0qmNX2_4r0wbFLV3Dw2nYw@mail.gmail.com>
+ <CAM9d7cioaqjPgp+-UyUwzg7J3OQRC8DNMP0T1h5ro=yNgr128w@mail.gmail.com>
+Content-Language: en-US
+From:   James Clark <james.clark@arm.com>
+In-Reply-To: <CAM9d7cioaqjPgp+-UyUwzg7J3OQRC8DNMP0T1h5ro=yNgr128w@mail.gmail.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-On Wed, Nov 16, 2022 at 10:16:34AM -0800, Linus Torvalds wrote:
-> Following the history of it is a big of a mess, because there's a
-> number of renamings and re-organizations, but it seems to go back to
-> 2007 and commit b6a2fea39318 ("mm: variable length argument support").
 
-I went back and read parts of the discussions with Ollie, and the
-.force=1 thing just magically appeared one day when we were sending
-work-in-progress patches back and forth without mention of where it came
-from :-/
 
-And I certainly can't remember now..
+On 17/11/2022 18:11, Namhyung Kim wrote:
+> Hi,
+> 
+> On Thu, Nov 17, 2022 at 9:42 AM Ian Rogers <irogers@google.com> wrote:
+>>
+>> On Thu, Nov 17, 2022 at 9:24 AM Arnaldo Carvalho de Melo
+>> <acme@kernel.org> wrote:
+>>>
+>>> Em Thu, Nov 17, 2022 at 09:16:58AM -0800, Ian Rogers escreveu:
+>>>> On Thu, Nov 17, 2022 at 8:15 AM Arnaldo Carvalho de Melo
+>>>> <acme@kernel.org> wrote:
+>>>>>
+>>>>> Em Thu, Nov 17, 2022 at 01:06:16PM -0300, Arnaldo Carvalho de Melo escreveu:
+>>>>>> Em Wed, Nov 16, 2022 at 03:38:47PM -0800, Namhyung Kim escreveu:
+>>>>>>> The leafloop workload is to run an infinite loop in the test_leaf
+>>>>>>> function.  This is needed for the ARM fp callgraph test to verify if it
+>>>>>>> gets the correct callchains.
+>>>>>>>
+>>>>>>>   $ perf test -w leafloop
+>>>>>>
+>>>>>> On fedora:36
+>>>>>>
+>>>>>> In file included from /usr/include/bits/libc-header-start.h:33,
+>>>>>>                  from /usr/include/stdlib.h:26,
+>>>>>>                  from tests/workloads/leafloop.c:2:
+>>>>>> /usr/include/features.h:412:4: error: #warning _FORTIFY_SOURCE requires compiling with optimization (-O) [-Werror=cpp]
+>>>>>>   412 | #  warning _FORTIFY_SOURCE requires compiling with optimization (-O)
+>>>>>>       |    ^~~~~~~
+>>>>>> cc1: all warnings being treated as errors
+>>>>>> make[5]: *** [/home/acme/git/perf/tools/build/Makefile.build:96: /tmp/build/perf/tests/workloads/leafloop.o] Error 1
+>>>>>> make[5]: *** Waiting for unfinished jobs....
+>>>>>>
+>>>>>> I'll try removing the _FORTIFY_SOURCE
+>>>>>
+>>>>> Works after I added this to datasym.c, leafloop.c and brstack.c:
+>>>>
+>>>> Is there a reason we are compiling without -O ? Perhaps we can filter
+>>>
+>>> I assumed so as Namhyung added it, perhaps he is just carrying it from
+>>> the pre-existing shell tests?
+> 
+> Exactly :)
+> 
+>>>
+>>> I wonder its to have a predictable binary output that the test expects
+>>> when doing things like hardware tracing? As it come from the coresight
+>>> tests, IIRC.
+> 
+> I think it just checks frame-pointer based callstacks on ARM to have the
+> precise results for leaves and their parents.
+> 
+> 
+>>
+>> Would the following in the Build be better:
+>>
+>> ```
+>> # Undefine _FORTIFY_SOURCE as it doesn't work with -O0
+>> CFLAGS_leafloop.o         = -g -O0 -fno-inline -fno-omit-frame-pointer
+>> -U_FORTIFY_SOURCE
+>> ```
+>>
+>> We could also use make's `filter-out`. If we are disabling inlining
+>> then there is also `-fno-optimize-sibling-calls` otherwise we can
+>> still lose stack frames.
+> 
+> I wonder if it's enough to use -O0 as it's enabled from -O2.
+> Maybe we can get rid of -fno-inline as well.
+> 
+> German, did you have any concerns for those options?
+> 
 
-Looking at it now, I have the same reaction as both you and Kees had, it
-seems entirely superflous. So I'm all for trying to remove it.
+Is it possible to go with the -U_FORTIFY_SOURCE option? From looking at
+the disassembly, changing -O and the other -f options makes quite a bit
+of difference.
+
+It's fairly important to that test because it's testing that the
+combination of both frame pointer unwinding and dwarf unwinding result
+in the complete stack.
+
+If we change the options I'd have to go back and double check with
+different compiler versions that it's still doing the right thing. For
+example if a frame pointer is included for the last frame, then the
+dwarf bit doesn't get tested.
+
+
+> Thanks,
+> Namhyung
