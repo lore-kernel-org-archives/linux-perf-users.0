@@ -2,96 +2,99 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 76994C4332F
-	for <linux-perf-users@archiver.kernel.org>; Fri, 18 Nov 2022 02:07:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DE5ADC4332F
+	for <linux-perf-users@archiver.kernel.org>; Fri, 18 Nov 2022 02:46:28 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S234455AbiKRCHv (ORCPT
+        id S232050AbiKRCq2 (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Thu, 17 Nov 2022 21:07:51 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38644 "EHLO
+        Thu, 17 Nov 2022 21:46:28 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56100 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S240499AbiKRCHu (ORCPT
+        with ESMTP id S234664AbiKRCq0 (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Thu, 17 Nov 2022 21:07:50 -0500
-X-Greylist: delayed 65 seconds by postgrey-1.37 at lindbergh.monkeyblade.net; Thu, 17 Nov 2022 18:07:36 PST
-Received: from esa9.hc1455-7.c3s2.iphmx.com (esa9.hc1455-7.c3s2.iphmx.com [139.138.36.223])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2B0FD898F8;
-        Thu, 17 Nov 2022 18:07:35 -0800 (PST)
-X-IronPort-AV: E=McAfee;i="6500,9779,10534"; a="84612510"
-X-IronPort-AV: E=Sophos;i="5.96,172,1665414000"; 
-   d="scan'208";a="84612510"
-Received: from unknown (HELO yto-r2.gw.nic.fujitsu.com) ([218.44.52.218])
-  by esa9.hc1455-7.c3s2.iphmx.com with ESMTP; 18 Nov 2022 11:06:28 +0900
-Received: from yto-m1.gw.nic.fujitsu.com (yto-nat-yto-m1.gw.nic.fujitsu.com [192.168.83.64])
-        by yto-r2.gw.nic.fujitsu.com (Postfix) with ESMTP id 4750ADE51A;
-        Fri, 18 Nov 2022 11:06:27 +0900 (JST)
-Received: from oym-om2.fujitsu.com (oym-om2.o.css.fujitsu.com [10.85.58.162])
-        by yto-m1.gw.nic.fujitsu.com (Postfix) with ESMTP id 8D742CFF9D;
-        Fri, 18 Nov 2022 11:06:26 +0900 (JST)
-Received: from cn-r05-10.example.com (n3235113.np.ts.nmh.cs.fujitsu.co.jp [10.123.235.113])
-        by oym-om2.fujitsu.com (Postfix) with ESMTP id 6789D40421239;
-        Fri, 18 Nov 2022 11:06:26 +0900 (JST)
-From:   "Masahiko, Yamada" <yamada.masahiko@fujitsu.com>
-To:     peterz@infradead.org, mingo@redhat.com, acme@kernel.org,
-        mark.rutland@arm.com, alexander.shishkin@linux.intel.com,
-        jolsa@kernel.org, namhyung@kernel.org
-Cc:     linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [PATCH 1/1] perf: fix reset interface potential failure
-Date:   Fri, 18 Nov 2022 11:00:16 +0900
-Message-Id: <20221118020016.1571100-2-yamada.masahiko@fujitsu.com>
-X-Mailer: git-send-email 2.27.0
-In-Reply-To: <20221118020016.1571100-1-yamada.masahiko@fujitsu.com>
-References: <20221118020016.1571100-1-yamada.masahiko@fujitsu.com>
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-TM-AS-GCONF: 00
+        Thu, 17 Nov 2022 21:46:26 -0500
+Received: from mail-yb1-xb4a.google.com (mail-yb1-xb4a.google.com [IPv6:2607:f8b0:4864:20::b4a])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 81B1E8DA47
+        for <linux-perf-users@vger.kernel.org>; Thu, 17 Nov 2022 18:46:25 -0800 (PST)
+Received: by mail-yb1-xb4a.google.com with SMTP id 204-20020a2510d5000000b006be7970889cso3363631ybq.21
+        for <linux-perf-users@vger.kernel.org>; Thu, 17 Nov 2022 18:46:25 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20210112;
+        h=cc:to:from:subject:mime-version:message-id:date:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=AgUYDEYaejS5dLEipBeiq3H0zkWJQSsfp95m7vR2umM=;
+        b=aZps6l3/4Ba8QF7QljbhqdPR9mWG4AYeeRMon9lNjZFTYKwoCa7DKFRrFp5MGXFBV1
+         nLLdyy5Jqgwi1iqPvWoOvXRS4XWty7N2uuoKaeW2nkfFmdFRwtBjnen0/LFFNgraexKR
+         Zjcy2axt+651IrFDKC2nCRlSkFHSiLP9eVQYHk4kHeAiLQnYTfvxPnLpxhIMmgv4pf6w
+         YhdONvGshrlhsr1lBLmplsNsIyf+xMx/gcdtyZPya8DnrdcNKAl6QdPOBQlnFAZfYCCP
+         f7QZ9qOgrRvZVB6C58wkLpV7w0+aD3GtDTw4Aq7z8/hfQml4CVg6Pd4L/uHIRWYvo1x0
+         eTuQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=cc:to:from:subject:mime-version:message-id:date:x-gm-message-state
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=AgUYDEYaejS5dLEipBeiq3H0zkWJQSsfp95m7vR2umM=;
+        b=s1qp5rEaNzwYuvscgRe2Pa7whpT7KC0Nq4a3ZcqmpWp5nNu8Mg9WjUbTLThoxE3+7R
+         Adzs0bFf62s/HCf+WFsYkNox7LI0vsVfg5R054IYkE8gFtAPcT7/hSxGIc0ztIcXLK6j
+         MNocZSlJsp03iE2wBPgqicstSt+8cE25AtEfqUdRu7wWqvy3Dgzf4zRQ1go890H5Pb+a
+         E5qyXZR9RqaU4Td9QKao25BHsN47NPtnSETXHU/CDp4A2BLNmYvI5w4cJT6omX0U8pF2
+         g5QIymNswHe7r376mN22unTJNlcYJY9yx5v9xoTLbu/SE5dKW9FQiKXDPXlJ0LhEXzzi
+         q52g==
+X-Gm-Message-State: ANoB5pnK/fyAixSvWKkQtNDU/G8KFf+g7dHBDl2VgXy3Fg/2SENUGthv
+        qgpT++nDbYPiWhXSiPCnZOTrlGVFskNM
+X-Google-Smtp-Source: AA0mqf5IQI8LuAX2DEdLTN0ckGnLEo2SU8PUK9F1qBUkl1JfhOLPnMkXFaZhHLOLGCmKYb37iJShf1a4UtbY
+X-Received: from irogers.svl.corp.google.com ([2620:15c:2d4:203:3f1e:c462:d6b8:fba8])
+ (user=irogers job=sendgmr) by 2002:a81:df14:0:b0:37c:24be:ce0f with SMTP id
+ c20-20020a81df14000000b0037c24bece0fmr9ywn.124.1668739584353; Thu, 17 Nov
+ 2022 18:46:24 -0800 (PST)
+Date:   Thu, 17 Nov 2022 18:46:04 -0800
+Message-Id: <20221118024607.409083-1-irogers@google.com>
+Mime-Version: 1.0
+X-Mailer: git-send-email 2.38.1.584.g0f3c55d4c2-goog
+Subject: [PATCH v2 0/3] perf list libpfm fixes
+From:   Ian Rogers <irogers@google.com>
+To:     Weilin Wang <weilin.wang@intel.com>,
+        Perry Taylor <perry.taylor@intel.com>,
+        Caleb Biggers <caleb.biggers@intel.com>,
+        Leo Yan <leo.yan@linaro.org>,
+        Adrian Hunter <adrian.hunter@intel.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        Arnaldo Carvalho de Melo <acme@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Jiri Olsa <jolsa@kernel.org>,
+        Namhyung Kim <namhyung@kernel.org>,
+        Sandipan Das <sandipan.das@amd.com>,
+        Kajol Jain <kjain@linux.ibm.com>,
+        Zhengjun Xing <zhengjun.xing@linux.intel.com>,
+        Kan Liang <kan.liang@linux.intel.com>,
+        Ravi Bangoria <ravi.bangoria@amd.com>,
+        Xin Gao <gaoxin@cdjrlc.com>, Rob Herring <robh@kernel.org>,
+        linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org
+Cc:     Stephane Eranian <eranian@google.com>,
+        Ian Rogers <irogers@google.com>
+Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-There is a potential bug where PERF_EVENT_IOC_RESET
-does not work when accessing PMU registers directly
-from userspace in the perf_event interface.
-we have created a patch on the kernel
-that fixes a potential perf_event reset failure.
+Fix a lack of libpfm support with the refactored perf list code. Add
+some improvements to wordwrap and the escape printing for json to aid
+this.
 
-The motivation is to initialize pc->offset.
-The perf_mmap__read_self function in tools/lib/perf/mmap.c is set by:.
-cnt = READ_ONCE(pc->offset);
-The pc->offset value is set in the following process
-in the perf_event_update_userpage function:.
-userpg->offset -= local64_read(&event->hw.prev_count);
-hw->prev_count is set in the armpmu_event_set_period function
-in drivers/perf/arm_pmu.c and in the x86_perf_event_set_period function
-in arch/x86/events/core.c as follows:.
-local64_set(&hwc->prev_count, (u64)-left);
+v2. Rebased on acme/linux.git tmp.perf/core
 
-Therefore, this patch was created to initialize hwc->prev_count
-during reset processing.
+Ian Rogers (3):
+  perf list: Support newlines in wordwrap
+  perf list: Json escape encoding improvements
+  perf list: List callback support for libpfm
 
-Signed-off-by: Masahiko, Yamada <yamada.masahiko@fujitsu.com>
----
- kernel/events/core.c | 5 +++++
- 1 file changed, 5 insertions(+)
+ tools/perf/builtin-list.c | 120 +++++++++++++++++------------
+ tools/perf/util/pfm.c     | 154 +++++++++++++++++---------------------
+ tools/perf/util/pfm.h     |   6 +-
+ 3 files changed, 144 insertions(+), 136 deletions(-)
 
-diff --git a/kernel/events/core.c b/kernel/events/core.c
-index 4ec3717003d5..296549755a9c 100644
---- a/kernel/events/core.c
-+++ b/kernel/events/core.c
-@@ -5468,8 +5468,13 @@ static __poll_t perf_poll(struct file *file, poll_table *wait)
- 
- static void _perf_event_reset(struct perf_event *event)
- {
-+	struct hw_perf_event *hwc = &event->hw;
-+	s64 left;
-+
- 	(void)perf_event_read(event, false);
- 	local64_set(&event->count, 0);
-+	left = local64_read(&hwc->period_left);
-+	local64_set(&hwc->prev_count, (u64)-left);
- 	perf_event_update_userpage(event);
- }
- 
 -- 
-2.27.0
+2.38.1.584.g0f3c55d4c2-goog
 
