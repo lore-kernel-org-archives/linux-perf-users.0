@@ -2,67 +2,54 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 67925C433FE
-	for <linux-perf-users@archiver.kernel.org>; Thu, 17 Nov 2022 23:26:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4ACD7C433FE
+	for <linux-perf-users@archiver.kernel.org>; Fri, 18 Nov 2022 00:31:32 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233439AbiKQX0Z (ORCPT
+        id S240411AbiKRAba (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Thu, 17 Nov 2022 18:26:25 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40208 "EHLO
+        Thu, 17 Nov 2022 19:31:30 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42448 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S234725AbiKQX0Y (ORCPT
+        with ESMTP id S240580AbiKRAb2 (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Thu, 17 Nov 2022 18:26:24 -0500
-Received: from mail-vs1-xe34.google.com (mail-vs1-xe34.google.com [IPv6:2607:f8b0:4864:20::e34])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id AB599E46
-        for <linux-perf-users@vger.kernel.org>; Thu, 17 Nov 2022 15:26:22 -0800 (PST)
-Received: by mail-vs1-xe34.google.com with SMTP id q127so3162780vsa.7
-        for <linux-perf-users@vger.kernel.org>; Thu, 17 Nov 2022 15:26:22 -0800 (PST)
+        Thu, 17 Nov 2022 19:31:28 -0500
+Received: from mail-pg1-x52c.google.com (mail-pg1-x52c.google.com [IPv6:2607:f8b0:4864:20::52c])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3E4596E550
+        for <linux-perf-users@vger.kernel.org>; Thu, 17 Nov 2022 16:31:26 -0800 (PST)
+Received: by mail-pg1-x52c.google.com with SMTP id s196so3626625pgs.3
+        for <linux-perf-users@vger.kernel.org>; Thu, 17 Nov 2022 16:31:26 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linux-foundation.org; s=google;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:from:to:cc:subject:date:message-id:reply-to;
-        bh=Y0Zl62KafxDJ8AwrDahi1bqb4Xk/32bDlmDdXpQC/2I=;
-        b=McHst7l/f7KmgETncU4ax8Cz1+X0pDSSDz+NpOo85KKRbSTGF3eq2IAlrIRy/FELSJ
-         Y7C0SIlyu5mGQyhzPLIjsCXMOXUrzD5TZH+dJcbaF2LHrVuVcof8hyWOL3D9pZZx4wAD
-         8LINQRolzJh6QXumNwKV51jsDIdF9sMEo4+5s=
+        d=chromium.org; s=google;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=SdXW0qNT9EJ55g7ZecMibSPRKy2hZHqw3Yh8nMlwERE=;
+        b=aU25zccRjTs3wP43k0MIJn4DgVbsnZCNuzNnI2CpXWYIZxXulCGxIQevzOUHHZBnNX
+         P9dqjL6CLaVk8Gd/8VV9yHkQnYw6wZLIF25d9n4/Hz+qw11dfo4C3uVe8ugX4akyWpVq
+         2j/LOKCC5xRDK3aE2eqqxuB+wZP/Rdy2IY2yY=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=Y0Zl62KafxDJ8AwrDahi1bqb4Xk/32bDlmDdXpQC/2I=;
-        b=BieDR+SEaVRPBRBAj6lUiJ5zEeHxp8e3QnydsAcj2h5wS9IQBS3D8m+kM1x+ZZKlot
-         PPrO9Gs0+4vPfTfBMHjL7gdkQGG+Sri74wOAkCADL6vbDP/wXLtoEahr7/9OQZhvRTyb
-         o3Cht8YbCDDvICribdxW8Dy8P2y8yQg0esAPPRsK73uHEL6jTmCENZ8lQtzDGNAyoa0U
-         x6i9bDgozp/IhVag3EFVR4qSZ9h7pksIFwhrAxa9qzgDYyA64aZkrOhbCgjlSJVA7scV
-         R5BLWDIGlF1G0I4tB3Rj/N/6RUjbuqa3iVUn/HCREi87BCWEC2gpsd5fCGXXJtSxjqJY
-         Ksfw==
-X-Gm-Message-State: ANoB5pkwY9M+PMOPDAJEOcXTeQSA/QdgQSa+TIcoHJj1n7fLpjPD4ZKo
-        4OqQOdEoMZzgxOD6oilAooqFBsxQRotVWA==
-X-Google-Smtp-Source: AA0mqf5KYWr6WWrms9YQCfUOHsuqLGK3gUDBBakfJW/DPS+lSfgZVqN+NSCZ/ATkQVLHbqHqcVMTmg==
-X-Received: by 2002:a67:1a02:0:b0:3a7:ad22:1b2e with SMTP id a2-20020a671a02000000b003a7ad221b2emr3248738vsa.50.1668727581505;
-        Thu, 17 Nov 2022 15:26:21 -0800 (PST)
-Received: from mail-vs1-f54.google.com (mail-vs1-f54.google.com. [209.85.217.54])
-        by smtp.gmail.com with ESMTPSA id 6-20020a9f2686000000b00418b42af6d6sm294095uay.34.2022.11.17.15.26.21
-        for <linux-perf-users@vger.kernel.org>
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 17 Nov 2022 15:26:21 -0800 (PST)
-Received: by mail-vs1-f54.google.com with SMTP id z189so3171197vsb.4
-        for <linux-perf-users@vger.kernel.org>; Thu, 17 Nov 2022 15:26:21 -0800 (PST)
-X-Received: by 2002:ad4:4101:0:b0:4b1:856b:4277 with SMTP id
- i1-20020ad44101000000b004b1856b4277mr4665856qvp.129.1668727216978; Thu, 17
- Nov 2022 15:20:16 -0800 (PST)
-MIME-Version: 1.0
-References: <20221116102659.70287-1-david@redhat.com> <20221116102659.70287-21-david@redhat.com>
- <CAHk-=wgtEwpR-rE_=cXzecHMZ+zgrx5zf9UfvH0w-mKgckn4=Q@mail.gmail.com> <202211171439.CDE720EAD@keescook>
-In-Reply-To: <202211171439.CDE720EAD@keescook>
-From:   Linus Torvalds <torvalds@linux-foundation.org>
-Date:   Thu, 17 Nov 2022 15:20:01 -0800
-X-Gmail-Original-Message-ID: <CAHk-=wjykbz-4xVTWF7vkvGJnFoTSXNVeMzfsXaLnGm3CRd8rQ@mail.gmail.com>
-Message-ID: <CAHk-=wjykbz-4xVTWF7vkvGJnFoTSXNVeMzfsXaLnGm3CRd8rQ@mail.gmail.com>
-Subject: Re: [PATCH mm-unstable v1 20/20] mm: rename FOLL_FORCE to FOLL_PTRACE
-To:     Kees Cook <keescook@chromium.org>
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=SdXW0qNT9EJ55g7ZecMibSPRKy2hZHqw3Yh8nMlwERE=;
+        b=3qO3aoQIaV+cAn4yx7v6ewJFb7mqPK0DUv1ZYIuwbsxVKF95AttAYkjJk2xkbuV1ye
+         I8VhFS5YxM3cdFo8Rrm2SQH1o4Jb5O7bT0VFRndi+gzYFrtsL4QKEZEHs7k0FV3+NGL2
+         7Per72qv/vM9ukfw3zhEfL4djHRwVyNnW0rLyyxbW53smpOUofrngOb9q4B6zFmEFk7j
+         0ZWRVJcNsks/7tGs72VvnOF9/tZ/blPVppYd1URegjwy7vViXS8uaAoZAsukgOqw8CYJ
+         1ls292uVz2gk4hi6HBPAsFb5lLHAwZlhH1H0QJVuzp259StRPx14+8TfxlmZgrUcpM0T
+         zixw==
+X-Gm-Message-State: ANoB5plN5WAmFatuPZgktdmkyEdydiZGihBhfSum1rb9sJu0Os0Rdeqi
+        hg8RtY1mwCq9mYo/m481M2ipwA==
+X-Google-Smtp-Source: AA0mqf4Eg6efWFkC4PcZKO6M1HjEMRT/hWrF7/OJe6t0KCBzvaZRup/szSwa3Jgy88qqEUfyA5B6Hg==
+X-Received: by 2002:a65:53ca:0:b0:476:dd80:fb29 with SMTP id z10-20020a6553ca000000b00476dd80fb29mr4360083pgr.619.1668731485545;
+        Thu, 17 Nov 2022 16:31:25 -0800 (PST)
+Received: from www.outflux.net (198-0-35-241-static.hfc.comcastbusiness.net. [198.0.35.241])
+        by smtp.gmail.com with ESMTPSA id b14-20020a170902650e00b00186b6bb2f48sm2022328plk.129.2022.11.17.16.31.25
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 17 Nov 2022 16:31:25 -0800 (PST)
+Date:   Thu, 17 Nov 2022 16:31:24 -0800
+From:   Kees Cook <keescook@chromium.org>
+To:     Linus Torvalds <torvalds@linux-foundation.org>
 Cc:     David Hildenbrand <david@redhat.com>, linux-kernel@vger.kernel.org,
         x86@kernel.org, linux-alpha@vger.kernel.org,
         linux-arm-kernel@lists.infradead.org, linux-ia64@vger.kernel.org,
@@ -123,29 +110,44 @@ Cc:     David Hildenbrand <david@redhat.com>, linux-kernel@vger.kernel.org,
         Paul Moore <paul@paul-moore.com>,
         James Morris <jmorris@namei.org>,
         "Serge E. Hallyn" <serge@hallyn.com>
-Content-Type: text/plain; charset="UTF-8"
+Subject: Re: [PATCH mm-unstable v1 20/20] mm: rename FOLL_FORCE to FOLL_PTRACE
+Message-ID: <202211171630.8EABF5EDD@keescook>
+References: <20221116102659.70287-1-david@redhat.com>
+ <20221116102659.70287-21-david@redhat.com>
+ <CAHk-=wgtEwpR-rE_=cXzecHMZ+zgrx5zf9UfvH0w-mKgckn4=Q@mail.gmail.com>
+ <202211171439.CDE720EAD@keescook>
+ <CAHk-=wjykbz-4xVTWF7vkvGJnFoTSXNVeMzfsXaLnGm3CRd8rQ@mail.gmail.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CAHk-=wjykbz-4xVTWF7vkvGJnFoTSXNVeMzfsXaLnGm3CRd8rQ@mail.gmail.com>
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-On Thu, Nov 17, 2022 at 2:58 PM Kees Cook <keescook@chromium.org> wrote:
->
-> Oh, er, why does get_arg_page() even need FOLL_FORCE? This is writing the
-> new stack contents to the nascent brpm->vma, which was newly allocated
-> with VM_STACK_FLAGS, which an arch can override, but they all appear to include
-> VM_WRITE | VM_MAYWRITE.
+On Thu, Nov 17, 2022 at 03:20:01PM -0800, Linus Torvalds wrote:
+> On Thu, Nov 17, 2022 at 2:58 PM Kees Cook <keescook@chromium.org> wrote:
+> >
+> > Oh, er, why does get_arg_page() even need FOLL_FORCE? This is writing the
+> > new stack contents to the nascent brpm->vma, which was newly allocated
+> > with VM_STACK_FLAGS, which an arch can override, but they all appear to include
+> > VM_WRITE | VM_MAYWRITE.
+> 
+> Yeah, it does seem entirely superfluous.
+> 
+> It's been there since the very beginning (although in that original
+> commit b6a2fea39318 it was there as a '1' to the 'force' argument to
+> get_user_pages()).
+> 
+> I *think* it can be just removed. But as long as it exists, it should
+> most definitely not be renamed to FOLL_PTRACE.
+> 
+> There's a slight worry that it currently hides some other setup issue
+> that makes it matter, since it's been that way so long, but I can't
+> see what it is.
 
-Yeah, it does seem entirely superfluous.
+My test system boots happily with it removed. I'll throw it into -next
+and see if anything melts...
 
-It's been there since the very beginning (although in that original
-commit b6a2fea39318 it was there as a '1' to the 'force' argument to
-get_user_pages()).
-
-I *think* it can be just removed. But as long as it exists, it should
-most definitely not be renamed to FOLL_PTRACE.
-
-There's a slight worry that it currently hides some other setup issue
-that makes it matter, since it's been that way so long, but I can't
-see what it is.
-
-             Linus
+-- 
+Kees Cook
