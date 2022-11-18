@@ -2,53 +2,66 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 78EAAC4332F
-	for <linux-perf-users@archiver.kernel.org>; Fri, 18 Nov 2022 11:34:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 501E4C4332F
+	for <linux-perf-users@archiver.kernel.org>; Fri, 18 Nov 2022 12:33:56 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S235282AbiKRLdq (ORCPT
+        id S241696AbiKRMdz (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Fri, 18 Nov 2022 06:33:46 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35000 "EHLO
+        Fri, 18 Nov 2022 07:33:55 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44190 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S241738AbiKRLcu (ORCPT
+        with ESMTP id S235107AbiKRMdX (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Fri, 18 Nov 2022 06:32:50 -0500
-Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTP id B2A529BA11;
-        Fri, 18 Nov 2022 03:32:47 -0800 (PST)
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id C7EE023A;
-        Fri, 18 Nov 2022 03:32:53 -0800 (PST)
-Received: from [10.1.26.29] (e121896.cambridge.arm.com [10.1.26.29])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id F0A8B3F587;
-        Fri, 18 Nov 2022 03:32:44 -0800 (PST)
-Message-ID: <13f1a15c-b14f-b4cd-a523-2ec6df168224@arm.com>
-Date:   Fri, 18 Nov 2022 11:32:43 +0000
+        Fri, 18 Nov 2022 07:33:23 -0500
+Received: from mga12.intel.com (mga12.intel.com [192.55.52.136])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 39DC1658A
+        for <linux-perf-users@vger.kernel.org>; Fri, 18 Nov 2022 04:33:23 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1668774803; x=1700310803;
+  h=message-id:date:mime-version:subject:to:cc:references:
+   from:in-reply-to:content-transfer-encoding;
+  bh=em8EYkj92uzaVM3J15vdZI09LN74a4rS7bAq6gGwuNE=;
+  b=UV5baLzPtyoWZHR8y6MJZWLH9Cy4SWpNKilpWJIX0F6kX7BPbXzl9v9c
+   ajYg5pN4Jlp17zyPz8YSZJ3xA1tVp0oFpUUYaBsxVJnTZEK+sDrZF/TWA
+   1aG2/TlD0H6DTWvFx+BQisVhCW3j/RM8AG7LkO/l2TUFHupknuEGJZej3
+   R5HYT5IYbs6/nryxY02Zv64YNiJdkliNZjdHU40W51cIrYo+Nzo7UAaiG
+   qAYU1pSUWY/dzkZI+Ex3jV9oAllkytzb2PEqxpNIq0l10Bnhq2sRT/Umq
+   KCEplCoUvKHa0vNEUCLbd+BWb3D7BsaC7iGglAQ/p2b60hWVBk8bF8nZ0
+   Q==;
+X-IronPort-AV: E=McAfee;i="6500,9779,10534"; a="292826478"
+X-IronPort-AV: E=Sophos;i="5.96,174,1665471600"; 
+   d="scan'208";a="292826478"
+Received: from fmsmga004.fm.intel.com ([10.253.24.48])
+  by fmsmga106.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 18 Nov 2022 04:33:23 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=McAfee;i="6500,9779,10534"; a="709019263"
+X-IronPort-AV: E=Sophos;i="5.96,174,1665471600"; 
+   d="scan'208";a="709019263"
+Received: from linux.intel.com ([10.54.29.200])
+  by fmsmga004.fm.intel.com with ESMTP; 18 Nov 2022 04:33:22 -0800
+Received: from [10.252.215.84] (yinlu1-MOBL1.ccr.corp.intel.com [10.252.215.84])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by linux.intel.com (Postfix) with ESMTPS id 5BAC0580A6C;
+        Fri, 18 Nov 2022 04:33:21 -0800 (PST)
+Message-ID: <9c74afc2-e349-881a-7326-31ddf00bf00c@linux.intel.com>
+Date:   Fri, 18 Nov 2022 07:33:20 -0500
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
- Thunderbird/102.2.2
-Subject: Re: [PATCH 05/12] perf test: Add 'leafloop' test workload
-To:     Namhyung Kim <namhyung@kernel.org>,
-        Ian Rogers <irogers@google.com>,
-        German Gomez <german.gomez@arm.com>
-Cc:     Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Jiri Olsa <jolsa@kernel.org>, Ingo Molnar <mingo@kernel.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Adrian Hunter <adrian.hunter@intel.com>,
-        linux-perf-users@vger.kernel.org, Leo Yan <leo.yan@linaro.org>,
-        Zhengjun Xing <zhengjun.xing@linux.intel.com>,
-        Athira Jajeev <atrajeev@linux.vnet.ibm.com>
-References: <20221116233854.1596378-1-namhyung@kernel.org>
- <20221116233854.1596378-6-namhyung@kernel.org> <Y3Zb+JChHoq+89yM@kernel.org>
- <Y3ZeOuNnk0xclY2x@kernel.org>
- <CAP-5=fVh0cQDeqSgVkLHbuiZKoFAp628oggQKwN6KxfUusA01Q@mail.gmail.com>
- <Y3ZuW2IxVWp9yoaD@kernel.org>
- <CAP-5=fWYi2ASE=v0UgrqbBDA2+jC0qmNX2_4r0wbFLV3Dw2nYw@mail.gmail.com>
- <CAM9d7cioaqjPgp+-UyUwzg7J3OQRC8DNMP0T1h5ro=yNgr128w@mail.gmail.com>
+User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:102.0) Gecko/20100101
+ Thunderbird/102.5.0
+Subject: Re: [PATCH v5 0/4] perf/x86/intel/uncore: Fix PCI device reference
+ count leak
+To:     Xiongfeng Wang <wangxiongfeng2@huawei.com>,
+        adrian.hunter@intel.com, peterz@infradead.org, ak@linux.intel.com,
+        alexander.shishkin@linux.intel.com,
+        alexander.antonov@linux.intel.com, acme@kernel.org,
+        jolsa@kernel.org
+Cc:     linux-perf-users@vger.kernel.org, yangyingliang@huawei.com
+References: <20221118063137.121512-1-wangxiongfeng2@huawei.com>
 Content-Language: en-US
-From:   James Clark <james.clark@arm.com>
-In-Reply-To: <CAM9d7cioaqjPgp+-UyUwzg7J3OQRC8DNMP0T1h5ro=yNgr128w@mail.gmail.com>
+From:   "Liang, Kan" <kan.liang@linux.intel.com>
+In-Reply-To: <20221118063137.121512-1-wangxiongfeng2@huawei.com>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 Precedence: bulk
@@ -57,90 +70,41 @@ X-Mailing-List: linux-perf-users@vger.kernel.org
 
 
 
-On 17/11/2022 18:11, Namhyung Kim wrote:
-> Hi,
-> 
-> On Thu, Nov 17, 2022 at 9:42 AM Ian Rogers <irogers@google.com> wrote:
->>
->> On Thu, Nov 17, 2022 at 9:24 AM Arnaldo Carvalho de Melo
->> <acme@kernel.org> wrote:
->>>
->>> Em Thu, Nov 17, 2022 at 09:16:58AM -0800, Ian Rogers escreveu:
->>>> On Thu, Nov 17, 2022 at 8:15 AM Arnaldo Carvalho de Melo
->>>> <acme@kernel.org> wrote:
->>>>>
->>>>> Em Thu, Nov 17, 2022 at 01:06:16PM -0300, Arnaldo Carvalho de Melo escreveu:
->>>>>> Em Wed, Nov 16, 2022 at 03:38:47PM -0800, Namhyung Kim escreveu:
->>>>>>> The leafloop workload is to run an infinite loop in the test_leaf
->>>>>>> function.  This is needed for the ARM fp callgraph test to verify if it
->>>>>>> gets the correct callchains.
->>>>>>>
->>>>>>>   $ perf test -w leafloop
->>>>>>
->>>>>> On fedora:36
->>>>>>
->>>>>> In file included from /usr/include/bits/libc-header-start.h:33,
->>>>>>                  from /usr/include/stdlib.h:26,
->>>>>>                  from tests/workloads/leafloop.c:2:
->>>>>> /usr/include/features.h:412:4: error: #warning _FORTIFY_SOURCE requires compiling with optimization (-O) [-Werror=cpp]
->>>>>>   412 | #  warning _FORTIFY_SOURCE requires compiling with optimization (-O)
->>>>>>       |    ^~~~~~~
->>>>>> cc1: all warnings being treated as errors
->>>>>> make[5]: *** [/home/acme/git/perf/tools/build/Makefile.build:96: /tmp/build/perf/tests/workloads/leafloop.o] Error 1
->>>>>> make[5]: *** Waiting for unfinished jobs....
->>>>>>
->>>>>> I'll try removing the _FORTIFY_SOURCE
->>>>>
->>>>> Works after I added this to datasym.c, leafloop.c and brstack.c:
->>>>
->>>> Is there a reason we are compiling without -O ? Perhaps we can filter
->>>
->>> I assumed so as Namhyung added it, perhaps he is just carrying it from
->>> the pre-existing shell tests?
-> 
-> Exactly :)
-> 
->>>
->>> I wonder its to have a predictable binary output that the test expects
->>> when doing things like hardware tracing? As it come from the coresight
->>> tests, IIRC.
-> 
-> I think it just checks frame-pointer based callstacks on ARM to have the
-> precise results for leaves and their parents.
+On 2022-11-18 1:31 a.m., Xiongfeng Wang wrote:
+> pci_get_device() will increase the reference count for the returned
+> pci_dev, and also decrease the reference count for the input parameter
+> *from* if it is not NULL. We add missing pci_dev_put() to decrease the
+> reference count.
 > 
 > 
->>
->> Would the following in the Build be better:
->>
->> ```
->> # Undefine _FORTIFY_SOURCE as it doesn't work with -O0
->> CFLAGS_leafloop.o         = -g -O0 -fno-inline -fno-omit-frame-pointer
->> -U_FORTIFY_SOURCE
->> ```
->>
->> We could also use make's `filter-out`. If we are disabling inlining
->> then there is also `-fno-optimize-sibling-calls` otherwise we can
->> still lose stack frames.
-> 
-> I wonder if it's enough to use -O0 as it's enabled from -O2.
-> Maybe we can get rid of -fno-inline as well.
-> 
-> German, did you have any concerns for those options?
-> 
+> ChangeLog:
+> v1->v2:
+>   move pci_dev_put() to the last of function sad_cfg_iio_topology()
+>   add fixes for snr_uncore_mmio_map(), hswep_has_limit_sbox() and __uncore_imc_init_box()
+> v2->v3:
+>   split one patch into several patches, one patch for one fix
+> v3->v4:
+>   change 'pci_dev_put(pdev)' to 'pci_dev_put(dev)' in the first patch
+> v4->v5:
+>   move the pci_dev_put() to avoid patching it twice
 
-Is it possible to go with the -U_FORTIFY_SOURCE option? From looking at
-the disassembly, changing -O and the other -f options makes quite a bit
-of difference.
+Thanks Xiongfeng. The series looks good to me.
 
-It's fairly important to that test because it's testing that the
-combination of both frame pointer unwinding and dwarf unwinding result
-in the complete stack.
+Reviewed-by: Kan Liang <kan.liang@linux.intel.com>
 
-If we change the options I'd have to go back and double check with
-different compiler versions that it's still doing the right thing. For
-example if a frame pointer is included for the last frame, then the
-dwarf bit doesn't get tested.
-
-
-> Thanks,
-> Namhyung
+Thanks,
+Kan
+> Xiongfeng Wang (4):
+>   perf/x86/intel/uncore: Fix reference count leak in
+>     sad_cfg_iio_topology()
+>   perf/x86/intel/uncore: Fix reference count leak in
+>     hswep_has_limit_sbox()
+>   perf/x86/intel/uncore: Fix reference count leak in
+>     snr_uncore_mmio_map()
+>   perf/x86/intel/uncore: Fix reference count leak in
+>     __uncore_imc_init_box()
+> 
+>  arch/x86/events/intel/uncore_snb.c   | 3 +++
+>  arch/x86/events/intel/uncore_snbep.c | 5 +++++
+>  2 files changed, 8 insertions(+)
+> 
