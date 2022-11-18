@@ -2,123 +2,136 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F01D2C4332F
-	for <linux-perf-users@archiver.kernel.org>; Fri, 18 Nov 2022 17:47:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 086BCC433FE
+	for <linux-perf-users@archiver.kernel.org>; Fri, 18 Nov 2022 18:01:24 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S235251AbiKRRrT (ORCPT
+        id S235147AbiKRSBX (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Fri, 18 Nov 2022 12:47:19 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41688 "EHLO
+        Fri, 18 Nov 2022 13:01:23 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48948 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S242115AbiKRRrS (ORCPT
+        with ESMTP id S234073AbiKRSBW (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Fri, 18 Nov 2022 12:47:18 -0500
+        Fri, 18 Nov 2022 13:01:22 -0500
 Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTP id B290F6035C;
-        Fri, 18 Nov 2022 09:47:17 -0800 (PST)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTP id B438F2CC96;
+        Fri, 18 Nov 2022 10:01:20 -0800 (PST)
 Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 71A2123A;
-        Fri, 18 Nov 2022 09:47:23 -0800 (PST)
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id C6C9423A;
+        Fri, 18 Nov 2022 10:01:17 -0800 (PST)
 Received: from FVFF77S0Q05N.cambridge.arm.com (FVFF77S0Q05N.cambridge.arm.com [10.1.34.127])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 42EAB3F663;
-        Fri, 18 Nov 2022 09:47:15 -0800 (PST)
-Date:   Fri, 18 Nov 2022 17:47:05 +0000
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 993613F663;
+        Fri, 18 Nov 2022 10:01:09 -0800 (PST)
+Date:   Fri, 18 Nov 2022 18:01:06 +0000
 From:   Mark Rutland <mark.rutland@arm.com>
 To:     Anshuman Khandual <anshuman.khandual@arm.com>
-Cc:     Suzuki K Poulose <suzuki.poulose@arm.com>,
-        linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org,
+Cc:     linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org,
         linux-arm-kernel@lists.infradead.org, peterz@infradead.org,
         acme@kernel.org, will@kernel.org, catalin.marinas@arm.com,
         Mark Brown <broonie@kernel.org>,
         James Clark <james.clark@arm.com>,
         Rob Herring <robh@kernel.org>, Marc Zyngier <maz@kernel.org>,
+        Suzuki Poulose <suzuki.poulose@arm.com>,
         Ingo Molnar <mingo@redhat.com>
-Subject: Re: [PATCH V5 2/7] arm64/perf: Update struct arm_pmu for BRBE
-Message-ID: <Y3fFGQN55+LM5s5u@FVFF77S0Q05N.cambridge.arm.com>
+Subject: Re: [PATCH V5 4/7] driver/perf/arm_pmu_platform: Add support for
+ BRBE attributes detection
+Message-ID: <Y3fIYjGtoXPSX9JQ@FVFF77S0Q05N.cambridge.arm.com>
 References: <20221107062514.2851047-1-anshuman.khandual@arm.com>
- <20221107062514.2851047-3-anshuman.khandual@arm.com>
- <8f6d3424-2650-8e8b-61f7-1431aec4633b@arm.com>
- <4efc0ae1-564e-dd05-842a-46fb1aeb4ad8@arm.com>
+ <20221107062514.2851047-5-anshuman.khandual@arm.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <4efc0ae1-564e-dd05-842a-46fb1aeb4ad8@arm.com>
+In-Reply-To: <20221107062514.2851047-5-anshuman.khandual@arm.com>
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
+On Mon, Nov 07, 2022 at 11:55:11AM +0530, Anshuman Khandual wrote:
+> This adds arm pmu infrastrure to probe BRBE implementation's attributes via
+> driver exported callbacks later. The actual BRBE feature detection will be
+> added by the driver itself.
+> 
+> CPU specific BRBE entries, cycle count, format support gets detected during
+> PMU init. This information gets saved in per-cpu struct pmu_hw_events which
+> later helps in operating BRBE during a perf event context.
 
-Hi Anshuman,
+Do we expect this to vary between CPUs handled by the same struct arm_pmu ?
 
-Apologies for the delayi n reviewing this.
+> Cc: Will Deacon <will@kernel.org>
+> Cc: Mark Rutland <mark.rutland@arm.com>
+> Cc: linux-arm-kernel@lists.infradead.org
+> Cc: linux-kernel@vger.kernel.org
+> Signed-off-by: Anshuman Khandual <anshuman.khandual@arm.com>
+> ---
+>  drivers/perf/arm_pmu_platform.c | 34 +++++++++++++++++++++++++++++++++
+>  1 file changed, 34 insertions(+)
+> 
+> diff --git a/drivers/perf/arm_pmu_platform.c b/drivers/perf/arm_pmu_platform.c
+> index 933b96e243b8..acdc445081aa 100644
+> --- a/drivers/perf/arm_pmu_platform.c
+> +++ b/drivers/perf/arm_pmu_platform.c
+> @@ -172,6 +172,36 @@ static int armpmu_request_irqs(struct arm_pmu *armpmu)
+>  	return err;
+>  }
+>  
+> +static void arm_brbe_probe_cpu(void *info)
+> +{
+> +	struct pmu_hw_events *hw_events;
+> +	struct arm_pmu *armpmu = info;
+> +
+> +	/*
+> +	 * Return from here, if BRBE driver has not been
+> +	 * implemented for this PMU. This helps prevent
+> +	 * kernel crash later when brbe_probe() will be
+> +	 * called on the PMU.
+> +	 */
+> +	if (!armpmu->brbe_probe)
+> +		return;
 
-On Fri, Nov 18, 2022 at 12:09:07PM +0530, Anshuman Khandual wrote:
-> On 11/9/22 17:00, Suzuki K Poulose wrote:
-> > On 07/11/2022 06:25, Anshuman Khandual wrote:
-> >> Although BRBE is an armv8 speciifc HW feature, abstracting out its various
-> >> function callbacks at the struct arm_pmu level is preferred, as it cleaner
-> >> , easier to follow and maintain.
-> >>
-> >> Besides some helpers i.e brbe_supported(), brbe_probe() and brbe_reset()
-> >> might not fit seamlessly, when tried to be embedded via existing arm_pmu
-> >> helpers in the armv8 implementation.
-> >>
-> >> Updates the struct arm_pmu to include all required helpers that will drive
-> >> BRBE functionality for a given PMU implementation. These are the following.
-> >>
-> >> - brbe_filter    : Convert perf event filters into BRBE HW filters
-> >> - brbe_probe    : Probe BRBE HW and capture its attributes
-> >> - brbe_enable    : Enable BRBE HW with a given config
-> >> - brbe_disable    : Disable BRBE HW
-> >> - brbe_read    : Read BRBE buffer for captured branch records
-> >> - brbe_reset    : Reset BRBE buffer
-> >> - brbe_supported: Whether BRBE is supported or not
-> >>
-> >> A BRBE driver implementation needs to provide these functionalities.
-> > 
-> > Could these not be hidden from the generic arm_pmu and kept in the
-> > arm64 pmu backend  ? It looks like they are quite easy to simply
-> > move these to the corresponding hooks in arm64 pmu.
-> 
-> We have had this discussion multiple times in the past [1], but I still
-> believe, keeping BRBE implementation hooks at the PMU level rather than
-> embedding them with other PMU events handling, is a much better logical
-> abstraction.
-> 
-> [1] https://lore.kernel.org/all/c3804290-bdb1-d1eb-3526-9b0ce4c8e8b1@arm.com/
-> 
-> --------------------------------------------------------------------------
-> > 
-> > One thing to answer in the commit msg is why we need the hooks here.  
-> > Have we concluded that adding BRBE hooks to struct arm_pmu for what is 
-> > an armv8 specific feature is the right approach? I don't recall 
-> > reaching that conclusion.
-> 
-> Although it might be possible to have this implementation embedded in
-> the existing armv8 PMU implementation, I still believe that the BRBE
-> functionalities abstracted out at the arm_pmu level with a separate
-> config option is cleaner, easier to follow and to maintain as well.
-> 
-> Besides some helpers i.e brbe_supported(), brbe_probe() and brbe_reset()
-> might not fit seamlessly, when tried to be embedded via existing arm_pmu
-> helpers in the armv8 implementation.
-> 
-> Nonetheless if arm_pmu based additional BRBE helpers is absolutely a no
-> go for folks here in general, will explore arm64 based implementation.
-> ----------------------------------------------------------------------------
-> 
-> I am still waiting for maintainer's take on this issue. I will be happy to
-> rework this series to move all these implementation inside arm64 callbacks
-> instead, if that is required or preferred by the maintainers. But according
-> to me, this current abstraction layout is much better.
+Since this is a field on struct arm_pmu, why doesn't armpmu_request_brbe()
+check this before calling smp_call_function_single(), to avoid the redundant
+IPI?
 
-To be honest, I'm not sure what's best right now; but at the moment it's not
-clear to me why this couldn't fit within the existing hooks.
+> +
+> +	hw_events = per_cpu_ptr(armpmu->hw_events, smp_processor_id());
+> +	armpmu->brbe_probe(hw_events);
+> +}
+> +
+> +static int armpmu_request_brbe(struct arm_pmu *armpmu)
+> +{
+> +	int cpu, err = 0;
+> +
+> +	for_each_cpu(cpu, &armpmu->supported_cpus) {
+> +		err = smp_call_function_single(cpu, arm_brbe_probe_cpu, armpmu, 1);
 
-Above you say brbe_supported() / brbe_probe() / brbe_reset() didn't fit
-seamlessly; can you give an example of problem? I think I'm missing something
-obvious.
+Why does this need to be called on each CPU in the supported_cpus mask?
+
+I don't see anything here to handle late hotplug, so this looks suspicious.
+Either we're missing something, or it's redundant at boot time.
 
 Thanks,
 Mark.
+
+> +		if (err)
+> +			return err;
+> +	}
+> +	return err;
+> +}
+> +
+>  static void armpmu_free_irqs(struct arm_pmu *armpmu)
+>  {
+>  	int cpu;
+> @@ -229,6 +259,10 @@ int arm_pmu_device_probe(struct platform_device *pdev,
+>  	if (ret)
+>  		goto out_free_irqs;
+>  
+> +	ret = armpmu_request_brbe(pmu);
+> +	if (ret)
+> +		goto out_free_irqs;
+> +
+>  	ret = armpmu_register(pmu);
+>  	if (ret) {
+>  		dev_err(dev, "failed to register PMU devices!\n");
+> -- 
+> 2.25.1
+> 
