@@ -2,27 +2,27 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 086BCC433FE
-	for <linux-perf-users@archiver.kernel.org>; Fri, 18 Nov 2022 18:01:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0A1D3C4332F
+	for <linux-perf-users@archiver.kernel.org>; Fri, 18 Nov 2022 18:15:26 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S235147AbiKRSBX (ORCPT
+        id S242541AbiKRSPX (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Fri, 18 Nov 2022 13:01:23 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48948 "EHLO
+        Fri, 18 Nov 2022 13:15:23 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55604 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S234073AbiKRSBW (ORCPT
+        with ESMTP id S242312AbiKRSPW (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Fri, 18 Nov 2022 13:01:22 -0500
+        Fri, 18 Nov 2022 13:15:22 -0500
 Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTP id B438F2CC96;
-        Fri, 18 Nov 2022 10:01:20 -0800 (PST)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTP id D2B68898CE;
+        Fri, 18 Nov 2022 10:15:20 -0800 (PST)
 Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id C6C9423A;
-        Fri, 18 Nov 2022 10:01:17 -0800 (PST)
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id F3FC523A;
+        Fri, 18 Nov 2022 10:15:26 -0800 (PST)
 Received: from FVFF77S0Q05N.cambridge.arm.com (FVFF77S0Q05N.cambridge.arm.com [10.1.34.127])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 993613F663;
-        Fri, 18 Nov 2022 10:01:09 -0800 (PST)
-Date:   Fri, 18 Nov 2022 18:01:06 +0000
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id C56EE3F663;
+        Fri, 18 Nov 2022 10:15:18 -0800 (PST)
+Date:   Fri, 18 Nov 2022 18:15:16 +0000
 From:   Mark Rutland <mark.rutland@arm.com>
 To:     Anshuman Khandual <anshuman.khandual@arm.com>
 Cc:     linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org,
@@ -33,105 +33,164 @@ Cc:     linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org,
         Rob Herring <robh@kernel.org>, Marc Zyngier <maz@kernel.org>,
         Suzuki Poulose <suzuki.poulose@arm.com>,
         Ingo Molnar <mingo@redhat.com>
-Subject: Re: [PATCH V5 4/7] driver/perf/arm_pmu_platform: Add support for
- BRBE attributes detection
-Message-ID: <Y3fIYjGtoXPSX9JQ@FVFF77S0Q05N.cambridge.arm.com>
+Subject: Re: [PATCH V5 5/7] arm64/perf: Drive BRBE from perf event states
+Message-ID: <Y3fLtK95qctxcKgR@FVFF77S0Q05N.cambridge.arm.com>
 References: <20221107062514.2851047-1-anshuman.khandual@arm.com>
- <20221107062514.2851047-5-anshuman.khandual@arm.com>
+ <20221107062514.2851047-6-anshuman.khandual@arm.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20221107062514.2851047-5-anshuman.khandual@arm.com>
+In-Reply-To: <20221107062514.2851047-6-anshuman.khandual@arm.com>
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-On Mon, Nov 07, 2022 at 11:55:11AM +0530, Anshuman Khandual wrote:
-> This adds arm pmu infrastrure to probe BRBE implementation's attributes via
-> driver exported callbacks later. The actual BRBE feature detection will be
-> added by the driver itself.
+On Mon, Nov 07, 2022 at 11:55:12AM +0530, Anshuman Khandual wrote:
+> Branch stack sampling rides along the normal perf event and all the branch
+> records get captured during the PMU interrupt. This just changes perf event
+> handling on the arm64 platform to accommodate required BRBE operations that
+> will enable branch stack sampling support.
 > 
-> CPU specific BRBE entries, cycle count, format support gets detected during
-> PMU init. This information gets saved in per-cpu struct pmu_hw_events which
-> later helps in operating BRBE during a perf event context.
-
-Do we expect this to vary between CPUs handled by the same struct arm_pmu ?
-
-> Cc: Will Deacon <will@kernel.org>
+> Cc: Peter Zijlstra <peterz@infradead.org>
+> Cc: Ingo Molnar <mingo@redhat.com>
+> Cc: Arnaldo Carvalho de Melo <acme@kernel.org>
 > Cc: Mark Rutland <mark.rutland@arm.com>
-> Cc: linux-arm-kernel@lists.infradead.org
+> Cc: Will Deacon <will@kernel.org>
+> Cc: Catalin Marinas <catalin.marinas@arm.com>
+> Cc: linux-perf-users@vger.kernel.org
 > Cc: linux-kernel@vger.kernel.org
+> Cc: linux-arm-kernel@lists.infradead.org
 > Signed-off-by: Anshuman Khandual <anshuman.khandual@arm.com>
 > ---
->  drivers/perf/arm_pmu_platform.c | 34 +++++++++++++++++++++++++++++++++
->  1 file changed, 34 insertions(+)
+>  arch/arm64/kernel/perf_event.c |  7 ++++++
+>  drivers/perf/arm_pmu.c         | 40 ++++++++++++++++++++++++++++++++++
+>  2 files changed, 47 insertions(+)
 > 
-> diff --git a/drivers/perf/arm_pmu_platform.c b/drivers/perf/arm_pmu_platform.c
-> index 933b96e243b8..acdc445081aa 100644
-> --- a/drivers/perf/arm_pmu_platform.c
-> +++ b/drivers/perf/arm_pmu_platform.c
-> @@ -172,6 +172,36 @@ static int armpmu_request_irqs(struct arm_pmu *armpmu)
->  	return err;
+> diff --git a/arch/arm64/kernel/perf_event.c b/arch/arm64/kernel/perf_event.c
+> index c97377e28288..97db333d1208 100644
+> --- a/arch/arm64/kernel/perf_event.c
+> +++ b/arch/arm64/kernel/perf_event.c
+> @@ -874,6 +874,13 @@ static irqreturn_t armv8pmu_handle_irq(struct arm_pmu *cpu_pmu)
+>  		if (!armpmu_event_set_period(event))
+>  			continue;
+>  
+> +		if (has_branch_stack(event)) {
+> +			cpu_pmu->brbe_read(cpuc, event);
+> +			data.br_stack = &cpuc->branches->brbe_stack;
+> +			data.sample_flags |= PERF_SAMPLE_BRANCH_STACK;
+> +			cpu_pmu->brbe_reset(cpuc);
+> +		}
+> +
+>  		/*
+>  		 * Perf event overflow will queue the processing of the event as
+>  		 * an irq_work which will be taken care of in the handling of
+> diff --git a/drivers/perf/arm_pmu.c b/drivers/perf/arm_pmu.c
+> index 5048a500441e..1a8dca4e513e 100644
+> --- a/drivers/perf/arm_pmu.c
+> +++ b/drivers/perf/arm_pmu.c
+> @@ -271,12 +271,22 @@ armpmu_stop(struct perf_event *event, int flags)
+>  {
+>  	struct arm_pmu *armpmu = to_arm_pmu(event->pmu);
+>  	struct hw_perf_event *hwc = &event->hw;
+> +	struct pmu_hw_events *hw_events = this_cpu_ptr(armpmu->hw_events);
+>  
+>  	/*
+>  	 * ARM pmu always has to update the counter, so ignore
+>  	 * PERF_EF_UPDATE, see comments in armpmu_start().
+>  	 */
+>  	if (!(hwc->state & PERF_HES_STOPPED)) {
+> +		if (has_branch_stack(event)) {
+> +			WARN_ON_ONCE(!hw_events->brbe_users);
+> +			hw_events->brbe_users--;
+> +			if (!hw_events->brbe_users) {
+> +				hw_events->brbe_context = NULL;
+> +				armpmu->brbe_disable(hw_events);
+> +			}
+> +		}
+
+Can't we do the actual enable/disable we start/stop the PMU as a whole?
+
+If we just counted the numberoof users here we could do the actual
+enable/disable in armpmu_{enable,disable}() or armv8pmu_{start,stop}(), like we
+do when checking hw_events->used_mask.
+
+[...]
+
+> @@ -349,6 +368,10 @@ armpmu_add(struct perf_event *event, int flags)
+>  	hw_events->events[idx] = event;
+>  
+>  	hwc->state = PERF_HES_STOPPED | PERF_HES_UPTODATE;
+> +
+> +	if (has_branch_stack(event))
+> +		armpmu->brbe_filter(hw_events, event);
+
+What exactly do we need to do here? Since the BRBE is shared, I'm suprised that
+there's any pwer-event configuration beyond "yes" or "no". 
+
+> +
+>  	if (flags & PERF_EF_START)
+>  		armpmu_start(event, PERF_EF_RELOAD);
+>  
+> @@ -443,6 +466,7 @@ __hw_perf_event_init(struct perf_event *event)
+>  {
+>  	struct arm_pmu *armpmu = to_arm_pmu(event->pmu);
+>  	struct hw_perf_event *hwc = &event->hw;
+> +	struct pmu_hw_events *hw_events = this_cpu_ptr(armpmu->hw_events);
+>  	int mapping;
+>  
+>  	hwc->flags = 0;
+> @@ -492,6 +516,9 @@ __hw_perf_event_init(struct perf_event *event)
+>  		local64_set(&hwc->period_left, hwc->sample_period);
+>  	}
+>  
+> +	if (has_branch_stack(event))
+> +		armpmu->brbe_filter(hw_events, event);
+
+I do not understand why we would use hw_events here; at this point the event
+has only been created, and not even added yet; it doesn't have a counter index.
+isn't even being installed into HW.
+
+What am I missing?
+
+> +
+>  	return validate_group(event);
 >  }
 >  
-> +static void arm_brbe_probe_cpu(void *info)
+> @@ -520,6 +547,18 @@ static int armpmu_event_init(struct perf_event *event)
+>  	return __hw_perf_event_init(event);
+>  }
+>  
+> +static void armpmu_sched_task(struct perf_event_context *ctx, bool sched_in)
 > +{
-> +	struct pmu_hw_events *hw_events;
-> +	struct arm_pmu *armpmu = info;
+> +	struct arm_pmu *armpmu = to_arm_pmu(ctx->pmu);
+> +	struct pmu_hw_events *hw_events = this_cpu_ptr(armpmu->hw_events);
 > +
-> +	/*
-> +	 * Return from here, if BRBE driver has not been
-> +	 * implemented for this PMU. This helps prevent
-> +	 * kernel crash later when brbe_probe() will be
-> +	 * called on the PMU.
-> +	 */
-> +	if (!armpmu->brbe_probe)
+> +	if (!hw_events->brbe_users)
 > +		return;
-
-Since this is a field on struct arm_pmu, why doesn't armpmu_request_brbe()
-check this before calling smp_call_function_single(), to avoid the redundant
-IPI?
-
 > +
-> +	hw_events = per_cpu_ptr(armpmu->hw_events, smp_processor_id());
-> +	armpmu->brbe_probe(hw_events);
-> +}
-> +
-> +static int armpmu_request_brbe(struct arm_pmu *armpmu)
-> +{
-> +	int cpu, err = 0;
-> +
-> +	for_each_cpu(cpu, &armpmu->supported_cpus) {
-> +		err = smp_call_function_single(cpu, arm_brbe_probe_cpu, armpmu, 1);
+> +	if (sched_in)
+> +		armpmu->brbe_reset(hw_events);
 
-Why does this need to be called on each CPU in the supported_cpus mask?
-
-I don't see anything here to handle late hotplug, so this looks suspicious.
-Either we're missing something, or it's redundant at boot time.
+I see that LBR does a save/restore, whereas IIUC here we discard without even
+reading the old values. Is that the intent? Shouldn't we snapshot them into the
+task context?
 
 Thanks,
 Mark.
 
-> +		if (err)
-> +			return err;
-> +	}
-> +	return err;
 > +}
 > +
->  static void armpmu_free_irqs(struct arm_pmu *armpmu)
+>  static void armpmu_enable(struct pmu *pmu)
 >  {
->  	int cpu;
-> @@ -229,6 +259,10 @@ int arm_pmu_device_probe(struct platform_device *pdev,
->  	if (ret)
->  		goto out_free_irqs;
+>  	struct arm_pmu *armpmu = to_arm_pmu(pmu);
+> @@ -877,6 +916,7 @@ static struct arm_pmu *__armpmu_alloc(gfp_t flags)
+>  	}
 >  
-> +	ret = armpmu_request_brbe(pmu);
-> +	if (ret)
-> +		goto out_free_irqs;
-> +
->  	ret = armpmu_register(pmu);
->  	if (ret) {
->  		dev_err(dev, "failed to register PMU devices!\n");
+>  	pmu->pmu = (struct pmu) {
+> +		.sched_task	= armpmu_sched_task,
+>  		.pmu_enable	= armpmu_enable,
+>  		.pmu_disable	= armpmu_disable,
+>  		.event_init	= armpmu_event_init,
 > -- 
 > 2.25.1
 > 
