@@ -2,127 +2,142 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 23ABAC4321E
-	for <linux-perf-users@archiver.kernel.org>; Fri, 18 Nov 2022 16:50:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 33986C43219
+	for <linux-perf-users@archiver.kernel.org>; Fri, 18 Nov 2022 17:03:40 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S235459AbiKRQui (ORCPT
+        id S242340AbiKRRDJ (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Fri, 18 Nov 2022 11:50:38 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36420 "EHLO
+        Fri, 18 Nov 2022 12:03:09 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42220 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S235463AbiKRQuh (ORCPT
+        with ESMTP id S242402AbiKRRDF (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Fri, 18 Nov 2022 11:50:37 -0500
-Received: from ams.source.kernel.org (ams.source.kernel.org [145.40.68.75])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A07D793721;
-        Fri, 18 Nov 2022 08:50:36 -0800 (PST)
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        Fri, 18 Nov 2022 12:03:05 -0500
+Received: from smtp-out2.suse.de (smtp-out2.suse.de [195.135.220.29])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4D05C87564;
+        Fri, 18 Nov 2022 09:03:03 -0800 (PST)
+Received: from imap2.suse-dmz.suse.de (imap2.suse-dmz.suse.de [192.168.254.74])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange X25519 server-signature ECDSA (P-521) server-digest SHA512)
         (No client certificate requested)
-        by ams.source.kernel.org (Postfix) with ESMTPS id 4A2C7B824BC;
-        Fri, 18 Nov 2022 16:50:35 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 4F026C433D6;
-        Fri, 18 Nov 2022 16:50:30 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1668790234;
-        bh=2SvZU2ZbmXvIOHrpSjoDJyk8GuB3PC2eqavTqAih/c4=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=PDCyFX1t2lbX2Y+JbxJspQJxL5IivL9nB6T9T8jDuj1ADFyeQ6AhYtrm7AMXDTrR9
-         3A4jPSXrHBkSeATkubSjiphuP/ZAmTP4Bdu2u/gBp/NdFMaNEjisc9WUIy1/y74jHG
-         dOARPW4nFoH7nbO80T8fpwi4qxBngjNaKyW50XgZMmTTdqDjH6VQQnl/9qmNyK0gy5
-         Qa62UpjpBwrCiNE4cv2lHgSut3CLX3Ox4hvHWnz2gEi2Q7A/QqhMK0ytZ1NzsQbBtA
-         3d8r/tBKMo563L/+EBD+upeTVN/Xy+jXaNnw90FnSFpaTbsu6jGPV93yC25scr1K6u
-         UMyclmg+Rj8yA==
-Date:   Fri, 18 Nov 2022 16:50:26 +0000
-From:   Will Deacon <will@kernel.org>
-To:     Rob Herring <robh@kernel.org>
-Cc:     Namhyung Kim <namhyung@kernel.org>,
-        Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Jiri Olsa <jolsa@kernel.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Marc Zyngier <maz@kernel.org>,
-        Oliver Upton <oliver.upton@linux.dev>,
-        Ingo Molnar <mingo@redhat.com>,
-        Suzuki K Poulose <suzuki.poulose@arm.com>,
-        James Morse <james.morse@arm.com>,
-        Alexandru Elisei <alexandru.elisei@arm.com>,
-        kvmarm@lists.linux.dev, linux-perf-users@vger.kernel.org,
-        linux-kernel@vger.kernel.org, James Clark <james.clark@arm.com>,
-        Mark Brown <broonie@kernel.org>,
-        linux-arm-kernel@lists.infradead.org, kvmarm@lists.cs.columbia.edu
-Subject: Re: [PATCH v3 0/8] perf: Arm SPEv1.2 support
-Message-ID: <20221118165025.GB4872@willie-the-truck>
-References: <20220825-arm-spe-v8-7-v3-0-87682f78caac@kernel.org>
- <CAL_Jsq+WOjoPW0FDSa=B9-aCMwXC3tc5HUqokoVkKUucKgqanQ@mail.gmail.com>
+        by smtp-out2.suse.de (Postfix) with ESMTPS id D4BF31FDA4;
+        Fri, 18 Nov 2022 17:03:01 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.cz; s=susede2_rsa;
+        t=1668790981; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+         mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=fK2sdLfZqlxwdzyzeVC6Yy7wx8vYkqbsaxCq7BgcB58=;
+        b=LS+hNeQ4geGgj4IXWO5+0pS41T+O+kbhrtYk+pP+vVRIoeuKs+oW13F6Ht+tR7USTuEyYF
+        w44h38vtDK2kFPU+O2RCals0tqkM1nJKUf86qC24NucyatqLyr4TTvgkMY8PsBAD2uBX+L
+        cHUUR5s7utA0uOsl3r11W1mUfWblbh8=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.cz;
+        s=susede2_ed25519; t=1668790981;
+        h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+         mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=fK2sdLfZqlxwdzyzeVC6Yy7wx8vYkqbsaxCq7BgcB58=;
+        b=khb2AjlSZXqyWGI6UYbr+/ZmYWHGQEHMU8He9yK4yvl4DWCKZ0jYtp3ha5rFTfTmR/yC2u
+        C7/yrrNfpsGvyLBA==
+Received: from imap2.suse-dmz.suse.de (imap2.suse-dmz.suse.de [192.168.254.74])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange X25519 server-signature ECDSA (P-521) server-digest SHA512)
+        (No client certificate requested)
+        by imap2.suse-dmz.suse.de (Postfix) with ESMTPS id 41DED1345B;
+        Fri, 18 Nov 2022 17:03:01 +0000 (UTC)
+Received: from dovecot-director2.suse.de ([192.168.254.65])
+        by imap2.suse-dmz.suse.de with ESMTPSA
+        id kEZlD8W6d2PfGAAAMHmgww
+        (envelope-from <vbabka@suse.cz>); Fri, 18 Nov 2022 17:03:01 +0000
+Message-ID: <e4dd50b8-7ae9-a6fd-8765-2b2dd90ea1a8@suse.cz>
+Date:   Fri, 18 Nov 2022 18:03:00 +0100
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CAL_Jsq+WOjoPW0FDSa=B9-aCMwXC3tc5HUqokoVkKUucKgqanQ@mail.gmail.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
+ Thunderbird/102.4.2
+Subject: Re: [PATCH mm-unstable v1 05/20] mm: add early FAULT_FLAG_WRITE
+ consistency checks
+Content-Language: en-US
+To:     David Hildenbrand <david@redhat.com>, linux-kernel@vger.kernel.org
+Cc:     x86@kernel.org, linux-alpha@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, linux-ia64@vger.kernel.org,
+        linux-mips@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
+        sparclinux@vger.kernel.org, linux-um@lists.infradead.org,
+        etnaviv@lists.freedesktop.org, dri-devel@lists.freedesktop.org,
+        linux-samsung-soc@vger.kernel.org, linux-rdma@vger.kernel.org,
+        linux-media@vger.kernel.org, linux-fsdevel@vger.kernel.org,
+        linux-mm@kvack.org, linux-perf-users@vger.kernel.org,
+        linux-security-module@vger.kernel.org,
+        linux-kselftest@vger.kernel.org,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Jason Gunthorpe <jgg@ziepe.ca>,
+        John Hubbard <jhubbard@nvidia.com>,
+        Peter Xu <peterx@redhat.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Andrea Arcangeli <aarcange@redhat.com>,
+        Hugh Dickins <hughd@google.com>, Nadav Amit <namit@vmware.com>,
+        Matthew Wilcox <willy@infradead.org>,
+        Mike Kravetz <mike.kravetz@oracle.com>,
+        Muchun Song <songmuchun@bytedance.com>,
+        Shuah Khan <shuah@kernel.org>,
+        Lucas Stach <l.stach@pengutronix.de>,
+        David Airlie <airlied@gmail.com>,
+        Oded Gabbay <ogabbay@kernel.org>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Christoph Hellwig <hch@infradead.org>,
+        Alex Williamson <alex.williamson@redhat.com>
+References: <20221116102659.70287-1-david@redhat.com>
+ <20221116102659.70287-6-david@redhat.com>
+From:   Vlastimil Babka <vbabka@suse.cz>
+In-Reply-To: <20221116102659.70287-6-david@redhat.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-On Thu, Nov 17, 2022 at 08:43:17AM -0600, Rob Herring wrote:
-> On Fri, Nov 4, 2022 at 10:55 AM Rob Herring <robh@kernel.org> wrote:
-> >
-> > This series adds support for Arm SPEv1.2 which is part of the
-> > Armv8.7/Armv9.2 architecture. There's 2 new features that affect the
-> > kernel: a new event filter bit, branch 'not taken', and an inverted
-> > event filter register.
-> >
-> > Since this support adds new registers and fields, first the SPE register
-> > defines are converted to automatic generation.
-> >
-> > Note that the 'config3' addition in sysfs format files causes SPE to
-> > break. A stable fix e552b7be12ed ("perf: Skip and warn on unknown format
-> > 'configN' attrs") landed in v6.1-rc1.
-> >
-> > The perf tool side changes are available here[1].
-> >
-> > Tested on FVP.
-> >
-> > [1] https://lore.kernel.org/all/20220914-arm-perf-tool-spe1-2-v2-v4-0-83c098e6212e@kernel.org/
-> >
-> > Signed-off-by: Rob Herring <robh@kernel.org>
-> > ---
-> > Changes in v3:
-> > - Add some more missing SPE register fields and use Enums for some
-> >   fields
-> > - Use the new PMSIDR_EL1 register Enum defines in the SPE driver
-> > - Link to v2: https://lore.kernel.org/r/20220825-arm-spe-v8-7-v2-0-e37322d68ac0@kernel.org
-> >
-> > Changes in v2:
-> > - Convert the SPE register defines to automatic generation
-> > - Fixed access to SYS_PMSNEVFR_EL1 when not present
-> > - Rebase on v6.1-rc1
-> > - Link to v1: https://lore.kernel.org/r/20220825-arm-spe-v8-7-v1-0-c75b8d92e692@kernel.org
-> >
-> > ---
-> > Rob Herring (8):
-> >       perf: arm_spe: Use feature numbering for PMSEVFR_EL1 defines
-> >       arm64: Drop SYS_ from SPE register defines
-> >       arm64/sysreg: Convert SPE registers to automatic generation
-> >       perf: arm_spe: Drop BIT() and use FIELD_GET/PREP accessors
-> >       perf: arm_spe: Use new PMSIDR_EL1 register enums
-> >       perf: arm_spe: Support new SPEv1.2/v8.7 'not taken' event
-> >       perf: Add perf_event_attr::config3
-> >       perf: arm_spe: Add support for SPEv1.2 inverted event filtering
-> >
-> >  arch/arm64/include/asm/el2_setup.h |   6 +-
-> >  arch/arm64/include/asm/sysreg.h    |  99 +++--------------------
-> >  arch/arm64/kvm/debug.c             |   2 +-
-> >  arch/arm64/kvm/hyp/nvhe/debug-sr.c |   2 +-
-> >  arch/arm64/tools/sysreg            | 139 +++++++++++++++++++++++++++++++++
-> >  drivers/perf/arm_spe_pmu.c         | 156 ++++++++++++++++++++++++-------------
-> >  include/uapi/linux/perf_event.h    |   3 +
-> >  7 files changed, 257 insertions(+), 150 deletions(-)
+On 11/16/22 11:26, David Hildenbrand wrote:
+> Let's catch abuse of FAULT_FLAG_WRITE early, such that we don't have to
+> care in all other handlers and might get "surprises" if we forget to do
+> so.
 > 
-> Will, any comments on this series?
+> Write faults without VM_MAYWRITE don't make any sense, and our
+> maybe_mkwrite() logic could have hidden such abuse for now.
+> 
+> Write faults without VM_WRITE on something that is not a COW mapping is
+> similarly broken, and e.g., do_wp_page() could end up placing an
+> anonymous page into a shared mapping, which would be bad.
+> 
+> This is a preparation for reliable R/O long-term pinning of pages in
+> private mappings, whereby we want to make sure that we will never break
+> COW in a read-only private mapping.
+> 
+> Signed-off-by: David Hildenbrand <david@redhat.com>
 
-Looks fine to me. Happy to queue it once the uapi change has been acked.
+Reviewed-by: Vlastimil Babka <vbabka@suse.cz>
 
-Will
+> ---
+>  mm/memory.c | 8 ++++++++
+>  1 file changed, 8 insertions(+)
+> 
+> diff --git a/mm/memory.c b/mm/memory.c
+> index e014435a87db..c4fa378ec2a0 100644
+> --- a/mm/memory.c
+> +++ b/mm/memory.c
+> @@ -5170,6 +5170,14 @@ static vm_fault_t sanitize_fault_flags(struct vm_area_struct *vma,
+>  		 */
+>  		if (!is_cow_mapping(vma->vm_flags))
+>  			*flags &= ~FAULT_FLAG_UNSHARE;
+> +	} else if (*flags & FAULT_FLAG_WRITE) {
+> +		/* Write faults on read-only mappings are impossible ... */
+> +		if (WARN_ON_ONCE(!(vma->vm_flags & VM_MAYWRITE)))
+> +			return VM_FAULT_SIGSEGV;
+> +		/* ... and FOLL_FORCE only applies to COW mappings. */
+> +		if (WARN_ON_ONCE(!(vma->vm_flags & VM_WRITE) &&
+> +				 !is_cow_mapping(vma->vm_flags)))
+> +			return VM_FAULT_SIGSEGV;
+>  	}
+>  	return 0;
+>  }
+
