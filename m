@@ -2,168 +2,91 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C5A45C43219
-	for <linux-perf-users@archiver.kernel.org>; Fri, 18 Nov 2022 15:02:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8D063C43219
+	for <linux-perf-users@archiver.kernel.org>; Fri, 18 Nov 2022 15:04:38 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S242038AbiKRPCd (ORCPT
+        id S242010AbiKRPEh (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Fri, 18 Nov 2022 10:02:33 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60272 "EHLO
+        Fri, 18 Nov 2022 10:04:37 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60284 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S242264AbiKRPBu (ORCPT
+        with ESMTP id S235245AbiKRPDy (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Fri, 18 Nov 2022 10:01:50 -0500
+        Fri, 18 Nov 2022 10:03:54 -0500
 Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 696CBB7FE;
-        Fri, 18 Nov 2022 06:58:33 -0800 (PST)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5148E8754F;
+        Fri, 18 Nov 2022 07:02:42 -0800 (PST)
 Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id 05AB6625CA;
-        Fri, 18 Nov 2022 14:58:33 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 348CCC433C1;
-        Fri, 18 Nov 2022 14:58:32 +0000 (UTC)
+        by dfw.source.kernel.org (Postfix) with ESMTPS id EC75C625B8;
+        Fri, 18 Nov 2022 15:02:41 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 26359C433C1;
+        Fri, 18 Nov 2022 15:02:41 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1668783512;
-        bh=MxONr46/i6WXoLQg4MqO6UDR/wZefwbgPz9h1nRnFGk=;
+        s=k20201202; t=1668783761;
+        bh=q3AdceVXKG17FUFJhMNAS25TG3DfWOjPsij2iCMaBiA=;
         h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=enJq6+eVNZWHUOqikPhIRCFI+9ZLFVobOyuh5w0Kx5yQxnzBAyA/VuGMxbqPNUJ1e
-         ey9L5IFtjY4s6DTIl0Bh/WSOOtXRNQPlJzCBAd5oHfGsEgF5pbk0j4Iv/HyEcbmXAd
-         jvpoyYQxgM3X//3JuxqguABy91MJeU4G0NY/EcK8CUVMTY4zKbuzByuF6GbjHsBVCu
-         pRdr9eEFsPhcfQXH+bZ4E4hLT3s+lkaFQxZYguUULy/3Bh7e1LQu2CAbeks+EfT/5u
-         fP4MYeuRi9Iueu2x29Cs4JHvtF+QRP38JDbRelCnqAxBB3/mfVoFHjNiH+mm6NAWAT
-         2Z/xvKPvSxvNw==
+        b=gDrEnbj2Mo97VZeksz+3qmlZnpoCjUFJoa2ujergiAYVL+IDswDXdUJ4P5ru2aPwZ
+         A2/B9gZUVk0GWssEZKm4GwkGtPPnlvKvIUmPbDlspP2O8JVHkcKfVWIkGL6wglVF8j
+         JUjBg0GNsfhf3e/LHobPQ7mUpM4jD2ogYjcAN0F6pkr4grraotVpC6hpZ8QZyHWUBy
+         i1tBLOmicaMFvnH/texbDaLL5gzekQ9QDcdzRCQbmZ55x8FI8vZCbdtENVx1Xxwr6q
+         92Papa2KPTi1O/iyj/J2m4QhVDn9rkPANg9OqNpz2McNivOOHYtRvJ7dwwmHxtdgQB
+         6zxZr7iOqra3A==
 Received: by quaco.ghostprotocols.net (Postfix, from userid 1000)
-        id A035B4034E; Fri, 18 Nov 2022 11:58:29 -0300 (-03)
-Date:   Fri, 18 Nov 2022 11:58:29 -0300
+        id D8F784034E; Fri, 18 Nov 2022 12:02:38 -0300 (-03)
+Date:   Fri, 18 Nov 2022 12:02:38 -0300
 From:   Arnaldo Carvalho de Melo <acme@kernel.org>
-To:     James Clark <james.clark@arm.com>
-Cc:     Namhyung Kim <namhyung@kernel.org>,
-        Ian Rogers <irogers@google.com>,
-        German Gomez <german.gomez@arm.com>,
-        Jiri Olsa <jolsa@kernel.org>, Ingo Molnar <mingo@kernel.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        LKML <linux-kernel@vger.kernel.org>,
+To:     Peter Zijlstra <peterz@infradead.org>
+Cc:     Ian Rogers <irogers@google.com>, Ingo Molnar <mingo@redhat.com>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Jiri Olsa <jolsa@kernel.org>,
+        Namhyung Kim <namhyung@kernel.org>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Masami Hiramatsu <mhiramat@kernel.org>,
+        linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org,
+        Steven Rostedt <rostedt@google.com>,
         Adrian Hunter <adrian.hunter@intel.com>,
-        linux-perf-users@vger.kernel.org, Leo Yan <leo.yan@linaro.org>,
-        Zhengjun Xing <zhengjun.xing@linux.intel.com>,
-        Athira Jajeev <atrajeev@linux.vnet.ibm.com>
-Subject: Re: [PATCH 05/12] perf test: Add 'leafloop' test workload
-Message-ID: <Y3edlSkfuRffwMnk@kernel.org>
-References: <20221116233854.1596378-1-namhyung@kernel.org>
- <20221116233854.1596378-6-namhyung@kernel.org>
- <Y3Zb+JChHoq+89yM@kernel.org>
- <Y3ZeOuNnk0xclY2x@kernel.org>
- <CAP-5=fVh0cQDeqSgVkLHbuiZKoFAp628oggQKwN6KxfUusA01Q@mail.gmail.com>
- <Y3ZuW2IxVWp9yoaD@kernel.org>
- <CAP-5=fWYi2ASE=v0UgrqbBDA2+jC0qmNX2_4r0wbFLV3Dw2nYw@mail.gmail.com>
- <CAM9d7cioaqjPgp+-UyUwzg7J3OQRC8DNMP0T1h5ro=yNgr128w@mail.gmail.com>
- <13f1a15c-b14f-b4cd-a523-2ec6df168224@arm.com>
+        Linux Trace Devel <linux-trace-devel@vger.kernel.org>,
+        Stephane Eranian <eranian@google.com>
+Subject: Re: [PATCH v1 1/2] perf build: Require libtraceevent from the system
+Message-ID: <Y3eejjLjChlGC96I@kernel.org>
+References: <20221117224952.358639-1-irogers@google.com>
+ <20221117224952.358639-2-irogers@google.com>
+ <Y3dQxVNwGmQMWPP0@hirez.programming.kicks-ass.net>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <13f1a15c-b14f-b4cd-a523-2ec6df168224@arm.com>
+In-Reply-To: <Y3dQxVNwGmQMWPP0@hirez.programming.kicks-ass.net>
 X-Url:  http://acmel.wordpress.com
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-Em Fri, Nov 18, 2022 at 11:32:43AM +0000, James Clark escreveu:
+Em Fri, Nov 18, 2022 at 10:30:45AM +0100, Peter Zijlstra escreveu:
+> On Thu, Nov 17, 2022 at 02:49:51PM -0800, Ian Rogers wrote:
+> > Unconditionally require libtraceevent to come from the system. Force
+> > the determination of the libtracefs version if it is present.
 > 
-> 
-> On 17/11/2022 18:11, Namhyung Kim wrote:
-> > Hi,
-> > 
-> > On Thu, Nov 17, 2022 at 9:42 AM Ian Rogers <irogers@google.com> wrote:
-> >>
-> >> On Thu, Nov 17, 2022 at 9:24 AM Arnaldo Carvalho de Melo
-> >> <acme@kernel.org> wrote:
-> >>>
-> >>> Em Thu, Nov 17, 2022 at 09:16:58AM -0800, Ian Rogers escreveu:
-> >>>> On Thu, Nov 17, 2022 at 8:15 AM Arnaldo Carvalho de Melo
-> >>>> <acme@kernel.org> wrote:
-> >>>>>
-> >>>>> Em Thu, Nov 17, 2022 at 01:06:16PM -0300, Arnaldo Carvalho de Melo escreveu:
-> >>>>>> Em Wed, Nov 16, 2022 at 03:38:47PM -0800, Namhyung Kim escreveu:
-> >>>>>>> The leafloop workload is to run an infinite loop in the test_leaf
-> >>>>>>> function.  This is needed for the ARM fp callgraph test to verify if it
-> >>>>>>> gets the correct callchains.
-> >>>>>>>
-> >>>>>>>   $ perf test -w leafloop
-> >>>>>>
-> >>>>>> On fedora:36
-> >>>>>>
-> >>>>>> In file included from /usr/include/bits/libc-header-start.h:33,
-> >>>>>>                  from /usr/include/stdlib.h:26,
-> >>>>>>                  from tests/workloads/leafloop.c:2:
-> >>>>>> /usr/include/features.h:412:4: error: #warning _FORTIFY_SOURCE requires compiling with optimization (-O) [-Werror=cpp]
-> >>>>>>   412 | #  warning _FORTIFY_SOURCE requires compiling with optimization (-O)
-> >>>>>>       |    ^~~~~~~
-> >>>>>> cc1: all warnings being treated as errors
-> >>>>>> make[5]: *** [/home/acme/git/perf/tools/build/Makefile.build:96: /tmp/build/perf/tests/workloads/leafloop.o] Error 1
-> >>>>>> make[5]: *** Waiting for unfinished jobs....
-> >>>>>>
-> >>>>>> I'll try removing the _FORTIFY_SOURCE
-> >>>>>
-> >>>>> Works after I added this to datasym.c, leafloop.c and brstack.c:
-> >>>>
-> >>>> Is there a reason we are compiling without -O ? Perhaps we can filter
-> >>>
-> >>> I assumed so as Namhyung added it, perhaps he is just carrying it from
-> >>> the pre-existing shell tests?
-> > 
-> > Exactly :)
-> > 
-> >>>
-> >>> I wonder its to have a predictable binary output that the test expects
-> >>> when doing things like hardware tracing? As it come from the coresight
-> >>> tests, IIRC.
-> > 
-> > I think it just checks frame-pointer based callstacks on ARM to have the
-> > precise results for leaves and their parents.
-> > 
-> > 
-> >>
-> >> Would the following in the Build be better:
-> >>
-> >> ```
-> >> # Undefine _FORTIFY_SOURCE as it doesn't work with -O0
-> >> CFLAGS_leafloop.o         = -g -O0 -fno-inline -fno-omit-frame-pointer
-> >> -U_FORTIFY_SOURCE
-> >> ```
-> >>
-> >> We could also use make's `filter-out`. If we are disabling inlining
-> >> then there is also `-fno-optimize-sibling-calls` otherwise we can
-> >> still lose stack frames.
-> > 
-> > I wonder if it's enough to use -O0 as it's enabled from -O2.
-> > Maybe we can get rid of -fno-inline as well.
-> > 
-> > German, did you have any concerns for those options?
-> > 
-> 
-> Is it possible to go with the -U_FORTIFY_SOURCE option? From looking at
-> the disassembly, changing -O and the other -f options makes quite a bit
-> of difference.
+> -ENOMOTIVATION
 
-I thought about doing it as a -U_FORTIFY_SOURCE but ended up doing it in
-each test as I thought that way to be more robust, i.e. the way the
-makefiles get that per-object CFLAGS and add to the global one could
-flip and then this would break again.
+Yeah, I was going to ask for that as well :-\
 
-But if people prefer it in the per-object file Build rule, np.
+And the motivation was spelled out in the discussion that led to this
+patch:
+
+https://lore.kernel.org/lkml/CAP-5=fWxAjEia-Qbm0RVzKOxyiod8rUOBieqaGK=DtQboDe3Qw@mail.gmail.com
+ 
+> also:
+> 
+> Makefile.config:1196: *** Error: libtraceevent is missing, please install libtraceevent-dev.  Stop.
+
+yeah, this probably should work like with other libraries, don't stop
+the build, just don't build features that depend on libtraceevent,
+warning the user that features foo, bar and baz won't be available.
+
+For people working with just hardware, software, cache events, no
+problem.
 
 - Arnaldo
- 
-> It's fairly important to that test because it's testing that the
-> combination of both frame pointer unwinding and dwarf unwinding result
-> in the complete stack.
-> 
-> If we change the options I'd have to go back and double check with
-> different compiler versions that it's still doing the right thing. For
-> example if a frame pointer is included for the last frame, then the
-> dwarf bit doesn't get tested.
-> 
-> 
-> > Thanks,
-> > Namhyung
