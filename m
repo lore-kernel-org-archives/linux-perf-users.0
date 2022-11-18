@@ -2,118 +2,105 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5787EC433FE
-	for <linux-perf-users@archiver.kernel.org>; Fri, 18 Nov 2022 16:46:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 60BCEC433FE
+	for <linux-perf-users@archiver.kernel.org>; Fri, 18 Nov 2022 16:49:56 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S242290AbiKRQp7 (ORCPT
+        id S235408AbiKRQtz (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Fri, 18 Nov 2022 11:45:59 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60918 "EHLO
+        Fri, 18 Nov 2022 11:49:55 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35932 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S242234AbiKRQpk (ORCPT
+        with ESMTP id S233401AbiKRQty (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Fri, 18 Nov 2022 11:45:40 -0500
-Received: from smtp-out1.suse.de (smtp-out1.suse.de [195.135.220.28])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3C7FD13EAF;
-        Fri, 18 Nov 2022 08:45:34 -0800 (PST)
-Received: from imap2.suse-dmz.suse.de (imap2.suse-dmz.suse.de [192.168.254.74])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange X25519 server-signature ECDSA (P-521) server-digest SHA512)
+        Fri, 18 Nov 2022 11:49:54 -0500
+Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C2CD793721;
+        Fri, 18 Nov 2022 08:49:53 -0800 (PST)
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by smtp-out1.suse.de (Postfix) with ESMTPS id B457722809;
-        Fri, 18 Nov 2022 16:45:32 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.cz; s=susede2_rsa;
-        t=1668789932; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-         mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=gGWCBwR6W7N/T/oKVxq15JaXduGL74ybELQMLEOROjQ=;
-        b=oTTvOF9em1RBHrcDz3sPtZD55HB28JQKz0rq8O6fqbEdz69a/AXJF4jT92zC2TnMfoTP5o
-        N+/92zbPBa11XH4uj3j1PVuX4IFT5iMf+cuDaOPUiGYk17AhOFewCKsW2Vloee6rUH2cev
-        ywRRIq+dF6sPyizq6eVC4qLT8N+v1Fc=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.cz;
-        s=susede2_ed25519; t=1668789932;
-        h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-         mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=gGWCBwR6W7N/T/oKVxq15JaXduGL74ybELQMLEOROjQ=;
-        b=w1a8SK5GtUV98VIRjCKPQTv/uTPpGl8AZCdCXalMKOScuLDWEelI6GTSk7XWYEsOviak8d
-        9ZPPVSaQ1GZLctAg==
-Received: from imap2.suse-dmz.suse.de (imap2.suse-dmz.suse.de [192.168.254.74])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange X25519 server-signature ECDSA (P-521) server-digest SHA512)
-        (No client certificate requested)
-        by imap2.suse-dmz.suse.de (Postfix) with ESMTPS id 2CE531345B;
-        Fri, 18 Nov 2022 16:45:32 +0000 (UTC)
-Received: from dovecot-director2.suse.de ([192.168.254.65])
-        by imap2.suse-dmz.suse.de with ESMTPSA
-        id /+1SCqy2d2MoEAAAMHmgww
-        (envelope-from <vbabka@suse.cz>); Fri, 18 Nov 2022 16:45:32 +0000
-Message-ID: <f427422c-9af3-dc0a-dcc3-2a1114eb77ea@suse.cz>
-Date:   Fri, 18 Nov 2022 17:45:31 +0100
+        by dfw.source.kernel.org (Postfix) with ESMTPS id 534B662675;
+        Fri, 18 Nov 2022 16:49:53 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 1EE7DC433D6;
+        Fri, 18 Nov 2022 16:49:48 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1668790192;
+        bh=Ezeq8ffMYvaPt9FpoGuX5EQSh2HNXruXkEIhBtNrqXo=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=t+JTQsE5gBlbQKNkVdC+DxA8XuWAPw+UeaHxdk4s7mPJ549BmuWk3MM6R4F6c7n6C
+         EsCL6Hk9H1J8XQPoNjTdfH2WJ8E6eUXq6otr2IhTOtYkxxdm3zXcv0un0lLCl5sc+t
+         3VP++ldEfKNntD/Tt+XxhZ/oVmWxCS39+2V0zwu4sPIrvGXB/u4JjkclpYadaIR7LR
+         m42PXa1FGhJvPcWmctVEpKKAzJetqlDkoRMDxgIJ/ipTmOv6diUYQI7rA0BGhoKyy+
+         QDDPH2K1Iv6AFjuh4lxI7nQdxnJZBu0jk91emROjy0tryHhV5qU+56VwXbPiW+8s82
+         OEFUywC54fQwA==
+Date:   Fri, 18 Nov 2022 16:49:45 +0000
+From:   Will Deacon <will@kernel.org>
+To:     Rob Herring <robh@kernel.org>
+Cc:     Namhyung Kim <namhyung@kernel.org>,
+        Arnaldo Carvalho de Melo <acme@kernel.org>,
+        Jiri Olsa <jolsa@kernel.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Marc Zyngier <maz@kernel.org>,
+        Oliver Upton <oliver.upton@linux.dev>,
+        Ingo Molnar <mingo@redhat.com>,
+        Suzuki K Poulose <suzuki.poulose@arm.com>,
+        James Morse <james.morse@arm.com>,
+        Alexandru Elisei <alexandru.elisei@arm.com>,
+        kvmarm@lists.linux.dev, linux-perf-users@vger.kernel.org,
+        linux-kernel@vger.kernel.org, James Clark <james.clark@arm.com>,
+        Mark Brown <broonie@kernel.org>,
+        linux-arm-kernel@lists.infradead.org, kvmarm@lists.cs.columbia.edu
+Subject: Re: [PATCH v3 7/8] perf: Add perf_event_attr::config3
+Message-ID: <20221118164943.GA4872@willie-the-truck>
+References: <20220825-arm-spe-v8-7-v3-0-87682f78caac@kernel.org>
+ <20220825-arm-spe-v8-7-v3-7-87682f78caac@kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
- Thunderbird/102.4.2
-Subject: Re: [PATCH mm-unstable v1 04/20] mm: add early FAULT_FLAG_UNSHARE
- consistency checks
-Content-Language: en-US
-To:     David Hildenbrand <david@redhat.com>, linux-kernel@vger.kernel.org
-Cc:     x86@kernel.org, linux-alpha@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, linux-ia64@vger.kernel.org,
-        linux-mips@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
-        sparclinux@vger.kernel.org, linux-um@lists.infradead.org,
-        etnaviv@lists.freedesktop.org, dri-devel@lists.freedesktop.org,
-        linux-samsung-soc@vger.kernel.org, linux-rdma@vger.kernel.org,
-        linux-media@vger.kernel.org, linux-fsdevel@vger.kernel.org,
-        linux-mm@kvack.org, linux-perf-users@vger.kernel.org,
-        linux-security-module@vger.kernel.org,
-        linux-kselftest@vger.kernel.org,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Jason Gunthorpe <jgg@ziepe.ca>,
-        John Hubbard <jhubbard@nvidia.com>,
-        Peter Xu <peterx@redhat.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Andrea Arcangeli <aarcange@redhat.com>,
-        Hugh Dickins <hughd@google.com>, Nadav Amit <namit@vmware.com>,
-        Matthew Wilcox <willy@infradead.org>,
-        Mike Kravetz <mike.kravetz@oracle.com>,
-        Muchun Song <songmuchun@bytedance.com>,
-        Shuah Khan <shuah@kernel.org>,
-        Lucas Stach <l.stach@pengutronix.de>,
-        David Airlie <airlied@gmail.com>,
-        Oded Gabbay <ogabbay@kernel.org>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Christoph Hellwig <hch@infradead.org>,
-        Alex Williamson <alex.williamson@redhat.com>
-References: <20221116102659.70287-1-david@redhat.com>
- <20221116102659.70287-5-david@redhat.com>
-From:   Vlastimil Babka <vbabka@suse.cz>
-In-Reply-To: <20221116102659.70287-5-david@redhat.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20220825-arm-spe-v8-7-v3-7-87682f78caac@kernel.org>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-On 11/16/22 11:26, David Hildenbrand wrote:
-> For now, FAULT_FLAG_UNSHARE only applies to anonymous pages, which
-> implies a COW mapping. Let's hide FAULT_FLAG_UNSHARE early if we're not
-> dealing with a COW mapping, such that we treat it like a read fault as
-> documented and don't have to worry about the flag throughout all fault
-> handlers.
+On Fri, Nov 04, 2022 at 10:55:07AM -0500, Rob Herring wrote:
+> Arm SPEv1.2 adds another 64-bits of event filtering control. As the
+> existing perf_event_attr::configN fields are all used up for SPE PMU, an
+> additional field is needed. Add a new 'config3' field.
 > 
-> While at it, centralize the check for mutual exclusion of
-> FAULT_FLAG_UNSHARE and FAULT_FLAG_WRITE and just drop the check that
-> either flag is set in the WP handler.
-> 
-> Signed-off-by: David Hildenbrand <david@redhat.com>
+> Tested-by: James Clark <james.clark@arm.com>
+> Signed-off-by: Rob Herring <robh@kernel.org>
 > ---
->  mm/huge_memory.c |  3 ---
->  mm/hugetlb.c     |  5 -----
->  mm/memory.c      | 23 ++++++++++++++++++++---
->  3 files changed, 20 insertions(+), 11 deletions(-)
+> v3:
+>  - No change
+> v2:
+>  - Drop tools/ side update
+> ---
+>  include/uapi/linux/perf_event.h | 3 +++
+>  1 file changed, 3 insertions(+)
+> 
+> diff --git a/include/uapi/linux/perf_event.h b/include/uapi/linux/perf_event.h
+> index 85be78e0e7f6..b2b1d7b54097 100644
+> --- a/include/uapi/linux/perf_event.h
+> +++ b/include/uapi/linux/perf_event.h
+> @@ -374,6 +374,7 @@ enum perf_event_read_format {
+>  #define PERF_ATTR_SIZE_VER5	112	/* add: aux_watermark */
+>  #define PERF_ATTR_SIZE_VER6	120	/* add: aux_sample_size */
+>  #define PERF_ATTR_SIZE_VER7	128	/* add: sig_data */
+> +#define PERF_ATTR_SIZE_VER8	136	/* add: config3 */
+>  
+>  /*
+>   * Hardware event_id to monitor via a performance monitoring event:
+> @@ -515,6 +516,8 @@ struct perf_event_attr {
+>  	 * truncated accordingly on 32 bit architectures.
+>  	 */
+>  	__u64	sig_data;
+> +
+> +	__u64	config3; /* extension of config2 */
 
-Reviewed-by: Vlastimil Babka <vbabka@suse.cz>
+I need an ack from the perf core maintainers before I can take this.
 
+Will
