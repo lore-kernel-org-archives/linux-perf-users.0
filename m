@@ -2,104 +2,168 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 67718C4332F
-	for <linux-perf-users@archiver.kernel.org>; Sat, 19 Nov 2022 01:46:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 51445C4332F
+	for <linux-perf-users@archiver.kernel.org>; Sat, 19 Nov 2022 01:52:57 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233578AbiKSBqU (ORCPT
+        id S233248AbiKSBwz (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Fri, 18 Nov 2022 20:46:20 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43786 "EHLO
+        Fri, 18 Nov 2022 20:52:55 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52816 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S233126AbiKSBqC (ORCPT
+        with ESMTP id S233526AbiKSBwk (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Fri, 18 Nov 2022 20:46:02 -0500
-Received: from mail-wm1-x329.google.com (mail-wm1-x329.google.com [IPv6:2a00:1450:4864:20::329])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 48023111A
-        for <linux-perf-users@vger.kernel.org>; Fri, 18 Nov 2022 17:11:49 -0800 (PST)
-Received: by mail-wm1-x329.google.com with SMTP id l39-20020a05600c1d2700b003cf93c8156dso5252395wms.4
-        for <linux-perf-users@vger.kernel.org>; Fri, 18 Nov 2022 17:11:49 -0800 (PST)
+        Fri, 18 Nov 2022 20:52:40 -0500
+Received: from mail-pl1-x64a.google.com (mail-pl1-x64a.google.com [IPv6:2607:f8b0:4864:20::64a])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0BB538EB60
+        for <linux-perf-users@vger.kernel.org>; Fri, 18 Nov 2022 17:34:54 -0800 (PST)
+Received: by mail-pl1-x64a.google.com with SMTP id c1-20020a170902d48100b0018723580343so5000751plg.15
+        for <linux-perf-users@vger.kernel.org>; Fri, 18 Nov 2022 17:34:54 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=google.com; s=20210112;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:from:to:cc:subject:date:message-id:reply-to;
-        bh=poUEgSpW8aRR+UYT6TnHI6nLDP+vN2nQH/+BboE+CwA=;
-        b=QJxTQsbhne1J0+HkYSqeeTJ8bAIxnkFEQPLDFXkPJOTL9+l4a2uz9W3tDZP/KE/OhI
-         Uov3slDhLE8qws9664ELtwF5kXtbZz+9eqzqnj5B41WgPT9YXFxc6MnYIVIw8wmHdVxu
-         cVtAW2Aiz5aLxZCJtkFz4y5svwqU0qfoexV+RiefHu+riHDabwWG4iux1ihYYAGcKMQU
-         8OVS2r7SqG9dgCYqiwNYd+PkXiiIuzfohSYXXpiAM9e8MTjnJaeuHK4xlnrs+uzNjatW
-         blQFethYpzfYBfhvU6HywPEwEpYwB0vfqhWkZ7iNzwniHirwV4FRf6mhxjdgIi3Oj5Oo
-         1Vjg==
+        h=cc:to:from:subject:message-id:mime-version:date:reply-to:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=CjK5nD/uvnQk7qUQi9oIboYcWNk4lZcV0pG+jDjHbYw=;
+        b=sO/BixX+Fxa6IYPQU8TkdF+XFQ44C4ZySQ2iwNGf4nj3I51S8QIRUibkPiKNqU6bw1
+         j4PlnepiO1Ad8v/zZSnMeIBI68hxaFqyJGMZebX4cy3Jv14uXBvY/oT0aik++6OQL6oN
+         DbLgAWDsPzUK72v+4dKMHKRTS+Pj0wR02zmTyQNbwMmm5J9cue1G73b6Acb3Oy+6Rqq7
+         SFCX3tIjVDK5Bkgwj3xiOgKx932eMjN+X5AA0/Lbv6Dl4c1cRTcxk/wdcfGn/cUpN1uD
+         EJ0BOyIS/RA9GP99cIy1ORxMCIBlL+dVVmi0pQd37KDIkkhww3/YCplg0uN9lfWxW1qn
+         tETw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=poUEgSpW8aRR+UYT6TnHI6nLDP+vN2nQH/+BboE+CwA=;
-        b=RMu60SDH8GXu9P4Nhn7ZER5QMui+Z3nM2XCD1+UpIuCy8k4UR0GKl42yhZd1DKGm6L
-         zBh/HzH4NJiCrE3hiDQzraDi5TUYvhmV24lZmpfu9y+9U5jpzRYeV6m0HiaLxN2wgnnL
-         O34LyIGOpapfG9mcYNBa/TUSS4TTi/aJrvzx26HXJUU+UvDhzhVuKyVUxdTbXPHgAGuR
-         gWaZNsf5i3OjtnfNzWay/UVa4QmvU+UofvDHlq8WL55KDzWulNg4/Vv0ayLWFy6vZO9v
-         98qzZE9phlzWTLS7bxT6ITWmcoY/cqENS4f201kX7JeglK/lXUJy5d+Ik6CKJPAPsFyb
-         sL7Q==
-X-Gm-Message-State: ANoB5pn/NtKn2axSk2MLZrWnH/mZpbenUP6nin2EobXHmCRav5l4vIgR
-        LYn1gsw1hjpW/cBPWLKwJvD6l3zGPZYb8cerQEMnFg==
-X-Google-Smtp-Source: AA0mqf7V9eiJHCaM/vFfpvEdbjfi2x3hRxzmxWRSYnv0W7idsEOSf0y1t2VFaXjebmElzcfCavuMUUICqyvZPyC9wH8=
-X-Received: by 2002:a7b:cb4d:0:b0:3cf:b2a6:267d with SMTP id
- v13-20020a7bcb4d000000b003cfb2a6267dmr6443367wmj.67.1668820307595; Fri, 18
- Nov 2022 17:11:47 -0800 (PST)
-MIME-Version: 1.0
-References: <20221118075702.40689-1-zhengjun.xing@linux.intel.com>
-In-Reply-To: <20221118075702.40689-1-zhengjun.xing@linux.intel.com>
-From:   Ian Rogers <irogers@google.com>
-Date:   Fri, 18 Nov 2022 17:11:35 -0800
-Message-ID: <CAP-5=fUGfJVLFzcUq8U-YH3S2EaPqJm3C2_uK4bF7m-NYpqNzQ@mail.gmail.com>
-Subject: Re: [PATCH 1/5] perf vendor events: Add the cpuid for Alderlake-N
-To:     zhengjun.xing@linux.intel.com
-Cc:     acme@kernel.org, peterz@infradead.org, mingo@redhat.com,
-        alexander.shishkin@intel.com, jolsa@kernel.org,
-        namhyung@kernel.org, linux-kernel@vger.kernel.org,
-        linux-perf-users@vger.kernel.org, ak@linux.intel.com,
-        kan.liang@linux.intel.com
+        h=cc:to:from:subject:message-id:mime-version:date:reply-to
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=CjK5nD/uvnQk7qUQi9oIboYcWNk4lZcV0pG+jDjHbYw=;
+        b=m9ultfOJo2iOIC0zuZfFFjnqOfI4mhn9oTLUW8aM9wRzI/m3/+fPx+ErKXSlRqvoaO
+         gboJ82e2Wp97vOKic4LM1NNVgWsIEBDVu5wfPizkDioPNia13pjEq8Co12/6450uSAM7
+         ipl/ajXtEpGj+1/aZuj5rZnj5iHdcwucDlk3YNAQSJ/9Sf3rDqtYWUCuoMv9gTfvQypw
+         4nv//jmsSrf2A0l57swcOXMcDxDQDsTZVfuTe9fujktKNy5xqq3WdZ+VK70a153xWCaU
+         61BoG3FA3iFvmibKRGB05ZWDQtBl9QxhytnrtVNkZec8aRuTRbx+jXfgRZFsEkfjGtL1
+         UoFA==
+X-Gm-Message-State: ANoB5pl9VlHn7qLRNniNMCOWHoNv0Bvyl0rw5Cqz7iU8mmT8NDFXgp4Q
+        fcTJGRt0bYPmlNtfP1Vr8el6wOrE5Uc=
+X-Google-Smtp-Source: AA0mqf40VxY3bniB1w/5m0fnfOQyqSksKugX3b7aeyvG44COkqlBU1UDui2GOB4g4JxSgT+nQap4mhTD/UM=
+X-Received: from zagreus.c.googlers.com ([fda3:e722:ac3:cc00:7f:e700:c0a8:5c37])
+ (user=seanjc job=sendgmr) by 2002:a62:31c4:0:b0:56e:989d:7410 with SMTP id
+ x187-20020a6231c4000000b0056e989d7410mr10648162pfx.1.1668821693609; Fri, 18
+ Nov 2022 17:34:53 -0800 (PST)
+Reply-To: Sean Christopherson <seanjc@google.com>
+Date:   Sat, 19 Nov 2022 01:34:41 +0000
+Mime-Version: 1.0
+X-Mailer: git-send-email 2.38.1.584.g0f3c55d4c2-goog
+Message-ID: <20221119013450.2643007-1-seanjc@google.com>
+Subject: [PATCH 0/9] tools: Make {clear,set}_bit() atomic for reals
+From:   Sean Christopherson <seanjc@google.com>
+To:     Yury Norov <yury.norov@gmail.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        Arnaldo Carvalho de Melo <acme@kernel.org>,
+        Marc Zyngier <maz@kernel.org>,
+        Paolo Bonzini <pbonzini@redhat.com>
+Cc:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Rasmus Villemoes <linux@rasmusvillemoes.dk>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Jiri Olsa <jolsa@kernel.org>,
+        Namhyung Kim <namhyung@kernel.org>,
+        James Morse <james.morse@arm.com>,
+        Alexandru Elisei <alexandru.elisei@arm.com>,
+        Suzuki K Poulose <suzuki.poulose@arm.com>,
+        Oliver Upton <oliver.upton@linux.dev>,
+        linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, kvmarm@lists.linux.dev,
+        kvmarm@lists.cs.columbia.edu, kvm@vger.kernel.org,
+        Sean Christopherson <seanjc@google.com>
 Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-On Thu, Nov 17, 2022 at 11:56 PM <zhengjun.xing@linux.intel.com> wrote:
->
-> From: Zhengjun Xing <zhengjun.xing@linux.intel.com>
->
-> Alderlake-N only has E-core, it has been moved to non-hybrid code path on
-> the kernel side, add the cpuid for Alderlake-N separately. Both events for
-> Alderlake and Alderlake-N are based on JSON file v1.16.
+For obvious reasons I'd like to route the this through Paolo's tree.
+In theory, taking just patch 5 through tip would work, but creating a
+topic branch seems like the way to go, though maybe I'm being overly
+paranoid.  The current tip/perf/core doesn't have any conflicts, nor does
+it have new set_bit() or clear_bit() users.
 
-The update to 1.16 is true at the end of the patch series rather than
-the beginning. It makes more sense to bump the version in the same
-change that updates the json otherwise reverting the json changes
-leaves the version number in place.
+ 
+Code sitting in kvm/queue for 6.2 adds functionality that relies on
+clear_bit() being an atomic operation.  Unfortunately, despite being
+implemented in atomic.h (among other strong hits that they should be
+atomic), clear_bit() and set_bit() aren't actually atomic (and of course
+I realized this _just_ after everything got queued up).
 
-Thanks,
-Ian
+Move current tools/ users of clear_bit() and set_bit() to the
+double-underscore versions (which tools/ already provides and documents
+as being non-atomic), and then implement clear_bit() and set_bit() as
+actual atomics to fix the KVM selftests bug.
+
+Perf and KVM are the only affected users.  NVDIMM also has test code
+in tools/, but that builds against the kernel proper.  The KVM code is
+well tested and fully audited.  The perf code is lightly tested; if I
+understand the build system, it's probably not even fully compile tested.
+
+Patches 1 and 2 are completely unrelated and are fixes for patches
+sitting in kvm/queue.  Paolo, they can be squashed if you want to rewrite
+history.
+
+Patch 3 fixes a hilarious collision in a KVM ARM selftest that will arise
+when clear_bit() is converted to an atomic.
+
+Patch 4 changes clear_bit() and set_bit() to take an "unsigned long"
+instead of an "int" so that patches 5-6 aren't accompanied by functional
+changes.  I.e. if something in perf is somehow relying on "bit" being a
+signed int, failures will bisect to patch 4 and not to the
+supposed-to-be-a-nop conversion to __clear_bit() and __set_bit().
+
+Patch 5-9 switch perf+KVM and complete the conversion.
+
+Applies on:
+  
+  git://git.kernel.org/pub/scm/virt/kvm/kvm.git queue
+
+Sean Christopherson (9):
+  KVM: selftests: Add rdmsr_from_l2() implementation in Hyper-V eVMCS
+    test
+  KVM: selftests: Remove unused "vcpu" param to fix build error
+  KVM: arm64: selftests: Enable single-step without a "full" ucall()
+  tools: Take @bit as an "unsigned long" in {clear,set}_bit() helpers
+  perf tools: Use dedicated non-atomic clear/set bit helpers
+  KVM: selftests: Use non-atomic clear/set bit helpers in KVM tests
+  tools: Drop conflicting non-atomic test_and_{clear,set}_bit() helpers
+  tools: Drop "atomic_" prefix from atomic test_and_set_bit()
+  tools: KVM: selftests: Convert clear/set_bit() to actual atomics
+
+ tools/arch/x86/include/asm/atomic.h           |  6 +++-
+ tools/include/asm-generic/atomic-gcc.h        | 13 ++++++-
+ tools/include/asm-generic/bitops/atomic.h     | 15 ++++----
+ tools/include/linux/bitmap.h                  | 34 -------------------
+ tools/perf/bench/find-bit-bench.c             |  2 +-
+ tools/perf/builtin-c2c.c                      |  6 ++--
+ tools/perf/builtin-kwork.c                    |  6 ++--
+ tools/perf/builtin-record.c                   |  6 ++--
+ tools/perf/builtin-sched.c                    |  2 +-
+ tools/perf/tests/bitmap.c                     |  2 +-
+ tools/perf/tests/mem2node.c                   |  2 +-
+ tools/perf/util/affinity.c                    |  4 +--
+ tools/perf/util/header.c                      |  8 ++---
+ tools/perf/util/mmap.c                        |  6 ++--
+ tools/perf/util/pmu.c                         |  2 +-
+ .../util/scripting-engines/trace-event-perl.c |  2 +-
+ .../scripting-engines/trace-event-python.c    |  2 +-
+ tools/perf/util/session.c                     |  2 +-
+ tools/perf/util/svghelper.c                   |  2 +-
+ .../selftests/kvm/aarch64/arch_timer.c        |  2 +-
+ .../selftests/kvm/aarch64/debug-exceptions.c  | 21 ++++++------
+ tools/testing/selftests/kvm/dirty_log_test.c  | 34 +++++++++----------
+ .../selftests/kvm/include/ucall_common.h      |  8 +++++
+ .../testing/selftests/kvm/lib/ucall_common.c  |  2 +-
+ .../selftests/kvm/x86_64/hyperv_evmcs.c       | 13 +++++--
+ .../selftests/kvm/x86_64/hyperv_svm_test.c    |  4 +--
+ .../selftests/kvm/x86_64/hyperv_tlb_flush.c   |  2 +-
+ 27 files changed, 102 insertions(+), 106 deletions(-)
 
 
-> Signed-off-by: Zhengjun Xing <zhengjun.xing@linux.intel.com>
-> Reviewed-by: Kan Liang <kan.liang@linux.intel.com>
-> ---
->  tools/perf/pmu-events/arch/x86/mapfile.csv | 3 ++-
->  1 file changed, 2 insertions(+), 1 deletion(-)
->
-> diff --git a/tools/perf/pmu-events/arch/x86/mapfile.csv b/tools/perf/pmu-events/arch/x86/mapfile.csv
-> index 5e609b876790..df47462a125f 100644
-> --- a/tools/perf/pmu-events/arch/x86/mapfile.csv
-> +++ b/tools/perf/pmu-events/arch/x86/mapfile.csv
-> @@ -1,5 +1,6 @@
->  Family-model,Version,Filename,EventType
-> -GenuineIntel-6-(97|9A|B7|BA|BE|BF),v1.15,alderlake,core
-> +GenuineIntel-6-(97|9A|B7|BA|BF),v1.16,alderlake,core
-> +GenuineIntel-6-BE,v1.16,alderlaken,core
->  GenuineIntel-6-(1C|26|27|35|36),v4,bonnell,core
->  GenuineIntel-6-(3D|47),v26,broadwell,core
->  GenuineIntel-6-56,v23,broadwellde,core
-> --
-> 2.25.1
->
+base-commit: 3321eef4acb51c303f0598d8a8493ca58528a054
+-- 
+2.38.1.584.g0f3c55d4c2-goog
+
