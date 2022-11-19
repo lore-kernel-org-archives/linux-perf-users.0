@@ -2,139 +2,171 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4D50CC4708D
-	for <linux-perf-users@archiver.kernel.org>; Sat, 19 Nov 2022 01:54:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4DC5EC433FE
+	for <linux-perf-users@archiver.kernel.org>; Sat, 19 Nov 2022 03:30:40 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232947AbiKSBxj (ORCPT
+        id S230271AbiKSDai (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Fri, 18 Nov 2022 20:53:39 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52936 "EHLO
+        Fri, 18 Nov 2022 22:30:38 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55114 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232034AbiKSBws (ORCPT
+        with ESMTP id S229946AbiKSDah (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Fri, 18 Nov 2022 20:52:48 -0500
-Received: from mail-pj1-x1049.google.com (mail-pj1-x1049.google.com [IPv6:2607:f8b0:4864:20::1049])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D832EC605A
-        for <linux-perf-users@vger.kernel.org>; Fri, 18 Nov 2022 17:35:06 -0800 (PST)
-Received: by mail-pj1-x1049.google.com with SMTP id c10-20020a17090aa60a00b00212e91df6acso3769406pjq.5
-        for <linux-perf-users@vger.kernel.org>; Fri, 18 Nov 2022 17:35:06 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20210112;
-        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
-         :date:reply-to:from:to:cc:subject:date:message-id:reply-to;
-        bh=qzw3IRf6ZKe9LngiNeoq0Xsow8qMnOMLe6mysjx7GEY=;
-        b=WWS9khtEqbOMUnGtkkRMFWvzWDeu4ayjWFRQDGu0iXtOVJDbGSrq/gFRGxrZKKJlGY
-         5URd5JYCZgwjvnTNl+Ti4rcPQweserrYFuLxS4+F3t/CDOTOr8AEBOZfx3Z2J7idO5c3
-         IDrXNJR03kAw8HpcOlPfCE2+OuJJLGuPU94IZVw40YREPb5/vCeSYvPEvia9tHwTfU1C
-         3eBObmpTzOi0i9sxvSozcBhsXpCtw6mLFCvyTAoFKa+x82RFPn06o73N3tlHftgOtE6+
-         Xi5hjcYeXjmsl23MApz3bUysNrg7rYzS/9ickjvQa7GqFIN4rdzGd0NiV/GRPNAISoz2
-         56jw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
-         :date:reply-to:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=qzw3IRf6ZKe9LngiNeoq0Xsow8qMnOMLe6mysjx7GEY=;
-        b=HIm8QDquHivo5H8tX0rQfr0XseXvu7IazTp28fUZ/Oqq2vA8v8QUncpw0DDupJl5Wq
-         Z4cFfV/iBgY35OTsItYvbOpFFCv2wwkP6a3e6ADswKwyao+WJuQVLFJUScrndTlzAHoX
-         l++P5W2teKFsgQYR5aEKklfb6dMwP/otNzzZwLhrw2W0eb4bmdNXkCCmk23eK2Epb6gL
-         WBCgCMpdJcnYCBi5LgbvOeymIYuxFFqssQVmzFfA5EA6yWnJvWR66sF2CGRgTdKUDAIO
-         uxQ9iTyJXV2MoghwTMDrKk3ibIM+ZrG1kfFdyjpYq//hack+cEzG9sGPgPPMXxpC3tuW
-         XT6Q==
-X-Gm-Message-State: ANoB5pk4dZrmmMtRe8RDRGQsNGrSvdxQBrxaIfwbzGFAzoRtCp8Ox4Y2
-        TNP1MoLHHo0BDIhVRWh9VRI+1jF6vBk=
-X-Google-Smtp-Source: AA0mqf7p4CLtuFVtgdl7Bc/NuOg5CLDSNQp6GUYPt/V6N4R/KHWFFrAEPbFAt9/8yfYfs5xqa5KFvyBu1UA=
-X-Received: from zagreus.c.googlers.com ([fda3:e722:ac3:cc00:7f:e700:c0a8:5c37])
- (user=seanjc job=sendgmr) by 2002:a63:ce09:0:b0:470:537b:9d23 with SMTP id
- y9-20020a63ce09000000b00470537b9d23mr8701437pgf.185.1668821706323; Fri, 18
- Nov 2022 17:35:06 -0800 (PST)
-Reply-To: Sean Christopherson <seanjc@google.com>
-Date:   Sat, 19 Nov 2022 01:34:49 +0000
-In-Reply-To: <20221119013450.2643007-1-seanjc@google.com>
-Mime-Version: 1.0
-References: <20221119013450.2643007-1-seanjc@google.com>
-X-Mailer: git-send-email 2.38.1.584.g0f3c55d4c2-goog
-Message-ID: <20221119013450.2643007-9-seanjc@google.com>
-Subject: [PATCH 8/9] tools: Drop "atomic_" prefix from atomic test_and_set_bit()
-From:   Sean Christopherson <seanjc@google.com>
-To:     Yury Norov <yury.norov@gmail.com>,
+        Fri, 18 Nov 2022 22:30:37 -0500
+Received: from out30-133.freemail.mail.aliyun.com (out30-133.freemail.mail.aliyun.com [115.124.30.133])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 23690A6589;
+        Fri, 18 Nov 2022 19:30:35 -0800 (PST)
+X-Alimail-AntiSpam: AC=PASS;BC=-1|-1;BR=01201311R931e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=ay29a033018046056;MF=renyu.zj@linux.alibaba.com;NM=1;PH=DS;RN=20;SR=0;TI=SMTPD_---0VV7ZO4r_1668828630;
+Received: from 192.168.0.105(mailfrom:renyu.zj@linux.alibaba.com fp:SMTPD_---0VV7ZO4r_1668828630)
+          by smtp.aliyun-inc.com;
+          Sat, 19 Nov 2022 11:30:32 +0800
+Message-ID: <ae446c02-d5d7-4631-72b7-243b6ef52708@linux.alibaba.com>
+Date:   Sat, 19 Nov 2022 11:30:29 +0800
+MIME-Version: 1.0
+User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.15; rv:102.0)
+ Gecko/20100101 Thunderbird/102.4.1
+Subject: Re: [PATCH RFC 0/6] Add metrics for neoverse-n2
+To:     James Clark <james.clark@arm.com>,
+        nick Forrington <Nick.Forrington@arm.com>,
+        Jumana MP <Jumana.MP@arm.com>,
+        John Garry <john.garry@huawei.com>
+Cc:     Will Deacon <will@kernel.org>, Mike Leach <mike.leach@linaro.org>,
+        Leo Yan <leo.yan@linaro.org>,
         Peter Zijlstra <peterz@infradead.org>,
         Ingo Molnar <mingo@redhat.com>,
         Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Marc Zyngier <maz@kernel.org>,
-        Paolo Bonzini <pbonzini@redhat.com>
-Cc:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Rasmus Villemoes <linux@rasmusvillemoes.dk>,
         Mark Rutland <mark.rutland@arm.com>,
         Alexander Shishkin <alexander.shishkin@linux.intel.com>,
         Jiri Olsa <jolsa@kernel.org>,
         Namhyung Kim <namhyung@kernel.org>,
-        James Morse <james.morse@arm.com>,
-        Alexandru Elisei <alexandru.elisei@arm.com>,
-        Suzuki K Poulose <suzuki.poulose@arm.com>,
-        Oliver Upton <oliver.upton@linux.dev>,
-        linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, kvmarm@lists.linux.dev,
-        kvmarm@lists.cs.columbia.edu, kvm@vger.kernel.org,
-        Sean Christopherson <seanjc@google.com>
-Content-Type: text/plain; charset="UTF-8"
+        Andrew Kilroy <andrew.kilroy@arm.com>,
+        Shuai Xue <xueshuai@linux.alibaba.com>,
+        Zhuo Song <zhuo.song@linux.alibaba.com>,
+        linux-arm-kernel@lists.infradead.org,
+        linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <1667214694-89839-1-git-send-email-renyu.zj@linux.alibaba.com>
+ <d6553087-9157-21e8-6980-31bc8e44f066@arm.com>
+From:   Jing Zhang <renyu.zj@linux.alibaba.com>
+In-Reply-To: <d6553087-9157-21e8-6980-31bc8e44f066@arm.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-Drop the "atomic_" prefix from tools' atomic_test_and_set_bit() to
-match the kernel nomenclature where test_and_set_bit() is atomic,
-and __test_and_set_bit() provides the non-atomic variant.
 
-Signed-off-by: Sean Christopherson <seanjc@google.com>
----
- tools/arch/x86/include/asm/atomic.h            | 3 +--
- tools/include/asm-generic/atomic-gcc.h         | 2 +-
- tools/testing/selftests/kvm/lib/ucall_common.c | 2 +-
- 3 files changed, 3 insertions(+), 4 deletions(-)
 
-diff --git a/tools/arch/x86/include/asm/atomic.h b/tools/arch/x86/include/asm/atomic.h
-index 01cc27ec4520..a42733af7d51 100644
---- a/tools/arch/x86/include/asm/atomic.h
-+++ b/tools/arch/x86/include/asm/atomic.h
-@@ -71,10 +71,9 @@ static __always_inline int atomic_cmpxchg(atomic_t *v, int old, int new)
- 	return cmpxchg(&v->counter, old, new);
- }
- 
--static inline int atomic_test_and_set_bit(long nr, unsigned long *addr)
-+static inline int test_and_set_bit(long nr, unsigned long *addr)
- {
- 	GEN_BINARY_RMWcc(LOCK_PREFIX __ASM_SIZE(bts), *addr, "Ir", nr, "%0", "c");
--
- }
- 
- #endif /* _TOOLS_LINUX_ASM_X86_ATOMIC_H */
-diff --git a/tools/include/asm-generic/atomic-gcc.h b/tools/include/asm-generic/atomic-gcc.h
-index 6daa68bf5b9e..37ef522aaac4 100644
---- a/tools/include/asm-generic/atomic-gcc.h
-+++ b/tools/include/asm-generic/atomic-gcc.h
-@@ -70,7 +70,7 @@ static inline int atomic_cmpxchg(atomic_t *v, int oldval, int newval)
- 	return cmpxchg(&(v)->counter, oldval, newval);
- }
- 
--static inline int atomic_test_and_set_bit(long nr, unsigned long *addr)
-+static inline int test_and_set_bit(long nr, unsigned long *addr)
- {
- 	unsigned long mask = BIT_MASK(nr);
- 	long old;
-diff --git a/tools/testing/selftests/kvm/lib/ucall_common.c b/tools/testing/selftests/kvm/lib/ucall_common.c
-index fcae96461e46..820ce6c82829 100644
---- a/tools/testing/selftests/kvm/lib/ucall_common.c
-+++ b/tools/testing/selftests/kvm/lib/ucall_common.c
-@@ -44,7 +44,7 @@ static struct ucall *ucall_alloc(void)
- 	GUEST_ASSERT(ucall_pool);
- 
- 	for (i = 0; i < KVM_MAX_VCPUS; ++i) {
--		if (!atomic_test_and_set_bit(i, ucall_pool->in_use)) {
-+		if (!test_and_set_bit(i, ucall_pool->in_use)) {
- 			uc = &ucall_pool->ucalls[i];
- 			memset(uc->args, 0, sizeof(uc->args));
- 			return uc;
--- 
-2.38.1.584.g0f3c55d4c2-goog
+在 2022/11/16 下午7:19, James Clark 写道:
+> 
+> 
+> On 31/10/2022 11:11, Jing Zhang wrote:
+>> This series add six metricgroups for neoverse-n2, among which, the
+>> formula of topdown L1 is from the document:
+>> https://documentation-service.arm.com/static/60250c7395978b529036da86?token=
+>>
+>> Since neoverse-n2 does not yet support topdown L2, metricgroups such
+>> as Cache, TLB, Branch, InstructionsMix, and PEutilization are added to
+>> help further analysis of performance bottlenecks.
+>>
+> 
+> Hi Jing,
+> 
+> Thanks for working on this, these metrics look ok to me in general,
+> although we're currently working on publishing standardised metrics
+> across all new cores as part of a new project in Arm. This will include
+> N2, and our ones are very similar (or almost identical) to yours,
+> barring slightly different group names, metric names, and differences in
+> things like outputting topdown metrics as percentages.
+> 
+> We plan to publish our standard metrics some time in the next 2 months.
+> Would you consider holding off on merging this change so that we have
+> consistant group names and units going forward? Otherwise N2 would be
+> the odd one out. I will send you the metrics when they are ready, and we
+> will have a script to generate perf jsons from them, so you can review.
+> 
+> We also have a slightly different forumula for one of the top down
+> metrics which I think would be slightly more accurate. We don't have
+> anything for your "PE utilization" metrics, which I can raise
+> internally. It could always be added to perf on top of the standardised
+> ones if we don't add it to our standard ones.
+> 
+> Thanks
+> James
+> 
 
+Hi James,
+
+Regarding the arm n2 standard metrics last time, is my understanding correct,
+and does it meet your meaning? If so, may I ask when you will send me the
+standards you formulate so that I can align with you in time over my patchset.
+Please communicate this matter so that we can understand each other's schedule.
+
+Thanks,
+Jing
+
+
+>> with this series on neoverse-n2:
+>>
+>> $./perf list metricgroup
+>>
+>> List of pre-defined events (to be used in -e):
+>>
+>>
+>> Metric Groups:
+>>
+>> Branch
+>> Cache
+>> InstructionMix
+>> PEutilization
+>> TLB
+>> TopDownL1
+>>
+>>
+>> $./perf list
+>>
+>> ...
+>> Metric Groups:
+>>
+>> Branch:
+>>   branch_miss_pred_rate
+>>        [The rate of branches mis-predited to the overall branches]
+>>   branch_mpki
+>>        [The rate of branches mis-predicted per kilo instructions]
+>>   branch_pki
+>>        [The rate of branches retired per kilo instructions]
+>> Cache:
+>>   l1d_cache_miss_rate
+>>        [The rate of L1 D-Cache misses to the overall L1 D-Cache]
+>>   l1d_cache_mpki
+>>        [The rate of L1 D-Cache misses per kilo instructions]
+>> ...
+>>
+>>
+>> $sudo ./perf stat -a -M TLB sleep 1
+>>
+>>  Performance counter stats for 'system wide':
+>>
+>>         35,861,936      L1I_TLB                          #     0.00 itlb_walk_rate           (74.91%)
+>>              5,661      ITLB_WALK                                                            (74.91%)
+>>         97,279,240      INST_RETIRED                     #     0.07 itlb_mpki                (74.91%)
+>>              6,851      ITLB_WALK                                                            (74.91%)
+>>             26,391      DTLB_WALK                        #     0.00 dtlb_walk_rate           (75.07%)
+>>         35,585,545      L1D_TLB                                                              (75.07%)
+>>         85,923,244      INST_RETIRED                     #     0.35 dtlb_mpki                (75.11%)
+>>             29,992      DTLB_WALK                                                            (75.11%)
+>>
+>>        1.003450755 seconds time elapsed
+>>        
+>>
+>> Jing Zhang (6):
+>>   perf vendor events arm64: Add topdown L1 metrics for neoverse-n2
+>>   perf vendor events arm64: Add TLB metrics for neoverse-n2
+>>   perf vendor events arm64: Add cache metrics for neoverse-n2
+>>   perf vendor events arm64: Add branch metrics for neoverse-n2
+>>   perf vendor events arm64: Add PE utilization metrics for neoverse-n2
+>>   perf vendor events arm64: Add instruction mix metrics for neoverse-n2
+>>
+>>  .../arch/arm64/arm/neoverse-n2/metrics.json        | 247 +++++++++++++++++++++
+>>  1 file changed, 247 insertions(+)
+>>  create mode 100644 tools/perf/pmu-events/arch/arm64/arm/neoverse-n2/metrics.json
+>>
