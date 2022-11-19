@@ -2,61 +2,61 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3B8DDC4167E
-	for <linux-perf-users@archiver.kernel.org>; Sat, 19 Nov 2022 01:53:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id ECBD3C433FE
+	for <linux-perf-users@archiver.kernel.org>; Sat, 19 Nov 2022 01:54:01 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S234617AbiKSBx3 (ORCPT
+        id S230223AbiKSBxa (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Fri, 18 Nov 2022 20:53:29 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51800 "EHLO
+        Fri, 18 Nov 2022 20:53:30 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50874 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S233639AbiKSBwm (ORCPT
+        with ESMTP id S229920AbiKSBwo (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Fri, 18 Nov 2022 20:52:42 -0500
+        Fri, 18 Nov 2022 20:52:44 -0500
 Received: from mail-pj1-x104a.google.com (mail-pj1-x104a.google.com [IPv6:2607:f8b0:4864:20::104a])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 11AF59209F
-        for <linux-perf-users@vger.kernel.org>; Fri, 18 Nov 2022 17:34:55 -0800 (PST)
-Received: by mail-pj1-x104a.google.com with SMTP id nl16-20020a17090b385000b002138288fd51so7642894pjb.6
-        for <linux-perf-users@vger.kernel.org>; Fri, 18 Nov 2022 17:34:55 -0800 (PST)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 26277C4C10
+        for <linux-perf-users@vger.kernel.org>; Fri, 18 Nov 2022 17:34:58 -0800 (PST)
+Received: by mail-pj1-x104a.google.com with SMTP id on5-20020a17090b1d0500b0021821a07953so7642019pjb.4
+        for <linux-perf-users@vger.kernel.org>; Fri, 18 Nov 2022 17:34:58 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=google.com; s=20210112;
         h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
          :date:reply-to:from:to:cc:subject:date:message-id:reply-to;
-        bh=ainK2RDn+jZipfmA59p8DPXtbCjd5fvmnXnNzM45Lqs=;
-        b=ElbaUsSFUGAHxw9FaGIh9WqW076YqYTniSp+9sLgIbyAZGXc9q18pS+d+PVOfEWLyg
-         Kx/QdBqkeFSoCaN0e1TOjAh4OmvJCcZTfbRkoIs9Pa9Ier3h3eU6dfc5nhMeLRYb7If1
-         R8gMGaRsYzdOWxgY6umO5g2RAl06ZRzk4tCJFWsOlqsTdFgeOz+FKVhUFHG0gjETIWMB
-         SJsXPpuWt8ijNGjeVGXQ26qTfp0uSqxFA3Tr0kPraQUGqTQxkgiCsPpjq4Ug8UUJokHo
-         3S2V7A4WGHkj82py+dbabm8Ds9t2svz5QsJ1xSBiuk9loWQwWH1Z8uCRnLa36e7zSQDg
-         hRig==
+        bh=e+ywn9anGlzmBRZYQfNE5JqRUvrYYtM9CuRcHhcOat8=;
+        b=bUEChsSWxywmbXEODMnhpTArgpDXm8MaKA/SqgTjg5p+/RcYNX7S04/3xpu9J/Qvhd
+         4bdagwUbiSdDxnx3tS0KF820eXh2iqkgSCqZDfRbzZHyloQR7cNnkjyTKyEuT6f4pI10
+         8tKIXR4fa/bt7sTnMlIgnfjppTnjmh2lzOejjH/eCf9LxOD5caHM7jQPu+J7kwCDF9RB
+         ooOOGe2F+sB/yW0Iak7LoRDXFnao07e5dDaQ6BfVTWKYFz8nLtcfxAGPgcnrQw6Wy4Sa
+         aeVwQDjy46i3XYIrO35DtjIYTHDet8LPXqZ4MaG6IOPG/C9jabUyQMOrTAnz/MWzY9l1
+         R0QQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
         h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
          :date:reply-to:x-gm-message-state:from:to:cc:subject:date:message-id
          :reply-to;
-        bh=ainK2RDn+jZipfmA59p8DPXtbCjd5fvmnXnNzM45Lqs=;
-        b=Itn5cLw9Xcua4O+KCrdThSxZrzkGVQXwysevx/D+HZbPU1IJFW5t7wn0gGvbek9Z2f
-         +cZ/aywCtLQgNmQunLT0R2boX1HfPfa/ljS8Qxbln4pesKDelNAUY6pn9xPTWr5IOkZf
-         lyvjsFSYOU08QjGQRx5x44IiId4upZ98gcKMC9tVmo1QQJO2c+X0nwdx3jmRFiEKNTpI
-         kVjMOotvbzkcBu6ulAsOyxehSLDjBKe7/7K1/lF21gEiMK2XZcRvMBqdStV8YALr/oBp
-         iBuLYSqyKysVqUzZcZPT5chh51bQjOLUn4N6UEYQNA9bSNQn2JE97e2P0DbtQi10tm5p
-         LEgw==
-X-Gm-Message-State: ANoB5pkfkAdKE3uKn0M6Rbu0xWEfmK1HiEm02ntkY/+vn0B1Lv1/OgIf
-        zrPJVVWxWEPHSD/nC3GBE7xQdvISL04=
-X-Google-Smtp-Source: AA0mqf6tFBmKyZhX4sewzWE/FLSMviulSVp5ypejrlokkSGEnAY1MSlwDguv1kCBOyWnNtV82VmzeHcBdl4=
+        bh=e+ywn9anGlzmBRZYQfNE5JqRUvrYYtM9CuRcHhcOat8=;
+        b=vbPcGQ1wlGdffpDHm/1W+vt+eqaudTM5kUtSC16Mg3U3YExb5aHRqxq+Zbc95u2kcs
+         +I9fOpDM1OVYYqXj+C82CRBXTI4wj1ien7srsK+BhRI4ypddHBi54iMNnD3aec5877x2
+         6cMMy7P281pRmLIgUWAsoZR7REU2KDK2kwxiQ1swLSk4+AcODaCeMDcFRgPbaeq1iFV6
+         3uc4ZY+wIMbTYKzdJblOqlpniYdOD46sjByJhewnNnY+p8eIJ834UOu18a2g0WJFRSI2
+         p7I+7UGn9JIvsOqUPz6qJV2JDWDIQww6Xc7Sy7VU7QgpZ9n7D92pLbajwUYkLHhrTiDX
+         wQDw==
+X-Gm-Message-State: ANoB5pkM2/Rp3U2ITKKQDYA2QflLkclLaE0FHgDQ/G56Jb3VSLiph/sa
+        V6hFmHcQGiTcjgGssoVzX9H/Rrs3SV8=
+X-Google-Smtp-Source: AA0mqf7PcgvXvqdOghYQniN0zB4c61iyewtOMCoU0bUVvjXFRgEWaXWMy7aEAP06rfFe12MZOAkzfOPPmU4=
 X-Received: from zagreus.c.googlers.com ([fda3:e722:ac3:cc00:7f:e700:c0a8:5c37])
- (user=seanjc job=sendgmr) by 2002:a17:902:ca14:b0:187:3fc8:986e with SMTP id
- w20-20020a170902ca1400b001873fc8986emr2206032pld.4.1668821695384; Fri, 18 Nov
- 2022 17:34:55 -0800 (PST)
+ (user=seanjc job=sendgmr) by 2002:a62:bd18:0:b0:562:3aed:e40c with SMTP id
+ a24-20020a62bd18000000b005623aede40cmr10612946pff.2.1668821698375; Fri, 18
+ Nov 2022 17:34:58 -0800 (PST)
 Reply-To: Sean Christopherson <seanjc@google.com>
-Date:   Sat, 19 Nov 2022 01:34:42 +0000
+Date:   Sat, 19 Nov 2022 01:34:44 +0000
 In-Reply-To: <20221119013450.2643007-1-seanjc@google.com>
 Mime-Version: 1.0
 References: <20221119013450.2643007-1-seanjc@google.com>
 X-Mailer: git-send-email 2.38.1.584.g0f3c55d4c2-goog
-Message-ID: <20221119013450.2643007-2-seanjc@google.com>
-Subject: [PATCH 1/9] KVM: selftests: Add rdmsr_from_l2() implementation in
- Hyper-V eVMCS test
+Message-ID: <20221119013450.2643007-4-seanjc@google.com>
+Subject: [PATCH 3/9] KVM: arm64: selftests: Enable single-step without a
+ "full" ucall()
 From:   Sean Christopherson <seanjc@google.com>
 To:     Yury Norov <yury.norov@gmail.com>,
         Peter Zijlstra <peterz@infradead.org>,
@@ -83,40 +83,89 @@ Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-Add rdmsr_from_l2() in hyperv_evmcs.c, it got left unintentionally omitted
-when applying code review feeback on the fly.  Intentionally duplicate
-the code that's in hyperv_svm_test.c, the helper really should not exist
-(L1 shouldn't clobber GPRs) and will hopefully be removed sooner than
-later.  Until that happens, deter other tests from using the somewhat
-misleading helper (it doesn't actually read L2's MSR value).
+Add a new ucall hook, GUEST_UCALL_NONE(), to allow tests to make ucalls
+without allocating a ucall struct, and use it to enable single-step
+in ARM's debug-exceptions test.  Like the disable single-step path, the
+enabling path also needs to ensure that no exclusive access sequences are
+attempted after enabling single-step, as the exclusive monitor is cleared
+on ERET from the debug exception taken to EL2.
 
-Link: https://lore.kernel.org/all/Y2FFNO3Bu9Z3LtCW@google.com
-Fixes: 860e80157068 ("KVM: selftests: Introduce rdmsr_from_l2() and use it for MSR-Bitmap tests")
+The test currently "works" because clear_bit() isn't actually an atomic
+operation... yet.
+
 Signed-off-by: Sean Christopherson <seanjc@google.com>
 ---
- tools/testing/selftests/kvm/x86_64/hyperv_evmcs.c | 9 +++++++++
- 1 file changed, 9 insertions(+)
+ .../selftests/kvm/aarch64/debug-exceptions.c  | 21 ++++++++++---------
+ .../selftests/kvm/include/ucall_common.h      |  8 +++++++
+ 2 files changed, 19 insertions(+), 10 deletions(-)
 
-diff --git a/tools/testing/selftests/kvm/x86_64/hyperv_evmcs.c b/tools/testing/selftests/kvm/x86_64/hyperv_evmcs.c
-index d418954590b1..ea58e5b436e8 100644
---- a/tools/testing/selftests/kvm/x86_64/hyperv_evmcs.c
-+++ b/tools/testing/selftests/kvm/x86_64/hyperv_evmcs.c
-@@ -31,6 +31,15 @@ static void guest_nmi_handler(struct ex_regs *regs)
- {
+diff --git a/tools/testing/selftests/kvm/aarch64/debug-exceptions.c b/tools/testing/selftests/kvm/aarch64/debug-exceptions.c
+index d86c4e4d1c82..c62ec4d7f6a3 100644
+--- a/tools/testing/selftests/kvm/aarch64/debug-exceptions.c
++++ b/tools/testing/selftests/kvm/aarch64/debug-exceptions.c
+@@ -239,10 +239,6 @@ static void guest_svc_handler(struct ex_regs *regs)
+ 	svc_addr = regs->pc;
  }
  
-+/* Exit to L1 from L2 with RDMSR instruction */
-+static inline void rdmsr_from_l2(uint32_t msr)
-+{
-+	/* Currently, L1 doesn't preserve GPRs during vmexits. */
-+	__asm__ __volatile__ ("rdmsr" : : "c"(msr) :
-+			      "rax", "rbx", "rdx", "rsi", "rdi", "r8", "r9",
-+			      "r10", "r11", "r12", "r13", "r14", "r15");
-+}
-+
- void l2_guest_code(void)
+-enum single_step_op {
+-	SINGLE_STEP_ENABLE = 0,
+-};
+-
+ static void guest_code_ss(int test_cnt)
  {
- 	u64 unused;
+ 	uint64_t i;
+@@ -253,8 +249,16 @@ static void guest_code_ss(int test_cnt)
+ 		w_bvr = i << 2;
+ 		w_wvr = i << 2;
+ 
+-		/* Enable Single Step execution */
+-		GUEST_SYNC(SINGLE_STEP_ENABLE);
++		/*
++		 * Enable Single Step execution.  Note!  This _must_ be a bare
++		 * ucall as the ucall() path uses atomic operations to manage
++		 * the ucall structures, and the built-in "atomics" are usually
++		 * implemented via exclusive access instructions.  The exlusive
++		 * monitor is cleared on ERET, and so taking debug exceptions
++		 * during a LDREX=>STREX sequence will prevent forward progress
++		 * and hang the guest/test.
++		 */
++		GUEST_UCALL_NONE();
+ 
+ 		/*
+ 		 * The userspace will verify that the pc is as expected during
+@@ -356,12 +360,9 @@ void test_single_step_from_userspace(int test_cnt)
+ 				break;
+ 			}
+ 
+-			TEST_ASSERT(cmd == UCALL_SYNC,
++			TEST_ASSERT(cmd == UCALL_NONE,
+ 				    "Unexpected ucall cmd 0x%lx", cmd);
+ 
+-			TEST_ASSERT(uc.args[1] == SINGLE_STEP_ENABLE,
+-				    "Unexpected ucall action 0x%lx", uc.args[1]);
+-
+ 			debug.control = KVM_GUESTDBG_ENABLE |
+ 					KVM_GUESTDBG_SINGLESTEP;
+ 			ss_enable = true;
+diff --git a/tools/testing/selftests/kvm/include/ucall_common.h b/tools/testing/selftests/kvm/include/ucall_common.h
+index bdd373189a77..1a6aaef5ccae 100644
+--- a/tools/testing/selftests/kvm/include/ucall_common.h
++++ b/tools/testing/selftests/kvm/include/ucall_common.h
+@@ -35,6 +35,14 @@ void ucall(uint64_t cmd, int nargs, ...);
+ uint64_t get_ucall(struct kvm_vcpu *vcpu, struct ucall *uc);
+ void ucall_init(struct kvm_vm *vm, vm_paddr_t mmio_gpa);
+ 
++/*
++ * Perform userspace call without any associated data.  This bare call avoids
++ * allocating a ucall struct, which can be useful if the atomic operations in
++ * the full ucall() are problematic and/or unwanted.  Note, this will come out
++ * as UCALL_NONE on the backend.
++ */
++#define GUEST_UCALL_NONE()	ucall_arch_do_ucall((vm_vaddr_t)NULL)
++
+ #define GUEST_SYNC_ARGS(stage, arg1, arg2, arg3, arg4)	\
+ 				ucall(UCALL_SYNC, 6, "hello", stage, arg1, arg2, arg3, arg4)
+ #define GUEST_SYNC(stage)	ucall(UCALL_SYNC, 2, "hello", stage)
 -- 
 2.38.1.584.g0f3c55d4c2-goog
 
