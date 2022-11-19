@@ -2,147 +2,100 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 76109C43217
-	for <linux-perf-users@archiver.kernel.org>; Fri, 18 Nov 2022 22:29:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AD000C4332F
+	for <linux-perf-users@archiver.kernel.org>; Sat, 19 Nov 2022 01:27:07 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230306AbiKRW3G (ORCPT
+        id S231615AbiKSB1G (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Fri, 18 Nov 2022 17:29:06 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53730 "EHLO
+        Fri, 18 Nov 2022 20:27:06 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60668 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231297AbiKRW3F (ORCPT
+        with ESMTP id S232185AbiKSB0l (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Fri, 18 Nov 2022 17:29:05 -0500
-Received: from mail-pj1-x102c.google.com (mail-pj1-x102c.google.com [IPv6:2607:f8b0:4864:20::102c])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D90C8701B7
-        for <linux-perf-users@vger.kernel.org>; Fri, 18 Nov 2022 14:29:03 -0800 (PST)
-Received: by mail-pj1-x102c.google.com with SMTP id k5so5666380pjo.5
-        for <linux-perf-users@vger.kernel.org>; Fri, 18 Nov 2022 14:29:03 -0800 (PST)
+        Fri, 18 Nov 2022 20:26:41 -0500
+Received: from mail-pl1-x629.google.com (mail-pl1-x629.google.com [IPv6:2607:f8b0:4864:20::629])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 86F40107B7A;
+        Fri, 18 Nov 2022 16:27:56 -0800 (PST)
+Received: by mail-pl1-x629.google.com with SMTP id g10so5926673plo.11;
+        Fri, 18 Nov 2022 16:27:56 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=UbBsvDU//DL6nEBTfVogOGw4gtrIt5cEgoWU7wg0yqE=;
-        b=An8R27hBelrmHfCbOWIi0CQbpB+FbdUKZd/K74OWA+t1inv8v4494buerQXpAbVoQ/
-         hawXo5IWqwOaOJXIlgQJ62nY4aZ8mzIQL8T0sN5QawgAa8EGZw3klOrzN/KXycM8ohn1
-         PnwiDQNXHvwQENzmlhMaoO6BFIxzwB92hREPE=
+        d=gmail.com; s=20210112;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:sender:from:to:cc:subject:date:message-id:reply-to;
+        bh=/iPMbl38syWjs5zIcb6fGRCtARpyLfweUo++FtYMEqs=;
+        b=ldhL2wnq8KpoU6+joFgyyzIoqcIhC7ujwyw/cavZq7CBiGYgWLupUQghx5UZHb3UCg
+         BGG4SFs9BYrfCBLreTzJFi9JhfB/IfOuKviN1F9MFj5sAWpjm6dMQ1F+l6puDr+mluo1
+         mm1DRxUY3mqAeXgXqy9It/duBgd5Tw26b3V48uYkPKEGgYnGY80RHUKRo+myiQ/OPrtQ
+         ZeNKYJLaH29H+TBl4ezlpIJVpPKtcsEG9k+qhen3SjWYCvWHUupVu9XIdBhtv+quV5h0
+         HXoegCYV1LtI2YjxrRh/gHcI+PTnISuY0+niBhp47UpHGJxprGycmQ+2oqExdzPLUr1W
+         wf2Q==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:sender:x-gm-message-state:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=UbBsvDU//DL6nEBTfVogOGw4gtrIt5cEgoWU7wg0yqE=;
-        b=5ko6kH5WTNu2Sa+arRh0a0IkH0Cja75jJ7EyVL8IiPr4n7sy/uSDNrGt9kh2utWyCr
-         hFG/Js1v2vCUTE8oX0Fh9sdghWCHiwjVWLuryGggxbpBtqsSte2/e5YyLSBsPs0Yn0d0
-         g7G26nBk+3Kq0e5vDGGcqBZXrJRk8zPycXmHL7RhEAJXUcDC2hy4TNts+m/+tVWjFhX0
-         JvRUxnfXv5w42EFPYZHBCJo1kpTq89K1Jt6tyDyjSg/BiKnJS13t1yS2+aibp3WDpdzO
-         4yretZGCbD33D0lYxe7gZAXKwTtrxVurJBJBy/OLKEchjjtzYLmWuUTF6Uzj5HXOGlud
-         WqNQ==
-X-Gm-Message-State: ANoB5pnsuj0Hm8lv8JzwV2yqjvYXwtZPAW5Y8NvLlN0faqVJ9rYF9JzF
-        tbYbwKiOFI5lGyLC1jCkdilhsg==
-X-Google-Smtp-Source: AA0mqf6x3WR1+0wUVWwli47/xk6od69+oUWF0cQjmoupKb1o7R1u9AWIvzDIrLxmCvQfjLJnyEjRtg==
-X-Received: by 2002:a17:902:e009:b0:188:649b:9dbe with SMTP id o9-20020a170902e00900b00188649b9dbemr1414800plo.107.1668810543395;
-        Fri, 18 Nov 2022 14:29:03 -0800 (PST)
-Received: from www.outflux.net (smtp.outflux.net. [198.145.64.163])
-        by smtp.gmail.com with ESMTPSA id b29-20020aa7951d000000b00561382a5a25sm3714931pfp.26.2022.11.18.14.29.02
+        bh=/iPMbl38syWjs5zIcb6fGRCtARpyLfweUo++FtYMEqs=;
+        b=Ts+E8npm1MAmpqaYs7PeZElEQUJIgZWr8vENRjrwz/UiLUCk5F7olveejTRMbhXDlV
+         fn2kCGEIxI/PuSIBOwqwR7wC4jf/JMMmt4xKA650uhcotCUObVWgyU7pGElOzBPNFi50
+         k/95YdmLFqUaHAG85o7wb6WdKITBhmfITmGRG1bBVNZ+6xf+IkdC/zBsV/nIwnA93gCE
+         v4VaDA910OpX8SDWZZ9zAVBYFQ/pJQMEiDyTw3WMYxqofKk6M6LlTQwTB3meSIhm+x4B
+         hjmAvHvNk/am9PfM6Rf/AuR2nFtpLg5S0tv40E60c65zwMg6C4+IpEvn/w+v9v/7jd/F
+         0Vaw==
+X-Gm-Message-State: ANoB5plgDzGanNQpfhwgtGNbQ9ZeQW/IgadwwrRQ7j4aOAJaASUAa42Z
+        u2EPCL43zyJZpmRwu4ePk4M=
+X-Google-Smtp-Source: AA0mqf69rRiHMW713fQToGlnZQ+rtEpJu8PHiZv6UFzDB4Be9+eKfAPi2RAJ6dOPURixWFxz4jgD3g==
+X-Received: by 2002:a17:90a:ac03:b0:216:bd33:b287 with SMTP id o3-20020a17090aac0300b00216bd33b287mr10282988pjq.26.1668817675923;
+        Fri, 18 Nov 2022 16:27:55 -0800 (PST)
+Received: from balhae.roam.corp.google.com ([2607:fb90:27d7:f680:581f:5527:bc6:1576])
+        by smtp.gmail.com with ESMTPSA id c15-20020a63ea0f000000b004393f60db36sm3406275pgi.32.2022.11.18.16.27.54
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 18 Nov 2022 14:29:02 -0800 (PST)
-Date:   Fri, 18 Nov 2022 14:29:02 -0800
-From:   Kees Cook <keescook@chromium.org>
-To:     Peter Zijlstra <peterz@infradead.org>
-Cc:     Linus Torvalds <torvalds@linux-foundation.org>,
-        David Hildenbrand <david@redhat.com>,
-        linux-kernel@vger.kernel.org, x86@kernel.org,
-        linux-alpha@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-ia64@vger.kernel.org, linux-mips@vger.kernel.org,
-        linuxppc-dev@lists.ozlabs.org, sparclinux@vger.kernel.org,
-        linux-um@lists.infradead.org, etnaviv@lists.freedesktop.org,
-        dri-devel@lists.freedesktop.org, linux-samsung-soc@vger.kernel.org,
-        linux-rdma@vger.kernel.org, linux-media@vger.kernel.org,
-        linux-fsdevel@vger.kernel.org, linux-mm@kvack.org,
-        linux-perf-users@vger.kernel.org,
-        linux-security-module@vger.kernel.org,
-        linux-kselftest@vger.kernel.org,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Jason Gunthorpe <jgg@ziepe.ca>,
-        John Hubbard <jhubbard@nvidia.com>,
-        Peter Xu <peterx@redhat.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Andrea Arcangeli <aarcange@redhat.com>,
-        Hugh Dickins <hughd@google.com>, Nadav Amit <namit@vmware.com>,
-        Vlastimil Babka <vbabka@suse.cz>,
-        Matthew Wilcox <willy@infradead.org>,
-        Mike Kravetz <mike.kravetz@oracle.com>,
-        Muchun Song <songmuchun@bytedance.com>,
-        Shuah Khan <shuah@kernel.org>,
-        Lucas Stach <l.stach@pengutronix.de>,
-        David Airlie <airlied@gmail.com>,
-        Oded Gabbay <ogabbay@kernel.org>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Christoph Hellwig <hch@infradead.org>,
-        Alex Williamson <alex.williamson@redhat.com>,
-        Oleg Nesterov <oleg@redhat.com>,
-        Richard Henderson <richard.henderson@linaro.org>,
-        Ivan Kokshaysky <ink@jurassic.park.msu.ru>,
-        Matt Turner <mattst88@gmail.com>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Will Deacon <will@kernel.org>,
-        Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        Nicholas Piggin <npiggin@gmail.com>,
-        Christophe Leroy <christophe.leroy@csgroup.eu>,
-        "David S. Miller" <davem@davemloft.net>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-        Dave Hansen <dave.hansen@linux.intel.com>,
-        "H. Peter Anvin" <hpa@zytor.com>,
-        Richard Weinberger <richard@nod.at>,
-        Anton Ivanov <anton.ivanov@cambridgegreys.com>,
-        Johannes Berg <johannes@sipsolutions.net>,
-        Eric Biederman <ebiederm@xmission.com>,
-        Alexander Viro <viro@zeniv.linux.org.uk>,
-        Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Jiri Olsa <jolsa@kernel.org>,
-        Namhyung Kim <namhyung@kernel.org>,
-        Kentaro Takeda <takedakn@nttdata.co.jp>,
-        Tetsuo Handa <penguin-kernel@i-love.sakura.ne.jp>,
-        Paul Moore <paul@paul-moore.com>,
-        James Morris <jmorris@namei.org>,
-        "Serge E. Hallyn" <serge@hallyn.com>
-Subject: Re: [PATCH mm-unstable v1 20/20] mm: rename FOLL_FORCE to FOLL_PTRACE
-Message-ID: <202211181427.4D1C3132FE@keescook>
-References: <20221116102659.70287-1-david@redhat.com>
- <20221116102659.70287-21-david@redhat.com>
- <CAHk-=wgtEwpR-rE_=cXzecHMZ+zgrx5zf9UfvH0w-mKgckn4=Q@mail.gmail.com>
- <Y3dnzgwJpjTQXI9y@hirez.programming.kicks-ass.net>
+        Fri, 18 Nov 2022 16:27:55 -0800 (PST)
+Sender: Namhyung Kim <namhyung@gmail.com>
+From:   Namhyung Kim <namhyung@kernel.org>
+To:     Arnaldo Carvalho de Melo <acme@kernel.org>,
+        Jiri Olsa <jolsa@kernel.org>
+Cc:     Ingo Molnar <mingo@kernel.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Ian Rogers <irogers@google.com>,
+        Adrian Hunter <adrian.hunter@intel.com>,
+        linux-perf-users@vger.kernel.org
+Subject: [PATCH] perf inject: Set PERF_RECORD_MISC_BUILD_ID_SIZE
+Date:   Fri, 18 Nov 2022 16:27:50 -0800
+Message-Id: <20221119002750.1568027-1-namhyung@kernel.org>
+X-Mailer: git-send-email 2.38.1.584.g0f3c55d4c2-goog
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <Y3dnzgwJpjTQXI9y@hirez.programming.kicks-ass.net>
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-On Fri, Nov 18, 2022 at 12:09:02PM +0100, Peter Zijlstra wrote:
-> On Wed, Nov 16, 2022 at 10:16:34AM -0800, Linus Torvalds wrote:
-> > Following the history of it is a big of a mess, because there's a
-> > number of renamings and re-organizations, but it seems to go back to
-> > 2007 and commit b6a2fea39318 ("mm: variable length argument support").
-> 
-> I went back and read parts of the discussions with Ollie, and the
-> .force=1 thing just magically appeared one day when we were sending
-> work-in-progress patches back and forth without mention of where it came
-> from :-/
-> 
-> And I certainly can't remember now..
-> 
-> Looking at it now, I have the same reaction as both you and Kees had, it
-> seems entirely superflous. So I'm all for trying to remove it.
+With perf inject -b, it synthesizes build-id event for DSOs.  But it
+missed to set the size and resulted in having trailing zeros.
 
-Thanks for digging through the history! I've pushed the change to -next:
-https://git.kernel.org/pub/scm/linux/kernel/git/kees/linux.git/commit/?h=for-next/execve&id=cd57e443831d8eeb083c7165bce195d886e216d4
+As perf record sets the size in write_build_id(), let's set the size
+here as well.
 
+Signed-off-by: Namhyung Kim <namhyung@kernel.org>
+---
+ tools/perf/util/synthetic-events.c | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
+
+diff --git a/tools/perf/util/synthetic-events.c b/tools/perf/util/synthetic-events.c
+index cccd293b5312..0645795ff080 100644
+--- a/tools/perf/util/synthetic-events.c
++++ b/tools/perf/util/synthetic-events.c
+@@ -2218,8 +2218,9 @@ int perf_event__synthesize_build_id(struct perf_tool *tool, struct dso *pos, u16
+ 	len = pos->long_name_len + 1;
+ 	len = PERF_ALIGN(len, NAME_ALIGN);
+ 	memcpy(&ev.build_id.build_id, pos->bid.data, sizeof(pos->bid.data));
++	ev.build_id.size = pos->bid.size;
+ 	ev.build_id.header.type = PERF_RECORD_HEADER_BUILD_ID;
+-	ev.build_id.header.misc = misc;
++	ev.build_id.header.misc = misc | PERF_RECORD_MISC_BUILD_ID_SIZE;
+ 	ev.build_id.pid = machine->pid;
+ 	ev.build_id.header.size = sizeof(ev.build_id) + len;
+ 	memcpy(&ev.build_id.filename, pos->long_name, pos->long_name_len);
 -- 
-Kees Cook
+2.38.1.584.g0f3c55d4c2-goog
+
