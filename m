@@ -2,204 +2,112 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D1AFCC4332F
-	for <linux-perf-users@archiver.kernel.org>; Sun, 20 Nov 2022 03:49:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AB2A8C4332F
+	for <linux-perf-users@archiver.kernel.org>; Sun, 20 Nov 2022 12:50:43 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229454AbiKTDti (ORCPT
+        id S229709AbiKTMun (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Sat, 19 Nov 2022 22:49:38 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57582 "EHLO
+        Sun, 20 Nov 2022 07:50:43 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40640 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229447AbiKTDth (ORCPT
+        with ESMTP id S229551AbiKTMum (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Sat, 19 Nov 2022 22:49:37 -0500
-Received: from out30-132.freemail.mail.aliyun.com (out30-132.freemail.mail.aliyun.com [115.124.30.132])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E9AA49E0AC;
-        Sat, 19 Nov 2022 19:49:35 -0800 (PST)
-X-Alimail-AntiSpam: AC=PASS;BC=-1|-1;BR=01201311R671e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=ay29a033018045170;MF=renyu.zj@linux.alibaba.com;NM=1;PH=DS;RN=21;SR=0;TI=SMTPD_---0VVAOkmS_1668916169;
-Received: from 30.39.172.100(mailfrom:renyu.zj@linux.alibaba.com fp:SMTPD_---0VVAOkmS_1668916169)
-          by smtp.aliyun-inc.com;
-          Sun, 20 Nov 2022 11:49:31 +0800
-Message-ID: <045b45ad-e191-5774-fc50-3a94ccfd7761@linux.alibaba.com>
-Date:   Sun, 20 Nov 2022 11:49:29 +0800
+        Sun, 20 Nov 2022 07:50:42 -0500
+Received: from mail.skyhub.de (mail.skyhub.de [5.9.137.197])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CE6B92BD1;
+        Sun, 20 Nov 2022 04:50:40 -0800 (PST)
+Received: from zn.tnic (p200300ea9733e704329c23fffea6a903.dip0.t-ipconnect.de [IPv6:2003:ea:9733:e704:329c:23ff:fea6:a903])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.skyhub.de (SuperMail on ZX Spectrum 128k) with ESMTPSA id 590F91EC058B;
+        Sun, 20 Nov 2022 13:50:39 +0100 (CET)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alien8.de; s=dkim;
+        t=1668948639;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:in-reply-to:in-reply-to:  references:references;
+        bh=Z294jfW899gWG9KQJWygBN9zIbq2/u/7AqtFDe3jlW8=;
+        b=iwf36W9xW/3K2aexfmifh/4MvxLoZfw9OePF9LS1T/tKpxYehADORzG8WPNKeF3TWu8AZc
+        b/q3Kzr76FFNJmZnxXK4m+W5OiKhEifeM5sw8fcH7Tje6z8NaEjSfnFGKobZZMrdmS3V6V
+        6t5SWTV1TRgT9CfZ40r4tvYUhIffco8=
+Date:   Sun, 20 Nov 2022 13:50:34 +0100
+From:   Borislav Petkov <bp@alien8.de>
+To:     Sanan Hasanov <hasanou59@gmail.com>
+Cc:     peterz@infradead.org, mingo@redhat.com, acme@kernel.org,
+        mark.rutland@arm.com, alexander.shishkin@linux.intel.com,
+        jolsa@kernel.org, namhyung@kernel.org, tglx@linutronix.de,
+        dave.hansen@linux.intel.com, x86@kernel.org, hpa@zytor.com,
+        linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org,
+        paul@pgazz.com, syzkaller <syzkaller@googlegroups.com>
+Subject: Re: Syzkaller found a bug: general protection fault in
+ x86_pmu_enable_event
+Message-ID: <Y3oimvn5CfU4N7Zc@zn.tnic>
+References: <CAMt6jhxg-_Pd__TfpSqX+=d2_-MFqCoF84qYYDcuu1Ps9M9hfQ@mail.gmail.com>
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.15; rv:102.0)
- Gecko/20100101 Thunderbird/102.4.1
-Subject: Re: [PATCH RFC 0/6] Add metrics for neoverse-n2
-To:     Ian Rogers <irogers@google.com>
-Cc:     James Clark <james.clark@arm.com>,
-        nick Forrington <Nick.Forrington@arm.com>,
-        Jumana MP <Jumana.MP@arm.com>,
-        John Garry <john.garry@oracle.com>,
-        Will Deacon <will@kernel.org>,
-        Mike Leach <mike.leach@linaro.org>,
-        Leo Yan <leo.yan@linaro.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Jiri Olsa <jolsa@kernel.org>,
-        Namhyung Kim <namhyung@kernel.org>,
-        Andrew Kilroy <andrew.kilroy@arm.com>,
-        Shuai Xue <xueshuai@linux.alibaba.com>,
-        Zhuo Song <zhuo.song@linux.alibaba.com>,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>,
-        linux-perf-users <linux-perf-users@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>
-References: <1667214694-89839-1-git-send-email-renyu.zj@linux.alibaba.com>
- <d6553087-9157-21e8-6980-31bc8e44f066@arm.com>
- <ae446c02-d5d7-4631-72b7-243b6ef52708@linux.alibaba.com>
- <CAP-5=fW+Z_Tc3BfK1bRKUeKWfxtPfoZXL9D2BhcU1SzNOruSsg@mail.gmail.com>
-From:   Jing Zhang <renyu.zj@linux.alibaba.com>
-In-Reply-To: <CAP-5=fW+Z_Tc3BfK1bRKUeKWfxtPfoZXL9D2BhcU1SzNOruSsg@mail.gmail.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <CAMt6jhxg-_Pd__TfpSqX+=d2_-MFqCoF84qYYDcuu1Ps9M9hfQ@mail.gmail.com>
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
+On Thu, Nov 10, 2022 at 01:47:26PM -0500, Sanan Hasanov wrote:
+> Good day, dear maintainers,
+> 
+> We found a bug using a modified kernel configuration file used by syzbot.
+> We enhanced the coverage of the configuration file using our tool, krepair.
+> config and reproducer files are attached.
+> Branch: https://github.com/torvalds/linux (HEAD detached at 33c9805860e58)
+> Reproducer can be executed as follows:
+> ./syz-execprog -repeat=0 -procs=8 program
+> More info: https://github.com/google/syzkaller/blob/master/docs/executing_syzkaller_programs.md
+> Thank you!
+> 
+> general protection fault, probably for non-canonical address
+> 0xdffffc0000000033: 0000 [#1] PREEMPT SMP KASAN NOPTI
+> KASAN: null-ptr-deref in range [0x0000000000000198-0x000000000000019f]
+> CPU: 0 PID: 7030 Comm: systemd-udevd Not tainted
+> 6.1.0-rc1-00010-gbb1a1146467a #2
+> Hardware name: QEMU Standard PC (i440FX + PIIX, 1996), BIOS
+> 1.13.0-1ubuntu1.1 04/01/2014
+> RIP: 0010:x86_pmu_enable_event+0x61/0x2b0
+> Code: 00 e8 93 95 3a 00 48 c7 c7 40 59 60 85 e8 47 17 a4 02 48 8d bb
+> 98 01 00 00 48 b8 00 00 00 00 00 fc ff df 48 89 fa 48 c1 ea 03 <0f> b6
+> 04 02 65 48 8b 2d 0b 46 a1 7d 84 c0 74 08 3c 03 0f 8e f3 01
+> RSP: 0000:ffff88811ae09ce8 EFLAGS: 00010016
+> RAX: dffffc0000000000 RBX: 0000000000000000 RCX: ffffffff8260e90d
+> RDX: 0000000000000033 RSI: ffffffff85605940 RDI: 0000000000000198
+> RBP: ffff88811ae21e20 R08: 0000000000000001 R09: ffffed10235c43c5
+> R10: ffff88811ae21e27 R11: ffffed10235c43c4 R12: 0000000000000007
+> R13: ffff88811ae21c20 R14: fffffbfff0cf1d0f R15: 0000000000000004
+> FS:  00007f2607dbb8c0(0000) GS:ffff88811ae00000(0000) knlGS:0000000000000000
+> CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+> CR2: 00005606fbe35108 CR3: 000000010c384000 CR4: 0000000000350ef0
+> DR0: 0000000003be2348 DR1: 0000000003be2348 DR2: 0000000000000000
+> DR3: 0000000000000000 DR6: 00000000ffff4ff0 DR7: 0000000000000600
+> Call Trace:
+>  <IRQ>
+>  amd_pmu_enable_all+0x101/0x160
+>  x86_pmu_enable+0x367/0xcb0
+>  perf_pmu_enable+0xb6/0xf0
+>  perf_mux_hrtimer_handler+0x4c0/0x880
+>  __hrtimer_run_queues+0x2cf/0x6c0
+>  hrtimer_interrupt+0x2f3/0x700
+>  __sysvec_apic_timer_interrupt+0x114/0x370
+>  sysvec_apic_timer_interrupt+0x89/0xc0
 
+Looks like
 
-在 2022/11/20 上午5:46, Ian Rogers 写道:
-> On Fri, Nov 18, 2022 at 7:30 PM Jing Zhang <renyu.zj@linux.alibaba.com <mailto:renyu.zj@linux.alibaba.com>> wrote:
->>
->>
->> 在 2022/11/16 下午7:19, James Clark 写道:
->> >
->> >
->> > On 31/10/2022 11:11, Jing Zhang wrote:
->> >> This series add six metricgroups for neoverse-n2, among which, the
->> >> formula of topdown L1 is from the document:
->> >> https://documentation-service.arm.com/static/60250c7395978b529036da86?token= <https://documentation-service.arm.com/static/60250c7395978b529036da86?token=>
->> >>
->> >> Since neoverse-n2 does not yet support topdown L2, metricgroups such
->> >> as Cache, TLB, Branch, InstructionsMix, and PEutilization are added to
->> >> help further analysis of performance bottlenecks.
->> >>
->> >
->> > Hi Jing,
->> >
->> > Thanks for working on this, these metrics look ok to me in general,
->> > although we're currently working on publishing standardised metrics
->> > across all new cores as part of a new project in Arm. This will include
->> > N2, and our ones are very similar (or almost identical) to yours,
->> > barring slightly different group names, metric names, and differences in
->> > things like outputting topdown metrics as percentages.
->> >
->> > We plan to publish our standard metrics some time in the next 2 months.
->> > Would you consider holding off on merging this change so that we have
->> > consistant group names and units going forward? Otherwise N2 would be
->> > the odd one out. I will send you the metrics when they are ready, and we
->> > will have a script to generate perf jsons from them, so you can review.
->> >
->> > We also have a slightly different forumula for one of the top down
->> > metrics which I think would be slightly more accurate. We don't have
->> > anything for your "PE utilization" metrics, which I can raise
->> > internally. It could always be added to perf on top of the standardised
->> > ones if we don't add it to our standard ones.
->> >
->> > Thanks
->> > James
->> >
->>
->> Hi James,
->>
->> Regarding the arm n2 standard metrics last time, is my understanding correct,
->> and does it meet your meaning? If so, may I ask when you will send me the
->> standards you formulate so that I can align with you in time over my patchset.
->> Please communicate this matter so that we can understand each other's schedule.
->>
->> Thanks,
->> Jing
-> 
-> Hi,
-> 
-> In past versions of the perf tool the metrics have been pretty broken. If we have something that is good we shouldn't be holding it to a bar of being perfect, we can merge what we have and improve over time. In this case what Jing has prepared may arrive in time for Linux 6.2 whilst the standard metrics may arrive in time for 6.3. I'd suggest merging Jing's work and then improving on it with the standard metrics.
-> 
-> In terms of the metrics themselves, could we add ScaleUnit? For example:
-> 
-> +    {
-> +        "MetricExpr": "LD_SPEC / INST_SPEC",
-> +        "PublicDescription": "The rate of load instructions speculatively executed to overall instructions speclatively executed",
-> +        "BriefDescription": "The rate of load instructions speculatively executed to overall instructions speclatively executed",
-> +        "MetricGroup": "InstructionMix",
-> +        "MetricName": "load_spec_rate"
-> +    },
-> 
-> A ScaleUnit of "100%" would likely make things more readable.
-> 
+baa014b9543c ("perf/x86/amd: Fix crash due to race between amd_pmu_enable_all, perf NMI and throttling")
 
-Ok, I'll modify it over your suggestion, making it more readable, and move on with it.
+which just went to Linus.
 
-Thanks,
-Jing
+You could try 6.1-rc6 when it releases tomorrow.
 
-> Thanks,
-> Ian
-> 
->> >> with this series on neoverse-n2:
->> >>
->> >> $./perf list metricgroup
->> >>
->> >> List of pre-defined events (to be used in -e):
->> >>
->> >>
->> >> Metric Groups:
->> >>
->> >> Branch
->> >> Cache
->> >> InstructionMix
->> >> PEutilization
->> >> TLB
->> >> TopDownL1
->> >>
->> >>
->> >> $./perf list
->> >>
->> >> ...
->> >> Metric Groups:
->> >>
->> >> Branch:
->> >>   branch_miss_pred_rate
->> >>        [The rate of branches mis-predited to the overall branches]
->> >>   branch_mpki
->> >>        [The rate of branches mis-predicted per kilo instructions]
->> >>   branch_pki
->> >>        [The rate of branches retired per kilo instructions]
->> >> Cache:
->> >>   l1d_cache_miss_rate
->> >>        [The rate of L1 D-Cache misses to the overall L1 D-Cache]
->> >>   l1d_cache_mpki
->> >>        [The rate of L1 D-Cache misses per kilo instructions]
->> >> ...
->> >>
->> >>
->> >> $sudo ./perf stat -a -M TLB sleep 1
->> >>
->> >>  Performance counter stats for 'system wide':
->> >>
->> >>         35,861,936      L1I_TLB                          #     0.00 itlb_walk_rate           (74.91%)
->> >>              5,661      ITLB_WALK                                                            (74.91%)
->> >>         97,279,240      INST_RETIRED                     #     0.07 itlb_mpki                (74.91%)
->> >>              6,851      ITLB_WALK                                                            (74.91%)
->> >>             26,391      DTLB_WALK                        #     0.00 dtlb_walk_rate           (75.07%)
->> >>         35,585,545      L1D_TLB                                                              (75.07%)
->> >>         85,923,244      INST_RETIRED                     #     0.35 dtlb_mpki                (75.11%)
->> >>             29,992      DTLB_WALK                                                            (75.11%)
->> >>
->> >>        1.003450755 seconds time elapsed
->> >>     
->> >>
->> >> Jing Zhang (6):
->> >>   perf vendor events arm64: Add topdown L1 metrics for neoverse-n2
->> >>   perf vendor events arm64: Add TLB metrics for neoverse-n2
->> >>   perf vendor events arm64: Add cache metrics for neoverse-n2
->> >>   perf vendor events arm64: Add branch metrics for neoverse-n2
->> >>   perf vendor events arm64: Add PE utilization metrics for neoverse-n2
->> >>   perf vendor events arm64: Add instruction mix metrics for neoverse-n2
->> >>
->> >>  .../arch/arm64/arm/neoverse-n2/metrics.json        | 247 +++++++++++++++++++++
->> >>  1 file changed, 247 insertions(+)
->> >>  create mode 100644 tools/perf/pmu-events/arch/arm64/arm/neoverse-n2/metrics.json
->> >>
+Thx.
+
+-- 
+Regards/Gruss,
+    Boris.
+
+https://people.kernel.org/tglx/notes-about-netiquette
