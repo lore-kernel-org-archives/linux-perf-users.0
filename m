@@ -2,79 +2,145 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4CA26C433FE
-	for <linux-perf-users@archiver.kernel.org>; Mon, 21 Nov 2022 14:08:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D596BC433FE
+	for <linux-perf-users@archiver.kernel.org>; Mon, 21 Nov 2022 15:20:29 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229929AbiKUOId (ORCPT
+        id S232240AbiKUPU2 (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Mon, 21 Nov 2022 09:08:33 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44508 "EHLO
+        Mon, 21 Nov 2022 10:20:28 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47360 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229914AbiKUOIL (ORCPT
+        with ESMTP id S229921AbiKUPUO (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Mon, 21 Nov 2022 09:08:11 -0500
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 114FBC76AC
-        for <linux-perf-users@vger.kernel.org>; Mon, 21 Nov 2022 06:03:58 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1669039438;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type;
-        bh=gpRiqy0kwVgMdz1yBw1kbEJkrvHf1eUDUqKJWLzJ948=;
-        b=aGGU/HAmc/IKuXO2EQEu4r+vCrqL+Vvf8zGgLStanp1pkvKqTS7IZfQ4YpO8b/xWZaIOe+
-        v5QC8O18i/U+fliAlWA5mbdH5TptFzfb+Jnkg95+GaMBkGVkN4Kh48ztcVicnNxe5B9I+v
-        Mm5m49wU7+fXz0Due/uBXj3sbz9iQyw=
-Received: from mail-vk1-f198.google.com (mail-vk1-f198.google.com
- [209.85.221.198]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_128_GCM_SHA256) id
- us-mta-613-nv9_nTFzO-yxgD4LgVR22g-1; Mon, 21 Nov 2022 09:03:57 -0500
-X-MC-Unique: nv9_nTFzO-yxgD4LgVR22g-1
-Received: by mail-vk1-f198.google.com with SMTP id b127-20020a1f3485000000b003b8a69e5b11so3990913vka.22
-        for <linux-perf-users@vger.kernel.org>; Mon, 21 Nov 2022 06:03:57 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=cc:to:subject:message-id:date:from:mime-version:x-gm-message-state
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=gpRiqy0kwVgMdz1yBw1kbEJkrvHf1eUDUqKJWLzJ948=;
-        b=zBwLrrrL2RBkZluK2npriyukYwU4r0bfLom7k+zYMuofS7mn8qHKCFzKuMXZhn+7AO
-         vJP0o9ESTvtzJBvW7Oi8botWSiZYJ5MSv+6EFdgvZOVmZP/N3yqcOmQ6vR78TzVK8zQP
-         iya242S3jIvc6cTXPJEehCM1H+2w5efWiFgQd/ceq/GXDnS/WF4+axKw4Qg1rY/ZC1EY
-         +tp9mg+UdaETmjhFHJw6xeMWeTdWbADTewKQH3bT0x/noJPt0wCWiwtyBBR/KIg5x84C
-         QaFuY5+3cPH/u6mpo4UACice1R7pwRPdvFAAOrf3ZCCfkZc7Wij5pJPypAfNbokylwdV
-         QSgw==
-X-Gm-Message-State: ANoB5plILz8GutqaenK08WqPkEAlAXROWBwZf8V46E5yzKP8MuLQQYHf
-        CUr+mNCxj7ca+lxfwvqrVVyZPmyUM2mYDMUykfdDJcBCqg66Cq4hxynkua9w+coT+wY0zBvzP1T
-        Z3Wij0roTGwDDeR9EE8WCIjqiod8Bl0zAmaO20k7cHZ46Uw==
-X-Received: by 2002:a1f:1ed7:0:b0:3bc:648b:eee7 with SMTP id e206-20020a1f1ed7000000b003bc648beee7mr6427946vke.28.1669039436055;
-        Mon, 21 Nov 2022 06:03:56 -0800 (PST)
-X-Google-Smtp-Source: AA0mqf6Qhw6bXLhldT3RfCnXHJ1orFBJROsMReUYxL7IR80o8yNo/DyYzqXwnWihAbsPrZn9ocfQhTHDbxoAqNk3PFo=
-X-Received: by 2002:a1f:1ed7:0:b0:3bc:648b:eee7 with SMTP id
- e206-20020a1f1ed7000000b003bc648beee7mr6427922vke.28.1669039435721; Mon, 21
- Nov 2022 06:03:55 -0800 (PST)
+        Mon, 21 Nov 2022 10:20:14 -0500
+Received: from out199-10.us.a.mail.aliyun.com (out199-10.us.a.mail.aliyun.com [47.90.199.10])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 251C6175B6;
+        Mon, 21 Nov 2022 07:17:18 -0800 (PST)
+X-Alimail-AntiSpam: AC=PASS;BC=-1|-1;BR=01201311R211e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=ay29a033018046051;MF=renyu.zj@linux.alibaba.com;NM=1;PH=DS;RN=20;SR=0;TI=SMTPD_---0VVOOPHM_1669043831;
+Received: from 30.120.171.189(mailfrom:renyu.zj@linux.alibaba.com fp:SMTPD_---0VVOOPHM_1669043831)
+          by smtp.aliyun-inc.com;
+          Mon, 21 Nov 2022 23:17:13 +0800
+Message-ID: <d904734a-e7c1-ca8e-7705-63fc4864ac4f@linux.alibaba.com>
+Date:   Mon, 21 Nov 2022 23:17:11 +0800
 MIME-Version: 1.0
-From:   Jirka Hladky <jhladky@redhat.com>
-Date:   Mon, 21 Nov 2022 15:03:44 +0100
-Message-ID: <CAE4VaGDR+p-KDK6WNnzp5go4r_3Q-OtjR_J2_NpgFcwL8O8KiA@mail.gmail.com>
-Subject: AMD -missing perf stat metricgroup "pipeline"
-To:     linux-perf-users@vger.kernel.org
-Cc:     ravi.bangoria@amd.com
-Content-Type: text/plain; charset="UTF-8"
+User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.15; rv:102.0)
+ Gecko/20100101 Thunderbird/102.4.1
+Subject: Re: [External] : [RFC PATCH v2 1/6] perf vendor events arm64: Add
+ topdown L1 metrics for neoverse-n2
+To:     John Garry <john.g.garry@oracle.com>,
+        linux-arm-kernel@lists.infradead.org,
+        linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org,
+        John Garry <john.garry@huawei.com>,
+        Will Deacon <will@kernel.org>,
+        James Clark <james.clark@arm.com>,
+        Mike Leach <mike.leach@linaro.org>,
+        Leo Yan <leo.yan@linaro.org>, Ian Rogers <irogers@google.com>
+Cc:     Peter Zijlstra <peterz@infradead.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        Arnaldo Carvalho de Melo <acme@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Jiri Olsa <jolsa@kernel.org>,
+        Namhyung Kim <namhyung@kernel.org>,
+        Andrew Kilroy <andrew.kilroy@arm.com>,
+        Shuai Xue <xueshuai@linux.alibaba.com>,
+        Zhuo Song <zhuo.song@linux.alibaba.com>
+References: <1667214694-89839-1-git-send-email-renyu.zj@linux.alibaba.com>
+ <1668411720-3581-2-git-send-email-renyu.zj@linux.alibaba.com>
+ <590ff032-d271-48ee-a4d8-141cc070c335@oracle.com>
+ <f3823c3e-d45e-40ce-1981-e726b4b6be62@linux.alibaba.com>
+ <f6e26e2d-2f10-e973-6c9f-47594da2fc99@oracle.com>
+ <cd016aa9-d43d-c585-0b77-a2e112777ec1@linux.alibaba.com>
+ <abebb42b-62c1-30d7-ad9a-5fbf6c0edce1@oracle.com>
+From:   Jing Zhang <renyu.zj@linux.alibaba.com>
+In-Reply-To: <abebb42b-62c1-30d7-ad9a-5fbf6c0edce1@oracle.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-Hi,
 
-I'm testing AVX-512 packed double performance on the AMD Zen4
-platform, and I need help identifying the backend-bound workloads. On
-Intel systems, I use the metricgroup pipeline:
 
-perf stat -M pipeline binary
+在 2022/11/21 下午6:22, John Garry 写道:
+> 
+>>
+>>
+>> #./perf stat -e FRONTEND_BOUND sleep 1
+>> event syntax error: 'FRONTEND_BOUND'
+> 
+> For metrics, use -M, not -e
+> 
+> If this doesn't help, verify generated pmu-events/pmu-events.c is same after you make the change to try to use std arch events for metrics. Note that I never tested running my change.
+> 
+> Thanks,
+> John
+> 
+>>                       \___ parser error
+>> Run 'perf list' for a list of valid events
+>>
+>>   Usage: perf stat [<options>] [<command>]
+>>
+>>      -e, --event <event>   event selector. use 'perf list' to list available events
+>>
+>>
+>>
+>> diff --git a/tools/perf/pmu-events/arch/arm64/arm/neoverse-n2/pipeline.json b/tools/perf/pmu-events/arch/arm64/arm/neoverse-n2/pipeli
+>> index f9fae15..1089ca0 100644
+>> --- a/tools/perf/pmu-events/arch/arm64/arm/neoverse-n2/pipeline.json
+>> +++ b/tools/perf/pmu-events/arch/arm64/arm/neoverse-n2/pipeline.json
+>> @@ -6,18 +6,24 @@
+>>           "ArchStdEvent": "STALL_BACKEND"
+>>       },
+>>       {
+>> -        "ArchStdEvent": "STALL_SLOT_FRONTEND"
+>> +        "ArchStdEvent": "STALL_SLOT_FRONTEND",
+>> +        "MetricExpr": "STALL_SLOT_FRONTEND - CPU_CYCLES"
+>>       },
+>>       {
+>>
 
-which gives me exactly what I need.
 
-What plans are to add a similar metric group for the AMD systems?
+I'm sorry that I misunderstood the purpose of putting metric as arch_std_event at first,
+and now it works after the modification over your suggestion.
 
-Thanks a lot!
-Jirka
+But there are also a few questions:
 
+1. The value of the slot in the topdownL1 is various in different architectures, for example,
+the slot is 5 on neoverse-n2. If I put topdownL1 metric as arch_std_event, then I need to
+specify the slot to 5 in n2. I can specify slot values in metric like below, but is there any
+other concise way to do this?
+
+diff --git a/tools/perf/pmu-events/arch/arm64/arm/neoverse-n2/metrics.json b/tools/perf/pmu-events/arch/arm64/arm/neoverse-n2/metrics.json
+index 8ff1dfe..b473baf 100644
+--- a/tools/perf/pmu-events/arch/arm64/arm/neoverse-n2/metrics.json
++++ b/tools/perf/pmu-events/arch/arm64/arm/neoverse-n2/metrics.json
+@@ -1,4 +1,23 @@
+[
++       {
++               "MetricExpr": "5",
++               "PublicDescription": "A pipeline slot represents the hardware resources needed to process one uOp",
++               "BriefDescription": "A pipeline slot represents the hardware resources needed to process one uOp",
++               "MetricName": "slot"
++       },
++       {
++               "ArchStdEvent": "FRONTEND_BOUND"
++       },
++       {
++               "ArchStdEvent": "BACKEND_BOUND"
++       },
++       {
++               "ArchStdEvent": "WASTED"
++       },
++       {
++               "ArchStdEvent": "RETIRING"
++       },
+
+
+2. Should I add the topdownL1 metric to tools/perf/pmu-event/recommended.json,
+or create a new json file to place the general metric?
+
+Looking forward to your reply.
+
+Thanks,
+Jing
