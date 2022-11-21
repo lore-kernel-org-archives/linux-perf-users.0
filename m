@@ -2,131 +2,161 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9AB04C433FE
-	for <linux-perf-users@archiver.kernel.org>; Mon, 21 Nov 2022 11:40:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 58A25C4332F
+	for <linux-perf-users@archiver.kernel.org>; Mon, 21 Nov 2022 11:51:51 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231165AbiKULk3 (ORCPT
+        id S229921AbiKULvu (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Mon, 21 Nov 2022 06:40:29 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37404 "EHLO
+        Mon, 21 Nov 2022 06:51:50 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51690 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231217AbiKULkD (ORCPT
+        with ESMTP id S229984AbiKULvt (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Mon, 21 Nov 2022 06:40:03 -0500
+        Mon, 21 Nov 2022 06:51:49 -0500
 Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTP id 81D2AB7F5;
-        Mon, 21 Nov 2022 03:39:50 -0800 (PST)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTP id AC88B2A27D;
+        Mon, 21 Nov 2022 03:51:47 -0800 (PST)
 Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id AEC231FB;
-        Mon, 21 Nov 2022 03:39:56 -0800 (PST)
-Received: from FVFF77S0Q05N.cambridge.arm.com (FVFF77S0Q05N.cambridge.arm.com [10.1.25.132])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 6D8613F587;
-        Mon, 21 Nov 2022 03:39:48 -0800 (PST)
-Date:   Mon, 21 Nov 2022 11:39:42 +0000
-From:   Mark Rutland <mark.rutland@arm.com>
-To:     Anshuman Khandual <anshuman.khandual@arm.com>
-Cc:     linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, peterz@infradead.org,
-        acme@kernel.org, will@kernel.org, catalin.marinas@arm.com,
-        Mark Brown <broonie@kernel.org>,
-        James Clark <james.clark@arm.com>,
-        Rob Herring <robh@kernel.org>, Marc Zyngier <maz@kernel.org>,
-        Suzuki Poulose <suzuki.poulose@arm.com>,
-        Ingo Molnar <mingo@redhat.com>
-Subject: Re: [PATCH V5 4/7] driver/perf/arm_pmu_platform: Add support for
- BRBE attributes detection
-Message-ID: <Y3tjfg/aPIixPTbs@FVFF77S0Q05N.cambridge.arm.com>
-References: <20221107062514.2851047-1-anshuman.khandual@arm.com>
- <20221107062514.2851047-5-anshuman.khandual@arm.com>
- <Y3fIYjGtoXPSX9JQ@FVFF77S0Q05N.cambridge.arm.com>
- <fa55fccc-455c-828a-b5fb-de5cb269e35b@arm.com>
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 94BC91FB;
+        Mon, 21 Nov 2022 03:51:53 -0800 (PST)
+Received: from [10.57.6.6] (unknown [10.57.6.6])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 757033F587;
+        Mon, 21 Nov 2022 03:51:44 -0800 (PST)
+Message-ID: <107dda1a-6053-ea35-1e29-96ee6d049eb1@arm.com>
+Date:   Mon, 21 Nov 2022 11:51:42 +0000
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <fa55fccc-455c-828a-b5fb-de5cb269e35b@arm.com>
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
+ Thunderbird/102.2.2
+From:   James Clark <james.clark@arm.com>
+Subject: Re: [PATCH RFC 0/6] Add metrics for neoverse-n2
+To:     Jing Zhang <renyu.zj@linux.alibaba.com>,
+        nick Forrington <Nick.Forrington@arm.com>,
+        Jumana MP <Jumana.MP@arm.com>,
+        John Garry <john.garry@huawei.com>
+Cc:     Will Deacon <will@kernel.org>, Mike Leach <mike.leach@linaro.org>,
+        Leo Yan <leo.yan@linaro.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        Arnaldo Carvalho de Melo <acme@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Jiri Olsa <jolsa@kernel.org>,
+        Namhyung Kim <namhyung@kernel.org>,
+        Andrew Kilroy <andrew.kilroy@arm.com>,
+        Shuai Xue <xueshuai@linux.alibaba.com>,
+        Zhuo Song <zhuo.song@linux.alibaba.com>,
+        linux-arm-kernel@lists.infradead.org,
+        linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <1667214694-89839-1-git-send-email-renyu.zj@linux.alibaba.com>
+ <d6553087-9157-21e8-6980-31bc8e44f066@arm.com>
+ <d334a33c-b171-8381-3f75-e47392b6cba5@linux.alibaba.com>
+Content-Language: en-US
+In-Reply-To: <d334a33c-b171-8381-3f75-e47392b6cba5@linux.alibaba.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-On Mon, Nov 21, 2022 at 12:06:31PM +0530, Anshuman Khandual wrote:
+
+
+On 16/11/2022 15:26, Jing Zhang wrote:
 > 
 > 
-> On 11/18/22 23:31, Mark Rutland wrote:
-> > On Mon, Nov 07, 2022 at 11:55:11AM +0530, Anshuman Khandual wrote:
-> >> This adds arm pmu infrastrure to probe BRBE implementation's attributes via
-> >> driver exported callbacks later. The actual BRBE feature detection will be
-> >> added by the driver itself.
-> >>
-> >> CPU specific BRBE entries, cycle count, format support gets detected during
-> >> PMU init. This information gets saved in per-cpu struct pmu_hw_events which
-> >> later helps in operating BRBE during a perf event context.
-> > 
-> > Do we expect this to vary between CPUs handled by the same struct arm_pmu ?
+> 在 2022/11/16 下午7:19, James Clark 写道:
+>>
+>>
+>> On 31/10/2022 11:11, Jing Zhang wrote:
+>>> This series add six metricgroups for neoverse-n2, among which, the
+>>> formula of topdown L1 is from the document:
+>>> https://documentation-service.arm.com/static/60250c7395978b529036da86?token=
+>>>
+>>> Since neoverse-n2 does not yet support topdown L2, metricgroups such
+>>> as Cache, TLB, Branch, InstructionsMix, and PEutilization are added to
+>>> help further analysis of performance bottlenecks.
+>>>
+>>
+>> Hi Jing,
+>>
+>> Thanks for working on this, these metrics look ok to me in general,
+>> although we're currently working on publishing standardised metrics
+>> across all new cores as part of a new project in Arm. This will include
+>> N2, and our ones are very similar (or almost identical) to yours,
+>> barring slightly different group names, metric names, and differences in
+>> things like outputting topdown metrics as percentages.
+>>
+>> We plan to publish our standard metrics some time in the next 2 months.
+>> Would you consider holding off on merging this change so that we have
+>> consistant group names and units going forward? Otherwise N2 would be> the odd one out. I will send you the metrics when they are ready, and we
+>> will have a script to generate perf jsons from them, so you can review.
+>>
 > 
-> BRBE registers are per CPU, and the spec does not assert about BRBE properties
-> being the same across the system, served via same the struct arm_pmu.
+> Do you mean that after you release the new standard metrics, I remake my
+> patch referring to them, such as consistent group names and unit?
 
-The same is true of the PMU, and struct arm_pmu does not cover the whole
-system, it covers each *micro-architecture* within the system.
+Hi Jing,
 
-I think BRBE should be treated the same, i.e. uniform *within* a struct
-arm_pmu.
+I was planning to submit the patch myself, but there will be a script to
+generate perf json files, so no manual work would be needed. Although
+this is complicated by the fact that we won't be publishing the fixed
+TopdownL1 metrics that you have for the existing N2 silicon so there
+would be a one time copy paste to fix that part.
 
-> Hence it would be inaccurate to make that assumption, which might have just
-> avoided all these IPI based probes during boot.
-
-FWIW, I would be happy to IPI all CPUs during boot to verify uniformity of CPUs
-within an arm_pmu; I just don't think that BRBE should be treated differently
-from the rest of the PMU features.
-
-[...]
-
-> >> +	hw_events = per_cpu_ptr(armpmu->hw_events, smp_processor_id());
-> >> +	armpmu->brbe_probe(hw_events);
-> >> +}
-> >> +
-> >> +static int armpmu_request_brbe(struct arm_pmu *armpmu)
-> >> +{
-> >> +	int cpu, err = 0;
-> >> +
-> >> +	for_each_cpu(cpu, &armpmu->supported_cpus) {
-> >> +		err = smp_call_function_single(cpu, arm_brbe_probe_cpu, armpmu, 1);
-> > 
-> > Why does this need to be called on each CPU in the supported_cpus mask?
 > 
-> Is not supported_cpus derived after partitioning the IRQ in pmu_parse_percpu_irq().
-> The idea is to fill up BRBE buffer attributes, on all such supported cpus which could
-> trigger PMU interrupt. Is the concern, that not all cpus in supported_cpus mask might
-> not be online during boot, hence IPIs could not be served, hence BRBE attributed for
-> them could not be fetched ?
-
-As above, I think this is solvable if we mandate that BRBE must be uniform
-*within* an arm_pmu's supported CPUs; then we only need one CPU in the
-supported_cpus mask to be present at boot time, as with the rest of the PMU
-code.
-
-We could *verify* that when onlining a CPU.
-
-> > I don't see anything here to handle late hotplug, so this looks suspicious.
 > 
-> Right, I should add cpu hotplug handling, otherwise risk loosing BRBE support on cpus
-> which might have been offline during boot i.e when above IPI based probe happened ?
+>> We also have a slightly different forumula for one of the top down
+>> metrics which I think would be slightly more accurate. We don't have
 > 
-> > Either we're missing something, or it's redundant at boot time.
 > 
-> Should we add cpu hotplug online-offline handlers like some other PMU drivers ? Let
-> me know if there are some other concerns.
+> The v2 version of the patchset updated the formula of topdown L1.
+> Link: https://lore.kernel.org/all/1668411720-3581-1-git-send-email-renyu.zj@linux.alibaba.com/
 > 
-> cpuhp_setup_state_multi(CPUHP_AP_ONLINE_DYN, DRVNAME,
-> 			arm_brbe_cpu_startup,
-> 		        arm_brbe_cpu_teardown)
+> The formula of the v2 version is more accurate than v1, and it has been
+> verified in our test environment. Can you share your formula first and we
+> can discuss it together? :)
 
-We *could* add that, but that's going to require ordering against the existing
-hooks for probing arm_pmu.
+I was looking at v2 but replied to the root of the thread by mistake. I
+also had it the wrong way round. So your version corrects for the errata
+on the current version of N2 (as you mentioned in the commit message).
+Our version would be if there is a future new silicon revision with that
+fixed, but it does have an extra improvement by subtracting the branch
+mispredicts.
 
-Why can't this hang off the exising hooks for arm_pmu? We're treating this as
-part of the PMU anyway, so I don't understand why we should probe it
-separately.
+Perf doesn't currently match the jsons based on silicon revision, so
+we'd have to add something in for that if a fixed silicon version is
+released. But this is another problem for another time.
 
-Thanks,
-Mark.
+This is the frontend bound metric we have for future revisions:
+
+	"100 * ( (STALL_SLOT_FRONTEND/(CPU_CYCLES * 5)) - ((BR_MIS_PRED *
+4)/CPU_CYCLES) )"
+
+Other changes are, for example, your 'wasted' metric, we have
+'bad_speculation', and without the
+cycles subtraction:
+
+	100 * ( ((1 - (OP_RETIRED/OP_SPEC)) * (1 - (STALL_SLOT/(CPU_CYCLES *
+5)))) + ((BR_MIS_PRED * 4)/CPU_CYCLES) )
+
+And some more details filled in around the units, for example:
+
+    {
+        "MetricName": "bad_speculation",
+        "MetricExpr": "100 * ( ((1 - (OP_RETIRED/OP_SPEC)) * (1 -
+(STALL_SLOT/(CPU_CYCLES * 5)))) + ((BR_MIS_PRED * 4)/CPU_CYCLES) )",
+        "BriefDescription": "Bad Speculation",
+        "PublicDescription": "This metric is the percentage of total
+slots that executed operations and didn't retire due to a pipeline
+flush.\nThis indicates cycles that were utilized but inefficiently.",
+        "MetricGroup": "TopdownL1",
+        "ScaleUnit": "1percent of slots"
+    },
+
+So ignoring the errata issue, the main reason to hold off is for
+consistency and churn because these metrics in this format will be
+released for all cores going forwards.
+
+Thanks
+James
+
+
