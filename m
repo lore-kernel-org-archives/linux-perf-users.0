@@ -2,144 +2,110 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 511E9C4332F
-	for <linux-perf-users@archiver.kernel.org>; Mon, 21 Nov 2022 06:36:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 63155C4332F
+	for <linux-perf-users@archiver.kernel.org>; Mon, 21 Nov 2022 07:52:53 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229680AbiKUGgl (ORCPT
+        id S229843AbiKUHwu (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Mon, 21 Nov 2022 01:36:41 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57268 "EHLO
+        Mon, 21 Nov 2022 02:52:50 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59002 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229698AbiKUGgl (ORCPT
+        with ESMTP id S229794AbiKUHwt (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Mon, 21 Nov 2022 01:36:41 -0500
-Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTP id AC07931233;
-        Sun, 20 Nov 2022 22:36:39 -0800 (PST)
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 908231FB;
-        Sun, 20 Nov 2022 22:36:45 -0800 (PST)
-Received: from [10.162.41.8] (unknown [10.162.41.8])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 9653B3F73D;
-        Sun, 20 Nov 2022 22:36:34 -0800 (PST)
-Message-ID: <fa55fccc-455c-828a-b5fb-de5cb269e35b@arm.com>
-Date:   Mon, 21 Nov 2022 12:06:31 +0530
+        Mon, 21 Nov 2022 02:52:49 -0500
+Received: from mail-pj1-x1034.google.com (mail-pj1-x1034.google.com [IPv6:2607:f8b0:4864:20::1034])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A59632186
+        for <linux-perf-users@vger.kernel.org>; Sun, 20 Nov 2022 23:52:46 -0800 (PST)
+Received: by mail-pj1-x1034.google.com with SMTP id e7-20020a17090a77c700b00216928a3917so13587228pjs.4
+        for <linux-perf-users@vger.kernel.org>; Sun, 20 Nov 2022 23:52:46 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=6WjVfFYLcTfewafnon3KVt0ktJTiMVy1KnjVKkT5rpE=;
+        b=b79/fyAq/YHmS0tOjEAtCmJdzJ1Ua36rMCUO8ivApIafNLtN6kTGfwicRGJWxwKqJH
+         lJqTjXKFQSETXnz1A4FO28qxJns3MyYYipxX7PqKjsNMbL6scsAern/+29y+tK3yRLiz
+         Y3LRr9VjVmgT1PnZ6dOgikEtWkRy25Ry0OuR/0PI2mEoOSrjuzFBXMfg1jtCepGjgbqy
+         UgvpV52e2CQo+J9euy+0nkAgV5wY/EDEiHyK4PfX08gIIZEqnh4jFb5OUx/HeIQ2hpfV
+         EUnU/V/yKi6jiFZsTr6ubsWvFNhGJSlwWY2QQHqL7Vi0pVoCKYzysbYlKNYGskbqywlQ
+         3SLg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=6WjVfFYLcTfewafnon3KVt0ktJTiMVy1KnjVKkT5rpE=;
+        b=cGQWKuVZIqU9JUrEX6u7goe3K4aWlY1cgThEEbQQNyVdYWZ2cbcZ7/NgFmyn7T9TvT
+         XnnMGb8oPZ3o1icOMDulmV/UO41AqdBXxMTu+dGTATWZT47bCZrIf0sf07RYRL5KTUvb
+         sLEwQUdkxYNjDJJmHCS9RAxYTLsrqr62t0N4ZVbSni7aKumZBxU8oVRmvQMfh4f988Mb
+         5nDzZVc6+8AgIhnfLISf1lplHTbxxbtA7HA287KieMqoTh+UulXBllUIsWcPHgo8b9Wm
+         +dieV0Z2JinfCrnJIEZ4lDTCXUAlhJkT55ql5Z2at5gBLv9LRYmGCYkRGkuXvx1PeawI
+         Azjg==
+X-Gm-Message-State: ANoB5pk8iE2f3Ezy+WUbuQhCmk2aUrxFTHFivOFWCb0dVJORV3IDWAeW
+        FZB+xRRiWze0Ft1nSmJVr1vP2/p/xQ3KG4OC
+X-Google-Smtp-Source: AA0mqf5nMvHnG2tzrfyG/pKaCg//dI3l1l5t28l8zrVad0SYYerVDasQyvTv7S7qhLyrX4NgNp1FzQ==
+X-Received: by 2002:a17:902:ec8a:b0:188:640f:f400 with SMTP id x10-20020a170902ec8a00b00188640ff400mr1182661plg.143.1669017165937;
+        Sun, 20 Nov 2022 23:52:45 -0800 (PST)
+Received: from leoy-huangpu.lan (211-75-219-204.hinet-ip.hinet.net. [211.75.219.204])
+        by smtp.gmail.com with ESMTPSA id h31-20020a63575f000000b0047696938911sm7006277pgm.74.2022.11.20.23.52.42
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sun, 20 Nov 2022 23:52:45 -0800 (PST)
+From:   Leo Yan <leo.yan@linaro.org>
+To:     Arnaldo Carvalho de Melo <acme@kernel.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Jiri Olsa <jolsa@kernel.org>,
+        Namhyung Kim <namhyung@kernel.org>,
+        Ian Rogers <irogers@google.com>,
+        linux-perf-users@vger.kernel.org, bpf@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Cc:     Leo Yan <leo.yan@linaro.org>
+Subject: [PATCH v1 0/5] perf trace: Cleanup and remove unused bpf map
+Date:   Mon, 21 Nov 2022 07:52:32 +0000
+Message-Id: <20221121075237.127706-1-leo.yan@linaro.org>
+X-Mailer: git-send-email 2.34.1
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
- Thunderbird/102.2.2
-Subject: Re: [PATCH V5 4/7] driver/perf/arm_pmu_platform: Add support for BRBE
- attributes detection
-Content-Language: en-US
-To:     Mark Rutland <mark.rutland@arm.com>
-Cc:     linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, peterz@infradead.org,
-        acme@kernel.org, will@kernel.org, catalin.marinas@arm.com,
-        Mark Brown <broonie@kernel.org>,
-        James Clark <james.clark@arm.com>,
-        Rob Herring <robh@kernel.org>, Marc Zyngier <maz@kernel.org>,
-        Suzuki Poulose <suzuki.poulose@arm.com>,
-        Ingo Molnar <mingo@redhat.com>
-References: <20221107062514.2851047-1-anshuman.khandual@arm.com>
- <20221107062514.2851047-5-anshuman.khandual@arm.com>
- <Y3fIYjGtoXPSX9JQ@FVFF77S0Q05N.cambridge.arm.com>
-From:   Anshuman Khandual <anshuman.khandual@arm.com>
-In-Reply-To: <Y3fIYjGtoXPSX9JQ@FVFF77S0Q05N.cambridge.arm.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
+The initial purpose of this series is to cleanup the unused bpf map
+'syscalls' in the eBPF program augmented_raw_syscalls and perf trace
+tool.  The relality is perf trace tool initializes system call table
+based on map 'syscalls' and wrongly returns syscall pointer for
+non-existed system calls based on the previous initialization.
 
+So the patch set firstly addresses the issue for handling non-existed
+system calls, then it removes unused local variable and bpf map in
+augmented_raw_syscalls.c.
 
-On 11/18/22 23:31, Mark Rutland wrote:
-> On Mon, Nov 07, 2022 at 11:55:11AM +0530, Anshuman Khandual wrote:
->> This adds arm pmu infrastrure to probe BRBE implementation's attributes via
->> driver exported callbacks later. The actual BRBE feature detection will be
->> added by the driver itself.
->>
->> CPU specific BRBE entries, cycle count, format support gets detected during
->> PMU init. This information gets saved in per-cpu struct pmu_hw_events which
->> later helps in operating BRBE during a perf event context.
-> 
-> Do we expect this to vary between CPUs handled by the same struct arm_pmu ?
+Patch 01 is a minor refactoring to use macro to replace number, patch 02
+is to return error if a system call doesn't exist, especially when we
+cannot find corresponding trace point in sysfs node, patch 03 is to fix
+the issue that trace__syscall_info() returns a syscall pointer even the
+system call doesn't exist, the corrected result is to always return NULL
+pointer for non-existed system call.
 
-BRBE registers are per CPU, and the spec does not assert about BRBE properties
-being the same across the system, served via same the struct arm_pmu. Hence it
-would be inaccurate to make that assumption, which might have just avoided all
-these IPI based probes during boot.
+The last two patches remove the unused local variable and bpf map
+'syscalls'.
 
-> 
->> Cc: Will Deacon <will@kernel.org>
->> Cc: Mark Rutland <mark.rutland@arm.com>
->> Cc: linux-arm-kernel@lists.infradead.org
->> Cc: linux-kernel@vger.kernel.org
->> Signed-off-by: Anshuman Khandual <anshuman.khandual@arm.com>
->> ---
->>  drivers/perf/arm_pmu_platform.c | 34 +++++++++++++++++++++++++++++++++
->>  1 file changed, 34 insertions(+)
->>
->> diff --git a/drivers/perf/arm_pmu_platform.c b/drivers/perf/arm_pmu_platform.c
->> index 933b96e243b8..acdc445081aa 100644
->> --- a/drivers/perf/arm_pmu_platform.c
->> +++ b/drivers/perf/arm_pmu_platform.c
->> @@ -172,6 +172,36 @@ static int armpmu_request_irqs(struct arm_pmu *armpmu)
->>  	return err;
->>  }
->>  
->> +static void arm_brbe_probe_cpu(void *info)
->> +{
->> +	struct pmu_hw_events *hw_events;
->> +	struct arm_pmu *armpmu = info;
->> +
->> +	/*
->> +	 * Return from here, if BRBE driver has not been
->> +	 * implemented for this PMU. This helps prevent
->> +	 * kernel crash later when brbe_probe() will be
->> +	 * called on the PMU.
->> +	 */
->> +	if (!armpmu->brbe_probe)
->> +		return;
-> 
-> Since this is a field on struct arm_pmu, why doesn't armpmu_request_brbe()
-> check this before calling smp_call_function_single(), to avoid the redundant
-> IPI?
+This patch set has been tested with mainline kernel on Arm64 Ampere
+Altra platform.
 
-Makes sense, I will move the check inside armpmu_request_brbe() with return
-code -ENODEV when not available.
+Leo Yan (5):
+  perf trace: Use macro RAW_SYSCALL_ARGS_NUM to replace number
+  perf trace: Return error if a system call doesn't exist
+  perf trace: Handle failure when trace point folder is missed
+  perf augmented_raw_syscalls: Remove unused variable 'syscall'
+  perf trace: Remove unused bpf map 'syscalls'
 
-> 
->> +
->> +	hw_events = per_cpu_ptr(armpmu->hw_events, smp_processor_id());
->> +	armpmu->brbe_probe(hw_events);
->> +}
->> +
->> +static int armpmu_request_brbe(struct arm_pmu *armpmu)
->> +{
->> +	int cpu, err = 0;
->> +
->> +	for_each_cpu(cpu, &armpmu->supported_cpus) {
->> +		err = smp_call_function_single(cpu, arm_brbe_probe_cpu, armpmu, 1);
-> 
-> Why does this need to be called on each CPU in the supported_cpus mask?
+ tools/perf/builtin-trace.c                    | 131 +++---------------
+ .../examples/bpf/augmented_raw_syscalls.c     |  18 ---
+ 2 files changed, 18 insertions(+), 131 deletions(-)
 
-Is not supported_cpus derived after partitioning the IRQ in pmu_parse_percpu_irq().
-The idea is to fill up BRBE buffer attributes, on all such supported cpus which could
-trigger PMU interrupt. Is the concern, that not all cpus in supported_cpus mask might
-not be online during boot, hence IPIs could not be served, hence BRBE attributed for
-them could not be fetched ?
+-- 
+2.34.1
 
-> 
-> I don't see anything here to handle late hotplug, so this looks suspicious.
-
-Right, I should add cpu hotplug handling, otherwise risk loosing BRBE support on cpus
-which might have been offline during boot i.e when above IPI based probe happened ?
-
-> Either we're missing something, or it's redundant at boot time.
-
-Should we add cpu hotplug online-offline handlers like some other PMU drivers ? Let
-me know if there are some other concerns.
-
-cpuhp_setup_state_multi(CPUHP_AP_ONLINE_DYN, DRVNAME,
-			arm_brbe_cpu_startup,
-		        arm_brbe_cpu_teardown)
