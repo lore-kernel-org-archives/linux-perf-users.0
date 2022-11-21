@@ -2,55 +2,55 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0CDABC433FE
-	for <linux-perf-users@archiver.kernel.org>; Mon, 21 Nov 2022 07:53:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 85E30C4332F
+	for <linux-perf-users@archiver.kernel.org>; Mon, 21 Nov 2022 07:53:24 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229893AbiKUHxT (ORCPT
+        id S229898AbiKUHxX (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Mon, 21 Nov 2022 02:53:19 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59370 "EHLO
+        Mon, 21 Nov 2022 02:53:23 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59150 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229960AbiKUHxB (ORCPT
+        with ESMTP id S229972AbiKUHxI (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Mon, 21 Nov 2022 02:53:01 -0500
-Received: from mail-pj1-x102a.google.com (mail-pj1-x102a.google.com [IPv6:2607:f8b0:4864:20::102a])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D41F118B35
-        for <linux-perf-users@vger.kernel.org>; Sun, 20 Nov 2022 23:52:58 -0800 (PST)
-Received: by mail-pj1-x102a.google.com with SMTP id w4-20020a17090ac98400b002186f5d7a4cso10054578pjt.0
-        for <linux-perf-users@vger.kernel.org>; Sun, 20 Nov 2022 23:52:58 -0800 (PST)
+        Mon, 21 Nov 2022 02:53:08 -0500
+Received: from mail-pj1-x102e.google.com (mail-pj1-x102e.google.com [IPv6:2607:f8b0:4864:20::102e])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 187641903D
+        for <linux-perf-users@vger.kernel.org>; Sun, 20 Nov 2022 23:53:01 -0800 (PST)
+Received: by mail-pj1-x102e.google.com with SMTP id 71-20020a17090a09cd00b00218adeb3549so2116904pjo.1
+        for <linux-perf-users@vger.kernel.org>; Sun, 20 Nov 2022 23:53:01 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=z6Y107DNA2h9x1jFeZux4gnXIStbDXBkeJQpL1mBr6o=;
-        b=C/0DTzrfe1WiC81ULqWXVG8uqC+cxWZaE46z38bg2ldaZUyDoMboRI6+YTdf7UEWM4
-         Pf635lAErhsUFqKe/pFEMAURdZTLRijqz3LqQWeTUgK403nR79SGis+uf6rbYi5ex6v0
-         LH03gj4MlW/af7YyhHPQxqq3CoLyy8kJNF6fakvv9eeK0V5kOnAoZZoe/a7JS8EYpMXp
-         X3FQl4YKFyWRejDIg/9DYzt0S7QHhdPHyrK0t9hgbby8zrb36fN+jM9hU8d/hlzWuVKL
-         tEWnB1+7t30ZkygZfvfkqb83K0EKNNyFC8yrqoa/R4xdu5xf1xjqyFs3sJke9micx/6y
-         lztA==
+        bh=4nLzWG/ZTlfyMH+jybHcXaVQUlUlVa+L1Vc5qu2tDhc=;
+        b=LBszov47TdVdBRHvE1cfnPBOe3cxsDJcrikL+M/vEKKxTQ/1XRbnsDBXfi0ePFG6gj
+         ztTpDO8zLTFE3hLkjMN31cjLxh32u4WfDHpgvfXC52n/khIGcvE2RmdQtAb5CUfn+efb
+         XLsVB/XW1MQgrAKGPLokqKPXBmfsNJVbXwp5D/DCBiSKz20SbNoTLRToQ48H/2mpyhxs
+         h2tB1hHR43Qy5H/vEQHr8g4kcBA7m9FpONKrjjx9KoXlT/eMRFkcykAdIB2wkCUfcx8f
+         9pwADcqEhGL7eiPFOTBJwG+ZkCEBUCbWU3vlMC882xV1yBZGFLCbbmwr4ZdD3DvqxSLm
+         B1Bg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=z6Y107DNA2h9x1jFeZux4gnXIStbDXBkeJQpL1mBr6o=;
-        b=KUdlnlHpa8+glbBbVb+00su6DJNBu38rI83H+Y9RdBIrznsk7U1YxIaR9zNIRB50lx
-         b0LwfRNEmKcRiYDWBcpRkAlHHp8FHFml4ygrhXcsjrLZiFw5bOq7PClJu+Jlu7nh8qov
-         CrBMrsnwiXUwUdi/hiLSDtuuVegHYVZ2KpEqRqAHZbMHWev48dVGvqctkeapdfqxstaG
-         s66+ZX3vHLDW0dzgq4AKClLiCg8TNF1tcvoijQdsVlxZvcVEXLgYBitmDtFfwGgqKZsv
-         PzNxlsGlIS5TWL4wsKWDdDkQnfdJaFMkPNyWlt5luArb7VTalBunyheqCzkZzkrF2vvu
-         /mew==
-X-Gm-Message-State: ANoB5pkhv5o7Rl8ooTWmy/037Rl11Tbd22CpqGbYf3MP76zsMpJln6J8
-        jBDh/BTacRc5DoCHhExRvpzdAA==
-X-Google-Smtp-Source: AA0mqf4heA29f+3z9aBG54hP4uqX83h4XI0cuLRu+sTd8uFpm6DZPLXxmb7YUevJpUCqZVKmIwbTZQ==
-X-Received: by 2002:a17:902:c409:b0:182:bccf:619f with SMTP id k9-20020a170902c40900b00182bccf619fmr10787696plk.9.1669017177711;
-        Sun, 20 Nov 2022 23:52:57 -0800 (PST)
+        bh=4nLzWG/ZTlfyMH+jybHcXaVQUlUlVa+L1Vc5qu2tDhc=;
+        b=q3E3a/+hkiR/j+YNzg9ODEdBHMX/0ISv0kVLqSx5V8l3moly4HlzWQJ0f6GNSDJJ3t
+         XECiZpN+pU8BqPy/OTCzI671wtB4dQRQFJzCpFnI8EqNAIBMpaLxMlL/2wHOhbBopMS4
+         QBnrXAqqYCIdojR55/9TuhNt6NKInou/kpMnNqBDtz93VThyn0zsKgWQdt49Tj/sWyIF
+         tzThLJzGIZB4uit25A5zhJocuHX+pe5zGGnZTtyPRPgmc/8hOk+7H+Ufvwji7IKVk4OL
+         HT6ePJ7r9KOJrXj4ACiVe/t/bkmE76FHHVezbZzEnZt/79witYyq1Mwmxl9ANyCzJwsF
+         QySw==
+X-Gm-Message-State: ANoB5pnrpBDecCP3hC8RzIt74Ul9Ww9FaaJH2kxbPUNNhNZDCmHCTaPB
+        RTyaHGSHrKMGtUJk8Nko57pi0g==
+X-Google-Smtp-Source: AA0mqf7DZy48KN08hxLT8+CVFI0g8Wo0+4J5TS1/NhepplENHGa0TG88nRS2vaAtfWgR3JWDBV8qVA==
+X-Received: by 2002:a17:902:e40a:b0:17a:a81:2a52 with SMTP id m10-20020a170902e40a00b0017a0a812a52mr4100105ple.159.1669017181614;
+        Sun, 20 Nov 2022 23:53:01 -0800 (PST)
 Received: from leoy-huangpu.lan (211-75-219-204.hinet-ip.hinet.net. [211.75.219.204])
-        by smtp.gmail.com with ESMTPSA id h31-20020a63575f000000b0047696938911sm7006277pgm.74.2022.11.20.23.52.53
+        by smtp.gmail.com with ESMTPSA id h31-20020a63575f000000b0047696938911sm7006277pgm.74.2022.11.20.23.52.58
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 20 Nov 2022 23:52:57 -0800 (PST)
+        Sun, 20 Nov 2022 23:53:01 -0800 (PST)
 From:   Leo Yan <leo.yan@linaro.org>
 To:     Arnaldo Carvalho de Melo <acme@kernel.org>,
         Peter Zijlstra <peterz@infradead.org>,
@@ -63,9 +63,9 @@ To:     Arnaldo Carvalho de Melo <acme@kernel.org>,
         linux-perf-users@vger.kernel.org, bpf@vger.kernel.org,
         linux-kernel@vger.kernel.org
 Cc:     Leo Yan <leo.yan@linaro.org>
-Subject: [PATCH v1 3/5] perf trace: Handle failure when trace point folder is missed
-Date:   Mon, 21 Nov 2022 07:52:35 +0000
-Message-Id: <20221121075237.127706-4-leo.yan@linaro.org>
+Subject: [PATCH v1 4/5] perf augmented_raw_syscalls: Remove unused variable 'syscall'
+Date:   Mon, 21 Nov 2022 07:52:36 +0000
+Message-Id: <20221121075237.127706-5-leo.yan@linaro.org>
 X-Mailer: git-send-email 2.34.1
 In-Reply-To: <20221121075237.127706-1-leo.yan@linaro.org>
 References: <20221121075237.127706-1-leo.yan@linaro.org>
@@ -75,76 +75,25 @@ Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-On Arm64 a case is perf tools fails to find the corresponding trace
-point folder for system calls listed in the table 'syscalltbl_arm64',
-e.g. the generated system call table contains "lookup_dcookie" but we
-cannot find out the matched trace point folder for it.
+The local variable 'syscall' is not used anymore, remove it.
 
-We need to figure out if there have any issue for the generated system
-call table, on the other hand, we need to handle the case when trace
-point folder is missed under sysfs, this patch sets the flag
-syscall::nonexistent as true and returns the error from
-trace__read_syscall_info().
-
-Another problem is for trace__syscall_info(), it returns two different
-values if a system call doesn't exist: at the first time calling
-trace__syscall_info() it returns NULL when the system call doesn't exist,
-later if call trace__syscall_info() again for the same missed system
-call, it returns pointer of syscall.  trace__syscall_info() checks the
-condition 'syscalls.table[id].name == NULL', but the name will be
-assigned in the first invoking even the system call is not found.
-
-So checking system call's name in trace__syscall_info() is not the right
-thing to do, this patch simply checks flag syscall::nonexistent to make
-decision if a system call exists or not, finally trace__syscall_info()
-returns the consistent result (NULL) if a system call doesn't existed.
-
-Fixes: b8b1033fcaa0 ("perf trace: Mark syscall ids that are not allocated to avoid unnecessary error messages")
 Signed-off-by: Leo Yan <leo.yan@linaro.org>
 ---
- tools/perf/builtin-trace.c | 17 ++++++++++-------
- 1 file changed, 10 insertions(+), 7 deletions(-)
+ tools/perf/examples/bpf/augmented_raw_syscalls.c | 1 -
+ 1 file changed, 1 deletion(-)
 
-diff --git a/tools/perf/builtin-trace.c b/tools/perf/builtin-trace.c
-index bd5513b15cde..071e7598391f 100644
---- a/tools/perf/builtin-trace.c
-+++ b/tools/perf/builtin-trace.c
-@@ -1814,13 +1814,19 @@ static int trace__read_syscall_info(struct trace *trace, int id)
- 		sc->tp_format = trace_event__tp_format("syscalls", tp_name);
- 	}
+diff --git a/tools/perf/examples/bpf/augmented_raw_syscalls.c b/tools/perf/examples/bpf/augmented_raw_syscalls.c
+index 7dc24c9173a7..4203f92c063b 100644
+--- a/tools/perf/examples/bpf/augmented_raw_syscalls.c
++++ b/tools/perf/examples/bpf/augmented_raw_syscalls.c
+@@ -389,7 +389,6 @@ int sys_enter(struct syscall_enter_args *args)
+ 	 * initial, non-augmented raw_syscalls:sys_enter payload.
+ 	 */
+ 	unsigned int len = sizeof(augmented_args->args);
+-	struct syscall *syscall;
  
-+	/*
-+	 * Fails to read trace point format via sysfs node, so the trace point
-+	 * doesn't exist.  Set the 'nonexistent' flag as true.
-+	 */
-+	if (IS_ERR(sc->tp_format)) {
-+		sc->nonexistent = true;
-+		return PTR_ERR(sc->tp_format);
-+	}
-+
- 	if (syscall__alloc_arg_fmts(sc, IS_ERR(sc->tp_format) ?
- 					RAW_SYSCALL_ARGS_NUM : sc->tp_format->format.nr_fields))
- 		return -ENOMEM;
- 
--	if (IS_ERR(sc->tp_format))
--		return PTR_ERR(sc->tp_format);
--
- 	sc->args = sc->tp_format->format.fields;
- 	/*
- 	 * We need to check and discard the first variable '__syscall_nr'
-@@ -2137,11 +2143,8 @@ static struct syscall *trace__syscall_info(struct trace *trace,
- 	    (err = trace__read_syscall_info(trace, id)) != 0)
- 		goto out_cant_read;
- 
--	if (trace->syscalls.table[id].name == NULL) {
--		if (trace->syscalls.table[id].nonexistent)
--			return NULL;
-+	if (trace->syscalls.table && trace->syscalls.table[id].nonexistent)
- 		goto out_cant_read;
--	}
- 
- 	return &trace->syscalls.table[id];
- 
+ 	if (pid_filter__has(&pids_filtered, getpid()))
+ 		return 0;
 -- 
 2.34.1
 
