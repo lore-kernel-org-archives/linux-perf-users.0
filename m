@@ -2,155 +2,111 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3BBD1C4332F
-	for <linux-perf-users@archiver.kernel.org>; Tue, 22 Nov 2022 14:00:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 57504C43219
+	for <linux-perf-users@archiver.kernel.org>; Tue, 22 Nov 2022 14:20:36 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233932AbiKVOA1 (ORCPT
+        id S234054AbiKVOUe (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Tue, 22 Nov 2022 09:00:27 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53878 "EHLO
+        Tue, 22 Nov 2022 09:20:34 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40078 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232586AbiKVOAZ (ORCPT
+        with ESMTP id S233988AbiKVOU1 (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Tue, 22 Nov 2022 09:00:25 -0500
-Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTP id 11A0866CB6;
-        Tue, 22 Nov 2022 06:00:23 -0800 (PST)
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 217861FB;
-        Tue, 22 Nov 2022 06:00:29 -0800 (PST)
-Received: from [10.57.3.106] (unknown [10.57.3.106])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 185633F73D;
-        Tue, 22 Nov 2022 06:00:19 -0800 (PST)
-Message-ID: <57315669-e6e7-08b8-a252-bc35d4fecc01@arm.com>
-Date:   Tue, 22 Nov 2022 14:00:18 +0000
+        Tue, 22 Nov 2022 09:20:27 -0500
+Received: from smtp-out1.suse.de (smtp-out1.suse.de [IPv6:2001:67c:2178:6::1c])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9DE36682B4;
+        Tue, 22 Nov 2022 06:20:25 -0800 (PST)
+Received: from imap2.suse-dmz.suse.de (imap2.suse-dmz.suse.de [192.168.254.74])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange X25519 server-signature ECDSA (P-521) server-digest SHA512)
+        (No client certificate requested)
+        by smtp-out1.suse.de (Postfix) with ESMTPS id 2F670220C7;
+        Tue, 22 Nov 2022 14:20:24 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.cz; s=susede2_rsa;
+        t=1669126824; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+         mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=sH9ni1mWjwD99/t20LozYjCgs14d4WSa0QQZ5/xw57A=;
+        b=ONiDsrks6Adh9kmLKRG5hX7BqNe+hBnscyawkgvu1AJz8qGmtAZIZ+hXnS6VAoj0OrAugk
+        o40tROK3kM3fcR+iRbpZ9PF8GZdkPa5vCpRePpRrCzRDrYRdaQdlrBhTLjbiqdgGW8ubhN
+        aliL9MBnPxAi22usfZx72R5a86MXxhI=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.cz;
+        s=susede2_ed25519; t=1669126824;
+        h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+         mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=sH9ni1mWjwD99/t20LozYjCgs14d4WSa0QQZ5/xw57A=;
+        b=uarCxHzXrpMaljr4S9hN6puiDtHJ7KzEH6f0QN+PEco61ECA0/JD1fNHaEc4r+5V2Q/nrm
+        T3EfGohG+a+5HLDA==
+Received: from imap2.suse-dmz.suse.de (imap2.suse-dmz.suse.de [192.168.254.74])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange X25519 server-signature ECDSA (P-521) server-digest SHA512)
+        (No client certificate requested)
+        by imap2.suse-dmz.suse.de (Postfix) with ESMTPS id 9FB2913AA1;
+        Tue, 22 Nov 2022 14:20:23 +0000 (UTC)
+Received: from dovecot-director2.suse.de ([192.168.254.65])
+        by imap2.suse-dmz.suse.de with ESMTPSA
+        id amktJqfafGMkbgAAMHmgww
+        (envelope-from <vbabka@suse.cz>); Tue, 22 Nov 2022 14:20:23 +0000
+Message-ID: <d6140b16-38c0-30d5-8ed8-0fcffa98a951@suse.cz>
+Date:   Tue, 22 Nov 2022 15:20:23 +0100
 MIME-Version: 1.0
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
- Thunderbird/102.2.2
-Subject: Re: [External] : [RFC PATCH v2 1/6] perf vendor events arm64: Add
- topdown L1 metrics for neoverse-n2
+ Thunderbird/102.5.0
+Subject: Re: [PATCH mm-unstable v1 06/20] mm: rework handling in do_wp_page()
+ based on private vs. shared mappings
 Content-Language: en-US
-To:     John Garry <john.g.garry@oracle.com>,
-        Jing Zhang <renyu.zj@linux.alibaba.com>
-Cc:     Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Jiri Olsa <jolsa@kernel.org>,
-        Namhyung Kim <namhyung@kernel.org>,
-        Andrew Kilroy <andrew.kilroy@arm.com>,
-        Shuai Xue <xueshuai@linux.alibaba.com>,
-        Zhuo Song <zhuo.song@linux.alibaba.com>,
-        linux-arm-kernel@lists.infradead.org,
-        linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Will Deacon <will@kernel.org>,
-        Mike Leach <mike.leach@linaro.org>,
-        Leo Yan <leo.yan@linaro.org>, Ian Rogers <irogers@google.com>
-References: <1667214694-89839-1-git-send-email-renyu.zj@linux.alibaba.com>
- <1668411720-3581-2-git-send-email-renyu.zj@linux.alibaba.com>
- <590ff032-d271-48ee-a4d8-141cc070c335@oracle.com>
- <f3823c3e-d45e-40ce-1981-e726b4b6be62@linux.alibaba.com>
- <f6e26e2d-2f10-e973-6c9f-47594da2fc99@oracle.com>
- <cd016aa9-d43d-c585-0b77-a2e112777ec1@linux.alibaba.com>
- <abebb42b-62c1-30d7-ad9a-5fbf6c0edce1@oracle.com>
- <d904734a-e7c1-ca8e-7705-63fc4864ac4f@linux.alibaba.com>
- <75c4f0e6-3f28-a748-e891-7be6016ca28e@oracle.com>
-From:   James Clark <james.clark@arm.com>
-In-Reply-To: <75c4f0e6-3f28-a748-e891-7be6016ca28e@oracle.com>
+To:     David Hildenbrand <david@redhat.com>, linux-kernel@vger.kernel.org
+Cc:     x86@kernel.org, linux-alpha@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, linux-ia64@vger.kernel.org,
+        linux-mips@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
+        sparclinux@vger.kernel.org, linux-um@lists.infradead.org,
+        etnaviv@lists.freedesktop.org, dri-devel@lists.freedesktop.org,
+        linux-samsung-soc@vger.kernel.org, linux-rdma@vger.kernel.org,
+        linux-media@vger.kernel.org, linux-fsdevel@vger.kernel.org,
+        linux-mm@kvack.org, linux-perf-users@vger.kernel.org,
+        linux-security-module@vger.kernel.org,
+        linux-kselftest@vger.kernel.org,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Jason Gunthorpe <jgg@ziepe.ca>,
+        John Hubbard <jhubbard@nvidia.com>,
+        Peter Xu <peterx@redhat.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Andrea Arcangeli <aarcange@redhat.com>,
+        Hugh Dickins <hughd@google.com>, Nadav Amit <namit@vmware.com>,
+        Matthew Wilcox <willy@infradead.org>,
+        Mike Kravetz <mike.kravetz@oracle.com>,
+        Muchun Song <songmuchun@bytedance.com>,
+        Shuah Khan <shuah@kernel.org>,
+        Lucas Stach <l.stach@pengutronix.de>,
+        David Airlie <airlied@gmail.com>,
+        Oded Gabbay <ogabbay@kernel.org>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Christoph Hellwig <hch@infradead.org>,
+        Alex Williamson <alex.williamson@redhat.com>
+References: <20221116102659.70287-1-david@redhat.com>
+ <20221116102659.70287-7-david@redhat.com>
+From:   Vlastimil Babka <vbabka@suse.cz>
+In-Reply-To: <20221116102659.70287-7-david@redhat.com>
 Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Transfer-Encoding: 7bit
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
+On 11/16/22 11:26, David Hildenbrand wrote:
+> We want to extent FAULT_FLAG_UNSHARE support to anything mapped into a
+> COW mapping (pagecache page, zeropage, PFN, ...), not just anonymous pages.
+> Let's prepare for that by handling shared mappings first such that we can
+> handle private mappings last.
+> 
+> While at it, use folio-based functions instead of page-based functions
+> where we touch the code either way.
+> 
+> Signed-off-by: David Hildenbrand <david@redhat.com>
 
+Reviewed-by: Vlastimil Babka <vbabka@suse.cz>
 
-On 21/11/2022 17:55, John Garry wrote:
-> On 21/11/2022 15:17, Jing Zhang wrote:
->> I'm sorry that I misunderstood the purpose of putting metric as
->> arch_std_event at first,
->> and now it works after the modification over your suggestion.
->>
->> But there are also a few questions:
->>
->> 1. The value of the slot in the topdownL1 is various in different
->> architectures, for example,
->> the slot is 5 on neoverse-n2. If I put topdownL1 metric as
->> arch_std_event, then I need to
->> specify the slot to 5 in n2. I can specify slot values in metric like
->> below, but is there any
->> other concise way to do this?
->>
->> diff --git
->> a/tools/perf/pmu-events/arch/arm64/arm/neoverse-n2/metrics.json
->> b/tools/perf/pmu-events/arch/arm64/arm/neoverse-n2/metrics.json
->> index 8ff1dfe..b473baf 100644
->> --- a/tools/perf/pmu-events/arch/arm64/arm/neoverse-n2/metrics.json
->> +++ b/tools/perf/pmu-events/arch/arm64/arm/neoverse-n2/metrics.json
->> @@ -1,4 +1,23 @@
->> [
->> +       {
->> +               "MetricExpr": "5",
->> +               "PublicDescription": "A pipeline slot represents the
->> hardware resources needed to process one uOp",
->> +               "BriefDescription": "A pipeline slot represents the
->> hardware resources needed to process one uOp",
->> +               "MetricName": "slot"
-> 
-> Ehhh....I'm not sure if that is a good idea. Ian or anyone else have an
-> opinion on this? It is possible to reuse metrics, so it should work, but...
-> 
-> One problem is that "slot" would show up as a metric, which you would
-> not want.
-> 
-> Alternatively I was going to suggest that you can overwrite specific std
-> arch event attributes. So for example of frontend_bound, you could have:
-
-I would agree with not having this and just hard coding the 5 wherever
-it's needed. Once we have a few different sets of metrics in place maybe
-we can start to look at deduplication, but for now I don't see the value.
-
-> 
-> + b/tools/perf/pmu-events/arch/arm64/arm/neoverse-n2/metrics.json
-> @@ -0,0 +1,30 @@
-> [
->     {
->     "ArchStdEvent": "FRONTEND_BOUND",
->         "MetricExpr": "(stall_slot_frontend - cpu_cycles) / (5 *
-> cpu_cycles)",
->     },
-> 
->> +       }
->> +       {
->> +               "ArchStdEvent": "FRONTEND_BOUND"
->> +       },
->> +       {
->> +               "ArchStdEvent": "BACKEND_BOUND"
->> +       },
->> +       {
->> +               "ArchStdEvent": "WASTED"
->> +       },
->> +       {
->> +               "ArchStdEvent": "RETIRING"
->> +       },
->>
->>
->> 2. Should I add the topdownL1 metric to
->> tools/perf/pmu-event/recommended.json,
->> or create a new json file to place the general metric?
-> 
-> It would not belong in recommended.json as that is specifically for
-> arch-recommended events. It would really just depend on where the value
-> comes from, i.e. arm arm or sbsa.
-> 
-
-For what we're going to publish shortly we'll be generating a
-metrics.json file for each CPU. It will be autogenerated so I don't
-think duplication will be an issue and I'm expecting that there will be
-differences in the topdown metrics between CPUs anyway. So I would also
-vote to not put it in recommended.json
-
->>
->> Looking forward to your reply.
-> 
