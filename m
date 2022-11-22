@@ -2,144 +2,162 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9DD08C4332F
-	for <linux-perf-users@archiver.kernel.org>; Tue, 22 Nov 2022 08:04:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3DDD2C433FE
+	for <linux-perf-users@archiver.kernel.org>; Tue, 22 Nov 2022 08:13:28 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232533AbiKVIEl (ORCPT
+        id S232348AbiKVIN0 (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Tue, 22 Nov 2022 03:04:41 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42252 "EHLO
+        Tue, 22 Nov 2022 03:13:26 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49724 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232402AbiKVIEl (ORCPT
+        with ESMTP id S232609AbiKVINZ (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Tue, 22 Nov 2022 03:04:41 -0500
-Received: from NAM10-BN7-obe.outbound.protection.outlook.com (mail-bn7nam10on2051.outbound.protection.outlook.com [40.107.92.51])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8D5BC21828;
-        Tue, 22 Nov 2022 00:04:39 -0800 (PST)
+        Tue, 22 Nov 2022 03:13:25 -0500
+Received: from NAM10-MW2-obe.outbound.protection.outlook.com (mail-mw2nam10on2065.outbound.protection.outlook.com [40.107.94.65])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 08C2B1FF82;
+        Tue, 22 Nov 2022 00:13:25 -0800 (PST)
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=OmSKF3192WP+IAQLPARikbsTzQ1z/Daz4jc55Rn8ZyMexluIptjZjyxWHsohIegBk3osnqEUMv1qDE01QM6SbzgTs40JkpxNu8sNlhspXzZ/fbiIETcL1V11iR1fE4yggsx/KfQl/HjpJ34DuysY6xtjH3sAaUH9+e/5APh8nz4g5CtqxNzpf2SO1oS+KZX108xV02JlHm52uLHXCXa2WFGuwC+VdCR48fYWW5dI4Ito6I8S+f6mLAVpBr0mTgS6g2SX76iVGhzPQ3ixWOAHLMHxncN+qXqn5nLCx2lOxvbSW17KIMtVcMbvcgHltTkurZa3eeD7zXybfKj/94m0GQ==
+ b=A1oJoIfmEmCLyUUz1nI6m96DIh2M7FQsWBDJSMRqdWJlffIVj0CfdvTgfRjfRHmSORRBgJPSJn046ASFIun8vZqa7f8fkdqYewWGC5qPg81Zk6xRCy/0LhLci1bfLtC9vFOWF3rlr588gDLpCLvSTGDbToQkmsVspQvHIcDoZ8OPAaelDJwg3M3juipWOn3d4EKh1pB5Bect5hx47XAmiZLfhUDYdzaYFT1xE0TCDfgcDTAwFjBECw1/CEDZzhPy1h+ZNJCbCrmhKyyAd2kjfEkkGVt49xBFp5rUvqgId8Ix3nQ5/Ig4HB4geaN9lOxKs03vnbKpcAoGND6N9A0Gcg==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector9901;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=ZDu5X8DbMOBCv73AokZly/dE0dXRH8GnI+5xzL9UCIY=;
- b=CH/W4cnMyWMocjLfkxBOWutSJPC1OhVUFlGLYG2KGd8XHkvD1966W6pPGgOsJ8Y4nnNdKSz2ouo34RgnSs2D4g6hu0nnG74IXghqgWwyJfsGcpY4NOUFhhNhFNQrh1D2s493nsoHKwl4lB7th72p0OZN3bRKfayEOrV4+pmKvjnqNo8VIdQBhnj63G9RYgSL/4ALRjJCRXfloihPbVC8l6SaUy4rAa7HvSc4zvMBQ2N1C/nk3I4sbYPXYA/PAOy/UTQKoBvs6L+wkaglRgBaNGpZ8BtkUX6rA1/mX7DrI+2e7lffSHYBmt795ghkw5IvBparQqwu3kFAn6g1/rXE4w==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
- 165.204.84.17) smtp.rcpttodomain=infradead.org smtp.mailfrom=amd.com;
- dmarc=pass (p=quarantine sp=quarantine pct=100) action=none
- header.from=amd.com; dkim=none (message not signed); arc=none
+ bh=8z56mdp6XZ6DA0JjRDA8rwKlPxkukbS/2Df+wORLZzk=;
+ b=T7XAurVwN/MmTP6Y9/6PHjnG0/uddkV4NVl0pQMgQKg4yrAkYrJISqM5uvKd0l0BC4KwwpnXz/+swY17k9/mYvSaDQyRieb9nSMfLWmBZo+b/TFxQ53ZjnUSlfmqVy4B7iKkksqf94GcDYVD0gcuYmjYpHAc2enwQnPTEnYEf1tbTuQSF9YAnqXiunsELpdHR2hYs6LKjyVotoANlurTFU52L26b4Ev8pD4SMx3mTirCJCbnKpycSq8oh5CpceJIoHLPD4vVIl+N8cjCFfzAJrHpE2KqS/QpPALd2lDRKGwEkJx6t/QZOqEQqjcP5Akay+mV0Gh0mB4m83Xd5t7MKA==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=amd.com; dmarc=pass action=none header.from=amd.com; dkim=pass
+ header.d=amd.com; arc=none
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=ZDu5X8DbMOBCv73AokZly/dE0dXRH8GnI+5xzL9UCIY=;
- b=CiAXCAM6Ifc0r8Ehvrrog+MfYhXOud5B5fuHynNN7ACYxVzI7EyUZ+F7VjWLTlZtYO6MIsayy7mzPo0dhCGctBsJbZZqxcrOPt4TXHpzjzMjeExbCZY7rsxJuK6HYHLqJkPYMJzDaTywYpdn8/PcDTQzgWYnonE2YqfZFHUTNPA=
-Received: from MW4PR03CA0244.namprd03.prod.outlook.com (2603:10b6:303:b4::9)
- by MW4PR12MB7430.namprd12.prod.outlook.com (2603:10b6:303:224::14) with
+ bh=8z56mdp6XZ6DA0JjRDA8rwKlPxkukbS/2Df+wORLZzk=;
+ b=eKwhlpGfxxVq6bZOBAMzdmZAcwns/Rhbz8VEPP6q48tDXPAmH8spTVXu9VzKYUwD5SMVU7cAWeZNhaJ47wYDkMXDjYRxpzChK8jquhDcFUrthVq3aXAGSjv2mLNRv8l0pKRREq2zVu/7FRLenYBzujbDFauadLj+3tVs18qp8C4=
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=amd.com;
+Received: from PH7PR12MB6588.namprd12.prod.outlook.com (2603:10b6:510:210::10)
+ by MW3PR12MB4443.namprd12.prod.outlook.com (2603:10b6:303:2d::15) with
  Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.5834.15; Tue, 22 Nov
- 2022 08:04:36 +0000
-Received: from CO1NAM11FT063.eop-nam11.prod.protection.outlook.com
- (2603:10b6:303:b4:cafe::3a) by MW4PR03CA0244.outlook.office365.com
- (2603:10b6:303:b4::9) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.5813.17 via Frontend
- Transport; Tue, 22 Nov 2022 08:04:36 +0000
-X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 165.204.84.17)
- smtp.mailfrom=amd.com; dkim=none (message not signed)
- header.d=none;dmarc=pass action=none header.from=amd.com;
-Received-SPF: Pass (protection.outlook.com: domain of amd.com designates
- 165.204.84.17 as permitted sender) receiver=protection.outlook.com;
- client-ip=165.204.84.17; helo=SATLEXMB04.amd.com; pr=C
-Received: from SATLEXMB04.amd.com (165.204.84.17) by
- CO1NAM11FT063.mail.protection.outlook.com (10.13.175.37) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.20.5834.8 via Frontend Transport; Tue, 22 Nov 2022 08:04:36 +0000
-Received: from BLR-5CG113396H.amd.com (10.180.168.240) by SATLEXMB04.amd.com
- (10.181.40.145) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2375.34; Tue, 22 Nov
- 2022 02:04:32 -0600
+ 2022 08:13:23 +0000
+Received: from PH7PR12MB6588.namprd12.prod.outlook.com
+ ([fe80::aa5f:5f2c:4143:f981]) by PH7PR12MB6588.namprd12.prod.outlook.com
+ ([fe80::aa5f:5f2c:4143:f981%9]) with mapi id 15.20.5834.011; Tue, 22 Nov 2022
+ 08:13:23 +0000
+Message-ID: <9002989d-3d87-dee1-23a3-6a652243d5b0@amd.com>
+Date:   Tue, 22 Nov 2022 13:43:10 +0530
+User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:102.0) Gecko/20100101
+ Thunderbird/102.3.3
+Subject: Re: [PATCH] perf/amd/ibs: Make IBS a core pmu
+To:     peterz@infradead.org
+Cc:     Ian Rogers <irogers@google.com>, acme@kernel.org,
+        mark.rutland@arm.com, jolsa@redhat.com, namhyung@kernel.org,
+        eranian@google.com, kan.liang@linux.intel.com, bp@alien8.de,
+        x86@kernel.org, linux-perf-users@vger.kernel.org,
+        linux-kernel@vger.kernel.org, sandipan.das@amd.com,
+        ananth.narayan@amd.com, santosh.shukla@amd.com,
+        Ravi Bangoria <ravi.bangoria@amd.com>
+References: <20221115093904.1799-1-ravi.bangoria@amd.com>
+ <CAP-5=fXq-YNKogH4DYQuf7rz8TZhu8=QnEsA2pvzj6YS_DQO7g@mail.gmail.com>
+ <d839086b-826d-3642-5be2-a62714457b62@amd.com>
+Content-Language: en-US
 From:   Ravi Bangoria <ravi.bangoria@amd.com>
-To:     <peterz@infradead.org>
-CC:     <ravi.bangoria@amd.com>, <mingo@redhat.com>, <acme@kernel.org>,
-        <mark.rutland@arm.com>, <jolsa@redhat.com>, <namhyung@kernel.org>,
-        <bp@alien8.de>, <linux-perf-users@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>, <sandipan.das@amd.com>,
-        <ananth.narayan@amd.com>, <santosh.shukla@amd.com>
-Subject: [PATCH] perf/core: Don't allow grouping events from different hw pmus
-Date:   Tue, 22 Nov 2022 13:33:26 +0530
-Message-ID: <20221122080326.228-1-ravi.bangoria@amd.com>
-X-Mailer: git-send-email 2.25.1
+In-Reply-To: <d839086b-826d-3642-5be2-a62714457b62@amd.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: PN0PR01CA0038.INDPRD01.PROD.OUTLOOK.COM
+ (2603:1096:c01:49::7) To PH7PR12MB6588.namprd12.prod.outlook.com
+ (2603:10b6:510:210::10)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-Originating-IP: [10.180.168.240]
-X-ClientProxiedBy: SATLEXMB03.amd.com (10.181.40.144) To SATLEXMB04.amd.com
- (10.181.40.145)
-X-EOPAttributedMessage: 0
 X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: CO1NAM11FT063:EE_|MW4PR12MB7430:EE_
-X-MS-Office365-Filtering-Correlation-Id: 4cdda74f-9b20-429a-bab7-08dacc6032c9
+X-MS-TrafficTypeDiagnostic: PH7PR12MB6588:EE_|MW3PR12MB4443:EE_
+X-MS-Office365-Filtering-Correlation-Id: fc9e5338-2843-43ab-af70-08dacc616b80
 X-MS-Exchange-SenderADCheck: 1
 X-MS-Exchange-AntiSpam-Relay: 0
 X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: wv18gGpY1/WlTSdxb0oG402LjBmOePf8KrAdcCD5xG3DJUwOTtNlxGecrgLxpjMLw3piizeXW+2oyUBMUbQvLKml/bRsm3732ghx8CxUjLf0p2MIl2BYXrrvbpry4pPy3EHj1U5Qiu+BYZwam822Iy9aqM/btRJNujuY2wrhNNFRjF0ndEzTPaXL/hKQmHnHDbK5a0CM+38co9dyMTuoVBkqMysRcgW4LK1Mqr4BTyhJTWZci7r9/XbctlRLkVIUlPlKQpvglhKo0xhT3q72u3juE94IkR8OGYHfIpGMGZVM3p15cBvU29hb5EHA++3cmxotZsCGI7/X25cLmPABnY2KN33ccEdjx/x9AA+P0xmlXxZfAAXj+Se0HWA/IA409vcofZEORJvPOennIxJ6AH71guclTwU2P05YW7SRKJ8LWXPI2QlklB5ESo/XQkk3VwGM/yVtE5aN22E5jXkisbcS8jh3ZUQiALFEoD4u6cQcAt5qYn3ZfHZ50JnCvvtzO2j72J+6ChRJYKvJjw/kKrKD0Uu3O9AHZSPhtcoyKVuLo/xntY8hediXSJGiI1O8TrCKzAxzEHqKvNRU0hHBJXNXYjIoERphhomVsH4MdjeHC7MS0ZyQfF4alE+Gc446bUSxvJ30BJdPl9e9rt6f/2qPIPl9vJk0F2GK2PJeNq2cq4q+RA8Pg2+bRVWTXtOzpZ2+8xedkZadq0rBuoGcNK1CEa259QPC7QmnYsckLxw=
-X-Forefront-Antispam-Report: CIP:165.204.84.17;CTRY:US;LANG:en;SCL:1;SRV:;IPV:CAL;SFV:NSPM;H:SATLEXMB04.amd.com;PTR:InfoDomainNonexistent;CAT:NONE;SFS:(13230022)(4636009)(396003)(346002)(376002)(136003)(39860400002)(451199015)(46966006)(36840700001)(40470700004)(478600001)(54906003)(7696005)(6666004)(26005)(86362001)(82310400005)(40480700001)(4326008)(8936002)(41300700001)(70206006)(40460700003)(6916009)(70586007)(5660300002)(316002)(44832011)(8676002)(36756003)(2906002)(83380400001)(16526019)(36860700001)(82740400003)(2616005)(47076005)(1076003)(426003)(186003)(336012)(81166007)(356005)(36900700001);DIR:OUT;SFP:1101;
+X-Microsoft-Antispam-Message-Info: KsMHs34NouWeuFhcwzG5UaPofK1rrikCRZNks7nplfBzdIN7wuxbAhWkAl5Wnc6M97UOTS+J5As7KO3hUOYoBvZlsaEopaZxalwgCcx34o7Vpv6ebTGa9sWt3nxrKMwY1WKVz8/862QJvkAzVTUlMIDJM/H+SenqHLVCJZn9TYRMwvGv+bAx15D+7XlCZI/YXzKA6F48IfPLObMiKbmZPBzwY6H5YVk0SgldjnhUcMaF1V78pUOAJE90FiYXuWuY4ysb/al1RcJ3MlfMSFW+fPDLxSb2+YXAvHU288Z/O7pX3h68zYyOwAaEdPlF+AGPibXJiqgPMfQ7DCzOkbWXQgMb1AoSRb6weU0ZXtfCsPsfeoQn/6WNqdpcyFT334mCmlu4qaD4Bhjm3EXng2MQ/HGEKpK94oNgkmQr5YK/nQtIyQxD6CaFyPCsBQ++2HlXdxfFwEr7wbdJKt2zwKwxk5C0vM8z2cHjl6AOtrydWydqq3t6dPfZ1oXkDzXz1s4xXEFb1+PyjTzsxTKP2Q1YP9gUlg2QrcnrBAVsJnzneEUOrHxcmnuy44aVnm+cj1aUX7/QNzmPsKNxP8u55vElibNMwcvjLScXgx5pXqGr3oXOWNhPy8rea7OQdQ+V/Uj5F+kgNAWOA8LJT8785ZehShxZa1VauWd+6hpo3k7TJ7Y1EhWzefn88ayOPL7k058J3hTabPiRWuC0+cIjqJMSHspIRHYDhCMVkA/wrGNGF84=
+X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:PH7PR12MB6588.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230022)(4636009)(136003)(376002)(396003)(346002)(39860400002)(366004)(451199015)(66476007)(66946007)(66556008)(38100700002)(8676002)(4326008)(6512007)(36756003)(186003)(478600001)(26005)(83380400001)(53546011)(86362001)(6916009)(31696002)(7416002)(316002)(5660300002)(41300700001)(54906003)(2616005)(6506007)(2906002)(44832011)(8936002)(6666004)(6486002)(31686004)(45980500001)(43740500002);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0: =?utf-8?B?VG1VdnVaV01udG1WNEhlTjcyeXM5YUcxQ3JlSnhSaDBRdHl3VW9CUFRvODZn?=
+ =?utf-8?B?MG0wMGxpVkU5Z3cxM0JySXZQU29xdmE5OWcyYXEzaEt3ZWwvY1M4UFg3bUs0?=
+ =?utf-8?B?WFNjeUFxUWFIaFZhNnRJSlZXSFF2eE5EODVDYnJMN1lTNjZwU3dSdjVaTTRj?=
+ =?utf-8?B?ZC9yZEt3NjN2TmcwR0U3OG94R2hmbWNnVEVydHB6K0xqU1FEdEZIeXJBUFlM?=
+ =?utf-8?B?NTlGQ3BDTE4vVUNNMXR3WDQ2M0w1TTFRUURMK1ZUZUpwWjc2NHNtN2ZoWnNJ?=
+ =?utf-8?B?eDJRZjdpblJXdEtUMDVINDdNWTZ3MGlVdXU5bHl6OVRPZG5mb1RITWdiUDh0?=
+ =?utf-8?B?SWRxaFBmQ1h0TytIYWRuK3lUaEMxSTIyczZnNzRNMmR6SnZYb1ZXdU1sTDJ2?=
+ =?utf-8?B?QlFFTDRta1ZpWkJoZEo3RFNvbng2ZHlQLzYrWDlBWGpOK0R4VU1RSG5hOEpy?=
+ =?utf-8?B?OTV5M0dLbVFpbHFhVnNINHQ3WDVIS2tvUCt5azlZeUdiMGJUKytJUWZsa3dj?=
+ =?utf-8?B?SjkrNmdmMUF0MG5EVG1HZ1VYUGhGbktsK0NERlY2T3U4ckRXSkxFZTQyVEFi?=
+ =?utf-8?B?RXlMeWdJa3hRM3I1VlNtUGd5RTcycjNvSHdsNDdvTmxraFhRSTg0MWdWeE5r?=
+ =?utf-8?B?eHJzdnNZajVyYi8yU2tLbGh0MU9KVEVOWS9VK05TdUZ6aGVqYjBiWEJxNith?=
+ =?utf-8?B?UDVxYUN6cGkybVd6RGR6VlVtaHhITHFVOGR0RTVxSjJKSkYraXphdGd1ekY2?=
+ =?utf-8?B?V3BsZXNsOG5URE1XV3dNSmhjWkFHZ0loN2E4bU03OEp5T2tVTDNSR0pmLzJa?=
+ =?utf-8?B?MXJPMWZ2NDRqUnFPQTc1K1VwZ1dCdC9yNEZFVk1vQXRKNWNTZ1VycnQ2aDE4?=
+ =?utf-8?B?cG41UjhoM1M4ajE1UUloamh1bGhad24rT0xZQUl5ZVp1WDZ3N29KWEEzWCtZ?=
+ =?utf-8?B?SkRFM1JNUWxNNWVpeHY4akpBdzBiQTNNVVBFTzN1dVpYZmdFS3Y5K1VtcHk4?=
+ =?utf-8?B?QVhTTnh0ZVUrQTdsQ3pXQTRiWVo0U1lxNStUclhTMG9DRFZBU3lhVVlqbnMx?=
+ =?utf-8?B?RkdvTHh1NE45OHhIWmFSckM4cWZxbERmS3pQRmFSNElUWkhyeFpta1RHMVpM?=
+ =?utf-8?B?TmFINXVibjJPS2dYdXZOUVJaUGFYcWNoTXdiemZMS3l6VDZjdWE2VWN0ODVI?=
+ =?utf-8?B?Uk82WkR4SFM0SFlzdFhhZGltSk5LZjV5dlVKMHRxY3ZmWFUzbWJMY1RSNXEr?=
+ =?utf-8?B?TlNHSElMRnVXRU9icUMyRkJjckV2ZU9vSWUzM2Y0MzNKQlNlNTJsd2IrMHNq?=
+ =?utf-8?B?U3Byam5PYXJHNFNmYXpiSmkxSFpmWEQyR0RwQTFVRTVJMzA4aEZ1ZWUyWUhy?=
+ =?utf-8?B?NEp2cGl5QXpleWVUZlhiKy9zTjVOYXVJbnVtS3JVZWdXWTgzNUxrb055czFm?=
+ =?utf-8?B?Zk5HNm1vVy9OQisvOXdadDhJblFTV2ZGU1RkdXZkR0RycmxmajFTZkRScm5y?=
+ =?utf-8?B?WDY4MFZQTjN4bFQrR1RkTVFNanFRR255QXdmT290czZWWTlDOEI2ZytTUjhk?=
+ =?utf-8?B?ckRFL1lJZ0ZlTFhLZ2hwNkp0OGNGWUF3V1MvbHJ4a0txRnFBMmZRQTlHU0VC?=
+ =?utf-8?B?bjJNQU5kQlRMOUd3OXRtY2hQWWI1VVNqSGdXSEhBUS93enRIV0RaWGJmemxF?=
+ =?utf-8?B?UWJpM1hoSmg0ZHorUHppS29nTTBCWmRGZU1JS3JNVXVCTTNtZXN1c21tRVhK?=
+ =?utf-8?B?Tzd2TDlFb01wL0RUdHlHUVF6eStydjVWZVYvbXlCd1JTWFV6YmlXOW9JS0hx?=
+ =?utf-8?B?SklxU1UvUEx4UmQvVHZLLy9meU9xL0FMWE94M2NUS25ic2xNemJLOHNEZHFk?=
+ =?utf-8?B?K0VUNWNZSnRGSzFsbTFEcmRKWG9COEFxNit6UDY2VGljSkhLUy9zNVRPb0tZ?=
+ =?utf-8?B?bUhPa1pXWGRCZ0J0NGZsaktVdjlkWnZWaHQ0UHk3dUZoOUQ3dG9ubVREVUxF?=
+ =?utf-8?B?RjdQbjlRamRSYlliNXIrem1VVkxRdTFFcUN2RlY3cEtQdFVKQVZidndJdkY0?=
+ =?utf-8?B?dEQ0YmVVWFNJeG44SVhUaWVTQWE1TjdqVUZ4TUZRK253S1dQZ3NEcmlOY0li?=
+ =?utf-8?Q?BHaV9DjBr6j4/p0IJWNHmv2X/?=
 X-OriginatorOrg: amd.com
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 22 Nov 2022 08:04:36.5792
+X-MS-Exchange-CrossTenant-Network-Message-Id: fc9e5338-2843-43ab-af70-08dacc616b80
+X-MS-Exchange-CrossTenant-AuthSource: PH7PR12MB6588.namprd12.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 22 Nov 2022 08:13:23.4636
  (UTC)
-X-MS-Exchange-CrossTenant-Network-Message-Id: 4cdda74f-9b20-429a-bab7-08dacc6032c9
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
 X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
-X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=3dd8961f-e488-4e60-8e11-a82d994e183d;Ip=[165.204.84.17];Helo=[SATLEXMB04.amd.com]
-X-MS-Exchange-CrossTenant-AuthSource: CO1NAM11FT063.eop-nam11.prod.protection.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Anonymous
-X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: MW4PR12MB7430
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: 8319dpP7hw+x5x+u9W8Vr7pEaKXaySrQiok+epFJHSTM6y48z0u69wJUs87gd/LmqK5nmbcMc/4k85t3Rr2jCw==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: MW3PR12MB4443
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-Event group from different hw pmus does not make sense and thus perf
-has never allowed it. However, with recent rewrite that restriction
-has been inadvertently removed. Fix it.
+On 16-Nov-22 11:15 AM, Ravi Bangoria wrote:
+> On 15-Nov-22 10:37 PM, Ian Rogers wrote:
+>> On Tue, Nov 15, 2022 at 1:39 AM Ravi Bangoria <ravi.bangoria@amd.com> wrote:
+>>>
+>>> So far, only one pmu was allowed to be registered as core pmu and thus
+>>> IBS pmus were being registered as uncore. However, with the event context
+>>> rewrite, that limitation no longer exists and thus IBS pmus can also be
+>>> registered as core pmu. This makes IBS much more usable, for ex, user
+>>> will be able to do per-process precise monitoring on AMD:
+>>>
+>>> Before patch:
+>>>   $ sudo perf record -e cycles:pp ls
+>>>   Error:
+>>>   Invalid event (cycles:pp) in per-thread mode, enable system wide with '-a'
+>>>
+>>> After patch:
+>>>   $ sudo perf record -e cycles:pp ls
+>>>   [ perf record: Woken up 1 times to write data ]
+>>>   [ perf record: Captured and wrote 0.017 MB perf.data (33 samples) ]
+>>>
+>>> Signed-off-by: Ravi Bangoria <ravi.bangoria@amd.com>
+>>
+>> Acked-by: Ian Rogers <irogers@google.com>
+>>
+>> This is awesome!
+>> Ian
+> 
+> Thanks Ian.
+> 
+> Peter, can we push this along with rewrite patch?
 
-Fixes: bd2756811766 ("perf: Rewrite core context handling")
-Signed-off-by: Ravi Bangoria <ravi.bangoria@amd.com>
----
- kernel/events/core.c | 24 +++++++++++++++---------
- 1 file changed, 15 insertions(+), 9 deletions(-)
+Gentle Ping, Peter!
 
-diff --git a/kernel/events/core.c b/kernel/events/core.c
-index 5f262f91cd31..4ee866ef075d 100644
---- a/kernel/events/core.c
-+++ b/kernel/events/core.c
-@@ -12499,15 +12499,21 @@ SYSCALL_DEFINE5(perf_event_open,
- 			 * perf_event_pmu_context.
- 			 */
- 			pmu = group_leader->pmu_ctx->pmu;
--		} else if (!is_software_event(event) &&
--			is_software_event(group_leader) &&
--			(group_leader->group_caps & PERF_EV_CAP_SOFTWARE)) {
--			/*
--			 * In case the group is a pure software group, and we
--			 * try to add a hardware event, move the whole group to
--			 * the hardware context.
--			 */
--			move_group = 1;
-+		} else if (!is_software_event(event)) {
-+			if (is_software_event(group_leader) &&
-+			    (group_leader->group_caps & PERF_EV_CAP_SOFTWARE)) {
-+				/*
-+				 * In case the group is a pure software group, and we
-+				 * try to add a hardware event, move the whole group to
-+				 * the hardware context.
-+				 */
-+				move_group = 1;
-+			}
-+
-+			/* Don't allow group of multiple hw events from different pmus */
-+			if (!in_software_context(group_leader) &&
-+			    group_leader->pmu_ctx->pmu != pmu)
-+				goto err_locked;
- 		}
- 	}
- 
--- 
-2.38.1
-
+Thanks,
+Ravi
