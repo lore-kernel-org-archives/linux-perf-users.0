@@ -2,1585 +2,179 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0E02DC4332F
-	for <linux-perf-users@archiver.kernel.org>; Mon, 21 Nov 2022 21:17:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EC701C4332F
+	for <linux-perf-users@archiver.kernel.org>; Tue, 22 Nov 2022 04:48:57 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231174AbiKUVRg (ORCPT
+        id S230070AbiKVEs4 (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Mon, 21 Nov 2022 16:17:36 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42042 "EHLO
+        Mon, 21 Nov 2022 23:48:56 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57768 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231325AbiKUVRb (ORCPT
+        with ESMTP id S229585AbiKVEsx (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Mon, 21 Nov 2022 16:17:31 -0500
-Received: from mail-wr1-x433.google.com (mail-wr1-x433.google.com [IPv6:2a00:1450:4864:20::433])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9AA98B31
-        for <linux-perf-users@vger.kernel.org>; Mon, 21 Nov 2022 13:17:27 -0800 (PST)
-Received: by mail-wr1-x433.google.com with SMTP id z4so7140863wrr.3
-        for <linux-perf-users@vger.kernel.org>; Mon, 21 Nov 2022 13:17:27 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20210112;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=y5Ekfx+cFv0QTzsPFN7bYPU5/zvfZbDd29UesdozCrg=;
-        b=hDb5s7WdM3dF/sHkGqa48Z6FA7c6Ke/hhfhcLIalOYDcMqjV3JM3ZVnOtG6nwoF4aD
-         xMrAdZR3SNzn7Xcko87rcpOlOOAckidjqqCBBCt7Fycdyqjd0OfYC4yY+KRhAifrFzUT
-         dGL519H+P5dBM58y2UgCKz9O+VTnr5EboQCOQvJ5Fjmq51YJHxxBLOJd7uvDi5wAmEJO
-         Ux9l6at7+P96nZxuc22Lsl8rkrlUdnZrhxkVKGdXzXZrJqmxSLxSnvrRjFfwGnr2V6i4
-         lqDlFqn8Hf4IWSRZb5+haP7pMyTl5/4nLUq9wu0fZ2vqTKfcOtEHrp55rmZ4aMYt6GSN
-         ZksA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=y5Ekfx+cFv0QTzsPFN7bYPU5/zvfZbDd29UesdozCrg=;
-        b=RH0uOMJtySAj0DubG5QrRKKNMpr18FMd1RUzBIbBx8fL1X8MwUgm8PV/wZqsJWVB31
-         Ggh7m740zNKksV474r2b94M+8gC9hoR6mBjy7xoB/p0VIKMgz+TwiGPfTWTdFyBhZi3K
-         IDJJubCswcr3mZWUIuAi6eMW5RT4OKXGQ9XLMRdBc4IM/bZNBzM1Ha/P1NQ57ad6mtD1
-         IRZZo1UPDpizo2V5nLZnuq0JryuSxDoxL++AohgMwh3Vh16JfKQlGTUuBlV2vCoW4UAv
-         Y9DDgGJM/sNbz0x/aE042eJX5GM6DyLkO9pAunPFx9Hn35RBbsQhPFocJkPIqjEPCVjZ
-         g3rw==
-X-Gm-Message-State: ANoB5pmT/1uuSPEdwYh/Qxxm1tLUVi5QCx4Z6sOFe1spphmdKucgW2Ps
-        /L+V6OqqXOkHwRk4wGdi9Ezgfbs879isUnxGZ9RL4w==
-X-Google-Smtp-Source: AA0mqf6b4s9JdloqQbs+84SgSruGvWZvnqVumYjQMF74kcMtEkYrQGjhq8rcfj/siHYcV9kPcsoN1ZGsSHi6gMc2+Ic=
-X-Received: by 2002:adf:f944:0:b0:236:8f54:f1f4 with SMTP id
- q4-20020adff944000000b002368f54f1f4mr12387736wrr.654.1669065445068; Mon, 21
- Nov 2022 13:17:25 -0800 (PST)
+        Mon, 21 Nov 2022 23:48:53 -0500
+Received: from NAM04-BN8-obe.outbound.protection.outlook.com (mail-bn8nam04on2067.outbound.protection.outlook.com [40.107.100.67])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id ADD4C27B12
+        for <linux-perf-users@vger.kernel.org>; Mon, 21 Nov 2022 20:48:51 -0800 (PST)
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=ImWMKEo8VX0AjJSqgskcZ0n0j7+lmXeGSJYfmfGoMLKCcQlvzYS4Kpqckvzpjox4Bn8xPPvUsFg15+zneXCY6TFrGIFJzF6FmIfs/yep9wJMxhlmggCOPTvulwOl0RoBYdZeIdHkkFRFu7g5cctii5OpA7mgkUB+yf85XCwHABNLCOSJWhuRoEreYzqwAvlMMJRa4BNqwKdF/bEILuFFDLbQjURfD1uHf+DQQzXZrwLuUcdSjq/GIFn9uA4fW7ThMvHeEThzjAyFu6COyrkwz6jYYo73oJ0bVdI8bWgReMuFAk8bs0QecXkfkUPH1nRQGnGilbEtXf4RMC5i0rUDKQ==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=RHLBReUG/BNlv1D7p4a+dAv5ntd2GYNi1j+jEBr49S0=;
+ b=aaJkv85IcsoO3imFAeVP5IN0ozh1SjtVNCnqvPCPfiW6gTA8iW8IlHYfRGxxD9WC9eVeyEvpFSswKYq8Hk7lqByodALnfH0nhEvYNlxMsh/EB00O+GIn/oyJvB3wXUkGxG/zcqNN1GtlzJBnpu7PriWjfgCSAkWtWDJFw4YP68pkJ2EK9gaAn8B6MkH2VrzHxvysW/6r0hHGVgmfpDQUntfDTJyP8fpxZ1j9xexNE9nYqlJcLiSjoOvbRn1i/7rACzS7LVKUTfJ/03lHky/EQ/Z7QBDPhpQN6BOV5UM8abeheGHNZiA2Tt9U0TAMO336j12T9INypLsBPRlubAU53g==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=amd.com; dmarc=pass action=none header.from=amd.com; dkim=pass
+ header.d=amd.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=RHLBReUG/BNlv1D7p4a+dAv5ntd2GYNi1j+jEBr49S0=;
+ b=e8Ci1QIZlEQbel/+O0H5XVav8vcidOv0wTOgOty0/1D24bhD53WLmb0mTyeFiQe6PJeM80OIJIRzmYu4NqhgBw3t2adLMTHSffIeb6zdj29bqxThAB97FCCwKlggmH6b2ux+gkwM8Xj/PY1/JUObSTWJeqdEXQCB0ZEoVPxbStg=
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=amd.com;
+Received: from PH7PR12MB5712.namprd12.prod.outlook.com (2603:10b6:510:1e3::13)
+ by CH3PR12MB7547.namprd12.prod.outlook.com (2603:10b6:610:147::5) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.5834.15; Tue, 22 Nov
+ 2022 04:48:49 +0000
+Received: from PH7PR12MB5712.namprd12.prod.outlook.com
+ ([fe80::5593:9517:a2e9:1b6b]) by PH7PR12MB5712.namprd12.prod.outlook.com
+ ([fe80::5593:9517:a2e9:1b6b%7]) with mapi id 15.20.5834.009; Tue, 22 Nov 2022
+ 04:48:49 +0000
+Message-ID: <0ecb09b3-5a72-6bac-0236-8807bbacf702@amd.com>
+Date:   Tue, 22 Nov 2022 10:18:37 +0530
+User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:102.0) Gecko/20100101
+ Thunderbird/102.5.0
+Subject: Re: AMD -missing perf stat metricgroup "pipeline"
+Content-Language: en-US
+To:     Jirka Hladky <jhladky@redhat.com>
+Cc:     linux-perf-users@vger.kernel.org, ravi.bangoria@amd.com,
+        ananth.narayan@amd.com
+References: <CAE4VaGDR+p-KDK6WNnzp5go4r_3Q-OtjR_J2_NpgFcwL8O8KiA@mail.gmail.com>
+From:   Sandipan Das <sandipan.das@amd.com>
+In-Reply-To: <CAE4VaGDR+p-KDK6WNnzp5go4r_3Q-OtjR_J2_NpgFcwL8O8KiA@mail.gmail.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: PN2PR01CA0113.INDPRD01.PROD.OUTLOOK.COM
+ (2603:1096:c01:27::28) To PH7PR12MB5712.namprd12.prod.outlook.com
+ (2603:10b6:510:1e3::13)
 MIME-Version: 1.0
-References: <20221121082058.64578-1-zhengjun.xing@linux.intel.com>
-In-Reply-To: <20221121082058.64578-1-zhengjun.xing@linux.intel.com>
-From:   Ian Rogers <irogers@google.com>
-Date:   Mon, 21 Nov 2022 13:17:12 -0800
-Message-ID: <CAP-5=fUQUe0UvLhaSBnm-dAPHc3_k8vZWNxhZajg8mg6R8og0g@mail.gmail.com>
-Subject: Re: [PATCH v2 1/5] perf vendor events intel: Add core event list for Alderlake-N
-To:     zhengjun.xing@linux.intel.com
-Cc:     acme@kernel.org, peterz@infradead.org, mingo@redhat.com,
-        alexander.shishkin@intel.com, jolsa@kernel.org,
-        namhyung@kernel.org, linux-kernel@vger.kernel.org,
-        linux-perf-users@vger.kernel.org, ak@linux.intel.com,
-        kan.liang@linux.intel.com
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: PH7PR12MB5712:EE_|CH3PR12MB7547:EE_
+X-MS-Office365-Filtering-Correlation-Id: 6cbece3d-8eaf-4c2c-8990-08dacc44d892
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info: 2dmgjGo629+GKe/NnBRxJrQh4cO1TVBQEa0IzbmYb+vmNLKClTEeS0kD3ohI1A0jNQwPu7QpVJ74ZhbsK/XIxmOZvGAO4A1T9ViykEj6KC/Ul1DrHFCWPiXqFEMUMN5nosOQJay/IPcI5+v18LH1fV0rB+ZzHflgyCzSxygnMkm9tYv9qms1MwAysnQoo6yM+et2toUX7VJbYh6eOzbttwXJTnnZ5h/km4PYL/ySycQI0cOR+JA6xWkzL1UjzfE03vXs3giLIjYJWcknNZYr2rLLUty3Lj0Hh3LrxHz8KLkL1CqH+peU9osRiCOabH2MHuvTHh5zLscomgcXLWeaKxFLPI0+210sHNwofia7TpLl8d8teGAjlECdLwNNH15JrPFGKr/TfLFST2JyAD1LVD1MLp2KRyixAVoGuL0LexXsY1A+rWSvOo1tFSVicfgse5GKQaV0i3SaxLgMU++hbkS8cZkEbIDzpTBgDMp+XTZ+L/q54fh5QR5hnHl93GyAfeLBNmlyf/Vd1b25NBcdFeH1SsOgXHZiaeooStT9nRWhjytKK1ii2abIkNk1HYPByaKVzhW1cOPreCdbx1ozfbB8CJ3AIqM1ywlc0KqEOi6hcEaBqm2UCdrxl1zybEMQ/1tQhi3z9T6XHjxL9rg5qQVynEgJNaSpYMqF2ZnOzSKqftL0g0UZ22XkRDCLRuMFeXazpkm73SAFScAY+SWlJobtFffuo22LPcKMIaqQ14nh7AXfgkAJwj65w4g9oBtp
+X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:PH7PR12MB5712.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230022)(4636009)(39860400002)(366004)(376002)(136003)(346002)(396003)(451199015)(41300700001)(8936002)(4326008)(316002)(6916009)(5660300002)(66556008)(66476007)(66946007)(31686004)(8676002)(44832011)(2906002)(478600001)(2616005)(36756003)(53546011)(966005)(6666004)(6512007)(6486002)(6506007)(186003)(26005)(38100700002)(86362001)(31696002)(45980500001)(43740500002);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0: =?utf-8?B?UUJNU056b1FIMklaTCs4TmdhYWpKL0lIZ3VXR1c4M0dTOURKSHRsNTJZRHJz?=
+ =?utf-8?B?Nmt1dnNxNWxkY2pzRFpqTW5wNWNyTUxSYlNZUTBMemgzV2FUMk1TQ1orZ3Rt?=
+ =?utf-8?B?cWdKVXAvaFlLSGdQa3R3bGVPd0V3ditvdUNUWWwxNFFtMG9IR05EV2FOa1VP?=
+ =?utf-8?B?TXBuOWVtMHRvOVdPN0MrRzcyMWVLc05TTnhEUWd1MnRNaUpBT1F3L2NFYmF5?=
+ =?utf-8?B?UjdrRDc0WG5MZkQwTVJuai82OVhHQndtMzVvY3pqUVN0VEVaWVZCck1Zdmpy?=
+ =?utf-8?B?VW5nN2JSWDNmbXBzbHBuMktMRS9OQlJsSDZ2UFpQTExwVkFwZUxtTnl4Z3lT?=
+ =?utf-8?B?WFFGVFphZExWaGkwNlRWRGYzMFNGL1pONGdNbjRiU2pZcm9VWlNnQWduTGIy?=
+ =?utf-8?B?ZkZTYks3L05hVENmM2pYOWkweGJNd2ZhR3YyMHd6Mkdyb0dKSVJ5US9EZTlG?=
+ =?utf-8?B?RUh6WGFiR0JvZDA2WU1TUWtQKzNCNm5uM0FyaWlpclkzejJZWWZobHlDa2Ni?=
+ =?utf-8?B?dWtMeVoxNUZlSUdCbzI3d0hzK3dNN2E4L09aVHI5ZzhvU3NSSlF4dTFwM3l4?=
+ =?utf-8?B?bUx2NkloUmppdXo1QjQ0aThVMThVdWZCbzhURGR5VlY5dGl2eklxT0o1blpZ?=
+ =?utf-8?B?My9IYVJVNGtRTHQ0QndJZkZSYVhHQ3ErYzZUSklFTVMvcXpvZFhZbFZlbnJx?=
+ =?utf-8?B?eEsrcmpVOWRVOVlsMWRncEVqSjNPVzJ5YVNDTWQyUFpIRU5EeUM1T3FYNGFi?=
+ =?utf-8?B?alFUb1JleDBJVnQydkQxRG1VK1pMOW91U2R1dERuZS92bUd1bzR5aGJqNGlX?=
+ =?utf-8?B?SWd3UE5QUTB2dXMvYkU2M3h0RU5heGdndFFreWlIdlBoU3Fzc1lGcTZLYWg0?=
+ =?utf-8?B?NWtDVGVWOGszc0lzcE9KZ1BMd0RlT1lnMHJsZlhCbldZRWpZbk5jdWt0cXBS?=
+ =?utf-8?B?MHFPQ0F3LzdrV0tVRXNITVVqZmNCL2F5Nm5HdnFzd0czdFJ1RjVzUC9uaU52?=
+ =?utf-8?B?dnd1YmtGUXBUKzJZbzBmYTAyNXNWckdMVkpXaThkcnYzYm9Ba1hNRjBRT3JQ?=
+ =?utf-8?B?VVpUalJGVVpPMzdQUjZ0TStJRzcvNlJISW95d2xCdHoxcjZWaiswc0ZqYXNy?=
+ =?utf-8?B?bnFRSFdjYWx1RDVlWEt5L2pFSCtiQ0pMSlgwWGVKUnZCSGRLY3NMei9xL25X?=
+ =?utf-8?B?OUxpOGNzelEyazNMQ0JKYUhKTzFCSnFhWWlWaTJKMWtFSlQ5WXlXSm1HNmZE?=
+ =?utf-8?B?SldsbjZvL2NLWnN6RGM0aGhZZ2c1c3Q1ZXhtcGZIMHhVZXZKZitOM0RzWEF0?=
+ =?utf-8?B?TTAxdW1IZEJhcEdyQXdONlNheXp3ckEwd2FSNDdFN2lUcjdJRmVHSXBhc2k1?=
+ =?utf-8?B?N0k2bmhpWWk2K0hZakZYUUdkNEtnWWZMRHJUOEFLdjRyNitQdFlCc29USVkx?=
+ =?utf-8?B?QTJWeG9wTENLaUlqNXpmRFJONSswb1JqYzlBU0poSXZnd1owYmZxSmZpQnN5?=
+ =?utf-8?B?cXZqaHBXRWc3OWxEc1ZLNmRnT1BSTDAzSjU2c1czYmhmUDVZd0l5UWpVQ1NF?=
+ =?utf-8?B?UE4zcms0VEFRdVZSVDZZUkRXbmR4K1AxQ0xIUXEyVm5iUTRwa1lLenVIMlRr?=
+ =?utf-8?B?THd6Z0VzVHlDOTAxTFJNMTZrNU1iUGZwNmk3cEdRYWdkc3BWSWRqYlErYmpm?=
+ =?utf-8?B?aGFwbkxnZWVOWGZZTkN4Syt4b3o4aEpCSm5jTnIxTjA1aEV1ZGoxWkJrb2Z4?=
+ =?utf-8?B?S3QvYWFvOXRYcElVRHVZRFdlaTVQY0EwbGVJUWx5MFRYc0VRVVdhRXpVUGZ4?=
+ =?utf-8?B?WkdoeTFvZ2JPa1NiejJLWGFaYm1QRko3U2dUSTNLQkk2WXBxS0dyOU42Tjg4?=
+ =?utf-8?B?Z0lJUklZNkEyZHM4RlNGM05XQzZZZnNRNXMrNDNrVnF1UERLQlVxSnpEZ3BI?=
+ =?utf-8?B?aGFDRnU5YUQvTVRKVDZzblpiT3lHL0lnaW43bVVWeXNaYVkzcjExZjBYUFVD?=
+ =?utf-8?B?T1Y5YXQ0YlZxUmJIeEdhWkZHWTdEWENQYTBIN0U1MkVEU0FlTzJBYy81ZGQv?=
+ =?utf-8?B?MlZPSjdiTzNJSFQ4QTV2VDR1U0UyeGZWWEhDeFNhdEN1ejlrVWZyUkFBcW9X?=
+ =?utf-8?Q?oO+GxkCKC+yCsO/bT866IAstG?=
+X-OriginatorOrg: amd.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 6cbece3d-8eaf-4c2c-8990-08dacc44d892
+X-MS-Exchange-CrossTenant-AuthSource: PH7PR12MB5712.namprd12.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 22 Nov 2022 04:48:49.3420
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: ljn3HZiuWerfEai5tDPDTXDTmNrY9mf4/uCZeV4AAhpwc0NSrt+A2/EuhIyhn/kINXn6mNt6YOGJ84BJUZjEaQ==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: CH3PR12MB7547
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-On Mon, Nov 21, 2022 at 12:19 AM <zhengjun.xing@linux.intel.com> wrote:
->
-> From: Zhengjun Xing <zhengjun.xing@linux.intel.com>
->
-> Alderlake-N only has E-core, it has been moved to non-hybrid code path on
-> the kernel side. Add core event list for Alderlake-N, it is based on the
-> ADL gracemont v1.16 JSON file.
->
-> https://github.com/intel/perfmon/tree/main/ADL/events/
->
-> Signed-off-by: Zhengjun Xing <zhengjun.xing@linux.intel.com>
-> Reviewed-by: Kan Liang <kan.liang@linux.intel.com>
+Hi,
 
-Acked-by: Ian Rogers <irogers@google.com>
+On 11/21/2022 7:33 PM, Jirka Hladky wrote:
+> 
+> I'm testing AVX-512 packed double performance on the AMD Zen4
+> platform, and I need help identifying the backend-bound workloads. On
+> Intel systems, I use the metricgroup pipeline:
+> 
+> perf stat -M pipeline binary
+> 
+> which gives me exactly what I need.
+> 
+> What plans are to add a similar metric group for the AMD systems?
+> 
 
-Looks good! Could you add the Alderlake-N patch to create_perf_json.py
-to github?
+For determining if a workload is backend-bound, the recommended
+method on Zen 4 is to use the pipeline utilization metrics. We are
+the process of providing similar metrics and metric groups through
+the perf JSON event files for Zen 4 and they will be out very soon.
 
-Thanks,
-Ian
+The Processor Programming Reference (PPR) for Zen 4 based parts
+has a table titled "Guidance for Pipeline Utilization Statistics"
+which has the formulae for different Level 1 and 2 pipeline
+utilization metrics.
 
-> ---
-> Change log:
->   v2:
->     * Regenerate the core event list with the new converter scripts.
->       (https://github.com/intel/perfmon/pull/32 and add the ADL-N fix)
->
->  .../pmu-events/arch/x86/alderlaken/cache.json | 330 +++++++++++
->  .../arch/x86/alderlaken/floating-point.json   |  18 +
->  .../arch/x86/alderlaken/frontend.json         |  26 +
->  .../arch/x86/alderlaken/memory.json           |  81 +++
->  .../pmu-events/arch/x86/alderlaken/other.json |  38 ++
->  .../arch/x86/alderlaken/pipeline.json         | 533 ++++++++++++++++++
->  .../arch/x86/alderlaken/virtual-memory.json   |  47 ++
->  7 files changed, 1073 insertions(+)
->  create mode 100644 tools/perf/pmu-events/arch/x86/alderlaken/cache.json
->  create mode 100644 tools/perf/pmu-events/arch/x86/alderlaken/floating-po=
-int.json
->  create mode 100644 tools/perf/pmu-events/arch/x86/alderlaken/frontend.js=
-on
->  create mode 100644 tools/perf/pmu-events/arch/x86/alderlaken/memory.json
->  create mode 100644 tools/perf/pmu-events/arch/x86/alderlaken/other.json
->  create mode 100644 tools/perf/pmu-events/arch/x86/alderlaken/pipeline.js=
-on
->  create mode 100644 tools/perf/pmu-events/arch/x86/alderlaken/virtual-mem=
-ory.json
->
-> diff --git a/tools/perf/pmu-events/arch/x86/alderlaken/cache.json b/tools=
-/perf/pmu-events/arch/x86/alderlaken/cache.json
-> new file mode 100644
-> index 000000000000..043445ae14a8
-> --- /dev/null
-> +++ b/tools/perf/pmu-events/arch/x86/alderlaken/cache.json
-> @@ -0,0 +1,330 @@
-> +[
-> +    {
-> +        "BriefDescription": "Counts the number of cacheable memory reque=
-sts that miss in the LLC. Counts on a per core basis.",
-> +        "EventCode": "0x2e",
-> +        "EventName": "LONGEST_LAT_CACHE.MISS",
-> +        "PublicDescription": "Counts the number of cacheable memory requ=
-ests that miss in the Last Level Cache (LLC). Requests include demand loads=
-, reads for ownership (RFO), instruction fetches and L1 HW prefetches. If t=
-he platform has an L3 cache, the LLC is the L3 cache, otherwise it is the L=
-2 cache. Counts on a per core basis.",
-> +        "SampleAfterValue": "200003",
-> +        "UMask": "0x41"
-> +    },
-> +    {
-> +        "BriefDescription": "Counts the number of cacheable memory reque=
-sts that access the LLC. Counts on a per core basis.",
-> +        "EventCode": "0x2e",
-> +        "EventName": "LONGEST_LAT_CACHE.REFERENCE",
-> +        "PublicDescription": "Counts the number of cacheable memory requ=
-ests that access the Last Level Cache (LLC). Requests include demand loads,=
- reads for ownership (RFO), instruction fetches and L1 HW prefetches. If th=
-e platform has an L3 cache, the LLC is the L3 cache, otherwise it is the L2=
- cache. Counts on a per core basis.",
-> +        "SampleAfterValue": "200003",
-> +        "UMask": "0x4f"
-> +    },
-> +    {
-> +        "BriefDescription": "Counts the number of cycles the core is sta=
-lled due to an instruction cache or TLB miss which hit in the L2, LLC, DRAM=
- or MMIO (Non-DRAM).",
-> +        "EventCode": "0x34",
-> +        "EventName": "MEM_BOUND_STALLS.IFETCH",
-> +        "PublicDescription": "Counts the number of cycles the core is st=
-alled due to an instruction cache or translation lookaside buffer (TLB) mis=
-s which hit in the L2, LLC, DRAM or MMIO (Non-DRAM).",
-> +        "SampleAfterValue": "200003",
-> +        "UMask": "0x38"
-> +    },
-> +    {
-> +        "BriefDescription": "Counts the number of cycles the core is sta=
-lled due to an instruction cache or TLB miss which hit in DRAM or MMIO (Non=
--DRAM).",
-> +        "EventCode": "0x34",
-> +        "EventName": "MEM_BOUND_STALLS.IFETCH_DRAM_HIT",
-> +        "PublicDescription": "Counts the number of cycles the core is st=
-alled due to an instruction cache or translation lookaside buffer (TLB) mis=
-s which hit in DRAM or MMIO (non-DRAM).",
-> +        "SampleAfterValue": "200003",
-> +        "UMask": "0x20"
-> +    },
-> +    {
-> +        "BriefDescription": "Counts the number of cycles the core is sta=
-lled due to an instruction cache or TLB miss which hit in the L2 cache.",
-> +        "EventCode": "0x34",
-> +        "EventName": "MEM_BOUND_STALLS.IFETCH_L2_HIT",
-> +        "PublicDescription": "Counts the number of cycles the core is st=
-alled due to an instruction cache or Translation Lookaside Buffer (TLB) mis=
-s which hit in the L2 cache.",
-> +        "SampleAfterValue": "200003",
-> +        "UMask": "0x8"
-> +    },
-> +    {
-> +        "BriefDescription": "Counts the number of cycles the core is sta=
-lled due to an instruction cache or TLB miss which hit in the LLC or other =
-core with HITE/F/M.",
-> +        "EventCode": "0x34",
-> +        "EventName": "MEM_BOUND_STALLS.IFETCH_LLC_HIT",
-> +        "PublicDescription": "Counts the number of cycles the core is st=
-alled due to an instruction cache or Translation Lookaside Buffer (TLB) mis=
-s which hit in the Last Level Cache (LLC) or other core with HITE/F/M.",
-> +        "SampleAfterValue": "200003",
-> +        "UMask": "0x10"
-> +    },
-> +    {
-> +        "BriefDescription": "Counts the number of cycles the core is sta=
-lled due to a demand load miss which hit in the L2, LLC, DRAM or MMIO (Non-=
-DRAM).",
-> +        "EventCode": "0x34",
-> +        "EventName": "MEM_BOUND_STALLS.LOAD",
-> +        "SampleAfterValue": "200003",
-> +        "UMask": "0x7"
-> +    },
-> +    {
-> +        "BriefDescription": "Counts the number of cycles the core is sta=
-lled due to a demand load miss which hit in DRAM or MMIO (Non-DRAM).",
-> +        "EventCode": "0x34",
-> +        "EventName": "MEM_BOUND_STALLS.LOAD_DRAM_HIT",
-> +        "SampleAfterValue": "200003",
-> +        "UMask": "0x4"
-> +    },
-> +    {
-> +        "BriefDescription": "Counts the number of cycles the core is sta=
-lled due to a demand load which hit in the L2 cache.",
-> +        "EventCode": "0x34",
-> +        "EventName": "MEM_BOUND_STALLS.LOAD_L2_HIT",
-> +        "SampleAfterValue": "200003",
-> +        "UMask": "0x1"
-> +    },
-> +    {
-> +        "BriefDescription": "Counts the number of cycles the core is sta=
-lled due to a demand load which hit in the LLC or other core with HITE/F/M.=
-",
-> +        "EventCode": "0x34",
-> +        "EventName": "MEM_BOUND_STALLS.LOAD_LLC_HIT",
-> +        "PublicDescription": "Counts the number of cycles the core is st=
-alled due to a demand load which hit in the Last Level Cache (LLC) or other=
- core with HITE/F/M.",
-> +        "SampleAfterValue": "200003",
-> +        "UMask": "0x2"
-> +    },
-> +    {
-> +        "BriefDescription": "Counts the number of load uops retired that=
- hit in DRAM.",
-> +        "Data_LA": "1",
-> +        "EventCode": "0xd1",
-> +        "EventName": "MEM_LOAD_UOPS_RETIRED.DRAM_HIT",
-> +        "PEBS": "1",
-> +        "SampleAfterValue": "200003",
-> +        "UMask": "0x80"
-> +    },
-> +    {
-> +        "BriefDescription": "Counts the number of load uops retired that=
- hit in the L2 cache.",
-> +        "Data_LA": "1",
-> +        "EventCode": "0xd1",
-> +        "EventName": "MEM_LOAD_UOPS_RETIRED.L2_HIT",
-> +        "PEBS": "1",
-> +        "SampleAfterValue": "200003",
-> +        "UMask": "0x2"
-> +    },
-> +    {
-> +        "BriefDescription": "Counts the number of load uops retired that=
- hit in the L3 cache.",
-> +        "Data_LA": "1",
-> +        "EventCode": "0xd1",
-> +        "EventName": "MEM_LOAD_UOPS_RETIRED.L3_HIT",
-> +        "PEBS": "1",
-> +        "SampleAfterValue": "200003",
-> +        "UMask": "0x4"
-> +    },
-> +    {
-> +        "BriefDescription": "Counts the number of cycles that uops are b=
-locked for any of the following reasons:  load buffer, store buffer or RSV =
-full.",
-> +        "EventCode": "0x04",
-> +        "EventName": "MEM_SCHEDULER_BLOCK.ALL",
-> +        "SampleAfterValue": "20003",
-> +        "UMask": "0x7"
-> +    },
-> +    {
-> +        "BriefDescription": "Counts the number of cycles that uops are b=
-locked due to a load buffer full condition.",
-> +        "EventCode": "0x04",
-> +        "EventName": "MEM_SCHEDULER_BLOCK.LD_BUF",
-> +        "SampleAfterValue": "20003",
-> +        "UMask": "0x2"
-> +    },
-> +    {
-> +        "BriefDescription": "Counts the number of cycles that uops are b=
-locked due to an RSV full condition.",
-> +        "EventCode": "0x04",
-> +        "EventName": "MEM_SCHEDULER_BLOCK.RSV",
-> +        "SampleAfterValue": "20003",
-> +        "UMask": "0x4"
-> +    },
-> +    {
-> +        "BriefDescription": "Counts the number of cycles that uops are b=
-locked due to a store buffer full condition.",
-> +        "EventCode": "0x04",
-> +        "EventName": "MEM_SCHEDULER_BLOCK.ST_BUF",
-> +        "SampleAfterValue": "20003",
-> +        "UMask": "0x1"
-> +    },
-> +    {
-> +        "BriefDescription": "Counts the number of load uops retired.",
-> +        "Data_LA": "1",
-> +        "EventCode": "0xd0",
-> +        "EventName": "MEM_UOPS_RETIRED.ALL_LOADS",
-> +        "PEBS": "1",
-> +        "PublicDescription": "Counts the total number of load uops retir=
-ed.",
-> +        "SampleAfterValue": "200003",
-> +        "UMask": "0x81"
-> +    },
-> +    {
-> +        "BriefDescription": "Counts the number of store uops retired.",
-> +        "Data_LA": "1",
-> +        "EventCode": "0xd0",
-> +        "EventName": "MEM_UOPS_RETIRED.ALL_STORES",
-> +        "PEBS": "1",
-> +        "PublicDescription": "Counts the total number of store uops reti=
-red.",
-> +        "SampleAfterValue": "200003",
-> +        "UMask": "0x82"
-> +    },
-> +    {
-> +        "BriefDescription": "Counts the number of tagged loads with an i=
-nstruction latency that exceeds or equals the threshold of 128 cycles as de=
-fined in MEC_CR_PEBS_LD_LAT_THRESHOLD (3F6H). Only counts with PEBS enabled=
-.",
-> +        "Data_LA": "1",
-> +        "EventCode": "0xd0",
-> +        "EventName": "MEM_UOPS_RETIRED.LOAD_LATENCY_GT_128",
-> +        "MSRIndex": "0x3F6",
-> +        "MSRValue": "0x80",
-> +        "PEBS": "2",
-> +        "PublicDescription": "Counts the number of tagged loads with an =
-instruction latency that exceeds or equals the threshold of 128 cycles as d=
-efined in MEC_CR_PEBS_LD_LAT_THRESHOLD (3F6H). Only counts with PEBS enable=
-d. If a PEBS record is generated, will populate the PEBS Latency and PEBS D=
-ata Source fields accordingly.",
-> +        "SampleAfterValue": "1000003",
-> +        "UMask": "0x5"
-> +    },
-> +    {
-> +        "BriefDescription": "Counts the number of tagged loads with an i=
-nstruction latency that exceeds or equals the threshold of 16 cycles as def=
-ined in MEC_CR_PEBS_LD_LAT_THRESHOLD (3F6H). Only counts with PEBS enabled.=
-",
-> +        "Data_LA": "1",
-> +        "EventCode": "0xd0",
-> +        "EventName": "MEM_UOPS_RETIRED.LOAD_LATENCY_GT_16",
-> +        "MSRIndex": "0x3F6",
-> +        "MSRValue": "0x10",
-> +        "PEBS": "2",
-> +        "PublicDescription": "Counts the number of tagged loads with an =
-instruction latency that exceeds or equals the threshold of 16 cycles as de=
-fined in MEC_CR_PEBS_LD_LAT_THRESHOLD (3F6H). Only counts with PEBS enabled=
-. If a PEBS record is generated, will populate the PEBS Latency and PEBS Da=
-ta Source fields accordingly.",
-> +        "SampleAfterValue": "1000003",
-> +        "UMask": "0x5"
-> +    },
-> +    {
-> +        "BriefDescription": "Counts the number of tagged loads with an i=
-nstruction latency that exceeds or equals the threshold of 256 cycles as de=
-fined in MEC_CR_PEBS_LD_LAT_THRESHOLD (3F6H). Only counts with PEBS enabled=
-.",
-> +        "Data_LA": "1",
-> +        "EventCode": "0xd0",
-> +        "EventName": "MEM_UOPS_RETIRED.LOAD_LATENCY_GT_256",
-> +        "MSRIndex": "0x3F6",
-> +        "MSRValue": "0x100",
-> +        "PEBS": "2",
-> +        "PublicDescription": "Counts the number of tagged loads with an =
-instruction latency that exceeds or equals the threshold of 256 cycles as d=
-efined in MEC_CR_PEBS_LD_LAT_THRESHOLD (3F6H). Only counts with PEBS enable=
-d. If a PEBS record is generated, will populate the PEBS Latency and PEBS D=
-ata Source fields accordingly.",
-> +        "SampleAfterValue": "1000003",
-> +        "UMask": "0x5"
-> +    },
-> +    {
-> +        "BriefDescription": "Counts the number of tagged loads with an i=
-nstruction latency that exceeds or equals the threshold of 32 cycles as def=
-ined in MEC_CR_PEBS_LD_LAT_THRESHOLD (3F6H). Only counts with PEBS enabled.=
-",
-> +        "Data_LA": "1",
-> +        "EventCode": "0xd0",
-> +        "EventName": "MEM_UOPS_RETIRED.LOAD_LATENCY_GT_32",
-> +        "MSRIndex": "0x3F6",
-> +        "MSRValue": "0x20",
-> +        "PEBS": "2",
-> +        "PublicDescription": "Counts the number of tagged loads with an =
-instruction latency that exceeds or equals the threshold of 32 cycles as de=
-fined in MEC_CR_PEBS_LD_LAT_THRESHOLD (3F6H). Only counts with PEBS enabled=
-. If a PEBS record is generated, will populate the PEBS Latency and PEBS Da=
-ta Source fields accordingly.",
-> +        "SampleAfterValue": "1000003",
-> +        "UMask": "0x5"
-> +    },
-> +    {
-> +        "BriefDescription": "Counts the number of tagged loads with an i=
-nstruction latency that exceeds or equals the threshold of 4 cycles as defi=
-ned in MEC_CR_PEBS_LD_LAT_THRESHOLD (3F6H). Only counts with PEBS enabled."=
-,
-> +        "Data_LA": "1",
-> +        "EventCode": "0xd0",
-> +        "EventName": "MEM_UOPS_RETIRED.LOAD_LATENCY_GT_4",
-> +        "MSRIndex": "0x3F6",
-> +        "MSRValue": "0x4",
-> +        "PEBS": "2",
-> +        "PublicDescription": "Counts the number of tagged loads with an =
-instruction latency that exceeds or equals the threshold of 4 cycles as def=
-ined in MEC_CR_PEBS_LD_LAT_THRESHOLD (3F6H). Only counts with PEBS enabled.=
- If a PEBS record is generated, will populate the PEBS Latency and PEBS Dat=
-a Source fields accordingly.",
-> +        "SampleAfterValue": "1000003",
-> +        "UMask": "0x5"
-> +    },
-> +    {
-> +        "BriefDescription": "Counts the number of tagged loads with an i=
-nstruction latency that exceeds or equals the threshold of 512 cycles as de=
-fined in MEC_CR_PEBS_LD_LAT_THRESHOLD (3F6H). Only counts with PEBS enabled=
-.",
-> +        "Data_LA": "1",
-> +        "EventCode": "0xd0",
-> +        "EventName": "MEM_UOPS_RETIRED.LOAD_LATENCY_GT_512",
-> +        "MSRIndex": "0x3F6",
-> +        "MSRValue": "0x200",
-> +        "PEBS": "2",
-> +        "PublicDescription": "Counts the number of tagged loads with an =
-instruction latency that exceeds or equals the threshold of 512 cycles as d=
-efined in MEC_CR_PEBS_LD_LAT_THRESHOLD (3F6H). Only counts with PEBS enable=
-d. If a PEBS record is generated, will populate the PEBS Latency and PEBS D=
-ata Source fields accordingly.",
-> +        "SampleAfterValue": "1000003",
-> +        "UMask": "0x5"
-> +    },
-> +    {
-> +        "BriefDescription": "Counts the number of tagged loads with an i=
-nstruction latency that exceeds or equals the threshold of 64 cycles as def=
-ined in MEC_CR_PEBS_LD_LAT_THRESHOLD (3F6H). Only counts with PEBS enabled.=
-",
-> +        "Data_LA": "1",
-> +        "EventCode": "0xd0",
-> +        "EventName": "MEM_UOPS_RETIRED.LOAD_LATENCY_GT_64",
-> +        "MSRIndex": "0x3F6",
-> +        "MSRValue": "0x40",
-> +        "PEBS": "2",
-> +        "PublicDescription": "Counts the number of tagged loads with an =
-instruction latency that exceeds or equals the threshold of 64 cycles as de=
-fined in MEC_CR_PEBS_LD_LAT_THRESHOLD (3F6H). Only counts with PEBS enabled=
-. If a PEBS record is generated, will populate the PEBS Latency and PEBS Da=
-ta Source fields accordingly.",
-> +        "SampleAfterValue": "1000003",
-> +        "UMask": "0x5"
-> +    },
-> +    {
-> +        "BriefDescription": "Counts the number of tagged loads with an i=
-nstruction latency that exceeds or equals the threshold of 8 cycles as defi=
-ned in MEC_CR_PEBS_LD_LAT_THRESHOLD (3F6H). Only counts with PEBS enabled."=
-,
-> +        "Data_LA": "1",
-> +        "EventCode": "0xd0",
-> +        "EventName": "MEM_UOPS_RETIRED.LOAD_LATENCY_GT_8",
-> +        "MSRIndex": "0x3F6",
-> +        "MSRValue": "0x8",
-> +        "PEBS": "2",
-> +        "PublicDescription": "Counts the number of tagged loads with an =
-instruction latency that exceeds or equals the threshold of 8 cycles as def=
-ined in MEC_CR_PEBS_LD_LAT_THRESHOLD (3F6H). Only counts with PEBS enabled.=
- If a PEBS record is generated, will populate the PEBS Latency and PEBS Dat=
-a Source fields accordingly.",
-> +        "SampleAfterValue": "1000003",
-> +        "UMask": "0x5"
-> +    },
-> +    {
-> +        "BriefDescription": "Counts the number of retired split load uop=
-s.",
-> +        "Data_LA": "1",
-> +        "EventCode": "0xd0",
-> +        "EventName": "MEM_UOPS_RETIRED.SPLIT_LOADS",
-> +        "PEBS": "1",
-> +        "SampleAfterValue": "200003",
-> +        "UMask": "0x41"
-> +    },
-> +    {
-> +        "BriefDescription": "Counts the number of stores uops retired. C=
-ounts with or without PEBS enabled.",
-> +        "Data_LA": "1",
-> +        "EventCode": "0xd0",
-> +        "EventName": "MEM_UOPS_RETIRED.STORE_LATENCY",
-> +        "PEBS": "2",
-> +        "PublicDescription": "Counts the number of stores uops retired. =
-Counts with or without PEBS enabled. If PEBS is enabled and a PEBS record i=
-s generated, will populate PEBS Latency and PEBS Data Source fields accordi=
-ngly.",
-> +        "SampleAfterValue": "1000003",
-> +        "UMask": "0x6"
-> +    },
-> +    {
-> +        "BriefDescription": "Counts demand data reads that were supplied=
- by the L3 cache.",
-> +        "EventCode": "0xB7",
-> +        "EventName": "OCR.DEMAND_DATA_RD.L3_HIT",
-> +        "MSRIndex": "0x1a6,0x1a7",
-> +        "MSRValue": "0x3F803C0001",
-> +        "SampleAfterValue": "100003",
-> +        "UMask": "0x1"
-> +    },
-> +    {
-> +        "BriefDescription": "Counts demand data reads that were supplied=
- by the L3 cache where a snoop was sent, the snoop hit, and modified data w=
-as forwarded.",
-> +        "EventCode": "0xB7",
-> +        "EventName": "OCR.DEMAND_DATA_RD.L3_HIT.SNOOP_HITM",
-> +        "MSRIndex": "0x1a6,0x1a7",
-> +        "MSRValue": "0x10003C0001",
-> +        "SampleAfterValue": "100003",
-> +        "UMask": "0x1"
-> +    },
-> +    {
-> +        "BriefDescription": "Counts demand data reads that were supplied=
- by the L3 cache where a snoop was sent, the snoop hit, but no data was for=
-warded.",
-> +        "EventCode": "0xB7",
-> +        "EventName": "OCR.DEMAND_DATA_RD.L3_HIT.SNOOP_HIT_NO_FWD",
-> +        "MSRIndex": "0x1a6,0x1a7",
-> +        "MSRValue": "0x4003C0001",
-> +        "SampleAfterValue": "100003",
-> +        "UMask": "0x1"
-> +    },
-> +    {
-> +        "BriefDescription": "Counts demand data reads that were supplied=
- by the L3 cache where a snoop was sent, the snoop hit, and non-modified da=
-ta was forwarded.",
-> +        "EventCode": "0xB7",
-> +        "EventName": "OCR.DEMAND_DATA_RD.L3_HIT.SNOOP_HIT_WITH_FWD",
-> +        "MSRIndex": "0x1a6,0x1a7",
-> +        "MSRValue": "0x8003C0001",
-> +        "SampleAfterValue": "100003",
-> +        "UMask": "0x1"
-> +    },
-> +    {
-> +        "BriefDescription": "Counts demand reads for ownership (RFO) and=
- software prefetches for exclusive ownership (PREFETCHW) that were supplied=
- by the L3 cache.",
-> +        "EventCode": "0xB7",
-> +        "EventName": "OCR.DEMAND_RFO.L3_HIT",
-> +        "MSRIndex": "0x1a6,0x1a7",
-> +        "MSRValue": "0x3F803C0002",
-> +        "SampleAfterValue": "100003",
-> +        "UMask": "0x1"
-> +    },
-> +    {
-> +        "BriefDescription": "Counts demand reads for ownership (RFO) and=
- software prefetches for exclusive ownership (PREFETCHW) that were supplied=
- by the L3 cache where a snoop was sent, the snoop hit, and modified data w=
-as forwarded.",
-> +        "EventCode": "0xB7",
-> +        "EventName": "OCR.DEMAND_RFO.L3_HIT.SNOOP_HITM",
-> +        "MSRIndex": "0x1a6,0x1a7",
-> +        "MSRValue": "0x10003C0002",
-> +        "SampleAfterValue": "100003",
-> +        "UMask": "0x1"
-> +    },
-> +    {
-> +        "BriefDescription": "Counts the number of issue slots every cycl=
-e that were not delivered by the frontend due to instruction cache misses."=
-,
-> +        "EventCode": "0x71",
-> +        "EventName": "TOPDOWN_FE_BOUND.ICACHE",
-> +        "SampleAfterValue": "1000003",
-> +        "UMask": "0x20"
-> +    }
-> +]
-> diff --git a/tools/perf/pmu-events/arch/x86/alderlaken/floating-point.jso=
-n b/tools/perf/pmu-events/arch/x86/alderlaken/floating-point.json
-> new file mode 100644
-> index 000000000000..30e8ca3c1485
-> --- /dev/null
-> +++ b/tools/perf/pmu-events/arch/x86/alderlaken/floating-point.json
-> @@ -0,0 +1,18 @@
-> +[
-> +    {
-> +        "BriefDescription": "Counts the number of floating point operati=
-ons retired that required microcode assist.",
-> +        "EventCode": "0xc3",
-> +        "EventName": "MACHINE_CLEARS.FP_ASSIST",
-> +        "PublicDescription": "Counts the number of floating point operat=
-ions retired that required microcode assist, which is not a reflection of t=
-he number of FP operations, instructions or uops.",
-> +        "SampleAfterValue": "20003",
-> +        "UMask": "0x4"
-> +    },
-> +    {
-> +        "BriefDescription": "Counts the number of floating point divide =
-uops retired (x87 and SSE, including x87 sqrt).",
-> +        "EventCode": "0xc2",
-> +        "EventName": "UOPS_RETIRED.FPDIV",
-> +        "PEBS": "1",
-> +        "SampleAfterValue": "2000003",
-> +        "UMask": "0x8"
-> +    }
-> +]
-> diff --git a/tools/perf/pmu-events/arch/x86/alderlaken/frontend.json b/to=
-ols/perf/pmu-events/arch/x86/alderlaken/frontend.json
-> new file mode 100644
-> index 000000000000..36898bab2bba
-> --- /dev/null
-> +++ b/tools/perf/pmu-events/arch/x86/alderlaken/frontend.json
-> @@ -0,0 +1,26 @@
-> +[
-> +    {
-> +        "BriefDescription": "Counts the total number of BACLEARS due to =
-all branch types including conditional and unconditional jumps, returns, an=
-d indirect branches.",
-> +        "EventCode": "0xe6",
-> +        "EventName": "BACLEARS.ANY",
-> +        "PublicDescription": "Counts the total number of BACLEARS, which=
- occur when the Branch Target Buffer (BTB) prediction or lack thereof, was =
-corrected by a later branch predictor in the frontend.  Includes BACLEARS d=
-ue to all branch types including conditional and unconditional jumps, retur=
-ns, and indirect branches.",
-> +        "SampleAfterValue": "100003",
-> +        "UMask": "0x1"
-> +    },
-> +    {
-> +        "BriefDescription": "Counts the number of requests to the instru=
-ction cache for one or more bytes of a cache line.",
-> +        "EventCode": "0x80",
-> +        "EventName": "ICACHE.ACCESSES",
-> +        "PublicDescription": "Counts the total number of requests to the=
- instruction cache.  The event only counts new cache line accesses, so that=
- multiple back to back fetches to the exact same cache line or byte chunk c=
-ount as one.  Specifically, the event counts when accesses from sequential =
-code crosses the cache line boundary, or when a branch target is moved to a=
- new line or to a non-sequential byte chunk of the same line.",
-> +        "SampleAfterValue": "200003",
-> +        "UMask": "0x3"
-> +    },
-> +    {
-> +        "BriefDescription": "Counts the number of instruction cache miss=
-es.",
-> +        "EventCode": "0x80",
-> +        "EventName": "ICACHE.MISSES",
-> +        "PublicDescription": "Counts the number of missed requests to th=
-e instruction cache.  The event only counts new cache line accesses, so tha=
-t multiple back to back fetches to the exact same cache line and byte chunk=
- count as one.  Specifically, the event counts when accesses from sequentia=
-l code crosses the cache line boundary, or when a branch target is moved to=
- a new line or to a non-sequential byte chunk of the same line.",
-> +        "SampleAfterValue": "200003",
-> +        "UMask": "0x2"
-> +    }
-> +]
-> diff --git a/tools/perf/pmu-events/arch/x86/alderlaken/memory.json b/tool=
-s/perf/pmu-events/arch/x86/alderlaken/memory.json
-> new file mode 100644
-> index 000000000000..f84bf8c43495
-> --- /dev/null
-> +++ b/tools/perf/pmu-events/arch/x86/alderlaken/memory.json
-> @@ -0,0 +1,81 @@
-> +[
-> +    {
-> +        "BriefDescription": "Counts the number of cycles that the head (=
-oldest load) of the load buffer is stalled due to any number of reasons, in=
-cluding an L1 miss, WCB full, pagewalk, store address block or store data b=
-lock, on a load that retires.",
-> +        "EventCode": "0x05",
-> +        "EventName": "LD_HEAD.ANY_AT_RET",
-> +        "SampleAfterValue": "1000003",
-> +        "UMask": "0xff"
-> +    },
-> +    {
-> +        "BriefDescription": "Counts the number of cycles that the head (=
-oldest load) of the load buffer is stalled due to a core bound stall includ=
-ing a store address match, a DTLB miss or a page walk that detains the load=
- from retiring.",
-> +        "EventCode": "0x05",
-> +        "EventName": "LD_HEAD.L1_BOUND_AT_RET",
-> +        "SampleAfterValue": "1000003",
-> +        "UMask": "0xf4"
-> +    },
-> +    {
-> +        "BriefDescription": "Counts the number of cycles that the head (=
-oldest load) of the load buffer and retirement are both stalled due to othe=
-r block cases.",
-> +        "EventCode": "0x05",
-> +        "EventName": "LD_HEAD.OTHER_AT_RET",
-> +        "PublicDescription": "Counts the number of cycles that the head =
-(oldest load) of the load buffer and retirement are both stalled due to oth=
-er block cases such as pipeline conflicts, fences, etc.",
-> +        "SampleAfterValue": "1000003",
-> +        "UMask": "0xc0"
-> +    },
-> +    {
-> +        "BriefDescription": "Counts the number of cycles that the head (=
-oldest load) of the load buffer and retirement are both stalled due to a pa=
-gewalk.",
-> +        "EventCode": "0x05",
-> +        "EventName": "LD_HEAD.PGWALK_AT_RET",
-> +        "SampleAfterValue": "1000003",
-> +        "UMask": "0xa0"
-> +    },
-> +    {
-> +        "BriefDescription": "Counts the number of cycles that the head (=
-oldest load) of the load buffer and retirement are both stalled due to a st=
-ore address match.",
-> +        "EventCode": "0x05",
-> +        "EventName": "LD_HEAD.ST_ADDR_AT_RET",
-> +        "SampleAfterValue": "1000003",
-> +        "UMask": "0x84"
-> +    },
-> +    {
-> +        "BriefDescription": "Counts the number of machine clears due to =
-memory ordering caused by a snoop from an external agent. Does not count in=
-ternally generated machine clears such as those due to memory disambiguatio=
-n.",
-> +        "EventCode": "0xc3",
-> +        "EventName": "MACHINE_CLEARS.MEMORY_ORDERING",
-> +        "SampleAfterValue": "20003",
-> +        "UMask": "0x2"
-> +    },
-> +    {
-> +        "BriefDescription": "Counts demand data reads that were not supp=
-lied by the L3 cache.",
-> +        "EventCode": "0xB7",
-> +        "EventName": "OCR.DEMAND_DATA_RD.L3_MISS",
-> +        "MSRIndex": "0x1a6,0x1a7",
-> +        "MSRValue": "0x3F84400001",
-> +        "SampleAfterValue": "100003",
-> +        "UMask": "0x1"
-> +    },
-> +    {
-> +        "BriefDescription": "Counts demand data reads that were not supp=
-lied by the L3 cache.",
-> +        "EventCode": "0xB7",
-> +        "EventName": "OCR.DEMAND_DATA_RD.L3_MISS_LOCAL",
-> +        "MSRIndex": "0x1a6,0x1a7",
-> +        "MSRValue": "0x3F84400001",
-> +        "SampleAfterValue": "100003",
-> +        "UMask": "0x1"
-> +    },
-> +    {
-> +        "BriefDescription": "Counts demand reads for ownership (RFO) and=
- software prefetches for exclusive ownership (PREFETCHW) that were not supp=
-lied by the L3 cache.",
-> +        "EventCode": "0xB7",
-> +        "EventName": "OCR.DEMAND_RFO.L3_MISS",
-> +        "MSRIndex": "0x1a6,0x1a7",
-> +        "MSRValue": "0x3F84400002",
-> +        "SampleAfterValue": "100003",
-> +        "UMask": "0x1"
-> +    },
-> +    {
-> +        "BriefDescription": "Counts demand reads for ownership (RFO) and=
- software prefetches for exclusive ownership (PREFETCHW) that were not supp=
-lied by the L3 cache.",
-> +        "EventCode": "0xB7",
-> +        "EventName": "OCR.DEMAND_RFO.L3_MISS_LOCAL",
-> +        "MSRIndex": "0x1a6,0x1a7",
-> +        "MSRValue": "0x3F84400002",
-> +        "SampleAfterValue": "100003",
-> +        "UMask": "0x1"
-> +    }
-> +]
-> diff --git a/tools/perf/pmu-events/arch/x86/alderlaken/other.json b/tools=
-/perf/pmu-events/arch/x86/alderlaken/other.json
-> new file mode 100644
-> index 000000000000..6336de61f628
-> --- /dev/null
-> +++ b/tools/perf/pmu-events/arch/x86/alderlaken/other.json
-> @@ -0,0 +1,38 @@
-> +[
-> +    {
-> +        "BriefDescription": "Counts modified writebacks from L1 cache an=
-d L2 cache that have any type of response.",
-> +        "EventCode": "0xB7",
-> +        "EventName": "OCR.COREWB_M.ANY_RESPONSE",
-> +        "MSRIndex": "0x1a6,0x1a7",
-> +        "MSRValue": "0x10008",
-> +        "SampleAfterValue": "100003",
-> +        "UMask": "0x1"
-> +    },
-> +    {
-> +        "BriefDescription": "Counts demand data reads that have any type=
- of response.",
-> +        "EventCode": "0xB7",
-> +        "EventName": "OCR.DEMAND_DATA_RD.ANY_RESPONSE",
-> +        "MSRIndex": "0x1a6,0x1a7",
-> +        "MSRValue": "0x10001",
-> +        "SampleAfterValue": "100003",
-> +        "UMask": "0x1"
-> +    },
-> +    {
-> +        "BriefDescription": "Counts demand reads for ownership (RFO) and=
- software prefetches for exclusive ownership (PREFETCHW) that have any type=
- of response.",
-> +        "EventCode": "0xB7",
-> +        "EventName": "OCR.DEMAND_RFO.ANY_RESPONSE",
-> +        "MSRIndex": "0x1a6,0x1a7",
-> +        "MSRValue": "0x10002",
-> +        "SampleAfterValue": "100003",
-> +        "UMask": "0x1"
-> +    },
-> +    {
-> +        "BriefDescription": "Counts streaming stores that have any type =
-of response.",
-> +        "EventCode": "0xB7",
-> +        "EventName": "OCR.STREAMING_WR.ANY_RESPONSE",
-> +        "MSRIndex": "0x1a6,0x1a7",
-> +        "MSRValue": "0x10800",
-> +        "SampleAfterValue": "100003",
-> +        "UMask": "0x1"
-> +    }
-> +]
-> diff --git a/tools/perf/pmu-events/arch/x86/alderlaken/pipeline.json b/to=
-ols/perf/pmu-events/arch/x86/alderlaken/pipeline.json
-> new file mode 100644
-> index 000000000000..fa53ff11a509
-> --- /dev/null
-> +++ b/tools/perf/pmu-events/arch/x86/alderlaken/pipeline.json
-> @@ -0,0 +1,533 @@
-> +[
-> +    {
-> +        "BriefDescription": "Counts the total number of branch instructi=
-ons retired for all branch types.",
-> +        "EventCode": "0xc4",
-> +        "EventName": "BR_INST_RETIRED.ALL_BRANCHES",
-> +        "PEBS": "1",
-> +        "PublicDescription": "Counts the total number of instructions in=
- which the instruction pointer (IP) of the processor is resteered due to a =
-branch instruction and the branch instruction successfully retires.  All br=
-anch type instructions are accounted for.",
-> +        "SampleAfterValue": "200003"
-> +    },
-> +    {
-> +        "BriefDescription": "This event is deprecated. Refer to new even=
-t BR_INST_RETIRED.NEAR_CALL",
-> +        "Deprecated": "1",
-> +        "EventCode": "0xc4",
-> +        "EventName": "BR_INST_RETIRED.CALL",
-> +        "PEBS": "1",
-> +        "SampleAfterValue": "200003",
-> +        "UMask": "0xf9"
-> +    },
-> +    {
-> +        "BriefDescription": "Counts the number of retired JCC (Jump on C=
-onditional Code) branch instructions retired, includes both taken and not t=
-aken branches.",
-> +        "EventCode": "0xc4",
-> +        "EventName": "BR_INST_RETIRED.COND",
-> +        "PEBS": "1",
-> +        "SampleAfterValue": "200003",
-> +        "UMask": "0x7e"
-> +    },
-> +    {
-> +        "BriefDescription": "Counts the number of taken JCC (Jump on Con=
-ditional Code) branch instructions retired.",
-> +        "EventCode": "0xc4",
-> +        "EventName": "BR_INST_RETIRED.COND_TAKEN",
-> +        "PEBS": "1",
-> +        "SampleAfterValue": "200003",
-> +        "UMask": "0xfe"
-> +    },
-> +    {
-> +        "BriefDescription": "Counts the number of far branch instruction=
-s retired, includes far jump, far call and return, and interrupt call and r=
-eturn.",
-> +        "EventCode": "0xc4",
-> +        "EventName": "BR_INST_RETIRED.FAR_BRANCH",
-> +        "PEBS": "1",
-> +        "SampleAfterValue": "200003",
-> +        "UMask": "0xbf"
-> +    },
-> +    {
-> +        "BriefDescription": "Counts the number of near indirect JMP and =
-near indirect CALL branch instructions retired.",
-> +        "EventCode": "0xc4",
-> +        "EventName": "BR_INST_RETIRED.INDIRECT",
-> +        "PEBS": "1",
-> +        "SampleAfterValue": "200003",
-> +        "UMask": "0xeb"
-> +    },
-> +    {
-> +        "BriefDescription": "Counts the number of near indirect CALL bra=
-nch instructions retired.",
-> +        "EventCode": "0xc4",
-> +        "EventName": "BR_INST_RETIRED.INDIRECT_CALL",
-> +        "PEBS": "1",
-> +        "SampleAfterValue": "200003",
-> +        "UMask": "0xfb"
-> +    },
-> +    {
-> +        "BriefDescription": "This event is deprecated. Refer to new even=
-t BR_INST_RETIRED.INDIRECT_CALL",
-> +        "Deprecated": "1",
-> +        "EventCode": "0xc4",
-> +        "EventName": "BR_INST_RETIRED.IND_CALL",
-> +        "PEBS": "1",
-> +        "SampleAfterValue": "200003",
-> +        "UMask": "0xfb"
-> +    },
-> +    {
-> +        "BriefDescription": "This event is deprecated. Refer to new even=
-t BR_INST_RETIRED.COND",
-> +        "Deprecated": "1",
-> +        "EventCode": "0xc4",
-> +        "EventName": "BR_INST_RETIRED.JCC",
-> +        "PEBS": "1",
-> +        "SampleAfterValue": "200003",
-> +        "UMask": "0x7e"
-> +    },
-> +    {
-> +        "BriefDescription": "Counts the number of near CALL branch instr=
-uctions retired.",
-> +        "EventCode": "0xc4",
-> +        "EventName": "BR_INST_RETIRED.NEAR_CALL",
-> +        "PEBS": "1",
-> +        "SampleAfterValue": "200003",
-> +        "UMask": "0xf9"
-> +    },
-> +    {
-> +        "BriefDescription": "Counts the number of near RET branch instru=
-ctions retired.",
-> +        "EventCode": "0xc4",
-> +        "EventName": "BR_INST_RETIRED.NEAR_RETURN",
-> +        "PEBS": "1",
-> +        "SampleAfterValue": "200003",
-> +        "UMask": "0xf7"
-> +    },
-> +    {
-> +        "BriefDescription": "This event is deprecated. Refer to new even=
-t BR_INST_RETIRED.INDIRECT",
-> +        "Deprecated": "1",
-> +        "EventCode": "0xc4",
-> +        "EventName": "BR_INST_RETIRED.NON_RETURN_IND",
-> +        "PEBS": "1",
-> +        "SampleAfterValue": "200003",
-> +        "UMask": "0xeb"
-> +    },
-> +    {
-> +        "BriefDescription": "Counts the number of near relative CALL bra=
-nch instructions retired.",
-> +        "EventCode": "0xc4",
-> +        "EventName": "BR_INST_RETIRED.REL_CALL",
-> +        "PEBS": "1",
-> +        "SampleAfterValue": "200003",
-> +        "UMask": "0xfd"
-> +    },
-> +    {
-> +        "BriefDescription": "This event is deprecated. Refer to new even=
-t BR_INST_RETIRED.NEAR_RETURN",
-> +        "Deprecated": "1",
-> +        "EventCode": "0xc4",
-> +        "EventName": "BR_INST_RETIRED.RETURN",
-> +        "PEBS": "1",
-> +        "SampleAfterValue": "200003",
-> +        "UMask": "0xf7"
-> +    },
-> +    {
-> +        "BriefDescription": "This event is deprecated. Refer to new even=
-t BR_INST_RETIRED.COND_TAKEN",
-> +        "Deprecated": "1",
-> +        "EventCode": "0xc4",
-> +        "EventName": "BR_INST_RETIRED.TAKEN_JCC",
-> +        "PEBS": "1",
-> +        "SampleAfterValue": "200003",
-> +        "UMask": "0xfe"
-> +    },
-> +    {
-> +        "BriefDescription": "Counts the total number of mispredicted bra=
-nch instructions retired for all branch types.",
-> +        "EventCode": "0xc5",
-> +        "EventName": "BR_MISP_RETIRED.ALL_BRANCHES",
-> +        "PEBS": "1",
-> +        "PublicDescription": "Counts the total number of mispredicted br=
-anch instructions retired.  All branch type instructions are accounted for.=
-  Prediction of the branch target address enables the processor to begin ex=
-ecuting instructions before the non-speculative execution path is known. Th=
-e branch prediction unit (BPU) predicts the target address based on the ins=
-truction pointer (IP) of the branch and on the execution path through which=
- execution reached this IP.    A branch misprediction occurs when the predi=
-ction is wrong, and results in discarding all instructions executed in the =
-speculative path and re-fetching from the correct path.",
-> +        "SampleAfterValue": "200003"
-> +    },
-> +    {
-> +        "BriefDescription": "Counts the number of mispredicted JCC (Jump=
- on Conditional Code) branch instructions retired.",
-> +        "EventCode": "0xc5",
-> +        "EventName": "BR_MISP_RETIRED.COND",
-> +        "PEBS": "1",
-> +        "SampleAfterValue": "200003",
-> +        "UMask": "0x7e"
-> +    },
-> +    {
-> +        "BriefDescription": "Counts the number of mispredicted taken JCC=
- (Jump on Conditional Code) branch instructions retired.",
-> +        "EventCode": "0xc5",
-> +        "EventName": "BR_MISP_RETIRED.COND_TAKEN",
-> +        "PEBS": "1",
-> +        "SampleAfterValue": "200003",
-> +        "UMask": "0xfe"
-> +    },
-> +    {
-> +        "BriefDescription": "Counts the number of mispredicted near indi=
-rect JMP and near indirect CALL branch instructions retired.",
-> +        "EventCode": "0xc5",
-> +        "EventName": "BR_MISP_RETIRED.INDIRECT",
-> +        "PEBS": "1",
-> +        "SampleAfterValue": "200003",
-> +        "UMask": "0xeb"
-> +    },
-> +    {
-> +        "BriefDescription": "Counts the number of mispredicted near indi=
-rect CALL branch instructions retired.",
-> +        "EventCode": "0xc5",
-> +        "EventName": "BR_MISP_RETIRED.INDIRECT_CALL",
-> +        "PEBS": "1",
-> +        "SampleAfterValue": "200003",
-> +        "UMask": "0xfb"
-> +    },
-> +    {
-> +        "BriefDescription": "This event is deprecated. Refer to new even=
-t BR_MISP_RETIRED.INDIRECT_CALL",
-> +        "Deprecated": "1",
-> +        "EventCode": "0xc5",
-> +        "EventName": "BR_MISP_RETIRED.IND_CALL",
-> +        "PEBS": "1",
-> +        "SampleAfterValue": "200003",
-> +        "UMask": "0xfb"
-> +    },
-> +    {
-> +        "BriefDescription": "This event is deprecated. Refer to new even=
-t BR_MISP_RETIRED.COND",
-> +        "Deprecated": "1",
-> +        "EventCode": "0xc5",
-> +        "EventName": "BR_MISP_RETIRED.JCC",
-> +        "PEBS": "1",
-> +        "SampleAfterValue": "200003",
-> +        "UMask": "0x7e"
-> +    },
-> +    {
-> +        "BriefDescription": "This event is deprecated. Refer to new even=
-t BR_MISP_RETIRED.INDIRECT",
-> +        "Deprecated": "1",
-> +        "EventCode": "0xc5",
-> +        "EventName": "BR_MISP_RETIRED.NON_RETURN_IND",
-> +        "PEBS": "1",
-> +        "SampleAfterValue": "200003",
-> +        "UMask": "0xeb"
-> +    },
-> +    {
-> +        "BriefDescription": "Counts the number of mispredicted near RET =
-branch instructions retired.",
-> +        "EventCode": "0xc5",
-> +        "EventName": "BR_MISP_RETIRED.RETURN",
-> +        "PEBS": "1",
-> +        "SampleAfterValue": "200003",
-> +        "UMask": "0xf7"
-> +    },
-> +    {
-> +        "BriefDescription": "This event is deprecated. Refer to new even=
-t BR_MISP_RETIRED.COND_TAKEN",
-> +        "Deprecated": "1",
-> +        "EventCode": "0xc5",
-> +        "EventName": "BR_MISP_RETIRED.TAKEN_JCC",
-> +        "PEBS": "1",
-> +        "SampleAfterValue": "200003",
-> +        "UMask": "0xfe"
-> +    },
-> +    {
-> +        "BriefDescription": "Counts the number of unhalted core clock cy=
-cles. (Fixed event)",
-> +        "EventName": "CPU_CLK_UNHALTED.CORE",
-> +        "PublicDescription": "Counts the number of core cycles while the=
- core is not in a halt state. The core enters the halt state when it is run=
-ning the HLT instruction. The core frequency may change from time to time. =
-For this reason this event may have a changing ratio with regards to time. =
-This event uses fixed counter 1.",
-> +        "SampleAfterValue": "2000003",
-> +        "UMask": "0x2"
-> +    },
-> +    {
-> +        "BriefDescription": "Counts the number of unhalted core clock cy=
-cles.",
-> +        "EventCode": "0x3c",
-> +        "EventName": "CPU_CLK_UNHALTED.CORE_P",
-> +        "PublicDescription": "Counts the number of core cycles while the=
- core is not in a halt state. The core enters the halt state when it is run=
-ning the HLT instruction. The core frequency may change from time to time. =
-For this reason this event may have a changing ratio with regards to time. =
-This event uses a programmable general purpose performance counter.",
-> +        "SampleAfterValue": "2000003"
-> +    },
-> +    {
-> +        "BriefDescription": "Counts the number of unhalted reference clo=
-ck cycles at TSC frequency. (Fixed event)",
-> +        "EventName": "CPU_CLK_UNHALTED.REF_TSC",
-> +        "PublicDescription": "Counts the number of reference cycles that=
- the core is not in a halt state. The core enters the halt state when it is=
- running the HLT instruction. This event is not affected by core frequency =
-changes and increments at a fixed frequency that is also used for the Time =
-Stamp Counter (TSC). This event uses fixed counter 2.",
-> +        "SampleAfterValue": "2000003",
-> +        "UMask": "0x3"
-> +    },
-> +    {
-> +        "BriefDescription": "Counts the number of unhalted reference clo=
-ck cycles at TSC frequency.",
-> +        "EventCode": "0x3c",
-> +        "EventName": "CPU_CLK_UNHALTED.REF_TSC_P",
-> +        "PublicDescription": "Counts the number of reference cycles that=
- the core is not in a halt state. The core enters the halt state when it is=
- running the HLT instruction. This event is not affected by core frequency =
-changes and increments at a fixed frequency that is also used for the Time =
-Stamp Counter (TSC). This event uses a programmable general purpose perform=
-ance counter.",
-> +        "SampleAfterValue": "2000003",
-> +        "UMask": "0x1"
-> +    },
-> +    {
-> +        "BriefDescription": "Counts the number of unhalted core clock cy=
-cles. (Fixed event)",
-> +        "EventName": "CPU_CLK_UNHALTED.THREAD",
-> +        "PublicDescription": "Counts the number of core cycles while the=
- core is not in a halt state.  The core enters the halt state when it is ru=
-nning the HLT instruction. The core frequency may change from time to time.=
- For this reason this event may have a changing ratio with regards to time.=
-  This event uses fixed counter 1.",
-> +        "SampleAfterValue": "2000003",
-> +        "UMask": "0x2"
-> +    },
-> +    {
-> +        "BriefDescription": "Counts the number of unhalted core clock cy=
-cles.",
-> +        "EventCode": "0x3c",
-> +        "EventName": "CPU_CLK_UNHALTED.THREAD_P",
-> +        "PublicDescription": "Counts the number of core cycles while the=
- core is not in a halt state.  The core enters the halt state when it is ru=
-nning the HLT instruction. The core frequency may change from time to time.=
- For this reason this event may have a changing ratio with regards to time.=
- This event uses a programmable general purpose performance counter.",
-> +        "SampleAfterValue": "2000003"
-> +    },
-> +    {
-> +        "BriefDescription": "Counts the total number of instructions ret=
-ired. (Fixed event)",
-> +        "EventName": "INST_RETIRED.ANY",
-> +        "PEBS": "1",
-> +        "PublicDescription": "Counts the total number of instructions th=
-at retired. For instructions that consist of multiple uops, this event coun=
-ts the retirement of the last uop of the instruction. This event continues =
-counting during hardware interrupts, traps, and inside interrupt handlers. =
-This event uses fixed counter 0.",
-> +        "SampleAfterValue": "2000003",
-> +        "UMask": "0x1"
-> +    },
-> +    {
-> +        "BriefDescription": "Counts the total number of instructions ret=
-ired.",
-> +        "EventCode": "0xc0",
-> +        "EventName": "INST_RETIRED.ANY_P",
-> +        "PEBS": "1",
-> +        "PublicDescription": "Counts the total number of instructions th=
-at retired. For instructions that consist of multiple uops, this event coun=
-ts the retirement of the last uop of the instruction. This event continues =
-counting during hardware interrupts, traps, and inside interrupt handlers. =
-This event uses a programmable general purpose performance counter.",
-> +        "SampleAfterValue": "2000003"
-> +    },
-> +    {
-> +        "BriefDescription": "This event is deprecated. Refer to new even=
-t LD_BLOCKS.ADDRESS_ALIAS",
-> +        "Deprecated": "1",
-> +        "EventCode": "0x03",
-> +        "EventName": "LD_BLOCKS.4K_ALIAS",
-> +        "PEBS": "1",
-> +        "SampleAfterValue": "1000003",
-> +        "UMask": "0x4"
-> +    },
-> +    {
-> +        "BriefDescription": "Counts the number of retired loads that are=
- blocked because it initially appears to be store forward blocked, but subs=
-equently is shown not to be blocked based on 4K alias check.",
-> +        "EventCode": "0x03",
-> +        "EventName": "LD_BLOCKS.ADDRESS_ALIAS",
-> +        "PEBS": "1",
-> +        "SampleAfterValue": "1000003",
-> +        "UMask": "0x4"
-> +    },
-> +    {
-> +        "BriefDescription": "Counts the number of retired loads that are=
- blocked because its address exactly matches an older store whose data is n=
-ot ready.",
-> +        "EventCode": "0x03",
-> +        "EventName": "LD_BLOCKS.DATA_UNKNOWN",
-> +        "PEBS": "1",
-> +        "SampleAfterValue": "1000003",
-> +        "UMask": "0x1"
-> +    },
-> +    {
-> +        "BriefDescription": "Counts the number of machine clears due to =
-memory ordering in which an internal load passes an older store within the =
-same CPU.",
-> +        "EventCode": "0xc3",
-> +        "EventName": "MACHINE_CLEARS.DISAMBIGUATION",
-> +        "SampleAfterValue": "20003",
-> +        "UMask": "0x8"
-> +    },
-> +    {
-> +        "BriefDescription": "Counts the number of machines clears due to=
- memory renaming.",
-> +        "EventCode": "0xc3",
-> +        "EventName": "MACHINE_CLEARS.MRN_NUKE",
-> +        "SampleAfterValue": "1000003",
-> +        "UMask": "0x80"
-> +    },
-> +    {
-> +        "BriefDescription": "Counts the number of machine clears due to =
-a page fault.  Counts both I-Side and D-Side (Loads/Stores) page faults.  A=
- page fault occurs when either the page is not present, or an access violat=
-ion occurs.",
-> +        "EventCode": "0xc3",
-> +        "EventName": "MACHINE_CLEARS.PAGE_FAULT",
-> +        "SampleAfterValue": "20003",
-> +        "UMask": "0x20"
-> +    },
-> +    {
-> +        "BriefDescription": "Counts the number of machine clears that fl=
-ush the pipeline and restart the machine with the use of microcode due to S=
-MC, MEMORY_ORDERING, FP_ASSISTS, PAGE_FAULT, DISAMBIGUATION, and FPC_VIRTUA=
-L_TRAP.",
-> +        "EventCode": "0xc3",
-> +        "EventName": "MACHINE_CLEARS.SLOW",
-> +        "SampleAfterValue": "20003",
-> +        "UMask": "0x6f"
-> +    },
-> +    {
-> +        "BriefDescription": "Counts the number of machine clears due to =
-program modifying data (self modifying code) within 1K of a recently fetche=
-d code page.",
-> +        "EventCode": "0xc3",
-> +        "EventName": "MACHINE_CLEARS.SMC",
-> +        "SampleAfterValue": "20003",
-> +        "UMask": "0x1"
-> +    },
-> +    {
-> +        "BriefDescription": "Counts the number of issue slots not consum=
-ed by the backend due to a micro-sequencer (MS) scoreboard, which stalls th=
-e front-end from issuing from the UROM until a specified older uop retires.=
-",
-> +        "EventCode": "0x75",
-> +        "EventName": "SERIALIZATION.NON_C01_MS_SCB",
-> +        "PublicDescription": "Counts the number of issue slots not consu=
-med by the backend due to a micro-sequencer (MS) scoreboard, which stalls t=
-he front-end from issuing from the UROM until a specified older uop retires=
-. The most commonly executed instruction with an MS scoreboard is PAUSE.",
-> +        "SampleAfterValue": "200003",
-> +        "UMask": "0x2"
-> +    },
-> +    {
-> +        "BriefDescription": "Counts the total number of issue slots that=
- were not consumed by the backend because allocation is stalled due to a mi=
-spredicted jump or a machine clear.",
-> +        "EventCode": "0x73",
-> +        "EventName": "TOPDOWN_BAD_SPECULATION.ALL",
-> +        "PublicDescription": "Counts the total number of issue slots tha=
-t were not consumed by the backend because allocation is stalled due to a m=
-ispredicted jump or a machine clear. Only issue slots wasted due to fast nu=
-kes such as memory ordering nukes are counted. Other nukes are not accounte=
-d for. Counts all issue slots blocked during this recovery window including=
- relevant microcode flows and while uops are not yet available in the instr=
-uction queue (IQ) even if an FE_bound event occurs during this period. Also=
- includes the issue slots that were consumed by the backend but were thrown=
- away because they were younger than the mispredict or machine clear.",
-> +        "SampleAfterValue": "1000003"
-> +    },
-> +    {
-> +        "BriefDescription": "Counts the number of issue slots every cycl=
-e that were not consumed by the backend due to fast nukes such as memory or=
-dering and memory disambiguation machine clears.",
-> +        "EventCode": "0x73",
-> +        "EventName": "TOPDOWN_BAD_SPECULATION.FASTNUKE",
-> +        "SampleAfterValue": "1000003",
-> +        "UMask": "0x2"
-> +    },
-> +    {
-> +        "BriefDescription": "Counts the total number of issue slots that=
- were not consumed by the backend because allocation is stalled due to a ma=
-chine clear (nuke) of any kind including memory ordering and memory disambi=
-guation.",
-> +        "EventCode": "0x73",
-> +        "EventName": "TOPDOWN_BAD_SPECULATION.MACHINE_CLEARS",
-> +        "SampleAfterValue": "1000003",
-> +        "UMask": "0x3"
-> +    },
-> +    {
-> +        "BriefDescription": "Counts the number of issue slots every cycl=
-e that were not consumed by the backend due to branch mispredicts.",
-> +        "EventCode": "0x73",
-> +        "EventName": "TOPDOWN_BAD_SPECULATION.MISPREDICT",
-> +        "SampleAfterValue": "1000003",
-> +        "UMask": "0x4"
-> +    },
-> +    {
-> +        "BriefDescription": "Counts the number of issue slots every cycl=
-e that were not consumed by the backend due to a machine clear (nuke).",
-> +        "EventCode": "0x73",
-> +        "EventName": "TOPDOWN_BAD_SPECULATION.NUKE",
-> +        "SampleAfterValue": "1000003",
-> +        "UMask": "0x1"
-> +    },
-> +    {
-> +        "BriefDescription": "Counts the total number of issue slots ever=
-y cycle that were not consumed by the backend due to backend stalls.",
-> +        "EventCode": "0x74",
-> +        "EventName": "TOPDOWN_BE_BOUND.ALL",
-> +        "SampleAfterValue": "1000003"
-> +    },
-> +    {
-> +        "BriefDescription": "Counts the number of issue slots every cycl=
-e that were not consumed by the backend due to certain allocation restricti=
-ons.",
-> +        "EventCode": "0x74",
-> +        "EventName": "TOPDOWN_BE_BOUND.ALLOC_RESTRICTIONS",
-> +        "SampleAfterValue": "1000003",
-> +        "UMask": "0x1"
-> +    },
-> +    {
-> +        "BriefDescription": "Counts the number of issue slots every cycl=
-e that were not consumed by the backend due to memory reservation stalls in=
- which a scheduler is not able to accept uops.",
-> +        "EventCode": "0x74",
-> +        "EventName": "TOPDOWN_BE_BOUND.MEM_SCHEDULER",
-> +        "SampleAfterValue": "1000003",
-> +        "UMask": "0x2"
-> +    },
-> +    {
-> +        "BriefDescription": "Counts the number of issue slots every cycl=
-e that were not consumed by the backend due to IEC or FPC RAT stalls, which=
- can be due to FIQ or IEC reservation stalls in which the integer, floating=
- point or SIMD scheduler is not able to accept uops.",
-> +        "EventCode": "0x74",
-> +        "EventName": "TOPDOWN_BE_BOUND.NON_MEM_SCHEDULER",
-> +        "SampleAfterValue": "1000003",
-> +        "UMask": "0x8"
-> +    },
-> +    {
-> +        "BriefDescription": "Counts the number of issue slots every cycl=
-e that were not consumed by the backend due to the physical register file u=
-nable to accept an entry (marble stalls).",
-> +        "EventCode": "0x74",
-> +        "EventName": "TOPDOWN_BE_BOUND.REGISTER",
-> +        "SampleAfterValue": "1000003",
-> +        "UMask": "0x20"
-> +    },
-> +    {
-> +        "BriefDescription": "Counts the number of issue slots every cycl=
-e that were not consumed by the backend due to the reorder buffer being ful=
-l (ROB stalls).",
-> +        "EventCode": "0x74",
-> +        "EventName": "TOPDOWN_BE_BOUND.REORDER_BUFFER",
-> +        "SampleAfterValue": "1000003",
-> +        "UMask": "0x40"
-> +    },
-> +    {
-> +        "BriefDescription": "Counts the number of issue slots every cycl=
-e that were not consumed by the backend due to scoreboards from the instruc=
-tion queue (IQ), jump execution unit (JEU), or microcode sequencer (MS).",
-> +        "EventCode": "0x74",
-> +        "EventName": "TOPDOWN_BE_BOUND.SERIALIZATION",
-> +        "SampleAfterValue": "1000003",
-> +        "UMask": "0x10"
-> +    },
-> +    {
-> +        "BriefDescription": "Counts the total number of issue slots ever=
-y cycle that were not consumed by the backend due to frontend stalls.",
-> +        "EventCode": "0x71",
-> +        "EventName": "TOPDOWN_FE_BOUND.ALL",
-> +        "SampleAfterValue": "1000003"
-> +    },
-> +    {
-> +        "BriefDescription": "Counts the number of issue slots every cycl=
-e that were not delivered by the frontend due to BACLEARS.",
-> +        "EventCode": "0x71",
-> +        "EventName": "TOPDOWN_FE_BOUND.BRANCH_DETECT",
-> +        "PublicDescription": "Counts the number of issue slots every cyc=
-le that were not delivered by the frontend due to BACLEARS, which occurs wh=
-en the Branch Target Buffer (BTB) prediction or lack thereof, was corrected=
- by a later branch predictor in the frontend. Includes BACLEARS due to all =
-branch types including conditional and unconditional jumps, returns, and in=
-direct branches.",
-> +        "SampleAfterValue": "1000003",
-> +        "UMask": "0x2"
-> +    },
-> +    {
-> +        "BriefDescription": "Counts the number of issue slots every cycl=
-e that were not delivered by the frontend due to BTCLEARS.",
-> +        "EventCode": "0x71",
-> +        "EventName": "TOPDOWN_FE_BOUND.BRANCH_RESTEER",
-> +        "PublicDescription": "Counts the number of issue slots every cyc=
-le that were not delivered by the frontend due to BTCLEARS, which occurs wh=
-en the Branch Target Buffer (BTB) predicts a taken branch.",
-> +        "SampleAfterValue": "1000003",
-> +        "UMask": "0x40"
-> +    },
-> +    {
-> +        "BriefDescription": "Counts the number of issue slots every cycl=
-e that were not delivered by the frontend due to the microcode sequencer (M=
-S).",
-> +        "EventCode": "0x71",
-> +        "EventName": "TOPDOWN_FE_BOUND.CISC",
-> +        "SampleAfterValue": "1000003",
-> +        "UMask": "0x1"
-> +    },
-> +    {
-> +        "BriefDescription": "Counts the number of issue slots every cycl=
-e that were not delivered by the frontend due to decode stalls.",
-> +        "EventCode": "0x71",
-> +        "EventName": "TOPDOWN_FE_BOUND.DECODE",
-> +        "SampleAfterValue": "1000003",
-> +        "UMask": "0x8"
-> +    },
-> +    {
-> +        "BriefDescription": "Counts the number of issue slots every cycl=
-e that were not delivered by the frontend due to frontend bandwidth restric=
-tions due to decode, predecode, cisc, and other limitations.",
-> +        "EventCode": "0x71",
-> +        "EventName": "TOPDOWN_FE_BOUND.FRONTEND_BANDWIDTH",
-> +        "SampleAfterValue": "1000003",
-> +        "UMask": "0x8d"
-> +    },
-> +    {
-> +        "BriefDescription": "Counts the number of issue slots every cycl=
-e that were not delivered by the frontend due to a latency related stalls i=
-ncluding BACLEARs, BTCLEARs, ITLB misses, and ICache misses.",
-> +        "EventCode": "0x71",
-> +        "EventName": "TOPDOWN_FE_BOUND.FRONTEND_LATENCY",
-> +        "SampleAfterValue": "1000003",
-> +        "UMask": "0x72"
-> +    },
-> +    {
-> +        "BriefDescription": "Counts the number of issue slots every cycl=
-e that were not delivered by the frontend due to ITLB misses.",
-> +        "EventCode": "0x71",
-> +        "EventName": "TOPDOWN_FE_BOUND.ITLB",
-> +        "PublicDescription": "Counts the number of issue slots every cyc=
-le that were not delivered by the frontend due to Instruction Table Lookasi=
-de Buffer (ITLB) misses.",
-> +        "SampleAfterValue": "1000003",
-> +        "UMask": "0x10"
-> +    },
-> +    {
-> +        "BriefDescription": "Counts the number of issue slots every cycl=
-e that were not delivered by the frontend due to other common frontend stal=
-ls not categorized.",
-> +        "EventCode": "0x71",
-> +        "EventName": "TOPDOWN_FE_BOUND.OTHER",
-> +        "SampleAfterValue": "1000003",
-> +        "UMask": "0x80"
-> +    },
-> +    {
-> +        "BriefDescription": "Counts the number of issue slots every cycl=
-e that were not delivered by the frontend due to wrong predecodes.",
-> +        "EventCode": "0x71",
-> +        "EventName": "TOPDOWN_FE_BOUND.PREDECODE",
-> +        "SampleAfterValue": "1000003",
-> +        "UMask": "0x4"
-> +    },
-> +    {
-> +        "BriefDescription": "Counts the total number of consumed retirem=
-ent slots.",
-> +        "EventCode": "0xc2",
-> +        "EventName": "TOPDOWN_RETIRING.ALL",
-> +        "PEBS": "1",
-> +        "SampleAfterValue": "1000003"
-> +    },
-> +    {
-> +        "BriefDescription": "Counts the total number of uops retired.",
-> +        "EventCode": "0xc2",
-> +        "EventName": "UOPS_RETIRED.ALL",
-> +        "PEBS": "1",
-> +        "SampleAfterValue": "2000003"
-> +    },
-> +    {
-> +        "BriefDescription": "Counts the number of integer divide uops re=
-tired.",
-> +        "EventCode": "0xc2",
-> +        "EventName": "UOPS_RETIRED.IDIV",
-> +        "PEBS": "1",
-> +        "SampleAfterValue": "2000003",
-> +        "UMask": "0x10"
-> +    },
-> +    {
-> +        "BriefDescription": "Counts the number of uops that are from com=
-plex flows issued by the micro-sequencer (MS).",
-> +        "EventCode": "0xc2",
-> +        "EventName": "UOPS_RETIRED.MS",
-> +        "PEBS": "1",
-> +        "PublicDescription": "Counts the number of uops that are from co=
-mplex flows issued by the Microcode Sequencer (MS). This includes uops from=
- flows due to complex instructions, faults, assists, and inserted flows.",
-> +        "SampleAfterValue": "2000003",
-> +        "UMask": "0x1"
-> +    },
-> +    {
-> +        "BriefDescription": "Counts the number of x87 uops retired, incl=
-udes those in MS flows.",
-> +        "EventCode": "0xc2",
-> +        "EventName": "UOPS_RETIRED.X87",
-> +        "PEBS": "1",
-> +        "SampleAfterValue": "2000003",
-> +        "UMask": "0x2"
-> +    }
-> +]
-> diff --git a/tools/perf/pmu-events/arch/x86/alderlaken/virtual-memory.jso=
-n b/tools/perf/pmu-events/arch/x86/alderlaken/virtual-memory.json
-> new file mode 100644
-> index 000000000000..67fd640f790e
-> --- /dev/null
-> +++ b/tools/perf/pmu-events/arch/x86/alderlaken/virtual-memory.json
-> @@ -0,0 +1,47 @@
-> +[
-> +    {
-> +        "BriefDescription": "Counts the number of page walks completed d=
-ue to load DTLB misses to any page size.",
-> +        "EventCode": "0x08",
-> +        "EventName": "DTLB_LOAD_MISSES.WALK_COMPLETED",
-> +        "PublicDescription": "Counts the number of page walks completed =
-due to loads (including SW prefetches) whose address translations missed in=
- all Translation Lookaside Buffer (TLB) levels and were mapped to any page =
-size. Includes page walks that page fault.",
-> +        "SampleAfterValue": "200003",
-> +        "UMask": "0xe"
-> +    },
-> +    {
-> +        "BriefDescription": "Counts the number of page walks completed d=
-ue to store DTLB misses to any page size.",
-> +        "EventCode": "0x49",
-> +        "EventName": "DTLB_STORE_MISSES.WALK_COMPLETED",
-> +        "PublicDescription": "Counts the number of page walks completed =
-due to stores whose address translations missed in all Translation Lookasid=
-e Buffer (TLB) levels and were mapped to any page size.  Includes page walk=
-s that page fault.",
-> +        "SampleAfterValue": "2000003",
-> +        "UMask": "0xe"
-> +    },
-> +    {
-> +        "BriefDescription": "Counts the number of page walks initiated b=
-y a instruction fetch that missed the first and second level TLBs.",
-> +        "EventCode": "0x85",
-> +        "EventName": "ITLB_MISSES.MISS_CAUSED_WALK",
-> +        "SampleAfterValue": "1000003",
-> +        "UMask": "0x1"
-> +    },
-> +    {
-> +        "BriefDescription": "Counts the number of page walks due to an i=
-nstruction fetch that miss the PDE (Page Directory Entry) cache.",
-> +        "EventCode": "0x85",
-> +        "EventName": "ITLB_MISSES.PDE_CACHE_MISS",
-> +        "SampleAfterValue": "2000003",
-> +        "UMask": "0x80"
-> +    },
-> +    {
-> +        "BriefDescription": "Counts the number of page walks completed d=
-ue to instruction fetch misses to any page size.",
-> +        "EventCode": "0x85",
-> +        "EventName": "ITLB_MISSES.WALK_COMPLETED",
-> +        "PublicDescription": "Counts the number of page walks completed =
-due to instruction fetches whose address translations missed in all Transla=
-tion Lookaside Buffer (TLB) levels and were mapped to any page size.  Inclu=
-des page walks that page fault.",
-> +        "SampleAfterValue": "200003",
-> +        "UMask": "0xe"
-> +    },
-> +    {
-> +        "BriefDescription": "Counts the number of cycles that the head (=
-oldest load) of the load buffer and retirement are both stalled due to a DT=
-LB miss.",
-> +        "EventCode": "0x05",
-> +        "EventName": "LD_HEAD.DTLB_MISS_AT_RET",
-> +        "SampleAfterValue": "1000003",
-> +        "UMask": "0x90"
-> +    }
-> +]
-> --
-> 2.25.1
->
+The PPR for Genoa processors is available here:
+https://www.amd.com/system/files/TechDocs/55901_0.25.zip
+
+In this specific document, the table is in page 235 under section
+2.1.15 titled "Performance Monitor Counters".
+
+It may not be convenient to find out if a workload is backend-bound
+without the use of a metric but one can still do it by programming
+the raw events that make up that metric.
+
+E.g. the formula for determining backend boundedness is:
+Event[100431EA0] / 6 * Event[430076]
+
+Running perf with the raw events give the counts which can then be
+used to calculate the metric.
+
+E.g.
+
+$ perf stat -e r100431EA0,r430076 ./test
+
+ Performance counter stats for './test':
+
+           750,372      r100431EA0:u
+     7,500,728,022      r430076:u
+
+       2.894204814 seconds time elapsed
+
+       2.894060000 seconds user
+       0.000000000 seconds sys
+
+The backend boundedness is then 750372 / (6 * 7500728022)
+which is roughly 0.001667%.
+
+- Sandipan
