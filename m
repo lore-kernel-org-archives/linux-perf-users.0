@@ -2,179 +2,182 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EC701C4332F
-	for <linux-perf-users@archiver.kernel.org>; Tue, 22 Nov 2022 04:48:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DB995C4332F
+	for <linux-perf-users@archiver.kernel.org>; Tue, 22 Nov 2022 07:11:45 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230070AbiKVEs4 (ORCPT
+        id S231825AbiKVHLp (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Mon, 21 Nov 2022 23:48:56 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57768 "EHLO
+        Tue, 22 Nov 2022 02:11:45 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34506 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229585AbiKVEsx (ORCPT
+        with ESMTP id S229750AbiKVHLo (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Mon, 21 Nov 2022 23:48:53 -0500
-Received: from NAM04-BN8-obe.outbound.protection.outlook.com (mail-bn8nam04on2067.outbound.protection.outlook.com [40.107.100.67])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id ADD4C27B12
-        for <linux-perf-users@vger.kernel.org>; Mon, 21 Nov 2022 20:48:51 -0800 (PST)
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=ImWMKEo8VX0AjJSqgskcZ0n0j7+lmXeGSJYfmfGoMLKCcQlvzYS4Kpqckvzpjox4Bn8xPPvUsFg15+zneXCY6TFrGIFJzF6FmIfs/yep9wJMxhlmggCOPTvulwOl0RoBYdZeIdHkkFRFu7g5cctii5OpA7mgkUB+yf85XCwHABNLCOSJWhuRoEreYzqwAvlMMJRa4BNqwKdF/bEILuFFDLbQjURfD1uHf+DQQzXZrwLuUcdSjq/GIFn9uA4fW7ThMvHeEThzjAyFu6COyrkwz6jYYo73oJ0bVdI8bWgReMuFAk8bs0QecXkfkUPH1nRQGnGilbEtXf4RMC5i0rUDKQ==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=RHLBReUG/BNlv1D7p4a+dAv5ntd2GYNi1j+jEBr49S0=;
- b=aaJkv85IcsoO3imFAeVP5IN0ozh1SjtVNCnqvPCPfiW6gTA8iW8IlHYfRGxxD9WC9eVeyEvpFSswKYq8Hk7lqByodALnfH0nhEvYNlxMsh/EB00O+GIn/oyJvB3wXUkGxG/zcqNN1GtlzJBnpu7PriWjfgCSAkWtWDJFw4YP68pkJ2EK9gaAn8B6MkH2VrzHxvysW/6r0hHGVgmfpDQUntfDTJyP8fpxZ1j9xexNE9nYqlJcLiSjoOvbRn1i/7rACzS7LVKUTfJ/03lHky/EQ/Z7QBDPhpQN6BOV5UM8abeheGHNZiA2Tt9U0TAMO336j12T9INypLsBPRlubAU53g==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=amd.com; dmarc=pass action=none header.from=amd.com; dkim=pass
- header.d=amd.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=RHLBReUG/BNlv1D7p4a+dAv5ntd2GYNi1j+jEBr49S0=;
- b=e8Ci1QIZlEQbel/+O0H5XVav8vcidOv0wTOgOty0/1D24bhD53WLmb0mTyeFiQe6PJeM80OIJIRzmYu4NqhgBw3t2adLMTHSffIeb6zdj29bqxThAB97FCCwKlggmH6b2ux+gkwM8Xj/PY1/JUObSTWJeqdEXQCB0ZEoVPxbStg=
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=amd.com;
-Received: from PH7PR12MB5712.namprd12.prod.outlook.com (2603:10b6:510:1e3::13)
- by CH3PR12MB7547.namprd12.prod.outlook.com (2603:10b6:610:147::5) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.5834.15; Tue, 22 Nov
- 2022 04:48:49 +0000
-Received: from PH7PR12MB5712.namprd12.prod.outlook.com
- ([fe80::5593:9517:a2e9:1b6b]) by PH7PR12MB5712.namprd12.prod.outlook.com
- ([fe80::5593:9517:a2e9:1b6b%7]) with mapi id 15.20.5834.009; Tue, 22 Nov 2022
- 04:48:49 +0000
-Message-ID: <0ecb09b3-5a72-6bac-0236-8807bbacf702@amd.com>
-Date:   Tue, 22 Nov 2022 10:18:37 +0530
-User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:102.0) Gecko/20100101
- Thunderbird/102.5.0
-Subject: Re: AMD -missing perf stat metricgroup "pipeline"
-Content-Language: en-US
-To:     Jirka Hladky <jhladky@redhat.com>
-Cc:     linux-perf-users@vger.kernel.org, ravi.bangoria@amd.com,
-        ananth.narayan@amd.com
-References: <CAE4VaGDR+p-KDK6WNnzp5go4r_3Q-OtjR_J2_NpgFcwL8O8KiA@mail.gmail.com>
-From:   Sandipan Das <sandipan.das@amd.com>
-In-Reply-To: <CAE4VaGDR+p-KDK6WNnzp5go4r_3Q-OtjR_J2_NpgFcwL8O8KiA@mail.gmail.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: PN2PR01CA0113.INDPRD01.PROD.OUTLOOK.COM
- (2603:1096:c01:27::28) To PH7PR12MB5712.namprd12.prod.outlook.com
- (2603:10b6:510:1e3::13)
+        Tue, 22 Nov 2022 02:11:44 -0500
+Received: from out30-42.freemail.mail.aliyun.com (out30-42.freemail.mail.aliyun.com [115.124.30.42])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DC3CB303EF;
+        Mon, 21 Nov 2022 23:11:42 -0800 (PST)
+X-Alimail-AntiSpam: AC=PASS;BC=-1|-1;BR=01201311R111e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=ay29a033018045170;MF=renyu.zj@linux.alibaba.com;NM=1;PH=DS;RN=21;SR=0;TI=SMTPD_---0VVR4.1Q_1669101096;
+Received: from 30.221.132.69(mailfrom:renyu.zj@linux.alibaba.com fp:SMTPD_---0VVR4.1Q_1669101096)
+          by smtp.aliyun-inc.com;
+          Tue, 22 Nov 2022 15:11:38 +0800
+Message-ID: <74d26daa-69cb-41bf-5a33-229c95521536@linux.alibaba.com>
+Date:   Tue, 22 Nov 2022 15:11:35 +0800
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: PH7PR12MB5712:EE_|CH3PR12MB7547:EE_
-X-MS-Office365-Filtering-Correlation-Id: 6cbece3d-8eaf-4c2c-8990-08dacc44d892
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: 2dmgjGo629+GKe/NnBRxJrQh4cO1TVBQEa0IzbmYb+vmNLKClTEeS0kD3ohI1A0jNQwPu7QpVJ74ZhbsK/XIxmOZvGAO4A1T9ViykEj6KC/Ul1DrHFCWPiXqFEMUMN5nosOQJay/IPcI5+v18LH1fV0rB+ZzHflgyCzSxygnMkm9tYv9qms1MwAysnQoo6yM+et2toUX7VJbYh6eOzbttwXJTnnZ5h/km4PYL/ySycQI0cOR+JA6xWkzL1UjzfE03vXs3giLIjYJWcknNZYr2rLLUty3Lj0Hh3LrxHz8KLkL1CqH+peU9osRiCOabH2MHuvTHh5zLscomgcXLWeaKxFLPI0+210sHNwofia7TpLl8d8teGAjlECdLwNNH15JrPFGKr/TfLFST2JyAD1LVD1MLp2KRyixAVoGuL0LexXsY1A+rWSvOo1tFSVicfgse5GKQaV0i3SaxLgMU++hbkS8cZkEbIDzpTBgDMp+XTZ+L/q54fh5QR5hnHl93GyAfeLBNmlyf/Vd1b25NBcdFeH1SsOgXHZiaeooStT9nRWhjytKK1ii2abIkNk1HYPByaKVzhW1cOPreCdbx1ozfbB8CJ3AIqM1ywlc0KqEOi6hcEaBqm2UCdrxl1zybEMQ/1tQhi3z9T6XHjxL9rg5qQVynEgJNaSpYMqF2ZnOzSKqftL0g0UZ22XkRDCLRuMFeXazpkm73SAFScAY+SWlJobtFffuo22LPcKMIaqQ14nh7AXfgkAJwj65w4g9oBtp
-X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:PH7PR12MB5712.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230022)(4636009)(39860400002)(366004)(376002)(136003)(346002)(396003)(451199015)(41300700001)(8936002)(4326008)(316002)(6916009)(5660300002)(66556008)(66476007)(66946007)(31686004)(8676002)(44832011)(2906002)(478600001)(2616005)(36756003)(53546011)(966005)(6666004)(6512007)(6486002)(6506007)(186003)(26005)(38100700002)(86362001)(31696002)(45980500001)(43740500002);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0: =?utf-8?B?UUJNU056b1FIMklaTCs4TmdhYWpKL0lIZ3VXR1c4M0dTOURKSHRsNTJZRHJz?=
- =?utf-8?B?Nmt1dnNxNWxkY2pzRFpqTW5wNWNyTUxSYlNZUTBMemgzV2FUMk1TQ1orZ3Rt?=
- =?utf-8?B?cWdKVXAvaFlLSGdQa3R3bGVPd0V3ditvdUNUWWwxNFFtMG9IR05EV2FOa1VP?=
- =?utf-8?B?TXBuOWVtMHRvOVdPN0MrRzcyMWVLc05TTnhEUWd1MnRNaUpBT1F3L2NFYmF5?=
- =?utf-8?B?UjdrRDc0WG5MZkQwTVJuai82OVhHQndtMzVvY3pqUVN0VEVaWVZCck1Zdmpy?=
- =?utf-8?B?VW5nN2JSWDNmbXBzbHBuMktMRS9OQlJsSDZ2UFpQTExwVkFwZUxtTnl4Z3lT?=
- =?utf-8?B?WFFGVFphZExWaGkwNlRWRGYzMFNGL1pONGdNbjRiU2pZcm9VWlNnQWduTGIy?=
- =?utf-8?B?ZkZTYks3L05hVENmM2pYOWkweGJNd2ZhR3YyMHd6Mkdyb0dKSVJ5US9EZTlG?=
- =?utf-8?B?RUh6WGFiR0JvZDA2WU1TUWtQKzNCNm5uM0FyaWlpclkzejJZWWZobHlDa2Ni?=
- =?utf-8?B?dWtMeVoxNUZlSUdCbzI3d0hzK3dNN2E4L09aVHI5ZzhvU3NSSlF4dTFwM3l4?=
- =?utf-8?B?bUx2NkloUmppdXo1QjQ0aThVMThVdWZCbzhURGR5VlY5dGl2eklxT0o1blpZ?=
- =?utf-8?B?My9IYVJVNGtRTHQ0QndJZkZSYVhHQ3ErYzZUSklFTVMvcXpvZFhZbFZlbnJx?=
- =?utf-8?B?eEsrcmpVOWRVOVlsMWRncEVqSjNPVzJ5YVNDTWQyUFpIRU5EeUM1T3FYNGFi?=
- =?utf-8?B?alFUb1JleDBJVnQydkQxRG1VK1pMOW91U2R1dERuZS92bUd1bzR5aGJqNGlX?=
- =?utf-8?B?SWd3UE5QUTB2dXMvYkU2M3h0RU5heGdndFFreWlIdlBoU3Fzc1lGcTZLYWg0?=
- =?utf-8?B?NWtDVGVWOGszc0lzcE9KZ1BMd0RlT1lnMHJsZlhCbldZRWpZbk5jdWt0cXBS?=
- =?utf-8?B?MHFPQ0F3LzdrV0tVRXNITVVqZmNCL2F5Nm5HdnFzd0czdFJ1RjVzUC9uaU52?=
- =?utf-8?B?dnd1YmtGUXBUKzJZbzBmYTAyNXNWckdMVkpXaThkcnYzYm9Ba1hNRjBRT3JQ?=
- =?utf-8?B?VVpUalJGVVpPMzdQUjZ0TStJRzcvNlJISW95d2xCdHoxcjZWaiswc0ZqYXNy?=
- =?utf-8?B?bnFRSFdjYWx1RDVlWEt5L2pFSCtiQ0pMSlgwWGVKUnZCSGRLY3NMei9xL25X?=
- =?utf-8?B?OUxpOGNzelEyazNMQ0JKYUhKTzFCSnFhWWlWaTJKMWtFSlQ5WXlXSm1HNmZE?=
- =?utf-8?B?SldsbjZvL2NLWnN6RGM0aGhZZ2c1c3Q1ZXhtcGZIMHhVZXZKZitOM0RzWEF0?=
- =?utf-8?B?TTAxdW1IZEJhcEdyQXdONlNheXp3ckEwd2FSNDdFN2lUcjdJRmVHSXBhc2k1?=
- =?utf-8?B?N0k2bmhpWWk2K0hZakZYUUdkNEtnWWZMRHJUOEFLdjRyNitQdFlCc29USVkx?=
- =?utf-8?B?QTJWeG9wTENLaUlqNXpmRFJONSswb1JqYzlBU0poSXZnd1owYmZxSmZpQnN5?=
- =?utf-8?B?cXZqaHBXRWc3OWxEc1ZLNmRnT1BSTDAzSjU2c1czYmhmUDVZd0l5UWpVQ1NF?=
- =?utf-8?B?UE4zcms0VEFRdVZSVDZZUkRXbmR4K1AxQ0xIUXEyVm5iUTRwa1lLenVIMlRr?=
- =?utf-8?B?THd6Z0VzVHlDOTAxTFJNMTZrNU1iUGZwNmk3cEdRYWdkc3BWSWRqYlErYmpm?=
- =?utf-8?B?aGFwbkxnZWVOWGZZTkN4Syt4b3o4aEpCSm5jTnIxTjA1aEV1ZGoxWkJrb2Z4?=
- =?utf-8?B?S3QvYWFvOXRYcElVRHVZRFdlaTVQY0EwbGVJUWx5MFRYc0VRVVdhRXpVUGZ4?=
- =?utf-8?B?WkdoeTFvZ2JPa1NiejJLWGFaYm1QRko3U2dUSTNLQkk2WXBxS0dyOU42Tjg4?=
- =?utf-8?B?Z0lJUklZNkEyZHM4RlNGM05XQzZZZnNRNXMrNDNrVnF1UERLQlVxSnpEZ3BI?=
- =?utf-8?B?aGFDRnU5YUQvTVRKVDZzblpiT3lHL0lnaW43bVVWeXNaYVkzcjExZjBYUFVD?=
- =?utf-8?B?T1Y5YXQ0YlZxUmJIeEdhWkZHWTdEWENQYTBIN0U1MkVEU0FlTzJBYy81ZGQv?=
- =?utf-8?B?MlZPSjdiTzNJSFQ4QTV2VDR1U0UyeGZWWEhDeFNhdEN1ejlrVWZyUkFBcW9X?=
- =?utf-8?Q?oO+GxkCKC+yCsO/bT866IAstG?=
-X-OriginatorOrg: amd.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 6cbece3d-8eaf-4c2c-8990-08dacc44d892
-X-MS-Exchange-CrossTenant-AuthSource: PH7PR12MB5712.namprd12.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 22 Nov 2022 04:48:49.3420
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: ljn3HZiuWerfEai5tDPDTXDTmNrY9mf4/uCZeV4AAhpwc0NSrt+A2/EuhIyhn/kINXn6mNt6YOGJ84BJUZjEaQ==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: CH3PR12MB7547
+User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.15; rv:102.0)
+ Gecko/20100101 Thunderbird/102.4.1
+Subject: Re: [PATCH RFC 0/6] Add metrics for neoverse-n2
+To:     James Clark <james.clark@arm.com>,
+        nick Forrington <Nick.Forrington@arm.com>,
+        Jumana MP <Jumana.MP@arm.com>,
+        John Garry <john.g.garry@oracle.com>,
+        Ian Rogers <irogers@google.com>
+Cc:     Will Deacon <will@kernel.org>, Mike Leach <mike.leach@linaro.org>,
+        Leo Yan <leo.yan@linaro.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        Arnaldo Carvalho de Melo <acme@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Jiri Olsa <jolsa@kernel.org>,
+        Namhyung Kim <namhyung@kernel.org>,
+        Andrew Kilroy <andrew.kilroy@arm.com>,
+        Shuai Xue <xueshuai@linux.alibaba.com>,
+        Zhuo Song <zhuo.song@linux.alibaba.com>,
+        linux-arm-kernel@lists.infradead.org,
+        linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <1667214694-89839-1-git-send-email-renyu.zj@linux.alibaba.com>
+ <d6553087-9157-21e8-6980-31bc8e44f066@arm.com>
+ <d334a33c-b171-8381-3f75-e47392b6cba5@linux.alibaba.com>
+ <107dda1a-6053-ea35-1e29-96ee6d049eb1@arm.com>
+From:   Jing Zhang <renyu.zj@linux.alibaba.com>
+In-Reply-To: <107dda1a-6053-ea35-1e29-96ee6d049eb1@arm.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-Hi,
 
-On 11/21/2022 7:33 PM, Jirka Hladky wrote:
+
+在 2022/11/21 下午7:51, James Clark 写道:
 > 
-> I'm testing AVX-512 packed double performance on the AMD Zen4
-> platform, and I need help identifying the backend-bound workloads. On
-> Intel systems, I use the metricgroup pipeline:
 > 
-> perf stat -M pipeline binary
+> On 16/11/2022 15:26, Jing Zhang wrote:
+>>
+>>
+>> 在 2022/11/16 下午7:19, James Clark 写道:
+>>>
+>>>
+>>> On 31/10/2022 11:11, Jing Zhang wrote:
+>>>> This series add six metricgroups for neoverse-n2, among which, the
+>>>> formula of topdown L1 is from the document:
+>>>> https://documentation-service.arm.com/static/60250c7395978b529036da86?token=
+>>>>
+>>>> Since neoverse-n2 does not yet support topdown L2, metricgroups such
+>>>> as Cache, TLB, Branch, InstructionsMix, and PEutilization are added to
+>>>> help further analysis of performance bottlenecks.
+>>>>
+>>>
+>>> Hi Jing,
+>>>
+>>> Thanks for working on this, these metrics look ok to me in general,
+>>> although we're currently working on publishing standardised metrics
+>>> across all new cores as part of a new project in Arm. This will include
+>>> N2, and our ones are very similar (or almost identical) to yours,
+>>> barring slightly different group names, metric names, and differences in
+>>> things like outputting topdown metrics as percentages.
+>>>
+>>> We plan to publish our standard metrics some time in the next 2 months.
+>>> Would you consider holding off on merging this change so that we have
+>>> consistant group names and units going forward? Otherwise N2 would be> the odd one out. I will send you the metrics when they are ready, and we
+>>> will have a script to generate perf jsons from them, so you can review.
+>>>
+>>
+>> Do you mean that after you release the new standard metrics, I remake my
+>> patch referring to them, such as consistent group names and unit?
 > 
-> which gives me exactly what I need.
+> Hi Jing,
 > 
-> What plans are to add a similar metric group for the AMD systems?
+> I was planning to submit the patch myself, but there will be a script to
+> generate perf json files, so no manual work would be needed. Although
+> this is complicated by the fact that we won't be publishing the fixed
+> TopdownL1 metrics that you have for the existing N2 silicon so there
+> would be a one time copy paste to fix that part.
+> 
+>>
+>>
+>>> We also have a slightly different forumula for one of the top down
+>>> metrics which I think would be slightly more accurate. We don't have
+>>
+>>
+>> The v2 version of the patchset updated the formula of topdown L1.
+>> Link: https://lore.kernel.org/all/1668411720-3581-1-git-send-email-renyu.zj@linux.alibaba.com/
+>>
+>> The formula of the v2 version is more accurate than v1, and it has been
+>> verified in our test environment. Can you share your formula first and we
+>> can discuss it together? :)
+> 
+> I was looking at v2 but replied to the root of the thread by mistake. I
+> also had it the wrong way round. So your version corrects for the errata
+> on the current version of N2 (as you mentioned in the commit message).
+> Our version would be if there is a future new silicon revision with that
+> fixed, but it does have an extra improvement by subtracting the branch
+> mispredicts.
+> 
+> Perf doesn't currently match the jsons based on silicon revision, so
+> we'd have to add something in for that if a fixed silicon version is
+> released. But this is another problem for another time.
 > 
 
-For determining if a workload is backend-bound, the recommended
-method on Zen 4 is to use the pipeline utilization metrics. We are
-the process of providing similar metrics and metric groups through
-the perf JSON event files for Zen 4 and they will be out very soon.
+Hi James,
 
-The Processor Programming Reference (PPR) for Zen 4 based parts
-has a table titled "Guidance for Pipeline Utilization Statistics"
-which has the formulae for different Level 1 and 2 pipeline
-utilization metrics.
+Let's do what Ian said, and you can improve it later with the standard metrics,
+after the fixed silicon version is released.
 
-The PPR for Genoa processors is available here:
-https://www.amd.com/system/files/TechDocs/55901_0.25.zip
 
-In this specific document, the table is in page 235 under section
-2.1.15 titled "Performance Monitor Counters".
+> This is the frontend bound metric we have for future revisions:
+> 
+> 	"100 * ( (STALL_SLOT_FRONTEND/(CPU_CYCLES * 5)) - ((BR_MIS_PRED *
+> 4)/CPU_CYCLES) )"
+> 
+> Other changes are, for example, your 'wasted' metric, we have
+> 'bad_speculation', and without the
+> cycles subtraction:
+> 
+> 	100 * ( ((1 - (OP_RETIRED/OP_SPEC)) * (1 - (STALL_SLOT/(CPU_CYCLES *
+> 5)))) + ((BR_MIS_PRED * 4)/CPU_CYCLES) )
+> 
 
-It may not be convenient to find out if a workload is backend-bound
-without the use of a metric but one can still do it by programming
-the raw events that make up that metric.
+Thanks for sharing your metric version, But I still wonder, is BR_MIS_PRED not classified
+as frontend bound? How do you judge the extra improvement by subtracting branch mispredicts?
 
-E.g. the formula for determining backend boundedness is:
-Event[100431EA0] / 6 * Event[430076]
+> And some more details filled in around the units, for example:
+> 
+>     {
+>         "MetricName": "bad_speculation",
+>         "MetricExpr": "100 * ( ((1 - (OP_RETIRED/OP_SPEC)) * (1 -
+> (STALL_SLOT/(CPU_CYCLES * 5)))) + ((BR_MIS_PRED * 4)/CPU_CYCLES) )",
+>         "BriefDescription": "Bad Speculation",
+>         "PublicDescription": "This metric is the percentage of total
+> slots that executed operations and didn't retire due to a pipeline
+> flush.\nThis indicates cycles that were utilized but inefficiently.",
+>         "MetricGroup": "TopdownL1",
+>         "ScaleUnit": "1percent of slots"
+>     },
+> 
 
-Running perf with the raw events give the counts which can then be
-used to calculate the metric.
+My "wasted" metric was changed according to the arm documentation description, it was originally
+"bad_speculation".  I will change "wasted" back to "bad_speculation", if you wish.
 
-E.g.
 
-$ perf stat -e r100431EA0,r430076 ./test
+Thanks,
+Jing
 
- Performance counter stats for './test':
 
-           750,372      r100431EA0:u
-     7,500,728,022      r430076:u
-
-       2.894204814 seconds time elapsed
-
-       2.894060000 seconds user
-       0.000000000 seconds sys
-
-The backend boundedness is then 750372 / (6 * 7500728022)
-which is roughly 0.001667%.
-
-- Sandipan
+> So ignoring the errata issue, the main reason to hold off is for
+> consistency and churn because these metrics in this format will be
+> released for all cores going forwards.
+> 
+> Thanks
+> James
+> 
