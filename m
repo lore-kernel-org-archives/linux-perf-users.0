@@ -2,59 +2,58 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 59997C4332F
-	for <linux-perf-users@archiver.kernel.org>; Wed, 23 Nov 2022 23:31:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C0BAFC433FE
+	for <linux-perf-users@archiver.kernel.org>; Wed, 23 Nov 2022 23:31:44 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229716AbiKWXbN (ORCPT
+        id S229961AbiKWXbn (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Wed, 23 Nov 2022 18:31:13 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36856 "EHLO
+        Wed, 23 Nov 2022 18:31:43 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37242 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229851AbiKWXbM (ORCPT
+        with ESMTP id S229519AbiKWXbm (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Wed, 23 Nov 2022 18:31:12 -0500
-Received: from mail-wm1-x32f.google.com (mail-wm1-x32f.google.com [IPv6:2a00:1450:4864:20::32f])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1D38B31370
-        for <linux-perf-users@vger.kernel.org>; Wed, 23 Nov 2022 15:31:11 -0800 (PST)
-Received: by mail-wm1-x32f.google.com with SMTP id p13-20020a05600c468d00b003cf8859ed1bso78813wmo.1
-        for <linux-perf-users@vger.kernel.org>; Wed, 23 Nov 2022 15:31:11 -0800 (PST)
+        Wed, 23 Nov 2022 18:31:42 -0500
+Received: from mail-wr1-x433.google.com (mail-wr1-x433.google.com [IPv6:2a00:1450:4864:20::433])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DFB6542188
+        for <linux-perf-users@vger.kernel.org>; Wed, 23 Nov 2022 15:31:40 -0800 (PST)
+Received: by mail-wr1-x433.google.com with SMTP id v1so31684088wrt.11
+        for <linux-perf-users@vger.kernel.org>; Wed, 23 Nov 2022 15:31:40 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=google.com; s=20210112;
         h=cc:to:subject:message-id:date:from:in-reply-to:references
          :mime-version:from:to:cc:subject:date:message-id:reply-to;
-        bh=2Gh9adVajP218Ts3ApPAosWBBtQBdYWaRz2QA1+khtY=;
-        b=HqThi0RtqIKtE7Hjk/pvTU/Ly6yW/y6qWaDK+myj+xWWLcupKPL+72uQbpAGYGwF9P
-         YYPNGeYWJttf7vNQIAEfyzJCUpFC9BHm0OdJfpYeoUOVeXTOsTNB2+iiGVCgY4q3sFEd
-         16j5SGUB8AcKs1BvDUMprlQCAS2FBkLF9j2tRMXtB3E4ApfDrEvz3HLzCUrzLhtNZXxR
-         RuO/2i3wb7nFSRqp8TmeqbJsjy/wdnx4S3asMkDb30Uu6lxTy5qdQ55bFuGiIfTu7Vss
-         dmaKTUqMgNdoDuVQzk5QA0KddC2ob8WAzen4fuq4x76bftwqG8zDw18c7yjWEjYj6FZQ
-         Kgzg==
+        bh=/GzkdSJX9SNnKwY3qDUaOPRLL/gIxEhMol0Hco9KJpI=;
+        b=pJigdusRH1JM3OUzwj2QESzt6NcfAn7uDMEsODC5XoSSnhwnwUsElhvuQ5sM8aU7nr
+         2iZQNQjM/uGkSrp5Se1jUs35kDGavm4vtBgYtMeGuaW8+9lv3+qXppXdnCKNeqnTkLp2
+         gXhKCgodjbjHHdyhB+dfIhSbSQKQXlpAqVMYVBVMxj22VqwryovoonYrDWoJ159RzOVu
+         7LR6me/japqo6FLVcDyZ4hVvbbwLEjpYn3EoqBqhNb7XWff9r8lRBmnDfJhhm6x4TvY7
+         QyEq5gb+xxiSEorfhRW0W7nQDDufKRiUOM4P6FyWjIM1tNwTvZrmjF0EtDPqP9qasPEO
+         cxcg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
         h=cc:to:subject:message-id:date:from:in-reply-to:references
          :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
          :reply-to;
-        bh=2Gh9adVajP218Ts3ApPAosWBBtQBdYWaRz2QA1+khtY=;
-        b=G0AI03OLSFuXSi4EmnN3P0WWkvsEoAs4cOR9/KwMF91dcJVp5oSf+e+9sHEQ/aqLtF
-         e7idzd19sKyrOwhJhWdBxZqOZ9VtjjTCAAJAvBXPSTw3s/NfkKomnhrVuDsr12rHVQrX
-         Xq+szlFNssV3kLMTNN5+fVxvzUVhDgXHkwCiyvcePHeV5KQMvlPbHE/z//fG2St3Xbza
-         0Jngs4e+oo0Jd40I5orffh1keqFPXXu6Hk021K5XucJ+HQv32z7F6BM+id7Xf8mv0SWj
-         Sv+/QI+hqGidalIjEtjiMqHfMtsWk56bRb+h/IUaL/4PsJ71yPfdlNC3SQa9aPqtDvQe
-         XUcA==
-X-Gm-Message-State: ANoB5pmFi8sr4ya0E4AALDRxT4OxeEgIEEsWu+2YN50VvwKOyT7mEDn9
-        VhKmSI8nMlVLwNupChxKlRy9MoH/2ZbQ9+siT5fjpA==
-X-Google-Smtp-Source: AA0mqf5HIHYQdZbYDp1s7lpv3EqNoj/9DctXzBPhAZrbRXn+ZcvGKoBv9/gW+rlKWpQtQYcH3rcWnFdpf9C8juK6kM4=
-X-Received: by 2002:a1c:7318:0:b0:3cf:cb16:f24a with SMTP id
- d24-20020a1c7318000000b003cfcb16f24amr24822853wmb.182.1669246269491; Wed, 23
- Nov 2022 15:31:09 -0800 (PST)
+        bh=/GzkdSJX9SNnKwY3qDUaOPRLL/gIxEhMol0Hco9KJpI=;
+        b=qK2gTjlkdo6Dys+szXLCp8Vu9RXtOJCITqbMVcvh0MIXmZX01lCAlPXfu9bcCOVH2c
+         ffhGuTx71Q3kkP8MT07q9TjX4WCYdMyOylJCkK0dXjuEaAG7XRQxvkpUdK4vzyNJm0WI
+         yLBAXxc0oz/POiVTVY0WDo//niXhz+vX+oNEKUISDq7PRXuw5n+UZsOGuBhOV/SINz3+
+         XbRJW+S8Cy/xfsHGUVAZz5cPpUQ8W3wjRwxkl7B1E9zRstCQAEvP5WpVTxQ+VbJgjkPy
+         Zhrp29ELqTGB8BxLF5iwm3WWNP/ZN2OxBbGO5TEUg3gB6aWj3duEIrhadsc8xQNWNSMA
+         Tp/w==
+X-Gm-Message-State: ANoB5plhyHJzhe60Wy9GKjdBGhdPr7PVDyBozta1vzlMEN5jIveZTjTV
+        sOwPk9BtnZ5MQa/6WHm8N4XtAsULDfef5I7J4TbzQg==
+X-Google-Smtp-Source: AA0mqf6bcwQGpv2OmjpeQVbXNNC8KE4XFllZ+PODDpuME59hW5jYnbqMEvt1epthcqLp92qvIxYH8J/UiNmeYix8oOg=
+X-Received: by 2002:adf:e64f:0:b0:241:e2f1:8b44 with SMTP id
+ b15-20020adfe64f000000b00241e2f18b44mr6043654wrn.300.1669246299194; Wed, 23
+ Nov 2022 15:31:39 -0800 (PST)
 MIME-Version: 1.0
-References: <20221123180208.2068936-1-namhyung@kernel.org> <20221123180208.2068936-15-namhyung@kernel.org>
-In-Reply-To: <20221123180208.2068936-15-namhyung@kernel.org>
+References: <20221123180208.2068936-1-namhyung@kernel.org> <20221123180208.2068936-16-namhyung@kernel.org>
+In-Reply-To: <20221123180208.2068936-16-namhyung@kernel.org>
 From:   Ian Rogers <irogers@google.com>
-Date:   Wed, 23 Nov 2022 15:30:56 -0800
-Message-ID: <CAP-5=fVJjPXk2hmWc6xqDxe06Arq-nOB51CwihAuuVFAoaKJ4g@mail.gmail.com>
-Subject: Re: [PATCH 14/15] perf stat: Rename "aggregate-number" to "cpu-count"
- in JSON
+Date:   Wed, 23 Nov 2022 15:31:26 -0800
+Message-ID: <CAP-5=fVaUFDwcP9s8aAtxFtRWQnBqRBrZYkKxAxzog_pmicsRQ@mail.gmail.com>
+Subject: Re: [PATCH 15/15] perf stat: Tidy up JSON metric-only output when no metrics
 To:     Namhyung Kim <namhyung@kernel.org>
 Cc:     Arnaldo Carvalho de Melo <acme@kernel.org>,
         Jiri Olsa <jolsa@kernel.org>, Ingo Molnar <mingo@kernel.org>,
@@ -73,47 +72,123 @@ X-Mailing-List: linux-perf-users@vger.kernel.org
 
 On Wed, Nov 23, 2022 at 10:02 AM Namhyung Kim <namhyung@kernel.org> wrote:
 >
-> As the JSON output has been broken for a little while, I guess there are
-> not many users.  Let's rename the field to more intuitive one. :)
+> It printed empty strings for each metric.  I guess it's needed for CSV
+> output to match the column number.  We could just ignore the empty
+> metrics in JSON but it ended up with a broken JSON object with a
+> trailing comma.
+>
+> So I added a dummy '"metric-value" : "none"' part.  To do that, it
+> needs to pass struct outstate to print_metric_end() to check if any
+> metric value is printed or not.
+>
+> Before:
+>   # perf stat -aj --metric-only --per-socket --for-each-cgroup system.slice true
+>   {"socket" : "S0", "cpu-count" : 8, "cgroup" : "system.slice", "" : "", "" : "", "" : "", "" : "", "" : "", "" : "", "" : "", "" : ""}
+>
+> After:
+>   # perf stat -aj --metric-only --per-socket --for-each-cgroup system.slice true
+>   {"socket" : "S0", "cpu-count" : 8, "cgroup" : "system.slice", "metric-value" : "none"}
+>
+> Signed-off-by: Namhyung Kim <namhyung@kernel.org>
 
-I'm not sure cpu-count is accurate. For example, an uncore counter in
-a dual socket machine may have a CPU mask of "0, 36", ie one event per
-socket. The aggregate-number in this case I believe is 2.
+Acked-by: Ian Rogers <irogers@google.com>
 
 Thanks,
 Ian
 
-> Signed-off-by: Namhyung Kim <namhyung@kernel.org>
 > ---
->  tools/perf/util/stat-display.c | 8 ++++----
->  1 file changed, 4 insertions(+), 4 deletions(-)
+>  tools/perf/util/stat-display.c | 27 +++++++++++++++++----------
+>  1 file changed, 17 insertions(+), 10 deletions(-)
 >
 > diff --git a/tools/perf/util/stat-display.c b/tools/perf/util/stat-display.c
-> index 43640115454c..7a39a1a7261d 100644
+> index 7a39a1a7261d..847acdb5dc40 100644
 > --- a/tools/perf/util/stat-display.c
 > +++ b/tools/perf/util/stat-display.c
-> @@ -281,19 +281,19 @@ static void print_aggr_id_json(struct perf_stat_config *config,
+> @@ -532,6 +532,8 @@ static void print_metric_only_json(struct perf_stat_config *config __maybe_unuse
+>         while (isdigit(*ends) || *ends == '.')
+>                 ends++;
+>         *ends = 0;
+> +       if (!unit[0] || !vals[0])
+> +               return;
+>         fprintf(out, "%s\"%s\" : \"%s\"", os->first ? "" : ", ", unit, vals);
+>         os->first = false;
+>  }
+> @@ -864,14 +866,19 @@ static void print_metric_begin(struct perf_stat_config *config,
+>         print_cgroup(config, os->cgrp ? : evsel->cgrp);
+>  }
 >
->         switch (config->aggr_mode) {
->         case AGGR_CORE:
-> -               fprintf(output, "\"core\" : \"S%d-D%d-C%d\", \"aggregate-number\" : %d, ",
-> +               fprintf(output, "\"core\" : \"S%d-D%d-C%d\", \"cpu-count\" : %d, ",
->                         id.socket, id.die, id.core, nr);
->                 break;
->         case AGGR_DIE:
-> -               fprintf(output, "\"die\" : \"S%d-D%d\", \"aggregate-number\" : %d, ",
-> +               fprintf(output, "\"die\" : \"S%d-D%d\", \"cpu-count\" : %d, ",
->                         id.socket, id.die, nr);
->                 break;
->         case AGGR_SOCKET:
-> -               fprintf(output, "\"socket\" : \"S%d\", \"aggregate-number\" : %d, ",
-> +               fprintf(output, "\"socket\" : \"S%d\", \"cpu-count\" : %d, ",
->                         id.socket, nr);
->                 break;
->         case AGGR_NODE:
-> -               fprintf(output, "\"node\" : \"N%d\", \"aggregate-number\" : %d, ",
-> +               fprintf(output, "\"node\" : \"N%d\", \"cpu-count\" : %d, ",
->                         id.node, nr);
+> -static void print_metric_end(struct perf_stat_config *config)
+> +static void print_metric_end(struct perf_stat_config *config, struct outstate *os)
+>  {
+> +       FILE *output = config->output;
+> +
+>         if (!config->metric_only)
+>                 return;
+>
+> -       if (config->json_output)
+> -               fputc('}', config->output);
+> -       fputc('\n', config->output);
+> +       if (config->json_output) {
+> +               if (os->first)
+> +                       fputs("\"metric-value\" : \"none\"", output);
+> +               fputc('}', output);
+> +       }
+> +       fputc('\n', output);
+>  }
+>
+>  static void print_aggr(struct perf_stat_config *config,
+> @@ -897,7 +904,7 @@ static void print_aggr(struct perf_stat_config *config,
+>
+>                         print_counter_aggrdata(config, counter, s, os);
+>                 }
+> -               print_metric_end(config);
+> +               print_metric_end(config, os);
+>         }
+>  }
+>
+> @@ -929,7 +936,7 @@ static void print_aggr_cgroup(struct perf_stat_config *config,
+>
+>                                 print_counter_aggrdata(config, counter, s, os);
+>                         }
+> -                       print_metric_end(config);
+> +                       print_metric_end(config, os);
+>                 }
+>         }
+>  }
+> @@ -985,7 +992,7 @@ static void print_no_aggr_metric(struct perf_stat_config *config,
+>                         printout(config, os, uval, run, ena, 1.0, counter_idx);
+>                 }
+>                 if (!first)
+> -                       print_metric_end(config);
+> +                       print_metric_end(config, os);
+>         }
+>  }
+>
+> @@ -1348,7 +1355,7 @@ static void print_cgroup_counter(struct perf_stat_config *config, struct evlist
+>         evlist__for_each_entry(evlist, counter) {
+>                 if (os->cgrp != counter->cgrp) {
+>                         if (os->cgrp != NULL)
+> -                               print_metric_end(config);
+> +                               print_metric_end(config, os);
+>
+>                         os->cgrp = counter->cgrp;
+>                         print_metric_begin(config, evlist, os, /*aggr_idx=*/0);
+> @@ -1357,7 +1364,7 @@ static void print_cgroup_counter(struct perf_stat_config *config, struct evlist
+>                 print_counter(config, counter, os);
+>         }
+>         if (os->cgrp)
+> -               print_metric_end(config);
+> +               print_metric_end(config, os);
+>  }
+>
+>  void evlist__print_counters(struct evlist *evlist, struct perf_stat_config *config,
+> @@ -1405,7 +1412,7 @@ void evlist__print_counters(struct evlist *evlist, struct perf_stat_config *conf
+>                         evlist__for_each_entry(evlist, counter) {
+>                                 print_counter(config, counter, &os);
+>                         }
+> -                       print_metric_end(config);
+> +                       print_metric_end(config, &os);
+>                 }
 >                 break;
 >         case AGGR_NONE:
 > --
