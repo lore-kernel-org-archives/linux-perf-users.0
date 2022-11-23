@@ -2,194 +2,198 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0A835C46467
-	for <linux-perf-users@archiver.kernel.org>; Wed, 23 Nov 2022 18:04:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D06D6C433FE
+	for <linux-perf-users@archiver.kernel.org>; Wed, 23 Nov 2022 19:50:25 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S239563AbiKWSEb (ORCPT
+        id S235462AbiKWTuY (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Wed, 23 Nov 2022 13:04:31 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56244 "EHLO
+        Wed, 23 Nov 2022 14:50:24 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40940 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S239495AbiKWSDK (ORCPT
+        with ESMTP id S234839AbiKWTuX (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Wed, 23 Nov 2022 13:03:10 -0500
-Received: from mail-pl1-x630.google.com (mail-pl1-x630.google.com [IPv6:2607:f8b0:4864:20::630])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E7371B86B;
-        Wed, 23 Nov 2022 10:02:32 -0800 (PST)
-Received: by mail-pl1-x630.google.com with SMTP id io19so17330837plb.8;
-        Wed, 23 Nov 2022 10:02:32 -0800 (PST)
+        Wed, 23 Nov 2022 14:50:23 -0500
+Received: from mail-wm1-x329.google.com (mail-wm1-x329.google.com [IPv6:2a00:1450:4864:20::329])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 31061786D2
+        for <linux-perf-users@vger.kernel.org>; Wed, 23 Nov 2022 11:50:22 -0800 (PST)
+Received: by mail-wm1-x329.google.com with SMTP id t25-20020a1c7719000000b003cfa34ea516so3334668wmi.1
+        for <linux-perf-users@vger.kernel.org>; Wed, 23 Nov 2022 11:50:22 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20210112;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:sender:from:to:cc:subject:date
+        d=linaro.org; s=google;
+        h=message-id:date:subject:cc:to:from:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=5gWMIg8ivBELEJG/R0PKwrUC/7uMdDKInwMAEQaG27g=;
-        b=qke1to8QicpmSPkYhan1X5ZD1RXagJ2z9CmBhlLxQnhfXiTNJv8xxwutR/52394kes
-         /01n7X41yjZGds2kUIu5G9xg2YM8+VDjSESa6fAiTsGHXfgO3j6QTC5HJDSwJN4E7eKH
-         1maVXeqsL+OzSug7BaPNpHQw+lJLgtlPWzSpJQrhtBCxCto4yLKv3yA+j0tGTV2Xf0zH
-         XuELKUdwLzl+JQqJ5qv1xzNITBfylJFCh3RO/44/tN61UNXshv+B4U2FF4CwgHGR2MuW
-         OvkT+rhMS0TMFgvbe2U5+6lolArOc4uY0IKRs67Sutu0wItPk0E03j9nrsqC5gsTvG6O
-         Hqdg==
+        bh=bOCelKtodnOuBbyEk5ruc3Oby9rXzvati+Q8sVlxgR4=;
+        b=FDq91Yc8KX6yqp7V+bpv/rzlnUdQv1LV7ogYwNkgupB/LvREIceWQQx4aiylWP/LJ9
+         cXgrHE9z4D7ZlY8M068nacQXPnF00jDohjpADktaWNuJPlwQLQVzdjH61+LprPx/Mz+K
+         cGZjcaSVyYv2LeXnsil0KNB2c3GDC9zUwAGhvm/XayaszG/BnNQn+YW9kFVUiwd5oadg
+         ilXbD8/VCpEekWIb3VAt4jGXLH9F+LMfPvi41HF8AXHSe3g4wxtRA0Ra23oenqJgqF4v
+         iYMInsZS6cLcUhiq0RxY2rdRUj5bQh3ix4BPk6v4hieHjlacUSJD6Lo0qW09hYi1uxUW
+         4IaA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:sender:x-gm-message-state:from
-         :to:cc:subject:date:message-id:reply-to;
-        bh=5gWMIg8ivBELEJG/R0PKwrUC/7uMdDKInwMAEQaG27g=;
-        b=CSgyiyVa/M7uRk7X2k+g6+qsCIc11Q8TFlMn46yfxaa+tABOZhOPSZhBbarrbq6xj7
-         vHrw+xmuv8XZz4r6tntEDE/v3kGo0An2SD8Vui1+4gfsGO8VDVARN90xzbpv+jW5Auv5
-         ULERn1XPRSatCXCFGRw7YB0RSuUowJk4o++IKx+IqnjVil3ZXth8E8CrRGMc8hQ8qlT0
-         KuLVS+Yps21Y2Kcx9+OVesgbJFmU0vdSUi80mHmXEjg26ms3lljbrBmslDMWuF7emB3u
-         H+NVpDjYwqAm2LhRyEiFG9mK8DCvg6IRRe6FCr8BzifLh5NOVyRroPpdQLw6GS7Bnv29
-         6aFQ==
-X-Gm-Message-State: ANoB5plyjAtva/h0YfG9QYiKimb/znui+sBSaeo0ua0luyiFY7XWWj47
-        rfG4B//Apn4DuaW7SKWQw6w=
-X-Google-Smtp-Source: AA0mqf4xZ5Y7E2KNh89B4QFT2XJ7+bbx0UghsjM6tXas+Zl8Eyd1Eui7nsyNb9KnfRXIcrOl4GcCWA==
-X-Received: by 2002:a17:903:3311:b0:186:d5b9:fbcd with SMTP id jk17-20020a170903331100b00186d5b9fbcdmr12767970plb.64.1669226552177;
-        Wed, 23 Nov 2022 10:02:32 -0800 (PST)
-Received: from balhae.hsd1.ca.comcast.net ([2601:647:6780:a80:c968:76:254b:3790])
-        by smtp.gmail.com with ESMTPSA id i15-20020a655b8f000000b00470275c8d6dsm10792364pgr.10.2022.11.23.10.02.31
+        h=message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=bOCelKtodnOuBbyEk5ruc3Oby9rXzvati+Q8sVlxgR4=;
+        b=FCdi4DHppzd7EHJKTfyG3Ap5O6H6DhrNgaFawNt0DHXfPrFZsRlzQxDNCsk8AJC8f9
+         NAPN5Mw7SM8cvaYuiu4bOshaZjM9hjEg6tazs5RU2J7VCh0TCoPCH8fkc2xnXlMA03kN
+         7sgHjfb/JN9ukwDpsNYfqLgP6laF3dmfXfGBOLpvmhqz6+9oOWy5IJkz2KwbRx19B9LY
+         PfKXiDZoejc7KlCGqVUAxNxdkjGffawx125zZakLqRZuEy8Td/BhyeFmiGxyOj6aQqwO
+         3+05GwBU/6CinOrNrw3qkyAgveOy+JbVXWjlSnpoUapgXaVmVgmnEK2ml/TWLQCzeNS+
+         V3NQ==
+X-Gm-Message-State: ANoB5pmm9DgPUTLK27/VFqkvJWtmrbljDDrx+aeJSbJNw2659lVWYffz
+        28jV664vt/9GBGvgXyewks+nec7Ihpfu2Q==
+X-Google-Smtp-Source: AA0mqf6/pak5h2/DEE+iiJ8hWac6o6kj3rrZskaMGds1CWt9RBDVnvFzVyHSzvnF8IFrV5VfHEIDGQ==
+X-Received: by 2002:a05:600c:2108:b0:3cf:aae0:802a with SMTP id u8-20020a05600c210800b003cfaae0802amr11677830wml.112.1669233020690;
+        Wed, 23 Nov 2022 11:50:20 -0800 (PST)
+Received: from linaro.org ([2a00:23c5:6809:2201:fcbc:7b5d:8d6c:43a4])
+        by smtp.gmail.com with ESMTPSA id w5-20020a5d6805000000b002364c77bcacsm7267414wru.38.2022.11.23.11.50.19
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 23 Nov 2022 10:02:31 -0800 (PST)
-Sender: Namhyung Kim <namhyung@gmail.com>
-From:   Namhyung Kim <namhyung@kernel.org>
-To:     Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Jiri Olsa <jolsa@kernel.org>
-Cc:     Ingo Molnar <mingo@kernel.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Ian Rogers <irogers@google.com>,
-        Adrian Hunter <adrian.hunter@intel.com>,
-        linux-perf-users@vger.kernel.org,
-        Kan Liang <kan.liang@linux.intel.com>,
-        Zhengjun Xing <zhengjun.xing@linux.intel.com>,
-        James Clark <james.clark@arm.com>,
-        Athira Jajeev <atrajeev@linux.vnet.ibm.com>
-Subject: [PATCH 15/15] perf stat: Tidy up JSON metric-only output when no metrics
-Date:   Wed, 23 Nov 2022 10:02:08 -0800
-Message-Id: <20221123180208.2068936-16-namhyung@kernel.org>
-X-Mailer: git-send-email 2.38.1.584.g0f3c55d4c2-goog
-In-Reply-To: <20221123180208.2068936-1-namhyung@kernel.org>
-References: <20221123180208.2068936-1-namhyung@kernel.org>
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+        Wed, 23 Nov 2022 11:50:20 -0800 (PST)
+From:   Mike Leach <mike.leach@linaro.org>
+To:     coresight@lists.linaro.org, linux-arm-kernel@lists.infradead.org,
+        linux-kernel@vger.kernel.org
+Cc:     mathieu.poirier@linaro.org, suzuki.poulose@arm.com,
+        peterz@infradead.org, mingo@redhat.com, acme@kernel.org,
+        linux-perf-users@vger.kernel.org, leo.yan@linaro.org,
+        quic_jinlmao@quicinc.com, Mike Leach <mike.leach@linaro.org>
+Subject: [PATCH v6 00/14] coresight: Add new API to allocate trace source ID values
+Date:   Wed, 23 Nov 2022 19:49:56 +0000
+Message-Id: <20221123195010.6859-1-mike.leach@linaro.org>
+X-Mailer: git-send-email 2.17.1
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-It printed empty strings for each metric.  I guess it's needed for CSV
-output to match the column number.  We could just ignore the empty
-metrics in JSON but it ended up with a broken JSON object with a
-trailing comma.
+The current method for allocating trace source ID values to sources is
+to use a fixed algorithm for CPU based sources of (cpu_num * 2 + 0x10).
+The STM is allocated ID 0x1.
 
-So I added a dummy '"metric-value" : "none"' part.  To do that, it
-needs to pass struct outstate to print_metric_end() to check if any
-metric value is printed or not.
+This fixed algorithm is used in both the CoreSight driver code, and by
+perf when writing the trace metadata in the AUXTRACE_INFO record.
 
-Before:
-  # perf stat -aj --metric-only --per-socket --for-each-cgroup system.slice true
-  {"socket" : "S0", "cpu-count" : 8, "cgroup" : "system.slice", "" : "", "" : "", "" : "", "" : "", "" : "", "" : "", "" : "", "" : ""}
+The method needs replacing as currently:-
+1. It is inefficient in using available IDs.
+2. Does not scale to larger systems with many cores and the algorithm
+has no limits so will generate invalid trace IDs for cpu number > 44.
 
-After:
-  # perf stat -aj --metric-only --per-socket --for-each-cgroup system.slice true
-  {"socket" : "S0", "cpu-count" : 8, "cgroup" : "system.slice", "metric-value" : "none"}
+Additionally requirements to allocate additional system IDs on some
+systems have been seen.
 
-Signed-off-by: Namhyung Kim <namhyung@kernel.org>
----
- tools/perf/util/stat-display.c | 27 +++++++++++++++++----------
- 1 file changed, 17 insertions(+), 10 deletions(-)
+This patch set  introduces an API that allows the allocation of trace IDs
+in a dynamic manner.
 
-diff --git a/tools/perf/util/stat-display.c b/tools/perf/util/stat-display.c
-index 7a39a1a7261d..847acdb5dc40 100644
---- a/tools/perf/util/stat-display.c
-+++ b/tools/perf/util/stat-display.c
-@@ -532,6 +532,8 @@ static void print_metric_only_json(struct perf_stat_config *config __maybe_unuse
- 	while (isdigit(*ends) || *ends == '.')
- 		ends++;
- 	*ends = 0;
-+	if (!unit[0] || !vals[0])
-+		return;
- 	fprintf(out, "%s\"%s\" : \"%s\"", os->first ? "" : ", ", unit, vals);
- 	os->first = false;
- }
-@@ -864,14 +866,19 @@ static void print_metric_begin(struct perf_stat_config *config,
- 	print_cgroup(config, os->cgrp ? : evsel->cgrp);
- }
- 
--static void print_metric_end(struct perf_stat_config *config)
-+static void print_metric_end(struct perf_stat_config *config, struct outstate *os)
- {
-+	FILE *output = config->output;
-+
- 	if (!config->metric_only)
- 		return;
- 
--	if (config->json_output)
--		fputc('}', config->output);
--	fputc('\n', config->output);
-+	if (config->json_output) {
-+		if (os->first)
-+			fputs("\"metric-value\" : \"none\"", output);
-+		fputc('}', output);
-+	}
-+	fputc('\n', output);
- }
- 
- static void print_aggr(struct perf_stat_config *config,
-@@ -897,7 +904,7 @@ static void print_aggr(struct perf_stat_config *config,
- 
- 			print_counter_aggrdata(config, counter, s, os);
- 		}
--		print_metric_end(config);
-+		print_metric_end(config, os);
- 	}
- }
- 
-@@ -929,7 +936,7 @@ static void print_aggr_cgroup(struct perf_stat_config *config,
- 
- 				print_counter_aggrdata(config, counter, s, os);
- 			}
--			print_metric_end(config);
-+			print_metric_end(config, os);
- 		}
- 	}
- }
-@@ -985,7 +992,7 @@ static void print_no_aggr_metric(struct perf_stat_config *config,
- 			printout(config, os, uval, run, ena, 1.0, counter_idx);
- 		}
- 		if (!first)
--			print_metric_end(config);
-+			print_metric_end(config, os);
- 	}
- }
- 
-@@ -1348,7 +1355,7 @@ static void print_cgroup_counter(struct perf_stat_config *config, struct evlist
- 	evlist__for_each_entry(evlist, counter) {
- 		if (os->cgrp != counter->cgrp) {
- 			if (os->cgrp != NULL)
--				print_metric_end(config);
-+				print_metric_end(config, os);
- 
- 			os->cgrp = counter->cgrp;
- 			print_metric_begin(config, evlist, os, /*aggr_idx=*/0);
-@@ -1357,7 +1364,7 @@ static void print_cgroup_counter(struct perf_stat_config *config, struct evlist
- 		print_counter(config, counter, os);
- 	}
- 	if (os->cgrp)
--		print_metric_end(config);
-+		print_metric_end(config, os);
- }
- 
- void evlist__print_counters(struct evlist *evlist, struct perf_stat_config *config,
-@@ -1405,7 +1412,7 @@ void evlist__print_counters(struct evlist *evlist, struct perf_stat_config *conf
- 			evlist__for_each_entry(evlist, counter) {
- 				print_counter(config, counter, &os);
- 			}
--			print_metric_end(config);
-+			print_metric_end(config, &os);
- 		}
- 		break;
- 	case AGGR_NONE:
+Architecturally reserved IDs are never allocated, and the system is
+limited to allocating only valid IDs.
+
+Each of the current trace sources ETM3.x, ETM4.x and STM is updated to use
+the new API.
+
+For the ETMx.x devices IDs are allocated on certain events
+a) When using sysfs, an ID will be allocated on hardware enable, or a read of
+sysfs TRCTRACEID register and freed when the sysfs reset is written.
+
+b) When using perf, ID is allocated on during setup AUX event, and freed on
+event free. IDs are communicated using the AUX_OUTPUT_HW_ID packet.
+The ID allocator is notified when perf sessions start and stop
+so CPU based IDs are kept constant throughout any perf session.
+
+
+Note: This patchset breaks some backward compatibility for perf record and
+perf report.
+
+The version of the AUXTRACE_INFO has been updated to reflect the fact that
+the trace source IDs are generated differently. This will
+mean older versions of perf report cannot decode the newer file.
+
+Appies to coresight/next
+
+Changes since v5: (requested by suzuki)
+1) Prefer odd ID values for system IDs to avoid overlap with legacy CPU IDs
+2) Some style changes
+
+Changes since v4:
+1) update to ensure that compiling after each individual patch added still
+works - ie. git bisect not broken through the patchset..
+
+2) Revision to some of the now redundant code in cs-etm (James)
+
+3) Comments and other minor fixes requested by Suzuki.
+
+Changes since v3:
+1) Fixed aarch32 build error in ETM3.x driver.
+Reported-by: kernel test robot <lkp@intel.com>
+
+Changes since v2:
+1) Improved backward compatibility: (requested by James)
+
+Using the new version of perf on an old kernel will generate a usable file
+legacy metadata values are set by the new perf and will be used if mew
+ID packets are not present in the file.
+
+Using an older version of perf / simpleperf on an updated kernel may still
+work. The trace ID allocator has been updated to use the legacy ID values
+where possible, so generated file and used trace IDs will match up to the
+point where the legacy algorithm is broken anyway.
+
+2) Various changes to the ID allocator and ID packet format.
+(suggested by Suzuki)
+
+3) per CPU ID info in allocator now stored as atomic type to allow a passive read
+without taking the allocator spinlock. perf flow now allocates and releases ID
+values in setup_aux / free_event. Device enable and event enable use the passive
+read to set the allocated values. This simplifies the locking mechanisms on the
+perf run and fixes issues that arose with locking dependencies.
+
+Changes since v1:
+(after feedback & discussion with Mathieu & Suzuki).
+
+1) API has changed. The global trace ID map is managed internally, so it
+is no longer passed in to the API functions.
+
+2) perf record does not use sysfs to find the trace IDs. These are now
+output as AUX_OUTPUT_HW_ID events. The drivers, perf record, and perf report
+have been updated accordingly to generate and handle these events.
+
+Mike Leach (14):
+  coresight: trace-id: Add API to dynamically assign Trace ID values
+  coresight: Remove obsolete Trace ID unniqueness checks
+  coresight: perf: traceid: Add perf ID allocation and notifiers
+  coresight: stm: Update STM driver to use Trace ID API
+  coresight: etm4x: Update ETM4 driver to use Trace ID API
+  coresight: etm3x: Update ETM3 driver to use Trace ID API
+  coresight: etmX.X: stm: Remove trace_id() callback
+  coresight: trace id: Remove legacy get trace ID function.
+  perf: cs-etm: Move mapping of Trace ID and cpu into helper function
+  perf: cs-etm: Update record event to use new Trace ID protocol
+  kernel: events: Export perf_report_aux_output_id()
+  perf: cs-etm: Handle PERF_RECORD_AUX_OUTPUT_HW_ID packet
+  coresight: events: PERF_RECORD_AUX_OUTPUT_HW_ID used for Trace ID
+  coresight: trace-id: Add debug & test macros to Trace ID allocation
+
+ drivers/hwtracing/coresight/Makefile          |   2 +-
+ drivers/hwtracing/coresight/coresight-core.c  |  45 ---
+ .../hwtracing/coresight/coresight-etm-perf.c  |  23 ++
+ drivers/hwtracing/coresight/coresight-etm.h   |   3 +-
+ .../coresight/coresight-etm3x-core.c          |  93 +++--
+ .../coresight/coresight-etm3x-sysfs.c         |  27 +-
+ .../coresight/coresight-etm4x-core.c          |  73 +++-
+ .../coresight/coresight-etm4x-sysfs.c         |  27 +-
+ drivers/hwtracing/coresight/coresight-etm4x.h |   3 +
+ drivers/hwtracing/coresight/coresight-stm.c   |  49 +--
+ .../hwtracing/coresight/coresight-trace-id.c  | 298 ++++++++++++++++
+ .../hwtracing/coresight/coresight-trace-id.h  | 156 +++++++++
+ include/linux/coresight-pmu.h                 |  34 +-
+ include/linux/coresight.h                     |   3 -
+ kernel/events/core.c                          |   1 +
+ tools/include/linux/coresight-pmu.h           |  48 ++-
+ tools/perf/arch/arm/util/cs-etm.c             |  21 +-
+ .../perf/util/cs-etm-decoder/cs-etm-decoder.c |   7 +
+ tools/perf/util/cs-etm.c                      | 328 +++++++++++++++---
+ tools/perf/util/cs-etm.h                      |  14 +-
+ 20 files changed, 1024 insertions(+), 231 deletions(-)
+ create mode 100644 drivers/hwtracing/coresight/coresight-trace-id.c
+ create mode 100644 drivers/hwtracing/coresight/coresight-trace-id.h
+
 -- 
-2.38.1.584.g0f3c55d4c2-goog
+2.17.1
 
