@@ -2,141 +2,190 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C001FC4167D
-	for <linux-perf-users@archiver.kernel.org>; Wed, 23 Nov 2022 14:30:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9967BC4332F
+	for <linux-perf-users@archiver.kernel.org>; Wed, 23 Nov 2022 18:02:26 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S238723AbiKWOag (ORCPT
+        id S239182AbiKWSCZ (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Wed, 23 Nov 2022 09:30:36 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57786 "EHLO
+        Wed, 23 Nov 2022 13:02:25 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53604 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S238450AbiKWOaJ (ORCPT
+        with ESMTP id S239359AbiKWSCU (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Wed, 23 Nov 2022 09:30:09 -0500
-Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0C93290580;
-        Wed, 23 Nov 2022 06:28:36 -0800 (PST)
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id 60E9E61D3B;
-        Wed, 23 Nov 2022 14:28:36 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 5B521C433D6;
-        Wed, 23 Nov 2022 14:28:28 +0000 (UTC)
-Message-ID: <0da1813a-7e37-bc35-cf8d-8c41590f3b1a@xs4all.nl>
-Date:   Wed, 23 Nov 2022 15:28:27 +0100
+        Wed, 23 Nov 2022 13:02:20 -0500
+Received: from mail-pf1-x432.google.com (mail-pf1-x432.google.com [IPv6:2607:f8b0:4864:20::432])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CC0C160F9;
+        Wed, 23 Nov 2022 10:02:18 -0800 (PST)
+Received: by mail-pf1-x432.google.com with SMTP id v28so18006470pfi.12;
+        Wed, 23 Nov 2022 10:02:18 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20210112;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:sender:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=XSagVML7GgOqlOudGxczoz0/8G87CcGh9QY51qbKYAY=;
+        b=ixqc+fmP1EpYwjc94PYCfvYVyvk1b5Q7/lCMMoLyMbzTKtNetDuy/0FhIf8rhhTEi5
+         G4jqBVVV8NG8HitM5TUlTJMExA1DX4cKRAip8OLufvcBZwHPqYIaCKGd1BpzWYFLkD1o
+         gylPTOpMhucAftwmh9v0CPo4ak1alld20Q7R5poqnbOfhPjkMhGRiTlAzQ0xDA/Vn/f5
+         x5tOxSMR7KphqJEMgcy7jTa5InRL8z8Zvabm/RiTmV2+kz58p1yIZey+nwChvk6z58GA
+         ji+Gl+OvcYIomtG2t/V2aYdP8YgqrST/zg/oQpt9Tx77R5boFq4izG9abLuzrq6RI45n
+         QzcQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:sender:x-gm-message-state:from
+         :to:cc:subject:date:message-id:reply-to;
+        bh=XSagVML7GgOqlOudGxczoz0/8G87CcGh9QY51qbKYAY=;
+        b=XgMWds5uELM4fZFBTrQYAmej/wyEb4pCuW6vOCiseeY82n+HDVx648DtNp4Hxm1wWs
+         ZXOSB4AsRjDzD/SXk02yM9gQiHgeePOQl1GIEAz+OcSg5G+9BJCoIYN5mmcJGRk31Z+S
+         0nNcA4zwVGTz+0c/e9QPlY68AjAwGATIL3snhYnBVcaq3iFVfE6K8zJOd8zIduIu6xxN
+         L4kXP5WmqyB5WEGLKzTJCTFQCJzAlxcGY3m9GrbzxtuYViL9G3pwnMk4k4TBslLgvxuL
+         8P24VeShSrXEKKT8vpW6GYkq2/UbNGjwMSgUvUa+un1fD+l5F0ewwzr0Vu+hLpfx8A7t
+         4ruA==
+X-Gm-Message-State: ANoB5pmYnTJTzGyYPxReYvfk/KNTF/XQrq0gEm90I9xwQP0/rxaJ+ZQH
+        2h5JFig93nXAYj/vhGRLsCw=
+X-Google-Smtp-Source: AA0mqf6KzYb+/auV2JdDKMMa0tioOSOQjN7DGFDSezEYynfNyIFk8ympGBU0GuWU3Nh4oYZfsvtRrw==
+X-Received: by 2002:a63:5b44:0:b0:46f:c9e8:5752 with SMTP id l4-20020a635b44000000b0046fc9e85752mr8580769pgm.157.1669226538136;
+        Wed, 23 Nov 2022 10:02:18 -0800 (PST)
+Received: from balhae.hsd1.ca.comcast.net ([2601:647:6780:a80:c968:76:254b:3790])
+        by smtp.gmail.com with ESMTPSA id i15-20020a655b8f000000b00470275c8d6dsm10792364pgr.10.2022.11.23.10.02.16
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 23 Nov 2022 10:02:17 -0800 (PST)
+Sender: Namhyung Kim <namhyung@gmail.com>
+From:   Namhyung Kim <namhyung@kernel.org>
+To:     Arnaldo Carvalho de Melo <acme@kernel.org>,
+        Jiri Olsa <jolsa@kernel.org>
+Cc:     Ingo Molnar <mingo@kernel.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Ian Rogers <irogers@google.com>,
+        Adrian Hunter <adrian.hunter@intel.com>,
+        linux-perf-users@vger.kernel.org,
+        Kan Liang <kan.liang@linux.intel.com>,
+        Zhengjun Xing <zhengjun.xing@linux.intel.com>,
+        James Clark <james.clark@arm.com>,
+        Athira Jajeev <atrajeev@linux.vnet.ibm.com>
+Subject: [PATCH 05/15] perf stat: Remove prefix argument in print_metric_headers()
+Date:   Wed, 23 Nov 2022 10:01:58 -0800
+Message-Id: <20221123180208.2068936-6-namhyung@kernel.org>
+X-Mailer: git-send-email 2.38.1.584.g0f3c55d4c2-goog
+In-Reply-To: <20221123180208.2068936-1-namhyung@kernel.org>
+References: <20221123180208.2068936-1-namhyung@kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
- Thunderbird/102.4.1
-Subject: Re: [PATCH mm-unstable v1 16/20] mm/frame-vector: remove FOLL_FORCE
- usage
-Content-Language: en-US
-From:   Hans Verkuil <hverkuil@xs4all.nl>
-To:     David Hildenbrand <david@redhat.com>,
-        Tomasz Figa <tfiga@chromium.org>
-Cc:     x86@kernel.org, linux-alpha@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, linux-ia64@vger.kernel.org,
-        linux-mips@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
-        sparclinux@vger.kernel.org, linux-um@lists.infradead.org,
-        etnaviv@lists.freedesktop.org, dri-devel@lists.freedesktop.org,
-        linux-samsung-soc@vger.kernel.org, linux-rdma@vger.kernel.org,
-        linux-media@vger.kernel.org, linux-fsdevel@vger.kernel.org,
-        linux-mm@kvack.org, linux-perf-users@vger.kernel.org,
-        linux-security-module@vger.kernel.org,
-        linux-kselftest@vger.kernel.org,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Jason Gunthorpe <jgg@ziepe.ca>,
-        John Hubbard <jhubbard@nvidia.com>,
-        Peter Xu <peterx@redhat.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Andrea Arcangeli <aarcange@redhat.com>,
-        Hugh Dickins <hughd@google.com>, Nadav Amit <namit@vmware.com>,
-        Vlastimil Babka <vbabka@suse.cz>,
-        Matthew Wilcox <willy@infradead.org>,
-        Mike Kravetz <mike.kravetz@oracle.com>,
-        Muchun Song <songmuchun@bytedance.com>,
-        Shuah Khan <shuah@kernel.org>,
-        Lucas Stach <l.stach@pengutronix.de>,
-        David Airlie <airlied@gmail.com>,
-        Oded Gabbay <ogabbay@kernel.org>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Christoph Hellwig <hch@infradead.org>,
-        Alex Williamson <alex.williamson@redhat.com>,
-        Marek Szyprowski <m.szyprowski@samsung.com>,
-        Mauro Carvalho Chehab <mchehab@kernel.org>,
-        linux-kernel@vger.kernel.org
-References: <20221116102659.70287-1-david@redhat.com>
- <20221116102659.70287-17-david@redhat.com>
- <36dd800b-d96b-af39-d0de-a5a8ca1034dd@xs4all.nl>
-In-Reply-To: <36dd800b-d96b-af39-d0de-a5a8ca1034dd@xs4all.nl>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-On 23/11/2022 14:26, Hans Verkuil wrote:
-> Hi David, Tomasz,
-> 
-> On 16/11/2022 11:26, David Hildenbrand wrote:
->> FOLL_FORCE is really only for ptrace access. According to commit
->> 707947247e95 ("media: videobuf2-vmalloc: get_userptr: buffers are always
->> writable"), get_vaddr_frames() currently pins all pages writable as a
->> workaround for issues with read-only buffers.
-> 
-> I've decided to revert 707947247e95: I have not been able to reproduce the problem
-> described in that commit, and Tomasz reported that it caused problems with a
-> specific use-case they encountered. I'll post that patch soon and I expect it
-> to land in 6.2. It will cause a conflict with this patch, though.
-> 
-> If the problem described in that patch occurs again, then I will revisit it
-> and hopefully do a better job than I did before. That commit was not my
-> finest moment.
+It always passes a whitespace to the function, thus we can just add it to the
+function body.  Furthermore, it's only used in the normal output mode.
 
-In any case, for this patch:
+Well, actually CSV used it but it doesn't need to since we don't care about the
+indentation or alignment in the CSV output.
 
-Acked-by: Hans Verkuil <hverkuil-cisco@xs4all.nl>
+Signed-off-by: Namhyung Kim <namhyung@kernel.org>
+---
+ tools/perf/util/stat-display.c | 26 ++++++++++----------------
+ 1 file changed, 10 insertions(+), 16 deletions(-)
 
-Regards,
-
-	Hans
-
-> 
-> Regards,
-> 
-> 	Hans
-> 
->>
->> FOLL_FORCE, however, seems to be a legacy leftover as it predates
->> commit 707947247e95 ("media: videobuf2-vmalloc: get_userptr: buffers are
->> always writable"). Let's just remove it.
->>
->> Once the read-only buffer issue has been resolved, FOLL_WRITE could
->> again be set depending on the DMA direction.
->>
->> Cc: Hans Verkuil <hverkuil@xs4all.nl>
->> Cc: Marek Szyprowski <m.szyprowski@samsung.com>
->> Cc: Tomasz Figa <tfiga@chromium.org>
->> Cc: Marek Szyprowski <m.szyprowski@samsung.com>
->> Cc: Mauro Carvalho Chehab <mchehab@kernel.org>
->> Signed-off-by: David Hildenbrand <david@redhat.com>
->> ---
->>  drivers/media/common/videobuf2/frame_vector.c | 2 +-
->>  1 file changed, 1 insertion(+), 1 deletion(-)
->>
->> diff --git a/drivers/media/common/videobuf2/frame_vector.c b/drivers/media/common/videobuf2/frame_vector.c
->> index 542dde9d2609..062e98148c53 100644
->> --- a/drivers/media/common/videobuf2/frame_vector.c
->> +++ b/drivers/media/common/videobuf2/frame_vector.c
->> @@ -50,7 +50,7 @@ int get_vaddr_frames(unsigned long start, unsigned int nr_frames,
->>  	start = untagged_addr(start);
->>  
->>  	ret = pin_user_pages_fast(start, nr_frames,
->> -				  FOLL_FORCE | FOLL_WRITE | FOLL_LONGTERM,
->> +				  FOLL_WRITE | FOLL_LONGTERM,
->>  				  (struct page **)(vec->ptrs));
->>  	if (ret > 0) {
->>  		vec->got_ref = true;
-> 
+diff --git a/tools/perf/util/stat-display.c b/tools/perf/util/stat-display.c
+index 744b7a40f59a..deed6ccf072f 100644
+--- a/tools/perf/util/stat-display.c
++++ b/tools/perf/util/stat-display.c
+@@ -996,10 +996,9 @@ static void print_no_aggr_metric(struct perf_stat_config *config,
+ }
+ 
+ static void print_metric_headers_std(struct perf_stat_config *config,
+-				     const char *prefix, bool no_indent)
++				     bool no_indent)
+ {
+-	if (prefix)
+-		fprintf(config->output, "%s", prefix);
++	fputc(' ', config->output);
+ 
+ 	if (!no_indent) {
+ 		int len = aggr_header_lens[config->aggr_mode];
+@@ -1012,11 +1011,8 @@ static void print_metric_headers_std(struct perf_stat_config *config,
+ }
+ 
+ static void print_metric_headers_csv(struct perf_stat_config *config,
+-				     const char *prefix,
+ 				     bool no_indent __maybe_unused)
+ {
+-	if (prefix)
+-		fprintf(config->output, "%s", prefix);
+ 	if (config->interval)
+ 		fputs("time,", config->output);
+ 	if (!config->iostat_run)
+@@ -1024,7 +1020,6 @@ static void print_metric_headers_csv(struct perf_stat_config *config,
+ }
+ 
+ static void print_metric_headers_json(struct perf_stat_config *config,
+-				      const char *prefix __maybe_unused,
+ 				      bool no_indent __maybe_unused)
+ {
+ 	if (config->interval)
+@@ -1032,8 +1027,7 @@ static void print_metric_headers_json(struct perf_stat_config *config,
+ }
+ 
+ static void print_metric_headers(struct perf_stat_config *config,
+-				 struct evlist *evlist,
+-				 const char *prefix, bool no_indent)
++				 struct evlist *evlist, bool no_indent)
+ {
+ 	struct evsel *counter;
+ 	struct outstate os = {
+@@ -1047,11 +1041,11 @@ static void print_metric_headers(struct perf_stat_config *config,
+ 	};
+ 
+ 	if (config->json_output)
+-		print_metric_headers_json(config, prefix, no_indent);
++		print_metric_headers_json(config, no_indent);
+ 	else if (config->csv_output)
+-		print_metric_headers_csv(config, prefix, no_indent);
++		print_metric_headers_csv(config, no_indent);
+ 	else
+-		print_metric_headers_std(config, prefix, no_indent);
++		print_metric_headers_std(config, no_indent);
+ 
+ 	if (config->iostat_run)
+ 		iostat_print_header_prefix(config);
+@@ -1132,7 +1126,7 @@ static void print_header_interval_std(struct perf_stat_config *config,
+ 	}
+ 
+ 	if (config->metric_only)
+-		print_metric_headers(config, evlist, " ", true);
++		print_metric_headers(config, evlist, true);
+ 	else
+ 		fprintf(output, " %*s %*s events\n",
+ 			COUNTS_LEN, "counts", config->unit_width, "unit");
+@@ -1168,7 +1162,7 @@ static void print_header_std(struct perf_stat_config *config,
+ 	fprintf(output, ":\n\n");
+ 
+ 	if (config->metric_only)
+-		print_metric_headers(config, evlist, " ", false);
++		print_metric_headers(config, evlist, false);
+ }
+ 
+ static void print_header_csv(struct perf_stat_config *config,
+@@ -1178,7 +1172,7 @@ static void print_header_csv(struct perf_stat_config *config,
+ 			     const char **argv __maybe_unused)
+ {
+ 	if (config->metric_only)
+-		print_metric_headers(config, evlist, " ", true);
++		print_metric_headers(config, evlist, true);
+ }
+ static void print_header_json(struct perf_stat_config *config,
+ 			      struct target *_target __maybe_unused,
+@@ -1187,7 +1181,7 @@ static void print_header_json(struct perf_stat_config *config,
+ 			      const char **argv __maybe_unused)
+ {
+ 	if (config->metric_only)
+-		print_metric_headers(config, evlist, " ", true);
++		print_metric_headers(config, evlist, true);
+ }
+ 
+ static void print_header(struct perf_stat_config *config,
+-- 
+2.38.1.584.g0f3c55d4c2-goog
 
