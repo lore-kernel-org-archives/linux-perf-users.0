@@ -2,58 +2,58 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D52A7C4332F
-	for <linux-perf-users@archiver.kernel.org>; Wed, 23 Nov 2022 23:25:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E576BC433FE
+	for <linux-perf-users@archiver.kernel.org>; Wed, 23 Nov 2022 23:27:04 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229527AbiKWXZc (ORCPT
+        id S229475AbiKWX1E (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Wed, 23 Nov 2022 18:25:32 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59410 "EHLO
+        Wed, 23 Nov 2022 18:27:04 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60416 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229921AbiKWXZ1 (ORCPT
+        with ESMTP id S229611AbiKWX1C (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Wed, 23 Nov 2022 18:25:27 -0500
-Received: from mail-wr1-x42f.google.com (mail-wr1-x42f.google.com [IPv6:2a00:1450:4864:20::42f])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A1A49107E52
-        for <linux-perf-users@vger.kernel.org>; Wed, 23 Nov 2022 15:25:26 -0800 (PST)
-Received: by mail-wr1-x42f.google.com with SMTP id x5so27653297wrt.7
-        for <linux-perf-users@vger.kernel.org>; Wed, 23 Nov 2022 15:25:26 -0800 (PST)
+        Wed, 23 Nov 2022 18:27:02 -0500
+Received: from mail-wm1-x329.google.com (mail-wm1-x329.google.com [IPv6:2a00:1450:4864:20::329])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7FDB1110902
+        for <linux-perf-users@vger.kernel.org>; Wed, 23 Nov 2022 15:27:00 -0800 (PST)
+Received: by mail-wm1-x329.google.com with SMTP id c65-20020a1c3544000000b003cfffd00fc0so2707857wma.1
+        for <linux-perf-users@vger.kernel.org>; Wed, 23 Nov 2022 15:27:00 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=google.com; s=20210112;
         h=cc:to:subject:message-id:date:from:in-reply-to:references
          :mime-version:from:to:cc:subject:date:message-id:reply-to;
-        bh=chKYKremI8l82yLQBleCjCfCnE6ikjwksdBvNeUY2BY=;
-        b=F2H0b8sbV3VuxorK3eUw56iopjhu2K4/r/sIVLjgacR+sPFVdX4Va4sie9GQFuKMBy
-         UWagscDfZGav1T6v9KGGJZ5XYna09Or3U4adG7YIbnW/+8bQyoXeSnAvrFt6r2A4Znvn
-         sUSvfFPjiW2xANP7aUBCn+k95uKy3FEMnzfVJYhU1oH+hWpRYGf+El4UhLj7EmgJNoIM
-         lFHQWqjwVpTGoRuQKofShYE7P85nbYHFIC3g6Xsiy9lH828GrOLshouScZLw9QbO+4dS
-         2quHGRqIQJbbIL+GkSxCfVrGRzh5G17O+4PG2DVukvA7F31Pq3KEeeRv8DACZkRrKejJ
-         hMWQ==
+        bh=xWiJIKBcw13JhwopJeRuNAw/j29dHEKJ/eefajfmj6w=;
+        b=MsRKyWyn2BV42pkoCtBVbXWdN5fHqtVa6/12TXBvnGbeUpvX9AUgmXIzG8je+BkAEy
+         Sy8I9LXdyKJXMw1OOyxbeNNgi5BnbwldvMN7rapJAClrGfMnzLR25F5opiv0IlHLwUWd
+         xLa6fPp7AOgbquoNirKJcGqApv4uBPkokOLl/wZC4eOfadavVJwS2qIYTOoVIwXkxmaw
+         b+OX0KjwsUttLaPgwpmWc/+bS01MG4YKYCrpoqAErzAFlP768rHw+s0oCFioAEMbc29U
+         CZEzNbfGFYUtcDtPAz2SwunuChQ6RbScX5eRAprrL2TYg0a/YG2y2kyETa0FSk/UDVI8
+         L9JQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
         h=cc:to:subject:message-id:date:from:in-reply-to:references
          :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
          :reply-to;
-        bh=chKYKremI8l82yLQBleCjCfCnE6ikjwksdBvNeUY2BY=;
-        b=NG+JmcBRfkDDl4mC4qAQbxzY1HR09zmsC5CjkmQVWDJDndO6Ql0DxJPyVnfxhRnlTI
-         JB0UfmWpGePHknrk5fPA3mpqzXydS53bPnIOzjQTS+phuL6Uy3PDCJY6LL6zzj1v/EuY
-         6G1oevZWTjaMqYYVwiuPoOCLxg5vJYy8AEHrVXmLFB0F0EZmlY5PGryF8Br+k+KoSQAc
-         +X0HV8x5xOO/c6pl004Hj7Wkw1apU0BM5cyHe87SIXuPMvmkYhnqy+AyxhGSOjXtCfr2
-         FW4sEU1ygolFwjkDCeGPO2FyHPlJ5sATxS41lGlhpccypl6rxiLKGz4Be2nT2cbu2Y56
-         BNUA==
-X-Gm-Message-State: ANoB5pnCMXqljR+HCs63GidpPfH4p5anBv0NChqtjSJI+K08Gs75xTjG
-        PEAGE9i4TD7mH6M2MCWs/jzOmbOHYWbZR3yGfp4XWg==
-X-Google-Smtp-Source: AA0mqf6Z28mDgI/9Rdc1hv42MikVHtNHpL7i0pTnq4MkKZ72ZL8P7DnAmFcx4BoffQVhh5vyF1UeNfgmg1JY8fWEUNo=
-X-Received: by 2002:adf:f6cc:0:b0:228:dd1d:8a42 with SMTP id
- y12-20020adff6cc000000b00228dd1d8a42mr7212105wrp.375.1669245924985; Wed, 23
- Nov 2022 15:25:24 -0800 (PST)
+        bh=xWiJIKBcw13JhwopJeRuNAw/j29dHEKJ/eefajfmj6w=;
+        b=YnxgP7q+OXwJQyNuqz0+5fXJ18f1sTQm7h8jSwNcvSxZBgeKDAksvw/sjjIq2FWGLW
+         /tY3llu4Mswx4whU7q+/CNa1ZqfPfZffCylAW3HhkREuDWhYuosmg6qquHM4riAsbe2/
+         1siQ6q1Qwys+mIj7LicUR1OrzYmcHZ60oy+V3pZp0uFuBcIr/8e6mEaQKbF0jxFgWLJ5
+         2K194l8kr8lYEd7pc6dJbf2xCS+4GjPLP7rhma0yuXBraacjRY7pB3YRSVdP5bWpDk8X
+         8/83SqkUCDG9GYGqYcfjrHXJQfoxYFxWjb73q4UNMrd0VGxeB5JzfjjNff7pDJ06CxC5
+         aUxg==
+X-Gm-Message-State: ANoB5pnijKYw/yiWWJ7j0UdUY45IHAl0nqcTelqeSHJshQiNF9QDTJ4j
+        HBzVVIdduNRcXaOyxbkB9IQeW/nYJerHPh4oj6hQLQ==
+X-Google-Smtp-Source: AA0mqf5veQ9e4nxvYwvI+Z+1owm8QW7DM7njux9KKLu2EMXc7njZy9EK/dvIMBsVoanPjWeT03hzfK/7ftVot8Zq7qg=
+X-Received: by 2002:a7b:cb4d:0:b0:3cf:b2a6:267d with SMTP id
+ v13-20020a7bcb4d000000b003cfb2a6267dmr21770400wmj.67.1669246018862; Wed, 23
+ Nov 2022 15:26:58 -0800 (PST)
 MIME-Version: 1.0
-References: <20221123180208.2068936-1-namhyung@kernel.org> <20221123180208.2068936-10-namhyung@kernel.org>
-In-Reply-To: <20221123180208.2068936-10-namhyung@kernel.org>
+References: <20221123180208.2068936-1-namhyung@kernel.org> <20221123180208.2068936-11-namhyung@kernel.org>
+In-Reply-To: <20221123180208.2068936-11-namhyung@kernel.org>
 From:   Ian Rogers <irogers@google.com>
-Date:   Wed, 23 Nov 2022 15:25:12 -0800
-Message-ID: <CAP-5=fUA-tFcpkWy2w29ou09GdoEU8e8ZFSgab12-QGPfH5g3w@mail.gmail.com>
-Subject: Re: [PATCH 09/15] perf stat: Pass struct outstate to print_metric_begin()
+Date:   Wed, 23 Nov 2022 15:26:46 -0800
+Message-ID: <CAP-5=fX8mT4RwHQ+k+sr23dv_iWLBRR6fQ4V_2B5LiYuDJzxbQ@mail.gmail.com>
+Subject: Re: [PATCH 10/15] perf stat: Pass struct outstate to printout()
 To:     Namhyung Kim <namhyung@kernel.org>
 Cc:     Arnaldo Carvalho de Melo <acme@kernel.org>,
         Jiri Olsa <jolsa@kernel.org>, Ingo Molnar <mingo@kernel.org>,
@@ -72,8 +72,9 @@ X-Mailing-List: linux-perf-users@vger.kernel.org
 
 On Wed, Nov 23, 2022 at 10:02 AM Namhyung Kim <namhyung@kernel.org> wrote:
 >
-> It passes prefix and cgroup pointers but the outstate already has them.
-> Let's pass the outstate pointer instead.
+> The printout() takes a lot of arguments and sets an outstate with the
+> value.  Instead, we can fill the outstate first and then pass it to
+> reduce the number of arguments.
 >
 > Signed-off-by: Namhyung Kim <namhyung@kernel.org>
 
@@ -83,156 +84,122 @@ Thanks,
 Ian
 
 > ---
->  tools/perf/util/stat-display.c | 50 +++++++++++++++++++---------------
->  1 file changed, 28 insertions(+), 22 deletions(-)
+>  tools/perf/util/stat-display.c | 38 ++++++++++++++++------------------
+>  1 file changed, 18 insertions(+), 20 deletions(-)
 >
 > diff --git a/tools/perf/util/stat-display.c b/tools/perf/util/stat-display.c
-> index 70aebf359e16..3ed63061d6f8 100644
+> index 3ed63061d6f8..dd190f71e933 100644
 > --- a/tools/perf/util/stat-display.c
 > +++ b/tools/perf/util/stat-display.c
-> @@ -843,8 +843,7 @@ static void print_counter_aggrdata(struct perf_stat_config *config,
->
->  static void print_metric_begin(struct perf_stat_config *config,
->                                struct evlist *evlist,
-> -                              const char *prefix, int aggr_idx,
-> -                              struct cgroup *cgrp)
-> +                              struct outstate *os, int aggr_idx)
->  {
->         struct perf_stat_aggr *aggr;
->         struct aggr_cpu_id id;
-> @@ -853,15 +852,15 @@ static void print_metric_begin(struct perf_stat_config *config,
->         if (!config->metric_only)
->                 return;
->
-> -       if (prefix)
-> -               fprintf(config->output, "%s", prefix);
-> +       if (os->prefix)
-> +               fprintf(config->output, "%s", os->prefix);
->
->         evsel = evlist__first(evlist);
->         id = config->aggr_map->map[aggr_idx];
->         aggr = &evsel->stats->aggr[aggr_idx];
->         aggr_printout(config, evsel, id, aggr->nr);
->
-> -       print_cgroup(config, cgrp);
-> +       print_cgroup(config, os->cgrp);
+> @@ -673,22 +673,15 @@ static bool is_mixed_hw_group(struct evsel *counter)
+>         return false;
 >  }
 >
->  static void print_metric_end(struct perf_stat_config *config)
-> @@ -877,6 +876,9 @@ static void print_aggr(struct perf_stat_config *config,
->                        const char *prefix)
+> -static void printout(struct perf_stat_config *config, struct aggr_cpu_id id, int nr,
+> -                    struct evsel *counter, double uval,
+> -                    const char *prefix, u64 run, u64 ena, double noise,
+> +static void printout(struct perf_stat_config *config, struct outstate *os,
+> +                    double uval, u64 run, u64 ena, double noise,
+>                      struct runtime_stat *st, int map_idx)
 >  {
->         struct evsel *counter;
-> +       struct outstate os = {
-> +               .prefix = prefix,
-> +       };
->         int s;
+>         struct perf_stat_output_ctx out;
+> -       struct outstate os = {
+> -               .fh = config->output,
+> -               .prefix = prefix ? prefix : "",
+> -               .id = id,
+> -               .nr = nr,
+> -               .evsel = counter,
+> -       };
+>         print_metric_t pm;
+>         new_line_t nl;
+>         bool ok = true;
+> +       struct evsel *counter = os->evsel;
 >
->         if (!config->aggr_map || !config->aggr_get_id)
-> @@ -887,7 +889,7 @@ static void print_aggr(struct perf_stat_config *config,
->          * Without each counter has its own line.
->          */
->         for (s = 0; s < config->aggr_map->nr; s++) {
-> -               print_metric_begin(config, evlist, prefix, s, /*cgrp=*/NULL);
-> +               print_metric_begin(config, evlist, &os, s);
+>         if (config->csv_output) {
+>                 static const int aggr_fields[AGGR_MAX] = {
+> @@ -704,7 +697,7 @@ static void printout(struct perf_stat_config *config, struct aggr_cpu_id id, int
 >
->                 evlist__for_each_entry(evlist, counter) {
->                         if (counter->merged_stat)
-> @@ -904,26 +906,28 @@ static void print_aggr_cgroup(struct perf_stat_config *config,
->                               const char *prefix)
->  {
->         struct evsel *counter, *evsel;
-> -       struct cgroup *cgrp = NULL;
-> +       struct outstate os = {
-> +               .prefix = prefix,
-> +       };
->         int s;
+>                 pm = config->metric_only ? print_metric_only_csv : print_metric_csv;
+>                 nl = config->metric_only ? new_line_metric : new_line_csv;
+> -               os.nfields = 3 + aggr_fields[config->aggr_mode] + (counter->cgrp ? 1 : 0);
+> +               os->nfields = 3 + aggr_fields[config->aggr_mode] + (counter->cgrp ? 1 : 0);
+>         } else if (config->json_output) {
+>                 pm = config->metric_only ? print_metric_only_json : print_metric_json;
+>                 nl = config->metric_only ? new_line_metric : new_line_json;
+> @@ -715,7 +708,7 @@ static void printout(struct perf_stat_config *config, struct aggr_cpu_id id, int
 >
->         if (!config->aggr_map || !config->aggr_get_id)
->                 return;
->
->         evlist__for_each_entry(evlist, evsel) {
-> -               if (cgrp == evsel->cgrp)
-> +               if (os.cgrp == evsel->cgrp)
->                         continue;
->
-> -               cgrp = evsel->cgrp;
-> +               os.cgrp = evsel->cgrp;
->
->                 for (s = 0; s < config->aggr_map->nr; s++) {
-> -                       print_metric_begin(config, evlist, prefix, s, cgrp);
-> +                       print_metric_begin(config, evlist, &os, s);
->
->                         evlist__for_each_entry(evlist, counter) {
->                                 if (counter->merged_stat)
->                                         continue;
->
-> -                               if (counter->cgrp != cgrp)
-> +                               if (counter->cgrp != os.cgrp)
->                                         continue;
->
->                                 print_counter_aggrdata(config, counter, s, prefix);
-> @@ -956,6 +960,9 @@ static void print_no_aggr_metric(struct perf_stat_config *config,
->  {
->         int all_idx;
->         struct perf_cpu cpu;
-> +       struct outstate os = {
-> +               .prefix = prefix,
-> +       };
->
->         perf_cpu_map__for_each_cpu(cpu, all_idx, evlist->core.user_requested_cpus) {
->                 struct evsel *counter;
-> @@ -973,8 +980,7 @@ static void print_no_aggr_metric(struct perf_stat_config *config,
->
->                         id = aggr_cpu_id__cpu(cpu, /*data=*/NULL);
->                         if (first) {
-> -                               print_metric_begin(config, evlist, prefix,
-> -                                                  counter_idx, /*cgrp=*/NULL);
-> +                               print_metric_begin(config, evlist, &os, counter_idx);
->                                 first = false;
->                         }
->                         val = ps->aggr[counter_idx].counts.val;
-> @@ -1347,22 +1353,23 @@ static void print_percore(struct perf_stat_config *config,
->  static void print_cgroup_counter(struct perf_stat_config *config, struct evlist *evlist,
->                                  const char *prefix)
->  {
-> -       struct cgroup *cgrp = NULL;
->         struct evsel *counter;
-> +       struct outstate os = {
-> +               .prefix = prefix,
-> +       };
->
->         evlist__for_each_entry(evlist, counter) {
-> -               if (cgrp != counter->cgrp) {
-> -                       if (cgrp != NULL)
-> +               if (os.cgrp != counter->cgrp) {
-> +                       if (os.cgrp != NULL)
->                                 print_metric_end(config);
->
-> -                       cgrp = counter->cgrp;
-> -                       print_metric_begin(config, evlist, prefix,
-> -                                          /*aggr_idx=*/0, cgrp);
-> +                       os.cgrp = counter->cgrp;
-> +                       print_metric_begin(config, evlist, &os, /*aggr_idx=*/0);
+>         if (run == 0 || ena == 0 || counter->counts->scaled == -1) {
+>                 if (config->metric_only) {
+> -                       pm(config, &os, NULL, "", "", 0);
+> +                       pm(config, os, NULL, "", "", 0);
+>                         return;
 >                 }
 >
->                 print_counter(config, counter, prefix);
->         }
-> -       if (cgrp)
-> +       if (os.cgrp)
->                 print_metric_end(config);
->  }
+> @@ -732,11 +725,11 @@ static void printout(struct perf_stat_config *config, struct aggr_cpu_id id, int
 >
-> @@ -1405,8 +1412,7 @@ void evlist__print_counters(struct evlist *evlist, struct perf_stat_config *conf
->                 } else if (config->cgroup_list) {
->                         print_cgroup_counter(config, evlist, os.prefix);
->                 } else {
-> -                       print_metric_begin(config, evlist, os.prefix,
-> -                                          /*aggr_idx=*/0, /*cgrp=*/NULL);
-> +                       print_metric_begin(config, evlist, &os, /*aggr_idx=*/0);
->                         evlist__for_each_entry(evlist, counter) {
->                                 print_counter(config, counter, os.prefix);
->                         }
+>         out.print_metric = pm;
+>         out.new_line = nl;
+> -       out.ctx = &os;
+> +       out.ctx = os;
+>         out.force_header = false;
+>
+>         if (!config->metric_only) {
+> -               abs_printout(config, id, nr, counter, uval, ok);
+> +               abs_printout(config, os->id, os->nr, counter, uval, ok);
+>
+>                 print_noise(config, counter, noise, /*before_metric=*/true);
+>                 print_running(config, run, ena, /*before_metric=*/true);
+> @@ -814,6 +807,13 @@ static void print_counter_aggrdata(struct perf_stat_config *config,
+>         struct aggr_cpu_id id = config->aggr_map->map[s];
+>         double avg = aggr->counts.val;
+>         bool metric_only = config->metric_only;
+> +       struct outstate os = {
+> +               .fh = config->output,
+> +               .prefix = prefix ? prefix : "",
+> +               .id = id,
+> +               .nr = aggr->nr,
+> +               .evsel = counter,
+> +       };
+>
+>         if (counter->supported && aggr->nr == 0)
+>                 return;
+> @@ -834,8 +834,7 @@ static void print_counter_aggrdata(struct perf_stat_config *config,
+>
+>         uval = val * counter->scale;
+>
+> -       printout(config, id, aggr->nr, counter, uval,
+> -                prefix, run, ena, avg, &rt_stat, s);
+> +       printout(config, &os, uval, run, ena, avg, &rt_stat, s);
+>
+>         if (!metric_only)
+>                 fputc('\n', output);
+> @@ -971,14 +970,14 @@ static void print_no_aggr_metric(struct perf_stat_config *config,
+>                 evlist__for_each_entry(evlist, counter) {
+>                         u64 ena, run, val;
+>                         double uval;
+> -                       struct aggr_cpu_id id;
+>                         struct perf_stat_evsel *ps = counter->stats;
+>                         int counter_idx = perf_cpu_map__idx(evsel__cpus(counter), cpu);
+>
+>                         if (counter_idx < 0)
+>                                 continue;
+>
+> -                       id = aggr_cpu_id__cpu(cpu, /*data=*/NULL);
+> +                       os.evsel = counter;
+> +                       os.id = aggr_cpu_id__cpu(cpu, /*data=*/NULL);
+>                         if (first) {
+>                                 print_metric_begin(config, evlist, &os, counter_idx);
+>                                 first = false;
+> @@ -988,8 +987,7 @@ static void print_no_aggr_metric(struct perf_stat_config *config,
+>                         run = ps->aggr[counter_idx].counts.run;
+>
+>                         uval = val * counter->scale;
+> -                       printout(config, id, 0, counter, uval, prefix,
+> -                                run, ena, 1.0, &rt_stat, counter_idx);
+> +                       printout(config, &os, uval, run, ena, 1.0, &rt_stat, counter_idx);
+>                 }
+>                 if (!first)
+>                         print_metric_end(config);
 > --
 > 2.38.1.584.g0f3c55d4c2-goog
 >
