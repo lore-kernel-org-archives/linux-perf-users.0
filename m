@@ -2,85 +2,85 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7453DC4332F
-	for <linux-perf-users@archiver.kernel.org>; Wed, 23 Nov 2022 13:51:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 33325C4332F
+	for <linux-perf-users@archiver.kernel.org>; Wed, 23 Nov 2022 13:55:49 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S237666AbiKWNvh (ORCPT
+        id S237714AbiKWNzr (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Wed, 23 Nov 2022 08:51:37 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38618 "EHLO
+        Wed, 23 Nov 2022 08:55:47 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41688 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S237906AbiKWNvA (ORCPT
+        with ESMTP id S236669AbiKWNz2 (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Wed, 23 Nov 2022 08:51:00 -0500
-Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C9D941B7B6;
-        Wed, 23 Nov 2022 05:41:58 -0800 (PST)
+        Wed, 23 Nov 2022 08:55:28 -0500
+Received: from ams.source.kernel.org (ams.source.kernel.org [145.40.68.75])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5E3A77721D;
+        Wed, 23 Nov 2022 05:49:59 -0800 (PST)
 Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id 5EE0061CD7;
-        Wed, 23 Nov 2022 13:41:58 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 9BCE0C433C1;
-        Wed, 23 Nov 2022 13:41:57 +0000 (UTC)
+        by ams.source.kernel.org (Postfix) with ESMTPS id 06C6BB81FFA;
+        Wed, 23 Nov 2022 13:49:58 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 7E1A3C433D7;
+        Wed, 23 Nov 2022 13:49:56 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1669210917;
-        bh=K6xOp+ZZlKqfNXVv1WAPsdzdApBdk64pGeS3iULK8gQ=;
+        s=k20201202; t=1669211396;
+        bh=tOKgVpDb4YGEFJ3vnIjCVjTP0R5hACprgjJE1++ks5o=;
         h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=MHdFhbTYxGbckNNGQIt6Ekcz9waay3TAJSWURnOxJw+hCzYyCsryF3/v+G0yIQnWt
-         xyKlyEtUEfjZIk6ic0Y9kkxCfoQ7VSUs2L4j3Gi9zT6X03WRiDVSOkzm53gLnZiywT
-         sFPPt6MFlP8ATzbUzMniqrh2FRFY2E54ebD60+kTFLixNxLNSmWn91m0klYD0nogC0
-         n1uk+fmSQQQXt+8P+9YjJQV1NnQONUjhzKby3i5PNh3bhCJZjloTL7ibqw462bY5zZ
-         rb9eoMRMl5sxV+pb7aHMe6rEb2TT4yIjvfsq7NfolHLMMc7ubeLpwddb36VCUPbEJ0
-         wPJt6lUVdloRQ==
+        b=JdrwUSVjuZIOmtlcCA9eWQ8bGMGKmJ2H4NWLVqLwjbAeh7G1wTGKaZ+nUkHeT+YEP
+         VWY36FquxoghtFAlf9Vu0gunxbiPiqfLCWumwDRyaQw1I0Km0o61koKlLyVsxHVu/C
+         2fRzcSt6wrKssbPtUlR6llOIF30W6JF4jNRPnK/c3nTK52Bh2IP/5sUpJ60aOSGocL
+         2eXWf5a5lgJcMMw9gibzI8DokDn5RiGsCYU8YAf2Cw3p1CktQRf2sOmRsAgg0ytOKp
+         PnP8rPvmr5ZGBa8QgYcmAye48D+FhT/x9yDkSTcsBdUfwPm67Twnl7FLuDgJgyENQk
+         wmuRvK0dlAy9g==
 Received: by quaco.ghostprotocols.net (Postfix, from userid 1000)
-        id 598AD4034E; Wed, 23 Nov 2022 10:41:55 -0300 (-03)
-Date:   Wed, 23 Nov 2022 10:41:55 -0300
+        id 15D4E4034E; Wed, 23 Nov 2022 10:49:54 -0300 (-03)
+Date:   Wed, 23 Nov 2022 10:49:54 -0300
 From:   Arnaldo Carvalho de Melo <acme@kernel.org>
-To:     John Garry <john.g.garry@oracle.com>, Will Deacon <will@kernel.org>
-Cc:     linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org,
-        irogers@google.com
-Subject: Re: [PATCH] MAINTAINERS: Update John Garry's email address for arm64
- perf tooling
-Message-ID: <Y34jI33Iy50A6/UV@kernel.org>
-References: <20221121113018.1899426-1-john.g.garry@oracle.com>
- <20221121125648.GB7097@willie-the-truck>
+To:     Martin KaFai Lau <martin.lau@linux.dev>
+Cc:     Namhyung Kim <namhyung@kernel.org>, Ingo Molnar <mingo@kernel.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Ian Rogers <irogers@google.com>,
+        Adrian Hunter <adrian.hunter@intel.com>,
+        linux-perf-users@vger.kernel.org, Song Liu <song@kernel.org>,
+        bpf@vger.kernel.org, Blake Jones <blakejones@google.com>,
+        Chris Li <chriscli@google.com>, Jiri Olsa <jolsa@kernel.org>
+Subject: Re: [PATCH] perf lock contention: Do not use BPF task local storage
+Message-ID: <Y34lAgJzG1DvUFXw@kernel.org>
+References: <20221118190109.1512674-1-namhyung@kernel.org>
+ <dea8c3c5-0739-58c1-9a88-b989878a9b8f@linux.dev>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20221121125648.GB7097@willie-the-truck>
+In-Reply-To: <dea8c3c5-0739-58c1-9a88-b989878a9b8f@linux.dev>
 X-Url:  http://acmel.wordpress.com
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-Em Mon, Nov 21, 2022 at 12:56:50PM +0000, Will Deacon escreveu:
-> On Mon, Nov 21, 2022 at 11:30:18AM +0000, John Garry wrote:
-> > Update my address.
+Em Mon, Nov 21, 2022 at 09:32:56AM -0800, Martin KaFai Lau escreveu:
+> On 11/18/22 11:01 AM, Namhyung Kim wrote:
+> > It caused some troubles when a lock inside kmalloc is contended
+> > because task local storage would allocate memory using kmalloc.
+> > It'd create a recusion and even crash in my system.
 > > 
-> > Signed-off-by: John Garry <john.g.garry@oracle.com>
-> > 
-> > diff --git a/MAINTAINERS b/MAINTAINERS
-> > index 379945f82a64..2ec6a2709225 100644
-> > --- a/MAINTAINERS
-> > +++ b/MAINTAINERS
-> > @@ -16191,7 +16191,7 @@ F:	tools/lib/perf/
-> >  F:	tools/perf/
-> >  
-> >  PERFORMANCE EVENTS TOOLING ARM64
-> > -R:	John Garry <john.garry@huawei.com>
-> > +R:	John Garry <john.g.garry@oracle.com>
-> >  R:	Will Deacon <will@kernel.org>
-> >  R:	James Clark <james.clark@arm.com>
-> >  R:	Mike Leach <mike.leach@linaro.org>
+> > There could be a couple of workarounds but I think the simplest
+> > one is to use a pre-allocated hash map.
 > 
-> Thanks for doing this, John, and good luck with your new role!
-
-Indeed, tis really nice to see you'll continue working with us!
- 
-> Acked-by: Will Deacon <will@kernel.org>
+> Acked-by: Martin KaFai Lau <martin.lau@kernel.org>
 
 Thanks, applied.
 
 - Arnaldo
 
+ 
+> > We could fix the task local storage to use the safe BPF allocator,
+> > but it takes time so let's change this until it happens actually.
+> 
+> I also got another report on the kfree_rcu path.  I am also looking into
+> this direction on using the BPF allocator.
+
+-- 
+
+- Arnaldo
