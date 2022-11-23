@@ -2,179 +2,96 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B67D3C4332F
-	for <linux-perf-users@archiver.kernel.org>; Wed, 23 Nov 2022 08:05:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7B4BEC433FE
+	for <linux-perf-users@archiver.kernel.org>; Wed, 23 Nov 2022 09:01:10 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S236248AbiKWIFy (ORCPT
+        id S236883AbiKWJBJ (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Wed, 23 Nov 2022 03:05:54 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44318 "EHLO
+        Wed, 23 Nov 2022 04:01:09 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36892 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S236251AbiKWIFv (ORCPT
+        with ESMTP id S236880AbiKWJBG (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Wed, 23 Nov 2022 03:05:51 -0500
-Received: from mx0a-001b2d01.pphosted.com (mx0a-001b2d01.pphosted.com [148.163.156.1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 291757211F;
-        Wed, 23 Nov 2022 00:05:51 -0800 (PST)
-Received: from pps.filterd (m0098396.ppops.net [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (8.17.1.19/8.17.1.19) with ESMTP id 2AN74aZX010256;
-        Wed, 23 Nov 2022 08:05:42 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=message-id : date :
- mime-version : subject : to : cc : references : from : in-reply-to :
- content-type : content-transfer-encoding; s=pp1;
- bh=n5QwxpIonNMroYuN7a7wcudqV6ZvkPpMwvP6kgKHgSU=;
- b=fTQrsSB4S7kApqxLLgy+vOqdypMGGMVvotXXwTHLojepLBvOiNIgBg+xXfKDASQb5HYf
- /w1h+Uw48JNLOc88IX7QSs7gzIX69Uc+bRElL491LN54Nzm2Fz5pAhxECRcE0A9c7pJc
- 4ICrGlCn6iDcCpvfS/Zt/PphMro1SF+f0jklHHUK9oplfN33JADtMDu8JzHZnSoeGJqw
- NH1wtgbeYyIaXfMtpU4hpz2drkGSkZkaTDLgo694EWYgF7F3QZXwuX1/bE8R7GQvvFq7
- 6w6OSwD3bMmC1yX+YcxVLERuS3bajFx+0oCzRPBxwwhu9wd+iEzpwTbaKG40zOGAApCD fQ== 
-Received: from ppma04fra.de.ibm.com (6a.4a.5195.ip4.static.sl-reverse.com [149.81.74.106])
-        by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 3m10bm687s-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Wed, 23 Nov 2022 08:05:41 +0000
-Received: from pps.filterd (ppma04fra.de.ibm.com [127.0.0.1])
-        by ppma04fra.de.ibm.com (8.16.1.2/8.16.1.2) with SMTP id 2AN85Dt0020032;
-        Wed, 23 Nov 2022 08:05:39 GMT
-Received: from b06cxnps4074.portsmouth.uk.ibm.com (d06relay11.portsmouth.uk.ibm.com [9.149.109.196])
-        by ppma04fra.de.ibm.com with ESMTP id 3kxps8uwbn-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Wed, 23 Nov 2022 08:05:39 +0000
-Received: from d06av23.portsmouth.uk.ibm.com (d06av23.portsmouth.uk.ibm.com [9.149.105.59])
-        by b06cxnps4074.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 2AN85bpq58458372
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Wed, 23 Nov 2022 08:05:37 GMT
-Received: from d06av23.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 18B5FA4040;
-        Wed, 23 Nov 2022 08:05:37 +0000 (GMT)
-Received: from d06av23.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 452F2A4053;
-        Wed, 23 Nov 2022 08:05:35 +0000 (GMT)
-Received: from [9.43.90.58] (unknown [9.43.90.58])
-        by d06av23.portsmouth.uk.ibm.com (Postfix) with ESMTP;
-        Wed, 23 Nov 2022 08:05:35 +0000 (GMT)
-Message-ID: <1671ea30-cc2f-e3b3-d8d0-430e6e14fed6@linux.ibm.com>
-Date:   Wed, 23 Nov 2022 13:35:34 +0530
-MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
- Thunderbird/91.11.0
-Subject: Re: [PATCH] perf test: Skip watchpoint tests if no watchpoints
- available
-Content-Language: en-US
-To:     "Naveen N. Rao" <naveen.n.rao@linux.vnet.ibm.com>,
-        Arnaldo Carvalho de Melo <acme@kernel.org>
-Cc:     Disha Goel <disgoel@linux.vnet.ibm.com>,
-        Ravi Bangoria <ravi.bangoria@amd.com>,
-        linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linuxppc-dev@lists.ozlabs.org
-References: <20221121102747.208289-1-naveen.n.rao@linux.vnet.ibm.com>
-From:   kajoljain <kjain@linux.ibm.com>
-In-Reply-To: <20221121102747.208289-1-naveen.n.rao@linux.vnet.ibm.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-X-TM-AS-GCONF: 00
-X-Proofpoint-ORIG-GUID: psj5nHdOV1vb4Hz5V79xQVbV3uzNKR3Q
-X-Proofpoint-GUID: psj5nHdOV1vb4Hz5V79xQVbV3uzNKR3Q
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.219,Aquarius:18.0.895,Hydra:6.0.545,FMLib:17.11.122.1
- definitions=2022-11-23_04,2022-11-18_01,2022-06-22_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 bulkscore=0
- priorityscore=1501 impostorscore=0 suspectscore=0 clxscore=1011
- lowpriorityscore=0 malwarescore=0 phishscore=0 spamscore=0 mlxscore=0
- adultscore=0 mlxlogscore=999 classifier=spam adjust=0 reason=mlx
- scancount=1 engine=8.12.0-2210170000 definitions=main-2211230060
+        Wed, 23 Nov 2022 04:01:06 -0500
+Received: from mxhk.zte.com.cn (mxhk.zte.com.cn [63.216.63.40])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3B363FFA8A;
+        Wed, 23 Nov 2022 01:01:02 -0800 (PST)
+Received: from mxct.zte.com.cn (unknown [192.168.251.13])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mxhk.zte.com.cn (FangMail) with ESMTPS id 4NHFTk5yf8z8RV6H;
+        Wed, 23 Nov 2022 17:00:58 +0800 (CST)
+Received: from mse-fl2.zte.com.cn (unknown [10.5.228.133])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mxct.zte.com.cn (FangMail) with ESMTPS id 4NHFTh3b9Sz4y0tt;
+        Wed, 23 Nov 2022 17:00:56 +0800 (CST)
+Received: from xaxapp01.zte.com.cn ([10.88.40.50])
+        by mse-fl2.zte.com.cn with SMTP id 2AN90mIR055180;
+        Wed, 23 Nov 2022 17:00:48 +0800 (+08)
+        (envelope-from zhang.songyi@zte.com.cn)
+Received: from mapi (xaxapp02[null])
+        by mapi (Zmail) with MAPI id mid31;
+        Wed, 23 Nov 2022 17:00:50 +0800 (CST)
+Date:   Wed, 23 Nov 2022 17:00:50 +0800 (CST)
+X-Zmail-TransId: 2afa637de14266b30956
+X-Mailer: Zmail v1.0
+Message-ID: <202211231700506267036@zte.com.cn>
+Mime-Version: 1.0
+From:   <zhang.songyi@zte.com.cn>
+To:     <peterz@infradead.org>, <zhengjun.xing@linux.intel.com>
+Cc:     <mingo@redhat.com>, <acme@kernel.org>, <mark.rutland@arm.com>,
+        <alexander.shishkin@linux.intel.com>, <jolsa@kernel.org>,
+        <namhyung@kernel.org>, <kan.liang@linux.intel.com>,
+        <irogers@google.com>, <zhang.songyi@zte.com.cn>,
+        <adrian.hunter@intel.com>, <linux-perf-users@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>
+Subject: =?UTF-8?B?W1BBVENIIGxpbnV4LW5leHRdIHBlcmYgc3RhdDogcmVtb3ZlIHJlZHVuZGFudCB2YXJpYWJsZSBpbgogYXJjaF9nZXRfdG9wZG93bl9wbXVfbmFtZQ==?=
+Content-Type: text/plain;
+        charset="UTF-8"
+X-MAIL: mse-fl2.zte.com.cn 2AN90mIR055180
+X-Fangmail-Gw-Spam-Type: 0
+X-FangMail-Miltered: at cgslv5.04-192.168.250.137.novalocal with ID 637DE14A.000 by FangMail milter!
+X-FangMail-Envelope: 1669194058/4NHFTk5yf8z8RV6H/637DE14A.000/192.168.251.13/[192.168.251.13]/mxct.zte.com.cn/<zhang.songyi@zte.com.cn>
+X-Fangmail-Anti-Spam-Filtered: true
+X-Fangmail-MID-QID: 637DE14A.000/4NHFTk5yf8z8RV6H
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
+From: zhang songyi <zhang.songyi@zte.com.cn>
 
+Return value from arch_get_topdown_pmu_name directly instead of taking
+this in another redundant variable.
 
-On 11/21/22 15:57, Naveen N. Rao wrote:
-> On IBM Power9, perf watchpoint tests fail since no hardware breakpoints
-> are available. Detect this by checking the error returned by
-> perf_event_open() and skip the tests in that case.
-> 
-> Reported-by: Disha Goel <disgoel@linux.vnet.ibm.com>
-> Signed-off-by: Naveen N. Rao <naveen.n.rao@linux.vnet.ibm.com>
-> ---
+Signed-off-by: zhang songyi <zhang.songyi@zte.com.cn>
+---
+ tools/perf/arch/x86/util/topdown.c | 6 +-----
+ 1 file changed, 1 insertion(+), 5 deletions(-)
 
-Patch looks fine to me. Also tested it in power9 box
+diff --git a/tools/perf/arch/x86/util/topdown.c b/tools/perf/arch/x86/util/topdown.c
+index 54810f9acd6f..5a5cdd6efe4d 100644
+--- a/tools/perf/arch/x86/util/topdown.c
++++ b/tools/perf/arch/x86/util/topdown.c
+@@ -84,8 +84,6 @@ bool arch_topdown_sample_read(struct evsel *leader)
 
-Test result without this patch changes :
- 23: Watchpoint  :
- 23.1: Read Only Watchpoint    : FAILED!
- 23.2: Write Only Watchpoint   : FAILED!
- 23.3: Read / Write Watchpoint : FAILED!
- 23.4: Modify Watchpoint       : FAILED!
+ const char *arch_get_topdown_pmu_name(struct evlist *evlist, bool warn)
+ {
+-       const char *pmu_name;
+-
+        if (!perf_pmu__has_hybrid())
+                return "cpu";
 
+@@ -95,9 +93,7 @@ const char *arch_get_topdown_pmu_name(struct evlist *evlist, bool warn)
+                evlist->hybrid_pmu_name = perf_pmu__hybrid_type_to_pmu("core");
+        }
 
-Test result with patch changes:
- 23: Watchpoint  :
- 23.1: Read Only Watchpoint    : Skip (missing hardware support)
- 23.2: Write Only Watchpoint   : Skip (missing hardware support)
- 23.3: Read / Write Watchpoint : Skip (missing hardware support)
- 23.4: Modify Watchpoint       : Skip (missing hardware support)
+-       pmu_name = evlist->hybrid_pmu_name;
+-
+-       return pmu_name;
++       return evlist->hybrid_pmu_name;
+ }
 
-
-Reviewed-by: Kajol Jain<kjain@linux.ibm.com>
-Tested-by: Kajol Jain<kjain@linux.ibm.com>
-
-Thanks,
-Kajol Jain
-
->  tools/perf/tests/wp.c | 12 +++++++-----
->  1 file changed, 7 insertions(+), 5 deletions(-)
-> 
-> diff --git a/tools/perf/tests/wp.c b/tools/perf/tests/wp.c
-> index 56455da30341b4..cc8719609b19ea 100644
-> --- a/tools/perf/tests/wp.c
-> +++ b/tools/perf/tests/wp.c
-> @@ -59,8 +59,10 @@ static int __event(int wp_type, void *wp_addr, unsigned long wp_len)
->  	get__perf_event_attr(&attr, wp_type, wp_addr, wp_len);
->  	fd = sys_perf_event_open(&attr, 0, -1, -1,
->  				 perf_event_open_cloexec_flag());
-> -	if (fd < 0)
-> +	if (fd < 0) {
-> +		fd = -errno;
->  		pr_debug("failed opening event %x\n", attr.bp_type);
-> +	}
->  
->  	return fd;
->  }
-> @@ -77,7 +79,7 @@ static int test__wp_ro(struct test_suite *test __maybe_unused,
->  
->  	fd = __event(HW_BREAKPOINT_R, (void *)&data1, sizeof(data1));
->  	if (fd < 0)
-> -		return -1;
-> +		return fd == -ENODEV ? TEST_SKIP : -1;
->  
->  	tmp = data1;
->  	WP_TEST_ASSERT_VAL(fd, "RO watchpoint", 1);
-> @@ -101,7 +103,7 @@ static int test__wp_wo(struct test_suite *test __maybe_unused,
->  
->  	fd = __event(HW_BREAKPOINT_W, (void *)&data1, sizeof(data1));
->  	if (fd < 0)
-> -		return -1;
-> +		return fd == -ENODEV ? TEST_SKIP : -1;
->  
->  	tmp = data1;
->  	WP_TEST_ASSERT_VAL(fd, "WO watchpoint", 0);
-> @@ -126,7 +128,7 @@ static int test__wp_rw(struct test_suite *test __maybe_unused,
->  	fd = __event(HW_BREAKPOINT_R | HW_BREAKPOINT_W, (void *)&data1,
->  		     sizeof(data1));
->  	if (fd < 0)
-> -		return -1;
-> +		return fd == -ENODEV ? TEST_SKIP : -1;
->  
->  	tmp = data1;
->  	WP_TEST_ASSERT_VAL(fd, "RW watchpoint", 1);
-> @@ -150,7 +152,7 @@ static int test__wp_modify(struct test_suite *test __maybe_unused, int subtest _
->  
->  	fd = __event(HW_BREAKPOINT_W, (void *)&data1, sizeof(data1));
->  	if (fd < 0)
-> -		return -1;
-> +		return fd == -ENODEV ? TEST_SKIP : -1;
->  
->  	data1 = tmp;
->  	WP_TEST_ASSERT_VAL(fd, "Modify watchpoint", 1);
-> 
-> base-commit: 63a3bf5e8d9e79ce456c8f73d4395a5a51d841b1
+ int topdown_parse_events(struct evlist *evlist)
+--
+2.15.2
