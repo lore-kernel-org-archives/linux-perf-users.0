@@ -2,55 +2,55 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id ACFEAC46467
-	for <linux-perf-users@archiver.kernel.org>; Wed, 23 Nov 2022 18:04:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0A835C46467
+	for <linux-perf-users@archiver.kernel.org>; Wed, 23 Nov 2022 18:04:34 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S239483AbiKWSEZ (ORCPT
+        id S239563AbiKWSEb (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Wed, 23 Nov 2022 13:04:25 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55930 "EHLO
+        Wed, 23 Nov 2022 13:04:31 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56244 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S239479AbiKWSDE (ORCPT
+        with ESMTP id S239495AbiKWSDK (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Wed, 23 Nov 2022 13:03:04 -0500
-Received: from mail-pf1-x429.google.com (mail-pf1-x429.google.com [IPv6:2607:f8b0:4864:20::429])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 906AD642F;
-        Wed, 23 Nov 2022 10:02:30 -0800 (PST)
-Received: by mail-pf1-x429.google.com with SMTP id 9so1289771pfx.11;
-        Wed, 23 Nov 2022 10:02:30 -0800 (PST)
+        Wed, 23 Nov 2022 13:03:10 -0500
+Received: from mail-pl1-x630.google.com (mail-pl1-x630.google.com [IPv6:2607:f8b0:4864:20::630])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E7371B86B;
+        Wed, 23 Nov 2022 10:02:32 -0800 (PST)
+Received: by mail-pl1-x630.google.com with SMTP id io19so17330837plb.8;
+        Wed, 23 Nov 2022 10:02:32 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20210112;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:sender:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=PTDdto5/eoDl85LlqvUb3DgMBRg+irZ3fXZplmAmP/4=;
-        b=RLxVPfndBEBdljQ6gVY3mhbDKukmqmEcOIg4Q+pjS4LHRqm5wBHtggVHo/n7bNsAE/
-         +g48UoG0UvFjeyogFsfA5/t8p4wCKlFzmWxYA+rTPmNEQZpb+WGt8G1psMGz9/Io9ALz
-         qgPGUVI0NqMogwZ5iIO0q2IYifR1RHfGZquKge1jyxcrOLAGIml/fyk8YSm0FJg6JEe7
-         IsgJX9P3N6HzH0Rozj0pMW0B8aI5IiHvfhkgNH9cWXx3tmtb6xYVbIjYkg30I8n+3ac4
-         jOftQ1EAHPacjPSuPp9ao2K+Aj9+IxbuYBCBWStrxRm9vRdcIFNWTqIMVp0MmmtYONg4
-         wsMA==
+        bh=5gWMIg8ivBELEJG/R0PKwrUC/7uMdDKInwMAEQaG27g=;
+        b=qke1to8QicpmSPkYhan1X5ZD1RXagJ2z9CmBhlLxQnhfXiTNJv8xxwutR/52394kes
+         /01n7X41yjZGds2kUIu5G9xg2YM8+VDjSESa6fAiTsGHXfgO3j6QTC5HJDSwJN4E7eKH
+         1maVXeqsL+OzSug7BaPNpHQw+lJLgtlPWzSpJQrhtBCxCto4yLKv3yA+j0tGTV2Xf0zH
+         XuELKUdwLzl+JQqJ5qv1xzNITBfylJFCh3RO/44/tN61UNXshv+B4U2FF4CwgHGR2MuW
+         OvkT+rhMS0TMFgvbe2U5+6lolArOc4uY0IKRs67Sutu0wItPk0E03j9nrsqC5gsTvG6O
+         Hqdg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:sender:x-gm-message-state:from
          :to:cc:subject:date:message-id:reply-to;
-        bh=PTDdto5/eoDl85LlqvUb3DgMBRg+irZ3fXZplmAmP/4=;
-        b=ysaEIIV4OlKQ3O9urR15CSzewfdUbMyvVJfS3XpHsxWZM/w+m8dW57Ql2o7wKvxv0r
-         rNrfY6eVbrz8vrfrdnQlg19MjvHs9FWNmCX0oxD0m2LynTLkVT+lXs7Nvwgff9lLXtWv
-         pUgZbpORbRFCCcLnO7ZyW9jKPAHH+9znaXqGV7AXtJtpkJDRGZKCIvYytYkdURDswOsE
-         h6qnV9aXQot8fYSJR7KQYHXTjpbBsX2fw8r3jWkBXGHDjrt7IqWVkNIEdXc+2h6BmSYS
-         sdoiVVRCZ/DuzehO9oUal1+HRuA+coCosgRFIMJwgvzxvQO0i/lHCheJ5PglVpfguYJv
-         06Sg==
-X-Gm-Message-State: ANoB5pmVhwVgUIXlPQT+J58C14xia6/rnuyqb1KZrnAKHF6wnBGFTXgI
-        1pPNDEw9afpznoEvJRnYyVo=
-X-Google-Smtp-Source: AA0mqf5pPCKGwfwcY/7kDm8gj5HW/1JL6TCc5g2G+MRpRVl/LkRjvbSH4K6hbVbrodccL2fjVMWn5w==
-X-Received: by 2002:a63:5359:0:b0:46f:7e1c:e6e6 with SMTP id t25-20020a635359000000b0046f7e1ce6e6mr27668686pgl.138.1669226549483;
-        Wed, 23 Nov 2022 10:02:29 -0800 (PST)
+        bh=5gWMIg8ivBELEJG/R0PKwrUC/7uMdDKInwMAEQaG27g=;
+        b=CSgyiyVa/M7uRk7X2k+g6+qsCIc11Q8TFlMn46yfxaa+tABOZhOPSZhBbarrbq6xj7
+         vHrw+xmuv8XZz4r6tntEDE/v3kGo0An2SD8Vui1+4gfsGO8VDVARN90xzbpv+jW5Auv5
+         ULERn1XPRSatCXCFGRw7YB0RSuUowJk4o++IKx+IqnjVil3ZXth8E8CrRGMc8hQ8qlT0
+         KuLVS+Yps21Y2Kcx9+OVesgbJFmU0vdSUi80mHmXEjg26ms3lljbrBmslDMWuF7emB3u
+         H+NVpDjYwqAm2LhRyEiFG9mK8DCvg6IRRe6FCr8BzifLh5NOVyRroPpdQLw6GS7Bnv29
+         6aFQ==
+X-Gm-Message-State: ANoB5plyjAtva/h0YfG9QYiKimb/znui+sBSaeo0ua0luyiFY7XWWj47
+        rfG4B//Apn4DuaW7SKWQw6w=
+X-Google-Smtp-Source: AA0mqf4xZ5Y7E2KNh89B4QFT2XJ7+bbx0UghsjM6tXas+Zl8Eyd1Eui7nsyNb9KnfRXIcrOl4GcCWA==
+X-Received: by 2002:a17:903:3311:b0:186:d5b9:fbcd with SMTP id jk17-20020a170903331100b00186d5b9fbcdmr12767970plb.64.1669226552177;
+        Wed, 23 Nov 2022 10:02:32 -0800 (PST)
 Received: from balhae.hsd1.ca.comcast.net ([2601:647:6780:a80:c968:76:254b:3790])
-        by smtp.gmail.com with ESMTPSA id i15-20020a655b8f000000b00470275c8d6dsm10792364pgr.10.2022.11.23.10.02.28
+        by smtp.gmail.com with ESMTPSA id i15-20020a655b8f000000b00470275c8d6dsm10792364pgr.10.2022.11.23.10.02.31
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 23 Nov 2022 10:02:29 -0800 (PST)
+        Wed, 23 Nov 2022 10:02:31 -0800 (PST)
 Sender: Namhyung Kim <namhyung@gmail.com>
 From:   Namhyung Kim <namhyung@kernel.org>
 To:     Arnaldo Carvalho de Melo <acme@kernel.org>,
@@ -65,9 +65,9 @@ Cc:     Ingo Molnar <mingo@kernel.org>,
         Zhengjun Xing <zhengjun.xing@linux.intel.com>,
         James Clark <james.clark@arm.com>,
         Athira Jajeev <atrajeev@linux.vnet.ibm.com>
-Subject: [PATCH 13/15] perf stat: Fix JSON output in metric-only mode
-Date:   Wed, 23 Nov 2022 10:02:06 -0800
-Message-Id: <20221123180208.2068936-14-namhyung@kernel.org>
+Subject: [PATCH 15/15] perf stat: Tidy up JSON metric-only output when no metrics
+Date:   Wed, 23 Nov 2022 10:02:08 -0800
+Message-Id: <20221123180208.2068936-16-namhyung@kernel.org>
 X-Mailer: git-send-email 2.38.1.584.g0f3c55d4c2-goog
 In-Reply-To: <20221123180208.2068936-1-namhyung@kernel.org>
 References: <20221123180208.2068936-1-namhyung@kernel.org>
@@ -77,188 +77,119 @@ Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-It generated a broken JSON output when aggregation mode or cgroup is
-used with --metric-only option.  Also get rid of the header line and
-make the output single line for each entry.
+It printed empty strings for each metric.  I guess it's needed for CSV
+output to match the column number.  We could just ignore the empty
+metrics in JSON but it ended up with a broken JSON object with a
+trailing comma.
 
-It needs to know whether the current metric is the first one or not.
-So add 'first' field in the outstate and mark it false after printing.
+So I added a dummy '"metric-value" : "none"' part.  To do that, it
+needs to pass struct outstate to print_metric_end() to check if any
+metric value is printed or not.
 
 Before:
-  # perf stat -a -j --metric-only true
-  {"unit" : "GHz"}{"unit" : "insn per cycle"}{"unit" : "branch-misses of all branches"}
-  {{"metric-value" : "0.797"}{"metric-value" : "1.65"}{"metric-value" : "0.89"}
-   ^
-
-  # perf stat -a -j --metric-only --per-socket true
-  {"unit" : "GHz"}{"unit" : "insn per cycle"}{"unit" : "branch-misses of all branches"}
-  {"socket" : "S0", "aggregate-number" : 8, {"metric-value" : "0.295"}{"metric-value" : "1.88"}{"metric-value" : "0.64"}
-                                           ^
+  # perf stat -aj --metric-only --per-socket --for-each-cgroup system.slice true
+  {"socket" : "S0", "cpu-count" : 8, "cgroup" : "system.slice", "" : "", "" : "", "" : "", "" : "", "" : "", "" : "", "" : "", "" : ""}
 
 After:
-  # perf stat -a -j --metric-only true
-  {"GHz" : "0.990", "insn per cycle" : "2.06", "branch-misses of all branches" : "0.59"}
-
-  # perf stat -a -j --metric-only --per-socket true
-  {"socket" : "S0", "aggregate-number" : 8, "GHz" : "0.439", "insn per cycle" : "2.14", "branch-misses of all branches" : "0.51"}
+  # perf stat -aj --metric-only --per-socket --for-each-cgroup system.slice true
+  {"socket" : "S0", "cpu-count" : 8, "cgroup" : "system.slice", "metric-value" : "none"}
 
 Signed-off-by: Namhyung Kim <namhyung@kernel.org>
 ---
- tools/perf/util/stat-display.c | 42 +++++++++++++++++++---------------
- 1 file changed, 24 insertions(+), 18 deletions(-)
+ tools/perf/util/stat-display.c | 27 +++++++++++++++++----------
+ 1 file changed, 17 insertions(+), 10 deletions(-)
 
 diff --git a/tools/perf/util/stat-display.c b/tools/perf/util/stat-display.c
-index 335627e8542d..43640115454c 100644
+index 7a39a1a7261d..847acdb5dc40 100644
 --- a/tools/perf/util/stat-display.c
 +++ b/tools/perf/util/stat-display.c
-@@ -279,9 +279,6 @@ static void print_aggr_id_json(struct perf_stat_config *config,
- {
- 	FILE *output = config->output;
- 
--	if (!config->interval)
--		fputc('{', output);
--
- 	switch (config->aggr_mode) {
- 	case AGGR_CORE:
- 		fprintf(output, "\"core\" : \"S%d-D%d-C%d\", \"aggregate-number\" : %d, ",
-@@ -335,6 +332,7 @@ static void aggr_printout(struct perf_stat_config *config,
- struct outstate {
- 	FILE *fh;
- 	bool newline;
-+	bool first;
- 	const char *prefix;
- 	int  nfields;
- 	int  nr;
-@@ -491,6 +489,7 @@ static void print_metric_only(struct perf_stat_config *config,
- 
- 	color_snprintf(str, sizeof(str), color ?: "", fmt, val);
- 	fprintf(out, "%*s ", mlen, str);
-+	os->first = false;
- }
- 
- static void print_metric_only_csv(struct perf_stat_config *config __maybe_unused,
-@@ -512,6 +511,7 @@ static void print_metric_only_csv(struct perf_stat_config *config __maybe_unused
- 		ends++;
- 	*ends = 0;
- 	fprintf(out, "%s%s", vals, config->csv_sep);
-+	os->first = false;
- }
- 
- static void print_metric_only_json(struct perf_stat_config *config __maybe_unused,
-@@ -532,7 +532,8 @@ static void print_metric_only_json(struct perf_stat_config *config __maybe_unuse
+@@ -532,6 +532,8 @@ static void print_metric_only_json(struct perf_stat_config *config __maybe_unuse
  	while (isdigit(*ends) || *ends == '.')
  		ends++;
  	*ends = 0;
--	fprintf(out, "{\"metric-value\" : \"%s\"}", vals);
-+	fprintf(out, "%s\"%s\" : \"%s\"", os->first ? "" : ", ", unit, vals);
-+	os->first = false;
- }
- 
- static void new_line_metric(struct perf_stat_config *config __maybe_unused,
-@@ -561,7 +562,7 @@ static void print_metric_header(struct perf_stat_config *config,
- 	unit = fixunit(tbuf, os->evsel, unit);
- 
- 	if (config->json_output)
--		fprintf(os->fh, "{\"unit\" : \"%s\"}", unit);
++	if (!unit[0] || !vals[0])
 +		return;
- 	else if (config->csv_output)
- 		fprintf(os->fh, "%s%s", unit, config->csv_sep);
- 	else
-@@ -821,6 +822,8 @@ static void print_counter_aggrdata(struct perf_stat_config *config,
- 	run = aggr->counts.run;
- 
- 	if (!metric_only) {
-+		if (config->json_output)
-+			fputc('{', output);
- 		if (os->prefix)
- 			fprintf(output, "%s", os->prefix);
- 		else if (config->summary && config->csv_output &&
-@@ -844,9 +847,12 @@ static void print_metric_begin(struct perf_stat_config *config,
- 	struct aggr_cpu_id id;
- 	struct evsel *evsel;
- 
-+	os->first = true;
- 	if (!config->metric_only)
- 		return;
- 
-+	if (config->json_output)
-+		fputc('{', config->output);
- 	if (os->prefix)
- 		fprintf(config->output, "%s", os->prefix);
- 
-@@ -855,7 +861,7 @@ static void print_metric_begin(struct perf_stat_config *config,
- 	aggr = &evsel->stats->aggr[aggr_idx];
- 	aggr_printout(config, evsel, id, aggr->nr);
- 
--	print_cgroup(config, os->cgrp);
-+	print_cgroup(config, os->cgrp ? : evsel->cgrp);
+ 	fprintf(out, "%s\"%s\" : \"%s\"", os->first ? "" : ", ", unit, vals);
+ 	os->first = false;
+ }
+@@ -864,14 +866,19 @@ static void print_metric_begin(struct perf_stat_config *config,
+ 	print_cgroup(config, os->cgrp ? : evsel->cgrp);
  }
  
- static void print_metric_end(struct perf_stat_config *config)
-@@ -863,6 +869,8 @@ static void print_metric_end(struct perf_stat_config *config)
- 	if (!config->metric_only)
- 		return;
- 
-+	if (config->json_output)
-+		fputc('}', config->output);
- 	fputc('\n', config->output);
- }
- 
-@@ -1005,11 +1013,9 @@ static void print_metric_headers_csv(struct perf_stat_config *config,
- 		fputs(aggr_header_csv[config->aggr_mode], config->output);
- }
- 
--static void print_metric_headers_json(struct perf_stat_config *config,
-+static void print_metric_headers_json(struct perf_stat_config *config __maybe_unused,
- 				      bool no_indent __maybe_unused)
+-static void print_metric_end(struct perf_stat_config *config)
++static void print_metric_end(struct perf_stat_config *config, struct outstate *os)
  {
--	if (config->interval)
--		fputs("{\"unit\" : \"sec\"}", config->output);
- }
- 
- static void print_metric_headers(struct perf_stat_config *config,
-@@ -1049,7 +1055,9 @@ static void print_metric_headers(struct perf_stat_config *config,
- 					      &config->metric_events,
- 					      &rt_stat);
- 	}
--	fputc('\n', config->output);
++	FILE *output = config->output;
 +
-+	if (!config->json_output)
-+		fputc('\n', config->output);
- }
- 
- static void prepare_interval(struct perf_stat_config *config,
-@@ -1058,17 +1066,14 @@ static void prepare_interval(struct perf_stat_config *config,
- 	if (config->iostat_run)
+ 	if (!config->metric_only)
  		return;
  
--	if (config->csv_output)
-+	if (config->json_output)
-+		scnprintf(prefix, len, "\"interval\" : %lu.%09lu, ",
-+			  (unsigned long) ts->tv_sec, ts->tv_nsec);
-+	else if (config->csv_output)
- 		scnprintf(prefix, len, "%lu.%09lu%s",
- 			  (unsigned long) ts->tv_sec, ts->tv_nsec, config->csv_sep);
--	else if (!config->json_output)
--		scnprintf(prefix, len, "%6lu.%09lu ",
--			  (unsigned long) ts->tv_sec, ts->tv_nsec);
--	else if (!config->metric_only)
--		scnprintf(prefix, len, "{\"interval\" : %lu.%09lu, ",
--			  (unsigned long) ts->tv_sec, ts->tv_nsec);
- 	else
--		scnprintf(prefix, len, "{\"interval\" : %lu.%09lu}",
-+		scnprintf(prefix, len, "%6lu.%09lu ",
- 			  (unsigned long) ts->tv_sec, ts->tv_nsec);
+-	if (config->json_output)
+-		fputc('}', config->output);
+-	fputc('\n', config->output);
++	if (config->json_output) {
++		if (os->first)
++			fputs("\"metric-value\" : \"none\"", output);
++		fputc('}', output);
++	}
++	fputc('\n', output);
  }
  
-@@ -1365,6 +1370,7 @@ void evlist__print_counters(struct evlist *evlist, struct perf_stat_config *conf
- 	char buf[64];
- 	struct outstate os = {
- 		.fh = config->output,
-+		.first = true,
- 	};
+ static void print_aggr(struct perf_stat_config *config,
+@@ -897,7 +904,7 @@ static void print_aggr(struct perf_stat_config *config,
  
- 	if (config->iostat_run)
+ 			print_counter_aggrdata(config, counter, s, os);
+ 		}
+-		print_metric_end(config);
++		print_metric_end(config, os);
+ 	}
+ }
+ 
+@@ -929,7 +936,7 @@ static void print_aggr_cgroup(struct perf_stat_config *config,
+ 
+ 				print_counter_aggrdata(config, counter, s, os);
+ 			}
+-			print_metric_end(config);
++			print_metric_end(config, os);
+ 		}
+ 	}
+ }
+@@ -985,7 +992,7 @@ static void print_no_aggr_metric(struct perf_stat_config *config,
+ 			printout(config, os, uval, run, ena, 1.0, counter_idx);
+ 		}
+ 		if (!first)
+-			print_metric_end(config);
++			print_metric_end(config, os);
+ 	}
+ }
+ 
+@@ -1348,7 +1355,7 @@ static void print_cgroup_counter(struct perf_stat_config *config, struct evlist
+ 	evlist__for_each_entry(evlist, counter) {
+ 		if (os->cgrp != counter->cgrp) {
+ 			if (os->cgrp != NULL)
+-				print_metric_end(config);
++				print_metric_end(config, os);
+ 
+ 			os->cgrp = counter->cgrp;
+ 			print_metric_begin(config, evlist, os, /*aggr_idx=*/0);
+@@ -1357,7 +1364,7 @@ static void print_cgroup_counter(struct perf_stat_config *config, struct evlist
+ 		print_counter(config, counter, os);
+ 	}
+ 	if (os->cgrp)
+-		print_metric_end(config);
++		print_metric_end(config, os);
+ }
+ 
+ void evlist__print_counters(struct evlist *evlist, struct perf_stat_config *config,
+@@ -1405,7 +1412,7 @@ void evlist__print_counters(struct evlist *evlist, struct perf_stat_config *conf
+ 			evlist__for_each_entry(evlist, counter) {
+ 				print_counter(config, counter, &os);
+ 			}
+-			print_metric_end(config);
++			print_metric_end(config, &os);
+ 		}
+ 		break;
+ 	case AGGR_NONE:
 -- 
 2.38.1.584.g0f3c55d4c2-goog
 
