@@ -2,58 +2,58 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6EF46C433FE
-	for <linux-perf-users@archiver.kernel.org>; Wed, 23 Nov 2022 23:21:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EEE23C433FE
+	for <linux-perf-users@archiver.kernel.org>; Wed, 23 Nov 2022 23:22:18 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229758AbiKWXVq (ORCPT
+        id S229520AbiKWXWS (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Wed, 23 Nov 2022 18:21:46 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51910 "EHLO
+        Wed, 23 Nov 2022 18:22:18 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52218 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229815AbiKWXVp (ORCPT
+        with ESMTP id S229681AbiKWXWR (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Wed, 23 Nov 2022 18:21:45 -0500
-Received: from mail-wm1-x32e.google.com (mail-wm1-x32e.google.com [IPv6:2a00:1450:4864:20::32e])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5B1E211604E
-        for <linux-perf-users@vger.kernel.org>; Wed, 23 Nov 2022 15:21:44 -0800 (PST)
-Received: by mail-wm1-x32e.google.com with SMTP id ay14-20020a05600c1e0e00b003cf6ab34b61so2687505wmb.2
-        for <linux-perf-users@vger.kernel.org>; Wed, 23 Nov 2022 15:21:44 -0800 (PST)
+        Wed, 23 Nov 2022 18:22:17 -0500
+Received: from mail-wr1-x42f.google.com (mail-wr1-x42f.google.com [IPv6:2a00:1450:4864:20::42f])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 25D1D11E703
+        for <linux-perf-users@vger.kernel.org>; Wed, 23 Nov 2022 15:22:16 -0800 (PST)
+Received: by mail-wr1-x42f.google.com with SMTP id s5so17809wru.1
+        for <linux-perf-users@vger.kernel.org>; Wed, 23 Nov 2022 15:22:16 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=google.com; s=20210112;
         h=cc:to:subject:message-id:date:from:in-reply-to:references
          :mime-version:from:to:cc:subject:date:message-id:reply-to;
-        bh=EjQEbGjYCwaCAVNOvIzuhjLPz0PBi/aiFkgT1FMj0Kw=;
-        b=YvcTWxjSyEJM5hJr9+pChZuvA4Mpc8IQtZ6dM7459/az4DEuJKRJzNOud25mfC/m1W
-         ISHaYPZNDmcCtk/DIDtImd5v53sPP8vHw1f3i4hzM6D57zDUh0kPTDVooBtiaq2lXYqT
-         ERQXHZflXYSilXhb6NbLQKNwm3v11INVuIopi+E+CSCChS0jc9HIyjqeYcRyBrdi0Y2v
-         raotMCZjamvZd3/V17Tr7MgbF2kVfBHfJNVMa+sQeCgU8u5/7A5jOrRWrVTuP5x3XLvO
-         A2oX/7JjVv8LAQovO1xA1KAQzRbb8ttaDCvhUUTNQnReqGSV3/aUc4VFc0L4MhklF3kO
-         xc1g==
+        bh=2Jdl6xJf2GOmq95nfWh92ojvpXIe3KF+eLKF3UOPapg=;
+        b=qOJB4MpqAvn4MQeX4Olb2iCcV3izJiOGVFzb/LgSbt/8ZIRnI30grkK6ejxfBOtfvE
+         /SBMZNNVomC0RDOeLbc/MV00k/6DUDBg3CdcDLGrFrrGEGcxd6/gvaOolgYWfgilkbAi
+         7iA2CFkamZ3xUJHrx22DnoXOI2dqPuIekmMFDKWO6DpLe4rrPXZv4zqmA7ircGRFNCYu
+         MHBv7nbF3CGcvzNK+3pjWsvjJip/8YfPBBtHEotbzzRPsNtabKCZqWeb1nCpGcj+1oPl
+         /fsv99iPYSfg/wBfbEAiuj1ImBw3ANHFH4PTRN54fFSg06tGyKR4UyfUhJ5osash7mZp
+         ha5Q==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
         h=cc:to:subject:message-id:date:from:in-reply-to:references
          :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
          :reply-to;
-        bh=EjQEbGjYCwaCAVNOvIzuhjLPz0PBi/aiFkgT1FMj0Kw=;
-        b=NryR6pN4gmERc2rVt7JNnCjWzglrBvkHeWDIoDbhgkTpkr0lQ1OUXhMP9N41C1D89z
-         c6OtcrueouBWIC/tqJUxWg8dySIr8fzAJSTlezzC9JCxrI9cfy/mOBtb33VerUJ+SD5O
-         b5+v04xcfblhMvVy14jM6qoF218EvKoNM/mKi0w3KxmMckqi8EPDiToWGkgyXzsYDzdg
-         ZeD8WJt4/Uwk74x5eFFdCcDNktE2ox0yxEqL32LV2jtz33VFBEfiudQZu/EVsmOAIM7c
-         Y1mE5klQvXUS9A7lr2dU8T+AvYQe4YNIoQ3ZrIKZwkYq97nEdJbfHtkR2pSSlEhesWqa
-         pluA==
-X-Gm-Message-State: ANoB5pmw/vVCzGb/WMthX8RPSNPLFrB5RUxEiFkFBrzCbT18xmMWULo4
-        8saSRHIEbtJ0eVDsBPTkLpEa7BVf+r3Qrne/3h675g==
-X-Google-Smtp-Source: AA0mqf7Vw5eLSy5FQU2GnXiaLgU41DckXd+YgpmFBiRb+IrjmyR2uA2PL3d6xcetVpQcDogn1FA/eDE36DARBHng26A=
-X-Received: by 2002:a05:600c:4fc4:b0:3c6:c109:2d9 with SMTP id
- o4-20020a05600c4fc400b003c6c10902d9mr11821409wmq.149.1669245702716; Wed, 23
- Nov 2022 15:21:42 -0800 (PST)
+        bh=2Jdl6xJf2GOmq95nfWh92ojvpXIe3KF+eLKF3UOPapg=;
+        b=xLf7z+mkPloM98GNM9riKAb/7qQlhnscJ5WSzkYhTCgn9V9/TiLUuA9+fnJThAg7OG
+         a9L/xNXQbwdSDfpBvT3UP8FZVNYN/UQO/XdBN6ZyChFMaeJXij1rLdZ+kbI9ssJA63Cz
+         zQ3pJa+8Y6Nti+XtnABbFypjHoNFh1jI7yj9Z6HvW5+wOAA8k4M3KZqSEhUH8TUqQmgZ
+         CK0nV53wZO6SFsiel8m+vsIXAiELr+Yp0/2Bc4TKEeHcMPdyIVzy+bZsn2f26Ko2YnHU
+         fRFmu9edPDZNTi6ngb2PsrPpE6QhaP5iIjOBD1KiYbKGODXwwLV2vuzr+cHL6XMmYghb
+         2FSQ==
+X-Gm-Message-State: ANoB5plOYAqajIlE/0Ls80Qw4M3i+EDiBc7BWY7RdDrMq6A793papnBG
+        h9Vy8yayrywpqiTMC8N/aeL16liwGatO+k8JE6seiQ==
+X-Google-Smtp-Source: AA0mqf4Md+PgZrtFIP7Z6ENJJ2tkSUqIrPjqpQrsRz7vIeA+KkN2WoOq4c/CeCq2zb9OmeDhHDrxVi+OG5ALSZ+38vk=
+X-Received: by 2002:adf:f6cc:0:b0:228:dd1d:8a42 with SMTP id
+ y12-20020adff6cc000000b00228dd1d8a42mr7208230wrp.375.1669245734572; Wed, 23
+ Nov 2022 15:22:14 -0800 (PST)
 MIME-Version: 1.0
-References: <20221123180208.2068936-1-namhyung@kernel.org> <20221123180208.2068936-4-namhyung@kernel.org>
-In-Reply-To: <20221123180208.2068936-4-namhyung@kernel.org>
+References: <20221123180208.2068936-1-namhyung@kernel.org> <20221123180208.2068936-5-namhyung@kernel.org>
+In-Reply-To: <20221123180208.2068936-5-namhyung@kernel.org>
 From:   Ian Rogers <irogers@google.com>
-Date:   Wed, 23 Nov 2022 15:21:30 -0800
-Message-ID: <CAP-5=fUmc3uL7o1zkJ9vv4dAa1dHwtNe1XZZbpqB5xhbgxWuTw@mail.gmail.com>
-Subject: Re: [PATCH 03/15] perf stat: Do not align time prefix in CSV output
+Date:   Wed, 23 Nov 2022 15:22:01 -0800
+Message-ID: <CAP-5=fXzc4-U=g96dr7jzUHNKudcUh2JZW89BT8xs01Zfp7ZDw@mail.gmail.com>
+Subject: Re: [PATCH 04/15] perf stat: Use scnprintf() in prepare_interval()
 To:     Namhyung Kim <namhyung@kernel.org>
 Cc:     Arnaldo Carvalho de Melo <acme@kernel.org>,
         Jiri Olsa <jolsa@kernel.org>, Ingo Molnar <mingo@kernel.org>,
@@ -72,45 +72,8 @@ X-Mailing-List: linux-perf-users@vger.kernel.org
 
 On Wed, Nov 23, 2022 at 10:02 AM Namhyung Kim <namhyung@kernel.org> wrote:
 >
-> We don't care about the alignment in the CSV output as it's intended for machine
-> processing.  Let's get rid of it to make the output more compact.
->
-> Before:
->   # perf stat -a --summary -I 1 -x, true
->        0.001149309,219.20,msec,cpu-clock,219322251,100.00,219.200,CPUs utilized
->        0.001149309,144,,context-switches,219241902,100.00,656.935,/sec
->        0.001149309,38,,cpu-migrations,219173705,100.00,173.358,/sec
->        0.001149309,61,,page-faults,219093635,100.00,278.285,/sec
->        0.001149309,10679310,,cycles,218746228,100.00,0.049,GHz
->        0.001149309,6288296,,instructions,218589869,100.00,0.59,insn per cycle
->        0.001149309,1386904,,branches,218428851,100.00,6.327,M/sec
->        0.001149309,56863,,branch-misses,218219951,100.00,4.10,of all branches
->            summary,219.20,msec,cpu-clock,219322251,100.00,20.025,CPUs utilized
->            summary,144,,context-switches,219241902,100.00,656.935,/sec
->            summary,38,,cpu-migrations,219173705,100.00,173.358,/sec
->            summary,61,,page-faults,219093635,100.00,278.285,/sec
->            summary,10679310,,cycles,218746228,100.00,0.049,GHz
->            summary,6288296,,instructions,218589869,100.00,0.59,insn per cycle
->            summary,1386904,,branches,218428851,100.00,6.327,M/sec
->            summary,56863,,branch-misses,218219951,100.00,4.10,of all branches
->
-> After:
->   0.001148449,224.75,msec,cpu-clock,224870589,100.00,224.747,CPUs utilized
->   0.001148449,176,,context-switches,224775564,100.00,783.103,/sec
->   0.001148449,38,,cpu-migrations,224707428,100.00,169.079,/sec
->   0.001148449,61,,page-faults,224629326,100.00,271.416,/sec
->   0.001148449,12172071,,cycles,224266368,100.00,0.054,GHz
->   0.001148449,6901907,,instructions,224108764,100.00,0.57,insn per cycle
->   0.001148449,1515655,,branches,223946693,100.00,6.744,M/sec
->   0.001148449,70027,,branch-misses,223735385,100.00,4.62,of all branches
->   summary,224.75,msec,cpu-clock,224870589,100.00,21.066,CPUs utilized
->   summary,176,,context-switches,224775564,100.00,783.103,/sec
->   summary,38,,cpu-migrations,224707428,100.00,169.079,/sec
->   summary,61,,page-faults,224629326,100.00,271.416,/sec
->   summary,12172071,,cycles,224266368,100.00,0.054,GHz
->   summary,6901907,,instructions,224108764,100.00,0.57,insn per cycle
->   summary,1515655,,branches,223946693,100.00,6.744,M/sec
->   summary,70027,,branch-misses,223735385,100.00,4.62,of all branches
+> It should not use sprintf() anymore.  Let's pass the buffer size and use the
+> safer scnprintf() instead.
 >
 > Signed-off-by: Namhyung Kim <namhyung@kernel.org>
 
@@ -120,37 +83,55 @@ Thanks,
 Ian
 
 > ---
->  tools/perf/util/stat-display.c | 9 ++++++---
->  1 file changed, 6 insertions(+), 3 deletions(-)
+>  tools/perf/util/stat-display.c | 20 ++++++++++----------
+>  1 file changed, 10 insertions(+), 10 deletions(-)
 >
 > diff --git a/tools/perf/util/stat-display.c b/tools/perf/util/stat-display.c
-> index d86f2f8e020d..15c88b9b5aa3 100644
+> index 15c88b9b5aa3..744b7a40f59a 100644
 > --- a/tools/perf/util/stat-display.c
 > +++ b/tools/perf/util/stat-display.c
-> @@ -828,7 +828,7 @@ static void print_counter_aggrdata(struct perf_stat_config *config,
->                         fprintf(output, "%s", prefix);
->                 else if (config->summary && config->csv_output &&
->                          !config->no_csv_summary && !config->interval)
-> -                       fprintf(output, "%16s%s", "summary", config->csv_sep);
-> +                       fprintf(output, "%s%s", "summary", config->csv_sep);
->         }
+> @@ -1073,23 +1073,23 @@ static void print_metric_headers(struct perf_stat_config *config,
+>  }
 >
->         uval = val * counter->scale;
-> @@ -1078,9 +1078,12 @@ static void prepare_interval(struct perf_stat_config *config,
+>  static void prepare_interval(struct perf_stat_config *config,
+> -                            char *prefix, struct timespec *ts)
+> +                            char *prefix, size_t len, struct timespec *ts)
+>  {
 >         if (config->iostat_run)
 >                 return;
 >
-> -       if (!config->json_output)
-> -               sprintf(prefix, "%6lu.%09lu%s", (unsigned long) ts->tv_sec,
-> +       if (config->csv_output)
-> +               sprintf(prefix, "%lu.%09lu%s", (unsigned long) ts->tv_sec,
->                                  ts->tv_nsec, config->csv_sep);
-> +       else if (!config->json_output)
-> +               sprintf(prefix, "%6lu.%09lu ", (unsigned long) ts->tv_sec,
-> +                                ts->tv_nsec);
+>         if (config->csv_output)
+> -               sprintf(prefix, "%lu.%09lu%s", (unsigned long) ts->tv_sec,
+> -                                ts->tv_nsec, config->csv_sep);
+> +               scnprintf(prefix, len, "%lu.%09lu%s",
+> +                         (unsigned long) ts->tv_sec, ts->tv_nsec, config->csv_sep);
+>         else if (!config->json_output)
+> -               sprintf(prefix, "%6lu.%09lu ", (unsigned long) ts->tv_sec,
+> -                                ts->tv_nsec);
+> +               scnprintf(prefix, len, "%6lu.%09lu ",
+> +                         (unsigned long) ts->tv_sec, ts->tv_nsec);
 >         else if (!config->metric_only)
->                 sprintf(prefix, "{\"interval\" : %lu.%09lu, ", (unsigned long)
->                                  ts->tv_sec, ts->tv_nsec);
+> -               sprintf(prefix, "{\"interval\" : %lu.%09lu, ", (unsigned long)
+> -                                ts->tv_sec, ts->tv_nsec);
+> +               scnprintf(prefix, len, "{\"interval\" : %lu.%09lu, ",
+> +                         (unsigned long) ts->tv_sec, ts->tv_nsec);
+>         else
+> -               sprintf(prefix, "{\"interval\" : %lu.%09lu}", (unsigned long)
+> -                                ts->tv_sec, ts->tv_nsec);
+> +               scnprintf(prefix, len, "{\"interval\" : %lu.%09lu}",
+> +                         (unsigned long) ts->tv_sec, ts->tv_nsec);
+>  }
+>
+>  static void print_header_interval_std(struct perf_stat_config *config,
+> @@ -1390,7 +1390,7 @@ void evlist__print_counters(struct evlist *evlist, struct perf_stat_config *conf
+>
+>         if (interval) {
+>                 prefix = buf;
+> -               prepare_interval(config, prefix, ts);
+> +               prepare_interval(config, buf, sizeof(buf), ts);
+>         }
+>
+>         print_header(config, _target, evlist, argc, argv);
 > --
 > 2.38.1.584.g0f3c55d4c2-goog
 >
