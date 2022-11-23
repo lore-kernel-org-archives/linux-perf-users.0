@@ -2,54 +2,55 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 87E69C46467
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DAF05C47088
 	for <linux-perf-users@archiver.kernel.org>; Wed, 23 Nov 2022 18:02:32 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S239402AbiKWSC2 (ORCPT
+        id S239405AbiKWSC3 (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Wed, 23 Nov 2022 13:02:28 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53524 "EHLO
+        Wed, 23 Nov 2022 13:02:29 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53584 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S239312AbiKWSCN (ORCPT
+        with ESMTP id S239343AbiKWSCR (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Wed, 23 Nov 2022 13:02:13 -0500
-Received: from mail-pj1-x102c.google.com (mail-pj1-x102c.google.com [IPv6:2607:f8b0:4864:20::102c])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5332C87540;
-        Wed, 23 Nov 2022 10:02:12 -0800 (PST)
-Received: by mail-pj1-x102c.google.com with SMTP id b11so16508894pjp.2;
-        Wed, 23 Nov 2022 10:02:12 -0800 (PST)
+        Wed, 23 Nov 2022 13:02:17 -0500
+Received: from mail-pj1-x1034.google.com (mail-pj1-x1034.google.com [IPv6:2607:f8b0:4864:20::1034])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5011893CC7;
+        Wed, 23 Nov 2022 10:02:17 -0800 (PST)
+Received: by mail-pj1-x1034.google.com with SMTP id y14-20020a17090a2b4e00b002189a1b84d4so2526037pjc.2;
+        Wed, 23 Nov 2022 10:02:17 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20210112;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:sender:from:to:cc:subject:date:message-id:reply-to;
-        bh=rDn/mw+FagN1m2eiShMyH8xai72ctuc/pHCaCu8gIX8=;
-        b=CQQ+Z2uEC/Y5KY8WYT4DVhjMlB7ix605zXjyMAlpj8C+mx25Kj75ljbsSLYrnVJRSJ
-         89lilGxicPszpFQXQ38f2waR/TA/zcHw6EQ45k6zN0jjX3fU4NexNGbdufd8OPBIWeyH
-         Ja/rv7cgOeBrSHYbu7jKk9n7Hv3eIfTqDr/pV0WfxXsoVUsjJSuECYgxoNMu2lZIxBK+
-         fJ7inBMrWCPpMEeEaYvbIIrcNrsJulgusFV9AHUtkPkmVW5QjuQady76RcaLEuLWLVrp
-         Vk8/ycPKTX+RbbqnLmCc5YOCQ6PUGDkwWXsjhhiVdMDYW1Q+4gOlO7yyjsKWNniIzEnq
-         rlPw==
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:sender:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=/XCyVoN2CehHx7RpmSNkS0ILYMPbGDge+MWsh49BZP0=;
+        b=RA6XwERAQ9oFGKRK9FwW2+BAXVuDXEcWwE98pPTTLsUP3d/uoo+JL//dsBAHnjn4YX
+         r41ok0+UGjJ+K1LT5J3SdMujw8e0BulQwi3Lcb3Cp/GjmqYJqO+VDT9wAJbV6d2rnYju
+         WGmkHN/N3eh3XepR7sYmi6x7gzb9c6dF8l5NxzN+k5SNSS8FLJHyg1lVrz/g/wzFltnh
+         Im0n53P1/kfTNowa3pf9fMXGAqer8r/eGnrCNNalZx1GRcURXPsVDNkgjBkgqeEE1Roa
+         r7RGzZB0EBZB5KcoNvu04H65LpGejG3zpHEBgWxJ3xdOiFHXNdAquYcJMz4e7Gb2nJBJ
+         7rfw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:sender:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=rDn/mw+FagN1m2eiShMyH8xai72ctuc/pHCaCu8gIX8=;
-        b=RdzaJ7oi4O+hizM6NVgGazzZjESxCK14fB4XmOMXXtpQvOjMWaIZz2ZErzaz/8hafS
-         IboGs4BPsghcPu86yoXbgcfJzus5oqSgbtRkfujiFkNArI2llVCXtahuK3nFtK0fpaLK
-         gYAym+cUXgcoOrhn9HprjMXLjik7p/Ft0vlniiqI0nUdIOpzseQYvcT9HyVU1sd4i+oc
-         yfPLyRa2FFAtPOpFeWJbcVbRrsPVlzCjwFARTh2MZ0QMz/76yVCGLETzic344f6454Ee
-         KpZASJ66Tarm6hl41eVDwO+49ORMal55pgEslfuCbpku2rT7j+gIu8sVAxGXJdRBcdh3
-         R+JQ==
-X-Gm-Message-State: ANoB5pl2U/oTvPqXU6qEJ5NU6w4cQOLJ6h7LUCgo/S/Nr8gA5wiLCEvV
-        j+KHMM3OsFDOiAYWjH7y8rs=
-X-Google-Smtp-Source: AA0mqf4/ovAD9a9j1NKeTDoIo+X3I0vrIx0aPrt329o8qSrb2pXbEv4LDfkiobf4pTLeAZBa5iRXIA==
-X-Received: by 2002:a17:90a:2e16:b0:20a:bb1f:44a with SMTP id q22-20020a17090a2e1600b0020abb1f044amr38726233pjd.160.1669226531222;
-        Wed, 23 Nov 2022 10:02:11 -0800 (PST)
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:sender:x-gm-message-state:from
+         :to:cc:subject:date:message-id:reply-to;
+        bh=/XCyVoN2CehHx7RpmSNkS0ILYMPbGDge+MWsh49BZP0=;
+        b=e6dLkJ91kdtIrZ9W4/ilx+sXFmQpIFW+eIWnVluRccnPgYzpAwAyQNK4FfamAFVCXD
+         2xnQyZo8krq0baUDbZKbrqCqeWKRd6PD29SD1AOsWxbroEN/b1OXtr4BE+RVkMsRCkdw
+         zJM7IHrvm8fUiOqpRsXrIrr7g/uSR21oSmLMI6S8ao0pFjcr58qD1P1pvuygkIufPEKH
+         s1B8NQ692n8qbFAQMAfSofTaqLLqqQ+u63tN996qNQY4ayI8BRWxwESKRevfRwno3Vgc
+         Pi96Y8wUOjXYLpnTB+65RvH32KAhmRphUm6/74HMLfD6CqhBj/8fYCkkM7SLd70BYw/L
+         k1sg==
+X-Gm-Message-State: ANoB5pnQWiWIRqDivTc3GoytDahG87olscMZq9tb6T1Qph548Vgn5soc
+        podUpHuoBe7IO7VODbZ/eGU=
+X-Google-Smtp-Source: AA0mqf59GDhKSyTePcmHXcmPXPe4IwSZ8QKzZBWKzqgEWXanTT2rXLZgYVVcUunvq1wvsC06q3C0fg==
+X-Received: by 2002:a17:902:6847:b0:183:6555:38ef with SMTP id f7-20020a170902684700b00183655538efmr13403292pln.157.1669226536694;
+        Wed, 23 Nov 2022 10:02:16 -0800 (PST)
 Received: from balhae.hsd1.ca.comcast.net ([2601:647:6780:a80:c968:76:254b:3790])
-        by smtp.gmail.com with ESMTPSA id i15-20020a655b8f000000b00470275c8d6dsm10792364pgr.10.2022.11.23.10.02.09
+        by smtp.gmail.com with ESMTPSA id i15-20020a655b8f000000b00470275c8d6dsm10792364pgr.10.2022.11.23.10.02.15
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 23 Nov 2022 10:02:10 -0800 (PST)
+        Wed, 23 Nov 2022 10:02:16 -0800 (PST)
 Sender: Namhyung Kim <namhyung@gmail.com>
 From:   Namhyung Kim <namhyung@kernel.org>
 To:     Arnaldo Carvalho de Melo <acme@kernel.org>,
@@ -64,69 +65,72 @@ Cc:     Ingo Molnar <mingo@kernel.org>,
         Zhengjun Xing <zhengjun.xing@linux.intel.com>,
         James Clark <james.clark@arm.com>,
         Athira Jajeev <atrajeev@linux.vnet.ibm.com>
-Subject: [PATCHSET 00/15] perf stat: Improve perf stat output (v2)
-Date:   Wed, 23 Nov 2022 10:01:53 -0800
-Message-Id: <20221123180208.2068936-1-namhyung@kernel.org>
+Subject: [PATCH 04/15] perf stat: Use scnprintf() in prepare_interval()
+Date:   Wed, 23 Nov 2022 10:01:57 -0800
+Message-Id: <20221123180208.2068936-5-namhyung@kernel.org>
 X-Mailer: git-send-email 2.38.1.584.g0f3c55d4c2-goog
+In-Reply-To: <20221123180208.2068936-1-namhyung@kernel.org>
+References: <20221123180208.2068936-1-namhyung@kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-Hello,
+It should not use sprintf() anymore.  Let's pass the buffer size and use the
+safer scnprintf() instead.
 
-This is a continuation of my perf stat cleanup work focusing on the
-metric-only mode with JSON output now.  It's based on the previous
-patchset which is already merged to acme/perf/core.
+Signed-off-by: Namhyung Kim <namhyung@kernel.org>
+---
+ tools/perf/util/stat-display.c | 20 ++++++++++----------
+ 1 file changed, 10 insertions(+), 10 deletions(-)
 
-The JSON output + metric-only with aggregation has been broken for a
-while.  The last update fixed the crash but it still produced invalid
-JSON objects.  Also having a separate header and objects with their own
-"metric-value" key is not convenient to process.
-
-  # perf stat -aj --metric-only --per-socket sleep 1
-  {"unit" : "GHz"}{"unit" : "insn per cycle"}{"unit" : "branch-misses of all branches"}
-  {"socket" : "S0", "aggregate-number" : 8, {"metric-value" : "0.809"}{"metric-value" : "2.10"}{"metric-value" : "0.37"}
-
-So I removed the header and move the metric keys to the object.  Then
-it doesn't need separate objects anymore.  The new output looks like:
-
-  # perf stat -aj --metric-only --per-socket sleep 1
-  {"socket" : "S0", "cpu-count" : 8, "GHz" : "0.817", "insn per cycle" : "2.15", "branch-misses of all branches" : "0.38"}
-
-You can get it from 'perf/stat-display-v2' branch in
-
-  git://git.kernel.org/pub/scm/linux/kernel/git/namhyung/linux-perf.git
-
-Thanks,
-Namhyung
-
-Namhyung Kim (15):
-  perf stat: Fix cgroup display in JSON output
-  perf stat: Move summary prefix printing logic in CSV output
-  perf stat: Do not align time prefix in CSV output
-  perf stat: Use scnprintf() in prepare_interval()
-  perf stat: Remove prefix argument in print_metric_headers()
-  perf stat: Remove metric_only argument in print_counter_aggrdata()
-  perf stat: Pass const char *prefix to display routines
-  perf stat: Use struct outstate in evlist__print_counters()
-  perf stat: Pass struct outstate to print_metric_begin()
-  perf stat: Pass struct outstate to printout()
-  perf stat: Do not pass runtime_stat to printout()
-  perf stat: Pass through struct outstate
-  perf stat: Fix JSON output in metric-only mode
-  perf stat: Rename "aggregate-number" to "cpu-count" in JSON
-  perf stat: Tidy up JSON metric-only output when no metrics
-
- tools/perf/arch/x86/util/iostat.c |   4 +-
- tools/perf/util/iostat.c          |   3 +-
- tools/perf/util/iostat.h          |   4 +-
- tools/perf/util/stat-display.c    | 257 +++++++++++++++---------------
- 4 files changed, 133 insertions(+), 135 deletions(-)
-
-
-base-commit: 63a3bf5e8d9e79ce456c8f73d4395a5a51d841b1
+diff --git a/tools/perf/util/stat-display.c b/tools/perf/util/stat-display.c
+index 15c88b9b5aa3..744b7a40f59a 100644
+--- a/tools/perf/util/stat-display.c
++++ b/tools/perf/util/stat-display.c
+@@ -1073,23 +1073,23 @@ static void print_metric_headers(struct perf_stat_config *config,
+ }
+ 
+ static void prepare_interval(struct perf_stat_config *config,
+-			     char *prefix, struct timespec *ts)
++			     char *prefix, size_t len, struct timespec *ts)
+ {
+ 	if (config->iostat_run)
+ 		return;
+ 
+ 	if (config->csv_output)
+-		sprintf(prefix, "%lu.%09lu%s", (unsigned long) ts->tv_sec,
+-				 ts->tv_nsec, config->csv_sep);
++		scnprintf(prefix, len, "%lu.%09lu%s",
++			  (unsigned long) ts->tv_sec, ts->tv_nsec, config->csv_sep);
+ 	else if (!config->json_output)
+-		sprintf(prefix, "%6lu.%09lu ", (unsigned long) ts->tv_sec,
+-				 ts->tv_nsec);
++		scnprintf(prefix, len, "%6lu.%09lu ",
++			  (unsigned long) ts->tv_sec, ts->tv_nsec);
+ 	else if (!config->metric_only)
+-		sprintf(prefix, "{\"interval\" : %lu.%09lu, ", (unsigned long)
+-				 ts->tv_sec, ts->tv_nsec);
++		scnprintf(prefix, len, "{\"interval\" : %lu.%09lu, ",
++			  (unsigned long) ts->tv_sec, ts->tv_nsec);
+ 	else
+-		sprintf(prefix, "{\"interval\" : %lu.%09lu}", (unsigned long)
+-				 ts->tv_sec, ts->tv_nsec);
++		scnprintf(prefix, len, "{\"interval\" : %lu.%09lu}",
++			  (unsigned long) ts->tv_sec, ts->tv_nsec);
+ }
+ 
+ static void print_header_interval_std(struct perf_stat_config *config,
+@@ -1390,7 +1390,7 @@ void evlist__print_counters(struct evlist *evlist, struct perf_stat_config *conf
+ 
+ 	if (interval) {
+ 		prefix = buf;
+-		prepare_interval(config, prefix, ts);
++		prepare_interval(config, buf, sizeof(buf), ts);
+ 	}
+ 
+ 	print_header(config, _target, evlist, argc, argv);
 -- 
 2.38.1.584.g0f3c55d4c2-goog
 
