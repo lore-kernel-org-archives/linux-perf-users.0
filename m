@@ -2,55 +2,54 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C4E46C4708E
-	for <linux-perf-users@archiver.kernel.org>; Wed, 23 Nov 2022 18:02:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 87E69C46467
+	for <linux-perf-users@archiver.kernel.org>; Wed, 23 Nov 2022 18:02:32 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S239397AbiKWSC2 (ORCPT
+        id S239402AbiKWSC2 (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
         Wed, 23 Nov 2022 13:02:28 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53550 "EHLO
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53524 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S239331AbiKWSCQ (ORCPT
+        with ESMTP id S239312AbiKWSCN (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Wed, 23 Nov 2022 13:02:16 -0500
-Received: from mail-pj1-x102b.google.com (mail-pj1-x102b.google.com [IPv6:2607:f8b0:4864:20::102b])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0143260F9;
-        Wed, 23 Nov 2022 10:02:16 -0800 (PST)
-Received: by mail-pj1-x102b.google.com with SMTP id e7-20020a17090a77c700b00216928a3917so2788706pjs.4;
-        Wed, 23 Nov 2022 10:02:15 -0800 (PST)
+        Wed, 23 Nov 2022 13:02:13 -0500
+Received: from mail-pj1-x102c.google.com (mail-pj1-x102c.google.com [IPv6:2607:f8b0:4864:20::102c])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5332C87540;
+        Wed, 23 Nov 2022 10:02:12 -0800 (PST)
+Received: by mail-pj1-x102c.google.com with SMTP id b11so16508894pjp.2;
+        Wed, 23 Nov 2022 10:02:12 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20210112;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:sender:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=2+TpuAANzcP9G4GqFnOlMV6rE/MSCSJ6k6rsAEAM1JY=;
-        b=Qckf1AShYdSF9G+SM4znSrGcL1PG0FNywXkO2Cibdzj4VjnLMOACwa0J68haTtg1HK
-         SWmpNPJbu8jZWhj5SySKAYCrNWg4RxlUf1SpWQkIl9u5w3Ety/IzEeZxQNkEQQEYx7Qj
-         7Xk9/WxFT2hht4RZZV9fXwQB50IApNNyMILgEFU9Cun1jGmH/ouMDyiPwJ6cxc+kW3sT
-         wCiraHoERWTJgIgSqe0lsndPeA+LLpgmIT3UVnL6FD2cOo7n7v4iQKLkGdK5opPsZFnp
-         KFEGP6llqvyDSPtsPWle7Ioym2OTOWOhuU5c5WouuINBgmqmRkuBzJ4UOdIFg4q2/22y
-         /opQ==
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:sender:from:to:cc:subject:date:message-id:reply-to;
+        bh=rDn/mw+FagN1m2eiShMyH8xai72ctuc/pHCaCu8gIX8=;
+        b=CQQ+Z2uEC/Y5KY8WYT4DVhjMlB7ix605zXjyMAlpj8C+mx25Kj75ljbsSLYrnVJRSJ
+         89lilGxicPszpFQXQ38f2waR/TA/zcHw6EQ45k6zN0jjX3fU4NexNGbdufd8OPBIWeyH
+         Ja/rv7cgOeBrSHYbu7jKk9n7Hv3eIfTqDr/pV0WfxXsoVUsjJSuECYgxoNMu2lZIxBK+
+         fJ7inBMrWCPpMEeEaYvbIIrcNrsJulgusFV9AHUtkPkmVW5QjuQady76RcaLEuLWLVrp
+         Vk8/ycPKTX+RbbqnLmCc5YOCQ6PUGDkwWXsjhhiVdMDYW1Q+4gOlO7yyjsKWNniIzEnq
+         rlPw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:sender:x-gm-message-state:from
-         :to:cc:subject:date:message-id:reply-to;
-        bh=2+TpuAANzcP9G4GqFnOlMV6rE/MSCSJ6k6rsAEAM1JY=;
-        b=f2nfvIWj4XwB19/9wUmCwqMyVRSN197yQa4vxf9tB+F4Wf9KzbLQsDVbbafH4e62vW
-         i8f46Mrp2IXEeKxiC8wz5F34BC4n0Rw+XHm3usOBp3g5AU+jtxgd38qd/0QqrWyI2o7n
-         AM5cnikX+ziLH4EmGsqIe5q3mpWrC4uk32FZUYoNu22D4RxNP2rGO6eivtyRUjS5KtYS
-         hicz0QWQYNniO7zjZR7YlCP3QJ1wNrhBdzv04+4M+OsWah5wW/iAPBjqUs/416P+3v+e
-         hjYAFVfbIZTQBk+ix3Nn60GpYEvOgFKzUQDPkMYGxAdBLpoXbernKRzXzGEpkkbYA1V2
-         vI1A==
-X-Gm-Message-State: ANoB5pnJqaerenHVK6Oz6U6/MlObf/bCDXqTihBmPQPAFIurRd3MDMeG
-        0VlFeNTy+ZgbpFV7pP6Ae5U=
-X-Google-Smtp-Source: AA0mqf4XROR4yKoJqyQlP+SkUdpP7f9C/BdD+BhjRpiQ+BCRmabrmydXcmgfIOsRyZclW/+xXhoPEA==
-X-Received: by 2002:a17:902:8212:b0:186:85c3:98b7 with SMTP id x18-20020a170902821200b0018685c398b7mr10562086pln.31.1669226535358;
-        Wed, 23 Nov 2022 10:02:15 -0800 (PST)
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:sender:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=rDn/mw+FagN1m2eiShMyH8xai72ctuc/pHCaCu8gIX8=;
+        b=RdzaJ7oi4O+hizM6NVgGazzZjESxCK14fB4XmOMXXtpQvOjMWaIZz2ZErzaz/8hafS
+         IboGs4BPsghcPu86yoXbgcfJzus5oqSgbtRkfujiFkNArI2llVCXtahuK3nFtK0fpaLK
+         gYAym+cUXgcoOrhn9HprjMXLjik7p/Ft0vlniiqI0nUdIOpzseQYvcT9HyVU1sd4i+oc
+         yfPLyRa2FFAtPOpFeWJbcVbRrsPVlzCjwFARTh2MZ0QMz/76yVCGLETzic344f6454Ee
+         KpZASJ66Tarm6hl41eVDwO+49ORMal55pgEslfuCbpku2rT7j+gIu8sVAxGXJdRBcdh3
+         R+JQ==
+X-Gm-Message-State: ANoB5pl2U/oTvPqXU6qEJ5NU6w4cQOLJ6h7LUCgo/S/Nr8gA5wiLCEvV
+        j+KHMM3OsFDOiAYWjH7y8rs=
+X-Google-Smtp-Source: AA0mqf4/ovAD9a9j1NKeTDoIo+X3I0vrIx0aPrt329o8qSrb2pXbEv4LDfkiobf4pTLeAZBa5iRXIA==
+X-Received: by 2002:a17:90a:2e16:b0:20a:bb1f:44a with SMTP id q22-20020a17090a2e1600b0020abb1f044amr38726233pjd.160.1669226531222;
+        Wed, 23 Nov 2022 10:02:11 -0800 (PST)
 Received: from balhae.hsd1.ca.comcast.net ([2601:647:6780:a80:c968:76:254b:3790])
-        by smtp.gmail.com with ESMTPSA id i15-20020a655b8f000000b00470275c8d6dsm10792364pgr.10.2022.11.23.10.02.14
+        by smtp.gmail.com with ESMTPSA id i15-20020a655b8f000000b00470275c8d6dsm10792364pgr.10.2022.11.23.10.02.09
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 23 Nov 2022 10:02:15 -0800 (PST)
+        Wed, 23 Nov 2022 10:02:10 -0800 (PST)
 Sender: Namhyung Kim <namhyung@gmail.com>
 From:   Namhyung Kim <namhyung@kernel.org>
 To:     Arnaldo Carvalho de Melo <acme@kernel.org>,
@@ -65,91 +64,69 @@ Cc:     Ingo Molnar <mingo@kernel.org>,
         Zhengjun Xing <zhengjun.xing@linux.intel.com>,
         James Clark <james.clark@arm.com>,
         Athira Jajeev <atrajeev@linux.vnet.ibm.com>
-Subject: [PATCH 03/15] perf stat: Do not align time prefix in CSV output
-Date:   Wed, 23 Nov 2022 10:01:56 -0800
-Message-Id: <20221123180208.2068936-4-namhyung@kernel.org>
+Subject: [PATCHSET 00/15] perf stat: Improve perf stat output (v2)
+Date:   Wed, 23 Nov 2022 10:01:53 -0800
+Message-Id: <20221123180208.2068936-1-namhyung@kernel.org>
 X-Mailer: git-send-email 2.38.1.584.g0f3c55d4c2-goog
-In-Reply-To: <20221123180208.2068936-1-namhyung@kernel.org>
-References: <20221123180208.2068936-1-namhyung@kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-We don't care about the alignment in the CSV output as it's intended for machine
-processing.  Let's get rid of it to make the output more compact.
+Hello,
 
-Before:
-  # perf stat -a --summary -I 1 -x, true
-       0.001149309,219.20,msec,cpu-clock,219322251,100.00,219.200,CPUs utilized
-       0.001149309,144,,context-switches,219241902,100.00,656.935,/sec
-       0.001149309,38,,cpu-migrations,219173705,100.00,173.358,/sec
-       0.001149309,61,,page-faults,219093635,100.00,278.285,/sec
-       0.001149309,10679310,,cycles,218746228,100.00,0.049,GHz
-       0.001149309,6288296,,instructions,218589869,100.00,0.59,insn per cycle
-       0.001149309,1386904,,branches,218428851,100.00,6.327,M/sec
-       0.001149309,56863,,branch-misses,218219951,100.00,4.10,of all branches
-           summary,219.20,msec,cpu-clock,219322251,100.00,20.025,CPUs utilized
-           summary,144,,context-switches,219241902,100.00,656.935,/sec
-           summary,38,,cpu-migrations,219173705,100.00,173.358,/sec
-           summary,61,,page-faults,219093635,100.00,278.285,/sec
-           summary,10679310,,cycles,218746228,100.00,0.049,GHz
-           summary,6288296,,instructions,218589869,100.00,0.59,insn per cycle
-           summary,1386904,,branches,218428851,100.00,6.327,M/sec
-           summary,56863,,branch-misses,218219951,100.00,4.10,of all branches
+This is a continuation of my perf stat cleanup work focusing on the
+metric-only mode with JSON output now.  It's based on the previous
+patchset which is already merged to acme/perf/core.
 
-After:
-  0.001148449,224.75,msec,cpu-clock,224870589,100.00,224.747,CPUs utilized
-  0.001148449,176,,context-switches,224775564,100.00,783.103,/sec
-  0.001148449,38,,cpu-migrations,224707428,100.00,169.079,/sec
-  0.001148449,61,,page-faults,224629326,100.00,271.416,/sec
-  0.001148449,12172071,,cycles,224266368,100.00,0.054,GHz
-  0.001148449,6901907,,instructions,224108764,100.00,0.57,insn per cycle
-  0.001148449,1515655,,branches,223946693,100.00,6.744,M/sec
-  0.001148449,70027,,branch-misses,223735385,100.00,4.62,of all branches
-  summary,224.75,msec,cpu-clock,224870589,100.00,21.066,CPUs utilized
-  summary,176,,context-switches,224775564,100.00,783.103,/sec
-  summary,38,,cpu-migrations,224707428,100.00,169.079,/sec
-  summary,61,,page-faults,224629326,100.00,271.416,/sec
-  summary,12172071,,cycles,224266368,100.00,0.054,GHz
-  summary,6901907,,instructions,224108764,100.00,0.57,insn per cycle
-  summary,1515655,,branches,223946693,100.00,6.744,M/sec
-  summary,70027,,branch-misses,223735385,100.00,4.62,of all branches
+The JSON output + metric-only with aggregation has been broken for a
+while.  The last update fixed the crash but it still produced invalid
+JSON objects.  Also having a separate header and objects with their own
+"metric-value" key is not convenient to process.
 
-Signed-off-by: Namhyung Kim <namhyung@kernel.org>
----
- tools/perf/util/stat-display.c | 9 ++++++---
- 1 file changed, 6 insertions(+), 3 deletions(-)
+  # perf stat -aj --metric-only --per-socket sleep 1
+  {"unit" : "GHz"}{"unit" : "insn per cycle"}{"unit" : "branch-misses of all branches"}
+  {"socket" : "S0", "aggregate-number" : 8, {"metric-value" : "0.809"}{"metric-value" : "2.10"}{"metric-value" : "0.37"}
 
-diff --git a/tools/perf/util/stat-display.c b/tools/perf/util/stat-display.c
-index d86f2f8e020d..15c88b9b5aa3 100644
---- a/tools/perf/util/stat-display.c
-+++ b/tools/perf/util/stat-display.c
-@@ -828,7 +828,7 @@ static void print_counter_aggrdata(struct perf_stat_config *config,
- 			fprintf(output, "%s", prefix);
- 		else if (config->summary && config->csv_output &&
- 			 !config->no_csv_summary && !config->interval)
--			fprintf(output, "%16s%s", "summary", config->csv_sep);
-+			fprintf(output, "%s%s", "summary", config->csv_sep);
- 	}
- 
- 	uval = val * counter->scale;
-@@ -1078,9 +1078,12 @@ static void prepare_interval(struct perf_stat_config *config,
- 	if (config->iostat_run)
- 		return;
- 
--	if (!config->json_output)
--		sprintf(prefix, "%6lu.%09lu%s", (unsigned long) ts->tv_sec,
-+	if (config->csv_output)
-+		sprintf(prefix, "%lu.%09lu%s", (unsigned long) ts->tv_sec,
- 				 ts->tv_nsec, config->csv_sep);
-+	else if (!config->json_output)
-+		sprintf(prefix, "%6lu.%09lu ", (unsigned long) ts->tv_sec,
-+				 ts->tv_nsec);
- 	else if (!config->metric_only)
- 		sprintf(prefix, "{\"interval\" : %lu.%09lu, ", (unsigned long)
- 				 ts->tv_sec, ts->tv_nsec);
+So I removed the header and move the metric keys to the object.  Then
+it doesn't need separate objects anymore.  The new output looks like:
+
+  # perf stat -aj --metric-only --per-socket sleep 1
+  {"socket" : "S0", "cpu-count" : 8, "GHz" : "0.817", "insn per cycle" : "2.15", "branch-misses of all branches" : "0.38"}
+
+You can get it from 'perf/stat-display-v2' branch in
+
+  git://git.kernel.org/pub/scm/linux/kernel/git/namhyung/linux-perf.git
+
+Thanks,
+Namhyung
+
+Namhyung Kim (15):
+  perf stat: Fix cgroup display in JSON output
+  perf stat: Move summary prefix printing logic in CSV output
+  perf stat: Do not align time prefix in CSV output
+  perf stat: Use scnprintf() in prepare_interval()
+  perf stat: Remove prefix argument in print_metric_headers()
+  perf stat: Remove metric_only argument in print_counter_aggrdata()
+  perf stat: Pass const char *prefix to display routines
+  perf stat: Use struct outstate in evlist__print_counters()
+  perf stat: Pass struct outstate to print_metric_begin()
+  perf stat: Pass struct outstate to printout()
+  perf stat: Do not pass runtime_stat to printout()
+  perf stat: Pass through struct outstate
+  perf stat: Fix JSON output in metric-only mode
+  perf stat: Rename "aggregate-number" to "cpu-count" in JSON
+  perf stat: Tidy up JSON metric-only output when no metrics
+
+ tools/perf/arch/x86/util/iostat.c |   4 +-
+ tools/perf/util/iostat.c          |   3 +-
+ tools/perf/util/iostat.h          |   4 +-
+ tools/perf/util/stat-display.c    | 257 +++++++++++++++---------------
+ 4 files changed, 133 insertions(+), 135 deletions(-)
+
+
+base-commit: 63a3bf5e8d9e79ce456c8f73d4395a5a51d841b1
 -- 
 2.38.1.584.g0f3c55d4c2-goog
 
