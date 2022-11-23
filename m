@@ -2,106 +2,98 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8DE44C433FE
-	for <linux-perf-users@archiver.kernel.org>; Wed, 23 Nov 2022 13:45:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 07133C4708C
+	for <linux-perf-users@archiver.kernel.org>; Wed, 23 Nov 2022 13:46:44 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S238017AbiKWNpY (ORCPT
+        id S235953AbiKWNqm (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Wed, 23 Nov 2022 08:45:24 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60230 "EHLO
+        Wed, 23 Nov 2022 08:46:42 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60346 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S237948AbiKWNpG (ORCPT
+        with ESMTP id S238308AbiKWNqY (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Wed, 23 Nov 2022 08:45:06 -0500
-Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CED6DD5396;
-        Wed, 23 Nov 2022 05:33:47 -0800 (PST)
+        Wed, 23 Nov 2022 08:46:24 -0500
+Received: from ams.source.kernel.org (ams.source.kernel.org [145.40.68.75])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8DFC1E1BF9;
+        Wed, 23 Nov 2022 05:35:14 -0800 (PST)
 Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id 5A9EB61CC9;
-        Wed, 23 Nov 2022 13:33:30 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 8BB36C433D6;
-        Wed, 23 Nov 2022 13:33:29 +0000 (UTC)
+        by ams.source.kernel.org (Postfix) with ESMTPS id 2D176B81FE2;
+        Wed, 23 Nov 2022 13:35:13 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id BA1E3C433D7;
+        Wed, 23 Nov 2022 13:35:11 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1669210409;
-        bh=o5a/1D++1Mz35bMC46Wx3lUgNniBZ5e14zrk6/8nSLA=;
+        s=k20201202; t=1669210511;
+        bh=eqQhB3JpwUD9N1JaSv+YIyRx7mv/TnGAZqN9bDQUYdM=;
         h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=LOl7Q4n4cEl48OuaUSA+Bgl0IZTxdonu6mUt/hJRzmYjzYC5vh9Aa2N3ZXMxrUR/6
-         48m+AKkRf2fO3muoslzGBzQUQBe2NxHZTgy+eHvpR+Au3yxQ2og13EtKoKPsTf8Wyg
-         nwUHbaUgC/sR+weWCCWEzz0ML39ZkwLmTORo98UEeKQs4s5cDDnvO08asxGGog6Ydz
-         eBDgNoiqpV5wqgiRgNG0A/FUmd9zgySBEdzk5Ud2AYI+S2ARX0UaCBcxxK1s3revGZ
-         GA8gUTbE00d7ixoql1pdSKm1bZNED2WAN8pFIiz5zQiXrapqcLWoVFoJCyl8cfqdRy
-         8bN3OuFhi7ziQ==
+        b=NIefZlfTT8OgpJHFnIhhhXYooyAZkBLK10g1K2THsxX/tEFzwWUSuRxX+beX97nCS
+         yLTfZbaJxy1ZwTF5P6BRSbJdlvSldo3IktNkfW82ysLHUD0g0W+QVYGYVDwqWvq8hl
+         EfTr0PWMVUauhXX3b2tSYA54dWa/YuKcRv1g3rJch/cwlONnhwBPbZ9+h8+j0kz9C4
+         Fn3c+3+lHDJ3WMWUXiPfE9T7qmOxm8VjKCxdrcFYI47NR1tIEqDpFEDOhZCd9dWKlH
+         h65gpcvv8ksMYggTocV4gFZNx54mNWpgiqbM+/yMrm9vxj47HEVAd/BbTBma4G5g0Z
+         Nv7MyaTlyT81A==
 Received: by quaco.ghostprotocols.net (Postfix, from userid 1000)
-        id E73C84034E; Wed, 23 Nov 2022 10:33:26 -0300 (-03)
-Date:   Wed, 23 Nov 2022 10:33:26 -0300
+        id B4E514034E; Wed, 23 Nov 2022 10:35:09 -0300 (-03)
+Date:   Wed, 23 Nov 2022 10:35:09 -0300
 From:   Arnaldo Carvalho de Melo <acme@kernel.org>
-To:     Ian Rogers <irogers@google.com>
-Cc:     Christophe Leroy <christophe.leroy@csgroup.eu>,
-        "Naveen N. Rao" <naveen.n.rao@linux.vnet.ibm.com>,
-        Ravi Bangoria <ravi.bangoria@amd.com>,
-        "linux-perf-users@vger.kernel.org" <linux-perf-users@vger.kernel.org>,
-        Disha Goel <disgoel@linux.vnet.ibm.com>,
-        "linuxppc-dev@lists.ozlabs.org" <linuxppc-dev@lists.ozlabs.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH] perf test: Skip watchpoint tests if no watchpoints
- available
-Message-ID: <Y34hJrqCzSE+W+X9@kernel.org>
-References: <20221121102747.208289-1-naveen.n.rao@linux.vnet.ibm.com>
- <a9f0f8f1-96cd-f6a8-9dda-d4744b938f97@csgroup.eu>
- <CAP-5=fXJf+1V5RF-m3e+AhK0Qg-yaJ1_2HL0CTOvp1xkK-1fDg@mail.gmail.com>
+To:     Adrian Hunter <adrian.hunter@intel.com>
+Cc:     Namhyung Kim <namhyung@kernel.org>, Jiri Olsa <jolsa@kernel.org>,
+        Ingo Molnar <mingo@kernel.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Ian Rogers <irogers@google.com>,
+        linux-perf-users@vger.kernel.org
+Subject: Re: [PATCH] perf inject: Set PERF_RECORD_MISC_BUILD_ID_SIZE
+Message-ID: <Y34hjaIcCUr/80Vx@kernel.org>
+References: <20221119002750.1568027-1-namhyung@kernel.org>
+ <5e408880-3394-c943-6ed5-6ceb8d05fd07@intel.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <CAP-5=fXJf+1V5RF-m3e+AhK0Qg-yaJ1_2HL0CTOvp1xkK-1fDg@mail.gmail.com>
+In-Reply-To: <5e408880-3394-c943-6ed5-6ceb8d05fd07@intel.com>
 X-Url:  http://acmel.wordpress.com
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-Em Tue, Nov 22, 2022 at 12:57:05PM -0800, Ian Rogers escreveu:
-> On Tue, Nov 22, 2022 at 11:19 AM Christophe Leroy
-> <christophe.leroy@csgroup.eu> wrote:
-> >
-> >
-> >
-> > Le 21/11/2022 à 11:27, Naveen N. Rao a écrit :
-> > > On IBM Power9, perf watchpoint tests fail since no hardware breakpoints
-> > > are available. Detect this by checking the error returned by
-> > > perf_event_open() and skip the tests in that case.
-> > >
-> > > Reported-by: Disha Goel <disgoel@linux.vnet.ibm.com>
-> > > Signed-off-by: Naveen N. Rao <naveen.n.rao@linux.vnet.ibm.com>
-> > > ---
-> > >   tools/perf/tests/wp.c | 12 +++++++-----
-> > >   1 file changed, 7 insertions(+), 5 deletions(-)
-> > >
-> > > diff --git a/tools/perf/tests/wp.c b/tools/perf/tests/wp.c
-> > > index 56455da30341b4..cc8719609b19ea 100644
-> > > --- a/tools/perf/tests/wp.c
-> > > +++ b/tools/perf/tests/wp.c
-> > > @@ -59,8 +59,10 @@ static int __event(int wp_type, void *wp_addr, unsigned long wp_len)
-> > >       get__perf_event_attr(&attr, wp_type, wp_addr, wp_len);
-> > >       fd = sys_perf_event_open(&attr, 0, -1, -1,
-> > >                                perf_event_open_cloexec_flag());
-> > > -     if (fd < 0)
-> > > +     if (fd < 0) {
-> > > +             fd = -errno;
-> > >               pr_debug("failed opening event %x\n", attr.bp_type);
-> > > +     }
-> >
-> > Do you really need that ?
-> >
-> > Can't you directly check errno in the caller ?
+Em Mon, Nov 21, 2022 at 10:45:14AM +0200, Adrian Hunter escreveu:
+> On 19/11/22 02:27, Namhyung Kim wrote:
+> > With perf inject -b, it synthesizes build-id event for DSOs.  But it
+> > missed to set the size and resulted in having trailing zeros.
+> > 
+> > As perf record sets the size in write_build_id(), let's set the size
+> > here as well.
+> > 
+> > Signed-off-by: Namhyung Kim <namhyung@kernel.org>
 > 
-> errno is very easily clobbered and not clearly set on success - ie,
-> it'd be better not to do that.
-> 
-> Acked-by: Ian Rogers <irogers@google.com>
+> Acked-by: Adrian Hunter <adrian.hunter@intel.com>
 
 Thanks, applied.
 
 - Arnaldo
 
+ 
+> > ---
+> >  tools/perf/util/synthetic-events.c | 3 ++-
+> >  1 file changed, 2 insertions(+), 1 deletion(-)
+> > 
+> > diff --git a/tools/perf/util/synthetic-events.c b/tools/perf/util/synthetic-events.c
+> > index cccd293b5312..0645795ff080 100644
+> > --- a/tools/perf/util/synthetic-events.c
+> > +++ b/tools/perf/util/synthetic-events.c
+> > @@ -2218,8 +2218,9 @@ int perf_event__synthesize_build_id(struct perf_tool *tool, struct dso *pos, u16
+> >  	len = pos->long_name_len + 1;
+> >  	len = PERF_ALIGN(len, NAME_ALIGN);
+> >  	memcpy(&ev.build_id.build_id, pos->bid.data, sizeof(pos->bid.data));
+> > +	ev.build_id.size = pos->bid.size;
+> >  	ev.build_id.header.type = PERF_RECORD_HEADER_BUILD_ID;
+> > -	ev.build_id.header.misc = misc;
+> > +	ev.build_id.header.misc = misc | PERF_RECORD_MISC_BUILD_ID_SIZE;
+> >  	ev.build_id.pid = machine->pid;
+> >  	ev.build_id.header.size = sizeof(ev.build_id) + len;
+> >  	memcpy(&ev.build_id.filename, pos->long_name, pos->long_name_len);
+
+-- 
+
+- Arnaldo
