@@ -2,36 +2,35 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6529EC4332F
-	for <linux-perf-users@archiver.kernel.org>; Thu, 24 Nov 2022 16:51:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 419FEC4332F
+	for <linux-perf-users@archiver.kernel.org>; Thu, 24 Nov 2022 17:15:04 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229500AbiKXQvK (ORCPT
+        id S229472AbiKXRPD (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Thu, 24 Nov 2022 11:51:10 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46794 "EHLO
+        Thu, 24 Nov 2022 12:15:03 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40922 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229499AbiKXQvJ (ORCPT
+        with ESMTP id S229453AbiKXRPC (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Thu, 24 Nov 2022 11:51:09 -0500
-Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTP id 28F16116043;
-        Thu, 24 Nov 2022 08:51:08 -0800 (PST)
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 461A323A;
-        Thu, 24 Nov 2022 08:51:14 -0800 (PST)
-Received: from [10.57.5.133] (unknown [10.57.5.133])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id EA0613F587;
-        Thu, 24 Nov 2022 08:51:04 -0800 (PST)
-Message-ID: <2a64150d-8282-ccda-c5e5-91fe61438315@arm.com>
-Date:   Thu, 24 Nov 2022 16:51:03 +0000
-MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
- Thunderbird/102.2.2
-Subject: Re: [External] : [RFC PATCH v2 1/6] perf vendor events arm64: Add
- topdown L1 metrics for neoverse-n2
-To:     Jing Zhang <renyu.zj@linux.alibaba.com>,
-        John Garry <john.g.garry@oracle.com>
-Cc:     Peter Zijlstra <peterz@infradead.org>,
+        Thu, 24 Nov 2022 12:15:02 -0500
+Received: from out30-130.freemail.mail.aliyun.com (out30-130.freemail.mail.aliyun.com [115.124.30.130])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E960C12F423;
+        Thu, 24 Nov 2022 09:15:00 -0800 (PST)
+X-Alimail-AntiSpam: AC=PASS;BC=-1|-1;BR=01201311R151e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=ay29a033018045176;MF=renyu.zj@linux.alibaba.com;NM=1;PH=DS;RN=21;SR=0;TI=SMTPD_---0VVbtc4t_1669310090;
+Received: from j66e01291.sqa.eu95.tbsite.net(mailfrom:renyu.zj@linux.alibaba.com fp:SMTPD_---0VVbtc4t_1669310090)
+          by smtp.aliyun-inc.com;
+          Fri, 25 Nov 2022 01:14:56 +0800
+From:   Jing Zhang <renyu.zj@linux.alibaba.com>
+To:     John Garry <john.g.garry@oracle.com>,
+        Ian Rogers <irogers@google.com>,
+        Xing Zhengjun <zhengjun.xing@linux.intel.com>,
+        Will Deacon <will@kernel.org>,
+        James Clark <james.clark@arm.com>,
+        Mike Leach <mike.leach@linaro.org>,
+        Leo Yan <leo.yan@linaro.org>
+Cc:     linux-arm-kernel@lists.infradead.org,
+        linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Peter Zijlstra <peterz@infradead.org>,
         Ingo Molnar <mingo@redhat.com>,
         Arnaldo Carvalho de Melo <acme@kernel.org>,
         Mark Rutland <mark.rutland@arm.com>,
@@ -41,195 +40,127 @@ Cc:     Peter Zijlstra <peterz@infradead.org>,
         Andrew Kilroy <andrew.kilroy@arm.com>,
         Shuai Xue <xueshuai@linux.alibaba.com>,
         Zhuo Song <zhuo.song@linux.alibaba.com>,
-        linux-arm-kernel@lists.infradead.org,
-        linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Will Deacon <will@kernel.org>,
-        Mike Leach <mike.leach@linaro.org>,
-        Leo Yan <leo.yan@linaro.org>, Ian Rogers <irogers@google.com>,
-        Nick Forrington <Nick.Forrington@arm.com>
-References: <1667214694-89839-1-git-send-email-renyu.zj@linux.alibaba.com>
- <1668411720-3581-2-git-send-email-renyu.zj@linux.alibaba.com>
- <590ff032-d271-48ee-a4d8-141cc070c335@oracle.com>
- <f3823c3e-d45e-40ce-1981-e726b4b6be62@linux.alibaba.com>
- <f6e26e2d-2f10-e973-6c9f-47594da2fc99@oracle.com>
- <cd016aa9-d43d-c585-0b77-a2e112777ec1@linux.alibaba.com>
- <abebb42b-62c1-30d7-ad9a-5fbf6c0edce1@oracle.com>
- <d904734a-e7c1-ca8e-7705-63fc4864ac4f@linux.alibaba.com>
- <75c4f0e6-3f28-a748-e891-7be6016ca28e@oracle.com>
- <57315669-e6e7-08b8-a252-bc35d4fecc01@arm.com>
- <180a34c2-f68d-6f4d-da74-7bbb80e9e65c@linux.alibaba.com>
- <279545ee-1758-c60d-fdc3-2b15bcc4be6d@arm.com>
- <50d46dcf-5e30-cd3d-82a2-51e527ff641f@linux.alibaba.com>
-Content-Language: en-US
-From:   James Clark <james.clark@arm.com>
-In-Reply-To: <50d46dcf-5e30-cd3d-82a2-51e527ff641f@linux.alibaba.com>
-Content-Type: text/plain; charset=UTF-8
+        Jing Zhang <renyu.zj@linux.alibaba.com>
+Subject: [PATCH v3 0/6] Add metrics for neoverse-n2
+Date:   Fri, 25 Nov 2022 01:14:42 +0800
+Message-Id: <1669310088-13482-1-git-send-email-renyu.zj@linux.alibaba.com>
+X-Mailer: git-send-email 1.8.3.1
+In-Reply-To: <1668411720-3581-1-git-send-email-renyu.zj@linux.alibaba.com>
+References: <1668411720-3581-1-git-send-email-renyu.zj@linux.alibaba.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=y
 Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
+Changes since v2:
+- Correct the furmula of Branch metrics;
+- Add more PE utilization metrics;
+- Add more TLB metrics;
+- Add “ScaleUnit” for some metrics;
+- Add a newline at the end of the file;
+- Link: https://lore.kernel.org/all/1668411720-3581-1-git-send-email-renyu.zj@linux.alibaba.com/
+
+Changes since v1: 
+- Corrected formula for topdown L1 due to wrong counts for stall_slot and
+  stall_slot_frontend; 
+- Link: https://lore.kernel.org/all/1667214694-89839-1-git-send-email-renyu.zj@linux.alibaba.com/
+
+This series add six metricgroups for neoverse-n2, among which, the formula of
+topdown L1 is from ARM sbsa7.0 platform design document [0], D37-38.
+
+However, due to the wrong count of stall_slot and stall_slot_frontend on
+neoverse-n2, the real stall_slot and real stall_slot_frontend need to
+subtract cpu_cycles,  so correct the expression of topdown metrics.
+Reference from ARM neoverse-n2 errata notice [1], D117.
+
+Since neoverse-n2 does not yet support topdown L2, metricgroups such as Cache,
+TLB, Branch, InstructionsMix, and PEutilization are added to help further
+analysis of performance bottlenecks.
+Reference from ARM PMU guide [2][3].
+
+[0] https://documentation-service.arm.com/static/60250c7395978b529036da86?token=
+[1] https://documentation-service.arm.com/static/636a66a64e6cf12278ad89cb?token=
+[2] https://documentation-service.arm.com/static/628f8fa3dfaf015c2b76eae8?token=
+[3] https://documentation-service.arm.com/static/62cfe21e31ea212bb6627393?token=
+
+$./perf list
+
+...
+Metric Groups:
+
+Branch:
+  branch_miss_pred_rate
+       [The rate of branches mis-predited to the overall branches]
+  branch_mpki
+       [The rate of branches mis-predicted per kilo instructions]
+  branch_pki
+       [The rate of branches retired per kilo instructions]
+Cache:
+  l1d_cache_miss_rate
+       [The rate of L1 D-Cache misses to the overall L1 D-Cache]
+  l1d_cache_mpki
+       [The rate of L1 D-Cache misses per kilo instructions]
+...
+
+$sudo ./perf stat -M TLB false_sharing 2
+
+ Performance counter stats for '/home/yaoxing/beetest/beecases/beeusers/spe/false_sharing 2':
+
+            31,561      L2D_TLB                          #     18.8 %  l2_tlb_miss_rate      (43.23%)
+             5,944      L2D_TLB_REFILL                                                       (43.23%)
+             2,248      L1I_TLB_REFILL                   #      0.1 %  l1i_tlb_miss_rate     (43.85%)
+         2,203,195      L1I_TLB                                                              (43.85%)
+       328,647,380      L1D_TLB                          #      0.0 %  l1d_tlb_miss_rate     (44.32%)
+            26,347      L1D_TLB_REFILL                                                       (44.32%)
+           747,319      L1I_TLB                          #      0.0 %  itlb_walk_rate        (43.74%)
+               310      ITLB_WALK                                                            (43.74%)
+       839,420,454      INST_RETIRED                     #     0.00 itlb_mpki                (42.77%)
+               212      ITLB_WALK                                                            (42.77%)
+               468      DTLB_WALK                        #      0.0 %  dtlb_walk_rate        (42.28%)
+       265,405,802      L1D_TLB                                                              (42.28%)
+       790,874,367      INST_RETIRED                     #     0.00 dtlb_mpki                (42.33%)
+                23      DTLB_WALK                                                            (42.33%)
+
+       0.515904553 seconds time elapsed
+
+       1.410313000 seconds user
+       0.000000000 seconds sys
 
 
-On 24/11/2022 16:32, Jing Zhang wrote:
-> 
-> 
-> 在 2022/11/23 下午10:26, James Clark 写道:
->>
->>
->> On 22/11/2022 15:41, Jing Zhang wrote:
->>>
->>>
->>> 在 2022/11/22 下午10:00, James Clark 写道:
->>>>
->>>>
->>>> On 21/11/2022 17:55, John Garry wrote:
->>>>> On 21/11/2022 15:17, Jing Zhang wrote:
->>>>>> I'm sorry that I misunderstood the purpose of putting metric as
->>>>>> arch_std_event at first,
->>>>>> and now it works after the modification over your suggestion.
->>>>>>
->>>>>> But there are also a few questions:
->>>>>>
->>>>>> 1. The value of the slot in the topdownL1 is various in different
->>>>>> architectures, for example,
->>>>>> the slot is 5 on neoverse-n2. If I put topdownL1 metric as
->>>>>> arch_std_event, then I need to
->>>>>> specify the slot to 5 in n2. I can specify slot values in metric like
->>>>>> below, but is there any
->>>>>> other concise way to do this?
->>>>>>
->>>>>> diff --git
->>>>>> a/tools/perf/pmu-events/arch/arm64/arm/neoverse-n2/metrics.json
->>>>>> b/tools/perf/pmu-events/arch/arm64/arm/neoverse-n2/metrics.json
->>>>>> index 8ff1dfe..b473baf 100644
->>>>>> --- a/tools/perf/pmu-events/arch/arm64/arm/neoverse-n2/metrics.json
->>>>>> +++ b/tools/perf/pmu-events/arch/arm64/arm/neoverse-n2/metrics.json
->>>>>> @@ -1,4 +1,23 @@
->>>>>> [
->>>>>> +       {
->>>>>> +               "MetricExpr": "5",
->>>>>> +               "PublicDescription": "A pipeline slot represents the
->>>>>> hardware resources needed to process one uOp",
->>>>>> +               "BriefDescription": "A pipeline slot represents the
->>>>>> hardware resources needed to process one uOp",
->>>>>> +               "MetricName": "slot"
->>>>>
->>>>> Ehhh....I'm not sure if that is a good idea. Ian or anyone else have an
->>>>> opinion on this? It is possible to reuse metrics, so it should work, but...
->>>>>
->>>>> One problem is that "slot" would show up as a metric, which you would
->>>>> not want.
->>>>>
->>>>> Alternatively I was going to suggest that you can overwrite specific std
->>>>> arch event attributes. So for example of frontend_bound, you could have:
->>>>
->>>> I would agree with not having this and just hard coding the 5 wherever
->>>> it's needed. Once we have a few different sets of metrics in place maybe
->>>> we can start to look at deduplication, but for now I don't see the value.
->>>>
->>>>>
->>>>> + b/tools/perf/pmu-events/arch/arm64/arm/neoverse-n2/metrics.json
->>>>> @@ -0,0 +1,30 @@
->>>>> [
->>>>>     {
->>>>>     "ArchStdEvent": "FRONTEND_BOUND",
->>>>>         "MetricExpr": "(stall_slot_frontend - cpu_cycles) / (5 *
->>>>> cpu_cycles)",
->>>>>     },
->>>>>
->>>>>> +       }
->>>>>> +       {
->>>>>> +               "ArchStdEvent": "FRONTEND_BOUND"
->>>>>> +       },
->>>>>> +       {
->>>>>> +               "ArchStdEvent": "BACKEND_BOUND"
->>>>>> +       },
->>>>>> +       {
->>>>>> +               "ArchStdEvent": "WASTED"
->>>>>> +       },
->>>>>> +       {
->>>>>> +               "ArchStdEvent": "RETIRING"
->>>>>> +       },
->>>>>>
->>>>>>
->>>>>> 2. Should I add the topdownL1 metric to
->>>>>> tools/perf/pmu-event/recommended.json,
->>>>>> or create a new json file to place the general metric?
->>>>>
->>>>> It would not belong in recommended.json as that is specifically for
->>>>> arch-recommended events. It would really just depend on where the value
->>>>> comes from, i.e. arm arm or sbsa.
->>>>>
->>>>
->>>> For what we're going to publish shortly we'll be generating a
->>>> metrics.json file for each CPU. It will be autogenerated so I don't
->>>> think duplication will be an issue and I'm expecting that there will be
->>>> differences in the topdown metrics between CPUs anyway. So I would also
->>>> vote to not put it in recommended.json
->>>>
->>>
->>> I will create a new sbsa.json file in tools/perf/pmu-events/arch/arm64/
->>> to place metrics that may be common between some CPUs, just like arch_std_event.
->>
->> Because this would apply to all CPUs rather than just N2, I still think
->> it's best to wait for our metrics repo to be published. Otherwise Arm
->> will start publishing metrics with names and group names for all future
->> CPUs that have different names to the common ones added as part of this
->> change.
->>
->> It's something that we've been working on for quite a while and we've
->> taken care to make sure that it applies to future products and is scalable.
->>
->> It would be easier to add these right now only for N2, and then
->> afterwards we can start to look at what is common and could be factored
->> out into the top level folder.
->>
->>> If the topdown metrics are different in other CPUs, we can overwrite the
->>> metric expression.
->>
->> True, but with different group names and metric names and units it could
->> get slightly complicated.
->>
->>>
->>> For example:
->>>
->>> +++ b/tools/perf/pmu-events/arch/arm64/sbsa.json
->>> @@ -0,0 +1,9 @@
->>> +[
->>> +    {
->>> +        "MetricExpr": "stall_slot_frontend / (slot * cpu_cycles)",
->>> +        "PublicDescription": "Frontend bound L1 topdown metric",
->>> +        "BriefDescription": "Frontend bound L1 topdown metric",
->>> +        "MetricGroup": "TopDownL1",
->>> +        "MetricName": "FRONTEND_BOUND"
->>> +    }
->>> +]
->>>
->>> + b/tools/perf/pmu-events/arch/arm64/arm/neoverse-n2/metrics.json
->>> @@ -0,0 +1,30 @@
->>> +[
->>> +   {
->>> +   	"ArchStdEvent": "FRONTEND_BOUND",
->>> +        "MetricExpr": "(stall_slot_frontend - cpu_cycles) / (5 * cpu_cycles)",
->>> +   }
->>> +]
->>>
->>
->> With the auto generation of metrics file I don't really see too much
->> benefit of doing it this way.
->>
->> You also run into the issue where if a platform happens to define all of
->> the events required by a metric, will that metric appear automatically,
->> even if it's not valid?
->>
-> 
-> Ok, I agree to put the topdown metric in the n2 metric instead of arch_std_event.
-> There is no unified formula for the topdown metric currently, and the slots of each
-> CPU may be different.
-> 
-> After the standard are pubulished in the future, please consider what John said, and
-> use the general metric as arch_std_event.
+$sudo ./perf stat -M TopDownL1 false_sharing 2
 
-Yep that sounds good, will do!
+ Performance counter stats for '/home/yaoxing/beetest/beecases/beeusers/spe/false_sharing 2':
+
+     4,310,905,590      cpu_cycles                       #      0.0 %  bad_speculation
+                                                  #      4.0 %  retiring              (66.87%)
+    25,009,763,735      stall_slot                                                           (66.87%)
+       855,659,327      op_spec                                                              (66.87%)
+       854,335,288      op_retired                                                           (66.87%)
+     4,330,308,058      cpu_cycles                       #     27.1 %  frontend_bound        (66.99%)
+    10,207,186,460      stall_slot_frontend                                                  (66.99%)
+     4,316,583,673      cpu_cycles                       #     69.4 %  backend_bound         (66.65%)
+    14,979,136,808      stall_slot_backend                                                   (66.65%)
+
+       0.572056818 seconds time elapsed
+
+       1.572143000 seconds user
+       0.004010000 seconds sys
+
+
+Jing Zhang (6):
+  perf vendor events arm64: Add topdown L1 metrics for neoverse-n2
+  perf vendor events arm64: Add TLB metrics for neoverse-n2
+  perf vendor events arm64: Add cache metrics for neoverse-n2
+  perf vendor events arm64: Add branch metrics for neoverse-n2
+  perf vendor events arm64: Add PE utilization metrics for neoverse-n2
+  perf vendor events arm64: Add instruction mix metrics for neoverse-n2
+
+ .../arch/arm64/arm/neoverse-n2/metrics.json        | 310 +++++++++++++++++++++
+ 1 file changed, 310 insertions(+)
+ create mode 100644 tools/perf/pmu-events/arch/arm64/arm/neoverse-n2/metrics.json
+
+-- 
+1.8.3.1
 
