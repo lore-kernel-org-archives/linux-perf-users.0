@@ -2,85 +2,82 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9FAB9C4332F
-	for <linux-perf-users@archiver.kernel.org>; Fri, 25 Nov 2022 11:42:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9FE8EC4332F
+	for <linux-perf-users@archiver.kernel.org>; Fri, 25 Nov 2022 12:01:53 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229711AbiKYLmV (ORCPT
+        id S229563AbiKYMBx (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Fri, 25 Nov 2022 06:42:21 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39524 "EHLO
+        Fri, 25 Nov 2022 07:01:53 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58534 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229491AbiKYLmU (ORCPT
+        with ESMTP id S229462AbiKYMBw (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Fri, 25 Nov 2022 06:42:20 -0500
-Received: from smtp1.axis.com (smtp1.axis.com [195.60.68.17])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 34BBB1E3F6;
-        Fri, 25 Nov 2022 03:42:19 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-  d=axis.com; q=dns/txt; s=axis-central1; t=1669376539;
-  x=1700912539;
-  h=from:to:cc:subject:date:message-id:mime-version:
-   content-transfer-encoding;
-  bh=JhyzSfrrReVX0sQCzaa5uP5Ld+NNauN2KVzxad0wMJA=;
-  b=aaxAm7XTJ3oP5MIs8no/Lz5/MiNXLM4WVCG+f9VE7jnk/2T0EWYOBmzD
-   SMnOePRCp+n+DQpYNeZYu1qZO747H2RkVWALh39sn/wi1jMfJwVRkQhwy
-   EFSlVrRpfFOZUA+SBLwRFVyr8B1l7YZdwujYDIWzyWTypXpc+c+K5C+OY
-   WyCiUQlcuzbpH1N/G4fYsetXX4F8a62qSSQckUDPIPkycc//Yr/2GDtFL
-   kVbuhl3EM08s1QOalPdXG2ouZmS+pJl+KpWYerAd4azPPrWqOpE0Q8Zq6
-   /+WmHuEFJlXZ6/Dinbpt7RL0X9fW7BcMbeesVIRkaeqrq3owkU41h2dSc
-   Q==;
-From:   Vincent Whitchurch <vincent.whitchurch@axis.com>
-To:     Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        Arnaldo Carvalho de Melo <acme@kernel.org>
-CC:     <kernel@axis.com>,
-        Vincent Whitchurch <vincent.whitchurch@axis.com>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Jiri Olsa <jolsa@kernel.org>,
-        Namhyung Kim <namhyung@kernel.org>,
-        <linux-perf-users@vger.kernel.org>, <linux-kernel@vger.kernel.org>
-Subject: [PATCH] perf annotate: Work with vmlinux outside symfs
-Date:   Fri, 25 Nov 2022 12:42:09 +0100
-Message-ID: <20221125114210.2353820-1-vincent.whitchurch@axis.com>
-X-Mailer: git-send-email 2.34.1
+        Fri, 25 Nov 2022 07:01:52 -0500
+Received: from foss.arm.com (foss.arm.com [217.140.110.172])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTP id 40FC62FC1A
+        for <linux-perf-users@vger.kernel.org>; Fri, 25 Nov 2022 04:01:51 -0800 (PST)
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 8EA452B;
+        Fri, 25 Nov 2022 04:01:57 -0800 (PST)
+Received: from [10.57.5.149] (unknown [10.57.5.149])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 9F6A83F73D;
+        Fri, 25 Nov 2022 04:01:50 -0800 (PST)
+Message-ID: <ecfae192-95fd-0814-1896-d60e9d44417a@arm.com>
+Date:   Fri, 25 Nov 2022 12:01:49 +0000
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
+ Thunderbird/102.2.2
+Subject: Re: Available Arm CPUs with SPE
+Content-Language: en-US
+To:     Marc Jorda <marc.jorda@bsc.es>
+References: <2695ecbe-816e-eab7-8da2-30e0f62ae926@bsc.es>
+From:   James Clark <james.clark@arm.com>
+Cc:     "linux-perf-users@vger.kernel.org" <linux-perf-users@vger.kernel.org>
+In-Reply-To: <2695ecbe-816e-eab7-8da2-30e0f62ae926@bsc.es>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-It is currently possible to use --symfs along with a vmlinux which lies
-outside of the symfs by passing an absolute path to --vmlinux, thanks to
-the check in dso__load_vmlinux() which handles this explicitly.
 
-However, the annotate code lacks this check and thus perf annotate does
-not work ("Internal error: Invalid -1 error code") for kernel functions
-with this combination.  Add the missing handling.
 
-Signed-off-by: Vincent Whitchurch <vincent.whitchurch@axis.com>
----
- tools/perf/util/annotate.c | 6 +++++-
- 1 file changed, 5 insertions(+), 1 deletion(-)
+On 25/11/2022 11:17, Marc Jorda wrote:
+> Hello,
+> 
+> I am trying to know which currently available Arm CPUs implement the
+> Statistical Profiling Extension (SPE), does anyone know where can I find
+> such information?
 
-diff --git a/tools/perf/util/annotate.c b/tools/perf/util/annotate.c
-index db475e44f42f..52bdec764545 100644
---- a/tools/perf/util/annotate.c
-+++ b/tools/perf/util/annotate.c
-@@ -1695,7 +1695,11 @@ static int dso__disassemble_filename(struct dso *dso, char *filename, size_t fil
- 		 * cache, or is just a kallsyms file, well, lets hope that this
- 		 * DSO is the same as when 'perf record' ran.
- 		 */
--		__symbol__join_symfs(filename, filename_size, dso->long_name);
-+		if (dso->kernel && dso->long_name[0] == '/')
-+			snprintf(filename, filename_size,
-+				 "%s", dso->long_name);
-+		else
-+			__symbol__join_symfs(filename, filename_size, dso->long_name);
- 
- 		mutex_lock(&dso->lock);
- 		if (access(filename, R_OK) && errno == ENOENT && dso->nsinfo) {
--- 
-2.34.1
+Hi Marc,
 
+Graviton 2s on AWS should have it and N1SDP has it. You will need a
+metal instance at the moment so that rules out Graviton 3.
+
+Make sure you read the kernel requirements section here [1]
+
+> 
+> As far as I know, it is an optional extension in Armv8.2, but I don't
+> know if it is mandatory for newer versions. Is it correct to assume that
+> all Arm Neoverse CPUs have this extension?
+
+I'm not sure about this, as you say it's optional, but whether all
+current Neoverse CPUs have it or not I don't know.
+
+I found this here [2] if it helps:
+
+   SPE is an optional Armv8-A architecture extension available since
+   Armv8.2-A. Examples of infrastructure CPUs supporting SPE are
+   Neoverse-E1, Neoverse N1 and Neoverse V1. Graviton 2 and Ampere Altra
+   are examples of Neoverse-based processors
+
+> 
+> Thank you very much,
+> Marc
+> 
+
+[1]:
+https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree/tools/perf/Documentation/perf-arm-spe.txt
+
+[2]:
+https://community.arm.com/arm-community-blogs/b/tools-software-ides-blog/posts/arm-allinea-studio-21-0
