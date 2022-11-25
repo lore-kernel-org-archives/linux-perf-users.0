@@ -2,92 +2,156 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 75D04C4321E
-	for <linux-perf-users@archiver.kernel.org>; Fri, 25 Nov 2022 07:51:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 53D56C4321E
+	for <linux-perf-users@archiver.kernel.org>; Fri, 25 Nov 2022 10:42:12 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229716AbiKYHvN (ORCPT
+        id S230198AbiKYKmJ (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Fri, 25 Nov 2022 02:51:13 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41252 "EHLO
+        Fri, 25 Nov 2022 05:42:09 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37754 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229690AbiKYHvM (ORCPT
+        with ESMTP id S229529AbiKYKmH (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Fri, 25 Nov 2022 02:51:12 -0500
-Received: from mail-io1-f50.google.com (mail-io1-f50.google.com [209.85.166.50])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 03EBE1BEBB;
-        Thu, 24 Nov 2022 23:51:11 -0800 (PST)
-Received: by mail-io1-f50.google.com with SMTP id 11so2599497iou.0;
-        Thu, 24 Nov 2022 23:51:10 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=WfaGZmFo/MDCDKQ3wQ47WkoM+4SN4aUEhpjFPo+PB1w=;
-        b=x5rFfWw51CF8Ei64TKl0CtyDO1/JQdpHXFIaWoteOoX0D7Z5KDQsXhb7kd/HUVILoP
-         ejR6yPa4U2fnIOW8GZAQu4vM3wqOHDyTDFhh59Gk+JRN7LCZGyczmZFmDWEQUA8PxYjD
-         o3h9ilpr3ZJyPPXL7d43VqLmJTELiojUbZL8yPedwVLIoBt3EkDgHDqI5XcaPh93CdpV
-         HrUMVIzexrDFme7LAY8nhFnvnQFVvMIwv0GQZy64VzSDi6PmMJDvGUyKyFTjNT0pIHDt
-         IpW7dzoLTRHPDu/h8nm57AcTKcmH3wobo7Pmew2Tzx/EqcHVYr35mJ1VGLF2Qzi3siZ7
-         0T6g==
-X-Gm-Message-State: ANoB5plEJe8MKdM/057LLVCUi/gSlfmQdyOjVg/QUyVQb/H1Zg8kSWaO
-        LIC9zPv/WYcCfK6HOJOMD0FNl3SeRDElgj1nIoa+zlxr
-X-Google-Smtp-Source: AA0mqf7XOzlkSC/Q9QKsCA1I6cAvJG7ZQpjehqaSXcKitkWud4VvMWWBSyfSAw7CZ/4sgTLmlnS+1hjgIE9b6ixJ9lM=
-X-Received: by 2002:a02:7409:0:b0:375:4727:8625 with SMTP id
- o9-20020a027409000000b0037547278625mr7900162jac.300.1669362670212; Thu, 24
- Nov 2022 23:51:10 -0800 (PST)
-MIME-Version: 1.0
-References: <20221123180208.2068936-1-namhyung@kernel.org> <20221123180208.2068936-15-namhyung@kernel.org>
- <CAP-5=fVJjPXk2hmWc6xqDxe06Arq-nOB51CwihAuuVFAoaKJ4g@mail.gmail.com>
-In-Reply-To: <CAP-5=fVJjPXk2hmWc6xqDxe06Arq-nOB51CwihAuuVFAoaKJ4g@mail.gmail.com>
-From:   Namhyung Kim <namhyung@kernel.org>
-Date:   Thu, 24 Nov 2022 23:50:58 -0800
-Message-ID: <CAM9d7ciARxBRKpwf-8eQr-x5kR8n0Wv3RmycVFdO4ikeYhDVwg@mail.gmail.com>
-Subject: Re: [PATCH 14/15] perf stat: Rename "aggregate-number" to "cpu-count"
- in JSON
+        Fri, 25 Nov 2022 05:42:07 -0500
+Received: from mx0a-001b2d01.pphosted.com (mx0a-001b2d01.pphosted.com [148.163.156.1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 410FC4664F;
+        Fri, 25 Nov 2022 02:42:07 -0800 (PST)
+Received: from pps.filterd (m0098410.ppops.net [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (8.17.1.19/8.17.1.19) with ESMTP id 2APARASg028857;
+        Fri, 25 Nov 2022 10:41:46 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=date : from : to : cc :
+ subject : message-id : references : mime-version : content-type :
+ in-reply-to; s=pp1; bh=KdosrhN5XdljozFCn1bQZylSOF7bQ1SODAs6gTMeRWE=;
+ b=EVc8j9PvPdNdRALd3lCx9cKJab0la9RUYkg94ZEseXvw2CkcD5RjeRT0cuMNC6G/MGq6
+ j7KXYO8VXI07z5CjoKWg/vSxtgO/lsyU8J8qzhxLCDXsQxVi7EeUkcgVDfuDxuINmamy
+ cftqr22Xsz8C+AyX9JGckTgAVF0ZtCGfe0qLcni+tJ1ej3mTPmr9XihosBUIsaM11k6J
+ wZAuQyN+TmFsjp9nIs6AG89o3ORQ4D+kVQcXANSpzaVWhnajhJiYCZj5JAaR9/Ys2pNh
+ CfEDD6sjGZvY1cm2bMfP72xhKe7HCbMGAWu10pzEtzxDwLgRXokhTx1Ac4LthsFhmPZP 6Q== 
+Received: from pps.reinject (localhost [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 3m2uye896n-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Fri, 25 Nov 2022 10:41:45 +0000
+Received: from m0098410.ppops.net (m0098410.ppops.net [127.0.0.1])
+        by pps.reinject (8.17.1.5/8.17.1.5) with ESMTP id 2APATqh2006474;
+        Fri, 25 Nov 2022 10:41:45 GMT
+Received: from ppma04ams.nl.ibm.com (63.31.33a9.ip4.static.sl-reverse.com [169.51.49.99])
+        by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 3m2uye895p-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Fri, 25 Nov 2022 10:41:45 +0000
+Received: from pps.filterd (ppma04ams.nl.ibm.com [127.0.0.1])
+        by ppma04ams.nl.ibm.com (8.16.1.2/8.16.1.2) with SMTP id 2APAZKKr016784;
+        Fri, 25 Nov 2022 10:41:42 GMT
+Received: from b06avi18626390.portsmouth.uk.ibm.com (b06avi18626390.portsmouth.uk.ibm.com [9.149.26.192])
+        by ppma04ams.nl.ibm.com with ESMTP id 3kxps91dwx-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Fri, 25 Nov 2022 10:41:42 +0000
+Received: from d06av26.portsmouth.uk.ibm.com (d06av26.portsmouth.uk.ibm.com [9.149.105.62])
+        by b06avi18626390.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 2APAZLaQ3474136
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Fri, 25 Nov 2022 10:35:21 GMT
+Received: from d06av26.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 62E99AE051;
+        Fri, 25 Nov 2022 10:41:40 +0000 (GMT)
+Received: from d06av26.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id D6010AE045;
+        Fri, 25 Nov 2022 10:41:38 +0000 (GMT)
+Received: from li-4a3a4a4c-28e5-11b2-a85c-a8d192c6f089.ibm.com (unknown [9.171.94.96])
+        by d06av26.portsmouth.uk.ibm.com (Postfix) with ESMTPS;
+        Fri, 25 Nov 2022 10:41:38 +0000 (GMT)
+Date:   Fri, 25 Nov 2022 11:41:37 +0100
+From:   Alexander Gordeev <agordeev@linux.ibm.com>
 To:     Ian Rogers <irogers@google.com>
-Cc:     Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Jiri Olsa <jolsa@kernel.org>, Ingo Molnar <mingo@kernel.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Adrian Hunter <adrian.hunter@intel.com>,
-        linux-perf-users@vger.kernel.org,
-        Kan Liang <kan.liang@linux.intel.com>,
-        Zhengjun Xing <zhengjun.xing@linux.intel.com>,
-        James Clark <james.clark@arm.com>,
-        Athira Jajeev <atrajeev@linux.vnet.ibm.com>
-Content-Type: text/plain; charset="UTF-8"
+Cc:     Peter Zijlstra <peterz@infradead.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        Arnaldo Carvalho de Melo <acme@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Jiri Olsa <jolsa@kernel.org>,
+        Namhyung Kim <namhyung@kernel.org>,
+        Masahiro Yamada <masahiroy@kernel.org>,
+        Nicolas Schier <nicolas@fjasle.eu>,
+        linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org,
+        bpf@vger.kernel.org, Nick Desaulniers <ndesaulniers@google.com>,
+        Andrii Nakryiko <andrii.nakryiko@gmail.com>,
+        Stephane Eranian <eranian@google.com>
+Subject: Re: [PATCH] perf build: Fix LIBTRACEEVENT_DYNAMIC
+Message-ID: <Y4Cb4feK/9q+Wzmt@li-4a3a4a4c-28e5-11b2-a85c-a8d192c6f089.ibm.com>
+References: <20221116224631.207631-1-irogers@google.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20221116224631.207631-1-irogers@google.com>
+X-TM-AS-GCONF: 00
+X-Proofpoint-GUID: WpKiEY4QRQZXaJx4X4kt9_r6cj_vRYGz
+X-Proofpoint-ORIG-GUID: BsZ2JV9HYOBMmRIcXbMrEUDl7AyMnV7A
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.219,Aquarius:18.0.895,Hydra:6.0.545,FMLib:17.11.122.1
+ definitions=2022-11-25_02,2022-11-25_01,2022-06-22_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 clxscore=1011
+ lowpriorityscore=0 suspectscore=0 mlxlogscore=999 adultscore=0 mlxscore=0
+ bulkscore=0 priorityscore=1501 phishscore=0 malwarescore=0 impostorscore=0
+ spamscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2210170000 definitions=main-2211250083
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
+On Wed, Nov 16, 2022 at 02:46:31PM -0800, Ian Rogers wrote:
+
 Hi Ian,
 
-On Wed, Nov 23, 2022 at 3:31 PM Ian Rogers <irogers@google.com> wrote:
->
-> On Wed, Nov 23, 2022 at 10:02 AM Namhyung Kim <namhyung@kernel.org> wrote:
-> >
-> > As the JSON output has been broken for a little while, I guess there are
-> > not many users.  Let's rename the field to more intuitive one. :)
->
-> I'm not sure cpu-count is accurate. For example, an uncore counter in
-> a dual socket machine may have a CPU mask of "0, 36", ie one event per
-> socket. The aggregate-number in this case I believe is 2.
+> The tools/lib includes fixes break LIBTRACEVENT_DYNAMIC as the
+> makefile erroneously had depdendencies on building libtraceevent even
+> when not linking with it. This change fixes the issues with
+> LIBTRACEEVENT_DYNAMIC by making the built files optional.
 
-You're right.  In case of uncore events, it can be confusing.  But in some
-sense it could be thought as cpu count as well since it aggregates the
-result from two cpus anyway. :)
+It kernel-next on s390 somehow libtraceevent seems to be bypassed, which leads 
+to make -C tools/perf install-bin failure. While it does not hit in every
+envoronment, could you please hint what could be a reason for that?
 
-Note that the aggregate-number (or cpu-count) is only printed if users
-requested one of aggregation options like --per-socket or --per-core.
-In your example, then it could print 1 for each socket.
+...
+make FIXDEP=1 -f Makefile.perf install-bin
+Makefile.config:1030: No numa.h found, disables 'perf bench numa mem' benchmark, please install numactl-devel/libnuma-devel/libnuma-dev
+Auto-detecting system features:
+...                                   dwarf: [ on  ]
+...                      dwarf_getlocations: [ on  ]
+...                                   glibc: [ on  ]
+...                                  libbfd: [ on  ]
+...                          libbfd-buildid: [ on  ]
+...                                  libcap: [ on  ]
+...                                  libelf: [ on  ]
+...                                 libnuma: [ OFF ]
+...                  numa_num_possible_cpus: [ OFF ]
+...                                 libperl: [ on  ]
+...                               libpython: [ on  ]
+...                               libcrypto: [ on  ]
+...                               libunwind: [ OFF ]
+...                      libdw-dwarf-unwind: [ on  ]
+...                                    zlib: [ on  ]
+...                                    lzma: [ on  ]
+...                               get_cpuid: [ OFF ]
+...                                     bpf: [ on  ]
+...                                  libaio: [ on  ]
+...                                 libzstd: [ on  ]
+$(:)
+make -C /builddir/build/BUILD/kernel-6.0.fc36/linux-6.0/tools/lib/api/ O=/builddir/build/BUILD/kernel-6.0.fc36/linux-6.0/tools/perf/libapi \
+ DESTDIR=/builddir/build/BUILD/kernel-6.0.fc36/linux-6.0/tools/perf/libapi prefix= \
+ /builddir/build/BUILD/kernel-6.0.fc36/linux-6.0/tools/perf/libapi/libapi.a install_headers
+make -C /builddir/build/BUILD/kernel-6.0.fc36/linux-6.0/tools/lib/perf/ O=/builddir/build/BUILD/kernel-6.0.fc36/linux-6.0/tools/perf/libperf \
+ DESTDIR=/builddir/build/BUILD/kernel-6.0.fc36/linux-6.0/tools/perf/libperf prefix= \
+ /builddir/build/BUILD/kernel-6.0.fc36/linux-6.0/tools/perf/libperf/libperf.a install_headers
+make -C /builddir/build/BUILD/kernel-6.0.fc36/linux-6.0/tools/lib/subcmd/ O=/builddir/build/BUILD/kernel-6.0.fc36/linux-6.0/tools/perf/libsubcmd \
+ DESTDIR=/builddir/build/BUILD/kernel-6.0.fc36/linux-6.0/tools/perf/libsubcmd prefix= \
+ /builddir/build/BUILD/kernel-6.0.fc36/linux-6.0/tools/perf/libsubcmd/libsubcmd.a install_headers
+make -C /builddir/build/BUILD/kernel-6.0.fc36/linux-6.0/tools/lib/symbol/ O=/builddir/build/BUILD/kernel-6.0.fc36/linux-6.0/tools/perf/libsymbol \
+ DESTDIR=/builddir/build/BUILD/kernel-6.0.fc36/linux-6.0/tools/perf/libsymbol prefix= \
+ /builddir/build/BUILD/kernel-6.0.fc36/linux-6.0/tools/perf/libsymbol/libsymbol.a install_headers
+make -C /builddir/build/BUILD/kernel-6.0.fc36/linux-6.0/tools/lib/bpf/ FEATURES_DUMP=/builddir/build/BUILD/kernel-6.0.fc36/linux-6.0/tools/perf/FEATURE-DUMP \
+ O= OUTPUT=/builddir/build/BUILD/kernel-6.0.fc36/linux-6.0/tools/perf/libbpf/ DESTDIR=/builddir/build/BUILD/kernel-6.0.fc36/linux-6.0/tools/perf/libbpf prefix= \
+ /builddir/build/BUILD/kernel-6.0.fc36/linux-6.0/tools/perf/libbpf/libbpf.a install_headers
+/bin/sh util/PERF-VERSION-GEN
+make -C /builddir/build/BUILD/kernel-6.0.fc36/linux-6.0/tools/perf/tests/shell/coresight
+make[2]: *** No rule to make target 'install-traceevent-plugins', needed by 'install-bin'.  Stop.
 
-But I think uncore events are different from core events, and hopefully
-they have separate instances for different sockets or something already.
-That means it doesn't need to use those aggregation options for them.
 
-Also the CSV output uses "cpus" for the same information.  It'd be nice
-we could have consistency.
-
-Thanks,
-Namhyung
+Thanks!
