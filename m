@@ -2,156 +2,169 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 53D56C4321E
-	for <linux-perf-users@archiver.kernel.org>; Fri, 25 Nov 2022 10:42:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9BD3EC4332F
+	for <linux-perf-users@archiver.kernel.org>; Fri, 25 Nov 2022 11:14:19 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230198AbiKYKmJ (ORCPT
+        id S230192AbiKYLOS (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Fri, 25 Nov 2022 05:42:09 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37754 "EHLO
+        Fri, 25 Nov 2022 06:14:18 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41574 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229529AbiKYKmH (ORCPT
+        with ESMTP id S230123AbiKYLOS (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Fri, 25 Nov 2022 05:42:07 -0500
-Received: from mx0a-001b2d01.pphosted.com (mx0a-001b2d01.pphosted.com [148.163.156.1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 410FC4664F;
-        Fri, 25 Nov 2022 02:42:07 -0800 (PST)
-Received: from pps.filterd (m0098410.ppops.net [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (8.17.1.19/8.17.1.19) with ESMTP id 2APARASg028857;
-        Fri, 25 Nov 2022 10:41:46 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=date : from : to : cc :
- subject : message-id : references : mime-version : content-type :
- in-reply-to; s=pp1; bh=KdosrhN5XdljozFCn1bQZylSOF7bQ1SODAs6gTMeRWE=;
- b=EVc8j9PvPdNdRALd3lCx9cKJab0la9RUYkg94ZEseXvw2CkcD5RjeRT0cuMNC6G/MGq6
- j7KXYO8VXI07z5CjoKWg/vSxtgO/lsyU8J8qzhxLCDXsQxVi7EeUkcgVDfuDxuINmamy
- cftqr22Xsz8C+AyX9JGckTgAVF0ZtCGfe0qLcni+tJ1ej3mTPmr9XihosBUIsaM11k6J
- wZAuQyN+TmFsjp9nIs6AG89o3ORQ4D+kVQcXANSpzaVWhnajhJiYCZj5JAaR9/Ys2pNh
- CfEDD6sjGZvY1cm2bMfP72xhKe7HCbMGAWu10pzEtzxDwLgRXokhTx1Ac4LthsFhmPZP 6Q== 
-Received: from pps.reinject (localhost [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 3m2uye896n-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Fri, 25 Nov 2022 10:41:45 +0000
-Received: from m0098410.ppops.net (m0098410.ppops.net [127.0.0.1])
-        by pps.reinject (8.17.1.5/8.17.1.5) with ESMTP id 2APATqh2006474;
-        Fri, 25 Nov 2022 10:41:45 GMT
-Received: from ppma04ams.nl.ibm.com (63.31.33a9.ip4.static.sl-reverse.com [169.51.49.99])
-        by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 3m2uye895p-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Fri, 25 Nov 2022 10:41:45 +0000
-Received: from pps.filterd (ppma04ams.nl.ibm.com [127.0.0.1])
-        by ppma04ams.nl.ibm.com (8.16.1.2/8.16.1.2) with SMTP id 2APAZKKr016784;
-        Fri, 25 Nov 2022 10:41:42 GMT
-Received: from b06avi18626390.portsmouth.uk.ibm.com (b06avi18626390.portsmouth.uk.ibm.com [9.149.26.192])
-        by ppma04ams.nl.ibm.com with ESMTP id 3kxps91dwx-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Fri, 25 Nov 2022 10:41:42 +0000
-Received: from d06av26.portsmouth.uk.ibm.com (d06av26.portsmouth.uk.ibm.com [9.149.105.62])
-        by b06avi18626390.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 2APAZLaQ3474136
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Fri, 25 Nov 2022 10:35:21 GMT
-Received: from d06av26.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 62E99AE051;
-        Fri, 25 Nov 2022 10:41:40 +0000 (GMT)
-Received: from d06av26.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id D6010AE045;
-        Fri, 25 Nov 2022 10:41:38 +0000 (GMT)
-Received: from li-4a3a4a4c-28e5-11b2-a85c-a8d192c6f089.ibm.com (unknown [9.171.94.96])
-        by d06av26.portsmouth.uk.ibm.com (Postfix) with ESMTPS;
-        Fri, 25 Nov 2022 10:41:38 +0000 (GMT)
-Date:   Fri, 25 Nov 2022 11:41:37 +0100
-From:   Alexander Gordeev <agordeev@linux.ibm.com>
-To:     Ian Rogers <irogers@google.com>
-Cc:     Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Jiri Olsa <jolsa@kernel.org>,
-        Namhyung Kim <namhyung@kernel.org>,
-        Masahiro Yamada <masahiroy@kernel.org>,
-        Nicolas Schier <nicolas@fjasle.eu>,
-        linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org,
-        bpf@vger.kernel.org, Nick Desaulniers <ndesaulniers@google.com>,
-        Andrii Nakryiko <andrii.nakryiko@gmail.com>,
-        Stephane Eranian <eranian@google.com>
-Subject: Re: [PATCH] perf build: Fix LIBTRACEEVENT_DYNAMIC
-Message-ID: <Y4Cb4feK/9q+Wzmt@li-4a3a4a4c-28e5-11b2-a85c-a8d192c6f089.ibm.com>
-References: <20221116224631.207631-1-irogers@google.com>
+        Fri, 25 Nov 2022 06:14:18 -0500
+Received: from mail-yb1-xb35.google.com (mail-yb1-xb35.google.com [IPv6:2607:f8b0:4864:20::b35])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BA84627FD3
+        for <linux-perf-users@vger.kernel.org>; Fri, 25 Nov 2022 03:14:15 -0800 (PST)
+Received: by mail-yb1-xb35.google.com with SMTP id z192so4752600yba.0
+        for <linux-perf-users@vger.kernel.org>; Fri, 25 Nov 2022 03:14:15 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=cc:to:subject:message-id:date:from:mime-version:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=tR6n285CjGjiEweDZ5Rpr+M2GTjNH/qXmtQMPjMs0+c=;
+        b=c99ikx49ox7ps1gMjRcvBxZCxMF1Q2X426RlWzGPErFaS2/JGYC+WE0VtkEkdWIyD6
+         z88xRAh6GX2/MFFFdrU6Ihb8gAAup+C6XRg27ULRjJBDkodEII/XjVG/RiC9D9qPFQsn
+         TYJN4FgikG1xUO5VRg3yAYazReVLHxnbkkhpUqOFkWSOVPRTjPEMf9rbE+EmvJFajtrD
+         FAgnyYlCCjUByqaUwxA9O4HO08lt22EX/hsxJi60T/LmHq4ZbdD59G5mIj8x94D7k+/o
+         x0pHSOalKNBHHlMC59N42eRhe9cW2TA57ujHkaQIRcVvJgxofT7gqkd+d9LUWnCIdjbN
+         kTdg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=cc:to:subject:message-id:date:from:mime-version:x-gm-message-state
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=tR6n285CjGjiEweDZ5Rpr+M2GTjNH/qXmtQMPjMs0+c=;
+        b=enPRrZn2QBhcR9vJEnJdY9vDFPEHgwiNB62oxeVB6qfnWi6ve7hHhvrMpQqqpBrSN4
+         I01YtQA9HO33QX3cJ71O6a3DQGahBHsBQZ7RR+OaQPAuYCkIb2d73hdxjZNrFOJb41Zx
+         HE4vV/ORRQe0p8o1w0761K3U3GLQh9CTGKYiFQxCthPJEAaUWgNjI9AlhodzduXKlDxy
+         GsUWRcyfd0/F/6yv/V4v8E4alPeL0qieWQPJhe92NDZfXA/q7JN/WXneNJX8js+39LwI
+         Gp4Ft+C0eKBEK/u8j00S4Xx/hW/r0paAILOm1uVrthoEgP1lMdIfDuaIhypPPXoJXQSe
+         SpYQ==
+X-Gm-Message-State: ANoB5pnkkkcbLqdu/hQskfVIB0V/gBl+8rhDtze+yfl/4W+jYWbQZ6av
+        LaAtHHDs4Nm6LshmwfEHOPauQurhQZeYR8Ux0StjPAqA/K5A4g==
+X-Google-Smtp-Source: AA0mqf4SbZz4MHCM6eYS/GQWVWxtFtQtXAM37B3lS2YcupS0l9TAFw0bzAoymEKP6IXA6txZtMTI5FJU7IPL9YrcSUw=
+X-Received: by 2002:a5b:f0f:0:b0:6d2:5835:301f with SMTP id
+ x15-20020a5b0f0f000000b006d25835301fmr25099494ybr.336.1669374853963; Fri, 25
+ Nov 2022 03:14:13 -0800 (PST)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20221116224631.207631-1-irogers@google.com>
-X-TM-AS-GCONF: 00
-X-Proofpoint-GUID: WpKiEY4QRQZXaJx4X4kt9_r6cj_vRYGz
-X-Proofpoint-ORIG-GUID: BsZ2JV9HYOBMmRIcXbMrEUDl7AyMnV7A
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.219,Aquarius:18.0.895,Hydra:6.0.545,FMLib:17.11.122.1
- definitions=2022-11-25_02,2022-11-25_01,2022-06-22_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 clxscore=1011
- lowpriorityscore=0 suspectscore=0 mlxlogscore=999 adultscore=0 mlxscore=0
- bulkscore=0 priorityscore=1501 phishscore=0 malwarescore=0 impostorscore=0
- spamscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2210170000 definitions=main-2211250083
+From:   Naresh Kamboju <naresh.kamboju@linaro.org>
+Date:   Fri, 25 Nov 2022 16:44:02 +0530
+Message-ID: <CA+G9fYt9W2h31bSquJ7Jj7jsP=4OEhF9WMB=NwdR2WcavvPusA@mail.gmail.com>
+Subject: perf: list of failures from LKFT CI
+To:     linux-perf-users@vger.kernel.org,
+        open list <linux-kernel@vger.kernel.org>
+Cc:     Arnaldo Carvalho de Melo <acme@kernel.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        =?UTF-8?B?RGFuaWVsIETDrWF6?= <daniel.diaz@linaro.org>
+Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-On Wed, Nov 16, 2022 at 02:46:31PM -0800, Ian Rogers wrote:
+Perf stat JSON output linter test and few more failed on next-20221125.
 
-Hi Ian,
+Reported-by: Linux Kernel Functional Testing <lkft@linaro.org>
 
-> The tools/lib includes fixes break LIBTRACEVENT_DYNAMIC as the
-> makefile erroneously had depdendencies on building libtraceevent even
-> when not linking with it. This change fixes the issues with
-> LIBTRACEEVENT_DYNAMIC by making the built files optional.
+Regressions found on qemu_arm64:
+    perf/perf-stat-JSON-output-linter
+    perf/perf-stat-CSV-output-linter
+    perf/perf-all-PMU-test
+    https://qa-reports.linaro.org/lkft/linux-next-master/build/next-20221125/testrun/13178580/suite/perf/tests/
 
-It kernel-next on s390 somehow libtraceevent seems to be bypassed, which leads 
-to make -C tools/perf install-bin failure. While it does not hit in every
-envoronment, could you please hint what could be a reason for that?
+Regressions found on qemu_x86_64:
+    perf/perf-stat-JSON-output-linter
+    perf/Watchpoint-subtest-2
+    perf/perf-all-metricgroups-test
+    https://qa-reports.linaro.org/lkft/linux-next-master/build/next-20221125/testrun/13178612/suite/perf/tests/
 
-...
-make FIXDEP=1 -f Makefile.perf install-bin
-Makefile.config:1030: No numa.h found, disables 'perf bench numa mem' benchmark, please install numactl-devel/libnuma-devel/libnuma-dev
-Auto-detecting system features:
-...                                   dwarf: [ on  ]
-...                      dwarf_getlocations: [ on  ]
-...                                   glibc: [ on  ]
-...                                  libbfd: [ on  ]
-...                          libbfd-buildid: [ on  ]
-...                                  libcap: [ on  ]
-...                                  libelf: [ on  ]
-...                                 libnuma: [ OFF ]
-...                  numa_num_possible_cpus: [ OFF ]
-...                                 libperl: [ on  ]
-...                               libpython: [ on  ]
-...                               libcrypto: [ on  ]
-...                               libunwind: [ OFF ]
-...                      libdw-dwarf-unwind: [ on  ]
-...                                    zlib: [ on  ]
-...                                    lzma: [ on  ]
-...                               get_cpuid: [ OFF ]
-...                                     bpf: [ on  ]
-...                                  libaio: [ on  ]
-...                                 libzstd: [ on  ]
-$(:)
-make -C /builddir/build/BUILD/kernel-6.0.fc36/linux-6.0/tools/lib/api/ O=/builddir/build/BUILD/kernel-6.0.fc36/linux-6.0/tools/perf/libapi \
- DESTDIR=/builddir/build/BUILD/kernel-6.0.fc36/linux-6.0/tools/perf/libapi prefix= \
- /builddir/build/BUILD/kernel-6.0.fc36/linux-6.0/tools/perf/libapi/libapi.a install_headers
-make -C /builddir/build/BUILD/kernel-6.0.fc36/linux-6.0/tools/lib/perf/ O=/builddir/build/BUILD/kernel-6.0.fc36/linux-6.0/tools/perf/libperf \
- DESTDIR=/builddir/build/BUILD/kernel-6.0.fc36/linux-6.0/tools/perf/libperf prefix= \
- /builddir/build/BUILD/kernel-6.0.fc36/linux-6.0/tools/perf/libperf/libperf.a install_headers
-make -C /builddir/build/BUILD/kernel-6.0.fc36/linux-6.0/tools/lib/subcmd/ O=/builddir/build/BUILD/kernel-6.0.fc36/linux-6.0/tools/perf/libsubcmd \
- DESTDIR=/builddir/build/BUILD/kernel-6.0.fc36/linux-6.0/tools/perf/libsubcmd prefix= \
- /builddir/build/BUILD/kernel-6.0.fc36/linux-6.0/tools/perf/libsubcmd/libsubcmd.a install_headers
-make -C /builddir/build/BUILD/kernel-6.0.fc36/linux-6.0/tools/lib/symbol/ O=/builddir/build/BUILD/kernel-6.0.fc36/linux-6.0/tools/perf/libsymbol \
- DESTDIR=/builddir/build/BUILD/kernel-6.0.fc36/linux-6.0/tools/perf/libsymbol prefix= \
- /builddir/build/BUILD/kernel-6.0.fc36/linux-6.0/tools/perf/libsymbol/libsymbol.a install_headers
-make -C /builddir/build/BUILD/kernel-6.0.fc36/linux-6.0/tools/lib/bpf/ FEATURES_DUMP=/builddir/build/BUILD/kernel-6.0.fc36/linux-6.0/tools/perf/FEATURE-DUMP \
- O= OUTPUT=/builddir/build/BUILD/kernel-6.0.fc36/linux-6.0/tools/perf/libbpf/ DESTDIR=/builddir/build/BUILD/kernel-6.0.fc36/linux-6.0/tools/perf/libbpf prefix= \
- /builddir/build/BUILD/kernel-6.0.fc36/linux-6.0/tools/perf/libbpf/libbpf.a install_headers
-/bin/sh util/PERF-VERSION-GEN
-make -C /builddir/build/BUILD/kernel-6.0.fc36/linux-6.0/tools/perf/tests/shell/coresight
-make[2]: *** No rule to make target 'install-traceevent-plugins', needed by 'install-bin'.  Stop.
+Regressions found on x86:
+    perf/perf-all-metricgroups-test
+    perf/perf-stat-JSON-output-linter
+    https://qa-reports.linaro.org/lkft/linux-next-master/build/next-20221125/testrun/13181129/suite/perf/tests/
 
+Details of perf test failures.
+Good case: Expected output,
+Linux next-20221124
 
-Thanks!
+ 92: perf stat JSON output linter                                    :
+--- start ---
+test child forked, pid 3067
+Checking json output: no args [Success]
+Checking json output: system wide [Success]
+Checking json output: interval [Success]
+Checking json output: event [Success]
+Checking json output: per thread [Success]
+Checking json output: per node [Success]
+Checking json output: system wide Checking json output: system wide no
+aggregation [Success]
+Checking json output: per core [Success]
+Checking json output: per die [Success]
+Checking json output: per socket [Success]
+test child finished with 0
+---- end ----
+perf stat JSON output linter: Ok
+
+https://qa-reports.linaro.org/lkft/linux-next-master/build/next-20221124/testrun/13170208/suite/perf/test/perf-stat-JSON-output-linter/log
+
+Bad case: failed output.
+ 92: perf stat JSON output linter                                    :
+--- start ---
+test child forked, pid 2268
+Checking json output: no args [   65.101948] audit: type=1701
+audit(1669350899.408:21): auid=4294967295 uid=0 gid=0 ses=4294967295
+pid=2277 comm=\"perf\" exe=\"/usr/bin/perf\" sig=6 res=1
+Test failed for input:
+{\"counter-value\" : \"0.531160\", \"unit\" : \"msec\", \"event\" :
+\"task-clock\", \"event-runtime\" : 531160, \"pcnt-running\" : 100.00,
+\"metric-value\" : 0.425336, \"metric-unit\" : \"CPUs utilized\"}
+
+{\"counter-value\" : \"0.000000\", \"unit\" : \"\", \"event\" :
+\"context-switches\", \"event-runtime\" : 531160, \"pcnt-running\" :
+100.00, \"metric-value\" : 0.000000, \"metric-unit\" : \"/sec\"}
+
+{\"counter-value\" : \"0.000000\", \"unit\" : \"\", \"event\" :
+\"cpu-migrations\", \"event-runtime\" : 531160, \"pcnt-running\" :
+100.00, \"metric-value\" : 0.000000, \"metric-unit\" : \"/sec\"}
+
+{\"counter-value\" : \"43.000000\", \"unit\" : \"\", \"event\" :
+\"page-faults\", \"event-runtime\" : 531160, \"pcnt-running\" :
+100.00, \"metric-value\" : 80.954891, \"metric-unit\" : \"K/sec\"}
+
+{\"counter-value\" : \"1264746.000000\", \"unit\" : \"\", \"event\" :
+\"cycles\", \"event-runtime\" : 531160, \"pcnt-running\" : 100.00,
+\"metric-value\" : 2.381102, \"metric-unit\" : \"GHz\"}
+
+{\"counter-value\" : \"1711188.000000\", \"unit\" : \"\", \"event\" :
+\"instructions\", \"event-runtime\" : 531160, \"pcnt-running\" :
+100.00, \"metric-value\" : 1.352989, \"metric-unit\" : \"insn per
+cycle\"}
+
+{\"counter-value\" : \"<not supported>\", \"unit\" : \"\", \"event\" :
+\"branches\", \"event-runtime\" : 0, \"pcnt-running\" : 100.00, Fatal
+error: glibc detected an invalid stdio handle
+
+Traceback (most recent call last):
+  File \"/usr/libexec/perf-core/tests/shell/lib/perf_json_output_lint.py\",
+line 93, in <module>
+    check_json_output(expected_items)
+  File \"/usr/libexec/perf-core/tests/shell/lib/perf_json_output_lint.py\",
+line 54, in check_json_output
+    raise RuntimeError(f'wrong number of fields. counted {count}
+expected {expected_items}'
+RuntimeError: wrong number of fields. counted 5 expected 6 in
+'{\"counter-value\" : \"<not supported>\", \"unit\" : \"\", \"event\"
+: \"branches\", \"event-runtime\" : 0, \"pcnt-running\" : 100.00,
+Fatal error: glibc detected an invalid stdio handle
+'
+test child finished with -1
+---- end ----
+perf stat JSON output linter: FAILED!
+
+https://qa-reports.linaro.org/lkft/linux-next-master/build/next-20221125/testrun/13178580/suite/perf/test/perf-stat-JSON-output-linter/log
+
+Test results comparison history:
+https://qa-reports.linaro.org/lkft/linux-next-master/build/next-20221125/testrun/13178580/suite/perf/test/perf-stat-JSON-output-linter/history/
+
+--
+Linaro LKFT
+https://lkft.linaro.org
