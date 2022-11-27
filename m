@@ -2,167 +2,117 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 50C08C4708B
-	for <linux-perf-users@archiver.kernel.org>; Sat, 26 Nov 2022 11:14:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9D462C4332F
+	for <linux-perf-users@archiver.kernel.org>; Sun, 27 Nov 2022 03:14:55 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229536AbiKZLOH (ORCPT
+        id S229534AbiK0DOy (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Sat, 26 Nov 2022 06:14:07 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50540 "EHLO
+        Sat, 26 Nov 2022 22:14:54 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60200 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229595AbiKZLNr (ORCPT
+        with ESMTP id S229453AbiK0DOu (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Sat, 26 Nov 2022 06:13:47 -0500
-Received: from mail-pj1-x102b.google.com (mail-pj1-x102b.google.com [IPv6:2607:f8b0:4864:20::102b])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 029291B1DA;
-        Sat, 26 Nov 2022 03:13:46 -0800 (PST)
-Received: by mail-pj1-x102b.google.com with SMTP id mv18so5591802pjb.0;
-        Sat, 26 Nov 2022 03:13:45 -0800 (PST)
+        Sat, 26 Nov 2022 22:14:50 -0500
+Received: from mail-wm1-x332.google.com (mail-wm1-x332.google.com [IPv6:2a00:1450:4864:20::332])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8F8BAFCD0
+        for <linux-perf-users@vger.kernel.org>; Sat, 26 Nov 2022 19:14:45 -0800 (PST)
+Received: by mail-wm1-x332.google.com with SMTP id 83-20020a1c0256000000b003d03017c6efso8380577wmc.4
+        for <linux-perf-users@vger.kernel.org>; Sat, 26 Nov 2022 19:14:45 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20210112;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=7wXxHwlliB9k9y/zRVSVfdaJjEK9h41TVLmU74Ql4mM=;
-        b=Az5eaU6yt/A/9EC16A5mgH5D+UhNxILaYesE0vaILZ41HUY0H0EcrKI190CwWnHlva
-         EXRB9mqds4P/vTNnGQg7YIWQHGxxy4rLja4l7HFjLh+xPTQmDug3UqLnYCBSwRb4OnFR
-         td+HpnkaCwdIwsKLWuIDT/+/983Dja5Dnkjcwn7l69ufK4v3lQ9eRyxXcBvE+vG0o2ZU
-         B7pUk+wC4UHYJrw71hTnsZKRWdr/UfG0sCH8mKtMm9i41WM05y5xUGmMbxlMFniZrXQn
-         82gU94ss0lWMN2ElU1tahDVhU4fILxrUBPUEiuptI3nsv+xUeD4LabOjkE9mzsmXxY+4
-         CnLQ==
+        d=google.com; s=20210112;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:from:to:cc:subject:date:message-id:reply-to;
+        bh=B7jJJzGDAdvwTHY0/uqqYf6jkjFWmT8EU2xpYpvXkds=;
+        b=cePTeChGShsKFQLKo60/NW160lCTvZ5UIrzkfSGokNE7LKlkvAKqCkVlqiSB10KNPE
+         8q1EoBmxueU34vR0QFvwtcqicOHoxW0GRYY69d1JNRddcLHtP9oZuM2MWykXPrj076S9
+         pm9oXtrQrft7qGK2r1rnDgk/jb89gR7RHXElUier3GlZ0Ga31EGMJVTpLwEKZr0zYGBe
+         wDUazPxKe3j1G+BtMnZgHpxQhSYJd0JklCht9o6K3yi8A2xjl5AVBHpCGQi1EBV6MEb+
+         br+SgLKyfvmqRCtYdT/jbChq25oqeXmu8pX3S88Ni+J07UAb9iRnPOHuejNro3S2w5W7
+         kOxQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=7wXxHwlliB9k9y/zRVSVfdaJjEK9h41TVLmU74Ql4mM=;
-        b=ETisHak7yZaVwnFqdzUePVIlflzx4x7UMke0HbXSVogI1L2KtdZQT6FHME3FHS4uRo
-         3TZreymeCJ4zmjd+GOGfCcdFWuGLP600fvY0enFlzmOcB7vJu4KNExUu5rxXzj7E/uWv
-         mXgqQNhp9amsbcMBf0OmqO2p+4Sr49BKZavHiuXFCv99oTOSVFOHDBx5bvqnFj4u3Z58
-         43rV4l+gCYL9me8LUr+OJrNN1ZJaIsgHqh28LH21AGGs5c8WLuILS1qGHbN5QFFmVv+J
-         rl8PDf1AuNOpADIdpHt2YL01Mn8wTi5seiuNxKMhhx/dN7Of9m3MMwDaziG9FRoyonhl
-         JJUg==
-X-Gm-Message-State: ANoB5pm2juBX3egqsvGAvH4o1lKdCEXE9vcfCD/vQTirfPEMKs4C6OWa
-        ropDKkJh8Z2x+sUfLGxjDTo=
-X-Google-Smtp-Source: AA0mqf4bjAQLyAOUkGVkFZ7QeA5U2FbfawVL8N5Pl0UJnzhCMcX/K+w/Q3lJasx/E4aU1n8l6Pjukg==
-X-Received: by 2002:a17:902:e807:b0:186:fb90:5774 with SMTP id u7-20020a170902e80700b00186fb905774mr23432978plg.137.1669461225418;
-        Sat, 26 Nov 2022 03:13:45 -0800 (PST)
-Received: from WRT-WX9.. ([103.135.102.183])
-        by smtp.gmail.com with ESMTPSA id c194-20020a621ccb000000b0056a93838606sm4555639pfc.58.2022.11.26.03.13.36
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sat, 26 Nov 2022 03:13:44 -0800 (PST)
-From:   Changbin Du <changbin.du@gmail.com>
-To:     Alexei Starovoitov <ast@kernel.org>,
-        Daniel Borkmann <daniel@iogearbox.net>,
-        Andrii Nakryiko <andrii@kernel.org>,
-        Quentin Monnet <quentin@isovalent.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Shuah Khan <shuah@kernel.org>
-Cc:     Martin KaFai Lau <martin.lau@linux.dev>,
-        Song Liu <song@kernel.org>, Yonghong Song <yhs@fb.com>,
-        John Fastabend <john.fastabend@gmail.com>,
-        KP Singh <kpsingh@kernel.org>,
-        Stanislav Fomichev <sdf@google.com>,
-        Hao Luo <haoluo@google.com>, Jiri Olsa <jolsa@kernel.org>,
-        bpf@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Mark Rutland <mark.rutland@arm.com>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Namhyung Kim <namhyung@kernel.org>,
-        Mykola Lysenko <mykolal@fb.com>,
-        linux-perf-users@vger.kernel.org, linux-kselftest@vger.kernel.org,
-        Changbin Du <changbin.du@gmail.com>
-Subject: [PATCH 2/2] makefiles: do not generate empty vmlinux.h
-Date:   Sat, 26 Nov 2022 19:11:47 +0800
-Message-Id: <20221126111147.199366-3-changbin.du@gmail.com>
-X-Mailer: git-send-email 2.37.2
-In-Reply-To: <20221126111147.199366-1-changbin.du@gmail.com>
-References: <20221126111147.199366-1-changbin.du@gmail.com>
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=B7jJJzGDAdvwTHY0/uqqYf6jkjFWmT8EU2xpYpvXkds=;
+        b=WJ9G95RTdiZVr/fVNZ2JwnbRO6mm32Yj2xkbE9avW3CxaO98cZXNh4ldHanLb2VMwX
+         tFpFCxtEZ8GBDXHlZqfPXnI62Jqjavq1XcGto3jjLIGl3lCBck5F71JphPxO71PIsIcu
+         kvaOZvafUF+Nt0qr5H6Crrt95S69T8nIViQ6Oe9iuDiKrbFKnW4/H2dJ5dLkqJLFJXo6
+         nEegxYWot19k048IvJ8yoU6pYb4ttCgGdC6NdDW+KC0t/55cgVzYQx4oRo+j2jlyo61R
+         BIAt1P9gFtvjkO7MjrqqhVaBKQ0R+BaWL7DAejodXNydpCnkkKVlT6do16d7VyA9tz4V
+         BLBA==
+X-Gm-Message-State: ANoB5pl3egedWe67mtkIUWYgJ4c5Kk65dNlSldoog3Mg0geyZNk8j/CD
+        eZSn1rUT1XIoX0OiL7+y1YzL5+6zxMJhugYQ/Ktkvg==
+X-Google-Smtp-Source: AA0mqf7LMoOeXBa4COl0lx2SMWDgnnyYM5Gy2YzqMQ8ChhQoXhTAJ9MTq7YA84e8LtYvn1kbeaJlNtnNfZtC+SoXNpE=
+X-Received: by 2002:a05:600c:540a:b0:3d0:50c4:432c with SMTP id
+ he10-20020a05600c540a00b003d050c4432cmr3448681wmb.67.1669518883874; Sat, 26
+ Nov 2022 19:14:43 -0800 (PST)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+References: <20221123180208.2068936-1-namhyung@kernel.org> <20221123180208.2068936-15-namhyung@kernel.org>
+ <CAP-5=fVJjPXk2hmWc6xqDxe06Arq-nOB51CwihAuuVFAoaKJ4g@mail.gmail.com> <CAM9d7ciARxBRKpwf-8eQr-x5kR8n0Wv3RmycVFdO4ikeYhDVwg@mail.gmail.com>
+In-Reply-To: <CAM9d7ciARxBRKpwf-8eQr-x5kR8n0Wv3RmycVFdO4ikeYhDVwg@mail.gmail.com>
+From:   Ian Rogers <irogers@google.com>
+Date:   Sat, 26 Nov 2022 19:14:31 -0800
+Message-ID: <CAP-5=fWF7ScB0kHKQsqePHmg3sJf22TOfvKcNeYQdMoD0p8Tbg@mail.gmail.com>
+Subject: Re: [PATCH 14/15] perf stat: Rename "aggregate-number" to "cpu-count"
+ in JSON
+To:     Namhyung Kim <namhyung@kernel.org>
+Cc:     Arnaldo Carvalho de Melo <acme@kernel.org>,
+        Jiri Olsa <jolsa@kernel.org>, Ingo Molnar <mingo@kernel.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Adrian Hunter <adrian.hunter@intel.com>,
+        linux-perf-users@vger.kernel.org,
+        Kan Liang <kan.liang@linux.intel.com>,
+        Zhengjun Xing <zhengjun.xing@linux.intel.com>,
+        James Clark <james.clark@arm.com>,
+        Athira Jajeev <atrajeev@linux.vnet.ibm.com>
+Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-Remove the empty vmlinux.h if bpftool failed to dump btf info.
-The emptry vmlinux.h can hide real error when reading output
-of make.
+On Thu, Nov 24, 2022 at 11:51 PM Namhyung Kim <namhyung@kernel.org> wrote:
+>
+> Hi Ian,
+>
+> On Wed, Nov 23, 2022 at 3:31 PM Ian Rogers <irogers@google.com> wrote:
+> >
+> > On Wed, Nov 23, 2022 at 10:02 AM Namhyung Kim <namhyung@kernel.org> wrote:
+> > >
+> > > As the JSON output has been broken for a little while, I guess there are
+> > > not many users.  Let's rename the field to more intuitive one. :)
+> >
+> > I'm not sure cpu-count is accurate. For example, an uncore counter in
+> > a dual socket machine may have a CPU mask of "0, 36", ie one event per
+> > socket. The aggregate-number in this case I believe is 2.
+>
+> You're right.  In case of uncore events, it can be confusing.  But in some
+> sense it could be thought as cpu count as well since it aggregates the
+> result from two cpus anyway. :)
+>
+> Note that the aggregate-number (or cpu-count) is only printed if users
+> requested one of aggregation options like --per-socket or --per-core.
+> In your example, then it could print 1 for each socket.
+>
+> But I think uncore events are different from core events, and hopefully
+> they have separate instances for different sockets or something already.
+> That means it doesn't need to use those aggregation options for them.
+>
+> Also the CSV output uses "cpus" for the same information.  It'd be nice
+> we could have consistency.
 
-Signed-off-by: Changbin Du <changbin.du@gmail.com>
----
- samples/bpf/Makefile                 | 2 +-
- tools/bpf/bpftool/Makefile           | 2 +-
- tools/bpf/runqslower/Makefile        | 2 +-
- tools/perf/Makefile.perf             | 2 +-
- tools/testing/selftests/bpf/Makefile | 2 +-
- 5 files changed, 5 insertions(+), 5 deletions(-)
+So in the original patch from Claire she'd passed the name "number"
+through to the json from the stat code. Having an integer called
+"number" isn't exactly intention revealing - thank you for your clean
+up work! :-) I switched "number" to be "aggregate number" as the
+number comes from the "data" aggregated and the code refers to it as
+aggregate data. I think aggregate-number is more consistent with the
+code, and cpu-count would look strange in the uncore case above where
+the number of CPUs (really hyperthreads) is 72. Perhaps we should also
+be outputting the aggregation mode with the number. Anyway, I think
+for the patch series I'd prefer we skipped this one and kept the rest.
 
-diff --git a/samples/bpf/Makefile b/samples/bpf/Makefile
-index 727da3c5879b..ab4788b4883e 100644
---- a/samples/bpf/Makefile
-+++ b/samples/bpf/Makefile
-@@ -362,7 +362,7 @@ ifeq ($(VMLINUX_BTF),)
- 	$(error Cannot find a vmlinux for VMLINUX_BTF at any of "$(VMLINUX_BTF_PATHS)",\
- 		build the kernel or set VMLINUX_BTF or VMLINUX_H variable)
- endif
--	$(Q)$(BPFTOOL) btf dump file $(VMLINUX_BTF) format c > $@
-+	$(Q)$(BPFTOOL) btf dump file $(VMLINUX_BTF) format c > $@ || { rm $@; exit 1; }
- else
- 	$(Q)cp "$(VMLINUX_H)" $@
- endif
-diff --git a/tools/bpf/bpftool/Makefile b/tools/bpf/bpftool/Makefile
-index 4a95c017ad4c..d9d6f890884c 100644
---- a/tools/bpf/bpftool/Makefile
-+++ b/tools/bpf/bpftool/Makefile
-@@ -177,7 +177,7 @@ BUILD_BPF_SKELS := 1
- 
- $(OUTPUT)vmlinux.h: $(VMLINUX_BTF) $(BPFTOOL_BOOTSTRAP)
- ifeq ($(VMLINUX_H),)
--	$(QUIET_GEN)$(BPFTOOL_BOOTSTRAP) btf dump file $< format c > $@
-+	$(QUIET_GEN)$(BPFTOOL_BOOTSTRAP) btf dump file $< format c > $@ || { rm $@; exit 1; }
- else
- 	$(Q)cp "$(VMLINUX_H)" $@
- endif
-diff --git a/tools/bpf/runqslower/Makefile b/tools/bpf/runqslower/Makefile
-index 8b3d87b82b7a..2d7911f4666b 100644
---- a/tools/bpf/runqslower/Makefile
-+++ b/tools/bpf/runqslower/Makefile
-@@ -77,7 +77,7 @@ ifeq ($(VMLINUX_H),)
- 			"specify its location." >&2;			       \
- 		exit 1;\
- 	fi
--	$(QUIET_GEN)$(BPFTOOL) btf dump file $(VMLINUX_BTF_PATH) format c > $@
-+	$(QUIET_GEN)$(BPFTOOL) btf dump file $(VMLINUX_BTF_PATH) format c > $@ || { rm $@; exit 1; }
- else
- 	$(Q)cp "$(VMLINUX_H)" $@
- endif
-diff --git a/tools/perf/Makefile.perf b/tools/perf/Makefile.perf
-index a432e59afc42..0546d408aa4e 100644
---- a/tools/perf/Makefile.perf
-+++ b/tools/perf/Makefile.perf
-@@ -1064,7 +1064,7 @@ VMLINUX_BTF ?= $(abspath $(firstword $(wildcard $(VMLINUX_BTF_PATHS))))
- 
- $(SKEL_OUT)/vmlinux.h: $(VMLINUX_BTF) $(BPFTOOL)
- ifeq ($(VMLINUX_H),)
--	$(QUIET_GEN)$(BPFTOOL) btf dump file $< format c > $@
-+	$(QUIET_GEN)$(BPFTOOL) btf dump file $< format c > $@ || { rm $@; exit 1; }
- else
- 	$(Q)cp "$(VMLINUX_H)" $@
- endif
-diff --git a/tools/testing/selftests/bpf/Makefile b/tools/testing/selftests/bpf/Makefile
-index e6cf21fad69f..9aa2475b4ac6 100644
---- a/tools/testing/selftests/bpf/Makefile
-+++ b/tools/testing/selftests/bpf/Makefile
-@@ -284,7 +284,7 @@ endif
- $(INCLUDE_DIR)/vmlinux.h: $(VMLINUX_BTF) $(BPFTOOL) | $(INCLUDE_DIR)
- ifeq ($(VMLINUX_H),)
- 	$(call msg,GEN,,$@)
--	$(Q)$(BPFTOOL) btf dump file $(VMLINUX_BTF) format c > $@
-+	$(Q)$(BPFTOOL) btf dump file $(VMLINUX_BTF) format c > $@ || { rm $@; exit 1; }
- else
- 	$(call msg,CP,,$@)
- 	$(Q)cp "$(VMLINUX_H)" $@
--- 
-2.37.2
-
+Thanks,
+Ian
+> Namhyung
