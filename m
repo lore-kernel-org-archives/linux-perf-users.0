@@ -2,87 +2,83 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 97192C43217
-	for <linux-perf-users@archiver.kernel.org>; Mon, 28 Nov 2022 13:57:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 59949C4167D
+	for <linux-perf-users@archiver.kernel.org>; Mon, 28 Nov 2022 14:06:23 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231820AbiK1N5M (ORCPT
+        id S231374AbiK1OGV (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Mon, 28 Nov 2022 08:57:12 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53166 "EHLO
+        Mon, 28 Nov 2022 09:06:21 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33516 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232252AbiK1N4v (ORCPT
+        with ESMTP id S231359AbiK1OGR (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Mon, 28 Nov 2022 08:56:51 -0500
-Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTP id EEE84209B1;
-        Mon, 28 Nov 2022 05:56:42 -0800 (PST)
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 50B84D6E;
-        Mon, 28 Nov 2022 05:56:49 -0800 (PST)
-Received: from a077893.arm.com (unknown [10.163.44.218])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPA id 8A4433F73D;
-        Mon, 28 Nov 2022 05:56:39 -0800 (PST)
-From:   Anshuman Khandual <anshuman.khandual@arm.com>
-To:     linux-arm-kernel@lists.infradead.org, maz@kernel.org
-Cc:     Anshuman Khandual <anshuman.khandual@arm.com>,
-        Arnaldo Carvalho de Melo <acme@kernel.org>,
+        Mon, 28 Nov 2022 09:06:17 -0500
+Received: from ams.source.kernel.org (ams.source.kernel.org [145.40.68.75])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 476E820F61;
+        Mon, 28 Nov 2022 06:06:08 -0800 (PST)
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by ams.source.kernel.org (Postfix) with ESMTPS id F168EB80DDF;
+        Mon, 28 Nov 2022 14:06:06 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id AFEEAC433C1;
+        Mon, 28 Nov 2022 14:06:05 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1669644365;
+        bh=PvFU14Tw+GunusKbVMruIGE8w1KDKd8yILQPKFFCjsk=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=k7CZOHPWVqpuMVy0DiM+Qx7MRYjZ5zqcv7d3OUPVBd2DbjOweUDW47zyJhf6x6o5a
+         tXytMHCFMWgFGsM/mMOm3ovtcdPK/kNziDAjJ8jb+SXg5iIMqIRxlg0OLBV+J8Ebeb
+         7J7jzXiqVVTnQ9CfuuMFR9wnIWSSX48WcLUxH+NEdTEUQTg6n6FP6OizB8t5zi7LIT
+         hSosMchmeoBnSPwLuFgKCsmbn2k1e/KKrikiMzQfKu2QP9IlgWKj9JAipXc/lmJ24G
+         htl8Xc4mPxFm70D5V4+HsNOPaA7rjFlZeNjQFhXu1DGP6lq/UGap2bdVkT8sybUMT4
+         XCEjaNkYl9mlw==
+Received: from sofa.misterjones.org ([185.219.108.64] helo=valley-girl.lan)
+        by disco-boy.misterjones.org with esmtpsa  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
+        (Exim 4.95)
+        (envelope-from <maz@kernel.org>)
+        id 1ozeln-0097Mn-Hr;
+        Mon, 28 Nov 2022 14:06:03 +0000
+From:   Marc Zyngier <maz@kernel.org>
+To:     linux-arm-kernel@lists.infradead.org,
+        Anshuman Khandual <anshuman.khandual@arm.com>
+Cc:     linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org,
+        Catalin Marinas <catalin.marinas@arm.com>,
         Mark Rutland <mark.rutland@arm.com>,
         Will Deacon <will@kernel.org>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [PATCH] KVM: arm64: Replace PMU version number '0' with ID_AA64DFR0_EL1_PMUVer_NI
-Date:   Mon, 28 Nov 2022 19:26:29 +0530
-Message-Id: <20221128135629.118346-1-anshuman.khandual@arm.com>
-X-Mailer: git-send-email 2.25.1
+        Arnaldo Carvalho de Melo <acme@kernel.org>
+Subject: Re: [PATCH] KVM: arm64: Replace PMU version number '0' with ID_AA64DFR0_EL1_PMUVer_NI
+Date:   Mon, 28 Nov 2022 14:06:00 +0000
+Message-Id: <166964435234.1494517.16237640748625443897.b4-ty@kernel.org>
+X-Mailer: git-send-email 2.34.1
+In-Reply-To: <20221128135629.118346-1-anshuman.khandual@arm.com>
+References: <20221128135629.118346-1-anshuman.khandual@arm.com>
 MIME-Version: 1.0
+Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 8bit
+X-SA-Exim-Connect-IP: 185.219.108.64
+X-SA-Exim-Rcpt-To: linux-arm-kernel@lists.infradead.org, anshuman.khandual@arm.com, linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org, catalin.marinas@arm.com, mark.rutland@arm.com, will@kernel.org, acme@kernel.org
+X-SA-Exim-Mail-From: maz@kernel.org
+X-SA-Exim-Scanned: No (on disco-boy.misterjones.org); SAEximRunCond expanded to false
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-kvm_host_pmu_init() returns when detected PMU is either not implemented, or
-implementation defined. kvm_pmu_probe_armpmu() also has a similar situation
-Extracted ID_AA64DFR0_EL1_PMUVer value, when PMU is not implemented is '0',
-which can be replaced with ID_AA64DFR0_EL1_PMUVer_NI defined as '0b0000'.
+On Mon, 28 Nov 2022 19:26:29 +0530, Anshuman Khandual wrote:
+> kvm_host_pmu_init() returns when detected PMU is either not implemented, or
+> implementation defined. kvm_pmu_probe_armpmu() also has a similar situation
+> Extracted ID_AA64DFR0_EL1_PMUVer value, when PMU is not implemented is '0',
+> which can be replaced with ID_AA64DFR0_EL1_PMUVer_NI defined as '0b0000'.
 
-Cc: Arnaldo Carvalho de Melo <acme@kernel.org>
-Cc: Marc Zyngier <maz@kernel.org>
-Cc: Mark Rutland <mark.rutland@arm.com>
-Cc: Will Deacon <will@kernel.org>
-Cc: Catalin Marinas <catalin.marinas@arm.com>
-Cc: linux-perf-users@vger.kernel.org
-Cc: linux-kernel@vger.kernel.org
-Cc: linux-arm-kernel@lists.infradead.org
-Signed-off-by: Anshuman Khandual <anshuman.khandual@arm.com>
----
-This applies on v6.1-rc6
+Applied to next, thanks!
 
- arch/arm64/kvm/pmu-emul.c | 5 +++--
- 1 file changed, 3 insertions(+), 2 deletions(-)
+[1/1] KVM: arm64: Replace PMU version number '0' with ID_AA64DFR0_EL1_PMUVer_NI
+      commit: 86815735aa571d493cf5768cad5fa8e6fd9c7ba8
 
-diff --git a/arch/arm64/kvm/pmu-emul.c b/arch/arm64/kvm/pmu-emul.c
-index 0003c7d37533..089a0b4c561b 100644
---- a/arch/arm64/kvm/pmu-emul.c
-+++ b/arch/arm64/kvm/pmu-emul.c
-@@ -774,7 +774,8 @@ void kvm_host_pmu_init(struct arm_pmu *pmu)
- {
- 	struct arm_pmu_entry *entry;
- 
--	if (pmu->pmuver == 0 || pmu->pmuver == ID_AA64DFR0_EL1_PMUVer_IMP_DEF)
-+	if (pmu->pmuver == ID_AA64DFR0_EL1_PMUVer_NI ||
-+	    pmu->pmuver == ID_AA64DFR0_EL1_PMUVer_IMP_DEF)
- 		return;
- 
- 	mutex_lock(&arm_pmus_lock);
-@@ -827,7 +828,7 @@ static struct arm_pmu *kvm_pmu_probe_armpmu(void)
- 
- 	if (event->pmu) {
- 		pmu = to_arm_pmu(event->pmu);
--		if (pmu->pmuver == 0 ||
-+		if (pmu->pmuver == ID_AA64DFR0_EL1_PMUVer_NI ||
- 		    pmu->pmuver == ID_AA64DFR0_EL1_PMUVer_IMP_DEF)
- 			pmu = NULL;
- 	}
+Cheers,
+
+	M.
 -- 
-2.25.1
+Without deviation from the norm, progress is not possible.
+
 
