@@ -2,37 +2,37 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3F994C4167D
-	for <linux-perf-users@archiver.kernel.org>; Mon, 28 Nov 2022 17:47:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6F1B6C433FE
+	for <linux-perf-users@archiver.kernel.org>; Mon, 28 Nov 2022 17:48:01 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233358AbiK1Rr4 (ORCPT
+        id S233401AbiK1Rr6 (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Mon, 28 Nov 2022 12:47:56 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33024 "EHLO
+        Mon, 28 Nov 2022 12:47:58 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35032 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S233815AbiK1RrU (ORCPT
+        with ESMTP id S233466AbiK1Rqf (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Mon, 28 Nov 2022 12:47:20 -0500
-Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 67C3727FE5;
-        Mon, 28 Nov 2022 09:42:11 -0800 (PST)
+        Mon, 28 Nov 2022 12:46:35 -0500
+Received: from sin.source.kernel.org (sin.source.kernel.org [145.40.73.55])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 800D92D743;
+        Mon, 28 Nov 2022 09:41:38 -0800 (PST)
 Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id 03D2F612C4;
-        Mon, 28 Nov 2022 17:42:11 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 0ADD0C433C1;
-        Mon, 28 Nov 2022 17:42:08 +0000 (UTC)
+        by sin.source.kernel.org (Postfix) with ESMTPS id 6176ACE0FBE;
+        Mon, 28 Nov 2022 17:41:33 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 5D4D4C433C1;
+        Mon, 28 Nov 2022 17:41:30 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1669657330;
+        s=k20201202; t=1669657291;
         bh=3dvlsZ0crK7vigTaS1T23MKHxpBSClQQPfxLSsv+Jmc=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=pLxgQZEjLrW3RKAlV7bo3p4RX9t/if4Q8fORQ/T7pNg4dkwbj+8oQ5fk9ibzgZ5GL
-         lpJKb25g0g2vP/rY+XjSgfrVING1KPy/cvYozY0IMMfIDF+47l1yv1R+0XcHXjQh6H
-         M2uvgV41kE2dheScNuHhLG2tRSykaCCF2W4/VGsTSKyPGy6J4EKshUh048+iSPYGWj
-         wPUGc8ArJ70WquuYbFf2W+cUahtuM0whmSvrrwomhlBERBF2+k7TqGSxWC8e7v55n7
-         HosbCUwWT1cCp6qI1WhHB48FdCQmuktN1EsMdLIGVc1MDB/s+6AUEeicTzTIg0c8wX
-         AF0byNWgD+1aA==
+        b=QVx7VdrklxR+yDXmYA6FAx5pNxlyzSETuHqpFwG66brGH8dmLMlFtyyjphZTK4UYg
+         kW6ojoa4jjElQL7Dj1o1yn+Z6NfgXd9kslle31JpEglf4Uks/MZBINY8ySiNPQpBxn
+         6wqZxSE+kCi+cvTqIiLHE637tfnj5re/FHVsD7MIh89bNMYOU1Xhy8rloLtrnsF2Ci
+         W5YGnd/1D3Q2OwGdAZ+mHti7i4NeYMCXLXP3WTXNzSIQ9T9+qcFef621iIOH9r9luH
+         31PjW6oICofsmIRjxja2jlwugipWFyjO8RwCNEUzyuPOjjHKe0qH7GPV4mgYjpM+tj
+         DfWNtx0Oc5mXw==
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
 Cc:     Tomislav Novak <tnovak@fb.com>,
@@ -43,12 +43,12 @@ Cc:     Tomislav Novak <tnovak@fb.com>,
         mark.rutland@arm.com, linux@armlinux.org.uk,
         linux-perf-users@vger.kernel.org,
         linux-arm-kernel@lists.infradead.org
-Subject: [PATCH AUTOSEL 5.4 05/16] ARM: 9251/1: perf: Fix stacktraces for tracepoint events in THUMB2 kernels
-Date:   Mon, 28 Nov 2022 12:41:48 -0500
-Message-Id: <20221128174201.1442499-5-sashal@kernel.org>
+Subject: [PATCH AUTOSEL 5.10 06/19] ARM: 9251/1: perf: Fix stacktraces for tracepoint events in THUMB2 kernels
+Date:   Mon, 28 Nov 2022 12:41:06 -0500
+Message-Id: <20221128174120.1442235-6-sashal@kernel.org>
 X-Mailer: git-send-email 2.35.1
-In-Reply-To: <20221128174201.1442499-1-sashal@kernel.org>
-References: <20221128174201.1442499-1-sashal@kernel.org>
+In-Reply-To: <20221128174120.1442235-1-sashal@kernel.org>
+References: <20221128174120.1442235-1-sashal@kernel.org>
 MIME-Version: 1.0
 X-stable: review
 X-Patchwork-Hint: Ignore
