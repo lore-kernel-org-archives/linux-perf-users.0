@@ -2,176 +2,151 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3D67DC433FE
-	for <linux-perf-users@archiver.kernel.org>; Mon, 28 Nov 2022 08:25:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 68249C46467
+	for <linux-perf-users@archiver.kernel.org>; Mon, 28 Nov 2022 08:26:21 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230054AbiK1IY6 (ORCPT
+        id S230177AbiK1I0S (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Mon, 28 Nov 2022 03:24:58 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38798 "EHLO
+        Mon, 28 Nov 2022 03:26:18 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39760 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229937AbiK1IY4 (ORCPT
+        with ESMTP id S229939AbiK1I0Q (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Mon, 28 Nov 2022 03:24:56 -0500
-Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTP id C4F102DCF;
-        Mon, 28 Nov 2022 00:24:53 -0800 (PST)
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 245DFD6E;
-        Mon, 28 Nov 2022 00:25:00 -0800 (PST)
-Received: from [10.162.40.16] (unknown [10.162.40.16])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 3CF773F73B;
-        Mon, 28 Nov 2022 00:24:48 -0800 (PST)
-Message-ID: <90f4abd0-2314-19e4-176c-00f15100ada0@arm.com>
-Date:   Mon, 28 Nov 2022 13:54:46 +0530
+        Mon, 28 Nov 2022 03:26:16 -0500
+Received: from ams.source.kernel.org (ams.source.kernel.org [IPv6:2604:1380:4601:e00::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 78EC2C07;
+        Mon, 28 Nov 2022 00:26:15 -0800 (PST)
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by ams.source.kernel.org (Postfix) with ESMTPS id 31BB0B80B8E;
+        Mon, 28 Nov 2022 08:26:14 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 75F8BC433D6;
+        Mon, 28 Nov 2022 08:26:05 +0000 (UTC)
+Message-ID: <0a52ed02-cf9d-eb67-8d68-e3d9dbe4e7b2@xs4all.nl>
+Date:   Mon, 28 Nov 2022 09:26:04 +0100
 MIME-Version: 1.0
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
- Thunderbird/102.2.2
-Subject: Re: [PATCH V5 4/7] driver/perf/arm_pmu_platform: Add support for BRBE
- attributes detection
+ Thunderbird/102.5.0
+Subject: Re: [PATCH mm-unstable v1 16/20] mm/frame-vector: remove FOLL_FORCE
+ usage
 Content-Language: en-US
-To:     Mark Rutland <mark.rutland@arm.com>
-Cc:     linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, peterz@infradead.org,
-        acme@kernel.org, will@kernel.org, catalin.marinas@arm.com,
-        Mark Brown <broonie@kernel.org>,
-        James Clark <james.clark@arm.com>,
-        Rob Herring <robh@kernel.org>, Marc Zyngier <maz@kernel.org>,
-        Suzuki Poulose <suzuki.poulose@arm.com>,
-        Ingo Molnar <mingo@redhat.com>
-References: <20221107062514.2851047-1-anshuman.khandual@arm.com>
- <20221107062514.2851047-5-anshuman.khandual@arm.com>
- <Y3fIYjGtoXPSX9JQ@FVFF77S0Q05N.cambridge.arm.com>
- <fa55fccc-455c-828a-b5fb-de5cb269e35b@arm.com>
- <Y3tjfg/aPIixPTbs@FVFF77S0Q05N.cambridge.arm.com>
-From:   Anshuman Khandual <anshuman.khandual@arm.com>
-In-Reply-To: <Y3tjfg/aPIixPTbs@FVFF77S0Q05N.cambridge.arm.com>
+To:     David Hildenbrand <david@redhat.com>, linux-kernel@vger.kernel.org,
+        Andrew Morton <akpm@linux-foundation.org>
+Cc:     x86@kernel.org, linux-alpha@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, linux-ia64@vger.kernel.org,
+        linux-mips@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
+        sparclinux@vger.kernel.org, linux-um@lists.infradead.org,
+        etnaviv@lists.freedesktop.org, dri-devel@lists.freedesktop.org,
+        linux-samsung-soc@vger.kernel.org, linux-rdma@vger.kernel.org,
+        linux-media@vger.kernel.org, linux-fsdevel@vger.kernel.org,
+        linux-mm@kvack.org, linux-perf-users@vger.kernel.org,
+        linux-security-module@vger.kernel.org,
+        linux-kselftest@vger.kernel.org,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Jason Gunthorpe <jgg@ziepe.ca>,
+        John Hubbard <jhubbard@nvidia.com>,
+        Peter Xu <peterx@redhat.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Andrea Arcangeli <aarcange@redhat.com>,
+        Hugh Dickins <hughd@google.com>, Nadav Amit <namit@vmware.com>,
+        Vlastimil Babka <vbabka@suse.cz>,
+        Matthew Wilcox <willy@infradead.org>,
+        Mike Kravetz <mike.kravetz@oracle.com>,
+        Muchun Song <songmuchun@bytedance.com>,
+        Shuah Khan <shuah@kernel.org>,
+        Lucas Stach <l.stach@pengutronix.de>,
+        David Airlie <airlied@gmail.com>,
+        Oded Gabbay <ogabbay@kernel.org>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Christoph Hellwig <hch@infradead.org>,
+        Alex Williamson <alex.williamson@redhat.com>,
+        Marek Szyprowski <m.szyprowski@samsung.com>,
+        Tomasz Figa <tfiga@chromium.org>,
+        Mauro Carvalho Chehab <mchehab@kernel.org>
+References: <20221116102659.70287-1-david@redhat.com>
+ <20221116102659.70287-17-david@redhat.com>
+ <81fb0fa3-2e06-b765-56ac-a7d981194e59@redhat.com>
+ <08b65ac6-6786-1080-18f8-d2be109c85fc@xs4all.nl>
+ <9d0bf98a-3d6a-1082-e992-1338e1525935@redhat.com>
+From:   Hans Verkuil <hverkuil@xs4all.nl>
+In-Reply-To: <9d0bf98a-3d6a-1082-e992-1338e1525935@redhat.com>
 Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-
-
-On 11/21/22 17:09, Mark Rutland wrote:
-> On Mon, Nov 21, 2022 at 12:06:31PM +0530, Anshuman Khandual wrote:
+On 28/11/2022 09:18, David Hildenbrand wrote:
+> On 28.11.22 09:17, Hans Verkuil wrote:
+>> Hi David,
 >>
->>
->> On 11/18/22 23:31, Mark Rutland wrote:
->>> On Mon, Nov 07, 2022 at 11:55:11AM +0530, Anshuman Khandual wrote:
->>>> This adds arm pmu infrastrure to probe BRBE implementation's attributes via
->>>> driver exported callbacks later. The actual BRBE feature detection will be
->>>> added by the driver itself.
+>> On 27/11/2022 11:35, David Hildenbrand wrote:
+>>> On 16.11.22 11:26, David Hildenbrand wrote:
+>>>> FOLL_FORCE is really only for ptrace access. According to commit
+>>>> 707947247e95 ("media: videobuf2-vmalloc: get_userptr: buffers are always
+>>>> writable"), get_vaddr_frames() currently pins all pages writable as a
+>>>> workaround for issues with read-only buffers.
 >>>>
->>>> CPU specific BRBE entries, cycle count, format support gets detected during
->>>> PMU init. This information gets saved in per-cpu struct pmu_hw_events which
->>>> later helps in operating BRBE during a perf event context.
+>>>> FOLL_FORCE, however, seems to be a legacy leftover as it predates
+>>>> commit 707947247e95 ("media: videobuf2-vmalloc: get_userptr: buffers are
+>>>> always writable"). Let's just remove it.
+>>>>
+>>>> Once the read-only buffer issue has been resolved, FOLL_WRITE could
+>>>> again be set depending on the DMA direction.
+>>>>
+>>>> Cc: Hans Verkuil <hverkuil@xs4all.nl>
+>>>> Cc: Marek Szyprowski <m.szyprowski@samsung.com>
+>>>> Cc: Tomasz Figa <tfiga@chromium.org>
+>>>> Cc: Marek Szyprowski <m.szyprowski@samsung.com>
+>>>> Cc: Mauro Carvalho Chehab <mchehab@kernel.org>
+>>>> Signed-off-by: David Hildenbrand <david@redhat.com>
+>>>> ---
+>>>>    drivers/media/common/videobuf2/frame_vector.c | 2 +-
+>>>>    1 file changed, 1 insertion(+), 1 deletion(-)
+>>>>
+>>>> diff --git a/drivers/media/common/videobuf2/frame_vector.c b/drivers/media/common/videobuf2/frame_vector.c
+>>>> index 542dde9d2609..062e98148c53 100644
+>>>> --- a/drivers/media/common/videobuf2/frame_vector.c
+>>>> +++ b/drivers/media/common/videobuf2/frame_vector.c
+>>>> @@ -50,7 +50,7 @@ int get_vaddr_frames(unsigned long start, unsigned int nr_frames,
+>>>>        start = untagged_addr(start);
+>>>>          ret = pin_user_pages_fast(start, nr_frames,
+>>>> -                  FOLL_FORCE | FOLL_WRITE | FOLL_LONGTERM,
+>>>> +                  FOLL_WRITE | FOLL_LONGTERM,
+>>>>                      (struct page **)(vec->ptrs));
+>>>>        if (ret > 0) {
+>>>>            vec->got_ref = true;
 >>>
->>> Do we expect this to vary between CPUs handled by the same struct arm_pmu ?
->>
->> BRBE registers are per CPU, and the spec does not assert about BRBE properties
->> being the same across the system, served via same the struct arm_pmu.
-> 
-> The same is true of the PMU, and struct arm_pmu does not cover the whole
-> system, it covers each *micro-architecture* within the system.
-> 
-> I think BRBE should be treated the same, i.e. uniform *within* a struct
-> arm_pmu.
-
-Understood, detected on one and verified on all ?
-
-> 
->> Hence it would be inaccurate to make that assumption, which might have just
->> avoided all these IPI based probes during boot.
-> 
-> FWIW, I would be happy to IPI all CPUs during boot to verify uniformity of CPUs
-> within an arm_pmu; I just don't think that BRBE should be treated differently
-> from the rest of the PMU features.
-
-Hence BRBE probing should be done inside an updated __armv8pmu_probe_pmu().
-
-static int armv8pmu_probe_pmu(struct arm_pmu *cpu_pmu)
-{
-        struct armv8pmu_probe_info probe = {
-                .pmu = cpu_pmu,
-                .present = false,
-        };
-        int ret;
-
-        ret = smp_call_function_any(&cpu_pmu->supported_cpus,
-                                    __armv8pmu_probe_pmu,
-                                    &probe, 1);
-        if (ret)
-                return ret;
-
-        return probe.present ? 0 : -ENODEV;
-}
-
-But if BRBE is assumed (and verified) to be same across the micro-architecture,
-then following BRBE attributes when captured should be part of 'struct arm_pmu'
-instead of 'struct pmu_hw_events' as is the case currently.
-
-        /* Detected BRBE attributes */
-        bool                            brbe_v1p1;
-        int                             brbe_cc;
-        int                             brbe_nr;
-        int                             brbe_format;
-
-> 
-> [...]
-> 
->>>> +	hw_events = per_cpu_ptr(armpmu->hw_events, smp_processor_id());
->>>> +	armpmu->brbe_probe(hw_events);
->>>> +}
->>>> +
->>>> +static int armpmu_request_brbe(struct arm_pmu *armpmu)
->>>> +{
->>>> +	int cpu, err = 0;
->>>> +
->>>> +	for_each_cpu(cpu, &armpmu->supported_cpus) {
->>>> +		err = smp_call_function_single(cpu, arm_brbe_probe_cpu, armpmu, 1);
 >>>
->>> Why does this need to be called on each CPU in the supported_cpus mask?
+>>> Hi Andrew,
+>>>
+>>> see the discussion at [1] regarding a conflict and how to proceed with
+>>> upstreaming. The conflict would be easy to resolve, however, also
+>>> the patch description doesn't make sense anymore with [1].
 >>
->> Is not supported_cpus derived after partitioning the IRQ in pmu_parse_percpu_irq().
->> The idea is to fill up BRBE buffer attributes, on all such supported cpus which could
->> trigger PMU interrupt. Is the concern, that not all cpus in supported_cpus mask might
->> not be online during boot, hence IPIs could not be served, hence BRBE attributed for
->> them could not be fetched ?
+>> Might it be easier and less confusing if you post a v2 of this series
+>> with my patch first? That way it is clear that 1) my patch has to come
+>> first, and 2) that it is part of a single series and should be merged
+>> by the mm subsystem.
+>>
+>> Less chances of things going wrong that way.
+>>
+>> Just mention in the v2 cover letter that the first patch was added to
+>> make it easy to backport that fix without being hampered by merge
+>> conflicts if it was added after your frame_vector.c patch.
 > 
-> As above, I think this is solvable if we mandate that BRBE must be uniform
-> *within* an arm_pmu's supported CPUs; then we only need one CPU in the
-> supported_cpus mask to be present at boot time, as with the rest of the PMU
-> code.
+> Yes, that's the way I would naturally do, it, however, Andrew prefers delta updates for minor changes.
 > 
-> We could *verify* that when onlining a CPU.
+> @Andrew, whatever you prefer!
 
-Understood.
+Andrew, I've resent my patch, this time with you CCed as well.
 
-> 
->>> I don't see anything here to handle late hotplug, so this looks suspicious.
->>
->> Right, I should add cpu hotplug handling, otherwise risk loosing BRBE support on cpus
->> which might have been offline during boot i.e when above IPI based probe happened ?
->>
->>> Either we're missing something, or it's redundant at boot time.
->>
->> Should we add cpu hotplug online-offline handlers like some other PMU drivers ? Let
->> me know if there are some other concerns.
->>
->> cpuhp_setup_state_multi(CPUHP_AP_ONLINE_DYN, DRVNAME,
->> 			arm_brbe_cpu_startup,
->> 		        arm_brbe_cpu_teardown)
-> 
-> We *could* add that, but that's going to require ordering against the existing
-> hooks for probing arm_pmu.
+Regards,
 
-Right.
+	Hans
 
 > 
-> Why can't this hang off the exising hooks for arm_pmu? We're treating this as
-> part of the PMU anyway, so I don't understand why we should probe it
-> separately.
-Okay, will try and see what all changes are required to move the probing into generic
-arm_pmu probe, and capture the BRBE attributes inside struct arm_pmu.
+> Thanks!
+> 
+
