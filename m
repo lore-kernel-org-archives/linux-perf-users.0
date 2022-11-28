@@ -2,199 +2,108 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4DE3FC4332F
-	for <linux-perf-users@archiver.kernel.org>; Mon, 28 Nov 2022 17:15:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CB19EC433FE
+	for <linux-perf-users@archiver.kernel.org>; Mon, 28 Nov 2022 17:15:44 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231424AbiK1RPB (ORCPT
+        id S232600AbiK1RPl (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Mon, 28 Nov 2022 12:15:01 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33534 "EHLO
+        Mon, 28 Nov 2022 12:15:41 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33902 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232547AbiK1RO7 (ORCPT
+        with ESMTP id S232336AbiK1RPj (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Mon, 28 Nov 2022 12:14:59 -0500
-Received: from mail-wm1-x32b.google.com (mail-wm1-x32b.google.com [IPv6:2a00:1450:4864:20::32b])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3DF981BE9C
-        for <linux-perf-users@vger.kernel.org>; Mon, 28 Nov 2022 09:14:58 -0800 (PST)
-Received: by mail-wm1-x32b.google.com with SMTP id t4so8992204wmj.5
-        for <linux-perf-users@vger.kernel.org>; Mon, 28 Nov 2022 09:14:58 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20210112;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=2yuTB0LuVTvAuueCSXqErL8XhQHEeQdK/qmHJKdgaoM=;
-        b=MioE/8if35q06jJbNXzrxjxJbAUCDJ4IPzSR3FuF4oogTs2mMb/0SYaNGRKRGLp/Px
-         ehQ/HA2JB61b5hTujyPoYhA5fg6wPwTcUPWxPWHqTOpC3t2UuFPembWEbM7yFRWmqDZi
-         7v3ILMSh3eX90XgIImg2tg9uKyYzBYHrqt/SFjrrEbA4RWd+SjRMuaofck4AepO4jbAL
-         0USg2DkvxxYPnIx7gLhoW8DrwWbD1bE3m9HpKM8AVkW0ytLm2oJMsRGMN9tvSiR7YiIX
-         8AMfc9/SzA+Sl9pwof1b+2wNNdTsGIGB0bwF22nSSyL4LzGJjIo/mMWbfQxFgUpnHDOK
-         YKlw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=2yuTB0LuVTvAuueCSXqErL8XhQHEeQdK/qmHJKdgaoM=;
-        b=NKFQJGtrHIEhqDHn9ywM22B43ZpAjynlhmPBXVXz22w8xX6XRg5vfFSrgreFWMn07V
-         AmdF3mw3W2IOLxf309cfJAcsTWOm1p9ofd38sLAzns419IDUhiwBTTjtr13/1au4YbdM
-         oqUzM3vRzqx1MQyn5BXrfO3zgcO1hflsko90ijqlr9CNayK+Qq+zRdiuKR5plqXVW1LA
-         bp3OtoheUxY9HRnuCLb1pduoZ+qSqGz1/pAa+KMrQG8uSyNIpG75lv699v3RfWrI5+Ot
-         VFmcapxP9y5B87nNowNgoKitl62UIrilUdFQMLQ3NgXnhdcQSUhRvG60SbbhB0n42zpE
-         QSSg==
-X-Gm-Message-State: ANoB5plSu4uRiudTDD7GSMIQhCnfisuodwNlBCsGP27L8nYeS5erfjKK
-        IZ+AGHAutJaqRZ3krTuCsCtS11Rqw3NXTLhdcZ2pcg==
-X-Google-Smtp-Source: AA0mqf7epnQVWOqbkHx8YWf9JOxQr4sQF58dFGKhnNvZWFDTLsAdLFXKntQ7VhGYubEldWmwxw0dxY7KAlq25a3HyrM=
-X-Received: by 2002:a05:600c:4920:b0:3cf:8b23:549c with SMTP id
- f32-20020a05600c492000b003cf8b23549cmr30520502wmp.174.1669655696520; Mon, 28
- Nov 2022 09:14:56 -0800 (PST)
+        Mon, 28 Nov 2022 12:15:39 -0500
+Received: from sin.source.kernel.org (sin.source.kernel.org [IPv6:2604:1380:40e1:4800::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8BAAC192AC;
+        Mon, 28 Nov 2022 09:15:38 -0800 (PST)
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by sin.source.kernel.org (Postfix) with ESMTPS id AB0B3CE0F82;
+        Mon, 28 Nov 2022 17:15:36 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id A7DC6C433D6;
+        Mon, 28 Nov 2022 17:15:34 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1669655734;
+        bh=TjkRRocGp4/KkfkTxpUuw69NnWIMsmRgISNVf22kTRY=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=gb+2JqY1awK0mINOxq4IOVP2bvEr5zFbvNeybTUSIRF1uf8NT78hZ8tldu0x7v9jb
+         /M6OzFHfSkmR934ZE4HVU1nt+ukWfEjX4dFHOnAeDYX1BqnzlhBeoxZzJp84Mx1651
+         80i5gyLFnOryM3LVTlvuX+n8iulgTzlUt6q2/vl4gZ1p24sE/yYUc4UrSvt49wen/H
+         L2NK92XAC46Jfb9pXeCnsIowsypLXlwDqKe/HMZs2Pa4mVan2YvqJTyhWSDPIelXql
+         +T8pYunZNHrKgrtcWdoZnv+WwQlHlCvdQAhWXTEccl6wbrN+zMIimXNZd20l1W3UKS
+         9D65CUkh8rVsg==
+Received: by mail-vk1-f172.google.com with SMTP id j19so5484360vke.12;
+        Mon, 28 Nov 2022 09:15:34 -0800 (PST)
+X-Gm-Message-State: ANoB5pknUjs85+uG6EQS5mCJua7LGAA3o7mMAWBwa0Yp+fQY5geX6rmu
+        hhsWnm/AMI8chZzZLJSxYD8ctbboEbIW70SYQg==
+X-Google-Smtp-Source: AA0mqf5DGWfEzpziiy8nNC806yxTFRTyR6VEXoTa46759eX6T6/rQB46oLpPxYdhiPJ/cDZe0y9EkUNMrHCu5nCup6Y=
+X-Received: by 2002:a1f:b2c9:0:b0:3b7:8f9b:4eff with SMTP id
+ b192-20020a1fb2c9000000b003b78f9b4effmr19775933vkf.19.1669655733655; Mon, 28
+ Nov 2022 09:15:33 -0800 (PST)
 MIME-Version: 1.0
-References: <20221125032018.962-1-ravi.bangoria@amd.com> <CAP-5=fVtFLuFzYY8x72ib1=G8n-aFYjqRmttxsu7t-oFGnCWEw@mail.gmail.com>
- <dda39c0a-0857-e650-b5ba-5fcff2414179@amd.com>
-In-Reply-To: <dda39c0a-0857-e650-b5ba-5fcff2414179@amd.com>
-From:   Ian Rogers <irogers@google.com>
-Date:   Mon, 28 Nov 2022 09:14:44 -0800
-Message-ID: <CAP-5=fU_gzuUnSqGKOrjg1ns5rFuuWu06bp8z9aSUXDGiveMPg@mail.gmail.com>
-Subject: Re: [PATCH] perf test: Add event group test
-To:     Ravi Bangoria <ravi.bangoria@amd.com>
-Cc:     acme@kernel.org, jolsa@redhat.com, namhyung@kernel.org,
-        peterz@infradead.org, mark.rutland@arm.com,
-        kan.liang@linux.intel.com, adrian.hunter@intel.com,
-        alexander.shishkin@linux.intel.com, carsten.haitzler@arm.com,
-        leo.yan@linaro.org, maddy@linux.ibm.com, kjain@linux.ibm.com,
-        atrajeev@linux.vnet.ibm.com, tmricht@linux.ibm.com,
-        linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org,
-        sandipan.das@amd.com, ananth.narayan@amd.com,
-        santosh.shukla@amd.com
+References: <20220825-arm-spe-v8-7-v3-0-87682f78caac@kernel.org>
+ <20220825-arm-spe-v8-7-v3-7-87682f78caac@kernel.org> <20221118164943.GA4872@willie-the-truck>
+ <CAL_JsqJMxEWhqZV=yqG15zvEHrBTwRVfHA6zptu2TswxRMSR0A@mail.gmail.com> <877czfujdj.fsf@ubik.fi.intel.com>
+In-Reply-To: <877czfujdj.fsf@ubik.fi.intel.com>
+From:   Rob Herring <robh@kernel.org>
+Date:   Mon, 28 Nov 2022 11:15:21 -0600
+X-Gmail-Original-Message-ID: <CAL_JsqKJYrEUzkzNMKMOGvzJN_EqacHZvBR6eVt35bRhhtRo=g@mail.gmail.com>
+Message-ID: <CAL_JsqKJYrEUzkzNMKMOGvzJN_EqacHZvBR6eVt35bRhhtRo=g@mail.gmail.com>
+Subject: Re: [PATCH v3 7/8] perf: Add perf_event_attr::config3
+To:     Alexander Shishkin <alexander.shishkin@linux.intel.com>
+Cc:     Will Deacon <will@kernel.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Arnaldo Carvalho de Melo <acme@kernel.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        Namhyung Kim <namhyung@kernel.org>,
+        Jiri Olsa <jolsa@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Marc Zyngier <maz@kernel.org>,
+        Oliver Upton <oliver.upton@linux.dev>,
+        Suzuki K Poulose <suzuki.poulose@arm.com>,
+        James Morse <james.morse@arm.com>,
+        Alexandru Elisei <alexandru.elisei@arm.com>,
+        kvmarm@lists.linux.dev, linux-perf-users@vger.kernel.org,
+        linux-kernel@vger.kernel.org, James Clark <james.clark@arm.com>,
+        Mark Brown <broonie@kernel.org>,
+        linux-arm-kernel@lists.infradead.org, kvmarm@lists.cs.columbia.edu
 Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-On Sun, Nov 27, 2022 at 11:02 PM Ravi Bangoria <ravi.bangoria@amd.com> wrot=
-e:
+On Mon, Nov 28, 2022 at 10:36 AM Alexander Shishkin
+<alexander.shishkin@linux.intel.com> wrote:
 >
-> On 27-Nov-22 8:58 AM, Ian Rogers wrote:
-> > On Thu, Nov 24, 2022 at 7:21 PM Ravi Bangoria <ravi.bangoria@amd.com> w=
-rote:
+> Rob Herring <robh@kernel.org> writes:
+>
+> > On Fri, Nov 18, 2022 at 10:49 AM Will Deacon <will@kernel.org> wrote:
 > >>
-> >> Multiple events in a group can belong to one or more pmus, however
-> >> there are some limitations to it. Basically, perf doesn't allow
-> >> creating a group of events from different hw pmus. Write a simple
-> >> test to create various combinations of hw, sw and uncore pmu events
-> >> and verify group creation succeeds or fails as expected.
+> >> On Fri, Nov 04, 2022 at 10:55:07AM -0500, Rob Herring wrote:
+> >> > @@ -515,6 +516,8 @@ struct perf_event_attr {
+> >> >        * truncated accordingly on 32 bit architectures.
+> >> >        */
+> >> >       __u64   sig_data;
+> >> > +
+> >> > +     __u64   config3; /* extension of config2 */
+> >>
+> >> I need an ack from the perf core maintainers before I can take this.
 > >
-> > Awesome, thanks! Some comments below.
->
-> Thanks Ian!
->
-> >> +static int event_open(int type, unsigned long config, int g_fd)
-> >> +{
-> >> +       struct perf_event_attr attr;
-> >> +
-> >> +       memset(&attr, 0, sizeof(struct perf_event_attr));
-> >> +       attr.type =3D type;
-> >> +       attr.size =3D sizeof(struct perf_event_attr);
-> >> +       attr.config =3D config;
+> > Peter, Arnaldo, Ingo,
 > >
-> > Could you add a comment for the line below?
+> > Can I get an ack on this please.
 >
-> Although this test exercises perf_event_open() and never enables any even=
-t,
-> I'm following standard practices. Snippet from man perf_event_open:
->
->    disabled
->        The disabled bit specifies whether the counter starts  out  dis=E2=
-=80=90
->        abled  or  enabled.  If disabled, the event can later be enabled
->        by ioctl(2), prctl(2), or enable_on_exec.
->
->        When creating an event group, typically the group leader is ini=E2=
-=80=90
->        tialized  with  disabled  set to 1 and any child events are ini=E2=
-=80=90
->        tialized with disabled set to 0.  Despite disabled being 0,  the
->        child events will not start until the group leader is enabled.
->
-> So it's well documented. I can probably put the same as comment.
->
-> >
-> >> +       attr.disabled =3D g_fd =3D=3D -1 ? 1 : 0;
-> >> +
-> >> +       return sys_perf_event_open(&attr, -1, 0, g_fd, 0);
-> >> +}
-> >> +
-> >> +/* hw: cycles, sw: context-switch, uncore: [arch dependent] */
-> >
-> > static?
->
-> +1
->
-> >
-> >> +int type[] =3D {0, 1, -1};
-> >> +unsigned long config[] =3D {0, 3, -1};
-> >> +
-> >> +static int setup_uncore_event(void)
-> >> +{
-> >> +       char pmu_name[25] =3D {0};
-> >> +       struct perf_pmu *pmu;
-> >> +
-> >
-> > I think the below finding of an uncore PMU is clunky.
->
-> Agree.
->
-> > On my tigerlake
-> > Intel laptop, for example, I don't have an uncore_imc_0 but do have
-> > uncore_imc_free_running_0. I think the real fix here is that we should
-> > start a new "pmus.h" and "pmus.c", moving the pmus static variable
-> > from pmu.c to pmus.c. In pmus.h we should have an every PMU iterator,
-> > like we do with perf_pmu__for_each_hybrid_pmu.
->
-> I see only one variable that can be moved from pmu.c to pmus.c:
->   LIST_HEAD(pmus)
-> So introducing new file pmus.c with just one list variable and a macro to
-> iterate over it seems overkill. Or are you suggesting to also migrate all
-> pmu.c functions which iterates over pmus list?
->
-> > I'd like to go further
-> > with a pmus.h, as the computation of the perf_pmu struct should be
-> > done a lot more lazily than it is now. But for now you can just
-> > iterate the pmus looking for one saying beginning with "uncore_" as a
-> > name.
->
-> Ok. I can probably introduce perf_pmu__starts_with(const char *name).
+> It appears that PMUs that don't use config{1,2} and now config3 allow
+> them to be whatever without any validation, whereas in reality we should
+> probably -EINVAL in those cases. Should something be done about that?
 
-uncore_ works for Intel, but... I agree having pmus.c for 1 variable
-is overkill. I'd put an iterator in pmus.h like:
+Always the 3rd occurrence that gets to clean-up things. ;)
 
-#define perf_pmu__for_each_pmu(pmu) list_for_each_entry(pmu, &pmus, list)
+I think we'd have to add some capability flags for PMU drivers to set
+to enable configN usage and then use those to validate configN is 0.
+Wouldn't be too hard to do for config3 as we know there's exactly 1
+user, but for 1,2 there's about 80 PMU drivers to check.
 
-and also not have pmus be static in pmu.c. That way in the test you
-can iterate the pmus and find the uncore ones.
-
-> >> +static int run_test(int i, int j, int k)
-> >> +{
-> >> +       int erroneous =3D ((((1 << i) | (1 << j) | (1 << k)) & 5) =3D=
-=3D 5);
-> >> +       int fd1, fd2, fd3;
-> >> +
-> >> +       fd1 =3D event_open(type[i], config[i], -1);
-> >
-> > nit: a name like "event_group_leader_fd" would be more intention
-> > revealing than fd1.
->
-> hmm, but that's too long :). Are you ok with:
->   s/fd1/group_fd/
->   s/fd2/sibling_fd1/
->   s/fd3/sibling_fd2/
->
-> Thanks,
-> Ravi
-
-I'm fine with the other changes. I've done too much Java to be
-allergic to long variable names ;-)
-
-Thanks,
-Ian
+Rob
