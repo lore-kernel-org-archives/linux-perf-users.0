@@ -2,122 +2,105 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DA6B7C4332F
-	for <linux-perf-users@archiver.kernel.org>; Mon, 28 Nov 2022 17:53:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2559AC43217
+	for <linux-perf-users@archiver.kernel.org>; Mon, 28 Nov 2022 22:59:52 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233659AbiK1RxS (ORCPT
+        id S234633AbiK1W7t (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Mon, 28 Nov 2022 12:53:18 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47068 "EHLO
+        Mon, 28 Nov 2022 17:59:49 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50766 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S233735AbiK1RuM (ORCPT
+        with ESMTP id S229667AbiK1W7e (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Mon, 28 Nov 2022 12:50:12 -0500
-Received: from ams.source.kernel.org (ams.source.kernel.org [IPv6:2604:1380:4601:e00::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B27172ED69;
-        Mon, 28 Nov 2022 09:43:32 -0800 (PST)
+        Mon, 28 Nov 2022 17:59:34 -0500
+Received: from sin.source.kernel.org (sin.source.kernel.org [IPv6:2604:1380:40e1:4800::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 741FA2AE15;
+        Mon, 28 Nov 2022 14:59:33 -0800 (PST)
 Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by ams.source.kernel.org (Postfix) with ESMTPS id 6652DB80E9F;
-        Mon, 28 Nov 2022 17:43:31 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id AE2AEC4347C;
-        Mon, 28 Nov 2022 17:43:28 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1669657410;
-        bh=+5GGC/8eufWXSVnOGBvw3X8yB+l1PO1V+/FGgW8gFtc=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=SWJHqDSw4erVSA9QC2FTkfU83IR79QQmph+qwIzyMpmSYuox4oTp/6LX9nv7T9NuI
-         uyooqkDnBzeA5gmAX+iANVfz7nc5+LQBBkGzcbrAJDXcc95cyFMht9Gcoc++8NxLg7
-         2jSxSrYNlGmxbQ/wYREpkbLk4hfaZ2YQJggaMYGX2+hej2nnkku0kldXMebRcEc3sW
-         Y4V8iNIZczpgKOIvpjn0BLmafrHKxObtWFmpYd1kmqqwjex0tIie3cXGrEkza7Lt/D
-         DAF96Yc9gGZOSvjyXORRX9N5h9J8XzCRUDzW0J1G03ZXzRoySmRJm/F9msrY/Lvn9G
-         N7c13aDtTDSTg==
-From:   Sasha Levin <sashal@kernel.org>
-To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Tomislav Novak <tnovak@fb.com>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Russell King <rmk+kernel@armlinux.org.uk>,
-        Sasha Levin <sashal@kernel.org>, will@kernel.org,
-        mark.rutland@arm.com, peterz@infradead.org, mingo@redhat.com,
-        acme@kernel.org, linux@armlinux.org.uk,
-        linux-arm-kernel@lists.infradead.org,
-        linux-perf-users@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.9 3/5] ARM: 9251/1: perf: Fix stacktraces for tracepoint events in THUMB2 kernels
-Date:   Mon, 28 Nov 2022 12:43:21 -0500
-Message-Id: <20221128174324.1443132-3-sashal@kernel.org>
-X-Mailer: git-send-email 2.35.1
-In-Reply-To: <20221128174324.1443132-1-sashal@kernel.org>
-References: <20221128174324.1443132-1-sashal@kernel.org>
-MIME-Version: 1.0
-X-stable: review
-X-Patchwork-Hint: Ignore
-Content-Transfer-Encoding: 8bit
+        by sin.source.kernel.org (Postfix) with ESMTPS id A62DBCE10AC;
+        Mon, 28 Nov 2022 22:59:31 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 3A99DC433D6;
+        Mon, 28 Nov 2022 22:59:28 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linux-foundation.org;
+        s=korg; t=1669676369;
+        bh=8eUsQnXrojDc3xf/FA0TCQqqadaNCz4PLnjHT4xDE/M=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=p/c6sfRX9un7PSA9WHRKHQPKKlq0P4NHxZWk+3LaBZS7DQenvFmjKk0jQBgH6o535
+         rwsyByROkiEJmDN58P/Z53hmZWo4xmybXT0VaPtvGqyQZyuQQjThzncIMjLPHHFdpc
+         3v4hl13h6A47jhJOM5850oDp2I/9vqahh0Q1uqps=
+Date:   Mon, 28 Nov 2022 14:59:27 -0800
+From:   Andrew Morton <akpm@linux-foundation.org>
+To:     David Hildenbrand <david@redhat.com>
+Cc:     Hans Verkuil <hverkuil@xs4all.nl>, linux-kernel@vger.kernel.org,
+        x86@kernel.org, linux-alpha@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, linux-ia64@vger.kernel.org,
+        linux-mips@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
+        sparclinux@vger.kernel.org, linux-um@lists.infradead.org,
+        etnaviv@lists.freedesktop.org, dri-devel@lists.freedesktop.org,
+        linux-samsung-soc@vger.kernel.org, linux-rdma@vger.kernel.org,
+        linux-media@vger.kernel.org, linux-fsdevel@vger.kernel.org,
+        linux-mm@kvack.org, linux-perf-users@vger.kernel.org,
+        linux-security-module@vger.kernel.org,
+        linux-kselftest@vger.kernel.org,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Jason Gunthorpe <jgg@ziepe.ca>,
+        John Hubbard <jhubbard@nvidia.com>,
+        Peter Xu <peterx@redhat.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Andrea Arcangeli <aarcange@redhat.com>,
+        Hugh Dickins <hughd@google.com>, Nadav Amit <namit@vmware.com>,
+        Vlastimil Babka <vbabka@suse.cz>,
+        Matthew Wilcox <willy@infradead.org>,
+        Mike Kravetz <mike.kravetz@oracle.com>,
+        Muchun Song <songmuchun@bytedance.com>,
+        Shuah Khan <shuah@kernel.org>,
+        Lucas Stach <l.stach@pengutronix.de>,
+        David Airlie <airlied@gmail.com>,
+        Oded Gabbay <ogabbay@kernel.org>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Christoph Hellwig <hch@infradead.org>,
+        Alex Williamson <alex.williamson@redhat.com>,
+        Marek Szyprowski <m.szyprowski@samsung.com>,
+        Tomasz Figa <tfiga@chromium.org>,
+        Mauro Carvalho Chehab <mchehab@kernel.org>
+Subject: Re: [PATCH mm-unstable v1 16/20] mm/frame-vector: remove FOLL_FORCE
+ usage
+Message-Id: <20221128145927.df895bf1966cfa125cae9668@linux-foundation.org>
+In-Reply-To: <9d0bf98a-3d6a-1082-e992-1338e1525935@redhat.com>
+References: <20221116102659.70287-1-david@redhat.com>
+        <20221116102659.70287-17-david@redhat.com>
+        <81fb0fa3-2e06-b765-56ac-a7d981194e59@redhat.com>
+        <08b65ac6-6786-1080-18f8-d2be109c85fc@xs4all.nl>
+        <9d0bf98a-3d6a-1082-e992-1338e1525935@redhat.com>
+X-Mailer: Sylpheed 3.7.0 (GTK+ 2.24.33; x86_64-redhat-linux-gnu)
+Mime-Version: 1.0
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-From: Tomislav Novak <tnovak@fb.com>
+On Mon, 28 Nov 2022 09:18:47 +0100 David Hildenbrand <david@redhat.com> wrote:
 
-[ Upstream commit 612695bccfdbd52004551308a55bae410e7cd22f ]
+> > Less chances of things going wrong that way.
+> > 
+> > Just mention in the v2 cover letter that the first patch was added to
+> > make it easy to backport that fix without being hampered by merge
+> > conflicts if it was added after your frame_vector.c patch.
+> 
+> Yes, that's the way I would naturally do, it, however, Andrew prefers 
+> delta updates for minor changes.
+> 
+> @Andrew, whatever you prefer!
 
-Store the frame address where arm_get_current_stackframe() looks for it
-(ARM_r7 instead of ARM_fp if CONFIG_THUMB2_KERNEL=y). Otherwise frame->fp
-gets set to 0, causing unwind_frame() to fail.
+I'm inclined to let things sit as they are.  Cross-tree conflicts
+happen, and Linus handles them.  I'll flag this (very simple) conflict
+in the pull request, if MM merges second.  If v4l merges second then
+hopefully they will do the same.  But this one is so simple that Linus
+hardly needs our help.
 
-  # bpftrace -e 't:sched:sched_switch { @[kstack] = count(); exit(); }'
-  Attaching 1 probe...
-  @[
-      __schedule+1059
-  ]: 1
-
-A typical first unwind instruction is 0x97 (SP = R7), so after executing
-it SP ends up being 0 and -URC_FAILURE is returned.
-
-  unwind_frame(pc = ac9da7d7 lr = 00000000 sp = c69bdda0 fp = 00000000)
-  unwind_find_idx(ac9da7d7)
-  unwind_exec_insn: insn = 00000097
-  unwind_exec_insn: fp = 00000000 sp = 00000000 lr = 00000000 pc = 00000000
-
-With this patch:
-
-  # bpftrace -e 't:sched:sched_switch { @[kstack] = count(); exit(); }'
-  Attaching 1 probe...
-  @[
-      __schedule+1059
-      __schedule+1059
-      schedule+79
-      schedule_hrtimeout_range_clock+163
-      schedule_hrtimeout_range+17
-      ep_poll+471
-      SyS_epoll_wait+111
-      sys_epoll_pwait+231
-      __ret_fast_syscall+1
-  ]: 1
-
-Link: https://lore.kernel.org/r/20220920230728.2617421-1-tnovak@fb.com/
-
-Reviewed-by: Linus Walleij <linus.walleij@linaro.org>
-Signed-off-by: Tomislav Novak <tnovak@fb.com>
-Signed-off-by: Russell King (Oracle) <rmk+kernel@armlinux.org.uk>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
----
- arch/arm/include/asm/perf_event.h | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
-
-diff --git a/arch/arm/include/asm/perf_event.h b/arch/arm/include/asm/perf_event.h
-index 4f9dec489931..c5d27140834e 100644
---- a/arch/arm/include/asm/perf_event.h
-+++ b/arch/arm/include/asm/perf_event.h
-@@ -21,7 +21,7 @@ extern unsigned long perf_misc_flags(struct pt_regs *regs);
- 
- #define perf_arch_fetch_caller_regs(regs, __ip) { \
- 	(regs)->ARM_pc = (__ip); \
--	(regs)->ARM_fp = (unsigned long) __builtin_frame_address(0); \
-+	frame_pointer((regs)) = (unsigned long) __builtin_frame_address(0); \
- 	(regs)->ARM_sp = current_stack_pointer; \
- 	(regs)->ARM_cpsr = SVC_MODE; \
- }
--- 
-2.35.1
-
+But Linus won't be editing changelogs so that the changelog makes more
+sense after both trees are joined.  I'm inclined to let the changelog
+sit as it is as well.
