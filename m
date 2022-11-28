@@ -2,108 +2,122 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CB19EC433FE
-	for <linux-perf-users@archiver.kernel.org>; Mon, 28 Nov 2022 17:15:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2D39CC4332F
+	for <linux-perf-users@archiver.kernel.org>; Mon, 28 Nov 2022 17:39:02 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232600AbiK1RPl (ORCPT
+        id S233119AbiK1Ri7 (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Mon, 28 Nov 2022 12:15:41 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33902 "EHLO
+        Mon, 28 Nov 2022 12:38:59 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51294 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232336AbiK1RPj (ORCPT
+        with ESMTP id S233118AbiK1Rii (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Mon, 28 Nov 2022 12:15:39 -0500
-Received: from sin.source.kernel.org (sin.source.kernel.org [IPv6:2604:1380:40e1:4800::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8BAAC192AC;
-        Mon, 28 Nov 2022 09:15:38 -0800 (PST)
+        Mon, 28 Nov 2022 12:38:38 -0500
+Received: from ams.source.kernel.org (ams.source.kernel.org [145.40.68.75])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id EF64927B3C;
+        Mon, 28 Nov 2022 09:38:26 -0800 (PST)
 Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by sin.source.kernel.org (Postfix) with ESMTPS id AB0B3CE0F82;
-        Mon, 28 Nov 2022 17:15:36 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id A7DC6C433D6;
-        Mon, 28 Nov 2022 17:15:34 +0000 (UTC)
+        by ams.source.kernel.org (Postfix) with ESMTPS id A5207B80E9D;
+        Mon, 28 Nov 2022 17:38:25 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 296AFC43470;
+        Mon, 28 Nov 2022 17:38:23 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1669655734;
-        bh=TjkRRocGp4/KkfkTxpUuw69NnWIMsmRgISNVf22kTRY=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=gb+2JqY1awK0mINOxq4IOVP2bvEr5zFbvNeybTUSIRF1uf8NT78hZ8tldu0x7v9jb
-         /M6OzFHfSkmR934ZE4HVU1nt+ukWfEjX4dFHOnAeDYX1BqnzlhBeoxZzJp84Mx1651
-         80i5gyLFnOryM3LVTlvuX+n8iulgTzlUt6q2/vl4gZ1p24sE/yYUc4UrSvt49wen/H
-         L2NK92XAC46Jfb9pXeCnsIowsypLXlwDqKe/HMZs2Pa4mVan2YvqJTyhWSDPIelXql
-         +T8pYunZNHrKgrtcWdoZnv+WwQlHlCvdQAhWXTEccl6wbrN+zMIimXNZd20l1W3UKS
-         9D65CUkh8rVsg==
-Received: by mail-vk1-f172.google.com with SMTP id j19so5484360vke.12;
-        Mon, 28 Nov 2022 09:15:34 -0800 (PST)
-X-Gm-Message-State: ANoB5pknUjs85+uG6EQS5mCJua7LGAA3o7mMAWBwa0Yp+fQY5geX6rmu
-        hhsWnm/AMI8chZzZLJSxYD8ctbboEbIW70SYQg==
-X-Google-Smtp-Source: AA0mqf5DGWfEzpziiy8nNC806yxTFRTyR6VEXoTa46759eX6T6/rQB46oLpPxYdhiPJ/cDZe0y9EkUNMrHCu5nCup6Y=
-X-Received: by 2002:a1f:b2c9:0:b0:3b7:8f9b:4eff with SMTP id
- b192-20020a1fb2c9000000b003b78f9b4effmr19775933vkf.19.1669655733655; Mon, 28
- Nov 2022 09:15:33 -0800 (PST)
+        s=k20201202; t=1669657104;
+        bh=3dvlsZ0crK7vigTaS1T23MKHxpBSClQQPfxLSsv+Jmc=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=TpMfIYPLurzgpEswlTow7ElAnVNxv2wYIwUzluN0OZYbpvbkVyPJrbwKNf5rejMpJ
+         VZuk+8q9VeJyN7VZraUrd8O+WFLA1uj40m/qvxr4hbj8mHCP1ynofBCF6//Ytj2/tM
+         40E4MSm72UWn+GRkL5aOFxJFvE0Jp/ZG3ZYPrfqhRlegdXH1QzbGD8xvN1zaxSyffU
+         VswD8HQBeSyiifPF+h5CnVgmeIte6GAW6uNOBrHF0f2FJcsnl5jhQqz8pfxwYtjCoC
+         NvmYDASzruVMae7xlPwonM+0665VuFbVeS3Oe/TzwuLlUY3hRvccYTvmbBlUUoc50p
+         SqtTm4N3v02+A==
+From:   Sasha Levin <sashal@kernel.org>
+To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
+Cc:     Tomislav Novak <tnovak@fb.com>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Russell King <rmk+kernel@armlinux.org.uk>,
+        Sasha Levin <sashal@kernel.org>, will@kernel.org,
+        mark.rutland@arm.com, peterz@infradead.org, mingo@redhat.com,
+        acme@kernel.org, linux@armlinux.org.uk,
+        linux-arm-kernel@lists.infradead.org,
+        linux-perf-users@vger.kernel.org
+Subject: [PATCH AUTOSEL 6.0 14/39] ARM: 9251/1: perf: Fix stacktraces for tracepoint events in THUMB2 kernels
+Date:   Mon, 28 Nov 2022 12:35:54 -0500
+Message-Id: <20221128173642.1441232-14-sashal@kernel.org>
+X-Mailer: git-send-email 2.35.1
+In-Reply-To: <20221128173642.1441232-1-sashal@kernel.org>
+References: <20221128173642.1441232-1-sashal@kernel.org>
 MIME-Version: 1.0
-References: <20220825-arm-spe-v8-7-v3-0-87682f78caac@kernel.org>
- <20220825-arm-spe-v8-7-v3-7-87682f78caac@kernel.org> <20221118164943.GA4872@willie-the-truck>
- <CAL_JsqJMxEWhqZV=yqG15zvEHrBTwRVfHA6zptu2TswxRMSR0A@mail.gmail.com> <877czfujdj.fsf@ubik.fi.intel.com>
-In-Reply-To: <877czfujdj.fsf@ubik.fi.intel.com>
-From:   Rob Herring <robh@kernel.org>
-Date:   Mon, 28 Nov 2022 11:15:21 -0600
-X-Gmail-Original-Message-ID: <CAL_JsqKJYrEUzkzNMKMOGvzJN_EqacHZvBR6eVt35bRhhtRo=g@mail.gmail.com>
-Message-ID: <CAL_JsqKJYrEUzkzNMKMOGvzJN_EqacHZvBR6eVt35bRhhtRo=g@mail.gmail.com>
-Subject: Re: [PATCH v3 7/8] perf: Add perf_event_attr::config3
-To:     Alexander Shishkin <alexander.shishkin@linux.intel.com>
-Cc:     Will Deacon <will@kernel.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        Namhyung Kim <namhyung@kernel.org>,
-        Jiri Olsa <jolsa@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Marc Zyngier <maz@kernel.org>,
-        Oliver Upton <oliver.upton@linux.dev>,
-        Suzuki K Poulose <suzuki.poulose@arm.com>,
-        James Morse <james.morse@arm.com>,
-        Alexandru Elisei <alexandru.elisei@arm.com>,
-        kvmarm@lists.linux.dev, linux-perf-users@vger.kernel.org,
-        linux-kernel@vger.kernel.org, James Clark <james.clark@arm.com>,
-        Mark Brown <broonie@kernel.org>,
-        linux-arm-kernel@lists.infradead.org, kvmarm@lists.cs.columbia.edu
-Content-Type: text/plain; charset="UTF-8"
+X-stable: review
+X-Patchwork-Hint: Ignore
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-On Mon, Nov 28, 2022 at 10:36 AM Alexander Shishkin
-<alexander.shishkin@linux.intel.com> wrote:
->
-> Rob Herring <robh@kernel.org> writes:
->
-> > On Fri, Nov 18, 2022 at 10:49 AM Will Deacon <will@kernel.org> wrote:
-> >>
-> >> On Fri, Nov 04, 2022 at 10:55:07AM -0500, Rob Herring wrote:
-> >> > @@ -515,6 +516,8 @@ struct perf_event_attr {
-> >> >        * truncated accordingly on 32 bit architectures.
-> >> >        */
-> >> >       __u64   sig_data;
-> >> > +
-> >> > +     __u64   config3; /* extension of config2 */
-> >>
-> >> I need an ack from the perf core maintainers before I can take this.
-> >
-> > Peter, Arnaldo, Ingo,
-> >
-> > Can I get an ack on this please.
->
-> It appears that PMUs that don't use config{1,2} and now config3 allow
-> them to be whatever without any validation, whereas in reality we should
-> probably -EINVAL in those cases. Should something be done about that?
+From: Tomislav Novak <tnovak@fb.com>
 
-Always the 3rd occurrence that gets to clean-up things. ;)
+[ Upstream commit 612695bccfdbd52004551308a55bae410e7cd22f ]
 
-I think we'd have to add some capability flags for PMU drivers to set
-to enable configN usage and then use those to validate configN is 0.
-Wouldn't be too hard to do for config3 as we know there's exactly 1
-user, but for 1,2 there's about 80 PMU drivers to check.
+Store the frame address where arm_get_current_stackframe() looks for it
+(ARM_r7 instead of ARM_fp if CONFIG_THUMB2_KERNEL=y). Otherwise frame->fp
+gets set to 0, causing unwind_frame() to fail.
 
-Rob
+  # bpftrace -e 't:sched:sched_switch { @[kstack] = count(); exit(); }'
+  Attaching 1 probe...
+  @[
+      __schedule+1059
+  ]: 1
+
+A typical first unwind instruction is 0x97 (SP = R7), so after executing
+it SP ends up being 0 and -URC_FAILURE is returned.
+
+  unwind_frame(pc = ac9da7d7 lr = 00000000 sp = c69bdda0 fp = 00000000)
+  unwind_find_idx(ac9da7d7)
+  unwind_exec_insn: insn = 00000097
+  unwind_exec_insn: fp = 00000000 sp = 00000000 lr = 00000000 pc = 00000000
+
+With this patch:
+
+  # bpftrace -e 't:sched:sched_switch { @[kstack] = count(); exit(); }'
+  Attaching 1 probe...
+  @[
+      __schedule+1059
+      __schedule+1059
+      schedule+79
+      schedule_hrtimeout_range_clock+163
+      schedule_hrtimeout_range+17
+      ep_poll+471
+      SyS_epoll_wait+111
+      sys_epoll_pwait+231
+      __ret_fast_syscall+1
+  ]: 1
+
+Link: https://lore.kernel.org/r/20220920230728.2617421-1-tnovak@fb.com/
+
+Reviewed-by: Linus Walleij <linus.walleij@linaro.org>
+Signed-off-by: Tomislav Novak <tnovak@fb.com>
+Signed-off-by: Russell King (Oracle) <rmk+kernel@armlinux.org.uk>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
+---
+ arch/arm/include/asm/perf_event.h | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/arch/arm/include/asm/perf_event.h b/arch/arm/include/asm/perf_event.h
+index fe87397c3d8c..bdbc1e590891 100644
+--- a/arch/arm/include/asm/perf_event.h
++++ b/arch/arm/include/asm/perf_event.h
+@@ -17,7 +17,7 @@ extern unsigned long perf_misc_flags(struct pt_regs *regs);
+ 
+ #define perf_arch_fetch_caller_regs(regs, __ip) { \
+ 	(regs)->ARM_pc = (__ip); \
+-	(regs)->ARM_fp = (unsigned long) __builtin_frame_address(0); \
++	frame_pointer((regs)) = (unsigned long) __builtin_frame_address(0); \
+ 	(regs)->ARM_sp = current_stack_pointer; \
+ 	(regs)->ARM_cpsr = SVC_MODE; \
+ }
+-- 
+2.35.1
+
