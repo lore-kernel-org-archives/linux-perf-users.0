@@ -2,88 +2,87 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A35AAC433FE
-	for <linux-perf-users@archiver.kernel.org>; Mon, 28 Nov 2022 12:15:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 97192C43217
+	for <linux-perf-users@archiver.kernel.org>; Mon, 28 Nov 2022 13:57:16 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231661AbiK1MPm (ORCPT
+        id S231820AbiK1N5M (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Mon, 28 Nov 2022 07:15:42 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58362 "EHLO
+        Mon, 28 Nov 2022 08:57:12 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53166 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231387AbiK1MPW (ORCPT
+        with ESMTP id S232252AbiK1N4v (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Mon, 28 Nov 2022 07:15:22 -0500
+        Mon, 28 Nov 2022 08:56:51 -0500
 Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTP id E27E128E12;
-        Mon, 28 Nov 2022 04:07:21 -0800 (PST)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTP id EEE84209B1;
+        Mon, 28 Nov 2022 05:56:42 -0800 (PST)
 Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 4D97CD6E;
-        Mon, 28 Nov 2022 04:06:34 -0800 (PST)
-Received: from FVFF77S0Q05N (unknown [10.57.7.109])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 7DBFD3F73B;
-        Mon, 28 Nov 2022 04:06:26 -0800 (PST)
-Date:   Mon, 28 Nov 2022 12:06:23 +0000
-From:   Mark Rutland <mark.rutland@arm.com>
-To:     Anshuman Khandual <anshuman.khandual@arm.com>
-Cc:     linux-arm-kernel@lists.infradead.org, will@kernel.org,
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 50B84D6E;
+        Mon, 28 Nov 2022 05:56:49 -0800 (PST)
+Received: from a077893.arm.com (unknown [10.163.44.218])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPA id 8A4433F73D;
+        Mon, 28 Nov 2022 05:56:39 -0800 (PST)
+From:   Anshuman Khandual <anshuman.khandual@arm.com>
+To:     linux-arm-kernel@lists.infradead.org, maz@kernel.org
+Cc:     Anshuman Khandual <anshuman.khandual@arm.com>,
         Arnaldo Carvalho de Melo <acme@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Will Deacon <will@kernel.org>,
         Catalin Marinas <catalin.marinas@arm.com>,
         linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] arm64/perf: Replace PMU version number '0' with
- ID_AA64DFR0_EL1_PMUVer_NI
-Message-ID: <Y4SkP5MgJ8OrjRvL@FVFF77S0Q05N>
-References: <20221128025449.39085-1-anshuman.khandual@arm.com>
+Subject: [PATCH] KVM: arm64: Replace PMU version number '0' with ID_AA64DFR0_EL1_PMUVer_NI
+Date:   Mon, 28 Nov 2022 19:26:29 +0530
+Message-Id: <20221128135629.118346-1-anshuman.khandual@arm.com>
+X-Mailer: git-send-email 2.25.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20221128025449.39085-1-anshuman.khandual@arm.com>
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-On Mon, Nov 28, 2022 at 08:24:49AM +0530, Anshuman Khandual wrote:
-> __armv8pmu_probe_pmu() returns if detected PMU is either not implemented or
-> implementation defined. Extracted ID_AA64DFR0_EL1_PMUVer value, when PMU is
-> not implemented is '0' which can be replaced with ID_AA64DFR0_EL1_PMUVer_NI
-> defined as '0b0000'.
-> 
-> Cc: Arnaldo Carvalho de Melo <acme@kernel.org>
-> Cc: Mark Rutland <mark.rutland@arm.com>
-> Cc: Will Deacon <will@kernel.org>
-> Cc: Catalin Marinas <catalin.marinas@arm.com>
-> Cc: linux-perf-users@vger.kernel.org
-> Cc: linux-kernel@vger.kernel.org
-> Cc: linux-arm-kernel@lists.infradead.org
-> Signed-off-by: Anshuman Khandual <anshuman.khandual@arm.com>
+kvm_host_pmu_init() returns when detected PMU is either not implemented, or
+implementation defined. kvm_pmu_probe_armpmu() also has a similar situation
+Extracted ID_AA64DFR0_EL1_PMUVer value, when PMU is not implemented is '0',
+which can be replaced with ID_AA64DFR0_EL1_PMUVer_NI defined as '0b0000'.
 
-This looks fine to me, so:
+Cc: Arnaldo Carvalho de Melo <acme@kernel.org>
+Cc: Marc Zyngier <maz@kernel.org>
+Cc: Mark Rutland <mark.rutland@arm.com>
+Cc: Will Deacon <will@kernel.org>
+Cc: Catalin Marinas <catalin.marinas@arm.com>
+Cc: linux-perf-users@vger.kernel.org
+Cc: linux-kernel@vger.kernel.org
+Cc: linux-arm-kernel@lists.infradead.org
+Signed-off-by: Anshuman Khandual <anshuman.khandual@arm.com>
+---
+This applies on v6.1-rc6
 
-Acked-by: Mark Rutland <mark.rutland@arm.com>
+ arch/arm64/kvm/pmu-emul.c | 5 +++--
+ 1 file changed, 3 insertions(+), 2 deletions(-)
 
-I'll leave it to Will to pick this as his convenience.
+diff --git a/arch/arm64/kvm/pmu-emul.c b/arch/arm64/kvm/pmu-emul.c
+index 0003c7d37533..089a0b4c561b 100644
+--- a/arch/arm64/kvm/pmu-emul.c
++++ b/arch/arm64/kvm/pmu-emul.c
+@@ -774,7 +774,8 @@ void kvm_host_pmu_init(struct arm_pmu *pmu)
+ {
+ 	struct arm_pmu_entry *entry;
+ 
+-	if (pmu->pmuver == 0 || pmu->pmuver == ID_AA64DFR0_EL1_PMUVer_IMP_DEF)
++	if (pmu->pmuver == ID_AA64DFR0_EL1_PMUVer_NI ||
++	    pmu->pmuver == ID_AA64DFR0_EL1_PMUVer_IMP_DEF)
+ 		return;
+ 
+ 	mutex_lock(&arm_pmus_lock);
+@@ -827,7 +828,7 @@ static struct arm_pmu *kvm_pmu_probe_armpmu(void)
+ 
+ 	if (event->pmu) {
+ 		pmu = to_arm_pmu(event->pmu);
+-		if (pmu->pmuver == 0 ||
++		if (pmu->pmuver == ID_AA64DFR0_EL1_PMUVer_NI ||
+ 		    pmu->pmuver == ID_AA64DFR0_EL1_PMUVer_IMP_DEF)
+ 			pmu = NULL;
+ 	}
+-- 
+2.25.1
 
-Mark.
-
-> ---
-> This applies on v6.1-rc6
-> 
->  arch/arm64/kernel/perf_event.c | 3 ++-
->  1 file changed, 2 insertions(+), 1 deletion(-)
-> 
-> diff --git a/arch/arm64/kernel/perf_event.c b/arch/arm64/kernel/perf_event.c
-> index 85a3aaefc0fb..b638f584b4dd 100644
-> --- a/arch/arm64/kernel/perf_event.c
-> +++ b/arch/arm64/kernel/perf_event.c
-> @@ -1188,7 +1188,8 @@ static void __armv8pmu_probe_pmu(void *info)
->  	dfr0 = read_sysreg(id_aa64dfr0_el1);
->  	pmuver = cpuid_feature_extract_unsigned_field(dfr0,
->  			ID_AA64DFR0_EL1_PMUVer_SHIFT);
-> -	if (pmuver == ID_AA64DFR0_EL1_PMUVer_IMP_DEF || pmuver == 0)
-> +	if (pmuver == ID_AA64DFR0_EL1_PMUVer_IMP_DEF ||
-> +	    pmuver == ID_AA64DFR0_EL1_PMUVer_NI)
->  		return;
->  
->  	cpu_pmu->pmuver = pmuver;
-> -- 
-> 2.25.1
-> 
