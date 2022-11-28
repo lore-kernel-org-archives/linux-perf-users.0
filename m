@@ -2,53 +2,53 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2D39CC4332F
-	for <linux-perf-users@archiver.kernel.org>; Mon, 28 Nov 2022 17:39:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2BFE4C4332F
+	for <linux-perf-users@archiver.kernel.org>; Mon, 28 Nov 2022 17:44:27 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233119AbiK1Ri7 (ORCPT
+        id S233400AbiK1RoZ (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Mon, 28 Nov 2022 12:38:59 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51294 "EHLO
+        Mon, 28 Nov 2022 12:44:25 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34100 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S233118AbiK1Rii (ORCPT
+        with ESMTP id S233403AbiK1Rnj (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Mon, 28 Nov 2022 12:38:38 -0500
-Received: from ams.source.kernel.org (ams.source.kernel.org [145.40.68.75])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id EF64927B3C;
-        Mon, 28 Nov 2022 09:38:26 -0800 (PST)
+        Mon, 28 Nov 2022 12:43:39 -0500
+Received: from ams.source.kernel.org (ams.source.kernel.org [IPv6:2604:1380:4601:e00::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BD4272B615;
+        Mon, 28 Nov 2022 09:40:47 -0800 (PST)
 Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by ams.source.kernel.org (Postfix) with ESMTPS id A5207B80E9D;
-        Mon, 28 Nov 2022 17:38:25 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 296AFC43470;
-        Mon, 28 Nov 2022 17:38:23 +0000 (UTC)
+        by ams.source.kernel.org (Postfix) with ESMTPS id 1D00EB80EA0;
+        Mon, 28 Nov 2022 17:40:46 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 5894BC4347C;
+        Mon, 28 Nov 2022 17:40:43 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1669657104;
+        s=k20201202; t=1669657244;
         bh=3dvlsZ0crK7vigTaS1T23MKHxpBSClQQPfxLSsv+Jmc=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=TpMfIYPLurzgpEswlTow7ElAnVNxv2wYIwUzluN0OZYbpvbkVyPJrbwKNf5rejMpJ
-         VZuk+8q9VeJyN7VZraUrd8O+WFLA1uj40m/qvxr4hbj8mHCP1ynofBCF6//Ytj2/tM
-         40E4MSm72UWn+GRkL5aOFxJFvE0Jp/ZG3ZYPrfqhRlegdXH1QzbGD8xvN1zaxSyffU
-         VswD8HQBeSyiifPF+h5CnVgmeIte6GAW6uNOBrHF0f2FJcsnl5jhQqz8pfxwYtjCoC
-         NvmYDASzruVMae7xlPwonM+0665VuFbVeS3Oe/TzwuLlUY3hRvccYTvmbBlUUoc50p
-         SqtTm4N3v02+A==
+        b=WVJigLq4i2A0zU2dCC0J943U0ClBB1jncmik9TVSsVjq3h3tv7zeALdCDo4xIiSzD
+         nkT5sKzYuSpyD8/gNiXAqjHLTmuMJEaY+xfWZNma1/ivbqiI1H/H4xLdzlLsAoQaWR
+         nnev6/Y37TIlGXqbwOZIxItW5uNK0LPQzyWoaFRE3mkG9dIdHO6CDdU+7Ljrz8ZsbR
+         o9zYlFw1dg7MI3Unjf7Ia/sHZmMXPJ3o6JZi+kr/98KTItj73RQUM081XQy1zWCuqg
+         U+z7fZ/DB8CBeetZaZIT3+QCeIErz2hjKLLZ5wjreK6cTllfL0P/Ok4tzytvUWX7pC
+         MZJKQgZsOA5ug==
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
 Cc:     Tomislav Novak <tnovak@fb.com>,
         Linus Walleij <linus.walleij@linaro.org>,
         Russell King <rmk+kernel@armlinux.org.uk>,
-        Sasha Levin <sashal@kernel.org>, will@kernel.org,
-        mark.rutland@arm.com, peterz@infradead.org, mingo@redhat.com,
-        acme@kernel.org, linux@armlinux.org.uk,
-        linux-arm-kernel@lists.infradead.org,
-        linux-perf-users@vger.kernel.org
-Subject: [PATCH AUTOSEL 6.0 14/39] ARM: 9251/1: perf: Fix stacktraces for tracepoint events in THUMB2 kernels
-Date:   Mon, 28 Nov 2022 12:35:54 -0500
-Message-Id: <20221128173642.1441232-14-sashal@kernel.org>
+        Sasha Levin <sashal@kernel.org>, peterz@infradead.org,
+        mingo@redhat.com, acme@kernel.org, will@kernel.org,
+        mark.rutland@arm.com, linux@armlinux.org.uk,
+        linux-perf-users@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org
+Subject: [PATCH AUTOSEL 5.15 08/24] ARM: 9251/1: perf: Fix stacktraces for tracepoint events in THUMB2 kernels
+Date:   Mon, 28 Nov 2022 12:40:08 -0500
+Message-Id: <20221128174027.1441921-8-sashal@kernel.org>
 X-Mailer: git-send-email 2.35.1
-In-Reply-To: <20221128173642.1441232-1-sashal@kernel.org>
-References: <20221128173642.1441232-1-sashal@kernel.org>
+In-Reply-To: <20221128174027.1441921-1-sashal@kernel.org>
+References: <20221128174027.1441921-1-sashal@kernel.org>
 MIME-Version: 1.0
 X-stable: review
 X-Patchwork-Hint: Ignore
