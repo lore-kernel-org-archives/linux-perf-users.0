@@ -2,135 +2,123 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D7BEAC4167B
-	for <linux-perf-users@archiver.kernel.org>; Tue, 29 Nov 2022 13:43:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 000B7C433FE
+	for <linux-perf-users@archiver.kernel.org>; Tue, 29 Nov 2022 15:53:43 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S234167AbiK2NnL (ORCPT
+        id S232134AbiK2Pxm (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Tue, 29 Nov 2022 08:43:11 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51072 "EHLO
+        Tue, 29 Nov 2022 10:53:42 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50560 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S234170AbiK2Nmx (ORCPT
+        with ESMTP id S235760AbiK2Pxk (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Tue, 29 Nov 2022 08:42:53 -0500
-Received: from mail-pl1-x62f.google.com (mail-pl1-x62f.google.com [IPv6:2607:f8b0:4864:20::62f])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 82C80B867;
-        Tue, 29 Nov 2022 05:42:50 -0800 (PST)
-Received: by mail-pl1-x62f.google.com with SMTP id io19so13424034plb.8;
-        Tue, 29 Nov 2022 05:42:50 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20210112;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=0k5rf78k7+OEY6nBWA1O7f1OJqZ5j+/qpJl/iZqmpyo=;
-        b=XfzWpsAwrdakVJ6T4hn6JM2PHV+n+hvfFFzsYM/gPTZps22qaFyz6bxZ61VE1jFaXK
-         eKCTmWssI6VPH7OsgeM48JOdxXPTKbNb6LQfpJmzwcyHu/bdMIeuJUqAXyB7G0FCRE14
-         swdSU5eS9QCuFj3Zg+TIiJkCZuS32UuLxK+hQBPzV5uRDmzm4MaVygkKZFqMVYSbuhDZ
-         +iE/NIkbCct3kp2Th0CNdV2X4h6DIFpQFqk3mzGiJKrXktqPm6kusYG08sjOZKK1GQRM
-         NbnQLuJvkTRut+1y8lmS4+EZP1tOLmfIfVivsFTtTFcJI7dYtW29TJFCQs5yB3et+ySt
-         mE3w==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=0k5rf78k7+OEY6nBWA1O7f1OJqZ5j+/qpJl/iZqmpyo=;
-        b=arNfjwsYkYTSZNJuYtM0qh0bGtTLtx/I0XzAk6KsghBR87IwkLDACitid+6Q2WAn9E
-         1s5ShgmGo+3Z/Kv0zyCoMvGGvhbi7uazJulDsK1s+dqZze7qve8VNVjTPr5kebnyj+TL
-         iQs72icgQi7aS06th7QsCx3bCGyy4qE6y3PTij6XGAPKH0uezPu1rin+HfXYizRr6fQ9
-         lZZf4HOVIeOLemD/2QipQ62cXKM7TZXcnTSf+Ikvyqkr2Akc5LCCIWE08HvTWSmtM0Hp
-         0Qj5afjcQRsTx8Xo8/iyA1d7s5a7xWB6jUe2/7zYnwezqZTCsJJR0OKhvpkAha8uS8xP
-         MulA==
-X-Gm-Message-State: ANoB5pk+4y06/YfF1rAxxP/EWRmrDhfIjueaHczsIuzWkCjuU00b9p1p
-        o/lQtI79pHH8wFuhtTc/HSA=
-X-Google-Smtp-Source: AA0mqf78QcbeQGRnxYQ8sKZN1u5YNPGSAvMc67kXLYU9TmX7jlvk0LQf9CJrZ8HUNsMkPGLQL9+KGQ==
-X-Received: by 2002:a17:90a:1a07:b0:212:fbab:446b with SMTP id 7-20020a17090a1a0700b00212fbab446bmr61121117pjk.146.1669729370013;
-        Tue, 29 Nov 2022 05:42:50 -0800 (PST)
-Received: from WRT-WX9.. ([103.135.102.183])
-        by smtp.gmail.com with ESMTPSA id z5-20020aa79f85000000b005636326fdbfsm9977154pfr.78.2022.11.29.05.42.41
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 29 Nov 2022 05:42:49 -0800 (PST)
-From:   Changbin Du <changbin.du@gmail.com>
-To:     Alexei Starovoitov <ast@kernel.org>,
-        Daniel Borkmann <daniel@iogearbox.net>,
-        Andrii Nakryiko <andrii@kernel.org>,
-        Quentin Monnet <quentin@isovalent.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Shuah Khan <shuah@kernel.org>
-Cc:     Martin KaFai Lau <martin.lau@linux.dev>,
-        Song Liu <song@kernel.org>, Yonghong Song <yhs@fb.com>,
-        John Fastabend <john.fastabend@gmail.com>,
-        KP Singh <kpsingh@kernel.org>,
-        Stanislav Fomichev <sdf@google.com>,
-        Hao Luo <haoluo@google.com>, Jiri Olsa <jolsa@kernel.org>,
-        bpf@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Mark Rutland <mark.rutland@arm.com>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Namhyung Kim <namhyung@kernel.org>,
-        Mykola Lysenko <mykolal@fb.com>,
-        linux-perf-users@vger.kernel.org, linux-kselftest@vger.kernel.org,
-        Changbin Du <changbin.du@gmail.com>
-Subject: [PATCH v2 2/2] bpf: makefiles: do not generate empty vmlinux.h
-Date:   Tue, 29 Nov 2022 21:42:17 +0800
-Message-Id: <20221129134217.52767-3-changbin.du@gmail.com>
-X-Mailer: git-send-email 2.37.2
-In-Reply-To: <20221129134217.52767-1-changbin.du@gmail.com>
-References: <20221129134217.52767-1-changbin.du@gmail.com>
+        Tue, 29 Nov 2022 10:53:40 -0500
+Received: from foss.arm.com (foss.arm.com [217.140.110.172])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTP id 5F05A31368;
+        Tue, 29 Nov 2022 07:53:38 -0800 (PST)
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id DAAFED6E;
+        Tue, 29 Nov 2022 07:53:44 -0800 (PST)
+Received: from [10.57.7.150] (unknown [10.57.7.150])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id A5AD83F67D;
+        Tue, 29 Nov 2022 07:53:35 -0800 (PST)
+Message-ID: <25658a70-0b37-966d-e46c-f86be2a76a8e@arm.com>
+Date:   Tue, 29 Nov 2022 15:53:32 +0000
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
+ Thunderbird/102.2.2
+Subject: Re: [PATCH V5 6/7] arm64/perf: Add BRBE driver
+To:     Anshuman Khandual <anshuman.khandual@arm.com>
+Cc:     Mark Brown <broonie@kernel.org>, Rob Herring <robh@kernel.org>,
+        Marc Zyngier <maz@kernel.org>,
+        Suzuki Poulose <suzuki.poulose@arm.com>,
+        Ingo Molnar <mingo@redhat.com>, linux-kernel@vger.kernel.org,
+        linux-perf-users@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, peterz@infradead.org,
+        acme@kernel.org, mark.rutland@arm.com, will@kernel.org,
+        catalin.marinas@arm.com
+References: <20221107062514.2851047-1-anshuman.khandual@arm.com>
+ <20221107062514.2851047-7-anshuman.khandual@arm.com>
+Content-Language: en-US
+From:   James Clark <james.clark@arm.com>
+In-Reply-To: <20221107062514.2851047-7-anshuman.khandual@arm.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-Remove the empty vmlinux.h if bpftool failed to dump btf info.
-The emptry vmlinux.h can hide real error when reading output
-of make.
 
-This is done by adding .DELETE_ON_ERROR special target in related
-makefiles.
 
-Signed-off-by: Changbin Du <changbin.du@gmail.com>
----
- tools/bpf/bpftool/Makefile           | 3 +++
- tools/perf/Makefile.perf             | 2 ++
- tools/testing/selftests/bpf/Makefile | 3 +++
- 3 files changed, 8 insertions(+)
+On 07/11/2022 06:25, Anshuman Khandual wrote:
+> This adds a BRBE driver which implements all the required helper functions
+> for struct arm_pmu. Following functions are defined by this driver which
+> will configure, enable, capture, reset and disable BRBE buffer HW as and
+> when requested via perf branch stack sampling framework.
 
-diff --git a/tools/bpf/bpftool/Makefile b/tools/bpf/bpftool/Makefile
-index 4a95c017ad4c..f6b1e65085db 100644
---- a/tools/bpf/bpftool/Makefile
-+++ b/tools/bpf/bpftool/Makefile
-@@ -265,3 +265,6 @@ FORCE:
- .PHONY: all FORCE bootstrap clean install-bin install uninstall
- .PHONY: doc doc-clean doc-install doc-uninstall
- .DEFAULT_GOAL := all
-+
-+# Delete partially updated (corrupted) files on error
-+.DELETE_ON_ERROR:
-diff --git a/tools/perf/Makefile.perf b/tools/perf/Makefile.perf
-index a432e59afc42..265254fc641a 100644
---- a/tools/perf/Makefile.perf
-+++ b/tools/perf/Makefile.perf
-@@ -1149,3 +1149,5 @@ FORCE:
- .PHONY: libtraceevent_plugins archheaders
- 
- endif # force_fixdep
-+
-+.DELETE_ON_ERROR:
-diff --git a/tools/testing/selftests/bpf/Makefile b/tools/testing/selftests/bpf/Makefile
-index e6cf21fad69f..f41c4b011221 100644
---- a/tools/testing/selftests/bpf/Makefile
-+++ b/tools/testing/selftests/bpf/Makefile
-@@ -617,3 +617,6 @@ EXTRA_CLEAN := $(TEST_CUSTOM_PROGS) $(SCRATCH_DIR) $(HOST_SCRATCH_DIR)	\
- 			       liburandom_read.so)
- 
- .PHONY: docs docs-clean
-+
-+# Delete partially updated (corrupted) files on error
-+.DELETE_ON_ERROR:
--- 
-2.37.2
+Hi Anshuman,
 
+I've got a rough version of an updated test for branch stacks here [1].
+A couple of interesting things that I've noticed running it:
+
+First one is that sometimes I get (null) for the branch type. Debugging
+in GDB shows me that the type is actually type == PERF_BR_EXTEND_ABI &&
+new_type == 11. I can't see how this is possible looking at the driver
+code. I think I saw this on a previous version of the patchset too but
+didn't mention it because I thought it wasn't significant, but now I see
+that something strange is going on. An interesting pattern is that they
+are always after ERET samples and go from userspace to kernel:
+
+41992866945460 0x6e8 [0x360]: PERF_RECORD_SAMPLE(IP, 0x1): 501/501:
+0xffff800008010118 period: 1229 addr: 0
+... branch stack: nr:34
+.. 007a9988 -> 00000000 0 cycles  P   9fbfbfbf IRQ
+.. 00000000 -> 007a9988 0 cycles  P   9fbfbfbf ERET
+.. 007a9988 -> 00000000 0 cycles  P   9fbfbfbf (null)
+.. 00747668 -> 007a9988 0 cycles  P   9fbfbfbf CALL
+.. 00747664 -> 00747660 0 cycles  P   9fbfbfbf COND
+.. 00747664 -> 00747660 0 cycles  P   9fbfbfbf COND
+.. 00747664 -> 00747660 0 cycles  P   9fbfbfbf COND
+.. 00747664 -> 00747660 0 cycles  P   9fbfbfbf COND
+.. 00747664 -> 00747660 0 cycles  P   9fbfbfbf COND
+.. 00747664 -> 00747660 0 cycles  P   9fbfbfbf COND
+.. 00747664 -> 00747660 0 cycles  P   9fbfbfbf COND
+.. 00747664 -> 00747660 0 cycles  P   9fbfbfbf COND
+.. 00747664 -> 00747660 0 cycles  P   9fbfbfbf COND
+.. 00747664 -> 00747660 0 cycles  P   9fbfbfbf COND
+.. 00747664 -> 00747660 0 cycles  P   9fbfbfbf COND
+.. 00747664 -> 00747660 0 cycles  P   9fbfbfbf COND
+.. 00747664 -> 00747660 0 cycles  P   9fbfbfbf COND
+.. 00747664 -> 00747660 0 cycles  P   9fbfbfbf COND
+.. 00747664 -> 00747660 0 cycles  P   9fbfbfbf COND
+.. 00747664 -> 00747660 0 cycles  P   9fbfbfbf COND
+.. 00747664 -> 00747660 0 cycles  P   9fbfbfbf COND
+.. 00000000 -> 00747658 0 cycles  P   9fbfbfbf ERET
+.. 00747658 -> 00000000 0 cycles  P   9fbfbfbf ARM64_DEBUG_DATA
+.. 00000000 -> 00747650 0 cycles  P   9fbfbfbf ERET
+.. 00747650 -> 00000000 0 cycles  P   9fbfbfbf ARM64_DEBUG_DATA
+.. 00747624 -> 00747634 0 cycles  P   9fbfbfbf COND
+.. 00000000 -> 007475f4 0 cycles  P   9fbfbfbf ERET
+.. 007475f4 -> 00000000 0 cycles  P   9fbfbfbf ARM64_DEBUG_DATA
+.. 00000000 -> 007475e8 0 cycles  P   9fbfbfbf ERET
+.. 007475e8 -> 00000000 0 cycles  P   9fbfbfbf (null)
+.. 004005ac -> 007475e8 0 cycles  P   9fbfbfbf CALL
+.. 00000000 -> 00400564 0 cycles  P   9fbfbfbf ERET
+.. 00400564 -> 00000000 0 cycles  P   9fbfbfbf (null)
+.. 00000000 -> 00400564 0 cycles  P   9fbfbfbf ERET
+ .. thread: perf:501
+ ...... dso: [kernel.kallsyms]
+
+The second one is that sometimes I get kernel addresses and RET branches
+even if the option is any_call,u. The pattern here is that it's the last
+non empty branch stack of a run, so maybe there is some disable path
+where the filters aren't configured properly:
+
+armv8pmu_brbe_enable+0xc/arm64_pmu_brbe_enable+0x0/P/-/-/0/CALL
+armpmu_start+0xe0/armv8pmu_brbe_enable+0x0/P/-/-/0/IND_CALL
+armv8pmu_brbe_reset+0x18/armpmu_start+0xd0/P/-/-/0/RET
+arm64_pmu_brbe_reset+0x18/armv8pmu_brbe_reset+0x10/P/-/-/0/RET
+
+
+[1]:
+https://gitlab.arm.com/linux-arm/linux-jc/-/commit/7260b7bef06ac161eac88d05266e8c5c303d9881
