@@ -2,105 +2,138 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2559AC43217
-	for <linux-perf-users@archiver.kernel.org>; Mon, 28 Nov 2022 22:59:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CF63CC4167B
+	for <linux-perf-users@archiver.kernel.org>; Tue, 29 Nov 2022 05:59:16 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S234633AbiK1W7t (ORCPT
+        id S235356AbiK2F7P (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Mon, 28 Nov 2022 17:59:49 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50766 "EHLO
+        Tue, 29 Nov 2022 00:59:15 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38564 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229667AbiK1W7e (ORCPT
+        with ESMTP id S229532AbiK2F7O (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Mon, 28 Nov 2022 17:59:34 -0500
-Received: from sin.source.kernel.org (sin.source.kernel.org [IPv6:2604:1380:40e1:4800::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 741FA2AE15;
-        Mon, 28 Nov 2022 14:59:33 -0800 (PST)
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by sin.source.kernel.org (Postfix) with ESMTPS id A62DBCE10AC;
-        Mon, 28 Nov 2022 22:59:31 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 3A99DC433D6;
-        Mon, 28 Nov 2022 22:59:28 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linux-foundation.org;
-        s=korg; t=1669676369;
-        bh=8eUsQnXrojDc3xf/FA0TCQqqadaNCz4PLnjHT4xDE/M=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=p/c6sfRX9un7PSA9WHRKHQPKKlq0P4NHxZWk+3LaBZS7DQenvFmjKk0jQBgH6o535
-         rwsyByROkiEJmDN58P/Z53hmZWo4xmybXT0VaPtvGqyQZyuQQjThzncIMjLPHHFdpc
-         3v4hl13h6A47jhJOM5850oDp2I/9vqahh0Q1uqps=
-Date:   Mon, 28 Nov 2022 14:59:27 -0800
-From:   Andrew Morton <akpm@linux-foundation.org>
-To:     David Hildenbrand <david@redhat.com>
-Cc:     Hans Verkuil <hverkuil@xs4all.nl>, linux-kernel@vger.kernel.org,
-        x86@kernel.org, linux-alpha@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, linux-ia64@vger.kernel.org,
-        linux-mips@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
-        sparclinux@vger.kernel.org, linux-um@lists.infradead.org,
-        etnaviv@lists.freedesktop.org, dri-devel@lists.freedesktop.org,
-        linux-samsung-soc@vger.kernel.org, linux-rdma@vger.kernel.org,
-        linux-media@vger.kernel.org, linux-fsdevel@vger.kernel.org,
-        linux-mm@kvack.org, linux-perf-users@vger.kernel.org,
-        linux-security-module@vger.kernel.org,
-        linux-kselftest@vger.kernel.org,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Jason Gunthorpe <jgg@ziepe.ca>,
-        John Hubbard <jhubbard@nvidia.com>,
-        Peter Xu <peterx@redhat.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Andrea Arcangeli <aarcange@redhat.com>,
-        Hugh Dickins <hughd@google.com>, Nadav Amit <namit@vmware.com>,
-        Vlastimil Babka <vbabka@suse.cz>,
-        Matthew Wilcox <willy@infradead.org>,
-        Mike Kravetz <mike.kravetz@oracle.com>,
-        Muchun Song <songmuchun@bytedance.com>,
+        Tue, 29 Nov 2022 00:59:14 -0500
+Received: from mail-ed1-x52c.google.com (mail-ed1-x52c.google.com [IPv6:2a00:1450:4864:20::52c])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 96E0F2983E;
+        Mon, 28 Nov 2022 21:59:13 -0800 (PST)
+Received: by mail-ed1-x52c.google.com with SMTP id v8so18398119edi.3;
+        Mon, 28 Nov 2022 21:59:13 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20210112;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:from:to:cc:subject:date:message-id:reply-to;
+        bh=A5R4C2aWexZsPArmjDH3ZXhc/nuP+Jv80yeRmE03+3Y=;
+        b=NPoI5sGa4eoD7m3PZcImAedtV9zgPn92Xyvx4je/A8t6DqzT3qlSN47OfxkVDgRw4N
+         Odm7gLkVMAucYLhuhhoqc1IUsQcF+HQFOTgcdhKG4R7OAYiL0rRMr9uWcnOR69LoQids
+         H6X6RVicu5J/LXpCtZEzyRlxvxr05q41N5Ks1n1bV9pFsLz7tK3TxrqANVCYzU5mlDXv
+         IzX5XhhNveW0oUpRv4fVGLFYl2W8tGQQYyImTePRKsH5L8lhX0YAZn62ChTREvo8ESzJ
+         xckoCa7MMfTVq+XLKXI594Oq0TW3Zn6RwpIyMfAqMvGqasTYa6WyQHeg0IEDQ/5OOJnR
+         Fn8w==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=A5R4C2aWexZsPArmjDH3ZXhc/nuP+Jv80yeRmE03+3Y=;
+        b=2ehHp70SIhQDwK8wdHZCSOuIUE84u7TzjnmZufVGG0z4YDKbBfrT+ZVIVPx1cMvCLP
+         k+xJtTX04x7q8h2DgmSfJPZibIi4yJB0SabDt4H1qizMHap33AwJI45fC0dpT5Qr9StM
+         gGu2D6Fi8W2+F/7D2o9zGy3KTqt6Qg7Rou6SzghMvVm/oBhMfPVDdT2+7QlKQ4uBLoiB
+         mj76mE3J9vkkP+ODU4oj/P6+PfNzXGowW8KflyL9agCQRNNoQgrlMxOTc6tE7z9jQ5fi
+         RrBBM4oUaU/iJrgvmKny9JC7mivCu9CRFv5LYp4T/AzQRn1DLWkU0la0UyOI6mrAI9tg
+         a92A==
+X-Gm-Message-State: ANoB5pkrUH1pkd9YwZBMTzPm4pI1NrjtqigiBoYFMkP33o2IcgTq468t
+        QW96ZwpNb30taQPBXI1t5EReiffLbsfuGXrKMh8=
+X-Google-Smtp-Source: AA0mqf61R1pxzPjXd65f/ntApUjrv3GpEO+onbJf191BTNPzrWYZEjQqYgMLUxzhCUoOsLN+wjyk2eU/3vf9wzG/ImY=
+X-Received: by 2002:aa7:d80d:0:b0:46b:7645:86a9 with SMTP id
+ v13-20020aa7d80d000000b0046b764586a9mr2395448edq.311.1669701552145; Mon, 28
+ Nov 2022 21:59:12 -0800 (PST)
+MIME-Version: 1.0
+References: <20221126111147.199366-1-changbin.du@gmail.com> <20221126111147.199366-2-changbin.du@gmail.com>
+In-Reply-To: <20221126111147.199366-2-changbin.du@gmail.com>
+From:   Andrii Nakryiko <andrii.nakryiko@gmail.com>
+Date:   Mon, 28 Nov 2022 21:59:00 -0800
+Message-ID: <CAEf4BzYt7MhKjWfdxKUe10mUxDoCYeWNHYr1-ruCxMEmNqJqqA@mail.gmail.com>
+Subject: Re: [PATCH 1/2] libbpf: show more info about missing ".BTF" section
+To:     Changbin Du <changbin.du@gmail.com>
+Cc:     Alexei Starovoitov <ast@kernel.org>,
+        Daniel Borkmann <daniel@iogearbox.net>,
+        Andrii Nakryiko <andrii@kernel.org>,
+        Quentin Monnet <quentin@isovalent.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        Arnaldo Carvalho de Melo <acme@kernel.org>,
         Shuah Khan <shuah@kernel.org>,
-        Lucas Stach <l.stach@pengutronix.de>,
-        David Airlie <airlied@gmail.com>,
-        Oded Gabbay <ogabbay@kernel.org>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Christoph Hellwig <hch@infradead.org>,
-        Alex Williamson <alex.williamson@redhat.com>,
-        Marek Szyprowski <m.szyprowski@samsung.com>,
-        Tomasz Figa <tfiga@chromium.org>,
-        Mauro Carvalho Chehab <mchehab@kernel.org>
-Subject: Re: [PATCH mm-unstable v1 16/20] mm/frame-vector: remove FOLL_FORCE
- usage
-Message-Id: <20221128145927.df895bf1966cfa125cae9668@linux-foundation.org>
-In-Reply-To: <9d0bf98a-3d6a-1082-e992-1338e1525935@redhat.com>
-References: <20221116102659.70287-1-david@redhat.com>
-        <20221116102659.70287-17-david@redhat.com>
-        <81fb0fa3-2e06-b765-56ac-a7d981194e59@redhat.com>
-        <08b65ac6-6786-1080-18f8-d2be109c85fc@xs4all.nl>
-        <9d0bf98a-3d6a-1082-e992-1338e1525935@redhat.com>
-X-Mailer: Sylpheed 3.7.0 (GTK+ 2.24.33; x86_64-redhat-linux-gnu)
-Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+        Martin KaFai Lau <martin.lau@linux.dev>,
+        Song Liu <song@kernel.org>, Yonghong Song <yhs@fb.com>,
+        John Fastabend <john.fastabend@gmail.com>,
+        KP Singh <kpsingh@kernel.org>,
+        Stanislav Fomichev <sdf@google.com>,
+        Hao Luo <haoluo@google.com>, Jiri Olsa <jolsa@kernel.org>,
+        bpf@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Mark Rutland <mark.rutland@arm.com>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Namhyung Kim <namhyung@kernel.org>,
+        Mykola Lysenko <mykolal@fb.com>,
+        linux-perf-users@vger.kernel.org, linux-kselftest@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-On Mon, 28 Nov 2022 09:18:47 +0100 David Hildenbrand <david@redhat.com> wrote:
+On Sat, Nov 26, 2022 at 3:13 AM Changbin Du <changbin.du@gmail.com> wrote:
+>
+> Show more information about why failed instead of just saying "No such file or
+> directory".
+>
+> Now will print below info:
+> libbpf: can not find '.BTF' section
+> libbpf: is CONFIG_DEBUG_INFO_BTF enabled for kernel?
+> Error: failed to load BTF from /home/changbin/work/linux/vmlinux: No such file or directory
+>
+> Signed-off-by: Changbin Du <changbin.du@gmail.com>
+> ---
+>  tools/lib/bpf/btf.c | 12 ++++++++++++
+>  1 file changed, 12 insertions(+)
+>
+> diff --git a/tools/lib/bpf/btf.c b/tools/lib/bpf/btf.c
+> index d88647da2c7f..3f661d991808 100644
+> --- a/tools/lib/bpf/btf.c
+> +++ b/tools/lib/bpf/btf.c
+> @@ -906,6 +906,15 @@ struct btf *btf__new(const void *data, __u32 size)
+>         return libbpf_ptr(btf_new(data, size, NULL));
+>  }
+>
+> +static bool is_vmlinux(const char *path)
+> +{
+> +       size_t path_len = strlen(path);
+> +       size_t suffix_len = strlen("vmlinux");
+> +
+> +       return (path_len >= suffix_len) &&
+> +              (!memcmp(path + path_len - suffix_len, "vmlinux", suffix_len));
+> +}
+> +
+>  static struct btf *btf_parse_elf(const char *path, struct btf *base_btf,
+>                                  struct btf_ext **btf_ext)
+>  {
+> @@ -990,6 +999,9 @@ static struct btf *btf_parse_elf(const char *path, struct btf *base_btf,
+>         err = 0;
+>
+>         if (!btf_data) {
+> +               pr_warn("can not find '%s' section\n", BTF_ELF_SEC);
+> +               if (is_vmlinux(path))
+> +                       pr_warn("is CONFIG_DEBUG_INFO_BTF enabled for kernel?\n");
 
-> > Less chances of things going wrong that way.
-> > 
-> > Just mention in the v2 cover letter that the first patch was added to
-> > make it easy to backport that fix without being hampered by merge
-> > conflicts if it was added after your frame_vector.c patch.
-> 
-> Yes, that's the way I would naturally do, it, however, Andrew prefers 
-> delta updates for minor changes.
-> 
-> @Andrew, whatever you prefer!
+this is generic piece of BTF loading code in libbpf, it knows nothing
+and should know nothing about vmlinux and CONFIG_DEBUG_INFO_BTF, this
+is not the right place to add such suggestions.
 
-I'm inclined to let things sit as they are.  Cross-tree conflicts
-happen, and Linus handles them.  I'll flag this (very simple) conflict
-in the pull request, if MM merges second.  If v4l merges second then
-hopefully they will do the same.  But this one is so simple that Linus
-hardly needs our help.
+Check bpf_object__load_vmlinux_btf(), libbpf emits vmlinux-specific
+error there: "Error loading vmlinux BTF". If we need to mention
+CONFIG_DEBUG_INFO_BTF anywhere, that would be the place to do that.
 
-But Linus won't be editing changelogs so that the changelog makes more
-sense after both trees are joined.  I'm inclined to let the changelog
-sit as it is as well.
+>                 err = -ENOENT;
+>                 goto done;
+>         }
+> --
+> 2.37.2
+>
