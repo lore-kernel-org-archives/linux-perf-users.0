@@ -2,250 +2,103 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E6C0EC433FE
-	for <linux-perf-users@archiver.kernel.org>; Tue, 29 Nov 2022 06:27:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6AE47C47089
+	for <linux-perf-users@archiver.kernel.org>; Tue, 29 Nov 2022 08:49:38 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S235497AbiK2G1D (ORCPT
+        id S230148AbiK2Ith (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Tue, 29 Nov 2022 01:27:03 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51218 "EHLO
+        Tue, 29 Nov 2022 03:49:37 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58116 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S233838AbiK2G1C (ORCPT
+        with ESMTP id S230103AbiK2Itf (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Tue, 29 Nov 2022 01:27:02 -0500
-Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTP id 012B4532C0;
-        Mon, 28 Nov 2022 22:27:01 -0800 (PST)
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 5613AD6E;
-        Mon, 28 Nov 2022 22:27:07 -0800 (PST)
-Received: from [10.162.41.67] (unknown [10.162.41.67])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 6C7343F67D;
-        Mon, 28 Nov 2022 22:26:56 -0800 (PST)
-Message-ID: <5e7fdfd1-4b1f-e6ff-0ef2-1be00aad8cf3@arm.com>
-Date:   Tue, 29 Nov 2022 11:56:53 +0530
+        Tue, 29 Nov 2022 03:49:35 -0500
+Received: from mail-pj1-x1033.google.com (mail-pj1-x1033.google.com [IPv6:2607:f8b0:4864:20::1033])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D6A51421BC;
+        Tue, 29 Nov 2022 00:48:42 -0800 (PST)
+Received: by mail-pj1-x1033.google.com with SMTP id e7-20020a17090a77c700b00216928a3917so16632482pjs.4;
+        Tue, 29 Nov 2022 00:48:42 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20210112;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=EC4xRvqluGfZQhXOMZWHGN3jn09RvjDMpBCLAdi0QzI=;
+        b=goyC1rqlr+kCBTqmN6es+d4t4wo7D0f1KQ5hgdppbSYnj7tqeGedd6ITcEC1uXu8Hb
+         JxPzDxEL2sgzlkfwbrhuzUFkPmmnvRp/Wh3VyHlJ/3PLOFLM4A/j09FEKcBzcu2qUdS8
+         Qgfhat/bh+OsnvNTB7Ovb51Heu2cUi9sz7fsIraxd/+nlL4SkM9uVRdSDvpCKMaOv1Hi
+         yabXURGGkNNQJJ6QWkv7aVsIsRaStLFpD12/yFDPvfX1yJUI3zZ82zE8RufdkHR/gQ3Z
+         Igwq84ygge8XJSbD5dJ0vla90wrpcT9dQPtF2UJpgU635rg+e4ThC6q2809e+lVn2gat
+         LU4A==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=EC4xRvqluGfZQhXOMZWHGN3jn09RvjDMpBCLAdi0QzI=;
+        b=n0aDzRHmMZbDb2HyhcqJ5HlHUYiGhcTEULLSpRSCbogSRSA9XFvqUmOh1FWjQi0L8C
+         OzqqgM7oOzIdTOuGt9hSeIM/fN9J2HeHJ+oAPKqLRmaywVh8m0KKkppfwVQFqtevqbIq
+         OI3C5h2T8pmAG38Fdv2No8B2CL70vZRso6Xi08/Q7cN7zPxXjFOJOpu7BrczonANGmyf
+         V9pIUOZlvpolYv2ksF1dYpl1slhii0S72yvmWR6aZKubwmD63TV+cZqse4nTRnHV4PMA
+         Ch8GQf6FFFmqI5eRqUnpu2iuYK5q7Cqeriq7UEcW4sP5jz4XpFestxwGMXPqUaj/aZmS
+         1ICw==
+X-Gm-Message-State: ANoB5plKluklRp+gMvGkTytcCmDMPZloxJXxw8oWoaZ7tWox37t3gm25
+        /gGLgKPf1FuPttVPQOTxcRYz5oi/+Nf+E9If
+X-Google-Smtp-Source: AA0mqf5rVsOhZuL3V/KGRx4gIVWTwHBsR8edMvyXagWtyn99J6QjqMwIEXljBY1iLo4r+PV4YXpcDQ==
+X-Received: by 2002:a17:90a:7885:b0:217:e32e:e931 with SMTP id x5-20020a17090a788500b00217e32ee931mr64379443pjk.146.1669711722097;
+        Tue, 29 Nov 2022 00:48:42 -0800 (PST)
+Received: from mail.google.com ([103.135.102.183])
+        by smtp.gmail.com with ESMTPSA id c10-20020a170902d48a00b00188a7bce192sm10258651plg.264.2022.11.29.00.48.32
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 29 Nov 2022 00:48:41 -0800 (PST)
+Date:   Tue, 29 Nov 2022 16:48:29 +0800
+From:   Changbin Du <changbin.du@gmail.com>
+To:     Andrii Nakryiko <andrii.nakryiko@gmail.com>
+Cc:     Changbin Du <changbin.du@gmail.com>,
+        Alexei Starovoitov <ast@kernel.org>,
+        Daniel Borkmann <daniel@iogearbox.net>,
+        Andrii Nakryiko <andrii@kernel.org>,
+        Quentin Monnet <quentin@isovalent.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        Arnaldo Carvalho de Melo <acme@kernel.org>,
+        Shuah Khan <shuah@kernel.org>,
+        Martin KaFai Lau <martin.lau@linux.dev>,
+        Song Liu <song@kernel.org>, Yonghong Song <yhs@fb.com>,
+        John Fastabend <john.fastabend@gmail.com>,
+        KP Singh <kpsingh@kernel.org>,
+        Stanislav Fomichev <sdf@google.com>,
+        Hao Luo <haoluo@google.com>, Jiri Olsa <jolsa@kernel.org>,
+        bpf@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Mark Rutland <mark.rutland@arm.com>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Namhyung Kim <namhyung@kernel.org>,
+        Mykola Lysenko <mykolal@fb.com>,
+        linux-perf-users@vger.kernel.org, linux-kselftest@vger.kernel.org
+Subject: Re: [PATCH 2/2] makefiles: do not generate empty vmlinux.h
+Message-ID: <20221129084829.ktim5wfe5rpjxw67@mail.google.com>
+References: <20221126111147.199366-1-changbin.du@gmail.com>
+ <20221126111147.199366-3-changbin.du@gmail.com>
+ <CAEf4BzZ6Ks0T=72vtGNc0TyPxHMO6PEFQb8TEYj7XmtqWjfDwQ@mail.gmail.com>
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
- Thunderbird/102.2.2
-Subject: Re: [PATCH V5 5/7] arm64/perf: Drive BRBE from perf event states
-Content-Language: en-US
-To:     Mark Rutland <mark.rutland@arm.com>
-Cc:     linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, peterz@infradead.org,
-        acme@kernel.org, will@kernel.org, catalin.marinas@arm.com,
-        Mark Brown <broonie@kernel.org>,
-        James Clark <james.clark@arm.com>,
-        Rob Herring <robh@kernel.org>, Marc Zyngier <maz@kernel.org>,
-        Suzuki Poulose <suzuki.poulose@arm.com>,
-        Ingo Molnar <mingo@redhat.com>
-References: <20221107062514.2851047-1-anshuman.khandual@arm.com>
- <20221107062514.2851047-6-anshuman.khandual@arm.com>
- <Y3fLtK95qctxcKgR@FVFF77S0Q05N.cambridge.arm.com>
-From:   Anshuman Khandual <anshuman.khandual@arm.com>
-In-Reply-To: <Y3fLtK95qctxcKgR@FVFF77S0Q05N.cambridge.arm.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CAEf4BzZ6Ks0T=72vtGNc0TyPxHMO6PEFQb8TEYj7XmtqWjfDwQ@mail.gmail.com>
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-
-
-On 11/18/22 23:45, Mark Rutland wrote:
-> On Mon, Nov 07, 2022 at 11:55:12AM +0530, Anshuman Khandual wrote:
->> Branch stack sampling rides along the normal perf event and all the branch
->> records get captured during the PMU interrupt. This just changes perf event
->> handling on the arm64 platform to accommodate required BRBE operations that
->> will enable branch stack sampling support.
->>
->> Cc: Peter Zijlstra <peterz@infradead.org>
->> Cc: Ingo Molnar <mingo@redhat.com>
->> Cc: Arnaldo Carvalho de Melo <acme@kernel.org>
->> Cc: Mark Rutland <mark.rutland@arm.com>
->> Cc: Will Deacon <will@kernel.org>
->> Cc: Catalin Marinas <catalin.marinas@arm.com>
->> Cc: linux-perf-users@vger.kernel.org
->> Cc: linux-kernel@vger.kernel.org
->> Cc: linux-arm-kernel@lists.infradead.org
->> Signed-off-by: Anshuman Khandual <anshuman.khandual@arm.com>
->> ---
->>  arch/arm64/kernel/perf_event.c |  7 ++++++
->>  drivers/perf/arm_pmu.c         | 40 ++++++++++++++++++++++++++++++++++
->>  2 files changed, 47 insertions(+)
->>
->> diff --git a/arch/arm64/kernel/perf_event.c b/arch/arm64/kernel/perf_event.c
->> index c97377e28288..97db333d1208 100644
->> --- a/arch/arm64/kernel/perf_event.c
->> +++ b/arch/arm64/kernel/perf_event.c
->> @@ -874,6 +874,13 @@ static irqreturn_t armv8pmu_handle_irq(struct arm_pmu *cpu_pmu)
->>  		if (!armpmu_event_set_period(event))
->>  			continue;
->>  
->> +		if (has_branch_stack(event)) {
->> +			cpu_pmu->brbe_read(cpuc, event);
->> +			data.br_stack = &cpuc->branches->brbe_stack;
->> +			data.sample_flags |= PERF_SAMPLE_BRANCH_STACK;
->> +			cpu_pmu->brbe_reset(cpuc);
->> +		}
->> +
->>  		/*
->>  		 * Perf event overflow will queue the processing of the event as
->>  		 * an irq_work which will be taken care of in the handling of
->> diff --git a/drivers/perf/arm_pmu.c b/drivers/perf/arm_pmu.c
->> index 5048a500441e..1a8dca4e513e 100644
->> --- a/drivers/perf/arm_pmu.c
->> +++ b/drivers/perf/arm_pmu.c
->> @@ -271,12 +271,22 @@ armpmu_stop(struct perf_event *event, int flags)
->>  {
->>  	struct arm_pmu *armpmu = to_arm_pmu(event->pmu);
->>  	struct hw_perf_event *hwc = &event->hw;
->> +	struct pmu_hw_events *hw_events = this_cpu_ptr(armpmu->hw_events);
->>  
->>  	/*
->>  	 * ARM pmu always has to update the counter, so ignore
->>  	 * PERF_EF_UPDATE, see comments in armpmu_start().
->>  	 */
->>  	if (!(hwc->state & PERF_HES_STOPPED)) {
->> +		if (has_branch_stack(event)) {
->> +			WARN_ON_ONCE(!hw_events->brbe_users);
->> +			hw_events->brbe_users--;
->> +			if (!hw_events->brbe_users) {
->> +				hw_events->brbe_context = NULL;
->> +				armpmu->brbe_disable(hw_events);
->> +			}
->> +		}
+On Mon, Nov 28, 2022 at 10:00:14PM -0800, Andrii Nakryiko wrote:
+> On Sat, Nov 26, 2022 at 3:13 AM Changbin Du <changbin.du@gmail.com> wrote:
+> >
+> > Remove the empty vmlinux.h if bpftool failed to dump btf info.
+> > The emptry vmlinux.h can hide real error when reading output
+> > of make.
 > 
-> Can't we do the actual enable/disable we start/stop the PMU as a whole?
-> 
-> If we just counted the numberoof users here we could do the actual
-> enable/disable in armpmu_{enable,disable}() or armv8pmu_{start,stop}(), like we
-> do when checking hw_events->used_mask.
+> wouldn't this be better handled by adding .DELETE_ON_ERROR: to
+> bpftool's Makefile?
+>
+yes, let me replace it.
 
-Right, it can be moved inside armv8pmu_{enable, disable}
-
-diff --git a/arch/arm64/kernel/perf_event.c b/arch/arm64/kernel/perf_event.c
-index 7b0643fe2f13..e64832bc83ba 100644
---- a/arch/arm64/kernel/perf_event.c
-+++ b/arch/arm64/kernel/perf_event.c
-@@ -789,6 +789,19 @@ static void armv8pmu_enable_event(struct perf_event *event)
-         * Enable counter
-         */
-        armv8pmu_enable_event_counter(event);
-+
-+       if (has_branch_stack(event)) {
-+               struct arm_pmu *armpmu = to_arm_pmu(event->pmu);
-+               struct pmu_hw_events *hw_events = this_cpu_ptr(armpmu->hw_events);
-+
-+               if (event->ctx->task && hw_events->brbe_context != event->ctx) {
-+                       arm64_pmu_brbe_reset(hw_events);
-+                       hw_events->brbe_context = event->ctx;
-+               }
-+               hw_events->brbe_users++;
-+               arm64_pmu_brbe_enable(event);
-+       }
- }
- 
- static void armv8pmu_disable_event(struct perf_event *event)
-@@ -802,6 +815,14 @@ static void armv8pmu_disable_event(struct perf_event *event)
-         * Disable interrupt for this counter
-         */
-        armv8pmu_disable_event_irq(event);
-+
-+       if (has_branch_stack(event)) {
-+               struct arm_pmu *armpmu = to_arm_pmu(event->pmu);
-+               struct pmu_hw_events *hw_events = this_cpu_ptr(armpmu->hw_events);
-+
-+               if (!hw_events->brbe_users)
-+                       arm64_pmu_brbe_disable(event);
-+       }
- }
- 
-
-> 
-> [...]
-> 
->> @@ -349,6 +368,10 @@ armpmu_add(struct perf_event *event, int flags)
->>  	hw_events->events[idx] = event;
->>  
->>  	hwc->state = PERF_HES_STOPPED | PERF_HES_UPTODATE;
->> +
->> +	if (has_branch_stack(event))
->> +		armpmu->brbe_filter(hw_events, event);
-> 
-> What exactly do we need to do here? Since the BRBE is shared, I'm suprised that
-> there's any pwer-event configuration beyond "yes" or "no". 
-
-Entire arm64_pmu_brbe_filter() can be moved inside arm64_pmu_brbe_enable().
-
-> 
->> +
->>  	if (flags & PERF_EF_START)
->>  		armpmu_start(event, PERF_EF_RELOAD);
->>  
->> @@ -443,6 +466,7 @@ __hw_perf_event_init(struct perf_event *event)
->>  {
->>  	struct arm_pmu *armpmu = to_arm_pmu(event->pmu);
->>  	struct hw_perf_event *hwc = &event->hw;
->> +	struct pmu_hw_events *hw_events = this_cpu_ptr(armpmu->hw_events);
->>  	int mapping;
->>  
->>  	hwc->flags = 0;
->> @@ -492,6 +516,9 @@ __hw_perf_event_init(struct perf_event *event)
->>  		local64_set(&hwc->period_left, hwc->sample_period);
->>  	}
->>  
->> +	if (has_branch_stack(event))
->> +		armpmu->brbe_filter(hw_events, event);
-> 
-> I do not understand why we would use hw_events here; at this point the event
-> has only been created, and not even added yet; it doesn't have a counter index.
-> isn't even being installed into HW.
-> 
-> What am I missing?
-
-perf event's requested branch sampling attributes need to be transferred into the
-BRBE HW config, when the event gets scheduled on a given CPU. But this transfer
-happens in two stages.
-
-event -----> pmu_hw_events ----> BRBE HW
-
-1. event->attr.branch_sample_type --> pmu_hw_events.[brbcr,brbfcr] (event add)
-2. pmu_hw_events.[brbcr,brbfcr]   --> BRBXXX_EL1 registers	   (event enable)
-
-But I guess both these stages can be done in event_enable() and the intermediary
-pmu_hw_events.[brbcr,brbfcr] elements can also be dropped.
-
-> 
->> +
->>  	return validate_group(event);
->>  }
->>  
->> @@ -520,6 +547,18 @@ static int armpmu_event_init(struct perf_event *event)
->>  	return __hw_perf_event_init(event);
->>  }
->>  
->> +static void armpmu_sched_task(struct perf_event_context *ctx, bool sched_in)
->> +{
->> +	struct arm_pmu *armpmu = to_arm_pmu(ctx->pmu);
->> +	struct pmu_hw_events *hw_events = this_cpu_ptr(armpmu->hw_events);
->> +
->> +	if (!hw_events->brbe_users)
->> +		return;
->> +
->> +	if (sched_in)
->> +		armpmu->brbe_reset(hw_events);
-> 
-> I see that LBR does a save/restore, whereas IIUC here we discard without even
-> reading the old values. Is that the intent? Shouldn't we snapshot them into the
-> task context?
-
-Yes, currently that is the intent. We cannot let the branch records from one task
-slip across into another task corrupting the capture on the later. Only Intel LBR
-implements such task context save/restore via hw_events, only when LBR call stack
-feature is supported otherwise, all other sched_task() implementation just flush
-or invalidate captured branches before changing the context.
-
-We could implement such BRBE context store/restore mechanism via given BRBXXXINJ
-registers/instructions. But this would make our context switch bit expensive and
-also might not provide substantial benefit as well. Although this can be explored
-later after the initial enablement.
+-- 
+Cheers,
+Changbin Du
