@@ -2,160 +2,135 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 04A34C4167B
-	for <linux-perf-users@archiver.kernel.org>; Tue, 29 Nov 2022 09:16:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E2AC0C4321E
+	for <linux-perf-users@archiver.kernel.org>; Tue, 29 Nov 2022 11:20:21 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230019AbiK2JQW (ORCPT
+        id S232201AbiK2LUU (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Tue, 29 Nov 2022 04:16:22 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51648 "EHLO
+        Tue, 29 Nov 2022 06:20:20 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57820 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229732AbiK2JQU (ORCPT
+        with ESMTP id S232463AbiK2LUO (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Tue, 29 Nov 2022 04:16:20 -0500
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 16C425655F
-        for <linux-perf-users@vger.kernel.org>; Tue, 29 Nov 2022 01:15:27 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1669713326;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=kLZwFc2T16+VzxzvdeqP7dZ+DZAGfAAiD+u0EUrSQ8s=;
-        b=OvXTU6p0Ct0GG3VEsw6AOZSjwusuY/Ng6cuNku1asLSrx9F6Mc66uLvd7qxMRAZbOAL+J5
-        Q8DdnyjmltiPLfDTqjLE3SaozLtbjrW5pWS5w+X7WF2iZ/48KkE540YFRqNv9Zfo0kmyyh
-        pze47cOZYmn8QXjChvz5wyc79I3BaI4=
-Received: from mail-wm1-f71.google.com (mail-wm1-f71.google.com
- [209.85.128.71]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_128_GCM_SHA256) id
- us-mta-502-Q7XMLrJkOVOxz0QE4i_H2g-1; Tue, 29 Nov 2022 04:15:24 -0500
-X-MC-Unique: Q7XMLrJkOVOxz0QE4i_H2g-1
-Received: by mail-wm1-f71.google.com with SMTP id 1-20020a05600c028100b003cf7833293cso9903182wmk.3
-        for <linux-perf-users@vger.kernel.org>; Tue, 29 Nov 2022 01:15:24 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=content-transfer-encoding:in-reply-to:organization:from:references
-         :cc:to:content-language:subject:user-agent:mime-version:date
-         :message-id:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=kLZwFc2T16+VzxzvdeqP7dZ+DZAGfAAiD+u0EUrSQ8s=;
-        b=1D1c7ipQWXat9gKB5lF++XYrGNxZvvnzB8y/3f2YeIGQ43ffQ5s3wiMDzKGyoqLgI7
-         RcvfE7LbHaw+6Z57zZXROSY+u3bSJtZdOW/lSrSv7ThTv+KkYcVWym0/hrpbuAjDCc1a
-         fgicIKZKv9XTWhicB5qr3GZOD0O0vOzuF9jndHMuxRuIE4Qu/L59rZFlXNY7xBhXgiOr
-         WIqse08Ry44oAvBUUctSuUt+170phLdndg2B+ijttoMZWP4s0Ud2P9pL/ujbwcIaPgY7
-         dEYqf+G1G8aIVZSLbrMkq2rPTdrUtyTbJi68L36+Tn8xDWIMbd/xqUZ+5/g7+WRwX0aI
-         2VsQ==
-X-Gm-Message-State: ANoB5pmy4b7M5ZexQRmRXDhp3JMzAFjxKMChfsG/uxrA8/fBgKYIQkC3
-        eL8np6nVWrRV1MSLXkRRGnaewB+QESVD0TUTEuqEJIK7UGJkIBK/0beGzHPcei17xL1z+erDH+/
-        x3HTHxInOubZqkBtAAc2YAghW3DLS9g==
-X-Received: by 2002:a05:600c:430c:b0:3cf:8ed7:7124 with SMTP id p12-20020a05600c430c00b003cf8ed77124mr42243441wme.140.1669713323651;
-        Tue, 29 Nov 2022 01:15:23 -0800 (PST)
-X-Google-Smtp-Source: AA0mqf5aMoFyhfTZRz6WGw0GcgDkcONZAiRyZAh+e0PFHXmVnEtFtgvwKaxuOXbIxhdoVgI1OB8H+Q==
-X-Received: by 2002:a05:600c:430c:b0:3cf:8ed7:7124 with SMTP id p12-20020a05600c430c00b003cf8ed77124mr42243382wme.140.1669713323266;
-        Tue, 29 Nov 2022 01:15:23 -0800 (PST)
-Received: from ?IPV6:2003:cb:c705:ca00:3fb8:c253:3bf7:b60e? (p200300cbc705ca003fb8c2533bf7b60e.dip0.t-ipconnect.de. [2003:cb:c705:ca00:3fb8:c253:3bf7:b60e])
-        by smtp.gmail.com with ESMTPSA id n26-20020a05600c3b9a00b003c6b70a4d69sm1498998wms.42.2022.11.29.01.15.21
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 29 Nov 2022 01:15:22 -0800 (PST)
-Message-ID: <abcba252-13a0-50aa-79ec-28b649c892cd@redhat.com>
-Date:   Tue, 29 Nov 2022 10:15:20 +0100
+        Tue, 29 Nov 2022 06:20:14 -0500
+Received: from NAM12-DM6-obe.outbound.protection.outlook.com (mail-dm6nam12on2057.outbound.protection.outlook.com [40.107.243.57])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C38B65CD1F;
+        Tue, 29 Nov 2022 03:20:13 -0800 (PST)
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=g3NVPh7eu0WzZ9LOUApuXq63/bPjA+wGsKxyTqtGjgL7i8laj3sm80Tqe1SCoVCuXqnqg6nonunR+Y93kbCBn97N142YlP7X1u4HyB3AKHwDpy+mbJRQK7g2vDPYIBF9DAQG0e4szc5iYCQYJHzlWMCNYy8AX3nZjZ5PDUzBb+IGkQFLzqkJ7IzYeNbBgAknxNIdFQaoylME+uqHvPi/8Dr/mzfZCA96hBIzMjJLmjAlrK9tk7s1BvljChIKi3xSDMPYIHAfA5NgTW5q0upYzL2sUBug3d9wfYEd3AoN9BSbzZmO4I1OpqcmL0osxVZZ6ztYroUwgWoC+U+rq9qGRQ==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=7ooajfqJWe7OUG7py4DSXgA/GjTJhL+3Ey83dgCbkzg=;
+ b=e68pWXNCFFBShrKvxfvXJ0V2Ey1v6N0rtFpmgKd+WSzKwl7vdQOQp+9V20Yes3UZd2BlWeznZk20dxmByC89Pm+XB6wWKaplk/4B8vTLkTlu4GvfuAenC1mhnJrN5uGefIk1ErUtkJmSdHXLCU0LTPqL0Je3H1Y6Lb7NCEnxQaYKHmj7L1DJPu8h/HcVy35t3PnPyQfkMT1JXQBdrdO/NmTVGgVDVE781553+8ynEWbzzX0ZhK3FiBBDDMzS4I4SqTNey7uzE9ots9fGYwpXczHWFOec8AMRWNh3wUNzqjYc/JdjEhHbUSfyMxSxAI8JL1Z8BbKU0dR28uznQzp4jg==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
+ 165.204.84.17) smtp.rcpttodomain=kernel.org smtp.mailfrom=amd.com; dmarc=pass
+ (p=quarantine sp=quarantine pct=100) action=none header.from=amd.com;
+ dkim=none (message not signed); arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=7ooajfqJWe7OUG7py4DSXgA/GjTJhL+3Ey83dgCbkzg=;
+ b=KpXx9RySuiStCU1ePeQv65C+qsB/Zz4ST3A8y7QzqBv69+6WABqlqL41MGYC/3PARyCRfiD26A0XL59eLvj+qiSwkf1mgpJu1VauSY/eQgNRo/Dm/ZsI4C4VSaxbqCnJ1TbJQ1lUauHygYji6J63DGkUQWDE7LeuPqByI5veG4Y=
+Received: from DM6PR13CA0066.namprd13.prod.outlook.com (2603:10b6:5:134::43)
+ by MN2PR12MB4336.namprd12.prod.outlook.com (2603:10b6:208:1df::9) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.5857.23; Tue, 29 Nov
+ 2022 11:20:11 +0000
+Received: from DM6NAM11FT008.eop-nam11.prod.protection.outlook.com
+ (2603:10b6:5:134:cafe::88) by DM6PR13CA0066.outlook.office365.com
+ (2603:10b6:5:134::43) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.5857.23 via Frontend
+ Transport; Tue, 29 Nov 2022 11:20:11 +0000
+X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 165.204.84.17)
+ smtp.mailfrom=amd.com; dkim=none (message not signed)
+ header.d=none;dmarc=pass action=none header.from=amd.com;
+Received-SPF: Pass (protection.outlook.com: domain of amd.com designates
+ 165.204.84.17 as permitted sender) receiver=protection.outlook.com;
+ client-ip=165.204.84.17; helo=SATLEXMB04.amd.com; pr=C
+Received: from SATLEXMB04.amd.com (165.204.84.17) by
+ DM6NAM11FT008.mail.protection.outlook.com (10.13.172.85) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.20.5857.22 via Frontend Transport; Tue, 29 Nov 2022 11:20:10 +0000
+Received: from BLR-5CG113396H.amd.com (10.180.168.240) by SATLEXMB04.amd.com
+ (10.181.40.145) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2375.34; Tue, 29 Nov
+ 2022 05:20:04 -0600
+From:   Ravi Bangoria <ravi.bangoria@amd.com>
+To:     <acme@kernel.org>
+CC:     <ravi.bangoria@amd.com>, <irogers@google.com>, <jolsa@redhat.com>,
+        <namhyung@kernel.org>, <peterz@infradead.org>,
+        <mark.rutland@arm.com>, <kan.liang@linux.intel.com>,
+        <adrian.hunter@intel.com>, <alexander.shishkin@linux.intel.com>,
+        <carsten.haitzler@arm.com>, <leo.yan@linaro.org>,
+        <maddy@linux.ibm.com>, <kjain@linux.ibm.com>,
+        <atrajeev@linux.vnet.ibm.com>, <tmricht@linux.ibm.com>,
+        <linux-perf-users@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        <sandipan.das@amd.com>, <ananth.narayan@amd.com>,
+        <santosh.shukla@amd.com>
+Subject: [PATCH v2 0/2] perf test: Add event group test
+Date:   Tue, 29 Nov 2022 16:49:44 +0530
+Message-ID: <20221129111946.409-1-ravi.bangoria@amd.com>
+X-Mailer: git-send-email 2.25.1
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
- Thunderbird/102.4.1
-Subject: Re: [PATCH mm-unstable v1 16/20] mm/frame-vector: remove FOLL_FORCE
- usage
-Content-Language: en-US
-To:     Hans Verkuil <hverkuil@xs4all.nl>,
-        Andrew Morton <akpm@linux-foundation.org>
-Cc:     linux-kernel@vger.kernel.org, x86@kernel.org,
-        linux-alpha@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-ia64@vger.kernel.org, linux-mips@vger.kernel.org,
-        linuxppc-dev@lists.ozlabs.org, sparclinux@vger.kernel.org,
-        linux-um@lists.infradead.org, etnaviv@lists.freedesktop.org,
-        dri-devel@lists.freedesktop.org, linux-samsung-soc@vger.kernel.org,
-        linux-rdma@vger.kernel.org, linux-media@vger.kernel.org,
-        linux-fsdevel@vger.kernel.org, linux-mm@kvack.org,
-        linux-perf-users@vger.kernel.org,
-        linux-security-module@vger.kernel.org,
-        linux-kselftest@vger.kernel.org,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Jason Gunthorpe <jgg@ziepe.ca>,
-        John Hubbard <jhubbard@nvidia.com>,
-        Peter Xu <peterx@redhat.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Andrea Arcangeli <aarcange@redhat.com>,
-        Hugh Dickins <hughd@google.com>, Nadav Amit <namit@vmware.com>,
-        Vlastimil Babka <vbabka@suse.cz>,
-        Matthew Wilcox <willy@infradead.org>,
-        Mike Kravetz <mike.kravetz@oracle.com>,
-        Muchun Song <songmuchun@bytedance.com>,
-        Shuah Khan <shuah@kernel.org>,
-        Lucas Stach <l.stach@pengutronix.de>,
-        David Airlie <airlied@gmail.com>,
-        Oded Gabbay <ogabbay@kernel.org>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Christoph Hellwig <hch@infradead.org>,
-        Alex Williamson <alex.williamson@redhat.com>,
-        Marek Szyprowski <m.szyprowski@samsung.com>,
-        Tomasz Figa <tfiga@chromium.org>,
-        Mauro Carvalho Chehab <mchehab@kernel.org>
-References: <20221116102659.70287-1-david@redhat.com>
- <20221116102659.70287-17-david@redhat.com>
- <81fb0fa3-2e06-b765-56ac-a7d981194e59@redhat.com>
- <08b65ac6-6786-1080-18f8-d2be109c85fc@xs4all.nl>
- <9d0bf98a-3d6a-1082-e992-1338e1525935@redhat.com>
- <20221128145927.df895bf1966cfa125cae9668@linux-foundation.org>
- <22b1107b-0acc-5772-a883-8f3c4682eb1b@redhat.com>
- <c2681582-1e24-7ed9-e4fb-e2dd17a93aed@xs4all.nl>
-From:   David Hildenbrand <david@redhat.com>
-Organization: Red Hat
-In-Reply-To: <c2681582-1e24-7ed9-e4fb-e2dd17a93aed@xs4all.nl>
-Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-Originating-IP: [10.180.168.240]
+X-ClientProxiedBy: SATLEXMB04.amd.com (10.181.40.145) To SATLEXMB04.amd.com
+ (10.181.40.145)
+X-EOPAttributedMessage: 0
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: DM6NAM11FT008:EE_|MN2PR12MB4336:EE_
+X-MS-Office365-Filtering-Correlation-Id: 4ba45d54-9e3f-4529-97c7-08dad1fbade3
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info: QVmCuxxh5ckbgQFzzS00RDWhhmqKL2S/E+PijzJVri8d9VMkGvlnFJKqV4/bEN1jQb44KerkZgl1ibaSzlVbIUEgIhQHP42vXkgLbkZ53JhNqJKQhzHtD7QSY8Gu+ByPqPfKYHHsDd6p7np4WvLEtcfmXC6sBQfZZasQkhJOx/1a0/HOKPHyaGBNv3yFKTo83UgGNBFNmR8Mo+vgp/C+7G3sWRBs+PRY+QKhvnJ8FW6Lb+oMNCmTOkgDqHAwcUj3IeXPSBEgiNX9fIjYfyecmhZb1DNs0wW+MU8f8VjvGmIMTKwSxn35AbNgL8IrKOTG+IE5cnoEuknLAjypkG/QIvYgu04ITBCpy4+LJFt9eoQZ3biozb5X/fE8fMBvzzORkfBnR2xpqArLgraLJnFIwX3kNe0U10ybyVWsn+tTPVSXAbUtg6B45OVHJiYjBVdbO/3yu3RAPIcBkUFkxBBG9CLMpZ+VRMhJcNpuVRoHR9ROwyVUJ97VhILrlqKDIz56lre6SU0n4lvTrv0kh+g2EDw3NR3SaLLgJss9dvBC994Spf2TNKubL6r2kZ3eM2njjhnkAr9vbejKrmOe79EeW6cWTlFtr1G5lAtBhO4/XjEXfLLxA/FyIbnh0Ob+wxcxvSkfjtfoMTuj1RZmie8Zuvo8Jx+KlPKM+79bbTsZ1s5hRLscgnaQd9Zwuk+ftF3ZlaL1AFGQWVjqEifGKnRn9f11rCXwd6Q7e2Ayg65y5T8HPTuok3G3WqCv8MsfpWf8Qkp0QZQ5MGQMKozneU48mg==
+X-Forefront-Antispam-Report: CIP:165.204.84.17;CTRY:US;LANG:en;SCL:1;SRV:;IPV:CAL;SFV:NSPM;H:SATLEXMB04.amd.com;PTR:InfoDomainNonexistent;CAT:NONE;SFS:(13230022)(4636009)(396003)(136003)(376002)(346002)(39860400002)(451199015)(40470700004)(46966006)(36840700001)(54906003)(86362001)(83380400001)(36860700001)(6666004)(478600001)(7696005)(966005)(41300700001)(336012)(2616005)(316002)(6916009)(40460700003)(426003)(8936002)(47076005)(5660300002)(40480700001)(7416002)(44832011)(81166007)(356005)(2906002)(70206006)(26005)(82740400003)(8676002)(4326008)(16526019)(36756003)(1076003)(186003)(70586007)(82310400005)(36900700001);DIR:OUT;SFP:1101;
+X-OriginatorOrg: amd.com
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 29 Nov 2022 11:20:10.9935
+ (UTC)
+X-MS-Exchange-CrossTenant-Network-Message-Id: 4ba45d54-9e3f-4529-97c7-08dad1fbade3
+X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
+X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=3dd8961f-e488-4e60-8e11-a82d994e183d;Ip=[165.204.84.17];Helo=[SATLEXMB04.amd.com]
+X-MS-Exchange-CrossTenant-AuthSource: DM6NAM11FT008.eop-nam11.prod.protection.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Anonymous
+X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: MN2PR12MB4336
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-On 29.11.22 10:08, Hans Verkuil wrote:
-> On 29/11/2022 09:48, David Hildenbrand wrote:
->> On 28.11.22 23:59, Andrew Morton wrote:
->>> On Mon, 28 Nov 2022 09:18:47 +0100 David Hildenbrand <david@redhat.com> wrote:
->>>
->>>>> Less chances of things going wrong that way.
->>>>>
->>>>> Just mention in the v2 cover letter that the first patch was added to
->>>>> make it easy to backport that fix without being hampered by merge
->>>>> conflicts if it was added after your frame_vector.c patch.
->>>>
->>>> Yes, that's the way I would naturally do, it, however, Andrew prefers
->>>> delta updates for minor changes.
->>>>
->>>> @Andrew, whatever you prefer!
->>>
->>> I'm inclined to let things sit as they are.  Cross-tree conflicts
->>> happen, and Linus handles them.  I'll flag this (very simple) conflict
->>> in the pull request, if MM merges second.  If v4l merges second then
->>> hopefully they will do the same.  But this one is so simple that Linus
->>> hardly needs our help.
-> 
-> It's not about cross-tree conflicts, it's about the fact that my patch is
-> a fix that needs to be backported to older kernels. It should apply cleanly
-> to those older kernels if my patch goes in first, but if it is the other way
-> around I would have to make a new patch for the stable kernels.
+Multiple events in a group can belong to one or more pmus, however
+there are some limitations to it. One of the limitation is, perf
+doesn't allow creating a group of events from different hw pmus.
+Write a simple test to create various combinations of hw, sw and
+uncore pmu events and verify group creation succeeds or fails as
+expected.
 
-IIUC, the conflict will be resolved at merge time and the merge 
-resolution will be part of the merge commit. It doesn't matter in which 
-order the patches go upstream, the merge commit resolves the problematic 
-overlap.
+v1: https://lore.kernel.org/r/20221125032018.962-1-ravi.bangoria@amd.com
+v1->v2:
+ - #1 is new. It makes pmus list variable non-static and moves
+   it to a new file.
+ - Instead of hardcoded uncore pmu configuration, iterate over
+   pmus list and use whichever first uncore pmu is available.
 
-So your patch will be upstream as intended, where it can be cleanly 
-backported.
+Ravi Bangoria (2):
+  perf tool: Move pmus list variable to new a file
+  perf test: Add event group test
 
-Hope I am not twisting reality ;)
+ tools/perf/tests/Build          |   1 +
+ tools/perf/tests/builtin-test.c |   1 +
+ tools/perf/tests/event_groups.c | 109 ++++++++++++++++++++++++++++++++
+ tools/perf/tests/tests.h        |   1 +
+ tools/perf/util/Build           |   1 +
+ tools/perf/util/pmu.c           |   2 +-
+ tools/perf/util/pmus.c          |   5 ++
+ tools/perf/util/pmus.h          |   9 +++
+ 8 files changed, 128 insertions(+), 1 deletion(-)
+ create mode 100644 tools/perf/tests/event_groups.c
+ create mode 100644 tools/perf/util/pmus.c
+ create mode 100644 tools/perf/util/pmus.h
 
 -- 
-Thanks,
-
-David / dhildenb
+2.38.1
 
