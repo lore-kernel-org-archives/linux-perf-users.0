@@ -2,75 +2,260 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9B75AC433FE
-	for <linux-perf-users@archiver.kernel.org>; Tue, 29 Nov 2022 19:52:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7A1B4C4332F
+	for <linux-perf-users@archiver.kernel.org>; Tue, 29 Nov 2022 20:14:13 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233851AbiK2Tw5 (ORCPT
+        id S236871AbiK2UOM (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Tue, 29 Nov 2022 14:52:57 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39056 "EHLO
+        Tue, 29 Nov 2022 15:14:12 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53916 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S236191AbiK2Twz (ORCPT
+        with ESMTP id S237245AbiK2UOK (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Tue, 29 Nov 2022 14:52:55 -0500
-Received: from ams.source.kernel.org (ams.source.kernel.org [145.40.68.75])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DBB0D13DC6;
-        Tue, 29 Nov 2022 11:52:53 -0800 (PST)
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        Tue, 29 Nov 2022 15:14:10 -0500
+Received: from mga07.intel.com (mga07.intel.com [134.134.136.100])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 828DA45096;
+        Tue, 29 Nov 2022 12:14:08 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1669752848; x=1701288848;
+  h=message-id:date:mime-version:subject:to:cc:references:
+   from:in-reply-to:content-transfer-encoding;
+  bh=OR/jFlZjPptXY8eBFs+xobMqolGE6m2lVFnp7v0DM70=;
+  b=LnsTc6DAT+WGiHEeVDLykSkxl96P+cRgQ+qnp6mb59yHiWOljdp0vuFM
+   WnihGLxlXykdyxhlDQ+W/kXVgxB3McorN/2+sHHKihYmeiSsRAd/SJCuC
+   JkWxBEh9GqsKjBxmnBxB0quuRJi0f5hn5bYrLRQh/JWrWKa98cTjs5Xod
+   9mybRkAB9YBiAT18isCLYouPaUhZBh/o0VMRCR9vKtJOPGz6ewuOVotUz
+   m0+wjjLHIhyoAmEbPXRHHMur6G5n4VjJNEl8TJdCpWTyjfYWb87e8VYzY
+   3ZYFKzRXzBNmS8oTdwcCkFXP4Gaw8MVZC7/q+xUuwuvdmc9Acbhcknnpo
+   A==;
+X-IronPort-AV: E=McAfee;i="6500,9779,10546"; a="379505242"
+X-IronPort-AV: E=Sophos;i="5.96,204,1665471600"; 
+   d="scan'208";a="379505242"
+Received: from orsmga006.jf.intel.com ([10.7.209.51])
+  by orsmga105.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 29 Nov 2022 12:14:08 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=McAfee;i="6500,9779,10546"; a="621609399"
+X-IronPort-AV: E=Sophos;i="5.96,204,1665471600"; 
+   d="scan'208";a="621609399"
+Received: from linux.intel.com ([10.54.29.200])
+  by orsmga006.jf.intel.com with ESMTP; 29 Nov 2022 12:14:01 -0800
+Received: from [10.252.213.107] (kliang2-mobl1.ccr.corp.intel.com [10.252.213.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by ams.source.kernel.org (Postfix) with ESMTPS id 97D80B818BE;
-        Tue, 29 Nov 2022 19:52:52 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 7F184C433C1;
-        Tue, 29 Nov 2022 19:52:49 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1669751571;
-        bh=EbjnWIA7UlHyqlpI/1Jvnvf0lorL9t5cddUnbOhAQ58=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=i/oz/HhM+Wn+gey9GJ6O0RVeUiKsExYFx2io5qjeI+k7bxvIL3Lk09bpRGaUjn9ud
-         LEaKIsPwAW8RvmDYXV61mNwBS3DquLR/pG3kNawcIs6NnnSXS1hITrcUHO9rPyIfik
-         UhuV8jzwPo3T1PJutHygiibbPQSTHeftiWXnPURwzMY5xowazTsUvxHiCvRtufDwHQ
-         5YT/i2GLIa0cd69Q/Zan2Ev+MoEJlKOx86+eiGodHi6We92958h28S7CpSE1Hm+eKQ
-         rHkgolwM+Ys9CsiRadQMKZV8IKYsGvC2sx4cSxPKqs0W3qOrumInkjFvSkq1I+f8jV
-         Q6x/rvlA+b1/w==
-From:   Will Deacon <will@kernel.org>
-To:     Anshuman Khandual <anshuman.khandual@arm.com>,
-        linux-arm-kernel@lists.infradead.org
-Cc:     catalin.marinas@arm.com, kernel-team@android.com,
-        Will Deacon <will@kernel.org>,
-        linux-perf-users@vger.kernel.org,
-        Arnaldo Carvalho de Melo <acme@kernel.org>,
-        linux-kernel@vger.kernel.org, Mark Rutland <mark.rutland@arm.com>
-Subject: Re: [PATCH] arm64/perf: Replace PMU version number '0' with ID_AA64DFR0_EL1_PMUVer_NI
-Date:   Tue, 29 Nov 2022 19:52:43 +0000
-Message-Id: <166973110482.2371212.6194416321613362626.b4-ty@kernel.org>
-X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20221128025449.39085-1-anshuman.khandual@arm.com>
-References: <20221128025449.39085-1-anshuman.khandual@arm.com>
+        by linux.intel.com (Postfix) with ESMTPS id BB8C458090D;
+        Tue, 29 Nov 2022 12:13:58 -0800 (PST)
+Message-ID: <0dd566ab-38fd-2204-f59c-e74b2244828b@linux.intel.com>
+Date:   Tue, 29 Nov 2022 15:13:57 -0500
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 8bit
+User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:102.0) Gecko/20100101
+ Thunderbird/102.5.0
+Subject: Re: [PATCH v2 2/2] perf test: Add event group test
+To:     Ravi Bangoria <ravi.bangoria@amd.com>, acme@kernel.org
+Cc:     irogers@google.com, jolsa@redhat.com, namhyung@kernel.org,
+        peterz@infradead.org, mark.rutland@arm.com,
+        adrian.hunter@intel.com, alexander.shishkin@linux.intel.com,
+        carsten.haitzler@arm.com, leo.yan@linaro.org, maddy@linux.ibm.com,
+        kjain@linux.ibm.com, atrajeev@linux.vnet.ibm.com,
+        tmricht@linux.ibm.com, linux-perf-users@vger.kernel.org,
+        linux-kernel@vger.kernel.org, sandipan.das@amd.com,
+        ananth.narayan@amd.com, santosh.shukla@amd.com
+References: <20221129111946.409-1-ravi.bangoria@amd.com>
+ <20221129111946.409-3-ravi.bangoria@amd.com>
+Content-Language: en-US
+From:   "Liang, Kan" <kan.liang@linux.intel.com>
+In-Reply-To: <20221129111946.409-3-ravi.bangoria@amd.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-On Mon, 28 Nov 2022 08:24:49 +0530, Anshuman Khandual wrote:
-> __armv8pmu_probe_pmu() returns if detected PMU is either not implemented or
-> implementation defined. Extracted ID_AA64DFR0_EL1_PMUVer value, when PMU is
-> not implemented is '0' which can be replaced with ID_AA64DFR0_EL1_PMUVer_NI
-> defined as '0b0000'.
+
+
+On 2022-11-29 6:19 a.m., Ravi Bangoria wrote:
+> Multiple events in a group can belong to one or more pmus, however
+> there are some limitations to it. One of the limitation is, perf
+> doesn't allow creating a group of events from different hw pmus.
+> Write a simple test to create various combinations of hw, sw and
+> uncore pmu events and verify group creation succeeds or fails as
+> expected.
 > 
+> Signed-off-by: Ravi Bangoria <ravi.bangoria@amd.com>
+> ---
+>  tools/perf/tests/Build          |   1 +
+>  tools/perf/tests/builtin-test.c |   1 +
+>  tools/perf/tests/event_groups.c | 109 ++++++++++++++++++++++++++++++++
+>  tools/perf/tests/tests.h        |   1 +
+>  4 files changed, 112 insertions(+)
+>  create mode 100644 tools/perf/tests/event_groups.c
 > 
+> diff --git a/tools/perf/tests/Build b/tools/perf/tests/Build
+> index 11b69023011b..658b5052c24d 100644
+> --- a/tools/perf/tests/Build
+> +++ b/tools/perf/tests/Build
+> @@ -67,6 +67,7 @@ perf-y += expand-cgroup.o
+>  perf-y += perf-time-to-tsc.o
+>  perf-y += dlfilter-test.o
+>  perf-y += sigtrap.o
+> +perf-y += event_groups.o
+>  
+>  $(OUTPUT)tests/llvm-src-base.c: tests/bpf-script-example.c tests/Build
+>  	$(call rule_mkdir)
+> diff --git a/tools/perf/tests/builtin-test.c b/tools/perf/tests/builtin-test.c
+> index 4c6ae59a4dfd..ddd8262bfa26 100644
+> --- a/tools/perf/tests/builtin-test.c
+> +++ b/tools/perf/tests/builtin-test.c
+> @@ -110,6 +110,7 @@ static struct test_suite *generic_tests[] = {
+>  	&suite__perf_time_to_tsc,
+>  	&suite__dlfilter,
+>  	&suite__sigtrap,
+> +	&suite__event_groups,
+>  	NULL,
+>  };
+>  
+> diff --git a/tools/perf/tests/event_groups.c b/tools/perf/tests/event_groups.c
+> new file mode 100644
+> index 000000000000..4002b467cc8f
+> --- /dev/null
+> +++ b/tools/perf/tests/event_groups.c
+> @@ -0,0 +1,109 @@
+> +// SPDX-License-Identifier: GPL-2.0
+> +#include <string.h>
+> +#include <unistd.h>
+> +#include <stdio.h>
+> +#include "linux/perf_event.h"
+> +#include "tests.h"
+> +#include "debug.h"
+> +#include "pmu.h"
+> +#include "pmus.h"
+> +#include "header.h"
+> +#include "../perf-sys.h"
+> +
+> +static int event_open(int type, unsigned long config, int group_fd)
+> +{
+> +	struct perf_event_attr attr;
+> +
+> +	memset(&attr, 0, sizeof(struct perf_event_attr));
+> +	attr.type = type;
+> +	attr.size = sizeof(struct perf_event_attr);
+> +	attr.config = config;
+> +	/*
+> +	 * When creating an event group, typically the group leader is
+> +	 * initialized with disabled set to 1 and any child events are
+> +	 * initialized with disabled set to 0. Despite disabled being 0,
+> +	 * the child events will not start until the group leader is
+> +	 * enabled.
+> +	 */
+> +	attr.disabled = group_fd == -1 ? 1 : 0;
+> +
+> +	return sys_perf_event_open(&attr, -1, 0, group_fd, 0);
+> +}
+> +
+> +/* hw: cycles, sw: context-switch, uncore: [arch dependent] */
+> +static int type[] = {0, 1, -1};
+> +static unsigned long config[] = {0, 3, 0};
+> +
+> +static int setup_uncore_event(void)
+> +{
+> +	struct perf_pmu *pmu;
+> +
+> +	if (list_empty(&pmus))
+> +		perf_pmu__scan(NULL);
+> +
+> +	perf_pmus__for_each_pmu(pmu) {
+> +		if (pmu->is_uncore) {
 
-Applied to will (for-next/perf), thanks!
+Always using the first uncore PMU may trigger false alarm on some Intel
+platforms. For example, Intel has free running uncore PMUs (e.g.,
+uncore_imc_free_running_0), which only supports special event encoding
+0xff. The config 0 must fails.
+You may want to add the below check to ignore the free running uncore PMUs.
+                        if (strstr(pmu->name, "free_running"))
+                                continue;
 
-[1/1] arm64/perf: Replace PMU version number '0' with ID_AA64DFR0_EL1_PMUVer_NI
-      https://git.kernel.org/will/c/cc91b9481605
 
-Cheers,
--- 
-Will
+Also, some uncore PMUs only support two counters. But the test assumes
+that the number of counters > 2. You may want to limit the size of the
+group for 2 for a pure uncore group.
 
-https://fixes.arm64.dev
-https://next.arm64.dev
-https://will.arm64.dev
+
+Thanks,
+Kan
+
+> +			pr_debug("Using %s for uncore pmu event\n", pmu->name);
+> +			type[2] = pmu->type;
+> +			return 0;
+> +		}
+> +	}
+> +	return -1;
+> +}
+> +
+> +static int run_test(int i, int j, int k)
+> +{
+> +	int erroneous = ((((1 << i) | (1 << j) | (1 << k)) & 5) == 5);
+> +	int group_fd, sibling_fd1, sibling_fd2;
+> +
+> +	group_fd = event_open(type[i], config[i], -1);
+> +	if (group_fd == -1)
+> +		return -1;
+> +
+> +	sibling_fd1 = event_open(type[j], config[j], group_fd);
+> +	if (sibling_fd1 == -1) {
+> +		close(group_fd);
+> +		return erroneous ? 0 : -1;
+> +	}
+> +
+> +	sibling_fd2 = event_open(type[k], config[k], group_fd);
+> +	if (sibling_fd2 == -1) {
+> +		close(sibling_fd1);
+> +		close(group_fd);
+> +		return erroneous ? 0 : -1;
+> +	}
+> +
+> +	close(sibling_fd2);
+> +	close(sibling_fd1);
+> +	close(group_fd);
+> +	return erroneous ? -1 : 0;
+> +}
+> +
+> +static int test__event_groups(struct test_suite *text __maybe_unused, int subtest __maybe_unused)
+> +{
+> +	int i, j, k;
+> +	int ret;
+> +	int r;
+> +
+> +	ret = setup_uncore_event();
+> +	if (ret || type[2] == -1)
+> +		return TEST_SKIP;
+> +
+> +	ret = TEST_OK;
+> +	for (i = 0; i < 3; i++) {
+> +		for (j = 0; j < 3; j++) {
+> +			for (k = 0; k < 3; k++) {
+> +				r = run_test(i, j, k);
+> +				if (r)
+> +					ret = TEST_FAIL;
+> +
+> +				pr_debug("0x%x 0x%lx, 0x%x 0x%lx, 0x%x 0x%lx: %s\n",
+> +					 type[i], config[i], type[j], config[j],
+> +					 type[k], config[k], r ? "Fail" : "Pass");
+> +			}
+> +		}
+> +	}
+> +	return ret;
+> +}
+> +
+> +DEFINE_SUITE("Event groups", event_groups);
+> diff --git a/tools/perf/tests/tests.h b/tools/perf/tests/tests.h
+> index e15f24cfc909..fb4b5ad4dd0f 100644
+> --- a/tools/perf/tests/tests.h
+> +++ b/tools/perf/tests/tests.h
+> @@ -147,6 +147,7 @@ DECLARE_SUITE(expand_cgroup_events);
+>  DECLARE_SUITE(perf_time_to_tsc);
+>  DECLARE_SUITE(dlfilter);
+>  DECLARE_SUITE(sigtrap);
+> +DECLARE_SUITE(event_groups);
+>  
+>  /*
+>   * PowerPC and S390 do not support creation of instruction breakpoints using the
