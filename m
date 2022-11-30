@@ -2,47 +2,47 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2E5B8C433FE
-	for <linux-perf-users@archiver.kernel.org>; Wed, 30 Nov 2022 18:47:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 40667C4321E
+	for <linux-perf-users@archiver.kernel.org>; Wed, 30 Nov 2022 18:53:06 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231324AbiK3Srr (ORCPT
+        id S230332AbiK3SxF (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Wed, 30 Nov 2022 13:47:47 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33866 "EHLO
+        Wed, 30 Nov 2022 13:53:05 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42402 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231308AbiK3Srp (ORCPT
+        with ESMTP id S231528AbiK3Sw5 (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Wed, 30 Nov 2022 13:47:45 -0500
-Received: from mail-wm1-f44.google.com (mail-wm1-f44.google.com [209.85.128.44])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 117D3657D;
-        Wed, 30 Nov 2022 10:47:44 -0800 (PST)
-Received: by mail-wm1-f44.google.com with SMTP id m7-20020a05600c090700b003cf8a105d9eso2109974wmp.5;
-        Wed, 30 Nov 2022 10:47:44 -0800 (PST)
+        Wed, 30 Nov 2022 13:52:57 -0500
+Received: from mail-wm1-f46.google.com (mail-wm1-f46.google.com [209.85.128.46])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 518CF1B7B4;
+        Wed, 30 Nov 2022 10:52:48 -0800 (PST)
+Received: by mail-wm1-f46.google.com with SMTP id ay14-20020a05600c1e0e00b003cf6ab34b61so2158805wmb.2;
+        Wed, 30 Nov 2022 10:52:48 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
         h=cc:to:subject:message-id:date:from:in-reply-to:references
          :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
          :reply-to;
-        bh=dY6t4MKpUcKU1pHAOXdVXL54lRiEp804yvwvE85yjss=;
-        b=BJw0Plv0nn92aUgO/Ic+KimdkNPG91umt2wKb5b3/IytBI90rQz2hCUxS4p98dE8lm
-         Uv5AxoaU0vHeXmU2kQLAB46blnGnl2zTZz0fPoNdIS8g2BdonaFKFQ2jAvBtF8+dldr5
-         HE0An2ZdBbf+XoPRuqYm7Zkge8qBquWJGtEyEVTzRYqverh+Cj4EQaq8+f181MprK8rD
-         GvmPbkBxx4WJs80pD1JkuRj7qX/q/AY+U6NGDlRdDUJ4oLvrv/XCEcTFVAzZ+CvF8oUt
-         vxj2DfPSXKL2gFMkS77CtluvtOz+zUixMlIT8/i0lxla7LlRgpUsH1J/z7hgw3aOZGwt
-         Jk/Q==
-X-Gm-Message-State: ANoB5plQDMz0lEG6KvkFV9xNuaVsb4RM+zm38aGqucdZL7Hejlrlx0fP
-        hCVFUJbLq3hXKu3Tq3OvdNRAf4bxQNoKMPxF9oA=
-X-Google-Smtp-Source: AA0mqf65PtPlMRhlQsYy8OJFRrHgR5ElnxUhBum5EFHY/d+ex0MlBLrzoDD5PAvg5IqTOrLkwTUR2G9vRf4UwL0U2yY=
+        bh=37mvhHvnN9tIEk/mahtS0ysu6GiJkb+pcUB5MovB1AQ=;
+        b=aX+vm/hKec+Nn+3/ZFoZSBxAuQUl5qcRiZL2bP9Sdp8aSVnJz8+mrDGweN3nEN1LNc
+         7f9qqrFy+0ICOOSd28jCm4uocYWOIoJaEysGnHFuXJ2Im4woMln1nyM/Xs0w7Wp6Woou
+         ecmQq5ylHB5gK75Zf8tHhS50Vq3rhobiyCVqO5Pr6mW2senpKoDMaLqBVq1VF6DZzU4K
+         zS4eX2KYEzDYctr87+hNKn0zb2adpYWItxxP5kJUurqgvjCYwAQQ+cDkDAGN+WrUC81z
+         gkHfya3nQDHCJpfsKeLgYJ7F7ehYZ7bkR5u8ZQvpB0xOIJ8MdyXod8uYBv8qcLXWZDqR
+         R90A==
+X-Gm-Message-State: ANoB5pnitUjBredYQh9JGDG+5yhijMiDxD2YM93fefV23rf9//GXmasK
+        YOFp5EyJ9eJVcqV3QQESYEEnB8OtJ7tFNOcoqYoljAJm
+X-Google-Smtp-Source: AA0mqf6rzAiBNwGFzyYND35PgFg4ZA7Q1B5uIplVux3+ixP2BzDBLEbBYgU3y2ZfZ6ML9ZC0pldHMRthLYx13hrfiQQ=
 X-Received: by 2002:a05:600c:5012:b0:3cf:486f:2700 with SMTP id
- n18-20020a05600c501200b003cf486f2700mr37479334wmr.83.1669834063396; Wed, 30
- Nov 2022 10:47:43 -0800 (PST)
+ n18-20020a05600c501200b003cf486f2700mr37490744wmr.83.1669834367131; Wed, 30
+ Nov 2022 10:52:47 -0800 (PST)
 MIME-Version: 1.0
-References: <20221130062935.2219247-1-irogers@google.com> <20221130062935.2219247-2-irogers@google.com>
-In-Reply-To: <20221130062935.2219247-2-irogers@google.com>
+References: <20221130062935.2219247-1-irogers@google.com> <20221130062935.2219247-3-irogers@google.com>
+In-Reply-To: <20221130062935.2219247-3-irogers@google.com>
 From:   Namhyung Kim <namhyung@kernel.org>
-Date:   Wed, 30 Nov 2022 10:47:31 -0800
-Message-ID: <CAM9d7cjdRWhx2J4CpO88u5sSRYPBeyenGb3EViAhOdhhQSW3nA@mail.gmail.com>
-Subject: Re: [PATCH v2 1/4] perf util: Make header guard consistent with tool
+Date:   Wed, 30 Nov 2022 10:52:35 -0800
+Message-ID: <CAM9d7cg1pmkMTFEoK7tNxQTmux7obr7KPr-5SPNDrB=S5Xp=vw@mail.gmail.com>
+Subject: Re: [PATCH v2 2/4] perf util: Add host_is_bigendian to util.h
 To:     Ian Rogers <irogers@google.com>
 Cc:     Peter Zijlstra <peterz@infradead.org>,
         Ingo Molnar <mingo@redhat.com>,
@@ -62,41 +62,58 @@ Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-On Tue, Nov 29, 2022 at 10:29 PM Ian Rogers <irogers@google.com> wrote:
+On Tue, Nov 29, 2022 at 10:30 PM Ian Rogers <irogers@google.com> wrote:
 >
-> Remove git reference by changing GIT_COMPAT_UTIL_H to __PERF_UTIL_H.
+> Avoid libtraceevent dependency for tep_is_bigendian or trace-event.h
+> dependency for bigendian. Add a new host_is_bigendian to util.h, using
+> the compiler defined __BYTE_ORDER__ when available.
 >
 > Signed-off-by: Ian Rogers <irogers@google.com>
 
 Acked-by: Namhyung Kim <namhyung@kernel.org>
 
+A nit below...
+
+> ---
+[SNIP]
+> diff --git a/tools/perf/util/util.h b/tools/perf/util/util.h
+> index 63cdab0e5314..87d418cb6792 100644
+> --- a/tools/perf/util/util.h
+> +++ b/tools/perf/util/util.h
+> @@ -94,4 +94,23 @@ int do_realloc_array_as_needed(void **arr, size_t *arr_sz, size_t x,
+>                 0;                                              \
+>         })
+>
+> +static inline bool host_is_bigendian(void)
+> +{
+> +#ifdef __BYTE_ORDER__
+> +#if __BYTE_ORDER__ == __ORDER_LITTLE_ENDIAN__
+> +       return false;
+> +#elif __BYTE_ORDER__ == __ORDER_BIG_ENDIAN__
+> +       return true;
+> +#else
+> +#error "Unrecognized __BYTE_ORDER__"
+> +#endif
+> +#else
+
+It'd be nice if we could have a comment at least there's a nested
+ifdef condition.  Like below?
+
+#else  /* !__BYTE_ORDER__ */
+
 Thanks,
 Namhyung
 
 
-> ---
->  tools/perf/util/util.h | 6 +++---
->  1 file changed, 3 insertions(+), 3 deletions(-)
->
-> diff --git a/tools/perf/util/util.h b/tools/perf/util/util.h
-> index c1f2d423a9ec..63cdab0e5314 100644
-> --- a/tools/perf/util/util.h
-> +++ b/tools/perf/util/util.h
-> @@ -1,6 +1,6 @@
->  /* SPDX-License-Identifier: GPL-2.0 */
-> -#ifndef GIT_COMPAT_UTIL_H
-> -#define GIT_COMPAT_UTIL_H
-> +#ifndef __PERF_UTIL_H
-> +#define __PERF_UTIL_H
->
->  #define _BSD_SOURCE 1
->  /* glibc 2.20 deprecates _BSD_SOURCE in favour of _DEFAULT_SOURCE */
-> @@ -94,4 +94,4 @@ int do_realloc_array_as_needed(void **arr, size_t *arr_sz, size_t x,
->                 0;                                              \
->         })
->
-> -#endif /* GIT_COMPAT_UTIL_H */
-> +#endif /* __PERF_UTIL_H */
+> +       unsigned char str[] = { 0x1, 0x2, 0x3, 0x4, 0x0, 0x0, 0x0, 0x0};
+> +       unsigned int *ptr;
+> +
+> +       ptr = (unsigned int *)(void *)str;
+> +       return *ptr == 0x01020304;
+> +#endif
+> +}
+> +
+>  #endif /* __PERF_UTIL_H */
 > --
 > 2.38.1.584.g0f3c55d4c2-goog
 >
