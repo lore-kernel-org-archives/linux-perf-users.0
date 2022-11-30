@@ -2,72 +2,71 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EFBB8C4321E
-	for <linux-perf-users@archiver.kernel.org>; Wed, 30 Nov 2022 18:35:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2E5B8C433FE
+	for <linux-perf-users@archiver.kernel.org>; Wed, 30 Nov 2022 18:47:48 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230411AbiK3Sfa (ORCPT
+        id S231324AbiK3Srr (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Wed, 30 Nov 2022 13:35:30 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44074 "EHLO
+        Wed, 30 Nov 2022 13:47:47 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33866 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230420AbiK3SfT (ORCPT
+        with ESMTP id S231308AbiK3Srp (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Wed, 30 Nov 2022 13:35:19 -0500
-Received: from mail-wr1-f46.google.com (mail-wr1-f46.google.com [209.85.221.46])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5108094908;
-        Wed, 30 Nov 2022 10:35:17 -0800 (PST)
-Received: by mail-wr1-f46.google.com with SMTP id v1so28519254wrt.11;
-        Wed, 30 Nov 2022 10:35:17 -0800 (PST)
+        Wed, 30 Nov 2022 13:47:45 -0500
+Received: from mail-wm1-f44.google.com (mail-wm1-f44.google.com [209.85.128.44])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 117D3657D;
+        Wed, 30 Nov 2022 10:47:44 -0800 (PST)
+Received: by mail-wm1-f44.google.com with SMTP id m7-20020a05600c090700b003cf8a105d9eso2109974wmp.5;
+        Wed, 30 Nov 2022 10:47:44 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
         h=cc:to:subject:message-id:date:from:in-reply-to:references
          :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
          :reply-to;
-        bh=vODMQMs9AFsDd392YJDnQtLYs2gL4oduDS+rooXoVmo=;
-        b=EPNX6trFRYCJ6o/n+eQizWT42VaUaQe5kCWPyoRsi2Ff2vr/qegTYPjBDmXLqpiKoC
-         vUIcWQevIsppIf1oICNwxcAY+s1PxPHmyVSE+W+e/g3b1v9MuWflfsmlgJYg4Ov6t7bW
-         ZKR9jDVmEr04UUn+l7DRvs4cvIzi67tEdNZTM8hLCZMHeJMmo6sw7Kw45YeBdCvTe/Qv
-         8kBtnQzaKrGGtmL7qqYP+aVL9EhONgy61YTKJ3QRDW/HMMmtBWI84mIfvyP3iK2vwc5C
-         1HkB4HJ6CPdZqy1yzd3xIawZqR7L/TrHsvvP8ZMC9BPORGLV/gqO9PHKhxm9ffUOh3kL
-         lIcw==
-X-Gm-Message-State: ANoB5pkJGv4UlWVd2Bqci5MIH4HH/kkm/x61N2+q028Wlpeyei/AtI9/
-        TazsqQOvAd3MbhCmsED1nHKZNH0UB/VNB6afJTU=
-X-Google-Smtp-Source: AA0mqf6ABKES+9nS+Dn5EVZt/UNR8lE0tPKf/UqLfb0DvFVqMd1IvSh/Jnw+GIikfm6dXmVJ4cUmm5SWqXdzMbail+0=
-X-Received: by 2002:adf:df05:0:b0:242:1783:5316 with SMTP id
- y5-20020adfdf05000000b0024217835316mr10336371wrl.701.1669833315512; Wed, 30
- Nov 2022 10:35:15 -0800 (PST)
+        bh=dY6t4MKpUcKU1pHAOXdVXL54lRiEp804yvwvE85yjss=;
+        b=BJw0Plv0nn92aUgO/Ic+KimdkNPG91umt2wKb5b3/IytBI90rQz2hCUxS4p98dE8lm
+         Uv5AxoaU0vHeXmU2kQLAB46blnGnl2zTZz0fPoNdIS8g2BdonaFKFQ2jAvBtF8+dldr5
+         HE0An2ZdBbf+XoPRuqYm7Zkge8qBquWJGtEyEVTzRYqverh+Cj4EQaq8+f181MprK8rD
+         GvmPbkBxx4WJs80pD1JkuRj7qX/q/AY+U6NGDlRdDUJ4oLvrv/XCEcTFVAzZ+CvF8oUt
+         vxj2DfPSXKL2gFMkS77CtluvtOz+zUixMlIT8/i0lxla7LlRgpUsH1J/z7hgw3aOZGwt
+         Jk/Q==
+X-Gm-Message-State: ANoB5plQDMz0lEG6KvkFV9xNuaVsb4RM+zm38aGqucdZL7Hejlrlx0fP
+        hCVFUJbLq3hXKu3Tq3OvdNRAf4bxQNoKMPxF9oA=
+X-Google-Smtp-Source: AA0mqf65PtPlMRhlQsYy8OJFRrHgR5ElnxUhBum5EFHY/d+ex0MlBLrzoDD5PAvg5IqTOrLkwTUR2G9vRf4UwL0U2yY=
+X-Received: by 2002:a05:600c:5012:b0:3cf:486f:2700 with SMTP id
+ n18-20020a05600c501200b003cf486f2700mr37479334wmr.83.1669834063396; Wed, 30
+ Nov 2022 10:47:43 -0800 (PST)
 MIME-Version: 1.0
-References: <20221130165158.517385-1-james.clark@arm.com>
-In-Reply-To: <20221130165158.517385-1-james.clark@arm.com>
+References: <20221130062935.2219247-1-irogers@google.com> <20221130062935.2219247-2-irogers@google.com>
+In-Reply-To: <20221130062935.2219247-2-irogers@google.com>
 From:   Namhyung Kim <namhyung@kernel.org>
-Date:   Wed, 30 Nov 2022 10:35:03 -0800
-Message-ID: <CAM9d7cg=nYY8PsjXZxui4YJQgwdiJUmwW5t5_0018R1yL61F=A@mail.gmail.com>
-Subject: Re: [PATCH] perf: Fix interpretation of branch records
-To:     James Clark <james.clark@arm.com>
-Cc:     linux-perf-users@vger.kernel.org, acme@kernel.org,
-        sandipan.das@amd.com, Anshuman.Khandual@arm.com,
-        linux-kernel@vger.kernel.org,
-        Peter Zijlstra <peterz@infradead.org>,
+Date:   Wed, 30 Nov 2022 10:47:31 -0800
+Message-ID: <CAM9d7cjdRWhx2J4CpO88u5sSRYPBeyenGb3EViAhOdhhQSW3nA@mail.gmail.com>
+Subject: Re: [PATCH v2 1/4] perf util: Make header guard consistent with tool
+To:     Ian Rogers <irogers@google.com>
+Cc:     Peter Zijlstra <peterz@infradead.org>,
         Ingo Molnar <mingo@redhat.com>,
+        Arnaldo Carvalho de Melo <acme@kernel.org>,
         Mark Rutland <mark.rutland@arm.com>,
         Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Jiri Olsa <jolsa@kernel.org>
+        Jiri Olsa <jolsa@kernel.org>,
+        Masami Hiramatsu <mhiramat@kernel.org>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Adrian Hunter <adrian.hunter@intel.com>,
+        Leo Yan <leo.yan@linaro.org>,
+        Kan Liang <kan.liang@linux.intel.com>,
+        linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org,
+        Stephane Eranian <eranian@google.com>
 Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-On Wed, Nov 30, 2022 at 8:52 AM James Clark <james.clark@arm.com> wrote:
+On Tue, Nov 29, 2022 at 10:29 PM Ian Rogers <irogers@google.com> wrote:
 >
-> Commit 93315e46b000 ("perf/core: Add speculation info to branch
-> entries") added a new field in between type and new_type. Perf has
-> its own copy of this struct so update it to match the kernel side.
+> Remove git reference by changing GIT_COMPAT_UTIL_H to __PERF_UTIL_H.
 >
-> This doesn't currently cause any issues because new_type is only used
-> by the Arm BRBE driver which isn't merged yet.
->
-> Fixes: 93315e46b000 ("perf/core: Add speculation info to branch entries")
-> Signed-off-by: James Clark <james.clark@arm.com>
+> Signed-off-by: Ian Rogers <irogers@google.com>
 
 Acked-by: Namhyung Kim <namhyung@kernel.org>
 
@@ -76,25 +75,28 @@ Namhyung
 
 
 > ---
->  tools/perf/util/branch.h | 3 ++-
->  1 file changed, 2 insertions(+), 1 deletion(-)
+>  tools/perf/util/util.h | 6 +++---
+>  1 file changed, 3 insertions(+), 3 deletions(-)
 >
-> diff --git a/tools/perf/util/branch.h b/tools/perf/util/branch.h
-> index d6017c9b1872..3ed792db1125 100644
-> --- a/tools/perf/util/branch.h
-> +++ b/tools/perf/util/branch.h
-> @@ -22,9 +22,10 @@ struct branch_flags {
->                         u64 abort:1;
->                         u64 cycles:16;
->                         u64 type:4;
-> +                       u64 spec:2;
->                         u64 new_type:4;
->                         u64 priv:3;
-> -                       u64 reserved:33;
-> +                       u64 reserved:31;
->                 };
->         };
->  };
+> diff --git a/tools/perf/util/util.h b/tools/perf/util/util.h
+> index c1f2d423a9ec..63cdab0e5314 100644
+> --- a/tools/perf/util/util.h
+> +++ b/tools/perf/util/util.h
+> @@ -1,6 +1,6 @@
+>  /* SPDX-License-Identifier: GPL-2.0 */
+> -#ifndef GIT_COMPAT_UTIL_H
+> -#define GIT_COMPAT_UTIL_H
+> +#ifndef __PERF_UTIL_H
+> +#define __PERF_UTIL_H
+>
+>  #define _BSD_SOURCE 1
+>  /* glibc 2.20 deprecates _BSD_SOURCE in favour of _DEFAULT_SOURCE */
+> @@ -94,4 +94,4 @@ int do_realloc_array_as_needed(void **arr, size_t *arr_sz, size_t x,
+>                 0;                                              \
+>         })
+>
+> -#endif /* GIT_COMPAT_UTIL_H */
+> +#endif /* __PERF_UTIL_H */
 > --
-> 2.25.1
+> 2.38.1.584.g0f3c55d4c2-goog
 >
