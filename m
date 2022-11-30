@@ -2,118 +2,168 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 20FB7C4321E
-	for <linux-perf-users@archiver.kernel.org>; Wed, 30 Nov 2022 20:18:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 38FD4C4321E
+	for <linux-perf-users@archiver.kernel.org>; Wed, 30 Nov 2022 21:21:46 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230154AbiK3USC (ORCPT
+        id S229519AbiK3VVp (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Wed, 30 Nov 2022 15:18:02 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56656 "EHLO
+        Wed, 30 Nov 2022 16:21:45 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51442 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230346AbiK3URU (ORCPT
+        with ESMTP id S229468AbiK3VVn (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Wed, 30 Nov 2022 15:17:20 -0500
-Received: from mail-wr1-x432.google.com (mail-wr1-x432.google.com [IPv6:2a00:1450:4864:20::432])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C4D47934CF
-        for <linux-perf-users@vger.kernel.org>; Wed, 30 Nov 2022 12:13:24 -0800 (PST)
-Received: by mail-wr1-x432.google.com with SMTP id h11so21651057wrw.13
-        for <linux-perf-users@vger.kernel.org>; Wed, 30 Nov 2022 12:13:24 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20210112;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:from:to:cc:subject:date:message-id:reply-to;
-        bh=2AAz1p3amdjSsxmPSJU+uGZAdAbSjyxAbikHqGyzpmk=;
-        b=nCNaAYb3XzkERXQkz2iPfkCS79RviSzmXslWPza+frd/CWKfVpYgJwneIY7uYo0TJE
-         kTbxjGHIjrWKsDkbC77zJRHJIZY8KNuLnUwx/6LFHKUJ0Rj35SAew4DrxVajLXWcYNoW
-         5+VTUZzEfuSwVKPFQK4L3hTKlZtN51Lpl0yL7hQ80XRYqz0ZZUMpdy+61UlN2IBdNAD+
-         kje/YBR6vT4oA5Pw74sFZBmbBKnW8QtQtP4ngiGm3HefZOjiJ0OTB/tKpK6i943h0XvF
-         SqljAkss+WFcGjsgETKJIo3dhnHpqwyKWI2GcEMp0dJSvYtIIePuC5E68lx1PbHNWYpQ
-         qfGg==
+        Wed, 30 Nov 2022 16:21:43 -0500
+Received: from mail-wr1-f51.google.com (mail-wr1-f51.google.com [209.85.221.51])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9C9C28B190;
+        Wed, 30 Nov 2022 13:21:42 -0800 (PST)
+Received: by mail-wr1-f51.google.com with SMTP id h11so21897863wrw.13;
+        Wed, 30 Nov 2022 13:21:42 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
         h=cc:to:subject:message-id:date:from:in-reply-to:references
          :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
          :reply-to;
-        bh=2AAz1p3amdjSsxmPSJU+uGZAdAbSjyxAbikHqGyzpmk=;
-        b=1th3aqWQ4DeqmUa1Bzu5wDRr52VZLjwJpkRLb0tB3skzmfRXZRYbnh8O57Vnrn9vL3
-         u6uI4OpaQXhr4D6J+h7Az13JLXRHQBY3Vq/JeVq9qw7RBGqq7s/wdlDwNSV40q2CRVtf
-         rlG0RV3rTwsoxt57Vq90qPhxuQT4QwAJ+wka35M7BaDKACIYvRdSUCIA76DB70Oh3rtc
-         13YOeuviHWKQgQ9JDOsU9UBvcVG6yuHJRpLYBb2/xp+Q98ebjHanOWkjmjiOLnVk2nHf
-         Skqkfis9AohMfXu4erVyXwooUNzmlb+O+aqlxM/7btBXWLZoUFtX94NnRWj3YpWermsY
-         FvOw==
-X-Gm-Message-State: ANoB5pn23sEaYDaIx4TAfEDmeFQ6z7o9Y5oYr7vxxvkztgb03k4Qsnj2
-        8L/wxQJAodRCm+GDoidAHdV6XjqUwQmtCl2/OsI/0A==
-X-Google-Smtp-Source: AA0mqf61KLGmp/Qm9g4FE973BvCOpu9OqNPOjOG4J5nE13JCMq7A8rvlH6yRlbfRF5bTYaCm/bglFAEjkAec+P1WlEc=
-X-Received: by 2002:adf:e64f:0:b0:241:e2f1:8b44 with SMTP id
- b15-20020adfe64f000000b00241e2f18b44mr25818541wrn.300.1669839202034; Wed, 30
- Nov 2022 12:13:22 -0800 (PST)
+        bh=nfrgQJXgKs3ZfjdSChkmp4Xkqxu/YX7zkn1AJdRRuFs=;
+        b=2XO34gz1mmuSzTOFjcPb5iL1nnOTDeHo+bClfo430NP+cXapyD//1wnGTYi7ulEH0/
+         rhSCn7Logqh7aFqYjczCDaQXcnvitSh+cGu2OqfH7W7jodfc81hiBX79APqBDQ/+NfqL
+         wso/BeNJR7pgbvsm/Wexmrd+oc/t4C7Xxkgx//P1x/fIXubbzwIZulkSeQxon9Zkx27T
+         9RWzB3VUP5iZWaa2D4zLcn/uG1Ksc37NsAdb4aojTEnqYdQWH9nnhgWzHTa++zQ0n0Os
+         X2sfJpCnLdDT0KMsxRieUeD5IBYGmykPSwAliv5tsfWyaPrBAxLZOV1IhB/sFT3Bj7Y3
+         Q0Ew==
+X-Gm-Message-State: ANoB5pn2yG26qT1HRpb1bBzJX0g/bHLZ42ZHp8rkFFU2Z4V4SEaNO1U6
+        fsfjfTHBZtoAwOg5Qrck9J6WQelNjtB0AUzi3BBGDy3j
+X-Google-Smtp-Source: AA0mqf6IQQ71busE+BH4Ytfjffv6UVsttt2Bga2b+quOs/gGuSFFm0YI7Tg9ePnXmHpv3bvxzyhk0otwzpSA13b1yOQ=
+X-Received: by 2002:a5d:500e:0:b0:241:c599:6c94 with SMTP id
+ e14-20020a5d500e000000b00241c5996c94mr35498283wrt.403.1669843301024; Wed, 30
+ Nov 2022 13:21:41 -0800 (PST)
 MIME-Version: 1.0
-References: <20221130062935.2219247-1-irogers@google.com> <20221130062935.2219247-4-irogers@google.com>
- <CAM9d7chrsLHoGe=RcU2e5hRL22j=813j3uuEHDOPZrkpWqnSsw@mail.gmail.com>
-In-Reply-To: <CAM9d7chrsLHoGe=RcU2e5hRL22j=813j3uuEHDOPZrkpWqnSsw@mail.gmail.com>
-From:   Ian Rogers <irogers@google.com>
-Date:   Wed, 30 Nov 2022 12:13:10 -0800
-Message-ID: <CAP-5=fWZVHN5tDG+eKRr7v_RXKYA_uUgY-dFH_g3Yc3mFgkXbA@mail.gmail.com>
-Subject: Re: [PATCH v2 3/4] perf build: Use libtraceevent from the system
-To:     Namhyung Kim <namhyung@kernel.org>
-Cc:     Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Jiri Olsa <jolsa@kernel.org>,
-        Masami Hiramatsu <mhiramat@kernel.org>,
-        Steven Rostedt <rostedt@goodmis.org>,
+References: <20221123180208.2068936-1-namhyung@kernel.org> <20221123180208.2068936-6-namhyung@kernel.org>
+ <CAP-5=fWZ27QW+XvZx0bzEMmUbyKpmmmZudB9u=SyxiLcH3CCqw@mail.gmail.com>
+ <CAP-5=fXsWfOmavOAmxsUcX+g3cve2r20JmseDF7Bn1jO6tPX-Q@mail.gmail.com> <CAP-5=fUOjSM5HajU9TCD6prY39LbX4OQbkEbtKPPGRBPBN=_VQ@mail.gmail.com>
+In-Reply-To: <CAP-5=fUOjSM5HajU9TCD6prY39LbX4OQbkEbtKPPGRBPBN=_VQ@mail.gmail.com>
+From:   Namhyung Kim <namhyung@kernel.org>
+Date:   Wed, 30 Nov 2022 13:21:29 -0800
+Message-ID: <CAM9d7ch3KqB2iL7rwz4M6yX_1XvJ5BMytTWdvtfvSeZBgqcAAA@mail.gmail.com>
+Subject: Re: [PATCH 05/15] perf stat: Remove prefix argument in print_metric_headers()
+To:     Ian Rogers <irogers@google.com>
+Cc:     Arnaldo Carvalho de Melo <acme@kernel.org>,
+        Jiri Olsa <jolsa@kernel.org>, Ingo Molnar <mingo@kernel.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        LKML <linux-kernel@vger.kernel.org>,
         Adrian Hunter <adrian.hunter@intel.com>,
-        Leo Yan <leo.yan@linaro.org>,
+        linux-perf-users@vger.kernel.org,
         Kan Liang <kan.liang@linux.intel.com>,
-        linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org,
-        Stephane Eranian <eranian@google.com>
+        Zhengjun Xing <zhengjun.xing@linux.intel.com>,
+        James Clark <james.clark@arm.com>,
+        Athira Jajeev <atrajeev@linux.vnet.ibm.com>
 Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-On Wed, Nov 30, 2022 at 11:05 AM Namhyung Kim <namhyung@kernel.org> wrote:
+On Tue, Nov 29, 2022 at 9:13 PM Ian Rogers <irogers@google.com> wrote:
 >
-> On Tue, Nov 29, 2022 at 10:30 PM Ian Rogers <irogers@google.com> wrote:
+> On Tue, Nov 29, 2022 at 9:09 PM Ian Rogers <irogers@google.com> wrote:
 > >
-> > Remove the LIBTRACEEVENT_DYNAMIC and LIBTRACEFS_DYNAMIC. If
-> > libtraceevent isn't installed or NO_LIBTRACEEVENT=1 is passed to the
-> > build, don't compile in libtraceevent and libtracefs support. This
-> > also disables CONFIG_TRACE that controls "perf
-> > trace". CONFIG_TRACEEVENT is used to control enablement in
-> > Build/Makefiles, HAVE_LIBTRACEEVENT is used in C code. Without
-> > HAVE_LIBTRACEEVENT tracepoints are disabled and as such the commands
-> > kmem, kwork, lock, sched and timechart are removed. The majority of
-> > commands continue to work including "perf test".
+> > On Wed, Nov 23, 2022 at 3:23 PM Ian Rogers <irogers@google.com> wrote:
+> > >
+> > > On Wed, Nov 23, 2022 at 10:02 AM Namhyung Kim <namhyung@kernel.org> wrote:
+> > > >
+> > > > It always passes a whitespace to the function, thus we can just add it to the
+> > > > function body.  Furthermore, it's only used in the normal output mode.
+> > > >
+> > > > Well, actually CSV used it but it doesn't need to since we don't care about the
+> > > > indentation or alignment in the CSV output.
+> > > >
+> > > > Signed-off-by: Namhyung Kim <namhyung@kernel.org>
+> > >
+> > > Acked-by: Ian Rogers <irogers@google.com>
+> > >
+> > > Thanks,
+> > > Ian
+> >
+> > I suspect this may be responsible for a metric segv that I'm now
+> > seeing in Arnaldo's tree:
+> >
+> > $ gdb --args perf stat -M Backend true
+> > ...
+> > Performance counter stats for 'true':
+> >
+> >         4,712,355      TOPDOWN.SLOTS                    #     17.3 %
+> > tma_core_bound
+> >
+> > Program received signal SIGSEGV, Segmentation fault.
+> > __strlen_evex () at ../sysdeps/x86_64/multiarch/strlen-evex.S:77
+> > 77      ../sysdeps/x86_64/multiarch/strlen-evex.S: No such file or directory.
+> > (gdb) bt
+> > #0  __strlen_evex () at ../sysdeps/x86_64/multiarch/strlen-evex.S:77
+> > #1  0x00007ffff74749a5 in __GI__IO_fputs (str=0x0, fp=0x7ffff75f5680
+> > <_IO_2_1_stderr_>)
+> >    at ./libio/iofputs.c:33
+> > #2  0x0000555555779f28 in do_new_line_std (config=0x555555e077c0
+> > <stat_config>, os=0x7fffffffbf10)
+> >    at util/stat-display.c:356
+> > #3  0x000055555577a081 in print_metric_std (config=0x555555e077c0
+> > <stat_config>,
+> >    ctx=0x7fffffffbf10, color=0x0, fmt=0x5555558b77b5 "%8.1f",
+> >    unit=0x7fffffffbb10 "%  tma_memory_bound", val=13.165355724442199)
+> > at util/stat-display.c:380
+> > #4  0x00005555557768b6 in generic_metric (config=0x555555e077c0 <stat_config>,
+> >    metric_expr=0x55555593d5b7 "((CYCLE_ACTIVITY.STALLS_MEM_ANY +
+> > EXE_ACTIVITY.BOUND_ON_STORES) / (C
+> > YCLE_ACTIVITY.STALLS_TOTAL + (EXE_ACTIVITY.1_PORTS_UTIL + tma_retiring
+> > * EXE_ACTIVITY.2_PORTS_UTIL)
+> > + EXE_ACTIVITY.BOUND_ON_STORES))"..., metric_events=0x555555f334e0,
+> > metric_refs=0x555555ec81d0,
+> >    name=0x555555f32e80 "TOPDOWN.SLOTS", metric_name=0x555555f26c80
+> > "tma_memory_bound",
+> >    metric_unit=0x55555593d5b1 "100%", runtime=0, map_idx=0,
+> > out=0x7fffffffbd90,
+> >    st=0x555555e9e620 <rt_stat>) at util/stat-shadow.c:934
+> > #5  0x0000555555778cac in perf_stat__print_shadow_stats
+> > (config=0x555555e077c0 <stat_config>,
+> >    evsel=0x555555f289d0, avg=4712355, map_idx=0, out=0x7fffffffbd90,
+> >    metric_events=0x555555e078e8 <stat_config+296>, st=0x555555e9e620 <rt_stat>)
+> >    at util/stat-shadow.c:1329
+> > #6  0x000055555577b6a0 in printout (config=0x555555e077c0
+> > <stat_config>, os=0x7fffffffbf10,
+> >    uval=4712355, run=325322, ena=325322, noise=4712355, map_idx=0) at
+> > util/stat-display.c:741
+> > #7  0x000055555577bc74 in print_counter_aggrdata
+> > (config=0x555555e077c0 <stat_config>,
+> >    counter=0x555555f289d0, s=0, os=0x7fffffffbf10) at util/stat-display.c:838
+> > #8  0x000055555577c1d8 in print_counter (config=0x555555e077c0 <stat_config>,
+> >    counter=0x555555f289d0, os=0x7fffffffbf10) at util/stat-display.c:957
+> > #9  0x000055555577dba0 in evlist__print_counters (evlist=0x555555ec3610,
+> >    config=0x555555e077c0 <stat_config>, _target=0x555555e01c80
+> > <target>, ts=0x0, argc=1,
+> >    argv=0x7fffffffe450) at util/stat-display.c:1413
+> > #10 0x00005555555fc821 in print_counters (ts=0x0, argc=1, argv=0x7fffffffe450)
+> >    at builtin-stat.c:1040
+> > #11 0x000055555560091a in cmd_stat (argc=1, argv=0x7fffffffe450) at
+> > builtin-stat.c:2665
+> > #12 0x00005555556b1eea in run_builtin (p=0x555555e11f70
+> > <commands+336>, argc=4,
+> >    argv=0x7fffffffe450) at perf.c:322
+> > #13 0x00005555556b2181 in handle_internal_command (argc=4,
+> > argv=0x7fffffffe450) at perf.c:376
+> > #14 0x00005555556b22d7 in run_argv (argcp=0x7fffffffe27c,
+> > argv=0x7fffffffe270) at perf.c:420
+> > #15 0x00005555556b26ef in main (argc=4, argv=0x7fffffffe450) at perf.c:550
+> > (gdb)
+> >
+> > Thanks,
+> > Ian
 >
-> Maybe we can have a different approach.  I guess the trace data
-> access is isolated then we can make dummy interfaces when there's
-> no libtraceevent.  This way we don't need to touch every command
-> and let it fail when it's asked.
+> More specifically, I think os->prefix needs testing for NULL:
+> https://git.kernel.org/pub/scm/linux/kernel/git/acme/linux.git/tree/tools/perf/util/stat-display.c?h=perf/core#n356
+> so:
+> fputs(os->prefix, os->fh);
+> should be:
+> if (os->prefix)
+>   fputs(os->prefix, os->fh);
 
-Sounds like a worthwhile refactor that can land on top of this change.
-
-> The motivation is that we should be able to run the sub-commands
-> as much as possible.  In fact, we could run 'record' part only on the
-> target machine and pass the data to the host for analysis with a
-> full-fledged perf.  Also some commands like 'perf lock contention'
-> can run with or without libtraceevent (using BPF only).
-
-The issue here is that perf lock contention will use evsel__new_tp and
-internally that uses libtraceevent. As such it is removed without
-HAVE_LIBTRACEEVENT. Without the evsel there's not much perf lock
-contention can do, so rather than litter the code with
-HAVE_LIBTRACEEVENT and for it to be broken, I made the choice just to
-remove it from the no libtraceevent build for now.
-
-I think it is worth pursuing these patches in the shape they are in so
-that we can land the removal of tools/lib/traceevent and ensure the
-migration away from an out-of-date version of that library.
+Yep, could you please send it as a formal patch?
 
 Thanks,
-Ian
-
-> Thanks,
-> Namhyung
+Namhyung
