@@ -2,198 +2,234 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A327EC4332F
-	for <linux-perf-users@archiver.kernel.org>; Wed, 30 Nov 2022 04:49:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 207A3C433FE
+	for <linux-perf-users@archiver.kernel.org>; Wed, 30 Nov 2022 05:01:28 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229604AbiK3Etk (ORCPT
+        id S230170AbiK3FB1 (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Tue, 29 Nov 2022 23:49:40 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44516 "EHLO
+        Wed, 30 Nov 2022 00:01:27 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50730 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230211AbiK3Etf (ORCPT
+        with ESMTP id S229584AbiK3FBZ (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Tue, 29 Nov 2022 23:49:35 -0500
-Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTP id D749C6D498;
-        Tue, 29 Nov 2022 20:49:33 -0800 (PST)
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 0EAD0D6E;
-        Tue, 29 Nov 2022 20:49:40 -0800 (PST)
-Received: from [10.162.43.8] (unknown [10.162.43.8])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id CAED73F73D;
-        Tue, 29 Nov 2022 20:49:28 -0800 (PST)
-Message-ID: <54d532cc-089c-0c6c-6bf4-be840bc27826@arm.com>
-Date:   Wed, 30 Nov 2022 10:19:25 +0530
+        Wed, 30 Nov 2022 00:01:25 -0500
+Received: from mail-wm1-x332.google.com (mail-wm1-x332.google.com [IPv6:2a00:1450:4864:20::332])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6632E6F0FA
+        for <linux-perf-users@vger.kernel.org>; Tue, 29 Nov 2022 21:01:24 -0800 (PST)
+Received: by mail-wm1-x332.google.com with SMTP id o7-20020a05600c510700b003cffc0b3374so562493wms.0
+        for <linux-perf-users@vger.kernel.org>; Tue, 29 Nov 2022 21:01:24 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20210112;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:from:to:cc:subject:date:message-id:reply-to;
+        bh=kpXnCKC/rrFNFqKBvBovi7KnRoPLUD/c1A9bpn5kMac=;
+        b=HkF2+Uudt//VPMDu3oIiLkoI/OCYh2PiGSUW91TabDN556pBAUCsqufwtnnf0Ym03J
+         VQChJAL0oRgDqQHcBDl4GIJZISqB3oDeh+s7YMuKS5BlvJuQSihUGymHTNOTdT0RO0T6
+         tbNfGRr2zHSMxIzGbde48Uc8BEx92ib0hykw+bKdeZ1rVktV+PIQrWJ+VuzSeD4tHij1
+         lbyRr3/UOUEN5/RChJ8VevMTLriCrAYAJoskMvAGU+EbgXAeJeUebWTmV/1Ewhq1O/KQ
+         UgvkB+lUT5UYnTA3ETpiZsMBIlwNEyuHMt2tC8Wh96T41yQfHgKpT3N4aFqAk326P4D1
+         EO5Q==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=kpXnCKC/rrFNFqKBvBovi7KnRoPLUD/c1A9bpn5kMac=;
+        b=TbeKBBk3FeU/k+4cYlwJ1lj5OixTAtUeaPrNZtYbVaoFxjmWneQIizUe/uzgljd25T
+         jrSvkw+DjVRii1k/JyvWu3U/SExACqjqyP8HMz5RKlyWyhYHAM96aHjex8dBwyA0jxxu
+         m/YpuSy8m2FirQeLwEcDzgEY/jiBUIFb1DW5ScD11dfVx6qMpeuL+fQ/qqiuxNMGjGkr
+         pbTB4wxLxbK2JFIl4L6R6Szzh2Jf5bL5q8n9kZKIGsOw8291AARj7zPgV/Y+LM+YDxsB
+         j1GJFM4gsI4YEsc0RL3OeZIl3BEbFfFETpWCmdBpyYuBPF4s25Ibtgsh8VZrA8GdHPck
+         M0sw==
+X-Gm-Message-State: ANoB5pl2dq7EjhQD/Tu3O6qn74fh3l513QZVFUOMjGBG6KkVhZOw/HsD
+        Yd83CHHECGTBQOc1WZLG+Hug+MTLDDF8zuAS70o3RA==
+X-Google-Smtp-Source: AA0mqf7qUjX7ETFUw1llimUeGEmRatqf6MC1xyEBpmhNirxzWuT7/GMdS+rYw1wto7YfXyCnYH8+fegRD3aHlyiojxE=
+X-Received: by 2002:a05:600c:4920:b0:3cf:8b23:549c with SMTP id
+ f32-20020a05600c492000b003cf8b23549cmr35258619wmp.174.1669784482752; Tue, 29
+ Nov 2022 21:01:22 -0800 (PST)
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
- Thunderbird/102.2.2
-Subject: Re: [PATCH V5 6/7] arm64/perf: Add BRBE driver
-Content-Language: en-US
-To:     James Clark <james.clark@arm.com>
-Cc:     Mark Brown <broonie@kernel.org>, Rob Herring <robh@kernel.org>,
-        Marc Zyngier <maz@kernel.org>,
-        Suzuki Poulose <suzuki.poulose@arm.com>,
-        Ingo Molnar <mingo@redhat.com>, linux-kernel@vger.kernel.org,
+References: <20221123180208.2068936-1-namhyung@kernel.org> <20221123180208.2068936-15-namhyung@kernel.org>
+ <CAP-5=fVJjPXk2hmWc6xqDxe06Arq-nOB51CwihAuuVFAoaKJ4g@mail.gmail.com>
+ <CAM9d7ciARxBRKpwf-8eQr-x5kR8n0Wv3RmycVFdO4ikeYhDVwg@mail.gmail.com>
+ <CAP-5=fWF7ScB0kHKQsqePHmg3sJf22TOfvKcNeYQdMoD0p8Tbg@mail.gmail.com> <CAM9d7cj-JeKiHUM1Eq36937q+o+yj=DKwt_pYQLD6aC5zCTN+Q@mail.gmail.com>
+In-Reply-To: <CAM9d7cj-JeKiHUM1Eq36937q+o+yj=DKwt_pYQLD6aC5zCTN+Q@mail.gmail.com>
+From:   Ian Rogers <irogers@google.com>
+Date:   Tue, 29 Nov 2022 21:01:11 -0800
+Message-ID: <CAP-5=fXu-LD9fFzB4+A=xxq0St2MipfJO3XkGLovrZLqQumbFA@mail.gmail.com>
+Subject: Re: [PATCH 14/15] perf stat: Rename "aggregate-number" to "cpu-count"
+ in JSON
+To:     Namhyung Kim <namhyung@kernel.org>
+Cc:     Arnaldo Carvalho de Melo <acme@kernel.org>,
+        Jiri Olsa <jolsa@kernel.org>, Ingo Molnar <mingo@kernel.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Adrian Hunter <adrian.hunter@intel.com>,
         linux-perf-users@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, peterz@infradead.org,
-        acme@kernel.org, mark.rutland@arm.com, will@kernel.org,
-        catalin.marinas@arm.com
-References: <20221107062514.2851047-1-anshuman.khandual@arm.com>
- <20221107062514.2851047-7-anshuman.khandual@arm.com>
- <25658a70-0b37-966d-e46c-f86be2a76a8e@arm.com>
-From:   Anshuman Khandual <anshuman.khandual@arm.com>
-In-Reply-To: <25658a70-0b37-966d-e46c-f86be2a76a8e@arm.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+        Kan Liang <kan.liang@linux.intel.com>,
+        Zhengjun Xing <zhengjun.xing@linux.intel.com>,
+        James Clark <james.clark@arm.com>,
+        Athira Jajeev <atrajeev@linux.vnet.ibm.com>
+Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
+On Tue, Nov 29, 2022 at 2:46 PM Namhyung Kim <namhyung@kernel.org> wrote:
+>
+> On Sat, Nov 26, 2022 at 7:14 PM Ian Rogers <irogers@google.com> wrote:
+> >
+> > On Thu, Nov 24, 2022 at 11:51 PM Namhyung Kim <namhyung@kernel.org> wrote:
+> > >
+> > > Hi Ian,
+> > >
+> > > On Wed, Nov 23, 2022 at 3:31 PM Ian Rogers <irogers@google.com> wrote:
+> > > >
+> > > > On Wed, Nov 23, 2022 at 10:02 AM Namhyung Kim <namhyung@kernel.org> wrote:
+> > > > >
+> > > > > As the JSON output has been broken for a little while, I guess there are
+> > > > > not many users.  Let's rename the field to more intuitive one. :)
+> > > >
+> > > > I'm not sure cpu-count is accurate. For example, an uncore counter in
+> > > > a dual socket machine may have a CPU mask of "0, 36", ie one event per
+> > > > socket. The aggregate-number in this case I believe is 2.
+> > >
+> > > You're right.  In case of uncore events, it can be confusing.  But in some
+> > > sense it could be thought as cpu count as well since it aggregates the
+> > > result from two cpus anyway. :)
+> > >
+> > > Note that the aggregate-number (or cpu-count) is only printed if users
+> > > requested one of aggregation options like --per-socket or --per-core.
+> > > In your example, then it could print 1 for each socket.
+> > >
+> > > But I think uncore events are different from core events, and hopefully
+> > > they have separate instances for different sockets or something already.
+> > > That means it doesn't need to use those aggregation options for them.
+> > >
+> > > Also the CSV output uses "cpus" for the same information.  It'd be nice
+> > > we could have consistency.
+> >
+> > So in the original patch from Claire she'd passed the name "number"
+> > through to the json from the stat code. Having an integer called
+> > "number" isn't exactly intention revealing - thank you for your clean
+> > up work! :-) I switched "number" to be "aggregate number" as the
+> > number comes from the "data" aggregated and the code refers to it as
+> > aggregate data. I think aggregate-number is more consistent with the
+> > code, and cpu-count would look strange in the uncore case above where
+> > the number of CPUs (really hyperthreads) is 72. Perhaps we should also
+> > be outputting the aggregation mode with the number. Anyway, I think
+> > for the patch series I'd prefer we skipped this one and kept the rest.
+>
+> Right, I think we need a more general term to include non-cpu events.
+> But it seems Arnaldo already merged it.
+>
+> Arnaldo, do you want me to send a revert?
+>
+> Thanks,
+> Namhyung
 
+This is also breaking the json output test:
 
-On 11/29/22 21:23, James Clark wrote:
-> 
-> 
-> On 07/11/2022 06:25, Anshuman Khandual wrote:
->> This adds a BRBE driver which implements all the required helper functions
->> for struct arm_pmu. Following functions are defined by this driver which
->> will configure, enable, capture, reset and disable BRBE buffer HW as and
->> when requested via perf branch stack sampling framework.
-> 
-> Hi Anshuman,
-> 
-> I've got a rough version of an updated test for branch stacks here [1].
-> A couple of interesting things that I've noticed running it:
-> 
-> First one is that sometimes I get (null) for the branch type. Debugging
-> in GDB shows me that the type is actually type == PERF_BR_EXTEND_ABI &&
-> new_type == 11. I can't see how this is possible looking at the driver
+$ perf test -vv 89
+89: perf stat JSON output linter                                    :
+--- start ---
+test child forked, pid 2116261
+Checking json output: no args [Success]
+Checking json output: system wide [Success]
+Checking json output: interval [Success]
+Checking json output: event [Success]
+Checking json output: per thread [Success]
+Checking json output: per node Test failed for input:
+{"node" : "N0", "cpu-count" : 16, "counter-value" : "32.468431",
+"unit" : "msec", "event" : "cpu-clo
+ck", "event-runtime" : 32498339, "pcnt-running" : 100.00,
+"metric-value" : 19.450525, "metric-unit"
+: "CPUs utilized"}
 
-Hmm, that is strange.
+{"node" : "N0", "cpu-count" : 16, "counter-value" : "52.000000",
+"unit" : "", "event" : "context-swi
+tches", "event-runtime" : 32471361, "pcnt-running" : 100.00,
+"metric-value" : 1.601556, "metric-unit
+" : "K/sec"}
 
-brbe_fetch_perf_type() evaluates captured brbinf and extracts BRBE branch
-type and later maps into perf branch types. All new perf branch types are
-contained inside [PERF_BR_NEW_FAULT_ALGN = 0 .. PERF_BR_NEW_ARCH_5 = 7].
-Hence wondering how '11' can be a new_type value after PERF_BR_EXTEND_ABI
-switch.
+{"node" : "N0", "cpu-count" : 16, "counter-value" : "16.000000",
+"unit" : "", "event" : "cpu-migrati
+ons", "event-runtime" : 32469950, "pcnt-running" : 100.00,
+"metric-value" : 492.786362, "metric-unit
+" : "/sec"}
 
-> code. I think I saw this on a previous version of the patchset too but
-> didn't mention it because I thought it wasn't significant, but now I see
-> that something strange is going on. An interesting pattern is that they
-> are always after ERET samples and go from userspace to kernel:
+{"node" : "N0", "cpu-count" : 16, "counter-value" : "57.000000",
+"unit" : "", "event" : "page-faults
+", "event-runtime" : 32474408, "pcnt-running" : 100.00, "metric-value"
+: 1.755551, "metric-unit" : "
+K/sec"}
 
-Unless it can be ascertained that wrong values are getting passed into the
-perf ring buffer via cpuc->branches->brbe_entries[idx].[type | new_type],
-the problem might be with perf report parsing the branch records ?
+{"node" : "N0", "cpu-count" : 16, "counter-value" : "2958499.000000",
+"unit" : "", "event" : "cycles
+", "event-runtime" : 32411643, "pcnt-running" : 100.00, "metric-value"
+: 0.091119, "metric-unit" : "
+GHz"}
 
-There are valid new branch types such as ARM64_DEBUG_DATA reported after
-ERET records as well. I guess the only way to figure out the problem here
-is to track the errant branch record from cpuc->branches->brbe_entries to
-all the way upto perf report processing.
+{"node" : "N0", "cpu-count" : 16, "counter-value" : "3175893.000000",
+"unit" : "", "event" : "instru
+ctions", "event-runtime" : 32403573, "pcnt-running" : 100.00,
+"metric-value" : 1.073481, "metric-uni
+t" : "insn per cycle"}
 
-> 
-> 41992866945460 0x6e8 [0x360]: PERF_RECORD_SAMPLE(IP, 0x1): 501/501:
-> 0xffff800008010118 period: 1229 addr: 0
-> ... branch stack: nr:34
-> .. 007a9988 -> 00000000 0 cycles  P   9fbfbfbf IRQ
-> .. 00000000 -> 007a9988 0 cycles  P   9fbfbfbf ERET
-> .. 007a9988 -> 00000000 0 cycles  P   9fbfbfbf (null)
-> .. 00747668 -> 007a9988 0 cycles  P   9fbfbfbf CALL
-> .. 00747664 -> 00747660 0 cycles  P   9fbfbfbf COND
-> .. 00747664 -> 00747660 0 cycles  P   9fbfbfbf COND
-> .. 00747664 -> 00747660 0 cycles  P   9fbfbfbf COND
-> .. 00747664 -> 00747660 0 cycles  P   9fbfbfbf COND
-> .. 00747664 -> 00747660 0 cycles  P   9fbfbfbf COND
-> .. 00747664 -> 00747660 0 cycles  P   9fbfbfbf COND
-> .. 00747664 -> 00747660 0 cycles  P   9fbfbfbf COND
-> .. 00747664 -> 00747660 0 cycles  P   9fbfbfbf COND
-> .. 00747664 -> 00747660 0 cycles  P   9fbfbfbf COND
-> .. 00747664 -> 00747660 0 cycles  P   9fbfbfbf COND
-> .. 00747664 -> 00747660 0 cycles  P   9fbfbfbf COND
-> .. 00747664 -> 00747660 0 cycles  P   9fbfbfbf COND
-> .. 00747664 -> 00747660 0 cycles  P   9fbfbfbf COND
-> .. 00747664 -> 00747660 0 cycles  P   9fbfbfbf COND
-> .. 00747664 -> 00747660 0 cycles  P   9fbfbfbf COND
-> .. 00747664 -> 00747660 0 cycles  P   9fbfbfbf COND
-> .. 00747664 -> 00747660 0 cycles  P   9fbfbfbf COND
-> .. 00000000 -> 00747658 0 cycles  P   9fbfbfbf ERET
-> .. 00747658 -> 00000000 0 cycles  P   9fbfbfbf ARM64_DEBUG_DATA
-> .. 00000000 -> 00747650 0 cycles  P   9fbfbfbf ERET
-> .. 00747650 -> 00000000 0 cycles  P   9fbfbfbf ARM64_DEBUG_DATA
-> .. 00747624 -> 00747634 0 cycles  P   9fbfbfbf COND
-> .. 00000000 -> 007475f4 0 cycles  P   9fbfbfbf ERET
-> .. 007475f4 -> 00000000 0 cycles  P   9fbfbfbf ARM64_DEBUG_DATA
-> .. 00000000 -> 007475e8 0 cycles  P   9fbfbfbf ERET
-> .. 007475e8 -> 00000000 0 cycles  P   9fbfbfbf (null)
-> .. 004005ac -> 007475e8 0 cycles  P   9fbfbfbf CALL
-> .. 00000000 -> 00400564 0 cycles  P   9fbfbfbf ERET
-> .. 00400564 -> 00000000 0 cycles  P   9fbfbfbf (null)
-> .. 00000000 -> 00400564 0 cycles  P   9fbfbfbf ERET
->  .. thread: perf:501
->  ...... dso: [kernel.kallsyms]
-> 
-> The second one is that sometimes I get kernel addresses and RET branches
-> even if the option is any_call,u. The pattern here is that it's the last
-> non empty branch stack of a run, so maybe there is some disable path
-> where the filters aren't configured properly:
+{"node" : "N0", "cpu-count" : 16, "counter-value" : "688120.000000",
+"unit" : "", "event" : "branche
+s", "event-runtime" : 32391536, "pcnt-running" : 100.00,
+"metric-value" : 21.193509, "metric-unit" :
+"M/sec"}
 
-The latest code (not posted), disables TRBE completely while reading the
-branch records during PMU interrupt. Could you please apply those changes
-as well, or rather just use the branch instead.
+{"node" : "N0", "cpu-count" : 16, "counter-value" : "17584.000000",
+"unit" : "", "event" : "branch-m
+isses", "event-runtime" : 32371972, "pcnt-running" : 100.00,
+"metric-value" : 2.555368, "metric-unit
+" : "of all branches"}
 
-https://gitlab.arm.com/linux-arm/linux-anshuman/-/commit/ab17879711f0e61c280ed52400ccde172b67e04a
+{"node" : "N0", "cpu-count" : 16, "counter-value" : "14377890.000000",
+"unit" : "", "event" : "slots
+", "event-runtime" : 32350026, "pcnt-running" : 100.00, "metric-value"
+: 442.826757, "metric-unit" :
+"M/sec"}
 
-> 
-> armv8pmu_brbe_enable+0xc/arm64_pmu_brbe_enable+0x0/P/-/-/0/CALL
-> armpmu_start+0xe0/armv8pmu_brbe_enable+0x0/P/-/-/0/IND_CALL
-> armv8pmu_brbe_reset+0x18/armpmu_start+0xd0/P/-/-/0/RET
-> arm64_pmu_brbe_reset+0x18/armv8pmu_brbe_reset+0x10/P/-/-/0/RET
+{"node" : "N0", "cpu-count" : 16, "counter-value" : "3380921.000000",
+"unit" : "", "event" : "topdow
+n-retiring", "event-runtime" : 32350026, "pcnt-running" : 100.00,
+"metric-value" : 23.514767, "metri
+c-unit" : "Retiring"}
 
-I am wondering how the different privilege branch record leak is possible.
-Because arm64_pmu_brbe_enable() should start BRBE from a clean state with
-respect to privilege level filters.
+{"node" : "N0", "cpu-count" : 16, "counter-value" : "1444174.000000",
+"unit" : "", "event" : "topdow
+n-bad-spec", "event-runtime" : 32350026, "pcnt-running" : 100.00,
+"metric-value" : 10.044427, "metri
+c-unit" : "Bad Speculation"}
 
-void arm64_pmu_brbe_enable(struct pmu_hw_events *cpuc)
-{
-        u64 brbfcr, brbcr;
+{"node" : "N0", "cpu-count" : 16, "counter-value" : "5899393.000000",
+"unit" : "", "event" : "topdow
+n-fe-bound", "event-runtime" : 32350026, "pcnt-running" : 100.00,
+"metric-value" : 41.031084, "metri
+c-unit" : "Frontend Bound"}
 
-        if (brbe_disabled(cpuc))
-                return;
+{"node" : "N0", "cpu-count" : 16, "counter-value" : "3653375.000000",
+"unit" : "", "event" : "topdow
+n-be-bound", "event-runtime" : 32350026, "pcnt-running" : 100.00,
+"metric-value" : 25.409722, "metri
+c-unit" : "Backend Bound"}
 
-        brbfcr = read_sysreg_s(SYS_BRBFCR_EL1);
-        brbfcr &= ~BRBFCR_EL1_BANK_MASK;
-        brbfcr &= ~(BRBFCR_EL1_EnI | BRBFCR_EL1_PAUSED | BRBE_FCR_MASK);
-        brbfcr |= (cpuc->brbfcr & BRBE_FCR_MASK);
-        write_sysreg_s(brbfcr, SYS_BRBFCR_EL1);
-        isb();
+Traceback (most recent call last):
+ File "/home/irogers/kernel.org/./tools/perf/tests/shell/lib/perf_json_output_lint.py",
+line 93, in
+<module>
+   check_json_output(expected_items)
+ File "/home/irogers/kernel.org/./tools/perf/tests/shell/lib/perf_json_output_lint.py",
+line 78, in
+check_json_output
+   raise RuntimeError(f'Unexpected key: key={key} value={value}')
+RuntimeError: Unexpected key: key=cpu-count value=16
+test child finished with -1
+---- end ----
+perf stat JSON output linter: FAILED!
 
-        brbcr = read_sysreg_s(SYS_BRBCR_EL1);
-        brbcr &= ~BRBE_CR_MASK;			--> Contains BRBCR_EL1_E1BRE and BRBCR_EL1_E0BRE
-        brbcr |= BRBCR_EL1_FZP;
-        brbcr |= (BRBCR_EL1_TS_PHYSICAL << BRBCR_EL1_TS_SHIFT);
-        brbcr |= (cpuc->brbcr & BRBE_CR_MASK);
-        write_sysreg_s(brbcr, SYS_BRBCR_EL1);
-        isb();
-}
-
-Could these samples are from a previous session ? But they should have been
-flushed in armpmu_start().
-
-static void armpmu_start(struct perf_event *event, int flags)
-{
-	.........
-        if (has_branch_stack(event)) {
-                if (event->ctx->task && hw_events->brbe_context != event->ctx) {
-                        armpmu->brbe_reset(hw_events);
-                        hw_events->brbe_context = event->ctx;
-                }
-                armpmu->brbe_enable(hw_events);
-                hw_events->brbe_users++;
-        }
-	.........
-}
-
-> 
-> 
-> [1]:
-> https://gitlab.arm.com/linux-arm/linux-jc/-/commit/7260b7bef06ac161eac88d05266e8c5c303d9881
+Thanks,
+Ian
